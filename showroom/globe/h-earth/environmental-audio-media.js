@@ -7,25 +7,18 @@ const ui=document.createElement('div');ui.className='h-earth-ambient-control';ui
 const button=ui.querySelector('button');
 
 function writeAscii(view,offset,text){for(let i=0;i<text.length;i++)view.setUint8(offset+i,text.charCodeAt(i));}
-function gullEnvelope(t,center,width){const d=Math.abs(t-center)/width;return d>=1?0:(1-d)*(1-d);}
 function createCoastalWav(seconds=38,sampleRate=22050){
   const samples=Math.floor(seconds*sampleRate),bytes=44+samples*2,buffer=new ArrayBuffer(bytes),view=new DataView(buffer);
   writeAscii(view,0,'RIFF');view.setUint32(4,bytes-8,true);writeAscii(view,8,'WAVE');writeAscii(view,12,'fmt ');view.setUint32(16,16,true);view.setUint16(20,1,true);view.setUint16(22,1,true);view.setUint32(24,sampleRate,true);view.setUint32(28,sampleRate*2,true);view.setUint16(32,2,true);view.setUint16(34,16,true);writeAscii(view,36,'data');view.setUint32(40,samples*2,true);
   let low=0,soft=0;
   const waveTimes=[1.8,7.4,13.9,21.8,29.1,35.2];
-  const gullTimes=[10.6,25.4,33.1];
   for(let i=0;i<samples;i++){
     const t=i/sampleRate,white=Math.random()*2-1;
     low=low*.997+white*.003;soft=soft*.94+white*.06;
     let wave=0;
     for(const c of waveTimes){const d=(t-c)/2.4;if(Math.abs(d)<1){const e=Math.pow(Math.cos(d*Math.PI*.5),3);wave+=e*(low*.18+soft*.055);}}
     const breeze=(low*.038+soft*.018)*(0.78+0.22*Math.sin(t*.17));
-    let gull=0;
-    for(let g=0;g<gullTimes.length;g++){
-      const c=gullTimes[g],env=gullEnvelope(t,c,.65);
-      if(env>0){const local=t-c+.65;const freq=920+250*Math.sin(local*5.1)+90*Math.sin(local*11.4);gull+=Math.sin(2*Math.PI*freq*t)*env*.026;}
-    }
-    const sample=Math.max(-1,Math.min(1,wave+breeze+gull));
+    const sample=Math.max(-1,Math.min(1,wave+breeze));
     view.setInt16(44+i*2,Math.round(sample*32767),true);
   }
   return new Blob([buffer],{type:'audio/wav'});
@@ -50,4 +43,4 @@ for(const type of ['pointerdown','touchend','click','keydown'])window.addEventLi
 button.addEventListener('click',async event=>{event.preventDefault();event.stopImmediatePropagation();if(!started){await ensurePlayback();return;}muted=!muted;audio.muted=muted;ui.dataset.muted=muted?'true':'false';button.setAttribute('aria-pressed',muted?'false':'true');button.setAttribute('aria-label',muted?'Enable environmental sound':'Mute environmental sound');updateProximity();},true);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)audio.pause();else if(started&&!muted)void audio.play().catch(()=>{});});
 window.addEventListener('beforeunload',()=>{clearInterval(proximityTimer);URL.revokeObjectURL(audio.src);},{once:true});
-window.H_EARTH_MEDIA_AUDIO=Object.freeze({version:'H_EARTH_MEDIA_AUDIO_23949_v2_GENTLE_COAST',delivery:'HTML_MEDIA_ELEMENT_GENERATED_WAV',singleAmbientAuthority:true,distantGulls:true,canonicalCoastProximityAudio:true,get started(){return started;},get paused(){return audio.paused;},get muted(){return muted;},get volume(){return audio.volume;},start:ensurePlayback});
+window.H_EARTH_MEDIA_AUDIO=Object.freeze({version:'H_EARTH_MEDIA_AUDIO_23949_v3_GENTLE_COAST_NO_TONAL_CALLS',delivery:'HTML_MEDIA_ELEMENT_GENERATED_WAV',singleAmbientAuthority:true,distantGulls:false,canonicalCoastProximityAudio:true,get started(){return started;},get paused(){return audio.paused;},get muted(){return muted;},get volume(){return audio.volume;},start:ensurePlayback});

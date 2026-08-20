@@ -2,7 +2,7 @@ import {
   H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY as HYDRO,
   resolveHEarthMapWideShorelineZ,
   sampleHEarthMapWideEnvironmentTerrainCandidate as sampleTerrain
-} from '../../../../h-earth-3d/terrain/h-earth.terrain-estate-construction-v1.candidate.js';
+} from '../../../../h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js';
 import {
   LOCAL_CENTER_Z,
   buildCanonicalWeatherObjects,

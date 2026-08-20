@@ -10,6 +10,39 @@ permissions:
   contents: read
 
 jobs:
+  diagnostic-live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Capture current custom-domain responses
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='https://diamondgatebridge.com'
+          tmp="$RUNNER_TEMP/gen331-live-diagnostic"
+          mkdir -p "$tmp"
+          for route in developer evidence governance; do
+            curl --fail-with-body --silent --show-error --location \
+              -H 'Cache-Control: no-cache, no-store, max-age=0' \
+              -H 'Pragma: no-cache' \
+              "${base}/${route}/?gen331_diag=${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" \
+              -o "$tmp/${route}.html"
+          done
+          curl --fail-with-body --silent --show-error --location \
+            -H 'Cache-Control: no-cache, no-store, max-age=0' \
+            -H 'Pragma: no-cache' \
+            "${base}/assets/public-legitimacy/public-legitimacy.carousel.parity.css?gen331_diag=${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" \
+            -o "$tmp/parity.css"
+          for f in "$tmp"/*; do echo "===== $f ====="; grep -Eo 'cb=[0-9a-f]{16}|How the machine works\.|How we know it worked\.|Intent should stay visible all the way to delivery\.|top:39%|top:48%|top:49%|position:fixed|height:100dvh' "$f" | sort -u || true; done
+          sha256sum "$tmp"/* > "$tmp/live-sha256.txt"
+      - name: Upload diagnostic responses
+        uses: actions/upload-artifact@v4
+        with:
+          name: gen331-live-diagnostic
+          path: ${{ runner.temp }}/gen331-live-diagnostic/**
+          if-no-files-found: error
+          retention-days: 30
+
   verify-live:
     runs-on: ubuntu-latest
     timeout-minutes: 15

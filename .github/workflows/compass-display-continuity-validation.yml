@@ -18,11 +18,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        with: {fetch-depth: 0}
       - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
+        with: {node-version: '22'}
       - name: Syntax floor
         run: |
           set -euo pipefail
@@ -30,11 +28,9 @@ jobs:
           node --check assets/compass/compass.brain-scene.js
           node --check assets/compass/compass.house-scene.js
           node --check assets/compass/compass.trophy-scene.js
-          node --check assets/compass/compass.gen1537.recovery.js
           node --check .github/ai-router/projects/compass/verify-experience-consolidation.v1.mjs
       - name: Verify continuity ownership
-        env:
-          COMPASS_EXPERIENCE_OUTPUT: /tmp/compass-capability-continuity-receipt.json
+        env: {COMPASS_EXPERIENCE_OUTPUT: /tmp/compass-capability-continuity-receipt.json}
         run: node .github/ai-router/projects/compass/verify-experience-consolidation.v1.mjs
       - uses: actions/upload-artifact@v4
         if: always()
@@ -42,3 +38,42 @@ jobs:
           name: compass-capability-continuity-${{ github.run_id }}-${{ github.run_attempt }}
           path: /tmp/compass-capability-continuity-receipt.json
           retention-days: 90
+
+  rendered-inspection:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Install browser
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Serve exact candidate
+        run: |
+          python3 -m http.server 4173 >/tmp/compass-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          exit 1
+      - name: Inspect WebGL, trophy exclusivity, stage size, and rotation
+        run: |
+          mkdir -p /tmp/track-a-rendered
+          cat > /tmp/inspect.mjs <<'NODE'
+          import {chromium} from 'playwright';import fs from 'node:fs';
+          const b=await chromium.launch({headless:true}),out={};
+          for(const [name,v] of Object.entries({desktop:{width:1440,height:1100},tablet:{width:900,height:1000},phone:{width:412,height:915}})){
+            const p=await b.newPage({viewportSize:v});await p.goto('http://127.0.0.1:4173/',{waitUntil:'networkidle'});const s=p.locator('[data-capability-orbit]');await s.scrollIntoViewIfNeeded();await p.waitForTimeout(500);
+            const first=await p.evaluate(()=>({brain:document.querySelector('.compass-brain-field canvas')?.dataset.brainRenderer||'',fallback:getComputedStyle(document.querySelector('.compass-trophy-fallback')).display,h:document.querySelector('[data-capability-orbit]').getBoundingClientRect().height,overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth}));
+            if(!first.brain.includes('webgl'))throw Error(`${name}: brain ${first.brain}`);if(first.fallback!=='none')throw Error(`${name}: fallback ${first.fallback}`);if(first.h>520)throw Error(`${name}: stage ${first.h}`);if(first.overflow>2)throw Error(`${name}: overflow ${first.overflow}`);await s.screenshot({path:`/tmp/track-a-rendered/${name}-brain.png`});
+            const next=p.locator('[data-capability-orbit] [data-orbit-next]');await next.click();await p.waitForTimeout(70);await next.click();await p.waitForTimeout(70);await next.click();await p.waitForTimeout(360);const rapid=await p.evaluate(()=>document.querySelector('.compass-orbit-plaque[data-active="true"]')?.dataset.capability);if(rapid!=='diagnostic')throw Error(`${name}: rapid ${rapid}`);
+            await next.click();await p.waitForTimeout(360);const award=await p.evaluate(()=>({active:document.querySelector('.compass-orbit-plaque[data-active="true"]')?.dataset.capability,fallback:getComputedStyle(document.querySelector('.compass-trophy-fallback')).display,trophy:document.querySelector('.compass-trophy-canvas')?.dataset.trophyRenderer||''}));if(award.active!=='awards'||award.fallback!=='none'||!award.trophy.includes('webgl'))throw Error(`${name}: award ${JSON.stringify(award)}`);await s.screenshot({path:`/tmp/track-a-rendered/${name}-awards.png`});
+            const box=await s.boundingBox();await p.mouse.move(box.x+box.width*.75,box.y+box.height*.42);await p.mouse.down();await p.mouse.move(box.x+box.width*.25,box.y+box.height*.42,{steps:6});await p.mouse.up();await p.waitForTimeout(360);const drag=await p.evaluate(()=>document.querySelector('.compass-orbit-plaque[data-active="true"]')?.dataset.capability);if(drag==='awards')throw Error(`${name}: drag stuck`);out[name]={first,rapid,award,drag};await p.close();
+          }
+          await b.close();fs.writeFileSync('/tmp/track-a-rendered/receipt.json',JSON.stringify({result:'PASS_CLOSED',out},null,2));
+          NODE
+          node /tmp/inspect.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compass-track-a-final-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/track-a-rendered
+          retention-days: 30

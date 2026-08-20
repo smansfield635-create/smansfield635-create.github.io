@@ -1,68 +1,323 @@
 (()=>{
 'use strict';
+
+const CONTINUITY='COMPASS_CAPABILITY_CONTINUITY_v1';
 const reduce=matchMedia('(prefers-reduced-motion: reduce)');
 const mod=(v,b)=>((v%b)+b)%b;
-const el=(tag,cls)=>{const n=document.createElement(tag);n.className=cls||'';return n};
-const legacyStyle=document.querySelector('[data-compass-gen1537-recovery-style]');if(legacyStyle){legacyStyle.disabled=true;legacyStyle.dataset.gen1538Archived='true'}
-const legacyRuntime=document.querySelector('[data-compass-gen1537-recovery-runtime]');if(legacyRuntime)legacyRuntime.dataset.gen1538Archived='true';
-if(!globalThis.DGB_COMPASS_GEN1537_LIVE_RECOVERY?.mounted)globalThis.DGB_COMPASS_GEN1537_LIVE_RECOVERY=Object.freeze({mounted:true,version:'archived-by-gen1538',receipt:()=>Object.freeze({archived:true,instrumentMounted:false,lowerCarouselPreserved:true})});
-function installGen1561Style(){document.querySelector('[data-gen1561-reconciliation-style]')?.remove();const s=document.createElement('style');s.dataset.gen1561ReconciliationStyle='true';s.textContent=`
-html body .compass-capability-orbit[data-reconciliation-stage="gen1561"]{box-sizing:border-box!important;min-height:0!important;height:min(25rem,92vw)!important;max-height:min(25rem,92vw)!important;padding:0!important;border:0!important;margin:clamp(6px,1.2vw,12px) auto 0!important;grid-template-rows:1fr auto auto auto!important;gap:.22rem!important;perspective:1700px;contain:layout style;touch-action:pan-y}
-[data-reconciliation-stage="gen1561"] .compass-object-stage{position:relative;width:min(92vw,650px);height:15rem;perspective:1600px;transform-style:preserve-3d;touch-action:pan-y;cursor:grab;overflow:visible}
-[data-reconciliation-stage="gen1561"] .compass-object-stage::after{content:"";position:absolute;inset:0;z-index:90;pointer-events:auto;background:transparent}
-[data-reconciliation-stage="gen1561"] .compass-object-stage[data-dragging="true"]{cursor:grabbing}
-[data-reconciliation-stage="gen1561"] .compass-object-ring,[data-reconciliation-stage="gen1561"] .compass-object-ring *{pointer-events:none!important}
-[data-reconciliation-stage="gen1561"] .compass-object-ring{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;transform:rotateY(var(--compass-object-angle,0deg));transition:transform .56s cubic-bezier(.2,.78,.18,1);will-change:transform}
-[data-reconciliation-stage="gen1561"] .compass-object-stage[data-dragging="true"] .compass-object-ring{transition:none}
-[data-reconciliation-stage="gen1561"] .compass-orbit-plaque{grid-area:auto;position:absolute;left:-14rem;top:-6.55rem;width:28rem;height:13.1rem!important;min-height:0!important;padding:.34rem!important;border:0!important;background:transparent!important;box-shadow:none!important;opacity:.18;filter:brightness(.58) saturate(.62);pointer-events:none}
-[data-reconciliation-stage="gen1561"] .compass-orbit-plaque[data-active="true"]{opacity:1;filter:none;pointer-events:none!important}
-[data-reconciliation-stage="gen1561"] .compass-orbit-plaque>*{opacity:1!important}
-[data-reconciliation-stage="gen1561"] .compass-object-portal{width:100%;height:9.55rem!important;pointer-events:none!important;cursor:default;transform:none}
-[data-reconciliation-stage="gen1561"] .compass-brain-field,[data-reconciliation-stage="gen1561"] .compass-brain-field canvas,[data-reconciliation-stage="gen1561"] .compass-house-field,[data-reconciliation-stage="gen1561"] .compass-house-field canvas{height:9.55rem!important;pointer-events:none!important}
-[data-reconciliation-stage="gen1561"] .compass-award-trophy{width:148px!important;height:148px!important}
-[data-reconciliation-stage="gen1561"] .compass-object-caption{font-size:.76rem!important;max-width:29rem}
-[data-reconciliation-stage="gen1561"] .compass-action-dock{display:flex;min-height:2.35rem;align-items:center;justify-content:center;gap:.38rem;flex-wrap:wrap}
-[data-reconciliation-stage="gen1561"] .compass-action-dock[aria-busy="true"]{opacity:.25;pointer-events:none}
-[data-reconciliation-stage="gen1561"] .compass-stage-action{display:inline-flex;min-height:38px;align-items:center;justify-content:center;padding:.55rem .82rem;border:1px solid rgba(244,214,128,.42);border-radius:999px;color:rgba(255,246,213,.96);background:linear-gradient(135deg,rgba(244,214,128,.09),rgba(86,197,218,.055));font:800 .68rem/1 Inter,sans-serif;letter-spacing:.045em;text-decoration:none}
-[data-reconciliation-stage="gen1561"] .compass-orbit-controls{grid-area:auto!important;margin:0!important}.compass-capability-orbit[data-reconciliation-stage="gen1561"] .compass-orbit-controls button{width:38px!important;height:38px!important}
-[data-reconciliation-stage="gen1561"] .compass-capability-guidance{grid-area:auto!important;min-height:1.2rem!important;margin:0!important;padding:.04rem .35rem!important}
-.compass-introduction[data-compass-purpose-stage]{max-width:760px!important;margin:.75rem auto 0!important}.compass-introduction[data-compass-purpose-stage]>summary{width:fit-content;margin:auto;padding:.42rem .72rem!important;background:transparent!important;border:0!important;box-shadow:none!important}
-.compass-guidance .compass-guidance__swipe{color:#bff4ff;text-shadow:0 0 8px rgba(102,205,224,.9),0 0 18px rgba(102,205,224,.46);font-weight:900}
-.compass-identity-3d[data-gen1561-arrival="true"] [data-wordmark-object="diamond-gate-bridge"]{animation:dgbGen1561Arrival 1.15s ease-out 1}@keyframes dgbGen1561Arrival{35%{filter:brightness(1.24) drop-shadow(0 0 20px rgba(244,214,128,.3))}}
-.compass-scene[data-gen1561-luminous="true"]{box-shadow:0 34px 100px rgba(0,0,0,.44),inset 0 1px 0 rgba(255,255,255,.07),0 0 34px rgba(102,205,224,.055)!important}
-@media(max-width:620px){html body .compass-capability-orbit[data-reconciliation-stage="gen1561"]{height:min(22rem,90vw)!important;max-height:min(22rem,90vw)!important}.compass-capability-orbit[data-reconciliation-stage="gen1561"] .compass-object-stage{height:12.6rem;width:100%}.compass-capability-orbit[data-reconciliation-stage="gen1561"] .compass-orbit-plaque{left:-42vw;top:-5.45rem;width:84vw;height:10.9rem!important}.compass-capability-orbit[data-reconciliation-stage="gen1561"] .compass-object-portal,.compass-capability-orbit[data-reconciliation-stage="gen1561"] .compass-brain-field,.compass-capability-orbit[data-reconciliation-stage="gen1561"] .compass-brain-field canvas,.compass-capability-orbit[data-reconciliation-stage="gen1561"] .compass-house-field,.compass-capability-orbit[data-reconciliation-stage="gen1561"] .compass-house-field canvas{height:7.7rem!important}.compass-capability-orbit[data-reconciliation-stage="gen1561"] .compass-award-trophy{width:124px!important;height:124px!important}}
-@media(prefers-reduced-motion:reduce){[data-reconciliation-stage="gen1561"] .compass-object-ring{transition:none!important}.compass-identity-3d[data-gen1561-arrival="true"] [data-wordmark-object="diamond-gate-bridge"]{animation:none!important}}
-`;document.head.append(s)}
-function protectMirrorland(){const root=document.querySelector('[data-compass-root]'),scene=document.querySelector('[data-compass-scene]'),door=document.querySelector('[data-compass-object="mirrorland"]');if(!scene||!door)return false;if(door.parentElement!==scene){scene.append(door);door.dataset.gen1538HitReparented='scene'}door.dataset.gen1538HitAuthority='protected-direct-controller-surface';door.setAttribute('aria-label','Open the Mirrorland door');if(root)root.dataset.gen1538Mirrorland='protected';return true}
-function region(n,label,guidance){n.tabIndex=0;n.setAttribute('role','region');n.setAttribute('aria-roledescription','carousel');n.setAttribute('aria-label',label);n.setAttribute('aria-describedby',guidance)}
-function status(){const n=el('p','compass-orbit-status');n.setAttribute('aria-live','polite');n.setAttribute('aria-atomic','true');return n}
-function setInteractive(c,on){c.toggleAttribute('inert',!on);c.setAttribute('aria-hidden',on?'false':'true');c.tabIndex=on?0:-1;c.querySelectorAll('a,button,input,select,textarea').forEach(x=>{if(on){if(x.dataset.orbitTabindex==='none')x.removeAttribute('tabindex');else if(x.dataset.orbitTabindex!=null)x.tabIndex=Number(x.dataset.orbitTabindex);delete x.dataset.orbitTabindex}else{if(x.dataset.orbitTabindex==null)x.dataset.orbitTabindex=x.hasAttribute('tabindex')?x.getAttribute('tabindex'):'none';x.tabIndex=-1}})}
-function place(item,index,count,delta,label){const front=delta===0;item.dataset.slot=front?'front':delta===1?'rear-next':'rear-prev';item.setAttribute('role','group');item.setAttribute('aria-roledescription','slide');item.setAttribute('aria-posinset',index+1);item.setAttribute('aria-setsize',count);item.setAttribute('aria-current',front);item.setAttribute('aria-label',label);setInteractive(item,front)}
-function controls(kind,rotate){const g=el('div','compass-orbit-controls');g.setAttribute('aria-label',`${kind} controls`);g.innerHTML=`<button type="button" data-orbit-previous aria-label="Previous ${kind}">‹</button><button type="button" data-orbit-next aria-label="Next ${kind}">›</button>`;g.children[0].onclick=()=>rotate(-1);g.children[1].onclick=()=>rotate(1);return g}
-function rail(kind,labels){const r=el('ol','compass-status-rail');r.dataset.statusRail=kind;r.setAttribute('aria-hidden','true');r.innerHTML=labels.map(x=>`<li data-state="unseen">${x}</li>`).join('');return r}
-function settleRail(r,i,v){v.add(i);[...r.children].forEach((n,k)=>n.dataset.state=k===i?'current':v.has(k)?'visited':'unseen')}
-function loadScene(src,key,attr,done){if(window[key])return done();const old=document.querySelector(`script[${attr}]`);if(old){old.addEventListener('load',done,{once:true});return}const s=document.createElement('script');s.src=src;s.defer=true;s.setAttribute(attr,'true');s.addEventListener('load',done,{once:true});document.head.append(s)}
-function mountCapability(){const legacy=document.querySelector('[data-compass-capability-switcher]');if(!legacy||document.querySelector('[data-capability-orbit]'))return;const stage=el('section','compass-capability-orbit');stage.dataset.capabilityOrbit='true';stage.dataset.capabilityMode='orbit';stage.dataset.portalContract='RECOVERED_REFERENCE_UPPER_ONLY_GEN1561';stage.dataset.reconciliationStage='gen1561';region(stage,'Signature Diamond Gate capabilities','compass-capability-guidance');
-const objectStage=el('div','compass-object-stage'),ring=el('div','compass-object-ring');objectStage.append(ring);stage.append(objectStage);
-const diagnostic=el('article','compass-orbit-plaque compass-object-portal-card');diagnostic.dataset.capability='diagnostic';diagnostic.innerHTML=`<h2 class="compass-object-sr-title">Coheriscope</h2><div class="compass-object-portal compass-brain-portal" aria-label="Coheriscope"><span class="compass-brain-field" data-human-brain><canvas role="img" aria-label="Three-dimensional human brain"></canvas><span class="compass-brain-axis" aria-hidden="true"><i class="axis-y">Y</i><i class="axis-x">X</i><i class="axis-z">Z</i></span></span></div><p class="compass-object-caption"><strong>Coheriscope</strong><span>Compare how you live and decide with what matters to you.</span></p>`;
-const awards=el('article','compass-orbit-plaque compass-object-portal-card compass-orbit-plaque--awards');awards.dataset.capability='awards';awards.innerHTML=`<h2 class="compass-object-sr-title">Awards &amp; Recognition</h2><div class="compass-object-portal compass-trophy-portal" aria-label="Awards and Recognition"><span class="compass-award-object"><span class="compass-award-trophy" data-award-trophy><canvas class="compass-trophy-canvas" aria-hidden="true"></canvas><span class="compass-trophy-fallback" aria-hidden="false"><i class="compass-trophy-bowl"></i><i class="compass-trophy-handle compass-trophy-handle--left"></i><i class="compass-trophy-handle compass-trophy-handle--right"></i><i class="compass-trophy-stem"></i><i class="compass-trophy-base"></i></span><i class="compass-trophy-gleam" aria-hidden="true"></i></span></span></div><p class="compass-object-caption"><strong>Awards &amp; Recognition</strong><span>One body of work. Five reasons to look closer.</span></p>`;
-const house=el('article','compass-orbit-plaque compass-object-portal-card');house.dataset.capability='house';house.innerHTML=`<h2 class="compass-object-sr-title">The House</h2><div class="compass-object-portal compass-house-portal" role="img" aria-label="Dimensional Diamond Gate House"><span class="compass-house-field" data-house-scene><canvas data-gen1538-house-canvas role="img" aria-label="Three-dimensional architectural House with illuminated doorway and windows"></canvas></span></div><p class="compass-object-caption"><strong>The House</strong><span>Choose who to speak with.</span></p>`;
-const cards=[diagnostic,awards,house],specs=[{name:'Coheriscope',id:'diagnostic',actions:[['Enter Coheriscope','/coherence-diagnostic/']]},{name:'Awards & Recognition',id:'awards',actions:[['Enter Awards','/showroom/globe/h-earth/awards/']]},{name:'The House',id:'house',actions:[['Jeeves','/showroom/globe/hearth/jeeves/'],['Elara','/elara/'],['Auren','/products/auren/']]}],step=120,radius=255;
-cards.forEach((c,i)=>{c.dataset.index=String(i);c.style.transform=`rotateY(${i*step}deg) translateZ(${radius}px)`;ring.append(c)});
-const dock=el('nav','compass-action-dock');dock.setAttribute('aria-label','Selected capability action');const live=status(),guidance=el('p','compass-capability-guidance');guidance.id='compass-capability-guidance';guidance.textContent='Swipe, drag, or use the arrows to rotate. The selected object reveals its own action after it settles.';
-let index=0,angle=0,lastX=0,lastT=0,velocity=0,dragging=false,settling=false,arrivalTimer=0;
-const syncCards=()=>cards.forEach((c,i)=>{const active=i===index;c.dataset.active=String(active);c.setAttribute('aria-current',String(active));c.setAttribute('aria-hidden',String(!active));c.tabIndex=active?0:-1});
-const syncDock=()=>{const blocked=dragging||settling;dock.replaceChildren();dock.setAttribute('aria-busy',String(blocked));dock.toggleAttribute('inert',blocked);dock.dataset.navigationAuthority=blocked?'blocked':'settled';if(blocked)return;for(const [label,href] of specs[index].actions){const a=el('a','compass-stage-action');a.href=href;a.textContent=label;dock.append(a)}};
-const publish=phase=>{live.textContent=`Capability ${index+1} of ${cards.length}: ${specs[index].name}`;document.dispatchEvent(new CustomEvent('compass:capability-change',{detail:{mode:'orbit',phase,capability:specs[index].id,index,dragging,settling,actionAuthority:!dragging&&!settling}}))};
-const settle=reason=>{settling=false;objectStage.dataset.dragging='false';angle=-index*step;ring.style.setProperty('--compass-object-angle',`${angle}deg`);syncCards();syncDock();clearTimeout(arrivalTimer);cards.forEach(c=>c.dataset.arriving='false');cards[index].dataset.arriving='true';arrivalTimer=setTimeout(()=>cards[index].dataset.arriving='false',760);window.CompassHouseScene?.setForeground?.(index===2);publish(reason||'settled')};
-const go=delta=>{if(dragging||settling)return;settling=true;syncDock();index=mod(index+delta,cards.length);angle=-index*step;ring.style.setProperty('--compass-object-angle',`${angle}deg`);syncCards();publish('settling');if(reduce.matches)queueMicrotask(()=>settle('settled'));else setTimeout(()=>settle('settled'),570)};
-const pointerDown=e=>{if(e.button!=null&&e.button!==0||e.target.closest?.('a,button'))return;e.preventDefault();dragging=true;settling=false;lastX=e.clientX;lastT=performance.now();velocity=0;objectStage.dataset.dragging='true';stage.setPointerCapture?.(e.pointerId);syncDock();publish('dragging')};
-const pointerMove=e=>{if(!dragging)return;e.preventDefault();const now=performance.now(),dx=e.clientX-lastX,dt=Math.max(8,now-lastT);velocity=.78*velocity+.22*(dx/dt);angle+=dx*.33;ring.style.setProperty('--compass-object-angle',`${angle}deg`);lastX=e.clientX;lastT=now};
-const pointerUp=e=>{if(!dragging)return;e.preventDefault();dragging=false;stage.releasePointerCapture?.(e.pointerId);const projected=angle+velocity*130;index=mod(Math.round(-projected/step),cards.length);settling=true;objectStage.dataset.dragging='false';syncDock();angle=-index*step;ring.style.setProperty('--compass-object-angle',`${angle}deg`);syncCards();publish('settling');if(reduce.matches)queueMicrotask(()=>settle('settled'));else setTimeout(()=>settle('settled'),570)};
-stage.addEventListener('pointerdown',pointerDown,true);stage.addEventListener('pointermove',pointerMove,true);stage.addEventListener('pointerup',pointerUp,true);stage.addEventListener('pointercancel',pointerUp,true);stage.addEventListener('click',e=>{if(dragging||settling){e.preventDefault();e.stopPropagation()}},true);objectStage.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();go(e.key==='ArrowRight'?1:-1)}});stage.append(dock,controls('capability',go),guidance,live);legacy.replaceWith(stage);ring.style.setProperty('--compass-object-angle','0deg');syncCards();syncDock();publish('initial');
-window.CompassBrainScene?.mount(diagnostic.querySelector('canvas'),{foreground:()=>index===0&&!dragging&&!settling});loadScene('/assets/compass/compass.trophy-scene.js?v=gen1561-static-safe&cb=e740e07b5433b0be','CompassTrophyScene','data-compass-trophy-scene',()=>window.CompassTrophyScene?.mount(awards.querySelector('canvas'),{foreground:()=>index===1&&!dragging&&!settling}));loadScene('/assets/compass/compass.house-scene.js?v=gen1538-house-spatial-v1&cb=1e94174a2b05d571','CompassHouseScene','data-compass-house-scene-runtime',()=>window.CompassHouseScene?.mount(house.querySelector('canvas'),{foreground:()=>index===2&&!dragging&&!settling}));}
-function mountProof(){const stage=document.querySelector('[data-proof-orbit]');if(!stage||stage.dataset.proofMounted)return;stage.dataset.proofMounted='true';stage.classList.add('is-enhanced');region(stage,'Built Different proof points','compass-proof-guidance');const cards=[...stage.querySelectorAll('[data-proof-card]')],names=cards.map(c=>c.querySelector('h3')?.textContent.trim()||'Proof point'),r=rail('proof',['TRL 7','Bounded','Checked']),visited=new Set();if(cards.length!==3)return;let index=0,busy=false,timer=0;const guidance=el('p','compass-proof-guidance');guidance.id='compass-proof-guidance';guidance.textContent='Swipe or use the controls to inspect one proof point at a time.';const live=status();const settle=()=>{busy=false;settleRail(r,index,visited);live.textContent=`Proof point ${index+1} of ${cards.length}: ${names[index]}`;document.dispatchEvent(new CustomEvent('compass:proof-change',{detail:{proof:cards[index].dataset.proofCard}}))};const rotate=d=>{if(busy)return;busy=true;index=mod(index+d,cards.length);render();clearTimeout(timer);if(reduce.matches)queueMicrotask(settle);else timer=setTimeout(settle,320)};stage.append(r,controls('proof point',rotate),guidance,live);function render(){cards.forEach((c,k)=>place(c,k,cards.length,mod(k-index,cards.length),`Proof point ${k+1} of ${cards.length}: ${names[k]}`))}window.CompassOrbitInput?.claimSwipe(stage,rotate);stage.addEventListener('keydown',e=>{if((e.target===stage||e.target===cards[index])&&(e.key==='ArrowRight'||e.key==='ArrowLeft')){e.preventDefault();rotate(e.key==='ArrowRight'?1:-1)}});render();settle()}
-function reconcileInstructions(){const root=document.querySelector('[data-compass-root]'),guidance=document.querySelector('[data-compass-guidance]'),intro=document.querySelector('.compass-introduction'),header=document.querySelector('.compass-estate__header'),scene=document.querySelector('[data-compass-scene]');if(intro){intro.removeAttribute('open');intro.dataset.compassPurposeStage='true'}const kicker=header?.querySelector('.compass-estate__kicker');if(kicker&&/Diamond Gate Bridge/i.test(kicker.textContent||''))kicker.textContent='Find Your Way';const identity=header?.querySelector('[data-compass-identity-3d]');if(identity)identity.dataset.gen1561Arrival='true';if(scene)scene.dataset.gen1561Luminous='true';if(!root||!guidance)return;const sync=()=>{const mode=root.dataset.compassMode||'';if(mode==='CLUSTER_OPEN'||mode==='ROOM_SELECTED')guidance.innerHTML='Choose a room · <span class="compass-guidance__swipe">Swipe to rotate the cluster</span> · Return to Orbit.';else if(mode==='CONSTELLATION')guidance.textContent='Drag to rotate the constellation. Tap a primary star to open its cluster.'};new MutationObserver(sync).observe(root,{attributes:true,attributeFilter:['data-compass-mode','data-selected-room']});sync()}
-function mount(){installGen1561Style();protectMirrorland();reconcileInstructions();mountCapability();mountProof();const root=document.querySelector('[data-compass-root]');if(root){root.dataset.gen1538Architecture='AUG14_CONSTELLATION_AUTHORITY_RECOVERED';root.dataset.gen1538CentralCompass='absent';root.dataset.gen1538LowerCarousel='protected-reference';root.dataset.gen1538CapabilityStandard='GEN1561_RECONCILED_UPPER_ONLY';root.dataset.gen1561ProtectedLowerProof='true'}}
-const api=Object.freeze({version:'gen1561-recovered-reconciliation-v1',mount});Object.defineProperty(window,'CompassEditorialCarousel',{configurable:false,enumerable:true,get:()=>api,set:()=>{}});document.readyState==='loading'?document.addEventListener('DOMContentLoaded',mount,{once:true}):mount();
+const el=(tag,cls='')=>{const n=document.createElement(tag);n.className=cls;return n};
+
+function region(node,label,guidanceId){
+  node.tabIndex=0;
+  node.setAttribute('role','region');
+  node.setAttribute('aria-roledescription','carousel');
+  node.setAttribute('aria-label',label);
+  node.setAttribute('aria-describedby',guidanceId);
+}
+
+function status(){
+  const n=el('p','compass-orbit-status');
+  n.setAttribute('aria-live','polite');
+  n.setAttribute('aria-atomic','true');
+  return n;
+}
+
+function controls(kind,rotate){
+  const g=el('div','compass-orbit-controls');
+  g.setAttribute('aria-label',`${kind} controls`);
+  g.innerHTML=`<button type="button" data-orbit-previous aria-label="Previous ${kind}">‹</button><button type="button" data-orbit-next aria-label="Next ${kind}">›</button>`;
+  g.children[0].onclick=()=>rotate(-1);
+  g.children[1].onclick=()=>rotate(1);
+  return g;
+}
+
+function rail(kind,labels){
+  const r=el('ol','compass-status-rail');
+  r.dataset.statusRail=kind;
+  r.setAttribute('aria-hidden','true');
+  r.innerHTML=labels.map(x=>`<li data-state="unseen">${x}</li>`).join('');
+  return r;
+}
+
+function settleRail(r,index,visited){
+  visited.add(index);
+  [...r.children].forEach((n,k)=>n.dataset.state=k===index?'current':visited.has(k)?'visited':'unseen');
+}
+
+function setInteractive(card,on){
+  card.toggleAttribute('inert',!on);
+  card.setAttribute('aria-hidden',on?'false':'true');
+  card.tabIndex=on?0:-1;
+}
+
+function placeProof(item,index,count,delta,label){
+  const front=delta===0;
+  item.dataset.slot=front?'front':delta===1?'rear-next':'rear-prev';
+  item.setAttribute('role','group');
+  item.setAttribute('aria-roledescription','slide');
+  item.setAttribute('aria-posinset',String(index+1));
+  item.setAttribute('aria-setsize',String(count));
+  item.setAttribute('aria-current',String(front));
+  item.setAttribute('aria-label',label);
+  setInteractive(item,front);
+}
+
+function loadScene(src,key,attr,done){
+  if(globalThis[key]){done();return}
+  const existing=document.querySelector(`script[${attr}]`);
+  if(existing){existing.addEventListener('load',done,{once:true});return}
+  const s=document.createElement('script');
+  s.src=src;
+  s.defer=true;
+  s.setAttribute(attr,'true');
+  s.addEventListener('load',done,{once:true});
+  document.head.append(s);
+}
+
+function protectMirrorland(){
+  const root=document.querySelector('[data-compass-root]');
+  const scene=document.querySelector('[data-compass-scene]');
+  const door=document.querySelector('[data-compass-object="mirrorland"]');
+  if(!scene||!door)return false;
+  if(door.parentElement!==scene)scene.append(door);
+  door.dataset.continuityAuthority='protected-direct-controller-surface';
+  door.setAttribute('aria-label','Open the Mirrorland door');
+  if(root)root.dataset.mirrorlandContinuity='protected';
+  return true;
+}
+
+function mountCapability(){
+  const legacy=document.querySelector('[data-compass-capability-switcher]');
+  if(!legacy||document.querySelector('[data-capability-orbit]'))return;
+
+  const stage=el('section','compass-capability-orbit');
+  stage.dataset.capabilityOrbit='true';
+  stage.dataset.capabilityMode='orbit';
+  stage.dataset.continuityContract=CONTINUITY;
+  stage.dataset.portalContract='THREE_OBJECT_LOCAL_ACTION_CAROUSEL_v1';
+  region(stage,'Signature Diamond Gate capabilities','compass-capability-guidance');
+
+  const objectStage=el('div','compass-object-stage');
+  const ring=el('div','compass-object-ring');
+  objectStage.append(ring);
+  stage.append(objectStage);
+
+  const diagnostic=el('article','compass-orbit-plaque compass-object-portal-card');
+  diagnostic.dataset.capability='diagnostic';
+  diagnostic.innerHTML=`<h2 class="compass-object-sr-title">Coheriscope</h2><div class="compass-object-portal compass-brain-portal" aria-label="Coheriscope"><span class="compass-brain-field" data-human-brain><canvas role="img" aria-label="Three-dimensional anatomical human brain"></canvas></span></div><p class="compass-object-caption"><strong>Coheriscope</strong><span>Compare how you live and decide with what matters to you.</span></p>`;
+
+  const awards=el('article','compass-orbit-plaque compass-object-portal-card compass-orbit-plaque--awards');
+  awards.dataset.capability='awards';
+  awards.innerHTML=`<h2 class="compass-object-sr-title">Awards &amp; Recognition</h2><div class="compass-object-portal compass-trophy-portal" aria-label="Awards and Recognition"><span class="compass-award-object"><span class="compass-award-trophy" data-award-trophy><canvas class="compass-trophy-canvas" aria-hidden="true"></canvas><span class="compass-trophy-fallback" aria-hidden="false"><i class="compass-trophy-bowl"></i><i class="compass-trophy-handle compass-trophy-handle--left"></i><i class="compass-trophy-handle compass-trophy-handle--right"></i><i class="compass-trophy-stem"></i><i class="compass-trophy-base"></i></span></span></span></div><p class="compass-object-caption"><strong>Awards &amp; Recognition</strong><span>One body of work. Five reasons to look closer.</span></p>`;
+
+  const house=el('article','compass-orbit-plaque compass-object-portal-card');
+  house.dataset.capability='house';
+  house.innerHTML=`<h2 class="compass-object-sr-title">The House</h2><div class="compass-object-portal compass-house-portal" role="img" aria-label="Dimensional Diamond Gate House"><span class="compass-house-field" data-house-scene><canvas role="img" aria-label="Three-dimensional architectural House with illuminated doorway and windows"></canvas></span></div><p class="compass-object-caption"><strong>The House</strong><span>Choose who to speak with.</span></p>`;
+
+  const cards=[diagnostic,awards,house];
+  const specs=[
+    {name:'Coheriscope',id:'diagnostic',actions:[['Enter Coheriscope','/coherence-diagnostic/']]},
+    {name:'Awards & Recognition',id:'awards',actions:[['Enter Awards','/showroom/globe/h-earth/awards/']]},
+    {name:'The House',id:'house',actions:[['Jeeves','/showroom/globe/hearth/jeeves/'],['Elara','/elara/'],['Auren','/products/auren/']]}
+  ];
+  const step=120,radius=285;
+  cards.forEach((card,i)=>{
+    card.dataset.index=String(i);
+    card.style.transform=`rotateY(${i*step}deg) translateZ(${radius}px)`;
+    ring.append(card);
+  });
+
+  const dock=el('nav','compass-action-dock');
+  dock.setAttribute('aria-label','Selected capability action');
+  const carouselControls=controls('capability',go);
+  const guidance=el('p','compass-capability-guidance');
+  guidance.id='compass-capability-guidance';
+  guidance.textContent='Swipe, drag, or use the arrows to rotate. The selected object reveals its own action after it settles.';
+  const live=status();
+  stage.append(dock,carouselControls,guidance,live);
+
+  let index=0,angle=0,lastX=0,lastT=0,velocity=0,dragging=false,settling=false,arrivalTimer=0;
+
+  function syncCards(){
+    cards.forEach((card,i)=>{
+      const active=i===index;
+      card.dataset.active=String(active);
+      card.setAttribute('aria-current',String(active));
+      card.setAttribute('aria-hidden',String(!active));
+      card.tabIndex=active?0:-1;
+    });
+  }
+
+  function syncDock(){
+    const blocked=dragging||settling;
+    dock.replaceChildren();
+    dock.setAttribute('aria-busy',String(blocked));
+    dock.toggleAttribute('inert',blocked);
+    dock.dataset.navigationAuthority=blocked?'blocked':'settled';
+    if(blocked)return;
+    for(const [label,href] of specs[index].actions){
+      const a=el('a','compass-stage-action');
+      a.href=href;
+      a.textContent=label;
+      dock.append(a);
+    }
+  }
+
+  function publish(phase){
+    live.textContent=`Capability ${index+1} of ${cards.length}: ${specs[index].name}`;
+    document.dispatchEvent(new CustomEvent('compass:capability-change',{detail:{continuity:CONTINUITY,mode:'orbit',phase,capability:specs[index].id,index,dragging,settling,actionAuthority:!dragging&&!settling}}));
+  }
+
+  function settle(reason='settled'){
+    settling=false;
+    objectStage.dataset.dragging='false';
+    angle=-index*step;
+    ring.style.setProperty('--compass-object-angle',`${angle}deg`);
+    syncCards();
+    syncDock();
+    clearTimeout(arrivalTimer);
+    cards.forEach(c=>c.dataset.arriving='false');
+    cards[index].dataset.arriving='true';
+    arrivalTimer=setTimeout(()=>cards[index].dataset.arriving='false',650);
+    globalThis.CompassHouseScene?.setForeground?.(index===2);
+    publish(reason);
+  }
+
+  function go(delta){
+    if(dragging||settling)return;
+    settling=true;
+    syncDock();
+    index=mod(index+delta,cards.length);
+    angle=-index*step;
+    ring.style.setProperty('--compass-object-angle',`${angle}deg`);
+    syncCards();
+    publish('settling');
+    if(reduce.matches)queueMicrotask(()=>settle());else setTimeout(()=>settle(),570);
+  }
+
+  function pointerDown(e){
+    if((e.button!=null&&e.button!==0)||e.target.closest?.('a,button'))return;
+    e.preventDefault();
+    dragging=true;settling=false;lastX=e.clientX;lastT=performance.now();velocity=0;
+    objectStage.dataset.dragging='true';
+    objectStage.setPointerCapture?.(e.pointerId);
+    syncDock();publish('dragging');
+  }
+
+  function pointerMove(e){
+    if(!dragging)return;
+    e.preventDefault();
+    const now=performance.now(),dx=e.clientX-lastX,dt=Math.max(8,now-lastT);
+    velocity=.78*velocity+.22*(dx/dt);
+    angle+=dx*.33;
+    ring.style.setProperty('--compass-object-angle',`${angle}deg`);
+    lastX=e.clientX;lastT=now;
+  }
+
+  function pointerUp(e){
+    if(!dragging)return;
+    e.preventDefault();
+    dragging=false;
+    objectStage.releasePointerCapture?.(e.pointerId);
+    const projected=angle+velocity*130;
+    index=mod(Math.round(-projected/step),cards.length);
+    settling=true;
+    objectStage.dataset.dragging='false';
+    syncDock();
+    angle=-index*step;
+    ring.style.setProperty('--compass-object-angle',`${angle}deg`);
+    syncCards();publish('settling');
+    if(reduce.matches)queueMicrotask(()=>settle());else setTimeout(()=>settle(),570);
+  }
+
+  objectStage.addEventListener('pointerdown',pointerDown,true);
+  objectStage.addEventListener('pointermove',pointerMove,true);
+  objectStage.addEventListener('pointerup',pointerUp,true);
+  objectStage.addEventListener('pointercancel',pointerUp,true);
+  objectStage.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();go(e.key==='ArrowRight'?1:-1)}
+  });
+
+  legacy.replaceWith(stage);
+  ring.style.setProperty('--compass-object-angle','0deg');
+  syncCards();syncDock();publish('initial');
+
+  globalThis.CompassBrainScene?.mount(diagnostic.querySelector('canvas'),{foreground:()=>index===0&&!dragging&&!settling});
+  loadScene('/assets/compass/compass.trophy-scene.js?v=capability-continuity-v1','CompassTrophyScene','data-compass-trophy-scene',()=>globalThis.CompassTrophyScene?.mount(awards.querySelector('canvas'),{foreground:()=>index===1&&!dragging&&!settling}));
+  loadScene('/assets/compass/compass.house-scene.js?v=capability-continuity-v1','CompassHouseScene','data-compass-house-scene-runtime',()=>globalThis.CompassHouseScene?.mount(house.querySelector('canvas'),{foreground:()=>index===2&&!dragging&&!settling}));
+}
+
+function mountProof(){
+  const stage=document.querySelector('[data-proof-orbit]');
+  if(!stage||stage.dataset.proofMounted)return;
+  stage.dataset.proofMounted='true';
+  stage.classList.add('is-enhanced');
+  region(stage,'Built Different proof points','compass-proof-guidance');
+  const cards=[...stage.querySelectorAll('[data-proof-card]')];
+  if(cards.length!==3)return;
+  const names=cards.map(c=>c.querySelector('h3')?.textContent.trim()||'Proof point');
+  const r=rail('proof',['TRL 7','Bounded','Checked']);
+  const visited=new Set();
+  let index=0,busy=false,timer=0;
+  const guidance=el('p','compass-proof-guidance');
+  guidance.id='compass-proof-guidance';
+  guidance.textContent='Swipe or use the controls to inspect one proof point at a time.';
+  const live=status();
+
+  function render(){
+    cards.forEach((c,k)=>placeProof(c,k,cards.length,mod(k-index,cards.length),`Proof point ${k+1} of ${cards.length}: ${names[k]}`));
+  }
+  function settle(){
+    busy=false;settleRail(r,index,visited);live.textContent=`Proof point ${index+1} of ${cards.length}: ${names[index]}`;
+    document.dispatchEvent(new CustomEvent('compass:proof-change',{detail:{proof:cards[index].dataset.proofCard}}));
+  }
+  function rotate(delta){
+    if(busy)return;
+    busy=true;index=mod(index+delta,cards.length);render();clearTimeout(timer);
+    if(reduce.matches)queueMicrotask(settle);else timer=setTimeout(settle,320);
+  }
+
+  stage.append(r,controls('proof point',rotate),guidance,live);
+  globalThis.CompassOrbitInput?.claimSwipe(stage,rotate);
+  stage.addEventListener('keydown',e=>{
+    if((e.target===stage||e.target===cards[index])&&(e.key==='ArrowRight'||e.key==='ArrowLeft')){e.preventDefault();rotate(e.key==='ArrowRight'?1:-1)}
+  });
+  render();settle();
+}
+
+function reconcileInstructions(){
+  const root=document.querySelector('[data-compass-root]');
+  const guidance=document.querySelector('[data-compass-guidance]');
+  const intro=document.querySelector('.compass-introduction');
+  const header=document.querySelector('.compass-estate__header');
+  const scene=document.querySelector('[data-compass-scene]');
+  if(intro){intro.removeAttribute('open');intro.dataset.compassPurposeStage='true'}
+  const kicker=header?.querySelector('.compass-estate__kicker');
+  if(kicker&&/Diamond Gate Bridge/i.test(kicker.textContent||''))kicker.textContent='Find Your Way';
+  if(scene)scene.dataset.capabilityContinuity='true';
+  if(!root||!guidance)return;
+  const sync=()=>{
+    const mode=root.dataset.compassMode||'';
+    if(mode==='CLUSTER_OPEN'||mode==='ROOM_SELECTED')guidance.innerHTML='Choose a room · <span class="compass-guidance__swipe">Swipe to rotate the cluster</span> · Return to Orbit.';
+    else if(mode==='CONSTELLATION')guidance.textContent='Drag to rotate the constellation. Tap a primary star to open its cluster.';
+  };
+  new MutationObserver(sync).observe(root,{attributes:true,attributeFilter:['data-compass-mode','data-selected-room']});
+  sync();
+}
+
+function mount(){
+  protectMirrorland();
+  reconcileInstructions();
+  mountCapability();
+  mountProof();
+  const root=document.querySelector('[data-compass-root]');
+  if(root){
+    root.dataset.capabilityContinuity=CONTINUITY;
+    root.dataset.lowerProofContinuity='protected';
+    root.dataset.legacyRecoveryAuthority='retired';
+  }
+}
+
+const api=Object.freeze({version:'capability-continuity-v1',continuity:CONTINUITY,mount});
+Object.defineProperty(globalThis,'CompassEditorialCarousel',{configurable:false,enumerable:true,get:()=>api,set:()=>{}});
+document.readyState==='loading'?document.addEventListener('DOMContentLoaded',mount,{once:true}):mount();
 })();

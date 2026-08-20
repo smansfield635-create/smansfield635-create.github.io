@@ -12,8 +12,25 @@ const bindHEarth=()=>{
     if(isHEarthExternal(href) && href!==H_EARTH_CANONICAL) el.setAttribute('href',H_EARTH_CANONICAL);
   });
 };
-if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bindHEarth,{once:true});
-else bindHEarth();
+const positionCapability=()=>{
+  const cta=document.querySelector('.compass-build-cta');
+  const capability=document.querySelector('[data-capability-orbit]')||document.querySelector('[data-compass-capability-switcher]');
+  const cue=document.querySelector('.compass-capability-cue');
+  if(!cta||!capability)return false;
+  if(cue){
+    cta.after(cue);
+    cue.after(capability);
+  }else{
+    cta.after(capability);
+  }
+  return true;
+};
+const initialize=()=>{
+  bindHEarth();
+  if(!positionCapability()) requestAnimationFrame(positionCapability);
+};
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initialize,{once:true});
+else initialize();
 document.addEventListener('click',event=>{
   const target=event.target?.closest?.('a,[data-compass-enter]');
   if(!target)return;
@@ -32,10 +49,12 @@ const receipt=Object.freeze({
   mounted:true,
   retired:false,
   authoritative:true,
-  version:'gen1537-h-earth-canonical-direct-route-stable-20260820-1720',
+  version:'gen1537-compass-stable-lower-capability-20260820-1738',
   externalProxyBypass:true,
   canonicalRoute:H_EARTH_CANONICAL,
-  mutationObserverRemoved:true
+  mutationObserverRemoved:true,
+  capabilityPlacement:'AFTER_BUILD_CTA',
+  repeatedReparenting:false
 });
 Object.defineProperty(globalThis,'DGB_COMPASS_GEN1537_LIVE_RECOVERY',{
   configurable:true,

@@ -55,4 +55,4 @@ const api=Object.freeze({version:'capability-continuity-v3-swipe-only-closeout',
 })();
 
 /* Track B upper-page presentation loader only. Capability behavior above is unchanged. */
-(()=>{if(document.querySelector('script[data-compass-track-b]'))return;const s=document.createElement('script');s.src='/assets/compass/compass.track-b.js?v=track-b-v1&cb=9a915298444e0c77';s.defer=true;s.dataset.compassTrackB='true';document.head.append(s)})();
+(()=>{if(document.querySelector('script[data-compass-track-b]'))return;const s=document.createElement('script');s.src='/assets/compass/compass.track-b.js?v=track-b-v1&cb=2edeeffec5837875';s.defer=true;s.dataset.compassTrackB='true';document.head.append(s)})();

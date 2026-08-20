@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      CANDIDATE_SHA: c10647db707329fb85c29e27323a06593eacc22e
+      CANDIDATE_SHA: 8f74e91d31071f7454a3d9e718faadd73b954af2
       PLAYWRIGHT_VERSION: 1.55.0
     steps:
       - uses: actions/checkout@v4

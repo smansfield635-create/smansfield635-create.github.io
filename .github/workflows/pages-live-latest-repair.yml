@@ -1,0 +1,100 @@
+name: Pages Live Latest Repair
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  actions: read
+
+concurrency:
+  group: pages-live-latest-repair
+  cancel-in-progress: true
+
+jobs:
+  publish-latest:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+    steps:
+      - name: Checkout exact latest head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Resolve Pages topology
+        id: topology
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          api="https://api.github.com/repos/${GITHUB_REPOSITORY}/pages"
+          payload="$(curl --fail-with-body --silent --show-error \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "$api")"
+          mode="$(jq -r '.build_type // empty' <<<"$payload")"
+          branch="$(jq -r '.source.branch // empty' <<<"$payload")"
+          path="$(jq -r '.source.path // empty' <<<"$payload")"
+          echo "mode=$mode" >> "$GITHUB_OUTPUT"
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+          echo "path=$path" >> "$GITHUB_OUTPUT"
+          printf '%s\n' "$payload"
+
+      - name: Trigger exact legacy Pages build
+        if: steps.topology.outputs.mode == 'legacy'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "${{ steps.topology.outputs.branch }}" = "main"
+          test "${{ steps.topology.outputs.path }}" = "/"
+          api_root="https://api.github.com/repos/${GITHUB_REPOSITORY}"
+          headers=(
+            -H "Accept: application/vnd.github+json"
+            -H "Authorization: Bearer ${GH_TOKEN}"
+            -H "X-GitHub-Api-Version: 2022-11-28"
+          )
+          curl --fail-with-body --silent --show-error -X POST "${headers[@]}" "${api_root}/pages/builds" >/tmp/pages-build-request.json
+          cat /tmp/pages-build-request.json
+          for attempt in $(seq 1 60); do
+            payload="$(curl --fail-with-body --silent --show-error "${headers[@]}" "${api_root}/pages/builds/latest")"
+            commit="$(jq -r '.commit // empty' <<<"$payload")"
+            status="$(jq -r '.status // empty' <<<"$payload")"
+            echo "attempt=$attempt commit=$commit status=$status expected=$GITHUB_SHA"
+            if [ "$commit" = "$GITHUB_SHA" ] && [ "$status" = "built" ]; then
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Latest Pages build did not reach exact head $GITHUB_SHA" >&2
+          exit 1
+
+      - name: Configure workflow Pages
+        if: steps.topology.outputs.mode == 'workflow'
+        uses: actions/configure-pages@v5
+
+      - name: Upload exact workflow Pages artifact
+        if: steps.topology.outputs.mode == 'workflow'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: .
+
+      - name: Deploy exact workflow Pages artifact
+        if: steps.topology.outputs.mode == 'workflow'
+        uses: actions/deploy-pages@v4
+
+      - name: Reject unsupported topology
+        if: steps.topology.outputs.mode != 'legacy' && steps.topology.outputs.mode != 'workflow'
+        shell: bash
+        run: |
+          echo "Unsupported Pages topology: ${{ steps.topology.outputs.mode }}" >&2
+          exit 1

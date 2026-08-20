@@ -1,0 +1,34 @@
+name: Compass Static Editorial Materialize V2
+
+on:
+  push:
+    branches: [recovery/compass-static-editorial-successor]
+    paths:
+      - '.github/workflows/compass-static-editorial-materialize-v2.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: recovery/compass-static-editorial-successor
+          fetch-depth: 0
+      - run: python tools/compass-static-editorial-materialize.py
+      - run: node tools/compass-static-editorial-qualification.mjs
+      - name: Commit generated candidate and remove temporary construction carriers
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rm -f .github/workflows/compass-static-editorial-successor-materialize.yml
+          rm -f .github/workflows/compass-static-editorial-materialize-v2.yml
+          rm -f tools/compass-static-editorial-materialize.py
+          git add -A index.html .github/workflows/compass-static-editorial-successor-materialize.yml .github/workflows/compass-static-editorial-materialize-v2.yml tools/compass-static-editorial-materialize.py
+          git commit -m 'feat(compass): materialize static editorial successor'
+          git push origin HEAD:recovery/compass-static-editorial-successor

@@ -29,6 +29,6 @@ jobs:
           rm -f .github/workflows/compass-static-editorial-successor-materialize.yml
           rm -f .github/workflows/compass-static-editorial-materialize-v2.yml
           rm -f tools/compass-static-editorial-materialize.py
-          git add -A index.html .github/workflows/compass-static-editorial-successor-materialize.yml .github/workflows/compass-static-editorial-materialize-v2.yml tools/compass-static-editorial-materialize.py
-          git commit -m 'feat(compass): materialize static editorial successor'
+          git add -A index.html assets/compass/compass.crystals.js .github/workflows/compass-static-editorial-successor-materialize.yml .github/workflows/compass-static-editorial-materialize-v2.yml tools/compass-static-editorial-materialize.py
+          git commit -m 'feat(compass): materialize static successor and sustain star motion'
           git push origin HEAD:recovery/compass-static-editorial-successor

@@ -42,7 +42,43 @@ jobs:
             .github/workflows/compass-static-editorial-materialize-v2.yml
       - name: Generate candidate without committing
         run: python -O tools/compass-static-editorial-materialize.py
-      - name: Diagnose structural authority counts
+      - name: Reconcile byte-identical duplicate hidden declarations
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('index.html')
+          s=p.read_text()
+          marker='<section class="compass-rooms" data-compass-room-declarations hidden>'
+          starts=[]
+          pos=0
+          while True:
+              i=s.find(marker,pos)
+              if i<0: break
+              starts.append(i); pos=i+1
+          if len(starts)!=2:
+              raise SystemExit(f'ROOM_DECLARATION_DUPLICATION_NOT_EXACTLY_TWO:{len(starts)}')
+          token=re.compile(r'<section(?:\s|>)|</section>',re.I)
+          def section_at(start):
+              depth=0
+              for m in token.finditer(s,start):
+                  if m.group(0).lower().startswith('<section'):
+                      depth+=1
+                  else:
+                      depth-=1
+                      if depth==0:
+                          return start,m.end(),s[start:m.end()]
+              raise SystemExit('UNBALANCED_ROOM_DECLARATION_SECTION')
+          a0,a1,a=section_at(starts[0])
+          b0,b1,b=section_at(starts[1])
+          if a!=b:
+              raise SystemExit('ROOM_DECLARATION_COPIES_DIFFER_FAIL_CLOSED')
+          s=s[:b0]+s[b1:]
+          p.write_text(s)
+          print('IDENTICAL_ROOM_DECLARATION_DUPLICATE_REMOVED')
+          PY
+      - name: Verify structural authority counts
         shell: bash
         run: |
           python - <<'PY'
@@ -56,7 +92,8 @@ jobs:
             'accessibilityFallback':s.count('data-editorial-fallback="true"'),
           }
           print('STRUCTURE_COUNTS',checks)
-          if checks != {'roomDeclarations':1,'capabilitySwitcher':1,'builtSections':1,'ctaSections':1,'accessibilityFallback':1}:
+          expected={'roomDeclarations':1,'capabilitySwitcher':1,'builtSections':1,'ctaSections':1,'accessibilityFallback':1}
+          if checks != expected:
               raise SystemExit('STRUCTURE_COUNT_MISMATCH')
           PY
       - run: node tools/compass-static-editorial-qualification.mjs

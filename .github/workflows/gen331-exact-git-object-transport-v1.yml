@@ -16,9 +16,9 @@ jobs:
     timeout-minutes: 20
     env:
       PUBLIC_REPOSITORY: smansfield635-create/smansfield635-create.github.io
-      CANDIDATE_SHA: efa23e0be1296509921ad4485f6ffa7d5852fcc7
-      BASE_SHA: 193015d07c9356ada9f2a6464e69b0d47275be20
-      SOURCE_SHA: efa23e0be1296509921ad4485f6ffa7d5852fcc7
+      CANDIDATE_SHA: 507df82157f06d51833a263da23660055b81714d
+      BASE_SHA: 265a7a5763b561353ba80fe0615f7b82ef42657f
+      SOURCE_SHA: 507df82157f06d51833a263da23660055b81714d
       PLAYWRIGHT_VERSION: 1.55.0
     steps:
       - name: Checkout transport workflow head only
@@ -52,8 +52,8 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p transport
-          git -C "$RUNNER_TEMP/exact-public" bundle create "$GITHUB_WORKSPACE/transport/gen331-efa23e0b.bundle" refs/transport/candidate refs/transport/base refs/transport/source
-          git -C "$RUNNER_TEMP/exact-public" bundle verify "$GITHUB_WORKSPACE/transport/gen331-efa23e0b.bundle"
+          git -C "$RUNNER_TEMP/exact-public" bundle create "$GITHUB_WORKSPACE/transport/gen331-507df821.bundle" refs/transport/candidate refs/transport/base refs/transport/source
+          git -C "$RUNNER_TEMP/exact-public" bundle verify "$GITHUB_WORKSPACE/transport/gen331-507df821.bundle"
 
       - name: Prove bundle reconstructs the exact Git subject
         shell: bash
@@ -61,7 +61,7 @@ jobs:
           set -euo pipefail
           rm -rf "$RUNNER_TEMP/reconstructed"
           git init -q "$RUNNER_TEMP/reconstructed"
-          git -C "$RUNNER_TEMP/reconstructed" fetch --no-tags "$GITHUB_WORKSPACE/transport/gen331-efa23e0b.bundle" refs/transport/candidate:refs/transport/candidate refs/transport/base:refs/transport/base refs/transport/source:refs/transport/source
+          git -C "$RUNNER_TEMP/reconstructed" fetch --no-tags "$GITHUB_WORKSPACE/transport/gen331-507df821.bundle" refs/transport/candidate:refs/transport/candidate refs/transport/base:refs/transport/base refs/transport/source:refs/transport/source
           git -C "$RUNNER_TEMP/reconstructed" checkout -q --detach refs/transport/candidate
           test "$(git -C "$RUNNER_TEMP/reconstructed" rev-parse HEAD^{commit})" = "$CANDIDATE_SHA"
           test -z "$(git -C "$RUNNER_TEMP/reconstructed" status --porcelain=v1 --untracked-files=all)"
@@ -85,7 +85,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          BUNDLE_SHA256="$(sha256sum transport/gen331-efa23e0b.bundle | awk '{print $1}')"
+          BUNDLE_SHA256="$(sha256sum transport/gen331-507df821.bundle | awk '{print $1}')"
           cat > transport/receipt.json <<JSON
           {
             "schema": "EXACT_PUBLIC_GIT_OBJECT_TRANSPORT_RECEIPT_v1",
@@ -112,7 +112,7 @@ jobs:
       - name: Upload exact Git object transport artifact
         uses: actions/upload-artifact@v4
         with:
-          name: gen331-exact-git-object-transport-efa23e0b
+          name: gen331-exact-git-object-transport-507df821
           path: transport/
           if-no-files-found: error
           retention-days: 30

@@ -1,0 +1,80 @@
+name: H-Earth 23923 Optical Recovery Visual Audit
+
+on:
+  pull_request:
+    branches:
+      - control-plane-delivery/h-earth-coast-water-natural-recovery-20260820-001
+    paths:
+      - 'showroom/globe/h-earth/render/geometry-shoreline.js'
+      - 'showroom/globe/h-earth/render/geometry-distant-context.js'
+      - '.github/workflows/h-earth-23923-optical-recovery-visual-audit.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  visual-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser runtime
+        run: |
+          npm install --no-save playwright@1.54.1
+          npx playwright install --with-deps chromium
+      - name: Start exact candidate server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/h-earth-optical-audit-server.log 2>&1 &
+          for attempt in $(seq 1 45); do
+            curl --fail --silent http://127.0.0.1:4173/showroom/globe/h-earth/ >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/h-earth-optical-audit-server.log
+          exit 1
+      - name: Capture exact rendered coast
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          mkdir -p h-earth-optical-audit
+          node --input-type=module <<'NODE'
+          import { chromium } from 'playwright';
+          import { writeFile } from 'node:fs/promises';
+          const browser=await chromium.launch({headless:true,args:['--enable-webgl','--ignore-gpu-blocklist','--use-gl=swiftshader','--disable-dev-shm-usage','--no-sandbox']});
+          const context=await browser.newContext({viewport:{width:709,height:1536},deviceScaleFactor:1,isMobile:true,hasTouch:true,userAgent:'Mozilla/5.0 (Linux; Android 16) AppleWebKit/537.36 Chrome/150 Mobile Safari/537.36'});
+          const page=await context.newPage();
+          const pageErrors=[]; const consoleErrors=[];
+          page.on('pageerror',e=>pageErrors.push(e.message));
+          page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())});
+          await page.goto('http://127.0.0.1:4173/showroom/globe/h-earth/',{waitUntil:'domcontentloaded',timeout:120000});
+          await page.waitForFunction(()=>globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready===true,null,{timeout:180000});
+          await page.waitForTimeout(1800);
+          const canvas=page.locator('#h-earth-functional-landscape-canvas');
+          await canvas.screenshot({path:'h-earth-optical-audit/01-forward.png'});
+          const box=await canvas.boundingBox();
+          const drag=async(dx,dy)=>{const x=box.x+box.width*.5,y=box.y+box.height*.5;await page.mouse.move(x,y);await page.mouse.down();await page.mouse.move(x+dx,y+dy,{steps:30});await page.mouse.up();await page.waitForTimeout(1000)};
+          await drag(-Math.min(260,box.width*.38),0); await canvas.screenshot({path:'h-earth-optical-audit/02-right.png'});
+          await drag(Math.min(520,box.width*.76),0); await canvas.screenshot({path:'h-earth-optical-audit/03-left.png'});
+          await drag(-Math.min(260,box.width*.38),Math.min(150,box.height*.2)); await canvas.screenshot({path:'h-earth-optical-audit/04-oblique.png'});
+          const diagnostics=await page.evaluate(()=>({
+            snapshot:globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getSnapshot?.()??null,
+            startup:globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()??null
+          }));
+          await writeFile('h-earth-optical-audit/receipt.json',JSON.stringify({expectedHead:process.env.EXPECTED_HEAD,pageErrors,consoleErrors,diagnostics},null,2));
+          await browser.close();
+          if(pageErrors.length||consoleErrors.length)process.exit(1);
+          NODE
+      - name: Upload visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-23923-optical-recovery-visual-audit
+          path: |
+            h-earth-optical-audit/**
+            /tmp/h-earth-optical-audit-server.log
+          if-no-files-found: error

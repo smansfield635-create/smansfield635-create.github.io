@@ -1,4 +1,5 @@
 from pathlib import Path
+import hashlib
 import re
 
 HTML = Path('index.html')
@@ -63,8 +64,6 @@ assert n == 1
 
 cap_start = s.find('<p class="compass-capability-cue">')
 assert cap_start >= 0
-cap_section_start = s.find('<section class="compass-monuments"', cap_start)
-assert cap_section_start >= 0
 _, cap_end, _ = balanced_element(s, '<section class="compass-monuments"', 'section')
 cap = s[cap_start:cap_end]
 built_start, built_end, built = balanced_element(s, '<section class="compass-built"', 'section')
@@ -74,7 +73,7 @@ s = s[:cap_start] + built + '\n' + cap + '\n' + cta + s[cta_end:]
 
 nav_start, nav_end, nav = balanced_element(s, '<nav class="compass-selective-routes"', 'nav')
 note_match = re.search(r'<p class="compass-accessibility-note">.*?</p>', s, flags=re.S)
-assert note_match
+assert note_match and note_match.start() >= nav_end
 accessibility = '<details class="compass-accessibility-routes"><summary>All destinations</summary>' + nav + '</details>\n' + note_match.group(0)
 s = s[:nav_start] + accessibility + s[nav_end:note_match.start()] + s[note_match.end():]
 s = s.replace('class="compass-selective-routes"', 'class="compass-selective-routes" data-editorial-fallback="true"', 1)
@@ -104,6 +103,13 @@ liveness_new = '''    for (let index = 0; index < 3; index += 1) {
 assert crystals.count(liveness_old) == 1, 'CRYSTAL_LIVENESS_INSERTION_POINT_DRIFTED'
 crystals = crystals.replace(liveness_old, liveness_new, 1)
 
+crystal_bytes = crystals.encode('utf-8')
+git_blob = hashlib.sha1(f'blob {len(crystal_bytes)}\0'.encode('ascii') + crystal_bytes).hexdigest()
+cache_id = git_blob[:16]
+crystal_script = re.compile(r'(/assets/compass/compass\.crystals\.js\?[^"\']*?&cb=)[0-9a-f]+')
+s, cache_count = crystal_script.subn(r'\g<1>' + cache_id, s, count=1)
+assert cache_count == 1, 'CRYSTAL_CACHE_BINDING_NOT_FOUND'
+
 assert 'DiamondGateBridge.com' in s
 assert 'New here? Open the introduction.' in s
 assert 'What is Diamond Gate Bridge?' in s
@@ -117,7 +123,8 @@ assert s.count('data-compass-capability-switcher') == 1
 assert s.count('data-compass-room-declarations') == 1
 assert s.count('data-editorial-fallback="true"') == 1
 assert 'COMPASS_CRYSTAL_CONTINUOUS_NORMAL_MOTION_v1' in crystals
+assert f'compass.crystals.js?v=gen1532-live-binding-v1&cb={cache_id}' in s
 
 HTML.write_text(s)
 CRYSTALS.write_text(crystals)
-print('STATIC_EDITORIAL_AND_CRYSTAL_LIVENESS_MATERIALIZED')
+print(f'STATIC_EDITORIAL_AND_CRYSTAL_LIVENESS_MATERIALIZED:{cache_id}')

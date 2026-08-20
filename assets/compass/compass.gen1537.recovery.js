@@ -1,6 +1,6 @@
 (()=>{
 'use strict';
-const PERFECTED_H_EARTH='https://raw.githack.com/smansfield635-create/smansfield635-create.github.io/709e57e0a0acac1991f47ad1e25b3719787b69a8/showroom/globe/h-earth/index.html';
+const PERFECTED_H_EARTH='https://raw.githack.com/smansfield635-create/smansfield635-create.github.io/376b8c07b747df592363476196ffb83290344028/showroom/globe/h-earth/index.html';
 const bindPerfectedHEarth=()=>{
   document.querySelectorAll('[data-compass-room][data-label="H-Earth"]').forEach(el=>{
     el.dataset.route=PERFECTED_H_EARTH;
@@ -34,7 +34,7 @@ const receipt=Object.freeze({
   mounted:false,
   retired:true,
   authoritative:false,
-  version:'gen1537-historical-artifact-retired-h-earth-experience-successor-23949-v6-gentle-coast-no-tonal-calls',
+  version:'gen1537-historical-artifact-retired-h-earth-experience-successor-23949-v7-spatial-surf-natural-wind',
   instrumentMounted:false,
   lowerCarouselPreserved:true,
   clusterGuidanceMounted:false,

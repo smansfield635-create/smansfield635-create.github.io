@@ -22,6 +22,21 @@ const step=()=>360/count();
 const angleFor=index=>-normalize(index,count())*step();
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
 
+function syncInspectionPlane(){
+  const inspecting=root.dataset.inspecting==="true";
+  if(inspecting){
+    ring.style.setProperty("transform","none","important");
+    viewport.style.setProperty("perspective","none","important");
+    root.dataset.inspectionPlane="flat";
+  }else{
+    ring.style.removeProperty("transform");
+    viewport.style.removeProperty("perspective");
+    root.dataset.inspectionPlane="orbit";
+  }
+}
+addEventListener("PUBLIC_LEGITIMACY_CAROUSEL_CHANGED",syncInspectionPlane);
+syncInspectionPlane();
+
 function selectAdjacent(direction){
   if(!direction)return;
   const list=tabButtons();

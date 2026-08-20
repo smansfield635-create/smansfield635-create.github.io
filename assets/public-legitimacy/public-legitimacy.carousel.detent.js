@@ -25,11 +25,13 @@ const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
 function syncInspectionPlane(){
   const inspecting=root.dataset.inspecting==="true";
   if(inspecting){
+    ring.style.setProperty("transition","none","important");
     ring.style.setProperty("transform","none","important");
     viewport.style.setProperty("perspective","none","important");
     root.dataset.inspectionPlane="flat";
   }else{
     ring.style.removeProperty("transform");
+    ring.style.removeProperty("transition");
     viewport.style.removeProperty("perspective");
     root.dataset.inspectionPlane="orbit";
   }

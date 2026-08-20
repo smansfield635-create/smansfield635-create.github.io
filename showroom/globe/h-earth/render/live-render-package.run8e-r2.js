@@ -120,15 +120,30 @@ function vegetationRgba(primitive) {
 }
 
 function functionalLandscapeMaterialDefaults(primitive) {
-  const intent = primitive?.materialHint?.materialIntent ??
+  const rawIntent = primitive?.materialHint?.materialIntent ??
     primitive?.materialHint?.materialReference ?? 'DEFAULT';
-  if (String(intent).includes('WATER')) {
-    return { rgba: [46, 118, 144, 210], transparencyClass: 'TRANSLUCENT' };
+  const intent = String(rawIntent);
+  const farOcean = primitive?.metadata?.representationClass === 'FAR' &&
+    primitive?.metadata?.farSurfaceClass === 'OCEAN';
+  if (farOcean || intent.includes('OPEN_OCEAN')) {
+    return { rgba: [15, 57, 96, 255], transparencyClass: 'OPAQUE' };
   }
-  if (String(intent).includes('FOAM')) {
+  if (intent.includes('SHALLOW_WATER')) {
+    return { rgba: [58, 168, 181, 218], transparencyClass: 'TRANSLUCENT' };
+  }
+  if (intent.includes('NEARSHORE_WATER')) {
+    return { rgba: [31, 116, 154, 224], transparencyClass: 'TRANSLUCENT' };
+  }
+  if (intent.includes('OPEN_WATER')) {
+    return { rgba: [15, 57, 96, 236], transparencyClass: 'TRANSLUCENT' };
+  }
+  if (intent.includes('WATER')) {
+    return { rgba: [31, 116, 154, 224], transparencyClass: 'TRANSLUCENT' };
+  }
+  if (intent.includes('FOAM')) {
     return { rgba: [232, 242, 235, 190], transparencyClass: 'TRANSLUCENT' };
   }
-  if (String(intent).includes('HIGHLAND') || String(intent).includes('DISTANT')) {
+  if (intent.includes('HIGHLAND') || intent.includes('DISTANT')) {
     return { rgba: [68, 83, 79, 255], transparencyClass: 'OPAQUE' };
   }
   return { rgba: [116, 103, 73, 255], transparencyClass: 'OPAQUE' };

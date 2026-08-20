@@ -77,10 +77,79 @@ jobs:
           node h-earth-3d/validation/h-earth.run8b.successor-neutral-geometry.harness.mjs
 
       - name: Execute CP3D full renderer survival
+        id: renderer_survival
+        continue-on-error: true
         env:
           CP3D_ORIGIN: http://127.0.0.1:4173
           CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
         run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-browser-renderer-survival.harness.mjs
+
+      - name: Capture full renderer startup diagnostic on survival failure
+        if: steps.renderer_survival.outcome == 'failure'
+        env:
+          CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
+        run: |
+          node --input-type=module <<'NODE'
+          import { chromium } from 'playwright';
+          import { mkdir, writeFile } from 'node:fs/promises';
+          const evidenceDirectory = process.env.CP3D_EVIDENCE_DIR;
+          await mkdir(evidenceDirectory, { recursive: true });
+          const browser = await chromium.launch({
+            headless: true,
+            args: ['--enable-webgl', '--ignore-gpu-blocklist', '--use-gl=swiftshader', '--disable-dev-shm-usage']
+          });
+          const page = await browser.newPage({
+            viewport: { width: 694, height: 747 },
+            deviceScaleFactor: 1.5,
+            isMobile: true,
+            hasTouch: true,
+            userAgent: 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36'
+          });
+          const consoleMessages = [];
+          const pageErrors = [];
+          page.on('console', message => consoleMessages.push({ type: message.type(), text: message.text() }));
+          page.on('pageerror', error => pageErrors.push({ name: error.name, message: error.message, stack: error.stack ?? null }));
+          try {
+            await page.goto('http://127.0.0.1:4173/showroom/globe/h-earth/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
+            await page.waitForFunction(() => {
+              const receipt = globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.();
+              return receipt?.firstFailureStage || globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready === true;
+            }, null, { timeout: 90_000 });
+            const diagnostic = await page.evaluate(() => ({
+              startup: globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.() ?? null,
+              routeReady: globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready === true,
+              routeSnapshot: globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getSnapshot?.() ?? null,
+              routeDataset: (() => {
+                const root = document.getElementById('h-earth-functional-landscape-route');
+                return root ? { ...root.dataset } : null;
+              })()
+            }));
+            const receipt = {
+              receiptType: 'H_EARTH_CP3D_GEN329_RENDERER_STARTUP_FAILURE_DIAGNOSTIC_v1',
+              eligible: false,
+              status: diagnostic.routeReady ? 'UNEXPECTED_READY_AFTER_SURVIVAL_FAILURE' : 'RENDERER_STARTUP_FAILURE_CAPTURED',
+              exactHead: process.env.GITHUB_SHA,
+              ...diagnostic,
+              pageErrors,
+              consoleMessages,
+              historicalR2CheckpointRewritten: false,
+              gen329ProductMutation: false,
+              experienceAnchorMutation: false,
+              mergeAuthorized: false,
+              deploymentAuthorized: false
+            };
+            await writeFile(`${evidenceDirectory}/cp3d-gen329-renderer-startup-failure.receipt.json`, `${JSON.stringify(receipt, null, 2)}\n`);
+            console.log(JSON.stringify(receipt, null, 2));
+          } finally {
+            await browser.close();
+          }
+          NODE
+
+      - name: Enforce CP3D renderer survival result
+        if: always()
+        env:
+          RENDERER_SURVIVAL_OUTCOME: ${{ steps.renderer_survival.outcome }}
+        run: test "$RENDERER_SURVIVAL_OUTCOME" = "success"
 
       - name: Upload CP3D evidence
         if: always()

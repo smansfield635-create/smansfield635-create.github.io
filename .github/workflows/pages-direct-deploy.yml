@@ -33,7 +33,6 @@ jobs:
           test "$(git rev-parse HEAD^{commit})" = "$GITHUB_SHA"
           scope_base="$(git rev-parse HEAD^1)"
           compass_revalidation_paths=(
-            index.html
             assets/compass/compass.orbit-input.js
             assets/compass/compass.statement-carousel.js
             assets/compass/compass.statement-carousel.css
@@ -58,11 +57,11 @@ jobs:
             done
           done
           if [ "$requires_compass_revalidation" = true ]; then
-            echo "Compass-scoped change detected; binding historical Gen1515 verifier to immediate predecessor ${scope_base}."
+            echo "Compass-scoped runtime change detected; binding historical Gen1515 verifier to immediate predecessor ${scope_base}."
             COMPASS_SCOPE_BASE="$scope_base" COMPASS_CANDIDATE_HEAD="$GITHUB_SHA" node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
             COMPASS_CANDIDATE_HEAD="$GITHUB_SHA" node .github/ai-router/projects/compass/verify-performance-successor.mjs
           else
-            echo "No Compass protected or Gen1515 qualification path changed; historical Gen1515 mutation-scope verifier is not applicable to this deployment head."
+            echo "No historical Gen1515 runtime/qualification path changed; historical mutation-scope verifier is not applicable to this deployment head."
           fi
           node .github/ai-router/platform/pages-deployment-resilience-controller.v1.mjs --self-test
       - name: Resolve authoritative Pages topology

@@ -29,7 +29,25 @@ jobs:
         with:
           ref: recovery/compass-static-editorial-successor
           fetch-depth: 1
-      - run: python tools/compass-static-editorial-materialize.py
+      - name: Generate candidate without committing
+        run: python -O tools/compass-static-editorial-materialize.py
+      - name: Diagnose structural authority counts
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('index.html').read_text()
+          checks={
+            'roomDeclarations':s.count('data-compass-room-declarations'),
+            'capabilitySwitcher':s.count('data-compass-capability-switcher'),
+            'builtSections':s.count('<section class="compass-built"'),
+            'ctaSections':s.count('<section class="compass-build-cta"'),
+            'accessibilityFallback':s.count('data-editorial-fallback="true"'),
+          }
+          print('STRUCTURE_COUNTS',checks)
+          if checks != {'roomDeclarations':1,'capabilitySwitcher':1,'builtSections':1,'ctaSections':1,'accessibilityFallback':1}:
+              raise SystemExit('STRUCTURE_COUNT_MISMATCH')
+          PY
       - run: node tools/compass-static-editorial-qualification.mjs
       - name: Commit generated candidate and remove temporary construction carriers
         shell: bash

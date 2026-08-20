@@ -25,16 +25,20 @@
   height:100dvh;
   min-height:100dvh;
   margin:0;
-  perspective:2200px;
-  perspective-origin:50% 44%;
+  perspective:none;
 }
 .carousel[data-inspecting="true"] .ring{
   position:absolute;
   left:50%;
   top:50%;
-  transform:rotateY(var(--ring-rotation))!important;
+  transform:none!important;
+  transform-style:flat;
 }
 .carousel[data-inspecting="true"] .card:not([data-active="true"]){visibility:hidden}
+.carousel[data-inspecting="true"] .card[data-active="true"]{
+  transform:none!important;
+  transform-style:flat;
+}
 .card[data-inspecting="true"]{
   width:min(90vw,720px);
   height:min(66dvh,620px);

@@ -22,9 +22,16 @@ export const H_EARTH_RUN_8E_R2D_GPU_FLOAT_CANONICALIZATION = freezeRecord({
     'materialModelCodes',
     'surfaceClassCodes',
     'primitiveIndices',
-    'roleCodes',
     'indices'
   ]),
+  presentationRoleProjection: freezeRecord({
+    sourceShorelineRoleCode: 2,
+    gpuDepthColorPreservingRoleCode: 4,
+    purpose: 'BYPASS_CP2_HARDCODED_TEAL_WATER_OVERRIDE',
+    semanticPackageRoleMutation: false,
+    materialBufferMutation: false,
+    geometryMutation: false
+  }),
   maximumPermittedAbsoluteAdjustment: 9.5367431640625e-7,
   sourceAuthorityMutation: false,
   packageSourceMutation: false,
@@ -70,6 +77,27 @@ function canonicalFloat32(source, bufferName) {
   };
 }
 
+function projectGpuRoleCodes(source) {
+  const result = new Uint8Array(source.length);
+  let remappedElementCount = 0;
+  for (let index = 0; index < source.length; index += 1) {
+    const before = Number(source[index]);
+    const after = before === 2 ? 4 : before;
+    result[index] = after;
+    if (after !== before) remappedElementCount += 1;
+  }
+  return {
+    view: result,
+    receipt: freezeRecord({
+      sourceShorelineRoleCode: 2,
+      gpuDepthColorPreservingRoleCode: 4,
+      remappedElementCount,
+      semanticPackageRoleMutation: false,
+      materialBufferMutation: false
+    })
+  };
+}
+
 export function createHEarthRun8ER2DCanonicalGPUUploadViews(
   packageRecord = getHEarthRun8ER2ImmutableLiveRenderPackage()
 ) {
@@ -79,6 +107,7 @@ export function createHEarthRun8ER2DCanonicalGPUUploadViews(
     rawViews.materialParameters,
     'materialParameters'
   );
+  const projectedRoleCodes = projectGpuRoleCodes(rawViews.roleCodes);
 
   return freezeRecord({
     positions: new Float32Array(rawViews.positions),
@@ -88,7 +117,7 @@ export function createHEarthRun8ER2DCanonicalGPUUploadViews(
     materialModelCodes: new Uint8Array(rawViews.materialModelCodes),
     surfaceClassCodes: new Uint8Array(rawViews.surfaceClassCodes),
     primitiveIndices: new Uint16Array(rawViews.primitiveIndices),
-    roleCodes: new Uint8Array(rawViews.roleCodes),
+    roleCodes: projectedRoleCodes.view,
     indices: new Uint32Array(rawViews.indices),
     canonicalizationReceipt: freezeRecord({
       contractId: H_EARTH_RUN_8E_R2D_GPU_UPLOAD_VIEW_CONTRACT_ID,
@@ -96,6 +125,7 @@ export function createHEarthRun8ER2DCanonicalGPUUploadViews(
       packageContentDigestAtSource: packageRecord.contentDigest,
       normalBuffer: canonicalNormals.receipt,
       materialParameterBuffer: canonicalMaterialParameters.receipt,
+      gpuRoleProjection: projectedRoleCodes.receipt,
       sourcePackageMutated: false,
       transportEncodingOnly: true
     }),

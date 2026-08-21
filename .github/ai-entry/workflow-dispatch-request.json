@@ -1,0 +1,10 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
+  "requestId": "PAGES_EXACT_HEAD_DEPLOY_20260821_011",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "workflow": "pages-direct-deploy.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "ea522877151ba03b70302ea0f85752f88b385878"
+  }
+}

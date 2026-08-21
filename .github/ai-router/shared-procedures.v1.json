@@ -13,11 +13,7 @@
         "Load every resolved project entrypoint, nested AGENTS.md, registry, validator, and stopping rule.",
         "Honor the emitted disposition."
       ],
-      "failClosedWhen": [
-        "ROUTER_MISSING",
-        "ROUTE_AMBIGUOUS",
-        "PROJECT_ENTRYPOINT_MISSING"
-      ]
+      "failClosedWhen": ["ROUTER_MISSING", "ROUTE_AMBIGUOUS", "PROJECT_ENTRYPOINT_MISSING"]
     },
     {
       "procedureId": "EXACT_COMMIT_RESOLUTION",
@@ -28,11 +24,7 @@
         "Resolve and record parent and merge-base identities when lineage matters.",
         "Reject abbreviated, missing, or moving refs as final evidence."
       ],
-      "receiptFields": [
-        "exactCommit",
-        "parentCommit",
-        "mergeBaseCommit"
-      ]
+      "receiptFields": ["exactCommit", "parentCommit", "mergeBaseCommit"]
     },
     {
       "procedureId": "CLEAN_CHECKOUT",
@@ -44,11 +36,7 @@
         "Execute only the repository-declared command.",
         "Write outputs outside the repository or to an ignored path."
       ],
-      "failClosedWhen": [
-        "COMMIT_UNRESOLVABLE",
-        "WORKTREE_DIRTY",
-        "DECLARED_COMMAND_MISSING"
-      ]
+      "failClosedWhen": ["COMMIT_UNRESOLVABLE", "WORKTREE_DIRTY", "DECLARED_COMMAND_MISSING"]
     },
     {
       "procedureId": "GITHUB_ACTIONS_FALLBACK",
@@ -62,6 +50,32 @@
         "Bind the result to workflow run, job, artifact, governing head, and target commit identities."
       ],
       "forbiddenSubstitute": "MANUAL_METADATA_RECONSTRUCTION_AS_EXECUTION_PROOF"
+    },
+    {
+      "procedureId": "AI_ENTRY_NATIVE_WORKFLOW_DISPATCH",
+      "purpose": "Continuously preserve the AI entry point's ability to start an allowlisted native GitHub Actions workflow even when the connected GitHub tool does not expose workflow_dispatch directly.",
+      "capabilityRegistry": ".github/ai-router/workflow-dispatch-capability.v1.json",
+      "preferredTransport": "DIRECT_CONNECTED_GITHUB_WORKFLOW_DISPATCH",
+      "fallbackTransport": "PUSH_BACKED_NATIVE_WORKFLOW_DISPATCH_BRIDGE",
+      "steps": [
+        "Prefer the connected GitHub workflow_dispatch write primitive whenever it is available.",
+        "If direct dispatch is unavailable, read .github/ai-router/workflow-dispatch-capability.v1.json and select only an allowlisted capabilityId.",
+        "Reset the dedicated ai-dispatch branch to the exact current main head before creating a request.",
+        "Write only .github/ai-entry/workflow-dispatch-request.json on ai-dispatch with schema AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1, a unique requestId, and the allowlisted capabilityId.",
+        "Allow the bridge workflow to validate request ancestry, resolve protected inputs such as CURRENT_MAIN_SHA, call GitHub's native workflow_dispatch API, and recover the resulting workflow run ID.",
+        "Read .github/ai-entry/workflow-dispatch-receipt.json from ai-dispatch and require NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED before treating the workflow as started.",
+        "Use dispatchedRunId from the receipt for all subsequent jobs, steps, logs, artifacts, deployment, and verification inspection.",
+        "Never substitute a dummy commit, release-branch nudge, issue-comment carrier, generic command workflow, or manual UI action when this capability is available."
+      ],
+      "failClosedWhen": [
+        "UNKNOWN_CAPABILITY_ID",
+        "AI_DISPATCH_BRANCH_NOT_BASED_ON_CURRENT_MAIN",
+        "UNDECLARED_OR_OVERRIDDEN_PROTECTED_INPUT",
+        "NATIVE_WORKFLOW_DISPATCH_NOT_ACCEPTED",
+        "DISPATCHED_RUN_ID_NOT_RESOLVED"
+      ],
+      "authorityCreated": false,
+      "genericCommandAuthorityCreated": false
     },
     {
       "procedureId": "BRANCH_MAIN_COMPARISON",

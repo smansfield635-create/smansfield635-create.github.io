@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Compass Functional Clone Inspection v2</title></head><body style="margin:0;background:#02040a;color:#eee;font-family:system-ui"><p id="loading" style="padding:24px">Loading immutable browser-qualified Compass clone…</p><script>
+(async()=>{
+  const payload='c9e9946f3979b425e5599793a314ac4c76d20ca1';
+  const owner='smansfield635-create';
+  const repo='smansfield635-create.github.io';
+  const raw=`https://raw.githubusercontent.com/${owner}/${repo}/${payload}/index.html`;
+  const gh=`https://raw.githack.com/${owner}/${repo}/${payload}`;
+  const prod='https://diamondgatebridge.com';
+  const hEarth='https://raw.githack.com/smansfield635-create/smansfield635-create.github.io/0c6069f30e494be2f84d2653f40e374178251c77/showroom/globe/h-earth/index.html';
+  try{
+    const response=await fetch(raw,{cache:'no-store'});
+    if(!response.ok)throw new Error(`index fetch ${response.status}`);
+    let html=await response.text();
+    html=html
+      .replaceAll('href="/assets/','href="'+gh+'/assets/')
+      .replaceAll("href='/assets/","href='"+gh+"/assets/")
+      .replaceAll('src="/assets/','src="'+gh+'/assets/')
+      .replaceAll("src='/assets/","src='"+gh+"/assets/")
+      .replaceAll('href="/showroom/globe/h-earth/"','href="'+hEarth+'"')
+      .replaceAll('href="/','href="'+prod+'/')
+      .replace('</body>',`<script src="${gh}/assets/compass/compass.functional-clone-repair.js?v=v2-${payload.slice(0,12)}"><\/script></body>`);
+    document.open();document.write(html);document.close();
+  }catch(error){document.getElementById('loading').textContent='Immutable inspection launcher failed: '+error;}
+})();
+</script></body></html>

@@ -25,6 +25,7 @@
   "requiredInstructions": [
     "AGENTS.md",
     "AI_ENTRYPOINT.json",
+    ".github/ai-router/publication-release-contract.v1.json",
     ".github/ai-router/display-continuity-constitution-v1/display-constitution.v1.json",
     "control-plane/whole-estate/narrative-continuity-development-map-v1/map.v1.json",
     ".github/ai-router/projects/compass/route-display-contract.v1.json",
@@ -40,7 +41,10 @@
     ".github/ai-router/shared-procedures.v1.json"
   ],
   "procedures": {
-    "operationAdmission": "CANONICAL_REPOSITORY_OPERATION_INTAKE_REQUIRED_BEFORE_MUTATION",
+    "operationAdmission": "CANONICAL_REPOSITORY_OPERATION_INTAKE_REQUIRED_ONLY_FOR_RUNTIME_OR_AUTHORITY_CLASS",
+    "publicationReleaseContract": ".github/ai-router/publication-release-contract.v1.json",
+    "boundedPageReleaseLaw": "APPROVED_COMMIT_TO_EXPLICIT_DEPLOYMENT_TO_LIVE_EXACT_HEAD_VERIFICATION",
+    "runtimeOrNewDevelopmentReleaseLaw": "APPLICABLE_GOVERNANCE_AND_QUALIFICATION_TO_APPROVED_COMMIT_TO_EXPLICIT_DEPLOYMENT_TO_LIVE_EXACT_HEAD_VERIFICATION",
     "displayContinuity": "WHOLE_ESTATE_DISPLAY_CONTINUITY",
     "routeDisplayContract": ".github/ai-router/projects/compass/route-display-contract.v1.json",
     "constructionPlan": ".github/ai-router/projects/compass/construction-execution-plan.v2.json",
@@ -61,14 +65,26 @@
     "failClosedVerifier": ".github/ai-router/projects/compass/verify-display-continuity.v1.mjs",
     "routerCommand": "node tools/repository-ai-entry-router.mjs --path <PATH> --task <TASK> [--mutation-intent] --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/compass-router-receipt.json"
   },
+  "releaseClassification": {
+    "BOUNDED_PAGE_RELEASE": {
+      "canonicalIntakeRequired": false,
+      "fullConstructionQualificationRequired": false,
+      "requiredClosure": ["APPROVED_COMMIT", "EXPLICIT_DEPLOYMENT", "LIVE_EXACT_HEAD_VERIFICATION"]
+    },
+    "RUNTIME_OR_NEW_DEVELOPMENT": {
+      "canonicalIntakeRequired": true,
+      "applicableConstructionQualificationRequired": true,
+      "requiredClosure": ["APPLICABLE_GOVERNANCE_AND_QUALIFICATION", "APPROVED_COMMIT", "EXPLICIT_DEPLOYMENT", "LIVE_EXACT_HEAD_VERIFICATION"]
+    }
+  },
   "localExecution": {
     "allowed": true,
     "requirements": [
       "FULL_REPOSITORY_CHECKOUT",
       "EXACT_SUBJECT_HEAD",
-      "COMMAND_EMITTED_ADMISSION_RECEIPT",
       "ROUTER_RECEIPT_FOR_EVERY_AFFECTED_PATH",
-      "LOAD_AND_MAP_EVERY_COMPASS_MUTATION_TO_CONSTRUCTION_EXECUTION_PLAN_V2_DISPLAY_FIDELITY_AMENDMENT_INFORMATION_DELIVERY_AMENDMENT_NARRATIVE_TRANSITION_COHERENCE_AMENDMENT_AND_INTERACTION_DIAGNOSTIC_AMENDMENT",
+      "COMMAND_EMITTED_ADMISSION_RECEIPT_ONLY_WHEN_RELEASE_CLASS_REQUIRES_CANONICAL_INTAKE",
+      "LOAD_AND_MAP_EVERY_RUNTIME_OR_NEW_DEVELOPMENT_COMPASS_MUTATION_TO_CONSTRUCTION_EXECUTION_PLAN_V2_DISPLAY_FIDELITY_AMENDMENT_INFORMATION_DELIVERY_AMENDMENT_NARRATIVE_TRANSITION_COHERENCE_AMENDMENT_AND_INTERACTION_DIAGNOSTIC_AMENDMENT",
       "FOR_AWARD_FILM_OR_CHAPTER_VIDEO_WORK_LOAD_AWARD_FILM_CYCLICAL_PRODUCTION_PROTOCOL_AND_CONTINUE_FROM_THE_FIRST_GENUINELY_INCOMPLETE_PRODUCTION_GATE_RATHER_THAN_REBUILDING_SOLVED_INFRASTRUCTURE"
     ]
   },
@@ -77,18 +93,21 @@
     "displayContinuityValidationWorkflow": ".github/workflows/compass-display-continuity-validation.yml",
     "performanceSuccessorValidationWorkflow": ".github/workflows/compass-performance-successor-validation.yml",
     "liveQualificationWorkflow": ".github/workflows/compass-carousel-successor-live-qualification.yml",
-    "deploymentWorkflow": ".github/workflows/pages-direct-deploy.yml"
+    "deploymentWorkflow": ".github/workflows/pages-direct-deploy.yml",
+    "deploymentInput": "target_sha",
+    "deploymentSuccessResult": "LIVE_EXACT_HEAD_VERIFIED"
   },
   "stoppingRules": [
-    "STOP_IF_CANONICAL_INTAKE_IS_NOT_ADMITTED_AND_LOCKED",
+    "STOP_IF_RUNTIME_OR_AUTHORITY_CLASS_AND_CANONICAL_INTAKE_IS_NOT_ADMITTED_AND_LOCKED",
     "STOP_IF_ROUTER_DISPOSITION_IS_BLOCK_OR_STOP",
-    "STOP_IF_ROUTE_DISPLAY_CONTRACT_IS_INCOMPLETE",
-    "STOP_IF_CONSTRUCTION_EXECUTION_PLAN_V2_DISPLAY_FIDELITY_AMENDMENT_INFORMATION_DELIVERY_AMENDMENT_NARRATIVE_TRANSITION_COHERENCE_AMENDMENT_OR_INTERACTION_DIAGNOSTIC_AMENDMENT_IS_MISSING_UNLOCKED_OR_UNMAPPED",
+    "STOP_IF_ROUTE_DISPLAY_CONTRACT_IS_INCOMPLETE_FOR_APPLICABLE_CONSTRUCTION",
+    "STOP_IF_RUNTIME_OR_NEW_DEVELOPMENT_AND_REQUIRED_CONSTRUCTION_CONTEXT_IS_MISSING_UNLOCKED_OR_UNMAPPED",
     "STOP_IF_AWARD_FILM_OR_CHAPTER_VIDEO_WORK_HAS_NOT_LOADED_THE_AWARD_FILM_CYCLICAL_PRODUCTION_PROTOCOL",
     "STOP_IF_A_FRESH_ROOM_PROPOSES_NEW_AWARD_FILM_TRANSPORT_RECOVERY_WORKFLOW_REGISTRY_OR_EXECUTION_INFRASTRUCTURE_BEFORE_CHECKING_EXISTING_VERIFIED_SOLUTIONS_AND_CUSTODY",
     "STOP_IF_CARDINAL_AUTHORITY_WOULD_BE_CORRUPTED",
     "STOP_IF_DOOR_OR_HOME_MUTATION_IS_REQUIRED",
     "STOP_IF_REQUIRED_QUALIFICATION_OR_RUNTIME_EVIDENCE_IS_MISSING",
-    "STOP_BEFORE_MERGE_UNTIL_EXACT_CANDIDATE_ENGINEERING_PLAYWRIGHT_DISPLAY_FIDELITY_AND_REQUIRED_VISUAL_PERCEPTUAL_QUALIFICATION_PASSES"
+    "STOP_BEFORE_MERGE_UNTIL_THE_QUALIFICATION_REQUIRED_BY_THE_RELEASE_CLASS_PASSES",
+    "STOP_AFTER_MERGE_UNTIL_EXPLICIT_DEPLOYMENT_AND_LIVE_EXACT_HEAD_VERIFICATION_SUCCEED"
   ]
 }

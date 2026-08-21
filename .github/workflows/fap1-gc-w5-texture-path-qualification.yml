@@ -1,0 +1,53 @@
+name: FAP1 G_C W5 Texture Path Qualification
+on:
+  pull_request:
+    paths: ['.github/workflows/fap1-gc-w5-texture-path-qualification.yml']
+permissions:
+  contents: read
+jobs:
+  visible:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 64f6cd16c5183c3a1bb31b24bfda2bc129613672
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with: {chrome-version: stable}
+      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/server.log 2>&1 &
+          for a in $(seq 1 60); do curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/weather-presentation-reconciliation/ >/dev/null && exit 0; sleep .25; done; exit 1
+      - name: Probe repaired W5 framebuffer
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          mkdir -p artifacts
+          node <<'NODE'
+          const fs=require('fs'),puppeteer=require('puppeteer-core');
+          (async()=>{
+            const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+            const page=await browser.newPage();await page.setViewport({width:720,height:1280,deviceScaleFactor:1});
+            const errors=[];page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error'&&!m.text().includes('favicon.ico')&&!m.text().includes('404 (File not found)'))errors.push(m.text());});
+            await page.goto('http://127.0.0.1:4173/showroom/globe/audralia/weather-presentation-reconciliation/',{waitUntil:'domcontentloaded',timeout:90000});
+            await page.waitForFunction(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.l5LightingActive===true,{timeout:90000});
+            const setup=await page.evaluate(()=>{const ga=window.__AUDRALIA_FAP1_GA_AUTHORITY__,s=ga.descriptorPacket().systems.find(x=>x.weatherClass==='LOW_CUMULIFORM')||ga.descriptorPacket().systems[0];const R=6200,D=Math.PI/180,N=[0,.5,-.8660254037844386],M=[0,.8660254037844386,.5],E=[1,0,0],lat=s.latitudeDeg*D,lon=s.longitudeDeg*D,cl=Math.cos(lat),sl=Math.sin(lat),co=Math.cos(lon),si=Math.sin(lon),r=[N[0]*sl+(M[0]*co+E[0]*si)*cl,N[1]*sl+(M[1]*co+E[1]*si)*cl,N[2]*sl+(M[2]*co+E[2]*si)*cl],angle=Math.acos(Math.max(-1,Math.min(1,r[1]))),sn=Math.sin(angle),arc=angle*R;return{systemId:s.id,targetU:Math.abs(sn)<1e-7?0:arc*r[0]/sn,targetV:Math.abs(sn)<1e-7?0:arc*r[2]/sn};});
+            const samples=[];
+            for(const [name,distance] of [['overlap',1200],['local',800],['interior',520]]){
+              const x=await page.evaluate(async({distance,targetU,targetV})=>{const sleep=ms=>new Promise(r=>setTimeout(r,ms)),proof=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__,h=window.__AUDRALIA_FAP1_W5_HANDOFF__;proof.setCameraStateForTest({targetU,targetV,distance,pitch:1.25,yaw:0});await sleep(500);h.setQuality('REST');const receipt=h.renderNow();await sleep(100);const local=document.querySelector('[data-fap1-w5-local-raymarch="true"]');if(!local)return{receipt,canvas:null,pixels:null};const gl=local.getContext('webgl2'),buf=new Uint8Array(local.width*local.height*4);gl.readPixels(0,0,local.width,local.height,gl.RGBA,gl.UNSIGNED_BYTE,buf);let nonzero=0,sumA=0,minLum=255,maxLum=0;for(let i=0;i<buf.length;i+=4){if(buf[i+3]){nonzero++;sumA+=buf[i+3];const lum=(buf[i]+buf[i+1]+buf[i+2])/3;minLum=Math.min(minLum,lum);maxLum=Math.max(maxLum,lum);}}return{receipt,canvas:{display:getComputedStyle(local).display,format:local.dataset.densityTextureFormat,quality:local.dataset.l5Quality,steps:local.dataset.l5LightSteps},pixels:{nonzero,coverage:nonzero/(local.width*local.height),meanAlpha:nonzero?sumA/nonzero:0,minLum:nonzero?minLum:0,maxLum:nonzero?maxLum:0,width:local.width,height:local.height}};},{distance,targetU:setup.targetU,targetV:setup.targetV});
+              samples.push({name,distance,...x});await page.screenshot({path:`artifacts/${name}.png`});
+            }
+            const nonzero=samples.some(x=>(x.pixels?.nonzero||0)>0);
+            const checks={nonzeroAlphaPixels:nonzero,textureFormat:samples.filter(x=>x.receipt?.active).every(x=>x.receipt?.densityTextureFormat==='R8_UNORM_LINEAR'),identity:samples.filter(x=>x.receipt?.active).every(x=>x.receipt?.weatherId===setup.systemId),handoff:samples.every(x=>Math.abs((x.receipt?.contributionSum??1)-1)<1e-6),noRuntimeErrors:errors.length===0};
+            const result={schema:'FAP1_GC_W5_TEXTURE_PATH_QUALIFICATION_v1',candidateHead:'64f6cd16c5183c3a1bb31b24bfda2bc129613672',systemId:setup.systemId,checks,samples,errors,pass:Object.values(checks).every(Boolean)};
+            fs.writeFileSync('artifacts/qualification.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result,null,2));await browser.close();if(!result.pass)process.exit(2);
+          })().catch(e=>{console.error(e);process.exit(1);});
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fap1-gc-w5-texture-path-evidence
+          path: artifacts/
+          if-no-files-found: error

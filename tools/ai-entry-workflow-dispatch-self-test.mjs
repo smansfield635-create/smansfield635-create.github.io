@@ -13,12 +13,12 @@ assert(registry.schema === 'AI_ENTRY_WORKFLOW_DISPATCH_CAPABILITY_v1', 'registry
 assert(registry.status === 'ACTIVE_FAIL_CLOSED', 'registry must fail closed');
 assert(registry.preferredTransport === 'DIRECT_CONNECTED_GITHUB_WORKFLOW_DISPATCH', 'direct dispatch must remain preferred');
 assert(registry.fallbackTransport === 'SAME_REPOSITORY_PR_TARGET_NATIVE_WORKFLOW_DISPATCH_BRIDGE', 'fallback transport drifted');
-assert(registry.requestBranchPrefix === 'ai-dispatch/', 'dispatch branch prefix drifted');
+assert(registry.requestBranchPrefix === 'ai-dispatch-request-', 'dispatch branch prefix drifted');
 assert(registry.requestPath === '.github/ai-entry/workflow-dispatch-request.json', 'request path drifted');
 assert(registry.receiptBranch === 'ai-dispatch-receipts', 'receipt branch drifted');
 assert(registry.receiptPathTemplate === '.github/ai-entry/receipts/<requestId>.json', 'receipt path template drifted');
 assert(registry.transportPullRequest?.base === 'main', 'transport PR base drifted');
-assert(registry.transportPullRequest?.headPrefix === 'ai-dispatch/', 'transport PR head prefix drifted');
+assert(registry.transportPullRequest?.headPrefix === 'ai-dispatch-request-', 'transport PR head prefix drifted');
 assert(registry.transportPullRequest?.autoDeleteHeadBranchOnSuccess === true, 'successful request branches must be deleted');
 assert(registry.continuity?.transportPullRequestMayNeverBeMerged === true, 'transport PR merge prohibition must remain explicit');
 assert(registry.continuity?.successfulTransportLeavesNoRequestBranch === true, 'successful transport must not leave a request branch');
@@ -35,7 +35,7 @@ assert(procedure.fallbackTransport === registry.fallbackTransport, 'shared proce
 for (const token of [
   'pull_request_target:',
   '.github/ai-entry/workflow-dispatch-request.json',
-  "startsWith(github.event.pull_request.head.ref, 'ai-dispatch/')",
+  "startsWith(github.event.pull_request.head.ref, 'ai-dispatch-request-')",
   'actions: write',
   'contents: write',
   'pull-requests: write',

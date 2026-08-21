@@ -3,7 +3,7 @@ import {createW5RefinementState,verifyW5RefinementState,W5_EMPTY_THRESHOLD} from
 const freeze=value=>Object.freeze(value);
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 
-export const FAP1_W5_LOCAL_RAYMARCH_SCHEMA='FAP1_W5_LOCAL_RAYMARCH_SURFACE_v1';
+export const FAP1_W5_LOCAL_RAYMARCH_SCHEMA='FAP1_W5_LOCAL_RAYMARCH_SURFACE_v2';
 export const W5_RAYMARCH_MAX_STEPS=32;
 export const W5_RAYMARCH_MIN_LOCAL_WEIGHT=.035;
 export const W5_RAYMARCH_MAX_PIXELS=110000;
@@ -56,10 +56,13 @@ void main(){
     vec3 q=ro+rd*t;
     vec3 uvw=q*0.5+0.5;
     float density=texture(uDensity,uvw).r*uDensityScale;
-    if(density>0.0025){occupied+=1.0;opticalDepth+=density*dt*uExtinction;}
+    if(density>0.0025){
+      occupied+=1.0;
+      opticalDepth+=density*dt*uExtinction*uLocalWeight;
+    }
   }
 
-  float alpha=(1.0-exp(-opticalDepth))*uLocalWeight;
+  float alpha=1.0-exp(-opticalDepth);
   if(alpha<0.001){outColor=vec4(0.0);return;}
   float structure=clamp(occupied/steps,0.0,1.0);
   vec3 neutral=vec3(0.86+0.08*structure);
@@ -82,10 +85,6 @@ function program(gl){
   return p;
 }
 function uniformMap(gl,p,names){return freeze(Object.fromEntries(names.map(name=>[name,gl.getUniformLocation(p,name)])));}
-function cameraSignature(camera){
-  const s=camera?.snapshot||{};
-  return [s.yaw,s.pitch,s.distance,s.targetU,s.targetV].map(v=>Number(v??0).toFixed(3)).join('|');
-}
 function resizeCanvas(canvas,worldCanvas,interaction=false){
   const rect=worldCanvas.getBoundingClientRect(),parent=worldCanvas.parentElement,parentRect=parent.getBoundingClientRect();
   canvas.style.left=`${rect.left-parentRect.left}px`;
@@ -120,6 +119,7 @@ export function createW5LocalRayMarchSurface({worldCanvas,parent=worldCanvas?.pa
   canvas.dataset.authority='FAP1_DESCRIPTOR_REFINEMENT_ONLY';
   canvas.dataset.lightingApplied='false';
   canvas.dataset.macroRendererMutation='false';
+  canvas.dataset.extinctionSplit='true';
   canvas.setAttribute('aria-hidden','true');
   Object.assign(canvas.style,{position:'absolute',pointerEvents:'none',zIndex:'3',background:'transparent',display:'none'});
   parent.appendChild(canvas);
@@ -140,7 +140,7 @@ export function createW5LocalRayMarchSurface({worldCanvas,parent=worldCanvas?.pa
     const localWeight=activeEntry?.alpha?.l??0;
     if(!refinement.active||!activeEntry||localWeight<W5_RAYMARCH_MIN_LOCAL_WEIGHT){
       canvas.style.display='none';
-      lastReceipt=freeze({schema:FAP1_W5_LOCAL_RAYMARCH_SCHEMA,active:false,weatherId:null,localWeight:0,macroRendererMutation:false,lightingApplied:false,l5LightingActive:false});
+      lastReceipt=freeze({schema:FAP1_W5_LOCAL_RAYMARCH_SCHEMA,active:false,weatherId:null,localWeight:0,macroRendererMutation:false,lightingApplied:false,l5LightingActive:false,extinctionSplit:true,compositeAuthority:'BOUNDED_HANDOFF_PARTICIPANT'});
       return lastReceipt;
     }
 
@@ -177,10 +177,11 @@ export function createW5LocalRayMarchSurface({worldCanvas,parent=worldCanvas?.pa
       renderPixels:canvas.width*canvas.height,
       cameraCentered:false,
       macroRendererMutation:false,
-      macroPassUntouched:true,
       lightingApplied:false,
       l5LightingActive:false,
-      compositeAuthority:'DIAGNOSTIC_LOCAL_OVERLAP_ONLY'
+      extinctionSplit:true,
+      transmittanceLaw:'T_MACRO_TIMES_T_LOCAL_EQUALS_T_CANONICAL_WHEN_DENSITY_MATCHES',
+      compositeAuthority:'BOUNDED_HANDOFF_PARTICIPANT'
     });
     return lastReceipt;
   }
@@ -206,8 +207,9 @@ export function verifyW5LocalRayMarchReceipt(receipt){
     if(receipt.cameraCentered!==false)failures.push('CAMERA_CENTERED_VOLUME_FORBIDDEN');
     if(receipt.densitySource!=='W5_BOUND_3D_BRICK')failures.push('NON_W5_DENSITY_SOURCE');
   }
-  if(receipt?.macroRendererMutation!==false||receipt?.macroPassUntouched!==true)failures.push('MACRO_PASS_MUTATION_FORBIDDEN');
+  if(receipt?.macroRendererMutation!==false)failures.push('LOCAL_MODULE_MACRO_MUTATION_FORBIDDEN');
   if(receipt?.lightingApplied!==false||receipt?.l5LightingActive!==false)failures.push('L5_PREMATURE_ACTIVATION');
-  if(receipt?.compositeAuthority!=='DIAGNOSTIC_LOCAL_OVERLAP_ONLY')failures.push('UNAUTHORIZED_COMPOSITE_AUTHORITY');
-  return freeze({schema:'FAP1_W5_LOCAL_RAYMARCH_INVARIANTS_v1',pass:failures.length===0,failures:freeze(failures),weatherId:receipt?.weatherId??null});
+  if(receipt?.extinctionSplit!==true)failures.push('EXTINCTION_SPLIT_REQUIRED');
+  if(receipt?.compositeAuthority!=='BOUNDED_HANDOFF_PARTICIPANT')failures.push('BOUNDED_HANDOFF_AUTHORITY_REQUIRED');
+  return freeze({schema:'FAP1_W5_LOCAL_RAYMARCH_INVARIANTS_v2',pass:failures.length===0,failures:freeze(failures),weatherId:receipt?.weatherId??null});
 }

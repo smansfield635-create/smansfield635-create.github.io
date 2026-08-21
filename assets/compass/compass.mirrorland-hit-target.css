@@ -1,0 +1,11 @@
+/* COMPASS_MIRRORLAND_HIT_TARGET_v1
+   Bounded ownership only: the static Mirrorland destination remains in its
+   canonical scene position; the Compass controller remains the sole reveal
+   state-machine authority. This file only preserves pointer/touch reachability.
+*/
+[data-compass-scene] [data-compass-object="mirrorland"]{
+  z-index:4!important;
+  pointer-events:auto!important;
+  visibility:visible!important;
+  touch-action:manipulation!important;
+}

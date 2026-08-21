@@ -19,16 +19,32 @@
     "staticVerifier": "tools/static-editorial-micro-verifier.v1.mjs",
     "staticEditorialMicroCanonicalAdmissionRequired": false,
     "staticEditorialMicroPageExcellenceRequired": false,
+    "boundedPageReleaseCanonicalAdmissionRequired": false,
+    "boundedPageReleasePageExcellenceRequired": false,
     "runtimeBehaviorAuthorityOrAmbiguousCanonicalAdmissionRequired": true,
     "ambiguityDisposition": "RUNTIME_OR_AUTHORITY",
     "mixedPathDisposition": "RUNTIME_OR_AUTHORITY",
     "requiredStaticProofs": ["EXACT_HEAD", "DECLARED_PATHS_ONLY", "NO_EXECUTABLE_RUNTIME_DELTA", "NO_UNRELATED_DIFF"]
   },
+  "publicationRelease": {
+    "schema": "PUBLICATION_RELEASE_BINDING_v1",
+    "contract": ".github/ai-router/publication-release-contract.v1.json",
+    "deploymentWorkflow": ".github/workflows/pages-direct-deploy.yml",
+    "boundedPageReleaseSequence": ["APPROVED_COMMIT", "EXPLICIT_DEPLOYMENT", "LIVE_EXACT_HEAD_VERIFICATION"],
+    "runtimeOrNewDevelopmentSequence": ["APPLICABLE_GOVERNANCE_AND_QUALIFICATION", "APPROVED_COMMIT", "EXPLICIT_DEPLOYMENT", "LIVE_EXACT_HEAD_VERIFICATION"],
+    "explicitDeploymentInput": "target_sha",
+    "liveVerificationMarker": ".well-known/dgb-release.json",
+    "successResult": "LIVE_EXACT_HEAD_VERIFIED",
+    "mergeAloneIsLiveRelease": false,
+    "dummyReleaseCommitAllowed": false,
+    "legacyImplicitPagesTriggerAllowed": false,
+    "releaseBranchNudgeAllowed": false
+  },
   "operationIntakeGate": {
     "locator": ".github/operation-intake/locator.v1.json",
     "mandatoryBeforeMutationRouting": false,
     "requiredForMutationClasses": ["RUNTIME_OR_AUTHORITY"],
-    "notRequiredForMutationClasses": ["STATIC_EDITORIAL_MICRO"],
+    "notRequiredForMutationClasses": ["STATIC_EDITORIAL_MICRO", "BOUNDED_PAGE_RELEASE"],
     "successorLifecycle": {
       "protocol": ".github/ai-router/operation-lifecycle/successor-protocol.v1.json",
       "gateCli": ".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs",
@@ -122,6 +138,8 @@
   "rules": [
     "CLASSIFY_PAGE_MUTATION_BEFORE_AUTHORITY_ESCALATION",
     "STATIC_EDITORIAL_MICRO_REQUIRES_EXACT_HEAD_BOUNDED_DIFF_VERIFICATION_NOT_CANONICAL_INTAKE",
+    "BOUNDED_PAGE_RELEASE_USES_APPROVED_COMMIT_THEN_EXPLICIT_DEPLOYMENT_THEN_LIVE_EXACT_HEAD_VERIFICATION",
+    "BOUNDED_PAGE_RELEASE_MUST_NOT_USE_DUMMY_RELEASE_COMMITS_RELEASE_BRANCH_NUDGES_OR_LEGACY_IMPLICIT_PAGES_TRIGGERS",
     "RUNTIME_BEHAVIOR_AUTHORITY_OR_AMBIGUOUS_MUTATION_REQUIRES_CANONICAL_INTAKE",
     "EXACT_GOVERNING_HEAD_BEFORE_MUTATION",
     "EXPLICIT_BOUNDED_MUTATION_SCOPE",

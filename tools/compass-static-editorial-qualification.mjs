@@ -25,7 +25,7 @@ has('data-compass-capability-switcher', 'Track A capability placeholder');
 has('Build Your Own Custom Site', 'final custom build CTA');
 has('data-editorial-fallback="true"', 'keyboard-accessible destination fallback');
 has('<summary>All destinations</summary>', 'collapsed destination fallback summary');
-has('class="compass-accessibility-note"', 'accessibility equivalence note');
+absent('The Compass exposes the same destinations to keyboard, touch, pointer, and reduced-motion users.', 'legacy bottom disclosure');
 
 const finalMaster = mediaRegistry?.sources?.CHAPTER_01_FINAL_AWARDS_LIVE_MASTER_V1;
 if (!finalMaster) fail('missing governing CHAPTER_01_FINAL_AWARDS_LIVE_MASTER_V1 registry entry');

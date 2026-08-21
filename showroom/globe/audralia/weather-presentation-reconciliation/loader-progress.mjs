@@ -42,7 +42,7 @@ function fail(label,error){
   window.__AUDRALIA_STARTUP_FAILURE__=Object.freeze({message,progress:displayed});
 }
 async function waitFor(predicate,label,attempts=480){
-  for(let i=0;i<attempts;i++){const value=predicate();if(value)return value;if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__)throw new Error(`QUALIFICATION_PARENT_FAILED:${label}`);if(window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__)throw new Error(`QUALIFICATION_GA_FAILED:${window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__.message}`);if(window.__AUDRALIA_FAP1_W5_HANDOFF_ERROR__)throw new Error(`GB_HANDOFF_FAILED:${window.__AUDRALIA_FAP1_W5_HANDOFF_ERROR__.message}`);await sleep(25);}
+  for(let i=0;i<attempts;i++){const value=predicate();if(value)return value;if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__)throw new Error(`QUALIFICATION_PARENT_FAILED:${label}`);if(window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__)throw new Error(`QUALIFICATION_GA_FAILED:${window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__.message}`);if(window.__AUDRALIA_FAP1_W5_HANDOFF_ERROR__)throw new Error(`GC_L5_HANDOFF_FAILED:${window.__AUDRALIA_FAP1_W5_HANDOFF_ERROR__.message}`);await sleep(25);}
   throw new Error(`QUALIFICATION_WAIT_TIMEOUT:${label}`);
 }
 function observeRuntime(){
@@ -53,13 +53,13 @@ function observeRuntime(){
   const runtime=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.();
   const ga=window.__AUDRALIA_FAP1_GA_AUTHORITY__;
   const gb=window.__AUDRALIA_FAP1_W5_HANDOFF__;
-  const gbReady=gaProofMode||gb?.authority==='BOUNDED_GB_HANDOFF_ACTIVE';
+  const gbReady=gaProofMode||(gb?.authority==='BOUNDED_GB_HANDOFF_ACTIVE'&&gb?.l5LightingActive===true&&gb?.l5LightingModel==='DIRECT_SUN_TRANSMITTANCE_ONLY');
   if(runtime?.invariants?.pass===true&&ga?.meteorologicalAuthority==='FAP1_ONLY'&&gbReady){
-    setVerified(100,gaProofMode?'Audralia ready · G_A proof active':'Audralia ready · W5 handoff active',100);clearInterval(activityTimer);clearTimeout(timeoutTimer);
-    if(note)note.textContent=gaProofMode?'One continuous world is ready · G_A negative-proof harness is running.':'One continuous world is ready · FAP1 remains weather authority and bounded W5 macro/local handoff is active.';
+    setVerified(100,gaProofMode?'Audralia ready · G_A proof active':'Audralia ready · W5 + L5 direct light active',100);clearInterval(activityTimer);clearTimeout(timeoutTimer);
+    if(note)note.textContent=gaProofMode?'One continuous world is ready · G_A negative-proof harness is running.':'One continuous world is ready · FAP1 weather authority, bounded W5 handoff, and direct L5 cloud self-shadowing are active.';
     if(loader){loader.classList.add('is-ready');setTimeout(()=>{loader.hidden=true;},460);}return;
   }
-  if(window.__AUDRALIA_FAP1_W5_HANDOFF_ERROR__&&!gaProofMode){fail('W5 macro/local handoff stopped',window.__AUDRALIA_FAP1_W5_HANDOFF_ERROR__.message);return;}
+  if(window.__AUDRALIA_FAP1_W5_HANDOFF_ERROR__&&!gaProofMode){fail('W5 / L5 local atmosphere stopped',window.__AUDRALIA_FAP1_W5_HANDOFF_ERROR__.message);return;}
   if(window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__){fail('FAP1 authority convergence stopped',window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__.message);return;}
   if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__){fail('World initialization stopped',window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__.message);return;}
   requestAnimationFrame(observeRuntime);
@@ -68,16 +68,14 @@ async function boot(){
   setVerified(6,'Preparing Audralia',15);beginActivity();
   try{
     setVerified(16,'Loading world systems',34);
-    // index.html owns the parent app bootstrap. Do not import a second cache-busted
-    // copy here; wait for the single canonical parent receipt instead.
     await waitFor(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer&&typeof window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getCameraFrame==='function','PARENT_RECEIPT');
     await import('./fap1-ga-authority-bootstrap.mjs?cb=FAP1_GA_v3');
     await waitFor(()=>window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY'&&typeof window.__AUDRALIA_FAP1_GA_AUTHORITY__?.renderNow==='function','GA_AUTHORITY');
     if(gaProofMode){
       await import('./fap1-ga-negative-proof-v2.mjs?cb=FAP1_GA_NEGATIVE_PROOF_v3');
     }else{
-      await import('./fap1-w5-handoff-bootstrap.gb.mjs?cb=FAP1_GB_HANDOFF_v1');
-      await waitFor(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.authority==='BOUNDED_GB_HANDOFF_ACTIVE','GB_HANDOFF');
+      await import('./fap1-w5-handoff-bootstrap.gb.mjs?cb=FAP1_GC_L5_DIRECT_v1');
+      await waitFor(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.authority==='BOUNDED_GB_HANDOFF_ACTIVE'&&window.__AUDRALIA_FAP1_W5_HANDOFF__?.l5LightingActive===true,'GC_L5_DIRECT');
     }
     setVerified(38,'Constructing planetary surface',54);requestAnimationFrame(observeRuntime);
   }catch(error){console.error('AUDRALIA_STARTUP_MODULE_GRAPH_FAILED',error);fail('World systems could not load',error);}

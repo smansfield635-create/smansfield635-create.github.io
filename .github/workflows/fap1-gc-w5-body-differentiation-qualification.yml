@@ -1,0 +1,52 @@
+name: FAP1 G_C W5 Body Differentiation Qualification
+
+on:
+  pull_request:
+    paths:
+      - 'showroom/globe/audralia/weather-presentation-reconciliation/fap1-w5-local-density.gb.mjs'
+      - '.github/workflows/fap1-gc-w5-body-differentiation-qualification.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  body-field:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify deterministic W5 mesoscale body field
+        run: |
+          node --input-type=module <<'NODE'
+          import {buildFAP1GPUWeatherPacket} from './showroom/globe/audralia/weather-presentation-reconciliation/fap1-gpu-weather-descriptors.mjs';
+          import {buildFAP1SpatialWeatherObjects} from './showroom/globe/audralia/weather-presentation-reconciliation/fap1-spatial-lod.gb.mjs';
+          import {buildW5DensityBrick} from './showroom/globe/audralia/weather-presentation-reconciliation/fap1-w5-local-density.gb.mjs';
+
+          const packet=buildFAP1GPUWeatherPacket({canonicalTimeHours:0});
+          const objects=buildFAP1SpatialWeatherObjects({packet});
+          const results=[];
+          for(const object of objects){
+            const brick=buildW5DensityBrick(object);
+            const cls=object.weatherClass;
+            const gapMin=cls==='MID_FRONTAL'||cls==='HIGH_ICE'?0.00:0.015;
+            const emptyMin=cls==='MID_FRONTAL'||cls==='HIGH_ICE'?0.01:0.04;
+            const checks={
+              parentIdentity:brick.weatherId===object.ID_i&&brick.bodyOwnershipWeatherId===object.ID_i,
+              bodyCount:brick.mesoBodyCount>=4,
+              verticalIntervals:brick.verticalIntervalsDifferentiated===true,
+              gapField:brick.gapColumnFraction>=gapMin,
+              interiorEmpty:brick.interiorEmptySampleFraction>=emptyMin,
+              macroFrozen:brick.macroWeatherMutation===false,
+              l5Frozen:brick.l5LightingMutation===false,
+              cameraIndependent:brick.cameraCentered===false,
+              finiteDensity:Number.isFinite(brick.meanOccupiedDensity)&&Number.isFinite(brick.maxDensity)&&brick.maxDensity<=1.8
+            };
+            const pass=Object.values(checks).every(Boolean);
+            results.push({id:object.ID_i,weatherClass:cls,mesoBodyCount:brick.mesoBodyCount,gapColumnFraction:brick.gapColumnFraction,interiorEmptySampleFraction:brick.interiorEmptySampleFraction,occupancyFraction:brick.occupancyFraction,checks,pass});
+          }
+          const pass=results.length>=5&&results.every(r=>r.pass);
+          console.log(JSON.stringify({schema:'FAP1_GC_W5_BODY_DIFFERENTIATION_QUALIFICATION_v1',pass,results},null,2));
+          if(!pass)process.exit(3);
+          NODE

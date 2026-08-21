@@ -42,7 +42,7 @@ function fail(label,error){
   window.__AUDRALIA_STARTUP_FAILURE__=Object.freeze({message,progress:displayed});
 }
 async function waitFor(predicate,label,attempts=480){
-  for(let i=0;i<attempts;i++){const value=predicate();if(value)return value;if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__)throw new Error(`QUALIFICATION_PARENT_FAILED:${label}`);if(window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__)throw new Error(`QUALIFICATION_GA_FAILED:${window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__.message}`);await sleep(25);}
+  for(let i=0;i<attempts;i++){const value=predicate();if(value)return value;if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__)throw new Error(`QUALIFICATION_PARENT_FAILED:${label}`);if(window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__)throw new Error(`QUALIFICATION_GA_FAILED:${window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__.message}`);if(window.__AUDRALIA_FAP1_W5_HANDOFF_ERROR__)throw new Error(`GB_HANDOFF_FAILED:${window.__AUDRALIA_FAP1_W5_HANDOFF_ERROR__.message}`);await sleep(25);}
   throw new Error(`QUALIFICATION_WAIT_TIMEOUT:${label}`);
 }
 function observeRuntime(){
@@ -50,12 +50,16 @@ function observeRuntime(){
   if(document.querySelector('[data-audralia-clear-atmosphere="true"]'))setVerified(56,'Atmosphere ready',70);
   if(document.querySelector('[data-audralia-exterior-weather="true"]'))setVerified(72,'Regional weather ready',84);
   if(document.querySelector('[data-canonical-weather-projection="true"]'))setVerified(86,'Local weather ready',94);
-  const runtime=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.();const ga=window.__AUDRALIA_FAP1_GA_AUTHORITY__;
-  if(runtime?.invariants?.pass===true&&ga?.meteorologicalAuthority==='FAP1_ONLY'){
-    setVerified(100,gaProofMode?'Audralia ready · G_A proof active':'Audralia ready',100);clearInterval(activityTimer);clearTimeout(timeoutTimer);
-    if(note)note.textContent=gaProofMode?'One continuous world is ready · G_A negative-proof harness is running.':'One continuous world is ready · FAP1 is the sole visible weather-density authority.';
+  const runtime=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.();
+  const ga=window.__AUDRALIA_FAP1_GA_AUTHORITY__;
+  const gb=window.__AUDRALIA_FAP1_W5_HANDOFF__;
+  const gbReady=gaProofMode||gb?.authority==='BOUNDED_GB_HANDOFF_ACTIVE';
+  if(runtime?.invariants?.pass===true&&ga?.meteorologicalAuthority==='FAP1_ONLY'&&gbReady){
+    setVerified(100,gaProofMode?'Audralia ready · G_A proof active':'Audralia ready · W5 handoff active',100);clearInterval(activityTimer);clearTimeout(timeoutTimer);
+    if(note)note.textContent=gaProofMode?'One continuous world is ready · G_A negative-proof harness is running.':'One continuous world is ready · FAP1 remains weather authority and bounded W5 macro/local handoff is active.';
     if(loader){loader.classList.add('is-ready');setTimeout(()=>{loader.hidden=true;},460);}return;
   }
+  if(window.__AUDRALIA_FAP1_W5_HANDOFF_ERROR__&&!gaProofMode){fail('W5 macro/local handoff stopped',window.__AUDRALIA_FAP1_W5_HANDOFF_ERROR__.message);return;}
   if(window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__){fail('FAP1 authority convergence stopped',window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__.message);return;}
   if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__){fail('World initialization stopped',window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__.message);return;}
   requestAnimationFrame(observeRuntime);
@@ -70,6 +74,8 @@ async function boot(){
     if(gaProofMode){
       await waitFor(()=>window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY'&&typeof window.__AUDRALIA_FAP1_GA_AUTHORITY__?.renderNow==='function','GA_AUTHORITY');
       await import('./fap1-ga-negative-proof-v2.mjs?cb=FAP1_GA_NEGATIVE_PROOF_v3');
+    }else{
+      await import('./fap1-w5-handoff-bootstrap.gb.mjs?cb=FAP1_GB_HANDOFF_v1');
     }
     setVerified(38,'Constructing planetary surface',54);requestAnimationFrame(observeRuntime);
   }catch(error){console.error('AUDRALIA_STARTUP_MODULE_GRAPH_FAILED',error);fail('World systems could not load',error);}

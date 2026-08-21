@@ -62,6 +62,17 @@ jobs:
             page.on('requestfailed', r => failedRequests.push(`${r.method()} ${r.url()} :: ${r.failure()?.errorText||'failed'}`));
             await page.goto('http://127.0.0.1:4173/', {waitUntil:'networkidle'});
             await page.waitForTimeout(1000);
+
+            const video = page.locator('.compass-editorial-film video').first();
+            if (await video.count() !== 1) throw new Error(`${name}: Chapter One video element missing`);
+            await video.evaluate(el => new Promise(resolve => {
+              if (el.readyState >= 1) return resolve();
+              const done=()=>resolve();
+              el.addEventListener('loadedmetadata',done,{once:true});
+              setTimeout(done,4000);
+            }));
+            const media = await video.evaluate(el => ({readyState:el.readyState,duration:Number(el.duration),currentSrc:el.currentSrc||el.querySelector('source')?.src||''}));
+
             const state = await page.evaluate(() => {
               const q = s => document.querySelector(s), qa = s => [...document.querySelectorAll(s)];
               const intro = q('[data-compass-static-introduction]');
@@ -91,10 +102,12 @@ jobs:
                 horizontalOverflow:document.documentElement.scrollWidth-document.documentElement.clientWidth
               };
             });
-            const fail = msg => { throw new Error(`${name}: ${msg} :: ${JSON.stringify(state)}`); };
+            const fail = msg => { throw new Error(`${name}: ${msg} :: ${JSON.stringify({state,media})}`); };
             if (!state.brand) fail('brand missing');
             if (!state.introFound || !state.introClosed) fail('Chapter One intro not closed by default');
             if (!state.aboutFound || !state.filmFound) fail('intro disclosure or film missing');
+            if (!media.currentSrc.includes('/showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4')) fail('Chapter One currentSrc drifted');
+            if (!(media.readyState >= 1 && Number.isFinite(media.duration) && media.duration >= 64 && media.duration <= 66)) fail('Chapter One 65-second metadata did not load');
             if (!state.sceneFound || state.sceneHeight < 430) fail(`Compass scene floor failed (${state.sceneHeight})`);
             if (!state.builtFound || !state.capabilityFound || !state.ctaFound) fail('major section missing');
             const [sceneAt,builtAt,capabilityAt,ctaAt] = state.staticOrder;
@@ -110,10 +123,13 @@ jobs:
             if (state.horizontalOverflow > 2) fail(`horizontal overflow ${state.horizontalOverflow}`);
             if (!state.genReceipt || state.genReceipt.mounted!==false || state.genReceipt.retired!==true || state.genReceipt.authoritative!==false || state.genReceipt.capabilityPlacementAuthority!==false || state.genReceipt.repeatedReparenting!==false) fail('Gen1537 authority contract invalid');
             if (errors.length) fail(`page errors: ${errors.join(' | ')}`);
-            const productFailures = failedRequests.filter(x=>x.includes('/assets/compass/')||x.includes('/media/')||x.includes('diamond-gate-compass-mirrorland-36s.mp4'));
+            const productFailures = failedRequests.filter(x => {
+              if (x.includes('diamond-gate-compass-mirrorland-36s.mp4') && x.includes('ERR_ABORTED') && media.readyState>=1 && media.duration>=64 && media.duration<=66) return false;
+              return x.includes('/assets/compass/') || x.includes('/media/');
+            });
             if (productFailures.length) fail(`product request failures: ${productFailures.join(' | ')}`);
             await page.screenshot({path:`.qualification/compass-static-editorial/${name}.png`,fullPage:true});
-            results[name]={...state,openedDirectoryVisible,errors,failedRequests};
+            results[name]={...state,media,openedDirectoryVisible,errors,failedRequests};
             await page.close();
           }
           await browser.close();

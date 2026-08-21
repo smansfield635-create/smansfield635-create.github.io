@@ -1,4 +1,4 @@
-const POLICY_ID='AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v5_MULTISYSTEM_COVERAGE';
+const POLICY_ID='AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v6_GLOBAL_MULTI_LAYER_COVERAGE';
 const previousShaderSource=WebGL2RenderingContext.prototype.shaderSource;
 let patched=0;
 let rejected=0;
@@ -23,6 +23,27 @@ float fap1InteriorPocket(vec3 p,float t){
 vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   float t=uTimeHours*.0065;
   float mass=0.0,ice=0.0,precip=0.0;
+
+  // Global broken cloud fabric. This is intentionally multi-layer and
+  // noise-broken: it prevents continent-scale empty ocean screens without
+  // becoming a uniform shell or generalized haze.
+  float globalBroad=fbm(radial*9.0+vec3(t*.24,-t*.17,t*.13));
+  float globalDetail=fbm(radial*19.0+vec3(-t*.15,t*.21,-t*.11));
+  float globalCells=smoothstep(.34,.66,globalBroad*.68+globalDetail*.32);
+  float globalWave=.5+.5*sin(lon*2.35+sin(lat*3.7)*1.05+t*.20);
+  float globalBreak=.60+.40*globalCells;
+  float globalClear=.72+.28*globalWave;
+  float globalLow=fap1Band(h,31.0,59.0)*(.13+.19*globalBreak)*globalClear;
+  float globalMid=fap1Band(h,48.0,84.0)*(.09+.16*fap1CloudBreak(radial,t,13.0,.34,.66))*(.76+.24*(1.0-globalWave));
+  float globalHigh=fap1Band(h,73.0,108.0)*(.07+.14*fap1CloudBreak(radial,t,16.0,.35,.68))*(.78+.22*globalWave);
+  float corridor=fap1ClearCorridor(lat,lon);
+  float corridorAttenuation=1.0-.42*corridor;
+  globalLow*=corridorAttenuation;
+  globalMid*=corridorAttenuation;
+  globalHigh*=corridorAttenuation;
+  mass+=globalLow+globalMid+globalHigh;
+  ice+=globalHigh*.94+globalMid*.24;
+  precip+=globalLow*.08+globalMid*.04;
 
   float polar= smoothstep(.82,1.12,abs(lat));
   float polarCore=smoothstep(1.00,1.30,abs(lat));
@@ -189,6 +210,9 @@ Object.defineProperty(window,'__AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION__',
     distributedMacroSystems:true,
     additionalIndependentWeatherFields:5,
     multiAltitudePlanetaryCoverage:true,
+    globalBrokenCloudFabric:true,
+    globalLowMidHighLayers:true,
+    fullScreenOceanVoidSuppression:true,
     clearCorridorPreserved:true,
     smokePlumeMorphologySuppressed:true,
     altitudeDifferentiation:true,

@@ -12,14 +12,14 @@ const wrapLon=lon=>((lon+180)%360+360)%360-180;
 const degToRad=deg=>deg*Math.PI/180,radToDeg=rad=>rad*180/Math.PI;
 const GENUS=Object.freeze({Ci:0,Cc:1,Cs:2,Ac:3,As:4,Ns:5,Sc:6,St:7,Cu:8,Cb:9});
 const SYSTEMS=Object.freeze([
-  Object.freeze({id:'SC_SUBTROPICAL_GRATITUDE',seed:.17,genus:'Sc',lat:30,lon:-12,base:.8,top:2.3,major:1450,minor:820,orientation:-18,windE:35,windN:5,shearE:2,shearN:-1,density:.62,ice:.03,precip:.14,support:.76,phase:.36,lifetime:320}),
-  Object.freeze({id:'CU_SUBTROPICAL_EAST',seed:.31,genus:'Cu',lat:23,lon:34,base:1.1,top:4.6,major:1200,minor:690,orientation:12,windE:28,windN:8,shearE:3,shearN:1,density:.76,ice:.05,precip:.22,support:.84,phase:.28,lifetime:250}),
-  Object.freeze({id:'CB_TROPICAL_EAST',seed:.47,genus:'Cb',lat:9,lon:72,base:1,top:15.5,major:1320,minor:760,orientation:24,windE:20,windN:10,shearE:6.5,shearN:2,density:.90,ice:.58,precip:.92,support:.92,phase:.45,lifetime:280}),
-  Object.freeze({id:'NS_EQUATORIAL_WEST',seed:.07,genus:'Ns',lat:-3,lon:-58,base:1.8,top:8.8,major:1580,minor:920,orientation:6,windE:16,windN:3,shearE:2.5,shearN:1,density:.64,ice:.28,precip:.78,support:.80,phase:.33,lifetime:410}),
-  Object.freeze({id:'AC_NORTH_MIDLAT',seed:.59,genus:'Ac',lat:43,lon:82,base:3.5,top:6.8,major:2050,minor:820,orientation:-8,windE:58,windN:2,shearE:4,shearN:-2,density:.56,ice:.20,precip:.12,support:.72,phase:.52,lifetime:360}),
-  Object.freeze({id:'CS_NORTH_JET',seed:.71,genus:'Cs',lat:57,lon:-88,base:7.5,top:12.5,major:3100,minor:980,orientation:15,windE:85,windN:1,shearE:7,shearN:1,density:.38,ice:.92,precip:.03,support:.74,phase:.50,lifetime:520}),
-  Object.freeze({id:'CI_SOUTH_JET',seed:.83,genus:'Ci',lat:-42,lon:48,base:9,top:15.8,major:3250,minor:920,orientation:29,windE:82,windN:-3,shearE:9,shearN:2,density:.34,ice:.98,precip:.01,support:.76,phase:.60,lifetime:560}),
-  Object.freeze({id:'AS_SOUTH_STORM',seed:.93,genus:'As',lat:-31,lon:-108,base:2.5,top:7.8,major:2650,minor:1120,orientation:-14,windE:48,windN:4,shearE:3,shearN:0,density:.48,ice:.32,precip:.32,support:.72,phase:.42,lifetime:430})
+  Object.freeze({id:'SC_SUBTROPICAL_GRATITUDE',seed:.17,genus:'Sc',lat:30,lon:-12,base:.8,top:2.3,major:1537,minor:902,orientation:-18,windE:35,windN:5,shearE:2,shearN:-1,density:.62,ice:.03,precip:.14,support:.76,phase:.36,lifetime:320}),
+  Object.freeze({id:'CU_SUBTROPICAL_EAST',seed:.31,genus:'Cu',lat:23,lon:34,base:1.1,top:4.6,major:1272,minor:759,orientation:12,windE:28,windN:8,shearE:3,shearN:1,density:.76,ice:.05,precip:.22,support:.84,phase:.28,lifetime:250}),
+  Object.freeze({id:'CB_TROPICAL_EAST',seed:.47,genus:'Cb',lat:9,lon:72,base:1,top:15.5,major:1399,minor:836,orientation:24,windE:20,windN:10,shearE:6.5,shearN:2,density:.90,ice:.58,precip:.92,support:.92,phase:.45,lifetime:280}),
+  Object.freeze({id:'NS_EQUATORIAL_WEST',seed:.07,genus:'Ns',lat:-3,lon:-58,base:1.8,top:8.8,major:1675,minor:1012,orientation:6,windE:16,windN:3,shearE:2.5,shearN:1,density:.64,ice:.28,precip:.78,support:.80,phase:.33,lifetime:410}),
+  Object.freeze({id:'AC_NORTH_MIDLAT',seed:.59,genus:'Ac',lat:43,lon:82,base:3.5,top:6.8,major:2173,minor:902,orientation:-8,windE:58,windN:2,shearE:4,shearN:-2,density:.56,ice:.20,precip:.12,support:.72,phase:.52,lifetime:360}),
+  Object.freeze({id:'CS_NORTH_JET',seed:.71,genus:'Cs',lat:57,lon:-88,base:7.5,top:12.5,major:3286,minor:1078,orientation:15,windE:85,windN:1,shearE:7,shearN:1,density:.38,ice:.92,precip:.03,support:.74,phase:.50,lifetime:520}),
+  Object.freeze({id:'CI_SOUTH_JET',seed:.83,genus:'Ci',lat:-42,lon:48,base:9,top:15.8,major:3445,minor:1012,orientation:29,windE:82,windN:-3,shearE:9,shearN:2,density:.34,ice:.98,precip:.01,support:.76,phase:.60,lifetime:560}),
+  Object.freeze({id:'AS_SOUTH_STORM',seed:.93,genus:'As',lat:-31,lon:-108,base:2.5,top:7.8,major:2809,minor:1232,orientation:-14,windE:48,windN:4,shearE:3,shearN:0,density:.48,ice:.32,precip:.32,support:.72,phase:.42,lifetime:430})
 ]);
 
 const VS=`#version 300 es

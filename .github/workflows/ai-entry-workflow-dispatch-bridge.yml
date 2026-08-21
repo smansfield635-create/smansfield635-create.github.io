@@ -8,8 +8,6 @@ on:
       - reopened
     branches:
       - main
-    paths:
-      - .github/ai-entry/workflow-dispatch-request.json
 
 permissions:
   actions: write

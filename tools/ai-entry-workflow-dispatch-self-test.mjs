@@ -34,7 +34,6 @@ assert(procedure.fallbackTransport === registry.fallbackTransport, 'shared proce
 
 for (const token of [
   'pull_request_target:',
-  '.github/ai-entry/workflow-dispatch-request.json',
   "startsWith(github.event.pull_request.head.ref, 'ai-dispatch-request-')",
   'actions: write',
   'contents: write',
@@ -43,6 +42,8 @@ for (const token of [
   'PULL_REQUEST_NUMBER:',
   'node tools/ai-entry-workflow-dispatch-bridge.mjs'
 ]) assert(workflow.includes(token), `bridge workflow missing ${token}`);
+
+assert(!workflow.includes('paths:'), 'bridge workflow must not depend on changed-path filtering');
 
 for (const token of [
   '/actions/workflows/',
@@ -70,6 +71,7 @@ console.log(JSON.stringify({
   preferredTransport: registry.preferredTransport,
   fallbackTransport: registry.fallbackTransport,
   requestBranchPrefix: registry.requestBranchPrefix,
+  triggerPathFilterDependency: false,
   runIdRecoveryRequired: registry.continuity.dispatchRunIdMustBeRecovered,
   successReceiptResult: registry.continuity.receiptResult
 }, null, 2));

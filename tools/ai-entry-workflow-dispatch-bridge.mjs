@@ -29,6 +29,7 @@ const gh = async (path, options = {}) => {
   return response.json();
 };
 const contentPath = path => path.split('/').map(encodeURIComponent).join('/');
+const refPath = branch => branch.split('/').map(encodeURIComponent).join('/');
 const decodeContent = payload => Buffer.from((payload.content || '').replace(/\n/g, ''), 'base64').toString('utf8');
 
 let registry;
@@ -36,8 +37,8 @@ let request = {};
 let currentMainSha = null;
 
 const ensureReceiptBranch = async (owner, name, receiptBranch, seedSha) => {
-  const refPath = `/repos/${owner}/${name}/git/ref/heads/${encodeURIComponent(receiptBranch)}`;
-  const existing = await ghResponse(refPath);
+  const endpoint = `/repos/${owner}/${name}/git/ref/heads/${refPath(receiptBranch)}`;
+  const existing = await ghResponse(endpoint);
   if (existing.ok) return;
   if (existing.status !== 404) throw new Error(`Unable to inspect receipt branch: ${existing.status} ${await existing.text()}`);
   await gh(`/repos/${owner}/${name}/git/refs`, {
@@ -77,7 +78,7 @@ const main = async () => {
   if (!repo || !token || !requestCommit || !requestBranch || !pullRequestNumber) throw new Error('Missing GitHub PR-target execution environment');
   registry = readJson(registryPath);
   if (registry.schema !== 'AI_ENTRY_WORKFLOW_DISPATCH_CAPABILITY_v1' || registry.status !== 'ACTIVE_FAIL_CLOSED') throw new Error('Dispatch capability registry is not active');
-  if (requestBranch !== registry.requestBranch) throw new Error(`Unexpected request branch: ${requestBranch}`);
+  if (!requestBranch.startsWith(registry.requestBranchPrefix)) throw new Error(`Unexpected request branch: ${requestBranch}`);
 
   const [owner, name] = repo.split('/');
   currentMainSha = (await gh(`/repos/${owner}/${name}/commits/main`)).sha;
@@ -162,6 +163,9 @@ const main = async () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ state: 'closed' })
     });
+  }
+  if (registry.transportPullRequest?.autoDeleteHeadBranchOnSuccess) {
+    await gh(`/repos/${owner}/${name}/git/refs/heads/${refPath(requestBranch)}`, { method: 'DELETE' });
   }
 };
 

@@ -59,13 +59,39 @@ jobs:
           mkdir -p .well-known
           printf '{"schema":"DGB_PUBLIC_RELEASE_MARKER_v1","commit":"%s"}\n' "$TARGET_SHA" > .well-known/dgb-release.json
 
+      - name: Stage bounded deployment-only Pages payload
+        env:
+          PAGES_STAGE: ${{ runner.temp }}/pages-site
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf "$PAGES_STAGE"
+          mkdir -p "$PAGES_STAGE"
+          rsync -a --prune-empty-dirs \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='preview/' \
+            --exclude='h-earth-live-6d18e158/' \
+            ./ "$PAGES_STAGE/"
+
+          test -f "$PAGES_STAGE/.well-known/dgb-release.json"
+          staged_bytes="$(du -sb "$PAGES_STAGE" | awk '{print $1}')"
+          echo "BOUNDED_PAGES_STAGE_BYTES=$staged_bytes"
+
+          if [ "$staged_bytes" -ge 1073741824 ]; then
+            echo "ARTIFACT_OVER_1_GIB staged_bytes=$staged_bytes" >&2
+            echo "Largest staged top-level entries:" >&2
+            du -x -B1 -d1 "$PAGES_STAGE" 2>/dev/null | sort -n | tail -30 >&2 || true
+            exit 1
+          fi
+
       - name: Configure GitHub Pages artifact
         uses: actions/configure-pages@v5
 
       - name: Upload exact-head Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: ${{ runner.temp }}/pages-site
 
   deploy:
     needs: prepare

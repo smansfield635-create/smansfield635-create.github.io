@@ -78,6 +78,19 @@ export function localCoordinates(point,object){
 
 export function pointInsideWeatherVolume(point,object){const q=localCoordinates(point,object);return dot(q,q)<=1+1e-9;}
 
+// Exact center-ray distance to the ellipsoid rather than the old bounding-sphere
+// approximation. Broad synoptic systems may have very large horizontal radii;
+// using max(radii) incorrectly promoted W5 while the observer was still far
+// above/outside the actual 3D cloud volume.
+export function distanceToWeatherVolume(point,object){
+  const delta=sub(point,object.V_i.center),physicalDistance=length(delta);
+  if(physicalDistance<=1e-9)return 0;
+  const q=localCoordinates(point,object),qLength=length(q);
+  if(qLength<=1+1e-9)return 0;
+  const ellipsoidRadiusAlongRay=physicalDistance/qLength;
+  return Math.max(0,physicalDistance-ellipsoidRadiusAlongRay);
+}
+
 export function rayWeatherVolumeInterval(origin,direction,object){
   const d=sub(origin,object.V_i.center),r=object.V_i.radii,rd=norm(direction);
   const ro=[dot(d,object.V_i.axisU)/r[0],dot(d,object.V_i.axisUp)/r[1],dot(d,object.V_i.axisV)/r[2]];
@@ -96,7 +109,7 @@ export function lodWeights(distanceToVolume){
 export function evaluateFAP1SpatialLOD(objects,camera){
   const forward=norm(camera.forward);
   const entries=objects.map(object=>{
-    const toCenter=sub(object.V_i.center,camera.eye),distance=length(toCenter),boundRadius=Math.max(...object.V_i.radii),distanceToVolume=Math.max(0,distance-boundRadius),inside=pointInsideWeatherVolume(camera.eye,object),forwardDot=distance>1e-9?dot(norm(toCenter),forward):1,Q_i=inside||(distanceToVolume<6900&&forwardDot>-.58);
+    const toCenter=sub(object.V_i.center,camera.eye),distance=length(toCenter),distanceToVolume=distanceToWeatherVolume(camera.eye,object),inside=pointInsideWeatherVolume(camera.eye,object),forwardDot=distance>1e-9?dot(norm(toCenter),forward):1,Q_i=inside||(distanceToVolume<6900&&forwardDot>-.58);
     return {object,distance,distanceToVolume,inside,forwardDot,Q_i,weights:lodWeights(distanceToVolume)};
   });
   const candidates=entries.filter(x=>x.Q_i&&x.weights.l>.001).sort((a,b)=>a.distanceToVolume-b.distanceToVolume||a.object.ID_i.localeCompare(b.object.ID_i));

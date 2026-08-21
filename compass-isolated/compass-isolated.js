@@ -28,6 +28,7 @@ let angle=0;
 let front='north';
 let activeWing=null;
 let clusterAngle=0;
+let selectedRoom='';
 let dragging=false;
 let pointerId=null;
 let lastX=0;
@@ -39,46 +40,59 @@ function nearestCardinal(){let best=CARDINALS[0],dist=999;for(const c of CARDINA
 function mark(key){checks.find(el=>el.dataset.check===key)?.setAttribute('data-pass','true')}
 function setInstruction(key,rest){instructionKey.textContent=key;instructionRest.textContent=rest;mark('instructions')}
 function setPanel(kicker,title,body){panelKicker.textContent=kicker;panelTitle.textContent=title;panelBody.textContent=body}
-function polar(radius,deg){const r=(deg-90)*Math.PI/180;return {x:50+Math.cos(r)*radius,y:50+Math.sin(r)*radius}}
+function project(relativeDeg,radius=34){
+ const rad=relativeDeg*Math.PI/180;
+ const depth=Math.cos(rad);
+ const x=50+Math.sin(rad)*radius;
+ const y=50-depth*18;
+ const scale=.72+(depth+1)*.18;
+ const opacity=.32+(depth+1)*.34;
+ return {x,y,depth,scale,opacity};
+}
+function applyProjection(el,p){
+ el.style.left=p.x+'%';el.style.top=p.y+'%';el.style.setProperty('--star-scale',p.scale.toFixed(3));el.style.setProperty('--star-opacity',p.opacity.toFixed(3));el.style.zIndex=String(Math.round((p.depth+1)*20)+2);
+}
 function renderConstellation(){
- constellation.innerHTML='';
+ constellation.innerHTML='';selectedRoom='';
  const current=nearestCardinal();front=current.id;app.dataset.front=front;
  for(const c of CARDINALS){
-   const p=polar(34,c.angle-angle);
-   const b=document.createElement('button');b.type='button';b.className='star';b.dataset.cardinal=c.id;b.dataset.primary=String(c.id===front);b.style.left=p.x+'%';b.style.top=p.y+'%';b.setAttribute('aria-label',`${c.label}${c.id===front?' — in front':''}`);b.innerHTML=`<span class="star-label">${c.label}</span>`;
+   const rel=signed(c.angle-angle);const p=project(rel,34);
+   const b=document.createElement('button');b.type='button';b.className='star';b.dataset.cardinal=c.id;b.dataset.primary=String(c.id===front);b.dataset.depth=p.depth.toFixed(3);applyProjection(b,p);b.setAttribute('aria-label',`${c.label}${c.id===front?' — in front':''}`);b.innerHTML=`<span class="star-label">${c.label}</span>`;
    b.addEventListener('click',()=>{if(moved>8)return;if(c.id===front)openCluster(c.id);else{angle=c.angle;renderAll();mark('tap')}});
    constellation.append(b);
  }
  setPanel('Direction in front',current.label,current.body);
  openFront.textContent=`Open ${current.label}`;openFront.hidden=false;returnBtn.hidden=true;
- setInstruction('Drag to rotate.','Bring a cardinal star to the front, then tap it to open its rooms.');
+ setInstruction('DRAG TO ROTATE','Bring a cardinal star to the front. The highlighted label must change with the star in front; tap that star to open its rooms.');
  mark('cardinals');mark('labels');
 }
 function renderCluster(){
  cluster.innerHTML='';
  const wing=CARDINALS.find(c=>c.id===activeWing);if(!wing)return;
+ let primaryRoom=wing.rooms[0];let primaryDist=999;
+ wing.rooms.forEach((room,i)=>{const d=Math.abs(signed(i*90-clusterAngle));if(d<primaryDist){primaryDist=d;primaryRoom=room}});
  wing.rooms.forEach((room,i)=>{
-   const base=i*90;const p=polar(33,base-clusterAngle);
-   const b=document.createElement('button');b.type='button';b.className='star room-star';b.dataset.room=room[0];b.dataset.primary=String(Math.abs(signed(base-clusterAngle))<45);b.style.left=p.x+'%';b.style.top=p.y+'%';b.setAttribute('aria-label',room[1]);b.innerHTML=`<span class="star-label">${room[1]}</span>`;
-   b.addEventListener('click',()=>{if(moved>8)return;setPanel('Room selected',room[1],`Selected from the ${wing.label} cluster. Navigation is intentionally disabled on this isolated qualification stage.`);setInstruction('Room selected.','Use Return to Orbit to reopen the four-cardinal constellation.');mark('tap')});
+   const rel=signed(i*90-clusterAngle);const p=project(rel,32);
+   const b=document.createElement('button');b.type='button';b.className='star room-star';b.dataset.room=room[0];b.dataset.primary=String(room[0]===primaryRoom[0]);b.dataset.selected=String(room[0]===selectedRoom);applyProjection(b,p);b.setAttribute('aria-label',`${room[1]}${room[0]===primaryRoom[0]?' — in front':''}`);b.innerHTML=`<span class="star-label">${room[1]}</span>`;
+   b.addEventListener('click',()=>{if(moved>8)return;if(room[0]!==primaryRoom[0]){clusterAngle=i*90;renderAll();mark('tap');return}selectedRoom=room[0];renderAll();setPanel('Room selected',room[1],`Selected from the ${wing.label} cluster. Navigation remains intentionally disabled on this isolated qualification stage.`);setInstruction('ROOM SELECTED','The Compass state is stable. Use Return to Orbit to restore the four-cardinal constellation.');mark('tap')});
    cluster.append(b);
  });
- setPanel(`${wing.label} cluster`,wing.label,`Rotate this room cluster independently. This proves cluster state without attaching estate navigation.`);
- setInstruction('Drag the room cluster.','Tap a room star to select it. Return to Orbit restores the four-cardinal constellation.');
- mark('clusters');
+ if(!selectedRoom){setPanel(`${wing.label} cluster`,primaryRoom[1],`Room in front. Rotate the ${wing.label} cluster independently, then tap the highlighted room.`);setInstruction('DRAG THE ROOM CLUSTER','Bring a room to the front. Its highlighted label must change with the foreground room; tap it to select.');}
+ openFront.hidden=true;returnBtn.hidden=false;
+ mark('clusters');mark('labels');
 }
-function renderState(){stateMode.textContent=mode;stateFront.textContent=front;stateAngle.textContent=Math.round(mode==='CONSTELLATION'?angle:clusterAngle)+'°';app.dataset.mode=mode}
+function renderState(){stateMode.textContent=selectedRoom?'ROOM_SELECTED':mode;stateFront.textContent=selectedRoom||front;stateAngle.textContent=Math.round(mode==='CONSTELLATION'?angle:clusterAngle)+'°';app.dataset.mode=selectedRoom?'ROOM_SELECTED':mode}
 function renderAll(){if(mode==='CONSTELLATION'){constellation.hidden=false;cluster.hidden=true;renderConstellation()}else{constellation.hidden=true;cluster.hidden=false;renderCluster()}renderState()}
-function openCluster(id=front){activeWing=id;mode='CLUSTER_OPEN';clusterAngle=0;openFront.hidden=true;returnBtn.hidden=false;renderAll();mark('tap')}
-function returnOrbit(){mode='CONSTELLATION';activeWing=null;renderAll();mark('return')}
-function rotateBy(dx){if(mode==='CONSTELLATION'){angle=norm(angle+dx*.38)}else{clusterAngle=norm(clusterAngle+dx*.45)}renderAll();mark('drag')}
-function settle(){if(mode==='CONSTELLATION'){const c=nearestCardinal();angle=c.angle}else{clusterAngle=Math.round(clusterAngle/90)*90}renderAll()}
+function openCluster(id=front){activeWing=id;mode='CLUSTER_OPEN';clusterAngle=0;selectedRoom='';renderAll();mark('tap')}
+function returnOrbit(){mode='CONSTELLATION';activeWing=null;selectedRoom='';renderAll();mark('return')}
+function rotateBy(dx){selectedRoom='';if(mode==='CONSTELLATION'){angle=norm(angle+dx*.34)}else{clusterAngle=norm(clusterAngle+dx*.40)}renderAll();mark('drag')}
+function settle(){if(mode==='CONSTELLATION'){const c=nearestCardinal();angle=c.angle}else{clusterAngle=norm(Math.round(clusterAngle/90)*90)}renderAll()}
 
-stage.addEventListener('pointerdown',e=>{dragging=true;pointerId=e.pointerId;lastX=e.clientX;moved=0;stage.setPointerCapture?.(pointerId)});
+stage.addEventListener('pointerdown',e=>{if(e.button!==undefined&&e.button!==0)return;dragging=true;pointerId=e.pointerId;lastX=e.clientX;moved=0;stage.classList.add('is-dragging');stage.setPointerCapture?.(pointerId)});
 stage.addEventListener('pointermove',e=>{if(!dragging||e.pointerId!==pointerId)return;const dx=e.clientX-lastX;lastX=e.clientX;moved+=Math.abs(dx);rotateBy(dx)});
-function endPointer(e){if(!dragging||e.pointerId!==pointerId)return;dragging=false;stage.releasePointerCapture?.(pointerId);settle();setTimeout(()=>{moved=0},0)}
-stage.addEventListener('pointerup',endPointer);stage.addEventListener('pointercancel',endPointer);
-stage.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();rotateBy(e.key==='ArrowRight'?-28:28);settle()}else if(e.key==='Enter'||e.key===' '){if(mode==='CONSTELLATION'){e.preventDefault();openCluster(front)}}else if(e.key==='Escape'&&mode!=='CONSTELLATION'){e.preventDefault();returnOrbit()}});
+function endPointer(e){if(!dragging||e.pointerId!==pointerId)return;dragging=false;stage.classList.remove('is-dragging');stage.releasePointerCapture?.(pointerId);settle();setTimeout(()=>{moved=0},0)}
+stage.addEventListener('pointerup',endPointer);stage.addEventListener('pointercancel',endPointer);stage.addEventListener('lostpointercapture',()=>{dragging=false;stage.classList.remove('is-dragging')});
+stage.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();rotateBy(e.key==='ArrowRight'?-90:90);settle()}else if(e.key==='Enter'||e.key===' '){if(mode==='CONSTELLATION'){e.preventDefault();openCluster(front)}}else if(e.key==='Escape'&&mode!=='CONSTELLATION'){e.preventDefault();returnOrbit()}});
 openFront.addEventListener('click',()=>openCluster(front));returnBtn.addEventListener('click',returnOrbit);
 renderAll();
 })();

@@ -30,11 +30,22 @@ jobs:
       - run: |
           python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/server.log 2>&1 &
           for a in $(seq 1 80); do curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/ >/dev/null && exit 0; sleep .25; done; exit 1
-      - name: Diagnose and verify browser bootstrap
+      - name: Verify exact W5 modules after parent readiness
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
         run: |
           node <<'NODE'
           const puppeteer=require('puppeteer-core');
-          (async()=>{const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});const page=await browser.newPage();const errors=[];page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});await page.goto('http://127.0.0.1:4173/showroom/globe/audralia/',{waitUntil:'domcontentloaded',timeout:90000});await new Promise(r=>setTimeout(r,20000));const state=await page.evaluate(()=>({parent:!!window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer,ga:window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority,gaError:window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__??null,handoff:window.__AUDRALIA_FAP1_W5_HANDOFF__??null,handoffError:window.__AUDRALIA_FAP1_W5_HANDOFF_ERROR__??null,w5Canvas:[...document.querySelectorAll('canvas')].find(c=>c.dataset.fap1W5LocalRaymarch==='true')?.style.display??null}));console.log(JSON.stringify({state,errors},null,2));const h=state.handoff?.getReceipt?await page.evaluate(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__.getReceipt()):null;console.log(JSON.stringify({receipt:h},null,2));const pass=state.parent&&state.ga==='FAP1_ONLY'&&!state.handoffError&&h?.macroReference==='24049'&&h?.macroWeatherFrozen===true&&h?.regime==='MACRO_LOCKED'&&h?.macroContribution===1&&h?.localContribution===0&&state.w5Canvas==='none';await browser.close();if(!pass)process.exit(2);})().catch(e=>{console.error(e);process.exit(1);});
+          (async()=>{
+            const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+            const page=await browser.newPage();const errors=[];page.on('pageerror',e=>errors.push(String(e)));
+            await page.goto('http://127.0.0.1:4173/showroom/globe/audralia/',{waitUntil:'domcontentloaded',timeout:90000});
+            await page.waitForFunction(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer&&typeof window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getCameraFrame==='function',{timeout:90000});
+            if(!(await page.evaluate(()=>window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY'))){await page.evaluate(()=>import('./weather-presentation-reconciliation/fap1-ga-authority-bootstrap.mjs?qual=macro-lock-v1'));}
+            await page.waitForFunction(()=>window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY',{timeout:30000});
+            if(!(await page.evaluate(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.authority==='BOUNDED_GB_HANDOFF_ACTIVE'))){await page.evaluate(()=>import('./weather-presentation-reconciliation/fap1-w5-handoff-bootstrap.gb.mjs?qual=macro-lock-v1'));}
+            await page.waitForFunction(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.authority==='BOUNDED_GB_HANDOFF_ACTIVE',{timeout:30000});
+            const result=await page.evaluate(()=>{const h=window.__AUDRALIA_FAP1_W5_HANDOFF__.getReceipt();const canvas=[...document.querySelectorAll('canvas')].find(c=>c.dataset.fap1W5LocalRaymarch==='true');return {authority:window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority,receipt:h,w5Display:canvas?.style.display??null,startupFailure:window.__AUDRALIA_STARTUP_FAILURE__??null,handoffError:window.__AUDRALIA_FAP1_W5_HANDOFF_ERROR__??null};});
+            console.log(JSON.stringify({result,errors},null,2));const h=result.receipt;const pass=result.authority==='FAP1_ONLY'&&!result.handoffError&&h?.macroReference==='24049'&&h?.macroWeatherFrozen===true&&h?.regime==='MACRO_LOCKED'&&h?.macroContribution===1&&h?.localContribution===0&&result.w5Display==='none';await browser.close();if(!pass)process.exit(2);
+          })().catch(e=>{console.error(e);process.exit(1);});
           NODE

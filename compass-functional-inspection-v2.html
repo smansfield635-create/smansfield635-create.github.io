@@ -1,17 +1,28 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Compass Functional Clone Inspection v8</title></head><body style="margin:0;background:#02040a;color:#eee;font-family:system-ui"><p id="loading" style="padding:24px">Loading immutable browser-qualified Compass clone…</p><script>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Compass Functional Clone Inspection · Single Host</title></head><body style="margin:0;background:#02040a;color:#eee;font-family:system-ui"><p id="loading" style="padding:24px">Loading single-host Compass reconstruction…</p><script>
 (async()=>{
-  const payload='f2e428f5ad223057a87d67dfb4dc6eba6337ba85';
-  const owner='smansfield635-create';
-  const repo='smansfield635-create.github.io';
-  const raw=`https://raw.githubusercontent.com/${owner}/${repo}/${payload}/index.html`;
-  const gh=`https://raw.githack.com/${owner}/${repo}/${payload}`;
+  const baseline='747b064135a0ff86915f5dbb75d8a128f66514a1';
+  const support='f2e428f5ad223057a87d67dfb4dc6eba6337ba85';
+  const owner='smansfield635-create',repo='smansfield635-create.github.io';
+  const raw=`https://raw.githubusercontent.com/${owner}/${repo}/${baseline}/index.html`;
+  const base=`https://raw.githack.com/${owner}/${repo}/${baseline}`;
+  const sup=`https://raw.githack.com/${owner}/${repo}/${support}`;
   const prod='https://diamondgatebridge.com';
   const hEarth='https://raw.githack.com/smansfield635-create/smansfield635-create.github.io/ae1697e0054f17644a4f1c6d12a7bfbe488356b0/h-earth-functional-inspection.html';
   try{
-    const response=await fetch(raw,{cache:'no-store'});if(!response.ok)throw new Error(`index fetch ${response.status}`);let html=await response.text();
-    html=html.replaceAll('href="/assets/','href="'+gh+'/assets/').replaceAll("href='/assets/","href='"+gh+"/assets/").replaceAll('src="/assets/','src="'+gh+'/assets/').replaceAll("src='/assets/","src='"+gh+"/assets/").replaceAll('href="/showroom/globe/h-earth/"','href="'+hEarth+'"').replaceAll('href="/','href="'+prod+'/').replace('</head>',`<link rel="stylesheet" href="${gh}/assets/compass/compass.functional-carousels.css?v=spread-${payload.slice(0,12)}"></head>`).replace('</body>',`<script src="${gh}/assets/compass/compass.functional-clone-repair.js?v=v4-${payload.slice(0,12)}"><\/script><script src="${gh}/assets/compass/compass.functional-carousels.js?v=spread-${payload.slice(0,12)}"><\/script></body>`);
+    const response=await fetch(raw,{cache:'no-store'});if(!response.ok)throw new Error(`baseline fetch ${response.status}`);let html=await response.text();
+    // Remove legacy lower presentation before parsing: DOM, CSS and every lower-page runtime owner.
+    html=html.replace(/<p class="compass-capability-cue">[\s\S]*?<section class="compass-build-cta"/,'<section class="compass-build-cta"');
+    html=html.replace(/<link rel="stylesheet" href="\/assets\/compass\/compass\.statement-carousel\.css[^>]*>\s*/g,'');
+    html=html.replace(/<link rel="stylesheet" href="\/assets\/compass\/compass\.capability-carousel\.css[^>]*>\s*/g,'');
+    html=html.replace(/<script src="\/assets\/compass\/compass\.(?:orbit-input|statement-carousel|brain-scene|capability-carousel)\.js[^>]*><\/script>\s*/g,'');
+    html=html.replace(/document\.addEventListener\('DOMContentLoaded',\(\)=>\{const capabilityChoices=[\s\S]*?(?=\n<\/script>)/,'');
+    // Rebase only the surviving historical Compass core assets.
+    html=html.replaceAll('href="/assets/','href="'+base+'/assets/').replaceAll("href='/assets/","href='"+base+"/assets/").replaceAll('src="/assets/','src="'+base+'/assets/').replaceAll("src='/assets/","src='"+base+"/assets/");
+    html=html.replaceAll('href="/showroom/globe/h-earth/"','href="'+hEarth+'"').replaceAll('href="/','href="'+prod+'/');
+    html=html.replace('</head>',`<link rel="stylesheet" href="${sup}/assets/compass/compass.functional-carousels.css?v=single-host"></head>`);
+    html=html.replace('</body>',`<script src="${sup}/assets/compass/compass.functional-clone-repair.js?v=single-host"><\/script><script src="${sup}/assets/compass/compass.functional-carousels.js?v=single-host"><\/script><script>document.addEventListener('DOMContentLoaded',()=>{const forbidden=[...document.scripts].map(s=>s.src).filter(src=>/(statement-carousel|capability-carousel|orbit-input)/.test(src));const roots=document.querySelectorAll('[data-dgb-orbit]');const root=document.querySelector('[data-compass-root]');if(root){root.dataset.runtimeAudit=forbidden.length===0&&roots.length===2?'SINGLE_HOST_PASS':'SINGLE_HOST_FAIL';root.dataset.runtimeOwners=String(4+2)}console.info('COMPASS_SINGLE_HOST_AUDIT',{forbidden,orbitRoots:roots.length,result:root?.dataset.runtimeAudit});},{once:true});<\/script></body>`);
     document.open();document.write(html);document.close();
-  }catch(error){document.getElementById('loading').textContent='Immutable inspection launcher failed: '+error;}
+  }catch(error){document.getElementById('loading').textContent='Single-host inspection failed: '+error;}
 })();
 </script></body></html>

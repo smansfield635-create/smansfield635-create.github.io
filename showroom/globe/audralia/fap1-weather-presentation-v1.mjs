@@ -1,4 +1,4 @@
-const POLICY_ID='AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v4';
+const POLICY_ID='AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v5';
 const previousShaderSource=WebGL2RenderingContext.prototype.shaderSource;
 let patched=0;
 let rejected=0;
@@ -71,8 +71,29 @@ vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   float anvil=fap1Ellipse(dq,vec2(.035,.085),vec2(.31,.13),-.10)*fap1Band(h,78.0,108.0)*mix(.35,1.0,fap1CloudBreak(radial,t,17.0,.32,.67))*.66;
   mass+=max(tower,anvil);ice+=tower*.48+anvil*.96;precip+=tower*.91;
 
-  const float CY_LAT=-.628319;
-  const float CY_LON=-2.199115;
+  // Low-intensity synoptic bridge fields fill conspicuous planetary dead zones
+  // without raising global density or replacing explicit clear-air corridors.
+  float clearBridge=1.0-fap1ClearCorridor(lat,lon);
+  vec2 bwq=fap1Local(lat,lon,.20,2.55+t*.009);
+  float westBridgeShape=fap1Ellipse(bwq,vec2(0.0),vec2(.58,.25),-.18);
+  float westBridgeBreak=fap1CloudBreak(radial,t,18.0,.46,.73);
+  float westBridge=westBridgeShape*fap1Band(h,54.0,90.0)*mix(.05,.34,westBridgeBreak)*.62*clearBridge;
+  mass+=westBridge;ice+=westBridge*.64;
+
+  vec2 bsq=fap1Local(lat,lon,-.56,-1.02-t*.007);
+  float southBridgeShape=fap1Ellipse(bsq,vec2(0.0),vec2(.52,.30),.27);
+  float southBridgeBreak=fap1CloudBreak(radial,t,24.0,.50,.77);
+  float southBridge=southBridgeShape*fap1Band(h,32.0,67.0)*mix(.04,.31,southBridgeBreak)*.64;
+  mass+=southBridge;precip+=southBridge*.10;
+
+  vec2 beq=fap1Local(lat,lon,.16,-2.50+t*.006);
+  float eastBridgeShape=fap1Ellipse(beq,vec2(0.0),vec2(.50,.21),-.36);
+  float eastBridgeBreak=fap1CloudBreak(radial,t,15.0,.48,.76);
+  float eastBridge=eastBridgeShape*fap1Band(h,68.0,102.0)*mix(.04,.29,eastBridgeBreak)*.58;
+  mass+=eastBridge;ice+=eastBridge*.86;
+
+  const float CY_LAT=-.349066;
+  const float CY_LON=.349066;
   vec2 sy=fap1Local(lat,lon,CY_LAT,CY_LON+t*.010);
   float sr=length(sy);
   float sa=atan(sy.y,sy.x);
@@ -164,11 +185,14 @@ Object.defineProperty(window,'__AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION__',
     cycloneEyewall:true,
     cycloneRainbands:true,
     cycloneUpperOutflow:true,
+    cyclonePlacementAlignedWithFAP1State:true,
     noVisiblePolarStripeConstruction:true,
     brokenAsymmetricStormMasses:true,
     polarCloudMaximumOccupation:true,
     broadPolarLayering:true,
-    smokePlumeMorphologySuppressed:true,
+    sparseSynopticBridgeFields:true,
+    planetaryDeadZoneReduction:true,
+    clearCorridorPreserved:true,
     altitudeDifferentiation:true,
     immersiveCloudInterior:true,
     cameraLocalRayMarchInsideCloud:true,

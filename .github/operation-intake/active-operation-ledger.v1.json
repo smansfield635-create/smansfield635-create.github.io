@@ -108,6 +108,18 @@
       "scopeHash": "0b32492db52675bf274cc2bb6acdf9e3ab5a5078f2c49e19ac17f4b404a27e76",
       "state": "ADMITTED_LOCKED"
     },
+    "0bb1f31d413c5e1e6bbacb45d56184915b13e9a91bbc746f7b1f37b013585568": {
+      "governingHead": "744961bd34be67a58037f685f2eda618dff58b10",
+      "lockGeneration": 1581,
+      "lockScope": "REPOSITORY-PUBLICATION-CONTROL-PLANE",
+      "operationId": "VERCEL_DETACHMENT_AND_PAGES_ONLY_RECOVERY_20260821_001",
+      "procedureLocatorDigest": "b8ca955d7392baf2de77059b29bab0ef4093492e1c5029c9a9e7e21e6f22631d",
+      "released": false,
+      "requestDigest": "7b3691226f4b566bce5c8fa9d8c8625f64a78082d0bea3871791800aac465a6e",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "0bb1f31d413c5e1e6bbacb45d56184915b13e9a91bbc746f7b1f37b013585568",
+      "state": "ADMITTED_LOCKED"
+    },
     "0cbb894a22e576db5e8f30790ca5b753f50d8e73f0394804166ce80d919effd0": {
       "governingHead": "590d106fbbd8bba2992fa7aeaec6e03e3a783863",
       "lockGeneration": 1456,
@@ -2850,7 +2862,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1580,
+  "lockGeneration": 1581,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

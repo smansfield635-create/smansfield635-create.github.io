@@ -5,7 +5,7 @@
   "purpose": "Provide a continuity-safe native GitHub workflow_dispatch path when the connected GitHub tool does not expose workflow dispatch directly.",
   "preferredTransport": "DIRECT_CONNECTED_GITHUB_WORKFLOW_DISPATCH",
   "fallbackTransport": "SAME_REPOSITORY_PR_TARGET_NATIVE_WORKFLOW_DISPATCH_BRIDGE",
-  "requestBranchPrefix": "ai-dispatch/",
+  "requestBranchPrefix": "ai-dispatch-request-",
   "requestPath": ".github/ai-entry/workflow-dispatch-request.json",
   "receiptBranch": "ai-dispatch-receipts",
   "receiptPathTemplate": ".github/ai-entry/receipts/<requestId>.json",
@@ -13,7 +13,7 @@
   "bridgeRuntime": "tools/ai-entry-workflow-dispatch-bridge.mjs",
   "transportPullRequest": {
     "base": "main",
-    "headPrefix": "ai-dispatch/",
+    "headPrefix": "ai-dispatch-request-",
     "titlePrefix": "AI Dispatch:",
     "sameRepositoryRequired": true,
     "autoCloseOnSuccess": true,

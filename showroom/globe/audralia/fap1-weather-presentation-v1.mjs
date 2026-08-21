@@ -1,4 +1,4 @@
-const POLICY_ID='AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v4';
+const POLICY_ID='AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v5_24056_FOOTPRINT_SUCCESSOR';
 const previousShaderSource=WebGL2RenderingContext.prototype.shaderSource;
 let patched=0;
 let rejected=0;
@@ -38,7 +38,7 @@ vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   ice+=polarHigh*.98+polarMid*.42+polarDeep*.55;
   precip+=polarLow*.20+polarMid*.18+polarDeep*.34;
 
-  vec2 hiq=fap1Local(lat,lon,.994838,.453786+t*.025);
+  vec2 hiq=fap1Local(lat,lon,.994838,.453786+t*.025)*vec2(.94,.91);
   float hiEnvelope=fap1Ellipse(hiq,vec2(0.0),vec2(.68,.32),-.22);
   float hiN=fbm(radial*13.0+vec3(t*.28,-t*.10,t*.41));
   float hiSecondary=fbm(radial*23.0+vec3(-t*.12,t*.18,-t*.22));
@@ -47,7 +47,7 @@ vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   float hi=hiEnvelope*fap1Band(h,72.0,106.0)*hiBody*hiBreak*.46*(1.0-polar*.55);
   mass+=hi;ice+=hi*.98;
 
-  vec2 fq=fap1Local(lat,lon,.593412,-1.27409+t*.018);
+  vec2 fq=fap1Local(lat,lon,.593412,-1.27409+t*.018)*vec2(.94,.91);
   float frontA=fap1Ellipse(fq,vec2(-.12,.00),vec2(.52,.12),-.34);
   float frontB=fap1Ellipse(fq,vec2(.26,.08),vec2(.34,.10),-.16);
   float frontShape=max(frontA,frontB)*fap1Band(h,42.0,80.0);
@@ -55,13 +55,13 @@ vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   float front=frontShape*mix(.18,1.0,frontBreak)*.58;
   mass+=front;ice+=front*.32;precip+=front*.22;
 
-  vec2 cq=fap1Local(lat,lon,.069813,.837758-t*.014);
+  vec2 cq=fap1Local(lat,lon,.069813,.837758-t*.014)*vec2(.94,.91);
   float cumulusZone=fap1Ellipse(cq,vec2(0.0),vec2(.58,.42),.08)*fap1Band(h,30.0,58.0);
   float cells=fbm(radial*31.0+vec3(-t*.5,t*.22,t*.35));
   float low=cumulusZone*smoothstep(.60,.79,cells)*.68;
   mass+=low;precip+=low*.12;
 
-  vec2 dq=fap1Local(lat,lon,-.331613,1.43117-t*.012);
+  vec2 dq=fap1Local(lat,lon,-.331613,1.43117-t*.012)*vec2(.94,.91);
   float towerShape=max(
     fap1Ellipse(dq,vec2(-.04,.01),vec2(.13,.18),-.18),
     fap1Ellipse(dq,vec2(.10,.055),vec2(.10,.15),.22)

@@ -82,12 +82,17 @@ function observeRuntime(){
   if(document.querySelector('[data-audralia-exterior-weather="true"]'))setVerified(72,'Regional weather ready',84);
   if(document.querySelector('[data-canonical-weather-projection="true"]'))setVerified(86,'Local weather ready',94);
   const runtime=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.();
-  if(runtime?.invariants?.pass===true){
+  const ga=window.__AUDRALIA_FAP1_GA_AUTHORITY__;
+  if(runtime?.invariants?.pass===true&&ga?.meteorologicalAuthority==='FAP1_ONLY'){
     setVerified(100,'Audralia ready',100);
     clearInterval(activityTimer);
     clearTimeout(timeoutTimer);
-    if(note)note.textContent='One continuous world is ready.';
+    if(note)note.textContent='One continuous world is ready · FAP1 is the sole visible weather-density authority.';
     if(loader){loader.classList.add('is-ready');setTimeout(()=>{loader.hidden=true;},460);}
+    return;
+  }
+  if(window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__){
+    fail('FAP1 authority convergence stopped',window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__.message);
     return;
   }
   if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__){
@@ -103,6 +108,7 @@ async function boot(){
   try{
     setVerified(16,'Loading world systems',34);
     await import('./app.mjs?cb=gratitude-chronology-startup-v2');
+    await import('./fap1-ga-authority-bootstrap.mjs?cb=FAP1_GA_v1');
     setVerified(38,'Constructing planetary surface',54);
     requestAnimationFrame(observeRuntime);
   }catch(error){

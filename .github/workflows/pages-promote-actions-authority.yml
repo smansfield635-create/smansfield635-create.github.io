@@ -3,8 +3,6 @@ name: Promote GitHub Pages Actions Authority
 on:
   push:
     branches: [main]
-    paths:
-      - '.github/workflows/pages-promote-actions-authority.yml'
   workflow_dispatch:
 
 permissions:

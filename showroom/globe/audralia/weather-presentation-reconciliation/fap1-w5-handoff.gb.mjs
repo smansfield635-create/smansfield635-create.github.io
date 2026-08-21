@@ -6,6 +6,11 @@ import {
   createW5LocalRayMarchSurface,
   verifyW5LocalRayMarchReceipt
 } from './fap1-w5-local-raymarch.gb.mjs';
+import {
+  setFAP1MacroRenderContribution,
+  clearFAP1MacroRenderContributions,
+  getFAP1MacroRenderContributions
+} from './fap1-gpu-weather-descriptors.mjs';
 
 const freeze=value=>Object.freeze(value);
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
@@ -28,7 +33,6 @@ export function createBoundedW5Handoff({worldCanvas,parentReceipt,gaAuthority}={
   if(!(worldCanvas instanceof HTMLCanvasElement))throw new Error('FAP1_W5_HANDOFF_WORLD_CANVAS_REQUIRED');
   if(!parentReceipt||typeof parentReceipt.getCameraFrame!=='function')throw new Error('FAP1_W5_HANDOFF_PARENT_RECEIPT_REQUIRED');
   if(!gaAuthority||typeof gaAuthority.descriptorPacket!=='function'||typeof gaAuthority.renderNow!=='function')throw new Error('FAP1_W5_HANDOFF_GA_AUTHORITY_REQUIRED');
-  if(typeof gaAuthority.setSystemContribution!=='function'||typeof gaAuthority.clearSystemContributions!=='function')throw new Error('FAP1_W5_HANDOFF_MACRO_CONTRIBUTION_CONTROL_REQUIRED');
 
   const localSurface=createW5LocalRayMarchSurface({worldCanvas});
   let lastReceipt=null;
@@ -43,7 +47,7 @@ export function createBoundedW5Handoff({worldCanvas,parentReceipt,gaAuthority}={
       .sort((a,b)=>b.alpha.l-a.alpha.l||a.distanceToVolume-b.distanceToVolume||a.object.ID_i.localeCompare(b.object.ID_i));
     const active=promoted[0]??null;
 
-    gaAuthority.clearSystemContributions();
+    clearFAP1MacroRenderContributions();
     if(!active){
       gaAuthority.renderNow();
       localSurface.render({camera,spatialState});
@@ -57,6 +61,7 @@ export function createBoundedW5Handoff({worldCanvas,parentReceipt,gaAuthority}={
         contributionSum:1,
         persistentWeatherIdentity:true,
         macroMassPreservationLaw:'MACRO_PLUS_LOCAL_EQUALS_ONE',
+        macroRenderContributions:getFAP1MacroRenderContributions(),
         l5LightingActive:false,
         handoffAuthority:'BOUNDED_GB_HANDOFF_ACTIVE'
       });
@@ -64,7 +69,7 @@ export function createBoundedW5Handoff({worldCanvas,parentReceipt,gaAuthority}={
     }
 
     const contribution=contributionFor(active);
-    gaAuthority.setSystemContribution(active.object.ID_i,contribution.macro);
+    setFAP1MacroRenderContribution(active.object.ID_i,contribution.macro);
     gaAuthority.renderNow();
     const localReceipt=localSurface.render({camera,spatialState});
     const localVerification=verifyW5LocalRayMarchReceipt(localReceipt);
@@ -82,8 +87,10 @@ export function createBoundedW5Handoff({worldCanvas,parentReceipt,gaAuthority}={
       persistentWeatherIdentity:localReceipt.weatherId===active.object.ID_i,
       localBrickAddress:localReceipt.brickAddress??null,
       macroMassPreservationLaw:'MACRO_PLUS_LOCAL_EQUALS_ONE',
+      macroRenderContributions:getFAP1MacroRenderContributions(),
       macroRendererWeatherAuthority:'FAP1_ONLY',
       localRendererWeatherAuthority:'FAP1_DESCRIPTOR_REFINEMENT_ONLY',
+      canonicalDensityPreserved:true,
       macroCloudTuning:false,
       l5LightingActive:false,
       handoffAuthority:'BOUNDED_GB_HANDOFF_ACTIVE'
@@ -97,7 +104,7 @@ export function createBoundedW5Handoff({worldCanvas,parentReceipt,gaAuthority}={
     getReceipt:()=>lastReceipt,
     beginInteraction(){localSurface.beginInteraction();},
     endInteraction(){localSurface.endInteraction();},
-    destroy(){gaAuthority.clearSystemContributions();gaAuthority.renderNow();localSurface.destroy();}
+    destroy(){clearFAP1MacroRenderContributions();gaAuthority.renderNow();localSurface.destroy();}
   });
 }
 
@@ -107,6 +114,7 @@ export function verifyBoundedW5Handoff(receipt,epsilon=1e-6){
   if(Math.abs((receipt?.contributionSum??NaN)-1)>epsilon)failures.push('CONTRIBUTION_SUM_NOT_ONE');
   if(!(receipt?.macroContribution>=0&&receipt?.macroContribution<=1))failures.push('MACRO_CONTRIBUTION_INVALID');
   if(!(receipt?.localContribution>=0&&receipt?.localContribution<=1))failures.push('LOCAL_CONTRIBUTION_INVALID');
+  if(receipt?.active&&receipt?.canonicalDensityPreserved!==true)failures.push('CANONICAL_DENSITY_NOT_PRESERVED');
   if(receipt?.macroCloudTuning===true)failures.push('MACRO_TUNING_FORBIDDEN');
   if(receipt?.l5LightingActive!==false)failures.push('L5_PREMATURE_ACTIVATION');
   if(receipt?.handoffAuthority!=='BOUNDED_GB_HANDOFF_ACTIVE')failures.push('HANDOFF_AUTHORITY_MISSING');

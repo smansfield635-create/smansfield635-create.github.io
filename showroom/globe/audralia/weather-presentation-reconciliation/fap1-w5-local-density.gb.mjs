@@ -8,8 +8,8 @@ const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 const smooth=(a,b,v)=>{const t=clamp((v-a)/(b-a||1),0,1);return t*t*(3-2*t);};
 const mix=(a,b,t)=>a+(b-a)*t;
 
-export const FAP1_W5_LOCAL_DENSITY_SCHEMA='FAP1_W5_LOCAL_DENSITY_REFINEMENT_v1';
-export const W5_GENERATION=1;
+export const FAP1_W5_LOCAL_DENSITY_SCHEMA='FAP1_W5_LOCAL_DENSITY_REFINEMENT_v2_MACRO_ANCHORED';
+export const W5_GENERATION=2;
 export const W5_BRICK_RESOLUTION=12;
 export const W5_MAX_ACTIVE_OBJECTS=1;
 export const W5_EMPTY_THRESHOLD=0.0025;
@@ -41,40 +41,83 @@ function fbm3(x,y,z,seed){
   return sum/(norm||1);
 }
 
-function familyShape(genus,q,seed){
-  const x=q[0],y=q[1],z=q[2],radial=Math.hypot(x,z),vertical=clamp((y+1)*.5,0,1);
-  const broad=fbm3(x*1.8+3.1,y*1.6-1.7,z*1.8+2.4,seed);
-  const erosion=fbm3(x*5.4-7.2,y*4.8+4.1,z*5.2-2.6,seed+97);
-  const cavity=fbm3(x*2.7+11.0,y*3.1-5.0,z*2.4+8.0,seed+211);
-  let envelope=1-clamp(x*x+y*y+z*z,0,1);
-  envelope*=envelope;
+// Macro anchor deliberately mirrors the G_A density expression at canonical
+// morphology time zero. W5 is a refinement of that mass, not a new cloud.
+function hash31(x,y,z){
+  let px=x*.1031-Math.floor(x*.1031),py=y*.1031-Math.floor(y*.1031),pz=z*.1031-Math.floor(z*.1031);
+  const d=px*(py+33.33)+py*(pz+33.33)+pz*(px+33.33);
+  px+=d;py+=d;pz+=d;
+  const value=(px+py)*pz;
+  return value-Math.floor(value);
+}
+function macroNoise3(x,y,z){
+  const ix=Math.floor(x),iy=Math.floor(y),iz=Math.floor(z),fx=x-ix,fy=y-iy,fz=z-iz;
+  const sx=fx*fx*(3-2*fx),sy=fy*fy*(3-2*fy),sz=fz*fz*(3-2*fz);
+  const n=(dx,dy,dz)=>hash31(ix+dx,iy+dy,iz+dz);
+  const a=mix(n(0,0,0),n(1,0,0),sx),b=mix(n(0,1,0),n(1,1,0),sx);
+  const c=mix(n(0,0,1),n(1,0,1),sx),d=mix(n(0,1,1),n(1,1,1),sx);
+  return mix(mix(a,b,sy),mix(c,d,sy),sz);
+}
+function macroFbm(x,y,z){
+  let value=macroNoise3(x,y,z)*.62;
+  value+=macroNoise3(x*2.07+5.3,y*2.07+1.7,z*2.07+9.2)*(.62*.48);
+  return value;
+}
+function verticalEnvelope(z){return smooth(0,.075,z)*(1-smooth(.86,1,z));}
+function genusCode(genus){return ({Ci:0,Cc:1,Cs:2,Ac:3,As:4,Ns:5,Sc:6,St:7,Cu:8,Cb:9})[genus]??8;}
 
-  if(genus==='Cb'){
-    const taper=mix(.92,.42,smooth(.05,.78,vertical));
-    const tower=1-smooth(taper*.62,taper*1.08,radial);
-    const anvilBand=smooth(.68,.78,vertical)*(1-smooth(.94,1,vertical));
-    const anvil=(1-smooth(.58,1.28,radial))*anvilBand;
-    envelope*=Math.max(tower,anvil*.78);
-  }else if(genus==='Cu'){
-    const taper=mix(1,.56,smooth(.08,.94,vertical));
-    envelope*=1-smooth(taper*.65,taper*1.08,radial);
-  }else if(genus==='Cs'||genus==='As'){
-    envelope*=.72+.28*(1-Math.abs(y));
+function macroAnchorShape(object,q){
+  const x=q[0],vertical=q[1],y=q[2];
+  const z=clamp((vertical+1)*.5,0,1),r=Math.hypot(x,y);
+  const fieldScale=clamp(Math.sqrt(Math.max(object.V_i.radii[0]*object.V_i.radii[2],1))/260,1,9);
+  const qx=x*fieldScale,qy=y*fieldScale,seed=object.W_i.seed??0;
+  const n=macroFbm(qx*2.15+seed*19,qy*2.15,z*3.2),v=verticalEnvelope(z),g=genusCode(object.W_i.genus);
+  let shape=0;
+  if(g<2.5){
+    const veil=.5+.5*Math.sin(qx*1.55+qy*.72+seed*7+n*2.2);
+    shape=(1-smooth(.70,1.08,r))*v*smooth(.32,.63,n+.12*veil)*.44;
+  }else if(g<4.5){
+    const cells=.5+.5*Math.sin(qx*2.7+n*2.4)*Math.cos(qy*2.3);
+    shape=(1-smooth(.70,1.08,r))*v*smooth(.39,.66,n+.18*cells)*.60;
+  }else if(g<7.5){
+    const sheet=.5+.5*Math.sin(qx*1.35+qy*.47+seed*5);
+    shape=(1-smooth(.70,1.08,r))*v*smooth(.35,.62,n+.10*sheet)*.68;
+  }else if(g<8.5){
+    const taper=mix(1,.48,smooth(.08,.95,z)),cell=.5+.5*Math.sin(qx*2.6+seed*9)*Math.cos(qy*2.35);
+    shape=(1-smooth(taper*.65,taper*1.08,r))*v*smooth(.44,.66,n+.22*cell)*.88;
+  }else{
+    const taper=mix(.90,.39,smooth(.05,.72,z)),cell=.5+.5*Math.sin(qx*2.2+seed*7)*Math.cos(qy*2);
+    const tower=(1-smooth(taper*.62,taper*1.10,r))*v*smooth(.39,.62,n+.20*cell);
+    const anvilBand=smooth(.62,.76,z)*(1-smooth(.95,1,z));
+    const anvil=(1-smooth(.48,1.32,r))*anvilBand*smooth(.34,.59,n+.14*cell)*.76;
+    shape=Math.max(tower,anvil);
+    if(object.weatherClass==='CYCLONE'){
+      const eye=1-smooth(.10,.19,r),wall=smooth(.12,.22,r)*(1-smooth(.31,.46,r));
+      shape=Math.max(shape,wall*.64*v);shape*=1-eye*.985;
+    }
   }
+  return clamp(shape,0,1.8);
+}
 
-  const mass=smooth(.31,.66,broad*.70+cavity*.30);
-  const carved=mass*(.54+.46*smooth(.28,.72,erosion));
-  const pocket=1-smooth(.38,.62,cavity);
-  return clamp(envelope*carved*(1-.52*pocket),0,1);
+function localRefinementFactor(object,q){
+  const seed=Math.floor((object.W_i.seed??0)*100000)+hash32(object.ID_i)%100000;
+  const fine=fbm3(q[0]*7.5+4.3,q[1]*8.2-2.1,q[2]*7.1+6.4,seed+401);
+  const cavity=fbm3(q[0]*3.4-8.2,q[1]*3.9+5.7,q[2]*3.2-1.9,seed+733);
+  const signedFine=(fine-.5)*2;
+  const signedCavity=(cavity-.5)*2;
+  // Bounded refinement: enough to add cavities/lobes without changing the
+  // low-frequency mass authority established by G_A.
+  return clamp(1+signedFine*.12-signedCavity*.06,.80,1.20);
 }
 
 export function sampleW5LocalDensity(object,worldPoint){
   if(!object||object.authority!=='FAP1_DESCRIPTOR_ONLY')throw new Error('FAP1_W5_OBJECT_AUTHORITY_REQUIRED');
   const q=localCoordinates(worldPoint,object);
   if(q[0]*q[0]+q[1]*q[1]+q[2]*q[2]>=1)return 0;
-  const seed=Math.floor((object.W_i.seed??0)*100000)+hash32(object.ID_i)%100000;
-  const shape=familyShape(object.W_i.genus,q,seed);
-  const density=clamp((object.W_i.density??0)*(object.W_i.support??1)*shape,0,1.8);
+  const macroShape=macroAnchorShape(object,q);
+  if(macroShape<=0)return 0;
+  const refinement=localRefinementFactor(object,q);
+  const density=clamp((object.W_i.density??0)*(object.W_i.support??1)*macroShape*refinement,0,1.8);
   return density<W5_EMPTY_THRESHOLD?0:density;
 }
 
@@ -116,6 +159,7 @@ export function buildW5DensityBrick(object,{bx=0,by=0,bz=0,generation=W5_GENERAT
     maxDensity,
     values,
     authority:'FAP1_DESCRIPTOR_REFINEMENT_ONLY',
+    correspondenceBasis:'G_A_MACRO_DENSITY_BOUNDARY_CONDITION',
     cameraCentered:false,
     persistentWeatherIdentity:true,
     lightingApplied:false,
@@ -127,18 +171,7 @@ export function createW5RefinementState(spatialState){
   const active=chooseW5ActiveObject(spatialState);
   if(!active)return freeze({schema:FAP1_W5_LOCAL_DENSITY_SCHEMA,active:false,activeWeatherId:null,brick:null,maxActiveObjects:W5_MAX_ACTIVE_OBJECTS,visibleRendererMutation:false,l5LightingActive:false});
   const brick=buildW5DensityBrick(active.object);
-  return freeze({
-    schema:FAP1_W5_LOCAL_DENSITY_SCHEMA,
-    active:true,
-    activeWeatherId:active.object.ID_i,
-    distanceToVolume:active.distanceToVolume,
-    inside:active.inside,
-    alpha:active.alpha,
-    brick,
-    maxActiveObjects:W5_MAX_ACTIVE_OBJECTS,
-    visibleRendererMutation:false,
-    l5LightingActive:false
-  });
+  return freeze({schema:FAP1_W5_LOCAL_DENSITY_SCHEMA,active:true,activeWeatherId:active.object.ID_i,distanceToVolume:active.distanceToVolume,inside:active.inside,alpha:active.alpha,brick,maxActiveObjects:W5_MAX_ACTIVE_OBJECTS,visibleRendererMutation:false,l5LightingActive:false});
 }
 
 export function verifyW5RefinementState(state){
@@ -146,11 +179,12 @@ export function verifyW5RefinementState(state){
   if(state?.active){
     if(!state.activeWeatherId)failures.push('ACTIVE_WEATHER_ID_MISSING');
     if(state.brick?.weatherId!==state.activeWeatherId)failures.push('BRICK_WEATHER_ID_MISMATCH');
+    if(state.brick?.correspondenceBasis!=='G_A_MACRO_DENSITY_BOUNDARY_CONDITION')failures.push('MACRO_CORRESPONDENCE_BASIS_MISSING');
     if(state.brick?.cameraCentered!==false)failures.push('CAMERA_CENTERED_LOCAL_VOLUME_FORBIDDEN');
     if(state.brick?.persistentWeatherIdentity!==true)failures.push('PERSISTENT_WEATHER_IDENTITY_MISSING');
     if(!(state.brick?.occupancyFraction>=0&&state.brick?.occupancyFraction<=1))failures.push('INVALID_OCCUPANCY_FRACTION');
   }
   if(state?.visibleRendererMutation!==false)failures.push('VISIBLE_RENDERER_MUTATION_FORBIDDEN_AT_GB_W5_DENSITY_STAGE');
   if(state?.l5LightingActive!==false)failures.push('L5_PREMATURE_ACTIVATION');
-  return freeze({schema:'FAP1_W5_LOCAL_DENSITY_INVARIANTS_v1',pass:failures.length===0,failures:freeze(failures),activeWeatherId:state?.activeWeatherId??null});
+  return freeze({schema:'FAP1_W5_LOCAL_DENSITY_INVARIANTS_v2',pass:failures.length===0,failures:freeze(failures),activeWeatherId:state?.activeWeatherId??null});
 }

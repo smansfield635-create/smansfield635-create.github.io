@@ -1901,6 +1901,18 @@
       "scopeHash": "b7c89b7086a2e6f35d5003972b0bd087326c4c713144f01484214a0aea4c5c61",
       "state": "ADMITTED_LOCKED"
     },
+    "b81b72c372a62c0f1be3640e5633a7aca62072b8a983ea3a00338760eb692a85": {
+      "governingHead": "ea522877151ba03b70302ea0f85752f88b385878",
+      "lockGeneration": 1575,
+      "lockScope": "COMPASS:PUBLIC_ACCESS_CONTINUITY:MIRRORLAND_PRESENTATION:V1",
+      "operationId": "COMPASS_PUBLIC_ACCESS_CONTINUITY_RECOVERY_20260821_001",
+      "procedureLocatorDigest": "2c790902df0388523d405105bb7264fd063399866251685882a0240559309b52",
+      "released": false,
+      "requestDigest": "1b6bae6d38afdea9970645d79cea38911dcd756d302435c2cabe0f38fac3ac5f",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "b81b72c372a62c0f1be3640e5633a7aca62072b8a983ea3a00338760eb692a85",
+      "state": "ADMITTED_LOCKED"
+    },
     "b863779715ea5296a89b644328fa6e0466f7dfad97a7600c2723ade21b92639c": {
       "governingHead": "e876e6107d3e01a19e76c9fd487b6de0d511cb25",
       "lockGeneration": 392,
@@ -2808,7 +2820,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1574,
+  "lockGeneration": 1575,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

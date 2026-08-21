@@ -88,7 +88,7 @@ jobs:
           from pathlib import Path
           s=Path('index.html').read_text()
           checks={
-            'roomDeclarations':s.count('data-compass-room-declarations'),
+            'roomDeclarations':s.count('<section class="compass-rooms" data-compass-room-declarations hidden>'),
             'capabilitySwitcher':s.count('data-compass-capability-switcher'),
             'builtSections':s.count('<section class="compass-built"'),
             'ctaSections':s.count('<section class="compass-build-cta"'),

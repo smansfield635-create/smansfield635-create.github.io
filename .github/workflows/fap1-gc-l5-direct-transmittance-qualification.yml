@@ -1,0 +1,37 @@
+name: FAP1 G_C L5 Direct Transmittance Qualification
+on:
+  pull_request:
+    paths: ['.github/workflows/fap1-gc-l5-direct-transmittance-qualification.yml']
+permissions:
+  contents: read
+jobs:
+  l5:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 0c0d884d42cf7726f5530e3456d1a7ecfd51da49
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Execute deterministic L5 direct transmittance qualification
+        run: |
+          node --input-type=module <<'NODE'
+          import {buildFAP1GPUWeatherPacket} from './showroom/globe/audralia/weather-presentation-reconciliation/fap1-gpu-weather-descriptors.mjs';
+          import {buildFAP1SpatialWeatherObjects} from './showroom/globe/audralia/weather-presentation-reconciliation/fap1-spatial-lod.gb.mjs';
+          import {sampleW5LocalDensity} from './showroom/globe/audralia/weather-presentation-reconciliation/fap1-w5-local-density.gb.mjs';
+          import {sampleL5DirectSunTransmittance,verifyL5DirectSunTransmittance} from './showroom/globe/audralia/weather-presentation-reconciliation/fap1-l5-direct-transmittance.gc.mjs';
+          const packet=buildFAP1GPUWeatherPacket({canonicalTimeHours:0}),objects=buildFAP1SpatialWeatherObjects({packet}),sun=[.42,.78,.46];
+          const receipts=[];
+          for(const object of objects){
+            let best={density:-1,point:null};
+            for(const qx of [-.5,0,.5])for(const qy of [-.5,0,.5])for(const qz of [-.5,0,.5]){
+              if(qx*qx+qy*qy+qz*qz>=.9)continue;
+              const r=object.V_i.radii,c=object.V_i.center,p=[c[0]+object.V_i.axisU[0]*qx*r[0]+object.V_i.axisUp[0]*qy*r[1]+object.V_i.axisV[0]*qz*r[2],c[1]+object.V_i.axisU[1]*qx*r[0]+object.V_i.axisUp[1]*qy*r[1]+object.V_i.axisV[1]*qz*r[2],c[2]+object.V_i.axisU[2]*qx*r[0]+object.V_i.axisUp[2]*qy*r[1]+object.V_i.axisV[2]*qz*r[2]],density=sampleW5LocalDensity(object,p);
+              if(density>best.density)best={density,point:p};
+            }
+            const interactive=sampleL5DirectSunTransmittance(object,best.point,sun,{quality:'INTERACTIVE'}),rest=sampleL5DirectSunTransmittance(object,best.point,sun,{quality:'REST'}),capture=sampleL5DirectSunTransmittance(object,best.point,sun,{quality:'CAPTURE'});
+            const checks=[interactive,rest,capture].map(verifyL5DirectSunTransmittance),bounded=[interactive,rest,capture].every(x=>x.transmittance>=0&&x.transmittance<=1&&x.opticalDepth>=0),costOrder=interactive.lightSteps<rest.lightSteps&&rest.lightSteps<capture.lightSteps,densityDriven=best.density>0&&[interactive,rest,capture].some(x=>x.opticalDepth>0&&x.transmittance<1);
+            receipts.push({weatherId:object.ID_i,bestDensity:best.density,interactive,rest,capture,checks,bounded,costOrder,densityDriven,pass:checks.every(x=>x.pass)&&bounded&&costOrder&&densityDriven});
+          }
+          const result={schema:'FAP1_GC_L5_DIRECT_TRANSMITTANCE_QUALIFICATION_v1',systemCount:objects.length,receipts,pass:receipts.length>=5&&receipts.every(x=>x.pass)};console.log(JSON.stringify(result,null,2));if(!result.pass)process.exit(2);
+          NODE

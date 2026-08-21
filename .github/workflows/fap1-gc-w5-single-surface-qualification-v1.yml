@@ -1,13 +1,13 @@
-name: FAP1 GC W5 Single Surface Ownership Qualification v1
+name: FAP1 GC W5 Isolated Full Runtime State Diff v2
 on:
   pull_request:
     paths: ['.github/workflows/fap1-gc-w5-single-surface-qualification-v1.yml']
 permissions:
   contents: read
 jobs:
-  qualify:
+  diagnose:
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    timeout-minutes: 7
     steps:
       - uses: actions/checkout@v4
         with:
@@ -18,84 +18,91 @@ jobs:
       - run: |
           python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/server.log 2>&1 &
           for a in $(seq 1 120); do curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/ >/dev/null && exit 0; sleep .25; done; exit 1
-      - name: Prove single W5 runtime owner and presented pixels
-        timeout-minutes: 5
+      - name: Diff isolated and full-runtime W5 draw state
+        timeout-minutes: 6
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
         run: |
-          timeout 285s node <<'NODE'
+          timeout 345s node <<'NODE'
           const puppeteer=require('puppeteer-core'),fs=require('fs');
-          const mark=(name,data={})=>console.log('OWNERSHIP',JSON.stringify({t:Date.now(),name,data}));
-          const delay=ms=>new Promise(r=>setTimeout(r,ms));
+          const mark=(name,data={})=>console.log('STATE_DIFF',JSON.stringify({t:Date.now(),name,data}));
           (async()=>{
             const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
             const page=await browser.newPage();await page.setViewport({width:900,height:900});
             const errors=[];page.on('pageerror',e=>errors.push(String(e)));
+            await page.evaluateOnNewDocument(()=>{
+              const records=[],byGl=new WeakMap(),locationNames=new WeakMap();let nextId=1;
+              const clone=v=>ArrayBuffer.isView(v)?Array.from(v):Array.isArray(v)?Array.from(v):v;
+              const origGet=HTMLCanvasElement.prototype.getContext;
+              HTMLCanvasElement.prototype.getContext=function(type,attrs){
+                const gl=origGet.call(this,type,attrs);
+                if(type==='webgl2'&&gl&&!byGl.has(gl)){
+                  const rec={id:nextId++,canvas:this,canvasRole:this.dataset.fap1W5LocalRaymarch==='true'?'W5':'OTHER',uniforms:{},viewport:null,framebuffer:null,texture3D:null,textureUpload:null,drawCount:0,calls:[]};records.push(rec);byGl.set(gl,rec);
+                  const push=(name,data={})=>{rec.calls.push({name,data});if(rec.calls.length>80)rec.calls.shift();};
+                  const getLoc=gl.getUniformLocation.bind(gl);gl.getUniformLocation=function(program,name){const loc=getLoc(program,name);if(loc)locationNames.set(loc,name);return loc;};
+                  for(const method of ['uniform1f','uniform1i','uniform3fv']){const orig=gl[method].bind(gl);gl[method]=function(loc,value){const name=locationNames.get(loc)||'UNKNOWN';rec.uniforms[name]=clone(value);return orig(loc,value);};}
+                  const vp=gl.viewport.bind(gl);gl.viewport=function(x,y,w,h){rec.viewport=[x,y,w,h];push('viewport',{x,y,w,h});return vp(x,y,w,h);};
+                  const bf=gl.bindFramebuffer.bind(gl);gl.bindFramebuffer=function(target,fb){rec.framebuffer={target,isDefault:fb===null};push('bindFramebuffer',rec.framebuffer);return bf(target,fb);};
+                  const bt=gl.bindTexture.bind(gl);gl.bindTexture=function(target,tex){if(target===gl.TEXTURE_3D)rec.texture3D={target,bound:!!tex};return bt(target,tex);};
+                  const ti=gl.texImage3D.bind(gl);gl.texImage3D=function(target,level,internalformat,width,height,depth,border,format,dataType,pixels){let sum=0,nonzero=0,max=0;if(pixels&&pixels.length!==undefined){for(let i=0;i<pixels.length;i++){const v=Number(pixels[i])||0;sum+=v;if(v){nonzero++;if(v>max)max=v;}}}rec.textureUpload={target,level,internalformat,width,height,depth,format,dataType,length:pixels?.length??0,sum,nonzero,max};push('texImage3D',rec.textureUpload);return ti(target,level,internalformat,width,height,depth,border,format,dataType,pixels);};
+                  const clear=gl.clear.bind(gl);gl.clear=function(mask){push('clear',{mask});return clear(mask);};
+                  const draw=gl.drawArrays.bind(gl);gl.drawArrays=function(mode,first,count){rec.drawCount++;push('drawArrays',{mode,first,count,uniforms:JSON.parse(JSON.stringify(rec.uniforms)),viewport:rec.viewport,framebuffer:rec.framebuffer,texture3D:rec.texture3D});return draw(mode,first,count);};
+                }
+                return gl;
+              };
+              window.__W5_GL_TRACE__={
+                snapshot(canvas){const rec=records.find(r=>r.canvas===canvas);if(!rec)return null;return {id:rec.id,canvasRole:rec.canvasRole,uniforms:JSON.parse(JSON.stringify(rec.uniforms)),viewport:rec.viewport,framebuffer:rec.framebuffer,texture3D:rec.texture3D,textureUpload:rec.textureUpload,drawCount:rec.drawCount,calls:JSON.parse(JSON.stringify(rec.calls)),width:canvas.width,height:canvas.height,display:getComputedStyle(canvas).display};},
+                count(){return records.length;}
+              };
+            });
             await page.goto('http://127.0.0.1:4173/showroom/globe/audralia/',{waitUntil:'domcontentloaded',timeout:45000});
-            mark('APP_IMPORT_BEGIN');
-            await page.evaluate(()=>import('./weather-presentation-reconciliation/app.mjs?qual=single-owner'));
-            await page.waitForFunction(()=>!!window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer,{timeout:100000});
-            mark('APP_READY');
-            if(!(await page.evaluate(()=>window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY'))){
-              await page.evaluate(()=>import('./weather-presentation-reconciliation/fap1-ga-authority-bootstrap.mjs?qual=single-owner'));
-              await page.waitForFunction(()=>window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY',{timeout:30000});
-            }
-            mark('GA_READY');
-
-            await page.evaluate(()=>import('./weather-presentation-reconciliation/fap1-w5-handoff-bootstrap.gb.mjs?qual=owner-a'));
-            await page.waitForFunction(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.surfaceOwnership==='SINGLE_RUNTIME_OWNER'&&window.__AUDRALIA_FAP1_W5_HANDOFF__?.getSurfaceCount?.()===1,{timeout:30000});
-            const first=await page.evaluate(()=>({count:window.__AUDRALIA_FAP1_W5_HANDOFF__.getSurfaceCount(),canvas:!!window.__AUDRALIA_FAP1_W5_HANDOFF__.getActiveSurface()}));
-            mark('FIRST_OWNER',first);
-
-            await page.evaluate(()=>import('./weather-presentation-reconciliation/fap1-w5-handoff-bootstrap.gb.mjs?qual=owner-b'));
-            await page.waitForFunction(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.surfaceOwnership==='SINGLE_RUNTIME_OWNER'&&window.__AUDRALIA_FAP1_W5_HANDOFF__?.getSurfaceCount?.()===1,{timeout:30000});
-            await delay(250);
-            const second=await page.evaluate(()=>({count:window.__AUDRALIA_FAP1_W5_HANDOFF__.getSurfaceCount(),domCount:document.querySelectorAll('canvas[data-fap1-w5-local-raymarch="true"]').length,canvas:!!window.__AUDRALIA_FAP1_W5_HANDOFF__.getActiveSurface()}));
-            mark('SECOND_OWNER',second);
-            if(second.count!==1||second.domCount!==1||!second.canvas)throw new Error('W5_SINGLE_SURFACE_OWNERSHIP_NOT_PROVEN');
+            await page.evaluate(()=>import('./weather-presentation-reconciliation/app.mjs?diag=state-diff'));
+            await page.waitForFunction(()=>!!window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer,{timeout:105000});
+            if(!(await page.evaluate(()=>window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY'))){await page.evaluate(()=>import('./weather-presentation-reconciliation/fap1-ga-authority-bootstrap.mjs?diag=state-diff'));await page.waitForFunction(()=>window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY',{timeout:30000});}
+            await page.evaluate(()=>import('./weather-presentation-reconciliation/fap1-w5-handoff-bootstrap.gb.mjs?diag=state-diff'));
+            await page.waitForFunction(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.authority==='BOUNDED_GB_HANDOFF_ACTIVE'&&window.__AUDRALIA_FAP1_W5_HANDOFF__?.getSurfaceCount?.()===1,{timeout:30000});
 
             const witness=await page.evaluate(async()=>{
-              const S=await import('./weather-presentation-reconciliation/fap1-spatial-lod.gb.mjs?qual=single-owner');
-              const W=await import('./weather-presentation-reconciliation/fap1-w5-local-density.gb.mjs?qual=single-owner');
-              const ga=window.__AUDRALIA_FAP1_GA_AUTHORITY__,packet=ga.descriptorPacket()??ga.renderNow();
-              const objects=S.buildFAP1SpatialWeatherObjects({packet}),o=objects.find(x=>x.ID_i==='SOUTHEAST_DEEP_CONVECTION'),brick=W.buildW5DensityBrick(o),body=brick.mesoBodies[1]||brick.mesoBodies[0];
+              const S=await import('./weather-presentation-reconciliation/fap1-spatial-lod.gb.mjs?diag=state-diff');
+              const W=await import('./weather-presentation-reconciliation/fap1-w5-local-density.gb.mjs?diag=state-diff');
+              const ga=window.__AUDRALIA_FAP1_GA_AUTHORITY__,packet=ga.descriptorPacket()??ga.renderNow(),objects=S.buildFAP1SpatialWeatherObjects({packet}),o=objects.find(x=>x.ID_i==='SOUTHEAST_DEEP_CONVECTION'),brick=W.buildW5DensityBrick(o),body=brick.mesoBodies[1]||brick.mesoBodies[0];
               const pc=S.PLANET_CENTER,c=o.V_i.center,r=[c[0]-pc[0],c[1]-pc[1],c[2]-pc[2]],len=Math.hypot(...r),dir=r.map(v=>v/len),angle=Math.acos(Math.max(-1,Math.min(1,dir[1]))),horiz=Math.hypot(dir[0],dir[2])||1,radius=angle*S.PLANET_RADIUS,baseU=radius*dir[0]/horiz,baseV=radius*dir[2]/horiz;
               const targetU=baseU+body.center[0]*o.V_i.radii[0],targetV=baseV+body.center[2]*o.V_i.radii[2],altitude=o.Z_i.centerAltitude+body.center[1]*o.V_i.radii[1],distance=Math.max(95,Math.min(180,(altitude-18)/Math.sin(.46)));
-              return{targetU,targetV,distance,pitch:.46,yaw:2.4,weatherId:o.ID_i};
+              return{targetU,targetV,distance,pitch:.46,yaw:2.4};
             });
             await page.evaluate(w=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__.setCameraStateForTest(w),witness);
-            const receipt=await page.evaluate(()=>{window.__AUDRALIA_FAP1_GA_AUTHORITY__.renderNow();return window.__AUDRALIA_FAP1_W5_HANDOFF__.renderNow();});
-            mark('HANDOFF',receipt);
 
-            const cpu=await page.evaluate(async()=>{
-              const S=await import('./weather-presentation-reconciliation/fap1-spatial-lod.gb.mjs?qual=single-owner-cpu');
-              const W=await import('./weather-presentation-reconciliation/fap1-w5-local-density.gb.mjs?qual=single-owner-cpu');
-              const ga=window.__AUDRALIA_FAP1_GA_AUTHORITY__,p=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__,packet=ga.descriptorPacket(),o=S.buildFAP1SpatialWeatherObjects({packet}).find(x=>x.ID_i==='SOUTHEAST_DEEP_CONVECTION'),cam=p.getCameraFrame();
-              let max=0,occupied=0;for(let i=0;i<32;i++){const t=i*8,pt=[cam.eye[0]+cam.forward[0]*t,cam.eye[1]+cam.forward[1]*t,cam.eye[2]+cam.forward[2]*t],d=W.sampleW5LocalDensity(o,pt);max=Math.max(max,d);if(d>.0025)occupied++;}
-              return{rhoEye:W.sampleW5LocalDensity(o,cam.eye),maxForward:max,occupiedForward:occupied,interval:S.rayWeatherVolumeInterval(cam.eye,cam.forward,o)};
-            });
-            mark('CPU',cpu);
+            const result=await page.evaluate(async()=>{
+              const S=await import('./weather-presentation-reconciliation/fap1-spatial-lod.gb.mjs?diag=state-diff-runtime');
+              const R=await import('./weather-presentation-reconciliation/fap1-w5-local-raymarch.gc-v5-spatial-handoff.mjs?diag=state-diff-runtime');
+              const ga=window.__AUDRALIA_FAP1_GA_AUTHORITY__,parent=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__,owner=window.__AUDRALIA_FAP1_W5_HANDOFF__;
+              ga.renderNow();
+              const runtimeReceipt=owner.renderNow();
+              const runtimeCanvas=owner.getActiveSurface();
+              const runtimeTrace=window.__W5_GL_TRACE__.snapshot(runtimeCanvas);
+              const packet=ga.descriptorPacket(),camera=parent.getCameraFrame(),objects=S.buildFAP1SpatialWeatherObjects({packet}),spatial=S.evaluateFAP1SpatialLOD(objects,camera);
+              const sun=window.__AUDRALIA_CELESTIAL_STATE__?.getSolarVector?.()||[.42,.78,.46];
 
-            const gpu=await page.evaluate(()=>{
-              const owner=window.__AUDRALIA_FAP1_W5_HANDOFF__,canvas=owner.getActiveSurface();
-              if(!canvas)return{canvas:false};const gl=canvas.getContext('webgl2',{preserveDrawingBuffer:true});if(!gl)return{canvas:true,gl:false};
-              const w=canvas.width,h=canvas.height,pix=new Uint8Array(w*h*4);gl.readPixels(0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,pix);let nonzero=0,maxAlpha=0;for(let i=3;i<pix.length;i+=4){if(pix[i])nonzero++;if(pix[i]>maxAlpha)maxAlpha=pix[i];}
-              const cs=getComputedStyle(canvas),wr=canvas.getBoundingClientRect();
-              return{canvas:true,gl:true,w,h,nonzero,maxAlpha,display:cs.display,zIndex:cs.zIndex,rect:{x:wr.x,y:wr.y,width:wr.width,height:wr.height},weatherId:canvas.dataset.weatherId,brickAddress:canvas.dataset.brickAddress,domCount:document.querySelectorAll('canvas[data-fap1-w5-local-raymarch="true"]').length};
+              const host=document.createElement('div');Object.assign(host.style,{position:'fixed',left:'-2000px',top:'0',width:'900px',height:'900px'});document.body.appendChild(host);
+              const world=document.createElement('canvas');world.width=900;world.height=900;Object.assign(world.style,{width:'900px',height:'900px'});host.appendChild(world);
+              const isolated=R.createW5LocalRayMarchSurface({worldCanvas:world,parent:host});isolated.setQuality('REST');const isolatedReceipt=isolated.render({camera,spatialState:spatial,sunDirection:sun,quality:'REST'}),isolatedCanvas=isolated.canvas,isolatedTrace=window.__W5_GL_TRACE__.snapshot(isolatedCanvas);
+
+              function read(canvas){const gl=canvas.getContext('webgl2');const w=canvas.width,h=canvas.height,pix=new Uint8Array(w*h*4);gl.readPixels(0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,pix);let nonzero=0,maxAlpha=0,sumAlpha=0;for(let i=3;i<pix.length;i+=4){const a=pix[i];if(a)nonzero++;if(a>maxAlpha)maxAlpha=a;sumAlpha+=a;}return{w,h,nonzero,maxAlpha,meanAlpha:sumAlpha/Math.max(1,w*h)};}
+              const runtimePixels=read(runtimeCanvas),isolatedPixels=read(isolatedCanvas);
+              const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+              const keys=['uEye','uForward','uRight','uUp','uSunDir','uCenter','uAxisU','uAxisUp','uAxisV','uRadii','uAspect','uTanHalfFov','uLocalWeight','uDensityScale','uExtinction','uLightExtinction','uStepCount','uLightStepCount'];
+              const uniformDiff=Object.fromEntries(keys.map(k=>[k,{same:same(runtimeTrace?.uniforms?.[k],isolatedTrace?.uniforms?.[k]),runtime:runtimeTrace?.uniforms?.[k]??null,isolated:isolatedTrace?.uniforms?.[k]??null}]));
+              const summary={runtimeReceipt,isolatedReceipt,runtimePixels,isolatedPixels,runtimeTrace,isolatedTrace,uniformDiff,viewportSame:same(runtimeTrace?.viewport,isolatedTrace?.viewport),textureUploadSame:same(runtimeTrace?.textureUpload,isolatedTrace?.textureUpload),framebufferSame:same(runtimeTrace?.framebuffer,isolatedTrace?.framebuffer),camera,spatialActive:spatial.objects.filter(x=>x.localPromoted).map(x=>({id:x.object.ID_i,l:x.alpha.l,Q:x.Q_i,inside:x.inside,distanceToVolume:x.distanceToVolume}))};
+              isolated.destroy();host.remove();return summary;
             });
-            mark('ACTIVE_GPU',gpu);
-            await page.screenshot({path:'w5-single-owner-presented.png'});
-            const pass=second.domCount===1&&receipt?.active===true&&receipt?.weatherId==='SOUTHEAST_DEEP_CONVECTION'&&cpu.maxForward>0&&gpu.nonzero>0&&gpu.display!=='none'&&gpu.domCount===1;
-            fs.writeFileSync('w5-single-owner-receipt.json',JSON.stringify({pass,first,second,witness,receipt,cpu,gpu,errors},null,2));
-            if(!pass)throw new Error('W5_SINGLE_SURFACE_PRESENTATION_GATE_FAILED');
+            mark('DIFF_RESULT',{runtimePixels:result.runtimePixels,isolatedPixels:result.isolatedPixels,viewportSame:result.viewportSame,textureUploadSame:result.textureUploadSame,framebufferSame:result.framebufferSame,uniformDiff:result.uniformDiff});
+            fs.writeFileSync('w5-isolated-runtime-state-diff.json',JSON.stringify({result,errors},null,2));
             await browser.close();
-          })().catch(e=>{console.error('OWNERSHIP_ERROR',e);process.exit(1)});
+          })().catch(e=>{console.error('STATE_DIFF_ERROR',e);process.exit(1)});
           NODE
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: w5-single-surface-qualification
-          path: |
-            w5-single-owner-receipt.json
-            w5-single-owner-presented.png
+          name: w5-isolated-runtime-state-diff
+          path: w5-isolated-runtime-state-diff.json
           if-no-files-found: warn

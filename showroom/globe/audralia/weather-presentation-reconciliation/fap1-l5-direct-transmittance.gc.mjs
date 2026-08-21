@@ -7,7 +7,7 @@ const norm=v=>{const l=length(v)||1;return v.map(x=>x/l);};
 const add=(a,b,s=1)=>a.map((v,i)=>v+b[i]*s);
 
 export const FAP1_L5_DIRECT_TRANSMITTANCE_SCHEMA='FAP1_L5_DIRECT_SUN_TRANSMITTANCE_v1';
-export const L5_EXTINCTION=0.018;
+export const L5_EXTINCTION=0.021;
 export const L5_QUALITY=freeze({
   INTERACTIVE:freeze({lightSteps:3}),
   REST:freeze({lightSteps:5}),

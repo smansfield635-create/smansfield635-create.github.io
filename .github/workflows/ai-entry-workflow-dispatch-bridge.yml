@@ -1,0 +1,41 @@
+name: AI Entry Workflow Dispatch Bridge
+
+on:
+  push:
+    branches:
+      - ai-dispatch
+    paths:
+      - .github/ai-entry/workflow-dispatch-request.json
+
+permissions:
+  actions: write
+  contents: write
+
+concurrency:
+  group: ai-entry-workflow-dispatch
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout dispatch request commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+
+      - name: Execute bounded native workflow dispatch
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node tools/ai-entry-workflow-dispatch-bridge.mjs
+
+      - name: Persist durable dispatch receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/ai-entry/workflow-dispatch-receipt.json
+          git commit -m "AI dispatch receipt: ${GITHUB_RUN_ID}"
+          git push origin HEAD:ai-dispatch

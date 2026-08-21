@@ -36,7 +36,7 @@ const REGIMES = freeze([
   freeze({ id: 'EQUATORIAL_CUMULUS_BELT', weatherClass: 'LOW_CUMULIFORM', center: freeze({ latitudeDeg: 4, longitudeDeg: 48 }), radiusDeg: 39, occupancy: 0.58, hazeSupport: 0.18, families: freeze(['LOW']), wind: freeze({ eastKmH: -31, northKmH: 8 }) }),
   freeze({ id: 'SOUTHEAST_DEEP_CONVECTION', weatherClass: 'DEEP_CONVECTION', center: freeze({ latitudeDeg: -19, longitudeDeg: 82 }), radiusDeg: 27, occupancy: 0.76, hazeSupport: 0.35, families: freeze(['LOW', 'DEEP', 'HIGH']), wind: freeze({ eastKmH: -46, northKmH: -16 }) }),
   freeze({
-    id: 'SOUTHERN_OCEAN_CYCLONE', weatherClass: 'CYCLONE', center: freeze({ latitudeDeg: -36, longitudeDeg: -126 }), radiusDeg: 24,
+    id: 'SOUTHERN_OCEAN_CYCLONE', weatherClass: 'CYCLONE', center: freeze({ latitudeDeg: -20, longitudeDeg: 20 }), radiusDeg: 24,
     occupancy: 0.84, hazeSupport: 0.42, families: freeze(['LOW', 'MID', 'DEEP', 'HIGH']), wind: freeze({ eastKmH: 42, northKmH: 12 }),
     cyclone: freeze({ eyeRadiusDeg: 2.4, eyewallRadiusDeg: 5.8, outerRainbandRadiusDeg: 21, spiralTightness: 2.15, rotationDirection: 'CCW', upperOutflowRadiusDeg: 28, maximumConvectiveSupport: 1 })
   })

@@ -10,10 +10,25 @@
   "sharedProcedureRegistry": ".github/ai-router/shared-procedures.v1.json",
   "entryReceiptSchema": ".github/ai-router/schemas/repository-ai-entry-router.receipt.schema.v1.json",
   "entryCommand": "node tools/repository-ai-entry-router.mjs --path <repository-path> [--path <repository-path> ...]",
-  "mutationCommand": "INTAKE_ADMISSION_RECEIPT=<ADMITTED_AND_LOCKED_RECEIPT> node tools/repository-ai-entry-router.mjs --mutation-intent --path <repository-path> [--path <repository-path> ...] --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/mutation-router-receipt.json",
+  "mutationCommand": "node tools/repository-ai-entry-router.mjs --mutation-intent --task <BOUNDED_TASK_DESCRIPTION> --path <repository-path> [--path <repository-path> ...] --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/mutation-router-receipt.json",
+  "pageMutationProportionality": {
+    "schema": "PAGE_MUTATION_PROPORTIONALITY_POLICY_v1",
+    "policy": ".github/ai-router/page-mutation-proportionality-policy.v1.json",
+    "classifier": "tools/repository-ai-entry-router.mjs",
+    "legacyGovernedRouter": "tools/repository-ai-entry-router.v3-legacy.mjs",
+    "staticVerifier": "tools/static-editorial-micro-verifier.v1.mjs",
+    "staticEditorialMicroCanonicalAdmissionRequired": false,
+    "staticEditorialMicroPageExcellenceRequired": false,
+    "runtimeBehaviorAuthorityOrAmbiguousCanonicalAdmissionRequired": true,
+    "ambiguityDisposition": "RUNTIME_OR_AUTHORITY",
+    "mixedPathDisposition": "RUNTIME_OR_AUTHORITY",
+    "requiredStaticProofs": ["EXACT_HEAD", "DECLARED_PATHS_ONLY", "NO_EXECUTABLE_RUNTIME_DELTA", "NO_UNRELATED_DIFF"]
+  },
   "operationIntakeGate": {
     "locator": ".github/operation-intake/locator.v1.json",
-    "mandatoryBeforeMutationRouting": true,
+    "mandatoryBeforeMutationRouting": false,
+    "requiredForMutationClasses": ["RUNTIME_OR_AUTHORITY"],
+    "notRequiredForMutationClasses": ["STATIC_EDITORIAL_MICRO"],
     "successorLifecycle": {
       "protocol": ".github/ai-router/operation-lifecycle/successor-protocol.v1.json",
       "gateCli": ".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs",
@@ -85,10 +100,7 @@
   "systemContinuityTrack": {
     "status": "ACTIVE_FAIL_CLOSED",
     "protocol": ".github/ai-router/system-continuity/progressive-system-continuity-protocol.v1.json",
-    "mandatoryFor": [
-      "SHARED_CONTROL_PLANE_INTERFACE_CHANGE",
-      "SYSTEM_GAP_CLOSED_CLAIM"
-    ],
+    "mandatoryFor": ["SHARED_CONTROL_PLANE_INTERFACE_CHANGE", "SYSTEM_GAP_CLOSED_CLAIM"],
     "authorityCreated": false,
     "replacementAuthorityCreated": false
   },
@@ -108,13 +120,15 @@
     "claimAuthorityCreated": false
   },
   "rules": [
+    "CLASSIFY_PAGE_MUTATION_BEFORE_AUTHORITY_ESCALATION",
+    "STATIC_EDITORIAL_MICRO_REQUIRES_EXACT_HEAD_BOUNDED_DIFF_VERIFICATION_NOT_CANONICAL_INTAKE",
+    "RUNTIME_BEHAVIOR_AUTHORITY_OR_AMBIGUOUS_MUTATION_REQUIRES_CANONICAL_INTAKE",
     "EXACT_GOVERNING_HEAD_BEFORE_MUTATION",
     "EXPLICIT_BOUNDED_MUTATION_SCOPE",
-    "SINGLE_ACTIVE_AUTHORITY_FOR_OVERLAPPING_SCOPE",
+    "SINGLE_ACTIVE_AUTHORITY_FOR_OVERLAPPING_GOVERNED_SCOPE",
     "NO_SILENT_AUTHORITY_INHERITANCE_OR_WIDENING",
     "VERIFY_CANDIDATE_BEFORE_ADOPTION",
     "FAIL_CLOSED_ON_GENUINE_AMBIGUITY_OR_CONTRADICTORY_EVIDENCE",
-    "CANONICAL_INTAKE_REQUIRED_BEFORE_MUTATION_ROUTING",
     "PUBLIC_METADATA_GRANTS_NO_PRIVATE_AUTHORITY",
     "TRANSPORT_DOES_NOT_DEFINE_ADMISSION_LOCK_OR_CLOSURE_SEMANTICS",
     "DISPLAY_CONTINUITY_CONSTITUTION_REQUIRED_FOR_APPLICABLE_CONSTRUCTION"

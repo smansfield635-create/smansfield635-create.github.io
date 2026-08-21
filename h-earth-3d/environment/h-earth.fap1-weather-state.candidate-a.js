@@ -1,4 +1,4 @@
-/** H_EARTH_FAP1_WEATHER_STATE_CANDIDATE_A_v2
+/** H_EARTH_FAP1_WEATHER_STATE_CANDIDATE_A_v3
  * Non-live candidate under Gen336.
  * Adds planetary/regional weather organization above OW01 without changing
  * geography, camera, traversal, or live baseline authority.
@@ -11,7 +11,7 @@ const clampLat = (value) => Math.min(89, Math.max(-89, value));
 const PLANET_RADIUS_KM = 6200;
 
 export const H_EARTH_FAP1_WEATHER_STATE_CONTRACT_ID =
-  'H_EARTH_FAP1_WEATHER_STATE_CANDIDATE_A_v2';
+  'H_EARTH_FAP1_WEATHER_STATE_CANDIDATE_A_v3';
 
 export const H_EARTH_FAP1_WEATHER_CLASSES = freeze({
   CLEAR: 'CLEAR',
@@ -52,6 +52,16 @@ function advectedCenter(regime, canonicalTimeHours) {
     latitudeDeg: clampLat(regime.center.latitudeDeg + deltaLatDeg),
     longitudeDeg: wrapLon(regime.center.longitudeDeg + deltaLonDeg)
   });
+}
+
+export function getHEarthFAP1WeatherRegimes({canonicalTimeHours=0}={}) {
+  if (!Number.isFinite(canonicalTimeHours)) return freeze([]);
+  return freeze(REGIMES.map((regime) => freeze({
+    ...regime,
+    center: advectedCenter(regime, canonicalTimeHours),
+    sourceCenter: regime.center,
+    canonicalTimeHours
+  })));
 }
 
 function angularDistanceDeg(aLat, aLon, bLat, bLon) {

@@ -2,45 +2,72 @@
 'use strict';
 const SOURCE='744961bd34be67a58037f685f2eda618dff58b10';
 const BASE=`https://raw.githack.com/smansfield635-create/smansfield635-create.github.io/${SOURCE}/assets/compass`;
-const mod=(n,b)=>((n%b)+b)%b;
 const reduce=matchMedia('(prefers-reduced-motion: reduce)');
-function load(src,key){return new Promise(r=>{if(globalThis[key])return r();const s=document.createElement('script');s.src=src;s.defer=true;s.onload=s.onerror=()=>r();document.head.append(s)})}
-function mountCarousel(stage,defs,{objectMode=false}={}){
-  const viewport=stage.querySelector('[data-viewport]'),ring=stage.querySelector('[data-ring]'),tabs=stage.querySelector('[data-tabs]'),caption=stage.querySelector('[data-caption]'),actions=stage.querySelector('[data-actions]');
-  let index=0,drag=false,startX=0,startIndex=0,angle=0,suppress=0;const count=defs.length,step=360/count,radius=objectMode?255:230;
-  const cards=defs.map((d,i)=>{const c=document.createElement('article');c.className='card';c.dataset.index=i;c.style.transform=`rotateY(${i*step}deg) translateZ(${radius}px)`;c.innerHTML=d.html;ring.append(c);const b=document.createElement('button');b.type='button';b.dataset.index=i;b.textContent=d.tab;b.setAttribute('aria-selected',i===0?'true':'false');tabs.append(b);return c});
-  function sync(){cards.forEach((c,i)=>{const on=i===index;c.dataset.active=String(on);c.setAttribute('aria-hidden',on?'false':'true')});[...tabs.children].forEach((b,i)=>b.setAttribute('aria-selected',i===index?'true':'false'));caption.innerHTML=`<strong>${defs[index].title}</strong><span>${defs[index].body}</span>`;actions.replaceChildren();for(const [label,href] of (defs[index].actions||[])){const a=document.createElement('a');a.href=href;a.textContent=label;actions.append(a)};ring.style.setProperty('--ring-rotation',`${-index*step}deg`);if(objectMode)globalThis.CompassHouseScene?.setForeground?.(defs[index].id==='house')}
-  function go(d){if(drag)return;index=mod(index+d,count);sync()}
-  tabs.addEventListener('click',e=>{const b=e.target.closest('[data-index]');if(!b)return;index=Number(b.dataset.index)||0;sync()});
-  stage.querySelector('[data-prev]').onclick=()=>go(-1);stage.querySelector('[data-next]').onclick=()=>go(1);
-  viewport.addEventListener('pointerdown',e=>{if((e.button!=null&&e.button!==0)||e.target.closest('a,button'))return;drag=true;startX=e.clientX;startIndex=index;angle=-index*step;viewport.dataset.dragging='true';viewport.setPointerCapture?.(e.pointerId);e.preventDefault()});
-  viewport.addEventListener('pointermove',e=>{if(!drag)return;const width=Math.max(320,viewport.clientWidth);const delta=e.clientX-startX;ring.style.setProperty('--ring-rotation',`${angle+Math.max(-step*.92,Math.min(step*.92,(delta/width)*190))}deg`);e.preventDefault()});
-  const end=e=>{if(!drag)return;drag=false;viewport.dataset.dragging='false';const dx=e.clientX-startX;index=Math.abs(dx)>Math.max(18,viewport.clientWidth*.055)?mod(startIndex+(dx<0?1:-1),count):startIndex;suppress=performance.now()+220;sync();e.preventDefault()};
-  viewport.addEventListener('pointerup',end);viewport.addEventListener('pointercancel',end);stage.addEventListener('click',e=>{if(performance.now()<suppress&&!e.target.closest('a,button')){e.preventDefault();e.stopImmediatePropagation()}},true);stage.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();go(e.key==='ArrowRight'?1:-1)}});
-  sync();return {cards,get index(){return index}};
+const mod=(v,n)=>((v%n)+n)%n;
+function load(src,key){return new Promise(resolve=>{if(globalThis[key])return resolve(globalThis[key]);const s=document.createElement('script');s.src=src;s.defer=true;s.onload=()=>resolve(globalThis[key]);s.onerror=()=>resolve(null);document.head.append(s)})}
+function purgeLegacy(){
+  const selectors=['[data-capability-orbit]','.compass-capability-orbit','.compass-capability-cue','.compass-monuments','.compass-built'];
+  selectors.forEach(sel=>document.querySelectorAll(sel).forEach(node=>node.remove()));
+  document.querySelectorAll('[data-functional-lower-carousels]').forEach(node=>node.remove());
 }
-function mount(){
+function shell({id,kicker,title,question,items}){
+  const section=document.createElement('section');section.className='dgb-orbit';section.dataset.dgbOrbit=id;section.dataset.inspecting='false';
+  section.innerHTML=`<header class="dgb-orbit__head"><div><p class="dgb-orbit__kicker">${kicker}</p><h2 data-orbit-title>${title}</h2><p data-orbit-question>${question}</p></div><div class="dgb-orbit__live" data-orbit-live></div></header><div class="dgb-orbit__tabs" role="tablist" data-orbit-tabs></div><div class="dgb-orbit__viewport" data-orbit-viewport tabindex="0"><div class="dgb-orbit__ring" data-orbit-ring></div></div><p class="dgb-orbit__note">Swipe horizontally or use the tabs. One object comes forward at a time.</p>`;
+  const ring=section.querySelector('[data-orbit-ring]'),tabs=section.querySelector('[data-orbit-tabs]'),viewport=section.querySelector('[data-orbit-viewport]'),live=section.querySelector('[data-orbit-live]'),heading=section.querySelector('[data-orbit-title]'),prompt=section.querySelector('[data-orbit-question]');
+  const count=items.length,step=360/count,cards=[];let index=0,angle=0,drag=false,pointer=null,startX=0,startAngle=0,startIndex=0,travel=0,suppress=false;
+  function radius(){const w=Math.max(320,viewport.clientWidth||section.clientWidth||900);if(w<520)return Math.max(235,Math.min(300,w*.72));if(w<820)return Math.max(310,Math.min(420,w*.58));return Math.max(430,Math.min(620,w*.46))}
+  function sync(reason='sync'){
+    const r=radius();angle=-index*step;ring.style.setProperty('--orbit-rotation',`${angle}deg`);
+    cards.forEach((card,i)=>{card.style.transform=`rotateY(${i*step}deg) translateZ(${r}px)`;const active=i===index;card.dataset.active=String(active);card.setAttribute('aria-hidden',String(!active));card.tabIndex=active?0:-1});
+    [...tabs.children].forEach((tab,i)=>{const active=i===index;tab.setAttribute('aria-selected',String(active));tab.tabIndex=active?0:-1});
+    const item=items[index];heading.textContent=item.title;prompt.textContent=item.question;live.textContent=`${item.label} · ${index+1} of ${count}`;
+    section.dispatchEvent(new CustomEvent('dgb:orbit-change',{detail:{id,reason,index,item:item.id}}));
+  }
+  function select(next,reason='select'){if(drag)return;index=mod(next,count);sync(reason)}
+  items.forEach((item,i)=>{
+    const tab=document.createElement('button');tab.type='button';tab.className='dgb-orbit__tab';tab.role='tab';tab.dataset.index=i;tab.dataset.indexLabel=String(i+1).padStart(2,'0');tab.textContent=item.label;tabs.append(tab);
+    const card=document.createElement('article');card.className='dgb-orbit__card';card.dataset.id=item.id;card.innerHTML=item.markup;ring.append(card);cards.push(card);
+    tab.addEventListener('click',()=>select(i,'tab'));
+  });
+  tabs.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();if(e.key==='Home')select(0,'keyboard');else if(e.key==='End')select(count-1,'keyboard');else select(index+(e.key==='ArrowRight'?1:-1),'keyboard')});
+  viewport.addEventListener('pointerdown',e=>{if((e.pointerType==='mouse'&&e.button!==0)||e.target.closest('a,button'))return;drag=true;pointer=e.pointerId;startX=e.clientX;startAngle=angle;startIndex=index;travel=0;viewport.dataset.dragging='true';viewport.setPointerCapture?.(pointer)});
+  viewport.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==pointer)return;const dx=e.clientX-startX;travel=Math.max(travel,Math.abs(dx));const w=Math.max(320,viewport.clientWidth);ring.style.setProperty('--orbit-rotation',`${startAngle+(dx/w)*190}deg`)});
+  function finish(e){if(!drag||e.pointerId!==pointer)return;const dx=e.clientX-startX;drag=false;viewport.dataset.dragging='false';viewport.releasePointerCapture?.(pointer);pointer=null;if(travel<8){sync('tap');return}if(Math.abs(dx)>Math.max(24,viewport.clientWidth*.055))index=mod(startIndex+(dx<0?1:-1),count);else index=startIndex;suppress=true;sync('drag')}
+  viewport.addEventListener('pointerup',finish);viewport.addEventListener('pointercancel',finish);
+  section.addEventListener('click',e=>{if(!suppress)return;suppress=false;if(!e.target.closest('a,button')){e.preventDefault();e.stopImmediatePropagation()}},true);
+  section.addEventListener('keydown',e=>{if(e.target.closest('[role=tablist]'))return;if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();select(index+(e.key==='ArrowRight'?1:-1),'stage-keyboard')}});
+  addEventListener('resize',()=>sync('resize'),{passive:true});
+  sync('init');
+  return {section,cards,get index(){return index},select};
+}
+function objectMarkup(kind,kicker,title,body,action,href){return `<div class="dgb-orbit__surface dgb-object-card"><div class="dgb-object-card__visual" data-object-visual="${kind}"><canvas role="img" aria-label="${title}"></canvas></div><div class="dgb-object-card__copy"><p class="dgb-orbit__kicker">${kicker}</p><h3>${title}</h3><p>${body}</p><a class="dgb-orbit__action" href="${href}">${action}</a></div></div>`}
+function readinessMarkup(kicker,title,signal,body,action,href){return `<div class="dgb-orbit__surface dgb-readiness-card"><div class="dgb-readiness-card__signal">${signal}</div><div><p class="dgb-orbit__kicker">${kicker}</p><h3>${title}</h3><p>${body}</p><a class="dgb-orbit__action" href="${href}">${action}</a></div></div>`}
+async function mount(){
   const root=document.querySelector('[data-compass-root]');if(!root)return;
-  document.querySelectorAll('[data-functional-lower-carousels]').forEach(n=>n.remove());
-  const oldMonuments=document.querySelector('.compass-monuments'),oldBuilt=document.querySelector('.compass-built'),build=document.querySelector('.compass-build-cta');
-  if(oldMonuments)oldMonuments.hidden=true;if(oldBuilt)oldBuilt.hidden=true;
-  const host=document.createElement('section');host.className='dgb-lower';host.dataset.functionalLowerCarousels='v2';
-  host.innerHTML=`<section class="dgb-carousel" tabindex="0" aria-label="Signature objects"><header class="carousel-head"><p>Three ways to engage</p><h2>Choose an object.</h2></header><div class="tabs" data-tabs></div><div class="viewport" data-viewport><div class="ring" data-ring></div></div><div class="carousel-copy" data-caption></div><nav class="carousel-actions" data-actions></nav><div class="carousel-controls"><button type="button" data-prev aria-label="Previous object">‹</button><button type="button" data-next aria-label="Next object">›</button></div><p class="orbit-note">Swipe the stage or use the controls.</p></section><section class="dgb-carousel dgb-carousel--proof" tabindex="0" aria-label="TRL and TRA"><header class="carousel-head"><p>Readiness</p><h2>Inspect the evidence.</h2></header><div class="tabs" data-tabs></div><div class="viewport" data-viewport><div class="ring" data-ring></div></div><div class="carousel-copy" data-caption></div><nav class="carousel-actions" data-actions></nav><div class="carousel-controls"><button type="button" data-prev aria-label="Previous readiness item">‹</button><button type="button" data-next aria-label="Next readiness item">›</button></div><p class="orbit-note">One item at a time. Swipe to rotate.</p></section>`;
-  (build||oldBuilt||oldMonuments||root).insertAdjacentElement(build?'beforebegin':oldBuilt?'beforebegin':oldMonuments?'beforebegin':'beforeend',host);
-  if(build){build.hidden=false;host.insertAdjacentElement('afterend',build)}
-  const stages=host.querySelectorAll('.dgb-carousel');
-  const objectDefs=[
-    {id:'trophy',tab:'Trophy',title:'Awards & Recognition',body:'One body of work. Five reasons to look closer.',actions:[['Enter Awards','/showroom/globe/h-earth/awards/']],html:'<div class="object-frame"><canvas aria-label="Awards trophy"></canvas></div>'},
-    {id:'house',tab:'House',title:'The House',body:'Choose who to speak with.',actions:[['Jeeves','/showroom/globe/hearth/jeeves/'],['Elara','/elara/'],['Auren','/products/auren/']],html:'<div class="object-frame"><canvas aria-label="The House"></canvas></div>'},
-    {id:'brain',tab:'Brain',title:'Coheriscope',body:'Compare how you live and decide with what matters to you.',actions:[['Enter Coheriscope','/coherence-diagnostic/']],html:'<div class="object-frame"><canvas aria-label="Coheriscope brain"></canvas></div>'}
+  purgeLegacy();
+  const build=document.querySelector('.compass-build-cta');
+  const host=document.createElement('section');host.className='dgb-lower-stack';host.dataset.functionalLowerCarousels='canonical-v2';
+  const objectItems=[
+    {id:'trophy',label:'Trophy',title:'Awards & Recognition',question:'Bring the trophy forward to enter the Awards layer.',markup:objectMarkup('trophy','Awards & Recognition','The Trophy','One body of work. Five reasons to look closer.','Explore the Awards Layer','/showroom/globe/h-earth/awards/')},
+    {id:'house',label:'House',title:'Talk to the House',question:'Bring the House forward when you want a guide through the estate.',markup:objectMarkup('house','Ask for directions','The House','Use the House as the practical guide into the estate and its rooms.','Talk to Jeeves','/showroom/globe/hearth/jeeves/')},
+    {id:'brain',label:'Brain',title:'Coheriscope',question:'Bring the brain forward to inspect personal alignment and coherence.',markup:objectMarkup('brain','Assessment','Coheriscope','Compare how you live and decide with what matters to you.','Enter Coheriscope','/coherence-diagnostic/')}
   ];
-  const proofDefs=[
-    {id:'trl',tab:'TRL',title:'Software TRL 7',body:'Demonstrated. Bounded. Inspectable. The current software platform is self-assessed at TRL 7; TRL 8 is not claimed.',actions:[['Inspect TRL evidence','/evidence/readiness/']],html:'<div class="proof-object"><span class="proof-kicker">TRL</span><strong>7</strong><span>Technology Readiness</span></div>'},
-    {id:'tra',tab:'TRA',title:'TRA',body:'Inspect the readiness assessment and the evidence that supports the current disposition.',actions:[['Inspect readiness evidence','/evidence/']],html:'<div class="proof-object"><span class="proof-kicker">TRA</span><strong>✓</strong><span>Readiness Assessment</span></div>'}
+  const objectOrbit=shell({id:'objects',kicker:'Three ways to engage · one shared orbit',title:objectItems[0].title,question:objectItems[0].question,items:objectItems});
+  const readinessItems=[
+    {id:'trl',label:'TRL',title:'Software TRL 7',question:'Inspect the bounded maturity claim against published criteria.',markup:readinessMarkup('Technology Readiness Level','Software TRL 7','7','Self-assessed against published NASA software TRL criteria, with TRL 8 explicitly unclaimed.','Inspect TRL 7','/evidence/readiness/')},
+    {id:'tra',label:'TRA',title:'Technology Readiness Assessment',question:'Inspect whether the evidence assigned to the readiness claim actually supports that claim.',markup:readinessMarkup('Technology Readiness Assessment','TRL Evidence Validation','TRA','Criterion, capability, evidence class, identity, and boundary remain tied together instead of being inferred from presentation.','Inspect the assessment','/evidence/readiness/validation/')}
   ];
-  const first=mountCarousel(stages[0],objectDefs,{objectMode:true});mountCarousel(stages[1],proofDefs);
-  Promise.all([load(`${BASE}/compass.trophy-scene.js`,'CompassTrophyScene'),load(`${BASE}/compass.house-scene.js`,'CompassHouseScene'),load(`${BASE}/compass.brain-scene.js`,'CompassBrainScene')]).then(()=>{globalThis.CompassTrophyScene?.mount?.(first.cards[0].querySelector('canvas'),{foreground:()=>first.index===0});globalThis.CompassHouseScene?.mount?.(first.cards[1].querySelector('canvas'),{foreground:()=>first.index===1});globalThis.CompassBrainScene?.mount?.(first.cards[2].querySelector('canvas'),{foreground:()=>first.index===2})});
-  root.dataset.functionalLowerCarousels='MOUNTED_V2';globalThis.DGB_COMPASS_FUNCTIONAL_CAROUSELS=Object.freeze({structure:'methods-models-parity',objects:['trophy','house','brain'],readiness:['TRL','TRA'],duplicateLegacyHidden:true,compassStateOwnership:false});
+  const readinessOrbit=shell({id:'readiness',kicker:'Readiness · one shared orbit',title:readinessItems[0].title,question:readinessItems[0].question,items:readinessItems});
+  host.append(objectOrbit.section,readinessOrbit.section);
+  if(build)build.before(host);else root.append(host);
+  const [Brain,Trophy,House]=await Promise.all([load(`${BASE}/compass.brain-scene.js`,'CompassBrainScene'),load(`${BASE}/compass.trophy-scene.js`,'CompassTrophyScene'),load(`${BASE}/compass.house-scene.js`,'CompassHouseScene')]);
+  const objectCards=objectOrbit.cards;
+  Brain?.mount?.(objectCards[2].querySelector('canvas'),{foreground:()=>objectCards[2].dataset.active==='true'});
+  Trophy?.mount?.(objectCards[0].querySelector('canvas'),{foreground:()=>objectCards[0].dataset.active==='true'});
+  House?.mount?.(objectCards[1].querySelector('canvas'),{foreground:()=>objectCards[1].dataset.active==='true'});
+  objectOrbit.section.addEventListener('dgb:orbit-change',()=>{House?.setForeground?.(objectCards[1].dataset.active==='true');Trophy?.activate?.()});
+  root.dataset.functionalLowerCarousels='CANONICAL_TWO_ORBITS';
+  globalThis.DGB_COMPASS_FUNCTIONAL_CAROUSELS=Object.freeze({version:'canonical-two-orbit-v2',legacyRemoved:true,orbitRoots:2,objects:['trophy','house','brain'],readiness:['trl','tra'],compassStateOwnership:false});
 }
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',mount,{once:true}):mount();
 })();

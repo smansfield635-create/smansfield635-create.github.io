@@ -1,0 +1,19 @@
+name: FAP1 W5 Overlap Continuity Qualification Trigger
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/fap1-w5-overlap-continuity-transport-trigger.yml'
+permissions:
+  contents: read
+jobs:
+  continuity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 9f16982e6cdfc7ff3e52c38cfdfc5084b0729c88
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute overlap continuity evaluator
+        run: node showroom/globe/audralia/weather-presentation-reconciliation/fap1-w5-overlap-continuity-runner.tmp.mjs

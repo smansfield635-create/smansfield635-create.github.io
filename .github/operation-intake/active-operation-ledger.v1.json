@@ -876,6 +876,18 @@
       "scopeHash": "6125bbaf86772503e43db6e50b7bf5ece384bd687edffbb322389c1f5acf24f8",
       "state": "ADMITTED_LOCKED"
     },
+    "628874262f921355589c20ec1f9c552e699eba3b78d1030db3f39394c3d5e123": {
+      "governingHead": "23214cf857c1591c1b6eac34a12af1e346882a95",
+      "lockGeneration": 1568,
+      "lockScope": "COMPASS_LEGACY_MAIN_SLIM_PUBLICATION_REPAIR",
+      "operationId": "COMPASS_LEGACY_MAIN_SLIM_PUBLICATION_REPAIR_20260820_001",
+      "procedureLocatorDigest": "3b03c72407416d8f7089ed47eed80b2434249322ac0116707cc4d486cfca5f58",
+      "released": false,
+      "requestDigest": "99c42c878bcb992fb6660b485e03b4f4a820f25890025629abe60aa1078bde51",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "628874262f921355589c20ec1f9c552e699eba3b78d1030db3f39394c3d5e123",
+      "state": "ADMITTED_LOCKED"
+    },
     "650ecddeb51e8e427fafe9a395e80ee71f87b10c59860e95a1f68e12dbfb63e3": {
       "governingHead": "7f832b749617b0360ad6bbfafadc37508d328dc3",
       "lockGeneration": 1378,
@@ -2724,7 +2736,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1567,
+  "lockGeneration": 1568,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

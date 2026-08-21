@@ -42,7 +42,7 @@ jobs:
             .github/workflows/compass-static-editorial-materialize-v2.yml
       - name: Generate candidate without committing
         run: python -O tools/compass-static-editorial-materialize.py
-      - name: Reconcile byte-identical duplicate hidden declarations
+      - name: Reconcile duplicate hidden room declarations if present
         shell: bash
         run: |
           python - <<'PY'
@@ -57,8 +57,11 @@ jobs:
               i=s.find(marker,pos)
               if i<0: break
               starts.append(i); pos=i+1
+          if len(starts)==1:
+              print('ONE_CANONICAL_ROOM_DECLARATION_PRESENT')
+              raise SystemExit(0)
           if len(starts)!=2:
-              raise SystemExit(f'ROOM_DECLARATION_DUPLICATION_NOT_EXACTLY_TWO:{len(starts)}')
+              raise SystemExit(f'ROOM_DECLARATION_COUNT_INVALID:{len(starts)}')
           token=re.compile(r'<section(?:\s|>)|</section>',re.I)
           def section_at(start):
               depth=0

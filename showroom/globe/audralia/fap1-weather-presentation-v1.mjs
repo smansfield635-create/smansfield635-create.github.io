@@ -1,4 +1,4 @@
-const POLICY_ID='AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v5';
+const POLICY_ID='AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v6';
 const previousShaderSource=WebGL2RenderingContext.prototype.shaderSource;
 let patched=0;
 let rejected=0;
@@ -71,26 +71,39 @@ vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   float anvil=fap1Ellipse(dq,vec2(.035,.085),vec2(.31,.13),-.10)*fap1Band(h,78.0,108.0)*mix(.35,1.0,fap1CloudBreak(radial,t,17.0,.32,.67))*.66;
   mass+=max(tower,anvil);ice+=tower*.48+anvil*.96;precip+=tower*.91;
 
-  // Low-intensity synoptic bridge fields fill conspicuous planetary dead zones
-  // without raising global density or replacing explicit clear-air corridors.
+  // Broad, broken synoptic support restores planetary weather presence without
+  // altering the named systems or filling the explicit clear-air corridor.
   float clearBridge=1.0-fap1ClearCorridor(lat,lon);
+
   vec2 bwq=fap1Local(lat,lon,.20,2.55+t*.009);
-  float westBridgeShape=fap1Ellipse(bwq,vec2(0.0),vec2(.58,.25),-.18);
-  float westBridgeBreak=fap1CloudBreak(radial,t,18.0,.46,.73);
-  float westBridge=westBridgeShape*fap1Band(h,54.0,90.0)*mix(.05,.34,westBridgeBreak)*.62*clearBridge;
-  mass+=westBridge;ice+=westBridge*.64;
+  float westBridgeShape=fap1Ellipse(bwq,vec2(0.0),vec2(.72,.34),-.18);
+  float westBridgeBreak=fap1CloudBreak(radial,t,18.0,.40,.70);
+  float westBridge=westBridgeShape*fap1Band(h,50.0,94.0)*mix(.12,.62,westBridgeBreak)*.78*clearBridge;
+  mass+=westBridge;ice+=westBridge*.60;
 
   vec2 bsq=fap1Local(lat,lon,-.56,-1.02-t*.007);
-  float southBridgeShape=fap1Ellipse(bsq,vec2(0.0),vec2(.52,.30),.27);
-  float southBridgeBreak=fap1CloudBreak(radial,t,24.0,.50,.77);
-  float southBridge=southBridgeShape*fap1Band(h,32.0,67.0)*mix(.04,.31,southBridgeBreak)*.64;
-  mass+=southBridge;precip+=southBridge*.10;
+  float southBridgeShape=fap1Ellipse(bsq,vec2(0.0),vec2(.68,.38),.27);
+  float southBridgeBreak=fap1CloudBreak(radial,t,24.0,.43,.73);
+  float southBridge=southBridgeShape*fap1Band(h,30.0,72.0)*mix(.10,.57,southBridgeBreak)*.76*clearBridge;
+  mass+=southBridge;precip+=southBridge*.12;
 
   vec2 beq=fap1Local(lat,lon,.16,-2.50+t*.006);
-  float eastBridgeShape=fap1Ellipse(beq,vec2(0.0),vec2(.50,.21),-.36);
-  float eastBridgeBreak=fap1CloudBreak(radial,t,15.0,.48,.76);
-  float eastBridge=eastBridgeShape*fap1Band(h,68.0,102.0)*mix(.04,.29,eastBridgeBreak)*.58;
-  mass+=eastBridge;ice+=eastBridge*.86;
+  float eastBridgeShape=fap1Ellipse(beq,vec2(0.0),vec2(.64,.30),-.36);
+  float eastBridgeBreak=fap1CloudBreak(radial,t,15.0,.42,.72);
+  float eastBridge=eastBridgeShape*fap1Band(h,64.0,104.0)*mix(.10,.54,eastBridgeBreak)*.72*clearBridge;
+  mass+=eastBridge;ice+=eastBridge*.82;
+
+  vec2 bnq=fap1Local(lat,lon,.49,1.96-t*.005);
+  float northBridgeShape=fap1Ellipse(bnq,vec2(0.0),vec2(.54,.27),.22);
+  float northBridgeBreak=fap1CloudBreak(radial,t,19.0,.45,.74);
+  float northBridge=northBridgeShape*fap1Band(h,57.0,96.0)*mix(.08,.44,northBridgeBreak)*.62*clearBridge;
+  mass+=northBridge;ice+=northBridge*.52;precip+=northBridge*.08;
+
+  vec2 btq=fap1Local(lat,lon,-.10,-2.88+t*.004);
+  float tropicalBridgeShape=fap1Ellipse(btq,vec2(0.0),vec2(.58,.31),-.10);
+  float tropicalBridgeBreak=fap1CloudBreak(radial,t,21.0,.44,.73);
+  float tropicalBridge=tropicalBridgeShape*fap1Band(h,34.0,76.0)*mix(.09,.48,tropicalBridgeBreak)*.66*clearBridge;
+  mass+=tropicalBridge;precip+=tropicalBridge*.16;
 
   const float CY_LAT=-.349066;
   const float CY_LON=.349066;
@@ -190,8 +203,9 @@ Object.defineProperty(window,'__AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION__',
     brokenAsymmetricStormMasses:true,
     polarCloudMaximumOccupation:true,
     broadPolarLayering:true,
-    sparseSynopticBridgeFields:true,
-    planetaryDeadZoneReduction:true,
+    broadBrokenSynopticSupport:true,
+    fiveSynopticSupportFields:true,
+    planetaryWeatherPresenceRestored:true,
     clearCorridorPreserved:true,
     altitudeDifferentiation:true,
     immersiveCloudInterior:true,

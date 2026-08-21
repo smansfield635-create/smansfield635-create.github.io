@@ -56,13 +56,14 @@ export function buildFAP1SpatialWeatherObjects({canonicalTimeHours=0,packet=null
     const frame=frameAt(system.latitudeDeg,system.longitudeDeg);
     const base=worldAltitude(system.baseKm),top=worldAltitude(system.topKm),centerAltitude=(base+top)*.5;
     const center=worldPosition(frame.axisUp,centerAltitude);
+    const canonicalDensity=Number.isFinite(system.canonicalDensity)?system.canonicalDensity:system.density;
     return freeze({
       ID_i:system.id,
       weatherClass:system.weatherClass,
       sourceDescriptor:system,
       F_i:freeze({latitudeDeg:system.latitudeDeg,longitudeDeg:system.longitudeDeg,majorKm:system.majorKm,minorKm:system.minorKm}),
       Z_i:freeze({base,top,centerAltitude}),
-      W_i:freeze({density:system.density,seed:system.seed,genus:system.genus,ice:system.ice,precip:system.precip,support:system.support}),
+      W_i:freeze({density:canonicalDensity,canonicalDensity,representationContribution:system.representationContribution??1,seed:system.seed,genus:system.genus,ice:system.ice,precip:system.precip,support:system.support}),
       V_i:freeze({center,axisU:frame.axisU,axisV:frame.axisV,axisUp:frame.axisUp,radii:freeze([system.majorKm,(top-base)*.5,system.minorKm])}),
       authority:'FAP1_DESCRIPTOR_ONLY',
       representationLaw:'LOD_CHANGES_WEATHER_REPRESENTATION_NOT_WEATHER_STATE'
@@ -107,7 +108,7 @@ export function evaluateFAP1SpatialLOD(objects,camera){
     const sum=p+r+l;if(entry.Q_i&&sum>0){p/=sum;r/=sum;l/=sum;}
     return freeze({...entry,alpha:freeze({p,r,l}),localPromoted:promoted.has(entry.object.ID_i)});
   });
-  return freeze({schema:FAP1_GB_SPATIAL_LOD_SCHEMA,objects:freeze(resolved),activeLocalCount:promoted.size,maxLocalCount:MAX_LOCAL_VOLUMETRIC_OBJECTS,visibleRendererMutation:false,w5DensityActive:false,l5LightingActive:false});
+  return freeze({schema:FAP1_GB_SPATIAL_LOD_SCHEMA,objects:freeze(resolved),activeLocalCount:promoted.size,maxLocalCount:MAX_LOCAL_VOLUMETRIC_OBJECTS,visibleRendererMutation:false,w5DensityActive:true,l5LightingActive:false});
 }
 
 export function weatherBrickAddress(object,bx,by,bz,generation=0){
@@ -124,6 +125,7 @@ export function verifyFAP1SpatialLOD(state,epsilon=1e-6){
     if(entry.object.authority!=='FAP1_DESCRIPTOR_ONLY')failures.push(`NON_FAP1_AUTHORITY:${entry.object.ID_i}`);
     if(entry.Q_i&&Math.abs(entry.alpha.p+entry.alpha.r+entry.alpha.l-1)>epsilon)failures.push(`LOD_SUM:${entry.object.ID_i}`);
     if(!entry.Q_i&&(entry.alpha.p!==0||entry.alpha.r!==0||entry.alpha.l!==0))failures.push(`IRRELEVANT_NONZERO_ALPHA:${entry.object.ID_i}`);
+    if(!(entry.object.W_i.canonicalDensity>0))failures.push(`CANONICAL_DENSITY_MISSING:${entry.object.ID_i}`);
   }
-  return freeze({schema:'FAP1_GB_SPATIAL_LOD_INVARIANTS_v1',pass:failures.length===0,failures:freeze(failures),w5DensityActive:false,visibleRendererMutation:false});
+  return freeze({schema:'FAP1_GB_SPATIAL_LOD_INVARIANTS_v1',pass:failures.length===0,failures:freeze(failures),w5DensityActive:true,visibleRendererMutation:false});
 }

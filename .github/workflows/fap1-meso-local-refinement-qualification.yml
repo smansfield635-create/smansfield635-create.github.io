@@ -1,0 +1,44 @@
+name: FAP1 Meso Local Refinement Qualification
+on:
+  pull_request:
+    paths: ['.github/workflows/fap1-meso-local-refinement-qualification.yml']
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 1ed3dfabd44347d8b453ebb5e017a1b2c8d9e26b
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Validate FAP1 occupation and W5 structure
+        run: |
+          node --input-type=module <<'NODE'
+          import {buildFAP1GPUWeatherPacket,evaluateFAP1GPUWeatherPacket} from './showroom/globe/audralia/weather-presentation-reconciliation/fap1-gpu-weather-descriptors.mjs';
+          import {buildFAP1SpatialWeatherObjects} from './showroom/globe/audralia/weather-presentation-reconciliation/fap1-spatial-lod.gb.mjs';
+          import {buildW5DensityBrick} from './showroom/globe/audralia/weather-presentation-reconciliation/fap1-w5-local-density.gb.mjs';
+          const packet=buildFAP1GPUWeatherPacket({canonicalTimeHours:0});
+          const evaluation=evaluateFAP1GPUWeatherPacket(packet);
+          const objects=buildFAP1SpatialWeatherObjects({packet});
+          const systems=packet.systems.map(s=>({id:s.id,class:s.weatherClass,scale:s.mesoscaleOccupationScale,stateMajorKm:s.stateMajorKm,majorKm:s.majorKm,stateMinorKm:s.stateMinorKm,minorKm:s.minorKm}));
+          const bricks=objects.map(o=>{const b=buildW5DensityBrick(o);return{id:o.ID_i,class:o.weatherClass,resolution:b.resolution,interiorEmptySampleFraction:b.interiorEmptySampleFraction,meanOccupiedDensity:b.meanOccupiedDensity,maxDensity:b.maxDensity,mesoscaleBodyDifferentiation:b.mesoscaleBodyDifferentiation};});
+          const checks={packet:evaluation.eligible===true,systemCount:systems.length===5,clearAir:packet.clearRegions.length>=1,allExpanded:systems.every(s=>s.scale>1&&s.majorKm>s.stateMajorKm&&s.minorKm>s.stateMinorKm),boundedExpansion:systems.every(s=>s.scale<=1.20),w5Bodies:bricks.every(b=>b.mesoscaleBodyDifferentiation===true),w5Resolution:bricks.every(b=>b.resolution===16),cavitySignal:bricks.filter(b=>['LOW_CUMULIFORM','DEEP_CONVECTION','CYCLONE'].includes(b.class)).every(b=>b.interiorEmptySampleFraction>=.05)};
+          const result={candidateHead:'1ed3dfabd44347d8b453ebb5e017a1b2c8d9e26b',systems,bricks,checks,pass:Object.values(checks).every(Boolean)};console.log(JSON.stringify(result,null,2));if(!result.pass)process.exit(2);
+          NODE
+      - id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with: {chrome-version: stable}
+      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/server.log 2>&1 &
+          for a in $(seq 1 60); do curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/ >/dev/null && exit 0; sleep .25; done; exit 1
+      - name: Verify exact-head browser readiness
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          node <<'NODE'
+          const puppeteer=require('puppeteer-core');
+          (async()=>{const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});const page=await browser.newPage();const errors=[];page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{const t=m.text();if(m.type()==='error'&&!t.includes('favicon.ico')&&!t.includes('404 (File not found)'))errors.push(t);});await page.goto('http://127.0.0.1:4173/showroom/globe/audralia/',{waitUntil:'domcontentloaded',timeout:90000});await page.waitForFunction(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.l5LightingActive===true&&window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer,{timeout:90000});const state=await page.evaluate(()=>({authority:window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority,handoff:window.__AUDRALIA_FAP1_W5_HANDOFF__?.authority,l5:window.__AUDRALIA_FAP1_W5_HANDOFF__?.l5LightingActive,loaderHidden:document.querySelector('[data-audralia-loader]')?.hidden===true}));console.log(JSON.stringify({state,errors},null,2));await browser.close();if(state.authority!=='FAP1_ONLY'||state.handoff!=='BOUNDED_GB_HANDOFF_ACTIVE'||state.l5!==true||errors.length)process.exit(2);})().catch(e=>{console.error(e);process.exit(1);});
+          NODE

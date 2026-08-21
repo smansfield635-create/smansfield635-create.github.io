@@ -1,3 +1,4 @@
+// QUALIFICATION_RETRIGGER_EXACT_MATERIALIZED_HEAD_20260820
 import fs from 'node:fs';
 
 const html = fs.readFileSync('index.html', 'utf8');

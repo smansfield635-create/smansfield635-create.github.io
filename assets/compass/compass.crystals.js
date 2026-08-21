@@ -8892,6 +8892,10 @@
     for (let index = 0; index < 3; index += 1) {
       if (scalarNeedsSettlement(state.camera.eye[index], state.camera.nextEye[index]) || scalarNeedsSettlement(state.camera.target[index], state.camera.nextTarget[index])) return true;
     }
+    // COMPASS_CRYSTAL_CONTINUOUS_NORMAL_MOTION_v1
+    // Time-dependent star rotation, float, twinkle, and shader motion require a live frame clock.
+    // Reduced-motion users retain the existing settle-and-idle behavior.
+    if (!state.reducedMotion) return true;
     return false;
   }
 

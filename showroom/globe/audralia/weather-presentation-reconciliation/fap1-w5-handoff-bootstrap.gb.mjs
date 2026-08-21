@@ -10,6 +10,7 @@ function handoffDisabled(){
   try{return new URLSearchParams(globalThis.location?.search||'').get('gaProof')==='1';}
   catch(_error){return false;}
 }
+function sunDirection(){return globalThis.__AUDRALIA_CELESTIAL_STATE__?.getSolarVector?.()||[.42,.78,.46];}
 
 async function waitForAuthorities(){
   for(let i=0;i<320;i++){
@@ -29,15 +30,16 @@ function cameraSignature(camera){
 
 async function initialize(){
   if(handoffDisabled()){
-    globalThis.__AUDRALIA_FAP1_W5_HANDOFF__=Object.freeze({schema:'FAP1_W5_BOUNDED_MACRO_LOCAL_HANDOFF_v1',disabledForGAProof:true,l5LightingActive:false});
+    globalThis.__AUDRALIA_FAP1_W5_HANDOFF__=Object.freeze({schema:'FAP1_W5_BOUNDED_MACRO_LOCAL_HANDOFF_v2_L5_DIRECT',disabledForGAProof:true,l5LightingActive:false});
     return;
   }
   if(!(canvas instanceof HTMLCanvasElement))throw new Error('FAP1_W5_HANDOFF_CANVAS_MISSING');
   const {parent,ga}=await waitForAuthorities();
-  const handoff=createBoundedW5Handoff({worldCanvas:canvas,parentReceipt:parent,gaAuthority:ga});
-  let interacting=false,lastSignature='',lastRender=0,raf=0,lastVerification=null;
+  const handoff=createBoundedW5Handoff({worldCanvas:canvas,parentReceipt:parent,gaAuthority:ga,getSunDirection:sunDirection});
+  let interacting=false,lastSignature='',lastRender=0,raf=0,lastVerification=null,quality='REST';
 
   function renderNow(){
+    handoff.setQuality(quality);
     const receipt=handoff.render();
     const verification=verifyBoundedW5Handoff(receipt);
     if(!verification.pass)throw new Error(`FAP1_W5_HANDOFF_INVALID:${verification.failures.join(',')}`);
@@ -48,8 +50,8 @@ async function initialize(){
     return receipt;
   }
 
-  function begin(){if(!interacting){interacting=true;handoff.beginInteraction();}}
-  function end(){if(interacting){interacting=false;handoff.endInteraction();lastSignature='';}}
+  function begin(){if(!interacting){interacting=true;quality='INTERACTIVE';handoff.beginInteraction();}}
+  function end(){if(interacting){interacting=false;quality='REST';handoff.endInteraction();lastSignature='';}}
   canvas.addEventListener('pointerdown',begin,{passive:true});
   canvas.addEventListener('pointerup',end,{passive:true});
   canvas.addEventListener('pointercancel',end,{passive:true});
@@ -67,15 +69,17 @@ async function initialize(){
   raf=requestAnimationFrame(frame);
 
   globalThis.__AUDRALIA_FAP1_W5_HANDOFF__=Object.freeze({
-    schema:'FAP1_W5_BOUNDED_MACRO_LOCAL_HANDOFF_v1',
+    schema:'FAP1_W5_BOUNDED_MACRO_LOCAL_HANDOFF_v2_L5_DIRECT',
     authority:'BOUNDED_GB_HANDOFF_ACTIVE',
     weatherAuthority:'FAP1_ONLY',
     canonicalDensityPreserved:true,
     macroLocalContinuityPreviouslyPassed:true,
-    l5LightingActive:false,
+    l5LightingActive:true,
+    l5LightingModel:'DIRECT_SUN_TRANSMITTANCE_ONLY',
     getReceipt:()=>handoff.getReceipt(),
     getVerification:()=>lastVerification,
     renderNow,
+    setQuality(value){quality=value==='CAPTURE'?'CAPTURE':value==='INTERACTIVE'?'INTERACTIVE':'REST';handoff.setQuality(quality);return renderNow();},
     destroy(){cancelAnimationFrame(raf);handoff.destroy();}
   });
 }

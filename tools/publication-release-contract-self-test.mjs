@@ -14,23 +14,34 @@ const ai = readJson(aiPath);
 const compass = readJson(compassPath);
 const workflow = readText(workflowPath);
 
+const boundedSequence = 'APPROVED_COMMIT>EXPLICIT_DEPLOYMENT>LIVE_EXACT_HEAD_VERIFICATION';
+const runtimeSequence = 'APPLICABLE_GOVERNANCE_AND_QUALIFICATION>APPROVED_COMMIT>EXPLICIT_DEPLOYMENT>LIVE_EXACT_HEAD_VERIFICATION';
+
 assert(contract.schema === 'PUBLICATION_RELEASE_CONTRACT_v1', 'release contract schema mismatch');
 assert(contract.status === 'ACTIVE', 'release contract must be ACTIVE');
-assert(contract.releaseClasses?.BOUNDED_PAGE_RELEASE?.requiredSequence?.join('>') === 'APPROVED_COMMIT>EXPLICIT_DEPLOYMENT>LIVE_EXACT_HEAD_VERIFICATION', 'bounded release sequence drifted');
+assert(contract.releaseClasses?.BOUNDED_PAGE_RELEASE?.requiredSequence?.join('>') === boundedSequence, 'bounded release sequence drifted');
 assert(contract.releaseClasses?.BOUNDED_PAGE_RELEASE?.canonicalOperationIntakeRequired === false, 'bounded releases must not require canonical intake');
+assert(contract.releaseClasses?.RUNTIME_OR_NEW_DEVELOPMENT?.requiredSequence?.join('>') === runtimeSequence, 'runtime release sequence drifted');
 assert(contract.releaseClasses?.RUNTIME_OR_NEW_DEVELOPMENT?.canonicalOperationIntakeRequired === true, 'runtime/new development must require canonical intake');
 assert(contract.deployment?.workflow === workflowPath, 'deployment workflow binding drifted');
 assert(contract.deployment?.input === 'target_sha', 'deployment input must remain target_sha');
 assert(contract.verification?.successResult === 'LIVE_EXACT_HEAD_VERIFIED', 'live success result drifted');
 assert(contract.verification?.failureResult === 'DEPLOYMENT_NOT_PROVEN', 'live failure result drifted');
 
-assert(ai.publicationReleaseContract?.policy === contractPath, 'AI entry point is not bound to release contract');
-assert(ai.publicationReleaseContract?.boundedPageReleaseClass === 'BOUNDED_PAGE_RELEASE', 'AI bounded release class drifted');
-assert(ai.publicationReleaseContract?.runtimeOrNewDevelopmentClass === 'RUNTIME_OR_NEW_DEVELOPMENT', 'AI runtime release class drifted');
+assert(ai.publicationRelease?.contract === contractPath, 'AI entry point is not bound to release contract');
+assert(ai.publicationRelease?.deploymentWorkflow === workflowPath, 'AI deployment workflow drifted');
+assert(ai.publicationRelease?.boundedPageReleaseSequence?.join('>') === boundedSequence, 'AI bounded release sequence drifted');
+assert(ai.publicationRelease?.runtimeOrNewDevelopmentSequence?.join('>') === runtimeSequence, 'AI runtime release sequence drifted');
+assert(ai.operationIntakeGate?.notRequiredForMutationClasses?.includes('BOUNDED_PAGE_RELEASE'), 'AI entry point must exempt bounded page release from canonical intake');
 
+assert(compass.procedures?.publicationReleaseContract === contractPath, 'Compass entry point is not bound to release contract');
 assert(compass.githubActionsExecution?.deploymentWorkflow === workflowPath, 'Compass deployment workflow drifted');
-assert(compass.publicationRelease?.policy === contractPath, 'Compass entry point is not bound to release contract');
-assert(compass.publicationRelease?.boundedPageReleaseSequence?.join('>') === 'APPROVED_COMMIT>EXPLICIT_DEPLOYMENT>LIVE_EXACT_HEAD_VERIFICATION', 'Compass bounded release sequence drifted');
+assert(compass.githubActionsExecution?.deploymentInput === 'target_sha', 'Compass deployment input drifted');
+assert(compass.githubActionsExecution?.deploymentSuccessResult === 'LIVE_EXACT_HEAD_VERIFIED', 'Compass deployment success result drifted');
+assert(compass.releaseClassification?.BOUNDED_PAGE_RELEASE?.requiredClosure?.join('>') === boundedSequence, 'Compass bounded release closure drifted');
+assert(compass.releaseClassification?.BOUNDED_PAGE_RELEASE?.canonicalIntakeRequired === false, 'Compass bounded release must not require canonical intake');
+assert(compass.releaseClassification?.RUNTIME_OR_NEW_DEVELOPMENT?.requiredClosure?.join('>') === runtimeSequence, 'Compass runtime release closure drifted');
+assert(compass.releaseClassification?.RUNTIME_OR_NEW_DEVELOPMENT?.canonicalIntakeRequired === true, 'Compass runtime release must require canonical intake');
 
 for (const required of [
   'workflow_dispatch:',
@@ -56,6 +67,7 @@ console.log(JSON.stringify({
   schema: 'PUBLICATION_RELEASE_CONTRACT_SELF_TEST_RECEIPT_v1',
   result: 'PASS',
   releaseSequence: contract.releaseClasses.BOUNDED_PAGE_RELEASE.requiredSequence,
+  runtimeSequence: contract.releaseClasses.RUNTIME_OR_NEW_DEVELOPMENT.requiredSequence,
   workflow: workflowPath,
   verification: contract.verification.successResult
 }, null, 2));

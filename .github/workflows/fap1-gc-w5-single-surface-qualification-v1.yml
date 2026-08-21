@@ -1,0 +1,87 @@
+name: FAP1 GC W5 Post Draw Persistence Diagnostic v3
+on:
+  pull_request:
+    paths: ['.github/workflows/fap1-gc-w5-single-surface-qualification-v1.yml']
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fc503ec6458161281c1a68f2c2d7a9ed6f87fb83
+      - id: chrome
+        uses: browser-actions/setup-chrome@v1
+      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/server.log 2>&1 &
+          for a in $(seq 1 120); do curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/ >/dev/null && exit 0; sleep .25; done; exit 1
+      - name: Trace W5 pixels after valid full-runtime draw
+        timeout-minutes: 6
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          timeout 345s node <<'NODE'
+          const puppeteer=require('puppeteer-core'),fs=require('fs');
+          const delay=ms=>new Promise(r=>setTimeout(r,ms));
+          const mark=(name,data={})=>console.log('PERSIST',JSON.stringify({t:Date.now(),name,data}));
+          (async()=>{
+            const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+            const page=await browser.newPage();await page.setViewport({width:900,height:900});
+            const errors=[];page.on('pageerror',e=>errors.push(String(e)));
+            await page.evaluateOnNewDocument(()=>{
+              const records=new WeakMap();
+              const origGet=HTMLCanvasElement.prototype.getContext;
+              HTMLCanvasElement.prototype.getContext=function(type,attrs){
+                const gl=origGet.call(this,type,attrs);
+                if(type==='webgl2'&&gl&&!records.has(gl)){
+                  const rec={draws:0,clears:0,resizes:0,events:[]};records.set(gl,rec);
+                  const push=(name,data={})=>{rec.events.push({t:performance.now(),name,data});if(rec.events.length>120)rec.events.shift();};
+                  const draw=gl.drawArrays.bind(gl);gl.drawArrays=function(mode,first,count){rec.draws++;push('draw',{mode,first,count,w:this.canvas.width,h:this.canvas.height});return draw(mode,first,count);};
+                  const clear=gl.clear.bind(gl);gl.clear=function(mask){rec.clears++;push('clear',{mask,w:this.canvas.width,h:this.canvas.height});return clear(mask);};
+                }
+                return gl;
+              };
+              const widthDesc=Object.getOwnPropertyDescriptor(HTMLCanvasElement.prototype,'width');
+              const heightDesc=Object.getOwnPropertyDescriptor(HTMLCanvasElement.prototype,'height');
+              for(const [prop,desc] of [['width',widthDesc],['height',heightDesc]]){
+                if(!desc?.set||!desc?.get)continue;
+                Object.defineProperty(HTMLCanvasElement.prototype,prop,{configurable:true,enumerable:desc.enumerable,get:desc.get,set:function(v){const old=desc.get.call(this);desc.set.call(this,v);if(this.dataset?.fap1W5LocalRaymarch==='true'&&old!==v){const gl=origGet.call(this,'webgl2');const rec=gl&&records.get(gl);if(rec){rec.resizes++;rec.events.push({t:performance.now(),name:'resize-'+prop,data:{old,value:v}});}}}});
+              }
+              window.__W5_PERSIST_TRACE__={snapshot(canvas){const gl=origGet.call(canvas,'webgl2');const rec=gl&&records.get(gl);return rec?JSON.parse(JSON.stringify(rec)):null;}};
+            });
+            await page.goto('http://127.0.0.1:4173/showroom/globe/audralia/',{waitUntil:'domcontentloaded',timeout:45000});
+            await page.evaluate(()=>import('./weather-presentation-reconciliation/app.mjs?diag=persist-v3'));
+            await page.waitForFunction(()=>!!window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer,{timeout:105000});
+            if(!(await page.evaluate(()=>window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY'))){await page.evaluate(()=>import('./weather-presentation-reconciliation/fap1-ga-authority-bootstrap.mjs?diag=persist-v3'));await page.waitForFunction(()=>window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY',{timeout:30000});}
+            await page.evaluate(()=>import('./weather-presentation-reconciliation/fap1-w5-handoff-bootstrap.gb.mjs?diag=persist-v3'));
+            await page.waitForFunction(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.authority==='BOUNDED_GB_HANDOFF_ACTIVE'&&window.__AUDRALIA_FAP1_W5_HANDOFF__?.getSurfaceCount?.()===1,{timeout:30000});
+            const witness=await page.evaluate(async()=>{
+              const S=await import('./weather-presentation-reconciliation/fap1-spatial-lod.gb.mjs?diag=persist-v3');
+              const W=await import('./weather-presentation-reconciliation/fap1-w5-local-density.gb.mjs?diag=persist-v3');
+              const ga=window.__AUDRALIA_FAP1_GA_AUTHORITY__,packet=ga.descriptorPacket()??ga.renderNow(),objects=S.buildFAP1SpatialWeatherObjects({packet}),o=objects.find(x=>x.ID_i==='SOUTHEAST_DEEP_CONVECTION'),brick=W.buildW5DensityBrick(o),body=brick.mesoBodies[1]||brick.mesoBodies[0];
+              const pc=S.PLANET_CENTER,c=o.V_i.center,r=[c[0]-pc[0],c[1]-pc[1],c[2]-pc[2]],len=Math.hypot(...r),dir=r.map(v=>v/len),angle=Math.acos(Math.max(-1,Math.min(1,dir[1]))),horiz=Math.hypot(dir[0],dir[2])||1,radius=angle*S.PLANET_RADIUS,baseU=radius*dir[0]/horiz,baseV=radius*dir[2]/horiz;
+              return{targetU:baseU+body.center[0]*o.V_i.radii[0],targetV:baseV+body.center[2]*o.V_i.radii[2],distance:Math.max(95,Math.min(180,(o.Z_i.centerAltitude+body.center[1]*o.V_i.radii[1]-18)/Math.sin(.46))),pitch:.46,yaw:2.4};
+            });
+            await page.evaluate(w=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__.setCameraStateForTest(w),witness);
+            const samples=await page.evaluate(async()=>{
+              const owner=window.__AUDRALIA_FAP1_W5_HANDOFF__,ga=window.__AUDRALIA_FAP1_GA_AUTHORITY__,parent=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__;
+              function read(){const canvas=owner.getActiveSurface();const gl=canvas.getContext('webgl2');const w=canvas.width,h=canvas.height,pix=new Uint8Array(w*h*4);gl.readPixels(0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,pix);let nonzero=0,maxAlpha=0,sum=0;for(let i=3;i<pix.length;i+=4){const a=pix[i];if(a)nonzero++;if(a>maxAlpha)maxAlpha=a;sum+=a;}const cs=getComputedStyle(canvas),rect=canvas.getBoundingClientRect();return{nonzero,maxAlpha,meanAlpha:sum/Math.max(1,w*h),width:w,height:h,display:cs.display,rect:{width:rect.width,height:rect.height},weatherId:canvas.dataset.weatherId,brickAddress:canvas.dataset.brickAddress,receipt:owner.getReceipt(),trace:window.__W5_PERSIST_TRACE__.snapshot(canvas),camera:parent.getCameraFrame().snapshot};}
+              ga.renderNow();owner.renderNow();
+              const out=[];out.push({delay:0,state:read()});
+              for(const ms of [50,150,450,900,1800,3200]){await new Promise(r=>setTimeout(r,ms-(out.reduce((a,x)=>a+x.delay,0))));out.push({delay:ms,state:read()});}
+              return out;
+            });
+            for(const s of samples)mark('SAMPLE',s);
+            fs.writeFileSync('w5-post-draw-persistence.json',JSON.stringify({samples,errors},null,2));
+            await browser.close();
+          })().catch(e=>{console.error('PERSIST_ERROR',e);process.exit(1)});
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: w5-post-draw-persistence
+          path: w5-post-draw-persistence.json
+          if-no-files-found: warn

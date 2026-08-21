@@ -33,16 +33,16 @@ jobs:
             await delay(15000);
             if(!(await page.evaluate(()=>!!window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer))){
               const before=await page.evaluate(()=>({parentError:window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__??null,startupFailure:window.__AUDRALIA_STARTUP_FAILURE__??null})); console.log('PARENT_BEFORE_FALLBACK',JSON.stringify(before));
-              await page.evaluate(()=>import('./weather-presentation-reconciliation/app.mjs?qual=body-visual-parent-v2'));
+              await page.evaluate(()=>import('./weather-presentation-reconciliation/app.mjs?qual=body-visual-parent-v3'));
             }
             await page.waitForFunction(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer,{timeout:180000});
-            if(!(await page.evaluate(()=>window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY'))){await page.evaluate(()=>import('./weather-presentation-reconciliation/fap1-ga-authority-bootstrap.mjs?qual=body-visual-v2'));}
+            if(!(await page.evaluate(()=>window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY'))){await page.evaluate(()=>import('./weather-presentation-reconciliation/fap1-ga-authority-bootstrap.mjs?qual=body-visual-v3'));}
             await page.waitForFunction(()=>window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY',{timeout:60000});
-            if(!(await page.evaluate(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.authority==='BOUNDED_GB_HANDOFF_ACTIVE'))){await page.evaluate(()=>import('./weather-presentation-reconciliation/fap1-w5-handoff-bootstrap.gb.mjs?qual=body-visual-v2'));}
+            if(!(await page.evaluate(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.authority==='BOUNDED_GB_HANDOFF_ACTIVE'))){await page.evaluate(()=>import('./weather-presentation-reconciliation/fap1-w5-handoff-bootstrap.gb.mjs?qual=body-visual-v3'));}
             await page.waitForFunction(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.authority==='BOUNDED_GB_HANDOFF_ACTIVE',{timeout:60000});
             const target=await page.evaluate(async()=>{
-              const m=await import('./weather-presentation-reconciliation/fap1-spatial-lod.gb.mjs?qual=body-target-v2');
-              const d=await import('./weather-presentation-reconciliation/fap1-gpu-weather-descriptors.mjs?qual=body-target-v2');
+              const m=await import('./weather-presentation-reconciliation/fap1-spatial-lod.gb.mjs?qual=body-target-v3');
+              const d=await import('./weather-presentation-reconciliation/fap1-gpu-weather-descriptors.mjs?qual=body-target-v3');
               const objects=m.buildFAP1SpatialWeatherObjects({packet:d.buildFAP1GPUWeatherPacket({canonicalTimeHours:0})});
               const o=objects.find(x=>x.ID_i==='SOUTHEAST_DEEP_CONVECTION');
               const c=o.V_i.center,pc=m.PLANET_CENTER,r=[c[0]-pc[0],c[1]-pc[1],c[2]-pc[2]],len=Math.hypot(...r),dir=r.map(v=>v/len),angle=Math.acos(Math.max(-1,Math.min(1,dir[1]))),horiz=Math.hypot(dir[0],dir[2])||1,radius=angle*m.PLANET_RADIUS;
@@ -53,7 +53,7 @@ jobs:
             const rows=[];
             for(const [name,distance,pitch] of stages){
               const metrics=await page.evaluate(({target,distance,pitch})=>{
-                const p=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__; p.setCameraStateForTest({targetU:target.targetU,targetV:target.targetV,distance,pitch,yaw:0}); window.__AUDRALIA_FAP1_GA_AUTHORITY__.renderNow(); const h=window.__AUDRALIA_FAP1_W5_HANDOFF__; h.render(); const rec=h.getReceipt(); const canvas=[...document.querySelectorAll('canvas')].find(c=>c.dataset.fap1W5LocalRaymarch==='true'); let fb={nonzero:0,low:0,mid:0,high:0,total:0,meanAlpha:0}; if(canvas&&canvas.style.display!=='none'){const gl=canvas.getContext('webgl2',{preserveDrawingBuffer:true});if(gl){const w=canvas.width,hh=canvas.height,pix=new Uint8Array(w*hh*4);gl.readPixels(0,0,w,hh,gl.RGBA,gl.UNSIGNED_BYTE,pix);let sum=0;fb.total=w*hh;for(let i=3;i<pix.length;i+=4){const a=pix[i];sum+=a;if(a>0)fb.nonzero++;if(a<=8)fb.low++;else if(a<=64)fb.mid++;else fb.high++;}fb.meanAlpha=sum/Math.max(1,fb.total);}} return {receipt:rec,fb,camera:p.getCameraFrame().snapshot};
+                const p=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__; p.setCameraStateForTest({targetU:target.targetU,targetV:target.targetV,distance,pitch,yaw:0}); window.__AUDRALIA_FAP1_GA_AUTHORITY__.renderNow(); const h=window.__AUDRALIA_FAP1_W5_HANDOFF__; const rec=h.renderNow(); const canvas=[...document.querySelectorAll('canvas')].find(c=>c.dataset.fap1W5LocalRaymarch==='true'); let fb={nonzero:0,low:0,mid:0,high:0,total:0,meanAlpha:0}; if(canvas&&canvas.style.display!=='none'){const gl=canvas.getContext('webgl2',{preserveDrawingBuffer:true});if(gl){const w=canvas.width,hh=canvas.height,pix=new Uint8Array(w*hh*4);gl.readPixels(0,0,w,hh,gl.RGBA,gl.UNSIGNED_BYTE,pix);let sum=0;fb.total=w*hh;for(let i=3;i<pix.length;i+=4){const a=pix[i];sum+=a;if(a>0)fb.nonzero++;if(a<=8)fb.low++;else if(a<=64)fb.mid++;else fb.high++;}fb.meanAlpha=sum/Math.max(1,fb.total);}} return {receipt:rec,fb,camera:p.getCameraFrame().snapshot};
               },{target,distance,pitch});
               await page.screenshot({path:`w5-visual-evidence/${name}.png`}); rows.push({name,distance,pitch,...metrics});
             }

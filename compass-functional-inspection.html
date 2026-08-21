@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Compass Functional Clone Inspection</title></head><body style="margin:0;background:#02040a;color:#eee;font-family:system-ui"><p id="loading" style="padding:24px">Loading browser-qualified Compass clone…</p><script>
+(async()=>{
+  const branch='compass-functional-clone-20260821';
+  const owner='smansfield635-create';
+  const repo='smansfield635-create.github.io';
+  const raw=`https://raw.githubusercontent.com/${owner}/${repo}/${branch}/index.html`;
+  const gh=`https://raw.githack.com/${owner}/${repo}/${branch}`;
+  const prod='https://diamondgatebridge.com';
+  try{
+    let html=await (await fetch(raw,{cache:'no-store'})).text();
+    html=html
+      .replaceAll('href="/assets/','href="'+gh+'/assets/')
+      .replaceAll("href='/assets/","href='"+gh+"/assets/")
+      .replaceAll('src="/assets/','src="'+gh+'/assets/')
+      .replaceAll("src='/assets/","src='"+gh+"/assets/")
+      .replaceAll('href="/showroom/globe/h-earth/"','href="https://raw.githack.com/smansfield635-create/smansfield635-create.github.io/0c6069f30e494be2f84d2653f40e374178251c77/showroom/globe/h-earth/index.html"')
+      .replaceAll('href="/','href="'+prod+'/');
+    document.open();document.write(html);document.close();
+  }catch(error){document.getElementById('loading').textContent='Inspection launcher failed: '+error;}
+})();
+</script></body></html>

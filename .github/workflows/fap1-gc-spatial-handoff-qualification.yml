@@ -1,0 +1,47 @@
+name: FAP1 G_C Spatial Handoff Qualification
+on:
+  pull_request:
+    paths: ['.github/workflows/fap1-gc-spatial-handoff-qualification.yml']
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/fap1-gc-spatial-handoff-qualification-v1
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with: {chrome-version: stable}
+      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/server.log 2>&1 &
+          for a in $(seq 1 60); do curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/weather-presentation-reconciliation/ >/dev/null && exit 0; sleep .25; done; exit 1
+      - name: Verify macro survives outside bounded W5 and local takes over inside
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          node <<'NODE'
+          const puppeteer=require('puppeteer-core'),fs=require('fs');
+          (async()=>{
+            const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+            const page=await browser.newPage();await page.setViewport({width:360,height:640,deviceScaleFactor:1});const errors=[];page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+            await page.goto('http://127.0.0.1:4173/showroom/globe/audralia/weather-presentation-reconciliation/',{waitUntil:'domcontentloaded',timeout:90000});await page.waitForFunction(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.l5LightingActive===true&&window.__AUDRALIA_FAP1_GA_AUTHORITY__?.spatialW5Carveout===true,{timeout:90000});
+            const setup=await page.evaluate(()=>{const ga=window.__AUDRALIA_FAP1_GA_AUTHORITY__,system=ga.descriptorPacket().systems.find(s=>s.weatherClass==='LOW_CUMULIFORM')||ga.descriptorPacket().systems[0],R=6200,D=Math.PI/180,N=[0,.5,-.8660254037844386],M=[0,.8660254037844386,.5],E=[1,0,0],lat=system.latitudeDeg*D,lon=system.longitudeDeg*D,cl=Math.cos(lat),sl=Math.sin(lat),co=Math.cos(lon),si=Math.sin(lon),r=[N[0]*sl+(M[0]*co+E[0]*si)*cl,N[1]*sl+(M[1]*co+E[1]*si)*cl,N[2]*sl+(M[2]*co+E[2]*si)*cl],angle=Math.acos(Math.max(-1,Math.min(1,r[1]))),sine=Math.sin(angle),arc=angle*R;return{systemId:system.id,targetU:Math.abs(sine)<1e-7?0:arc*r[0]/sine,targetV:Math.abs(sine)<1e-7?0:arc*r[2]/sine};});
+            fs.mkdirSync('gc-spatial-handoff',{recursive:true});const positions=[['approach',1500],['wall',900],['near',520],['interior',260],['deep',120],['exit',900]],samples=[];
+            const readCanvas=selector=>page.evaluate(selector=>{const c=document.querySelector(selector);if(!c)return null;const gl=c.getContext('webgl2');if(!gl)return null;const w=c.width,h=c.height,p=new Uint8Array(w*h*4);gl.readPixels(0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,p);let nz=0,sum=0,sum2=0;for(let i=3;i<p.length;i+=4){const a=p[i];if(a>0)nz++;sum+=a;sum2+=a*a;}const n=w*h,mean=sum/n;return{w,h,nz,occupancy:nz/n,meanAlpha:mean,alphaStdDev:Math.sqrt(Math.max(0,sum2/n-mean*mean))};},selector);
+            for(let i=0;i<positions.length;i++){const [name,distance]=positions[i],yaw=name==='exit'?Math.PI:0;await page.evaluate(({targetU,targetV,distance,yaw})=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__.setCameraStateForTest({targetU,targetV,distance,pitch:1.25,yaw}),{...setup,distance,yaw});await new Promise(r=>setTimeout(r,250));await page.evaluate(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__.renderNow());const ga=await readCanvas('[data-fap1-ga="true"]'),w5=await readCanvas('[data-fap1-w5-local-raymarch="true"]'),receipt=await page.evaluate(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__.getReceipt());await page.screenshot({path:`gc-spatial-handoff/${String(i).padStart(2,'0')}-${name}.png`});samples.push({name,distance,ga,w5,receipt});}
+            const cleanErrors=errors.filter(e=>!e.includes('404')&&!e.includes('favicon'));
+            const wall=samples.find(x=>x.name==='wall'),near=samples.find(x=>x.name==='near'),interior=samples.find(x=>x.name==='interior'),exit=samples.find(x=>x.name==='exit');
+            const criteria={wallMacroPreserved:(wall.ga?.nz||0)>0,nearLocalVisible:(near.w5?.nz||0)>0,interiorLocalVisible:(interior.w5?.nz||0)>0,exitMacroPresent:(exit.ga?.nz||0)>0,spatialCarveout:samples.filter(s=>s.receipt.active).every(s=>s.receipt.spatialCarveoutActive===true&&s.receipt.macroOutsideLocalVolumePreserved===true&&s.receipt.localSpatialHandoffMask===true),identity:samples.every(s=>!s.receipt.active||s.receipt.weatherId===setup.systemId),conservation:samples.every(s=>Math.abs((s.receipt.contributionSum??1)-1)<1e-6),l5:samples.every(s=>s.receipt.l5LightingActive===true),errors:cleanErrors.length===0};criteria.pass=Object.values(criteria).every(Boolean);
+            const out={schema:'FAP1_GC_SPATIAL_HANDOFF_QUALIFICATION_v1',productHead:'a65407281a4f70c1373ac7b63e97820e38581dbd',systemId:setup.systemId,samples,criteria,errors};fs.writeFileSync('gc-spatial-handoff/receipt.json',JSON.stringify(out,null,2));console.log(JSON.stringify(out,null,2));await browser.close();if(!criteria.pass)process.exit(3);
+          })().catch(e=>{console.error(e);process.exit(1);});
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fap1-gc-spatial-handoff-evidence
+          path: gc-spatial-handoff

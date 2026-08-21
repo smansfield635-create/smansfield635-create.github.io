@@ -1,0 +1,70 @@
+{
+  "schema": "PUBLICATION_RELEASE_CONTRACT_v1",
+  "status": "ACTIVE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "purpose": "Make bounded public page updates deterministic without forcing runtime-development governance onto presentation-only releases.",
+  "releaseClasses": {
+    "BOUNDED_PAGE_RELEASE": {
+      "includes": [
+        "STATIC_EDITORIAL_MICRO",
+        "BOUNDED_LAYOUT",
+        "BOUNDED_STYLE",
+        "BOUNDED_COPY",
+        "BOUNDED_PRESENTATION_ORDER",
+        "BOUNDED_EXISTING_INTERACTION_REPAIR_WITHOUT_NEW_RUNTIME_AUTHORITY"
+      ],
+      "requiredSequence": [
+        "APPROVED_COMMIT",
+        "EXPLICIT_DEPLOYMENT",
+        "LIVE_EXACT_HEAD_VERIFICATION"
+      ],
+      "canonicalOperationIntakeRequired": false,
+      "pageExcellenceChainRequired": false,
+      "newReleaseBranchRequired": false,
+      "dummyReleaseCommitRequired": false,
+      "legacyImplicitPagesTriggerAllowed": false
+    },
+    "RUNTIME_OR_NEW_DEVELOPMENT": {
+      "includes": [
+        "NEW_RUNTIME_OWNER",
+        "STATE_MACHINE_CHANGE",
+        "CONTROLLER_CHANGE",
+        "NEW_INTERACTIVE_SYSTEM",
+        "NEW_ENVIRONMENT",
+        "NEW_PRODUCT",
+        "ARCHITECTURE_OR_AUTHORITY_CHANGE",
+        "AMBIGUOUS_OR_MIXED_SCOPE"
+      ],
+      "requiredSequence": [
+        "APPLICABLE_GOVERNANCE_AND_QUALIFICATION",
+        "APPROVED_COMMIT",
+        "EXPLICIT_DEPLOYMENT",
+        "LIVE_EXACT_HEAD_VERIFICATION"
+      ],
+      "canonicalOperationIntakeRequired": true
+    }
+  },
+  "deployment": {
+    "workflow": ".github/workflows/pages-direct-deploy.yml",
+    "input": "target_sha",
+    "authority": "EXPLICIT_GITHUB_PAGES_ARTIFACT_DEPLOYMENT",
+    "sourceRule": "DEPLOY_EXACT_REQUESTED_COMMIT_ONLY",
+    "mainRequirement": "TARGET_SHA_MUST_EQUAL_CURRENT_MAIN_UNLESS_EXPLICIT_ROLLBACK_MODE_EXISTS",
+    "artifactHeadMarker": ".well-known/dgb-release.json"
+  },
+  "verification": {
+    "required": true,
+    "method": "FETCH_PUBLIC_RELEASE_MARKER_AND_COMPARE_TO_TARGET_SHA",
+    "successResult": "LIVE_EXACT_HEAD_VERIFIED",
+    "failureResult": "DEPLOYMENT_NOT_PROVEN",
+    "appearanceOnlyVerificationSufficient": false
+  },
+  "rules": [
+    "MERGE_IS_NOT_DEPLOYMENT",
+    "DEPLOYMENT_IS_NOT_VERIFIED_LIVE_RELEASE",
+    "BOUNDED_PAGE_RELEASES_MUST_NOT_ESCALATE_TO_RUNTIME_GOVERNANCE_WITHOUT_RUNTIME_OR_AUTHORITY_DELTA",
+    "DO_NOT_USE_DUMMY_COMMITS_RELEASE_BRANCH_NUDGES_OR_CACHE_CHURN_TO_TRIGGER_PUBLICATION",
+    "ONE_EXPLICIT_DEPLOYMENT_AUTHORITY",
+    "ONE_EXACT_HEAD_LIVE_RECEIPT"
+  ]
+}

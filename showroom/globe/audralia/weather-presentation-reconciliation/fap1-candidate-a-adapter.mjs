@@ -90,6 +90,7 @@ export function createFAP1CandidateAReconciliationAdapter({exterior,sky}={}){
       mutatesLiveRoute:false,
       opticsDrivenByCandidateA:true,
       weatherStateDrivenByCandidateA:true,
+      stableCoverageFromExistingRegimes:true,
       qualityMode:requestedQualityMode(),
       lastWeatherClass:lastPlan?.weather?.weatherClass??null,
       lastWeatherIdentity:lastPlan?.weather?.stateIdentity??null

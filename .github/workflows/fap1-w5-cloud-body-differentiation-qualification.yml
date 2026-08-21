@@ -23,28 +23,15 @@ jobs:
           const packet=buildFAP1GPUWeatherPacket({canonicalTimeHours:0});
           const objects=buildFAP1SpatialWeatherObjects({packet});
           const results=objects.map(object=>{
-            const bodies=deriveW5CloudBodies(object);
-            const brick=buildW5DensityBrick(object);
-            const intervals=bodies.map(b=>[b.baseN,b.topN]);
-            const uniqueVertical=new Set(intervals.map(v=>v.map(x=>x.toFixed(3)).join(':'))).size;
-            const meaningfulGap=brick.interiorEmptySampleFraction;
-            return {id:object.ID_i,class:object.weatherClass,bodyCount:bodies.length,roles:bodies.map(b=>b.role),intervals,uniqueVertical,interiorEmptySampleFraction:meaningfulGap,occupancyFraction:brick.occupancyFraction,meanOccupiedDensity:brick.meanOccupiedDensity,maxDensity:brick.maxDensity,distinctCloudBodies:brick.distinctCloudBodies,bodyGapCapable:brick.bodyGapCapable,macroWeatherFrozen:brick.macroWeatherFrozen};
+            const bodies=deriveW5CloudBodies(object),brick=buildW5DensityBrick(object),intervals=bodies.map(b=>[b.baseN,b.topN]);
+            return {id:object.ID_i,class:object.weatherClass,bodyCount:bodies.length,roles:bodies.map(b=>b.role),intervals,uniqueVertical:new Set(intervals.map(v=>v.map(x=>x.toFixed(3)).join(':'))).size,interiorEmptySampleFraction:brick.interiorEmptySampleFraction,occupancyFraction:brick.occupancyFraction,meanOccupiedDensity:brick.meanOccupiedDensity,maxDensity:brick.maxDensity,distinctCloudBodies:brick.distinctCloudBodies,bodyGapCapable:brick.bodyGapCapable,macroWeatherFrozen:brick.macroWeatherFrozen};
           });
           const localFamilies=results.filter(r=>['LOW_CUMULIFORM','DEEP_CONVECTION','CYCLONE'].includes(r.class));
-          const checks={
-            fiveSystems:results.length===5,
-            bodyCounts:results.every(r=>r.bodyCount>=3),
-            verticalDiversity:results.every(r=>r.uniqueVertical>=3),
-            explicitPartition:results.every(r=>r.distinctCloudBodies===true&&r.bodyGapCapable===true),
-            macroFrozen:results.every(r=>r.macroWeatherFrozen===true),
-            localGapSignal:localFamilies.every(r=>r.interiorEmptySampleFraction>=0.08),
-            nonCollapsedMass:results.every(r=>r.occupancyFraction>0.08&&r.maxDensity>0.01)
-          };
-          const receipt={candidateHead:'d144a510684b5dd77ffdd1751876b1a0c400d4d8',results,checks,pass:Object.values(checks).every(Boolean)};
-          console.log(JSON.stringify(receipt,null,2));
-          if(!receipt.pass)process.exit(2);
+          const checks={fiveSystems:results.length===5,bodyCounts:results.every(r=>r.bodyCount>=3),verticalDiversity:results.every(r=>r.uniqueVertical>=3),explicitPartition:results.every(r=>r.distinctCloudBodies===true&&r.bodyGapCapable===true),macroFrozen:results.every(r=>r.macroWeatherFrozen===true),localGapSignal:localFamilies.every(r=>r.interiorEmptySampleFraction>=0.08),nonCollapsedMass:results.every(r=>r.occupancyFraction>0.08&&r.maxDensity>0.01)};
+          const receipt={candidateHead:'d144a510684b5dd77ffdd1751876b1a0c400d4d8',results,checks,pass:Object.values(checks).every(Boolean)};console.log(JSON.stringify(receipt,null,2));if(!receipt.pass)process.exit(2);
           NODE
-      - uses: browser-actions/setup-chrome@v1
+      - id: chrome
+        uses: browser-actions/setup-chrome@v1
       - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
       - run: |
           python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/server.log 2>&1 &

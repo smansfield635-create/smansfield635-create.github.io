@@ -64,7 +64,7 @@ jobs:
               const camera={eye,forward,right,up,snapshot:{yaw:0,pitch:.46,distance:24,targetU:0,targetV:0}};
               let rhoEye=W.sampleW5LocalDensity(object,eye),maxForward=0,occupiedForward=0;
               for(let i=0;i<32;i++){const t=i*4,pt=[eye[0]+forward[0]*t,eye[1]+forward[1]*t,eye[2]+forward[2]*t],d=W.sampleW5LocalDensity(object,pt);maxForward=Math.max(maxForward,d);if(d>.0025)occupiedForward++;}
-              const interval=S.rayWeatherVolumeInterval(eye,forward,object.V_i);
+              const interval=S.rayWeatherVolumeInterval(eye,forward,object);
               const spatialState=S.evaluateFAP1SpatialLOD(objects,camera);
               const entry=spatialState.objects.find(e=>e.object.ID_i===object.ID_i);
               const surface=R.createW5LocalRayMarchSurface({worldCanvas:canvas});

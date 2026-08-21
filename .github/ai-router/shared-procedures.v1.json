@@ -56,26 +56,30 @@
       "purpose": "Continuously preserve the AI entry point's ability to start an allowlisted native GitHub Actions workflow even when the connected GitHub tool does not expose workflow_dispatch directly.",
       "capabilityRegistry": ".github/ai-router/workflow-dispatch-capability.v1.json",
       "preferredTransport": "DIRECT_CONNECTED_GITHUB_WORKFLOW_DISPATCH",
-      "fallbackTransport": "PUSH_BACKED_NATIVE_WORKFLOW_DISPATCH_BRIDGE",
+      "fallbackTransport": "SAME_REPOSITORY_PR_TARGET_NATIVE_WORKFLOW_DISPATCH_BRIDGE",
       "steps": [
         "Prefer the connected GitHub workflow_dispatch write primitive whenever it is available.",
         "If direct dispatch is unavailable, read .github/ai-router/workflow-dispatch-capability.v1.json and select only an allowlisted capabilityId.",
-        "Reset the dedicated ai-dispatch branch to the exact current main head before creating a request.",
-        "Write only .github/ai-entry/workflow-dispatch-request.json on ai-dispatch with schema AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1, a unique requestId, and the allowlisted capabilityId.",
-        "Allow the bridge workflow to validate request ancestry, resolve protected inputs such as CURRENT_MAIN_SHA, call GitHub's native workflow_dispatch API, and recover the resulting workflow run ID.",
-        "Read .github/ai-entry/workflow-dispatch-receipt.json from ai-dispatch and require NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED before treating the workflow as started.",
+        "Force-reset the dedicated ai-dispatch branch to the exact current main head.",
+        "Create one request commit on ai-dispatch containing only .github/ai-entry/workflow-dispatch-request.json with schema AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1, a unique requestId, and the allowlisted capabilityId.",
+        "Open a same-repository transport pull request from ai-dispatch to main with an AI Dispatch: title. The transport PR is execution-only and must never be merged.",
+        "The pull_request_target bridge validates that the request commit parent equals current main, resolves protected inputs such as CURRENT_MAIN_SHA, calls GitHub's native workflow_dispatch API, and recovers the resulting workflow run ID.",
+        "Read .github/ai-entry/receipts/<requestId>.json from ai-dispatch-receipts and require NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED before treating the target workflow as started.",
         "Use dispatchedRunId from the receipt for all subsequent jobs, steps, logs, artifacts, deployment, and verification inspection.",
-        "Never substitute a dummy commit, release-branch nudge, issue-comment carrier, generic command workflow, or manual UI action when this capability is available."
+        "The bridge closes the transport PR after a successful dispatch. Failed transport PRs remain available for diagnosis and are not merge candidates.",
+        "Never substitute a dummy product commit, release-branch nudge, issue-comment carrier, generic command workflow, or manual UI action when this capability is available."
       ],
       "failClosedWhen": [
         "UNKNOWN_CAPABILITY_ID",
         "AI_DISPATCH_BRANCH_NOT_BASED_ON_CURRENT_MAIN",
+        "TRANSPORT_PR_NOT_SAME_REPOSITORY",
         "UNDECLARED_OR_OVERRIDDEN_PROTECTED_INPUT",
         "NATIVE_WORKFLOW_DISPATCH_NOT_ACCEPTED",
         "DISPATCHED_RUN_ID_NOT_RESOLVED"
       ],
       "authorityCreated": false,
-      "genericCommandAuthorityCreated": false
+      "genericCommandAuthorityCreated": false,
+      "transportPullRequestMergeAuthorityCreated": false
     },
     {
       "procedureId": "BRANCH_MAIN_COMPARISON",

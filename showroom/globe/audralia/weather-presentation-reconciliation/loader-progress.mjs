@@ -17,6 +17,7 @@ const STAGES=Object.freeze([
 ]);
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const gaProofMode=(()=>{try{return new URLSearchParams(location.search).get('gaProof')==='1';}catch(_error){return false;}})();
+const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 let verified=0;
 let displayed=0;
 let ceiling=15;
@@ -77,6 +78,17 @@ function fail(label,error){
   window.__AUDRALIA_STARTUP_FAILURE__=Object.freeze({message,progress:displayed});
 }
 
+async function waitFor(predicate,label,attempts=480){
+  for(let i=0;i<attempts;i++){
+    const value=predicate();
+    if(value)return value;
+    if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__)throw new Error(`QUALIFICATION_PARENT_FAILED:${label}`);
+    if(window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__)throw new Error(`QUALIFICATION_GA_FAILED:${window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__.message}`);
+    await sleep(25);
+  }
+  throw new Error(`QUALIFICATION_WAIT_TIMEOUT:${label}`);
+}
+
 function observeRuntime(){
   if(failed)return;
   if(document.querySelector('[data-audralia-clear-atmosphere="true"]'))setVerified(56,'Atmosphere ready',70);
@@ -92,14 +104,8 @@ function observeRuntime(){
     if(loader){loader.classList.add('is-ready');setTimeout(()=>{loader.hidden=true;},460);}
     return;
   }
-  if(window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__){
-    fail('FAP1 authority convergence stopped',window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__.message);
-    return;
-  }
-  if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__){
-    fail('World initialization stopped',window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__.message);
-    return;
-  }
+  if(window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__){fail('FAP1 authority convergence stopped',window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__.message);return;}
+  if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__){fail('World initialization stopped',window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__.message);return;}
   requestAnimationFrame(observeRuntime);
 }
 
@@ -109,8 +115,14 @@ async function boot(){
   try{
     setVerified(16,'Loading world systems',34);
     await import('./app.mjs?cb=gratitude-chronology-startup-v2');
-    await import('./fap1-ga-authority-bootstrap.mjs?cb=FAP1_GA_v1');
-    if(gaProofMode)await import('./fap1-ga-negative-proof.mjs?cb=FAP1_GA_NEGATIVE_PROOF_v1');
+    if(gaProofMode){
+      await waitFor(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer&&typeof window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getCameraFrame==='function','PARENT_RECEIPT');
+    }
+    await import('./fap1-ga-authority-bootstrap.mjs?cb=FAP1_GA_v2');
+    if(gaProofMode){
+      await waitFor(()=>window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY','GA_AUTHORITY');
+      await import('./fap1-ga-negative-proof.mjs?cb=FAP1_GA_NEGATIVE_PROOF_v2');
+    }
     setVerified(38,'Constructing planetary surface',54);
     requestAnimationFrame(observeRuntime);
   }catch(error){
@@ -119,12 +131,8 @@ async function boot(){
   }
 }
 
-window.addEventListener('error',event=>{
-  if(!failed&&displayed<100&&event?.error)fail('Audralia startup encountered an error',event.error);
-});
-window.addEventListener('unhandledrejection',event=>{
-  if(!failed&&displayed<100)fail('Audralia startup encountered an error',event.reason);
-});
+window.addEventListener('error',event=>{if(!failed&&displayed<100&&event?.error)fail('Audralia startup encountered an error',event.error);});
+window.addEventListener('unhandledrejection',event=>{if(!failed&&displayed<100)fail('Audralia startup encountered an error',event.reason);});
 
 timeoutTimer=setTimeout(()=>{
   if(!failed&&displayed<100){

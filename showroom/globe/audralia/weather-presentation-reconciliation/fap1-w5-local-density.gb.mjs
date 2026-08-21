@@ -9,8 +9,8 @@ const smooth=(a,b,v)=>{const t=clamp((v-a)/(b-a||1),0,1);return t*t*(3-2*t);};
 const mix=(a,b,t)=>a+(b-a)*t;
 const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
 
-export const FAP1_W5_LOCAL_DENSITY_SCHEMA='FAP1_W5_LOCAL_DENSITY_REFINEMENT_v5_COHERENT_CAVITIES';
-export const W5_GENERATION=5;
+export const FAP1_W5_LOCAL_DENSITY_SCHEMA='FAP1_W5_LOCAL_DENSITY_REFINEMENT_v6_MESO_BODY_DIFFERENTIATION';
+export const W5_GENERATION=6;
 export const W5_BRICK_RESOLUTION=16;
 export const W5_MAX_ACTIVE_OBJECTS=1;
 export const W5_EMPTY_THRESHOLD=0.0025;
@@ -40,6 +40,10 @@ function ellipsoidVoid(q,center,radii){
   const x=(q[0]-center[0])/radii[0],y=(q[1]-center[1])/radii[1],z=(q[2]-center[2])/radii[2],d=Math.hypot(x,y,z);
   return 1-smooth(.62,1.05,d);
 }
+function ellipsoidLobe(q,center,radii){
+  const x=(q[0]-center[0])/radii[0],y=(q[1]-center[1])/radii[1],z=(q[2]-center[2])/radii[2],d=Math.hypot(x,y,z);
+  return 1-smooth(.72,1.08,d);
+}
 
 function coherentCavityMask(object,q){
   const seed=hash32(object.ID_i)+Math.floor((object.W_i.seed??0)*100000);
@@ -52,18 +56,44 @@ function coherentCavityMask(object,q){
   return clamp(Math.max(p,s*.86),0,1);
 }
 
+function mesoscaleBodyMask(object,q){
+  const seed=hash32(object.ID_i)+Math.floor((object.W_i.seed??0)*100000);
+  const u=n=>hashUnit(n*7+3,n*11+5,n*13+9,seed+n*313);
+  const jitter=(n,scale)=>(u(n)-.5)*scale;
+  const deep=object.weatherClass==='DEEP_CONVECTION'||object.weatherClass==='CYCLONE';
+  const low=object.weatherClass==='LOW_CUMULIFORM';
+  if(deep){
+    const a=ellipsoidLobe(q,[-.24+jitter(1,.10),-.05+jitter(2,.10),-.12+jitter(3,.12)],[.44,.72,.42]);
+    const b=ellipsoidLobe(q,[.22+jitter(4,.12),.10+jitter(5,.12),.12+jitter(6,.12)],[.38,.62,.40]);
+    const c=ellipsoidLobe(q,[jitter(7,.12),.38+jitter(8,.10),-.02+jitter(9,.14)],[.52,.36,.56]);
+    return clamp(Math.max(a,b*.95,c*.82),0,1);
+  }
+  if(low){
+    const a=ellipsoidLobe(q,[-.32+jitter(1,.12),-.10+jitter(2,.10),-.18+jitter(3,.12)],[.38,.44,.36]);
+    const b=ellipsoidLobe(q,[.28+jitter(4,.12),-.02+jitter(5,.10),.10+jitter(6,.12)],[.34,.48,.38]);
+    const c=ellipsoidLobe(q,[jitter(7,.14),.18+jitter(8,.10),.34+jitter(9,.12)],[.40,.42,.32]);
+    const d=ellipsoidLobe(q,[.04+jitter(10,.14),-.18+jitter(11,.10),-.36+jitter(12,.12)],[.36,.38,.30]);
+    return clamp(Math.max(a,b,c*.90,d*.84),0,1);
+  }
+  const a=ellipsoidLobe(q,[-.26+jitter(1,.14),jitter(2,.08),-.10+jitter(3,.14)],[.58,.42,.62]);
+  const b=ellipsoidLobe(q,[.28+jitter(4,.14),jitter(5,.08),.18+jitter(6,.14)],[.54,.40,.58]);
+  return clamp(Math.max(a,b*.92),0,1);
+}
+
 function localRefinementFactor(object,q){
   const seed=Math.floor((object.W_i.seed??0)*100000)+hash32(object.ID_i)%100000;
   const fine=fbm3(q[0]*7.8+4.3,q[1]*8.6-2.1,q[2]*7.4+6.4,seed+401);
   const lobe=fbm3(q[0]*3.3+1.7,q[1]*3.8-4.6,q[2]*3.1+2.9,seed+557);
   const cavity=fbm3(q[0]*2.15-8.2,q[1]*2.4+5.7,q[2]*2.05-1.9,seed+733);
   const signedFine=(fine-.5)*2,signedLobe=(lobe-.5)*2;
-  const stochasticCavity=smooth(.62,.77,cavity);
+  const stochasticCavity=smooth(.64,.80,cavity);
   const coherentCavity=coherentCavityMask(object,q);
+  const body=mesoscaleBodyMask(object,q);
+  const bodyFactor=.72+.56*body;
   const radius=Math.hypot(q[0],q[1],q[2]);
   const boundaryLock=smooth(.64,.90,radius);
-  let interior=clamp(1+signedLobe*.30+signedFine*.18-stochasticCavity*1.05,0,1.70);
-  interior*=1-coherentCavity*.985;
+  let interior=clamp(bodyFactor+signedLobe*.28+signedFine*.17-stochasticCavity*.92,0,1.72);
+  interior*=1-coherentCavity*.99;
   return mix(interior,1,boundaryLock);
 }
 
@@ -82,7 +112,7 @@ export function buildW5DensityBrick(object,{bx=0,by=0,bz=0,generation=W5_GENERAT
   for(let z=0;z<resolution;z++)for(let y=0;y<resolution;y++)for(let x=0;x<resolution;x++){
     const qx=-1+(x+.5)*span,qy=-1+(y+.5)*span,qz=-1+(z+.5)*span,q2=qx*qx+qy*qy+qz*qz,r=object.V_i.radii,center=object.V_i.center,point=[center[0]+object.V_i.axisU[0]*qx*r[0]+object.V_i.axisUp[0]*qy*r[1]+object.V_i.axisV[0]*qz*r[2],center[1]+object.V_i.axisU[1]*qx*r[0]+object.V_i.axisUp[1]*qy*r[1]+object.V_i.axisV[1]*qz*r[2],center[2]+object.V_i.axisU[2]*qx*r[0]+object.V_i.axisUp[2]*qy*r[1]+object.V_i.axisV[2]*qz*r[2]],density=sampleW5LocalDensity(object,point);values[index++]=density;if(q2<1)insideVolumeSamples++;if(density>0){occupied++;sumDensity+=density;maxDensity=Math.max(maxDensity,density);if(q2<1)insideOccupiedSamples++;}}
   const insideEmptySamples=Math.max(0,insideVolumeSamples-insideOccupiedSamples);
-  return freeze({schema:FAP1_W5_LOCAL_DENSITY_SCHEMA,address,weatherId:object.ID_i,generation,resolution,sampleCount:values.length,occupiedSampleCount:occupied,occupancyFraction:occupied/values.length,emptySampleFraction:1-occupied/values.length,insideVolumeSampleCount:insideVolumeSamples,insideOccupiedSampleCount:insideOccupiedSamples,insideEmptySampleCount:insideEmptySamples,interiorEmptySampleFraction:insideVolumeSamples?insideEmptySamples/insideVolumeSamples:0,meanOccupiedDensity:occupied?sumDensity/occupied:0,maxDensity,values,authority:'FAP1_DESCRIPTOR_REFINEMENT_ONLY',correspondenceBasis:'FAP1_PRESERVED_MACRO_COORDINATES_PLUS_COHERENT_LOCAL_CAVITIES',refinementCanCreateEmptyPockets:true,coherentObjectSpaceCavities:true,boundaryLockRadius:.90,cameraCentered:false,persistentWeatherIdentity:true,lightingApplied:false,visibleRendererMutation:false});
+  return freeze({schema:FAP1_W5_LOCAL_DENSITY_SCHEMA,address,weatherId:object.ID_i,generation,resolution,sampleCount:values.length,occupiedSampleCount:occupied,occupancyFraction:occupied/values.length,emptySampleFraction:1-occupied/values.length,insideVolumeSampleCount:insideVolumeSamples,insideOccupiedSampleCount:insideOccupiedSamples,insideEmptySampleCount:insideEmptySamples,interiorEmptySampleFraction:insideVolumeSamples?insideEmptySamples/insideVolumeSamples:0,meanOccupiedDensity:occupied?sumDensity/occupied:0,maxDensity,values,authority:'FAP1_DESCRIPTOR_REFINEMENT_ONLY',correspondenceBasis:'FAP1_PRESERVED_MACRO_COORDINATES_PLUS_MESO_BODY_DIFFERENTIATION',refinementCanCreateEmptyPockets:true,coherentObjectSpaceCavities:true,mesoscaleBodyDifferentiation:true,boundaryLockRadius:.90,cameraCentered:false,persistentWeatherIdentity:true,lightingApplied:false,visibleRendererMutation:false});
 }
 export function createW5RefinementState(spatialState){const active=chooseW5ActiveObject(spatialState);if(!active)return freeze({schema:FAP1_W5_LOCAL_DENSITY_SCHEMA,active:false,activeWeatherId:null,brick:null,maxActiveObjects:W5_MAX_ACTIVE_OBJECTS,visibleRendererMutation:false,l5LightingActive:false});const brick=buildW5DensityBrick(active.object);return freeze({schema:FAP1_W5_LOCAL_DENSITY_SCHEMA,active:true,activeWeatherId:active.object.ID_i,distanceToVolume:active.distanceToVolume,inside:active.inside,alpha:active.alpha,brick,maxActiveObjects:W5_MAX_ACTIVE_OBJECTS,visibleRendererMutation:false,l5LightingActive:false});}
-export function verifyW5RefinementState(state){const failures=[];if(state?.active){if(!state.activeWeatherId)failures.push('ACTIVE_WEATHER_ID_MISSING');if(state.brick?.weatherId!==state.activeWeatherId)failures.push('BRICK_WEATHER_ID_MISMATCH');if(state.brick?.correspondenceBasis!=='FAP1_PRESERVED_MACRO_COORDINATES_PLUS_COHERENT_LOCAL_CAVITIES')failures.push('MACRO_CORRESPONDENCE_BASIS_MISSING');if(state.brick?.refinementCanCreateEmptyPockets!==true||state.brick?.coherentObjectSpaceCavities!==true)failures.push('COHERENT_CAVITY_REFINEMENT_MISSING');if(state.brick?.cameraCentered!==false)failures.push('CAMERA_CENTERED_LOCAL_VOLUME_FORBIDDEN');if(state.brick?.persistentWeatherIdentity!==true)failures.push('PERSISTENT_WEATHER_IDENTITY_MISSING');if(!(state.brick?.occupancyFraction>=0&&state.brick?.occupancyFraction<=1))failures.push('INVALID_OCCUPANCY_FRACTION');if(!(state.brick?.interiorEmptySampleFraction>=0&&state.brick?.interiorEmptySampleFraction<=1))failures.push('INVALID_INTERIOR_EMPTY_FRACTION');}if(state?.visibleRendererMutation!==false)failures.push('VISIBLE_RENDERER_MUTATION_FORBIDDEN_AT_GB_W5_DENSITY_STAGE');if(state?.l5LightingActive!==false)failures.push('L5_PREMATURE_ACTIVATION');return freeze({schema:'FAP1_W5_LOCAL_DENSITY_INVARIANTS_v5_COHERENT_CAVITIES',pass:failures.length===0,failures:freeze(failures),activeWeatherId:state?.activeWeatherId??null});}
+export function verifyW5RefinementState(state){const failures=[];if(state?.active){if(!state.activeWeatherId)failures.push('ACTIVE_WEATHER_ID_MISSING');if(state.brick?.weatherId!==state.activeWeatherId)failures.push('BRICK_WEATHER_ID_MISMATCH');if(state.brick?.correspondenceBasis!=='FAP1_PRESERVED_MACRO_COORDINATES_PLUS_MESO_BODY_DIFFERENTIATION')failures.push('MACRO_CORRESPONDENCE_BASIS_MISSING');if(state.brick?.refinementCanCreateEmptyPockets!==true||state.brick?.coherentObjectSpaceCavities!==true||state.brick?.mesoscaleBodyDifferentiation!==true)failures.push('MESOSCALE_LOCAL_REFINEMENT_MISSING');if(state.brick?.cameraCentered!==false)failures.push('CAMERA_CENTERED_LOCAL_VOLUME_FORBIDDEN');if(state.brick?.persistentWeatherIdentity!==true)failures.push('PERSISTENT_WEATHER_IDENTITY_MISSING');if(!(state.brick?.occupancyFraction>=0&&state.brick?.occupancyFraction<=1))failures.push('INVALID_OCCUPANCY_FRACTION');if(!(state.brick?.interiorEmptySampleFraction>=0&&state.brick?.interiorEmptySampleFraction<=1))failures.push('INVALID_INTERIOR_EMPTY_FRACTION');}if(state?.visibleRendererMutation!==false)failures.push('VISIBLE_RENDERER_MUTATION_FORBIDDEN_AT_GB_W5_DENSITY_STAGE');if(state?.l5LightingActive!==false)failures.push('L5_PREMATURE_ACTIVATION');return freeze({schema:'FAP1_W5_LOCAL_DENSITY_INVARIANTS_v6_MESO_BODY_DIFFERENTIATION',pass:failures.length===0,failures:freeze(failures),activeWeatherId:state?.activeWeatherId??null});}

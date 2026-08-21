@@ -50,3 +50,15 @@ html body main#compass[data-compass-root] section.compass-instrument>header.comp
 .compass-capability-orbit[data-continuity-contract="COMPASS_CAPABILITY_CONTINUITY_v1"]{min-height:410px!important}
 @media(max-width:760px){.compass-capability-orbit[data-continuity-contract="COMPASS_CAPABILITY_CONTINUITY_v1"]{min-height:370px!important}}
 @media(max-width:480px){.compass-capability-orbit[data-continuity-contract="COMPASS_CAPABILITY_CONTINUITY_v1"]{min-height:350px!important}}
+
+/* COMPASS_MACRO_ORDER_REGRESSION_REPAIR_v1 — user-visible page order only. */
+html body main#compass[data-compass-root]{display:flex!important;flex-direction:column!important}
+html body main#compass[data-compass-root]>.compass-estate__hall{display:contents!important}
+html body main#compass[data-compass-root] .compass-purpose-stage{order:1!important}
+html body main#compass[data-compass-root] .compass-instrument{order:2!important}
+html body main#compass[data-compass-root] .compass-capability-cue{order:3!important}
+html body main#compass[data-compass-root] [data-compass-capability-switcher],
+html body main#compass[data-compass-root] [data-capability-orbit]{order:4!important}
+html body main#compass[data-compass-root] .compass-built{order:5!important}
+html body main#compass[data-compass-root] .compass-build-cta{order:6!important}
+html body main#compass[data-compass-root] .compass-accessibility-routes{order:7!important}

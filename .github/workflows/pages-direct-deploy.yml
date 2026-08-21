@@ -7,6 +7,10 @@ on:
         description: Exact approved commit SHA to publish
         required: true
         type: string
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/pages-direct-deploy.yml'
 
 permissions:
   contents: read
@@ -28,10 +32,16 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           REQUESTED_SHA: ${{ inputs.target_sha }}
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_SHA: ${{ github.sha }}
         shell: bash
         run: |
           set -euo pipefail
-          requested="$(printf '%s' "$REQUESTED_SHA" | tr -d '[:space:]')"
+          if [ "$EVENT_NAME" = "push" ]; then
+            requested="$EVENT_SHA"
+          else
+            requested="$(printf '%s' "$REQUESTED_SHA" | tr -d '[:space:]')"
+          fi
           test -n "$requested"
           main_sha="$(curl --fail-with-body --silent --show-error -L \
             -H "Accept: application/vnd.github+json" \

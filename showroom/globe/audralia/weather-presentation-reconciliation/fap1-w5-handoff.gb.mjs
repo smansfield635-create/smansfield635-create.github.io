@@ -5,7 +5,7 @@ import {
 import {
   createW5LocalRayMarchSurface,
   verifyW5LocalRayMarchReceipt
-} from './fap1-w5-local-raymarch.gb.mjs';
+} from './fap1-w5-local-raymarch.gc-v4.mjs';
 import {
   setFAP1MacroRenderContribution,
   clearFAP1MacroRenderContributions,
@@ -101,6 +101,7 @@ export function createBoundedW5Handoff({worldCanvas,parentReceipt,gaAuthority,ge
       l5DensityAuthority:localReceipt.l5DensityAuthority,
       l5Quality:localReceipt.quality,
       l5LightSteps:localReceipt.lightSteps,
+      densityTextureFormat:localReceipt.densityTextureFormat??null,
       multipleScattering:false,
       groundContribution:false,
       handoffAuthority:'BOUNDED_GB_HANDOFF_ACTIVE'
@@ -130,7 +131,8 @@ export function verifyBoundedW5Handoff(receipt,epsilon=1e-6){
   if(receipt?.l5LightingActive!==true)failures.push('L5_DIRECT_LIGHTING_NOT_ACTIVE');
   if(receipt?.l5LightingModel!=='DIRECT_SUN_TRANSMITTANCE_ONLY')failures.push('L5_LIGHTING_SCOPE_DRIFT');
   if(!Number.isInteger(receipt?.l5LightSteps)||![3,5,8].includes(receipt.l5LightSteps))failures.push('L5_LIGHT_STEP_SCHEDULE_INVALID');
+  if(receipt?.active&&receipt?.densityTextureFormat!=='R8_UNORM_LINEAR')failures.push('W5_TEXTURE_PATH_NOT_REPAIRED');
   if(receipt?.multipleScattering===true||receipt?.groundContribution===true)failures.push('L5_SCOPE_EXPANSION_FORBIDDEN');
   if(receipt?.handoffAuthority!=='BOUNDED_GB_HANDOFF_ACTIVE')failures.push('HANDOFF_AUTHORITY_MISSING');
-  return freeze({schema:'FAP1_W5_BOUNDED_HANDOFF_INVARIANTS_v2_L5_DIRECT',pass:failures.length===0,failures:freeze(failures),weatherId:receipt?.weatherId??null});
+  return freeze({schema:'FAP1_W5_BOUNDED_HANDOFF_INVARIANTS_v2_L5_DIRECT_R8',pass:failures.length===0,failures:freeze(failures),weatherId:receipt?.weatherId??null});
 }

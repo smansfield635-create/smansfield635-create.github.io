@@ -1,4 +1,4 @@
-const POLICY_ID='AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v4';
+const POLICY_ID='AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v6_GLOBAL_MULTI_LAYER_COVERAGE';
 const previousShaderSource=WebGL2RenderingContext.prototype.shaderSource;
 let patched=0;
 let rejected=0;
@@ -23,6 +23,27 @@ float fap1InteriorPocket(vec3 p,float t){
 vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   float t=uTimeHours*.0065;
   float mass=0.0,ice=0.0,precip=0.0;
+
+  // Global broken cloud fabric. This is intentionally multi-layer and
+  // noise-broken: it prevents continent-scale empty ocean screens without
+  // becoming a uniform shell or generalized haze.
+  float globalBroad=fbm(radial*9.0+vec3(t*.24,-t*.17,t*.13));
+  float globalDetail=fbm(radial*19.0+vec3(-t*.15,t*.21,-t*.11));
+  float globalCells=smoothstep(.34,.66,globalBroad*.68+globalDetail*.32);
+  float globalWave=.5+.5*sin(lon*2.35+sin(lat*3.7)*1.05+t*.20);
+  float globalBreak=.60+.40*globalCells;
+  float globalClear=.72+.28*globalWave;
+  float globalLow=fap1Band(h,31.0,59.0)*(.13+.19*globalBreak)*globalClear;
+  float globalMid=fap1Band(h,48.0,84.0)*(.09+.16*fap1CloudBreak(radial,t,13.0,.34,.66))*(.76+.24*(1.0-globalWave));
+  float globalHigh=fap1Band(h,73.0,108.0)*(.07+.14*fap1CloudBreak(radial,t,16.0,.35,.68))*(.78+.22*globalWave);
+  float corridor=fap1ClearCorridor(lat,lon);
+  float corridorAttenuation=1.0-.42*corridor;
+  globalLow*=corridorAttenuation;
+  globalMid*=corridorAttenuation;
+  globalHigh*=corridorAttenuation;
+  mass+=globalLow+globalMid+globalHigh;
+  ice+=globalHigh*.94+globalMid*.24;
+  precip+=globalLow*.08+globalMid*.04;
 
   float polar= smoothstep(.82,1.12,abs(lat));
   float polarCore=smoothstep(1.00,1.30,abs(lat));
@@ -70,6 +91,30 @@ vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   float tower=towerShape*fap1Band(h,31.0,104.0)*mix(.52,1.0,towerBreak)*.92;
   float anvil=fap1Ellipse(dq,vec2(.035,.085),vec2(.31,.13),-.10)*fap1Band(h,78.0,108.0)*mix(.35,1.0,fap1CloudBreak(radial,t,17.0,.32,.67))*.66;
   mass+=max(tower,anvil);ice+=tower*.48+anvil*.96;precip+=tower*.91;
+
+  float clearBridge=1.0-fap1ClearCorridor(lat,lon);
+
+  vec2 nwq=fap1Local(lat,lon,.72,2.72+t*.011);
+  float northwestHigh=fap1Ellipse(nwq,vec2(0.0),vec2(.43,.18),-.24)*fap1Band(h,69.0,105.0)*mix(.10,.58,fap1CloudBreak(radial,t,17.0,.42,.72))*.70*clearBridge;
+  mass+=northwestHigh;ice+=northwestHigh*.90;
+
+  vec2 swq=fap1Local(lat,lon,-.58,-.42-t*.009);
+  float southwestMarine=fap1Ellipse(swq,vec2(0.0),vec2(.48,.26),.18)*fap1Band(h,31.0,60.0)*mix(.12,.62,fap1CloudBreak(radial,t,23.0,.44,.74))*.74*clearBridge;
+  mass+=southwestMarine;precip+=southwestMarine*.10;
+
+  vec2 ewq=fap1Local(lat,lon,.02,-2.18+t*.008);
+  float equatorialWestShape=fap1Ellipse(ewq,vec2(0.0),vec2(.42,.30),-.10)*fap1Band(h,31.0,82.0);
+  float equatorialWestBreak=fap1CloudBreak(radial,t,26.0,.46,.75);
+  float equatorialWest=equatorialWestShape*mix(.08,.60,equatorialWestBreak)*.72*clearBridge;
+  mass+=equatorialWest;ice+=equatorialWest*.18;precip+=equatorialWest*.24;
+
+  vec2 neq=fap1Local(lat,lon,.40,-2.73-t*.006);
+  float northeastMid=fap1Ellipse(neq,vec2(0.0),vec2(.39,.22),.31)*fap1Band(h,48.0,82.0)*mix(.10,.55,fap1CloudBreak(radial,t,20.0,.43,.73))*.68*clearBridge;
+  mass+=northeastMid;ice+=northeastMid*.36;precip+=northeastMid*.12;
+
+  vec2 seq=fap1Local(lat,lon,-.76,2.24+t*.005);
+  float southeastCirrus=fap1Ellipse(seq,vec2(0.0),vec2(.52,.20),-.33)*fap1Band(h,76.0,108.0)*mix(.08,.50,fap1CloudBreak(radial,t,15.0,.45,.74))*.64*clearBridge;
+  mass+=southeastCirrus;ice+=southeastCirrus*.96;
 
   const float CY_LAT=-.628319;
   const float CY_LON=-2.199115;
@@ -121,17 +166,11 @@ vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
     'vec3 fap1=fap1OrganizedWeather(radial,h,lat,lon);float clearCorridor=fap1ClearCorridor(lat,lon);float background=globalCloudSupport(radial,h,lat,lon)*(1.0-.94*clearCorridor);float iceMass=background*smoothstep(66.0,96.0,h)*.78+fap1.y,precipMass=background*(1.0-smoothstep(58.0,82.0,h))*.10+fap1.z,mass=background+fap1.x;'
   );
 
-  // Cloud-interior traversal: when the camera is physically inside occupied
-  // density, begin ray marching at the eye instead of honoring the exterior
-  // near-cutoff. This makes the same world-space cloud volume envelop the viewer.
   next=next.replace(
     'vec2 outerHit=raySphere(uEye,rd,OUTER);float t0=max(max(0.0,outerHit.x),uNearCutoff),t1=outerHit.y;',
     'vec2 outerHit=raySphere(uEye,rd,OUTER);vec3 fap1EyeDensity=densityAt(uEye);float fap1Inside=smoothstep(.10,.36,fap1EyeDensity.x);float fap1Pocket=fap1InteriorPocket(uEye,uTimeHours*.0065);float fap1InteriorPresence=fap1Inside*(1.0-.78*fap1Pocket);float fap1NearCutoff=mix(uNearCutoff,0.0,fap1InteriorPresence);float t0=max(max(0.0,outerHit.x),fap1NearCutoff),t1=outerHit.y;'
   );
 
-  // Inside dense cloud, increase local extinction smoothly but preserve broad
-  // low-frequency voids. The result should alternate between enveloping cloud
-  // and transient visibility pockets like aircraft traversal, never a flat fog.
   next=next.replace(
     'float extinction=mix(.020,.032,smoothstep(.12,.74,den));',
     'float fap1LocalPocket=fap1InteriorPocket(p,uTimeHours*.0065);float fap1InteriorBoost=1.0+fap1InteriorPresence*(1.35-1.05*fap1LocalPocket);den*=fap1InteriorBoost;float extinction=mix(.020,.039,smoothstep(.10,.72,den));'
@@ -168,6 +207,13 @@ Object.defineProperty(window,'__AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION__',
     brokenAsymmetricStormMasses:true,
     polarCloudMaximumOccupation:true,
     broadPolarLayering:true,
+    distributedMacroSystems:true,
+    additionalIndependentWeatherFields:5,
+    multiAltitudePlanetaryCoverage:true,
+    globalBrokenCloudFabric:true,
+    globalLowMidHighLayers:true,
+    fullScreenOceanVoidSuppression:true,
+    clearCorridorPreserved:true,
     smokePlumeMorphologySuppressed:true,
     altitudeDifferentiation:true,
     immersiveCloudInterior:true,

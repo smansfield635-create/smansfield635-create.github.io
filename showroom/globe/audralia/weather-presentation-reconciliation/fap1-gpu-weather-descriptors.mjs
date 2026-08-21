@@ -11,11 +11,11 @@ const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 const renderContributions=new Map();
 
 const CLASS_PROFILE=freeze({
-  HIGH_ICE:freeze({family:'HIGH',genus:'Cs',aspect:.38,density:.46,ice:.98,precip:.02,orientationDeg:16,shearE:10,shearN:2,seed:.71}),
-  MID_FRONTAL:freeze({family:'MID',genus:'As',aspect:.34,density:.58,ice:.38,precip:.24,orientationDeg:-18,shearE:6,shearN:1,seed:.59}),
-  LOW_CUMULIFORM:freeze({family:'LOW',genus:'Cu',aspect:.58,density:.66,ice:.04,precip:.16,orientationDeg:8,shearE:3,shearN:1,seed:.31}),
-  DEEP_CONVECTION:freeze({family:'DEEP',genus:'Cb',aspect:.52,density:.78,ice:.56,precip:.88,orientationDeg:22,shearE:8,shearN:3,seed:.47}),
-  CYCLONE:freeze({family:'DEEP',genus:'Cb',aspect:.86,density:.82,ice:.64,precip:.94,orientationDeg:-10,shearE:11,shearN:4,seed:.93})
+  HIGH_ICE:freeze({family:'HIGH',genus:'Cs',aspect:.38,density:.46,ice:.98,precip:.02,orientationDeg:16,shearE:10,shearN:2,seed:.71,occupationScale:1.14}),
+  MID_FRONTAL:freeze({family:'MID',genus:'As',aspect:.34,density:.58,ice:.38,precip:.24,orientationDeg:-18,shearE:6,shearN:1,seed:.59,occupationScale:1.20}),
+  LOW_CUMULIFORM:freeze({family:'LOW',genus:'Cu',aspect:.58,density:.66,ice:.04,precip:.16,orientationDeg:8,shearE:3,shearN:1,seed:.31,occupationScale:1.18}),
+  DEEP_CONVECTION:freeze({family:'DEEP',genus:'Cb',aspect:.52,density:.78,ice:.56,precip:.88,orientationDeg:22,shearE:8,shearN:3,seed:.47,occupationScale:1.14}),
+  CYCLONE:freeze({family:'DEEP',genus:'Cb',aspect:.86,density:.82,ice:.64,precip:.94,orientationDeg:-10,shearE:11,shearN:4,seed:.93,occupationScale:1.12})
 });
 
 function radiusKm(radiusDeg){return PLANET_RADIUS*radiusDeg*DEG_TO_RAD;}
@@ -96,8 +96,11 @@ export function buildFAP1GPUWeatherPacket({canonicalTimeHours=0}={}){
     const profile=CLASS_PROFILE[regime.weatherClass];
     if(!profile)continue;
     const family=H_EARTH_FAP1_ALTITUDE_FAMILIES[profile.family];
-    const major=radiusKm(regime.radiusDeg);
-    const minor=major*profile.aspect;
+    const stateMajorKm=radiusKm(regime.radiusDeg);
+    const stateMinorKm=stateMajorKm*profile.aspect;
+    const occupationScale=profile.occupationScale??1;
+    const major=stateMajorKm*occupationScale;
+    const minor=stateMinorKm*occupationScale;
     const occupancy=clamp(regime.occupancy,0,1);
     const span=Math.max(.1,family.topKm-family.baseKm);
     const canonicalDensity=profile.density*occupancy;
@@ -110,8 +113,11 @@ export function buildFAP1GPUWeatherPacket({canonicalTimeHours=0}={}){
       longitudeDeg:regime.center.longitudeDeg,
       baseKm:family.baseKm,
       topKm:family.topKm,
+      stateMajorKm,
+      stateMinorKm,
       majorKm:major,
       minorKm:minor,
+      mesoscaleOccupationScale:occupationScale,
       orientationDeg:profile.orientationDeg,
       canonicalDensity,
       representationContribution,
@@ -140,6 +146,7 @@ export function buildFAP1GPUWeatherPacket({canonicalTimeHours=0}={}){
     meteorologicalAuthority:'FAP1_ONLY',
     rendererMayCreateWeather:false,
     noiseRole:'SUBGRID_EXPRESSION_ONLY',
+    mesoscaleOccupationPolicy:'EXPAND_EXISTING_FAP1_SYSTEMS_PRESERVE_CLEAR_AIR',
     representationContributionAuthority:'GB_HANDOFF_ONLY',
     macroRenderContributions:getFAP1MacroRenderContributions()
   });
@@ -161,6 +168,8 @@ export function evaluateFAP1GPUWeatherPacket(packet){
     if(!(canonicalDensity>0))issues.push(`INVALID_CANONICAL_DENSITY:${system.id}`);
     if(!(Number.isFinite(system.density)&&system.density>=0))issues.push(`INVALID_RENDER_DENSITY:${system.id}`);
     if(!(Number.isFinite(system.representationContribution)&&system.representationContribution>=0&&system.representationContribution<=1))issues.push(`INVALID_REPRESENTATION_CONTRIBUTION:${system.id}`);
+    if(!(Number.isFinite(system.mesoscaleOccupationScale)&&system.mesoscaleOccupationScale>=1&&system.mesoscaleOccupationScale<=1.25))issues.push(`INVALID_MESOSCALE_OCCUPATION:${system.id}`);
+    if(!(system.majorKm>=system.stateMajorKm&&system.minorKm>=system.stateMinorKm))issues.push(`MESOSCALE_OCCUPATION_CONTRACT_FAIL:${system.id}`);
   }
   return freeze({eligible:issues.length===0,status:issues.length?'FAP1_GPU_PACKET_FAIL':'FAP1_GPU_PACKET_PASS',qualificationMode,issues:freeze(issues)});
 }

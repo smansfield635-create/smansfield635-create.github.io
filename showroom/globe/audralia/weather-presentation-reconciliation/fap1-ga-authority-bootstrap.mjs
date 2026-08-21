@@ -24,8 +24,6 @@ async function initialize(){
   if(!(canvas instanceof HTMLCanvasElement))throw new Error('FAP1_GA_CANVAS_MISSING');
   const receipt=await waitForReceipt();
 
-  // G_A boundary: historical weather renderers remain available only as
-  // diagnostic ancestors. They no longer contribute visible cloud density.
   if(receipt.exterior?.overlay){
     receipt.exterior.overlay.style.visibility='hidden';
     receipt.exterior.overlay.dataset.fap1GADiagnosticOnly='true';
@@ -41,6 +39,13 @@ async function initialize(){
   ga.overlay.dataset.fap1SoleVisibleDensityAuthority='true';
   let interacting=false,lastSignature='',lastTimeRender=0,raf=0;
 
+  function renderNow(){
+    const camera=receipt.getCameraFrame();
+    ga.render(camera);
+    lastSignature=cameraSignature(camera);
+    lastTimeRender=performance.now();
+    return ga.getPacket();
+  }
   function begin(){if(!interacting){interacting=true;ga.beginInteraction();}}
   function end(){if(interacting){interacting=false;ga.endInteraction();lastSignature='';}}
   canvas.addEventListener('pointerdown',begin,{passive:true});
@@ -59,6 +64,7 @@ async function initialize(){
     }
     raf=requestAnimationFrame(frame);
   }
+  renderNow();
   raf=requestAnimationFrame(frame);
 
   globalThis.__AUDRALIA_FAP1_GA_AUTHORITY__=Object.freeze({
@@ -71,6 +77,7 @@ async function initialize(){
     noiseCreatesWeather:false,
     descriptorEvidence:()=>ga.getEvidence(),
     descriptorPacket:()=>ga.getPacket(),
+    renderNow,
     destroy(){cancelAnimationFrame(raf);ga.destroy();}
   });
 }

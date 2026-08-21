@@ -1,3 +1,4 @@
+# qualification transport: exact dc47ba4c candidate
 name: FAP1 G_C W5 Coherent Cavity Visible
 on:
   pull_request:

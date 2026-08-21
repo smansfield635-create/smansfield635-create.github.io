@@ -16,6 +16,7 @@ const STAGES=Object.freeze([
   ['READY',100,'Audralia ready']
 ]);
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const gaProofMode=(()=>{try{return new URLSearchParams(location.search).get('gaProof')==='1';}catch(_error){return false;}})();
 let verified=0;
 let displayed=0;
 let ceiling=15;
@@ -84,10 +85,10 @@ function observeRuntime(){
   const runtime=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.();
   const ga=window.__AUDRALIA_FAP1_GA_AUTHORITY__;
   if(runtime?.invariants?.pass===true&&ga?.meteorologicalAuthority==='FAP1_ONLY'){
-    setVerified(100,'Audralia ready',100);
+    setVerified(100,gaProofMode?'Audralia ready · G_A proof active':'Audralia ready',100);
     clearInterval(activityTimer);
     clearTimeout(timeoutTimer);
-    if(note)note.textContent='One continuous world is ready · FAP1 is the sole visible weather-density authority.';
+    if(note)note.textContent=gaProofMode?'One continuous world is ready · G_A negative-proof harness is running.':'One continuous world is ready · FAP1 is the sole visible weather-density authority.';
     if(loader){loader.classList.add('is-ready');setTimeout(()=>{loader.hidden=true;},460);}
     return;
   }
@@ -109,6 +110,7 @@ async function boot(){
     setVerified(16,'Loading world systems',34);
     await import('./app.mjs?cb=gratitude-chronology-startup-v2');
     await import('./fap1-ga-authority-bootstrap.mjs?cb=FAP1_GA_v1');
+    if(gaProofMode)await import('./fap1-ga-negative-proof.mjs?cb=FAP1_GA_NEGATIVE_PROOF_v1');
     setVerified(38,'Constructing planetary surface',54);
     requestAnimationFrame(observeRuntime);
   }catch(error){

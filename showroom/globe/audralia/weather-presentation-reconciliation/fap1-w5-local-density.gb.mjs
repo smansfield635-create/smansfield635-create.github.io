@@ -7,9 +7,10 @@ const freeze=value=>Object.freeze(value);
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 const smooth=(a,b,v)=>{const t=clamp((v-a)/(b-a||1),0,1);return t*t*(3-2*t);};
 const mix=(a,b,t)=>a+(b-a)*t;
+const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
 
-export const FAP1_W5_LOCAL_DENSITY_SCHEMA='FAP1_W5_LOCAL_DENSITY_REFINEMENT_v2_MACRO_ANCHORED';
-export const W5_GENERATION=2;
+export const FAP1_W5_LOCAL_DENSITY_SCHEMA='FAP1_W5_LOCAL_DENSITY_REFINEMENT_v3_BOUNDED_MACRO_ANCHORED';
+export const W5_GENERATION=3;
 export const W5_BRICK_RESOLUTION=12;
 export const W5_MAX_ACTIVE_OBJECTS=1;
 export const W5_EMPTY_THRESHOLD=0.0025;
@@ -41,8 +42,6 @@ function fbm3(x,y,z,seed){
   return sum/(norm||1);
 }
 
-// Macro anchor deliberately mirrors the G_A density expression at canonical
-// morphology time zero. W5 is a refinement of that mass, not a new cloud.
 function hash31(x,y,z){
   let px=x*.1031-Math.floor(x*.1031),py=y*.1031-Math.floor(y*.1031),pz=z*.1031-Math.floor(z*.1031);
   const d=px*(py+33.33)+py*(pz+33.33)+pz*(px+33.33);
@@ -66,10 +65,18 @@ function macroFbm(x,y,z){
 function verticalEnvelope(z){return smooth(0,.075,z)*(1-smooth(.86,1,z));}
 function genusCode(genus){return ({Ci:0,Cc:1,Cs:2,Ac:3,As:4,Ns:5,Sc:6,St:7,Cu:8,Cb:9})[genus]??8;}
 
+function macroCoordinates(worldPoint,object){
+  const d=[worldPoint[0]-object.V_i.center[0],worldPoint[1]-object.V_i.center[1],worldPoint[2]-object.V_i.center[2]];
+  const r=object.F_i?.macroRadii;
+  if(!Array.isArray(r)||r.length!==3)throw new Error('FAP1_W5_MACRO_RADII_REQUIRED');
+  return [dot(d,object.V_i.axisU)/r[0],dot(d,object.V_i.axisUp)/r[1],dot(d,object.V_i.axisV)/r[2]];
+}
+
 function macroAnchorShape(object,q){
   const x=q[0],vertical=q[1],y=q[2];
   const z=clamp((vertical+1)*.5,0,1),r=Math.hypot(x,y);
-  const fieldScale=clamp(Math.sqrt(Math.max(object.V_i.radii[0]*object.V_i.radii[2],1))/260,1,9);
+  const macroRadii=object.F_i.macroRadii;
+  const fieldScale=clamp(Math.sqrt(Math.max(macroRadii[0]*macroRadii[2],1))/260,1,9);
   const qx=x*fieldScale,qy=y*fieldScale,seed=object.W_i.seed??0;
   const n=macroFbm(qx*2.15+seed*19,qy*2.15,z*3.2),v=verticalEnvelope(z),g=genusCode(object.W_i.genus);
   let shape=0;
@@ -105,18 +112,17 @@ function localRefinementFactor(object,q){
   const cavity=fbm3(q[0]*3.4-8.2,q[1]*3.9+5.7,q[2]*3.2-1.9,seed+733);
   const signedFine=(fine-.5)*2;
   const signedCavity=(cavity-.5)*2;
-  // Bounded refinement: enough to add cavities/lobes without changing the
-  // low-frequency mass authority established by G_A.
   return clamp(1+signedFine*.12-signedCavity*.06,.80,1.20);
 }
 
 export function sampleW5LocalDensity(object,worldPoint){
   if(!object||object.authority!=='FAP1_DESCRIPTOR_ONLY')throw new Error('FAP1_W5_OBJECT_AUTHORITY_REQUIRED');
-  const q=localCoordinates(worldPoint,object);
-  if(q[0]*q[0]+q[1]*q[1]+q[2]*q[2]>=1)return 0;
-  const macroShape=macroAnchorShape(object,q);
+  const localQ=localCoordinates(worldPoint,object);
+  if(localQ[0]*localQ[0]+localQ[1]*localQ[1]+localQ[2]*localQ[2]>=1)return 0;
+  const macroQ=macroCoordinates(worldPoint,object);
+  const macroShape=macroAnchorShape(object,macroQ);
   if(macroShape<=0)return 0;
-  const refinement=localRefinementFactor(object,q);
+  const refinement=localRefinementFactor(object,localQ);
   const density=clamp((object.W_i.density??0)*(object.W_i.support??1)*macroShape*refinement,0,1.8);
   return density<W5_EMPTY_THRESHOLD?0:density;
 }
@@ -159,7 +165,7 @@ export function buildW5DensityBrick(object,{bx=0,by=0,bz=0,generation=W5_GENERAT
     maxDensity,
     values,
     authority:'FAP1_DESCRIPTOR_REFINEMENT_ONLY',
-    correspondenceBasis:'G_A_MACRO_DENSITY_BOUNDARY_CONDITION',
+    correspondenceBasis:'FAP1_PRESERVED_MACRO_COORDINATES_PLUS_LOCAL_REFINEMENT',
     cameraCentered:false,
     persistentWeatherIdentity:true,
     lightingApplied:false,
@@ -179,12 +185,12 @@ export function verifyW5RefinementState(state){
   if(state?.active){
     if(!state.activeWeatherId)failures.push('ACTIVE_WEATHER_ID_MISSING');
     if(state.brick?.weatherId!==state.activeWeatherId)failures.push('BRICK_WEATHER_ID_MISMATCH');
-    if(state.brick?.correspondenceBasis!=='G_A_MACRO_DENSITY_BOUNDARY_CONDITION')failures.push('MACRO_CORRESPONDENCE_BASIS_MISSING');
+    if(state.brick?.correspondenceBasis!=='FAP1_PRESERVED_MACRO_COORDINATES_PLUS_LOCAL_REFINEMENT')failures.push('MACRO_CORRESPONDENCE_BASIS_MISSING');
     if(state.brick?.cameraCentered!==false)failures.push('CAMERA_CENTERED_LOCAL_VOLUME_FORBIDDEN');
     if(state.brick?.persistentWeatherIdentity!==true)failures.push('PERSISTENT_WEATHER_IDENTITY_MISSING');
     if(!(state.brick?.occupancyFraction>=0&&state.brick?.occupancyFraction<=1))failures.push('INVALID_OCCUPANCY_FRACTION');
   }
   if(state?.visibleRendererMutation!==false)failures.push('VISIBLE_RENDERER_MUTATION_FORBIDDEN_AT_GB_W5_DENSITY_STAGE');
   if(state?.l5LightingActive!==false)failures.push('L5_PREMATURE_ACTIVATION');
-  return freeze({schema:'FAP1_W5_LOCAL_DENSITY_INVARIANTS_v2',pass:failures.length===0,failures:freeze(failures),activeWeatherId:state?.activeWeatherId??null});
+  return freeze({schema:'FAP1_W5_LOCAL_DENSITY_INVARIANTS_v3_BOUNDED_MACRO_ANCHORED',pass:failures.length===0,failures:freeze(failures),activeWeatherId:state?.activeWeatherId??null});
 }

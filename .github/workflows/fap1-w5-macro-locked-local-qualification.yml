@@ -28,7 +28,8 @@ jobs:
           console.log(JSON.stringify({candidate:'51ea969a7688aee3c85dbe057043c718ba4d5e1d',results,checks,pass:Object.values(checks).every(Boolean)},null,2));
           if(!Object.values(checks).every(Boolean))process.exit(2);
           NODE
-      - uses: browser-actions/setup-chrome@v1
+      - id: chrome
+        uses: browser-actions/setup-chrome@v1
       - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
       - run: |
           python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/server.log 2>&1 &

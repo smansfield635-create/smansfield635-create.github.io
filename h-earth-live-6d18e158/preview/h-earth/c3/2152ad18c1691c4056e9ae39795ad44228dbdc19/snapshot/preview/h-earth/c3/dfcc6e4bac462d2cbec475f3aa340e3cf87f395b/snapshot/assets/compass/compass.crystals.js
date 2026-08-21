@@ -68,7 +68,7 @@
       "DGB_COMPASS_CRYSTALS_SPHERICAL_CONSTELLATION_AND_CLUSTER_REBUILD_v3",
 
     file:
-      "/assets/compass/compass.crystals.js",
+      "/assets/compass/compass.crystals.js?cb=cf87a11b01d8fed1",
 
     releaseId:
       "dgb-compass-spherical-clusters-hardened-v4",

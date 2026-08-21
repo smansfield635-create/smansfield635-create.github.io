@@ -44,6 +44,30 @@ jobs:
           fi
           echo "target_sha=$requested" >> "$GITHUB_OUTPUT"
 
+      - name: Make GitHub Actions the Pages deployment authority
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          api="https://api.github.com/repos/${GITHUB_REPOSITORY}/pages"
+          current="$(curl --fail-with-body --silent --show-error -L \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "$api")"
+          build_type="$(echo "$current" | jq -r '.build_type // empty')"
+          if [ "$build_type" != "workflow" ]; then
+            curl --fail-with-body --silent --show-error -L \
+              -X PUT \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              -H "Content-Type: application/json" \
+              "$api" \
+              -d '{"build_type":"workflow"}' >/dev/null
+          fi
+
       - name: Checkout exact approved commit
         uses: actions/checkout@v4
         with:

@@ -1,0 +1,70 @@
+name: FAP1 G_A Runtime Negative Proof Transport
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/fap1-ga-runtime-negative-proof-transport.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  exact-head-negative-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout immutable proof head
+        uses: actions/checkout@v4
+        with:
+          ref: 6f9a374454004bef2d753eba87409ec3caab1e4e
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+      - name: Install browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Validate qualification modules
+        run: |
+          node --check showroom/globe/audralia/weather-presentation-reconciliation/fap1-ga-negative-proof.mjs
+          node --check showroom/globe/audralia/weather-presentation-reconciliation/fap1-gpu-weather-descriptors.mjs
+          node --check showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs
+      - name: Start exact-head server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/fap1-ga-server.log 2>&1 &
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/ >/dev/null; then exit 0; fi
+            sleep 0.25
+          done
+          cat /tmp/fap1-ga-server.log
+          exit 1
+      - name: Execute G_A runtime negative proof
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          node <<'NODE'
+          const puppeteer=require('puppeteer-core');
+          (async()=>{
+            const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+            const page=await browser.newPage();
+            await page.setViewport({width:720,height:1280,deviceScaleFactor:1});
+            const pageErrors=[],consoleErrors=[];
+            page.on('pageerror',e=>pageErrors.push(String(e?.stack||e)));
+            page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text());});
+            const url='http://127.0.0.1:4173/showroom/globe/audralia/?gaProof=1';
+            await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});
+            await page.waitForFunction(()=>window.__AUDRALIA_FAP1_GA_NEGATIVE_PROOF__?.pass===true||document.documentElement.dataset.fap1GaNegativeProof==='FAIL'||document.documentElement.dataset.fap1GaNegativeProof==='ERROR',{timeout:120000});
+            const result=await page.evaluate(()=>({
+              receipt:window.__AUDRALIA_FAP1_GA_NEGATIVE_PROOF__||null,
+              state:document.documentElement.dataset.fap1GaNegativeProof||null,
+              authority:window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority||null,
+              descriptorSource:window.__AUDRALIA_FAP1_GA_AUTHORITY__?.descriptorSource||null,
+              location:location.href
+            }));
+            console.log(JSON.stringify({proofHead:'6f9a374454004bef2d753eba87409ec3caab1e4e',result,pageErrors,consoleErrors},null,2));
+            const failed=pageErrors.length||!result.receipt?.pass||result.state!=='PASS'||result.authority!=='FAP1_ONLY';
+            await browser.close();
+            if(failed)process.exit(1);
+          })().catch(error=>{console.error(error);process.exit(1);});
+          NODE

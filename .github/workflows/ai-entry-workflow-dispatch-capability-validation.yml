@@ -1,0 +1,31 @@
+name: AI Entry Workflow Dispatch Capability Validation
+
+on:
+  pull_request:
+    paths:
+      - .github/ai-router/workflow-dispatch-capability.v1.json
+      - .github/ai-router/shared-procedures.v1.json
+      - .github/workflows/ai-entry-workflow-dispatch-bridge.yml
+      - tools/ai-entry-workflow-dispatch-bridge.mjs
+      - tools/ai-entry-workflow-dispatch-self-test.mjs
+  push:
+    branches:
+      - main
+    paths:
+      - .github/ai-router/workflow-dispatch-capability.v1.json
+      - .github/ai-router/shared-procedures.v1.json
+      - .github/workflows/ai-entry-workflow-dispatch-bridge.yml
+      - tools/ai-entry-workflow-dispatch-bridge.mjs
+      - tools/ai-entry-workflow-dispatch-self-test.mjs
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate universal workflow dispatch continuity capability
+        run: node tools/ai-entry-workflow-dispatch-self-test.mjs

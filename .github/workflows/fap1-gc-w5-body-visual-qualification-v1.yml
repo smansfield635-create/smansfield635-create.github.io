@@ -1,0 +1,84 @@
+name: FAP1 GC W5 Body Visual Qualification v1
+on:
+  pull_request:
+    paths: ['.github/workflows/fap1-gc-w5-body-visual-qualification-v1.yml']
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 2651bcba5c1071153914e6abb722d19aa778a051
+      - id: chrome
+        uses: browser-actions/setup-chrome@v1
+      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/server.log 2>&1 &
+          for a in $(seq 1 120); do curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/ >/dev/null && exit 0; sleep .25; done; exit 1
+      - name: Exact-head orbit to interior traversal
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          node <<'NODE'
+          const puppeteer=require('puppeteer-core');
+          const fs=require('fs');
+          (async()=>{
+            const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+            const page=await browser.newPage(); await page.setViewport({width:900,height:900,deviceScaleFactor:1});
+            const errors=[]; page.on('pageerror',e=>errors.push(String(e))); page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+            await page.goto('http://127.0.0.1:4173/showroom/globe/audralia/',{waitUntil:'domcontentloaded',timeout:90000});
+            await page.waitForFunction(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer,{timeout:90000});
+            if(!(await page.evaluate(()=>window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY'))){await page.evaluate(()=>import('./weather-presentation-reconciliation/fap1-ga-authority-bootstrap.mjs?qual=body-visual-v1'));}
+            await page.waitForFunction(()=>window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY',{timeout:30000});
+            if(!(await page.evaluate(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.authority==='BOUNDED_GB_HANDOFF_ACTIVE'))){await page.evaluate(()=>import('./weather-presentation-reconciliation/fap1-w5-handoff-bootstrap.gb.mjs?qual=body-visual-v1'));}
+            await page.waitForFunction(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.authority==='BOUNDED_GB_HANDOFF_ACTIVE',{timeout:30000});
+            const target=await page.evaluate(async()=>{
+              const m=await import('./weather-presentation-reconciliation/fap1-spatial-lod.gb.mjs?qual=body-target-v1');
+              const d=await import('./weather-presentation-reconciliation/fap1-gpu-weather-descriptors.mjs?qual=body-target-v1');
+              const objects=m.buildFAP1SpatialWeatherObjects({packet:d.buildFAP1GPUWeatherPacket({canonicalTimeHours:0})});
+              const o=objects.find(x=>x.ID_i==='SOUTHEAST_DEEP_CONVECTION');
+              const c=o.V_i.center, pc=m.PLANET_CENTER, r=[c[0]-pc[0],c[1]-pc[1],c[2]-pc[2]], len=Math.hypot(...r), dir=r.map(v=>v/len), angle=Math.acos(Math.max(-1,Math.min(1,dir[1]))), horiz=Math.hypot(dir[0],dir[2])||1, radius=angle*m.PLANET_RADIUS;
+              return {targetU:radius*dir[0]/horiz,targetV:radius*dir[2]/horiz,id:o.ID_i};
+            });
+            fs.mkdirSync('w5-visual-evidence',{recursive:true});
+            const stages=[['orbit',5200,0.80],['regional',2400,0.70],['approach',1450,0.58],['body0',900,0.50],['gap',620,0.46],['wall',360,0.46],['interior',160,0.46],['deepInterior',95,0.46],['exit',900,0.50]];
+            const rows=[];
+            for(const [name,distance,pitch] of stages){
+              const metrics=await page.evaluate(async({target,distance,pitch})=>{
+                const p=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__;
+                p.setCameraStateForTest({targetU:target.targetU,targetV:target.targetV,distance,pitch,yaw:0});
+                window.__AUDRALIA_FAP1_GA_AUTHORITY__.renderNow();
+                const h=window.__AUDRALIA_FAP1_W5_HANDOFF__; h.render();
+                const rec=h.getReceipt(); const canvas=[...document.querySelectorAll('canvas')].find(c=>c.dataset.fap1W5LocalRaymarch==='true');
+                let fb={nonzero:0,low:0,mid:0,high:0,total:0,meanAlpha:0};
+                if(canvas&&canvas.style.display!=='none'){
+                  const gl=canvas.getContext('webgl2',{preserveDrawingBuffer:true});
+                  if(gl){const w=canvas.width,h=canvas.height,pix=new Uint8Array(w*h*4);gl.readPixels(0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,pix);let sum=0;fb.total=w*h;for(let i=3;i<pix.length;i+=4){const a=pix[i];sum+=a;if(a>0)fb.nonzero++;if(a<=8)fb.low++;else if(a<=64)fb.mid++;else fb.high++;}fb.meanAlpha=sum/Math.max(1,fb.total);}
+                }
+                const cam=p.getCameraFrame();
+                return {receipt:rec,fb,camera:cam.snapshot};
+              },{target,distance,pitch});
+              await page.screenshot({path:`w5-visual-evidence/${name}.png`,fullPage:false}); rows.push({name,distance,pitch,...metrics});
+            }
+            console.log(JSON.stringify({target,rows,errors},null,2));
+            const orbit=rows[0],near=rows.slice(3,8);
+            const checks={
+              exactMacroAtOrbit:orbit.receipt?.active===false&&orbit.receipt?.macroContribution===1&&orbit.receipt?.localContribution===0,
+              persistentIdentity:near.filter(r=>r.receipt?.active).every(r=>r.receipt.weatherId==='SOUTHEAST_DEEP_CONVECTION'&&r.receipt.persistentWeatherIdentity===true),
+              handoffConserved:near.filter(r=>r.receipt?.active).every(r=>Math.abs((r.receipt.contributionSum??0)-1)<1e-6),
+              localBecomesVisible:near.some(r=>r.fb.nonzero>0),
+              structuredAlpha:near.some(r=>r.fb.high>0&&r.fb.low>0),
+              noRuntimeErrors:errors.length===0
+            };
+            const pass=Object.values(checks).every(Boolean); console.log(JSON.stringify({checks,pass},null,2));
+            await browser.close(); if(!pass)process.exit(2);
+          })().catch(e=>{console.error(e);process.exit(1);});
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: w5-body-visual-evidence
+          path: w5-visual-evidence/*.png
+          if-no-files-found: warn

@@ -31,14 +31,14 @@ export const H_EARTH_FAP1_ALTITUDE_FAMILIES = freeze({
 
 const REGIMES = freeze([
   freeze({ id: 'GRATITUDE_CLEAR_CORRIDOR', weatherClass: 'CLEAR', center: freeze({ latitudeDeg: 26, longitudeDeg: -18 }), radiusDeg: 23, occupancy: 0.08, hazeSupport: 0.08, families: freeze([]), wind: freeze({ eastKmH: 38, northKmH: 6 }) }),
-  freeze({ id: 'NORTHERN_HIGH_ICE_FIELD', weatherClass: 'HIGH_ICE', center: freeze({ latitudeDeg: 57, longitudeDeg: 26 }), radiusDeg: 34, occupancy: 0.54, hazeSupport: 0.12, families: freeze(['HIGH']), wind: freeze({ eastKmH: 118, northKmH: -10 }) }),
-  freeze({ id: 'WESTERN_FRONTAL_FIELD', weatherClass: 'MID_FRONTAL', center: freeze({ latitudeDeg: 34, longitudeDeg: -73 }), radiusDeg: 31, occupancy: 0.67, hazeSupport: 0.28, families: freeze(['HIGH', 'MID']), wind: freeze({ eastKmH: 72, northKmH: 18 }) }),
-  freeze({ id: 'EQUATORIAL_CUMULUS_BELT', weatherClass: 'LOW_CUMULIFORM', center: freeze({ latitudeDeg: 4, longitudeDeg: 48 }), radiusDeg: 39, occupancy: 0.58, hazeSupport: 0.18, families: freeze(['LOW']), wind: freeze({ eastKmH: -31, northKmH: 8 }) }),
-  freeze({ id: 'SOUTHEAST_DEEP_CONVECTION', weatherClass: 'DEEP_CONVECTION', center: freeze({ latitudeDeg: -19, longitudeDeg: 82 }), radiusDeg: 27, occupancy: 0.76, hazeSupport: 0.35, families: freeze(['LOW', 'DEEP', 'HIGH']), wind: freeze({ eastKmH: -46, northKmH: -16 }) }),
+  freeze({ id: 'NORTHERN_HIGH_ICE_FIELD', weatherClass: 'HIGH_ICE', center: freeze({ latitudeDeg: 57, longitudeDeg: 26 }), radiusDeg: 42, occupancy: 0.58, hazeSupport: 0.12, families: freeze(['HIGH']), wind: freeze({ eastKmH: 118, northKmH: -10 }) }),
+  freeze({ id: 'WESTERN_FRONTAL_FIELD', weatherClass: 'MID_FRONTAL', center: freeze({ latitudeDeg: 34, longitudeDeg: -73 }), radiusDeg: 38, occupancy: 0.69, hazeSupport: 0.28, families: freeze(['HIGH', 'MID']), wind: freeze({ eastKmH: 72, northKmH: 18 }) }),
+  freeze({ id: 'EQUATORIAL_CUMULUS_BELT', weatherClass: 'LOW_CUMULIFORM', center: freeze({ latitudeDeg: 4, longitudeDeg: 48 }), radiusDeg: 45, occupancy: 0.62, hazeSupport: 0.18, families: freeze(['LOW']), wind: freeze({ eastKmH: -31, northKmH: 8 }) }),
+  freeze({ id: 'SOUTHEAST_DEEP_CONVECTION', weatherClass: 'DEEP_CONVECTION', center: freeze({ latitudeDeg: -19, longitudeDeg: 82 }), radiusDeg: 34, occupancy: 0.78, hazeSupport: 0.35, families: freeze(['LOW', 'DEEP', 'HIGH']), wind: freeze({ eastKmH: -46, northKmH: -16 }) }),
   freeze({
-    id: 'SOUTHERN_OCEAN_CYCLONE', weatherClass: 'CYCLONE', center: freeze({ latitudeDeg: -20, longitudeDeg: 20 }), radiusDeg: 24,
+    id: 'SOUTHERN_OCEAN_CYCLONE', weatherClass: 'CYCLONE', center: freeze({ latitudeDeg: -20, longitudeDeg: 20 }), radiusDeg: 28,
     occupancy: 0.84, hazeSupport: 0.42, families: freeze(['LOW', 'MID', 'DEEP', 'HIGH']), wind: freeze({ eastKmH: 42, northKmH: 12 }),
-    cyclone: freeze({ eyeRadiusDeg: 2.4, eyewallRadiusDeg: 5.8, outerRainbandRadiusDeg: 21, spiralTightness: 2.15, rotationDirection: 'CCW', upperOutflowRadiusDeg: 28, maximumConvectiveSupport: 1 })
+    cyclone: freeze({ eyeRadiusDeg: 2.4, eyewallRadiusDeg: 5.8, outerRainbandRadiusDeg: 24, spiralTightness: 2.15, rotationDirection: 'CCW', upperOutflowRadiusDeg: 31, maximumConvectiveSupport: 1 })
   })
 ]);
 

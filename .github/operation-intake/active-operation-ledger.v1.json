@@ -1741,13 +1741,30 @@
       "state": "ADMITTED_LOCKED"
     },
     "b23dcdb4bbbbf5d972b342e7811418489cb33435adfeaf32f041f31672f415ee": {
-      "governingHead": "372961f0738fb29704c4d4f8e36daa666f131ae4",
-      "lockGeneration": 1559,
+      "governingHead": "16f88c67a918eda82317b8d405bde31cf31c586a",
+      "lockGeneration": 1566,
       "lockScope": "COMPASS_PAGES_PUBLICATION_RECOVERY",
-      "operationId": "COMPASS_PAGES_LEGACY_EXPLICIT_BUILD_REQUEST_REPAIR_20260819_001",
-      "procedureLocatorDigest": "929f6a4b6d54aecebbe50e6f8c51988b23f82a78878c483bb8b57898c7bc191a",
+      "operationId": "COMPASS_PAGES_PUBLIC_RELEASE_BUILD_COMPLETION_20260820_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "372961f0738fb29704c4d4f8e36daa666f131ae4",
+        "lockGeneration": 1559,
+        "lockScope": "COMPASS_PAGES_PUBLICATION_RECOVERY",
+        "operationId": "COMPASS_PAGES_LEGACY_EXPLICIT_BUILD_REQUEST_REPAIR_20260819_001",
+        "preservedEvidenceRefs": [
+          "issue:1011#comment:5345817148",
+          "issue:1011#comment:5345827570",
+          "issue:1503#comment:5364748157",
+          "public-release:e5efda82a8a07d37c10a0016b7216f2c79eb19dc"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_PAGES_PUBLIC_RELEASE_BUILD_COMPLETION_TRANSITION_20260820_001"
+      },
+      "procedureLocatorDigest": "aa0377df7afebdf738b2f4b0e06f5b6ae736b61030b85b0851aad662f347355b",
       "released": false,
-      "requestDigest": "4e9bab013e6644288c0e278847720da4edeba4458e845c7626469e00759211be",
+      "requestDigest": "e3c44a1376a29b75a32ffe101891af3b4043fda37f4c24e6ff5e0232d0f25093",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "b23dcdb4bbbbf5d972b342e7811418489cb33435adfeaf32f041f31672f415ee",
       "state": "ADMITTED_LOCKED"
@@ -2695,7 +2712,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1565,
+  "lockGeneration": 1566,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -23486,6 +23503,36 @@
         "successorLockScope": "H_EARTH:AUDRALIA:PC1:GEOGRAPHIC_QUALIFICATION:EXECUTION_CARRIER:EXACT_2_PATH_CONTROL_PLANE_SCOPE",
         "successorOperationId": "AUDRALIA_PC1_GEOGRAPHIC_QUALIFICATION_EXECUTION_CARRIER_20260820_005",
         "transitionId": "AUDRALIA_PC1_GEOGRAPHIC_QUALIFICATION_EXECUTION_CARRIER_SUCCESSOR_20260820_005"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "372961f0738fb29704c4d4f8e36daa666f131ae4",
+      "lockGeneration": 1559,
+      "lockScope": "COMPASS_PAGES_PUBLICATION_RECOVERY",
+      "operationId": "COMPASS_PAGES_LEGACY_EXPLICIT_BUILD_REQUEST_REPAIR_20260819_001",
+      "procedureLocatorDigest": "929f6a4b6d54aecebbe50e6f8c51988b23f82a78878c483bb8b57898c7bc191a",
+      "released": true,
+      "requestDigest": "4e9bab013e6644288c0e278847720da4edeba4458e845c7626469e00759211be",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "b23dcdb4bbbbf5d972b342e7811418489cb33435adfeaf32f041f31672f415ee",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:1011#comment:5345817148",
+          "issue:1011#comment:5345827570",
+          "issue:1503#comment:5364748157",
+          "public-release:e5efda82a8a07d37c10a0016b7216f2c79eb19dc"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "16f88c67a918eda82317b8d405bde31cf31c586a",
+        "successorLockGeneration": 1566,
+        "successorLockScope": "COMPASS_PAGES_PUBLICATION_RECOVERY",
+        "successorOperationId": "COMPASS_PAGES_PUBLIC_RELEASE_BUILD_COMPLETION_20260820_001",
+        "transitionId": "COMPASS_PAGES_PUBLIC_RELEASE_BUILD_COMPLETION_TRANSITION_20260820_001"
       },
       "terminalDisposition": "SUPERSEDED"
     }

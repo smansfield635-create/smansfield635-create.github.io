@@ -15,7 +15,7 @@ import {
 const freeze=value=>Object.freeze(value);
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 
-export const FAP1_W5_HANDOFF_SCHEMA='FAP1_W5_BOUNDED_MACRO_LOCAL_HANDOFF_v1';
+export const FAP1_W5_HANDOFF_SCHEMA='FAP1_W5_BOUNDED_MACRO_LOCAL_HANDOFF_v2_L5_DIRECT';
 export const HANDOFF_MIN_LOCAL_WEIGHT=.035;
 export const HANDOFF_LOCAL_DOMINANT_WEIGHT=.72;
 
@@ -29,13 +29,13 @@ function contributionFor(entry){
   });
 }
 
-export function createBoundedW5Handoff({worldCanvas,parentReceipt,gaAuthority}={}){
+export function createBoundedW5Handoff({worldCanvas,parentReceipt,gaAuthority,getSunDirection}={}){
   if(!(worldCanvas instanceof HTMLCanvasElement))throw new Error('FAP1_W5_HANDOFF_WORLD_CANVAS_REQUIRED');
   if(!parentReceipt||typeof parentReceipt.getCameraFrame!=='function')throw new Error('FAP1_W5_HANDOFF_PARENT_RECEIPT_REQUIRED');
   if(!gaAuthority||typeof gaAuthority.descriptorPacket!=='function'||typeof gaAuthority.renderNow!=='function')throw new Error('FAP1_W5_HANDOFF_GA_AUTHORITY_REQUIRED');
 
   const localSurface=createW5LocalRayMarchSurface({worldCanvas});
-  let lastReceipt=null;
+  let lastReceipt=null,quality='REST';
 
   function render(){
     const camera=parentReceipt.getCameraFrame();
@@ -46,11 +46,12 @@ export function createBoundedW5Handoff({worldCanvas,parentReceipt,gaAuthority}={
       .filter(entry=>entry.localPromoted===true&&entry.Q_i===true&&entry.alpha.l>=HANDOFF_MIN_LOCAL_WEIGHT)
       .sort((a,b)=>b.alpha.l-a.alpha.l||a.distanceToVolume-b.distanceToVolume||a.object.ID_i.localeCompare(b.object.ID_i));
     const active=promoted[0]??null;
+    const sunDirection=typeof getSunDirection==='function'?getSunDirection():[.42,.78,.46];
 
     clearFAP1MacroRenderContributions();
     if(!active){
       gaAuthority.renderNow();
-      localSurface.render({camera,spatialState});
+      const localReceipt=localSurface.render({camera,spatialState,sunDirection,quality});
       lastReceipt=freeze({
         schema:FAP1_W5_HANDOFF_SCHEMA,
         active:false,
@@ -62,7 +63,10 @@ export function createBoundedW5Handoff({worldCanvas,parentReceipt,gaAuthority}={
         persistentWeatherIdentity:true,
         macroMassPreservationLaw:'MACRO_PLUS_LOCAL_EQUALS_ONE',
         macroRenderContributions:getFAP1MacroRenderContributions(),
-        l5LightingActive:false,
+        l5LightingActive:true,
+        l5LightingModel:localReceipt.l5LightingModel,
+        l5Quality:localReceipt.quality,
+        l5LightSteps:localReceipt.lightSteps,
         handoffAuthority:'BOUNDED_GB_HANDOFF_ACTIVE'
       });
       return lastReceipt;
@@ -71,7 +75,7 @@ export function createBoundedW5Handoff({worldCanvas,parentReceipt,gaAuthority}={
     const contribution=contributionFor(active);
     setFAP1MacroRenderContribution(active.object.ID_i,contribution.macro);
     gaAuthority.renderNow();
-    const localReceipt=localSurface.render({camera,spatialState});
+    const localReceipt=localSurface.render({camera,spatialState,sunDirection,quality});
     const localVerification=verifyW5LocalRayMarchReceipt(localReceipt);
     if(!localVerification.pass)throw new Error(`FAP1_W5_HANDOFF_LOCAL_SURFACE_INVALID:${localVerification.failures.join(',')}`);
 
@@ -92,7 +96,13 @@ export function createBoundedW5Handoff({worldCanvas,parentReceipt,gaAuthority}={
       localRendererWeatherAuthority:'FAP1_DESCRIPTOR_REFINEMENT_ONLY',
       canonicalDensityPreserved:true,
       macroCloudTuning:false,
-      l5LightingActive:false,
+      l5LightingActive:true,
+      l5LightingModel:localReceipt.l5LightingModel,
+      l5DensityAuthority:localReceipt.l5DensityAuthority,
+      l5Quality:localReceipt.quality,
+      l5LightSteps:localReceipt.lightSteps,
+      multipleScattering:false,
+      groundContribution:false,
       handoffAuthority:'BOUNDED_GB_HANDOFF_ACTIVE'
     });
     return lastReceipt;
@@ -101,9 +111,10 @@ export function createBoundedW5Handoff({worldCanvas,parentReceipt,gaAuthority}={
   return freeze({
     schema:FAP1_W5_HANDOFF_SCHEMA,
     render,
+    setQuality(value){quality=value==='CAPTURE'?'CAPTURE':value==='INTERACTIVE'?'INTERACTIVE':'REST';localSurface.setQuality(quality);},
     getReceipt:()=>lastReceipt,
-    beginInteraction(){localSurface.beginInteraction();},
-    endInteraction(){localSurface.endInteraction();},
+    beginInteraction(){quality='INTERACTIVE';localSurface.beginInteraction();},
+    endInteraction(){quality='REST';localSurface.endInteraction();},
     destroy(){clearFAP1MacroRenderContributions();gaAuthority.renderNow();localSurface.destroy();}
   });
 }
@@ -116,7 +127,10 @@ export function verifyBoundedW5Handoff(receipt,epsilon=1e-6){
   if(!(receipt?.localContribution>=0&&receipt?.localContribution<=1))failures.push('LOCAL_CONTRIBUTION_INVALID');
   if(receipt?.active&&receipt?.canonicalDensityPreserved!==true)failures.push('CANONICAL_DENSITY_NOT_PRESERVED');
   if(receipt?.macroCloudTuning===true)failures.push('MACRO_TUNING_FORBIDDEN');
-  if(receipt?.l5LightingActive!==false)failures.push('L5_PREMATURE_ACTIVATION');
+  if(receipt?.l5LightingActive!==true)failures.push('L5_DIRECT_LIGHTING_NOT_ACTIVE');
+  if(receipt?.l5LightingModel!=='DIRECT_SUN_TRANSMITTANCE_ONLY')failures.push('L5_LIGHTING_SCOPE_DRIFT');
+  if(!Number.isInteger(receipt?.l5LightSteps)||![3,5,8].includes(receipt.l5LightSteps))failures.push('L5_LIGHT_STEP_SCHEDULE_INVALID');
+  if(receipt?.multipleScattering===true||receipt?.groundContribution===true)failures.push('L5_SCOPE_EXPANSION_FORBIDDEN');
   if(receipt?.handoffAuthority!=='BOUNDED_GB_HANDOFF_ACTIVE')failures.push('HANDOFF_AUTHORITY_MISSING');
-  return freeze({schema:'FAP1_W5_BOUNDED_HANDOFF_INVARIANTS_v1',pass:failures.length===0,failures:freeze(failures),weatherId:receipt?.weatherId??null});
+  return freeze({schema:'FAP1_W5_BOUNDED_HANDOFF_INVARIANTS_v2_L5_DIRECT',pass:failures.length===0,failures:freeze(failures),weatherId:receipt?.weatherId??null});
 }

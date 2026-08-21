@@ -1,0 +1,98 @@
+name: FAP1 G_C Bounded Local Qualification
+on:
+  pull_request:
+    paths: ['.github/workflows/fap1-gc-bounded-local-qualification.yml']
+permissions:
+  contents: read
+jobs:
+  continuity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/fap1-gc-bounded-continuity-qualification-v1
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Run corrected 5-system macro-local continuity gate
+        run: |
+          node --input-type=module <<'NODE'
+          const descriptors=await import('./showroom/globe/audralia/weather-presentation-reconciliation/fap1-gpu-weather-descriptors.mjs');
+          const spatial=await import('./showroom/globe/audralia/weather-presentation-reconciliation/fap1-spatial-lod.gb.mjs');
+          const continuity=await import('./showroom/globe/audralia/weather-presentation-reconciliation/fap1-w5-overlap-continuity.gb.mjs');
+          const packet=descriptors.buildFAP1GPUWeatherPacket({canonicalTimeHours:0});
+          const objects=spatial.buildFAP1SpatialWeatherObjects({packet});
+          const results=objects.map(object=>{
+            const receipt=continuity.evaluateMacroLocalContinuity(object,{canonicalTimeHours:0});
+            const verification=continuity.verifyMacroLocalContinuity(receipt);
+            return {weatherId:object.ID_i,weatherClass:object.weatherClass,localRadii:object.V_i.radii,macroRadii:object.F_i.macroRadii,massRatio:receipt.massRatio,normalizedMae:receipt.normalizedMae,boundaryMae:receipt.boundaryMae,occupancyAgreement:receipt.occupancyAgreement,pass:receipt.pass&&verification.pass,failures:verification.failures};
+          });
+          const packetOut={schema:'FAP1_GC_BOUNDED_LOCAL_CONTINUITY_RECEIPT_v1',productHead:'4060176f9afb46f033f07ae7f72491214f5a7366',qualificationHead:process.env.GITHUB_SHA,results,passed:results.filter(x=>x.pass).length,total:results.length,pass:results.every(x=>x.pass)};
+          console.log(JSON.stringify(packetOut,null,2));
+          if(!packetOut.pass)process.exit(2);
+          NODE
+  interior:
+    needs: continuity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/fap1-gc-bounded-continuity-qualification-v1
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with: {chrome-version: stable}
+      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0 pngjs@7.0.0
+      - run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/server.log 2>&1 &
+          for a in $(seq 1 60); do curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/weather-presentation-reconciliation/ >/dev/null && exit 0; sleep .25; done; exit 1
+      - name: Capture bounded W5 interior evidence
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          node <<'NODE'
+          const puppeteer=require('puppeteer-core');
+          const fs=require('fs');
+          const {PNG}=require('pngjs');
+          (async()=>{
+            const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+            const page=await browser.newPage();await page.setViewport({width:720,height:1280,deviceScaleFactor:1});
+            const errors=[];page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+            await page.goto('http://127.0.0.1:4173/showroom/globe/audralia/weather-presentation-reconciliation/',{waitUntil:'domcontentloaded',timeout:90000});
+            await page.waitForFunction(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.l5LightingActive===true,{timeout:90000});
+            const setup=await page.evaluate(async()=>{
+              const ga=window.__AUDRALIA_FAP1_GA_AUTHORITY__,proof=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__;
+              const system=ga.descriptorPacket().systems.find(s=>s.weatherClass==='LOW_CUMULIFORM')||ga.descriptorPacket().systems[0];
+              const R=6200,D=Math.PI/180,N=[0,.5,-.8660254037844386],M=[0,.8660254037844386,.5],E=[1,0,0],lat=system.latitudeDeg*D,lon=system.longitudeDeg*D,cl=Math.cos(lat),sl=Math.sin(lat),co=Math.cos(lon),si=Math.sin(lon),r=[N[0]*sl+(M[0]*co+E[0]*si)*cl,N[1]*sl+(M[1]*co+E[1]*si)*cl,N[2]*sl+(M[2]*co+E[2]*si)*cl],angle=Math.acos(Math.max(-1,Math.min(1,r[1]))),sine=Math.sin(angle),arc=angle*R;
+              return {systemId:system.id,targetU:Math.abs(sine)<1e-7?0:arc*r[0]/sine,targetV:Math.abs(sine)<1e-7?0:arc*r[2]/sine};
+            });
+            fs.mkdirSync('gc-interior-evidence',{recursive:true});
+            const positions=[{name:'overlap',distance:1500},{name:'local',distance:900},{name:'interior',distance:360}];
+            const samples=[];
+            for(const pos of positions){
+              await page.evaluate(({targetU,targetV,distance})=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__.setCameraStateForTest({targetU,targetV,distance,pitch:1.25,yaw:0}),{...setup,distance:pos.distance});
+              await new Promise(r=>setTimeout(r,500));
+              await page.evaluate(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__.renderNow());
+              const metrics=await page.evaluate(()=>{
+                const canvas=document.querySelector('[data-fap1-w5-local-raymarch="true"]');
+                const receipt=window.__AUDRALIA_FAP1_W5_HANDOFF__.getReceipt();
+                if(!canvas)return {missing:true,receipt};
+                const gl=canvas.getContext('webgl2');const w=canvas.width,h=canvas.height,pixels=new Uint8Array(w*h*4);gl.readPixels(0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
+                let nz=0,sum=0,sum2=0,edgeNz=0,centerNz=0,edgeCount=0,centerCount=0;const vals=[];
+                for(let y=0;y<h;y++)for(let x=0;x<w;x++){const a=pixels[(y*w+x)*4+3];vals.push(a);if(a>0)nz++;sum+=a;sum2+=a*a;const edge=x<w*.2||x>w*.8||y<h*.2||y>h*.8;if(edge){edgeCount++;if(a>0)edgeNz++;}else if(x>w*.35&&x<w*.65&&y>h*.35&&y<h*.65){centerCount++;if(a>0)centerNz++;}}
+                const mean=sum/(w*h),variance=sum2/(w*h)-mean*mean;
+                return {width:w,height:h,nonzeroAlphaPixels:nz,occupancy:nz/(w*h),meanAlpha:mean,alphaStdDev:Math.sqrt(Math.max(0,variance)),edgeOccupancy:edgeNz/Math.max(1,edgeCount),centerOccupancy:centerNz/Math.max(1,centerCount),receipt};
+              });
+              const shot=`gc-interior-evidence/${pos.name}.png`;await page.screenshot({path:shot,fullPage:false});
+              samples.push({name:pos.name,distance:pos.distance,...metrics,screenshot:shot});
+            }
+            const pass=samples.every(s=>!s.missing&&s.nonzeroAlphaPixels>0)&&samples.some(s=>s.occupancy<.95)&&samples.some(s=>s.alphaStdDev>4)&&errors.filter(e=>!e.includes('favicon.ico')).length===0;
+            const out={schema:'FAP1_GC_BOUNDED_LOCAL_INTERIOR_EVIDENCE_v1',productHead:'4060176f9afb46f033f07ae7f72491214f5a7366',systemId:setup.systemId,samples,errors,pass};
+            fs.writeFileSync('gc-interior-evidence/receipt.json',JSON.stringify(out,null,2));console.log(JSON.stringify(out,null,2));await browser.close();if(!pass)process.exit(3);
+          })().catch(e=>{console.error(e);process.exit(1);});
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fap1-gc-bounded-local-interior-evidence
+          path: gc-interior-evidence

@@ -5,8 +5,9 @@ const freeze=value=>Object.freeze(value);
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 const smooth=(a,b,v)=>{const t=clamp((v-a)/(b-a||1),0,1);return t*t*(3-2*t);};
 const mix=(a,b,t)=>a+(b-a)*t;
+const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
 
-export const FAP1_W5_OVERLAP_CONTINUITY_SCHEMA='FAP1_W5_MACRO_LOCAL_OVERLAP_CONTINUITY_v1';
+export const FAP1_W5_OVERLAP_CONTINUITY_SCHEMA='FAP1_W5_MACRO_LOCAL_OVERLAP_CONTINUITY_v2_BOUNDED_LOCAL';
 export const CONTINUITY_SAMPLE_RESOLUTION=15;
 export const CONTINUITY_BOUNDARY_INNER_RADIUS=.68;
 export const CONTINUITY_BOUNDARY_OUTER_RADIUS=.94;
@@ -34,11 +35,18 @@ function fbm(x,y,z){let value=noise3(x,y,z)*.62;value+=noise3(x*2.07+5.3,y*2.07+
 function verticalEnvelope(z){return smooth(0,.075,z)*(1-smooth(.86,1,z));}
 function genusCode(genus){return ({Ci:0,Cc:1,Cs:2,Ac:3,As:4,Ns:5,Sc:6,St:7,Cu:8,Cb:9})[genus]??8;}
 
+function macroCoordinates(point,object){
+  const d=[point[0]-object.V_i.center[0],point[1]-object.V_i.center[1],point[2]-object.V_i.center[2]];
+  const r=object.F_i?.macroRadii;
+  if(!Array.isArray(r)||r.length!==3)throw new Error('FAP1_CONTINUITY_MACRO_RADII_REQUIRED');
+  return [dot(d,object.V_i.axisU)/r[0],dot(d,object.V_i.axisUp)/r[1],dot(d,object.V_i.axisV)/r[2]];
+}
+
 export function sampleFAP1MacroDensity(object,worldPoint,{canonicalTimeHours=0}={}){
   if(!object||object.authority!=='FAP1_DESCRIPTOR_ONLY')throw new Error('FAP1_CONTINUITY_OBJECT_AUTHORITY_REQUIRED');
-  const q=localCoordinates(worldPoint,object),x=q[0],vertical=q[1],y=q[2];
+  const q=macroCoordinates(worldPoint,object),x=q[0],vertical=q[1],y=q[2];
   if(x*x+vertical*vertical+y*y>=1)return 0;
-  const z=clamp((vertical+1)*.5,0,1),r=Math.hypot(x,y),fieldScale=clamp(Math.sqrt(Math.max(object.V_i.radii[0]*object.V_i.radii[2],1))/260,1,9);
+  const z=clamp((vertical+1)*.5,0,1),r=Math.hypot(x,y),macroRadii=object.F_i.macroRadii,fieldScale=clamp(Math.sqrt(Math.max(macroRadii[0]*macroRadii[2],1))/260,1,9);
   const qx=x*fieldScale,qy=y*fieldScale,seed=object.W_i.seed??0,time=canonicalTimeHours;
   const n=fbm(qx*2.15+seed*19,qy*2.15+time*.018,z*3.2-time*.012),v=verticalEnvelope(z),g=genusCode(object.W_i.genus);
   let shape=0;
@@ -76,13 +84,15 @@ export function evaluateMacroLocalContinuity(object,{canonicalTimeHours=0,resolu
   }
   const normalization=Math.max(.08,(macroMass+localMass)/(2*Math.max(count,1))),normalizedMae=(absoluteError/Math.max(count,1))/normalization,boundaryMae=(boundaryError/Math.max(boundaryCount,1))/normalization,massRatio=localMass/Math.max(macroMass,1e-9),occupancyAgreement=occupiedAgreement/Math.max(count,1);
   const pass=normalizedMae<=CONTINUITY_MAX_NORMALIZED_MAE&&boundaryMae<=CONTINUITY_MAX_BOUNDARY_MAE&&massRatio>=CONTINUITY_MIN_MASS_RATIO&&massRatio<=CONTINUITY_MAX_MASS_RATIO;
-  return freeze({schema:FAP1_W5_OVERLAP_CONTINUITY_SCHEMA,weatherId:object.ID_i,persistentWeatherIdentity:true,sharedSamplePositions:true,sampleCount:count,boundarySampleCount:boundaryCount,macroMass,localMass,massRatio,normalizedMae,boundaryMae,occupancyAgreement,thresholds:freeze({maxNormalizedMae:CONTINUITY_MAX_NORMALIZED_MAE,maxBoundaryMae:CONTINUITY_MAX_BOUNDARY_MAE,minMassRatio:CONTINUITY_MIN_MASS_RATIO,maxMassRatio:CONTINUITY_MAX_MASS_RATIO}),pass,handoffAuthority:pass?'ELIGIBLE_FOR_BOUNDED_HANDOFF_CONSTRUCTION':'HELD',macroRendererMutation:false,localRendererMutation:false,l5LightingActive:false});
+  return freeze({schema:FAP1_W5_OVERLAP_CONTINUITY_SCHEMA,weatherId:object.ID_i,persistentWeatherIdentity:true,sharedSamplePositions:true,macroCoordinates:'F_I_MACRO_RADII',localCoordinates:'V_I_BOUNDED_W5_RADII',sampleCount:count,boundarySampleCount:boundaryCount,macroMass,localMass,massRatio,normalizedMae,boundaryMae,occupancyAgreement,thresholds:freeze({maxNormalizedMae:CONTINUITY_MAX_NORMALIZED_MAE,maxBoundaryMae:CONTINUITY_MAX_BOUNDARY_MAE,minMassRatio:CONTINUITY_MIN_MASS_RATIO,maxMassRatio:CONTINUITY_MAX_MASS_RATIO}),pass,handoffAuthority:pass?'ELIGIBLE_FOR_BOUNDED_HANDOFF_CONSTRUCTION':'HELD',macroRendererMutation:false,localRendererMutation:false,l5LightingActive:false});
 }
 
 export function verifyMacroLocalContinuity(receipt){
   const failures=[];
   if(receipt?.persistentWeatherIdentity!==true)failures.push('WEATHER_IDENTITY_NOT_PERSISTENT');
   if(receipt?.sharedSamplePositions!==true)failures.push('NON_SHARED_SAMPLE_POSITIONS');
+  if(receipt?.macroCoordinates!=='F_I_MACRO_RADII')failures.push('MACRO_COORDINATE_AUTHORITY_WRONG');
+  if(receipt?.localCoordinates!=='V_I_BOUNDED_W5_RADII')failures.push('LOCAL_COORDINATE_AUTHORITY_WRONG');
   if(!(receipt?.sampleCount>0))failures.push('NO_CONTINUITY_SAMPLES');
   if(!(receipt?.boundarySampleCount>0))failures.push('NO_BOUNDARY_SAMPLES');
   if(!(receipt?.normalizedMae<=CONTINUITY_MAX_NORMALIZED_MAE))failures.push('NORMALIZED_MAE_EXCEEDED');
@@ -90,5 +100,5 @@ export function verifyMacroLocalContinuity(receipt){
   if(!(receipt?.massRatio>=CONTINUITY_MIN_MASS_RATIO&&receipt?.massRatio<=CONTINUITY_MAX_MASS_RATIO))failures.push('MASS_RATIO_OUT_OF_RANGE');
   if(receipt?.macroRendererMutation!==false||receipt?.localRendererMutation!==false)failures.push('RENDERER_MUTATION_FORBIDDEN');
   if(receipt?.l5LightingActive!==false)failures.push('L5_PREMATURE_ACTIVATION');
-  return freeze({schema:'FAP1_W5_OVERLAP_CONTINUITY_INVARIANTS_v1',pass:failures.length===0,failures:freeze(failures),weatherId:receipt?.weatherId??null,handoffAuthority:failures.length?'HELD':'ELIGIBLE_FOR_BOUNDED_HANDOFF_CONSTRUCTION'});
+  return freeze({schema:'FAP1_W5_OVERLAP_CONTINUITY_INVARIANTS_v2_BOUNDED_LOCAL',pass:failures.length===0,failures:freeze(failures),weatherId:receipt?.weatherId??null,handoffAuthority:failures.length?'HELD':'ELIGIBLE_FOR_BOUNDED_HANDOFF_CONSTRUCTION'});
 }

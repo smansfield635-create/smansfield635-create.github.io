@@ -1,31 +1,106 @@
-name: Direct GitHub Pages Deploy — Manual Diagnostic Only
+name: Direct GitHub Pages Deploy — Exact Head
 
 on:
   workflow_dispatch:
+    inputs:
+      target_sha:
+        description: Exact approved commit SHA to publish
+        required: true
+        type: string
 
 permissions:
   contents: read
-  pages: read
+  pages: write
+  id-token: write
 
 concurrency:
-  group: pages-diagnostic
-  cancel-in-progress: true
+  group: pages-production
+  cancel-in-progress: false
 
 jobs:
-  diagnose:
+  prepare:
     runs-on: ubuntu-latest
+    outputs:
+      target_sha: ${{ steps.resolve.outputs.target_sha }}
     steps:
-      - name: Read authoritative GitHub Pages state without publishing
+      - name: Resolve and require current main exact head
+        id: resolve
         env:
           GH_TOKEN: ${{ github.token }}
+          REQUESTED_SHA: ${{ inputs.target_sha }}
         shell: bash
         run: |
           set -euo pipefail
-          api="https://api.github.com/repos/${GITHUB_REPOSITORY}/pages"
-          payload="$(curl --fail-with-body --silent --show-error -L \
+          requested="$(printf '%s' "$REQUESTED_SHA" | tr -d '[:space:]')"
+          test -n "$requested"
+          main_sha="$(curl --fail-with-body --silent --show-error -L \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${GH_TOKEN}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            "$api")"
-          echo "$payload" | jq '{build_type,source,status,html_url,cname}'
-          echo "Diagnostic only: this workflow no longer requests, retries, or dispatches Pages builds."
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/main" | jq -r '.sha')"
+          if [ "$requested" != "$main_sha" ]; then
+            echo "Requested SHA $requested is not current main $main_sha" >&2
+            exit 1
+          fi
+          echo "target_sha=$requested" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout exact approved commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.resolve.outputs.target_sha }}
+          fetch-depth: 1
+
+      - name: Stamp exact-head release marker
+        env:
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .well-known
+          printf '{"schema":"DGB_PUBLIC_RELEASE_MARKER_v1","commit":"%s"}\n' "$TARGET_SHA" > .well-known/dgb-release.json
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload exact-head Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+  deploy:
+    needs: prepare
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy exact-head artifact
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  verify-live-exact-head:
+    needs: [prepare, deploy]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify public site serves exact approved head
+        env:
+          TARGET_SHA: ${{ needs.prepare.outputs.target_sha }}
+          PAGE_URL: ${{ needs.deploy.outputs.page_url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          marker_url="${PAGE_URL%/}/.well-known/dgb-release.json"
+          observed=""
+          for attempt in $(seq 1 24); do
+            observed="$(curl --fail --silent --show-error -L --max-time 20 "$marker_url" 2>/dev/null | jq -r '.commit // empty' 2>/dev/null || true)"
+            if [ "$observed" = "$TARGET_SHA" ]; then
+              echo "LIVE_EXACT_HEAD_VERIFIED target=$TARGET_SHA url=$marker_url"
+              exit 0
+            fi
+            echo "Attempt $attempt: observed=${observed:-none}; waiting for target=$TARGET_SHA"
+            sleep 10
+          done
+          echo "DEPLOYMENT_NOT_PROVEN expected=$TARGET_SHA observed=${observed:-none} url=$marker_url" >&2
+          exit 1

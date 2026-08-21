@@ -1902,13 +1902,30 @@
       "state": "ADMITTED_LOCKED"
     },
     "b81b72c372a62c0f1be3640e5633a7aca62072b8a983ea3a00338760eb692a85": {
-      "governingHead": "ea522877151ba03b70302ea0f85752f88b385878",
-      "lockGeneration": 1575,
+      "governingHead": "b46a97dd6b4f5edc8432b99d9b8a1b4f97dca11d",
+      "lockGeneration": 1576,
       "lockScope": "COMPASS:PUBLIC_ACCESS_CONTINUITY:MIRRORLAND_PRESENTATION:V1",
-      "operationId": "COMPASS_PUBLIC_ACCESS_CONTINUITY_RECOVERY_20260821_001",
-      "procedureLocatorDigest": "2c790902df0388523d405105bb7264fd063399866251685882a0240559309b52",
+      "operationId": "COMPASS_PUBLIC_ACCESS_CONTINUITY_RECOVERY_20260821_003",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "ea522877151ba03b70302ea0f85752f88b385878",
+        "lockGeneration": 1575,
+        "lockScope": "COMPASS:PUBLIC_ACCESS_CONTINUITY:MIRRORLAND_PRESENTATION:V1",
+        "operationId": "COMPASS_PUBLIC_ACCESS_CONTINUITY_RECOVERY_20260821_001",
+        "preservedEvidenceRefs": [
+          "pr:1556",
+          "merge:34db10b09788af3760bb658c28a3741122e13562",
+          "commit:b46a97dd6b4f5edc8432b99d9b8a1b4f97dca11d",
+          "operation:COMPASS_PUBLIC_ACCESS_CONTINUITY_RECOVERY_20260821_001:generation:1575"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_PUBLIC_ACCESS_CONTINUITY_EA522877_TO_B46A97DD_20260821_v1"
+      },
+      "procedureLocatorDigest": "22db0202013267599575c21df7905af6f9be68b78efb91294a4de851890c6f92",
       "released": false,
-      "requestDigest": "1b6bae6d38afdea9970645d79cea38911dcd756d302435c2cabe0f38fac3ac5f",
+      "requestDigest": "62918906d0451869f689303e181163f25c9303fa6d66acd003e70c98b718bee2",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "b81b72c372a62c0f1be3640e5633a7aca62072b8a983ea3a00338760eb692a85",
       "state": "ADMITTED_LOCKED"
@@ -2820,7 +2837,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1575,
+  "lockGeneration": 1576,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -23641,6 +23658,36 @@
         "successorLockScope": "COMPASS_PAGES_PUBLICATION_RECOVERY",
         "successorOperationId": "COMPASS_PAGES_PUBLIC_RELEASE_BUILD_COMPLETION_20260820_001",
         "transitionId": "COMPASS_PAGES_PUBLIC_RELEASE_BUILD_COMPLETION_TRANSITION_20260820_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "ea522877151ba03b70302ea0f85752f88b385878",
+      "lockGeneration": 1575,
+      "lockScope": "COMPASS:PUBLIC_ACCESS_CONTINUITY:MIRRORLAND_PRESENTATION:V1",
+      "operationId": "COMPASS_PUBLIC_ACCESS_CONTINUITY_RECOVERY_20260821_001",
+      "procedureLocatorDigest": "2c790902df0388523d405105bb7264fd063399866251685882a0240559309b52",
+      "released": true,
+      "requestDigest": "1b6bae6d38afdea9970645d79cea38911dcd756d302435c2cabe0f38fac3ac5f",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "b81b72c372a62c0f1be3640e5633a7aca62072b8a983ea3a00338760eb692a85",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "pr:1556",
+          "merge:34db10b09788af3760bb658c28a3741122e13562",
+          "commit:b46a97dd6b4f5edc8432b99d9b8a1b4f97dca11d",
+          "operation:COMPASS_PUBLIC_ACCESS_CONTINUITY_RECOVERY_20260821_001:generation:1575"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "b46a97dd6b4f5edc8432b99d9b8a1b4f97dca11d",
+        "successorLockGeneration": 1576,
+        "successorLockScope": "COMPASS:PUBLIC_ACCESS_CONTINUITY:MIRRORLAND_PRESENTATION:V1",
+        "successorOperationId": "COMPASS_PUBLIC_ACCESS_CONTINUITY_RECOVERY_20260821_003",
+        "transitionId": "COMPASS_PUBLIC_ACCESS_CONTINUITY_EA522877_TO_B46A97DD_20260821_v1"
       },
       "terminalDisposition": "SUPERSEDED"
     }

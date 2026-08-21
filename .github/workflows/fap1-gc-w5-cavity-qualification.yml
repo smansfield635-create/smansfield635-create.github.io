@@ -1,0 +1,40 @@
+name: FAP1 G_C W5 Cavity Qualification
+on:
+  pull_request:
+    paths: ['.github/workflows/fap1-gc-w5-cavity-qualification.yml']
+permissions:
+  contents: read
+jobs:
+  deterministic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 42db1d871a9140d997e023501c839d3aa13a3dd1
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Run corrected five-system correspondence and cavity gate
+        run: |
+          node --input-type=module <<'NODE'
+          import {buildFAP1SpatialWeatherObjects} from './showroom/globe/audralia/weather-presentation-reconciliation/fap1-spatial-lod.gb.mjs';
+          import {sampleW5LocalDensity,buildW5DensityBrick,W5_EMPTY_THRESHOLD} from './showroom/globe/audralia/weather-presentation-reconciliation/fap1-w5-local-density.gb.mjs';
+
+          const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+          const smooth=(a,b,v)=>{const t=clamp((v-a)/(b-a||1),0,1);return t*t*(3-2*t);};
+          const mix=(a,b,t)=>a+(b-a)*t;
+          const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+          const hash31=(x,y,z)=>{let px=x*.1031-Math.floor(x*.1031),py=y*.1031-Math.floor(y*.1031),pz=z*.1031-Math.floor(z*.1031);const d=px*(py+33.33)+py*(pz+33.33)+pz*(px+33.33);px+=d;py+=d;pz+=d;const v=(px+py)*pz;return v-Math.floor(v);};
+          function noise3(x,y,z){const ix=Math.floor(x),iy=Math.floor(y),iz=Math.floor(z),fx=x-ix,fy=y-iy,fz=z-iz,sx=fx*fx*(3-2*fx),sy=fy*fy*(3-2*fy),sz=fz*fz*(3-2*fz),n=(dx,dy,dz)=>hash31(ix+dx,iy+dy,iz+dz),a=mix(n(0,0,0),n(1,0,0),sx),b=mix(n(0,1,0),n(1,1,0),sx),c=mix(n(0,0,1),n(1,0,1),sx),d=mix(n(0,1,1),n(1,1,1),sx);return mix(mix(a,b,sy),mix(c,d,sy),sz);}
+          const fbm=(x,y,z)=>noise3(x,y,z)*.62+noise3(x*2.07+5.3,y*2.07+1.7,z*2.07+9.2)*(.62*.48);
+          const verticalEnvelope=z=>smooth(0,.075,z)*(1-smooth(.86,1,z));
+          const genusCode=g=>({Ci:0,Cc:1,Cs:2,Ac:3,As:4,Ns:5,Sc:6,St:7,Cu:8,Cb:9})[g]??8;
+
+          function macroQ(point,o){const d=[point[0]-o.V_i.center[0],point[1]-o.V_i.center[1],point[2]-o.V_i.center[2]],r=o.F_i.macroRadii;return [dot(d,o.V_i.axisU)/r[0],dot(d,o.V_i.axisUp)/r[1],dot(d,o.V_i.axisV)/r[2]];}
+          function macroDensity(o,p){const q=macroQ(p,o),x=q[0],vertical=q[1],y=q[2];if(x*x+vertical*vertical+y*y>=1)return 0;const z=clamp((vertical+1)*.5,0,1),r=Math.hypot(x,y),mr=o.F_i.macroRadii,fieldScale=clamp(Math.sqrt(Math.max(mr[0]*mr[2],1))/260,1,9),qx=x*fieldScale,qy=y*fieldScale,seed=o.W_i.seed??0,n=fbm(qx*2.15+seed*19,qy*2.15,z*3.2),v=verticalEnvelope(z),g=genusCode(o.W_i.genus);let shape=0;if(g<2.5){const veil=.5+.5*Math.sin(qx*1.55+qy*.72+seed*7+n*2.2);shape=(1-smooth(.70,1.08,r))*v*smooth(.32,.63,n+.12*veil)*.44;}else if(g<4.5){const cells=.5+.5*Math.sin(qx*2.7+n*2.4)*Math.cos(qy*2.3);shape=(1-smooth(.70,1.08,r))*v*smooth(.39,.66,n+.18*cells)*.60;}else if(g<7.5){const sheet=.5+.5*Math.sin(qx*1.35+qy*.47+seed*5);shape=(1-smooth(.70,1.08,r))*v*smooth(.35,.62,n+.10*sheet)*.68;}else if(g<8.5){const taper=mix(1,.48,smooth(.08,.95,z)),cell=.5+.5*Math.sin(qx*2.6+seed*9)*Math.cos(qy*2.35);shape=(1-smooth(taper*.65,taper*1.08,r))*v*smooth(.44,.66,n+.22*cell)*.88;}else{const taper=mix(.90,.39,smooth(.05,.72,z)),cell=.5+.5*Math.sin(qx*2.2+seed*7)*Math.cos(qy*2),tower=(1-smooth(taper*.62,taper*1.10,r))*v*smooth(.39,.62,n+.20*cell),anvilBand=smooth(.62,.76,z)*(1-smooth(.95,1,z)),anvil=(1-smooth(.48,1.32,r))*anvilBand*smooth(.34,.59,n+.14*cell)*.76;shape=Math.max(tower,anvil);if(o.weatherClass==='CYCLONE'){const eye=1-smooth(.10,.19,r),wall=smooth(.12,.22,r)*(1-smooth(.31,.46,r));shape=Math.max(shape,wall*.64*v);shape*=1-eye*.985;}}const d=clamp(shape*(o.W_i.density??0)*(o.W_i.support??1),0,1.8);return d<W5_EMPTY_THRESHOLD?0:d;}
+          function worldPoint(o,q){const r=o.V_i.radii,c=o.V_i.center;return [c[0]+o.V_i.axisU[0]*q[0]*r[0]+o.V_i.axisUp[0]*q[1]*r[1]+o.V_i.axisV[0]*q[2]*r[2],c[1]+o.V_i.axisU[1]*q[0]*r[0]+o.V_i.axisUp[1]*q[1]*r[1]+o.V_i.axisV[1]*q[2]*r[2],c[2]+o.V_i.axisU[2]*q[0]*r[0]+o.V_i.axisUp[2]*q[1]*r[1]+o.V_i.axisV[2]*q[2]*r[2]];}
+
+          const objects=buildFAP1SpatialWeatherObjects({canonicalTimeHours:0});
+          const results=[];let pass=true;
+          for(const o of objects){let count=0,bcount=0,mm=0,lm=0,ae=0,be=0;const res=15,span=2/res;for(let z=0;z<res;z++)for(let y=0;y<res;y++)for(let x=0;x<res;x++){const q=[-1+(x+.5)*span,-1+(y+.5)*span,-1+(z+.5)*span],rad=Math.hypot(...q);if(rad>=1)continue;const p=worldPoint(o,q),m=macroDensity(o,p),l=sampleW5LocalDensity(o,p);mm+=m;lm+=l;ae+=Math.abs(l-m);if(rad>=.68&&rad<=.94){bcount++;be+=Math.abs(l-m);}count++;}const norm=Math.max(.08,(mm+lm)/(2*Math.max(count,1))),nmae=(ae/Math.max(count,1))/norm,bmae=(be/Math.max(bcount,1))/norm,ratio=lm/Math.max(mm,1e-9),brick=buildW5DensityBrick(o),cavityRequired=['LOW_CUMULIFORM','DEEP_CONVECTION','CYCLONE'].includes(o.weatherClass),cavityPass=!cavityRequired||brick.emptySampleFraction>0.01,ok=nmae<=.34&&bmae<=.30&&ratio>=.62&&ratio<=1.38&&cavityPass;pass&&=ok;results.push({id:o.ID_i,class:o.weatherClass,massRatio:ratio,normalizedMae:nmae,boundaryMae:bmae,emptySampleFraction:brick.emptySampleFraction,cavityRequired,cavityPass,pass:ok});}
+          const receipt={schema:'FAP1_GC_W5_CAVITY_QUALIFICATION_v1',candidateHead:'42db1d871a9140d997e023501c839d3aa13a3dd1',thresholds:{normalizedMae:.34,boundaryMae:.30,massRatio:[.62,1.38],requiredEmptySampleFraction:.01},results,pass};console.log(JSON.stringify(receipt,null,2));if(!pass)process.exit(2);
+          NODE

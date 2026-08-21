@@ -1914,31 +1914,29 @@
       "state": "ADMITTED_LOCKED"
     },
     "b81b72c372a62c0f1be3640e5633a7aca62072b8a983ea3a00338760eb692a85": {
-      "governingHead": "a9bacc8439945f71cd2d9b3623676008f4d2f549",
-      "lockGeneration": 1579,
+      "governingHead": "744961bd34be67a58037f685f2eda618dff58b10",
+      "lockGeneration": 1582,
       "lockScope": "COMPASS:PUBLIC_ACCESS_CONTINUITY:MIRRORLAND_PRESENTATION:V1",
-      "operationId": "COMPASS_FOREGROUND_LABEL_PROJECTION_REGRESSION_REPAIR_20260821_001",
+      "operationId": "COMPASS_FUNCTIONAL_CLONE_TO_PRODUCTION_RECONCILIATION_20260821_003",
       "predecessor": {
         "authorityInherited": false,
         "exactHeadRevalidationRequired": true,
-        "governingHead": "12cdbdd20eeb250c2c3b9a4395fa75d2feeb5408",
-        "lockGeneration": 1578,
+        "governingHead": "a9bacc8439945f71cd2d9b3623676008f4d2f549",
+        "lockGeneration": 1579,
         "lockScope": "COMPASS:PUBLIC_ACCESS_CONTINUITY:MIRRORLAND_PRESENTATION:V1",
-        "operationId": "COMPASS_RUNTIME_SINGLE_OWNER_CONSOLIDATION_20260821_004",
+        "operationId": "COMPASS_FOREGROUND_LABEL_PROJECTION_REGRESSION_REPAIR_20260821_001",
         "preservedEvidenceRefs": [
-          "operation:COMPASS_RUNTIME_SINGLE_OWNER_CONSOLIDATION_20260821_004:generation:1578",
-          "merge:a9bacc8439945f71cd2d9b3623676008f4d2f549",
-          "live-observation:foreground-star-label-does-not-follow-rendered-primary",
-          "source-proof:crystals-computes-visualPrimaryWing",
-          "source-proof:gen1578-retired-inline-syncOrbitIndex-and-projected-room-label-owner"
+          "clone:b84dfa11a03b4e5f21e42c764019bd84752ef79b",
+          "isolated-rebuild:2cd0c53b18585ad2da218cb652281a9e5c293fef",
+          "merge:744961bd34be67a58037f685f2eda618dff58b10"
         ],
         "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
         "terminalDisposition": "SUPERSEDED",
-        "transitionId": "COMPASS_LABEL_PROJECTION_12CDBDD2_TO_A9BACC84_20260821_v1"
+        "transitionId": "COMPASS_CLONE_RECONCILIATION_A9BACC84_TO_744961BD_20260821_v3"
       },
-      "procedureLocatorDigest": "d143012037dc3b6fa7b97cc01b563da58a97cb58c7be20061921fe7d6eafbfdb",
+      "procedureLocatorDigest": "072d593a3c7ba0089c044b4a58e780647554e2730a056b42ddc17bbb65626f89",
       "released": false,
-      "requestDigest": "3c58f258334ee13fbc22a31a511782cc53e93bfd9b45b05299ff927399e1c5eb",
+      "requestDigest": "a3b5ddf6219333f0ef39b276e999a8bdd257e119cc2aa56ac086ac03c0991537",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "b81b72c372a62c0f1be3640e5633a7aca62072b8a983ea3a00338760eb692a85",
       "state": "ADMITTED_LOCKED"
@@ -2862,7 +2860,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1581,
+  "lockGeneration": 1582,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -23853,6 +23851,53 @@
         "successorLockScope": "COMPASS:PUBLIC_ACCESS_CONTINUITY:MIRRORLAND_PRESENTATION:V1",
         "successorOperationId": "COMPASS_FOREGROUND_LABEL_PROJECTION_REGRESSION_REPAIR_20260821_001",
         "transitionId": "COMPASS_LABEL_PROJECTION_12CDBDD2_TO_A9BACC84_20260821_v1"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "a9bacc8439945f71cd2d9b3623676008f4d2f549",
+      "lockGeneration": 1579,
+      "lockScope": "COMPASS:PUBLIC_ACCESS_CONTINUITY:MIRRORLAND_PRESENTATION:V1",
+      "operationId": "COMPASS_FOREGROUND_LABEL_PROJECTION_REGRESSION_REPAIR_20260821_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "12cdbdd20eeb250c2c3b9a4395fa75d2feeb5408",
+        "lockGeneration": 1578,
+        "lockScope": "COMPASS:PUBLIC_ACCESS_CONTINUITY:MIRRORLAND_PRESENTATION:V1",
+        "operationId": "COMPASS_RUNTIME_SINGLE_OWNER_CONSOLIDATION_20260821_004",
+        "preservedEvidenceRefs": [
+          "operation:COMPASS_RUNTIME_SINGLE_OWNER_CONSOLIDATION_20260821_004:generation:1578",
+          "merge:a9bacc8439945f71cd2d9b3623676008f4d2f549",
+          "live-observation:foreground-star-label-does-not-follow-rendered-primary",
+          "source-proof:crystals-computes-visualPrimaryWing",
+          "source-proof:gen1578-retired-inline-syncOrbitIndex-and-projected-room-label-owner"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_LABEL_PROJECTION_12CDBDD2_TO_A9BACC84_20260821_v1"
+      },
+      "procedureLocatorDigest": "d143012037dc3b6fa7b97cc01b563da58a97cb58c7be20061921fe7d6eafbfdb",
+      "released": true,
+      "requestDigest": "3c58f258334ee13fbc22a31a511782cc53e93bfd9b45b05299ff927399e1c5eb",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "b81b72c372a62c0f1be3640e5633a7aca62072b8a983ea3a00338760eb692a85",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "clone:b84dfa11a03b4e5f21e42c764019bd84752ef79b",
+          "isolated-rebuild:2cd0c53b18585ad2da218cb652281a9e5c293fef",
+          "merge:744961bd34be67a58037f685f2eda618dff58b10"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "744961bd34be67a58037f685f2eda618dff58b10",
+        "successorLockGeneration": 1582,
+        "successorLockScope": "COMPASS:PUBLIC_ACCESS_CONTINUITY:MIRRORLAND_PRESENTATION:V1",
+        "successorOperationId": "COMPASS_FUNCTIONAL_CLONE_TO_PRODUCTION_RECONCILIATION_20260821_003",
+        "transitionId": "COMPASS_CLONE_RECONCILIATION_A9BACC84_TO_744961BD_20260821_v3"
       },
       "terminalDisposition": "SUPERSEDED"
     }

@@ -1,4 +1,4 @@
-const POLICY_ID='AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v1';
+const POLICY_ID='AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v2';
 const previousShaderSource=WebGL2RenderingContext.prototype.shaderSource;
 let patched=0;
 let rejected=0;
@@ -12,58 +12,93 @@ float fap1Band(float h,float lo,float hi){return smoothstep(lo,lo+5.0,h)*(1.0-sm
 vec2 fap1Local(float lat,float lon,float cLat,float cLon){float dl=wrapPi(lon-cLon);return vec2(dl*cos(cLat),lat-cLat);}
 float fap1Disk(float lat,float lon,float cLat,float cLon,float radius){vec2 q=fap1Local(lat,lon,cLat,cLon);return 1.0-smoothstep(radius*.62,radius,length(q));}
 float fap1ClearCorridor(float lat,float lon){return fap1Disk(lat,lon,.453786,-.314159,.401426);}
+float fap1Ellipse(vec2 q,vec2 c,vec2 scale,float angle){float ca=cos(angle),sa=sin(angle);vec2 d=q-c;vec2 p=vec2(ca*d.x+sa*d.y,-sa*d.x+ca*d.y)/scale;return 1.0-smoothstep(.58,1.04,length(p));}
+float fap1CloudBreak(vec3 radial,float t,float scale,float lo,float hi){float n=fbm(radial*scale+vec3(t*.31,-t*.23,t*.17));return smoothstep(lo,hi,n);}
 vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   float t=uTimeHours*.0065;
   float mass=0.0,ice=0.0,precip=0.0;
 
-  // High cirrus / cirrostratus field: broad, thin, wind-stretched structure.
+  // High cirrus / cirrostratus: broad but filamentary, never a solid latitude band.
   vec2 hiq=fap1Local(lat,lon,.994838,.453786+t*.025);
-  float hiBase=1.0-smoothstep(.36,.63,length(hiq));
-  float hiStrand=.5+.5*sin(hiq.x*38.0+hiq.y*11.0+t*9.0+fbm(radial*24.0)*4.0);
-  float hi=hiBase*fap1Band(h,72.0,106.0)*smoothstep(.30,.72,hiStrand)*.44;
+  float hiEnvelope=fap1Ellipse(hiq,vec2(0.0),vec2(.64,.28),-.22);
+  float hiN=fbm(radial*19.0+vec3(t*.28,-t*.10,t*.41));
+  float hiFilaments=.5+.5*sin((hiq.x*28.0+hiq.y*9.0)+hiN*5.5+t*5.0);
+  float hi=hiEnvelope*fap1Band(h,72.0,106.0)*smoothstep(.58,.84,hiFilaments)*smoothstep(.28,.64,hiN)*.40;
   mass+=hi;ice+=hi*.98;
 
-  // Mid-level frontal field: long asymmetric sheet with embedded breaks.
+  // Mid-level frontal field: asymmetric sheet with embedded breaks and lobes.
   vec2 fq=fap1Local(lat,lon,.593412,-1.27409+t*.018);
-  float frontAxis=abs(fq.y+.28*fq.x+.055*sin(fq.x*16.0+t*4.0));
-  float frontLong=1.0-smoothstep(.42,.82,abs(fq.x));
-  float front=frontLong*(1.0-smoothstep(.055,.18,frontAxis))*fap1Band(h,42.0,80.0);
-  float frontBreak=smoothstep(.30,.68,fbm(radial*15.0+vec3(t*.4,0.0,-t*.2)));
-  front*=mix(.38,1.0,frontBreak)*.63;
+  float frontA=fap1Ellipse(fq,vec2(-.12,.00),vec2(.52,.12),-.34);
+  float frontB=fap1Ellipse(fq,vec2(.26,.08),vec2(.34,.10),-.16);
+  float frontShape=max(frontA,frontB)*fap1Band(h,42.0,80.0);
+  float frontBreak=fap1CloudBreak(radial,t,14.0,.36,.69);
+  float front=frontShape*mix(.18,1.0,frontBreak)*.58;
   mass+=front;ice+=front*.32;precip+=front*.22;
 
-  // Low cumulus belt: cellular bodies with real clear slots between them.
+  // Low cumulus: cellular fields separated by substantial true clear air.
   vec2 cq=fap1Local(lat,lon,.069813,.837758-t*.014);
-  float cumulusZone=(1.0-smoothstep(.42,.72,length(cq)))*fap1Band(h,30.0,58.0);
+  float cumulusZone=fap1Ellipse(cq,vec2(0.0),vec2(.58,.42),.08)*fap1Band(h,30.0,58.0);
   float cells=fbm(radial*31.0+vec3(-t*.5,t*.22,t*.35));
-  float low=cumulusZone*smoothstep(.55,.78,cells)*.72;
+  float low=cumulusZone*smoothstep(.60,.79,cells)*.68;
   mass+=low;precip+=low*.12;
 
-  // Deep convection: vertically coherent towers with high anvil support.
+  // Deep convection: compact vertical towers with a broader but broken anvil.
   vec2 dq=fap1Local(lat,lon,-.331613,1.43117-t*.012);
-  float dr=length(dq);
-  float towerCore=(1.0-smoothstep(.07,.23,dr))*fap1Band(h,31.0,104.0);
-  float towerNoise=smoothstep(.37,.68,fbm(radial*21.0+vec3(t*.25,-t*.2,t*.31)));
-  float tower=towerCore*mix(.62,1.0,towerNoise)*.92;
-  float anvil=(1.0-smoothstep(.12,.37,dr))*fap1Band(h,78.0,108.0)*.66;
+  float towerShape=max(
+    fap1Ellipse(dq,vec2(-.04,.01),vec2(.13,.18),-.18),
+    fap1Ellipse(dq,vec2(.10,.055),vec2(.10,.15),.22)
+  );
+  float towerBreak=fap1CloudBreak(radial,t,22.0,.30,.64);
+  float tower=towerShape*fap1Band(h,31.0,104.0)*mix(.52,1.0,towerBreak)*.92;
+  float anvil=fap1Ellipse(dq,vec2(.035,.085),vec2(.31,.13),-.10)*fap1Band(h,78.0,108.0)*mix(.35,1.0,fap1CloudBreak(radial,t,17.0,.32,.67))*.66;
   mass+=max(tower,anvil);ice+=tower*.48+anvil*.96;precip+=tower*.91;
 
-  // Organized cyclone: eye, eyewall, logarithmic-style spiral bands and upper outflow.
+  // Cyclone: the spiral is organizational only. Visible density is built from
+  // a broken eyewall plus asymmetric rainband segments and convective clusters,
+  // so no mathematical polar stripe can appear on the planet.
   const float CY_LAT=-.628319;
   const float CY_LON=-2.199115;
   vec2 sy=fap1Local(lat,lon,CY_LAT,CY_LON+t*.010);
   float sr=length(sy);
   float sa=atan(sy.y,sy.x);
-  float stormEnvelope=1.0-smoothstep(.34,.49,sr);
-  float eye=1.0-smoothstep(.035,.060,sr);
-  float eyewall=exp(-pow((sr-.088)/.027,2.0));
-  float spiralPhase=sa+sr*29.0-t*10.0;
-  float bands=pow(.5+.5*cos(spiralPhase),5.0);
-  bands*=smoothstep(.095,.14,sr)*(1.0-smoothstep(.31,.46,sr));
-  float bandNoise=mix(.62,1.0,smoothstep(.30,.70,fbm(radial*26.0+vec3(t*.3,-t*.4,t*.2))));
-  float cycloneLow=(eyewall*1.12+bands*.68*bandNoise)*stormEnvelope*fap1Band(h,30.0,86.0);
-  cycloneLow*=1.0-eye*.98;
-  float outflow=(1.0-smoothstep(.18,.55,sr))*fap1Band(h,79.0,108.0)*(.28+.30*bands);
+  float stormEnvelope=1.0-smoothstep(.40,.53,sr);
+  float eye=1.0-smoothstep(.032,.060,sr);
+
+  float eyewallRing=exp(-pow((sr-.086)/.025,2.0));
+  float eyewallBreak=.48+.52*fap1CloudBreak(radial,t,27.0,.31,.68);
+  float eyewallAngular=.70+.30*(.5+.5*sin(sa*3.0+1.1));
+  float eyewall=eyewallRing*eyewallBreak*eyewallAngular;
+
+  // Curved placement of discrete band segments. Their positions imply rotation,
+  // but each segment has its own width, orientation and erosion field.
+  float b1=fap1Ellipse(sy,vec2(.145,-.015),vec2(.19,.050),-.22);
+  float b2=fap1Ellipse(sy,vec2(.205,.105),vec2(.22,.055),.20);
+  float b3=fap1Ellipse(sy,vec2(.095,.235),vec2(.20,.050),.70);
+  float b4=fap1Ellipse(sy,vec2(-.105,.275),vec2(.24,.058),1.10);
+  float b5=fap1Ellipse(sy,vec2(-.275,.135),vec2(.25,.060),1.50);
+  float b6=fap1Ellipse(sy,vec2(-.315,-.095),vec2(.23,.055),-1.25);
+  float b7=fap1Ellipse(sy,vec2(-.135,-.300),vec2(.24,.060),-.78);
+  float b8=fap1Ellipse(sy,vec2(.145,-.315),vec2(.22,.052),-.42);
+  float segmented=max(max(max(b1,b2),max(b3,b4)),max(max(b5,b6),max(b7,b8)));
+  float segmentErosion=fap1CloudBreak(radial,t,25.0,.38,.72);
+  float bandMass=segmented*mix(.18,1.0,segmentErosion);
+
+  // Embedded convective bursts break the bands into cloud masses.
+  float c1=fap1Ellipse(sy,vec2(.18,.08),vec2(.075,.095),.30);
+  float c2=fap1Ellipse(sy,vec2(-.16,.22),vec2(.070,.10),-.20);
+  float c3=fap1Ellipse(sy,vec2(-.27,-.08),vec2(.085,.11),.55);
+  float c4=fap1Ellipse(sy,vec2(.10,-.27),vec2(.080,.105),-.35);
+  float bursts=max(max(c1,c2),max(c3,c4));
+
+  float cycloneLow=(eyewall*1.12+bandMass*.70+bursts*.78)*stormEnvelope*fap1Band(h,30.0,86.0);
+  cycloneLow*=1.0-eye*.995;
+
+  // High outflow is broad, thin, offset downshear and independently eroded.
+  vec2 outQ=sy-vec2(.055,.035);
+  float outflowShape=fap1Ellipse(outQ,vec2(0.0),vec2(.48,.34),-.18);
+  float outflowBreak=mix(.30,1.0,fap1CloudBreak(radial,t,18.0,.34,.70));
+  float outflow=outflowShape*fap1Band(h,79.0,108.0)*outflowBreak*.42*(1.0-eye*.55);
+
   mass+=cycloneLow+outflow;
   ice+=cycloneLow*.34+outflow*.97;
   precip+=cycloneLow*.95;
@@ -75,7 +110,7 @@ vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   next=next.replace('vec3 densityAt(vec3 p){',helper+'\nvec3 densityAt(vec3 p){');
   next=next.replace(
     'float background=globalCloudSupport(radial,h,lat,lon);float iceMass=background*smoothstep(66.0,96.0,h)*.78,precipMass=background*(1.0-smoothstep(58.0,82.0,h))*.10,mass=background;',
-    'vec3 fap1=fap1OrganizedWeather(radial,h,lat,lon);float clearCorridor=fap1ClearCorridor(lat,lon);float background=globalCloudSupport(radial,h,lat,lon)*(1.0-.90*clearCorridor);float iceMass=background*smoothstep(66.0,96.0,h)*.78+fap1.y,precipMass=background*(1.0-smoothstep(58.0,82.0,h))*.10+fap1.z,mass=background+fap1.x;'
+    'vec3 fap1=fap1OrganizedWeather(radial,h,lat,lon);float clearCorridor=fap1ClearCorridor(lat,lon);float background=globalCloudSupport(radial,h,lat,lon)*(1.0-.94*clearCorridor);float iceMass=background*smoothstep(66.0,96.0,h)*.78+fap1.y,precipMass=background*(1.0-smoothstep(58.0,82.0,h))*.10+fap1.z,mass=background+fap1.x;'
   );
 
   const changed=next!==source;
@@ -105,6 +140,8 @@ Object.defineProperty(window,'__AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION__',
     cycloneEyewall:true,
     cycloneRainbands:true,
     cycloneUpperOutflow:true,
+    noVisiblePolarStripeConstruction:true,
+    brokenAsymmetricStormMasses:true,
     altitudeDifferentiation:true
   }),
   getRuntimeEvidence:()=>Object.freeze({patchedCloudShaders:patched,rejectedCloudShaders:rejected})

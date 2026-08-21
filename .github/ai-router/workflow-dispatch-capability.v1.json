@@ -4,7 +4,7 @@
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "purpose": "Provide a continuity-safe native GitHub workflow_dispatch path when the connected GitHub tool does not expose workflow dispatch directly.",
   "preferredTransport": "DIRECT_CONNECTED_GITHUB_WORKFLOW_DISPATCH",
-  "fallbackTransport": "SAME_REPOSITORY_PR_TARGET_NATIVE_WORKFLOW_DISPATCH_BRIDGE",
+  "fallbackTransport": "SAME_REPOSITORY_PR_NATIVE_WORKFLOW_DISPATCH_BRIDGE",
   "requestBranchPrefix": "ai-dispatch-request-",
   "requestPath": ".github/ai-entry/workflow-dispatch-request.json",
   "receiptBranch": "ai-dispatch-receipts",
@@ -17,7 +17,8 @@
     "titlePrefix": "AI Dispatch:",
     "sameRepositoryRequired": true,
     "autoCloseOnSuccess": true,
-    "autoDeleteHeadBranchOnSuccess": true
+    "autoDeleteHeadBranchOnSuccess": true,
+    "mergeAllowed": false
   },
   "capabilities": {
     "PAGES_EXACT_HEAD_DEPLOY": {

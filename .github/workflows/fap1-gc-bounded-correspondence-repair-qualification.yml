@@ -1,0 +1,27 @@
+name: FAP1 G_C Bounded Correspondence Repair Qualification
+on:
+  pull_request:
+    paths: ['.github/workflows/fap1-gc-bounded-correspondence-repair-qualification.yml']
+permissions:
+  contents: read
+jobs:
+  continuity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/fap1-gc-bounded-correspondence-repair-qualification-v1
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Run repaired 5-system bounded macro-local continuity gate
+        run: |
+          node --input-type=module <<'NODE'
+          const descriptors=await import('./showroom/globe/audralia/weather-presentation-reconciliation/fap1-gpu-weather-descriptors.mjs');
+          const spatial=await import('./showroom/globe/audralia/weather-presentation-reconciliation/fap1-spatial-lod.gb.mjs');
+          const continuity=await import('./showroom/globe/audralia/weather-presentation-reconciliation/fap1-w5-overlap-continuity.gb.mjs');
+          const packet=descriptors.buildFAP1GPUWeatherPacket({canonicalTimeHours:0});
+          const objects=spatial.buildFAP1SpatialWeatherObjects({packet});
+          const results=objects.map(object=>{const receipt=continuity.evaluateMacroLocalContinuity(object,{canonicalTimeHours:0});const verification=continuity.verifyMacroLocalContinuity(receipt);return{weatherId:object.ID_i,weatherClass:object.weatherClass,localRadii:object.V_i.radii,macroRadii:object.F_i.macroRadii,massRatio:receipt.massRatio,normalizedMae:receipt.normalizedMae,boundaryMae:receipt.boundaryMae,occupancyAgreement:receipt.occupancyAgreement,pass:receipt.pass&&verification.pass,failures:verification.failures};});
+          const out={schema:'FAP1_GC_BOUNDED_CORRESPONDENCE_REPAIR_RECEIPT_v1',productHead:'053546765572001213f53eff0c0c2bdbeae16cca',results,passed:results.filter(x=>x.pass).length,total:results.length,pass:results.every(x=>x.pass)};
+          console.log(JSON.stringify(out,null,2));if(!out.pass)process.exit(2);
+          NODE

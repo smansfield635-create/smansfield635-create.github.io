@@ -12,9 +12,6 @@ permissions:
   pages: write
   id-token: write
 
-environment:
-  name: github-pages
-
 concurrency:
   group: pages-authority-migration
   cancel-in-progress: true
@@ -22,6 +19,8 @@ concurrency:
 jobs:
   migrate-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
     steps:
       - name: Checkout exact main head
         uses: actions/checkout@v4

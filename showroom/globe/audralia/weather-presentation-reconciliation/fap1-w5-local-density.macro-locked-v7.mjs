@@ -1,5 +1,6 @@
 import {localCoordinates,weatherBrickAddress} from './fap1-spatial-lod.gb.mjs';
 import {sampleW5LocalDensity as sampleBaseDensity,chooseW5ActiveObject,W5_EMPTY_THRESHOLD,W5_BRICK_RESOLUTION} from './fap1-w5-local-density.gb.mjs';
+export {W5_EMPTY_THRESHOLD};
 
 const freeze=v=>Object.freeze(v);
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
@@ -51,38 +52,13 @@ export function deriveW5CloudBodies(object){
   }
   return freeze(specs.map((b,index)=>freeze({...b,index,weatherId:object.ID_i})));
 }
-
 function bodyMask(object,q){let m=0;for(const b of deriveW5CloudBodies(object))m=Math.max(m,ellipsoid(q,b.center,b.radii));return m;}
 function boundaryLock(q){return smooth(.80,.96,Math.hypot(...q));}
-export function sampleMacroLockedW5Density(object,worldPoint){
-  const base=sampleBaseDensity(object,worldPoint);if(base<=0)return 0;
-  const q=localCoordinates(worldPoint,object);if(q[0]*q[0]+q[1]*q[1]+q[2]*q[2]>=1)return 0;
-  const m=bodyMask(object,q),connected=object.weatherClass==='MID_FRONTAL'||object.weatherClass==='HIGH_ICE';
-  const support=connected?clamp(.58+.42*m,0,1):smooth(.10,.58,m);
-  const factor=mix(support,1,boundaryLock(q));
-  const density=base*factor;return density<W5_EMPTY_THRESHOLD?0:density;
-}
-
+export function sampleMacroLockedW5Density(object,worldPoint){const base=sampleBaseDensity(object,worldPoint);if(base<=0)return 0;const q=localCoordinates(worldPoint,object);if(q[0]*q[0]+q[1]*q[1]+q[2]*q[2]>=1)return 0;const m=bodyMask(object,q),connected=object.weatherClass==='MID_FRONTAL'||object.weatherClass==='HIGH_ICE';const support=connected?clamp(.58+.42*m,0,1):smooth(.10,.58,m),factor=mix(support,1,boundaryLock(q)),density=base*factor;return density<W5_EMPTY_THRESHOLD?0:density;}
 const brickCache=new Map();
 function cacheKey(object,resolution,generation){return `${object.ID_i}|${object.W_i?.seed??0}|${resolution}|${generation}`;}
 function trimCache(){while(brickCache.size>W5_CACHE_MAX)brickCache.delete(brickCache.keys().next().value);}
 export function clearW5BrickCache(){brickCache.clear();}
-
-export function buildW5DensityBrick(object,{bx=0,by=0,bz=0,generation=W5_GENERATION,resolution=W5_BRICK_RESOLUTION}={}){
-  const key=cacheKey(object,resolution,generation);if(brickCache.has(key))return brickCache.get(key);
-  const address=weatherBrickAddress(object,bx,by,bz,generation),values=new Float32Array(resolution**3),span=2/resolution;
-  let index=0,occupied=0,inside=0,insideOccupied=0,maxDensity=0,sum=0;
-  for(let z=0;z<resolution;z++)for(let y=0;y<resolution;y++)for(let x=0;x<resolution;x++){
-    const q=[-1+(x+.5)*span,-1+(y+.5)*span,-1+(z+.5)*span],q2=q[0]*q[0]+q[1]*q[1]+q[2]*q[2],r=object.V_i.radii,c=object.V_i.center;
-    const p=[c[0]+object.V_i.axisU[0]*q[0]*r[0]+object.V_i.axisUp[0]*q[1]*r[1]+object.V_i.axisV[0]*q[2]*r[2],c[1]+object.V_i.axisU[1]*q[0]*r[0]+object.V_i.axisUp[1]*q[1]*r[1]+object.V_i.axisV[1]*q[2]*r[2],c[2]+object.V_i.axisU[2]*q[0]*r[0]+object.V_i.axisUp[2]*q[1]*r[1]+object.V_i.axisV[2]*q[2]*r[2]];
-    const d=sampleMacroLockedW5Density(object,p);values[index++]=d;if(q2<1)inside++;if(d>0){occupied++;sum+=d;maxDensity=Math.max(maxDensity,d);if(q2<1)insideOccupied++;}
-  }
-  const receipt=freeze({schema:FAP1_W5_MACRO_LOCKED_SCHEMA,address,weatherId:object.ID_i,generation,resolution,values,occupancyFraction:occupied/values.length,interiorEmptySampleFraction:inside?1-insideOccupied/inside:0,meanOccupiedDensity:occupied?sum/occupied:0,maxDensity,distinctCloudBodies:true,bodyGapCapable:true,macroWeatherFrozen:true,cacheable:true,bodyCount:deriveW5CloudBodies(object).length});
-  brickCache.set(key,receipt);trimCache();return receipt;
-}
-
-export function createW5RefinementState(spatialState){
-  const active=chooseW5ActiveObject(spatialState);if(!active)return freeze({schema:FAP1_W5_MACRO_LOCKED_SCHEMA,active:false,activeWeatherId:null,brick:null});
-  const brick=buildW5DensityBrick(active.object);return freeze({schema:FAP1_W5_MACRO_LOCKED_SCHEMA,active:true,activeWeatherId:active.object.ID_i,brick,localWeight:active.alpha?.l??0,macroWeatherFrozen:true,cacheable:true});
-}
+export function buildW5DensityBrick(object,{bx=0,by=0,bz=0,generation=W5_GENERATION,resolution=W5_BRICK_RESOLUTION}={}){const key=cacheKey(object,resolution,generation);if(brickCache.has(key))return brickCache.get(key);const address=weatherBrickAddress(object,bx,by,bz,generation),values=new Float32Array(resolution**3),span=2/resolution;let index=0,occupied=0,inside=0,insideOccupied=0,maxDensity=0,sum=0;for(let z=0;z<resolution;z++)for(let y=0;y<resolution;y++)for(let x=0;x<resolution;x++){const q=[-1+(x+.5)*span,-1+(y+.5)*span,-1+(z+.5)*span],q2=q[0]*q[0]+q[1]*q[1]+q[2]*q[2],r=object.V_i.radii,c=object.V_i.center,p=[c[0]+object.V_i.axisU[0]*q[0]*r[0]+object.V_i.axisUp[0]*q[1]*r[1]+object.V_i.axisV[0]*q[2]*r[2],c[1]+object.V_i.axisU[1]*q[0]*r[0]+object.V_i.axisUp[1]*q[1]*r[1]+object.V_i.axisV[1]*q[2]*r[2],c[2]+object.V_i.axisU[2]*q[0]*r[0]+object.V_i.axisUp[2]*q[1]*r[1]+object.V_i.axisV[2]*q[2]*r[2]],d=sampleMacroLockedW5Density(object,p);values[index++]=d;if(q2<1)inside++;if(d>0){occupied++;sum+=d;maxDensity=Math.max(maxDensity,d);if(q2<1)insideOccupied++;}}const receipt=freeze({schema:FAP1_W5_MACRO_LOCKED_SCHEMA,address,weatherId:object.ID_i,generation,resolution,values,occupancyFraction:occupied/values.length,interiorEmptySampleFraction:inside?1-insideOccupied/inside:0,meanOccupiedDensity:occupied?sum/occupied:0,maxDensity,distinctCloudBodies:true,bodyGapCapable:true,macroWeatherFrozen:true,cacheable:true,bodyCount:deriveW5CloudBodies(object).length});brickCache.set(key,receipt);trimCache();return receipt;}
+export function createW5RefinementState(spatialState){const active=chooseW5ActiveObject(spatialState);if(!active)return freeze({schema:FAP1_W5_MACRO_LOCKED_SCHEMA,active:false,activeWeatherId:null,brick:null});const brick=buildW5DensityBrick(active.object);return freeze({schema:FAP1_W5_MACRO_LOCKED_SCHEMA,active:true,activeWeatherId:active.object.ID_i,brick,localWeight:active.alpha?.l??0,macroWeatherFrozen:true,cacheable:true});}
 export function verifyW5RefinementState(state){const failures=[];if(state?.active){if(!state.brick)failures.push('BRICK_MISSING');if(state.brick?.weatherId!==state.activeWeatherId)failures.push('WEATHER_ID_MISMATCH');if(state.brick?.macroWeatherFrozen!==true)failures.push('MACRO_FREEZE_VIOLATED');}return freeze({pass:failures.length===0,failures:freeze(failures)});}

@@ -1,15 +1,20 @@
 name: AI Entry Workflow Dispatch Bridge
 
 on:
-  push:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+      - reopened
     branches:
-      - ai-dispatch
+      - main
     paths:
       - .github/ai-entry/workflow-dispatch-request.json
 
 permissions:
   actions: write
   contents: write
+  pull-requests: write
 
 concurrency:
   group: ai-entry-workflow-dispatch
@@ -17,36 +22,21 @@ concurrency:
 
 jobs:
   dispatch:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'ai-dispatch'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout dispatch request commit
+      - name: Checkout authoritative bridge runtime from main
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
-          fetch-depth: 2
+          ref: main
+          fetch-depth: 1
 
       - name: Execute bounded native workflow dispatch
-        id: dispatch
-        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          REQUEST_COMMIT: ${{ github.event.pull_request.head.sha }}
+          REQUEST_BRANCH: ${{ github.event.pull_request.head.ref }}
+          PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
         run: node tools/ai-entry-workflow-dispatch-bridge.mjs
-
-      - name: Persist durable dispatch receipt
-        if: always()
-        shell: bash
-        run: |
-          set -euo pipefail
-          test -f .github/ai-entry/workflow-dispatch-receipt.json
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .github/ai-entry/workflow-dispatch-receipt.json
-          git commit -m "AI dispatch receipt: ${GITHUB_RUN_ID}"
-          git push origin HEAD:ai-dispatch
-
-      - name: Enforce dispatch result
-        if: steps.dispatch.outcome != 'success'
-        shell: bash
-        run: |
-          echo "Workflow dispatch bridge failed; durable receipt was persisted." >&2
-          exit 1

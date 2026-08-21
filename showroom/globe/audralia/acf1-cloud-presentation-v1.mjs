@@ -14,7 +14,7 @@ function patchCloudFragmentShader(source){
 
   next=next.replace(
     /float clearSlot=\.64\+\.36\*\(1\.0-smoothstep\(\.72,\.93,clearWave\)\);\s*float climate=([^;]+);\s*return clamp\(climate\*broken\*clearSlot\*\.38,0\.0,\.34\);/,
-    `float synoptic=.5+.5*sin(lon*.71+lat*1.83-t*.13+sin(lon*1.7-lat*.9)*.82);\n  float clearSlot=.08+.92*(1.0-smoothstep(.48,.78,clearWave));\n  clearSlot*=.20+.80*(1.0-smoothstep(.60,.88,synoptic));\n  float climate=$1;\n  float organized=smoothstep(.46,.74,broad*.68+detail*.32+.09*longitudinal);\n  return clamp(climate*max(broken,organized*.72)*clearSlot*.24,0.0,.24);`
+    `float synoptic=.5+.5*sin(lon*.71+lat*1.83-t*.13+sin(lon*1.7-lat*.9)*.82);\n  float clearSlot=.08+.92*(1.0-smoothstep(.48,.78,clearWave));\n  clearSlot*=.20+.80*(1.0-smoothstep(.60,.88,synoptic));\n  float climate=$1;\n  float organized=smoothstep(.46,.74,broad*.70+detail*.30);\n  return clamp(climate*max(broken,organized*.72)*clearSlot*.24,0.0,.24);`
   );
 
   next=next.replace(

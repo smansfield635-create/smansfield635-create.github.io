@@ -23,11 +23,15 @@ async function capabilitySnapshot(orbit) {
   }));
 }
 
-async function sceneTap(page, name, x, y) {
-  const top = await page.evaluate(({x,y}) => { const el=document.elementFromPoint(x,y); return el ? {tag:el.tagName,cls:el.className||'',scene:Boolean(el.closest?.('[data-compass-scene]'))} : null; }, {x,y});
-  if (!top?.scene) throw new Error(`${name}: projected star coordinate is not owned by Compass scene ${JSON.stringify({x,y,top})}`);
+async function sceneTap(page, name, sceneBox, x, y, viewport) {
+  const insideScene = x >= sceneBox.x && x <= sceneBox.x+sceneBox.width && y >= sceneBox.y && y <= sceneBox.y+sceneBox.height;
+  const insideViewport = x >= 0 && x <= viewport.width && y >= 0 && y <= viewport.height;
+  if (!insideScene || !insideViewport) return false;
+  const top = await page.evaluate(({x,y}) => { const el=document.elementFromPoint(x,y); return el ? {tag:el.tagName,cls:String(el.className||''),scene:Boolean(el.closest?.('[data-compass-scene]'))} : null; }, {x,y});
+  if (!top?.scene) return false;
   if (name === 'desktop') await page.mouse.click(x,y);
   else await page.touchscreen.tap(x,y);
+  return true;
 }
 
 async function swipe(page, name, x1, y1, x2, y2) {
@@ -49,29 +53,34 @@ for (const [name, viewport] of Object.entries(viewports)) {
   await page.goto(base,{waitUntil:'networkidle'}); await page.waitForTimeout(900);
 
   const root=page.locator('[data-compass-root]').first(), scene=page.locator('[data-compass-scene]').first();
-  const box=await scene.boundingBox();
+  await scene.scrollIntoViewIfNeeded(); await page.waitForTimeout(150);
+  let box=await scene.boundingBox();
   if(!box||box.height<430) throw new Error(`${name}: Compass scene below protected 430px floor: ${box?.height||0}`);
   if(await root.getAttribute('data-compass-mode')!=='CONSTELLATION') throw new Error(`${name}: initial Compass mode is not CONSTELLATION`);
 
-  await swipe(page,name,box.x+box.width*.62,box.y+box.height*.55,box.x+box.width*.42,box.y+box.height*.55);
+  await swipe(page,name,box.x+box.width*.62,Math.min(viewport.height-10,box.y+box.height*.55),box.x+box.width*.42,Math.min(viewport.height-10,box.y+box.height*.55));
   await page.waitForTimeout(450);
   const postDrag=await root.evaluate(el=>({mode:el.dataset.compassMode,orbitIndex:el.dataset.compassOrbitIndex,readable:el.dataset.readableCardinal,foreground:el.dataset.renderedForegroundCardinal}));
   if(postDrag.mode!=='CONSTELLATION') throw new Error(`${name}: drag broke constellation mode ${JSON.stringify(postDrag)}`);
 
+  // The semantic cardinal nodes are positioned by the crystal renderer. They locate the star,
+  // but physical activation is sent to the scene at that rendered coordinate.
+  box=await scene.boundingBox();
   const candidates=page.locator('[data-compass-cardinal]');
-  let openedCardinal='', physicalTarget=null;
+  let openedCardinal='', physicalTarget=null, attempted=[];
   for(let i=0;i<await candidates.count();i++){
     const candidate=candidates.nth(i), b=await candidate.boundingBox();
     if(!b||b.width<2||b.height<2) continue;
     const x=b.x+b.width/2,y=b.y+b.height/2;
-    const before=await root.getAttribute('data-compass-mode');
-    await sceneTap(page,name,x,y); await page.waitForTimeout(550);
+    const id=await candidate.getAttribute('data-cardinal-id')||`index-${i}`;
+    const accepted=await sceneTap(page,name,box,x,y,viewport);
+    attempted.push({id,x,y,accepted});
+    if(!accepted) continue;
+    await page.waitForTimeout(550);
     const after=await root.getAttribute('data-compass-mode');
-    if(before!==after&&['CLUSTER_OPEN','ROOM_SELECTED'].includes(after||'')){
-      openedCardinal=await candidate.getAttribute('data-cardinal-id')||`index-${i}`; physicalTarget={x,y}; break;
-    }
+    if(['CLUSTER_OPEN','ROOM_SELECTED'].includes(after||'')){openedCardinal=id;physicalTarget={x,y};break;}
   }
-  if(!openedCardinal) throw new Error(`${name}: no rendered cardinal projection opened through the crystal scene hit-test owner`);
+  if(!openedCardinal) throw new Error(`${name}: no visible rendered cardinal projection opened through crystal scene hit testing ${JSON.stringify({scene:box,attempted})}`);
   const cluster=await root.evaluate(el=>({mode:el.dataset.compassMode,wing:el.dataset.activeClusterWing||el.dataset.selectedWing||'',primary:el.dataset.clusterPrimaryRoom||'',preview:el.dataset.clusterPreviewPrimaryRoom||''}));
 
   const back=page.locator('[data-compass-return-to-orbit]').first();
@@ -83,8 +92,10 @@ for (const [name, viewport] of Object.entries(viewports)) {
   if(await orbit.locator('[data-orbit-next],[data-orbit-previous]').count()!==0) throw new Error(`${name}: protected swipe-only carousel gained arrow controls`);
   const guidance=(await orbit.locator('.compass-capability-guidance').first().textContent()||'').trim();
   if(guidance!=='Swipe to rotate.') throw new Error(`${name}: capability guidance changed: ${JSON.stringify(guidance)}`);
+  await orbit.scrollIntoViewIfNeeded(); await page.waitForTimeout(150);
   const beforeCarousel=await capabilitySnapshot(orbit), obox=await orbit.boundingBox(); if(!obox) throw new Error(`${name}: capability orbit has no bounds`);
-  await swipe(page,name,obox.x+obox.width*.72,obox.y+Math.min(obox.height*.5,220),obox.x+obox.width*.42,obox.y+Math.min(obox.height*.5,220));
+  const oy=Math.min(viewport.height-10,Math.max(10,obox.y+Math.min(obox.height*.5,220)));
+  await swipe(page,name,obox.x+obox.width*.72,oy,obox.x+obox.width*.42,oy);
   await page.waitForTimeout(650);
   const afterCarousel=await capabilitySnapshot(orbit);
   const carouselChanged=beforeCarousel.index!==afterCarousel.index||beforeCarousel.text!==afterCarousel.text||JSON.stringify(beforeCarousel.selected)!==JSON.stringify(afterCarousel.selected)||JSON.stringify(beforeCarousel.transforms)!==JSON.stringify(afterCarousel.transforms);

@@ -1,0 +1,43 @@
+name: FAP1 W5 Macro-Locked Local Qualification
+on:
+  pull_request:
+    paths: ['.github/workflows/fap1-w5-macro-locked-local-qualification.yml']
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 51ea969a7688aee3c85dbe057043c718ba4d5e1d
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify macro lock, body structure, and cache
+        run: |
+          node --input-type=module <<'NODE'
+          import {buildFAP1GPUWeatherPacket} from './showroom/globe/audralia/weather-presentation-reconciliation/fap1-gpu-weather-descriptors.mjs';
+          import {buildFAP1SpatialWeatherObjects} from './showroom/globe/audralia/weather-presentation-reconciliation/fap1-spatial-lod.gb.mjs';
+          import {buildW5DensityBrick,deriveW5CloudBodies,FAP1_W5_MACRO_LOCKED_SCHEMA} from './showroom/globe/audralia/weather-presentation-reconciliation/fap1-w5-local-density.macro-locked-v7.mjs';
+          const packet=buildFAP1GPUWeatherPacket({canonicalTimeHours:0});
+          const objects=buildFAP1SpatialWeatherObjects({packet});
+          const results=objects.map(o=>{const a=buildW5DensityBrick(o),b=buildW5DensityBrick(o),bodies=deriveW5CloudBodies(o);return{id:o.ID_i,class:o.weatherClass,bodyCount:bodies.length,verticalCenters:new Set(bodies.map(x=>x.center[1].toFixed(3))).size,empty:a.interiorEmptySampleFraction,occupancy:a.occupancyFraction,max:a.maxDensity,cacheIdentity:a===b,macroFrozen:a.macroWeatherFrozen,schema:a.schema};});
+          const local=results.filter(r=>['LOW_CUMULIFORM','DEEP_CONVECTION','CYCLONE'].includes(r.class));
+          const checks={fiveSystems:results.length===5,macroFrozen:results.every(r=>r.macroFrozen===true),schema:results.every(r=>r.schema===FAP1_W5_MACRO_LOCKED_SCHEMA),bodyStructure:results.every(r=>r.bodyCount>=3&&r.verticalCenters>=3),localGaps:local.every(r=>r.empty>=0.08),nonCollapsed:results.every(r=>r.occupancy>0.05&&r.max>0.01),cacheReuse:results.every(r=>r.cacheIdentity===true)};
+          console.log(JSON.stringify({candidate:'51ea969a7688aee3c85dbe057043c718ba4d5e1d',results,checks,pass:Object.values(checks).every(Boolean)},null,2));
+          if(!Object.values(checks).every(Boolean))process.exit(2);
+          NODE
+      - uses: browser-actions/setup-chrome@v1
+      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/server.log 2>&1 &
+          for a in $(seq 1 80); do curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/ >/dev/null && exit 0; sleep .25; done; exit 1
+      - name: Verify macro remains 24049 at ordinary view and local budget is bounded
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          node <<'NODE'
+          const puppeteer=require('puppeteer-core');
+          (async()=>{const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});const page=await browser.newPage();const errors=[];page.on('pageerror',e=>errors.push(String(e)));await page.goto('http://127.0.0.1:4173/showroom/globe/audralia/',{waitUntil:'domcontentloaded',timeout:90000});await page.waitForFunction(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.handoffAuthority==='BOUNDED_GB_HANDOFF_ACTIVE'&&window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY',{timeout:90000});const state=await page.evaluate(()=>({authority:window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority,handoff:window.__AUDRALIA_FAP1_W5_HANDOFF__,w5Canvas:[...document.querySelectorAll('canvas')].find(c=>c.dataset.fap1W5LocalRaymarch==='true')?.style.display??null}));console.log(JSON.stringify({state,errors},null,2));const h=state.handoff;const pass=state.authority==='FAP1_ONLY'&&h?.macroReference==='24049'&&h?.macroWeatherFrozen===true&&h?.regime==='MACRO_LOCKED'&&h?.macroContribution===1&&h?.localContribution===0&&state.w5Canvas==='none'&&errors.length===0;await browser.close();if(!pass)process.exit(2);})().catch(e=>{console.error(e);process.exit(1);});
+          NODE

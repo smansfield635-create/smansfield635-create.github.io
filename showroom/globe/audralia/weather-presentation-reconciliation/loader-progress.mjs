@@ -68,14 +68,16 @@ async function boot(){
   setVerified(6,'Preparing Audralia',15);beginActivity();
   try{
     setVerified(16,'Loading world systems',34);
-    await import('./app.mjs?cb=gratitude-chronology-startup-v2');
-    if(gaProofMode)await waitFor(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer&&typeof window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getCameraFrame==='function','PARENT_RECEIPT');
+    // index.html owns the parent app bootstrap. Do not import a second cache-busted
+    // copy here; wait for the single canonical parent receipt instead.
+    await waitFor(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer&&typeof window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getCameraFrame==='function','PARENT_RECEIPT');
     await import('./fap1-ga-authority-bootstrap.mjs?cb=FAP1_GA_v3');
+    await waitFor(()=>window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY'&&typeof window.__AUDRALIA_FAP1_GA_AUTHORITY__?.renderNow==='function','GA_AUTHORITY');
     if(gaProofMode){
-      await waitFor(()=>window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY'&&typeof window.__AUDRALIA_FAP1_GA_AUTHORITY__?.renderNow==='function','GA_AUTHORITY');
       await import('./fap1-ga-negative-proof-v2.mjs?cb=FAP1_GA_NEGATIVE_PROOF_v3');
     }else{
       await import('./fap1-w5-handoff-bootstrap.gb.mjs?cb=FAP1_GB_HANDOFF_v1');
+      await waitFor(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.authority==='BOUNDED_GB_HANDOFF_ACTIVE','GB_HANDOFF');
     }
     setVerified(38,'Constructing planetary surface',54);requestAnimationFrame(observeRuntime);
   }catch(error){console.error('AUDRALIA_STARTUP_MODULE_GRAPH_FAILED',error);fail('World systems could not load',error);}

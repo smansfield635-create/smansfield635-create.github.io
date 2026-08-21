@@ -76,8 +76,8 @@ void main(){
   vec2 ph=raySphere(uEye,rd,OCCLUDER);if(ph.x>0.0)t1=min(t1,ph.x);if(t1<=t0){outColor=vec4(0.0);return;}
   float count=max(float(uStepCount),1.0),stepLen=(t1-t0)/count,jitter=hash31(vec3(gl_FragCoord.xy,uTimeHours*.01)),t=t0+stepLen*jitter;vec3 premul=vec3(0.0);float alpha=0.0;vec3 sun=normalize(uSunDir);
   for(int s=0;s<40;s++){
-    if(s>=uStepCount||t>t1||alpha>.92)break;vec3 sample=densityAt(uEye+rd*t);float gate=mix(smoothstep(uNearCutoff,uNearCutoff+max(1.0,uNearFade),t),1.0,inside),den=sample.x*gate*uExteriorScale;
-    if(den>.003){vec3 radial=normalize(uEye+rd*t-CENTER);float daylight=.40+.60*clamp(dot(radial,sun)*.5+.5,0.0,1.0),forward=pow(max(dot(rd,sun),0.0),7.0),core=clamp(den*.56+sample.z*.22,0.0,.76);vec3 bright=mix(vec3(.84,.88,.92),vec3(1.02,1.0,.95),daylight),dark=vec3(.31,.35,.41),col=mix(bright,dark,core);col=mix(col,vec3(.91,.95,1.0),sample.y*.13);col+=vec3(1.0,.95,.84)*forward*.10;float a=(1.0-exp(-den*stepLen*.017))*uOpacity;premul+=(1.0-alpha)*col*a;alpha+=(1.0-alpha)*a;}t+=stepLen;
+    if(s>=uStepCount||t>t1||alpha>.92)break;vec3 cloudSample=densityAt(uEye+rd*t);float gate=mix(smoothstep(uNearCutoff,uNearCutoff+max(1.0,uNearFade),t),1.0,inside),den=cloudSample.x*gate*uExteriorScale;
+    if(den>.003){vec3 radial=normalize(uEye+rd*t-CENTER);float daylight=.40+.60*clamp(dot(radial,sun)*.5+.5,0.0,1.0),forward=pow(max(dot(rd,sun),0.0),7.0),core=clamp(den*.56+cloudSample.z*.22,0.0,.76);vec3 bright=mix(vec3(.84,.88,.92),vec3(1.02,1.0,.95),daylight),dark=vec3(.31,.35,.41),col=mix(bright,dark,core);col=mix(col,vec3(.91,.95,1.0),cloudSample.y*.13);col+=vec3(1.0,.95,.84)*forward*.10;float a=(1.0-exp(-den*stepLen*.017))*uOpacity;premul+=(1.0-alpha)*col*a;alpha+=(1.0-alpha)*a;}t+=stepLen;
   }
   if(alpha<.003){outColor=vec4(0.0);return;}outColor=vec4(premul/max(alpha,.0001),clamp(alpha,0.0,.88));
 }`;

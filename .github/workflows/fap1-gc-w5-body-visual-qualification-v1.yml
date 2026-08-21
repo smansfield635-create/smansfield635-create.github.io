@@ -1,4 +1,4 @@
-name: FAP1 GC W5 Direct CPU GPU Surface Diagnostic v4
+name: FAP1 GC W5 Camera Handoff Pixel Survival Diagnostic v5
 on:
   pull_request:
     paths: ['.github/workflows/fap1-gc-w5-body-visual-qualification-v1.yml']
@@ -7,7 +7,7 @@ permissions:
 jobs:
   diagnose:
     runs-on: ubuntu-latest
-    timeout-minutes: 4
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
         with:
@@ -18,70 +18,117 @@ jobs:
       - run: |
           python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/server.log 2>&1 &
           for a in $(seq 1 120); do curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/ >/dev/null && exit 0; sleep .25; done; exit 1
-      - name: Compare W5 CPU density directly to local GPU surface
-        timeout-minutes: 2
+      - name: Trace full-runtime camera through W5 handoff and overlay
+        timeout-minutes: 3
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
         run: |
-          timeout 105s node <<'NODE'
+          timeout 165s node <<'NODE'
           const puppeteer=require('puppeteer-core'),fs=require('fs');
-          const mark=(name,data={})=>console.log('DIRECT',JSON.stringify({t:Date.now(),name,data}));
+          const delay=ms=>new Promise(r=>setTimeout(r,ms));
+          const mark=(name,data={})=>console.log('SURVIVAL',JSON.stringify({t:Date.now(),name,data}));
           (async()=>{
             const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
-            const page=await browser.newPage();await page.setViewport({width:900,height:900});const errors=[];page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>console.log('PAGE',m.type(),m.text()));
+            const page=await browser.newPage();await page.setViewport({width:900,height:900});
+            const errors=[],consoleLines=[],failed=[];
+            page.on('pageerror',e=>errors.push(String(e)));
+            page.on('console',m=>{const line=`${m.type()}:${m.text()}`;consoleLines.push(line);console.log('PAGE',line);});
+            page.on('requestfailed',r=>failed.push({url:r.url(),error:r.failure()?.errorText||''}));
             await page.goto('http://127.0.0.1:4173/showroom/globe/audralia/',{waitUntil:'domcontentloaded',timeout:45000});
-            mark('MODULE_TEST_BEGIN');
+            mark('PAGE_READY');
+            const boot=await page.evaluate(async()=>{
+              const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+              if(!globalThis.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__&&!globalThis.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__){
+                try{await import('./weather-presentation-reconciliation/app.mjs?diag=survival-v5');}catch(error){return{stage:'APP_IMPORT_EXCEPTION',message:String(error),stack:error?.stack||null};}
+              }
+              for(let i=0;i<120;i++){
+                if(globalThis.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer)break;
+                if(globalThis.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__)return{stage:'APP_INIT_ERROR',error:globalThis.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__};
+                await sleep(100);
+              }
+              if(!globalThis.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer)return{stage:'APP_NOT_READY'};
+              if(globalThis.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority!=='FAP1_ONLY'){
+                try{await import('./weather-presentation-reconciliation/fap1-ga-authority-bootstrap.mjs?diag=survival-v5');}catch(error){return{stage:'GA_IMPORT_EXCEPTION',message:String(error),stack:error?.stack||null};}
+              }
+              for(let i=0;i<120;i++){
+                if(globalThis.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY')break;
+                if(globalThis.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__)return{stage:'GA_INIT_ERROR',error:globalThis.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__};
+                await sleep(50);
+              }
+              if(globalThis.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority!=='FAP1_ONLY')return{stage:'GA_NOT_READY'};
+              if(globalThis.__AUDRALIA_FAP1_W5_HANDOFF__?.authority!=='BOUNDED_GB_HANDOFF_ACTIVE'){
+                try{await import('./weather-presentation-reconciliation/fap1-w5-handoff-bootstrap.gb.mjs?diag=survival-v5');}catch(error){return{stage:'HANDOFF_IMPORT_EXCEPTION',message:String(error),stack:error?.stack||null};}
+              }
+              for(let i=0;i<160;i++){
+                if(globalThis.__AUDRALIA_FAP1_W5_HANDOFF__?.authority==='BOUNDED_GB_HANDOFF_ACTIVE')break;
+                if(globalThis.__AUDRALIA_FAP1_W5_HANDOFF_ERROR__)return{stage:'HANDOFF_INIT_ERROR',error:globalThis.__AUDRALIA_FAP1_W5_HANDOFF_ERROR__};
+                await sleep(50);
+              }
+              if(globalThis.__AUDRALIA_FAP1_W5_HANDOFF__?.authority!=='BOUNDED_GB_HANDOFF_ACTIVE')return{stage:'HANDOFF_NOT_READY'};
+              return{stage:'READY'};
+            });
+            mark('BOOT_RESULT',boot);
+            if(boot.stage!=='READY')throw new Error(`BOOT_FAILED:${boot.stage}`);
+
             const result=await page.evaluate(async()=>{
-              const D=await import('./weather-presentation-reconciliation/fap1-gpu-weather-descriptors.mjs?diag=direct-v4');
-              const S=await import('./weather-presentation-reconciliation/fap1-spatial-lod.gb.mjs?diag=direct-v4');
-              const W=await import('./weather-presentation-reconciliation/fap1-w5-local-density.gb.mjs?diag=direct-v4');
-              const R=await import('./weather-presentation-reconciliation/fap1-w5-local-raymarch.gc-v5-spatial-handoff.mjs?diag=direct-v4');
-              const canvas=document.querySelector('[data-h-earth-map-wide-canvas]');
-              if(!(canvas instanceof HTMLCanvasElement))throw new Error('WORLD_CANVAS_MISSING');
-              const packet=D.buildFAP1GPUWeatherPacket({canonicalTimeHours:0});
+              const S=await import('./weather-presentation-reconciliation/fap1-spatial-lod.gb.mjs?diag=survival-v5');
+              const W=await import('./weather-presentation-reconciliation/fap1-w5-local-density.gb.mjs?diag=survival-v5');
+              const parent=globalThis.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__;
+              const ga=globalThis.__AUDRALIA_FAP1_GA_AUTHORITY__;
+              const handoff=globalThis.__AUDRALIA_FAP1_W5_HANDOFF__;
+              ga.renderNow();
+              const packet=ga.descriptorPacket();
               const objects=S.buildFAP1SpatialWeatherObjects({packet});
               const object=objects.find(x=>x.ID_i==='SOUTHEAST_DEEP_CONVECTION');
               if(!object)throw new Error('DEEP_CONVECTION_OBJECT_MISSING');
-              const brick=W.buildW5DensityBrick(object);
-              const r=brick.resolution;
-              let best={density:-1,ix:0,iy:0,iz:0,q:[0,0,0],point:null};
-              const worldFromQ=q=>[
-                object.V_i.center[0]+object.V_i.axisU[0]*q[0]*object.V_i.radii[0]+object.V_i.axisUp[0]*q[1]*object.V_i.radii[1]+object.V_i.axisV[0]*q[2]*object.V_i.radii[2],
-                object.V_i.center[1]+object.V_i.axisU[1]*q[0]*object.V_i.radii[0]+object.V_i.axisUp[1]*q[1]*object.V_i.radii[1]+object.V_i.axisV[1]*q[2]*object.V_i.radii[2],
-                object.V_i.center[2]+object.V_i.axisU[2]*q[0]*object.V_i.radii[0]+object.V_i.axisUp[2]*q[1]*object.V_i.radii[1]+object.V_i.axisV[2]*q[2]*object.V_i.radii[2]
-              ];
-              for(let iz=1;iz<r-1;iz++)for(let iy=1;iy<r-1;iy++)for(let ix=1;ix<r-1;ix++){
-                const q=[(ix/(r-1))*2-1,(iy/(r-1))*2-1,(iz/(r-1))*2-1];
-                if(q[0]*q[0]+q[1]*q[1]+q[2]*q[2]>0.82*0.82)continue;
-                const point=worldFromQ(q),density=W.sampleW5LocalDensity(object,point);
-                if(density>best.density)best={density,ix,iy,iz,q,point};
+              const brick=W.buildW5DensityBrick(object),body=brick.mesoBodies[1]||brick.mesoBodies[0];
+              const pc=S.PLANET_CENTER,c=object.V_i.center,r=[c[0]-pc[0],c[1]-pc[1],c[2]-pc[2]],len=Math.hypot(...r),dir=r.map(v=>v/len),angle=Math.acos(Math.max(-1,Math.min(1,dir[1]))),horiz=Math.hypot(dir[0],dir[2])||1,radius=angle*S.PLANET_RADIUS,baseU=radius*dir[0]/horiz,baseV=radius*dir[2]/horiz;
+              const state={targetU:baseU+body.center[0]*object.V_i.radii[0],targetV:baseV+body.center[2]*object.V_i.radii[2],distance:Math.max(95,Math.min(180,(object.Z_i.centerAltitude+body.center[1]*object.V_i.radii[1]-18)/Math.sin(.46))),pitch:.46,yaw:2.4};
+              parent.setCameraStateForTest(state);
+              const cameraBefore=parent.getCameraFrame();
+              const intervalBefore=S.rayWeatherVolumeInterval(cameraBefore.eye,cameraBefore.forward,object);
+              const qEye=S.localCoordinates(cameraBefore.eye,object);
+              const rhoEye=W.sampleW5LocalDensity(object,cameraBefore.eye);
+              let maxForward=0,occupiedForward=0;
+              const forwardSamples=[];
+              for(let i=0;i<32;i++){
+                const t=i*12,pt=[cameraBefore.eye[0]+cameraBefore.forward[0]*t,cameraBefore.eye[1]+cameraBefore.forward[1]*t,cameraBefore.eye[2]+cameraBefore.forward[2]*t],density=W.sampleW5LocalDensity(object,pt);
+                if(density>maxForward)maxForward=density;
+                if(density>.0025)occupiedForward++;
+                if(i%4===0)forwardSamples.push({i,t,density});
               }
-              if(!(best.density>0.01))throw new Error(`NO_DENSE_W5_WITNESS:${best.density}`);
-              const eye=[best.point[0]-object.V_i.axisV[0]*24,best.point[1]-object.V_i.axisV[1]*24,best.point[2]-object.V_i.axisV[2]*24];
-              const forward=[object.V_i.axisV[0],object.V_i.axisV[1],object.V_i.axisV[2]];
-              const right=[object.V_i.axisU[0],object.V_i.axisU[1],object.V_i.axisU[2]];
-              const up=[object.V_i.axisUp[0],object.V_i.axisUp[1],object.V_i.axisUp[2]];
-              const camera={eye,forward,right,up,snapshot:{yaw:0,pitch:.46,distance:24,targetU:0,targetV:0}};
-              let rhoEye=W.sampleW5LocalDensity(object,eye),maxForward=0,occupiedForward=0;
-              for(let i=0;i<32;i++){const t=i*4,pt=[eye[0]+forward[0]*t,eye[1]+forward[1]*t,eye[2]+forward[2]*t],d=W.sampleW5LocalDensity(object,pt);maxForward=Math.max(maxForward,d);if(d>.0025)occupiedForward++;}
-              const interval=S.rayWeatherVolumeInterval(eye,forward,object);
-              const spatialState=S.evaluateFAP1SpatialLOD(objects,camera);
-              const entry=spatialState.objects.find(e=>e.object.ID_i===object.ID_i);
-              const surface=R.createW5LocalRayMarchSurface({worldCanvas:canvas});
-              const receipt=surface.render({camera,spatialState,sunDirection:[.42,.78,.46],quality:'REST'});
-              const localCanvas=surface.canvas,gl=localCanvas.getContext('webgl2',{preserveDrawingBuffer:true});
-              const pts=[[.5,.5],[.4,.5],[.6,.5],[.5,.4],[.5,.6]],samples=[];
-              for(const[nx,ny]of pts){const x=Math.max(0,Math.min(localCanvas.width-1,Math.floor(nx*localCanvas.width))),y=Math.max(0,Math.min(localCanvas.height-1,Math.floor(ny*localCanvas.height))),pix=new Uint8Array(4);gl.readPixels(x,y,1,1,gl.RGBA,gl.UNSIGNED_BYTE,pix);samples.push({x,y,rgba:[...pix]});}
-              return {weatherId:object.ID_i,brick:{address:brick.address,resolution:brick.resolution,bodyCount:brick.mesoBodyCount,interiorEmpty:brick.interiorEmptySampleFraction,gapColumns:brick.gapColumnFraction},best,rhoEye,maxForward,occupiedForward,interval,lod:{Q_i:entry.Q_i,localPromoted:entry.localPromoted,distanceToVolume:entry.distanceToVolume,alpha:entry.alpha},receipt,gpu:{w:localCanvas.width,h:localCanvas.height,samples}};
+              const spatialBefore=S.evaluateFAP1SpatialLOD(objects,cameraBefore);
+              const entryBefore=spatialBefore.objects.find(e=>e.object.ID_i===object.ID_i);
+              const receipt=handoff.renderNow();
+              const cameraAfter=parent.getCameraFrame();
+              const delta=(a,b)=>Math.hypot(...a.map((v,i)=>v-b[i]));
+              const cameraDelta={eye:delta(cameraBefore.eye,cameraAfter.eye),forward:delta(cameraBefore.forward,cameraAfter.forward),right:delta(cameraBefore.right,cameraAfter.right),up:delta(cameraBefore.up,cameraAfter.up)};
+              const localCanvas=[...document.querySelectorAll('canvas')].find(c=>c.dataset.fap1W5LocalRaymarch==='true');
+              const worldCanvas=document.querySelector('[data-h-earth-map-wide-canvas]');
+              const sampleCanvas=canvas=>{
+                if(!(canvas instanceof HTMLCanvasElement))return{exists:false};
+                const gl=canvas.getContext('webgl2',{preserveDrawingBuffer:true})||canvas.getContext('webgl',{preserveDrawingBuffer:true});
+                const style=getComputedStyle(canvas),rect=canvas.getBoundingClientRect();
+                const base={exists:true,width:canvas.width,height:canvas.height,display:style.display,visibility:style.visibility,opacity:style.opacity,zIndex:style.zIndex,rect:{left:rect.left,top:rect.top,width:rect.width,height:rect.height},dataset:{...canvas.dataset},samples:[]};
+                if(!gl)return{...base,gl:false};
+                const pts=[[.5,.5],[.4,.5],[.6,.5],[.5,.4],[.5,.6]];
+                for(const[nx,ny]of pts){const x=Math.max(0,Math.min(canvas.width-1,Math.floor(nx*canvas.width))),y=Math.max(0,Math.min(canvas.height-1,Math.floor(ny*canvas.height))),pix=new Uint8Array(4);gl.readPixels(x,y,1,1,gl.RGBA,gl.UNSIGNED_BYTE,pix);base.samples.push({nx,ny,x,y,rgba:[...pix]});}
+                return{...base,gl:true};
+              };
+              const local=sampleCanvas(localCanvas);
+              const world=sampleCanvas(worldCanvas);
+              const parentNode=worldCanvas?.parentElement;
+              const children=parentNode?[...parentNode.children].map((el,index)=>({index,tag:el.tagName,id:el.id||'',className:typeof el.className==='string'?el.className:'',zIndex:getComputedStyle(el).zIndex,display:getComputedStyle(el).display,dataset:{...el.dataset}})):[];
+              return{state,weatherId:object.ID_i,brick:{address:brick.address,resolution:brick.resolution,bodyCount:brick.mesoBodyCount},cameraBefore,cameraAfter,cameraDelta,cpu:{qEye,rhoEye,maxForward,occupiedForward,interval:intervalBefore,forwardSamples},lod:{Q_i:entryBefore?.Q_i,localPromoted:entryBefore?.localPromoted,distanceToVolume:entryBefore?.distanceToVolume,alpha:entryBefore?.alpha},handoffReceipt:receipt,handoffVerification:handoff.getVerification?.()||null,localOverlay:local,worldCanvas:world,parentChildren:children};
             });
-            mark('MODULE_TEST_RESULT',result);
-            fs.writeFileSync('w5-direct-cpu-gpu.json',JSON.stringify({result,errors},null,2));
+            mark('SURVIVAL_RESULT',result);
+            fs.writeFileSync('w5-camera-handoff-survival.json',JSON.stringify({result,errors,consoleLines,failed},null,2));
             await browser.close();
-          })().catch(e=>{console.error('DIRECT_DIAG_ERROR',e);try{fs.writeFileSync('w5-direct-cpu-gpu.json',JSON.stringify({fatal:{message:String(e),stack:e?.stack||null}},null,2));}catch{}process.exit(1)});
+          })().catch(e=>{console.error('SURVIVAL_DIAG_ERROR',e);try{fs.writeFileSync('w5-camera-handoff-survival.json',JSON.stringify({fatal:{message:String(e),stack:e?.stack||null}},null,2));}catch{}process.exit(1)});
           NODE
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: w5-direct-cpu-gpu-diagnostic
-          path: w5-direct-cpu-gpu.json
+          name: w5-camera-handoff-survival-diagnostic
+          path: w5-camera-handoff-survival.json
           if-no-files-found: warn

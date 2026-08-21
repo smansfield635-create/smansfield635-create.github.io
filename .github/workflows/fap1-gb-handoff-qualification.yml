@@ -30,7 +30,6 @@ jobs:
             if curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/weather-presentation-reconciliation/ >/dev/null; then exit 0; fi
             sleep 0.25
           done
-          cat /tmp/fap1-gb-handoff-server.log
           exit 1
       - name: Execute exact-head macro local traversal
         env:
@@ -40,47 +39,39 @@ jobs:
           const puppeteer=require('puppeteer-core');
           (async()=>{
             const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
-            const page=await browser.newPage();
-            await page.setViewport({width:720,height:1280,deviceScaleFactor:1});
-            const errors=[];
-            page.on('pageerror',e=>errors.push(String(e?.stack||e)));
-            page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+            const page=await browser.newPage();await page.setViewport({width:720,height:1280,deviceScaleFactor:1});
+            const errors=[];page.on('pageerror',e=>errors.push(String(e?.stack||e)));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
             await page.goto('http://127.0.0.1:4173/showroom/globe/audralia/weather-presentation-reconciliation/',{waitUntil:'domcontentloaded',timeout:60000});
-            await page.waitForFunction(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.authority==='BOUNDED_GB_HANDOFF_ACTIVE',{timeout:45000});
+            try{await page.waitForFunction(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.authority==='BOUNDED_GB_HANDOFF_ACTIVE',{timeout:18000});}
+            catch(waitError){
+              const diagnostic=await page.evaluate(()=>({
+                parent:Boolean(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer),
+                parentCamera:typeof window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getCameraFrame,
+                parentError:window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__||null,
+                ga:window.__AUDRALIA_FAP1_GA_AUTHORITY__?{authority:window.__AUDRALIA_FAP1_GA_AUTHORITY__.meteorologicalAuthority,renderNow:typeof window.__AUDRALIA_FAP1_GA_AUTHORITY__.renderNow}:null,
+                gaError:window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__||null,
+                gb:window.__AUDRALIA_FAP1_W5_HANDOFF__||null,
+                gbError:window.__AUDRALIA_FAP1_W5_HANDOFF_ERROR__||null,
+                startup:window.__AUDRALIA_STARTUP_FAILURE__||null,
+                loader:document.querySelector('[data-audralia-loader]')?.dataset?.progress||null,
+                stage:document.querySelector('[data-audralia-loader-stage]')?.textContent||null
+              }));
+              console.error('GB_HANDOFF_STARTUP_DIAGNOSTIC',JSON.stringify({diagnostic,errors,waitError:String(waitError)},null,2));
+              await browser.close();process.exit(1);
+            }
             const result=await page.evaluate(async()=>{
-              const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-              const proof=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__;
-              const ga=window.__AUDRALIA_FAP1_GA_AUTHORITY__;
-              const handoff=window.__AUDRALIA_FAP1_W5_HANDOFF__;
-              const packet=ga.descriptorPacket();
+              const sleep=ms=>new Promise(r=>setTimeout(r,ms)),proof=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__,ga=window.__AUDRALIA_FAP1_GA_AUTHORITY__,handoff=window.__AUDRALIA_FAP1_W5_HANDOFF__,packet=ga.descriptorPacket();
               const system=packet.systems.find(s=>s.weatherClass==='LOW_CUMULIFORM')||packet.systems[0];
-              const PLANET_RADIUS=6200,DEG=Math.PI/180,NORTH=[0,.5,-.8660254037844386],MERIDIAN=[0,.8660254037844386,.5],EAST=[1,0,0];
-              const radial=(latDeg,lonDeg)=>{const lat=latDeg*DEG,lon=lonDeg*DEG,cl=Math.cos(lat),sl=Math.sin(lat),co=Math.cos(lon),si=Math.sin(lon);return [NORTH[0]*sl+(MERIDIAN[0]*co+EAST[0]*si)*cl,NORTH[1]*sl+(MERIDIAN[1]*co+EAST[1]*si)*cl,NORTH[2]*sl+(MERIDIAN[2]*co+EAST[2]*si)*cl];};
-              const r=radial(system.latitudeDeg,system.longitudeDeg),angle=Math.acos(Math.max(-1,Math.min(1,r[1]))),sine=Math.sin(angle),distance=angle*PLANET_RADIUS;
-              const target={targetU:Math.abs(sine)<1e-7?0:distance*r[0]/sine,targetV:Math.abs(sine)<1e-7?0:distance*r[2]/sine};
-              const distances=[5000,3200,2200,1500,1050,760,520,760,1050,1500,2200,3200,5000];
-              const samples=[];
-              for(const d of distances){
-                proof.setCameraStateForTest({...target,distance:d,pitch:1.25,yaw:0});
-                await sleep(80);
-                const receipt=handoff.renderNow();
-                const verification=handoff.getVerification();
-                samples.push({distance:d,receipt,verification});
-              }
+              const R=6200,D=Math.PI/180,N=[0,.5,-.8660254037844386],M=[0,.8660254037844386,.5],E=[1,0,0];
+              const lat=system.latitudeDeg*D,lon=system.longitudeDeg*D,cl=Math.cos(lat),sl=Math.sin(lat),co=Math.cos(lon),si=Math.sin(lon),r=[N[0]*sl+(M[0]*co+E[0]*si)*cl,N[1]*sl+(M[1]*co+E[1]*si)*cl,N[2]*sl+(M[2]*co+E[2]*si)*cl];
+              const angle=Math.acos(Math.max(-1,Math.min(1,r[1]))),sine=Math.sin(angle),arc=angle*R,target={targetU:Math.abs(sine)<1e-7?0:arc*r[0]/sine,targetV:Math.abs(sine)<1e-7?0:arc*r[2]/sine};
+              const distances=[5000,3200,2200,1500,1050,760,520,760,1050,1500,2200,3200,5000],samples=[];
+              for(const distance of distances){proof.setCameraStateForTest({...target,distance,pitch:1.25,yaw:0});await sleep(80);samples.push({distance,receipt:handoff.renderNow(),verification:handoff.getVerification()});}
               return {systemId:system.id,samples};
             });
             console.log(JSON.stringify({result,errors},null,2));
-            const s=result.samples;
-            const badInvariant=s.some(x=>!x.verification?.pass||Math.abs((x.receipt?.contributionSum??0)-1)>1e-6||x.receipt?.l5LightingActive!==false);
-            const active=s.filter(x=>x.receipt?.active);
-            const ids=new Set(active.map(x=>x.receipt.weatherId));
-            const identityBad=active.length===0||ids.size!==1||!ids.has(result.systemId)||active.some(x=>x.receipt.persistentWeatherIdentity!==true||x.receipt.canonicalDensityPreserved!==true);
-            const forward=s.slice(0,7).map(x=>x.receipt?.localContribution??0);
-            const monotonicBad=forward.some((v,i)=>i&&v+0.04<forward[i-1]);
-            const hasMacro=forward.some(v=>v===0),hasOverlap=forward.some(v=>v>0&&v<0.72),hasLocal=forward.some(v=>v>=0.72);
-            const paired=s.slice(0,6).every((x,i)=>Math.abs((x.receipt?.localContribution??0)-(s[s.length-1-i].receipt?.localContribution??0))<=0.08);
-            const failed=errors.length||badInvariant||identityBad||monotonicBad||!hasMacro||!hasOverlap||!hasLocal||!paired;
-            await browser.close();
-            if(failed)process.exit(1);
+            const s=result.samples,active=s.filter(x=>x.receipt?.active),ids=new Set(active.map(x=>x.receipt.weatherId)),forward=s.slice(0,7).map(x=>x.receipt?.localContribution??0);
+            const failed=errors.length||s.some(x=>!x.verification?.pass||Math.abs((x.receipt?.contributionSum??0)-1)>1e-6||x.receipt?.l5LightingActive!==false)||active.length===0||ids.size!==1||!ids.has(result.systemId)||active.some(x=>x.receipt.persistentWeatherIdentity!==true||x.receipt.canonicalDensityPreserved!==true)||forward.some((v,i)=>i&&v+0.04<forward[i-1])||!forward.some(v=>v===0)||!forward.some(v=>v>0&&v<.72)||!forward.some(v=>v>=.72)||!s.slice(0,6).every((x,i)=>Math.abs((x.receipt?.localContribution??0)-(s[s.length-1-i].receipt?.localContribution??0))<=.08);
+            await browser.close();if(failed)process.exit(1);
           })().catch(e=>{console.error(e);process.exit(1);});
           NODE

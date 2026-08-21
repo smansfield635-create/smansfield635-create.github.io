@@ -1,0 +1,30 @@
+{
+  "schema": "AUDRALIA_GRATITUDE_LAND_BASELINE_v1",
+  "status": "ACCEPTED_MACRO_GEOGRAPHY_FROZEN",
+  "acceptedGeometryCommit": "a3def121e087533822859864d935c77805d6f246",
+  "planet": "Audralia",
+  "continent": "Gratitude",
+  "relationship": "H-Earth is the local/proximity expression of the first accessible Gratitude region on the same Audralia world",
+  "landRules": {
+    "preserveMacroFootprint": true,
+    "preserveHEarthLocalArcAtOneToOneScale": true,
+    "preserveDeepAsymmetricOceanInlet": true,
+    "preserveGreatInlandLake": true,
+    "preserveTwoInletIslands": true,
+    "preserveOffshoreArchipelago": true,
+    "preserveNonPrimitiveCoastlineRule": true,
+    "forbidCircleEllipseSemicircleAsVisibleGeographicPrimitive": true,
+    "forbidLongRulerStraightShoreline": true,
+    "forbidViewportWidthAsContinentalScale": true,
+    "forbidMacroSilhouetteMutationDuringCloudCycle": true
+  },
+  "deferredLandWork": [
+    "continental watershed hierarchy",
+    "river and stream network",
+    "forest belts and biome transitions",
+    "great-lake drainage relationship",
+    "regional terrain material differentiation"
+  ],
+  "nextCycle": "AUDRALIA_ATMOSPHERIC_CLOUD_FIDELITY_ACF1",
+  "nextCycleConstraint": "Cloud construction may respond to terrain elevation and geography but may not alter the accepted Gratitude macro land geometry."
+}

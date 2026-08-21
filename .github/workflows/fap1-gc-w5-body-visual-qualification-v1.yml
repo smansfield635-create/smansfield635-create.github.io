@@ -1,4 +1,4 @@
-name: FAP1 GC W5 CPU GPU Witness Diagnostic v2
+name: FAP1 GC Reconciliation Bootstrap Diagnostic v3
 on:
   pull_request:
     paths: ['.github/workflows/fap1-gc-w5-body-visual-qualification-v1.yml']
@@ -7,7 +7,7 @@ permissions:
 jobs:
   diagnose:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 4
     steps:
       - uses: actions/checkout@v4
         with:
@@ -18,53 +18,74 @@ jobs:
       - run: |
           python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/server.log 2>&1 &
           for a in $(seq 1 120); do curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/ >/dev/null && exit 0; sleep .25; done; exit 1
-      - name: Compare CPU density to one W5 GPU witness
-        timeout-minutes: 3
+      - name: Trace reconciliation bootstrap without readiness wait
+        timeout-minutes: 2
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
         run: |
-          timeout 150s node <<'NODE'
+          timeout 105s node <<'NODE'
           const puppeteer=require('puppeteer-core'),fs=require('fs');
-          const mark=(name,data={})=>console.log(`DIAG ${Date.now()} ${name} ${JSON.stringify(data)}`);
-          const delay=ms=>new Promise(r=>setTimeout(r,ms));
+          const events=[];
+          const mark=(name,data={})=>{const row={t:Date.now(),name,data};events.push(row);console.log('BOOT',JSON.stringify(row));};
+          const snapshot=async page=>page.evaluate(()=>{
+            const g=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__;
+            const e=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__;
+            return {
+              globalExists:!!g,
+              globalKeys:g?Object.keys(g):[],
+              rendererExists:!!g?.renderer,
+              error:e||null,
+              status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null,
+              statusText:document.querySelector('[data-h-earth-status]')?.textContent||null,
+              loaderStage:document.querySelector('[data-audralia-loader-stage]')?.textContent||null,
+              mapCanvas:!!document.querySelector('[data-h-earth-map-wide-canvas]')
+            };
+          });
           (async()=>{
+            mark('BROWSER_LAUNCH_BEGIN');
             const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
-            const page=await browser.newPage();await page.setViewport({width:900,height:900});const errors=[];page.on('pageerror',e=>errors.push(String(e)));
-            await page.goto('http://127.0.0.1:4173/showroom/globe/audralia/',{waitUntil:'domcontentloaded',timeout:90000});await delay(10000);
-            if(!(await page.evaluate(()=>!!window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer)))await page.evaluate(()=>import('./weather-presentation-reconciliation/app.mjs?diag=cpu-gpu-v2'));
-            await page.waitForFunction(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer,{timeout:60000});
-            if(!(await page.evaluate(()=>window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY')))await page.evaluate(()=>import('./weather-presentation-reconciliation/fap1-ga-authority-bootstrap.mjs?diag=cpu-gpu-v2'));
-            await page.waitForFunction(()=>window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY',{timeout:60000});
-            if(!(await page.evaluate(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.authority==='BOUNDED_GB_HANDOFF_ACTIVE')))await page.evaluate(()=>import('./weather-presentation-reconciliation/fap1-w5-handoff-bootstrap.gb.mjs?diag=cpu-gpu-v2'));
-            await page.waitForFunction(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.authority==='BOUNDED_GB_HANDOFF_ACTIVE',{timeout:60000});
+            mark('BROWSER_LAUNCH_RETURN');
+            const page=await browser.newPage();await page.setViewport({width:900,height:900});
+            const consoleRows=[],pageErrors=[];
+            page.on('console',m=>{const row={type:m.type(),text:m.text()};consoleRows.push(row);console.log('PAGE_CONSOLE',JSON.stringify(row));});
+            page.on('pageerror',e=>{const row={message:String(e),stack:e?.stack||null};pageErrors.push(row);console.log('PAGE_ERROR',JSON.stringify(row));});
+            page.on('requestfailed',r=>console.log('REQUEST_FAILED',JSON.stringify({url:r.url(),failure:r.failure()})));
 
-            const witness=await page.evaluate(async()=>{
-              const S=await import('./weather-presentation-reconciliation/fap1-spatial-lod.gb.mjs?diag=cpu-gpu-v2');
-              const W=await import('./weather-presentation-reconciliation/fap1-w5-local-density.gb.mjs?diag=cpu-gpu-v2');
-              const p=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__,ga=window.__AUDRALIA_FAP1_GA_AUTHORITY__;
-              ga.renderNow();const packet=ga.descriptorPacket(),objects=S.buildFAP1SpatialWeatherObjects({packet}),o=objects.find(x=>x.ID_i==='SOUTHEAST_DEEP_CONVECTION'),brick=W.buildW5DensityBrick(o),body=brick.mesoBodies[1]||brick.mesoBodies[0];
-              const pc=S.PLANET_CENTER,c=o.V_i.center,r=[c[0]-pc[0],c[1]-pc[1],c[2]-pc[2]],len=Math.hypot(...r),dir=r.map(v=>v/len),angle=Math.acos(Math.max(-1,Math.min(1,dir[1]))),horiz=Math.hypot(dir[0],dir[2])||1,radius=angle*S.PLANET_RADIUS,baseU=radius*dir[0]/horiz,baseV=radius*dir[2]/horiz;
-              const targetU=baseU+body.center[0]*o.V_i.radii[0],targetV=baseV+body.center[2]*o.V_i.radii[2],altitude=o.Z_i.centerAltitude+body.center[1]*o.V_i.radii[1],distance=Math.max(95,Math.min(180,(altitude-18)/Math.sin(.46)));
-              return{state:{targetU,targetV,distance,pitch:.46,yaw:2.4},weatherId:o.ID_i,role:body.role};
-            });
-            await page.evaluate(w=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__.setCameraStateForTest(w.state),witness);
+            mark('PAGE_LOAD_BEGIN');
+            await page.goto('http://127.0.0.1:4173/showroom/globe/audralia/',{waitUntil:'domcontentloaded',timeout:45000});
+            mark('PAGE_LOAD_RETURN',await snapshot(page));
 
-            const cpu=await page.evaluate(async()=>{
-              const S=await import('./weather-presentation-reconciliation/fap1-spatial-lod.gb.mjs?diag=cpu-gpu-v2b');
-              const W=await import('./weather-presentation-reconciliation/fap1-w5-local-density.gb.mjs?diag=cpu-gpu-v2b');
-              const p=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__,ga=window.__AUDRALIA_FAP1_GA_AUTHORITY__;
-              ga.renderNow();const packet=ga.descriptorPacket(),objects=S.buildFAP1SpatialWeatherObjects({packet}),o=objects.find(x=>x.ID_i==='SOUTHEAST_DEEP_CONVECTION'),cam=p.getCameraFrame(),q=S.localCoordinates(cam.eye,o),rhoEye=W.sampleW5LocalDensity(o,cam.eye),interval=S.rayWeatherVolumeInterval(cam.eye,cam.forward,o.V_i);let max=0,occupied=0;for(let i=0;i<24;i++){const t=i*12,pt=[cam.eye[0]+cam.forward[0]*t,cam.eye[1]+cam.forward[1]*t,cam.eye[2]+cam.forward[2]*t],d=W.sampleW5LocalDensity(o,pt);max=Math.max(max,d);if(d>.0025)occupied++;}return{q,rhoEye,maxForward:max,occupiedForward:occupied,interval};
+            mark('APP_IMPORT_BEGIN');
+            const importResult=await page.evaluate(async()=>{
+              try{
+                const m=await import('./weather-presentation-reconciliation/app.mjs?diag=bootstrap-v3');
+                return {ok:true,exports:Object.keys(m)};
+              }catch(e){return {ok:false,message:e instanceof Error?e.message:String(e),stack:e instanceof Error?e.stack:null};}
             });
-            mark('CPU_WITNESS',cpu);
-            mark('HANDOFF_BEFORE');const handoff=await page.evaluate(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__.renderNow());mark('HANDOFF_AFTER',handoff||{});
-            const gpu=await page.evaluate(()=>{const canvas=[...document.querySelectorAll('canvas')].find(c=>c.dataset.fap1W5LocalRaymarch==='true');if(!canvas)return{canvas:false};const gl=canvas.getContext('webgl2',{preserveDrawingBuffer:true});if(!gl)return{canvas:true,gl:false};const pts=[[.5,.5],[.25,.5],[.75,.5],[.5,.25],[.5,.75]],out=[];for(const[nx,ny]of pts){const x=Math.max(0,Math.min(canvas.width-1,Math.floor(nx*canvas.width))),y=Math.max(0,Math.min(canvas.height-1,Math.floor(ny*canvas.height))),pix=new Uint8Array(4);gl.readPixels(x,y,1,1,gl.RGBA,gl.UNSIGNED_BYTE,pix);out.push({x,y,rgba:[...pix]});}return{canvas:true,gl:true,w:canvas.width,h:canvas.height,samples:out};});
-            mark('GPU_SAMPLES',gpu);
-            fs.writeFileSync('cpu-gpu-witness.json',JSON.stringify({witness,cpu,handoff,gpu,errors},null,2));await browser.close();
-          })().catch(e=>{console.error('DIAG_ERROR',e);process.exit(1)});
+            mark('APP_IMPORT_RETURN',importResult);
+            mark('POST_IMPORT_IMMEDIATE',await snapshot(page));
+
+            await new Promise(r=>setTimeout(r,1000));
+            mark('POST_IMPORT_1S',await snapshot(page));
+            await new Promise(r=>setTimeout(r,4000));
+            mark('POST_IMPORT_5S',await snapshot(page));
+
+            const moduleProbe=await page.evaluate(async()=>{
+              const out={};
+              try{const r=await import('../../h-earth/terrain-estate-construction-v1/renderer.mjs?diag=bootstrap-v3');out.rendererModule={ok:true,exports:Object.keys(r)};}catch(e){out.rendererModule={ok:false,message:e instanceof Error?e.message:String(e),stack:e instanceof Error?e.stack:null};}
+              try{const w=await import('./weather-presentation-reconciliation/fap1-gpu-weather-descriptors.mjs?diag=bootstrap-v3');out.fap1DescriptorModule={ok:true,exports:Object.keys(w)};}catch(e){out.fap1DescriptorModule={ok:false,message:e instanceof Error?e.message:String(e),stack:e instanceof Error?e.stack:null};}
+              return out;
+            });
+            mark('DEPENDENCY_IMPORT_PROBE',moduleProbe);
+
+            const finalState=await snapshot(page);mark('FINAL_STATE',finalState);
+            fs.writeFileSync('reconciliation-bootstrap-diagnostic.json',JSON.stringify({events,consoleRows,pageErrors,finalState,moduleProbe},null,2));
+            await browser.close();mark('DONE');
+          })().catch(e=>{console.error('BOOT_DIAG_ERROR',e);try{fs.writeFileSync('reconciliation-bootstrap-diagnostic.json',JSON.stringify({events,fatal:{message:String(e),stack:e?.stack||null}},null,2));}catch{}process.exit(1);});
           NODE
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: w5-cpu-gpu-witness-diagnostic
-          path: cpu-gpu-witness.json
+          name: reconciliation-bootstrap-diagnostic
+          path: reconciliation-bootstrap-diagnostic.json
           if-no-files-found: warn

@@ -44,24 +44,17 @@ assert(compass.releaseClassification?.RUNTIME_OR_NEW_DEVELOPMENT?.requiredClosur
 assert(compass.releaseClassification?.RUNTIME_OR_NEW_DEVELOPMENT?.canonicalIntakeRequired === true, 'Compass runtime release must require canonical intake');
 
 for (const required of [
-  'workflow_dispatch:',
-  'target_sha:',
-  'pages: write',
-  'id-token: write',
-  'actions/checkout@v4',
-  'actions/configure-pages@v5',
-  'actions/upload-pages-artifact@v3',
-  'actions/deploy-pages@v4',
-  '.well-known/dgb-release.json',
-  'LIVE_EXACT_HEAD_VERIFIED',
-  'DEPLOYMENT_NOT_PROVEN',
-  'build_type',
-  'workflow'
+  'workflow_dispatch:', 'target_sha:', 'pages: write', 'id-token: write',
+  'actions/checkout@v4', 'actions/configure-pages@v5',
+  'actions/upload-pages-artifact@v3', 'actions/deploy-pages@v4',
+  '.well-known/dgb-release.json', 'LIVE_EXACT_HEAD_VERIFIED', 'DEPLOYMENT_NOT_PROVEN'
 ]) assert(workflow.includes(required), `deployment workflow missing required token: ${required}`);
 
-for (const forbidden of ['Manual Diagnostic Only', 'dummy release', 'public-release']) {
-  assert(!workflow.includes(forbidden), `deployment workflow contains retired release behavior: ${forbidden}`);
-}
+for (const forbidden of [
+  'Manual Diagnostic Only', 'dummy release', 'public-release',
+  'build_type', 'api.github.com/repos/${GITHUB_REPOSITORY}/pages',
+  'push:'
+]) assert(!workflow.includes(forbidden), `deployment workflow contains retired or unauthorized release behavior: ${forbidden}`);
 
 console.log(JSON.stringify({
   schema: 'PUBLICATION_RELEASE_CONTRACT_SELF_TEST_RECEIPT_v1',
@@ -69,5 +62,7 @@ console.log(JSON.stringify({
   releaseSequence: contract.releaseClasses.BOUNDED_PAGE_RELEASE.requiredSequence,
   runtimeSequence: contract.releaseClasses.RUNTIME_OR_NEW_DEVELOPMENT.requiredSequence,
   workflow: workflowPath,
+  workflowDispatchOnly: true,
+  pagesAdministrationMutation: false,
   verification: contract.verification.successResult
 }, null, 2));

@@ -1,0 +1,59 @@
+name: FAP1 W5 Cloud Body Differentiation Qualification
+on:
+  pull_request:
+    paths: ['.github/workflows/fap1-w5-cloud-body-differentiation-qualification.yml']
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: d144a510684b5dd77ffdd1751876b1a0c400d4d8
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate W5 body partition
+        run: |
+          node --input-type=module <<'NODE'
+          import {buildFAP1GPUWeatherPacket} from './showroom/globe/audralia/weather-presentation-reconciliation/fap1-gpu-weather-descriptors.mjs';
+          import {buildFAP1SpatialWeatherObjects} from './showroom/globe/audralia/weather-presentation-reconciliation/fap1-spatial-lod.gb.mjs';
+          import {buildW5DensityBrick,deriveW5CloudBodies} from './showroom/globe/audralia/weather-presentation-reconciliation/fap1-w5-local-density.gb.mjs';
+          const packet=buildFAP1GPUWeatherPacket({canonicalTimeHours:0});
+          const objects=buildFAP1SpatialWeatherObjects({packet});
+          const results=objects.map(object=>{
+            const bodies=deriveW5CloudBodies(object);
+            const brick=buildW5DensityBrick(object);
+            const intervals=bodies.map(b=>[b.baseN,b.topN]);
+            const uniqueVertical=new Set(intervals.map(v=>v.map(x=>x.toFixed(3)).join(':'))).size;
+            const meaningfulGap=brick.interiorEmptySampleFraction;
+            return {id:object.ID_i,class:object.weatherClass,bodyCount:bodies.length,roles:bodies.map(b=>b.role),intervals,uniqueVertical,interiorEmptySampleFraction:meaningfulGap,occupancyFraction:brick.occupancyFraction,meanOccupiedDensity:brick.meanOccupiedDensity,maxDensity:brick.maxDensity,distinctCloudBodies:brick.distinctCloudBodies,bodyGapCapable:brick.bodyGapCapable,macroWeatherFrozen:brick.macroWeatherFrozen};
+          });
+          const localFamilies=results.filter(r=>['LOW_CUMULIFORM','DEEP_CONVECTION','CYCLONE'].includes(r.class));
+          const checks={
+            fiveSystems:results.length===5,
+            bodyCounts:results.every(r=>r.bodyCount>=3),
+            verticalDiversity:results.every(r=>r.uniqueVertical>=3),
+            explicitPartition:results.every(r=>r.distinctCloudBodies===true&&r.bodyGapCapable===true),
+            macroFrozen:results.every(r=>r.macroWeatherFrozen===true),
+            localGapSignal:localFamilies.every(r=>r.interiorEmptySampleFraction>=0.08),
+            nonCollapsedMass:results.every(r=>r.occupancyFraction>0.08&&r.maxDensity>0.01)
+          };
+          const receipt={candidateHead:'d144a510684b5dd77ffdd1751876b1a0c400d4d8',results,checks,pass:Object.values(checks).every(Boolean)};
+          console.log(JSON.stringify(receipt,null,2));
+          if(!receipt.pass)process.exit(2);
+          NODE
+      - uses: browser-actions/setup-chrome@v1
+      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/server.log 2>&1 &
+          for a in $(seq 1 60); do curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/ >/dev/null && exit 0; sleep .25; done; exit 1
+      - name: Verify exact-head browser readiness
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          node <<'NODE'
+          const puppeteer=require('puppeteer-core');
+          (async()=>{const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});const page=await browser.newPage();const errors=[];page.on('pageerror',e=>errors.push(String(e)));await page.goto('http://127.0.0.1:4173/showroom/globe/audralia/',{waitUntil:'domcontentloaded',timeout:90000});await page.waitForFunction(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.l5LightingActive===true&&window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer,{timeout:90000});const state=await page.evaluate(()=>({authority:window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority,handoff:window.__AUDRALIA_FAP1_W5_HANDOFF__?.authority,l5:window.__AUDRALIA_FAP1_W5_HANDOFF__?.l5LightingActive,loaderHidden:document.querySelector('[data-audralia-loader]')?.hidden===true}));console.log(JSON.stringify({state,errors},null,2));await browser.close();if(state.authority!=='FAP1_ONLY'||state.handoff!=='BOUNDED_GB_HANDOFF_ACTIVE'||state.l5!==true||errors.length)process.exit(2);})().catch(e=>{console.error(e);process.exit(1);});
+          NODE

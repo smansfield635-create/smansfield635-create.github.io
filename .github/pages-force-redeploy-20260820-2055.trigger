@@ -1,0 +1,6 @@
+FORCE_DIRECT_GITHUB_PAGES_DEPLOY
+reason=publish-qualified-compass-successor
+qualified_pr=1504
+qualified_candidate=789f760e80a6d9e0b1bfecaca3f2e37d629be687
+merge_commit=5d3035225c6461411d0df0fc559c671079362967
+product_bytes_changed=false

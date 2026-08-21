@@ -27,118 +27,54 @@ let timeoutTimer=0;
 
 function paint(){
   const bounded=Math.max(0,Math.min(100,displayed));
-  if(fill){
-    fill.style.animation='none';
-    fill.style.left='0';
-    fill.style.width=`${bounded}%`;
-    fill.style.transition=reducedMotion?'none':'width .28s cubic-bezier(.2,.8,.2,1)';
-  }
+  if(fill){fill.style.animation='none';fill.style.left='0';fill.style.width=`${bounded}%`;fill.style.transition=reducedMotion?'none':'width .28s cubic-bezier(.2,.8,.2,1)';}
   if(progress)progress.textContent=`${Math.floor(bounded)}%`;
   if(track){track.setAttribute('aria-valuemin','0');track.setAttribute('aria-valuemax','100');track.setAttribute('aria-valuenow',String(Math.floor(bounded)));}
   if(loader)loader.dataset.progress=String(Math.floor(bounded));
 }
-
-function setVerified(value,label,nextCeiling=value){
-  if(failed)return;
-  verified=Math.max(verified,value);
-  displayed=Math.max(displayed,verified);
-  ceiling=Math.max(verified,nextCeiling);
-  if(stage)stage.textContent=label;
-  paint();
-}
-
-function beginActivity(){
-  clearInterval(activityTimer);
-  if(reducedMotion)return;
-  activityTimer=setInterval(()=>{
-    if(failed||displayed>=ceiling)return;
-    displayed=Math.min(ceiling,displayed+1);
-    paint();
-  },430);
-}
-
+function setVerified(value,label,nextCeiling=value){if(failed)return;verified=Math.max(verified,value);displayed=Math.max(displayed,verified);ceiling=Math.max(verified,nextCeiling);if(stage)stage.textContent=label;paint();}
+function beginActivity(){clearInterval(activityTimer);if(reducedMotion)return;activityTimer=setInterval(()=>{if(failed||displayed>=ceiling)return;displayed=Math.min(ceiling,displayed+1);paint();},430);}
 function fail(label,error){
-  if(failed)return;
-  failed=true;
-  clearInterval(activityTimer);
-  clearTimeout(timeoutTimer);
+  if(failed)return;failed=true;clearInterval(activityTimer);clearTimeout(timeoutTimer);
   const message=error instanceof Error?error.message:String(error||'unknown startup error');
-  if(loader)loader.classList.add('is-error');
-  if(stage)stage.textContent=label;
-  if(progress)progress.textContent=`Held at ${Math.floor(displayed)}%`;
-  if(note){
-    note.textContent=`Audralia did not finish this startup stage: ${message}`;
-    const retry=document.createElement('button');
-    retry.type='button';
-    retry.textContent='Retry Audralia';
-    retry.style.cssText='margin-top:14px;padding:10px 16px;border:1px solid rgba(225,239,219,.28);border-radius:999px;background:rgba(225,239,219,.08);color:inherit;font:inherit';
-    retry.addEventListener('click',()=>location.reload());
-    note.after(retry);
-  }
+  if(loader)loader.classList.add('is-error');if(stage)stage.textContent=label;if(progress)progress.textContent=`Held at ${Math.floor(displayed)}%`;
+  if(note){note.textContent=`Audralia did not finish this startup stage: ${message}`;const retry=document.createElement('button');retry.type='button';retry.textContent='Retry Audralia';retry.style.cssText='margin-top:14px;padding:10px 16px;border:1px solid rgba(225,239,219,.28);border-radius:999px;background:rgba(225,239,219,.08);color:inherit;font:inherit';retry.addEventListener('click',()=>location.reload());note.after(retry);}
   window.__AUDRALIA_STARTUP_FAILURE__=Object.freeze({message,progress:displayed});
 }
-
 async function waitFor(predicate,label,attempts=480){
-  for(let i=0;i<attempts;i++){
-    const value=predicate();
-    if(value)return value;
-    if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__)throw new Error(`QUALIFICATION_PARENT_FAILED:${label}`);
-    if(window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__)throw new Error(`QUALIFICATION_GA_FAILED:${window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__.message}`);
-    await sleep(25);
-  }
+  for(let i=0;i<attempts;i++){const value=predicate();if(value)return value;if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__)throw new Error(`QUALIFICATION_PARENT_FAILED:${label}`);if(window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__)throw new Error(`QUALIFICATION_GA_FAILED:${window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__.message}`);await sleep(25);}
   throw new Error(`QUALIFICATION_WAIT_TIMEOUT:${label}`);
 }
-
 function observeRuntime(){
   if(failed)return;
   if(document.querySelector('[data-audralia-clear-atmosphere="true"]'))setVerified(56,'Atmosphere ready',70);
   if(document.querySelector('[data-audralia-exterior-weather="true"]'))setVerified(72,'Regional weather ready',84);
   if(document.querySelector('[data-canonical-weather-projection="true"]'))setVerified(86,'Local weather ready',94);
-  const runtime=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.();
-  const ga=window.__AUDRALIA_FAP1_GA_AUTHORITY__;
+  const runtime=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.();const ga=window.__AUDRALIA_FAP1_GA_AUTHORITY__;
   if(runtime?.invariants?.pass===true&&ga?.meteorologicalAuthority==='FAP1_ONLY'){
-    setVerified(100,gaProofMode?'Audralia ready · G_A proof active':'Audralia ready',100);
-    clearInterval(activityTimer);
-    clearTimeout(timeoutTimer);
+    setVerified(100,gaProofMode?'Audralia ready · G_A proof active':'Audralia ready',100);clearInterval(activityTimer);clearTimeout(timeoutTimer);
     if(note)note.textContent=gaProofMode?'One continuous world is ready · G_A negative-proof harness is running.':'One continuous world is ready · FAP1 is the sole visible weather-density authority.';
-    if(loader){loader.classList.add('is-ready');setTimeout(()=>{loader.hidden=true;},460);}
-    return;
+    if(loader){loader.classList.add('is-ready');setTimeout(()=>{loader.hidden=true;},460);}return;
   }
   if(window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__){fail('FAP1 authority convergence stopped',window.__AUDRALIA_FAP1_GA_AUTHORITY_ERROR__.message);return;}
   if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__){fail('World initialization stopped',window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__.message);return;}
   requestAnimationFrame(observeRuntime);
 }
-
 async function boot(){
-  setVerified(6,'Preparing Audralia',15);
-  beginActivity();
+  setVerified(6,'Preparing Audralia',15);beginActivity();
   try{
     setVerified(16,'Loading world systems',34);
     await import('./app.mjs?cb=gratitude-chronology-startup-v2');
+    if(gaProofMode)await waitFor(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer&&typeof window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getCameraFrame==='function','PARENT_RECEIPT');
+    await import('./fap1-ga-authority-bootstrap.mjs?cb=FAP1_GA_v3');
     if(gaProofMode){
-      await waitFor(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer&&typeof window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getCameraFrame==='function','PARENT_RECEIPT');
+      await waitFor(()=>window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY'&&typeof window.__AUDRALIA_FAP1_GA_AUTHORITY__?.renderNow==='function','GA_AUTHORITY');
+      await import('./fap1-ga-negative-proof-v2.mjs?cb=FAP1_GA_NEGATIVE_PROOF_v3');
     }
-    await import('./fap1-ga-authority-bootstrap.mjs?cb=FAP1_GA_v2');
-    if(gaProofMode){
-      await waitFor(()=>window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY','GA_AUTHORITY');
-      await import('./fap1-ga-negative-proof.mjs?cb=FAP1_GA_NEGATIVE_PROOF_v2');
-    }
-    setVerified(38,'Constructing planetary surface',54);
-    requestAnimationFrame(observeRuntime);
-  }catch(error){
-    console.error('AUDRALIA_STARTUP_MODULE_GRAPH_FAILED',error);
-    fail('World systems could not load',error);
-  }
+    setVerified(38,'Constructing planetary surface',54);requestAnimationFrame(observeRuntime);
+  }catch(error){console.error('AUDRALIA_STARTUP_MODULE_GRAPH_FAILED',error);fail('World systems could not load',error);}
 }
-
 window.addEventListener('error',event=>{if(!failed&&displayed<100&&event?.error)fail('Audralia startup encountered an error',event.error);});
 window.addEventListener('unhandledrejection',event=>{if(!failed&&displayed<100)fail('Audralia startup encountered an error',event.reason);});
-
-timeoutTimer=setTimeout(()=>{
-  if(!failed&&displayed<100){
-    if(stage)stage.textContent='Still building Audralia…';
-    if(note)note.textContent='This device is taking longer than expected. Startup is still active; if it cannot continue, the failed stage will be shown here.';
-  }
-},18000);
-
+timeoutTimer=setTimeout(()=>{if(!failed&&displayed<100){if(stage)stage.textContent='Still building Audralia…';if(note)note.textContent='This device is taking longer than expected. Startup is still active; if it cannot continue, the failed stage will be shown here.';}},18000);
 boot();

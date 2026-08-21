@@ -24,7 +24,7 @@ jobs:
   dispatch:
     if: >-
       github.event.pull_request.head.repo.full_name == github.repository &&
-      github.event.pull_request.head.ref == 'ai-dispatch'
+      startsWith(github.event.pull_request.head.ref, 'ai-dispatch/')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout authoritative bridge runtime from main

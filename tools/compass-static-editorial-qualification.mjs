@@ -1,4 +1,4 @@
-// QUALIFICATION_RETRIGGER_FINAL_STATIC_CLEANUP_20260820
+// QUALIFICATION_RETRIGGER_STRENGTHENED_FALLBACK_HEAD_20260820
 import fs from 'node:fs';
 
 const html = fs.readFileSync('index.html', 'utf8');

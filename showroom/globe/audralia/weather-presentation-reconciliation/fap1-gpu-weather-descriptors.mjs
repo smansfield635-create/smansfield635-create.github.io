@@ -5,6 +5,7 @@ import {
 
 const PLANET_RADIUS=6200;
 const DEG_TO_RAD=Math.PI/180;
+const FAP1_STATE_TIME_SCALE=.0065;
 const freeze=value=>Object.freeze(value);
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 
@@ -20,7 +21,8 @@ function radiusKm(radiusDeg){return PLANET_RADIUS*radiusDeg*DEG_TO_RAD;}
 function deterministicSeed(id,fallback){let h=2166136261;for(const ch of id){h^=ch.charCodeAt(0);h=Math.imul(h,16777619);}return ((h>>>0)%10000)/10000*.72+fallback*.28;}
 
 export function buildFAP1GPUWeatherPacket({canonicalTimeHours=0}={}){
-  const regimes=getHEarthFAP1WeatherRegimes({canonicalTimeHours});
+  const stateTimeHours=canonicalTimeHours*FAP1_STATE_TIME_SCALE;
+  const regimes=getHEarthFAP1WeatherRegimes({canonicalTimeHours:stateTimeHours});
   const systems=[];
   const clearRegions=[];
   for(const regime of regimes){
@@ -68,6 +70,7 @@ export function buildFAP1GPUWeatherPacket({canonicalTimeHours=0}={}){
   return freeze({
     schema:'H_EARTH_FAP1_GPU_WEATHER_PACKET_GA_v1',
     canonicalTimeHours,
+    stateTimeHours,
     systems:freeze(systems),
     clearRegions:freeze(clearRegions),
     meteorologicalAuthority:'FAP1_ONLY',

@@ -1,0 +1,66 @@
+name: Compass Static Editorial Final Cleanup
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+    paths:
+      - '.github/workflows/compass-static-editorial-final-cleanup.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    if: github.head_ref == 'recovery/compass-static-editorial-successor'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: recovery/compass-static-editorial-successor
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            index.html
+            tools/compass-static-editorial-qualification.mjs
+            .github/workflows/compass-static-editorial-final-cleanup.yml
+      - name: Remove visible legacy disclosure and reconcile source gate
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          html=Path('index.html')
+          s=html.read_text()
+          pattern=r'<p class="compass-accessibility-note">The Compass exposes the same destinations to keyboard, touch, pointer, and reduced-motion users\..*?</p>'
+          s,n=re.subn(pattern,'',s,count=1,flags=re.S)
+          if n!=1: raise SystemExit(f'LEGACY_DISCLOSURE_MATCH_COUNT:{n}')
+          if 'data-editorial-fallback="true"' not in s or '<summary>All destinations</summary>' not in s:
+              raise SystemExit('ACCESSIBLE_ROUTE_FALLBACK_MISSING')
+          html.write_text(s)
+
+          gate=Path('tools/compass-static-editorial-qualification.mjs')
+          q=gate.read_text()
+          old="has('class=\"compass-accessibility-note\"', 'accessibility equivalence note');"
+          new="absent('The Compass exposes the same destinations to keyboard, touch, pointer, and reduced-motion users.', 'legacy bottom disclosure');"
+          if q.count(old)!=1: raise SystemExit('SOURCE_GATE_DISCLOSURE_PREDICATE_DRIFTED')
+          gate.write_text(q.replace(old,new,1))
+          PY
+      - name: Verify bounded static result
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'data-editorial-fallback="true"' index.html
+          grep -q '<summary>All destinations</summary>' index.html
+          ! grep -q 'The Compass exposes the same destinations to keyboard, touch, pointer, and reduced-motion users.' index.html
+          git diff --check
+      - name: Commit cleanup and remove carrier
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rm .github/workflows/compass-static-editorial-final-cleanup.yml
+          git add index.html tools/compass-static-editorial-qualification.mjs .github/workflows/compass-static-editorial-final-cleanup.yml
+          git commit -m 'fix(compass): remove legacy bottom disclosure from static successor'
+          git push origin HEAD:recovery/compass-static-editorial-successor

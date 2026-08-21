@@ -15,7 +15,8 @@
       .replaceAll('src="/assets/','src="'+gh+'/assets/')
       .replaceAll("src='/assets/","src='"+gh+"/assets/")
       .replaceAll('href="/showroom/globe/h-earth/"','href="https://raw.githack.com/smansfield635-create/smansfield635-create.github.io/0c6069f30e494be2f84d2653f40e374178251c77/showroom/globe/h-earth/index.html"')
-      .replaceAll('href="/','href="'+prod+'/');
+      .replaceAll('href="/','href="'+prod+'/')
+      .replace('</body>',`<script src="${gh}/assets/compass/compass.functional-clone-repair.js?v=stage1-repair-1"><\/script></body>`);
     document.open();document.write(html);document.close();
   }catch(error){document.getElementById('loading').textContent='Inspection launcher failed: '+error;}
 })();

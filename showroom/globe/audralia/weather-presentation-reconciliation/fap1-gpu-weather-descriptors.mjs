@@ -8,6 +8,7 @@ const DEG_TO_RAD=Math.PI/180;
 const FAP1_STATE_TIME_SCALE=.0065;
 const freeze=value=>Object.freeze(value);
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const renderContributions=new Map();
 
 const CLASS_PROFILE=freeze({
   HIGH_ICE:freeze({family:'HIGH',genus:'Cs',aspect:.38,density:.46,ice:.98,precip:.02,orientationDeg:16,shearE:10,shearN:2,seed:.71}),
@@ -20,6 +21,18 @@ const CLASS_PROFILE=freeze({
 function radiusKm(radiusDeg){return PLANET_RADIUS*radiusDeg*DEG_TO_RAD;}
 function deterministicSeed(id,fallback){let h=2166136261;for(const ch of id){h^=ch.charCodeAt(0);h=Math.imul(h,16777619);}return ((h>>>0)%10000)/10000*.72+fallback*.28;}
 function wrapLon(value){return ((value+180)%360+360)%360-180;}
+function renderContributionFor(id){return renderContributions.has(id)?clamp(renderContributions.get(id),0,1):1;}
+
+export function setFAP1MacroRenderContribution(id,value){
+  if(typeof id!=='string'||!id)throw new Error('FAP1_MACRO_CONTRIBUTION_ID_REQUIRED');
+  if(!Number.isFinite(value))throw new Error('FAP1_MACRO_CONTRIBUTION_FINITE_REQUIRED');
+  renderContributions.set(id,clamp(value,0,1));
+  return renderContributionFor(id);
+}
+
+export function clearFAP1MacroRenderContributions(){renderContributions.clear();}
+export function getFAP1MacroRenderContributions(){return freeze(Object.fromEntries([...renderContributions.entries()].sort(([a],[b])=>a.localeCompare(b))));}
+
 function proofEnabled(){
   try{return new URLSearchParams(globalThis.location?.search||'').get('gaProof')==='1';}
   catch(_error){return false;}
@@ -87,6 +100,8 @@ export function buildFAP1GPUWeatherPacket({canonicalTimeHours=0}={}){
     const minor=major*profile.aspect;
     const occupancy=clamp(regime.occupancy,0,1);
     const span=Math.max(.1,family.topKm-family.baseKm);
+    const canonicalDensity=profile.density*occupancy;
+    const representationContribution=renderContributionFor(regime.id);
     systems.push(freeze({
       id:regime.id,
       weatherClass:regime.weatherClass,
@@ -98,7 +113,9 @@ export function buildFAP1GPUWeatherPacket({canonicalTimeHours=0}={}){
       majorKm:major,
       minorKm:minor,
       orientationDeg:profile.orientationDeg,
-      density:profile.density*occupancy,
+      canonicalDensity,
+      representationContribution,
+      density:canonicalDensity*representationContribution,
       seed:deterministicSeed(regime.id,profile.seed),
       ice:profile.ice,
       precip:profile.precip,
@@ -122,7 +139,9 @@ export function buildFAP1GPUWeatherPacket({canonicalTimeHours=0}={}){
     qualificationProof:controlled.proof,
     meteorologicalAuthority:'FAP1_ONLY',
     rendererMayCreateWeather:false,
-    noiseRole:'SUBGRID_EXPRESSION_ONLY'
+    noiseRole:'SUBGRID_EXPRESSION_ONLY',
+    representationContributionAuthority:'GB_HANDOFF_ONLY',
+    macroRenderContributions:getFAP1MacroRenderContributions()
   });
 }
 
@@ -138,7 +157,10 @@ export function evaluateFAP1GPUWeatherPacket(packet){
   for(const system of packet?.systems??[]){
     if(!system.id||!Number.isFinite(system.latitudeDeg)||!Number.isFinite(system.longitudeDeg))issues.push(`INVALID_DESCRIPTOR:${system?.id??'UNKNOWN'}`);
     if(!(system.topKm>system.baseKm))issues.push(`INVALID_VERTICAL_INTERVAL:${system.id}`);
-    if(!(system.density>0))issues.push(`INVALID_DENSITY:${system.id}`);
+    const canonicalDensity=Number.isFinite(system.canonicalDensity)?system.canonicalDensity:system.density;
+    if(!(canonicalDensity>0))issues.push(`INVALID_CANONICAL_DENSITY:${system.id}`);
+    if(!(Number.isFinite(system.density)&&system.density>=0))issues.push(`INVALID_RENDER_DENSITY:${system.id}`);
+    if(!(Number.isFinite(system.representationContribution)&&system.representationContribution>=0&&system.representationContribution<=1))issues.push(`INVALID_REPRESENTATION_CONTRIBUTION:${system.id}`);
   }
   return freeze({eligible:issues.length===0,status:issues.length?'FAP1_GPU_PACKET_FAIL':'FAP1_GPU_PACKET_PASS',qualificationMode,issues:freeze(issues)});
 }

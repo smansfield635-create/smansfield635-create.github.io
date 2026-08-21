@@ -41,10 +41,23 @@ uniform float uTanHalfFov;
 const vec3 CENTER=vec3(0.0,-6200.0,0.0);
 const float R=6200.0;
 float sstep(float a,float b,float v){float t=clamp((v-a)/(b-a),0.0,1.0);return t*t*(3.0-2.0*t);}
+float planetHit(vec3 ro,vec3 rd){
+  vec3 oc=ro-CENTER;
+  float b=dot(oc,rd);
+  float c=dot(oc,oc)-R*R;
+  float h=b*b-c;
+  if(h<0.0)return -1.0;
+  float root=sqrt(h);
+  float t=-b-root;
+  if(t>0.0)return t;
+  t=-b+root;
+  return t>0.0?t:-1.0;
+}
 void main(){
   ivec2 px=ivec2(gl_FragCoord.xy);
-  if(texelFetch(uDepth,px,0).r<.999999){outColor=vec4(0.0);return;}
   vec3 rd=normalize(uForward+uRight*(vNdc.x*uAspect*uTanHalfFov)+uUp*(vNdc.y*uTanHalfFov));
+  if(planetHit(uEye,rd)>0.0){outColor=vec4(0.0);return;}
+  if(texelFetch(uDepth,px,0).r<.999999){outColor=vec4(0.0);return;}
   vec3 localUp=normalize(uEye-CENTER);
   vec3 sun=normalize(uSunDir);
   float altitude=max(0.0,length(uEye-CENTER)-R);
@@ -98,11 +111,11 @@ export function createClearAtmosphereLayer({renderer,worldCanvas,getSunDirection
   if(getComputedStyle(parent).position==='static')parent.style.position='relative';
   const overlay=document.createElement('canvas');overlay.dataset.audraliaClearAtmosphere='true';overlay.setAttribute('aria-hidden','true');Object.assign(overlay.style,{position:'absolute',pointerEvents:'none',zIndex:'1',background:'transparent'});parent.appendChild(overlay);
   const gl=overlay.getContext('webgl2',{alpha:true,antialias:false,premultipliedAlpha:false,powerPreference:'high-performance'});if(!gl)throw new Error('CLEAR_ATMOSPHERE_WEBGL2_UNAVAILABLE');
-  const depthProgram=makeProgram(gl,DEPTH_VS,DEPTH_FS),skyProgram=makeProgram(gl,SKY_VS,SKY_FS),planet=meshVao(gl,renderer.planetMesh),gratitude=meshVao(gl,renderer.gratitudeMesh);
+  const depthProgram=makeProgram(gl,DEPTH_VS,DEPTH_FS),skyProgram=makeProgram(gl,SKY_VS,SKY_FS),gratitude=meshVao(gl,renderer.gratitudeMesh);
   const framebuffer=gl.createFramebuffer(),depthTexture=gl.createTexture(),colorTexture=gl.createTexture();let width=0,height=0;
   function allocate(w,h){if(w===width&&h===height)return;width=w;height=h;gl.bindTexture(gl.TEXTURE_2D,depthTexture);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);gl.texImage2D(gl.TEXTURE_2D,0,gl.DEPTH_COMPONENT24,w,h,0,gl.DEPTH_COMPONENT,gl.UNSIGNED_INT,null);gl.bindTexture(gl.TEXTURE_2D,colorTexture);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA8,w,h,0,gl.RGBA,gl.UNSIGNED_BYTE,null);gl.bindFramebuffer(gl.FRAMEBUFFER,framebuffer);gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.DEPTH_ATTACHMENT,gl.TEXTURE_2D,depthTexture,0);gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,colorTexture,0);const status=gl.checkFramebufferStatus(gl.FRAMEBUFFER);gl.bindFramebuffer(gl.FRAMEBUFFER,null);if(status!==gl.FRAMEBUFFER_COMPLETE)throw new Error(`CLEAR_ATMOSPHERE_FRAMEBUFFER_INCOMPLETE:${status}`);}
   function resize(){const rect=worldCanvas.getBoundingClientRect(),parentRect=parent.getBoundingClientRect();overlay.style.left=`${rect.left-parentRect.left}px`;overlay.style.top=`${rect.top-parentRect.top}px`;overlay.style.width=`${rect.width}px`;overlay.style.height=`${rect.height}px`;const dpr=Math.min(1.15,window.devicePixelRatio||1),w=Math.max(1,Math.round(rect.width*dpr)),h=Math.max(1,Math.round(rect.height*dpr));if(overlay.width!==w||overlay.height!==h){overlay.width=w;overlay.height=h;allocate(w,h);}gl.viewport(0,0,w,h);}
-  function renderDepth(vp){gl.bindFramebuffer(gl.FRAMEBUFFER,framebuffer);gl.viewport(0,0,width,height);gl.clearDepth(1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);gl.depthMask(true);gl.colorMask(false,false,false,false);gl.useProgram(depthProgram);gl.uniformMatrix4fv(gl.getUniformLocation(depthProgram,'uVP'),false,vp);gl.bindVertexArray(planet.vao);gl.drawElements(gl.TRIANGLES,planet.count,gl.UNSIGNED_INT,0);gl.bindVertexArray(gratitude.vao);gl.drawElements(gl.TRIANGLES,gratitude.count,gl.UNSIGNED_INT,0);gl.colorMask(true,true,true,true);gl.bindFramebuffer(gl.FRAMEBUFFER,null);}
+  function renderDepth(vp){gl.bindFramebuffer(gl.FRAMEBUFFER,framebuffer);gl.viewport(0,0,width,height);gl.clearDepth(1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);gl.depthMask(true);gl.colorMask(false,false,false,false);gl.useProgram(depthProgram);gl.uniformMatrix4fv(gl.getUniformLocation(depthProgram,'uVP'),false,vp);gl.bindVertexArray(gratitude.vao);gl.drawElements(gl.TRIANGLES,gratitude.count,gl.UNSIGNED_INT,0);gl.colorMask(true,true,true,true);gl.bindFramebuffer(gl.FRAMEBUFFER,null);}
   function render(camera){resize();const aspect=overlay.width/Math.max(1,overlay.height),vp=multiply(perspective(55*Math.PI/180,aspect,2,PLANET_RADIUS*4.5),lookAt(camera.eye,camera.target,camera.up));renderDepth(vp);gl.bindFramebuffer(gl.FRAMEBUFFER,null);gl.viewport(0,0,width,height);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.disable(gl.DEPTH_TEST);gl.disable(gl.BLEND);gl.useProgram(skyProgram);const U=name=>gl.getUniformLocation(skyProgram,name);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,depthTexture);gl.uniform1i(U('uDepth'),0);gl.uniform3fv(U('uEye'),camera.eye);gl.uniform3fv(U('uForward'),camera.forward);gl.uniform3fv(U('uRight'),camera.right);gl.uniform3fv(U('uUp'),camera.up);gl.uniform3fv(U('uSunDir'),typeof getSunDirection==='function'?getSunDirection():[.42,.78,.46]);gl.uniform1f(U('uAspect'),aspect);gl.uniform1f(U('uTanHalfFov'),Math.tan(55*Math.PI/360));gl.drawArrays(gl.TRIANGLES,0,3);overlay.dataset.cameraAltitude=(Math.max(0,Math.hypot(...sub(camera.eye,PLANET_CENTER))-PLANET_RADIUS)).toFixed(2);}
-  return Object.freeze({overlay,render,destroy:()=>overlay.remove(),getEvidence:()=>Object.freeze({schema:'AUDRALIA_CLEAR_ATMOSPHERE_PROJECTION_v1',terrainDepthAware:true,nearTerrainVeil:false,surfaceSky:true,progressiveSpaceTransition:true,celestialMechanicsRedefined:false})});
+  return Object.freeze({overlay,render,destroy:()=>overlay.remove(),getEvidence:()=>Object.freeze({schema:'AUDRALIA_CLEAR_ATMOSPHERE_PROJECTION_v2_ANALYTIC_HORIZON',terrainDepthAware:true,nearTerrainVeil:false,surfaceSky:true,progressiveSpaceTransition:true,celestialMechanicsRedefined:false,horizonOwner:'PLANETARY_ATMOSPHERE',planetHorizonAuthority:'ANALYTIC_SPHERE_INTERSECTION',planetMeshHorizonOccluderRetired:true,gratitudeDepthOcclusionPreserved:true,fap1Mutated:false,w5Mutated:false,l5Mutated:false,lodMutated:false})});
 }

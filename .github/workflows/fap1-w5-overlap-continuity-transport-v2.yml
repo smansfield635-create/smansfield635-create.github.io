@@ -1,0 +1,20 @@
+name: FAP1 W5 Overlap Continuity Qualification v2
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/fap1-w5-overlap-continuity-transport-v2.yml'
+      - 'showroom/globe/audralia/weather-presentation-reconciliation/fap1-w5-overlap-continuity-runner.tmp.mjs'
+permissions:
+  contents: read
+jobs:
+  continuity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 2d4a2d16f2b902e1e8f78a6d9c87f6609f81407c
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute corrected macro-local continuity evaluator
+        run: node showroom/globe/audralia/weather-presentation-reconciliation/fap1-w5-overlap-continuity-runner.tmp.mjs

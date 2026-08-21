@@ -2,7 +2,7 @@ name: Pages Emergency Live Verifier
 
 on:
   workflow_run:
-    workflows: ["Direct GitHub Pages Deploy"]
+    workflows: ["Promote GitHub Pages Actions Authority"]
     types: [completed]
 
 permissions:

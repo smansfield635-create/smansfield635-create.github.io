@@ -50,8 +50,9 @@ jobs:
           exit 1
       - name: Inspect rendered successor
         run: |
-          mkdir -p /tmp/compass-static-editorial
-          cat > /tmp/compass-static-editorial/inspect.mjs <<'NODE'
+          rm -rf .qualification/compass-static-editorial
+          mkdir -p .qualification/compass-static-editorial
+          cat > .qualification/compass-static-editorial/inspect.mjs <<'NODE'
           import { chromium } from 'playwright';
           import fs from 'node:fs';
 
@@ -87,7 +88,6 @@ jobs:
               const order = [scene,built,capability,cta].map(node => node ? [...document.querySelectorAll('body *')].indexOf(node) : -1);
               const gen = globalThis.DGB_COMPASS_GEN1537_LIVE_RECOVERY;
               const genReceipt = gen?.receipt?.() || null;
-              const capabilityGuidance = q('[data-capability-orbit] .compass-capability-guidance')?.textContent.trim() || '';
               const trackBScript = qa('script[src]').some(s => (s.getAttribute('src')||'').includes('compass.track-b.js'));
               const directoryVisible = qa('.compass-selective-routes').some(el => {
                 const cs = getComputedStyle(el); const r = el.getBoundingClientRect();
@@ -106,7 +106,6 @@ jobs:
                 legacyDisclosureVisible: bodyText.includes('The Compass exposes the same destinations to keyboard, touch, pointer, and reduced-motion users.'),
                 trackBScript,
                 genReceipt,
-                capabilityGuidance,
                 horizontalOverflow: document.documentElement.scrollWidth-document.documentElement.clientWidth,
                 compassMode:q('[data-compass-root]')?.dataset.compassMode||'',
                 controllerReceipt:Boolean(q('[data-compass-controller-receipt]'))
@@ -131,18 +130,18 @@ jobs:
             const productFailures = failedRequests.filter(x => x.includes('/assets/compass/') || x.includes('/media/') || x.includes('diamond-gate-compass-mirrorland-36s.mp4'));
             if (productFailures.length) fail(`product request failures: ${productFailures.join(' | ')}`);
 
-            await page.screenshot({path:`/tmp/compass-static-editorial/${name}.png`,fullPage:true});
+            await page.screenshot({path:`.qualification/compass-static-editorial/${name}.png`,fullPage:true});
             results[name] = {...state, errors, failedRequests};
             await page.close();
           }
 
           await browser.close();
-          fs.writeFileSync('/tmp/compass-static-editorial/receipt.json', JSON.stringify({result:'PASS_CLOSED',results},null,2));
+          fs.writeFileSync('.qualification/compass-static-editorial/receipt.json', JSON.stringify({result:'PASS_CLOSED',results},null,2));
           NODE
-          node /tmp/compass-static-editorial/inspect.mjs
+          node .qualification/compass-static-editorial/inspect.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: compass-static-editorial-${{ github.run_id }}-${{ github.run_attempt }}
-          path: /tmp/compass-static-editorial
+          path: .qualification/compass-static-editorial
           retention-days: 30

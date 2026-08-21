@@ -1,0 +1,122 @@
+{
+  "domain": {
+    "columns": 256,
+    "nodeCount": 65536,
+    "rows": 256,
+    "xMaximum": 256,
+    "xMinimum": -256,
+    "zMaximum": 64,
+    "zMinimum": -320
+  },
+  "eligibility": {
+    "distancePredicate": "euclideanDistanceFromResolvedCenter <= 144",
+    "traversabilityPredicate": "water === false AND slopeDegrees <= 25",
+    "waterPredicate": "elevation <= 0"
+  },
+  "geodesicCap": 144,
+  "hardConstraints": [
+    "ESTATE_GRAPH_CONNECTED",
+    "PRINCIPAL_MANOR_CAPACITY_SUFFICIENT",
+    "FIRST_HILL_INCLUDED",
+    "SECOND_HILL_INCLUDED",
+    "INTER_HILL_AXIS_OPEN",
+    "LOW_CORRIDOR_OPEN",
+    "MOUNTAIN_VIEW_PASS",
+    "OCEAN_VIEW_PASS",
+    "PRIMARY_ROUTE_PASS",
+    "SERVICE_ROUTE_PASS",
+    "R06_C10_INTRUSION_ZERO",
+    "CAVERN_INTRUSION_ZERO",
+    "WATER_INTRUSION_ZERO",
+    "FUTURE_EXPANSION_CONNECTED"
+  ],
+  "lineageCenter": {
+    "x": 80,
+    "z": -172
+  },
+  "nonInferenceLaw": {
+    "zeroPassingArrangementsEstablishesEstateInfeasibility": false,
+    "zeroPassingArrangementsEstablishesTerrainInfeasibility": false
+  },
+  "operationId": "H_EARTH_INTER_HILL_ESTATE_V2_CAUSAL_EVIDENCE_EXECUTION_001",
+  "orientationsDegrees": [
+    0,
+    5,
+    10,
+    15,
+    20,
+    25,
+    30,
+    35,
+    40,
+    45,
+    50,
+    55,
+    60,
+    65,
+    70,
+    75,
+    80,
+    85,
+    90,
+    95,
+    100,
+    105,
+    110,
+    115,
+    120,
+    125,
+    130,
+    135,
+    140,
+    145,
+    150,
+    155,
+    160,
+    165,
+    170,
+    175
+  ],
+  "schema": "H_EARTH_INTER_HILL_ESTATE_V2_CAUSAL_EVIDENCE_INPUT_FREEZE_v1",
+  "seedOrder": [
+    "slopeDegrees ASC",
+    "distanceFromCenter ASC",
+    "nodeId ASC"
+  ],
+  "sourceIdentities": {
+    "acceptedDelta": {
+      "blob": "eb544a41aaa56bdee5d6d92114e85d6b4e6262f3",
+      "head": "d1147c67c366fad53e824c64519998e7ccd5f8f5",
+      "path": "h-earth-3d/terrain/h-earth.r06-c10.official-landform-candidate-001.js"
+    },
+    "causalEvaluator": {
+      "blob": "c5216445f8bd8267e94d7651c7b06c5f38ab1c83",
+      "path": "tools/h-earth-map-wide-terrain/inter-hill-estate/causal-trace-evaluator.v2.mjs"
+    },
+    "currentMain": {
+      "commit": "502f791f26f19b9802920a7d1d24671aeae822c2",
+      "tree": "19137a72f347f7b832f036a258cbe425d59e221d"
+    },
+    "currentTerrain": {
+      "blob": "0bd36eec01a75311bf6441d575bae5a057195bbc",
+      "head": "0d88fe21aba99c97b73fcdc68d44af57d55b68be",
+      "path": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js"
+    },
+    "generator": {
+      "blob": "80ff6fa6f8b349babf668fa40f54456ed140452b",
+      "path": "tools/h-earth-map-wide-terrain/inter-hill-estate/estate-multizone-search.v1.mjs"
+    },
+    "orchestrator": {
+      "blob": "d443e7e900e260b4399dfd6014bce4e158ac32c9",
+      "path": "tools/h-earth-map-wide-terrain/inter-hill-estate/successor-evaluator.v1.mjs"
+    },
+    "realTerrainPartition": {
+      "blob": "28cbbcc8882ad061fad99cce6b772f4914dc3d86",
+      "path": "tools/h-earth-map-wide-terrain/inter-hill-estate/real-terrain-partition.v1.mjs"
+    }
+  },
+  "sourceModes": [
+    "CURRENT_MAIN_BASELINE",
+    "CURRENT_MAIN_PLUS_ACCEPTED_R06_C10_ANALYSIS_COMPOSITE"
+  ]
+}

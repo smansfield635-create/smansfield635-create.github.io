@@ -1,0 +1,1321 @@
+<!doctype html>
+<html
+  lang="en"
+  data-page="governance-runtime"
+  data-governance-contract="GOVERNANCE_RUNTIME_CONTROL_PANEL_V1_SOURCE_RUNTIME_MOUNT_PARITY_TNT"
+  data-protocol="SOURCE_RUNTIME_MOUNT_PARITY_TICTACTOE_PROTOCOL_v1"
+  data-role="governor-control-runtime-panel"
+  data-does-not-render-planet="true"
+  data-source-runtime-mount-parity="true"
+>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <title>Governance Runtime · Source Runtime Mount Parity</title>
+  <meta
+    name="description"
+    content="Governor/control/runtime panel for measuring served source, browser runtime globals, mounted DOM expression, old-expression leakage, and next target."
+  />
+
+  <!--
+    GOVERNANCE_RUNTIME_CONTROL_PANEL_V1_SOURCE_RUNTIME_MOUNT_PARITY_TNT
+    SOURCE_RUNTIME_MOUNT_PARITY_TICTACTOE_PROTOCOL_v1
+
+    TARGET=
+    /governance/runtime/index.html
+
+    PURPOSE=
+    MEASURE_SOURCE_RUNTIME_MOUNT_AS_THREE_SEPARATE_LAYERS
+    DETECT_WHETHER_SOURCE_RUNTIME_AND_MOUNTED_DOM_AGREE
+    IDENTIFY_OLD_EXPRESSION_LEAKAGE
+    PREVENT_BLIND_RENDER_REWRITES
+    GOVERN_NEXT_TARGET_SELECTION
+
+    THIS PANEL DOES_NOT_RENDER_PLANET=TRUE
+    THIS PANEL MEASURES_ONLY=TRUE
+
+    TIC_TAC_TOE GRID=
+    SOURCE
+    RUNTIME GLOBAL
+    MOUNTED DOM
+    ROUTE
+    ASSET
+    RENDERER
+    OLD EXPRESSION LEAKAGE
+    PARITY
+    NEXT TARGET
+
+    GOVERNANCE LAW=
+    SOURCE = RUNTIME = MOUNT BEFORE VISUAL JUDGMENT
+
+    CURRENT EXPECTED RENDERER=
+    PLANET_ONE_RENDER_V18B_TERRAIN_WATER_ADHESION_MARKER_CLOSEOUT_TNT_v1
+
+    CURRENT EXPECTED ROUTE=
+    SHOWROOM_GLOBE_V21_HYDRATION_AWARE_INSPECTION_ROUTE_TNT_v1
+
+    CURRENT EXPECTED ASSET=
+    SHOWROOM_GLOBE_INSTRUMENT_V20_HYDRATION_FIRST_DELEGATOR_TNT_v1
+
+    REQUIRED RENDERER SOURCE MARKERS=
+    PLANET_ONE_RENDER_V18B_TERRAIN_WATER_ADHESION_MARKER_CLOSEOUT_TNT_v1
+    PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1
+    hydration-render-authority=/world/render/planet-one.hydration.render.js
+    hydration-module-integrated=true
+    hydro-terrain-marriage-active=true
+    terrain-water-adhesion-active=true
+    terrain-render-authority=/world/render/planet-one.terrain.render.js
+    terrain-module-integrated=true
+  -->
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #05070d;
+      --panel: rgba(255,255,255,.055);
+      --panel-strong: rgba(255,255,255,.085);
+      --line: rgba(168,199,255,.18);
+      --line-strong: rgba(242,199,111,.42);
+      --text: rgba(246,248,255,.93);
+      --muted: rgba(226,232,246,.68);
+      --soft: rgba(226,232,246,.52);
+      --gold: #f2c76f;
+      --green: #8fe3b0;
+      --blue: #91bdff;
+      --red: #ff9b9b;
+      --max: 1180px;
+      --radius: 28px;
+      --shadow: 0 28px 80px rgba(0,0,0,.52);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background:
+        radial-gradient(circle at 50% -12%, rgba(145,189,255,.16), transparent 34rem),
+        radial-gradient(circle at 16% 20%, rgba(242,199,111,.09), transparent 23rem),
+        radial-gradient(circle at 88% 28%, rgba(143,227,176,.07), transparent 24rem),
+        linear-gradient(180deg,#07101f 0%,var(--bg) 44%,#02030a 100%);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: var(--gold);
+    }
+
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: 10px;
+      z-index: 20;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: #101725;
+      color: var(--text);
+      font-weight: 900;
+    }
+
+    .skip-link:focus {
+      left: 12px;
+    }
+
+    .site-shell {
+      width: min(var(--max), calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 50px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.045);
+      box-shadow: 0 18px 50px rgba(0,0,0,.22);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: fit-content;
+      font-weight: 950;
+      letter-spacing: -.03em;
+    }
+
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 12px;
+      border: 1px solid rgba(242,199,111,.48);
+      background:
+        linear-gradient(135deg, rgba(242,199,111,.9), rgba(145,189,255,.45)),
+        radial-gradient(circle at 35% 30%, #fff, transparent 40%);
+      box-shadow: 0 0 36px rgba(242,199,111,.18);
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    nav a {
+      border: 1px solid rgba(168,199,255,.16);
+      border-radius: 999px;
+      padding: 8px 10px;
+      color: var(--muted);
+      font-size: .78rem;
+      font-weight: 850;
+    }
+
+    nav a[aria-current="page"] {
+      border-color: var(--line-strong);
+      color: var(--gold);
+      background: rgba(242,199,111,.065);
+    }
+
+    .hero,
+    .panel,
+    .score-card,
+    .check-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: clamp(24px,5vw,52px);
+      background:
+        radial-gradient(circle at 78% 20%, rgba(242,199,111,.12), transparent 20rem),
+        radial-gradient(circle at 18% 18%, rgba(145,189,255,.15), transparent 23rem),
+        rgba(255,255,255,.045);
+    }
+
+    .kicker {
+      color: var(--gold);
+      font-size: .78rem;
+      font-weight: 950;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 980px;
+      margin: 12px 0;
+      font-size: clamp(2.35rem,7vw,5.25rem);
+      line-height: .94;
+      letter-spacing: -.075em;
+    }
+
+    .lead {
+      max-width: 900px;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(1rem,2.4vw,1.25rem);
+      line-height: 1.55;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(242,199,111,.46);
+      border-radius: 999px;
+      padding: 11px 15px;
+      background: linear-gradient(180deg, rgba(242,199,111,.18), rgba(242,199,111,.04));
+      color: #fff4d3;
+      font-weight: 950;
+      cursor: pointer;
+    }
+
+    .button.secondary {
+      border-color: rgba(168,199,255,.22);
+      background: rgba(255,255,255,.045);
+      color: var(--text);
+    }
+
+    main {
+      display: grid;
+      gap: 20px;
+      margin-top: 22px;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(5,minmax(0,1fr));
+      gap: 12px;
+    }
+
+    .score-card {
+      min-height: 132px;
+      padding: 18px;
+      display: grid;
+      align-content: space-between;
+      gap: 12px;
+      box-shadow: 0 18px 54px rgba(0,0,0,.26);
+    }
+
+    .score-card span {
+      color: var(--muted);
+      font-size: .78rem;
+      font-weight: 950;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .score-card strong {
+      display: block;
+      font-size: clamp(1.45rem,3.6vw,2.55rem);
+      line-height: .98;
+      letter-spacing: -.055em;
+      overflow-wrap: anywhere;
+    }
+
+    .good strong { color: var(--green); }
+    .next strong { color: var(--gold); }
+    .hold strong { color: var(--blue); }
+    .bad strong { color: var(--red); }
+
+    .panel {
+      padding: clamp(18px,3vw,28px);
+      box-shadow: 0 18px 54px rgba(0,0,0,.26);
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .panel h2 {
+      margin: 0;
+      font-size: clamp(1.35rem,3vw,2rem);
+      line-height: 1.05;
+      letter-spacing: -.055em;
+    }
+
+    .panel p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 30px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 10px;
+      color: var(--muted);
+      font-size: .7rem;
+      font-weight: 950;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .pill.pass {
+      border-color: rgba(143,227,176,.45);
+      color: var(--green);
+      background: rgba(143,227,176,.06);
+    }
+
+    .pill.next {
+      border-color: rgba(242,199,111,.45);
+      color: var(--gold);
+      background: rgba(242,199,111,.06);
+    }
+
+    .pill.hold {
+      border-color: rgba(145,189,255,.45);
+      color: var(--blue);
+      background: rgba(145,189,255,.06);
+    }
+
+    .pill.fail {
+      border-color: rgba(255,155,155,.45);
+      color: var(--red);
+      background: rgba(255,155,155,.06);
+    }
+
+    .checks-grid {
+      display: grid;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 14px;
+    }
+
+    .check-card {
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,.062), rgba(255,255,255,.025));
+      box-shadow: 0 18px 54px rgba(0,0,0,.18);
+    }
+
+    .check-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .check-title h3 {
+      margin: 0;
+      font-size: 1.04rem;
+      line-height: 1.2;
+      letter-spacing: -.035em;
+      overflow-wrap: anywhere;
+    }
+
+    code {
+      color: rgba(255,244,211,.94);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      overflow-wrap: anywhere;
+    }
+
+    .mono {
+      margin-top: 12px;
+      border: 1px solid rgba(168,199,255,.14);
+      border-radius: 18px;
+      padding: 12px;
+      background: rgba(0,0,0,.16);
+      color: var(--soft);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: .78rem;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .marker-list {
+      display: grid;
+      gap: 7px;
+      margin-top: 12px;
+    }
+
+    .marker {
+      display: grid;
+      grid-template-columns: 24px minmax(0,1fr);
+      gap: 8px;
+      color: var(--muted);
+      font-size: .84rem;
+      line-height: 1.35;
+    }
+
+    .dot {
+      width: 16px;
+      height: 16px;
+      margin-top: 1px;
+      border-radius: 999px;
+      border: 1px solid rgba(168,199,255,.24);
+      background: rgba(255,255,255,.05);
+    }
+
+    .dot.pass { border-color: rgba(143,227,176,.6); background: rgba(143,227,176,.28); }
+    .dot.next { border-color: rgba(242,199,111,.6); background: rgba(242,199,111,.22); }
+    .dot.fail { border-color: rgba(255,155,155,.6); background: rgba(255,155,155,.22); }
+
+    .frame-grid {
+      display: grid;
+      grid-template-columns: repeat(3,minmax(0,1fr));
+      gap: 14px;
+    }
+
+    .frame-card {
+      border: 1px solid rgba(168,199,255,.16);
+      border-radius: 22px;
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    }
+
+    .frame-card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--gold);
+      font-size: .78rem;
+      font-weight: 950;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .frame-card h3 {
+      margin: 0 0 8px;
+      font-size: 1.18rem;
+      letter-spacing: -.035em;
+    }
+
+    .frame-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .observer-frame {
+      width: 100%;
+      min-height: 480px;
+      border: 1px solid rgba(168,199,255,.18);
+      border-radius: 24px;
+      background: rgba(0,0,0,.22);
+    }
+
+    .observer-note {
+      color: var(--soft);
+      font-size: .82rem;
+      line-height: 1.45;
+    }
+
+    footer {
+      margin-top: 24px;
+      padding: 18px 4px;
+      color: var(--soft);
+      font-size: .84rem;
+      text-align: center;
+    }
+
+    @media (max-width: 960px) {
+      .topbar {
+        align-items: flex-start;
+        border-radius: 26px;
+        flex-direction: column;
+      }
+
+      nav {
+        justify-content: flex-start;
+      }
+
+      .score-grid {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+      }
+
+      .checks-grid,
+      .frame-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 540px) {
+      .site-shell {
+        width: min(100% - 18px,var(--max));
+        padding-top: 12px;
+      }
+
+      .hero,
+      .panel {
+        border-radius: 24px;
+      }
+
+      .panel-head {
+        display: grid;
+      }
+
+      .score-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .observer-frame {
+        min-height: 420px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#runtime-main">Skip to Governance Runtime</a>
+
+  <div class="site-shell">
+    <header class="topbar" aria-label="Site navigation">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>Diamond Gate Bridge</span>
+      </a>
+
+      <nav aria-label="Primary navigation">
+        <a href="/">Compass</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/showroom/globe/">Planet 1</a>
+        <a href="/nine-summits/">Nine Summits</a>
+        <a href="/nine-summits/universe/">Universe</a>
+        <a href="/products/">Products</a>
+        <a href="/gauges/">Gauges</a>
+        <a href="/governance/runtime/" aria-current="page">Runtime</a>
+      </nav>
+    </header>
+
+    <section class="hero" id="runtime-main">
+      <div class="kicker">Governance · Runtime · Control Panel</div>
+      <h1>Separate source, runtime, and mount before judging the visual.</h1>
+      <p class="lead">
+        This panel does not render Planet 1. It observes the live chain and reports whether served source, browser runtime globals,
+        and mounted DOM expression agree.
+      </p>
+
+      <div class="actions">
+        <button class="button" type="button" id="runParityButton">Run parity audit</button>
+        <a class="button secondary" href="/showroom/globe/">Open Planet 1</a>
+        <a class="button secondary" href="/gauges/">Open Gauges</a>
+      </div>
+    </section>
+
+    <main>
+      <section class="score-grid" aria-label="Source runtime mount summary">
+        <article class="score-card" id="scoreSource">
+          <span>Source</span>
+          <strong>WAIT</strong>
+        </article>
+
+        <article class="score-card" id="scoreRuntime">
+          <span>Runtime</span>
+          <strong>WAIT</strong>
+        </article>
+
+        <article class="score-card" id="scoreMount">
+          <span>Mount</span>
+          <strong>WAIT</strong>
+        </article>
+
+        <article class="score-card" id="scoreLeakage">
+          <span>Leakage</span>
+          <strong>WAIT</strong>
+        </article>
+
+        <article class="score-card" id="scoreNext">
+          <span>Next target</span>
+          <strong>WAIT</strong>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Current read</h2>
+            <p id="currentRead">
+              Audit has not run yet. The panel will compare served source, live runtime globals, mounted DOM, route authority, asset authority, and leakage.
+            </p>
+          </div>
+          <span class="pill hold" id="overallStatus">WAIT</span>
+        </div>
+
+        <div class="frame-grid">
+          <article class="frame-card">
+            <strong>Source</strong>
+            <h3>What the server gives.</h3>
+            <p>Fetches raw files and checks exact source markers.</p>
+          </article>
+
+          <article class="frame-card">
+            <strong>Runtime</strong>
+            <h3>What the browser loaded.</h3>
+            <p>Reads globals inside the Planet 1 route frame.</p>
+          </article>
+
+          <article class="frame-card">
+            <strong>Mount</strong>
+            <h3>What the DOM displays.</h3>
+            <p>Inspects the mounted output and searches for old expression leakage.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>TicTacToe parity checks</h2>
+            <p>
+              The panel checks source, runtime, mount, route, asset, renderer, leakage, parity, and next target.
+            </p>
+          </div>
+          <span class="pill hold" id="checksStatus">WAIT</span>
+        </div>
+
+        <div class="checks-grid" id="checksGrid"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Next target decision</h2>
+            <p id="decisionText">
+              Run the parity audit to identify whether the next target is the renderer source, route source, asset/runtime boot, mounted DOM lifecycle, or visual expression.
+            </p>
+          </div>
+          <span class="pill hold" id="decisionStatus">WAIT</span>
+        </div>
+
+        <div class="mono" id="decisionMono">NEXT_TARGET=WAIT</div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Observed Planet 1 route</h2>
+            <p>
+              This iframe is used only for runtime and mounted-DOM inspection. The governance panel itself does not render Planet 1.
+            </p>
+          </div>
+          <span class="pill hold" id="frameStatus">WAIT</span>
+        </div>
+
+        <p class="observer-note">
+          If the frame cannot be inspected, the panel will still report source parity and will mark runtime/mount as blocked.
+        </p>
+
+        <iframe
+          class="observer-frame"
+          id="planetOneObserver"
+          title="Observed Planet 1 route for runtime parity inspection"
+          src="/showroom/globe/?_runtime_parity_observer=1"
+          loading="eager"
+        ></iframe>
+      </section>
+    </main>
+
+    <footer>
+      GOVERNANCE_RUNTIME_CONTROL_PANEL_V1_SOURCE_RUNTIME_MOUNT_PARITY_TNT · Source/runtime/mount separation panel.
+    </footer>
+  </div>
+
+  <script>
+    (function governanceRuntimeParityPanel(global) {
+      "use strict";
+
+      const VERSION = "GOVERNANCE_RUNTIME_CONTROL_PANEL_V1_SOURCE_RUNTIME_MOUNT_PARITY_TNT";
+      const PROTOCOL = "SOURCE_RUNTIME_MOUNT_PARITY_TICTACTOE_PROTOCOL_v1";
+
+      const EXPECTED = Object.freeze({
+        renderer: "PLANET_ONE_RENDER_V18B_TERRAIN_WATER_ADHESION_MARKER_CLOSEOUT_TNT_v1",
+        rendererV18: "PLANET_ONE_RENDER_V18_HYDRO_TERRAIN_COMPOSITION_ONLY_TNT_v1",
+        rendererV15: "PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1",
+        route: "SHOWROOM_GLOBE_V21_HYDRATION_AWARE_INSPECTION_ROUTE_TNT_v1",
+        routeV17: "SHOWROOM_GLOBE_V17_TERRAIN_FIRST_ROUTE_BOOT_TNT_v1",
+        asset: "SHOWROOM_GLOBE_INSTRUMENT_V20_HYDRATION_FIRST_DELEGATOR_TNT_v1",
+        assetV16: "SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_V16_TERRAIN_FIRST_OPTIMUM_PAIR_TNT_v1"
+      });
+
+      const TARGETS = Object.freeze({
+        renderer: "/world/render/planet-one.render.js",
+        route: "/showroom/globe/",
+        asset: "/assets/showroom.globe.instrument.js",
+        hydration: "/world/render/planet-one.hydration.render.js",
+        terrain: "/world/render/planet-one.terrain.render.js"
+      });
+
+      const SOURCE_CHECKS = {
+        renderer: [
+          EXPECTED.renderer,
+          EXPECTED.rendererV15,
+          "window.DGBPlanetOneRenderTeam",
+          "renderPlanetOne",
+          "hydration-render-authority=/world/render/planet-one.hydration.render.js",
+          "hydration-module-integrated=true",
+          "hydro-terrain-marriage-active=true",
+          "terrain-water-adhesion-active=true",
+          "terrain-render-authority=/world/render/planet-one.terrain.render.js",
+          "terrain-module-integrated=true"
+        ],
+        route: [
+          EXPECTED.route,
+          EXPECTED.routeV17,
+          "Planet 1 inspection room",
+          "planet-one-render",
+          "Planet 1 render loaded",
+          "Optimum expression",
+          "/world/render/planet-one.hydration.render.js",
+          "hydration-engine-required=true",
+          "hydro-terrain-marriage-active=true",
+          "hydration-first-or-before-terrain=true",
+          "/assets/showroom.globe.instrument.js",
+          "/world/render/planet-one.terrain.render.js",
+          "/world/render/planet-one.render.js"
+        ],
+        asset: [
+          EXPECTED.asset,
+          EXPECTED.assetV16,
+          "window.DGBShowroomGlobeInstrument",
+          "renderGlobe",
+          "loadHydrationRenderer",
+          "loadTerrainRenderer",
+          "loadMainRendererAfterTerrain",
+          "hydrationFirstLoadOrder",
+          "hydroTerrainMarriage",
+          "/world/render/planet-one.hydration.render.js",
+          "/world/render/planet-one.terrain.render.js",
+          "/world/render/planet-one.render.js"
+        ]
+      };
+
+      const MOUNT_REQUIRED = [
+        EXPECTED.renderer,
+        "Hydration module integrated",
+        "Terrain module integrated",
+        "Hydro-terrain marriage active",
+        "Terrain-water adhesion active",
+        "Composition only"
+      ];
+
+      const LEAKAGE_STRINGS = [
+        "Terrain fallback active",
+        "Legacy markers restored",
+        "terrain-first instrument chain",
+        "Terrain module integrated</span><span>Optimum expression only",
+        "DEMO PLANET",
+        "demo planet",
+        "fallback planet"
+      ];
+
+      function byId(id) {
+        return document.getElementById(id);
+      }
+
+      function className(status) {
+        if (status === "PASS") return "pass";
+        if (status === "NEXT") return "next";
+        if (status === "FAIL") return "fail";
+        return "hold";
+      }
+
+      function setPill(id, status) {
+        const el = byId(id);
+        if (!el) return;
+        el.className = "pill " + className(status);
+        el.textContent = status;
+      }
+
+      function setScore(id, value, status) {
+        const el = byId(id);
+        if (!el) return;
+
+        el.classList.remove("good", "next", "hold", "bad");
+
+        if (status === "PASS") el.classList.add("good");
+        else if (status === "NEXT") el.classList.add("next");
+        else if (status === "FAIL") el.classList.add("bad");
+        else el.classList.add("hold");
+
+        const strong = el.querySelector("strong");
+        if (strong) strong.textContent = value;
+      }
+
+      function escapeHtml(value) {
+        return String(value == null ? "" : value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function cacheBusted(path) {
+        const url = new URL(path, window.location.origin);
+        url.searchParams.set("_governance_runtime", VERSION);
+        url.searchParams.set("_t", String(Date.now()));
+        return url.pathname + url.search;
+      }
+
+      function fetchText(path) {
+        return fetch(cacheBusted(path), {
+          cache: "no-store",
+          credentials: "same-origin"
+        })
+          .then(function got(response) {
+            return response.text().then(function body(text) {
+              return {
+                path,
+                ok: response.ok,
+                status: response.status,
+                text
+              };
+            });
+          })
+          .catch(function failed(error) {
+            return {
+              path,
+              ok: false,
+              status: 0,
+              text: "",
+              error: error && error.message ? error.message : "fetch failed"
+            };
+          });
+      }
+
+      function has(text, marker) {
+        return String(text || "").indexOf(marker) !== -1;
+      }
+
+      function makeRows(markers, text, invert) {
+        return markers.map(function row(marker) {
+          const found = has(text, marker);
+          return {
+            marker,
+            found,
+            ok: invert ? !found : found,
+            invert: Boolean(invert)
+          };
+        });
+      }
+
+      function summarize(rows) {
+        const total = rows.length;
+        const passed = rows.filter(function ok(row) { return row.ok; }).length;
+
+        return {
+          total,
+          passed,
+          score: total ? Math.round((passed / total) * 100) : 100,
+          missing: rows.filter(function miss(row) { return !row.ok; }).map(function marker(row) { return row.marker; })
+        };
+      }
+
+      function markerHtml(row) {
+        const dotClass = row.ok ? "pass" : row.invert ? "fail" : "next";
+        const prefix = row.invert ? "LEAK: " : "";
+
+        return [
+          '<div class="marker">',
+            '<span class="dot ' + dotClass + '" aria-hidden="true"></span>',
+            '<code>' + escapeHtml(prefix + row.marker) + '</code>',
+          '</div>'
+        ].join("");
+      }
+
+      function cardHtml(title, path, status, rows, meta) {
+        const summary = summarize(rows || []);
+        const metaText = meta || "Checks: " + summary.passed + " of " + summary.total + ".";
+
+        return [
+          '<article class="check-card">',
+            '<div class="check-title">',
+              '<h3>' + escapeHtml(title) + '</h3>',
+              '<span class="pill ' + className(status) + '">' + status + '</span>',
+            '</div>',
+            path ? '<div><code>' + escapeHtml(path) + '</code></div>' : '',
+            '<div class="mono">' + escapeHtml(metaText) + '</div>',
+            '<div class="marker-list">',
+              (rows || []).map(markerHtml).join(""),
+            '</div>',
+          '</article>'
+        ].join("");
+      }
+
+      function inspectFrame() {
+        const iframe = byId("planetOneObserver");
+
+        return new Promise(function wait(resolve) {
+          let tries = 0;
+
+          function inspect() {
+            tries += 1;
+
+            try {
+              if (!iframe || !iframe.contentWindow || !iframe.contentDocument) {
+                throw new Error("observer frame unavailable");
+              }
+
+              const frameWindow = iframe.contentWindow;
+              const frameDocument = iframe.contentDocument;
+
+              const rendererGlobal = frameWindow.DGBPlanetOneRenderTeam;
+              const assetGlobal = frameWindow.DGBShowroomGlobeInstrument;
+              const routeGlobal = frameWindow.DGBShowroomGlobeRouteV21;
+
+              const mount = frameDocument.getElementById("planet-one-render");
+              const mountHtml = mount ? mount.innerHTML : "";
+              const mountText = mount ? mount.textContent : "";
+              const rootDataset = frameDocument.documentElement ? frameDocument.documentElement.dataset : {};
+              const mountDataset = mount ? mount.dataset : {};
+
+              const runtime = {
+                ok: true,
+                rendererVersion: rendererGlobal && rendererGlobal.VERSION ? rendererGlobal.VERSION : "",
+                rendererStatus: rendererGlobal && typeof rendererGlobal.getStatus === "function" ? rendererGlobal.getStatus() : null,
+                assetVersion: assetGlobal && assetGlobal.VERSION ? assetGlobal.VERSION : "",
+                assetStatus: assetGlobal && typeof assetGlobal.getStatus === "function" ? assetGlobal.getStatus() : null,
+                routeVersion: routeGlobal && routeGlobal.VERSION ? routeGlobal.VERSION : "",
+                routeStatus: routeGlobal && typeof routeGlobal.getStatus === "function" ? routeGlobal.getStatus() : null,
+                rootDataset,
+                mountDataset,
+                mountHtml,
+                mountText
+              };
+
+              const rendererReady =
+                runtime.rendererVersion ||
+                rootDataset.planetOneRender ||
+                mountHtml.indexOf("planet-one-v18b") !== -1 ||
+                mountText.indexOf("Hydration module integrated") !== -1;
+
+              if (!rendererReady && tries < 32) {
+                global.setTimeout(inspect, 250);
+                return;
+              }
+
+              resolve(runtime);
+            } catch (error) {
+              if (tries < 20) {
+                global.setTimeout(inspect, 250);
+                return;
+              }
+
+              resolve({
+                ok: false,
+                error: error && error.message ? error.message : "frame inspection failed",
+                rendererVersion: "",
+                assetVersion: "",
+                routeVersion: "",
+                mountHtml: "",
+                mountText: "",
+                rootDataset: {},
+                mountDataset: {}
+              });
+            }
+          }
+
+          inspect();
+        });
+      }
+
+      function evaluateSource(name, fetched, markers) {
+        const rows = makeRows(markers, fetched.text, false);
+        const summary = summarize(rows);
+
+        return {
+          name,
+          fetched,
+          rows,
+          summary,
+          status: fetched.ok && summary.score === 100 ? "PASS" : "FAIL"
+        };
+      }
+
+      function evaluateRuntime(frame) {
+        const runtimeText = [
+          frame.rendererVersion,
+          frame.assetVersion,
+          frame.routeVersion,
+          frame.rendererStatus ? JSON.stringify(frame.rendererStatus) : "",
+          frame.assetStatus ? JSON.stringify(frame.assetStatus) : "",
+          frame.routeStatus ? JSON.stringify(frame.routeStatus) : "",
+          frame.rootDataset ? JSON.stringify(frame.rootDataset) : "",
+          frame.mountDataset ? JSON.stringify(frame.mountDataset) : ""
+        ].join("\n");
+
+        const rows = makeRows([
+          EXPECTED.renderer,
+          EXPECTED.asset,
+          EXPECTED.route,
+          "hydrationModuleIntegrated",
+          "hydroTerrainMarriageActive",
+          "terrainWaterAdhesionActive"
+        ], runtimeText, false);
+
+        const summary = summarize(rows);
+
+        return {
+          rows,
+          summary,
+          status: frame.ok && summary.score === 100 ? "PASS" : "FAIL",
+          meta: frame.ok
+            ? [
+                "Renderer VERSION: " + (frame.rendererVersion || "missing"),
+                "Asset VERSION: " + (frame.assetVersion || "missing"),
+                "Route VERSION: " + (frame.routeVersion || "missing")
+              ].join("\n")
+            : "Frame inspection failed: " + (frame.error || "unknown")
+        };
+      }
+
+      function evaluateMount(frame) {
+        const mountCombined = [
+          frame.mountHtml || "",
+          frame.mountText || "",
+          frame.mountDataset ? JSON.stringify(frame.mountDataset) : ""
+        ].join("\n");
+
+        const rows = makeRows(MOUNT_REQUIRED, mountCombined, false);
+        const summary = summarize(rows);
+
+        return {
+          rows,
+          summary,
+          status: frame.ok && summary.score === 100 ? "PASS" : "FAIL",
+          meta: "Mounted DOM required checks: " + summary.passed + " of " + summary.total + "."
+        };
+      }
+
+      function evaluateLeakage(frame) {
+        const combined = [
+          frame.mountHtml || "",
+          frame.mountText || "",
+          frame.rootDataset ? JSON.stringify(frame.rootDataset) : "",
+          frame.mountDataset ? JSON.stringify(frame.mountDataset) : ""
+        ].join("\n");
+
+        const rows = makeRows(LEAKAGE_STRINGS, combined, true);
+        const summary = summarize(rows);
+
+        return {
+          rows,
+          summary,
+          status: summary.score === 100 ? "PASS" : "FAIL",
+          meta: "Old-expression leakage checks clean: " + summary.passed + " of " + summary.total + "."
+        };
+      }
+
+      function decide(results) {
+        if (results.rendererSource.status !== "PASS") {
+          return {
+            status: "NEXT",
+            nextTarget: TARGETS.renderer,
+            code: "SOURCE_RENDERER_NOT_CURRENT",
+            read: "Renderer served source does not yet satisfy V18B source parity. Renew or verify /world/render/planet-one.render.js.",
+            source: "FAIL",
+            runtime: "WAIT",
+            mount: "WAIT",
+            leakage: "WAIT"
+          };
+        }
+
+        if (results.routeSource.status !== "PASS") {
+          return {
+            status: "NEXT",
+            nextTarget: "/showroom/globe/index.html",
+            code: "ROUTE_SOURCE_NOT_CURRENT",
+            read: "Route served source does not yet satisfy V21 hydration-aware route parity.",
+            source: "HOLD",
+            runtime: "WAIT",
+            mount: "WAIT",
+            leakage: "WAIT"
+          };
+        }
+
+        if (results.assetSource.status !== "PASS") {
+          return {
+            status: "NEXT",
+            nextTarget: TARGETS.asset,
+            code: "ASSET_SOURCE_NOT_CURRENT",
+            read: "Asset served source does not yet satisfy hydration-first delegator parity.",
+            source: "HOLD",
+            runtime: "WAIT",
+            mount: "WAIT",
+            leakage: "WAIT"
+          };
+        }
+
+        if (results.runtime.status !== "PASS") {
+          return {
+            status: "NEXT",
+            nextTarget: "/showroom/globe/index.html",
+            code: "RUNTIME_GLOBAL_NOT_CURRENT",
+            read: "Served source passes, but runtime globals inside the Planet 1 route do not match current expected versions.",
+            source: "PASS",
+            runtime: "FAIL",
+            mount: "WAIT",
+            leakage: "WAIT"
+          };
+        }
+
+        if (results.mount.status !== "PASS") {
+          return {
+            status: "NEXT",
+            nextTarget: "mount lifecycle / stale DOM purge",
+            code: "MOUNTED_DOM_NOT_CURRENT",
+            read: "Source and runtime are current, but the mounted DOM does not show the current V18B hydro-terrain proof.",
+            source: "PASS",
+            runtime: "PASS",
+            mount: "FAIL",
+            leakage: "WAIT"
+          };
+        }
+
+        if (results.leakage.status !== "PASS") {
+          return {
+            status: "NEXT",
+            nextTarget: "old expression leakage purge",
+            code: "OLD_EXPRESSION_LEAKAGE_PRESENT",
+            read: "Current source/runtime/mount checks mostly pass, but old expression leakage remains in the mounted DOM.",
+            source: "PASS",
+            runtime: "PASS",
+            mount: "PASS",
+            leakage: "FAIL"
+          };
+        }
+
+        return {
+          status: "PASS",
+          nextTarget: "/showroom/globe/ visual review",
+          code: "SOURCE_RUNTIME_MOUNT_PARITY_PASS",
+          read: "Source, runtime, and mounted DOM agree. Visual review is now lawful.",
+          source: "PASS",
+          runtime: "PASS",
+          mount: "PASS",
+          leakage: "PASS"
+        };
+      }
+
+      function render(results, decision) {
+        const checks = [
+          cardHtml(
+            "Top Left · Renderer source",
+            TARGETS.renderer,
+            results.rendererSource.status,
+            results.rendererSource.rows,
+            "HTTP " + results.rendererSource.fetched.status + ". Checks: " + results.rendererSource.summary.passed + " of " + results.rendererSource.summary.total + "."
+          ),
+          cardHtml(
+            "Middle Left · Route source",
+            TARGETS.route,
+            results.routeSource.status,
+            results.routeSource.rows,
+            "HTTP " + results.routeSource.fetched.status + ". Checks: " + results.routeSource.summary.passed + " of " + results.routeSource.summary.total + "."
+          ),
+          cardHtml(
+            "Middle Center · Asset source",
+            TARGETS.asset,
+            results.assetSource.status,
+            results.assetSource.rows,
+            "HTTP " + results.assetSource.fetched.status + ". Checks: " + results.assetSource.summary.passed + " of " + results.assetSource.summary.total + "."
+          ),
+          cardHtml(
+            "Top Center · Runtime globals",
+            "/showroom/globe/ iframe runtime",
+            results.runtime.status,
+            results.runtime.rows,
+            results.runtime.meta
+          ),
+          cardHtml(
+            "Top Right · Mounted DOM",
+            "#planet-one-render",
+            results.mount.status,
+            results.mount.rows,
+            results.mount.meta
+          ),
+          cardHtml(
+            "Bottom Left · Old expression leakage",
+            "#planet-one-render leakage scan",
+            results.leakage.status,
+            results.leakage.rows,
+            results.leakage.meta
+          )
+        ];
+
+        byId("checksGrid").innerHTML = checks.join("");
+
+        setScore("scoreSource", decision.source, decision.source);
+        setScore("scoreRuntime", decision.runtime, decision.runtime);
+        setScore("scoreMount", decision.mount, decision.mount);
+        setScore("scoreLeakage", decision.leakage, decision.leakage);
+        setScore("scoreNext", decision.nextTarget, decision.status === "PASS" ? "PASS" : "NEXT");
+
+        setPill("overallStatus", decision.status);
+        setPill("checksStatus", decision.status);
+        setPill("decisionStatus", decision.status);
+        setPill("frameStatus", results.frame.ok ? "PASS" : "FAIL");
+
+        byId("currentRead").textContent = decision.read;
+        byId("decisionText").textContent = decision.read;
+
+        byId("decisionMono").textContent = [
+          "DIAGNOSTIC_CODE=" + decision.code,
+          "PROTOCOL=" + PROTOCOL,
+          "SOURCE_STATE=" + decision.source,
+          "RUNTIME_STATE=" + decision.runtime,
+          "MOUNT_STATE=" + decision.mount,
+          "LEAKAGE_STATE=" + decision.leakage,
+          "NEXT_TARGET=" + decision.nextTarget,
+          "RULE=Trust only source/runtime/mount parity before visual judgment."
+        ].join("\n");
+
+        global.DGBGovernanceRuntimeParityPanel = Object.freeze({
+          VERSION,
+          PROTOCOL,
+          TARGETS,
+          EXPECTED,
+          results,
+          decision,
+          getStatus: function getStatus() {
+            return {
+              version: VERSION,
+              protocol: PROTOCOL,
+              targets: TARGETS,
+              expected: EXPECTED,
+              decision
+            };
+          }
+        });
+      }
+
+      function runAudit() {
+        byId("currentRead").textContent = "Running parity audit. Fetching source and inspecting Planet 1 runtime/mount state.";
+
+        const sourcePromises = Promise.all([
+          fetchText(TARGETS.renderer),
+          fetchText(TARGETS.route),
+          fetchText(TARGETS.asset)
+        ]);
+
+        const framePromise = inspectFrame();
+
+        return Promise.all([sourcePromises, framePromise]).then(function complete(payload) {
+          const fetched = payload[0];
+          const frame = payload[1];
+
+          const results = {
+            rendererSource: evaluateSource("renderer", fetched[0], SOURCE_CHECKS.renderer),
+            routeSource: evaluateSource("route", fetched[1], SOURCE_CHECKS.route),
+            assetSource: evaluateSource("asset", fetched[2], SOURCE_CHECKS.asset),
+            frame,
+            runtime: evaluateRuntime(frame),
+            mount: evaluateMount(frame),
+            leakage: evaluateLeakage(frame)
+          };
+
+          const decision = decide(results);
+          render(results, decision);
+
+          return { results, decision };
+        });
+      }
+
+      byId("runParityButton").addEventListener("click", runAudit);
+      global.DGBRunGovernanceRuntimeParityAudit = runAudit;
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", runAudit, { once: true });
+      } else {
+        runAudit();
+      }
+    })(window);
+  </script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+name: H-Earth Narrative Observatory
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-narrative-observatory.yml'
+      - 'showroom/globe/h-earth/observatory/**'
+      - 'showroom/globe/h-earth/index.html'
+      - 'h-earth-3d/control-plane/instrument-platform/H_EARTH_NARRATIVE_OBSERVATORY_INTEGRATION_001.v1.mjs'
+      - 'h-earth-3d/validation/instrument-platform/h-earth.narrative-observatory.*.mjs'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/h-earth-narrative-observatory.yml'
+      - 'showroom/globe/h-earth/observatory/**'
+      - 'showroom/globe/h-earth/index.html'
+      - 'h-earth-3d/control-plane/instrument-platform/H_EARTH_NARRATIVE_OBSERVATORY_INTEGRATION_001.v1.mjs'
+      - 'h-earth-3d/validation/instrument-platform/h-earth.narrative-observatory.*.mjs'
+  workflow_dispatch:
+    inputs:
+      public_verification:
+        description: Run B8 against the canonical public H-Earth origin
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  verify-observatory-candidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+      PUBLIC_VERIFICATION: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.public_verification) }}
+      H_EARTH_OBSERVATORY_ORIGIN: ${{ (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.public_verification)) && 'https://diamondgatebridge.com' || 'http://127.0.0.1:4186' }}
+      H_EARTH_OBSERVATORY_B5_RECEIPT: /tmp/h-earth-narrative-observatory-b5.receipt.json
+      H_EARTH_OBSERVATORY_B6_RECEIPT: /tmp/h-earth-narrative-observatory-b6.browser.receipt.json
+    steps:
+      - name: Checkout exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install bounded Chromium dependency
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Execute static, deterministic, and admission verification
+        run: |
+          node h-earth-3d/validation/instrument-platform/h-earth.narrative-observatory.runner.mjs \
+            | tee /tmp/h-earth-narrative-observatory-b5.log
+
+      - name: Start exact candidate server
+        if: ${{ env.PUBLIC_VERIFICATION != 'true' }}
+        run: |
+          python3 -m http.server 4186 --bind 127.0.0.1 > /tmp/h-earth-narrative-observatory-server.log 2>&1 &
+          for attempt in $(seq 1 90); do
+            curl -fsS http://127.0.0.1:4186/showroom/globe/h-earth/observatory/ >/dev/null \
+              && curl -fsS http://127.0.0.1:4186/showroom/globe/h-earth/ >/dev/null \
+              && exit 0
+            sleep 1
+          done
+          cat /tmp/h-earth-narrative-observatory-server.log
+          exit 1
+
+      - name: Wait for exact public candidate deployment
+        if: ${{ env.PUBLIC_VERIFICATION == 'true' }}
+        run: |
+          : > /tmp/h-earth-narrative-observatory-server.log
+          for attempt in $(seq 1 40); do
+            OBSERVATORY_SOURCE="$(curl -fsS "${H_EARTH_OBSERVATORY_ORIGIN}/showroom/globe/h-earth/observatory/?candidate=H_EARTH_NARRATIVE_OBSERVATORY_INTEGRATION_001&attempt=${attempt}" || true)"
+            H_EARTH_SOURCE="$(curl -fsS "${H_EARTH_OBSERVATORY_ORIGIN}/showroom/globe/h-earth/?candidate=H_EARTH_NARRATIVE_OBSERVATORY_INTEGRATION_001&attempt=${attempt}" || true)"
+            if grep -q 'THE_H_EARTH_OBSERVATORY' <<<"${OBSERVATORY_SOURCE}" \
+              && grep -q 'h-earth-observatory-candidate-gate' <<<"${H_EARTH_SOURCE}"; then
+              printf 'PUBLIC_CANDIDATE_SOURCE_AVAILABLE_ATTEMPT=%s\n' "${attempt}" | tee /tmp/h-earth-narrative-observatory-server.log
+              exit 0
+            fi
+            sleep 15
+          done
+          printf 'PUBLIC_CANDIDATE_SOURCE_NOT_AVAILABLE\n' | tee /tmp/h-earth-narrative-observatory-server.log
+          exit 1
+
+      - name: Execute exact browser and traversal regression
+        run: |
+          node h-earth-3d/validation/instrument-platform/h-earth.narrative-observatory.browser.mjs \
+            | tee /tmp/h-earth-narrative-observatory-b6.log
+
+      - name: Enforce B5, B6, and B8 checkpoint boundary
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const b5 = JSON.parse(fs.readFileSync(process.env.H_EARTH_OBSERVATORY_B5_RECEIPT, 'utf8'));
+          const b6 = JSON.parse(fs.readFileSync(process.env.H_EARTH_OBSERVATORY_B6_RECEIPT, 'utf8'));
+          const expectPublic = process.env.PUBLIC_VERIFICATION === 'true';
+          const valid =
+            b5.status === 'PASS_CLOSED' &&
+            b5.exactChangedPaths.length === 7 &&
+            b5.unauthorizedChangedPaths === 0 &&
+            b5.protectedPathMutations === 0 &&
+            b5.failedAssertionCount === 0 &&
+            b5.boundedLiveAdmission?.authorized === true &&
+            b5.boundedLiveAdmission?.productAccepted === false &&
+            b5.boundedLiveAdmission?.defaultPromoted === false &&
+            b6.status === 'PASS_CLOSED' &&
+            b6.failedAssertionCount === 0 &&
+            b6.pageErrors.length === 0 &&
+            b6.consoleErrors.length === 0 &&
+            b6.httpErrors.length === 0 &&
+            b6.publicVerificationPerformed === expectPublic &&
+            b6.baselinePublicDefaultUnchanged === true &&
+            b6.userDifferentialRecorded === false &&
+            b6.defaultPromoted === false;
+          if (!valid) {
+            console.error(JSON.stringify({ b5, b6, expectPublic }, null, 2));
+            process.exit(1);
+          }
+          const checkpoint = expectPublic ? 'B8_PUBLIC_CANDIDATE_PASS' : 'B5_B6_ENGINEERING_PASS';
+          console.log(`H_EARTH_NARRATIVE_OBSERVATORY_${checkpoint}:${process.env.CANDIDATE_HEAD}:${b5.receiptSha256}:${b6.receiptSha256}`);
+          NODE
+
+      - name: Publish B8 public candidate receipt to PR 404
+        if: ${{ env.PUBLIC_VERIFICATION == 'true' }}
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const b5 = JSON.parse(fs.readFileSync(process.env.H_EARTH_OBSERVATORY_B5_RECEIPT, 'utf8'));
+            const b8 = JSON.parse(fs.readFileSync(process.env.H_EARTH_OBSERVATORY_B6_RECEIPT, 'utf8'));
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = [
+              '## Operation B · B8 public candidate receipt',
+              '',
+              '```text',
+              'RECEIPT_TYPE = H_EARTH_NARRATIVE_OBSERVATORY_B8_PUBLIC_CANDIDATE_RECEIPT_v1',
+              'CHECKPOINT = B8_PUBLIC_CANDIDATE_SOURCE_AND_RUNTIME_VERIFICATION',
+              'STATUS = PASS_CLOSED',
+              `EXACT_BASE = ${b5.exactBase}`,
+              `PUBLIC_CANDIDATE_HEAD = ${b8.candidateHead}`,
+              `WORKFLOW_RUN_ID = ${context.runId}`,
+              `WORKFLOW_RUN_URL = ${runUrl}`,
+              `PUBLIC_CANDIDATE_URL = ${b8.candidateUrl}`,
+              `PUBLIC_OBSERVATORY_URL = ${b8.observatoryUrl}`,
+              `SOURCE_RECEIPT_DIGEST = ${b5.receiptSha256}`,
+              `BROWSER_AND_TRAVERSAL_RECEIPT_DIGEST = ${b8.receiptSha256}`,
+              '```',
+              '',
+              '```text',
+              `PUBLIC_VERIFICATION_PERFORMED = ${b8.publicVerificationPerformed}`,
+              `PUBLIC_CANDIDATE_SOURCE_MATCH = ${b5.candidateHead === b8.candidateHead}`,
+              `PUBLIC_CANDIDATE_RUNTIME_MATCH = ${b8.failedAssertionCount === 0}`,
+              `BASELINE_PUBLIC_DEFAULT_UNCHANGED = ${b8.baselinePublicDefaultUnchanged}`,
+              `USER_DIFFERENTIAL_RECORDED = ${b8.userDifferentialRecorded}`,
+              `DEFAULT_PROMOTED = ${b8.defaultPromoted}`,
+              `PAGE_ERRORS = ${b8.pageErrors.length}`,
+              `CONSOLE_ERRORS = ${b8.consoleErrors.length}`,
+              `HTTP_ERRORS = ${b8.httpErrors.length}`,
+              '```',
+              '',
+              '```text',
+              'STOP_BOUNDARY = PUBLIC_CANDIDATE_VERIFIED_WAITING_FOR_USER_DIFFERENTIAL',
+              'ALLOWED_USER_DISPOSITIONS = ACCEPT | REJECT | RECONCILE',
+              '```'
+            ].join('\n');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: 404,
+              body
+            });
+
+      - name: Upload Observatory evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-narrative-observatory-${{ github.event_name }}
+          path: |
+            /tmp/h-earth-narrative-observatory-b5.receipt.json
+            /tmp/h-earth-narrative-observatory-b6.browser.receipt.json
+            /tmp/h-earth-narrative-observatory-b5.log
+            /tmp/h-earth-narrative-observatory-b6.log
+            /tmp/h-earth-narrative-observatory-server.log
+          retention-days: 90

@@ -1,0 +1,36 @@
+{
+  "receiptType": "H_EARTH_FUNCTIONAL_LANDSCAPE_RUN_6E_RECEIPT",
+  "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_COMPOSITOR_ADAPTER_RUN_6E_v1",
+  "eligible": true,
+  "status": "FUNCTIONAL_LANDSCAPE_COMPOSITOR_HANDOFF_COMPLETE",
+  "neutralPrimitiveCount": 20,
+  "admittedPrimitiveCount": 20,
+  "semanticAddressCount": 256,
+  "proxySummarizedAddressCount": 64,
+  "shorelineBandCount": 7,
+  "westAdmission": "PASS",
+  "successorPostWestTransfer": "PASS",
+  "successorAdmittedFrame": "PASS",
+  "successorCompositorHandoff": "PASS",
+  "rendererPlan": "PASS",
+  "compatibilityModesPreserved": [
+    "FIRST_ADMITTED_WET_SAND_PROOF",
+    "MINIMUM_NATIVE_SHORELINE_PROOF"
+  ],
+  "packet001Altered": false,
+  "existingPacket002Altered": false,
+  "existingAdmittedGeometryFrameAltered": false,
+  "existingCompositorAltered": false,
+  "runtimeActivated": false,
+  "productionAuthority": false,
+  "issues": [],
+  "execution": {
+    "runtime": "GitHub Actions / Node.js 22",
+    "actualRepositorySourceGraph": true,
+    "workflowRunId": 30184708845,
+    "workflowJobId": 89747195822,
+    "workflowConclusion": "success",
+    "checkpointStepConclusion": "success",
+    "productPromotionClaim": false
+  }
+}

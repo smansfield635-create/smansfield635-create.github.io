@@ -1,0 +1,77 @@
+<!-- /gauges/h-earth/index.html -->
+<!doctype html>
+<html
+  lang="en"
+  data-page="gauges-h-earth-current-authority"
+  data-route="/gauges/h-earth/"
+  data-contract="H_EARTH_CURRENT_AUTHORITY_GAUGE_v3"
+  data-receipt="H_EARTH_CURRENT_AUTHORITY_GAUGE_RECEIPT_v3"
+  data-read-only="true"
+  data-repository-mutation="false"
+  data-live-h-earth-mutation="false"
+>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+  <title>Diamond Gate Bridge · H-Earth Current-Authority Gauge</title>
+  <style>
+    :root{color-scheme:dark;--bg:#030914;--panel:rgba(8,18,35,.9);--panel2:rgba(4,10,20,.82);--line:rgba(231,188,105,.34);--gold:#e7bc69;--text:#eef6ff;--muted:rgba(238,246,255,.72);--pass:#8bd7a3;--fail:#ff8e8e;--held:#e7bc69;--superseded:#8fa7c4;--na:#bba6d8;--unresolved:#ffbd78;--shadow:0 22px 70px rgba(0,0,0,.38)}
+    *{box-sizing:border-box}html{min-height:100%;background:radial-gradient(circle at 50% 12%,rgba(42,124,164,.2),transparent 35%),radial-gradient(circle at 10% 8%,rgba(231,188,105,.12),transparent 28%),linear-gradient(180deg,#06101e,var(--bg) 76%);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{margin:0;min-height:100vh}a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}.shell{width:min(1180px,calc(100% - 28px));margin:0 auto;padding:22px 0 42px}.topbar,.hero,.metric,.check,.receipt,.ledger{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),var(--panel2));box-shadow:var(--shadow);backdrop-filter:blur(10px)}.topbar{display:flex;justify-content:space-between;gap:14px;border-radius:24px;padding:12px 14px}.brand{display:inline-flex;align-items:center;gap:10px;font-weight:900}.mark{display:grid;place-items:center;width:36px;height:36px;border-radius:12px;border:1px solid rgba(231,188,105,.46);color:var(--gold)}.nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}.nav a,.button,button{border:1px solid rgba(231,188,105,.28);border-radius:999px;padding:9px 12px;color:var(--muted);background:rgba(231,188,105,.1);font-weight:850}.nav a[aria-current="page"],.primary{color:#06101e;background:var(--gold);font-weight:900}.hero{margin-top:22px;border-radius:28px;padding:20px}.eyebrow{color:var(--gold);font-size:.78rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase}h1{margin:8px 0 10px;font-size:clamp(2rem,6vw,4.8rem);line-height:.94;letter-spacing:-.07em}.lede{max-width:88ch;color:var(--muted);line-height:1.58;margin:0}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.metrics{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;margin-top:18px}.metric{border-radius:20px;padding:13px}.metric strong{display:block;font-size:1.45rem;color:var(--gold)}.metric span{color:var(--muted);font-size:.8rem}.section-title{margin:24px 0 10px;color:var(--gold);font-size:.86rem;letter-spacing:.12em;text-transform:uppercase}.checks{display:grid;gap:10px}.check{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;border-radius:18px;padding:14px}.check h2{margin:0 0 5px;font-size:1rem}.check p{margin:0;color:var(--muted);font-size:.9rem;line-height:1.45;overflow-wrap:anywhere}.status{min-width:96px;padding:5px 9px;border-radius:999px;font-size:.7rem;font-weight:1000;text-transform:uppercase;text-align:center;border:1px solid rgba(255,255,255,.14)}.check[data-status="PASS"] .status{color:#07170c;background:var(--pass)}.check[data-status="FAIL"] .status{color:#220808;background:var(--fail)}.check[data-status="HELD_BY_CURRENT_AUTHORITY"] .status{color:#161005;background:var(--held)}.check[data-status="SUPERSEDED"] .status{color:#07111d;background:var(--superseded)}.check[data-status="NOT_APPLICABLE"] .status{color:#160d21;background:var(--na)}.check[data-status="UNRESOLVED"] .status{color:#211004;background:var(--unresolved)}.receipt{margin-top:18px;padding:14px;overflow:auto;border-radius:18px;color:rgba(238,246,255,.8);font-size:.76rem;line-height:1.45;white-space:pre-wrap}.ledger{border-radius:18px;padding:14px}.legacy-grid{display:grid;gap:8px}.legacy-row{display:grid;grid-template-columns:minmax(220px,.8fr) minmax(0,1.2fr);gap:12px;padding:10px;border-radius:12px;background:rgba(255,255,255,.035)}.legacy-row strong{font-size:.84rem}.legacy-row span{color:var(--muted);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.74rem;overflow-wrap:anywhere}.law{margin-top:12px;padding:12px;border:1px solid rgba(231,188,105,.24);border-radius:14px;color:var(--muted);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.76rem;white-space:pre-wrap}@media(max-width:980px){.metrics{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:700px){.topbar{flex-direction:column}.nav{justify-content:flex-start}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.check{display:grid}.status{min-width:0;width:fit-content}.legacy-row{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/"><span class="mark">H</span><span>Diamond Gate Bridge · H-Earth Gauges</span></a>
+      <nav class="nav" aria-label="H-Earth gauge navigation">
+        <a href="/">Compass</a>
+        <a href="/showroom/globe/">Mirrorland Globe</a>
+        <a href="/showroom/globe/h-earth/">H-Earth</a>
+        <a href="/h-earth-3d/tools/instrument-platform/">Unified Instrument</a>
+        <a href="/gauges/h-earth/" aria-current="page">Current-Authority Gauge</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <div class="eyebrow">Read-only · Current-authority execution</div>
+        <h1>H-Earth Current-Authority Gauge</h1>
+        <p class="lede">This backstage instrument measures the current Mirrorland, Run 8E, Run 8B, accepted CP2, FD_05, and unified-platform authorities. Retired May-era markers remain visible only in the supersession ledger. The gauge never changes H-Earth to satisfy itself.</p>
+        <div class="actions">
+          <button class="primary" type="button" id="runAudit">Run Current-Authority Audit</button>
+          <a class="button" href="/showroom/globe/h-earth/">Open H-Earth</a>
+          <a class="button" href="/showroom/globe/h-earth/diagnostic/">Open FD_05</a>
+          <a class="button" href="/h-earth-3d/tools/instrument-platform/">Open Unified Instrument</a>
+        </div>
+        <div class="metrics" aria-label="Current-authority audit totals">
+          <div class="metric"><strong id="requiredCount">0</strong><span>Required applicable</span></div>
+          <div class="metric"><strong id="passCount">0</strong><span>Required passes</span></div>
+          <div class="metric"><strong id="heldCount">0</strong><span>Current holds</span></div>
+          <div class="metric"><strong id="supersededCount">11</strong><span>Legacy superseded</span></div>
+          <div class="metric"><strong id="failCount">0</strong><span>Required failures</span></div>
+          <div class="metric"><strong id="unresolvedCount">0</strong><span>Required unresolved</span></div>
+          <div class="metric"><strong id="readiness">0%</strong><span>Operational readiness</span></div>
+        </div>
+        <div class="law">READINESS = REQUIRED_APPLICABLE_PASSES ÷ REQUIRED_APPLICABLE_CHECKS
+SUPERSEDED, NOT_APPLICABLE, AND LEGITIMATE HELD STATES REMAIN VISIBLE BUT DO NOT LOWER READINESS.</div>
+      </section>
+
+      <h2 class="section-title">Current authority checks</h2>
+      <section id="checks" class="checks" aria-live="polite"></section>
+
+      <h2 class="section-title">Derived authority records</h2>
+      <section id="derived-authorities" class="checks" aria-live="polite"></section>
+
+      <h2 class="section-title">Legacy eleven-row disposition</h2>
+      <section class="ledger">
+        <div id="legacy-dispositions" class="legacy-grid"></div>
+      </section>
+
+      <pre id="receipt" class="receipt">H_EARTH_CURRENT_AUTHORITY_GAUGE_v3 · waiting</pre>
+    </main>
+  </div>
+  <script type="module" src="./h-earth.current-authority-gauge.v3.mjs?cb=1d9b9eec68de90c3"></script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+{
+  "receiptId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4E_COMPLETION_RECEIPT_v1",
+  "targetNumber": 4,
+  "targetSubtarget": "4E-14",
+  "result": "PASS",
+  "branch": "agent/h-earth-repository-registry-installation-001",
+  "completionCommitIdentity": "THE_COMMIT_CONTAINING_THIS_RECEIPT",
+  "bootstrap": {
+    "path": "/h-earth-3d/registry/h-earth.repository-registry.bootstrap.json",
+    "gitBlobSha": "7c14d57452280e60d5ff7f7f9c465868d4782764",
+    "automaticActivationRegistered": true,
+    "systemicComprehensionRegistered": true,
+    "nextAuthorizedSubtarget": "4F-1"
+  },
+  "executionReceipt": {
+    "path": "/h-earth-3d/registry/h-earth.repository-registry.target-4e-receipt.json",
+    "gitBlobSha": "e58f660bee60833579a47157383b21a71baf0d62",
+    "result": "PASS",
+    "executionEnvironment": "BOUNDED_GITHUB_ACTION_ACTUAL_BRANCH_CHECKOUT",
+    "executedCommit": "1a411fcbcf5b156667f1a47ce8b40d9d6ff13692"
+  },
+  "automaticActivation": {
+    "activationId": "H_EARTH_REPOSITORY_REGISTRY_AUTOMATIC_PREFLIGHT_ACTIVATION_v1",
+    "rootAgentEntrypointPath": "/AGENTS.md",
+    "rootAgentEntrypointGitBlobSha": "4e9bfb218afb7dde9a68be893100e4f4ebef93f5",
+    "activationContractGitBlobSha": "56e749d139a0fd587ee284fad2f5f6204d639981",
+    "activationModuleGitBlobSha": "b3c51381af190b6aab296db222296dc851cb7e9a",
+    "automaticCliGitBlobSha": "6d4af698ca75b96aaa660033e9ae24c704673eb7",
+    "automaticWorkflowGitBlobSha": "b230e688c2778f6b5acf5567d1cf32ac2450de25",
+    "compatibleAgentUserPromptRequired": false,
+    "githubChangeUserPromptRequiredAfterWorkflowActivation": false,
+    "automaticWorkflowCandidateInstalled": true,
+    "automaticWorkflowActiveOnMain": false,
+    "allExternalToolsControlled": false,
+    "branchProtectionCreated": false
+  },
+  "automaticWorkflowExecution": {
+    "runId": 30045319611,
+    "workflowName": "H-Earth Automatic Repository Registry Preflight",
+    "headSha": "899e76c27e297d8bfed3bac90e30288159702d6d",
+    "conclusion": "EXPECTED_FAILURE_FROM_STOP_DISPOSITION",
+    "activationOccurredWithoutUserRegistryInstruction": true,
+    "changedPathDiscoverySucceeded": true,
+    "preflightExecutionConclusion": "FAILURE_BECAUSE_VALIDATOR_RETURNED_STOP",
+    "receiptUploadSucceeded": true,
+    "artifactId": 8578876013,
+    "artifactDigest": "sha256:c236a4d781ab43051a8d1e1ebf818ef2d84ad2feb58c5cffb9aace6a51dbb807",
+    "artifactReceipt": {
+      "activationStatus": "ACTIVATED",
+      "dependenciesVerified": true,
+      "finalDisposition": "STOP",
+      "mutationIntentDetected": true,
+      "mutationMayProceed": false,
+      "failureCodes": [
+        "OPERATION_SCOPE_UNRESOLVED",
+        "REQUESTED_PATH_UNRESOLVED"
+      ],
+      "derivationTraceLength": 14
+    }
+  },
+  "boundedIntegratedAudit": {
+    "runId": 30045319813,
+    "jobId": 89334968952,
+    "conclusion": "SUCCESS",
+    "staticActivationAudit": {
+      "result": "PASS",
+      "totalChecks": 47,
+      "passedChecks": 47,
+      "failedChecks": 0
+    },
+    "target4BRegression": {
+      "result": "PASS",
+      "passedChecks": 34,
+      "failedChecks": 0
+    },
+    "target4CRegression": {
+      "staticResult": "PASS",
+      "staticPassedChecks": 37,
+      "fixtureResult": "PASS",
+      "executedFixtureCount": 33,
+      "passedFixtureCount": 33,
+      "failedFixtureCount": 0
+    },
+    "systemicExecution": {
+      "result": "PASS",
+      "executedScenarioCount": 8,
+      "passedScenarioCount": 8,
+      "failedScenarioCount": 0,
+      "activatedScenarioCount": 7,
+      "notApplicableScenarioCount": 1,
+      "allTasksUnprompted": true,
+      "allReceiptsDeterministic": true,
+      "dispositionCounts": {
+        "PASS": 6,
+        "REVIEW_REQUIRED": 0,
+        "BLOCK": 0,
+        "STOP": 1,
+        "NOT_APPLICABLE": 1
+      }
+    }
+  },
+  "target4DReclassification": {
+    "status": "OPTIONAL_DEFERRED_GENERALIZATION_LANE",
+    "findingValidityPreserved": true,
+    "hEarthCriticalPathBlocked": false,
+    "genericEngineRequiredForHEarth": false,
+    "portabilityClaimCreated": false
+  },
+  "protectedIdentities": {
+    "target2RegistryGitBlob": "10ab7b203e03fde419e526d0cce2c0af42860911",
+    "target3InstructionGitBlob": "de421803f21808ce27b2ffff349af8756c4d9929",
+    "target4AContractGitBlob": "a6733c868cfee1abce172c0ac901fecf3dd209b2",
+    "target4BEngineGitBlob": "b2d7e0290a2032bef36205e1e1e5b0d3e72ca759",
+    "target4CCompletionReceiptGitBlob": "fc137bb499cd51b4031f671b071c835e6a0cff42",
+    "target4DBlockerReceiptGitBlob": "49e24b382a192b486f1d5cc5f4ed91f3378748ca"
+  },
+  "finalVerification": {
+    "permanentAutomaticWorkflowPresentOnInstallationBranch": true,
+    "temporaryBoundedWorkflowAbsentFromInstallationBranch": true,
+    "temporaryTriggerSourceAbsentFromInstallationBranch": true,
+    "temporaryExecutionPrNumber": 67,
+    "temporaryExecutionPrClosed": true,
+    "temporaryExecutionPrMerged": false,
+    "temporaryExecutionBranchNeutralizedToMain": true,
+    "temporaryExecutionBranchDeleted": false,
+    "mainChanged": false,
+    "candidatePrNumber": 61,
+    "candidatePrOpen": true,
+    "candidatePrDraft": true,
+    "candidatePrMerged": false
+  },
+  "boundaries": {
+    "target4EComplete": true,
+    "automaticRepositoryEntrypointInstalled": true,
+    "automaticWorkflowCandidateInstalled": true,
+    "automaticWorkflowActiveOnMain": false,
+    "systemicComprehensionAuditExecuted": true,
+    "allExternalToolsAutomaticallyControlled": false,
+    "branchProtectionCreated": false,
+    "sourceAuthorityCreated": false,
+    "mutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "canonicalizationAuthorityCreated": false,
+    "runtimeActivationCreated": false,
+    "rendererActivationCreated": false,
+    "deploymentAuthorityCreated": false,
+    "productionClaimCreated": false,
+    "mainChanged": false
+  },
+  "stoppingCondition": {
+    "target4EComplete": true,
+    "advanceBeyondTarget4E": false,
+    "nextAuthorizedSubtarget": "4F-1"
+  }
+}

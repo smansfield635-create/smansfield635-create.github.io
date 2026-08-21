@@ -1,0 +1,98 @@
+{
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "procedureId": "H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_CONTINUITY_INSTRUMENTATION_PROCEDURE_v2",
+  "operationClass": "NONPRODUCT_CROSS_ROOM_DURABLE_CONTINUITY_INSTRUMENT_CONSTRUCTION",
+  "exactGoverningHead": "f5c4238adee4161cb1f3583cc52ed13eebfffa2b",
+  "exactAllowedRepositoryPaths": [
+    ".github/workflows/h-earth-audralia-open-world-spatial-migration-continuity.yml",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/AGENTS.md",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/authority-and-lineage.v1.json",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/changed-path-manifest.v1.json",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/checkpoint-registry.v1.json",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/construction-procedure.v1.json",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/continuity-state.v1.json",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/instrument.locator.v1.json",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/operation-request.v1.json",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/schemas.v1.json",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/spatial-invariants.v1.json",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/successor-room-recovery.v1.json",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/verification-contract.v1.json",
+    "tools/h-earth-audralia-open-world-spatial-migration/continuity-verifier.v1.mjs"
+  ],
+  "exactBranchAndCommitSequence": [
+    {"step": 1, "action": "CREATE_FRESH_INSTRUMENTATION_BRANCH_FROM_EXACT_ADMITTED_MAIN_F5C4238A"},
+    {"step": 2, "action": "MATERIALIZE_EXACT_13_NONWORKFLOW_PACKAGE_FILES_AS_FULL_FILE_CONTENTS"},
+    {"step": 3, "action": "RUN_STATIC_CONTINUITY_VERIFIER_AND_REQUIRE_PASS"},
+    {"step": 4, "action": "MATERIALIZE_EXACT_WORKFLOW_PATH_LAST"},
+    {"step": 5, "action": "VERIFY_BRANCH_DELTA_IS_EXACTLY_14_PATHS"},
+    {"step": 6, "action": "RUN_BUILDER_AND_FRESH_INDEPENDENT_VERIFIER_AT_EXACT_CANDIDATE_HEAD"},
+    {"step": 7, "action": "REQUIRE_EQUAL_PACKAGE_FINGERPRINTS_AND_PRESERVE_RECEIPTS"},
+    {"step": 8, "action": "OPEN_DRAFT_PR_FOR_REVIEW_WITHOUT_MERGE"},
+    {"step": 9, "action": "STOP_FOR_SEPARATE_EXACT_HEAD_H_EARTH_REGISTRY_REGISTRATION_AND_PERMANENT_ACTIVATION"}
+  ],
+  "evaluationToolingHeadBindingRule": "ALL_VERIFICATION_BINDS_TO_THE_EXACT_14_PATH_CANDIDATE_HEAD;REVISION_10_IS_IMMUTABLE_SOURCE;F5C4238A_IS_GOVERNING_ROUTER_MERGE_BASE;NO_MOVING_BRANCH_CLAIM",
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_CONTINUITY_INSTRUMENT_SCHEMA_v1",
+    "H_EARTH_AUDRALIA_OPEN_WORLD_CHECKPOINT_REGISTRY_v1",
+    "H_EARTH_AUDRALIA_OPEN_WORLD_CONTINUITY_STATE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "H_EARTH_AUDRALIA_OPEN_WORLD_CONTINUITY_VERIFICATION_RECEIPT_v1",
+    "H_EARTH_AUDRALIA_OPEN_WORLD_SUCCESSOR_ROOM_RECOVERY_RECEIPT_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_MAIN_MISMATCH",
+    "PATH_BOUNDARY_MISMATCH",
+    "OPEN_WORLD_INVARIANT_MISSING",
+    "REVISION_10_SOURCE_IDENTITY_MISMATCH",
+    "ROUTER_MERGE_IDENTITY_MISMATCH",
+    "CHECKPOINT_SEQUENCE_INVALID",
+    "RECOVERY_POINTER_INVALID",
+    "ROOM_PRIVATE_STATE_DECLARED_AUTHORITATIVE",
+    "TRAVERSAL_EXPANSION_REQUIREMENT_MISSING",
+    "PRODUCT_AUTHORITY_LEAK",
+    "FINGERPRINT_MISMATCH",
+    "UNEXPECTED_ERROR"
+  ],
+  "exactTestRunnerCommand": "node tools/h-earth-audralia-open-world-spatial-migration/continuity-verifier.v1.mjs --verify-static",
+  "independentVerifierDefinition": {
+    "freshCheckoutAtExactCandidateHead": true,
+    "repairProhibited": true,
+    "mustVerify": [
+      "EXACT_PATH_SET",
+      "SPATIAL_INVARIANTS",
+      "CHECKPOINT_DAG",
+      "CURRENT_STATE_POINTER",
+      "REVISION_10_IDENTITY",
+      "ROUTER_MERGE_IDENTITY",
+      "TRAVERSAL_EXPANSION_REQUIRED",
+      "NO_PRODUCT_AUTHORITY",
+      "PACKAGE_FINGERPRINT"
+    ]
+  },
+  "workflowAndArtifactPackagingPaths": {
+    "workflowPath": ".github/workflows/h-earth-audralia-open-world-spatial-migration-continuity.yml",
+    "artifactPaths": ["h-earth-audralia-open-world-spatial-migration-continuity/**"],
+    "retentionDays": 90
+  },
+  "bridgeOutputFingerprintDomain": {
+    "algorithm": "SHA-256",
+    "includes": "EXACT_12_CONTROL_FILES_PLUS_VERIFIER_BYTES_EXCLUDING_WORKFLOW_RUNTIME_METADATA",
+    "exactPathCount": 14,
+    "sourceRevision10Head": "ad9e72adb97df7ab867af1fe20df2c29de763d28",
+    "governingHead": "f5c4238adee4161cb1f3583cc52ed13eebfffa2b",
+    "excludes": ["TIMESTAMPS", "WORKFLOW_RUN_IDS", "ARTIFACT_IDS", "GITHUB_EPHEMERAL_METADATA"]
+  },
+  "priorAttemptInspectionLimits": {
+    "mayInspectCurrentMain": true,
+    "mayInspectIssue719": true,
+    "mayInspectRevision10Source": true,
+    "mayInspectPermanentMapWideInstrumentReadOnly": true,
+    "mayInspectRepositoryRegistryReadOnly": true,
+    "mayInspectRouterMergeReadOnly": true,
+    "mayMutatePredecessorOperation": false,
+    "mayMutateProductTerrainRuntimeShowroom": false,
+    "mayMergeDeployRelease": false
+  }
+}

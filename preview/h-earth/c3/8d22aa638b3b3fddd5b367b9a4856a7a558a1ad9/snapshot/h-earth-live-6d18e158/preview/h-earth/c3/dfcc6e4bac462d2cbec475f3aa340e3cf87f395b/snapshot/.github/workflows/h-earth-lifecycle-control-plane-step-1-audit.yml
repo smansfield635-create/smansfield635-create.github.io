@@ -1,0 +1,32 @@
+name: H-Earth Lifecycle Control Plane Step 1 Audit
+
+on:
+  push:
+    branches:
+      - 'agent/h-earth-lifecycle-control-plane-step-1-001'
+  pull_request:
+    paths:
+      - 'h-earth-3d/control-plane/step-1/**'
+      - 'tools/h-earth-lifecycle-control-plane-step-1-audit.mjs'
+      - '.github/workflows/h-earth-lifecycle-control-plane-step-1-audit.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit-step-1:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute lifecycle control-plane step 1 audit
+        run: node --experimental-default-type=module tools/h-earth-lifecycle-control-plane-step-1-audit.mjs
+      - name: Upload step 1 audit receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-lifecycle-control-plane-step-1-audit
+          path: artifacts/h-earth-lifecycle-control-plane-step-1-audit-receipt.json
+          if-no-files-found: error

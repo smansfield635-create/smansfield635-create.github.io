@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "H_EARTH_C0_ALLOWED_PATH_MANIFEST_v1",
+  "program": "H_EARTH_COASTAL_MORPHOLOGY_AND_BAKED_EXPRESSION_PROGRAM_001",
+  "checkpoint": "C0_EXACT_LIVE_COASTAL_BASELINE_FREEZE",
+  "boundedExecutionBlocks": [
+    {
+      "id": "C0_A_PUBLIC_OCCURRENCE_AND_LINKAGE",
+      "status": "PASS_CLOSED"
+    },
+    {
+      "id": "C0_B_REPOSITORY_SOURCE_AND_AUTHORITY_CUSTODY",
+      "status": "PASS_CLOSED"
+    },
+    {
+      "id": "C0_C_FIXED_COASTAL_SCENES_AND_SHORELINE_SAMPLES",
+      "status": "PASS_CLOSED"
+    },
+    {
+      "id": "C0_D_RUNTIME_AND_MOBILE_BASELINE",
+      "status": "PASS_CLOSED"
+    },
+    {
+      "id": "C0_E_REPRODUCIBILITY_ROLLBACK_AND_FINAL_RECEIPT",
+      "status": "PASS_CLOSED"
+    }
+  ],
+  "exactMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+  "repositoryRollbackTarget": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+  "branch": "agent/h-earth-c0-exact-live-coastal-baseline-freeze-001",
+  "exactAllowedPathCount": 26,
+  "exactAllowedPaths": [
+    ".github/workflows/h-earth-c0-exact-live-coastal-baseline-freeze.yml",
+    "h-earth-3d/control-plane/coastal-morphology/c0/h-earth.c0.allowed-path-manifest.json",
+    "h-earth-3d/control-plane/coastal-morphology/c0/h-earth.c0.capture.mjs",
+    "h-earth-3d/control-plane/coastal-morphology/c0/h-earth.c0.fixed-scenes.json",
+    "h-earth-3d/control-plane/coastal-morphology/c0/h-earth.c0.receipt.schema.json",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.preflight-receipt.json",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.public-occurrence.json",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.source-custody.json",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.authority-dependency-graph.json",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.shoreline-samples.json",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.performance-baseline.json",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.runtime-receipts.json",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.fixed-scenes-receipt.json",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.reproducibility-receipt.json",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.content-history-reconciliation.json",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.artifact-manifest.json",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.receipt.json",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.public-occurrence-bodies.tar.gz",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.source-tree.txt",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.network-log.json",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/shoreline-approach.png",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/lateral-beach.png",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/inland-to-open-water.png",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/shallow-water.png",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/dark-terrain-transition.png",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/traversal-through-coast.png"
+  ],
+  "allowedMutationClass": "NEW_C0_CONTROL_AND_EVIDENCE_PATHS_ONLY",
+  "protectedPathClasses": [
+    "PUBLIC_H_EARTH_HTML",
+    "PUBLIC_H_EARTH_CSS",
+    "RUNTIME_BOOTSTRAP",
+    "RENDERER",
+    "RENDERER_LIFECYCLE",
+    "TERRAIN_GEOMETRY",
+    "HEIGHTFIELD",
+    "TERRAIN_MATERIALS",
+    "WATER_GEOMETRY",
+    "OCEAN_MATERIAL",
+    "SHORELINE",
+    "CAMERA",
+    "TRAVERSAL",
+    "TOUCH_AND_INPUT",
+    "MANOR_PLACEMENT",
+    "CAVERN_PLACEMENT",
+    "OTHER_ACCEPTED_PLACEMENTS",
+    "VEGETATION",
+    "LIVE_ANIMATION"
+  ],
+  "productMutationExpected": false,
+  "pathExpansionAuthorized": false,
+  "laterCheckpointsAuthorized": false,
+  "currentBlock": "C0_E_REPRODUCIBILITY_ROLLBACK_AND_FINAL_RECEIPT",
+  "c0Overall": "PASS_CLOSED",
+  "repositoryRollbackBranch": "rollback/h-earth-c0-exact-live-coastal-baseline-freeze-001"
+}

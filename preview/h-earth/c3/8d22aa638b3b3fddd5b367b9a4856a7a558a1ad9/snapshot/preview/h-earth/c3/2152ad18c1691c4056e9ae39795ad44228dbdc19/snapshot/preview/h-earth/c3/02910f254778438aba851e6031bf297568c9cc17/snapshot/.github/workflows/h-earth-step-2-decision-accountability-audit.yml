@@ -1,0 +1,42 @@
+name: H-Earth Step 2 Decision Accountability Audit
+
+on:
+  push:
+    branches:
+      - agent/h-earth-step-2-decision-accountability-001
+    paths:
+      - h-earth-3d/control-plane/step-2/**
+      - .github/workflows/h-earth-step-2-decision-accountability-audit.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - h-earth-3d/control-plane/step-2/**
+      - .github/workflows/h-earth-step-2-decision-accountability-audit.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit-step-2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Re-run successor identity audit
+        run: node --experimental-default-type=module tools/h-earth-repository-registry-successor-v2-audit.mjs
+      - name: Execute bounded Step 2 decision-accountability audit
+        run: node --experimental-default-type=module h-earth-3d/control-plane/step-2/h-earth.step-2.transition-decision.validator.mjs
+      - name: Upload deterministic Step 2 receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-step-2-transition-decision-audit-receipt
+          path: artifacts/h-earth-step-2-transition-decision-audit-receipt.json
+          if-no-files-found: error
+          retention-days: 90

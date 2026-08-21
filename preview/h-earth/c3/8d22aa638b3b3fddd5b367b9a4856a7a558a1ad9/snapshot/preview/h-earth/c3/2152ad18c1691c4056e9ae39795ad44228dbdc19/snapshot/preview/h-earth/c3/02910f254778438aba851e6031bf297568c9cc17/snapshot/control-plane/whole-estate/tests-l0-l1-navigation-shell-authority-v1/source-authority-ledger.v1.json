@@ -1,0 +1,111 @@
+{
+  "schema": "WHOLE_ESTATE_TESTS_L0_L1_SOURCE_AUTHORITY_LEDGER_v1",
+  "version": "1.0.0",
+  "status": "FROZEN_SOURCE_BOUNDARY_CANDIDATE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "constructionBase": "45d8a7d3b642d99a4377110f63bca15d14c8b900",
+  "authorityOrder": [
+    "FROZEN_CONTRACT_THIS_PACKAGE_AFTER_ACCEPTANCE",
+    "MERGED_WHOLE_ESTATE_AND_LAWS_AUTHORITY_REFERENCED_BELOW",
+    "EXACT_COMMIT_OR_BRANCH_EVIDENCE_REFERENCED_BELOW_FOR_BOUNDED_PRESERVATION_ONLY"
+  ],
+  "sources": [
+    {
+      "id": "LAWS_CP6_1_AUTHORITY_MAP",
+      "authorityClass": "MERGED_LAWS_AUTHORITY",
+      "ref": "45d8a7d3b642d99a4377110f63bca15d14c8b900",
+      "path": "laws/control-plane/cp6-1/authority-map.json",
+      "blob": "2d71a35533908b34e2c8ef988de4ce1bebfa0182",
+      "admittedFacts": [
+        "LOCKED_DECLARATION_RESEARCH_COMES_FIRST",
+        "FIRST_EXPANSION_FLOW_INTEGRITY_REALITY_STRUCTURE_TEST",
+        "RESEARCH_ROLE_EXAMINES_AND_SUPPORTS_COMPLETE_FIRST_SEQUENCE",
+        "EXISTING_RESEARCH_METHODS_MODELS_ROUTE_PRESENT",
+        "SCIENTIFIC_LAW_SPLIT_CUSTODY_PRESENT"
+      ],
+      "notAdmittedByThisSourceAlone": [
+        "TESTS_L0_L1_VISUAL_TOPOLOGY",
+        "TESTS_OBJECT_POPULATION",
+        "PUBLIC_ROUTE_RELOCATION"
+      ]
+    },
+    {
+      "id": "WHOLE_ESTATE_AUTHORITY_AND_OWNERSHIP_MATRIX",
+      "authorityClass": "MERGED_WHOLE_ESTATE_AUTHORITY",
+      "ref": "45d8a7d3b642d99a4377110f63bca15d14c8b900",
+      "path": "control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/authority-and-ownership-matrix.v1.json",
+      "blob": "c24c86b89d0650dd597988d4b3148bec41304b4a",
+      "admittedFacts": [
+        "LAWS_SUPPLIES_CONSTRAINTS_ADMISSIBILITY_FIRST_STRUCTURE_AND_TEST_BOUNDARIES",
+        "METHODS_MODELS_CONTROLLED_COMPARISON_AND_METHOD_MODEL_SEPARATION",
+        "RESEARCH_PROVENANCE_OWNS_SOURCE_VERSION_EXECUTION_EVIDENCE_AND_CLAIM_LINEAGE",
+        "INTERFACE_3D_MAY_NOT_MUTATE_SCIENTIFIC_STATE_EVIDENCE_STATUS_EXECUTION_STATUS_OR_CUSTODY_STATUS"
+      ]
+    },
+    {
+      "id": "METHODS_MODELS_ROLE_CONSTITUTION",
+      "authorityClass": "MERGED_WHOLE_ESTATE_AUTHORITY",
+      "mergeCommit": "b2533139bacbf876f818892a06c691824fa216dd",
+      "path": "control-plane/whole-estate/methods-models-role-constitution-v1/methods-models-role-contract.v1.json",
+      "blob": "60393aa69a57c01642796697d36a16c3426087c8",
+      "admittedFacts": [
+        "METHODS_MODELS_EVIDENCE_GATE_RELATION_MAP_DISCOVERY_BRIDGE",
+        "CONTROLLED_COMPARISON",
+        "METHOD_MODEL_SEPARATION",
+        "EVIDENCE_STANDING_RESOLUTION",
+        "CLAIM_TRACEABILITY",
+        "DECLARED_RELATION_DISCOVERY",
+        "EVIDENCE_ESCALATION_BY_NAVIGATION_PROHIBITED",
+        "RECLASSIFICATION_BY_RENDERING_PROHIBITED"
+      ]
+    },
+    {
+      "id": "METHODS_SEMANTIC_TOPOLOGY_TERMINAL_RECEIPT",
+      "authorityClass": "BOUNDED_NONPUBLIC_VERIFIED_AUTHORITY_REFERENCE",
+      "commit": "7ff3fb5e2e33cae76f98aab2409041f178a54ed4",
+      "path": "control-plane/methods-information-benchmark/methods-semantic-interaction-topology-authority-reanchor-v1/semantic-topology-terminal-receipt.v1.json",
+      "admittedFacts": [
+        "MINIMUM_AUTHORIZED_ONTOLOGY_AVAILABLE_BOUNDED",
+        "SEMANTIC_INTERACTION_TOPOLOGY_AVAILABLE_BOUNDED",
+        "EMBODIMENT_BINDING_CONTRACT_AVAILABLE",
+        "LEGACY_SEMANTIC_INHERITANCE_BLOCKED"
+      ],
+      "scope": "PRESERVATION_AND_CONSTRAINT_ONLY_NOT_TESTS_SHELL_POPULATION_AUTHORITY"
+    },
+    {
+      "id": "M1R2_DEEP_PROCEDURAL_INSTRUMENT",
+      "authorityClass": "BOUNDED_NONPUBLIC_VALIDATED_DEEP_ENTRY_REFERENCE",
+      "branch": "agent/methods-models-manifestation-m1r2-v1",
+      "head": "6840cf0b99914263628e937453497e5af3f16166",
+      "headMessage": "methods: record M1R2 fresh independent verification",
+      "runtimeEvidenceCommit": "07dbb047414fb6c554645fa2db5f262c5d33ae05",
+      "candidateCommit": "7ab27d421233433b691ad34a7f79a904b08c7705",
+      "authorityCommit": "454620f0c45c622e3d9e0f152c3dd0bd055ef958",
+      "terminalSemanticClosureCommit": "7ff3fb5e2e33cae76f98aab2409041f178a54ed4",
+      "admittedFacts": [
+        "VALID_DEEP_PROCEDURAL_INSTRUMENT",
+        "MAY_BE_REFERENCED_AS_L4_TARGET",
+        "INTERNAL_MUTATION_NOT_AUTHORIZED_BY_SHELL"
+      ],
+      "notAdmitted": [
+        "M1R2_EQUALS_WHOLE_METHODS_ENVIRONMENT",
+        "M1R2_DEFINES_TESTS_L0_TAXONOMY",
+        "M1R2_DEFINES_RESEARCH_AUTHORITY"
+      ]
+    }
+  ],
+  "explicitNonSources": [
+    "PR_DISCUSSION_TEXT_NOT_PROMOTED_INTO_ACCEPTED_AUTHORITY",
+    "CHAT_THREAD_MEMORY",
+    "ASSISTANT_SUMMARY",
+    "VISUAL_COMPLETENESS_PRESSURE",
+    "LABEL_SIMILARITY",
+    "SPATIAL_ADJACENCY",
+    "PRIOR_PROTOTYPE_DEFAULTS",
+    "UNVERIFIED_BRANCH_NAMES_OR_UNVERIFIED_FILE_PATHS"
+  ],
+  "admissibilityRule": "NO_SCIENTIFIC_OBJECT_RELATION_EVIDENCE_ROUTE_OR_DEEP_ENTRY_MAY_BE_POPULATED_FROM_A_NON_SOURCE",
+  "conflictRule": "WHEN_SOURCES_APPEAR_TO_CONFLICT_DO_NOT_RECONCILE_BY_INFERENCE; RECORD_THE_CONFLICT_AND_WITHHOLD_THE_AFFECTED_REGISTRY_ENTRY_UNTIL_EXPLICIT_AUTHORITY_RESOLVES_IT",
+  "missingAuthorityRule": "ABSENCE_OF_CURRENT_AUTHORITY_IS_NOT_PERMISSION_TO_INHERIT",
+  "publicMutationAuthorized": false
+}

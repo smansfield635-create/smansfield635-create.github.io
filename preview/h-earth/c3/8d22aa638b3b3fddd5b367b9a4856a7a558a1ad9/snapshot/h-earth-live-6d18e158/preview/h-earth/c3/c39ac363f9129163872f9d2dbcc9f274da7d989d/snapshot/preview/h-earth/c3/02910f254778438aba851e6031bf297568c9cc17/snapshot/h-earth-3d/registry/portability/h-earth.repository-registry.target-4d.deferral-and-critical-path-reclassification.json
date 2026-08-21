@@ -1,0 +1,45 @@
+{
+  "reclassificationId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4D_PORTABILITY_DEFERRAL_AND_CRITICAL_PATH_RECLASSIFICATION_v1",
+  "targetNumber": 4,
+  "targetSubtarget": "4E-2",
+  "status": "COMPLETE_CANDIDATE_NOT_ACCEPTED",
+  "accepted": false,
+  "canonical": false,
+  "priorTarget4DResult": {
+    "completedSubtargets": ["4D-1", "4D-2", "4D-3"],
+    "blockerReceiptPath": "/h-earth-3d/registry/h-earth.repository-registry.target-4d-blocker-receipt.json",
+    "blockerReceiptGitBlobSha": "49e24b382a192b486f1d5cc5f4ed91f3378748ca",
+    "finding": "CURRENT_TARGET_4B_ENGINE_IS_H_EARTH_SPECIFIC_AND_NOT_PACKAGE_PORTABLE"
+  },
+  "reclassification": {
+    "findingValidityPreserved": true,
+    "hEarthFunctionalDefectEstablished": false,
+    "hEarthCriticalPathBlocked": false,
+    "remainingTarget4DSubtargets": ["4D-4", "4D-5", "4D-6", "4D-7", "4D-8", "4D-9", "4D-10", "4D-11", "4D-12", "4D-13", "4D-14"],
+    "remainingTarget4DStatus": "OPTIONAL_DEFERRED_GENERALIZATION_LANE",
+    "target4BPortabilityRefactorRequiredForHEarth": false,
+    "resumeCondition": "SEPARATE_USER_AUTHORIZATION_FOR_CROSS_PACKAGE_GENERALIZATION"
+  },
+  "correctedCriticalPath": [
+    "TARGET_4A_COMPLETE",
+    "TARGET_4B_COMPLETE",
+    "TARGET_4C_COMPLETE",
+    "TARGET_4D_PORTABILITY_DEFERRED_NONBLOCKING",
+    "TARGET_4E_AUTOMATIC_ACTIVATION_AND_SYSTEMIC_COMPREHENSION",
+    "TARGET_4F_FINAL_STATUS_AND_CUSTODY_CLOSURE"
+  ],
+  "boundaries": {
+    "portabilityClaimCreated": false,
+    "genericEngineRequiredNow": false,
+    "protectedTarget4BEngineChanged": false,
+    "mutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "canonicalizationAuthorityCreated": false,
+    "mainChanged": false
+  },
+  "stoppingCondition": {
+    "target4DDeferredNonblocking": true,
+    "criticalPathReclassified": true,
+    "nextAuthorizedSubtarget": "4E-3"
+  }
+}

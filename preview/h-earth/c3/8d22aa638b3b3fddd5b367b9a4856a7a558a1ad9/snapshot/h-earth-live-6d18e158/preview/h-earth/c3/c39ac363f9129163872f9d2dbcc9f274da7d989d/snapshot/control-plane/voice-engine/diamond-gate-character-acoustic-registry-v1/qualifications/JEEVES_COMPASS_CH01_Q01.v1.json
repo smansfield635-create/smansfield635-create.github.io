@@ -1,0 +1,60 @@
+{
+  "schema": "DIAMOND_GATE_VOICE_QUALIFICATION_RECORD_v1",
+  "qualificationId": "JEEVES_COMPASS_CH01_Q01",
+  "status": "READY_FOR_FIRST_SYNTHESIS",
+  "characterId": "jeeves",
+  "profilePath": "control-plane/voice-engine/diamond-gate-character-acoustic-registry-v1/profiles/jeeves.acoustic.v1.json",
+  "deliveryMode": "compassNarration",
+  "purpose": "First production qualification of Jeeves as an audible Diamond Gate identity and immediate narration candidate for Compass Chapter 01.",
+  "frozenLines": [
+    {
+      "lineId": "C01",
+      "text": "Navigation requires orientation."
+    },
+    {
+      "lineId": "C02",
+      "text": "Without orientation, there is no navigation."
+    },
+    {
+      "lineId": "C03",
+      "text": "Here at Diamond Gate Bridge, we assess our questions through their connections."
+    },
+    {
+      "lineId": "C04",
+      "text": "And the stars provide the answers."
+    },
+    {
+      "lineId": "C05",
+      "text": "Reality relies on their existence."
+    },
+    {
+      "lineId": "C06",
+      "text": "Therefore, nothing navigates better than a compass."
+    }
+  ],
+  "requiredOutputs": [
+    "six isolated lossless line renders",
+    "one assembled raw narration master",
+    "one film-mastered narration candidate",
+    "artifact metadata for each render",
+    "listening/qualification receipt"
+  ],
+  "qualificationDimensions": {
+    "humanNaturalness": "UNSCORED",
+    "jeevesIdentityFit": "UNSCORED",
+    "intelligibility": "UNSCORED",
+    "restraint": "UNSCORED",
+    "philosophicalSpaciousness": "UNSCORED",
+    "precisionOfEmphasis": "UNSCORED",
+    "terminalCadence": "UNSCORED",
+    "pictureTimingFit": "UNSCORED",
+    "recognizableThirdPartyImitationRisk": "MUST_BE_LOW"
+  },
+  "acceptanceLaw": "No profile is locked merely because synthesis succeeds. Jeeves v1 requires listening qualification against the frozen Compass lines.",
+  "referenceBinding": {
+    "status": "UNBOUND",
+    "authorization": "REQUIRED"
+  },
+  "renderState": "NOT_RENDERED",
+  "nextLawfulAction": "BIND_AUTHORIZED_REFERENCE_OR_ORIGINAL_BASE_VOICE_THEN_RENDER_C01_THROUGH_C06"
+}

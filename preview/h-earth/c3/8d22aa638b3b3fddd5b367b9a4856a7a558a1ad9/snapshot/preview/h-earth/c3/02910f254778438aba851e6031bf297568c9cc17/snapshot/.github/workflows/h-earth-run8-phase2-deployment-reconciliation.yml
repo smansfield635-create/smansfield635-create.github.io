@@ -1,0 +1,56 @@
+name: H-Earth Run 8 Phase 2 Deployment Reconciliation
+
+# Historical validator for PR #198 / the completed Run 8 Phase 2 deployment
+# reconciliation. Its expected promoted-main identity is intentionally frozen to
+# that July execution and must not be applied to later H-Earth candidates.
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-run8-phase2-deployment-reconciliation.yml'
+      - 'h-earth-3d/validation/h-earth.run8.phase2-deployment-reconciliation.harness.mjs'
+      - 'h-earth-3d/validation/h-earth.run8.phase2-deployment-reconciliation.receipt.json'
+      - 'h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js'
+      - 'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8-phase2-deployment-reconciliation-scope.js'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: read
+
+jobs:
+  validate-run8-phase2-deployment:
+    # Execute only for the original Phase 2 reconciliation PR. The shared
+    # repository-registry loader is deliberately not a trigger for this durable
+    # historical proof.
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.head_ref == 'agent/h-earth-run8-phase2-deployment-reconciliation-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out Phase 2 workspace
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Execute Phase 2 deployment reconciliation
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          H_EARTH_EXPECTED_PROMOTED_MAIN_HEAD: 0ae82d417dd7868f0546891d4e720abdb294d466
+          H_EARTH_LIVE_ORIGIN: https://smansfield635-create.github.io
+        run: node h-earth-3d/validation/h-earth.run8.phase2-deployment-reconciliation.harness.mjs
+
+      - name: Upload Phase 2 deployment evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8-phase2-deployment-reconciliation-evidence
+          path: |
+            h-earth-3d/validation/h-earth.run8.phase2-deployment-reconciliation.receipt.json
+            h-earth-3d/validation/h-earth.run8.phase2-deployment-reconciliation.log
+          if-no-files-found: error

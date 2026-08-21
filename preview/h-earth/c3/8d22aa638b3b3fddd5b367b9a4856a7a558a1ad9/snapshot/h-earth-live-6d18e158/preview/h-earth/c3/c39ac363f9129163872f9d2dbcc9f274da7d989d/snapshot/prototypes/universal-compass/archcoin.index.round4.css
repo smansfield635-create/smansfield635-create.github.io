@@ -1,0 +1,258 @@
+/* /prototypes/universal-compass/archcoin.index.round4.css
+   ARCHCOIN calibration lab · Round 4.
+   Showroom-centered room cluster, preserved Main Compass control authority,
+   visible Earth globe replacement, and Main Compass room-star presentation.
+*/
+
+html::before {
+  content: "ARCHCOIN CALIBRATION LAB · ROUND 4";
+  position: fixed;
+  top: max(8px, env(safe-area-inset-top));
+  right: 8px;
+  z-index: 2147483647;
+  padding: 6px 9px;
+  border: 1px solid rgba(160, 214, 255, 0.72);
+  border-radius: 7px;
+  background: rgba(2, 10, 24, 0.88);
+  color: #dff4ff;
+  font: 700 10px/1.15 system-ui, sans-serif;
+  letter-spacing: 0.08em;
+  box-shadow: 0 0 18px rgba(75, 180, 255, 0.24);
+  pointer-events: none;
+}
+
+.archcoin-calibration-focus {
+  display: none !important;
+}
+
+.archcoin-coin,
+[data-archcoin-room] {
+  left: var(--archcoin-label-x, 50%) !important;
+  top: var(--archcoin-label-y, 50%) !important;
+  transform: translate(-50%, -50%) scale(var(--archcoin-round4-scale, 1)) !important;
+  transform-origin: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+  transition:
+    opacity 150ms var(--archcoin-ease),
+    filter 150ms var(--archcoin-ease),
+    transform 150ms var(--archcoin-ease) !important;
+}
+
+.archcoin-coin {
+  display: grid !important;
+  place-items: center !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  gap: 0 !important;
+}
+
+.archcoin-coin > *,
+[data-archcoin-room] > * {
+  display: none !important;
+}
+
+.archcoin-coin::after,
+[data-archcoin-room]::after {
+  content: attr(data-round3-label);
+  display: block;
+  width: max-content;
+  max-width: min(132px, 34vw);
+  color: rgba(241, 244, 244, 0.90);
+  font-family: var(--archcoin-sans);
+  font-size: clamp(0.57rem, 1.8vw, 0.72rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  white-space: normal;
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.96),
+    0 0 5px rgba(0, 0, 0, 0.94),
+    0 0 10px rgba(4, 12, 20, 0.90);
+  pointer-events: none;
+}
+
+[data-archcoin-room] {
+  display: grid !important;
+  place-items: center !important;
+  width: 64px !important;
+  height: 64px !important;
+  min-width: 64px !important;
+  min-height: 64px !important;
+  color: transparent !important;
+  font-size: 0 !important;
+}
+
+[data-archcoin-room]::after {
+  color: rgba(241, 244, 244, 0.84);
+  font-size: clamp(0.52rem, 1.65vw, 0.66rem);
+}
+
+.archcoin-coin[data-round3-active="false"],
+[data-archcoin-room][data-round3-active="false"] {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.archcoin-coin[data-archcoin-depth-layer="rear"][data-round3-active="true"],
+[data-archcoin-room][data-archcoin-depth-layer="rear"][data-round3-active="true"] {
+  --archcoin-round4-scale: 0.86;
+  opacity: 0.54 !important;
+  visibility: visible !important;
+  filter: saturate(0.78) brightness(0.76);
+}
+
+.archcoin-coin[data-archcoin-depth-layer="front"][data-round3-active="true"],
+[data-archcoin-room][data-archcoin-depth-layer="front"][data-round3-active="true"] {
+  --archcoin-round4-scale: 1;
+  opacity: 0.92 !important;
+  visibility: visible !important;
+  filter: saturate(1.02) brightness(1);
+}
+
+.archcoin-coin[data-round3-primary="true"],
+[data-archcoin-room][data-round3-primary="true"] {
+  --archcoin-round4-scale: 1.16;
+  opacity: 1 !important;
+  visibility: visible !important;
+  filter:
+    saturate(1.22)
+    brightness(1.16)
+    drop-shadow(0 0 7px rgba(234, 208, 131, 0.68))
+    drop-shadow(0 0 16px rgba(118, 213, 230, 0.30));
+}
+
+.archcoin-coin[data-round3-primary="true"]::after,
+[data-archcoin-room][data-round3-primary="true"]::after {
+  color: #fff4c8;
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.98),
+    0 0 6px rgba(0, 0, 0, 0.98),
+    0 0 11px rgba(234, 208, 131, 0.58),
+    0 0 20px rgba(154, 217, 225, 0.28);
+}
+
+[data-upstream-compass-mount] > canvas,
+[data-upstream-compass-mount] > svg,
+[data-upstream-compass-mount] > [data-upstream-compass-renderer] {
+  display: none !important;
+}
+
+.archcoin-scene__upstream-compass-fallback {
+  display: none !important;
+}
+
+.archcoin-scene__upstream-compass-control {
+  width: clamp(92px, 24vw, 118px) !important;
+  height: clamp(92px, 24vw, 118px) !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.archcoin-round4-globe {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(158, 218, 255, 0.72);
+  border-radius: 50%;
+  isolation: isolate;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 34% 28%, rgba(255,255,255,.94) 0 2%, transparent 3%),
+    radial-gradient(ellipse at 36% 42%, rgba(112,178,104,.96) 0 15%, transparent 16%),
+    radial-gradient(ellipse at 62% 61%, rgba(126,168,86,.92) 0 18%, transparent 19%),
+    radial-gradient(circle at 42% 40%, #4aa8dc 0 45%, #17649b 66%, #071c3d 100%);
+  box-shadow:
+    0 0 0 4px rgba(172, 220, 255, 0.10),
+    0 0 18px rgba(93, 190, 255, 0.46),
+    0 0 34px rgba(56, 120, 255, 0.24),
+    inset -16px -12px 22px rgba(0, 5, 28, 0.68),
+    inset 8px 7px 14px rgba(255, 255, 255, 0.22);
+}
+
+.archcoin-round4-globe::before {
+  content: "";
+  position: absolute;
+  inset: -8%;
+  z-index: 2;
+  border-radius: 50%;
+  background:
+    repeating-radial-gradient(ellipse at 48% 48%, transparent 0 10px, rgba(255,255,255,.10) 11px 12px, transparent 13px 20px),
+    linear-gradient(105deg, transparent 20%, rgba(255,255,255,.26) 34%, transparent 48%);
+  opacity: .48;
+  animation: archcoin-round4-cloud-spin 24s linear infinite;
+}
+
+.archcoin-round4-globe::after {
+  content: "";
+  position: absolute;
+  inset: -5%;
+  z-index: 3;
+  border: 1px solid rgba(187, 232, 255, 0.56);
+  border-radius: 50%;
+  box-shadow: inset 8px 0 18px rgba(140, 218, 255, 0.28);
+}
+
+.archcoin-round4-globe canvas {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 4 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  pointer-events: none !important;
+}
+
+@keyframes archcoin-round4-cloud-spin {
+  to { transform: rotate(360deg); }
+}
+
+[data-archcoin-scene-field] {
+  cursor: grab;
+}
+
+[data-archcoin-scene-field].is-calibration-dragging,
+[data-archcoin-scene-field].is-calibration-settling {
+  cursor: grabbing;
+}
+
+[data-archcoin-scene-field].is-calibration-dragging .archcoin-coin,
+[data-archcoin-scene-field].is-calibration-dragging [data-archcoin-room] {
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .archcoin-round4-globe::before { animation: none; }
+}
+
+@media (max-width: 720px) {
+  :root {
+    --archcoin-scene-height: clamp(590px, 70vh, 720px);
+    --archcoin-compass-size: clamp(100px, 27vw, 126px);
+  }
+
+  .archcoin-coin::after,
+  [data-archcoin-room]::after {
+    max-width: 104px;
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "schema": "REPOSITORY_OPERATION_SUCCESSOR_PROTOCOL_v1",
+  "protocolId": "GENERIC_STALE_HEAD_SUCCESSOR_AND_SUPERSESSION_PROTOCOL_v1",
+  "version": "1.1.0",
+  "status": "ACTIVE_WHEN_PRESENT_ON_DEFAULT_BRANCH_AND_VALIDATION_PASS",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "purpose": "Replace manual stale-head closure and re-admission with one fail-closed successor transaction, and deterministically compile fresh strict-successor packets after a ratifying main advance without inheriting authority or relabeling evidence.",
+  "governingLaw": "AUTHORITY_FOR_H0_DOES_NOT_IMPLY_AUTHORITY_FOR_H1",
+  "trigger": "AN_ACTIVE_OPERATION_HAS_A_GOVERNING_HEAD_DIFFERENT_FROM_CURRENT_REFS_HEADS_MAIN",
+  "entryGate": ".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs",
+  "selfTest": ".github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs",
+  "postRatificationSuccessorCompiler": {
+    "status": "ACTIVE_WHEN_PRESENT_ON_DEFAULT_BRANCH_AND_VALIDATION_PASS",
+    "cli": ".github/ai-router/operation-lifecycle/successor-packet-compiler.v1.mjs",
+    "selfTest": ".github/ai-router/operation-lifecycle/successor-packet-compiler-self-test.v1.mjs",
+    "inputSchema": "REPOSITORY_OPERATION_SUCCESSOR_PACKET_COMPILE_REQUEST_v1",
+    "outputSchema": "REPOSITORY_OPERATION_SUCCESSOR_COMPILED_PACKET_v1",
+    "receiptSchema": "REPOSITORY_OPERATION_SUCCESSOR_PACKET_COMPILER_RECEIPT_v1",
+    "authorityEffect": "NONE",
+    "freshOperationIdRequired": true,
+    "freshProcedureIdRequired": true,
+    "explicitJsonPointerHeadRebindsRequired": true,
+    "permittedRebindModes": ["REPLACE_VALUE_IF_EQUALS", "REPLACE_SUBSTRING_EXACTLY_ONCE"],
+    "scopeRule": "LOCK_SCOPE_PROJECT_ALLOWED_PATHS_PROHIBITED_PATHS_AND_PROCEDURE_ALLOWED_PATHS_MUST_REMAIN_EXACTLY_EQUAL_IN_V1",
+    "authorityInherited": false,
+    "automaticEvidenceRelabeling": false,
+    "automaticProductMutation": false,
+    "existingAtomicSuccessorGateStillRequired": true,
+    "remoteInvocationMarker": "REMOTE_OPERATION_SUCCESSOR_COMPILE_AND_EXECUTE_REQUEST_V1",
+    "remoteInvocationSchema": "REMOTE_OPERATION_SUCCESSOR_COMPILE_AND_EXECUTE_INVOCATION_REQUEST_v1",
+    "remoteInvocationWorkflow": ".github/workflows/remote-operation-successor-v1.yml",
+    "failureLaw": "ANY_UNDECLARED_PREDECESSOR_HEAD_BINDING_SCOPE_CHANGE_AUTHORITY_CHANGE_OR_ARBITRARY_REBIND_FAILS_CLOSED_BEFORE_THE_ATOMIC_SUCCESSOR_GATE"
+  },
+  "dependencies": {
+    "currentMainConstructionBaseline": "8df49529c3895ff07ee4655f3dd3ec708bb977aa",
+    "currentMainLockManager": {
+      "path": "tools/operation-intake/repository-operation-lock-manager.v1.mjs",
+      "gitBlobSha": "0aa440a3de30e145c7912fcfe2833fb8430ffbb0",
+      "modifiedByThisProtocol": false
+    },
+    "currentMainIntakeGate": {
+      "path": "tools/operation-intake/repository-operation-intake-gate.v1.mjs",
+      "gitBlobSha": "f0b22e6b9574507632f1ad07647710971a4d63de",
+      "modifiedByThisProtocol": false
+    },
+    "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+    "ledgerPath": ".github/operation-intake/active-operation-ledger.v1.json",
+    "governingRef": "refs/heads/main"
+  },
+  "identityBoundary": {
+    "frozenPreRegistrationBridgeLockManagerBlob": "6fc0199c9dc943b8cdf3efe7c789f0e1888774b8",
+    "currentMainLockManagerBlob": "0aa440a3de30e145c7912fcfe2833fb8430ffbb0",
+    "law": "FROZEN_BRIDGE_TOOL_IDENTITY_MUST_NOT_BE_RELABELED_AS_CURRENT_MAIN_TOOL_IDENTITY"
+  },
+  "transitionRequest": {
+    "schema": "REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_REQUEST_v1",
+    "requiredFields": ["transitionId", "reasonCode", "governingRef", "authorityPolicy", "evidencePolicy", "predecessor", "successor", "inheritedAuthority", "preservedEvidenceRefs"],
+    "reasonCode": "GOVERNING_HEAD_ADVANCED",
+    "governingRef": "refs/heads/main",
+    "authorityPolicy": "FRESH_SUCCESSOR_REQUEST_REQUIRED_NO_IMPLICIT_INHERITANCE",
+    "evidencePolicy": "EXACT_HEAD_REVALIDATION_REQUIRED",
+    "inheritedAuthorityMustBeEmpty": true
+  },
+  "transaction": {
+    "sequence": ["VALIDATE_FRESH_SUCCESSOR_REQUEST_AND_CONSTRUCTION_PROCEDURE", "VERIFY_LIVE_GOVERNING_HEAD_EQUALS_SUCCESSOR_EXACT_GOVERNING_HEAD", "VERIFY_EXACT_ACTIVE_PREDECESSOR_ID_SCOPE_GENERATION_AND_GOVERNING_HEAD", "BUILD_TERMINAL_SUPERSEDED_PREDECESSOR_WITH_SUCCESSOR_LINK", "BUILD_ADMITTED_LOCKED_SUCCESSOR_WITH_PREDECESSOR_LINK", "COMMIT_BOTH_CHANGES_IN_ONE_LEDGER_COMPARE_AND_SWAP"],
+    "predecessorTerminalDisposition": "SUPERSEDED",
+    "successorState": "ADMITTED_LOCKED",
+    "generationRule": "SUCCESSOR_LOCK_GENERATION_EQUALS_LEDGER_LOCK_GENERATION_PLUS_ONE",
+    "atomicityRule": "PREDECESSOR_TERMINATION_AND_SUCCESSOR_ADMISSION_SHARE_ONE_CONTENTS_API_SHA_GUARDED_LEDGER_WRITE",
+    "casConflictDisposition": "BOUNDED_REREAD_REVALIDATE_AND_RETRY_THEN_SUCCESSOR_NOT_ADMITTED",
+    "casRetryLimit": 8,
+    "casRetryLaw": "EVERY_RETRY_REREADS_LIVE_MAIN_AND_LEDGER_AND_REVALIDATES_THE_EXACT_PREDECESSOR_BEFORE_ANOTHER_SHA_GUARDED_WRITE",
+    "historyPreserved": true,
+    "bidirectionalLineageRequired": true
+  },
+  "authorityAndEvidence": {
+    "authorityInherited": false,
+    "authoritySource": "FRESH_SUCCESSOR_REQUEST_AND_CONSTRUCTION_PROCEDURE",
+    "exactHeadRevalidationRequired": true,
+    "predecessorEvidenceMayBePreservedByReference": true,
+    "predecessorEvidenceMayNotBeRelabeledAsSuccessorExactHeadEvidence": true,
+    "compilerMayOnlyPrepareFreshPacket": true,
+    "compilerCannotAdmitOrMutateLedger": true,
+    "lrpv1ModificationRequired": false,
+    "imiModificationRequired": false,
+    "productMutationAuthorityCreated": false
+  },
+  "successfulReceipt": {
+    "schema": "REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1",
+    "result": "SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED"
+  },
+  "failureLaw": "ANY_IDENTITY_HEAD_GENERATION_SCOPE_AUTHORITY_OR_EXHAUSTED_COMPARE_AND_SWAP_MISMATCH_FAILS_CLOSED_WITH_NO_SUCCESSOR_AUTHORITY",
+  "usage": {
+    "directCommand": "GITHUB_TOKEN=<token> node .github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs --transition <TRANSITION.json> --request <SUCCESSOR_REQUEST.json> --procedure <SUCCESSOR_PROCEDURE.json> --repository smansfield635-create/smansfield635-create.github.io --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 --output <SUCCESSOR_RECEIPT.json>",
+    "compileCommand": "node .github/ai-router/operation-lifecycle/successor-packet-compiler.v1.mjs --input <COMPILE_REQUEST.json> --output <COMPILED_PACKET.json>",
+    "continuationRule": "CONTINUE_ONLY_ON_SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED_AND_SEPARATELY_REQUIRED_PROJECT_ROUTING_VALIDATION"
+  },
+  "motivatingHistoricalCases": [
+    {"caseId": "ESTATE_VALIDATION_GENERATION_677_TO_693", "use": "HISTORICAL_PATTERN_ONLY_NO_MUTATION_AUTHORITY"},
+    {"caseId": "H_EARTH_HC02_GENERATION_660_STALE_HEAD", "use": "HISTORICAL_PATTERN_ONLY_NO_MUTATION_AUTHORITY"},
+    {"caseId": "LAWS_PAGE_EXCELLENCE_RUNTIME_GENERATION_1168_AFTER_RUNTIME_DESCRIPTOR_RATIFICATION", "use": "LIVE_POST_RATIFICATION_STRICT_SUCCESSOR_PROOF_TARGET_NO_PRODUCT_MUTATION_AUTHORITY"}
+  ],
+  "installation": {
+    "originalOperationId": "GENERIC_STALE_HEAD_SUCCESSOR_AND_SUPERSESSION_PROTOCOL_INSTALLATION_v1_CORRECTED_001",
+    "originalGoverningHead": "8df49529c3895ff07ee4655f3dd3ec708bb977aa",
+    "originalLockGeneration": 700,
+    "failedCompilerExtensionAttempt": {
+      "operationId": "POST_RATIFICATION_SUCCESSOR_PACKET_COMPILER_V1_CCD2D1F0_20260812_001",
+      "lockGeneration": 1176,
+      "terminalDisposition": "FAIL_CLOSED",
+      "reason": "DIFFERENTIAL_CONTINUITY_PINNED_CONSUMER_MISSING_FROM_INITIAL_SCOPE"
+    },
+    "compilerExtensionOperationId": "POST_RATIFICATION_SUCCESSOR_PACKET_COMPILER_V1_CCD2D1F0_20260812_002",
+    "compilerExtensionLockGeneration": 1183,
+    "compilerExtensionGoverningHead": "ccd2d1f0d07111c7952423fdb7fab8ec471452cb",
+    "activationCondition": "MERGED_TO_DEFAULT_BRANCH_WITH_REQUIRED_ROUTER_SUCCESSOR_COMPILER_DIFFERENTIAL_AND_CONTINUITY_VALIDATION_PASS"
+  }
+}

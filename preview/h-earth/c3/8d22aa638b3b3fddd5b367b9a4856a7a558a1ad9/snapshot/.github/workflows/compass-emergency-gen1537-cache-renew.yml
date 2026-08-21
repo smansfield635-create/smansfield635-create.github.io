@@ -1,0 +1,67 @@
+name: Compass Emergency Gen1537 Cache Renew
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/compass-emergency-gen1537-cache-renew.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: compass-emergency-gen1537-cache-renew
+  cancel-in-progress: true
+
+jobs:
+  renew:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Bind retired Gen1537 bytes to a fresh cache identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          old='/assets/compass/compass.gen1537.recovery.js?v=gen1537-live-recovery-v2-20260818&cb=2db210339a19270e'
+          new='/assets/compass/compass.gen1537.recovery.js?v=gen1537-retired-h-earth-route-only-20260820&cb=037ef4d04a46361b'
+          if old not in s and new not in s:
+              raise SystemExit('GEN1537_SCRIPT_REFERENCE_NOT_FOUND')
+          if old in s:
+              s=s.replace(old,new,1)
+              p.write_text(s)
+          PY
+          grep -F 'compass.gen1537.recovery.js?v=gen1537-retired-h-earth-route-only-20260820&cb=037ef4d04a46361b' index.html
+          grep -F "mounted:false,retired:true,authoritative:false" assets/compass/compass.gen1537.recovery.js
+          ! grep -F 'positionCapability' assets/compass/compass.gen1537.recovery.js
+      - name: Commit exact two-file recovery head
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- index.html; then
+            echo 'Cache identity already renewed.'
+          else
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add index.html
+            git commit -m 'recovery(compass): renew retired Gen1537 cache identity'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+          curl --fail-with-body --silent --show-error -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/pages-direct-deploy.yml/dispatches" \
+            -d '{"ref":"main"}'

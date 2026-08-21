@@ -1,0 +1,266 @@
+{
+  "artifactId": "METAVERSE_BENCHMARK_CORRECTED_HARNESS_AND_WORKFLOW_CONSTRUCTION_RECEIPT_v1",
+  "phase": "TOOL_CORRECTION_AND_CONSTRUCTION",
+  "checkpoint": "T2",
+  "status": "PASS_CORRECTED_HARNESS_AND_WORKFLOW_CONSTRUCTION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "baselineMainCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+  "parentT1Commit": "c90e2037d4a06814688482e6a7b9514562f8c6c3",
+  "parentT1Blob": "ac1f63feb8112659a81ad2830640cfac404e5c1b",
+  "toolBranch": "agent/metaverse-benchmark-four-compass-tool-t2-001",
+  "sourceHeadBeforeReceipt": "8d3ada9c41f0561b2d4b366add0a2a0d7e6b6e7b",
+  "recordedDate": "2026-07-25",
+  "mode": "CONSTRUCT_STATICALLY_VALIDATE_AND_LOCK_CORRECTED_TOOL_WITHOUT_BROWSER_EXECUTION",
+  "constructedSources": [
+    {
+      "path": "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-benchmark.config.mjs",
+      "gitBlob": "f46128d33cc8498616c9accf56b44d6b6c04f534",
+      "byteLength": 5677,
+      "sha256": "805f44cd7a931e6d78af243cb48f59e5b5170b12401cd2e33bc2b62523aed38e",
+      "classification": "CANONICAL_TWO_LANE_AUTHORITY_CONFIG"
+    },
+    {
+      "path": "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-browser-baseline.mjs",
+      "gitBlob": "db7da8e983f5f99926d229a4a1795eb7ecc7fe30",
+      "byteLength": 23288,
+      "sha256": "556c3b44834b1c8e6eba57b24393d62b90f5897af17a279ffce7d6f6b1e0772d",
+      "classification": "SEPARATED_COMPASS_AND_AUXILIARY_BROWSER_BASELINE"
+    },
+    {
+      "path": "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-smoke-capture.mjs",
+      "gitBlob": "b79b429bf251d6bdaf1d3cc52be9f49d741c9e5a",
+      "byteLength": 5744,
+      "sha256": "50cfa279323b0c5d2c4d3c04b1a8aed77bc3bd8b2d3ee2a08a316269ab9c83ae",
+      "classification": "SEPARATED_COMPASS_AND_AUXILIARY_SMOKE_HARNESS"
+    },
+    {
+      "path": ".github/workflows/metaverse-benchmark-four-compass-tool.yml",
+      "gitBlob": "4384e1b2d169053b2b3fba12b5aefba8cc4913c2",
+      "byteLength": 4638,
+      "sha256": "0a79a51f7f7efede68a4c5283cb9925c33e1865f6a929d5f46f1fa54365c2632",
+      "classification": "CORRECTED_BASELINE_WORKFLOW"
+    },
+    {
+      "path": ".github/workflows/metaverse-benchmark-four-compass-tool-smoke.yml",
+      "gitBlob": "926b98839515ed68128fdef1fcaded148d3a1123",
+      "byteLength": 3064,
+      "sha256": "eb0d1263b22f2b7e704db80cde32a68b9106aff7cd0265007093689a6edef3bb",
+      "classification": "CORRECTED_SMOKE_WORKFLOW"
+    }
+  ],
+  "canonicalArchitecture": {
+    "compassCorpus": {
+      "lane": "FOUR_COMPASS_CORPUS",
+      "memberCount": 4,
+      "ids": [
+        "MAIN_COMPASS",
+        "ARCHCOIN_COMPASS",
+        "SHOWROOM_COMPASS",
+        "LAWS_COMPASS"
+      ],
+      "records": "SEPARATE",
+      "summaries": "SEPARATE",
+      "findings": "SEPARATE",
+      "screenshotManifest": "SEPARATE",
+      "digest": "SEPARATE"
+    },
+    "homeAuxiliaryControl": {
+      "lane": "AUXILIARY_CONTROL",
+      "memberCount": 1,
+      "id": "WEBSITE_HOME_RECEIVER_CONTROL",
+      "compassAuthority": false,
+      "records": "SEPARATE",
+      "summaries": "SEPARATE",
+      "findings": "SEPARATE",
+      "screenshotManifest": "SEPARATE",
+      "digest": "SEPARATE"
+    },
+    "sharedBrowserMechanisms": true,
+    "sharedGoverningAggregate": false,
+    "crossLaneAggregateOutput": false
+  },
+  "outputContracts": {
+    "compassBaselineReceipt": "four-compass-benchmark-tool-baseline.json",
+    "auxiliaryBaselineReceipt": "website-home-receiver-control-baseline.json",
+    "compassScreenshotRoot": "four-compass-benchmark-tool-screenshots/",
+    "auxiliaryScreenshotRoot": "website-home-receiver-control-screenshots/",
+    "compassSmokeReceipt": "four-compass-benchmark-tool-smoke.json",
+    "auxiliarySmokeReceipt": "website-home-receiver-control-smoke.json",
+    "workflowArtifact": "metaverse-benchmark-four-compass-tool-evidence",
+    "smokeArtifact": "metaverse-benchmark-four-compass-tool-smoke-evidence"
+  },
+  "staticValidation": {
+    "javascriptSyntax": {
+      "status": "PASS_3_OF_3",
+      "files": [
+        "four-compass-benchmark.config.mjs",
+        "four-compass-browser-baseline.mjs",
+        "four-compass-smoke-capture.mjs"
+      ],
+      "commandClass": "NODE_CHECK"
+    },
+    "workflowYamlParsing": {
+      "status": "PASS_2_OF_2",
+      "files": [
+        "metaverse-benchmark-four-compass-tool.yml",
+        "metaverse-benchmark-four-compass-tool-smoke.yml"
+      ]
+    },
+    "authorityConfigExecution": {
+      "status": "PASS_8_OF_8",
+      "assertions": {
+        "compassCountExact": true,
+        "canonicalCompassIdsExact": true,
+        "auxiliaryControlCountExact": true,
+        "auxiliaryControlIdExact": true,
+        "identitiesUnique": true,
+        "routesUnique": true,
+        "compassLaneExact": true,
+        "auxiliaryLaneExact": true
+      }
+    },
+    "retiredIdentityScan": {
+      "status": "PASS",
+      "tokensAbsent": [
+        "HOMEPAGE_COMPASS",
+        "LAWS_CHAMBER_POST_PR128",
+        "allFiveRoutesCaptured",
+        "CP7-3_MAIN_COMPASS_VISUAL_CAPTURE",
+        "CP8_LAWS_REPAIR_AUTHORITY_AND_BOUNDED_CORRECTION_PLAN",
+        "Object.entries(CONFIG)"
+      ]
+    },
+    "repositoryBlobIdentity": {
+      "status": "PASS_5_OF_5",
+      "allLocalGitBlobsMatchRepository": true
+    }
+  },
+  "workflowPosture": {
+    "automaticPushExecution": false,
+    "pullRequestTriggerBase": "agent/metaverse-benchmark-four-compass-tool-t1-001",
+    "manualDispatchAvailable": true,
+    "exactExecutionCommitCheckout": true,
+    "pinnedPuppeteerCore": "24.15.0",
+    "chromeSetup": "STABLE",
+    "artifactRetentionDays": 30,
+    "workflowExecutedAtT2": false
+  },
+  "constructionDigest": {
+    "algorithm": "SHA-256(JSON.stringify(constructionCore))",
+    "constructionCore": {
+      "parentT1Commit": "c90e2037d4a06814688482e6a7b9514562f8c6c3",
+      "sourceRecords": [
+        {
+          "path": "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-benchmark.config.mjs",
+          "byteLength": 5677,
+          "sha256": "805f44cd7a931e6d78af243cb48f59e5b5170b12401cd2e33bc2b62523aed38e",
+          "gitBlob": "f46128d33cc8498616c9accf56b44d6b6c04f534"
+        },
+        {
+          "path": "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-browser-baseline.mjs",
+          "byteLength": 23288,
+          "sha256": "556c3b44834b1c8e6eba57b24393d62b90f5897af17a279ffce7d6f6b1e0772d",
+          "gitBlob": "db7da8e983f5f99926d229a4a1795eb7ecc7fe30"
+        },
+        {
+          "path": "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-smoke-capture.mjs",
+          "byteLength": 5744,
+          "sha256": "50cfa279323b0c5d2c4d3c04b1a8aed77bc3bd8b2d3ee2a08a316269ab9c83ae",
+          "gitBlob": "b79b429bf251d6bdaf1d3cc52be9f49d741c9e5a"
+        },
+        {
+          "path": ".github/workflows/metaverse-benchmark-four-compass-tool.yml",
+          "byteLength": 4638,
+          "sha256": "0a79a51f7f7efede68a4c5283cb9925c33e1865f6a929d5f46f1fa54365c2632",
+          "gitBlob": "4384e1b2d169053b2b3fba12b5aefba8cc4913c2"
+        },
+        {
+          "path": ".github/workflows/metaverse-benchmark-four-compass-tool-smoke.yml",
+          "byteLength": 3064,
+          "sha256": "eb0d1263b22f2b7e704db80cde32a68b9106aff7cd0265007093689a6edef3bb",
+          "gitBlob": "926b98839515ed68128fdef1fcaded148d3a1123"
+        }
+      ],
+      "compassIds": [
+        "MAIN_COMPASS",
+        "ARCHCOIN_COMPASS",
+        "SHOWROOM_COMPASS",
+        "LAWS_COMPASS"
+      ],
+      "auxiliaryControlId": "WEBSITE_HOME_RECEIVER_CONTROL",
+      "separateRecords": true,
+      "separateSummaries": true,
+      "separateFindings": true,
+      "separateManifests": true,
+      "separateDigests": true,
+      "browserExecutionPerformed": false,
+      "nextCheckpoint": "T3_TOOL_EXECUTION_AND_EVIDENCE_VALIDATION"
+    },
+    "sha256": "60dea2b6b433bcee731a1be0d1f933a51fa51808d5b9f07ad4b7c579e6a9e6fe"
+  },
+  "authority": {
+    "correctedToolConstruction": true,
+    "correctedToolStaticValidation": true,
+    "correctedToolExecution": false,
+    "correctedToolEvidenceAcceptance": false,
+    "correctedToolInstallation": false,
+    "correctedToolMerge": false,
+    "lawsRepair": false,
+    "productMutation": false,
+    "mainWrite": false
+  },
+  "assertions": {
+    "t1ParentExact": true,
+    "authorizedPathSetExact": true,
+    "constructedSourceCount": 5,
+    "constructionReceiptCount": 1,
+    "totalT2PathCount": 6,
+    "allSourceBlobsLocked": true,
+    "allStaticValidationPassed": true,
+    "fourCompassCountExact": true,
+    "homeAuxiliaryControlExact": true,
+    "crossLaneAggregateCreated": false,
+    "retiredFiveEntryModelPresent": false,
+    "browserExecutionPerformed": false,
+    "workflowRunCreated": false,
+    "toolInstallationReady": false,
+    "lawsRepairReady": false,
+    "productFilesChanged": 0,
+    "mainChanged": false,
+    "mergeAuthority": "NONE"
+  },
+  "prohibited": [
+    "EXECUTE_OR_ACCEPT_TOOL_WITHOUT_T3",
+    "INSTALL_OR_MERGE_CORRECTED_TOOL",
+    "CREATE_SHARED_FIVE_MEMBER_AGGREGATE",
+    "REINTRODUCE_RETIRED_EXECUTION_IDENTITIES",
+    "BEGIN_LAWS_REPAIR",
+    "CHANGE_PRODUCT_FILES",
+    "CHANGE_MAIN",
+    "GRANT_MERGE_AUTHORITY"
+  ],
+  "stoppingBoundary": {
+    "proves": [
+      "CORRECTED_TOOL_SOURCE_CONSTRUCTED",
+      "FOUR_COMPASS_AND_HOME_AUXILIARY_EXECUTION_LANES_SEPARATED",
+      "SEPARATE_RECORD_SUMMARY_FINDING_MANIFEST_AND_DIGEST_CONTRACTS",
+      "CORRECTED_WORKFLOW_SOURCE_CONSTRUCTED",
+      "STATIC_SOURCE_AND_WORKFLOW_VALIDATION_PASS",
+      "EXACT_SOURCE_BLOB_CUSTODY"
+    ],
+    "doesNotProve": [
+      "BROWSER_EXECUTION_PASS",
+      "WORKFLOW_EXECUTION_PASS",
+      "DEPLOYED_ROUTE_EVIDENCE_ACCEPTED",
+      "TOOL_EVIDENCE_VALIDATION_COMPLETE",
+      "TOOL_INSTALLATION_READINESS",
+      "TOOL_MERGE_AUTHORITY",
+      "LAWS_REPAIR_READINESS",
+      "PRODUCT_ROOT_CAUSE"
+    ],
+    "authorizes": [
+      "T3_TOOL_EXECUTION_AND_EVIDENCE_VALIDATION"
+    ]
+  },
+  "nextCheckpoint": "T3_TOOL_EXECUTION_AND_EVIDENCE_VALIDATION"
+}

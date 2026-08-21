@@ -1,0 +1,174 @@
+{
+  "receiptType": "H_EARTH_C0_D_PERFORMANCE_BASELINE_v2",
+  "managementCorrection": "C0_D_PHYSICAL_MOBILE_REQUIREMENT_WITHDRAWAL_001",
+  "operation": "C0_D_RUNTIME_AND_MOBILE_BASELINE",
+  "result": "PASS_CLOSED",
+  "c0Overall": "OPEN_IN_PROGRESS",
+  "exactMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+  "desktopEnvironment": {
+    "deviceModel": "GITHUB_HOSTED_UBUNTU_RUNNER",
+    "operatingSystem": "Ubuntu 24.04",
+    "browserAndVersion": "GOOGLE_CHROME_STABLE",
+    "physicalOrEmulated": "HOSTED_DESKTOP_RUNTIME",
+    "orientation": "LANDSCAPE",
+    "viewport": {
+      "width": 1365,
+      "height": 768
+    },
+    "devicePixelRatio": 1,
+    "networkProfile": "RUNNER_DEFAULT",
+    "cacheState": "CLEAN_CONTEXT_PER_STATE",
+    "batteryOrPowerState": "EXTERNAL_RUNNER_POWER",
+    "thermalState": {
+      "status": "UNAVAILABLE",
+      "reason": "NOT_EXPOSED"
+    }
+  },
+  "physicalMobile": {
+    "deviceModel": "DESIGNATED_SAMSUNG_REFERENCE_DEVICE",
+    "physicalOrEmulated": "PHYSICAL_REQUIRED",
+    "executed": false,
+    "status": "DEFERRED_NONBLOCKING_REFERENCE_VALIDATION",
+    "reason": "REQUIRED_LATER_FOR_CHANGED_CANDIDATE_VERIFICATION_NOT_REQUIRED_FOR_C0_BASELINE_CUSTODY",
+    "officialBaseline": false,
+    "samsungSpecificImplementationAuthorized": false,
+    "disposition": "DEFERRED_NONBLOCKING_REFERENCE_VALIDATION"
+  },
+  "runtimeStates": [
+    {
+      "stateId": "STATIONARY_COASTAL_VIEW",
+      "measurementDurationMilliseconds": 8015.6,
+      "frameTime": {
+        "minimum": 16.5,
+        "median": 16.7,
+        "p95": 16.8,
+        "p99": 16.8,
+        "maximum": 16.8,
+        "longFrameCount": 0,
+        "frameSampleCount": 480
+      },
+      "cameraUpdateCount": 0,
+      "rendererPresentCount": 0,
+      "startupDurationMilliseconds": 7370,
+      "downloadTransferBytes": 339085,
+      "decodedOrResourceBytes": 1598622,
+      "requestCount": 57,
+      "gpuMemoryBaseline": {
+        "status": "UNAVAILABLE",
+        "method": "WEB_PLATFORM_RUNTIME",
+        "reason": "NO_STANDARD_WEB_API_EXPOSES_GPU_MEMORY"
+      },
+      "systemMemoryBaseline": {
+        "status": "AVAILABLE_APPROXIMATE_DEVICE_GIB",
+        "value": 16,
+        "method": "navigator.deviceMemory"
+      },
+      "jsHeapMemory": {
+        "usedJSHeapSize": 280261149,
+        "totalJSHeapSize": 333125205,
+        "jsHeapSizeLimit": 4395630592
+      },
+      "errors": {
+        "pageErrors": [],
+        "consoleErrors": [
+          "Failed to load resource: the server responded with a status of 404 ()"
+        ],
+        "requestFailures": [],
+        "ownedHttpErrors": [
+          {
+            "url": "https://diamondgatebridge.com/favicon.ico",
+            "status": 404
+          }
+        ]
+      }
+    },
+    {
+      "stateId": "CONTINUOUS_COASTAL_TRAVERSAL",
+      "measurementDurationMilliseconds": 8122.1,
+      "frameTime": {
+        "minimum": 16.5,
+        "median": 16.8,
+        "p95": 350,
+        "p99": 383.2,
+        "maximum": 383.2,
+        "longFrameCount": 25,
+        "frameSampleCount": 51
+      },
+      "cameraUpdateCount": 26,
+      "rendererPresentCount": 26,
+      "startupDurationMilliseconds": 6639,
+      "downloadTransferBytes": 300,
+      "decodedOrResourceBytes": 1597962,
+      "requestCount": 56,
+      "gpuMemoryBaseline": {
+        "status": "UNAVAILABLE",
+        "method": "WEB_PLATFORM_RUNTIME",
+        "reason": "NO_STANDARD_WEB_API_EXPOSES_GPU_MEMORY"
+      },
+      "systemMemoryBaseline": {
+        "status": "AVAILABLE_APPROXIMATE_DEVICE_GIB",
+        "value": 16,
+        "method": "navigator.deviceMemory"
+      },
+      "jsHeapMemory": {
+        "usedJSHeapSize": 311914314,
+        "totalJSHeapSize": 351299834,
+        "jsHeapSizeLimit": 4395630592
+      },
+      "errors": {
+        "pageErrors": [],
+        "consoleErrors": [],
+        "requestFailures": [],
+        "ownedHttpErrors": []
+      }
+    },
+    {
+      "stateId": "OCEAN_VISIBLE_WITH_LIVE_MOTION",
+      "measurementDurationMilliseconds": 8388.3,
+      "frameTime": {
+        "minimum": 16.6,
+        "median": 383.3,
+        "p95": 400,
+        "p99": 400,
+        "maximum": 400,
+        "longFrameCount": 21,
+        "frameSampleCount": 30
+      },
+      "cameraUpdateCount": 22,
+      "rendererPresentCount": 22,
+      "startupDurationMilliseconds": 6582,
+      "downloadTransferBytes": 300,
+      "decodedOrResourceBytes": 1597962,
+      "requestCount": 56,
+      "gpuMemoryBaseline": {
+        "status": "UNAVAILABLE",
+        "method": "WEB_PLATFORM_RUNTIME",
+        "reason": "NO_STANDARD_WEB_API_EXPOSES_GPU_MEMORY"
+      },
+      "systemMemoryBaseline": {
+        "status": "AVAILABLE_APPROXIMATE_DEVICE_GIB",
+        "value": 16,
+        "method": "navigator.deviceMemory"
+      },
+      "jsHeapMemory": {
+        "usedJSHeapSize": 277676953,
+        "totalJSHeapSize": 339763133,
+        "jsHeapSizeLimit": 4395630592
+      },
+      "errors": {
+        "pageErrors": [],
+        "consoleErrors": [],
+        "requestFailures": [],
+        "ownedHttpErrors": []
+      }
+    }
+  ],
+  "managementCorrectionHistory": [
+    "C0_D_SCENE_UNIQUENESS_REQUIREMENT_WITHDRAWAL_001",
+    "C0_D_PHYSICAL_MOBILE_REQUIREMENT_WITHDRAWAL_001"
+  ],
+  "previousRequirement": "PHYSICAL_MOBILE_BASELINE_EXECUTED_MUST_EQUAL_TRUE",
+  "disposition": "WITHDRAWN_AS_UNAUTHORIZED_OVERCONSTRAINT",
+  "correctionReason": "C0_REQUIRES_AN_EXECUTED_AND_REPRODUCIBLE_PERFORMANCE_BASELINE_NOT_MANDATORY_PHYSICAL_DEVICE_EXECUTION",
+  "performanceBaselineExecuted": true
+}

@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+  <title>H-Earth FD_05 Diagnostic Authority</title>
+  <link rel="stylesheet" href="./index.css?v=fd05-chamber-ui-20260718a&cb=7a9f11df44de2c12">
+</head>
+<body>
+  <main id="h-earth-fd05-diagnostic" class="diagnostic" data-run-state="BOOTING" data-cycle-state="READY">
+    <header class="command-crown" aria-labelledby="fd05-title">
+      <div class="command-crown__identity">
+        <p class="eyebrow">H-EARTH · FD_05</p>
+        <h1 id="fd05-title">Diagnostic Authority</h1>
+        <p class="workspace-state">Current workspace: <strong id="h-earth-fd05-workspace-state">Browser Evidence</strong></p>
+      </div>
+
+      <nav class="command-crown__routes" aria-label="Authority routes">
+        <a href="/showroom/globe/h-earth/">Return to H-Earth</a>
+        <a href="/">Return to Orbit</a>
+      </nav>
+
+      <details id="h-earth-fd05-utilities" class="utilities">
+        <summary>Utilities</summary>
+        <div class="utilities__drawer">
+          <section class="utility-group" aria-labelledby="browser-utilities-title">
+            <h2 id="browser-utilities-title">Browser artifacts</h2>
+            <div class="utility-actions">
+              <button id="h-earth-fd05-copy-summary" type="button" disabled>Copy browser summary</button>
+              <button id="h-earth-fd05-copy-findings" type="button" disabled>Copy browser findings</button>
+              <button id="h-earth-fd05-copy-receipt" type="button" disabled>Copy completion receipt</button>
+              <button id="h-earth-fd05-copy-digest" type="button" disabled>Copy package digest</button>
+              <button id="h-earth-fd05-save-package" type="button" disabled>Save full browser package</button>
+            </div>
+          </section>
+
+          <section class="utility-group" aria-labelledby="cycle-utilities-title">
+            <h2 id="cycle-utilities-title">Cycle artifacts</h2>
+            <div class="utility-actions">
+              <button id="h-earth-fd05-cycle-copy-summary" type="button" disabled>Copy cycle summary</button>
+              <button id="h-earth-fd05-cycle-save-packet" type="button" disabled>Save cycle packet</button>
+              <button id="h-earth-fd05-cycle-save-terminal" type="button" disabled>Save terminal receipt</button>
+            </div>
+          </section>
+
+          <details id="h-earth-fd05-cycle-input-vault" class="utility-group input-vault">
+            <summary>Load cycle inputs</summary>
+            <p class="supporting-copy">Browser package is required. Later artifacts are optional inputs that convert controlled holds into later classifications.</p>
+            <div class="file-grid">
+              <label><span>Browser package</span><input id="h-earth-fd05-load-browser-package" type="file" accept="application/json,.json"></label>
+              <label><span>Engineering disposition</span><input id="h-earth-fd05-load-engineering-receipt" type="file" accept="application/json,.json"></label>
+              <label><span>Repository occurrence</span><input id="h-earth-fd05-load-repository-evidence" type="file" accept="application/json,.json"></label>
+              <label><span>Selected Drive occurrence</span><input id="h-earth-fd05-load-drive-evidence" type="file" accept="application/json,.json"></label>
+              <label><span>Correction authority receipt</span><input id="h-earth-fd05-load-correction-authority" type="file" accept="application/json,.json"></label>
+              <label><span>Replacement plan</span><input id="h-earth-fd05-load-replacement-plan" type="file" accept="application/json,.json"></label>
+              <label><span>Replacement execution</span><input id="h-earth-fd05-load-replacement-execution" type="file" accept="application/json,.json"></label>
+              <label><span>Post-correction validation</span><input id="h-earth-fd05-load-post-correction-validation" type="file" accept="application/json,.json"></label>
+            </div>
+            <div id="h-earth-fd05-cycle-inputs" class="custody-grid" aria-live="polite"></div>
+          </details>
+        </div>
+      </details>
+
+      <div class="authority-strip" aria-label="Authority limits">
+        <span>SOURCE CORRECTION · WITHHELD</span>
+        <span>PRODUCTION CLAIM · NONE</span>
+        <span>MANIFEST · 19 ROWS</span>
+      </div>
+    </header>
+
+    <section id="diagnostic-orbit" class="diagnostic-orbit" aria-labelledby="diagnostic-orbit-title">
+      <div class="diagnostic-orbit__heading">
+        <div>
+          <p class="section-kicker">Diagnostic orbit</p>
+          <h2 id="diagnostic-orbit-title">Select an operational workspace</h2>
+        </div>
+        <p>Workspace selection changes presentation only. It does not start capture, run the cycle, or reset completed evidence.</p>
+      </div>
+
+      <div class="workspace-tabs" role="tablist" aria-label="FD_05 diagnostic workspaces">
+        <button id="h-earth-fd05-tab-browser" class="workspace-tab" type="button" role="tab" aria-selected="true" aria-controls="browser-layer" tabindex="0" data-workspace="browser">Browser Evidence</button>
+        <button id="h-earth-fd05-tab-cycle" class="workspace-tab" type="button" role="tab" aria-selected="false" aria-controls="cycle-layer" tabindex="-1" data-workspace="cycle">Diagnosis Cycle</button>
+      </div>
+    </section>
+
+    <section id="browser-layer" class="workspace-panel" role="tabpanel" aria-labelledby="h-earth-fd05-tab-browser" data-workspace-panel="browser">
+      <div class="workspace-heading">
+        <div>
+          <p class="section-kicker">Browser evidence</p>
+          <h2>Governed capture chamber</h2>
+          <p>All nineteen transports finish before one ordered native-import observation pass begins.</p>
+        </div>
+        <button class="return-orbit" type="button" data-return-diagnostic-orbit>Return to Diagnostic Orbit</button>
+      </div>
+
+      <section class="operator-card" aria-labelledby="capture-controls-title">
+        <div>
+          <h3 id="capture-controls-title">Capture control</h3>
+          <p id="h-earth-fd05-capture-status" class="live-status" aria-live="polite">Initializing manifest projection.</p>
+        </div>
+        <button id="h-earth-fd05-start" class="primary-operation" type="button" disabled>Start governed capture</button>
+      </section>
+
+      <div id="h-earth-fd05-capture-metrics" class="metric-grid" aria-label="Capture totals"></div>
+
+      <section class="panel navigator-panel" aria-labelledby="occurrence-navigator-title">
+        <div class="panel__heading">
+          <div>
+            <p class="section-kicker">Manifest schedule</p>
+            <h3 id="occurrence-navigator-title">Nineteen governed occurrences</h3>
+          </div>
+          <p>Choose one occurrence. The complete selected evidence remains available in the workbench.</p>
+        </div>
+
+        <label class="occurrence-select-label" for="h-earth-fd05-row-select">
+          <span>Select occurrence</span>
+          <select id="h-earth-fd05-row-select"></select>
+        </label>
+
+        <div class="occurrence-layout">
+          <div id="h-earth-fd05-row-nav" class="occurrence-rail" role="listbox" aria-label="Governed occurrences"></div>
+          <div id="h-earth-fd05-rows" class="occurrence-workbench" tabindex="-1" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="browser-findings-title">
+        <div class="panel__heading">
+          <div>
+            <p class="section-kicker">Browser adjudication</p>
+            <h3 id="browser-findings-title">Independent findings</h3>
+          </div>
+        </div>
+        <div id="h-earth-fd05-summary" class="finding-grid"><p class="empty-state">No finalized browser package.</p></div>
+      </section>
+
+      <section class="two-column">
+        <article class="panel">
+          <h3>Unresolved browser fields</h3>
+          <div id="h-earth-fd05-unresolved"><p class="empty-state">No finalized browser package.</p></div>
+        </article>
+        <article class="panel">
+          <h3>Completion receipt projection</h3>
+          <pre id="h-earth-fd05-receipt" class="compact-json">No finalized browser package.</pre>
+        </article>
+      </section>
+    </section>
+
+    <section id="cycle-layer" class="workspace-panel" role="tabpanel" aria-labelledby="h-earth-fd05-tab-cycle" data-workspace-panel="cycle" hidden>
+      <div class="workspace-heading">
+        <div>
+          <p class="section-kicker">Diagnosis cycle</p>
+          <h2>Exact-nine adjudication chamber</h2>
+          <p>Read-only exact-nine adjudication. It never fetches modules, edits evidence, writes repositories, or grants correction authority.</p>
+        </div>
+        <button class="return-orbit" type="button" data-return-diagnostic-orbit>Return to Diagnostic Orbit</button>
+      </div>
+
+      <section class="operator-card operator-card--cycle" aria-labelledby="cycle-controls-title">
+        <div>
+          <h3 id="cycle-controls-title">Nine-cycle control</h3>
+          <p id="h-earth-fd05-cycle-status" class="live-status" aria-live="polite">Load a finalized browser package or complete a capture.</p>
+        </div>
+        <button id="h-earth-fd05-cycle-run" class="primary-operation" type="button" disabled>Run exact-nine cycle</button>
+      </section>
+
+      <section class="panel station-panel" aria-labelledby="station-navigator-title">
+        <div class="panel__heading">
+          <div>
+            <p class="section-kicker">F1 → F89</p>
+            <h3 id="station-navigator-title">Exact-nine station navigator</h3>
+          </div>
+          <p>Station selection changes only the displayed receipt detail.</p>
+        </div>
+        <div id="h-earth-fd05-cycle-rail" class="station-rail" role="tablist" aria-label="Exact-nine diagnosis stations"></div>
+        <div id="h-earth-fd05-cycle-station-detail" class="station-workbench" role="tabpanel" tabindex="-1" aria-live="polite"></div>
+      </section>
+
+      <section class="two-column">
+        <article class="panel">
+          <h3>Terminal synthesis</h3>
+          <div id="h-earth-fd05-cycle-terminal" class="terminal-grid"><p class="empty-state">No terminal synthesis yet.</p></div>
+        </article>
+        <article class="panel">
+          <h3>F89 terminal receipt</h3>
+          <pre id="h-earth-fd05-cycle-receipt" class="compact-json">No finalized cycle packet.</pre>
+        </article>
+      </section>
+    </section>
+  </main>
+  <script type="importmap">
+    {"imports":{"./ui.js?v=fd05-nine-cycle-20260718a":"./ui.js?v=fd05-chamber-ui-20260718a"}}
+  </script>
+  <script type="module" src="./index.js?v=fd05-chamber-ui-20260718a&cb=a52f81b5338a8421"></script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+name: H-Earth Public Face Trophy Standard
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-public-face-trophy-standard.yml'
+      - 'showroom/globe/h-earth/index.html'
+      - 'showroom/globe/h-earth/index.css'
+      - 'showroom/globe/h-earth/awards/index.html'
+      - 'h-earth-3d/control-plane/instrument-platform/H_EARTH_PUBLIC_FACE_TROPHY_STANDARD_RECONCILIATION_001.v1.mjs'
+      - 'h-earth-3d/validation/instrument-platform/h-earth.public-face-trophy-standard.*.mjs'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/h-earth-public-face-trophy-standard.yml'
+      - 'showroom/globe/h-earth/index.html'
+      - 'showroom/globe/h-earth/index.css'
+      - 'showroom/globe/h-earth/awards/index.html'
+      - 'h-earth-3d/control-plane/instrument-platform/H_EARTH_PUBLIC_FACE_TROPHY_STANDARD_RECONCILIATION_001.v1.mjs'
+      - 'h-earth-3d/validation/instrument-platform/h-earth.public-face-trophy-standard.*.mjs'
+  workflow_dispatch:
+    inputs:
+      public_verification:
+        description: Run the promoted Trophy Standard regression against the canonical public H-Earth origin
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+  statuses: write
+
+jobs:
+  verify-public-face-candidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+      PUBLIC_VERIFICATION: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.public_verification) }}
+      H_EARTH_B10_ORIGIN: ${{ (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.public_verification)) && 'https://diamondgatebridge.com' || 'http://127.0.0.1:4187' }}
+      H_EARTH_B10_STATIC_RECEIPT: /tmp/h-earth-public-face-trophy-standard-b10.static.receipt.json
+      H_EARTH_B10_BROWSER_RECEIPT: /tmp/h-earth-public-face-trophy-standard-b10.browser.receipt.json
+
+    steps:
+      - name: Checkout exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Publish pending public verification status
+        if: ${{ env.PUBLIC_VERIFICATION == 'true' }}
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const targetUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            await github.rest.repos.createCommitStatus({ owner: context.repo.owner, repo: context.repo.repo, sha: context.sha, state: 'pending', context: 'h-earth/b10-public-candidate', description: 'Promoted Trophy Standard verification is running', target_url: targetUrl });
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install bounded Chromium dependency
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Execute B10 static and scope verification
+        run: |
+          set -o pipefail
+          node h-earth-3d/validation/instrument-platform/h-earth.public-face-trophy-standard.runner.mjs | tee /tmp/h-earth-public-face-trophy-standard-b10.static.log
+
+      - name: Start exact candidate server
+        if: ${{ env.PUBLIC_VERIFICATION != 'true' }}
+        run: |
+          python3 -m http.server 4187 --bind 127.0.0.1 > /tmp/h-earth-public-face-trophy-standard-server.log 2>&1 &
+          for attempt in $(seq 1 90); do
+            curl -fsS http://127.0.0.1:4187/showroom/globe/h-earth/ >/dev/null && curl -fsS http://127.0.0.1:4187/showroom/globe/h-earth/awards/ >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/h-earth-public-face-trophy-standard-server.log
+          exit 1
+
+      - name: Wait for exact public candidate deployment
+        if: ${{ env.PUBLIC_VERIFICATION == 'true' }}
+        run: |
+          : > /tmp/h-earth-public-face-trophy-standard-server.log
+          for attempt in $(seq 1 40); do
+            H_EARTH_SOURCE="$(curl -fsS "${H_EARTH_B10_ORIGIN}/showroom/globe/h-earth/?attempt=${attempt}" || true)"
+            AWARDS_SOURCE="$(curl -fsS "${H_EARTH_B10_ORIGIN}/showroom/globe/h-earth/awards/?attempt=${attempt}" || true)"
+            if grep -q 'data-h-earth-public-face-default="promoted"' <<<"${H_EARTH_SOURCE}" && grep -q 'DIAMOND_GATE_BRIDGE_AWARD_LANDSCAPE' <<<"${AWARDS_SOURCE}"; then
+              printf 'PUBLIC_PROMOTED_TROPHY_STANDARD_SOURCE_AVAILABLE_ATTEMPT=%s\n' "${attempt}" | tee /tmp/h-earth-public-face-trophy-standard-server.log
+              exit 0
+            fi
+            sleep 15
+          done
+          printf 'PUBLIC_PROMOTED_TROPHY_STANDARD_SOURCE_NOT_AVAILABLE\n' | tee /tmp/h-earth-public-face-trophy-standard-server.log
+          exit 1
+
+      - name: Execute B10 desktop mobile and awards browser verification
+        run: |
+          set -o pipefail
+          node h-earth-3d/validation/instrument-platform/h-earth.public-face-trophy-standard.browser.mjs | tee /tmp/h-earth-public-face-trophy-standard-b10.browser.log
+
+      - name: Enforce promoted Trophy Standard boundary
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const staticReceipt = JSON.parse(fs.readFileSync(process.env.H_EARTH_B10_STATIC_RECEIPT, 'utf8'));
+          const browserReceipt = JSON.parse(fs.readFileSync(process.env.H_EARTH_B10_BROWSER_RECEIPT, 'utf8'));
+          const expectPublic = process.env.PUBLIC_VERIFICATION === 'true';
+          const valid = staticReceipt.status === 'PASS_CLOSED' && staticReceipt.failedAssertionCount === 0 && staticReceipt.unauthorizedChangedPaths.length === 0 && browserReceipt.status === 'PASS_CLOSED' && browserReceipt.failedAssertionCount === 0 && browserReceipt.pageErrors.length === 0 && browserReceipt.consoleErrors.length === 0 && browserReceipt.httpErrors.length === 0 && browserReceipt.publicVerificationPerformed === expectPublic && browserReceipt.baselinePublicDefaultUnchanged === true && browserReceipt.productAccepted === true && browserReceipt.defaultPromoted === true && browserReceipt.newUserDifferentialRequired === false;
+          if (!valid) { console.error(JSON.stringify({ staticReceipt, browserReceipt, expectPublic }, null, 2)); process.exit(1); }
+          console.log(`H_EARTH_PUBLIC_FACE_TROPHY_STANDARD_PROMOTED_REGRESSION_PASS:${process.env.CANDIDATE_HEAD}:${staticReceipt.receiptSha256}:${browserReceipt.receiptSha256}`);
+          NODE
+
+      - name: Upload B10 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-public-face-trophy-standard-${{ github.event_name }}
+          path: |
+            /tmp/h-earth-public-face-trophy-standard-b10.static.receipt.json
+            /tmp/h-earth-public-face-trophy-standard-b10.browser.receipt.json
+            /tmp/h-earth-public-face-trophy-standard-b10.static.log
+            /tmp/h-earth-public-face-trophy-standard-b10.browser.log
+            /tmp/h-earth-public-face-trophy-standard-server.log
+          retention-days: 90
+
+      - name: Publish final public verification status
+        if: ${{ always() && env.PUBLIC_VERIFICATION == 'true' }}
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const targetUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const passed = '${{ job.status }}' === 'success';
+            await github.rest.repos.createCommitStatus({ owner: context.repo.owner, repo: context.repo.repo, sha: context.sha, state: passed ? 'success' : 'failure', context: 'h-earth/b10-public-candidate', description: passed ? 'Promoted Trophy Standard regression passed' : 'Promoted Trophy Standard regression failed', target_url: targetUrl });

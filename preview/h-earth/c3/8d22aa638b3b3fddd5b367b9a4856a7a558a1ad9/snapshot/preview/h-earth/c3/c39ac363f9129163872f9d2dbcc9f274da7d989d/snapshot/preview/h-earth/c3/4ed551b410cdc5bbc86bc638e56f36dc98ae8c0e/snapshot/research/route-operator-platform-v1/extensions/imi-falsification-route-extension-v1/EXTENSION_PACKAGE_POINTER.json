@@ -1,0 +1,22 @@
+{
+  "authority": "DRIVE_BACKED_VERSIONED_FALSIFICATION_ROUTE_EXTENSION",
+  "candidate_base_commit": "c3b76c497e9bec243f5ca3bdc2831d50ec19a1bb",
+  "core_instrument_id": "IMI_OBSERVER_GRADE_INSTRUMENT_v1",
+  "core_mutation_performed": false,
+  "core_output_schema_mutation_performed": false,
+  "core_package_sha256": "0be0608fa9aab10d75eeba796530421e96efc7829364172e52f7925ca74d9c87",
+  "custody_readback_status": "PASS_EXACT_SHA256_AND_SIZE",
+  "drive_file_id": "1K07Nt5NL46TV_LtypRJ-R4hMOMvhJqG7",
+  "drive_file_url": "https://drive.google.com/file/d/1K07Nt5NL46TV_LtypRJ-R4hMOMvhJqG7/view?usp=drivesdk",
+  "drive_parent_folder_id": "1GwAuA0ZEqNRhH0Oj7e_00nner0esAYdQ",
+  "operation": "IMI_FALSIFICATION_ROUTE_EXTENSION_SEMANTIC_CONTRACT_DATA_ELIGIBILITY_AND_INSTRUMENTATION_v1",
+  "operational_status": "ACTIVE_READY_FOR_FIRST_FROZEN_PILOT",
+  "package_file_count": 21,
+  "package_id": "IMI_FALSIFICATION_ROUTE_EXTENSION_v1",
+  "package_version": "1.0.0",
+  "ratification_status": "PASS_CLOSED",
+  "real_outcome_adjudication": "HELD",
+  "zip_file_name": "IMI_FALSIFICATION_ROUTE_EXTENSION_v1.zip",
+  "zip_sha256": "74a1cf877d10788c3e455fb3318d8eabd3fefdb91a9a7a0e918fe2f860492e8e",
+  "zip_size_bytes": 29812
+}

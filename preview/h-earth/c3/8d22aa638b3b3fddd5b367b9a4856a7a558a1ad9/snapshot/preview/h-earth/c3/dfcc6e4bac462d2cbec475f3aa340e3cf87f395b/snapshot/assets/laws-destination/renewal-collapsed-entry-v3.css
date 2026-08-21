@@ -1,0 +1,80 @@
+/* LAWS_RENEWAL_COLLAPSED_ENTRY_CONTRACT_v3 */
+
+.lr-page-facts {
+  width: min(100%, 58rem);
+  margin-top: .5rem;
+  overflow: hidden;
+  border: 1px solid rgba(184, 205, 255, .16);
+  border-radius: var(--lr-radius-md);
+  background: rgba(255, 255, 255, .028);
+}
+
+.lr-page-facts > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3.75rem;
+  padding: .9rem 1rem;
+  color: var(--lr-soft);
+  cursor: pointer;
+  font-size: .8rem;
+  font-weight: 900;
+  letter-spacing: .1em;
+  list-style: none;
+  text-transform: uppercase;
+}
+
+.lr-page-facts > summary::-webkit-details-marker { display: none; }
+.lr-page-facts > summary::after {
+  content: "+";
+  color: var(--lr-cyan);
+  font-size: 1.2rem;
+}
+.lr-page-facts[open] > summary::after { content: "–"; }
+.lr-page-facts__body { padding: 0 .8rem .8rem; }
+.lr-page-facts .lr-status-grid { width: 100%; max-width: none; margin: 0; }
+
+.lr-tablist {
+  border-radius: var(--lr-radius-md);
+}
+
+.lr-tab[aria-expanded="true"],
+.lr-tab[aria-selected="true"] {
+  color: #090b11;
+  border-color: rgba(242, 202, 114, .78);
+  background: linear-gradient(135deg, var(--lr-gold-2), var(--lr-gold));
+  box-shadow: 0 .8rem 2rem rgba(242, 202, 114, .14);
+}
+
+.lr-tab[aria-expanded="false"] {
+  color: var(--lr-soft);
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+.lr-js .lr-panel[hidden] { display: none !important; }
+
+/* Source disclosures are open for static/no-JavaScript readability.
+   The inline bootstrap marks enhanced pages before first paint; the full
+   runtime then closes disclosures and records readiness. */
+html.lr-js:not(.lr-runtime-ready) .lr-page-facts > .lr-page-facts__body,
+html.lr-js:not(.lr-runtime-ready) .lr-audit > .lr-audit__body {
+  display: none !important;
+}
+
+html:not(.lr-js) .lr-page-facts > summary::after,
+html:not(.lr-js) .lr-audit > summary::after {
+  content: "Static";
+  font-size: .58rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 680px) {
+  .lr-page-facts > summary {
+    min-height: 3.5rem;
+  }
+}

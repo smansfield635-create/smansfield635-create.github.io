@@ -1,0 +1,42 @@
+name: Pages Legacy Artifact Size Audit
+
+on:
+  push:
+    branches: [recovery/pages-legacy-artifact-slim]
+    paths:
+      - '.github/workflows/pages-legacy-size-audit.yml'
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Measure publication mass
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          total=$(du -sb . --exclude=.git | awk '{print $1}')
+          top=$(du -sb -- * .[^.]* 2>/dev/null | sort -nr | head -40 | awk '{printf "- `%s` — %.2f MiB\n", $2, $1/1048576}')
+          large=$(find . -path './.git' -prune -o -type f -size +20M -printf '%s\t%p\n' | sort -nr | head -50 | awk '{printf "- `%s` — %.2f MiB\n", $2, $1/1048576}')
+          body=$(cat <<EOF
+          PAGES_LEGACY_ARTIFACT_SIZE_AUDIT
+
+          Audit head: \`${GITHUB_SHA}\`
+          Worktree bytes excluding .git: \`${total}\`
+
+          Top-level mass:
+          ${top}
+
+          Largest tracked files (>20 MiB, top 50):
+          ${large}
+          EOF
+          )
+          gh api "repos/${GITHUB_REPOSITORY}/issues/1503/comments" -f body="$body" >/dev/null

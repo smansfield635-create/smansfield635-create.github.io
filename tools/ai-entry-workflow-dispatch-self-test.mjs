@@ -18,6 +18,7 @@ assert(registry.capabilities?.PAGES_EXACT_HEAD_DEPLOY?.workflow === 'pages-direc
 assert(registry.capabilities?.PAGES_EXACT_HEAD_DEPLOY?.inputPolicy?.target_sha?.source === 'CURRENT_MAIN_SHA', 'Pages deploy target must bind current main');
 assert(registry.continuity?.dispatchRunIdMustBeRecovered === true, 'run id recovery must remain mandatory');
 assert(registry.continuity?.directConnectorDispatchPreferredWhenAvailable === true, 'direct connector dispatch must remain preferred');
+assert(registry.continuity?.receiptResult === 'NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED', 'success receipt result drifted');
 
 const procedure = shared.procedures?.find(p => p.procedureId === 'AI_ENTRY_NATIVE_WORKFLOW_DISPATCH');
 assert(procedure, 'shared AI entry dispatch procedure missing');
@@ -39,7 +40,8 @@ for (const token of [
   'currentMainSha',
   'requestCommitParent',
   'dispatchedRunId',
-  'NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED'
+  'registry.continuity.receiptResult',
+  'workflow-dispatch-receipt.json'
 ]) assert(runtime.includes(token), `bridge runtime missing ${token}`);
 
 for (const forbidden of ['child_process.exec(', 'eval(', 'request.command', 'request.workflow ||']) {
@@ -52,5 +54,6 @@ console.log(JSON.stringify({
   capabilityCount: Object.keys(registry.capabilities || {}).length,
   preferredTransport: registry.preferredTransport,
   fallbackTransport: registry.fallbackTransport,
-  runIdRecoveryRequired: registry.continuity.dispatchRunIdMustBeRecovered
+  runIdRecoveryRequired: registry.continuity.dispatchRunIdMustBeRecovered,
+  successReceiptResult: registry.continuity.receiptResult
 }, null, 2));

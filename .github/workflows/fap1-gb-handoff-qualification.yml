@@ -5,7 +5,7 @@ on:
 permissions:
   contents: read
 jobs:
-  lod:
+  handoff:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -13,18 +13,39 @@ jobs:
           ref: 8ffc2437c318c6e0c040bd121f1344cb2c62e751
       - uses: actions/setup-node@v4
         with: {node-version: '22'}
-      - name: Execute deterministic ellipsoid promotion qualification
+      - id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with: {chrome-version: stable}
+      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/server.log 2>&1 &
+          for a in $(seq 1 40); do curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/weather-presentation-reconciliation/ >/dev/null && exit 0; sleep .25; done; exit 1
+      - name: Execute final exact-head browser handoff traversal
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
         run: |
-          node --input-type=module <<'NODE'
-          import {buildFAP1GPUWeatherPacket} from './showroom/globe/audralia/weather-presentation-reconciliation/fap1-gpu-weather-descriptors.mjs';
-          import {buildFAP1SpatialWeatherObjects,evaluateFAP1SpatialLOD} from './showroom/globe/audralia/weather-presentation-reconciliation/fap1-spatial-lod.gb.mjs';
-          const packet=buildFAP1GPUWeatherPacket({canonicalTimeHours:0}),objects=buildFAP1SpatialWeatherObjects({packet});
-          const object=objects.find(o=>o.weatherClass==='LOW_CUMULIFORM')||objects[0],up=object.V_i.axisUp,c=object.V_i.center,vr=object.V_i.radii[1];
-          const distances=[5600,4300,3500,2800,2200,1700,1450,1200,1000,800,720,400,0],samples=[];
-          for(const surfaceDistance of distances){
-            const eye=c.map((v,i)=>v+up[i]*(vr+surfaceDistance)),forward=up.map(v=>-v),state=evaluateFAP1SpatialLOD(objects,{eye,forward}),entry=state.objects.find(e=>e.object.ID_i===object.ID_i);
-            samples.push({surfaceDistance,distanceToVolume:entry.distanceToVolume,inside:entry.inside,promoted:entry.localPromoted,alpha:entry.alpha});
-          }
-          const l=samples.map(x=>x.alpha.l),result={weatherId:object.ID_i,samples,distanceAccurate:samples.every(x=>Math.abs(x.distanceToVolume-x.surfaceDistance)<1e-5),macro:l.some(v=>v===0),overlap:l.some(v=>v>0&&v<.72),local:l.some(v=>v>=.72),monotonic:l.every((v,i)=>!i||v+1e-9>=l[i-1])};
-          result.pass=result.distanceAccurate&&result.macro&&result.overlap&&result.local&&result.monotonic;console.log(JSON.stringify(result,null,2));if(!result.pass)process.exit(2);
+          node <<'NODE'
+          const puppeteer=require('puppeteer-core');
+          (async()=>{
+            const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+            const page=await browser.newPage();await page.setViewport({width:720,height:1280});
+            const errors=[];page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error'&&!m.text().includes('favicon'))errors.push(m.text());});
+            await page.goto('http://127.0.0.1:4173/showroom/globe/audralia/weather-presentation-reconciliation/',{waitUntil:'domcontentloaded',timeout:90000});
+            await page.waitForFunction(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer,{timeout:90000});
+            await page.evaluate(async()=>{if(!window.__AUDRALIA_FAP1_GA_AUTHORITY__)await import('./fap1-ga-authority-bootstrap.mjs?qualification=finalgb');});
+            await page.waitForFunction(()=>window.__AUDRALIA_FAP1_GA_AUTHORITY__?.meteorologicalAuthority==='FAP1_ONLY',{timeout:30000});
+            await page.evaluate(async()=>{if(!window.__AUDRALIA_FAP1_W5_HANDOFF__?.authority)await import('./fap1-w5-handoff-bootstrap.gb.mjs?qualification=finalgb');});
+            await page.waitForFunction(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.authority==='BOUNDED_GB_HANDOFF_ACTIVE',{timeout:30000});
+            const result=await page.evaluate(async()=>{
+              const sleep=ms=>new Promise(r=>setTimeout(r,ms)),proof=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__,ga=window.__AUDRALIA_FAP1_GA_AUTHORITY__,h=window.__AUDRALIA_FAP1_W5_HANDOFF__,system=ga.descriptorPacket().systems.find(s=>s.weatherClass==='LOW_CUMULIFORM')||ga.descriptorPacket().systems[0];
+              const R=6200,D=Math.PI/180,N=[0,.5,-.8660254037844386],M=[0,.8660254037844386,.5],E=[1,0,0],lat=system.latitudeDeg*D,lon=system.longitudeDeg*D,cl=Math.cos(lat),sl=Math.sin(lat),co=Math.cos(lon),si=Math.sin(lon),r=[N[0]*sl+(M[0]*co+E[0]*si)*cl,N[1]*sl+(M[1]*co+E[1]*si)*cl,N[2]*sl+(M[2]*co+E[2]*si)*cl],angle=Math.acos(Math.max(-1,Math.min(1,r[1]))),sine=Math.sin(angle),arc=angle*R,target={targetU:Math.abs(sine)<1e-7?0:arc*r[0]/sine,targetV:Math.abs(sine)<1e-7?0:arc*r[2]/sine};
+              const ds=[5600,4300,3500,2800,2200,1700,1450,1200,1000,800,720,520,720,800,1000,1200,1450,1700,2200,2800,3500,4300,5600],samples=[];
+              for(const distance of ds){proof.setCameraStateForTest({...target,distance,pitch:1.25,yaw:0});await sleep(120);samples.push({distance,receipt:h.renderNow(),verification:h.getVerification()});}
+              return {systemId:system.id,samples};
+            });
+            const s=result.samples,mid=Math.floor(s.length/2),forward=s.slice(0,mid+1),active=s.filter(x=>x.receipt?.active),ids=new Set(active.map(x=>x.receipt.weatherId)),f=forward.map(x=>x.receipt?.localContribution??0);
+            const checks={invariants:s.every(x=>x.verification?.pass&&Math.abs((x.receipt?.contributionSum??0)-1)<=1e-6&&x.receipt?.l5LightingActive===false),identity:active.length>0&&ids.size===1&&ids.has(result.systemId)&&active.every(x=>x.receipt.persistentWeatherIdentity===true&&x.receipt.canonicalDensityPreserved===true),monotonic:f.every((v,i)=>!i||v+.04>=f[i-1]),macro:f.some(v=>v===0),overlap:f.some(v=>v>0&&v<.72),local:f.some(v=>v>=.72),symmetry:s.slice(0,mid).every((x,i)=>Math.abs((x.receipt?.localContribution??0)-(s[s.length-1-i].receipt?.localContribution??0))<=.08),noRuntimeErrors:errors.length===0};
+            const pass=Object.values(checks).every(Boolean);console.log(JSON.stringify({schema:'FAP1_GB_BROWSER_HANDOFF_QUALIFICATION_v1',candidateHead:'8ffc2437c318c6e0c040bd121f1344cb2c62e751',systemId:result.systemId,checks,forwardLocalContributions:f,pass,errors},null,2));
+            await browser.close();if(!pass)process.exit(2);
+          })().catch(e=>{console.error(e);process.exit(1);});
           NODE

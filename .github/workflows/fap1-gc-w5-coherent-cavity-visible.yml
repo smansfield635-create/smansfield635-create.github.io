@@ -1,0 +1,40 @@
+name: FAP1 G_C W5 Coherent Cavity Visible
+on:
+  pull_request:
+    paths: ['.github/workflows/fap1-gc-w5-coherent-cavity-visible.yml']
+permissions:
+  contents: read
+jobs:
+  visual:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: dc47ba4c428a605919c232b680abc5daff21b022
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with: {chrome-version: stable}
+      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/server.log 2>&1 &
+          for a in $(seq 1 60); do curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/weather-presentation-reconciliation/ >/dev/null && exit 0; sleep .25; done; exit 1
+      - name: Prove true-interior coherent clear pockets
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          mkdir -p artifacts
+          node <<'NODE'
+          const fs=require('fs'),puppeteer=require('puppeteer-core');
+          (async()=>{const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});const page=await browser.newPage();await page.setViewport({width:720,height:1280,deviceScaleFactor:1});const errors=[];page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{const t=m.text();if(m.type()==='error'&&!t.includes('favicon.ico')&&!t.includes('404 (File not found)'))errors.push(t);});await page.goto('http://127.0.0.1:4173/showroom/globe/audralia/weather-presentation-reconciliation/',{waitUntil:'domcontentloaded',timeout:90000});await page.waitForFunction(()=>window.__AUDRALIA_FAP1_W5_HANDOFF__?.l5LightingActive===true,{timeout:90000});
+          const setup=await page.evaluate(async()=>{const ga=window.__AUDRALIA_FAP1_GA_AUTHORITY__,s=ga.descriptorPacket().systems.find(x=>x.weatherClass==='DEEP_CONVECTION'),mod=await import('./fap1-spatial-lod.gb.mjs'),dens=await import('./fap1-w5-local-density.gb.mjs'),o=mod.buildFAP1SpatialWeatherObjects({packet:ga.descriptorPacket()}).find(x=>x.ID_i===s.id),brick=dens.buildW5DensityBrick(o),R=6200,D=Math.PI/180,N=[0,.5,-.8660254037844386],M=[0,.8660254037844386,.5],E=[1,0,0],lat=s.latitudeDeg*D,lon=s.longitudeDeg*D,cl=Math.cos(lat),sl=Math.sin(lat),co=Math.cos(lon),si=Math.sin(lon),r=[N[0]*sl+(M[0]*co+E[0]*si)*cl,N[1]*sl+(M[1]*co+E[1]*si)*cl,N[2]*sl+(M[2]*co+E[2]*si)*cl],angle=Math.acos(Math.max(-1,Math.min(1,r[1]))),sn=Math.sin(angle),arc=angle*R;return{systemId:s.id,targetU:Math.abs(sn)<1e-7?0:arc*r[0]/sn,targetV:Math.abs(sn)<1e-7?0:arc*r[2]/sn,brick:{resolution:brick.resolution,interiorEmptySampleFraction:brick.interiorEmptySampleFraction,insideVolumeSampleCount:brick.insideVolumeSampleCount,insideEmptySampleCount:brick.insideEmptySampleCount}};});
+          const samples=[];for(const [name,distance] of [['insideA',160],['insideB',120],['insideC',95]]){const s=await page.evaluate(async({distance,targetU,targetV,systemId})=>{const sleep=ms=>new Promise(r=>setTimeout(r,ms)),proof=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__,h=window.__AUDRALIA_FAP1_W5_HANDOFF__,ga=window.__AUDRALIA_FAP1_GA_AUTHORITY__;proof.setCameraStateForTest({targetU,targetV,distance,pitch:.46,yaw:0});await sleep(650);h.setQuality('REST');const receipt=h.renderNow();await sleep(150);const camera=proof.getCameraFrame(),mod=await import('./fap1-spatial-lod.gb.mjs'),o=mod.buildFAP1SpatialWeatherObjects({packet:ga.descriptorPacket()}).find(x=>x.ID_i===systemId),inside=mod.pointInsideWeatherVolume(camera.eye,o),local=document.querySelector('[data-fap1-w5-local-raymarch="true"]'),gl=local.getContext('webgl2'),buf=new Uint8Array(local.width*local.height*4);gl.readPixels(0,0,local.width,local.height,gl.RGBA,gl.UNSIGNED_BYTE,buf);let zero=0,low=0,occupied=0,sumA=0,minA=255,maxA=0;for(let i=3;i<buf.length;i+=4){const a=buf[i];if(a===0)zero++;if(a<=8)low++;if(a>0){occupied++;sumA+=a;minA=Math.min(minA,a);maxA=Math.max(maxA,a);}}const total=local.width*local.height;return{inside,receipt,pixels:{total,zeroFraction:zero/total,lowAlphaFraction:low/total,coverage:occupied/total,meanAlpha:occupied?sumA/occupied:0,alphaRange:occupied?maxA-minA:0}};},{distance,targetU:setup.targetU,targetV:setup.targetV,systemId:setup.systemId});samples.push({name,distance,...s});await page.screenshot({path:`artifacts/${name}.png`});}
+          const clearSignal=Math.max(...samples.map(x=>x.pixels.lowAlphaFraction)),cloudSignal=Math.max(...samples.map(x=>x.pixels.coverage));const checks={allInside:samples.every(x=>x.inside),brickInteriorEmpty:setup.brick.interiorEmptySampleFraction>=.08,clearPocketSignal:clearSignal>=.02,substantialCloud:cloudSignal>=.55,structure:samples.some(x=>x.pixels.alphaRange>=20),identity:samples.every(x=>x.receipt.weatherId===setup.systemId),handoff:samples.every(x=>Math.abs(x.receipt.contributionSum-1)<1e-6),noRuntimeErrors:errors.length===0};const result={schema:'FAP1_GC_W5_COHERENT_CAVITY_VISIBLE_v1',candidateHead:'dc47ba4c428a605919c232b680abc5daff21b022',setup,clearSignal,cloudSignal,checks,samples,errors,pass:Object.values(checks).every(Boolean)};fs.writeFileSync('artifacts/qualification.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result,null,2));await browser.close();if(!result.pass)process.exit(2);})().catch(e=>{console.error(e);process.exit(1);});
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fap1-gc-w5-coherent-cavity-visible-evidence
+          path: artifacts/
+          if-no-files-found: error

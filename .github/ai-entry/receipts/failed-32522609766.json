@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": null,
+  "capabilityId": null,
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 1550,
+  "requestBranch": "ai-dispatch-request-PAGES_EXACT_HEAD_DEPLOY_20260821_010",
+  "requestCommit": "adb17729f80125cd2626ac9d5b8c2c4de0119c8b",
+  "currentMainSha": "ea522877151ba03b70302ea0f85752f88b385878",
+  "bridgeRunId": "32522609766",
+  "error": "GitHub API 404 /repos/smansfield635-create/smansfield635-create.github.io/contents/.github/ai-entry/workflow-dispatch-request.json?ref=adb17729f80125cd2626ac9d5b8c2c4de0119c8b: {\"message\":\"Not Found\",\"documentation_url\":\"https://docs.github.com/rest/repos/contents#get-repository-content\",\"status\":\"404\"}",
+  "failedAt": "2026-08-21T20:15:59.266Z"
+}

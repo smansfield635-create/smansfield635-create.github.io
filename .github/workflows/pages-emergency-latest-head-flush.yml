@@ -32,3 +32,5 @@ jobs:
             "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/pages-direct-deploy.yml/dispatches" \
             -d '{"ref":"main"}'
           echo "Dispatched Direct GitHub Pages Deploy against latest main after cancelling stale pages-group work."
+
+# Manual latest-head flush trigger: 2026-08-20T21:01:00-05:00

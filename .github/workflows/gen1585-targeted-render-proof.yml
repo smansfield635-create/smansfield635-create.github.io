@@ -9,12 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 5
       - uses: actions/setup-node@v4
         with:
           node-version: 22
       - run: |
-          test "$(git show HEAD^1:assets/compass/compass.presentation-convergence.js | git hash-object --stdin)" = "$(git show f1e7f1e19671c2de58d289971f5b2594fae80be7:assets/compass/compass.presentation-convergence.js | git hash-object --stdin)"
-          test "$(git show HEAD^1:assets/compass/compass.capability-carousel.css | git hash-object --stdin)" = "$(git show f1e7f1e19671c2de58d289971f5b2594fae80be7:assets/compass/compass.capability-carousel.css | git hash-object --stdin)"
+          test "$(git show f1e7f1e19671c2de58d289971f5b2594fae80be7:assets/compass/compass.presentation-convergence.js | git hash-object --stdin)" = "$(git show HEAD:assets/compass/compass.presentation-convergence.js | git hash-object --stdin)"
+          test "$(git show f1e7f1e19671c2de58d289971f5b2594fae80be7:assets/compass/compass.capability-carousel.css | git hash-object --stdin)" = "$(git show HEAD:assets/compass/compass.capability-carousel.css | git hash-object --stdin)"
       - run: npm install --no-save playwright@1.55.0
       - run: npx playwright install --with-deps chromium
       - run: |

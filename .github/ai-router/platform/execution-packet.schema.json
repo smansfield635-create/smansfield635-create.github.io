@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "DGB_EXECUTION_PACKET_v1",
+  "title": "Diamond Gate Direct Construction Execution Packet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "operationId",
+    "lockGeneration",
+    "mode",
+    "exactGoverningHead",
+    "allowedPaths",
+    "targetSymbols",
+    "requiredMutations",
+    "prohibitedActions",
+    "executionTransport",
+    "nextRequiredEvent",
+    "watchdog",
+    "qualification",
+    "exitConditions"
+  ],
+  "properties": {
+    "schema": {"const": "EXECUTION_PACKET_v1"},
+    "operationId": {"type": "string", "minLength": 1},
+    "lockGeneration": {"type": ["integer", "string"]},
+    "mode": {"enum": ["TRANSPORT_BINDING", "DIRECT_CONSTRUCTION"]},
+    "exactGoverningHead": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "allowedPaths": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "prohibitedPaths": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "targetSymbols": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "symbols", "maximumExactReads"],
+        "properties": {
+          "path": {"type": "string"},
+          "symbols": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+          "maximumExactReads": {"type": "integer", "minimum": 0, "maximum": 10}
+        }
+      }
+    },
+    "requiredMutations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "prohibitedActions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "WEB_SEARCH",
+          "BROAD_REPOSITORY_SEARCH",
+          "ARCHITECTURE_SEARCH",
+          "PRECEDENT_SEARCH",
+          "WORKFLOW_DISCOVERY",
+          "CAPABILITY_DISCOVERY",
+          "RE_AUDIT",
+          "REPEATED_SOURCE_FETCH"
+        ]
+      }
+    },
+    "executionTransport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "primary", "targetRepository", "targetBranch", "supportsAllowedPaths", "supportsLargeFiles", "fallback", "unboundDisposition"],
+      "properties": {
+        "status": {"enum": ["BOUND", "UNBOUND"]},
+        "primary": {"type": "string", "minLength": 1},
+        "targetRepository": {"type": "string", "minLength": 1},
+        "targetBranch": {"type": "string", "minLength": 1},
+        "supportsAllowedPaths": {"type": "boolean"},
+        "supportsLargeFiles": {"type": "boolean"},
+        "fallback": {"type": "string", "minLength": 1},
+        "handoffTarget": {"type": ["string", "null"]},
+        "unboundDisposition": {"const": "EXECUTION_TRANSPORT_UNBOUND"}
+      }
+    },
+    "nextRequiredEvent": {"enum": ["WRITE_TRANSPORT_BOUND", "ALLOWED_PATH_MUTATION", "CANDIDATE_COMMIT", "TOOLING_BLOCK_RECEIPT"]},
+    "watchdog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["deadlineSeconds", "observes", "timeoutDisposition"],
+      "properties": {
+        "deadlineSeconds": {"type": "integer", "minimum": 30, "maximum": 3600},
+        "observes": {"const": "REPOSITORY_VISIBLE_ALLOWED_PATH_MUTATION"},
+        "timeoutDisposition": {"const": "DIRECT_CONSTRUCTION_TIMEOUT"}
+      }
+    },
+    "qualification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidateAuthority", "mustRemainUnchanged"],
+      "properties": {
+        "candidateAuthority": {"type": "string", "minLength": 1},
+        "staticAssetIdentityGate": {"type": ["string", "null"]},
+        "liveManifest": {"type": ["string", "null"]},
+        "terminalReceipt": {"type": ["string", "null"]},
+        "mustRemainUnchanged": {"type": "boolean", "const": true}
+      }
+    },
+    "exitConditions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"enum": ["CANDIDATE_READY", "EXECUTION_TRANSPORT_UNBOUND", "EXECUTION_TOOLING_BLOCKED", "DIRECT_CONSTRUCTION_TIMEOUT", "GOVERNING_HEAD_OVERLAP", "SUPERSEDED"]}
+    }
+  }
+}

@@ -1,6 +1,6 @@
 (()=>{
 'use strict';
-const BUILD='gen347-functional-repair-excellence-1';
+const BUILD='gen347-functional-repair-excellence-3';
 const q=(s,r=document)=>r.querySelector(s), qa=(s,r=document)=>[...r.querySelectorAll(s)], mod=(n,m)=>((n%m)+m)%m;
 const root=q('[data-compass-root]');
 const controller=()=>window.DGB_COMPASS_CONTROLLER||null;
@@ -44,8 +44,11 @@ if(newHere){const p=q(':scope > p',newHere);if(p)p.textContent='The estate conta
 const compassTitle=q('#compass-title');if(compassTitle)compassTitle.textContent='The estate becomes navigable when meaning has geometry.';
 const compassCopy=q('.clone-compass>.clone-section-heading p:last-child');if(compassCopy)compassCopy.textContent='Four primary directions remain visible. Settlement grants one label semantic ownership. Open that direction to enter its secondary constellation; one room at a time becomes readable and selectable.';
 
-/* Excellence repair: preserve the accepted Gen345 interaction controller and layer Laws-style one-label ownership on top. */
-const scene=q('[data-compass-scene]',root||document);const declarations=qa('[data-compass-room]');const groups=new Map();declarations.forEach(el=>{const w=el.dataset.wing||'';if(!groups.has(w))groups.set(w,[]);groups.get(w).push(el)});
+/* Preserve the accepted Gen345 controller while collapsing duplicated responsive room declarations to semantic room identity. */
+const scene=q('[data-compass-scene]',root||document);
+const declarations=qa('[data-compass-room]');
+const semanticRooms=[...new Map(declarations.map(el=>[el.dataset.roomId||`${el.dataset.wing}:${el.dataset.label}`,el])).values()];
+const groups=new Map();semanticRooms.forEach(el=>{const w=el.dataset.wing||'';if(!groups.has(w))groups.set(w,[]);groups.get(w).push(el)});
 let stateBar,roomLabel,roomNav;const localIndexByWing={};
 if(scene){
  stateBar=document.createElement('div');stateBar.className='ap-cluster-state';stateBar.innerHTML='<span class="wing"></span><strong class="room"></strong><span class="count"></span>';scene.appendChild(stateBar);
@@ -60,7 +63,10 @@ const renderCluster=()=>{
  qa('.clone-cluster-semantic-layer').forEach(n=>n.setAttribute('hidden',''));
  const mode=root.dataset.compassMode||'CONSTELLATION',wing=activeWing(),rooms=roomList(),on=(mode==='CLUSTER_OPEN'||mode==='ROOM_SELECTED')&&rooms.length>0;
  stateBar.classList.toggle('is-active',on);roomLabel.classList.toggle('is-active',on);roomNav.classList.toggle('is-active',on);if(!on)return;
- let wanted=root.dataset.clusterPrimaryRoom||root.dataset.clusterPreviewPrimaryRoom||root.dataset.selectedRoom||'';let idx=rooms.findIndex(r=>r.dataset.roomId===wanted);if(idx<0)idx=localIndexByWing[wing]??0;localIndexByWing[wing]=idx;
+ const hasLocal=Number.isInteger(localIndexByWing[wing]);
+ let idx=hasLocal?localIndexByWing[wing]:-1;
+ if(idx<0){const wanted=root.dataset.selectedRoom||root.dataset.clusterPrimaryRoom||root.dataset.clusterPreviewPrimaryRoom||'';idx=rooms.findIndex(r=>r.dataset.roomId===wanted);if(idx<0)idx=0}
+ idx=mod(idx,rooms.length);localIndexByWing[wing]=idx;
  const room=rooms[idx];q('.wing',stateBar).textContent=wingNames[wing]||wing;q('.room',stateBar).textContent=mode==='ROOM_SELECTED'?'Selected room':'Secondary constellation';q('.count',stateBar).textContent=`${String(idx+1).padStart(2,'0')} / ${String(rooms.length).padStart(2,'0')}`;
  roomLabel.dataset.roomId=room.dataset.roomId||'';roomLabel.innerHTML=`<small>${room.dataset.localCoordinate||'ESTATE ROOM'}</small><strong>${room.dataset.label||room.textContent.trim()}</strong><span>${room.dataset.localFunction||room.dataset.preview||''}</span>`;
 };
@@ -70,7 +76,6 @@ if(root){new MutationObserver(renderCluster).observe(root,{attributes:true,attri
 
 const syncCardinals=()=>{if(!root)return;const readable=root.dataset.renderedForegroundCardinal||root.dataset.readableCardinal||root.dataset.orbitFocus||'north';qa('[data-compass-cardinal]',root).forEach(el=>{const on=(el.dataset.cardinalId||el.dataset.wing)===readable;el.classList.toggle('is-readable-cardinal',on);el.setAttribute('aria-current',on?'true':'false')})};if(root){new MutationObserver(syncCardinals).observe(root,{attributes:true,attributeFilter:['data-rendered-foreground-cardinal','data-readable-cardinal','data-orbit-focus']});syncCardinals()}
 
-/* Runtime qualification receipt. It proves the repaired page retained its functional substrate instead of replacing it with decoration. */
 const qualify=()=>{
  const cloneController=document.documentElement.dataset.compassCloneController||'';
  const checks={
@@ -78,7 +83,7 @@ const qualify=()=>{
   acceptedCloneController:cloneController.includes('gen345'),
   compassRoot:Boolean(root),
   cardinalCount:qa('[data-compass-cardinal]',root||document).length===4,
-  roomCount:declarations.length===19,
+  roomCount:semanticRooms.length===19,
   mirrorlandRouteCount:qa('[data-compass-mirrorland-routes] a').length>=4,
   capabilityCount:qa('[data-capability]').length===3,
   readinessFamilies:qa('[data-readiness-family]').length===2,

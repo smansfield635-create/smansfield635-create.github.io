@@ -155,8 +155,7 @@ jobs:
               >> /tmp/public-byte-results.jsonl
           done
 
-      - name: Set up Chrome when runtime verification is required
-        if: ${{ fromJSON('true') }}
+      - name: Set up Chrome
         uses: browser-actions/setup-chrome@v1
         with:
           chrome-version: stable
@@ -219,7 +218,7 @@ jobs:
             --arg runAttempt "$GITHUB_RUN_ATTEMPT" \
             --argjson byteResults "$byte_results" \
             --argjson runtime "$runtime" \
-            '{projectId:$projectId,manifestPath:$manifestPath,manifestSha256:$manifestSha256,requestedSha:$requestedSha,observedMainSha:$observedMainSha,publicReleaseMarkerSha:$publicReleaseMarkerSha,pageUrl:$pageUrl,workflow:$workflow,runId:$runId,runAttempt:$runAttempt,publicByteResults:$byteResults,runtime:$runtime,states:{SOURCE_IDENTITY:{status:(if $requestedSha==$observedMainSha then "PASS" else "FAIL" end)},CANDIDATE_QUALIFICATION:{status:"NOT_REQUIRED"},ASSET_IDENTITY:{status:"PASS"},MERGE_IDENTITY:{status:"PASS"},PUBLICATION:{status:(if $publicReleaseMarkerSha==$requestedSha then "PASS" else "FAIL" end)},PUBLIC_BYTES:{status:(if ($byteResults|all(.status=="PASS")) then "PASS" else "FAIL" end)},LIVE_RUNTIME:{status:$runtime.status}}}' \
+            '{projectId:$projectId,manifestPath:$manifestPath,manifestSha256:$manifestSha256,requestedSha:$requestedSha,observedMainSha:$observedMainSha,publicReleaseMarkerSha:$publicReleaseMarkerSha,pageUrl:$pageUrl,workflow:$workflow,runId:$runId,runAttempt:$runAttempt,publicByteResults:$byteResults,runtime:$runtime,states:{SOURCE_IDENTITY:{status:(if $requestedSha==$observedMainSha then "PASS" else "FAIL" end)},CANDIDATE_QUALIFICATION:{status:"NOT_REQUIRED"},ASSET_IDENTITY:{status:"NOT_REQUIRED"},MERGE_IDENTITY:{status:(if $requestedSha==$observedMainSha then "PASS" else "FAIL" end)},PUBLICATION:{status:(if $publicReleaseMarkerSha==$requestedSha then "PASS" else "FAIL" end)},PUBLIC_BYTES:{status:(if ($byteResults|all(.[]; .status=="PASS")) then "PASS" else "FAIL" end)},LIVE_RUNTIME:{status:$runtime.status}}}' \
             > /tmp/qualification-receipt-input.json
           node .github/ai-router/platform/repository-live-qualification-engine.v1.mjs finalize-receipt /tmp/qualification-receipt-input.json /tmp/repository-live-qualification-receipt.json
 

@@ -1,8 +1,10 @@
-# COMPASS_TAKEOVER_BOUNDARY_v2
+# COMPASS_TAKEOVER_BOUNDARY_v3
 
 ## Authority
 
 **GEN1586 = DEPLOYED EVIDENCE BASELINE, NOT ACCEPTED SUCCESSOR.**
+
+Gen1587 source has since been merged to `main` at `78ff88bf69bced653625e458b830d007bb8ce967`, but source adoption and product qualification do not by themselves prove public release. Publication authority is governed separately by `docs/PUBLICATION_AUTHORITY_BOUNDARY.md`.
 
 Successful merge/publication of Gen1586 does not constitute qualification. Relevant rendered/static, interaction/browser, continuity/recovery, and state-focus diagnostic/qualification surfaces contained failures or unresolved/stale stopping predicates. A takeover room MUST NOT inherit Gen1586 as a qualified baseline.
 
@@ -28,6 +30,14 @@ Readiness is one shared stage with outer `TRL | TRA` family tabs. TRL is the def
 
 Qualification must compare Compass carousel behavior and containment against Methods & Models, Developer, Evidence, and Governance on desktop, tablet, and mobile.
 
+## Publication boundary
+
+Product qualification and publication are separate gates.
+
+`MERGE_IS_NOT_DEPLOYMENT` and `DEPLOYMENT_IS_NOT_VERIFIED_LIVE_RELEASE` are binding. The canonical release path is `.github/workflows/pages-direct-deploy.yml(target_sha=<exact approved current main>)`, followed by a public `.well-known/dgb-release.json` exact-SHA match and `LIVE_EXACT_HEAD_VERIFIED`.
+
+An older push-triggered Pages deployer still exists. Do not treat that predecessor as publication authority and do not mutate/retire it without applicable runtime/control-plane governance. Full disposition: `docs/PUBLICATION_AUTHORITY_BOUNDARY.md`.
+
 ## Acceptance
 
 Acceptance is whole-page, not patch-local. After construction, inspect the complete page from initial load through full scroll and interactive states. Exercise Compass/cardinal/room states, all 19 star→information transitions, Mirrorland four-way ingress and reversal, capability carousel states, repeated TRL↔TRA switching, all inner TRL and TRA slide transitions, and destination ingress.
@@ -36,14 +46,12 @@ A successor is not accepted merely because named defects were edited. Acceptance
 
 User-observed rendered evidence is the presentation authority. Source presence, CI assertions, merge success, exact-head deployment, and publication are necessary evidence where applicable but are not visual acceptance.
 
-## Current construction cycle
+## Current disposition
 
-Gen1587 repair construction is on branch `compass-gen1587-takeover-repair-20260821`, created from exact main `2a74e3ca8f2372990bfb42c1b2f3eb7ea409bda4`. The first product commit, `dcb5b60dad46ca111a1f1d90e7f640bdd0ef84ec`, replaces simultaneous sibling TRL/TRA presentation with the shared readiness stage and begins the capability/site-continuity conversion. This is SOURCE_ONLY until rendered qualification succeeds.
+Gen1587 source is merged to `main` at `78ff88bf69bced653625e458b830d007bb8ce967`. Runtime/presentation-owner qualification and publication are separate facts. Do not add another Compass runtime/presentation layer merely because the public site has not yet been proven at Gen1587. Resolve publication through the explicit exact-head release boundary.
 
 ## Evidence spine
 
-Read `docs/COMPASS_VISUAL_EVIDENCE_TIMELINE.md` for timestamped visual chronology and `docs/MASTER_PAGE_AND_COMPASS_CONTINUITY_LEDGER.md` for generation/change continuity. This file is the compact takeover boundary; the other records should reference it rather than duplicate this acceptance contract.
+Read `docs/COMPASS_VISUAL_EVIDENCE_TIMELINE.md` for timestamped visual chronology, `docs/MASTER_PAGE_AND_COMPASS_CONTINUITY_LEDGER.md` for generation/change continuity, and `docs/PUBLICATION_AUTHORITY_BOUNDARY.md` for release/control-plane disposition.
 
-Documentation commits after Gen1586 record evidence and takeover law only; they do not convert Gen1586 into an accepted product baseline.
-
-Active reconstruction lane PR #1578 remains continuity evidence. Production promotion must use the exact qualified Gen1587 successor rather than treating PR #1578's older branch head as current authority.
+Active reconstruction lane PR #1578 remains continuity evidence. Any further construction, qualification conclusion, or release claim must resolve against current `main` and these repository-resident boundaries rather than room memory.

@@ -34,8 +34,10 @@
 @keyframes compass-mirrorland-route-arrival{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(max-width:560px){[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-scene__semantic .compass-object--wing[data-primary="true"]{min-width:6.5rem!important;max-width:7.8rem!important;padding:.34rem .48rem!important}[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-scene__semantic .compass-object--wing[data-primary="true"]>span{font-size:.58rem!important}}
 
-/* GEN1582_CLUSTER_LABEL_EXCLUSIVITY_v1 — renderer-primary room label is the sole cluster label owner. */
+/* GEN1583_CLUSTER_LABEL_REPAIR_v1 — selected/projected room label is the sole cluster label owner. */
 [data-compass-root][data-compass-mode="CLUSTER_OPEN"] .compass-object--wing>span,
 [data-compass-root][data-compass-mode="ROOM_SELECTED"] .compass-object--wing>span{opacity:0!important;visibility:hidden!important}
+[data-compass-root][data-compass-mode="CLUSTER_OPEN"] .compass-scene__semantic button[data-compass-room-proxy]::after,
+[data-compass-root][data-compass-mode="ROOM_SELECTED"] .compass-scene__semantic button[data-compass-room-proxy]::after{content:none!important;display:none!important;visibility:hidden!important}
 [data-compass-root][data-compass-mode="CLUSTER_OPEN"] .compass-projected-room-label,
-[data-compass-root][data-compass-mode="ROOM_SELECTED"] .compass-projected-room-label{display:none!important;visibility:hidden!important}
+[data-compass-root][data-compass-mode="ROOM_SELECTED"] .compass-projected-room-label{display:grid!important;visibility:visible!important}

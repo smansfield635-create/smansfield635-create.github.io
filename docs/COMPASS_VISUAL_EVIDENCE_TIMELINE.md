@@ -4,6 +4,16 @@ Purpose: append-only, non-redundant chronology of owner-recorded visual evidence
 
 Time basis: video container `creation_time`, converted using the recorded Samsung UTC offset `-0500`. Video-relative times are approximate inspection positions.
 
+## TAKEOVER ACCEPTANCE BOUNDARY — READ FIRST
+
+**GEN1586 = DEPLOYED EVIDENCE BASELINE, NOT ACCEPTED SUCCESSOR.**
+
+Gen1586 was successfully merged/published, but its relevant qualification/diagnostic surfaces did not establish acceptance: rendered/static, interaction/browser, continuity/recovery, and state-focus checks contained failures or stopped on unresolved/stale predicates. Deployment success and exact-head publication MUST NOT be inherited as a qualification verdict.
+
+The next construction cycle must preserve known-good earlier behavior while repairing the current evidence-backed defects: horizontal clipping/oversizing; complete 19/19 foreground-star → information ownership/transitions; stale Compass/Mirrorland label ownership; restoration of functional four-choice Mirrorland ingress; Coheriscope copy/control separation; brain/trophy/house containment and transitions; TRL/TRA heading containment; and clean outgoing → incoming carousel-state replacement.
+
+Acceptance is whole-page, not patch-local. After construction, inspect the complete page from initial load through full scroll and interactive states. A successor is not accepted merely because the named defects were edited. Acceptance requires no text collision, clipping, stale state, broken control, predecessor flash, or newly introduced regression anywhere in the exercised page. User-observed rendered evidence remains the presentation authority.
+
 ## 2026-08-21 20:10 CDT — `24097.mp4` — PRE-GEN1584 visual baseline
 
 - Duration: 63.84 s.
@@ -54,7 +64,8 @@ The detailed timestamp audit identifies four recurring failure classes rather th
 ## Continuity rule for subsequent work
 
 1. Compare each claimed improvement against the earliest supplied evidence that already contains that behavior. Do not award a later generation credit for preserving a pre-existing function.
-2. A source change or CI assertion is not visual closure. User-observed evidence outranks source-only claims for presentation acceptance.
+2. A source change, CI assertion, merge, or exact-head publication is not visual closure. User-observed evidence outranks source-only claims for presentation acceptance.
 3. Record a defect as closed only when the exact behavior is exercised in rendered evidence; for the 19-star contract, partial examples do not establish 19/19 closure.
 4. Mirrorland acceptance requires both presentation focus and working actions: Narrative, Demo, World Map, and Back-to-Compass reversal.
-5. Keep this chronology non-redundant. The master continuity ledger should reference this timeline for visual facts rather than restating every frame observation.
+5. Every successor requires a full-page regression inspection after construction: initial load, full scroll, all relevant carousel states/transitions, Compass/cardinal/room states, Mirrorland fork actions/reversal, and destination ingress. Named-fix confirmation alone is insufficient.
+6. Keep this chronology non-redundant. The master continuity ledger should reference this timeline for visual facts rather than restating every frame observation.

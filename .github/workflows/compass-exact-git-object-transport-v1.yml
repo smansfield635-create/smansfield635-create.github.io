@@ -16,7 +16,7 @@ jobs:
     timeout-minutes: 20
     env:
       PUBLIC_REPOSITORY: smansfield635-create/smansfield635-create.github.io
-      CANDIDATE_SHA: 894c7b60351cfb850ad5d26f080c3e2a1b3622e4
+      CANDIDATE_SHA: d59b6f4fd4ef64e58a3bf515a5f4561a0a54cb8e
       BASE_SHA: 2a74e3ca8f2372990bfb42c1b2f3eb7ea409bda4
       PLAYWRIGHT_VERSION: 1.55.0
     steps:
@@ -49,8 +49,8 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p transport
-          git -C "$RUNNER_TEMP/exact-public" bundle create "$GITHUB_WORKSPACE/transport/compass-894c7b60.bundle" refs/transport/candidate refs/transport/base
-          git -C "$RUNNER_TEMP/exact-public" bundle verify "$GITHUB_WORKSPACE/transport/compass-894c7b60.bundle"
+          git -C "$RUNNER_TEMP/exact-public" bundle create "$GITHUB_WORKSPACE/transport/compass-d59b6f4f.bundle" refs/transport/candidate refs/transport/base
+          git -C "$RUNNER_TEMP/exact-public" bundle verify "$GITHUB_WORKSPACE/transport/compass-d59b6f4f.bundle"
 
       - name: Prove bundle reconstructs the exact Git subject
         shell: bash
@@ -58,7 +58,7 @@ jobs:
           set -euo pipefail
           rm -rf "$RUNNER_TEMP/reconstructed"
           git init -q "$RUNNER_TEMP/reconstructed"
-          git -C "$RUNNER_TEMP/reconstructed" fetch --no-tags "$GITHUB_WORKSPACE/transport/compass-894c7b60.bundle" refs/transport/candidate:refs/transport/candidate refs/transport/base:refs/transport/base
+          git -C "$RUNNER_TEMP/reconstructed" fetch --no-tags "$GITHUB_WORKSPACE/transport/compass-d59b6f4f.bundle" refs/transport/candidate:refs/transport/candidate refs/transport/base:refs/transport/base
           git -C "$RUNNER_TEMP/reconstructed" checkout -q --detach refs/transport/candidate
           test "$(git -C "$RUNNER_TEMP/reconstructed" rev-parse HEAD^{commit})" = "$CANDIDATE_SHA"
           test -z "$(git -C "$RUNNER_TEMP/reconstructed" status --porcelain=v1 --untracked-files=all)"
@@ -82,7 +82,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          BUNDLE_SHA256="$(sha256sum transport/compass-894c7b60.bundle | awk '{print $1}')"
+          BUNDLE_SHA256="$(sha256sum transport/compass-d59b6f4f.bundle | awk '{print $1}')"
           cat > transport/receipt.json <<JSON
           {
             "schema": "EXACT_PUBLIC_GIT_OBJECT_TRANSPORT_RECEIPT_v1",
@@ -108,7 +108,7 @@ jobs:
       - name: Upload exact Git object transport artifact
         uses: actions/upload-artifact@v4
         with:
-          name: compass-exact-git-object-transport-894c7b60
+          name: compass-exact-git-object-transport-d59b6f4f
           path: transport/
           if-no-files-found: error
           retention-days: 30

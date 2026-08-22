@@ -6,6 +6,11 @@ on:
     paths:
       - 'compass-inspect-v2/**'
       - '.github/workflows/compass-rebuild-browser-qualification.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'compass-inspect-v2/**'
+      - '.github/workflows/compass-rebuild-browser-qualification.yml'
 permissions:
   contents: read
 jobs:
@@ -19,7 +24,7 @@ jobs:
           node-version: '22'
       - run: npm install --no-save playwright@1.55.0
       - run: npx playwright install --with-deps chromium
-      - name: Serve exact branch tree
+      - name: Serve exact candidate tree
         run: |
           python3 -m http.server 8080 --bind 127.0.0.1 >/tmp/compass-http.log 2>&1 &
           echo $! >/tmp/compass-http.pid
@@ -47,19 +52,14 @@ jobs:
             const r=scene?.getBoundingClientRect();
             const cr=globalThis.DGB_COMPASS_CRYSTALS_RECEIPT||{};
             const ctrl=globalThis.DGB_COMPASS_CONTROLLER_RECEIPT||{};
-            let nonzero=false;
-            if(crystalCanvas){
-              const gl=crystalCanvas.getContext('webgl');
-              if(gl){const px=new Uint8Array(4);gl.readPixels(Math.floor(crystalCanvas.width/2),Math.floor(crystalCanvas.height/2),1,1,gl.RGBA,gl.UNSIGNED_BYTE,px);nonzero=px.some(v=>v!==0)}
-            }
-            return {status:root?.dataset.runtimeGate||'',mode:root?.dataset.compassMode||'',scene:{w:r?.width||0,h:r?.height||0},controller:!!globalThis.DGB_COMPASS_CONTROLLER,controllerReceipt:ctrl,crystals:!!globalThis.DGB_COMPASS_CRYSTALS,crystalsReceipt:cr,crystalCanvas:crystalCanvas?{w:crystalCanvas.width,h:crystalCanvas.height}:null,roomProxies:document.querySelectorAll('[data-compass-room-proxy]').length,cardinals:document.querySelectorAll('[data-compass-cardinal]').length,rooms:document.querySelectorAll('[data-compass-room-declarations] [data-compass-room]').length,centerPixelNonzero:nonzero};
+            return {status:root?.dataset.runtimeGate||'',mode:root?.dataset.compassMode||'',scene:{w:r?.width||0,h:r?.height||0},controller:!!globalThis.DGB_COMPASS_CONTROLLER,controllerReceipt:ctrl,crystals:!!globalThis.DGB_COMPASS_CRYSTALS,crystalsReceipt:cr,crystalCanvas:crystalCanvas?{w:crystalCanvas.width,h:crystalCanvas.height}:null,roomProxies:document.querySelectorAll('[data-compass-room-proxy]').length,cardinals:document.querySelectorAll('[data-compass-cardinal]').length,rooms:document.querySelectorAll('[data-compass-room-declarations] [data-compass-room]').length};
           });
           if(!before.controller) throw new Error('CONTROLLER_NOT_MOUNTED');
           if(before.controllerReceipt.status!=='available') throw new Error('CONTROLLER_NOT_AVAILABLE:'+JSON.stringify(before.controllerReceipt));
           if(!before.crystals) throw new Error('CRYSTALS_API_NOT_MOUNTED');
           if(before.crystalsReceipt.status!=='available'||before.crystalsReceipt.rendererInitialized!==true) throw new Error('CRYSTALS_NOT_AVAILABLE:'+JSON.stringify(before.crystalsReceipt));
           if(before.crystalsReceipt.registryCardinalCount!==4||before.crystalsReceipt.registryRoomCount!==19) throw new Error('CRYSTAL_REGISTRY_INVALID:'+JSON.stringify(before.crystalsReceipt));
-          if(before.crystalsReceipt.drawCallsLastFrame<4) throw new Error('NO_CARDINAL_DRAW_CALLS:'+JSON.stringify(before.crystalsReceipt));
+          if((before.crystalsReceipt.drawCallsLastFrame||0)<4) throw new Error('NO_CARDINAL_DRAW_CALLS:'+JSON.stringify(before.crystalsReceipt));
           if(!before.crystalCanvas||before.crystalCanvas.w<100||before.crystalCanvas.h<100) throw new Error('CRYSTAL_CANVAS_INVALID:'+JSON.stringify(before.crystalCanvas));
           if(before.roomProxies!==19) throw new Error('ROOM_PROXIES_INVALID:'+before.roomProxies);
           const opened=await page.evaluate(()=>globalThis.DGB_COMPASS_CONTROLLER.requestCardinalSelection('north'));

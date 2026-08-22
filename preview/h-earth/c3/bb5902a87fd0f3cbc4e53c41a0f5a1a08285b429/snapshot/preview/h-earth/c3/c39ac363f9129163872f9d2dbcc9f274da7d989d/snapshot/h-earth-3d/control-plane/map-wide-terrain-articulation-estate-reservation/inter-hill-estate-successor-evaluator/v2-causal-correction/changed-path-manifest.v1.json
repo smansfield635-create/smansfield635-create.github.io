@@ -1,0 +1,109 @@
+{
+  "branch": "agent/h-earth-inter-hill-estate-successor-evaluator-v2-causal-correction-002",
+  "expectedChangedPaths": [
+    ".github/workflows/h-earth-inter-hill-estate-successor-evaluator-v2-causal-correction.yml",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/AGENTS.md",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/operation-request.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/construction-procedure.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/changed-path-manifest.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/input-schema.v2.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/output-schema.v2.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/causal-rules.v2.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/fixtures.v2.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/rollback.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/verify.v2.mjs",
+    "tools/h-earth-map-wide-terrain/inter-hill-estate/causal-trace-evaluator.v2.mjs",
+    "h-earth-3d/validation/h-earth.inter-hill-estate-successor-evaluator-v2.mjs"
+  ],
+  "governingHead": "6ca63ec4ba34b9c84e783aaaf5aa73c4604f4fb6",
+  "operationId": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_002",
+  "pathClassifications": [
+    {
+      "classification": "ADDED",
+      "path": ".github/workflows/h-earth-inter-hill-estate-successor-evaluator-v2-causal-correction.yml"
+    },
+    {
+      "classification": "ADDED",
+      "path": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/AGENTS.md"
+    },
+    {
+      "classification": "ADDED",
+      "path": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/operation-request.v1.json"
+    },
+    {
+      "classification": "ADDED",
+      "path": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/construction-procedure.v1.json"
+    },
+    {
+      "classification": "ADDED",
+      "path": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/changed-path-manifest.v1.json"
+    },
+    {
+      "classification": "ADDED",
+      "path": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/input-schema.v2.json"
+    },
+    {
+      "classification": "ADDED",
+      "path": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/output-schema.v2.json"
+    },
+    {
+      "classification": "ADDED",
+      "path": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/causal-rules.v2.json"
+    },
+    {
+      "classification": "ADDED",
+      "path": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/fixtures.v2.json"
+    },
+    {
+      "classification": "ADDED",
+      "path": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/rollback.v1.json"
+    },
+    {
+      "classification": "ADDED",
+      "path": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/verify.v2.mjs"
+    },
+    {
+      "classification": "ADDED",
+      "path": "tools/h-earth-map-wide-terrain/inter-hill-estate/causal-trace-evaluator.v2.mjs"
+    },
+    {
+      "classification": "ADDED",
+      "path": "h-earth-3d/validation/h-earth.inter-hill-estate-successor-evaluator-v2.mjs"
+    }
+  ],
+  "pathCount": 13,
+  "pathMode": "ADDITIVE_ONLY",
+  "prohibitedMutationClasses": [
+    "PRODUCT",
+    "TERRAIN",
+    "LIVE_ENVIRONMENT",
+    "CAMERA",
+    "NAVIGATION",
+    "WATER",
+    "PLACEMENT",
+    "MANOR",
+    "V1_EVALUATOR",
+    "ACTIVE_OPERATION_LEDGER",
+    "LOCK_MANAGER"
+  ],
+  "readOnlyDependencies": [
+    {
+      "path": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/output-schema.v1.json",
+      "purpose": "V1 output-shape comparison only"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.inter-hill-estate-successor-evaluator.mjs",
+      "purpose": "frozen V1 executable identity only"
+    },
+    {
+      "path": "tools/h-earth-map-wide-terrain/inter-hill-estate/successor-evaluator.v1.mjs",
+      "purpose": "frozen V1 implementation identity only"
+    },
+    {
+      "path": ".github/operation-intake/active-operation-ledger.v1.json",
+      "purpose": "read-only active-lock verification",
+      "ref": "operation-locks/repository-operation-intake-v1"
+    }
+  ],
+  "schema": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_CHANGED_PATH_MANIFEST_v1"
+}

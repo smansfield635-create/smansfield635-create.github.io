@@ -1,0 +1,136 @@
+{
+  "receiptId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4B_ENGINE_EXECUTION_RECEIPT_v1",
+  "targetNumber": 4,
+  "targetSubtarget": "4B-14",
+  "result": "PASS",
+  "branch": "agent/h-earth-repository-registry-installation-001",
+  "completionCommitIdentity": "THE_COMMIT_CONTAINING_THIS_RECEIPT",
+  "executedCommit": "89acce9d6106e29562ff79d51102d41466fba785",
+  "executionEnvironment": "BOUNDED_GITHUB_ACTION_ACTUAL_BRANCH_CHECKOUT",
+  "audit": {
+    "auditId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4B_ENGINE_SELF_AUDIT_v1",
+    "checks": {
+      "dependencyIdentityVerified": true,
+      "registryStructureAuditPass": true,
+      "engineIdentityExact": true,
+      "engineCandidateOnly": true,
+      "previewValid": true,
+      "previewHasNodes": true,
+      "previewHasRelations": true,
+      "previewHasComposites": true,
+      "positiveDispositionPass": true,
+      "positiveHasNoFailures": true,
+      "positiveScopeExact": true,
+      "positiveTraceFourteenSteps": true,
+      "positiveTraceOrderExact": true,
+      "positiveReceiptFieldsExact": true,
+      "positiveReceiptDeterministic": true,
+      "positiveReceiptFrozen": true,
+      "positiveKernelNorth": true,
+      "positiveKernelEast": true,
+      "positiveKernelSouth": true,
+      "positiveKernelWest": true,
+      "mutationDispositionBlock": true,
+      "mutationAuthorityRejected": true,
+      "mutationScopeRejected": true,
+      "mutationStoppingBoundaryEnforced": true,
+      "adapterOverclaimBlocked": true,
+      "adapterAuthorityPreserved": true,
+      "cardinalPromotionBlocked": true,
+      "candidateCardinalStatusPreserved": true,
+      "malformedDispositionStop": true,
+      "malformedScopeFailurePresent": true,
+      "malformedTraceStillComplete": true,
+      "engineCreatesNoMutationAuthority": true,
+      "engineCreatesNoMergeAuthority": true,
+      "engineCreatesNoWorkflowEnforcement": true
+    },
+    "totalChecks": 34,
+    "passedChecks": 34,
+    "failedChecks": []
+  },
+  "executionResults": {
+    "positiveDisposition": "PASS",
+    "positiveAffectedNodeCount": 15,
+    "positiveAffectedRelationCount": 32,
+    "positiveCompositeCount": 4,
+    "positiveCardinalRecordCount": 11,
+    "mutationDisposition": "BLOCK",
+    "mutationFailureCodes": [
+      "MUTATION_AUTHORITY_NOT_ESTABLISHED",
+      "MUTATION_SCOPE_EXCEEDS_AUTHORITY",
+      "STOPPING_BOUNDARY_BYPASSED"
+    ],
+    "adapterOverclaimDisposition": "BLOCK",
+    "adapterOverclaimFailureCodes": [
+      "ORCHESTRATION_PROMOTED_TO_ADMISSION_AUTHORITY"
+    ],
+    "cardinalPromotionDisposition": "BLOCK",
+    "cardinalPromotionFailureCodes": [
+      "CANDIDATE_CARDINAL_ROLE_PROMOTED"
+    ],
+    "malformedDisposition": "STOP",
+    "malformedFailureCodes": [
+      "OPERATION_SCOPE_UNRESOLVED"
+    ]
+  },
+  "gitBlobs": {
+    "h-earth-3d/registry/h-earth.repository-registry.validator-engine.identity.js": "62ca170428a5de0920e8d198df59b89385ea129e",
+    "h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js": "d996b2143dbf4aa37f25b97191c432b6cd21bd99",
+    "h-earth-3d/registry/h-earth.repository-registry.validator-engine.input.js": "e63554ae9722fce8baef26de23af537417185c17",
+    "h-earth-3d/registry/h-earth.repository-registry.validator-engine.occurrences.js": "f8f8ea5bd3e024014f57800dc9d001bb0d7fe608",
+    "h-earth-3d/registry/h-earth.repository-registry.validator-engine.scope.js": "2a4774a6346b60ad8d360cb736a3ca5d92b740d8",
+    "h-earth-3d/registry/h-earth.repository-registry.validator-engine.composites.js": "4e9448aec955df64ce82234033979d1401e5c181",
+    "h-earth-3d/registry/h-earth.repository-registry.validator-engine.cardinals.js": "82b4bcd3ce59f86f913bc7b6ea4bbc5fae52af8c",
+    "h-earth-3d/registry/h-earth.repository-registry.validator-engine.governance.js": "6e5a6b1dbc94d2bc636a6045691842cea1ecc12d",
+    "h-earth-3d/registry/h-earth.repository-registry.validator-engine.compare.js": "3aa352830871dbcd887cc2356989bfc04ad2b078",
+    "h-earth-3d/registry/h-earth.repository-registry.validator-engine.boundaries.js": "ec8a6a2b890e05f612df436a47b4f23daffeb8d6",
+    "h-earth-3d/registry/h-earth.repository-registry.validator-engine.decision.js": "c42be6bf5dc831bebdd82c91fec5afd667accbf8",
+    "h-earth-3d/registry/h-earth.repository-registry.validator-engine.js": "b2d7e0290a2032bef36205e1e1e5b0d3e72ca759",
+    "tools/h-earth-repository-registry-target-4b-audit.mjs": "bf4898021f8dd69dead8c53423f03aabb5d30475",
+    "h-earth-3d/registry/h-earth.repository-registry.bootstrap.json": "00cc5830dd8a5e87d63522535c4d24793aa70400"
+  },
+  "protectedIdentities": {
+    "target2RegistryGitBlob": "10ab7b203e03fde419e526d0cce2c0af42860911",
+    "target3InstructionGitBlob": "de421803f21808ce27b2ffff349af8756c4d9929",
+    "target4AContractGitBlob": "a6733c868cfee1abce172c0ac901fecf3dd209b2"
+  },
+  "finalVerification": {
+    "bootstrapRegistered": true,
+    "validatorEngineRegistered": true,
+    "validatorEngineExecutedAgainstActualBranch": true,
+    "engineAuditPass": true,
+    "target2RegistryUnchanged": true,
+    "target3InstructionUnchanged": true,
+    "target4AContractUnchanged": true,
+    "temporaryWorkflowAbsentFromTargetBranch": true,
+    "temporaryExecutionPrNumber": 62,
+    "temporaryExecutionPrClosed": true,
+    "temporaryExecutionPrMerged": false,
+    "temporaryExecutionBranchNeutralizedToMain": true,
+    "temporaryExecutionBranchDeleted": false,
+    "mainChanged": false,
+    "candidatePrNumber": 61,
+    "candidatePrOpen": true,
+    "candidatePrDraft": true,
+    "candidatePrMerged": false
+  },
+  "boundaries": {
+    "validatorEngineComplete": true,
+    "validatorEngineInstalled": true,
+    "validatorEngineExecuted": true,
+    "fixturesInstalled": false,
+    "portabilityReferencePackageInstalled": false,
+    "systemicComprehensionAuditExecuted": false,
+    "workflowEnforcementInstalled": false,
+    "mutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "canonicalizationAuthorityCreated": false,
+    "mainChanged": false
+  },
+  "stoppingCondition": {
+    "target4BComplete": true,
+    "advanceBeyondTarget4B": false,
+    "nextAuthorizedSubtarget": "4C-1"
+  }
+}

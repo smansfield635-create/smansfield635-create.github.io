@@ -1,0 +1,130 @@
+{
+  "contract": "LAWS_CHAMBER_CP6_2_ROUTE_MAP_v1",
+  "base_head": "2fad7a28a632c0f4fae1b08dc33cd0f3742d08e8",
+  "branch": "agent/laws-cp6-2-eight-standalone-destinations-001",
+  "destinations": [
+    {
+      "group": "Test",
+      "title": "Admission and Baseline",
+      "route": "/laws/test/admission-and-baseline/",
+      "authority_id": "TEST_ADMISSION_AND_BASELINE_AUTHORITY_V1",
+      "legacy_input": "/laws/test/#admission-baseline",
+      "parent": "/laws/test/"
+    },
+    {
+      "group": "Test",
+      "title": "Forward Construction",
+      "route": "/laws/test/forward-construction/",
+      "authority_id": "TEST_FORWARD_CONSTRUCTION_AUTHORITY_V1",
+      "legacy_input": "/laws/test/#forward-construction",
+      "parent": "/laws/test/"
+    },
+    {
+      "group": "Test",
+      "title": "Reverse Audit",
+      "route": "/laws/test/reverse-audit/",
+      "authority_id": "TEST_REVERSE_AUDIT_AUTHORITY_V1",
+      "legacy_input": "/laws/test/#reverse-audit",
+      "parent": "/laws/test/"
+    },
+    {
+      "group": "Test",
+      "title": "Result and Record",
+      "route": "/laws/test/result-and-record/",
+      "authority_id": "TEST_RESULT_AND_RECORD_AUTHORITY_V1",
+      "legacy_input": "/laws/test/#results-records",
+      "parent": "/laws/test/"
+    },
+    {
+      "group": "Research",
+      "title": "Evidence and Sources",
+      "route": "/laws/research/evidence-and-sources/",
+      "authority_id": "RESEARCH_EVIDENCE_AND_SOURCES_AUTHORITY_V1",
+      "legacy_input": "/laws/research/#evidence-sources",
+      "parent": "/laws/research/"
+    },
+    {
+      "group": "Research",
+      "title": "Methods and Models",
+      "route": "/laws/research/methods-and-models/",
+      "authority_id": "RESEARCH_METHODS_AND_MODELS_AUTHORITY_V1",
+      "legacy_input": "/laws/research/#methods-models",
+      "parent": "/laws/research/"
+    },
+    {
+      "group": "Research",
+      "title": "Applied Investigations",
+      "route": "/laws/research/applied-investigations/",
+      "authority_id": "RESEARCH_APPLIED_INVESTIGATIONS_AUTHORITY_V1",
+      "legacy_input": "/laws/research/#applied-investigations",
+      "parent": "/laws/research/"
+    },
+    {
+      "group": "Research",
+      "title": "Findings and Boundaries",
+      "route": "/laws/research/findings-and-boundaries/",
+      "authority_id": "RESEARCH_FINDINGS_AND_BOUNDARIES_AUTHORITY_V1",
+      "legacy_input": "/laws/research/#findings-boundaries",
+      "parent": "/laws/research/"
+    }
+  ],
+  "compatibility_bindings": [
+    {
+      "binding_id": "CP6-COMPAT-01",
+      "legacy": "/laws/test/#admission-baseline",
+      "canonical": "/laws/test/admission-and-baseline/",
+      "implementation": "PARENT_ANCHOR_FORWARD"
+    },
+    {
+      "binding_id": "CP6-COMPAT-02",
+      "legacy": "/laws/test/#forward-construction",
+      "canonical": "/laws/test/forward-construction/",
+      "implementation": "PARENT_ANCHOR_FORWARD"
+    },
+    {
+      "binding_id": "CP6-COMPAT-03",
+      "legacy": "/laws/test/#reverse-audit",
+      "canonical": "/laws/test/reverse-audit/",
+      "implementation": "PARENT_ANCHOR_FORWARD"
+    },
+    {
+      "binding_id": "CP6-COMPAT-04",
+      "legacy": "/laws/test/#results-records",
+      "canonical": "/laws/test/result-and-record/",
+      "implementation": "PARENT_ANCHOR_FORWARD"
+    },
+    {
+      "binding_id": "CP6-COMPAT-05",
+      "legacy": "/laws/research/#evidence-sources",
+      "canonical": "/laws/research/evidence-and-sources/",
+      "implementation": "PARENT_ANCHOR_FORWARD"
+    },
+    {
+      "binding_id": "CP6-COMPAT-06",
+      "legacy": "/laws/research/#methods-models",
+      "canonical": "/laws/research/methods-and-models/",
+      "implementation": "PARENT_ANCHOR_FORWARD"
+    },
+    {
+      "binding_id": "CP6-COMPAT-07",
+      "legacy": "/laws/research/#applied-investigations",
+      "canonical": "/laws/research/applied-investigations/",
+      "implementation": "PARENT_ANCHOR_FORWARD"
+    },
+    {
+      "binding_id": "CP6-COMPAT-08",
+      "legacy": "/laws/research/#findings-boundaries",
+      "canonical": "/laws/research/findings-and-boundaries/",
+      "implementation": "PARENT_ANCHOR_FORWARD"
+    },
+    {
+      "binding_id": "CP6-COMPAT-09",
+      "legacy": "/laws/categories/reality/theory.html",
+      "canonical": "/laws/categories/reality/#theory",
+      "implementation": "RETAINED_LEGACY_ENTRY_WITH_EXPLICIT_TRANSITION_LINK"
+    }
+  ],
+  "content_migration_performed": false,
+  "main_page_reduction_performed": false,
+  "visible_first_implementation": false
+}

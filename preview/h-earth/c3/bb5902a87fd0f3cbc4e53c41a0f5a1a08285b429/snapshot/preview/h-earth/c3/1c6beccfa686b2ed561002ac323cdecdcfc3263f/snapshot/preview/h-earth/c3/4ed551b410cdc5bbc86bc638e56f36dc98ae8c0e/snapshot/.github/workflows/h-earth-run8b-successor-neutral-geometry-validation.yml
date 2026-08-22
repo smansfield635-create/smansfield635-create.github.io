@@ -1,0 +1,128 @@
+name: H-Earth Run 8B Successor Neutral Geometry Validation
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8b-successor-neutral-geometry-001
+  pull_request:
+    branches:
+      - agent/h-earth-run8a-dimensional-reconciliation-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run8b:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out Run 8B workspace
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify bounded changed-path scope
+        run: |
+          set -euo pipefail
+          git diff --name-only 88e2a3f8b5ff5fb8587ba95d2e13d3ea8504dfbd...HEAD > /tmp/run8b-paths.txt
+          cat /tmp/run8b-paths.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          allowed = {
+            '.github/workflows/h-earth-run8b-successor-neutral-geometry-validation.yml',
+            'h-earth-3d/control-plane/run-8/h-earth.run8b.successor-neutral-geometry.js',
+            'h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js',
+            'showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js',
+            'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8b-successor-neutral-geometry-scope.js',
+            'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
+            'h-earth-3d/validation/h-earth.run8b.successor-neutral-geometry.harness.mjs',
+            'h-earth-3d/validation/h-earth.run8b.successor-neutral-geometry.receipt.json'
+          }
+          paths = {line.strip() for line in Path('/tmp/run8b-paths.txt').read_text().splitlines() if line.strip()}
+          unexpected = sorted(paths - allowed)
+          required = allowed - {'h-earth-3d/validation/h-earth.run8b.successor-neutral-geometry.receipt.json'}
+          missing = sorted(required - paths)
+          if unexpected:
+            raise SystemExit(f'UNEXPECTED_RUN8B_PATHS:{unexpected}')
+          if missing:
+            raise SystemExit(f'MISSING_RUN8B_PATHS:{missing}')
+          product_paths = {
+            'h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js',
+            'showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js'
+          }
+          if len(paths & product_paths) != 2:
+            raise SystemExit('RUN8B_PRODUCT_CONSTRUCTION_SCOPE_INVALID')
+          PY
+
+      - name: Execute Run 8B successor neutral geometry harness
+        env:
+          H_EARTH_RUN8B_RECEIPT: /tmp/run8b-receipt.json
+        run: |
+          set -o pipefail
+          node h-earth-3d/validation/h-earth.run8b.successor-neutral-geometry.harness.mjs \
+            2>&1 | tee /tmp/run8b.log
+
+      - name: Verify Run 8B receipt state
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt = JSON.parse(fs.readFileSync('/tmp/run8b-receipt.json', 'utf8'));
+          const requiredTrue = [
+            'eligible',
+            'predecessorTerrainFieldPreserved',
+            'legacyProxyPreserved',
+            'successorContinuousMountainConstructed',
+            'multipleZBandsConstructed',
+            'connectedXZFootprint',
+            'validIndexTopology',
+            'nondegenerateTriangles',
+            'vertexNormalsValid',
+            'sharedEdgeContinuity',
+            'worldSpaceStable',
+            'southNeutralPrimitiveValid',
+            'deterministicRepeatExecution'
+          ];
+          if (receipt.status !== 'RUN_8B_PASS_CLOSED') process.exit(1);
+          if (!requiredTrue.every((key) => receipt[key] === true)) process.exit(1);
+          if (
+            receipt.vertexCount <= 0 ||
+            receipt.triangleCount <= 0 ||
+            receipt.zBandCount < 6 ||
+            receipt.sharedEdgePairCount <= 0 ||
+            receipt.assertionsPassed <= 0 ||
+            receipt.WestAdmissionExecuted !== false ||
+            receipt.packet002TransferExecuted !== false ||
+            receipt.rendererMutation !== false ||
+            receipt.materialAndLightingPresentation !== false ||
+            receipt.vegetationInstanceConstruction !== false ||
+            receipt.publicRouteMutation !== false ||
+            receipt.deployment !== false ||
+            receipt.visualImprovementClaim !== false ||
+            receipt.localConstruction !== false ||
+            receipt.issues.length !== 0
+          ) process.exit(1);
+          const durable = 'h-earth-3d/validation/h-earth.run8b.successor-neutral-geometry.receipt.json';
+          if (
+            fs.existsSync(durable) &&
+            fs.readFileSync(durable, 'utf8') !== fs.readFileSync('/tmp/run8b-receipt.json', 'utf8')
+          ) process.exit(1);
+          NODE
+
+      - name: Upload Run 8B evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8b-successor-neutral-geometry-evidence
+          path: |
+            /tmp/run8b.log
+            /tmp/run8b-receipt.json
+          if-no-files-found: error
+          retention-days: 30
+
+# Final-head validation trigger after bounded witness correction and cleanup.

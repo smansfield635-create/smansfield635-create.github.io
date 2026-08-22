@@ -1,0 +1,150 @@
+{
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "procedureId": "METHODS_ROLE_6_AUDIT_CONSTRUCTION_PROCEDURE_V1",
+  "operationClass": "METHODS_REQUIREMENTS_CAUSAL_AND_DEVELOPMENTAL_BASELINE_AUDIT",
+  "exactGoverningHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+  "exactAllowedRepositoryPaths": [
+    "control-plane/methods-information-benchmark/role6-audit/outputs/01-canonical-25-record-inventory-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/02-formal-type-assignment-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/03-conceptual-cluster-assignment-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/04-record-dependency-graph-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/05-independence-classification-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/06-computational-vs-noncomputational-boundary-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/07-invocation-condition-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/08-question-intent-to-record-type-routing-spec-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/09-unresolved-or-ambiguous-record-hold-register-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/10-role-6-requirements-freeze-recommendation-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/11-methods-three-anchor-development-contract-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/12-methods-user-cognitive-origin-requirements-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/13-generic-trophy-standard-binding-requirements-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/14-methods-benchmark-compass-binding-requirements-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/15-three-anchor-conflict-and-precedence-rules-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/16-preconstruction-and-postconstruction-evaluation-lifecycle-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/17-phone-tablet-desktop-equivalence-requirements-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/18-trophy-and-compass-evidence-requirements-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/19-methods-product-requirements-integration-schema-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/20-role-6-integrated-requirements-freeze-recommendation-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/21-developmental-baseline-element-inventory-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/22-intent-implementation-outcome-crosswalk-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/23-correlated-developmental-value-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/24-element-level-disposition-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/25-concept-implementation-requirements-instrumentation-failure-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/26-baseline-to-successor-requirement-trace-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/27-causal-confidence-and-unresolved-cause-register-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/receipts/role6-operation-return.packet.v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/receipts/role6-operation-return.receipt.v1.json"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "step": 1,
+      "action": "VERIFY_EXACT_ASSIGNMENT_HEAD",
+      "head": "ce40519190a9048c1e0cef682108c34b0a7f8055"
+    },
+    {
+      "step": 2,
+      "action": "REQUIRE_COMMAND_EMITTED_ADMITTED_AND_LOCKED",
+      "lockScope": "METHODS_INFORMATION_BENCHMARK/ROLE6_AUDIT/FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_DEVELOPMENTAL_BASELINE"
+    },
+    {
+      "step": 3,
+      "action": "CREATE_SINGLE_AUDIT_EXECUTION_BRANCH",
+      "baseHeadBinding": "AUDIT_EXECUTION_DESCRIPTOR.exactToolingHead",
+      "subjectAssignmentHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+      "branchPattern": "audit/methods-role6-formal-record-three-anchor-developmental-baseline-v1-[0-9]{3}"
+    },
+    {
+      "step": 4,
+      "action": "MATERIALIZE_27_SUBSTANTIVE_OUTPUTS_PLUS_ROLE_6_RETURN_PACKET",
+      "pathCount": 28
+    },
+    {
+      "step": 5,
+      "action": "RUN_BUILDER_VERIFICATION_AND_FRESH_INDEPENDENT_REPRODUCTION_ON_28_PATHS"
+    },
+    {
+      "step": 6,
+      "action": "COMMAND_EMIT_ROLE_6_RETURN_RECEIPT_AND_SUCCESSOR_LEDGER_EVIDENCE",
+      "finalRepositoryPathCount": 29
+    },
+    {
+      "step": 7,
+      "action": "FINAL_VERIFY_29_PATHS_TERMINATE_ROLE_6_TO_INACTIVE_AND_CLOSE_ROOT_LOCK"
+    },
+    {
+      "step": 8,
+      "action": "STOP_WITHOUT_ADOPTION_RATIFICATION_NEXT_ROLE_MERGE_DEPLOYMENT_OR_RELEASE"
+    }
+  ],
+  "evaluationToolingHeadBindingRule": "EXECUTION_MUST_USE_THE_EXACT_CERTIFIED_TOOLING_HEAD_NAMED_BY_AUDIT_EXECUTION_DESCRIPTOR; MOVING_REFS_AND_SELF_SUBSTITUTION_ARE_PROHIBITED",
+  "canonicalInputSchemas": [
+    "control-plane/methods-information-benchmark/role6-audit-bootstrap/audit-package.schema.v1.json",
+    "control-plane/methods-information-benchmark/role6-audit-bootstrap/audit-output-path-registry.v1.json"
+  ],
+  "canonicalOutputSchemas": [
+    "control-plane/methods-information-benchmark/role6-audit-bootstrap/audit-package.schema.v1.json",
+    "control-plane/methods-information-benchmark/role6-audit-bootstrap/audit-output-path-registry.v1.json"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "INPUT_SCHEMA_INVALID",
+    "ASSIGNMENT_IDENTITY_MISMATCH",
+    "OPERATION_ID_MISMATCH",
+    "OUTPUT_COUNT_MISMATCH",
+    "OUTPUT_ID_OR_PATH_MISMATCH",
+    "DUPLICATE_OUTPUT_ID_OR_PATH",
+    "PAYLOAD_NOT_OBJECT",
+    "UNAUTHORIZED_PATH",
+    "MATERIALIZATION_WRITE_FAILURE",
+    "BYTE_VERIFICATION_FAILURE",
+    "FINGERPRINT_MISMATCH",
+    "RETURN_OR_TERMINATION_FAILURE"
+  ],
+  "exactTestRunnerCommand": "node tools/methods-role6-audit/audit-package-materializer.v1.mjs --self-test",
+  "independentVerifierDefinition": {
+    "tool": "tools/methods-role6-audit/fresh-verifier.v1.mjs",
+    "distinctExecutionHolder": true,
+    "repairAuthority": false,
+    "requiredComparisons": [
+      "EXACT_29_PATH_SET",
+      "OUTPUT_ID_PATH_PAYLOAD_BYTES",
+      "PACKAGE_FINGERPRINT",
+      "ASSIGNMENT_AND_OPERATION_IDENTITY",
+      "RETURN_AND_ROLE_TERMINATION_STATE"
+    ]
+  },
+  "workflowAndArtifactPackagingPaths": {
+    "workflowPath": ".github/workflows/methods-role6-audit-execution.yml",
+    "artifactPaths": [
+      "methods-role6-audit-builder-evidence/audit-materialization.receipt.v1.json",
+      "methods-role6-audit-verifier-evidence/audit-verification.receipt.v1.json",
+      "methods-role6-audit-final-return/role6-operation-return.packet.v1.json",
+      "methods-role6-audit-final-return/role6-operation-return.receipt.v1.json",
+      "methods-role6-audit-final-return/first-assignment-ledger.returned-successor.v1.json"
+    ]
+  },
+  "bridgeOutputFingerprintDomain": {
+    "algorithm": "sha256",
+    "canonicalization": "UTF8_JSON_STABLE_KEY_ORDER_WITH_TRAILING_LF",
+    "boundFields": [
+      "operationId",
+      "assignmentHead",
+      "assignmentId",
+      "packetHead",
+      "packetCanonicalSha256",
+      "substantiveOutputIdPathPayloadMap",
+      "returnArtifactIdPathPayloadMap",
+      "authorizedPathRegistrySha256",
+      "executionHolder"
+    ],
+    "excludeFields": [
+      "generatedAt",
+      "workflowRunId"
+    ]
+  },
+  "priorAttemptInspectionLimits": {
+    "priorAttemptsMayBeRead": true,
+    "priorAttemptsAreAuthoritative": false,
+    "copyWithoutRevalidation": false,
+    "repairByVerifier": false,
+    "maximumPurpose": "NONAUTHORITATIVE_HISTORY_AND_DEFECT_RECOVERY_ONLY"
+  }
+}

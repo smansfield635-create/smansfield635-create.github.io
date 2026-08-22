@@ -1,0 +1,180 @@
+name: Public → Private Gen288 Closure Qualification v1
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  qualify:
+    if: >-
+      github.event.issue.number == 578 &&
+      startsWith(github.event.comment.body, 'PUBLIC_PRIVATE_GEN288_CLOSURE_QUALIFICATION_REQUEST_V1') &&
+      github.event.comment.author_association == 'OWNER'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PRIVATE_REPOSITORY: smansfield635-create/geodiametrics1
+      PRIVATE_ISSUE: '217'
+      LOCK_REF: operation-locks/repository-operation-intake-v1
+      LOCK_LEDGER_PATH: .github/operation-intake/active-operation-ledger.v1.json
+      EXPECTED_OPERATION: SECOND_CANONICAL_AUTHENTICATED_CAS_CLOSURE_TRANSPORT_20260815_003
+      EXPECTED_BASE: 74624a0a8e2c2a04549eb90623bbc57dcc7272f5
+      EXPECTED_RUNTIME_BLOB: 265496282e7e204bd0f3cbd6bb4beeeff28afec6
+      EXPECTED_TEST_BLOB: 91d9680e4cd4631083fb3ec8bf4849860f4112b1
+      EXPECTED_DESCRIPTOR_BLOB: 92b6c529573cb41970f0f88b19c1339563c466b7
+      EXPECTED_REGISTRY_BLOB: a53e3335084d6eb17ff37ed95efe45f865055529
+
+    steps:
+      - name: Parse closed qualification locator
+        id: locator
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, re
+          event=json.load(open(os.environ['GITHUB_EVENT_PATH'],encoding='utf-8'))
+          body=event['comment']['body']
+          marker='PUBLIC_PRIVATE_GEN288_CLOSURE_QUALIFICATION_REQUEST_V1'
+          req=json.loads(body[len(marker):].strip())
+          required={'schema','privateSuccessorCommentId','expectedOperationId','exactBaseHead','candidateHead'}
+          if set(req)!=required or req.get('schema')!=marker: raise SystemExit('REQUEST_NOT_CLOSED')
+          if req['expectedOperationId']!=os.environ['EXPECTED_OPERATION']: raise SystemExit('OPERATION_MISMATCH')
+          if req['exactBaseHead']!=os.environ['EXPECTED_BASE']: raise SystemExit('BASE_HEAD_MISMATCH')
+          if not isinstance(req['privateSuccessorCommentId'],int) or req['privateSuccessorCommentId']<1: raise SystemExit('PRIVATE_COMMENT_INVALID')
+          if not re.fullmatch(r'[0-9a-f]{40}',req['candidateHead']): raise SystemExit('CANDIDATE_HEAD_INVALID')
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+            f.write('private_comment='+str(req['privateSuccessorCommentId'])+'\n')
+            f.write('candidate='+req['candidateHead']+'\n')
+          PY
+
+      - name: Mint private read token
+        id: token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+          permission-issues: read
+
+      - name: Validate canonical successor and active lock
+        id: authority
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          PRIVATE_COMMENT: ${{ steps.locator.outputs.private_comment }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/gen288-qualification"; mkdir -p "$work"
+          curl --fail-with-body --silent --show-error -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$PRIVATE_REPOSITORY/issues/comments/$PRIVATE_COMMENT" > "$work/comment.json"
+          curl --fail-with-body --silent --show-error -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$PRIVATE_REPOSITORY/contents/$LOCK_LEDGER_PATH?ref=$LOCK_REF" > "$work/ledger-file.json"
+          python - <<'PY'
+          import base64, hashlib, json, os
+          def stable(v):
+            if isinstance(v,dict): return {k:stable(v[k]) for k in sorted(v)}
+            if isinstance(v,list): return [stable(x) for x in v]
+            return v
+          def digest(v): return hashlib.sha256(json.dumps(stable(v),separators=(',',':'),ensure_ascii=False).encode()).hexdigest()
+          w=os.path.join(os.environ['RUNNER_TEMP'],'gen288-qualification')
+          c=json.load(open(os.path.join(w,'comment.json')))
+          if not str(c.get('issue_url','')).endswith('/issues/'+os.environ['PRIVATE_ISSUE']): raise SystemExit('PRIVATE_COMMENT_ISSUE_MISMATCH')
+          b=c.get('body') or ''; marker='REMOTE_OPERATION_SUCCESSOR_REQUEST_V1'
+          if not b.startswith(marker): raise SystemExit('SUCCESSOR_MARKER_MISSING')
+          e=json.loads(b[len(marker):].strip()); op=e.get('operationRequest') or {}; p=e.get('constructionProcedure') or {}; tr=e.get('transition') or {}
+          if op.get('operationId')!=os.environ['EXPECTED_OPERATION']: raise SystemExit('OPERATION_MISMATCH')
+          if op.get('exactGoverningHead')!=os.environ['EXPECTED_BASE'] or p.get('exactGoverningHead')!=os.environ['EXPECTED_BASE']: raise SystemExit('GOVERNING_HEAD_MISMATCH')
+          if (tr.get('successor') or {}).get('operationId')!=os.environ['EXPECTED_OPERATION']: raise SystemExit('SUCCESSOR_OPERATION_MISMATCH')
+          lf=json.load(open(os.path.join(w,'ledger-file.json'))); ledger=json.loads(base64.b64decode(''.join((lf.get('content') or '').split())).decode())
+          matches=[x for x in (ledger.get('activeScopes') or {}).values() if x.get('operationId')==os.environ['EXPECTED_OPERATION']]
+          if len(matches)!=1: raise SystemExit('ACTIVE_OPERATION_NOT_UNIQUE')
+          lock=matches[0]
+          if lock.get('state')!='ADMITTED_LOCKED' or lock.get('released') is not False: raise SystemExit('LOCK_NOT_EXECUTABLE')
+          if lock.get('governingHead')!=os.environ['EXPECTED_BASE']: raise SystemExit('LOCK_HEAD_MISMATCH')
+          if lock.get('requestDigest')!=digest(op) or lock.get('procedureLocatorDigest')!=digest(p): raise SystemExit('AUTHORITY_DIGEST_MISMATCH')
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f: f.write('generation='+str(lock.get('lockGeneration'))+'\n')
+          PY
+
+      - name: Verify candidate four-path delta
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          CANDIDATE: ${{ steps.locator.outputs.candidate }}
+        run: |
+          set -euo pipefail
+          curl --fail-with-body --silent --show-error -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$PRIVATE_REPOSITORY/compare/$EXPECTED_BASE...$CANDIDATE" > "$RUNNER_TEMP/gen288-qualification/compare.json"
+          python - <<'PY'
+          import json, os
+          c=json.load(open(os.path.join(os.environ['RUNNER_TEMP'],'gen288-qualification','compare.json')))
+          expected={
+            '.github/ai-router/dependency-continuity/pinned-consumers.v1.json',
+            '.github/ai-router/operation-lifecycle/connected-github-terminal-closure-transport.v1.json',
+            'tools/operation-intake/connected-github-terminal-closure-transport.v1.mjs',
+            'tools/operation-intake/connected-github-terminal-closure-transport.v1.test.mjs'}
+          got={f['filename'] for f in c.get('files',[])}
+          if got!=expected: raise SystemExit('CANDIDATE_PATHSET_MISMATCH:'+repr(got))
+          PY
+
+      - name: Check out exact candidate
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: ${{ steps.locator.outputs.candidate }}
+          token: ${{ steps.token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact candidate blobs
+        shell: bash
+        env:
+          CANDIDATE: ${{ steps.locator.outputs.candidate }}
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/private-control-plane"
+          test "$(git rev-parse HEAD^{commit})" = "$CANDIDATE"
+          test "$(git rev-parse HEAD:tools/operation-intake/connected-github-terminal-closure-transport.v1.mjs)" = "$EXPECTED_RUNTIME_BLOB"
+          test "$(git rev-parse HEAD:tools/operation-intake/connected-github-terminal-closure-transport.v1.test.mjs)" = "$EXPECTED_TEST_BLOB"
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/connected-github-terminal-closure-transport.v1.json)" = "$EXPECTED_DESCRIPTOR_BLOB"
+          test "$(git rev-parse HEAD:.github/ai-router/dependency-continuity/pinned-consumers.v1.json)" = "$EXPECTED_REGISTRY_BLOB"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Execute exact Gen288 qualification
+        id: execute
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/private-control-plane"
+          node --test tools/operation-intake/connected-github-terminal-closure-transport.v1.test.mjs tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs 2>&1 | tee "$RUNNER_TEMP/gen288-qualification/test-output.txt"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Publish redacted PASS receipt
+        if: success()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANDIDATE: ${{ steps.locator.outputs.candidate }}
+          GENERATION: ${{ steps.authority.outputs.generation }}
+        run: |
+          set -euo pipefail
+          sha="$(sha256sum "$RUNNER_TEMP/gen288-qualification/test-output.txt" | awk '{print $1}')"
+          body="PUBLIC_PRIVATE_GEN288_CLOSURE_QUALIFICATION_RESULT_V1\noperationId: $EXPECTED_OPERATION\nlockGeneration: $GENERATION\nbaseHead: $EXPECTED_BASE\ncandidateHead: $CANDIDATE\nresult: PASS\ntestOutputSha256: $sha\nrunId: $GITHUB_RUN_ID\nrunAttempt: $GITHUB_RUN_ATTEMPT\nprivateMutationPerformed: false\ngenericCommandAuthority: false"
+          jq -n --arg body "$body" '{body:$body}' > "$RUNNER_TEMP/gen288-qualification/result.json"
+          curl --fail-with-body --silent --show-error --request POST -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/issues/578/comments" --data-binary "@$RUNNER_TEMP/gen288-qualification/result.json" >/dev/null
+
+      - name: Enforce fail-closed completion
+        if: always()
+        shell: bash
+        env:
+          EXECUTE_OUTCOME: ${{ steps.execute.outcome }}
+        run: |
+          set -euo pipefail
+          test "$EXECUTE_OUTCOME" = success

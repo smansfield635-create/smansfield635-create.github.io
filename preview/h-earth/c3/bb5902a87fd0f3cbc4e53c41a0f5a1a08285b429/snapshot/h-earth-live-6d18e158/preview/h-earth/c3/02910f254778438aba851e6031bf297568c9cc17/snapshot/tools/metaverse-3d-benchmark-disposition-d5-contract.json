@@ -1,0 +1,123 @@
+{
+  "contractId": "METAVERSE_3D_BENCHMARK_TO_DISPOSITION_COMPILER_D5_DISPOSITION_COMPILATION_AND_COMPILER_CLOSURE_v1",
+  "toolId": "METAVERSE_3D_BENCHMARK_TO_DISPOSITION_COMPILER_v1",
+  "checkpoint": "D5",
+  "checkpointTitle": "DISPOSITION_COMPILATION_AND_COMPILER_CLOSURE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "compilerBranch": "agent/metaverse-3d-benchmark-disposition-compiler-d5-001",
+  "parentD4": {
+    "branch": "agent/metaverse-3d-benchmark-disposition-compiler-d4-001",
+    "headCommit": "874012997a9a41c91d5c50746f29ec063e979755",
+    "draftPullRequest": 147,
+    "pullRequestState": "OPEN_DRAFT_UNMERGED",
+    "status": "PASS_CLOSED",
+    "artifactId": "8621910872",
+    "artifactSizeBytes": 24864,
+    "artifactSha256": "18290e7b2a70b63d47e53d449cdf87a812cd03612b98b26ff867c6d48f67c7a5",
+    "weightedFactCount": 119,
+    "weightedRelationCount": 7,
+    "governedDimensionCount": 11,
+    "factWeightManifestSha256": "24c8d4d97db4dd6b0a3feb268cb58a2e560b9d76452ddb2f93acd1afed1a1092",
+    "relationWeightManifestSha256": "17da29918716c7cb39918b8b52157d00cf38b6af8b5561a1f377ef662a4f49e8",
+    "dimensionStrengthManifestSha256": "e438e286a7d0760692b81f31ee224094e9fd138c81f3ffb5adbfe62354858df6",
+    "aggregateReceiptSha256": "15f5c32ab54f0090ace8928e02137684118dd90c72c27747a0b2a23b7eaacc4a"
+  },
+  "governedDimensions": [
+    "SOURCE_CUSTODY",
+    "AUTHORITY_BOUNDARIES",
+    "RUNTIME_LOAD",
+    "INTERACTION_EXECUTION",
+    "VISUAL_REALIZATION",
+    "SPATIAL_REALIZATION",
+    "RESPONSIVE_BEHAVIOR",
+    "PERFORMANCE",
+    "ACCESSIBILITY",
+    "DEPLOYED_IDENTITY",
+    "USER_ACCEPTANCE"
+  ],
+  "governedSubjects": [
+    {"subjectId":"MAIN_COMPASS","class":"PRODUCTION_COMPASS"},
+    {"subjectId":"ARCHCOIN_COMPASS","class":"PRODUCTION_COMPASS"},
+    {"subjectId":"SHOWROOM_COMPASS","class":"PRODUCTION_COMPASS"},
+    {"subjectId":"LAWS_COMPASS","class":"PRODUCTION_COMPASS"},
+    {"subjectId":"WEBSITE_HOME_RECEIVER_CONTROL","class":"AUXILIARY_NON_COMPASS_CONTROL"},
+    {"subjectId":"UNIVERSAL_COMPASS_PROTOTYPE_CANDIDATE","class":"CANDIDATE_ONLY"},
+    {"subjectId":"PROJECT_AWARENESS_V1_HISTORICAL_BASELINE","class":"HISTORICAL_CONTEXT_ONLY"},
+    {"subjectId":"FOUR_COMPASS_SHARED_EVIDENCE_INFRASTRUCTURE","class":"SHARED_EVIDENCE_AUTHORITY"}
+  ],
+  "permittedDispositions": [
+    "RETAIN",
+    "RECLASSIFY",
+    "CORRECT",
+    "ISOLATE",
+    "SUPERSEDE",
+    "REVERT",
+    "DEFER_PENDING_EVIDENCE",
+    "ADMISSIBLE_FOR_ACCEPTANCE"
+  ],
+  "deterministicDispositionRules": [
+    {"state":"PASS","minimumStrength":"W3_DIRECT_EXACT","disposition":"RETAIN"},
+    {"state":"PASS","strength":"W2_DETERMINISTIC_DERIVED","dimensions":["SOURCE_CUSTODY","AUTHORITY_BOUNDARIES"],"disposition":"RETAIN"},
+    {"state":"PASS","otherwise":true,"disposition":"DEFER_PENDING_EVIDENCE"},
+    {"state":"FAIL_OR_BLOCKED","currentDirectMinimumStrength":"W3_DIRECT_EXACT","disposition":"CORRECT"},
+    {"state":"FAIL_OR_BLOCKED","otherwise":true,"disposition":"DEFER_PENDING_EVIDENCE"},
+    {"state":"UNRESOLVED","disposition":"DEFER_PENDING_EVIDENCE"},
+    {"state":"NOT_EXECUTED","disposition":"DEFER_PENDING_EVIDENCE"},
+    {"state":"WITHHELD","disposition":"DEFER_PENDING_EVIDENCE"},
+    {"state":"NOT_APPLICABLE","disposition":"ISOLATE"},
+    {"state":"SUPERSEDED","disposition":"SUPERSEDE"}
+  ],
+  "restrictedDispositionRules": {
+    "RECLASSIFY": "REQUIRES_EXACT_IDENTITY_ROLE_AUTHORITY_LANE_OR_TAXONOMY_MISMATCH",
+    "REVERT": "REQUIRES_EXPLICIT_REVERSAL_EVIDENCE_AND_SEPARATE_AUTHORITY",
+    "ADMISSIBLE_FOR_ACCEPTANCE": "SEPARATE_ELIGIBILITY_ONLY_NEVER_AUTOMATIC"
+  },
+  "subjectProjectionPolicy": {
+    "aggregateFourCompassEvidenceMayBeAssignedToIndividualCompassWithoutMemberIdentity": false,
+    "unattributedFourCompassEvidenceSubject": "FOUR_COMPASS_SHARED_EVIDENCE_INFRASTRUCTURE",
+    "homeAuxiliaryEvidenceControlsProductionCompassDisposition": false,
+    "prototypeEvidenceControlsProductionCompassDisposition": false,
+    "historicalEvidenceOverridesCurrentDirectEvidence": false,
+    "missingSubjectDimensionEvidenceCreatesPass": false
+  },
+  "authorizedD5Subcheckpoints": [
+    "D5A_DISPOSITION_AUTHORITY_AND_RULE_LOCK",
+    "D5B_FACT_AND_DIMENSION_DISPOSITION_COMPILATION",
+    "D5C_SUBJECT_RECONCILIATION_AND_DEFERRED_EVIDENCE_LEDGER",
+    "D5D_COMPLETENESS_AND_CLOSURE_AUDIT",
+    "D5E_DETERMINISTIC_EXECUTION_AND_COMPILER_CLOSURE"
+  ],
+  "authorizedCheckpointPaths": [
+    ".github/workflows/metaverse-3d-benchmark-disposition-d5.yml",
+    "tools/metaverse-3d-benchmark-disposition-d5-contract.json",
+    "tools/metaverse-3d-benchmark-disposition-d5-core.mjs",
+    "tools/metaverse-3d-benchmark-disposition-d5-rules.mjs",
+    "tools/metaverse-3d-benchmark-disposition-d5-compile.mjs",
+    "tools/metaverse-3d-benchmark-disposition-d5-controls.mjs"
+  ],
+  "closureBoundaries": {
+    "parentD4WeightsRewritten": false,
+    "parentD3StatesChanged": false,
+    "factWinnerSelected": false,
+    "productActionPlanCreated": false,
+    "productMutationAllowed": false,
+    "hEarthEvidenceAdmitted": false,
+    "mainWriteAllowed": false,
+    "mergeAllowed": false,
+    "userAcceptanceGrantAllowed": false,
+    "compilerInstallationOnMainAutomatic": false
+  },
+  "claimsAtD5A": {
+    "dispositionAuthorityLocked": true,
+    "deterministicMappingRulesLocked": true,
+    "dispositionCompilationPerformed": false,
+    "compilerClosurePerformed": false,
+    "productFilesChanged": 0,
+    "hEarthFilesChanged": 0,
+    "mainChanged": false,
+    "mergePerformed": false,
+    "userAcceptanceGranted": false
+  },
+  "finalStoppingPoint": "D5_PASS_CLOSED",
+  "nextRequiredCompilerCheckpointAfterPass": "NONE"
+}

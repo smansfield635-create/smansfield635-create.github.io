@@ -1,0 +1,45 @@
+name: Compass Gen1538 Static and Performance Qualification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'assets/compass/**'
+      - '.github/ai-router/projects/compass/verify-display-continuity.v1.mjs'
+      - '.github/ai-router/projects/compass/verify-performance-successor.mjs'
+      - '.github/workflows/compass-performance-successor-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  COMPASS_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+  COMPASS_SCOPE_BASE_SHA: 21ee87e945a62492b8f9447a5049f4ae0ab1ceb9
+  COMPASS_PERFORMANCE_OUTPUT: /tmp/compass-gen1538-performance.json
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.COMPASS_CANDIDATE_HEAD }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Qualify exact Gen1538 runtime budget
+        run: |
+          test "$(git rev-parse HEAD^{commit})" = "$COMPASS_CANDIDATE_HEAD"
+          node --check assets/compass/compass.capability-carousel.js
+          node --check assets/compass/compass.house-scene.js
+          node .github/ai-router/projects/compass/verify-performance-successor.mjs
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1537 and .candidate == env.COMPASS_CANDIDATE_HEAD' /tmp/compass-gen1538-performance.json >/dev/null
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compass-gen1538-performance-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/compass-gen1538-performance.json
+          retention-days: 90

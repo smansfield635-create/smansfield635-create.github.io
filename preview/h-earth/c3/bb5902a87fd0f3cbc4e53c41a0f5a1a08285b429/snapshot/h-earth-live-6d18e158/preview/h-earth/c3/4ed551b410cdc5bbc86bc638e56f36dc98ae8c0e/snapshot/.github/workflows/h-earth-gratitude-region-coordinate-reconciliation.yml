@@ -1,0 +1,18 @@
+name: H-Earth Gratitude Region Coordinate Reconciliation — archived
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  archive-notice:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report archived verification custody
+        run: |
+          echo 'This isolated Gratitude Region reconciliation is retired from automatic pull-request execution.'
+          echo 'Original repository commit: 5efe5118e0addfa6965a2f00511b531afa8c8d8a'
+          echo 'Original workflow blob: 30b4cd8045130723ef73cfaaa86011b390541c8f'
+          echo 'The original YAML remains recoverable from Git history; this manual entry creates no product or validation claim.'

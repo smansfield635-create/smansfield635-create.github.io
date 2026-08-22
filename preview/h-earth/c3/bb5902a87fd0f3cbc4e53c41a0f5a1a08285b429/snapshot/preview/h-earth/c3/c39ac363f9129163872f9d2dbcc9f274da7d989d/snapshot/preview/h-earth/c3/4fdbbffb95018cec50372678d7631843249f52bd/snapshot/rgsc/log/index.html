@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>RGSC · Log</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+
+<style>
+html,body{height:100%;margin:0}
+body{background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);color:#eaf2f6;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.page{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 12px}
+.h{text-align:center;margin-bottom:14px}
+.h h1{font-size:40px;font-weight:900;margin:0}
+.h p{opacity:.7;margin-top:8px}
+.card{width:min(760px,94vw);background:rgba(255,255,255,.06);border-radius:18px;box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;padding:14px}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap}
+.btn{flex:1;min-width:170px;padding:12px 14px;border-radius:16px;border:0;font-weight:900;letter-spacing:.6px;cursor:pointer;background:rgba(0,255,136,.22);color:#eaf2f6;box-shadow:0 0 0 1px rgba(0,255,136,.28) inset}
+.btn.secondary{background:rgba(255,255,255,.10);box-shadow:0 0 0 1px rgba(255,255,255,.12) inset}
+.btn.danger{background:rgba(255,90,90,.14);box-shadow:0 0 0 1px rgba(255,90,90,.22) inset}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.row input{flex:1;min-width:220px;padding:10px 12px;border-radius:14px;border:0;outline:none;background:rgba(255,255,255,.10);color:#eaf2f6;box-shadow:0 0 0 1px rgba(255,255,255,.10) inset}
+.items{margin-top:12px;max-height:520px;overflow:auto;border-radius:14px;background:rgba(0,0,0,.18);box-shadow:0 0 0 1px rgba(255,255,255,.08) inset;padding:8px}
+.item{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;line-height:1.35;opacity:.9;padding:8px;border-radius:12px;background:rgba(255,255,255,.04);box-shadow:0 0 0 1px rgba(255,255,255,.06) inset;margin-bottom:8px;white-space:pre-wrap;word-break:break-word}
+.report{margin-top:12px;padding:10px 12px;border-radius:14px;background:rgba(0,0,0,.18);box-shadow:0 0 0 1px rgba(255,255,255,.08) inset;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;white-space:pre-wrap}
+.nav{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap;justify-content:center}
+.nav a{padding:14px 22px;border-radius:18px;background:rgba(255,255,255,.10);text-decoration:none;color:#eaf2f6;font-weight:900}
+footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-size:12px}
+.badge{font-weight:900;letter-spacing:.8px;opacity:.85;font-size:12px;margin-top:6px}
+</style>
+</head>
+
+<body>
+<div class="page">
+  <div class="h">
+    <h1>RGSC · Log</h1>
+    <p>View · Verify · Replay (Per-Subject) · Import/Export · Wipe Lock</p>
+  </div>
+
+  <div class="card">
+    <div class="btnrow">
+      <button class="btn" onclick="verifyAll()">VERIFY ALL</button>
+      <button class="btn" onclick="replayCheck()">REPLAY CHECK</button>
+      <button class="btn secondary" onclick="exportJSON()">EXPORT JSON</button>
+      <button class="btn secondary" onclick="exportJSONL()">EXPORT JSONL</button>
+      <button class="btn secondary" onclick="triggerImport()">IMPORT LOG</button>
+    </div>
+
+    <div class="row">
+      <input id="wipePhrase" placeholder='Type: WIPE LOCAL LOG' />
+      <button class="btn danger" onclick="wipeLocal()">WIPE</button>
+    </div>
+
+    <div class="badge" id="stats"></div>
+    <div class="report" id="report">Report: (run VERIFY ALL or REPLAY CHECK)</div>
+    <div class="items" id="log"></div>
+  </div>
+
+  <div class="nav">
+    <a href="/rgsc/">RGSC Door</a>
+    <a href="/home/">Home</a>
+    <a href="/links/">Links</a>
+  </div>
+
+  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+</div>
+
+<input id="fileInput" type="file" accept=".json,.jsonl,application/json,text/plain" style="display:none" />
+
+<script>
+const STORAGE_KEY="rgsc_log";
+const SECRET_KEY="rgsc_device_secret";
+const SCHEMA_VERSION="1.0";
+const SIG_ALG="HMAC-SHA256-LOCAL";
+
+let log = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+function saveLog(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(log)); }
+function esc(s){ return s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
+
+function renderLog(){
+  const el=document.getElementById("log");
+  const stats=document.getElementById("stats");
+  const subjects = new Set(log.map(r=>r && r.subject_id).filter(Boolean));
+  el.innerHTML="";
+  stats.textContent=`Entries: ${log.length} · Subjects: ${subjects.size}`;
+  if(!log.length){ el.innerHTML='<div class="item">No receipts yet.</div>'; return; }
+  for(let i=log.length-1;i>=0;i--){
+    el.innerHTML+='<div class="item">'+esc(JSON.stringify(log[i], null, 2))+'</div>';
+  }
+}
+
+function canonicalPayload(obj){
+  const keys=Object.keys(obj).sort();
+  const out={};
+  for(const k of keys){ out[k]=obj[k]; }
+  return JSON.stringify(out);
+}
+async function sha256Hex(str){
+  const buf=new TextEncoder().encode(str);
+  const digest=await crypto.subtle.digest("SHA-256", buf);
+  return [...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+function getOrCreateDeviceSecret(){
+  let secret=localStorage.getItem(SECRET_KEY);
+  if(!secret){
+    const arr=new Uint8Array(32);
+    crypto.getRandomValues(arr);
+    secret=btoa(String.fromCharCode(...arr));
+    localStorage.setItem(SECRET_KEY, secret);
+  }
+  return secret;
+}
+async function hmacHex(secretB64, message){
+  const raw=Uint8Array.from(atob(secretB64), c=>c.charCodeAt(0));
+  const key=await crypto.subtle.importKey("raw", raw, {name:"HMAC", hash:"SHA-256"}, false, ["sign","verify"]);
+  const sig=await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(message));
+  return [...new Uint8Array(sig)].map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+
+function baseFromReceipt(r){
+  // Must match leaf pages exactly (we sign these fields)
+  return {
+    schema_version: r.schema_version,
+    sig_alg: r.sig_alg,
+    issuer_id: r.issuer_id,
+    subject_id: r.subject_id,
+    domain: r.domain,
+    state_id: r.state_id,
+    A: r.A, B: r.B, C: r.C, D: r.D,
+    constraint_hash: r.constraint_hash,
+    outcome_code: r.outcome_code,
+    ts: r.ts,
+    prev_hash: r.prev_hash
+  };
+}
+
+async function verifyReceipt(r, secret){
+  const required=["schema_version","sig_alg","issuer_id","subject_id","domain","state_id","A","B","C","D","constraint_hash","outcome_code","ts","prev_hash","payload_hash","signature"];
+  for(const k of required){ if(!(k in r)) return {ok:false, reason:`Missing field: ${k}`}; }
+  if(r.schema_version!==SCHEMA_VERSION) return {ok:false, reason:`schema_version mismatch: ${r.schema_version}`};
+  if(r.sig_alg!==SIG_ALG) return {ok:false, reason:`sig_alg mismatch: ${r.sig_alg}`};
+
+  const payload = canonicalPayload(baseFromReceipt(r));
+  const hash = await sha256Hex(payload);
+  if(r.payload_hash!==hash) return {ok:false, reason:"payload_hash mismatch"};
+
+  const sig = await hmacHex(secret, hash);
+  if(r.signature!==sig) return {ok:false, reason:"signature mismatch"};
+
+  return {ok:true, reason:"OK"};
+}
+
+async function verifyAll(){
+  const secret=getOrCreateDeviceSecret();
+  let ok=0,bad=0,firstBad=null;
+  for(let i=0;i<log.length;i++){
+    const res=await verifyReceipt(log[i], secret);
+    log[i].verify_status = res.ok ? "VALID_LOCAL" : "INVALID_LOCAL";
+    log[i].verify_reason = res.reason;
+    if(res.ok) ok++; else { bad++; if(!firstBad) firstBad={i,reason:res.reason}; }
+  }
+  saveLog(); renderLog();
+  setReport(`VERIFY ALL:\nvalid=${ok}\ninvalid=${bad}\nfirst_invalid=${firstBad?`${firstBad.i} (${firstBad.reason})`:"none"}`);
+}
+
+/* ===== Per-subject chain replay check ===== */
+function groupBySubject(){
+  const m = new Map();
+  for(const r of log){
+    if(!r || !r.subject_id) continue;
+    if(!m.has(r.subject_id)) m.set(r.subject_id, []);
+    m.get(r.subject_id).push(r);
+  }
+  return m;
+}
+
+async function replayCheck(){
+  const secret=getOrCreateDeviceSecret();
+  const bySub = groupBySubject();
+  let lines = [];
+  let globalFail = null;
+
+  // quick duplicate checks across whole log
+  const ids=new Set(), hashes=new Set();
+  for(let i=0;i<log.length;i++){
+    const r=log[i];
+    if(!r) continue;
+    if(ids.has(r.receipt_id)){ globalFail=`FAIL: duplicate receipt_id @log_index=${i}`; break; }
+    ids.add(r.receipt_id);
+    if(hashes.has(r.payload_hash)){ globalFail=`FAIL: duplicate payload_hash @log_index=${i}`; break; }
+    hashes.add(r.payload_hash);
+  }
+
+  if(globalFail){
+    setReport(`REPLAY CHECK:\n${globalFail}`);
+    return;
+  }
+
+  // per-subject continuity
+  for(const [subject, arr] of bySub.entries()){
+    // sort by ts (stable tie-breaker: receipt_id)
+    arr.sort((a,b)=> (a.ts===b.ts ? (a.receipt_id||"").localeCompare(b.receipt_id||"") : (a.ts||"").localeCompare(b.ts||"")));
+
+    // verify each receipt cryptographically
+    for(let i=0;i<arr.length;i++){
+      const res=await verifyReceipt(arr[i], secret);
+      if(!res.ok){
+        globalFail = `FAIL: subject=${subject} idx=${i} reason=${res.reason}`;
+        break;
+      }
+    }
+    if(globalFail) break;
+
+    // continuity: prev_hash must equal previous receipt's payload_hash within same subject
+    for(let i=0;i<arr.length;i++){
+      const expectedPrev = (i===0) ? null : arr[i-1].payload_hash;
+      if(arr[i].prev_hash !== expectedPrev){
+        globalFail = `FAIL: subject=${subject} idx=${i} prev_hash mismatch (expected ${expectedPrev}, got ${arr[i].prev_hash})`;
+        break;
+      }
+    }
+    if(globalFail) break;
+
+    // summary line
+    const last = arr[arr.length-1];
+    lines.push(`PASS: subject=${subject} entries=${arr.length} head=${(last.payload_hash||"").slice(0,12)}…`);
+  }
+
+  if(globalFail){
+    setReport(`REPLAY CHECK:\n${globalFail}`);
+    return;
+  }
+
+  setReport(`REPLAY CHECK: PASS\nsubjects=${bySub.size}\n` + lines.join("\n"));
+}
+
+function exportJSON(){
+  const dataStr="data:application/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(log, null, 2));
+  const a=document.createElement("a"); a.href=dataStr; a.download="rgsc_log.json"; document.body.appendChild(a); a.click(); a.remove();
+}
+function exportJSONL(){
+  const lines = log.map(x=>JSON.stringify(x));
+  const blob = new Blob([lines.join("\n")+"\n"], {type:"application/x-ndjson"});
+  const url = URL.createObjectURL(blob);
+  const a=document.createElement("a"); a.href=url; a.download="rgsc_log.jsonl"; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+}
+function triggerImport(){
+  document.getElementById("fileInput").value="";
+  document.getElementById("fileInput").click();
+}
+document.getElementById("fileInput").addEventListener("change", async (e)=>{
+  const file=e.target.files && e.target.files[0];
+  if(!file) return;
+  const text=await file.text();
+  let imported=null;
+
+  try{ const parsed=JSON.parse(text); if(Array.isArray(parsed)) imported=parsed; }catch(_){}
+  if(!imported){
+    const lines=text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+    if(lines.length){
+      imported=[];
+      for(const line of lines){ imported.push(JSON.parse(line)); }
+    }
+  }
+  if(!imported){ alert("Import failed: file is not JSON array or JSONL."); return; }
+
+  log=imported;
+  saveLog(); renderLog();
+  setReport(`IMPORT: OK\nentries=${log.length}\nRun REPLAY CHECK next.`);
+});
+
+function wipeLocal(){
+  const phrase=document.getElementById("wipePhrase").value.trim();
+  if(phrase!=="WIPE LOCAL LOG"){ alert('Type exactly: WIPE LOCAL LOG'); return; }
+  if(!confirm("This deletes the local log on THIS device/browser only. Continue?")) return;
+  log=[]; saveLog(); renderLog(); setReport("WIPE: OK (local only)"); document.getElementById("wipePhrase").value="";
+}
+
+function setReport(s){ document.getElementById("report").textContent="Report:\n"+s; }
+
+function normalizeExisting(){
+  for(const r of log){
+    if(!r || typeof r!=="object") continue;
+    if(!("schema_version" in r)) r.schema_version=SCHEMA_VERSION;
+    if(!("sig_alg" in r)) r.sig_alg=SIG_ALG;
+    if(!("domain" in r)) r.domain="unknown";
+    if(!("state_id" in r)) r.state_id=0;
+    if(!("A" in r)) r.A=0; if(!("B" in r)) r.B=0; if(!("C" in r)) r.C=0; if(!("D" in r)) r.D=0;
+    if(!("verify_status" in r)) r.verify_status="UNKNOWN";
+  }
+  saveLog();
+}
+
+normalizeExisting();
+renderLog();
+</script>
+</body>
+</html>

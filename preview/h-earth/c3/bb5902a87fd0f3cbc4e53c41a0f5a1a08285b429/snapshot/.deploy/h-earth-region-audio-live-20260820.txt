@@ -1,0 +1,4 @@
+H-Earth live publication trigger
+Accepted exact environment successor: 6d18e158171a31b296a787202ac731a5c0513e37
+Purpose: force publication of the region-classified environmental audio successor while preserving the accepted H-Earth world and loader unchanged.
+Live route and Compass binding both target this exact successor.

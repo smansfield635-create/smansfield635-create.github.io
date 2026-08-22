@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en" data-route="/showroom/globe/h-earth/observatory/" data-observatory="THE_H_EARTH_OBSERVATORY" data-story-mode="true">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#07110f">
+  <meta name="description" content="The H-Earth Observatory explains how the Survival world inside Shadows Never Shatter in Mirrorland is preserved.">
+  <title>The H-Earth Observatory · How this world is preserved</title>
+  <style>
+    :root{color-scheme:dark;--bg:#050b0a;--panel:#0b1613;--panel2:#101f1a;--text:#eef5f1;--muted:#a9bbb3;--line:rgba(194,229,211,.18);--gold:#e3c37c;--green:#8dd9b0;--danger:#ff9b9b;--max:1120px;--radius:24px;--shadow:0 28px 90px rgba(0,0,0,.42)}
+    *{box-sizing:border-box}html{min-width:320px;min-height:100%;background:var(--bg);scroll-behavior:smooth}body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.58;background:radial-gradient(circle at 50% -10%,rgba(80,166,125,.17),transparent 34rem),radial-gradient(circle at 90% 20%,rgba(227,195,124,.10),transparent 28rem),linear-gradient(180deg,#081411,var(--bg) 48%)}
+    a{color:inherit}.skip{position:absolute;left:-999px;top:8px;z-index:100;padding:.75rem 1rem;border-radius:999px;background:var(--gold);color:#10130e;font-weight:900}.skip:focus{left:8px}a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+    .shell{width:min(var(--max),calc(100% - 28px));margin:0 auto;padding:max(18px,env(safe-area-inset-top)) 0 max(48px,env(safe-area-inset-bottom))}.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0;background:linear-gradient(180deg,rgba(5,11,10,.98),rgba(5,11,10,.82),transparent)}.brand{display:flex;align-items:center;gap:11px;text-decoration:none;font-weight:900}.mark{display:grid;place-items:center;width:42px;height:42px;border:1px solid rgba(227,195,124,.48);border-radius:14px;color:var(--gold);background:rgba(227,195,124,.08)}.topnav{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}.button,.topnav a{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:9px 13px;border:1px solid var(--line);border-radius:999px;text-decoration:none;color:var(--muted);background:rgba(255,255,255,.03);font-weight:800}.button.primary{color:#08110d;background:var(--gold);border-color:var(--gold)}
+    .hero,.section,.return-panel{border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018)),var(--panel);box-shadow:var(--shadow)}.hero{position:relative;overflow:hidden;padding:clamp(24px,6vw,70px);min-height:min(72vh,760px);display:grid;align-content:center}.hero::after{content:"";position:absolute;right:-8%;top:12%;width:min(42vw,420px);aspect-ratio:1;border:1px solid rgba(227,195,124,.19);border-radius:44% 56% 52% 48%;transform:rotate(18deg);background:radial-gradient(circle,rgba(141,217,176,.13),transparent 64%);pointer-events:none}.eyebrow{margin:0 0 10px;color:var(--gold);font-size:.76rem;font-weight:950;letter-spacing:.17em;text-transform:uppercase}.hero h1{position:relative;z-index:1;max-width:900px;margin:0;font-size:clamp(2.6rem,9vw,7.4rem);line-height:.88;letter-spacing:-.075em}.lede{position:relative;z-index:1;max-width:760px;margin:22px 0 0;color:var(--muted);font-size:clamp(1rem,2.3vw,1.28rem)}.hero-actions{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+    .section{margin-top:18px;padding:clamp(20px,4vw,42px)}.section-grid{display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr);gap:clamp(20px,5vw,62px);align-items:start}.section h2{margin:0;font-size:clamp(1.7rem,4vw,3.4rem);line-height:1;letter-spacing:-.045em}.section-copy{color:var(--muted)}.section-copy p:first-child{margin-top:0}.fact-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:20px}.fact{padding:14px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.025)}.fact strong{display:block;color:var(--gold);font-size:.76rem;letter-spacing:.08em;text-transform:uppercase}.fact span{display:block;margin-top:4px;color:var(--text)}
+    details.disclosure{margin-top:16px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.025)}details.disclosure>summary{padding:16px 18px;cursor:pointer;color:var(--gold);font-weight:900;list-style-position:inside}.disclosure-body{padding:0 18px 18px}.replay-list{display:grid;gap:10px;margin:0;padding:0;list-style:none}.replay-card{padding:15px;border:1px solid var(--line);border-radius:15px;background:rgba(0,0,0,.18)}.replay-card h3{margin:0 0 6px;font-size:1rem}.replay-card p{margin:0;color:var(--muted)}.status-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.status-chip{padding:4px 8px;border:1px solid var(--line);border-radius:999px;font:700 .68rem ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted)}.status-chip[data-state="PASS"]{color:#07130c;background:var(--green)}.status-chip[data-state="OPEN"]{color:#181005;background:var(--gold)}.status-chip[data-state="FALSE"]{color:#1a0808;background:var(--danger)}
+    .tool-ladder{display:grid;gap:10px}.tool-group{padding:14px;border:1px solid var(--line);border-radius:16px;background:rgba(0,0,0,.16)}.tool-group h3{margin:0 0 8px}.tool-links{display:flex;flex-wrap:wrap;gap:8px}.tool-links a{display:inline-flex;padding:8px 11px;border:1px solid var(--line);border-radius:999px;text-decoration:none;color:var(--muted);font-weight:800}.return-panel{margin-top:18px;padding:clamp(24px,5vw,54px);text-align:center}.return-panel h2{margin:0;font-size:clamp(2rem,6vw,4.8rem);letter-spacing:-.06em}.return-panel p{max-width:660px;margin:12px auto 20px;color:var(--muted)}
+    .persistent-return{position:fixed;right:max(14px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));z-index:40;box-shadow:0 12px 42px rgba(0,0,0,.5)}
+    [data-js-state="ready"] .js-pending{display:none}.noscript{margin-top:14px;padding:12px;border:1px solid rgba(255,155,155,.35);border-radius:14px;color:#ffd0d0;background:rgba(100,20,20,.22)}
+    @media(max-width:780px){.topbar{align-items:stretch;flex-direction:column}.topnav{justify-content:flex-start}.section-grid{grid-template-columns:1fr}.fact-grid{grid-template-columns:1fr}.persistent-return{left:14px;right:14px}.persistent-return.button{width:calc(100% - 28px)}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
+  </style>
+</head>
+<body data-js-state="pending">
+  <a class="skip" href="#observatory-main">Skip to Observatory</a>
+  <div class="shell">
+    <header class="topbar" aria-label="H-Earth Observatory navigation">
+      <a class="brand" href="/showroom/globe/h-earth/"><span class="mark" aria-hidden="true">H</span><span>The H-Earth Observatory</span></a>
+      <nav class="topnav" aria-label="Observatory routes"><a href="/showroom/globe/h-earth/">Return to H-Earth</a><a href="/showroom/globe/">Mirrorland Globe</a></nav>
+    </header>
+    <main id="observatory-main">
+      <section class="hero" data-observatory-section="H_EARTH_WITHIN_MIRRORLAND" aria-labelledby="observatory-title">
+        <p class="eyebrow">The H-Earth Observatory</p>
+        <h1 id="observatory-title">How this world is preserved.</h1>
+        <p class="lede">H-Earth is the Survival path inside <em>Shadows Never Shatter in Mirrorland</em>. The Observatory sits behind the experience: it explains how the world is protected without becoming a second world beside it.</p>
+        <div class="hero-actions"><a class="button primary" href="/showroom/globe/h-earth/">Return to H-Earth</a><a class="button" href="#mirrorland-context">Continue through the Observatory</a></div>
+      </section>
+
+      <section id="mirrorland-context" class="section" data-observatory-section="SHADOWS_NEVER_SHATTER_IN_MIRRORLAND" aria-labelledby="mirrorland-title">
+        <div class="section-grid"><div><p class="eyebrow">Current narrative context</p><h2 id="mirrorland-title">Shadows Never Shatter in Mirrorland</h2></div><div class="section-copy"><p>Mirrorland separates future paths by what they reveal under pressure. ZIONTS carries consequence. Audralia carries possibility. H-Earth carries survival: the persistence of a world, its terrain, and the ability to keep moving through it.</p><p>This relationship is inherited from Mirrorland. H-Earth does not claim an equal or separate narrative authority.</p><div class="fact-grid"><div class="fact"><strong>Season</strong><span>Shadows Never Shatter in Mirrorland</span></div><div class="fact"><strong>World relation</strong><span>H-Earth within Mirrorland</span></div><div class="fact"><strong>Path identity</strong><span>Survival</span></div></div></div></div>
+      </section>
+
+      <section class="section" data-observatory-section="THE_LIVE_ENVIRONMENT" aria-labelledby="environment-title">
+        <div class="section-grid"><div><p class="eyebrow">The live environment</p><h2 id="environment-title">The world remains on H-Earth.</h2></div><div class="section-copy"><p>The active canvas, current Run 8E host, accepted CP2 WebGL renderer, Run 8B terrain, live GPU binding, camera, navigation, gestures, geometry, and vegetation remain owned by the H-Earth route.</p><p>The Observatory does not duplicate or simulate that renderer. It returns you to the actual environment.</p><a class="button" href="/showroom/globe/h-earth/">Open the live H-Earth environment</a></div></div>
+      </section>
+
+      <section class="section" data-observatory-section="HOW_THE_WORLD_IS_PRESERVED" aria-labelledby="preserved-title">
+        <div class="section-grid"><div><p class="eyebrow">How the world is preserved</p><h2 id="preserved-title">Protect what has already been accepted.</h2></div><div class="section-copy"><p>Each correction begins from an exact source and runtime identity. Mutation is bounded to an authorized path set. Protected authorities remain frozen. Engineering execution proves what ran; public availability proves what can be inspected; only the user records whether the visible difference should be accepted.</p><div class="fact-grid"><div class="fact"><strong>Scope</strong><span>Bounded before mutation</span></div><div class="fact"><strong>Evidence</strong><span>Executed before claimed</span></div><div class="fact"><strong>Acceptance</strong><span>User differential only</span></div></div></div></div>
+      </section>
+
+      <section class="section" data-observatory-section="ONE_REAL_ENGINEERING_SESSION" aria-labelledby="session-title">
+        <div class="section-grid"><div><p class="eyebrow">One real engineering session</p><h2 id="session-title">A platform can pass without being allowed to promote itself.</h2></div><div class="section-copy"><p>The replay below is read-only. It follows the unified instrument proof, the engineering pass, the refusal to substitute automation for acceptance, and the specialized gauge reconstruction.</p><details id="session-replay-disclosure" class="disclosure"><summary>Read the engineering-session replay</summary><div class="disclosure-body"><ol id="observatory-replay" class="replay-list" aria-live="polite"><li class="js-pending">Replay source loading…</li></ol></div></details></div></div>
+      </section>
+
+      <section class="section" data-observatory-section="OPTIONAL_TECHNICAL_EVIDENCE" aria-labelledby="technical-title">
+        <div class="section-grid"><div><p class="eyebrow">Optional technical evidence</p><h2 id="technical-title">Go backstage only when needed.</h2></div><div class="section-copy"><p>The story is complete without opening an engineering instrument. Technical evidence remains a deeper, explicit choice.</p><details id="technical-evidence-disclosure" class="disclosure"><summary>Inspect technical evidence</summary><div id="technical-evidence-body" class="disclosure-body"><p class="js-pending">Technical registry loading…</p></div></details></div></div>
+      </section>
+
+      <section class="return-panel" data-observatory-section="RETURN_TO_H_EARTH" aria-labelledby="return-title"><p class="eyebrow">Return to H-Earth</p><h2 id="return-title">The Observatory ends where the environment begins.</h2><p>Return to the coast, the terrain, and the live traversal experience. The backstage record does not replace the world it preserves.</p><a class="button primary" href="/showroom/globe/h-earth/">Return to H-Earth</a></section>
+    </main>
+  </div>
+  <a class="button primary persistent-return" href="/showroom/globe/h-earth/" aria-label="Return to the H-Earth environment">Return to H-Earth</a>
+  <noscript><div class="shell"><p class="noscript">The narrative Observatory remains readable without JavaScript. The read-only replay and technical registry require JavaScript.</p></div></noscript>
+  <script type="module" src="./observatory.mjs?cb=dc4eacc4bc8f62a4"></script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+{
+  "schema": "WHOLE_ESTATE_CHECKPOINT_7_SOURCE_LEDGER_v1",
+  "status": "CHECKPOINT_7_REPAIR_CANDIDATE",
+  "governingBaseline": {
+    "main": "aaa8d55f20198f1ef508c5eb64f76ddb8477db30",
+    "tree": "aff84c63fcd96d5c8d4b1d29f4b86a374394b8a8",
+    "checkpoint6Pr": 733,
+    "checkpoint6CertificationRun": 31156024178,
+    "checkpoint6CertificationAttempt": 2
+  },
+  "constitutionalSources": [
+    {
+      "path": "control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/prospective-change-register.v1.json",
+      "ref": "aaa8d55f20198f1ef508c5eb64f76ddb8477db30",
+      "blob": "e817cb14eb736de002c9be6d630951ea65c5c271",
+      "use": "exact Checkpoint 7 registration"
+    },
+    {
+      "path": "control-plane/whole-estate/invariant-contract-package-v1/scientific-delta-ingress-contract.v1.json",
+      "ref": "aaa8d55f20198f1ef508c5eb64f76ddb8477db30",
+      "blob": "07cf244827ad22e278f49dc415f046abe5c12cae",
+      "use": "scientific delta ingress law"
+    }
+  ],
+  "selectedStudySources": {
+    "pr": 709,
+    "exactHead": "54e0f3cf59cffab6a195c9c2ffe4f104185b5e81",
+    "operation": "UCIC_CSB_FIVE_CASE_EXTERNAL_OFFICIAL_RECORD_SPECIFICITY_REPLICATION_v1",
+    "files": [
+      {
+        "path": "research/route-operator-platform-v1/registered-challenges/external-official-record-specificity-replication-v1/RESULT.v1.json",
+        "blob": "8a0aaca5d8edcccbf6e90d352a0612de56e69b19"
+      },
+      {
+        "path": "research/route-operator-platform-v1/registered-challenges/external-official-record-specificity-replication-v1/selection-and-scoring.v1.json",
+        "blob": "509ca8a97abf4a38a46f443d099e444cec118431"
+      },
+      {
+        "path": "research/route-operator-platform-v1/registered-challenges/external-official-record-specificity-replication-v1/route-maps.freeze.v1.json",
+        "blob": "2ee2e6f4c8bb0380b5d0ba4e931e106938cdcc90"
+      },
+      {
+        "path": "research/route-operator-platform-v1/registered-challenges/external-official-record-specificity-replication-v1/outcome-ledger.v1.json",
+        "blob": "6a5e964572721280352d519660a20249afe1c460"
+      },
+      {
+        "path": "research/route-operator-platform-v1/registered-challenges/external-official-record-specificity-replication-v1/decoy-maps.freeze.v1.json",
+        "blob": "62a609ae0db9dcd7fe54d1b1a14657c80c8ded0f"
+      }
+    ],
+    "exactHeadVerificationRuns": [31142314591, 31142314579],
+    "scientificExecution": "COMPLETE",
+    "repositoryAdmission": "OPEN_DRAFT_UNMERGED"
+  },
+  "hurricaneDeltaSources": {
+    "sourceType": "QC_CORRECTED_RAW_TC_RADAR_ACTIONS_ARTIFACT",
+    "sourcePr": 735,
+    "operation": "UCIC_HURRICANE_RAW_TC_RADAR_MECHANISTIC_EARLY_WARNING_v1",
+    "workflowHead": "2fe335c165a0de004980e429b60830d76e4ce6bc",
+    "workflowRun": 31195025635,
+    "workflowResult": "SUCCESS",
+    "artifactId": 9001275013,
+    "artifactName": "ucic-hurricane-raw-tc-radar-mechanistic-qc-corrected-rerun-v1",
+    "artifactZipSha256": "637f00dbcd701a90f5348b812f4dcb8a9d41a41effcc8ec548a4726aaa17ba9c",
+    "artifactFiles": {
+      "protocol": {
+        "path": "research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/raw-tc-radar-mechanistic-protocol.v1.json",
+        "sha256": "52199364e8880188230831080c333a3a83a52fcccd57e7086aa7fac45d45463d"
+      },
+      "result": {
+        "path": "research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/raw-tc-radar-mechanistic-qc-corrected-result.v1.json",
+        "sha256": "9bfe86b5036d8a44aed34fa24c949abf5362d421b59c6838e8a2256d78aab5fe"
+      },
+      "features": {
+        "path": "research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/raw-tc-radar-mechanistic-qc-corrected-features.v1.csv",
+        "sha256": "8fb7684683a8f8a4a846299e1f3e19e44524297c7a3dcd2d49508d740760a306"
+      },
+      "qcCorrectionNote": {
+        "path": "research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/RAW_TC_RADAR_SST_SENTINEL_QC_CORRECTION_v1.md",
+        "sha256": "6ebdf6e3290f0d0d4e37f71fb0c39faecbb0ebde8df153b3ad74c6543fbd0be6"
+      },
+      "executionLog": {
+        "path": "raw-tc-radar-mechanistic-qc-corrected-execution.log",
+        "sha256": "adb4c52770edabc7f2a794c2c47e4bc527bbae7d2dd48aa03947732f42691c95"
+      }
+    },
+    "qcCorrection": "SST_SHIPS_ABS_GE_900_TREATED_AS_MISSING_NO_IMPUTATION",
+    "terminalDisposition": "RAW_TC_RADAR_MECHANISTIC_NOT_SUPPORTED",
+    "priorMetadataExecution": {
+      "pr": 734,
+      "exactHead": "f6a7267e010a42cce94a7ea292af8e1974591ae2",
+      "workflowRun": 31160027240,
+      "artifactId": 8986676118,
+      "priorStanding": "SIGNAL_PRESENT_INCONCLUSIVE",
+      "currentAdmission": "QUARANTINED_SUPERSEDED_BY_QC_CORRECTED_RAW_RESULT",
+      "reason": "unhandled SST sentinel contaminated evaluation input"
+    }
+  },
+  "sourceMutationAuthorized": false,
+  "sciencePrMergeAuthorized": false,
+  "pr541MutationAuthorized": false
+}

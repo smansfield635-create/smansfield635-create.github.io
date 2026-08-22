@@ -1,0 +1,22 @@
+{
+  "schema": "IMI_CMAPSS_FD001_FROZEN_CONTRACT_ENCODING_DISCLOSURE_v1",
+  "contract_id": "IMI_CMAPSS_FD001_FACTORIAL_TEMPORAL_RUL_UNTOUCHED_VALIDATION_v1",
+  "defect_class": "HUMAN_READABLE_MARKDOWN_ENCODING_CORRUPTION",
+  "discovery_time": "POST_EXECUTION_PREMERGE_REVIEW",
+  "authoritative_frozen_file": "PREDICTION_CONTRACT_FROZEN_BEFORE_OUTCOME_ACCESS.md",
+  "authoritative_frozen_sha256": "c2c5dc8dc08cab8673afe13bb34593c7d5a8190a49e40ee53ab5b82f605fa96e",
+  "frozen_file_mutated_after_outcome": false,
+  "executable_prepare_code_mutated_after_outcome": false,
+  "executable_evaluation_code_mutated_after_outcome": false,
+  "prediction_file_mutated_after_outcome": false,
+  "model_or_result_impact": "NONE_DETECTED",
+  "evidence": {
+    "two_deterministic_workflow_runs": "PASS_EXACT_RESULT_AND_FREEZE_RECEIPT_SHA256",
+    "prediction_freeze_receipt": "PREDICTIONS_FROZEN_BEFORE_OUTCOME_ACCESS",
+    "outcome_file_present_during_freeze": false
+  },
+  "readable_rendering_file": "PREDICTION_CONTRACT_READABLE_RENDERING_NONAUTHORITATIVE.md",
+  "readable_rendering_authority": "NONAUTHORITATIVE_POSTEXECUTION_RENDERING",
+  "scientific_rule": "THE_READABLE_RENDERING_MAY_EXPLAIN_BUT_MAY_NOT_REPLACE_OR_ALTER_THE_FROZEN_BYTES_OR_EXECUTABLE_RULES",
+  "disposition": "DISCLOSED_WITH_CUSTODY_PRESERVED"
+}

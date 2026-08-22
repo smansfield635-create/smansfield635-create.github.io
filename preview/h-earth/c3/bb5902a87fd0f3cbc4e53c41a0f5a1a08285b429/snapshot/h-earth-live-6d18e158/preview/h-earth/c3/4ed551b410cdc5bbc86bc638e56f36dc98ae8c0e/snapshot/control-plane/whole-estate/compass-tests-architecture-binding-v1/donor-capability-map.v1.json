@@ -1,0 +1,111 @@
+{
+  "schema": "COMPASS_TESTS_DONOR_CAPABILITY_MAP_v1",
+  "version": "1.0.0",
+  "operation": "COMPASS_TESTS_ARCHITECTURE_BINDING_v1",
+  "status": "FROZEN_ADMISSION_BINDING_CANDIDATE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "discoveryBaseHead": "798d3b034ed9814574e5cbe189ef280eb857602e",
+  "governingLaw": "CURRENTNESS_NE_MECHANICAL_SUITABILITY_NE_ADMISSION",
+  "transferLaw": {
+    "stripDonorSemantics": "T_donor:(M_mechanical,S_donor)->(M_mechanical,EMPTY)",
+    "destinationMeaning": "M_mechanical+S_Tests->P_Tests"
+  },
+  "requiredCapabilities": ["C01","C02","C03","C04","C05","C06","C07","C08","C09"],
+  "records": [
+    {
+      "capabilityId":"C01","capabilityRequirement":"COMPASS_ENTRY","donorId":"MAIN_COMPASS_CONTROLLER","donorDomain":"MAIN_COMPASS",
+      "donorImplementationIdentity":{"repository":"smansfield635-create/smansfield635-create.github.io","exactCommit":"798d3b034ed9814574e5cbe189ef280eb857602e","exactPath":"assets/compass/compass.controller.js","exactBlob":"83ff2b714c9c36a9c096cf5ab2fd7b3875fe3e46","relevantSymbols":["preserveCompassState","requestRoomSelection"]},
+      "currentnessProof":{"mainHeadObserved":"798d3b034ed9814574e5cbe189ef280eb857602e","fourCompassBenchmarkRole":"MAIN_COMPASS_POSITIVE_REFERENCE","currentnessDoesNotAuthorizeTransfer":true},
+      "exactTransferUnit":["preserveCompassState snapshot mechanism","guarded selection-to-navigation transaction skeleton"],
+      "mechanicalBehavior":"Capture pre-entry navigation context and perform a guarded destination transition after Tests resolves the target.",
+      "mechanicalDependencies":["navigation state","Tests destination adapter"],
+      "admissionAuthority":["WHOLE_ESTATE_MATRIX:COMPASS:DIRECT_ENTRY_CONTEXT","WHOLE_ESTATE_MATRIX:INTERFACE_3D:SPATIAL_TRANSITION","TESTS_L0_L1_NAVIGATION_SHELL_AUTHORITY_v1"],
+      "requiredAdapter":"TESTS_COMPASS_ENTRY_ADAPTER_v1","mechanicsReuseBoundary":"Snapshot/transition mechanics only.",
+      "doNotInheritFromThisDonor":["DONOR_OBJECT_IDENTITIES","DONOR_LABELS_AND_TAXONOMY","DONOR_CONTAINMENT_SEMANTICS","DONOR_ADJACENCY_SEMANTICS","DONOR_SEQUENCE_SEMANTICS","DONOR_IMPORTANCE_SEMANTICS","DONOR_STANDING","DONOR_SCIENTIFIC_RELATIONS","DONOR_DOMAIN_METAPHOR","DONOR_SPECIFIC_NAVIGATION_MEANING","ROOM_ROUTE_REGISTRY","CARDINAL_ENTRY_MEANING"],
+      "destinationBinding":{"testsStateConsumed":["AUTHORIZED_TESTS_DESTINATION_IDENTITY"],"compassStateConsumed":["PRIOR_NAVIGATION_SNAPSHOT"],"navigationStateProduced":["TESTS_ENTRY_CONTEXT","RETURN_TARGET"],"scientificStateMutationPermitted":false},"disposition":"ADMIT_WITH_ADAPTER"
+    },
+    {
+      "capabilityId":"C02","capabilityRequirement":"RETURN_TO_PRIOR_CONTEXT","donorId":"MAIN_COMPASS_CONTROLLER","donorDomain":"MAIN_COMPASS",
+      "donorImplementationIdentity":{"repository":"smansfield635-create/smansfield635-create.github.io","exactCommit":"798d3b034ed9814574e5cbe189ef280eb857602e","exactPath":"assets/compass/compass.controller.js","exactBlob":"83ff2b714c9c36a9c096cf5ab2fd7b3875fe3e46","relevantSymbols":["preserveCompassState","applyPreservedState","requestReturnToConstellation","requestReturnToOrbit"]},
+      "currentnessProof":{"mainHeadObserved":"798d3b034ed9814574e5cbe189ef280eb857602e","fourCompassBenchmarkRole":"MAIN_COMPASS_POSITIVE_REFERENCE","currentnessDoesNotAuthorizeTransfer":true},
+      "exactTransferUnit":["preserveCompassState","applyPreservedState","return restoration skeleton"],
+      "mechanicalBehavior":"Restore prior navigation context without deriving semantic state from geometry.","mechanicalDependencies":["preserved navigation snapshot","Tests return adapter"],
+      "admissionAuthority":["WHOLE_ESTATE_MATRIX:COMPASS:RETURN_CONTEXT","WHOLE_ESTATE_MATRIX:INTERFACE_3D:NAVIGATION_STATE"],
+      "requiredAdapter":"TESTS_COMPASS_RETURN_ADAPTER_v1","mechanicsReuseBoundary":"State capture/restoration only.",
+      "doNotInheritFromThisDonor":["DONOR_OBJECT_IDENTITIES","DONOR_LABELS_AND_TAXONOMY","DONOR_CONTAINMENT_SEMANTICS","DONOR_ADJACENCY_SEMANTICS","DONOR_SEQUENCE_SEMANTICS","DONOR_IMPORTANCE_SEMANTICS","DONOR_STANDING","DONOR_SCIENTIFIC_RELATIONS","DONOR_DOMAIN_METAPHOR","DONOR_SPECIFIC_NAVIGATION_MEANING","CONSTELLATION_AS_TESTS_PARENT","ORBIT_AS_SCIENTIFIC_CONTAINER"],
+      "destinationBinding":{"testsStateConsumed":[],"compassStateConsumed":["PRIOR_NAVIGATION_SNAPSHOT","CURRENT_TESTS_NAVIGATION_STATE"],"navigationStateProduced":["RESTORED_PRIOR_CONTEXT"],"scientificStateMutationPermitted":false},"disposition":"ADMIT_WITH_ADAPTER"
+    },
+    {
+      "capabilityId":"C03","capabilityRequirement":"PERSISTENT_SPATIAL_FIELD","donorId":"MAIN_COMPASS_CONTROLLER","donorDomain":"MAIN_COMPASS",
+      "donorImplementationIdentity":{"repository":"smansfield635-create/smansfield635-create.github.io","exactCommit":"798d3b034ed9814574e5cbe189ef280eb857602e","exactPath":"assets/compass/compass.controller.js","exactBlob":"83ff2b714c9c36a9c096cf5ab2fd7b3875fe3e46","relevantSymbols":["state.clusters","cloneClusterSnapshot","setConstellationOrientation","setClusterOrientation"]},
+      "currentnessProof":{"mainHeadObserved":"798d3b034ed9814574e5cbe189ef280eb857602e","fourCompassBenchmarkRole":"MAIN_COMPASS_POSITIVE_REFERENCE","currentnessDoesNotAuthorizeTransfer":true},
+      "exactTransferUnit":["persistent orientation state representation","snapshot copy/restore mechanics"],
+      "mechanicalBehavior":"Keep spatial navigation state alive while focus changes among Tests-authorized objects.","mechanicalDependencies":["Tests object list","nonsemantic projection","navigation store"],
+      "admissionAuthority":["WHOLE_ESTATE_MATRIX:COMPASS:ESTATE_ORIENTATION","WHOLE_ESTATE_MATRIX:INTERFACE_3D:PRESENTATION_STATE"],
+      "requiredAdapter":"TESTS_FIELD_STATE_ADAPTER_v1","mechanicsReuseBoundary":"State container only; Tests supplies membership and meaning.",
+      "doNotInheritFromThisDonor":["DONOR_OBJECT_IDENTITIES","DONOR_LABELS_AND_TAXONOMY","DONOR_CONTAINMENT_SEMANTICS","DONOR_ADJACENCY_SEMANTICS","DONOR_SEQUENCE_SEMANTICS","DONOR_IMPORTANCE_SEMANTICS","DONOR_STANDING","DONOR_SCIENTIFIC_RELATIONS","DONOR_DOMAIN_METAPHOR","DONOR_SPECIFIC_NAVIGATION_MEANING","CARDINAL_CLUSTER_MEMBERSHIP","ROOM_CLUSTER_MEMBERSHIP"],
+      "destinationBinding":{"testsStateConsumed":["M1_AUTHORIZED_OBJECT_IDENTITIES"],"compassStateConsumed":["TESTS_FIELD_ORIENTATION"],"navigationStateProduced":["PERSISTENT_TESTS_FIELD_STATE"],"scientificStateMutationPermitted":false},"disposition":"ADMIT_WITH_ADAPTER"
+    },
+    {
+      "capabilityId":"C04","capabilityRequirement":"ACTIVE_OBJECT_DOMINANCE","donorId":"MAIN_COMPASS_CONTROLLER","donorDomain":"MAIN_COMPASS",
+      "donorImplementationIdentity":{"repository":"smansfield635-create/smansfield635-create.github.io","exactCommit":"798d3b034ed9814574e5cbe189ef280eb857602e","exactPath":"assets/compass/compass.controller.js","exactBlob":"83ff2b714c9c36a9c096cf5ab2fd7b3875fe3e46","relevantSymbols":["requestOrbitFocus","orbitFocus","orbitPreviewFocus"]},
+      "currentnessProof":{"mainHeadObserved":"798d3b034ed9814574e5cbe189ef280eb857602e","fourCompassBenchmarkRole":"MAIN_COMPASS_POSITIVE_REFERENCE","currentnessDoesNotAuthorizeTransfer":true},
+      "exactTransferUnit":["committed/preview focus-state transition"],"mechanicalBehavior":"Change the active navigation referent without changing scientific identity or standing.","mechanicalDependencies":["Tests target validator","focus adapter"],
+      "admissionAuthority":["WHOLE_ESTATE_MATRIX:COMPASS:ESTATE_ORIENTATION","TESTS_AUTHORITY:FOCUS"],"requiredAdapter":"TESTS_FOCUS_ADAPTER_v1","mechanicsReuseBoundary":"Focus state only.",
+      "doNotInheritFromThisDonor":["DONOR_OBJECT_IDENTITIES","DONOR_LABELS_AND_TAXONOMY","DONOR_CONTAINMENT_SEMANTICS","DONOR_ADJACENCY_SEMANTICS","DONOR_SEQUENCE_SEMANTICS","DONOR_IMPORTANCE_SEMANTICS","DONOR_STANDING","DONOR_SCIENTIFIC_RELATIONS","DONOR_DOMAIN_METAPHOR","DONOR_SPECIFIC_NAVIGATION_MEANING","FOCUS_EQUALS_IMPORTANCE","PRIMARY_POSITION_EQUALS_SCIENTIFIC_PRIORITY"],
+      "destinationBinding":{"testsStateConsumed":["AUTHORIZED_FOCUS_TARGET"],"compassStateConsumed":["CURRENT_FOCUS"],"navigationStateProduced":["NEXT_FOCUS"],"scientificStateMutationPermitted":false},"disposition":"ADMIT_WITH_ADAPTER"
+    },
+    {
+      "capabilityId":"C05","capabilityRequirement":"NEIGHBOR_RETENTION","donorId":"MAIN_COMPASS_CRYSTALS","donorDomain":"MAIN_COMPASS",
+      "donorImplementationIdentity":{"repository":"smansfield635-create/smansfield635-create.github.io","exactCommit":"798d3b034ed9814574e5cbe189ef280eb857602e","exactPath":"assets/compass/compass.crystals.js","exactBlob":"3d6427cbdb961576468d4aab05c0e4987549cea3","relevantSymbols":["persistent crystal registry","rotated-vector projection","primary/selected prominence rendering"]},
+      "currentnessProof":{"mainHeadObserved":"798d3b034ed9814574e5cbe189ef280eb857602e","fourCompassBenchmarkRole":"MAIN_COMPASS_POSITIVE_REFERENCE","currentnessDoesNotAuthorizeTransfer":true},
+      "exactTransferUnit":["registry-preserving projection loop","relative projection/prominence computation"],"mechanicalBehavior":"Keep nonactive objects present while active focus changes; distance/scale remain nonsemantic.","mechanicalDependencies":["Tests object registry","projection adapter","focus state"],
+      "admissionAuthority":["WHOLE_ESTATE_MATRIX:COMPASS:ESTATE_ORIENTATION","WHOLE_ESTATE_MATRIX:INTERFACE_3D:SPATIAL_TRANSITION"],"requiredAdapter":"TESTS_NEIGHBOR_PROJECTION_ADAPTER_v1","mechanicsReuseBoundary":"Retention/projection only.",
+      "doNotInheritFromThisDonor":["DONOR_OBJECT_IDENTITIES","DONOR_LABELS_AND_TAXONOMY","DONOR_CONTAINMENT_SEMANTICS","DONOR_ADJACENCY_SEMANTICS","DONOR_SEQUENCE_SEMANTICS","DONOR_IMPORTANCE_SEMANTICS","DONOR_STANDING","DONOR_SCIENTIFIC_RELATIONS","DONOR_DOMAIN_METAPHOR","DONOR_SPECIFIC_NAVIGATION_MEANING","CRYSTAL_IDENTITY","CELESTIAL_HIERARCHY","PROXIMITY_AS_RELATION","SCALE_AS_IMPORTANCE"],
+      "destinationBinding":{"testsStateConsumed":["M1_AUTHORIZED_OBJECT_IDENTITIES"],"compassStateConsumed":["CURRENT_FOCUS","FIELD_ORIENTATION"],"navigationStateProduced":["VISIBLE_ACTIVE_AND_NEIGHBOR_PROJECTION"],"scientificStateMutationPermitted":false},"disposition":"ADMIT_WITH_ADAPTER"
+    },
+    {
+      "capabilityId":"C06","capabilityRequirement":"DEPTH_TRANSFORMATION","donorId":"LAWS_COMPASS_CONTROLLER","donorDomain":"LAWS_COMPASS",
+      "donorImplementationIdentity":{"repository":"smansfield635-create/smansfield635-create.github.io","exactCommit":"798d3b034ed9814574e5cbe189ef280eb857602e","exactPath":"laws/index.controller.js","exactBlob":"e6eef54a8d808c12ea0e5db85539bc521f29f3b2","relevantSymbols":["STATES","PRESENTATION_MODE_BY_STATE","TRANSITIONS","requestCategorySelection","preserveCompassState","applyPreservedState"]},
+      "currentnessProof":{"mainHeadObserved":"798d3b034ed9814574e5cbe189ef280eb857602e","fourCompassBenchmarkRole":"LAWS_COMPASS_POSITIVE_REFERENCE","currentLawsHtmlBlob":"df2fc6b74da5791cedf07f0d01449ccf72243c36","currentnessDoesNotAuthorizeTransfer":true},
+      "exactTransferUnit":["bounded state-machine depth transition skeleton","state preservation across depth change"],"mechanicalBehavior":"Change navigation resolution while preserving origin context; Tests defines what the new depth means.","mechanicalDependencies":["Tests depth adapter","Compass snapshot"],
+      "admissionAuthority":["FOUR_COMPASS_BENCHMARK:LAWS_COMPASS","WHOLE_ESTATE_MATRIX:COMPASS:WAYFINDING","WHOLE_ESTATE_MATRIX:INTERFACE_3D:SPATIAL_TRANSITION"],"requiredAdapter":"TESTS_DEPTH_TRANSFORMATION_ADAPTER_v1","mechanicsReuseBoundary":"Transition/state preservation only.",
+      "doNotInheritFromThisDonor":["DONOR_OBJECT_IDENTITIES","DONOR_LABELS_AND_TAXONOMY","DONOR_CONTAINMENT_SEMANTICS","DONOR_ADJACENCY_SEMANTICS","DONOR_SEQUENCE_SEMANTICS","DONOR_IMPORTANCE_SEMANTICS","DONOR_STANDING","DONOR_SCIENTIFIC_RELATIONS","DONOR_DOMAIN_METAPHOR","DONOR_SPECIFIC_NAVIGATION_MEANING","LAWS_TEST_IDENTITY","LAWS_RESEARCH_IDENTITY","LAWS_METHODS_AND_MODELS_IDENTITY","LAWS_RESULTS_AND_RECORDS_IDENTITY","TEST_FRONT_POLE_MEANING","RESEARCH_REAR_POLE_MEANING","LAWS_ROUTE_CUSTODY"],
+      "destinationBinding":{"testsStateConsumed":["AUTHORIZED_TESTS_LAYER_IDENTITY"],"compassStateConsumed":["CURRENT_DEPTH","ORIGIN_CONTEXT"],"navigationStateProduced":["NEXT_TESTS_DEPTH","PRESERVED_ORIGIN_CONTEXT"],"scientificStateMutationPermitted":false},"disposition":"ADMIT_WITH_ADAPTER"
+    },
+    {
+      "capabilityId":"C07","capabilityRequirement":"DIRECT_MANIPULATION","donorId":"MAIN_COMPASS_CRYSTALS","donorDomain":"MAIN_COMPASS",
+      "donorImplementationIdentity":{"repository":"smansfield635-create/smansfield635-create.github.io","exactCommit":"798d3b034ed9814574e5cbe189ef280eb857602e","exactPath":"assets/compass/compass.crystals.js","exactBlob":"3d6427cbdb961576468d4aab05c0e4987549cea3","relevantSymbols":["pointer capture lifecycle","drag/flick classifier","orientation proposal/settlement mechanics"]},
+      "currentnessProof":{"mainHeadObserved":"798d3b034ed9814574e5cbe189ef280eb857602e","fourCompassBenchmarkRole":"MAIN_COMPASS_POSITIVE_REFERENCE","currentnessDoesNotAuthorizeTransfer":true},
+      "exactTransferUnit":["pointer capture/cancel/recovery state machine","drag threshold/orientation proposal mechanics"],"mechanicalBehavior":"Convert manipulation into navigation proposals; gesture has no semantic authority.","mechanicalDependencies":["Tests focus adapter","Compass controller","accessible equivalent route"],
+      "admissionAuthority":["WHOLE_ESTATE_MATRIX:INTERFACE_3D:NAVIGATION_STATE","TESTS_AUTHORITY:FOCUS_ROUTE_EQUIVALENCE"],"requiredAdapter":"TESTS_DIRECT_MANIPULATION_ADAPTER_v1","mechanicsReuseBoundary":"Low-level gesture lifecycle only.",
+      "doNotInheritFromThisDonor":["DONOR_OBJECT_IDENTITIES","DONOR_LABELS_AND_TAXONOMY","DONOR_CONTAINMENT_SEMANTICS","DONOR_ADJACENCY_SEMANTICS","DONOR_SEQUENCE_SEMANTICS","DONOR_IMPORTANCE_SEMANTICS","DONOR_STANDING","DONOR_SCIENTIFIC_RELATIONS","DONOR_DOMAIN_METAPHOR","DONOR_SPECIFIC_NAVIGATION_MEANING","FLICK_EQUALS_RETURN","DRAG_EQUALS_ORBIT","GRABBED_STAR_MEANING","POINTER_TERRITORY_SEMANTICS"],
+      "destinationBinding":{"testsStateConsumed":["AUTHORIZED_FOCUS_TARGET_SET"],"compassStateConsumed":["POINTER_NAVIGATION_TRANSACTION"],"navigationStateProduced":["FOCUS_PROPOSAL_OR_CANCEL"],"scientificStateMutationPermitted":false},"disposition":"ADMIT_WITH_ADAPTER"
+    },
+    {
+      "capabilityId":"C08","capabilityRequirement":"RESPONSIVE_SPATIAL_PROJECTION","donorId":"MAIN_COMPASS_UPSTREAM_RENDERER","donorDomain":"MAIN_COMPASS",
+      "donorImplementationIdentity":{"repository":"smansfield635-create/smansfield635-create.github.io","exactCommit":"798d3b034ed9814574e5cbe189ef280eb857602e","exactPath":"assets/compass/upstream-compass.renderer.js","exactBlob":"965376dd8a92686bc7008d1fea4846b5f8300872","relevantSymbols":["mount discovery","projected bounds calculation","responsive DPR/FOV projection","promotion-after-error-free-frame"]},
+      "currentnessProof":{"mainHeadObserved":"798d3b034ed9814574e5cbe189ef280eb857602e","fourCompassBenchmarkRole":"MAIN_COMPASS_POSITIVE_REFERENCE","pageAgnosticRenderer":true,"currentnessDoesNotAuthorizeTransfer":true},
+      "exactTransferUnit":["responsive projection calculation","DPR/FOV/mobile policy","error-gated renderer promotion"],"mechanicalBehavior":"Responsively project host-owned spatial state while Tests retains semantic activation.","mechanicalDependencies":["host projection inputs","viewport","renderer mount"],
+      "admissionAuthority":["WHOLE_ESTATE_MATRIX:INTERFACE_3D:PRESENTATION_STATE","WHOLE_ESTATE_MATRIX:INTERFACE_3D:SPATIAL_TRANSITION"],"requiredAdapter":"TESTS_RESPONSIVE_PROJECTION_ADAPTER_v1","mechanicsReuseBoundary":"Projection math/lifecycle only.",
+      "doNotInheritFromThisDonor":["DONOR_OBJECT_IDENTITIES","DONOR_LABELS_AND_TAXONOMY","DONOR_CONTAINMENT_SEMANTICS","DONOR_ADJACENCY_SEMANTICS","DONOR_SEQUENCE_SEMANTICS","DONOR_IMPORTANCE_SEMANTICS","DONOR_STANDING","DONOR_SCIENTIFIC_RELATIONS","DONOR_DOMAIN_METAPHOR","DONOR_SPECIFIC_NAVIGATION_MEANING","COMPASS_HOUSING_IDENTITY","DIAL_IDENTITY","NEEDLE_OR_NORTH_MEANING","FIXED_CENTER_AS_SEMANTIC_CENTER"],
+      "destinationBinding":{"testsStateConsumed":["NONSEMANTIC_OBJECT_PROJECTION_INPUTS"],"compassStateConsumed":["VIEWPORT_NAVIGATION_PROJECTION_STATE"],"navigationStateProduced":["RESPONSIVE_SPATIAL_PROJECTION"],"scientificStateMutationPermitted":false},"disposition":"ADMIT_WITH_ADAPTER"
+    },
+    {
+      "capabilityId":"C09","capabilityRequirement":"DEEP_CONTINUITY_STATE_PERSISTENCE","donorId":"MAIN_COMPASS_CONTROLLER","donorDomain":"MAIN_COMPASS",
+      "donorImplementationIdentity":{"repository":"smansfield635-create/smansfield635-create.github.io","exactCommit":"798d3b034ed9814574e5cbe189ef280eb857602e","exactPath":"assets/compass/compass.controller.js","exactBlob":"83ff2b714c9c36a9c096cf5ab2fd7b3875fe3e46","relevantSymbols":["cloneClusterSnapshot","preserveCompassState","applyClusterSnapshots","applyPreservedState"]},
+      "currentnessProof":{"mainHeadObserved":"798d3b034ed9814574e5cbe189ef280eb857602e","fourCompassBenchmarkRole":"MAIN_COMPASS_POSITIVE_REFERENCE","currentnessDoesNotAuthorizeTransfer":true},
+      "exactTransferUnit":["deep-copy navigation snapshot representation","orientation restoration mechanics"],"mechanicalBehavior":"Persist navigation context through depth change and restore it with destination identity validation.","mechanicalDependencies":["Tests snapshot adapter","object identity validator"],
+      "admissionAuthority":["WHOLE_ESTATE_MATRIX:COMPASS:RETURN_CONTEXT","WHOLE_ESTATE_MATRIX:INTERFACE_3D:NAVIGATION_STATE"],"requiredAdapter":"TESTS_CONTINUITY_STATE_ADAPTER_v1","mechanicsReuseBoundary":"Navigation-state persistence only.",
+      "doNotInheritFromThisDonor":["DONOR_OBJECT_IDENTITIES","DONOR_LABELS_AND_TAXONOMY","DONOR_CONTAINMENT_SEMANTICS","DONOR_ADJACENCY_SEMANTICS","DONOR_SEQUENCE_SEMANTICS","DONOR_IMPORTANCE_SEMANTICS","DONOR_STANDING","DONOR_SCIENTIFIC_RELATIONS","DONOR_DOMAIN_METAPHOR","DONOR_SPECIFIC_NAVIGATION_MEANING","DONOR_CLUSTER_IDENTITY","DONOR_ORBIT_HISTORY_MEANING","DONOR_SELECTED_ROOM_STATE_AS_TESTS_STATE"],
+      "destinationBinding":{"testsStateConsumed":["AUTHORIZED_OBJECT_ID_VALIDATOR"],"compassStateConsumed":["SERIALIZABLE_NAVIGATION_SNAPSHOT"],"navigationStateProduced":["RESTORABLE_TESTS_NAVIGATION_CONTEXT"],"scientificStateMutationPermitted":false},"disposition":"ADMIT_WITH_ADAPTER"
+    }
+  ],
+  "withheldAlternatives": [
+    {"donorId":"UNIVERSAL_COMPASS_PROTOTYPE","disposition":"WITHHOLD","role":"HISTORICAL_REFERENCE_ONLY","reason":"Prototype explicitly withholds navigation/product/production authority.","exactPath":"prototypes/universal-compass/index.controller.js","exactBlob":"103ab8c2e0fc0920e72524f3a2075fcc3b8d9b91"},
+    {"donorId":"SHOWROOM_COMPASS","disposition":"WITHHOLD","role":"POSITIVE_REFERENCE_NOT_REQUIRED_V1","reason":"No unique required capability remains."},
+    {"donorId":"ARCHCOIN_COMPASS","disposition":"WITHHOLD","role":"POSITIVE_REFERENCE_NOT_REQUIRED_V1","reason":"No unique required capability remains."},
+    {"donorId":"H_EARTH_WORLD_NAVIGATION","disposition":"WITHHOLD","role":"MECHANICALLY_STRONG_HIGH_SEMANTIC_STRIPPING_COST","reason":"Unnecessary for L-1/L0/L1 FOCUS and carries world/geographic semantics."}
+  ],
+  "admissionGate":{"expression":"FOR_ALL_REQUIRED_C_DISPOSITION_IN_ADMIT_DIRECT_OR_ADMIT_WITH_ADAPTER","passes":true,"constructionAuthorizedByPass":false}
+}

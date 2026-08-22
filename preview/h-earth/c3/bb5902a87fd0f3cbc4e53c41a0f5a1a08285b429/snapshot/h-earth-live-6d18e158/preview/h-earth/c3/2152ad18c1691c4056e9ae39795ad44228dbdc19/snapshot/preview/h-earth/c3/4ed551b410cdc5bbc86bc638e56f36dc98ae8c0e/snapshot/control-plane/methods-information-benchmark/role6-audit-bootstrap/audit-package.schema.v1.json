@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "METHODS_ROLE_6_AUDIT_PACKAGE_SCHEMA_v1",
+  "title": "Canonical Methods Role 6 audit package",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "operationId",
+    "assignmentHead",
+    "assignmentId",
+    "packetHead",
+    "packetCanonicalSha256",
+    "executionHolder",
+    "substantiveOutputs",
+    "returnPacket"
+  ],
+  "properties": {
+    "schema": {
+      "const": "METHODS_ROLE_6_AUDIT_PACKAGE_v1"
+    },
+    "operationId": {
+      "const": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1"
+    },
+    "assignmentHead": {
+      "const": "ce40519190a9048c1e0cef682108c34b0a7f8055"
+    },
+    "assignmentId": {
+      "const": "8c4d0f0fb1b3068764e476c4"
+    },
+    "packetHead": {
+      "const": "fa7e74403ff43e017bccef7462f4e001918cf0a3"
+    },
+    "packetCanonicalSha256": {
+      "const": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc"
+    },
+    "executionHolder": {
+      "const": "MIB_ROLE6_FIRST_ASSIGNMENT_HOLDER_20260804_1802_6BB3D2454E65D0254CD93ED7"
+    },
+    "substantiveOutputs": {
+      "type": "array",
+      "minItems": 27,
+      "maxItems": 27,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "path",
+          "payload"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "payload": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "returnPacket": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "path",
+        "payload"
+      ],
+      "properties": {
+        "id": {
+          "const": "ROLE_6_OPERATION_RETURN_PACKET_v1"
+        },
+        "path": {
+          "const": "control-plane/methods-information-benchmark/role6-audit/receipts/role6-operation-return.packet.v1.json"
+        },
+        "payload": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

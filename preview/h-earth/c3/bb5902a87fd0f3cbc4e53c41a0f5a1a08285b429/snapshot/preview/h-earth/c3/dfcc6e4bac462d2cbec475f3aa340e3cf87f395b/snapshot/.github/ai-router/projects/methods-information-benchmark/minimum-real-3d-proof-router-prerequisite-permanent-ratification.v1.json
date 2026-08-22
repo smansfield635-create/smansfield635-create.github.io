@@ -1,0 +1,50 @@
+{
+  "schema": "METHODS_MINIMUM_REAL_3D_PROOF_ROUTER_PREREQUISITE_PERMANENT_RATIFICATION_RECEIPT_v1",
+  "status": "RATIFICATION_CANDIDATE_VERIFIED_PASS_CLOSED",
+  "governingMainHead": "b9937e4f732751b4f1108ecbc08dcef0df92b692",
+  "sourceIssue": 641,
+  "sourcePr": 642,
+  "sourceCandidateHead": "181d2fa77354512249f3281e5bf6c84227acf642",
+  "sourceMergeCommit": "b9937e4f732751b4f1108ecbc08dcef0df92b692",
+  "architectureFingerprint": "59da453bc620ff7992d71d6db4f075d28db9f35530c570961a6a0a14a2ef7252",
+  "registeredExactPathCount": 17,
+  "prefixWideOwnership": false,
+  "rejectedVisualSubject": "2044e7ab5d27af7bcfbd477a6c3ee046549744ed",
+  "rejectedVisualFoundationExcluded": true,
+  "predecessorLock": {
+    "operationId": "METHODS_CONTEXT_DISPLACEMENT_MINIMUM_REAL_3D_PROOF_ROUTER_OWNERSHIP_PREREQUISITE_v1",
+    "lockScope": "METHODS_INFORMATION_BENCHMARK:CONTEXT_DISPLACEMENT:MINIMUM_REAL_3D_PROOF:ROUTER_OWNERSHIP:V1",
+    "scopeHash": "0585d3986d5af6b435b94cfcb57397d63f9698f438ae8dd581f260b32fe92710",
+    "lockGeneration": 307,
+    "terminalDisposition": "PASS_CLOSED",
+    "lockReleased": true,
+    "closureCommitSha": "87bf38cb1140a560b931ba0f629a879bb9d4cec3"
+  },
+  "ratificationOperation": {
+    "operationId": "METHODS_CONTEXT_DISPLACEMENT_MINIMUM_REAL_3D_PROOF_ROUTER_PREREQUISITE_POST_MERGE_VALIDATION_LOCK_CLOSURE_AND_PERMANENT_RATIFICATION_v1",
+    "lockScope": "METHODS_INFORMATION_BENCHMARK:CONTEXT_DISPLACEMENT:MINIMUM_REAL_3D_PROOF:ROUTER_OWNERSHIP:POST_MERGE_RATIFICATION:V1",
+    "scopeHash": "865ce45338ade463ee79382a757459005364be15cd2e135d7343798bfa12beb8",
+    "lockGeneration": 312,
+    "terminalClosureRequiredAfterCandidateCommit": true
+  },
+  "builderFingerprint": "3f152a34ae843a035f6d2078dc688bcff444aff65a614331004be03b08fc141d",
+  "freshVerifierFingerprint": "3f152a34ae843a035f6d2078dc688bcff444aff65a614331004be03b08fc141d",
+  "exactNormalizedEquality": true,
+  "validationWorkflowRun": 31065772171,
+  "finalCandidateScope": {
+    "changedPathCount": 1,
+    "changedPath": ".github/ai-router/projects/methods-information-benchmark/minimum-real-3d-proof-router-prerequisite-permanent-ratification.v1.json",
+    "workflowRestoredToBlob": "5f5b6317d520ef072c4347b62a179870491d5448"
+  },
+  "authorityBoundaries": {
+    "targetMinimumReal3DProofExecuted": false,
+    "methodsPageMutation": false,
+    "compassMutation": false,
+    "hEarthMutation": false,
+    "publicOrVisualMutation": false,
+    "deploymentOrRelease": false,
+    "mergeAuthorized": false,
+    "namedAwardReadinessClaim": false
+  },
+  "permanentEffectCondition": "EFFECTIVE_ONLY_AFTER_THIS_CANDIDATE_IS_MERGED_AND_MAIN_VALIDATION_PASSES"
+}

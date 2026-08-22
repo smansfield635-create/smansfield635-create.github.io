@@ -1,0 +1,68 @@
+name: IMI C-MAPSS FD001 Untouched Validation v1
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - imi-cmapss-fd001-untouched-validation-v1
+    paths:
+      - "research/route-operator-platform-v1/extensions/imi-falsification-route-extension-v1/validations/cmapss-fd001-untouched-validation-v1/**"
+      - ".github/workflows/imi-cmapss-fd001-untouched-validation-v1.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install scientific dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy pandas scipy scikit-learn joblib
+
+      - name: Download development and untouched feature sets only
+        working-directory: research/route-operator-platform-v1/extensions/imi-falsification-route-extension-v1/validations/cmapss-fd001-untouched-validation-v1
+        run: |
+          mkdir -p data output
+          curl --fail --location --silent --show-error             https://raw.githubusercontent.com/hankroark/Turbofan-Engine-Degradation/master/CMAPSSData/train_FD001.txt             -o data/train_FD001.txt
+          curl --fail --location --silent --show-error             https://raw.githubusercontent.com/hankroark/Turbofan-Engine-Degradation/master/CMAPSSData/test_FD001.txt             -o data/test_FD001.txt
+          test ! -e data/RUL_FD001.txt
+
+      - name: Freeze factor dictionary models and untouched predictions
+        working-directory: research/route-operator-platform-v1/extensions/imi-falsification-route-extension-v1/validations/cmapss-fd001-untouched-validation-v1
+        run: |
+          python prepare_and_freeze_v1.py
+          test -f output/PREDICTION_FREEZE_RECEIPT.json
+          test -f output/TEST_PREDICTIONS_FROZEN_BEFORE_OUTCOME_ACCESS.csv
+
+      - name: Download withheld test outcomes only after prediction freeze
+        working-directory: research/route-operator-platform-v1/extensions/imi-falsification-route-extension-v1/validations/cmapss-fd001-untouched-validation-v1
+        run: |
+          curl --fail --location --silent --show-error             https://raw.githubusercontent.com/hankroark/Turbofan-Engine-Degradation/master/CMAPSSData/RUL_FD001.txt             -o data/RUL_FD001.txt
+          test -f data/RUL_FD001.txt
+
+      - name: Execute frozen adjudication
+        working-directory: research/route-operator-platform-v1/extensions/imi-falsification-route-extension-v1/validations/cmapss-fd001-untouched-validation-v1
+        run: |
+          python evaluate_after_outcome_access_v1.py
+
+      - name: Display result
+        working-directory: research/route-operator-platform-v1/extensions/imi-falsification-route-extension-v1/validations/cmapss-fd001-untouched-validation-v1
+        run: |
+          cat output/VALIDATION_RESULT.json
+          cat output/VALIDATION_EXECUTION_RECEIPT.json
+
+      - name: Upload complete validation package
+        uses: actions/upload-artifact@v4
+        with:
+          name: imi-cmapss-fd001-untouched-validation-v1
+          path: research/route-operator-platform-v1/extensions/imi-falsification-route-extension-v1/validations/cmapss-fd001-untouched-validation-v1/output/
+          if-no-files-found: error

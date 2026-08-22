@@ -1,0 +1,96 @@
+name: H-Earth Player-Scale Depth Convergence
+
+on:
+  pull_request:
+    paths:
+      - 'h-earth-3d/environment/h-earth.successor-surface-material.run8c.js'
+      - 'h-earth-3d/environment/h-earth.atmosphere-state.js'
+      - 'showroom/globe/h-earth/render/environment-atmosphere.js'
+      - 'showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js'
+      - 'h-earth-3d/validation/h-earth.player-scale-depth-convergence.harness.mjs'
+      - '.github/workflows/h-earth-player-scale-depth-convergence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qualify-player-scale-depth:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact candidate head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Enforce admitted six-path ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='108dd921f54ff14d99c515f945e67c799cef1065'
+          git cat-file -e "$BASE^{commit}"
+          mapfile -t changed < <(git diff --name-only "$BASE"...HEAD | sort)
+          printf '%s\n' "${changed[@]}" > /tmp/changed.txt
+          cat > /tmp/allowed.txt <<'EOF'
+          .github/workflows/h-earth-player-scale-depth-convergence.yml
+          h-earth-3d/environment/h-earth.atmosphere-state.js
+          h-earth-3d/environment/h-earth.successor-surface-material.run8c.js
+          h-earth-3d/validation/h-earth.player-scale-depth-convergence.harness.mjs
+          showroom/globe/h-earth/render/environment-atmosphere.js
+          showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js
+          EOF
+          sort -o /tmp/allowed.txt /tmp/allowed.txt
+          unexpected="$(comm -23 /tmp/changed.txt /tmp/allowed.txt)"
+          if [ -n "$unexpected" ]; then
+            echo "UNADMITTED_PATHS:" >&2
+            printf '%s\n' "$unexpected" >&2
+            exit 1
+          fi
+          count="$(wc -l < /tmp/changed.txt | tr -d ' ')"
+          test "$count" -ge 1
+          test "$count" -le 6
+
+      - name: Verify protected Gen329 and player bytes unchanged
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='108dd921f54ff14d99c515f945e67c799cef1065'
+          protected=(
+            'showroom/globe/h-earth/render/geometry-shoreline.js'
+            'showroom/globe/h-earth/render/geometry-distant-context.js'
+            'showroom/globe/h-earth/render/planetary-world-frame.js'
+            'showroom/globe/h-earth/render/landscape-preview.js'
+            'showroom/globe/h-earth/functional-landscape/navigation.js'
+            'h-earth-3d/terrain/h-earth.terrain-field.js'
+            'h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js'
+            'showroom/globe/h-earth/render/live-render-package.run8e-r2.js'
+            'showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js'
+          )
+          for path in "${protected[@]}"; do
+            base_blob="$(git rev-parse "$BASE:$path")"
+            head_blob="$(git rev-parse "HEAD:$path")"
+            test "$base_blob" = "$head_blob" || { echo "PROTECTED_BYTE_DRIFT:$path" >&2; exit 1; }
+          done
+          if ! git diff --quiet "$BASE"...HEAD -- h-earth-3d/experience-anchor; then
+            echo 'EXPERIENCE_ANCHOR_DRIFT' >&2
+            exit 1
+          fi
+
+      - name: Run exact player-scale depth harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p h-earth-3d/validation/evidence/player-scale-depth-convergence
+          node h-earth-3d/validation/h-earth.player-scale-depth-convergence.harness.mjs \
+            | tee h-earth-3d/validation/evidence/player-scale-depth-convergence/receipt.json
+          node -e "const fs=require('fs');const r=JSON.parse(fs.readFileSync('h-earth-3d/validation/evidence/player-scale-depth-convergence/receipt.json','utf8'));if(r.status!=='PASS_CLOSED'||r.passCount!==r.checkCount)process.exit(1)"
+
+      - name: Upload machine receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-player-scale-depth-convergence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: h-earth-3d/validation/evidence/player-scale-depth-convergence/receipt.json
+          if-no-files-found: warn
+          retention-days: 90

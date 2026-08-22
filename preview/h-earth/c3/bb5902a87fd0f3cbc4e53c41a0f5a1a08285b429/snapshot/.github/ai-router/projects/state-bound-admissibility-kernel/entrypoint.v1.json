@@ -1,0 +1,65 @@
+{
+  "schema": "REPOSITORY_AI_PROJECT_ENTRYPOINT_v1",
+  "projectId": "STATE_BOUND_ADMISSIBILITY_KERNEL",
+  "status": "ACTIVE_REGISTERED_PROJECT",
+  "ownedPathPrefixes": [
+    "infrastructure/state-bound-admissibility-kernel-v1/"
+  ],
+  "ownedExactPaths": [
+    ".github/workflows/state-bound-admissibility-kernel-v1.yml"
+  ],
+  "entrypoint": ".github/ai-router/projects/state-bound-admissibility-kernel/entrypoint.v1.json",
+  "authorityBoundary": [
+    "ROUTING_DOES_NOT_CREATE_PRODUCT_SECURITY_MARKET_OR_STANDARDS_CONFORMANCE_CLAIMS",
+    "ROUTING_DOES_NOT_AUTHORIZE_MUTATION_WITHOUT_CANONICAL_REPOSITORY_OPERATION_INTAKE",
+    "ROUTING_REGISTRATION_CREATES_NO_SPIFFE_CEDAR_SLSA_IN_TOTO_SIGSTORE_OR_OPENTELEMETRY_CONFORMANCE_CLAIM",
+    "TEMPORAL_ADMISSIBILITY_STATE_BINDING_AND_DRIFT_PROTECTION_CLAIMS_REQUIRE_SEPARATELY_ADMITTED_KERNEL_CONSTRUCTION_AND_EXECUTABLE_CONFORMANCE",
+    "ROUTING_REGISTRATION_CREATES_NO_MERGE_DEPLOYMENT_OR_PRODUCTION_AUTHORITY"
+  ],
+  "requiredInstructions": [
+    "AGENTS.md",
+    "AI_ENTRYPOINT.json"
+  ],
+  "registries": [
+    ".github/ai-router/router.v1.json",
+    ".github/ai-router/shared-procedures.v1.json",
+    ".github/ai-router/execution-backends.v1.json"
+  ],
+  "procedures": {
+    "operationAdmission": "CANONICAL_REPOSITORY_OPERATION_INTAKE_REQUIRED_BEFORE_MUTATION",
+    "routerCommand": "node tools/repository-ai-entry-router.mjs --path <PATH> --task <TASK> [--mutation-intent] --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/state-bound-admissibility-kernel-router-receipt.json",
+    "conformanceWorkflow": ".github/workflows/state-bound-admissibility-kernel-v1.yml",
+    "implementationOrder": [
+      "CANONICAL_INTAKE_ADMITTED_AND_LOCKED",
+      "REPOSITORY_AI_ROUTER_PASS",
+      "FORMAL_STATE_BOUND_ADMISSIBILITY_LIFECYCLE_SPECIFICATION",
+      "STANDARDS_ADAPTER_CONSTRUCTION",
+      "STATE_BOUND_REPLAY_RESISTANT_ADMISSION_CAPABILITY",
+      "SIGNED_ATTESTATION_AND_TERMINAL_RECEIPT_CONFORMANCE",
+      "EXTERNAL_FAIL_CLOSED_ENFORCEMENT_BOUNDARY",
+      "ADVERSARIAL_CONFORMANCE_AND_COMPETITIVE_BENCHMARK",
+      "DRAFT_PR_REVIEW"
+    ]
+  },
+  "localExecution": {
+    "allowed": true,
+    "requirements": [
+      "FULL_REPOSITORY_CHECKOUT",
+      "EXACT_SUBJECT_HEAD",
+      "COMMAND_EMITTED_ADMISSION_RECEIPT",
+      "ROUTER_RECEIPT_FOR_EVERY_AFFECTED_PATH"
+    ]
+  },
+  "githubActionsExecution": {
+    "routerValidationWorkflow": ".github/workflows/repository-ai-entry-router-validation.yml",
+    "kernelConformanceWorkflow": ".github/workflows/state-bound-admissibility-kernel-v1.yml"
+  },
+  "stoppingRules": [
+    "STOP_IF_CANONICAL_INTAKE_IS_NOT_ADMITTED_AND_LOCKED",
+    "STOP_IF_ROUTER_DISPOSITION_IS_BLOCK_OR_STOP",
+    "STOP_IF_PRODUCT_IMPLEMENTATION_IS_ATTEMPTED_UNDER_ROUTER_REGISTRATION_AUTHORITY",
+    "STOP_IF_STANDARDS_CONFORMANCE_IS_CLAIMED_WITHOUT_EXECUTABLE_EVIDENCE",
+    "STOP_IF_TEMPORAL_ADMISSIBILITY_OR_DRIFT_PROTECTION_IS_CLAIMED_BEYOND_TESTED_INVARIANTS",
+    "STOP_IF_MERGE_DEPLOYMENT_OR_PRODUCTION_AUTHORITY_IS_ASSUMED"
+  ]
+}

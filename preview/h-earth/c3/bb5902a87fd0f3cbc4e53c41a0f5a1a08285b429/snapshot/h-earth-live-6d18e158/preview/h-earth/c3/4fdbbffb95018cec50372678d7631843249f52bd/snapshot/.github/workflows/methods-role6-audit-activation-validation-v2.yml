@@ -1,0 +1,238 @@
+name: Methods Role 6 Audit Descriptor Activation v2
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/methods-role6-audit-bootstrap-validation.yml'
+      - '.github/workflows/methods-role6-audit-execution.yml'
+      - '.github/workflows/methods-role6-audit-activation-validation-v2.yml'
+      - 'control-plane/methods-information-benchmark/role6-audit-bootstrap/**'
+      - 'tools/methods-role6-audit/**'
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: methods-role6-audit-descriptor-activation-v2
+  cancel-in-progress: false
+
+env:
+  BASE_HEAD: 5d6295c6c4a9b94db168e0822e02e36fbee29414
+  SOURCE_HEAD: e62bbcd23aa8351f76ab6c5f501800d4d8f03565
+  OPERATION_ID: METHODS_ROLE_6_AUDIT_EXECUTION_DESCRIPTOR_ACTIVATION_SUCCESSOR_v2
+  LOCK_SCOPE: METHODS_INFORMATION_BENCHMARK/ROLE6_AUDIT/EXECUTION_DESCRIPTOR_ACTIVATION_SUCCESSOR/V2
+  LOCK_GENERATION: '45'
+
+jobs:
+  builder:
+    if: github.event.pull_request.head.ref == 'activation/methods-role6-audit-execution-descriptor-v2-001'
+    runs-on: ubuntu-24.04
+    outputs:
+      candidate_head: ${{ steps.identity.outputs.candidate_head }}
+      activation_fingerprint: ${{ steps.certify.outputs.activation_fingerprint }}
+      holder: ${{ steps.certify.outputs.holder }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - id: identity
+        shell: bash
+        run: |
+          test "$(git rev-parse "${{ github.event.pull_request.base.sha }}")" = "$BASE_HEAD"
+          echo "candidate_head=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - id: certify
+        name: Builder activation certification
+        shell: bash
+        env:
+          HOLDER: GITHUB_ACTIONS_METHODS_ROLE6_AUDIT_ACTIVATION_V2_BUILDER_${{ github.run_id }}_${{ github.run_attempt }}
+          CANDIDATE_HEAD: ${{ steps.identity.outputs.candidate_head }}
+        run: |
+          node tools/methods-role6-audit/activation-self-test.v2.mjs \
+            --base-head "$BASE_HEAD" \
+            --source-head "$SOURCE_HEAD" \
+            --candidate-head "$CANDIDATE_HEAD" \
+            --holder "$HOLDER" \
+            --output "$RUNNER_TEMP/builder-receipt.json"
+          node - <<'NODE'
+          const fs=require('fs');
+          const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/builder-receipt.json','utf8'));
+          if(r.result!=='PASS_CLOSED_ACTIVATION_CANDIDATE_CERTIFIED') process.exit(1);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,`activation_fingerprint=${r.activationPackageFingerprint}\n`);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,`holder=${r.executionHolder}\n`);
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: methods-role6-audit-activation-v2-builder
+          path: ${{ runner.temp }}/builder-receipt.json
+          if-no-files-found: error
+          retention-days: 90
+
+  fresh-verifier:
+    needs: builder
+    runs-on: ubuntu-24.04
+    outputs:
+      activation_fingerprint: ${{ steps.certify.outputs.activation_fingerprint }}
+      holder: ${{ steps.certify.outputs.holder }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.builder.outputs.candidate_head }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: methods-role6-audit-activation-v2-builder
+          path: ${{ runner.temp }}/builder
+      - id: certify
+        name: Fresh independent activation reproduction
+        shell: bash
+        env:
+          HOLDER: GITHUB_ACTIONS_METHODS_ROLE6_AUDIT_ACTIVATION_V2_VERIFIER_${{ github.run_id }}_${{ github.run_attempt }}
+          CANDIDATE_HEAD: ${{ needs.builder.outputs.candidate_head }}
+        run: |
+          node tools/methods-role6-audit/activation-self-test.v2.mjs \
+            --base-head "$BASE_HEAD" \
+            --source-head "$SOURCE_HEAD" \
+            --candidate-head "$CANDIDATE_HEAD" \
+            --holder "$HOLDER" \
+            --output "$RUNNER_TEMP/verifier-receipt.json"
+          node - <<'NODE'
+          const fs=require('fs');
+          const b=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/builder/builder-receipt.json','utf8'));
+          const v=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/verifier-receipt.json','utf8'));
+          if(v.result!=='PASS_CLOSED_ACTIVATION_CANDIDATE_CERTIFIED') process.exit(1);
+          if(b.executionHolder===v.executionHolder) process.exit(1);
+          if(b.activationPackageFingerprint!==v.activationPackageFingerprint) process.exit(1);
+          if(JSON.stringify(b.source18PathBlobMap)!==JSON.stringify(v.source18PathBlobMap)) process.exit(1);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,`activation_fingerprint=${v.activationPackageFingerprint}\n`);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,`holder=${v.executionHolder}\n`);
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: methods-role6-audit-activation-v2-verifier
+          path: ${{ runner.temp }}/verifier-receipt.json
+          if-no-files-found: error
+          retention-days: 90
+
+  activate-and-close:
+    needs: [builder, fresh-verifier]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.builder.outputs.candidate_head }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: methods-role6-audit-activation-v2-builder
+          path: ${{ runner.temp }}/builder
+      - uses: actions/download-artifact@v4
+        with:
+          name: methods-role6-audit-activation-v2-verifier
+          path: ${{ runner.temp }}/verifier
+      - name: Verify exact certification and unchanged main
+        shell: bash
+        env:
+          BUILDER_FP: ${{ needs.builder.outputs.activation_fingerprint }}
+          VERIFIER_FP: ${{ needs.fresh-verifier.outputs.activation_fingerprint }}
+          BUILDER_HOLDER: ${{ needs.builder.outputs.holder }}
+          VERIFIER_HOLDER: ${{ needs.fresh-verifier.outputs.holder }}
+        run: |
+          test "$BUILDER_FP" = "$VERIFIER_FP"
+          test "$BUILDER_HOLDER" != "$VERIFIER_HOLDER"
+          test "$(git rev-parse HEAD)" = "${{ needs.builder.outputs.candidate_head }}"
+          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$BASE_HEAD"
+          node - <<'NODE'
+          const fs=require('fs');
+          const b=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/builder/builder-receipt.json','utf8'));
+          const v=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/verifier/verifier-receipt.json','utf8'));
+          for(const r of [b,v]){
+            if(r.changedPathCount!==23||r.unchangedCertifiedSourcePathCount!==18) process.exit(1);
+            if(r.negativeFixturesPassed!==15||r.substantiveAuditOutputCountCreated!==0||r.returnArtifactCountCreated!==0) process.exit(1);
+            if(r.publicMethodsMutation||r.publicLawsMutation||r.productMutation||r.mergePerformed||r.deploymentPerformed||r.releasePerformed) process.exit(1);
+          }
+          NODE
+      - name: Fast-forward current main to exact activation head
+        shell: bash
+        run: |
+          git push origin "HEAD:main"
+          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "${{ needs.builder.outputs.candidate_head }}"
+      - name: Command-close root activation lock
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+            --action close \
+            --repository smansfield635-create/smansfield635-create.github.io \
+            --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+            --operation-id "$OPERATION_ID" \
+            --lock-scope "$LOCK_SCOPE" \
+            --lock-generation "$LOCK_GENERATION" \
+            --terminal-disposition PASS_CLOSED_ACTIVATED \
+            --output "$RUNNER_TEMP/root-lock-closure-receipt.json"
+          node - <<'NODE'
+          const fs=require('fs');
+          const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/root-lock-closure-receipt.json','utf8'));
+          if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||r.lockReleased!==true||r.lockGeneration!==45) process.exit(1);
+          NODE
+      - name: Build final activation record
+        shell: bash
+        env:
+          CANDIDATE_HEAD: ${{ needs.builder.outputs.candidate_head }}
+          ACTIVATION_FP: ${{ needs.builder.outputs.activation_fingerprint }}
+          BUILDER_HOLDER: ${{ needs.builder.outputs.holder }}
+          VERIFIER_HOLDER: ${{ needs.fresh-verifier.outputs.holder }}
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),crypto=require('crypto');
+          const b=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/builder/builder-receipt.json','utf8'));
+          const v=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/verifier/verifier-receipt.json','utf8'));
+          const c=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/root-lock-closure-receipt.json','utf8'));
+          const out={
+            schema:'METHODS_ROLE_6_AUDIT_EXECUTION_DESCRIPTOR_FINAL_ACTIVATION_RECEIPT_v2',
+            operationId:process.env.OPERATION_ID,
+            descriptorId:'METHODS_ROLE6_AUDIT_EXECUTION_DESCRIPTOR_V1',
+            currentMainBaseHead:process.env.BASE_HEAD,
+            certifiedSourceHead:process.env.SOURCE_HEAD,
+            exactActivationHead:process.env.CANDIDATE_HEAD,
+            activationPackageFingerprint:process.env.ACTIVATION_FP,
+            builderHolder:process.env.BUILDER_HOLDER,
+            verifierHolder:process.env.VERIFIER_HOLDER,
+            distinctExecutionHolders:process.env.BUILDER_HOLDER!==process.env.VERIFIER_HOLDER,
+            builderReceiptSha256:crypto.createHash('sha256').update(fs.readFileSync(process.env.RUNNER_TEMP+'/builder/builder-receipt.json')).digest('hex'),
+            verifierReceiptSha256:crypto.createHash('sha256').update(fs.readFileSync(process.env.RUNNER_TEMP+'/verifier/verifier-receipt.json')).digest('hex'),
+            rootLockClosure:c,
+            descriptorActiveOnMain:true,
+            rootAuditAdmissionPerformed:false,
+            substantiveAuditProgress:'0_OF_27',
+            returnProgress:'0_OF_2',
+            role6TerminationPerformed:false,
+            mergePerformed:false,
+            deploymentPerformed:false,
+            releasePerformed:false,
+            result:'PASS_CLOSED_DESCRIPTOR_ACTIVATED_ROOT_AUDIT_INTAKE_PENDING'
+          };
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/activation-final-receipt.json',JSON.stringify(out,null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: methods-role6-audit-activation-v2-final
+          path: |
+            ${{ runner.temp }}/activation-final-receipt.json
+            ${{ runner.temp }}/root-lock-closure-receipt.json
+          if-no-files-found: error
+          retention-days: 90

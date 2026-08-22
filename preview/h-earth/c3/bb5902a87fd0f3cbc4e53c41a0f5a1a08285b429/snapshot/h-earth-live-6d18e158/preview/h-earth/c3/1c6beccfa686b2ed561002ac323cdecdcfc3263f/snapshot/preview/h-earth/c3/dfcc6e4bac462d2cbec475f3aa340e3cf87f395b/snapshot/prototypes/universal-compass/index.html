@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ARCHCOIN Calibration Lab · Round 4 · Stages 4A/4B</title>
+</head>
+<body>
+  <p>Preparing isolated ARCHCOIN calibration lab · Round 4 · Stages 4A/4B…</p>
+  <script>
+    (async () => {
+      "use strict";
+      const BUILD = "ARCHCOIN_CALIBRATION_ROUND4_STAGE4AB_v3";
+      const target = `./archcoin.lab.html?build=${encodeURIComponent(BUILD)}`;
+      if (!("serviceWorker" in navigator)) {
+        document.body.textContent = "Service worker support is required for the isolated calibration lab.";
+        return;
+      }
+      try {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(
+          registrations
+            .filter(registration => registration.scope.includes("/prototypes/universal-compass/"))
+            .map(registration => registration.unregister())
+        );
+        await navigator.serviceWorker.register(
+          `./archcoin.lab.sw.js?build=${encodeURIComponent(BUILD)}`,
+          { scope: "./" }
+        );
+        await navigator.serviceWorker.ready;
+        if (!navigator.serviceWorker.controller) {
+          location.reload();
+          return;
+        }
+        location.replace(target);
+      } catch (error) {
+        document.body.textContent = `ARCHCOIN lab Round 4 staged build failed: ${error && error.message ? error.message : String(error)}`;
+      }
+    })();
+  </script>
+</body>
+</html>

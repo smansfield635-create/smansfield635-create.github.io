@@ -1,0 +1,75 @@
+{
+  "schema": "METHODS_SPATIAL_DATABASE_TEXT_FIRST_V2_PERMANENT_RATIFICATION_RECEIPT_v1",
+  "status": "RATIFICATION_CANDIDATE_VERIFIED_PASS_CLOSED",
+  "governingMainHead": "1a7f674bed83730ac37b40c38dbbde5d2e0593a9",
+  "sourceIssue": 656,
+  "sourcePr": 665,
+  "sourceCandidateHead": "935e6c9243df60d2362b1bb834df49412b610496",
+  "sourceMergeCommit": "1a7f674bed83730ac37b40c38dbbde5d2e0593a9",
+  "sourceRouterBlob": "abfab1c5f33ca66b32b5b5a438a06016c04cab10",
+  "sourceEntrypointBlob": "e85d35a1bce1925b380eed87b9eee586f05a355f",
+  "interactionContract": {
+    "id": "METHODS_SPATIAL_DATABASE_TEXT_FIRST_INTERACTION_STATE_CONTRACT_v2",
+    "fingerprint": "7f19aab646a09187369d6c4da00135b0e3623d3bfae288050318a04fb12845ef",
+    "canonicalByteCount": 5803
+  },
+  "registeredExactPathCount": 19,
+  "prefixWideOwnership": false,
+  "textFirstSemantics": {
+    "semanticDomTextPrimary": true,
+    "informationRecordsAsVisibleTabs": true,
+    "standardTextualScrolling": true,
+    "exactContextualReturn": true,
+    "practicalDefault": true,
+    "oneLensActiveAtATime": true,
+    "nestedTabs": true,
+    "webglOptionalSupportingNoncontrolling": true,
+    "userControlledCameraProhibited": true,
+    "gestureHeavyFirstProofProhibited": true
+  },
+  "predecessorLock": {
+    "operationId": "METHODS_SPATIAL_DATABASE_ROUTER_RECONCILIATION_REPLACEMENT_CANDIDATE_v1",
+    "lockScope": "METHODS_INFORMATION_BENCHMARK:SPATIAL_DATABASE:NESTED_TAB_RECOMPOSITION:ROUTER_RECONCILIATION:V2",
+    "scopeHash": "13788afd216b2a85743f4f664cbdc273871a241d7c03180b3aef56f8f4eefab2",
+    "lockGeneration": 365,
+    "terminalDisposition": "PASS_CLOSED",
+    "lockReleased": true,
+    "closureCommitSha": "095ca6bef461a614c370cdb0d038b599cb85e1fc"
+  },
+  "ratificationOperation": {
+    "operationId": "METHODS_SPATIAL_DATABASE_TEXT_FIRST_INTERACTION_CONTRACT_V2_POST_MERGE_VALIDATION_LOCK_CLOSURE_AND_PERMANENT_RATIFICATION_v1",
+    "lockScope": "METHODS_INFORMATION_BENCHMARK:SPATIAL_DATABASE:NESTED_TAB_RECOMPOSITION:TEXT_FIRST_V2:POST_MERGE_RATIFICATION:V1",
+    "scopeHash": "83226b40792f58a4df5a5166ac1f02f16857bd0fafc733abb269578336e5e51f",
+    "lockGeneration": 376,
+    "terminalClosureRequiredAfterCandidateCommit": true
+  },
+  "builderFingerprint": "9b4d044159fcd1769b5759c7809978943656f7ea17c178c367aeb67c26ecb29c",
+  "freshVerifierFingerprint": "9b4d044159fcd1769b5759c7809978943656f7ea17c178c367aeb67c26ecb29c",
+  "exactNormalizedEquality": true,
+  "sourcePostMergeValidation": {
+    "routerValidationRun": 31076075240,
+    "intakeBootstrapRun": 31076075238,
+    "result": "PASS"
+  },
+  "validationWorkflowRun": 31076986611,
+  "finalCandidateScope": {
+    "changedPathCount": 1,
+    "changedPath": ".github/ai-router/projects/methods-information-benchmark/spatial-database-text-first-interaction-contract-v2-permanent-ratification.v1.json",
+    "workflowRestoredToBlob": "5f5b6317d520ef072c4347b62a179870491d5448"
+  },
+  "authorityBoundaries": {
+    "checkpoint4Executed": false,
+    "successorImplementationExecuted": false,
+    "methodsPageMutation": false,
+    "lawsMutation": false,
+    "compassMutation": false,
+    "waveMutation": false,
+    "robMutation": false,
+    "hEarthMutation": false,
+    "publicOrVisualMutation": false,
+    "deploymentOrRelease": false,
+    "perceptualAcceptanceClaim": false,
+    "ratificationReceiptMergeAuthorized": true
+  },
+  "permanentEffectCondition": "EFFECTIVE_ONLY_AFTER_THIS_RECEIPT_CANDIDATE_IS_MERGED_AND_RESULTING_MAIN_VALIDATION_PASSES"
+}

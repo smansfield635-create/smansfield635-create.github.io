@@ -1,0 +1,77 @@
+{
+  "receipt_id": "OSF_LAWS_CP6_PINNED_SOURCE_ADMISSION_RECEIPT_v1",
+  "status": "PINNED_SOURCE_ADMITTED",
+  "admission_mode": "EXPLICIT_PINNED_SOURCE_ADMISSION",
+  "admission_scope": "PR_483_SOURCE_DERIVATIVE_USE_ONLY",
+  "admission_basis": {
+    "six_page_content_review": "PASS",
+    "responsive_and_static_review": "PASS",
+    "source_correspondence": "VERIFIED"
+  },
+  "source_registry": {
+    "registry_id": "OSF_LAWS_CHAMBER_SOURCE_REGISTRY_v1",
+    "branch": "agent/osf-laws-source-registry-001",
+    "pull_request": 466,
+    "pull_request_head": "ae2ccedd4f74ef1afdcc5181a4056c30c83fa20d",
+    "source_snapshot_head": "dbd508fc5cacaa463abed0c159812a1e02635c1d",
+    "claim_boundary": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+    "registry_state_at_admission": "OPEN_DRAFT_UNMERGED"
+  },
+  "admitted_sources": {
+    "7jnxq": {
+      "metadata_sha256": "467beb4017f844fddd7328d69b654483324235d4f941b031e4a7eb20004c5530",
+      "source_class": "FROZEN_REGISTRATION",
+      "admission_status": "FILES_REVIEWED"
+    },
+    "9ut2z": {
+      "metadata_sha256": "82735851ff27ee32bb19c5ac5cf99da57805d8dc3be48bdad83dd24be6799a2f",
+      "source_class": "METHOD_SPECIFICATION",
+      "admission_status": "ADMITTED_AS_METHOD"
+    },
+    "7vkgs": {
+      "metadata_sha256": "d77b87050afb73108e62c34aae8a54d93cc04756785c0bdc2dfc31b1900df979",
+      "source_class": "METHOD_SPECIFICATION",
+      "admission_status": "ADMITTED_AS_METHOD"
+    },
+    "n82xh": {
+      "metadata_sha256": "12d75fd447aa5686c695264bf9387d35546d02933644eafbdaed251ed141cada",
+      "source_class": "METHOD_AND_STUDY_DESIGN",
+      "admission_status": "ADMITTED_AS_METHOD"
+    },
+    "rjdms": {
+      "metadata_sha256": "695a0d8ccb59b57135758a2ea89b54b5c27119f74024b98de6da1becc8bf437c",
+      "source_class": "METHOD_SPECIFICATION",
+      "admission_status": "ADMITTED_AS_METHOD"
+    }
+  },
+  "authorized_product": {
+    "contract": "LAWS_CP6_OSF_DERIVATIVE_METHODS_V1",
+    "pull_request": 483,
+    "destination_count": 6,
+    "destinations": [
+      "EVIDENCE_AND_SOURCES",
+      "ADMISSION_AND_BASELINE",
+      "METHODS_AND_MODELS",
+      "FORWARD_CONSTRUCTION",
+      "REVERSE_AUDIT",
+      "RESULT_AND_RECORD"
+    ],
+    "landing_page_mutation": false
+  },
+  "evidence_boundary": {
+    "empirical_validation_claimed": false,
+    "independent_replication_established": false,
+    "executed_study_established": false,
+    "public_dataset_recovered": false,
+    "public_analytic_code_recovered": false,
+    "executed_result_tables_recovered": false,
+    "derivative_is_new_method": false
+  },
+  "authority": {
+    "source_identity_admitted_for_this_candidate": true,
+    "source_registry_merge_required_for_this_candidate": false,
+    "product_merge_requires_technical_pass": true,
+    "merge_requires_expected_head_guard": true,
+    "correctness_or_validation_established": false
+  }
+}

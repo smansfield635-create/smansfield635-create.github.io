@@ -1,0 +1,30 @@
+name: Compass Gen347 Layout Diagnostic
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+permissions:
+  contents: read
+jobs:
+  layout:
+    if: github.head_ref == 'verification/compass-gen347-bootstrap-receipt'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ github.event.pull_request.head.sha }}'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: |
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/http.log 2>&1 &
+          for i in $(seq 1 40); do curl -fsS http://127.0.0.1:4173/compass-awards-provenance/ >/dev/null && exit 0; sleep .25; done; exit 1
+      - env: {NODE_PATH: '${{ github.workspace }}/node_modules'}
+        run: |
+          node --input-type=module <<'NODE'
+          import {chromium} from 'playwright'; import fs from 'node:fs'; const browser=await chromium.launch({headless:true}),results=[];
+          for(const [name,width,height] of [['desktop',1440,900],['tablet',1024,768],['phone',390,844]]){const p=await browser.newPage({viewport:{width,height}});await p.goto('http://127.0.0.1:4173/compass-awards-provenance/',{waitUntil:'networkidle'});await p.waitForTimeout(1500);results.push({name,...await p.evaluate(()=>{const vw=document.documentElement.clientWidth,sw=document.documentElement.scrollWidth;const els=[...document.querySelectorAll('body *')].map(e=>{const r=e.getBoundingClientRect(),s=getComputedStyle(e);return{tag:e.tagName,id:e.id||'',cls:typeof e.className==='string'?e.className.slice(0,120):'',left:Math.round(r.left),right:Math.round(r.right),width:Math.round(r.width),position:s.position,overflowX:s.overflowX,transform:s.transform}}).filter(x=>x.right>vw+2||x.left<-2).sort((a,b)=>Math.max(b.right-vw,-b.left)-Math.max(a.right-vw,-a.left)).slice(0,30);return{viewport:vw,scrollWidth:sw,overflow:sw-vw,offenders:els}})});await p.close()}await browser.close();fs.writeFileSync('/tmp/layout.json',JSON.stringify({schema:'COMPASS_GEN347_LAYOUT_DIAGNOSTIC_v1',results},null,2));console.log(JSON.stringify(results,null,2));
+          NODE
+      - uses: actions/upload-artifact@v4
+        with: {name: 'compass-gen347-layout-${{ github.run_id }}', path: /tmp/layout.json, retention-days: 30}

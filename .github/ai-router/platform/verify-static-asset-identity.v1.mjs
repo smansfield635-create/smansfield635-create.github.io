@@ -12,27 +12,34 @@ const changedAssets=changed.filter(p=>assetRe.test(p)&&!p.startsWith('.github/')
 const candidatePages=changed.filter(p=>pageRe.test(p)&&!p.startsWith('.github/')&&!p.startsWith('docs/')&&!p.startsWith('preview/'));
 
 const show=(ref,path)=>{try{return git(['show',`${ref}:${path}`]);}catch{return '';}};
+const exists=(ref,path)=>{try{git(['cat-file','-e',`${ref}:${path}`]);return true;}catch{return false;}};
 const esc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
 const refs=(text,path)=>{
   const target='/'+path.replace(/^\.\//,'');
   const re=new RegExp(esc(target)+'(?:\\?[^"\'\\s)<>]*)?','g');
   return [...text.matchAll(re)].map(m=>m[0]);
 };
+const isConsumer=(page,asset)=>{
+  if(page===asset)return false;
+  if(!pageRe.test(page))return false;
+  return exists(head,page);
+};
 
 const violations=[];
 const evidence=[];
 for(const asset of changedAssets){
-  const searchPaths=new Set([...candidatePages]);
-  // Always inspect root and same-directory HTML when present because a runtime asset can change without its consumer changing.
+  const searchPaths=new Set();
+  for(const p of candidatePages){if(isConsumer(p,asset))searchPaths.add(p);}
+  // Root and same-directory HTML are authoritative loader candidates only when they actually exist.
   for(const p of ['index.html',asset.split('/').slice(0,-1).concat('index.html').join('/')]){
-    try{git(['cat-file','-e',`${head}:${p}`]);searchPaths.add(p);}catch{}
+    if(isConsumer(p,asset))searchPaths.add(p);
   }
   for(const page of searchPaths){
     const before=show(base,page),after=show(head,page);
     const beforeRefs=refs(before,asset),afterRefs=refs(after,asset);
     if(!afterRefs.length) continue;
     const beforeSet=new Set(beforeRefs),fresh=afterRefs.some(r=>!beforeSet.has(r));
-    evidence.push({asset,page,beforeRefs,afterRefs,fresh});
+    evidence.push({asset,page,beforeRefs,afterRefs,fresh,consumerAuthority:true});
     if(beforeRefs.length&&!fresh) violations.push({asset,page,requestIdentity:afterRefs});
   }
 }

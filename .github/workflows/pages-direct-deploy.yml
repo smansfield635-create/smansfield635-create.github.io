@@ -75,22 +75,23 @@ jobs:
             --exclude='h-earth-live-6d18e158/' \
             ./ "$PAGES_STAGE/"
 
-          # Publish the accepted live H-Earth environment at the canonical public route
-          # without copying the duplicated full-repository carrier tree.
           rm -rf "$PAGES_STAGE/showroom/globe/h-earth"
           mkdir -p "$PAGES_STAGE/showroom/globe/h-earth"
           rsync -a --delete \
             h-earth-live-6d18e158/showroom/globe/h-earth/ \
             "$PAGES_STAGE/showroom/globe/h-earth/"
 
-          # Preserve the global preview exclusion, but explicitly publish the one
-          # immutable owner-inspection snapshot for the protected 24056 candidate.
           test -f "preview/h-earth/c3/$C3_ID/index.html"
           test -f "preview/h-earth/c3/$C3_ID/snapshot/showroom/globe/audralia/index.html"
-          mkdir -p "$PAGES_STAGE/preview/h-earth/c3/$C3_ID"
-          rsync -a --delete \
-            "preview/h-earth/c3/$C3_ID/" \
-            "$PAGES_STAGE/preview/h-earth/c3/$C3_ID/"
+          mkdir -p "$PAGES_STAGE/preview/h-earth/c3/$C3_ID/snapshot"
+          cp "preview/h-earth/c3/$C3_ID/index.html" "$PAGES_STAGE/preview/h-earth/c3/$C3_ID/index.html"
+          rsync -a --prune-empty-dirs \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='preview/' \
+            --exclude='h-earth-live-6d18e158/' \
+            "preview/h-earth/c3/$C3_ID/snapshot/" \
+            "$PAGES_STAGE/preview/h-earth/c3/$C3_ID/snapshot/"
 
           test -f "$PAGES_STAGE/.well-known/dgb-release.json"
           test -f "$PAGES_STAGE/showroom/globe/h-earth/index.html"
@@ -112,7 +113,6 @@ jobs:
 
           if [ "$staged_bytes" -ge 1073741824 ]; then
             echo "ARTIFACT_OVER_1_GIB staged_bytes=$staged_bytes" >&2
-            echo "Largest staged top-level entries:" >&2
             du -x -B1 -d1 "$PAGES_STAGE" 2>/dev/null | sort -n | tail -30 >&2 || true
             exit 1
           fi

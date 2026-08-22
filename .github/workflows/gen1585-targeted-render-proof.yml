@@ -1,0 +1,23 @@
+name: Gen1585 Targeted Render Proof
+on:
+  push:
+    branches: [gen1585-targeted-render-proof-20260821]
+permissions:
+  contents: read
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: |
+          test "$(git show HEAD^1:assets/compass/compass.presentation-convergence.js | git hash-object --stdin)" = "$(git show f1e7f1e19671c2de58d289971f5b2594fae80be7:assets/compass/compass.presentation-convergence.js | git hash-object --stdin)"
+          test "$(git show HEAD^1:assets/compass/compass.capability-carousel.css | git hash-object --stdin)" = "$(git show f1e7f1e19671c2de58d289971f5b2594fae80be7:assets/compass/compass.capability-carousel.css | git hash-object --stdin)"
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - run: |
+          python3 -m http.server 4173 >/tmp/gen1585-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && break; sleep 1; done
+          node tools/gen1585-targeted-render-proof.mjs

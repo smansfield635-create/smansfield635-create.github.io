@@ -14,6 +14,7 @@
     "targetSymbols",
     "requiredMutations",
     "prohibitedActions",
+    "executionTransport",
     "nextRequiredEvent",
     "watchdog",
     "qualification",
@@ -23,7 +24,7 @@
     "schema": {"const": "EXECUTION_PACKET_v1"},
     "operationId": {"type": "string", "minLength": 1},
     "lockGeneration": {"type": ["integer", "string"]},
-    "mode": {"const": "DIRECT_CONSTRUCTION"},
+    "mode": {"enum": ["TRANSPORT_BINDING", "DIRECT_CONSTRUCTION"]},
     "exactGoverningHead": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
     "allowedPaths": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
     "prohibitedPaths": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
@@ -59,7 +60,23 @@
         ]
       }
     },
-    "nextRequiredEvent": {"enum": ["ALLOWED_PATH_MUTATION", "CANDIDATE_COMMIT", "TOOLING_BLOCK_RECEIPT"]},
+    "executionTransport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "primary", "targetRepository", "targetBranch", "supportsAllowedPaths", "supportsLargeFiles", "fallback", "unboundDisposition"],
+      "properties": {
+        "status": {"enum": ["BOUND", "UNBOUND"]},
+        "primary": {"type": "string", "minLength": 1},
+        "targetRepository": {"type": "string", "minLength": 1},
+        "targetBranch": {"type": "string", "minLength": 1},
+        "supportsAllowedPaths": {"type": "boolean"},
+        "supportsLargeFiles": {"type": "boolean"},
+        "fallback": {"type": "string", "minLength": 1},
+        "handoffTarget": {"type": ["string", "null"]},
+        "unboundDisposition": {"const": "EXECUTION_TRANSPORT_UNBOUND"}
+      }
+    },
+    "nextRequiredEvent": {"enum": ["WRITE_TRANSPORT_BOUND", "ALLOWED_PATH_MUTATION", "CANDIDATE_COMMIT", "TOOLING_BLOCK_RECEIPT"]},
     "watchdog": {
       "type": "object",
       "additionalProperties": false,
@@ -86,7 +103,7 @@
       "type": "array",
       "minItems": 1,
       "uniqueItems": true,
-      "items": {"enum": ["CANDIDATE_READY", "EXECUTION_TOOLING_BLOCKED", "DIRECT_CONSTRUCTION_TIMEOUT", "GOVERNING_HEAD_OVERLAP", "SUPERSEDED"]}
+      "items": {"enum": ["CANDIDATE_READY", "EXECUTION_TRANSPORT_UNBOUND", "EXECUTION_TOOLING_BLOCKED", "DIRECT_CONSTRUCTION_TIMEOUT", "GOVERNING_HEAD_OVERLAP", "SUPERSEDED"]}
     }
   }
 }

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Compass Isolated Rebuild</title>
+<meta name="description" content="Isolated Diamond Gate Bridge Compass rebuild stage.">
+<link rel="stylesheet" href="./compass-isolated.css">
+</head>
+<body>
+<main class="bench" data-compass-app data-mode="CONSTELLATION" data-front="north">
+  <header class="intro" aria-labelledby="compass-title">
+    <p class="eyebrow">DIAMOND GATE BRIDGE · ISOLATED REBUILD</p>
+    <h1 id="compass-title">The Compass</h1>
+    <p class="lede">A clean-room navigation instrument. The Compass is being qualified here before any editorial, carousel, headboard, Mirrorland, or estate layers are attached.</p>
+    <div class="instruction" role="status" aria-live="polite" data-instruction>
+      <strong data-instruction-key>Drag to rotate.</strong>
+      <span data-instruction-rest>Bring a cardinal star to the front, then tap it to open its rooms.</span>
+    </div>
+  </header>
+
+  <section class="instrument" aria-label="Compass interaction stage">
+    <div class="stage" data-stage tabindex="0" aria-describedby="stage-help">
+      <div class="halo" aria-hidden="true"></div>
+      <div class="axis axis-x" aria-hidden="true"></div>
+      <div class="axis axis-y" aria-hidden="true"></div>
+      <div class="constellation" data-constellation aria-label="Four cardinal constellation"></div>
+      <div class="cluster" data-cluster hidden aria-label="Room cluster"></div>
+      <div class="core" aria-hidden="true"><span>◆</span></div>
+      <p class="stage-help" id="stage-help">Pointer drag or left/right arrow keys rotate. Enter opens the star in front.</p>
+    </div>
+
+    <aside class="panel" aria-live="polite">
+      <p class="panel-kicker" data-panel-kicker>Direction in front</p>
+      <h2 data-panel-title>North</h2>
+      <p data-panel-body>Boundary, authority, admissibility, and orientation.</p>
+      <div class="panel-actions">
+        <button type="button" data-open-front>Open North</button>
+        <button type="button" data-return hidden>Return to Orbit</button>
+      </div>
+      <div class="diagnostic" aria-label="Current Compass state">
+        <span>Mode <b data-state-mode>CONSTELLATION</b></span>
+        <span>Front <b data-state-front>north</b></span>
+        <span>Angle <b data-state-angle>0°</b></span>
+      </div>
+    </aside>
+  </section>
+
+  <section class="acceptance" aria-labelledby="acceptance-title">
+    <h2 id="acceptance-title">Stage 1 acceptance boundary</h2>
+    <div class="checks">
+      <span data-check="cardinals">4 cardinals</span>
+      <span data-check="labels">dynamic labels</span>
+      <span data-check="clusters">room clusters</span>
+      <span data-check="drag">drag</span>
+      <span data-check="tap">tap/open</span>
+      <span data-check="return">return</span>
+      <span data-check="instructions">state-aware instructions</span>
+    </div>
+  </section>
+</main>
+<script src="./compass-isolated.js" defer></script>
+</body>
+</html>

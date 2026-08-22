@@ -1,0 +1,11 @@
+{
+  "schema":"COMPASS_ISOLATED_STAGE1_INSPECTION_RECEIPT_v1",
+  "route":"/compass-isolated/",
+  "branch":"compass-isolated-rebuild-20260821",
+  "productionRouteChanged":false,
+  "legacyCompassRuntimeImported":false,
+  "navigationEnabled":false,
+  "included":["four-cardinal constellation","dynamic foreground cardinal label","independent room clusters","dynamic foreground room label","pointer drag","keyboard rotation","tap/open","return to orbit","state-aware instructions"],
+  "excluded":["headboard","carousels","Mirrorland runtime","H-Earth wiring","estate navigation","production publication"],
+  "status":"READY_FOR_HUMAN_INSPECTION"
+}

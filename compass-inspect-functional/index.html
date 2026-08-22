@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#02040a">
+<title>Diamond Gate Bridge Compass · Functional Inspection</title>
+<style>html,body{margin:0;min-height:100%;background:#02040a;color:#f5f0e4}body{font-family:system-ui,sans-serif}.boot{min-height:100vh;display:grid;place-items:center;padding:24px;text-align:center}.boot strong{display:block;color:#d9c58e;letter-spacing:.12em;text-transform:uppercase;font-size:.78rem}.boot span{display:block;margin-top:10px;color:#81949e;font-size:.75rem;letter-spacing:.06em}</style>
+</head>
+<body>
+<div class="boot" id="boot"><div><strong>Diamond Gate Bridge · Compass Inspection</strong><span>Loading verified single-owner runtime…</span></div></div>
+<script>
+(async()=>{
+  const SOURCE='https://raw.githack.com/smansfield635-create/smansfield635-create.github.io/6d34c70b3b615916a1f3c7cac003368cee7e0c72/compass-inspect-v2/index.html';
+  const RUNTIME='744961bd34be67a58037f685f2eda618dff58b10';
+  try{
+    const r=await fetch(SOURCE,{cache:'no-store'});
+    if(!r.ok) throw new Error('source '+r.status);
+    let html=await r.text();
+    html=html
+      .replaceAll('747b064135a0ff86915f5dbb75d8a128f66514a1',RUNTIME)
+      .replace(/<script[^>]+compass\.functional-clone-repair\.js[^>]*><\/script>/gi,'')
+      .replace(/<script[^>]+compass\.functional-carousels\.js[^>]*><\/script>/gi,'')
+      .replace('Direct Inspection v2','Functional Inspection')
+      .replace('Direct-entry interactive candidate v2','Verified single-owner runtime candidate');
+    document.open();
+    document.write(html);
+    document.close();
+  }catch(err){
+    const boot=document.getElementById('boot');
+    boot.innerHTML='<div><strong>Compass inspection failed to load</strong><span>'+String(err.message||err)+'</span></div>';
+    console.error('COMPASS_INSPECTION_BOOT_FAILURE',err);
+  }
+})();
+</script>
+</body>
+</html>

@@ -46,6 +46,16 @@
           "userOverrideAllowed": true
         }
       }
+    },
+    "H_EARTH_STAGE1_INSPECTION_PUBLISH": {
+      "workflow": "h-earth-stage1-inspection-publish.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "target_sha": {
+          "source": "CURRENT_MAIN_SHA",
+          "userOverrideAllowed": false
+        }
+      }
     }
   },
   "continuity": {

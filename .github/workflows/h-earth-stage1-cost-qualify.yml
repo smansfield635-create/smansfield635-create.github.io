@@ -1,0 +1,167 @@
+name: H-Earth Stage 1 Cost Qualification
+
+on:
+  workflow_dispatch:
+    inputs:
+      baseline_sha:
+        description: Protected 24056 baseline SHA
+        required: true
+        type: string
+      candidate_sha:
+        description: Stage 1 optimization candidate SHA
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout protected baseline runtime roots
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.baseline_sha }}
+          path: baseline
+          fetch-depth: 1
+          sparse-checkout: |
+            showroom/globe/audralia
+            showroom/globe/h-earth
+            h-earth-3d
+
+      - name: Checkout Stage 1 candidate runtime roots
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          path: candidate
+          fetch-depth: 1
+          sparse-checkout: |
+            showroom/globe/audralia
+            showroom/globe/h-earth
+            h-earth-3d
+
+      - name: Prove bounded Stage 1 mutation
+        shell: bash
+        env:
+          BASELINE_SHA: ${{ inputs.baseline_sha }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          expected_baseline='1d45379f81ea4089e9c5f3d7d9688e702be9add3'
+          test "$BASELINE_SHA" = "$expected_baseline"
+          test -f candidate/showroom/globe/audralia/fap1-stage1-cost-decoupling-v1.mjs
+          grep -q 'fap1-stage1-cost-decoupling-v1.mjs' candidate/showroom/globe/audralia/index.html
+          grep -q 'sharedHorizontalOrganization:true' candidate/showroom/globe/audralia/fap1-stage1-cost-decoupling-v1.mjs
+          grep -q 'originalConvolutionWeightsPreserved:true' candidate/showroom/globe/audralia/fap1-stage1-cost-decoupling-v1.mjs
+          base_fap1="$(sha256sum baseline/showroom/globe/audralia/fap1-weather-presentation-v1.mjs | awk '{print $1}')"
+          cand_fap1="$(sha256sum candidate/showroom/globe/audralia/fap1-weather-presentation-v1.mjs | awk '{print $1}')"
+          base_xyz="$(sha256sum baseline/showroom/globe/audralia/fap1-xyz-volumetric-depth-v1.mjs | awk '{print $1}')"
+          cand_xyz="$(sha256sum candidate/showroom/globe/audralia/fap1-xyz-volumetric-depth-v1.mjs | awk '{print $1}')"
+          test "$base_fap1" = "$cand_fap1"
+          test "$base_xyz" = "$cand_xyz"
+          echo "PROTECTED_FAP1_BYTES_PRESERVED sha256=$base_fap1"
+          echo "PROTECTED_XYZ_BYTES_PRESERVED sha256=$base_xyz"
+
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install browser driver
+        shell: bash
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Start isolated static servers
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --directory baseline >/tmp/h-earth-stage1-baseline.log 2>&1 &
+          echo $! >/tmp/h-earth-stage1-baseline.pid
+          python3 -m http.server 4174 --directory candidate >/tmp/h-earth-stage1-candidate.log 2>&1 &
+          echo $! >/tmp/h-earth-stage1-candidate.pid
+          for i in $(seq 1 30); do
+            curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/ >/dev/null && curl -fsS http://127.0.0.1:4174/showroom/globe/audralia/ >/dev/null && exit 0
+            sleep 1
+          done
+          exit 1
+
+      - name: Qualify visual equivalence and frame cost
+        shell: bash
+        run: |
+          set -euo pipefail
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          test -x "$CHROME_PATH"
+          node <<'NODE'
+          const puppeteer=require('puppeteer-core');
+          const crypto=require('node:crypto');
+          const {performance}=require('node:perf_hooks');
+          const median=a=>[...a].sort((x,y)=>x-y)[Math.floor(a.length/2)];
+          const fixedNow=Date.parse('2026-08-21T21:00:00.000Z');
+          async function openRuntime(browser,url,expectStage1){
+            const page=await browser.newPage();
+            await page.setViewport({width:320,height:568,deviceScaleFactor:1});
+            await page.evaluateOnNewDocument(now=>{Date.now=()=>now;},fixedNow);
+            const fatal=[];
+            page.on('pageerror',e=>fatal.push(String(e?.stack||e)));
+            await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});
+            await page.waitForFunction(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime()?.invariants?.pass===true,{timeout:90000});
+            await page.waitForFunction(()=>document.querySelector('[data-audralia-loader]')?.hidden===true,{timeout:30000});
+            const state=await page.evaluate(()=>({
+              status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null,
+              runtimePass:window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime()?.invariants?.pass===true,
+              stage1:window.__AUDRALIA_FAP1_STAGE1_COST_DECOUPLING__?.getRuntimeEvidence?.()||null,
+              runtimeError:window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__||null
+            }));
+            if(fatal.length||!state.runtimePass||state.runtimeError)throw new Error(`RUNTIME_FAIL ${url} ${JSON.stringify({state,fatal})}`);
+            if(expectStage1&&!(state.stage1?.patchedCloudShaders>0))throw new Error(`STAGE1_SHADER_PATCH_NOT_OBSERVED ${JSON.stringify(state)}`);
+            if(!expectStage1&&state.stage1)throw new Error('BASELINE_UNEXPECTED_STAGE1_PATCH');
+            return {page,state};
+          }
+          async function setYaw(page,yaw){
+            await page.evaluate(y=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__.setCameraStateForTest({yaw:y}),yaw);
+          }
+          async function forcedFrame(page,yaw){
+            const t0=performance.now();
+            await setYaw(page,yaw);
+            await page.screenshot({type:'png'});
+            return performance.now()-t0;
+          }
+          (async()=>{
+            const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+            try{
+              const base=await openRuntime(browser,'http://127.0.0.1:4173/showroom/globe/audralia/',false);
+              const cand=await openRuntime(browser,'http://127.0.0.1:4174/showroom/globe/audralia/',true);
+              const visualYaw=.63;
+              await setYaw(base.page,visualYaw);await setYaw(cand.page,visualYaw);
+              const baseShot=await base.page.screenshot({type:'png'}),candShot=await cand.page.screenshot({type:'png'});
+              const baseHash=crypto.createHash('sha256').update(baseShot).digest('hex');
+              const candHash=crypto.createHash('sha256').update(candShot).digest('hex');
+              if(baseHash!==candHash)throw new Error(`VISUAL_PIXEL_EQUIVALENCE_FAIL baseline=${baseHash} candidate=${candHash}`);
+              const yaws=[-.85,-.32,.08,.47,.93];
+              for(const y of [-.15,.35]){await forcedFrame(base.page,y);await forcedFrame(cand.page,y);}
+              const baseTimes=[],candTimes=[];
+              for(const y of yaws)baseTimes.push(await forcedFrame(base.page,y));
+              for(const y of yaws)candTimes.push(await forcedFrame(cand.page,y));
+              const baseMedian=median(baseTimes),candMedian=median(candTimes),ratio=candMedian/baseMedian;
+              console.log(JSON.stringify({
+                result:'H_EARTH_STAGE1_COST_QUALIFIED',
+                visual:{pixelEquivalent:true,sha256:baseHash},
+                baseline:{state:base.state,timesMs:baseTimes,medianMs:baseMedian},
+                candidate:{state:cand.state,timesMs:candTimes,medianMs:candMedian},
+                candidateToBaselineRatio:ratio,
+                improvementPercent:(1-ratio)*100
+              },null,2));
+              if(!(candMedian<=baseMedian*1.02))throw new Error(`PERFORMANCE_NONREGRESSION_FAIL baselineMedian=${baseMedian} candidateMedian=${candMedian}`);
+            } finally { await browser.close(); }
+          })().catch(e=>{console.error(e);process.exit(1);});
+          NODE
+
+      - name: Stop isolated static servers
+        if: always()
+        shell: bash
+        run: |
+          kill "$(cat /tmp/h-earth-stage1-baseline.pid 2>/dev/null)" 2>/dev/null || true
+          kill "$(cat /tmp/h-earth-stage1-candidate.pid 2>/dev/null)" 2>/dev/null || true

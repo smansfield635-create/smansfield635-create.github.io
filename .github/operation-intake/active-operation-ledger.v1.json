@@ -1216,18 +1216,6 @@
       "scopeHash": "77e9d50eb7b12a10edb88aa4520d9d7c1333f174f9fbbc325bf8f0234749d07e",
       "state": "ADMITTED_LOCKED"
     },
-    "7c0a200bd5d860a4cef69672d221c1bc43121c4efce2f7a19aca5a99395507be": {
-      "governingHead": "ec1e19a8ec5c351827fad248635039906ffb2f3b",
-      "lockGeneration": 1591,
-      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:SOURCE_READBACK_CLASS:DIFFERENTIAL_CONTINUITY:V1",
-      "operationId": "REPOSITORY_SOURCE_READBACK_CLASS_AND_DIFFERENTIAL_CONTINUITY_CLOSURE_20260822_002",
-      "procedureLocatorDigest": "8089d5e5a6c22a81121037d953b701226c95c9cce31785b9eb0c40c04a2f69c6",
-      "released": false,
-      "requestDigest": "f13c22b308548b98092e6f7258520b114a1b7d4d5afe1efb90887df2d4c72bed",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "7c0a200bd5d860a4cef69672d221c1bc43121c4efce2f7a19aca5a99395507be",
-      "state": "ADMITTED_LOCKED"
-    },
     "7fb397b296cbd1085c0f0992223035a658f95072c8737e338935b9fd69af0cc9": {
       "governingHead": "140861742fb42a54c809ef3a08f343f4cc22d6a9",
       "lockGeneration": 1587,
@@ -24009,6 +23997,19 @@
       "scopeHash": "7c0a200bd5d860a4cef69672d221c1bc43121c4efce2f7a19aca5a99395507be",
       "state": "TERMINAL",
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "ec1e19a8ec5c351827fad248635039906ffb2f3b",
+      "lockGeneration": 1591,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:SOURCE_READBACK_CLASS:DIFFERENTIAL_CONTINUITY:V1",
+      "operationId": "REPOSITORY_SOURCE_READBACK_CLASS_AND_DIFFERENTIAL_CONTINUITY_CLOSURE_20260822_002",
+      "procedureLocatorDigest": "8089d5e5a6c22a81121037d953b701226c95c9cce31785b9eb0c40c04a2f69c6",
+      "released": true,
+      "requestDigest": "f13c22b308548b98092e6f7258520b114a1b7d4d5afe1efb90887df2d4c72bed",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "7c0a200bd5d860a4cef69672d221c1bc43121c4efce2f7a19aca5a99395507be",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

@@ -1,0 +1,21 @@
+name: Compass Live Qualification
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        description: Exact current main SHA to publish and qualify against the audit-derived Compass contract
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  qualify:
+    uses: ./.github/workflows/repository-live-qualification-engine.yml
+    with:
+      target_sha: ${{ inputs.target_sha }}
+      manifest_path: .github/live-qualification/manifests/compass-root.v1.json

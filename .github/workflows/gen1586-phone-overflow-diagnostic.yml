@@ -1,0 +1,40 @@
+name: Gen1586 Phone Overflow Diagnostic
+on:
+  push:
+    branches:
+      - compass-gen1586-state-focus-reconciliation-20260821
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - run: |
+          python3 -m http.server 4173 >/tmp/compass-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          exit 1
+      - name: Identify crossing elements
+        run: |
+          cat > /tmp/gen1586-overflow.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          const browser=await chromium.launch({headless:true});
+          const page=await browser.newPage({viewport:{width:412,height:915}});
+          await page.goto('http://127.0.0.1:4173/',{waitUntil:'networkidle'});
+          await page.waitForTimeout(900);
+          const report=await page.evaluate(()=>{
+            const vw=document.documentElement.clientWidth;
+            const all=[...document.querySelectorAll('body *')];
+            const crossing=all.map((el,i)=>{const r=el.getBoundingClientRect();const cs=getComputedStyle(el);return{tag:el.tagName,id:el.id,cls:String(el.className||'').slice(0,180),i,left:Math.round(r.left),right:Math.round(r.right),width:Math.round(r.width),position:cs.position,display:cs.display,visibility:cs.visibility,overflowX:cs.overflowX}}).filter(x=>x.display!=='none'&&x.visibility!=='hidden'&&(x.right>vw+2||x.left<-2)).sort((a,b)=>(Math.max(b.right-vw,-b.left)-Math.max(a.right-vw,-a.left))).slice(0,40);
+            return{vw,scrollWidth:document.documentElement.scrollWidth,overflow:document.documentElement.scrollWidth-vw,crossing};
+          });
+          console.log('GEN1586_OVERFLOW_REPORT '+JSON.stringify(report,null,2));
+          await browser.close();
+          NODE
+          node /tmp/gen1586-overflow.mjs

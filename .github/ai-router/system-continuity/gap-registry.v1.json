@@ -56,14 +56,15 @@
     },
     {
       "gapId": "EXACT_HEAD_NON_IMPACTING_CHANGE_PROOF_CHURN",
-      "status": "OPEN",
+      "status": "CLOSED_BOUNDED",
       "discoveredAtHead": "64ec16ce6a4f65c72d54a5460071c1c20caf126f",
+      "closedAtHead": "13edc454c33aa31c037b966bb9d06744abd38280",
       "coordinationIssue": 830,
-      "summary": "Exact-head safety currently forces successor/proof reconstruction for every main movement even when a complete dependency declaration can prove the cumulative change is irrelevant; differential continuity must suppress only provably non-impacting churn while preserving strict successor fallback.",
+      "summary": "Exact-head safety previously forced successor/proof reconstruction for every main movement. Differential continuity now permits carry-forward only when a complete dependency surface and cumulative comparison prove the movement disjoint, while overlap, ambiguity, divergence, or incomplete evidence still require the strict successor path.",
       "interfaceKeys": ["DIFFERENTIAL_CONTINUITY_RECEIPT_v1", "DEPENDENCY_SURFACE_RECEIPT_v1", "REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1", "LATEST_MAIN_CUMULATIVE_COMPARE"],
       "pathScopes": [".github/ai-router/differential-continuity/", ".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs", ".github/workflows/remote-operation-successor-v1.yml", "AI_ENTRYPOINT.json", ".github/ai-router/router.v1.json"],
-      "evidenceRefs": ["PR_827_VALIDATION_ONLY_PROOF_CHURN", "PR_828_VALIDATION_ONLY_PROOF_CHURN", "ISSUE_830_DIFFERENTIAL_CONTINUITY_COORDINATION", "GENERATION_784_CORRECTED_DIFFERENTIAL_CONTINUITY_ADMISSION"],
-      "closureRequirements": ["DETERMINISTIC_DIFFERENTIAL_SELF_TEST_PASS", "PINNED_STRICT_SUCCESSOR_REGRESSION_PASS", "ROUTER_AND_ROOT_DISCOVERY_PASS", "REMOTE_DIFFERENTIAL_ASSESSMENT_PASS", "POST_MERGE_PUSH_VALIDATION_PASS", "REAL_COMPLETE_DEPENDENCY_SURFACE_DISJOINT_MAIN_MOVE_CARRY_FORWARD_PROOF"],
+      "evidenceRefs": ["PR_827_VALIDATION_ONLY_PROOF_CHURN", "PR_828_VALIDATION_ONLY_PROOF_CHURN", "ISSUE_830_DIFFERENTIAL_CONTINUITY_COORDINATION", "GENERATION_784_CORRECTED_DIFFERENTIAL_CONTINUITY_ADMISSION", "OPERATION_REPOSITORY_SOURCE_READBACK_CLASS_AND_DIFFERENTIAL_CONTINUITY_CLOSURE_20260822_002_LOCK_GENERATION_1591", "PR_1644_INSTALLATION_MERGE_13EDC454", "RUN_32590950404_DETERMINISTIC_DIFFERENTIAL_SELF_TEST_PASS", "RUN_32590950300_OPERATION_INTAKE_AND_STRICTNESS_VALIDATION_PASS", "RUN_32590950363_ROUTER_DISCOVERY_VALIDATION_PASS", "ISSUE_1638_REMOTE_DIFFERENTIAL_RECEIPT_5381962256_CARRY_FORWARD_APPROVED", "REAL_GEN344_2910D071_TO_13EDC454_COMPLETE_DISJOINT_CARRY_FORWARD_PROOF", "POST_MERGE_DEFAULT_BRANCH_REMOTE_SELF_TEST_AND_ASSESSMENT_PASS"],
+      "closureRequirements": [],
       "authorityCreated": false
     },
     {

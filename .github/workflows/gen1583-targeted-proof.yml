@@ -1,21 +1,21 @@
 name: Gen1583 Targeted Demo and Label Proof
 
 on:
-  pull_request:
-    branches: [ main ]
+  push:
+    branches:
+      - gen1583-targeted-proof-20260821
 
 permissions:
   contents: read
 
 jobs:
   targeted-proof:
-    if: github.head_ref == 'gen1583-targeted-proof-20260821'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 8
       - name: Prove product bytes equal Gen1583 candidate
         shell: bash
         run: |

@@ -1,0 +1,55 @@
+{
+  "$id": "H_EARTH_INTER_HILL_ESTATE_V2_ARTIFACT_SCHEMAS_v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "definitions": {
+    "eligibleSeedManifest": {
+      "required": [
+        "schema",
+        "sourceMode",
+        "eligibleSeedCount",
+        "configurationDenominator",
+        "eligibleSeeds",
+        "eligibleSeedListDigest"
+      ],
+      "type": "object"
+    },
+    "reducerReceipt": {
+      "required": [
+        "schema",
+        "canonicalScientificReceipt",
+        "operationalEnvelope"
+      ],
+      "type": "object"
+    },
+    "rerunReceipt": {
+      "required": [
+        "schema",
+        "byteIdentical",
+        "leftDigest",
+        "rightDigest"
+      ],
+      "type": "object"
+    },
+    "shardReceipt": {
+      "required": [
+        "schema",
+        "sourceMode",
+        "shardIndex",
+        "observedSeedCount",
+        "observedConfigurationCount",
+        "perResultClassCounts",
+        "shardDisposition"
+      ],
+      "type": "object"
+    },
+    "waveManifest": {
+      "required": [
+        "sourceMode",
+        "waveIndex",
+        "shards",
+        "expectedConfigurationCount"
+      ],
+      "type": "object"
+    }
+  }
+}

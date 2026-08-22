@@ -1,0 +1,16 @@
+{
+  "files": {
+    ".github/workflows/route-operator-platform-v1-conformance.yml": "67522c2a056cc36a6488294efd6258484beeea7ce0fed53267b8d106ad1e6071",
+    "research/route-operator-platform-v1/ARCHITECTURE.md": "2208f5562c0b9f06d6d5fba11d925da06801485b9e3549f234026f9e1e2439c2",
+    "research/route-operator-platform-v1/IMI_PACKAGE_POINTER.json": "10f7f948810b34110ad33d488c8a1111cf60cdf7a76f2b3b05c36e8b24aac15e",
+    "research/route-operator-platform-v1/PLATFORM_AUTHORITY.json": "d3eb3ffaf54044155bb76d7f7f72e696b7f6b9edabfcb4b2f1559a2f2f67db92",
+    "research/route-operator-platform-v1/README.md": "52f72785057d7b6f55a8b494b8f5e0151be39839ab9ea451ade4af0284933c9f",
+    "research/route-operator-platform-v1/demo_route_operator_platform_v1.py": "7b215ff7dbf723d83a265cec96cafb9b6be34cc41f37c35f876648c849036cd7",
+    "research/route-operator-platform-v1/route_operator_platform_core_v1.py": "6f9402675a018c63b732f3e1343a8ccd85b03869fa5afb9593c46f0b0908a716",
+    "research/route-operator-platform-v1/route_operator_platform_v1.py": "0776c8f7073186eca68c52ad4ebb2396093a1a42fb0318b069f06b3a044e3e80",
+    "research/route-operator-platform-v1/test_pointer_custody_v1.py": "bb772c5d38248405b9291b95ebb32b5386d14470b3cab4442e1855e9342b0650",
+    "research/route-operator-platform-v1/test_route_operator_platform_v1.py": "4dd85e3f06c52fb770eca75fc3162cacd2c4f2c9fc8656f485f64949765a03e8"
+  },
+  "platform_id": "ROUTE_OPERATOR_RESEARCH_PLATFORM_v1",
+  "platform_version": "1.0.0"
+}

@@ -1,0 +1,111 @@
+name: Laws Carousel Direction-Only Atomic Gesture Proof
+
+on:
+  pull_request:
+    paths:
+      - 'laws/index.destination-carousel.js'
+      - 'laws/index.destination-carousel.css'
+      - 'laws/index.mobile-background-tabs.js'
+      - 'laws/index.html'
+      - '.github/workflows/laws-carousel-discrete-swipe-proof.yml'
+permissions: { contents: read }
+
+jobs:
+  direction-only-atomic-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: '${{ github.event.pull_request.head.sha }}', fetch-depth: 1 }
+      - name: Syntax and frozen interaction contract
+        run: |
+          node --check laws/index.destination-carousel.js
+          python3 - <<'PY'
+          from pathlib import Path
+          js=Path('laws/index.destination-carousel.js').read_text()
+          loader=Path('laws/index.mobile-background-tabs.js').read_text()
+          required=['LAWS_DESTINATION_CAROUSEL_RUNTIME_v11_DIRECTION_ONLY_ATOMIC','20260816E_DIRECTION_ONLY_CANONICAL','directionOnlyGesture: true','liveGestureGeometry: false','atomicRotation: true','oneGestureOneStep: true','canonicalFrameLockedDuringGesture: true','velocityProjection: false','momentumTraversal: false','pointer-atomic-step','POST_LANDING_GUARD_MS = 1000','angleForDetent','targetDetent','transitionend']
+          for token in required: assert token in js, f'missing direction-only contract: {token}'
+          forbidden=['pointerStartAngle','state.velocity','snapFromDrag','methodsReleaseProjection:true','momentumTraversal:true','state.pointerStartAngle+(delta/width)*190']
+          for token in forbidden: assert token not in js, f'revoked continuous/momentum authority remains: {token}'
+          assert 'LAWS_DESTINATION_CAROUSEL_RUNTIME_V11_DIRECTION_ONLY_ATOMIC_20260816E' in loader
+          print('LAWS_DIRECTION_ONLY_ATOMIC_STATIC_PASS')
+          PY
+      - name: Install Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null
+      - name: Serve exact candidate
+        run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/laws-direction-only.log 2>&1 &
+      - name: Prove locked custody and sequential one-step settlement
+        run: |
+          node <<'NODE'
+          const {chromium}=require('playwright');
+          const A=(x,m)=>{if(!x)throw Error(m)};
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const context=await browser.newContext({viewport:{width:960,height:1536},hasTouch:true,isMobile:true,deviceScaleFactor:1});
+            const page=await context.newPage();
+            await page.goto('http://127.0.0.1:4173/laws/',{waitUntil:'networkidle'});
+            await page.waitForSelector('html[data-laws-destination-carousel-runtime="active"]',{timeout:15000});
+            const runtime=await page.evaluate(()=>globalThis.DGB_LAWS_DESTINATION_CAROUSEL);
+            A(runtime?.contract==='LAWS_DESTINATION_CAROUSEL_RUNTIME_v11_DIRECTION_ONLY_ATOMIC','wrong runtime');
+            A(runtime.directionOnlyGesture===true&&runtime.liveGestureGeometry===false&&runtime.atomicRotation===true&&runtime.oneGestureOneStep===true,'direction-only law absent');
+            const field=page.locator('[data-laws-root-rolodex-section] .laws-rolodex-field[data-destination-stage-state="active"]').first();
+            const viewport=field.locator('.laws-rolodex-viewport'); await viewport.scrollIntoViewIfNeeded(); const box=await viewport.boundingBox(); A(box,'no viewport');
+            const id=await field.getAttribute('data-rolodex-id'); const count=await field.locator('.laws-rolodex-card').count();
+            const get=()=>field.evaluate(el=>({index:+el.dataset.carouselIndex,angle:+el.dataset.carouselOrbitAngle,canonical:el.dataset.carouselCanonicalLanding,phase:el.dataset.carouselGestureState,ring:getComputedStyle(el.querySelector('.laws-rolodex-track')).transform}));
+            const trace=()=>page.evaluate(id=>globalThis.DGB_LAWS_DESTINATION_CAROUSEL.getTransactionTrace(id).slice(-16),id);
+            const restore=async index=>{A(await page.evaluate(({id,index})=>globalThis.DGB_LAWS_DESTINATION_CAROUSEL.restoreOrbitState({rolodexId:id,index}),{id,index}),'restore failed');await page.waitForTimeout(80)};
+            const cdp=await context.newCDPSession(page);let tid=400;
+            const touch=(type,x,y)=>cdp.send('Input.dispatchTouchEvent',{type,touchPoints:/End|Cancel/.test(type)?[]:[{x,y,id:tid,radiusX:2,radiusY:2,force:1}],modifiers:0});
+            async function waitCanonical(){
+              await page.waitForFunction(id=>{
+                const el=document.querySelector(`[data-rolodex-id="${id}"]`);
+                return el?.dataset.carouselGestureState==='idle' && el?.dataset.carouselCanonicalLanding==='true';
+              },id,{timeout:3500});
+            }
+            async function gesture(dx,dy=0,finish='end'){
+              await viewport.scrollIntoViewIfNeeded();
+              const currentBox=await viewport.boundingBox(); A(currentBox,'viewport missing during gesture');
+              const sx=currentBox.x+currentBox.width*.50, sy=currentBox.y+currentBox.height*.04;
+              tid++;
+              await touch('touchStart',sx,sy);
+              await page.waitForTimeout(25);
+              await touch('touchMove',sx+dx,sy+dy);
+              await page.waitForTimeout(80);
+              const during=await get();
+              await touch(finish==='cancel'?'touchCancel':'touchEnd',sx,sy);
+              await waitCanonical();
+              return {during,after:await get()};
+            }
+
+            await restore(0); const start=await get();
+            const short=await gesture(-box.width*.22);
+            A(short.during.index===start.index&&short.during.ring===start.ring,'short gesture gained positional custody');
+            A(short.after.index===1%count&&short.after.canonical==='true','short left swipe failed '+JSON.stringify({short,trace:await trace()}));
+
+            await restore(0); const longStart=await get();
+            const long=await gesture(-box.width*.35);
+            A(long.during.index===0&&long.during.ring===longStart.ring,'long gesture gained positional custody');
+            A(long.after.index===1%count&&long.after.canonical==='true','long left swipe failed '+JSON.stringify({long,trace:await trace()}));
+
+            await restore(0); const reverse=await gesture(box.width*.35);
+            A(reverse.during.index===0,'reverse semantic index moved during custody');
+            A(reverse.after.index===count-1&&reverse.after.canonical==='true','reverse swipe failed '+JSON.stringify({reverse,trace:await trace()}));
+
+            await restore(0); const cancelStart=await get(); const cancelled=await gesture(-box.width*.28,0,'cancel');
+            A(cancelled.after.index===0&&cancelled.after.ring===cancelStart.ring&&cancelled.after.canonical==='true','cancel changed canonical geometry');
+
+            await restore(0); const verticalStart=await get(); const vertical=await gesture(8,box.height*.22);
+            A(vertical.after.index===0&&vertical.after.ring===verticalStart.ring,'vertical gesture mutated carousel');
+
+            await restore(count-1); const seam=await gesture(-box.width*.28);
+            A(seam.after.index===0&&seam.after.canonical==='true','circular seam failed one-step landing '+JSON.stringify({seam,trace:await trace()}));
+
+            const guardA=await get(); await page.waitForTimeout(1100); const guardB=await get();
+            A(guardA.index===guardB.index&&guardA.ring===guardB.ring&&guardB.canonical==='true','post-landing geometry mutated');
+            console.log(JSON.stringify({start,short,long,reverse,cancelled,vertical,seam,guardA,guardB,count},null,2));
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE

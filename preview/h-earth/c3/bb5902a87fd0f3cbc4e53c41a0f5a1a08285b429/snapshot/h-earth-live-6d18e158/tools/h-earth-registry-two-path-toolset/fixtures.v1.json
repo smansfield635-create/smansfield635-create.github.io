@@ -1,0 +1,18 @@
+{
+  "schema": "H_EARTH_REGISTRY_TWO_PATH_TOOLSET_FIXTURES_v1",
+  "positive": {
+    "changedPaths": [
+      "h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-material-only-binding-exact-head.js",
+      "h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js"
+    ],
+    "overlaySource": "import base from './h-earth.repository-registry.c2-r1-candidate-path-disposition.js'; export const requireC2R1BaseRegistryNode=()=>true;",
+    "loaderSource": "import x from './accepted-amendments/h-earth.repository-registry.c2-r1-material-only-binding-exact-head.js'; export function loadHEarthRepositoryRegistryValidatorDependencies(){return x;}"
+  },
+  "negative": [
+    {"id": "THIRD_PATH", "field": "changedPaths"},
+    {"id": "NO_PREDECESSOR_IMPORT", "field": "overlayImport"},
+    {"id": "NO_BASE_GUARD", "field": "overlayGuard"},
+    {"id": "NO_OVERLAY_IMPORT", "field": "loaderImport"},
+    {"id": "NO_LOADER_ENTRY", "field": "loaderEntry"}
+  ]
+}

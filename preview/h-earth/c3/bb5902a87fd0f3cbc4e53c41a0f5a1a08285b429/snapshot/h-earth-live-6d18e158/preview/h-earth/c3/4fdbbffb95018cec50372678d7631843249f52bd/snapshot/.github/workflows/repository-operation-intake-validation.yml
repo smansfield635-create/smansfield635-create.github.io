@@ -1,0 +1,65 @@
+name: Repository Operation Intake Validation
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'AI_ENTRYPOINT.json'
+      - '.github/operation-intake/**'
+      - 'tools/operation-intake/**'
+      - '.github/workflows/repository-operation-intake-validation.yml'
+      - '.github/workflows/canonical-operation-intake-transport-v1.yml'
+      - 'tools/repository-ai-entry-router.mjs'
+  push:
+    branches: [main]
+    paths:
+      - 'AI_ENTRYPOINT.json'
+      - '.github/operation-intake/**'
+      - 'tools/operation-intake/**'
+      - '.github/workflows/repository-operation-intake-validation.yml'
+      - '.github/workflows/canonical-operation-intake-transport-v1.yml'
+      - 'tools/repository-ai-entry-router.mjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+jobs:
+  current-control-plane-conformance:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify exact head and canonical spine
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$EXPECTED_HEAD"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const e=JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json'));
+          const l=JSON.parse(fs.readFileSync('.github/operation-intake/locator.v1.json'));
+          if(e.status!=='ACTIVE_FAIL_CLOSED'||l.status!=='ACTIVE_FAIL_CLOSED') throw Error('ACTIVE_STATUS_MISMATCH');
+          if(e.operationIntakeGate?.locator!=='.github/operation-intake/locator.v1.json') throw Error('NONCANONICAL_LOCATOR');
+          if(e.remoteCanonicalIntakeTransport?.canonicalLocator!==e.operationIntakeGate.locator||e.remoteCanonicalIntakeTransport?.admissionSemanticsDuplicated!==false) throw Error('PARALLEL_INTAKE_SEMANTICS');
+          for(const p of [l.entrypoint,l.lockManager,l.requestSchema,l.constructionProcedureSchema]) if(!fs.existsSync(p)) throw Error('CANONICAL_PATH_MISSING:'+p);
+          if(fs.existsSync('.github/ai-router/fixed-fixture-intake')) throw Error('RETIRED_FIXED_FIXTURE_SURFACE_PRESENT');
+          NODE
+          node --check tools/operation-intake/repository-operation-intake-gate.v1.mjs
+          node --check tools/operation-intake/repository-operation-lock-manager.v1.mjs
+          node tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs
+          node tools/operation-intake/canonical-operation-intake-transport.v1.mjs --self-test > /tmp/transport-self-test.json
+          node tools/repository-ai-entry-router.mjs --self-test --output /tmp/router-self-test.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: repository-operation-intake-current-conformance-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/transport-self-test.json
+            /tmp/router-self-test.json
+          if-no-files-found: error
+          retention-days: 90

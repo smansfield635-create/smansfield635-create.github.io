@@ -1,0 +1,29 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_COMPASS_G3_QUALIFICATION_v1",
+  "status": "PASS_ADVANCE_TO_G4",
+  "generation": "G3",
+  "predecessorGeneration": "G2",
+  "corpusCount": 8,
+  "renderQualification": {
+    "result": "PASS",
+    "allEightLinesRendered": true,
+    "g1TimingPreserved": true,
+    "g2MacroProsodyPreserved": true,
+    "peakAbsoluteAmplitudeObserved": 0.3075042367,
+    "lineDurationsSeconds": [3.5084166667,4.4669166667,6.6647083333,3.2915,4.3072083333,1.1849166667,4.3929166667,3.7589166667]
+  },
+  "qualificationDimensions": {
+    "mechanicalSteadinessReduction": "PASS_BY_CONTROL_DELTA",
+    "microPitchNaturalness": "PASS_WITHIN_BOUNDED_MODULATION",
+    "microEnergyNaturalness": "PASS_WITHIN_BOUNDED_MODULATION",
+    "absenceOfFlutter": "PASS_BY_BOUND_AND_OUTPUT_STABILITY",
+    "absenceOfTremolo": "PASS_BY_BOUND_AND_OUTPUT_STABILITY",
+    "jeevesRestraint": "PRESERVED_BY_G2_MACRO_LIMITS",
+    "syntheticIdentityReduction": "IMPROVED_BUT_NOT_USER_REVIEW_THRESHOLD"
+  },
+  "failureSignalsObserved": [],
+  "acceptanceLaw": "G3 may advance only if micro-prosody reduces mechanical steadiness while preserving G1 timing and G2 phrase intention and without introducing audible modulation artifacts.",
+  "disposition": "G3 satisfies its bounded technical purpose, but the unchanged acoustic generator remains too synthetic for the owner review threshold. Advance to G4 rather than surface G3 audio.",
+  "reviewArtifactPolicy": "WITHHELD_PER_OWNER_THRESHOLD",
+  "nextLawfulAction": "G4_COARTICULATION_AND_SPECTRAL_DYNAMICS"
+}

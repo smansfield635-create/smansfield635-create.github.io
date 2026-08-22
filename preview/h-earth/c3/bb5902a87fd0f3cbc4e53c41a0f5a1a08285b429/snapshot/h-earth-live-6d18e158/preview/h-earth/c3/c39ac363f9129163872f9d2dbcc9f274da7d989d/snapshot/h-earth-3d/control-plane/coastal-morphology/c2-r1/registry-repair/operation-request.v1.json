@@ -1,0 +1,37 @@
+{
+  "schema": "H_EARTH_C2_R1_REGISTRY_BASE_NODE_LINEAGE_REPAIR_REQUEST_v1",
+  "operationId": "H_EARTH_C2_R1_REGISTRY_BASE_NODE_LINEAGE_REPAIR_v1",
+  "operationClass": "READ_ONLY_REGISTRY_LINEAGE_REPAIR",
+  "originIssue": 572,
+  "defectIssue": 571,
+  "exactStartingHead": "3ac9279dc82e56f7b0d67972ce56048d07e5ecfa",
+  "repairBranch": "repair/h-earth-c2-r1-base-node-lineage-v1-001",
+  "blockedInstrument": {
+    "pullRequest": 570,
+    "exactHead": "7c0b8871928b21cd9b2806f058bce34eed11f2ba",
+    "mutationProhibited": true
+  },
+  "observedFailure": {
+    "workflowRun": 30960405689,
+    "job": 92162866026,
+    "error": "C2_R1_BASE_REGISTRY_NODE_NOT_FOUND:H_EARTH_C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR_CANDIDATE_PACKAGE"
+  },
+  "historicalPredecessor": {
+    "path": "h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-candidate-path-disposition.js",
+    "sourceBranch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
+    "gitBlob": "a195eea704df0a3f754f626817181b63114178fd",
+    "restoreExactBytes": true
+  },
+  "requiredResult": "RESTORED_PREDECESSOR_AND_PASS_CLOSED_PREFLIGHT_WITHOUT_AUTHORITY_EXPANSION",
+  "prohibitedEffects": [
+    "PR_570_MUTATION",
+    "TERRAIN_MUTATION",
+    "RENDERER_OR_RUNTIME_MUTATION",
+    "PRODUCT_OR_ROUTE_MUTATION",
+    "MANOR_CONSTRUCTION",
+    "DEPLOYMENT_OR_RELEASE",
+    "MERGE_OR_PROMOTION",
+    "USER_DIFFERENTIAL_CLAIM",
+    "AUTHORITY_BROADENING"
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "schema": "H_EARTH_INTER_HILL_ESTATE_OPERATOR_FAMILY_ADMISSION_v1",
+  "families": [
+    {
+      "id": "SUMMIT_SPLIT_OFFSET",
+      "eligibleClasses": [
+        "SUMMIT",
+        "RIDGE",
+        "SHOULDER"
+      ],
+      "positiveAmplitude": [
+        2,
+        8
+      ],
+      "notchDepth": [
+        0,
+        4
+      ],
+      "featureRadius": [
+        12,
+        40
+      ],
+      "peakSeparation": [
+        16,
+        56
+      ]
+    },
+    {
+      "id": "SECONDARY_PEAK_SHOULDER",
+      "eligibleClasses": [
+        "SUMMIT",
+        "SHOULDER",
+        "SLOPE"
+      ],
+      "amplitude": [
+        1.5,
+        7
+      ],
+      "radius": [
+        12,
+        48
+      ]
+    },
+    {
+      "id": "SADDLE_AND_PASS",
+      "eligibleClasses": [
+        "SUMMIT",
+        "RIDGE",
+        "SHOULDER"
+      ],
+      "depth": [
+        1,
+        6
+      ],
+      "width": [
+        8,
+        24
+      ],
+      "length": [
+        16,
+        64
+      ]
+    },
+    {
+      "id": "RIDGE_BREAK_SPUR",
+      "eligibleClasses": [
+        "RIDGE",
+        "SHOULDER",
+        "SPUR"
+      ],
+      "spurRise": [
+        1,
+        6
+      ],
+      "ridgeBreakDepth": [
+        1,
+        4
+      ],
+      "width": [
+        8,
+        32
+      ],
+      "length": [
+        20,
+        80
+      ]
+    },
+    {
+      "id": "SLOPE_TERRACE_VALLEY",
+      "eligibleClasses": [
+        "SLOPE",
+        "HOLLOW",
+        "FOOTSLOPE",
+        "VALLEY"
+      ],
+      "terraceRise": [
+        0.5,
+        3
+      ],
+      "valleyDepth": [
+        0.5,
+        5
+      ],
+      "width": [
+        8,
+        40
+      ],
+      "length": [
+        20,
+        96
+      ]
+    },
+    {
+      "id": "MULTI_PEAK_RIDGE_DEPTH",
+      "eligibleClasses": [
+        "SUMMIT",
+        "RIDGE",
+        "SHOULDER",
+        "SPUR"
+      ],
+      "positiveAmplitude": [
+        2,
+        12
+      ],
+      "separation": [
+        24,
+        96
+      ],
+      "ridgeCutDepth": [
+        1,
+        6
+      ]
+    }
+  ],
+  "universalRequirements": [
+    "REAL_TERRAIN_SUPPORT_MASK",
+    "C2_ADJACENCY_BLEND",
+    "ESTATE_ZERO_INTRUSION",
+    "VIEW_CORRIDOR_ZERO_INTRUSION",
+    "TRAVERSAL_REEVALUATION",
+    "LOCAL_RELIEF_SCALED_AMPLITUDE",
+    "CUMULATIVE_SLOPE_GATE"
+  ],
+  "productionAuthority": false
+}

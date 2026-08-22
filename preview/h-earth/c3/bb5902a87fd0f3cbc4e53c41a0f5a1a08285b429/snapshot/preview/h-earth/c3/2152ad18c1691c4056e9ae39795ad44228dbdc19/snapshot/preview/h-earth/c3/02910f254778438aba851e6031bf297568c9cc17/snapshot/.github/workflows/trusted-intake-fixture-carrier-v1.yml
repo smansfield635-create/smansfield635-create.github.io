@@ -1,0 +1,60 @@
+name: Trusted Intake Fixture Carrier v1
+on:
+  pull_request:
+    paths:
+      - '.github/ai-router/trusted-intake-fixture/**'
+      - '.github/workflows/trusted-intake-fixture-carrier-v1.yml'
+  issue_comment:
+    types: [created]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  qualify:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate frozen fixture and carrier boundary
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import { MARKER, ONLY_FIXTURE_ID, parseMarker, loadFrozenFixture, bridgeRequestFromFixture } from './.github/ai-router/trusted-intake-fixture/trusted-intake-fixture-carrier.v1.mjs';
+          const fixture=loadFrozenFixture(parseMarker(`${MARKER} ${ONLY_FIXTURE_ID}`));
+          const request=bridgeRequestFromFixture(fixture);
+          assert.equal(request.exactGoverningHead,'e0c69d3f2581b0917dab882f5750a45403a523b9');
+          assert.equal(request.operationRequest.allowedPaths.length,10);
+          assert.deepEqual(request.operationRequest.allowedPaths,request.constructionProcedure.exactAllowedRepositoryPaths);
+          assert.deepEqual(request.operationRequest,fixture.operationRequest);
+          assert.deepEqual(request.constructionProcedure,fixture.constructionProcedure);
+          assert.equal(request.operationRequest.requestingAuthority.mergeAuthority,false);
+          assert.equal(request.operationRequest.executingRole.mayMerge,false);
+          console.log(JSON.stringify({schema:'TRUSTED_CANONICAL_INTAKE_CARRIER_QUALIFICATION_v1',result:'PASS_CLOSED',fixtureId:fixture.fixtureId,allowedPathCount:10,mergeAuthority:false,canonicalBridgeDelegated:true}));
+          NODE
+  execute:
+    if: >-
+      github.event_name == 'issue_comment' &&
+      startsWith(github.event.comment.body, 'TRUSTED_INTAKE_FIXTURE_V1 METHODS_MODELS_FROZEN_CANDIDATE_INTAKE_20260813_V1') &&
+      (github.event.comment.author_association == 'OWNER' || github.event.comment.author_association == 'MEMBER' || github.event.comment.author_association == 'COLLABORATOR')
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Execute trusted frozen fixture through canonical bridge
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          TRUSTED_INTAKE_OUTPUT: ${{ runner.temp }}/trusted-intake-carrier-receipt.json
+        run: node .github/ai-router/trusted-intake-fixture/trusted-intake-fixture-carrier.v1.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: trusted-intake-fixture-carrier-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/trusted-intake-carrier-receipt.json
+          if-no-files-found: error
+          retention-days: 90

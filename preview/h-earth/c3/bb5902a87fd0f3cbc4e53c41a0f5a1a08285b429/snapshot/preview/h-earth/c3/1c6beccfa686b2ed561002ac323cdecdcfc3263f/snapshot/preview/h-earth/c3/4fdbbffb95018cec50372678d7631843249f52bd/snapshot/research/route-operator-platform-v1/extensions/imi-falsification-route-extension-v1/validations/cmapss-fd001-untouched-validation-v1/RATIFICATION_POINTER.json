@@ -1,0 +1,29 @@
+{
+  "claim_dispositions": {
+    "FACTORIAL_TEMPORAL_UTILITY": "SUPPORTED",
+    "FULL_COMPLEXITY_INCREMENT": "SUPPORTED",
+    "MULTIDIMENSIONAL_CONDITION_UTILITY": "NOT_SUPPORTED",
+    "MULTIPLICATIVE_SPECIFICITY": "NOT_SUPPORTED"
+  },
+  "contract_id": "IMI_CMAPSS_FD001_FACTORIAL_TEMPORAL_RUL_UNTOUCHED_VALIDATION_v1",
+  "deterministic_two_run_equality": "PASS",
+  "execution_receipt_sha256": "de01e821ca98a1ca84083086ae4c0dcaf99513422a13b0fbd613ea2ac32e2259",
+  "execution_status": "PASS_CLOSED",
+  "freeze_receipt_sha256": "b9439d8fa434196ef312a91a3f3068ec9124052959c60a7873dd49e11fe56683",
+  "outcome_access_after_prediction_freeze": true,
+  "outcome_file_present_during_freeze": false,
+  "parent_theory_adjudication": "NOT_PERFORMED",
+  "personal_portfolio_recommendation": "NARROW_AND_REDESIGN_BEFORE_FURTHER_INVESTMENT",
+  "platform_conformance_status": "PASS",
+  "post_outcome_model_mutation": false,
+  "prediction_freeze_verified": true,
+  "primary_result_category": "OPERATOR_NOT_DISTINGUISHED",
+  "ratification_status": "PASS_CLOSED",
+  "result_sha256": "240ccb803444c627e70780e0637bb3bbe75bb28a2ebcbb68be9f34c33d5c6b7a",
+  "schema": "IMI_CMAPSS_FD001_UNTOUCHED_VALIDATION_RATIFICATION_POINTER_v1",
+  "scientific_interpretation": "FACTORIAL_TEMPORAL_INFORMATION_HAS_MATERIAL_EXTERNAL_PREDICTIVE_VALUE_BUT_THE_MULTIPLICATIVE_OPERATOR_IS_NOT_SUPPORTED_AND_IS_DOMINATED_BY_ADDITIVE_AND_WEAKEST_FACTOR_ALTERNATIVES",
+  "source_dataset": "NASA_CMAPSS_FD001",
+  "source_outcome_file": "RUL_FD001.txt",
+  "source_outcome_role": "SEPARATE_TRUE_REMAINING_USEFUL_LIFE_VECTOR_FOR_100_TEST_ENGINES",
+  "workflow_status": "PASS"
+}

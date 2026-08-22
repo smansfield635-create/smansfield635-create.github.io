@@ -1,0 +1,21 @@
+{
+  "candidateId": "H_EARTH_C2_COASTAL_VISUAL_SUCCESSOR_001",
+  "nonProduction": true,
+  "publicDefaultMutated": false,
+  "baseHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
+  "branch": "agent/h-earth-c2-bounded-coastal-visual-successor-001",
+  "previewPath": "/preview/h-earth/c2/coastal-visual-successor-001/",
+  "status": "REJECTED_EXPERIMENTAL_CANDIDATE",
+  "approval": "NOT_APPROVED_FOR_PROMOTION",
+  "functionalVerification": "PASS",
+  "isolatedPublication": "PASS",
+  "visualSuccessor": "FAIL_REJECTED",
+  "userDifferential": "REJECTED",
+  "firstBlocker": "PHYSICALLY_AND_VISUALLY_INCOHERENT_COASTAL_MODEL",
+  "featureFlagsProveExecutionOnly": true,
+  "featureFlagsProveVisualSuccess": false,
+  "promotionToPublicDefault": "PROHIBITED",
+  "candidateHead": "618941cd569e3421c84043fcf68367299f7e673e",
+  "supersededStatus": "VERIFIED_READY_FOR_PUBLICATION",
+  "retentionPurpose": "ENGINEERING_EVIDENCE_ONLY"
+}

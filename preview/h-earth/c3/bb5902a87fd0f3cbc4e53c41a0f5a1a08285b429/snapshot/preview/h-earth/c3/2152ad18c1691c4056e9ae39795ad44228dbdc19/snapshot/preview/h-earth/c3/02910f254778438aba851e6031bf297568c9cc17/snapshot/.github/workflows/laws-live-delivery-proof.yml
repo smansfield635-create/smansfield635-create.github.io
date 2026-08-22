@@ -1,0 +1,43 @@
+name: Laws Live Delivery Proof
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'laws/index.html'
+      - 'laws/index.mobile-background-tabs.js'
+      - 'laws/index.destination-carousel.js'
+      - 'laws/index.destination-carousel.css'
+      - 'laws/index.destination-stage.css'
+      - 'laws/index.destination-stage-anchor.css'
+      - '.github/workflows/laws-live-delivery-proof.yml'
+  workflow_dispatch:
+
+jobs:
+  live-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for exact public delivery
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 24); do
+            html="$(curl -fsSL --retry 3 --retry-delay 2 -H 'Cache-Control: no-cache' "https://diamondgatebridge.com/laws/?delivery-proof=${GITHUB_SHA}-${attempt}" || true)"
+            bootstrap="$(curl -fsSL --retry 3 --retry-delay 2 -H 'Cache-Control: no-cache' "https://diamondgatebridge.com/laws/index.mobile-background-tabs.js?v=LAWS_DESTINATION_STAGE_LIVE_20260816B&delivery-proof=${GITHUB_SHA}-${attempt}" || true)"
+            runtime="$(curl -fsSL --retry 3 --retry-delay 2 -H 'Cache-Control: no-cache' "https://diamondgatebridge.com/laws/index.destination-carousel.js?v=LAWS_DESTINATION_CAROUSEL_RUNTIME_V3_20260816A&delivery-proof=${GITHUB_SHA}-${attempt}" || true)"
+
+            if grep -q 'LAWS_DESTINATION_STAGE_LIVE_20260816B' <<<"$html" \
+              && grep -q 'LAWS_DESTINATION_CAROUSEL_RUNTIME_V3_20260816A' <<<"$bootstrap" \
+              && grep -q 'LAWS_DESTINATION_CAROUSEL_RUNTIME_v3' <<<"$runtime" \
+              && grep -q 'surrogateNavigation: false' <<<"$runtime"; then
+              echo 'LIVE_LAWS_DELIVERY_VERIFIED'
+              echo "attempt=$attempt"
+              exit 0
+            fi
+
+            echo "Public delivery not settled yet; attempt $attempt/24"
+            sleep 10
+          done
+
+          echo 'LIVE_LAWS_DELIVERY_NOT_VERIFIED' >&2
+          exit 1

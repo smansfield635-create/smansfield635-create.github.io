@@ -1,0 +1,247 @@
+name: Methods Role 6 Audit Exact Execution
+
+on:
+  workflow_dispatch:
+    inputs:
+      execution_branch:
+        description: Existing audit execution branch created from the exact certified tooling head
+        required: true
+        type: string
+      package_artifact_run_id:
+        description: Workflow run containing the fixed methods-role6-audit-package artifact
+        required: true
+        type: string
+      expected_tooling_head:
+        description: Exact immutable tooling head from the certified descriptor
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: methods-role6-audit-${{ inputs.execution_branch }}
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    outputs:
+      candidate_head: ${{ steps.commit.outputs.candidate_head }}
+      lock_generation: ${{ steps.admission.outputs.lock_generation }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.execution_branch }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact tooling identity and execution branch
+        shell: bash
+        env:
+          EXPECTED_TOOLING_HEAD: ${{ inputs.expected_tooling_head }}
+          EXECUTION_BRANCH: ${{ inputs.execution_branch }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_TOOLING_HEAD"
+          echo "$EXECUTION_BRANCH" | grep -Eq '^audit/methods-role6-formal-record-three-anchor-developmental-baseline-v1-[0-9]{3}$'
+      - name: Download canonical audit package artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ inputs.package_artifact_run_id }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/audit-package"
+          gh run download "$RUN_ID" --repo "${{ github.repository }}" --name methods-role6-audit-package --dir "$RUNNER_TEMP/audit-package"
+          test -f "$RUNNER_TEMP/audit-package/audit-package.v1.json"
+      - name: Verify fixed Role 6 holder
+        shell: bash
+        run: |
+          node -e "const j=require(process.env.RUNNER_TEMP+'/audit-package/audit-package.v1.json');if(j.executionHolder!=='MIB_ROLE6_FIRST_ASSIGNMENT_HOLDER_20260804_1802_6BB3D2454E65D0254CD93ED7')process.exit(1)"
+      - id: admission
+        name: Obtain command-emitted root intake admission
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          node tools/operation-intake/repository-operation-intake-gate.v1.mjs \
+            --request control-plane/methods-information-benchmark/role6-audit-bootstrap/audit-operation-request.v1.json \
+            --procedure control-plane/methods-information-benchmark/role6-audit-bootstrap/audit-construction-procedure.v1.json \
+            --repository "${{ github.repository }}" \
+            --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+            --output "$RUNNER_TEMP/admission-receipt.json"
+          node - <<'NODE'
+          const fs=require('fs');
+          const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/admission-receipt.json','utf8'));
+          if(r.result!=='ADMITTED_AND_LOCKED'||!r.lock?.lockGeneration) process.exit(1);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,`lock_generation=${r.lock.lockGeneration}\n`);
+          NODE
+      - name: Materialize 27 outputs and Role 6 return packet
+        shell: bash
+        run: |
+          node tools/methods-role6-audit/audit-package-materializer.v1.mjs \
+            --input "$RUNNER_TEMP/audit-package/audit-package.v1.json" \
+            --output-root "$GITHUB_WORKSPACE" \
+            --receipt "$RUNNER_TEMP/materialization-receipt.json"
+      - name: Builder verification of exact 28 package-input paths
+        shell: bash
+        run: |
+          node tools/methods-role6-audit/audit-package-verifier.v1.mjs \
+            --input "$RUNNER_TEMP/audit-package/audit-package.v1.json" \
+            --output-root "$GITHUB_WORKSPACE" \
+            --holder GITHUB_ACTIONS_METHODS_ROLE6_AUDIT_BUILDER_VERIFIER_${{ github.run_id }}_${{ github.run_attempt }} \
+            --receipt "$RUNNER_TEMP/builder-verification-receipt.json"
+      - id: commit
+        name: Commit exact 28 package-input paths
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          node -e "const r=require('./control-plane/methods-information-benchmark/role6-audit-bootstrap/audit-output-path-registry.v1.json');console.log(r.packageInputPaths.join('\n'))" > "$RUNNER_TEMP/package-input-paths.txt"
+          while IFS= read -r p; do git add -- "$p"; done < "$RUNNER_TEMP/package-input-paths.txt"
+          test "$(git diff --cached --name-only | wc -l | tr -d ' ')" = "28"
+          git commit -m "materialize Methods Role 6 audit outputs and return packet"
+          git push origin "HEAD:${{ inputs.execution_branch }}"
+          echo "candidate_head=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: methods-role6-audit-builder-evidence
+          path: |
+            ${{ runner.temp }}/admission-receipt.json
+            ${{ runner.temp }}/materialization-receipt.json
+            ${{ runner.temp }}/builder-verification-receipt.json
+          if-no-files-found: error
+
+  fresh-verification:
+    needs: materialize
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.materialize.outputs.candidate_head }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Download canonical audit package artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ inputs.package_artifact_run_id }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/audit-package"
+          gh run download "$RUN_ID" --repo "${{ github.repository }}" --name methods-role6-audit-package --dir "$RUNNER_TEMP/audit-package"
+          test -f "$RUNNER_TEMP/audit-package/audit-package.v1.json"
+      - name: Fresh independent verification of exact 28 package-input paths
+        shell: bash
+        run: |
+          node tools/methods-role6-audit/audit-package-verifier.v1.mjs \
+            --input "$RUNNER_TEMP/audit-package/audit-package.v1.json" \
+            --output-root "$GITHUB_WORKSPACE" \
+            --holder GITHUB_ACTIONS_METHODS_ROLE6_AUDIT_FRESH_VERIFIER_${{ github.run_id }}_${{ github.run_attempt }} \
+            --receipt "$RUNNER_TEMP/fresh-verification-receipt.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: methods-role6-audit-verifier-evidence
+          path: ${{ runner.temp }}/fresh-verification-receipt.json
+          if-no-files-found: error
+
+  return-role:
+    needs: [materialize, fresh-verification]
+    runs-on: ubuntu-latest
+    outputs:
+      final_candidate_head: ${{ steps.commit.outputs.final_candidate_head }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.materialize.outputs.candidate_head }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Download canonical audit package artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ inputs.package_artifact_run_id }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/audit-package"
+          gh run download "$RUN_ID" --repo "${{ github.repository }}" --name methods-role6-audit-package --dir "$RUNNER_TEMP/audit-package"
+      - name: Command-emit Role 6 return receipt and successor ledger evidence
+        shell: bash
+        run: |
+          node tools/methods-role6-audit/audit-package-materializer.v1.mjs \
+            --return-assignment \
+            --input "$RUNNER_TEMP/audit-package/audit-package.v1.json" \
+            --ledger control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/first-assignment-ledger.successor.v1.json \
+            --output-receipt control-plane/methods-information-benchmark/role6-audit/receipts/role6-operation-return.receipt.v1.json \
+            --successor-ledger "$RUNNER_TEMP/first-assignment-ledger.returned-successor.v1.json"
+      - name: Final verification of 29 paths and inactive Role 6 successor
+        shell: bash
+        run: |
+          node tools/methods-role6-audit/audit-package-verifier.v1.mjs \
+            --input "$RUNNER_TEMP/audit-package/audit-package.v1.json" \
+            --output-root "$GITHUB_WORKSPACE" \
+            --holder GITHUB_ACTIONS_METHODS_ROLE6_AUDIT_FINAL_VERIFIER_${{ github.run_id }}_${{ github.run_attempt }} \
+            --final-receipt control-plane/methods-information-benchmark/role6-audit/receipts/role6-operation-return.receipt.v1.json \
+            --successor-ledger "$RUNNER_TEMP/first-assignment-ledger.returned-successor.v1.json" \
+            --receipt "$RUNNER_TEMP/final-verification-receipt.json"
+      - id: commit
+        name: Commit command-emitted return receipt
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- control-plane/methods-information-benchmark/role6-audit/receipts/role6-operation-return.receipt.v1.json
+          test "$(git diff --cached --name-only)" = "control-plane/methods-information-benchmark/role6-audit/receipts/role6-operation-return.receipt.v1.json"
+          git commit -m "command-emit Methods Role 6 assignment return receipt"
+          git push origin "HEAD:${{ inputs.execution_branch }}"
+          echo "final_candidate_head=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: methods-role6-audit-final-return
+          path: |
+            control-plane/methods-information-benchmark/role6-audit/receipts/role6-operation-return.packet.v1.json
+            control-plane/methods-information-benchmark/role6-audit/receipts/role6-operation-return.receipt.v1.json
+            ${{ runner.temp }}/first-assignment-ledger.returned-successor.v1.json
+            ${{ runner.temp }}/final-verification-receipt.json
+          if-no-files-found: error
+
+  close-operation-lock:
+    if: ${{ always() && needs.materialize.outputs.lock_generation != '' }}
+    needs: [materialize, fresh-verification, return-role]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.expected_tooling_head }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Close root operation lock terminally
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          LOCK_GENERATION: ${{ needs.materialize.outputs.lock_generation }}
+          MATERIALIZE_RESULT: ${{ needs.materialize.result }}
+          VERIFY_RESULT: ${{ needs.fresh-verification.result }}
+          RETURN_RESULT: ${{ needs.return-role.result }}
+        run: |
+          if test "$MATERIALIZE_RESULT" = success && test "$VERIFY_RESULT" = success && test "$RETURN_RESULT" = success; then
+            DISPOSITION=PASS_CLOSED
+          else
+            DISPOSITION=FAIL_CLOSED
+          fi
+          node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+            --action close \
+            --repository "${{ github.repository }}" \
+            --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+            --operation-id METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1 \
+            --lock-scope METHODS_INFORMATION_BENCHMARK/ROLE6_AUDIT/FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_DEVELOPMENTAL_BASELINE \
+            --lock-generation "$LOCK_GENERATION" \
+            --terminal-disposition "$DISPOSITION" \
+            --output "$RUNNER_TEMP/root-lock-closure-receipt.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: methods-role6-audit-root-lock-closure
+          path: ${{ runner.temp }}/root-lock-closure-receipt.json
+          if-no-files-found: error

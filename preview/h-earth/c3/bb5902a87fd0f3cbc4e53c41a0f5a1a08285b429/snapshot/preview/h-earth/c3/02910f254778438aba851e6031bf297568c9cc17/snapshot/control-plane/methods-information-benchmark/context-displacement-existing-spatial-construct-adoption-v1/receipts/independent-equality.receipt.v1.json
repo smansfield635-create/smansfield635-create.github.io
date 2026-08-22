@@ -1,0 +1,17 @@
+{
+  "schema": "METHODS_SPATIAL_ADOPTION_INDEPENDENT_EQUALITY_RECEIPT_v1",
+  "status": "PASS",
+  "operationId": "METHODS_CONTEXT_DISPLACEMENT_EXISTING_SPATIAL_CONSTRUCT_ADOPTION_v1",
+  "governingHead": "3b21d30763ca0368110811351bb3d3c8a042af47",
+  "candidateHeadEvaluated": "ca796757e4767bfd7621f35cbb0b51b733f42574",
+  "workflowRun": 31055513313,
+  "builderWorkflowJob": 92472039141,
+  "freshVerifierWorkflowJob": 92472073445,
+  "builderFingerprint": "59da453bc620ff7992d71d6db4f075d28db9f35530c570961a6a0a14a2ef7252",
+  "freshVerifierFingerprint": "59da453bc620ff7992d71d6db4f075d28db9f35530c570961a6a0a14a2ef7252",
+  "fingerprint": "59da453bc620ff7992d71d6db4f075d28db9f35530c570961a6a0a14a2ef7252",
+  "exactNormalizedEquality": true,
+  "distinctVerifier": true,
+  "inspirationOnlyRowCount": 0,
+  "rejectedVisualFoundationExcluded": true
+}

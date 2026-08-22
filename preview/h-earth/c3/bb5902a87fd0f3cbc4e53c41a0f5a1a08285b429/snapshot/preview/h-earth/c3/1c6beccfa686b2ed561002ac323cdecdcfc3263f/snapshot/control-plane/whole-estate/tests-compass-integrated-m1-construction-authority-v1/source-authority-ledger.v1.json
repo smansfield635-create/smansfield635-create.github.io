@@ -1,0 +1,99 @@
+{
+  "schema": "TESTS_COMPASS_INTEGRATED_M1_CONSTRUCTION_SOURCE_AUTHORITY_LEDGER_v1",
+  "version": "1.0.0",
+  "operation": "TESTS_COMPASS_INTEGRATED_M1_CONSTRUCTION_AUTHORITY_v1",
+  "constructionBaseMain": "5dc56c1b73743706078afeb07cfe2dc144b72c90",
+  "sources": [
+    {
+      "id": "PROMOTED_COMPASS_TESTS_BINDING_CONTRACT",
+      "path": "control-plane/whole-estate/compass-tests-architecture-binding-v1/binding-contract.v1.json",
+      "blob": "52ce1e12dc2a07c90e7eaae350f97015b2f28179",
+      "authorityAnchor": "5dc56c1b73743706078afeb07cfe2dc144b72c90",
+      "role": "NAVIGATION_MECHANICS_BINDING"
+    },
+    {
+      "id": "PROMOTED_COMPASS_TESTS_DONOR_MAP",
+      "path": "control-plane/whole-estate/compass-tests-architecture-binding-v1/donor-capability-map.v1.json",
+      "blob": "6bd625bd63bc0bbdec4a629e8c5058f65284924f",
+      "authorityAnchor": "5dc56c1b73743706078afeb07cfe2dc144b72c90",
+      "role": "NINE_CAPABILITY_ADMISSION_MAP"
+    },
+    {
+      "id": "PROMOTED_COMPASS_TESTS_NONINHERITANCE_LEDGER",
+      "path": "control-plane/whole-estate/compass-tests-architecture-binding-v1/donor-noninheritance-ledger.v1.json",
+      "blob": "10777cb94ca72e694ab6ab5372f53ddd9441aadc",
+      "authorityAnchor": "5dc56c1b73743706078afeb07cfe2dc144b72c90",
+      "role": "DONOR_SEMANTIC_STRIPPING_AUTHORITY"
+    },
+    {
+      "id": "TESTS_L0_L1_NAVIGATION_AUTHORITY",
+      "path": "control-plane/whole-estate/tests-l0-l1-navigation-shell-authority-v1/authority-contract.v1.json",
+      "blob": "0bfab791c005ca71cee771a5d14d27f8dfab3177",
+      "role": "TESTS_ENVIRONMENT_AND_RESEARCH_CUSTODY_AUTHORITY"
+    },
+    {
+      "id": "WHOLE_ESTATE_AUTHORITY_MATRIX",
+      "path": "control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/authority-and-ownership-matrix.v1.json",
+      "blob": "c24c86b89d0650dd597988d4b3148bec41304b4a",
+      "role": "ROLE_AND_NON_SUBSTITUTION_AUTHORITY"
+    },
+    {
+      "id": "ACCEPTED_M1_MANIFEST",
+      "path": "control-plane/whole-estate/tests-l0-l1-bounded-manifestation-m1-v1/candidate-manifest.v1.json",
+      "blob": "e18c382c7f82bd3335f69bcf752198c0c10e66a9",
+      "candidateHead": "9370bba7841b8a831f7f1c034d0b74fb83dab2e0",
+      "promotionMerge": "391c3543fd048bac90493232f04973911468d3eb",
+      "role": "M1_SCIENTIFIC_AND_PROCEDURAL_SUBJECT"
+    },
+    {
+      "id": "ACCEPTED_M1_HTML",
+      "path": "control-plane/whole-estate/tests-l0-l1-bounded-manifestation-m1-v1/index.html",
+      "blob": "1dab5d948af7326db1213f6b0ff3c92acdce6246",
+      "role": "M1_PRESENTATION_BASELINE"
+    },
+    {
+      "id": "ACCEPTED_M1_CSS",
+      "path": "control-plane/whole-estate/tests-l0-l1-bounded-manifestation-m1-v1/manifestation.css",
+      "blob": "3f77c2a8559293e29b6ba5ac22a69e4cec658031",
+      "role": "M1_PRESENTATION_BASELINE"
+    },
+    {
+      "id": "ACCEPTED_M1_RUNTIME",
+      "path": "control-plane/whole-estate/tests-l0-l1-bounded-manifestation-m1-v1/manifestation.mjs",
+      "blob": "93773f7ecff4036e531f6db1a672850919cee7c5",
+      "role": "M1_RUNTIME_BEHAVIOR_BASELINE"
+    },
+    {
+      "id": "ACCEPTED_M1_VERIFIER",
+      "path": "control-plane/whole-estate/tests-l0-l1-bounded-manifestation-m1-v1/verify.v1.mjs",
+      "blob": "73fe56d20c6d0d1bddcea3c0bbc3313b57dee03a",
+      "role": "M1_STATIC_REGRESSION_BASELINE"
+    },
+    {
+      "id": "M1_RUNTIME_EVIDENCE_MANIFEST",
+      "path": "control-plane/whole-estate/tests-l0-l1-bounded-manifestation-m1-runtime-evidence-v1/runtime-evidence-manifest.v1.json",
+      "blob": "ea817db12cc70b306518f2ba6d906619f6bd1bab",
+      "role": "PRESERVED_M1_RUNTIME_EVIDENCE"
+    },
+    {
+      "id": "M1_ACCESSIBILITY_RESPONSIVE_EVIDENCE_MANIFEST",
+      "path": "control-plane/whole-estate/tests-l0-l1-bounded-manifestation-m1-accessibility-responsive-evidence-v1/accessibility-responsive-manifest.v1.json",
+      "blob": "04379034a3900700fed38130c2009723c2dc0113",
+      "role": "PRESERVED_M1_ACCESSIBILITY_RESPONSIVE_EVIDENCE"
+    },
+    {
+      "id": "M1R2_PRESERVED_PRIOR_EVIDENCE_HEAD",
+      "branch": "agent/methods-models-manifestation-m1r2-v1",
+      "head": "6840cf0b99914263628e937453497e5af3f16166",
+      "role": "PRESERVED_PRIOR_EVIDENCE_NOT_REWRITE_AUTHORITY"
+    }
+  ],
+  "sourceRules": {
+    "threadMemoryIsAuthority": false,
+    "labelSimilarityIsAuthority": false,
+    "prototypeExistenceIsAuthority": false,
+    "unresolvedSourceMayBeInherited": false,
+    "researchContentMayBeCopiedIntoTests": false,
+    "donorMechanicsMayCarryDonorSemantics": false
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "schema": "REPOSITORY_AI_ENTRY_ROUTER_INSTALLATION_RECEIPT_v1",
+  "operationId": "REPOSITORY_WIDE_AI_ENTRY_ROUTER_GENERALIZATION_001",
+  "status": "IMPLEMENTED_ROUTER_VALIDATED_AND_NEGATIVE_BACKEND_PROVEN",
+  "startingHead": "e7bbd2c6d74d2cd98fca35e3ea02d43b13b77b5e",
+  "installationHeadBinding": "COMMIT_CONTAINING_THIS_RECEIPT",
+  "architecture": {
+    "rootEntrypointGeneralized": true,
+    "existingHEarthRegistryPreserved": true,
+    "hEarthRegisteredAsFirstProject": true,
+    "futureProjectRegistrationSupported": true,
+    "sharedGithubProceduresInstalled": true,
+    "localAndGithubActionsBackendsDeclared": true,
+    "routerCliInstalled": true,
+    "routerValidationWorkflowInstalled": true,
+    "r06c10CandidateAdmissionWorkflowInstalled": true
+  },
+  "routerValidation": {
+    "workflowRunId": 30884473282,
+    "jobId": 91912555601,
+    "artifactId": 8882523803,
+    "artifactDigest": "sha256:1e7d2e1a6244266c5537d668939863b3c1d6b6e340a118f8731dfa9305dbe80e",
+    "result": "PASS",
+    "receiptPath": ".github/ai-router/receipts/repository-ai-entry-router-v1.github-actions-validation.receipt.json"
+  },
+  "negativeCandidateAdmissionBackendValidation": {
+    "workflowRunId": 30884745802,
+    "jobId": 91913374596,
+    "artifactId": 8882625114,
+    "artifactDigest": "sha256:4b34f704e517d3b8b37b7577b59a61056000b350557802de66a32b9a90be94fc",
+    "testCandidateHead": "95504c9927922318225da1d61fa303cec70497f9",
+    "result": "PASS_FAIL_CLOSED_NEGATIVE_BACKEND_PROVEN",
+    "receiptPath": ".github/ai-router/receipts/h-earth-r06-c10-negative-candidate-admission-backend.validation.receipt.v1.json"
+  },
+  "productMutation": false,
+  "hEarthRuntimeMutation": false,
+  "conversationMemoryRequired": false,
+  "remainingIndependentClosure": [
+    "LATER_RUN_POSITIVE_SUCCESSOR_CANDIDATE_AND_SECOND_FINGERPRINT_REPRODUCTION"
+  ]
+}

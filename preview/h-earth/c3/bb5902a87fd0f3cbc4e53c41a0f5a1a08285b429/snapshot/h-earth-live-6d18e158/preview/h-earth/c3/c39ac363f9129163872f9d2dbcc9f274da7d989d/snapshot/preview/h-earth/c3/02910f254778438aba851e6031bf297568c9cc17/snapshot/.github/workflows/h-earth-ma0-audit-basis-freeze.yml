@@ -1,0 +1,51 @@
+# validation-trigger: 1
+name: H-Earth MA0 Audit Basis Freeze
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-ma0-audit-basis-freeze.yml'
+      - 'h-earth-3d/control-plane/post-cp2-round2/metric-attribution/h-earth.ma0-audit-basis-freeze.v1.mjs'
+      - 'h-earth-3d/validation/metric-attribution/h-earth.ma0-audit-basis-freeze.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-exact-audit-basis:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact MA0 head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute MA0 freeze verification
+        run: node h-earth-3d/validation/metric-attribution/h-earth.ma0-audit-basis-freeze.mjs | tee h-earth.ma0-audit-basis-freeze.log
+      - name: Upload MA0 receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-ma0-audit-basis-freeze
+          path: |
+            h-earth-3d/validation/metric-attribution/h-earth.ma0-audit-basis-freeze.receipt.v1.json
+            h-earth.ma0-audit-basis-freeze.log
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Report MA0 disposition
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const path = 'h-earth-3d/validation/metric-attribution/h-earth.ma0-audit-basis-freeze.receipt.v1.json';
+          const receipt = JSON.parse(fs.readFileSync(path, 'utf8'));
+          if (receipt.passClosed !== true || receipt.result !== 'MA0_AUDIT_BASIS_FREEZE_PASS_CLOSED') {
+            console.error(JSON.stringify(receipt, null, 2));
+            process.exit(1);
+          }
+          console.log(`MA0_DISPOSITION:${receipt.result}:${receipt.canonicalReceiptSha256}:${receipt.resumeToken}`);
+          NODE

@@ -1,0 +1,63 @@
+{
+  "schema": "WHOLE_ESTATE_EVIDENCE_STANDING_TRAVERSAL_CONTRACT_v1",
+  "status": "CHECKPOINT_2_CONSTRUCTION_CANDIDATE",
+  "methodsModelsLocalRole": [
+    "EVIDENCE_GATE",
+    "RELATION_MAP",
+    "DISCOVERY_BRIDGE"
+  ],
+  "movements": {
+    "understand": "WHAT_IS_THIS_OBJECT_AND_WHAT_IS_ACTUALLY_BEING_CLAIMED",
+    "verify": "WHAT_EVIDENCE_METHOD_RESULT_BOUNDARY_AND_PROVENANCE_DETERMINE_CURRENT_STANDING",
+    "explore": "GIVEN_THAT_STANDING_WHERE_DO_DECLARED_RELATIONS_LAWFULLY_LEAD",
+    "inwardTraversal": "EXPERIENCE_TO_VERIFY",
+    "outwardTraversal": "VERIFY_TO_EXPLORE"
+  },
+  "reservedTerminology": {
+    "PROSPECTIVE": "STRICT_SCIENTIFIC_USE_ONLY_NOT_INTERFACE_TRAVERSAL"
+  },
+  "standingStates": [
+    "SUPPORTED_WITHIN_BOUNDARY",
+    "MIXED",
+    "ADVERSE_RESULT_PRESERVED",
+    "PROTOCOL_ONLY",
+    "SOURCE_CONFIRMED_STRUCTURE_ONLY",
+    "EMPIRICAL_VALIDATION_NOT_ESTABLISHED",
+    "UNRESOLVED",
+    "NO_MATCH"
+  ],
+  "laws": [
+    "NAVIGABLE_RELATION_REQUIRES_DECLARED_SEMANTIC_RELATION",
+    "INTERFACE_MOVEMENT_MAY_NOT_ESCALATE_EVIDENCE",
+    "ADVERSE_OR_UNRESOLVED_EVIDENCE_DOES_NOT_CREATE_DISCOVERY_DEAD_END",
+    "EXPLORATION_MAY_FOLLOW_EVIDENCE_BUT_MAY_NEVER_OUTRUN_IT",
+    "OUTWARD_TRAVERSAL_IS_CONSTRAINED_BY_GIVEN_THAT_STANDING",
+    "METHODS_MODELS_RETURNS_STANDING_NOT_TRUST"
+  ],
+  "typedRelationRequirement": {
+    "form": "CLAIM_i <-> OBJECT_i <-> APPLICATION_j",
+    "universalConnectivity": false,
+    "rendererMayInventRelations": false,
+    "narrativeConvenienceMayInventRelations": false
+  },
+  "standingAwareExamples": [
+    {
+      "standing": "PROTOCOL_ONLY",
+      "permitted": "EXPLORE_THE_EXPERIMENT_BEING_PREPARED",
+      "forbidden": "SEE_WHAT_THIS_DISCOVERY_PROVED"
+    },
+    {
+      "standing": "MIXED",
+      "permitted": "EXPLORE_THE_ADVERSE_COMPARATOR_OR_REMAINING_RESEARCH_QUESTION",
+      "forbidden": "PRESENT_AS_UNQUALIFIED_CONFIRMATION"
+    },
+    {
+      "standing": "ADVERSE_RESULT_PRESERVED",
+      "permitted": "EXPLORE_WHAT_FAILED_WHY_IT_MATTERED_AND_WHAT_QUESTION_REMAINS",
+      "forbidden": "HIDE_THE_ADVERSE_RESULT_BEHIND_A_POSITIVE_PARENT_CLAIM"
+    }
+  ],
+  "globalOrientationAuthority": "COMPASS",
+  "methodsModelsMayBecomeGlobalCompass": false,
+  "publicMutationAuthorized": false
+}

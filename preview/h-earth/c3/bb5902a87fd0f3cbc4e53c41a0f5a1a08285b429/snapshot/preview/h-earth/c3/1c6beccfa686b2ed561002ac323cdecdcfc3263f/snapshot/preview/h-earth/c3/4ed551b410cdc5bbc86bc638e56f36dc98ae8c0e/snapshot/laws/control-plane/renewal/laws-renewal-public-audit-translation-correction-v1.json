@@ -1,0 +1,70 @@
+{
+  "contract": "LAWS_RENEWAL_PUBLIC_AUDIT_TRANSLATION_CORRECTION_v1",
+  "mode": "USER_VISUAL_CORRECTION_AND_SHARED_PRESENTATION_REPAIR",
+  "status": "CORRECTION_IMPLEMENTED_PENDING_EXECUTED_AND_USER_VISUAL_VERIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "rollback_baseline": "54d79db4f8d17367bf6bbe6388b114e243ec0bd0",
+  "branch": "agent/laws-renewal-public-audit-translation-001",
+  "trigger": {
+    "source": "USER_SUPPLIED_MOBILE_SCREENSHOTS",
+    "page": "/laws/test/reverse-audit/",
+    "observed_surface": "EXPANDED_CANONICAL_AUDIT",
+    "user_correction": "No Laws page may present public or audit material as old-school engineering or terminal text.",
+    "visual_acceptance_of_merged_cohort": "NOT_RECORDED"
+  },
+  "defect": {
+    "id": "LAWS_PUBLIC_AUDIT_TERMINAL_PRESENTATION_DEFECT_v1",
+    "classification": "SHARED_PRESENTATION_STANDARD_VIOLATION",
+    "observed_failures": [
+      "MONOSPACE_FORMULA_AND_RELATIONSHIP_BLOCKS",
+      "RAW_MACHINE_STATUS_VALUES_DOMINATE_READING",
+      "LONG_STRUCTURAL_RECEIPT_EXPOSED_AS_PRIMARY_ENGINEERING_DUMP",
+      "CUSTODY_PRESERVATION_CONFUSED_WITH_PUBLIC_PRESENTATION"
+    ],
+    "content_loss": false,
+    "route_failure": false,
+    "evidence_status_failure": false
+  },
+  "governing_public_standard": {
+    "sequence": "HUMAN_MEANING_TO_VISUAL_RELATIONSHIP_TO_ENGINEERING_DETAIL_TO_OPTIONAL_AUDIT_DEPTH",
+    "ordinary_language_first": true,
+    "terminal_or_console_visual_identity": false,
+    "canonical_custody_preserved": true,
+    "exact_source_text": "SECOND_CLOSED_DISCLOSURE_WHEN_JAVASCRIPT_IS_AVAILABLE",
+    "static_no_javascript": "COMPLETE_TEXT_REMAINS_AVAILABLE_WITH_MODERN_SANS_PRESENTATION"
+  },
+  "shared_correction": {
+    "renewal_css_wrapper": "assets/laws-destination/renewal.css",
+    "preserved_core_styles": "assets/laws-destination/renewal-core-v1.css",
+    "public_audit_translation_styles": "assets/laws-destination/renewal-public-audit-v2.css",
+    "interaction_engine": "assets/laws-destination/renewal.js",
+    "formula_typography": "MODERN_HUMAN_READABLE_RELATIONSHIP_SURFACE",
+    "machine_status_translation": "PUBLIC_READABLE_TEXT_WITH_EXACT_VALUE_RETAINED_IN_DOM_DATA_AND_STATIC_SOURCE",
+    "long_receipt_treatment": "NESTED_NATIVE_DISCLOSURE_CLOSED_BY_DEFAULT_IN_ENHANCED_MODE"
+  },
+  "scope": {
+    "applies_to": [
+      "/laws/categories/flow/signals/",
+      "/laws/categories/reality/measure.html",
+      "/laws/test/reverse-audit/",
+      "/laws/research/findings-and-boundaries/",
+      "/laws/industrial-posture/",
+      "ALL_FUTURE_PAGES_CONSUMING_THE_SHARED_RENEWAL_ENGINE"
+    ],
+    "product_page_html_mutation": 0,
+    "route_mutation": 0,
+    "canonical_record_mutation": 0,
+    "formula_identity_mutation": 0,
+    "evidence_status_mutation": 0,
+    "claim_ceiling_mutation": 0,
+    "frontier_mutation": 0,
+    "compass_runtime_mutation": 0
+  },
+  "program_disposition": {
+    "merged_representative_engineering_pass": "PRESERVED_AS_TECHNICAL_EXECUTION_HISTORY",
+    "representative_user_visual_acceptance": "REOPENED_PENDING_CORRECTED_VISUAL_REVIEW",
+    "next_five_page_cohort": "HELD",
+    "batch_migration": "HELD",
+    "merge_authority": "NOT_GRANTED"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "manifestId": "H_EARTH_C2_BOUNDED_COASTAL_VISUAL_SUCCESSOR_ALLOWED_PATHS_v1",
+  "baseHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
+  "branch": "agent/h-earth-c2-bounded-coastal-visual-successor-001",
+  "allowedPaths": [
+    ".github/workflows/h-earth-c2-coastal-visual-successor.yml",
+    "h-earth-3d/control-plane/coastal-morphology/c2/evidence/h-earth.c2.browser-verification.json",
+    "h-earth-3d/control-plane/coastal-morphology/c2/evidence/h-earth.c2.visual-successor-receipt.json",
+    "h-earth-3d/control-plane/coastal-morphology/c2/h-earth.c2.allowed-path-manifest.json",
+    "h-earth-3d/control-plane/coastal-morphology/c2/h-earth.c2.branch-anchor.json",
+    "h-earth-3d/control-plane/coastal-morphology/c2/h-earth.c2.changed-path-count.json",
+    "h-earth-3d/control-plane/coastal-morphology/c2/h-earth.c2.feature-matrix.json",
+    "h-earth-3d/control-plane/coastal-morphology/c2/h-earth.c2.management-correction.json",
+    "h-earth-3d/control-plane/coastal-morphology/c2/h-earth.c2.pass-sequence.json",
+    "h-earth-3d/control-plane/coastal-morphology/c2/h-earth.c2.progress-ledger.json",
+    "h-earth-3d/control-plane/coastal-morphology/c2/h-earth.c2.rollback-receipt.json",
+    "h-earth-3d/control-plane/coastal-morphology/c2/h-earth.c2.work-log.jsonl",
+    "preview/h-earth/c2/coastal-visual-successor-001/README.txt",
+    "preview/h-earth/c2/coastal-visual-successor-001/candidate-integration.js",
+    "preview/h-earth/c2/coastal-visual-successor-001/candidate-renderer.js",
+    "preview/h-earth/c2/coastal-visual-successor-001/index.html",
+    "preview/h-earth/c2/coastal-visual-successor-001/preview-manifest.json"
+  ],
+  "protectedPaths": [
+    "showroom/globe/h-earth/index.html",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+    "showroom/globe/h-earth/functional-landscape/navigation.js",
+    "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js"
+  ],
+  "exactAllowedPathCount": 17,
+  "publicDefaultMutationAllowed": false
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "WHOLE_ESTATE_DEVELOPMENTAL_CLAIM_LANGUAGE_CONTRACT_v1",
+  "status": "CHECKPOINT_4_CONSTRUCTION_CANDIDATE",
+  "standingQuestion": "WHAT_DOES_THE_DEVELOPMENTAL_RECORD_PERMIT_US_TO_SAY_ABOUT_HOW_THE_ESTATE_WAS_CONSTRUCTED",
+  "permittedStatements": [
+    {
+      "class": "STRONG_CONTEMPORANEOUS",
+      "form": "This source explicitly records the stated architecture, constraint or separation at the time represented by the source.",
+      "requiredQualifier": "do not infer a scientific test unless a separate scientific protocol establishes one"
+    },
+    {
+      "class": "PARTIAL_CONTEMPORANEOUS",
+      "form": "Multiple contemporaneous artifacts are consistent with the stated developmental interpretation.",
+      "requiredQualifier": "the complete intent or whole-estate prediction was not contemporaneously established"
+    },
+    {
+      "class": "RETROSPECTIVE_INTERPRETATION",
+      "form": "The earlier artifact can be interpreted through the later coherence framework.",
+      "requiredQualifier": "this is a later interpretation, not evidence of earlier preregistration or intent"
+    }
+  ],
+  "estateScalePermittedForm": "The development record supports a bounded construction-lineage interpretation in which coherence-compatible constraints recur across identity, routing, authority, evidence handling and representation.",
+  "estateScaleRequiredQualifier": "This is developmental provenance and retrospective synthesis, not proof, preregistration, prospective confirmation or scientific validation of UCIC.",
+  "prohibitedPhrasesAsScientificClaims": [
+    "the website proves UCIC",
+    "the estate validates UCIC",
+    "the project was a preregistered test from the beginning",
+    "the coherence of the build confirms the theory",
+    "successful implementation proves the scientific model"
+  ],
+  "materialQualifierSalience": "ANY_OMITTED_QUALIFIER_THAT_WOULD_CHANGE_THE_USER_INFERENCE_MUST_APPEAR_AT_OR_BEFORE_THE_CLAIM_DEPTH",
+  "narrativeMayUseMetaphor": true,
+  "metaphorMayCarryScientificStanding": false,
+  "publicMutationAuthorized": false
+}

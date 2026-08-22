@@ -1,0 +1,56 @@
+{
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "operationId": "H_EARTH_MAP_WIDE_TERRAIN_ARTICULATION_AND_ESTATE_RESERVATION_INSTRUMENTATION_EXTENSION_v1",
+  "locator": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/instrument.locator.v1.json",
+  "projectIds": ["H_EARTH", "H_EARTH_MAP_WIDE_TERRAIN"],
+  "allowedChangedPathsManifest": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/changed-path-manifest.v1.json",
+  "branchSequence": [
+    "CREATE_GENESIS_BRANCH_FROM_EXACT_STARTING_HEAD",
+    "CREATE_ONLY_EXACT_25_PATHS",
+    "OPEN_DRAFT_PR",
+    "RUN_BUILDER",
+    "RUN_FRESH_VERIFIER",
+    "EMIT_TERMINATION_RECEIPT",
+    "STOP"
+  ],
+  "commitSequence": [
+    "MATERIALIZE_BOUND_INSTRUMENT_PACKAGE",
+    "REPAIR_ONLY_DECLARED_PATHS_IF_CERTIFICATION_FAILS",
+    "NO_WRITES_AFTER_TERMINATION"
+  ],
+  "canonicalSchemasPath": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/schemas.v1.json",
+  "exactToolingBinding": {
+    "toolRoot": "tools/h-earth-map-wide-terrain",
+    "runtime": "node >=22",
+    "externalDependencies": []
+  },
+  "errorPrecedence": [
+    "AUTHORITY_BOUNDARY_VIOLATION",
+    "PATH_SET_MISMATCH",
+    "WORLD_OR_CELL_IDENTITY_FAILURE",
+    "ESTATE_RESERVATION_FAILURE",
+    "ZONE_PLAN_FAILURE",
+    "CONTINUITY_FAILURE",
+    "CUMULATIVE_CONSTRAINT_FAILURE",
+    "REPETITION_FAILURE",
+    "PREVIEW_OR_ROLLBACK_FAILURE",
+    "FINGERPRINT_MISMATCH"
+  ],
+  "rollbackAndRecovery": {
+    "productRollbackRequired": false,
+    "candidateRecovery": "CLOSE_DRAFT_OR_REPAIR_ONLY_DECLARED_PATHS",
+    "existingPathMutation": "PROHIBITED"
+  },
+  "exactTestRunner": "node tools/h-earth-map-wide-terrain/self-test.v1.mjs --root . --expected-head <EXACT_HEAD> --holder <BUILDER_HOLDER> --output-dir <DIR>",
+  "freshVerifier": "node tools/h-earth-map-wide-terrain/fresh-verifier.v1.mjs --root . --expected-head <EXACT_HEAD> --builder-receipt <PATH> --holder <VERIFIER_HOLDER> --output-dir <DIR>",
+  "workflowPath": ".github/workflows/h-earth-map-wide-terrain-articulation-estate-reservation-bootstrap-validation.yml",
+  "artifactNames": [
+    "h-earth-map-wide-terrain-instrument-builder-evidence",
+    "h-earth-map-wide-terrain-instrument-verifier-evidence",
+    "h-earth-map-wide-terrain-instrument-final-certification"
+  ],
+  "useOperation": {
+    "status": "PROHIBITED_IN_THIS_BOOTSTRAP",
+    "requiredSuccessor": "SEPARATELY_RATIFIED_AND_ADMITTED_MAP_WIDE_TERRAIN_CANDIDATE_OPERATION"
+  }
+}

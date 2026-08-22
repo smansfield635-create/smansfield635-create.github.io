@@ -1,0 +1,49 @@
+name: Authorized Toolset Active Conformance
+on:
+  pull_request:
+    branches: [main]
+    paths: ['.github/ai-toolset-transport/**','.github/workflows/ai-room-authorized-toolset-bootstrap-validation.yml','.github/workflows/ai-room-execution-transport.yml','tools/ai-room-transport/**']
+  push:
+    branches: [main]
+    paths: ['.github/ai-toolset-transport/**','.github/workflows/ai-room-authorized-toolset-bootstrap-validation.yml','.github/workflows/ai-room-execution-transport.yml','tools/ai-room-transport/**']
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+jobs:
+  builder:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0, persist-credentials: false}
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - run: |
+          test "$(git rev-parse HEAD^{commit})" = "$EXPECTED_HEAD"
+          node tools/ai-room-transport/active-conformance.v1.mjs --root . --expected-head "$EXPECTED_HEAD" --holder "ACTIVE_BUILDER_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" --output /tmp/builder.json
+          node -e "const r=require('/tmp/builder.json');if(r.result!=='PASS_CLOSED_ACTIVE_CONFORMANCE'||r.descriptorsResolved!==r.descriptorCount)process.exit(1)"
+      - uses: actions/upload-artifact@v4
+        with: {name: 'active-builder-${{ github.run_id }}-${{ github.run_attempt }}', path: /tmp/builder.json, if-no-files-found: error}
+  verifier:
+    needs: builder
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0, persist-credentials: false}
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - uses: actions/download-artifact@v4
+        with: {name: 'active-builder-${{ github.run_id }}-${{ github.run_attempt }}', path: /tmp/builder}
+      - run: |
+          node tools/ai-room-transport/active-conformance.v1.mjs --root . --expected-head "$EXPECTED_HEAD" --holder "ACTIVE_VERIFIER_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" --output /tmp/verifier.json
+          node - <<'NODE'
+          const fs=require('fs'),b=JSON.parse(fs.readFileSync('/tmp/builder/builder.json')),v=JSON.parse(fs.readFileSync('/tmp/verifier.json'));if(b.result!=='PASS_CLOSED_ACTIVE_CONFORMANCE'||v.result!=='PASS_CLOSED_ACTIVE_CONFORMANCE'||b.executionHolder===v.executionHolder||b.packageFingerprint!==v.packageFingerprint)process.exit(1);fs.writeFileSync('/tmp/certification.json',JSON.stringify({schema:'AUTHORIZED_TOOLSET_ACTIVE_CONFORMANCE_CERTIFICATION_v2',result:'PASS_CLOSED',currentHead:process.env.EXPECTED_HEAD,activePackageFingerprint:b.packageFingerprint,distinctExecutionHolders:true,historicalGenesisReplayed:false,bootstrapAuthorityReactivated:false,productMutationPerformed:false},null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: active-conformance-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/verifier.json
+            /tmp/certification.json
+          if-no-files-found: error

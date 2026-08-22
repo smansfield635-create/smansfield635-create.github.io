@@ -1,0 +1,266 @@
+name: H-Earth Pre-Mutation Preflight Remote Binding Validation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/ai-toolset-transport/h-earth-repository-preflight-execution-binding.v1.json'
+      - '.github/workflows/h-earth-repository-preflight-execution-binding-validation.yml'
+      - 'tools/ai-room-transport/h-earth-repository-preflight-remote-execution.v1.mjs'
+  push:
+    branches: [main]
+    paths:
+      - '.github/ai-toolset-transport/h-earth-repository-preflight-execution-binding.v1.json'
+      - '.github/workflows/h-earth-repository-preflight-execution-binding-validation.yml'
+      - 'tools/ai-room-transport/h-earth-repository-preflight-remote-execution.v1.mjs'
+  workflow_dispatch:
+    inputs:
+      candidate_head:
+        description: Exact two-stage binding candidate head to validate
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  CHECKOUT_HEAD: ${{ github.event.pull_request.head.sha || inputs.candidate_head || github.sha }}
+  REGISTRATION_BASE: 8f33f025c21c0f6cdb412d8ad9e135de9e019f73
+  DESCRIPTOR_PATH: .github/ai-toolset-transport/h-earth-repository-preflight-execution-binding.v1.json
+  REGISTRY_PATH: .github/ai-toolset-transport/authorized-toolset-registry.v1.json
+  WORKFLOW_PATH: .github/workflows/h-earth-repository-preflight-execution-binding-validation.yml
+  ADAPTER_PATH: tools/ai-room-transport/h-earth-repository-preflight-remote-execution.v1.mjs
+  NATIVE_TOOL_PATH: tools/h-earth-repository-registry-auto-preflight.mjs
+  NATIVE_TOOL_BLOB: 6d4af698ca75b96aaa660033e9ae24c704673eb7
+  ACTIVATION_PATH: h-earth-3d/registry/activation/h-earth.repository-registry.auto-preflight.js
+  ACTIVATION_BLOB: b3c51381af190b6aab296db222296dc851cb7e9a
+
+jobs:
+  validate-binding:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact validation head with full history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CHECKOUT_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Resolve active and construction heads
+        shell: bash
+        run: |
+          set -euo pipefail
+          ACTIVE_HEAD="$(git rev-parse HEAD^{commit})"
+          test "$ACTIVE_HEAD" = "$CHECKOUT_HEAD"
+
+          case "$GITHUB_EVENT_NAME" in
+            pull_request|workflow_dispatch)
+              CANDIDATE_HEAD="$ACTIVE_HEAD"
+              ;;
+            push)
+              read -r -a PARENTS <<< "$(git show -s --format=%P "$ACTIVE_HEAD")"
+              test "${#PARENTS[@]}" -eq 2
+              CANDIDATE_HEAD="${PARENTS[1]}"
+              ;;
+            *)
+              echo "Unsupported event: $GITHUB_EVENT_NAME" >&2
+              exit 1
+              ;;
+          esac
+
+          TOOLING_HEAD="$(git rev-parse "$CANDIDATE_HEAD^")"
+          CANDIDATE_BASE="$(git rev-parse "$CANDIDATE_HEAD^^")"
+          test "$CANDIDATE_BASE" = "$REGISTRATION_BASE"
+
+          echo "ACTIVE_HEAD=$ACTIVE_HEAD" >> "$GITHUB_ENV"
+          echo "CANDIDATE_HEAD=$CANDIDATE_HEAD" >> "$GITHUB_ENV"
+          echo "TOOLING_HEAD=$TOOLING_HEAD" >> "$GITHUB_ENV"
+
+      - name: Verify exact two-commit construction and immutable tooling identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --name-only "$REGISTRATION_BASE" "$TOOLING_HEAD" | sort > "$RUNNER_TEMP/tooling-paths.txt"
+          printf '%s\n' "$WORKFLOW_PATH" "$ADAPTER_PATH" | sort > "$RUNNER_TEMP/expected-tooling-paths.txt"
+          diff -u "$RUNNER_TEMP/expected-tooling-paths.txt" "$RUNNER_TEMP/tooling-paths.txt"
+
+          git diff --name-only "$TOOLING_HEAD" "$CANDIDATE_HEAD" | sort > "$RUNNER_TEMP/registration-paths.txt"
+          printf '%s\n' "$DESCRIPTOR_PATH" "$REGISTRY_PATH" | sort > "$RUNNER_TEMP/expected-registration-paths.txt"
+          diff -u "$RUNNER_TEMP/expected-registration-paths.txt" "$RUNNER_TEMP/registration-paths.txt"
+
+          test "$(git rev-parse "$TOOLING_HEAD:$NATIVE_TOOL_PATH")" = "$NATIVE_TOOL_BLOB"
+          test "$(git rev-parse "$TOOLING_HEAD:$ACTIVATION_PATH")" = "$ACTIVATION_BLOB"
+
+          node --input-type=module - "$TOOLING_HEAD" <<'NODE'
+          import fs from 'node:fs';
+          const toolingHead = process.argv[2];
+          const descriptor = JSON.parse(fs.readFileSync(process.env.DESCRIPTOR_PATH, 'utf8'));
+          const registry = JSON.parse(fs.readFileSync(process.env.REGISTRY_PATH, 'utf8'));
+          if (descriptor.schema !== 'AUTHORIZED_TOOLSET_DESCRIPTOR_v1') throw new Error('DESCRIPTOR_SCHEMA_MISMATCH');
+          if (descriptor.exactToolingHead !== toolingHead) throw new Error('TOOLING_HEAD_BINDING_MISMATCH');
+          if (descriptor.commandSpecification?.scriptPath !== process.env.ADAPTER_PATH) throw new Error('ADAPTER_PATH_MISMATCH');
+          if (descriptor.allowedMutationPaths?.length !== 0) throw new Error('WRITABLE_PATH_LEAK');
+          const matches = registry.tools.filter((tool) => tool.descriptorId === descriptor.descriptorId && tool.operationId === descriptor.operationId);
+          if (matches.length !== 1) throw new Error('REGISTRY_DESCRIPTOR_CARDINALITY_MISMATCH');
+          if (JSON.stringify(matches[0]) !== JSON.stringify(descriptor)) throw new Error('REGISTRY_DESCRIPTOR_CONTENT_MISMATCH');
+          NODE
+
+      - name: Run adapter self-test and exact active-head preflight proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          node "$ADAPTER_PATH" \
+            --self-test \
+            --output "$RUNNER_TEMP/adapter-self-test.json"
+
+          PATHS_BASE64="$(node -e "process.stdout.write(Buffer.from(JSON.stringify(['showroom/globe/h-earth/index.html','showroom/globe/h-earth/index.css']),'utf8').toString('base64'))")"
+          node "$ADAPTER_PATH" \
+            --subject-head "$ACTIVE_HEAD" \
+            --paths-base64 "$PATHS_BASE64" \
+            --execution-holder H_EARTH_PREMUTATION_PREFLIGHT_BINDING_VALIDATION \
+            --output "$RUNNER_TEMP/direct-execution-receipt.json"
+
+          node - <<'NODE'
+          const fs = require('fs');
+          const s = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/adapter-self-test.json', 'utf8'));
+          const r = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/direct-execution-receipt.json', 'utf8'));
+          if (s.result !== 'PASS_CLOSED' || s.negativeScopeFixturePassed !== true) process.exit(1);
+          if (r.schema !== 'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_EXECUTION_RECEIPT_v1' || r.result !== 'PASS_CLOSED') process.exit(1);
+          if (r.subjectHead !== process.env.ACTIVE_HEAD || r.nativePreflightReceipt?.finalDisposition !== 'PASS') process.exit(1);
+          if (r.nativePreflightReceipt?.continuation !== 'SEPARATE_MUTATION_AUTHORITY_REQUIRED_BEFORE_CHANGE') process.exit(1);
+          if (r.nativePreflightReceipt?.mutationMayProceed !== false) process.exit(1);
+          if (r.productMutationPerformed || r.constructionAuthorityGranted || r.branchCreated || r.genericCommandAuthority) process.exit(1);
+          if (!r.repositoryCleanBefore || !r.repositoryCleanAfter || !r.subjectWorktreeCleanBefore || !r.subjectWorktreeCleanAfter) process.exit(1);
+          NODE
+
+      - name: Run closed-world active conformance
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/ai-room-transport/active-conformance.v1.mjs \
+            --root . \
+            --expected-head "$ACTIVE_HEAD" \
+            --holder H_EARTH_PREMUTATION_PREFLIGHT_ACTIVE_CONFORMANCE_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT} \
+            --output "$RUNNER_TEMP/active-conformance.json"
+          node -e "const r=require(process.env.RUNNER_TEMP+'/active-conformance.json');if(r.result!=='PASS_CLOSED_ACTIVE_CONFORMANCE'||r.descriptorsResolved!==r.descriptorCount)process.exit(1)"
+
+      - name: Exercise fixed-command dispatcher and validate command receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import { dispatchLoaded } from './tools/ai-room-transport/fixed-command-dispatcher.v1.mjs';
+          import { validateCommandReceipt } from './tools/ai-room-transport/command-receipt-validator.v1.mjs';
+          const descriptor = JSON.parse(fs.readFileSync(process.env.DESCRIPTOR_PATH, 'utf8'));
+          const registry = JSON.parse(fs.readFileSync(process.env.REGISTRY_PATH, 'utf8'));
+          const pathsBase64 = Buffer.from(JSON.stringify(['showroom/globe/h-earth/index.html','showroom/globe/h-earth/index.css']), 'utf8').toString('base64');
+          const request = {
+            schema: 'AI_ROOM_EXECUTION_REQUEST_v1',
+            requestId: 'H_EARTH_PREMUTATION_PREFLIGHT_BINDING_VALIDATION_REQUEST',
+            descriptorId: descriptor.descriptorId,
+            operationId: descriptor.operationId,
+            admissionReceiptIdentity: 'SYNTHETIC_VALIDATION_ADMISSION',
+            routerReceiptIdentity: 'SYNTHETIC_VALIDATION_ROUTER',
+            inputs: {
+              subjectHead: process.env.ACTIVE_HEAD,
+              pathsBase64,
+              executionHolder: 'H_EARTH_PREMUTATION_PREFLIGHT_DISPATCH_VALIDATION'
+            },
+            availableCapabilities: {
+              schema: 'AVAILABLE_CAPABILITY_RECEIPT_v1',
+              availableBackends: ['GITHUB_ACTIONS_CLEAN_EXECUTION'],
+              availableWorkflowPaths: [descriptor.workflowPath],
+              availableToolingHeads: [descriptor.exactToolingHead]
+            },
+            requestNonce: 'a'.repeat(64)
+          };
+          const admission = {
+            schema: 'REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1',
+            result: 'ADMITTED_AND_LOCKED',
+            operationId: descriptor.operationId,
+            projectId: descriptor.projectId,
+            operationStarted: true,
+            workflowExecutionAuthorized: true,
+            lock: { operationId: descriptor.operationId, state: 'ADMITTED_LOCKED', released: false, lockGeneration: 999999 }
+          };
+          const router = { schema: 'REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v1', disposition: 'PASS', routes: [{ projectId: descriptor.projectId, disposition: 'PASS' }] };
+          const receipt = dispatchLoaded({ request, registry, admissionReceipt: admission, routerReceipt: router, root: '.', allowCandidate: false });
+          const validation = validateCommandReceipt({ descriptor, receipt });
+          fs.writeFileSync(process.env.RUNNER_TEMP + '/command-execution-receipt.json', JSON.stringify(receipt, null, 2) + '\n');
+          fs.writeFileSync(process.env.RUNNER_TEMP + '/command-receipt-validation.json', JSON.stringify(validation, null, 2) + '\n');
+          if (receipt.executionDisposition !== 'COMMAND_EXECUTED_AND_PASSED') throw new Error('DISPATCH_NOT_PASS');
+          if (receipt.commandPayloadSchema !== 'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_EXECUTION_RECEIPT_v1') throw new Error('PAYLOAD_SCHEMA_MISMATCH');
+          if (receipt.changedPaths.length !== 0 || receipt.prohibitedSideEffectsObserved !== false) throw new Error('MUTATION_OBSERVED');
+          if (validation.validationDisposition !== 'VALIDATED_PASS') throw new Error('COMMAND_RECEIPT_NOT_VALIDATED_PASS');
+          NODE
+
+      - name: Run bounded negative fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          BAD_SCOPE="$(node -e "process.stdout.write(Buffer.from(JSON.stringify(['laws/index.html']),'utf8').toString('base64'))")"
+          if node "$ADAPTER_PATH" --subject-head "$ACTIVE_HEAD" --paths-base64 "$BAD_SCOPE" --execution-holder H_EARTH_NEGATIVE_SCOPE --output "$RUNNER_TEMP/negative-scope.json"; then
+            echo 'Expected out-of-scope path failure' >&2
+            exit 1
+          fi
+          node -e "const r=require(process.env.RUNNER_TEMP+'/negative-scope.json');if(r.result!=='FAIL_CLOSED'||r.errorCode!=='PATH_OUTSIDE_H_EARTH_SCOPE')process.exit(1)"
+
+          TRAVERSAL="$(node -e "process.stdout.write(Buffer.from(JSON.stringify(['showroom/globe/h-earth/../laws/index.html']),'utf8').toString('base64'))")"
+          if node "$ADAPTER_PATH" --subject-head "$ACTIVE_HEAD" --paths-base64 "$TRAVERSAL" --execution-holder H_EARTH_NEGATIVE_TRAVERSAL --output "$RUNNER_TEMP/negative-traversal.json"; then
+            echo 'Expected traversal failure' >&2
+            exit 1
+          fi
+          node -e "const r=require(process.env.RUNNER_TEMP+'/negative-traversal.json');if(r.result!=='FAIL_CLOSED'||r.errorCode!=='PATH_TRAVERSAL_OR_EMPTY_SEGMENT')process.exit(1)"
+
+      - name: Emit validation summary
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const direct = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/direct-execution-receipt.json', 'utf8'));
+          const command = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/command-execution-receipt.json', 'utf8'));
+          const validation = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/command-receipt-validation.json', 'utf8'));
+          const active = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/active-conformance.json', 'utf8'));
+          const out = {
+            schema: 'H_EARTH_PREMUTATION_PREFLIGHT_BINDING_VALIDATION_RECEIPT_v1',
+            result: 'PASS_CLOSED',
+            eventName: process.env.GITHUB_EVENT_NAME,
+            activeHead: process.env.ACTIVE_HEAD,
+            candidateHead: process.env.CANDIDATE_HEAD,
+            toolingHead: process.env.TOOLING_HEAD,
+            nativePreflightDisposition: direct.nativePreflightReceipt.finalDisposition,
+            nativePreflightReceiptSha256: direct.nativePreflightReceiptSha256,
+            commandExecutionDisposition: command.executionDisposition,
+            commandReceiptValidationDisposition: validation.validationDisposition,
+            activeConformanceFingerprint: active.packageFingerprint,
+            zeroWritableRepositoryPaths: command.changedPaths.length === 0,
+            productMutationPerformed: false,
+            hc02MutationPerformed: false,
+            constructionAuthorityGranted: false
+          };
+          fs.writeFileSync(process.env.RUNNER_TEMP + '/binding-validation-summary.json', JSON.stringify(out, null, 2) + '\n');
+          NODE
+
+      - name: Upload deterministic validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-premutation-preflight-binding-validation
+          path: |
+            ${{ runner.temp }}/adapter-self-test.json
+            ${{ runner.temp }}/direct-execution-receipt.json
+            ${{ runner.temp }}/active-conformance.json
+            ${{ runner.temp }}/command-execution-receipt.json
+            ${{ runner.temp }}/command-receipt-validation.json
+            ${{ runner.temp }}/negative-scope.json
+            ${{ runner.temp }}/negative-traversal.json
+            ${{ runner.temp }}/binding-validation-summary.json
+          if-no-files-found: error
+          retention-days: 90

@@ -1,0 +1,1 @@
+(()=>{'use strict';const css=document.createElement('link');css.rel='stylesheet';css.href='/assets/compass/compass.carousel.css?v=compass-carousel-v2';document.head.appendChild(css);const s=document.createElement('script');s.src='/assets/compass/compass.carousel.js?v=compass-carousel-v2';s.defer=true;document.head.appendChild(s)})();

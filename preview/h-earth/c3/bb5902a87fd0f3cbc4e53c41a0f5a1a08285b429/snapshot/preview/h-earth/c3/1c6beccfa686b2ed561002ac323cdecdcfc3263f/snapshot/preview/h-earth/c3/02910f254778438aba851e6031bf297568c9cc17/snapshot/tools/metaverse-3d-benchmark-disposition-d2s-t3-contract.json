@@ -1,0 +1,113 @@
+{
+  "contractId": "METAVERSE_3D_BENCHMARK_TO_DISPOSITION_COMPILER_T3_EVIDENCE_DELTA_SUPPLEMENT_D2S_v1",
+  "toolId": "METAVERSE_3D_BENCHMARK_TO_DISPOSITION_COMPILER_v1",
+  "checkpoint": "D2S",
+  "checkpointTitle": "T3_NATIVE_EVIDENCE_DELTA_INTAKE_AND_CANONICAL_FACT_NORMALIZATION_SUPPLEMENT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "compilerBranch": "agent/metaverse-3d-benchmark-disposition-compiler-d2s-t3-001",
+  "parentD2": {
+    "branch": "agent/metaverse-3d-benchmark-disposition-compiler-d2-001",
+    "headCommit": "209eac49c2db4d532bf1110743cba838deb443a4",
+    "draftPullRequest": 141,
+    "pullRequestState": "OPEN_DRAFT_UNMERGED",
+    "status": "PASS_CLOSED",
+    "contractGitBlob": "f4460f1108f09ab6cfc6ed98ba94a840b80cd522",
+    "normalizerGitBlob": "d5fdabc37c3cedfc1c02679bc6389cda2cb06dc4",
+    "controlsGitBlob": "966c6ed0c21feafffe55b61aa59693d62ebdf6e7",
+    "workflowGitBlob": "3b20fd57ebb67d05b2f1ae31b31961c18dcc37f8",
+    "workflowRunId": "30163081806",
+    "jobId": "89691458672",
+    "artifactId": "8620779192",
+    "artifactSizeBytes": 16661,
+    "artifactSha256": "2bda7846aeb559263b0e3207285fef8caa359761afb9bc212ea5c043a29986fe",
+    "canonicalFactCount": 47,
+    "factManifestSha256": "c88e3afa3327eefe6aca7fff544cd4ebe922c63ac47d53a2f5c842b1d718ddb4",
+    "coexistenceRelationCount": 3,
+    "coexistenceIndexSha256": "3ee791df987a6894b923e5d137f66b86abfcef89b0467b230288b7ab4b6c52e6",
+    "normalizationReceiptSha256": "0387c1bf54b7568ff58d0bddbef8150c61f57bcd153c3da41df4f20981e2c6b3",
+    "aggregateReceiptSha256": "a314560be0afc58f5facd669b5c317994346e75c9a7ed8552b427afc361e5c79"
+  },
+  "t2InstrumentOccurrence": {
+    "branch": "agent/metaverse-benchmark-four-compass-tool-t2-001",
+    "parentT1Commit": "c90e2037d4a06814688482e6a7b9514562f8c6c3",
+    "headCommit": "beb8bf02a45d8c178c52b91244ad9e077853b23c",
+    "receiptPath": "verification/benchmark-tools/four-compass-benchmark-v1/checkpoint-t2/corrected-harness-and-workflow-construction.receipt.json",
+    "receiptGitBlob": "42b5c24e0a6a329395185b662a8a165f6bc0d0e0",
+    "constructionDigest": "60dea2b6b433bcee731a1be0d1f933a51fa51808d5b9f07ad4b7c579e6a9e6fe",
+    "sourcePathCount": 5,
+    "authorizedDeltaPathCount": 6,
+    "browserExecutionPerformed": false
+  },
+  "t3EvidenceOccurrence": {
+    "branch": "agent/metaverse-benchmark-four-compass-tool-t3-001",
+    "parentT2Commit": "beb8bf02a45d8c178c52b91244ad9e077853b23c",
+    "receiptCommit": "3f7b8b9e4a2b4b503d4564d11fa75cf09e152abc",
+    "receiptPath": "verification/benchmark-tools/four-compass-benchmark-v1/checkpoint-t3/tool-execution-and-evidence-validation.receipt.json",
+    "receiptGitBlob": "73015114b8c47491dc76e8dab60c3c72442a733c",
+    "validationDigest": "77550e769de04f4399704e768497284249daa154e0fbd079e423b9db05231bed",
+    "executionPullRequest": 142,
+    "executionPullRequestFinalState": "CLOSED_DRAFT_UNMERGED",
+    "smoke": {
+      "runId": "30163665632",
+      "jobId": "89692959410",
+      "artifactId": "8620937660",
+      "artifactSizeBytes": 5437691,
+      "artifactSha256": "dede20e2d7b99cf7205fef65f7b78be8ef8b8ea6da82afbbc581b24f95ffd5a3"
+    },
+    "baseline": {
+      "runId": "30163665625",
+      "jobId": "89692959531",
+      "artifactId": "8620971574",
+      "artifactSizeBytes": 82804260,
+      "artifactSha256": "558000ae772033c325958224208321d1cfb442893f47db5476b2c5402ac7fdc2"
+    }
+  },
+  "lockedAuthority": {
+    "topLevelLaneId": "FOUR_COMPASS_PRODUCTION_BENCHMARK_CORPUS",
+    "canonicalCompassIds": [
+      "MAIN_COMPASS",
+      "ARCHCOIN_COMPASS",
+      "SHOWROOM_COMPASS",
+      "LAWS_COMPASS"
+    ],
+    "auxiliaryControlId": "WEBSITE_HOME_RECEIVER_CONTROL",
+    "newTopLevelLaneCreated": false,
+    "crossLaneAggregateAllowed": false,
+    "findingsAreAutomaticDefects": false
+  },
+  "authorizedCheckpointPaths": [
+    ".github/workflows/metaverse-3d-benchmark-disposition-d2s-t3.yml",
+    "tools/metaverse-3d-benchmark-disposition-d2s-t3-contract.json",
+    "tools/metaverse-3d-benchmark-disposition-d2s-t3-core.mjs",
+    "tools/metaverse-3d-benchmark-disposition-d2s-t3-facts.mjs",
+    "tools/metaverse-3d-benchmark-disposition-d2s-t3-normalize.mjs",
+    "tools/metaverse-3d-benchmark-disposition-d2s-t3-controls.mjs"
+  ],
+  "supplementRules": {
+    "preserveParentD2FactRecordsByteExact": true,
+    "preserveParentD2RelationsByteExact": true,
+    "deltaOnlyNormalization": true,
+    "rediscoverPriorD1OrD2Evidence": false,
+    "genericNullAllowed": false,
+    "lossyTransformationAllowed": false,
+    "findingDefectPromotionAllowed": false,
+    "toolMergeReadinessInferenceAllowed": false,
+    "toolInstallationInferenceAllowed": false,
+    "dimensionClassificationAllowed": false,
+    "evidenceWeightingAllowed": false,
+    "dispositionCompilationAllowed": false
+  },
+  "claims": {
+    "t3NativeEvidenceDeltaAdmitted": true,
+    "t3CanonicalFactDeltaNormalized": true,
+    "parentD2Rewritten": false,
+    "dimensionClassificationPerformed": false,
+    "evidenceWeightingPerformed": false,
+    "dispositionCompilationPerformed": false,
+    "productFilesChanged": 0,
+    "mainChanged": false,
+    "mergePerformed": false,
+    "userAcceptanceGranted": false
+  },
+  "nextCheckpoint": "D3_CANONICAL_BENCHMARK_DIMENSION_CLASSIFICATION"
+}

@@ -1,0 +1,41 @@
+{
+  "canonicalization": "ROUTE_OPERATOR_CANONICAL_V1",
+  "vectors": [
+    {
+      "id": "legacy_basic",
+      "payload": {
+        "state": "NUMERIC",
+        "route_id": "R",
+        "continuous_capacity": 0.4
+      },
+      "canonical_json": "{\"continuous_capacity\":0.4,\"route_id\":\"R\",\"state\":\"NUMERIC\"}",
+      "sha256": "50f71f264790b061ee2e8c38c26a9486cb4c72075c2c1421c3fb8146937d546b"
+    },
+    {
+      "id": "legacy_nested",
+      "payload": {
+        "z": [
+          3,
+          2,
+          1
+        ],
+        "a": {
+          "b": true,
+          "a": null
+        }
+      },
+      "canonical_json": "{\"a\":{\"a\":null,\"b\":true},\"z\":[3,2,1]}",
+      "sha256": "e72fe59c8a89cf7de8dcafc794176faec7d762a2a326c49fb0c9bc5232f81e04"
+    },
+    {
+      "id": "legacy_unicode",
+      "payload": {
+        "😀": "emoji",
+        "€": "euro",
+        "דּ": "hebrew"
+      },
+      "canonical_json": "{\"€\":\"euro\",\"דּ\":\"hebrew\",\"😀\":\"emoji\"}",
+      "sha256": "2c1f0fd81b1a7e6d512631c7a83693e34533d090bd42a89634c68df676aa1556"
+    }
+  ]
+}

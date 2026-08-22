@@ -1,0 +1,74 @@
+{
+  "contract": "EARTH_G5_NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE_TNT_v1",
+  "previous_contract": "EARTH_G4_PNG_ONLY_NASA_SURFACE_NO_CARTOON_FALLBACK_TNT_v3",
+  "body": "earth",
+  "label": "Earth",
+  "route": "/showroom/globe/earth/",
+  "authority": "/assets/earth/earth_canvas.js",
+  "source_standard": "NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE",
+  "generation": "G5_NON_NASA_SATELLITE_DERIVED_NATURAL_GLOBE",
+  "visual_pass": "HELD_UNTIL_SCREENSHOT_OR_OWNER_CONFIRMATION",
+  "generated_image": false,
+  "graphic_box": false,
+  "visual_pass_claimed": false,
+
+  "active_assets": {
+    "surface": "/assets/earth/earth_surface_satellite.png",
+    "clouds_primary": "/assets/earth/earth_clouds_satellite.png",
+    "material": "/assets/earth/earth_material.css",
+    "canvas": "/assets/earth/earth_canvas.js",
+    "fallback_svg": "/assets/earth/earth.svg"
+  },
+
+  "source_law": {
+    "nasa_reference": "retired",
+    "nasa_blue_marble": "forbidden",
+    "jpg_surface": "forbidden",
+    "jpg_cloud_fallback": "forbidden",
+    "procedural_cartoon_fallback": "forbidden",
+    "required_surface_kind": "non_nasa_satellite_png",
+    "missing_surface_behavior": "hold_blank_with_status",
+    "renderer_may_fake_continents": false,
+    "renderer_may_fake_clouds": false
+  },
+
+  "telemetry_law": {
+    "axial_tilt_degrees": 23.44,
+    "sphere_mask": "fixed",
+    "projection_sampling": "locked",
+    "surface_mode_detection": "full_disk_or_equirectangular_png",
+    "lighting_model": "satellite_view_limb_rim_daylight_gradient",
+    "touch_model": "horizontal_drag_only",
+    "release_inertia": "enabled_for_equirectangular_surface_only",
+    "full_disk_surface_rotation": "held_to_preserve_satellite_view_truth"
+  },
+
+  "control_law": {
+    "canvas": "fixed",
+    "sphere_mask": "fixed",
+    "object_boundary": "natural_sphere_mask",
+    "projection_sampling": "locked",
+    "surface_rotation": "longitude_phase_when_equirectangular_only",
+    "cloud_rotation": "independent_longitude_phase_when_equirectangular_only",
+    "touch_model": "horizontal_drag_only",
+    "vertical_drag_texture_effect": "disabled",
+    "disk_rotation": "forbidden",
+    "texture_stretch": "forbidden",
+    "whole_canvas_transform": "forbidden",
+    "whole_object_rotation": "forbidden"
+  },
+
+  "protected_non_jurisdiction": [
+    "Audralia",
+    "Showroom selector",
+    "Showroom CSS",
+    "Gauges",
+    "Products",
+    "Sun",
+    "Moon",
+    "global files",
+    "image generation",
+    "GraphicBox",
+    "visual pass claim"
+  ]
+}

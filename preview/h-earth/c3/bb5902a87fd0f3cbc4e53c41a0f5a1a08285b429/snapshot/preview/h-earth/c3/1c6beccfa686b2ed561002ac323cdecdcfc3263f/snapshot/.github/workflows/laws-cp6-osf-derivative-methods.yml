@@ -1,0 +1,167 @@
+name: Laws CP6 OSF derivative methods
+
+on:
+  push:
+    branches:
+      - agent/laws-cp6-child-derivative-methods-001
+    paths:
+      - .github/workflows/laws-cp6-osf-derivative-methods.yml
+      - tools/laws-cp6-osf-derivative-methods-transform.mjs
+      - tools/laws-cp6-osf-derivative-methods-verify.mjs
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+    paths:
+      - .github/workflows/laws-cp6-osf-derivative-methods.yml
+      - tools/laws-cp6-osf-derivative-methods-transform.mjs
+      - tools/laws-cp6-osf-derivative-methods-verify.mjs
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: laws-cp6-osf-derivative-methods-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-verify:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+
+    steps:
+      - name: Check out exact candidate branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_BRANCH }}
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Reconcile exact source identities and governance records
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          transform_path = Path('tools/laws-cp6-osf-derivative-methods-transform.mjs')
+          transform = transform_path.read_text(encoding='utf-8')
+
+          def reconcile(text, old, new, label):
+              if old in text:
+                  return text.replace(old, new, 1)
+              if new not in text:
+                  raise SystemExit(f'MISSING_RECONCILIATION_SURFACE:{label}')
+              return text
+
+          transform_replacements = [
+              (
+                  "method_class: 'DOMAIN_SPECIFIC_SDTL_FALSIFICATION'",
+                  "method_class: 'FORMAL_FALSIFICATION_PATH'",
+                  'N82XH_METHOD_CLASS'
+              ),
+              (
+                  "metadata_sha256: '8b88e6605d4b3afee7a46aa2439a51a941c4f3ffbc3fd7d6cd8f7e2b5c1e44cf'",
+                  "metadata_sha256: '12d75fd447aa5686c695264bf9387d35546d02933644eafbdaed251ed141cada'",
+                  'N82XH_METADATA_SHA256'
+              ),
+              (
+                  "method_class: 'ADMISSIBLE_EVIDENCE_WINDOWS_OBSERVER_INVARIANCE_CLASSIFICATION_RULES'",
+                  "method_class: 'ADMISSIBLE_EVIDENCE_FIXED_WINDOWS_OBSERVER_INVARIANCE'",
+                  'RJDMS_METHOD_CLASS'
+              ),
+              (
+                  "metadata_sha256: 'c38419126a445f240982fb4f3a667bdf4227840c7db1e2670acc75c35a0c7219'",
+                  "metadata_sha256: '695a0d8ccb59b57135758a2ea89b54b5c27119f74024b98de6da1becc8bf437c'",
+                  'RJDMS_METADATA_SHA256'
+              ),
+              (
+                  "  status: 'CANDIDATE_GENERATED',",
+                  "  status: 'VERIFIED_PUBLISHED_CANDIDATE',",
+                  'MANIFEST_STATUS'
+              ),
+              (
+                  "  landing_change: {\n    route: '/laws/',\n    type: 'COMPACT_LOCAL_COMPASS_ORIENTATION',\n    navigation_authority_changed: false,\n    compass_runtime_changed: false\n  },",
+                  "  landing_page_mutation: false,\n  source_admission_receipt: {\n    receipt_id: 'OSF_LAWS_CP6_PINNED_SOURCE_ADMISSION_RECEIPT_v1',\n    path: 'laws/control-plane/osf-derivative-methods/PINNED_SOURCE_ADMISSION_RECEIPT.json',\n    admission_mode: 'EXPLICIT_PINNED_SOURCE_ADMISSION',\n    source_count: Object.keys(SOURCES).length,\n    registry_pull_request_head: SOURCE_REGISTRY.pull_request_head,\n    source_snapshot_head: SOURCE_REGISTRY.source_snapshot_head\n  },",
+                  'LANDING_AND_RECEIPT_MANIFEST_RECORD'
+              ),
+              (
+                  "write('laws/control-plane/osf-derivative-methods/manifest.json', `${JSON.stringify(manifest, null, 2)}\\n`);",
+                  "const pinnedSourceAdmissionReceipt = {\n  receipt_id: 'OSF_LAWS_CP6_PINNED_SOURCE_ADMISSION_RECEIPT_v1',\n  status: 'PINNED_SOURCE_ADMITTED',\n  admission_mode: 'EXPLICIT_PINNED_SOURCE_ADMISSION',\n  admission_scope: 'PR_483_SOURCE_DERIVATIVE_USE_ONLY',\n  admission_basis: {\n    six_page_content_review: 'PASS',\n    responsive_and_static_review: 'PASS',\n    source_correspondence: 'VERIFIED'\n  },\n  source_registry: {\n    ...SOURCE_REGISTRY,\n    registry_state_at_admission: 'OPEN_DRAFT_UNMERGED'\n  },\n  admitted_sources: Object.fromEntries(Object.entries(SOURCES).map(([id, source]) => [id, {\n    metadata_sha256: source.metadata_sha256,\n    source_class: source.source_class,\n    admission_status: source.admission_status\n  }])),\n  authorized_product: {\n    contract: CONTRACT,\n    pull_request: 483,\n    destination_count: Object.keys(manifest.derivative_destinations).length,\n    destinations: Object.keys(manifest.derivative_destinations),\n    landing_page_mutation: false\n  },\n  evidence_boundary: manifest.claim_boundary,\n  authority: {\n    source_identity_admitted_for_this_candidate: true,\n    source_registry_merge_required_for_this_candidate: false,\n    product_merge_requires_technical_pass: true,\n    merge_requires_expected_head_guard: true,\n    correctness_or_validation_established: false\n  }\n};\nwrite('laws/control-plane/osf-derivative-methods/PINNED_SOURCE_ADMISSION_RECEIPT.json', `${JSON.stringify(pinnedSourceAdmissionReceipt, null, 2)}\\n`);\nwrite('laws/control-plane/osf-derivative-methods/manifest.json', `${JSON.stringify(manifest, null, 2)}\\n`);",
+                  'PINNED_SOURCE_RECEIPT_GENERATION'
+              )
+          ]
+
+          for old, new, label in transform_replacements:
+              transform = reconcile(transform, old, new, label)
+          transform_path.write_text(transform, encoding='utf-8')
+
+          verify_path = Path('tools/laws-cp6-osf-derivative-methods-verify.mjs')
+          verify = verify_path.read_text(encoding='utf-8')
+
+          governance_assertion_anchor = "assert.equal(manifest.source_registry.source_snapshot_head, 'dbd508fc5cacaa463abed0c159812a1e02635c1d');\nassert.deepEqual(Object.keys(manifest.first_slice_sources).sort(), Object.keys(EXPECTED_METADATA).sort());"
+          governance_assertions = "assert.equal(manifest.source_registry.source_snapshot_head, 'dbd508fc5cacaa463abed0c159812a1e02635c1d');\nassert.equal(manifest.status, 'VERIFIED_PUBLISHED_CANDIDATE', 'MANIFEST_STATUS_NOT_VERIFIED_PUBLISHED');\nassert.equal(manifest.landing_page_mutation, false, 'LANDING_PAGE_MUTATION_RECORD_FALSE_REQUIRED');\nassert.equal(Object.hasOwn(manifest, 'landing_change'), false, 'STALE_LANDING_CHANGE_RECORD_PROHIBITED');\nassert.equal(manifest.source_admission_receipt.receipt_id, 'OSF_LAWS_CP6_PINNED_SOURCE_ADMISSION_RECEIPT_v1');\nassert.equal(manifest.source_admission_receipt.admission_mode, 'EXPLICIT_PINNED_SOURCE_ADMISSION');\nassert.equal(manifest.source_admission_receipt.source_count, 5);\nassert.equal(manifest.source_admission_receipt.registry_pull_request_head, 'ae2ccedd4f74ef1afdcc5181a4056c30c83fa20d');\nassert.equal(manifest.source_admission_receipt.source_snapshot_head, 'dbd508fc5cacaa463abed0c159812a1e02635c1d');\nconst receiptPath = 'laws/control-plane/osf-derivative-methods/PINNED_SOURCE_ADMISSION_RECEIPT.json';\nconst receipt = JSON.parse(read(receiptPath));\nassert.equal(receipt.receipt_id, 'OSF_LAWS_CP6_PINNED_SOURCE_ADMISSION_RECEIPT_v1');\nassert.equal(receipt.status, 'PINNED_SOURCE_ADMITTED');\nassert.equal(receipt.admission_mode, 'EXPLICIT_PINNED_SOURCE_ADMISSION');\nassert.equal(receipt.admission_scope, 'PR_483_SOURCE_DERIVATIVE_USE_ONLY');\nassert.equal(receipt.source_registry.pull_request_head, 'ae2ccedd4f74ef1afdcc5181a4056c30c83fa20d');\nassert.equal(receipt.source_registry.source_snapshot_head, 'dbd508fc5cacaa463abed0c159812a1e02635c1d');\nassert.equal(receipt.source_registry.registry_state_at_admission, 'OPEN_DRAFT_UNMERGED');\nassert.equal(receipt.authorized_product.contract, CONTRACT);\nassert.equal(receipt.authorized_product.pull_request, 483);\nassert.equal(receipt.authorized_product.destination_count, 6);\nassert.equal(receipt.authorized_product.landing_page_mutation, false);\nassert.equal(receipt.authority.source_identity_admitted_for_this_candidate, true);\nassert.equal(receipt.authority.product_merge_requires_technical_pass, true);\nassert.equal(receipt.authority.merge_requires_expected_head_guard, true);\nassert.equal(receipt.authority.correctness_or_validation_established, false);\nassert.deepEqual(Object.keys(receipt.admitted_sources).sort(), Object.keys(EXPECTED_METADATA).sort());\nfor (const [id, hash] of Object.entries(EXPECTED_METADATA)) {\n  assert.equal(receipt.admitted_sources[id].metadata_sha256, hash, `PINNED_SOURCE_HASH_MISMATCH:${id}`);\n}\nstaticReport.pinned_source_admission = {\n  receipt_id: receipt.receipt_id,\n  status: receipt.status,\n  source_count: Object.keys(receipt.admitted_sources).length,\n  registry_pull_request_head: receipt.source_registry.pull_request_head,\n  source_snapshot_head: receipt.source_registry.source_snapshot_head\n};\nassert.deepEqual(Object.keys(manifest.first_slice_sources).sort(), Object.keys(EXPECTED_METADATA).sort());"
+          verify = reconcile(verify, governance_assertion_anchor, governance_assertions, 'VERIFIER_GOVERNANCE_ASSERTIONS')
+
+          allowed_anchor = "  'laws/control-plane/osf-derivative-methods/manifest.json'\n]);"
+          allowed_replacement = "  'laws/control-plane/osf-derivative-methods/manifest.json',\n  'laws/control-plane/osf-derivative-methods/PINNED_SOURCE_ADMISSION_RECEIPT.json'\n]);"
+          verify = reconcile(verify, allowed_anchor, allowed_replacement, 'VERIFIER_RECEIPT_ALLOWED_PATH')
+          verify_path.write_text(verify, encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            tools/laws-cp6-osf-derivative-methods-transform.mjs \
+            tools/laws-cp6-osf-derivative-methods-verify.mjs
+          if ! git diff --cached --quiet; then
+            git commit -m "Bind verified manifest and pinned source admission"
+          fi
+
+      - name: Build derivative-method candidate
+        run: node tools/laws-cp6-osf-derivative-methods-transform.mjs
+
+      - name: Enforce exact six-page product scope
+        run: |
+          git checkout -- laws/index.html
+          test -z "$(git diff --name-only -- laws/index.html)"
+
+      - name: Install browser verifier
+        run: |
+          npm install --no-save --no-package-lock playwright@1.54.2
+          npx playwright install --with-deps chromium
+
+      - name: Verify source, admission, archive, runtime, responsive, and static contracts
+        run: node tools/laws-cp6-osf-derivative-methods-verify.mjs
+
+      - name: Upload evidence package
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-cp6-osf-derivative-methods
+          path: laws/control-plane/osf-derivative-methods/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Commit exact verified candidate
+        run: |
+          git add \
+            laws/derivative-methods.css \
+            laws/test/admission-and-baseline/index.html \
+            laws/test/forward-construction/index.html \
+            laws/test/reverse-audit/index.html \
+            laws/test/result-and-record/index.html \
+            laws/research/evidence-and-sources/index.html \
+            laws/research/methods-and-models/index.html \
+            laws/control-plane/osf-derivative-methods
+          git diff --cached --check
+          git commit -m "Publish verified derivative methods with pinned source admission"
+          git push origin HEAD:${TARGET_BRANCH}

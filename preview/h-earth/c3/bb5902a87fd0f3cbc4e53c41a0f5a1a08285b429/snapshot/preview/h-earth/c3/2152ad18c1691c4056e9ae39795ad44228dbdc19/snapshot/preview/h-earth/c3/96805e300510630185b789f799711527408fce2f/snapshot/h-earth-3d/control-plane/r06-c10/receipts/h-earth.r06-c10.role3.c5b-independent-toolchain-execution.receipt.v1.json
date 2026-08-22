@@ -1,0 +1,87 @@
+{
+  "schema": "H_EARTH_R06_C10_ROLE_3_C5B_INDEPENDENT_TOOLCHAIN_EXECUTION_PUBLICATION_RECEIPT_v1",
+  "receiptId": "H_EARTH_R06_C10_ROLE_3_C5B_INDEPENDENT_TOOLCHAIN_EXECUTION_PUBLICATION_RECEIPT_v1",
+  "status": "PASS_CLOSED",
+  "exactSuccessToken": "R06_C10_ROLE_3_C5B_INDEPENDENT_RECEIPT_PUBLICATION_PASS_CLOSED",
+  "project": "H_EARTH_C2_R1_COMPLETE_WORLD",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "sourceExecution": {
+    "result": "R06_C10_ROLE_3_INDEPENDENT_TOOLCHAIN_EXECUTION_PASS_CLOSED",
+    "operation": "H_EARTH_R06_C10_ROLE_3_INDEPENDENT_TOOLCHAIN_EXECUTION_001",
+    "executionAttempt": "3_C5B_RECOVERY_ROOT_GENERALIZATION_REACTIVATION",
+    "sourceReceiptSha256": "bcf66843a51bd36e7550a2061d2736d9e81d3adf6a32e9ed0fab0eb0511575b5",
+    "repositoryMutation": false
+  },
+  "publicationAuthority": {
+    "exactStartingMainHead": "96d3806983a85f7c2c7c2799f264e2b09fed898d",
+    "branch": "role3/r06-c10-c5b-independent-receipt-001",
+    "commitMessage": "Record R06 C10 Role 3 C5B independent execution receipt",
+    "authorizedChangedPathCount": 1,
+    "authorizedNewPath": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role3.c5b-independent-toolchain-execution.receipt.v1.json",
+    "fastForwardMainAuthorizedOnlyFromExactStartingHead": true,
+    "stopAfterPublication": true
+  },
+  "preservedPriorRole3Receipt": {
+    "path": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role3.independent-toolchain-execution.receipt.v1.json",
+    "gitBlobAtStartingMain": "b0967eadb4470d68b12ed8aaf97ece59f07d4b0a",
+    "unchanged": true,
+    "overwriteProhibited": true
+  },
+  "packageIdentity": {
+    "packageId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_v1",
+    "packageVersion": "0.3.2_ROLE_1_RECOVERY_ROOT_GENERALIZED",
+    "driveFileId": "1FNI8K_MBzFhKnVlq0HHVrDU1mDNYd_Gp",
+    "archiveSha256": "215749b55b6b933f4142aac585af699a99c797b9573b33bea4fdddf8ec941b07",
+    "archiveByteCount": 13364458,
+    "archiveMemberCount": 167,
+    "completeManifestCoverage": "167_OF_167_PASS",
+    "internalSha256SumsCoverage": "166_OF_166_PASS"
+  },
+  "toolIdentity": {
+    "eightToolIdentity": "8_OF_8_PASS",
+    "tool8": {
+      "toolId": "H_EARTH_R06_C10_PACKAGE_AND_RECOVERY_EMITTER_v1",
+      "rootGeneralizationResult": "PASS",
+      "rootDiscoveryLaw": "EXACTLY_ONE_VERIFIED_ARCHIVE_ROOT_THEN_VALIDATE_PACKAGE_BUILD_RECEIPT_IDENTITY",
+      "hardCodedSuccessorRoot": false,
+      "zeroRootFailsClosed": true,
+      "multipleRootsFailClosed": true
+    },
+    "toolchainVerificationResult": "PASS"
+  },
+  "independentExecution": {
+    "assertionImplementationCount": 28,
+    "assertionExecutionCount": 28,
+    "passAssertionCount": 25,
+    "failAssertionCount": 3,
+    "exactFailAssertionIds": [
+      "19_SLOPE_EDGE_RISE_AND_NORMAL_ANGLE_BOUNDS_PASS",
+      "20_TRAVERSABLE_OPENING_WIDTH_LENGTH_SLOPE_CLEARANCE_PASS",
+      "23_FALL_FACE_BASIN_DRAINAGE_OUTLET_READINESS_PASS"
+    ],
+    "candidateAdmissionResult": "FAIL_CLOSED",
+    "failedAssertionConversionToPass": false
+  },
+  "cleanRecovery": {
+    "result": "PASS",
+    "receiptSha256": "12edfb9c403d222de33f8636d87e8952c2a1cd4afc2dadc2dd00e2c628ccb7e0",
+    "missingAuthorityFailClosedPass": true,
+    "missingAuthorityClassification": "HARNESS_INPUT_REJECTED_FAIL_CLOSED",
+    "conversationStateRequired": false,
+    "deterministicRepeat": true
+  },
+  "boundary": {
+    "executionRerun": false,
+    "toolOrPackageMutation": false,
+    "assertionResultChange": false,
+    "productMutation": false,
+    "sourceExecutionRepositoryMutation": false,
+    "role5Work": false,
+    "officialGeometryArticulationRound": "NOT_STARTED"
+  },
+  "return": {
+    "nextRoom": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY",
+    "exactOneChangedPathRequired": true,
+    "priorRole3ReceiptMustRemainUnchanged": true
+  }
+}

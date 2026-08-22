@@ -1,0 +1,2689 @@
+<!-- TARGET FILE: /showroom/wonders/window/index.html -->
+<!-- COMPLETE REPLACEMENT -->
+<!-- SHOWROOM_SATELLITE_OPEN_THE_WINDOW_HTML_TNT_v2_PERCEPTION_WITHOUT_AGENCY -->
+
+<!doctype html>
+
+<html
+  lang="en"
+  data-route="/showroom/wonders/window/"
+  data-page="showroom-wonders-window"
+  data-version="SHOWROOM-SATELLITE-OPEN-THE-WINDOW-2.0.0"
+  data-contract="SHOWROOM_SATELLITE_OPEN_THE_WINDOW_HTML_TNT_v2_PERCEPTION_WITHOUT_AGENCY"
+  data-showroom-satellite="true"
+  data-showroom-route-family="wonders"
+  data-showroom-route-id="south-1"
+  data-showroom-route-title="Open the Window"
+  data-showroom-parent-route="/showroom/"
+  data-showroom-previous-route="/showroom/"
+  data-showroom-next-route="/showroom/wonders/diamond/"
+  data-showroom-return-route="/showroom/"
+  data-showroom-main-compass-route="/index.html"
+  data-showroom-window-state="open"
+  data-showroom-window-purpose="foreground-threshold-to-visible-world-layer"
+  data-showroom-observation-boundary="access-does-not-equal-understanding"
+>
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,viewport-fit=cover"
+  >
+
+  <title>
+    Open the Window · Shadows Never Shatter
+  </title>
+
+  <meta
+    name="description"
+    content="After the threshold, arrival begins as perception without agency. Open the Window, see the visible world layer, and learn that seeing is real but not yet touching, changing, or understanding."
+  >
+
+  <meta
+    name="showroom-page-contract"
+    content="SHOWROOM_SATELLITE_OPEN_THE_WINDOW_HTML_TNT_v2_PERCEPTION_WITHOUT_AGENCY"
+  >
+
+  <style>
+    /* ============================================================
+       SHOWROOM SATELLITE PAGE EMBEDDED VISUAL SYSTEM v2
+       PAGE: south-1 · Open the Window
+
+       Page-specific standard:
+       - one-file route page;
+       - embedded CSS;
+       - page-local JavaScript only;
+       - no external dependencies;
+       - no shared Showroom runtime ownership;
+       - no repeating tiled starfield as primary atmosphere;
+       - dominant animation object: chamber window clearing.
+       ============================================================ */
+
+    :root {
+      color-scheme: dark;
+
+      --ink-0: #02040a;
+      --ink-1: #050914;
+      --ink-2: #091020;
+      --ink-3: #101a30;
+
+      --cream: #f5eddd;
+      --cream-soft: #ddd3c1;
+      --muted: #aab2c2;
+      --muted-strong: #c6ccd7;
+
+      --gold: #e0b85b;
+      --gold-bright: #f4d47e;
+      --gold-soft: #ffe7a5;
+      --gold-faint: rgba(224, 184, 91, 0.14);
+
+      --cyan: #75e9ff;
+      --cyan-soft: #b4f5ff;
+      --cyan-faint: rgba(117, 233, 255, 0.13);
+
+      --violet: #b798ff;
+      --violet-soft: #d5c5ff;
+      --violet-faint: rgba(183, 152, 255, 0.13);
+
+      --border: rgba(226, 197, 128, 0.24);
+      --border-strong: rgba(239, 205, 125, 0.5);
+      --border-cool: rgba(117, 233, 255, 0.25);
+      --border-violet: rgba(183, 152, 255, 0.26);
+      --rule: rgba(255, 255, 255, 0.085);
+
+      --glass:
+        linear-gradient(
+          145deg,
+          rgba(18, 27, 49, 0.9),
+          rgba(6, 10, 22, 0.93)
+        );
+
+      --shadow:
+        0 1.5rem 4rem rgba(0, 0, 0, 0.46),
+        0 0 0 1px rgba(255, 255, 255, 0.018) inset;
+
+      --shadow-deep:
+        0 2.4rem 7rem rgba(0, 0, 0, 0.62),
+        0 0 3rem rgba(70, 114, 190, 0.08);
+
+      --radius-sm: 0.72rem;
+      --radius-md: 1rem;
+      --radius-lg: 1.45rem;
+      --radius-xl: 2rem;
+
+      --page-width: 84rem;
+      --reading-width: 52rem;
+
+      --space-4: 1.3rem;
+      --space-6: 2.5rem;
+      --space-7: 3.5rem;
+
+      --transition-fast: 150ms ease;
+      --transition:
+        260ms cubic-bezier(0.2, 0.72, 0.25, 1);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-width: 20rem;
+      scroll-behavior: smooth;
+      background: var(--ink-0);
+    }
+
+    body {
+      position: relative;
+
+      min-width: 20rem;
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+
+      color: var(--cream);
+
+      background:
+        radial-gradient(
+          circle at 50% -10%,
+          rgba(80, 124, 198, 0.35),
+          transparent 35rem
+        ),
+        radial-gradient(
+          circle at 10% 36%,
+          rgba(57, 177, 190, 0.13),
+          transparent 28rem
+        ),
+        radial-gradient(
+          circle at 89% 52%,
+          rgba(135, 94, 204, 0.14),
+          transparent 32rem
+        ),
+        linear-gradient(
+          180deg,
+          #050916 0%,
+          #02040b 47%,
+          #080b16 100%
+        );
+
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      font-size: 1rem;
+      line-height: 1.65;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      position: fixed;
+      z-index: 0;
+      inset: 0;
+
+      pointer-events: none;
+      content: "";
+
+      opacity: 0.62;
+
+      background:
+        radial-gradient(
+          circle at 17% 18%,
+          rgba(255, 255, 255, 0.82) 0 0.045rem,
+          transparent 0.06rem
+        ),
+        radial-gradient(
+          circle at 79% 16%,
+          rgba(117, 233, 255, 0.72) 0 0.04rem,
+          transparent 0.06rem
+        ),
+        radial-gradient(
+          circle at 91% 68%,
+          rgba(244, 212, 126, 0.7) 0 0.045rem,
+          transparent 0.065rem
+        ),
+        radial-gradient(
+          circle at 34% 83%,
+          rgba(255, 255, 255, 0.58) 0 0.036rem,
+          transparent 0.055rem
+        ),
+        radial-gradient(
+          circle at 11% 66%,
+          rgba(117, 233, 255, 0.48) 0 0.032rem,
+          transparent 0.052rem
+        ),
+        radial-gradient(
+          circle at 58% 31%,
+          rgba(244, 212, 126, 0.42) 0 0.032rem,
+          transparent 0.052rem
+        );
+    }
+
+    body::after {
+      position: fixed;
+      z-index: 1;
+      inset: 0;
+
+      pointer-events: none;
+      content: "";
+
+      background:
+        linear-gradient(
+          90deg,
+          rgba(0, 0, 0, 0.43),
+          transparent 11%,
+          transparent 89%,
+          rgba(0, 0, 0, 0.43)
+        ),
+        radial-gradient(
+          ellipse at center,
+          transparent 40%,
+          rgba(0, 0, 0, 0.48) 100%
+        );
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    a,
+    button {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    h1,
+    h2,
+    h3,
+    p,
+    blockquote {
+      margin-top: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    strong,
+    summary {
+      text-wrap: balance;
+    }
+
+    p,
+    blockquote {
+      text-wrap: pretty;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 4px;
+    }
+
+    .sr-only {
+      position: absolute !important;
+
+      width: 1px !important;
+      height: 1px !important;
+
+      padding: 0 !important;
+      margin: -1px !important;
+
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    .skip-link {
+      position: fixed;
+      z-index: 10000;
+      top: 0.75rem;
+      left: 0.75rem;
+
+      padding: 0.72rem 1rem;
+
+      border: 1px solid var(--gold-bright);
+      border-radius: var(--radius-sm);
+
+      color: var(--ink-0);
+      background: var(--gold-bright);
+
+      font-weight: 850;
+      text-decoration: none;
+
+      transform: translateY(-220%);
+      transition: transform var(--transition-fast);
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .page-shell {
+      position: relative;
+      z-index: 2;
+
+      width: min(
+        calc(100% - 2rem),
+        var(--page-width)
+      );
+
+      margin-inline: auto;
+      padding-bottom: var(--space-6);
+    }
+
+    .eyebrow,
+    .route-kicker,
+    .scene-index,
+    .window-label,
+    .practical-label {
+      color: var(--gold-bright);
+
+      font-size: 0.69rem;
+      font-weight: 850;
+      letter-spacing: 0.16em;
+      line-height: 1.35;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      color: var(--cream);
+      font-weight: 600;
+      line-height: 1.02;
+    }
+
+    h1 {
+      max-width: 10ch;
+      margin-bottom: 0.95rem;
+
+      font-size: clamp(3.2rem, 8vw, 7rem);
+      letter-spacing: -0.05em;
+    }
+
+    h2 {
+      margin-bottom: 0;
+
+      font-size: clamp(2.2rem, 5vw, 4.8rem);
+      letter-spacing: -0.04em;
+    }
+
+    h3 {
+      font-size: clamp(1.35rem, 2.5vw, 2.2rem);
+      letter-spacing: -0.025em;
+    }
+
+    .button {
+      display: inline-flex;
+
+      min-height: 2.9rem;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+
+      padding: 0.75rem 1.05rem;
+
+      border: 1px solid rgba(226, 231, 241, 0.23);
+      border-radius: 999px;
+
+      color: var(--cream);
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.075),
+          rgba(255, 255, 255, 0.024)
+        ),
+        rgba(5, 9, 20, 0.84);
+
+      box-shadow:
+        0 0.7rem 1.8rem rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.018) inset;
+
+      font-size: 0.76rem;
+      font-weight: 850;
+      letter-spacing: 0.065em;
+      line-height: 1;
+      text-align: center;
+      text-decoration: none;
+      text-transform: uppercase;
+
+      transition:
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    .button:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-1px);
+    }
+
+    .button:active {
+      transform: translateY(0);
+    }
+
+    .button-gold {
+      border-color: rgba(255, 222, 142, 0.76);
+      color: #171006;
+
+      background:
+        linear-gradient(
+          135deg,
+          #f6d985 0%,
+          #d4a94c 52%,
+          #f0ca69 100%
+        );
+
+      box-shadow:
+        0 0.95rem 2.3rem rgba(156, 105, 25, 0.24),
+        0 0 1.7rem rgba(245, 213, 130, 0.16);
+    }
+
+    .button-gold:hover {
+      border-color: #fff1bf;
+
+      box-shadow:
+        0 1rem 2.7rem rgba(156, 105, 25, 0.3),
+        0 0 2rem rgba(245, 213, 130, 0.22);
+    }
+
+    /* ============================================================
+       TOPBAR
+       ============================================================ */
+
+    .page-topbar {
+      display: flex;
+
+      min-height: 4.7rem;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+
+      margin-top: 0.8rem;
+      padding: 0.72rem 0.88rem;
+
+      border: 1px solid rgba(225, 197, 127, 0.18);
+      border-radius: var(--radius-lg);
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(18, 26, 48, 0.84),
+          rgba(5, 9, 20, 0.78)
+        );
+
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(1rem);
+    }
+
+    .brand {
+      display: inline-flex;
+
+      min-width: 0;
+      align-items: center;
+      gap: 0.75rem;
+
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      position: relative;
+
+      display: grid;
+
+      width: 2.75rem;
+      height: 2.75rem;
+      flex: 0 0 auto;
+      place-items: center;
+
+      border: 1px solid rgba(241, 207, 123, 0.58);
+      border-radius: 50%;
+
+      color: var(--gold-bright);
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(221, 181, 89, 0.17),
+          rgba(12, 17, 33, 0.95)
+        );
+
+      box-shadow:
+        0 0 1.4rem rgba(220, 180, 87, 0.14),
+        inset 0 0 0 0.22rem rgba(255, 255, 255, 0.025);
+    }
+
+    .brand-mark::before {
+      width: 1.15rem;
+      height: 1.45rem;
+
+      content: "";
+
+      border: 1px solid currentColor;
+      border-radius: 0.45rem 0.45rem 0.12rem 0.12rem;
+
+      box-shadow:
+        inset 0.35rem 0 0 rgba(117, 233, 255, 0.12),
+        inset -0.35rem 0 0 rgba(183, 152, 255, 0.1);
+    }
+
+    .brand-mark::after {
+      position: absolute;
+
+      width: 0.5rem;
+      height: 0.5rem;
+
+      content: "";
+
+      border: 1px solid var(--cyan);
+      border-radius: 50%;
+    }
+
+    .brand-copy {
+      display: grid;
+      min-width: 0;
+      gap: 0.04rem;
+    }
+
+    .brand-copy span {
+      color: var(--muted);
+
+      font-size: 0.61rem;
+      font-weight: 750;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .brand-copy strong {
+      overflow: hidden;
+
+      color: var(--cream);
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: 1.02rem;
+      font-weight: 600;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .topbar-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .topbar-nav a {
+      padding: 0.48rem 0.68rem;
+
+      border-radius: 999px;
+
+      color: var(--muted-strong);
+
+      font-size: 0.69rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      text-transform: uppercase;
+
+      transition:
+        color var(--transition-fast),
+        background var(--transition-fast);
+    }
+
+    .topbar-nav a:hover {
+      color: var(--cream);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    /* ============================================================
+       MAIN
+       ============================================================ */
+
+    main {
+      display: grid;
+      gap: var(--space-7);
+      padding-top: var(--space-4);
+    }
+
+    section {
+      scroll-margin-top: 1rem;
+    }
+
+    .section-heading {
+      display: grid;
+
+      grid-template-columns:
+        minmax(0, 1fr)
+        minmax(16rem, 27rem);
+
+      align-items: end;
+      gap: 1.5rem;
+
+      padding-inline: 0.35rem;
+    }
+
+    .section-heading p {
+      margin-bottom: 0.25rem;
+      color: var(--muted-strong);
+    }
+
+    /* ============================================================
+       HERO WINDOW
+       ============================================================ */
+
+    .route-hero {
+      position: relative;
+
+      min-height: min(82vh, 52rem);
+      overflow: hidden;
+
+      border: 1px solid rgba(224, 184, 91, 0.23);
+      border-radius: var(--radius-xl);
+
+      background:
+        radial-gradient(
+          circle at 16% 18%,
+          rgba(117, 233, 255, 0.14),
+          transparent 24rem
+        ),
+        radial-gradient(
+          circle at 83% 70%,
+          rgba(136, 170, 255, 0.14),
+          transparent 28rem
+        ),
+        radial-gradient(
+          circle at 58% 50%,
+          rgba(244, 212, 126, 0.08),
+          transparent 20rem
+        ),
+        linear-gradient(
+          145deg,
+          rgba(16, 25, 46, 0.9),
+          rgba(3, 6, 15, 0.97)
+        );
+
+      box-shadow: var(--shadow-deep);
+      isolation: isolate;
+    }
+
+    .route-hero::before {
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+
+      content: "";
+
+      background:
+        linear-gradient(
+          115deg,
+          transparent 0 42%,
+          rgba(117, 233, 255, 0.035) 42.4%,
+          transparent 43% 58%,
+          rgba(224, 184, 91, 0.035) 58.5%,
+          transparent 59%
+        ),
+        radial-gradient(
+          circle at 70% 42%,
+          transparent 0 9rem,
+          rgba(117, 233, 255, 0.055) 9.1rem 9.2rem,
+          transparent 9.3rem
+        ),
+        radial-gradient(
+          circle at 70% 42%,
+          transparent 0 14rem,
+          rgba(224, 184, 91, 0.045) 14.1rem 14.2rem,
+          transparent 14.3rem
+        );
+    }
+
+    .route-hero__inner {
+      display: grid;
+
+      min-height: inherit;
+
+      grid-template-columns:
+        minmax(0, 1.08fr)
+        minmax(18rem, 0.92fr);
+
+      align-items: center;
+      gap: clamp(2rem, 6vw, 6rem);
+
+      padding:
+        clamp(2rem, 6vw, 5rem)
+        clamp(1.2rem, 4vw, 4rem);
+    }
+
+    .route-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      margin-bottom: 1.2rem;
+    }
+
+    .route-kicker::before {
+      width: 1.75rem;
+      height: 1px;
+
+      content: "";
+      background: currentColor;
+      box-shadow: 0 0 1rem rgba(224, 184, 91, 0.3);
+    }
+
+    .hero-subtitle {
+      max-width: 35rem;
+      margin-bottom: 0.85rem;
+
+      color: var(--cyan-soft);
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: clamp(1.25rem, 2.7vw, 2rem);
+      line-height: 1.22;
+    }
+
+    .hero-lead {
+      max-width: 45rem;
+      margin-bottom: 1.5rem;
+
+      color: var(--muted-strong);
+      font-size: clamp(1rem, 1.5vw, 1.15rem);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+    }
+
+    .window-stage {
+      position: relative;
+
+      display: grid;
+      align-content: end;
+      gap: 1rem;
+
+      min-height: 28rem;
+      overflow: hidden;
+      padding: 1.4rem;
+
+      border: 1px solid var(--border-cool);
+      border-radius: var(--radius-lg);
+
+      background:
+        radial-gradient(
+          circle at 50% 35%,
+          rgba(117, 233, 255, 0.18),
+          transparent 10rem
+        ),
+        radial-gradient(
+          circle at 50% 30%,
+          rgba(244, 212, 126, 0.08),
+          transparent 13rem
+        ),
+        linear-gradient(
+          180deg,
+          rgba(19, 31, 55, 0.94),
+          rgba(5, 9, 20, 0.97)
+        );
+
+      box-shadow:
+        var(--shadow),
+        inset 0.24rem 0 0 rgba(117, 233, 255, 0.28);
+    }
+
+    .chamber-window {
+      position: absolute;
+      top: 8%;
+      left: 50%;
+
+      width: min(76%, 17rem);
+      height: 17rem;
+
+      overflow: hidden;
+
+      border: 0.18rem solid rgba(244, 212, 126, 0.54);
+      border-radius: 0.65rem;
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(16, 31, 54, 0.98) 0%,
+          rgba(18, 52, 75, 0.96) 36%,
+          rgba(41, 72, 70, 0.96) 37%,
+          rgba(13, 24, 26, 0.98) 100%
+        );
+
+      box-shadow:
+        0 0 0 0.6rem rgba(224, 184, 91, 0.035),
+        0 0 3rem rgba(117, 233, 255, 0.17),
+        inset 0 0 2rem rgba(0, 0, 0, 0.28);
+
+      transform: translateX(-50%);
+    }
+
+    .chamber-window::before {
+      position: absolute;
+      inset: 0;
+
+      content: "";
+
+      background:
+        radial-gradient(
+          circle at 66% 22%,
+          rgba(244, 212, 126, 0.85) 0 0.34rem,
+          rgba(117, 233, 255, 0.22) 0.5rem 3.1rem,
+          transparent 3.2rem
+        ),
+        linear-gradient(
+          90deg,
+          transparent 49.5%,
+          rgba(244, 212, 126, 0.35) 50%,
+          transparent 50.5%
+        ),
+        linear-gradient(
+          180deg,
+          transparent 49.5%,
+          rgba(244, 212, 126, 0.28) 50%,
+          transparent 50.5%
+        );
+    }
+
+    .chamber-window::after {
+      position: absolute;
+      right: -10%;
+      bottom: -15%;
+
+      width: 78%;
+      height: 45%;
+
+      content: "";
+
+      border-radius: 50% 50% 0 0;
+
+      background:
+        linear-gradient(
+          160deg,
+          rgba(43, 99, 78, 0.9),
+          rgba(11, 27, 31, 0.98)
+        );
+
+      box-shadow:
+        -5.8rem 0 0 rgba(27, 62, 57, 0.86),
+        -8.5rem -0.6rem 0 rgba(31, 72, 67, 0.42);
+    }
+
+    .window-fog {
+      position: absolute;
+      top: 8%;
+      left: 50%;
+
+      width: min(76%, 17rem);
+      height: 17rem;
+
+      pointer-events: none;
+
+      border-radius: 0.65rem;
+
+      background:
+        radial-gradient(
+          ellipse at 50% 43%,
+          rgba(255, 255, 255, 0.36),
+          rgba(180, 245, 255, 0.24) 35%,
+          rgba(180, 245, 255, 0.08) 61%,
+          transparent 100%
+        );
+
+      filter: blur(0.2rem);
+      opacity: 0.78;
+
+      transform: translateX(-50%);
+      animation: windowClears 7s ease-in-out infinite;
+    }
+
+    .window-light {
+      position: absolute;
+      top: 8%;
+      left: 50%;
+
+      width: min(76%, 17rem);
+      height: 17rem;
+
+      pointer-events: none;
+
+      background:
+        linear-gradient(
+          125deg,
+          rgba(255, 255, 255, 0.18),
+          transparent 36%
+        );
+
+      transform: translateX(-50%);
+    }
+
+    .distance-line {
+      position: absolute;
+      right: 13%;
+      bottom: 23%;
+
+      width: 5rem;
+      height: 1px;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(244, 212, 126, 0.9)
+        );
+
+      box-shadow:
+        0 0 1rem rgba(244, 212, 126, 0.34);
+
+      transform: rotate(-16deg);
+    }
+
+    .distance-line::after {
+      position: absolute;
+      top: 50%;
+      right: 0;
+
+      width: 0.48rem;
+      height: 0.48rem;
+
+      content: "";
+
+      border-top: 1px solid var(--gold-bright);
+      border-right: 1px solid var(--gold-bright);
+
+      transform:
+        translateY(-50%)
+        rotate(45deg);
+    }
+
+    .window-copy {
+      position: relative;
+      z-index: 2;
+    }
+
+    .window-label {
+      display: block;
+      margin-bottom: 0.45rem;
+
+      color: var(--cyan);
+    }
+
+    .window-copy strong {
+      display: block;
+      margin-bottom: 0.65rem;
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: clamp(1.35rem, 2.5vw, 2rem);
+      font-weight: 600;
+      line-height: 1.12;
+    }
+
+    .window-copy p {
+      margin-bottom: 0;
+
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    /* ============================================================
+       STORY CARDS
+       ============================================================ */
+
+    .story-stage {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .scene-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+      gap: 0.9rem;
+    }
+
+    .scene-card {
+      position: relative;
+
+      min-width: 0;
+      overflow: hidden;
+
+      padding: 1.25rem;
+
+      border: 1px solid rgba(224, 184, 91, 0.17);
+      border-radius: var(--radius-lg);
+
+      background: var(--glass);
+      box-shadow: var(--shadow);
+
+      transition:
+        transform var(--transition),
+        border-color var(--transition),
+        box-shadow var(--transition);
+    }
+
+    .scene-card:hover {
+      border-color: rgba(224, 184, 91, 0.34);
+
+      box-shadow:
+        0 1.7rem 4.5rem rgba(0, 0, 0, 0.48),
+        inset 0.2rem 0 0 rgba(117, 233, 255, 0.22);
+
+      transform: translateY(-3px);
+    }
+
+    .scene-card::before {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      width: 8rem;
+      height: 8rem;
+
+      pointer-events: none;
+      content: "";
+
+      background:
+        radial-gradient(
+          circle at 100% 0,
+          rgba(117, 233, 255, 0.11),
+          transparent 68%
+        );
+    }
+
+    .scene-index {
+      display: block;
+      margin-bottom: 0.8rem;
+    }
+
+    .scene-card h3 {
+      margin-bottom: 0.65rem;
+    }
+
+    .scene-card p {
+      margin-bottom: 0;
+      color: var(--muted-strong);
+    }
+
+    .scene-card blockquote {
+      margin:
+        1rem 0
+        0;
+      padding: 0.85rem 0.95rem;
+
+      border-left: 0.2rem solid var(--cyan);
+
+      color: var(--cream);
+      background: var(--cyan-faint);
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: 1.02rem;
+      line-height: 1.5;
+    }
+
+    /* ============================================================
+       WINDOW DIALOGUE
+       ============================================================ */
+
+    .dialogue-stage {
+      display: grid;
+
+      grid-template-columns:
+        minmax(0, 0.86fr)
+        minmax(0, 1.14fr);
+
+      gap: 1rem;
+    }
+
+    .dialogue-intro,
+    .dialogue-panel {
+      min-width: 0;
+      padding: clamp(1.2rem, 3vw, 2rem);
+
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+
+      background: var(--glass);
+      box-shadow: var(--shadow);
+    }
+
+    .dialogue-intro {
+      display: grid;
+      align-content: center;
+      gap: 0.9rem;
+    }
+
+    .dialogue-intro p {
+      margin-bottom: 0;
+      color: var(--muted-strong);
+    }
+
+    .dialogue-panel {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .dialogue-line {
+      display: grid;
+      gap: 0.2rem;
+
+      max-width: 88%;
+      padding: 0.85rem 1rem;
+
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: var(--radius-md);
+
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .dialogue-line[data-side="you"] {
+      justify-self: start;
+
+      border-color: rgba(117, 233, 255, 0.19);
+      box-shadow: inset 0.2rem 0 0 rgba(117, 233, 255, 0.3);
+    }
+
+    .dialogue-line[data-side="window"] {
+      justify-self: end;
+
+      border-color: rgba(224, 184, 91, 0.2);
+      box-shadow: inset -0.2rem 0 0 rgba(224, 184, 91, 0.3);
+    }
+
+    .dialogue-line span {
+      color: var(--gold-bright);
+
+      font-size: 0.61rem;
+      font-weight: 850;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .dialogue-line p {
+      margin-bottom: 0;
+      color: var(--cream-soft);
+    }
+
+    /* ============================================================
+       ACCESS GRID
+       ============================================================ */
+
+    .access-section {
+      display: grid;
+      gap: 1rem;
+
+      padding: clamp(1rem, 2.8vw, 2rem);
+
+      border: 1px solid var(--border-violet);
+      border-radius: var(--radius-xl);
+
+      background:
+        radial-gradient(
+          circle at 100% 0,
+          rgba(183, 152, 255, 0.1),
+          transparent 22rem
+        ),
+        linear-gradient(
+          145deg,
+          rgba(17, 20, 43, 0.9),
+          rgba(4, 7, 16, 0.95)
+        );
+
+      box-shadow: var(--shadow-deep);
+    }
+
+    .access-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+      gap: 0.75rem;
+    }
+
+    .access-card {
+      min-width: 0;
+      padding: 1rem;
+
+      border: 1px solid rgba(183, 152, 255, 0.16);
+      border-radius: var(--radius-md);
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(183, 152, 255, 0.065),
+          rgba(255, 255, 255, 0.015)
+        );
+    }
+
+    .access-card span {
+      display: block;
+      margin-bottom: 0.55rem;
+
+      color: var(--violet-soft);
+
+      font-size: 0.62rem;
+      font-weight: 850;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .access-card strong {
+      display: block;
+      margin-bottom: 0.45rem;
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: 1.2rem;
+      font-weight: 600;
+      line-height: 1.16;
+    }
+
+    .access-card p {
+      margin-bottom: 0;
+
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    /* ============================================================
+       PRACTICAL RETURN
+       ============================================================ */
+
+    .practical-return {
+      display: grid;
+
+      grid-template-columns:
+        minmax(0, 1fr)
+        minmax(16rem, 0.7fr);
+
+      align-items: center;
+      gap: 1.3rem;
+
+      padding: clamp(1.25rem, 3vw, 2rem);
+
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+
+      background:
+        radial-gradient(
+          circle at 100% 0,
+          rgba(224, 184, 91, 0.13),
+          transparent 20rem
+        ),
+        linear-gradient(
+          145deg,
+          rgba(25, 31, 49, 0.9),
+          rgba(7, 11, 22, 0.96)
+        );
+
+      box-shadow:
+        var(--shadow),
+        inset 0.22rem 0 0 var(--gold);
+    }
+
+    .practical-copy h2 {
+      max-width: 12ch;
+      margin-bottom: 0.8rem;
+
+      font-size: clamp(2rem, 4.7vw, 4rem);
+    }
+
+    .practical-copy p {
+      max-width: var(--reading-width);
+      margin-bottom: 0;
+
+      color: var(--muted-strong);
+    }
+
+    .practical-actions {
+      display: grid;
+      gap: 0.6rem;
+    }
+
+    .practical-actions .button {
+      width: 100%;
+    }
+
+    /* ============================================================
+       EVIDENCE
+       ============================================================ */
+
+    .evidence-disclosure {
+      overflow: clip;
+
+      border: 1px solid rgba(224, 184, 91, 0.17);
+      border-radius: var(--radius-md);
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(17, 24, 44, 0.82),
+          rgba(7, 11, 23, 0.9)
+        );
+    }
+
+    .evidence-disclosure[open] {
+      border-color: rgba(224, 184, 91, 0.34);
+
+      box-shadow:
+        0 1rem 2.8rem rgba(0, 0, 0, 0.24),
+        inset 0.2rem 0 0 rgba(117, 233, 255, 0.26);
+    }
+
+    .evidence-disclosure > summary {
+      display: flex;
+
+      min-height: 4rem;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+
+      padding: 0.9rem 1rem;
+
+      color: var(--cream);
+      list-style: none;
+      cursor: pointer;
+    }
+
+    .evidence-disclosure
+    > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .evidence-disclosure
+    > summary > span:first-child {
+      display: grid;
+      gap: 0.1rem;
+    }
+
+    .evidence-disclosure
+    > summary strong {
+      color: var(--gold-bright);
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .evidence-disclosure
+    > summary small {
+      color: var(--muted);
+      font-size: 0.72rem;
+    }
+
+    .evidence-disclosure
+    > summary > span:last-child {
+      display: grid;
+
+      width: 2rem;
+      height: 2rem;
+      flex: 0 0 auto;
+      place-items: center;
+
+      border: 1px solid var(--border-cool);
+      border-radius: 50%;
+
+      color: var(--cyan);
+      background: var(--cyan-faint);
+
+      transition: transform var(--transition-fast);
+    }
+
+    .evidence-disclosure[open]
+    > summary > span:last-child {
+      transform: rotate(45deg);
+    }
+
+    .evidence-body {
+      display: grid;
+      gap: 0.75rem;
+
+      padding: 1rem;
+
+      border-top: 1px solid var(--rule);
+    }
+
+    .evidence-body p {
+      max-width: var(--reading-width);
+      margin-bottom: 0;
+
+      color: var(--muted-strong);
+    }
+
+    .evidence-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+      gap: 0.65rem;
+    }
+
+    .evidence-grid article {
+      min-width: 0;
+      padding: 0.85rem;
+
+      border: 1px solid rgba(255, 255, 255, 0.065);
+      border-radius: var(--radius-sm);
+
+      background: rgba(255, 255, 255, 0.022);
+    }
+
+    .evidence-grid span {
+      display: block;
+      margin-bottom: 0.3rem;
+
+      color: var(--cyan);
+
+      font-size: 0.58rem;
+      font-weight: 850;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .evidence-grid p {
+      color: var(--muted);
+      font-size: 0.76rem;
+    }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+
+    .page-footer {
+      display: flex;
+
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+
+      margin-top: var(--space-6);
+      padding: 1.1rem 0.2rem 0.5rem;
+
+      border-top: 1px solid rgba(224, 184, 91, 0.18);
+    }
+
+    .page-footer > div {
+      display: grid;
+      gap: 0.1rem;
+    }
+
+    .page-footer strong {
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-weight: 600;
+    }
+
+    .page-footer span {
+      color: var(--muted);
+      font-size: 0.74rem;
+    }
+
+    .page-footer nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 0.35rem;
+    }
+
+    .page-footer a {
+      padding: 0.42rem 0.58rem;
+
+      border-radius: 999px;
+
+      color: var(--muted-strong);
+
+      font-size: 0.67rem;
+      font-weight: 760;
+      letter-spacing: 0.045em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .page-footer a:hover {
+      color: var(--gold-bright);
+      background: var(--gold-faint);
+    }
+
+    /* ============================================================
+       ANIMATION
+       ============================================================ */
+
+    @keyframes windowClears {
+      0%,
+      100% {
+        opacity: 0.78;
+        transform:
+          translateX(-50%)
+          scale(1.02);
+      }
+
+      50% {
+        opacity: 0.18;
+        transform:
+          translateX(-50%)
+          scale(1);
+      }
+    }
+
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(1rem);
+      transition:
+        opacity 520ms ease,
+        transform 520ms cubic-bezier(0.2, 0.72, 0.25, 1);
+    }
+
+    .js .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .js .window-stage.is-awake .window-fog {
+      animation:
+        windowClears 7s ease-in-out infinite;
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+
+    @media (max-width: 68rem) {
+      .scene-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+
+      .scene-card:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .access-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+
+      .evidence-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 54rem) {
+      .route-hero__inner,
+      .dialogue-stage,
+      .practical-return,
+      .section-heading {
+        grid-template-columns: 1fr;
+      }
+
+      .window-stage {
+        min-height: 25rem;
+      }
+
+      .section-heading {
+        gap: 0.75rem;
+      }
+
+      .practical-actions {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 40rem) {
+      :root {
+        --space-7: 2.2rem;
+      }
+
+      body {
+        font-size: 0.96rem;
+      }
+
+      .page-shell {
+        width: min(
+          calc(100% - 0.8rem),
+          var(--page-width)
+        );
+
+        padding-bottom: 1.2rem;
+      }
+
+      .page-topbar {
+        min-height: 3.9rem;
+
+        margin-top: 0.4rem;
+        padding: 0.5rem 0.55rem;
+
+        border-radius: 1rem;
+      }
+
+      .brand-mark {
+        width: 2.2rem;
+        height: 2.2rem;
+      }
+
+      .brand-copy span {
+        display: none;
+      }
+
+      .brand-copy strong {
+        font-size: 0.9rem;
+      }
+
+      .topbar-nav a {
+        padding: 0.4rem 0.42rem;
+        font-size: 0.58rem;
+      }
+
+      .topbar-nav a:nth-child(2) {
+        display: none;
+      }
+
+      main {
+        gap: 2.2rem;
+        padding-top: 0.4rem;
+      }
+
+      h1 {
+        font-size: clamp(2.8rem, 14vw, 4.7rem);
+      }
+
+      h2 {
+        font-size: clamp(2rem, 10vw, 3.4rem);
+      }
+
+      .route-hero {
+        min-height: 0;
+        border-radius: 1.2rem;
+      }
+
+      .route-hero__inner {
+        gap: 1.2rem;
+        padding: 1.2rem 0.75rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1.13rem;
+      }
+
+      .hero-lead {
+        font-size: 0.93rem;
+      }
+
+      .hero-actions,
+      .practical-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .hero-actions .button,
+      .practical-actions .button {
+        width: 100%;
+      }
+
+      .window-stage {
+        min-height: 22rem;
+        padding: 1rem;
+      }
+
+      .chamber-window,
+      .window-fog,
+      .window-light {
+        width: 11rem;
+        height: 13.5rem;
+      }
+
+      .scene-grid,
+      .access-grid,
+      .evidence-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .scene-card:last-child {
+        grid-column: auto;
+      }
+
+      .scene-card,
+      .dialogue-intro,
+      .dialogue-panel,
+      .access-section,
+      .practical-return {
+        border-radius: 1rem;
+      }
+
+      .dialogue-line {
+        max-width: 96%;
+      }
+
+      .page-footer {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .page-footer nav {
+        justify-content: flex-start;
+      }
+    }
+
+    /* ============================================================
+       ACCESSIBILITY MODES
+       ============================================================ */
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+
+        transition-duration: 0.001ms !important;
+      }
+
+      .scene-card:hover,
+      .button:hover {
+        transform: none;
+      }
+
+      .js .reveal {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    @media (prefers-reduced-transparency: reduce) {
+      .page-topbar,
+      .scene-card,
+      .dialogue-intro,
+      .dialogue-panel,
+      .access-section,
+      .practical-return,
+      .evidence-disclosure {
+        background-color: var(--ink-1);
+        backdrop-filter: none;
+      }
+    }
+
+    @media (forced-colors: active) {
+      body,
+      .page-topbar,
+      .route-hero,
+      .window-stage,
+      .chamber-window,
+      .scene-card,
+      .dialogue-intro,
+      .dialogue-panel,
+      .access-section,
+      .access-card,
+      .practical-return,
+      .evidence-disclosure {
+        color: CanvasText;
+        background: Canvas;
+        box-shadow: none;
+      }
+
+      .button,
+      summary {
+        forced-color-adjust: auto;
+      }
+
+      .brand-mark,
+      .chamber-window {
+        border: 2px solid ButtonText;
+        background: ButtonFace;
+        box-shadow: none;
+      }
+    }
+
+    @media print {
+      body {
+        color: #111;
+        background: #fff;
+      }
+
+      body::before,
+      body::after,
+      .page-topbar,
+      .hero-actions,
+      .practical-actions,
+      .page-footer,
+      .chamber-window,
+      .window-fog,
+      .window-light,
+      .distance-line {
+        display: none !important;
+      }
+
+      .page-shell {
+        width: 100%;
+      }
+
+      .route-hero,
+      .window-stage,
+      .scene-card,
+      .dialogue-intro,
+      .dialogue-panel,
+      .access-section,
+      .access-card,
+      .practical-return,
+      .evidence-disclosure {
+        color: #111;
+        background: #fff;
+        border: 1px solid #777;
+        box-shadow: none;
+      }
+
+      .route-hero,
+      .window-stage {
+        min-height: 0;
+      }
+
+      .evidence-disclosure:not([open])
+      > :not(summary) {
+        display: block;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a
+    class="skip-link"
+    href="#main"
+  >
+    Skip to the story
+  </a>
+
+  <div class="page-shell">
+    <header
+      class="page-topbar"
+      aria-label="Open the Window header"
+    >
+      <a
+        class="brand"
+        href="/showroom/"
+        aria-label="Return to the Showroom constellation"
+      >
+        <span
+          class="brand-mark"
+          aria-hidden="true"
+        ></span>
+
+        <span class="brand-copy">
+          <span>Shadows Never Shatter</span>
+          <strong>Open the Window</strong>
+        </span>
+      </a>
+
+      <nav
+        class="topbar-nav"
+        aria-label="Direct routes"
+      >
+        <a href="/showroom/">
+          Constellation
+        </a>
+
+        <a href="/showroom/wonders/diamond/">
+          Next
+        </a>
+
+        <a href="/index.html">
+          Compass
+        </a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section
+        class="route-hero"
+        aria-labelledby="page-title"
+      >
+        <div class="route-hero__inner">
+          <div class="reveal">
+            <div class="route-kicker">
+              South Route · Chamber One
+            </div>
+
+            <h1 id="page-title">
+              Open the Window.
+            </h1>
+
+            <p class="hero-subtitle">
+              You crossed the door. Now you learn that arrival begins as seeing.
+            </p>
+
+            <p class="hero-lead">
+              You expected the first step to feel like entering a world.
+              Instead, you wake in a chamber facing glass. The threshold
+              did not reject you. It did not complete you either. Beyond
+              the Window, a living layer brightens into view. You are
+              close enough to know it is real and limited enough to know
+              you cannot touch it yet.
+            </p>
+
+            <div class="hero-actions">
+              <a
+                class="button button-gold"
+                href="#first-view"
+              >
+                Look Through
+              </a>
+
+              <a
+                class="button"
+                href="/showroom/"
+              >
+                Return to Constellation
+              </a>
+            </div>
+          </div>
+
+          <aside
+            class="window-stage reveal"
+            aria-label="Mirrorland chamber window"
+          >
+            <span
+              class="chamber-window"
+              aria-hidden="true"
+            ></span>
+
+            <span
+              class="window-fog"
+              aria-hidden="true"
+            ></span>
+
+            <span
+              class="window-light"
+              aria-hidden="true"
+            ></span>
+
+            <span
+              class="distance-line"
+              aria-hidden="true"
+            ></span>
+
+            <div class="window-copy">
+              <span class="window-label">
+                Foreground Threshold
+              </span>
+
+              <strong>
+                Perception opens before agency.
+              </strong>
+
+              <p>
+                The visible world is not a possession. It is the first
+                layer you are allowed to witness.
+              </p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section
+        id="first-view"
+        class="story-stage"
+        aria-labelledby="first-view-title"
+      >
+        <header class="section-heading reveal">
+          <div>
+            <div class="eyebrow">
+              The First View
+            </div>
+
+            <h2 id="first-view-title">
+              The glass clears slowly.
+            </h2>
+          </div>
+
+          <p>
+            The first South lesson is not wonder alone. It is limitation
+            inside wonder.
+          </p>
+        </header>
+
+        <div class="scene-grid">
+          <article class="scene-card reveal">
+            <span class="scene-index">
+              01 · You Can See
+            </span>
+
+            <h3>
+              A world becomes visible.
+            </h3>
+
+            <p>
+              Roofs appear first. Then roads, water, distant light, and a
+              horizon that does not behave like a picture. Something is
+              moving out there. The view is not symbolic. The layer
+              beyond the glass is alive.
+            </p>
+
+            <blockquote>
+              Seeing confirms arrival, but it does not complete arrival.
+            </blockquote>
+          </article>
+
+          <article class="scene-card reveal">
+            <span class="scene-index">
+              02 · You Cannot Touch
+            </span>
+
+            <h3>
+              Your hand stops at the glass.
+            </h3>
+
+            <p>
+              You reach before you decide to. The chamber lets you try.
+              Your fingers meet the Window, and the world remains just
+              beyond contact. You are present, but your presence has not
+              become action.
+            </p>
+
+            <blockquote>
+              Access crossed the threshold. Agency did not.
+            </blockquote>
+          </article>
+
+          <article class="scene-card reveal">
+            <span class="scene-index">
+              03 · You Cannot Command
+            </span>
+
+            <h3>
+              The world does not answer your will.
+            </h3>
+
+            <p>
+              You focus on a road and nothing changes. You look toward a
+              light and it does not move closer. The Window is not a
+              control panel. It is a boundary that lets perception begin
+              without allowing power to arrive too early.
+            </p>
+
+            <blockquote>
+              A world that can be seen is not yet a world that can be used.
+            </blockquote>
+          </article>
+        </div>
+      </section>
+
+      <section
+        class="dialogue-stage"
+        aria-labelledby="dialogue-title"
+      >
+        <div class="dialogue-intro reveal">
+          <div class="eyebrow">
+            The Window’s Correction
+          </div>
+
+          <h2 id="dialogue-title">
+            You mistake nearness for entry.
+          </h2>
+
+          <p>
+            Distance has changed. That matters. But distance is not the
+            only boundary. The Window teaches you the difference between
+            seeing a place and belonging to the conditions inside it.
+          </p>
+        </div>
+
+        <div
+          class="dialogue-panel reveal"
+          aria-label="Window dialogue"
+        >
+          <div
+            class="dialogue-line"
+            data-side="you"
+          >
+            <span>You</span>
+
+            <p>
+              “I crossed the door. Why am I still outside?”
+            </p>
+          </div>
+
+          <div
+            class="dialogue-line"
+            data-side="window"
+          >
+            <span>Window</span>
+
+            <p>
+              “You are not outside. You are not inside in the way you
+              expected.”
+            </p>
+          </div>
+
+          <div
+            class="dialogue-line"
+            data-side="you"
+          >
+            <span>You</span>
+
+            <p>
+              “Then what am I allowed to do?”
+            </p>
+          </div>
+
+          <div
+            class="dialogue-line"
+            data-side="window"
+          >
+            <span>Window</span>
+
+            <p>
+              “Look. Notice the frame. Notice the distance. Notice what
+              your desire to act makes you ignore.”
+            </p>
+          </div>
+
+          <div
+            class="dialogue-line"
+            data-side="you"
+          >
+            <span>You</span>
+
+            <p>
+              “What comes after seeing?”
+            </p>
+          </div>
+
+          <div
+            class="dialogue-line"
+            data-side="window"
+          >
+            <span>Window</span>
+
+            <p>
+              “Pressure. If perception is honest, the next chamber will
+              ask whether you can hold form under it.”
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="access-section"
+        aria-labelledby="access-title"
+      >
+        <header class="section-heading reveal">
+          <div>
+            <div class="eyebrow">
+              What the Window Gives
+            </div>
+
+            <h2 id="access-title">
+              The first layer is perception without agency.
+            </h2>
+          </div>
+
+          <p>
+            The Window is generous and strict. It opens the visible world
+            layer while protecting that world from premature command.
+          </p>
+        </header>
+
+        <div class="access-grid">
+          <article class="access-card reveal">
+            <span>Granted</span>
+
+            <strong>
+              View.
+            </strong>
+
+            <p>
+              You can see structures, motion, distance, weather, light,
+              absence, and the first shape of the world beyond.
+            </p>
+          </article>
+
+          <article class="access-card reveal">
+            <span>Granted</span>
+
+            <strong>
+              Orientation.
+            </strong>
+
+            <p>
+              You can begin learning where you are, what faces you, and
+              what the frame does not include.
+            </p>
+          </article>
+
+          <article class="access-card reveal">
+            <span>Withheld</span>
+
+            <strong>
+              Touch.
+            </strong>
+
+            <p>
+              You cannot yet reach into the scene, alter objects, answer
+              need, or disturb what lives beyond the glass.
+            </p>
+          </article>
+
+          <article class="access-card reveal">
+            <span>Withheld</span>
+
+            <strong>
+              Understanding.
+            </strong>
+
+            <p>
+              You cannot yet know motive, memory, legitimacy, fear, trust,
+              or what any visible pattern costs to endure.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section
+        class="practical-return reveal"
+        aria-labelledby="practical-title"
+      >
+        <div class="practical-copy">
+          <span class="practical-label">
+            The Rule of the Window
+          </span>
+
+          <h2 id="practical-title">
+            Do not explain what you can only see.
+          </h2>
+
+          <p>
+            Name the frame. Name the distance. Name the limit. The Window
+            has opened, but the world has not submitted itself to your
+            interpretation. The next chamber will ask whether perception
+            can survive pressure without breaking into false certainty.
+          </p>
+        </div>
+
+        <div class="practical-actions">
+          <a
+            class="button button-gold"
+            href="/showroom/wonders/diamond/"
+          >
+            Continue to the Diamond
+          </a>
+
+          <a
+            class="button"
+            href="/showroom/"
+          >
+            Choose Another Chamber
+          </a>
+        </div>
+      </section>
+
+      <details class="evidence-disclosure">
+        <summary>
+          <span>
+            <strong>Story Reveal Boundary</strong>
+            <small>
+              What this chamber reveals, and what remains withheld
+            </small>
+          </span>
+
+          <span aria-hidden="true">+</span>
+        </summary>
+
+        <div class="evidence-body">
+          <p>
+            This chamber reveals that the player’s first South arrival is
+            perceptual, not embodied. The Window opens the visible world
+            layer, but it does not grant touch, control, full agency,
+            complete understanding, or permission to intervene.
+          </p>
+
+          <div class="evidence-grid">
+            <article>
+              <span>Revealed Here</span>
+
+              <p>
+                The player can see into the next layer after crossing the
+                threshold, but perception arrives before agency.
+              </p>
+            </article>
+
+            <article>
+              <span>Withheld Here</span>
+
+              <p>
+                Touch, control, full embodiment, full conjugation, Hearth,
+                H-Earth, ZIONTS, full Audralia systems, and final Earth
+                stakes remain closed.
+              </p>
+            </article>
+
+            <article>
+              <span>Next Pressure</span>
+
+              <p>
+                After seeing without agency, the player must face the
+                Diamond and learn whether form can hold under pressure.
+              </p>
+            </article>
+          </div>
+        </div>
+      </details>
+    </main>
+
+    <footer class="page-footer">
+      <div>
+        <strong>
+          Open the Window
+        </strong>
+
+        <span>
+          The world is visible. It is not yet yours to touch.
+        </span>
+      </div>
+
+      <nav aria-label="Footer routes">
+        <a href="/showroom/">
+          Constellation
+        </a>
+
+        <a href="/showroom/wonders/diamond/">
+          Next Chamber
+        </a>
+
+        <a href="/index.html">
+          Main Compass
+        </a>
+      </nav>
+    </footer>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const CONTRACT =
+        "SHOWROOM_SATELLITE_OPEN_THE_WINDOW_HTML_TNT_v2_PERCEPTION_WITHOUT_AGENCY";
+
+      const root =
+        document.documentElement;
+
+      root.classList.add("js");
+
+      const reducedMotionQuery =
+        window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      const reducedMotion =
+        Boolean(
+          reducedMotionQuery &&
+          reducedMotionQuery.matches
+        );
+
+      function markVisible(elements) {
+        for (const element of elements) {
+          element.classList.add("is-visible");
+        }
+      }
+
+      function initializeReveals() {
+        const revealElements =
+          Array.from(
+            document.querySelectorAll(".reveal")
+          );
+
+        if (!revealElements.length) {
+          return;
+        }
+
+        if (
+          reducedMotion ||
+          typeof IntersectionObserver !== "function"
+        ) {
+          markVisible(revealElements);
+          return;
+        }
+
+        const observer =
+          new IntersectionObserver(
+            entries => {
+              for (const entry of entries) {
+                if (!entry.isIntersecting) {
+                  continue;
+                }
+
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+              }
+            },
+            {
+              root: null,
+              threshold: 0.14,
+              rootMargin: "0px 0px -6% 0px"
+            }
+          );
+
+        for (const element of revealElements) {
+          observer.observe(element);
+        }
+      }
+
+      function initializeWindowStage() {
+        const windowStage =
+          document.querySelector(".window-stage");
+
+        if (!windowStage || reducedMotion) {
+          return;
+        }
+
+        window.setTimeout(
+          () => {
+            windowStage.classList.add("is-awake");
+          },
+          240
+        );
+      }
+
+      function publishReceipt() {
+        const payload = {
+          contract: CONTRACT,
+          route: "/showroom/wonders/window/",
+          routeId: "south-1",
+          page: "Open the Window",
+          localEnhancementOnly: true,
+          globalRuntimeOwned: false,
+          navigationOwned: false,
+          systematicReveal: "perception-without-agency",
+          previousRoute: "/showroom/",
+          nextRoute: "/showroom/wonders/diamond/",
+          windowState: "open",
+          windowPurpose: "foreground-threshold-to-visible-world-layer",
+          observationBoundary: "access-does-not-equal-understanding",
+          perceptionGranted: true,
+          agencyAutomatic: false,
+          touchGranted: false,
+          reducedMotion: reducedMotion,
+          timestamp: new Date().toISOString()
+        };
+
+        window.dispatchEvent(
+          new CustomEvent(
+            "SHOWROOM_SATELLITE_PAGE_READY",
+            {
+              detail: Object.freeze(payload)
+            }
+          )
+        );
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener(
+          "DOMContentLoaded",
+          () => {
+            initializeReveals();
+            initializeWindowStage();
+            publishReceipt();
+          },
+          {
+            once: true
+          }
+        );
+      } else {
+        initializeReveals();
+        initializeWindowStage();
+        publishReceipt();
+      }
+    })();
+  </script>
+</body>
+</html>
+
+<!--
+SHOWROOM_SATELLITE_OPEN_THE_WINDOW_HTML_RECEIPT_v2_PERCEPTION_WITHOUT_AGENCY
+
+TARGET:
+/showroom/wonders/window/index.html
+
+STATUS:
+COMPLETE SELF-CONTAINED HTML REPLACEMENT
+
+SOURCE BASELINE:
+SHOWROOM_SATELLITE_OPEN_THE_WINDOW_HTML_TNT_v1
+supplied by user as current source baseline for south-1.
+
+NEW CONTRACT:
+SHOWROOM_SATELLITE_OPEN_THE_WINDOW_HTML_TNT_v2_PERCEPTION_WITHOUT_AGENCY
+
+ROUTE FAMILY:
+Wonders / South
+
+ROUTE ID:
+south-1
+
+ROUTE TITLE:
+Open the Window
+
+PARENT:
+/showroom/
+
+PREVIOUS ROUTE:
+/showroom/
+
+NEXT ROUTE:
+/showroom/wonders/diamond/
+
+RETURN ROUTE:
+/showroom/
+
+MAIN COMPASS:
+/index.html
+
+WINDOW STATE:
+open
+
+WINDOW PURPOSE:
+foreground-threshold-to-visible-world-layer
+
+OBSERVATION BOUNDARY:
+access-does-not-equal-understanding
+
+NARRATIVE AUTHORITY:
+SHOWROOM_MIRRORLAND_AUDRALIA_ROUTE_PAGE_NARRATIVE_FREEZE_PACKET_v1_1
+SHOWROOM_ROUTE_PAGE_RENEWAL_RULES_LOCK_v1
+
+PRIMARY NARRATIVE CORRECTIONS FROM v1:
+- Reframed South-1 as the first post-door condition rather than a general observation-discipline page.
+- Preserved infrastructure routes, route identity, window metadata, and observation-boundary metadata.
+- Established that the player crossed the threshold but begins South as perception without agency.
+- Preserved the Window as foreground threshold to a visible world layer.
+- Withheld touch, control, full agency, full understanding, embodiment, and deeper systems.
+- Connected the page to south-2 by making the next pressure form-under-pressure through the Diamond.
+
+PAGE 5 / SOUTH-1 STORY SPINE:
+1. The player has crossed the door.
+2. The first arrival is not full entry into action.
+3. The player wakes in a chamber facing glass.
+4. The Window clears slowly.
+5. A living world layer becomes visible.
+6. The player can see but cannot touch.
+7. The player learns perception arrives before agency.
+8. The next chamber becomes the Diamond, where pressure tests form.
+
+CONTROLLED REVEAL:
+The player’s first arrival is perceptual, not embodied.
+They can see into the next layer, but cannot yet touch, change, command, or fully understand it.
+
+WITHHELD:
+- touch;
+- control;
+- full agency;
+- full embodiment;
+- full conjugation;
+- Hearth;
+- H-Earth;
+- ZIONTS;
+- full Audralia systems;
+- final Earth stakes.
+
+DOMINANT ANIMATION IDEA:
+The chamber Window slowly clears, revealing a visible but unreachable world layer.
+
+ANTI-TILED-STAR CORRECTION:
+The page does not use repeating square-cell starfields as the main atmosphere.
+Atmospheric stars are hand-positioned through fixed radial points.
+The dominant animated visual is the clearing Window.
+
+EMBEDDED SYSTEM:
+- HTML structure
+- embedded CSS
+- embedded page-local JavaScript
+- no external dependencies
+- no shared runtime ownership
+
+PAGE-LOCAL JAVASCRIPT AUTHORITY:
+- local reveal enhancement only
+- local window-stage awakening only
+- local readiness event only
+- no navigation ownership
+- no controller calls
+- no constellation mutation
+- no Main Compass ownership
+- safe without JavaScript
+
+ACCESSIBILITY / RESILIENCE:
+- skip link
+- semantic sections
+- focus-visible handling
+- reduced-motion support
+- reduced-transparency support
+- forced-colors support
+- print handling
+- readable without JavaScript
+
+NOT CLAIMED:
+- runtime validation
+- browser visual pass
+- deployment pass
+-->

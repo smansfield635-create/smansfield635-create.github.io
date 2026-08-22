@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <title>H-Earth Run 8E-R1 Profiler</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #07100d; color: #eef6f1; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: linear-gradient(#0c1814, #050806); }
+    main { width: min(1100px, 100%); margin: 0 auto; padding: 16px; display: grid; gap: 14px; }
+    section { border: 1px solid rgba(210,235,220,.2); border-radius: 16px; background: rgba(10,20,16,.92); padding: 14px; }
+    h1, h2, p { margin-top: 0; }
+    h1 { font-size: clamp(1.5rem, 5vw, 2.5rem); }
+    p { color: #bed0c5; line-height: 1.5; }
+    .law { font-family: ui-monospace, monospace; color: #dff8e9; white-space: pre-wrap; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    button { min-height: 46px; padding: 10px 14px; border: 1px solid rgba(220,245,230,.3); border-radius: 12px; background: #163229; color: inherit; font-weight: 750; }
+    button:disabled { opacity: .45; }
+    #profile-state { margin: 10px 0 0; font-family: ui-monospace, monospace; color: #b8dfca; }
+    iframe { width: 100%; height: min(780px, 72dvh); border: 1px solid rgba(220,245,230,.22); border-radius: 14px; background: #0b1210; }
+    #gpu-probe-canvas { width: 320px; max-width: 100%; aspect-ratio: 16 / 10; border: 1px solid rgba(220,245,230,.2); border-radius: 10px; }
+    pre { max-height: 560px; overflow: auto; padding: 12px; border-radius: 12px; background: #020604; color: #d8eee0; font-size: .72rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+    ol { color: #c8d8cf; line-height: 1.55; }
+  </style>
+</head>
+<body>
+  <main>
+    <section>
+      <h1>Run 8E-R1 Physical Profiling and Architecture Disposition</h1>
+      <p>This diagnostic route does not replace the renderer or alter the public interaction model. It profiles the retained failure occurrence, runs bounded CPU-worker and WebGL 2 probes against the same world and camera corpus, and generates a physical-device receipt.</p>
+      <p class="law">DO NOT REBUILD THE WORLD BECAUSE THE CAMERA MOVED.
+DO NOT MOVE AN OLD BITMAP TO IMPLY THAT THE CAMERA MOVED.</p>
+      <div class="actions">
+        <button id="run-probes" type="button">Run architecture probes</button>
+        <button id="start-physical" type="button" disabled>Start physical session</button>
+        <button id="stop-physical" type="button" disabled>Stop physical session</button>
+        <button id="copy-receipt" type="button" disabled>Copy receipt</button>
+        <button id="download-receipt" type="button" disabled>Download receipt</button>
+      </div>
+      <p id="profile-state">Loading current public route and profiler modules…</p>
+    </section>
+
+    <section>
+      <h2>Physical Samsung procedure</h2>
+      <ol>
+        <li>Open this route on the official Samsung phone in portrait.</li>
+        <li>Tap “Start physical session.”</li>
+        <li>Perform repeated one-finger look, two-finger forward/back travel, and pinch zoom for at least 60 seconds.</li>
+        <li>Rotate to landscape and repeat the sequence.</li>
+        <li>Return to portrait, background Chrome once, return, and repeat one look/travel/pinch cycle.</li>
+        <li>Tap “Stop physical session,” then copy or download the JSON receipt.</li>
+      </ol>
+      <iframe id="live-frame" src="../../" title="Current deployed H-Earth public route for physical profiling"></iframe>
+    </section>
+
+    <section>
+      <h2>Bounded WebGL 2 probe surface</h2>
+      <canvas id="gpu-probe-canvas" width="320" height="200"></canvas>
+    </section>
+
+    <section>
+      <h2>Generated receipt</h2>
+      <pre id="profile-output">No receipt generated.</pre>
+    </section>
+  </main>
+  <script type="module" src="./profiler.js?v=run8e-r1-001"></script>
+</body>
+</html>

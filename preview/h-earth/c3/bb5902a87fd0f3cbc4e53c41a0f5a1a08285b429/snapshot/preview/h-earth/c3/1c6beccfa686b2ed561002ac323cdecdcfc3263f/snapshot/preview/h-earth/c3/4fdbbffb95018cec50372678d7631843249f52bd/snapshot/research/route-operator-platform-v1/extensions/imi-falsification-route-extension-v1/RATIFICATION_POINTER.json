@@ -1,0 +1,33 @@
+{
+  "authority_boundary": "CORE_CALCULATES_STATE_EXTENSION_ADJUDICATES_PREDICTION",
+  "checks_executed": 52,
+  "core_mutation_performed": false,
+  "core_nonmutation": "PASS",
+  "core_output_schema_mutation_performed": false,
+  "data_eligibility": {
+    "agricultural_colony": "RETROSPECTIVE_LOCKED_STRESS_TEST_ELIGIBLE_PENDING_FIELD_AUDIT",
+    "hospital": "BASELINE_IMI_ONLY",
+    "spontaneous_speech": "BASELINE_IMI_ONLY"
+  },
+  "extension_id": "IMI_FALSIFICATION_ROUTE_EXTENSION_v1",
+  "extension_version": "1.0.0",
+  "frozen_core_mutation": "NONE",
+  "internal_ratification_receipt_sha256": "741deb5dc6579503447872bcd332b06c4074303aa90b1a536f0cfc4c0706ffce",
+  "internal_verification_receipt_sha256": "df0f1accf69f337564566d9ba3eb08b730086c34f0249aa6706541c5a962568d",
+  "manifest_integrity": "PASS",
+  "negative_fixtures_passed": 19,
+  "negative_fixtures_total": 19,
+  "operational_cli": "PASS",
+  "operational_status": "ACTIVE_READY_FOR_FIRST_FROZEN_PILOT",
+  "package_checksums": "PASS",
+  "positive_fixtures_passed": 1,
+  "product_mutation": "NONE",
+  "ratification_basis": "REPRODUCIBLE_REFERENCE_VERIFIER_AND_EXACT_DRIVE_CUSTODY_READBACK",
+  "ratification_status": "PASS_CLOSED",
+  "ratified_on": "2026-08-05",
+  "real_outcome_adjudication": "HELD",
+  "real_outcome_adjudication_performed": false,
+  "receipt_id": "IMI_FALSIFICATION_ROUTE_EXTENSION_v1_REPOSITORY_RATIFICATION_POINTER_v1",
+  "schema_count": 9,
+  "verification_status": "PASS"
+}

@@ -1,0 +1,51 @@
+name: H-Earth BM1 Unique Baked Material Contract
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-bm1-unique-baked-material-contract.yml'
+      - 'h-earth-3d/control-plane/post-cp2-round2/baked-material/h-earth.bm1-unique-baked-material-contract.v1.mjs'
+      - 'h-earth-3d/validation/baked-material/h-earth.bm1-unique-baked-material-contract.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-baked-material-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact BM1 candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute BM1 verifier first pass
+        run: node h-earth-3d/validation/baked-material/h-earth.bm1-unique-baked-material-contract.mjs > /tmp/bm1-first.json
+      - name: Execute BM1 verifier second pass
+        run: node h-earth-3d/validation/baked-material/h-earth.bm1-unique-baked-material-contract.mjs > /tmp/bm1-second.json
+      - name: Require identical receipts
+        run: cmp /tmp/bm1-first.json /tmp/bm1-second.json
+      - name: Upload BM1 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-bm1-unique-baked-material-contract
+          path: |
+            /tmp/bm1-first.json
+            /tmp/bm1-second.json
+          retention-days: 90
+      - name: Enforce BM1 pass
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt = JSON.parse(fs.readFileSync('/tmp/bm1-first.json', 'utf8'));
+          if (receipt.pass !== true || receipt.result !== 'BM1_UNIQUE_BAKED_MATERIAL_CONTRACT_PASS_CLOSED') {
+            console.error(JSON.stringify(receipt, null, 2));
+            process.exit(1);
+          }
+          console.log(`BM1_PASS:${receipt.canonicalReceiptSha256}`);
+          NODE

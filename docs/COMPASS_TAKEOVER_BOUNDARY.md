@@ -1,132 +1,168 @@
-# COMPASS_TAKEOVER_BOUNDARY_v5
+# COMPASS_TAKEOVER_BOUNDARY_v6
 
 ## Authority
 
-**GEN1589 = CURRENT PRODUCT SOURCE BASELINE, NOT ACCEPTED VISUAL SUCCESSOR.**
+This boundary supersedes the earlier Gen1589-only stopping point. The Compass has since crossed deterministic bootstrap repair, automatic publication restoration, exact-head publication proof, and a later failed release-settlement/tablet-context correction.
 
-Gen1589 merged at `76021a66e43aedecd255755bfe5775b7bdb702a8` with the stated purpose `repair final four Compass defects`. A subsequent docs-only audit commit records the missing Laws-page precedent and does not alter product behavior. Publication, source presence, and visual/product qualification remain separate facts.
+The current controlling records are:
 
-The controlling supplementary audit is now:
+1. `docs/COMPASS_LAWS_PRECEDENT_AND_STATE_TRANSITION_AUDIT_20260822.md`
+2. `docs/COMPASS_RELEASE_SETTLEMENT_AND_TABLET_CONTEXT_CYCLE_20260822.md`
+3. `docs/PAGE_CHANGE_EXECUTION_AND_LIVE_VERIFICATION_PROTOCOL.md`
+4. `docs/PUBLICATION_AUTHORITY_BOUNDARY.md`
+5. `docs/COMPASS_VISUAL_EVIDENCE_TIMELINE.md`
+6. `docs/MASTER_PAGE_AND_COMPASS_CONTINUITY_LEDGER.md`
 
-`docs/COMPASS_LAWS_PRECEDENT_AND_STATE_TRANSITION_AUDIT_20260822.md`
+Conversation memory is not execution proof.
 
-That audit supersedes any prior interpretation that “one label at a time” means hiding three of the four cardinal stars or star owners.
+## Settled Laws precedent
 
-## Current user-observed disposition — 2026-08-22
-
-The newest owner evidence and exact-source audit establish:
-
-- **19/19 foreground-star -> information coverage = PASS.** Do not spend another cycle re-proving the already-closed 19-state path unless a regression is observed.
-- **Four-cardinal constellation presentation = FAIL / ownership conflict.** All four star bodies must remain present. Exactly one settled/readable cardinal may own a visible label. The Laws Compass is the direct precedent: full constellation remains present while one projected outer label is active. Gen1588's `EXACTLY_ONE_VISIBLE_CARDINAL_SHELL` policy is therefore not the target behavior, and Gen1589's compensating visibility shim is not an acceptable final ownership architecture.
-- **Brain/Trophy/House capability carousel = presently acceptable.** Preserve it unless regression evidence identifies a concrete defect; it is not the primary next-cycle target.
-- **Mirrorland = primary remaining product defect.** The four-choice chooser must be functionally hardwired to Narrative, Demo, World Map, and Return to Compass. When the page darkens, the four choices must become the luminous visual authority and remain crisp/unfiltered. Underlying content must become visually/focus inert while the chooser owns the state. On Return to Compass, the chooser must disappear before restoration begins.
-- **Mirrorland source diagnosis = probable stacking/ownership failure.** The chooser is structurally nested in the Compass panel while the blur backdrop is body-level. A nested fixed element can remain trapped below a body-level backdrop by an ancestor stacking context. The next successor should use a body-level modal/portal host where chooser and backdrop are siblings, backdrop below chooser. Rendered qualification must confirm the diagnosis.
-- **TRL/TRA = structurally improved but still requires rendered whole-page qualification.** Preserve the one-stage / active-family / inner-carousel contract and reject clipping, stale neighboring family residue, or broken slide navigation.
-
-## Laws precedent — now explicit
-
-`laws/index.controller.js` provides the state-transaction precedent:
+The Laws page remains the direct interaction/state precedent:
 
 `gesture begin -> preview -> controller commit/cancel -> canonical settled orientation -> semantic ownership`
 
 Preview motion is not semantic selection.
 
-`laws/index.interactions.js` provides the label precedent:
+For the main Compass constellation:
 
-**ALL AUTHORITIES PRESENT + SINGLE ACTIVE OUTER LABEL.**
+**ALL FOUR CARDINAL STARS PRESENT + EXACTLY ONE SETTLED READABLE LABEL.**
 
-The main Compass translation is:
+The inactive three labels leave visual/focus/pointer ownership, but the star bodies remain present.
 
-**ALL FOUR CARDINAL STARS PRESENT + ONE SETTLED READABLE LABEL.**
+## Ownership invariant
 
-The inactive three labels must leave visual/focus/pointer ownership, but their star geometry must not disappear merely to achieve one-label semantics.
+One controller state owner. One presentation owner for each visual surface. One active text/label owner per text region. Presentation helpers render canonical state; they do not establish a parallel state machine.
 
-## Ownership/layout invariant
+A second observer, click handler, navigation shim, or compensating presentation layer is not an acceptable substitute when the existing controller/renderer transaction already owns the behavior.
 
-One controller state owner. One presentation owner for each visual surface. One active text/label owner per text region and one active content card per state. Active content reserves its own layout height. Outgoing text/card state leaves visual/layout/focus flow before incoming state enters.
+## Gen1591/bootstrap lesson — closed
 
-For the constellation specifically, the star bodies are geometry rather than competing text tabs: all four remain rendered; only the settled foreground cardinal owns the readable label.
+The earlier source-to-live ambiguity was real: product source could merge without becoming the deterministic runtime owner. Gen1591 corrected the root bootstrap/presentation ownership chain, and PR #1621 restored automatic exact-head publication for accepted `main` pushes.
 
-A blank inactive label shell is not acceptable. A second presentation observer that reverses the first owner's state is also not acceptable.
+That publication architecture is now recorded separately in `docs/PUBLICATION_AUTHORITY_BOUNDARY.md`.
 
-## Main Compass transition invariant
+Do not reopen the old “merge versus publish” or stale-root-bootstrap branch of diagnosis without new contradictory evidence.
 
-The existing `assets/compass/compass.controller.js` remains the canonical state/navigation authority for:
+## Current release-settlement diagnosis
 
-- `CONSTELLATION`
-- `CLUSTER_OPEN`
-- `ROOM_SELECTED`
-- `MIRRORLAND_REVEALING`
-- `MIRRORLAND_FOCUSED`
-- `MIRRORLAND_WITHDRAWING`
-- `NAVIGATING`
-- `HELD`
+A later bounded correction attempted to make the nearest/forward cardinal remain settled after drag release.
 
-Presentation helpers must render those states rather than establish a parallel state machine.
+The implementation added a bridge in `assets/compass/compass.capability-carousel.js` that expected `data-orbit-gesture-active` to transition on `[data-compass-root]`.
 
-For constellation rotation:
+Post-live audit established that this is not the authoritative emitted DOM state channel. Gesture-active state exists inside controller state/receipt rather than as the expected root dataset transition.
 
-`preview motion -> controller settlement -> outgoing label removed -> incoming settled label shown`
+Result:
 
-For Mirrorland return:
+`RELEASE FIX = WIRED TO NON-AUTHORITATIVE / NON-EMITTED SIGNAL`
 
-`chooser teardown -> backdrop teardown -> MIRRORLAND_WITHDRAWING / Compass restoration`
+The next repair must be placed directly in the renderer/controller release transaction that already knows the nearest forward cardinal.
 
-## Site-wide carousel continuity standard
+Required path:
 
-Compass MUST NOT invent a separate carousel interaction language. Methods & Models is the reference stage/orbit language; Developer, Evidence, and Governance carry the repository-documented `PUBLIC_LEGITIMACY_CONTEXTUAL_CAROUSEL_V3` family.
+`pointer release -> existing nearest-forward-cardinal result -> controller commit -> canonical data-orbit-focus -> one readable settled label`
 
-**ONE STAGE + TABS + ONE ACTIVE CARD + SWIPE/KEYBOARD + STATE-DERIVED HEADING.**
+Do not add another MutationObserver bridge. Do not create a second snap calculation.
 
-Brain/Trophy/House already approximates this standard sufficiently for the present cycle and should be preserved. Readiness remains subject to the same whole-page rule: outer `TRL | TRA` selects the readiness family, while inner carousel states within the selected family use established site grammar.
+## Current tablet-layout diagnosis
 
-## Mirrorland acceptance contract
+The same cycle attempted to center tablet top-context by centering:
 
-Mirrorland passes only when all of the following are demonstrated in rendered evidence:
+- `.compass-estate__header`
+- `.compass-statement-orbit`
+- `.compass-editorial-intro`
 
-1. The chooser darkens/suppresses the surrounding page while the four decisions visibly glow/sparkle/reveal as the sole interaction authority.
-2. The chooser itself remains crisp and is not affected by the background blur.
-3. `Enter the Narrative` reaches `/showroom/`.
-4. `Enter the Demo` reaches `/showroom/globe/h-earth/`.
-5. `See the World Map` reaches `/showroom/globe/audralia/`.
-6. `Return to Compass` first removes the chooser/backdrop ownership, then begins Compass restoration.
-7. No underlying Mirrorland copy, stale control, hidden/blank label shell, or focus target competes with the active chooser.
-8. Navigation remains under the declared/controller authority; no duplicate capture-phase navigation shim remains as a second owner.
+Post-live audit established that the statement-orbit stage already centers its own content. The correction therefore operated at the wrong layout level and did not identify the exact rendered child producing the left bias.
 
-## Next bounded construction cycle
+Result:
 
-The next product successor should make the smallest ownership-consolidating repair:
+`TABLET FIX = APPLIED TO WRONG LAYOUT LEVEL`
 
-1. Correct `compass.presentation-convergence.js` at the source so it preserves all four cardinal stars and owns only the one-label handoff.
-2. Remove the Gen1589 compensating cardinal visibility override after the source owner is corrected.
-3. Move/portal the focused Mirrorland chooser into a body-level overlay host sibling to its backdrop.
-4. Preserve underlying inert/focus suppression without stripping suppression from ancestors as a repair tactic.
-5. Preserve the declarative Narrative/Demo/World Map routes and controller-owned navigation.
-6. Preserve teardown-before-return sequencing.
-7. Regression-check 19/19 room states and Brain/Trophy/House without redesigning already-passing surfaces.
-8. Qualify TRL/TRA and the whole page across phone portrait/landscape, tablet, desktop, touch, pointer, keyboard/focus, and reduced motion.
+Before further CSS mutation, identify the exact biased child and record its bounding rectangle, containing-block rectangle, and active width/margin/transform/position/inset declarations. Correct that child/declaration only.
 
-## Publication boundary
+If an ancestor is already centered, do not center it again.
 
-The obsolete push-triggered Pages authority remains retired. `.github/workflows/pages-direct-deploy.yml(target_sha=<exact approved current main>)` is the surviving explicit publication authority. Release proof still requires the matching public `.well-known/dgb-release.json` exact-SHA marker and successful live exact-head verification.
+## Publication/cache branch — closed for the failed cycle
 
-No product mutation should be published merely because the source audit is complete. Construction, qualification, merge, publication, and live visual acceptance remain separate boundaries.
+The release-settlement/tablet-context product changes were present in the live lineage. The root capability-loader URL was advanced to a fresh identity. Exact-head publication was subsequently proven through the Pages release marker and live verification.
 
-## Acceptance
+Therefore the governing interpretation of that failed cycle is:
 
-Acceptance is whole-page, not patch-local. A successor is not accepted merely because named defects were edited.
+`LIVE BYTES CORRECT + WRONG STATE CHANNEL + WRONG LAYOUT LEVEL`
 
-Acceptance still requires no text collision, clipping, stale state, broken control, predecessor flash, inactive-carousel residue, blank competing label shell, blurred active chooser, duplicate interaction owner, or newly introduced regression anywhere in the exercised page.
+not:
 
-User-observed rendered evidence is the presentation authority. Source presence, CI assertions, merge success, exact-head deployment, and publication are necessary evidence where applicable but are not visual acceptance.
+`DEPLOYMENT FAILED`
 
-## Evidence spine
+and not:
 
-Read, in order:
+`CACHE FAILED`.
 
-1. `docs/COMPASS_LAWS_PRECEDENT_AND_STATE_TRANSITION_AUDIT_20260822.md` — Laws transition/label precedent and current ownership diagnosis.
-2. `docs/COMPASS_VISUAL_EVIDENCE_TIMELINE.md` — timestamped visual chronology.
-3. `docs/MASTER_PAGE_AND_COMPASS_CONTINUITY_LEDGER.md` — generation/change continuity.
-4. `docs/PUBLICATION_AUTHORITY_BOUNDARY.md` — release/control-plane disposition.
+No further cache-bust or publication-infrastructure work is authorized for those two defects unless new evidence reopens that branch.
 
-Any further construction, qualification conclusion, or release claim must resolve against current `main`, current rendered owner evidence, and this repository-resident audit spine rather than room memory.
+## Mirrorland standing contract
+
+Mirrorland remains governed by the earlier audit unless newer rendered evidence explicitly supersedes it.
+
+Acceptance requires:
+
+1. background suppression while the four decisions become the sole interaction authority;
+2. chooser itself remains crisp/unfiltered;
+3. Narrative reaches `/showroom/`;
+4. Demo reaches `/showroom/globe/h-earth/`;
+5. World Map reaches `/showroom/globe/audralia/`;
+6. Return removes chooser/backdrop ownership before Compass restoration;
+7. no duplicate navigation or focus owner competes with the active chooser.
+
+Do not redesign Mirrorland merely while correcting release settlement or tablet alignment.
+
+## Other preserved surfaces
+
+The 19/19 foreground-star -> information coverage was previously closed and should not be re-proven absent regression evidence.
+
+Brain/Trophy/House should be preserved unless new evidence identifies a concrete defect.
+
+TRL/TRA remains subject to whole-page carousel continuity and regression qualification.
+
+## Governing cross-page execution protocol
+
+Every further Compass change must use:
+
+`docs/PAGE_CHANGE_EXECUTION_AND_LIVE_VERIFICATION_PROTOCOL.md`
+
+The required cycle is:
+
+`TRACE LIVE AUTHORITY -> CHANGE SMALLEST AUTHORITATIVE SURFACE -> VERIFY SOURCE -> MERGE -> AUTO-PUBLISH -> VERIFY PUBLIC EXACT SHA -> VERIFY LIVE BEHAVIOR`
+
+The room must record these states separately:
+
+- `SOURCE_CHANGE_PRESENT`
+- `AUTHORITATIVE_WIRING_PROVEN`
+- `SOURCE_SANITY_PASS`
+- `MERGED_EXACT_CANDIDATE`
+- `PUBLIC_EXACT_SHA_VERIFIED`
+- `LIVE_BEHAVIOR_PASS` or `LIVE_BEHAVIOR_FAIL`
+
+Do not call a cycle complete merely because source, merge, workflow, or deployment passed.
+
+## Next bounded Compass correction
+
+The next correction is narrow:
+
+1. trace the actual pointer-release transaction in the renderer/controller;
+2. commit the already-known nearest forward cardinal in that authoritative transaction;
+3. remove/retire the ineffective observer-derived release bridge when the direct owner is in place;
+4. inspect the exact live tablet child producing the left bias;
+5. correct that exact layout declaration only;
+6. regression-check four-cardinal one-label semantics, Mirrorland, and preserved lower-page behavior;
+7. merge through the normal accepted path;
+8. allow automatic exact-head publication;
+9. verify public exact SHA;
+10. verify the actual live behavior before declaring success.
+
+## Completion law
+
+For this page:
+
+`AUTHORITATIVE PRODUCT CHANGE + EXACT PUBLICATION + LIVE BEHAVIORAL PROOF = COMPLETE`
+
+Anything less is an intermediate state.

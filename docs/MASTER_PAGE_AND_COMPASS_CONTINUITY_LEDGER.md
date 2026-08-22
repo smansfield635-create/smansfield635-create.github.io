@@ -132,3 +132,16 @@ The purpose of this file is strict continuity: at all times we must be able to i
 - `LIVE STATUS`: `SOURCE_ONLY`; not merged or deployed at this entry.
 - `USER-OBSERVED STATUS`: the successor is specifically constructed against user evidence `24109.mp4` and `24110.mp4` plus the explicit Mirrorland modal-fork instruction.
 - `NEXT LAWFUL BOUNDARY`: revalidate current `main`; if still exact `c448de505e718793cc84bb024318ef0dfe936a7b`, merge only PR #1583 exact head and perform exact-head GitHub Pages deployment, then require user visual inspection before declaring the six presentation defects closed.
+
+## 2026-08-21 21:26 CDT / Gen1586 / exact-head revalidation
+
+- `EXACT HEAD`: current `main` revalidated as `c448de505e718793cc84bb024318ef0dfe936a7b`; PR #1583 remains based on that exact head.
+- `PATHS CHANGED`: no new product scope beyond the two Gen1586 presentation assets; this entry is documentation-only.
+- `PREVIOUS STATE`: qualification had reached the promotion boundary but exact-head authority still required a final main readback.
+- `NEW STATE`: governing base remains unchanged; no competing main mutation has invalidated Gen1586.
+- `PROGRESS`: exact-head condition satisfied for PR #1583 promotion.
+- `REGRESSION`: none introduced by this documentation-only readback.
+- `UNRESOLVED`: live deployment and user visual inspection remain required.
+- `LIVE STATUS`: `SOURCE_ONLY` until merge and exact-head Pages deployment complete.
+- `USER-OBSERVED STATUS`: unchanged; six visual acceptance conditions remain pending live inspection.
+- `NEXT LAWFUL BOUNDARY`: merge exact PR #1583 head, deploy the resulting main SHA through GitHub Pages exact-head transport, verify live publication, then return to user visual validation.

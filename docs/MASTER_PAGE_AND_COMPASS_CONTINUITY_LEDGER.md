@@ -106,3 +106,42 @@ The purpose of this file is strict continuity: at all times we must be able to i
 - `LIVE STATUS`: `SOURCE_ONLY`; not merged and not deployed at this entry.
 - `USER-OBSERVED STATUS`: user video `24104.mp4` is the governing visual regression evidence for this successor.
 - `NEXT LAWFUL BOUNDARY`: qualify exact candidate `c5136948dccfc519c0eed4d59d51e5cc5debbe1b` (plus this documentation-only ledger update), revalidate current main, merge only if presentation behavior passes, then exact-head GitHub Pages deploy and user visual inspection.
+
+## 2026-08-21 21:02 CDT / Gen1586 / Compass state-focus reconciliation
+
+- `EXACT HEAD`: `c448de505e718793cc84bb024318ef0dfe936a7b`.
+- `PATHS CHANGED`: `assets/compass/compass.presentation-convergence.js`, `assets/compass/compass.capability-carousel.js`, and this continuity ledger only.
+- `PREVIOUS STATE`: Gen1585 materially improved the bottom carousels, but user videos `24109.mp4` and `24110.mp4` prove six remaining presentation defects: TRL/TRA still expose visible Previous/Next controls; brain/trophy/house still bleeds or transitions poorly; Mirrorland choice state does not clearly take visual focus; cluster rotation leaves stale/extra labels; the lower Selected Path panel does not transition with the 19 foreground room stars; and the upper Compass reads optically left of the page axis.
+- `NEW STATE`: Gen1586 source candidate keeps controller/navigation ownership unchanged while making visible TRL/TRA navigation swipe-only, turning Mirrorland FOCUSED into a dimmed modal four-way fork with alternating destination glow and existing Back-to-Compass reversal, enforcing one projected room label, deriving lower-panel presentation atomically from controller-owned cluster primary/preview datasets for all 19 rooms, making inactive brain/trophy/house plaques/canvases presentation-inert, and optically centering the interactive Compass scene.
+- `PROGRESS`: no new navigation, controller, renderer, H-Earth runtime, deployment owner, or destination route was introduced; presentation follows existing controller datasets and existing route controls.
+- `REGRESSION`: Gen1585 residual defects remain recorded until rendered/user proof closes them.
+- `UNRESOLVED`: exact rendered qualification is required for modal focus, swipe-only behavior, 19-room state transitions, label exclusivity, capability carousel single-foreground behavior, and mobile centering.
+- `LIVE STATUS`: `SOURCE_ONLY`; branch `compass-gen1586-state-focus-reconciliation-20260821` only at this entry.
+- `USER-OBSERVED STATUS`: `24109.mp4` and `24110.mp4` are governing visual evidence.
+- `NEXT LAWFUL BOUNDARY`: open exact-head Gen1586 PR, inspect diff, run rendered interaction qualification against the candidate, revalidate current `main`, and promote only if all six acceptance conditions pass without H-Earth or route regression.
+
+## 2026-08-21 21:24 CDT / Gen1586 / qualification correction and promotion boundary
+
+- `EXACT HEAD`: candidate product head `31122206ca6aa9f14fd24981dc06d5eed19ad3d0` on base `c448de505e718793cc84bb024318ef0dfe936a7b`; this ledger update follows that product head.
+- `PATHS CHANGED`: same Gen1586 scope only: `assets/compass/compass.presentation-convergence.js`, `assets/compass/compass.capability-carousel.js`, and this continuity ledger. A disposable phone-overflow diagnostic workflow was created and removed before promotion and is not part of the candidate diff.
+- `PREVIOUS STATE`: first Gen1586 centering attempt used auto margins/inset overrides on the relative Compass scene and collapsed the desktop interaction hit box to 2 px wide. This was a candidate-specific regression and was not promoted.
+- `NEW STATE`: centering correction preserves a full-width canonical Compass scene hit box while keeping the surrounding presentation aligned; TRL/TRA visible controls are now strictly swipe-only (progress dots hidden; keyboard arrows remain accessibility fallback); other Gen1586 state-focus behaviors remain unchanged.
+- `PROGRESS`: interaction qualification after the centering correction successfully opens the Compass and reaches the same boundary as Gen1585, then stops on the pre-existing H-Earth proxy assertion `href:null` while `data-route` remains `/showroom/globe/h-earth/`. Capability rendered qualification passes desktop and tablet brain/trophy/house WebGL, swipe sequence, no arrows, and guidance `Swipe to rotate.`
+- `REGRESSION`: the 2 px scene-hitbox regression discovered in the first Gen1586 candidate was corrected before merge. Phone capability qualification still reports 108 px horizontal overflow, but exact Gen1585 baseline run #505 reports the identical 108 px overflow; therefore it is preserved as a pre-existing condition, not attributed to Gen1586.
+- `UNRESOLVED`: final user-visible inspection remains required after deployment for the Mirrorland four-way fork, alternating glow, 19-room panel transitions, single-label visual exclusivity, optical centering, and swipe-only TRL/TRA presentation. The stale H-Earth proxy assertion and pre-existing phone overflow remain separate legacy qualification debt.
+- `LIVE STATUS`: `SOURCE_ONLY`; not merged or deployed at this entry.
+- `USER-OBSERVED STATUS`: the successor is specifically constructed against user evidence `24109.mp4` and `24110.mp4` plus the explicit Mirrorland modal-fork instruction.
+- `NEXT LAWFUL BOUNDARY`: revalidate current `main`; if still exact `c448de505e718793cc84bb024318ef0dfe936a7b`, merge only PR #1583 exact head and perform exact-head GitHub Pages deployment, then require user visual inspection before declaring the six presentation defects closed.
+
+## 2026-08-21 21:26 CDT / Gen1586 / exact-head revalidation
+
+- `EXACT HEAD`: current `main` revalidated as `c448de505e718793cc84bb024318ef0dfe936a7b`; PR #1583 remains based on that exact head.
+- `PATHS CHANGED`: no new product scope beyond the two Gen1586 presentation assets; this entry is documentation-only.
+- `PREVIOUS STATE`: qualification had reached the promotion boundary but exact-head authority still required a final main readback.
+- `NEW STATE`: governing base remains unchanged; no competing main mutation has invalidated Gen1586.
+- `PROGRESS`: exact-head condition satisfied for PR #1583 promotion.
+- `REGRESSION`: none introduced by this documentation-only readback.
+- `UNRESOLVED`: live deployment and user visual inspection remain required.
+- `LIVE STATUS`: `SOURCE_ONLY` until merge and exact-head Pages deployment complete.
+- `USER-OBSERVED STATUS`: unchanged; six visual acceptance conditions remain pending live inspection.
+- `NEXT LAWFUL BOUNDARY`: merge exact PR #1583 head, deploy the resulting main SHA through GitHub Pages exact-head transport, verify live publication, then return to user visual validation.

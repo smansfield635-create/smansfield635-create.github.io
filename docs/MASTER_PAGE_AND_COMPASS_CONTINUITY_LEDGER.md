@@ -158,3 +158,14 @@ The purpose of this file is strict continuity: at all times we must be able to i
 - `LIVE STATUS`: `LIVE_PROVEN` only for publication of Gen1586, not for closure of these presentation defects.
 - `USER-OBSERVED STATUS`: `USER_OBSERVED REGRESSION / UNRESOLVED`. Governing evidence is `24117.mp4` plus owner screenshots; earlier `24097.mp4` and `24104.mp4` remain the baseline for determining what predated later generations.
 - `NEXT LAWFUL BOUNDARY`: any successor must repair ownership/layout rather than move individual words: one active owner per text region, reserved height for active content, outgoing state removed from visual flow before incoming state enters, controls excluded from body-copy space, and user-visible proof required before closure. Reference the visual timeline rather than duplicating frame-by-frame details here.
+
+## 2026-08-21 21:48 CDT / Gen1586 / takeover qualification lock
+
+- `EXACT HEAD`: Gen1586 deployed product head `9312ddec57cd44db0b43843d877589aef6d6492a`; documentation-only successors do not alter the product baseline.
+- `PATHS CHANGED`: documentation only — takeover acceptance language in `docs/COMPASS_VISUAL_EVIDENCE_TIMELINE.md` and this ledger.
+- `PREVIOUS STATE`: publication and post-deployment visual regressions were recorded, but a takeover room could still misread successful exact-head deployment as evidence that Gen1586 itself had qualified.
+- `NEW STATE`: authoritative takeover classification is now explicit: `GEN1586 = DEPLOYED EVIDENCE BASELINE, NOT ACCEPTED SUCCESSOR`.
+- `PROGRESS`: takeover continuity is deterministic: chronology, preserved earlier behavior, Gen1586 regressions, ownership/layout contract, and next-cycle repair scope are repository-resident.
+- `REGRESSION`: none introduced; documentation-only operation.
+- `UNRESOLVED`: Gen1586 qualification/diagnostic runs did not establish acceptance across the relevant rendered/static, interaction/browser, continuity/recovery, and state-focus surfaces. A later room must not inherit Gen1586 as qualified merely because it was deployed.
+- `LIVE STATUS`: Gen1586 remains deployed evidence only; `LIVE_PROVEN` publication is not an acceptance verdict.

@@ -25,36 +25,29 @@
       "workflow": "pages-direct-deploy.yml",
       "ref": "main",
       "inputPolicy": {
-        "target_sha": {
-          "source": "CURRENT_MAIN_SHA",
-          "userOverrideAllowed": false
-        }
+        "target_sha": {"source": "CURRENT_MAIN_SHA","userOverrideAllowed": false}
       }
     },
     "H_EARTH_STAGE1_COST_QUALIFY": {
       "workflow": "h-earth-stage1-cost-qualify.yml",
       "ref": "main",
       "inputPolicy": {
-        "baseline_sha": {
-          "source": "REQUEST",
-          "required": true,
-          "userOverrideAllowed": true
-        },
-        "candidate_sha": {
-          "source": "REQUEST",
-          "required": true,
-          "userOverrideAllowed": true
-        }
+        "baseline_sha": {"source": "REQUEST","required": true,"userOverrideAllowed": true},
+        "candidate_sha": {"source": "REQUEST","required": true,"userOverrideAllowed": true}
       }
     },
     "H_EARTH_STAGE1_INSPECTION_PUBLISH": {
       "workflow": "h-earth-stage1-inspection-publish.yml",
       "ref": "main",
       "inputPolicy": {
-        "target_sha": {
-          "source": "CURRENT_MAIN_SHA",
-          "userOverrideAllowed": false
-        }
+        "target_sha": {"source": "CURRENT_MAIN_SHA","userOverrideAllowed": false}
+      }
+    },
+    "H_EARTH_STAGE1_MOBILE_INTERACTION_QUALIFY": {
+      "workflow": "h-earth-stage1-mobile-interaction-qualify.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "candidate_sha": {"source": "REQUEST","required": true,"userOverrideAllowed": true}
       }
     }
   },

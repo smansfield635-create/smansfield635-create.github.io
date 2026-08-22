@@ -1,4 +1,4 @@
-# PAGE_CHANGE_EXECUTION_AND_LIVE_VERIFICATION_PROTOCOL_v1
+# PAGE_CHANGE_EXECUTION_AND_LIVE_VERIFICATION_PROTOCOL_v2
 
 ## Purpose
 
@@ -6,26 +6,50 @@ This record exists to prevent small page changes from turning into repeated mult
 
 The governing operational sequence for any public page change is:
 
-`TRACE LIVE AUTHORITY -> CHANGE SMALLEST AUTHORITATIVE SURFACE -> VERIFY SOURCE -> MERGE -> AUTO-PUBLISH -> VERIFY PUBLIC EXACT SHA -> VERIFY LIVE BEHAVIOR`
+`RESOLVE CURRENT HEAD -> PIN EXACT SHA -> DIRECT SOURCE READBACK -> TRACE LIVE AUTHORITY -> CHANGE SMALLEST AUTHORITATIVE SURFACE -> VERIFY SOURCE -> MERGE -> AUTO-PUBLISH -> VERIFY PUBLIC EXACT SHA -> VERIFY LIVE BEHAVIOR`
 
-A room is not finished at commit, PR, merge, deploy, cache-bust, or CI success. Completion requires the intended behavior to be visible and functional on the live page.
+A room is not finished at search result, commit, PR, merge, deploy, cache-bust, CI success, or documentation update. Completion requires the intended behavior to be visible and functional on the live page.
 
-## Core distinction: publication versus behavior
+## Source-authority and freshness rule
+
+The controlling cross-repository source protocol is:
+
+`docs/SOURCE_AUTHORITY_AND_INDEX_FRESHNESS_PROTOCOL.md`
+
+GitHub code search is discovery only. Every current-state conclusion must first resolve the current `main` SHA and directly read decision-critical files at that exact SHA.
+
+A search result whose URL embeds a different commit than the governing SHA is `INDEX_STALE_FOR_CURRENT_HEAD`. It may explain history but may not establish current implementation state.
+
+`NO SEARCH RESULT` is never proof that a current file/function does not exist. Absence requires exact-ref readback, exact tree/directory inspection, or an explicit compare proving removal.
+
+A multi-file audit must use one pinned SHA. If `main` advances during the audit, finish the pinned snapshot, compare it to new `main`, and carry the result forward only when the cumulative change is proven disjoint from the audited dependency surface. Otherwise re-read the affected files at the new exact head.
+
+Documentation is contract/history evidence, not a self-updating source snapshot. If documentation and exact-ref source disagree about what currently exists, exact-ref source controls implementation state and the documentation contradiction must be classified and repaired if it purports to describe current authority.
+
+A filtered workflow lookup is not exhaustive. An empty PR-triggered run lookup, for example, cannot prove that no push-triggered release occurred.
+
+## Core distinction: source, publication, and behavior
 
 These are separate questions and must be proven separately.
 
-1. **Are the intended bytes live?**
+1. **What bytes are actually in the governing repository generation?**
+   - resolve current `main`;
+   - pin its exact SHA;
+   - read the relevant source directly at that SHA;
+   - do not infer current state from a lagging search index.
+
+2. **Are the intended bytes live?**
    - exact approved/main SHA is published;
    - `.well-known/dgb-release.json` returns that exact SHA;
    - the relevant root asset identity is current where cache identity matters.
 
-2. **Do those live bytes control the intended behavior?**
+3. **Do those live bytes control the intended behavior?**
    - the code is attached to the actual controller/state/layout authority;
    - the state signal being observed is actually emitted where the code expects it;
    - the CSS selector targets the element whose rendered bounds cause the defect;
    - the live interaction visibly changes as intended.
 
-Never infer question 2 from a PASS on question 1.
+Never infer question 3 from a PASS on question 2, and never infer question 1 from code search.
 
 ## Live-authority-first rule
 
@@ -94,6 +118,9 @@ The fallback AI-entry exact-head dispatch capability may be used when the automa
 
 Every page-change cycle should record these states separately:
 
+- `GOVERNING_SHA_RESOLVED`
+- `EXACT_REF_SOURCE_READBACK_COMPLETE`
+- `SEARCH_INDEX_FRESHNESS_CLASSIFIED`
 - `SOURCE_CHANGE_PRESENT`
 - `AUTHORITATIVE_WIRING_PROVEN`
 - `SOURCE_SANITY_PASS`
@@ -104,6 +131,14 @@ Every page-change cycle should record these states separately:
 Do not collapse these into one statement such as “deployed” or “done.”
 
 ## Failure branching
+
+If source/search evidence conflicts:
+
+- resolve current `main` directly;
+- pin that SHA;
+- direct-read the disputed files at that SHA;
+- classify older search refs as stale rather than reopening architecture;
+- compare only if `main` moved after the pinned snapshot.
 
 If `PUBLIC_EXACT_SHA_VERIFIED` fails:
 
@@ -118,29 +153,35 @@ If `PUBLIC_EXACT_SHA_VERIFIED` passes but `LIVE_BEHAVIOR_PASS` fails:
 
 If two simple fixes in the same runtime surface both produce no visible effect after exact-head publication, first test whether both were attached to the wrong authority before assuming two independent product failures.
 
-## Compass lesson — 2026-08-22
+## Compass lessons — 2026-08-22
 
-The Compass release-settlement and tablet-context cycle provides the controlling example.
+Two separate precedents now control.
 
-The settlement patch listened for `data-orbit-gesture-active` on `[data-compass-root]`, but the controller did not publish that field as the expected root dataset transition. The patch therefore waited on a non-authoritative/non-emitted state signal and its release path never became active.
+### Product-authority precedent
 
-The tablet patch centered `.compass-estate__header`, `.compass-statement-orbit`, and `.compass-editorial-intro`, while the relevant statement stage already centered its own content. The patch therefore changed the wrong layout level and did not prove the exact child producing the left bias.
+The Compass settlement patch listened for `data-orbit-gesture-active` on `[data-compass-root]`, but the controller did not publish that field as the expected root dataset transition. The patch therefore waited on a non-authoritative/non-emitted state signal.
+
+The tablet patch centered already-centered outer containers rather than first identifying the exact child producing the left bias.
 
 The correct interpretation was:
 
 `LIVE BYTES CORRECT + WRONG STATE CHANNEL + WRONG LAYOUT LEVEL`
 
-not:
+not deployment failure.
 
-`DEPLOYMENT FAILED`
+### Source-index precedent
 
-and not:
+A later audit compared a page-specific document with GitHub code-search results indexed at an older commit while `main` had already advanced. Direct exact-ref readback showed that current source contained a renderer/controller release path absent from the older evidence context.
 
-`TWO SIMPLE FIXES MYSTERIOUSLY FAILED`.
+The correct interpretation was:
+
+`PROJECT CONTEXT INTACT + SEARCH INDEX STALE + MIXED-SNAPSHOT COMPARISON`
+
+not a missing construction cycle.
 
 ## Compass-specific state precedent
 
-For the constellation, Laws remains the direct precedent:
+For the constellation, Laws remains the direct interaction precedent:
 
 `gesture begin -> preview -> controller commit/cancel -> canonical settled orientation -> semantic ownership`
 
@@ -152,18 +193,18 @@ Preview is not semantic selection. Release settlement belongs in the existing co
 
 Any room continuing page work must begin from repository evidence, not conversation memory alone.
 
-At minimum it must read:
+At minimum it must:
 
-1. this protocol;
-2. the page-specific takeover/audit record;
-3. current `main`;
-4. the exact current live/publication evidence when release state matters.
+1. resolve exact current `main`;
+2. pin that SHA for the audit;
+3. read `docs/SOURCE_AUTHORITY_AND_INDEX_FRESHNESS_PROTOCOL.md`;
+4. read this protocol;
+5. read the page-specific takeover/audit record;
+6. direct-read decision-critical product files at the pinned SHA;
+7. classify any code-search result against that SHA before using it;
+8. read exact current live/publication evidence when release state matters.
 
-A room must not reopen a closed branch of diagnosis without new contradictory evidence. Examples:
-
-- once exact SHA and fresh bootstrap identity are proven, do not blame cache again;
-- once a state signal is proven absent from the observed DOM channel, do not keep adding observers to that channel;
-- once a parent is proven centered, do not keep applying centering rules to that parent.
+A room must not reopen a closed branch of diagnosis without new contradictory evidence.
 
 ## Completion definition
 
@@ -171,6 +212,6 @@ For ordinary page work, the user should only need to describe the desired change
 
 Engineering completion means:
 
-`AUTHORITATIVE CHANGE + EXACT PUBLICATION + LIVE BEHAVIORAL PROOF`
+`PINNED SOURCE AUTHORITY + AUTHORITATIVE CHANGE + EXACT PUBLICATION + LIVE BEHAVIORAL PROOF`
 
 Anything less is an intermediate state and must be described as such.

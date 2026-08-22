@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "H_EARTH_STAGE1_COST_QUALIFY_20260822_004",
+  "capabilityId": "H_EARTH_STAGE1_COST_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 1630,
+  "requestBranch": "ai-dispatch-request-h-earth-stage1-cost-qualify-20260822-r4",
+  "requestCommit": "a055c24a6a69f87ca259ce2b2e5c49ab096db998",
+  "requestCommitParent": "dc7a9fbbe6596b20ee77e159a38f3abba0405d6e",
+  "currentMainSha": "dc7a9fbbe6596b20ee77e159a38f3abba0405d6e",
+  "workflow": "h-earth-stage1-cost-qualify.yml",
+  "ref": "main",
+  "inputs": {
+    "baseline_sha": "1d45379f81ea4089e9c5f3d7d9688e702be9add3",
+    "candidate_sha": "3ca35e634d3e1d7305b1924cc0591d1c02bb4c37"
+  },
+  "bridgeRunId": "32588336536",
+  "dispatchedRunId": 32588398327,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/32588398327",
+  "dispatchedRunHeadSha": "dc7a9fbbe6596b20ee77e159a38f3abba0405d6e",
+  "dispatchedAt": "2026-08-22T17:39:33.932Z",
+  "resolvedAt": "2026-08-22T17:39:37.141Z"
+}

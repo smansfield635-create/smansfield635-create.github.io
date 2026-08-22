@@ -26,6 +26,10 @@ await page.evaluate(()=>{
   const suppress=e=>{if(e.target?.closest?.('a[href]'))e.preventDefault();};
   document.addEventListener('click',suppress,true);
   document.addEventListener('auxclick',suppress,true);
+  for(const anchor of document.querySelectorAll('[data-compass-scene] a[href]')){
+    anchor.dataset.auditQualificationHref=anchor.getAttribute('href')||'';
+    anchor.removeAttribute('href');
+  }
 });
 
 const snapshot=()=>page.evaluate(()=>{

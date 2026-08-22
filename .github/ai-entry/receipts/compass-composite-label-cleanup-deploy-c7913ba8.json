@@ -1,0 +1,23 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "compass-composite-label-cleanup-deploy-c7913ba8",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 1701,
+  "requestBranch": "ai-dispatch-request-compass-composite-label-cleanup",
+  "requestCommit": "3064ab005c253f7da85e5cef545d38251818b5db",
+  "requestCommitParent": "c7913ba858f1ead7d05a5a11f74bb2db824ef50f",
+  "currentMainSha": "c7913ba858f1ead7d05a5a11f74bb2db824ef50f",
+  "workflow": "pages-direct-deploy.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "c7913ba858f1ead7d05a5a11f74bb2db824ef50f"
+  },
+  "bridgeRunId": "32606487379",
+  "dispatchedRunId": 32606556242,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/32606556242",
+  "dispatchedRunHeadSha": "c7913ba858f1ead7d05a5a11f74bb2db824ef50f",
+  "dispatchedAt": "2026-08-22T23:56:25.158Z",
+  "resolvedAt": "2026-08-22T23:56:29.291Z"
+}

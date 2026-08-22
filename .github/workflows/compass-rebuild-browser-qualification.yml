@@ -1,0 +1,85 @@
+name: Compass Rebuild Browser Qualification
+on:
+  push:
+    branches:
+      - compass-static-single-runtime-20260821
+    paths:
+      - 'compass-inspect-v2/**'
+      - '.github/workflows/compass-rebuild-browser-qualification.yml'
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Serve exact branch tree
+        run: |
+          python3 -m http.server 8080 --bind 127.0.0.1 >/tmp/compass-http.log 2>&1 &
+          echo $! >/tmp/compass-http.pid
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:8080/compass-inspect-v2/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/compass-http.log
+          exit 1
+      - name: Browser qualify Compass core
+        run: |
+          cat >/tmp/qualify.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+          const browser=await chromium.launch({headless:true});
+          const page=await browser.newPage({viewport:{width:1024,height:900},deviceScaleFactor:1});
+          const consoleErrors=[]; const pageErrors=[]; const failed=[];
+          page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())});
+          page.on('pageerror',e=>pageErrors.push(String(e)));
+          page.on('requestfailed',r=>failed.push({url:r.url(),failure:r.failure()?.errorText||''}));
+          const response=await page.goto('http://127.0.0.1:8080/compass-inspect-v2/',{waitUntil:'domcontentloaded',timeout:120000});
+          await page.waitForFunction(()=>document.querySelector('[data-compass-root]')?.dataset.runtimeGate==='PASS',{timeout:30000});
+          await page.waitForTimeout(1000);
+          const before=await page.evaluate(()=>{
+            const root=document.querySelector('[data-compass-root]');
+            const scene=document.querySelector('[data-compass-scene]');
+            const crystalCanvas=document.querySelector('canvas[data-compass-crystals-canvas]');
+            const r=scene?.getBoundingClientRect();
+            const cr=globalThis.DGB_COMPASS_CRYSTALS_RECEIPT||{};
+            const ctrl=globalThis.DGB_COMPASS_CONTROLLER_RECEIPT||{};
+            let nonzero=false;
+            if(crystalCanvas){
+              const gl=crystalCanvas.getContext('webgl');
+              if(gl){const px=new Uint8Array(4);gl.readPixels(Math.floor(crystalCanvas.width/2),Math.floor(crystalCanvas.height/2),1,1,gl.RGBA,gl.UNSIGNED_BYTE,px);nonzero=px.some(v=>v!==0)}
+            }
+            return {status:root?.dataset.runtimeGate||'',mode:root?.dataset.compassMode||'',scene:{w:r?.width||0,h:r?.height||0},controller:!!globalThis.DGB_COMPASS_CONTROLLER,controllerReceipt:ctrl,crystals:!!globalThis.DGB_COMPASS_CRYSTALS,crystalsReceipt:cr,crystalCanvas:crystalCanvas?{w:crystalCanvas.width,h:crystalCanvas.height}:null,roomProxies:document.querySelectorAll('[data-compass-room-proxy]').length,cardinals:document.querySelectorAll('[data-compass-cardinal]').length,rooms:document.querySelectorAll('[data-compass-room-declarations] [data-compass-room]').length,centerPixelNonzero:nonzero};
+          });
+          if(!before.controller) throw new Error('CONTROLLER_NOT_MOUNTED');
+          if(before.controllerReceipt.status!=='available') throw new Error('CONTROLLER_NOT_AVAILABLE:'+JSON.stringify(before.controllerReceipt));
+          if(!before.crystals) throw new Error('CRYSTALS_API_NOT_MOUNTED');
+          if(before.crystalsReceipt.status!=='available'||before.crystalsReceipt.rendererInitialized!==true) throw new Error('CRYSTALS_NOT_AVAILABLE:'+JSON.stringify(before.crystalsReceipt));
+          if(before.crystalsReceipt.registryCardinalCount!==4||before.crystalsReceipt.registryRoomCount!==19) throw new Error('CRYSTAL_REGISTRY_INVALID:'+JSON.stringify(before.crystalsReceipt));
+          if(before.crystalsReceipt.drawCallsLastFrame<4) throw new Error('NO_CARDINAL_DRAW_CALLS:'+JSON.stringify(before.crystalsReceipt));
+          if(!before.crystalCanvas||before.crystalCanvas.w<100||before.crystalCanvas.h<100) throw new Error('CRYSTAL_CANVAS_INVALID:'+JSON.stringify(before.crystalCanvas));
+          if(before.roomProxies!==19) throw new Error('ROOM_PROXIES_INVALID:'+before.roomProxies);
+          const opened=await page.evaluate(()=>globalThis.DGB_COMPASS_CONTROLLER.requestCardinalSelection('north'));
+          if(opened===false) throw new Error('CARDINAL_SELECTION_REJECTED');
+          await page.waitForFunction(()=>document.querySelector('[data-compass-root]')?.dataset.compassMode==='CLUSTER_OPEN',{timeout:5000});
+          await page.waitForTimeout(500);
+          const after=await page.evaluate(()=>({mode:document.querySelector('[data-compass-root]')?.dataset.compassMode||'',cluster:globalThis.DGB_COMPASS_CONTROLLER.getFrameState().cluster,crystals:globalThis.DGB_COMPASS_CRYSTALS_RECEIPT}));
+          if(after.mode!=='CLUSTER_OPEN'||!after.cluster||after.cluster.roomIds.length<4) throw new Error('CLUSTER_OPEN_FAILED:'+JSON.stringify(after));
+          const result={ok:true,httpStatus:response?.status()||0,before,after,consoleErrors,pageErrors,failed};
+          fs.writeFileSync('compass-rebuild-browser-qualification.json',JSON.stringify(result,null,2)+'\n');
+          await page.screenshot({path:'compass-rebuild-browser-qualification.png',fullPage:false});
+          console.log(JSON.stringify(result,null,2));
+          await browser.close();
+          NODE
+          node /tmp/qualify.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compass-rebuild-browser-qualification
+          path: |
+            compass-rebuild-browser-qualification.json
+            compass-rebuild-browser-qualification.png
+          if-no-files-found: ignore

@@ -5,5 +5,11 @@ html,body{max-width:100%;overflow-x:clip}
 .ap-award-head>*{min-width:0!important;max-width:100%!important}
 .ap-award-carousel,.clone-carousel{max-width:100%!important;overflow:hidden!important;contain:paint}
 .ap-award-ring{max-width:100%!important}
+.ap-direction-rail{position:relative;z-index:80;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;width:min(100%,860px);margin:0 auto 18px;padding:8px;border:1px solid rgba(239,210,139,.18);border-radius:999px;background:rgba(2,7,12,.78);backdrop-filter:blur(16px);box-shadow:0 18px 60px rgba(0,0,0,.28)}
+.ap-direction-rail button{display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center;min-width:0;padding:10px 14px;border:1px solid transparent;border-radius:999px;background:transparent;color:rgba(247,242,231,.64);font:inherit;text-align:left;cursor:pointer;transition:background .22s ease,border-color .22s ease,color .22s ease,transform .22s ease}
+.ap-direction-rail button span{display:grid;place-items:center;width:28px;height:28px;border:1px solid rgba(142,223,242,.18);border-radius:50%;color:#8edff2;font-size:.68rem;font-weight:900;letter-spacing:.08em}
+.ap-direction-rail button strong{min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.ap-direction-rail button:hover,.ap-direction-rail button:focus-visible,.ap-direction-rail button.is-active{border-color:rgba(239,210,139,.34);background:rgba(239,210,139,.08);color:#f7f2e7;transform:translateY(-1px)}
+.ap-direction-rail button:focus-visible{outline:2px solid #8edff2;outline-offset:2px}
 @media(max-width:900px){.clone-video{grid-template-columns:minmax(0,1fr)!important}.clone-video-frame{width:100%!important}.ap-award-head{grid-template-columns:minmax(0,1fr)!important}}
-@media(max-width:680px){.clone{width:calc(100% - 20px)!important}.ap-award-head{padding-left:8px!important;padding-right:8px!important}.ap-award-card{max-width:calc(100vw - 40px)!important}}
+@media(max-width:680px){.clone{width:calc(100% - 20px)!important}.ap-award-head{padding-left:8px!important;padding-right:8px!important}.ap-award-card{max-width:calc(100vw - 40px)!important}.ap-direction-rail{grid-template-columns:repeat(2,minmax(0,1fr));border-radius:24px}.ap-direction-rail button{padding:9px 11px}.ap-direction-rail button strong{font-size:.68rem}}

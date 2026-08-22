@@ -1,0 +1,68 @@
+:root{--clone-gold:#f2d58a;--clone-cyan:#89e3ff;--clone-ink:#f5f0e4;--clone-muted:rgba(232,231,222,.72);--clone-line:rgba(224,225,215,.17);--clone-panel:rgba(8,15,25,.78)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:#02040a}
+body{margin:0;color:var(--clone-ink);background:radial-gradient(circle at 15% 5%,rgba(137,227,255,.08),transparent 34rem),radial-gradient(circle at 85% 10%,rgba(242,213,138,.07),transparent 34rem),linear-gradient(180deg,#030711,#02040a 52%,#010208);font-family:Inter,ui-sans-serif,system-ui,sans-serif;overflow-x:hidden}
+.clone{width:min(1180px,calc(100% - 36px));margin:auto;padding:0 0 80px}
+.clone-kicker{margin:0;color:var(--clone-gold);font-size:.7rem;font-weight:900;letter-spacing:.19em;text-transform:uppercase}
+.clone-hero{min-height:92vh;display:grid;align-content:center;justify-items:center;text-align:center;padding:70px 0}
+.clone-hero h1{margin:.15em 0 .12em;font-family:Georgia,serif;font-size:clamp(5rem,17vw,12rem);line-height:.75;letter-spacing:-.075em}
+.clone-statements{position:relative;width:min(850px,100%);min-height:7.5rem;display:grid;place-items:center;outline:none;border-radius:1.5rem}
+.clone-statements:focus-visible{box-shadow:0 0 0 2px var(--clone-cyan)}
+.clone-statement{position:absolute;margin:0;opacity:0;transform:translateY(12px);pointer-events:none;color:var(--clone-muted);font-family:Georgia,serif;font-size:clamp(1.25rem,3vw,2rem);line-height:1.45;transition:opacity .5s ease,transform .5s ease}
+.clone-statement.is-active{opacity:1;transform:none;pointer-events:auto}
+.clone-statement.is-active::after{content:"";position:absolute;inset:-20px -30px;z-index:-1;background:radial-gradient(circle,rgba(242,213,138,.09),transparent 68%);animation:cloneSparkle 1.4s ease both}
+.clone-swipe-cue{margin:.35rem 0 0;color:rgba(232,231,222,.48);font-size:.78rem;letter-spacing:.08em}
+.clone-hero-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:28px}
+.clone-pill{display:inline-flex;padding:12px 17px;border:1px solid rgba(242,213,138,.34);border-radius:999px;background:rgba(242,213,138,.08);color:inherit;text-decoration:none;font-weight:850}
+.clone-pill--quiet{border-color:var(--clone-line);background:rgba(255,255,255,.025)}
+.clone-section{margin-top:clamp(70px,10vw,130px);padding:clamp(26px,5vw,58px);border:1px solid var(--clone-line);border-radius:32px;background:linear-gradient(145deg,rgba(9,18,29,.78),rgba(3,7,13,.74));box-shadow:0 30px 90px rgba(0,0,0,.25);overflow:clip}
+.clone-section-heading{max-width:780px;margin-bottom:28px}
+.clone-section h2{margin:10px 0 12px;font-family:Georgia,serif;font-size:clamp(2.5rem,6vw,5.2rem);line-height:.92;letter-spacing:-.055em}
+.clone-section h3{margin:6px 0 10px;font-family:Georgia,serif;font-size:clamp(1.8rem,4vw,3.2rem);line-height:.98}
+.clone-section p{color:var(--clone-muted);line-height:1.65}
+.clone-new-here{display:grid;grid-template-columns:1.15fr .85fr;gap:30px;align-items:end}
+.clone-video{display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center}
+.clone-video-frame{aspect-ratio:16/9;overflow:hidden;border:1px solid rgba(137,227,255,.22);border-radius:24px;background:#030914;box-shadow:0 18px 50px rgba(0,0,0,.35)}
+.clone-video-frame video{display:block;width:100%;height:100%;object-fit:cover;background:#02040a}
+.clone-compass{overflow:visible}
+.clone-compass>.clone-section-heading{margin-left:auto;margin-right:auto;text-align:center}
+.clone-native-compass.compass-estate{width:100%;max-width:none;min-height:0;margin:0;padding:0;background:transparent;color:inherit;overflow:visible}
+.clone-native-compass .compass-instrument{margin:0!important;max-width:none!important;padding:0!important}
+.clone-native-compass .compass-instrument__grid{display:grid!important;grid-template-columns:minmax(0,1fr)!important;justify-items:center!important;align-items:start!important;gap:clamp(16px,2.4vw,28px)!important;width:100%!important}
+.clone-native-compass .compass-scene{width:min(100%,920px)!important;min-height:clamp(520px,58vw,700px);margin-inline:auto!important;border-radius:26px;overflow:hidden}
+.clone-native-compass .compass-panel{width:min(100%,760px)!important;min-height:0!important;margin-inline:auto!important;border-radius:24px!important;overflow:hidden}
+.clone-native-compass .compass-panel h2{font-size:clamp(1.85rem,3vw,2.8rem)!important;line-height:1!important;letter-spacing:-.04em!important}
+.clone-native-compass .compass-mirrorland-routes nav{display:grid;gap:.55rem;margin-top:1rem}
+.clone-native-compass .compass-mirrorland-routes a{display:block;padding:.78rem .9rem;border:1px solid rgba(242,213,138,.2);border-radius:.75rem;color:inherit;text-decoration:none;background:rgba(255,255,255,.025)}
+[data-compass-root][data-mirrorland-window-active="true"] [data-compass-mirrorland-routes][hidden]{display:block!important}
+[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing>span{opacity:0!important;visibility:hidden!important;transition:opacity .18s ease,visibility .18s ease}
+[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing.is-readable-cardinal>span{opacity:1!important;visibility:visible!important}
+[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing:not(.is-readable-cardinal){background:transparent!important;border-color:transparent!important;box-shadow:none!important;outline-color:transparent!important}
+[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing:not(.is-readable-cardinal)::before,[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing:not(.is-readable-cardinal)::after{opacity:0!important;visibility:hidden!important;box-shadow:none!important;background:transparent!important;border-color:transparent!important}
+button[data-compass-room-proxy]{position:absolute!important;pointer-events:auto!important;overflow:visible!important;min-width:44px!important;min-height:44px!important;padding:0!important;margin:0!important;border:0!important;border-radius:50%!important;color:transparent!important;background:transparent!important;box-shadow:none!important;font-size:0!important;-webkit-tap-highlight-color:transparent!important;-webkit-appearance:none!important;appearance:none!important}
+button[data-compass-room-proxy]::before,button[data-compass-room-proxy]::after{content:none!important;display:none!important;background:none!important;box-shadow:none!important}
+.compass-projected-room-label{position:absolute;z-index:12;display:grid;place-items:center;width:max-content;max-width:9.4rem;min-height:1.7rem;padding:.32rem .52rem;border:1px solid rgba(243,217,139,.42);border-radius:999px;color:rgba(255,248,224,.98);background:linear-gradient(135deg,rgba(71,56,29,.90),rgba(11,31,43,.86));box-shadow:0 8px 24px rgba(0,0,0,.34),0 0 20px rgba(243,217,139,.12),inset 0 1px 0 rgba(255,255,255,.10);font:850 .70rem/1.08 Inter,ui-sans-serif,system-ui,sans-serif;letter-spacing:.055em;text-align:center;text-transform:uppercase;text-shadow:0 1px 5px rgba(0,0,0,.95);white-space:normal;overflow-wrap:anywhere;pointer-events:none;transform:translate(-50%,0);filter:brightness(1.08) saturate(1.04)}
+.compass-projected-room-label[hidden]{display:none!important}
+.clone-carousel{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;touch-action:pan-y}
+.clone-card{min-height:180px;padding:22px;border:1px solid var(--clone-line);border-radius:22px;color:inherit;background:rgba(255,255,255,.025);text-align:left;cursor:pointer;outline:none}
+.clone-card span,.clone-card strong,.clone-card small{display:block}
+.clone-card span{color:var(--clone-gold);font-size:.7rem;letter-spacing:.16em}
+.clone-card strong{margin-top:35px;font-family:Georgia,serif;font-size:2rem}
+.clone-card small{margin-top:6px;color:var(--clone-muted)}
+.clone-card.is-active{border-color:rgba(242,213,138,.65);background:linear-gradient(145deg,rgba(242,213,138,.09),rgba(137,227,255,.04))}
+.clone-card:focus-visible,.clone-readiness-tabs button:focus-visible,.clone-readiness-track button:focus-visible{box-shadow:0 0 0 2px var(--clone-cyan)}
+.clone-capability-detail,.clone-readiness-detail{position:relative;min-height:13rem;margin-top:14px;padding:24px;border:1px solid var(--clone-line);border-radius:22px;background:rgba(255,255,255,.025);display:grid;align-content:center}
+.clone-capability-detail a{color:var(--clone-cyan);font-weight:850;width:max-content;max-width:100%}
+.clone-readiness-tabs{display:flex;gap:8px}
+.clone-readiness-tabs button{min-width:80px;padding:10px 16px;border:1px solid var(--clone-line);border-radius:999px;background:transparent;color:inherit;font-weight:900;cursor:pointer;outline:none}
+.clone-readiness-tabs button.is-active{border-color:rgba(242,213,138,.6);background:rgba(242,213,138,.08)}
+.clone-readiness-track{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;margin-top:18px;touch-action:pan-y}
+.clone-readiness-track button{aspect-ratio:1;border:1px solid var(--clone-line);border-radius:50%;background:rgba(255,255,255,.025);color:var(--clone-muted);cursor:pointer;outline:none}
+.clone-readiness-track button.is-active{border-color:var(--clone-cyan);color:var(--clone-ink);background:rgba(137,227,255,.1)}
+.clone-destination-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.clone-destination-grid a{padding:20px;border:1px solid var(--clone-line);border-radius:18px;color:inherit;text-decoration:none;font-weight:850;background:rgba(255,255,255,.02)}
+@keyframes cloneSparkle{0%{opacity:0;transform:scale(.92)}50%{opacity:1}100%{opacity:.3;transform:scale(1.04)}}
+@media(max-width:900px){.clone-native-compass .compass-panel{min-height:0!important}}
+@media(max-width:760px){.clone{width:min(100% - 24px,1180px)}.clone-section{padding:22px;border-radius:24px}.clone-new-here,.clone-video{grid-template-columns:1fr}.clone-carousel,.clone-destination-grid{grid-template-columns:1fr}.clone-card{min-height:130px}.clone-card strong{margin-top:20px}.clone-readiness-track{grid-template-columns:repeat(5,1fr)}.clone-native-compass .compass-scene{min-height:520px}.compass-projected-room-label{max-width:7.6rem;min-height:1.55rem;padding:.27rem .42rem;font-size:.64rem;letter-spacing:.045em}}
+@media(max-width:560px){.clone-hero h1{font-size:clamp(4.3rem,25vw,7rem)}.clone-statements{min-height:10rem}.clone-native-compass .compass-scene{min-height:480px}.compass-projected-room-label{max-width:6.8rem;padding:.25rem .38rem;font-size:.60rem}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.clone-statement{transition:none}.clone-statement.is-active::after{animation:none}.clone-card,.clone-readiness-track button{transition:none!important}}

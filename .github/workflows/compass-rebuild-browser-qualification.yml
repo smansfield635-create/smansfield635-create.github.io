@@ -48,20 +48,25 @@ jobs:
           const before=await page.evaluate(()=>{
             const root=document.querySelector('[data-compass-root]');
             const scene=document.querySelector('[data-compass-scene]');
+            const grid=document.querySelector('.compass-instrument__grid');
+            const hall=document.querySelector('.compass-estate__hall');
             const r=scene?.getBoundingClientRect();
+            const gr=grid?.getBoundingClientRect();
+            const hr=hall?.getBoundingClientRect();
+            const cs=scene?getComputedStyle(scene):null;
             const cr=globalThis.DGB_COMPASS_CRYSTALS_RECEIPT||{};
             const ctrl=globalThis.DGB_COMPASS_CONTROLLER_RECEIPT||{};
             const canvases=[...document.querySelectorAll('canvas')].map((c,i)=>({i,w:c.width,h:c.height,className:c.className||'',parentClass:c.parentElement?.className||'',rect:{w:c.getBoundingClientRect().width,h:c.getBoundingClientRect().height}}));
-            return {status:root?.dataset.runtimeGate||'',mode:root?.dataset.compassMode||'',scene:{w:r?.width||0,h:r?.height||0},controller:!!globalThis.DGB_COMPASS_CONTROLLER,controllerReceipt:ctrl,crystals:!!globalThis.DGB_COMPASS_CRYSTALS,crystalsReceipt:cr,canvases,cardinals:document.querySelectorAll('[data-compass-cardinal]').length,rooms:document.querySelectorAll('[data-compass-room-declarations] [data-compass-room]').length};
+            const styleSheets=[...document.styleSheets].map(s=>({href:s.href||'inline',disabled:s.disabled}));
+            return {status:root?.dataset.runtimeGate||'',mode:root?.dataset.compassMode||'',scene:{w:r?.width||0,h:r?.height||0,display:cs?.display||'',position:cs?.position||'',minHeight:cs?.minHeight||'',height:cs?.height||'',width:cs?.width||''},grid:{w:gr?.width||0,h:gr?.height||0,display:grid?getComputedStyle(grid).display:''},hall:{w:hr?.width||0,h:hr?.height||0,display:hall?getComputedStyle(hall).display:''},controller:!!globalThis.DGB_COMPASS_CONTROLLER,controllerReceipt:ctrl,crystals:!!globalThis.DGB_COMPASS_CRYSTALS,crystalsReceipt:cr,canvases,styleSheets,cardinals:document.querySelectorAll('[data-compass-cardinal]').length,rooms:document.querySelectorAll('[data-compass-room-declarations] [data-compass-room]').length};
           });
+          await page.screenshot({path:'compass-rebuild-browser-qualification-before.png',fullPage:false});
           if(!before.controller) throw new Error('CONTROLLER_NOT_MOUNTED');
           if(before.controllerReceipt.status!=='available') throw new Error('CONTROLLER_NOT_AVAILABLE:'+JSON.stringify(before.controllerReceipt));
           if(!before.crystals) throw new Error('CRYSTALS_API_NOT_MOUNTED');
           if(before.crystalsReceipt.status!=='available'||before.crystalsReceipt.rendererInitialized!==true) throw new Error('CRYSTALS_NOT_AVAILABLE:'+JSON.stringify(before.crystalsReceipt));
           if(before.crystalsReceipt.registryCardinalCount!==4||before.crystalsReceipt.registryRoomCount!==19||before.crystalsReceipt.roomProxyCount!==19) throw new Error('CRYSTAL_REGISTRY_INVALID:'+JSON.stringify(before.crystalsReceipt));
           if((before.crystalsReceipt.drawCallsLastFrame||0)<4) throw new Error('NO_CARDINAL_DRAW_CALLS:'+JSON.stringify(before.crystalsReceipt));
-          if(before.scene.w<300||before.scene.h<300) throw new Error('SCENE_GEOMETRY_INVALID:'+JSON.stringify(before.scene));
-          await page.screenshot({path:'compass-rebuild-browser-qualification-before.png',fullPage:false});
           const opened=await page.evaluate(()=>globalThis.DGB_COMPASS_CONTROLLER.requestCardinalSelection('north'));
           if(opened===false) throw new Error('CARDINAL_SELECTION_REJECTED');
           await page.waitForFunction(()=>document.querySelector('[data-compass-root]')?.dataset.compassMode==='CLUSTER_OPEN',{timeout:5000});
@@ -69,7 +74,7 @@ jobs:
           const after=await page.evaluate(()=>({mode:document.querySelector('[data-compass-root]')?.dataset.compassMode||'',cluster:globalThis.DGB_COMPASS_CONTROLLER.getFrameState().cluster,crystals:globalThis.DGB_COMPASS_CRYSTALS_RECEIPT}));
           if(after.mode!=='CLUSTER_OPEN'||!after.cluster||after.cluster.roomIds.length<4) throw new Error('CLUSTER_OPEN_FAILED:'+JSON.stringify(after));
           if((after.crystals.drawCallsLastFrame||0)<4) throw new Error('CLUSTER_RENDER_DRAWS_MISSING:'+JSON.stringify(after.crystals));
-          const result={ok:true,httpStatus:response?.status()||0,before,after,consoleErrors,pageErrors,failed};
+          const result={ok:true,httpStatus:response?.status()||0,before,after,layoutPass:before.scene.w>=300&&before.scene.h>=300,consoleErrors,pageErrors,failed};
           fs.writeFileSync('compass-rebuild-browser-qualification.json',JSON.stringify(result,null,2)+'\n');
           await page.screenshot({path:'compass-rebuild-browser-qualification-after.png',fullPage:false});
           console.log(JSON.stringify(result,null,2));

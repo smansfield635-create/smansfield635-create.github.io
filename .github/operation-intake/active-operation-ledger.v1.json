@@ -2928,6 +2928,18 @@
       "scopeHash": "fb941fb311d034729a4ad8f949bf10f0473f08f64690169c0365ec59101fc34e",
       "state": "ADMITTED_LOCKED"
     },
+    "fc9a881aa8c39ce948a4fc35928099f421b49b6e4e8c12cd196416ee3e9b2504": {
+      "governingHead": "2107b4aa516a1d151a6e3f1c4588e24f0b9c2041",
+      "lockGeneration": 1593,
+      "lockScope": "COMPASS:ROOT:PERCEPTUAL_ALIGNMENT_AND_CANONICAL_SETTLEMENT:20260822:R2",
+      "operationId": "COMPASS_AUDIT_DERIVED_PERCEPTUAL_REPAIR_20260822_R2",
+      "procedureLocatorDigest": "9f3907b01aeba50439802c8b269e66344e70ddc8f8cb3e3cb985db18baa80b69",
+      "released": false,
+      "requestDigest": "f6b87e6a77d4ebe3ab6597a664e8b6129488c549b0fe9bf1ced6668774365f0b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "fc9a881aa8c39ce948a4fc35928099f421b49b6e4e8c12cd196416ee3e9b2504",
+      "state": "ADMITTED_LOCKED"
+    },
     "ff79734b4cea600d6f944a537b197ea4a4265fd816845d998f108693c6616247": {
       "governingHead": "dffdc60207c3b666b1a6341832eba6bba6bff10f",
       "lockGeneration": 1544,
@@ -2956,7 +2968,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1592,
+  "lockGeneration": 1593,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

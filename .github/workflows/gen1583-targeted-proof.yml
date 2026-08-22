@@ -1,0 +1,70 @@
+name: Gen1583 Targeted Demo and Label Proof
+
+on:
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  targeted-proof:
+    if: github.head_ref == 'gen1583-targeted-proof-20260821'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Prove product bytes equal Gen1583 candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          candidate=c80abe83b2b0540ea72ea4f63d1140fb3a443462
+          git cat-file -e "$candidate^{commit}"
+          git diff --exit-code "$candidate" HEAD -- assets/compass/compass.css .github/workflows/pages-direct-deploy.yml index.html assets/compass/compass.controller.js assets/compass/compass.crystals.js showroom/globe/h-earth/
+          echo GEN1583_PRODUCT_BYTES_EXACT
+      - name: Stage exact Pages payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          stage="$RUNNER_TEMP/pages-site"
+          rm -rf "$stage" && mkdir -p "$stage"
+          rsync -a --prune-empty-dirs \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='preview/' \
+            --exclude='h-earth-live-6d18e158/' \
+            ./ "$stage/"
+          rm -rf "$stage/showroom/globe/h-earth"
+          mkdir -p "$stage/showroom/globe/h-earth"
+          rsync -a --delete h-earth-live-6d18e158/showroom/globe/h-earth/ "$stage/showroom/globe/h-earth/"
+          test -f "$stage/showroom/globe/h-earth/index.html"
+          test -f "$stage/showroom/globe/h-earth/environmental-audio-media.js"
+          test -f "$stage/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js"
+          ! grep -q 'h-earth-live-6d18e158' "$stage/showroom/globe/h-earth/index.html"
+          grep -q 'environmental-audio-media.js' "$stage/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js"
+          bytes="$(du -sb "$stage" | awk '{print $1}')"
+          test "$bytes" -lt 1073741824
+          echo "GEN1583_STAGE_BYTES=$bytes"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Serve staged payload
+        shell: bash
+        run: |
+          cd "$RUNNER_TEMP/pages-site"
+          python3 -m http.server 4173 >/tmp/gen1583-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/gen1583-http.log || true
+          exit 1
+      - name: Run targeted Chromium proof
+        run: node tools/gen1583-targeted-proof.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gen1583-targeted-proof-${{ github.run_id }}
+          path: .qualification/gen1583-targeted
+          retention-days: 30

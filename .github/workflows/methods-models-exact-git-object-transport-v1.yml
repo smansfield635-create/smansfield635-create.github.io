@@ -1,0 +1,118 @@
+name: Methods and Models Exact Git Object Transport v1
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/methods-models-exact-git-object-transport-v1.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  package-exact-git-objects:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PUBLIC_REPOSITORY: smansfield635-create/smansfield635-create.github.io
+      CANDIDATE_SHA: d374d9821b78a4744e22c1d30d101f281054f099
+      BASE_SHA: 7917ecb7b07a32e8a653a6e1534397b232cccd6b
+      SOURCE_SHA: 7917ecb7b07a32e8a653a6e1534397b232cccd6b
+      PLAYWRIGHT_VERSION: 1.55.0
+    steps:
+      - name: Checkout transport workflow head only
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Materialize exact public Git objects
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf "$RUNNER_TEMP/exact-public"
+          git init -q "$RUNNER_TEMP/exact-public"
+          git -C "$RUNNER_TEMP/exact-public" remote add origin "https://github.com/${PUBLIC_REPOSITORY}.git"
+          git -C "$RUNNER_TEMP/exact-public" fetch --no-tags origin "$CANDIDATE_SHA" "$BASE_SHA" "$SOURCE_SHA"
+          git -C "$RUNNER_TEMP/exact-public" update-ref refs/transport/candidate "$CANDIDATE_SHA"
+          git -C "$RUNNER_TEMP/exact-public" update-ref refs/transport/base "$BASE_SHA"
+          git -C "$RUNNER_TEMP/exact-public" update-ref refs/transport/source "$SOURCE_SHA"
+
+      - name: Verify exact candidate lineage and object presence
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C "$RUNNER_TEMP/exact-public" rev-parse refs/transport/candidate^{commit})" = "$CANDIDATE_SHA"
+          test "$(git -C "$RUNNER_TEMP/exact-public" rev-parse refs/transport/base^{commit})" = "$BASE_SHA"
+          test "$(git -C "$RUNNER_TEMP/exact-public" rev-parse refs/transport/source^{commit})" = "$SOURCE_SHA"
+          git -C "$RUNNER_TEMP/exact-public" cat-file -p "$CANDIDATE_SHA" | grep -Fx "parent $BASE_SHA"
+
+      - name: Create Git-native bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p transport
+          git -C "$RUNNER_TEMP/exact-public" bundle create "$GITHUB_WORKSPACE/transport/methods-models-d374d982.bundle" refs/transport/candidate refs/transport/base refs/transport/source
+          git -C "$RUNNER_TEMP/exact-public" bundle verify "$GITHUB_WORKSPACE/transport/methods-models-d374d982.bundle"
+
+      - name: Prove bundle reconstructs the exact Git subject
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf "$RUNNER_TEMP/reconstructed"
+          git init -q "$RUNNER_TEMP/reconstructed"
+          git -C "$RUNNER_TEMP/reconstructed" fetch --no-tags "$GITHUB_WORKSPACE/transport/methods-models-d374d982.bundle" refs/transport/candidate:refs/transport/candidate refs/transport/base:refs/transport/base refs/transport/source:refs/transport/source
+          git -C "$RUNNER_TEMP/reconstructed" checkout -q --detach refs/transport/candidate
+          test "$(git -C "$RUNNER_TEMP/reconstructed" rev-parse HEAD^{commit})" = "$CANDIDATE_SHA"
+          test -z "$(git -C "$RUNNER_TEMP/reconstructed" status --porcelain=v1 --untracked-files=all)"
+          git -C "$RUNNER_TEMP/reconstructed" cat-file -p HEAD | grep -Fx "parent $BASE_SHA"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Package pinned Playwright execution runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p transport/playwright-runtime transport/playwright-browsers
+          npm install --prefix transport/playwright-runtime --no-save "playwright@${PLAYWRIGHT_VERSION}"
+          PLAYWRIGHT_BROWSERS_PATH="$GITHUB_WORKSPACE/transport/playwright-browsers" node transport/playwright-runtime/node_modules/playwright/cli.js install chromium
+          test "$(node -p "require('./transport/playwright-runtime/node_modules/playwright/package.json').version")" = "$PLAYWRIGHT_VERSION"
+          test -n "$(find transport/playwright-browsers -type f -name chrome -o -name headless_shell | head -1)"
+
+      - name: Emit transport-only provenance receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          BUNDLE_SHA256="$(sha256sum transport/methods-models-d374d982.bundle | awk '{print $1}')"
+          cat > transport/receipt.json <<JSON
+          {
+            "schema": "EXACT_PUBLIC_GIT_OBJECT_TRANSPORT_RECEIPT_v1",
+            "result": "PASS_CLOSED",
+            "repository": "$PUBLIC_REPOSITORY",
+            "candidateSha": "$CANDIDATE_SHA",
+            "baseSha": "$BASE_SHA",
+            "sourceShas": ["$SOURCE_SHA"],
+            "format": "GIT_BUNDLE",
+            "bundleSha256": "$BUNDLE_SHA256",
+            "bundleVerified": true,
+            "reconstructionVerified": true,
+            "playwrightVersion": "$PLAYWRIGHT_VERSION",
+            "playwrightRuntimeTransported": true,
+            "qualificationAuthorityCreated": false,
+            "productMutationAuthorityCreated": false,
+            "mergeAuthorityCreated": false,
+            "deploymentAuthorityCreated": false,
+            "ownerAcceptanceCreated": false,
+            "userApprovalCreated": false
+          }
+          JSON
+
+      - name: Upload exact Git object transport artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-models-exact-git-object-transport-d374d982
+          path: transport/
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,8 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
+  "requestId": "H_EARTH_STAGE1_MOBILE_INTERACTION_QUALIFY_20260822_001",
+  "capabilityId": "H_EARTH_STAGE1_MOBILE_INTERACTION_QUALIFY",
+  "inputs": {
+    "candidate_sha": "4c6b9dbea4cb59dfb6cc9abf11dfa73498dd6421"
+  }
+}

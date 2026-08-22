@@ -1,0 +1,144 @@
+name: H-Earth Stage 1 Stable Inspection Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        description: Exact current main SHA used to build Pages payload
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-production
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+    steps:
+      - name: Require exact current main
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REQUESTED_SHA: ${{ inputs.target_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          main_sha="$(curl --fail-with-body --silent --show-error -L -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${GH_TOKEN}" -H "X-GitHub-Api-Version: 2022-11-28" "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/main" | jq -r '.sha')"
+          test "$REQUESTED_SHA" = "$main_sha"
+
+      - name: Checkout exact main
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_sha }}
+          fetch-depth: 1
+
+      - name: Stage current site plus protected inspection trees
+        env:
+          PAGES_STAGE: ${{ runner.temp }}/pages-site
+          BASELINE_SHA: 1d45379f81ea4089e9c5f3d7d9688e702be9add3
+          STAGE1_SHA: 3ca35e634d3e1d7305b1924cc0591d1c02bb4c37
+          BASELINE_ROOT: ${{ runner.temp }}/pages-site/inspection/h-earth/24056
+          STAGE1_ROOT: ${{ runner.temp }}/pages-site/inspection/h-earth/stage1-cost-decoupling
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf "$PAGES_STAGE"
+          mkdir -p "$PAGES_STAGE"
+          rsync -a --prune-empty-dirs --exclude='.git/' --exclude='.github/' --exclude='preview/' --exclude='h-earth-live-6d18e158/' ./ "$PAGES_STAGE/"
+
+          rm -rf "$PAGES_STAGE/showroom/globe/h-earth"
+          mkdir -p "$PAGES_STAGE/showroom/globe/h-earth"
+          rsync -a --delete h-earth-live-6d18e158/showroom/globe/h-earth/ "$PAGES_STAGE/showroom/globe/h-earth/"
+
+          git fetch --no-tags --depth=1 origin "$BASELINE_SHA" "$STAGE1_SHA"
+
+          rm -rf "$BASELINE_ROOT" "$STAGE1_ROOT"
+          mkdir -p "$BASELINE_ROOT" "$STAGE1_ROOT"
+          git archive "$BASELINE_SHA" showroom/globe/audralia showroom/globe/h-earth h-earth-3d | tar -x -C "$BASELINE_ROOT"
+          git archive "$STAGE1_SHA" showroom/globe/audralia showroom/globe/h-earth h-earth-3d | tar -x -C "$STAGE1_ROOT"
+
+          python3 <<'PY'
+          from pathlib import Path
+          p=Path('${{ runner.temp }}/pages-site/inspection/h-earth/stage1-cost-decoupling/showroom/globe/audralia/weather-presentation-reconciliation/index.html')
+          text=p.read_text()
+          marker='<script type="module" src="./app.mjs?cb=2c64ff2e477f6dd2"></script>'
+          assert marker in text
+          prefix='''<script type="module" src="../fap1-stage1-cost-decoupling-v1.mjs?cb=STAGE1_COST_DECOUPLING_v1"></script>\n  <script type="module" src="../acf1-cloud-presentation-v1.mjs?cb=ACF1_v3"></script>\n  <script type="module" src="../fap1-xyz-volumetric-depth-v1.mjs?cb=FAP1_XYZ_DEPTH_v1"></script>\n  <script type="module" src="../fap1-weather-presentation-v1.mjs?cb=FAP1_CANDIDATE_A_VISUAL_v4"></script>\n  '''
+          p.write_text(text.replace(marker,prefix+marker,1))
+          PY
+
+          test -f "$BASELINE_ROOT/showroom/globe/audralia/weather-presentation-reconciliation/index.html"
+          test -f "$STAGE1_ROOT/showroom/globe/audralia/fap1-stage1-cost-decoupling-v1.mjs"
+          grep -q 'fap1-stage1-cost-decoupling-v1.mjs' "$STAGE1_ROOT/showroom/globe/audralia/weather-presentation-reconciliation/index.html"
+          staged_bytes="$(du -sb "$PAGES_STAGE" | awk '{print $1}')"
+          echo "BOUNDED_PAGES_STAGE_BYTES=$staged_bytes"
+          test "$staged_bytes" -lt 1073741824
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/pages-site
+
+      - name: Deploy Pages artifact
+        id: deploy
+        uses: actions/deploy-pages@v4
+
+      - name: Verify Stage 1 public bytes
+        env:
+          PAGE_URL: ${{ steps.deploy.outputs.page_url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          url="${PAGE_URL%/}/inspection/h-earth/stage1-cost-decoupling/showroom/globe/audralia/weather-presentation-reconciliation/"
+          for i in $(seq 1 24); do
+            html="$(curl --fail --silent --show-error -L --max-time 20 "$url" 2>/dev/null || true)"
+            if printf '%s' "$html" | grep -q 'fap1-stage1-cost-decoupling-v1.mjs' && printf '%s' "$html" | grep -q 'Audralia · Weather Presentation Reconciliation'; then
+              echo "STAGE1_STABLE_INSPECTION_BYTES_VERIFIED $url"
+              exit 0
+            fi
+            sleep 10
+          done
+          exit 1
+
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install browser driver
+        shell: bash
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Verify Stage 1 public runtime
+        env:
+          PAGE_URL: ${{ steps.deploy.outputs.page_url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          export INSPECTION_URL="${PAGE_URL%/}/inspection/h-earth/stage1-cost-decoupling/showroom/globe/audralia/weather-presentation-reconciliation/"
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          node <<'NODE'
+          const puppeteer=require('puppeteer-core');
+          (async()=>{
+            const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+            const page=await browser.newPage();
+            await page.setViewport({width:720,height:1280,deviceScaleFactor:1});
+            await page.goto(process.env.INSPECTION_URL,{waitUntil:'domcontentloaded',timeout:60000});
+            await page.waitForFunction(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime()?.invariants?.pass===true,{timeout:45000});
+            await page.waitForFunction(()=>window.__AUDRALIA_FAP1_STAGE1_COST_DECOUPLING__?.getRuntimeEvidence?.()?.patchedCloudShaders>0,{timeout:15000});
+            const result=await page.evaluate(()=>({status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null,pass:window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime()?.invariants?.pass===true,stage1:window.__AUDRALIA_FAP1_STAGE1_COST_DECOUPLING__?.getRuntimeEvidence?.()||null,error:window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__||null}));
+            console.log(JSON.stringify(result,null,2));
+            await browser.close();
+            if(!result.pass||!result.stage1?.patchedCloudShaders||result.error)process.exit(1);
+          })().catch(e=>{console.error(e);process.exit(1);});
+          NODE

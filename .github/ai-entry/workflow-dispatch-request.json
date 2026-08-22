@@ -1,0 +1,6 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
+  "requestId": "compass-gen345-pages-20260822-1917z-r3",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "inputs": {}
+}

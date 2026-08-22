@@ -12,14 +12,15 @@ function installGen1587Bounds(){
 .compass-instrument__grid{justify-items:stretch!important}
 .compass-readiness-dots{display:none!important}
 /* Gen1587 collision reservation: capability copy and its action dock own separate vertical bands. */
-.compass-capability-orbit[data-continuity-contract="COMPASS_CAPABILITY_CONTINUITY_v1"] .compass-action-dock{margin-top:28px!important;position:relative!important;z-index:30!important}
-.compass-capability-orbit[data-continuity-contract="COMPASS_CAPABILITY_CONTINUITY_v1"] .compass-object-caption{padding-bottom:6px!important}
+.compass-capability-orbit[data-continuity-contract="COMPASS_CAPABILITY_CONTINUITY_v1"] .compass-action-dock{margin-top:68px!important;position:relative!important;z-index:30!important}
+.compass-capability-orbit[data-continuity-contract="COMPASS_CAPABILITY_CONTINUITY_v1"] .compass-object-caption{padding-bottom:8px!important}
 @media(max-width:820px){
   [data-compass-scene]{width:100%!important;max-width:100%!important;left:0!important;right:0!important;inset-inline:0!important;margin-inline:0!important}
   .compass-scene,.compass-stage,.compass-compass-stage,[data-compass-render-host],[data-compass-crystal-stage]{max-width:100%!important;box-sizing:border-box!important}
+  .compass-capability-orbit[data-continuity-contract="COMPASS_CAPABILITY_CONTINUITY_v1"] .compass-action-dock{margin-top:72px!important}
 }
 @media(max-width:480px){
-  .compass-capability-orbit[data-continuity-contract="COMPASS_CAPABILITY_CONTINUITY_v1"] .compass-action-dock{margin-top:30px!important}
+  .compass-capability-orbit[data-continuity-contract="COMPASS_CAPABILITY_CONTINUITY_v1"] .compass-action-dock{margin-top:76px!important}
 }
 `;
   document.head.append(style);

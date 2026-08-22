@@ -106,3 +106,16 @@ The purpose of this file is strict continuity: at all times we must be able to i
 - `LIVE STATUS`: `SOURCE_ONLY`; not merged and not deployed at this entry.
 - `USER-OBSERVED STATUS`: user video `24104.mp4` is the governing visual regression evidence for this successor.
 - `NEXT LAWFUL BOUNDARY`: qualify exact candidate `c5136948dccfc519c0eed4d59d51e5cc5debbe1b` (plus this documentation-only ledger update), revalidate current main, merge only if presentation behavior passes, then exact-head GitHub Pages deploy and user visual inspection.
+
+## 2026-08-21 21:02 CDT / Gen1586 / Compass state-focus reconciliation
+
+- `EXACT HEAD`: `c448de505e718793cc84bb024318ef0dfe936a7b`.
+- `PATHS CHANGED`: `assets/compass/compass.presentation-convergence.js`, `assets/compass/compass.capability-carousel.js`, and this continuity ledger only.
+- `PREVIOUS STATE`: Gen1585 materially improved the bottom carousels, but user videos `24109.mp4` and `24110.mp4` prove six remaining presentation defects: TRL/TRA still expose visible Previous/Next controls; brain/trophy/house still bleeds or transitions poorly; Mirrorland choice state does not clearly take visual focus; cluster rotation leaves stale/extra labels; the lower Selected Path panel does not transition with the 19 foreground room stars; and the upper Compass reads optically left of the page axis.
+- `NEW STATE`: Gen1586 source candidate keeps controller/navigation ownership unchanged while making visible TRL/TRA navigation swipe-only, turning Mirrorland FOCUSED into a dimmed modal four-way fork with alternating destination glow and existing Back-to-Compass reversal, enforcing one projected room label, deriving lower-panel presentation atomically from controller-owned cluster primary/preview datasets for all 19 rooms, making inactive brain/trophy/house plaques/canvases presentation-inert, and optically centering the interactive Compass scene.
+- `PROGRESS`: no new navigation, controller, renderer, H-Earth runtime, deployment owner, or destination route was introduced; presentation follows existing controller datasets and existing route controls.
+- `REGRESSION`: Gen1585 residual defects remain recorded until rendered/user proof closes them.
+- `UNRESOLVED`: exact rendered qualification is required for modal focus, swipe-only behavior, 19-room state transitions, label exclusivity, capability carousel single-foreground behavior, and mobile centering.
+- `LIVE STATUS`: `SOURCE_ONLY`; branch `compass-gen1586-state-focus-reconciliation-20260821` only at this entry.
+- `USER-OBSERVED STATUS`: `24109.mp4` and `24110.mp4` are governing visual evidence.
+- `NEXT LAWFUL BOUNDARY`: open exact-head Gen1586 PR, inspect diff, run rendered interaction qualification against the candidate, revalidate current `main`, and promote only if all six acceptance conditions pass without H-Earth or route regression.

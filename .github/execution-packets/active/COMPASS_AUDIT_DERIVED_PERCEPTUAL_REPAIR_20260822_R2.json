@@ -65,6 +65,17 @@
     "RE_AUDIT",
     "REPEATED_SOURCE_FETCH"
   ],
+  "executionTransport": {
+    "status": "BOUND",
+    "primary": "GitHub Contents API update_file on admitted branch",
+    "targetRepository": "smansfield635-create/smansfield635-create.github.io",
+    "targetBranch": "compass-audit-perceptual-repair-20260822-r2",
+    "supportsAllowedPaths": true,
+    "supportsLargeFiles": true,
+    "fallback": "GitHub Git Data blob/tree/commit/ref transport",
+    "handoffTarget": "write-capable GitHub connector executor",
+    "unboundDisposition": "EXECUTION_TRANSPORT_UNBOUND"
+  },
   "nextRequiredEvent": "ALLOWED_PATH_MUTATION",
   "watchdog": {
     "deadlineSeconds": 120,
@@ -80,6 +91,7 @@
   },
   "exitConditions": [
     "CANDIDATE_READY",
+    "EXECUTION_TRANSPORT_UNBOUND",
     "EXECUTION_TOOLING_BLOCKED",
     "DIRECT_CONSTRUCTION_TIMEOUT",
     "GOVERNING_HEAD_OVERLAP",

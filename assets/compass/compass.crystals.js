@@ -4328,26 +4328,20 @@
   }
 
   function settledConstellationQuaternion(
-    wing,
-    currentQuaternion
+    wing
   ) {
-    const currentVector =
-      rotatedCardinalUnitVector(
-        wing,
-        currentQuaternion
-      );
+    const canonicalAngle =
+      wing === "east"
+        ? -Math.PI / 2
+        : wing === "south"
+          ? Math.PI
+          : wing === "west"
+            ? Math.PI / 2
+            : 0;
 
-    const alignment =
-      quaternionFromUnitVectors(
-        currentVector,
-        constellationAnchorVector()
-      );
-
-    return quaternionNormalize(
-      quaternionMultiply(
-        alignment,
-        currentQuaternion
-      )
+    return quaternionFromAxisAngle(
+      [0, 0, 1],
+      canonicalAngle
     );
   }
 
@@ -6990,9 +6984,15 @@
       ) *
       GESTURE.radiansPerViewport;
 
+    const horizontalAxis =
+      pointer.gestureScope ===
+        "constellation"
+        ? [0, 0, 1]
+        : [0, 1, 0];
+
     const yawQuaternion =
       quaternionFromAxisAngle(
-        [0, 1, 0],
+        horizontalAxis,
         yaw
       );
 
@@ -7527,8 +7527,7 @@
 
     const settledQuaternion =
       settledConstellationQuaternion(
-        primaryWing,
-        currentQuaternion
+        primaryWing
       );
 
     state.settledPrimaryWing =
@@ -7540,10 +7539,8 @@
     state.constellationTargetQuaternion =
       settledQuaternion.slice();
 
-    if (state.reducedMotion) {
-      state.constellationQuaternion =
-        settledQuaternion.slice();
-    }
+    state.constellationQuaternion =
+      settledQuaternion.slice();
 
     const committed =
       requestControllerOrbitCommit(

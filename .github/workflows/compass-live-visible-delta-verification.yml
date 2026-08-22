@@ -1,0 +1,55 @@
+name: Compass Live Visible Delta Verification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/compass-live-visible-delta-verification.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  live-visible-delta:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      EXPECTED_MAIN_SHA: 27297daf0508bc4169afe2eafaa6f2f9c6c54a82
+      LIVE_ORIGIN: https://diamondgatebridge.com
+      LIVE_CAPABILITY_URL: https://diamondgatebridge.com/assets/compass/compass.capability-carousel.js?v=compass-root-award-finish-successor-v1&g=1593-visible-delta-r1&cb=20260822-1659-a060417e
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Require exact public release marker
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail-with-body --silent --show-error --location -H 'Cache-Control: no-cache' "$LIVE_ORIGIN/.well-known/dgb-release.json?verify=$EXPECTED_MAIN_SHA" -o /tmp/release.json
+          cat /tmp/release.json
+          node -e 'const fs=require("fs"); const j=JSON.parse(fs.readFileSync("/tmp/release.json","utf8")); const expected=process.env.EXPECTED_MAIN_SHA; const values=Object.values(j).map(String); if(!values.includes(expected)) { console.error(j); process.exit(1) }'
+      - name: Require public capability bytes equal exact source
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected="$(sha256sum assets/compass/compass.capability-carousel.js | awk '{print $1}')"
+          curl --fail-with-body --silent --show-error --location -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' "$LIVE_CAPABILITY_URL&verify=$EXPECTED_MAIN_SHA" -o /tmp/live-capability.js
+          actual="$(sha256sum /tmp/live-capability.js | awk '{print $1}')"
+          echo "expected=$expected"
+          echo "actual=$actual"
+          test "$expected" = "$actual"
+      - name: Require public root uses fresh capability identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail-with-body --silent --show-error --location -H 'Cache-Control: no-cache' "$LIVE_ORIGIN/?verify=$EXPECTED_MAIN_SHA" -o /tmp/live-index.html
+          grep -F 'g=1593-visible-delta-r1&cb=20260822-1659-a060417e' /tmp/live-index.html
+      - name: Install Playwright
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Verify live 900px centerline and non-North settled label
+        env:
+          COMPASS_TEST_URL: https://diamondgatebridge.com/
+        run: node tools/compass-static-editorial-interaction-qualification.mjs

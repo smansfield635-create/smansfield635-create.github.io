@@ -82,9 +82,6 @@ jobs:
             h-earth-live-6d18e158/showroom/globe/h-earth/ \
             "$PAGES_STAGE/showroom/globe/h-earth/"
 
-          # Recover the exact Aug 21 24056 finishing candidate in a root-faithful
-          # inspection tree. Candidate bytes are not modified; only the three
-          # runtime roots required by the reconciliation harness are materialized.
           git fetch --no-tags --depth=1 origin "$INSPECTION_SHA"
           rm -rf "$INSPECTION_ROOT"
           mkdir -p "$INSPECTION_ROOT"
@@ -194,11 +191,13 @@ jobs:
       - name: Verify public 24056 reconciliation runtime actually reaches ready state
         env:
           PAGE_URL: ${{ needs.deploy.outputs.page_url }}
-          CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
         shell: bash
         run: |
           set -euo pipefail
           export INSPECTION_URL="${PAGE_URL%/}/inspection/h-earth/24056/showroom/globe/audralia/weather-presentation-reconciliation/"
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          test -x "$CHROME_PATH"
+          echo "CHROME_PATH=$CHROME_PATH"
           node <<'NODE'
           const puppeteer=require('puppeteer-core');
           (async()=>{

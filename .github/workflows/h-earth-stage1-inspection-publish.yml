@@ -43,7 +43,7 @@ jobs:
         env:
           PAGES_STAGE: ${{ runner.temp }}/pages-site
           BASELINE_SHA: 1d45379f81ea4089e9c5f3d7d9688e702be9add3
-          STAGE1_SHA: 3ca35e634d3e1d7305b1924cc0591d1c02bb4c37
+          STAGE1_SHA: bb5902a87fd0f3cbc4e53c41a0f5a1a08285b429
           BASELINE_ROOT: ${{ runner.temp }}/pages-site/inspection/h-earth/24056
           STAGE1_ROOT: ${{ runner.temp }}/pages-site/inspection/h-earth/stage1-cost-decoupling
         shell: bash

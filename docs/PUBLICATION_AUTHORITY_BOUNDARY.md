@@ -1,8 +1,8 @@
-# PUBLICATION_AUTHORITY_BOUNDARY_v1
+# PUBLICATION_AUTHORITY_BOUNDARY_v2
 
 ## Authority
 
-Current product source head: `78ff88bf69bced653625e458b830d007bb8ce967` (Gen1587).
+Current verified public/main head: `4b169d611624833cefcfc73492daea2c8ebf664b`.
 
 **MERGE IS NOT DEPLOYMENT. DEPLOYMENT IS NOT VERIFIED LIVE RELEASE.**
 
@@ -12,40 +12,40 @@ The canonical publication sequence is:
 
 The designated publication authority is `.github/workflows/pages-direct-deploy.yml` with required input `target_sha`. The release is proven only when `.well-known/dgb-release.json` on the public site returns the exact requested SHA and the workflow's live verification succeeds.
 
-## Current authority conflict
+## Current authority disposition
 
-Two Pages deployment authorities currently coexist:
+The previous publication-authority conflict has been closed.
 
-1. `.github/workflows/pages-direct-deploy.yml` — explicit, exact-head, manually dispatched successor; requires `target_sha`, verifies requested SHA equals current `main`, stamps the release marker, deploys the bounded artifact, and verifies the public marker.
-2. `.github/workflows/pages-promote-actions-authority.yml` — older predecessor that still triggers automatically on every push to `main` and also calls `actions/deploy-pages`.
+- `.github/workflows/pages-direct-deploy.yml` remains present as the explicit exact-head manually dispatched publication authority.
+- `.github/workflows/pages-promote-actions-authority.yml` was lawfully retired and is absent from current `main`.
+- The temporary router registration required for that retirement was removed in the same final cleanup.
+- Final cleanup merged through PR #1596 as `4b169d611624833cefcfc73492daea2c8ebf664b`.
+- AI-entry carrier PR #1598 dispatched `PAGES_EXACT_HEAD_DEPLOY` against that exact head and closed unmerged as intended.
+- Pages run `32554813185` completed successfully through `prepare`, `deploy`, and `verify-live-exact-head`, proving the public release marker and live site correspond to `4b169d611624833cefcfc73492daea2c8ebf664b`.
 
-This violates the active publication contract's `ONE_EXPLICIT_DEPLOYMENT_AUTHORITY` and `legacyImplicitPagesTriggerAllowed: false` rules. Until reconciled, publication authority is structurally ambiguous even when product source is correct.
+Therefore:
 
-## Required disposition
+**ONE_EXPLICIT_DEPLOYMENT_AUTHORITY = SATISFIED**
 
-- Treat `pages-direct-deploy.yml(target_sha=<exact current approved main>)` as the canonical successor release path.
-- Do not infer that a merge or push-triggered Pages run published the approved release.
-- Do not call Gen1587 live until the public release marker returns exactly `78ff88bf69bced653625e458b830d007bb8ce967` through the explicit exact-head deployment path.
-- Do not delete, disable, or mutate the conflicting predecessor workflow without applicable `RUNTIME_OR_AUTHORITY` governance and an `ADMITTED_AND_LOCKED` receipt (or valid successor lifecycle receipt) for that control-plane scope.
-- Documentation of this conflict creates no deployment, workflow-mutation, governance, or production authority.
+**CURRENT MAIN 4b169d61... = DEPLOYED + LIVE EXACT-HEAD VERIFIED**
 
-## Product/runtime distinction
-
-Current evidence indicates legacy Compass presentation/runtime owners are retired or replaced rather than simultaneously authoritative. However, presentation styling remains layered across base CSS, presentation-convergence overrides, and Gen1587 capability bounds. Treat that as technical debt, not proof of multiple runtime owners. Do not add another presentation override generation merely to address publication recovery.
-
-## Release acceptance
-
-For any subsequent release:
+## Required disposition for future releases
 
 1. classify the mutation through `AI_ENTRYPOINT.json` / `AGENTS.md`;
-2. satisfy canonical intake only when the mutation class requires it;
+2. satisfy canonical intake when the mutation class requires it;
 3. qualify the exact approved product candidate;
 4. merge/adopt the exact candidate;
 5. explicitly dispatch `pages-direct-deploy.yml` with the exact current approved `main` SHA;
-6. require `LIVE_EXACT_HEAD_VERIFIED` and a matching `.well-known/dgb-release.json` marker;
+6. require successful live exact-head verification and a matching `.well-known/dgb-release.json` marker;
 7. only then perform/record user-visible acceptance.
 
-Publication success must never be substituted for visual/product qualification, and visual qualification must never be substituted for exact-head publication proof.
+Do not recreate an implicit push-triggered competing Pages authority.
+
+## Product/runtime distinction
+
+Publication success does not establish visual/product qualification. Current product evidence must be read from `docs/COMPASS_TAKEOVER_BOUNDARY.md`, `docs/COMPASS_VISUAL_EVIDENCE_TIMELINE.md`, and `docs/MASTER_PAGE_AND_COMPASS_CONTINUITY_LEDGER.md`.
+
+The current active product boundary is no longer deployment recovery. It is the remaining Compass visual/interaction work documented there: four-constellation exactly-one-tab ownership, Mirrorland functional/luminous chooser completion, and TRL/TRA full carousel completion while preserving already-passed 19/19 and acceptable Brain/Trophy/House behavior.
 
 ## Related authority records
 

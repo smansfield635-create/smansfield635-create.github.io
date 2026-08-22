@@ -40,6 +40,17 @@ Time basis: video container `creation_time`, converted using the recorded Samsun
 - H-Earth/Demo route: no regression shown in this capture; prior route repair remains separate from the unresolved Compass presentation defects.
 - Classification: `USER_OBSERVED REGRESSION / UNRESOLVED` for centering, label exclusivity, 19/19 state continuity, Mirrorland modal interaction/presentation, capability containment, and TRL/TRA layering. `PROGRESS` only for removal of visible TRL/TRA Previous/Next controls and preservation of basic Compass rotation/route continuity; those pre-existing behaviors must not be double-counted as Gen1586 accomplishments.
 
+### 24117 text/layer ownership finding — consolidated, non-redundant
+
+The detailed timestamp audit identifies four recurring failure classes rather than isolated text-placement defects:
+
+1. **Stale Compass label ownership (`~15–29 s`)** — `MIRRORLAND / Enter through the door` remains rendered beneath active room/cardinal labels including Atlas Study, H-Earth, Zionts, Audralia Conservatory, Instruments, Worlds, Orientation, and Frontier. Two state labels occupy the same central coordinate space.
+2. **Control/body-copy collision (`~30.7–36 s`)** — Coheriscope body copy (`Take the free diagnostic assessment.`) and the `Enter Coheriscope` control occupy the same vertical region. This persists after animation, so it is a steady-state layout reservation failure.
+3. **Fixed-heading/carousel-heading collision (`~38–44.3 s`)** — TRL and TRA section headings collide with their active carousel headings (`Software TRL 7`, `Can the readiness claim survive inspection?`). Separate text owners are reserving the same space.
+4. **Outgoing/incoming carousel state coexistence (`~40.5 s`, `~45.7 s`)** — multiple TRL/TRA states remain visually present during transition (`Software TRL 7` + `What would justify TRL 8?`; later `From assessment to environment` over remnants of the prior TRA state). Cleaner frames after transition prove that inactive state removal/clipping is incomplete during the handoff.
+
+**Governing repair invariant:** `THIS IS NOT ISOLATED TEXT OVERLAP. IT IS A REPEATED LAYER-OWNERSHIP AND LAYOUT-RESERVATION FAILURE.` Each visual text region must have exactly one active owner; active cards must reserve their own height; outgoing states must leave visual flow before incoming states enter; controls must not share body-copy space.
+
 ## Continuity rule for subsequent work
 
 1. Compare each claimed improvement against the earliest supplied evidence that already contains that behavior. Do not award a later generation credit for preserving a pre-existing function.

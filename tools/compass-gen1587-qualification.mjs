@@ -9,10 +9,21 @@ const viewports={desktop:{width:1440,height:1100},tablet:{width:900,height:1000}
 const receipts={};
 
 async function boot(page){
-  await page.goto(base,{waitUntil:'domcontentloaded',timeout:30000});
-  await page.locator('[data-compass-root]').waitFor({state:'attached',timeout:15000});
-  await page.waitForFunction(()=>globalThis.DGB_COMPASS_PRESENTATION_RETIREMENT_V2?.version==='presentation-convergence-v6',{timeout:15000});
-  await page.waitForTimeout(700);
+  let lastError=null;
+  for(let attempt=0;attempt<2;attempt++){
+    try{
+      const response=await page.goto(base,{waitUntil:'domcontentloaded',timeout:45000});
+      if(!response||!response.ok())throw new Error(`candidate boot HTTP ${response?.status?.()??'NO_RESPONSE'}`);
+      await page.locator('[data-compass-root]').waitFor({state:'attached',timeout:30000});
+      await page.waitForFunction(()=>globalThis.DGB_COMPASS_PRESENTATION_RETIREMENT_V2?.version==='presentation-convergence-v6',{timeout:30000});
+      await page.waitForTimeout(700);
+      return;
+    }catch(error){
+      lastError=error;
+      if(attempt===0)await page.waitForTimeout(900);
+    }
+  }
+  throw lastError;
 }
 
 for(const [name,viewport] of Object.entries(viewports)){

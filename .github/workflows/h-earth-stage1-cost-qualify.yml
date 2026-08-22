@@ -18,7 +18,7 @@ permissions:
 jobs:
   qualify:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 12
     steps:
       - name: Checkout protected baseline runtime roots
         uses: actions/checkout@v4
@@ -47,7 +47,6 @@ jobs:
         env:
           BASELINE_SHA: ${{ inputs.baseline_sha }}
           CANDIDATE_SHA: ${{ inputs.candidate_sha }}
-          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           expected_baseline='1d45379f81ea4089e9c5f3d7d9688e702be9add3'
@@ -88,8 +87,9 @@ jobs:
           done
           exit 1
 
-      - name: Qualify visual equivalence and frame cost
+      - name: Diagnose and qualify visual equivalence and frame cost
         shell: bash
+        timeout-minutes: 7
         run: |
           set -euo pipefail
           export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
@@ -100,51 +100,87 @@ jobs:
           const perf=require('node:perf_hooks').performance;
           const median=a=>[...a].sort((x,y)=>x-y)[Math.floor(a.length/2)];
           const fixedNow=Date.parse('2026-08-21T21:00:00.000Z');
-          async function openRuntime(browser,url,expectStage1){
-            const page=await browser.newPage();
-            await page.setViewport({width:320,height:568,deviceScaleFactor:1});
+          const withTimeout=(promise,ms,label)=>Promise.race([
+            promise,
+            new Promise((_,reject)=>setTimeout(()=>reject(new Error(`TIMEOUT_${label}_${ms}MS`)),ms))
+          ]);
+          const checkpoint=(label,extra={})=>console.log(JSON.stringify({checkpoint:label,at:new Date().toISOString(),...extra}));
+
+          async function openRuntime(browser,label,url,expectStage1){
+            checkpoint(`${label}_OPEN_BEGIN`,{url});
+            const page=await withTimeout(browser.newPage(),10000,`${label}_NEW_PAGE`);
+            await withTimeout(page.setViewport({width:320,height:568,deviceScaleFactor:1}),10000,`${label}_VIEWPORT`);
             await page.evaluateOnNewDocument(now=>{Date.now=()=>now;},fixedNow);
             const fatal=[];
-            page.on('pageerror',e=>fatal.push(String(e?.stack||e)));
-            await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});
-            await page.waitForFunction(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime()?.invariants?.pass===true,{timeout:90000});
-            await page.waitForFunction(()=>document.querySelector('[data-audralia-loader]')?.hidden===true,{timeout:30000});
-            const state=await page.evaluate(()=>({
+            page.on('pageerror',e=>{const s=String(e?.stack||e);fatal.push(s);console.error(`${label}_PAGEERROR`,s);});
+            page.on('console',m=>{if(['error','warning'].includes(m.type()))console.log(`${label}_CONSOLE_${m.type().toUpperCase()}`,m.text());});
+            checkpoint(`${label}_GOTO_BEGIN`);
+            await withTimeout(page.goto(url,{waitUntil:'domcontentloaded',timeout:30000}),35000,`${label}_GOTO`);
+            checkpoint(`${label}_DOM_READY`);
+            await withTimeout(page.waitForFunction(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime()?.invariants?.pass===true,{timeout:30000}),35000,`${label}_RUNTIME_READY`);
+            checkpoint(`${label}_RUNTIME_READY`);
+            await withTimeout(page.waitForFunction(()=>document.querySelector('[data-audralia-loader]')?.hidden===true,{timeout:15000}),20000,`${label}_LOADER_HIDDEN`);
+            checkpoint(`${label}_LOADER_HIDDEN`);
+            const state=await withTimeout(page.evaluate(()=>({
               status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null,
               runtimePass:window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime()?.invariants?.pass===true,
               stage1:window.__AUDRALIA_FAP1_STAGE1_COST_DECOUPLING__?.getRuntimeEvidence?.()||null,
               runtimeError:window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__||null
-            }));
-            if(fatal.length||!state.runtimePass||state.runtimeError)throw new Error(`RUNTIME_FAIL ${url} ${JSON.stringify({state,fatal})}`);
+            })),10000,`${label}_STATE_READ`);
+            checkpoint(`${label}_STATE_READ`,{state});
+            if(fatal.length||!state.runtimePass||state.runtimeError)throw new Error(`RUNTIME_FAIL_${label} ${JSON.stringify({state,fatal})}`);
             if(expectStage1&&!(state.stage1?.patchedCloudShaders>0))throw new Error(`STAGE1_SHADER_PATCH_NOT_OBSERVED ${JSON.stringify(state)}`);
             if(!expectStage1&&state.stage1)throw new Error('BASELINE_UNEXPECTED_STAGE1_PATCH');
             return {page,state};
           }
-          async function setYaw(page,yaw){
-            await page.evaluate(y=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__.setCameraStateForTest({yaw:y}),yaw);
+
+          async function setYaw(page,label,yaw){
+            checkpoint(`${label}_SET_YAW_BEGIN`,{yaw});
+            await withTimeout(page.evaluate(y=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__.setCameraStateForTest({yaw:y}),yaw),10000,`${label}_SET_YAW`);
+            checkpoint(`${label}_SET_YAW_DONE`,{yaw});
           }
-          async function forcedFrame(page,yaw){
+
+          async function shot(page,label){
+            checkpoint(`${label}_SCREENSHOT_BEGIN`);
+            const image=await withTimeout(page.screenshot({type:'png',captureBeyondViewport:false}),15000,`${label}_SCREENSHOT`);
+            checkpoint(`${label}_SCREENSHOT_DONE`,{bytes:image.length});
+            return image;
+          }
+
+          async function forcedFrame(page,label,yaw){
             const t0=perf.now();
-            await setYaw(page,yaw);
-            await page.screenshot({type:'png'});
-            return perf.now()-t0;
+            await setYaw(page,label,yaw);
+            await shot(page,label);
+            const ms=perf.now()-t0;
+            checkpoint(`${label}_FRAME_DONE`,{yaw,ms});
+            return ms;
           }
+
           (async()=>{
-            const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+            checkpoint('BROWSER_LAUNCH_BEGIN');
+            const browser=await withTimeout(puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']}),20000,'BROWSER_LAUNCH');
+            checkpoint('BROWSER_LAUNCHED');
             try{
-              const base=await openRuntime(browser,'http://127.0.0.1:4173/showroom/globe/audralia/',false);
-              const cand=await openRuntime(browser,'http://127.0.0.1:4174/showroom/globe/audralia/',true);
+              const base=await openRuntime(browser,'BASELINE','http://127.0.0.1:4173/showroom/globe/audralia/',false);
+              const cand=await openRuntime(browser,'CANDIDATE','http://127.0.0.1:4174/showroom/globe/audralia/',true);
               const visualYaw=.63;
-              await setYaw(base.page,visualYaw);await setYaw(cand.page,visualYaw);
-              const baseShot=await base.page.screenshot({type:'png'}),candShot=await cand.page.screenshot({type:'png'});
+              await setYaw(base.page,'BASELINE_VISUAL',visualYaw);
+              await setYaw(cand.page,'CANDIDATE_VISUAL',visualYaw);
+              const baseShot=await shot(base.page,'BASELINE_VISUAL');
+              const candShot=await shot(cand.page,'CANDIDATE_VISUAL');
               const baseHash=crypto.createHash('sha256').update(baseShot).digest('hex');
               const candHash=crypto.createHash('sha256').update(candShot).digest('hex');
+              checkpoint('VISUAL_HASHES',{baseHash,candHash});
               if(baseHash!==candHash)throw new Error(`VISUAL_PIXEL_EQUIVALENCE_FAIL baseline=${baseHash} candidate=${candHash}`);
+
               const yaws=[-.85,-.32,.08,.47,.93];
-              for(const y of [-.15,.35]){await forcedFrame(base.page,y);await forcedFrame(cand.page,y);}
+              for(const y of [-.15,.35]){
+                await forcedFrame(base.page,`BASELINE_WARM_${y}`,y);
+                await forcedFrame(cand.page,`CANDIDATE_WARM_${y}`,y);
+              }
               const baseTimes=[],candTimes=[];
-              for(const y of yaws)baseTimes.push(await forcedFrame(base.page,y));
-              for(const y of yaws)candTimes.push(await forcedFrame(cand.page,y));
+              for(const y of yaws)baseTimes.push(await forcedFrame(base.page,`BASELINE_BENCH_${y}`,y));
+              for(const y of yaws)candTimes.push(await forcedFrame(cand.page,`CANDIDATE_BENCH_${y}`,y));
               const baseMedian=median(baseTimes),candMedian=median(candTimes),ratio=candMedian/baseMedian;
               console.log(JSON.stringify({
                 result:'H_EARTH_STAGE1_COST_QUALIFIED',
@@ -155,8 +191,10 @@ jobs:
                 improvementPercent:(1-ratio)*100
               },null,2));
               if(!(candMedian<=baseMedian*1.02))throw new Error(`PERFORMANCE_NONREGRESSION_FAIL baselineMedian=${baseMedian} candidateMedian=${candMedian}`);
-            } finally { await browser.close(); }
-          })().catch(e=>{console.error(e);process.exit(1);});
+            } finally {
+              await withTimeout(browser.close(),10000,'BROWSER_CLOSE').catch(e=>console.error(String(e)));
+            }
+          })().catch(e=>{console.error('QUALIFICATION_FATAL',e?.stack||e);process.exit(1);});
           NODE
 
       - name: Stop isolated static servers

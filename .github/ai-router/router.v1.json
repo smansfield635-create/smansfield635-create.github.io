@@ -40,7 +40,7 @@
       ".github/workflows/bounded-binary-object-transfer-v1.yml",
       "tools/ai-room-transport/bounded-binary-object-transfer.v1.mjs",
       "tools/ai-room-transport/bounded-binary-object-transfer.v1.test.mjs",
-      ".github/ai-toolset-transport/bounded-binary-object-transfer.v1.json"
+      ".github/ai-toolset-transport/bounded-binary-object-transfer-v1.json"
     ],
     "validationCommand": "node tools/repository-ai-entry-router.mjs --self-test --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/router-self-test-receipt.json"
   },
@@ -167,8 +167,7 @@
       "ownedPathPrefixes": ["assets/compass/"],
       "ownedExactPaths": [
         "index.html",
-        ".github/workflows/pages-direct-deploy.yml",
-        ".github/workflows/pages-promote-actions-authority.yml"
+        ".github/workflows/pages-direct-deploy.yml"
       ],
       "entrypoint": ".github/ai-router/projects/compass/entrypoint.v1.json",
       "priority": 100

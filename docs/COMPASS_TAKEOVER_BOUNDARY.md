@@ -29,3 +29,5 @@ User-observed rendered evidence is the presentation authority. Source presence, 
 Read `docs/COMPASS_VISUAL_EVIDENCE_TIMELINE.md` for timestamped visual chronology and `docs/MASTER_PAGE_AND_COMPASS_CONTINUITY_LEDGER.md` for generation/change continuity. This file is the compact takeover boundary; the other records should reference it rather than duplicate this acceptance contract.
 
 Documentation commits after Gen1586 record evidence and takeover law only; they do not convert Gen1586 into an accepted product baseline.
+
+Active reconstruction lane PR #1578 is instructed to use this boundary before further construction, qualification conclusion, or promotion.

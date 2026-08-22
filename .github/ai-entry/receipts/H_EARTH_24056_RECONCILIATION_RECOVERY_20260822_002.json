@@ -1,0 +1,23 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "H_EARTH_24056_RECONCILIATION_RECOVERY_20260822_002",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 1617,
+  "requestBranch": "ai-dispatch-request-h-earth-24056-reconciliation-20260822",
+  "requestCommit": "0122b95ad9a8d7e380a8e926e0c3a20a0ae6b69a",
+  "requestCommitParent": "ba20b722b7cfbd3d68c17a8a5b64d2a3508e9281",
+  "currentMainSha": "ba20b722b7cfbd3d68c17a8a5b64d2a3508e9281",
+  "workflow": "pages-direct-deploy.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "ba20b722b7cfbd3d68c17a8a5b64d2a3508e9281"
+  },
+  "bridgeRunId": "32584663557",
+  "dispatchedRunId": 32584723832,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/32584723832",
+  "dispatchedRunHeadSha": "ba20b722b7cfbd3d68c17a8a5b64d2a3508e9281",
+  "dispatchedAt": "2026-08-22T16:26:48.505Z",
+  "resolvedAt": "2026-08-22T16:26:52.076Z"
+}

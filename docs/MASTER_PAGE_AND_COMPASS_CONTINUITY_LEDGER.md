@@ -168,4 +168,4 @@ The purpose of this file is strict continuity: at all times we must be able to i
 - `PROGRESS`: takeover continuity is deterministic: chronology, preserved earlier behavior, Gen1586 regressions, ownership/layout contract, and next-cycle repair scope are repository-resident.
 - `REGRESSION`: none introduced; documentation-only operation.
 - `UNRESOLVED`: Gen1586 qualification/diagnostic runs did not establish acceptance across the relevant rendered/static, interaction/browser, continuity/recovery, and state-focus surfaces. A later room must not inherit Gen1586 as qualified merely because it was deployed.
-- `LIVE STATUS`: Gen1586 remains deployed evidence only; `LIVE_PROVEN` publication is not an acceptance verdict.
+- `LIVE STATUS`: Gen1586 remains deployed evidence only; `LIVE_PROVEN` publication is

@@ -1,0 +1,96 @@
+name: AI Entry — Automatic Exact-Head Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-production
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact pushed head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Stage exact-head Pages payload
+        env:
+          TARGET_SHA: ${{ github.sha }}
+          PAGES_STAGE: ${{ runner.temp }}/pages-site
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .well-known
+          printf '{"schema":"DGB_PUBLIC_RELEASE_MARKER_v1","commit":"%s"}\n' "$TARGET_SHA" > .well-known/dgb-release.json
+          rm -rf "$PAGES_STAGE"
+          mkdir -p "$PAGES_STAGE"
+          rsync -a --prune-empty-dirs \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='preview/' \
+            --exclude='h-earth-live-6d18e158/' \
+            ./ "$PAGES_STAGE/"
+          rm -rf "$PAGES_STAGE/showroom/globe/h-earth"
+          mkdir -p "$PAGES_STAGE/showroom/globe/h-earth"
+          rsync -a --delete h-earth-live-6d18e158/showroom/globe/h-earth/ "$PAGES_STAGE/showroom/globe/h-earth/"
+          test -f "$PAGES_STAGE/.well-known/dgb-release.json"
+          test -f "$PAGES_STAGE/index.html"
+          staged_bytes="$(du -sb "$PAGES_STAGE" | awk '{print $1}')"
+          echo "AI_ENTRY_PAGES_STAGE_BYTES=$staged_bytes"
+          test "$staged_bytes" -lt 1073741824
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload exact-head Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/pages-site
+
+  deploy:
+    needs: prepare
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy exact-head artifact
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  verify-live-exact-head:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require public exact-head marker
+        env:
+          TARGET_SHA: ${{ github.sha }}
+          PAGE_URL: ${{ needs.deploy.outputs.page_url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          marker_url="${PAGE_URL%/}/.well-known/dgb-release.json"
+          observed=""
+          for attempt in $(seq 1 24); do
+            observed="$(curl --fail --silent --show-error -L --max-time 20 "$marker_url" 2>/dev/null | jq -r '.commit // empty' 2>/dev/null || true)"
+            if [ "$observed" = "$TARGET_SHA" ]; then
+              echo "LIVE_EXACT_HEAD_VERIFIED target=$TARGET_SHA"
+              exit 0
+            fi
+            echo "Attempt $attempt: observed=${observed:-none}; waiting for target=$TARGET_SHA"
+            sleep 10
+          done
+          echo "DEPLOYMENT_NOT_PROVEN expected=$TARGET_SHA observed=${observed:-none}" >&2
+          exit 1

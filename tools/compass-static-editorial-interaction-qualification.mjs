@@ -101,7 +101,7 @@ for (const [name, viewport] of Object.entries(viewports)) {
   const carouselChanged=beforeCarousel.index!==afterCarousel.index||beforeCarousel.text!==afterCarousel.text||JSON.stringify(beforeCarousel.selected)!==JSON.stringify(afterCarousel.selected)||JSON.stringify(beforeCarousel.transforms)!==JSON.stringify(afterCarousel.transforms);
   if(!carouselChanged) throw new Error(`${name}: capability swipe produced no observable index/content/selection/geometry change`);
 
-  const hEarth=await page.locator('[data-compass-room][data-label="H-Earth"]').first().evaluate(el=>({href:el.getAttribute('href'),route:el.dataset.route}));
+  const hEarth=await page.locator('[data-compass-room-declarations] [data-compass-room][data-label="H-Earth"]').first().evaluate(el=>({href:el.getAttribute('href'),route:el.dataset.route}));
   if(hEarth.href!=='/showroom/globe/h-earth/'||hEarth.route!=='/showroom/globe/h-earth/') throw new Error(`${name}: H-Earth route regression ${JSON.stringify(hEarth)}`);
   const gen=await page.evaluate(()=>globalThis.DGB_COMPASS_GEN1537_LIVE_RECOVERY?.receipt?.()||null);
   if(!gen||gen.mounted!==false||gen.retired!==true||gen.authoritative!==false||gen.capabilityPlacementAuthority!==false||gen.repeatedReparenting!==false) throw new Error(`${name}: Gen1537 regained authority ${JSON.stringify(gen)}`);

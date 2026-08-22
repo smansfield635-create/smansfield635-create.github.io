@@ -1,0 +1,45 @@
+name: Direct Construction Execution Packet Gate
+
+on:
+  pull_request:
+    paths:
+      - '.github/execution-packets/**'
+      - '.github/ai-router/platform/execution-packet.schema.json'
+      - '.github/ai-router/platform/validate-execution-packet.v1.mjs'
+      - 'docs/ADMITTED_OPERATION_DIRECT_CONSTRUCTION_PROTOCOL.md'
+  workflow_dispatch:
+    inputs:
+      packet:
+        description: 'Path to EXECUTION_PACKET_v1'
+        required: true
+        default: '.github/execution-packets/active/COMPASS_AUDIT_DERIVED_PERCEPTUAL_REPAIR_20260822_R2.json'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact ref
+        uses: actions/checkout@v4
+      - name: Validate changed active packets
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            node .github/ai-router/platform/validate-execution-packet.v1.mjs "${{ inputs.packet }}"
+            exit 0
+          fi
+
+          base="${{ github.event.pull_request.base.sha }}"
+          head="${{ github.event.pull_request.head.sha }}"
+          mapfile -t packets < <(git diff --name-only "$base" "$head" -- '.github/execution-packets/active/*.json')
+          if (( ${#packets[@]} == 0 )); then
+            echo 'No active execution packet changed.'
+            exit 0
+          fi
+          for packet in "${packets[@]}"; do
+            echo "Validating $packet"
+            node .github/ai-router/platform/validate-execution-packet.v1.mjs "$packet"
+          done

@@ -264,6 +264,18 @@
       "scopeHash": "18b76db5a84dece3ef9779cca3798b87f3c0f47f85edd8d39fccb0287e2fb703",
       "state": "ADMITTED_LOCKED"
     },
+    "18db711e273cc5148e33aa5cdac3765243a14ec935cd4553808debfefa58bc05": {
+      "governingHead": "57b4662e97fe6c75b409d8b23b3df1884ffdde90",
+      "lockGeneration": 1586,
+      "lockScope": "REPOSITORY-AI-ROUTER/STALE-EXACT-PATH-REGISTRATION-RECONCILIATION",
+      "operationId": "ROUTER_STALE_EXACT_PATH_REGISTRATION_RECONCILIATION_20260822_002",
+      "procedureLocatorDigest": "b1d90084ed70d5f6ec75716bd8967ba6b9652d12f8c04a3bf85cad479fb7885e",
+      "released": false,
+      "requestDigest": "18e5a6f5b7b4cf25cf3ac102b102cd911b41df546f075f8ed825cfdaf6dd34d3",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "18db711e273cc5148e33aa5cdac3765243a14ec935cd4553808debfefa58bc05",
+      "state": "ADMITTED_LOCKED"
+    },
     "1ae1b91f6e782e73a926087a9891b430c0dbdb107a6f156a63c9eab0996a9c9b": {
       "governingHead": "331284949940c95db80a332235492de4c80d3d43",
       "lockGeneration": 831,
@@ -2896,7 +2908,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1585,
+  "lockGeneration": 1586,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -2,6 +2,11 @@ name: H-Earth coast water continuity recovery
 
 on:
   pull_request:
+    branches: [main]
+    paths:
+      - 'h-earth-3d/**'
+      - 'h-earth-live-*/h-earth-3d/**'
+      - '.github/workflows/h-earth-player-scale-coast-water-continuity-recovery.yml'
   workflow_dispatch:
 
 permissions:

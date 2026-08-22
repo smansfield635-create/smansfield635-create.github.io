@@ -1,0 +1,11 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
+  "requestId": "H_EARTH_STAGE1_COST_QUALIFY_20260822_006",
+  "capabilityId": "H_EARTH_STAGE1_COST_QUALIFY",
+  "workflow": "h-earth-stage1-cost-qualify.yml",
+  "ref": "main",
+  "inputs": {
+    "baseline_sha": "1d45379f81ea4089e9c5f3d7d9688e702be9add3",
+    "candidate_sha": "3ca35e634d3e1d7305b1924cc0591d1c02bb4c37"
+  }
+}

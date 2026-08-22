@@ -74,6 +74,42 @@ for(const [name,viewport] of Object.entries(viewports)){
   const returned=await page.evaluate(()=>{const s=document.querySelector('[data-compass-readiness-stage]'),trl=s?.querySelector('[data-readiness-family="trl"]'),tra=s?.querySelector('[data-readiness-family="tra"]');return{active:s?.dataset.activeFamily,trlHidden:trl?.hidden,traHidden:tra?.hidden};});
   if(returned.active!=='trl'||returned.trlHidden||!returned.traHidden)fail('TRL restoration failed');
 
+  const orbit=page.locator('[data-capability-orbit]').first();
+  await orbit.scrollIntoViewIfNeeded();
+  const capabilityCollisionSweep=[];
+  for(let i=0;i<3;i++){
+    await page.waitForTimeout(180);
+    const snap=await page.evaluate(()=>{
+      const orbit=document.querySelector('[data-capability-orbit]');
+      const visible=el=>{if(!el)return false;const s=getComputedStyle(el),r=el.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&Number(s.opacity)!==0&&r.width>0&&r.height>0;};
+      const active=[...(orbit?.querySelectorAll('.compass-orbit-plaque')||[])].filter(el=>el.dataset.active==='true'&&visible(el));
+      const plaque=active[0]||null,caption=plaque?.querySelector('.compass-object-caption')||null,dock=orbit?.querySelector('.compass-action-dock')||null,guidance=orbit?.querySelector('.compass-capability-guidance')||null;
+      const rect=el=>{if(!el)return null;const r=el.getBoundingClientRect();return{left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
+      const C=rect(caption),D=rect(dock),G=rect(guidance);
+      const overlap=(A,B)=>A&&B?{x:Math.min(A.right,B.right)-Math.max(A.left,B.left),y:Math.min(A.bottom,B.bottom)-Math.max(A.top,B.top)}:null;
+      return {
+        capability:plaque?.dataset.capability||'',activeCount:active.length,
+        caption:C,dock:D,guidance:G,
+        captionDockOverlap:overlap(C,D),dockGuidanceOverlap:overlap(D,G),
+        captionDockGap:C&&D?D.top-C.bottom:null,
+        dockGuidanceGap:D&&G?G.top-D.bottom:null,
+        actionCount:dock?[...dock.querySelectorAll('a,button')].filter(visible).length:0,
+        orbitOverflow:document.documentElement.scrollWidth-document.documentElement.clientWidth
+      };
+    });
+    capabilityCollisionSweep.push(snap);
+    if(snap.activeCount!==1)fail(`capability ${i+1} exposes ${snap.activeCount} active plaques`);
+    if(!snap.capability)fail(`capability ${i+1} has no active identity`);
+    if(snap.actionCount<1)fail(`${snap.capability}: no visible action control`);
+    if(snap.captionDockOverlap&&snap.captionDockOverlap.x>3&&snap.captionDockOverlap.y>0)fail(`${snap.capability}: caption/action collision ${JSON.stringify(snap.captionDockOverlap)}`);
+    if(snap.captionDockGap==null||snap.captionDockGap<8)fail(`${snap.capability}: caption/action reservation below 8px (${snap.captionDockGap})`);
+    if(snap.dockGuidanceOverlap&&snap.dockGuidanceOverlap.x>3&&snap.dockGuidanceOverlap.y>0)fail(`${snap.capability}: action/guidance collision ${JSON.stringify(snap.dockGuidanceOverlap)}`);
+    if(snap.orbitOverflow>2)fail(`${snap.capability}: horizontal overflow ${snap.orbitOverflow}`);
+    await orbit.press('ArrowRight');
+  }
+  const identities=[...new Set(capabilityCollisionSweep.map(x=>x.capability))];
+  if(identities.length!==3)fail(`capability sweep did not cover three unique states ${JSON.stringify(identities)}`);
+
   const collision=await page.evaluate(()=>{
     const visible=el=>{if(!el)return false;const s=getComputedStyle(el),r=el.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&r.width>0&&r.height>0;};
     const overlaps=(a,b)=>{const A=a.getBoundingClientRect(),B=b.getBoundingClientRect();return Math.min(A.right,B.right)-Math.max(A.left,B.left)>3&&Math.min(A.bottom,B.bottom)-Math.max(A.top,B.top)>3;};
@@ -92,7 +128,7 @@ for(const [name,viewport] of Object.entries(viewports)){
   const productFailures=requestFailures.filter(x=>x.includes('/assets/compass/')&&!x.includes('ERR_ABORTED'));
   if(pageErrors.length)fail(`page errors ${pageErrors.join(' | ')}`);
   if(productFailures.length)fail(`Compass asset request failures ${productFailures.join(' | ')}`);
-  receipts[name]={initial,traState,traTitleBefore,traTitleAfter,returned,collision,pageErrors,requestFailures};
+  receipts[name]={initial,traState,traTitleBefore,traTitleAfter,returned,capabilityCollisionSweep,collision,pageErrors,requestFailures};
   await context.close();
 }
 await browser.close();

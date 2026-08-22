@@ -1,0 +1,66 @@
+{
+  "schema": "H_EARTH_AUDRALIA_CLOUD_DIAGNOSTIC_CONTRACT_v1",
+  "status": "NONPRODUCT_FROZEN_DIAGNOSTIC_ARCHITECTURE",
+  "wmoGenera": ["Ci", "Cc", "Cs", "Ac", "As", "Ns", "Sc", "St", "Cu", "Cb"],
+  "classificationUnit": "CONNECTED_SUPPORTED_CLOUD_OBJECT",
+  "oneGenusPerObjectAtATime": true,
+  "multipleObjectsPerColumnAllowed": true,
+  "inputs": ["baseKm", "topKm", "thicknessKm", "coverage", "condensatePath", "iceFraction", "meanW", "maxW", "stability", "convectiveSupport", "precipitationClass", "organization", "cellularity", "filamentarity", "layerContinuity", "originHistory"],
+  "altitudeLevels": {
+    "low": {"rangeKm": [0, 2], "genera": ["St", "Sc", "Cu", "Cb"]},
+    "middle": {"polarKm": [2, 4], "temperateKm": [2, 7], "tropicalKm": [2, 8], "genera": ["Ac", "As", "Ns"]},
+    "high": {"polarKm": [3, 8], "temperateKm": [5, 13], "tropicalKm": [6, 18], "genera": ["Ci", "Cc", "Cs"]}
+  },
+  "rules": {
+    "St": {
+      "requirements": ["LOW_BASE", "SHALLOW_LAYER", "STABLE_OR_WEAKLY_CONVECTIVE", "BROAD_CONTINUITY"],
+      "supports": ["FOG_IF_SURFACE_CONTACT"],
+      "disfavoredBy": ["DEEP_CONVECTION", "STRONG_UPDRAFT", "DEEP_UPPER_ICE"]
+    },
+    "Sc": {
+      "requirements": ["LOW_LAYER", "CAPPED_OR_SHALLOW_MIXING", "BROKEN_OR_CELLULAR_OR_ROLL_ORGANIZATION"],
+      "disfavoredBy": ["DEEP_SUSTAINED_CONVECTION", "HIGH_ICE_ANVIL"]
+    },
+    "Cu": {
+      "requirements": ["LOW_BASE", "BUOYANT_CONVECTIVE_SUPPORT", "LOCALIZED_VERTICAL_TOWERS", "NON_ANVIL_TOP"],
+      "mayTransitionTo": ["Cb"],
+      "disfavoredBy": ["BROAD_STABLE_STRATIFORM_LAYER"]
+    },
+    "Cb": {
+      "requirements": ["DEEP_SUSTAINED_CONVECTION", "LARGE_VERTICAL_EXTENT", "UPPER_ICE_PRODUCTION", "PRECIPITATION_OR_STRONG_UPDRAFT_SUPPORT"],
+      "baseUsuallyLow": true,
+      "mayGenerate": ["Ci", "Cs", "Ac", "As", "Sc"],
+      "anvilOutflowAllowed": true
+    },
+    "Ac": {
+      "requirements": ["MIDDLE_LEVEL", "PATCH_OR_CELL_OR_ROLL_STRUCTURE", "MODERATE_OR_SHALLOW_DEPTH"],
+      "origins": ["MIDLEVEL_INSTABILITY", "WAVE_SUPPORT", "CAPPED_CONVECTION", "TRANSFORMED_STRATIFORM_OR_HIGH_CLOUD"]
+    },
+    "As": {
+      "requirements": ["MIDDLE_DOMINANT", "BROAD_STRATIFORM_CONTINUITY", "COHERENT_WEAK_TO_MODERATE_ASCENT"],
+      "mayTransitionTo": ["Ns"],
+      "mayOriginateFrom": ["Cs", "Ac", "Ns", "Cb"]
+    },
+    "Ns": {
+      "requirements": ["BROAD_CONTINUITY", "DEEP_THICK_STRATIFORM_STATE", "SUSTAINED_PRECIPITATION", "WEAK_LOCALIZED_TOWER_IDENTITY"],
+      "maySpanMultipleLevels": true,
+      "mayTransitionTo": ["As", "Cb"]
+    },
+    "Ci": {
+      "requirements": ["HIGH_LEVEL", "ICE_DOMINANT", "FILAMENTARY_OR_FIBROUS", "THIN_TO_MODERATE_OPTICAL_DEPTH"],
+      "mayOriginateFrom": ["Cb", "Cc", "Ac", "Cs"]
+    },
+    "Cc": {
+      "requirements": ["HIGH_LEVEL", "ICE_DOMINANT", "SMALL_CELL_OR_RIPPLE_ORGANIZATION", "LIMITED_VERTICAL_THICKNESS"],
+      "mayTransitionTo": ["Ci", "Ac"]
+    },
+    "Cs": {
+      "requirements": ["HIGH_LEVEL", "ICE_DOMINANT", "BROAD_VEIL", "HIGH_HORIZONTAL_CONTINUITY", "LOWER_LOCAL_THICKNESS_VARIATION"],
+      "mayTransitionTo": ["As", "Ci"],
+      "mayOriginateFrom": ["Cb"]
+    }
+  },
+  "transitionTests": ["Cu_CONGESTUS_TO_Cb", "Cb_OUTFLOW_TO_Ci_OR_Cs", "As_TO_Ns", "St_TO_Sc_OR_Cu", "Sc_TO_Cu", "Ns_TO_As"],
+  "ambiguityLaw": "IF_MULTIPLE_GENERA_SATISFY_WITHOUT_DECISIVE_DIAGNOSTIC_MARK_UNEVALUABLE_OR_USE_ORIGIN_HISTORY_DO_NOT_RANDOMLY_FORCE",
+  "randomGenusSelectionProhibited": true
+}

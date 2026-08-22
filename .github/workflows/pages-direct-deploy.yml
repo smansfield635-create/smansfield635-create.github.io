@@ -62,7 +62,8 @@ jobs:
       - name: Stage bounded deployment-only Pages payload
         env:
           PAGES_STAGE: ${{ runner.temp }}/pages-site
-          C3_ID: 8d22aa638b3b3fddd5b367b9a4856a7a558a1ad9
+          INSPECTION_SHA: 1d45379f81ea4089e9c5f3d7d9688e702be9add3
+          INSPECTION_ROOT: ${{ runner.temp }}/pages-site/inspection/h-earth/24056
         shell: bash
         run: |
           set -euo pipefail
@@ -81,32 +82,37 @@ jobs:
             h-earth-live-6d18e158/showroom/globe/h-earth/ \
             "$PAGES_STAGE/showroom/globe/h-earth/"
 
-          # Recover the existing August 20 FAP1 Candidate A owner-inspection environment.
-          # Do not reconstruct or rebase it: publish the already-preserved C3 snapshot bytes.
-          test -f "preview/h-earth/c3/$C3_ID/index.html"
-          test -f "preview/h-earth/c3/$C3_ID/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/index.html"
-          mkdir -p "$PAGES_STAGE/preview/h-earth/c3/$C3_ID/snapshot"
-          cp "preview/h-earth/c3/$C3_ID/index.html" "$PAGES_STAGE/preview/h-earth/c3/$C3_ID/index.html"
-          rsync -a --prune-empty-dirs \
-            --exclude='.git/' \
-            --exclude='.github/' \
-            --exclude='preview/' \
-            --exclude='h-earth-live-6d18e158/' \
-            "preview/h-earth/c3/$C3_ID/snapshot/" \
-            "$PAGES_STAGE/preview/h-earth/c3/$C3_ID/snapshot/"
+          # Recover the exact Aug 21 24056 finishing candidate in a root-faithful
+          # inspection tree. Candidate bytes are not modified; only the three
+          # runtime roots required by the reconciliation harness are materialized.
+          git fetch --no-tags --depth=1 origin "$INSPECTION_SHA"
+          rm -rf "$INSPECTION_ROOT"
+          mkdir -p "$INSPECTION_ROOT"
+          git archive "$INSPECTION_SHA" \
+            showroom/globe/audralia \
+            showroom/globe/h-earth \
+            h-earth-3d \
+            | tar -x -C "$INSPECTION_ROOT"
 
           test -f "$PAGES_STAGE/.well-known/dgb-release.json"
           test -f "$PAGES_STAGE/showroom/globe/h-earth/index.html"
           test -f "$PAGES_STAGE/showroom/globe/h-earth/environmental-audio-media.js"
           test -f "$PAGES_STAGE/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js"
-          test -f "$PAGES_STAGE/preview/h-earth/c3/$C3_ID/index.html"
-          test -f "$PAGES_STAGE/preview/h-earth/c3/$C3_ID/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/index.html"
+          test -f "$INSPECTION_ROOT/showroom/globe/audralia/weather-presentation-reconciliation/index.html"
+          test -f "$INSPECTION_ROOT/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs"
+          test -f "$INSPECTION_ROOT/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs"
+          test -f "$INSPECTION_ROOT/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js"
+
           if grep -q 'h-earth-live-6d18e158' "$PAGES_STAGE/showroom/globe/h-earth/index.html"; then
             echo "H_EARTH_PUBLIC_ROUTE_STILL_REDIRECTS_TO_EXCLUDED_TREE" >&2
             exit 1
           fi
           if ! grep -q "environmental-audio-media.js" "$PAGES_STAGE/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js"; then
             echo "H_EARTH_ENVIRONMENTAL_AUDIO_IMPORT_MISSING" >&2
+            exit 1
+          fi
+          if ! grep -q 'Audralia · Weather Presentation Reconciliation' "$INSPECTION_ROOT/showroom/globe/audralia/weather-presentation-reconciliation/index.html"; then
+            echo "INSPECTION_24056_RECONCILIATION_ENTRY_MISMATCH" >&2
             exit 1
           fi
 
@@ -144,36 +150,76 @@ jobs:
     needs: [prepare, deploy]
     runs-on: ubuntu-latest
     steps:
-      - name: Verify public site serves exact approved head and recovered existing C3 inspection
+      - name: Verify public site serves exact approved head and 24056 reconciliation bytes
         env:
           TARGET_SHA: ${{ needs.prepare.outputs.target_sha }}
           PAGE_URL: ${{ needs.deploy.outputs.page_url }}
-          C3_ID: 8d22aa638b3b3fddd5b367b9a4856a7a558a1ad9
         shell: bash
         run: |
           set -euo pipefail
           marker_url="${PAGE_URL%/}/.well-known/dgb-release.json"
           demo_url="${PAGE_URL%/}/showroom/globe/h-earth/"
-          c3_url="${PAGE_URL%/}/preview/h-earth/c3/${C3_ID}/"
-          c3_snapshot_url="${PAGE_URL%/}/preview/h-earth/c3/${C3_ID}/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/"
+          inspection_url="${PAGE_URL%/}/inspection/h-earth/24056/showroom/globe/audralia/weather-presentation-reconciliation/"
+          inspection_app_url="${PAGE_URL%/}/inspection/h-earth/24056/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs"
           observed=""
           for attempt in $(seq 1 24); do
             observed="$(curl --fail --silent --show-error -L --max-time 20 "$marker_url" 2>/dev/null | jq -r '.commit // empty' 2>/dev/null || true)"
             if [ "$observed" = "$TARGET_SHA" ]; then
               demo_html="$(curl --fail --silent --show-error -L --max-time 20 "$demo_url" 2>/dev/null || true)"
-              c3_html="$(curl --fail --silent --show-error -L --max-time 20 "$c3_url" 2>/dev/null || true)"
-              snapshot_html="$(curl --fail --silent --show-error -L --max-time 20 "$c3_snapshot_url" 2>/dev/null || true)"
+              inspection_html="$(curl --fail --silent --show-error -L --max-time 20 "$inspection_url" 2>/dev/null || true)"
+              inspection_app="$(curl --fail --silent --show-error -L --max-time 20 "$inspection_app_url" 2>/dev/null || true)"
               if printf '%s' "$demo_html" | grep -q 'The coast is the entrance.' && \
                  ! printf '%s' "$demo_html" | grep -q 'h-earth-live-6d18e158' && \
-                 printf '%s' "$c3_html" | grep -q 'FAP1 Candidate A' && \
-                 printf '%s' "$c3_html" | grep -q "$C3_ID" && \
-                 printf '%s' "$snapshot_html" | grep -q 'Audralia · Weather Presentation Reconciliation'; then
-                echo "LIVE_EXACT_HEAD_H_EARTH_AND_EXISTING_FAP1_C3_VERIFIED target=$TARGET_SHA c3=$c3_url snapshot=$c3_snapshot_url"
+                 printf '%s' "$inspection_html" | grep -q 'Audralia · Weather Presentation Reconciliation' && \
+                 printf '%s' "$inspection_app" | grep -q 'AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION'; then
+                echo "LIVE_EXACT_HEAD_AND_24056_RECONCILIATION_BYTES_VERIFIED target=$TARGET_SHA inspection=$inspection_url"
                 exit 0
               fi
             fi
-            echo "Attempt $attempt: observed=${observed:-none}; waiting for target=$TARGET_SHA and existing FAP1 C3 inspection"
+            echo "Attempt $attempt: observed=${observed:-none}; waiting for target=$TARGET_SHA and 24056 inspection bytes"
             sleep 10
           done
-          echo "DEPLOYMENT_NOT_PROVEN expected=$TARGET_SHA observed=${observed:-none} marker=$marker_url c3=$c3_url snapshot=$c3_snapshot_url" >&2
+          echo "DEPLOYMENT_NOT_PROVEN expected=$TARGET_SHA observed=${observed:-none} marker=$marker_url inspection=$inspection_url" >&2
           exit 1
+
+      - name: Set up Chrome for public runtime verification
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install browser driver
+        shell: bash
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Verify public 24056 reconciliation runtime actually reaches ready state
+        env:
+          PAGE_URL: ${{ needs.deploy.outputs.page_url }}
+          CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          export INSPECTION_URL="${PAGE_URL%/}/inspection/h-earth/24056/showroom/globe/audralia/weather-presentation-reconciliation/"
+          node <<'NODE'
+          const puppeteer=require('puppeteer-core');
+          (async()=>{
+            const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+            const page=await browser.newPage();
+            await page.setViewport({width:720,height:1280,deviceScaleFactor:1});
+            const errors=[];
+            page.on('pageerror',e=>errors.push(String(e?.stack||e)));
+            page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+            await page.goto(process.env.INSPECTION_URL,{waitUntil:'domcontentloaded',timeout:60000});
+            await page.waitForFunction(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime()?.invariants?.pass===true,{timeout:45000});
+            await page.waitForFunction(()=>document.querySelector('[data-h-earth-status]')?.dataset?.status?.includes('USER_REVIEW_REQUIRED'),{timeout:15000});
+            const result=await page.evaluate(()=>({
+              title:document.title,
+              status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null,
+              loaderHidden:Boolean(document.querySelector('[data-audralia-loader]')?.hidden),
+              runtimePass:window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime()?.invariants?.pass===true,
+              error:window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__||null
+            }));
+            console.log(JSON.stringify({inspection:process.env.INSPECTION_URL,result,errors},null,2));
+            await browser.close();
+            if(errors.length||!result.runtimePass||!String(result.status).includes('USER_REVIEW_REQUIRED'))process.exit(1);
+          })().catch(error=>{console.error(error);process.exit(1);});
+          NODE

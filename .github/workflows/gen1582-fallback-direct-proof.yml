@@ -1,0 +1,47 @@
+name: Gen1582 Fallback Direct Rendered Proof
+
+on:
+  push:
+    branches:
+      - gen1582-fallback-proof-20260821
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rendered-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 4
+      - name: Prove Compass product bytes equal fallback candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          candidate='81b4556abc598df016f9747f85371a191e919bf0'
+          git cat-file -e "${candidate}^{commit}"
+          git diff --exit-code "$candidate" HEAD -- assets/compass/compass.css index.html assets/compass/compass.controller.js assets/compass/compass.crystals.js assets/compass/compass.mirrorland.js
+          echo GEN1582_FALLBACK_PRODUCT_BYTES_EXACT
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Serve exact fallback child
+        shell: bash
+        run: |
+          python3 -m http.server 4173 >/tmp/gen1582-fallback-proof-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/gen1582-fallback-proof-http.log || true
+          exit 1
+      - name: Run direct rendered fallback proof
+        run: node tools/gen1582-fallback-direct-proof.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gen1582-fallback-direct-proof-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .qualification/gen1582-fallback
+          retention-days: 30

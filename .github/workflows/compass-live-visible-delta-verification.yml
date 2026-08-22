@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     env:
-      EXPECTED_MAIN_SHA: 27297daf0508bc4169afe2eafaa6f2f9c6c54a82
+      EXPECTED_MAIN_SHA: e219a400fcc8260075863522dba5a75584736be1
       LIVE_ORIGIN: https://diamondgatebridge.com
       LIVE_CAPABILITY_URL: https://diamondgatebridge.com/assets/compass/compass.capability-carousel.js?v=compass-root-award-finish-successor-v1&g=1593-visible-delta-r1&cb=20260822-1659-a060417e
     steps:

@@ -17,6 +17,11 @@
 .compass-orbit-plaque{position:absolute;left:-14rem;top:-112px;width:28rem;min-height:292px;height:auto;padding:.2rem;display:grid;grid-template-rows:202px auto;align-content:start;gap:6px;border:0;border-radius:1.25rem;background:transparent;box-shadow:none;opacity:.17;filter:brightness(.48) saturate(.62);overflow:visible;contain:layout;transform-style:preserve-3d;transition:opacity .28s,filter .28s}
 .compass-orbit-plaque[data-active="true"]{opacity:1;filter:none;z-index:8}
 .compass-orbit-plaque:not([data-active="true"])>*{opacity:.08!important}
+/* Gen1585: only the active capability may expose rendered pixels or caption text. */
+.compass-orbit-plaque:not([data-active="true"]) .compass-object-portal,
+.compass-orbit-plaque:not([data-active="true"]) .compass-object-caption{opacity:0!important;visibility:hidden!important}
+.compass-orbit-plaque[data-active="true"] .compass-object-portal,
+.compass-orbit-plaque[data-active="true"] .compass-object-caption{opacity:1!important;visibility:visible!important;transition:opacity .24s ease,visibility .24s ease}
 .compass-object-sr-title,.compass-orbit-status{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 .compass-object-portal{position:relative;z-index:2;display:grid;place-items:center;width:100%;height:202px;min-height:202px;margin:0 auto;padding:0;border:0;background:transparent;color:inherit;overflow:visible;transform:none}
 .compass-brain-field,.compass-house-field{position:relative;display:block;width:100%;height:202px;min-height:202px;isolation:isolate;overflow:visible}

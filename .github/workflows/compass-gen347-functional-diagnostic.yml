@@ -1,0 +1,71 @@
+name: Compass Gen347 Functional Diagnostic
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+permissions:
+  contents: read
+jobs:
+  trace:
+    if: github.head_ref == 'verification/compass-gen347-bootstrap-receipt'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: |
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/http.log 2>&1 &
+          for i in $(seq 1 40); do curl -fsS http://127.0.0.1:4173/compass-awards-provenance/ >/dev/null && exit 0; sleep .25; done
+          exit 1
+      - name: Trace all functional stages
+        env:
+          NODE_PATH: ${{ github.workspace }}/node_modules
+        run: |
+          node --input-type=module <<'NODE'
+          import { chromium } from 'playwright'; import fs from 'node:fs';
+          const profiles=[['desktop',1440,900],['tablet',1024,768],['phone',390,844]], out=[]; let failed=false;
+          const browser=await chromium.launch({headless:true});
+          for(const [name,width,height] of profiles){
+            const page=await browser.newPage({viewport:{width,height}}), errors=[], stages={};
+            page.on('console',m=>{if(m.type()==='error')errors.push('console:'+m.text())}); page.on('pageerror',e=>errors.push('page:'+String(e)));
+            try{
+              await page.goto('http://127.0.0.1:4173/compass-awards-provenance/',{waitUntil:'networkidle',timeout:30000});
+              await page.waitForFunction(()=>Boolean(document.documentElement.dataset.compassAwardsQualification),{timeout:10000});
+              stages.bootstrap=await page.evaluate(()=>{const rs=[...document.querySelectorAll('[data-compass-room]')];return{rooms:rs.length,uniqueRooms:new Set(rs.map(x=>x.dataset.roomId).filter(Boolean)).size,cardinals:document.querySelectorAll('[data-compass-cardinal]').length,capabilities:document.querySelectorAll('[data-capability]').length,readiness:document.querySelectorAll('[data-readiness-family]').length,provenance:document.querySelectorAll('.ap-award-card').length,routes:document.querySelectorAll('[data-compass-mirrorland-routes] a').length,status:document.documentElement.dataset.compassAwardsQualification}});
+              if(stages.bootstrap.uniqueRooms!==19||stages.bootstrap.cardinals!==4||stages.bootstrap.capabilities!==3||stages.bootstrap.readiness!==2||stages.bootstrap.provenance!==5||stages.bootstrap.routes<4)throw new Error('semantic bootstrap');
+              const north=page.locator('[data-compass-cardinal][data-cardinal-id="north"]'); await north.click();
+              await page.waitForFunction(()=>['CLUSTER_OPEN','ROOM_SELECTED'].includes(document.querySelector('[data-compass-root]')?.dataset.compassMode),{timeout:7000}); await page.waitForFunction(()=>document.querySelector('.ap-room-label')?.classList.contains('is-active'),{timeout:5000});
+              stages.cluster1=await page.evaluate(()=>({mode:document.querySelector('[data-compass-root]')?.dataset.compassMode,id:document.querySelector('.ap-room-label')?.dataset.roomId,visible:[...document.querySelectorAll('.ap-room-label')].filter(e=>e.classList.contains('is-active')&&getComputedStyle(e).display!=='none').length}));
+              if(stages.cluster1.visible!==1||!stages.cluster1.id)throw new Error('label ownership');
+              await page.locator('[data-ap-room-next]').click(); await page.waitForTimeout(150); stages.cluster2={id:await page.locator('.ap-room-label').getAttribute('data-room-id')}; if(!stages.cluster2.id||stages.cluster2.id===stages.cluster1.id)throw new Error('room advance');
+              await page.locator('[data-ap-room-open]').click(); await page.waitForFunction(()=>document.querySelector('[data-compass-root]')?.dataset.compassMode==='ROOM_SELECTED',{timeout:7000}); stages.selected=await page.locator('[data-compass-root]').getAttribute('data-selected-room'); if(stages.selected!==stages.cluster2.id)throw new Error('room open');
+              await page.locator('[data-ap-room-back]').click(); await page.waitForFunction(()=>document.querySelector('[data-compass-root]')?.dataset.compassMode==='CONSTELLATION',{timeout:7000});
+              const hb=await page.locator('[data-statement].is-active').innerText().catch(()=>null), hn=page.locator('[data-hero-next]'); if(await hn.count()){await hn.click();await page.waitForTimeout(250)} const ha=await page.locator('[data-statement].is-active').innerText().catch(()=>null); stages.hero={before:hb,after:ha,advanced:!hb||!ha||hb!==ha}; if(!stages.hero.advanced)throw new Error('hero advance');
+              const pb=await page.locator('.ap-award-card.is-active h3').innerText(); await page.locator('[data-ap-next]').click(); await page.waitForTimeout(150); const pa=await page.locator('.ap-award-card.is-active h3').innerText(); stages.provenance={before:pb,after:pa,advanced:pb!==pa}; if(!stages.provenance.advanced)throw new Error('provenance advance');
+              const cn=page.locator('[data-capability-next]'); stages.capability={control:await cn.count()>0}; if(stages.capability.control){const cb=await page.locator('[data-capability].is-front,[data-capability][aria-current="true"]').first().getAttribute('data-capability').catch(()=>null);await cn.click();await page.waitForTimeout(250);const ca=await page.locator('[data-capability].is-front,[data-capability][aria-current="true"]').first().getAttribute('data-capability').catch(()=>null);stages.capability={control:true,before:cb,after:ca,advanced:!cb||!ca||cb!==ca};if(!stages.capability.advanced)throw new Error('capability advance')}
+              stages.readiness={trl:await page.locator('[data-readiness-family="TRL"]').count(),tra:await page.locator('[data-readiness-family="TRA"]').count()}; if(stages.readiness.trl!==1||stages.readiness.tra!==1)throw new Error('readiness');
+              const mt=page.locator('[data-mirrorland-trigger], [data-compass-mirrorland-trigger]').first(); stages.mirror={trigger:await mt.count()>0}; if(stages.mirror.trigger){await mt.click();await page.waitForFunction(()=>document.querySelector('[data-compass-root]')?.dataset.compassMode==='MIRRORLAND_FOCUSED',{timeout:10000});const back=page.locator('[data-mirrorland-back], [data-compass-mirrorland-back], .mirrorland-back').first();stages.mirror={trigger:true,routes:await page.locator('[data-compass-mirrorland-routes] a').count(),back:await back.count()};if(stages.mirror.routes<4||stages.mirror.back!==1)throw new Error('mirror');await back.click();await page.waitForFunction(()=>document.querySelector('[data-compass-root]')?.dataset.compassMode==='CONSTELLATION',{timeout:10000})}
+              await page.keyboard.press('Tab'); stages.focus=await page.evaluate(()=>({tag:document.activeElement?.tagName||'',body:document.activeElement===document.body}));
+              stages.layout=await page.evaluate(()=>{const vw=document.documentElement.clientWidth,sw=document.documentElement.scrollWidth;const offenders=[...document.querySelectorAll('body *')].map(e=>{const r=e.getBoundingClientRect(),s=getComputedStyle(e);return{tag:e.tagName,cls:e.className?.toString?.().slice(0,100)||'',id:e.id||'',left:Math.round(r.left),right:Math.round(r.right),width:Math.round(r.width),position:s.position,transform:s.transform}}).filter(x=>x.right>vw+2||x.left<-2).sort((a,b)=>Math.max(b.right-vw,-b.left)-Math.max(a.right-vw,-a.left)).slice(0,20);return{viewport:vw,scrollWidth:sw,overflow:sw-vw,offenders}});
+              if(stages.layout.overflow>2)throw new Error('overflow'); if(errors.length)throw new Error('runtime errors');
+            }catch(e){failed=true;stages.failure=String(e.stack||e)}
+            await page.screenshot({path:`/tmp/trace-${name}.png`,fullPage:true}).catch(()=>{}); out.push({name,stages,errors}); await page.close();
+          }
+          await browser.close(); const receipt={schema:'COMPASS_GEN347_FUNCTIONAL_TRACE_v1',failed,out}; fs.writeFileSync('/tmp/trace.json',JSON.stringify(receipt,null,2)); console.log(JSON.stringify(receipt,null,2)); if(failed)process.exitCode=1;
+          NODE
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-gen347-trace-${{ github.run_id }}
+          path: |
+            /tmp/trace.json
+            /tmp/trace-desktop.png
+            /tmp/trace-tablet.png
+            /tmp/trace-phone.png
+          retention-days: 30

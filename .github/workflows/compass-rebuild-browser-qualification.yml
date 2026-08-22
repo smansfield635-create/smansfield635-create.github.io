@@ -44,15 +44,15 @@ jobs:
           page.on('requestfailed',r=>failed.push({url:r.url(),failure:r.failure()?.errorText||''}));
           const response=await page.goto('http://127.0.0.1:8080/compass-inspect-v2/',{waitUntil:'domcontentloaded',timeout:120000});
           await page.waitForFunction(()=>document.querySelector('[data-compass-root]')?.dataset.runtimeGate==='PASS',{timeout:30000});
-          await page.waitForTimeout(1000);
+          await page.waitForTimeout(1200);
           const before=await page.evaluate(()=>{
             const root=document.querySelector('[data-compass-root]');
             const scene=document.querySelector('[data-compass-scene]');
-            const crystalCanvas=document.querySelector('[data-compass-crystals-mount] canvas');
             const r=scene?.getBoundingClientRect();
             const cr=globalThis.DGB_COMPASS_CRYSTALS_RECEIPT||{};
             const ctrl=globalThis.DGB_COMPASS_CONTROLLER_RECEIPT||{};
-            return {status:root?.dataset.runtimeGate||'',mode:root?.dataset.compassMode||'',scene:{w:r?.width||0,h:r?.height||0},controller:!!globalThis.DGB_COMPASS_CONTROLLER,controllerReceipt:ctrl,crystals:!!globalThis.DGB_COMPASS_CRYSTALS,crystalsReceipt:cr,crystalCanvas:crystalCanvas?{w:crystalCanvas.width,h:crystalCanvas.height}:null,roomProxies:document.querySelectorAll('[data-compass-room-proxy]').length,cardinals:document.querySelectorAll('[data-compass-cardinal]').length,rooms:document.querySelectorAll('[data-compass-room-declarations] [data-compass-room]').length};
+            const canvases=[...document.querySelectorAll('[data-compass-scene] canvas')].map((c,i)=>({i,w:c.width,h:c.height,className:c.className||'',parentClass:c.parentElement?.className||'',rect:{w:c.getBoundingClientRect().width,h:c.getBoundingClientRect().height}}));
+            return {status:root?.dataset.runtimeGate||'',mode:root?.dataset.compassMode||'',scene:{w:r?.width||0,h:r?.height||0},controller:!!globalThis.DGB_COMPASS_CONTROLLER,controllerReceipt:ctrl,crystals:!!globalThis.DGB_COMPASS_CRYSTALS,crystalsReceipt:cr,canvases,roomProxies:document.querySelectorAll('[data-compass-room-proxy]').length,cardinals:document.querySelectorAll('[data-compass-cardinal]').length,rooms:document.querySelectorAll('[data-compass-room-declarations] [data-compass-room]').length};
           });
           if(!before.controller) throw new Error('CONTROLLER_NOT_MOUNTED');
           if(before.controllerReceipt.status!=='available') throw new Error('CONTROLLER_NOT_AVAILABLE:'+JSON.stringify(before.controllerReceipt));
@@ -60,17 +60,19 @@ jobs:
           if(before.crystalsReceipt.status!=='available'||before.crystalsReceipt.rendererInitialized!==true) throw new Error('CRYSTALS_NOT_AVAILABLE:'+JSON.stringify(before.crystalsReceipt));
           if(before.crystalsReceipt.registryCardinalCount!==4||before.crystalsReceipt.registryRoomCount!==19) throw new Error('CRYSTAL_REGISTRY_INVALID:'+JSON.stringify(before.crystalsReceipt));
           if((before.crystalsReceipt.drawCallsLastFrame||0)<4) throw new Error('NO_CARDINAL_DRAW_CALLS:'+JSON.stringify(before.crystalsReceipt));
-          if(!before.crystalCanvas||before.crystalCanvas.w<100||before.crystalCanvas.h<100) throw new Error('CRYSTAL_CANVAS_INVALID:'+JSON.stringify(before.crystalCanvas));
+          if(!before.canvases.some(c=>c.w>=100&&c.h>=100&&c.rect.w>=100&&c.rect.h>=100)) throw new Error('SCENE_CANVAS_INVALID:'+JSON.stringify(before.canvases));
           if(before.roomProxies!==19) throw new Error('ROOM_PROXIES_INVALID:'+before.roomProxies);
+          await page.screenshot({path:'compass-rebuild-browser-qualification-before.png',fullPage:false});
           const opened=await page.evaluate(()=>globalThis.DGB_COMPASS_CONTROLLER.requestCardinalSelection('north'));
           if(opened===false) throw new Error('CARDINAL_SELECTION_REJECTED');
           await page.waitForFunction(()=>document.querySelector('[data-compass-root]')?.dataset.compassMode==='CLUSTER_OPEN',{timeout:5000});
-          await page.waitForTimeout(500);
-          const after=await page.evaluate(()=>({mode:document.querySelector('[data-compass-root]')?.dataset.compassMode||'',cluster:globalThis.DGB_COMPASS_CONTROLLER.getFrameState().cluster,crystals:globalThis.DGB_COMPASS_CRYSTALS_RECEIPT}));
+          await page.waitForTimeout(700);
+          const after=await page.evaluate(()=>({mode:document.querySelector('[data-compass-root]')?.dataset.compassMode||'',cluster:globalThis.DGB_COMPASS_CONTROLLER.getFrameState().cluster,crystals:globalThis.DGB_COMPASS_CRYSTALS_RECEIPT,roomProxyVisible:[...document.querySelectorAll('[data-compass-room-proxy]')].filter(e=>{const s=getComputedStyle(e),r=e.getBoundingClientRect();return s.visibility!=='hidden'&&s.display!=='none'&&r.width>0&&r.height>0}).length}));
           if(after.mode!=='CLUSTER_OPEN'||!after.cluster||after.cluster.roomIds.length<4) throw new Error('CLUSTER_OPEN_FAILED:'+JSON.stringify(after));
+          if((after.crystals.drawCallsLastFrame||0)<4) throw new Error('CLUSTER_RENDER_DRAWS_MISSING:'+JSON.stringify(after.crystals));
           const result={ok:true,httpStatus:response?.status()||0,before,after,consoleErrors,pageErrors,failed};
           fs.writeFileSync('compass-rebuild-browser-qualification.json',JSON.stringify(result,null,2)+'\n');
-          await page.screenshot({path:'compass-rebuild-browser-qualification.png',fullPage:false});
+          await page.screenshot({path:'compass-rebuild-browser-qualification-after.png',fullPage:false});
           console.log(JSON.stringify(result,null,2));
           await browser.close();
           NODE
@@ -81,5 +83,6 @@ jobs:
           name: compass-rebuild-browser-qualification
           path: |
             compass-rebuild-browser-qualification.json
-            compass-rebuild-browser-qualification.png
+            compass-rebuild-browser-qualification-before.png
+            compass-rebuild-browser-qualification-after.png
           if-no-files-found: ignore

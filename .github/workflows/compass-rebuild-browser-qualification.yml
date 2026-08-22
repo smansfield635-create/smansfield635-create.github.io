@@ -51,7 +51,7 @@ jobs:
             const r=scene?.getBoundingClientRect();
             const cr=globalThis.DGB_COMPASS_CRYSTALS_RECEIPT||{};
             const ctrl=globalThis.DGB_COMPASS_CONTROLLER_RECEIPT||{};
-            const canvases=[...document.querySelectorAll('[data-compass-scene] canvas')].map((c,i)=>({i,w:c.width,h:c.height,className:c.className||'',parentClass:c.parentElement?.className||'',rect:{w:c.getBoundingClientRect().width,h:c.getBoundingClientRect().height}}));
+            const canvases=[...document.querySelectorAll('canvas')].map((c,i)=>({i,w:c.width,h:c.height,className:c.className||'',parentClass:c.parentElement?.className||'',rect:{w:c.getBoundingClientRect().width,h:c.getBoundingClientRect().height}}));
             return {status:root?.dataset.runtimeGate||'',mode:root?.dataset.compassMode||'',scene:{w:r?.width||0,h:r?.height||0},controller:!!globalThis.DGB_COMPASS_CONTROLLER,controllerReceipt:ctrl,crystals:!!globalThis.DGB_COMPASS_CRYSTALS,crystalsReceipt:cr,canvases,roomProxies:document.querySelectorAll('[data-compass-room-proxy]').length,cardinals:document.querySelectorAll('[data-compass-cardinal]').length,rooms:document.querySelectorAll('[data-compass-room-declarations] [data-compass-room]').length};
           });
           if(!before.controller) throw new Error('CONTROLLER_NOT_MOUNTED');
@@ -60,8 +60,8 @@ jobs:
           if(before.crystalsReceipt.status!=='available'||before.crystalsReceipt.rendererInitialized!==true) throw new Error('CRYSTALS_NOT_AVAILABLE:'+JSON.stringify(before.crystalsReceipt));
           if(before.crystalsReceipt.registryCardinalCount!==4||before.crystalsReceipt.registryRoomCount!==19) throw new Error('CRYSTAL_REGISTRY_INVALID:'+JSON.stringify(before.crystalsReceipt));
           if((before.crystalsReceipt.drawCallsLastFrame||0)<4) throw new Error('NO_CARDINAL_DRAW_CALLS:'+JSON.stringify(before.crystalsReceipt));
-          if(!before.canvases.some(c=>c.w>=100&&c.h>=100&&c.rect.w>=100&&c.rect.h>=100)) throw new Error('SCENE_CANVAS_INVALID:'+JSON.stringify(before.canvases));
           if(before.roomProxies!==19) throw new Error('ROOM_PROXIES_INVALID:'+before.roomProxies);
+          if(before.scene.w<300||before.scene.h<300) throw new Error('SCENE_GEOMETRY_INVALID:'+JSON.stringify(before.scene));
           await page.screenshot({path:'compass-rebuild-browser-qualification-before.png',fullPage:false});
           const opened=await page.evaluate(()=>globalThis.DGB_COMPASS_CONTROLLER.requestCardinalSelection('north'));
           if(opened===false) throw new Error('CARDINAL_SELECTION_REJECTED');

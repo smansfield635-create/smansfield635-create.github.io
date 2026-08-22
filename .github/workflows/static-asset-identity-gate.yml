@@ -1,0 +1,21 @@
+name: Static Asset Identity Gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+jobs:
+  verify-static-asset-identity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify changed browser assets have fresh request identities
+        env:
+          STATIC_IDENTITY_BASE: ${{ github.event.pull_request.base.sha }}
+          STATIC_IDENTITY_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: node .github/ai-router/platform/verify-static-asset-identity.v1.mjs

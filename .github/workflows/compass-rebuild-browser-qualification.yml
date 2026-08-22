@@ -48,7 +48,7 @@ jobs:
           const before=await page.evaluate(()=>{
             const root=document.querySelector('[data-compass-root]');
             const scene=document.querySelector('[data-compass-scene]');
-            const crystalCanvas=document.querySelector('canvas[data-compass-crystals-canvas]');
+            const crystalCanvas=document.querySelector('[data-compass-crystals-mount] canvas');
             const r=scene?.getBoundingClientRect();
             const cr=globalThis.DGB_COMPASS_CRYSTALS_RECEIPT||{};
             const ctrl=globalThis.DGB_COMPASS_CONTROLLER_RECEIPT||{};

@@ -1,0 +1,4 @@
+Compass successor publication retrigger.
+Target route: /compass-successor/
+Reason: force a fresh GitHub Pages publication after merge 2040e9b841b48caff94b42bb561481e59f985047 without altering the successor HTML, CSS, or controller.
+Timestamp: 2026-08-22 19:01 America/New_York

@@ -1168,6 +1168,36 @@
       "scopeHash": "72258889edde8bc7e3b0fc272d34a3c067cf9a80d2d925323982309def876c6d",
       "state": "ADMITTED_LOCKED"
     },
+    "72da0be52cdf8b3b3c90ad57a361328dd63db947205f0072f7bad48efb835410": {
+      "governingHead": "dd227d1365f88045be59ce764155a7c1675c0249",
+      "lockGeneration": 1594,
+      "lockScope": "COMPASS:ISOLATED:CLEAN_INTEGRATED_SUCCESSOR:20260822:001",
+      "operationId": "COMPASS_CLEAN_INTEGRATED_SUCCESSOR_20260822_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "2107b4aa516a1d151a6e3f1c4588e24f0b9c2041",
+        "lockGeneration": 1593,
+        "lockScope": "COMPASS:ROOT:PERCEPTUAL_ALIGNMENT_AND_CANONICAL_SETTLEMENT:20260822:R2",
+        "operationId": "COMPASS_AUDIT_DERIVED_PERCEPTUAL_REPAIR_20260822_R2",
+        "preservedEvidenceRefs": [
+          "PR#1688",
+          "docs/COMPASS_AUDIT_DERIVED_ACCEPTANCE_CONTRACT_20260822.md",
+          "laws/index.controller.js",
+          "laws/index.compositor.js",
+          "assets/compass/"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_CLEAN_INTEGRATED_SUCCESSOR_SUPERSESSION_20260822_002"
+      },
+      "procedureLocatorDigest": "cddbb12bb07db88acb884332fb641551ea857e5c071d5ae91e0b08fb46e4ebb7",
+      "released": false,
+      "requestDigest": "43e7440ab256c548fff88d854cdf5dc87cc407f4ad34d217ce52aa0c85bf986d",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "72da0be52cdf8b3b3c90ad57a361328dd63db947205f0072f7bad48efb835410",
+      "state": "ADMITTED_LOCKED"
+    },
     "74933798ee5c239a9ce485fc52563349c7e6417eee30beef1ad60091d4652d20": {
       "governingHead": "a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc",
       "lockGeneration": 457,
@@ -2928,18 +2958,6 @@
       "scopeHash": "fb941fb311d034729a4ad8f949bf10f0473f08f64690169c0365ec59101fc34e",
       "state": "ADMITTED_LOCKED"
     },
-    "fc9a881aa8c39ce948a4fc35928099f421b49b6e4e8c12cd196416ee3e9b2504": {
-      "governingHead": "2107b4aa516a1d151a6e3f1c4588e24f0b9c2041",
-      "lockGeneration": 1593,
-      "lockScope": "COMPASS:ROOT:PERCEPTUAL_ALIGNMENT_AND_CANONICAL_SETTLEMENT:20260822:R2",
-      "operationId": "COMPASS_AUDIT_DERIVED_PERCEPTUAL_REPAIR_20260822_R2",
-      "procedureLocatorDigest": "9f3907b01aeba50439802c8b269e66344e70ddc8f8cb3e3cb985db18baa80b69",
-      "released": false,
-      "requestDigest": "f6b87e6a77d4ebe3ab6597a664e8b6129488c549b0fe9bf1ced6668774365f0b",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "fc9a881aa8c39ce948a4fc35928099f421b49b6e4e8c12cd196416ee3e9b2504",
-      "state": "ADMITTED_LOCKED"
-    },
     "ff79734b4cea600d6f944a537b197ea4a4265fd816845d998f108693c6616247": {
       "governingHead": "dffdc60207c3b666b1a6341832eba6bba6bff10f",
       "lockGeneration": 1544,
@@ -2968,7 +2986,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1593,
+  "lockGeneration": 1594,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -24034,6 +24052,37 @@
       "scopeHash": "7c0a200bd5d860a4cef69672d221c1bc43121c4efce2f7a19aca5a99395507be",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "2107b4aa516a1d151a6e3f1c4588e24f0b9c2041",
+      "lockGeneration": 1593,
+      "lockScope": "COMPASS:ROOT:PERCEPTUAL_ALIGNMENT_AND_CANONICAL_SETTLEMENT:20260822:R2",
+      "operationId": "COMPASS_AUDIT_DERIVED_PERCEPTUAL_REPAIR_20260822_R2",
+      "procedureLocatorDigest": "9f3907b01aeba50439802c8b269e66344e70ddc8f8cb3e3cb985db18baa80b69",
+      "released": true,
+      "requestDigest": "f6b87e6a77d4ebe3ab6597a664e8b6129488c549b0fe9bf1ced6668774365f0b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "fc9a881aa8c39ce948a4fc35928099f421b49b6e4e8c12cd196416ee3e9b2504",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "PR#1688",
+          "docs/COMPASS_AUDIT_DERIVED_ACCEPTANCE_CONTRACT_20260822.md",
+          "laws/index.controller.js",
+          "laws/index.compositor.js",
+          "assets/compass/"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "dd227d1365f88045be59ce764155a7c1675c0249",
+        "successorLockGeneration": 1594,
+        "successorLockScope": "COMPASS:ISOLATED:CLEAN_INTEGRATED_SUCCESSOR:20260822:001",
+        "successorOperationId": "COMPASS_CLEAN_INTEGRATED_SUCCESSOR_20260822_001",
+        "transitionId": "COMPASS_CLEAN_INTEGRATED_SUCCESSOR_SUPERSESSION_20260822_002"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

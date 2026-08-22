@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "compass-gen346-pages-20260822-1938z",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 1668,
+  "requestBranch": "ai-dispatch-request-compass-gen346-pages-20260822",
+  "requestCommit": "ffd7a504216a68b6089de7855141a8e5c93ef62b",
+  "currentMainSha": "731b8a08361601e3140d24918269b8cdfaf0caf7",
+  "bridgeRunId": "32594274685",
+  "error": "Input may not be user supplied: target_sha",
+  "failedAt": "2026-08-22T19:39:08.713Z"
+}

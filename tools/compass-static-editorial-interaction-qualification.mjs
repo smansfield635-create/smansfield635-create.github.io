@@ -1,8 +1,77 @@
 import { chromium } from 'playwright';
+
 const base=process.env.COMPASS_TEST_URL||'http://127.0.0.1:4173/';
+const BASELINE_TABLET_SCENE_CENTER_ERROR=-160;
 const browser=await chromium.launch({headless:true});
 const context=await browser.newContext({viewport:{width:900,height:1000},hasTouch:true});
 const page=await context.newPage();
-await page.goto(base,{waitUntil:'networkidle'});await page.waitForTimeout(1200);
-const snap=async()=>page.evaluate(()=>{const R=e=>{const r=e.getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height,cx:r.x+r.width/2}};const root=document.querySelector('[data-compass-root]'),header=document.querySelector('.compass-estate__header'),scene=document.querySelector('[data-compass-scene]'),c=innerWidth/2;return{viewportCenter:c,header:header?{rect:R(header),error:R(header).cx-c}:null,children:header?[...header.children].map(el=>{const r=R(el),s=getComputedStyle(el);return{tag:el.tagName,id:el.id||'',cls:String(el.className||''),text:(el.textContent||'').trim().slice(0,80),rect:r,error:r.cx-c,width:s.width,marginLeft:s.marginLeft,marginRight:s.marginRight,left:s.left,right:s.right,transform:s.transform,textAlign:s.textAlign}}):[],scene:scene?{rect:R(scene),error:R(scene).cx-c}:null,root:root?{focus:root.dataset.orbitFocus,preview:root.dataset.orbitPreviewFocus,phase:root.dataset.orbitPhase,readable:root.dataset.readableCardinal,foreground:root.dataset.renderedForegroundCardinal}:null,cardinals:[...document.querySelectorAll('[data-compass-cardinal]')].map(el=>({wing:el.dataset.wing,primary:el.dataset.primary||'',readableClass:el.classList.contains('is-readable-cardinal'),visible:[...el.querySelectorAll(':scope>span')].some(s=>{const x=getComputedStyle(s);return x.visibility!=='hidden'&&Number(x.opacity)>.5})}))}});
-const before=await snap();const scene=page.locator('[data-compass-scene]').first();await scene.scrollIntoViewIfNeeded();await page.waitForTimeout(150);const b=await scene.boundingBox();if(b){const cdp=await context.newCDPSession(page),y=Math.min(990,Math.max(10,b.y+b.height*.55)),x1=b.x+b.width*.72,x2=b.x+b.width*.28,p=(x,y)=>[{x,y,radiusX:1,radiusY:1,force:1,id:1}];await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:p(x1,y)});for(let i=1;i<=14;i++){const t=i/14;await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:p(x1+(x2-x1)*t,y)});await page.waitForTimeout(18)}await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]})}await page.waitForTimeout(900);const after=await snap();console.log(JSON.stringify({result:'COMPASS_PRE_REPAIR_MEASUREMENT',before,after},null,2));await browser.close();
+const errors=[];page.on('pageerror',e=>errors.push(String(e)));
+await page.goto(base,{waitUntil:'networkidle'});await page.waitForTimeout(1400);
+
+const snapshot=async()=>page.evaluate(()=>{
+  const box=e=>{const r=e.getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height,cx:r.x+r.width/2}};
+  const root=document.querySelector('[data-compass-root]');
+  const scene=document.querySelector('[data-compass-scene]');
+  const header=document.querySelector('.compass-estate__header');
+  const center=innerWidth/2;
+  const cardinals=[...document.querySelectorAll('[data-compass-cardinal]')].map(el=>({
+    wing:el.dataset.wing,
+    primary:el.dataset.primary==='true',
+    readableClass:el.classList.contains('is-readable-cardinal'),
+    visible:[...el.querySelectorAll(':scope>span')].some(s=>{const cs=getComputedStyle(s);return cs.visibility!=='hidden'&&Number(cs.opacity)>.5})
+  }));
+  return{
+    viewportCenter:center,
+    headerCenterError:header?box(header).cx-center:null,
+    scene:scene?box(scene):null,
+    sceneCenterError:scene?box(scene).cx-center:null,
+    focus:root?.dataset.orbitFocus||'',
+    phase:root?.dataset.orbitPhase||'',
+    primary:cardinals.filter(x=>x.primary).map(x=>x.wing),
+    visible:cardinals.filter(x=>x.visible).map(x=>x.wing),
+    cardinals,
+    labelBinding:globalThis.DGB_COMPASS_LAWS_LABEL_BINDING||null
+  };
+});
+
+const initial=await snapshot();
+if(initial.headerCenterError===null||Math.abs(initial.headerCenterError)>1)throw new Error(`tablet header is not centered ${JSON.stringify(initial)}`);
+if(initial.sceneCenterError===null)throw new Error('tablet scene missing');
+const improvement=Math.abs(BASELINE_TABLET_SCENE_CENTER_ERROR)-Math.abs(initial.sceneCenterError);
+if(Math.abs(initial.sceneCenterError)>2||improvement<150)throw new Error(`tablet scene centerline did not materially improve ${JSON.stringify({baseline:BASELINE_TABLET_SCENE_CENTER_ERROR,after:initial.sceneCenterError,improvement})}`);
+if(initial.labelBinding?.observer!==false||!String(initial.labelBinding?.source||'').includes('data-primary'))throw new Error(`settled label authority is not direct controller data-primary presentation ${JSON.stringify(initial.labelBinding)}`);
+
+const scene=page.locator('[data-compass-scene]').first();await scene.scrollIntoViewIfNeeded();await page.waitForTimeout(150);
+const b=await scene.boundingBox();if(!b)throw new Error('scene has no bounds');
+const cdp=await context.newCDPSession(page);
+const p=(x,y)=>[{x,y,radiusX:1,radiusY:1,force:1,id:1}];
+const gestures=[
+  [0.84,0.50,0.16,0.50],
+  [0.50,0.80,0.50,0.20],
+  [0.16,0.50,0.84,0.50],
+  [0.50,0.20,0.50,0.80]
+];
+let released=null;
+for(const [sx,sy,ex,ey] of gestures){
+  const before=await snapshot();
+  const x1=b.x+b.width*sx,y1=b.y+b.height*sy,x2=b.x+b.width*ex,y2=b.y+b.height*ey;
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:p(x1,y1)});
+  for(let i=1;i<=18;i++){const t=i/18;await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:p(x1+(x2-x1)*t,y1+(y2-y1)*t)});await page.waitForTimeout(24)}
+  await page.waitForTimeout(100);
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+  await page.waitForTimeout(1050);
+  const after=await snapshot();
+  if(after.phase==='COMMITTED'&&after.focus&&after.focus!==before.focus){released={before,after};break;}
+}
+if(!released)throw new Error(`controlled release never changed committed cardinal ${JSON.stringify(await snapshot())}`);
+const settled=released.after;
+if(settled.primary.length!==1||settled.primary[0]!==settled.focus)throw new Error(`controller committed primary mismatch ${JSON.stringify(settled)}`);
+if(settled.visible.length!==1||settled.visible[0]!==settled.focus)throw new Error(`committed cardinal is not sole readable label owner ${JSON.stringify(settled)}`);
+if(errors.length)throw new Error(`browser errors ${errors.join(' | ')}`);
+
+console.log(JSON.stringify({
+  result:'COMPASS_VISIBLE_DELTA_PREMERGE_PASS',
+  tablet:{baselineSceneCenterError:BASELINE_TABLET_SCENE_CENTER_ERROR,afterSceneCenterError:initial.sceneCenterError,centerlineImprovement:improvement,headerCenterError:initial.headerCenterError},
+  constellation:{outgoing:released.before.focus,settled:settled.focus,incomingVisible:settled.visible[0],soleReadableCount:settled.visible.length,primary:settled.primary[0],phase:settled.phase,labelBinding:settled.labelBinding}
+},null,2));
+await browser.close();

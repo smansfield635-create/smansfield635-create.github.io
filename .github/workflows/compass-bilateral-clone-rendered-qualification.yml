@@ -1,0 +1,62 @@
+name: Compass Bilateral Clone Rendered Qualification
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rendered:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Serve candidate
+        run: |
+          python3 -m http.server 4173 >/tmp/compass-bilateral-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/compass-bilateral-http.log || true
+          exit 1
+      - name: Render and qualify
+        run: |
+          rm -rf .qualification/compass-bilateral
+          mkdir -p .qualification/compass-bilateral
+          cat > .qualification/compass-bilateral/inspect.mjs <<'NODE'
+          import {chromium} from 'playwright'; import fs from 'node:fs';
+          const browser=await chromium.launch({headless:true}); const out={};
+          const views={desktop:{width:1440,height:1100},tablet:{width:900,height:1100},phone:{width:412,height:915}};
+          for(const [name,viewport] of Object.entries(views)){
+            const page=await browser.newPage({viewport}); const errors=[]; const failed=[];
+            page.on('pageerror',e=>errors.push(String(e))); page.on('requestfailed',r=>failed.push(`${r.url()} :: ${r.failure()?.errorText||'failed'}`));
+            await page.goto('http://127.0.0.1:4173/',{waitUntil:'networkidle'}); await page.waitForTimeout(1800);
+            const state=await page.evaluate(()=>{const q=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)],root=q('[data-compass-root]'),scene=q('[data-compass-scene]');return {identity:Boolean(q('[data-compass-identity-3d]')),studio:q('.compass-studio-descriptor')?.textContent?.trim()||'',statements:qa('.compass-statement-object').length,statementOrbit:Boolean(q('[data-statement-orbit]')),intro:Boolean(q('[data-compass-static-introduction],.compass-editorial-intro,.compass-introduction')),video:Boolean(q('.compass-editorial-film video,video source[src*="diamond-gate-compass-mirrorland"]')),scene:Boolean(scene),sceneHeight:scene?.getBoundingClientRect().height||0,cardinals:qa('[data-compass-cardinal]').length,rooms:qa('[data-compass-room]').length,crystalMount:Boolean(q('[data-compass-crystals-mount]')),cosmos:Boolean(q('[data-compass-cosmic-field]')),capability:Boolean(q('[data-capability-orbit],.compass-capability-orbit')),capabilityCards:qa('[data-capability]').length,capabilityCanvases:qa('[data-capability] canvas').length,readiness:Boolean(q('[data-bilateral-readiness]')),tabs:qa('[data-bilateral-readiness] [data-mode]').length,trl:qa('[data-bilateral-readiness] .compass-bilateral-carousel[aria-label="TRL"] .compass-bilateral-slide').length,tra:qa('[data-bilateral-readiness] .compass-bilateral-carousel[aria-label="TRA"] .compass-bilateral-slide').length,overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,identityPolicy:root?.dataset.compassIdentityPolicy||''};});
+            const fail=m=>{throw new Error(`${name}: ${m} :: ${JSON.stringify(state)}`)};
+            if(!state.identity||!/Independent Studio/i.test(state.studio))fail('3D studio identity missing');
+            if(!state.statementOrbit||state.statements!==2)fail('opening statement carousel missing');
+            if(!state.intro||!state.video)fail('New Here/video introduction missing');
+            if(!state.scene||state.sceneHeight<420||state.cardinals!==4||state.rooms!==19||!state.crystalMount||!state.cosmos)fail('Compass topology/render mounts incomplete');
+            if(!state.capability||state.capabilityCards!==3||state.capabilityCanvases<3)fail('3D Brain/Trophy/House carousel incomplete');
+            if(!state.readiness||state.tabs!==2||state.trl!==3||state.tra!==3)fail('TRL/TRA dual carousel incomplete');
+            if(state.overflow>2)fail(`horizontal overflow ${state.overflow}`);
+            const cap=page.locator('[data-capability-orbit],.compass-capability-orbit').first(); await cap.press('ArrowRight'); await page.waitForTimeout(450); if(await page.locator('[data-capability="awards"]').getAttribute('aria-current')!=='true')fail('trophy rotation failed'); await cap.press('ArrowRight'); await page.waitForTimeout(450); if(await page.locator('[data-capability="house"]').getAttribute('aria-current')!=='true')fail('house rotation failed');
+            await page.locator('[data-bilateral-readiness] [data-mode="tra"]').click(); await page.waitForTimeout(180); if(!await page.locator('[data-bilateral-readiness] .compass-bilateral-carousel[aria-label="TRA"]').isVisible())fail('TRA switch failed'); const tra=page.locator('[data-bilateral-readiness] .compass-bilateral-carousel[aria-label="TRA"]'); const a=await tra.locator('.compass-bilateral-slide[data-slot="front"] h3').textContent(); await tra.press('ArrowRight'); await page.waitForTimeout(180); const b=await tra.locator('.compass-bilateral-slide[data-slot="front"] h3').textContent(); if(a===b)fail('TRA advance failed');
+            await page.evaluate(()=>globalThis.DGB_COMPASS_CONTROLLER?.requestMirrorlandReveal?.()); await page.waitForTimeout(1800); const mirror=await page.evaluate(()=>({state:document.querySelector('[data-compass-root]')?.dataset.mirrorlandWindowState||'',routes:[...document.querySelectorAll('[data-compass-mirrorland-routes] a')].filter(a=>{const s=getComputedStyle(a),r=a.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&r.width>0&&r.height>0}).map(a=>a.textContent.trim())})); if(mirror.routes.length<4)fail(`Mirrorland routes failed ${JSON.stringify(mirror)}`);
+            if(errors.length)fail(`page errors ${errors.join(' | ')}`); const productFailures=failed.filter(x=>x.includes('/assets/compass/')); if(productFailures.length)fail(`Compass requests failed ${productFailures.join(' | ')}`);
+            await page.screenshot({path:`.qualification/compass-bilateral/${name}.png`,fullPage:true}); out[name]={state,mirror,errors,failed}; await page.close();
+          }
+          await browser.close(); fs.writeFileSync('.qualification/compass-bilateral/receipt.json',JSON.stringify({result:'PASS_CLOSED',results:out},null,2));
+          NODE
+          node .qualification/compass-bilateral/inspect.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compass-bilateral-rendered-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .qualification/compass-bilateral
+          retention-days: 30

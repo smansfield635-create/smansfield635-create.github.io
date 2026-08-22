@@ -97,7 +97,7 @@ jobs:
           node <<'NODE'
           const puppeteer=require('puppeteer-core');
           const crypto=require('node:crypto');
-          const {performance}=require('node:perf_hooks');
+          const perf=require('node:perf_hooks').performance;
           const median=a=>[...a].sort((x,y)=>x-y)[Math.floor(a.length/2)];
           const fixedNow=Date.parse('2026-08-21T21:00:00.000Z');
           async function openRuntime(browser,url,expectStage1){
@@ -124,10 +124,10 @@ jobs:
             await page.evaluate(y=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__.setCameraStateForTest({yaw:y}),yaw);
           }
           async function forcedFrame(page,yaw){
-            const t0=performance.now();
+            const t0=perf.now();
             await setYaw(page,yaw);
             await page.screenshot({type:'png'});
-            return performance.now()-t0;
+            return perf.now()-t0;
           }
           (async()=>{
             const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});

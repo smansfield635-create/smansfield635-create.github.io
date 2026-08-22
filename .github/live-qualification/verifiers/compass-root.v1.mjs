@@ -21,6 +21,13 @@ page.on('pageerror',e=>pageErrors.push(String(e)));
 await page.goto(`${base}/`,{waitUntil:'networkidle2',timeout:60000});
 await new Promise(r=>setTimeout(r,1600));
 
+// Synthetic qualification gestures must exercise Compass state without following a cardinal/link.
+await page.evaluate(()=>{
+  const suppress=e=>{if(e.target?.closest?.('a[href]'))e.preventDefault();};
+  document.addEventListener('click',suppress,true);
+  document.addEventListener('auxclick',suppress,true);
+});
+
 const snapshot=()=>page.evaluate(()=>{
   const rect=el=>{const r=el?.getBoundingClientRect?.();return r?{x:r.x,y:r.y,width:r.width,height:r.height,cx:r.x+r.width/2,cy:r.y+r.height/2}:null};
   const textUnion=el=>{
@@ -85,7 +92,6 @@ if(!anchor){
     const point=(x,y)=>[{x,y,radiusX:1,radiusY:1,force:1,id:1}];
     const patterns=[[.84,.50,.16,.50],[.50,.80,.50,.20],[.16,.50,.84,.50],[.50,.20,.50,.80]];
     const transitions=[];
-    let last=initial;
     for(let attempt=0;attempt<8&&new Set([initial.root.focus,...transitions.map(t=>t.after.root.focus)].filter(Boolean)).size<4;attempt++){
       const g=patterns[attempt%patterns.length];
       const [sx,sy,ex,ey]=g;
@@ -99,7 +105,7 @@ if(!anchor){
       const early=await snapshot();
       await new Promise(r=>setTimeout(r,650));
       const after=await snapshot();
-      if(after.root.phase==='COMMITTED'&&after.root.focus&&after.root.focus!==before.root.focus){transitions.push({before,early,after});last=after}
+      if(after.root.phase==='COMMITTED'&&after.root.focus&&after.root.focus!==before.root.focus)transitions.push({before,early,after});
     }
 
     const geometryEvidence=[];

@@ -145,3 +145,16 @@ The purpose of this file is strict continuity: at all times we must be able to i
 - `LIVE STATUS`: `SOURCE_ONLY` until merge and exact-head Pages deployment complete.
 - `USER-OBSERVED STATUS`: unchanged; six visual acceptance conditions remain pending live inspection.
 - `NEXT LAWFUL BOUNDARY`: merge exact PR #1583 head, deploy the resulting main SHA through GitHub Pages exact-head transport, verify live publication, then return to user visual validation.
+
+## 2026-08-21 21:43 CDT / Gen1586 / post-deployment visual correction record
+
+- `EXACT HEAD`: deployed Gen1586 product head `9312ddec57cd44db0b43843d877589aef6d6492a`; repository documentation head later advanced by evidence-log commits only.
+- `PATHS CHANGED`: documentation only — `docs/COMPASS_VISUAL_EVIDENCE_TIMELINE.md` and this ledger. No product, controller, renderer, route, H-Earth, or deployment mutation in this entry.
+- `PREVIOUS STATE`: source/CI qualification suggested closure of several Gen1586 presentation goals, but owner video `24117.mp4` and screenshots show that those claims were too broad.
+- `NEW STATE`: visual authority is corrected and centralized in `docs/COMPASS_VISUAL_EVIDENCE_TIMELINE.md`. The detailed `24117` audit reduces fourteen observed collision moments to four systemic failure classes: stale Compass labels under active labels; Coheriscope control/body-copy collision; fixed TRL/TRA headings sharing space with active carousel headings; and outgoing/incoming carousel states coexisting during transitions.
+- `PROGRESS`: visible Previous/Next controls remain removed from TRL/TRA; basic Compass rotation and previously working route continuity remain present. These are not double-counted where earlier evidence already proves them.
+- `REGRESSION`: Gen1586 Mirrorland modal is user-observed blurry/weak and its four actions are reported nonfunctional; stale Mirrorland labeling persists under active room/cardinal labels; TRL/TRA and capability text layers overlap; global horizontal oversizing remains visible.
+- `UNRESOLVED`: 19/19 foreground-room information transitions, exact single-label ownership, Mirrorland interaction/presentation, Coheriscope layout reservation, TRL/TRA single-state text ownership, capability containment, and upper-page width/centering.
+- `LIVE STATUS`: `LIVE_PROVEN` only for publication of Gen1586, not for closure of these presentation defects.
+- `USER-OBSERVED STATUS`: `USER_OBSERVED REGRESSION / UNRESOLVED`. Governing evidence is `24117.mp4` plus owner screenshots; earlier `24097.mp4` and `24104.mp4` remain the baseline for determining what predated later generations.
+- `NEXT LAWFUL BOUNDARY`: any successor must repair ownership/layout rather than move individual words: one active owner per text region, reserved height for active content, outgoing state removed from visual flow before incoming state enters, controls excluded from body-copy space, and user-visible proof required before closure. Reference the visual timeline rather than duplicating frame-by-frame details here.

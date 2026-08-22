@@ -1,0 +1,20 @@
+{
+  "schema": "DGB_CHECK_AUTHORITY_POLICY_v1",
+  "defaultDisposition": "INFORMATIONAL_UNLESS_DECLARED",
+  "principles": [
+    "A product candidate may be rejected only by an authoritative check declared for that operation and only when the check completes its intended evaluation.",
+    "A verifier crash, navigation loss, missing artifact caused by an earlier verifier crash, runner failure, checkout failure, or unavailable external service is QUALIFIER_INFRA_FAILURE, not PRODUCT_FAIL.",
+    "A check from another page, project, benchmark lane, clone lane, or deployment provider is non-blocking unless the active operation explicitly declares it as a dependency.",
+    "External deployment providers do not block GitHub Pages operations unless the operation manifest names that provider as publication authority.",
+    "False-positive scope inside a gate must be repaired in the gate; product bytes must not be mutated to satisfy evidence the gate was never authorized to evaluate."
+  ],
+  "alwaysNonBlockingUnlessExplicitlyDeclared": ["Vercel*","*Benchmark Compass*","*isolated clone*","*clone*","H-Earth*","Audralia*","Laws*"],
+  "classifications": {
+    "AUTHORITATIVE_PRODUCT_FAIL": {"blocks":true,"requires":["check declared by active operation","check executed to completion","machine-readable acceptance result exists","one or more declared acceptance criteria explicitly failed"]},
+    "QUALIFIER_INFRA_FAILURE": {"blocksMergeUntilRerun":true,"permitsProductMutation":false,"examples":["execution context destroyed","runner failure","checkout failure","browser launch failure","missing result artifact because verifier crashed"]},
+    "FALSE_POSITIVE_SCOPE": {"blocksMergeUntilGateFixedAndRerun":true,"permitsProductMutation":false,"examples":["asset gate treats changed asset as its own loader","gate evaluates nonexistent inferred consumer","unrelated project result used against current operation"]},
+    "NON_BLOCKING_EXTERNAL": {"blocks":false,"examples":["Vercel quota/deployment failure when GitHub Pages is publication authority"]},
+    "UNRELATED_PROJECT": {"blocks":false,"examples":["Benchmark Compass failure during root Compass operation unless declared","H-Earth check during Compass-only operation","clone qualification during live-root repair"]},
+    "AUTHORITATIVE_PASS": {"blocks":false,"requires":["declared check","completed evaluation","machine-readable pass result"]}
+  }
+}

@@ -93,3 +93,16 @@ At ledger creation, comparison from pre-Gen1582 head `744961bd34be67a58037f685f2
 If another room advances `main`, all older room-local heads and construction assumptions are stale until revalidated. Reconcile against the newest authoritative state before writing. Do not create competing repairs from stale branches.
 
 The purpose of this file is strict continuity: at all times we must be able to identify exactly what was built, what became live, what improved, what digressed, what remains broken, and which implementation is authoritative.
+
+## 2026-08-21 20:42 CDT / Gen1585 / Compass presentation ownership reconciliation
+
+- `EXACT HEAD`: `731f1f177ebb66e00636c1d60d3e2a6bde7699f9`.
+- `PATHS CHANGED`: `assets/compass/compass.presentation-convergence.js`, `assets/compass/compass.capability-carousel.css`, and this continuity ledger only.
+- `PREVIOUS STATE`: Gen1584 placed the four Mirrorland choices over the stained-glass scene instead of inside the existing THRESHOLD/Mirrorland panel; TRL and TRA were separate in data but rendered as ordinary stacked content cards rather than the established cinematic carousel language; brain/trophy/house capability transitions exposed adjacent plaque pixels/captions; user also observed missing cluster state transitions and one extra label exposed at a time.
+- `NEW STATE`: source candidate moves the existing controller-owned Mirrorland route node into the existing threshold panel, preserves route/state ownership, renders TRL and TRA as two independent front/rear orbit carousels with keyboard/pointer controls, follows existing controller modes for cluster presentation transitions and single-label exclusivity, and makes inactive capability plaques presentation-inert while retaining the existing carousel geometry owner.
+- `PROGRESS`: exact Gen1585 product blobs were reparented unchanged after main advanced only by creation of this continuity ledger.
+- `REGRESSION`: Gen1584 presentation regressions remain recorded and are not erased by this successor.
+- `UNRESOLVED`: rendered qualification and user-visible inspection are still required; source presence alone is not acceptance.
+- `LIVE STATUS`: `SOURCE_ONLY`; not merged and not deployed at this entry.
+- `USER-OBSERVED STATUS`: user video `24104.mp4` is the governing visual regression evidence for this successor.
+- `NEXT LAWFUL BOUNDARY`: qualify exact candidate `c5136948dccfc519c0eed4d59d51e5cc5debbe1b` (plus this documentation-only ledger update), revalidate current main, merge only if presentation behavior passes, then exact-head GitHub Pages deploy and user visual inspection.

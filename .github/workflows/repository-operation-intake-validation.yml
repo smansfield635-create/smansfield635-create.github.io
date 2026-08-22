@@ -6,8 +6,11 @@ on:
       - 'AI_ENTRYPOINT.json'
       - '.github/operation-intake/**'
       - 'tools/operation-intake/**'
+      - '.github/ai-router/differential-continuity/**'
+      - '.github/ai-router/system-continuity/gap-registry.v1.json'
       - '.github/workflows/repository-operation-intake-validation.yml'
       - '.github/workflows/canonical-operation-intake-transport-v1.yml'
+      - '.github/workflows/differential-continuity-v1.yml'
       - 'tools/repository-ai-entry-router.mjs'
   push:
     branches: [main]
@@ -15,8 +18,11 @@ on:
       - 'AI_ENTRYPOINT.json'
       - '.github/operation-intake/**'
       - 'tools/operation-intake/**'
+      - '.github/ai-router/differential-continuity/**'
+      - '.github/ai-router/system-continuity/gap-registry.v1.json'
       - '.github/workflows/repository-operation-intake-validation.yml'
       - '.github/workflows/canonical-operation-intake-transport-v1.yml'
+      - '.github/workflows/differential-continuity-v1.yml'
       - 'tools/repository-ai-entry-router.mjs'
   workflow_dispatch:
 permissions:
@@ -47,11 +53,15 @@ jobs:
           if(e.status!=='ACTIVE_FAIL_CLOSED'||l.status!=='ACTIVE_FAIL_CLOSED') throw Error('ACTIVE_STATUS_MISMATCH');
           if(e.operationIntakeGate?.locator!=='.github/operation-intake/locator.v1.json') throw Error('NONCANONICAL_LOCATOR');
           if(e.remoteCanonicalIntakeTransport?.canonicalLocator!==e.operationIntakeGate.locator||e.remoteCanonicalIntakeTransport?.admissionSemanticsDuplicated!==false) throw Error('PARALLEL_INTAKE_SEMANTICS');
-          for(const p of [l.entrypoint,l.lockManager,l.requestSchema,l.constructionProcedureSchema]) if(!fs.existsSync(p)) throw Error('CANONICAL_PATH_MISSING:'+p);
+          if(e.operationIntakeGate?.successorLifecycle?.differentialPreflight?.gateCli!=='.github/ai-router/differential-continuity/differential-continuity-gate.v1.mjs') throw Error('DIFFERENTIAL_DISCOVERY_MISMATCH');
+          for(const p of [l.entrypoint,l.lockManager,l.requestSchema,l.constructionProcedureSchema,'.github/ai-router/differential-continuity/differential-continuity-gate.v1.mjs','.github/ai-router/differential-continuity/differential-continuity-self-test.v1.mjs','.github/workflows/differential-continuity-v1.yml']) if(!fs.existsSync(p)) throw Error('CANONICAL_PATH_MISSING:'+p);
           if(fs.existsSync('.github/ai-router/fixed-fixture-intake')) throw Error('RETIRED_FIXED_FIXTURE_SURFACE_PRESENT');
           NODE
           node --check tools/operation-intake/repository-operation-intake-gate.v1.mjs
           node --check tools/operation-intake/repository-operation-lock-manager.v1.mjs
+          node --check .github/ai-router/differential-continuity/differential-continuity-gate.v1.mjs
+          node tools/operation-intake/repository-operation-intake-gate.v1.operation-class.test.mjs
+          node .github/ai-router/differential-continuity/differential-continuity-self-test.v1.mjs
           node tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs
           node tools/operation-intake/canonical-operation-intake-transport.v1.mjs --self-test > /tmp/transport-self-test.json
           node tools/repository-ai-entry-router.mjs --self-test --output /tmp/router-self-test.json

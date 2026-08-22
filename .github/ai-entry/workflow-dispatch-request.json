@@ -1,0 +1,6 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
+  "requestId": "compass-composite-gen1596-deploy-65f86e11",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "inputs": {}
+}

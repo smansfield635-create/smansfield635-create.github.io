@@ -8,7 +8,7 @@ Successful merge/publication of Gen1586 does not constitute qualification. Relev
 
 ## Construction obligation
 
-Preserve behavior proven good in earlier visual evidence while repairing the current evidence-backed defects: horizontal clipping/oversizing; complete 19/19 foreground-star → information ownership and transitions; stale Compass/Mirrorland label ownership; functional four-choice Mirrorland ingress (Narrative, Demo, World Map, Back-to-Compass reversal); Coheriscope copy/control separation; brain/trophy/house containment and transitions; TRL/TRA heading containment; clean outgoing → incoming carousel-state replacement.
+Preserve behavior proven good in earlier visual evidence while repairing: horizontal clipping/oversizing; complete 19/19 foreground-star → information ownership/transitions; stale Compass/Mirrorland label ownership; functional four-choice Mirrorland ingress (Narrative, Demo, World Map, Back-to-Compass reversal); Coheriscope copy/control separation; brain/trophy/house containment/transitions; TRL/TRA heading containment; clean outgoing → incoming carousel-state replacement.
 
 Do not award a successor credit for merely preserving behavior already visible in earlier evidence.
 
@@ -26,6 +26,6 @@ User-observed rendered evidence is the presentation authority. Source presence, 
 
 ## Evidence spine
 
-Read with `docs/COMPASS_VISUAL_EVIDENCE_TIMELINE.md` for timestamped visual chronology and `docs/MASTER_PAGE_AND_COMPASS_CONTINUITY_LEDGER.md` for generation/change continuity. This file is the compact takeover boundary; the other records should reference it rather than duplicate this acceptance contract.
+Read `docs/COMPASS_VISUAL_EVIDENCE_TIMELINE.md` for timestamped visual chronology and `docs/MASTER_PAGE_AND_COMPASS_CONTINUITY_LEDGER.md` for generation/change continuity. This file is the compact takeover boundary; the other records should reference it rather than duplicate this acceptance contract.
 
-Documentation authority advanced after Gen1586 only to record evidence and takeover law; these documentation commits do not convert Gen1586 into an accepted product baseline.
+Documentation commits after Gen1586 record evidence and takeover law only; they do not convert Gen1586 into an accepted product baseline.

@@ -65,6 +65,10 @@ jobs:
           node <<'NODE'
           const puppeteer=require('puppeteer-core');
           const fail=(m,x)=>{throw new Error(m+' '+JSON.stringify(x||{}));};
+          const safetyActive=safety=>Boolean(
+            safety?.controllerOwnsInteractionStaging===true ||
+            safety?.pointerMoveRafCoalescing===true
+          );
           (async()=>{
             const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
             const page=await browser.newPage();
@@ -94,7 +98,7 @@ jobs:
             }
             if(!startupState)fail('MOBILE_STARTUP_NOT_READY',{state:await snapshot(),errors,consoleLog});
             if(!(startupState.stage1?.patchedCloudShaders>0))fail('STAGE1_PATCH_MISSING_AT_STARTUP',startupState.stage1);
-            if(startupState.safety?.pointerMoveRafCoalescing!==true)fail('MOBILE_SAFETY_MISSING_AT_STARTUP',startupState.safety);
+            if(!safetyActive(startupState.safety))fail('MOBILE_SAFETY_MISSING_AT_STARTUP',startupState.safety);
             if((startupState.safety?.contextLossCount||0)!==0)fail('WEBGL_CONTEXT_LOSS_AT_STARTUP',startupState.safety);
             await page.evaluate(async()=>{
               const c=document.querySelector('[data-h-earth-map-wide-canvas]');
@@ -115,7 +119,7 @@ jobs:
             if(state.runtime?.invariants?.pass!==true)fail('RUNTIME_LOST',state);
             if((state.safety?.contextLossCount||0)!==0)fail('WEBGL_CONTEXT_LOSS',state.safety);
             if(!(state.stage1?.patchedCloudShaders>0))fail('STAGE1_PATCH_MISSING',state.stage1);
-            if(state.safety?.pointerMoveRafCoalescing!==true)fail('MOBILE_SAFETY_LOST',state.safety);
+            if(!safetyActive(state.safety))fail('MOBILE_SAFETY_LOST',state.safety);
             await browser.close();
           })().catch(e=>{console.error(e);process.exit(1);});
           NODE

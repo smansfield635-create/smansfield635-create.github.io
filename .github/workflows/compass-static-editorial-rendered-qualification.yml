@@ -95,6 +95,7 @@ jobs:
               const nodes = [...document.querySelectorAll('body *')];
               const visible = el => { if(!el) return false; const cs=getComputedStyle(el),r=el.getBoundingClientRect(); return cs.display!=='none'&&cs.visibility!=='hidden'&&r.width>0&&r.height>0; };
               const genReceipt = globalThis.DGB_COMPASS_GEN1537_LIVE_RECOVERY?.receipt?.() || null;
+              const gen1537Script = qa('script[src]').some(s=>(s.getAttribute('src')||'').includes('compass.gen1537.recovery.js'));
               return {
                 brand:document.body.innerText.includes('DiamondGateBridge.com'),
                 introFound:Boolean(intro), introClosed:Boolean(intro && !intro.open),
@@ -107,6 +108,7 @@ jobs:
                 legacyWhyVisible:document.body.innerText.includes('Why Diamond Gate exists'),
                 legacyDisclosureVisible:document.body.innerText.includes('The Compass exposes the same destinations to keyboard, touch, pointer, and reduced-motion users.'),
                 trackBScript:qa('script[src]').some(s=>(s.getAttribute('src')||'').includes('compass.track-b.js')),
+                gen1537Script,
                 genReceipt,
                 horizontalOverflow:document.documentElement.scrollWidth-document.documentElement.clientWidth
               };
@@ -129,7 +131,11 @@ jobs:
             if (await page.locator('.compass-accessibility-routes .compass-selective-routes').isVisible()) fail('fallback did not collapse through keyboard activation');
             if (state.legacyWhyVisible || state.legacyDisclosureVisible || state.trackBScript) fail('legacy/Track B presentation leaked');
             if (state.horizontalOverflow > 2) fail(`horizontal overflow ${state.horizontalOverflow}`);
-            if (!state.genReceipt || state.genReceipt.mounted!==false || state.genReceipt.retired!==true || state.genReceipt.authoritative!==false || state.genReceipt.capabilityPlacementAuthority!==false || state.genReceipt.repeatedReparenting!==false) fail('Gen1537 authority contract invalid');
+            if (state.gen1537Script) {
+              if (!state.genReceipt || state.genReceipt.mounted!==false || state.genReceipt.retired!==true || state.genReceipt.authoritative!==false || state.genReceipt.capabilityPlacementAuthority!==false || state.genReceipt.repeatedReparenting!==false) fail('loaded Gen1537 authority contract invalid');
+            } else if (state.genReceipt !== null) {
+              fail('retired Gen1537 receipt exists without its runtime');
+            }
             if (errors.length) fail(`page errors: ${errors.join(' | ')}`);
             const productFailures = failedRequests.filter(x => {
               if (x.includes(governedMediaPath) && x.includes('ERR_ABORTED')) return false;

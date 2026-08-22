@@ -1,0 +1,10 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
+  "requestId": "H_EARTH_STAGE1_INSPECTION_PUBLISH_20260822_001",
+  "capabilityId": "H_EARTH_STAGE1_INSPECTION_PUBLISH",
+  "workflow": "h-earth-stage1-inspection-publish.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "2910d0718de3b1d5ecd31e32b97ff9678028c036"
+  }
+}

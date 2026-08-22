@@ -30,6 +30,22 @@
           "userOverrideAllowed": false
         }
       }
+    },
+    "H_EARTH_STAGE1_COST_QUALIFY": {
+      "workflow": "h-earth-stage1-cost-qualify.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "baseline_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        },
+        "candidate_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        }
+      }
     }
   },
   "continuity": {

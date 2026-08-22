@@ -10,7 +10,7 @@ const wingFromRoomId=id=>allUnique().find(r=>r.dataset.roomId===id)?.dataset.win
 const wing=()=>wingFromRoomId(label()?.dataset.roomId||'')||root.dataset.activeClusterWing||root.dataset.selectedWing||root.dataset.selectedCardinal||'';
 const currentIndex=rooms=>{const id=label()?.dataset.roomId||'';const i=rooms.findIndex(r=>r.dataset.roomId===id);return i<0?0:i};
 const paint=room=>{const el=label();if(!el||!room)return;el.dataset.roomId=room.dataset.roomId||'';el.innerHTML=`<small>${room.dataset.localCoordinate||'ESTATE ROOM'}</small><strong>${room.dataset.label||room.textContent.trim()}</strong><span>${room.dataset.localFunction||room.dataset.preview||''}</span>`;const state=q('.ap-cluster-state');if(state){const rooms=uniqueRooms(room.dataset.wing||'');const idx=rooms.findIndex(r=>r.dataset.roomId===room.dataset.roomId);q('.count',state)?.replaceChildren(`${String(idx+1).padStart(2,'0')} / ${String(rooms.length).padStart(2,'0')}`)}};
-const move=d=>{const rooms=uniqueRooms(wing());if(!rooms.length)return;paint(rooms[mod(currentIndex(rooms)+d,rooms.length)])};
+const move=d=>{const currentWing=wing(),rooms=uniqueRooms(currentWing);if(!rooms.length)return;const room=rooms[mod(currentIndex(rooms)+d,rooms.length)];paint(room);controller()?.requestClusterFocus?.(currentWing,room.dataset.roomId,{source:'GEN347_SEMANTIC_NAV'});};
 const intercept=(selector,fn)=>{q(selector)?.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();fn()},true)};
 intercept('[data-ap-room-prev]',()=>move(-1));
 intercept('[data-ap-room-next]',()=>move(1));
@@ -27,5 +27,5 @@ if(scene&&!q('.ap-direction-rail')){
  const sync=()=>{const active=root.dataset.activeClusterWing||root.dataset.selectedWing||root.dataset.selectedCardinal||root.dataset.renderedForegroundCardinal||root.dataset.readableCardinal||root.dataset.orbitFocus||'north';qa('[data-ap-cardinal]',rail).forEach(b=>{const on=b.dataset.apCardinal===active;b.classList.toggle('is-active',on);b.setAttribute('aria-current',on?'true':'false')})};
  new MutationObserver(sync).observe(root,{attributes:true,attributeFilter:['data-active-cluster-wing','data-selected-wing','data-selected-cardinal','data-rendered-foreground-cardinal','data-readable-cardinal','data-orbit-focus']});sync();
 }
-document.documentElement.dataset.compassGen347SecondaryRepair='semantic-room-navigation-2';
+document.documentElement.dataset.compassGen347SecondaryRepair='semantic-room-navigation-3';
 })();

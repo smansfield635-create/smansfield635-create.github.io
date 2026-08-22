@@ -21,6 +21,14 @@ page.on('pageerror',e=>pageErrors.push(String(e)));
 await page.goto(`${base}/`,{waitUntil:'networkidle2',timeout:60000});
 await new Promise(r=>setTimeout(r,1600));
 
+// Qualification gestures must exercise Compass state without accidentally following a star/link.
+// Suppress default click navigation only inside this verifier page; product pointer/touch handlers still run.
+await page.evaluate(()=>{
+  const suppress=e=>{if(e.target?.closest?.('a[href]'))e.preventDefault();};
+  document.addEventListener('click',suppress,true);
+  document.addEventListener('auxclick',suppress,true);
+});
+
 const snapshot=()=>page.evaluate(()=>{
   const rect=el=>{const r=el?.getBoundingClientRect?.();return r?{x:r.x,y:r.y,width:r.width,height:r.height,cx:r.x+r.width/2,cy:r.y+r.height/2}:null};
   const textUnion=el=>{

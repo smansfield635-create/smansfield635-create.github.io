@@ -1,0 +1,1 @@
+Allowed scope: automatic release control plane only. No Compass product bytes are modified. The first merge of this control-plane repair intentionally becomes the exact production head and therefore publishes the already-merged Gen1591 product bytes together with this release-control restoration.

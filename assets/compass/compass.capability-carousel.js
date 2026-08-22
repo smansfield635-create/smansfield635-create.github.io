@@ -25,5 +25,5 @@ function installGen1587Bounds(){
 `;
   document.head.append(style);
 }
-load('/assets/compass/compass.statement-orbit.js?v=statement-orbit-restoration-v2&cb=980dbbe68b46','data-compass-statement-orbit-runtime',()=>load('/assets/compass/compass.presentation-convergence.js?v=presentation-convergence-v5&cb=20260821-1586','data-compass-presentation-convergence-runtime',()=>{installGen1587Bounds();load('/assets/compass/compass.capability-carousel.core.js?v=capability-continuity-v4-single-owner&cb=20260821-1577','data-compass-capability-carousel-core')}));
+load('/assets/compass/compass.statement-orbit.js?v=statement-orbit-restoration-v2&cb=980dbbe68b46','data-compass-statement-orbit-runtime',()=>load('/assets/compass/compass.presentation-convergence.v8.js?v=presentation-convergence-v8&cb=20260822-1589','data-compass-presentation-convergence-runtime',()=>{installGen1587Bounds();load('/assets/compass/compass.capability-carousel.core.js?v=capability-continuity-v4-single-owner&cb=20260821-1577','data-compass-capability-carousel-core')}));
 })();

@@ -74,7 +74,27 @@ jobs:
             --exclude='h-earth-live-6d18e158/' \
             ./ "$PAGES_STAGE/"
 
+          # Publish the accepted live H-Earth environment at the canonical public route
+          # without copying the duplicated full-repository carrier tree.
+          rm -rf "$PAGES_STAGE/showroom/globe/h-earth"
+          mkdir -p "$PAGES_STAGE/showroom/globe/h-earth"
+          rsync -a --delete \
+            h-earth-live-6d18e158/showroom/globe/h-earth/ \
+            "$PAGES_STAGE/showroom/globe/h-earth/"
+
           test -f "$PAGES_STAGE/.well-known/dgb-release.json"
+          test -f "$PAGES_STAGE/showroom/globe/h-earth/index.html"
+          test -f "$PAGES_STAGE/showroom/globe/h-earth/environmental-audio-media.js"
+          test -f "$PAGES_STAGE/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js"
+          if grep -q 'h-earth-live-6d18e158' "$PAGES_STAGE/showroom/globe/h-earth/index.html"; then
+            echo "H_EARTH_PUBLIC_ROUTE_STILL_REDIRECTS_TO_EXCLUDED_TREE" >&2
+            exit 1
+          fi
+          if ! grep -q "environmental-audio-media.js" "$PAGES_STAGE/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js"; then
+            echo "H_EARTH_ENVIRONMENTAL_AUDIO_IMPORT_MISSING" >&2
+            exit 1
+          fi
+
           staged_bytes="$(du -sb "$PAGES_STAGE" | awk '{print $1}')"
           echo "BOUNDED_PAGES_STAGE_BYTES=$staged_bytes"
 
@@ -118,15 +138,19 @@ jobs:
         run: |
           set -euo pipefail
           marker_url="${PAGE_URL%/}/.well-known/dgb-release.json"
+          demo_url="${PAGE_URL%/}/showroom/globe/h-earth/"
           observed=""
           for attempt in $(seq 1 24); do
             observed="$(curl --fail --silent --show-error -L --max-time 20 "$marker_url" 2>/dev/null | jq -r '.commit // empty' 2>/dev/null || true)"
             if [ "$observed" = "$TARGET_SHA" ]; then
-              echo "LIVE_EXACT_HEAD_VERIFIED target=$TARGET_SHA url=$marker_url"
-              exit 0
+              demo_html="$(curl --fail --silent --show-error -L --max-time 20 "$demo_url" 2>/dev/null || true)"
+              if printf '%s' "$demo_html" | grep -q 'The coast is the entrance.' && ! printf '%s' "$demo_html" | grep -q 'h-earth-live-6d18e158'; then
+                echo "LIVE_EXACT_HEAD_AND_H_EARTH_DEMO_VERIFIED target=$TARGET_SHA marker=$marker_url demo=$demo_url"
+                exit 0
+              fi
             fi
-            echo "Attempt $attempt: observed=${observed:-none}; waiting for target=$TARGET_SHA"
+            echo "Attempt $attempt: observed=${observed:-none}; waiting for target=$TARGET_SHA and live H-Earth demo"
             sleep 10
           done
-          echo "DEPLOYMENT_NOT_PROVEN expected=$TARGET_SHA observed=${observed:-none} url=$marker_url" >&2
+          echo "DEPLOYMENT_NOT_PROVEN expected=$TARGET_SHA observed=${observed:-none} marker=$marker_url demo=$demo_url" >&2
           exit 1

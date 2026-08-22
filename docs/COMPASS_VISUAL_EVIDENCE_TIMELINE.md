@@ -1,4 +1,4 @@
-# COMPASS_VISUAL_EVIDENCE_TIMELINE_v1
+# COMPASS_VISUAL_EVIDENCE_TIMELINE_v2
 
 Purpose: append-only, non-redundant chronology of owner-recorded visual evidence. Do not convert pre-existing good behavior into credit for later generations and do not erase regressions after later repair.
 
@@ -32,7 +32,7 @@ Gen1586 publication succeeded, but relevant rendered/static, interaction/browser
 - Duration 47.51 s; captured after Gen1586 product deployment `9312ddec57cd44db0b43843d877589aef6d6492a`.
 - **Global layout:** real horizontal oversizing/clipping is visible on tablet. Upper composition extends beyond viewport. Centering is not closed.
 - **Label exclusivity:** stale `MIRRORLAND / Enter through the door` remains beneath other foreground room/cardinal labels. Exactly-one-visible-label invariant fails.
-- **19-star transitions:** some foreground rooms drive lower content while others return to generic `Selected Path / Choose a star`. 19/19 coverage is not established.
+- **19-star transitions:** some foreground rooms drive lower content while others return to generic `Selected Path / Choose a star`. 19/19 coverage is not established at this historical point.
 - **Mirrorland modal:** regression. New fork is blurry/weak and owner testing reports its destination buttons nonfunctional. Earlier `24097.mp4` inline fork is the functional comparison baseline.
 - **Capability carousel:** brain/trophy/house containment/transition instability remains. Rotation alone is not acceptance.
 - **TRL/TRA:** visible Previous/Next controls are removed, but heading/card layering is malformed and overlaps. Swipe-only compliance is partial progress only.
@@ -41,18 +41,39 @@ Gen1586 publication succeeded, but relevant rendered/static, interaction/browser
 
 Four systemic failure classes explain the detailed timestamp collisions:
 
-1. **Stale Compass label ownership (`~15–29 s`)** — Mirrorland label remains beneath active Atlas Study, H-Earth, Zionts, Audralia Conservatory, Instruments, Worlds, Orientation, and Frontier labels.
-2. **Control/body-copy collision (`~30.7–36 s`)** — Coheriscope body copy and `Enter Coheriscope` occupy the same vertical region.
-3. **Fixed-heading/carousel-heading collision (`~38–44.3 s`)** — TRL/TRA section headings collide with active carousel headings such as `Software TRL 7` and `Can the readiness claim survive inspection?`.
-4. **Outgoing/incoming state coexistence (`~40.5 s`, `~45.7 s`)** — multiple TRL/TRA states remain visible simultaneously during transitions.
+1. stale Compass labels remain under the active star/cardinal label;
+2. Coheriscope body copy and its CTA occupy the same vertical region;
+3. fixed TRL/TRA section headings and active carousel headings reserve the same space;
+4. outgoing and incoming carousel text states remain visible simultaneously during transitions.
 
 Governing invariant: **this is repeated layer-ownership and layout-reservation failure, not isolated word placement.** One active owner per text region; active cards reserve their own height; outgoing states leave visual flow before incoming states enter; controls do not share body-copy space.
+
+## 2026-08-22 — `24149.mp4`, `24151.mp4` + owner screenshots — post-Gen1587 live owner evidence
+
+This evidence materially narrows the remaining product boundary.
+
+### Closed / improved
+
+- **19/19 foreground-star → information coverage = PASS.** This is now owner-qualified and supersedes the older `24117` unresolved predicate. Do not reopen without regression evidence.
+- **Global composition = materially improved.** The broad tablet overflow and page-wide layering failure visible in `24117` are no longer the governing defect class in this evidence.
+- **Brain/Trophy/House = presently acceptable.** The capability carousel works well enough to preserve rather than redesign; future work here is regression-only unless a concrete failure appears.
+- **TRL/TRA structural containment = improved.** The old fixed-heading collision and obvious simultaneous readable card overlap are substantially reduced.
+- **Mirrorland reveal = retained.** The stained-glass entry state and four-choice chooser are present, and Return to Compass can dismiss the chooser before restoration begins in the exercised path.
+
+### Still failing / incomplete
+
+- **Four constellation stars = tab ownership failure.** More than one tab shell is exposed at once. An inactive blank shell is still a visible competing owner. Exactly one tab/container may remain in visual/layout/focus flow. The four constellation state changes must transition with the same clean handoff behavior as the already-passing 19 states.
+- **Mirrorland visual authority = incomplete.** When the page darkens, the four choices do not yet become luminous enough. Narrative, Demo, World Map, and Return to Compass must glow/sparkle/reveal as the sole decision surface rather than reading as large dark rectangles with weak labels.
+- **Mirrorland underlying-content suppression = incomplete.** Underlying explanatory content remains too perceptible during chooser ownership and must become visually/focus inert.
+- **Mirrorland route closure = incomplete.** Return-to-Compass reversal is exercised; Narrative, Demo, and World Map still require direct route-by-route destination proof in the next acceptance pass.
+- **TRL/TRA full carousel experience = incomplete.** Outer family tabs alone are insufficient. The target remains the established site grammar inside the selected family: one stage, inner slide selection, one active card, swipe/drag, keyboard navigation, state-derived title/question/ordinal, and clean outgoing→incoming replacement.
 
 ## Continuity rules
 
 1. Compare claimed improvement against earliest evidence already containing the behavior. Preservation is not progress.
 2. Source change, CI assertion, merge, exact-head publication, or deployment is not visual closure.
-3. Defects close only when exercised in rendered evidence; partial star examples do not establish 19/19 closure.
+3. Once owner-rendered evidence explicitly closes a predicate, preserve that closure unless later regression evidence reopens it.
 4. Mirrorland acceptance requires presentation focus plus working Narrative, Demo, World Map, and Back-to-Compass reversal.
-5. Every successor requires full-page regression inspection: initial load, full scroll, relevant carousel states/transitions, Compass/cardinal/room states, Mirrorland actions/reversal, and destination ingress. Named-fix confirmation alone is insufficient.
-6. Keep frame chronology here; keep generation/change continuity in `MASTER_PAGE_AND_COMPASS_CONTINUITY_LEDGER.md`; keep the compact acceptance contract in `COMPASS_TAKEOVER_BOUNDARY.md`.
+5. A blank inactive tab/card shell still violates exactly-one-visible-owner semantics.
+6. Every successor requires full-page regression inspection of the still-active boundary; do not waste cycles re-proving closed work absent regression evidence.
+7. Keep frame chronology here; keep generation/change continuity in `MASTER_PAGE_AND_COMPASS_CONTINUITY_LEDGER.md`; keep the compact acceptance contract in `COMPASS_TAKEOVER_BOUNDARY.md`.

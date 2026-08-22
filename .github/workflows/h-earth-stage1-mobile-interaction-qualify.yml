@@ -84,17 +84,18 @@ jobs:
             }));
             const url='http://127.0.0.1:4174/showroom/globe/audralia/weather-presentation-reconciliation/qualification-mobile.html';
             await page.goto(url,{waitUntil:'domcontentloaded',timeout:45000});
-            let ready=false;
+            let startupState=null;
             for(let i=0;i<18;i++){
               const s=await snapshot();
               console.log(JSON.stringify({checkpoint:`startup-${i}`,state:s},null,2));
-              if(s.runtime?.invariants?.pass===true){ready=true;break;}
+              if(s.runtime?.invariants?.pass===true){startupState=s;break;}
               if(s.reconciliationError)fail('MOBILE_STARTUP_RECONCILIATION_ERROR',{state:s,errors,consoleLog});
               await new Promise(r=>setTimeout(r,5000));
             }
-            if(!ready)fail('MOBILE_STARTUP_NOT_READY',{state:await snapshot(),errors,consoleLog});
-            await page.waitForFunction(()=>window.__AUDRALIA_FAP1_STAGE1_COST_DECOUPLING__?.getRuntimeEvidence?.()?.patchedCloudShaders>0,{timeout:15000});
-            await page.waitForFunction(()=>window.__AUDRALIA_MOBILE_INTERACTION_SAFETY__?.getEvidence?.()?.pointerMoveRafCoalescing===true,{timeout:10000});
+            if(!startupState)fail('MOBILE_STARTUP_NOT_READY',{state:await snapshot(),errors,consoleLog});
+            if(!(startupState.stage1?.patchedCloudShaders>0))fail('STAGE1_PATCH_MISSING_AT_STARTUP',startupState.stage1);
+            if(startupState.safety?.pointerMoveRafCoalescing!==true)fail('MOBILE_SAFETY_MISSING_AT_STARTUP',startupState.safety);
+            if((startupState.safety?.contextLossCount||0)!==0)fail('WEBGL_CONTEXT_LOSS_AT_STARTUP',startupState.safety);
             await page.evaluate(async()=>{
               const c=document.querySelector('[data-h-earth-map-wide-canvas]');
               const r=c.getBoundingClientRect(),x=r.left+r.width*.5,y=r.top+r.height*.5;
@@ -114,6 +115,7 @@ jobs:
             if(state.runtime?.invariants?.pass!==true)fail('RUNTIME_LOST',state);
             if((state.safety?.contextLossCount||0)!==0)fail('WEBGL_CONTEXT_LOSS',state.safety);
             if(!(state.stage1?.patchedCloudShaders>0))fail('STAGE1_PATCH_MISSING',state.stage1);
+            if(state.safety?.pointerMoveRafCoalescing!==true)fail('MOBILE_SAFETY_LOST',state.safety);
             await browser.close();
           })().catch(e=>{console.error(e);process.exit(1);});
           NODE

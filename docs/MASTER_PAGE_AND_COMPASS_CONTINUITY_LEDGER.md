@@ -119,3 +119,16 @@ The purpose of this file is strict continuity: at all times we must be able to i
 - `LIVE STATUS`: `SOURCE_ONLY`; branch `compass-gen1586-state-focus-reconciliation-20260821` only at this entry.
 - `USER-OBSERVED STATUS`: `24109.mp4` and `24110.mp4` are governing visual evidence.
 - `NEXT LAWFUL BOUNDARY`: open exact-head Gen1586 PR, inspect diff, run rendered interaction qualification against the candidate, revalidate current `main`, and promote only if all six acceptance conditions pass without H-Earth or route regression.
+
+## 2026-08-21 21:24 CDT / Gen1586 / qualification correction and promotion boundary
+
+- `EXACT HEAD`: candidate product head `31122206ca6aa9f14fd24981dc06d5eed19ad3d0` on base `c448de505e718793cc84bb024318ef0dfe936a7b`; this ledger update follows that product head.
+- `PATHS CHANGED`: same Gen1586 scope only: `assets/compass/compass.presentation-convergence.js`, `assets/compass/compass.capability-carousel.js`, and this continuity ledger. A disposable phone-overflow diagnostic workflow was created and removed before promotion and is not part of the candidate diff.
+- `PREVIOUS STATE`: first Gen1586 centering attempt used auto margins/inset overrides on the relative Compass scene and collapsed the desktop interaction hit box to 2 px wide. This was a candidate-specific regression and was not promoted.
+- `NEW STATE`: centering correction preserves a full-width canonical Compass scene hit box while keeping the surrounding presentation aligned; TRL/TRA visible controls are now strictly swipe-only (progress dots hidden; keyboard arrows remain accessibility fallback); other Gen1586 state-focus behaviors remain unchanged.
+- `PROGRESS`: interaction qualification after the centering correction successfully opens the Compass and reaches the same boundary as Gen1585, then stops on the pre-existing H-Earth proxy assertion `href:null` while `data-route` remains `/showroom/globe/h-earth/`. Capability rendered qualification passes desktop and tablet brain/trophy/house WebGL, swipe sequence, no arrows, and guidance `Swipe to rotate.`
+- `REGRESSION`: the 2 px scene-hitbox regression discovered in the first Gen1586 candidate was corrected before merge. Phone capability qualification still reports 108 px horizontal overflow, but exact Gen1585 baseline run #505 reports the identical 108 px overflow; therefore it is preserved as a pre-existing condition, not attributed to Gen1586.
+- `UNRESOLVED`: final user-visible inspection remains required after deployment for the Mirrorland four-way fork, alternating glow, 19-room panel transitions, single-label visual exclusivity, optical centering, and swipe-only TRL/TRA presentation. The stale H-Earth proxy assertion and pre-existing phone overflow remain separate legacy qualification debt.
+- `LIVE STATUS`: `SOURCE_ONLY`; not merged or deployed at this entry.
+- `USER-OBSERVED STATUS`: the successor is specifically constructed against user evidence `24109.mp4` and `24110.mp4` plus the explicit Mirrorland modal-fork instruction.
+- `NEXT LAWFUL BOUNDARY`: revalidate current `main`; if still exact `c448de505e718793cc84bb024318ef0dfe936a7b`, merge only PR #1583 exact head and perform exact-head GitHub Pages deployment, then require user visual inspection before declaring the six presentation defects closed.

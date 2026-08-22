@@ -1,0 +1,23 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "H_EARTH_STAGE1_MOBILE_INTERACTION_QUALIFY_20260822_005",
+  "capabilityId": "H_EARTH_STAGE1_MOBILE_INTERACTION_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 1650,
+  "requestBranch": "ai-dispatch-request-h-earth-stage1-mobile-qualify-20260822-r5",
+  "requestCommit": "5ebbd91987a594d610eb659f304e546401b8ce08",
+  "requestCommitParent": "76e90d406ae09a406691d99cbbe46bcc5d921082",
+  "currentMainSha": "76e90d406ae09a406691d99cbbe46bcc5d921082",
+  "workflow": "h-earth-stage1-mobile-interaction-qualify.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "2cc3a227941b38d378c864c4cd6fbe0b13fc79f9"
+  },
+  "bridgeRunId": "32591982827",
+  "dispatchedRunId": 32592043453,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/32592043453",
+  "dispatchedRunHeadSha": "76e90d406ae09a406691d99cbbe46bcc5d921082",
+  "dispatchedAt": "2026-08-22T18:52:41.665Z",
+  "resolvedAt": "2026-08-22T18:52:45.018Z"
+}

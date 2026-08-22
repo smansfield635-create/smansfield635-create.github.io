@@ -14,6 +14,14 @@ body{background:#010308!important}
 .compass-projected-room-label:not([data-gen1587-current="true"]):not([data-gen1596-current="true"]){display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important}
 .compass-projected-room-label[data-gen1587-current="true"],.compass-projected-room-label[data-gen1596-current="true"]{display:grid!important;opacity:1!important;visibility:visible!important}
 
+/* Final label-ownership cleanup: keep the Mirrorland hit target, but suppress its stale black text shell while a cardinal/room owns the readable label. */
+[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--mirrorland,
+[data-compass-root][data-compass-mode="CLUSTER_OPEN"] .compass-object--mirrorland,
+[data-compass-root][data-compass-mode="ROOM_SELECTED"] .compass-object--mirrorland{background:transparent!important;border-color:transparent!important;box-shadow:none!important;outline-color:transparent!important;color:transparent!important;text-shadow:none!important}
+[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--mirrorland>span,
+[data-compass-root][data-compass-mode="CLUSTER_OPEN"] .compass-object--mirrorland>span,
+[data-compass-root][data-compass-mode="ROOM_SELECTED"] .compass-object--mirrorland>span{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+
 /* Preserve the successful current capability state rail/detail system. Never allow an older 3-D orbit to become a second owner. */
 .compass-monuments{overflow:hidden!important}
 .compass-capability-choices{position:relative!important;z-index:3!important}

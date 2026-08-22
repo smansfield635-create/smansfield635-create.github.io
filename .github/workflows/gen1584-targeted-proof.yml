@@ -1,0 +1,37 @@
+name: Gen1584 Targeted Presentation Proof
+on:
+  push:
+    branches: [ gen1584-targeted-proof-20260821 ]
+permissions:
+  contents: read
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Prove product bytes equal Gen1584 candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          candidate=dbb5a4e3cef682221d1fecf9ae8a092b4bd4bcac
+          git fetch --no-tags origin "$candidate" --depth=1 || true
+          git cat-file -e "$candidate^{commit}"
+          git diff --exit-code "$candidate" HEAD -- assets/compass/compass.presentation-convergence.js assets/compass/compass.capability-carousel.js
+          echo GEN1584_PRODUCT_BYTES_EXACT
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Serve candidate
+        shell: bash
+        run: |
+          python3 -m http.server 4173 >/tmp/gen1584-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/gen1584-http.log || true
+          exit 1
+      - name: Prove threshold and dual evidence carousels
+        run: node tools/gen1584-targeted-proof.mjs

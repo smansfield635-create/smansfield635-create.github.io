@@ -1,0 +1,23 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "COMPASS_GEN1582_EMERGENCY_LIVE_DEPLOY_FE424457_20260822",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 1573,
+  "requestBranch": "ai-dispatch-request-compass-gen1582-fe424457",
+  "requestCommit": "dc6b12fac63c3be43bf7ef87617342be34ff2770",
+  "requestCommitParent": "fe4244574308e48653a548435dc8fe215c2a9fdc",
+  "currentMainSha": "fe4244574308e48653a548435dc8fe215c2a9fdc",
+  "workflow": "pages-direct-deploy.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "fe4244574308e48653a548435dc8fe215c2a9fdc"
+  },
+  "bridgeRunId": "32541387924",
+  "dispatchedRunId": 32541446460,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/32541446460",
+  "dispatchedRunHeadSha": "fe4244574308e48653a548435dc8fe215c2a9fdc",
+  "dispatchedAt": "2026-08-22T00:47:09.335Z",
+  "resolvedAt": "2026-08-22T00:47:13.116Z"
+}

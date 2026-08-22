@@ -33,7 +33,7 @@ jobs:
           exit 1
       - name: Browser qualify Compass core
         run: |
-          cat >/tmp/qualify.mjs <<'NODE'
+          cat >.compass-rebuild-qualify.mjs <<'NODE'
           import { chromium } from 'playwright';
           import fs from 'node:fs';
           const browser=await chromium.launch({headless:true});
@@ -74,7 +74,7 @@ jobs:
           console.log(JSON.stringify(result,null,2));
           await browser.close();
           NODE
-          node /tmp/qualify.mjs
+          node .compass-rebuild-qualify.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

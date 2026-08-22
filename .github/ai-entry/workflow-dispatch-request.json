@@ -1,0 +1,8 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
+  "requestId": "compass-gen346-pages-r3-20260822-1945z",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "workflow": "pages-direct-deploy.yml",
+  "ref": "main",
+  "inputs": {}
+}

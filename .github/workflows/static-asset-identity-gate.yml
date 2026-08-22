@@ -19,3 +19,143 @@ jobs:
           STATIC_IDENTITY_BASE: ${{ github.event.pull_request.base.sha }}
           STATIC_IDENTITY_HEAD: ${{ github.event.pull_request.head.sha }}
         run: node .github/ai-router/platform/verify-static-asset-identity.v1.mjs
+
+  compass-gen347-functional-browser-matrix:
+    if: github.head_ref == 'verification/compass-gen347-functional-browser-matrix'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Chromium
+        run: |
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Serve exact candidate
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/gen347-http.log 2>&1 &
+          echo $! > /tmp/gen347-http.pid
+          for i in $(seq 1 40); do curl -fsS http://127.0.0.1:4173/compass-awards-provenance/ >/dev/null && exit 0; sleep .25; done
+          cat /tmp/gen347-http.log
+          exit 1
+      - name: Execute phone tablet desktop functional matrix
+        env:
+          NODE_PATH: ${{ github.workspace }}/node_modules
+        run: |
+          node --input-type=module <<'NODE'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+          const profiles=[
+            {name:'desktop',viewport:{width:1440,height:900}},
+            {name:'tablet',viewport:{width:1024,height:768}},
+            {name:'phone',viewport:{width:390,height:844}}
+          ];
+          const results=[];
+          const browser=await chromium.launch({headless:true});
+          for(const profile of profiles){
+            const page=await browser.newPage({viewport:profile.viewport});
+            const consoleErrors=[],pageErrors=[];
+            page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())});
+            page.on('pageerror',e=>pageErrors.push(String(e.stack||e)));
+            const response=await page.goto('http://127.0.0.1:4173/compass-awards-provenance/',{waitUntil:'networkidle',timeout:30000});
+            if(!response||!response.ok()) throw new Error(`${profile.name}: route failed ${response?.status()}`);
+            await page.waitForFunction(()=>document.documentElement.dataset.compassAwardsQualification==='QUALIFICATION_READY',{timeout:15000});
+            const initial=await page.evaluate(()=>({
+              mode:document.querySelector('[data-compass-root]')?.dataset.compassMode,
+              root:Boolean(document.querySelector('[data-compass-root]')),
+              cardinals:document.querySelectorAll('[data-compass-cardinal]').length,
+              rooms:document.querySelectorAll('[data-compass-room]').length,
+              capabilities:document.querySelectorAll('[data-capability]').length,
+              readiness:document.querySelectorAll('[data-readiness-family]').length,
+              provenance:document.querySelectorAll('.ap-award-card').length,
+              overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
+              runtime:window.__COMPASS_AWARDS_PROVENANCE__?.getRuntime?.()
+            }));
+            if(!initial.root||initial.cardinals!==4||initial.rooms!==19||initial.capabilities!==3||initial.readiness!==2||initial.provenance!==5||initial.overflow>2||initial.runtime?.pass!==true) throw new Error(`${profile.name}: initial contract ${JSON.stringify(initial)}`);
+
+            const north=page.locator('[data-compass-cardinal][data-cardinal-id="north"]');
+            if(await north.count()!==1) throw new Error(`${profile.name}: north cardinal missing`);
+            await north.click();
+            await page.waitForFunction(()=>['CLUSTER_OPEN','ROOM_SELECTED'].includes(document.querySelector('[data-compass-root]')?.dataset.compassMode),{timeout:7000});
+            await page.waitForFunction(()=>document.querySelector('.ap-room-label')?.classList.contains('is-active'),{timeout:5000});
+            const cluster1=await page.evaluate(()=>({
+              mode:document.querySelector('[data-compass-root]')?.dataset.compassMode,
+              wing:document.querySelector('[data-compass-root]')?.dataset.activeClusterWing||document.querySelector('[data-compass-root]')?.dataset.selectedWing||document.querySelector('[data-compass-root]')?.dataset.selectedCardinal,
+              visibleLabels:[...document.querySelectorAll('.ap-room-label')].filter(e=>getComputedStyle(e).display!=='none'&&getComputedStyle(e).visibility!=='hidden'&&e.classList.contains('is-active')).length,
+              roomId:document.querySelector('.ap-room-label')?.dataset.roomId,
+              text:document.querySelector('.ap-room-label')?.innerText.trim()
+            }));
+            if(cluster1.visibleLabels!==1||!cluster1.roomId||!cluster1.text) throw new Error(`${profile.name}: secondary label failure ${JSON.stringify(cluster1)}`);
+            await page.locator('[data-ap-room-next]').click();
+            const cluster2=await page.evaluate(()=>({roomId:document.querySelector('.ap-room-label')?.dataset.roomId,text:document.querySelector('.ap-room-label')?.innerText.trim()}));
+            if(!cluster2.roomId||cluster2.roomId===cluster1.roomId) throw new Error(`${profile.name}: secondary transition did not advance ${JSON.stringify({cluster1,cluster2})}`);
+            await page.locator('[data-ap-room-open]').click();
+            await page.waitForFunction(()=>document.querySelector('[data-compass-root]')?.dataset.compassMode==='ROOM_SELECTED',{timeout:7000});
+            const selected=await page.evaluate(()=>document.querySelector('[data-compass-root]')?.dataset.selectedRoom||'');
+            if(selected!==cluster2.roomId) throw new Error(`${profile.name}: selected room mismatch ${selected} != ${cluster2.roomId}`);
+            await page.locator('[data-ap-room-back]').click();
+            await page.waitForFunction(()=>document.querySelector('[data-compass-root]')?.dataset.compassMode==='CONSTELLATION',{timeout:7000});
+
+            const heroBefore=await page.locator('[data-statement].is-active').innerText().catch(()=>null);
+            const heroNext=page.locator('[data-hero-next]');
+            if(await heroNext.count()) { await heroNext.click(); await page.waitForTimeout(250); }
+            const heroAfter=await page.locator('[data-statement].is-active').innerText().catch(()=>null);
+            if(heroBefore&&heroAfter&&heroBefore===heroAfter) throw new Error(`${profile.name}: hero carousel did not advance`);
+
+            const provActive=()=>page.locator('.ap-award-card.is-active').getAttribute('style');
+            const provBefore=await page.locator('.ap-award-card.is-active h3').innerText();
+            await page.locator('[data-ap-next]').click(); await page.waitForTimeout(150);
+            const provAfter=await page.locator('.ap-award-card.is-active h3').innerText();
+            if(provBefore===provAfter) throw new Error(`${profile.name}: provenance carousel did not advance`);
+
+            const capNext=page.locator('[data-capability-next]');
+            if(await capNext.count()) { const before=await page.locator('[data-capability].is-front,[data-capability][aria-current="true"]').first().getAttribute('data-capability').catch(()=>null); await capNext.click(); await page.waitForTimeout(250); const after=await page.locator('[data-capability].is-front,[data-capability][aria-current="true"]').first().getAttribute('data-capability').catch(()=>null); if(before&&after&&before===after) throw new Error(`${profile.name}: capability orbit did not advance`); }
+
+            const trl=page.locator('[data-readiness-family="TRL"]');
+            const tra=page.locator('[data-readiness-family="TRA"]');
+            if(await trl.count()!==1||await tra.count()!==1) throw new Error(`${profile.name}: readiness families missing`);
+
+            const mirrorTrigger=page.locator('[data-mirrorland-trigger], [data-compass-mirrorland-trigger]').first();
+            if(await mirrorTrigger.count()){
+              await mirrorTrigger.click();
+              await page.waitForFunction(()=>['MIRRORLAND_REVEALING','MIRRORLAND_FOCUSED'].includes(document.querySelector('[data-compass-root]')?.dataset.compassMode),{timeout:7000});
+              await page.waitForFunction(()=>document.querySelector('[data-compass-root]')?.dataset.compassMode==='MIRRORLAND_FOCUSED',{timeout:7000});
+              const routes=await page.locator('[data-compass-mirrorland-routes] a').count();
+              if(routes<4) throw new Error(`${profile.name}: Mirrorland route count ${routes}`);
+              const back=page.locator('[data-mirrorland-back], [data-compass-mirrorland-back], .mirrorland-back').first();
+              if(await back.count()!==1) throw new Error(`${profile.name}: Mirrorland return missing`);
+              await back.click();
+              await page.waitForFunction(()=>document.querySelector('[data-compass-root]')?.dataset.compassMode==='CONSTELLATION',{timeout:10000});
+            }
+
+            await page.keyboard.press('Tab');
+            const focusTag=await page.evaluate(()=>document.activeElement?.tagName||'');
+            if(!focusTag) throw new Error(`${profile.name}: keyboard focus absent`);
+            const finalOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+            if(finalOverflow>2) throw new Error(`${profile.name}: horizontal overflow ${finalOverflow}`);
+            if(consoleErrors.length||pageErrors.length) throw new Error(`${profile.name}: runtime errors ${JSON.stringify({consoleErrors,pageErrors})}`);
+            await page.screenshot({path:`/tmp/gen347-${profile.name}.png`,fullPage:true});
+            results.push({profile:profile.name,initial,cluster1,cluster2,selected,heroBefore,heroAfter,provBefore,provAfter,focusTag,finalOverflow});
+            await page.close();
+          }
+          await browser.close();
+          fs.writeFileSync('/tmp/gen347-functional-matrix.json',JSON.stringify({schema:'COMPASS_GEN347_FUNCTIONAL_BROWSER_MATRIX_v1',candidate:process.env.GITHUB_SHA,results},null,2));
+          console.log(JSON.stringify({result:'PASS_CLOSED',profiles:results.map(r=>r.profile)},null,2));
+          NODE
+      - name: Upload functional evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-gen347-functional-browser-matrix-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/gen347-functional-matrix.json
+            /tmp/gen347-desktop.png
+            /tmp/gen347-tablet.png
+            /tmp/gen347-phone.png
+          if-no-files-found: warn
+          retention-days: 30

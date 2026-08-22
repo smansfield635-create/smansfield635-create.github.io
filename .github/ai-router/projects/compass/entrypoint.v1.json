@@ -5,9 +5,6 @@
   "ownedPathPrefixes": ["assets/compass/"],
   "ownedExactPaths": [
     "index.html",
-    ".github/workflows/compass-display-continuity-validation.yml",
-    ".github/workflows/compass-performance-successor-validation.yml",
-    ".github/workflows/compass-carousel-successor-live-qualification.yml",
     ".github/workflows/pages-direct-deploy.yml"
   ],
   "entrypoint": ".github/ai-router/projects/compass/entrypoint.v1.json",

@@ -62,7 +62,7 @@ jobs:
       - name: Stage bounded deployment-only Pages payload
         env:
           PAGES_STAGE: ${{ runner.temp }}/pages-site
-          C3_ID: 1d45379f81ea4089e9c5f3d7d9688e702be9add3
+          C3_ID: 8d22aa638b3b3fddd5b367b9a4856a7a558a1ad9
         shell: bash
         run: |
           set -euo pipefail
@@ -81,8 +81,10 @@ jobs:
             h-earth-live-6d18e158/showroom/globe/h-earth/ \
             "$PAGES_STAGE/showroom/globe/h-earth/"
 
+          # Recover the existing August 20 FAP1 Candidate A owner-inspection environment.
+          # Do not reconstruct or rebase it: publish the already-preserved C3 snapshot bytes.
           test -f "preview/h-earth/c3/$C3_ID/index.html"
-          test -f "preview/h-earth/c3/$C3_ID/snapshot/showroom/globe/audralia/index.html"
+          test -f "preview/h-earth/c3/$C3_ID/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/index.html"
           mkdir -p "$PAGES_STAGE/preview/h-earth/c3/$C3_ID/snapshot"
           cp "preview/h-earth/c3/$C3_ID/index.html" "$PAGES_STAGE/preview/h-earth/c3/$C3_ID/index.html"
           rsync -a --prune-empty-dirs \
@@ -98,7 +100,7 @@ jobs:
           test -f "$PAGES_STAGE/showroom/globe/h-earth/environmental-audio-media.js"
           test -f "$PAGES_STAGE/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js"
           test -f "$PAGES_STAGE/preview/h-earth/c3/$C3_ID/index.html"
-          test -f "$PAGES_STAGE/preview/h-earth/c3/$C3_ID/snapshot/showroom/globe/audralia/index.html"
+          test -f "$PAGES_STAGE/preview/h-earth/c3/$C3_ID/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/index.html"
           if grep -q 'h-earth-live-6d18e158' "$PAGES_STAGE/showroom/globe/h-earth/index.html"; then
             echo "H_EARTH_PUBLIC_ROUTE_STILL_REDIRECTS_TO_EXCLUDED_TREE" >&2
             exit 1
@@ -142,18 +144,18 @@ jobs:
     needs: [prepare, deploy]
     runs-on: ubuntu-latest
     steps:
-      - name: Verify public site serves exact approved head and preserved C3 snapshot
+      - name: Verify public site serves exact approved head and recovered existing C3 inspection
         env:
           TARGET_SHA: ${{ needs.prepare.outputs.target_sha }}
           PAGE_URL: ${{ needs.deploy.outputs.page_url }}
-          C3_ID: 1d45379f81ea4089e9c5f3d7d9688e702be9add3
+          C3_ID: 8d22aa638b3b3fddd5b367b9a4856a7a558a1ad9
         shell: bash
         run: |
           set -euo pipefail
           marker_url="${PAGE_URL%/}/.well-known/dgb-release.json"
           demo_url="${PAGE_URL%/}/showroom/globe/h-earth/"
           c3_url="${PAGE_URL%/}/preview/h-earth/c3/${C3_ID}/"
-          c3_snapshot_url="${PAGE_URL%/}/preview/h-earth/c3/${C3_ID}/snapshot/showroom/globe/audralia/"
+          c3_snapshot_url="${PAGE_URL%/}/preview/h-earth/c3/${C3_ID}/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/"
           observed=""
           for attempt in $(seq 1 24); do
             observed="$(curl --fail --silent --show-error -L --max-time 20 "$marker_url" 2>/dev/null | jq -r '.commit // empty' 2>/dev/null || true)"
@@ -163,13 +165,14 @@ jobs:
               snapshot_html="$(curl --fail --silent --show-error -L --max-time 20 "$c3_snapshot_url" 2>/dev/null || true)"
               if printf '%s' "$demo_html" | grep -q 'The coast is the entrance.' && \
                  ! printf '%s' "$demo_html" | grep -q 'h-earth-live-6d18e158' && \
+                 printf '%s' "$c3_html" | grep -q 'FAP1 Candidate A' && \
                  printf '%s' "$c3_html" | grep -q "$C3_ID" && \
-                 printf '%s' "$snapshot_html" | grep -q 'Audralia · Planetary World'; then
-                echo "LIVE_EXACT_HEAD_H_EARTH_AND_C3_VERIFIED target=$TARGET_SHA c3=$c3_url snapshot=$c3_snapshot_url"
+                 printf '%s' "$snapshot_html" | grep -q 'Audralia · Weather Presentation Reconciliation'; then
+                echo "LIVE_EXACT_HEAD_H_EARTH_AND_EXISTING_FAP1_C3_VERIFIED target=$TARGET_SHA c3=$c3_url snapshot=$c3_snapshot_url"
                 exit 0
               fi
             fi
-            echo "Attempt $attempt: observed=${observed:-none}; waiting for target=$TARGET_SHA and C3 snapshot"
+            echo "Attempt $attempt: observed=${observed:-none}; waiting for target=$TARGET_SHA and existing FAP1 C3 inspection"
             sleep 10
           done
           echo "DEPLOYMENT_NOT_PROVEN expected=$TARGET_SHA observed=${observed:-none} marker=$marker_url c3=$c3_url snapshot=$c3_snapshot_url" >&2

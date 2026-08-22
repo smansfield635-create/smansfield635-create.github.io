@@ -1,0 +1,23 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "H_EARTH_STAGE1_INSPECTION_REPLAY_20260822_BYTEFIX_001",
+  "capabilityId": "H_EARTH_STAGE1_INSPECTION_PUBLISH",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 1687,
+  "requestBranch": "ai-dispatch-request-h-earth-stage1-inspection-replay-20260822-bytefix-r1",
+  "requestCommit": "ead402b780dd80935f075da48ab98b4c4350c24f",
+  "requestCommitParent": "2107b4aa516a1d151a6e3f1c4588e24f0b9c2041",
+  "currentMainSha": "2107b4aa516a1d151a6e3f1c4588e24f0b9c2041",
+  "workflow": "h-earth-stage1-inspection-publish.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "2107b4aa516a1d151a6e3f1c4588e24f0b9c2041"
+  },
+  "bridgeRunId": "32598054132",
+  "dispatchedRunId": 32598167819,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/32598167819",
+  "dispatchedRunHeadSha": "2107b4aa516a1d151a6e3f1c4588e24f0b9c2041",
+  "dispatchedAt": "2026-08-22T20:57:10.877Z",
+  "resolvedAt": "2026-08-22T20:57:14.385Z"
+}

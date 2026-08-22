@@ -1,0 +1,96 @@
+name: Products Compass Return Disclosure v1
+
+on:
+  pull_request:
+    paths:
+      - "products/index.controller.js"
+      - "products/index.crystals.js"
+      - "verification/benchmark-tools/products-compass-return-disclosure-v1/**"
+      - ".github/workflows/products-compass-return-disclosure-v1.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: products-compass-return-disclosure-v1-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  bounded-products-return-disclosure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Check out corrective branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Verify branch and source boundary
+        shell: bash
+        run: |
+          test "${GITHUB_HEAD_REF}" = "agent/products-laws-return-disclosure-cp0-001"
+          git merge-base --is-ancestor 95ec09b7fe159332adb9f6e4e8e9cd337511f66c HEAD
+          git diff --check 95ec09b7fe159332adb9f6e4e8e9cd337511f66c..HEAD
+          node --check products/index.controller.js
+          node --check products/index.crystals.js
+          node --check verification/benchmark-tools/products-compass-return-disclosure-v1/products-compass-return-disclosure-benchmark.mjs
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install browser dependency
+        run: npm install --no-save puppeteer-core@24.15.0
+
+      - name: Resolve Chrome
+        shell: bash
+        run: |
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$chrome" ]; then
+            sudo apt-get update
+            sudo apt-get install -y chromium
+            chrome="$(command -v chromium || command -v chromium-browser)"
+          fi
+          echo "CHROME_PATH=$chrome" >> "$GITHUB_ENV"
+          "$chrome" --version
+
+      - name: Start branch-local server
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > products-return-disclosure-server.log 2>&1 &
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/products/ >/dev/null; then
+              exit 0
+            fi
+            sleep 0.25
+          done
+          cat products-return-disclosure-server.log
+          exit 1
+
+      - name: Execute Products return-disclosure benchmark
+        env:
+          PRODUCTS_RETURN_ORIGIN: http://127.0.0.1:4173
+          PRODUCTS_RETURN_EVIDENCE_DIR: .
+        run: node verification/benchmark-tools/products-compass-return-disclosure-v1/products-compass-return-disclosure-benchmark.mjs
+
+      - name: Record executed head
+        shell: bash
+        run: |
+          git rev-parse HEAD | tee products-return-disclosure-executed-head.txt
+          git status --short | tee products-return-disclosure-working-tree.txt
+
+      - name: Upload benchmark evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: products-compass-return-disclosure-v1-evidence
+          if-no-files-found: error
+          path: |
+            products-compass-return-disclosure-v1.json
+            products-return-disclosure-executed-head.txt
+            products-return-disclosure-working-tree.txt
+            products-return-disclosure-server.log
+            products-return-disclosure-*.png

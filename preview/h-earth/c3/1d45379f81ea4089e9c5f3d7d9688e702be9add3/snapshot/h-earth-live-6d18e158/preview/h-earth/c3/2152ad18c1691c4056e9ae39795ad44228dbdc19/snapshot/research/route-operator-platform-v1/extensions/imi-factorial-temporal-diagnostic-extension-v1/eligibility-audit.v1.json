@@ -1,0 +1,68 @@
+{
+  "audit_id": "IMI_FACTORIAL_TEMPORAL_PORTFOLIO_ELIGIBILITY_AUDIT_v1",
+  "version": "1.0.0",
+  "governing_head": "6ca63ec4ba34b9c84e783aaaf5aa73c4604f4fb6",
+  "audit_scope": "CLASSIFY_EXISTING_STUDIES_WITHOUT_REANALYSIS_OR_RESULT_MUTATION",
+  "studies": [
+    {
+      "study_id": "NASA_CMAPSS_FD001_UNTOUCHED_VALIDATION_v1",
+      "source_locator": "PR_648_AND_MERGED_VALIDATION_DIRECTORY",
+      "repeated_comparable_observations": true,
+      "eligibility_class": "TEMPORAL_ARCHITECTURE_ALREADY_APPLIED",
+      "basis": "Condition, direction, and persistence were already frozen and tested against untouched outcomes.",
+      "lawful_next_use": "USE_AS_EMPIRICAL_REFERENCE_AND_DO_NOT_REWRITE_THE_RATIFIED_RESULT"
+    },
+    {
+      "study_id": "IMI_AGRICULTURAL_COLONY_RESILIENCE_EXPLORATORY_LONGITUDINAL_v1",
+      "source_locator": "DRIVE_FOLDER_1FXxYOVY0UkKbmkLJ8gIsDFQLwnFIzMfv_AND_PR_640",
+      "repeated_comparable_observations": true,
+      "eligibility_class": "FULL_RETROSPECTIVE_TEMPORAL_REANALYSIS_ELIGIBLE",
+      "basis": "The panel contains repeated state-quarter observations, while the completed CS4 test addressed only current state to next-quarter loss.",
+      "lawful_next_use": "SEPARATE_RETROSPECTIVE_SUCCESSOR_REANALYSIS_AFTER_EXTENSION_ADMISSION"
+    },
+    {
+      "study_id": "IMI_EMPIRICAL_STUDY_01_HOSPITAL_GENERAL_INFORMATION_EXPLORATORY_v1",
+      "source_locator": "DRIVE_FOLDER_1QifJ0cu0RoieHb_INFwCRpwRNNDTeOXx",
+      "repeated_comparable_observations": false,
+      "eligibility_class": "SNAPSHOT_ONLY_REQUIRES_NEW_OBSERVATION",
+      "basis": "The archived study is cross-sectional and cannot establish direction, persistence, recovery, or relapse.",
+      "lawful_next_use": "PRESERVE_SNAPSHOT_FINDINGS_AND_ACQUIRE_ALIGNED_LATER_RELEASE"
+    },
+    {
+      "study_id": "HOSPITAL_MEASURE_LEVEL_IMI_ROBUSTNESS_EXTENSION_1B_v1",
+      "source_locator": "DRIVE_FOLDER_1Rd6K8L6vvkN0ZpFwGsxwVZn5A0i_g3ms",
+      "repeated_comparable_observations": false,
+      "eligibility_class": "SNAPSHOT_ONLY_REQUIRES_NEW_OBSERVATION",
+      "basis": "The robustness execution does not supply a comparable longitudinal facility series.",
+      "lawful_next_use": "PRESERVE_ROBUSTNESS_FINDINGS_AND_BIND_MULTIPERIOD_FACILITY_DATA"
+    },
+    {
+      "study_id": "IMI_EMPIRICAL_STUDY_02_SPONTANEOUS_SPEECH_EXPLORATORY_v1",
+      "source_locator": "DRIVE_FOLDER_1GxeZDNiSg7tH13VEReSc2a4D5CncqiqB",
+      "repeated_comparable_observations": false,
+      "eligibility_class": "SNAPSHOT_ONLY_REQUIRES_NEW_OBSERVATION",
+      "basis": "The current file contains one participant-level feature observation and no repeat outcome trajectory.",
+      "lawful_next_use": "PRESERVE_CROSS_DOMAIN_FINDINGS_AND_REQUIRE_REPEAT_RECORDINGS"
+    },
+    {
+      "study_id": "DSSI_SOVEREIGN_DEBT_PAYMENT_SCHEDULE_BOOTSTRAP_v1",
+      "source_locator": "EXACT_IDENTITY_UNRESOLVED",
+      "repeated_comparable_observations": false,
+      "eligibility_class": "SOURCE_IDENTITY_REQUIRES_BINDING",
+      "secondary_class": "WITHIN_SCHEDULE_NOT_LONGITUDINAL",
+      "basis": "Monthly positions within one payment schedule are not automatically repeated system-state observations, and the exact study package identity was not resolved in this audit.",
+      "lawful_next_use": "BIND_EXACT_SOURCE_AND_ASSEMBLE_MULTIPLE_COUNTRY_YEARS_BEFORE_TEMPORAL_ANALYSIS"
+    }
+  ],
+  "summary": {
+    "study_count": 6,
+    "temporal_architecture_already_applied": 1,
+    "full_retrospective_reanalysis_eligible_now": 1,
+    "snapshot_only_requiring_new_observation": 3,
+    "source_identity_requiring_binding": 1,
+    "real_reanalysis_performed": false,
+    "archived_result_mutation": false
+  },
+  "next_lawful_operation": "AGRICULTURAL_FACTORIAL_TEMPORAL_RETROSPECTIVE_SUCCESSOR_REANALYSIS_v1",
+  "next_operation_authorized_by_this_audit": false
+}

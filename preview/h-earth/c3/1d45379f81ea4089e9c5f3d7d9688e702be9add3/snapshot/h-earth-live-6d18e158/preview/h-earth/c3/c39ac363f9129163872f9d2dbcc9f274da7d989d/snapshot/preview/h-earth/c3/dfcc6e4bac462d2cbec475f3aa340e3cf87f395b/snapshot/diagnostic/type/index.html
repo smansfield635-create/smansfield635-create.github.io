@@ -1,0 +1,117 @@
+<!-- TNT: /diagnostic/type/index.html (FULL REPLACEMENT — 4 archetypes, low cognitive load, lock-in) -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Diagnostic · Type Lock-In</title>
+
+  <link rel="icon" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
+
+  <style>
+    .box{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:14px 16px;line-height:1.5;margin:0 0 12px}
+    .opt{display:flex;gap:12px;align-items:flex-start;margin:12px 0}
+    input[type="radio"]{transform:scale(1.2);margin-top:3px}
+    .name{font-weight:900}
+    .desc{opacity:.86;margin-top:2px}
+    .tag{opacity:.72;font-size:13px;margin-top:6px}
+    .check{display:flex;gap:10px;align-items:flex-start;margin-top:10px}
+    input[type="checkbox"]{transform:scale(1.2);margin-top:2px}
+  </style>
+</head>
+
+<body>
+  <main class="gPage">
+    <header class="gHeader">
+      <h1 class="gTitle">Type Lock-In</h1>
+      <p class="gSub">Choose the closest archetype. No overthinking.</p>
+    </header>
+
+    <section class="gPanel" aria-label="Type selection">
+      <div class="box">
+        <p><strong>Rule</strong> This sets your declared baseline for this run. Changing later invalidates the run.</p>
+        <p class="tag">If the fourth archetype name is not “Explorer,” tell me the correct label and I’ll TNT swap it.</p>
+      </div>
+
+      <div class="box" role="group" aria-label="Archetype options">
+        <label class="opt">
+          <input type="radio" name="atype" value="harmonizer" />
+          <span>
+            <div class="name">Harmonizer</div>
+            <div class="desc">Stabilizes people and systems. Seeks coherence, closure, and shared ground.</div>
+            <div class="tag">Bias: cohesion</div>
+          </span>
+        </label>
+
+        <label class="opt">
+          <input type="radio" name="atype" value="executor" />
+          <span>
+            <div class="name">Executor</div>
+            <div class="desc">Moves fast toward closure. Converts decisions into action and receipts.</div>
+            <div class="tag">Bias: completion</div>
+          </span>
+        </label>
+
+        <label class="opt">
+          <input type="radio" name="atype" value="explorer" />
+          <span>
+            <div class="name">Explorer</div>
+            <div class="desc">Tests boundaries and learns by iteration. Expands map before commitment.</div>
+            <div class="tag">Bias: discovery</div>
+          </span>
+        </label>
+
+        <label class="opt">
+          <input type="radio" name="atype" value="disruptor" />
+          <span>
+            <div class="name">Disruptor</div>
+            <div class="desc">Challenges weak structure. Breaks false coherence to force true constraints.</div>
+            <div class="tag">Bias: correction</div>
+          </span>
+        </label>
+
+        <label class="check">
+          <input type="checkbox" id="lock" />
+          <span>I understand this declaration is locked for this run.</span>
+        </label>
+      </div>
+
+      <div class="gActions">
+        <a class="gBtn" href="/diagnostic/">Back</a>
+        <button class="gBtn gPrimary" id="begin" type="button">Begin Exam</button>
+      </div>
+
+      <footer class="gFooter">DECLARATION-FIRST · RECEIPT-GATED · © GEODIAMETRICS</footer>
+    </section>
+  </main>
+
+  <script>
+    function getType(){
+      const el = document.querySelector('input[name="atype"]:checked');
+      return el ? el.value : null;
+    }
+
+    document.getElementById('begin').addEventListener('click', ()=>{
+      const t = getType();
+      const lock = document.getElementById('lock');
+      if(!t || !lock.checked) return;
+
+      localStorage.setItem('GD_DIAG_ARCHETYPE', t);
+
+      // minimal receipt stub (exam page will append)
+      const started = localStorage.getItem('GD_DIAG_STARTED_AT') || new Date().toISOString();
+      localStorage.setItem('GD_DIAG_RECEIPT', JSON.stringify({
+        version: "diag_v1",
+        started_at: started,
+        archetype: t,
+        status: "started",
+        answers: []
+      }));
+
+      location.href = '/diagnostic/exam/';
+    });
+  </script>
+</body>
+</html>

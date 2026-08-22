@@ -1,0 +1,10 @@
+name: Track B Live Finalizer (retired)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  retired:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Retired. Direct GitHub Pages Deploy is the single publication authority."

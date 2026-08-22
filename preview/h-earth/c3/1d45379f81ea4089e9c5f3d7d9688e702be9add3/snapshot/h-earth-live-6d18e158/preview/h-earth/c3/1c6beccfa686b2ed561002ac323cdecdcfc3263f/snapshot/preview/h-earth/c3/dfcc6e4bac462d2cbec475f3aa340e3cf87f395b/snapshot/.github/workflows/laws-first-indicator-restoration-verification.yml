@@ -1,0 +1,63 @@
+name: Laws FIRST Indicator Restoration Verification
+
+on:
+  pull_request:
+    paths:
+      - 'laws/index.experience.polish.css'
+      - 'laws/index.experience.js'
+      - 'laws/index.html'
+      - 'scripts/verify-laws-first-indicator-restoration.mjs'
+      - 'scripts/verify-laws-first-indicator-restoration-runner.mjs'
+      - '.github/workflows/laws-first-indicator-restoration-verification.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-first-indicators:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out candidate
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install browser verifier
+        run: |
+          npm install --no-save playwright@1.52.0
+          npx playwright install --with-deps chromium
+
+      - name: Start static candidate server
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-first-indicators-server.log 2>&1 &
+          echo $! > /tmp/laws-first-indicators-server.pid
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:4173/laws/ > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/laws-first-indicators-server.log
+          exit 1
+
+      - name: Run FIRST indicator source and browser matrix
+        env:
+          LAWS_BASE_URL: http://127.0.0.1:4173
+        run: node scripts/verify-laws-first-indicator-restoration-runner.mjs
+
+      - name: Upload restoration evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-first-indicator-restoration-${{ github.sha }}
+          path: |
+            artifacts/laws-first-indicator-restoration-verification.json
+            artifacts/laws-first-indicators-*.png
+          if-no-files-found: warn
+          retention-days: 30

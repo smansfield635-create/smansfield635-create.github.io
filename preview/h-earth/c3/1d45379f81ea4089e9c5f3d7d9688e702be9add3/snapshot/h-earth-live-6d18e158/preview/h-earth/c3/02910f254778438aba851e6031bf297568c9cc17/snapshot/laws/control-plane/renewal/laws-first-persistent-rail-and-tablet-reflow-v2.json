@@ -1,0 +1,54 @@
+{
+  "contract": "LAWS_FIRST_PERSISTENT_RAIL_AND_TABLET_REFLOW_v2",
+  "status": "CANDIDATE_PENDING_USER_VISUAL_ACCEPTANCE",
+  "route": "/laws/",
+  "authority_source": "EXISTING_COMPASS_PRESENTATION_CORRESPONDENCE",
+  "product_surfaces": [
+    "laws/index.html",
+    "laws/index.experience.js",
+    "laws/index.experience.polish.css"
+  ],
+  "guarantees": [
+    "FIVE_SOURCE_NATIVE_FIRST_INDICATORS",
+    "ONE_ACTIVE_CYAN_LIGHT_FOLLOWS_ACCEPTED_COMPASS_STATE",
+    "NO_RESEARCH_LIGHT",
+    "NO_NEW_INTERACTION_OR_ROUTE_AUTHORITY",
+    "PERSISTENT_RAIL_REMAINS_IN_COMPASS_ZONE",
+    "PHONE_TABLET_SINGLE_COLUMN_HERO_REFLOW",
+    "QUESTION_DISCLOSURE_REMAINS_SECONDARY",
+    "STATIC_NO_JAVASCRIPT_NEUTRAL_VISIBILITY",
+    "CACHE_BUSTED_PRESENTATION_ASSETS",
+    "COMPASS_ZONE_PRELOAD_CORRIDOR_PRESERVED_AFTER_REFLOW"
+  ],
+  "preload_contract": {
+    "owner": "laws/index.experience.js",
+    "target": ".laws-compass-primary",
+    "root_margin": "1200px 0px",
+    "loader_surface": "DGBLawsStagedLoader",
+    "requested_systems": [
+      "loadOrbitSystems",
+      "loadInteractionSystems"
+    ],
+    "authority": "PRESENTATION_ONLY_REQUEST_TO_EXISTING_STAGED_LOADER",
+    "controller_mutation": false,
+    "navigation_authority_change": false
+  },
+  "verification_surfaces": [
+    ".github/workflows/laws-first-rail-architecture-verification.yml",
+    "scripts/verify-laws-first-rail-architecture.mjs",
+    "scripts/verify-laws-first-indicator-restoration.mjs"
+  ],
+  "temporary_workflows_allowed_in_final_scope": false,
+  "protected": [
+    "laws/index.controller.js",
+    "laws/index.interactions.js",
+    "laws/index.compositor.js",
+    "laws/index.cosmos.js",
+    "laws/index.crystals.js",
+    "laws/index.planet.js"
+  ],
+  "claim_authority_change": false,
+  "route_authority_change": false,
+  "empirical_status_change": false,
+  "merge_authority": "USER_ONLY"
+}

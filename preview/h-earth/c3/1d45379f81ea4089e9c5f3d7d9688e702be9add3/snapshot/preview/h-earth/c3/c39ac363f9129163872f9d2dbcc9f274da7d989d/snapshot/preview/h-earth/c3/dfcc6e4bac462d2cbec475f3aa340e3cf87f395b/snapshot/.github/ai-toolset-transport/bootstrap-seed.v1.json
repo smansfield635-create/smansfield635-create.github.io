@@ -1,0 +1,108 @@
+{
+  "schema": "REPOSITORY_AUTHORIZED_TOOLSET_AND_AI_ROOM_TRANSPORT_BOOTSTRAP_SEED_v1",
+  "bootstrapId": "REPOSITORY_AUTHORIZED_TOOLSET_ROUTING_AND_AI_ROOM_EXECUTION_TRANSPORT_BOOTSTRAP_v1",
+  "status": "USER_ORIGIN_GENESIS_AUTHORIZED_CONSTRUCTION_ONLY",
+  "originAuthority": "USER",
+  "authoritySource": "CURRENT_CONVERSATION_EXPLICIT_DIRECTION",
+  "authorityDirection": "Proceed to close the checkpoints in a bounded manner, as discussed.",
+  "exactStartingHead": "56b6ab1f192aec994af0c537dd7c9dad1be14d7f",
+  "genesisBranch": "bootstrap/authorized-toolset-ai-room-transport-genesis-v1-001",
+  "prematureBranchEvidence": {
+    "branch": "bootstrap/authorized-toolset-ai-room-transport-v1-001",
+    "head": "56b6ab1f192aec994af0c537dd7c9dad1be14d7f",
+    "status": "INERT_UNAUTHORIZED_CONTAINER_PRESERVED_AS_DEFECT_EVIDENCE",
+    "reuseAuthorized": false
+  },
+  "temporaryAuthorities": {
+    "builder": {
+      "id": "TEMPORARY_AI_ROOM_TRANSPORT_BOOTSTRAP_BUILDER_v1",
+      "may": [
+        "CREATE_ONLY_THE_DECLARED_NONPRODUCT_BOOTSTRAP_PATHS",
+        "IMPLEMENT_THE_TEN_DECLARED_COMPONENTS",
+        "EMIT_CHECKPOINT_AND_SELF_TEST_RECEIPTS",
+        "OPEN_A_DRAFT_PULL_REQUEST_FOR_INDEPENDENT_CERTIFICATION"
+      ],
+      "mayNot": [
+        "APPROVE_ITS_OWN_OUTPUT",
+        "ACTIVATE_PERMANENT_TRANSPORT_AUTHORITY",
+        "MERGE",
+        "MUTATE_PRODUCT_PATHS",
+        "ACTIVATE_ROLE_6",
+        "EXECUTE_THE_METHODS_AUDIT",
+        "ACCEPT_ARBITRARY_COMMANDS"
+      ]
+    },
+    "verifier": {
+      "id": "FRESH_INDEPENDENT_AI_ROOM_TRANSPORT_BOOTSTRAP_VERIFIER_v1",
+      "may": [
+        "REPRODUCE_REGISTRY_DESCRIPTOR_FIXTURE_AND_PACKAGE_IDENTITIES",
+        "VALIDATE_FAIL_CLOSED_BEHAVIOR",
+        "EMIT_CERTIFICATION_EVIDENCE"
+      ],
+      "mayNot": [
+        "REPAIR_BUILDER_OUTPUT",
+        "ALTER_THE_REGISTRY",
+        "ACTIVATE_OR_MERGE_THE_INSTRUMENT"
+      ]
+    }
+  },
+  "checkpoints": [
+    "CP00_BOOTSTRAP_SEED_AND_SCOPE",
+    "CP01_SCHEMAS",
+    "CP02_AUTHORIZED_TOOLSET_REGISTRY",
+    "CP03_TOOLSET_RESOLVER",
+    "CP04_EXECUTION_BACKEND_SELECTOR",
+    "CP05_FIXED_COMMAND_DISPATCHER",
+    "CP06_AI_ROOM_ISSUE_COMMENT_TRANSPORT",
+    "CP07_COMMAND_RECEIPT_RETURN",
+    "CP08_RECEIPT_VALIDATOR_AND_CONTINUATION_GATE",
+    "CP09_NEGATIVE_FIXTURES_AND_INDEPENDENT_CERTIFICATION",
+    "CP10_BOOTSTRAP_AUTHORITY_TERMINATION"
+  ],
+  "exactAllowedPaths": [
+    ".github/ai-toolset-transport/AGENTS.md",
+    ".github/ai-toolset-transport/authorized-toolset-registry.v1.json",
+    ".github/ai-toolset-transport/bootstrap-seed.v1.json",
+    ".github/ai-toolset-transport/bootstrap-termination-policy.v1.json",
+    ".github/ai-toolset-transport/changed-path-manifest.v1.json",
+    ".github/ai-toolset-transport/negative-fixtures.v1.json",
+    ".github/ai-toolset-transport/progress-ledger.v1.json",
+    ".github/ai-toolset-transport/schemas.v1.json",
+    ".github/workflows/ai-room-authorized-toolset-bootstrap-validation.yml",
+    ".github/workflows/ai-room-execution-transport.yml",
+    "tools/ai-room-transport/backend-selector.v1.mjs",
+    "tools/ai-room-transport/bootstrap-authority-terminator.v1.mjs",
+    "tools/ai-room-transport/command-receipt-validator.v1.mjs",
+    "tools/ai-room-transport/continuation-gate.v1.mjs",
+    "tools/ai-room-transport/fixed-command-dispatcher.v1.mjs",
+    "tools/ai-room-transport/fresh-verifier.v1.mjs",
+    "tools/ai-room-transport/lib.v1.mjs",
+    "tools/ai-room-transport/self-test.v1.mjs",
+    "tools/ai-room-transport/toolset-resolver.v1.mjs",
+    "tools/ai-room-transport/transport-request-parser.v1.mjs"
+  ],
+  "prohibitedPathPrefixes": [
+    "assets/",
+    "laws/",
+    "showroom/",
+    "h-earth-3d/",
+    "control-plane/methods-information-benchmark/assignment-state/"
+  ],
+  "prohibitedSideEffects": [
+    "PRODUCT_MUTATION",
+    "ROLE_ACTIVATION",
+    "METHODS_AUDIT_EXECUTION",
+    "ARBITRARY_COMMAND_EXECUTION",
+    "MERGE",
+    "DEPLOYMENT",
+    "RELEASE",
+    "RESIDUAL_BOOTSTRAP_AUTHORITY"
+  ],
+  "registeredInitialToolingHead": "cfc2dc915ae84fd6349832500165a40a5dd0ddb8",
+  "registeredInitialOperationId": "METHODS_FIRST_ATOMIC_ASSIGNMENT_SUCCESSOR_GAP_CLOSURE_v1",
+  "certificationRequired": true,
+  "activationRequiresSeparateRatification": true,
+  "mergeAllowed": false,
+  "terminationRule": "TEMPORARY_AUTHORITIES_TERMINATE_ONLY_AFTER_BUILDER_AND_FRESH_VERIFIER_PASS_AND_A_COMMAND_EMITTED_TERMINATION_RECEIPT_IS_RETURNED",
+  "residualBootstrapAuthorityAllowed": false
+}

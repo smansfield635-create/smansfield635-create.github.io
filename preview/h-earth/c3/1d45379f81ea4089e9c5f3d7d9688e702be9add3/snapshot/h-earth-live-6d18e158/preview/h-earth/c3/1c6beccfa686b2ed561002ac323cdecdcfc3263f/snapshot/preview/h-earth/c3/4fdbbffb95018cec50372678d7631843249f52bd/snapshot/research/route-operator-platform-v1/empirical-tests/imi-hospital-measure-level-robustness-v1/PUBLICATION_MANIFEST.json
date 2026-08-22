@@ -1,0 +1,58 @@
+{
+  "publication_id": "IMI_HOSPITAL_MEASURE_LEVEL_ROBUSTNESS_GITHUB_PUBLICATION_v2",
+  "operation": "HOSPITAL_MEASURE_LEVEL_IMI_ROBUSTNESS_EXTENSION_1B",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/imi-hospital-measure-level-robustness-v1",
+  "pull_request": 545,
+  "base_branch": "main",
+  "target_path": "research/route-operator-platform-v1/empirical-tests/imi-hospital-measure-level-robustness-v1",
+  "custody_model": "GITHUB_PRIMARY_OPERATIONAL_RECORD_WITH_HASH_BOUND_EXTERNAL_LARGE_BYTE_REDUNDANCY",
+  "instrument_relationship": "SEPARATE_STUDY_RECORD_REFERENCING_FROZEN_INSTRUMENT_AUTHORITY",
+  "source": {
+    "filename": "Complications_and_Deaths-Hospital.csv",
+    "bytes": 21641635,
+    "sha256": "0ba1b358e54e8812c9d1cf72c37f715b7bfeb3da12009bb6705158f0d15f91b5",
+    "published_in_ordinary_git_history": false,
+    "reason": "Large raw public dataset retained by exact identity; executable rejects hash mismatch."
+  },
+  "complete_successor_zip": {
+    "bytes": 13907,
+    "sha256": "e818c9b16b8b493d27da9e2d37f9503944b0d7699497a705ad5ec9ddbfefe32d",
+    "github_carrier": "archive/complete-package-v1/HOSPITAL_MEASURE_LEVEL_IMI_ROBUSTNESS_EXTENSION_1B_COMPLETE_PACKAGE_v1.zip.base64",
+    "materializer": "archive/complete-package-v1/materialize_complete_package.py"
+  },
+  "full_outputs": {
+    "hospital_level_sha256": "d8efa1e9db284294f49cd64542955bba7aaa6858f77a17bdf07c7eabeedf4f12",
+    "sensitivity_sha256": "9923812fa22bcf968dd01f1f334cbcffedb436f22fae1a44a8ec0ef33636a7f3",
+    "custody_pointers": "archive/complete-package-v1/FILE_LIBRARY_ORIGINAL_ARTIFACT_CUSTODY_POINTERS_v1.json"
+  },
+  "resolved_clarifications": {
+    "additive_comparator": "(MORT_nonworse + SAFETY_nonworse) / (MORT_comparable + SAFETY_comparable)",
+    "collapse_case_coverage_tier": "ANY_COMPARABLE_ONLY"
+  },
+  "published_files": [
+    {"path":"README.md","bytes":3336,"sha256":"acada6ca34f089b78fecc5460d3770d6522328fbcf5d57fc5adcba0181fa2a56"},
+    {"path":"STUDY_CUSTODY_STATUS.json","bytes":1604,"sha256":"ee0f4576dafec14e081872816a09c14e5c68fdc716d37010a4555f633d6e6997"},
+    {"path":"archive/complete-package-v1/FILE_LIBRARY_ORIGINAL_ARTIFACT_CUSTODY_POINTERS_v1.json","bytes":1048,"sha256":"270b747eb01abc48c6e0fc6c918ee0625b1ea7eb6477071c2ff22b7e3d76684b"},
+    {"path":"archive/complete-package-v1/HOSPITAL_EXTENSION_1B_RESOLVED_CLARIFICATIONS_RECEIPT_v1.json","bytes":765,"sha256":"b0a14d8069042506bfc1aabd31aced854982e519e2f8112d03f6244254ba7464"},
+    {"path":"archive/complete-package-v1/HOSPITAL_MEASURE_LEVEL_IMI_ROBUSTNESS_EXTENSION_1B_COMPLETE_MANIFEST_v1.json","bytes":2503,"sha256":"b156c51c0f67301ddc78423eb13992eaf7ee58863d1d97dabbf496a54e75c88a"},
+    {"path":"archive/complete-package-v1/HOSPITAL_MEASURE_LEVEL_IMI_ROBUSTNESS_EXTENSION_1B_COMPLETE_PACKAGE_v1.zip.base64","bytes":18545,"sha256":"b24f2bcd8a167003d38a3f200f15f2ca2bf53f47224de411de8f72c00f58f258"},
+    {"path":"archive/complete-package-v1/HOSPITAL_MEASURE_LEVEL_IMI_ROBUSTNESS_EXTENSION_1B_ROUTE_PROFILE_v1.json","bytes":3876,"sha256":"7c45de011632f8bc4445cdda6c930717009c24bda525068f4e8593d9fa3b61e9"},
+    {"path":"archive/complete-package-v1/IMI_Additive_Hidden_Collapse_Examples_RECOVERED_AGGREGATE.csv","bytes":602,"sha256":"d0126c1f7a787f21226e89d2f7a9342222f0d5603cd842144b4804f25821aed6"},
+    {"path":"archive/complete-package-v1/IMI_Hospital_Robustness_Summary.csv","bytes":910,"sha256":"dbdd976fe66b209c9991dff830d2d7aa5c555677237febffca41338f58296239"},
+    {"path":"archive/complete-package-v1/IMI_Hospital_Robustness_Test_Report.md","bytes":4991,"sha256":"02758f679f5132bc8e723bda7752b310caf1d6c006ee1ead73a9f297aea61c6e"},
+    {"path":"archive/complete-package-v1/IMI_Hospital_Sensitivity_Results_RECOVERED_CORE.csv","bytes":1890,"sha256":"ec16461ea68edcb94c7f0965a7bb6b050ac33e95de78c5211de31e8b090bd272"},
+    {"path":"archive/complete-package-v1/MANIFEST_SHA256.json","bytes":1757,"sha256":"5f31f49e3921568a714ce5c979c5c14c2783b306a4db044d416373f85a6694bb"},
+    {"path":"archive/complete-package-v1/README.md","bytes":1625,"sha256":"1b81fce54218a414a9fbdb846384994babfe14312376858da762e1dd7ba10f87"},
+    {"path":"archive/complete-package-v1/materialize_complete_package.py","bytes":856,"sha256":"d9758a676b2c977e2a4f440b6f250c517d71803f833c041b5bdad6fa966c8529"},
+    {"path":"archive/complete-package-v1/run_hospital_measure_level_imi_extension_1b.py","bytes":7806,"sha256":"d3c9488bac26fff54b9e3d07db91a3ed2b3fd2b90098746f4f9a75b4f450f0b4"},
+    {"path":"receipts/IMI_HOSPITAL_ROBUSTNESS_EXECUTION_RECEIPT_v1.json","bytes":5389,"sha256":"594f5fd7c75dad977e8392267319bb3fd83dae7ab80965b92e6deb6569eace2b"},
+    {"path":"requirements.txt","bytes":36,"sha256":"5b838bf2f0f241130d094fd5fff6eecb6ffe97ad1f4392df7e779d2a69505dcd"},
+    {"path":"results/IMI_Additive_Hidden_Collapse_Examples.csv","bytes":1227,"sha256":"d3cf5144e943ceb7cc8f78ef87bd595c3d6b2154f15b5f8914b24ab7bed3bf36"},
+    {"path":"results/IMI_Hospital_Robustness_Summary.csv","bytes":904,"sha256":"857d30b919c45d2ca3d0021a021e3b2cefbc7318828814479ef7253cd88e8fd7"},
+    {"path":"results/IMI_Hospital_Sensitivity_Results.csv","bytes":3653,"sha256":"9923812fa22bcf968dd01f1f334cbcffedb436f22fae1a44a8ec0ef33636a7f3"},
+    {"path":"results/IMI_Measure_Dictionary.csv","bytes":1856,"sha256":"f99ded8915c6b6ae05b1fac585839a21ab5f502fdb157d05d424b54a8bbd0961"},
+    {"path":"route_definition.json","bytes":1599,"sha256":"597e90552172009ea1d8dfbebf4fc1a2e7ec42e8b227279623e42bf1c1017d31"},
+    {"path":"run_imi_hospital_robustness.py","bytes":5537,"sha256":"ed1a5fcc6c78104dbbb6d4bec5b6c6cdfcee48f2be90be355a0c43418cdb6201"}
+  ]
+}

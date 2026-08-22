@@ -1,0 +1,519 @@
+name: H-Earth V2 Registry Role 4 Exact-Head Execution Carrier
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/h-earth-v2-registry-role4-exact-head-carrier.yml'
+  issue_comment:
+    types:
+      - created
+
+permissions:
+  contents: read
+  pull-requests: read
+  issues: read
+  actions: read
+
+concurrency:
+  group: h-earth-v2-registry-role4-exact-head-carrier
+  cancel-in-progress: false
+
+env:
+  REPOSITORY: smansfield635-create/smansfield635-create.github.io
+  TARGET_PR: '657'
+  SOURCE_PR: '652'
+  EXACT_REGISTRY_BASE: 5123ad418fcb1b88795470120e4632705ceaf288
+  EXACT_REGISTRY_CANDIDATE_HEAD: da74dcf214bb1ff542894ad343a7102899d68bde
+  EXACT_REGISTRY_CANDIDATE_TREE: 6a90c5bcb9004fe0294db8280da561324d64fcc3
+  SOURCE_HEAD: 7ab3408099c80a0eeb6cf29b39cc28c8ca0bd602
+  SOURCE_TREE: c82bbc92b3c77d4cadf29fb40138f53aa0621ae6
+  ROLE1_RETURN_COMMENT: '5200412182'
+  ROLE3_HANDOFF_COMMENT: '5200414705'
+  ROLE3_BLOCKED_RECEIPT_SHA256: c16860bd96429978aed51dba2fba864e9786bd75f5af27eb743e439dec732e4d
+  AMENDMENT_PATH: h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.inter-hill-estate-successor-evaluator-v2-causal-correction-exact-head.js
+  LOADER_PATH: h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+  EXPECTED_AMENDMENT_BLOB: 534bff50eea4422c8d98cb8378a96624c99924a3
+  EXPECTED_LOADER_BLOB: c4a8ff9fc1a824e5f727070a7de5dae95aed88fc
+  EXPECTED_BASE_LOADER_BLOB: c29c2d3f658170724d07b4432b373ea5bd4048b1
+  COMMENT_MARKER: H_EARTH_V2_REGISTRY_ROLE4_EXACT_HEAD_EXECUTION_REQUEST_v1
+  WORKFLOW_PATH: .github/workflows/h-earth-v2-registry-role4-exact-head-carrier.yml
+
+jobs:
+  verify-carrier:
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact carrier candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify one-file read-only carrier boundary
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/h-earth-v2-registry-role4-carrier-verification
+          node <<'NODE'
+          const fs = require('fs');
+          const api = 'https://api.github.com';
+          const headers = {
+            Accept: 'application/vnd.github+json',
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+            'X-GitHub-Api-Version': '2022-11-28'
+          };
+          async function get(path) {
+            const response = await fetch(`${api}${path}`, {headers});
+            const text = await response.text();
+            const body = text ? JSON.parse(text) : null;
+            if (!response.ok) throw new Error(`GITHUB_API_ERROR:${response.status}:${path}:${text}`);
+            return body;
+          }
+          function requireCondition(value, code) {
+            if (!value) throw new Error(code);
+          }
+          (async () => {
+            const [owner, repo] = process.env.REPOSITORY.split('/');
+            const pr = await get(`/repos/${owner}/${repo}/pulls/${process.env.PR_NUMBER}`);
+            requireCondition(pr.base.ref === 'main', 'CARRIER_BASE_NOT_MAIN');
+            requireCondition(pr.head.sha === process.env.PR_HEAD_SHA, 'CARRIER_HEAD_MISMATCH');
+            const compare = await get(`/repos/${owner}/${repo}/compare/${process.env.PR_BASE_SHA}...${process.env.PR_HEAD_SHA}`);
+            const paths = compare.files.map(file => file.filename);
+            requireCondition(paths.length === 1 && paths[0] === process.env.WORKFLOW_PATH, 'CARRIER_PATH_BOUNDARY_MISMATCH');
+            requireCondition(compare.files[0].status === 'added', 'CARRIER_FILE_NOT_ADDED_ONLY');
+            const workflow = fs.readFileSync(process.env.WORKFLOW_PATH, 'utf8');
+            for (const token of [
+              process.env.EXACT_REGISTRY_CANDIDATE_HEAD,
+              process.env.EXACT_REGISTRY_CANDIDATE_TREE,
+              process.env.EXACT_REGISTRY_BASE,
+              process.env.SOURCE_HEAD,
+              process.env.SOURCE_TREE,
+              process.env.ROLE3_BLOCKED_RECEIPT_SHA256,
+              'verifyHEarthV2CausalCorrectionExactHeadScope',
+              'runHEarthC2R1MC5AutomaticRegistryPreflight',
+              'H_EARTH_MAP_WIDE_INSTRUMENT_CONTROL_PATHS',
+              'persist-credentials: false',
+              'LOCK_322',
+              'LOCK_339',
+              'ROLE_4_EXACT_HEAD_EXECUTION_CARRIER_RECEIPT_v1'
+            ]) requireCondition(workflow.includes(token), `CARRIER_REQUIRED_TOKEN_MISSING:${token}`);
+            const forbidden = [
+              ['contents:', ' write'].join(''),
+              ['pull-requests:', ' write'].join(''),
+              ['issues:', ' write'].join(''),
+              ['merge_', 'pull_request'].join(''),
+              ['--action', ' close'].join(''),
+              ['git', ' push'].join(''),
+              ['update', '-ref'].join('')
+            ];
+            for (const token of forbidden) {
+              requireCondition(!workflow.includes(token), `CARRIER_FORBIDDEN_MUTATION_TOKEN:${token}`);
+            }
+            const receipt = {
+              schema: 'H_EARTH_V2_REGISTRY_ROLE4_CARRIER_SELF_VERIFICATION_RECEIPT_v2',
+              result: 'PASS',
+              pullRequestNumber: Number(process.env.PR_NUMBER),
+              base: process.env.PR_BASE_SHA,
+              head: process.env.PR_HEAD_SHA,
+              exactChangedPaths: paths,
+              readOnlyPermissions: true,
+              exactCandidateBound: true,
+              lockMutationAuthorityAbsent: true,
+              mergeAuthorityAbsent: true,
+              reflexiveForbiddenTokenDefectCorrected: true
+            };
+            fs.writeFileSync('/tmp/h-earth-v2-registry-role4-carrier-verification/receipt.json', JSON.stringify(receipt, null, 2) + '\n');
+          })().catch(error => {
+            console.error(error.stack || error.message);
+            process.exit(1);
+          });
+          NODE
+
+      - name: Upload carrier self-verification receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-v2-registry-role4-carrier-self-verification
+          path: /tmp/h-earth-v2-registry-role4-carrier-verification
+          if-no-files-found: error
+          retention-days: 30
+
+  execute-exact-head:
+    if: >-
+      ${{
+        github.event_name == 'issue_comment' &&
+        github.event.issue.pull_request &&
+        github.event.issue.number == 657 &&
+        startsWith(github.event.comment.body, 'H_EARTH_V2_REGISTRY_ROLE4_EXACT_HEAD_EXECUTION_REQUEST_v1')
+      }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Parse exact Role 4 execution request
+        id: request
+        shell: bash
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const body = String(process.env.COMMENT_BODY || '');
+          if (!body.startsWith(process.env.COMMENT_MARKER)) throw new Error('COMMENT_MARKER_MISMATCH');
+          let payload = body.slice(process.env.COMMENT_MARKER.length).trim();
+          if (payload.startsWith('```json')) payload = payload.slice(7);
+          else if (payload.startsWith('```')) payload = payload.slice(3);
+          if (payload.endsWith('```')) payload = payload.slice(0, -3);
+          const request = JSON.parse(payload.trim());
+          const exact = {
+            exactRegistryBase: process.env.EXACT_REGISTRY_BASE,
+            exactRegistryCandidateHead: process.env.EXACT_REGISTRY_CANDIDATE_HEAD,
+            exactRegistryCandidateTree: process.env.EXACT_REGISTRY_CANDIDATE_TREE,
+            sourceHead: process.env.SOURCE_HEAD,
+            sourceTree: process.env.SOURCE_TREE,
+            role1ReturnCommentId: process.env.ROLE1_RETURN_COMMENT,
+            role3HandoffCommentId: process.env.ROLE3_HANDOFF_COMMENT,
+            role3BlockedReceiptSha256: process.env.ROLE3_BLOCKED_RECEIPT_SHA256
+          };
+          for (const [key, expected] of Object.entries(exact)) {
+            if (String(request[key]) !== String(expected)) throw new Error(`REQUEST_${key.toUpperCase()}_MISMATCH`);
+          }
+          if (!/^\d+$/.test(String(request.role4AuthorizationCommentId || ''))) {
+            throw new Error('ROLE4_AUTHORIZATION_COMMENT_ID_INVALID');
+          }
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `role4_auth_comment_id=${request.role4AuthorizationCommentId}\n`);
+          NODE
+
+      - name: Bind exact PRs authorization comments and pre-execution lock state
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ROLE4_AUTH_COMMENT_ID: ${{ steps.request.outputs.role4_auth_comment_id }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/h-earth-v2-registry-role4-execution
+          node <<'NODE'
+          const fs = require('fs');
+          const api = 'https://api.github.com';
+          const headers = {
+            Accept: 'application/vnd.github+json',
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+            'X-GitHub-Api-Version': '2022-11-28'
+          };
+          async function get(path) {
+            const response = await fetch(`${api}${path}`, {headers});
+            const text = await response.text();
+            let body;
+            try { body = text ? JSON.parse(text) : null; } catch { body = {raw:text}; }
+            if (!response.ok) throw new Error(`GITHUB_API_ERROR:${response.status}:${path}:${JSON.stringify(body)}`);
+            return body;
+          }
+          function requireCondition(value, code) {
+            if (!value) throw new Error(code);
+          }
+          function lockByGeneration(ledger, generation) {
+            return Object.values(ledger.activeScopes || {}).find(entry => entry.lockGeneration === generation);
+          }
+          (async () => {
+            const [owner, repo] = process.env.REPOSITORY.split('/');
+            const [registryPr, sourcePr, role1, handoff, auth, lockRef, ledgerFile] = await Promise.all([
+              get(`/repos/${owner}/${repo}/pulls/${process.env.TARGET_PR}`),
+              get(`/repos/${owner}/${repo}/pulls/${process.env.SOURCE_PR}`),
+              get(`/repos/${owner}/${repo}/issues/comments/${process.env.ROLE1_RETURN_COMMENT}`),
+              get(`/repos/${owner}/${repo}/issues/comments/${process.env.ROLE3_HANDOFF_COMMENT}`),
+              get(`/repos/${owner}/${repo}/issues/comments/${process.env.ROLE4_AUTH_COMMENT_ID}`),
+              get(`/repos/${owner}/${repo}/git/ref/heads/operation-locks/repository-operation-intake-v1`),
+              get(`/repos/${owner}/${repo}/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=operation-locks/repository-operation-intake-v1`)
+            ]);
+            requireCondition(registryPr.state === 'open' && registryPr.draft === true && registryPr.merged === false, 'REGISTRY_PR_NOT_OPEN_DRAFT_UNMERGED');
+            requireCondition(registryPr.head.sha === process.env.EXACT_REGISTRY_CANDIDATE_HEAD, 'REGISTRY_PR_HEAD_MISMATCH');
+            requireCondition(sourcePr.state === 'open' && sourcePr.draft === true && sourcePr.merged === false, 'SOURCE_PR_NOT_OPEN_DRAFT_UNMERGED');
+            requireCondition(sourcePr.head.sha === process.env.SOURCE_HEAD, 'SOURCE_PR_HEAD_MISMATCH');
+            requireCondition(role1.author_association === 'OWNER', 'ROLE1_RETURN_COMMENT_NOT_OWNER');
+            requireCondition(String(role1.body || '').includes(process.env.EXACT_REGISTRY_CANDIDATE_HEAD), 'ROLE1_RETURN_NOT_HEAD_BOUND');
+            requireCondition(handoff.issue_url.endsWith(`/issues/${process.env.TARGET_PR}`), 'ROLE3_HANDOFF_COMMENT_WRONG_PR');
+            requireCondition(String(handoff.body || '').includes(process.env.EXACT_REGISTRY_CANDIDATE_HEAD), 'ROLE3_HANDOFF_NOT_HEAD_BOUND');
+            requireCondition(auth.issue_url.endsWith(`/issues/${process.env.TARGET_PR}`), 'ROLE4_AUTH_COMMENT_WRONG_PR');
+            requireCondition(auth.author_association === 'OWNER', 'ROLE4_AUTH_COMMENT_NOT_OWNER');
+            for (const token of [
+              'ROLE_4_NONMUTATING_EXACT_HEAD_EXECUTION_CARRIER_AUTHORIZATION',
+              process.env.EXACT_REGISTRY_CANDIDATE_HEAD,
+              process.env.EXACT_REGISTRY_CANDIDATE_TREE,
+              process.env.SOURCE_HEAD,
+              process.env.SOURCE_TREE,
+              process.env.ROLE3_BLOCKED_RECEIPT_SHA256
+            ]) requireCondition(String(auth.body || '').includes(token), `ROLE4_AUTH_COMMENT_TOKEN_MISSING:${token}`);
+            const ledger = JSON.parse(Buffer.from(ledgerFile.content.replace(/\s/g, ''), 'base64').toString('utf8'));
+            const lock322 = lockByGeneration(ledger, 322);
+            const lock339 = lockByGeneration(ledger, 339);
+            requireCondition(lock322?.state === 'ADMITTED_LOCKED' && lock322.released === false, 'LOCK_322_NOT_ACTIVE_UNRELEASED');
+            requireCondition(lock339?.state === 'ADMITTED_LOCKED' && lock339.released === false, 'LOCK_339_NOT_ACTIVE_UNRELEASED');
+            const receipt = {
+              schema: 'H_EARTH_V2_REGISTRY_ROLE4_PRE_EXECUTION_BINDING_RECEIPT_v2',
+              result: 'PASS',
+              registryPr: Number(process.env.TARGET_PR),
+              registryHead: registryPr.head.sha,
+              sourcePr: Number(process.env.SOURCE_PR),
+              sourceHead: sourcePr.head.sha,
+              role1ReturnCommentId: Number(process.env.ROLE1_RETURN_COMMENT),
+              role3HandoffCommentId: Number(process.env.ROLE3_HANDOFF_COMMENT),
+              role4AuthorizationCommentId: Number(process.env.ROLE4_AUTH_COMMENT_ID),
+              role3BlockedReceiptSha256: process.env.ROLE3_BLOCKED_RECEIPT_SHA256,
+              lockRefHead: lockRef.object.sha,
+              ledgerBlobSha: ledgerFile.sha,
+              lock322,
+              lock339
+            };
+            fs.writeFileSync('/tmp/h-earth-v2-registry-role4-execution/pre-execution-binding.json', JSON.stringify(receipt, null, 2) + '\n');
+          })().catch(error => {
+            console.error(error.stack || error.message);
+            process.exit(1);
+          });
+          NODE
+
+      - name: Check out exact registry candidate read-only
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXACT_REGISTRY_CANDIDATE_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify exact Git lineage boundary loader delta and source blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "$SOURCE_HEAD"
+          test "$(git rev-parse HEAD)" = "$EXACT_REGISTRY_CANDIDATE_HEAD"
+          test "$(git rev-parse HEAD^{tree})" = "$EXACT_REGISTRY_CANDIDATE_TREE"
+          test "$(git rev-parse HEAD^)" = "$EXACT_REGISTRY_BASE"
+          test "$(git rev-list --count "$EXACT_REGISTRY_BASE..$EXACT_REGISTRY_CANDIDATE_HEAD")" = "1"
+          test "$(git rev-parse "$SOURCE_HEAD^{tree}")" = "$SOURCE_TREE"
+          test "$(git rev-parse "HEAD:$AMENDMENT_PATH")" = "$EXPECTED_AMENDMENT_BLOB"
+          test "$(git rev-parse "HEAD:$LOADER_PATH")" = "$EXPECTED_LOADER_BLOB"
+          test "$(git rev-parse "$EXACT_REGISTRY_BASE:$LOADER_PATH")" = "$EXPECTED_BASE_LOADER_BLOB"
+          node --input-type=module <<'NODE'
+          import cp from 'node:child_process';
+          import fs from 'node:fs';
+          const exec = args => cp.execFileSync('git', args, {encoding:'utf8'}).trim();
+          const raw = args => cp.execFileSync('git', args, {encoding:'utf8'});
+          const lines = exec(['diff','--name-status',process.env.EXACT_REGISTRY_BASE,process.env.EXACT_REGISTRY_CANDIDATE_HEAD]).split(/\r?\n/).filter(Boolean);
+          const expected = [`A\t${process.env.AMENDMENT_PATH}`, `M\t${process.env.LOADER_PATH}`];
+          if (JSON.stringify(lines.sort()) !== JSON.stringify(expected.sort())) throw new Error(`EXACT_TWO_PATH_STATUS_MISMATCH:${JSON.stringify(lines)}`);
+          const baseLoader = raw(['show',`${process.env.EXACT_REGISTRY_BASE}:${process.env.LOADER_PATH}`]);
+          const candidateLoader = fs.readFileSync(process.env.LOADER_PATH,'utf8');
+          const baseImport = baseLoader.match(/^import registryFacade from .*;$/m)?.[0];
+          const candidateImport = candidateLoader.match(/^import registryFacade from .*;$/m)?.[0];
+          if (!baseImport || !candidateImport || baseImport === candidateImport) throw new Error('ACTIVE_FACADE_IMPORT_REPLACEMENT_NOT_ISOLATED');
+          if (baseLoader.replace(baseImport, candidateImport) !== candidateLoader) throw new Error('LOADER_BODY_NOT_PRESERVED_EXCEPT_IMPORT');
+          const amendment = fs.readFileSync(process.env.AMENDMENT_PATH,'utf8');
+          const pairs = [...amendment.matchAll(/\[`([^`]+)`, '([0-9a-f]{40})'\]/g)].map(match => [match[1],match[2]]);
+          if (pairs.length !== 11) throw new Error(`AMENDMENT_EXPECTED_BLOB_PAIR_COUNT_MISMATCH:${pairs.length}`);
+          const sourceBlobChecks = pairs.map(([path, expectedBlob]) => {
+            const repositoryPath = path.startsWith('/') ? path.slice(1) : path;
+            const actualBlob = exec(['rev-parse',`${process.env.SOURCE_HEAD}:${repositoryPath}`]);
+            if (actualBlob !== expectedBlob) throw new Error(`SOURCE_BLOB_MISMATCH:${repositoryPath}:${actualBlob}:${expectedBlob}`);
+            return {repositoryPath:`/${repositoryPath}`, expectedBlob, actualBlob};
+          });
+          const receipt = {
+            schema:'H_EARTH_V2_REGISTRY_EXACT_GIT_AND_SOURCE_BLOB_RECEIPT_v2',
+            result:'PASS',
+            head:exec(['rev-parse','HEAD']),
+            tree:exec(['rev-parse','HEAD^{tree}']),
+            soleParent:exec(['rev-parse','HEAD^']),
+            commitCount:Number(exec(['rev-list','--count',`${process.env.EXACT_REGISTRY_BASE}..${process.env.EXACT_REGISTRY_CANDIDATE_HEAD}`])),
+            changedPathStatus:lines,
+            amendmentBlob:exec(['rev-parse',`HEAD:${process.env.AMENDMENT_PATH}`]),
+            loaderBlob:exec(['rev-parse',`HEAD:${process.env.LOADER_PATH}`]),
+            baseLoaderBlob:exec(['rev-parse',`${process.env.EXACT_REGISTRY_BASE}:${process.env.LOADER_PATH}`]),
+            loaderBodyPreservedExceptActiveFacadeImport:true,
+            sourceHead:process.env.SOURCE_HEAD,
+            sourceTree:exec(['rev-parse',`${process.env.SOURCE_HEAD}^{tree}`]),
+            sourceBlobChecks
+          };
+          fs.writeFileSync('/tmp/h-earth-v2-registry-role4-execution/git-and-source-blobs.json', JSON.stringify(receipt,null,2)+'\n');
+          NODE
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Execute exact loader amendment map-wide and C2 R1 registry surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check "$AMENDMENT_PATH"
+          node --check "$LOADER_PATH"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {
+            H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_EXACT_HEAD_SCOPE_NODE,
+            H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_EXACT_PATHS,
+            verifyHEarthV2CausalCorrectionExactHeadScope
+          } from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.inter-hill-estate-successor-evaluator-v2-causal-correction-exact-head.js';
+          import load, {runHEarthC2R1MC5AutomaticRegistryPreflight} from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
+          import {
+            H_EARTH_MAP_WIDE_INSTRUMENT_CONTROL_PATHS,
+            H_EARTH_MAP_WIDE_INSTRUMENT_SCOPE_NODE
+          } from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.map-wide-instrument-scope-registration.js';
+          const exact = verifyHEarthV2CausalCorrectionExactHeadScope();
+          if (exact.result !== 'PASS') throw new Error(`EXACT_SCOPE_NOT_PASS:${JSON.stringify(exact)}`);
+          if (exact.pathChecks.length !== 11 || !exact.pathChecks.every(check => check.resolved && check.resolvesToTargetNode && check.exactOccurrenceResolved && check.exactOccurrenceCount === 1)) {
+            throw new Error('EXACT_SCOPE_PATH_CHECKS_NOT_11_OF_11_PASS');
+          }
+          const dependencies = load();
+          if (dependencies.identityVerified !== true) throw new Error('LOADER_IDENTITY_NOT_VERIFIED');
+          if (dependencies.exactHeadRegistrationVerified !== true) throw new Error(`C2_R1_EXACT_HEAD_REGISTRATION_FAILED:${JSON.stringify(dependencies.exactHeadChecks)}`);
+          const activeFacade = dependencies.registryFacade;
+          const targetNode = activeFacade.getHEarthRepositoryRegistryNode(H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_EXACT_HEAD_SCOPE_NODE.nodeId);
+          if (targetNode?.nodeId !== H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_EXACT_HEAD_SCOPE_NODE.nodeId) throw new Error('ACTIVE_LOADER_TARGET_NODE_NOT_PRESENT');
+          const expectedMap = new Map((H_EARTH_MAP_WIDE_INSTRUMENT_SCOPE_NODE.repositoryOccurrences || []).map(entry => [entry.path, entry]));
+          const mapWideChecks = H_EARTH_MAP_WIDE_INSTRUMENT_CONTROL_PATHS.map(repositoryPath => {
+            const expected = expectedMap.get(repositoryPath);
+            const resolution = activeFacade.resolveHEarthRepositoryRegistryPath(repositoryPath);
+            const target = (resolution.nodes || []).some(node => node.nodeId === H_EARTH_MAP_WIDE_INSTRUMENT_SCOPE_NODE.nodeId);
+            const occurrence = Boolean(expected) && (resolution.occurrences || []).some(entry => entry.path === expected.path && entry.commitSha === expected.commitSha && entry.gitBlobSha === expected.gitBlobSha);
+            return {repositoryPath, resolved:resolution.resolved === true, target, occurrence};
+          });
+          if (mapWideChecks.length !== 13 || !mapWideChecks.every(check => check.resolved && check.target && check.occurrence)) throw new Error(`MAP_WIDE_REGISTRY_SURFACE_FAILED:${JSON.stringify(mapWideChecks)}`);
+          const mapWideNeighbor = activeFacade.resolveHEarthRepositoryRegistryPath('/h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/undeclared-neighbor.v1.json');
+          if (mapWideNeighbor?.resolved === true) throw new Error('MAP_WIDE_UNDECLARED_NEIGHBOR_RESOLVED');
+          const c2r1 = await runHEarthC2R1MC5AutomaticRegistryPreflight();
+          if (c2r1.finalDisposition !== 'PASS' || c2r1.requiredFinalDisposition !== 'PASS') throw new Error(`C2_R1_REGISTRY_PREFLIGHT_FAILED:${JSON.stringify(c2r1)}`);
+          const receipt = {
+            schema:'H_EARTH_V2_REGISTRY_FRESH_FULL_CHAIN_EXECUTION_RECEIPT_v2',
+            result:'PASS',
+            exactRegistryCandidateHead:process.env.EXACT_REGISTRY_CANDIDATE_HEAD,
+            exactRegistryCandidateTree:process.env.EXACT_REGISTRY_CANDIDATE_TREE,
+            loaderImportedAndExecuted:true,
+            exactVerificationFunctionExecuted:true,
+            exactPathCount:H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_EXACT_PATHS.length,
+            exactScopeReceipt:exact,
+            activeLoaderTargetNodePresent:true,
+            mapWideRegistrySurface:{result:'PASS',pathCount:mapWideChecks.length,pathChecks:mapWideChecks,undeclaredNeighborUnresolved:true},
+            c2R1RegistrySurface:{result:'PASS',identityVerified:dependencies.identityVerified,exactHeadRegistrationVerified:dependencies.exactHeadRegistrationVerified,automaticPreflightFinalDisposition:c2r1.finalDisposition,receipt:c2r1}
+          };
+          fs.writeFileSync('/tmp/h-earth-v2-registry-role4-execution/full-chain-execution.json', JSON.stringify(receipt,null,2)+'\n');
+          NODE
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Verify post-execution PR lock and mutation invariants
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const api = 'https://api.github.com';
+          const headers = {
+            Accept: 'application/vnd.github+json',
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+            'X-GitHub-Api-Version':'2022-11-28'
+          };
+          async function get(path) {
+            const response = await fetch(`${api}${path}`,{headers});
+            const text = await response.text();
+            const body = text ? JSON.parse(text) : null;
+            if (!response.ok) throw new Error(`GITHUB_API_ERROR:${response.status}:${path}:${text}`);
+            return body;
+          }
+          function requireCondition(value, code) {
+            if (!value) throw new Error(code);
+          }
+          function lockByGeneration(ledger, generation) {
+            return Object.values(ledger.activeScopes || {}).find(entry => entry.lockGeneration === generation);
+          }
+          const stable = value => Array.isArray(value) ? value.map(stable) : value && typeof value === 'object' ? Object.fromEntries(Object.keys(value).sort().map(key => [key, stable(value[key])])) : value;
+          const canonical = value => JSON.stringify(stable(value));
+          (async () => {
+            const [owner,repo] = process.env.REPOSITORY.split('/');
+            const pre = JSON.parse(fs.readFileSync('/tmp/h-earth-v2-registry-role4-execution/pre-execution-binding.json','utf8'));
+            const [registryPr,sourcePr,lockRef,ledgerFile] = await Promise.all([
+              get(`/repos/${owner}/${repo}/pulls/${process.env.TARGET_PR}`),
+              get(`/repos/${owner}/${repo}/pulls/${process.env.SOURCE_PR}`),
+              get(`/repos/${owner}/${repo}/git/ref/heads/operation-locks/repository-operation-intake-v1`),
+              get(`/repos/${owner}/${repo}/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=operation-locks/repository-operation-intake-v1`)
+            ]);
+            requireCondition(registryPr.state === 'open' && registryPr.draft === true && registryPr.merged === false, 'POST_REGISTRY_PR_STATE_CHANGED');
+            requireCondition(registryPr.head.sha === process.env.EXACT_REGISTRY_CANDIDATE_HEAD, 'POST_REGISTRY_PR_HEAD_CHANGED');
+            requireCondition(sourcePr.state === 'open' && sourcePr.draft === true && sourcePr.merged === false, 'POST_SOURCE_PR_STATE_CHANGED');
+            requireCondition(sourcePr.head.sha === process.env.SOURCE_HEAD, 'POST_SOURCE_PR_HEAD_CHANGED');
+            const ledger = JSON.parse(Buffer.from(ledgerFile.content.replace(/\s/g,''),'base64').toString('utf8'));
+            const lock322 = lockByGeneration(ledger,322);
+            const lock339 = lockByGeneration(ledger,339);
+            requireCondition(lock322?.state === 'ADMITTED_LOCKED' && lock322.released === false, 'POST_LOCK_322_CHANGED');
+            requireCondition(lock339?.state === 'ADMITTED_LOCKED' && lock339.released === false, 'POST_LOCK_339_CHANGED');
+            requireCondition(canonical(lock322) === canonical(pre.lock322), 'LOCK_322_IDENTITY_CHANGED_DURING_EXECUTION');
+            requireCondition(canonical(lock339) === canonical(pre.lock339), 'LOCK_339_IDENTITY_CHANGED_DURING_EXECUTION');
+            const gitReceipt = JSON.parse(fs.readFileSync('/tmp/h-earth-v2-registry-role4-execution/git-and-source-blobs.json','utf8'));
+            const executionReceipt = JSON.parse(fs.readFileSync('/tmp/h-earth-v2-registry-role4-execution/full-chain-execution.json','utf8'));
+            const final = {
+              schema:'ROLE_4_EXACT_HEAD_EXECUTION_CARRIER_RECEIPT_v1',
+              result:'PASS',
+              workflowRunId:Number(process.env.GITHUB_RUN_ID),
+              workflowEventHead:process.env.GITHUB_SHA,
+              exactRegistryBase:process.env.EXACT_REGISTRY_BASE,
+              exactRegistryCandidateHead:process.env.EXACT_REGISTRY_CANDIDATE_HEAD,
+              exactRegistryCandidateTree:process.env.EXACT_REGISTRY_CANDIDATE_TREE,
+              sourcePr:Number(process.env.SOURCE_PR),
+              sourceHead:process.env.SOURCE_HEAD,
+              sourceTree:process.env.SOURCE_TREE,
+              role3BlockedReceiptSha256:process.env.ROLE3_BLOCKED_RECEIPT_SHA256,
+              mandatoryFreshExecutionGate:'ESTABLISHED',
+              exactFullCheckout:true,
+              exactRegistryLoaderExecuted:true,
+              exportedVerificationFunctionExecuted:true,
+              mapWideRegistryValidationExecuted:true,
+              c2R1RegistryValidationExecuted:true,
+              elevenSourceBlobIdentities:'PASS_11_OF_11',
+              registryPrState:'OPEN_DRAFT_UNMERGED',
+              sourcePrState:'OPEN_DRAFT_UNMERGED',
+              lock322State:'ADMITTED_LOCKED_UNRELEASED',
+              lock339State:'ADMITTED_LOCKED_UNRELEASED',
+              lock322IdentityUnchanged:true,
+              lock339IdentityUnchanged:true,
+              preExecutionLockRefHead:pre.lockRefHead,
+              postExecutionLockRefHead:lockRef.object.sha,
+              preExecutionLedgerBlobSha:pre.ledgerBlobSha,
+              postExecutionLedgerBlobSha:ledgerFile.sha,
+              unrelatedLedgerMovementPermitted:true,
+              mergeExecuted:false,
+              lockClosureExecuted:false,
+              candidateMutation:false,
+              sourceCandidateMutation:false,
+              productTerrainLiveEstateManorMutation:false,
+              gitReceipt,
+              executionReceipt
+            };
+            fs.writeFileSync('/tmp/h-earth-v2-registry-role4-execution/final-role4-execution-receipt.json',JSON.stringify(final,null,2)+'\n');
+          })().catch(error => {
+            console.error(error.stack || error.message);
+            process.exit(1);
+          });
+          NODE
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Create deterministic receipt manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/h-earth-v2-registry-role4-execution
+          find . -maxdepth 1 -type f ! -name artifact-sha256.txt -print0 | sort -z | xargs -0 sha256sum > artifact-sha256.txt
+
+      - name: Upload exact-head execution receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-v2-registry-role4-exact-head-execution-receipts
+          path: /tmp/h-earth-v2-registry-role4-execution
+          if-no-files-found: error
+          retention-days: 90

@@ -1,0 +1,323 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_INPUT_v1",
+  "type": "object",
+  "required": [
+    "schema",
+    "repositoryIdentity",
+    "governingMainIdentity",
+    "sourceIdentities",
+    "estateIdentityCorrection",
+    "terrainDomain",
+    "witnesses",
+    "requiredEstateSubzones",
+    "prohibitedActions",
+    "estateModel",
+    "operatorFamilyRegistry"
+  ],
+  "properties": {
+    "schema": {
+      "const": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_INPUT_INSTANCE_v1"
+    },
+    "repositoryIdentity": {
+      "const": "smansfield635-create/smansfield635-create.github.io"
+    },
+    "governingMainIdentity": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "sourceIdentities": {
+      "type": "object",
+      "required": [
+        "currentTerrain",
+        "acceptedLocalReference"
+      ],
+      "properties": {
+        "currentTerrain": {
+          "type": "object",
+          "required": [
+            "head",
+            "path",
+            "blob",
+            "generationRevision"
+          ],
+          "properties": {
+            "head": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "blob": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "generationRevision": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "acceptedLocalReference": {
+          "type": "object",
+          "required": [
+            "head",
+            "deltaPath",
+            "deltaBlob",
+            "successorFieldPath",
+            "successorFieldBlob",
+            "mergedMain"
+          ],
+          "properties": {
+            "head": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "deltaPath": {
+              "type": "string",
+              "minLength": 1
+            },
+            "deltaBlob": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "successorFieldPath": {
+              "type": "string",
+              "minLength": 1
+            },
+            "successorFieldBlob": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "mergedMain": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "estateIdentityCorrection": {
+      "type": "object",
+      "required": [
+        "lineageCenter",
+        "startingEvidenceEnvelope",
+        "semanticReference",
+        "formationReference",
+        "rejectedReservation"
+      ],
+      "properties": {
+        "lineageCenter": {
+          "type": "object",
+          "required": [
+            "x",
+            "z"
+          ],
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "z": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": false
+        },
+        "startingEvidenceEnvelope": {
+          "type": "object"
+        },
+        "semanticReference": {
+          "type": "string",
+          "minLength": 1
+        },
+        "formationReference": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rejectedReservation": {
+          "type": "object",
+          "required": [
+            "x",
+            "z",
+            "rejectionClass",
+            "silentSubstitution"
+          ],
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "z": {
+              "type": "number"
+            },
+            "rejectionClass": {
+              "type": "string"
+            },
+            "silentSubstitution": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "terrainDomain": {
+      "type": "object",
+      "required": [
+        "xMinimum",
+        "xMaximum",
+        "zMinimum",
+        "zMaximum",
+        "rows",
+        "columns",
+        "nodeCount",
+        "xSampleInterval",
+        "zSampleInterval",
+        "fourNeighborEdgeCount",
+        "eightNeighborEdgeCount"
+      ],
+      "properties": {
+        "xMinimum": {
+          "type": "number"
+        },
+        "xMaximum": {
+          "type": "number"
+        },
+        "zMinimum": {
+          "type": "number"
+        },
+        "zMaximum": {
+          "type": "number"
+        },
+        "rows": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "columns": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "nodeCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "xSampleInterval": {
+          "type": "number",
+          "minimum": 0
+        },
+        "zSampleInterval": {
+          "type": "number",
+          "minimum": 0
+        },
+        "fourNeighborEdgeCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "eightNeighborEdgeCount": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "witnesses": {
+      "type": "object",
+      "required": [
+        "firstHill",
+        "secondHill",
+        "interHillSaddle",
+        "hillSeparation",
+        "lowCorridorNoBuildHalfWidth"
+      ]
+    },
+    "requiredEstateSubzones": {
+      "type": "array",
+      "minItems": 15,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "prohibitedActions": {
+      "type": "array",
+      "minItems": 8,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "estateModel": {
+      "type": "object",
+      "required": [
+        "modelClass",
+        "rectangularPadModel",
+        "fixedDimensions"
+      ],
+      "properties": {
+        "modelClass": {
+          "type": "string"
+        },
+        "rectangularPadModel": {
+          "type": "boolean"
+        },
+        "fixedDimensions": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "required": [
+                "width",
+                "depth"
+              ],
+              "properties": {
+                "width": {
+                  "type": "number"
+                },
+                "depth": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "operatorFamilyRegistry": {
+      "type": "object",
+      "required": [
+        "schema",
+        "families",
+        "universalRequirements",
+        "productionAuthority"
+      ],
+      "properties": {
+        "schema": {
+          "type": "string"
+        },
+        "families": {
+          "type": "array",
+          "minItems": 6
+        },
+        "universalRequirements": {
+          "type": "array",
+          "minItems": 7
+        },
+        "productionAuthority": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

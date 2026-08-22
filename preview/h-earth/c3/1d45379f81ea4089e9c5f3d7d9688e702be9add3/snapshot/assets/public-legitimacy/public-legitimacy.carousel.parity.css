@@ -1,0 +1,147 @@
+/* PUBLIC_LEGITIMACY_CAROUSEL_METHODS_MODELS_PARITY_v1
+   Closed orbit: adopt the proven Methods & Models stage placement.
+   Open inspection: remain bounded inside the device viewport with internal scrolling.
+   Applies to Developer, Evidence, and Governance only when explicitly linked. */
+
+.carousel:not([data-inspecting="true"]) .viewport{
+  inset:10.5rem 0 0;
+  perspective:3200px;
+  perspective-origin:50% 42%;
+}
+.carousel:not([data-inspecting="true"]) .ring{top:30%}
+
+.carousel[data-inspecting="true"]{
+  min-height:clamp(680px,86dvh,900px);
+  overflow:hidden;
+}
+.carousel[data-inspecting="true"] .carousel-head{opacity:.12;pointer-events:none}
+.carousel[data-inspecting="true"] .tabs{visibility:hidden}
+.carousel[data-inspecting="true"] .orbit-note{opacity:0}
+.carousel[data-inspecting="true"] .viewport{
+  position:fixed;
+  inset:0;
+  z-index:40;
+  width:100vw;
+  height:100dvh;
+  min-height:100dvh;
+  margin:0;
+  perspective:none;
+}
+.carousel[data-inspecting="true"] .ring{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:none!important;
+  transform-style:flat;
+}
+.carousel[data-inspecting="true"] .card:not([data-active="true"]){visibility:hidden}
+.carousel[data-inspecting="true"] .card[data-active="true"]{
+  transform:none!important;
+  transform-style:flat;
+}
+.card[data-inspecting="true"]{
+  width:min(90vw,720px);
+  height:min(66dvh,620px);
+  min-height:0;
+  max-height:min(66dvh,620px);
+  left:max(-360px,-45vw);
+  top:min(-310px,-33dvh);
+}
+.card[data-inspecting="true"] .surface{
+  height:100%;
+  overflow:hidden;
+}
+.card[data-inspecting="true"] .card-body{
+  height:100%;
+  min-height:0;
+  overflow:hidden;
+  padding:3.8rem 1.3rem 1.35rem;
+}
+.card[data-inspecting="true"] .inspection{
+  height:100%;
+  min-height:0;
+  overflow:hidden;
+}
+.card[data-inspecting="true"] .inspection-rail,
+.card[data-inspecting="true"] .inspection-detail{
+  min-height:0;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scrollbar-width:thin;
+}
+.card[data-inspecting="true"] .inspection-detail{padding-bottom:1rem}
+.card[data-inspecting="true"] .close{position:absolute;right:1rem;top:1rem}
+
+@media(max-width:1100px){
+  .carousel:not([data-inspecting="true"]) .viewport{
+    inset:16.5rem 0 0;
+    perspective:2200px;
+    perspective-origin:50% 44%;
+  }
+  .carousel:not([data-inspecting="true"]) .ring{top:43%}
+  .carousel[data-inspecting="true"]{min-height:clamp(720px,88dvh,900px)}
+  .card[data-inspecting="true"]{
+    width:min(90vw,720px);
+    height:min(66dvh,620px);
+    left:max(-360px,-45vw);
+    top:min(-310px,-33dvh);
+  }
+}
+
+@media(max-width:760px){
+  .carousel:not([data-inspecting="true"]) .viewport{
+    position:absolute;
+    inset:18.75rem 0 0;
+    min-height:0;
+    margin:0;
+    perspective:1800px;
+    perspective-origin:50% 40%;
+  }
+  .carousel:not([data-inspecting="true"]) .ring{top:44%}
+  .carousel[data-inspecting="true"]{
+    min-height:clamp(660px,92dvh,820px);
+    overflow:hidden;
+  }
+  .carousel[data-inspecting="true"] .viewport{
+    position:fixed;
+    inset:0;
+    width:100vw;
+    height:100dvh;
+    min-height:100dvh;
+    margin:0;
+    perspective:none;
+  }
+  .carousel[data-inspecting="true"] .ring{top:50%}
+  .card[data-inspecting="true"]{
+    width:min(92vw,34rem);
+    height:min(68dvh,600px);
+    min-height:0;
+    max-height:min(68dvh,600px);
+    left:max(-46vw,-272px);
+    top:min(-300px,-34dvh);
+  }
+  .card[data-inspecting="true"] .card-body{padding:3.7rem 1rem 1rem}
+  .card[data-inspecting="true"] .inspection{
+    grid-template-columns:1fr;
+    grid-template-rows:auto minmax(0,1fr);
+    gap:.75rem;
+  }
+  .card[data-inspecting="true"] .inspection-rail{
+    max-height:30%;
+    padding:0 0 .7rem;
+    border-right:0;
+    border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  .card[data-inspecting="true"] .inspection-detail{
+    height:100%;
+    padding:.1rem .15rem .8rem;
+  }
+  .card[data-inspecting="true"] .grid{grid-template-columns:1fr}
+}
+
+@media(max-width:440px){
+  .card[data-inspecting="true"]{
+    width:min(94vw,22rem);
+    left:max(-47vw,-176px);
+  }
+}

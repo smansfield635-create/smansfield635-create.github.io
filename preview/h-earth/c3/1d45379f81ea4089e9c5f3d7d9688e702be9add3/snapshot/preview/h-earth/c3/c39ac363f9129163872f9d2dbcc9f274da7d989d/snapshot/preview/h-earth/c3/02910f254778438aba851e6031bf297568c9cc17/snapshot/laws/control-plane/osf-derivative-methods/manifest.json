@@ -1,0 +1,141 @@
+{
+  "contract": "LAWS_CP6_OSF_DERIVATIVE_METHODS_V1",
+  "status": "VERIFIED_PUBLISHED_CANDIDATE",
+  "source_registry": {
+    "registry_id": "OSF_LAWS_CHAMBER_SOURCE_REGISTRY_v1",
+    "branch": "agent/osf-laws-source-registry-001",
+    "pull_request": 466,
+    "pull_request_head": "ae2ccedd4f74ef1afdcc5181a4056c30c83fa20d",
+    "source_snapshot_head": "dbd508fc5cacaa463abed0c159812a1e02635c1d",
+    "claim_boundary": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality."
+  },
+  "first_slice_sources": {
+    "7jnxq": {
+      "title": "Universal Law of Coherence Dynamics",
+      "source_class": "FROZEN_REGISTRATION",
+      "admission_status": "FILES_REVIEWED",
+      "method_class": "FIXED_EVIDENCE_WINDOWS_AND_OBSERVER_PROTOCOL",
+      "empirical_status": "REGISTRATION_IS_CUSTODY_NOT_VALIDATION",
+      "metadata_sha256": "467beb4017f844fddd7328d69b654483324235d4f941b031e4a7eb20004c5530",
+      "public_files": {
+        "Diagnostic_Rules_Coherence_Framework.pdf": "514175c7c619adf7d208260fe47702771895e199d5bef36fd18dd3a81d2c6ced",
+        "Methods_Appendix_Diagnostic_Framework.pdf": "5bb824f8c4291403ab486fd9412f2069aa9d2e49fbd4f508ada68f54caceb18f",
+        "Diagnostic_Protocol_Rulebook.pdf": "8c1e9e23d58f88c2922eb949db0a7da70fa1b33b50365da74b4c3b16273da1a6",
+        "Case_Selection_and_Evidence_Windows-1.pdf": "6de1a6f746dc0c9bbcbdcdd2a7b3631418f46cfc9b31ba211e3960d34d2fe2e3",
+        "Observer_Replication_Guide.pdf": "d4d7d5a005f300d5230ee6ace3711f1689583202b17cfbc538fa42a0113e6b55"
+      },
+      "canonical_destinations": [
+        "EVIDENCE_AND_SOURCES",
+        "METHODS_AND_MODELS",
+        "ADMISSION_AND_BASELINE",
+        "REVERSE_AUDIT"
+      ]
+    },
+    "9ut2z": {
+      "title": "Alignment Diagnostics, an Integrity-Based Platform",
+      "source_class": "METHOD_SPECIFICATION",
+      "admission_status": "ADMITTED_AS_METHOD",
+      "method_class": "OBSERVE_HYPOTHESIZE_1_2_3_REDUCE_FALSIFY_ITERATE_TERMINATE_11_12_13",
+      "empirical_status": "TWO_METHOD_PDFS_NO_VALIDATION_STUDY",
+      "metadata_sha256": "82735851ff27ee32bb19c5ac5cf99da57805d8dc3be48bdad83dd24be6799a2f",
+      "public_files": {
+        "Integral_Platform_HOW_TO-2.pdf": "6bf9d21f9e06768e2eb829dae5641ac76bc3b74f98b1d4061910b09bb4ab8e3a",
+        "Integral_Platform_Method_Explained.pdf": "13adead582dfca3140137ac7eb9d32774c53a74920cc5c104dc99a9216250343"
+      },
+      "canonical_destinations": [
+        "METHODS_AND_MODELS",
+        "FORWARD_CONSTRUCTION",
+        "RESULT_AND_RECORD"
+      ]
+    },
+    "7vkgs": {
+      "title": "As Easy as A–B–C–D: Diagnosing Coherence Before Collapse",
+      "source_class": "METHOD_SPECIFICATION",
+      "admission_status": "ADMITTED_AS_METHOD",
+      "method_class": "ABCD_INTERNAL_COHERENCE_CONSTRAINT_ALIGNMENT_FRAGMENTATION_TRAJECTORY",
+      "empirical_status": "PROCEDURE_ONLY",
+      "metadata_sha256": "d77b87050afb73108e62c34aae8a54d93cc04756785c0bdc2dfc31b1900df979",
+      "public_files": {},
+      "canonical_destinations": [
+        "METHODS_AND_MODELS",
+        "FORWARD_CONSTRUCTION",
+        "APPLIED_INVESTIGATIONS"
+      ]
+    },
+    "n82xh": {
+      "title": "Formal Falsification Path — Break This If You Can",
+      "source_class": "METHOD_AND_STUDY_DESIGN",
+      "admission_status": "ADMITTED_AS_METHOD",
+      "method_class": "FORMAL_FALSIFICATION_PATH",
+      "empirical_status": "PROTOCOL_WITHOUT_DATASET_OR_RESULTS",
+      "metadata_sha256": "12d75fd447aa5686c695264bf9387d35546d02933644eafbdaed251ed141cada",
+      "public_files": {},
+      "canonical_destinations": [
+        "METHODS_AND_MODELS",
+        "REVERSE_AUDIT",
+        "APPLIED_INVESTIGATIONS"
+      ]
+    },
+    "rjdms": {
+      "title": "Methods Appendix: Diagnostic Application and Evaluation Protocol",
+      "source_class": "METHOD_SPECIFICATION",
+      "admission_status": "ADMITTED_AS_METHOD",
+      "method_class": "ADMISSIBLE_EVIDENCE_FIXED_WINDOWS_OBSERVER_INVARIANCE",
+      "empirical_status": "METHODS_SPECIFICATION_ONLY",
+      "metadata_sha256": "695a0d8ccb59b57135758a2ea89b54b5c27119f74024b98de6da1becc8bf437c",
+      "public_files": {},
+      "canonical_destinations": [
+        "METHODS_AND_MODELS",
+        "ADMISSION_AND_BASELINE",
+        "REVERSE_AUDIT"
+      ]
+    }
+  },
+  "landing_page_mutation": false,
+  "source_admission_receipt": {
+    "receipt_id": "OSF_LAWS_CP6_PINNED_SOURCE_ADMISSION_RECEIPT_v1",
+    "path": "laws/control-plane/osf-derivative-methods/PINNED_SOURCE_ADMISSION_RECEIPT.json",
+    "admission_mode": "EXPLICIT_PINNED_SOURCE_ADMISSION",
+    "source_count": 5,
+    "registry_pull_request_head": "ae2ccedd4f74ef1afdcc5181a4056c30c83fa20d",
+    "source_snapshot_head": "dbd508fc5cacaa463abed0c159812a1e02635c1d"
+  },
+  "derivative_destinations": {
+    "EVIDENCE_AND_SOURCES": [
+      "7jnxq"
+    ],
+    "ADMISSION_AND_BASELINE": [
+      "7jnxq",
+      "rjdms"
+    ],
+    "METHODS_AND_MODELS": [
+      "7jnxq",
+      "9ut2z",
+      "7vkgs",
+      "n82xh",
+      "rjdms"
+    ],
+    "FORWARD_CONSTRUCTION": [
+      "9ut2z",
+      "7vkgs"
+    ],
+    "REVERSE_AUDIT": [
+      "7jnxq",
+      "n82xh",
+      "rjdms"
+    ],
+    "RESULT_AND_RECORD": [
+      "9ut2z"
+    ]
+  },
+  "claim_boundary": {
+    "empirical_validation_claimed": false,
+    "independent_replication_established": false,
+    "executed_study_established": false,
+    "public_dataset_recovered": false,
+    "public_analytic_code_recovered": false,
+    "executed_result_tables_recovered": false,
+    "derivative_is_new_method": false
+  },
+  "archive_rule": "Existing CP6-3 canonical content beginning at the scope-and-exclusions marker is preserved byte-for-byte on every child destination."
+}

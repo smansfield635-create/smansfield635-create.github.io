@@ -1,0 +1,1492 @@
+<!doctype html>
+<html
+  lang="en"
+  data-route="/products/nutrition/"
+  data-page="nutrition-product-grandchild-baseline-systems"
+  data-contract="NUTRITION_PRODUCT_GRANDCHILD_BASELINE_SYSTEMS_RENEWAL_TNT_v2"
+  data-previous-contract="NUTRITION_RUSSIAN_DOLL_BASELINE_SYSTEMS_RENEWAL_TNT_v1"
+  data-parent-route="/products/"
+  data-grandparent-route="/"
+  data-role="product-grandchild"
+  data-product-chamber="baseline-nutrition-systems"
+  data-product-type="kitchen-pantry-support"
+  data-core-principle="food-is-support-not-a-moral-score"
+  data-core-message="baseline-before-optimization"
+  data-baseline-loop="water-fuel-time-reset-shelf"
+  data-support-set="water-fuel-time-reset-shelf"
+  data-animation-method="css-only"
+  data-orbit-animation="active"
+  data-label-gravity-lock="true"
+  data-js-required="false"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-heavy-runtime-loaded="false"
+  data-streaming="false"
+  data-visual-pass-claimed="false"
+>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+  <title>Baseline Nutrition Systems · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Baseline Nutrition Systems is a kitchen-and-pantry support chamber for water, food access, timing, rhythm, recovery, and repeatable support without shame."
+  >
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg:#02040b;
+      --ink:#fff4d8;
+      --muted:rgba(230,238,255,.78);
+      --faint:rgba(230,238,255,.52);
+      --gold:#f3c86f;
+      --gold2:#ffe8a3;
+      --blue:#8dd8ff;
+      --green:#8ff0c3;
+      --mint:#a7f3c6;
+      --leaf:#74d99f;
+      --earth:#b9874f;
+      --panel:rgba(9,15,31,.88);
+      --line:rgba(184,205,255,.18);
+      --shadow:0 32px 110px rgba(0,0,0,.48);
+      --max:1180px;
+      --field-turn-duration:50s;
+      --orbit-duration:34s;
+      --gem-float-duration:6.8s;
+      --center-pulse-duration:7.4s;
+      --gem-cut:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
+    }
+
+    * { box-sizing:border-box; }
+
+    html {
+      min-width:320px;
+      min-height:100%;
+      background:var(--bg);
+      scroll-behavior:smooth;
+      overflow-x:hidden;
+    }
+
+    body {
+      margin:0;
+      min-width:320px;
+      min-height:100vh;
+      color:var(--ink);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.5;
+      overflow-x:hidden;
+      background:
+        radial-gradient(circle at 50% -8%,rgba(143,240,195,.18),transparent 28rem),
+        radial-gradient(circle at 12% 18%,rgba(185,135,79,.17),transparent 28rem),
+        radial-gradient(circle at 88% 30%,rgba(243,200,111,.14),transparent 28rem),
+        radial-gradient(circle at 50% 78%,rgba(141,216,255,.10),transparent 34rem),
+        linear-gradient(180deg,#08120d 0%,#030713 58%,#010207 100%);
+      -webkit-font-smoothing:antialiased;
+      text-rendering:geometricPrecision;
+    }
+
+    body::before {
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      background-image:
+        radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
+        linear-gradient(rgba(143,240,195,.04) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(243,200,111,.035) 1px,transparent 1px);
+      background-size:220px 260px,54px 54px,54px 54px;
+      opacity:.22;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
+    }
+
+    a { color:inherit; text-decoration:none; }
+
+    a:focus-visible,
+    button:focus-visible,
+    [tabindex]:focus-visible {
+      outline:2px solid var(--gold);
+      outline-offset:4px;
+    }
+
+    .svg-defs {
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+      pointer-events:none;
+    }
+
+    .skip {
+      position:absolute;
+      left:-999px;
+      top:8px;
+      z-index:50;
+      padding:.75rem 1rem;
+      border-radius:999px;
+      color:#05070d;
+      background:var(--gold);
+      font-weight:950;
+    }
+
+    .skip:focus { left:8px; }
+
+    .shell {
+      position:relative;
+      z-index:2;
+      width:min(var(--max),calc(100% - 28px));
+      margin:0 auto;
+      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
+    }
+
+    .topbar {
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:18px;
+      padding:12px 0 18px;
+    }
+
+    .brand {
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:.9rem;
+      min-width:260px;
+    }
+
+    .brand-mark {
+      width:4.2rem;
+      height:4.2rem;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(143,240,195,.42);
+      transform:rotate(45deg);
+      clip-path:var(--gem-cut);
+      background:
+        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.28) 21% 23%,transparent 24%),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.28),rgba(143,240,195,.25),rgba(185,135,79,.24),rgba(243,200,111,.20),rgba(141,216,255,.16),rgba(255,255,255,.28)),
+        radial-gradient(circle at 48% 22%,rgba(255,255,255,.32),transparent 42%),
+        linear-gradient(145deg,rgba(30,93,55,.95),rgba(5,8,20,.98));
+      box-shadow:
+        0 0 2rem rgba(143,240,195,.20),
+        0 1.2rem 2.8rem rgba(0,0,0,.46),
+        inset 0 1px 0 rgba(255,255,255,.16);
+    }
+
+    .brand-mark span {
+      transform:rotate(-45deg);
+      font-weight:950;
+      letter-spacing:.04em;
+      color:rgba(255,244,216,.98);
+      text-shadow:0 2px 10px rgba(0,0,0,.85);
+    }
+
+    .brand-copy {
+      display:grid;
+      gap:.18rem;
+    }
+
+    .brand-copy strong {
+      font-size:clamp(1.08rem,3vw,1.7rem);
+      line-height:1;
+      letter-spacing:-.045em;
+    }
+
+    .brand-copy span {
+      color:var(--muted);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .nav {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:.48rem;
+    }
+
+    .nav a {
+      min-height:2.25rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:999px;
+      padding:.5rem .74rem;
+      color:rgba(241,246,255,.84);
+      background:rgba(255,255,255,.035);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .nav a[aria-current="page"] {
+      border-color:rgba(143,240,195,.82);
+      color:#06101c;
+      background:linear-gradient(135deg,#b7ffd4,#87e6b5);
+    }
+
+    .panel {
+      border:1px solid var(--line);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
+      background:
+        radial-gradient(circle at 14% 0%,rgba(143,240,195,.10),transparent 28rem),
+        radial-gradient(circle at 86% 18%,rgba(185,135,79,.12),transparent 28rem),
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
+        var(--panel);
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+
+    .hero {
+      position:relative;
+      min-height:clamp(23rem,42vw,34rem);
+      display:grid;
+      align-content:center;
+      gap:1rem;
+      padding:clamp(1.45rem,5vw,3.4rem);
+      margin-top:.6rem;
+      isolation:isolate;
+    }
+
+    .hero::before {
+      content:"";
+      position:absolute;
+      right:clamp(1rem,6vw,5.5rem);
+      top:50%;
+      z-index:0;
+      width:clamp(9rem,25vw,18rem);
+      height:clamp(9rem,25vw,18rem);
+      border:1px solid rgba(143,240,195,.18);
+      border-radius:2.9rem;
+      transform:translateY(-50%) rotate(45deg);
+      background:
+        radial-gradient(circle at 50% 42%,rgba(143,240,195,.14),transparent 48%),
+        radial-gradient(circle at 50% 72%,rgba(185,135,79,.15),transparent 62%),
+        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+      animation:anchorPulse 8s ease-in-out infinite;
+      pointer-events:none;
+      opacity:.54;
+    }
+
+    @keyframes anchorPulse {
+      0%,100% { opacity:.42; filter:brightness(.95); }
+      50% { opacity:.60; filter:brightness(1.1); }
+    }
+
+    .kicker {
+      width:fit-content;
+      display:inline-flex;
+      align-items:center;
+      gap:.58rem;
+      padding:.58rem .95rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      color:rgba(230,238,255,.86);
+      background:rgba(255,255,255,.04);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      position:relative;
+      z-index:2;
+    }
+
+    .kicker::before {
+      content:"";
+      width:.72rem;
+      height:.72rem;
+      border-radius:.18rem;
+      transform:rotate(45deg);
+      background:linear-gradient(135deg,var(--mint),var(--leaf));
+      box-shadow:0 0 1.1rem rgba(143,240,195,.44);
+    }
+
+    h1 {
+      margin:0;
+      max-width:1000px;
+      font-size:clamp(3rem,9vw,6.8rem);
+      line-height:.86;
+      letter-spacing:-.102em;
+      text-wrap:balance;
+      position:relative;
+      z-index:2;
+    }
+
+    h2 {
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.45rem,4.7vw,2.65rem);
+      line-height:.98;
+      letter-spacing:-.07em;
+      text-wrap:balance;
+      position:relative;
+      z-index:2;
+    }
+
+    p {
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(.98rem,2.7vw,1.16rem);
+      line-height:1.55;
+    }
+
+    .lead {
+      max-width:910px;
+      position:relative;
+      z-index:2;
+    }
+
+    .subline {
+      max-width:920px;
+      color:rgba(255,244,216,.90);
+      font-size:clamp(1.08rem,2.8vw,1.34rem);
+      font-weight:850;
+      position:relative;
+      z-index:2;
+    }
+
+    .principle {
+      max-width:980px;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(143,240,195,.26);
+      border-radius:1.2rem;
+      color:rgba(200,255,228,.96);
+      background:rgba(28,80,58,.16);
+      font-weight:900;
+      position:relative;
+      z-index:2;
+    }
+
+    .quote {
+      max-width:980px;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(243,200,111,.22);
+      border-radius:1.2rem;
+      color:rgba(255,244,216,.92);
+      background:rgba(243,200,111,.065);
+      font-weight:850;
+      position:relative;
+      z-index:2;
+    }
+
+    .guardrail {
+      max-width:980px;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(141,216,255,.18);
+      border-radius:1.2rem;
+      color:rgba(230,238,255,.90);
+      background:rgba(36,120,255,.07);
+      font-weight:850;
+      position:relative;
+      z-index:2;
+    }
+
+    .actions {
+      display:flex;
+      flex-wrap:wrap;
+      gap:.62rem;
+      margin-top:.2rem;
+      position:relative;
+      z-index:2;
+    }
+
+    .button {
+      min-height:2.65rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:999px;
+      padding:.65rem 1rem;
+      background:rgba(255,255,255,.045);
+      color:rgba(241,246,255,.88);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      transform:translateY(-2px);
+      border-color:rgba(143,240,195,.62);
+      outline:none;
+    }
+
+    .button.gold {
+      border-color:rgba(243,200,111,.9);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
+    }
+
+    .button.green {
+      border-color:rgba(143,240,195,.42);
+      color:var(--green);
+      background:rgba(143,240,195,.07);
+    }
+
+    .section {
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.45rem);
+      display:grid;
+      gap:1.05rem;
+    }
+
+    .nutrition-stage {
+      position:relative;
+      min-height:clamp(32rem,62vw,45rem);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      isolation:isolate;
+      border:1px solid rgba(184,205,255,.13);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
+      background:
+        radial-gradient(circle at 50% 42%,rgba(143,240,195,.13),transparent 20rem),
+        radial-gradient(circle at 50% 52%,rgba(185,135,79,.12),transparent 25rem),
+        linear-gradient(180deg,rgba(1,5,16,.68),rgba(2,6,16,.92));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .nutrition-stage::before,
+    .nutrition-stage::after {
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+    }
+
+    .nutrition-stage::before {
+      width:min(80%,34rem);
+      height:min(80%,34rem);
+      border:1px solid rgba(143,240,195,.10);
+      background:
+        conic-gradient(
+          from 0deg,
+          transparent 0deg,
+          rgba(141,216,255,.12) 28deg,
+          transparent 58deg,
+          rgba(143,240,195,.10) 108deg,
+          transparent 154deg,
+          rgba(243,200,111,.11) 214deg,
+          transparent 270deg,
+          rgba(185,135,79,.10) 320deg,
+          transparent 360deg
+        );
+      box-shadow:0 0 3rem rgba(143,240,195,.10);
+      opacity:.82;
+      animation:nutritionFieldTurn var(--field-turn-duration) linear infinite;
+    }
+
+    .nutrition-stage::after {
+      width:min(52%,22rem);
+      height:min(52%,22rem);
+      border:1px solid rgba(36,120,255,.15);
+      box-shadow:
+        inset 0 0 3rem rgba(36,120,255,.035),
+        0 0 2.4rem rgba(36,120,255,.08);
+      animation:nutritionInnerFieldBreathe 8s ease-in-out infinite;
+    }
+
+    @keyframes nutritionFieldTurn {
+      to { transform:translate(-50%,-50%) rotate(360deg); }
+    }
+
+    @keyframes nutritionInnerFieldBreathe {
+      0%,100% { opacity:.54; filter:brightness(.94); }
+      50% { opacity:.86; filter:brightness(1.12); }
+    }
+
+    .center-gem {
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:5;
+      width:clamp(10.5rem,24vw,15rem);
+      height:clamp(7.7rem,17vw,10.9rem);
+      transform:translate(-50%,-50%);
+      display:grid;
+      place-items:center;
+      text-align:center;
+      pointer-events:none;
+    }
+
+    .nutrition-orbit {
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:4;
+      width:min(80%,34rem);
+      height:min(80%,34rem);
+      border-radius:999px;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+      animation:nutritionOrbitTurn var(--orbit-duration) linear infinite;
+      transform-origin:50% 50%;
+      will-change:transform;
+    }
+
+    @keyframes nutritionOrbitTurn {
+      from { transform:translate(-50%,-50%) rotate(0deg); }
+      to { transform:translate(-50%,-50%) rotate(360deg); }
+    }
+
+    .center-gem-core,
+    .nutrition-gem-core,
+    .nutrition-upright {
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      transform-origin:50% 50%;
+    }
+
+    .center-gem-core {
+      animation:centerPulse var(--center-pulse-duration) ease-in-out infinite;
+    }
+
+    @keyframes centerPulse {
+      0%,100% { transform:scale(1); filter:brightness(1); }
+      50% { transform:scale(1.035); filter:brightness(1.13); }
+    }
+
+    .nutrition-point {
+      --angle:0deg;
+      --radius:-15rem;
+      --nutrition-delay:0s;
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:clamp(7.4rem,16vw,9.4rem);
+      height:clamp(5.4rem,12vw,6.95rem);
+      margin-left:calc(clamp(7.4rem,16vw,9.4rem) / -2);
+      margin-top:calc(clamp(5.4rem,12vw,6.95rem) / -2);
+      display:grid;
+      place-items:center;
+      text-align:center;
+      pointer-events:auto;
+      background:transparent;
+      border:0;
+      transform:
+        rotate(var(--angle))
+        translateY(var(--radius))
+        rotate(calc(-1 * var(--angle)));
+      transition:filter .18s ease,scale .18s ease;
+    }
+
+    .nutrition-point .nutrition-upright {
+      animation:nutritionLabelGravityLock var(--orbit-duration) linear infinite reverse;
+      will-change:transform;
+    }
+
+    @keyframes nutritionLabelGravityLock {
+      from { transform:rotate(0deg); }
+      to { transform:rotate(360deg); }
+    }
+
+    .nutrition-point .nutrition-gem-core {
+      animation:nutritionGemFloat var(--gem-float-duration) ease-in-out infinite;
+      animation-delay:var(--nutrition-delay);
+    }
+
+    @keyframes nutritionGemFloat {
+      0%,100% { transform:translateY(0) scale(1); filter:brightness(1); }
+      50% { transform:translateY(-8px) scale(1.025); filter:brightness(1.12); }
+    }
+
+    .nutrition-point:hover,
+    .nutrition-point:focus-visible {
+      filter:brightness(1.12) saturate(1.08);
+      scale:1.045;
+      outline:none;
+    }
+
+    .nutrition-point:hover .nutrition-gem-core,
+    .nutrition-point:focus-visible .nutrition-gem-core {
+      animation-play-state:paused;
+      transform:translateY(-10px) scale(1.045);
+      filter:brightness(1.18);
+    }
+
+    .nutrition-gem-svg {
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      overflow:visible;
+      pointer-events:none;
+      filter:
+        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
+        drop-shadow(0 0 1.15rem rgba(143,240,195,.17))
+        drop-shadow(0 0 .55rem rgba(243,200,111,.10));
+    }
+
+    .center-gem .nutrition-gem-svg {
+      filter:
+        drop-shadow(0 1.55rem 1.85rem rgba(0,0,0,.42))
+        drop-shadow(0 0 1.65rem rgba(143,240,195,.22))
+        drop-shadow(0 0 .85rem rgba(185,135,79,.12));
+    }
+
+    .gem-label {
+      position:relative;
+      z-index:3;
+      width:72%;
+      display:grid;
+      gap:.12rem;
+      place-items:center;
+      text-align:center;
+      pointer-events:none;
+      text-shadow:
+        0 2px 12px rgba(0,0,0,.94),
+        0 0 10px rgba(0,60,45,.82),
+        0 0 2px rgba(255,255,255,.42);
+    }
+
+    .gem-label b {
+      display:block;
+      color:rgba(255,244,216,.98);
+      font-size:clamp(.58rem,1.5vw,.82rem);
+      font-weight:950;
+      letter-spacing:.075em;
+      line-height:1.02;
+      text-transform:uppercase;
+    }
+
+    .gem-label span {
+      color:rgba(230,238,255,.78);
+      font-size:clamp(.42rem,1vw,.55rem);
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .center-gem .gem-label b {
+      color:var(--green);
+      font-size:clamp(.72rem,1.65vw,.95rem);
+      letter-spacing:.16em;
+    }
+
+    .center-gem .gem-label strong {
+      display:block;
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1rem,2.2vw,1.38rem);
+      line-height:1.05;
+      letter-spacing:-.035em;
+      text-transform:none;
+    }
+
+    .nutrition-glint {
+      animation:nutritionGlint 8.5s ease-in-out infinite;
+      transform-origin:110px 80px;
+    }
+
+    .nutrition-star {
+      animation:nutritionFacetTurn 28s linear infinite;
+      transform-origin:110px 80px;
+    }
+
+    @keyframes nutritionGlint {
+      0%,100% { opacity:.08; transform:translateX(-34px); }
+      48%,55% { opacity:.56; transform:translateX(34px); }
+    }
+
+    @keyframes nutritionFacetTurn {
+      to { transform:rotate(360deg); }
+    }
+
+    .card-grid {
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.85rem;
+    }
+
+    .loop-grid {
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:.85rem;
+    }
+
+    .family-grid,
+    .guardrail-grid,
+    .route-card-grid,
+    .middle-grid {
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.85rem;
+    }
+
+    .card,
+    .loop-card,
+    .route-card {
+      display:grid;
+      gap:.6rem;
+      min-height:100%;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.2rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(143,240,195,.08),transparent 60%),
+        rgba(255,255,255,.035);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .card:hover,
+    .card:focus-within,
+    .route-card:hover,
+    .route-card:focus-visible {
+      transform:translateY(-3px);
+      border-color:rgba(143,240,195,.46);
+      outline:none;
+    }
+
+    .card b,
+    .loop-card b,
+    .route-card b {
+      color:var(--green);
+      font-size:.68rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .card strong,
+    .loop-card strong,
+    .route-card strong {
+      color:rgba(255,244,216,.98);
+      font-size:1.15rem;
+      line-height:1.1;
+    }
+
+    .card span,
+    .loop-card span,
+    .route-card span {
+      color:var(--muted);
+      font-size:.94rem;
+      line-height:1.42;
+    }
+
+    .guardrail-card {
+      border-color:rgba(243,200,111,.18);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(243,200,111,.08),transparent 60%),
+        rgba(243,200,111,.035);
+    }
+
+    .guardrail-card b {
+      color:var(--gold);
+    }
+
+    .final-direction {
+      padding:1.1rem;
+      border:1px solid rgba(143,240,195,.22);
+      border-radius:1.2rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(143,240,195,.10),transparent 60%),
+        rgba(143,240,195,.045);
+      display:grid;
+      gap:.65rem;
+    }
+
+    .final-direction strong {
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.2rem,3.6vw,2rem);
+      line-height:1.05;
+      letter-spacing:-.04em;
+    }
+
+    .open-path {
+      margin-top:auto;
+      color:rgba(230,238,255,.88);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .route-receipt,
+    [data-route-receipt],
+    [data-contract-receipt],
+    [data-debug-receipt],
+    .receipt {
+      display:none!important;
+      visibility:hidden!important;
+      overflow:hidden!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      inset:auto!important;
+      clip-path:inset(50%)!important;
+      white-space:nowrap!important;
+    }
+
+    footer {
+      padding:1.35rem 0 .5rem;
+      color:var(--faint);
+      text-align:center;
+      font-size:.76rem;
+    }
+
+    @media (max-width:1080px) {
+      .loop-grid,
+      .family-grid,
+      .guardrail-grid,
+      .route-card-grid,
+      .middle-grid {
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .card-grid {
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width:980px) {
+      .topbar {
+        grid-template-columns:1fr;
+        align-items:start;
+      }
+
+      .nav {
+        justify-content:flex-start;
+      }
+    }
+
+    @media (max-width:720px) {
+      .shell { width:min(100% - 22px,var(--max)); }
+      h1 { font-size:clamp(3rem,17vw,5rem); }
+
+      .hero {
+        min-height:28rem;
+        padding:1rem;
+      }
+
+      .actions { display:grid; }
+      .button { width:100%; }
+
+      .nutrition-stage { min-height:29rem; }
+
+      .nutrition-orbit {
+        width:20rem;
+        height:20rem;
+      }
+
+      .nutrition-point {
+        --radius:-9.25rem;
+        width:5.2rem;
+        height:3.82rem;
+        margin-left:-2.6rem;
+        margin-top:-1.91rem;
+      }
+
+      .gem-label b { font-size:.38rem; }
+      .gem-label span { display:none; }
+
+      .center-gem {
+        width:7.4rem;
+        height:5.4rem;
+      }
+
+      .center-gem .gem-label b { font-size:.50rem; }
+      .center-gem .gem-label strong { font-size:.82rem; }
+
+      .loop-grid,
+      .family-grid,
+      .guardrail-grid,
+      .route-card-grid,
+      .middle-grid {
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width:460px) {
+      .nutrition-stage { min-height:27rem; }
+
+      .nutrition-orbit {
+        width:17.3rem;
+        height:17.3rem;
+      }
+
+      .nutrition-point {
+        --radius:-8rem;
+        width:4.7rem;
+        height:3.45rem;
+        margin-left:-2.35rem;
+        margin-top:-1.725rem;
+      }
+
+      .gem-label b { font-size:.33rem; }
+
+      .center-gem {
+        width:6.75rem;
+        height:4.9rem;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
+      }
+
+      .nutrition-stage::before,
+      .nutrition-stage::after,
+      .nutrition-orbit,
+      .nutrition-point .nutrition-upright,
+      .center-gem-core,
+      .nutrition-point .nutrition-gem-core,
+      .nutrition-glint,
+      .nutrition-star {
+        animation:none!important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="nutritionGemBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#fff8dc" stop-opacity=".94"/>
+        <stop offset=".16" stop-color="#a7f3c6" stop-opacity=".78"/>
+        <stop offset=".32" stop-color="#74d99f" stop-opacity=".62"/>
+        <stop offset=".50" stop-color="#b9874f" stop-opacity=".48"/>
+        <stop offset=".70" stop-color="#f3c86f" stop-opacity=".30"/>
+        <stop offset="1" stop-color="#020816" stop-opacity=".92"/>
+      </linearGradient>
+
+      <linearGradient id="nutritionGemAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".90"/>
+        <stop offset=".34" stop-color="#eaffdc" stop-opacity=".46"/>
+        <stop offset=".68" stop-color="#fff0a3" stop-opacity=".18"/>
+        <stop offset="1" stop-color="#8dd8ff" stop-opacity=".10"/>
+      </linearGradient>
+
+      <linearGradient id="nutritionGemDepth" x1="110" y1="36" x2="110" y2="156" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".18"/>
+        <stop offset=".30" stop-color="#8ff0c3" stop-opacity=".22"/>
+        <stop offset=".62" stop-color="#b9874f" stop-opacity=".16"/>
+        <stop offset="1" stop-color="#020716" stop-opacity=".62"/>
+      </linearGradient>
+
+      <radialGradient id="nutritionGemTableGlow" cx="50%" cy="38%" r="64%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".58"/>
+        <stop offset=".28" stop-color="#a7f3c6" stop-opacity=".30"/>
+        <stop offset=".58" stop-color="#ffe8a3" stop-opacity=".12"/>
+        <stop offset="1" stop-color="#020611" stop-opacity="0"/>
+      </radialGradient>
+
+      <linearGradient id="nutritionGemGlint" x1="28" y1="130" x2="184" y2="24" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset=".45" stop-color="#ffffff" stop-opacity=".86"/>
+        <stop offset=".52" stop-color="#fff0a3" stop-opacity=".30"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+
+      <filter id="nutritionGemGlow" x="-42%" y="-50%" width="184%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="blur"/>
+        <feColorMatrix
+          in="blur"
+          type="matrix"
+          values="
+            0.48 0 0 0 0.10
+            0 .82 0 0 0.22
+            0 0 .46 0 0.10
+            0 0 0 0.52 0"
+          result="glow"
+        />
+        <feMerge>
+          <feMergeNode in="glow"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <symbol id="nutritionDigitalGem" viewBox="0 0 220 160">
+        <g filter="url(#nutritionGemGlow)">
+          <path
+            d="M110 5 L145 13 L182 38 L210 75 L190 106 L150 137 L110 155 L70 137 L30 106 L10 75 L38 38 L75 13 Z"
+            fill="url(#nutritionGemBody)"
+            stroke="rgba(235,255,245,.60)"
+            stroke-width="1.35"
+          />
+          <path d="M110 5 L145 13 L132 37 L110 29 L88 37 L75 13 Z" fill="url(#nutritionGemAir)" opacity=".84"/>
+          <path d="M75 13 L88 37 L62 58 L38 38 Z" fill="rgba(255,255,255,.25)"/>
+          <path d="M145 13 L132 37 L158 58 L182 38 Z" fill="rgba(255,255,255,.17)"/>
+          <path d="M38 38 L62 58 L55 82 L10 75 Z" fill="rgba(143,240,195,.13)"/>
+          <path d="M182 38 L158 58 L165 82 L210 75 Z" fill="rgba(243,200,111,.12)"/>
+          <path
+            d="M88 37 L110 29 L132 37 L158 58 L148 82 L110 101 L72 82 L62 58 Z"
+            fill="url(#nutritionGemTableGlow)"
+            stroke="rgba(255,255,255,.30)"
+            stroke-width=".9"
+          />
+          <path d="M10 75 L55 82 L70 137 L30 106 Z" fill="rgba(143,240,195,.16)"/>
+          <path d="M210 75 L165 82 L150 137 L190 106 Z" fill="rgba(185,135,79,.14)"/>
+          <path d="M55 82 L72 82 L110 155 L70 137 Z" fill="rgba(2,8,24,.38)"/>
+          <path d="M165 82 L148 82 L110 155 L150 137 Z" fill="rgba(243,200,111,.10)"/>
+          <path d="M72 82 L110 101 L110 155 Z" fill="url(#nutritionGemDepth)" opacity=".76"/>
+          <path d="M148 82 L110 101 L110 155 Z" fill="rgba(4,10,22,.36)"/>
+          <path d="M110 5 L110 155" stroke="rgba(255,255,255,.34)" stroke-width="1.15"/>
+          <path d="M10 75 L210 75" stroke="rgba(255,255,255,.28)" stroke-width="1.05"/>
+          <path d="M38 38 L190 106" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M182 38 L30 106" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M75 13 L110 101 L145 13" stroke="rgba(255,255,255,.18)" stroke-width=".9" fill="none"/>
+          <path d="M38 38 L110 101 L182 38" stroke="rgba(255,255,255,.16)" stroke-width=".9" fill="none"/>
+          <path d="M30 106 L110 101 L190 106" stroke="rgba(243,200,111,.14)" stroke-width=".9" fill="none"/>
+          <g class="nutrition-star" opacity=".82">
+            <path d="M110 26 L116 70 L110 106 L104 70 Z" fill="rgba(255,255,255,.28)"/>
+            <path d="M62 58 L105 72 L158 58 L116 78 Z" fill="rgba(255,255,255,.17)"/>
+            <path d="M72 82 L105 75 L148 82 L114 91 Z" fill="rgba(143,240,195,.14)"/>
+            <path d="M110 101 L126 81 L148 82 L129 96 Z" fill="rgba(255,255,255,.14)"/>
+            <path d="M110 101 L94 81 L72 82 L91 96 Z" fill="rgba(243,200,111,.08)"/>
+          </g>
+          <path class="nutrition-glint" d="M34 117 L176 22 L188 38 L48 130 Z" fill="url(#nutritionGemGlint)"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
+  <a class="skip" href="#nutrition-main">Skip to Baseline Nutrition Systems</a>
+
+  <div class="shell">
+    <header class="topbar" aria-label="Baseline Nutrition Systems header">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true"><span>BN</span></span>
+        <span class="brand-copy">
+          <span>Diamond Gate Bridge</span>
+          <strong>Baseline Nutrition Systems</strong>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/explore/">Explore</a>
+        <a href="/nine-summits-of-love/">Book</a>
+        <a href="/products/">Products</a>
+        <a href="/products/on-your-side-ai/">On Your Side AAI</a>
+        <a href="/products/education/">Education</a>
+        <a href="/products/nutrition/" aria-current="page">Nutrition</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/showroom/globe/">Globe</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </header>
+
+    <main id="nutrition-main">
+      <section class="panel hero" aria-labelledby="page-title">
+        <div class="kicker">Baseline Nutrition Systems · Kitchen / Pantry</div>
+        <h1 id="page-title">Food is support. Not a moral score.</h1>
+
+        <p class="subline">Water. Fuel. Time. Reset. Shelf.</p>
+
+        <p class="lead">
+          Baseline Nutrition Systems is a kitchen-and-pantry support chamber. It helps people return to the basics: water, food access, timing, rhythm, recovery, and repeatable support before optimization enters the room.
+        </p>
+
+        <div class="principle">
+          The kitchen does not shame the body. It brings the day back into range.
+        </div>
+
+        <div class="quote">
+          Most people do not need a perfect diet. They need a survivable baseline. Optimization fails when the basics are missing.
+        </div>
+
+        <div class="guardrail">
+          This page is practical support, not medical care. It does not diagnose, prescribe, treat, replace a doctor, replace a registered dietitian, or address emergency health needs.
+        </div>
+
+        <div class="actions">
+          <a class="button gold" href="#baseline-loop">Baseline Loop</a>
+          <a class="button green" href="#guardrails">Guardrails</a>
+          <a class="button" href="/products/">Back to Products</a>
+          <a class="button" href="/gauges/">Read Gauges</a>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="baseline-title">
+        <div class="kicker">Five baseline points</div>
+        <h2 id="baseline-title">The chamber turns food pressure into repeatable support.</h2>
+
+        <div class="nutrition-stage" aria-label="Water fuel time reset shelf baseline field">
+          <div class="center-gem" aria-hidden="true">
+            <span class="center-gem-core">
+              <svg class="nutrition-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                <use href="#nutritionDigitalGem"></use>
+              </svg>
+              <span class="gem-label">
+                <b>Baseline</b>
+                <strong>Nutrition Field</strong>
+              </span>
+            </span>
+          </div>
+
+          <div class="nutrition-orbit" aria-label="Animated nutrition orbit">
+            <a class="nutrition-point" style="--angle:0deg;--nutrition-delay:-.2s" href="#baseline-loop">
+              <span class="nutrition-upright">
+                <span class="nutrition-gem-core">
+                  <svg class="nutrition-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#nutritionDigitalGem"></use></svg>
+                  <span class="gem-label"><b>Water</b><span>First cue</span></span>
+                </span>
+              </span>
+            </a>
+
+            <a class="nutrition-point" style="--angle:72deg;--nutrition-delay:-1.4s" href="#baseline-loop">
+              <span class="nutrition-upright">
+                <span class="nutrition-gem-core">
+                  <svg class="nutrition-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#nutritionDigitalGem"></use></svg>
+                  <span class="gem-label"><b>Fuel</b><span>Enough support</span></span>
+                </span>
+              </span>
+            </a>
+
+            <a class="nutrition-point" style="--angle:144deg;--nutrition-delay:-2.6s" href="#baseline-loop">
+              <span class="nutrition-upright">
+                <span class="nutrition-gem-core">
+                  <svg class="nutrition-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#nutritionDigitalGem"></use></svg>
+                  <span class="gem-label"><b>Time</b><span>Meal rhythm</span></span>
+                </span>
+              </span>
+            </a>
+
+            <a class="nutrition-point" style="--angle:216deg;--nutrition-delay:-3.8s" href="#baseline-loop">
+              <span class="nutrition-upright">
+                <span class="nutrition-gem-core">
+                  <svg class="nutrition-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#nutritionDigitalGem"></use></svg>
+                  <span class="gem-label"><b>Reset</b><span>Return path</span></span>
+                </span>
+              </span>
+            </a>
+
+            <a class="nutrition-point" style="--angle:288deg;--nutrition-delay:-5s" href="#baseline-loop">
+              <span class="nutrition-upright">
+                <span class="nutrition-gem-core">
+                  <svg class="nutrition-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#nutritionDigitalGem"></use></svg>
+                  <span class="gem-label"><b>Shelf</b><span>Pantry fallback</span></span>
+                </span>
+              </span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="helps-title">
+        <div class="kicker">What it helps with</div>
+        <h2 id="helps-title">Practical support for real days.</h2>
+
+        <div class="card-grid">
+          <article class="card">
+            <b>Water</b>
+            <strong>Start with the simplest support.</strong>
+            <span>Morning water cue, second-water checkpoint, and low-friction refill rhythm before the day drifts too far.</span>
+          </article>
+
+          <article class="card">
+            <b>Food access</b>
+            <strong>Make the next meal reachable.</strong>
+            <span>Build a pantry fallback, fast meal options, and recovery-day support so eating does not become an emergency.</span>
+          </article>
+
+          <article class="card">
+            <b>Rhythm</b>
+            <strong>Repeat support without overthinking it.</strong>
+            <span>First meal anchor, midday support, and evening reset before crash windows take over.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section" id="baseline-loop" aria-labelledby="loop-title">
+        <div class="kicker">Baseline loop</div>
+        <h2 id="loop-title">Water → Fuel → Time → Reset → Shelf.</h2>
+
+        <div class="loop-grid">
+          <article class="loop-card">
+            <b>01</b>
+            <strong>Water first.</strong>
+            <span>Begin with hydration cues that are easy to repeat and hard to moralize.</span>
+          </article>
+
+          <article class="loop-card">
+            <b>02</b>
+            <strong>Fuel the day.</strong>
+            <span>Make sure enough food support exists to keep the day manageable.</span>
+          </article>
+
+          <article class="loop-card">
+            <b>03</b>
+            <strong>Anchor timing.</strong>
+            <span>Use simple meal rhythm instead of waiting until the body is already crashing.</span>
+          </article>
+
+          <article class="loop-card">
+            <b>04</b>
+            <strong>Reset without shame.</strong>
+            <span>When the day breaks, return to baseline instead of restarting from guilt.</span>
+          </article>
+
+          <article class="loop-card">
+            <b>05</b>
+            <strong>Keep the shelf ready.</strong>
+            <span>Pantry fallbacks make support available on the days when energy is low.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="middle-title">
+        <div class="kicker">Messy middle</div>
+        <h2 id="middle-title">Nutrition usually collapses where real life gets loud.</h2>
+
+        <div class="middle-grid">
+          <article class="card">
+            <b>Time</b>
+            <strong>The schedule gets ahead of the body.</strong>
+            <span>Workdays, errands, care duties, and late starts can erase the first useful meal.</span>
+          </article>
+
+          <article class="card">
+            <b>Money</b>
+            <strong>The pantry is part of the product.</strong>
+            <span>Knowing what to eat does not help if nothing usable is available or affordable.</span>
+          </article>
+
+          <article class="card">
+            <b>Stress</b>
+            <strong>Decision fatigue breaks the plan.</strong>
+            <span>Baseline support works best when it reduces decisions instead of adding more pressure.</span>
+          </article>
+
+          <article class="card">
+            <b>Recovery</b>
+            <strong>Missed days need a return path.</strong>
+            <span>A missed day is not failure. It is where the reset system proves whether it works.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="family-title">
+        <div class="kicker">Product family</div>
+        <h2 id="family-title">The kitchen and pantry can become a practical support line.</h2>
+
+        <div class="family-grid">
+          <article class="card">
+            <b>Water First</b>
+            <strong>Morning cue, midday checkpoint, evening reset.</strong>
+            <span>A hydration rhythm that supports the day without becoming another scorecard.</span>
+          </article>
+
+          <article class="card">
+            <b>Pantry Reset</b>
+            <strong>Fallback shelf, fast meals, recovery-day options.</strong>
+            <span>Support for days when planning fails and the kitchen still needs to work.</span>
+          </article>
+
+          <article class="card">
+            <b>Meal Rhythm</b>
+            <strong>First meal anchor, workday support, evening rhythm.</strong>
+            <span>Timing support before optimization, tracking, or aesthetic goals enter the room.</span>
+          </article>
+
+          <article class="card">
+            <b>Family Kitchen</b>
+            <strong>Household staples and shared planning.</strong>
+            <span>Food support that does not make one person carry the entire household system.</span>
+          </article>
+
+          <article class="card">
+            <b>Budget Baseline</b>
+            <strong>Low-cost staples, batch basics, waste reduction.</strong>
+            <span>Nutrition support that respects money pressure and actual pantry constraints.</span>
+          </article>
+
+          <article class="card">
+            <b>Recovery Kitchen</b>
+            <strong>Reset meals, gentle rhythm, return-repeat loop.</strong>
+            <span>A support line for the days after disruption, illness, stress, travel, or overload.</span>
+          </article>
+
+          <article class="card">
+            <b>Workday Fuel</b>
+            <strong>Packable options, desk backups, long-day timing.</strong>
+            <span>Food support for days that do not pause long enough for perfect meals.</span>
+          </article>
+
+          <article class="card">
+            <b>AAI Kitchen Support</b>
+            <strong>Shopping support, meal ideas, pantry organization.</strong>
+            <span>Connects preferences, budget, schedule, and pantry inventory to practical next steps.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section" id="guardrails" aria-labelledby="guardrails-title">
+        <div class="kicker">Guardrails</div>
+        <h2 id="guardrails-title">Nutrition support is not medical care.</h2>
+
+        <div class="guardrail-grid">
+          <article class="card guardrail-card">
+            <b>Not medical care</b>
+            <strong>It does not diagnose, prescribe, or treat.</strong>
+            <span>Medical conditions, chronic symptoms, and specialized needs require qualified professional care.</span>
+          </article>
+
+          <article class="card guardrail-card">
+            <b>Not eating-disorder care</b>
+            <strong>Specialized support belongs with qualified professionals.</strong>
+            <span>Eating disorders, severe restriction, purging, or urgent mental-health concerns require professional help.</span>
+          </article>
+
+          <article class="card guardrail-card">
+            <b>Not a moral score</b>
+            <strong>Food should not become shame math.</strong>
+            <span>The product should help visitors return to support, not punish them for being human.</span>
+          </article>
+
+          <article class="card guardrail-card">
+            <b>Not optimization first</b>
+            <strong>Basics come before strategy.</strong>
+            <span>Optimization fails when water, food access, timing, and recovery are missing.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="routes-title">
+        <div class="kicker">Product chamber routes</div>
+        <h2 id="routes-title">Baseline Nutrition Systems stays attached to the product wing.</h2>
+
+        <div class="route-card-grid">
+          <a class="route-card" href="/products/">
+            <b>Products</b>
+            <strong>Return to the wing.</strong>
+            <span>Baseline Nutrition Systems sits inside the larger product chamber system.</span>
+            <span class="open-path">Open Products</span>
+          </a>
+
+          <a class="route-card" href="/products/on-your-side-ai/">
+            <b>On Your Side AAI</b>
+            <strong>Open support.</strong>
+            <span>Connect food support to preferences, budget, schedule, and pantry inventory.</span>
+            <span class="open-path">Open AAI</span>
+          </a>
+
+          <a class="route-card" href="/products/education/">
+            <b>Education</b>
+            <strong>Open learning.</strong>
+            <span>Connect baseline support to language, habits, and everyday operating systems.</span>
+            <span class="open-path">Open Education</span>
+          </a>
+
+          <a class="route-card" href="/gauges/">
+            <b>Gauges</b>
+            <strong>Measure the route.</strong>
+            <span>Gauges checks served source truth and contract alignment.</span>
+            <span class="open-path">Read Gauges</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="final-title">
+        <div class="final-direction">
+          <strong id="final-title">Baseline Nutrition Systems restores support before optimization.</strong>
+          <p>
+            Water, fuel, timing, reset, and pantry fallback come first. The chamber does not shame the body. It helps bring the day back into range.
+          </p>
+
+          <div class="actions">
+            <a class="button gold" href="/products/">Back to Products</a>
+            <a class="button green" href="/products/on-your-side-ai/">Open On Your Side AAI</a>
+            <a class="button" href="/products/education/">Open Education</a>
+            <a class="button" href="/gauges/">Read Gauges</a>
+          </div>
+        </div>
+      </section>
+
+      <template id="route-receipt" data-route-receipt>
+NUTRITION_PRODUCT_GRANDCHILD_BASELINE_SYSTEMS_RENEWAL_TNT_v2
+previous=NUTRITION_RUSSIAN_DOLL_BASELINE_SYSTEMS_RENEWAL_TNT_v1
+route=/products/nutrition/
+page=nutrition
+role=product_grandchild
+parent=/products/
+grandparent=/
+product_type=kitchen_pantry_support
+public_label=Baseline_Nutrition_Systems
+canonical_one_line=Baseline Nutrition Systems helps people return to water, food, timing, rhythm, recovery, and repeatable support without turning food into shame.
+core_principle=Food is support. Not a moral score.
+core_message=Baseline before optimization.
+core_mechanic=water_fuel_time_reset_shelf
+support_points=water,fuel,time,reset,shelf
+baseline_loop=water_first,fuel_the_day,anchor_timing,reset_without_shame,keep_the_shelf_ready
+public_frame=kitchen_pantry
+support_not_shame=true
+medical_care=false
+not_medical_care=true
+not_diagnosis=true
+not_prescription=true
+not_treatment=true
+not_registered_dietitian_replacement=true
+not_doctor_replacement=true
+not_emergency_health_support=true
+baseline_layers=water,fuel,time,reset,shelf
+product_family=water_first,pantry_reset,meal_rhythm,family_kitchen,budget_baseline,recovery_kitchen,workday_fuel,aai_kitchen_support
+connected_products=on_your_side_aai,education
+visible_label_corrections=Explore_not_Manor,Earth_G1_removed_from_product_nav
+parent_products=/products/
+on_your_side_aai=/products/on-your-side-ai/
+education=/products/education/
+showroom=/showroom/
+globe=/showroom/globe/
+gauges=/gauges/
+compass=/
+explore=/explore/
+visual_system=code_rendered_five_baseline_nutrition_digital_gem_orbit
+animation_method=css_only
+js_required=false
+animated=nutrition_orbit_turn,nutrition_label_gravity_lock,nutrition_field_turn,nutrition_inner_field_breathe,nutrition_gem_float,center_pulse,nutrition_glint,nutrition_facet_turn
+label_gravity_lock=true
+mobile_law=stacked_baseline_points_no_clipping_no_hidden_nodes
+receipt_visibility=hidden_template_only
+route_owns=baseline_nutrition_public_support_chamber,baseline_loop,guardrails,product_family,product_chamber_receipt,nutrition_visual_field,css_only_nutrition_orbit
+route_does_not_own=products_root,other_product_chambers,showroom,gauges_logic,runtime,render_files,instrument_state,javascript_animation_runtime,medical_care
+heavy_runtime_loaded=false
+render_files_touched=false
+instrument_touched=false
+gauges_logic_touched=false
+generated_image=false
+graphic_box=false
+streaming=false
+visual_pass_claimed=false
+      </template>
+    </main>
+
+    <footer>
+      NUTRITION_PRODUCT_GRANDCHILD_BASELINE_SYSTEMS_RENEWAL_TNT_v2 · Baseline Nutrition Systems · Product Grandchild · Kitchen / Pantry Support.
+    </footer>
+  </div>
+</body>
+</html>

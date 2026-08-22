@@ -1,0 +1,52 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_SPEECH_KERNEL_G3_BOUNDARY_v1",
+  "status": "CONSTRUCTED_PENDING_RENDER_QUALIFICATION",
+  "generation": "G3",
+  "predecessorGeneration": "G2",
+  "installedMain": "eb70077f37bfe04cde44afe66bd12eecd13eed41",
+  "heldConstant": [
+    "exact eight Compass lines",
+    "phoneme inventory",
+    "G1 duration law",
+    "G1 word-gap law",
+    "G1 punctuation-pause law",
+    "G1 word-final lengthening",
+    "G2 lexical stress law",
+    "G2 phrase-level F0 contour",
+    "G2 stress-linked F0 excursion",
+    "G2 stress-linked energy envelope",
+    "G2 phrase-final F0 settling",
+    "sample rate",
+    "formant table",
+    "harmonic/noise excitation families",
+    "WAV encoding"
+  ],
+  "g3AuthorizedVariables": [
+    "sub-percent deterministic F0 jitter",
+    "low-rate intra-phoneme F0 drift",
+    "sub-two-percent deterministic amplitude shimmer",
+    "slow intra-phoneme amplitude drift",
+    "micro attack/release envelope asymmetry"
+  ],
+  "bounds": {
+    "f0JitterFractionMax": 0.008,
+    "f0DriftHzMax": 0.9,
+    "amplitudeShimmerFractionMax": 0.015,
+    "amplitudeDriftFractionMax": 0.012,
+    "rule": "micro-variation remains subordinate to G2 phrase intention and must never create audible wobble"
+  },
+  "forbidden": [
+    "coarticulation",
+    "cross-phoneme formant interpolation",
+    "spectral tilt dynamics",
+    "spectral noise-floor dynamics",
+    "breath insertion",
+    "learned residual",
+    "external model weights",
+    "public product mutation"
+  ],
+  "acceptanceQuestion": "Does G3 reduce mechanical steadiness without audible flutter, wobble, tremolo, or loss of Jeeves restraint?",
+  "reviewArtifactPolicy": "Do not surface user review audio unless the rendered voice is materially closer to a natural Jeeves voice.",
+  "nextIfPass": "G4_COARTICULATION_AND_SPECTRAL_DYNAMICS",
+  "nextIfFail": "REPAIR_G3_MICRO_PROSODY_WITHOUT_ADVANCING_GENERATION"
+}

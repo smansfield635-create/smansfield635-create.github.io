@@ -1,0 +1,117 @@
+{
+  "contract": "LAWS_FIRST_DYNAMIC_INDICATOR_RESTORATION_v1",
+  "mode": "BOUNDED_MAIN_LAWS_PRESENTATION_RESTORATION",
+  "status": "IMPLEMENTED_PENDING_EXECUTED_AND_USER_VISUAL_VERIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "base_main": "7a00f5c07c986541ca3ce0312be714e2ef85f6b5",
+  "rollback_target": "7a00f5c07c986541ca3ce0312be714e2ef85f6b5",
+  "branch": "agent/laws-first-indicator-restoration-001",
+  "route": "/laws/",
+  "user_supplied_evidence": {
+    "class": "CURRENT_AND_PRIOR_DEVICE_SCREENSHOTS",
+    "observed_defect": [
+      "FIVE_FIRST_STATE_LIGHTS_NO_LONGER_PRESENT_AS_A_CLEAR_DYNAMIC_VISUAL_SYSTEM",
+      "MOBILE_INDICATORS_POSITIONED_PARTLY_OUTSIDE_THE_CONTENT_RAIL"
+    ],
+    "requested_restoration": "RESTORE_THE_FIVE_LIGHTS_SO_THE_ACTIVE_LIGHT_FOLLOWS_THE_ACCEPTED_COMPASS_SELECTION_WITHOUT_RESTORING_THE_OLD_LAYOUT"
+  },
+  "restoration_target": {
+    "indicators": [
+      "FLOW",
+      "INTEGRITY",
+      "REALITY",
+      "STRUCTURE",
+      "TEST"
+    ],
+    "indicator_count": 5,
+    "research_indicator_included": false,
+    "active_state": "ONE_CYAN_ILLUMINATED_MARKER",
+    "inactive_state": "FOUR_SUBDUED_OUTLINE_MARKERS",
+    "state_source": "EXISTING_CONTROLLER_PUBLISHED_COMPASS_STATE",
+    "state_correspondence": "EXISTING_LAWS_CP6_EXPERIENTIAL_PRESENTATION_v1",
+    "new_navigation_surface": false,
+    "new_controller_state": false
+  },
+  "changed_product_surface": {
+    "path": "laws/index.experience.polish.css",
+    "authority": "PRESENTATION_ONLY",
+    "changes": [
+      "KEEP_ALL_FIVE_INDICATORS_VISUALLY_PRESENT",
+      "REMOVE_PARENT_OPACITY_FROM_THE_GENERATED_LIGHTS",
+      "MOVE_MOBILE_LIGHTS_INSIDE_THE_CONTENT_RAIL",
+      "RESTORE_A_VERTICAL_MOBILE_LIGHT_PATH",
+      "MAKE_THE_ACCEPTED_ACTIVE_STATE_VISIBLY_CYAN_AND_ILLUMINATED",
+      "PRESERVE_REDUCED_MOTION_EQUIVALENCE"
+    ]
+  },
+  "unchanged_authority_surfaces": [
+    "laws/index.html",
+    "laws/index.experience.js",
+    "laws/index.controller.js",
+    "laws/index.interactions.js",
+    "laws/index.compositor.js",
+    "laws/index.cosmos.js",
+    "laws/index.crystals.js",
+    "laws/index.planet.js",
+    "ALL_CANONICAL_ROUTES",
+    "ALL_CANONICAL_RECORDS",
+    "ALL_EVIDENCE_STATUSES",
+    "ALL_CLAIM_CEILINGS",
+    "ALL_FRONTIER_CUSTODY"
+  ],
+  "verification": {
+    "workflow": ".github/workflows/laws-first-indicator-restoration-verification.yml",
+    "script": "scripts/verify-laws-first-indicator-restoration.mjs",
+    "required_matrix": [
+      "PHONE",
+      "TABLET",
+      "DESKTOP",
+      "FULL_MOTION",
+      "REDUCED_MOTION",
+      "STATIC_NO_JAVASCRIPT",
+      "FLOW_SELECTION",
+      "INTEGRITY_SELECTION",
+      "REALITY_SELECTION",
+      "STRUCTURE_SELECTION",
+      "TEST_SELECTION"
+    ],
+    "required_assertions": [
+      "EXACTLY_FIVE_INDICATORS",
+      "EXACTLY_ONE_ACTIVE_INDICATOR_AFTER_EACH_SELECTION",
+      "ACTIVE_INDICATOR_MATCHES_COMPASS_DIRECTION",
+      "ACTIVE_INDICATOR_IS_CYAN_AND_ILLUMINATED",
+      "INACTIVE_INDICATORS_ARE_SUBDUED_OUTLINES",
+      "MOBILE_INDICATORS_REMAIN_INSIDE_THE_CONTENT_RAIL",
+      "NO_HORIZONTAL_OVERFLOW",
+      "NO_UNCLASSIFIED_BROWSER_ERRORS",
+      "STATIC_MODE_INVENTS_NO_ACTIVE_RUNTIME_STATE"
+    ]
+  },
+  "concurrent_work_rule": {
+    "parallel_branch_work_allowed": true,
+    "safe_when": [
+      "EACH_ROOM_USES_A_SEPARATE_BRANCH_FROM_A_DECLARED_MAIN_SHA",
+      "NO_DIRECT_WRITES_TO_MAIN",
+      "NO_SIMULTANEOUS_MERGE",
+      "MERGE_ORDER_IS_DECLARED",
+      "THE_SECOND_PR_IS_REBASED_OR_RECONCILED_AFTER_THE_FIRST_MERGE",
+      "OVERLAPPING_FILE_CHANGES_ARE_MANUALLY_REVIEWED"
+    ],
+    "high_conflict_paths_for_this_operation": [
+      "laws/index.experience.polish.css",
+      "laws/index.html",
+      "laws/index.experience.js",
+      "laws/index.controller.js",
+      "laws/index.interactions.js"
+    ],
+    "recommended_merge_order": "MERGE_THIS_BOUNDED_MAIN_LAWS_RESTORATION_FIRST_IF_THE_SUCCESSOR_ROOM_IS_WORKING_ONLY_ON_CHILD_DESTINATIONS; OTHERWISE_RECONCILE_THE_TWO_EXACT_DIFFS_BEFORE_EITHER_MERGE",
+    "automatic_conflict_assumption": false
+  },
+  "program_disposition": {
+    "draft_pr_required": true,
+    "merge_authority": "USER_ONLY",
+    "user_visual_acceptance": "PENDING",
+    "successor_child_page_work": "MAY_PROCEED_IN_A_SEPARATE_BRANCH",
+    "same_file_parallel_mutation": "NOT_SAFE_WITHOUT_RECONCILIATION"
+  }
+}

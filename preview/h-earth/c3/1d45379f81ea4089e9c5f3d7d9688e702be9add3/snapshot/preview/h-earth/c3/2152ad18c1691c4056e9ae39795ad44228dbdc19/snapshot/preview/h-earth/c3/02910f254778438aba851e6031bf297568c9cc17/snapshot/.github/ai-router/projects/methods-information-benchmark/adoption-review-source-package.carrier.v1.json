@@ -1,0 +1,126 @@
+{
+  "commandEmittedDestinationFiles": {
+    "generation58ClosureReceipt": "control-plane/methods-information-benchmark/adoption-and-page-translation-v1/receipts/operation-closure.receipt.v1.json",
+    "independentVerificationReceipt": "control-plane/methods-information-benchmark/adoption-and-page-translation-v1/receipts/independent-verification.receipt.v1.json",
+    "workflow": ".github/workflows/methods-and-models-audit-output-adoption-and-page-translation-v1.yml"
+  },
+  "destinationMap": {
+    "adoption-register.v1.json": "control-plane/methods-information-benchmark/adoption-and-page-translation-v1/adoption-register.v1.json",
+    "page-translation-model.v1.json": "control-plane/methods-information-benchmark/adoption-and-page-translation-v1/page-translation-model.v1.json",
+    "review-package.v1.json": "control-plane/methods-information-benchmark/adoption-and-page-translation-v1/review-package.v1.json",
+    "review-summary.v1.json": "control-plane/methods-information-benchmark/adoption-and-page-translation-v1/review-summary.v1.json",
+    "rolodex-information-map.v1.json": "control-plane/methods-information-benchmark/adoption-and-page-translation-v1/rolodex-information-map.v1.json"
+  },
+  "exactZip": {
+    "base64Length": 24012,
+    "chunkCount": 5,
+    "sha256": "97d020eb80603f4ba19f33273a0ddfd721aa351aac95c950c29858d6ccee1a29",
+    "size": 18008
+  },
+  "excludedFromDestinationMaterialization": [
+    "METHODS_AND_MODELS_ADOPTION_REVIEW_REPORT_v1.md",
+    "fresh-reproduction.receipt.v1.json",
+    "repository-router-blocker.receipt.v1.json"
+  ],
+  "expectedZipMembers": [
+    "METHODS_AND_MODELS_ADOPTION_REVIEW_REPORT_v1.md",
+    "adoption-register.v1.json",
+    "fresh-reproduction.receipt.v1.json",
+    "page-translation-model.v1.json",
+    "repository-router-blocker.receipt.v1.json",
+    "review-package.v1.json",
+    "review-summary.v1.json",
+    "rolodex-information-map.v1.json"
+  ],
+  "fingerprintDerivation": {
+    "canonicalization": "RECURSIVE_KEY_SORTED_JSON_NO_WHITESPACE",
+    "deriveFromZipMembers": true,
+    "domainMembers": [
+      "auditSourceHead",
+      "adoptionRegister",
+      "pageTranslationModel",
+      "rolodexInformationMap",
+      "stoppingBoundary"
+    ]
+  },
+  "localVerificationOverride": {
+    "environmentVariable": "METHODS_SOURCE_ZIP_PATH",
+    "mustStillMatchExactZipSha256": true,
+    "purpose": "OFFLINE_TEST_ONLY"
+  },
+  "packageFingerprintSha256": "4fc8e2280057b426e1573ab5ac4f710e0b0d1881264d443a56fb25b9f560f79e",
+  "packageRegenerated": false,
+  "reviewRepeated": false,
+  "schema": "METHODS_AND_MODELS_ADOPTION_REVIEW_SOURCE_PACKAGE_CARRIER_v1",
+  "sourceAuditHead": "7eee0e3f7a8c37e548e7721f1f5c2df69b2a310a",
+  "status": "IMMUTABLE_COMMENT_CHUNK_CARRIER",
+  "transport": {
+    "chunks": [
+      {
+        "chunkIndex": 1,
+        "commentId": 5187613092,
+        "length": 6000,
+        "sha256": "0d2cbc3c5151e46f21cb0a93128677ce289661b6c651126a5062ae3b81e368a8"
+      },
+      {
+        "chunkIndex": 2,
+        "commentId": 5187632672,
+        "length": 6000,
+        "sha256": "777436319cd9e35bfb5a682b6b259e11815ebeda7a34c96a11788493a8ea6b99"
+      },
+      {
+        "chunkIndex": 3,
+        "commentId": 5187619330,
+        "length": 6000,
+        "sha256": "806179c15e8ed67a74845974358b0a6e47346222fe358e71361576eab3517e0c"
+      },
+      {
+        "chunkIndex": 4,
+        "commentId": 5187638794,
+        "length": 6000,
+        "sha256": "45d2d3c63d52b267107f7963f36d8f7eead5d0d4d883519a430cb01680c34c89"
+      },
+      {
+        "chunkIndex": 5,
+        "commentId": 5187640144,
+        "length": 12,
+        "sha256": "130a5d484a4f8fe914396792ef8eedd5e6e8d4030471e85c49b647a0764c8295"
+      }
+    ],
+    "exactRecoveryPolicies": [
+      {
+        "acceptedPrefixLength": 6000,
+        "acceptedPrefixSha256": "0d2cbc3c5151e46f21cb0a93128677ce289661b6c651126a5062ae3b81e368a8",
+        "chunkIndex": 1,
+        "commentId": 5187613092,
+        "observedBase64Length": 9285,
+        "observedBase64Sha256": "3de2f39b8d937e8c7891ad67f1bb75f90eac38221963e9771a9e95fcd9994fcc",
+        "recoveryClass": "EXACT_COMMENT_ID_PREFIX_AND_NEXT_CHUNK_CROSSCHECK_ONLY",
+        "rejectedReplacementCommentId": 5188010300,
+        "trailingLength": 3285,
+        "trailingMustEqualChunkIndex": 2,
+        "trailingMustEqualPrefixLength": 3285,
+        "trailingSha256": "d9d5810cdd31a5e7e13da9e1502271a3e3f55777d15101b826e935fef8621e56"
+      },
+      {
+        "chunkIndex": 2,
+        "commentId": 5187632672,
+        "correctedBase64Length": 6000,
+        "correctedBase64Sha256": "777436319cd9e35bfb5a682b6b259e11815ebeda7a34c96a11788493a8ea6b99",
+        "correctedCharacter": "h",
+        "observedBase64Length": 6000,
+        "observedBase64Sha256": "0861950a2f3a1f976ca6c48e8168d707b329b23ed4be68ed114f5bcc7bd53681",
+        "observedCharacter": "z",
+        "recoveryClass": "EXACT_COMMENT_ID_SINGLE_CHARACTER_SUBSTITUTION_ONLY",
+        "substitutionIndex": 3421
+      }
+    ],
+    "issueNumber": 586,
+    "marker": "METHODS_ADOPTION_SOURCE_PACKAGE_CHUNK_V1",
+    "recoveryPolicyVersion": "EXACT_COMMENT_CHUNK_RECOVERY_v2",
+    "rejectedReplacementCommentIds": [
+      5188010300
+    ],
+    "repository": "smansfield635-create/smansfield635-create.github.io"
+  }
+}

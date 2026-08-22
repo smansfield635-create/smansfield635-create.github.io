@@ -1,0 +1,55 @@
+{
+  "schema": "WHOLE_ESTATE_INVARIANT_CONTRACT_SOURCE_LEDGER_v1",
+  "status": "CHECKPOINT_6_CONSTRUCTION_CANDIDATE",
+  "governingMain": "b2533139bacbf876f818892a06c691824fa216dd",
+  "governingTree": "a7eedf5723c88d558cb3d5da9b2aa35e1175bbe4",
+  "checkpoint5SourcePR": 732,
+  "checkpoint5PostMergeCertificationRun": 31153754083,
+  "sources": [
+    {
+      "id": "CP1_PROSPECTIVE_CHANGE_REGISTER",
+      "path": "control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/prospective-change-register.v1.json",
+      "blobSha": "e817cb14eb736de002c9be6d630951ea65c5c271",
+      "role": "REGISTERED_CHECKPOINT_6_INTERVENTION_AND_FALSIFIERS"
+    },
+    {
+      "id": "CP3_TRANSLATION_FIDELITY",
+      "path": "control-plane/whole-estate/constitutional-room-relation-contracts-v1/translation-fidelity-and-salience-contract.v1.json",
+      "blobSha": "90489c64a44f059c042935a2318854a997f8461c",
+      "role": "V_C_V_E_V_T_V_U_AND_QUALIFIER_SALIENCE"
+    },
+    {
+      "id": "CP5_METHODS_MODELS_ROLE",
+      "path": "control-plane/whole-estate/methods-models-role-constitution-v1/methods-models-role-contract.v1.json",
+      "blobSha": "60393aa69a57c01642796697d36a16c3426087c8",
+      "role": "EVIDENCE_GATE_RELATION_MAP_DISCOVERY_BRIDGE_AND_TRAVERSAL_BOUNDARIES"
+    },
+    {
+      "id": "CP5_CLAIM_TRACE_STANDING",
+      "path": "control-plane/whole-estate/methods-models-role-constitution-v1/claim-trace-standing-contract.v1.json",
+      "blobSha": "48da4a9d65d4050531816866cf62a9734cd87337",
+      "role": "STANDING_VOCABULARY_SOURCE_OWNERSHIP_AND_GIVEN_THAT_STANDING"
+    }
+  ],
+  "scientificDeltaInputs": [
+    {
+      "id": "UCIC_IMI_HURRICANE_SUCCESSOR_MEASUREMENT_BOUNDARY_2026_08",
+      "sourceClass": "USER_SUPPLIED_IMI_CHAMBER_RETURN",
+      "repositoryArtifactRecovered": false,
+      "projectEmpiricalResultProduced": false,
+      "constitutionalImpact": false,
+      "checkpoint6BlockingEffect": "NONE",
+      "claimUpgradeAuthorized": false
+    }
+  ],
+  "unmergedPresentationPrototype": {
+    "pr": 541,
+    "disposition": "PRESERVE_AND_ADAPT",
+    "promotedToGoverningAuthority": false,
+    "mutationAuthorizedByCheckpoint6": false
+  },
+  "canonicalCrosswalkMaterialized": false,
+  "typedSemanticRelationGraphMaterialized": false,
+  "publicMutationAuthorized": false,
+  "scientificClaimUpgradeAuthorized": false
+}

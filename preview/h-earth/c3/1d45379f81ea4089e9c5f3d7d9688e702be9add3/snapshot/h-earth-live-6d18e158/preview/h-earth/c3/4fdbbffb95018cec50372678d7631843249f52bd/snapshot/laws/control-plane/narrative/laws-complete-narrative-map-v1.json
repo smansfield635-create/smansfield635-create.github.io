@@ -1,0 +1,1300 @@
+{
+  "contract": "LAWS_COMPLETE_NARRATIVE_MAP_v1",
+  "mode": "NON_PRODUCT_DESIGN_AUTHORITY",
+  "status": "COMPLETE_CANDIDATE_PENDING_USER_FREEZE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "baseline_main_commit": "61d4709c8e4e566fbc7704e210b3b38037762753",
+  "design_branch": "agent/laws-complete-narrative-map-001",
+  "product_mutation_authority": false,
+  "batch_implementation_authority": false,
+  "evidence_status_upgrade_authority": false,
+  "route_mutation_authority": false,
+  "controlling_identity": {
+    "one_chamber": true,
+    "one_controlling_story": true,
+    "multiple_page_specific_slices": true,
+    "shared_presentation_standard": true,
+    "duplicated_monolithic_records": false
+  },
+  "governing_story": [
+    "A REAL PROBLEM APPEARS",
+    "RESEARCH ASKS WHAT ACTUALLY HAPPENED",
+    "EVIDENCE DEFINES WHAT CAN BE KNOWN",
+    "METHODS EXPOSE HOW IT WAS TESTED",
+    "LAWS EXPLAIN THE RECURRING RELATIONSHIPS",
+    "TEST CHALLENGES THE INTERPRETATION",
+    "BOUNDARIES SHOW WHERE THE CLAIM STOPS",
+    "RECORDS PRESERVE THE COMPLETE WORK"
+  ],
+  "coverage": {
+    "laws_landing_root": 1,
+    "child_routes": 24,
+    "flow_children": 4,
+    "integrity_children": 4,
+    "reality_children": 4,
+    "structure_children": 4,
+    "test_children": 4,
+    "research_children": 4
+  },
+  "root_landing": {
+    "route": "/laws/",
+    "page_role": "Establish the entire chamber, preserve the Laws Compass as navigation authority, and allow visitors to enter any authority while understanding the controlling story.",
+    "question_answered": "How do real research, the four Laws, Test, and Research work together as one chamber?",
+    "next_story_beat": {
+      "label": "Research / Applied Investigations",
+      "route": "/laws/research/applied-investigations/"
+    },
+    "presentation_rule": "The landing page provides the whole-system orientation and a small number of study examples. It is not a second study directory."
+  },
+  "authority_roles": {
+    "FLOW": "Movement, change, recurrence, return, and transfer.",
+    "INTEGRITY": "Consistency, custody, continuity, and coherence.",
+    "REALITY": "Theory, evidence, measurement, interpretation, and limits.",
+    "STRUCTURE": "Constraints, interfaces, boundaries, dependencies, governance, and admissible states.",
+    "TEST": "Admission, forward construction, reverse challenge, result disposition, and record custody.",
+    "RESEARCH": "Real investigations, evidence, methods, findings, uncertainty, unresolved work, and return to the complete Frontier record."
+  },
+  "shared_presentation_standard": {
+    "quality_target": "MAIN_COMPASS_QUALITY",
+    "typography": "One shared modern sans-serif system with page-specific hierarchy.",
+    "atmosphere": "One chamber atmosphere with authority-specific depth, motion, and visual accent; consistency must not become sameness.",
+    "hero": "Every page receives a page-specific hero built around one direct question.",
+    "primary_lens": "Exactly one of PRACTICAL, ENGINEERING, or EMPIRICAL is active on entry. The other two remain available as page-specific lenses.",
+    "disclosures": "Nested detail and canonical audit disclosures are closed by default.",
+    "formula_and_relationship_delivery": "Equations, thresholds, causal chains, state diagrams, or relationship maps must be structured and legible rather than terminal-style decoration.",
+    "lens_separation": "Practical, Engineering, and Empirical claims remain visibly distinct and cannot silently substitute for one another.",
+    "claim_boundary": "Every page exposes a plain-language claim boundary before the audit layer.",
+    "story_navigation": "Every page displays previous and next story context. Direct entry remains allowed; the sequence is explanatory, not a forced wizard.",
+    "audit_access": "Each route owns one collapsed canonical audit record rather than reproducing implementation history in the public layer.",
+    "mobile": "Mobile composition is designed independently, with one primary idea visible before secondary lenses and audit detail.",
+    "motion_equivalence": [
+      "FULL_MOTION",
+      "REDUCED_MOTION",
+      "STATIC_NO_JAVASCRIPT"
+    ],
+    "route_authority": "Existing route and Compass navigation authority remains unchanged until a separately authorized implementation operation."
+  },
+  "non_duplication_rules": [
+    "Child pages do not repeat the authority-family introduction.",
+    "Child pages do not reproduce the complete selected study.",
+    "Research pages divide study context by investigation, evidence, method, and findings.",
+    "Test pages divide one selected study by admission, forward construction, reverse audit, and result custody.",
+    "Law pages expose only materially relevant recurring relationships.",
+    "Audit records preserve custody and implementation facts behind progressive disclosure."
+  ],
+  "canonical_story_traversal_rule": {
+    "linear_sequence_is_context_not_access_control": true,
+    "direct_entry_supported": true,
+    "family_entry_supported": true,
+    "previous_and_next_required": true,
+    "final_return": "The last Laws interpretation returns to the current complete Frontier study record."
+  },
+  "required_page_fields": [
+    "PAGE_ROLE",
+    "QUESTION_ANSWERED",
+    "PREVIOUS_STORY_BEAT",
+    "NEXT_STORY_BEAT",
+    "PRIMARY_VISUAL_OR_EQUATION",
+    "PRACTICAL_LENS",
+    "ENGINEERING_LENS",
+    "EMPIRICAL_LENS",
+    "BOUNDARY_STATEMENT",
+    "RELATED_STUDY",
+    "AUDIT_RECORD"
+  ],
+  "pages": [
+    {
+      "sequence_index": 1,
+      "route": "/laws/research/applied-investigations/",
+      "authority": "RESEARCH",
+      "page_title": "Applied Investigations",
+      "story_phase": "REAL_WORLD_PROBLEM_AND_STUDY_ENTRY",
+      "page_role": "Introduce the selected real-world investigation and establish why the chamber is examining it.",
+      "question_answered": "What real system or problem was studied, and why does it matter?",
+      "primary_lens": "PRACTICAL",
+      "primary_visual_or_equation": {
+        "type": "SYSTEM_STUDY_MAP",
+        "delivery": "A real asset or population at the center, surrounded by problem, observation unit, evidence status, bounded result, unresolved issue, and the route to the complete Frontier record.",
+        "expression": "REAL SYSTEM → OBSERVATIONS → BOUNDED RESULT"
+      },
+      "practical_lens": "State the practical system, affected people or operations, failure or opportunity, and public value in direct language.",
+      "engineering_lens": "Identify system components, operating conditions, observation unit, dependencies, and the exact study boundary.",
+      "empirical_lens": "Show evidence status, sample or observation count, strongest bounded result, negative or mixed findings, and unresolved controls.",
+      "boundary_statement": "This page interprets the study for Laws; it does not reproduce the complete Frontier execution record or upgrade its evidence status.",
+      "previous_story_beat": {
+        "label": "Laws Compass establishes the chamber and a real problem appears",
+        "route": "/laws/",
+        "story_beat": "A_REAL_PROBLEM_APPEARS"
+      },
+      "next_story_beat": {
+        "label": "Research / Evidence and Sources",
+        "route": "/laws/research/evidence-and-sources/",
+        "story_beat": "EVIDENCE_ADMISSION_AND_KNOWLEDGE_BOUNDARY"
+      },
+      "related_study": {
+        "study_id": "BATTERY_COHERENCE_HELDOUT_STUDY_v1",
+        "relationship_status": "PRIMARY_CONTEXTUAL_STUDY_FOR_CP6",
+        "complete_frontier_record": "/frontier/energy/battery-coherence-study/",
+        "rule": "The page presents only its assigned slice and must not duplicate the complete study."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_RESEARCH_APPLIED_INVESTIGATIONS_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    },
+    {
+      "sequence_index": 2,
+      "route": "/laws/research/evidence-and-sources/",
+      "authority": "RESEARCH",
+      "page_title": "Evidence and Sources",
+      "story_phase": "EVIDENCE_ADMISSION_AND_KNOWLEDGE_BOUNDARY",
+      "page_role": "Define what evidence entered, where it came from, and what it can support.",
+      "question_answered": "What can actually be known from the admitted sources and observations?",
+      "primary_lens": "EMPIRICAL",
+      "primary_visual_or_equation": {
+        "type": "PROVENANCE_CHAIN",
+        "delivery": "A source-to-observation-to-admission-to-claim chain with exclusions and missing evidence visibly branching away.",
+        "expression": "SOURCE → OBSERVATION → ADMISSION → SUPPORTABLE CLAIM"
+      },
+      "practical_lens": "Explain what was observed in real terms and why the source is relevant to the practical problem.",
+      "engineering_lens": "Expose acquisition method, observation unit, sampling window, exclusions, missingness, custody, and source identity.",
+      "empirical_lens": "Separate direct evidence, derived evidence, source limitations, and what the evidence cannot establish.",
+      "boundary_statement": "Source existence is not validation; provenance and observation volume do not establish mechanism, transfer, or deployment fitness.",
+      "previous_story_beat": {
+        "label": "Research / Applied Investigations",
+        "route": "/laws/research/applied-investigations/",
+        "story_beat": "REAL_WORLD_PROBLEM_AND_STUDY_ENTRY"
+      },
+      "next_story_beat": {
+        "label": "Research / Methods and Models",
+        "route": "/laws/research/methods-and-models/",
+        "story_beat": "METHOD_CONSTRUCTION_AND_COMPARATOR_EXPOSURE"
+      },
+      "related_study": {
+        "study_id": "BATTERY_COHERENCE_HELDOUT_STUDY_v1",
+        "relationship_status": "PRIMARY_CONTEXTUAL_STUDY_FOR_CP6",
+        "complete_frontier_record": "/frontier/energy/battery-coherence-study/",
+        "rule": "The page presents only its assigned slice and must not duplicate the complete study."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_RESEARCH_EVIDENCE_AND_SOURCES_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    },
+    {
+      "sequence_index": 3,
+      "route": "/laws/research/methods-and-models/",
+      "authority": "RESEARCH",
+      "page_title": "Methods and Models",
+      "story_phase": "METHOD_CONSTRUCTION_AND_COMPARATOR_EXPOSURE",
+      "page_role": "Show how the study transformed evidence into a testable procedure without hiding assumptions or comparators.",
+      "question_answered": "How was the proposition specified, calculated, compared, and exposed to failure?",
+      "primary_lens": "ENGINEERING",
+      "primary_visual_or_equation": {
+        "type": "STRUCTURED_METHOD_BOARD",
+        "delivery": "A legible sequence of variables, equations or procedures, baseline, comparators, expected output, and falsification rule.",
+        "expression": "INPUTS + METHOD + BASELINE + COMPARATORS → TESTABLE OUTPUT"
+      },
+      "practical_lens": "Translate the method into the operational decision it is intended to clarify.",
+      "engineering_lens": "Present variables, equations, algorithms, thresholds, baselines, comparators, and execution status in structured mathematical form.",
+      "empirical_lens": "State which method was executed, which was only specified, and which comparisons remain under review.",
+      "boundary_statement": "A specified or executed method is not proof that its interpretation is causal, universal, or superior outside the tested conditions.",
+      "previous_story_beat": {
+        "label": "Research / Evidence and Sources",
+        "route": "/laws/research/evidence-and-sources/",
+        "story_beat": "EVIDENCE_ADMISSION_AND_KNOWLEDGE_BOUNDARY"
+      },
+      "next_story_beat": {
+        "label": "Flow / Signals",
+        "route": "/laws/categories/flow/signals/",
+        "story_beat": "LAW_RELATIONSHIP_FLOW_DETECTION"
+      },
+      "related_study": {
+        "study_id": "BATTERY_COHERENCE_HELDOUT_STUDY_v1",
+        "relationship_status": "PRIMARY_CONTEXTUAL_STUDY_FOR_CP6",
+        "complete_frontier_record": "/frontier/energy/battery-coherence-study/",
+        "rule": "The page presents only its assigned slice and must not duplicate the complete study."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_RESEARCH_METHODS_AND_MODELS_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    },
+    {
+      "sequence_index": 4,
+      "route": "/laws/categories/flow/signals/",
+      "authority": "FLOW",
+      "page_title": "Signals",
+      "story_phase": "LAW_RELATIONSHIP_FLOW_DETECTION",
+      "page_role": "Explain how a change becomes detectable before any response or interpretation is justified.",
+      "question_answered": "What changed, and how was that change detected?",
+      "primary_lens": "EMPIRICAL",
+      "primary_visual_or_equation": {
+        "type": "SIGNAL_PATH",
+        "delivery": "An animated or static signal moving from source through channel to receiver, with noise, delay, and detection threshold visible.",
+        "expression": "SOURCE CHANGE → SIGNAL → CHANNEL → RECEIVER → DETECTION"
+      },
+      "practical_lens": "Show the real warning, reading, event, or observation that first indicates change.",
+      "engineering_lens": "Expose source, channel, sensor or observation process, latency, noise, threshold, and receiver state.",
+      "empirical_lens": "Show observed signal quality, missingness, false alarms, missed detections, and whether the signal preceded the outcome.",
+      "boundary_statement": "A detected signal may predict or correspond to change without establishing cause, mechanism, or operational readiness.",
+      "previous_story_beat": {
+        "label": "Research / Methods and Models",
+        "route": "/laws/research/methods-and-models/",
+        "story_beat": "METHOD_CONSTRUCTION_AND_COMPARATOR_EXPOSURE"
+      },
+      "next_story_beat": {
+        "label": "Flow / Feedback",
+        "route": "/laws/categories/flow/feedback/",
+        "story_beat": "LAW_RELATIONSHIP_FLOW_RETURN"
+      },
+      "related_study": {
+        "study_id": "BATTERY_COHERENCE_HELDOUT_STUDY_v1",
+        "relationship_status": "MATERIAL_LAW_RELATIONSHIP_ADMITTED",
+        "complete_frontier_record": "/frontier/energy/battery-coherence-study/",
+        "rule": "The relationship must materially clarify the law and study and must preserve the battery claim ceiling."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_FLOW_SIGNALS_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    },
+    {
+      "sequence_index": 5,
+      "route": "/laws/categories/flow/feedback/",
+      "authority": "FLOW",
+      "page_title": "Feedback",
+      "story_phase": "LAW_RELATIONSHIP_FLOW_RETURN",
+      "page_role": "Explain how an observed output returns to influence the next input, decision, or state.",
+      "question_answered": "What returned from the result, and how did it alter what happened next?",
+      "primary_lens": "ENGINEERING",
+      "primary_visual_or_equation": {
+        "type": "FEEDBACK_LOOP",
+        "delivery": "A bounded loop connecting output, observation, controller or decision, revised input, and the next state; destabilizing and stabilizing paths remain distinct.",
+        "expression": "OUTPUT_t → OBSERVATION → RESPONSE → INPUT_(t+1)"
+      },
+      "practical_lens": "Show how an outcome changes a later action, setting, allocation, or behavior.",
+      "engineering_lens": "Identify the feedback path, controller, delay, gain, saturation, and potential for oscillation or runaway response.",
+      "empirical_lens": "Show whether a return signal and subsequent state change were actually observed, rather than inferred from sequence alone.",
+      "boundary_statement": "Temporal return does not prove a functioning feedback mechanism unless the return path and resulting change are observed.",
+      "previous_story_beat": {
+        "label": "Flow / Signals",
+        "route": "/laws/categories/flow/signals/",
+        "story_beat": "LAW_RELATIONSHIP_FLOW_DETECTION"
+      },
+      "next_story_beat": {
+        "label": "Flow / Cycles",
+        "route": "/laws/categories/flow/cycles/",
+        "story_beat": "LAW_RELATIONSHIP_FLOW_RECURRENCE"
+      },
+      "related_study": {
+        "study_id": null,
+        "relationship_status": "NO_CURRENT_ADMITTED_STUDY",
+        "complete_frontier_record": null,
+        "rule": "Do not force the battery study into this page. Admit a study only after exact source custody and material relationship review."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_FLOW_FEEDBACK_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    },
+    {
+      "sequence_index": 6,
+      "route": "/laws/categories/flow/cycles/",
+      "authority": "FLOW",
+      "page_title": "Cycles",
+      "story_phase": "LAW_RELATIONSHIP_FLOW_RECURRENCE",
+      "page_role": "Explain recurrence, accumulation, degradation, recovery, or return across repeated intervals.",
+      "question_answered": "What repeated, accumulated, degraded, recovered, or returned over time?",
+      "primary_lens": "PRACTICAL",
+      "primary_visual_or_equation": {
+        "type": "CYCLE_ACCUMULATION_RING",
+        "delivery": "A cycle ring with each pass adding or removing burden, capacity, residue, or recovery; the exit condition remains visible.",
+        "expression": "STATE_t → CYCLE → STATE_(t+1); cumulative effect = Σ cycle effects"
+      },
+      "practical_lens": "Show the repeated operation or exposure and the real consequence of accumulation or recovery.",
+      "engineering_lens": "Expose cycle definition, state transition, counters, accumulated throughput, reset conditions, and exit thresholds.",
+      "empirical_lens": "Show cycle count, longitudinal observations, trend, variability, and whether recurrence is stable or drifting.",
+      "boundary_statement": "A repeated pattern within one horizon is not a universal cycle law and may be explained by age, exposure, or an unmeasured trend.",
+      "previous_story_beat": {
+        "label": "Flow / Feedback",
+        "route": "/laws/categories/flow/feedback/",
+        "story_beat": "LAW_RELATIONSHIP_FLOW_RETURN"
+      },
+      "next_story_beat": {
+        "label": "Flow / Handoffs",
+        "route": "/laws/categories/flow/handoffs/",
+        "story_beat": "LAW_RELATIONSHIP_FLOW_TRANSFER"
+      },
+      "related_study": {
+        "study_id": "BATTERY_COHERENCE_HELDOUT_STUDY_v1",
+        "relationship_status": "MATERIAL_LAW_RELATIONSHIP_ADMITTED",
+        "complete_frontier_record": "/frontier/energy/battery-coherence-study/",
+        "rule": "The relationship must materially clarify the law and study and must preserve the battery claim ceiling."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_FLOW_CYCLES_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    },
+    {
+      "sequence_index": 7,
+      "route": "/laws/categories/flow/handoffs/",
+      "authority": "FLOW",
+      "page_title": "Handoffs",
+      "story_phase": "LAW_RELATIONSHIP_FLOW_TRANSFER",
+      "page_role": "Explain whether state, meaning, responsibility, and timing survive transfer between holders or system components.",
+      "question_answered": "What moved between holders, and what had to remain intact through transfer?",
+      "primary_lens": "ENGINEERING",
+      "primary_visual_or_equation": {
+        "type": "CUSTODY_TRANSFER",
+        "delivery": "A sender-to-interface-to-receiver transfer showing payload, context, timing, acceptance, and receipt as separate objects.",
+        "expression": "SENDER + STATE + CONTEXT → INTERFACE → RECEIVER + ACCEPTANCE"
+      },
+      "practical_lens": "Show the real object, service, instruction, or responsibility that changed hands.",
+      "engineering_lens": "Expose sender, receiver, interface, protocol, state package, acceptance condition, timeout, and failure modes.",
+      "empirical_lens": "Show transfer receipts, timestamps, dropped or duplicated events, receiver readiness, and continuity after acceptance.",
+      "boundary_statement": "Movement alone is not a successful handoff; meaning, state, custody, and acceptance must be preserved.",
+      "previous_story_beat": {
+        "label": "Flow / Cycles",
+        "route": "/laws/categories/flow/cycles/",
+        "story_beat": "LAW_RELATIONSHIP_FLOW_RECURRENCE"
+      },
+      "next_story_beat": {
+        "label": "Integrity / Consistency",
+        "route": "/laws/categories/integrity/consistency/",
+        "story_beat": "LAW_RELATIONSHIP_INTEGRITY_REPEATABILITY"
+      },
+      "related_study": {
+        "study_id": null,
+        "relationship_status": "NO_CURRENT_ADMITTED_STUDY",
+        "complete_frontier_record": null,
+        "rule": "Do not force the battery study into this page. Admit a study only after exact source custody and material relationship review."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_FLOW_HANDOFFS_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    },
+    {
+      "sequence_index": 8,
+      "route": "/laws/categories/integrity/consistency/",
+      "authority": "INTEGRITY",
+      "page_title": "Consistency",
+      "story_phase": "LAW_RELATIONSHIP_INTEGRITY_REPEATABILITY",
+      "page_role": "Explain whether the same rule or representation behaves comparably across observations, cases, or time.",
+      "question_answered": "Did the result remain comparable when the case, time, or observation changed?",
+      "primary_lens": "EMPIRICAL",
+      "primary_visual_or_equation": {
+        "type": "REPEATED_CASE_COMPARISON",
+        "delivery": "Aligned case panels compare expected relation, observed variation, and permitted tolerance without hiding outliers.",
+        "expression": "SAME RULE + COMPARABLE CONDITIONS → BOUNDED VARIATION"
+      },
+      "practical_lens": "Explain why dependable behavior across cases matters to the real system.",
+      "engineering_lens": "Define invariant rules, tolerated variation, case separation, normalization, and sources of drift.",
+      "empirical_lens": "Show held-out performance, cross-case variation, outliers, and whether the relationship survives outside development cases.",
+      "boundary_statement": "Consistency across the admitted cases does not establish transfer across all populations, environments, or operating regimes.",
+      "previous_story_beat": {
+        "label": "Flow / Handoffs",
+        "route": "/laws/categories/flow/handoffs/",
+        "story_beat": "LAW_RELATIONSHIP_FLOW_TRANSFER"
+      },
+      "next_story_beat": {
+        "label": "Integrity / Accountability",
+        "route": "/laws/categories/integrity/accountability/",
+        "story_beat": "LAW_RELATIONSHIP_INTEGRITY_CUSTODY"
+      },
+      "related_study": {
+        "study_id": "BATTERY_COHERENCE_HELDOUT_STUDY_v1",
+        "relationship_status": "MATERIAL_LAW_RELATIONSHIP_ADMITTED",
+        "complete_frontier_record": "/frontier/energy/battery-coherence-study/",
+        "rule": "The relationship must materially clarify the law and study and must preserve the battery claim ceiling."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_INTEGRITY_CONSISTENCY_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    },
+    {
+      "sequence_index": 9,
+      "route": "/laws/categories/integrity/accountability/",
+      "authority": "INTEGRITY",
+      "page_title": "Accountability",
+      "story_phase": "LAW_RELATIONSHIP_INTEGRITY_CUSTODY",
+      "page_role": "Explain who acted, what authority they held, what changed, and what record permits review.",
+      "question_answered": "Who was responsible for each action, decision, transfer, and preserved result?",
+      "primary_lens": "PRACTICAL",
+      "primary_visual_or_equation": {
+        "type": "RESPONSIBILITY_LEDGER",
+        "delivery": "An actor-action-authority-receipt chain with unresolved ownership shown as a visible break.",
+        "expression": "ACTOR → AUTHORIZED ACTION → RECEIPT → REVIEW"
+      },
+      "practical_lens": "Identify the people, organizations, or operating roles responsible for decisions and consequences.",
+      "engineering_lens": "Expose authority boundaries, write ownership, approval gates, custody transitions, and immutable receipts.",
+      "empirical_lens": "Show which actions and decisions are supported by logs, records, attestations, or missing custody evidence.",
+      "boundary_statement": "A recorded event does not establish rightful authority, and assigned authority does not prove the action was correctly executed.",
+      "previous_story_beat": {
+        "label": "Integrity / Consistency",
+        "route": "/laws/categories/integrity/consistency/",
+        "story_beat": "LAW_RELATIONSHIP_INTEGRITY_REPEATABILITY"
+      },
+      "next_story_beat": {
+        "label": "Integrity / Continuity",
+        "route": "/laws/categories/integrity/continuity/",
+        "story_beat": "LAW_RELATIONSHIP_INTEGRITY_PERSISTENCE"
+      },
+      "related_study": {
+        "study_id": null,
+        "relationship_status": "NO_CURRENT_ADMITTED_STUDY",
+        "complete_frontier_record": null,
+        "rule": "Do not force the battery study into this page. Admit a study only after exact source custody and material relationship review."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_INTEGRITY_ACCOUNTABILITY_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    },
+    {
+      "sequence_index": 10,
+      "route": "/laws/categories/integrity/continuity/",
+      "authority": "INTEGRITY",
+      "page_title": "Continuity",
+      "story_phase": "LAW_RELATIONSHIP_INTEGRITY_PERSISTENCE",
+      "page_role": "Explain whether essential function, identity, or service survives change, interruption, and recovery.",
+      "question_answered": "What remained dependable across the trajectory, and where did continuity break?",
+      "primary_lens": "PRACTICAL",
+      "primary_visual_or_equation": {
+        "type": "SERVICE_CONTINUITY_TIMELINE",
+        "delivery": "A time axis separates normal function, degradation, interruption, fallback, recovery, and unresolved loss.",
+        "expression": "FUNCTION(t) across transitions; continuity requires preserved service or bounded recovery"
+      },
+      "practical_lens": "Show what people or operations needed to keep working and the consequence of interruption.",
+      "engineering_lens": "Expose redundancy, fallback, reserve, recovery time, state restoration, and dependencies.",
+      "empirical_lens": "Show uptime, interruption duration, recovery time, lost function, and evidence of restored service.",
+      "boundary_statement": "Potential early warning or redundancy does not establish continuity benefit until deployed service preservation or recovery is measured.",
+      "previous_story_beat": {
+        "label": "Integrity / Accountability",
+        "route": "/laws/categories/integrity/accountability/",
+        "story_beat": "LAW_RELATIONSHIP_INTEGRITY_CUSTODY"
+      },
+      "next_story_beat": {
+        "label": "Integrity / Coherence",
+        "route": "/laws/categories/integrity/coherence/",
+        "story_beat": "LAW_RELATIONSHIP_INTEGRITY_ALIGNMENT"
+      },
+      "related_study": {
+        "study_id": "BATTERY_COHERENCE_HELDOUT_STUDY_v1",
+        "relationship_status": "MATERIAL_LAW_RELATIONSHIP_ADMITTED",
+        "complete_frontier_record": "/frontier/energy/battery-coherence-study/",
+        "rule": "The relationship must materially clarify the law and study and must preserve the battery claim ceiling."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_INTEGRITY_CONTINUITY_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    },
+    {
+      "sequence_index": 11,
+      "route": "/laws/categories/integrity/coherence/",
+      "authority": "INTEGRITY",
+      "page_title": "Coherence",
+      "story_phase": "LAW_RELATIONSHIP_INTEGRITY_ALIGNMENT",
+      "page_role": "Explain whether multiple observations or components form one compatible account without forcing them into artificial agreement.",
+      "question_answered": "Do the parts support one intelligible system description, and where do they conflict?",
+      "primary_lens": "ENGINEERING",
+      "primary_visual_or_equation": {
+        "type": "MULTI_AXIS_ALIGNMENT_MATRIX",
+        "delivery": "Independent axes remain visible while compatible intersections, contradictions, and weakest links are highlighted.",
+        "expression": "COHERENCE = compatible relations among distinct components, not uniformity"
+      },
+      "practical_lens": "Explain what a coherent account would allow a person or operator to understand or decide.",
+      "engineering_lens": "Expose component definitions, coupling, shared constraints, contradictions, weakest links, and alternative decompositions.",
+      "empirical_lens": "Show whether combined representations outperform or merely re-express stronger individual variables and ordinary explanations.",
+      "boundary_statement": "Combined performance does not establish a distinct coherence mechanism when conventional predictors or confounds remain stronger.",
+      "previous_story_beat": {
+        "label": "Integrity / Continuity",
+        "route": "/laws/categories/integrity/continuity/",
+        "story_beat": "LAW_RELATIONSHIP_INTEGRITY_PERSISTENCE"
+      },
+      "next_story_beat": {
+        "label": "Reality / Theory",
+        "route": "/laws/categories/reality/theory/",
+        "story_beat": "LAW_RELATIONSHIP_REALITY_EXPLANATION"
+      },
+      "related_study": {
+        "study_id": "BATTERY_COHERENCE_HELDOUT_STUDY_v1",
+        "relationship_status": "MATERIAL_LAW_RELATIONSHIP_ADMITTED",
+        "complete_frontier_record": "/frontier/energy/battery-coherence-study/",
+        "rule": "The relationship must materially clarify the law and study and must preserve the battery claim ceiling."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_INTEGRITY_COHERENCE_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    },
+    {
+      "sequence_index": 12,
+      "route": "/laws/categories/reality/theory/",
+      "authority": "REALITY",
+      "page_title": "Theory",
+      "story_phase": "LAW_RELATIONSHIP_REALITY_EXPLANATION",
+      "page_role": "State the candidate explanation and the observations it predicts before treating it as reality.",
+      "question_answered": "What explanation is being proposed, and what should be observed if it is correct?",
+      "primary_lens": "ENGINEERING",
+      "primary_visual_or_equation": {
+        "type": "HYPOTHESIS_PREDICTION_MAP",
+        "delivery": "Observation, candidate mechanism, predictions, rival explanations, and disconfirming outcomes appear in one branching model.",
+        "expression": "THEORY → PREDICTIONS; RIVAL THEORY → DIFFERENT PREDICTIONS"
+      },
+      "practical_lens": "Explain the real-world question the theory is intended to clarify.",
+      "engineering_lens": "Declare assumptions, mechanism, variables, scope, predicted relationships, and rival models.",
+      "empirical_lens": "Identify observations that support, fail to distinguish, or contradict the proposed explanation.",
+      "boundary_statement": "A theory can organize observations without being validated, causal, unique, or universally applicable.",
+      "previous_story_beat": {
+        "label": "Integrity / Coherence",
+        "route": "/laws/categories/integrity/coherence/",
+        "story_beat": "LAW_RELATIONSHIP_INTEGRITY_ALIGNMENT"
+      },
+      "next_story_beat": {
+        "label": "Reality / Evidence",
+        "route": "/laws/categories/reality/evidence/",
+        "story_beat": "LAW_RELATIONSHIP_REALITY_SUPPORT"
+      },
+      "related_study": {
+        "study_id": null,
+        "relationship_status": "NO_CURRENT_ADMITTED_STUDY",
+        "complete_frontier_record": null,
+        "rule": "Do not force the battery study into this page. Admit a study only after exact source custody and material relationship review."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_REALITY_THEORY_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    },
+    {
+      "sequence_index": 13,
+      "route": "/laws/categories/reality/evidence/",
+      "authority": "REALITY",
+      "page_title": "Evidence",
+      "story_phase": "LAW_RELATIONSHIP_REALITY_SUPPORT",
+      "page_role": "Explain how admitted observations correspond to a proposition and how strong that correspondence is.",
+      "question_answered": "Which observations support the interpretation, and how directly do they do so?",
+      "primary_lens": "EMPIRICAL",
+      "primary_visual_or_equation": {
+        "type": "EVIDENCE_CORRESPONDENCE_LADDER",
+        "delivery": "Direct measurement, derived indicator, comparator result, negative evidence, and missing evidence occupy distinct levels.",
+        "expression": "OBSERVATION ↔ PROPOSITION, qualified by provenance and alternatives"
+      },
+      "practical_lens": "Show what was seen or recorded in terms a non-specialist can connect to the real problem.",
+      "engineering_lens": "Expose provenance, transformation, admission rules, comparator structure, and evidentiary dependencies.",
+      "empirical_lens": "Separate supporting, negative, mixed, indirect, and absent evidence with exact observation counts and status.",
+      "boundary_statement": "Evidence may support a bounded relationship without proving mechanism, generality, or operational value.",
+      "previous_story_beat": {
+        "label": "Reality / Theory",
+        "route": "/laws/categories/reality/theory/",
+        "story_beat": "LAW_RELATIONSHIP_REALITY_EXPLANATION"
+      },
+      "next_story_beat": {
+        "label": "Reality / Measure",
+        "route": "/laws/categories/reality/measure/",
+        "story_beat": "LAW_RELATIONSHIP_REALITY_QUANTIFICATION"
+      },
+      "related_study": {
+        "study_id": "BATTERY_COHERENCE_HELDOUT_STUDY_v1",
+        "relationship_status": "MATERIAL_LAW_RELATIONSHIP_ADMITTED",
+        "complete_frontier_record": "/frontier/energy/battery-coherence-study/",
+        "rule": "The relationship must materially clarify the law and study and must preserve the battery claim ceiling."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_REALITY_EVIDENCE_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    },
+    {
+      "sequence_index": 14,
+      "route": "/laws/categories/reality/measure/",
+      "authority": "REALITY",
+      "page_title": "Measure",
+      "story_phase": "LAW_RELATIONSHIP_REALITY_QUANTIFICATION",
+      "page_role": "Explain the scale, unit, threshold, uncertainty, and interpretation used to turn observation into a result.",
+      "question_answered": "What was measured, using which unit, scale, threshold, and uncertainty?",
+      "primary_lens": "EMPIRICAL",
+      "primary_visual_or_equation": {
+        "type": "MEASUREMENT_CARD",
+        "delivery": "Value, unit, denominator, threshold, uncertainty, comparator, and interpretation are visually inseparable.",
+        "expression": "MEASUREMENT = value + unit + reference + uncertainty + decision rule"
+      },
+      "practical_lens": "Explain what the number means for the actual asset, person, environment, or operation.",
+      "engineering_lens": "Declare units, normalization, thresholds, scales, calibration, aggregation, and error handling.",
+      "empirical_lens": "Show measured values, confidence or variability, comparator values, sensitivity to thresholds, and missing calibration evidence.",
+      "boundary_statement": "A high score or threshold crossing measures a defined relationship; it does not by itself establish causation, utility, or transfer.",
+      "previous_story_beat": {
+        "label": "Reality / Evidence",
+        "route": "/laws/categories/reality/evidence/",
+        "story_beat": "LAW_RELATIONSHIP_REALITY_SUPPORT"
+      },
+      "next_story_beat": {
+        "label": "Reality / Limits",
+        "route": "/laws/categories/reality/limits/",
+        "story_beat": "LAW_RELATIONSHIP_REALITY_CLAIM_CEILING"
+      },
+      "related_study": {
+        "study_id": "BATTERY_COHERENCE_HELDOUT_STUDY_v1",
+        "relationship_status": "MATERIAL_LAW_RELATIONSHIP_ADMITTED",
+        "complete_frontier_record": "/frontier/energy/battery-coherence-study/",
+        "rule": "The relationship must materially clarify the law and study and must preserve the battery claim ceiling."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_REALITY_MEASURE_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    },
+    {
+      "sequence_index": 15,
+      "route": "/laws/categories/reality/limits/",
+      "authority": "REALITY",
+      "page_title": "Limits",
+      "story_phase": "LAW_RELATIONSHIP_REALITY_CLAIM_CEILING",
+      "page_role": "Make the claim ceiling and unresolved uncertainty more prominent than promotional interpretation.",
+      "question_answered": "What does the result not establish, and which uncertainty remains controlling?",
+      "primary_lens": "EMPIRICAL",
+      "primary_visual_or_equation": {
+        "type": "CLAIM_CEILING_LADDER",
+        "delivery": "Observed result, supported claim, unresolved inference, prohibited claim, and required next evidence appear as ascending locked levels.",
+        "expression": "RESULT ≤ EVIDENCE-SUPPORTED CLAIM < UNRESOLVED OR PROHIBITED CLAIM"
+      },
+      "practical_lens": "State what a person, operator, or organization must not assume from the result.",
+      "engineering_lens": "Expose untested regimes, missing controls, transfer gaps, threshold sensitivity, and deployment prerequisites.",
+      "empirical_lens": "Show replication status, external validity, negative findings, confounds, and evidence that remains absent.",
+      "boundary_statement": "The strongest public statement is the evidence-supported claim ceiling; everything above it remains unresolved or prohibited.",
+      "previous_story_beat": {
+        "label": "Reality / Measure",
+        "route": "/laws/categories/reality/measure/",
+        "story_beat": "LAW_RELATIONSHIP_REALITY_QUANTIFICATION"
+      },
+      "next_story_beat": {
+        "label": "Structure / Constraints",
+        "route": "/laws/categories/structure/constraints/",
+        "story_beat": "LAW_RELATIONSHIP_STRUCTURE_FEASIBLE_REGION"
+      },
+      "related_study": {
+        "study_id": "BATTERY_COHERENCE_HELDOUT_STUDY_v1",
+        "relationship_status": "MATERIAL_LAW_RELATIONSHIP_ADMITTED",
+        "complete_frontier_record": "/frontier/energy/battery-coherence-study/",
+        "rule": "The relationship must materially clarify the law and study and must preserve the battery claim ceiling."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_REALITY_LIMITS_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    },
+    {
+      "sequence_index": 16,
+      "route": "/laws/categories/structure/constraints/",
+      "authority": "STRUCTURE",
+      "page_title": "Constraints",
+      "story_phase": "LAW_RELATIONSHIP_STRUCTURE_FEASIBLE_REGION",
+      "page_role": "Explain the fixed conditions that shape which outcomes, models, or actions are possible.",
+      "question_answered": "Which fixed conditions shaped the outcome and restricted the admissible interpretation?",
+      "primary_lens": "ENGINEERING",
+      "primary_visual_or_equation": {
+        "type": "FEASIBLE_REGION",
+        "delivery": "A state space shows admissible and inadmissible regions, with each controlling constraint visibly clipping the space.",
+        "expression": "ADMISSIBLE = {x | every required constraint C_i(x) holds}"
+      },
+      "practical_lens": "Show the real limits imposed by capacity, environment, resources, policy, safety, or operating conditions.",
+      "engineering_lens": "Declare hard and soft constraints, fixed thresholds, dependencies, tolerances, and failure conditions.",
+      "empirical_lens": "Show which constraints were observed, assumed, held constant, violated, or not measured.",
+      "boundary_statement": "A result obtained inside one constrained region cannot be transferred outside it without new evidence.",
+      "previous_story_beat": {
+        "label": "Reality / Limits",
+        "route": "/laws/categories/reality/limits/",
+        "story_beat": "LAW_RELATIONSHIP_REALITY_CLAIM_CEILING"
+      },
+      "next_story_beat": {
+        "label": "Structure / Interfaces",
+        "route": "/laws/categories/structure/interfaces/",
+        "story_beat": "LAW_RELATIONSHIP_STRUCTURE_CONNECTIONS"
+      },
+      "related_study": {
+        "study_id": "BATTERY_COHERENCE_HELDOUT_STUDY_v1",
+        "relationship_status": "MATERIAL_LAW_RELATIONSHIP_ADMITTED",
+        "complete_frontier_record": "/frontier/energy/battery-coherence-study/",
+        "rule": "The relationship must materially clarify the law and study and must preserve the battery claim ceiling."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_STRUCTURE_CONSTRAINTS_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    },
+    {
+      "sequence_index": 17,
+      "route": "/laws/categories/structure/interfaces/",
+      "authority": "STRUCTURE",
+      "page_title": "Interfaces",
+      "story_phase": "LAW_RELATIONSHIP_STRUCTURE_CONNECTIONS",
+      "page_role": "Explain the boundary where distinct components exchange state, material, energy, information, or authority.",
+      "question_answered": "Where did systems meet, what crossed the interface, and what compatibility was required?",
+      "primary_lens": "ENGINEERING",
+      "primary_visual_or_equation": {
+        "type": "INTERFACE_CROSS_SECTION",
+        "delivery": "Two systems remain distinct while exchange objects, protocol, translation, loss, and acceptance are shown at the boundary.",
+        "expression": "SYSTEM A ⇄ INTERFACE CONTRACT ⇄ SYSTEM B"
+      },
+      "practical_lens": "Show the real handoff point where failure would affect people, assets, or service.",
+      "engineering_lens": "Expose interface contract, units, protocol, capacity, translation, synchronization, loss, and fallback.",
+      "empirical_lens": "Show observed compatibility, transfer loss, error rate, latency, rejected states, and missing interface evidence.",
+      "boundary_statement": "Connected components are not integrated unless the interface contract and observed exchange both hold.",
+      "previous_story_beat": {
+        "label": "Structure / Constraints",
+        "route": "/laws/categories/structure/constraints/",
+        "story_beat": "LAW_RELATIONSHIP_STRUCTURE_FEASIBLE_REGION"
+      },
+      "next_story_beat": {
+        "label": "Structure / Boundaries",
+        "route": "/laws/categories/structure/boundaries/",
+        "story_beat": "LAW_RELATIONSHIP_STRUCTURE_SCOPE"
+      },
+      "related_study": {
+        "study_id": null,
+        "relationship_status": "NO_CURRENT_ADMITTED_STUDY",
+        "complete_frontier_record": null,
+        "rule": "Do not force the battery study into this page. Admit a study only after exact source custody and material relationship review."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_STRUCTURE_INTERFACES_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    },
+    {
+      "sequence_index": 18,
+      "route": "/laws/categories/structure/boundaries/",
+      "authority": "STRUCTURE",
+      "page_title": "Boundaries",
+      "story_phase": "LAW_RELATIONSHIP_STRUCTURE_SCOPE",
+      "page_role": "Separate the domain in which the interpretation is supported from the domain in which it is not.",
+      "question_answered": "Where does the system, study, authority, or claim begin and end?",
+      "primary_lens": "ENGINEERING",
+      "primary_visual_or_equation": {
+        "type": "DOMAIN_BOUNDARY_MAP",
+        "delivery": "Inside, edge, outside, transfer condition, and prohibited extrapolation are spatially distinct.",
+        "expression": "SUPPORTED DOMAIN ∩ ADMITTED CONDITIONS; outside requires new evidence"
+      },
+      "practical_lens": "Show what assets, populations, environments, or decisions are included and excluded.",
+      "engineering_lens": "Declare system boundary, study boundary, authority boundary, operating envelope, and transfer conditions.",
+      "empirical_lens": "Show which observations occurred inside the boundary and which external regimes remain untested.",
+      "boundary_statement": "No route, relationship, or visual treatment may imply support beyond the admitted system, evidence window, and operating conditions.",
+      "previous_story_beat": {
+        "label": "Structure / Interfaces",
+        "route": "/laws/categories/structure/interfaces/",
+        "story_beat": "LAW_RELATIONSHIP_STRUCTURE_CONNECTIONS"
+      },
+      "next_story_beat": {
+        "label": "Structure / Governance",
+        "route": "/laws/categories/structure/governance/",
+        "story_beat": "LAW_RELATIONSHIP_STRUCTURE_AUTHORITY"
+      },
+      "related_study": {
+        "study_id": "BATTERY_COHERENCE_HELDOUT_STUDY_v1",
+        "relationship_status": "MATERIAL_LAW_RELATIONSHIP_ADMITTED",
+        "complete_frontier_record": "/frontier/energy/battery-coherence-study/",
+        "rule": "The relationship must materially clarify the law and study and must preserve the battery claim ceiling."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_STRUCTURE_BOUNDARIES_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    },
+    {
+      "sequence_index": 19,
+      "route": "/laws/categories/structure/governance/",
+      "authority": "STRUCTURE",
+      "page_title": "Governance",
+      "story_phase": "LAW_RELATIONSHIP_STRUCTURE_AUTHORITY",
+      "page_role": "Explain who may admit, change, stop, approve, or preserve action within the defined structure.",
+      "question_answered": "Who has authority to act, under which conditions, and who can stop the system?",
+      "primary_lens": "PRACTICAL",
+      "primary_visual_or_equation": {
+        "type": "AUTHORITY_AND_KILL_CONDITION_MATRIX",
+        "delivery": "Roles, permitted actions, review gates, escalation, immutable receipts, and stop conditions form one visible matrix.",
+        "expression": "AUTHORITY + CONDITION + RECEIPT; KILL CONDITION overrides continuation"
+      },
+      "practical_lens": "Show the people or institutions responsible for safe, lawful, and reviewable operation.",
+      "engineering_lens": "Expose permissions, separation of duties, admission gates, mutation authority, escalation, shutdown, and rollback.",
+      "empirical_lens": "Show evidence of approvals, executed actions, violations, shutdown tests, and missing governance records.",
+      "boundary_statement": "Governance design does not prove compliance or safe execution; authority and receipts must be demonstrated in operation.",
+      "previous_story_beat": {
+        "label": "Structure / Boundaries",
+        "route": "/laws/categories/structure/boundaries/",
+        "story_beat": "LAW_RELATIONSHIP_STRUCTURE_SCOPE"
+      },
+      "next_story_beat": {
+        "label": "Test / Admission and Baseline",
+        "route": "/laws/test/admission-and-baseline/",
+        "story_beat": "TEST_ADMISSION"
+      },
+      "related_study": {
+        "study_id": null,
+        "relationship_status": "NO_CURRENT_ADMITTED_STUDY",
+        "complete_frontier_record": null,
+        "rule": "Do not force the battery study into this page. Admit a study only after exact source custody and material relationship review."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_STRUCTURE_GOVERNANCE_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    },
+    {
+      "sequence_index": 20,
+      "route": "/laws/test/admission-and-baseline/",
+      "authority": "TEST",
+      "page_title": "Admission and Baseline",
+      "story_phase": "TEST_ADMISSION",
+      "page_role": "Define what is allowed into the test and the simpler or established reference the proposition must face.",
+      "question_answered": "What was admitted, what was excluded, and what baseline must the proposition beat or clarify?",
+      "primary_lens": "EMPIRICAL",
+      "primary_visual_or_equation": {
+        "type": "ADMISSION_GATE_AND_BASELINE",
+        "delivery": "Evidence and cases pass through explicit gates into a baseline comparison table; rejected inputs remain visible outside.",
+        "expression": "ADMITTED CASES + FIXED OUTCOME + BASELINE → TESTABLE START"
+      },
+      "practical_lens": "Explain which real cases or observations are being judged and why the baseline matters.",
+      "engineering_lens": "Declare inclusion, exclusion, split logic, outcome definition, baseline, comparator set, and leakage controls.",
+      "empirical_lens": "Show admitted sample or observation count, excluded cases, baseline performance, and missing admission evidence.",
+      "boundary_statement": "A test is not interpretable when case admission, target definition, or baseline selection can move after results are known.",
+      "previous_story_beat": {
+        "label": "Structure / Governance",
+        "route": "/laws/categories/structure/governance/",
+        "story_beat": "LAW_RELATIONSHIP_STRUCTURE_AUTHORITY"
+      },
+      "next_story_beat": {
+        "label": "Test / Forward Construction",
+        "route": "/laws/test/forward-construction/",
+        "story_beat": "TEST_FORWARD_SPECIFICATION"
+      },
+      "related_study": {
+        "study_id": "BATTERY_COHERENCE_HELDOUT_STUDY_v1",
+        "relationship_status": "SELECTED_STUDY_FOR_PROCEDURAL_VIEW",
+        "complete_frontier_record": "/frontier/energy/battery-coherence-study/",
+        "rule": "The selected study remains visible across all four Test views, but each page exposes only one procedural function."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_TEST_ADMISSION_AND_BASELINE_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    },
+    {
+      "sequence_index": 21,
+      "route": "/laws/test/forward-construction/",
+      "authority": "TEST",
+      "page_title": "Forward Construction",
+      "story_phase": "TEST_FORWARD_SPECIFICATION",
+      "page_role": "Expose what was specified before the result and how the proposition was made vulnerable to failure.",
+      "question_answered": "What procedure, prediction, threshold, and failure condition were fixed before evaluation?",
+      "primary_lens": "ENGINEERING",
+      "primary_visual_or_equation": {
+        "type": "FORWARD_TEST_CHAIN",
+        "delivery": "Inputs, frozen representation, procedure, expected output, comparator, and failure condition form a left-to-right construction.",
+        "expression": "FIXED INPUTS → PREDECLARED METHOD → EXPECTED OUTPUT → FAILURE EXPOSURE"
+      },
+      "practical_lens": "Explain what operational decision the forward test is intended to inform.",
+      "engineering_lens": "Expose preregistration or freeze point, variables, procedure, thresholds, comparators, expected output, and termination rule.",
+      "empirical_lens": "Show which elements were actually frozen before evaluation and which remain reconstructed or under review.",
+      "boundary_statement": "Post-result adjustment, test leakage, or moving thresholds invalidates the claim that the construction was forward specified.",
+      "previous_story_beat": {
+        "label": "Test / Admission and Baseline",
+        "route": "/laws/test/admission-and-baseline/",
+        "story_beat": "TEST_ADMISSION"
+      },
+      "next_story_beat": {
+        "label": "Test / Reverse Audit",
+        "route": "/laws/test/reverse-audit/",
+        "story_beat": "TEST_REVERSE_CHALLENGE"
+      },
+      "related_study": {
+        "study_id": "BATTERY_COHERENCE_HELDOUT_STUDY_v1",
+        "relationship_status": "SELECTED_STUDY_FOR_PROCEDURAL_VIEW",
+        "complete_frontier_record": "/frontier/energy/battery-coherence-study/",
+        "rule": "The selected study remains visible across all four Test views, but each page exposes only one procedural function."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_TEST_FORWARD_CONSTRUCTION_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    },
+    {
+      "sequence_index": 22,
+      "route": "/laws/test/reverse-audit/",
+      "authority": "TEST",
+      "page_title": "Reverse Audit",
+      "story_phase": "TEST_REVERSE_CHALLENGE",
+      "page_role": "Challenge the conclusion backward through rival explanations, ablations, counterfactuals, and failure paths.",
+      "question_answered": "What happens when the result is traced backward and attacked by simpler explanations?",
+      "primary_lens": "EMPIRICAL",
+      "primary_visual_or_equation": {
+        "type": "REVERSE_CAUSAL_AUDIT",
+        "delivery": "The claimed result is the starting node; backward branches test confounds, ablations, stronger comparators, threshold failure, and missing evidence.",
+        "expression": "RESULT ← METHOD ← INPUTS; challenge every link and rival path"
+      },
+      "practical_lens": "Explain what could make the apparent result misleading in the real system.",
+      "engineering_lens": "Expose ablations, comparator challenges, confound controls, sensitivity tests, rollback paths, and reproduction checks.",
+      "empirical_lens": "Show which challenges passed, failed, remained mixed, or were not executed.",
+      "boundary_statement": "A result that survives one held-out test may still fail under confound control, transfer, replication, or operational calibration.",
+      "previous_story_beat": {
+        "label": "Test / Forward Construction",
+        "route": "/laws/test/forward-construction/",
+        "story_beat": "TEST_FORWARD_SPECIFICATION"
+      },
+      "next_story_beat": {
+        "label": "Test / Result and Record",
+        "route": "/laws/test/result-and-record/",
+        "story_beat": "TEST_DISPOSITION_AND_CUSTODY"
+      },
+      "related_study": {
+        "study_id": "BATTERY_COHERENCE_HELDOUT_STUDY_v1",
+        "relationship_status": "SELECTED_STUDY_FOR_PROCEDURAL_VIEW",
+        "complete_frontier_record": "/frontier/energy/battery-coherence-study/",
+        "rule": "The selected study remains visible across all four Test views, but each page exposes only one procedural function."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_TEST_REVERSE_AUDIT_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    },
+    {
+      "sequence_index": 23,
+      "route": "/laws/test/result-and-record/",
+      "authority": "TEST",
+      "page_title": "Result and Record",
+      "story_phase": "TEST_DISPOSITION_AND_CUSTODY",
+      "page_role": "Preserve the tested result, failed components, claim ceiling, and exact record without rewriting the study.",
+      "question_answered": "What conclusion was preserved, what failed, and what is the strongest permitted statement?",
+      "primary_lens": "PRACTICAL",
+      "primary_visual_or_equation": {
+        "type": "RESULT_LEDGER",
+        "delivery": "Supported, negative, mixed, unresolved, claim ceiling, prohibited claims, receipt, and next study occupy fixed ledger positions.",
+        "expression": "TEST DISPOSITION = supported + negative + mixed + unresolved + claim ceiling"
+      },
+      "practical_lens": "State the decision-relevant conclusion and what action is not yet justified.",
+      "engineering_lens": "Expose execution status, result identifiers, failed gates, version, custody, rollback, and next required test.",
+      "empirical_lens": "Show metrics, uncertainty, comparator outcome, negative findings, replication status, and unresolved alternatives.",
+      "boundary_statement": "The preserved record cannot be promoted beyond its claim ceiling by later presentation, routing, or implementation.",
+      "previous_story_beat": {
+        "label": "Test / Reverse Audit",
+        "route": "/laws/test/reverse-audit/",
+        "story_beat": "TEST_REVERSE_CHALLENGE"
+      },
+      "next_story_beat": {
+        "label": "Research / Findings and Boundaries",
+        "route": "/laws/research/findings-and-boundaries/",
+        "story_beat": "RESEARCH_SYNTHESIS_AND_RETURN_TO_COMPLETE_RECORD"
+      },
+      "related_study": {
+        "study_id": "BATTERY_COHERENCE_HELDOUT_STUDY_v1",
+        "relationship_status": "SELECTED_STUDY_FOR_PROCEDURAL_VIEW",
+        "complete_frontier_record": "/frontier/energy/battery-coherence-study/",
+        "rule": "The selected study remains visible across all four Test views, but each page exposes only one procedural function."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_TEST_RESULT_AND_RECORD_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    },
+    {
+      "sequence_index": 24,
+      "route": "/laws/research/findings-and-boundaries/",
+      "authority": "RESEARCH",
+      "page_title": "Findings and Boundaries",
+      "story_phase": "RESEARCH_SYNTHESIS_AND_RETURN_TO_COMPLETE_RECORD",
+      "page_role": "Synthesize what survived, failed, remained mixed, or stayed unresolved and return custody to the complete Frontier record.",
+      "question_answered": "Which findings survived challenge, which failed, what remains unresolved, and what study must come next?",
+      "primary_lens": "EMPIRICAL",
+      "primary_visual_or_equation": {
+        "type": "FOUR_STATE_FINDINGS_FIELD",
+        "delivery": "Supported, negative, mixed, and unresolved findings form four distinct regions connected to claim ceiling and next-study requirements.",
+        "expression": "FINDINGS = SUPPORTED ∪ NEGATIVE ∪ MIXED ∪ UNRESOLVED"
+      },
+      "practical_lens": "Explain what the findings mean for the real problem now, without implying deployment or universal transfer.",
+      "engineering_lens": "Expose domain boundary, mechanism status, required controls, replication plan, and next-study construction.",
+      "empirical_lens": "Preserve exact metrics, negative results, competing explanations, replication status, and prohibited claims.",
+      "boundary_statement": "Laws closes the interpretation, not the research archive; the complete evidence, execution, and future study record remains in Frontier.",
+      "previous_story_beat": {
+        "label": "Test / Result and Record",
+        "route": "/laws/test/result-and-record/",
+        "story_beat": "TEST_DISPOSITION_AND_CUSTODY"
+      },
+      "next_story_beat": {
+        "label": "Open the complete selected Frontier study record",
+        "route": "/frontier/energy/battery-coherence-study/",
+        "story_beat": "RECORDS_PRESERVE_THE_COMPLETE_WORK",
+        "dynamic_rule": "Future studies must return to their own current complete Frontier record."
+      },
+      "related_study": {
+        "study_id": "BATTERY_COHERENCE_HELDOUT_STUDY_v1",
+        "relationship_status": "PRIMARY_CONTEXTUAL_STUDY_FOR_CP6",
+        "complete_frontier_record": "/frontier/energy/battery-coherence-study/",
+        "rule": "The page presents only its assigned slice and must not duplicate the complete study."
+      },
+      "audit_record": {
+        "record_id": "LAWS_NARRATIVE_AUDIT_RESEARCH_FINDINGS_AND_BOUNDARIES_v1",
+        "status": "DESIGN_TARGET_NOT_YET_IMPLEMENTED",
+        "presentation": "COLLAPSED_BY_DEFAULT",
+        "must_preserve": [
+          "CURRENT_ROUTE_AND_CANONICAL_OWNER",
+          "SOURCE_CUSTODY",
+          "EVIDENCE_STATUS",
+          "CLAIM_CEILING",
+          "VERSION_HISTORY",
+          "IMPLEMENTATION_OWNERSHIP"
+        ],
+        "rule": "Audit material remains inspectable but cannot control initial public comprehension."
+      }
+    }
+  ],
+  "freeze_gate": {
+    "map_must_be_frozen_before": [
+      "REPRESENTATIVE_PAGE_IMPLEMENTATION",
+      "SHARED_COMPONENT_CONSTRUCTION",
+      "BATCH_CHILD_MIGRATION"
+    ],
+    "representative_pages_after_freeze": [
+      "/laws/categories/flow/signals/",
+      "/laws/categories/reality/measure/",
+      "/laws/test/reverse-audit/",
+      "/laws/research/findings-and-boundaries/"
+    ],
+    "representative_selection_basis": "One signal-oriented law page, one quantitative law page, one adversarial Test page, and one Research synthesis page establish the shared system across distinct narrative functions.",
+    "remaining_children_may_migrate_only_after": "Representative pages prove shared typography, atmosphere, lens behavior, disclosure, formulas, navigation context, audit access, mobile composition, reduced motion, and static equivalence.",
+    "current_disposition": "NO_PRODUCT_IMPLEMENTATION_AUTHORIZED_BY_THIS_MAP"
+  }
+}

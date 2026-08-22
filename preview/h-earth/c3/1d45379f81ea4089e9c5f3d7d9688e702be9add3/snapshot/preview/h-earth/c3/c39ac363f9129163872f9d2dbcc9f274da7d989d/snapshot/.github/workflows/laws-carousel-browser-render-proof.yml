@@ -1,0 +1,25 @@
+name: Laws Destination Stage Browser Proof
+
+on:
+  pull_request:
+    paths: ['laws/index.mobile-background-tabs.js','laws/index.destination-carousel.js','laws/index.destination-carousel.css','laws/index.destination-stage.js','laws/index.destination-stage.css','laws/index.stellar-continuity.css','.github/workflows/laws-carousel-browser-render-proof.yml']
+  workflow_dispatch:
+permissions: { contents: read }
+jobs:
+  browser-proof:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: '${{ github.event.pull_request.head.sha || github.sha }}', fetch-depth: 1 }
+      - run: |
+          node --check laws/index.destination-carousel.js
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null
+      - run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/laws-stage-http.log 2>&1 &
+      - name: Prove stage and direction-only shared-ring integration
+        run: |
+          node <<'NODE'
+          const {chromium}=require('playwright');
+          (async()=>{const browser=await chromium.launch({headless:true});const page=await browser.newPage({viewport:{width:1024,height:1366}});await page.goto('http://127.0.0.1:4173/laws/',{waitUntil:'networkidle'});await page.waitForSelector('html[data-laws-destination-stage="active"]',{timeout:15000});const identity=await page.evaluate(()=>({contract:document.documentElement.dataset.lawsCarouselContract,reference:document.documentElement.dataset.lawsCarouselReference,build:document.documentElement.dataset.lawsCarouselBuild,gesture:document.documentElement.dataset.lawsCarouselGestureLaw,runtime:globalThis.DGB_LAWS_DESTINATION_CAROUSEL}));if(identity.contract!=='LAWS_DESTINATION_CAROUSEL_RUNTIME_v11_DIRECTION_ONLY_ATOMIC'||identity.reference!=='METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1'||identity.build!=='20260816E_DIRECTION_ONLY_CANONICAL'||identity.gesture!=='direction-only-release-one-atomic-step')throw Error('identity '+JSON.stringify(identity));if(identity.runtime?.directionOnlyGesture!==true||identity.runtime?.liveGestureGeometry!==false||identity.runtime?.oneGestureOneStep!==true)throw Error('gesture authority '+JSON.stringify(identity.runtime));const hero=page.locator('[data-laws-experience-stage="hero"]'),stage=page.locator('[data-laws-root-rolodex-section][data-laws-destination-stage="active"]');const hb=await hero.boundingBox(),sb=await stage.boundingBox();if(!hb||!sb||sb.y<=hb.y+hb.height+20)throw Error('stage separation failed');const tabs=stage.locator('.laws-destination-stage__tab');if(await tabs.count()!==3||await stage.locator('.laws-destination-stage__tab[aria-selected="true"]').count()!==1)throw Error('family tabs invalid');const field=stage.locator('.laws-rolodex-field[data-destination-stage-state="active"]').first(),viewport=field.locator('.laws-rolodex-viewport'),track=field.locator('.laws-rolodex-track');const active=field.locator('.laws-rolodex-card[data-active="true"]');const before=await active.getAttribute('data-destination-id'),initial=await track.evaluate(n=>getComputedStyle(n).transform);await viewport.focus();await page.keyboard.press('ArrowRight');await page.waitForFunction(before=>document.querySelector('.laws-rolodex-field[data-destination-stage-state="active"] .laws-rolodex-card[data-active="true"]')?.getAttribute('data-destination-id')!==before,before,{timeout:3000});await page.waitForTimeout(800);const ab=await field.locator('.laws-rolodex-card[data-active="true"]').boundingBox(),vb=await viewport.boundingBox();if(!ab||!vb||Math.abs((ab.x+ab.width/2)-(vb.x+vb.width/2))>24)throw Error('center custody failed');if(await track.evaluate(n=>getComputedStyle(n).transform)===initial)throw Error('ring did not rotate');if(await field.getAttribute('data-carousel-canonical-landing')!=='true')throw Error('canonical landing absent');console.log(JSON.stringify({identity:{contract:identity.contract,reference:identity.reference,build:identity.build,gesture:identity.gesture},stage:sb},null,2));await browser.close();})().catch(e=>{console.error(e);process.exit(1)});
+          NODE

@@ -1,0 +1,41 @@
+{
+  "drive_file_id": "1A_FgrvsN-sugszgmll4fO-CGCVHNIPir",
+  "drive_file_url": "https://drive.google.com/file/d/1A_FgrvsN-sugszgmll4fO-CGCVHNIPir/view?usp=drivesdk",
+  "drive_folder_id": "1Dlmg0Obm7BJJ9vB0mHwMwXxDP9fB7LuE",
+  "drive_folder_url": "https://drive.google.com/drive/folders/1Dlmg0Obm7BJJ9vB0mHwMwXxDP9fB7LuE",
+  "empirical_reliability_and_validity": "OPEN",
+  "executable_release_receipt_sha256": "bcd40f1f4b7fb52cb0cec13b2396ac9af87c9c45dd35d8aa662bd2cbb443ef77",
+  "fixed_pitch_requirement_removed": true,
+  "observer_grade_imi_instrument_available": true,
+  "orientation_alignment_numeric_equivalence_to_v1": false,
+  "platform_binding": {
+    "platform_id": "ROUTE_OPERATOR_RESEARCH_PLATFORM_v1",
+    "platform_merge_commit_sha": "cffa9889430d6700c3fad548d29dfada3dd04e61",
+    "platform_version": "1.0.0"
+  },
+  "predecessor_binding": {
+    "historical_baseline_immutable": true,
+    "merge_commit_sha": "2e2d6636bffb54aef5d1b65e7ed87ba2b3cba02a",
+    "release_id": "IMI_H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_DEPLOYABLE_RELEASE_v1",
+    "route_id": "H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_v1",
+    "route_version": "1.0.0"
+  },
+  "predeclared_correction_manifest_required": true,
+  "private_imi_dependency": {
+    "custody_state": "BYTE_VERIFIED_EXTERNAL_INSTRUMENT_DEPENDENCY",
+    "package_id": "IMI_OBSERVER_GRADE_INSTRUMENT_v1",
+    "package_version": "1.0.0",
+    "repository_mirror": false,
+    "runtime_mount_required": true,
+    "zip_sha256": "0be0608fa9aab10d75eeba796530421e96efc7829364172e52f7925ca74d9c87"
+  },
+  "release_bundle_file": "IMI_H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_DEPLOYABLE_RELEASE_v2.zip",
+  "release_bundle_file_count": 42,
+  "release_bundle_sha256": "5f669f26bf7910da3e59efa01c0780c70d7bab1e08237d42c9626ff6767fe3a0",
+  "release_bundle_size_bytes": 68506,
+  "release_id": "IMI_H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_DEPLOYABLE_RELEASE_v2",
+  "release_version": "2.0.0",
+  "route_id": "H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_v2",
+  "route_version": "2.0.0",
+  "successor_role": "AUTHORIZED_REPAIR_COMPARATIVE_EVALUATION"
+}

@@ -1,0 +1,83 @@
+name: Compass Capability Continuity Qualification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'assets/compass/**'
+      - '.github/ai-router/projects/compass/verify-experience-consolidation.v1.mjs'
+      - '.github/workflows/compass-display-continuity-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  continuity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Syntax floor
+        run: |
+          set -euo pipefail
+          node --check assets/compass/compass.capability-carousel.js
+          node --check assets/compass/compass.brain-scene.js
+          node --check assets/compass/compass.house-scene.js
+          node --check assets/compass/compass.trophy-scene.js
+          node --check assets/compass/compass.carousel.js
+          node --check .github/ai-router/projects/compass/verify-experience-consolidation.v1.mjs
+      - name: Verify continuity ownership
+        env: {COMPASS_EXPERIENCE_OUTPUT: /tmp/compass-capability-continuity-receipt.json}
+        run: node .github/ai-router/projects/compass/verify-experience-consolidation.v1.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compass-capability-continuity-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/compass-capability-continuity-receipt.json
+          retention-days: 90
+
+  rendered-inspection:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Install browser
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Serve exact candidate
+        run: |
+          python3 -m http.server 4173 >/tmp/compass-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          exit 1
+      - name: Inspect compact swipe-only capability runtime
+        run: |
+          mkdir -p /tmp/track-a-rendered
+          cat > .track-a-inspect.mjs <<'NODE'
+          import {chromium} from 'playwright';import fs from 'node:fs';
+          const b=await chromium.launch({headless:true}),out={};
+          const limits={desktop:430,tablet:430,phone:370};
+          async function swipe(p,s,dir=-1){const box=await s.boundingBox();const y=box.y+Math.min(box.height*.42,180),x1=dir<0?box.x+box.width*.74:box.x+box.width*.26,x2=dir<0?box.x+box.width*.26:box.x+box.width*.74;await p.mouse.move(x1,y);await p.mouse.down();await p.mouse.move(x2,y,{steps:7});await p.mouse.up();await p.waitForTimeout(260)}
+          for(const [name,v] of Object.entries({desktop:{width:1440,height:1100},tablet:{width:900,height:1000},phone:{width:412,height:915}})){
+            const p=await b.newPage({viewport:v});await p.goto('http://127.0.0.1:4173/',{waitUntil:'networkidle'});const s=p.locator('[data-capability-orbit]');await s.scrollIntoViewIfNeeded();await p.waitForTimeout(500);
+            const first=await p.evaluate(()=>{const stage=document.querySelector('[data-capability-orbit]'),cs=getComputedStyle(stage);return{brain:document.querySelector('.compass-brain-field canvas')?.dataset.brainRenderer||'',fallback:getComputedStyle(document.querySelector('.compass-trophy-fallback')).display,h:stage.getBoundingClientRect().height,minHeight:cs.minHeight,grid:cs.gridTemplateRows,overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,guidance:stage.querySelector('.compass-capability-guidance')?.textContent.trim()||'',capabilityArrows:stage.querySelectorAll(':scope > .compass-orbit-controls [data-orbit-next],:scope > .compass-orbit-controls [data-orbit-previous]').length,legacyCss:[...document.styleSheets].some(x=>(x.href||'').includes('compass.carousel.css'))}});
+            console.log(name,JSON.stringify(first));
+            if(!first.brain.includes('webgl'))throw Error(`${name}: brain ${first.brain}`);if(first.fallback!=='none')throw Error(`${name}: fallback ${first.fallback}`);if(first.overflow>2)throw Error(`${name}: overflow ${first.overflow}`);if(first.guidance!=='Swipe to rotate.')throw Error(`${name}: guidance ${first.guidance}`);if(first.capabilityArrows!==0)throw Error(`${name}: arrows ${first.capabilityArrows}`);if(first.h>limits[name])throw Error(`${name}: stage ${first.h}`);await s.screenshot({path:`/tmp/track-a-rendered/${name}-brain.png`});
+            await swipe(p,s,-1);let active=await p.evaluate(()=>document.querySelector('.compass-orbit-plaque[data-active="true"]')?.dataset.capability);if(active!=='awards')throw Error(`${name}: first swipe ${active}`);const award=await p.evaluate(()=>({fallback:getComputedStyle(document.querySelector('.compass-trophy-fallback')).display,trophy:document.querySelector('.compass-trophy-canvas')?.dataset.trophyRenderer||''}));if(award.fallback!=='none'||!award.trophy.includes('webgl'))throw Error(`${name}: award ${JSON.stringify(award)}`);await s.screenshot({path:`/tmp/track-a-rendered/${name}-awards.png`});
+            await swipe(p,s,-1);active=await p.evaluate(()=>document.querySelector('.compass-orbit-plaque[data-active="true"]')?.dataset.capability);if(active!=='house')throw Error(`${name}: second swipe ${active}`);await s.screenshot({path:`/tmp/track-a-rendered/${name}-house.png`});
+            await swipe(p,s,-1);active=await p.evaluate(()=>document.querySelector('.compass-orbit-plaque[data-active="true"]')?.dataset.capability);if(active!=='diagnostic')throw Error(`${name}: third swipe ${active}`);out[name]={first,award,active};await p.close();
+          }
+          await b.close();fs.writeFileSync('/tmp/track-a-rendered/receipt.json',JSON.stringify({result:'PASS_CLOSED',out},null,2));
+          NODE
+          node .track-a-inspect.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compass-track-a-final-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/track-a-rendered
+          retention-days: 30

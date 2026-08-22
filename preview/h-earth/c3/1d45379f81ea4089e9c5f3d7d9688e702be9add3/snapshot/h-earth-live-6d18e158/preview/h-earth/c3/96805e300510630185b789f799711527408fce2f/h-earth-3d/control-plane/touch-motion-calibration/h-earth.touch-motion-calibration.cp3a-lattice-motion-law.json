@@ -1,0 +1,69 @@
+{
+  "artifactId": "H_EARTH_TOUCH_MOTION_CALIBRATION_CP3A_LATTICE_AND_MOTION_LAW_v1",
+  "program": "H_EARTH_TOUCH_MOTION_CALIBRATION_AND_FLUIDITY",
+  "checkpoint": "CP3A_LATTICE_AND_MOTION_LAW_CONSTRUCTION",
+  "parentCheckpoint": "CP2B_PHYSICAL_ATTEMPT_RECORDER",
+  "parentHead": "0b0580a3ba8b1a00d5e1d9a0e5f928208076bcbd",
+  "authority": {
+    "cp2bStandalonePhysicalExecutionRequiredBeforeCp3": false,
+    "cp2bRecorderRetentionRequired": true,
+    "nextPhysicalExecution": "ONE_ALL_EIGHT_GESTURE_SESSION_ON_IMPROVED_STACK",
+    "latticeRole": "WHAT_THE_USER_IS_DOING",
+    "motionEngineRole": "HOW_THE_CAMERA_MOVES"
+  },
+  "targetArchitecture": [
+    "RAW_POINTER_EVENTS",
+    "CONTACT_TRACKING",
+    "256_STATE_GESTURE_CONTROL_LATTICE",
+    "LOCKED_CONTINUOUS_MOTION_INTENT",
+    "FRAME_TIME_CAMERA_INTEGRATION",
+    "GPU_PRESENTATION"
+  ],
+  "implementedInCp3A": {
+    "gestureOwnershipLock": true,
+    "pinchVersusTravelStability": true,
+    "forwardBackwardDirectionalSymmetry": true,
+    "viewportNormalizedInputContract": true,
+    "frameTimeNormalization": true,
+    "boundedInputAccumulation": true,
+    "continuousMotionOutput": true,
+    "releaseTermination": true,
+    "orientationIndependentScalingContract": true
+  },
+  "syntheticFixtures": {
+    "turnLeft": "PASS",
+    "turnRight": "PASS",
+    "pitchUp": "PASS",
+    "pitchDown": "PASS",
+    "moveForward": "PASS",
+    "moveBackward": "PASS",
+    "zoomIn": "PASS",
+    "zoomOut": "PASS",
+    "pinchTravelAmbiguity": "PASS",
+    "contactAdditionAndRemoval": "BOUNDED_BY_RESET_CONTRACT",
+    "midGestureReversal": "PASS",
+    "eventInterleaving": "CLASSIFIER_STATE_ORDER_PRESERVED",
+    "frameRateVariation": "PASS"
+  },
+  "execution": {
+    "runtime": "NODE_JS_EXACT_MODULE_REPRODUCTION",
+    "status": "PASS",
+    "assertionCount": 22,
+    "forwardTravel": 5.999999999999987,
+    "backwardTravel": -5.999999999999987,
+    "travelAt30Fps": 6.000000000000003,
+    "travelAt60Fps": 5.999999999999987,
+    "travelAt120Fps": 5.999999999999987
+  },
+  "scope": {
+    "productionTouchMutationPerformed": false,
+    "productionNavigationMutationPerformed": false,
+    "rendererMutationPerformed": false,
+    "cameraConventionChanged": false,
+    "worldGeometryChanged": false,
+    "cp2bDiagnosticRemoved": false
+  },
+  "status": "PASS_CLOSED_FOR_CONSTRUCTION",
+  "nextCheckpoint": "CP3B_PRODUCT_INTEGRATION_CANDIDATE",
+  "stoppingBoundary": "STOP_BEFORE_PRODUCT_INTEGRATION_UNTIL_CP3A_RECEIPT_IS_REVIEWED"
+}

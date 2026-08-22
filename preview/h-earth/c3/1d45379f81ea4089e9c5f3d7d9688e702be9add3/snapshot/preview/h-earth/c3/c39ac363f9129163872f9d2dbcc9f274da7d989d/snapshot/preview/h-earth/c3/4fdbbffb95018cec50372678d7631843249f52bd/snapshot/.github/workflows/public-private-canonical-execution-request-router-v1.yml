@@ -1,0 +1,67 @@
+name: Public → Private Canonical Execution Request Router v1
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+jobs:
+  parse:
+    if: >-
+      contains(github.event.comment.body, 'PUBLIC_PRIVATE_CANONICAL_EXECUTION_REQUEST_V1') &&
+      github.event.comment.author_association == 'OWNER'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      private_issue: ${{ steps.request.outputs.private_issue }}
+      private_comment: ${{ steps.request.outputs.private_comment }}
+      expected_request_id: ${{ steps.request.outputs.expected_request_id }}
+      exact_private_head: ${{ steps.request.outputs.exact_private_head }}
+      callback_issue: ${{ steps.request.outputs.callback_issue }}
+    steps:
+      - name: Extract closed locator
+        id: request
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          event = json.load(open(os.environ['GITHUB_EVENT_PATH'], encoding='utf-8'))
+          body = event['comment']['body']
+          marker = 'PUBLIC_PRIVATE_CANONICAL_EXECUTION_REQUEST_V1'
+          pos = body.find(marker)
+          if pos < 0:
+              raise SystemExit('REQUEST_MARKER_MISSING')
+          request = json.loads(body[pos + len(marker):].strip())
+          required = {'schema','privateIssueNumber','privateCommentId','expectedRequestId','exactPrivateHead'}
+          if set(request) != required or request['schema'] != marker:
+              raise SystemExit('ROUTER_REQUEST_NOT_CLOSED')
+          if not isinstance(request['privateIssueNumber'], int) or request['privateIssueNumber'] < 1:
+              raise SystemExit('PRIVATE_ISSUE_INVALID')
+          if not isinstance(request['privateCommentId'], int) or request['privateCommentId'] < 1:
+              raise SystemExit('PRIVATE_COMMENT_INVALID')
+          head = request['exactPrivateHead']
+          if not isinstance(head, str) or len(head) != 40 or any(c not in '0123456789abcdef' for c in head):
+              raise SystemExit('EXACT_PRIVATE_HEAD_INVALID')
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as f:
+              f.write(f"private_issue={request['privateIssueNumber']}\n")
+              f.write(f"private_comment={request['privateCommentId']}\n")
+              f.write(f"expected_request_id={request['expectedRequestId']}\n")
+              f.write(f"exact_private_head={head}\n")
+              f.write('callback_issue=' + str(event['issue']['number']) + '\n')
+          PY
+
+  execute:
+    needs: parse
+    uses: ./.github/workflows/public-private-canonical-execution-carrier-v1.yml
+    with:
+      private_issue: ${{ needs.parse.outputs.private_issue }}
+      private_comment: ${{ needs.parse.outputs.private_comment }}
+      expected_request_id: ${{ needs.parse.outputs.expected_request_id }}
+      exact_private_head: ${{ needs.parse.outputs.exact_private_head }}
+      callback_issue: ${{ needs.parse.outputs.callback_issue }}
+    secrets: inherit

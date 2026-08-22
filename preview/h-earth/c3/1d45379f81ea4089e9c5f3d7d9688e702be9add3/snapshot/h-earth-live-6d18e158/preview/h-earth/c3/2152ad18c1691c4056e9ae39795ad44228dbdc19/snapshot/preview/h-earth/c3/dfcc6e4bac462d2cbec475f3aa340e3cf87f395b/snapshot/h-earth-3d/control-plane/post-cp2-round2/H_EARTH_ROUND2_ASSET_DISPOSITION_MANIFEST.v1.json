@@ -1,0 +1,192 @@
+{
+  "schemaVersion": "H_EARTH_ROUND2_ASSET_DISPOSITION_MANIFEST_v1",
+  "deliverable": "H_EARTH_TERRAIN_INTELLIGENCE_AND_PERCEPTUAL_WORKBENCH_v1",
+  "class": "INTERNAL_AUTHORING_DIAGNOSTIC_AND_USER_COMPARISON_TOOL",
+  "controllingMainHead": "accdec74088120446bfc28f4441fc08a8210813f",
+  "allowedClassifications": [
+    "REUSABLE_INFRASTRUCTURE",
+    "REJECTED_VISUAL_CONTENT",
+    "DIAGNOSTIC_ONLY",
+    "HISTORICAL_EVIDENCE",
+    "LIVE_AUTHORITY"
+  ],
+  "boundaries": {
+    "liveHEarthMutation": false,
+    "acceptedCP2Mutation": false,
+    "rejectedCandidatePromotion": false,
+    "massMergeOfRejectedBranches": false,
+    "newVisualCandidate": false,
+    "publicHEarthRouteChanged": false,
+    "liveBindingChanged": false,
+    "acceptedRendererChanged": false
+  },
+  "assets": [
+    {
+      "path": "h-earth-3d/analysis/morphology/h-earth.b1-morphology-descriptor-baseline.v1.mjs",
+      "classification": "REUSABLE_INFRASTRUCTURE",
+      "workbenchUse": ["TERRAIN_LAYER_DATA", "CLICK_INSPECTION", "REPETITION_HOTSPOTS"],
+      "promotionRule": "AUTHORING_AND_DIAGNOSTIC_USE_ONLY_UNLESS_SEPARATELY_AUTHORIZED"
+    },
+    {
+      "path": "h-earth-3d/control-plane/post-cp2-round2/morphology/h-earth.b1-morphology-descriptor-baseline.closure.v1.json",
+      "classification": "HISTORICAL_EVIDENCE",
+      "workbenchUse": ["BASELINE_DIGEST_AUTHORITY"],
+      "promotionRule": "NO_RUNTIME_IMPORT"
+    },
+    {
+      "path": "h-earth-3d/analysis/morphology/h-earth.b2-protection-model.v1.mjs",
+      "classification": "REUSABLE_INFRASTRUCTURE",
+      "workbenchUse": ["P0_P1_P2_MASKS", "HARDNESS", "EDITABLE_WEIGHT"],
+      "promotionRule": "AUTHORING_SAFETY_SYSTEM_NOT_LIVE_TERRAIN_MUTATION_AUTHORITY"
+    },
+    {
+      "path": "h-earth-3d/control-plane/post-cp2-round2/morphology/h-earth.b2-protection-model.v1.mjs",
+      "classification": "DIAGNOSTIC_ONLY",
+      "workbenchUse": ["PROTECTION_MODEL_AUTHORITY", "APPROACH_VIEWSHEDS", "ANCHOR_REGISTRY"],
+      "promotionRule": "NO_DIRECT_PRODUCT_MUTATION"
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+      "classification": "LIVE_AUTHORITY",
+      "workbenchUse": ["READ_ONLY_TERRAIN_SAMPLING"],
+      "promotionRule": "IMMUTABLE_INPUT_FOR_THIS_DELIVERABLE"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js",
+      "classification": "LIVE_AUTHORITY",
+      "workbenchUse": ["ACCEPTED_CP2_REPLAY", "SHADER_EXTRACTION_SOURCE"],
+      "promotionRule": "READ_ONLY_EXACT_ACCEPTED_RENDERER"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "classification": "LIVE_AUTHORITY",
+      "workbenchUse": ["EXACT_SCENE_CAMERA_REPLAY"],
+      "promotionRule": "READ_ONLY"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+      "classification": "LIVE_AUTHORITY",
+      "workbenchUse": ["FRAME_UNIFORM_PACKETS"],
+      "promotionRule": "READ_ONLY"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+      "classification": "LIVE_AUTHORITY",
+      "workbenchUse": ["CANONICAL_RENDER_PACKAGE"],
+      "promotionRule": "READ_ONLY"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+      "classification": "LIVE_AUTHORITY",
+      "workbenchUse": ["CANONICAL_GPU_UPLOAD_VIEWS"],
+      "promotionRule": "READ_ONLY"
+    },
+    {
+      "path": "h-earth-3d/validation/metric-attribution/h-earth.metric-attribution-diagnostic-renderer.v1.mjs",
+      "classification": "REUSABLE_INFRASTRUCTURE",
+      "workbenchUse": ["SIDE_BY_SIDE_RENDERING", "COLOR_READBACK", "DEPTH_READBACK", "FRAME_COMPARISON"],
+      "promotionRule": "INTERNAL_DIAGNOSTIC_ONLY"
+    },
+    {
+      "path": "h-earth-3d/validation/metric-attribution/h-earth.metric-attribution-directional-metric.v1.mjs",
+      "classification": "REUSABLE_INFRASTRUCTURE",
+      "workbenchUse": ["MICRO_MESO_MACRO_ANALYSIS", "ORIENTATION_AND_LAG_SIGNATURE"],
+      "promotionRule": "MAY_DESCRIBE_ACCEPTED_FRAMES_BUT_MAY_NOT_GOVERN_NEW_IMPLEMENTATION"
+    },
+    {
+      "path": "h-earth-3d/control-plane/post-cp2-round2/metric-attribution/h-earth.ma2-diagnostic-pass-authority.v1.mjs",
+      "classification": "DIAGNOSTIC_ONLY",
+      "workbenchUse": ["A_THROUGH_H_PASS_REGISTRY"],
+      "promotionRule": "NO_PRODUCT_AUTHORITY"
+    },
+    {
+      "path": "h-earth-3d/validation/metric-attribution/h-earth.ma2-diagnostic-pass-authority-browser.mjs",
+      "classification": "DIAGNOSTIC_ONLY",
+      "workbenchUse": ["PASS_AUTHORITY_REFERENCE"],
+      "promotionRule": "NO_LIVE_BINDING"
+    },
+    {
+      "path": "h-earth-3d/control-plane/post-cp2-round2/metric-attribution/h-earth.rma1-single-family-ablations.v1.mjs",
+      "classification": "HISTORICAL_EVIDENCE",
+      "workbenchUse": ["FIXED_SCENES", "FAMILY_REGISTRY", "FROZEN_GATES"],
+      "promotionRule": "RESULTS_DO_NOT_AUTHORIZE_PRODUCT_DIRECTION"
+    },
+    {
+      "path": "h-earth-3d/validation/metric-attribution/h-earth.rma1-single-family-ablations-browser.mjs",
+      "classification": "REUSABLE_INFRASTRUCTURE",
+      "workbenchUse": ["EIGHT_SCENE_REPLAY", "G_H_AND_SEVEN_ABLATIONS", "DETERMINISTIC_EQUIVALENCE"],
+      "promotionRule": "ABLATIONS_REMAIN_DIAGNOSTIC_ONLY"
+    },
+    {
+      "path": "h-earth-3d/control-plane/post-cp2-round2/metric-attribution/h-earth.rma3-final-research-disposition.v1.mjs",
+      "classification": "HISTORICAL_EVIDENCE",
+      "workbenchUse": ["PRODUCT_AND_LIVE_PROHIBITIONS", "PERCEPTUAL_CORRESPONDENCE_NEXT_OPERATION"],
+      "promotionRule": "CONTROLLING_RESEARCH_DISPOSITION"
+    },
+    {
+      "path": "h-earth-3d/validation/baked-material/h-earth.bm4-one-sample-renderer.mjs",
+      "classification": "REUSABLE_INFRASTRUCTURE",
+      "workbenchUse": ["ONE_TEXTURE_UPLOAD_PATTERN", "MIPMAP_AND_RESOURCE_LIFECYCLE_REFERENCE", "FRAME_AND_DEPTH_COMPARISON_REFERENCE"],
+      "promotionRule": "INFRASTRUCTURE_PATTERN_ONLY_NO_BAKED_VISUAL_CONTENT"
+    },
+    {
+      "path": "h-earth-3d/validation/baked-material/bm4/h-earth.bm4-one-sample-renderer.browser.mjs",
+      "classification": "DIAGNOSTIC_ONLY",
+      "workbenchUse": ["SIDE_BY_SIDE_HARNESS_REFERENCE"],
+      "promotionRule": "NO_LIVE_BINDING"
+    },
+    {
+      "path": "h-earth-3d/control-plane/post-cp2-round2/baked-material/h-earth.bm4-one-sample-renderer-authority.v1.mjs",
+      "classification": "HISTORICAL_EVIDENCE",
+      "workbenchUse": ["RESOURCE_LIFECYCLE_FACTS", "REJECTED_CONTENT_BOUNDARY"],
+      "promotionRule": "BM4_PASS_DOES_NOT_AUTHORIZE_VISUAL_PROMOTION"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/terrain-material-field.round2-baked.v1.rgba",
+      "classification": "REJECTED_VISUAL_CONTENT",
+      "workbenchUse": [],
+      "promotionRule": "NEVER_IMPORT_BIND_OR_PROMOTE_FROM_THIS_WORKBENCH"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/terrain-material-field.round2-baked.v1.js",
+      "classification": "REJECTED_VISUAL_CONTENT",
+      "workbenchUse": [],
+      "promotionRule": "METADATA_MAY_BE_INSPECTED_AS_HISTORY_ONLY"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round2-baked-material-candidate.js",
+      "classification": "REJECTED_VISUAL_CONTENT",
+      "workbenchUse": [],
+      "promotionRule": "PROHIBITED_FROM_LIVE_BINDING_AND_ACCEPTED_RENDERER_REPLACEMENT"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/terrain-control-field.cp2-round2.v1.js",
+      "classification": "REJECTED_VISUAL_CONTENT",
+      "workbenchUse": [],
+      "promotionRule": "CP7_VISUAL_SYNTHESIS_CONTENT_NOT_REUSED"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round2-control-field-candidate.js",
+      "classification": "REJECTED_VISUAL_CONTENT",
+      "workbenchUse": [],
+      "promotionRule": "CP7_CANDIDATE_NOT_PROMOTABLE"
+    },
+    {
+      "path": "h-earth-3d/control-plane/post-cp2-round2/h-earth.cp6-round2-method-reconciliation.v1.mjs",
+      "classification": "HISTORICAL_EVIDENCE",
+      "workbenchUse": ["CP5_FAILURE_EVIDENCE", "CP7_METHOD_HISTORY"],
+      "promotionRule": "NO_REOPENING_CP5_OR_CP7_VISUAL_DIRECTION"
+    }
+  ],
+  "workbenchPaths": [
+    "h-earth-3d/tools/terrain-workbench/index.html",
+    "h-earth-3d/tools/terrain-workbench/workbench.mjs",
+    "h-earth-3d/tools/terrain-workbench/terrain-atlas.mjs",
+    "h-earth-3d/tools/terrain-workbench/scene-lab.mjs",
+    "h-earth-3d/tools/terrain-workbench/perceptual-correspondence.mjs",
+    "h-earth-3d/tools/terrain-workbench/export-packet.mjs",
+    "h-earth-3d/control-plane/post-cp2-round2/H_EARTH_ROUND2_ASSET_DISPOSITION_MANIFEST.v1.json",
+    "h-earth-3d/validation/terrain-workbench/h-earth.terrain-workbench.runner.mjs",
+    ".github/workflows/h-earth-terrain-workbench.yml"
+  ]
+}

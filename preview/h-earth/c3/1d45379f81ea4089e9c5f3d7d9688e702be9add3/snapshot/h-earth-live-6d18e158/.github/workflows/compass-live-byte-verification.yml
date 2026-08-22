@@ -1,0 +1,121 @@
+name: Compass Live Byte Verification
+
+on:
+  push:
+    branches: [main]
+  workflow_run:
+    workflows: ["Direct GitHub Pages Deploy"]
+    types: [completed]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  verify-live:
+    if: github.event_name == 'push' || github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      DEPLOYED_HEAD: ${{ github.event.workflow_run.head_sha || github.sha }}
+      UPSTREAM_CONCLUSION: ${{ github.event.workflow_run.conclusion || 'push-observation' }}
+      VERIFICATION_TRIGGER: ${{ github.event_name }}
+      LIVE_ORIGIN: https://diamondgatebridge.com
+    steps:
+      - name: Checkout exact observed main head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.DEPLOYED_HEAD }}
+          fetch-depth: 0
+
+      - name: Verify live bytes against exact observed source
+        id: verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$DEPLOYED_HEAD"
+          files=(
+            index.html
+            assets/compass/compass.identity-3d.js
+            assets/compass/compass.identity-3d.css
+            assets/compass/compass.brain-scene.js
+            assets/compass/compass.crystals.js
+            assets/compass/compass.mirrorland-window.js
+          )
+          rm -rf /tmp/compass-live-verify
+          mkdir -p /tmp/compass-live-verify/live
+          : > /tmp/compass-live-verify/receipt.tsv
+          pass=false
+          for attempt in $(seq 1 30); do
+            ok=true
+            : > /tmp/compass-live-verify/receipt.tsv
+            for path in "${files[@]}"; do
+              expected="$(sha256sum "$path" | awk '{print $1}')"
+              out="/tmp/compass-live-verify/live/$(basename "$path")"
+              url="${LIVE_ORIGIN}/${path}?dgb_verify_head=${DEPLOYED_HEAD}&attempt=${attempt}"
+              if ! curl --fail-with-body --silent --show-error --location \
+                -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' \
+                "$url" -o "$out"; then
+                actual="FETCH_FAILED"
+                ok=false
+              else
+                actual="$(sha256sum "$out" | awk '{print $1}')"
+                if [ "$actual" != "$expected" ]; then ok=false; fi
+              fi
+              printf '%s\t%s\t%s\n' "$path" "$expected" "$actual" >> /tmp/compass-live-verify/receipt.tsv
+            done
+            if [ "$ok" = true ]; then
+              pass=true
+              echo "attempt=$attempt" >> "$GITHUB_OUTPUT"
+              break
+            fi
+            sleep 10
+          done
+          cp /tmp/compass-live-verify/receipt.tsv /tmp/compass-live-byte-receipt.tsv
+          if [ "$pass" != true ]; then
+            echo "result=FAIL_CLOSED" >> "$GITHUB_OUTPUT"
+            cat /tmp/compass-live-byte-receipt.tsv
+            exit 1
+          fi
+          echo "result=PASS_CLOSED" >> "$GITHUB_OUTPUT"
+          cat /tmp/compass-live-byte-receipt.tsv
+
+      - name: Upload live byte receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-live-byte-receipt
+          path: /tmp/compass-live-byte-receipt.tsv
+          if-no-files-found: error
+
+      - name: Record live verification on reconciliation PR
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RESULT: ${{ steps.verify.outputs.result }}
+          ATTEMPT: ${{ steps.verify.outputs.attempt }}
+        run: |
+          set -euo pipefail
+          body_file=/tmp/compass-live-comment.md
+          {
+            echo "### Live deployment byte verification"
+            echo
+            echo "Observed main head: \`$DEPLOYED_HEAD\`"
+            echo "Verification trigger: **$VERIFICATION_TRIGGER**"
+            echo "Direct Pages workflow conclusion: **$UPSTREAM_CONCLUSION**"
+            echo "Live byte result: **${RESULT:-FAIL_CLOSED}**"
+            echo "Successful fetch attempt: \`${ATTEMPT:-none}\`"
+            echo
+            echo '| Public path | Expected SHA-256 | Live SHA-256 | Match |'
+            echo '|---|---|---|---|'
+            if [ -s /tmp/compass-live-byte-receipt.tsv ]; then
+              while IFS=$'\t' read -r path expected actual; do
+                if [ "$expected" = "$actual" ]; then match='PASS'; else match='FAIL'; fi
+                printf '| `%s` | `%s` | `%s` | %s |\n' "$path" "$expected" "$actual" "$match"
+              done < /tmp/compass-live-byte-receipt.tsv
+            else
+              echo '| receipt | unavailable | unavailable | FAIL |'
+            fi
+          } > "$body_file"
+          gh api "repos/${GITHUB_REPOSITORY}/issues/1282/comments" --method POST -F "body=@${body_file}" >/dev/null

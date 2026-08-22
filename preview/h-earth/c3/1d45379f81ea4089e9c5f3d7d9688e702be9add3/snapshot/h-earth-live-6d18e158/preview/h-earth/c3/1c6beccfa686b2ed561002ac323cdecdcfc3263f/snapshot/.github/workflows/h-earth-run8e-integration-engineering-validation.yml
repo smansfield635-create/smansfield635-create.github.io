@@ -1,0 +1,130 @@
+name: H-Earth Run 8E Integration Engineering Validation
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8e-public-integration-001
+  pull_request:
+    branches:
+      - agent/h-earth-run8d-grounded-vegetation-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run8e-engineering:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out Run 8E workspace
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify bounded Run 8E engineering scope
+        run: |
+          set -euo pipefail
+          git diff --name-only 26bab1eb804a6e8737f551e1d1aa9d9cbbe4ae5f...HEAD > /tmp/run8e-paths.txt
+          cat /tmp/run8e-paths.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          allowed = {
+            '.github/workflows/h-earth-run8e-integration-engineering-validation.yml',
+            'h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js',
+            'h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js',
+            'showroom/globe/h-earth/render/run8e-successor-environment.js',
+            'h-earth-3d/validation/h-earth.run8e.integration-engineering.harness.mjs',
+            'h-earth-3d/validation/h-earth.run8e.integration-engineering.receipt.json',
+            'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-integration-engineering-scope.js',
+            'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
+            '.github/workflows/h-earth-run8e-public-route-validation.yml',
+            'showroom/globe/h-earth/functional-landscape/environment-integration.js',
+            'h-earth-3d/validation/h-earth.run8e.public-route.receipt.json',
+            '.github/workflows/h-earth-run8e-pre-update-baseline-comparison.yml',
+            'h-earth-3d/validation/h-earth.run8e.pre-update-baseline-comparison.receipt.json'
+          }
+          paths = {line.strip() for line in Path('/tmp/run8e-paths.txt').read_text().splitlines() if line.strip()}
+          unexpected = sorted(paths - allowed)
+          required = allowed - {
+            'h-earth-3d/validation/h-earth.run8e.integration-engineering.receipt.json',
+            'h-earth-3d/validation/h-earth.run8e.public-route.receipt.json',
+            'h-earth-3d/validation/h-earth.run8e.pre-update-baseline-comparison.receipt.json'
+          }
+          missing = sorted(required - paths)
+          if unexpected:
+            raise SystemExit(f'UNEXPECTED_RUN8E_PATHS:{unexpected}')
+          if missing:
+            raise SystemExit(f'MISSING_RUN8E_PATHS:{missing}')
+          PY
+
+      - name: Execute Run 8E integration engineering harness
+        env:
+          H_EARTH_RUN8E_RECEIPT: /tmp/run8e-receipt.json
+        run: |
+          set -o pipefail
+          node h-earth-3d/validation/h-earth.run8e.integration-engineering.harness.mjs \
+            2>&1 | tee /tmp/run8e.log
+
+      - name: Verify Run 8E engineering receipt
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt = JSON.parse(fs.readFileSync('/tmp/run8e-receipt.json', 'utf8'));
+          const requiredTrue = [
+            'actualTerrainVegetationDepthInteractionExecuted',
+            'sameWorldToCameraTransformForTerrainAndVegetation',
+            'singlePhysicalDepthDomainExecuted',
+            'singleSkyAuthorityMaterialized',
+            'sunDiscMaterialized',
+            'alphaClosed',
+            'WestAdmissionExecuted',
+            'packet002SuccessorTransferExecuted',
+            'frameCompositionExecuted',
+            'rendererIntegrationExecuted',
+            'terrainOcclusionExecuted'
+          ];
+          if (
+            receipt.eligible !== true ||
+            receipt.status !== 'RUN_8E_ENGINEERING_INTEGRATION_PASS' ||
+            !requiredTrue.every((key) => receipt[key] === true) ||
+            receipt.neutralPrimitiveCount !== 35 ||
+            receipt.admittedPrimitiveCount !== 35 ||
+            receipt.terrainPrimitiveCount !== 1 ||
+            receipt.shorelinePrimitiveCount !== 7 ||
+            receipt.vegetationPrimitiveCount !== 27 ||
+            receipt.successorTerrainVertexCount !== 24360 ||
+            receipt.successorTerrainTriangleCount !== 48076 ||
+            receipt.terrainVisiblePixelCount <= 0 ||
+            receipt.vegetationVisiblePixelCount <= 0 ||
+            receipt.vegetationTerrainDepthInteractionCount <= 0 ||
+            receipt.publicRouteMutation !== false ||
+            receipt.physicalSamsungExecution !== false ||
+            receipt.deployment !== false ||
+            receipt.liveIdentityProof !== false ||
+            receipt.run8EPassClosed !== false ||
+            !/^[0-9a-f]{64}$/.test(receipt.deterministicDigest) ||
+            receipt.issues.length !== 0
+          ) process.exit(1);
+          const durable = 'h-earth-3d/validation/h-earth.run8e.integration-engineering.receipt.json';
+          if (
+            fs.existsSync(durable) &&
+            fs.readFileSync(durable, 'utf8') !== fs.readFileSync('/tmp/run8e-receipt.json', 'utf8')
+          ) process.exit(1);
+          NODE
+
+      - name: Upload Run 8E engineering evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-integration-engineering-evidence
+          path: |
+            /tmp/run8e.log
+            /tmp/run8e-receipt.json
+          if-no-files-found: error
+          retention-days: 30

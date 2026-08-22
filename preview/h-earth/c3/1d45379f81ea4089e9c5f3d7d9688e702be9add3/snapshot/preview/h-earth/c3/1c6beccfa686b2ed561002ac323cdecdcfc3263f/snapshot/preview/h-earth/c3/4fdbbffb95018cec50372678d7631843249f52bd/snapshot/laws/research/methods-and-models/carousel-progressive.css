@@ -1,0 +1,303 @@
+/*
+ * METHODS & MODELS — compound progressive successor
+ * Human understanding first; engineering depth remains intact and inspectable.
+ */
+
+.mm-model-choice {
+  display: grid;
+  gap: .2rem;
+  align-content: center;
+}
+
+.mm-model-choice__reader {
+  display: block;
+  color: inherit;
+  font-size: .86rem;
+  font-weight: 760;
+  line-height: 1.22;
+}
+
+.mm-model-choice__formal {
+  display: block;
+  color: #66737d;
+  font-size: .64rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: .035em;
+}
+
+.mm-model-choice[aria-selected="true"] .mm-model-choice__formal {
+  color: #aa9874;
+}
+
+.mm-inspection__detail {
+  padding-top: .15rem;
+}
+
+.mm-progressive-detail {
+  display: grid;
+  gap: 1rem;
+  min-height: 100%;
+}
+
+.mm-depth-label {
+  margin: 0 0 .42rem;
+  color: #a99469;
+  font-size: .64rem;
+  font-weight: 800;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+
+.mm-reader-first {
+  padding: clamp(1rem, 2.4vw, 1.45rem);
+  border: 1px solid rgba(217,188,130,.2);
+  border-radius: 1rem;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(217,188,130,.07), transparent 13rem),
+    rgba(255,255,255,.025);
+}
+
+.mm-reader-first h4 {
+  margin: 0;
+  max-width: 18ch;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.85rem, 3vw, 2.8rem);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -.035em;
+}
+
+.mm-reader-first__lead {
+  margin: .8rem 0 0;
+  max-width: 58ch;
+  color: #d9e0e6;
+  font-size: clamp(1rem, 1.5vw, 1.12rem);
+  line-height: 1.62;
+}
+
+.mm-reader-first__why {
+  margin-top: 1rem;
+  padding-top: .9rem;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.mm-reader-first__why strong,
+.mm-engineering-grid strong {
+  display: block;
+  margin-bottom: .3rem;
+  color: #9ba7b1;
+  font-size: .64rem;
+  font-weight: 800;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.mm-reader-first__why p {
+  margin: 0;
+  max-width: 62ch;
+  color: #acb8c1;
+  line-height: 1.58;
+}
+
+.mm-engineering-depth {
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 1rem;
+  background: rgba(3,6,9,.36);
+  overflow: clip;
+}
+
+.mm-engineering-depth > summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: .7rem 1rem;
+  align-items: center;
+  padding: 1rem 1.1rem;
+  cursor: pointer;
+  list-style: none;
+  color: #d7dde2;
+  font-weight: 780;
+}
+
+.mm-engineering-depth > summary::-webkit-details-marker {
+  display: none;
+}
+
+.mm-engineering-depth > summary::after {
+  content: "+";
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  color: #d9bc82;
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+.mm-engineering-depth[open] > summary::after {
+  content: "−";
+}
+
+.mm-engineering-depth > summary small {
+  grid-column: 1;
+  color: #6f7b85;
+  font-size: .68rem;
+  font-weight: 620;
+  line-height: 1.35;
+}
+
+.mm-engineering-depth__body {
+  display: grid;
+  gap: 1rem;
+  padding: 0 1.1rem 1.15rem;
+  border-top: 1px solid rgba(255,255,255,.065);
+}
+
+.mm-engineering-identity {
+  padding-top: 1rem;
+}
+
+.mm-engineering-identity h5 {
+  margin: .05rem 0 .5rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.45rem, 2.4vw, 2.05rem);
+  font-weight: 500;
+  line-height: 1.05;
+}
+
+.mm-engineering-identity .mm-inspection__equation {
+  margin: .7rem 0 .85rem;
+}
+
+.mm-engineering-identity .mm-inspection__statement {
+  margin: 0;
+  color: #b7c1c9;
+  font-size: .94rem;
+}
+
+.mm-engineering-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .7rem;
+}
+
+.mm-engineering-grid section {
+  padding: .78rem;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: .72rem;
+  background: rgba(255,255,255,.018);
+}
+
+.mm-engineering-grid p {
+  margin: 0;
+  color: #99a6af;
+  font-size: .81rem;
+  line-height: 1.52;
+}
+
+.mm-card__action {
+  min-height: 2.75rem;
+  font-weight: 720;
+}
+
+.mm-carousel[data-return-lock="true"] .mm-card[data-active="true"] {
+  pointer-events: none;
+}
+
+@media (max-width: 1100px) {
+  .mm-card[data-inspecting="true"] {
+    height: min(82vh, 49rem);
+  }
+
+  .mm-card[data-inspecting="true"] .mm-card__body {
+    padding-top: 4.15rem;
+  }
+
+  .mm-inspection__rail {
+    align-content: start;
+  }
+
+  .mm-model-choice {
+    min-height: 3.4rem;
+    padding-block: .65rem;
+  }
+
+  .mm-reader-first {
+    padding: 1.15rem 1.2rem 1.25rem;
+  }
+}
+
+@media (max-width: 760px) {
+  .mm-card[data-inspecting="true"] {
+    height: min(84vh, 44rem);
+  }
+
+  .mm-card[data-inspecting="true"] .mm-card__body {
+    padding: 4rem 1.1rem 1.15rem;
+  }
+
+  .mm-inspection__rail {
+    gap: .42rem;
+  }
+
+  .mm-model-choice {
+    display: block;
+    max-width: 13.5rem;
+    min-height: 2.65rem;
+    padding: .58rem .72rem;
+  }
+
+  .mm-model-choice__reader {
+    font-size: .76rem;
+    white-space: normal;
+  }
+
+  .mm-model-choice__formal {
+    margin-top: .18rem;
+    font-size: .58rem;
+    white-space: normal;
+  }
+
+  .mm-reader-first h4 {
+    max-width: 16ch;
+    font-size: clamp(1.75rem, 8vw, 2.45rem);
+  }
+
+  .mm-reader-first__lead {
+    font-size: .96rem;
+    line-height: 1.57;
+  }
+
+  .mm-engineering-depth > summary {
+    padding: .9rem 1rem;
+  }
+
+  .mm-engineering-depth__body {
+    padding-inline: 1rem;
+  }
+
+  .mm-engineering-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 440px) {
+  .mm-card[data-inspecting="true"] .mm-card__body {
+    padding-inline: .9rem;
+  }
+
+  .mm-reader-first {
+    padding-inline: 1rem;
+  }
+
+  .mm-reader-first__why {
+    margin-top: .8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mm-engineering-depth,
+  .mm-engineering-depth > summary {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}

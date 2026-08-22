@@ -1,0 +1,151 @@
+{
+  "schemaVersion": "H_EARTH_GRATITUDE_REGION_FINAL_PLACEMENT_FP05_REGIONAL_COMPOSITE_RECEIPT_v1",
+  "checkpointId": "FP-05",
+  "eligible": true,
+  "status": "FINAL_PLACEMENT_DISPOSITION_RESOLVED_PASS_CLOSED",
+  "authorizedBaseHead": "554a693c82876d9533bd577475a818a570d03b0d",
+  "executionHead": "b63c7b2871c831e49bc81d2c5af307302f75e302",
+  "workflowTriggerHead": "0707b5657dfeefacc3513c702757dae90b80a509",
+  "closedCheckpointRegression": {
+    "fp00": "FP_00_FREEZE_INPUT_AUTHORITY_PASS_CLOSED",
+    "fp01": "FP_01_ENTRY_ARRIVAL_CORRESPONDENCE_PASS_CLOSED",
+    "fp02": "FP_02_MIRROR_MANOR_SITE_DISPOSITION_PASS_CLOSED",
+    "fp03": "PASS_CLOSED_DO_NOT_REOPEN",
+    "fp04": "PASS_CLOSED_DO_NOT_REOPEN",
+    "doNotReopen": true
+  },
+  "externalDurableCustodyInputs": {
+    "fp03": {
+      "status": "PASS_CLOSED_DO_NOT_REOPEN",
+      "disposition": "ACCEPT_CURRENT_RELATION",
+      "exteriorFace": {"x": 40, "z": -284},
+      "apron": {"x": 48, "z": -284},
+      "precinctCenter": {"x": 56, "z": -284},
+      "userIntentMateriallySatisfied": true,
+      "authorizedBaseHead": "554a693c82876d9533bd577475a818a570d03b0d",
+      "workflowTriggerHead": "e4533a52171a56b4054fd5e3aba7286b62b136bb",
+      "executedDetachedCandidateHead": "65454a6d46764505048599dfcc56abef20e3007b",
+      "executionDigest": "d8aa6c41e6e8bac3ab79ff44b3121e644dcd1be06b43a637a96e86f299d8d57a",
+      "receiptSha256": "fdd73087f7e8891b04ce8fe23611947dfbba99e55f37f0bdaf6592c44dd9c986",
+      "githubArtifactId": 8740913317,
+      "driveEvidence": {"id": "12QvP0O7sjtRj5MRmJxZeG4t2E3uAjLdE", "bytes": 10603, "sha256": "5910c652169493bc9fe58087c8ed25ada2987010b6d1cd12e533590fd2899fde"},
+      "driveReceipt": {"id": "1dDjdYCipISobV2bKgGKKIFBkx-Dplw5S", "bytes": 4268, "sha256": "034ef94dbdfabbbb363c7c3201ebd7fb285baad150c9b9f7a6fc61e262404038"}
+    },
+    "fp04": {
+      "status": "PASS_CLOSED_DO_NOT_REOPEN",
+      "disposition": "RETAIN_ELIGIBLE_NONFINAL_AS_SEPARATE_FUTURE_PROJECT",
+      "preservedRole": "LARGE_REGIONAL_CAPACITY_RESERVE",
+      "finalEnvelopeAccepted": false,
+      "finalAnchorAssigned": false,
+      "allElevenSystemsAssigned": false,
+      "exactFunctionalCellsAssigned": false,
+      "distributedTopology": "DEFERRED",
+      "constructionAuthority": false,
+      "authorizedBaseHead": "554a693c82876d9533bd577475a818a570d03b0d",
+      "workflowTriggerHead": "d91b5ae02b747645f8eb0633f04d61fa135ee67d",
+      "executedDetachedCandidateHead": "398267fe1a7bb42f7042e27936bf1c5d029574df",
+      "executionDigest": "3312969933c7ae7f3397af5a2f8d0a7128a9b77f7bb0af868e56e5d77492582a",
+      "receiptSha256": "6d09b601e6128ac0abe657dad8fcc6ea12a5d1ad03c022e26ace653145fc53ad",
+      "githubArtifactId": 8741378132,
+      "driveEvidence": {"id": "1U2GA1kOZIdYWvNbsOlrI6DXAqoetH40k", "bytes": 12480, "sha256": "0f114776d5cb9d693750920caa0ae42b1c26290b0ce2200456ab076b752d4351"},
+      "driveReceipt": {"id": "1BusJWUbS5tvigU3tQJ9kpC8K3JFb1lwO", "bytes": 6317, "sha256": "db35881dcf085c232716884ac54776a8c4d23b70fe07bb06570ea6f2dbbc8429"}
+    }
+  },
+  "areaDispositionCount": 4,
+  "completeLifecycleDispositionCount": 4,
+  "areaDispositions": [
+    {
+      "areaId": "GRATITUDE_REGION_ENTRY_ZONE",
+      "lifecycleDisposition": "ACCEPTED",
+      "placementDisposition": "ACCEPT_EXISTING_INITIAL_CAMERA_BOUND_ARRIVAL",
+      "sourceCandidateId": "GRATITUDE_REGION_ENTRY_ZONE_CANDIDATE_01",
+      "finalBounds": {"xMinimum": -24, "xMaximum": 24, "zMinimum": -132, "zMaximum": -88},
+      "activeInitialState": {"waypointId": "COAST", "x": 0, "z": -96, "yPolicy": "DERIVE_FROM_ACTIVE_TERRAIN_CLEARANCE_LAW", "yawDegrees": 0, "pitchDegrees": -8, "verticalFovDegrees": 56},
+      "deferred": ["ALARIC_STAR_GEOMETRY", "MAP_PROJECTION_GEOMETRY"],
+      "requiredPlacementFieldsResolved": true
+    },
+    {
+      "areaId": "GRATITUDE_REGION_MIRROR_MANOR_PRECINCT",
+      "lifecycleDisposition": "ACCEPTED",
+      "placementDisposition": "ACCEPT_UPPER_CONNECTED_HILL_SITE_ENVELOPE_ONLY",
+      "sourceCandidateId": "GRATITUDE_REGION_MIRROR_MANOR_SITE_ENVELOPE_CANDIDATE_01",
+      "finalSiteCenter": {"x": 80, "z": -172},
+      "finalSiteBounds": {"xMinimum": 64, "xMaximum": 96, "zMinimum": -188, "zMaximum": -156},
+      "deferred": ["EXACT_BUILDING_FOOTPRINT", "BUILDING_ORIENTATION", "ATRIUM_GEOMETRY", "ENTRANCE_COORDINATES", "GARDEN_LAYOUT", "SCULPTURE_POSITIONS"],
+      "requiredPlacementFieldsResolved": true
+    },
+    {
+      "areaId": "GRATITUDE_REGION_CAVERN_PRECINCT",
+      "lifecycleDisposition": "ACCEPTED",
+      "placementDisposition": "ACCEPT_CURRENT_RELATION",
+      "sourceCandidateId": "GRATITUDE_REGION_CAVERN_EXTERIOR_ENTRANCE_RELATION_CANDIDATE_01",
+      "exteriorFace": {"x": 40, "z": -284},
+      "apron": {"x": 48, "z": -284},
+      "precinctCenter": {"x": 56, "z": -284},
+      "deferred": ["CAVERN_INTERIOR_OCCURRENCE", "ENTRANCE_OPENING_GEOMETRY", "INTERIOR_TRANSITION_ANCHOR", "CAVERN_SHAPE", "CAVERN_SIZE", "CAVERN_CONTENTS"],
+      "requiredPlacementFieldsResolved": true
+    },
+    {
+      "areaId": "GRATITUDE_REGION_FRONTIER_PLAINS",
+      "lifecycleDisposition": "RETAINED_ELIGIBLE_NONFINAL",
+      "placementDisposition": "RETAIN_ELIGIBLE_NONFINAL_AS_SEPARATE_FUTURE_PROJECT",
+      "sourceCandidateId": "GRATITUDE_REGION_FRONTIER_PLAINS_PRECINCT_ENVELOPE_CANDIDATE_01",
+      "preservedRole": "LARGE_REGIONAL_CAPACITY_RESERVE",
+      "finalEnvelope": null,
+      "finalAnchor": null,
+      "deferred": ["DISTRIBUTED_FUNCTIONAL_SYSTEMS_TOPOLOGY", "EXACT_FUNCTIONAL_CELLS", "INFRASTRUCTURE_LAYOUT", "FRONTIER_CONSTRUCTION"],
+      "requiredPlacementFieldsResolved": true
+    }
+  ],
+  "pairRelationshipCount": 6,
+  "pairRelationshipMatrix": [
+    {"id": "ENTRY_ZONE__MIRROR_MANOR", "status": "PASS", "passed": true, "basis": {"relationship": "SEPARATE_CONNECTED_REGIONAL_AREAS", "boundsDistance": 46.6476151587624}},
+    {"id": "ENTRY_ZONE__CAVERN_PRECINCT", "status": "PASS", "passed": true, "basis": {"relationship": "DISTINCT_CONCEALED_MOUNTAIN_EXTERIOR_DESTINATION", "boundsDistance": 145.98630072715724, "straightLineDistance": 180.48822676285562}},
+    {"id": "ENTRY_ZONE__FRONTIER_PLAINS", "status": "PASS", "passed": true, "basis": {"relationship": "CONNECTED_ROUTE_CANDIDATE_TO_SEPARATE_CAPACITY_RESERVE", "envelopeDistance": 128, "routeAccepted": false}},
+    {"id": "MIRROR_MANOR__CAVERN_PRECINCT", "status": "PASS", "passed": true, "basis": {"relationship": "LAWFUL_APPROACH_TO_CONCEALED_MOUNTAIN_EXTERIOR", "boundsDistance": 88, "approachPathDistance": 113.94112549695429}},
+    {"id": "MIRROR_MANOR__FRONTIER_PLAINS", "status": "PASS", "passed": true, "basis": {"relationship": "CONNECTED_ROUTE_CANDIDATE_TO_SEPARATE_CAPACITY_RESERVE", "envelopeDistance": 56, "routeAccepted": false}},
+    {"id": "CAVERN_PRECINCT__FRONTIER_PLAINS", "status": "PASS", "passed": true, "basis": {"relationship": "SEPARATE_CAPACITY_RESERVE_CLEAR_OF_CAVERN_PRECINCT_AND_APPROACH", "envelopeDistance": 113.27841806805036, "cavernApproachMinimumDistance": 72}}
+  ],
+  "allPairRelationshipsPass": true,
+  "preservationLawCount": 13,
+  "preservationLaws": [
+    {"id": "ENTRY_WATER_REMAINS_HARD_BOUNDARY", "status": "PASS", "passed": true, "basis": "SOURCE_LAW_PLUS_UNCHANGED_CAMERA_BOUND_ARRIVAL"},
+    {"id": "ENTRY_CURRENT_NAVIGATION_MODEL_REMAINS_BASELINE", "status": "PASS", "passed": true, "basis": "ACTIVE_NAVIGATION_EXECUTED_UNCHANGED"},
+    {"id": "ENTRY_MUST_NOT_COLLAPSE_INTO_MANOR", "status": "PASS", "passed": true, "basis": {"relationship": "SEPARATE_CONNECTED_REGIONAL_AREAS", "boundsDistance": 46.6476151587624}},
+    {"id": "MANOR_LOW_CORRIDOR_REMAINS_OPEN", "status": "PASS", "passed": true, "basis": "FP_02_PROTECTED_LOW_CORRIDOR"},
+    {"id": "MANOR_TWO_HILL_RELATION_REMAINS_LEGIBLE", "status": "PASS", "passed": true, "basis": "FP_02_TWO_HILL_RELATION"},
+    {"id": "MANOR_BOTH_VIEWS_REMAIN_CLEAR", "status": "PASS", "passed": true, "basis": "FP_02_VIEW_PRESERVATION"},
+    {"id": "MANOR_ARCHITECTURE_REMAINS_UNASSIGNED", "status": "PASS", "passed": true, "basis": "FP_02_STOP_BEFORE_ARCHITECTURE"},
+    {"id": "CAVERN_MOUNTAIN_EXTERIOR_ATTACHMENT_PRESERVED", "status": "PASS", "passed": true, "basis": "FP_03_CURRENT_RELATION"},
+    {"id": "CAVERN_INTERIOR_REMAINS_SEPARATE", "status": "PASS", "passed": true, "basis": "SEPARATE_UNASSIGNED_INTERIOR"},
+    {"id": "FRONTIER_NAME_DOES_NOT_PREASSIGN_FINAL_COORDINATES", "status": "PASS", "passed": true, "basis": "FP_04_FORMAL_DEFERRAL"},
+    {"id": "FRONTIER_CAPACITY_EVIDENCE_PRESERVED_NONFINAL", "status": "PASS", "passed": true, "basis": "EXISTING_ANALYTICAL_CANDIDATE_RETAINED"},
+    {"id": "FRONTIER_NO_OBJECTS_FLATTENING_OR_SYSTEM_PLACEMENT", "status": "PASS", "passed": true, "basis": "FP_04_NONCONSTRUCTION"},
+    {"id": "GLOBAL_NO_AUTHORITY_OVERREACH", "status": "PASS", "passed": true, "basis": {"priorAuthorityMutation": false, "grCr01To04Mutation": false, "terrainMutation": false, "cameraAuthorityMutation": false, "buildingGeometry": false, "cavernExcavation": false, "roadOrCorridorGeometry": false, "runtimeIntegration": false, "publicRouteMutation": false, "livePageChange": false, "productConstruction": false, "mergeAuthorityCreated": false, "canonicalizationAuthority": false}}
+  ],
+  "allPreservationLawsPass": true,
+  "registryPreflight": {
+    "status": "PASS",
+    "identityVerified": true,
+    "identityChecks": {"contractId": true, "contractVersion": true, "registryId": true, "registryVersion": true, "schemaId": true, "schemaVersion": true, "candidateGitBlobSha": true, "instructionId": true, "instructionVersion": true, "candidateNotAccepted": true, "candidateNotCanonical": true},
+    "readOnly": true,
+    "mutationAuthorityCreated": false,
+    "networkDependencyRequired": false
+  },
+  "registryPreflightStatus": "PASS",
+  "unresolvedRequiredPlacementFields": [],
+  "unresolvedRequiredPlacementFieldCount": 0,
+  "deferredFieldsAreNotUnresolvedRequiredFields": true,
+  "regionalComposite": {"entryZone": "ACCEPTED", "mirrorManorSiteEnvelope": "ACCEPTED", "cavernCurrentExteriorRelation": "ACCEPTED", "frontierPlains": "RETAINED_ELIGIBLE_NONFINAL"},
+  "nextProgramBoundary": {
+    "finalPlacementProgramComplete": true,
+    "nextConstructionProgramCandidates": ["EXISTING_CAMERA_BOUND_ARRIVAL_PRESENTATION", "MIRROR_MANOR_WITHIN_ACCEPTED_UPPER_SITE", "VERIFIED_CAVERN_EXTERIOR_ENTRANCE"],
+    "deferred": ["CAVERN_INTERIOR", "FRONTIER_PLAINS", "DISTRIBUTED_FUNCTIONAL_SYSTEMS_TOPOLOGY", "DYNAMIC_SUN_AND_WORLD_TIME_ACTIVATION"],
+    "nextProgramExecutionAuthorized": false
+  },
+  "authorityBoundary": {"priorAuthorityMutation": false, "grCr01To04Mutation": false, "terrainMutation": false, "cameraAuthorityMutation": false, "buildingGeometry": false, "cavernExcavation": false, "roadOrCorridorGeometry": false, "infrastructureGeometry": false, "functionalSystemDistributionDesign": false, "elevenCellMapping": false, "runtimeIntegration": false, "publicRouteMutation": false, "livePageChange": false, "productConstruction": false, "finalPlacementPrMergeAuthorized": false, "mergeAuthorityCreated": false, "canonicalizationAuthority": false},
+  "finalPlacementPrMergeAuthorized": false,
+  "constructionAuthorized": false,
+  "stoppingBoundary": "STOP_BEFORE_FINAL_PLACEMENT_PR_MERGE",
+  "issues": []
+}

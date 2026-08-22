@@ -1,0 +1,62 @@
+name: Compass Track B Upper Page Qualification
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'assets/compass/compass.track-b.js'
+      - 'assets/compass/compass.track-b.css'
+      - 'assets/compass/compass.capability-carousel.js'
+      - '.github/workflows/compass-track-b-upper-page-validation.yml'
+permissions:
+  contents: read
+jobs:
+  rendered:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Syntax and single-authority floor
+        run: |
+          node --check assets/compass/compass.track-b.js
+          node --check assets/compass/compass.capability-carousel.js
+          test -s assets/compass/compass.track-b.css
+          grep -q 'COMPASS_TRACK_B_UPPER_PRESENTATION_v10' assets/compass/compass.track-b.js
+          grep -q 'compass.track-b.js' assets/compass/compass.capability-carousel.js
+          grep -q 'data-compass-capability-mount' index.html
+          grep -q 'class="compass-track-b-intro"' index.html
+          ! grep -q 'data-compass-capability-switcher' index.html
+          ! grep -q 'class="compass-selective-routes"' index.html
+          ! grep -q 'class="compass-accessibility-note"' index.html
+      - run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - run: |
+          python3 -m http.server 4173 >/tmp/track-b-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && curl -fsS http://127.0.0.1:4173/assets/compass/compass.track-b.js | grep -q 'COMPASS_TRACK_B_UPPER_PRESENTATION_v10' && exit 0; sleep 1; done
+          exit 1
+      - name: Inspect Track B presentation
+        run: |
+          mkdir -p /tmp/track-b-rendered
+          cat > .track-b-inspect.mjs <<'NODE'
+          import {chromium} from 'playwright';import fs from 'node:fs';
+          const b=await chromium.launch({headless:true}),out={};
+          for(const [name,viewport] of Object.entries({desktop:{width:1440,height:1100},tablet:{width:900,height:1000},phone:{width:412,height:915}})){
+            const p=await b.newPage({viewport}),errors=[];p.on('pageerror',e=>errors.push(String(e)));p.on('requestfailed',r=>errors.push(`REQUEST ${r.url()} ${r.failure()?.errorText||''}`));
+            await p.goto('http://127.0.0.1:4173/',{waitUntil:'domcontentloaded',timeout:30000});await p.waitForTimeout(1800);
+            const state=await p.evaluate(()=>{const brand=document.querySelector('.compass-track-b-brand'),intro=document.querySelector('.compass-track-b-intro'),about=document.querySelector('.compass-track-b-about'),copy=document.querySelector('[data-track-b-about-copy]'),video=document.querySelector('.compass-track-b-film video'),built=document.querySelector('[data-track-b-built-evidence]'),orbit=document.querySelector('[data-capability-orbit]'),orbitBlock=document.querySelector('[data-track-b-capability-block]'),cta=document.querySelector('[data-track-b-build-cta]'),scene=document.querySelector('[data-compass-scene]'),guide=document.querySelector('.compass-track-b-operating-guide'),root=document.querySelector('[data-compass-root]'),why=[...document.querySelectorAll('h1,h2,h3,h4,p,strong,span')].filter(n=>n.textContent.trim()==='Why Diamond Gate exists'),labels=['Products','Worlds','Instruments','Frontier','Guide Desk'],visibleDirectory=[...document.querySelectorAll('a')].some(a=>!a.closest('[data-compass-room-declarations]')&&labels.includes(a.textContent.trim())&&a.getClientRects().length>0),disclosure=[...document.querySelectorAll('p')].some(n=>n.textContent.includes('The Compass exposes the same destinations')&&n.getClientRects().length>0),afterCta=cta?[...cta.parentElement.children].slice([...cta.parentElement.children].indexOf(cta)+1):[],visibleAfterCta=afterCta.some(n=>!n.hidden&&getComputedStyle(n).display!=='none'&&!n.matches('.compass-receipts'));return{brand:brand?.textContent.trim()||'',introClosed:Boolean(intro&&!intro.open),summary:intro?.querySelector(':scope>summary')?.textContent.trim()||'',about:about?.querySelector(':scope>summary')?.textContent.trim()||'',aboutCopy:copy?.textContent.trim()||'',video:video?.querySelector('source')?.getAttribute('src')||'',visibleWhyOutsideIntro:why.some(n=>!intro?.contains(n)&&n.getClientRects().length>0),builtFound:Boolean(built),ctaFound:Boolean(cta),builtBeforeOrbit:Boolean(built&&orbitBlock&&(built.compareDocumentPosition(orbitBlock)&Node.DOCUMENT_POSITION_FOLLOWING)),orbitBeforeCta:Boolean(cta&&orbitBlock&&(orbitBlock.compareDocumentPosition(cta)&Node.DOCUMENT_POSITION_FOLLOWING)),ctaVisuallyLast:Boolean(cta&&!visibleAfterCta),sceneHeight:scene?.getBoundingClientRect().height||0,trackAArrows:orbit?.querySelectorAll('[data-orbit-next],[data-orbit-previous]').length??-1,trackAGuidance:orbit?.querySelector('.compass-capability-guidance')?.textContent.trim()||'',compassGuidance:guide?.querySelector('[data-compass-guidance]')?.textContent.trim()||'',directoryGone:!visibleDirectory,disclosureGone:!disclosure,mode:root?.dataset.compassMode||'',runtime:globalThis.__DGB_TRACK_B?.contract||'',overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth}});
+            console.log(name,JSON.stringify({state,errors}));
+            if(errors.some(e=>e.includes('compass.track-b')))throw Error(`${name}: runtime load ${errors.join(' | ')}`);if(state.runtime!=='COMPASS_TRACK_B_UPPER_PRESENTATION_v10')throw Error(`${name}: runtime ${state.runtime}`);if(state.brand!=='DiamondGateBridge.com')throw Error(`${name}: brand`);if(!state.introClosed)throw Error(`${name}: intro open`);if(state.summary!=='New here? Open the introduction.')throw Error(`${name}: summary`);if(state.about!=='What is Diamond Gate Bridge?')throw Error(`${name}: about`);if(!state.video.includes('diamond-gate-compass-mirrorland-36s.mp4'))throw Error(`${name}: video`);if(!state.aboutCopy.includes('Diamond Gate exists because useful ideas are often separated')||!state.aboutCopy.includes('The Compass is how you orient yourself'))throw Error(`${name}: about copy`);if(state.visibleWhyOutsideIntro)throw Error(`${name}: legacy why remains`);if(!state.directoryGone||!state.disclosureGone)throw Error(`${name}: visible directory clutter remains`);if(!state.builtFound||!state.ctaFound||!state.builtBeforeOrbit||!state.orbitBeforeCta||!state.ctaVisuallyLast)throw Error(`${name}: lower order`);if(state.trackAArrows!==0||state.trackAGuidance!=='Swipe to rotate.')throw Error(`${name}: Track A regression`);if(state.compassGuidance!=='Drag to rotate the constellation. Tap a primary star to open its cluster.')throw Error(`${name}: constellation guidance ${state.compassGuidance}`);if(state.overflow>2)throw Error(`${name}: overflow ${state.overflow}`);if(state.sceneHeight<430)throw Error(`${name}: compass presentation too small ${state.sceneHeight}`);
+            const modes=await p.evaluate(async()=>{const root=document.querySelector('[data-compass-root]'),g=document.querySelector('[data-compass-guidance]');const tick=()=>new Promise(r=>setTimeout(r,100));root.dataset.compassMode='CLUSTER_OPEN';await tick();const cluster=g.textContent.trim();root.dataset.compassMode='ROOM_SELECTED';await tick();const selected=g.textContent.trim();return{cluster,selected}});if(!modes.cluster.includes('Tap a room star to select it')||!modes.cluster.includes('return to the constellation'))throw Error(`${name}: cluster guidance ${modes.cluster}`);if(!modes.selected.includes('Enter Room')||!modes.selected.includes('Return To Orbit')||!modes.selected.includes('return to the constellation'))throw Error(`${name}: selected guidance ${modes.selected}`);
+            await p.screenshot({path:`/tmp/track-b-rendered/${name}.png`,fullPage:true});out[name]={state,modes,errors};await p.close();
+          }
+          await b.close();fs.writeFileSync('/tmp/track-b-rendered/receipt.json',JSON.stringify({result:'PASS_CLOSED',out},null,2));
+          NODE
+          node .track-b-inspect.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compass-track-b-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/track-b-rendered
+          retention-days: 30

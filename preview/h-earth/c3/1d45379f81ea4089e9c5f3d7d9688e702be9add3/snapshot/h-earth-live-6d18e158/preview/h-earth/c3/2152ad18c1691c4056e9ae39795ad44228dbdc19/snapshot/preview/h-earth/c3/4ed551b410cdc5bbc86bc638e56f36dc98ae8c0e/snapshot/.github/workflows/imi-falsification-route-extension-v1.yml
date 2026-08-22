@@ -1,0 +1,28 @@
+name: IMI Falsification Route Extension v1
+
+on:
+  pull_request:
+    paths:
+      - "research/route-operator-platform-v1/extensions/imi-falsification-route-extension-v1/**"
+      - ".github/workflows/imi-falsification-route-extension-v1.yml"
+  push:
+    branches: [main]
+    paths:
+      - "research/route-operator-platform-v1/extensions/imi-falsification-route-extension-v1/**"
+      - ".github/workflows/imi-falsification-route-extension-v1.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-extension-pointer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify frozen extension pointer and ratification state
+        run: >-
+          python
+          research/route-operator-platform-v1/extensions/imi-falsification-route-extension-v1/verify_extension_pointer_v1.py

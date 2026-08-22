@@ -1,0 +1,9 @@
+/* Gen347 bounded responsive containment repair. */
+html,body{max-width:100%;overflow-x:clip}
+.clone,.clone-section,.clone-video,.clone-video>*{min-width:0!important;max-width:100%!important}
+.clone-video-frame,.clone-video-frame video{display:block!important;width:100%!important;max-width:100%!important;min-width:0!important;height:auto}
+.ap-award-head>*{min-width:0!important;max-width:100%!important}
+.ap-award-carousel,.clone-carousel{max-width:100%!important;overflow:hidden!important;contain:paint}
+.ap-award-ring{max-width:100%!important}
+@media(max-width:900px){.clone-video{grid-template-columns:minmax(0,1fr)!important}.clone-video-frame{width:100%!important}.ap-award-head{grid-template-columns:minmax(0,1fr)!important}}
+@media(max-width:680px){.clone{width:calc(100% - 20px)!important}.ap-award-head{padding-left:8px!important;padding-right:8px!important}.ap-award-card{max-width:calc(100vw - 40px)!important}}

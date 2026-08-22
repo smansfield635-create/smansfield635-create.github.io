@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#02040a">
+<title>Diamond Gate Bridge Compass · Current Full Inspection</title>
+<style>html,body{margin:0;min-height:100%;background:#02040a;color:#f5f0e4;font-family:system-ui,sans-serif}.boot{min-height:100vh;display:grid;place-items:center;padding:24px;text-align:center}.boot strong{display:block;color:#d9c58e;letter-spacing:.12em;text-transform:uppercase;font-size:.78rem}.boot span{display:block;margin-top:10px;color:#81949e;font-size:.75rem;letter-spacing:.06em}</style>
+</head>
+<body>
+<div class="boot" id="boot"><div><strong>Diamond Gate Bridge · Compass</strong><span>Loading full current page with immutable asset rebinding…</span></div></div>
+<script>
+(async()=>{
+  const SHA='744961bd34be67a58037f685f2eda618dff58b10';
+  const PREFIX='https://raw.githack.com/smansfield635-create/smansfield635-create.github.io/'+SHA;
+  const SOURCE=PREFIX+'/index.html';
+  try{
+    const r=await fetch(SOURCE,{cache:'no-store'});
+    if(!r.ok) throw new Error('source '+r.status);
+    let html=await r.text();
+    html=html
+      .replace(/\b(href|src|poster|action)=(['"])\/(?!\/)/gi,(m,a,q)=>a+'='+q+PREFIX+'/')
+      .replace(/url\((['"]?)\/(?!\/)/gi,(m,q)=>'url('+q+PREFIX+'/')
+      .replace(/<head>/i,'<head><meta name="dgb-inspection-source" content="'+SHA+'">');
+    document.open();
+    document.write(html);
+    document.close();
+  }catch(err){
+    const boot=document.getElementById('boot');
+    boot.innerHTML='<div><strong>Compass inspection failed to load</strong><span>'+String(err.message||err)+'</span></div>';
+    console.error('COMPASS_FULL_INSPECTION_BOOT_FAILURE',err);
+  }
+})();
+</script>
+</body>
+</html>

@@ -28,9 +28,9 @@ for(const [name,viewport] of Object.entries(viewports)){
     const stage=document.querySelector('[data-compass-readiness-stage]');
     const trl=stage?.querySelector('[data-readiness-family="trl"]');
     const tra=stage?.querySelector('[data-readiness-family="tra"]');
-    const capChoices=document.querySelector('.compass-capability-choices');
-    const capTabs=[...(capChoices?.querySelectorAll('[role="tab"]')||[])];
-    const selectedCaps=capTabs.filter(x=>x.getAttribute('aria-selected')==='true');
+    const capabilityOrbit=document.querySelector('[data-capability-orbit]');
+    const capabilityChoices=[...(capabilityOrbit?.querySelectorAll('[aria-selected]')||[])];
+    const selectedCaps=capabilityChoices.filter(x=>x.getAttribute('aria-selected')==='true');
     const activePlaques=[...document.querySelectorAll('.compass-capability-orbit .compass-orbit-plaque')].filter(x=>getComputedStyle(x).display!=='none'&&getComputedStyle(x).visibility!=='hidden');
     const h=document.querySelector('[data-compass-room-declarations] [data-compass-room][data-label="H-Earth"]');
     const overflow=document.documentElement.scrollWidth-document.documentElement.clientWidth;
@@ -44,7 +44,7 @@ for(const [name,viewport] of Object.entries(viewports)){
       trlInert:Boolean(trl?.hasAttribute('inert')),traInert:Boolean(tra?.hasAttribute('inert')),
       trlActiveCards:trl?[...trl.querySelectorAll('.compass-readiness-slide')].filter(x=>x.dataset.active==='true'&&!x.hidden).length:-1,
       traActiveCards:tra?[...tra.querySelectorAll('.compass-readiness-slide')].filter(x=>x.dataset.active==='true'&&!x.hidden).length:-1,
-      capTabCount:capTabs.length,selectedCapCount:selectedCaps.length,activePlaqueCount:activePlaques.length,
+      capabilityOrbit:Boolean(capabilityOrbit),capabilityChoiceCount:capabilityChoices.length,selectedCapCount:selectedCaps.length,activePlaqueCount:activePlaques.length,
       hEarth:h?{href:h.getAttribute('href'),route:h.dataset.route}:null
     };
   });
@@ -55,8 +55,8 @@ for(const [name,viewport] of Object.entries(viewports)){
   if(initial.overflow>2)fail(`horizontal overflow ${initial.overflow}`);
   if(!initial.stage||initial.activeFamily!=='trl'||initial.trlHidden||!initial.traHidden||initial.trlInert||!initial.traInert)fail('default TRL/TRA ownership invalid');
   if(initial.trlActiveCards!==1)fail('TRL does not expose exactly one active card');
-  if(initial.capTabCount!==3||initial.selectedCapCount!==1)fail('capability selectors are not one-of-three tabs');
-  if(initial.activePlaqueCount>1)fail('multiple capability plaques visible simultaneously');
+  if(!initial.capabilityOrbit||initial.activePlaqueCount!==1)fail('capability stage does not expose exactly one active presentation owner');
+  if(initial.capabilityChoiceCount>0&&initial.selectedCapCount!==1)fail('capability selectors do not preserve one selected state');
   if(!initial.hEarth||initial.hEarth.route!=='/showroom/globe/h-earth/'||!initial.hEarth.href)fail('canonical H-Earth declaration lost ingress');
 
   const trlTab=page.getByRole('tab',{name:'TRL',exact:true});

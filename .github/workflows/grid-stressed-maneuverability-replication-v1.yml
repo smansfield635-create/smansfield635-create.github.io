@@ -3,7 +3,9 @@ on:
   pull_request:
     paths:
       - 'research/imi/grid_stressed_maneuverability_replication_v1.py'
+      - 'research/imi/grid_stressed_maneuverability_replication_sourcefix_v1.py'
       - 'research/imi/GRID_STRESSED_MANEUVERABILITY_REPLICATION_PROTOCOL_v1.md'
+      - 'research/imi/GRID_STRESSED_MANEUVERABILITY_SOURCE_ADAPTER_ADDENDUM_v1.md'
   workflow_dispatch:
 jobs:
   replicate:
@@ -21,7 +23,7 @@ jobs:
       - name: Install scientific dependencies
         run: pip install numpy pandas scipy scikit-learn lightgbm requests
       - name: Execute frozen stressed-grid replication
-        run: python research/imi/grid_stressed_maneuverability_replication_v1.py
+        run: python research/imi/grid_stressed_maneuverability_replication_sourcefix_v1.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -99,12 +99,42 @@ jobs:
           rm -rf "$PAGES_STAGE/showroom/globe/h-earth"
           mkdir -p "$PAGES_STAGE/showroom/globe/h-earth"
           rsync -a --delete h-earth-live-6d18e158/showroom/globe/h-earth/ "$PAGES_STAGE/showroom/globe/h-earth/"
+
+          # Audralia is qualified against the exact-head renderer in the canonical
+          # showroom tree. The public H-Earth route is intentionally replaced by
+          # its frozen live tree above, so preserve Audralia's qualified renderer
+          # as a surface-local deployment dependency and rewrite only the staged
+          # Audralia import. This prevents public deployment from silently swapping
+          # the renderer that exact-head qualification actually exercised.
+          audralia_renderer_src="showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs"
+          audralia_runtime_dir="$PAGES_STAGE/showroom/globe/audralia/runtime-dependencies"
+          audralia_app="$PAGES_STAGE/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs"
+          test -f "$audralia_renderer_src"
+          test -f "$audralia_app"
+          mkdir -p "$audralia_runtime_dir"
+          cp "$audralia_renderer_src" "$audralia_runtime_dir/renderer.mjs"
+          python3 - "$audralia_app" <<'PY'
+from pathlib import Path
+import sys
+path=Path(sys.argv[1])
+text=path.read_text()
+old="../../h-earth/terrain-estate-construction-v1/renderer.mjs"
+new="../runtime-dependencies/renderer.mjs"
+if text.count(old) != 1:
+    raise SystemExit(f"AUDRALIA_RENDERER_IMPORT_REWRITE_CARDINALITY:{text.count(old)}")
+path.write_text(text.replace(old,new))
+PY
+          test "$(sha256sum "$audralia_renderer_src" | awk '{print $1}')" = "$(sha256sum "$audralia_runtime_dir/renderer.mjs" | awk '{print $1}')"
+          grep -q "../runtime-dependencies/renderer.mjs" "$audralia_app"
+          echo "AUDRALIA_EXACT_HEAD_RENDERER_DEPENDENCY_ALIGNED"
+
           git fetch --no-tags --depth=1 origin "$INSPECTION_SHA"
           rm -rf "$INSPECTION_ROOT"
           mkdir -p "$INSPECTION_ROOT"
           git archive "$INSPECTION_SHA" showroom/globe/audralia showroom/globe/h-earth h-earth-3d | tar -x -C "$INSPECTION_ROOT"
           test -f "$PAGES_STAGE/.well-known/dgb-release.json"
           test -f "$PAGES_STAGE/showroom/globe/h-earth/index.html"
+          test -f "$PAGES_STAGE/showroom/globe/audralia/runtime-dependencies/renderer.mjs"
           test -f "$INSPECTION_ROOT/showroom/globe/audralia/weather-presentation-reconciliation/index.html"
           if grep -q 'h-earth-live-6d18e158' "$PAGES_STAGE/showroom/globe/h-earth/index.html"; then
             echo "H_EARTH_PUBLIC_ROUTE_STILL_REDIRECTS_TO_EXCLUDED_TREE" >&2

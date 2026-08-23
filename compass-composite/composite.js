@@ -13,30 +13,16 @@ const start=()=>{
     qa('span',wing).forEach(span=>['display','opacity','visibility','pointer-events'].forEach(prop=>span.style.removeProperty(prop)));
   };
 
-  const resolveRenderedOwner=()=>{
+  const resolveSettledOwner=()=>{
     const wings=qa('[data-compass-cardinal]',root);
-    const ranked=wings.map(wing=>({
-      wing,
-      id:wing.dataset.cardinalId||wing.dataset.wing||'',
-      depth:Number(wing.dataset.depth),
-      primary:wing.dataset.primary==='true'
-    }));
-    const finite=ranked.filter(x=>Number.isFinite(x.depth));
-    if(finite.length){
-      finite.sort((a,b)=>b.depth-a.depth);
-      if(finite.length===1||Math.abs(finite[0].depth-finite[1].depth)>0.0001)return finite[0].id;
-      const tied=finite.filter(x=>Math.abs(x.depth-finite[0].depth)<=0.0001);
-      const primary=tied.find(x=>x.primary);
-      if(primary)return primary.id;
-    }
-    const primary=ranked.find(x=>x.primary);
-    if(primary)return primary.id;
-    return root.dataset.renderedForegroundCardinal||root.dataset.readableCardinal||root.dataset.orbitFocus||'north';
+    const primary=wings.find(wing=>wing.dataset.primary==='true');
+    if(primary)return primary.dataset.cardinalId||primary.dataset.wing||'north';
+    return root.dataset.orbitFocus||root.dataset.readableCardinal||root.dataset.renderedForegroundCardinal||'north';
   };
 
   const syncCardinals=()=>{
     if(root.dataset.compassMode!=='CONSTELLATION')return;
-    const readable=resolveRenderedOwner();
+    const readable=resolveSettledOwner();
     root.dataset.gen1596RenderedLabelOwner=readable;
     qa('[data-compass-cardinal]',root).forEach(wing=>{
       const id=wing.dataset.cardinalId||wing.dataset.wing||'';
@@ -94,7 +80,7 @@ const start=()=>{
   const sync=()=>{scheduled=false;syncCardinals();syncRooms();suppressStaleMirrorlandLabel();suppressDuplicateCapabilityOwner();};
   const schedule=()=>{if(scheduled)return;scheduled=true;requestAnimationFrame(sync);};
   const observer=new MutationObserver(schedule);
-  observer.observe(root,{subtree:true,attributes:true,attributeFilter:['data-compass-mode','data-depth','data-primary','data-rendered-foreground-cardinal','data-readable-cardinal','data-orbit-focus','data-selected-room','data-cluster-primary-room','data-cluster-preview-primary-room','data-gen1587-current','hidden','aria-current','class']});
+  observer.observe(root,{subtree:true,attributes:true,attributeFilter:['data-compass-mode','data-primary','data-orbit-focus','data-readable-cardinal','data-rendered-foreground-cardinal','data-selected-room','data-cluster-primary-room','data-cluster-preview-primary-room','data-gen1587-current','hidden','aria-current','class']});
   sync();
   setTimeout(sync,120);setTimeout(sync,350);setTimeout(sync,900);setTimeout(sync,1600);
 };

@@ -1,0 +1,79 @@
+name: H-Earth CDP Cloud Screencast Smoke
+
+on:
+  pull_request:
+    branches:
+      - agent/h-earth-multiscale-atmosphere-convergence-24055-20260821
+    paths:
+      - 'showroom/globe/audralia/**'
+      - '.github/workflows/h-earth-final-frame-cloud-coverage-audit.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  cdp-cloud-screencast:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Start local inspection server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/h-earth-server.log 2>&1 &
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/ >/dev/null && exit 0; sleep 1; done
+          exit 1
+      - name: Install controller
+        run: |
+          mkdir -p /tmp/cloud-cdp
+          npm install --prefix /tmp/cloud-cdp --no-save playwright-core@1.55.0 >/tmp/playwright-install.log 2>&1
+      - name: Capture planetary smoke models from compositor stream
+        run: |
+          export CHROME="$(command -v google-chrome || command -v chromium-browser || command -v chromium || true)"
+          test -n "$CHROME"
+          cat > /tmp/cloud-cdp/capture.mjs <<'EOF'
+          import { chromium } from 'playwright-core';
+          import fs from 'node:fs/promises';
+          const browser=await chromium.launch({executablePath:process.env.CHROME,headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+          const context=await browser.newContext({viewport:{width:1280,height:900},deviceScaleFactor:1});
+          const page=await context.newPage();
+          const cdp=await context.newCDPSession(page);
+          async function compositorFrame(){
+            let handler;
+            const framePromise=new Promise(resolve=>{
+              handler=async event=>{cdp.off('Page.screencastFrame',handler);await cdp.send('Page.screencastFrameAck',{sessionId:event.sessionId}).catch(()=>{});resolve(event.data);};
+              cdp.on('Page.screencastFrame',handler);
+            });
+            await cdp.send('Page.startScreencast',{format:'png',quality:100,maxWidth:1280,maxHeight:900,everyNthFrame:1});
+            const data=await Promise.race([framePromise,new Promise((_,reject)=>setTimeout(()=>reject(new Error('SCREencast_FRAME_TIMEOUT')),15000))]);
+            await cdp.send('Page.stopScreencast').catch(()=>{});
+            if(handler)cdp.off('Page.screencastFrame',handler);
+            return data;
+          }
+          for(const model of [3,36,60]){
+            await page.goto(`http://127.0.0.1:4173/showroom/globe/audralia/?cloudModel=${model}&fap1Quality=capture`,{waitUntil:'domcontentloaded',timeout:120000});
+            await page.waitForTimeout(3000);
+            await page.mouse.move(640,450);
+            for(let i=0;i<3;i++){await page.mouse.wheel(0,900);await page.waitForTimeout(250);}
+            await page.waitForTimeout(1200);
+            const data=await compositorFrame();
+            await fs.writeFile(`/tmp/cloud-cdp/model-${String(model).padStart(2,'0')}.png`,Buffer.from(data,'base64'));
+            await fs.writeFile(`/tmp/cloud-cdp/model-${String(model).padStart(2,'0')}.html`,await page.content(),'utf8');
+          }
+          await context.close(); await browser.close();
+          EOF
+          node /tmp/cloud-cdp/capture.mjs
+          test "$(find /tmp/cloud-cdp -name 'model-*.png' | wc -l)" -eq 3
+      - name: Preserve CDP smoke evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-cdp-cloud-screencast-smoke
+          path: |
+            /tmp/cloud-cdp/model-*.png
+            /tmp/cloud-cdp/model-*.html
+            /tmp/h-earth-server.log
+            /tmp/playwright-install.log
+          if-no-files-found: error

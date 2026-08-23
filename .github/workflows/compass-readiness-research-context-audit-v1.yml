@@ -55,8 +55,8 @@ jobs:
               if(state.active!==expected||state.visible.length!==1||state.visible[0]!==expected)throw new Error(cfg.name+' FAMILY_SWITCH '+label+' '+JSON.stringify(state));
             }
             await page.getByRole('tab',{name:'RESEARCH',exact:true}).click();
-            const researchText=await page.locator('[data-readiness-family="research"]').textContent();
-            for(const phrase of ['Condition is not capacity','Prospective evidence exists','The decisive threshold is still ahead'])if(!researchText.includes(phrase))throw new Error(cfg.name+' MISSING_RESEARCH_COPY '+phrase);
+            const researchTitles=await page.locator('[data-readiness-family="research"] .compass-readiness-slide').evaluateAll(nodes=>nodes.map(node=>node.dataset.readinessTitle));
+            for(const phrase of ['Condition is not capacity','Prospective evidence exists','The decisive threshold is still ahead'])if(!researchTitles.includes(phrase))throw new Error(cfg.name+' MISSING_RESEARCH_TITLE '+phrase+' '+JSON.stringify(researchTitles));
             await page.close();
           }
           const rp=await browser.newPage({viewport:{width:960,height:1200}});

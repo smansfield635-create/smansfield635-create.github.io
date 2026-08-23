@@ -10,16 +10,22 @@ This study follows the completed N-1 transition-path test, which was UNEVALUABLE
 
 PowerAgentBench stressed IEEE 39-bus MATPOWER case pinned to commit `a93255d827292922165c05396b600904e0a6130e`.
 
+## Pre-outcome feasibility amendment
+
+The first execution attempt stopped **before any generated state or second-outage outcome was evaluated** because only four of the globally frozen 12 candidate lines admit a full-load feasible single-line maintenance topology under published generator bounds and branch ratings. The originally planned eight topology folds therefore do not exist in the source realization.
+
+Because no outcome had been generated, the protocol is lawfully amended now to use **all four feasible maintenance topologies**, with the total planned state count preserved at 112 by generating 28 states per topology. The scientific feature definitions, outcome, action set, model family, and 5% primary improvement threshold are unchanged. Leave-one-maintenance-topology-out validation therefore contains four folds, and the preregistered fold-consistency requirements become 3 of 4 folds rather than 6 of 8. No further scientific changes are permitted after outcome generation begins.
+
 ## Maintenance-state construction
 
 The globally ranked 12 non-islanding candidate lines are determined exactly as in the preceding transition-path study: highest absolute DC utilization under the deterministic balanced published stressed dispatch.
 
-From that list, the **first eight lines whose single-line opening admits a full-load feasible dispatch using generator bounds and published branch ratings** become the frozen maintenance-topology set. This selection occurs before any second-outage outcome is evaluated.
+From that list, **every line whose single-line opening admits a full-load feasible dispatch using generator bounds and published branch ratings** becomes the frozen maintenance-topology set. The source feasibility audit established that this set contains four lines.
 
-For each of the eight maintenance topologies:
+For each of the four maintenance topologies:
 
 - the selected maintenance line is already open before the prospective event;
-- 14 distinct feasible dispatch states are generated with fixed load and total generation;
+- 28 distinct feasible dispatch states are generated with fixed load and total generation;
 - generation variation uses only balanced pairwise redispatch under the maintenance topology.
 
 Total planned state count: **112**. Fresh seed: `20260826`.
@@ -64,7 +70,7 @@ The five transition-geometry features are excluded from the conventional challen
 
 ## Cross-validation
 
-The primary validation is **leave-one-maintenance-topology-out** across the eight maintenance topologies. Every state and second-outage row from one maintenance topology is held out together. LightGBM hyperparameters are unchanged from prior studies.
+The primary validation is **leave-one-maintenance-topology-out** across the four feasible maintenance topologies. Every state and second-outage row from one maintenance topology is held out together. LightGBM hyperparameters are unchanged from prior studies.
 
 ## Evaluability
 
@@ -82,8 +88,8 @@ PASS requires all four:
 
 1. pooled Brier error improves by at least 5% when the transition-geometry block is added;
 2. pooled AUROC delta is nonnegative;
-3. Brier improves in at least 6 of the 8 held-out maintenance-topology folds; and
-4. the augmented model's mean state-level absolute calibration error is lower than the conventional model's in at least 6 of 8 held-out maintenance topologies.
+3. Brier improves in at least 3 of the 4 held-out maintenance-topology folds; and
+4. the augmented model's mean state-level absolute calibration error is lower than the conventional model's in at least 3 of 4 held-out maintenance topologies.
 
 Any failed criterion yields FAIL. No threshold or feature definition may change after outcome generation.
 

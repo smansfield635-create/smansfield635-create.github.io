@@ -1,6 +1,6 @@
 {
   "schema": "H_EARTH_EXPERIENCE_ANCHOR_BOUNDED_PRESENTATION_EVIDENCE_v1",
-  "candidateHeadBeforeEvidence": "3957e2caabc130c83acc4eb34fd1606d8a773ca8",
+  "candidateHeadBeforeEvidence": "03b5906099dc5c71e23b111977b37b90985feba6",
   "changeClass": "AUDRALIA_LOADING_PRESENTATION_FAIL_VISIBLE_AND_CELESTIAL_STARTUP_SEQUENCING",
   "experienceFiles": [
     {
@@ -17,12 +17,12 @@
     },
     {
       "path": "showroom/globe/audralia/celestial-bootstrap-v2.mjs",
-      "sha256": "3bdcf6605d473c40329c73321d559f5d7a4d354809618519ed2a02098fe23885"
+      "sha256": "d771727edc0c51571a771d1b43df324be0480eef305a36f549795e960e2a90c8"
     }
   ],
   "anchorReview": {
     "visual": "The mutation remains a temporary Audralia arrival overlay and strengthens the established H-Earth-family world-initialization language with a visibly chromatic blue, violet, teal and gold treatment plus explicit COLOR ARRIVAL v4 build identity. It does not substitute a dashboard, map application, or separate product for the world.",
-    "interaction": "No camera, travel, look, gesture, world navigation, renderer geometry, or world interaction behavior is changed. Loader-progress changes only expose delayed startup after 15 seconds and an already-recorded reconciliation initialization error. The celestial bootstrap only sequences the existing celestial checkpoint behind established renderer authority so its independent startup timeout cannot expire before that authority exists.",
+    "interaction": "No camera, travel, look, gesture, world navigation, renderer geometry, or world interaction behavior is changed. Loader-progress changes only expose delayed startup after 15 seconds and an already-recorded reconciliation initialization error. The celestial bootstrap only sequences the existing celestial checkpoint behind established renderer authority and records bootstrap failure visibly for qualification.",
     "continuity": "The same five-stage runtime predicates remain authoritative for world readiness. The loader still resolves into the same canonical Audralia world. Celestial rendering remains the existing AUDRALIA_CELESTIAL_CONTEXT_v2 implementation and is initialized only after the same renderer authority already used by the world reconciliation runtime."
   },
   "scopeAssertions": {

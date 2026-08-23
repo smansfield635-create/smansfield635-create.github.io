@@ -56,30 +56,36 @@ jobs:
           });
           const context=await browser.newContext({viewport:{width:1280,height:900},deviceScaleFactor:1});
           const page=await context.newPage();
-          const rows=['model\twidth\tbroken\tsupport\tbytes\tcameraDistance\tviewScale'];
+          const rows=['model\twidth\tbroken\tsupport\tbytes\tpageErrors'];
+          const widthFactors=[1.35,1.55,1.75,1.95,2.15];
+          const brokenLows=[.46,.42,.38,.34];
+          const supportScales=[.50,.66,.82];
           for(let model=1;model<=60;model++){
             const padded=String(model).padStart(2,'0');
+            const idx=model-1;
+            const width=widthFactors[Math.floor(idx/12)];
+            const broken=brokenLows[Math.floor((idx%12)/3)];
+            const support=supportScales[idx%3];
+            const errors=[];
+            const handler=e=>errors.push(String(e));
+            page.on('pageerror',handler);
             await page.goto(`http://127.0.0.1:4173/showroom/globe/audralia/?cloudModel=${model}&fap1Quality=capture`,{waitUntil:'domcontentloaded',timeout:120000});
-            await page.waitForFunction(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer,{timeout:120000});
+            await page.waitForTimeout(2600);
+            const stage=page.locator('.audralia-world-stage');
+            const box=await stage.boundingBox();
+            if(!box)throw new Error(`MODEL_${model}_STAGE_MISSING`);
+            await page.mouse.move(box.x+box.width*.5,box.y+box.height*.5);
+            await page.mouse.wheel(0,900);
+            await page.waitForTimeout(180);
+            await page.mouse.wheel(0,900);
+            await page.waitForTimeout(180);
+            await page.mouse.wheel(0,900);
             await page.waitForTimeout(900);
-            const evidence=await page.evaluate(()=>{
-              const receipt=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__;
-              receipt.setCameraStateForTest({yaw:-0.62,pitch:1.02,distance:5000,targetU:0,targetV:-4});
-              const tuning=window.__AUDRALIA_FAP1_ORBITAL_SUPPORT_TUNING__;
-              const snapshot=receipt.renderer.getSnapshot();
-              return {
-                width:tuning?.parameterization?.widthOuter ?? null,
-                broken:tuning?.parameterization?.brokenLow ?? null,
-                support:tuning?.parameterization?.supportScale ?? null,
-                cameraDistance:snapshot.distance,
-                viewScale:snapshot.viewScale
-              };
-            });
-            await page.waitForTimeout(700);
             const path=`/tmp/cloud-sweep/model-${padded}.png`;
             await page.screenshot({path,fullPage:true});
             const stat=await fs.stat(path);
-            rows.push([model,evidence.width,evidence.broken,evidence.support,stat.size,evidence.cameraDistance,evidence.viewScale].join('\t'));
+            rows.push([model,width,broken,support,stat.size,errors.length].join('\t'));
+            page.off('pageerror',handler);
           }
           await fs.writeFile('/tmp/cloud-sweep/manifest.tsv',rows.join('\n')+'\n','utf8');
           await context.close();

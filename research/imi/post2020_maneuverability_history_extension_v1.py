@@ -30,9 +30,7 @@ spec = importlib.util.spec_from_file_location('frozen_replication', TARGET)
 mod = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(mod)
 
-# Frozen model/evaluation protocol is inherited from TARGET. Only the history window expands.
 mod.YEARS = list(range(2014, 2024))
-
 MIRROR_BASE = mod.BASE
 _HIST_CACHE = {}
 _DL = FFIECDownloader()
@@ -73,25 +71,47 @@ def _download_historical_year(year):
     matches = [p for p in periods if str(year) in str(p.date_str)]
     if not matches:
         raise RuntimeError(f'FFIEC four-period product has no reporting option for {year}; sample={[p.date_str for p in periods[:12]]}')
-    # Prefer a year-end/12-31 option when the interface exposes quarter dates.
     matches = sorted(matches, key=lambda p: ('12/31' not in str(p.date_str), str(p.date_str)))
     content = _DL.download(Product.CALL_FOUR_PERIODS, matches[0], FileFormat.TSV, save_to_disk=False)
     if not hasattr(content, 'read'):
         raise RuntimeError(f'FFIEC download failed for {year}: {content}')
     content.seek(0)
+    parts = []
     with zipfile.ZipFile(content) as zf:
-        names = [n for n in zf.namelist() if n.lower().endswith('.txt')]
-        picked = {}
-        for half in (1, 2):
-            exact = [n for n in names if str(year) in n and f'({half} of 2)' in n and 'subset' in n.lower()]
-            if not exact:
-                exact = [n for n in names if str(year) in n and f'{half} of 2' in n.lower()]
-            if not exact:
-                raise RuntimeError(f'Could not identify {year} half {half} in FFIEC archive; names={names[:40]}')
-            with zf.open(exact[0]) as fh:
-                picked[half] = normalize_columns(pd.read_csv(fh, sep='\t', dtype=str, low_memory=False))
+        names = [n for n in zf.namelist() if n.lower().endswith('.txt') and 'readme' not in n.lower()]
+        candidates = [n for n in names if str(year) in n and 'subset' in n.lower()]
+        if not candidates:
+            raise RuntimeError(f'No FFIEC subset files found for {year}; names={names[:40]}')
+        def partno(name):
+            m = re.search(r'\((\d+)\s+of\s+(\d+)\)', name, re.I)
+            return int(m.group(1)) if m else 999
+        for name in sorted(candidates, key=partno):
+            with zf.open(name) as fh:
+                p = normalize_columns(pd.read_csv(fh, sep='\t', dtype=str, low_memory=False))
+            # Remove the human-description row now; the frozen loader expects to remove one row later,
+            # so a synthetic placeholder will be restored after the part-wise merge.
+            p = p.iloc[1:].copy()
+            parts.append((name, p))
+    if not parts:
+        raise RuntimeError(f'No usable historical parts for {year}')
+    merged = parts[0][1]
+    keys = [k for k in ['ID_RSSD','AS_OF_DT'] if k in merged.columns]
+    if len(keys) < 2:
+        raise RuntimeError(f'Historical identity keys absent in {year}: {list(merged.columns[:20])}')
+    for name, p in parts[1:]:
+        pkeys = [k for k in keys if k in p.columns]
+        if len(pkeys) < 2:
+            raise RuntimeError(f'Historical part missing keys {year} {name}')
+        keep = keys + [c for c in p.columns if c not in merged.columns]
+        merged = merged.merge(p[keep], on=keys, how='outer')
+    dummy = pd.DataFrame([{c: np.nan for c in merged.columns}])
+    merged = pd.concat([dummy, merged], ignore_index=True)
+    # The frozen loader only needs the second return to supply RIAD income fields; returning the
+    # same fully merged frame for both positions preserves its exact downstream logic across years
+    # whose official archives contain 2, 3, or more physical text parts.
+    picked = {1: merged, 2: merged}
     _HIST_CACHE[year] = picked
-    print(f'FFIEC_HISTORY_YEAR={year} HALF1_ROWS={len(picked[1])} HALF2_ROWS={len(picked[2])}')
+    print(f'FFIEC_HISTORY_YEAR={year} PARTS={len(parts)} ROWS={len(merged)-1} COLS={len(merged.columns)} NAMES={[x[0] for x in parts]}')
     return picked
 
 
@@ -104,7 +124,6 @@ def extended_get_file(year, half):
 def source_mapped_coalesce(df, cands):
     use = list(cands)
     if any(x in {'RCFD2122','RCON2122','RCFD2125','RCON2125'} for x in use):
-        # B529 is loans and leases net of unearned income and allowance in the qualified subset realization.
         use += ['RCFDB529','RCONB529']
     out = pd.Series(np.nan, index=df.index, dtype=float)
     for c in use:
@@ -121,7 +140,7 @@ def official_failure_table():
     chosen = None
     for t in tabs:
         cols = [str(c).strip().upper() for c in t.columns]
-        if any(c == 'CERT' or 'CERT' in c for c in cols) and any('CLOSING DATE' in c or c == 'DATE' for c in cols):
+        if any('CERT' in c for c in cols) and any('CLOSING DATE' in c or c == 'DATE' for c in cols):
             chosen = t
             break
     if chosen is None:
@@ -131,10 +150,8 @@ def official_failure_table():
     if not date_candidates:
         date_candidates = [c for c in chosen.columns if 'DATE' in str(c).upper()]
     datec = date_candidates[0]
-    q = pd.DataFrame({
-        'cert': pd.to_numeric(chosen[certc], errors='coerce'),
-        'faildate': pd.to_datetime(chosen[datec], errors='coerce')
-    }).dropna()
+    q = pd.DataFrame({'cert': pd.to_numeric(chosen[certc], errors='coerce'),
+                      'faildate': pd.to_datetime(chosen[datec], errors='coerce')}).dropna()
     q = q[(q.faildate >= pd.Timestamp('2014-01-01')) & (q.faildate <= pd.Timestamp('2025-12-31'))]
     q['cert'] = q['cert'].astype(int)
     q = q.drop_duplicates(['cert','faildate']).sort_values('faildate').reset_index(drop=True)
@@ -149,7 +166,6 @@ mod.get_file = extended_get_file
 mod.coalesce = source_mapped_coalesce
 mod.failure_table = official_failure_table
 
-# Durable execution declaration separate from the frozen protocol file written by TARGET.
 EXTENSION = {
     'execution':'IMI_v3_POST2020_PRE2019_HISTORY_EXTENSION_v1',
     'historical_input_years':[2014,2015,2016,2017,2018],

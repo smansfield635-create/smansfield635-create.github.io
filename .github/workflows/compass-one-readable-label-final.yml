@@ -17,42 +17,60 @@ jobs:
           node-version: '22'
       - run: npm install --no-save playwright@1.55.0
       - run: npx playwright install --with-deps chromium
-      - name: Serve candidate and prove one visible cardinal label after renderer ownership changes
+      - name: Prove one functional label and no duplicate shell through real touch transitions
         run: |
           python3 -m http.server 4173 >/tmp/compass-http.log 2>&1 &
           cat > verify.mjs <<'NODE'
           import { chromium } from 'playwright';
           const browser=await chromium.launch({headless:true});
-          const profiles=[{name:'tablet',w:800,h:1280},{name:'desktop',w:1280,h:900},{name:'phone',w:430,h:932}];
+          const profiles=[{name:'tablet',w:900,h:1000},{name:'phone',w:430,h:932},{name:'desktop',w:1280,h:900}];
           for(const p of profiles){
-            const page=await browser.newPage({viewport:{width:p.w,height:p.h}});
+            const context=await browser.newContext({viewport:{width:p.w,height:p.h},hasTouch:true});
+            const page=await context.newPage();
             await page.goto('http://127.0.0.1:4173/compass-composite/?q='+Date.now(),{waitUntil:'networkidle',timeout:120000});
             await page.waitForTimeout(3500);
+            const scene=page.locator('[data-compass-scene]');
+            await scene.evaluate(el=>el.scrollIntoView({block:'center',inline:'nearest'}));
+            await page.waitForTimeout(200);
             const read=()=>page.evaluate(()=>{
               const root=document.querySelector('[data-compass-root]');
               const wings=[...document.querySelectorAll('[data-compass-cardinal]')];
-              return {build:root?.dataset.compassComposite,owner:root?.dataset.gen1596RenderedLabelOwner,rows:wings.map(w=>{const c=getComputedStyle(w);const spans=[...w.querySelectorAll('span')].map(s=>{const x=getComputedStyle(s);return {display:x.display,visibility:x.visibility,opacity:Number(x.opacity)}});return {id:w.dataset.cardinalId||w.dataset.wing,readable:w.classList.contains('is-readable-cardinal'),bg:c.backgroundColor,spans};})};
+              const mirror=document.querySelector('.compass-object--mirrorland');
+              const row=w=>{const c=getComputedStyle(w);const spans=[...w.querySelectorAll(':scope>span')].map(s=>{const x=getComputedStyle(s),r=s.getBoundingClientRect();return {display:x.display,visibility:x.visibility,opacity:Number(x.opacity),w:r.width,h:r.height}});return {id:w.dataset.cardinalId||w.dataset.wing,primary:w.dataset.primary==='true',readable:w.classList.contains('is-readable-cardinal'),bg:c.backgroundColor,border:c.borderTopColor,spans};};
+              const mr=mirror?[...mirror.querySelectorAll('span')].map(s=>{const x=getComputedStyle(s);return {display:x.display,visibility:x.visibility,opacity:Number(x.opacity)}}):[];
+              return {build:root?.dataset.compassComposite,mode:root?.dataset.compassMode,focus:root?.dataset.orbitFocus,phase:root?.dataset.orbitPhase,owner:root?.dataset.gen1596RenderedLabelOwner,rows:wings.map(row),mirror:mr};
             });
-            const assertOne=s=>{
-              if(s.build!=='gen1596-surgical-composite-3')throw new Error(p.name+': wrong build '+s.build);
+            const assertOne=(s,stage)=>{
+              if(s.build!=='gen1596-surgical-composite-3')throw new Error(`${p.name}/${stage}: wrong build ${s.build}`);
+              if(s.mode!=='CONSTELLATION')throw new Error(`${p.name}/${stage}: wrong mode ${s.mode}`);
+              const primary=s.rows.filter(r=>r.primary);
               const readable=s.rows.filter(r=>r.readable);
-              if(readable.length!==1)throw new Error(p.name+': readable count '+readable.length);
-              if(!readable[0].spans.every(x=>x.display!=='none'&&x.visibility!=='hidden'&&x.opacity>.5))throw new Error(p.name+': functional label hidden');
+              if(primary.length!==1)throw new Error(`${p.name}/${stage}: primary count ${primary.length}`);
+              if(readable.length!==1)throw new Error(`${p.name}/${stage}: readable count ${readable.length}`);
+              if(primary[0].id!==s.focus||readable[0].id!==s.focus||s.owner!==s.focus)throw new Error(`${p.name}/${stage}: owner mismatch focus=${s.focus} primary=${primary[0]?.id} readable=${readable[0]?.id} owner=${s.owner}`);
+              if(!readable[0].spans.every(x=>x.display!=='none'&&x.visibility!=='hidden'&&x.opacity>.5&&x.w>0&&x.h>0))throw new Error(`${p.name}/${stage}: functional label not visible`);
               const inactive=s.rows.filter(r=>!r.readable);
-              if(!inactive.every(r=>r.bg==='rgba(0, 0, 0, 0)'&&r.spans.every(x=>x.visibility==='hidden'||x.opacity===0)))throw new Error(p.name+': duplicate shell/text remains');
+              if(!inactive.every(r=>r.bg==='rgba(0, 0, 0, 0)'&&r.spans.every(x=>x.visibility==='hidden'||x.opacity===0)))throw new Error(`${p.name}/${stage}: inactive duplicate shell/text visible`);
+              if(!s.mirror.every(x=>x.display==='none'||x.visibility==='hidden'||x.opacity===0))throw new Error(`${p.name}/${stage}: Mirrorland stale label visible`);
             };
-            let s=await read(); assertOne(s);
-            await page.evaluate(()=>{
-              const wings=[...document.querySelectorAll('[data-compass-cardinal]')];
-              wings.forEach(w=>{w.dataset.depth=(w.dataset.cardinalId==='east'?'0.94':'0.10');w.dataset.primary=String(w.dataset.cardinalId==='east');});
-              wings.forEach(w=>w.classList.add('is-readable-cardinal'));
-            });
-            await page.waitForTimeout(250);
-            s=await read(); assertOne(s);
-            if(s.owner!=='east'||s.rows.find(r=>r.readable)?.id!=='east')throw new Error(p.name+': rendered foreground did not own label');
-            await page.close();
+            let initial=await read();assertOne(initial,'initial');
+            const box=await scene.boundingBox();if(!box)throw new Error(`${p.name}: no scene bounds`);
+            const cdp=await context.newCDPSession(page);
+            const point=(x,y)=>[{x,y,radiusX:1,radiusY:1,force:1,id:1}];
+            const patterns=[[.84,.50,.16,.50],[.50,.80,.50,.20],[.16,.50,.84,.50],[.50,.20,.50,.80]];
+            let transitions=0;let prior=initial.focus;
+            for(let attempt=0;attempt<8&&transitions<2;attempt++){
+              const [sx,sy,ex,ey]=patterns[attempt%patterns.length];
+              const x1=box.x+box.width*sx,y1=box.y+box.height*sy,x2=box.x+box.width*ex,y2=box.y+box.height*ey;
+              await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:point(x1,y1)});
+              for(let i=1;i<=18;i++){const t=i/18;await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:point(x1+(x2-x1)*t,y1+(y2-y1)*t)});await page.waitForTimeout(22)}
+              await page.waitForTimeout(100);await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await page.waitForTimeout(900);
+              const s=await read();
+              if(s.phase==='COMMITTED'&&s.focus&&s.focus!==prior){transitions++;assertOne(s,`transition-${transitions}`);prior=s.focus;}
+            }
+            if(transitions<1)throw new Error(`${p.name}: no real committed cardinal transition observed`);
+            await context.close();
           }
-          await browser.close();
-          console.log('COMPASS_ONE_READABLE_LABEL_FINAL_PASS');
+          await browser.close();console.log('COMPASS_ONE_READABLE_LABEL_FINAL_PASS');
           NODE
           node verify.mjs

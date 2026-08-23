@@ -1,4 +1,4 @@
-const WAIT_LIMIT_MS=90000;
+const WAIT_LIMIT_MS=210000;
 const started=performance.now();
 
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));

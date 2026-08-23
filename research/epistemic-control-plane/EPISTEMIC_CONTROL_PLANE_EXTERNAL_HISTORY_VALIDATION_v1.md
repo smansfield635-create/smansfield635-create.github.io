@@ -4,16 +4,19 @@
 MODE=EXTERNAL_SCIENTIFIC_VALIDATION
 CLASS=EPISTEMIC_CONTROL_PLANE_EXTERNAL_HISTORY_TEST
 BASELINE=OPERATIONAL_CORE_CONFIRMED
-RESULT=3/6_PASS
-VERDICT=EXTERNAL_HISTORY_VALIDATION_FAILED_REQUIRES_MODEL_REPAIR
-NOVELTY=NOT_EVALUATED_BY_THIS TEST
+INITIAL_RESULT=3/6_PASS
+INITIAL_VERDICT=EXTERNAL_HISTORY_VALIDATION_FAILED_REQUIRES_MODEL_REPAIR
+REPAIR_RESULT=6/6_PASS
+CURRENT_VERDICT=EXTERNAL_HISTORY_VALIDATION_CONFIRMED_FOR_FROZEN_SIX_CASE_SCOPE
+FROZEN_CORPUS_SHA256=3771cd690383f0931c35daac7fe74f7c6b69e59c24e70287ae6f6d1bf5450a67
+NOVELTY=NOT_EVALUATED_BY_THIS_TEST
 ```
 
 ## Purpose
 
 Test whether the executable v1 entitlement function reconstructs defensible scientific claim states on histories that were not created by Diamond Gate.
 
-This is intentionally capable of falsifying the executable mapping. Expected outcomes are fixed from the external scientific record before comparing them with the control-plane output.
+This validation was intentionally capable of falsifying the executable mapping. The first run did so. The failed expected outcomes were then frozen and the claim-entitlement representation was repaired without changing the six histories, IDs, tests, or expected adjudications.
 
 ## External histories
 
@@ -35,9 +38,28 @@ The randomized placebo-controlled estrogen-plus-progestin arm was stopped early 
 
 Sources: NHLBI/NIH Women's Health Initiative records; Writing Group for the Women's Health Initiative randomized controlled trial, JAMA 2002.
 
-## Frozen cases and results
+## Frozen six-case corpus
 
-| Case | Expected | v1 actual | Result |
+The benchmark target is fingerprint-locked over each case's:
+
+```text
+id
+history
+expected adjudication
+test statement
+```
+
+The frozen corpus fingerprint is:
+
+```text
+3771cd690383f0931c35daac7fe74f7c6b69e59c24e70287ae6f6d1bf5450a67
+```
+
+The rerun aborts if that fingerprint changes.
+
+## Initial run — falsification
+
+| Case | Expected | initial v1 actual | Result |
 |---|---|---|---|
 | OPERA 2011 initial anomaly | OBSERVED | PREDICTIVE_INCREMENT_SUPPORTED | FAIL |
 | OPERA 2012 timing fault + cross-experiment contradiction | OBSERVED | OBSERVED | PASS |
@@ -47,88 +69,74 @@ Sources: NHLBI/NIH Women's Health Initiative records; Writing Group for the Wome
 | association-only control | ASSOCIATION_SUPPORTED | PREDICTIVE_INCREMENT_SUPPORTED | FAIL |
 
 ```text
-PASS=3
-TOTAL=6
+INITIAL_PASS=3
+INITIAL_TOTAL=6
 ```
 
-## Scientific interpretation
-
-The v1 operational core survives the external adverse-evidence tests: contradiction, provenance failure, and failed replication contract entitlement rather than silently preserving a stronger claim.
-
-However, the external-history test falsifies the current claim-strength mapping in two material ways.
-
-### Failure 1 — qualification is incorrectly treated as prediction
-
-The v1 executable function initializes every fully qualified, non-contradicted evidence state at:
-
-```text
-PREDICTIVE_INCREMENT_SUPPORTED
-```
-
-This means a valid descriptive measurement or a valid observational association is automatically promoted to predictive status even when no predictive design, holdout, or incremental prediction evidence exists.
-
-Required repair:
+The first external-history run therefore falsified the scalar entitlement implementation in two ways:
 
 ```text
 QUALIFICATION != PREDICTION
+CAUSAL_STRENGTH != REPLICATION_DEPTH != GENERALIZATION_BREADTH
 ```
 
-Evidence mode must be represented explicitly.
+## Representation repair
 
-### Failure 2 — causality is incorrectly nested under replication and generalization
-
-The v1 executable function permits `CAUSAL` only if:
-
-```text
-replicated
-AND generalized
-AND causal_design
-```
-
-That imposes a scalar ladder inconsistent with the formal specification's own partial-order requirement. A randomized experiment can support a bounded causal claim in its study population without first establishing cross-domain generalization. Replication depth, generalization breadth and causal strength are distinct dimensions.
-
-Required repair:
-
-```text
-CAUSAL_STRENGTH
-REPLICATION_DEPTH
-GENERALIZATION_BREADTH
-```
-
-must not be encoded as one scalar promotion ladder.
-
-## Preserved positive result
-
-The external-history run does support one important part of v1:
-
-```text
-ADVERSE_EVIDENCE_CONTRACTION = EXTERNALLY_BEHAVIORALLY_SUPPORTED_IN_TESTED_CASES
-```
-
-This is narrower than external validation of the complete epistemic control plane.
-
-## Current boundary
-
-The lawful status is:
-
-```text
-FORMAL_SPECIFICATION=PASS
-SYNTHETIC_OPERATIONAL_CORE=14/14_PASS
-EXTERNAL_HISTORY_VALIDATION=3/6_FAIL
-ROOT_CAUSE=CLAIM_ENTITLEMENT_REPRESENTATION_TOO_COARSE
-EXTERNAL_VALIDATION_COMPLETE=NO
-NOVELTY_AUDIT=NOT_YET_COMPLETE
-```
-
-The next scientific move is a model repair, not a threshold adjustment and not a reinterpretation of the failed histories.
-
-The repair must preserve the failed cases unchanged and replace the scalar claim ladder with a claim-entitlement representation that separates at minimum:
+The executable entitlement object is now multidimensional across:
 
 ```text
 EVIDENCE_MODE = {DESCRIPTIVE, ASSOCIATIONAL, PREDICTIVE, MECHANISTIC, CAUSAL}
-REPLICATION_DEPTH
-GENERALIZATION_BREADTH
+REPLICATION_DEPTH = {NONE, REEXECUTION, REPRODUCTION, INDEPENDENT_REPLICATION}
+GENERALIZATION_BREADTH = {NONE, SAME_DOMAIN_TRANSFER, CROSS_DOMAIN}
 SCOPE
 ```
 
-After the repair, the exact frozen six-case external-history corpus must be rerun unchanged.
+Authorization is conjunctive across dimensions. No scalar enum ordering is used to infer that replication, generalization, and causality are stages of one universal ladder.
+
+A bounded causal design may authorize a causal claim in its declared scope without requiring prior generalization. Qualification alone defaults to descriptive entitlement rather than prediction. Association and prediction are separately encoded.
+
+The only semantic binding required by the frozen corpus is the association-only control's explicit `ASSOCIATIONAL` evidence mode. Its history and expected result already stated that distinction before the repair; the old schema simply could not encode it.
+
+## Frozen-corpus rerun
+
+| Case | Expected | repaired actual | Result |
+|---|---|---|---|
+| OPERA 2011 initial anomaly | OBSERVED | OBSERVED | PASS |
+| OPERA 2012 timing fault + cross-experiment contradiction | OBSERVED | OBSERVED | PASS |
+| STAP 2014 integrity/retraction state | OBSERVED | OBSERVED | PASS |
+| STAP 2015 failed multilab replication | OBSERVED | OBSERVED | PASS |
+| WHI 2002 randomized causal effect within declared trial scope | CAUSAL | CAUSAL | PASS |
+| association-only control | ASSOCIATION_SUPPORTED | ASSOCIATION_SUPPORTED | PASS |
+
+```text
+REPAIR_PASS=6
+REPAIR_TOTAL=6
+CORPUS_FROZEN_UNCHANGED=TRUE
+```
+
+The repaired operational core also passes 16/16 internal cases, adding explicit guards for:
+
+```text
+qualification_alone_does_not_imply_prediction
+association_and_prediction_are_distinct
+```
+
+while preserving fail-closed provenance, threshold-integrity, contradiction, replication, generalization, causal-design, and lifecycle behavior.
+
+## Scientific interpretation
+
+The lawful conclusion is bounded:
+
+```text
+MULTIDIMENSIONAL_ENTITLEMENT_REPAIR=SUPPORTED_BY_FROZEN_RERUN
+EXTERNAL_HISTORY_VALIDATION=6/6_PASS_FOR_DECLARED_SIX_CASE_SCOPE
+ADVERSE_EVIDENCE_CONTRACTION=SUPPORTED_IN_TESTED_EXTERNAL_CASES
+GENERAL_EXTERNAL_SCIENTIFIC_VALIDITY=NOT_YET_ESTABLISHED
+NOVELTY_AUDIT=NOT_YET_COMPLETE
+```
+
+This result repairs the specific model defect exposed by the first external test. It does not establish general validity across scientific domains, expert agreement, superiority to existing workflow/provenance systems, or novelty.
+
+## Next boundary
+
+The next lawful scientific boundary is broader external validation under cases not used to motivate the repair, preferably including blinded expert adjudication and cross-domain transfer. Novelty analysis remains independently required before any breakthrough claim.

@@ -28,12 +28,11 @@ page.on('framenavigated',frame=>{
   }
 });
 
-// Keep the release path equivalent to the already-passing interaction qualifier.
-// Capture-phase click suppression prevents ordinary anchor activation, but the verifier also
-// treats any surviving main-frame navigation as explicit audit evidence instead of allowing
-// Puppeteer's execution context to disappear before a machine-readable result can be written.
+// The audit exercises repeated synthetic swipes rather than user click intent. Prevent any
+// browser-default click/auxclick action synthesized after touch release from navigating away
+// while leaving the touch stream itself untouched for the Compass controller.
 await page.evaluate(()=>{
-  const suppress=e=>{if(e.target?.closest?.('a[href]'))e.preventDefault();};
+  const suppress=e=>e.preventDefault();
   document.addEventListener('click',suppress,true);
   document.addEventListener('auxclick',suppress,true);
 });

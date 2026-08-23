@@ -6,6 +6,11 @@ on:
     paths:
       - 'preview/bt4/entitlement-v1/**'
       - '.github/workflows/bt4-entitlement-preview-verification.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'preview/bt4/entitlement-v1/**'
+      - '.github/workflows/bt4-entitlement-preview-verification.yml'
   workflow_dispatch:
 
 permissions:

@@ -20,11 +20,15 @@
     },
     {
       "path": "showroom/globe/audralia/index.html",
-      "sha256": "76fe6495a47ddbfd34c0cb2347d0b5bb734206ba9c9a8e9d16dfb8ee041ae5f9"
+      "sha256": "ff7fc189793a81de552fff317871c4d6b02752acaeffebe9bf531a99c65c7e0a"
     },
     {
       "path": "showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs",
       "sha256": "c8d320548768e615e92d5f84a299a148a309246ced4f8c88795250f927386c2a"
+    },
+    {
+      "path": "showroom/globe/audralia/celestial-bootstrap-v2.mjs",
+      "sha256": "3bdcf6605d473c40329c73321d559f5d7a4d354809618519ed2a02098fe23885"
     }
   ],
   "invariants": {
@@ -41,8 +45,8 @@
     "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
   },
   "reviewSummary": {
-    "reviewedCandidateHead": "26d69e1c84d5985f63f05e868805753d9f3c051a",
-    "qualificationOperation": "AUDRALIA_COLOR_ARRIVAL_V4_AND_FAIL_VISIBLE_STARTUP_20260823_001",
-    "finding": "The protected experience mutation is bounded to Audralia arrival presentation, cache identity, and fail-visible loader reporting. The five readiness predicates and all canonical world, terrain, weather authority, camera, navigation, and world interaction behavior remain unchanged."
+    "reviewedCandidateHead": "3957e2caabc130c83acc4eb34fd1606d8a773ca8",
+    "qualificationOperation": "AUDRALIA_COLOR_ARRIVAL_V4_AND_CELESTIAL_STARTUP_SEQUENCE_20260823_001",
+    "finding": "The protected experience mutation is bounded to Audralia arrival presentation, cache identity, fail-visible loader reporting, and startup sequencing of the pre-existing celestial checkpoint behind renderer authority. The five readiness predicates and all canonical world, terrain, weather authority, camera, navigation, celestial rendering, and world interaction behavior remain unchanged."
   }
 }

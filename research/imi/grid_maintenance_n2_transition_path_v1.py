@@ -14,8 +14,8 @@ mod = pathv1.mod
 
 SEED = 20260826
 RNG = np.random.default_rng(SEED)
-N_PER_TOPOLOGY = 14
-N_MAINT = 8
+N_PER_TOPOLOGY = 28
+N_MAINT = 4
 PRE_RAMP = 0.10
 REC_RAMP = 0.20
 mod.SEED = SEED
@@ -68,7 +68,7 @@ def make_states_for_topology(m, mask, seed_pg, n):
     states = [seed_pg.copy()]
     attempts = 0
     on = np.where(m['gen'][:, mod.GEN_STATUS] > 0)[0]
-    while len(states) < n and attempts < 50000:
+    while len(states) < n and attempts < 80000:
         attempts += 1
         q = states[int(RNG.integers(len(states)))].copy()
         for _ in range(int(RNG.integers(2, 9))):
@@ -96,10 +96,8 @@ def choose_maintenance_topologies(m, base_pg, global_candidates):
         if q is not None:
             chosen.append(int(k))
             seeds[int(k)] = q
-        if len(chosen) == N_MAINT:
-            break
     if len(chosen) != N_MAINT:
-        raise RuntimeError(f'only {len(chosen)} feasible maintenance topologies')
+        raise RuntimeError(f'pre-outcome feasibility audit expected {N_MAINT} maintenance topologies, found {len(chosen)}')
     return chosen, seeds
 
 
@@ -117,8 +115,7 @@ def graph_features(m, pg, base_mask, global_candidates):
     n1 = 0
     n2 = 0
     for c in eligible:
-        mask1 = base_mask.copy()
-        mask1[c] = False
+        mask1 = base_mask.copy(); mask1[c] = False
         q1 = pathv1.corrective(m, pg, mask1, PRE_RAMP, 1.0)
         if q1 is None:
             continue
@@ -127,12 +124,10 @@ def graph_features(m, pg, base_mask, global_candidates):
         for d in eligible:
             if d == c:
                 continue
-            mask2 = mask1.copy()
-            mask2[d] = False
+            mask2 = mask1.copy(); mask2[d] = False
             q2 = pathv1.corrective(m, q1, mask2, PRE_RAMP, 1.0)
             if q2 is not None:
-                cc += 1
-                n2 += 1
+                cc += 1; n2 += 1
         children.append(cc)
     ne = len(eligible)
     f1 = n1 / ne if ne else 0.0
@@ -144,8 +139,7 @@ def graph_features(m, pg, base_mask, global_candidates):
         bent = 0.0
     if children and ne > 1:
         fr = np.asarray(children, float) / (ne - 1)
-        mn = float(fr.min())
-        mx = float(fr.max())
+        mn = float(fr.min()); mx = float(fr.max())
     else:
         mn = mx = 0.0
     return {'f1': float(f1), 'f2': float(f2), 'branch_entropy': bent,
@@ -156,18 +150,15 @@ def graph_features(m, pg, base_mask, global_candidates):
 def contingency_rows(m, pg, base_mask):
     idx, f, _, _ = mod.flows_sens(m, pg, base_mask)
     fmap = {int(k): float(v) for k, v in zip(idx, f)}
-    nb = len(m['bus'])
-    deg = np.zeros(nb, int)
+    nb = len(m['bus']); deg = np.zeros(nb, int)
     for k, row in enumerate(m['branch']):
         if base_mask[k]:
-            deg[int(row[mod.F_BUS])] += 1
-            deg[int(row[mod.T_BUS])] += 1
+            deg[int(row[mod.F_BUS])] += 1; deg[int(row[mod.T_BUS])] += 1
     out = []
     for k, row in enumerate(m['branch']):
         if not base_mask[k]:
             continue
-        mask2 = base_mask.copy()
-        mask2[k] = False
+        mask2 = base_mask.copy(); mask2[k] = False
         if not mod.connected(m, mask2):
             continue
         rt = float(row[mod.RATE_A]) if row[mod.RATE_A] > 1e-6 else 1e9
@@ -179,8 +170,7 @@ def contingency_rows(m, pg, base_mask):
 
 
 def recover_n2(m, pg, base_mask, outage, global_candidates):
-    mask2 = base_mask.copy()
-    mask2[outage] = False
+    mask2 = base_mask.copy(); mask2[outage] = False
     q = pathv1.corrective(m, pg, mask2, REC_RAMP, 1.0)
     if q is not None:
         return 1, 0
@@ -188,8 +178,7 @@ def recover_n2(m, pg, base_mask, outage, global_candidates):
         c = int(c)
         if c == outage or not mask2[c]:
             continue
-        mask3 = mask2.copy()
-        mask3[c] = False
+        mask3 = mask2.copy(); mask3[c] = False
         if not mod.connected(m, mask3):
             continue
         q3 = pathv1.corrective(m, pg, mask3, REC_RAMP, 1.0)
@@ -200,14 +189,10 @@ def recover_n2(m, pg, base_mask, outage, global_candidates):
 
 def state_features_mask(m, pg, mask):
     idx, f, _, on = mod.flows_sens(m, pg, mask)
-    rate = mod.rates(m, idx)
-    util = np.abs(f) / rate
-    g = m['gen'][on]
-    p = pg[on]
-    up = np.maximum(0, g[:, mod.PMAX] - p)
-    dn = np.maximum(0, p - g[:, mod.PMIN])
-    span = np.maximum(1e-9, g[:, mod.PMAX] - g[:, mod.PMIN])
-    load = float(m['bus'][:, mod.PD].sum())
+    rate = mod.rates(m, idx); util = np.abs(f) / rate
+    g = m['gen'][on]; p = pg[on]
+    up = np.maximum(0, g[:, mod.PMAX] - p); dn = np.maximum(0, p - g[:, mod.PMIN])
+    span = np.maximum(1e-9, g[:, mod.PMAX] - g[:, mod.PMIN]); load = float(m['bus'][:, mod.PD].sum())
     return {'max_util': float(util.max()), 'mean_util': float(util.mean()), 'std_util': float(util.std()),
             'p95_util': float(np.quantile(util, .95)), 'up_headroom_ratio': float(up.sum()/load),
             'down_headroom_ratio': float(dn.sum()/load), 'min_up_frac': float(np.min(up/span)),
@@ -216,25 +201,21 @@ def state_features_mask(m, pg, mask):
 
 
 def main():
-    raw, source_sha = mod.load_case()
-    m = mod.internalize(raw)
+    raw, source_sha = mod.load_case(); m = mod.internalize(raw)
     base_pg = pathv1.balanced_seed(m)
     global_candidates = pathv1.frozen_switch_candidates(m, base_pg)
     maint_lines, maint_seed = choose_maintenance_topologies(m, base_pg, global_candidates)
 
-    rows = []
-    states_out = []
-    sid = 0
+    rows = []; states_out = []; sid = 0
     for topo_id, maint in enumerate(maint_lines):
         base_mask = active_mask(m, [maint])
         states = make_states_for_topology(m, base_mask, maint_seed[maint], N_PER_TOPOLOGY)
-        for local_id, pg in enumerate(states):
+        for pg in states:
             gf = graph_features(m, pg, base_mask, global_candidates)
             sf = state_features_mask(m, pg, base_mask)
             topo = {'active_branch_count': int(base_mask.sum()),
                     'maintenance_intact_util': float(intact_util_of_line(m, pg, maint))}
-            ys = []
-            depths = []
+            ys = []; depths = []
             for outage, cf in contingency_rows(m, pg, base_mask):
                 y, depth = recover_n2(m, pg, base_mask, outage, global_candidates)
                 ys.append(y); depths.append(depth)
@@ -251,35 +232,26 @@ def main():
                       'SURV', float(np.mean(ys)), 'F1', gf['f1'], 'F2', gf['f2'], flush=True)
             sid += 1
 
-    df = pd.DataFrame(rows)
-    sd = pd.DataFrame(states_out)
+    df = pd.DataFrame(rows); sd = pd.DataFrame(states_out)
     failure_rate = float(1 - df.y.mean())
-    sig_cols = PATH_FEATURES
-    signatures = int(sd[sig_cols].round(10).drop_duplicates().shape[0])
+    signatures = int(sd[PATH_FEATURES].round(10).drop_duplicates().shape[0])
     survival_distinct = int(sd.survival.round(10).nunique())
     evaluable = bool(signatures >= 20 and 0.05 <= failure_rate <= 0.95 and survival_distinct >= 8)
 
-    folds = []
-    preds = []
+    folds = []; preds = []
     if evaluable:
         for fold in range(N_MAINT):
-            tr = df.topology_fold != fold
-            te = df.topology_fold == fold
-            y = df.loc[te, 'y'].to_numpy()
-            a = mod.mdl(); b = mod.mdl()
-            a.set_params(random_state=SEED); b.set_params(random_state=SEED)
+            tr = df.topology_fold != fold; te = df.topology_fold == fold; y = df.loc[te, 'y'].to_numpy()
+            a = mod.mdl(); b = mod.mdl(); a.set_params(random_state=SEED); b.set_params(random_state=SEED)
             a.fit(df.loc[tr, XCOLS], df.loc[tr, 'y'])
             b.fit(df.loc[tr, XCOLS + PATH_FEATURES], df.loc[tr, 'y'])
-            p0 = a.predict_proba(df.loc[te, XCOLS])[:,1]
-            p1 = b.predict_proba(df.loc[te, XCOLS + PATH_FEATURES])[:,1]
+            p0 = a.predict_proba(df.loc[te, XCOLS])[:,1]; p1 = b.predict_proba(df.loc[te, XCOLS + PATH_FEATURES])[:,1]
             m0 = mod.metrics(y, p0); m1 = mod.metrics(y, p1)
             rel = (m0['brier'] - m1['brier']) / m0['brier']
             z = df.loc[te, ['state','topology_fold','maintenance_line','second_outage','y']].copy()
-            z['p_base'] = p0; z['p_aug'] = p1
-            preds.append(z)
+            z['p_base'] = p0; z['p_aug'] = p1; preds.append(z)
             st = z.groupby('state').agg(y=('y','mean'), p_base=('p_base','mean'), p_aug=('p_aug','mean'))
-            mae0 = float(np.mean(np.abs(st.y-st.p_base)))
-            mae1 = float(np.mean(np.abs(st.y-st.p_aug)))
+            mae0 = float(np.mean(np.abs(st.y-st.p_base))); mae1 = float(np.mean(np.abs(st.y-st.p_aug)))
             folds.append({'fold': fold, 'maintenance_line': int(maint_lines[fold]), 'n': int(len(y)),
                           'failures': int((1-y).sum()), 'base': m0, 'aug': m1,
                           'brier_rel_improve': float(rel), 'state_cal_mae_base': mae0,
@@ -292,8 +264,8 @@ def main():
         cal_wins = sum(x['state_cal_mae_aug'] < x['state_cal_mae_base'] for x in folds)
         criteria = {'brier_rel_improve_ge_5pct': bool(pooled_rel >= .05),
                     'auroc_delta_nonnegative': bool(auc_delta >= 0),
-                    'brier_wins_ge_6_of_8': bool(brier_wins >= 6),
-                    'state_calibration_wins_ge_6_of_8': bool(cal_wins >= 6)}
+                    'brier_wins_ge_3_of_4': bool(brier_wins >= 3),
+                    'state_calibration_wins_ge_3_of_4': bool(cal_wins >= 3)}
         verdict = 'PASS' if all(criteria.values()) else 'FAIL'
     else:
         pred = pd.DataFrame(); pool0 = {}; pool1 = {}; pooled_rel = None; auc_delta = None

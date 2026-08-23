@@ -1,0 +1,115 @@
+name: H-Earth Focused Cloud Model Comparison
+
+on:
+  pull_request:
+    branches:
+      - agent/h-earth-multiscale-atmosphere-convergence-24055-20260821
+    paths:
+      - 'showroom/globe/audralia/**'
+      - '.github/workflows/h-earth-final-frame-cloud-coverage-audit.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  focused-cloud-model-comparison:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+
+      - name: Start repository-local inspection server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/h-earth-server.log 2>&1 &
+          echo $! >/tmp/h-earth-server.pid
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/h-earth-server.log
+          exit 1
+
+      - name: Install browser controller
+        run: |
+          mkdir -p /tmp/cloud-comparison
+          npm install --prefix /tmp/cloud-comparison --no-save playwright-core@1.55.0 >/tmp/playwright-install.log 2>&1
+
+      - name: Capture six upgraded cloud candidates
+        run: |
+          set -euo pipefail
+          export CHROME="$(command -v google-chrome || command -v chromium-browser || command -v chromium || true)"
+          if [ -z "$CHROME" ]; then
+            echo 'No Chrome/Chromium binary found on runner.' >&2
+            exit 1
+          fi
+          cat > /tmp/cloud-comparison/capture.mjs <<'EOF'
+          import { chromium } from 'playwright-core';
+          import fs from 'node:fs/promises';
+
+          const browser=await chromium.launch({
+            executablePath:process.env.CHROME,
+            headless:true,
+            args:['--no-sandbox','--disable-dev-shm-usage','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']
+          });
+          const context=await browser.newContext({viewport:{width:1280,height:900},deviceScaleFactor:1});
+          const page=await context.newPage();
+          const models=[12,24,36,48,54,60];
+          const rows=['model\twidth\tbroken\tsupport\tbytes\tpageErrors'];
+          const widthFactors=[1.35,1.55,1.75,1.95,2.15];
+          const brokenLows=[.46,.42,.38,.34];
+          const supportScales=[.50,.66,.82];
+
+          for(const model of models){
+            const padded=String(model).padStart(2,'0');
+            const idx=model-1;
+            const width=widthFactors[Math.floor(idx/12)];
+            const broken=brokenLows[Math.floor((idx%12)/3)];
+            const support=supportScales[idx%3];
+            const errors=[];
+            const handler=e=>errors.push(String(e));
+            page.on('pageerror',handler);
+
+            await page.goto(`http://127.0.0.1:4173/showroom/globe/audralia/?cloudModel=${model}&fap1Quality=capture`,{waitUntil:'domcontentloaded',timeout:90000});
+            await page.waitForTimeout(2400);
+            await page.mouse.move(640,450);
+            await page.mouse.wheel(0,900);
+            await page.waitForTimeout(160);
+            await page.mouse.wheel(0,900);
+            await page.waitForTimeout(160);
+            await page.mouse.wheel(0,900);
+            await page.waitForTimeout(700);
+
+            await page.addStyleTag({content:'*{animation:none!important;transition:none!important;}'}).catch(()=>{});
+            const world=page.locator('[data-h-earth-map-wide-canvas]');
+            const box=await world.boundingBox();
+            if(!box)throw new Error(`MODEL_${model}_WORLD_CANVAS_NOT_VISIBLE`);
+            const clip={x:Math.max(0,box.x),y:Math.max(0,box.y),width:Math.min(box.width,1280-Math.max(0,box.x)),height:Math.min(box.height,900-Math.max(0,box.y))};
+            const path=`/tmp/cloud-comparison/model-${padded}.png`;
+            await page.screenshot({path,clip,timeout:15000});
+            const stat=await fs.stat(path);
+            rows.push([model,width,broken,support,stat.size,errors.length].join('\t'));
+            page.off('pageerror',handler);
+          }
+
+          await fs.writeFile('/tmp/cloud-comparison/manifest.tsv',rows.join('\n')+'\n','utf8');
+          await context.close();
+          await browser.close();
+          EOF
+          node /tmp/cloud-comparison/capture.mjs
+          test "$(find /tmp/cloud-comparison -name 'model-*.png' | wc -l)" -eq 6
+          test "$(wc -l < /tmp/cloud-comparison/manifest.tsv)" -eq 7
+
+      - name: Preserve focused comparison
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-focused-cloud-model-comparison
+          path: |
+            /tmp/cloud-comparison/model-*.png
+            /tmp/cloud-comparison/manifest.tsv
+            /tmp/h-earth-server.log
+            /tmp/playwright-install.log
+          if-no-files-found: error

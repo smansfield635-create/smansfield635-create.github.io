@@ -21,6 +21,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            preview/bt4/entitlement-v1
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
       - name: Verify shared entitlement engine
         run: node preview/bt4/entitlement-v1/verify-entitlement-preview.v1.mjs
       - name: Verify public Pages transport

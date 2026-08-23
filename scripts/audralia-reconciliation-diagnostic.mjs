@@ -13,24 +13,44 @@ const browser=await puppeteer.launch({
 try{
   const page=await browser.newPage();
   await page.setViewport({width:720,height:1280,deviceScaleFactor:1});
+
   const pageErrors=[];
   const consoleErrors=[];
+  const failedRequests=[];
+  const notFoundResponses=[];
+
   page.on('pageerror',error=>pageErrors.push(String(error?.stack||error)));
   page.on('console',message=>{if(message.type()==='error')consoleErrors.push(message.text());});
+  page.on('requestfailed',request=>{
+    failedRequests.push({url:request.url(),failure:request.failure()?.errorText||null,resourceType:request.resourceType()});
+  });
+  page.on('response',response=>{
+    if(response.status()===404){
+      notFoundResponses.push({url:response.url(),resourceType:response.request().resourceType()});
+    }
+  });
+
   await page.goto(`${baseUrl}/showroom/globe/audralia/weather-presentation-reconciliation/`,{waitUntil:'domcontentloaded',timeout:60000});
 
-  let ready=false;
+  let waitObservedPass=false;
   let waitError=null;
   try{
-    await page.waitForFunction(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime()?.invariants?.pass===true,{timeout:30000});
-    ready=true;
+    await page.waitForFunction(()=>{
+      const proof=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__;
+      const proofRuntime=(()=>{try{return proof?.getRuntime?.()||null;}catch{return null;}})();
+      const runtime=proofRuntime||window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_RUNTIME__||null;
+      return runtime?.invariants?.pass===true;
+    },{timeout:45000,polling:250});
+    waitObservedPass=true;
   }catch(error){
     waitError=String(error?.stack||error);
   }
 
   const diagnostic=await page.evaluate(()=>{
     const proof=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__;
-    const runtime=proof?.getRuntime?.()||window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_RUNTIME__||null;
+    let proofRuntime=null;
+    try{proofRuntime=proof?.getRuntime?.()||null;}catch{}
+    const runtime=proofRuntime||window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_RUNTIME__||null;
     return {
       location:location.href,
       statusText:document.querySelector('[data-h-earth-status]')?.textContent?.trim()||null,
@@ -49,7 +69,31 @@ try{
     };
   });
 
-  console.log('AUDRALIA_RECONCILIATION_DIAGNOSTIC',JSON.stringify({ready,waitError,diagnostic,pageErrors,consoleErrors},null,2));
+  const authoritativePass=(
+    diagnostic.reconciliationPresent===true&&
+    diagnostic.runtimePresent===true&&
+    diagnostic.reconciliationError==null&&
+    diagnostic.runtimeInvariants?.pass===true&&
+    Array.isArray(diagnostic.runtimeInvariants?.failures)&&
+    diagnostic.runtimeInvariants.failures.length===0
+  );
+
+  const readinessSource=waitObservedPass?'WAIT_PREDICATE':'POST_WAIT_AUTHORITATIVE_RUNTIME';
+  const ready=authoritativePass;
+
+  console.log('AUDRALIA_RECONCILIATION_DIAGNOSTIC',JSON.stringify({
+    ready,
+    authoritativePass,
+    readinessSource,
+    waitObservedPass,
+    waitError,
+    diagnostic,
+    failedRequests,
+    notFoundResponses,
+    pageErrors,
+    consoleErrors
+  },null,2));
+
   if(!ready)process.exitCode=1;
 }finally{
   await browser.close();

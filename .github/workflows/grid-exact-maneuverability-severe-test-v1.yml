@@ -7,6 +7,11 @@ on:
       - 'research/imi/grid_exact_maneuverability_severe_test_v1.py'
       - 'research/imi/GRID_EXACT_MANEUVERABILITY_SEVERE_TEST_PROTOCOL_v1.md'
       - '.github/workflows/grid-exact-maneuverability-severe-test-v1.yml'
+  pull_request:
+    paths:
+      - 'research/imi/grid_exact_maneuverability_severe_test_v1.py'
+      - 'research/imi/GRID_EXACT_MANEUVERABILITY_SEVERE_TEST_PROTOCOL_v1.md'
+      - '.github/workflows/grid-exact-maneuverability-severe-test-v1.yml'
   workflow_dispatch:
 jobs:
   severe-test:
@@ -36,4 +41,3 @@ jobs:
             grid_predictions_v1.csv
             grid_matched_pairs_v1.csv
             GRID_EXACT_MANEUVERABILITY_VERDICT_v1.txt
-# execution trigger after protocol freeze

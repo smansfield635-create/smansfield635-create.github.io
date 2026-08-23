@@ -6,6 +6,11 @@ on:
     paths:
       - 'research/imi/post2020_maneuverability_history_extension_v1.py'
       - '.github/workflows/imi-post2020-history-extension-v1.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'research/imi/post2020_maneuverability_history_extension_v1.py'
+      - '.github/workflows/imi-post2020-history-extension-v1.yml'
   workflow_dispatch:
 jobs:
   replicate:

@@ -12,7 +12,7 @@ kill=loc.kill; mod=loc.mod
 SEED=20260829
 RNG=np.random.default_rng(SEED)
 TRAIN_STATES=['KS','OR']
-FRESH_STATES=['IA','KY','AZ']
+FRESH_STATES=['PA','OH','FL']
 ALL_STATES=TRAIN_STATES+FRESH_STATES
 ASH=loc.A+loc.S+loc.H
 

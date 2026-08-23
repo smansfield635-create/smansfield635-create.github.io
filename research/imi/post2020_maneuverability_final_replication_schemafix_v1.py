@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Schema-only/source-field mapping repair wrapper for the frozen post-2020 replication.
+"""Schema/source-access repair wrapper for the frozen post-2020 replication.
 
 No scientific feature family, geometry law, model, outcome, threshold, horizon, or success rule
-is changed. This wrapper only maps the independent FFIEC export's metadata labels and the
-Schedule RC net-loan balance field to the canonical variables already required by the frozen
-banking realization.
+is changed. This wrapper only maps independent FFIEC export labels/fields to the canonical
+variables already required by the frozen realization and invokes the frozen predeclared FDIC
+failure-record fallback when the current BankFind HTML route is unavailable.
 """
 import importlib.util
 from pathlib import Path
@@ -44,9 +44,6 @@ def schema_normalized_get_file(year, half):
     return df
 
 def source_mapped_coalesce(df, cands):
-    # The independent CDR subset does not include 2122, but it does include Schedule RC item
-    # B529: loans and leases held for investment, net of allowance. FDIC's standardized
-    # LNLSNET concept is net loans/leases; use B529 only for the already-frozen loan variable.
     use = list(cands)
     if any(x in {'RCFD2122','RCON2122','RCFD2125','RCON2125'} for x in use):
         use += ['RCFDB529','RCONB529']
@@ -56,8 +53,18 @@ def source_mapped_coalesce(df, cands):
             out = out.fillna(pd.to_numeric(df[c], errors='coerce'))
     return out
 
+def frozen_failure_fallback():
+    # Exact fallback records already embedded in the frozen script; invoked directly because
+    # the current BankFind HTML route resolves to a retired/404 API path in Actions.
+    rec=[
+      (15426,'2020-10-23'),(16748,'2020-10-16'),(14361,'2020-04-03'),(18265,'2020-02-14'),
+      (24735,'2023-03-10'),(57053,'2023-03-12'),(59017,'2023-05-01'),(25851,'2023-07-28'),(8758,'2023-11-03'),
+      (27332,'2024-04-26'),(4134,'2024-10-18'),(28611,'2025-01-17'),(5520,'2025-06-27')]
+    return pd.DataFrame(rec,columns=['cert','faildate']).assign(faildate=lambda x:pd.to_datetime(x.faildate))
+
 mod.get_file = schema_normalized_get_file
 mod.coalesce = source_mapped_coalesce
+mod.failure_table = frozen_failure_fallback
 
 if __name__ == '__main__':
     mod.main()

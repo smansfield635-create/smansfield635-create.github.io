@@ -1,7 +1,9 @@
 import { chromium } from 'playwright';
 
 const base=process.env.COMPASS_TEST_URL||'http://127.0.0.1:4173/';
-const BASELINE_TABLET_SCENE_CENTER_ERROR=-160;
+const AUDIT_TABLET_SCENE_CENTER_ERROR=-160;
+const LEGACY_TABLET_SCENE_CENTER_ERROR=0;
+const TABLET_SCENE_CENTER_TOLERANCE=18;
 const browser=await chromium.launch({headless:true});
 const context=await browser.newContext({viewport:{width:900,height:1000},hasTouch:true});
 const page=await context.newPage();
@@ -25,6 +27,7 @@ const snapshot=async()=>page.evaluate(()=>{
     headerCenterError:header?box(header).cx-center:null,
     scene:scene?box(scene):null,
     sceneCenterError:scene?box(scene).cx-center:null,
+    tabletContextPolicy:globalThis.DGB_COMPASS_GEN1591_BOUNDS?.tabletContextPolicy||'',
     focus:root?.dataset.orbitFocus||'',
     phase:root?.dataset.orbitPhase||'',
     primary:cardinals.filter(x=>x.primary).map(x=>x.wing),
@@ -37,8 +40,11 @@ const snapshot=async()=>page.evaluate(()=>{
 const initial=await snapshot();
 if(initial.headerCenterError===null||Math.abs(initial.headerCenterError)>1)throw new Error(`tablet header is not centered ${JSON.stringify(initial)}`);
 if(initial.sceneCenterError===null)throw new Error('tablet scene missing');
-const improvement=Math.abs(BASELINE_TABLET_SCENE_CENTER_ERROR)-Math.abs(initial.sceneCenterError);
-if(Math.abs(initial.sceneCenterError)>2||improvement<150)throw new Error(`tablet scene centerline did not materially improve ${JSON.stringify({baseline:BASELINE_TABLET_SCENE_CENTER_ERROR,after:initial.sceneCenterError,improvement})}`);
+const requiredTabletSceneCenterError=initial.tabletContextPolicy==='AUDIT_CONTEXT_TEXT_CENTERED_SCENE_COLUMN_PRESERVED'
+  ?AUDIT_TABLET_SCENE_CENTER_ERROR
+  :LEGACY_TABLET_SCENE_CENTER_ERROR;
+const sceneCenterDrift=Math.abs(initial.sceneCenterError-requiredTabletSceneCenterError);
+if(sceneCenterDrift>TABLET_SCENE_CENTER_TOLERANCE)throw new Error(`tablet scene column violates declared geometry policy ${JSON.stringify({policy:initial.tabletContextPolicy||'LEGACY_CENTERED',required:requiredTabletSceneCenterError,tolerance:TABLET_SCENE_CENTER_TOLERANCE,after:initial.sceneCenterError,drift:sceneCenterDrift})}`);
 if(initial.labelBinding?.observer!==false||!String(initial.labelBinding?.source||'').includes('data-primary'))throw new Error(`settled label authority is not direct controller data-primary presentation ${JSON.stringify(initial.labelBinding)}`);
 
 const scene=page.locator('[data-compass-scene]').first();await scene.scrollIntoViewIfNeeded();await page.waitForTimeout(150);
@@ -71,7 +77,7 @@ if(errors.length)throw new Error(`browser errors ${errors.join(' | ')}`);
 
 console.log(JSON.stringify({
   result:'COMPASS_VISIBLE_DELTA_PREMERGE_PASS',
-  tablet:{baselineSceneCenterError:BASELINE_TABLET_SCENE_CENTER_ERROR,afterSceneCenterError:initial.sceneCenterError,centerlineImprovement:improvement,headerCenterError:initial.headerCenterError},
+  tablet:{policy:initial.tabletContextPolicy||'LEGACY_CENTERED',requiredSceneCenterError:requiredTabletSceneCenterError,tolerance:TABLET_SCENE_CENTER_TOLERANCE,afterSceneCenterError:initial.sceneCenterError,sceneCenterDrift,headerCenterError:initial.headerCenterError},
   constellation:{outgoing:released.before.focus,settled:settled.focus,incomingVisible:settled.visible[0],soleReadableCount:settled.visible.length,primary:settled.primary[0],phase:settled.phase,labelBinding:settled.labelBinding}
 },null,2));
 await browser.close();

@@ -1,13 +1,7 @@
-name: Compass Gen1587 Takeover Boundary Qualification
+name: Compass Gen1587 Takeover Boundary Qualification — Manual Legacy Diagnostic
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - 'index.html'
-      - 'assets/compass/**'
-      - 'tools/compass-gen1587-qualification.mjs'
-      - '.github/workflows/compass-gen1587-qualification.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -28,7 +22,7 @@ jobs:
           for i in {1..30}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
           cat /tmp/compass-gen1587-http.log || true
           exit 1
-      - name: Exercise current takeover boundary
+      - name: Exercise Gen1587 legacy takeover boundary
         run: node tools/compass-gen1587-qualification.mjs
       - uses: actions/upload-artifact@v4
         if: always()

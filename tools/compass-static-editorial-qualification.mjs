@@ -4,6 +4,7 @@ import fs from 'node:fs';
 const html = fs.readFileSync('index.html', 'utf8');
 const gen1537 = fs.readFileSync('assets/compass/compass.gen1537.recovery.js', 'utf8');
 const capability = fs.readFileSync('assets/compass/compass.capability-carousel.js', 'utf8');
+const capabilityCore = fs.readFileSync('assets/compass/compass.capability-carousel.core.js', 'utf8');
 const crystals = fs.readFileSync('assets/compass/compass.crystals.js', 'utf8');
 const mediaRegistry = JSON.parse(fs.readFileSync('tools/ai-room-transport/ai-media-source-registry.v1.json', 'utf8'));
 
@@ -56,8 +57,8 @@ for (const forbidden of ['positionCapability(', 'requestAnimationFrame(positionC
 }
 if (!gen1537.includes("'/showroom/globe/h-earth/'")) fail('Gen1537 lost canonical H-Earth route');
 
-if (!capability.includes('Swipe to rotate.')) fail('Track A capability guidance floor changed');
-if (capability.includes('compass.track-b.js')) fail('Track A capability runtime dynamically loads Track B');
+if (!(capability.includes('Swipe to rotate.') || capabilityCore.includes('Swipe to rotate.'))) fail('Track A capability guidance floor changed');
+if (capability.includes('compass.track-b.js') || capabilityCore.includes('compass.track-b.js')) fail('Track A capability runtime dynamically loads Track B');
 
 if (!crystals.includes('COMPASS_CRYSTAL_CONTINUOUS_NORMAL_MOTION_v1')) fail('crystal liveness repair missing');
 if (!crystals.includes('if (!state.reducedMotion) return true;')) fail('normal-motion continuous frame contract missing');

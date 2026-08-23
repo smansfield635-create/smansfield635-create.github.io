@@ -44,8 +44,8 @@ jobs:
           test -f inspection/compass/brain-v9/index.html
           test -f assets/compass/capability-object-stage.js
           test -f assets/compass/capability-object-brain-v9.js
-          grep -q 'COMPASS_BRAIN_V9_FREE_SPLINE_ANATOMY_v1' assets/compass/capability-object-brain-v9.js
-          grep -q 'NO_ENVELOPE_INDEPENDENT_3D_SPLINES' assets/compass/capability-object-brain-v9.js
+          grep -q 'COMPASS_BRAIN_V9_ANATOMICAL_DENSITY_v2' assets/compass/capability-object-brain-v9.js
+          grep -q 'NO_ENVELOPE_ANATOMICAL_SPLINE_TOPOLOGY' assets/compass/capability-object-brain-v9.js
           echo "manifest=$manifest" >> "$GITHUB_OUTPUT"
           echo "runtime=$(jq -r 'if .runtime?.enabled == true then "true" else "false" end' "$manifest")" >> "$GITHUB_OUTPUT"
 
@@ -62,11 +62,9 @@ jobs:
           rm -rf "$STAGE"
           mkdir -p "$STAGE"
           rsync -a --prune-empty-dirs --exclude='.git/' --exclude='.github/' --exclude='preview/' --exclude='h-earth-live-6d18e158/' ./ "$STAGE/"
-
           rm -rf "$STAGE/showroom/globe/h-earth"
           mkdir -p "$STAGE/showroom/globe/h-earth"
           rsync -a --delete h-earth-live-6d18e158/showroom/globe/h-earth/ "$STAGE/showroom/globe/h-earth/"
-
           audralia_renderer_src='showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs'
           audralia_runtime_dir="$STAGE/showroom/globe/audralia/runtime-dependencies"
           audralia_app="$STAGE/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs"
@@ -80,15 +78,12 @@ import sys
 p=Path(sys.argv[1]); t=p.read_text()
 old='../../h-earth/terrain-estate-construction-v1/renderer.mjs'
 new='../runtime-dependencies/renderer.mjs'
-if old in t:
-    p.write_text(t.replace(old,new))
+if old in t: p.write_text(t.replace(old,new))
 PY
-
           git fetch --no-tags --depth=1 origin "$INSPECTION_SHA"
           rm -rf "$INSPECTION_ROOT"
           mkdir -p "$INSPECTION_ROOT"
           git archive "$INSPECTION_SHA" showroom/globe/audralia showroom/globe/h-earth h-earth-3d | tar -x -C "$INSPECTION_ROOT"
-
           mkdir -p "$STAGE/.well-known"
           manifest_sha="$(sha256sum "$MANIFEST" | awk '{print $1}')"
           jq -n --arg schema DGB_OBJECT_INSPECTION_RELEASE_v1 --arg commit "$TARGET_SHA" --arg surface compass-brain-v9 --arg manifest "$MANIFEST" --arg manifestSha256 "$manifest_sha" '{schema:$schema,commit:$commit,surface:$surface,verificationManifest:$manifest,verificationManifestSha256:$manifestSha256}' > "$STAGE/.well-known/dgb-release.json"
@@ -99,7 +94,6 @@ PY
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ${{ runner.temp }}/pages-site
-
       - name: Deploy exact merge artifact
         id: deploy
         uses: actions/deploy-pages@v4
@@ -129,11 +123,9 @@ PY
         uses: browser-actions/setup-chrome@v1
         with:
           chrome-version: stable
-
       - name: Install runtime verifier dependency
         if: ${{ steps.contract.outputs.runtime == 'true' }}
         run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
-
       - name: Verify live Brain V9 runtime
         if: ${{ steps.contract.outputs.runtime == 'true' }}
         env:

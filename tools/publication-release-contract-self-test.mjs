@@ -45,7 +45,7 @@ assert(contract.verification?.failedAssertionLocalizationRequiredBeforeRepair ==
 assert(contract.verification?.blindRerunAllowed === false, 'blind rerun must remain prohibited');
 
 assert(ai.publicationRelease?.contract === contractPath, 'AI entry point is not bound to release contract');
-assert(ai.publicationRelease?.deploymentCapability === 'PAGES_EXACT_HEAD_DEPLOY', 'AI publication capability drifted');
+assert(ai.publicationRelease?.deploymentCapabilityId === 'PAGES_EXACT_HEAD_DEPLOY', 'AI publication capability drifted');
 assert(ai.publicationRelease?.deploymentWorkflow === workflowPath, 'AI deployment workflow drifted');
 assert(ai.publicationRelease?.boundedPageReleaseSequence?.join('>') === boundedSequence, 'AI bounded release sequence drifted');
 assert(ai.publicationRelease?.runtimeOrNewDevelopmentSequence?.join('>') === runtimeSequence, 'AI runtime release sequence drifted');

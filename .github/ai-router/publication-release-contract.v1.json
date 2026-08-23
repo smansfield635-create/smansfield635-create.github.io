@@ -2,7 +2,7 @@
   "schema": "PUBLICATION_RELEASE_CONTRACT_v1",
   "status": "ACTIVE",
   "repository": "smansfield635-create/smansfield635-create.github.io",
-  "purpose": "Make bounded public page updates deterministic without forcing runtime-development governance onto presentation-only releases.",
+  "purpose": "Provide one deterministic publication path for every approved public page, file, route, environment, and future public surface in this repository.",
   "releaseClasses": {
     "BOUNDED_PAGE_RELEASE": {
       "includes": [
@@ -46,25 +46,42 @@
   },
   "deployment": {
     "workflow": ".github/workflows/pages-direct-deploy.yml",
-    "input": "target_sha",
+    "inputs": ["target_sha", "surface_id"],
     "authority": "EXPLICIT_GITHUB_PAGES_ARTIFACT_DEPLOYMENT",
     "sourceRule": "DEPLOY_EXACT_REQUESTED_COMMIT_ONLY",
     "mainRequirement": "TARGET_SHA_MUST_EQUAL_CURRENT_MAIN_UNLESS_EXPLICIT_ROLLBACK_MODE_EXISTS",
-    "artifactHeadMarker": ".well-known/dgb-release.json"
+    "artifactHeadMarker": ".well-known/dgb-release.json",
+    "surfaceManifestRoot": ".github/ai-router/publication-surfaces/",
+    "surfaceManifestSchema": ".github/ai-router/publication-surfaces/schema.v1.json",
+    "surfaceResolutionRule": "SURFACE_ID_RESOLVES_ONLY_TO_COMMITTED_DECLARATIVE_VERIFICATION_MANIFEST_AT_TARGET_SHA"
   },
   "verification": {
     "required": true,
-    "method": "FETCH_PUBLIC_RELEASE_MARKER_AND_COMPARE_TO_TARGET_SHA",
+    "method": "FETCH_PUBLIC_RELEASE_MARKER_COMPARE_TARGET_SHA_AND_SURFACE_MANIFEST_THEN_RUN_DECLARED_STATIC_AND_OPTIONAL_RUNTIME_CHECKS",
     "successResult": "LIVE_EXACT_HEAD_VERIFIED",
     "failureResult": "DEPLOYMENT_NOT_PROVEN",
-    "appearanceOnlyVerificationSufficient": false
+    "appearanceOnlyVerificationSufficient": false,
+    "exactHeadProofRequired": true,
+    "surfaceSpecificProofRequired": true,
+    "runtimeProofRequiredWhenManifestDeclaresRuntime": true
+  },
+  "universality": {
+    "scope": "ALL_PUBLIC_SURFACES_IN_REPOSITORY",
+    "examples": ["COMPASS", "AUDRALIA", "H_EARTH", "LAWS", "PRODUCTS", "HOME", "DOOR", "SHOWROOM", "RESEARCH", "FUTURE_PUBLIC_SURFACES"],
+    "projectSpecificDeploymentWorkflowAllowed": false,
+    "surfaceSpecificVerificationManifestAllowed": true,
+    "newSurfaceRequiresDeploymentWorkflowMutation": false,
+    "newSurfaceRequiresCommittedVerificationManifest": true
   },
   "rules": [
     "MERGE_IS_NOT_DEPLOYMENT",
     "DEPLOYMENT_IS_NOT_VERIFIED_LIVE_RELEASE",
     "BOUNDED_PAGE_RELEASES_MUST_NOT_ESCALATE_TO_RUNTIME_GOVERNANCE_WITHOUT_RUNTIME_OR_AUTHORITY_DELTA",
-    "DO_NOT_USE_DUMMY_COMMITS_RELEASE_BRANCH_NUDGES_OR_CACHE_CHURN_TO_TRIGGER_PUBLICATION",
-    "ONE_EXPLICIT_DEPLOYMENT_AUTHORITY",
-    "ONE_EXACT_HEAD_LIVE_RECEIPT"
+    "DO_NOT_USE_DUMMY_COMMITS_RELEASE_BRANCH_NUDGES_CACHE_CHURN_OR_PUSH_TRIGGERED_PUBLICATION",
+    "ONE_EXPLICIT_DEPLOYMENT_AUTHORITY_FOR_ALL_PUBLIC_SURFACES",
+    "ONE_EXACT_HEAD_LIVE_RECEIPT",
+    "PUBLIC_RELEASE_REQUIRES_SURFACE_SPECIFIC_BYTE_PROOF",
+    "PUBLIC_RUNTIME_RELEASE_REQUIRES_DECLARED_RUNTIME_PROOF",
+    "NO_PROJECT_ROOM_MAY_INVENT_A_PARALLEL_PUBLICATION_WORKFLOW"
   ]
 }

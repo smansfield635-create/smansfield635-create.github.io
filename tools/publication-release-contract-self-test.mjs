@@ -8,11 +8,15 @@ const contractPath = '.github/ai-router/publication-release-contract.v1.json';
 const aiPath = 'AI_ENTRYPOINT.json';
 const compassPath = '.github/ai-router/projects/compass/entrypoint.v1.json';
 const workflowPath = '.github/workflows/pages-direct-deploy.yml';
+const surfaceSchemaPath = '.github/ai-router/publication-surfaces/schema.v1.json';
+const audraliaSurfacePath = '.github/ai-router/publication-surfaces/audralia.json';
 
 const contract = readJson(contractPath);
 const ai = readJson(aiPath);
 const compass = readJson(compassPath);
 const workflow = readText(workflowPath);
+const surfaceSchema = readJson(surfaceSchemaPath);
+const audralia = readJson(audraliaSurfacePath);
 
 const boundedSequence = 'APPROVED_COMMIT>EXPLICIT_DEPLOYMENT>LIVE_EXACT_HEAD_VERIFICATION';
 const runtimeSequence = 'APPLICABLE_GOVERNANCE_AND_QUALIFICATION>APPROVED_COMMIT>EXPLICIT_DEPLOYMENT>LIVE_EXACT_HEAD_VERIFICATION';
@@ -24,7 +28,12 @@ assert(contract.releaseClasses?.BOUNDED_PAGE_RELEASE?.canonicalOperationIntakeRe
 assert(contract.releaseClasses?.RUNTIME_OR_NEW_DEVELOPMENT?.requiredSequence?.join('>') === runtimeSequence, 'runtime release sequence drifted');
 assert(contract.releaseClasses?.RUNTIME_OR_NEW_DEVELOPMENT?.canonicalOperationIntakeRequired === true, 'runtime/new development must require canonical intake');
 assert(contract.deployment?.workflow === workflowPath, 'deployment workflow binding drifted');
-assert(contract.deployment?.input === 'target_sha', 'deployment input must remain target_sha');
+assert(contract.deployment?.inputs?.join('>') === 'target_sha>surface_id', 'deployment inputs must remain target_sha and surface_id');
+assert(contract.deployment?.surfaceManifestRoot === '.github/ai-router/publication-surfaces/', 'surface manifest root drifted');
+assert(contract.universality?.scope === 'ALL_PUBLIC_SURFACES_IN_REPOSITORY', 'publication scope is not universal');
+assert(contract.universality?.projectSpecificDeploymentWorkflowAllowed === false, 'project-specific publication workflows must remain forbidden');
+assert(contract.universality?.newSurfaceRequiresDeploymentWorkflowMutation === false, 'new public surfaces must not require workflow mutation');
+assert(contract.verification?.surfaceSpecificProofRequired === true, 'surface-specific proof must remain mandatory');
 assert(contract.verification?.successResult === 'LIVE_EXACT_HEAD_VERIFIED', 'live success result drifted');
 assert(contract.verification?.failureResult === 'DEPLOYMENT_NOT_PROVEN', 'live failure result drifted');
 
@@ -36,18 +45,24 @@ assert(ai.operationIntakeGate?.notRequiredForMutationClasses?.includes('BOUNDED_
 
 assert(compass.procedures?.publicationReleaseContract === contractPath, 'Compass entry point is not bound to release contract');
 assert(compass.githubActionsExecution?.deploymentWorkflow === workflowPath, 'Compass deployment workflow drifted');
-assert(compass.githubActionsExecution?.deploymentInput === 'target_sha', 'Compass deployment input drifted');
+assert(compass.githubActionsExecution?.deploymentInput === 'target_sha', 'Compass target SHA deployment input drifted');
 assert(compass.githubActionsExecution?.deploymentSuccessResult === 'LIVE_EXACT_HEAD_VERIFIED', 'Compass deployment success result drifted');
 assert(compass.releaseClassification?.BOUNDED_PAGE_RELEASE?.requiredClosure?.join('>') === boundedSequence, 'Compass bounded release closure drifted');
 assert(compass.releaseClassification?.BOUNDED_PAGE_RELEASE?.canonicalIntakeRequired === false, 'Compass bounded release must not require canonical intake');
 assert(compass.releaseClassification?.RUNTIME_OR_NEW_DEVELOPMENT?.requiredClosure?.join('>') === runtimeSequence, 'Compass runtime release closure drifted');
-assert(compass.releaseClassification?.RUNTIME_OR_NEW_DEVELOPMENT?.canonicalIntakeRequired === true, 'Compass runtime release must require canonical intake');
+assert(compass.releaseClassification?.RUNTIME_OR_NEW_DEVELOPMENT?.canonicalIntakeRequired === true, 'Compass runtime/new development must require canonical intake');
+
+assert(surfaceSchema.$id === 'PUBLICATION_SURFACE_VERIFICATION_v1', 'surface verification schema mismatch');
+assert(audralia.schema === 'PUBLICATION_SURFACE_VERIFICATION_v1', 'Audralia surface manifest schema mismatch');
+assert(audralia.surfaceId === 'audralia', 'Audralia surface id mismatch');
+assert(audralia.checks?.length >= 1, 'Audralia requires static public verification checks');
 
 for (const required of [
-  'workflow_dispatch:', 'target_sha:', 'pages: write', 'id-token: write',
+  'workflow_dispatch:', 'target_sha:', 'surface_id:', 'pages: write', 'id-token: write',
   'actions/checkout@v4', 'actions/configure-pages@v5',
   'actions/upload-pages-artifact@v3', 'actions/deploy-pages@v4',
-  '.well-known/dgb-release.json', 'LIVE_EXACT_HEAD_VERIFIED', 'DEPLOYMENT_NOT_PROVEN'
+  '.well-known/dgb-release.json', '.github/ai-router/publication-surfaces/',
+  'PUBLICATION_SURFACE_VERIFICATION_v1', 'LIVE_EXACT_HEAD_VERIFIED', 'DEPLOYMENT_NOT_PROVEN'
 ]) assert(workflow.includes(required), `deployment workflow missing required token: ${required}`);
 
 for (const forbidden of [
@@ -57,12 +72,15 @@ for (const forbidden of [
 ]) assert(!workflow.includes(forbidden), `deployment workflow contains retired or unauthorized release behavior: ${forbidden}`);
 
 console.log(JSON.stringify({
-  schema: 'PUBLICATION_RELEASE_CONTRACT_SELF_TEST_RECEIPT_v1',
+  schema: 'PUBLICATION_RELEASE_CONTRACT_SELF_TEST_RECEIPT_v2',
   result: 'PASS',
   releaseSequence: contract.releaseClasses.BOUNDED_PAGE_RELEASE.requiredSequence,
   runtimeSequence: contract.releaseClasses.RUNTIME_OR_NEW_DEVELOPMENT.requiredSequence,
   workflow: workflowPath,
   workflowDispatchOnly: true,
   pagesAdministrationMutation: false,
+  universalSurfaceVerification: true,
+  surfaceManifestRoot: contract.deployment.surfaceManifestRoot,
+  registeredProofSample: audralia.surfaceId,
   verification: contract.verification.successResult
 }, null, 2));

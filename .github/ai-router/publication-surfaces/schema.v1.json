@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "title": "Public surface verification manifest",
+  "type": "object",
+  "required": ["schema", "surfaceId", "checks"],
+  "properties": {
+    "schema": {"const": "PUBLICATION_SURFACE_VERIFICATION_v1"},
+    "surfaceId": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,79}$"},
+    "description": {"type": "string"},
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["path", "includes", "excludes"],
+        "properties": {
+          "path": {"type": "string", "pattern": "^/"},
+          "includes": {"type": "array", "items": {"type": "string"}},
+          "excludes": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "required": ["enabled", "path"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "path": {"type": "string", "pattern": "^/"},
+        "timeoutMs": {"type": "integer", "minimum": 1000, "maximum": 120000},
+        "readySelector": {"type": "string"},
+        "readyAttribute": {
+          "type": "object",
+          "required": ["selector", "name", "contains"],
+          "properties": {
+            "selector": {"type": "string"},
+            "name": {"type": "string"},
+            "contains": {"type": "string"}
+          },
+          "additionalProperties": false
+        },
+        "failOnConsoleErrors": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -28,12 +28,25 @@ jobs:
           fetch-depth: 1
       - name: Verify shared entitlement engine
         run: node preview/bt4/entitlement-v1/verify-entitlement-preview.v1.mjs
+      - name: Diagnose Pages transport controls
+        shell: bash
+        run: |
+          set -euo pipefail
+          for URL in \
+            'https://diamondgatebridge.com/preview/h-earth/c3/e7259d40726a7890b34140a9d4154232bf2d91f6/' \
+            'https://smansfield635-create.github.io/preview/h-earth/c3/e7259d40726a7890b34140a9d4154232bf2d91f6/' \
+            'https://diamondgatebridge.com/preview/bt4/entitlement-v1/' \
+            'https://smansfield635-create.github.io/preview/bt4/entitlement-v1/'
+          do
+            CODE="$(curl -sS -o /tmp/body -w '%{http_code}' --max-time 15 "$URL" || true)"
+            echo "$CODE $URL"
+          done
       - name: Verify public Pages transport
         shell: bash
         run: |
           set -euo pipefail
           URL='https://diamondgatebridge.com/preview/bt4/entitlement-v1/'
-          for i in {1..18}; do
+          for i in {1..12}; do
             BODY="$(curl -fsSL --max-time 15 "$URL" || true)"
             if grep -q 'BT4 SERVED-STATE EXPERIMENT' <<<"$BODY" && grep -q 'entitlement-engine.v1.mjs' <<<"$BODY"; then
               echo 'PUBLIC_PREVIEW_TRANSPORT=PASS'

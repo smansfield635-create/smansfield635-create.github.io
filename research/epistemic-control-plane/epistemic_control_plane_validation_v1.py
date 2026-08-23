@@ -85,6 +85,7 @@ class EvidenceState:
     causal_design: bool = False
     replicated: bool = False
     generalized: bool = False
+    contradiction_targets: tuple[str, ...] = ()
 
     def normalized_replication_depth(self) -> ReplicationDepth:
         if self.replication_depth > ReplicationDepth.NONE:
@@ -100,22 +101,35 @@ class EvidenceState:
             return GeneralizationBreadth.SAME_DOMAIN_TRANSFER
         return GeneralizationBreadth.NONE
 
+    def contradiction_blocks_scope(self, scope: str) -> bool:
+        if self.contradiction_clear:
+            return False
+        # Backward-compatible fail-closed law: an unresolved contradiction
+        # without a target remains globally blocking.
+        if not self.contradiction_targets:
+            return True
+        return scope in self.contradiction_targets
 
-def fail_closed(e: EvidenceState) -> bool:
+
+def integrity_fail_closed(e: EvidenceState) -> bool:
     required = (
         e.design_frozen,
         e.execution_verified,
         e.evidence_complete,
         e.provenance_verified,
         e.threshold_locked,
-        e.contradiction_clear,
         e.qualification_passed,
     )
     return not all(required)
 
 
+def fail_closed(e: EvidenceState, scope: str | None = None) -> bool:
+    claim_scope = e.scope if scope is None else scope
+    return integrity_fail_closed(e) or e.contradiction_blocks_scope(claim_scope)
+
+
 def entitlement(e: EvidenceState) -> ClaimEntitlement:
-    if fail_closed(e):
+    if fail_closed(e, e.scope):
         return ClaimEntitlement(EvidenceMode.DESCRIPTIVE, scope=e.scope)
 
     mode = e.evidence_mode
@@ -134,6 +148,8 @@ def entitlement(e: EvidenceState) -> ClaimEntitlement:
 
 
 def authorize(e: EvidenceState, claim: ClaimEntitlement) -> bool:
+    if fail_closed(e, claim.scope):
+        return claim == ClaimEntitlement(EvidenceMode.DESCRIPTIVE, scope=claim.scope)
     allowed = entitlement(e)
     if claim.scope != allowed.scope:
         return False
@@ -192,6 +208,18 @@ def main():
     contradicted = EvidenceState(
         True, True, True, True, True, False, True,
         evidence_mode=EvidenceMode.PREDICTIVE,
+    )
+    localized_other = EvidenceState(
+        True, True, True, True, True, False, True,
+        evidence_mode=EvidenceMode.PREDICTIVE,
+        scope="SURROGATE_PREDICTION",
+        contradiction_targets=("DIRECT_CLINICAL_EFFICACY",),
+    )
+    localized_same = EvidenceState(
+        True, True, True, True, True, False, True,
+        evidence_mode=EvidenceMode.PREDICTIVE,
+        scope="DIRECT_CLINICAL_EFFICACY",
+        contradiction_targets=("DIRECT_CLINICAL_EFFICACY",),
     )
 
     tests = [
@@ -261,7 +289,7 @@ def main():
             fail_closed(threshold_drift) and report_level(threshold_drift) == ClaimLevel.OBSERVED,
         ),
         run_case(
-            "contradiction_contracts_entitlement",
+            "unlocalized_contradiction_retains_global_fail_closed_behavior",
             fail_closed(contradicted) and report_level(contradicted) == ClaimLevel.OBSERVED,
         ),
         run_case(
@@ -281,12 +309,20 @@ def main():
                 )
             ) == ClaimLevel.ASSOCIATION_SUPPORTED,
         ),
+        run_case(
+            "contradiction_on_other_target_does_not_collapse_current_entitlement",
+            report_level(localized_other) == ClaimLevel.PREDICTIVE_INCREMENT_SUPPORTED,
+        ),
+        run_case(
+            "contradiction_on_current_target_contracts_current_entitlement",
+            report_level(localized_same) == ClaimLevel.OBSERVED,
+        ),
     ]
 
     passed = sum(t["pass"] for t in tests)
     verdict = "OPERATIONAL_CORE_CONFIRMED" if passed == len(tests) else "FAIL"
     result = {
-        "instrument": "EPISTEMIC_CONTROL_PLANE_v1_MULTIDIMENSIONAL_ENTITLEMENT",
+        "instrument": "EPISTEMIC_CONTROL_PLANE_v1_TARGET_LOCALIZED_CONTRADICTION",
         "tests": tests,
         "passed": passed,
         "total": len(tests),
@@ -296,8 +332,9 @@ def main():
             "replication_depth",
             "generalization_breadth",
             "scope",
+            "contradiction_target",
         ],
-        "scope": "formal operational core only; external scientific validation and novelty remain unclaimed",
+        "scope": "formal operational core only; external scientific validation and novelty remain bounded",
     }
     print(json.dumps(result, indent=2))
     with open("epistemic_control_plane_validation_v1.json", "w", encoding="utf-8") as f:

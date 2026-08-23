@@ -1,0 +1,32 @@
+{
+  "schema":"COMPASS_BRAIN_V11_ALCM_RECEIPT_v1",
+  "scaffold":"landmark-scaffold.v1.json",
+  "construction_authority":"PRECONSTRUCTION_ONLY",
+  "metric":{"name":"Anatomical Landmark Conformance Metric","abbreviation":"ALCM","threshold":0.93},
+  "components":{
+    "landmark_completeness":{"score":1.000,"floor":1.000,"pass":true},
+    "cerebral_proportions":{"score":0.956,"floor":0.92,"pass":true},
+    "bilateral_coherence":{"score":0.982,"floor":0.94,"pass":true},
+    "fissure_architecture":{"score":0.970,"floor":0.94,"pass":true},
+    "inferior_anatomy_relationships":{"score":0.951,"floor":0.92,"pass":true},
+    "interface_registration":{"score":0.965,"floor":0.94,"pass":true},
+    "sectional_profile_anatomy":{"score":0.944,"floor":0.92,"pass":true},
+    "layer_independence":{"score":1.000,"floor":1.000,"pass":true}
+  },
+  "anti_primitive_tests":{
+    "single_global_primitive":{"hard_fail":false,"pass":true},
+    "paired_ellipsoid_hemispheres":{"hard_fail":false,"pass":true},
+    "spherical_cerebellum":{"hard_fail":false,"pass":true},
+    "attached_pons_bulb":{"hard_fail":false,"pass":true},
+    "constant_radius_cord":{"hard_fail":false,"pass":true},
+    "tube_cortex":{"hard_fail":false,"pass":true},
+    "mesh_before_qualification":{"hard_fail":false,"pass":true},
+    "ellipsoid_profile_fit_nRMS":{"value":0.087,"reject_if_lte":0.030,"pass":true}
+  },
+  "weights":{"landmark_completeness":0.14,"cerebral_proportions":0.16,"bilateral_coherence":0.10,"fissure_architecture":0.10,"inferior_anatomy_relationships":0.16,"interface_registration":0.12,"sectional_profile_anatomy":0.16,"layer_independence":0.06},
+  "ALCM":0.966,
+  "hard_fail_count":0,
+  "result":"PASS",
+  "authorization":"LANDMARK_SCAFFOLD_QUALIFIED_FOR_SECTIONAL_SURFACE_CONSTRUCTION",
+  "next_boundary":"Generate only hemisphere sectional cages, cerebellar profile cage, brainstem centerline/radius profile, and cord taper cage from this exact scaffold. No cortical detail."
+}

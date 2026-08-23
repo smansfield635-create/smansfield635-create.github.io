@@ -22,24 +22,33 @@ function evaluate(label, state, expected) {
   assert(served.served === expected, `${label}: served expected ${expected}, observed ${served.served}`);
   return { label, expected, entitlement: entitlement.state, served: served.served, blocked: served.blocked, reason: entitlement.reason };
 }
+function manifestPathToRepoPath(publicPath) {
+  const rel = publicPath.replace(/^\/+/, '');
+  return publicPath.endsWith('/') ? `${rel}index.html` : rel;
+}
 
 // Lane A: bind to the real Audralia world/runtime publication contract.
 const audraliaManifestPath = '.github/ai-router/publication-surfaces/audralia.json';
-const audraliaIndexPath = 'showroom/globe/audralia/index.html';
 const manifest = readJson(audraliaManifestPath);
-const audraliaIndex = read(audraliaIndexPath);
 
 assert(manifest.schema === 'PUBLICATION_SURFACE_VERIFICATION_v1', 'Audralia manifest schema mismatch');
 assert(manifest.surfaceId === 'audralia', 'Audralia surface identity mismatch');
 assert(manifest.runtime?.enabled === true, 'Audralia runtime verification is not enabled');
 assert(manifest.runtime?.path === '/showroom/globe/audralia/', 'Audralia runtime path mismatch');
 assert(typeof manifest.runtime?.readySelector === 'string' && manifest.runtime.readySelector.length > 0, 'Audralia runtime ready selector missing');
-for (const check of manifest.checks || []) {
-  if (check.path === '/showroom/globe/audralia/') {
-    for (const marker of check.includes || []) {
-      assert(audraliaIndex.includes(marker), `Audralia source missing required manifest marker: ${marker}`);
-    }
+assert(Array.isArray(manifest.checks) && manifest.checks.length > 0, 'Audralia manifest has no static checks');
+
+const validatedManifestPaths = [];
+for (const check of manifest.checks) {
+  const repoPath = manifestPathToRepoPath(check.path);
+  const source = read(repoPath);
+  for (const marker of check.includes || []) {
+    assert(source.includes(marker), `Audralia manifest include missing at ${check.path}: ${marker}`);
   }
+  for (const marker of check.excludes || []) {
+    assert(!source.includes(marker), `Audralia manifest exclusion violated at ${check.path}: ${marker}`);
+  }
+  validatedManifestPaths.push({ publicPath: check.path, repoPath, includes: (check.includes || []).length, excludes: (check.excludes || []).length });
 }
 
 const worldBaseline = { epoch: 7, provenance: true, reproduction: true, evidence: 'supporting', authority: true, receiptEpoch: 7 };
@@ -82,7 +91,7 @@ const result = {
   schema: 'BT4_WORLD_DIAGNOSTIC_ENTITLEMENT_INVARIANCE_RESULT_v1',
   kernel: 'preview/bt4/entitlement-v1/entitlement-engine.v1.mjs',
   objectBindings: {
-    worldRuntime: { manifest: audraliaManifestPath, source: audraliaIndexPath, surfaceId: manifest.surfaceId, runtime: manifest.runtime },
+    worldRuntime: { manifest: audraliaManifestPath, surfaceId: manifest.surfaceId, runtime: manifest.runtime, validatedManifestPaths },
     diagnosticQualification: { source: diagnosticPath, readOnlyProductionAuthority: true }
   },
   worldResults,

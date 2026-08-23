@@ -1,51 +1,40 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "compass-brain-v9",
-  "description": "Isolated Compass Brain V9 free-spline anatomy inspection surface; does not integrate with the accepted live capability carousel.",
+  "description": "Isolated Compass Brain V9 anatomical-density free-spline inspection surface; does not integrate with the accepted live capability carousel.",
   "checks": [
     {
       "path": "/inspection/compass/brain-v9/",
       "includes": [
         "Volumetric brain V9",
         "Compass · Brain successor · isolated",
-        "No envelope",
+        "Anatomical density",
         "Independent XYZ splines",
         "data-capability-brain-v9",
         "/assets/compass/capability-object-stage.js?v=1",
-        "/assets/compass/capability-object-brain-v9.js?v=4"
+        "/assets/compass/capability-object-brain-v9.js?v=5"
       ],
-      "excludes": [
-        "compass.capability-carousel.js",
-        "data-capability-orbit"
-      ]
+      "excludes": ["compass.capability-carousel.js","data-capability-orbit"]
     },
     {
       "path": "/assets/compass/capability-object-brain-v9.js",
       "includes": [
-        "COMPASS_BRAIN_V9_FREE_SPLINE_ANATOMY_v1",
+        "COMPASS_BRAIN_V9_ANATOMICAL_DENSITY_v2",
         "APPROVED_HIGH_FIDELITY_ANATOMICAL_REFERENCE",
         "TRUE_WEBGL_GEOMETRY",
-        "independent-xyz-gyrus-splines",
-        "cerebellar-folia-splines",
-        "NO_ENVELOPE_INDEPENDENT_3D_SPLINES",
-        "medulla-tract-bundle"
+        "precentral-gyrus",
+        "postcentral-gyrus",
+        "central-sulcus-gap",
+        "lateral-sulcus-gap",
+        "narrow-medial-fissure",
+        "dense-cerebellar-folia",
+        "NO_ENVELOPE_ANATOMICAL_SPLINE_TOPOLOGY"
       ],
-      "excludes": [
-        "function hemi(",
-        "function ellipsoid(",
-        "cerebellarLobe(",
-        "crown=M.sqrt",
-        "M.pow(z/.93,2)",
-        "M.pow(z/.94,2)"
-      ]
+      "excludes": ["function hemi(","function ellipsoid(","cerebellarLobe(","crown=M.sqrt","M.pow(z/.93,2)","M.pow(z/.94,2)"]
     },
     {
       "path": "/assets/compass/capability-object-stage.js",
-      "includes": [
-        "CAPABILITY_OBJECT_STAGE_v1",
-        "objectDepthModel",
-        "TRUE_WEBGL_GEOMETRY"
-      ],
+      "includes": ["CAPABILITY_OBJECT_STAGE_v1","objectDepthModel","TRUE_WEBGL_GEOMETRY"],
       "excludes": []
     }
   ],
@@ -56,7 +45,7 @@
     "readyAttribute": {
       "selector": "[data-capability-brain-v9]",
       "name": "data-brain-renderer",
-      "contains": "COMPASS_BRAIN_V9_FREE_SPLINE_ANATOMY_v1"
+      "contains": "COMPASS_BRAIN_V9_ANATOMICAL_DENSITY_v2"
     },
     "failOnConsoleErrors": true
   }

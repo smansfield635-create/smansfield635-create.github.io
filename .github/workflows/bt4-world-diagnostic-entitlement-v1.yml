@@ -1,0 +1,23 @@
+name: BT4 World + Diagnostic Entitlement v1
+
+on:
+  pull_request:
+    paths:
+      - 'research/bt4/**'
+      - 'preview/bt4/entitlement-v1/**'
+      - '.github/ai-router/publication-surfaces/audralia.json'
+      - 'showroom/globe/audralia/index.html'
+      - 'showroom/globe/audralia/diagnostic/index.inspection.authority.js'
+      - '.github/workflows/bt4-world-diagnostic-entitlement-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  invariance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify real-object world/runtime and diagnostic entitlement invariants
+        run: node research/bt4/verify-world-diagnostic-entitlement.v1.mjs

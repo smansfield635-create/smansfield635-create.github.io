@@ -32,39 +32,61 @@ jobs:
           cat /tmp/h-earth-server.log
           exit 1
 
-      - name: Capture 60 final browser-composited cloud models
+      - name: Install browser controller
+        run: |
+          npm install --no-save playwright-core@1.55.0 >/tmp/playwright-install.log 2>&1
+
+      - name: Capture 60 deterministic planetary final-screen models
         run: |
           set -euo pipefail
-          CHROME="$(command -v google-chrome || command -v chromium-browser || command -v chromium || true)"
+          export CHROME="$(command -v google-chrome || command -v chromium-browser || command -v chromium || true)"
           if [ -z "$CHROME" ]; then
             echo 'No Chrome/Chromium binary found on runner.' >&2
             exit 1
           fi
           mkdir -p /tmp/cloud-sweep
-          : > /tmp/cloud-sweep/manifest.tsv
-          for model in $(seq 1 60); do
-            padded=$(printf '%02d' "$model")
-            "$CHROME" \
-              --headless=new \
-              --no-sandbox \
-              --disable-dev-shm-usage \
-              --use-angle=swiftshader \
-              --enable-unsafe-swiftshader \
-              --ignore-gpu-blocklist \
-              --hide-scrollbars \
-              --window-size=1280,900 \
-              --virtual-time-budget=9000 \
-              --screenshot="/tmp/cloud-sweep/model-${padded}.png" \
-              "http://127.0.0.1:4173/showroom/globe/audralia/?cloudModel=${model}&fap1Quality=capture" \
-              >/tmp/cloud-sweep/model-${padded}.stdout 2>/tmp/cloud-sweep/model-${padded}.stderr || true
-            if [ ! -s "/tmp/cloud-sweep/model-${padded}.png" ]; then
-              echo "MODEL ${model} SCREENSHOT_MISSING" >&2
-              exit 1
-            fi
-            bytes=$(stat -c%s "/tmp/cloud-sweep/model-${padded}.png")
-            printf '%s\t%s\n' "$model" "$bytes" >> /tmp/cloud-sweep/manifest.tsv
-          done
+          cat > /tmp/cloud-sweep/capture.mjs <<'EOF'
+          import { chromium } from 'playwright-core';
+          import fs from 'node:fs/promises';
+          const browser=await chromium.launch({
+            executablePath:process.env.CHROME,
+            headless:true,
+            args:['--no-sandbox','--disable-dev-shm-usage','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']
+          });
+          const context=await browser.newContext({viewport:{width:1280,height:900},deviceScaleFactor:1});
+          const page=await context.newPage();
+          const rows=['model\twidth\tbroken\tsupport\tbytes\tcameraDistance\tviewScale'];
+          for(let model=1;model<=60;model++){
+            const padded=String(model).padStart(2,'0');
+            await page.goto(`http://127.0.0.1:4173/showroom/globe/audralia/?cloudModel=${model}&fap1Quality=capture`,{waitUntil:'domcontentloaded',timeout:120000});
+            await page.waitForFunction(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer,{timeout:120000});
+            await page.waitForTimeout(900);
+            const evidence=await page.evaluate(()=>{
+              const receipt=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__;
+              receipt.setCameraStateForTest({yaw:-0.62,pitch:1.02,distance:5000,targetU:0,targetV:-4});
+              const tuning=window.__AUDRALIA_FAP1_ORBITAL_SUPPORT_TUNING__;
+              const snapshot=receipt.renderer.getSnapshot();
+              return {
+                width:tuning?.parameterization?.widthOuter ?? null,
+                broken:tuning?.parameterization?.brokenLow ?? null,
+                support:tuning?.parameterization?.supportScale ?? null,
+                cameraDistance:snapshot.distance,
+                viewScale:snapshot.viewScale
+              };
+            });
+            await page.waitForTimeout(700);
+            const path=`/tmp/cloud-sweep/model-${padded}.png`;
+            await page.screenshot({path,fullPage:true});
+            const stat=await fs.stat(path);
+            rows.push([model,evidence.width,evidence.broken,evidence.support,stat.size,evidence.cameraDistance,evidence.viewScale].join('\t'));
+          }
+          await fs.writeFile('/tmp/cloud-sweep/manifest.tsv',rows.join('\n')+'\n','utf8');
+          await context.close();
+          await browser.close();
+          EOF
+          node /tmp/cloud-sweep/capture.mjs
           test "$(find /tmp/cloud-sweep -name 'model-*.png' | wc -l)" -eq 60
+          test "$(wc -l < /tmp/cloud-sweep/manifest.tsv)" -eq 61
 
       - name: Preserve final-screen sweep
         if: always()
@@ -75,4 +97,5 @@ jobs:
             /tmp/cloud-sweep/model-*.png
             /tmp/cloud-sweep/manifest.tsv
             /tmp/h-earth-server.log
+            /tmp/playwright-install.log
           if-no-files-found: error

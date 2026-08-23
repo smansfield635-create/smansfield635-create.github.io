@@ -1,0 +1,64 @@
+name: Capability Stability Candidate 1733 Qualification
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/capability-stability-candidate-1733.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Serve exact candidate
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/capability-server.log 2>&1 &
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/capability-server.log
+          exit 1
+      - name: Qualify centered settlement object balance and continuity
+        run: |
+          cat > .capability-candidate-verify.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          const browser=await chromium.launch({headless:true});
+          const sizes=[{name:'phone',w:390,h:844},{name:'tablet',w:960,h:1536},{name:'desktop',w:1440,h:1000}];
+          const receipts=[];
+          for(const s of sizes){
+            const page=await browser.newPage({viewport:{width:s.w,height:s.h}});
+            const errors=[];page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+            await page.goto('http://127.0.0.1:4173/?candidate=1733',{waitUntil:'networkidle',timeout:120000});
+            await page.waitForSelector('.compass-capability-orbit[data-continuity-contract="COMPASS_CAPABILITY_CONTINUITY_v1"]');
+            await page.waitForTimeout(600);
+            const measure=()=>page.evaluate(()=>{
+              const orbit=document.querySelector('.compass-capability-orbit');const stage=orbit.querySelector('.compass-object-stage');const sr=stage.getBoundingClientRect();
+              const active=orbit.querySelector('.compass-orbit-plaque[data-active="true"]');const ar=active.getBoundingClientRect();const canvas=active.querySelector('canvas')?.getBoundingClientRect();
+              const centerError=Math.abs((ar.left+ar.width/2)-(sr.left+sr.width/2));
+              return {id:active.dataset.capability,centerError,plaque:{w:ar.width,h:ar.height},canvas:canvas?{w:canvas.width,h:canvas.height}:null,activeCount:orbit.querySelectorAll('.compass-orbit-plaque[data-active="true"]').length,overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,ringTransition:getComputedStyle(orbit.querySelector('.compass-object-ring')).transitionDuration,stability:globalThis.DGB_COMPASS_GEN1591_BOUNDS?.capabilityStability||null,cardinals:document.querySelectorAll('[data-compass-cardinal]').length,readableCardinals:document.querySelectorAll('[data-compass-cardinal].is-readable-cardinal').length};
+            });
+            const states=[];const orbit=page.locator('.compass-capability-orbit');await orbit.focus();
+            states.push(await measure());
+            for(let i=0;i<3;i++){await page.keyboard.press('ArrowRight');await page.waitForTimeout(20);states.push(await measure());}
+            const distinct=[...new Set(states.slice(1).map(x=>x.id))];
+            if(distinct.length!==3)throw new Error(`${s.name}: incomplete cycle ${distinct}`);
+            for(const st of states){if(st.centerError>4)throw new Error(`${s.name}: committed plaque not centered ${JSON.stringify(st)}`);if(st.activeCount!==1)throw new Error(`${s.name}: active count ${st.activeCount}`);if(st.overflow>2)throw new Error(`${s.name}: overflow ${st.overflow}`);if(st.ringTransition!=='0s')throw new Error(`${s.name}: ring transition still active ${st.ringTransition}`);if(st.stability!=='COMMITTED_SELECTION_SNAPS_FRONT_TROPHY_HEIGHT_NORMALIZED')throw new Error(`${s.name}: stability receipt missing`);if(st.cardinals!==4||st.readableCardinals!==1)throw new Error(`${s.name}: Compass cardinal regression`);}
+            const byId=Object.fromEntries(states.slice(1).map(x=>[x.id,x]));
+            const trophy=byId.awards?.canvas?.h,brain=byId.diagnostic?.canvas?.h,house=byId.house?.canvas?.h;
+            if(!trophy||!brain||!house)throw new Error(`${s.name}: object canvases missing`);
+            const max=Math.max(trophy,brain,house),min=Math.min(trophy,brain,house);if(max-min>8)throw new Error(`${s.name}: object height imbalance ${JSON.stringify({trophy,brain,house})}`);
+            await page.evaluate(()=>{globalThis.__capEvents=[];document.addEventListener('compass:capability-change',e=>globalThis.__capEvents.push(e.detail));});
+            const box=await page.locator('.compass-object-stage').boundingBox();
+            await page.mouse.move(box.x+box.width*.72,box.y+box.height*.42);await page.mouse.down();await page.mouse.move(box.x+box.width*.20,box.y+box.height*.42,{steps:12});await page.mouse.up();await page.waitForTimeout(220);
+            const drag=await page.evaluate(()=>({events:globalThis.__capEvents,active:document.querySelector('.compass-orbit-plaque[data-active="true"]')?.dataset.capability,center:(()=>{const stage=document.querySelector('.compass-object-stage').getBoundingClientRect(),a=document.querySelector('.compass-orbit-plaque[data-active="true"]').getBoundingClientRect();return Math.abs((a.left+a.width/2)-(stage.left+stage.width/2));})()}));
+            if(!drag.events.some(e=>e.phase==='dragging')||!drag.events.some(e=>e.phase==='settled')||drag.center>4)throw new Error(`${s.name}: drag continuity failed ${JSON.stringify(drag)}`);
+            if(errors.length)throw new Error(`${s.name}: browser errors ${errors.join(' | ')}`);
+            receipts.push({size:s.name,states,objectHeights:{trophy,brain,house},drag});await page.close();
+          }
+          console.log('CAPABILITY_STABILITY_CANDIDATE_PASS '+JSON.stringify(receipts));await browser.close();
+          NODE
+          node ./.capability-candidate-verify.mjs

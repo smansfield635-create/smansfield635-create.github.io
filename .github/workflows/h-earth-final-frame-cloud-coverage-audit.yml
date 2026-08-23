@@ -34,7 +34,8 @@ jobs:
 
       - name: Install browser controller
         run: |
-          npm install --no-save playwright-core@1.55.0 >/tmp/playwright-install.log 2>&1
+          mkdir -p /tmp/cloud-sweep
+          npm install --prefix /tmp/cloud-sweep --no-save playwright-core@1.55.0 >/tmp/playwright-install.log 2>&1
 
       - name: Capture 60 deterministic planetary final-screen models
         run: |

@@ -111,9 +111,6 @@ vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   ice+=cycloneLow*.34+outflow*.97;
   precip+=cycloneLow*.95;
 
-  // Integrated orbital coverage systems. These are part of the same canonical
-  // FAP1 density function and therefore inherit the exact same volumetric ray
-  // march, cloud-interior traversal, lighting, morphology helpers and LOD path.
   vec2 oc1=fap1Local(lat,lon,.30,-2.78+t*.010);
   float oc1e=fap1Ellipse(oc1,vec2(0.0),vec2(.78,.30),-.20);
   float oc1n=mix(.30,1.0,fap1CloudBreak(radial,t,15.0,.30,.67));
@@ -191,8 +188,6 @@ vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   float oc14m=oc14e*fap1Band(h,31.0,70.0)*smoothstep(.49,.72,oc14cells)*.74;
   mass+=oc14m;precip+=oc14m*.22;
 
-  // Broken high-cloud bridge. It remains within the same FAP1 volume and is
-  // deliberately nonuniform so clear pockets survive without hemispheric voids.
   float bridgeWave=.5+.5*sin(lon*3.0 + sin(lat*4.0)*1.35 + t*.42);
   float bridgeNoise=fap1CloudBreak(radial,t,12.0,.27,.63);
   float bridgeLat=(1.0-smoothstep(.92,1.18,abs(lat)));
@@ -238,6 +233,7 @@ Object.defineProperty(window,'__AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION__',
   targetVisibleOrbitalCoverage:0.70,
   integratedAddedSystems:14,
   singleCanonicalFAP1DensityField:true,
+  secondaryCoveragePatchStage:false,
   visibleUpgrade:Object.freeze({
     explicitClearAir:true,
     highIceField:true,

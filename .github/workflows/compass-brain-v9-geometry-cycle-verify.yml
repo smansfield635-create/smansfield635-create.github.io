@@ -82,7 +82,9 @@ jobs:
             await page.waitForFunction(b=>Number(document.querySelector('[data-capability-brain-v9]').dataset.objectFrames||0)>b,{},before);
             await new Promise(r=>setTimeout(r,650));
             const file=`geometry-evidence/${view}.png`;
-            await page.locator('.stage').screenshot({path:file});
+            const stage=await page.$('.stage');
+            if(!stage)throw Error('inspection stage unavailable');
+            await stage.screenshot({path:file});
             evidence.push({view,file,frames:await page.$eval('[data-capability-brain-v9]',c=>Number(c.dataset.objectFrames||0))});
           }
           if(errors.length)throw Error('browser errors: '+errors.join(' | '));

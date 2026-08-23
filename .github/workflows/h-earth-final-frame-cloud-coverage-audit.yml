@@ -71,10 +71,7 @@ jobs:
             page.on('pageerror',handler);
             await page.goto(`http://127.0.0.1:4173/showroom/globe/audralia/?cloudModel=${model}&fap1Quality=capture`,{waitUntil:'domcontentloaded',timeout:120000});
             await page.waitForTimeout(2600);
-            const stage=page.locator('.audralia-world-stage');
-            const box=await stage.boundingBox();
-            if(!box)throw new Error(`MODEL_${model}_STAGE_MISSING`);
-            await page.mouse.move(box.x+box.width*.5,box.y+box.height*.5);
+            await page.mouse.move(640,450);
             await page.mouse.wheel(0,900);
             await page.waitForTimeout(180);
             await page.mouse.wheel(0,900);

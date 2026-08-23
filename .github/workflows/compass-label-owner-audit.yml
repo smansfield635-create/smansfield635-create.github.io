@@ -1,0 +1,52 @@
+name: Compass Label Owner Audit
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/compass-label-owner-audit.yml'
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Audit public Compass composite label owners
+        run: |
+          cat > /tmp/audit.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          const browser=await chromium.launch({headless:true});
+          const page=await browser.newPage({viewport:{width:960,height:1500},deviceScaleFactor:1});
+          await page.goto('https://diamondgatebridge.com/compass-composite/?audit='+Date.now(),{waitUntil:'networkidle',timeout:120000});
+          await page.waitForTimeout(4500);
+          const report=await page.evaluate(()=>{
+            const root=document.querySelector('[data-compass-root]');
+            const scene=document.querySelector('[data-compass-scene]');
+            const rows=[...document.querySelectorAll('[data-compass-cardinal], .compass-object--mirrorland, .compass-projected-room-label')].map((el,i)=>{
+              const cs=getComputedStyle(el); const rect=el.getBoundingClientRect();
+              return {
+                i,
+                kind:el.matches('[data-compass-cardinal]')?`cardinal:${el.dataset.cardinalId}`:el.matches('.compass-object--mirrorland')?'mirrorland':'projected-room',
+                className:el.className,
+                text:(el.textContent||'').replace(/\s+/g,' ').trim(),
+                visible:rect.width>0&&rect.height>0&&cs.display!=='none'&&cs.visibility!=='hidden'&&Number(cs.opacity)>0.02,
+                rect:{x:Math.round(rect.x),y:Math.round(rect.y),w:Math.round(rect.width),h:Math.round(rect.height)},
+                display:cs.display,visibility:cs.visibility,opacity:cs.opacity,
+                background:cs.backgroundColor,border:cs.borderTopColor,boxShadow:cs.boxShadow,
+                readable:el.dataset.gen1596Readable||'',
+                ariaHidden:el.getAttribute('aria-hidden'),hidden:el.hidden,
+                spans:[...el.children].map(s=>{const c=getComputedStyle(s),r=s.getBoundingClientRect();return {text:(s.textContent||'').trim(),display:c.display,visibility:c.visibility,opacity:c.opacity,w:Math.round(r.width),h:Math.round(r.height)}})
+              };
+            });
+            return {mode:root?.dataset.compassMode,readableCardinal:root?.dataset.renderedForegroundCardinal||root?.dataset.readableCardinal,scene:scene?.getBoundingClientRect().toJSON?.()||null,rows};
+          });
+          console.log('AUDIT_REPORT '+JSON.stringify(report));
+          await page.screenshot({path:'compass-label-owner-audit.png',fullPage:false});
+          await browser.close();
+          NODE
+          node /tmp/audit.mjs

@@ -2970,6 +2970,18 @@
       "scopeHash": "f8b3798a2ef5c5621a3bc56eddd55d9372cce6eef1e81db4896d43ce6f6169c8",
       "state": "ADMITTED_LOCKED"
     },
+    "f972e84b465e1b63fd935b753f376a1a79e0a9ba9d8f6335fbf084c7fae80bae": {
+      "governingHead": "f5eddec4abed869d2af1fb10570c878a209427a8",
+      "lockGeneration": 1597,
+      "lockScope": "RESEARCH/COMPASS/BRAIN-ANATOMICAL-BASIS/SOURCE-BINDING-GEN1",
+      "operationId": "ANATOMICAL_BASIS_GEN1_SOURCE_SELECTION_AND_BINDING_20260823",
+      "procedureLocatorDigest": "d4adc651793571dc5617abfc6407c7d75cb13516b43088779ec59cb8235c874e",
+      "released": false,
+      "requestDigest": "6e4f80529c123ffaa8cad2eb84c541394c8fea304783ee0b09ebc0d705d053d6",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "f972e84b465e1b63fd935b753f376a1a79e0a9ba9d8f6335fbf084c7fae80bae",
+      "state": "ADMITTED_LOCKED"
+    },
     "fb941fb311d034729a4ad8f949bf10f0473f08f64690169c0365ec59101fc34e": {
       "governingHead": "2be9f181f626251e7611a877be013feff9c10b2a",
       "lockGeneration": 490,
@@ -3010,7 +3022,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1596,
+  "lockGeneration": 1597,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

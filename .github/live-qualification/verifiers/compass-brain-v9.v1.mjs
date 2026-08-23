@@ -17,7 +17,8 @@ const browser = await puppeteer.launch({
   ]
 });
 
-const EXPECTED_RENDERER='COMPASS_BRAIN_V9_REFERENCE_REBUILD_v2';
+const EXPECTED_RENDERER='COMPASS_BRAIN_V9_GEOMETRY_G123_v12';
+const EXPECTED_PASS='G1_CEREBRAL_SILHOUETTE_FINISH__G2_LOCALIZED_SUPERIOR_LATERAL_INTEGRATION__G3_INFERIOR_CONTINUITY';
 const viewports = [
   {name:'phone',width:390,height:844,deviceScaleFactor:1},
   {name:'tablet',width:820,height:1180,deviceScaleFactor:1},
@@ -33,14 +34,14 @@ for (const vp of viewports) {
   page.on('pageerror',e=>errors.push(String(e)));
   await page.setViewport(vp);
   const t0=Date.now();
-  const res=await page.goto(`${base}/inspection/compass/brain-v9/`,{waitUntil:'domcontentloaded',timeout:15000});
+  const res=await page.goto(`${base}/inspection/compass/brain-v9/`,{waitUntil:'domcontentloaded',timeout:30000});
   const httpOk=!!res && res.ok();
 
-  await page.waitForSelector('[data-capability-brain-v9]',{timeout:15000});
+  await page.waitForSelector('[data-capability-brain-v9]',{timeout:30000});
   await page.waitForFunction(expected=>{
     const c=document.querySelector('[data-capability-brain-v9]');
     return !!(c && c.dataset.brainRenderer===expected && c._brainV9 && Number(c.dataset.objectFrames||0)>=2);
-  },{timeout:15000},EXPECTED_RENDERER);
+  },{timeout:30000},EXPECTED_RENDERER);
 
   const before=await page.evaluate(()=>{
     const c=document.querySelector('[data-capability-brain-v9]');
@@ -62,7 +63,9 @@ for (const vp of viewports) {
     viewport:vp.name,
     httpOk,
     renderer:before.dataset.brainRenderer,
+    pass:before.dataset.brainGeometryPass,
     depthModel:before.dataset.brainDepthModel,
+    construction:before.dataset.brainConstruction,
     triangles,
     components,
     frames:Number(before.dataset.objectFrames||0),
@@ -73,20 +76,26 @@ for (const vp of viewports) {
   };
 
   const requiredComponents=[
-    'bilateral-hemispheres',
-    'longitudinal-fissure',
-    'central-sulcus',
-    'lateral-sulcus',
-    'paired-cerebellar-lobes',
-    'pons',
-    'medulla',
-    'brainstem'
+    'multibank-serpentine-cortex',
+    'narrow-longitudinal-fissure',
+    'central-sulcus-corridor',
+    'lateral-sulcus-corridor',
+    'precentral-gyri',
+    'postcentral-gyri',
+    'deep-intermediate-gyri',
+    'compact-cerebellar-folia',
+    'pons-fibers',
+    'medulla-tracts',
+    'brainstem',
+    'peduncles'
   ];
 
   const pass = httpOk &&
     before.dataset.brainRenderer===EXPECTED_RENDERER &&
+    before.dataset.brainGeometryPass===EXPECTED_PASS &&
     before.dataset.brainDepthModel==='TRUE_WEBGL_GEOMETRY' &&
-    triangles>=24000 && triangles<50000 &&
+    before.dataset.brainConstruction==='NO_ENVELOPE_INDEPENDENT_3D_SPLINES' &&
+    triangles>=90000 && triangles<130000 &&
     requiredComponents.every(x=>components.includes(x)) &&
     result.dragYawDelta>0.03 &&
     result.frames>=2 &&
@@ -100,6 +109,6 @@ for (const vp of viewports) {
 }
 
 await browser.close();
-const out={schema:'DGB_COMPASS_BRAIN_V9_ISOLATED_QUALIFICATION_v3',status:failed?'FAIL':'PASS',surface:'/inspection/compass/brain-v9/',expectedRenderer:EXPECTED_RENDERER,checks};
+const out={schema:'DGB_COMPASS_BRAIN_V9_ISOLATED_QUALIFICATION_v4',status:failed?'FAIL':'PASS',surface:'/inspection/compass/brain-v9/',expectedRenderer:EXPECTED_RENDERER,expectedPass:EXPECTED_PASS,checks};
 console.log(JSON.stringify(out,null,2));
 if(failed) process.exit(1);

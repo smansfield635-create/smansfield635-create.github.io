@@ -25,7 +25,8 @@
       "workflow": "pages-direct-deploy.yml",
       "ref": "main",
       "inputPolicy": {
-        "target_sha": {"source": "CURRENT_MAIN_SHA","userOverrideAllowed": false}
+        "target_sha": {"source": "CURRENT_MAIN_SHA","userOverrideAllowed": false},
+        "surface_id": {"source": "REQUEST","required": true,"userOverrideAllowed": true}
       }
     },
     "H_EARTH_STAGE1_COST_QUALIFY": {

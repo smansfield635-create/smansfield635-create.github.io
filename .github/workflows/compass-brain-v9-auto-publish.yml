@@ -44,8 +44,8 @@ jobs:
           test -f inspection/compass/brain-v9/index.html
           test -f assets/compass/capability-object-stage.js
           test -f assets/compass/capability-object-brain-v9.js
-          grep -q 'COMPASS_BRAIN_V9_TUBULAR_COMPOSITE_v1' assets/compass/capability-object-brain-v9.js
-          grep -q 'EMERGENT_TUBULAR_COMPOSITE' assets/compass/capability-object-brain-v9.js
+          grep -q 'COMPASS_BRAIN_V9_FREE_SPLINE_ANATOMY_v1' assets/compass/capability-object-brain-v9.js
+          grep -q 'NO_ENVELOPE_INDEPENDENT_3D_SPLINES' assets/compass/capability-object-brain-v9.js
           echo "manifest=$manifest" >> "$GITHUB_OUTPUT"
           echo "runtime=$(jq -r 'if .runtime?.enabled == true then "true" else "false" end' "$manifest")" >> "$GITHUB_OUTPUT"
 

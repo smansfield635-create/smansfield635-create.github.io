@@ -1,17 +1,18 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "compass-brain-v9",
-  "description": "Isolated Compass Brain V9 tubular-composite inspection surface; does not integrate with the accepted live capability carousel.",
+  "description": "Isolated Compass Brain V9 free-spline anatomy inspection surface; does not integrate with the accepted live capability carousel.",
   "checks": [
     {
       "path": "/inspection/compass/brain-v9/",
       "includes": [
         "Volumetric brain V9",
         "Compass · Brain successor · isolated",
-        "tubular composite",
+        "No envelope",
+        "Independent XYZ splines",
         "data-capability-brain-v9",
         "/assets/compass/capability-object-stage.js?v=1",
-        "/assets/compass/capability-object-brain-v9.js?v=3"
+        "/assets/compass/capability-object-brain-v9.js?v=4"
       ],
       "excludes": [
         "compass.capability-carousel.js",
@@ -21,18 +22,21 @@
     {
       "path": "/assets/compass/capability-object-brain-v9.js",
       "includes": [
-        "COMPASS_BRAIN_V9_TUBULAR_COMPOSITE_v1",
+        "COMPASS_BRAIN_V9_FREE_SPLINE_ANATOMY_v1",
         "APPROVED_HIGH_FIDELITY_ANATOMICAL_REFERENCE",
         "TRUE_WEBGL_GEOMETRY",
-        "tubular-cortical-gyri",
-        "paired-cerebellar-folia",
-        "EMERGENT_TUBULAR_COMPOSITE",
-        "medulla"
+        "independent-xyz-gyrus-splines",
+        "cerebellar-folia-splines",
+        "NO_ENVELOPE_INDEPENDENT_3D_SPLINES",
+        "medulla-tract-bundle"
       ],
       "excludes": [
         "function hemi(",
         "function ellipsoid(",
-        "cerebellarLobe("
+        "cerebellarLobe(",
+        "crown=M.sqrt",
+        "M.pow(z/.93,2)",
+        "M.pow(z/.94,2)"
       ]
     },
     {
@@ -52,7 +56,7 @@
     "readyAttribute": {
       "selector": "[data-capability-brain-v9]",
       "name": "data-brain-renderer",
-      "contains": "COMPASS_BRAIN_V9_TUBULAR_COMPOSITE_v1"
+      "contains": "COMPASS_BRAIN_V9_FREE_SPLINE_ANATOMY_v1"
     },
     "failOnConsoleErrors": true
   }

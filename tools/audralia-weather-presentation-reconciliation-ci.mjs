@@ -1,0 +1,131 @@
+#!/usr/bin/env node
+import puppeteer from 'puppeteer-core';
+
+const base='http://127.0.0.1:4173';
+const chrome=process.env.CHROME_PATH;
+if(!chrome)throw new Error('CHROME_PATH_MISSING');
+
+const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+
+async function waitForAuthoritativeRuntime(page,{timeout=45000,label='runtime'}={}){
+  const started=Date.now();
+  let last=null;
+  while(Date.now()-started<timeout){
+    last=await page.evaluate(()=>({
+      reconciliationPresent:Boolean(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__),
+      runtimePresent:Boolean(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.()),
+      pass:window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.()?.invariants?.pass===true,
+      failures:window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.()?.invariants?.failures||[],
+      reconciliationError:window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__||null,
+      loaderProgress:Number(document.querySelector('[data-audralia-loader]')?.dataset?.progress||0),
+      loaderStage:document.querySelector('[data-audralia-loader-stage]')?.textContent?.trim()||null,
+      status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null
+    }));
+    if(last.reconciliationError)throw new Error(`${label.toUpperCase()}_RECONCILIATION_ERROR ${JSON.stringify(last)}`);
+    if(last.pass)return last;
+    await sleep(250);
+  }
+  throw new Error(`${label.toUpperCase()}_AUTHORITATIVE_RUNTIME_TIMEOUT ${JSON.stringify(last)}`);
+}
+
+async function waitForCelestial(page,{timeout=30000,label='celestial'}={}){
+  const started=Date.now();
+  while(Date.now()-started<timeout){
+    if(await page.evaluate(()=>Boolean(window.__AUDRALIA_CELESTIAL_STATE__?.getSolarVector)))return true;
+    await sleep(250);
+  }
+  throw new Error(`${label.toUpperCase()}_TIMEOUT`);
+}
+
+function installErrorCapture(page){
+  const pageErrors=[],consoleErrors=[];
+  page.on('pageerror',error=>pageErrors.push(String(error?.stack||error)));
+  page.on('console',message=>{if(message.type()==='error')consoleErrors.push(message.text());});
+  return {pageErrors,consoleErrors};
+}
+
+const browser=await puppeteer.launch({
+  executablePath:chrome,
+  headless:'new',
+  args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']
+});
+
+try{
+  const page=await browser.newPage();
+  await page.setViewport({width:720,height:1280,deviceScaleFactor:1});
+  const reconciliationCapture=installErrorCapture(page);
+  await page.goto(`${base}/showroom/globe/audralia/weather-presentation-reconciliation/`,{waitUntil:'domcontentloaded',timeout:60000});
+  const authoritative=await waitForAuthoritativeRuntime(page,{label:'reconciliation'});
+  await waitForCelestial(page,{label:'reconciliation_celestial'});
+
+  const result=await page.evaluate(()=>{
+    const proof=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__;
+    const ids0=proof.canonicalObjects.map(x=>x.ID_i);
+    const local=proof.setCameraStateForTest({distance:720});
+    const localCutoff=Number(proof.exterior.overlay.dataset.nearCutoff||0);
+    const ids1=proof.canonicalObjects.map(x=>x.ID_i);
+    const planetary=proof.setCameraStateForTest({distance:5000});
+    const planetaryCutoff=Number(proof.exterior.overlay.dataset.nearCutoff||-1);
+    const ids2=proof.canonicalObjects.map(x=>x.ID_i);
+    proof.setCameraStateForTest({distance:720});
+    return {
+      schema:proof.schema,
+      cameraSemanticsMutated:proof.cameraSemanticsMutated,
+      zoomSemanticsMutated:proof.zoomSemanticsMutated,
+      travelSemanticsMutated:proof.travelSemanticsMutated,
+      localPass:local.invariants.pass,
+      planetaryPass:planetary.invariants.pass,
+      localCutoff,
+      planetaryCutoff,
+      idsStable:JSON.stringify(ids0)===JSON.stringify(ids1)&&JSON.stringify(ids1)===JSON.stringify(ids2),
+      localActive:local.spatial.activeLocalCount,
+      localCap:local.spatial.maxLocalCount,
+      loaderProgress:Number(document.querySelector('[data-audralia-loader]')?.dataset?.progress||0),
+      skyEvidence:proof.sky.getEvidence(),
+      exteriorEvidence:proof.exterior.getEvidence(),
+      celestial:Boolean(window.__AUDRALIA_CELESTIAL_STATE__?.getSolarVector),
+      status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null
+    };
+  });
+  console.log(JSON.stringify({authoritative,reconciliation:result,...reconciliationCapture},null,2));
+  const reconciliationFailed=
+    reconciliationCapture.pageErrors.length||
+    !result.localPass||!result.planetaryPass||!result.idsStable||
+    result.localActive>result.localCap||result.loaderProgress<4||
+    result.cameraSemanticsMutated||result.zoomSemanticsMutated||result.travelSemanticsMutated||
+    result.localCutoff<500||result.planetaryCutoff!==0||
+    result.skyEvidence.nearTerrainVeil!==false||
+    result.exteriorEvidence.nearFieldExtinctionAuthority!==false||
+    !result.celestial||!String(result.status).includes('USER_REVIEW_REQUIRED');
+  if(reconciliationFailed)throw new Error('RECONCILIATION_ASSERTION_FAILURE');
+  await page.close();
+
+  const live=await browser.newPage();
+  await live.setViewport({width:720,height:1280,deviceScaleFactor:1});
+  const liveCapture=installErrorCapture(live);
+  await live.goto(`${base}/showroom/globe/audralia/`,{waitUntil:'domcontentloaded',timeout:60000});
+  const liveAuthoritative=await waitForAuthoritativeRuntime(live,{label:'live'});
+  await waitForCelestial(live,{label:'live_celestial'});
+  const liveResult=await live.evaluate(()=>({
+    integration:window.__AUDRALIA_LIVE_PLANETARY_INTEGRATION__,
+    loaderProgress:Number(document.querySelector('[data-audralia-loader]')?.dataset?.progress||0),
+    loaderBuild:document.querySelector('.audralia-loading-version')?.textContent?.trim()||null,
+    status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null,
+    celestial:Boolean(window.__AUDRALIA_CELESTIAL_STATE__?.getSolarVector),
+    nav:[...document.querySelectorAll('.audralia-live-nav a')].map(a=>a.textContent.trim())
+  }));
+  console.log(JSON.stringify({liveAuthoritative,live:liveResult,...liveCapture},null,2));
+  const liveFailed=
+    liveCapture.pageErrors.length||
+    liveResult.integration?.schema!=='AUDRALIA_LIVE_PLANETARY_INTEGRATION_v3'||
+    liveResult.integration?.weatherPresentationReconciliation!==true||
+    liveResult.integration?.cameraSemanticsFrozen!==true||
+    liveResult.loaderProgress<4||
+    liveResult.loaderBuild!=='LIVE BUILD · COLOR ARRIVAL v4'||
+    !String(liveResult.status).includes('USER_REVIEW_REQUIRED')||
+    !liveResult.celestial||
+    !['H-Earth · Play','Compass','Mirrorland'].every(label=>liveResult.nav.includes(label));
+  if(liveFailed)throw new Error('LIVE_AUDRALIA_ASSERTION_FAILURE');
+}finally{
+  await browser.close();
+}

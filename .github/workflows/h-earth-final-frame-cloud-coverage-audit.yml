@@ -1,0 +1,70 @@
+name: H-Earth Final Frame Cloud Coverage Audit
+
+on:
+  pull_request:
+    branches:
+      - agent/h-earth-multiscale-atmosphere-convergence-24055-20260821
+    paths:
+      - 'showroom/globe/audralia/**'
+      - '.github/workflows/h-earth-final-frame-cloud-coverage-audit.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  rendered-cloud-coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+
+      - name: Start repository-local inspection server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/h-earth-server.log 2>&1 &
+          echo $! >/tmp/h-earth-server.pid
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/h-earth-server.log
+          exit 1
+
+      - name: Execute final-frame orbital coverage audit
+        run: |
+          CHROME="$(command -v google-chrome || command -v chromium-browser || command -v chromium || true)"
+          if [ -z "$CHROME" ]; then
+            echo 'No Chrome/Chromium binary found on runner.' >&2
+            exit 1
+          fi
+          "$CHROME" \
+            --headless=new \
+            --no-sandbox \
+            --disable-dev-shm-usage \
+            --use-angle=swiftshader \
+            --enable-unsafe-swiftshader \
+            --ignore-gpu-blocklist \
+            --window-size=1280,900 \
+            --virtual-time-budget=30000 \
+            --dump-dom \
+            'http://127.0.0.1:4173/showroom/globe/audralia/?fap1Quality=capture' \
+            >/tmp/audralia-final-dom.html 2>/tmp/audralia-chrome.log
+          cat /tmp/audralia-chrome.log
+          grep -o 'data-cloud-coverage-audit="[^"]*"' /tmp/audralia-final-dom.html || true
+          grep -o 'data-cloud-coverage-audit-minimum-nonzero="[^"]*"' /tmp/audralia-final-dom.html || true
+          grep -o 'data-cloud-coverage-audit-minimum-visible="[^"]*"' /tmp/audralia-final-dom.html || true
+          grep -o 'data-cloud-coverage-audit-minimum-effective-visible="[^"]*"' /tmp/audralia-final-dom.html || true
+          grep -q 'data-cloud-coverage-audit="PASS"' /tmp/audralia-final-dom.html
+
+      - name: Preserve audit DOM and Chrome log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-final-frame-cloud-coverage-audit
+          path: |
+            /tmp/audralia-final-dom.html
+            /tmp/audralia-chrome.log
+            /tmp/h-earth-server.log
+          if-no-files-found: ignore

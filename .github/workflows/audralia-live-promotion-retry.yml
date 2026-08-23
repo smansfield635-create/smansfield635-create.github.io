@@ -1,0 +1,166 @@
+name: Audralia Live Promotion Retry
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/audralia-live-promotion-retry.yml'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-production
+  cancel-in-progress: false
+
+jobs:
+  promote-publish-verify:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      CLOUD_SHA: 50e663986c957b6a11268e13176a0a42de9b2daa
+      LEGACY_SHA: 1d45379f81ea4089e9c5f3d7d9688e702be9add3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Install exact Audralia cloud candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "$CLOUD_SHA"
+          git checkout "$CLOUD_SHA" -- \
+            showroom/globe/audralia/fap1-orbital-support-tuning-v1.mjs \
+            showroom/globe/audralia/fap1-weather-presentation-v1.mjs \
+            showroom/globe/audralia/composition-authority-repair-v1.mjs \
+            showroom/globe/audralia/weather-presentation-reconciliation/exterior-weather.mjs \
+            showroom/globe/audralia/weather-presentation-reconciliation/fap1-candidate-a-adapter.mjs
+          grep -q 'AUDRALIA_FAP1_ORBITAL_SUPPORT_DIRECT_DENSITY_v4' showroom/globe/audralia/fap1-orbital-support-tuning-v1.mjs
+          grep -q 'targetVisibleOrbitalCoverage:.72' showroom/globe/audralia/fap1-orbital-support-tuning-v1.mjs
+
+      - name: Install informative loading continuity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python <<'PY'
+          from pathlib import Path
+          p=Path('showroom/globe/audralia/index.html')
+          s=p.read_text()
+          s=s.replace('index.css?v=AUDRALIA_LIVE_STARTUP_LOADING_v1','index.css?v=AUDRALIA_LIVE_STARTUP_LOADING_v3')
+          start=s.index('    <div class="audralia-loading-panel">')
+          end=s.index('\n  </div>\n\n  <main',start)
+          panel='''    <div class="audralia-loading-panel" data-audralia-loader-panel>
+      <div class="audralia-loading-kicker">DIAMOND GATE · WORLD SYSTEM</div>
+      <div class="audralia-loading-mark" aria-hidden="true"><span>A</span></div>
+      <div class="audralia-loading-title">Audralia</div>
+      <div class="audralia-loading-subtitle">Entering a continuous planetary world</div>
+      <div class="audralia-loading-stage" data-audralia-loader-stage>Preparing terrain, atmosphere, and camera…</div>
+      <div class="audralia-loading-systems" aria-label="World initialization systems">
+        <div class="audralia-loading-system" data-loader-system="surface"><span>Surface + atmosphere</span><b>waiting</b></div>
+        <div class="audralia-loading-system" data-loader-system="clouds"><span>Orbital cloud field</span><b>waiting</b></div>
+        <div class="audralia-loading-system" data-loader-system="regional"><span>Regional weather</span><b>waiting</b></div>
+        <div class="audralia-loading-system" data-loader-system="local"><span>Local continuity</span><b>waiting</b></div>
+      </div>
+      <div class="audralia-loading-track" data-audralia-loader-track role="progressbar" aria-label="Audralia initialization progress" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0"><span data-audralia-loader-fill></span></div>
+      <div class="audralia-loading-meta"><span data-audralia-loader-progress>0% · preparing</span><span data-audralia-loader-elapsed>0.0s</span></div>
+      <div class="audralia-loading-note">One world, progressively resolved: terrain → atmosphere → planetary clouds → regional weather → local continuity.</div>
+    </div>'''
+          s=s[:start]+panel+s[end:]
+          old='  <script type="module" src="./weather-presentation-reconciliation/loader-progress.mjs"></script>\n  <script type="module" src="./weather-presentation-reconciliation/app.mjs?cb=c7aa1038b54b29b2"></script>\n  <script type="module" src="./celestial-checkpoint-1.mjs"></script>'
+          new='''  <script type="module" src="./acf1-cloud-presentation-v1.mjs?cb=ACF1_v3"></script>
+  <script type="module" src="./fap1-xyz-volumetric-depth-v1.mjs?cb=FAP1_XYZ_DEPTH_v1"></script>
+  <script type="module" src="./fap1-orbital-support-tuning-v1.mjs?cb=DIRECT_DENSITY_v4"></script>
+  <script type="module" src="./fap1-weather-presentation-v1.mjs?cb=FAP1_INTEGRATED_COVERAGE_v5"></script>
+  <script type="module" src="./weather-presentation-reconciliation/loader-progress.mjs?cb=AUDRALIA_LOADING_CONTINUITY_v3"></script>
+  <script type="module" src="./weather-presentation-reconciliation/app.mjs?cb=c7aa1038b54b29b2"></script>
+  <script type="module" src="./celestial-checkpoint-1.mjs"></script>
+  <script type="module" src="./composition-authority-repair-v1.mjs?cb=COMPOSITION_AUTHORITY_v1"></script>'''
+          if old not in s: raise SystemExit('expected script block not found')
+          s=s.replace(old,new)
+          p.write_text(s)
+          PY
+          cat > showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs <<'EOF'
+          const loader=document.querySelector('[data-audralia-loader]');
+          const stage=document.querySelector('[data-audralia-loader-stage]');
+          const track=document.querySelector('[data-audralia-loader-track]');
+          const fill=document.querySelector('[data-audralia-loader-fill]');
+          const progress=document.querySelector('[data-audralia-loader-progress]');
+          const elapsed=document.querySelector('[data-audralia-loader-elapsed]');
+          const started=performance.now();
+          const TOTAL=5;
+          let completed=-1;
+          const rows={surface:document.querySelector('[data-loader-system="surface"]'),clouds:document.querySelector('[data-loader-system="clouds"]'),regional:document.querySelector('[data-loader-system="regional"]'),local:document.querySelector('[data-loader-system="local"]')};
+          function setRow(name,state){const row=rows[name];if(!row)return;row.dataset.state=state;const out=row.querySelector('b');if(out)out.textContent=state==='ready'?'ready':'waiting';}
+          function commit(next,label){if(next<=completed)return;completed=next;const n=Math.max(0,Math.min(TOTAL,next));const ratio=n/TOTAL;if(stage)stage.textContent=label;if(progress)progress.textContent=`${Math.round(ratio*100)}% · ${n} of ${TOTAL} stages`;if(track)track.setAttribute('aria-valuenow',String(n));if(fill)fill.style.width=`${Math.round(ratio*100)}%`;}
+          function observe(){if(elapsed)elapsed.textContent=`${((performance.now()-started)/1000).toFixed(1)}s`;if(loader?.classList.contains('is-error'))return;if(document.querySelector('[data-audralia-clear-atmosphere="true"]')){setRow('surface','ready');commit(1,'Surface and atmosphere resolved');}if(globalThis.__AUDRALIA_FAP1_ORBITAL_SUPPORT_TUNING__){setRow('clouds','ready');commit(2,'Planetary cloud field online');}if(document.querySelector('[data-audralia-exterior-weather="true"]')){setRow('regional','ready');commit(3,'Regional weather online');}if(document.querySelector('[data-canonical-weather-projection="true"]')){setRow('local','ready');commit(4,'Local weather continuity online');}if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.()?.invariants?.pass===true){commit(5,'Audralia ready');return;}requestAnimationFrame(observe);}
+          commit(0,'Preparing terrain, atmosphere, and camera…');requestAnimationFrame(observe);
+          EOF
+          cat >> showroom/globe/audralia/index.css <<'EOF'
+
+          /* AUDRALIA_LOADING_CONTINUITY_v3 */
+          .audralia-loading-screen{background:radial-gradient(circle at 50% 36%,rgba(48,116,104,.22),transparent 35rem),linear-gradient(180deg,#061014 0%,#040a0c 58%,#020507 100%)}
+          .audralia-loading-panel{width:min(540px,92vw);padding:clamp(24px,6vw,44px);align-items:stretch;text-align:left;border:1px solid rgba(216,248,235,.16);border-radius:28px;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018));box-shadow:0 32px 110px rgba(0,0,0,.52);backdrop-filter:blur(18px)}
+          .audralia-loading-kicker{color:#a8ddca;font-size:10px;font-weight:850;letter-spacing:.16em;text-transform:uppercase}.audralia-loading-mark{width:54px;height:54px;margin:18px 0 16px;display:grid;place-items:center;border:1px solid rgba(216,248,235,.28);border-radius:18px;background:rgba(216,248,235,.06)}.audralia-loading-mark span{font-size:22px;font-weight:900;color:#d8f8eb}.audralia-loading-title{font-size:clamp(38px,9vw,64px);font-weight:850;letter-spacing:-.045em}.audralia-loading-subtitle{margin-top:7px;color:rgba(237,243,235,.64);font-size:13px}.audralia-loading-stage{margin-top:22px;color:#edf3eb;font-size:13px;font-weight:720}.audralia-loading-systems{display:grid;gap:7px;margin-top:16px}.audralia-loading-system{display:grid;grid-template-columns:1fr auto;gap:14px;padding:9px 10px;border:1px solid rgba(216,248,235,.09);border-radius:10px;background:rgba(255,255,255,.025);color:rgba(237,243,235,.62);font-size:11px}.audralia-loading-system b{color:rgba(237,243,235,.36);font-size:10px;text-transform:uppercase}.audralia-loading-system[data-state="ready"]{border-color:rgba(157,229,189,.22);color:#dff7e8;background:rgba(77,151,105,.08)}.audralia-loading-system[data-state="ready"] b{color:#9de5bd}.audralia-loading-track{height:4px;margin-top:18px}.audralia-loading-track span{left:0;width:0;animation:none;background:linear-gradient(90deg,rgba(157,229,189,.58),#d8f8eb);transition:width .28s ease}.audralia-loading-meta{display:flex;justify-content:space-between;margin-top:9px;color:rgba(237,243,235,.42);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:9px}.audralia-loading-note{max-width:none;margin-top:18px;line-height:1.55}@media(max-width:460px){.audralia-loading-panel{width:min(360px,92vw);padding:22px 18px;border-radius:22px}.audralia-loading-title{font-size:42px}}
+          EOF
+
+      - name: Commit promoted source to main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add showroom/globe/audralia
+          git commit -m 'Promote denser Audralia clouds and loading continuity'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
+          echo "PROMOTED_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Stage Pages payload
+        shell: bash
+        env:
+          STAGE: ${{ runner.temp }}/pages-site
+          LEGACY_ROOT: ${{ runner.temp }}/pages-site/inspection/h-earth/24056
+        run: |
+          set -euo pipefail
+          rm -rf "$STAGE"; mkdir -p "$STAGE"
+          rsync -a --prune-empty-dirs --exclude='.git/' --exclude='.github/' --exclude='preview/' --exclude='h-earth-live-6d18e158/' ./ "$STAGE/"
+          rm -rf "$STAGE/showroom/globe/h-earth"; mkdir -p "$STAGE/showroom/globe/h-earth"
+          rsync -a --delete h-earth-live-6d18e158/showroom/globe/h-earth/ "$STAGE/showroom/globe/h-earth/"
+          git fetch --no-tags origin "$LEGACY_SHA"
+          mkdir -p "$LEGACY_ROOT"
+          git archive "$LEGACY_SHA" showroom/globe/audralia showroom/globe/h-earth h-earth-3d | tar -x -C "$LEGACY_ROOT"
+          mkdir -p "$STAGE/.well-known"
+          printf '{"schema":"DGB_PUBLIC_RELEASE_MARKER_v1","commit":"%s","audraliaCloud":"%s","audraliaLoading":"AUDRALIA_LOADING_CONTINUITY_v3"}\n' "$PROMOTED_SHA" "$CLOUD_SHA" > "$STAGE/.well-known/dgb-release.json"
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/pages-site
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Verify live Audralia exact bytes
+        shell: bash
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          set -euo pipefail
+          root="${PAGE_URL%/}/showroom/globe/audralia"
+          for i in $(seq 1 30); do
+            html="$(curl -fsSL --max-time 20 "$root/" 2>/dev/null || true)"
+            tune="$(curl -fsSL --max-time 20 "$root/fap1-orbital-support-tuning-v1.mjs" 2>/dev/null || true)"
+            css="$(curl -fsSL --max-time 20 "$root/index.css?v=AUDRALIA_LIVE_STARTUP_LOADING_v3" 2>/dev/null || true)"
+            if printf '%s' "$html" | grep -q 'Orbital cloud field' && printf '%s' "$html" | grep -q 'DIRECT_DENSITY_v4' && printf '%s' "$tune" | grep -q 'AUDRALIA_FAP1_ORBITAL_SUPPORT_DIRECT_DENSITY_v4' && printf '%s' "$css" | grep -q 'AUDRALIA_LOADING_CONTINUITY_v3'; then
+              echo "AUDRALIA_LIVE_PROMOTION_VERIFIED $root/"
+              exit 0
+            fi
+            sleep 10
+          done
+          exit 1

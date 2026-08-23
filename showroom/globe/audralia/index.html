@@ -11,18 +11,26 @@
   <link rel="modulepreload" href="../h-earth/terrain-estate-construction-v1/renderer.mjs?cb=0818ec6631424ed0">
   <link rel="modulepreload" href="./canonical-weather-spatial-lod-proof/weather-model.mjs">
   <link rel="modulepreload" href="./canonical-weather-spatial-lod-proof/weather-renderer.mjs">
-  <link rel="stylesheet" href="./index.css?v=AUDRALIA_LIVE_STARTUP_LOADING_v1">
+  <link rel="stylesheet" href="./index.css?v=AUDRALIA_LOADING_CONTINUITY_v3">
   <link rel="stylesheet" href="./weather-presentation-reconciliation/reconciliation.css?v=AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_v2">
 </head>
 <body>
   <div class="audralia-loading-screen" data-audralia-loader role="status" aria-live="polite" aria-label="Audralia is loading">
-    <div class="audralia-loading-panel">
-      <div class="audralia-loading-orbit" aria-hidden="true"></div>
+    <div class="audralia-loading-panel" data-audralia-loader-panel>
+      <div class="audralia-loading-kicker">DIAMOND GATE · WORLD SYSTEM</div>
+      <div class="audralia-loading-mark" aria-hidden="true"><span>A</span></div>
       <div class="audralia-loading-title">Audralia</div>
-      <div class="audralia-loading-stage" data-audralia-loader-stage>Preparing world and camera…</div>
-      <div class="audralia-loading-track" data-audralia-loader-track role="progressbar" aria-label="Audralia initialization progress" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0"><span data-audralia-loader-fill></span></div>
-      <div class="audralia-loading-time" data-audralia-loader-progress>0 of 4 systems ready</div>
-      <div class="audralia-loading-note">Building the same world progressively: surface atmosphere, regional weather, and bounded local weather.</div>
+      <div class="audralia-loading-subtitle">Entering a continuous planetary world</div>
+      <div class="audralia-loading-stage" data-audralia-loader-stage>Preparing terrain, atmosphere, and camera…</div>
+      <div class="audralia-loading-systems" aria-label="World initialization systems">
+        <div class="audralia-loading-system" data-loader-system="surface"><span>Surface + atmosphere</span><b>waiting</b></div>
+        <div class="audralia-loading-system" data-loader-system="clouds"><span>Orbital cloud field</span><b>waiting</b></div>
+        <div class="audralia-loading-system" data-loader-system="regional"><span>Regional weather</span><b>waiting</b></div>
+        <div class="audralia-loading-system" data-loader-system="local"><span>Local continuity</span><b>waiting</b></div>
+      </div>
+      <div class="audralia-loading-track" data-audralia-loader-track role="progressbar" aria-label="Audralia initialization progress" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0"><span data-audralia-loader-fill></span></div>
+      <div class="audralia-loading-meta"><span data-audralia-loader-progress>0% · preparing</span><span data-audralia-loader-elapsed>0.0s</span></div>
+      <div class="audralia-loading-note">One world, progressively resolved: terrain → atmosphere → planetary clouds → regional weather → local continuity.</div>
     </div>
   </div>
 
@@ -55,15 +63,25 @@
 
   <script>
     window.__AUDRALIA_LIVE_PLANETARY_INTEGRATION__ = Object.freeze({
-      schema: 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v2',
+      schema: 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v3',
       legacyPlanetActive: false,
       canonicalWeatherSpatialLod: true,
       weatherPresentationReconciliation: true,
-      cameraSemanticsFrozen: true
+      cameraSemanticsFrozen: true,
+      acf1CloudPresentation: true,
+      fap1XYZVolumetricDepth: true,
+      fap1OrganizedWeatherCandidate: true,
+      directDenseCloudCoverage: true,
+      loadingContinuity: 'AUDRALIA_LOADING_CONTINUITY_v3'
     });
   </script>
-  <script type="module" src="./weather-presentation-reconciliation/loader-progress.mjs"></script>
+  <script type="module" src="./acf1-cloud-presentation-v1.mjs?cb=ACF1_v3"></script>
+  <script type="module" src="./fap1-xyz-volumetric-depth-v1.mjs?cb=FAP1_XYZ_DEPTH_v2"></script>
+  <script type="module" src="./fap1-orbital-support-tuning-v1.mjs?cb=DIRECT_DENSITY_v4"></script>
+  <script type="module" src="./fap1-weather-presentation-v1.mjs?cb=FAP1_INTEGRATED_COVERAGE_v5"></script>
+  <script type="module" src="./weather-presentation-reconciliation/loader-progress.mjs?cb=AUDRALIA_LOADING_CONTINUITY_v3"></script>
   <script type="module" src="./weather-presentation-reconciliation/app.mjs?cb=c7aa1038b54b29b2"></script>
   <script type="module" src="./celestial-checkpoint-1.mjs"></script>
+  <script type="module" src="./composition-authority-repair-v1.mjs?cb=COMPOSITION_AUTHORITY_v1"></script>
 </body>
 </html>

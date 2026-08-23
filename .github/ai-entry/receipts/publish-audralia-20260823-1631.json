@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "publish-audralia-20260823-1631",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 1755,
+  "requestBranch": "ai-dispatch-request-publish-audralia-20260823-1631",
+  "requestCommit": "994d83192941519086df237a9f9b37567f5e95ba",
+  "currentMainSha": "5c5a2b849416b344029b6e77872676c5174cef8a",
+  "bridgeRunId": "32652208685",
+  "error": "GitHub API 422 /repos/smansfield635-create/smansfield635-create.github.io/actions/workflows/pages-direct-deploy.yml/dispatches: {\"message\":\"Workflow does not have 'workflow_dispatch' trigger\",\"documentation_url\":\"https://docs.github.com/rest/actions/workflows#create-a-workflow-dispatch-event\",\"status\":\"422\"}",
+  "failedAt": "2026-08-23T16:38:22.971Z"
+}

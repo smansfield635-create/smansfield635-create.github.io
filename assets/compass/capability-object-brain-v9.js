@@ -1,6 +1,6 @@
 (()=>{
 'use strict';
-const VERSION='COMPASS_BRAIN_V9_GEOMETRY_G123_v5';
+const VERSION='COMPASS_BRAIN_V9_GEOMETRY_G123_v6';
 const M=Math,PI=M.PI,TAU=PI*2;
 const norm=v=>{const d=M.hypot(v[0],v[1],v[2])||1;return[v[0]/d,v[1]/d,v[2]/d]};
 const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
@@ -21,21 +21,23 @@ function build(gl){
  function wig(seed,k){return .62*M.sin(seed*1.771+k*2.413)+.25*M.sin(seed*.719+k*4.103)}
  function morphCenter(side,center,seed){
   let [x,y,z]=center;
-  const lateral=M.min(1,x/.56),frontBack=M.min(1,M.abs(z+.10)/.82),inferior=M.max(0,(-y-.06)/.48);
-  const endTaper=1-.16*frontBack*frontBack-.10*inferior*inferior;
-  x*=M.max(.76,endTaper);
-  y-=.092*lateral*lateral;
+  const lateral=M.min(1,x/.56),front=M.max(0,(z-.18)/.42),rear=M.max(0,(-z-.38)/.48),frontBack=M.min(1,M.abs(z+.10)/.82),inferior=M.max(0,(-y-.06)/.48);
+  const endTaper=1-.18*frontBack*frontBack-.10*inferior*inferior;
+  x*=M.max(.74,endTaper);
+  y-=.096*lateral*lateral;
   y+=.012*M.sin(seed*.83)+(side>0?.006:-.004)*(1-.45*frontBack);
-  z+=.038*lateral*lateral*M.sin(seed*.57+.6)+side*.010*(.35+.65*lateral);
+  z+=.042*lateral*lateral*M.sin(seed*.57+.6)+side*.010*(.35+.65*lateral);
+  z+=.030*front*(1-.42*lateral)-.026*rear*(1-.36*lateral);
+  x-=.030*(front*front+rear*rear)*(.42+.58*lateral);
   x+=.008*M.sin(seed*1.19)+.004*M.sin(seed*.31+2.1);
   return[x,y,z];
  }
  function morphTangent(side,center,tangent,seed){
-  const lateral=M.min(1,center[0]/.56),inferior=M.max(0,(-center[1]-.08)/.50);
+  const lateral=M.min(1,center[0]/.56),front=M.max(0,(center[2]-.18)/.42),rear=M.max(0,(-center[2]-.38)/.48),inferior=M.max(0,(-center[1]-.08)/.50);
   return norm([
-   tangent[0]*(1-.08*lateral),
-   tangent[1]-.13*lateral+.05*inferior,
-   tangent[2]+side*.06*lateral*M.sin(seed*.41)
+   tangent[0]*(1-.10*lateral-.12*(front+rear)),
+   tangent[1]-.14*lateral+.05*inferior,
+   tangent[2]+side*.06*lateral*M.sin(seed*.41)+.16*front-.14*rear
   ]);
  }
  function serpent(side,center,tangent,length=.22,r=.026,seed=0,color=neutral,amp=.052){
@@ -49,7 +51,7 @@ function build(gl){
    p=add(p,[side*wig(seed,i)*.003,wig(seed+3,i)*.003,wig(seed+7,i)*.003]);
    ctrl.push(p);
   }
-  tube(spline(ctrl,2),u=>r*(.90+.17*M.sin(PI*u)),6,color);
+  tube(spline(ctrl,2),u=>{const end=M.sin(PI*M.max(.035,M.min(.965,u))),cap=.36+.64*M.pow(M.max(0,end),.42);return r*cap*(.91+.16*M.sin(PI*u))},6,color);
  }
  function addSeeds(side,seeds,base,color=neutral){seeds.forEach((s,i)=>serpent(side,[s[0],s[1],s[2]],[s[3],s[4],s[5]],s[6]||.22,s[7]||.026,base+i,color,s[8]||.050))}
  const superior=[];
@@ -91,11 +93,11 @@ function build(gl){
  pons.forEach((c,i)=>tube(spline(c,3),.020+i*.001,7,light));
  const stem=[[0,-.17,-.15],[0,-.235,-.125],[.004,-.300,-.105],[.008,-.370,-.103],[.006,-.440,-.114],[.002,-.515,-.136],[-.003,-.590,-.160],[-.006,-.665,-.184],[0,-.740,-.202]];
  for(let k=-4;k<=4;k++){const c=stem.map((p,i)=>[p[0]+k*.008,p[1]+.003*M.sin(i*.8+k),p[2]+.004*M.sin(i*1.15+k*.45)]);tube(spline(c,2),u=>lerp(.017,.010,u),6,k%2?dark:neutral)}
- const vertexCount=pos.length/3;if(vertexCount>65535)throw Error('Brain V9 G123 v5 vertex budget exceeded: '+vertexCount);
+ const vertexCount=pos.length/3;if(vertexCount>65535)throw Error('Brain V9 G123 v6 vertex budget exceeded: '+vertexCount);
  const buf=(t,d)=>{const b=gl.createBuffer();gl.bindBuffer(t,b);gl.bufferData(t,d,gl.STATIC_DRAW);return b};
  return{p:buf(gl.ARRAY_BUFFER,new Float32Array(pos)),n:buf(gl.ARRAY_BUFFER,new Float32Array(nor)),c:buf(gl.ARRAY_BUFFER,new Float32Array(col)),i:buf(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(idx)),count:idx.length,triangles:idx.length/3};
 }
-function boot(){const stage=window.CapabilityObjectStage;if(!stage)return;document.querySelectorAll('[data-capability-brain-v9]').forEach(canvas=>{const api=stage.mount(canvas,{meshFactory:build,initialYaw:.42,initialPitch:-.04,spin:0,scale:1.00,inspectionMode:'geometry',dataset:{brainRenderer:VERSION,brainContract:'COMPASS_BRAIN_GEOMETRY_SYSTEMATIC_G123_v5',brainMaterial:'NEUTRAL_GEOMETRY_MATTE',brainDepthModel:'TRUE_WEBGL_GEOMETRY',brainConstruction:'NO_ENVELOPE_INDEPENDENT_3D_SPLINES',brainGeometryPass:'G1_ROUNDED_MACRO_MORPHOLOGY__G2_ASYMMETRIC_SERPENTINE_TOPOLOGY__G3_INFERIOR_CONTINUITY',brainComponents:'multibank-serpentine-cortex,narrow-longitudinal-fissure,central-sulcus-corridor,lateral-sulcus-corridor,precentral-gyri,postcentral-gyri,deep-intermediate-gyri,compact-cerebellar-folia,pons-fibers,medulla-tracts,brainstem,peduncles'}});if(api)canvas._brainV9=api})}
+function boot(){const stage=window.CapabilityObjectStage;if(!stage)return;document.querySelectorAll('[data-capability-brain-v9]').forEach(canvas=>{const api=stage.mount(canvas,{meshFactory:build,initialYaw:.42,initialPitch:-.04,spin:0,scale:1.00,inspectionMode:'geometry',dataset:{brainRenderer:VERSION,brainContract:'COMPASS_BRAIN_GEOMETRY_SYSTEMATIC_G123_v6',brainMaterial:'NEUTRAL_GEOMETRY_MATTE',brainDepthModel:'TRUE_WEBGL_GEOMETRY',brainConstruction:'NO_ENVELOPE_INDEPENDENT_3D_SPLINES',brainGeometryPass:'G1_ROUNDED_PERIMETER_FLOW__G2_ASYMMETRIC_SERPENTINE_TOPOLOGY__G3_INFERIOR_CONTINUITY',brainComponents:'multibank-serpentine-cortex,narrow-longitudinal-fissure,central-sulcus-corridor,lateral-sulcus-corridor,precentral-gyri,postcentral-gyri,deep-intermediate-gyri,compact-cerebellar-folia,pons-fibers,medulla-tracts,brainstem,peduncles'}});if(api)canvas._brainV9=api})}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 window.CompassBrainV9=Object.freeze({version:VERSION,build,boot});
 })();

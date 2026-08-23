@@ -4,7 +4,7 @@
   "evidencePath": "assets/credibility/governance-gen3-benchmark.v1.json",
   "expectedEvidenceBlobSha": "bb2e1fce04699165a099f82cb656b911e583b897",
   "epoch": 3,
-  "receiptEpoch": 1,
-  "expectedServedState": "SUPPORTED",
-  "phase": "REPAIRED_STALE_RECEIPT"
+  "receiptEpoch": 3,
+  "expectedServedState": "QUALIFIED",
+  "phase": "FRESH_REQUALIFIED"
 }

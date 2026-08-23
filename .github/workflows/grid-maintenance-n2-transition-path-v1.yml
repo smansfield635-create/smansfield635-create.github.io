@@ -1,0 +1,34 @@
+name: Grid maintenance N-2 transition-path severe test v1
+on:
+  pull_request:
+    paths:
+      - 'research/imi/grid_maintenance_n2_transition_path_v1.py'
+      - 'research/imi/GRID_MAINTENANCE_N2_TRANSITION_PATH_PROTOCOL_v1.md'
+  workflow_dispatch:
+jobs:
+  severe-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout: |
+            research/imi
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install scientific dependencies
+        run: pip install numpy pandas scipy scikit-learn lightgbm requests
+      - name: Execute frozen maintenance N-2 transition-path severe test
+        run: python research/imi/grid_maintenance_n2_transition_path_v1.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: grid-maintenance-n2-transition-path-v1
+          path: |
+            grid_maintenance_n2_transition_path_findings_v1.json
+            grid_maintenance_n2_transition_path_rows_v1.csv
+            grid_maintenance_n2_transition_path_states_v1.csv
+            grid_maintenance_n2_transition_path_predictions_v1.csv
+            GRID_MAINTENANCE_N2_TRANSITION_PATH_VERDICT_v1.txt

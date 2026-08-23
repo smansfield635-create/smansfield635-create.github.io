@@ -3,15 +3,13 @@
   "projectId": "COMPASS",
   "status": "ACTIVE_REGISTERED_PROJECT",
   "ownedPathPrefixes": ["assets/compass/"],
-  "ownedExactPaths": [
-    "index.html",
-    ".github/workflows/pages-direct-deploy.yml"
-  ],
+  "ownedExactPaths": ["index.html"],
   "entrypoint": ".github/ai-router/projects/compass/entrypoint.v1.json",
   "authorityBoundary": [
     "THIS_ENTRYPOINT_ROUTES_AND_DOES_NOT_CREATE_MUTATION_AUTHORITY",
     "COMPASS_IS_GLOBAL_ORIENTATION_AND_CARDINAL_AUTHORITY_ONLY",
     "COMPASS_MAY_NOT_ABSORB_DOOR_HOME_LOCAL_DOMAIN_OR_SCIENTIFIC_AUTHORITY",
+    "UNIVERSAL_PUBLICATION_WORKFLOW_IS_CONTROL_PLANE_AUTHORITY_NOT_COMPASS_OWNERSHIP",
     "DISPLAY_CONTINUITY_CONSTITUTION_IS_MANDATORY_DEVELOPMENT_CONTEXT_AND_CREATES_NO_AUTHORITY",
     "COMPASS_PAGE_RECONSTRUCTION_EXECUTION_PLAN_DISPLAY_FIDELITY_AMENDMENT_INFORMATION_DELIVERY_AMENDMENT_NARRATIVE_TRANSITION_COHERENCE_AMENDMENT_AND_INTERACTION_DIAGNOSTIC_AMENDMENT_ARE_MANDATORY_CONSTRUCTION_CONTEXT_AND_CREATE_NO_AUTHORITY",
     "AWARD_FILM_CYCLICAL_PRODUCTION_PROTOCOL_IS_MANDATORY_FOR_COMPASS_AWARD_FILM_AND_CHAPTER_VIDEO_WORK_AND_CREATES_NO_MUTATION_PUBLICATION_OR_DEPLOYMENT_AUTHORITY",
@@ -35,11 +33,13 @@
   ],
   "registries": [
     ".github/ai-router/router.v1.json",
-    ".github/ai-router/shared-procedures.v1.json"
+    ".github/ai-router/shared-procedures.v1.json",
+    ".github/ai-router/workflow-dispatch-capability.v1.json"
   ],
   "procedures": {
     "operationAdmission": "CANONICAL_REPOSITORY_OPERATION_INTAKE_REQUIRED_ONLY_FOR_RUNTIME_OR_AUTHORITY_CLASS",
     "publicationReleaseContract": ".github/ai-router/publication-release-contract.v1.json",
+    "publicationCapability": "PAGES_EXACT_HEAD_DEPLOY",
     "boundedPageReleaseLaw": "APPROVED_COMMIT_TO_EXPLICIT_DEPLOYMENT_TO_LIVE_EXACT_HEAD_VERIFICATION",
     "runtimeOrNewDevelopmentReleaseLaw": "APPLICABLE_GOVERNANCE_AND_QUALIFICATION_TO_APPROVED_COMMIT_TO_EXPLICIT_DEPLOYMENT_TO_LIVE_EXACT_HEAD_VERIFICATION",
     "displayContinuity": "WHOLE_ESTATE_DISPLAY_CONTINUITY",
@@ -90,8 +90,10 @@
     "displayContinuityValidationWorkflow": ".github/workflows/compass-display-continuity-validation.yml",
     "performanceSuccessorValidationWorkflow": ".github/workflows/compass-performance-successor-validation.yml",
     "liveQualificationWorkflow": ".github/workflows/compass-carousel-successor-live-qualification.yml",
-    "deploymentWorkflow": ".github/workflows/pages-direct-deploy.yml",
+    "deploymentCapability": "PAGES_EXACT_HEAD_DEPLOY",
+    "deploymentWorkflow": ".github/workflows/pages-exact-head-deploy-v3.yml",
     "deploymentInput": "target_sha",
+    "surfaceInput": "surface_id",
     "deploymentSuccessResult": "LIVE_EXACT_HEAD_VERIFIED"
   },
   "stoppingRules": [

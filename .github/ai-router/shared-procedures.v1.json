@@ -7,48 +7,49 @@
     {
       "procedureId": "REPOSITORY_ENTRY",
       "purpose": "Resolve the owning project and load its instructions before substantive action.",
-      "steps": [
-        "Read AI_ENTRYPOINT.json.",
-        "Run the repository entry router for every affected path.",
-        "Load every resolved project entrypoint, nested AGENTS.md, registry, validator, and stopping rule.",
-        "Honor the emitted disposition."
-      ],
+      "steps": ["Read AI_ENTRYPOINT.json.", "Run the repository entry router for every affected path.", "Load every resolved project entrypoint, nested AGENTS.md, registry, validator, and stopping rule.", "Honor the emitted disposition."],
       "failClosedWhen": ["ROUTER_MISSING", "ROUTE_AMBIGUOUS", "PROJECT_ENTRYPOINT_MISSING"]
+    },
+    {
+      "procedureId": "EVIDENCE_BEARING_EXECUTION",
+      "purpose": "Keep procedural execution efficient by requiring every repeated probe to produce new evidence or change evidence strategy.",
+      "policy": ".github/ai-router/execution-efficiency-policy.v1.json",
+      "steps": [
+        "Before a diagnostic probe, state the exact evidence object sought: run ID, job ID, assertion, log segment, artifact, receipt, commit, or public marker.",
+        "After the probe, classify the result as NEW_EVIDENCE or NO_NEW_EVIDENCE.",
+        "Do not repeat an equivalent probe after NO_NEW_EVIDENCE. A second attempt is allowed only when transport, identifier resolution, evidence source, or query surface materially changes.",
+        "Allow at most two equivalent-purpose retrieval attempts before stopping repetition.",
+        "For workflow failures, localize the first failed step and extract its exact assertion or strongest available machine evidence before proposing repair.",
+        "Treat downstream skipped steps as consequences, not independent failure diagnoses.",
+        "If evidence remains unavailable after escalation, report the exact missing evidence boundary and the blocker; do not rename further retries as investigation progress.",
+        "When a lawful next execution step is available, execute it rather than returning a status-only response.",
+        "After execution, report completed action, new evidence or none, current boundary, and next lawful action or blocker."
+      ],
+      "failClosedWhen": [
+        "REPEATED_EQUIVALENT_PROBE_WITHOUT_NEW_EVIDENCE",
+        "REPAIR_PROPOSED_BEFORE_FAULT_LOCALIZATION",
+        "SPECULATIVE_MUTATION_FROM_VERIFICATION_FAILURE",
+        "PROGRESS_CLAIM_WITHOUT_NEW_EVIDENCE",
+        "KNOWN_LAWFUL_EXECUTION_STEP_REPLACED_BY_STATUS_ONLY_RESPONSE"
+      ],
+      "authorityCreated": false
     },
     {
       "procedureId": "EXACT_COMMIT_RESOLUTION",
       "purpose": "Bind work to immutable repository identities.",
-      "steps": [
-        "Resolve each supplied ref with git rev-parse <ref>^{commit}.",
-        "Record the exact 40-character commit SHA.",
-        "Resolve and record parent and merge-base identities when lineage matters.",
-        "Reject abbreviated, missing, or moving refs as final evidence."
-      ],
+      "steps": ["Resolve each supplied ref with git rev-parse <ref>^{commit}.", "Record the exact 40-character commit SHA.", "Resolve and record parent and merge-base identities when lineage matters.", "Reject abbreviated, missing, or moving refs as final evidence."],
       "receiptFields": ["exactCommit", "parentCommit", "mergeBaseCommit"]
     },
     {
       "procedureId": "CLEAN_CHECKOUT",
       "purpose": "Execute against committed state rather than conversation or private working state.",
-      "steps": [
-        "Fetch the exact required commits.",
-        "Create a detached checkout or worktree at the governing head.",
-        "Verify git status --porcelain is empty.",
-        "Execute only the repository-declared command.",
-        "Write outputs outside the repository or to an ignored path."
-      ],
+      "steps": ["Fetch the exact required commits.", "Create a detached checkout or worktree at the governing head.", "Verify git status --porcelain is empty.", "Execute only the repository-declared command.", "Write outputs outside the repository or to an ignored path."],
       "failClosedWhen": ["COMMIT_UNRESOLVABLE", "WORKTREE_DIRTY", "DECLARED_COMMAND_MISSING"]
     },
     {
       "procedureId": "GITHUB_ACTIONS_FALLBACK",
       "purpose": "Provide a clean execution backend when a local room cannot clone or run the repository.",
-      "steps": [
-        "Use the procedure-specific workflow declared by the project entrypoint.",
-        "Checkout the exact governing head with full history.",
-        "Pass the exact target commit as an explicit workflow input.",
-        "Run the same repository gate or validator used by the local backend.",
-        "Upload the command-emitted receipt and fingerprint even when the gate fails.",
-        "Bind the result to workflow run, job, artifact, governing head, and target commit identities."
-      ],
+      "steps": ["Use the procedure-specific workflow declared by the project entrypoint.", "Checkout the exact governing head with full history.", "Pass the exact target commit as an explicit workflow input.", "Run the same repository gate or validator used by the local backend.", "Upload the command-emitted receipt and fingerprint even when the gate fails.", "Bind the result to workflow run, job, artifact, governing head, and target commit identities."],
       "forbiddenSubstitute": "MANUAL_METADATA_RECONSTRUCTION_AS_EXECUTION_PROOF"
     },
     {
@@ -68,16 +69,10 @@
         "Use dispatchedRunId from the receipt for all subsequent jobs, steps, logs, artifacts, deployment, and verification inspection.",
         "On success, the bridge closes the transport PR and deletes the ephemeral request branch. The durable receipt remains on ai-dispatch-receipts.",
         "Failed transport PRs remain unmerged and diagnosable; they never become product or release commits.",
+        "Before creating a replacement carrier after failure, localize the bridge or target-workflow assertion. Do not generate serial carriers for an unchanged unresolved failure.",
         "Never substitute a dummy product commit, release-branch nudge, issue-comment carrier, generic command workflow, destructive branch reset, or manual UI action when this capability is available."
       ],
-      "failClosedWhen": [
-        "UNKNOWN_CAPABILITY_ID",
-        "REQUEST_BRANCH_NOT_FRESH_FROM_CURRENT_MAIN",
-        "TRANSPORT_PR_NOT_SAME_REPOSITORY",
-        "UNDECLARED_OR_OVERRIDDEN_PROTECTED_INPUT",
-        "NATIVE_WORKFLOW_DISPATCH_NOT_ACCEPTED",
-        "DISPATCHED_RUN_ID_NOT_RESOLVED"
-      ],
+      "failClosedWhen": ["UNKNOWN_CAPABILITY_ID", "REQUEST_BRANCH_NOT_FRESH_FROM_CURRENT_MAIN", "TRANSPORT_PR_NOT_SAME_REPOSITORY", "UNDECLARED_OR_OVERRIDDEN_PROTECTED_INPUT", "NATIVE_WORKFLOW_DISPATCH_NOT_ACCEPTED", "DISPATCHED_RUN_ID_NOT_RESOLVED", "REPEATED_CARRIER_WITHOUT_FAILURE_LOCALIZATION"],
       "authorityCreated": false,
       "genericCommandAuthorityCreated": false,
       "transportPullRequestMergeAuthorityCreated": false
@@ -85,77 +80,34 @@
     {
       "procedureId": "BRANCH_MAIN_COMPARISON",
       "purpose": "Determine exact divergence without assuming branch state.",
-      "steps": [
-        "Resolve exact base and head commits.",
-        "Compute merge base.",
-        "List every changed path and blob identity.",
-        "Record ahead and behind counts.",
-        "Treat unrelated main advancement separately from candidate lineage."
-      ]
+      "steps": ["Resolve exact base and head commits.", "Compute merge base.", "List every changed path and blob identity.", "Record ahead and behind counts.", "Treat unrelated main advancement separately from candidate lineage."]
     },
     {
       "procedureId": "WORKFLOW_ARTIFACT_RETRIEVAL",
-      "purpose": "Recover executable evidence from GitHub Actions.",
-      "steps": [
-        "Resolve workflow run and job identities.",
-        "Inspect step conclusions and logs.",
-        "List artifacts by exact run.",
-        "Download the named artifact.",
-        "Verify artifact digest and contained receipt identities."
-      ]
+      "purpose": "Recover executable evidence from GitHub Actions without redundant retrieval loops.",
+      "steps": ["Resolve workflow run and job identities once.", "Inspect step conclusions and fetch the failed job log.", "Extract the exact failed assertion or strongest available machine evidence.", "If the first log surface is incomplete, change evidence surface once: artifact, receipt, run metadata, or alternate transport.", "Do not repeat an equivalent log fetch after NO_NEW_EVIDENCE.", "List artifacts by exact run when declared.", "Download the named artifact when needed.", "Verify artifact digest and contained receipt identities."],
+      "failClosedWhen": ["FAILED_ASSERTION_NOT_LOCALIZED_AND_REPAIR_PROPOSED", "EQUIVALENT_LOG_FETCH_REPEATED_WITHOUT_NEW_EVIDENCE"]
     },
     {
       "procedureId": "HASH_AND_BLOB_VERIFICATION",
       "purpose": "Distinguish repository identity from file names and summaries.",
-      "steps": [
-        "Resolve Git blob SHA for committed text identity.",
-        "Compute SHA-256 for transported artifact bytes.",
-        "Record byte count and member manifest for archives.",
-        "Reject name-only or URL-only identity claims."
-      ]
+      "steps": ["Resolve Git blob SHA for committed text identity.", "Compute SHA-256 for transported artifact bytes.", "Record byte count and member manifest for archives.", "Reject name-only or URL-only identity claims."]
     },
     {
       "procedureId": "RECEIPT_PUBLICATION",
       "purpose": "Make execution durable and independently discoverable.",
-      "steps": [
-        "Use the procedure-declared receipt schema.",
-        "Bind exact governing and target commits, commands, measurements, artifacts, and disposition.",
-        "Commit only after validation when repository publication is authorized.",
-        "Preserve workflow artifact identity when repository publication is not authorized."
-      ]
+      "steps": ["Use the procedure-declared receipt schema.", "Bind exact governing and target commits, commands, measurements, artifacts, and disposition.", "Commit only after validation when repository publication is authorized.", "Preserve workflow artifact identity when repository publication is not authorized."]
     },
     {
       "procedureId": "ROLLBACK_VERIFICATION",
       "purpose": "Prove bounded reversibility.",
-      "steps": [
-        "Record exact starting head and changed paths.",
-        "Declare the rollback operation before promotion.",
-        "Execute rollback in an isolated branch or worktree.",
-        "Verify protected blobs and accepted baseline identities are restored exactly."
-      ]
+      "steps": ["Record exact starting head and changed paths.", "Declare the rollback operation before promotion.", "Execute rollback in an isolated branch or worktree.", "Verify protected blobs and accepted baseline identities are restored exactly."]
     },
     {
       "procedureId": "WHOLE_ESTATE_DISPLAY_CONTINUITY",
       "purpose": "Load and apply whole-estate narrative and display continuity laws before applicable page, frontier, product, room, world, campaign, navigation, transition, responsive, or shared visual-system construction.",
-      "steps": [
-        "Read .github/ai-router/display-continuity-constitution-v1/display-constitution.v1.json and .github/ai-router/display-continuity-constitution-v1/README.md.",
-        "Read control-plane/whole-estate/narrative-continuity-development-map-v1/map.v1.json and the governing narrative spine when narrative relation is material.",
-        "Resolve the route display contract: local identity, narrative relation, orientation relation, display role, runtime ceiling, persistent objects, transition meaning, progressive disclosure, mobile composition, reduced-motion equivalence, return contract, claim boundary, local visual identity, and continuity hook.",
-        "Treat the runtime class as a ceiling, not a requirement.",
-        "Preserve Compass global orientation, room-local identity, explicit return, semantic meaning under reduced motion, and claim boundaries.",
-        "If the task is not visual or experiential, do not invent display work or widen the admitted scope merely because this global context exists.",
-        "Honor all project-specific entrypoints, nested AGENTS.md files, scientific and evidence boundaries, and runtime authorities after loading this context."
-      ],
-      "failClosedWhen": [
-        "COMPETING_GLOBAL_ORIENTATION",
-        "NARRATIVE_RELATION_UNRESOLVED",
-        "RUNTIME_CEILING_UNJUSTIFIED",
-        "MOBILE_OR_REDUCED_MOTION_SEMANTICS_MISSING",
-        "DISCOVERY_MUTATES_CARDINAL_MAP",
-        "VISUAL_EMPHASIS_CREATES_CLAIM_AUTHORITY",
-        "DEEP_ROUTE_HAS_NO_EXPLICIT_RETURN",
-        "UNIVERSAL_SHELL_FLATTENS_REQUIRED_LOCAL_IDENTITY"
-      ],
+      "steps": ["Read .github/ai-router/display-continuity-constitution-v1/display-constitution.v1.json and .github/ai-router/display-continuity-constitution-v1/README.md.", "Read control-plane/whole-estate/narrative-continuity-development-map-v1/map.v1.json and the governing narrative spine when narrative relation is material.", "Resolve the route display contract: local identity, narrative relation, orientation relation, display role, runtime ceiling, persistent objects, transition meaning, progressive disclosure, mobile composition, reduced-motion equivalence, return contract, claim boundary, local visual identity, and continuity hook.", "Treat the runtime class as a ceiling, not a requirement.", "Preserve Compass global orientation, room-local identity, explicit return, semantic meaning under reduced motion, and claim boundaries.", "If the task is not visual or experiential, do not invent display work or widen the admitted scope merely because this global context exists.", "Honor all project-specific entrypoints, nested AGENTS.md files, scientific and evidence boundaries, and runtime authorities after loading this context."],
+      "failClosedWhen": ["COMPETING_GLOBAL_ORIENTATION", "NARRATIVE_RELATION_UNRESOLVED", "RUNTIME_CEILING_UNJUSTIFIED", "MOBILE_OR_REDUCED_MOTION_SEMANTICS_MISSING", "DISCOVERY_MUTATES_CARDINAL_MAP", "VISUAL_EMPHASIS_CREATES_CLAIM_AUTHORITY", "DEEP_ROUTE_HAS_NO_EXPLICIT_RETURN", "UNIVERSAL_SHELL_FLATTENS_REQUIRED_LOCAL_IDENTITY"],
       "authorityCreated": false
     }
   ]

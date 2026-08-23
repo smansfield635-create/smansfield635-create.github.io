@@ -1,0 +1,32 @@
+name: Execution Efficiency Self-Test
+
+on:
+  pull_request:
+    paths:
+      - 'AI_ENTRYPOINT.json'
+      - 'AGENTS.md'
+      - '.github/ai-router/execution-efficiency-policy.v1.json'
+      - '.github/ai-router/execution-efficiency-self-test.v1.mjs'
+      - '.github/ai-router/shared-procedures.v1.json'
+      - '.github/ai-router/workflow-dispatch-capability.v1.json'
+      - '.github/ai-router/publication-release-contract.v1.json'
+      - '.github/workflows/pages-exact-head-deploy-v3.yml'
+      - '.github/workflows/execution-efficiency-self-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  self-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate JSON control-plane manifests
+        run: |
+          node -e "for (const p of ['AI_ENTRYPOINT.json','.github/ai-router/execution-efficiency-policy.v1.json','.github/ai-router/shared-procedures.v1.json','.github/ai-router/workflow-dispatch-capability.v1.json','.github/ai-router/publication-release-contract.v1.json']) JSON.parse(require('fs').readFileSync(p,'utf8'));"
+      - name: Verify execution efficiency and publication bindings
+        run: node .github/ai-router/execution-efficiency-self-test.v1.mjs

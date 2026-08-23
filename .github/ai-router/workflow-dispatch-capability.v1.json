@@ -11,6 +11,7 @@
   "receiptPathTemplate": ".github/ai-entry/receipts/<requestId>.json",
   "bridgeWorkflow": ".github/workflows/ai-entry-workflow-dispatch-bridge.yml",
   "bridgeRuntime": "tools/ai-entry-workflow-dispatch-bridge.mjs",
+  "executionEfficiencyPolicy": ".github/ai-router/execution-efficiency-policy.v1.json",
   "transportPullRequest": {
     "base": "main",
     "headPrefix": "ai-dispatch-request-",
@@ -25,30 +26,32 @@
       "workflow": "pages-exact-head-deploy-v3.yml",
       "ref": "main",
       "inputPolicy": {
-        "target_sha": {"source": "CURRENT_MAIN_SHA","userOverrideAllowed": false},
-        "surface_id": {"source": "REQUEST","required": true,"userOverrideAllowed": true}
-      }
+        "target_sha": {"source": "CURRENT_MAIN_SHA", "userOverrideAllowed": false},
+        "surface_id": {"source": "REQUEST", "required": true, "userOverrideAllowed": true}
+      },
+      "workflowDispatchRegistrationRequired": true,
+      "failureLocalizationRequiredBeforeReplacementCarrier": true
     },
     "H_EARTH_STAGE1_COST_QUALIFY": {
       "workflow": "h-earth-stage1-cost-qualify.yml",
       "ref": "main",
       "inputPolicy": {
-        "baseline_sha": {"source": "REQUEST","required": true,"userOverrideAllowed": true},
-        "candidate_sha": {"source": "REQUEST","required": true,"userOverrideAllowed": true}
+        "baseline_sha": {"source": "REQUEST", "required": true, "userOverrideAllowed": true},
+        "candidate_sha": {"source": "REQUEST", "required": true, "userOverrideAllowed": true}
       }
     },
     "H_EARTH_STAGE1_INSPECTION_PUBLISH": {
       "workflow": "h-earth-stage1-inspection-publish.yml",
       "ref": "main",
       "inputPolicy": {
-        "target_sha": {"source": "CURRENT_MAIN_SHA","userOverrideAllowed": false}
+        "target_sha": {"source": "CURRENT_MAIN_SHA", "userOverrideAllowed": false}
       }
     },
     "H_EARTH_STAGE1_MOBILE_INTERACTION_QUALIFY": {
       "workflow": "h-earth-stage1-mobile-interaction-qualify.yml",
       "ref": "main",
       "inputPolicy": {
-        "candidate_sha": {"source": "REQUEST","required": true,"userOverrideAllowed": true}
+        "candidate_sha": {"source": "REQUEST", "required": true, "userOverrideAllowed": true}
       }
     }
   },
@@ -62,7 +65,9 @@
     "fallbackMayNotCreateGenericCommandAuthority": true,
     "transportPullRequestIsExecutionCarrierOnly": true,
     "transportPullRequestMayNeverBeMerged": true,
-    "successfulTransportLeavesNoRequestBranch": true
+    "successfulTransportLeavesNoRequestBranch": true,
+    "failedCarrierMustBeLocalizedBeforeReplacement": true,
+    "serialEquivalentCarrierRetriesAllowed": false
   },
   "rules": [
     "FAIL_CLOSED_ON_UNKNOWN_CAPABILITY",
@@ -71,6 +76,9 @@
     "FAIL_CLOSED_ON_UNDECLARED_INPUT",
     "FAIL_CLOSED_IF_NATIVE_DISPATCH_IS_NOT_ACCEPTED",
     "FAIL_CLOSED_IF_DISPATCHED_RUN_ID_CANNOT_BE_RESOLVED",
+    "FAIL_CLOSED_IF_REGISTERED_WORKFLOW_LACKS_WORKFLOW_DISPATCH",
+    "LOCALIZE_FAILED_DISPATCH_ASSERTION_BEFORE_REPLACEMENT_CARRIER",
+    "NO_SERIAL_EQUIVALENT_CARRIERS_FOR_UNCHANGED_FAILURE",
     "NO_SHELL_OR_GENERIC_COMMAND_INPUT",
     "NO_ARBITRARY_WORKFLOW_PATH",
     "NO_AUTHORITY_EXPANSION_BY_REQUEST",

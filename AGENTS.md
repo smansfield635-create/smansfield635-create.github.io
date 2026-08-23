@@ -2,6 +2,16 @@
 
 Read `AI_ENTRYPOINT.json` first and classify the requested page mutation before escalating into repository-operation authority.
 
+## Procedural execution efficiency
+
+Load `.github/ai-router/execution-efficiency-policy.v1.json` and apply shared procedure `EVIDENCE_BEARING_EXECUTION` to diagnostics, GitHub Actions inspection, workflow-log retrieval, publication verification, and control-plane troubleshooting.
+
+A probe counts as progress only when it yields new evidence: a new immutable identity, exact assertion, log/artifact content, state transition, or newly eliminated hypothesis. After a probe yields `NO_NEW_EVIDENCE`, do not repeat an equivalent probe. At most one second attempt may pursue the same evidence purpose, and only if it changes transport, identifier resolution, evidence source, or query surface. Rephrasing the same retrieval is not a strategy change.
+
+For a failed workflow, localize the first failed step and extract its exact assertion or strongest available machine evidence before proposing repair. Downstream skipped steps are consequences, not separate diagnoses. Do not blind-rerun an unchanged failure, create serial equivalent dispatch carriers, or mutate product/runtime bytes from a verification failure before fault localization.
+
+If evidence remains unavailable after the allowed escalation, stop repetition and report the exact missing evidence boundary. Do not describe repeated retrieval attempts as investigation progress. When a lawful execution step is available, execute it rather than returning status only. Every execution report should state what completed, what new evidence was obtained or that none was obtained, the current boundary, and the next lawful action or blocker.
+
 For a deterministically classified `STATIC_EDITORIAL_MICRO` change—such as bounded copy, wording, label, headline, instructions, typo, punctuation, or non-runtime static presentation work—the canonical operation intake gate and Page Excellence are **not required**. These changes must instead remain exact-head bound, touch only the declared static paths, contain no executable/runtime delta, contain no unrelated diff, and pass `tools/static-editorial-micro-verifier.v1.mjs` before adoption.
 
 For any `RUNTIME_OR_AUTHORITY` change—including executable files, runtime behavior, navigation, routing, event handling, state machines, gestures, DOM authority, control-plane/governance work, mixed changes, or anything ambiguous—the existing governed path remains mandatory. Ambiguity fails closed into `RUNTIME_OR_AUTHORITY`; static classification never creates runtime or project authority and never bypasses project registration.

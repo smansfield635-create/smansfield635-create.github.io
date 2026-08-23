@@ -1,0 +1,26 @@
+name: Epistemic Control Plane Validation v1
+
+on:
+  pull_request:
+    paths:
+      - 'research/epistemic-control-plane/**'
+      - '.github/workflows/epistemic_control_plane_validation_v1.yml'
+  workflow_dispatch:
+
+jobs:
+  validate-epistemic-control-plane:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Execute epistemic control plane operational validation
+        run: python research/epistemic-control-plane/epistemic_control_plane_validation_v1.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: epistemic-control-plane-validation-v1
+          path: epistemic_control_plane_validation_v1.json
+          if-no-files-found: error

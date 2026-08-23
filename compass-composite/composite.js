@@ -1,11 +1,38 @@
 (()=>{'use strict';
-const BUILD='gen1596-surgical-composite-1';
+const BUILD='gen1596-surgical-composite-2';
 const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const force=(el,prop,value)=>el?.style?.setProperty(prop,value,'important');
 const start=()=>{
   const root=q('[data-compass-root]');
   if(!root){requestAnimationFrame(start);return;}
   document.documentElement.dataset.compassComposite=BUILD;
   root.dataset.compassComposite=BUILD;
+
+  const suppressStaleMirrorlandLabel=()=>{
+    const mode=root.dataset.compassMode||'CONSTELLATION';
+    const mirror=q('[data-compass-object="mirrorland"]',root)||q('.compass-object--mirrorland',root);
+    if(!mirror)return;
+    const ordinary=mode==='CONSTELLATION'||mode==='CLUSTER_OPEN'||mode==='ROOM_SELECTED';
+    if(ordinary){
+      force(mirror,'background','transparent');
+      force(mirror,'border-color','transparent');
+      force(mirror,'box-shadow','none');
+      force(mirror,'outline-color','transparent');
+      force(mirror,'color','transparent');
+      force(mirror,'text-shadow','none');
+      qa('span',mirror).forEach(span=>{
+        force(span,'display','none');
+        force(span,'opacity','0');
+        force(span,'visibility','hidden');
+        force(span,'pointer-events','none');
+      });
+      mirror.dataset.gen1596MirrorlandLabelSuppressed='true';
+    }else{
+      ['background','border-color','box-shadow','outline-color','color','text-shadow'].forEach(prop=>mirror.style.removeProperty(prop));
+      qa('span',mirror).forEach(span=>['display','opacity','visibility','pointer-events'].forEach(prop=>span.style.removeProperty(prop)));
+      delete mirror.dataset.gen1596MirrorlandLabelSuppressed;
+    }
+  };
 
   const syncCardinals=()=>{
     if(root.dataset.compassMode!=='CONSTELLATION')return;
@@ -19,6 +46,21 @@ const start=()=>{
       wing.tabIndex=active?0:-1;
       wing.dataset.gen1596StarOwner='present';
       wing.dataset.gen1596Readable=String(active);
+      if(active){
+        ['background','border-color','box-shadow','outline-color'].forEach(prop=>wing.style.removeProperty(prop));
+        qa('span',wing).forEach(span=>['display','opacity','visibility','pointer-events'].forEach(prop=>span.style.removeProperty(prop)));
+      }else{
+        force(wing,'background','transparent');
+        force(wing,'border-color','transparent');
+        force(wing,'box-shadow','none');
+        force(wing,'outline-color','transparent');
+        qa('span',wing).forEach(span=>{
+          force(span,'display','none');
+          force(span,'opacity','0');
+          force(span,'visibility','hidden');
+          force(span,'pointer-events','none');
+        });
+      }
     });
   };
 
@@ -48,11 +90,11 @@ const start=()=>{
     });
   };
 
-  const sync=()=>{syncCardinals();syncRooms();suppressDuplicateCapabilityOwner();};
+  const sync=()=>{syncCardinals();syncRooms();suppressStaleMirrorlandLabel();suppressDuplicateCapabilityOwner();};
   const observer=new MutationObserver(sync);
-  observer.observe(root,{subtree:true,attributes:true,attributeFilter:['data-compass-mode','data-rendered-foreground-cardinal','data-readable-cardinal','data-orbit-focus','data-selected-room','data-cluster-primary-room','data-cluster-preview-primary-room','data-gen1587-current','hidden','aria-current']});
+  observer.observe(root,{subtree:true,attributes:true,attributeFilter:['data-compass-mode','data-rendered-foreground-cardinal','data-readable-cardinal','data-orbit-focus','data-selected-room','data-cluster-primary-room','data-cluster-preview-primary-room','data-gen1587-current','hidden','aria-current','style','class']});
   sync();
-  setTimeout(sync,250);setTimeout(sync,900);
+  setTimeout(sync,120);setTimeout(sync,350);setTimeout(sync,900);setTimeout(sync,1600);
 };
 start();
 })();

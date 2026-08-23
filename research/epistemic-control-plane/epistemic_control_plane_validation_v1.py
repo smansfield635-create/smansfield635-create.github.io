@@ -148,11 +148,11 @@ def entitlement(e: EvidenceState) -> ClaimEntitlement:
 
 
 def authorize(e: EvidenceState, claim: ClaimEntitlement) -> bool:
+    if claim.scope != e.scope:
+        return False
     if fail_closed(e, claim.scope):
         return claim == ClaimEntitlement(EvidenceMode.DESCRIPTIVE, scope=claim.scope)
     allowed = entitlement(e)
-    if claim.scope != allowed.scope:
-        return False
     if claim.evidence_mode > allowed.evidence_mode:
         return False
     if claim.replication_depth > allowed.replication_depth:

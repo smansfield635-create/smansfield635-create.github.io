@@ -22,7 +22,7 @@ jobs:
       - name: Verify contextual successor and research surface
         run: |
           python3 -m http.server 4173 >/tmp/dgb-http.log 2>&1 &
-          cat > /tmp/verify.mjs <<'NODE'
+          cat > .audit-verify.mjs <<'NODE'
           import { chromium } from 'playwright';
           const browser=await chromium.launch({headless:true});
           const contexts=[
@@ -74,4 +74,4 @@ jobs:
           console.log('PASS',JSON.stringify({contexts:contexts.map(x=>x.name),research}));
           await browser.close();
           NODE
-          node /tmp/verify.mjs
+          node ./.audit-verify.mjs

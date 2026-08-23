@@ -1,4 +1,4 @@
-const AUDIT_SCHEMA='AUDRALIA_FINAL_FRAME_ORBITAL_CLOUD_COVERAGE_AUDIT_v1';
+const AUDIT_SCHEMA='AUDRALIA_FINAL_FRAME_ORBITAL_CLOUD_COVERAGE_AUDIT_v2';
 const PLANET_RADIUS=6200;
 const HALF_PI=Math.PI*.5;
 const ARC=PLANET_RADIUS*HALF_PI;
@@ -16,43 +16,26 @@ const SAMPLE_STATES=Object.freeze([
 ]);
 const FINAL_NONZERO_FLOOR=.70;
 const FINAL_VISIBLE_FLOOR=.42;
-const ALPHA_NONZERO=8;
-const ALPHA_VISIBLE=32;
 const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 
 async function waitForRuntime(timeoutMs=12000){
   const start=performance.now();
   while(performance.now()-start<timeoutMs){
     const receipt=globalThis.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__;
-    if(receipt?.setCameraStateForTest&&receipt?.fap1CandidateA?.getEvidence&&receipt?.exterior?.overlay)return receipt;
+    if(receipt?.setCameraStateForTest&&receipt?.fap1CandidateA?.getEvidence&&receipt?.exterior?.overlay&&globalThis.__AUDRALIA_FINAL_FRAME_CLOUD_READBACK_PROBE__)return receipt;
     await wait(50);
   }
   throw new Error('ORBITAL_COVERAGE_AUDIT_RUNTIME_TIMEOUT');
 }
 
-function readAlphaCoverage(overlay){
-  const gl=overlay.getContext('webgl2');
-  if(!gl)throw new Error('ORBITAL_COVERAGE_AUDIT_WEBGL2_UNAVAILABLE');
-  const width=overlay.width,height=overlay.height;
-  if(!(width>0&&height>0))throw new Error('ORBITAL_COVERAGE_AUDIT_EMPTY_BUFFER');
-  const pixels=new Uint8Array(width*height*4);
-  gl.finish();
-  gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
-  let nonzero=0,visible=0,alphaSum=0;
-  const count=width*height;
-  for(let i=3;i<pixels.length;i+=4){
-    const a=pixels[i];
-    alphaSum+=a;
-    if(a>=ALPHA_NONZERO)nonzero++;
-    if(a>=ALPHA_VISIBLE)visible++;
-  }
+function readCapturedCoverage(overlay){
+  const coverage=overlay.__AUDRALIA_LAST_DRAW_COVERAGE__;
+  if(!coverage)throw new Error('ORBITAL_COVERAGE_AUDIT_NO_POST_DRAW_CAPTURE');
   const cssOpacity=Number.parseFloat(getComputedStyle(overlay).opacity||'1');
   return Object.freeze({
-    width,height,count,cssOpacity,
-    nonzeroFraction:nonzero/count,
-    visibleFraction:visible/count,
-    meanAlpha:alphaSum/(count*255),
-    effectiveVisibleFraction:(visible/count)*cssOpacity
+    ...coverage,
+    cssOpacity,
+    effectiveVisibleFraction:coverage.visibleFraction*cssOpacity
   });
 }
 
@@ -68,8 +51,10 @@ async function runAudit(){
   const receipt=await waitForRuntime();
   const original=receipt.renderer.getSnapshot();
   const samples=[];
+  globalThis.__AUDRALIA_COVERAGE_AUDIT_ACTIVE__=true;
   try{
     for(const state of SAMPLE_STATES){
+      receipt.exterior.overlay.__AUDRALIA_LAST_DRAW_COVERAGE__=null;
       receipt.setCameraStateForTest({
         targetU:state.targetU,
         targetV:state.targetV,
@@ -77,8 +62,7 @@ async function runAudit(){
         pitch:1.02,
         yaw:-.62
       });
-      await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-      const coverage=readAlphaCoverage(receipt.exterior.overlay);
+      const coverage=readCapturedCoverage(receipt.exterior.overlay);
       const fap1Evidence=receipt.fap1CandidateA.getEvidence();
       samples.push(Object.freeze({
         id:state.id,
@@ -86,12 +70,14 @@ async function runAudit(){
         effectiveExteriorOpacity:fap1Evidence.effectiveExteriorOpacity,
         orbitalBlend:fap1Evidence.orbitalBlend
       }));
+      await new Promise(resolve=>requestAnimationFrame(resolve));
     }
   }finally{
     receipt.setCameraStateForTest({
       targetU:original.targetU,targetV:original.targetV,distance:original.distance,
       pitch:original.pitch,yaw:original.yaw
     });
+    globalThis.__AUDRALIA_COVERAGE_AUDIT_ACTIVE__=false;
   }
   const minimumNonzero=Math.min(...samples.map(x=>x.nonzeroFraction));
   const minimumVisible=Math.min(...samples.map(x=>x.visibleFraction));
@@ -111,6 +97,7 @@ async function runAudit(){
 }
 
 runAudit().catch(error=>{
+  globalThis.__AUDRALIA_COVERAGE_AUDIT_ACTIVE__=false;
   const result=Object.freeze({schema:AUDIT_SCHEMA,pass:false,error:error instanceof Error?error.message:String(error),minimumNonzero:0,minimumVisible:0,minimumEffectiveVisible:0,opacityAuthorityPass:false,samples:Object.freeze([])});
   publish(result);
   console.error('AUDRALIA_ORBITAL_CLOUD_COVERAGE_AUDIT_ERROR',error);

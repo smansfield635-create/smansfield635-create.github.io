@@ -1,0 +1,9 @@
+FROZEN BEFORE CONFIRMATION EXECUTION
+
+Object: viable decision-space proxy, not integer constraint count.
+Formula: VDS = mean availability × normalized inverse-Simpson effective route count.
+Dynamics: contraction = prior VDS - current VDS; acceleration = change in contraction; dynamic_risk = (1-VDS)+positive contraction+0.5*positive acceleration.
+Calibration cohort only: J.C. Penney, Pier 1 Imports, RadioShack, Sears Holdings.
+Untouched confirmation: Tailored Brands, Ascena Retail Group, Stein Mart, Macys, Kohls, Nordstrom, Target, Lowes, TJX Companies.
+No threshold or coefficient tuning after confirmation opens.
+Verdicts: VDS_CONFIRMED / FAIL / UNEVALUABLE.

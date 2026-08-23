@@ -3,18 +3,21 @@ html,body{max-width:100%;overflow-x:clip!important}
 body{background:#010308!important}
 .compass-estate,[data-compass-root],.compass-instrument,.compass-built,.compass-monuments{max-width:100%!important;box-sizing:border-box!important}
 
-/* Laws precedent: all four star owners remain present; exactly one readable cardinal label owns text/focus. */
+/* Laws precedent: all four star owners remain present; exactly one native readable cardinal label owns text/focus. */
 [data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing{display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
 [data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing>span{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
 [data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing.is-readable-cardinal>span{opacity:1!important;visibility:visible!important}
 [data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing:not(.is-readable-cardinal){background:transparent!important;border-color:transparent!important;box-shadow:none!important;outline-color:transparent!important}
+/* The duplicate seen on-device is the decorative black shell of a non-readable wing, not the readable label itself. Remove only that shell. */
+[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing:not(.is-readable-cardinal)::before,
+[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing:not(.is-readable-cardinal)::after{content:none!important;display:none!important;background:transparent!important;border-color:transparent!important;box-shadow:none!important;outline:0!important;opacity:0!important}
 
 /* Gen1587 ownership rule: no ring of competing room labels. */
 [data-compass-root][data-compass-mode="CONSTELLATION"] .compass-projected-room-label{display:none!important}
 .compass-projected-room-label:not([data-gen1587-current="true"]):not([data-gen1596-current="true"]){display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important}
 .compass-projected-room-label[data-gen1587-current="true"],.compass-projected-room-label[data-gen1596-current="true"]{display:grid!important;opacity:1!important;visibility:visible!important}
 
-/* Final label-ownership cleanup: keep the Mirrorland hit target, but suppress its stale black text shell while a cardinal/room owns the readable label. */
+/* Keep the Mirrorland hit target, but suppress its stale text shell while a cardinal/room owns the readable label. */
 [data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--mirrorland,
 [data-compass-root][data-compass-mode="CLUSTER_OPEN"] .compass-object--mirrorland,
 [data-compass-root][data-compass-mode="ROOM_SELECTED"] .compass-object--mirrorland{background:transparent!important;border-color:transparent!important;box-shadow:none!important;outline-color:transparent!important;color:transparent!important;text-shadow:none!important}

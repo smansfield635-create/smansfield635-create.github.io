@@ -16,39 +16,44 @@ jobs:
           node-version: '22'
       - run: npm install --no-save playwright@1.55.0
       - run: npx playwright install --with-deps chromium
-      - name: Identify cardinal label owners and pseudo layers before and after real drag
+      - name: Verify v3 deployed native label and duplicate-shell removal
         run: |
-          cat > audit.mjs <<'NODE'
+          cat > verify.mjs <<'NODE'
           import { chromium } from 'playwright';
           const browser=await chromium.launch({headless:true});
           const page=await browser.newPage({viewport:{width:960,height:1500},deviceScaleFactor:1});
-          await page.goto('https://diamondgatebridge.com/compass-composite/?identity='+Date.now(),{waitUntil:'networkidle',timeout:120000});
-          await page.waitForTimeout(5000);
-          const report=async(label)=>{
+          const url='https://diamondgatebridge.com/compass-composite/?verify='+Date.now();
+          let loaded=false;
+          for(let i=0;i<12;i++){
+            await page.goto(url+'&attempt='+i,{waitUntil:'networkidle',timeout:120000});
+            await page.waitForTimeout(2500);
+            loaded=await page.evaluate(()=>document.documentElement.dataset.compassComposite==='gen1596-surgical-composite-3');
+            if(loaded) break;
+            await page.waitForTimeout(5000);
+          }
+          if(!loaded) throw new Error('V3_NOT_DEPLOYED');
+          const snapshot=async(label)=>{
             const out=await page.evaluate(()=>{
               const root=document.querySelector('[data-compass-root]');
-              const scene=document.querySelector('[data-compass-scene]');
-              const snap=(wing)=>{
-                const c=getComputedStyle(wing),b=getComputedStyle(wing,'::before'),a=getComputedStyle(wing,'::after'),r=wing.getBoundingClientRect();
-                return {
-                  id:wing.dataset.cardinalId||wing.dataset.wing||'',
-                  cls:wing.className,
-                  text:(wing.textContent||'').replace(/\s+/g,' ').trim(),
-                  readable:wing.dataset.gen1596Readable||'',
-                  selected:wing.dataset.selected||'',
-                  depth:wing.dataset.depth||'',
-                  rect:{x:Math.round(r.x),y:Math.round(r.y),w:Math.round(r.width),h:Math.round(r.height)},
-                  style:{display:c.display,visibility:c.visibility,opacity:c.opacity,bg:c.backgroundColor,border:c.borderTopColor,shadow:c.boxShadow,z:c.zIndex,transform:c.transform},
-                  before:{content:b.content,display:b.display,visibility:b.visibility,opacity:b.opacity,bg:b.backgroundColor,border:b.borderTopColor,shadow:b.boxShadow,transform:b.transform},
-                  after:{content:a.content,display:a.display,visibility:a.visibility,opacity:a.opacity,bg:a.backgroundColor,border:a.borderTopColor,shadow:a.boxShadow,transform:a.transform},
-                  spans:[...wing.querySelectorAll('span')].map(s=>{const sc=getComputedStyle(s),sr=s.getBoundingClientRect();return {text:(s.textContent||'').trim(),display:sc.display,visibility:sc.visibility,opacity:sc.opacity,bg:sc.backgroundColor,rect:{x:Math.round(sr.x),y:Math.round(sr.y),w:Math.round(sr.width),h:Math.round(sr.height)}}})
-                };
-              };
-              return {mode:root?.dataset.compassMode||'',foreground:root?.dataset.renderedForegroundCardinal||'',readable:root?.dataset.readableCardinal||'',orbitFocus:root?.dataset.orbitFocus||'',scene:scene?(()=>{const r=scene.getBoundingClientRect();return{x:r.x,y:r.y,w:r.width,h:r.height}})():null,wings:[...document.querySelectorAll('[data-compass-cardinal]')].map(snap)};
+              const wings=[...document.querySelectorAll('[data-compass-cardinal]')];
+              const rows=wings.map(wing=>{
+                const c=getComputedStyle(wing),b=getComputedStyle(wing,'::before'),a=getComputedStyle(wing,'::after');
+                const spans=[...wing.querySelectorAll('span')].map(s=>{const sc=getComputedStyle(s);return {text:(s.textContent||'').trim(),display:sc.display,visibility:sc.visibility,opacity:Number(sc.opacity)}});
+                return {id:wing.dataset.cardinalId||wing.dataset.wing||'',readable:wing.classList.contains('is-readable-cardinal'),text:(wing.textContent||'').replace(/\s+/g,' ').trim(),bg:c.backgroundColor,before:{display:b.display,content:b.content,opacity:Number(b.opacity),bg:b.backgroundColor},after:{display:a.display,content:a.content,opacity:Number(a.opacity),bg:a.backgroundColor},spans};
+              });
+              return {mode:root?.dataset.compassMode||'',foreground:root?.dataset.renderedForegroundCardinal||'',rows};
             });
+            const readable=out.rows.filter(r=>r.readable);
+            if(readable.length!==1) throw new Error(label+'_READABLE_COUNT_'+readable.length+' '+JSON.stringify(out));
+            if(!readable[0].spans.some(s=>s.display!=='none'&&s.visibility!=='hidden'&&s.opacity>0.5&&s.text)) throw new Error(label+'_READABLE_TEXT_MISSING '+JSON.stringify(out));
+            for(const r of out.rows.filter(r=>!r.readable)){
+              if(r.before.display!=='none'&&r.before.opacity>0.02) throw new Error(label+'_BEFORE_SHELL_VISIBLE_'+r.id+' '+JSON.stringify(r));
+              if(r.after.display!=='none'&&r.after.opacity>0.02) throw new Error(label+'_AFTER_SHELL_VISIBLE_'+r.id+' '+JSON.stringify(r));
+            }
             console.log(label+' '+JSON.stringify(out));
+            return out;
           };
-          await report('BEFORE');
+          const before=await snapshot('BEFORE');
           const scene=page.locator('[data-compass-scene]');
           const box=await scene.boundingBox();
           if(!box) throw new Error('NO_SCENE_BOX');
@@ -56,8 +61,9 @@ jobs:
           await page.mouse.down();
           await page.mouse.move(box.x+box.width*0.28,box.y+box.height*0.52,{steps:18});
           await page.mouse.up();
-          await page.waitForTimeout(2200);
-          await report('AFTER_DRAG');
+          await page.waitForTimeout(2500);
+          const after=await snapshot('AFTER_DRAG');
+          if(before.rows.find(r=>r.readable)?.id===after.rows.find(r=>r.readable)?.id) console.log('NOTE readable owner unchanged by this drag; visual integrity assertions still passed.');
           await browser.close();
           NODE
-          node audit.mjs
+          node verify.mjs

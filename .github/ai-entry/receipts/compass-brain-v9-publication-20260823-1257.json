@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "compass-brain-v9-publication-20260823-1257",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 1761,
+  "requestBranch": "ai-dispatch-request-compass-brain-v9-20260823-1257",
+  "requestCommit": "a701254f0059764d1c90950b426ed61b6085d8d9",
+  "requestCommitParent": "d71b45b09fefdd77b803728c4a2da8d8d9f07093",
+  "currentMainSha": "d71b45b09fefdd77b803728c4a2da8d8d9f07093",
+  "workflow": "pages-direct-deploy.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "d71b45b09fefdd77b803728c4a2da8d8d9f07093",
+    "surface_id": "compass-brain-v9"
+  },
+  "bridgeRunId": "32653272800",
+  "dispatchedRunId": 32653497778,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/32653497778",
+  "dispatchedRunHeadSha": "d71b45b09fefdd77b803728c4a2da8d8d9f07093",
+  "dispatchedAt": "2026-08-23T17:01:22.628Z",
+  "resolvedAt": "2026-08-23T17:01:26.500Z"
+}

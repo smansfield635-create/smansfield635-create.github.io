@@ -55,10 +55,19 @@ for (const vp of viewports) {
     const x0=r.left+r.width*.45;
     const x1=r.left+r.width*.72;
     const pointerId=17;
-    const fire=(type,x,buttons)=>c.dispatchEvent(new PointerEvent(type,{bubbles:true,cancelable:true,pointerId,pointerType:'touch',isPrimary:true,clientX:x,clientY:y,buttons,button:type==='pointerdown'?0:-1}));
-    fire('pointerdown',x0,1);
-    for(let i=1;i<=8;i++) fire('pointermove',x0+(x1-x0)*(i/8),1);
-    fire('pointerup',x1,0);
+    const originalSet=c.setPointerCapture;
+    const originalRelease=c.releasePointerCapture;
+    c.setPointerCapture=()=>{};
+    c.releasePointerCapture=()=>{};
+    try {
+      const fire=(type,x,buttons)=>c.dispatchEvent(new PointerEvent(type,{bubbles:true,cancelable:true,pointerId,pointerType:'touch',isPrimary:true,clientX:x,clientY:y,buttons,button:type==='pointerdown'?0:-1}));
+      fire('pointerdown',x0,1);
+      for(let i=1;i<=8;i++) fire('pointermove',x0+(x1-x0)*(i/8),1);
+      fire('pointerup',x1,0);
+    } finally {
+      c.setPointerCapture=originalSet;
+      c.releasePointerCapture=originalRelease;
+    }
   });
   await page.waitForFunction(yaw0=>Math.abs(document.querySelector('[data-capability-brain-v9]')._brainV9.inspect().yaw-yaw0)>0.03,{timeout:5000},before.inspect.yaw);
   await new Promise(r=>setTimeout(r,250));
@@ -118,6 +127,6 @@ for (const vp of viewports) {
 }
 
 await browser.close();
-const out={schema:'DGB_COMPASS_BRAIN_V9_ISOLATED_QUALIFICATION_v5',status:failed?'FAIL':'PASS',surface:'/inspection/compass/brain-v9/',expectedRenderer:EXPECTED_RENDERER,expectedPass:EXPECTED_PASS,checks};
+const out={schema:'DGB_COMPASS_BRAIN_V9_ISOLATED_QUALIFICATION_v6',status:failed?'FAIL':'PASS',surface:'/inspection/compass/brain-v9/',expectedRenderer:EXPECTED_RENDERER,expectedPass:EXPECTED_PASS,checks};
 console.log(JSON.stringify(out,null,2));
 if(failed) process.exit(1);

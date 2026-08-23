@@ -2,9 +2,9 @@
   "schema": "BT4_REAL_OBJECT_BINDING_v1",
   "subject": "blinded-governance-generalization",
   "evidencePath": "assets/credibility/governance-gen3-benchmark.v1.json",
-  "expectedEvidenceBlobSha": "bb2e1fce04699165a099f82cb656b911e583b897",
-  "epoch": 1,
+  "expectedEvidenceBlobSha": "0000000000000000000000000000000000000000",
+  "epoch": 2,
   "receiptEpoch": 1,
-  "expectedServedState": "QUALIFIED",
-  "phase": "BASELINE"
+  "expectedServedState": "HELD",
+  "phase": "IDENTITY_MISMATCH"
 }

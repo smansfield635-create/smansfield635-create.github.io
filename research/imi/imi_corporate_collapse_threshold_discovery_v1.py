@@ -10,8 +10,8 @@ UA='IMI-collapse-research/1.0 research@example.com'
 BASE='https://data.sec.gov/api/xbrl/companyfacts/CIK{cik:010d}.json'
 
 DISCOVERY=[
-    {'name':'Blockbuster','cik':1085734,'bankruptcy':'2010-09-23'},
-    {'name':'Borders','cik':940510,'bankruptcy':'2011-02-16'},
+    {'name':'J.C. Penney','cik':1166126,'bankruptcy':'2020-05-15'},
+    {'name':'Pier 1 Imports','cik':278130,'bankruptcy':'2020-02-17'},
     {'name':'RadioShack','cik':96289,'bankruptcy':'2015-02-05'},
     {'name':'Sears Holdings','cik':1310067,'bankruptcy':'2018-10-15'},
 ]
@@ -137,7 +137,6 @@ def threshold_scan(d):
         if len(hi)<5 or len(lo)<5: continue
         p_hi=float(hi.collapse_within_4q.mean()); p_lo=float(lo.collapse_within_4q.mean())
         rr=(p_hi+.02)/(p_lo+.02)
-        # reversibility: probability of dropping below k within next 4 observed quarters
         rev=[]
         for _,g in z.groupby('company'):
             g=g.sort_values('quarter').reset_index(drop=True)
@@ -193,7 +192,6 @@ def main():
         else:
             k=int(candidate['threshold'])
             crossings=company_crossings(d,k)
-            # momentum boundary: among levels, where next-quarter mean worsening is largest
             mom=[]
             q=usable.sort_values(['company','quarter']).copy()
             q['next_delta']=q.groupby('company').imi_level.shift(-1)-q.imi_level

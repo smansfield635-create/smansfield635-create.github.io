@@ -10,6 +10,7 @@ on:
 permissions:
   actions: write
   contents: read
+  issues: write
 
 jobs:
   prove-native-dispatch:
@@ -18,15 +19,27 @@ jobs:
       - name: Require native workflow_dispatch acceptance
         env:
           GH_TOKEN: ${{ github.token }}
+          RECEIPT_ISSUE: '1782'
         shell: bash
         run: |
           set -euo pipefail
           main_sha="$(curl --fail-with-body --silent --show-error -L -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${GH_TOKEN}" -H "X-GitHub-Api-Version: 2022-11-28" "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/main" | jq -r '.sha')"
           payload="$(jq -n --arg ref main --arg sha "$main_sha" --arg surface audralia '{ref:$ref,inputs:{target_sha:$sha,surface_id:$surface}}')"
           status="$(curl --silent --show-error -o /tmp/dispatch-response.json -w '%{http_code}' -X POST -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${GH_TOKEN}" -H "X-GitHub-Api-Version: 2022-11-28" "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/pages-exact-head-deploy-v3.yml/dispatches" -d "$payload")"
+          if [ "$status" = "204" ]; then
+            receipt="NATIVE_WORKFLOW_DISPATCH_ACCEPTED workflow=pages-exact-head-deploy-v3.yml status=204 target=${main_sha} surface=audralia proof_run=${GITHUB_RUN_ID} proof_sha=${GITHUB_SHA}"
+          else
+            response="$(cat /tmp/dispatch-response.json 2>/dev/null || true)"
+            receipt="NATIVE_WORKFLOW_DISPATCH_REJECTED workflow=pages-exact-head-deploy-v3.yml status=${status} target=${main_sha} surface=audralia proof_run=${GITHUB_RUN_ID} response=${response}"
+          fi
+          comment_payload="$(jq -n --arg body "$receipt" '{body:$body}')"
+          curl --fail-with-body --silent --show-error -L -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${RECEIPT_ISSUE}/comments" \
+            -d "$comment_payload" >/dev/null
+          echo "$receipt"
           if [ "$status" != "204" ]; then
-            cat /tmp/dispatch-response.json >&2 || true
-            echo "NATIVE_WORKFLOW_DISPATCH_REJECTED status=$status workflow=pages-exact-head-deploy-v3.yml" >&2
             exit 1
           fi
-          echo "NATIVE_WORKFLOW_DISPATCH_ACCEPTED workflow=pages-exact-head-deploy-v3.yml target=$main_sha surface=audralia"

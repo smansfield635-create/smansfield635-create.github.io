@@ -1,0 +1,10 @@
+FROZEN BEFORE CONFIRMATION EXECUTION
+Prior failures remain binding: integer threshold FAIL; VDS threshold FAIL; route-entrenchment FAIL.
+Question: does ordered multivariate history add predictive information beyond current state?
+Window: four consecutive observed quarters over the unchanged seven availability dimensions.
+Models: state-only vs sequence-aware logistic regression, balanced class weights, C=1.0.
+Training/calibration: previously opened companies only.
+Confirmation: Big Lots, Rite Aid, Revlon; Abercrombie & Fitch, Foot Locker, Ross Stores; Kroger, AutoZone, Tractor Supply.
+History ablation: 100 deterministic within-window historical-order permutations; current state preserved.
+No post-opening tuning.
+Verdicts: TRAJECTORY_CONFIRMED / FAIL / UNEVALUABLE.

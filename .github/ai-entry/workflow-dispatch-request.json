@@ -1,6 +1,8 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-composite-label-owner-v2-c5e136b9",
+  "requestId": "audralia-go-live-postmerge-20260823-1736",
   "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
-  "inputs": {"target_sha":"c5e136b9f51929dc7b55c4a25179e7b9f9e56eea"}
+  "inputs": {
+    "surface_id": "audralia"
+  }
 }

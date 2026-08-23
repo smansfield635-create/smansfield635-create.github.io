@@ -61,7 +61,6 @@ def _path_features(v):
 def enrich(x):
     x=x.sort_values(['permit','month']).copy().reset_index(drop=True)
     gb=x.groupby('permit',group_keys=False)
-    # Exact lag history 4..12; v1 already includes lags 1..3 for several variables.
     for c in SEQ_COLS:
         for k in range(1,13):
             name=f'{c}_lag{k}'
@@ -75,11 +74,9 @@ def enrich(x):
             x[f'{c}_rmin{win}']=roll.min().reset_index(level=0,drop=True)
             x[f'{c}_rmax{win}']=roll.max().reset_index(level=0,drop=True)
     x['obs_age']=gb.cumcount().astype(float)+1.0
-    prior_n=np.maximum(x['obs_age']-1,1)
     x['cum_high80_prior']=gb['max_util'].transform(lambda s: (s.shift(1)>=.8).expanding().mean())
     x['cum_high90_prior']=gb['max_util'].transform(lambda s: (s.shift(1)>=.9).expanding().mean())
     x['cum_mean_util_prior']=gb['max_util'].transform(lambda s: s.shift(1).expanding().mean())
-    # Order-sensitive residue features computed from full observed compliant path through t.
     feats=[]
     for _,d in x.groupby('permit',sort=False):
         vals=d['max_util'].to_numpy(float)
@@ -101,7 +98,6 @@ def strong_cols(x):
         for win in [6,12]:
             cols += [f'{c}_rmean{win}',f'{c}_rstd{win}',f'{c}_rmin{win}',f'{c}_rmax{win}']
     cols += ['obs_age','cum_high80_prior','cum_high90_prior','cum_mean_util_prior']
-    # Keep deterministic order and existing columns only.
     return list(dict.fromkeys([c for c in cols if c in x.columns]))
 
 
@@ -128,10 +124,13 @@ def strata_frame(te,p0):
     z=pd.DataFrame(index=te.index)
     z['risk']=pd.qcut(pd.Series(p0,index=te.index),10,labels=False,duplicates='drop')
     z['cur']=pd.qcut(te['max_util'],5,labels=False,duplicates='drop')
-    # qcut slope with fallback to sign bins when degenerate
-    try: z['slp']=pd.qcut(te['max_util_slope6'],3,labels=False,duplicates='drop')
-    except Exception: z['slp']=(te['max_util_slope6']>0).astype(int)
-    z['key']=z[['risk','cur','slp']].astype(str).agg('|'.join,axis=1)
+    try:
+        z['slp']=pd.qcut(te['max_util_slope6'],3,labels=False,duplicates='drop')
+    except Exception:
+        z['slp']=(te['max_util_slope6']>0).astype(int)
+    for c in ['risk','cur','slp']:
+        z[c]=z[c].map(lambda v: 'NA' if pd.isna(v) else str(v))
+    z['key']=z['risk']+'|'+z['cur']+'|'+z['slp']
     return z
 
 
@@ -185,7 +184,6 @@ def main():
         for y in mod.YEARS: raw.append(mod.fetch_state_year(s,y))
     x=mod.agg_months(mod.prep_raw(pd.concat(raw,ignore_index=True)))
     x=enrich(x)
-    # Replication horizon Y1 is already prospectively constructed by v1 before current-compliance filtering.
     x['Y1']=x['future1_viol']
     bcols=strong_cols(x)
     train=x[x.year<=2022].copy(); temporal=x[x.year>=2023].copy()

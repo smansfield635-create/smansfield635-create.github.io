@@ -33,10 +33,24 @@ def pick(cols,*terms):
         if all(norm(t) in v for t in terms): return c
     raise KeyError((terms,list(cols)))
 
+def _read_epa_csv_payload(content):
+    text=content.decode('utf-8-sig',errors='replace')
+    lines=text.splitlines()
+    header_idx=None
+    for i,line in enumerate(lines):
+        low=line.lower()
+        if ',' in line and 'state' in low and line.count(',')>=5:
+            header_idx=i
+            break
+    if header_idx is None:
+        raise RuntimeError('EPA state-statistics response has no detectable CSV header')
+    payload='\n'.join(lines[header_idx:])
+    return pd.read_csv(io.StringIO(payload),engine='python')
+
 def fetch_year(y):
     r=requests.get(URL.format(year=y),timeout=60,headers={'User-Agent':'Mozilla/5.0 imi-research/1.0'})
     r.raise_for_status()
-    d=pd.read_csv(io.BytesIO(r.content))
+    d=_read_epa_csv_payload(r.content)
     d['SOURCE_YEAR']=y
     return d
 

@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Audralia — Gratitude Continent Reconstruction GCR1</title>
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#06111c;color:#eef5f8;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}*{box-sizing:border-box}#world{position:fixed;inset:0;width:100%;height:100%;touch-action:none;display:block}.hud{position:fixed;left:max(14px,env(safe-area-inset-left));top:max(14px,env(safe-area-inset-top));z-index:2;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,.75)}.title{font-size:13px;font-weight:650;letter-spacing:.14em;text-transform:uppercase}.sub{margin-top:5px;font-size:11px;opacity:.72;letter-spacing:.06em}.scale{position:fixed;right:max(14px,env(safe-area-inset-right));top:max(14px,env(safe-area-inset-top));z-index:2;padding:8px 10px;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(5,15,24,.46);backdrop-filter:blur(8px);font-size:11px;letter-spacing:.12em;text-transform:uppercase;pointer-events:none}.controls{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;gap:8px;z-index:3}.controls button{appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(5,15,24,.58);color:#eef5f8;border-radius:999px;padding:9px 13px;font:600 11px/1 system-ui;letter-spacing:.08em;text-transform:uppercase;backdrop-filter:blur(8px)}.controls button:active{transform:translateY(1px)}.legend{position:fixed;right:max(14px,env(safe-area-inset-right));bottom:max(64px,env(safe-area-inset-bottom));z-index:2;font-size:10px;line-height:1.5;opacity:.72;text-align:right;pointer-events:none}@media(max-width:640px){.legend{display:none}.sub{max-width:250px}.controls button{padding:9px 11px}}
+</style>
+</head>
+<body>
+<canvas id="world" aria-label="Interactive Audralia world map"></canvas>
+<div class="hud"><div class="title">Audralia · GCR1</div><div class="sub">Gratitude resolved from H‑Earth · future territories provisional</div></div>
+<div class="scale" id="scaleLabel">Planetary</div>
+<div class="controls"><button data-view="world">World</button><button data-view="gratitude">Gratitude</button><button data-view="region">Region</button></div>
+<div class="legend">Drag to orbit · pinch/wheel to zoom<br>Clear-atmosphere geography inspection</div>
+<script type="module" src="./app.mjs?v=gcr1-1&cb=955523a75246a825"></script>
+</body>
+</html>

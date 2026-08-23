@@ -1,0 +1,51 @@
+name: Live Capability Stability 36cf90d Verification
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/live-capability-stability-36cf90d.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Require exact public release head
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected='36cf90df231e19bb82af898339903d31074bbffb'
+          for i in $(seq 1 36); do
+            observed="$(curl -fsSL --max-time 20 "https://diamondgatebridge.com/.well-known/dgb-release.json?verify=$RANDOM" | jq -r '.commit // empty' 2>/dev/null || true)"
+            if [ "$observed" = "$expected" ]; then echo "LIVE_EXACT_HEAD_VERIFIED $observed"; exit 0; fi
+            echo "attempt=$i observed=${observed:-none} expected=$expected"
+            sleep 10
+          done
+          exit 1
+      - name: Verify live capability stability
+        run: |
+          cat > verify.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          const browser=await chromium.launch({headless:true});
+          const sizes=[{name:'phone',w:390,h:844},{name:'tablet',w:960,h:1536},{name:'desktop',w:1440,h:1000}];
+          const receipts=[];
+          for(const s of sizes){
+            const page=await browser.newPage({viewport:{width:s.w,height:s.h}});
+            await page.goto('https://diamondgatebridge.com/?live-capability=36cf90d-'+Date.now(),{waitUntil:'networkidle',timeout:120000});
+            await page.waitForSelector('.compass-capability-orbit[data-continuity-contract="COMPASS_CAPABILITY_CONTINUITY_v1"]');await page.waitForTimeout(700);
+            const measure=()=>page.evaluate(()=>{const orbit=document.querySelector('.compass-capability-orbit'),stage=orbit.querySelector('.compass-object-stage'),sr=stage.getBoundingClientRect(),active=orbit.querySelector('.compass-orbit-plaque[data-active="true"]'),ar=active.getBoundingClientRect(),canvas=active.querySelector('canvas')?.getBoundingClientRect();return{id:active.dataset.capability,center:Math.abs((ar.left+ar.width/2)-(sr.left+sr.width/2)),canvasH:canvas?.height||0,activeCount:orbit.querySelectorAll('.compass-orbit-plaque[data-active="true"]').length,transition:getComputedStyle(orbit.querySelector('.compass-object-ring')).transitionDuration,stability:globalThis.DGB_COMPASS_GEN1591_BOUNDS?.capabilityStability||null,overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,cardinals:document.querySelectorAll('[data-compass-cardinal]').length,readable:document.querySelectorAll('[data-compass-cardinal].is-readable-cardinal').length};});
+            const orbit=page.locator('.compass-capability-orbit');await orbit.focus();const states=[await measure()];for(let i=0;i<3;i++){await page.keyboard.press('ArrowRight');await page.waitForTimeout(20);states.push(await measure());}
+            if(new Set(states.slice(1).map(x=>x.id)).size!==3)throw new Error(`${s.name} incomplete cycle`);
+            for(const x of states){if(x.center>4||x.activeCount!==1||x.transition!=='0s'||x.stability!=='COMMITTED_SELECTION_SNAPS_FRONT_TROPHY_HEIGHT_NORMALIZED'||x.overflow>2||x.cardinals!==4||x.readable!==1)throw new Error(`${s.name} state fail ${JSON.stringify(x)}`)}
+            const map=Object.fromEntries(states.slice(1).map(x=>[x.id,x]));const hs=[map.diagnostic.canvasH,map.awards.canvasH,map.house.canvasH];if(Math.max(...hs)-Math.min(...hs)>8)throw new Error(`${s.name} object imbalance ${hs}`);
+            await page.evaluate(()=>{globalThis.__ev=[];document.addEventListener('compass:capability-change',e=>globalThis.__ev.push(e.detail));});const stage=page.locator('.compass-object-stage');await stage.scrollIntoViewIfNeeded();await page.waitForTimeout(80);const b=await stage.boundingBox();await page.mouse.move(b.x+b.width*.72,b.y+b.height*.42);await page.mouse.down();await page.mouse.move(b.x+b.width*.20,b.y+b.height*.42,{steps:12});await page.mouse.up();await page.waitForTimeout(220);const drag=await page.evaluate(()=>({ev:globalThis.__ev,center:(()=>{const s=document.querySelector('.compass-object-stage').getBoundingClientRect(),a=document.querySelector('.compass-orbit-plaque[data-active="true"]').getBoundingClientRect();return Math.abs((a.left+a.width/2)-(s.left+s.width/2));})()}));if(!drag.ev.some(e=>e.phase==='dragging')||!drag.ev.some(e=>e.phase==='settled')||drag.center>4)throw new Error(`${s.name} drag fail ${JSON.stringify(drag)}`);
+            receipts.push({size:s.name,states,heights:hs,drag});await page.close();
+          }
+          console.log('LIVE_CAPABILITY_STABILITY_PASS '+JSON.stringify(receipts));await browser.close();
+          NODE
+          node verify.mjs

@@ -1,0 +1,74 @@
+name: Compass v4 Empty Shell Public Verification
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/compass-v4-empty-shell-public.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Verify public v4 preserves one coherent label and removes empty dark shells
+        run: |
+          cat > verify.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          const browser=await chromium.launch({headless:true});
+          const page=await browser.newPage({viewport:{width:960,height:1536},deviceScaleFactor:1});
+          const base='https://diamondgatebridge.com/compass-composite/?verify_v4='+Date.now();
+          let loaded=false;
+          for(let i=0;i<15;i++){
+            await page.goto(base+'&attempt='+i,{waitUntil:'networkidle',timeout:120000});
+            await page.waitForTimeout(2500);
+            loaded=await page.evaluate(()=>document.documentElement.dataset.compassComposite==='gen1596-surgical-composite-4');
+            if(loaded) break;
+            await page.waitForTimeout(5000);
+          }
+          if(!loaded) throw new Error('V4_NOT_DEPLOYED');
+          const inspect=async(label)=>{
+            const out=await page.evaluate(()=>{
+              const scene=document.querySelector('[data-compass-scene]');
+              const root=document.querySelector('[data-compass-root]');
+              const rgbaAlpha=s=>{const m=String(s).match(/rgba?\([^,]+,[^,]+,[^,]+(?:,\s*([\d.]+))?\)/);return m?(m[1]===undefined?1:Number(m[1])):0};
+              const visibleText=el=>[...el.querySelectorAll('span')].some(s=>{const c=getComputedStyle(s);return (s.textContent||'').trim()&&c.display!=='none'&&c.visibility!=='hidden'&&Number(c.opacity)>.5;});
+              const wings=[...document.querySelectorAll('[data-compass-cardinal]')].map(w=>{const c=getComputedStyle(w),r=w.getBoundingClientRect();return{id:w.dataset.cardinalId||w.dataset.wing||'',textVisible:visibleText(w),bg:c.backgroundColor,bgAlpha:rgbaAlpha(c.backgroundColor),shadow:c.boxShadow,rect:{x:r.x,y:r.y,w:r.width,h:r.height}}});
+              const sr=scene.getBoundingClientRect();
+              const emptyDark=[...scene.querySelectorAll('*')].filter(el=>{
+                const c=getComputedStyle(el),r=el.getBoundingClientRect();
+                if(c.display==='none'||c.visibility==='hidden'||Number(c.opacity)<=.02)return false;
+                if(r.right<=sr.left||r.left>=sr.right||r.bottom<=sr.top||r.top>=sr.bottom)return false;
+                if(r.width<70||r.width>190||r.height<24||r.height>90)return false;
+                if(rgbaAlpha(c.backgroundColor)<=0.12)return false;
+                const own=(el.textContent||'').replace(/\s+/g,' ').trim();
+                const anyVisible=[...el.querySelectorAll('*')].some(n=>{const nc=getComputedStyle(n);return (n.textContent||'').trim()&&nc.display!=='none'&&nc.visibility!=='hidden'&&Number(nc.opacity)>.5;});
+                return !own||!anyVisible;
+              }).map(el=>{const c=getComputedStyle(el),r=el.getBoundingClientRect();return{tag:el.tagName,cls:el.className||'',id:el.id||'',bg:c.backgroundColor,rect:{x:Math.round(r.x),y:Math.round(r.y),w:Math.round(r.width),h:Math.round(r.height)}}});
+              return{mode:root?.dataset.compassMode||'',foreground:root?.dataset.renderedForegroundCardinal||'',wings,emptyDark};
+            });
+            const readable=out.wings.filter(w=>w.textVisible);
+            if(readable.length!==1) throw new Error(label+'_VISIBLE_LABEL_COUNT_'+readable.length+' '+JSON.stringify(out));
+            for(const w of out.wings.filter(w=>!w.textVisible)){
+              if(w.bgAlpha>.05||w.shadow!=='none') throw new Error(label+'_EMPTY_WING_SHELL_'+w.id+' '+JSON.stringify(w));
+            }
+            if(out.emptyDark.length) throw new Error(label+'_EMPTY_DARK_RECT_'+JSON.stringify(out.emptyDark));
+            console.log(label+' '+JSON.stringify(out));
+            return out;
+          };
+          await inspect('BEFORE');
+          const scene=page.locator('[data-compass-scene]');
+          const box=await scene.boundingBox();
+          await page.mouse.move(box.x+box.width*.72,box.y+box.height*.52);
+          await page.mouse.down();
+          await page.mouse.move(box.x+box.width*.28,box.y+box.height*.52,{steps:18});
+          await page.mouse.up();
+          for(const delay of [100,300,700,1500,2600]){await page.waitForTimeout(delay);await inspect('AFTER_'+delay);}
+          await browser.close();
+          NODE
+          node verify.mjs

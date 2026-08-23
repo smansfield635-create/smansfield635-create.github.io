@@ -47,12 +47,21 @@ for (const vp of viewports) {
     const c=document.querySelector('[data-capability-brain-v9]');
     return {dataset:{...c.dataset},inspect:c._brainV9.inspect(),width:c.width,height:c.height};
   });
-  const box=await page.$eval('[data-capability-brain-v9]',el=>{const r=el.getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height}});
-  await page.mouse.move(box.x+box.width*.55,box.y+box.height*.52);
-  await page.mouse.down();
-  await page.mouse.move(box.x+box.width*.72,box.y+box.height*.60,{steps:8});
-  await page.mouse.up();
-  await new Promise(r=>setTimeout(r,350));
+
+  await page.evaluate(()=>{
+    const c=document.querySelector('[data-capability-brain-v9]');
+    const r=c.getBoundingClientRect();
+    const y=r.top+r.height*.52;
+    const x0=r.left+r.width*.45;
+    const x1=r.left+r.width*.72;
+    const pointerId=17;
+    const fire=(type,x,buttons)=>c.dispatchEvent(new PointerEvent(type,{bubbles:true,cancelable:true,pointerId,pointerType:'touch',isPrimary:true,clientX:x,clientY:y,buttons,button:type==='pointerdown'?0:-1}));
+    fire('pointerdown',x0,1);
+    for(let i=1;i<=8;i++) fire('pointermove',x0+(x1-x0)*(i/8),1);
+    fire('pointerup',x1,0);
+  });
+  await page.waitForFunction(yaw0=>Math.abs(document.querySelector('[data-capability-brain-v9]')._brainV9.inspect().yaw-yaw0)>0.03,{timeout:5000},before.inspect.yaw);
+  await new Promise(r=>setTimeout(r,250));
   const after=await page.evaluate(()=>document.querySelector('[data-capability-brain-v9]')._brainV9.inspect());
 
   const triangles=Number(before.dataset.objectTriangleCount||0);
@@ -109,6 +118,6 @@ for (const vp of viewports) {
 }
 
 await browser.close();
-const out={schema:'DGB_COMPASS_BRAIN_V9_ISOLATED_QUALIFICATION_v4',status:failed?'FAIL':'PASS',surface:'/inspection/compass/brain-v9/',expectedRenderer:EXPECTED_RENDERER,expectedPass:EXPECTED_PASS,checks};
+const out={schema:'DGB_COMPASS_BRAIN_V9_ISOLATED_QUALIFICATION_v5',status:failed?'FAIL':'PASS',surface:'/inspection/compass/brain-v9/',expectedRenderer:EXPECTED_RENDERER,expectedPass:EXPECTED_PASS,checks};
 console.log(JSON.stringify(out,null,2));
 if(failed) process.exit(1);

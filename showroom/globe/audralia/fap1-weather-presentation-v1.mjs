@@ -1,4 +1,4 @@
-const POLICY_ID='AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v6_INTEGRATED_FULL_COVERAGE';
+const POLICY_ID='AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v5_INTEGRATED_COVERAGE';
 const previousShaderSource=WebGL2RenderingContext.prototype.shaderSource;
 let patched=0;
 let rejected=0;
@@ -188,68 +188,6 @@ vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   float oc14m=oc14e*fap1Band(h,31.0,70.0)*smoothstep(.49,.72,oc14cells)*.74;
   mass+=oc14m;precip+=oc14m*.22;
 
-  // Second integrated ring: independent low/mid/high systems placed between
-  // the first coverage systems so no longitude sector depends on one cloud body.
-  vec2 oc15=fap1Local(lat,lon,.34,-2.34-t*.007);
-  float oc15e=fap1Ellipse(oc15,vec2(0.0),vec2(.60,.26),.18);
-  float oc15m=oc15e*fap1Band(h,72.0,105.0)*mix(.48,1.0,fap1CloudBreak(radial,t,16.0,.27,.63))*.58;
-  mass+=oc15m;ice+=oc15m*.98;
-
-  vec2 oc16=fap1Local(lat,lon,-.36,-1.78+t*.008);
-  float oc16e=fap1Ellipse(oc16,vec2(0.0),vec2(.62,.29),-.14);
-  float oc16m=oc16e*fap1Band(h,30.0,62.0)*mix(.44,1.0,fap1CloudBreak(radial,t,21.0,.28,.65))*.70;
-  mass+=oc16m;precip+=oc16m*.16;
-
-  vec2 oc17=fap1Local(lat,lon,.18,-1.18+t*.010);
-  float oc17e=fap1Ellipse(oc17,vec2(0.0),vec2(.61,.25),-.26);
-  float oc17m=oc17e*fap1Band(h,45.0,84.0)*mix(.46,1.0,fap1CloudBreak(radial,t,18.0,.28,.64))*.66;
-  mass+=oc17m;ice+=oc17m*.38;precip+=oc17m*.16;
-
-  vec2 oc18=fap1Local(lat,lon,-.20,-.55-t*.009);
-  float oc18e=fap1Ellipse(oc18,vec2(0.0),vec2(.62,.30),.11);
-  float oc18m=oc18e*fap1Band(h,69.0,105.0)*mix(.50,1.0,fap1CloudBreak(radial,t,15.0,.26,.62))*.56;
-  mass+=oc18m;ice+=oc18m*.98;
-
-  vec2 oc19=fap1Local(lat,lon,.38,.05+t*.008);
-  float oc19e=fap1Ellipse(oc19,vec2(0.0),vec2(.60,.28),-.08);
-  float oc19m=oc19e*fap1Band(h,31.0,63.0)*mix(.46,1.0,fap1CloudBreak(radial,t,22.0,.28,.64))*.70;
-  mass+=oc19m;precip+=oc19m*.18;
-
-  vec2 oc20=fap1Local(lat,lon,-.40,.58-t*.008);
-  float oc20e=fap1Ellipse(oc20,vec2(0.0),vec2(.64,.25),.25);
-  float oc20m=oc20e*fap1Band(h,47.0,87.0)*mix(.45,1.0,fap1CloudBreak(radial,t,17.0,.28,.64))*.66;
-  mass+=oc20m;ice+=oc20m*.40;precip+=oc20m*.17;
-
-  vec2 oc21=fap1Local(lat,lon,.22,1.05+t*.009);
-  float oc21e=fap1Ellipse(oc21,vec2(0.0),vec2(.62,.31),-.03);
-  float oc21m=oc21e*fap1Band(h,71.0,106.0)*mix(.48,1.0,fap1CloudBreak(radial,t,14.0,.27,.63))*.58;
-  mass+=oc21m;ice+=oc21m*.98;
-
-  vec2 oc22=fap1Local(lat,lon,-.24,1.62-t*.008);
-  float oc22e=fap1Ellipse(oc22,vec2(0.0),vec2(.61,.30),.10);
-  float oc22m=oc22e*fap1Band(h,30.0,64.0)*mix(.45,1.0,fap1CloudBreak(radial,t,23.0,.28,.65))*.72;
-  mass+=oc22m;precip+=oc22m*.19;
-
-  vec2 oc23=fap1Local(lat,lon,.42,2.08+t*.008);
-  float oc23e=fap1Ellipse(oc23,vec2(0.0),vec2(.63,.24),-.21);
-  float oc23m=oc23e*fap1Band(h,46.0,86.0)*mix(.46,1.0,fap1CloudBreak(radial,t,18.0,.27,.63))*.66;
-  mass+=oc23m;ice+=oc23m*.42;precip+=oc23m*.16;
-
-  vec2 oc24=fap1Local(lat,lon,-.38,2.68-t*.007);
-  float oc24e=fap1Ellipse(oc24,vec2(0.0),vec2(.62,.29),.17);
-  float oc24m=oc24e*fap1Band(h,70.0,106.0)*mix(.49,1.0,fap1CloudBreak(radial,t,15.0,.26,.62))*.58;
-  mass+=oc24m;ice+=oc24m*.98;
-
-  vec2 oc25=fap1Local(lat,lon,.12,-2.98+t*.008);
-  float oc25e=fap1Ellipse(oc25,vec2(0.0),vec2(.64,.32),-.05);
-  float oc25m=oc25e*fap1Band(h,31.0,65.0)*mix(.46,1.0,fap1CloudBreak(radial,t,22.0,.28,.64))*.72;
-  mass+=oc25m;precip+=oc25m*.18;
-
-  vec2 oc26=fap1Local(lat,lon,-.10,2.38-t*.009);
-  float oc26e=fap1Ellipse(oc26,vec2(0.0),vec2(.61,.27),.08);
-  float oc26m=oc26e*fap1Band(h,45.0,85.0)*mix(.46,1.0,fap1CloudBreak(radial,t,17.0,.28,.64))*.68;
-  mass+=oc26m;ice+=oc26m*.38;precip+=oc26m*.17;
-
   float bridgeWave=.5+.5*sin(lon*3.0 + sin(lat*4.0)*1.35 + t*.42);
   float bridgeNoise=fap1CloudBreak(radial,t,12.0,.27,.63);
   float bridgeLat=(1.0-smoothstep(.92,1.18,abs(lat)));
@@ -293,7 +231,7 @@ Object.defineProperty(window,'__AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION__',
   cameraMutation:false,
   navigationMutation:false,
   targetVisibleOrbitalCoverage:0.70,
-  integratedAddedSystems:26,
+  integratedAddedSystems:14,
   singleCanonicalFAP1DensityField:true,
   secondaryCoveragePatchStage:false,
   visibleUpgrade:Object.freeze({
@@ -319,8 +257,7 @@ Object.defineProperty(window,'__AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION__',
     intermittentClearPockets:true,
     noUniformInteriorFogFallback:true,
     orbitalCoverageIntegrated:true,
-    noSecondaryCoveragePatchStage:true,
-    secondIntegratedWeatherRing:true
+    noSecondaryCoveragePatchStage:true
   }),
   getRuntimeEvidence:()=>Object.freeze({patchedCloudShaders:patched,rejectedCloudShaders:rejected})
 }),writable:false,configurable:false});

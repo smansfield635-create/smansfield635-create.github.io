@@ -31,8 +31,8 @@ jobs:
           node --check assets/compass/capability-object-stage.js
           node --check assets/compass/capability-object-brain-v9.js
           grep -q 'CAPABILITY_OBJECT_STAGE_v3' assets/compass/capability-object-stage.js
-          grep -q 'COMPASS_BRAIN_V9_GEOMETRY_G123_v2' assets/compass/capability-object-brain-v9.js
-          grep -q 'G1_LOCAL_GYRUS_CLOSURE__G2_ANATOMICAL_TOPOLOGY__G3_INFERIOR_INTEGRATION' assets/compass/capability-object-brain-v9.js
+          grep -q 'COMPASS_BRAIN_V9_GEOMETRY_G123_v3' assets/compass/capability-object-brain-v9.js
+          grep -q 'G1_MULTIBANK_VOLUME__G2_LOCAL_SERPENTINE_TOPOLOGY__G3_INFERIOR_INTEGRATION' assets/compass/capability-object-brain-v9.js
           grep -q 'NO_ENVELOPE_INDEPENDENT_3D_SPLINES' assets/compass/capability-object-brain-v9.js
           for view in front rear top left right oblique; do grep -q "data-view=\"$view\"" inspection/compass/brain-v9/index.html; done
       - uses: browser-actions/setup-chrome@v1
@@ -65,10 +65,10 @@ jobs:
           page.on('pageerror',e=>errors.push(String(e)));
           page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
           await page.goto('http://127.0.0.1:4173/inspection/compass/brain-v9/',{waitUntil:'domcontentloaded',timeout:30000});
-          await page.waitForFunction(()=>document.querySelector('[data-capability-brain-v9]')?.dataset.brainRenderer==='COMPASS_BRAIN_V9_GEOMETRY_G123_v2',{timeout:30000});
+          await page.waitForFunction(()=>document.querySelector('[data-capability-brain-v9]')?.dataset.brainRenderer==='COMPASS_BRAIN_V9_GEOMETRY_G123_v3',{timeout:30000});
           await page.waitForFunction(()=>Number(document.querySelector('[data-capability-brain-v9]')?.dataset.objectFrames||0)>1,{timeout:30000});
           const base=await page.evaluate(()=>{const c=document.querySelector('[data-capability-brain-v9]');return{renderer:c.dataset.brainRenderer,stage:c.dataset.objectStage,mode:c.dataset.objectInspectionMode,triangles:Number(c.dataset.objectTriangleCount),construction:c.dataset.brainConstruction,pass:c.dataset.brainGeometryPass,hasApi:!!c._brainV9?.setView}});
-          if(base.renderer!=='COMPASS_BRAIN_V9_GEOMETRY_G123_v2')throw Error('renderer identity mismatch');
+          if(base.renderer!=='COMPASS_BRAIN_V9_GEOMETRY_G123_v3')throw Error('renderer identity mismatch');
           if(base.stage!=='CAPABILITY_OBJECT_STAGE_v3')throw Error('stage identity mismatch');
           if(base.mode!=='geometry')throw Error('not in neutral geometry mode');
           if(!base.hasApi)throw Error('fixed-view API unavailable');
@@ -88,13 +88,13 @@ jobs:
             evidence.push({view,file,frames:await page.$eval('[data-capability-brain-v9]',c=>Number(c.dataset.objectFrames||0))});
           }
           if(errors.length)throw Error('browser errors: '+errors.join(' | '));
-          fs.writeFileSync('geometry-evidence/receipt.json',JSON.stringify({schema:'BRAIN_V9_GEOMETRY_G123_EVIDENCE_v2',...base,views:evidence},null,2));
+          fs.writeFileSync('geometry-evidence/receipt.json',JSON.stringify({schema:'BRAIN_V9_GEOMETRY_G123_EVIDENCE_v3',...base,views:evidence},null,2));
           await browser.close();
           NODE
           node verify-g123.mjs
           rm verify-g123.mjs
       - uses: actions/upload-artifact@v4
         with:
-          name: brain-v9-geometry-g123-v2-evidence
+          name: brain-v9-geometry-g123-v3-evidence
           path: geometry-evidence/
           if-no-files-found: error

@@ -1,0 +1,58 @@
+name: Compass One Readable Label Final
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'compass-composite/**'
+      - '.github/workflows/compass-one-readable-label-final.yml'
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Serve candidate and prove one visible cardinal label after renderer ownership changes
+        run: |
+          python3 -m http.server 4173 >/tmp/compass-http.log 2>&1 &
+          cat > verify.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          const browser=await chromium.launch({headless:true});
+          const profiles=[{name:'tablet',w:800,h:1280},{name:'desktop',w:1280,h:900},{name:'phone',w:430,h:932}];
+          for(const p of profiles){
+            const page=await browser.newPage({viewport:{width:p.w,height:p.h}});
+            await page.goto('http://127.0.0.1:4173/compass-composite/?q='+Date.now(),{waitUntil:'networkidle',timeout:120000});
+            await page.waitForTimeout(3500);
+            const read=()=>page.evaluate(()=>{
+              const root=document.querySelector('[data-compass-root]');
+              const wings=[...document.querySelectorAll('[data-compass-cardinal]')];
+              return {build:root?.dataset.compassComposite,owner:root?.dataset.gen1596RenderedLabelOwner,rows:wings.map(w=>{const c=getComputedStyle(w);const spans=[...w.querySelectorAll('span')].map(s=>{const x=getComputedStyle(s);return {display:x.display,visibility:x.visibility,opacity:Number(x.opacity)}});return {id:w.dataset.cardinalId||w.dataset.wing,readable:w.classList.contains('is-readable-cardinal'),bg:c.backgroundColor,spans};})};
+            });
+            const assertOne=s=>{
+              if(s.build!=='gen1596-surgical-composite-3')throw new Error(p.name+': wrong build '+s.build);
+              const readable=s.rows.filter(r=>r.readable);
+              if(readable.length!==1)throw new Error(p.name+': readable count '+readable.length);
+              if(!readable[0].spans.every(x=>x.display!=='none'&&x.visibility!=='hidden'&&x.opacity>.5))throw new Error(p.name+': functional label hidden');
+              const inactive=s.rows.filter(r=>!r.readable);
+              if(!inactive.every(r=>r.bg==='rgba(0, 0, 0, 0)'&&r.spans.every(x=>x.visibility==='hidden'||x.opacity===0)))throw new Error(p.name+': duplicate shell/text remains');
+            };
+            let s=await read(); assertOne(s);
+            await page.evaluate(()=>{
+              const wings=[...document.querySelectorAll('[data-compass-cardinal]')];
+              wings.forEach(w=>{w.dataset.depth=(w.dataset.cardinalId==='east'?'0.94':'0.10');w.dataset.primary=String(w.dataset.cardinalId==='east');});
+              wings.forEach(w=>w.classList.add('is-readable-cardinal'));
+            });
+            await page.waitForTimeout(250);
+            s=await read(); assertOne(s);
+            if(s.owner!=='east'||s.rows.find(r=>r.readable)?.id!=='east')throw new Error(p.name+': rendered foreground did not own label');
+            await page.close();
+          }
+          await browser.close();
+          console.log('COMPASS_ONE_READABLE_LABEL_FINAL_PASS');
+          NODE
+          node verify.mjs

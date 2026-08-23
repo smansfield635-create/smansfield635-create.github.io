@@ -1,0 +1,35 @@
+name: BT4 Entitlement Preview Verification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'preview/bt4/entitlement-v1/**'
+      - '.github/workflows/bt4-entitlement-preview-verification.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify shared entitlement engine
+        run: node preview/bt4/entitlement-v1/verify-entitlement-preview.v1.mjs
+      - name: Verify public Pages transport
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://diamondgatebridge.com/preview/bt4/entitlement-v1/'
+          for i in {1..18}; do
+            BODY="$(curl -fsSL --max-time 15 "$URL" || true)"
+            if grep -q 'BT4 SERVED-STATE EXPERIMENT' <<<"$BODY" && grep -q 'entitlement-engine.v1.mjs' <<<"$BODY"; then
+              echo 'PUBLIC_PREVIEW_TRANSPORT=PASS'
+              exit 0
+            fi
+            sleep 10
+          done
+          echo 'PUBLIC_PREVIEW_TRANSPORT=FAIL'
+          exit 1

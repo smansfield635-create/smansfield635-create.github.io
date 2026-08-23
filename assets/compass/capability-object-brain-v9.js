@@ -1,6 +1,6 @@
 (()=>{
 'use strict';
-const VERSION='COMPASS_BRAIN_V9_GEOMETRY_G123_v3';
+const VERSION='COMPASS_BRAIN_V9_GEOMETRY_G123_v4';
 const M=Math,PI=M.PI,TAU=PI*2;
 const norm=v=>{const d=M.hypot(v[0],v[1],v[2])||1;return[v[0]/d,v[1]/d,v[2]/d]};
 const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
@@ -16,7 +16,7 @@ function build(gl){
  const tri=(a,b,c)=>idx.push(a,b,c);
  function cat(a,b,c,d,t){const t2=t*t,t3=t2*t;return[0,1,2].map(k=>.5*((2*b[k])+(-a[k]+c[k])*t+(2*a[k]-5*b[k]+4*c[k]-d[k])*t2+(-a[k]+3*b[k]-3*c[k]+d[k])*t3))}
  function spline(c,steps=2){const o=[];for(let i=0;i<c.length-1;i++){const a=c[M.max(0,i-1)],b=c[i],d=c[i+1],e=c[M.min(c.length-1,i+2)];for(let s=0;s<steps;s++)o.push(cat(a,b,d,e,s/steps))}o.push(c[c.length-1]);return o}
- function tube(points,radius,sides=7,color=neutral){if(points.length<2)return;const rings=[];let prev=[0,1,0];for(let i=0;i<points.length;i++){const p=points[i],a=points[M.max(0,i-1)],b=points[M.min(points.length-1,i+1)],t=norm(sub(b,a)),ref=M.abs(t[1])>.87?[1,0,0]:[0,1,0];let n=norm(cross(t,ref));if(i&&dot(n,prev)<0)n=mul(n,-1);const q=norm(cross(t,n));prev=n;const u=i/M.max(1,points.length-1),r=typeof radius==='function'?radius(u):radius,ring=[];for(let s=0;s<sides;s++){const ang=s/sides*TAU,rad=add(mul(n,M.cos(ang)),mul(q,M.sin(ang)));ring.push(V(add(p,mul(rad,r)),rad,color))}rings.push(ring)}for(let i=0;i<rings.length-1;i++)for(let s=0;s<sides;s++){const n=(s+1)%sides,a=rings[i][s],b=rings[i][n],c=rings[i+1][n],d=rings[i+1][s];tri(a,b,c);tri(a,c,d)}}
+ function tube(points,radius,sides=6,color=neutral){if(points.length<2)return;const rings=[];let prev=[0,1,0];for(let i=0;i<points.length;i++){const p=points[i],a=points[M.max(0,i-1)],b=points[M.min(points.length-1,i+1)],t=norm(sub(b,a)),ref=M.abs(t[1])>.87?[1,0,0]:[0,1,0];let n=norm(cross(t,ref));if(i&&dot(n,prev)<0)n=mul(n,-1);const q=norm(cross(t,n));prev=n;const u=i/M.max(1,points.length-1),r=typeof radius==='function'?radius(u):radius,ring=[];for(let s=0;s<sides;s++){const ang=s/sides*TAU,rad=add(mul(n,M.cos(ang)),mul(q,M.sin(ang)));ring.push(V(add(p,mul(rad,r)),rad,color))}rings.push(ring)}for(let i=0;i<rings.length-1;i++)for(let s=0;s<sides;s++){const n=(s+1)%sides,a=rings[i][s],b=rings[i][n],c=rings[i+1][n],d=rings[i+1][s];tri(a,b,c);tri(a,c,d)}}
  function frame(t){const T=norm(t),ref=M.abs(T[1])>.80?[0,0,1]:[0,1,0],N=norm(cross(T,ref)),B=norm(cross(T,N));return[T,N,B]}
  function wig(seed,k){return .62*M.sin(seed*1.771+k*2.413)+.25*M.sin(seed*.719+k*4.103)}
  function serpent(side,center,tangent,length=.22,r=.026,seed=0,color=neutral,amp=.052){
@@ -29,7 +29,7 @@ function build(gl){
    p=add(p,[side*wig(seed,i)*.003,wig(seed+3,i)*.003,wig(seed+7,i)*.003]);
    ctrl.push(p);
   }
-  tube(spline(ctrl,2),u=>r*(.90+.17*M.sin(PI*u)),7,color);
+  tube(spline(ctrl,2),u=>r*(.90+.17*M.sin(PI*u)),6,color);
  }
  function addSeeds(side,seeds,base,color=neutral){seeds.forEach((s,i)=>serpent(side,[s[0],s[1],s[2]],[s[3],s[4],s[5]],s[6]||.22,s[7]||.026,base+i,color,s[8]||.050))}
  const superior=[];
@@ -68,14 +68,14 @@ function build(gl){
   [[-.17,-.330,-.115],[-.105,-.300,-.080],[-.045,-.285,-.057],[0,-.282,-.050],[.045,-.285,-.057],[.105,-.300,-.080],[.17,-.330,-.115]],
   [[-.155,-.375,-.125],[-.095,-.345,-.090],[-.040,-.330,-.067],[0,-.327,-.060],[.040,-.330,-.067],[.095,-.345,-.090],[.155,-.375,-.125]]
  ];
- pons.forEach((c,i)=>tube(spline(c,3),.020+i*.001,8,light));
+ pons.forEach((c,i)=>tube(spline(c,3),.020+i*.001,7,light));
  const stem=[[0,-.18,-.17],[0,-.245,-.14],[.004,-.315,-.118],[.008,-.385,-.113],[.006,-.455,-.122],[.002,-.530,-.142],[-.003,-.605,-.165],[-.006,-.680,-.188],[0,-.755,-.205]];
- for(let k=-4;k<=4;k++){const c=stem.map((p,i)=>[p[0]+k*.008,p[1]+.003*M.sin(i*.8+k),p[2]+.004*M.sin(i*1.15+k*.45)]);tube(spline(c,2),u=>lerp(.017,.010,u),7,k%2?dark:neutral)}
- const vertexCount=pos.length/3;if(vertexCount>65535)throw Error('Brain V9 G123 v3 vertex budget exceeded: '+vertexCount);
+ for(let k=-4;k<=4;k++){const c=stem.map((p,i)=>[p[0]+k*.008,p[1]+.003*M.sin(i*.8+k),p[2]+.004*M.sin(i*1.15+k*.45)]);tube(spline(c,2),u=>lerp(.017,.010,u),6,k%2?dark:neutral)}
+ const vertexCount=pos.length/3;if(vertexCount>65535)throw Error('Brain V9 G123 v4 vertex budget exceeded: '+vertexCount);
  const buf=(t,d)=>{const b=gl.createBuffer();gl.bindBuffer(t,b);gl.bufferData(t,d,gl.STATIC_DRAW);return b};
  return{p:buf(gl.ARRAY_BUFFER,new Float32Array(pos)),n:buf(gl.ARRAY_BUFFER,new Float32Array(nor)),c:buf(gl.ARRAY_BUFFER,new Float32Array(col)),i:buf(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(idx)),count:idx.length,triangles:idx.length/3};
 }
-function boot(){const stage=window.CapabilityObjectStage;if(!stage)return;document.querySelectorAll('[data-capability-brain-v9]').forEach(canvas=>{const api=stage.mount(canvas,{meshFactory:build,initialYaw:.42,initialPitch:-.04,spin:0,scale:1.00,inspectionMode:'geometry',dataset:{brainRenderer:VERSION,brainContract:'COMPASS_BRAIN_GEOMETRY_SYSTEMATIC_G123_v3',brainMaterial:'NEUTRAL_GEOMETRY_MATTE',brainDepthModel:'TRUE_WEBGL_GEOMETRY',brainConstruction:'NO_ENVELOPE_INDEPENDENT_3D_SPLINES',brainGeometryPass:'G1_MULTIBANK_VOLUME__G2_LOCAL_SERPENTINE_TOPOLOGY__G3_INFERIOR_INTEGRATION',brainComponents:'multibank-serpentine-cortex,narrow-longitudinal-fissure,central-sulcus-corridor,lateral-sulcus-corridor,precentral-gyri,postcentral-gyri,deep-intermediate-gyri,compact-cerebellar-folia,pons-fibers,medulla-tracts,brainstem,peduncles'}});if(api)canvas._brainV9=api})}
+function boot(){const stage=window.CapabilityObjectStage;if(!stage)return;document.querySelectorAll('[data-capability-brain-v9]').forEach(canvas=>{const api=stage.mount(canvas,{meshFactory:build,initialYaw:.42,initialPitch:-.04,spin:0,scale:1.00,inspectionMode:'geometry',dataset:{brainRenderer:VERSION,brainContract:'COMPASS_BRAIN_GEOMETRY_SYSTEMATIC_G123_v4',brainMaterial:'NEUTRAL_GEOMETRY_MATTE',brainDepthModel:'TRUE_WEBGL_GEOMETRY',brainConstruction:'NO_ENVELOPE_INDEPENDENT_3D_SPLINES',brainGeometryPass:'G1_MULTIBANK_VOLUME__G2_LOCAL_SERPENTINE_TOPOLOGY__G3_INFERIOR_INTEGRATION',brainComponents:'multibank-serpentine-cortex,narrow-longitudinal-fissure,central-sulcus-corridor,lateral-sulcus-corridor,precentral-gyri,postcentral-gyri,deep-intermediate-gyri,compact-cerebellar-folia,pons-fibers,medulla-tracts,brainstem,peduncles'}});if(api)canvas._brainV9=api})}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 window.CompassBrainV9=Object.freeze({version:VERSION,build,boot});
 })();

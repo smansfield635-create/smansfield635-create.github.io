@@ -2,7 +2,6 @@
 'use strict';
 const VERSION='COMPASS_BRAIN_V9_TUBULAR_COMPOSITE_v1';
 const M=Math,PI=M.PI,TAU=PI*2;
-const clamp=(x,a,b)=>M.max(a,M.min(b,x));
 const norm=(x,y,z)=>{const d=M.hypot(x,y,z)||1;return[x/d,y/d,z/d]};
 const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
 const sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]];
@@ -26,7 +25,7 @@ function build(gl){
    const p=points[i];
    const pa=points[M.max(0,i-1)],pb=points[M.min(points.length-1,i+1)];
    const t=norm(...sub(pb,pa));
-   let ref=M.abs(t[1])>.88?[1,0,0]:[0,1,0];
+   const ref=M.abs(t[1])>.88?[1,0,0]:[0,1,0];
    let n=norm(...cross(t,ref));
    if(i&&n[0]*prevN[0]+n[1]*prevN[1]+n[2]*prevN[2]<0)n=mul(n,-1);
    const b=norm(...cross(t,n));
@@ -76,14 +75,12 @@ function build(gl){
    tube(pts,.046+(band%4)*.003,corticalColor(mid[2],mid[1]),10);
   }
 
-  // Short crossing gyri break the longitudinal regularity and create deep natural sulcal gaps.
   const crossRows=11;
   for(let r=0;r<crossRows;r++){
    const z=-.61+r/(crossRows-1)*1.22;
    const pts=[];
-   const samples2=18;
-   for(let i=0;i<samples2;i++){
-    const u=i/(samples2-1);
+   for(let i=0;i<18;i++){
+    const u=i/17;
     const a=-.92+u*1.84;
     const crown=M.sqrt(M.max(0,1-M.pow(z/.94,2)));
     const phase=r*2.21;
@@ -98,14 +95,13 @@ function build(gl){
  }
 
  function cerebellum(side){
-  const rows=17,samples=22;
-  for(let r=0;r<rows;r++){
-   const q=r/(rows-1);
+  for(let r=0;r<17;r++){
+   const q=r/16;
    const y=-.50+q*.31;
    const width=.255*(.78+.22*M.sin(q*PI));
    const pts=[];
-   for(let i=0;i<samples;i++){
-    const u=i/(samples-1);
+   for(let i=0;i<22;i++){
+    const u=i/21;
     const sweep=-1+2*u;
     const x=side*(.085+width*(.45+.55*(1-sweep*sweep)))+side*.055*sweep;
     const yy=y+.018*M.sin(u*TAU*3.0+r*.8);
@@ -114,7 +110,6 @@ function build(gl){
    }
    tube(pts,.025+(r%2)*.0025,palette.cerebellum,8);
   }
-  // Vertical folia ties prevent the cerebellum reading as two detached balls.
   for(let c=0;c<6;c++){
    const pts=[];
    for(let i=0;i<15;i++){
@@ -133,7 +128,7 @@ function build(gl){
    [0,-.26,-.18],[0,-.32,-.145],[0,-.39,-.115],[0,-.47,-.105],
    [0,-.56,-.115],[0,-.66,-.13],[0,-.78,-.145],[0,-.91,-.155]
   ];
-  tube(pts,(u)=>.095*(1-u)+.046*u,uColor=>palette.stem,12);
+  tube(pts,(u)=>.095*(1-u)+.046*u,palette.stem,12);
  }
 
  function pons(){

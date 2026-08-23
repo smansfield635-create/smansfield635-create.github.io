@@ -1,0 +1,43 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "audralia",
+  "description": "Live Audralia planetary environment, dense upgraded cloud runtime, and informative loading continuity.",
+  "checks": [
+    {
+      "path": "/showroom/globe/audralia/",
+      "includes": [
+        "Audralia · Planetary World",
+        "DIRECT_DENSITY_v4",
+        "Orbital cloud field",
+        "AUDRALIA_LOADING_CONTINUITY_v3"
+      ],
+      "excludes": [
+        "http-equiv=\"refresh\"",
+        "h-earth-live-6d18e158/showroom/globe/audralia"
+      ]
+    },
+    {
+      "path": "/showroom/globe/audralia/fap1-orbital-support-tuning-v1.mjs",
+      "includes": [
+        "AUDRALIA_FAP1_ORBITAL_SUPPORT_DIRECT_DENSITY_v4",
+        "targetVisibleOrbitalCoverage:.72",
+        "DIRECT_DENSE_UPGRADED"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/showroom/globe/audralia/index.css",
+      "includes": [
+        "AUDRALIA_LOADING_CONTINUITY_v3"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/showroom/globe/audralia/",
+    "timeoutMs": 60000,
+    "readySelector": "[data-audralia-loader].is-ready",
+    "failOnConsoleErrors": false
+  }
+}

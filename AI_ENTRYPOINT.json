@@ -11,6 +11,17 @@
   "entryReceiptSchema": ".github/ai-router/schemas/repository-ai-entry-router.receipt.schema.v1.json",
   "entryCommand": "node tools/repository-ai-entry-router.mjs --path <repository-path> [--path <repository-path> ...]",
   "mutationCommand": "node tools/repository-ai-entry-router.mjs --mutation-intent --task <BOUNDED_TASK_DESCRIPTION> --path <repository-path> [--path <repository-path> ...] --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/mutation-router-receipt.json",
+  "executionEfficiency": {
+    "schema": "AI_PROCEDURAL_EXECUTION_EFFICIENCY_BINDING_v1",
+    "policy": ".github/ai-router/execution-efficiency-policy.v1.json",
+    "selfTest": ".github/ai-router/execution-efficiency-self-test.v1.mjs",
+    "sharedProcedureId": "EVIDENCE_BEARING_EXECUTION",
+    "maxEquivalentProbeAttempts": 2,
+    "sameProbeWithoutNewEvidenceAllowed": false,
+    "strategyChangeRequiredAfterFirstFailedRetrieval": true,
+    "exactFailedAssertionRequiredBeforeRepairWhenAvailable": true,
+    "noNewEvidenceDisposition": "NO_NEW_EVIDENCE_DO_NOT_REPEAT"
+  },
   "pageMutationProportionality": {
     "schema": "PAGE_MUTATION_PROPORTIONALITY_POLICY_v1",
     "policy": ".github/ai-router/page-mutation-proportionality-policy.v1.json",
@@ -29,7 +40,9 @@
   "publicationRelease": {
     "schema": "PUBLICATION_RELEASE_BINDING_v1",
     "contract": ".github/ai-router/publication-release-contract.v1.json",
-    "deploymentWorkflow": ".github/workflows/pages-direct-deploy.yml",
+    "deploymentCapabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+    "deploymentCapabilityRegistry": ".github/ai-router/workflow-dispatch-capability.v1.json",
+    "deploymentWorkflow": ".github/workflows/pages-exact-head-deploy-v3.yml",
     "boundedPageReleaseSequence": ["APPROVED_COMMIT", "EXPLICIT_DEPLOYMENT", "LIVE_EXACT_HEAD_VERIFICATION"],
     "runtimeOrNewDevelopmentSequence": ["APPLICABLE_GOVERNANCE_AND_QUALIFICATION", "APPROVED_COMMIT", "EXPLICIT_DEPLOYMENT", "LIVE_EXACT_HEAD_VERIFICATION"],
     "explicitDeploymentInput": "target_sha",
@@ -137,6 +150,10 @@
   },
   "rules": [
     "CLASSIFY_PAGE_MUTATION_BEFORE_AUTHORITY_ESCALATION",
+    "NO_REPEATED_EQUIVALENT_PROBE_WITHOUT_NEW_EVIDENCE",
+    "CHANGE_EVIDENCE_SURFACE_AFTER_FIRST_FAILED_RETRIEVAL",
+    "LOCALIZE_EXACT_FAILED_ASSERTION_BEFORE_REPAIR",
+    "REPORT_NO_NEW_EVIDENCE_AS_A_BOUNDARY_NOT_AS_PROGRESS",
     "STATIC_EDITORIAL_MICRO_REQUIRES_EXACT_HEAD_BOUNDED_DIFF_VERIFICATION_NOT_CANONICAL_INTAKE",
     "BOUNDED_PAGE_RELEASE_USES_APPROVED_COMMIT_THEN_EXPLICIT_DEPLOYMENT_THEN_LIVE_EXACT_HEAD_VERIFICATION",
     "BOUNDED_PAGE_RELEASE_MUST_NOT_USE_DUMMY_RELEASE_COMMITS_RELEASE_BRANCH_NUDGES_OR_LEGACY_IMPLICIT_PAGES_TRIGGERS",

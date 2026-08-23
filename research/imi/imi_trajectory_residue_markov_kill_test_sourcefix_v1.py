@@ -17,9 +17,10 @@ def strata_frame_fixed(te,p0):
         z['slp']=pd.qcut(te['max_util_slope6'],3,labels=False,duplicates='drop')
     except Exception:
         z['slp']=(te['max_util_slope6']>0).astype(int)
+    # Narrow execution repair only: serialize each stratum component deterministically.
     keys=z[['risk','cur','slp']].copy()
     for c in keys.columns:
-        keys[c]=keys[c].astype('object').where(keys[c].notna(),'NA').map(str)
+        keys[c]=keys[c].map(lambda v: 'NA' if pd.isna(v) else str(v))
     z['key']=keys['risk']+'|'+keys['cur']+'|'+keys['slp']
     return z
 

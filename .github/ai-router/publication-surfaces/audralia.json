@@ -27,7 +27,7 @@
     {
       "path": "/showroom/globe/audralia/loading-continuity-v3.css",
       "includes": [
-        "AUDRALIA_LOADING_CONTINUITY_v3"
+        "AUDRALIA_LOADING_CONTINUITY_v4"
       ],
       "excludes": []
     }

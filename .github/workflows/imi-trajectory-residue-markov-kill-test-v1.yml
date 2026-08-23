@@ -4,6 +4,7 @@ on:
     paths:
       - 'research/imi/IMI_TRAJECTORY_RESIDUE_MARKOV_KILL_TEST_PROTOCOL_v1.md'
       - 'research/imi/imi_trajectory_residue_markov_kill_test_v1.py'
+      - 'research/imi/imi_trajectory_residue_markov_kill_test_sourcefix_v1.py'
       - '.github/workflows/imi-trajectory-residue-markov-kill-test-v1.yml'
   workflow_dispatch:
 jobs:
@@ -22,7 +23,7 @@ jobs:
       - name: Install scientific dependencies
         run: pip install numpy pandas scikit-learn lightgbm requests
       - name: Execute frozen IMI trajectory-residue kill test
-        run: python research/imi/imi_trajectory_residue_markov_kill_test_v1.py
+        run: python research/imi/imi_trajectory_residue_markov_kill_test_sourcefix_v1.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:

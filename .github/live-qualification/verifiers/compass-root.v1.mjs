@@ -20,11 +20,18 @@ const pageErrors=[];
 page.on('pageerror',e=>pageErrors.push(String(e)));
 await page.goto(`${base}/`,{waitUntil:'networkidle2',timeout:60000});
 await new Promise(r=>setTimeout(r,1600));
+const auditStartUrl=page.url();
+let navigationObserved=null;
+page.on('framenavigated',frame=>{
+  if(frame===page.mainFrame()&&frame.url()!==auditStartUrl){
+    navigationObserved={url:frame.url(),observedAt:Date.now()};
+  }
+});
 
-// Keep the release path byte-for-byte equivalent to the already-passing interaction qualifier.
-// A capture-phase click guard prevents accidental link activation without mutating href state or
-// aborting main-frame requests; either audit-only intervention can itself destroy Puppeteer's
-// execution context during the first post-release sample.
+// Keep the release path equivalent to the already-passing interaction qualifier.
+// Capture-phase click suppression prevents ordinary anchor activation, but the verifier also
+// treats any surviving main-frame navigation as explicit audit evidence instead of allowing
+// Puppeteer's execution context to disappear before a machine-readable result can be written.
 await page.evaluate(()=>{
   const suppress=e=>{if(e.target?.closest?.('a[href]'))e.preventDefault();};
   document.addEventListener('click',suppress,true);
@@ -69,6 +76,17 @@ const snapshot=()=>page.evaluate(()=>{
   };
 });
 
+const safeSnapshot=async stage=>{
+  try{return{value:await snapshot(),error:null};}
+  catch(error){
+    const message=String(error?.message||error);
+    if(message.includes('Execution context was destroyed')||message.includes('Cannot find context')||message.includes('Navigating frame was detached')){
+      return{value:null,error:{stage,message,url:page.url()}};
+    }
+    throw error;
+  }
+};
+
 const failures=[];
 const checks=[];
 const add=(id,pass,evidence)=>{checks.push({id,status:pass?'PASS':'FAIL',evidence});if(!pass)failures.push(id)};
@@ -103,24 +121,37 @@ if(!anchor){
     const point=(x,y)=>[{x,y,radiusX:1,radiusY:1,force:1,id:1}];
     const patterns=[[.84,.50,.16,.50],[.50,.80,.50,.20],[.16,.50,.84,.50],[.50,.20,.50,.80]];
     const transitions=[];
+    let transitionNavigation=null;
     for(let attempt=0;attempt<8&&new Set([interactionBaseline.root.focus,...transitions.map(t=>t.after.root.focus)].filter(Boolean)).size<4;attempt++){
       const g=patterns[attempt%patterns.length];
       const [sx,sy,ex,ey]=g;
       const x1=b.x+b.width*sx,y1=b.y+b.height*sy,x2=b.x+b.width*ex,y2=b.y+b.height*ey;
-      const before=await snapshot();
+      const beforeResult=await safeSnapshot(`attempt-${attempt+1}-before`);
+      if(!beforeResult.value){transitionNavigation=beforeResult.error;break;}
+      const before=beforeResult.value;
+      navigationObserved=null;
       await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:point(x1,y1)});
       for(let i=1;i<=18;i++){const t=i/18;await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:point(x1+(x2-x1)*t,y1+(y2-y1)*t)});await new Promise(r=>setTimeout(r,22))}
       await new Promise(r=>setTimeout(r,100));
       await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
       await new Promise(r=>setTimeout(r,260));
-      const early=await snapshot();
+      if(navigationObserved){transitionNavigation={stage:`attempt-${attempt+1}-post-release-early`,...navigationObserved};break;}
+      const earlyResult=await safeSnapshot(`attempt-${attempt+1}-early`);
+      if(!earlyResult.value){transitionNavigation=earlyResult.error;break;}
+      const early=earlyResult.value;
       await new Promise(r=>setTimeout(r,650));
-      const after=await snapshot();
+      if(navigationObserved){transitionNavigation={stage:`attempt-${attempt+1}-post-release-settled`,...navigationObserved};break;}
+      const afterResult=await safeSnapshot(`attempt-${attempt+1}-after`);
+      if(!afterResult.value){transitionNavigation=afterResult.error;break;}
+      const after=afterResult.value;
       if(after.root.phase==='COMMITTED'&&after.root.focus&&after.root.focus!==before.root.focus)transitions.push({before,early,after});
     }
 
+    if(transitionNavigation)add('AUDIT_TRANSITION_NAVIGATION',false,transitionNavigation);
+    else add('AUDIT_TRANSITION_NAVIGATION',true,{navigationObserved:false});
+
     const geometryEvidence=[];
-    let geometryPass=transitions.length>=3;
+    let geometryPass=!transitionNavigation&&transitions.length>=3;
     for(const t of transitions){
       const incoming=t.after.cardinals.find(x=>x.wing===t.after.root.focus);
       const outgoing=t.after.cardinals.find(x=>x.wing===t.before.root.focus);
@@ -133,9 +164,9 @@ if(!anchor){
       geometryPass&&=onePass;
       geometryEvidence.push({from:t.before.root.focus,to:t.after.root.focus,phase:t.after.root.phase,anchorError,outgoingDistance,settledDrift:drift,primary:t.after.primary,visibleLabels:t.after.visibleLabels,status:onePass?'PASS':'FAIL'});
     }
-    add('AUDIT_SETTLED_GEOMETRY',geometryPass,{requiredDistinctTransitions:3,observedTransitions:transitions.length,anchor,tolerances:{anchor:SETTLED_ANCHOR_TOLERANCE,outgoingDeparture:OLD_PRIMARY_DEPARTURE_MIN,drift:SETTLED_DRIFT_TOLERANCE},transitions:geometryEvidence});
-    add('AUDIT_SINGLE_SETTLED_LABEL',transitions.length>=1&&transitions.every(t=>t.after.visibleLabels.length===1&&t.after.primary.length===1&&t.after.visibleLabels[0]===t.after.root.focus&&t.after.primary[0]===t.after.root.focus),{transitions:geometryEvidence.map(x=>({from:x.from,to:x.to,primary:x.primary,visibleLabels:x.visibleLabels}))});
-    add('AUDIT_RELEASE_STABILITY',transitions.length>=1&&geometryEvidence.every(x=>x.settledDrift<=SETTLED_DRIFT_TOLERANCE),{drifts:geometryEvidence.map(x=>({to:x.to,drift:x.settledDrift}))});
+    add('AUDIT_SETTLED_GEOMETRY',geometryPass,{requiredDistinctTransitions:3,observedTransitions:transitions.length,anchor,tolerances:{anchor:SETTLED_ANCHOR_TOLERANCE,outgoingDeparture:OLD_PRIMARY_DEPARTURE_MIN,drift:SETTLED_DRIFT_TOLERANCE},navigation:transitionNavigation,transitions:geometryEvidence});
+    add('AUDIT_SINGLE_SETTLED_LABEL',!transitionNavigation&&transitions.length>=1&&transitions.every(t=>t.after.visibleLabels.length===1&&t.after.primary.length===1&&t.after.visibleLabels[0]===t.after.root.focus&&t.after.primary[0]===t.after.root.focus),{navigation:transitionNavigation,transitions:geometryEvidence.map(x=>({from:x.from,to:x.to,primary:x.primary,visibleLabels:x.visibleLabels}))});
+    add('AUDIT_RELEASE_STABILITY',!transitionNavigation&&transitions.length>=1&&geometryEvidence.every(x=>x.settledDrift<=SETTLED_DRIFT_TOLERANCE),{navigation:transitionNavigation,drifts:geometryEvidence.map(x=>({to:x.to,drift:x.settledDrift}))});
   }
 }
 

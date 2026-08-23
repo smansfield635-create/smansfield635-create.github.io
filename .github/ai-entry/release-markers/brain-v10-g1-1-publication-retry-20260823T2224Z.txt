@@ -1,0 +1,5 @@
+AI Entry exact-head publication retry for Brain V10 G1.1.
+Target route: /inspection/compass/brain-v10-g1-1/
+Source merge head before marker: 517aeb942650e10467630243ec616c0f06a81cba
+Reason: public inspection route returned 404 after merge.
+No Brain geometry or runtime files changed by this marker.

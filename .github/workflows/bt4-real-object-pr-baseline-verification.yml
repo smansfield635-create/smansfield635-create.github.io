@@ -25,12 +25,13 @@ jobs:
           chrome-version: stable
       - name: Install browser driver
         run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
-      - name: Verify current live real-object baseline
+      - name: Verify exact live real-object baseline
+        env:
+          TARGET_SHA: ${{ github.event.pull_request.base.sha }}
         shell: bash
         run: |
           set -euo pipefail
           export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
           test -x "$CHROME_PATH"
-          export TARGET_SHA="$(curl -fsSL --max-time 20 'https://diamondgatebridge.com/.well-known/dgb-release.json' | jq -r '.commit')"
           test -n "$TARGET_SHA"
           node research/bt4/verify-bt4-real-object-live-browser.v1.mjs

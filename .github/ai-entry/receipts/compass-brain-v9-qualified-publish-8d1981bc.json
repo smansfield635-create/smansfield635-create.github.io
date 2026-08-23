@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "compass-brain-v9-qualified-publish-8d1981bc",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 1769,
+  "requestBranch": "ai-dispatch-request-compass-brain-v9-qualified-v2",
+  "requestCommit": "cd6f0e70a3b063e565ccb7a8ab3fabe378e002df",
+  "currentMainSha": "8d1981bc161cf2b8938c803d9f87ad9f641ff578",
+  "bridgeRunId": "32655646620",
+  "error": "GitHub API 422 /repos/smansfield635-create/smansfield635-create.github.io/actions/workflows/pages-exact-head-deploy-v2.yml/dispatches: {\"message\":\"Workflow does not have 'workflow_dispatch' trigger\",\"documentation_url\":\"https://docs.github.com/rest/actions/workflows#create-a-workflow-dispatch-event\",\"status\":\"422\"}",
+  "failedAt": "2026-08-23T17:43:01.417Z"
+}

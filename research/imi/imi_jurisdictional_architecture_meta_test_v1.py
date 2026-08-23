@@ -27,11 +27,12 @@ AXES=['major_share','log_permit_universe','loading_coverage_gap','log_major_load
 def norm(s):
     return ''.join(ch.lower() for ch in str(s) if ch.isalnum())
 
-def pick(cols,*terms):
-    n={c:norm(c) for c in cols}
-    for c,v in n.items():
-        if all(norm(t) in v for t in terms): return c
-    raise KeyError((terms,list(cols)))
+def exact_col(cols, expected):
+    target=norm(expected)
+    for c in cols:
+        if norm(c)==target:
+            return c
+    raise KeyError((expected,list(cols)))
 
 def _read_epa_csv_payload(content):
     text=content.decode('utf-8-sig',errors='replace')
@@ -56,13 +57,13 @@ def fetch_year(y):
 
 def parse_external(raw):
     cols=list(raw.columns)
-    state=pick(cols,'state')
-    majors=pick(cols,'number','majors','icis')
-    nonmaj=pick(cols,'number','nonmajors','icis')
-    pm=pick(cols,'percent','majors','pollutant','loadings')
-    pn=pick(cols,'percent','nonmajors','pollutant','loadings')
-    loadm=pick(cols,'total','pollutant','loading','majors')
-    toxm=pick(cols,'total','toxic','weighted','majors')
+    state=exact_col(cols,'State')
+    majors=exact_col(cols,'# of Majors in ICIS-NPDES')
+    nonmaj=exact_col(cols,'# of Non-Majors in ICIS-NPDES')
+    pm=exact_col(cols,'% of Majors w/ Pollutant Loadings')
+    pn=exact_col(cols,'% of Non-Majors w/ Pollutant Loadings')
+    loadm=exact_col(cols,'Total Pollutant Pounds (lb/yr) for Majors')
+    toxm=exact_col(cols,'Total Toxic-Weighted Pounds (lb-eq/yr) for Majors')
     z=pd.DataFrame({
       'STATE':raw[state].astype(str).str.strip(),
       'year':raw.SOURCE_YEAR,

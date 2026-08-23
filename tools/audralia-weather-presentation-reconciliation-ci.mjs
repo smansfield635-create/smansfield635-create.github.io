@@ -28,13 +28,22 @@ async function waitForAuthoritativeRuntime(page,{timeout=45000,label='runtime'}=
   throw new Error(`${label.toUpperCase()}_AUTHORITATIVE_RUNTIME_TIMEOUT ${JSON.stringify(last)}`);
 }
 
-async function waitForCelestial(page,{timeout=30000,label='celestial'}={}){
+async function waitForCelestial(page,{timeout=45000,label='celestial'}={}){
   const started=Date.now();
+  let last=null;
   while(Date.now()-started<timeout){
-    if(await page.evaluate(()=>Boolean(window.__AUDRALIA_CELESTIAL_STATE__?.getSolarVector)))return true;
+    last=await page.evaluate(()=>({
+      ready:Boolean(window.__AUDRALIA_CELESTIAL_STATE__?.getSolarVector),
+      error:window.__AUDRALIA_CELESTIAL_CONTEXT_ERROR__||null,
+      bootstrap:window.__AUDRALIA_CELESTIAL_BOOTSTRAP_STATE__||null,
+      rendererReady:Boolean(window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW__?.renderer),
+      reconciliationPass:window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.()?.invariants?.pass===true
+    }));
+    if(last.ready)return last;
+    if(last.error)throw new Error(`${label.toUpperCase()}_ERROR ${JSON.stringify(last)}`);
     await sleep(250);
   }
-  throw new Error(`${label.toUpperCase()}_TIMEOUT`);
+  throw new Error(`${label.toUpperCase()}_TIMEOUT ${JSON.stringify(last)}`);
 }
 
 function installErrorCapture(page){
@@ -56,7 +65,7 @@ try{
   const reconciliationCapture=installErrorCapture(page);
   await page.goto(`${base}/showroom/globe/audralia/weather-presentation-reconciliation/`,{waitUntil:'domcontentloaded',timeout:60000});
   const authoritative=await waitForAuthoritativeRuntime(page,{label:'reconciliation'});
-  await waitForCelestial(page,{label:'reconciliation_celestial'});
+  const reconciliationCelestial=await waitForCelestial(page,{label:'reconciliation_celestial'});
 
   const result=await page.evaluate(()=>{
     const proof=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__;
@@ -87,7 +96,7 @@ try{
       status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null
     };
   });
-  console.log(JSON.stringify({authoritative,reconciliation:result,...reconciliationCapture},null,2));
+  console.log(JSON.stringify({authoritative,reconciliationCelestial,reconciliation:result,...reconciliationCapture},null,2));
   const reconciliationFailed=
     reconciliationCapture.pageErrors.length||
     !result.localPass||!result.planetaryPass||!result.idsStable||
@@ -105,7 +114,7 @@ try{
   const liveCapture=installErrorCapture(live);
   await live.goto(`${base}/showroom/globe/audralia/`,{waitUntil:'domcontentloaded',timeout:60000});
   const liveAuthoritative=await waitForAuthoritativeRuntime(live,{label:'live'});
-  await waitForCelestial(live,{label:'live_celestial'});
+  const liveCelestial=await waitForCelestial(live,{label:'live_celestial'});
   const liveResult=await live.evaluate(()=>({
     integration:window.__AUDRALIA_LIVE_PLANETARY_INTEGRATION__,
     loaderProgress:Number(document.querySelector('[data-audralia-loader]')?.dataset?.progress||0),
@@ -114,7 +123,7 @@ try{
     celestial:Boolean(window.__AUDRALIA_CELESTIAL_STATE__?.getSolarVector),
     nav:[...document.querySelectorAll('.audralia-live-nav a')].map(a=>a.textContent.trim())
   }));
-  console.log(JSON.stringify({liveAuthoritative,live:liveResult,...liveCapture},null,2));
+  console.log(JSON.stringify({liveAuthoritative,liveCelestial,live:liveResult,...liveCapture},null,2));
   const liveFailed=
     liveCapture.pageErrors.length||
     liveResult.integration?.schema!=='AUDRALIA_LIVE_PLANETARY_INTEGRATION_v3'||

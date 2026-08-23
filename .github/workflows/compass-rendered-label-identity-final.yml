@@ -1,0 +1,59 @@
+name: Compass Rendered Label Identity Final
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/compass-rendered-label-identity-final.yml'
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Identify every rendered label-like owner in public Compass scene
+        run: |
+          cat > audit.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          const browser=await chromium.launch({headless:true});
+          const page=await browser.newPage({viewport:{width:960,height:1500},deviceScaleFactor:1});
+          await page.goto('https://diamondgatebridge.com/compass-composite/?identity='+Date.now(),{waitUntil:'networkidle',timeout:120000});
+          await page.waitForTimeout(5000);
+          const report=await page.evaluate(()=>{
+            const scene=document.querySelector('[data-compass-scene]');
+            if(!scene) throw new Error('NO_SCENE');
+            const sr=scene.getBoundingClientRect();
+            const els=[...scene.querySelectorAll('*')];
+            const visible=el=>{const c=getComputedStyle(el),r=el.getBoundingClientRect();return r.width>0&&r.height>0&&c.display!=='none'&&c.visibility!=='hidden'&&Number(c.opacity)>0.02};
+            const rgbaAlpha=s=>{const m=String(s).match(/rgba?\([^,]+,[^,]+,[^,]+(?:,\s*([\d.]+))?\)/);return m?(m[1]===undefined?1:Number(m[1])):0};
+            const rows=[];
+            for(const el of els){
+              if(!visible(el)) continue;
+              const r=el.getBoundingClientRect(),c=getComputedStyle(el);
+              const inScene=r.left<sr.right&&r.right>sr.left&&r.top<sr.bottom&&r.bottom>sr.top;
+              if(!inScene) continue;
+              const text=(el.textContent||'').replace(/\s+/g,' ').trim();
+              const bg=rgbaAlpha(c.backgroundColor)>0.08;
+              const labelish=(r.width>=70&&r.width<=320&&r.height>=22&&r.height<=120&&(bg||text.length>0));
+              if(!labelish) continue;
+              const before=getComputedStyle(el,'::before'),after=getComputedStyle(el,'::after');
+              rows.push({
+                tag:el.tagName.toLowerCase(),id:el.id||'',cls:el.className||'',text:text.slice(0,180),
+                attrs:[...el.attributes].filter(a=>a.name.startsWith('data-')||a.name==='aria-hidden'||a.name==='hidden').reduce((o,a)=>(o[a.name]=a.value,o),{}),
+                rect:{x:Math.round(r.x),y:Math.round(r.y),w:Math.round(r.width),h:Math.round(r.height)},
+                style:{display:c.display,visibility:c.visibility,opacity:c.opacity,bg:c.backgroundColor,border:c.borderTopColor,shadow:c.boxShadow,z:c.zIndex,transform:c.transform},
+                before:{content:before.content,bg:before.backgroundColor,display:before.display,opacity:before.opacity},
+                after:{content:after.content,bg:after.backgroundColor,display:after.display,opacity:after.opacity}
+              });
+            }
+            return {mode:document.querySelector('[data-compass-root]')?.dataset.compassMode||'',foreground:document.querySelector('[data-compass-root]')?.dataset.renderedForegroundCardinal||'',scene:{x:sr.x,y:sr.y,w:sr.width,h:sr.height},rows};
+          });
+          console.log('IDENTITY_REPORT '+JSON.stringify(report));
+          await browser.close();
+          NODE
+          node audit.mjs

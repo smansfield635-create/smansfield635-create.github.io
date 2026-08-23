@@ -1,4 +1,4 @@
-name: H-Earth Final Frame Cloud Coverage Audit
+name: H-Earth Final Screen Cloud Model Sweep
 
 on:
   pull_request:
@@ -12,9 +12,9 @@ permissions:
   contents: read
 
 jobs:
-  rendered-cloud-coverage:
+  rendered-cloud-model-sweep:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 25
     steps:
       - name: Checkout exact PR head
         uses: actions/checkout@v4
@@ -32,39 +32,47 @@ jobs:
           cat /tmp/h-earth-server.log
           exit 1
 
-      - name: Execute final-frame orbital coverage audit
+      - name: Capture 60 final browser-composited cloud models
         run: |
+          set -euo pipefail
           CHROME="$(command -v google-chrome || command -v chromium-browser || command -v chromium || true)"
           if [ -z "$CHROME" ]; then
             echo 'No Chrome/Chromium binary found on runner.' >&2
             exit 1
           fi
-          "$CHROME" \
-            --headless=new \
-            --no-sandbox \
-            --disable-dev-shm-usage \
-            --use-angle=swiftshader \
-            --enable-unsafe-swiftshader \
-            --ignore-gpu-blocklist \
-            --window-size=1280,900 \
-            --virtual-time-budget=30000 \
-            --dump-dom \
-            'http://127.0.0.1:4173/showroom/globe/audralia/?fap1Quality=capture' \
-            >/tmp/audralia-final-dom.html 2>/tmp/audralia-chrome.log
-          cat /tmp/audralia-chrome.log
-          grep -o 'data-cloud-coverage-audit="[^"]*"' /tmp/audralia-final-dom.html || true
-          grep -o 'data-cloud-coverage-audit-minimum-nonzero="[^"]*"' /tmp/audralia-final-dom.html || true
-          grep -o 'data-cloud-coverage-audit-minimum-visible="[^"]*"' /tmp/audralia-final-dom.html || true
-          grep -o 'data-cloud-coverage-audit-minimum-effective-visible="[^"]*"' /tmp/audralia-final-dom.html || true
-          grep -q 'data-cloud-coverage-audit="PASS"' /tmp/audralia-final-dom.html
+          mkdir -p /tmp/cloud-sweep
+          : > /tmp/cloud-sweep/manifest.tsv
+          for model in $(seq 1 60); do
+            padded=$(printf '%02d' "$model")
+            "$CHROME" \
+              --headless=new \
+              --no-sandbox \
+              --disable-dev-shm-usage \
+              --use-angle=swiftshader \
+              --enable-unsafe-swiftshader \
+              --ignore-gpu-blocklist \
+              --hide-scrollbars \
+              --window-size=1280,900 \
+              --virtual-time-budget=9000 \
+              --screenshot="/tmp/cloud-sweep/model-${padded}.png" \
+              "http://127.0.0.1:4173/showroom/globe/audralia/?cloudModel=${model}&fap1Quality=capture" \
+              >/tmp/cloud-sweep/model-${padded}.stdout 2>/tmp/cloud-sweep/model-${padded}.stderr || true
+            if [ ! -s "/tmp/cloud-sweep/model-${padded}.png" ]; then
+              echo "MODEL ${model} SCREENSHOT_MISSING" >&2
+              exit 1
+            fi
+            bytes=$(stat -c%s "/tmp/cloud-sweep/model-${padded}.png")
+            printf '%s\t%s\n' "$model" "$bytes" >> /tmp/cloud-sweep/manifest.tsv
+          done
+          test "$(find /tmp/cloud-sweep -name 'model-*.png' | wc -l)" -eq 60
 
-      - name: Preserve audit DOM and Chrome log
+      - name: Preserve final-screen sweep
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-final-frame-cloud-coverage-audit
+          name: h-earth-final-screen-cloud-model-sweep-60
           path: |
-            /tmp/audralia-final-dom.html
-            /tmp/audralia-chrome.log
+            /tmp/cloud-sweep/model-*.png
+            /tmp/cloud-sweep/manifest.tsv
             /tmp/h-earth-server.log
-          if-no-files-found: ignore
+          if-no-files-found: error

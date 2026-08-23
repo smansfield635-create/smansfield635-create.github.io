@@ -55,7 +55,7 @@ assert(compass.releaseClassification?.RUNTIME_OR_NEW_DEVELOPMENT?.requiredClosur
 assert(compass.releaseClassification?.RUNTIME_OR_NEW_DEVELOPMENT?.canonicalIntakeRequired === true, 'Compass runtime/new development must require canonical intake');
 
 const pagesDispatch = dispatchCapability.capabilities?.PAGES_EXACT_HEAD_DEPLOY;
-assert(pagesDispatch?.workflow === 'pages-exact-head-deploy-v2.yml', 'AI dispatch Pages workflow drifted');
+assert(pagesDispatch?.workflow === 'pages-exact-head-deploy-v3.yml', 'AI dispatch Pages workflow drifted');
 assert(pagesDispatch?.ref === 'main', 'AI dispatch Pages ref must remain main');
 assert(pagesDispatch?.inputPolicy?.target_sha?.source === 'CURRENT_MAIN_SHA', 'AI dispatch must bind target_sha to current main');
 assert(pagesDispatch?.inputPolicy?.target_sha?.userOverrideAllowed === false, 'AI dispatch target_sha must not be user-overridable');
@@ -73,7 +73,8 @@ for (const required of [
   'actions/checkout@v4', 'actions/configure-pages@v5',
   'actions/upload-pages-artifact@v3', 'actions/deploy-pages@v4',
   '.well-known/dgb-release.json', '.github/ai-router/publication-surfaces/',
-  'PUBLICATION_SURFACE_VERIFICATION_v1', 'LIVE_EXACT_HEAD_VERIFIED', 'DEPLOYMENT_NOT_PROVEN'
+  'PUBLICATION_SURFACE_VERIFICATION_v1', 'LIVE_EXACT_HEAD_VERIFIED', 'DEPLOYMENT_NOT_PROVEN',
+  'AUDRALIA_VISIBLE_BUILD_FINGERPRINT=', 'data-audralia-build-sha=', 'BUILD $short_sha'
 ]) assert(workflow.includes(required), `deployment workflow missing required token: ${required}`);
 
 for (const forbidden of [
@@ -83,7 +84,7 @@ for (const forbidden of [
 ]) assert(!workflow.includes(forbidden), `deployment workflow contains retired or unauthorized release behavior: ${forbidden}`);
 
 console.log(JSON.stringify({
-  schema: 'PUBLICATION_RELEASE_CONTRACT_SELF_TEST_RECEIPT_v3',
+  schema: 'PUBLICATION_RELEASE_CONTRACT_SELF_TEST_RECEIPT_v4',
   result: 'PASS',
   releaseSequence: contract.releaseClasses.BOUNDED_PAGE_RELEASE.requiredSequence,
   runtimeSequence: contract.releaseClasses.RUNTIME_OR_NEW_DEVELOPMENT.requiredSequence,
@@ -94,6 +95,7 @@ console.log(JSON.stringify({
   universalAiDispatch: true,
   dispatchCapability: 'PAGES_EXACT_HEAD_DEPLOY',
   dispatchInputs: ['target_sha','surface_id'],
+  audraliaVisibleBuildFingerprintRequired: true,
   surfaceManifestRoot: contract.deployment.surfaceManifestRoot,
   registeredProofSample: audralia.surfaceId,
   verification: contract.verification.successResult

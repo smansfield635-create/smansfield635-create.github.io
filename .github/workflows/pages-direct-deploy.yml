@@ -88,6 +88,7 @@ jobs:
       - name: Stage bounded deployment-only Pages payload
         env:
           PAGES_STAGE: ${{ runner.temp }}/pages-site
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
           INSPECTION_SHA: 1d45379f81ea4089e9c5f3d7d9688e702be9add3
           INSPECTION_ROOT: ${{ runner.temp }}/pages-site/inspection/h-earth/24056
         shell: bash
@@ -99,6 +100,29 @@ jobs:
           rm -rf "$PAGES_STAGE/showroom/globe/h-earth"
           mkdir -p "$PAGES_STAGE/showroom/globe/h-earth"
           rsync -a --delete h-earth-live-6d18e158/showroom/globe/h-earth/ "$PAGES_STAGE/showroom/globe/h-earth/"
+
+          # Stamp the staged Audralia loader with the exact commit being deployed.
+          # This is deployment evidence only: repository product bytes remain unchanged.
+          audralia_index="$PAGES_STAGE/showroom/globe/audralia/index.html"
+          test -f "$audralia_index"
+          short_sha="$(printf '%s' "$TARGET_SHA" | cut -c1-8 | tr '[:lower:]' '[:upper:]')"
+          python3 - "$audralia_index" "$short_sha" "$TARGET_SHA" <<'PY'
+from pathlib import Path
+import sys
+path = Path(sys.argv[1])
+short_sha = sys.argv[2]
+full_sha = sys.argv[3]
+text = path.read_text()
+old = '<div class="audralia-loading-version">LIVE BUILD · COLOR ARRIVAL v4</div>'
+new = f'<div class="audralia-loading-version" data-audralia-build-sha="{full_sha}">LIVE BUILD · COLOR ARRIVAL v4 · BUILD {short_sha}</div>'
+count = text.count(old)
+if count != 1:
+    raise SystemExit(f'AUDRALIA_BUILD_FINGERPRINT_STAMP_CARDINALITY:{count}')
+path.write_text(text.replace(old, new))
+PY
+          grep -Fq "data-audralia-build-sha=\"$TARGET_SHA\"" "$audralia_index"
+          grep -Fq "BUILD $short_sha" "$audralia_index"
+          echo "AUDRALIA_VISIBLE_BUILD_FINGERPRINT=$short_sha"
 
           # Audralia is qualified against the exact-head renderer in the canonical
           # showroom tree. The public H-Earth route is intentionally replaced by
@@ -196,6 +220,14 @@ PY
             marker_surface="$(printf '%s' "$marker" | jq -r '.surface // empty' 2>/dev/null || true)"
             marker_manifest_sha="$(printf '%s' "$marker" | jq -r '.verificationManifestSha256 // empty' 2>/dev/null || true)"
             if [ "$observed" = "$TARGET_SHA" ] && [ "$marker_surface" = "$SURFACE_ID" ] && [ "$marker_manifest_sha" = "$expected_manifest_sha" ]; then
+              if [ "$SURFACE_ID" = "audralia" ]; then
+                audralia_url="${PAGE_URL%/}/showroom/globe/audralia/"
+                short_sha="$(printf '%s' "$TARGET_SHA" | cut -c1-8 | tr '[:lower:]' '[:upper:]')"
+                audralia_html="$(curl --fail --silent --show-error -L --max-time 20 "$audralia_url")"
+                printf '%s' "$audralia_html" | grep -Fq "data-audralia-build-sha=\"$TARGET_SHA\"" || { echo "AUDRALIA_PUBLIC_BUILD_FINGERPRINT_FULL_SHA_MISMATCH expected=$TARGET_SHA url=$audralia_url" >&2; exit 1; }
+                printf '%s' "$audralia_html" | grep -Fq "BUILD $short_sha" || { echo "AUDRALIA_PUBLIC_BUILD_FINGERPRINT_VISIBLE_MISMATCH expected=$short_sha url=$audralia_url" >&2; exit 1; }
+                echo "AUDRALIA_PUBLIC_BUILD_FINGERPRINT_VERIFIED=$short_sha"
+              fi
               node tools/publication-live-verify.mjs static "$PAGE_URL" "$MANIFEST_PATH"
               echo "LIVE_EXACT_HEAD_VERIFIED target=$TARGET_SHA surface=$SURFACE_ID manifest=$MANIFEST_PATH"
               exit 0

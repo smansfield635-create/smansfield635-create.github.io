@@ -22,7 +22,7 @@ jobs:
       - name: Materialize owner-provided Drive recording
         run: |
           set -euo pipefail
-          gdown --fuzzy 'https://drive.google.com/file/d/1JmBeYxcjnq8v-fwkSnPXqfbiEEvgjAP8/view?usp=drivesdk' -O source.mp4
+          gdown '1JmBeYxcjnq8v-fwkSnPXqfbiEEvgjAP8' -O source.mp4
           stat -c '%s' source.mp4 | tee source-bytes.txt
           sha256sum source.mp4 | tee source-sha256.txt
           ffprobe -v error -show_entries format=duration,size:stream=codec_name,width,height,r_frame_rate -of json source.mp4 > probe.json

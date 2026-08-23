@@ -16,6 +16,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            assets/compass/capability-object-stage.js
+            assets/compass/capability-object-brain-v9.js
+            inspection/compass/brain-v9/
+            .github/workflows/compass-brain-v9-geometry-cycle-verify.yml
       - name: Verify JavaScript syntax and construction identities
         shell: bash
         run: |

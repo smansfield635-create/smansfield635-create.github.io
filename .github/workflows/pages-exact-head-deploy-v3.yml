@@ -76,6 +76,30 @@ jobs:
           mkdir -p "$STAGE/.well-known"
           manifest_sha="$(sha256sum "$MANIFEST" | awk '{print $1}')"
           jq -n --arg schema DGB_PUBLIC_RELEASE_MARKER_v3 --arg commit "$TARGET_SHA" --arg surface "$SURFACE_ID" --arg manifest "$MANIFEST" --arg manifestSha256 "$manifest_sha" '{schema:$schema,commit:$commit,surface:$surface,verificationManifest:$manifest,verificationManifestSha256:$manifestSha256}' > "$STAGE/.well-known/dgb-release.json"
+
+          if [ "$SURFACE_ID" = "audralia" ]; then
+            audralia_index="$STAGE/showroom/globe/audralia/index.html"
+            test -f "$audralia_index"
+            short_sha="$(printf '%s' "$TARGET_SHA" | cut -c1-8 | tr '[:lower:]' '[:upper:]')"
+            python3 - "$audralia_index" "$short_sha" "$TARGET_SHA" <<'PY'
+from pathlib import Path
+import sys
+path = Path(sys.argv[1])
+short_sha = sys.argv[2]
+full_sha = sys.argv[3]
+text = path.read_text()
+old = '<div class="audralia-loading-version">LIVE BUILD · COLOR ARRIVAL v4</div>'
+new = f'<div class="audralia-loading-version" data-audralia-build-sha="{full_sha}">LIVE BUILD · COLOR ARRIVAL v4 · BUILD {short_sha}</div>'
+count = text.count(old)
+if count != 1:
+    raise SystemExit(f'AUDRALIA_BUILD_FINGERPRINT_STAMP_CARDINALITY:{count}')
+path.write_text(text.replace(old, new))
+PY
+            grep -Fq "data-audralia-build-sha=\"$TARGET_SHA\"" "$audralia_index"
+            grep -Fq "BUILD $short_sha" "$audralia_index"
+            echo "AUDRALIA_VISIBLE_BUILD_FINGERPRINT=$short_sha"
+          fi
+
           test "$(du -sb "$STAGE" | awk '{print $1}')" -lt 1073741824
 
       - uses: actions/configure-pages@v5
@@ -100,6 +124,16 @@ jobs:
             observed="$(printf '%s' "$marker" | jq -r '.commit // empty' 2>/dev/null || true)"
             observed_surface="$(printf '%s' "$marker" | jq -r '.surface // empty' 2>/dev/null || true)"
             if [ "$observed" = "$TARGET_SHA" ] && [ "$observed_surface" = "$SURFACE_ID" ]; then
+              if [ "$SURFACE_ID" = "audralia" ]; then
+                short_sha="$(printf '%s' "$TARGET_SHA" | cut -c1-8 | tr '[:lower:]' '[:upper:]')"
+                audralia_url="${PAGE_URL%/}/showroom/globe/audralia/"
+                public_html="$(curl --fail --silent --show-error -L --max-time 20 "$audralia_url")"
+                if ! printf '%s' "$public_html" | grep -Fq "data-audralia-build-sha=\"$TARGET_SHA\"" || ! printf '%s' "$public_html" | grep -Fq "BUILD $short_sha"; then
+                  echo "PUBLIC_BUILD_FINGERPRINT_MISMATCH expected=$short_sha observed=NONE" >&2
+                  exit 1
+                fi
+                echo "PUBLIC_BUILD_FINGERPRINT_VERIFIED=$short_sha"
+              fi
               node tools/publication-live-verify.mjs static "$PAGE_URL" "$MANIFEST"
               exit 0
             fi

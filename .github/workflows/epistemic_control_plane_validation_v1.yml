@@ -20,8 +20,12 @@ jobs:
         run: python research/epistemic-control-plane/epistemic_control_plane_validation_v1.py
       - name: Execute frozen external-history validation
         run: python research/epistemic-control-plane/epistemic_control_plane_external_history_validation_v1.py
-      - name: Execute frozen prospective cross-domain transfer validation
+      - name: Reproduce preserved pre-repair prospective transfer failure
+        id: preserved-transfer-failure
+        continue-on-error: true
         run: python research/epistemic-control-plane/epistemic_control_plane_prospective_transfer_v1.py
+      - name: Execute frozen transfer corpus against localized-contradiction repair
+        run: python research/epistemic-control-plane/epistemic_control_plane_transfer_repair_rerun_v1.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -30,4 +34,5 @@ jobs:
             epistemic_control_plane_validation_v1.json
             epistemic_control_plane_external_history_validation_v1.json
             epistemic_control_plane_prospective_transfer_v1.json
+            epistemic_control_plane_transfer_repair_rerun_v1.json
           if-no-files-found: error

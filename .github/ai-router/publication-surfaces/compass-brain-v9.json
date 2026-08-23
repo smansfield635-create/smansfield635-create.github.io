@@ -1,52 +1,11 @@
 {
-  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
-  "surfaceId": "compass-brain-v9",
-  "description": "Isolated Compass Brain V9 anatomical-density free-spline inspection surface; does not integrate with the accepted live capability carousel.",
-  "checks": [
-    {
-      "path": "/inspection/compass/brain-v9/",
-      "includes": [
-        "Volumetric brain V9",
-        "Compass · Brain successor · isolated",
-        "Anatomical density",
-        "Independent XYZ splines",
-        "data-capability-brain-v9",
-        "/assets/compass/capability-object-stage.js?v=1",
-        "/assets/compass/capability-object-brain-v9.js?v=5"
-      ],
-      "excludes": ["compass.capability-carousel.js","data-capability-orbit"]
-    },
-    {
-      "path": "/assets/compass/capability-object-brain-v9.js",
-      "includes": [
-        "COMPASS_BRAIN_V9_ANATOMICAL_DENSITY_v2",
-        "APPROVED_HIGH_FIDELITY_ANATOMICAL_REFERENCE",
-        "TRUE_WEBGL_GEOMETRY",
-        "precentral-gyrus",
-        "postcentral-gyrus",
-        "central-sulcus-gap",
-        "lateral-sulcus-gap",
-        "narrow-medial-fissure",
-        "dense-cerebellar-folia",
-        "NO_ENVELOPE_ANATOMICAL_SPLINE_TOPOLOGY"
-      ],
-      "excludes": ["function hemi(","function ellipsoid(","cerebellarLobe(","crown=M.sqrt","M.pow(z/.93,2)","M.pow(z/.94,2)"]
-    },
-    {
-      "path": "/assets/compass/capability-object-stage.js",
-      "includes": ["CAPABILITY_OBJECT_STAGE_v1","objectDepthModel","TRUE_WEBGL_GEOMETRY"],
-      "excludes": []
-    }
+  "schema":"PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId":"compass-brain-v9",
+  "description":"Brain V9 geometry-only G1 gross proportion and closure inspection; live capability carousel remains untouched.",
+  "checks":[
+    {"path":"/inspection/compass/brain-v9/","includes":["Gross proportion &amp; closure","Geometry-only boundary","Neutral matte","data-capability-brain-v9","/assets/compass/capability-object-stage.js?v=2","/assets/compass/capability-object-brain-v9.js?v=6"],"excludes":["compass.capability-carousel.js","data-capability-orbit"]},
+    {"path":"/assets/compass/capability-object-brain-v9.js","includes":["COMPASS_BRAIN_V9_GEOMETRY_G1_v1","COMPASS_BRAIN_GEOMETRY_INSPECTION_G1","NEUTRAL_GEOMETRY_MATTE","NO_ENVELOPE_FREE_SPLINE_GEOMETRY","G1_GROSS_PROPORTION_AND_CLOSURE"],"excludes":["function hemi(","function ellipsoid(","crown=M.sqrt"]},
+    {"path":"/assets/compass/capability-object-stage.js","includes":["CAPABILITY_OBJECT_STAGE_v2","inspectionMode","geometry","TRUE_WEBGL_GEOMETRY"],"excludes":[]}
   ],
-  "runtime": {
-    "enabled": true,
-    "path": "/inspection/compass/brain-v9/",
-    "timeoutMs": 30000,
-    "readyAttribute": {
-      "selector": "[data-capability-brain-v9]",
-      "name": "data-brain-renderer",
-      "contains": "COMPASS_BRAIN_V9_ANATOMICAL_DENSITY_v2"
-    },
-    "failOnConsoleErrors": true
-  }
+  "runtime":{"enabled":true,"path":"/inspection/compass/brain-v9/","timeoutMs":30000,"readyAttribute":{"selector":"[data-capability-brain-v9]","name":"data-brain-renderer","contains":"COMPASS_BRAIN_V9_GEOMETRY_G1_v1"},"failOnConsoleErrors":true}
 }

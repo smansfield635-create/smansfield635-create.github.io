@@ -8,6 +8,7 @@ const registry = readJson('.github/ai-router/workflow-dispatch-capability.v1.jso
 const shared = readJson('.github/ai-router/shared-procedures.v1.json');
 const workflow = readText('.github/workflows/ai-entry-workflow-dispatch-bridge.yml');
 const runtime = readText('tools/ai-entry-workflow-dispatch-bridge.mjs');
+const pagesCapability = registry.capabilities?.PAGES_EXACT_HEAD_DEPLOY;
 
 assert(registry.schema === 'AI_ENTRY_WORKFLOW_DISPATCH_CAPABILITY_v1', 'registry schema mismatch');
 assert(registry.status === 'ACTIVE_FAIL_CLOSED', 'registry must fail closed');
@@ -23,8 +24,14 @@ assert(registry.transportPullRequest?.mergeAllowed === false, 'transport PR merg
 assert(registry.transportPullRequest?.autoDeleteHeadBranchOnSuccess === true, 'successful request branches must be deleted');
 assert(registry.continuity?.dispatchRunIdMustBeRecovered === true, 'run id recovery must remain mandatory');
 assert(registry.continuity?.receiptResult === 'NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED', 'success receipt result drifted');
-assert(registry.capabilities?.PAGES_EXACT_HEAD_DEPLOY?.workflow === 'pages-exact-head-deploy-v2.yml', 'Pages deploy capability drifted');
-assert(registry.capabilities?.PAGES_EXACT_HEAD_DEPLOY?.inputPolicy?.target_sha?.source === 'CURRENT_MAIN_SHA', 'Pages deploy target must bind current main');
+assert(pagesCapability?.workflow, 'Pages deploy capability workflow missing');
+assert(pagesCapability?.ref === 'main', 'Pages deploy capability ref drifted');
+assert(pagesCapability?.inputPolicy?.target_sha?.source === 'CURRENT_MAIN_SHA', 'Pages deploy target must bind current main');
+assert(pagesCapability?.inputPolicy?.target_sha?.userOverrideAllowed === false, 'Pages deploy target must not be user-overridable');
+assert(pagesCapability?.inputPolicy?.surface_id?.source === 'REQUEST', 'Pages deploy surface must come from request');
+assert(pagesCapability?.inputPolicy?.surface_id?.required === true, 'Pages deploy surface must be required');
+assert(fs.existsSync(`.github/workflows/${pagesCapability.workflow}`), 'Pages deploy capability workflow file missing');
+assert(/^\s*workflow_dispatch\s*:/m.test(readText(`.github/workflows/${pagesCapability.workflow}`)), 'Pages deploy capability workflow is not dispatchable');
 
 const procedure = shared.procedures?.find(p => p.procedureId === 'AI_ENTRY_NATIVE_WORKFLOW_DISPATCH');
 assert(procedure, 'shared AI entry dispatch procedure missing');
@@ -56,9 +63,11 @@ for (const forbidden of ['child_process.exec(', 'eval(', 'request.command', 'req
 }
 
 console.log(JSON.stringify({
-  schema: 'AI_ENTRY_WORKFLOW_DISPATCH_SELF_TEST_RECEIPT_v1',
+  schema: 'AI_ENTRY_WORKFLOW_DISPATCH_SELF_TEST_RECEIPT_v2',
   result: 'PASS',
   capabilityCount: Object.keys(registry.capabilities || {}).length,
+  pagesCapability: 'PAGES_EXACT_HEAD_DEPLOY',
+  pagesWorkflow: pagesCapability.workflow,
   preferredTransport: registry.preferredTransport,
   fallbackTransport: registry.fallbackTransport,
   requestBranchPrefix: registry.requestBranchPrefix,

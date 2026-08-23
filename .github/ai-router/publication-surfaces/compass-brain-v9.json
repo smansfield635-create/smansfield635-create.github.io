@@ -1,0 +1,52 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "compass-brain-v9",
+  "description": "Isolated Compass Brain V9 volumetric inspection surface; does not integrate with the accepted live capability carousel.",
+  "checks": [
+    {
+      "path": "/inspection/compass/brain-v9/",
+      "includes": [
+        "Volumetric brain V9",
+        "Compass · Brain successor · isolated",
+        "data-capability-brain-v9",
+        "/assets/compass/capability-object-stage.js?v=1",
+        "/assets/compass/capability-object-brain-v9.js?v=1"
+      ],
+      "excludes": [
+        "compass.capability-carousel.js",
+        "data-capability-orbit"
+      ]
+    },
+    {
+      "path": "/assets/compass/capability-object-brain-v9.js",
+      "includes": [
+        "COMPASS_BRAIN_V9_VOLUMETRIC_SUCCESSOR",
+        "COMPASS_COHERISCOPE_ANATOMICAL_WEBGL_v9",
+        "TRUE_WEBGL_GEOMETRY",
+        "central-sulcus",
+        "lateral-sulcus"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/assets/compass/capability-object-stage.js",
+      "includes": [
+        "CAPABILITY_OBJECT_STAGE_v1",
+        "objectDepthModel",
+        "TRUE_WEBGL_GEOMETRY"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/inspection/compass/brain-v9/",
+    "timeoutMs": 30000,
+    "readyAttribute": {
+      "selector": "[data-capability-brain-v9]",
+      "name": "data-brain-renderer",
+      "contains": "COMPASS_BRAIN_V9_VOLUMETRIC_SUCCESSOR"
+    },
+    "failOnConsoleErrors": true
+  }
+}

@@ -22,7 +22,7 @@
   },
   "capabilities": {
     "PAGES_EXACT_HEAD_DEPLOY": {
-      "workflow": "pages-exact-head-deploy-v2.yml",
+      "workflow": "pages-exact-head-deploy-v3.yml",
       "ref": "main",
       "inputPolicy": {
         "target_sha": {"source": "CURRENT_MAIN_SHA","userOverrideAllowed": false},

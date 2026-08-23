@@ -1,43 +1,177 @@
 (()=>{
 'use strict';
-const VERSION='COMPASS_BRAIN_V9_GEOMETRY_G123_v12';
+const VERSION='COMPASS_BRAIN_V9_REFERENCE_REBUILD_v2';
 const M=Math,PI=M.PI,TAU=PI*2;
-const norm=v=>{const d=M.hypot(v[0],v[1],v[2])||1;return[v[0]/d,v[1]/d,v[2]/d]};
-const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
-const add=(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]],sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]],mul=(a,s)=>[a[0]*s,a[1]*s,a[2]*s],dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2],lerp=(a,b,t)=>a+(b-a)*t;
+const clamp=(x,a,b)=>M.max(a,M.min(b,x));
+const norm=(x,y,z)=>{const d=M.hypot(x,y,z)||1;return[x/d,y/d,z/d]};
+const gauss=(x,s)=>M.exp(-(x*x)/(s*s));
+const mix=(a,b,t)=>a+(b-a)*t;
+
 function build(gl){
- const pos=[],nor=[],col=[],idx=[],neutral=[.59,.60,.61],dark=[.46,.47,.48],light=[.68,.69,.70];
- const V=(p,n,c=neutral)=>{const i=pos.length/3;pos.push(...p);nor.push(...n);col.push(...c);return i},tri=(a,b,c)=>idx.push(a,b,c);
- function cat(a,b,c,d,t){const t2=t*t,t3=t2*t;return[0,1,2].map(k=>.5*((2*b[k])+(-a[k]+c[k])*t+(2*a[k]-5*b[k]+4*c[k]-d[k])*t2+(-a[k]+3*b[k]-3*c[k]+d[k])*t3))}
- function spline(c,steps=2){const o=[];for(let i=0;i<c.length-1;i++){const a=c[M.max(0,i-1)],b=c[i],d=c[i+1],e=c[M.min(c.length-1,i+2)];for(let s=0;s<steps;s++)o.push(cat(a,b,d,e,s/steps))}o.push(c[c.length-1]);return o}
- function tube(points,radius,sides=6,color=neutral){if(points.length<2)return;const rings=[];let prev=[0,1,0];for(let i=0;i<points.length;i++){const p=points[i],a=points[M.max(0,i-1)],b=points[M.min(points.length-1,i+1)],t=norm(sub(b,a)),ref=M.abs(t[1])>.87?[1,0,0]:[0,1,0];let n=norm(cross(t,ref));if(i&&dot(n,prev)<0)n=mul(n,-1);const q=norm(cross(t,n));prev=n;const u=i/M.max(1,points.length-1),r=typeof radius==='function'?radius(u):radius,ring=[];for(let s=0;s<sides;s++){const ang=s/sides*TAU,rad=add(mul(n,M.cos(ang)),mul(q,M.sin(ang)));ring.push(V(add(p,mul(rad,r)),rad,color))}rings.push(ring)}for(let i=0;i<rings.length-1;i++)for(let s=0;s<sides;s++){const n=(s+1)%sides,a=rings[i][s],b=rings[i][n],c=rings[i+1][n],d=rings[i+1][s];tri(a,b,c);tri(a,c,d)}}
- function frame(t){const T=norm(t),ref=M.abs(T[1])>.80?[0,0,1]:[0,1,0],N=norm(cross(T,ref)),B=norm(cross(T,N));return[T,N,B]}
- function surfaceFrame(c,t){const R=norm([c[0]/(.56*.56),c[1]/(.50*.50),(c[2]+.08)/(.82*.82)]),proj=sub(t,mul(R,dot(t,R))),T=norm(proj),S=norm(cross(R,T));return[T,S,R]}
- function wig(seed,k){return .62*M.sin(seed*1.771+k*2.413)+.25*M.sin(seed*.719+k*4.103)}
- function morphCenter(side,center,seed){let[x,y,z]=center;const lateral=M.min(1,x/.56),front=M.max(0,(z-.18)/.42),rear=M.max(0,(-z-.38)/.48),frontBack=M.min(1,M.abs(z+.10)/.82),inferior=M.max(0,(-y-.06)/.48),superior=M.max(0,(y-.18)/.32),corner=M.min(1,lateral*(.58*superior+.46*front+.52*rear)),endTaper=1-.20*frontBack*frontBack-.11*inferior*inferior-.10*corner;x*=M.max(.70,endTaper);y-=.112*lateral*lateral*(.68+.32*superior);y+=.010*M.sin(seed*.83)+(side>0?.005:-.003)*(1-.45*frontBack);z+=.034*lateral*lateral*M.sin(seed*.57+.6)+side*.008*(.35+.65*lateral);z+=.044*front*(1-.55*lateral)-.040*rear*(1-.50*lateral);x-=.044*(front*front+rear*rear)*(.40+.60*lateral);x-=.040*superior*lateral*lateral;if(inferior>.20)x*=1-.055*inferior*lateral;const inner=.018*(.5+.5*M.sin(seed*.271+1.4))*(1-.35*lateral);x-=inner;y-=.030*superior*(.35+.65*lateral);x+=.006*M.sin(seed*1.19)+.003*M.sin(seed*.31+2.1);return[x,y,z]}
- function regionalFlow(side,center,tangent,seed){const[x,y,z]=center,lateral=M.min(1,x/.56),p1=M.sin(seed*.331),p2=M.sin(seed*.173+1.7),p3=M.cos(seed*.287-.9);let target;if(y<-.08)target=[.28+.08*p2,-.04+.06*p3,(z>.04?-.96:.96)+.15*p1];else if(z>.22)target=[.42+.10*p2,-.72+.12*p1,-.34+.16*p3];else if(z<-.34)target=[.38+.11*p3,-.30+.13*p2,.87+.14*p1];else if(y>.28)target=[.30+.10*p3,-.90+.11*p2,(z>.0?-.22:.22)+.16*p1];else target=[.26+.11*p2,-.91+.12*p3,(z>.02?-.18:.18)+.15*p1];const blend=.32+.18*lateral+.08*(.5+.5*p2);return norm([lerp(tangent[0],target[0],blend),lerp(tangent[1],target[1],blend)+.045*p1,lerp(tangent[2],target[2],blend)+side*.045*p3])}
- function morphTangent(side,center,tangent,seed){const base=regionalFlow(side,center,tangent,seed),lateral=M.min(1,center[0]/.56),front=M.max(0,(center[2]-.18)/.42),rear=M.max(0,(-center[2]-.38)/.48),inferior=M.max(0,(-center[1]-.08)/.50),superior=M.max(0,(center[1]-.18)/.32),phase=M.sin(seed*.677),drift=M.sin(seed*.119+2.3);return norm([base[0]*(1-.08*lateral-.08*(front+rear))+.045*drift,base[1]-.09*lateral+.04*inferior-.045*superior+.032*phase,base[2]+side*.040*lateral*M.sin(seed*.41)+.11*front-.10*rear+.042*phase*lateral+.038*drift])}
- function serpent(side,center,tangent,length=.22,r=.026,seed=0,color=neutral,amp=.052){const mc=morphCenter(side,center,seed),mt=morphTangent(side,center,tangent,seed),c=[side*mc[0],mc[1],mc[2]],t=[side*mt[0],mt[1],mt[2]],cortical=seed<650,F=cortical?surfaceFrame(c,t):frame(t),sl=cortical*M.min(1,M.max(0,(center[1]-.18)/.31))*M.min(1,M.max(0,(center[0]-.24)/.32));let T=F[0],N=F[1],B=F[2];if(sl>.001){const H=norm(cross([0,1,0],B));T=norm(add(mul(T,1-.45*sl),mul(H,.45*sl)));N=norm(cross(B,T))}const ctrl=[],scale=.94+.22*(.5+.5*M.sin(seed*.229)),regionalLength=length*(center[1]<-.08?1.18:center[2]>.22||center[2]<-.34?1.15:1.12)*scale*(1+.10*sl),ampScale=(.64+.24*(.5+.5*M.cos(seed*.311)))*(1-.18*sl),freq=.82+.34*(.5+.5*M.sin(seed*.143+1.2)),phase=M.sin(seed*.197)*.62,weave=.014*M.sin(seed*.367+1.1);for(let i=0;i<7;i++){const u=i/6-.5,a=TAU*(u+.5)*freq+phase,a2=TAU*2*(u+.5)*(1.06-.15*freq)+seed*.37,taper=.72+.28*M.sin(PI*(u+.5)),drift=M.sin(PI*(u+.5))*M.sin(seed*.251+u*PI*1.55),interlock=M.sin(PI*(u+.5))*M.sin(seed*.409+u*PI*2.2);let p=add(c,mul(T,regionalLength*u));p=add(p,mul(N,amp*ampScale*(.50*M.sin(a)+.20*M.sin(a2))*taper));p=add(p,mul(B,amp*(cortical?.16*(1-.45*sl):.50)*(.78*M.cos(a+seed*.23)+.22*M.sin(a2))*taper));p=add(p,mul(T,.022*drift));p=add(p,mul(N,weave*(1+.22*sl)*interlock));p=add(p,mul(B,(cortical?.003:.006)*interlock*M.sin(seed*.401)));if(cortical)p=add(p,mul(B,-.010*M.sin(PI*(u+.5))*(.45+.55*M.abs(M.sin(seed*.219)))));p=add(p,[side*wig(seed,i)*.002,wig(seed+3,i)*.0018,wig(seed+7,i)*.002]);ctrl.push(p)}tube(spline(ctrl,2),u=>{const end=M.sin(PI*M.max(.035,M.min(.965,u))),cap=.36+.64*M.pow(M.max(0,end),.42),pulse=1+.06*M.sin((u*TAU)*(1.10+.20*M.sin(seed*.07))+seed*.29);return r*cap*(.92+.11*M.sin(PI*u))*pulse},6,color)}
- function addSeeds(side,seeds,base,color=neutral){seeds.forEach((s,i)=>serpent(side,[s[0],s[1],s[2]],[s[3],s[4],s[5]],s[6]||.22,s[7]||.026,base+i,color,s[8]||.050))}
- const superior=[],supZ=[.48,.28,.08,-.14,-.34,-.52],supX=[.08,.22,.37,.50];supZ.forEach((z,zi)=>supX.forEach((x,xi)=>{const y=.49-.018*xi-.018*M.max(0,zi-3),t=xi%2?[.72,-.28,zi%2?-.34:.34]:[.55,-.38,zi%2?.52:-.52];superior.push([x,y,z,...t,.20+(xi%2)*.025,.026+(xi===2?.001:0),.048])}));
- const frontal=[],fY=[.38,.25,.12,-.01],fZ=[.49,.35];fY.forEach((y,yi)=>fZ.forEach((z,zi)=>[.10,.24,.39,.52].forEach((x,xi)=>{const t=yi%2?[.58,-.62,zi?.28:-.28]:[.48,-.55,zi?-.48:.48];frontal.push([x,y,z-.05*xi,...t,.21,.027,.052])})));
- const precentral=[],postcentral=[];[.10,.22,.35,.47,.55].forEach((x,xi)=>{const y=.40-.035*xi;precentral.push([x,y,.14,.28,-.92,-.12,.24,.027,.040]);postcentral.push([x,y,-.075,.30,-.91,-.18,.24,.027,.040])});
- const parietal=[],pY=[.36,.23,.10,-.01],pZ=[-.20,-.36,-.50];pY.forEach((y,yi)=>pZ.forEach((z,zi)=>[.10,.25,.40,.52].forEach((x,xi)=>{if(zi===2&&yi>2)return;const t=yi%2?[.60,-.28,-.58]:[.54,-.38,.62];parietal.push([x,y,z-.025*xi,...t,.21,.0265,.050])})));
- const temporal=[],tY=[-.12,-.22,-.32,-.40],tZ=[.28,.10,-.10,-.28];tY.forEach((y,yi)=>tZ.forEach((z,zi)=>[.11,.28,.45,.54].forEach((x,xi)=>{if((yi===3&&zi===0)||(xi===3&&zi===3))return;const t=zi%2?[.45,.06,-.89]:[.40,-.05,.91];temporal.push([x,y,z-.02*xi,...t,.23,.026,.046])})));
- const occipital=[],oY=[.30,.18,.06,-.07,-.18],oZ=[-.57,-.70,-.81];oY.forEach((y,yi)=>oZ.forEach((z,zi)=>[.09,.23,.37,.47].forEach((x,xi)=>{if(yi===4&&zi===0&&xi>1)return;const t=yi%2?[.55,-.38,-.74]:[.48,-.48,.73];occipital.push([x,y,z+.018*xi,...t,.18,.025,.044])})));
- const medial=[],mY=[.38,.25,.12,-.02,-.14],mZ=[.35,.18,.00,-.18,-.36,-.52];mY.forEach((y,yi)=>mZ.forEach((z,zi)=>{if(yi>3&&zi<2)return;medial.push([.040+.006*(zi%2),y,z,.20,-.58,zi%2?.79:-.79,.18,.022,.038])}));
- const deep=[],dX=[.16,.30,.43],dY=[.30,.15,.00,-.16,-.30],dZ=[.30,.08,-.18,-.42];dX.forEach((x,xi)=>dY.forEach((y,yi)=>dZ.forEach((z,zi)=>{if((yi===4&&zi===0)||(yi===0&&zi===3))return;const t=(xi+yi+zi)%3===0?[.52,-.45,.72]:(xi+yi+zi)%3===1?[.42,.68,-.60]:[.68,-.18,-.71];deep.push([x,y,z,...t,.18,.0235,.043])})));
- for(const side of[-1,1]){addSeeds(side,superior,10);addSeeds(side,frontal,70);addSeeds(side,precentral,130,light);addSeeds(side,postcentral,150,light);addSeeds(side,parietal,180);addSeeds(side,temporal,260);addSeeds(side,occipital,360);addSeeds(side,medial,470,dark);addSeeds(side,deep,540,dark)}
- function cerebellum(side){const folia=[],cx=[.055,.125,.195,.255],cy=[-.285,-.335,-.385,-.435,-.485],cz=[-.45,-.55,-.63];cy.forEach((y,yi)=>cz.forEach((z,zi)=>cx.forEach((x,xi)=>{if(zi===2&&xi===3)return;const t=(yi+xi)%2?[.78,-.08,-.62]:[.80,.05,.59];folia.push([x,y,z-.015*xi,...t,.11,.0135,.027])})));addSeeds(side,folia,700,dark);[[.040,-.285,-.16,.46,-.20,-.86,.24,.014,.030],[.055,-.335,-.18,.50,-.18,-.85,.24,.013,.029],[.070,-.385,-.21,.54,-.15,-.83,.23,.0125,.028]].forEach((s,i)=>serpent(side,[s[0],s[1],s[2]],[s[3],s[4],s[5]],s[6],s[7],800+i,light,s[8]))}
- cerebellum(-1);cerebellum(1);
- const pons=[[[-.16,-.275,-.095],[-.10,-.245,-.062],[-.045,-.230,-.042],[0,-.227,-.036],[.045,-.230,-.042],[.10,-.245,-.062],[.16,-.275,-.095]],[[-.17,-.315,-.105],[-.105,-.285,-.072],[-.045,-.270,-.052],[0,-.267,-.046],[.045,-.270,-.052],[.105,-.285,-.072],[.17,-.315,-.105]],[[-.155,-.355,-.115],[-.095,-.325,-.082],[-.040,-.310,-.062],[0,-.307,-.056],[.040,-.310,-.062],[.095,-.325,-.082],[.155,-.355,-.115]]];pons.forEach((c,i)=>tube(spline(c,3),.020+i*.001,7,light));
- const stem=[[0,-.17,-.15],[0,-.235,-.125],[.004,-.300,-.105],[.008,-.370,-.103],[.006,-.440,-.114],[.002,-.515,-.136],[-.003,-.590,-.160],[-.006,-.665,-.184],[0,-.740,-.202]];
- for(let k=-4;k<=4;k++){const c=stem.map((p,i)=>[p[0]+k*.008,p[1]+.003*M.sin(i*.8+k),p[2]+.004*M.sin(i*1.15+k*.45)]);tube(spline(c,2),u=>lerp(.017,.010,u),6,k%2?dark:neutral)}
- const vertexCount=pos.length/3;if(vertexCount>65535)throw Error('Brain V9 G123 v12 vertex budget exceeded: '+vertexCount);
- const buf=(t,d)=>{const b=gl.createBuffer();gl.bindBuffer(t,b);gl.bufferData(t,d,gl.STATIC_DRAW);return b};
- return{p:buf(gl.ARRAY_BUFFER,new Float32Array(pos)),n:buf(gl.ARRAY_BUFFER,new Float32Array(nor)),c:buf(gl.ARRAY_BUFFER,new Float32Array(col)),i:buf(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(idx)),count:idx.length,triangles:idx.length/3};
+ const pos=[],nor=[],col=[],idx=[];
+ const palette={
+  frontal:[.93,.52,.54],parietal:[.83,.40,.46],temporal:[.76,.31,.39],occipital:[.66,.24,.34],
+  cerebellum:[.52,.20,.27],stem:[.63,.27,.31],pons:[.69,.31,.34],fissure:[.18,.035,.055]
+ };
+ const v=(p,n,c)=>{const i=pos.length/3;pos.push(...p);nor.push(...n);col.push(...c);return i};
+ const tri=(a,b,c)=>idx.push(a,b,c);
+ const ridge=x=>M.tanh(x*1.8);
+
+ function hemi(side){
+  const rows=64,cols=96,str=cols+1,g=[];
+  for(let r=0;r<=rows;r++){
+   const phi=-PI/2+r/rows*PI,cp=M.cos(phi),sp=M.sin(phi);
+   for(let c=0;c<=cols;c++){
+    const th=-PI/2+c/cols*PI,ct=M.cos(th),st=M.sin(th);
+
+    const frontal=gauss(th-.66,.62)*gauss(phi-.02,.95);
+    const temporal=gauss(phi+.47,.34)*gauss(th-.05,.95);
+    const parietal=gauss(phi-.26,.50)*gauss(th+.02,.72);
+    const occipital=gauss(th+.98,.48)*gauss(phi,.88);
+    const central=gauss(th-.06,.055)*gauss(phi-.02,.78);
+    const lateral=gauss(phi+.34,.052)*gauss(th-.05,.80);
+    const precentral=gauss(th-.18,.055)*gauss(phi-.01,.74);
+    const postcentral=gauss(th+.07,.060)*gauss(phi-.01,.74);
+
+    const f1=M.sin(th*8.1+phi*5.2+.35);
+    const f2=M.sin(th*13.7-phi*8.6-.80);
+    const f3=M.sin(th*19.4+phi*11.2+1.30);
+    const f4=M.sin(th*27.8-phi*16.5+.20);
+    const f5=M.sin(th*36.2+phi*22.0-.45);
+    const macro=.39*ridge(f1)+.27*ridge(f2)+.19*ridge(f3)+.10*ridge(f4)+.05*ridge(f5);
+    const temporalBands=.30*M.sin(th*15.0+phi*3.2)+.12*M.sin(th*25.0-phi*4.2);
+    const frontalBands=.18*M.sin(th*10.0-phi*12.0)+.08*M.sin(th*21.0+phi*15.0);
+    const fold=mix(macro,temporalBands,clamp(temporal*.58,0,.58))+frontal*frontalBands;
+
+    const sulcus=.090*central+.058*lateral+.028*precentral+.025*postcentral;
+    const valley=.030*M.max(0,-fold);
+    const crown=.040*M.max(0,fold);
+    const relief=1+crown-valley-sulcus;
+
+    const gap=.034+.012*(1-M.abs(sp))+.015*gauss(ct,.18);
+    const rx=.665*(1+.040*parietal+.055*temporal-.025*occipital);
+    const ry=.660*(1-.055*temporal+.025*parietal);
+    const rz=.915*(1+.075*frontal+.035*occipital+.025*temporal);
+
+    let x=side*(gap+rx*cp*ct*relief);
+    let y=.070+ry*sp+.017*fold*cp-.025*lateral-.022*temporal;
+    let z=.012+rz*cp*st*(1+.020*fold)+.020*fold*cp;
+
+    const inferior=clamp((-sp-.18)/.82,0,1);
+    x*=1-.045*inferior*(1-temporal);
+    z+=.045*temporal-.018*inferior;
+
+    const nx=side*(cp*ct+.095*fold*cp-.13*central-.07*lateral);
+    const ny=sp*.88+.050*fold-.08*lateral-.04*central;
+    const nz=cp*st+.105*fold-.07*central;
+    const nn=norm(nx,ny,nz);
+    const color=phi<-.27?palette.temporal:th>.38?palette.frontal:th<-.58?palette.occipital:palette.parietal;
+    g.push(v([x,y,z],nn,color));
+   }
+  }
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
+   const a=g[r*str+c],b=a+1,d=g[(r+1)*str+c],e=d+1;
+   if(side<0){tri(a,e,d);tri(a,b,e)}else{tri(a,d,e);tri(a,e,b)}
+  }
+ }
+
+ function ellipsoid(cx,cy,cz,rx,ry,rz,color,rows=28,cols=56,warp=()=>1){
+  const g=[];
+  for(let r=0;r<=rows;r++){
+   const ph=-PI/2+r/rows*PI,cp=M.cos(ph),sp=M.sin(ph);
+   for(let c=0;c<cols;c++){
+    const th=c/cols*TAU,w=warp(th,ph);
+    const px=cx+rx*cp*M.cos(th)*w,py=cy+ry*sp*w,pz=cz+rz*cp*M.sin(th)*w;
+    const nn=norm(cp*M.cos(th)/rx,sp/ry,cp*M.sin(th)/rz);
+    g.push(v([px,py,pz],nn,color));
+   }
+  }
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
+   const n=(c+1)%cols,a=g[r*cols+c],b=g[r*cols+n],d=g[(r+1)*cols+c],e=g[(r+1)*cols+n];
+   tri(a,b,e);tri(a,e,d);
+  }
+ }
+
+ function cerebellarLobe(side){
+  ellipsoid(side*.235,-.505,-.575,.335,.235,.345,palette.cerebellum,34,68,(th,ph)=>{
+   const folia=.045*M.sin(ph*28.0)+.020*M.sin(ph*49.0+th*2.0)+.012*M.sin(th*10.0-ph*6.0);
+   return 1+folia;
+  });
+ }
+
+ function brainstem(){
+  const rings=[
+   [-.420,-.105,.118,.105],
+   [-.500,-.105,.135,.118],
+   [-.575,-.112,.112,.096],
+   [-.675,-.120,.086,.074],
+   [-.790,-.125,.066,.058],
+   [-.910,-.128,.052,.046]
+  ],seg=48,g=[];
+  for(let r=0;r<rings.length;r++){
+   const [y,z,rx,rz]=rings[r];
+   for(let i=0;i<seg;i++){
+    const t=i/seg*TAU;
+    const frontBulge=r===1?1+.10*M.max(0,M.sin(t)):1;
+    const px=rx*M.cos(t),py=y,pz=z+rz*M.sin(t)*frontBulge;
+    g.push(v([px,py,pz],norm(M.cos(t),.08,M.sin(t)),r<2?palette.pons:palette.stem));
+   }
+  }
+  for(let r=0;r<rings.length-1;r++)for(let i=0;i<seg;i++){
+   const n=(i+1)%seg,a=g[r*seg+i],b=g[r*seg+n],d=g[(r+1)*seg+i],e=g[(r+1)*seg+n];
+   tri(a,b,e);tri(a,e,d);
+  }
+ }
+
+ function fissureFloor(){
+  const rows=24,cols=44,g=[];
+  for(let r=0;r<=rows;r++){
+   const y=-.53+r/rows*1.13;
+   for(let c=0;c<=cols;c++){
+    const z=-.58+c/cols*1.23;
+    const x=.006*M.sin(c/cols*TAU*2.0)*(1-.35*M.abs(y));
+    g.push(v([x,y,z],norm(0,0,1),palette.fissure));
+   }
+  }
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
+   const a=g[r*(cols+1)+c],b=a+1,d=g[(r+1)*(cols+1)+c],e=d+1;tri(a,b,e);tri(a,e,d);
+  }
+ }
+
+ hemi(-1);hemi(1);
+ fissureFloor();
+ cerebellarLobe(-1);cerebellarLobe(1);
+ brainstem();
+
+ const vertexCount=pos.length/3;
+ if(vertexCount>65535)throw Error('Brain V9 vertex budget exceeded: '+vertexCount);
+ const buf=(target,data)=>{const b=gl.createBuffer();gl.bindBuffer(target,b);gl.bufferData(target,data,gl.STATIC_DRAW);return b};
+ return{
+  p:buf(gl.ARRAY_BUFFER,new Float32Array(pos)),
+  n:buf(gl.ARRAY_BUFFER,new Float32Array(nor)),
+  c:buf(gl.ARRAY_BUFFER,new Float32Array(col)),
+  i:buf(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(idx)),
+  count:idx.length,triangles:idx.length/3
+ };
 }
-function boot(){const stage=window.CapabilityObjectStage;if(!stage)return;document.querySelectorAll('[data-capability-brain-v9]').forEach(canvas=>{const api=stage.mount(canvas,{meshFactory:build,initialYaw:.42,initialPitch:-.04,spin:0,scale:1.00,inspectionMode:'geometry',dataset:{brainRenderer:VERSION,brainContract:'COMPASS_BRAIN_GEOMETRY_SYSTEMATIC_G123_v12',brainMaterial:'NEUTRAL_GEOMETRY_MATTE',brainDepthModel:'TRUE_WEBGL_GEOMETRY',brainConstruction:'NO_ENVELOPE_INDEPENDENT_3D_SPLINES',brainGeometryPass:'G1_CEREBRAL_SILHOUETTE_FINISH__G2_LOCALIZED_SUPERIOR_LATERAL_INTEGRATION__G3_INFERIOR_CONTINUITY',brainComponents:'multibank-serpentine-cortex,narrow-longitudinal-fissure,central-sulcus-corridor,lateral-sulcus-corridor,precentral-gyri,postcentral-gyri,deep-intermediate-gyri,compact-cerebellar-folia,pons-fibers,medulla-tracts,brainstem,peduncles'}});if(api)canvas._brainV9=api})}
+
+function boot(){
+ const stage=window.CapabilityObjectStage;if(!stage)return;
+ document.querySelectorAll('[data-capability-brain-v9]').forEach(canvas=>{
+  const api=stage.mount(canvas,{
+   meshFactory:build,initialYaw:.48,initialPitch:-.075,spin:.000085,scale:1.00,
+   dataset:{
+    brainRenderer:VERSION,
+    brainContract:'COMPASS_COHERISCOPE_ANATOMICAL_WEBGL_v9_REFERENCE_REBUILD',
+    brainMaterial:'NATIVE_ROSE_FLESH_V6',
+    brainDepthModel:'TRUE_WEBGL_GEOMETRY',
+    brainComponents:'bilateral-hemispheres,longitudinal-fissure,central-sulcus,lateral-sulcus,paired-cerebellar-lobes,pons,medulla,brainstem',
+    brainReferenceTarget:'APPROVED_HIGH_FIDELITY_ANATOMICAL_REFERENCE'
+   }
+  });
+  if(api)canvas._brainV9=api;
+ });
+}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 window.CompassBrainV9=Object.freeze({version:VERSION,build,boot});
 })();

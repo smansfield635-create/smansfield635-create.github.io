@@ -1,0 +1,36 @@
+name: Grid exact maneuverability severe test v1
+on:
+  pull_request:
+    paths:
+      - 'research/imi/grid_exact_maneuverability_severe_test_v1.py'
+      - 'research/imi/GRID_EXACT_MANEUVERABILITY_SEVERE_TEST_PROTOCOL_v1.md'
+      - '.github/workflows/grid-exact-maneuverability-severe-test-v1.yml'
+  workflow_dispatch:
+jobs:
+  severe-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout: |
+            research/imi
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install scientific dependencies
+        run: pip install numpy pandas scipy scikit-learn lightgbm PYPOWER
+      - name: Execute frozen grid severe test
+        run: python research/imi/grid_exact_maneuverability_severe_test_v1.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: grid-exact-maneuverability-severe-test-v1
+          path: |
+            grid_exact_maneuverability_findings_v1.json
+            grid_state_contingency_rows_v1.csv
+            grid_state_summary_v1.csv
+            grid_predictions_v1.csv
+            grid_matched_pairs_v1.csv
+            GRID_EXACT_MANEUVERABILITY_VERDICT_v1.txt

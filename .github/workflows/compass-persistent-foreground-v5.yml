@@ -1,0 +1,87 @@
+name: Compass Persistent Foreground v5
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/compass-persistent-foreground-v5.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Verify default retires permanently after first interaction
+        run: |
+          cat > verify.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          const browser=await chromium.launch({headless:true});
+          const page=await browser.newPage({viewport:{width:960,height:1536},deviceScaleFactor:1});
+          const url='https://diamondgatebridge.com/compass-composite/?verify_v5='+Date.now();
+          let loaded=false;
+          for(let i=0;i<18;i++){
+            await page.goto(url+'&attempt='+i,{waitUntil:'networkidle',timeout:120000});
+            await page.waitForTimeout(2200);
+            loaded=await page.evaluate(()=>document.documentElement.dataset.compassComposite==='gen1596-surgical-composite-5');
+            if(loaded)break;
+            await page.waitForTimeout(5000);
+          }
+          if(!loaded)throw new Error('V5_NOT_DEPLOYED');
+          const read=()=>page.evaluate(()=>{
+            const root=document.querySelector('[data-compass-root]');
+            const panel=document.querySelector('[data-compass-panel]');
+            const visible=[...document.querySelectorAll('[data-compass-cardinal]')].find(w=>[...w.querySelectorAll(':scope > span')].some(s=>{const c=getComputedStyle(s);return (s.textContent||'').trim()&&c.display!=='none'&&c.visibility!=='hidden'&&Number(c.opacity)>.5;}));
+            return {
+              mode:root?.dataset.compassMode||'',
+              committed:root?.dataset.compassInteractionCommitted||'',
+              cardinal:visible?.dataset.cardinalId||visible?.dataset.wing||'',
+              title:panel?.querySelector('[data-compass-panel-title]')?.textContent?.trim()||'',
+              eyebrow:panel?.querySelector('[data-compass-panel-eyebrow]')?.textContent?.trim()||''
+            };
+          });
+          const expected={
+            north:'Find your bearings before you choose a destination.',
+            east:'Sometimes a system becomes clearer when you can stand inside it.',
+            south:'Measure, govern, and inspect without mistaking the instrument for the whole truth.',
+            west:'When understanding is no longer enough, build the next thing.'
+          };
+          const initial=await read();
+          if(initial.committed)throw new Error('DEFAULT_NOT_FRESH '+JSON.stringify(initial));
+          const scene=page.locator('[data-compass-scene]');
+          const box=await scene.boundingBox();
+          if(!box)throw new Error('NO_SCENE');
+          await page.mouse.move(box.x+box.width*.72,box.y+box.height*.52);
+          await page.mouse.down();
+          await page.mouse.move(box.x+box.width*.28,box.y+box.height*.52,{steps:24});
+          await page.mouse.up();
+          for(const delay of [80,220,500,900,1600,2800]){
+            await page.waitForTimeout(delay);
+            const s=await read();
+            if(s.mode==='CONSTELLATION'){
+              if(s.committed!=='true')throw new Error('INTERACTION_NOT_COMMITTED '+JSON.stringify(s));
+              if(!expected[s.cardinal])throw new Error('NO_VISIBLE_CARDINAL '+JSON.stringify(s));
+              if(s.title!==expected[s.cardinal])throw new Error('PANEL_NOT_OWNED_BY_FOREGROUND '+JSON.stringify({initial,s}));
+              if(s.title===initial.title)throw new Error('DEFAULT_REAPPEARED '+JSON.stringify({initial,s}));
+            }
+          }
+          for(let n=0;n<3;n++){
+            await page.mouse.move(box.x+box.width*.25,box.y+box.height*.52);
+            await page.mouse.down();
+            await page.mouse.move(box.x+box.width*.78,box.y+box.height*.52,{steps:24});
+            await page.mouse.up();
+            await page.waitForTimeout(1200);
+            const s=await read();
+            if(s.mode==='CONSTELLATION'){
+              if(s.title!==expected[s.cardinal])throw new Error('LATER_TRANSITION_LOST_OWNERSHIP '+JSON.stringify(s));
+              if(s.title===initial.title)throw new Error('DEFAULT_RETURNED_LATER '+JSON.stringify({initial,s}));
+            }
+          }
+          console.log('PASS',JSON.stringify({initial,final:await read()}));
+          await browser.close();
+          NODE
+          node verify.mjs

@@ -26,14 +26,14 @@ Two physically explicit action classes are represented:
 
 The candidate switching set is fixed before generated-state outcomes are evaluated: among branches whose opening does not island the published network, select the 12 branches with highest absolute DC utilization under the deterministic balanced published stressed dispatch. The same 12 branch identities are used for every generated state and every contingency.
 
-No load shedding, generation curtailment outside generator bounds, storage, reactive-power action, or protection override is allowed.
+No load shedding, generation outside generator bounds, storage, reactive-power action, or protection override is allowed.
 
 ## Pre-disturbance path geometry
 
 For each intact state, construct a bounded depth-2 transition graph using the frozen switching set.
 
-- A depth-1 edge exists when one candidate branch can be opened and a bounded 10%-span corrective redispatch can restore a full-load feasible DC state.
-- A depth-2 path exists when, after a feasible depth-1 transition, a second distinct candidate branch can be opened and another bounded corrective redispatch restores feasibility.
+- A depth-1 edge exists when one candidate branch can be opened and a bounded 10%-span corrective redispatch can restore a full-load feasible DC state under published branch ratings.
+- A depth-2 path exists when, after a feasible depth-1 transition, a second distinct candidate branch can be opened and another bounded corrective redispatch restores feasibility under published branch ratings.
 
 Let `f1` be the fraction of the 12 candidate first-step switches that are feasible and `f2` the fraction of ordered distinct two-switch sequences that are feasible. The frozen path-richness score is
 
@@ -43,13 +43,13 @@ This is a discrete topology/path measure. It is not the prior aggregate redispat
 
 ## Prospective outcome
 
-Every non-islanding N-1 branch outage is evaluated from every generated state. Survival means full load can be preserved through **any recovery path of depth 0, 1, or 2**:
+Every non-islanding N-1 branch outage is evaluated from every generated state. Survival means full load can be preserved through any lawful recovery path of depth 0, 1, or 2:
 
-- depth 0: bounded 20%-span corrective redispatch under the outage topology;
-- depth 1: one additional candidate line opening followed by bounded corrective redispatch;
-- depth 2: two distinct additional candidate line openings, each followed by bounded corrective redispatch.
+- depth 0: bounded 20%-span corrective redispatch under the outage topology and published branch ratings;
+- depth 1: one additional candidate line opening followed by bounded corrective redispatch to a state satisfying published ratings;
+- depth 2: a first candidate line opening and bounded redispatch may occupy a short-lived **emergency transition state** whose branch flows are no more than 120% of published ratings, followed by a second distinct candidate opening and bounded redispatch that restores all remaining branches to published ratings.
 
-All intermediate and terminal networks must remain connected and satisfy all remaining branch thermal limits and generator bounds. No load shedding is permitted.
+All intermediate and terminal networks must remain connected and respect generator bounds. The 120% emergency allowance is fixed before outcome generation and applies only to the single intermediate state of a depth-2 path. No load shedding is permitted.
 
 ## Conventional challenger
 

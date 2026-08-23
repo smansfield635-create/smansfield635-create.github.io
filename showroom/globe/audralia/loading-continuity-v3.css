@@ -1,0 +1,140 @@
+/* AUDRALIA_LOADING_CONTINUITY_v3 — H-Earth-family informative arrival */
+.audralia-loading-screen{
+  background:
+    radial-gradient(circle at 50% 36%,rgba(48,116,104,.22),transparent 35rem),
+    linear-gradient(180deg,#061014 0%,#040a0c 58%,#020507 100%);
+}
+
+.audralia-loading-panel{
+  width:min(540px,92vw);
+  padding:clamp(24px,6vw,44px);
+  align-items:stretch;
+  text-align:left;
+  border:1px solid rgba(216,248,235,.16);
+  border-radius:28px;
+  background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018));
+  box-shadow:0 32px 110px rgba(0,0,0,.52);
+  backdrop-filter:blur(18px);
+}
+
+.audralia-loading-kicker{
+  color:#a8ddca;
+  font-size:10px;
+  font-weight:850;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+
+.audralia-loading-mark{
+  width:54px;
+  height:54px;
+  margin:18px 0 16px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(216,248,235,.28);
+  border-radius:18px;
+  background:rgba(216,248,235,.06);
+  box-shadow:inset 0 0 24px rgba(216,248,235,.04),0 0 34px rgba(83,185,150,.08);
+}
+
+.audralia-loading-mark span{
+  font-size:22px;
+  font-weight:900;
+  color:#d8f8eb;
+}
+
+.audralia-loading-title{
+  font-size:clamp(38px,9vw,64px);
+  font-weight:850;
+  letter-spacing:-.045em;
+}
+
+.audralia-loading-subtitle{
+  margin-top:7px;
+  color:rgba(237,243,235,.64);
+  font-size:13px;
+}
+
+.audralia-loading-stage{
+  margin-top:22px;
+  min-height:1.4em;
+  color:#edf3eb;
+  font-size:13px;
+  font-weight:720;
+}
+
+.audralia-loading-systems{
+  display:grid;
+  gap:7px;
+  margin-top:16px;
+}
+
+.audralia-loading-system{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:14px;
+  padding:9px 10px;
+  border:1px solid rgba(216,248,235,.09);
+  border-radius:10px;
+  background:rgba(255,255,255,.025);
+  color:rgba(237,243,235,.62);
+  font-size:11px;
+}
+
+.audralia-loading-system b{
+  color:rgba(237,243,235,.36);
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.07em;
+}
+
+.audralia-loading-system[data-state="ready"]{
+  border-color:rgba(157,229,189,.22);
+  color:#dff7e8;
+  background:rgba(77,151,105,.08);
+}
+
+.audralia-loading-system[data-state="ready"] b{color:#9de5bd}
+
+.audralia-loading-track{
+  height:4px;
+  margin-top:18px;
+  background:rgba(216,248,235,.09);
+}
+
+.audralia-loading-track span{
+  left:0;
+  width:0;
+  animation:none;
+  background:linear-gradient(90deg,rgba(157,229,189,.58),#d8f8eb);
+  transition:width .28s ease;
+}
+
+.audralia-loading-meta{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:9px;
+  color:rgba(237,243,235,.42);
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:9px;
+  letter-spacing:.04em;
+}
+
+.audralia-loading-note{
+  max-width:none;
+  margin-top:18px;
+  color:rgba(237,243,235,.42);
+  font-size:10px;
+  line-height:1.55;
+}
+
+@media(max-width:460px){
+  .audralia-loading-panel{
+    width:min(360px,92vw);
+    padding:22px 18px;
+    border-radius:22px;
+  }
+  .audralia-loading-title{font-size:42px}
+}

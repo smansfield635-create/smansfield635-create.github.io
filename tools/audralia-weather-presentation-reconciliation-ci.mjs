@@ -126,7 +126,8 @@ try{
   console.log(JSON.stringify({liveAuthoritative,liveCelestial,live:liveResult,...liveCapture},null,2));
   const liveFailed=
     liveCapture.pageErrors.length||
-    liveResult.integration?.schema!=='AUDRALIA_LIVE_PLANETARY_INTEGRATION_v3'||
+    liveResult.integration?.schema!=='AUDRALIA_LIVE_PLANETARY_INTEGRATION_v4'||
+    liveResult.integration?.startupArchitecture!=='RENDERER_FIRST_PROGRESSIVE_ENRICHMENT_v1'||
     liveResult.integration?.weatherPresentationReconciliation!==true||
     liveResult.integration?.cameraSemanticsFrozen!==true||
     liveResult.loaderProgress<4||

@@ -40,11 +40,7 @@ jobs:
           set -euo pipefail
           requested="$(printf '%s' "$REQUESTED_SHA" | tr -d '[:space:]')"
           test -n "$requested"
-          main_sha="$(curl --fail-with-body --silent --show-error -L \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${GH_TOKEN}" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/main" | jq -r '.sha')"
+          main_sha="$(curl --fail-with-body --silent --show-error -L -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${GH_TOKEN}" -H "X-GitHub-Api-Version: 2022-11-28" "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/main" | jq -r '.sha')"
           if [ "$requested" != "$main_sha" ]; then
             echo "Requested SHA $requested is not current main $main_sha" >&2
             exit 1
@@ -71,18 +67,11 @@ jobs:
           fi
           manifest=".github/ai-router/publication-surfaces/${surface}.json"
           test -f "$manifest"
-          jq -e --arg surface "$surface" '
-            .schema == "PUBLICATION_SURFACE_VERIFICATION_v1" and
-            .surfaceId == $surface and
-            (.checks | type == "array") and
-            (.checks | length > 0) and
-            ([.checks[] | (.path | type == "string") and (.path | startswith("/")) and (.path | contains("..") | not) and (.includes | type == "array") and (.excludes | type == "array")] | all)
-          ' "$manifest" >/dev/null
+          jq -e --arg surface "$surface" '.schema == "PUBLICATION_SURFACE_VERIFICATION_v1" and .surfaceId == $surface and (.checks | type == "array") and (.checks | length > 0) and ([.checks[] | (.path | type == "string") and (.path | startswith("/")) and (.path | contains("..") | not) and (.includes | type == "array") and (.excludes | type == "array")] | all)' "$manifest" >/dev/null
           runtime_enabled="$(jq -r 'if .runtime?.enabled == true then "true" else "false" end' "$manifest")"
           echo "surface_id=$surface" >> "$GITHUB_OUTPUT"
           echo "manifest_path=$manifest" >> "$GITHUB_OUTPUT"
           echo "runtime_enabled=$runtime_enabled" >> "$GITHUB_OUTPUT"
-          echo "PUBLICATION_SURFACE=$surface manifest=$manifest runtime=$runtime_enabled"
 
       - name: Stamp exact-head release marker
         env:
@@ -94,14 +83,7 @@ jobs:
           set -euo pipefail
           mkdir -p .well-known
           manifest_sha256="$(sha256sum "$MANIFEST_PATH" | awk '{print $1}')"
-          jq -n \
-            --arg schema 'DGB_PUBLIC_RELEASE_MARKER_v2' \
-            --arg commit "$TARGET_SHA" \
-            --arg surface "$SURFACE_ID" \
-            --arg manifest "$MANIFEST_PATH" \
-            --arg manifestSha256 "$manifest_sha256" \
-            '{schema:$schema,commit:$commit,surface:$surface,verificationManifest:$manifest,verificationManifestSha256:$manifestSha256}' \
-            > .well-known/dgb-release.json
+          jq -n --arg schema 'DGB_PUBLIC_RELEASE_MARKER_v2' --arg commit "$TARGET_SHA" --arg surface "$SURFACE_ID" --arg manifest "$MANIFEST_PATH" --arg manifestSha256 "$manifest_sha256" '{schema:$schema,commit:$commit,surface:$surface,verificationManifest:$manifest,verificationManifestSha256:$manifestSha256}' > .well-known/dgb-release.json
 
       - name: Stage bounded deployment-only Pages payload
         env:
@@ -113,42 +95,25 @@ jobs:
           set -euo pipefail
           rm -rf "$PAGES_STAGE"
           mkdir -p "$PAGES_STAGE"
-          rsync -a --prune-empty-dirs \
-            --exclude='.git/' \
-            --exclude='.github/' \
-            --exclude='preview/' \
-            --exclude='h-earth-live-6d18e158/' \
-            ./ "$PAGES_STAGE/"
-
+          rsync -a --prune-empty-dirs --exclude='.git/' --exclude='.github/' --exclude='preview/' --exclude='h-earth-live-6d18e158/' ./ "$PAGES_STAGE/"
           rm -rf "$PAGES_STAGE/showroom/globe/h-earth"
           mkdir -p "$PAGES_STAGE/showroom/globe/h-earth"
-          rsync -a --delete \
-            h-earth-live-6d18e158/showroom/globe/h-earth/ \
-            "$PAGES_STAGE/showroom/globe/h-earth/"
-
+          rsync -a --delete h-earth-live-6d18e158/showroom/globe/h-earth/ "$PAGES_STAGE/showroom/globe/h-earth/"
           git fetch --no-tags --depth=1 origin "$INSPECTION_SHA"
           rm -rf "$INSPECTION_ROOT"
           mkdir -p "$INSPECTION_ROOT"
-          git archive "$INSPECTION_SHA" \
-            showroom/globe/audralia \
-            showroom/globe/h-earth \
-            h-earth-3d \
-            | tar -x -C "$INSPECTION_ROOT"
-
+          git archive "$INSPECTION_SHA" showroom/globe/audralia showroom/globe/h-earth h-earth-3d | tar -x -C "$INSPECTION_ROOT"
           test -f "$PAGES_STAGE/.well-known/dgb-release.json"
           test -f "$PAGES_STAGE/showroom/globe/h-earth/index.html"
           test -f "$INSPECTION_ROOT/showroom/globe/audralia/weather-presentation-reconciliation/index.html"
-
           if grep -q 'h-earth-live-6d18e158' "$PAGES_STAGE/showroom/globe/h-earth/index.html"; then
             echo "H_EARTH_PUBLIC_ROUTE_STILL_REDIRECTS_TO_EXCLUDED_TREE" >&2
             exit 1
           fi
-
           staged_bytes="$(du -sb "$PAGES_STAGE" | awk '{print $1}')"
           echo "BOUNDED_PAGES_STAGE_BYTES=$staged_bytes"
           if [ "$staged_bytes" -ge 1073741824 ]; then
             echo "ARTIFACT_OVER_1_GIB staged_bytes=$staged_bytes" >&2
-            du -x -B1 -d1 "$PAGES_STAGE" 2>/dev/null | sort -n | tail -30 >&2 || true
             exit 1
           fi
 
@@ -201,32 +166,9 @@ jobs:
             marker_surface="$(printf '%s' "$marker" | jq -r '.surface // empty' 2>/dev/null || true)"
             marker_manifest_sha="$(printf '%s' "$marker" | jq -r '.verificationManifestSha256 // empty' 2>/dev/null || true)"
             if [ "$observed" = "$TARGET_SHA" ] && [ "$marker_surface" = "$SURFACE_ID" ] && [ "$marker_manifest_sha" = "$expected_manifest_sha" ]; then
-              if python - "$PAGE_URL" "$MANIFEST_PATH" <<'PY'
-import json, sys, urllib.request
-base=sys.argv[1].rstrip('/')
-manifest=json.load(open(sys.argv[2]))
-for check in manifest['checks']:
-    url=base+check['path']
-    try:
-        with urllib.request.urlopen(url, timeout=20) as response:
-            body=response.read().decode('utf-8','replace')
-    except Exception as exc:
-        print(f'FETCH_FAILED {url} {exc}', file=sys.stderr)
-        raise SystemExit(1)
-    for token in check.get('includes',[]):
-        if token not in body:
-            print(f'MISSING_TOKEN {url} {token}', file=sys.stderr)
-            raise SystemExit(1)
-    for token in check.get('excludes',[]):
-        if token in body:
-            print(f'FORBIDDEN_TOKEN {url} {token}', file=sys.stderr)
-            raise SystemExit(1)
-print('SURFACE_STATIC_BYTES_VERIFIED')
-PY
-              then
-                echo "LIVE_EXACT_HEAD_VERIFIED target=$TARGET_SHA surface=$SURFACE_ID manifest=$MANIFEST_PATH"
-                exit 0
-              fi
+              node tools/publication-live-verify.mjs static "$PAGE_URL" "$MANIFEST_PATH"
+              echo "LIVE_EXACT_HEAD_VERIFIED target=$TARGET_SHA surface=$SURFACE_ID manifest=$MANIFEST_PATH"
+              exit 0
             fi
             echo "Attempt $attempt: observed=${observed:-none} surface=${marker_surface:-none}; waiting for target=$TARGET_SHA surface=$SURFACE_ID"
             sleep 10
@@ -255,34 +197,4 @@ PY
           set -euo pipefail
           export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
           test -x "$CHROME_PATH"
-          node <<'NODE'
-          const fs=require('fs');
-          const puppeteer=require('puppeteer-core');
-          const manifest=JSON.parse(fs.readFileSync(process.env.MANIFEST_PATH,'utf8'));
-          const spec=manifest.runtime;
-          (async()=>{
-            const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
-            const page=await browser.newPage();
-            await page.setViewport({width:720,height:1280,deviceScaleFactor:1});
-            const errors=[];
-            page.on('pageerror',e=>errors.push(String(e?.stack||e)));
-            page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
-            const url=process.env.PAGE_URL.replace(/\/$/,'')+spec.path;
-            await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});
-            if(spec.readySelector) await page.waitForSelector(spec.readySelector,{timeout:spec.timeoutMs||45000});
-            if(spec.readyAttribute){
-              await page.waitForFunction(({selector,name,contains})=>{
-                const el=document.querySelector(selector); if(!el)return false;
-                const value=el.getAttribute(name)||''; return value.includes(contains);
-              },{timeout:spec.timeoutMs||45000},{selector:spec.readyAttribute.selector,name:spec.readyAttribute.name,contains:spec.readyAttribute.contains});
-            }
-            const result=await page.evaluate(spec=>({
-              title:document.title,
-              readySelector:spec.readySelector?Boolean(document.querySelector(spec.readySelector)):null,
-              attributeValue:spec.readyAttribute?document.querySelector(spec.readyAttribute.selector)?.getAttribute(spec.readyAttribute.name)||null:null
-            }),spec);
-            console.log(JSON.stringify({schema:'PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1',surfaceId:manifest.surfaceId,url,result,errors},null,2));
-            await browser.close();
-            if(spec.failOnConsoleErrors!==false && errors.length)process.exit(1);
-          })().catch(error=>{console.error(error);process.exit(1);});
-          NODE
+          node tools/publication-live-verify.mjs runtime "$PAGE_URL" "$MANIFEST_PATH"

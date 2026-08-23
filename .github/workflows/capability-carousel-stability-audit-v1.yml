@@ -11,6 +11,10 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .github/workflows/capability-carousel-stability-audit-v1.yml
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -25,39 +29,32 @@ jobs:
           const reports=[];
           for(const s of sizes){
             const page=await browser.newPage({viewport:{width:s.w,height:s.h}});
+            await page.addInitScript(()=>{globalThis.__capEvents=[];document.addEventListener('compass:capability-change',e=>globalThis.__capEvents.push({...e.detail,t:performance.now()}));});
             await page.goto('https://diamondgatebridge.com/?capability-audit='+Date.now(),{waitUntil:'networkidle',timeout:120000});
-            await page.waitForTimeout(1200);
+            await page.waitForSelector('.compass-capability-orbit');await page.waitForTimeout(700);
             const snap=()=>page.evaluate(()=>{
-              const orbit=document.querySelector('.compass-capability-orbit');
-              if(!orbit)return {missing:true};
-              const rect=o=>{const r=o.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height,right:r.right,bottom:r.bottom}};
-              const sty=o=>{const c=getComputedStyle(o);return {display:c.display,visibility:c.visibility,opacity:+c.opacity,transform:c.transform,transition:c.transitionDuration,position:c.position,z:c.zIndex,pointer:c.pointerEvents,filter:c.filter}};
-              const plaques=[...orbit.querySelectorAll('.compass-orbit-plaque')].map((el,i)=>({i,text:(el.innerText||'').trim().replace(/\s+/g,' ').slice(0,140),active:el.dataset.active||null,rect:rect(el),style:sty(el),cls:el.className,canvas:el.querySelector('canvas')?{rect:rect(el.querySelector('canvas')),style:sty(el.querySelector('canvas'))}:null}));
-              const canvases=[...orbit.querySelectorAll('canvas')].map((el,i)=>({i,rect:rect(el),style:sty(el),parent:el.parentElement?.className||''}));
-              const semantic=[...orbit.querySelectorAll('button,a,[role="button"],[tabindex]')].map((el,i)=>({i,text:(el.innerText||el.getAttribute('aria-label')||'').trim().replace(/\s+/g,' ').slice(0,120),rect:rect(el),style:sty(el),active:el.dataset.active||null,selected:el.getAttribute('aria-selected'),pressed:el.getAttribute('aria-pressed'),cls:el.className}));
-              const visiblePlaques=plaques.filter(x=>x.style.display!=='none'&&x.style.visibility!=='hidden'&&x.style.opacity>.02&&x.rect.w>1&&x.rect.h>1);
-              const visibleCanvas=canvases.filter(x=>x.style.display!=='none'&&x.style.visibility!=='hidden'&&x.style.opacity>.02&&x.rect.w>1&&x.rect.h>1);
-              const descendants=[...orbit.querySelectorAll('*')].filter(el=>{const r=el.getBoundingClientRect(),c=getComputedStyle(el);return r.width>20&&r.height>20&&c.display!=='none'&&c.visibility!=='hidden'&&+c.opacity>.02}).map((el,i)=>({i,tag:el.tagName,cls:el.className||'',text:(el.innerText||'').trim().replace(/\s+/g,' ').slice(0,80),rect:rect(el),style:sty(el)}));
-              return {missing:false,orbit:{rect:rect(orbit),style:sty(orbit),htmlClass:orbit.className},plaques,visiblePlaques,canvases,visibleCanvas,semantic,descendants,overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
+              const orbit=document.querySelector('.compass-capability-orbit');const stage=orbit.querySelector('.compass-object-stage');const dock=orbit.querySelector('.compass-action-dock');
+              const rect=o=>{const r=o.getBoundingClientRect();return {x:+r.x.toFixed(2),y:+r.y.toFixed(2),w:+r.width.toFixed(2),h:+r.height.toFixed(2),right:+r.right.toFixed(2),bottom:+r.bottom.toFixed(2)}};
+              const css=o=>{const c=getComputedStyle(o);return {display:c.display,visibility:c.visibility,opacity:+c.opacity,transform:c.transform,transition:c.transitionDuration,pointer:c.pointerEvents,filter:c.filter}};
+              const cards=[...orbit.querySelectorAll('.compass-orbit-plaque')].map(el=>({id:el.dataset.capability,active:el.dataset.active,arriving:el.dataset.arriving,rect:rect(el),style:css(el),portal:rect(el.querySelector('.compass-object-portal')),canvas:rect(el.querySelector('canvas')),caption:rect(el.querySelector('.compass-object-caption'))}));
+              const active=cards.find(x=>x.active==='true');
+              return {stage:rect(stage),orbit:rect(orbit),dock:rect(dock),dockText:(dock.innerText||'').trim(),active,cards,events:[...(globalThis.__capEvents||[])],overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
             });
-            const base=await snap(); if(base.missing)throw new Error(s.name+' ORBIT_MISSING');
-            const idle=[]; let prev=base;
-            for(const t of [150,350,750,1400]){await page.waitForTimeout(t-(idle.at(-1)?.t||0));const cur=await snap();const movement=[];for(let i=0;i<Math.min(prev.descendants.length,cur.descendants.length);i++){const a=prev.descendants[i],b=cur.descendants[i];if(a.tag===b.tag&&a.cls===b.cls){const d=Math.hypot(a.rect.x-b.rect.x,a.rect.y-b.rect.y);if(d>1.5)movement.push({i,d:+d.toFixed(2),tag:a.tag,cls:String(a.cls).slice(0,70)});}}idle.push({t,movement});prev=cur;}
-            const orbitLoc=page.locator('.compass-capability-orbit');const box=await orbitLoc.boundingBox();let afterDrag=null;
-            if(box){await page.mouse.move(box.x+box.width*.72,box.y+box.height*.55);await page.mouse.down();await page.mouse.move(box.x+box.width*.24,box.y+box.height*.55,{steps:10});await page.mouse.up();await page.waitForTimeout(900);afterDrag=await snap();}
-            reports.push({size:s.name,base,idle,afterDrag}); await page.close();
+            const initial=await snap();
+            const idle=[];for(const wait of [160,350,700]){await page.waitForTimeout(wait);idle.push(await snap())}
+            const keyboard=[];await page.locator('.compass-capability-orbit').focus();for(let i=0;i<3;i++){await page.keyboard.press('ArrowRight');const sequence=[];for(const wait of [0,80,180,340]){if(wait)await page.waitForTimeout(wait);sequence.push({wait,state:await snap()})}keyboard.push(sequence)}
+            await page.evaluate(()=>{globalThis.__capEvents=[]});
+            const box=await page.locator('.compass-object-stage').boundingBox();let drag=null;if(box){await page.mouse.move(box.x+box.width*.72,box.y+box.height*.42);await page.mouse.down();await page.mouse.move(box.x+box.width*.20,box.y+box.height*.42,{steps:12});await page.mouse.up();const sequence=[];for(const wait of [0,80,180,340]){if(wait)await page.waitForTimeout(wait);sequence.push({wait,state:await snap()})}drag=sequence}
+            reports.push({size:s.name,initial,idle,keyboard,drag});await page.close();
           }
-          console.log('CAPABILITY_AUDIT '+JSON.stringify(reports));
           const weaknesses=[];
           for(const r of reports){
-            if(r.base.overflow>2)weaknesses.push([r.size,'horizontal-overflow',r.base.overflow]);
-            if(r.base.visiblePlaques.length!==1)weaknesses.push([r.size,'visible-plaque-count',r.base.visiblePlaques.length]);
-            if(r.base.plaques.filter(x=>x.active==='true').length!==1)weaknesses.push([r.size,'active-plaque-count',r.base.plaques.filter(x=>x.active==='true').length]);
-            const drift=r.idle.flatMap(x=>x.movement);if(drift.length)weaknesses.push([r.size,'idle-drift',drift.slice(0,20)]);
-            if(r.afterDrag){if(r.afterDrag.visiblePlaques.length!==1)weaknesses.push([r.size,'post-drag-visible-plaque-count',r.afterDrag.visiblePlaques.length]);if(r.afterDrag.plaques.filter(x=>x.active==='true').length!==1)weaknesses.push([r.size,'post-drag-active-plaque-count',r.afterDrag.plaques.filter(x=>x.active==='true').length]);}
-            const vis=r.base.visibleCanvas.map(x=>Math.min(x.rect.w,x.rect.h)).filter(Boolean);if(vis.length>1&&Math.max(...vis)-Math.min(...vis)>24)weaknesses.push([r.size,'visible-canvas-size-imbalance',vis]);
+            const stable=[r.initial,...r.idle];const first=stable[0].active;for(const x of stable.slice(1)){if(x.active?.id!==first?.id)weaknesses.push([r.size,'idle-owner-drift',first?.id,x.active?.id]);if(Math.abs((x.active?.rect.x||0)-(first?.rect.x||0))>1.5||Math.abs((x.active?.rect.y||0)-(first?.rect.y||0))>1.5)weaknesses.push([r.size,'idle-geometry-drift']);}
+            const settled=r.keyboard.map(seq=>seq.at(-1).state);const ids=settled.map(x=>x.active?.id);if(new Set(ids).size!==3)weaknesses.push([r.size,'keyboard-cycle-incomplete',ids]);
+            const heights=settled.map(x=>x.active?.rect.h||0), canvasHeights=settled.map(x=>x.active?.canvas.h||0), dockYs=settled.map(x=>x.dock.y||0);if(Math.max(...heights)-Math.min(...heights)>34)weaknesses.push([r.size,'plaque-height-jump',heights]);if(Math.max(...canvasHeights)-Math.min(...canvasHeights)>34)weaknesses.push([r.size,'object-height-imbalance',canvasHeights]);if(Math.max(...dockYs)-Math.min(...dockYs)>16)weaknesses.push([r.size,'action-dock-jump',dockYs]);
+            if(r.drag){const before=settled.at(-1)?.active?.id;const after=r.drag.at(-1).state.active?.id;const ev=r.drag.at(-1).state.events;if(after===before||!ev.some(e=>e.phase==='dragging')||!ev.some(e=>e.phase==='settled'))weaknesses.push([r.size,'drag-transition-not-proven',{before,after,events:ev}]);}
+            if(r.initial.overflow>2)weaknesses.push([r.size,'horizontal-overflow',r.initial.overflow]);
           }
-          console.log('WEAKNESSES '+JSON.stringify(weaknesses));
-          await browser.close();
+          console.log('CAPABILITY_TRANSITION_AUDIT '+JSON.stringify(reports));console.log('WEAKNESSES '+JSON.stringify(weaknesses));await browser.close();
           NODE
           node ./.capability-audit.mjs

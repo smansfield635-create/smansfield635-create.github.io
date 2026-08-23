@@ -1,0 +1,33 @@
+name: Compass Release Timing Trace
+on:
+  pull_request:
+    paths:
+      - 'tools/compass-release-timing-trace.mjs'
+      - '.github/workflows/compass-release-timing-trace.yml'
+      - 'index.html'
+      - 'assets/compass/**'
+jobs:
+  trace:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+      - name: Install verifier dependency
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Serve exact candidate
+        run: |
+          python3 -m http.server 4173 >/tmp/compass-trace-http.log 2>&1 &
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/compass-trace-http.log || true
+          exit 1
+      - name: Trace release settlement
+        run: |
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          node tools/compass-release-timing-trace.mjs | tee /tmp/compass-release-timing-trace.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compass-release-timing-trace-${{ github.run_id }}
+          path: /tmp/compass-release-timing-trace.json

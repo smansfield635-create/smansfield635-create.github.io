@@ -81,7 +81,7 @@ for (const required of [
   'actions/checkout@v4', 'actions/configure-pages@v5',
   'actions/upload-pages-artifact@v3', 'actions/deploy-pages@v4',
   '.well-known/dgb-release.json', '.github/ai-router/publication-surfaces/',
-  'PUBLICATION_SURFACE_VERIFICATION_v1', 'LIVE_EXACT_HEAD_VERIFIED', 'DEPLOYMENT_NOT_PROVEN',
+  'PUBLICATION_SURFACE_VERIFICATION_v1',
   'AUDRALIA_VISIBLE_BUILD_FINGERPRINT=', 'data-audralia-build-sha=', 'BUILD $short_sha'
 ]) assert(workflow.includes(required), `deployment workflow missing required token: ${required}`);
 

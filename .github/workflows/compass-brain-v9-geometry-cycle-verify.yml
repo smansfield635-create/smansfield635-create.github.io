@@ -1,0 +1,94 @@
+name: Compass Brain V9 Geometry Cycle Verify
+
+on:
+  pull_request:
+    paths:
+      - 'assets/compass/capability-object-stage.js'
+      - 'assets/compass/capability-object-brain-v9.js'
+      - 'inspection/compass/brain-v9/**'
+      - '.github/workflows/compass-brain-v9-geometry-cycle-verify.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  geometry-g123:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify JavaScript syntax and construction identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check assets/compass/capability-object-stage.js
+          node --check assets/compass/capability-object-brain-v9.js
+          grep -q 'CAPABILITY_OBJECT_STAGE_v3' assets/compass/capability-object-stage.js
+          grep -q 'COMPASS_BRAIN_V9_GEOMETRY_G123_v1' assets/compass/capability-object-brain-v9.js
+          grep -q 'G1_GROSS_CLOSURE__G2_CORTICAL_TOPOLOGY__G3_INFERIOR_ANATOMY' assets/compass/capability-object-brain-v9.js
+          grep -q 'NO_ENVELOPE_INDEPENDENT_3D_SPLINES' assets/compass/capability-object-brain-v9.js
+          grep -q 'data-view="front"' inspection/compass/brain-v9/index.html
+          grep -q 'data-view="rear"' inspection/compass/brain-v9/index.html
+          grep -q 'data-view="top"' inspection/compass/brain-v9/index.html
+          grep -q 'data-view="left"' inspection/compass/brain-v9/index.html
+          grep -q 'data-view="right"' inspection/compass/brain-v9/index.html
+          grep -q 'data-view="oblique"' inspection/compass/brain-v9/index.html
+      - uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+      - name: Install runtime verifier
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Serve exact PR candidate
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/brain-g123-server.log 2>&1 &
+          echo $! > /tmp/brain-g123-server.pid
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/inspection/compass/brain-v9/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/brain-g123-server.log
+          exit 1
+      - name: Exercise complete G1 G2 G3 geometry and fixed views
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        shell: bash
+        run: |
+          mkdir -p geometry-evidence
+          cat > /tmp/verify-g123.mjs <<'NODE'
+          import puppeteer from 'puppeteer-core';
+          import fs from 'node:fs';
+          const executablePath=process.env.CHROME_PATH || '/usr/bin/google-chrome';
+          const browser=await puppeteer.launch({headless:true,executablePath,args:['--no-sandbox','--disable-dev-shm-usage','--enable-unsafe-swiftshader']});
+          const page=await browser.newPage();
+          await page.setViewport({width:1280,height:900,deviceScaleFactor:1});
+          const errors=[];
+          page.on('pageerror',e=>errors.push(String(e)));
+          page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+          await page.goto('http://127.0.0.1:4173/inspection/compass/brain-v9/',{waitUntil:'domcontentloaded',timeout:30000});
+          await page.waitForFunction(()=>document.querySelector('[data-capability-brain-v9]')?.dataset.brainRenderer==='COMPASS_BRAIN_V9_GEOMETRY_G123_v1',{timeout:30000});
+          await page.waitForFunction(()=>Number(document.querySelector('[data-capability-brain-v9]')?.dataset.objectFrames||0)>1,{timeout:30000});
+          const base=await page.evaluate(()=>{const c=document.querySelector('[data-capability-brain-v9]');return{renderer:c.dataset.brainRenderer,stage:c.dataset.objectStage,mode:c.dataset.objectInspectionMode,triangles:Number(c.dataset.objectTriangleCount),construction:c.dataset.brainConstruction,pass:c.dataset.brainGeometryPass,hasApi:!!c._brainV9?.setView}});
+          if(base.renderer!=='COMPASS_BRAIN_V9_GEOMETRY_G123_v1')throw Error('renderer identity mismatch');
+          if(base.stage!=='CAPABILITY_OBJECT_STAGE_v3')throw Error('stage identity mismatch');
+          if(base.mode!=='geometry')throw Error('not in neutral geometry mode');
+          if(!base.hasApi)throw Error('fixed-view API unavailable');
+          if(!(base.triangles>12000 && base.triangles<90000))throw Error('triangle budget outside geometry inspection bounds: '+base.triangles);
+          if(base.construction!=='NO_ENVELOPE_INDEPENDENT_3D_SPLINES')throw Error('construction law mismatch');
+          const views=['front','rear','top','left','right','oblique'];
+          const evidence=[];
+          for(const view of views){
+            const before=await page.$eval('[data-capability-brain-v9]',c=>Number(c.dataset.objectFrames||0));
+            await page.click(`[data-view="${view}"]`);
+            await page.waitForFunction(b=>Number(document.querySelector('[data-capability-brain-v9]').dataset.objectFrames||0)>b,{},before);
+            await new Promise(r=>setTimeout(r,450));
+            const file=`geometry-evidence/${view}.png`;
+            await page.locator('.stage').screenshot({path:file});
+            evidence.push({view,file,frames:await page.$eval('[data-capability-brain-v9]',c=>Number(c.dataset.objectFrames||0))});
+          }
+          if(errors.length)throw Error('browser errors: '+errors.join(' | '));
+          fs.writeFileSync('geometry-evidence/receipt.json',JSON.stringify({schema:'BRAIN_V9_GEOMETRY_G123_EVIDENCE_v1',...base,views:evidence},null,2));
+          await browser.close();
+          NODE
+          node /tmp/verify-g123.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: brain-v9-geometry-g123-evidence
+          path: geometry-evidence/
+          if-no-files-found: error

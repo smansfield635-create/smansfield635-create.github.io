@@ -8,6 +8,7 @@ const contractPath = '.github/ai-router/publication-release-contract.v1.json';
 const aiPath = 'AI_ENTRYPOINT.json';
 const compassPath = '.github/ai-router/projects/compass/entrypoint.v1.json';
 const workflowPath = '.github/workflows/pages-direct-deploy.yml';
+const dispatchCapabilityPath = '.github/ai-router/workflow-dispatch-capability.v1.json';
 const surfaceSchemaPath = '.github/ai-router/publication-surfaces/schema.v1.json';
 const audraliaSurfacePath = '.github/ai-router/publication-surfaces/audralia.json';
 
@@ -15,6 +16,7 @@ const contract = readJson(contractPath);
 const ai = readJson(aiPath);
 const compass = readJson(compassPath);
 const workflow = readText(workflowPath);
+const dispatchCapability = readJson(dispatchCapabilityPath);
 const surfaceSchema = readJson(surfaceSchemaPath);
 const audralia = readJson(audraliaSurfacePath);
 
@@ -52,6 +54,15 @@ assert(compass.releaseClassification?.BOUNDED_PAGE_RELEASE?.canonicalIntakeRequi
 assert(compass.releaseClassification?.RUNTIME_OR_NEW_DEVELOPMENT?.requiredClosure?.join('>') === runtimeSequence, 'Compass runtime release closure drifted');
 assert(compass.releaseClassification?.RUNTIME_OR_NEW_DEVELOPMENT?.canonicalIntakeRequired === true, 'Compass runtime/new development must require canonical intake');
 
+const pagesDispatch = dispatchCapability.capabilities?.PAGES_EXACT_HEAD_DEPLOY;
+assert(pagesDispatch?.workflow === 'pages-direct-deploy.yml', 'AI dispatch Pages workflow drifted');
+assert(pagesDispatch?.ref === 'main', 'AI dispatch Pages ref must remain main');
+assert(pagesDispatch?.inputPolicy?.target_sha?.source === 'CURRENT_MAIN_SHA', 'AI dispatch must bind target_sha to current main');
+assert(pagesDispatch?.inputPolicy?.target_sha?.userOverrideAllowed === false, 'AI dispatch target_sha must not be user-overridable');
+assert(pagesDispatch?.inputPolicy?.surface_id?.source === 'REQUEST', 'AI dispatch surface_id must come from explicit request');
+assert(pagesDispatch?.inputPolicy?.surface_id?.required === true, 'AI dispatch surface_id must be required');
+assert(pagesDispatch?.inputPolicy?.surface_id?.userOverrideAllowed === true, 'AI dispatch surface_id must be selectable');
+
 assert(surfaceSchema.$id === 'PUBLICATION_SURFACE_VERIFICATION_v1', 'surface verification schema mismatch');
 assert(audralia.schema === 'PUBLICATION_SURFACE_VERIFICATION_v1', 'Audralia surface manifest schema mismatch');
 assert(audralia.surfaceId === 'audralia', 'Audralia surface id mismatch');
@@ -72,7 +83,7 @@ for (const forbidden of [
 ]) assert(!workflow.includes(forbidden), `deployment workflow contains retired or unauthorized release behavior: ${forbidden}`);
 
 console.log(JSON.stringify({
-  schema: 'PUBLICATION_RELEASE_CONTRACT_SELF_TEST_RECEIPT_v2',
+  schema: 'PUBLICATION_RELEASE_CONTRACT_SELF_TEST_RECEIPT_v3',
   result: 'PASS',
   releaseSequence: contract.releaseClasses.BOUNDED_PAGE_RELEASE.requiredSequence,
   runtimeSequence: contract.releaseClasses.RUNTIME_OR_NEW_DEVELOPMENT.requiredSequence,
@@ -80,6 +91,9 @@ console.log(JSON.stringify({
   workflowDispatchOnly: true,
   pagesAdministrationMutation: false,
   universalSurfaceVerification: true,
+  universalAiDispatch: true,
+  dispatchCapability: 'PAGES_EXACT_HEAD_DEPLOY',
+  dispatchInputs: ['target_sha','surface_id'],
   surfaceManifestRoot: contract.deployment.surfaceManifestRoot,
   registeredProofSample: audralia.surfaceId,
   verification: contract.verification.successResult

@@ -93,12 +93,20 @@ const contextAligned=initial.contextCenterError.heading!==null&&initial.contextC
 add('AUDIT_CONTEXTUAL_ALIGNMENT',contextAligned,{tolerance:CONTEXT_CENTER_TOLERANCE,errors:initial.contextCenterError,rects:initial.context});
 add('AUDIT_NO_HORIZONTAL_OVERFLOW',Math.abs(initial.overflow)<=1,{overflow:initial.overflow});
 
-const primary0=initial.cardinals.find(x=>x.primary)||initial.cardinals.find(x=>x.wing===(initial.root.focus||'north'));
+// The audited page intentionally preserves the tablet Compass scene at -160px, which places
+// much of the 720px scene below the initial 1000px viewport. Synthetic touch coordinates are
+// viewport-relative, so exercise the transition only after bringing the scene into view. The
+// physical foreground anchor must be sampled again after scrolling so geometry comparisons use
+// one coordinate frame. This changes only the harness input boundary, not acceptance criteria.
+const sceneHandle=await page.$('[data-compass-scene]');
+await sceneHandle?.evaluate(el=>el.scrollIntoView({block:'center',inline:'nearest'}));
+await new Promise(r=>setTimeout(r,150));
+const interactionBaseline=await snapshot();
+const primary0=interactionBaseline.cardinals.find(x=>x.primary)||interactionBaseline.cardinals.find(x=>x.wing===(interactionBaseline.root.focus||'north'));
 const anchor=primary0?.rect?{cx:primary0.rect.cx,cy:primary0.rect.cy}:null;
 if(!anchor){
   add('AUDIT_SETTLED_GEOMETRY',false,{reason:'NO_INITIAL_FOREGROUND_ANCHOR'});
 }else{
-  const sceneHandle=await page.$('[data-compass-scene]');
   const b=await sceneHandle?.boundingBox();
   if(!b){
     add('AUDIT_SETTLED_GEOMETRY',false,{reason:'NO_SCENE_BOUNDS'});
@@ -107,7 +115,7 @@ if(!anchor){
     const point=(x,y)=>[{x,y,radiusX:1,radiusY:1,force:1,id:1}];
     const patterns=[[.84,.50,.16,.50],[.50,.80,.50,.20],[.16,.50,.84,.50],[.50,.20,.50,.80]];
     const transitions=[];
-    for(let attempt=0;attempt<8&&new Set([initial.root.focus,...transitions.map(t=>t.after.root.focus)].filter(Boolean)).size<4;attempt++){
+    for(let attempt=0;attempt<8&&new Set([interactionBaseline.root.focus,...transitions.map(t=>t.after.root.focus)].filter(Boolean)).size<4;attempt++){
       const g=patterns[attempt%patterns.length];
       const [sx,sy,ex,ey]=g;
       const x1=b.x+b.width*sx,y1=b.y+b.height*sy,x2=b.x+b.width*ex,y2=b.y+b.height*ey;

@@ -1,6 +1,7 @@
 (()=>{
 'use strict';
 const PRESENTATION_OWNER='DGB_COMPASS_PRESENTATION_OWNER_GEN1591';
+const LIVE_COMPOSITE_BUILD='gen1596-surgical-composite-5';
 function load(src,attr,next){const existing=document.querySelector(`script[${attr}]`);if(existing){if(existing.dataset.loaded==='true')next?.();else existing.addEventListener('load',()=>next?.(),{once:true});return;}const script=document.createElement('script');script.src=src;script.defer=true;script.setAttribute(attr,'true');script.addEventListener('load',()=>{script.dataset.loaded='true';next?.()},{once:true});document.head.append(script);}
 function requirePresentationOwner(next){const ready=()=>{const owner=globalThis[PRESENTATION_OWNER];if(!owner?.mounted||owner.version!=='presentation-convergence-v8-root-bound-gen1591'||owner.legacyGuardClearedBeforeFetch!==true){throw new Error('COMPASS_GEN1591_PRESENTATION_OWNER_NOT_MOUNTED');}next();};if(document.readyState==='complete')ready();else document.addEventListener('DOMContentLoaded',ready,{once:true});}
 function declareControllerSettledLabelAuthority(){globalThis.DGB_COMPASS_LAWS_LABEL_BINDING=Object.freeze({mounted:true,source:'DGB_COMPASS_CONTROLLER:[data-compass-cardinal][data-primary=true]',previewSource:null,policy:'ALL_FOUR_STARS_PRESENT_ONE_CONTROLLER_COMMITTED_READABLE_LABEL',settlement:'CONTROLLER_DATA_PRIMARY_DIRECT_PRESENTATION',observer:false});}
@@ -11,5 +12,14 @@ html body [data-compass-root][data-compass-mode="CONSTELLATION"] .compass-scene_
 @media(min-width:561px) and (max-width:1024px){.compass-instrument__grid{grid-template-columns:minmax(0,1fr)!important}.compass-scene{justify-self:stretch!important}.compass-panel{width:100%!important}.compass-estate__header h1{margin-left:auto!important;margin-right:auto!important}}
 @media(max-width:820px){[data-compass-scene]{width:100%!important;max-width:100%!important;left:0!important;right:0!important;inset-inline:0!important;margin-inline:0!important}.compass-scene,.compass-stage,.compass-compass-stage,[data-compass-render-host],[data-compass-crystal-stage]{max-width:100%!important;box-sizing:border-box!important}.compass-capability-orbit[data-continuity-contract="COMPASS_CAPABILITY_CONTINUITY_v1"] .compass-action-dock{margin-top:72px!important}.compass-readiness-viewport{min-height:29rem!important}.compass-readiness-slide{min-height:21rem!important}}@media(max-width:480px){.compass-capability-orbit[data-continuity-contract="COMPASS_CAPABILITY_CONTINUITY_v1"] .compass-action-dock{margin-top:76px!important}.compass-readiness-viewport{min-height:32rem!important}.compass-readiness-slide{min-height:23rem!important}}
 `;document.head.append(style);globalThis.DGB_COMPASS_GEN1591_BOUNDS=Object.freeze({mounted:true,ownershipPolicy:'PRESENTATION_FIRST_SINGLE_OWNER',readinessPolicy:'UNCLIPPED_SPATIAL_CAROUSEL_RESERVATION',tabletContextPolicy:'MEASURED_SCENE_COLUMN_COLLAPSE_AT_TABLET',releaseSettlementAuthority:'CONTROLLER_DATA_PRIMARY_DIRECT_PRESENTATION'});}
-requirePresentationOwner(()=>{declareControllerSettledLabelAuthority();load('/assets/compass/compass.statement-orbit.js?v=statement-orbit-restoration-v2&cb=980dbbe68b46','data-compass-statement-orbit-runtime',()=>{installGen1591Bounds();load('/assets/compass/compass.capability-carousel.core.js?v=capability-continuity-v4-single-owner&cb=20260821-1577','data-compass-capability-carousel-core');});});
+function installLiveComposite(){
+  const path=location.pathname.replace(/\/index\.html$/,'/');
+  if(path!=='/'||globalThis.DGB_COMPASS_LIVE_COMPOSITE_PROMOTION)return;
+  globalThis.DGB_COMPASS_LIVE_COMPOSITE_PROMOTION=Object.freeze({mounted:true,build:LIVE_COMPOSITE_BUILD,source:'/compass-composite/'});
+  if(!document.querySelector('link[data-compass-live-composite]')){
+    const link=document.createElement('link');link.rel='stylesheet';link.href=`/compass-composite/composite.css?v=${LIVE_COMPOSITE_BUILD}-live-20260823`;link.setAttribute('data-compass-live-composite','true');document.head.append(link);
+  }
+  load(`/compass-composite/composite.js?v=${LIVE_COMPOSITE_BUILD}-live-20260823`,'data-compass-live-composite-runtime');
+}
+requirePresentationOwner(()=>{declareControllerSettledLabelAuthority();load('/assets/compass/compass.statement-orbit.js?v=statement-orbit-restoration-v2&cb=980dbbe68b46','data-compass-statement-orbit-runtime',()=>{installGen1591Bounds();installLiveComposite();load('/assets/compass/compass.capability-carousel.core.js?v=capability-continuity-v4-single-owner&cb=20260821-1577','data-compass-capability-carousel-core');});});
 })();

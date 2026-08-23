@@ -7,7 +7,7 @@
       "path": "/showroom/globe/audralia/",
       "includes": [
         "Audralia · Planetary World",
-        "DIRECT_DENSITY_v4",
+        "directDenseCloudCoverage: true",
         "Orbital cloud field",
         "AUDRALIA_LOADING_CONTINUITY_v4"
       ],

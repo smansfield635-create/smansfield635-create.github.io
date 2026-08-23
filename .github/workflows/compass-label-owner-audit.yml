@@ -22,7 +22,7 @@ jobs:
           import { chromium } from 'playwright';
           const browser=await chromium.launch({headless:true});
           const page=await browser.newPage({viewport:{width:960,height:1500},deviceScaleFactor:1});
-          await page.goto('https://diamondgatebridge.com/compass-composite/?audit_v2='+Date.now(),{waitUntil:'networkidle',timeout:120000});
+          await page.goto('https://diamondgatebridge.com/compass-composite/?audit_v2_swipe='+Date.now(),{waitUntil:'networkidle',timeout:120000});
           await page.waitForTimeout(4500);
           const inspect=()=>page.evaluate(()=>{
             const root=document.querySelector('[data-compass-root]');
@@ -40,26 +40,27 @@ jobs:
               wings:wings.map(one)
             };
           });
-          const initial=await inspect();
-          await page.evaluate(()=>{
-            const root=document.querySelector('[data-compass-root]');
-            root.dataset.renderedForegroundCardinal='east';
-            root.dataset.readableCardinal='east';
-          });
-          await page.waitForTimeout(250);
-          const east=await inspect();
-          console.log('AUDIT_V2 '+JSON.stringify({initial,east}));
-          const hasV2=[...initial.css,...initial.js].every(x=>x.includes('gen1596-surgical-composite-2'));
           const stateOk=s=>{
             const active=s.wings.filter(w=>w.readable==='true');
             const inactive=s.wings.filter(w=>w.readable==='false');
-            const activeReadable=active.length===1&&active[0].spans.every(x=>x.display!=='none'&&x.visibility!=='hidden'&&Number(x.opacity)>0.5);
-            const inactiveHidden=inactive.length===3&&inactive.every(w=>w.bg==='rgba(0, 0, 0, 0)'&&w.spans.every(x=>x.display==='none'||x.visibility==='hidden'||Number(x.opacity)===0));
-            const mirrorHidden=s.mirror.spans.every(x=>x.display==='none'||x.visibility==='hidden'||Number(x.opacity)===0);
-            return activeReadable&&inactiveHidden&&mirrorHidden;
+            return active.length===1 && active[0].spans.every(x=>x.display!=='none'&&x.visibility!=='hidden'&&Number(x.opacity)>0.5)
+              && inactive.length===3 && inactive.every(w=>w.bg==='rgba(0, 0, 0, 0)'&&w.spans.every(x=>x.display==='none'||x.visibility==='hidden'||Number(x.opacity)===0))
+              && s.mirror.spans.every(x=>x.display==='none'||x.visibility==='hidden'||Number(x.opacity)===0);
           };
-          if(!hasV2||initial.compositeBuild!=='gen1596-surgical-composite-2'||east.compositeBuild!=='gen1596-surgical-composite-2'||!stateOk(initial)||!stateOk(east)){
-            throw new Error('COMPASS_LABEL_OWNER_V2_VERIFICATION_FAILED');
+          const initial=await inspect();
+          const scene=page.locator('[data-compass-scene]');
+          const box=await scene.boundingBox();
+          if(!box) throw new Error('NO_COMPASS_SCENE');
+          await page.mouse.move(box.x+box.width*.72,box.y+box.height*.45);
+          await page.mouse.down();
+          await page.mouse.move(box.x+box.width*.25,box.y+box.height*.45,{steps:12});
+          await page.mouse.up();
+          await page.waitForTimeout(1300);
+          const rotated=await inspect();
+          console.log('AUDIT_V2_SWIPE '+JSON.stringify({initial,rotated}));
+          const hasV2=[...initial.css,...initial.js].every(x=>x.includes('gen1596-surgical-composite-2'));
+          if(!hasV2||initial.compositeBuild!=='gen1596-surgical-composite-2'||rotated.compositeBuild!=='gen1596-surgical-composite-2'||!stateOk(initial)||!stateOk(rotated)||rotated.readable===initial.readable){
+            throw new Error('COMPASS_LABEL_OWNER_V2_REAL_SWIPE_VERIFICATION_FAILED');
           }
           await browser.close();
           NODE

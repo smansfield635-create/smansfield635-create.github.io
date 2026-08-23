@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  issues: write
 
 jobs:
   exact-reconciliation-diagnostic:
@@ -32,7 +33,20 @@ jobs:
           done
           cat /tmp/audralia-reconciliation-server.log
           exit 1
-      - name: Extract first reconciliation failure
+      - name: Extract and publish reconciliation receipt
         env:
           CHROME_PATH: /opt/hostedtoolcache/setup-chrome/chromium/stable/x64/chrome
-        run: node scripts/audralia-reconciliation-diagnostic.mjs
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          node scripts/audralia-reconciliation-diagnostic.mjs 2>&1 | tee /tmp/audralia-reconciliation-diagnostic.log
+          diagnostic_exit=${PIPESTATUS[0]}
+          {
+            echo 'Protected-main diagnostic commit: `${{ github.sha }}`'
+            echo
+            echo '```text'
+            cat /tmp/audralia-reconciliation-diagnostic.log
+            echo '```'
+          } > /tmp/audralia-reconciliation-receipt.md
+          gh issue comment 1757 --repo "$GITHUB_REPOSITORY" --body-file /tmp/audralia-reconciliation-receipt.md
+          exit "$diagnostic_exit"

@@ -21,26 +21,14 @@ page.on('pageerror',e=>pageErrors.push(String(e)));
 await page.goto(`${base}/`,{waitUntil:'networkidle2',timeout:60000});
 await new Promise(r=>setTimeout(r,1600));
 
-// From this point forward the verifier owns the page lifecycle. A synthetic touch must
-// change Compass state only; any main-frame navigation is a harness side effect and is blocked.
-await page.setRequestInterception(true);
-page.on('request',request=>{
-  if(request.isNavigationRequest()&&request.frame()===page.mainFrame()){
-    request.abort('blockedbyclient');
-    return;
-  }
-  request.continue();
-});
-
-// Synthetic qualification gestures must exercise Compass state without following a cardinal/link.
+// Keep the release path byte-for-byte equivalent to the already-passing interaction qualifier.
+// A capture-phase click guard prevents accidental link activation without mutating href state or
+// aborting main-frame requests; either audit-only intervention can itself destroy Puppeteer's
+// execution context during the first post-release sample.
 await page.evaluate(()=>{
   const suppress=e=>{if(e.target?.closest?.('a[href]'))e.preventDefault();};
   document.addEventListener('click',suppress,true);
   document.addEventListener('auxclick',suppress,true);
-  for(const anchor of document.querySelectorAll('[data-compass-scene] a[href]')){
-    anchor.dataset.auditQualificationHref=anchor.getAttribute('href')||'';
-    anchor.removeAttribute('href');
-  }
 });
 
 const snapshot=()=>page.evaluate(()=>{

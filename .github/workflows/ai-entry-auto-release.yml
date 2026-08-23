@@ -69,6 +69,21 @@ jobs:
           grep -Fq "../entitlement-v1/entitlement-engine.v1.mjs" "$ops_dst/index.html"
           echo 'BT4_BOUNDED_PREVIEWS_STAGED=PASS'
 
+          # Emit a deployment-time identity receipt for the real Generation 3
+          # benchmark evidence consumed by the bounded BT4 real-object projection.
+          evidence_src='assets/credibility/governance-gen3-benchmark.v1.json'
+          evidence_dst="$PAGES_STAGE/evidence/readiness/governance-gen3-entitlement/evidence-identity.v1.json"
+          test -f "$evidence_src"
+          test -f "$PAGES_STAGE/evidence/readiness/governance-gen3-entitlement/index.html"
+          test -f "$PAGES_STAGE/evidence/readiness/governance-gen3-entitlement/binding.v1.json"
+          evidence_blob="$(git hash-object "$evidence_src")"
+          evidence_sha256="$(sha256sum "$evidence_src" | awk '{print $1}')"
+          evidence_bytes="$(wc -c < "$evidence_src" | tr -d ' ')"
+          printf '{"schema":"BT4_REAL_OBJECT_EVIDENCE_IDENTITY_v1","sourcePath":"%s","sourceBlobSha":"%s","sha256":"%s","bytes":%s,"releaseCommit":"%s"}\n' \
+            "$evidence_src" "$evidence_blob" "$evidence_sha256" "$evidence_bytes" "$TARGET_SHA" > "$evidence_dst"
+          test -s "$evidence_dst"
+          echo "BT4_REAL_OBJECT_EVIDENCE_IDENTITY=PASS blob=$evidence_blob sha256=$evidence_sha256"
+
           rm -rf "$PAGES_STAGE/showroom/globe/h-earth"
           mkdir -p "$PAGES_STAGE/showroom/globe/h-earth"
           rsync -a --delete h-earth-live-6d18e158/showroom/globe/h-earth/ "$PAGES_STAGE/showroom/globe/h-earth/"
@@ -103,7 +118,7 @@ jobs:
     needs: deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Require public exact-head marker and both BT4 served surfaces
+      - name: Require public exact-head marker and BT4 served surfaces
         env:
           TARGET_SHA: ${{ github.sha }}
           PAGE_URL: ${{ needs.deploy.outputs.page_url }}
@@ -114,6 +129,8 @@ jobs:
           claim_url="${PAGE_URL%/}/preview/bt4/entitlement-v1/"
           claim_engine_url="${PAGE_URL%/}/preview/bt4/entitlement-v1/entitlement-engine.v1.mjs"
           ops_url="${PAGE_URL%/}/preview/bt4/operational-release-v1/"
+          real_url="${PAGE_URL%/}/evidence/readiness/governance-gen3-entitlement/"
+          real_identity_url="${real_url}evidence-identity.v1.json"
           observed=""
           for attempt in $(seq 1 24); do
             marker="$(curl --fail --silent --show-error -L --max-time 20 "$marker_url" 2>/dev/null || true)"
@@ -121,20 +138,26 @@ jobs:
             claim_html="$(curl --fail --silent --show-error -L --max-time 20 "$claim_url" 2>/dev/null || true)"
             claim_engine="$(curl --fail --silent --show-error -L --max-time 20 "$claim_engine_url" 2>/dev/null || true)"
             ops_html="$(curl --fail --silent --show-error -L --max-time 20 "$ops_url" 2>/dev/null || true)"
+            real_html="$(curl --fail --silent --show-error -L --max-time 20 "$real_url" 2>/dev/null || true)"
+            real_identity="$(curl --fail --silent --show-error -L --max-time 20 "$real_identity_url" 2>/dev/null || true)"
+            real_release="$(printf '%s' "$real_identity" | jq -r '.releaseCommit // empty' 2>/dev/null || true)"
             if [ "$observed" = "$TARGET_SHA" ] \
               && grep -Fq 'NONPRODUCTION · BT4 SERVED-STATE EXPERIMENT' <<<"$claim_html" \
               && grep -Fq 'entitlement-engine.v1.mjs' <<<"$claim_html" \
               && grep -Fq 'computeEntitlement' <<<"$claim_engine" \
               && grep -Fq 'NONPRODUCTION · BT4 CROSS-OBJECT EXPERIMENT' <<<"$ops_html" \
-              && grep -Fq '../entitlement-v1/entitlement-engine.v1.mjs' <<<"$ops_html"; then
+              && grep -Fq '../entitlement-v1/entitlement-engine.v1.mjs' <<<"$ops_html" \
+              && grep -Fq 'BT4 · bounded real-object integration' <<<"$real_html" \
+              && [ "$real_release" = "$TARGET_SHA" ]; then
               echo "LIVE_EXACT_HEAD_VERIFIED target=$TARGET_SHA"
               echo "BT4_PUBLIC_CLAIM_SURFACE=PASS url=$claim_url"
               echo "BT4_PUBLIC_OPERATIONAL_SURFACE=PASS url=$ops_url"
+              echo "BT4_REAL_OBJECT_SURFACE=PASS url=$real_url"
               exit 0
             fi
-            echo "Attempt $attempt: observed=${observed:-none}; waiting for target=$TARGET_SHA and both BT4 served surfaces"
+            echo "Attempt $attempt: observed=${observed:-none}; waiting for target=$TARGET_SHA and BT4 surfaces"
             sleep 10
           done
           echo "DEPLOYMENT_NOT_PROVEN expected=$TARGET_SHA observed=${observed:-none}" >&2
-          echo "BT4_PUBLIC_CLAIM_SURFACE_OR_OPERATIONAL_SURFACE=FAIL" >&2
+          echo "BT4_PUBLIC_SURFACE_VERIFICATION=FAIL" >&2
           exit 1

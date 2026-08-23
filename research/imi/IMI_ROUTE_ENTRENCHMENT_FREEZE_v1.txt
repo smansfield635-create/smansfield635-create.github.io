@@ -1,0 +1,15 @@
+FROZEN BEFORE CONFIRMATION EXECUTION
+
+Binding prior negative results:
+1. Integer IMI 3→4 threshold confirmation = FAILED.
+2. Continuous VDS severe test = FAILED.
+
+New object: temporal persistence and recoverability of dimensional constraint, not a retuned scalar threshold.
+Constraint boundary: availability < 1/3.
+Persistent dimension: constrained in >=3 of current/prior 4 observed quarters, with >=3 observations.
+Entrenched state: persistent_count >=3 AND recovery_deficit >=0.50.
+Confirmed entrenchment: entrenched in two consecutive observed quarters.
+Route-lock score: [persistent_fraction + pair_density + persistent_fraction*recovery_deficit] / 3.
+Untouched confirmation cohort: Bed Bath & Beyond, Party City Holdco, Tuesday Morning, Gap, Best Buy, Dick's Sporting Goods, Walmart, Home Depot, Costco.
+No threshold, coefficient, cohort, persistence window, recovery rule, or acceptance criterion may be tuned after confirmation opens.
+Verdicts: ENTRENCHMENT_CONFIRMED / FAIL / UNEVALUABLE.

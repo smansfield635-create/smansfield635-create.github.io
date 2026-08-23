@@ -3,7 +3,7 @@ name: Audralia reconciliation diagnostic
 on:
   push:
     branches:
-      - system/audralia-reconciliation-diagnostic-observability-v1
+      - main
   workflow_dispatch:
 
 permissions:

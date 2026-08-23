@@ -1,0 +1,81 @@
+name: Live Readiness Research c8ad116 Verification
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/live-readiness-research-c8ad116-verify.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Verify public exact head and live readiness/research UI
+        run: |
+          cat > .live-verify.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          const expected='c8ad116b5349db0cfbe6089996d05c03540b7fcc';
+          const browser=await chromium.launch({headless:true});
+          const markerPage=await browser.newPage();
+          let observed='';
+          for(let i=0;i<24;i++){
+            try{
+              const r=await markerPage.goto('https://diamondgatebridge.com/.well-known/dgb-release.json?cb='+Date.now(),{waitUntil:'domcontentloaded',timeout:20000});
+              const text=await r.text();
+              observed=JSON.parse(text).commit||'';
+            }catch{}
+            if(observed===expected)break;
+            await markerPage.waitForTimeout(10000);
+          }
+          if(observed!==expected)throw new Error('LIVE_EXACT_HEAD expected='+expected+' observed='+(observed||'none'));
+          await markerPage.close();
+          for(const cfg of [
+            {name:'tablet',viewport:{width:960,height:1536}},
+            {name:'phone',viewport:{width:390,height:844}},
+            {name:'desktop',viewport:{width:1440,height:1000}}
+          ]){
+            const page=await browser.newPage({viewport:cfg.viewport});
+            await page.goto('https://diamondgatebridge.com/?cb='+Date.now(),{waitUntil:'networkidle',timeout:120000});
+            await page.waitForFunction(()=>globalThis.DGB_COMPASS_READINESS_CONTEXT_V1?.mounted===true,{timeout:30000});
+            const base=await page.evaluate(()=>({
+              owner:globalThis.DGB_COMPASS_READINESS_CONTEXT_V1,
+              tabs:[...document.querySelectorAll('.compass-readiness-tabs > .compass-readiness-tab')].map(x=>x.textContent.trim()),
+              families:[...document.querySelectorAll('.compass-readiness-family')].map(x=>({type:x.dataset.readinessFamily,count:x.querySelectorAll('.compass-readiness-slide').length})),
+              cardinals:document.querySelectorAll('[data-compass-cardinal]').length,
+              readable:document.querySelectorAll('[data-compass-cardinal].is-readable-cardinal').length,
+              overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth
+            }));
+            if(JSON.stringify(base.tabs)!==JSON.stringify(['TRL','TRA','RESEARCH']))throw new Error(cfg.name+' TABS '+JSON.stringify(base));
+            if(base.families.length!==3||base.families.some(x=>x.count!==4))throw new Error(cfg.name+' FAMILIES '+JSON.stringify(base));
+            if(base.owner.geometryChanged!==false||base.owner.compassStateChanged!==false)throw new Error(cfg.name+' SCOPE '+JSON.stringify(base.owner));
+            if(base.cardinals!==4||base.readable!==1)throw new Error(cfg.name+' COMPASS '+JSON.stringify(base));
+            if(base.overflow>2)throw new Error(cfg.name+' OVERFLOW '+base.overflow);
+            for(const label of ['TRA','RESEARCH','TRL']){
+              await page.getByRole('tab',{name:label,exact:true}).click();
+              await page.waitForTimeout(120);
+              const state=await page.evaluate(()=>({active:document.querySelector('.compass-readiness-stage')?.dataset.activeFamily,visible:[...document.querySelectorAll('.compass-readiness-family')].filter(x=>!x.hidden).map(x=>x.dataset.readinessFamily)}));
+              const expectedFamily=label.toLowerCase();
+              if(state.active!==expectedFamily||state.visible.length!==1||state.visible[0]!==expectedFamily)throw new Error(cfg.name+' SWITCH '+label+' '+JSON.stringify(state));
+            }
+            await page.getByRole('tab',{name:'RESEARCH',exact:true}).click();
+            const titles=await page.locator('[data-readiness-family="research"] .compass-readiness-slide').evaluateAll(nodes=>nodes.map(n=>n.dataset.readinessTitle));
+            for(const phrase of ['Condition is not capacity','Prospective evidence exists','The decisive threshold is still ahead'])if(!titles.includes(phrase))throw new Error(cfg.name+' RESEARCH_TITLE '+phrase+' '+JSON.stringify(titles));
+            await page.close();
+          }
+          const rp=await browser.newPage({viewport:{width:960,height:1200}});
+          await rp.goto('https://diamondgatebridge.com/laws/research/methods-and-models/?cb='+Date.now(),{waitUntil:'networkidle',timeout:120000});
+          await rp.waitForFunction(()=>globalThis.METHODS_MODELS_CAROUSEL_DATA?.contract==='METHODS_MODELS_SINGLE_AXIS_CAROUSEL_DATA_v2',{timeout:30000});
+          const research=await rp.evaluate(()=>({families:globalThis.METHODS_MODELS_CAROUSEL_DATA.families.map(f=>f.id),imi:globalThis.METHODS_MODELS_CAROUSEL_DATA.families.find(f=>f.id==='maneuverability')?.models||[]}));
+          if(!research.families.includes('maneuverability')||research.imi.length!==4)throw new Error('LIVE_RESEARCH '+JSON.stringify(research));
+          const ag=research.imi.find(m=>m.id==='agricultural-temporal');
+          if(!ag||!ag.statement.includes('did not beat the additive Mean4 comparator')||!ag.limits.includes('not confirmatory validation'))throw new Error('LIVE_AG_BOUNDARY '+JSON.stringify(ag));
+          console.log('LIVE_PASS',JSON.stringify({expected,contexts:['tablet','phone','desktop'],families:research.families}));
+          await browser.close();
+          NODE
+          node ./.live-verify.mjs

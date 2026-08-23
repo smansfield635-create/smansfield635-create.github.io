@@ -27,14 +27,20 @@ jobs:
           set -euo pipefail
           changed="$(git diff --name-only '${{ github.event.pull_request.base.sha }}' '${{ github.event.pull_request.head.sha }}')"
           printf '%s\n' "$changed"
-          if printf '%s\n' "$changed" | grep -Eq '^(h-earth-3d/|h-earth-live-[^/]+/h-earth-3d/)'; then
+          product_changed="$(printf '%s\n' "$changed" \
+            | grep -E '^(h-earth-3d/|h-earth-live-[^/]+/h-earth-3d/)' \
+            | grep -Ev '^h-earth-3d/experience-anchor/(evidence|receipts)/' \
+            || true)"
+          if [ -n "$product_changed" ]; then
+            printf 'Qualifying product paths:\n%s\n' "$product_changed"
             echo 'product_changed=true' >> "$GITHUB_OUTPUT"
           else
+            echo 'No coast/water product implementation bytes changed.'
             echo 'product_changed=false' >> "$GITHUB_OUTPUT"
           fi
-      - name: Validate workflow-only change
+      - name: Validate non-product change
         if: github.event_name == 'pull_request' && steps.scope.outputs.product_changed != 'true'
-        run: echo 'H-Earth workflow definition changed without H-Earth product bytes; full product qualification is not applicable.'
+        run: echo 'Only dynamic Experience Anchor records and/or workflow-adjacent non-product bytes changed; full coast/water product qualification is not applicable.'
       - name: Run recovery qualification
         if: github.event_name == 'workflow_dispatch' || steps.scope.outputs.product_changed == 'true'
         run: node h-earth-3d/validation/h-earth.player-scale-coast-water-continuity-recovery.harness.mjs

@@ -16,36 +16,51 @@ jobs:
           node-version: '22'
       - run: npm install --no-save playwright@1.55.0
       - run: npx playwright install --with-deps chromium
-      - name: Audit public Compass composite label owners
+      - name: Verify deployed Compass composite v2 label ownership
         run: |
           cat > audit.mjs <<'NODE'
           import { chromium } from 'playwright';
           const browser=await chromium.launch({headless:true});
           const page=await browser.newPage({viewport:{width:960,height:1500},deviceScaleFactor:1});
-          await page.goto('https://diamondgatebridge.com/compass-composite/?audit='+Date.now(),{waitUntil:'networkidle',timeout:120000});
+          await page.goto('https://diamondgatebridge.com/compass-composite/?audit_v2='+Date.now(),{waitUntil:'networkidle',timeout:120000});
           await page.waitForTimeout(4500);
-          const report=await page.evaluate(()=>{
+          const inspect=()=>page.evaluate(()=>{
             const root=document.querySelector('[data-compass-root]');
-            const scene=document.querySelector('[data-compass-scene]');
-            const rows=[...document.querySelectorAll('[data-compass-cardinal], .compass-object--mirrorland, .compass-projected-room-label')].map((el,i)=>{
-              const cs=getComputedStyle(el); const rect=el.getBoundingClientRect();
-              return {
-                i,
-                kind:el.matches('[data-compass-cardinal]')?`cardinal:${el.dataset.cardinalId}`:el.matches('.compass-object--mirrorland')?'mirrorland':'projected-room',
-                className:el.className,
-                text:(el.textContent||'').replace(/\s+/g,' ').trim(),
-                visible:rect.width>0&&rect.height>0&&cs.display!=='none'&&cs.visibility!=='hidden'&&Number(cs.opacity)>0.02,
-                rect:{x:Math.round(rect.x),y:Math.round(rect.y),w:Math.round(rect.width),h:Math.round(rect.height)},
-                display:cs.display,visibility:cs.visibility,opacity:cs.opacity,
-                background:cs.backgroundColor,border:cs.borderTopColor,boxShadow:cs.boxShadow,
-                readable:el.dataset.gen1596Readable||'',
-                ariaHidden:el.getAttribute('aria-hidden'),hidden:el.hidden,
-                spans:[...el.children].map(s=>{const c=getComputedStyle(s),r=s.getBoundingClientRect();return {text:(s.textContent||'').trim(),display:c.display,visibility:c.visibility,opacity:c.opacity,w:Math.round(r.width),h:Math.round(r.height)}})
-              };
-            });
-            return {mode:root?.dataset.compassMode,readableCardinal:root?.dataset.renderedForegroundCardinal||root?.dataset.readableCardinal,scene:scene?.getBoundingClientRect().toJSON?.()||null,rows};
+            const mirror=document.querySelector('.compass-object--mirrorland');
+            const wings=[...document.querySelectorAll('[data-compass-cardinal]')];
+            const one=el=>{const c=getComputedStyle(el);return {id:el.dataset.cardinalId||'',readable:el.dataset.gen1596Readable||'',bg:c.backgroundColor,border:c.borderTopColor,shadow:c.boxShadow,spans:[...el.querySelectorAll('span')].map(s=>{const x=getComputedStyle(s);return {text:s.textContent.trim(),display:x.display,visibility:x.visibility,opacity:x.opacity}})}};
+            const mc=getComputedStyle(mirror);
+            return {
+              mode:root?.dataset.compassMode,
+              readable:root?.dataset.renderedForegroundCardinal||root?.dataset.readableCardinal,
+              compositeBuild:root?.dataset.compassComposite||'',
+              css:[...document.querySelectorAll('link[rel="stylesheet"]')].map(x=>x.href).filter(x=>x.includes('/compass-composite/')),
+              js:[...document.scripts].map(x=>x.src).filter(x=>x.includes('/compass-composite/')),
+              mirror:{bg:mc.backgroundColor,border:mc.borderTopColor,shadow:mc.boxShadow,opacity:mc.opacity,spans:[...mirror.querySelectorAll('span')].map(s=>{const x=getComputedStyle(s);return {text:s.textContent.trim(),display:x.display,visibility:x.visibility,opacity:x.opacity}})},
+              wings:wings.map(one)
+            };
           });
-          console.log('AUDIT_REPORT '+JSON.stringify(report));
+          const initial=await inspect();
+          await page.evaluate(()=>{
+            const root=document.querySelector('[data-compass-root]');
+            root.dataset.renderedForegroundCardinal='east';
+            root.dataset.readableCardinal='east';
+          });
+          await page.waitForTimeout(250);
+          const east=await inspect();
+          console.log('AUDIT_V2 '+JSON.stringify({initial,east}));
+          const hasV2=[...initial.css,...initial.js].every(x=>x.includes('gen1596-surgical-composite-2'));
+          const stateOk=s=>{
+            const active=s.wings.filter(w=>w.readable==='true');
+            const inactive=s.wings.filter(w=>w.readable==='false');
+            const activeReadable=active.length===1&&active[0].spans.every(x=>x.display!=='none'&&x.visibility!=='hidden'&&Number(x.opacity)>0.5);
+            const inactiveHidden=inactive.length===3&&inactive.every(w=>w.bg==='rgba(0, 0, 0, 0)'&&w.spans.every(x=>x.display==='none'||x.visibility==='hidden'||Number(x.opacity)===0));
+            const mirrorHidden=s.mirror.spans.every(x=>x.display==='none'||x.visibility==='hidden'||Number(x.opacity)===0);
+            return activeReadable&&inactiveHidden&&mirrorHidden;
+          };
+          if(!hasV2||initial.compositeBuild!=='gen1596-surgical-composite-2'||east.compositeBuild!=='gen1596-surgical-composite-2'||!stateOk(initial)||!stateOk(east)){
+            throw new Error('COMPASS_LABEL_OWNER_V2_VERIFICATION_FAILED');
+          }
           await browser.close();
           NODE
           node audit.mjs

@@ -47,22 +47,28 @@ jobs:
             --exclude='h-earth-live-6d18e158/' \
             ./ "$PAGES_STAGE/"
 
-          # The global preview tree remains excluded. BT4 is the sole bounded
-          # nonproduction exception because this experiment must be verified on
-          # the same public serving path that would ultimately enforce claim
-          # entitlement. No other preview bytes are admitted by this exception.
-          bt4_src='preview/bt4/entitlement-v1'
-          bt4_dst="$PAGES_STAGE/preview/bt4/entitlement-v1"
-          test -f "$bt4_src/index.html"
-          test -f "$bt4_src/entitlement-engine.v1.mjs"
-          test -f "$bt4_src/verify-entitlement-preview.v1.mjs"
-          mkdir -p "$bt4_dst"
-          rsync -a --delete "$bt4_src/" "$bt4_dst/"
-          test -f "$bt4_dst/index.html"
-          test -f "$bt4_dst/entitlement-engine.v1.mjs"
-          grep -Fq 'NONPRODUCTION · BT4 SERVED-STATE EXPERIMENT' "$bt4_dst/index.html"
-          grep -Fq 'entitlement-engine.v1.mjs' "$bt4_dst/index.html"
-          echo 'BT4_BOUNDED_PREVIEW_STAGED=PASS'
+          # The global preview tree remains excluded. Only the two explicitly
+          # bounded BT4 nonproduction experiments are admitted to the public
+          # serving path. No other preview bytes are included.
+          claim_src='preview/bt4/entitlement-v1'
+          claim_dst="$PAGES_STAGE/preview/bt4/entitlement-v1"
+          ops_src='preview/bt4/operational-release-v1'
+          ops_dst="$PAGES_STAGE/preview/bt4/operational-release-v1"
+          test -f "$claim_src/index.html"
+          test -f "$claim_src/entitlement-engine.v1.mjs"
+          test -f "$claim_src/verify-entitlement-preview.v1.mjs"
+          test -f "$ops_src/index.html"
+          mkdir -p "$claim_dst" "$ops_dst"
+          rsync -a --delete "$claim_src/" "$claim_dst/"
+          rsync -a --delete "$ops_src/" "$ops_dst/"
+          test -f "$claim_dst/index.html"
+          test -f "$claim_dst/entitlement-engine.v1.mjs"
+          test -f "$ops_dst/index.html"
+          grep -Fq 'NONPRODUCTION · BT4 SERVED-STATE EXPERIMENT' "$claim_dst/index.html"
+          grep -Fq 'entitlement-engine.v1.mjs' "$claim_dst/index.html"
+          grep -Fq 'NONPRODUCTION · BT4 CROSS-OBJECT EXPERIMENT' "$ops_dst/index.html"
+          grep -Fq "../entitlement-v1/entitlement-engine.v1.mjs" "$ops_dst/index.html"
+          echo 'BT4_BOUNDED_PREVIEWS_STAGED=PASS'
 
           rm -rf "$PAGES_STAGE/showroom/globe/h-earth"
           mkdir -p "$PAGES_STAGE/showroom/globe/h-earth"
@@ -98,7 +104,7 @@ jobs:
     needs: deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Require public exact-head marker and BT4 served surface
+      - name: Require public exact-head marker and both BT4 served surfaces
         env:
           TARGET_SHA: ${{ github.sha }}
           PAGE_URL: ${{ needs.deploy.outputs.page_url }}
@@ -106,25 +112,30 @@ jobs:
         run: |
           set -euo pipefail
           marker_url="${PAGE_URL%/}/.well-known/dgb-release.json"
-          bt4_url="${PAGE_URL%/}/preview/bt4/entitlement-v1/"
-          bt4_engine_url="${PAGE_URL%/}/preview/bt4/entitlement-v1/entitlement-engine.v1.mjs"
+          claim_url="${PAGE_URL%/}/preview/bt4/entitlement-v1/"
+          claim_engine_url="${PAGE_URL%/}/preview/bt4/entitlement-v1/entitlement-engine.v1.mjs"
+          ops_url="${PAGE_URL%/}/preview/bt4/operational-release-v1/"
           observed=""
           for attempt in $(seq 1 24); do
             marker="$(curl --fail --silent --show-error -L --max-time 20 "$marker_url" 2>/dev/null || true)"
             observed="$(printf '%s' "$marker" | jq -r '.commit // empty' 2>/dev/null || true)"
-            bt4_html="$(curl --fail --silent --show-error -L --max-time 20 "$bt4_url" 2>/dev/null || true)"
-            bt4_engine="$(curl --fail --silent --show-error -L --max-time 20 "$bt4_engine_url" 2>/dev/null || true)"
+            claim_html="$(curl --fail --silent --show-error -L --max-time 20 "$claim_url" 2>/dev/null || true)"
+            claim_engine="$(curl --fail --silent --show-error -L --max-time 20 "$claim_engine_url" 2>/dev/null || true)"
+            ops_html="$(curl --fail --silent --show-error -L --max-time 20 "$ops_url" 2>/dev/null || true)"
             if [ "$observed" = "$TARGET_SHA" ] \
-              && grep -Fq 'NONPRODUCTION · BT4 SERVED-STATE EXPERIMENT' <<<"$bt4_html" \
-              && grep -Fq 'entitlement-engine.v1.mjs' <<<"$bt4_html" \
-              && grep -Fq 'computeEntitlement' <<<"$bt4_engine"; then
+              && grep -Fq 'NONPRODUCTION · BT4 SERVED-STATE EXPERIMENT' <<<"$claim_html" \
+              && grep -Fq 'entitlement-engine.v1.mjs' <<<"$claim_html" \
+              && grep -Fq 'computeEntitlement' <<<"$claim_engine" \
+              && grep -Fq 'NONPRODUCTION · BT4 CROSS-OBJECT EXPERIMENT' <<<"$ops_html" \
+              && grep -Fq '../entitlement-v1/entitlement-engine.v1.mjs' <<<"$ops_html"; then
               echo "LIVE_EXACT_HEAD_VERIFIED target=$TARGET_SHA"
-              echo "BT4_PUBLIC_SERVED_SURFACE=PASS url=$bt4_url"
+              echo "BT4_PUBLIC_CLAIM_SURFACE=PASS url=$claim_url"
+              echo "BT4_PUBLIC_OPERATIONAL_SURFACE=PASS url=$ops_url"
               exit 0
             fi
-            echo "Attempt $attempt: observed=${observed:-none}; waiting for target=$TARGET_SHA and BT4 served surface"
+            echo "Attempt $attempt: observed=${observed:-none}; waiting for target=$TARGET_SHA and both BT4 served surfaces"
             sleep 10
           done
           echo "DEPLOYMENT_NOT_PROVEN expected=$TARGET_SHA observed=${observed:-none}" >&2
-          echo "BT4_PUBLIC_SERVED_SURFACE=FAIL url=$bt4_url" >&2
+          echo "BT4_PUBLIC_CLAIM_SURFACE_OR_OPERATIONAL_SURFACE=FAIL" >&2
           exit 1

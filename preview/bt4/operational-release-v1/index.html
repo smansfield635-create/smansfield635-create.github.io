@@ -1,0 +1,58 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>BT4 Operational Release Authority</title>
+<style>
+:root{color-scheme:dark}body{margin:0;background:#03110e;color:#eef8f5;font:16px/1.5 system-ui,sans-serif}.wrap{max-width:980px;margin:auto;padding:28px}.card{border:1px solid #29473f;border-radius:18px;padding:24px;margin:22px 0;background:#071713}h1{font-size:38px;margin:0 0 14px}.eyebrow{color:#9cb7af}.state{font-size:64px;font-weight:800;line-height:1;margin:18px 0}.reason{color:#b5c8c2}.controls{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}button{font:inherit;color:#eef8f5;background:#0c241e;border:1px solid #42655b;border-radius:12px;padding:12px 16px}.blocked{color:#f1b1ae}.ok{color:#a8e3b8}pre{white-space:pre-wrap;overflow-wrap:anywhere;color:#dbe9e5}.note{color:#9cb7af}</style>
+<div class="wrap">
+  <div class="eyebrow">NONPRODUCTION · BT4 CROSS-OBJECT EXPERIMENT</div>
+  <h1>Synthetic planetary runtime release authority</h1>
+  <p>This surface tests whether the same entitlement law that governs a public claim can govern an operational object. It does not alter Audralia, H-Earth, or any canonical Diamond Gate release.</p>
+
+  <section class="card">
+    <div class="eyebrow">Maximum permissible operational status</div>
+    <div id="status" class="state"></div>
+    <div id="reason" class="reason"></div>
+    <div class="controls">
+      <button data-action="corrupt">Break artifact identity</button>
+      <button data-action="reprofail">Fail runtime verification</button>
+      <button data-action="adverse">Introduce blocking evidence</button>
+      <button data-action="repair">Repair operational conditions</button>
+      <button data-action="fresh">Issue fresh release receipt</button>
+      <button data-action="reset">Reset experiment</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Release override test</h2>
+    <p>The release layer requests <code>RELEASE AUTHORIZED</code> on every render. The shared entitlement engine either permits that state or contracts it to the strongest lawful operational status.</p>
+    <div id="override"></div>
+  </section>
+
+  <section class="card">
+    <h2>Operational evidence state</h2>
+    <pre id="evidence"></pre>
+    <div id="epoch" class="note"></div>
+  </section>
+</div>
+<script type="module">
+import {initialEntitlementState,computeEntitlement,serveRequestedState,applyIntervention} from '../entitlement-v1/entitlement-engine.v1.mjs';
+const labels={QUALIFIED:'RELEASE AUTHORIZED',SUPPORTED:'REQUALIFICATION REQUIRED',CANDIDATE:'RELEASE CANDIDATE',HELD:'RELEASE HELD',CONTRADICTED:'RELEASE BLOCKED'};
+let state=initialEntitlementState();
+const status=document.querySelector('#status'), reason=document.querySelector('#reason'), override=document.querySelector('#override'), evidence=document.querySelector('#evidence'), epoch=document.querySelector('#epoch');
+function render(){
+  const entitlement=computeEntitlement(state);
+  const served=serveRequestedState('QUALIFIED',state);
+  status.textContent=labels[entitlement.state];
+  status.dataset.entitlement=entitlement.state;
+  status.dataset.operationalStatus=labels[entitlement.state];
+  reason.textContent=entitlement.reason;
+  override.className=served.blocked?'blocked':'ok';
+  override.textContent=served.blocked?`RELEASE AUTHORIZED override BLOCKED → served as ${labels[served.served]}.`:'RELEASE AUTHORIZED admitted.';
+  evidence.textContent=JSON.stringify(state,null,2);
+  epoch.textContent=`release receipt epoch: ${state.receiptEpoch} · required current epoch: ${state.epoch}`;
+}
+document.querySelectorAll('button[data-action]').forEach(button=>button.addEventListener('click',()=>{state=applyIntervention(state,button.dataset.action);render();}));
+render();
+</script>

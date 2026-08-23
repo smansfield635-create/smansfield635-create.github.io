@@ -64,7 +64,7 @@ jobs:
           if(base.stage!=='CAPABILITY_OBJECT_STAGE_v3')throw Error('stage identity mismatch');
           if(base.mode!=='geometry')throw Error('not in neutral geometry mode');
           if(!base.hasApi)throw Error('fixed-view API unavailable');
-          if(!(base.triangles>12000 && base.triangles<90000))throw Error('triangle budget outside geometry inspection bounds: '+base.triangles);
+          if(!(base.triangles>20000 && base.triangles<150000))throw Error('geometry density outside construction-cycle bounds: '+base.triangles);
           if(base.construction!=='NO_ENVELOPE_INDEPENDENT_3D_SPLINES')throw Error('construction law mismatch');
           const views=['front','rear','top','left','right','oblique'];
           const evidence=[];

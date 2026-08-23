@@ -52,7 +52,7 @@ jobs:
             if(!trophy||!brain||!house)throw new Error(`${s.name}: object canvases missing`);
             const max=Math.max(trophy,brain,house),min=Math.min(trophy,brain,house);if(max-min>8)throw new Error(`${s.name}: object height imbalance ${JSON.stringify({trophy,brain,house})}`);
             await page.evaluate(()=>{globalThis.__capEvents=[];document.addEventListener('compass:capability-change',e=>globalThis.__capEvents.push(e.detail));});
-            const box=await page.locator('.compass-object-stage').boundingBox();
+            const stageLoc=page.locator('.compass-object-stage');await stageLoc.scrollIntoViewIfNeeded();await page.waitForTimeout(80);const box=await stageLoc.boundingBox();
             await page.mouse.move(box.x+box.width*.72,box.y+box.height*.42);await page.mouse.down();await page.mouse.move(box.x+box.width*.20,box.y+box.height*.42,{steps:12});await page.mouse.up();await page.waitForTimeout(220);
             const drag=await page.evaluate(()=>({events:globalThis.__capEvents,active:document.querySelector('.compass-orbit-plaque[data-active="true"]')?.dataset.capability,center:(()=>{const stage=document.querySelector('.compass-object-stage').getBoundingClientRect(),a=document.querySelector('.compass-orbit-plaque[data-active="true"]').getBoundingClientRect();return Math.abs((a.left+a.width/2)-(stage.left+stage.width/2));})()}));
             if(!drag.events.some(e=>e.phase==='dragging')||!drag.events.some(e=>e.phase==='settled')||drag.center>4)throw new Error(`${s.name}: drag continuity failed ${JSON.stringify(drag)}`);

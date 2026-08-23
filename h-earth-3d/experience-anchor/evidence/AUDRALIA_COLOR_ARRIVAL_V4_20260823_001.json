@@ -1,7 +1,7 @@
 {
   "schema": "H_EARTH_EXPERIENCE_ANCHOR_BOUNDED_PRESENTATION_EVIDENCE_v1",
-  "candidateHeadBeforeEvidence": "26d69e1c84d5985f63f05e868805753d9f3c051a",
-  "changeClass": "AUDRALIA_LOADING_PRESENTATION_AND_FAIL_VISIBLE_PROGRESS",
+  "candidateHeadBeforeEvidence": "3957e2caabc130c83acc4eb34fd1606d8a773ca8",
+  "changeClass": "AUDRALIA_LOADING_PRESENTATION_FAIL_VISIBLE_AND_CELESTIAL_STARTUP_SEQUENCING",
   "experienceFiles": [
     {
       "path": "showroom/globe/audralia/loading-continuity-v3.css",
@@ -9,17 +9,21 @@
     },
     {
       "path": "showroom/globe/audralia/index.html",
-      "sha256": "76fe6495a47ddbfd34c0cb2347d0b5bb734206ba9c9a8e9d16dfb8ee041ae5f9"
+      "sha256": "ff7fc189793a81de552fff317871c4d6b02752acaeffebe9bf531a99c65c7e0a"
     },
     {
       "path": "showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs",
       "sha256": "c8d320548768e615e92d5f84a299a148a309246ced4f8c88795250f927386c2a"
+    },
+    {
+      "path": "showroom/globe/audralia/celestial-bootstrap-v2.mjs",
+      "sha256": "3bdcf6605d473c40329c73321d559f5d7a4d354809618519ed2a02098fe23885"
     }
   ],
   "anchorReview": {
     "visual": "The mutation remains a temporary Audralia arrival overlay and strengthens the established H-Earth-family world-initialization language with a visibly chromatic blue, violet, teal and gold treatment plus explicit COLOR ARRIVAL v4 build identity. It does not substitute a dashboard, map application, or separate product for the world.",
-    "interaction": "No camera, travel, look, gesture, world navigation, renderer geometry, or world interaction behavior is changed. Loader-progress changes only expose delayed startup after 15 seconds and an already-recorded reconciliation initialization error.",
-    "continuity": "The same five-stage runtime predicates remain authoritative for world readiness. The loader still resolves into the same canonical Audralia world and does not create a parallel world or alternate route."
+    "interaction": "No camera, travel, look, gesture, world navigation, renderer geometry, or world interaction behavior is changed. Loader-progress changes only expose delayed startup after 15 seconds and an already-recorded reconciliation initialization error. The celestial bootstrap only sequences the existing celestial checkpoint behind established renderer authority so its independent startup timeout cannot expire before that authority exists.",
+    "continuity": "The same five-stage runtime predicates remain authoritative for world readiness. The loader still resolves into the same canonical Audralia world. Celestial rendering remains the existing AUDRALIA_CELESTIAL_CONTEXT_v2 implementation and is initialized only after the same renderer authority already used by the world reconciliation runtime."
   },
   "scopeAssertions": {
     "worldGeometryMutated": false,
@@ -29,6 +33,8 @@
     "navigationMutated": false,
     "loaderProgressSemanticsMutated": true,
     "loaderReadinessPredicatesMutated": false,
+    "celestialRenderingMutated": false,
+    "celestialStartupSequencingMutated": true,
     "parallelProductCreated": false,
     "hEarthPublicExperienceMutated": false
   },
@@ -37,6 +43,8 @@
     "showroom/globe/audralia/index.html",
     "showroom/globe/audralia/loading-continuity-v3.css",
     "showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs",
+    "showroom/globe/audralia/celestial-bootstrap-v2.mjs",
+    "showroom/globe/audralia/celestial-checkpoint-1.mjs",
     "h-earth-live-6d18e158/showroom/globe/h-earth/experience-layer.js"
   ],
   "disposition": "PASS"

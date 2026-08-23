@@ -1,0 +1,39 @@
+{
+  "schema":"COMPASS_BRAIN_V11_ANATOMICAL_LANDMARK_SCAFFOLD_v1",
+  "units":"normalized_cerebral_AP_length",
+  "axes":{"x":"left(-)/right(+)","y":"inferior(-)/superior(+)","z":"posterior(-)/anterior(+)"},
+  "origin":"mid-sagittal cerebral centroid",
+  "landmarks":{
+    "frontal_pole_L":[-0.18,0.08,0.50],"frontal_pole_R":[0.18,0.08,0.50],
+    "occipital_pole_L":[-0.15,0.10,-0.50],"occipital_pole_R":[0.15,0.10,-0.50],
+    "superior_crown_L":[-0.19,0.38,0.02],"superior_crown_R":[0.19,0.38,0.02],
+    "temporal_pole_L":[-0.30,-0.20,0.23],"temporal_pole_R":[0.30,-0.20,0.23],
+    "inferior_temporal_L":[-0.27,-0.31,0.02],"inferior_temporal_R":[0.27,-0.31,0.02],
+    "fissure_anterior":[0,0.30,0.39],"fissure_crown":[0,0.40,0.00],"fissure_posterior":[0,0.29,-0.38],
+    "sylvian_anterior_L":[-0.25,-0.02,0.27],"sylvian_anterior_R":[0.25,-0.02,0.27],
+    "sylvian_posterior_L":[-0.31,0.00,-0.08],"sylvian_posterior_R":[0.31,0.00,-0.08],
+    "cerebellar_crown":[0,-0.25,-0.36],"cerebellar_posterior":[0,-0.35,-0.55],"cerebellar_inferior":[0,-0.49,-0.38],
+    "midbrain_center":[0,-0.18,-0.12],"pons_center":[0,-0.31,-0.20],"medulla_center":[0,-0.46,-0.22],"cord_origin":[0,-0.58,-0.23],"cord_distal":[0,-0.82,-0.24],
+    "peduncle_L":[-0.10,-0.30,-0.27],"peduncle_R":[0.10,-0.30,-0.27]
+  },
+  "hemisphere_profiles":{
+    "stations_z":[-0.46,-0.31,-0.15,0.00,0.16,0.32,0.46],
+    "left":[
+      {"z":-0.46,"medial_x":-0.055,"lateral_x":-0.205,"inferior_y":-0.08,"superior_y":0.25,"shape":"occipital_taper"},
+      {"z":-0.31,"medial_x":-0.045,"lateral_x":-0.325,"inferior_y":-0.16,"superior_y":0.34,"shape":"posterior_full"},
+      {"z":-0.15,"medial_x":-0.040,"lateral_x":-0.355,"inferior_y":-0.25,"superior_y":0.38,"shape":"parietotemporal"},
+      {"z":0.00,"medial_x":-0.038,"lateral_x":-0.365,"inferior_y":-0.31,"superior_y":0.39,"shape":"maximum_breadth"},
+      {"z":0.16,"medial_x":-0.040,"lateral_x":-0.350,"inferior_y":-0.29,"superior_y":0.37,"shape":"frontal_temporal"},
+      {"z":0.32,"medial_x":-0.048,"lateral_x":-0.310,"inferior_y":-0.20,"superior_y":0.32,"shape":"frontal_round"},
+      {"z":0.46,"medial_x":-0.075,"lateral_x":-0.235,"inferior_y":-0.08,"superior_y":0.23,"shape":"frontal_taper"}
+    ],
+    "right":"MIRROR_LEFT_ACROSS_X0"
+  },
+  "interfaces":{
+    "cerebrum_midbrain":{"center":[0,-0.16,-0.10],"radius":0.10,"overlap_required":true},
+    "brainstem_cerebellum_L":{"center":[-0.09,-0.31,-0.27],"radius":0.075,"overlap_required":true},
+    "brainstem_cerebellum_R":{"center":[0.09,-0.31,-0.27],"radius":0.075,"overlap_required":true},
+    "medulla_cord":{"center":[0,-0.56,-0.23],"radius":0.055,"overlap_required":true}
+  },
+  "construction_prohibition":"NO_MESH_GENERATION_UNTIL_ALCM_RECEIPT_PASS"
+}

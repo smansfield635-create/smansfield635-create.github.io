@@ -1,5 +1,5 @@
 (()=>{'use strict';
-const BUILD='gen1596-surgical-composite-3';
+const BUILD='gen1596-surgical-composite-4';
 const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
 const force=(el,prop,value)=>el?.style?.setProperty(prop,value,'important');
 const start=()=>{
@@ -9,8 +9,29 @@ const start=()=>{
   root.dataset.compassComposite=BUILD;
 
   /* Preserve native cardinal ownership. The Compass controller alone decides
-     which cardinal is readable; this composite must not toggle that class,
-     hide its spans, or infer foreground from potentially stale data fields. */
+     which cardinal is readable. The composite only removes a label shell when
+     that rendered wing has no actually visible label text. */
+  const suppressEmptyWingShells=()=>{
+    if((root.dataset.compassMode||'CONSTELLATION')!=='CONSTELLATION')return;
+    qa('[data-compass-cardinal]',root).forEach(wing=>{
+      const hasVisibleText=qa(':scope > span',wing).some(span=>{
+        const c=getComputedStyle(span);
+        return Boolean((span.textContent||'').trim())&&c.display!=='none'&&c.visibility!=='hidden'&&Number(c.opacity)>0.5;
+      });
+      if(hasVisibleText){
+        if(wing.dataset.gen1596EmptyShellSuppressed==='true'){
+          ['background','border-color','box-shadow','outline-color'].forEach(prop=>wing.style.removeProperty(prop));
+          delete wing.dataset.gen1596EmptyShellSuppressed;
+        }
+        return;
+      }
+      force(wing,'background','transparent');
+      force(wing,'border-color','transparent');
+      force(wing,'box-shadow','none');
+      force(wing,'outline-color','transparent');
+      wing.dataset.gen1596EmptyShellSuppressed='true';
+    });
+  };
 
   const suppressStaleMirrorlandLabel=()=>{
     const mode=root.dataset.compassMode||'CONSTELLATION';
@@ -64,11 +85,11 @@ const start=()=>{
     });
   };
 
-  const sync=()=>{syncRooms();suppressStaleMirrorlandLabel();suppressDuplicateCapabilityOwner();};
+  const sync=()=>{syncRooms();suppressStaleMirrorlandLabel();suppressEmptyWingShells();suppressDuplicateCapabilityOwner();};
   const observer=new MutationObserver(sync);
   observer.observe(root,{subtree:true,attributes:true,attributeFilter:['data-compass-mode','data-selected-room','data-cluster-primary-room','data-cluster-preview-primary-room','data-gen1587-current','hidden','aria-current','style','class']});
   sync();
-  setTimeout(sync,120);setTimeout(sync,350);setTimeout(sync,900);setTimeout(sync,1600);
+  setTimeout(sync,60);setTimeout(sync,120);setTimeout(sync,250);setTimeout(sync,500);setTimeout(sync,900);setTimeout(sync,1600);
 };
 start();
 })();

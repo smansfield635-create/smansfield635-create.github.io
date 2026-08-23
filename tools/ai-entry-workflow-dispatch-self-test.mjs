@@ -23,7 +23,7 @@ assert(registry.transportPullRequest?.mergeAllowed === false, 'transport PR merg
 assert(registry.transportPullRequest?.autoDeleteHeadBranchOnSuccess === true, 'successful request branches must be deleted');
 assert(registry.continuity?.dispatchRunIdMustBeRecovered === true, 'run id recovery must remain mandatory');
 assert(registry.continuity?.receiptResult === 'NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED', 'success receipt result drifted');
-assert(registry.capabilities?.PAGES_EXACT_HEAD_DEPLOY?.workflow === 'pages-direct-deploy.yml', 'Pages deploy capability drifted');
+assert(registry.capabilities?.PAGES_EXACT_HEAD_DEPLOY?.workflow === 'pages-exact-head-deploy-v2.yml', 'Pages deploy capability drifted');
 assert(registry.capabilities?.PAGES_EXACT_HEAD_DEPLOY?.inputPolicy?.target_sha?.source === 'CURRENT_MAIN_SHA', 'Pages deploy target must bind current main');
 
 const procedure = shared.procedures?.find(p => p.procedureId === 'AI_ENTRY_NATIVE_WORKFLOW_DISPATCH');

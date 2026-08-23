@@ -5,11 +5,13 @@ on:
       - research/post2020-maneuverability-independent-replication-v1
     paths:
       - 'research/imi/post2020_maneuverability_final_replication_v1.py'
+      - 'research/imi/post2020_maneuverability_final_replication_schemafix_v1.py'
       - '.github/workflows/imi-post2020-final-replication-v1.yml'
   pull_request:
     branches: [main]
     paths:
       - 'research/imi/post2020_maneuverability_final_replication_v1.py'
+      - 'research/imi/post2020_maneuverability_final_replication_schemafix_v1.py'
       - '.github/workflows/imi-post2020-final-replication-v1.yml'
   workflow_dispatch:
 jobs:
@@ -27,9 +29,10 @@ jobs:
           python-version: '3.12'
       - name: Install analysis dependencies
         run: pip install pandas numpy requests scikit-learn lightgbm lxml
-      - name: Execute frozen post-2020 replication
-        run: python research/imi/post2020_maneuverability_final_replication_v1.py
+      - name: Execute frozen post-2020 replication with schema-only normalization
+        run: python research/imi/post2020_maneuverability_final_replication_schemafix_v1.py
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: imi-post2020-final-replication-v1
           path: |

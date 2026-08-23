@@ -1,6 +1,6 @@
 {
   "schema": "H_EARTH_EXPERIENCE_ANCHOR_BOUNDED_PRESENTATION_EVIDENCE_v1",
-  "candidateHeadBeforeEvidence": "03b5906099dc5c71e23b111977b37b90985feba6",
+  "candidateHeadBeforeEvidence": "9a488db06bbd25907273d49a165898fa3d312746",
   "changeClass": "AUDRALIA_LOADING_PRESENTATION_FAIL_VISIBLE_AND_CELESTIAL_STARTUP_SEQUENCING",
   "experienceFiles": [
     {
@@ -18,12 +18,16 @@
     {
       "path": "showroom/globe/audralia/celestial-bootstrap-v2.mjs",
       "sha256": "d771727edc0c51571a771d1b43df324be0480eef305a36f549795e960e2a90c8"
+    },
+    {
+      "path": "showroom/globe/audralia/weather-presentation-reconciliation/index.html",
+      "sha256": "ceb66e30770fded46bb68ca57cef9c092986cf590fdbc23cc809a58e766531b7"
     }
   ],
   "anchorReview": {
     "visual": "The mutation remains a temporary Audralia arrival overlay and strengthens the established H-Earth-family world-initialization language with a visibly chromatic blue, violet, teal and gold treatment plus explicit COLOR ARRIVAL v4 build identity. It does not substitute a dashboard, map application, or separate product for the world.",
     "interaction": "No camera, travel, look, gesture, world navigation, renderer geometry, or world interaction behavior is changed. Loader-progress changes only expose delayed startup after 15 seconds and an already-recorded reconciliation initialization error. The celestial bootstrap only sequences the existing celestial checkpoint behind established renderer authority and records bootstrap failure visibly for qualification.",
-    "continuity": "The same five-stage runtime predicates remain authoritative for world readiness. The loader still resolves into the same canonical Audralia world. Celestial rendering remains the existing AUDRALIA_CELESTIAL_CONTEXT_v2 implementation and is initialized only after the same renderer authority already used by the world reconciliation runtime."
+    "continuity": "The same five-stage runtime predicates remain authoritative for world readiness. The loader still resolves into the same canonical Audralia world. Both the public page and the bounded reconciliation page now initialize the unchanged AUDRALIA_CELESTIAL_CONTEXT_v2 only after the same renderer authority already used by the world reconciliation runtime."
   },
   "scopeAssertions": {
     "worldGeometryMutated": false,
@@ -42,6 +46,7 @@
     "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
     "showroom/globe/audralia/index.html",
     "showroom/globe/audralia/loading-continuity-v3.css",
+    "showroom/globe/audralia/weather-presentation-reconciliation/index.html",
     "showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs",
     "showroom/globe/audralia/celestial-bootstrap-v2.mjs",
     "showroom/globe/audralia/celestial-checkpoint-1.mjs",

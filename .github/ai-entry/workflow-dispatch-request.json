@@ -1,6 +1,6 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-label-owner-r2-deploy-6453a752",
+  "requestId": "compass-label-owner-r2-deploy-6453a752-v2",
   "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
-  "inputs": {"target_sha":"6453a7525434e7e9dccc8820e513763666aae9f7"}
+  "inputs": {}
 }

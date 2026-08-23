@@ -1,0 +1,4 @@
+GEN1596_LABEL_OWNER_FIX_V2
+Target: /compass-composite/
+Scope: suppress stale Mirrorland text/shell and non-readable cardinal label shells only.
+Preserve: active cardinal/room label styling, Compass geometry, interactions, Mirrorland hit target/focused portal.

@@ -33,7 +33,7 @@ for (const vp of viewports) {
   page.on('pageerror',e=>errors.push(String(e)));
   await page.setViewport(vp);
   const t0=Date.now();
-  const res=await page.goto(`${base}/inspection/compass/brain-v9/`,{waitUntil:'networkidle0',timeout:30000});
+  const res=await page.goto(`${base}/inspection/compass/brain-v9/`,{waitUntil:'domcontentloaded',timeout:15000});
   const httpOk=!!res && res.ok();
 
   await page.waitForSelector('[data-capability-brain-v9]',{timeout:15000});
@@ -100,6 +100,6 @@ for (const vp of viewports) {
 }
 
 await browser.close();
-const out={schema:'DGB_COMPASS_BRAIN_V9_ISOLATED_QUALIFICATION_v2',status:failed?'FAIL':'PASS',surface:'/inspection/compass/brain-v9/',expectedRenderer:EXPECTED_RENDERER,checks};
+const out={schema:'DGB_COMPASS_BRAIN_V9_ISOLATED_QUALIFICATION_v3',status:failed?'FAIL':'PASS',surface:'/inspection/compass/brain-v9/',expectedRenderer:EXPECTED_RENDERER,checks};
 console.log(JSON.stringify(out,null,2));
 if(failed) process.exit(1);

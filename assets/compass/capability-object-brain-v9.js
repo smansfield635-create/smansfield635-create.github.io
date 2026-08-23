@@ -1,6 +1,6 @@
 (()=>{
 'use strict';
-const VERSION='COMPASS_BRAIN_V9_GEOMETRY_G123_v4';
+const VERSION='COMPASS_BRAIN_V9_GEOMETRY_G123_v5';
 const M=Math,PI=M.PI,TAU=PI*2;
 const norm=v=>{const d=M.hypot(v[0],v[1],v[2])||1;return[v[0]/d,v[1]/d,v[2]/d]};
 const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
@@ -19,8 +19,28 @@ function build(gl){
  function tube(points,radius,sides=6,color=neutral){if(points.length<2)return;const rings=[];let prev=[0,1,0];for(let i=0;i<points.length;i++){const p=points[i],a=points[M.max(0,i-1)],b=points[M.min(points.length-1,i+1)],t=norm(sub(b,a)),ref=M.abs(t[1])>.87?[1,0,0]:[0,1,0];let n=norm(cross(t,ref));if(i&&dot(n,prev)<0)n=mul(n,-1);const q=norm(cross(t,n));prev=n;const u=i/M.max(1,points.length-1),r=typeof radius==='function'?radius(u):radius,ring=[];for(let s=0;s<sides;s++){const ang=s/sides*TAU,rad=add(mul(n,M.cos(ang)),mul(q,M.sin(ang)));ring.push(V(add(p,mul(rad,r)),rad,color))}rings.push(ring)}for(let i=0;i<rings.length-1;i++)for(let s=0;s<sides;s++){const n=(s+1)%sides,a=rings[i][s],b=rings[i][n],c=rings[i+1][n],d=rings[i+1][s];tri(a,b,c);tri(a,c,d)}}
  function frame(t){const T=norm(t),ref=M.abs(T[1])>.80?[0,0,1]:[0,1,0],N=norm(cross(T,ref)),B=norm(cross(T,N));return[T,N,B]}
  function wig(seed,k){return .62*M.sin(seed*1.771+k*2.413)+.25*M.sin(seed*.719+k*4.103)}
+ function morphCenter(side,center,seed){
+  let [x,y,z]=center;
+  const lateral=M.min(1,x/.56),frontBack=M.min(1,M.abs(z+.10)/.82),inferior=M.max(0,(-y-.06)/.48);
+  const endTaper=1-.16*frontBack*frontBack-.10*inferior*inferior;
+  x*=M.max(.76,endTaper);
+  y-=.092*lateral*lateral;
+  y+=.012*M.sin(seed*.83)+(side>0?.006:-.004)*(1-.45*frontBack);
+  z+=.038*lateral*lateral*M.sin(seed*.57+.6)+side*.010*(.35+.65*lateral);
+  x+=.008*M.sin(seed*1.19)+.004*M.sin(seed*.31+2.1);
+  return[x,y,z];
+ }
+ function morphTangent(side,center,tangent,seed){
+  const lateral=M.min(1,center[0]/.56),inferior=M.max(0,(-center[1]-.08)/.50);
+  return norm([
+   tangent[0]*(1-.08*lateral),
+   tangent[1]-.13*lateral+.05*inferior,
+   tangent[2]+side*.06*lateral*M.sin(seed*.41)
+  ]);
+ }
  function serpent(side,center,tangent,length=.22,r=.026,seed=0,color=neutral,amp=.052){
-  const c=[side*center[0],center[1],center[2]],t=[side*tangent[0],tangent[1],tangent[2]],F=frame(t),T=F[0],N=F[1],B=F[2],ctrl=[];
+  const mc=morphCenter(side,center,seed),mt=morphTangent(side,center,tangent,seed);
+  const c=[side*mc[0],mc[1],mc[2]],t=[side*mt[0],mt[1],mt[2]],F=frame(t),T=F[0],N=F[1],B=F[2],ctrl=[];
   for(let i=0;i<7;i++){
    const u=i/6-.5,a=TAU*(u+.5),a2=TAU*2*(u+.5),taper=.76+.24*M.sin(PI*(u+.5));
    let p=add(c,mul(T,length*u));
@@ -57,25 +77,25 @@ function build(gl){
  dX.forEach((x,xi)=>dY.forEach((y,yi)=>dZ.forEach((z,zi)=>{if((yi===4&&zi===0)||(yi===0&&zi===3))return;const tang=(xi+yi+zi)%3===0?[.52,-.45,.72]:(xi+yi+zi)%3===1?[.42,.68,-.60]:[.68,-.18,-.71];deep.push([x,y,z,...tang,.18,.0235,.043])})));
  for(const side of[-1,1]){addSeeds(side,superior,10);addSeeds(side,frontal,70);addSeeds(side,precentral,130,light);addSeeds(side,postcentral,150,light);addSeeds(side,parietal,180);addSeeds(side,temporal,260);addSeeds(side,occipital,360);addSeeds(side,medial,470,dark);addSeeds(side,deep,540,dark)}
  function cerebellum(side){
-  const folia=[],cx=[.065,.145,.225,.295],cy=[-.31,-.365,-.42,-.475,-.525],cz=[-.51,-.60,-.68];
-  cy.forEach((y,yi)=>cz.forEach((z,zi)=>cx.forEach((x,xi)=>{if(zi===2&&xi===3)return;const tang=(yi+xi)%2?[.78,-.08,-.62]:[.80,.05,.59];folia.push([x,y,z-.018*xi,...tang,.11,.0135,.027])})));
+  const folia=[],cx=[.055,.125,.195,.255],cy=[-.285,-.335,-.385,-.435,-.485],cz=[-.45,-.55,-.63];
+  cy.forEach((y,yi)=>cz.forEach((z,zi)=>cx.forEach((x,xi)=>{if(zi===2&&xi===3)return;const tang=(yi+xi)%2?[.78,-.08,-.62]:[.80,.05,.59];folia.push([x,y,z-.015*xi,...tang,.11,.0135,.027])})));
   addSeeds(side,folia,700,dark);
-  [[.045,-.31,-.18,.46,-.20,-.86,.23,.014,.030],[.060,-.37,-.20,.50,-.18,-.85,.23,.013,.029],[.075,-.42,-.23,.54,-.15,-.83,.22,.0125,.028]].forEach((s,i)=>serpent(side,[s[0],s[1],s[2]],[s[3],s[4],s[5]],s[6],s[7],800+i,light,s[8]));
+  [[.040,-.285,-.16,.46,-.20,-.86,.24,.014,.030],[.055,-.335,-.18,.50,-.18,-.85,.24,.013,.029],[.070,-.385,-.21,.54,-.15,-.83,.23,.0125,.028]].forEach((s,i)=>serpent(side,[s[0],s[1],s[2]],[s[3],s[4],s[5]],s[6],s[7],800+i,light,s[8]));
  }
  cerebellum(-1);cerebellum(1);
  const pons=[
-  [[-.16,-.285,-.105],[-.10,-.255,-.070],[-.045,-.240,-.047],[0,-.237,-.040],[.045,-.240,-.047],[.10,-.255,-.070],[.16,-.285,-.105]],
-  [[-.17,-.330,-.115],[-.105,-.300,-.080],[-.045,-.285,-.057],[0,-.282,-.050],[.045,-.285,-.057],[.105,-.300,-.080],[.17,-.330,-.115]],
-  [[-.155,-.375,-.125],[-.095,-.345,-.090],[-.040,-.330,-.067],[0,-.327,-.060],[.040,-.330,-.067],[.095,-.345,-.090],[.155,-.375,-.125]]
+  [[-.16,-.275,-.095],[-.10,-.245,-.062],[-.045,-.230,-.042],[0,-.227,-.036],[.045,-.230,-.042],[.10,-.245,-.062],[.16,-.275,-.095]],
+  [[-.17,-.315,-.105],[-.105,-.285,-.072],[-.045,-.270,-.052],[0,-.267,-.046],[.045,-.270,-.052],[.105,-.285,-.072],[.17,-.315,-.105]],
+  [[-.155,-.355,-.115],[-.095,-.325,-.082],[-.040,-.310,-.062],[0,-.307,-.056],[.040,-.310,-.062],[.095,-.325,-.082],[.155,-.355,-.115]]
  ];
  pons.forEach((c,i)=>tube(spline(c,3),.020+i*.001,7,light));
- const stem=[[0,-.18,-.17],[0,-.245,-.14],[.004,-.315,-.118],[.008,-.385,-.113],[.006,-.455,-.122],[.002,-.530,-.142],[-.003,-.605,-.165],[-.006,-.680,-.188],[0,-.755,-.205]];
+ const stem=[[0,-.17,-.15],[0,-.235,-.125],[.004,-.300,-.105],[.008,-.370,-.103],[.006,-.440,-.114],[.002,-.515,-.136],[-.003,-.590,-.160],[-.006,-.665,-.184],[0,-.740,-.202]];
  for(let k=-4;k<=4;k++){const c=stem.map((p,i)=>[p[0]+k*.008,p[1]+.003*M.sin(i*.8+k),p[2]+.004*M.sin(i*1.15+k*.45)]);tube(spline(c,2),u=>lerp(.017,.010,u),6,k%2?dark:neutral)}
- const vertexCount=pos.length/3;if(vertexCount>65535)throw Error('Brain V9 G123 v4 vertex budget exceeded: '+vertexCount);
+ const vertexCount=pos.length/3;if(vertexCount>65535)throw Error('Brain V9 G123 v5 vertex budget exceeded: '+vertexCount);
  const buf=(t,d)=>{const b=gl.createBuffer();gl.bindBuffer(t,b);gl.bufferData(t,d,gl.STATIC_DRAW);return b};
  return{p:buf(gl.ARRAY_BUFFER,new Float32Array(pos)),n:buf(gl.ARRAY_BUFFER,new Float32Array(nor)),c:buf(gl.ARRAY_BUFFER,new Float32Array(col)),i:buf(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(idx)),count:idx.length,triangles:idx.length/3};
 }
-function boot(){const stage=window.CapabilityObjectStage;if(!stage)return;document.querySelectorAll('[data-capability-brain-v9]').forEach(canvas=>{const api=stage.mount(canvas,{meshFactory:build,initialYaw:.42,initialPitch:-.04,spin:0,scale:1.00,inspectionMode:'geometry',dataset:{brainRenderer:VERSION,brainContract:'COMPASS_BRAIN_GEOMETRY_SYSTEMATIC_G123_v4',brainMaterial:'NEUTRAL_GEOMETRY_MATTE',brainDepthModel:'TRUE_WEBGL_GEOMETRY',brainConstruction:'NO_ENVELOPE_INDEPENDENT_3D_SPLINES',brainGeometryPass:'G1_MULTIBANK_VOLUME__G2_LOCAL_SERPENTINE_TOPOLOGY__G3_INFERIOR_INTEGRATION',brainComponents:'multibank-serpentine-cortex,narrow-longitudinal-fissure,central-sulcus-corridor,lateral-sulcus-corridor,precentral-gyri,postcentral-gyri,deep-intermediate-gyri,compact-cerebellar-folia,pons-fibers,medulla-tracts,brainstem,peduncles'}});if(api)canvas._brainV9=api})}
+function boot(){const stage=window.CapabilityObjectStage;if(!stage)return;document.querySelectorAll('[data-capability-brain-v9]').forEach(canvas=>{const api=stage.mount(canvas,{meshFactory:build,initialYaw:.42,initialPitch:-.04,spin:0,scale:1.00,inspectionMode:'geometry',dataset:{brainRenderer:VERSION,brainContract:'COMPASS_BRAIN_GEOMETRY_SYSTEMATIC_G123_v5',brainMaterial:'NEUTRAL_GEOMETRY_MATTE',brainDepthModel:'TRUE_WEBGL_GEOMETRY',brainConstruction:'NO_ENVELOPE_INDEPENDENT_3D_SPLINES',brainGeometryPass:'G1_ROUNDED_MACRO_MORPHOLOGY__G2_ASYMMETRIC_SERPENTINE_TOPOLOGY__G3_INFERIOR_CONTINUITY',brainComponents:'multibank-serpentine-cortex,narrow-longitudinal-fissure,central-sulcus-corridor,lateral-sulcus-corridor,precentral-gyri,postcentral-gyri,deep-intermediate-gyri,compact-cerebellar-folia,pons-fibers,medulla-tracts,brainstem,peduncles'}});if(api)canvas._brainV9=api})}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 window.CompassBrainV9=Object.freeze({version:VERSION,build,boot});
 })();

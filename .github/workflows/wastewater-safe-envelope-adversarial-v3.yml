@@ -1,0 +1,34 @@
+name: Wastewater safe-envelope adversarial v3
+on:
+  pull_request:
+    paths:
+      - 'research/imi/WASTEWATER_SAFE_ENVELOPE_ADVERSARIAL_PROTOCOL_v3.md'
+      - 'research/imi/wastewater_safe_envelope_adversarial_v3.py'
+      - '.github/workflows/wastewater-safe-envelope-adversarial-v3.yml'
+  workflow_dispatch:
+jobs:
+  severe-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout: |
+            research/imi
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install scientific dependencies
+        run: pip install numpy pandas scikit-learn lightgbm requests
+      - name: Execute frozen wastewater v3 severe test
+        run: python research/imi/wastewater_safe_envelope_adversarial_v3.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wastewater-safe-envelope-adversarial-v3
+          path: |
+            wastewater_safe_envelope_findings_v3.json
+            wastewater_safe_envelope_temporal_predictions_v3.csv
+            wastewater_safe_envelope_snapshot_sample_v3.csv
+            WASTEWATER_SAFE_ENVELOPE_VERDICT_v3.txt

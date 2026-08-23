@@ -36,3 +36,4 @@ jobs:
             grid_predictions_v1.csv
             grid_matched_pairs_v1.csv
             GRID_EXACT_MANEUVERABILITY_VERDICT_v1.txt
+# execution trigger after protocol freeze

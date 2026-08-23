@@ -3,13 +3,57 @@ from enum import IntEnum
 import json
 
 
+class EvidenceMode(IntEnum):
+    DESCRIPTIVE = 0
+    ASSOCIATIONAL = 1
+    PREDICTIVE = 2
+    MECHANISTIC = 3
+    CAUSAL = 4
+
+
+class ReplicationDepth(IntEnum):
+    NONE = 0
+    REEXECUTION = 1
+    REPRODUCTION = 2
+    INDEPENDENT_REPLICATION = 3
+
+
+class GeneralizationBreadth(IntEnum):
+    NONE = 0
+    SAME_DOMAIN_TRANSFER = 1
+    CROSS_DOMAIN = 2
+
+
 class ClaimLevel(IntEnum):
+    # Compatibility/reporting labels only. Authorization is not computed by
+    # ordinal comparison across this enum.
     OBSERVED = 0
     ASSOCIATION_SUPPORTED = 1
     PREDICTIVE_INCREMENT_SUPPORTED = 2
     REPLICATED = 3
     GENERALIZED = 4
     CAUSAL = 5
+
+
+@dataclass(frozen=True)
+class ClaimEntitlement:
+    evidence_mode: EvidenceMode
+    replication_depth: ReplicationDepth = ReplicationDepth.NONE
+    generalization_breadth: GeneralizationBreadth = GeneralizationBreadth.NONE
+    scope: str = "DECLARED_SCOPE"
+
+    def report_level(self) -> ClaimLevel:
+        if self.evidence_mode == EvidenceMode.CAUSAL:
+            return ClaimLevel.CAUSAL
+        if self.generalization_breadth > GeneralizationBreadth.NONE:
+            return ClaimLevel.GENERALIZED
+        if self.replication_depth >= ReplicationDepth.INDEPENDENT_REPLICATION:
+            return ClaimLevel.REPLICATED
+        if self.evidence_mode == EvidenceMode.PREDICTIVE:
+            return ClaimLevel.PREDICTIVE_INCREMENT_SUPPORTED
+        if self.evidence_mode == EvidenceMode.ASSOCIATIONAL:
+            return ClaimLevel.ASSOCIATION_SUPPORTED
+        return ClaimLevel.OBSERVED
 
 
 LIFECYCLE = [
@@ -34,9 +78,27 @@ class EvidenceState:
     threshold_locked: bool
     contradiction_clear: bool
     qualification_passed: bool
+    evidence_mode: EvidenceMode = EvidenceMode.DESCRIPTIVE
+    replication_depth: ReplicationDepth = ReplicationDepth.NONE
+    generalization_breadth: GeneralizationBreadth = GeneralizationBreadth.NONE
+    scope: str = "DECLARED_SCOPE"
+    causal_design: bool = False
     replicated: bool = False
     generalized: bool = False
-    causal_design: bool = False
+
+    def normalized_replication_depth(self) -> ReplicationDepth:
+        if self.replication_depth > ReplicationDepth.NONE:
+            return self.replication_depth
+        if self.replicated:
+            return ReplicationDepth.INDEPENDENT_REPLICATION
+        return ReplicationDepth.NONE
+
+    def normalized_generalization_breadth(self) -> GeneralizationBreadth:
+        if self.generalization_breadth > GeneralizationBreadth.NONE:
+            return self.generalization_breadth
+        if self.generalized:
+            return GeneralizationBreadth.SAME_DOMAIN_TRANSFER
+        return GeneralizationBreadth.NONE
 
 
 def fail_closed(e: EvidenceState) -> bool:
@@ -52,21 +114,40 @@ def fail_closed(e: EvidenceState) -> bool:
     return not all(required)
 
 
-def entitlement(e: EvidenceState) -> ClaimLevel:
+def entitlement(e: EvidenceState) -> ClaimEntitlement:
     if fail_closed(e):
-        return ClaimLevel.OBSERVED
-    level = ClaimLevel.PREDICTIVE_INCREMENT_SUPPORTED
-    if e.replicated:
-        level = ClaimLevel.REPLICATED
-    if e.replicated and e.generalized:
-        level = ClaimLevel.GENERALIZED
-    if e.replicated and e.generalized and e.causal_design:
-        level = ClaimLevel.CAUSAL
-    return level
+        return ClaimEntitlement(EvidenceMode.DESCRIPTIVE, scope=e.scope)
+
+    mode = e.evidence_mode
+
+    if e.causal_design:
+        mode = EvidenceMode.CAUSAL
+    elif mode == EvidenceMode.CAUSAL:
+        mode = EvidenceMode.DESCRIPTIVE
+
+    return ClaimEntitlement(
+        evidence_mode=mode,
+        replication_depth=e.normalized_replication_depth(),
+        generalization_breadth=e.normalized_generalization_breadth(),
+        scope=e.scope,
+    )
 
 
-def authorize(e: EvidenceState, claim: ClaimLevel) -> bool:
-    return claim <= entitlement(e)
+def authorize(e: EvidenceState, claim: ClaimEntitlement) -> bool:
+    allowed = entitlement(e)
+    if claim.scope != allowed.scope:
+        return False
+    if claim.evidence_mode > allowed.evidence_mode:
+        return False
+    if claim.replication_depth > allowed.replication_depth:
+        return False
+    if claim.generalization_breadth > allowed.generalization_breadth:
+        return False
+    return True
+
+
+def report_level(e: EvidenceState) -> ClaimLevel:
+    return entitlement(e).report_level()
 
 
 def lifecycle_transition_allowed(source: str, target: str) -> bool:
@@ -80,39 +161,142 @@ def run_case(name, condition):
 
 
 def main():
-    base = EvidenceState(True, True, True, True, True, True, True)
-    replicated = EvidenceState(True, True, True, True, True, True, True, replicated=True)
-    generalized = EvidenceState(True, True, True, True, True, True, True, replicated=True, generalized=True)
-    causal = EvidenceState(True, True, True, True, True, True, True, replicated=True, generalized=True, causal_design=True)
-    missing_provenance = EvidenceState(True, True, True, False, True, True, True)
-    threshold_drift = EvidenceState(True, True, True, True, False, True, True)
-    contradicted = EvidenceState(True, True, True, True, True, False, True)
+    predictive = EvidenceState(
+        True, True, True, True, True, True, True,
+        evidence_mode=EvidenceMode.PREDICTIVE,
+    )
+    replicated = EvidenceState(
+        True, True, True, True, True, True, True,
+        evidence_mode=EvidenceMode.PREDICTIVE,
+        replication_depth=ReplicationDepth.INDEPENDENT_REPLICATION,
+    )
+    generalized = EvidenceState(
+        True, True, True, True, True, True, True,
+        evidence_mode=EvidenceMode.PREDICTIVE,
+        replication_depth=ReplicationDepth.INDEPENDENT_REPLICATION,
+        generalization_breadth=GeneralizationBreadth.SAME_DOMAIN_TRANSFER,
+    )
+    causal = EvidenceState(
+        True, True, True, True, True, True, True,
+        evidence_mode=EvidenceMode.CAUSAL,
+        causal_design=True,
+    )
+    missing_provenance = EvidenceState(
+        True, True, True, False, True, True, True,
+        evidence_mode=EvidenceMode.PREDICTIVE,
+    )
+    threshold_drift = EvidenceState(
+        True, True, True, True, False, True, True,
+        evidence_mode=EvidenceMode.PREDICTIVE,
+    )
+    contradicted = EvidenceState(
+        True, True, True, True, True, False, True,
+        evidence_mode=EvidenceMode.PREDICTIVE,
+    )
 
     tests = [
         run_case("valid_next_stage_advances", lifecycle_transition_allowed("DESIGN_FROZEN", "EXECUTING")),
         run_case("stage_skip_blocked", not lifecycle_transition_allowed("DESIGN_FROZEN", "RESULT_AVAILABLE")),
         run_case("reverse_transition_blocked", not lifecycle_transition_allowed("RESULT_AVAILABLE", "EXECUTING")),
-        run_case("qualified_evidence_allows_bounded_claim", authorize(base, ClaimLevel.PREDICTIVE_INCREMENT_SUPPORTED)),
-        run_case("qualified_evidence_blocks_replication_overclaim", not authorize(base, ClaimLevel.REPLICATED)),
-        run_case("replication_expands_entitlement", authorize(replicated, ClaimLevel.REPLICATED)),
-        run_case("replication_alone_blocks_generalization", not authorize(replicated, ClaimLevel.GENERALIZED)),
-        run_case("generalization_requires_replication_and_transfer", authorize(generalized, ClaimLevel.GENERALIZED)),
-        run_case("noncausal_generalization_blocks_causal_claim", not authorize(generalized, ClaimLevel.CAUSAL)),
-        run_case("causal_claim_requires_causal_design", authorize(causal, ClaimLevel.CAUSAL)),
-        run_case("missing_provenance_fails_closed", fail_closed(missing_provenance) and entitlement(missing_provenance) == ClaimLevel.OBSERVED),
-        run_case("posthoc_threshold_drift_fails_closed", fail_closed(threshold_drift) and entitlement(threshold_drift) == ClaimLevel.OBSERVED),
-        run_case("contradiction_contracts_entitlement", fail_closed(contradicted) and entitlement(contradicted) == ClaimLevel.OBSERVED),
-        run_case("negative_evidence_cannot_silently_preserve_strong_claim", not authorize(contradicted, ClaimLevel.PREDICTIVE_INCREMENT_SUPPORTED)),
+        run_case(
+            "qualified_predictive_evidence_allows_bounded_predictive_claim",
+            authorize(predictive, ClaimEntitlement(EvidenceMode.PREDICTIVE)),
+        ),
+        run_case(
+            "qualified_predictive_evidence_blocks_replication_overclaim",
+            not authorize(
+                predictive,
+                ClaimEntitlement(
+                    EvidenceMode.PREDICTIVE,
+                    replication_depth=ReplicationDepth.INDEPENDENT_REPLICATION,
+                ),
+            ),
+        ),
+        run_case(
+            "replication_expands_replication_dimension",
+            authorize(
+                replicated,
+                ClaimEntitlement(
+                    EvidenceMode.PREDICTIVE,
+                    replication_depth=ReplicationDepth.INDEPENDENT_REPLICATION,
+                ),
+            ),
+        ),
+        run_case(
+            "replication_alone_blocks_generalization_dimension",
+            not authorize(
+                replicated,
+                ClaimEntitlement(
+                    EvidenceMode.PREDICTIVE,
+                    replication_depth=ReplicationDepth.INDEPENDENT_REPLICATION,
+                    generalization_breadth=GeneralizationBreadth.SAME_DOMAIN_TRANSFER,
+                ),
+            ),
+        ),
+        run_case(
+            "generalization_requires_transfer_evidence",
+            authorize(
+                generalized,
+                ClaimEntitlement(
+                    EvidenceMode.PREDICTIVE,
+                    replication_depth=ReplicationDepth.INDEPENDENT_REPLICATION,
+                    generalization_breadth=GeneralizationBreadth.SAME_DOMAIN_TRANSFER,
+                ),
+            ),
+        ),
+        run_case(
+            "noncausal_generalization_blocks_causal_dimension",
+            not authorize(generalized, ClaimEntitlement(EvidenceMode.CAUSAL)),
+        ),
+        run_case(
+            "bounded_causal_claim_requires_causal_design_not_generalization",
+            authorize(causal, ClaimEntitlement(EvidenceMode.CAUSAL)),
+        ),
+        run_case(
+            "missing_provenance_fails_closed",
+            fail_closed(missing_provenance) and report_level(missing_provenance) == ClaimLevel.OBSERVED,
+        ),
+        run_case(
+            "posthoc_threshold_drift_fails_closed",
+            fail_closed(threshold_drift) and report_level(threshold_drift) == ClaimLevel.OBSERVED,
+        ),
+        run_case(
+            "contradiction_contracts_entitlement",
+            fail_closed(contradicted) and report_level(contradicted) == ClaimLevel.OBSERVED,
+        ),
+        run_case(
+            "negative_evidence_cannot_silently_preserve_strong_claim",
+            not authorize(contradicted, ClaimEntitlement(EvidenceMode.PREDICTIVE)),
+        ),
+        run_case(
+            "qualification_alone_does_not_imply_prediction",
+            report_level(EvidenceState(True, True, True, True, True, True, True)) == ClaimLevel.OBSERVED,
+        ),
+        run_case(
+            "association_and_prediction_are_distinct",
+            report_level(
+                EvidenceState(
+                    True, True, True, True, True, True, True,
+                    evidence_mode=EvidenceMode.ASSOCIATIONAL,
+                )
+            ) == ClaimLevel.ASSOCIATION_SUPPORTED,
+        ),
     ]
 
     passed = sum(t["pass"] for t in tests)
     verdict = "OPERATIONAL_CORE_CONFIRMED" if passed == len(tests) else "FAIL"
     result = {
-        "instrument": "EPISTEMIC_CONTROL_PLANE_v1",
+        "instrument": "EPISTEMIC_CONTROL_PLANE_v1_MULTIDIMENSIONAL_ENTITLEMENT",
         "tests": tests,
         "passed": passed,
         "total": len(tests),
         "verdict": verdict,
+        "entitlement_dimensions": [
+            "evidence_mode",
+            "replication_depth",
+            "generalization_breadth",
+            "scope",
+        ],
         "scope": "formal operational core only; external scientific validation and novelty remain unclaimed",
     }
     print(json.dumps(result, indent=2))

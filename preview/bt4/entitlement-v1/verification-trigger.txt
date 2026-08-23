@@ -1,1 +1,1 @@
-BT4 entitlement preview verification trigger · 2026-08-23 · transport-diagnostic rerun
+BT4 entitlement preview verification trigger · 2026-08-23 · fast-transport diagnostic

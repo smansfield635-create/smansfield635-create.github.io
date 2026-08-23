@@ -65,7 +65,7 @@
 
   <script>
     window.__AUDRALIA_LIVE_PLANETARY_INTEGRATION__ = Object.freeze({
-      schema: 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v3',
+      schema: 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v4',
       legacyPlanetActive: false,
       canonicalWeatherSpatialLod: true,
       weatherPresentationReconciliation: true,
@@ -74,16 +74,12 @@
       fap1XYZVolumetricDepth: true,
       fap1OrganizedWeatherCandidate: true,
       directDenseCloudCoverage: true,
-      loadingContinuity: 'AUDRALIA_LOADING_CONTINUITY_v4'
+      loadingContinuity: 'AUDRALIA_LOADING_CONTINUITY_v4',
+      startupArchitecture: 'RENDERER_FIRST_PROGRESSIVE_ENRICHMENT_v1'
     });
   </script>
-  <script type="module" src="./acf1-cloud-presentation-v1.mjs?cb=ACF1_v3"></script>
-  <script type="module" src="./fap1-xyz-volumetric-depth-v1.mjs?cb=FAP1_XYZ_DEPTH_v2"></script>
-  <script type="module" src="./fap1-orbital-support-tuning-v1.mjs?cb=DIRECT_DENSITY_v4"></script>
-  <script type="module" src="./fap1-weather-presentation-v1.mjs?cb=FAP1_INTEGRATED_COVERAGE_v5"></script>
   <script type="module" src="./weather-presentation-reconciliation/loader-progress.mjs?cb=AUDRALIA_LOADING_CONTINUITY_v4"></script>
   <script type="module" src="./weather-presentation-reconciliation/app.mjs?cb=c7aa1038b54b29b2"></script>
-  <script type="module" src="./celestial-bootstrap-v2.mjs?cb=AUDRALIA_CELESTIAL_BOOTSTRAP_v2"></script>
-  <script type="module" src="./composition-authority-repair-v1.mjs?cb=COMPOSITION_AUTHORITY_v1"></script>
+  <script type="module" src="./progressive-enrichment-bootstrap-v1.mjs?cb=RENDERER_FIRST_PROGRESSIVE_ENRICHMENT_v1"></script>
 </body>
 </html>

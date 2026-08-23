@@ -1,0 +1,22 @@
+{
+  "schema": "DGB_BRAIN_V10_G0_FREEZE_v1",
+  "status": "FROZEN_BASELINE",
+  "baselineCommit": "e988f9109a6aa9e63534fcf38a45403a90274fcb",
+  "geometryAsset": "assets/compass/brain-v10-continuous-surface-g0.js",
+  "inspectionRoute": "inspection/compass/brain-v10-continuous/index.html",
+  "rendererIdentity": "COMPASS_BRAIN_V10_CONTINUOUS_SURFACE_G0_v1",
+  "architecture": "CONTINUOUS_DISPLACED_SURFACE",
+  "governingLaw": [
+    "NO_EXPOSED_CORTICAL_TUBES",
+    "NO_FLOATING_CORTICAL_PARTS",
+    "CONTINUOUS_CEREBRAL_TISSUE_AT_ALL_INSPECTION_ANGLES"
+  ],
+  "qualification": {
+    "staticAssetIdentity": "PASS",
+    "renderedQualification": "PASS",
+    "interactionQualification": "PASS",
+    "auditDerivedRootCompass": "SEPARATE_FAILURE_NOT_ATTRIBUTED_TO_BRAIN_V10"
+  },
+  "nextProductionBoundary": "V10_G1_GROSS_PROPORTION_AND_INFERIOR_ANATOMY",
+  "mutationPolicy": "G0 files remain immutable; all progression occurs in successor assets and routes."
+}

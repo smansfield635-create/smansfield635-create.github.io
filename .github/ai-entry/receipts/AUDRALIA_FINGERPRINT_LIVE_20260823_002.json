@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "AUDRALIA_FINGERPRINT_LIVE_20260823_002",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 1820,
+  "requestBranch": "ai-dispatch-request-audralia-fingerprint-live-20260823-002",
+  "requestCommit": "73ba47dc32e480299ce175a9cd26464581ad7cd5",
+  "currentMainSha": "aa51aeb1a043d12c46eebdf1e39f66dd2a9176e5",
+  "bridgeRunId": "32670881578",
+  "error": "GitHub API 422 /repos/smansfield635-create/smansfield635-create.github.io/actions/workflows/pages-exact-head-deploy-v3.yml/dispatches: {\"message\":\"Workflow does not have 'workflow_dispatch' trigger\",\"documentation_url\":\"https://docs.github.com/rest/actions/workflows#create-a-workflow-dispatch-event\",\"status\":\"422\"}",
+  "failedAt": "2026-08-23T22:33:43.921Z"
+}

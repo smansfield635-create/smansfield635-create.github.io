@@ -55,7 +55,7 @@ assert(compass.releaseClassification?.RUNTIME_OR_NEW_DEVELOPMENT?.requiredClosur
 assert(compass.releaseClassification?.RUNTIME_OR_NEW_DEVELOPMENT?.canonicalIntakeRequired === true, 'Compass runtime/new development must require canonical intake');
 
 const pagesDispatch = dispatchCapability.capabilities?.PAGES_EXACT_HEAD_DEPLOY;
-assert(pagesDispatch?.workflow === 'pages-direct-deploy.yml', 'AI dispatch Pages workflow drifted');
+assert(pagesDispatch?.workflow === 'pages-exact-head-deploy-v2.yml', 'AI dispatch Pages workflow drifted');
 assert(pagesDispatch?.ref === 'main', 'AI dispatch Pages ref must remain main');
 assert(pagesDispatch?.inputPolicy?.target_sha?.source === 'CURRENT_MAIN_SHA', 'AI dispatch must bind target_sha to current main');
 assert(pagesDispatch?.inputPolicy?.target_sha?.userOverrideAllowed === false, 'AI dispatch target_sha must not be user-overridable');

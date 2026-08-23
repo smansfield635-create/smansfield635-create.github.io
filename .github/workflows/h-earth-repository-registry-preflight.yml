@@ -5,6 +5,8 @@ on:
     paths:
       - 'h-earth-3d/**'
       - '!h-earth-3d/registry/**'
+      - '!h-earth-3d/experience-anchor/evidence/**'
+      - '!h-earth-3d/experience-anchor/receipts/**'
       - '!h-earth-3d/AGENTS.md'
       - 'showroom/globe/h-earth/**'
       - '!showroom/globe/h-earth/AGENTS.md'
@@ -12,6 +14,8 @@ on:
     paths:
       - 'h-earth-3d/**'
       - '!h-earth-3d/registry/**'
+      - '!h-earth-3d/experience-anchor/evidence/**'
+      - '!h-earth-3d/experience-anchor/receipts/**'
       - '!h-earth-3d/AGENTS.md'
       - 'showroom/globe/h-earth/**'
       - '!showroom/globe/h-earth/AGENTS.md'
@@ -46,8 +50,14 @@ jobs:
             git show --pretty='' --name-only "$CURRENT_SHA" > /tmp/all-changed-paths.txt
           fi
 
+          # Experience-anchor evidence and acceptance receipts are generated
+          # qualification records. They are governed by the dedicated hard
+          # Experience Anchor Gate and are not product/projection paths in the
+          # static repository registry. Keep the registry preflight focused on
+          # governed implementation paths while retaining fail-closed anchor
+          # validation for these dynamic evidence objects.
           grep -E '^(h-earth-3d/|showroom/globe/h-earth/)' /tmp/all-changed-paths.txt \
-            | grep -Ev '^(h-earth-3d/registry/|h-earth-3d/AGENTS\.md$|showroom/globe/h-earth/AGENTS\.md$)' \
+            | grep -Ev '^(h-earth-3d/registry/|h-earth-3d/experience-anchor/(evidence|receipts)/|h-earth-3d/AGENTS\.md$|showroom/globe/h-earth/AGENTS\.md$)' \
             | sort -u > /tmp/h-earth-changed-paths.txt || true
 
           cat /tmp/h-earth-changed-paths.txt

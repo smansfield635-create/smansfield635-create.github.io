@@ -1,5 +1,5 @@
 @layer laws-room-carousel {
-  [data-laws-room-carousel] {
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] {
     --lrc-accent: #d7bb82;
     --lrc-text: #edf2f7;
     --lrc-muted: #9ba8b3;
@@ -13,34 +13,49 @@
     isolation: isolate;
   }
 
-  [data-lrc-viewport] {
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-viewport] {
     position: relative;
     min-height: inherit;
     perspective: 1800px;
     perspective-origin: 50% 45%;
     touch-action: pan-y;
-    user-select: none;
+    user-select: text;
     cursor: grab;
+    outline: none;
   }
 
-  [data-lrc-viewport][data-dragging="true"] { cursor: grabbing; }
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-viewport]:focus-visible {
+    outline: 1px solid rgba(215, 187, 130, .72);
+    outline-offset: -2px;
+  }
 
-  [data-lrc-track] {
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-viewport][data-dragging="true"] {
+    cursor: grabbing;
+    user-select: none;
+  }
+
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-track] {
     position: absolute;
     inset: 0;
     transform-style: preserve-3d;
   }
 
-  [data-lrc-card] {
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] {
     --lrc-offset: 0;
     --lrc-depth-factor: 1;
     --lrc-scale: 1;
     --lrc-opacity: 1;
+    box-sizing: border-box;
     position: absolute;
     left: 50%;
     top: 50%;
-    width: min(78vw, 34rem);
+    width: min(78vw, 42rem);
     min-height: min(30rem, 60vh);
+    max-height: min(72vh, 48rem);
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    padding: clamp(1rem, 2.4vw, 1.65rem);
     transform:
       translate(-50%, -50%)
       translateX(calc(var(--lrc-offset) * var(--lrc-step)))
@@ -58,34 +73,36 @@
     will-change: transform, opacity;
   }
 
-  [data-lrc-card][data-active="true"] {
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card][data-active="true"] {
     z-index: 5;
     opacity: 1;
     border-color: rgba(215, 187, 130, .58);
     pointer-events: auto;
   }
 
-  [data-lrc-card][data-adjacent="true"] { z-index: 3; }
-  [data-lrc-card][data-distant="true"] { visibility: hidden; }
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card][data-adjacent="true"] { z-index: 3; }
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card][data-distant="true"] { visibility: hidden; }
 
-  [data-lrc-card] :is(a, button, input, select, textarea, summary) { pointer-events: auto; }
-  [data-lrc-card]:not([data-active="true"]) :is(a, button, input, select, textarea, summary) { pointer-events: none; }
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] :is(a, button, input, select, textarea, summary) { pointer-events: auto; }
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card]:not([data-active="true"]) :is(a, button, input, select, textarea, summary) { pointer-events: none; }
 
-  [data-lrc-live] {
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-live] {
     position: absolute;
     z-index: 10;
     left: 50%;
     bottom: 1rem;
     transform: translateX(-50%);
     margin: 0;
+    max-width: min(70vw, 36rem);
     color: var(--lrc-muted);
     font-size: .78rem;
     letter-spacing: .08em;
+    text-align: center;
     text-transform: uppercase;
     pointer-events: none;
   }
 
-  [data-lrc-controls] {
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-controls] {
     position: absolute;
     z-index: 12;
     inset: auto 1rem 1rem auto;
@@ -93,33 +110,47 @@
     gap: .5rem;
   }
 
-  [data-lrc-controls] button {
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-controls] button {
     min-width: 2.75rem;
     min-height: 2.75rem;
     border: 1px solid rgba(215, 187, 130, .42);
     border-radius: 999px;
     background: rgba(8, 11, 15, .88);
     color: var(--lrc-accent);
+    cursor: pointer;
   }
 
   [data-lrc-static] { display: block; }
   .lr-js [data-lrc-static] { display: none; }
 
   @media (max-width: 760px) {
-    [data-laws-room-carousel] {
+    html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] {
       --lrc-step: clamp(12rem, 72vw, 19rem);
       --lrc-depth: 4rem;
       min-height: clamp(34rem, 72vh, 44rem);
     }
-    [data-lrc-card] { width: min(86vw, 29rem); min-height: min(29rem, 62vh); }
+    html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] {
+      width: min(86vw, 32rem);
+      min-height: min(29rem, 62vh);
+      max-height: min(68vh, 42rem);
+      padding: 1rem;
+    }
+    html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-live] {
+      left: 1rem;
+      right: 7rem;
+      bottom: 1.15rem;
+      transform: none;
+      max-width: none;
+      text-align: left;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    [data-lrc-card] { transition: none; }
+    html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] { transition: none; }
   }
 
   @media (forced-colors: active) {
-    [data-lrc-card] { border: 1px solid CanvasText; background: Canvas; color: CanvasText; }
-    [data-lrc-controls] button { border: 1px solid ButtonText; }
+    html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] { border: 1px solid CanvasText; background: Canvas; color: CanvasText; }
+    html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-controls] button { border: 1px solid ButtonText; }
   }
 }

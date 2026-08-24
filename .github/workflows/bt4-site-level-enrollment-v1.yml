@@ -12,12 +12,14 @@ on:
       - 'showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs'
       - 'showroom/globe/audralia/diagnostic/index.inspection.authority.js'
       - '.github/ai-router/publication-release-contract.v1.json'
+      - '.github/ai-router/publication-surfaces/evidence.json'
       - '.github/workflows/bt4-site-level-enrollment-v1.yml'
   push:
     branches: [main]
     paths:
       - 'evidence/readiness/bt4-site-governance/**'
       - 'research/bt4/verify-site-level-enrollment.v1.mjs'
+      - '.github/ai-router/publication-surfaces/evidence.json'
       - '.github/workflows/bt4-site-level-enrollment-v1.yml'
   workflow_dispatch:
 
@@ -42,5 +44,6 @@ jobs:
             /showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs
             /showroom/globe/audralia/diagnostic/index.inspection.authority.js
             /.github/ai-router/publication-release-contract.v1.json
+            /.github/ai-router/publication-surfaces/evidence.json
       - name: Verify four-domain site-level enrollment under unchanged kernel
         run: node research/bt4/verify-site-level-enrollment.v1.mjs

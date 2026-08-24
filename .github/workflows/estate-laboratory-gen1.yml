@@ -1,0 +1,74 @@
+name: Estate Laboratory Gen1 Qualification
+
+on:
+  pull_request:
+    paths:
+      - 'showroom/globe/audralia/disposition/index.html'
+      - 'showroom/globe/audralia/disposition/laboratory.js'
+      - 'tools/estate-laboratory-gen1-verify.mjs'
+      - 'tools/h-earth-experience-anchor-gate.mjs'
+      - '.github/workflows/estate-laboratory-gen1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  responsive-laboratory:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify static laboratory contract
+        run: node tools/estate-laboratory-gen1-verify.mjs --static
+
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Start exact candidate server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/estate-laboratory-http.log 2>&1 &
+          echo $! > /tmp/estate-laboratory-http.pid
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/disposition/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/estate-laboratory-http.log || true
+          exit 1
+
+      - name: Verify phone tablet and desktop operation
+        env:
+          BASE_URL: http://127.0.0.1:4173
+          OUTPUT_DIR: estate-laboratory-gen1-verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          test -n "$CHROME_PATH"
+          node tools/estate-laboratory-gen1-verify.mjs --runtime
+
+      - name: Upload qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: estate-laboratory-gen1-verification-${{ github.run_id }}-${{ github.run_attempt }}
+          path: estate-laboratory-gen1-verification/
+          if-no-files-found: warn
+          retention-days: 30

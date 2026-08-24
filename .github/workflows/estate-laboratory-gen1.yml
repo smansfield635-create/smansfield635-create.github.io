@@ -1,34 +1,150 @@
-name: Estate Laboratory Gen1 Qualification
+name: Estate Laboratory Successor 004 Exact-Head Adoption
 
 on:
-  pull_request:
+  push:
+    branches:
+      - 'ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_004'
     paths:
-      - 'showroom/globe/audralia/disposition/index.html'
-      - 'showroom/globe/audralia/disposition/laboratory.js'
-      - 'tools/estate-laboratory-gen1-verify.mjs'
-      - 'tools/h-earth-experience-anchor-gate.mjs'
       - '.github/workflows/estate-laboratory-gen1.yml'
-  workflow_dispatch:
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
-  responsive-laboratory:
-    runs-on: ubuntu-latest
+  construct-qualify-adopt:
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    runs-on: ubuntu-24.04
     steps:
-      - name: Check out exact candidate
+      - name: Check out exact admitted branch
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.ref_name }}
           fetch-depth: 0
+          persist-credentials: true
 
       - name: Set up Node 22
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Verify static laboratory contract
-        run: node tools/estate-laboratory-gen1-verify.mjs --static
+      - name: Revalidate exact governing head and fetch inspected predecessor
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='558f8301f3408db5f2850a8c4587c58f60cb6193'
+          test "$GITHUB_REF_NAME" = 'ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_004'
+          git fetch --no-tags origin main ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_002
+          test "$(git rev-parse origin/main^{commit})" = "$BASE"
+          test "$(git merge-base HEAD "$BASE")" = "$BASE"
+
+      - name: Construct exact candidate from inspected allowed bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          STALE='232d673faa0cb4df5bd6542fe57242371f8c9633'
+          git cat-file -e "$STALE^{commit}"
+          for p in \
+            index.html \
+            site-guide/index.html \
+            instruments/index.html \
+            instruments/laboratory.js \
+            showroom/globe/audralia/disposition/index.html \
+            showroom/globe/audralia/diagnostic/index.html \
+            showroom/globe/h-earth/diagnostic/index.html \
+            showroom/globe/hearth/diagnostic/index.html \
+            tools/estate-laboratory-gen1-verify.mjs \
+            tools/h-earth-experience-anchor-gate.mjs; do
+            mkdir -p "$(dirname "$p")"
+            git show "$STALE:$p" > "$p"
+          done
+          rm -f showroom/globe/audralia/disposition/laboratory.js
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('coherence-diagnostic/index.html')
+          s=p.read_text()
+          old='''      <nav class="route-links" aria-label="Route links">
+        <a href="/">Compass</a>
+        <a href="/showroom/globe/">Mirrorland</a>
+        <a href="/gauges/">Triple G</a>
+      </nav>'''
+          new='''      <nav class="route-links" aria-label="Route links">
+        <a href="/">Compass</a>
+        <a href="/showroom/globe/">Mirrorland</a>
+        <a href="/instruments/" data-estate-laboratory-return>Estate Laboratory</a>
+        <a href="/gauges/">Triple G</a>
+      </nav>'''
+          if '<a href="/instruments/" data-estate-laboratory-return>Estate Laboratory</a>' not in s:
+              count=s.count(old)
+              if count != 1:
+                  raise SystemExit(f'COHERENCE_DIAGNOSTIC_RETURN_PATCH_MATCH_COUNT:{count}')
+              p.write_text(s.replace(old,new,1))
+          PY
+          git diff --check
+          test "$(git diff --numstat -- coherence-diagnostic/index.html | awk '{print $1":"$2}')" = '1:0'
+
+      - name: Enforce admitted path boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          allowed='^(index.html|site-guide/index.html|instruments/index.html|instruments/laboratory.js|showroom/globe/audralia/disposition/index.html|showroom/globe/audralia/disposition/laboratory.js|showroom/globe/audralia/diagnostic/index.html|showroom/globe/h-earth/diagnostic/index.html|showroom/globe/hearth/diagnostic/index.html|coherence-diagnostic/index.html|tools/estate-laboratory-gen1-verify.mjs|tools/h-earth-experience-anchor-gate.mjs|\.github/workflows/estate-laboratory-gen1.yml)$'
+          changed="$(git diff --name-only)"
+          test -n "$changed"
+          if printf '%s\n' "$changed" | grep -Ev "$allowed"; then
+            echo 'ESTATE_LABORATORY_OUT_OF_SCOPE_PATH' >&2
+            exit 1
+          fi
+          for prohibited in showroom/globe/audralia/index.html showroom/globe/audralia/render.js showroom/globe/audralia/world_kernel.js evidence/readiness/governance-gen3-entitlement/evidence-identity.v1.json; do
+            if printf '%s\n' "$changed" | grep -Fxq "$prohibited"; then
+              echo "ESTATE_LABORATORY_PROHIBITED_PATH:$prohibited" >&2
+              exit 1
+            fi
+          done
+
+      - name: Commit exact candidate locally
+        id: candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A -- \
+            index.html \
+            site-guide/index.html \
+            instruments/index.html \
+            instruments/laboratory.js \
+            showroom/globe/audralia/disposition/index.html \
+            showroom/globe/audralia/disposition/laboratory.js \
+            showroom/globe/audralia/diagnostic/index.html \
+            showroom/globe/h-earth/diagnostic/index.html \
+            showroom/globe/hearth/diagnostic/index.html \
+            coherence-diagnostic/index.html \
+            tools/estate-laboratory-gen1-verify.mjs \
+            tools/h-earth-experience-anchor-gate.mjs
+          git commit -m 'Estate Laboratory: construct exact-head successor 004 candidate'
+          sha="$(git rev-parse HEAD)"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          echo "ESTATE_LABORATORY_CANDIDATE_HEAD=$sha"
+
+      - name: Verify exact candidate static contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p estate-laboratory-gen1-verification
+          node tools/estate-laboratory-gen1-verify.mjs --static | tee estate-laboratory-gen1-verification/static-verification.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const r=JSON.parse(fs.readFileSync('estate-laboratory-gen1-verification/static-verification.json','utf8'));
+          if(r.result!=='PASS')process.exit(1);
+          if(r.canonicalLaboratoryRoute!=='/instruments/')process.exit(1);
+          if(r.audraliaCommandCockpitRestored!==true)process.exit(1);
+          if(r.compassInstrumentsIdentityReconciled!==true)process.exit(1);
+          if(r.siteGuideInstrumentsIdentityReconciled!==true)process.exit(1);
+          if(r.deepChamberReturnSemantics!==true)process.exit(1);
+          if(r.experienceAnchorObservabilityBoundaryPreserved!==true)process.exit(1);
+          if(r.audraliaProductRootProtected!==true)process.exit(1);
+          NODE
 
       - name: Set up Chrome
         uses: browser-actions/setup-chrome@v1
@@ -45,7 +161,7 @@ jobs:
           python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/estate-laboratory-http.log 2>&1 &
           echo $! > /tmp/estate-laboratory-http.pid
           for i in {1..30}; do
-            if curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/disposition/ >/dev/null; then
+            if curl -fsS http://127.0.0.1:4173/instruments/ >/dev/null; then
               exit 0
             fi
             sleep 1
@@ -53,7 +169,7 @@ jobs:
           cat /tmp/estate-laboratory-http.log || true
           exit 1
 
-      - name: Verify phone tablet and desktop operation
+      - name: Verify exact candidate responsive round trip in browser
         env:
           BASE_URL: http://127.0.0.1:4173
           OUTPUT_DIR: estate-laboratory-gen1-verification
@@ -63,12 +179,74 @@ jobs:
           export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
           test -n "$CHROME_PATH"
           node tools/estate-laboratory-gen1-verify.mjs --runtime
+          node - <<'NODE'
+          const fs=require('fs');
+          const r=JSON.parse(fs.readFileSync('estate-laboratory-gen1-verification/receipt.json','utf8'));
+          if(r.result!=='PASS')process.exit(1);
+          if(!Array.isArray(r.deepRoundTrips)||r.deepRoundTrips.length!==4)process.exit(1);
+          if(r.deepRoundTrips.some(x=>x.from!=='/instruments/'||x.returnRoute!=='/instruments/'))process.exit(1);
+          if(r.boundaries?.deepChamberReturnSemantics!==true)process.exit(1);
+          if(r.boundaries?.productionMutationAuthority!==false)process.exit(1);
+          if(r.boundaries?.audraliaProductRootProtected!==true)process.exit(1);
+          NODE
 
-      - name: Upload qualification evidence
+      - name: Revalidate governing head immediately before adoption
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='558f8301f3408db5f2850a8c4587c58f60cb6193'
+          git fetch --no-tags origin main
+          test "$(git rev-parse origin/main^{commit})" = "$BASE"
+          test "$(git merge-base HEAD "$BASE")" = "$BASE"
+          test "$(git rev-parse HEAD)" = '${{ steps.candidate.outputs.sha }}'
+
+      - name: Push exact qualified candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git push origin "HEAD:$GITHUB_REF_NAME"
+
+      - name: Open or resolve exact candidate PR and adopt
+        id: adopt
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANDIDATE_SHA: ${{ steps.candidate.outputs.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          api="https://api.github.com/repos/$GITHUB_REPOSITORY"
+          owner="${GITHUB_REPOSITORY%%/*}"
+          auth=(-H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2022-11-28')
+          pulls="$(curl -fsSL "${auth[@]}" "$api/pulls?state=open&head=$owner:$GITHUB_REF_NAME&base=main")"
+          pr="$(printf '%s' "$pulls" | jq -r '.[0].number // empty')"
+          if [ -z "$pr" ]; then
+            payload="$(jq -n --arg title 'Estate Laboratory: reconcile Instruments navigation and restore Audralia cockpit' --arg head "$GITHUB_REF_NAME" --arg base main --arg body 'Successor operation ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_004. Exact-head browser qualified before adoption. Observation does not grant production mutation authority. Merge does not grant deployment authority.' '{title:$title,head:$head,base:$base,body:$body}')"
+            created="$(curl -fsSL -X POST "${auth[@]}" "$api/pulls" -d "$payload")"
+            pr="$(printf '%s' "$created" | jq -r '.number')"
+          fi
+          git fetch --no-tags origin main
+          test "$(git rev-parse origin/main^{commit})" = '558f8301f3408db5f2850a8c4587c58f60cb6193'
+          remote_head="$(git ls-remote origin "refs/heads/$GITHUB_REF_NAME" | awk '{print $1}')"
+          test "$remote_head" = "$CANDIDATE_SHA"
+          payload="$(jq -n --arg sha "$CANDIDATE_SHA" --arg title 'Estate Laboratory: canonical Instruments navigation reconciliation' '{sha:$sha,merge_method:"merge",commit_title:$title}')"
+          code="$(curl -sS -o "$RUNNER_TEMP/merge.json" -w '%{http_code}' -X PUT "${auth[@]}" "$api/pulls/$pr/merge" -d "$payload")"
+          if [ "$code" != 200 ] || ! jq -e '.merged==true' "$RUNNER_TEMP/merge.json" >/dev/null; then
+            body="$(jq -Rs --arg pr "$pr" --arg sha "$CANDIDATE_SHA" --arg code "$code" '{body:("ESTATE_LABORATORY_004_ADOPTION_HELD\nPR="+$pr+"\nCANDIDATE_HEAD="+$sha+"\nHTTP="+$code+"\nMERGE_RESPONSE="+.)}' < "$RUNNER_TEMP/merge.json")"
+            curl -fsSL -X POST "${auth[@]}" "$api/issues/1968/comments" -d "$body" >/dev/null || true
+            cat "$RUNNER_TEMP/merge.json" >&2
+            exit 1
+          fi
+          merge_sha="$(jq -r '.sha' "$RUNNER_TEMP/merge.json")"
+          echo "pr=$pr" >> "$GITHUB_OUTPUT"
+          echo "merge_sha=$merge_sha" >> "$GITHUB_OUTPUT"
+          body="$(jq -n --arg pr "$pr" --arg candidate "$CANDIDATE_SHA" --arg merge "$merge_sha" '{body:("ESTATE_LABORATORY_004_ADOPTION_RECEIPT\nPR="+$pr+"\nCANDIDATE_HEAD="+$candidate+"\nMERGE_COMMIT="+$merge+"\nQUALIFICATION=PASS\nDEPLOYMENT_AUTHORITY=false")}' )"
+          curl -fsSL -X POST "${auth[@]}" "$api/issues/1968/comments" -d "$body" >/dev/null
+
+      - name: Upload exact-head qualification evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: estate-laboratory-gen1-verification-${{ github.run_id }}-${{ github.run_attempt }}
+          name: estate-laboratory-gen1-successor-004-${{ github.run_id }}-${{ github.run_attempt }}
           path: estate-laboratory-gen1-verification/
           if-no-files-found: warn
           retention-days: 30

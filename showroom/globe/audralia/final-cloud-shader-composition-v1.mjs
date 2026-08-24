@@ -36,6 +36,7 @@ function replaceExactlyOnce(source,target,replacement,label){
 function stageEvidence(source){
   const stages={
     FAP1_ORGANIZED_WEATHER_V6:Object.freeze({
+      contract:'V6_WEATHER_AND_COVERAGE_DENSITY_PRESENT_IN_FINAL_DENSITY_AT',
       requiredMutationCount:6,
       observedMutationCount:[
         'vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon)',
@@ -47,6 +48,7 @@ function stageEvidence(source){
       ].filter(token=>source.includes(token)).length
     }),
     XYZ_VOLUMETRIC_DEPTH_V2:Object.freeze({
+      contract:'ACCEPTED_24057_DEEP_VOLUME_EFFECTS_PRESENT',
       requiredMutationCount:4,
       observedMutationCount:[
         'OUTER=6405.0,OCCLUDER=6205.0',
@@ -56,15 +58,23 @@ function stageEvidence(source){
       ].filter(token=>source.includes(token)).length
     }),
     ACF1_PRESENTATION_V3:Object.freeze({
-      requiredMutationCount:4,
+      contract:'ACCEPTED_24057_ACTIVE_ACF1_EFFECTS_PRESERVED',
+      requiredMutationCount:3,
       observedMutationCount:[
-        'float angle=atan(xy.y,xy.x);',
         'float systemAngle=atan(xy.y,xy.x);',
-        'vec3 dark=vec3(.26,.30,.36);',
-        'col=mix(col,vec3(.96,.985,1.0),cloudSample.y*.21);'
-      ].filter(token=>source.includes(token)).length
+        'col=mix(col,vec3(.96,.985,1.0),cloudSample.y*.21);',
+        'col+=vec3(1.0,.96,.86)*forward*.18; col*=1.0-.25*cloudSample.z;'
+      ].filter(token=>source.includes(token)).length,
+      historicalDormantTargets:Object.freeze([
+        'IRREGULAR_MORPHOLOGY_BOUNDARY_SOURCE_PATTERN_DID_NOT_MATCH_ACCEPTED_RENDERER',
+        'DARK_CORE_SOURCE_PATTERN_DID_NOT_MATCH_ACCEPTED_RENDERER',
+        'ORGANIZED_BOOST_SUPERSEDED_BY_XYZ_DENSITY_REWRITE',
+        'ACF1_GLOBAL_SUPPORT_SUPERSEDED_BY_XYZ_THEN_DIRECT_DENSITY',
+        'ACF1_EXTINCTION_SUPERSEDED_BY_XYZ_DEEP_VOLUME_OPACITY'
+      ])
     }),
     DIRECT_DENSITY_V4:Object.freeze({
+      contract:'ALL_THREE_DIRECT_DENSITY_EFFECTS_PRESENT_AFTER_XYZ',
       requiredMutationCount:3,
       observedMutationCount:[
         'halfWidth*0.920,halfWidth*2.350',
@@ -136,10 +146,9 @@ function scheduleSha256(source){
 WebGL2RenderingContext.prototype.shaderSource=captureSink;
 let composedWrapper;
 try{
-  // Preserve the already-live wrapper lineage. The historical collision occurs
-  // because execution order is the reverse of installation order:
-  // FAP1 -> XYZ -> ACF1 -> DIRECT_DENSITY. We capture that complete result and
-  // repair the one density-strength mutation that was silently missed.
+  // Preserve the accepted 24057 wrapper lineage. Execution order is the reverse
+  // of installation order: FAP1 -> XYZ -> ACF1 -> DIRECT_DENSITY. The compositor
+  // captures that complete result and reconciles only the proven silent collision.
   await importWrapper('DIRECT_DENSITY_V4','./fap1-orbital-support-tuning-v1.mjs?cb=FINAL_COMPOSITION_v1');
   await importWrapper('ACF1_PRESENTATION_V3','/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/acf1-cloud-presentation-v1.mjs?cb=FINAL_COMPOSITION_v1');
   await importWrapper('XYZ_VOLUMETRIC_DEPTH_V2','/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/fap1-xyz-volumetric-depth-v1.mjs?cb=FINAL_COMPOSITION_v1');

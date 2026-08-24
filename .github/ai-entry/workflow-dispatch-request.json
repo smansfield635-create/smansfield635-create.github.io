@@ -1,6 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "audralia-startup-first-visual-c00842b4",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
-  "inputs": {"target_sha":"c00842b45f5e0efa38853229448b128b22521f01"}
+  "requestId": "estate-laboratory-publication-preflight-20260824-002",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "inputs": {
+    "target_sha": "55e6af4cbee08effd3b008d124908d518493d14c",
+    "surface_id": "estate-laboratory"
+  }
 }

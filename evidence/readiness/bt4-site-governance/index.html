@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>BT4 Site Governance · Diamond Gate</title>
+<style>
+:root{color-scheme:dark;font-family:Inter,system-ui,sans-serif;background:#07100f;color:#eef7f4}*{box-sizing:border-box}body{margin:0;padding:32px 20px 72px;background:radial-gradient(circle at 15% 0%,#11302a 0,#07100f 44%);min-height:100vh}main{max-width:1100px;margin:auto}.eyebrow{font-size:.76rem;letter-spacing:.13em;text-transform:uppercase;color:#91c4b4}.note{color:#b8ccc5;line-height:1.55;max-width:850px}.site{font-size:clamp(2.8rem,8vw,6rem);font-weight:800;letter-spacing:-.05em;margin:12px 0 24px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.card{border:1px solid #29433c;border-radius:18px;background:#0a1815;padding:20px}.card h2{margin:4px 0 10px;font-size:1.05rem}.state{font-size:2rem;font-weight:800;margin:8px 0}.reason,.detail{font-size:.88rem;color:#adc3bb;line-height:1.4}.error{color:#ffb7b7;white-space:pre-wrap;margin-top:18px}</style>
+</head>
+<body>
+<main>
+<p class="eyebrow">BT4 · bounded site-level enrollment</p>
+<h1>Public entitlement governance</h1>
+<p class="note">One unchanged entitlement kernel evaluates four materially different live Diamond Gate objects: a scientific claim, the Audralia runtime, the Audralia diagnostic authority, and the exact-head release state. This surface is a bounded architectural proof; it does not claim that every estate surface is already enrolled.</p>
+<div class="site" data-site>LOADING</div>
+<section class="grid" data-grid></section>
+<p class="error" data-error></p>
+</main>
+<script type="module">
+import { evaluateSite } from './site-entitlement.v1.mjs';
+const grid=document.querySelector('[data-grid]');
+try{
+ const result=await evaluateSite();
+ document.querySelector('[data-site]').textContent=result.siteState;
+ document.documentElement.dataset.bt4SiteGovernance='ready';
+ document.documentElement.dataset.bt4SiteState=result.siteState;
+ for(const x of result.objects){
+  const card=document.createElement('article'); card.className='card'; card.dataset.object=x.id; card.dataset.served=x.entitlement.served;
+  card.innerHTML=`<div class="eyebrow">${x.id}</div><h2>${x.label}</h2><div class="state">${x.entitlement.served}</div><div class="reason">${x.entitlement.reason}</div><div class="detail">Requested QUALIFIED · ${x.entitlement.blocked?'blocked':'admitted'}</div>`;
+  grid.append(card);
+ }
+}catch(e){
+ document.querySelector('[data-site]').textContent='RESTRICTED';
+ document.querySelector('[data-error]').textContent=String(e?.message||e);
+ document.documentElement.dataset.bt4SiteGovernance='error';
+}
+</script>
+</body>
+</html>

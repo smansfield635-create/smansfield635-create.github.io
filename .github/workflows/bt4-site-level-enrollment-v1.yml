@@ -1,0 +1,45 @@
+name: BT4 Site-Level Enrollment v1
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'evidence/readiness/bt4-site-governance/**'
+      - 'evidence/readiness/governance-gen3-entitlement/binding.v1.json'
+      - 'preview/bt4/entitlement-v1/entitlement-engine.v1.mjs'
+      - 'research/bt4/verify-site-level-enrollment.v1.mjs'
+      - 'showroom/globe/audralia/index.html'
+      - 'showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs'
+      - 'showroom/globe/audralia/diagnostic/index.inspection.authority.js'
+      - '.github/ai-router/publication-release-contract.v1.json'
+      - '.github/workflows/bt4-site-level-enrollment-v1.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'evidence/readiness/bt4-site-governance/**'
+      - 'research/bt4/verify-site-level-enrollment.v1.mjs'
+      - '.github/workflows/bt4-site-level-enrollment-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  site-invariance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /evidence/readiness/bt4-site-governance/index.html
+            /evidence/readiness/bt4-site-governance/site-entitlement.v1.mjs
+            /evidence/readiness/governance-gen3-entitlement/binding.v1.json
+            /preview/bt4/entitlement-v1/entitlement-engine.v1.mjs
+            /research/bt4/verify-site-level-enrollment.v1.mjs
+            /showroom/globe/audralia/index.html
+            /showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs
+            /showroom/globe/audralia/diagnostic/index.inspection.authority.js
+            /.github/ai-router/publication-release-contract.v1.json
+      - name: Verify four-domain site-level enrollment under unchanged kernel
+        run: node research/bt4/verify-site-level-enrollment.v1.mjs

@@ -1,0 +1,27 @@
+{
+  "schema": "PUBLICATION_FAST_PREFLIGHT_CONTRACT_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "purpose": "Reject release-critical publication defects before production deployment.",
+  "productionRule": "PREFLIGHT_PASS_REQUIRED_BEFORE_PAGES_DEPLOY",
+  "payloadParityRule": "PREFLIGHT_AND_PRODUCTION_MUST_USE_THE_SAME_PAYLOAD_CONSTRUCTION_RUNNER",
+  "verificationReuseRule": "REUSE_TOOLS_PUBLICATION_LIVE_VERIFY_MJS_FOR_STATIC_AND_RUNTIME_CHECKS",
+  "requiredOrder": [
+    "EXACT_SHA",
+    "SURFACE_MANIFEST",
+    "DIFF_SCOPE",
+    "REQUIRED_ASSETS",
+    "ENVIRONMENT_BINDING",
+    "PAYLOAD_BUILD",
+    "STATIC_CHECKS",
+    "RUNTIME_READINESS",
+    "PREFLIGHT_PASS",
+    "PRODUCTION_DEPLOY",
+    "POST_DEPLOY_LIVE_PROOF"
+  ],
+  "receiptSchema": "PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1",
+  "receiptFingerprintFields": ["targetSha", "surfaceId", "manifestSha256", "payloadDigest", "result"],
+  "successResult": "PREFLIGHT_PASS",
+  "deploymentOnFailure": false,
+  "productMutationAuthority": false,
+  "deploymentAuthorityCreated": false
+}

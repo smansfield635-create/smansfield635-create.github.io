@@ -1,0 +1,49 @@
+name: Current Public Condition
+on:
+  pull_request:
+    paths:
+      - 'evidence/index.html'
+      - 'evidence/current-public-condition.css'
+      - 'evidence/current-public-condition.mjs'
+      - 'research/bt4/verify-current-public-condition-live.v1.mjs'
+      - '.github/workflows/current-public-condition-live-v1.yml'
+  workflow_dispatch:
+    inputs:
+      expected_head:
+        description: Exact published commit expected from release marker
+        required: false
+        type: string
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node research/bt4/verify-current-public-condition-live.v1.mjs --static
+  live:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Verify exact-head public condition
+        env:
+          EXPECTED_HEAD: ${{ inputs.expected_head }}
+        run: node research/bt4/verify-current-public-condition-live.v1.mjs --live
+      - uses: actions/upload-artifact@v4
+        with:
+          name: current-public-condition-live-${{ github.run_id }}
+          path: research/bt4/current-public-condition-live-proof.json
+          if-no-files-found: error

@@ -2062,13 +2062,30 @@
       "state": "ADMITTED_LOCKED"
     },
     "a746eff833311b24e633dfed78711b6521e946e9d3b47596ef22a4e535f84a43": {
-      "governingHead": "558f8301f3408db5f2850a8c4587c58f60cb6193",
-      "lockGeneration": 1631,
+      "governingHead": "57302a9b955475f57a14bcd80940eb89d55094d8",
+      "lockGeneration": 1632,
       "lockScope": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_C7",
-      "operationId": "C7_AUTHORITY_LEDGER_PROVENANCE_INTEGRITY_20260824_001",
-      "procedureLocatorDigest": "93204290e6bd0d39045cb8aaec69b542c41da3236bfb39bb883e6ad1b3419ec3",
+      "operationId": "C7_AUTHORITY_LEDGER_PROVENANCE_INTEGRITY_20260824_001_S1_57302A9B",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "558f8301f3408db5f2850a8c4587c58f60cb6193",
+        "lockGeneration": 1631,
+        "lockScope": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_C7",
+        "operationId": "C7_AUTHORITY_LEDGER_PROVENANCE_INTEGRITY_20260824_001",
+        "preservedEvidenceRefs": [
+          "issue:1984",
+          "workflow-run:32780343979",
+          "predecessor-generation:1631",
+          "main-merge:57302a9b955475f57a14bcd80940eb89d55094d8"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "C7_AUTHORITY_PROVENANCE_SUCCESSOR_20260824_001"
+      },
+      "procedureLocatorDigest": "cab6ca01428542f2af639967ddf6158c226ec326de556b85431a7ba59de136e2",
       "released": false,
-      "requestDigest": "0c5de28d68de43062a06e5c648755a7763cd25a4ee0b0fa1703d66f5f68cb1a8",
+      "requestDigest": "b730f6f7a611c865b54941976b6e6b07aea23ec546f70ce837dbd14debc54c85",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "a746eff833311b24e633dfed78711b6521e946e9d3b47596ef22a4e535f84a43",
       "state": "ADMITTED_LOCKED"
@@ -3381,7 +3398,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1631,
+  "lockGeneration": 1632,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -25104,6 +25121,36 @@
         "successorLockScope": "ESTATE_INSTRUMENTS_NAVIGATION_AND_LABORATORY_IDENTITY",
         "successorOperationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_004",
         "transitionId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_003_TO_004"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "558f8301f3408db5f2850a8c4587c58f60cb6193",
+      "lockGeneration": 1631,
+      "lockScope": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_C7",
+      "operationId": "C7_AUTHORITY_LEDGER_PROVENANCE_INTEGRITY_20260824_001",
+      "procedureLocatorDigest": "93204290e6bd0d39045cb8aaec69b542c41da3236bfb39bb883e6ad1b3419ec3",
+      "released": true,
+      "requestDigest": "0c5de28d68de43062a06e5c648755a7763cd25a4ee0b0fa1703d66f5f68cb1a8",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a746eff833311b24e633dfed78711b6521e946e9d3b47596ef22a4e535f84a43",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:1984",
+          "workflow-run:32780343979",
+          "predecessor-generation:1631",
+          "main-merge:57302a9b955475f57a14bcd80940eb89d55094d8"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "57302a9b955475f57a14bcd80940eb89d55094d8",
+        "successorLockGeneration": 1632,
+        "successorLockScope": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_C7",
+        "successorOperationId": "C7_AUTHORITY_LEDGER_PROVENANCE_INTEGRITY_20260824_001_S1_57302A9B",
+        "transitionId": "C7_AUTHORITY_PROVENANCE_SUCCESSOR_20260824_001"
       },
       "terminalDisposition": "SUPERSEDED"
     }

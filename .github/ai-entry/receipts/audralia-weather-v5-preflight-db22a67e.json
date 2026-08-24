@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "audralia-weather-v5-preflight-db22a67e",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 1974,
+  "requestBranch": "ai-dispatch-request-audralia-weather-v5-preflight-db22a67e",
+  "requestCommit": "329d6e02dc2abd296d26536df60c182724c35148",
+  "requestCommitParent": "db22a67efc610298f8796829f57d39032c5010a1",
+  "currentMainSha": "db22a67efc610298f8796829f57d39032c5010a1",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "db22a67efc610298f8796829f57d39032c5010a1",
+    "surface_id": "audralia"
+  },
+  "bridgeRunId": "32776201711",
+  "dispatchedRunId": 32776467105,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/32776467105",
+  "dispatchedRunHeadSha": "db22a67efc610298f8796829f57d39032c5010a1",
+  "dispatchedAt": "2026-08-24T20:53:42.439Z",
+  "resolvedAt": "2026-08-24T20:53:46.181Z"
+}

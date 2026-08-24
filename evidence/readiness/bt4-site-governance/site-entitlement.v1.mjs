@@ -6,6 +6,7 @@ const BASE='/evidence/readiness/bt4-site-governance/';
 async function getJson(url){const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw new Error(`${url} -> ${r.status}`);return r.json()}
 async function getText(url){const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw new Error(`${url} -> ${r.status}`);return r.text()}
 const out=(id,label,state,detail={})=>({id,label,state,entitlement:serveRequestedState('QUALIFIED',state),detail});
+const held=(id,label,error)=>out(id,label,{epoch:1,provenance:false,reproduction:false,evidence:'insufficient',authority:false,receiptEpoch:0},{error:String(error?.message||error||'adapter unavailable')});
 
 export async function claimAdapter(){
   const [registry,benchmark,identity,binding]=await Promise.all([
@@ -90,9 +91,16 @@ export async function releaseAdapter(){
 }
 
 export async function evaluateSite(){
-  const objects=await Promise.all([claimAdapter(),worldAdapter(),diagnosticAdapter(),releaseAdapter()]);
+  const specs=[
+    ['claim','Scientific claim',claimAdapter],
+    ['world','Audralia world/runtime',worldAdapter],
+    ['diagnostic','Audralia diagnostic authority',diagnosticAdapter],
+    ['release','Exact-head public release',releaseAdapter]
+  ];
+  const settled=await Promise.allSettled(specs.map(([, ,adapter])=>adapter()));
+  const objects=settled.map((result,i)=>result.status==='fulfilled'?result.value:held(specs[i][0],specs[i][1],result.reason));
   const siteState=objects.every(x=>x.entitlement.served==='QUALIFIED')?'QUALIFIED':'RESTRICTED';
-  return {schema:'BT4_SITE_ENTITLEMENT_v1',kernel:'/evidence/readiness/bt4-site-governance/entitlement-engine.v1.mjs',objects,siteState};
+  return {schema:'BT4_SITE_ENTITLEMENT_v1',kernel:'/evidence/readiness/bt4-site-governance/entitlement-engine.v1.mjs',objects,siteState,partialFailure:objects.some(x=>x.detail?.error)};
 }
 
 export function controlledLifecycle(base){

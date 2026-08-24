@@ -40,7 +40,23 @@
           },
           "additionalProperties": false
         },
-        "failOnConsoleErrors": {"type": "boolean"}
+        "binding": {
+          "type": "object",
+          "required": ["mode"],
+          "properties": {
+            "mode": {"enum": ["direct-document", "iframe"]},
+            "path": {"type": "string", "pattern": "^/"},
+            "selector": {"type": "string"}
+          },
+          "additionalProperties": false
+        },
+        "failOnConsoleErrors": {"type": "boolean"},
+        "failOnPageErrors": {"type": "boolean"},
+        "ignoreConsoleErrorIncludes": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        }
       },
       "additionalProperties": false
     }

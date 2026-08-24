@@ -80,7 +80,7 @@ function main() {
   const contract = JSON.parse(fs.readFileSync(CONTRACT_PATH, "utf8"));
   if (contract.schema !== "LAWS_DESTINATION_ROOM_CONJUGATION_PRECONSTRUCTION_CONTRACT_v1") throw new Error("CONTRACT_SCHEMA_MISMATCH");
   if (contract.exactGoverningHead !== a.base) throw new Error("CONTRACT_BASE_MISMATCH");
-  if (contract.operationId !== "LAWS_FIRST_ROOM_CONJUGATION_20260824_1626_S1_BC4078F8") throw new Error("CONTRACT_OPERATION_MISMATCH");
+  if (contract.operationId !== "LAWS_FIRST_ROOM_CONJUGATION_20260824_1626_S3_D8E0CFAE") throw new Error("CONTRACT_OPERATION_MISMATCH");
 
   const changed = git("diff", "--name-only", `${a.base}..${a.head}`).split("\n").filter(Boolean);
   const unrelated = changed.filter(file => !ALLOWED.has(file));

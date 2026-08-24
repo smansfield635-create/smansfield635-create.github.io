@@ -55,8 +55,24 @@
     "exactCommitObjectReadbackForExcludedProtectedClosuresAllowed": true,
     "centralWorkflows": {
       "aiEntryBridge": ".github/workflows/ai-entry-workflow-dispatch-bridge.yml",
+      "canonicalIntake": ".github/workflows/canonical-operation-intake-transport-v1.yml",
+      "successorGateway": ".github/workflows/remote-operation-successor-v1.yml",
       "publicationPreflight": ".github/workflows/publication-preflight-v1.yml",
       "publicationDeploy": ".github/workflows/pages-exact-head-deploy-v3.yml"
+    },
+    "canonicalGatewayWorkingSets": {
+      "canonicalIntake": [
+        "/.github/operation-intake/locator.v1.json",
+        "/tools/operation-intake/"
+      ],
+      "successorGateway": [
+        "/AI_ENTRYPOINT.json",
+        "/.github/workflows/remote-operation-successor-v1.yml",
+        "/.github/ai-router/router.v1.json",
+        "/.github/ai-router/system-continuity/gap-registry.v1.json",
+        "/.github/ai-router/operation-lifecycle/",
+        "/tools/operation-intake/"
+      ]
     },
     "publicationBulkRootsExcludedFromWorktree": [
       "preview",

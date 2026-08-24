@@ -18,10 +18,16 @@ jobs:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout canonical intake working set
+        uses: actions/checkout@v4
         with:
           ref: main
+          fetch-depth: 1
           persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/operation-intake/locator.v1.json
+            /tools/operation-intake/
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -37,11 +43,16 @@ jobs:
       startsWith(github.event.comment.body, 'CANONICAL_OPERATION_INTAKE_REQUEST_V1')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout canonical intake working set
+        uses: actions/checkout@v4
         with:
           ref: main
-          fetch-depth: 0
+          fetch-depth: 1
           persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/operation-intake/locator.v1.json
+            /tools/operation-intake/
       - uses: actions/setup-node@v4
         with:
           node-version: 22

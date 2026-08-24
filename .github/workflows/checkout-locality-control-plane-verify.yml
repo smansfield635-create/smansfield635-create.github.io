@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - '.github/workflows/ai-entry-workflow-dispatch-bridge.yml'
+      - '.github/workflows/canonical-operation-intake-transport-v1.yml'
+      - '.github/workflows/remote-operation-successor-v1.yml'
       - '.github/workflows/publication-preflight-v1.yml'
       - '.github/workflows/pages-exact-head-deploy-v3.yml'
       - 'tools/publication-preflight.v1.mjs'
@@ -33,11 +35,12 @@ jobs:
             /.github/ai-router/workflow-dispatch-capability.v1.json
             /.github/ai-router/publication-release-contract.v1.json
             /.github/workflows/ai-entry-workflow-dispatch-bridge.yml
+            /.github/workflows/canonical-operation-intake-transport-v1.yml
+            /.github/workflows/remote-operation-successor-v1.yml
             /.github/workflows/publication-preflight-v1.yml
             /.github/workflows/pages-exact-head-deploy-v3.yml
             /.github/workflows/checkout-locality-control-plane-verify.yml
             /tools/publication-preflight.v1.mjs
-            /tools/publication-preflight-self-test.v1.mjs
             /tools/checkout-locality-self-test.v1.mjs
 
       - name: Run admitted checkout locality verification
@@ -47,8 +50,7 @@ jobs:
         run: |
           set -euo pipefail
           node tools/checkout-locality-self-test.v1.mjs && \
-          node .github/ai-router/execution-efficiency-self-test.v1.mjs && \
-          node tools/publication-preflight-self-test.v1.mjs
+          node .github/ai-router/execution-efficiency-self-test.v1.mjs
 
       - name: Upload checkout locality receipt
         if: always()

@@ -1257,13 +1257,31 @@
       "state": "ADMITTED_LOCKED"
     },
     "7668c21745659f35442efa7e2bf6e8731a532c4bf2a72a5af253703668d3f629": {
-      "governingHead": "08b165ab31f7c5f4d65dc8080439f440d66db609",
-      "lockGeneration": 1603,
+      "governingHead": "d3d64e74d1466e398f0c1a2e40f29bd0cb2eaa2f",
+      "lockGeneration": 1606,
       "lockScope": "PUBLIC_LEGITIMACY:EVIDENCE:CURRENT_PUBLIC_CONDITION:TERMINAL_BOOTSTRAP:V1",
-      "operationId": "PUBLIC_LEGITIMACY_EVIDENCE_TERMINAL_BOOTSTRAP_REPAIR_20260823_001",
-      "procedureLocatorDigest": "0cc0679d0c69123c9053dfcc69ecf84448f4afd7cb693753561b2e6df9d38099",
+      "operationId": "PUBLIC_LEGITIMACY_EVIDENCE_TERMINAL_BOOTSTRAP_REPAIR_20260823_004",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "08b165ab31f7c5f4d65dc8080439f440d66db609",
+        "lockGeneration": 1603,
+        "lockScope": "PUBLIC_LEGITIMACY:EVIDENCE:CURRENT_PUBLIC_CONDITION:TERMINAL_BOOTSTRAP:V1",
+        "operationId": "PUBLIC_LEGITIMACY_EVIDENCE_TERMINAL_BOOTSTRAP_REPAIR_20260823_001",
+        "preservedEvidenceRefs": [
+          "PR_1911_MERGE_d22af1ea80733895a59756c23c5a0c79724870d9",
+          "PUBLICATION_RUN_32691079271",
+          "DEPLOYMENT_ARTIFACT_9507282143",
+          "PR_1914_UNRELATED_AUDRALIA_HEAD_ADVANCE_d3d64e74d1466e398f0c1a2e40f29bd0cb2eaa2f",
+          "EVIDENCE_BLOBS_UNCHANGED_ACROSS_D22_TO_D3D64"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "PUBLIC_LEGITIMACY_EVIDENCE_TERMINAL_BOOTSTRAP_REPAIR_GEN1603_TO_D3D64E74_20260823_004"
+      },
+      "procedureLocatorDigest": "eaef7cd118413ec0e1af3ed5f4c4f2160657e022e2ca44f1cbc40fcad022a9a9",
       "released": false,
-      "requestDigest": "0326a5f9f58e89cbd92fb0e27aa4e0644f6e488a6ec21d217227ac181d9225e6",
+      "requestDigest": "cd8110df332c86b6e0f03931b5eeedf6dac4bddad81385499141ed996b06ac9f",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "7668c21745659f35442efa7e2bf6e8731a532c4bf2a72a5af253703668d3f629",
       "state": "ADMITTED_LOCKED"
@@ -3124,7 +3142,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1605,
+  "lockGeneration": 1606,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -24357,6 +24375,37 @@
         "successorLockScope": "COMPASS_ROOT_BRAIN_GEN1_AND_AUDIT_SETTLEMENT",
         "successorOperationId": "COMPASS_BRAIN_GEN1_AND_AUDIT_SETTLEMENT_20260824_0058",
         "transitionId": "COMPASS_BRAIN_GEN1_AUDIT_SETTLEMENT_SUCCESSOR_20260824_0058"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "08b165ab31f7c5f4d65dc8080439f440d66db609",
+      "lockGeneration": 1603,
+      "lockScope": "PUBLIC_LEGITIMACY:EVIDENCE:CURRENT_PUBLIC_CONDITION:TERMINAL_BOOTSTRAP:V1",
+      "operationId": "PUBLIC_LEGITIMACY_EVIDENCE_TERMINAL_BOOTSTRAP_REPAIR_20260823_001",
+      "procedureLocatorDigest": "0cc0679d0c69123c9053dfcc69ecf84448f4afd7cb693753561b2e6df9d38099",
+      "released": true,
+      "requestDigest": "0326a5f9f58e89cbd92fb0e27aa4e0644f6e488a6ec21d217227ac181d9225e6",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "7668c21745659f35442efa7e2bf6e8731a532c4bf2a72a5af253703668d3f629",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "PR_1911_MERGE_d22af1ea80733895a59756c23c5a0c79724870d9",
+          "PUBLICATION_RUN_32691079271",
+          "DEPLOYMENT_ARTIFACT_9507282143",
+          "PR_1914_UNRELATED_AUDRALIA_HEAD_ADVANCE_d3d64e74d1466e398f0c1a2e40f29bd0cb2eaa2f",
+          "EVIDENCE_BLOBS_UNCHANGED_ACROSS_D22_TO_D3D64"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "d3d64e74d1466e398f0c1a2e40f29bd0cb2eaa2f",
+        "successorLockGeneration": 1606,
+        "successorLockScope": "PUBLIC_LEGITIMACY:EVIDENCE:CURRENT_PUBLIC_CONDITION:TERMINAL_BOOTSTRAP:V1",
+        "successorOperationId": "PUBLIC_LEGITIMACY_EVIDENCE_TERMINAL_BOOTSTRAP_REPAIR_20260823_004",
+        "transitionId": "PUBLIC_LEGITIMACY_EVIDENCE_TERMINAL_BOOTSTRAP_REPAIR_GEN1603_TO_D3D64E74_20260823_004"
       },
       "terminalDisposition": "SUPERSEDED"
     }

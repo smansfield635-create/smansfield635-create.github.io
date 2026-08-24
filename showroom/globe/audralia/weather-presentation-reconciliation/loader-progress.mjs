@@ -4,11 +4,14 @@ const track=document.querySelector('[data-audralia-loader-track]');
 const fill=document.querySelector('[data-audralia-loader-fill]');
 const progress=document.querySelector('[data-audralia-loader-progress]');
 const elapsed=document.querySelector('[data-audralia-loader-elapsed]');
+const statusNode=document.querySelector('[data-h-earth-status]');
 const started=performance.now();
 const TOTAL=5;
 let completed=-1;
 let lastAdvance=started;
 let delayed=false;
+let lastPhase='PAGE_BOOT';
+let lastPhaseAt=started;
 const rows={
   surface:document.querySelector('[data-loader-system="surface"]'),
   clouds:document.querySelector('[data-loader-system="clouds"]'),
@@ -22,6 +25,59 @@ function setRow(name,state){
   row.dataset.state=state;
   const out=row.querySelector('b');
   if(out)out.textContent=state==='ready'?'ready':'waiting';
+}
+
+function publishDiagnostic(phase,status='ACTIVE',extra={}){
+  const now=performance.now();
+  if(phase!==lastPhase){lastPhase=phase;lastPhaseAt=now;delayed=false;if(loader)delete loader.dataset.delayed;}
+  const receipt=Object.freeze({
+    schema:'AUDRALIA_STARTUP_DIAGNOSTIC_v1',
+    phase,
+    status,
+    elapsedMs:Math.round(now-started),
+    phaseElapsedMs:Math.round(now-lastPhaseAt),
+    completedStage:Math.max(0,completed),
+    lastSuccessfulStage:Math.max(0,completed),
+    build:document.querySelector('.audralia-loading-version')?.textContent?.trim()||null,
+    ...extra
+  });
+  window.__AUDRALIA_STARTUP_DIAGNOSTIC__=receipt;
+  if(loader){loader.dataset.startupPhase=phase;loader.dataset.startupStatus=status;}
+  return receipt;
+}
+
+function inferPhase(){
+  const explicit=window.__AUDRALIA_STARTUP_PHASE__?.phase;
+  const state=statusNode?.dataset?.status||'';
+  if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__)return 'CORE_RECONCILIATION_ERROR';
+  if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.()?.invariants?.pass===true)return 'RUNTIME_INVARIANTS_READY';
+  if(document.querySelector('[data-canonical-weather-projection="true"]'))return 'LOCAL_CONTINUITY_READY';
+  if(document.querySelector('[data-audralia-exterior-weather="true"]'))return 'REGIONAL_WEATHER_READY';
+  if(globalThis.__AUDRALIA_FAP1_ORBITAL_SUPPORT_TUNING__)return 'ORBITAL_CLOUD_READY';
+  if(document.querySelector('[data-audralia-clear-atmosphere="true"]'))return 'SURFACE_ATMOSPHERE_READY';
+  if(window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW__?.renderer)return 'RENDERER_READY';
+  if(state==='AUDRALIA_WEATHER_RECONCILIATION_BUILDING')return 'CORE_RENDERER_BOOT';
+  if(explicit==='APP_MODULE_EVALUATED')return 'CORE_RENDERER_BOOT';
+  return explicit||'PAGE_BOOT';
+}
+
+function phaseLabel(phase){
+  return ({
+    PAGE_BOOT:'Preparing page shell',
+    PAGE_SHELL_READY:'Page shell ready',
+    FIRST_PAINT_RELEASED:'First paint released',
+    APP_MODULE_REQUESTED:'Loading Audralia runtime graph',
+    APP_MODULE_EVALUATED:'Audralia runtime graph evaluated',
+    CORE_RENDERER_BOOT:'Building renderer and first world frame',
+    RENDERER_READY:'Renderer ready',
+    SURFACE_ATMOSPHERE_READY:'Surface and atmosphere resolved',
+    ORBITAL_CLOUD_READY:'Planetary cloud field online',
+    REGIONAL_WEATHER_READY:'Regional weather online',
+    LOCAL_CONTINUITY_READY:'Local weather continuity online',
+    RUNTIME_INVARIANTS_READY:'Audralia ready',
+    CORE_RECONCILIATION_ERROR:'Core reconciliation failed',
+    APP_MODULE_FAILED:'Application module failed'
+  })[phase]||phase;
 }
 
 function commit(next,label){
@@ -39,18 +95,23 @@ function commit(next,label){
   if(loader)loader.dataset.progress=String(bounded);
 }
 
-function markDelayed(now){
-  if(delayed||completed>=TOTAL||now-lastAdvance<15000)return;
+function markDelayed(now,phase){
+  if(delayed||completed>=TOTAL||now-lastPhaseAt<15000)return;
   delayed=true;
-  if(loader)loader.dataset.delayed='true';
-  if(stage)stage.textContent=`Renderer still working at stage ${Math.max(0,completed)} · continuing exact startup`;
+  const code=`STALLED_${phase}`;
+  if(loader){loader.dataset.delayed='true';loader.dataset.stallCode=code;}
+  if(stage)stage.textContent=`${phaseLabel(phase)} · ${code}`;
+  if(progress)progress.textContent=`${Math.max(0,completed)*20}% · diagnostic ${code}`;
+  publishDiagnostic(phase,'STALLED',{code,stalledForMs:Math.round(now-lastPhaseAt)});
 }
 
 function markError(error){
   if(!error||loader?.classList.contains('is-error'))return false;
-  if(loader)loader.classList.add('is-error');
-  if(stage)stage.textContent='Audralia startup stopped · renderer initialization failed';
-  if(progress)progress.textContent=`${Math.max(0,completed)*20}% · startup error recorded`;
+  const code=error?.message||'AUDRALIA_RENDERER_INITIALIZATION_FAILED';
+  if(loader){loader.classList.add('is-error');loader.dataset.errorCode=code;}
+  if(stage)stage.textContent=`Audralia startup stopped · ${code}`;
+  if(progress)progress.textContent=`${Math.max(0,completed)*20}% · startup error ${code}`;
+  publishDiagnostic('CORE_RECONCILIATION_ERROR','ERROR',{code,message:error?.message||String(error)});
   return true;
 }
 
@@ -61,6 +122,11 @@ function observe(){
 
   const reconciliationError=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__;
   if(markError(reconciliationError))return;
+
+  const phase=inferPhase();
+  const diag=publishDiagnostic(phase);
+
+  if(completed===0&&stage&&!delayed)stage.textContent=`${phaseLabel(phase)} · ${phase}`;
 
   if(document.querySelector('[data-audralia-clear-atmosphere="true"]')){
     setRow('surface','ready');
@@ -80,13 +146,15 @@ function observe(){
   }
   if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.()?.invariants?.pass===true){
     commit(5,'Audralia ready');
+    publishDiagnostic('RUNTIME_INVARIANTS_READY','READY',{code:'AUDRALIA_RUNTIME_READY'});
     if(loader)loader.classList.add('is-ready');
     return;
   }
 
-  markDelayed(now);
+  markDelayed(now,diag.phase);
   requestAnimationFrame(observe);
 }
 
-commit(0,'Preparing terrain, atmosphere, and camera…');
+commit(0,'Preparing page shell…');
+publishDiagnostic('PAGE_BOOT');
 requestAnimationFrame(observe);

@@ -2241,13 +2241,30 @@
       "state": "ADMITTED_LOCKED"
     },
     "b42c855020ac097941aaabe6e2524e0b60f9262518a3f23e73c93e8f14c5469c": {
-      "governingHead": "6419f78d2c048d51827bb6c631e557d83fe4f061",
-      "lockGeneration": 1625,
+      "governingHead": "57302a9b955475f57a14bcd80940eb89d55094d8",
+      "lockGeneration": 1634,
       "lockScope": "AUDRALIA_WEATHER_PRESENTATION",
-      "operationId": "AUDRALIA_WEATHER_SYSTEM_DIVERSIFICATION_20260824_001",
-      "procedureLocatorDigest": "81240df6d45fb67beaa5cc513c3b424a9139c5de6ce9a47e8df3d7daa2627741",
+      "operationId": "AUDRALIA_PLANETARY_CLOUD_FIELD_COVERAGE_20260824_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "6419f78d2c048d51827bb6c631e557d83fe4f061",
+        "lockGeneration": 1625,
+        "lockScope": "AUDRALIA_WEATHER_PRESENTATION",
+        "operationId": "AUDRALIA_WEATHER_SYSTEM_DIVERSIFICATION_20260824_001",
+        "preservedEvidenceRefs": [
+          "PR#1972",
+          "merge:db22a67efc610298f8796829f57d39032c5010a1",
+          "live-verify-run:32780875540",
+          "owner-video:24370"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "AUDRALIA_PLANETARY_CLOUD_FIELD_SUCCESSOR_20260824_001"
+      },
+      "procedureLocatorDigest": "9f4796d86e5fdc702ef77a1777201317725670e4e2c68b3a06479fdc971a0da2",
       "released": false,
-      "requestDigest": "e5b908271bbdff8c306b53899193b72eaf7c5c3515b1ad020054c433e0b14e47",
+      "requestDigest": "5e85f5f04e323816c4616f4d4b7be34bd96680a68a619682bcbb1bcc71a9d5a3",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "b42c855020ac097941aaabe6e2524e0b60f9262518a3f23e73c93e8f14c5469c",
       "state": "ADMITTED_LOCKED"
@@ -3399,7 +3416,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1633,
+  "lockGeneration": 1634,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -25198,6 +25215,36 @@
         "successorLockScope": "LAWS_FIRST_TEST_RESEARCH_ROOM_CONJUGATION_V1",
         "successorOperationId": "LAWS_FIRST_ROOM_CONJUGATION_20260824_1626_S2_57302A9B",
         "transitionId": "LAWS_FIRST_ROOM_CONJUGATION_GEN1628_TO_57302A9B_20260824_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "6419f78d2c048d51827bb6c631e557d83fe4f061",
+      "lockGeneration": 1625,
+      "lockScope": "AUDRALIA_WEATHER_PRESENTATION",
+      "operationId": "AUDRALIA_WEATHER_SYSTEM_DIVERSIFICATION_20260824_001",
+      "procedureLocatorDigest": "81240df6d45fb67beaa5cc513c3b424a9139c5de6ce9a47e8df3d7daa2627741",
+      "released": true,
+      "requestDigest": "e5b908271bbdff8c306b53899193b72eaf7c5c3515b1ad020054c433e0b14e47",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "b42c855020ac097941aaabe6e2524e0b60f9262518a3f23e73c93e8f14c5469c",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "PR#1972",
+          "merge:db22a67efc610298f8796829f57d39032c5010a1",
+          "live-verify-run:32780875540",
+          "owner-video:24370"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "57302a9b955475f57a14bcd80940eb89d55094d8",
+        "successorLockGeneration": 1634,
+        "successorLockScope": "AUDRALIA_WEATHER_PRESENTATION",
+        "successorOperationId": "AUDRALIA_PLANETARY_CLOUD_FIELD_COVERAGE_20260824_001",
+        "transitionId": "AUDRALIA_PLANETARY_CLOUD_FIELD_SUCCESSOR_20260824_001"
       },
       "terminalDisposition": "SUPERSEDED"
     }

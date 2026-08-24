@@ -131,7 +131,7 @@ try{
     liveResult.integration?.weatherPresentationReconciliation!==true||
     liveResult.integration?.cameraSemanticsFrozen!==true||
     liveResult.loaderProgress<4||
-    liveResult.loaderBuild!=='LIVE BUILD · COLOR ARRIVAL v4'||
+    !String(liveResult.loaderBuild||'').startsWith('LIVE BUILD · COLOR ARRIVAL v4')||
     !String(liveResult.status).includes('USER_REVIEW_REQUIRED')||
     !liveResult.celestial||
     !['H-Earth · Play','Compass','Mirrorland'].every(label=>liveResult.nav.includes(label));

@@ -1826,28 +1826,28 @@
       "state": "ADMITTED_LOCKED"
     },
     "99ffb39e511cc2c8cd68698915bd123716d7cdeaa06bb9d13d5b3e619ca1d3d1": {
-      "governingHead": "6419f78d2c048d51827bb6c631e557d83fe4f061",
-      "lockGeneration": 1624,
+      "governingHead": "bc4078f8f884921e8c58fe5a30f6a7c9c577d6f0",
+      "lockGeneration": 1626,
       "lockScope": "ESTATE_INSTRUMENTS_NAVIGATION_AND_LABORATORY_IDENTITY",
-      "operationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_002",
+      "operationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_003",
       "predecessor": {
         "authorityInherited": false,
         "exactHeadRevalidationRequired": true,
-        "governingHead": "55e6af4cbee08effd3b008d124908d518493d14c",
-        "lockGeneration": 1623,
+        "governingHead": "6419f78d2c048d51827bb6c631e557d83fe4f061",
+        "lockGeneration": 1624,
         "lockScope": "ESTATE_INSTRUMENTS_NAVIGATION_AND_LABORATORY_IDENTITY",
-        "operationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_001",
+        "operationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_002",
         "preservedEvidenceRefs": [
-          "issue:#1968:operation-001-admission",
-          "branch:estate-laboratory/observability-navigation-reconciliation-v1:NONAUTHORITATIVE_PREDECESSOR_EVIDENCE_ONLY"
+          "issue:#1968:operation-002-admission",
+          "branch:ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_002@232d673faa0cb4df5bd6542fe57242371f8c9633:NONAUTHORITATIVE_STALE_CANDIDATE_EVIDENCE_ONLY"
         ],
         "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
         "terminalDisposition": "SUPERSEDED",
-        "transitionId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_001_TO_002"
+        "transitionId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_002_TO_003"
       },
-      "procedureLocatorDigest": "4cc193f40ab9ccdf021a2d5e839e28d2514dd9a96c4681b93ae09c79fa72d6d2",
+      "procedureLocatorDigest": "56926ab98b21ff0586116d9761df36af0e9d78e74dacec6ac11bc7d5f5feba88",
       "released": false,
-      "requestDigest": "c333313125cd4f87402c554be4bc41492859957eedc477573ff54edb0d704d10",
+      "requestDigest": "f32775e8ecb3f11fe3be9e701319ab2989844a96e491e364bad5368f7533ec48",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "99ffb39e511cc2c8cd68698915bd123716d7cdeaa06bb9d13d5b3e619ca1d3d1",
       "state": "ADMITTED_LOCKED"
@@ -3324,7 +3324,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1625,
+  "lockGeneration": 1626,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -24902,6 +24902,49 @@
         "successorLockScope": "ESTATE_INSTRUMENTS_NAVIGATION_AND_LABORATORY_IDENTITY",
         "successorOperationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_002",
         "transitionId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_001_TO_002"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "6419f78d2c048d51827bb6c631e557d83fe4f061",
+      "lockGeneration": 1624,
+      "lockScope": "ESTATE_INSTRUMENTS_NAVIGATION_AND_LABORATORY_IDENTITY",
+      "operationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "55e6af4cbee08effd3b008d124908d518493d14c",
+        "lockGeneration": 1623,
+        "lockScope": "ESTATE_INSTRUMENTS_NAVIGATION_AND_LABORATORY_IDENTITY",
+        "operationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_001",
+        "preservedEvidenceRefs": [
+          "issue:#1968:operation-001-admission",
+          "branch:estate-laboratory/observability-navigation-reconciliation-v1:NONAUTHORITATIVE_PREDECESSOR_EVIDENCE_ONLY"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_001_TO_002"
+      },
+      "procedureLocatorDigest": "4cc193f40ab9ccdf021a2d5e839e28d2514dd9a96c4681b93ae09c79fa72d6d2",
+      "released": true,
+      "requestDigest": "c333313125cd4f87402c554be4bc41492859957eedc477573ff54edb0d704d10",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "99ffb39e511cc2c8cd68698915bd123716d7cdeaa06bb9d13d5b3e619ca1d3d1",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:#1968:operation-002-admission",
+          "branch:ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_002@232d673faa0cb4df5bd6542fe57242371f8c9633:NONAUTHORITATIVE_STALE_CANDIDATE_EVIDENCE_ONLY"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "bc4078f8f884921e8c58fe5a30f6a7c9c577d6f0",
+        "successorLockGeneration": 1626,
+        "successorLockScope": "ESTATE_INSTRUMENTS_NAVIGATION_AND_LABORATORY_IDENTITY",
+        "successorOperationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_003",
+        "transitionId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_002_TO_003"
       },
       "terminalDisposition": "SUPERSEDED"
     }

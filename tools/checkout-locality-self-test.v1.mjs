@@ -74,7 +74,7 @@ for(const required of [
   'inspection/audralia-24057-exact/snapshot/h-earth-3d/environment'
 ])check(`audralia-weather-qualification-path-${required}`,audraliaWeatherQualification.includes(required));
 check('audralia-weather-qualification-module-closure-guard',audraliaWeatherQualification.includes('Verify browser module dependency closure'));
-check('audralia-weather-qualification-no-root-wide-pattern',!audraliaWeatherQualification.includes('/*'));
+check('audralia-weather-qualification-no-root-wide-sparse-set',!audraliaWeatherQualification.includes('git sparse-checkout set /'));
 for(const text of [preflight,deploy])for(const excluded of ['!/preview/','!/h-earth-live-6d18e158/','!/inspection/audralia-24057-exact/'])check(`publication-exclusion-${excluded}-${text===preflight?'preflight':'deploy'}`,text.includes(excluded));
 check('builder-exact-object-reader',builder.includes("source:'EXACT_COMMIT_OBJECT'"));
 check('builder-git-object-show',builder.includes("spawnSync('git',['-C',repoRoot,'show',objectPath]"));

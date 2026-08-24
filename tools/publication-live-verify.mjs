@@ -45,6 +45,8 @@ const browser=await puppeteer.launch({
 try{
   const page=await browser.newPage();
   await page.setViewport({width:720,height:1280,deviceScaleFactor:1});
+  const evidenceColdRefresh=manifest.surfaceId==='evidence';
+  if(evidenceColdRefresh)await page.setCacheEnabled(false);
   const pageErrors=[];
   const consoleErrors=[];
   page.on('pageerror',error=>pageErrors.push(String(error?.stack||error)));
@@ -110,7 +112,7 @@ try{
     };
   },{spec,surfaceId:manifest.surfaceId,failure:String(failure?.stack||failure)});
 
-  try{
+  const waitForReadiness=async()=>{
     if(spec.readySelector)await page.waitForSelector(spec.readySelector,{timeout:spec.timeoutMs||45000});
     if(spec.readyAttribute){
       await page.waitForFunction(({selector,name,contains})=>{
@@ -118,6 +120,16 @@ try{
         if(!element)return false;
         return String(element.getAttribute(name)||'').includes(contains);
       },{timeout:spec.timeoutMs||45000},spec.readyAttribute);
+    }
+  };
+
+  let reloadsPerformed=0;
+  try{
+    await waitForReadiness();
+    if(evidenceColdRefresh){
+      await page.reload({waitUntil:'domcontentloaded',timeout:60000});
+      reloadsPerformed=1;
+      await waitForReadiness();
     }
   }catch(error){
     let diagnostic=null;
@@ -133,7 +145,7 @@ try{
       result:'FAIL',
       phase:'READINESS_WAIT',
       failure:String(error?.stack||error),
-      diagnostics:{pageErrors,consoleErrors,failures:['RUNTIME_READINESS_FAILED']},
+      diagnostics:{pageErrors,consoleErrors,failures:['RUNTIME_READINESS_FAILED'],evidenceColdRefresh,reloadsPerformed},
       diagnostic
     },null,2));
     throw error;
@@ -182,7 +194,7 @@ try{
     surfaceId:manifest.surfaceId,
     url,
     result:failures.length?'FAIL':'PASS',
-    runtime:result,
+    runtime:{...result,evidenceColdRefresh,reloadsPerformed},
     diagnostics:{pageErrors,consoleErrors,ignoredConsoleErrors,actionableConsoleErrors,failures}
   };
   console.log(JSON.stringify(receipt,null,2));

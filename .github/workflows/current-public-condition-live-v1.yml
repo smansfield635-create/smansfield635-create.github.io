@@ -1,0 +1,54 @@
+name: Current Public Condition
+
+on:
+  pull_request:
+    paths:
+      - 'evidence/index.html'
+      - 'evidence/current-public-condition.css'
+      - 'evidence/current-public-condition.mjs'
+      - 'research/bt4/verify-current-public-condition-live.v1.mjs'
+      - '.github/workflows/current-public-condition-live-v1.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'evidence/index.html'
+      - 'evidence/current-public-condition.css'
+      - 'evidence/current-public-condition.mjs'
+      - 'research/bt4/verify-current-public-condition-live.v1.mjs'
+      - '.github/workflows/current-public-condition-live-v1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /evidence/index.html
+            /evidence/current-public-condition.css
+            /evidence/current-public-condition.mjs
+            /research/bt4/verify-current-public-condition-live.v1.mjs
+      - name: Verify public language and source binding
+        if: github.event_name == 'pull_request'
+        run: node research/bt4/verify-current-public-condition-live.v1.mjs --static
+      - name: Set up Chrome
+        if: github.event_name == 'push'
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+      - name: Install browser driver
+        if: github.event_name == 'push'
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Verify exact-head live Evidence condition
+        if: github.event_name == 'push'
+        env:
+          TARGET_SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          node research/bt4/verify-current-public-condition-live.v1.mjs | tee research/bt4/current-public-condition-live-proof.json

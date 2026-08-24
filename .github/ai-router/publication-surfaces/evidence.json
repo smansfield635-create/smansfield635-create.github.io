@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "evidence",
-  "description": "Diamond Gate public Evidence surface with current public condition inspection.",
+  "description": "Diamond Gate public Evidence surface with independently responsive carousel and fail-closed current public condition inspection.",
   "checks": [
     {
       "path": "/evidence/",
@@ -9,21 +9,24 @@
         "Current Public Condition",
         "What can the estate say right now?",
         "data-current-public-condition",
-        "/evidence/current-public-condition.mjs?v=1&cb=prod3"
+        "/evidence/current-public-condition.mjs?v=1&cb=prod4"
       ],
       "excludes": [
         "Breakthrough 4",
-        "BT4 ·"
+        "BT4 ·",
+        "MODULE_OR_RUNTIME_DEADLINE",
+        "bootstrapTerminal"
       ]
     },
     {
       "path": "/evidence/current-public-condition.mjs",
       "includes": [
         "evaluateSite",
-        "site-entitlement.v1.mjs?cb=prod3",
+        "site-entitlement.v1.mjs?cb=prod4",
         "data-condition-state",
         "data-condition-objects",
-        "What restores it"
+        "What restores it",
+        "The Evidence carousel remains independently available"
       ],
       "excludes": [
         "document.write"
@@ -34,15 +37,17 @@
       "includes": [
         "./entitlement-engine.v1.mjs?cb=prod1",
         "FETCH_DEADLINE_MS=10000",
-        "WORLD_READY_DEADLINE_MS=30000",
-        "ADAPTER_DEADLINE_MS=35000",
+        "ADAPTER_DEADLINE_MS=15000",
         "Promise.allSettled",
+        "LIVE_RUNTIME_PROBE_DECOUPLED_FROM_EVIDENCE_PAGE",
         "Scientific claim",
         "Audralia world/runtime",
         "Audralia diagnostic authority",
         "Exact-head public release"
       ],
       "excludes": [
+        "waitForAudraliaReady",
+        "data-audralia-loader",
         "/preview/bt4/entitlement-v1/entitlement-engine.v1.mjs"
       ]
     },
@@ -64,7 +69,8 @@
       "name": "data-ready",
       "contains": "true"
     },
-    "timeoutMs": 45000,
-    "failOnConsoleErrors": true
+    "timeoutMs": 25000,
+    "failOnConsoleErrors": true,
+    "requireEvidenceCarouselInteraction": true
   }
 }

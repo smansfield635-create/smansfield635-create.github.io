@@ -1,14 +1,15 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "audralia",
-  "description": "Live Audralia planetary environment using the approved preserved model authority with informative loading continuity. Cloud coverage expansion is deferred and is not a release blocker.",
+  "description": "Live Audralia planetary environment using the approved preserved model authority with informative loading continuity and the installed dense-cloud successor enabled.",
   "checks": [
     {
       "path": "/showroom/globe/audralia/",
       "includes": [
         "Audralia · Planetary World",
         "approvedModelAuthority: '1d45379f81ea4089e9c5f3d7d9688e702be9add3'",
-        "cloudCoverageUpgradeDeferred: true",
+        "cloudCoverageUpgradeDeferred: false",
+        "directDenseCloudCoverage: true",
         "APPROVED_PRESENTATION_PRE_RENDER_v1",
         "Orbital cloud field",
         "AUDRALIA_LOADING_CONTINUITY_v4"

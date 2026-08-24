@@ -2,11 +2,24 @@ import { serveRequestedState } from './entitlement-engine.v1.mjs?cb=prod1';
 
 const CLAIM_ID='blinded-governance-generalization';
 const BASE='/evidence/readiness/bt4-site-governance/';
+const FETCH_DEADLINE_MS=10000;
+const WORLD_READY_DEADLINE_MS=30000;
+const ADAPTER_DEADLINE_MS=35000;
 
-async function getJson(url){const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw new Error(`${url} -> ${r.status}`);return r.json()}
-async function getText(url){const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw new Error(`${url} -> ${r.status}`);return r.text()}
+async function fetchBounded(url,init={}){
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(new Error(`fetch deadline exceeded: ${url}`)),FETCH_DEADLINE_MS);
+  try{return await fetch(url,{...init,cache:'no-store',signal:controller.signal});}
+  finally{clearTimeout(timer)}
+}
+async function getJson(url){const r=await fetchBounded(url);if(!r.ok)throw new Error(`${url} -> ${r.status}`);return r.json()}
+async function getText(url){const r=await fetchBounded(url);if(!r.ok)throw new Error(`${url} -> ${r.status}`);return r.text()}
 const out=(id,label,state,detail={})=>({id,label,state,entitlement:serveRequestedState('QUALIFIED',state),detail});
 const held=(id,label,error)=>out(id,label,{epoch:1,provenance:false,reproduction:false,evidence:'insufficient',authority:false,receiptEpoch:0},{error:String(error?.message||error||'adapter unavailable')});
+const withDeadline=(promise,label,timeoutMs=ADAPTER_DEADLINE_MS)=>new Promise((resolve,reject)=>{
+  const timer=setTimeout(()=>reject(new Error(`${label} evaluation deadline exceeded after ${timeoutMs}ms`)),timeoutMs);
+  Promise.resolve(promise).then(value=>{clearTimeout(timer);resolve(value)},error=>{clearTimeout(timer);reject(error)});
+});
 
 export async function claimAdapter(){
   const [registry,benchmark,identity,binding]=await Promise.all([
@@ -28,7 +41,7 @@ export async function claimAdapter(){
   return out('claim','Scientific claim',state,{subject:CLAIM_ID,phase:binding.phase});
 }
 
-async function waitForAudraliaReady(timeoutMs=60000){
+async function waitForAudraliaReady(timeoutMs=WORLD_READY_DEADLINE_MS){
   const frame=document.createElement('iframe');
   frame.hidden=true; frame.setAttribute('aria-hidden','true'); frame.src=`/showroom/globe/audralia/?bt4-site=${Date.now()}`;
   document.body.append(frame);
@@ -97,10 +110,10 @@ export async function evaluateSite(){
     ['diagnostic','Audralia diagnostic authority',diagnosticAdapter],
     ['release','Exact-head public release',releaseAdapter]
   ];
-  const settled=await Promise.allSettled(specs.map(([, ,adapter])=>adapter()));
+  const settled=await Promise.allSettled(specs.map(([id,,adapter])=>withDeadline(adapter(),id)));
   const objects=settled.map((result,i)=>result.status==='fulfilled'?result.value:held(specs[i][0],specs[i][1],result.reason));
   const siteState=objects.every(x=>x.entitlement.served==='QUALIFIED')?'QUALIFIED':'RESTRICTED';
-  return {schema:'BT4_SITE_ENTITLEMENT_v1',kernel:'/evidence/readiness/bt4-site-governance/entitlement-engine.v1.mjs',objects,siteState,partialFailure:objects.some(x=>x.detail?.error)};
+  return {schema:'BT4_SITE_ENTITLEMENT_v1',kernel:'/evidence/readiness/bt4-site-governance/entitlement-engine.v1.mjs',objects,siteState,partialFailure:objects.some(x=>x.detail?.error),evaluationDeadlineMs:ADAPTER_DEADLINE_MS};
 }
 
 export function controlledLifecycle(base){

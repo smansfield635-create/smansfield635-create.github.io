@@ -2428,13 +2428,33 @@
       "state": "ADMITTED_LOCKED"
     },
     "c741f04e2c0d6d80298d66debdf940cecdb250a77af64fc3747b25c94355ab34": {
-      "governingHead": "81f588401c7f38c25f788331ea457fbc9f83d102",
-      "lockGeneration": 1615,
+      "governingHead": "6ebca4a53465bc349757bafb4c58caed666191af",
+      "lockGeneration": 1616,
       "lockScope": "H_EARTH:ESTATE_LABORATORY:GEN1:RESPONSIVE_QUALIFICATION_AND_NONEXPERIENCE_CLASSIFICATION:V3:5_PATH_SCOPE",
-      "operationId": "H_EARTH_ESTATE_LABORATORY_COCKPIT_GEN1_QUALIFICATION_20260824_003",
-      "procedureLocatorDigest": "495a932ef4c8d958de6c19ba64083eacb73ecd47ab1e690a2b56ad0fc35703c1",
+      "operationId": "H_EARTH_ESTATE_LABORATORY_COCKPIT_GEN1_QUALIFICATION_20260824_007",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "81f588401c7f38c25f788331ea457fbc9f83d102",
+        "lockGeneration": 1615,
+        "lockScope": "H_EARTH:ESTATE_LABORATORY:GEN1:RESPONSIVE_QUALIFICATION_AND_NONEXPERIENCE_CLASSIFICATION:V3:5_PATH_SCOPE",
+        "operationId": "H_EARTH_ESTATE_LABORATORY_COCKPIT_GEN1_QUALIFICATION_20260824_003",
+        "preservedEvidenceRefs": [
+          "issue#1940",
+          "PR#1944",
+          "candidate-head:dfe81164cadf6d991a1306cba5e2059f36668ebf",
+          "qualification-run:32756742316",
+          "failed-assertion:HORIZONTAL_OVERFLOW_AFTER_SUITE:phone:360:364",
+          "failed-successor-invocation:004:TEST_COMMAND_MISMATCH",
+          "failed-or-stale-successor-invocations:005-006"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "H_EARTH_ESTATE_LABORATORY_GEN1_QUALIFICATION_SUCCESSOR_20260824_1306"
+      },
+      "procedureLocatorDigest": "7332ebb7bf29e67131a690a43ee6ff78bb72a711eafefc3ce8e3b0f5c27f90d2",
       "released": false,
-      "requestDigest": "ca12fc3ab374cf284cf0ee3f3381cf01fb766d1a6161991d8e540842470fc4c2",
+      "requestDigest": "3d721abe7b1b1e03fcb7681c91bea036c7766d4f4baa8a25098b6e4caaf6befe",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "c741f04e2c0d6d80298d66debdf940cecdb250a77af64fc3747b25c94355ab34",
       "state": "ADMITTED_LOCKED"
@@ -3227,7 +3247,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1615,
+  "lockGeneration": 1616,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -24625,6 +24645,39 @@
         "successorLockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:REMOTE_ROUTER_RECEIPT_TRANSPORT:V1",
         "successorOperationId": "REPOSITORY_ROUTER_REMOTE_RECEIPT_TRANSPORT_20260824_1706",
         "transitionId": "REPOSITORY_ROUTER_REMOTE_RECEIPT_TRANSPORT_SUCCESSOR_20260824_1706"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "81f588401c7f38c25f788331ea457fbc9f83d102",
+      "lockGeneration": 1615,
+      "lockScope": "H_EARTH:ESTATE_LABORATORY:GEN1:RESPONSIVE_QUALIFICATION_AND_NONEXPERIENCE_CLASSIFICATION:V3:5_PATH_SCOPE",
+      "operationId": "H_EARTH_ESTATE_LABORATORY_COCKPIT_GEN1_QUALIFICATION_20260824_003",
+      "procedureLocatorDigest": "495a932ef4c8d958de6c19ba64083eacb73ecd47ab1e690a2b56ad0fc35703c1",
+      "released": true,
+      "requestDigest": "ca12fc3ab374cf284cf0ee3f3381cf01fb766d1a6161991d8e540842470fc4c2",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c741f04e2c0d6d80298d66debdf940cecdb250a77af64fc3747b25c94355ab34",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue#1940",
+          "PR#1944",
+          "candidate-head:dfe81164cadf6d991a1306cba5e2059f36668ebf",
+          "qualification-run:32756742316",
+          "failed-assertion:HORIZONTAL_OVERFLOW_AFTER_SUITE:phone:360:364",
+          "failed-successor-invocation:004:TEST_COMMAND_MISMATCH",
+          "failed-or-stale-successor-invocations:005-006"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "6ebca4a53465bc349757bafb4c58caed666191af",
+        "successorLockGeneration": 1616,
+        "successorLockScope": "H_EARTH:ESTATE_LABORATORY:GEN1:RESPONSIVE_QUALIFICATION_AND_NONEXPERIENCE_CLASSIFICATION:V3:5_PATH_SCOPE",
+        "successorOperationId": "H_EARTH_ESTATE_LABORATORY_COCKPIT_GEN1_QUALIFICATION_20260824_007",
+        "transitionId": "H_EARTH_ESTATE_LABORATORY_GEN1_QUALIFICATION_SUCCESSOR_20260824_1306"
       },
       "terminalDisposition": "SUPERSEDED"
     }

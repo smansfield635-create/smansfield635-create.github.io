@@ -1,0 +1,166 @@
+name: Remote Operation Terminal Closure v1
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/remote-operation-terminal-closure-v1.yml'
+      - '.github/operation-intake/locator.v1.json'
+      - 'tools/operation-intake/repository-operation-lock-manager.v1.mjs'
+      - 'tools/operation-intake/remote-operation-terminal-closure-bridge.v1.mjs'
+      - 'tools/operation-intake/remote-operation-terminal-closure-bridge.v1.test.mjs'
+      - 'tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs'
+  issue_comment:
+    types: [created]
+permissions: {}
+env:
+  ROUTE_ID: REMOTE_OPERATION_TERMINAL_CLOSURE_v1
+  REQUEST_MARKER: REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1
+  LOCATOR_PATH: .github/operation-intake/locator.v1.json
+  BRIDGE_PATH: tools/operation-intake/remote-operation-terminal-closure-bridge.v1.mjs
+  TEST_PATH: tools/operation-intake/remote-operation-terminal-closure-bridge.v1.test.mjs
+  REMOTE_RECEIPT_TEST_PATH: tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs
+jobs:
+  validate-contract:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify current canonical closure contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "${{ github.event.pull_request.head.sha }}"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const l=JSON.parse(fs.readFileSync(process.env.LOCATOR_PATH));
+          if(l.schema!=='REPOSITORY_OPERATION_INTAKE_LOCATOR_v1'||l.status!=='ACTIVE_FAIL_CLOSED') throw Error('LOCATOR_INVALID');
+          if(!fs.existsSync(l.lockManager)) throw Error('LOCK_MANAGER_MISSING');
+          NODE
+          node --test "$TEST_PATH" "$REMOTE_RECEIPT_TEST_PATH"
+          grep -Fq 'resolveCanonicalIdentity' "$BRIDGE_PATH"
+          grep -Fq 'canonicalIdentityResolvedAtRuntime:true' "$BRIDGE_PATH"
+          grep -Fq 'closeRemote' "$BRIDGE_PATH"
+          grep -Fq 'directLedgerEditPerformed:false' "$BRIDGE_PATH"
+          grep -Fq 'genericCommandAuthority:false' "$BRIDGE_PATH"
+          ! grep -Fq 'LOCK_MANAGER_BLOB' "$BRIDGE_PATH"
+      - name: Write validation receipt
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const l=JSON.parse(fs.readFileSync(process.env.LOCATOR_PATH));
+          fs.writeFileSync(`${process.env.RUNNER_TEMP}/remote-operation-terminal-closure-contract-validation.json`,JSON.stringify({schema:'REMOTE_OPERATION_TERMINAL_CLOSURE_CONTRACT_VALIDATION_RECEIPT_v2',result:'PASS_CLOSED',routeId:process.env.ROUTE_ID,pullRequestHead:process.env.GITHUB_SHA,canonicalLocator:process.env.LOCATOR_PATH,lockManagerPath:l.lockManager,lockRef:l.lockRef,canonicalIdentityResolvedAtRuntime:true,nativeCloseRemoteOnly:true,directLedgerEditAuthorized:false,genericCommandAuthority:false,semanticAuthorityCreated:false},null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: remote-operation-terminal-closure-contract-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/remote-operation-terminal-closure-contract-validation.json
+          if-no-files-found: error
+          retention-days: 90
+  execute-closure:
+    if: >-
+      github.event_name == 'issue_comment' &&
+      startsWith(github.event.comment.body, 'REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1') &&
+      (github.event.comment.author_association == 'OWNER' || github.event.comment.author_association == 'MEMBER' || github.event.comment.author_association == 'COLLABORATOR')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify current canonical route
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const l=JSON.parse(fs.readFileSync(process.env.LOCATOR_PATH));
+          if(l.status!=='ACTIVE_FAIL_CLOSED'||!fs.existsSync(l.lockManager)) throw Error('CANONICAL_CLOSURE_DEPENDENCY_MISSING');
+          NODE
+          node --test "$TEST_PATH" "$REMOTE_RECEIPT_TEST_PATH"
+      - name: Extract exact closure request
+        id: parse
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        shell: bash
+        run: |
+          set +e
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const marker=process.env.REQUEST_MARKER,body=String(process.env.COMMENT_BODY??'').trim();let status=0;
+          try{if(!body.startsWith(marker))throw Error('REQUEST_MARKER_MISSING');const tail=body.slice(marker.length).trim();if(!tail.startsWith('{')||!tail.endsWith('}'))throw Error('REQUEST_JSON_NOT_EXACT');fs.writeFileSync(`${process.env.RUNNER_TEMP}/closure-input.json`,JSON.stringify(JSON.parse(tail),null,2)+'\n');}
+          catch(error){status=1;fs.writeFileSync(`${process.env.RUNNER_TEMP}/workflow-failure-receipt.json`,JSON.stringify({schema:'REMOTE_OPERATION_TERMINAL_CLOSURE_WORKFLOW_FAILURE_RECEIPT_v1',result:'FAIL_CLOSED_NO_CLOSURE',routeId:process.env.ROUTE_ID,errorCode:error.message,directLedgerEditPerformed:false,genericCommandAuthority:false},null,2)+'\n');}
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,`status=${status}\n`);
+          NODE
+          exit 0
+      - name: Execute canonical closeRemote bridge
+        id: closure
+        if: steps.parse.outputs.status == '0'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set +e
+          node "$BRIDGE_PATH" --input "$RUNNER_TEMP/closure-input.json" --output "$RUNNER_TEMP/remote-operation-terminal-closure-receipt.json" --native-output "$RUNNER_TEMP/native-remote-closure-receipt.json"
+          echo "status=$?" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Verify returned receipt identity
+        if: always() && steps.parse.outputs.status == '0'
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';import crypto from 'node:crypto';
+          const p=`${process.env.RUNNER_TEMP}/remote-operation-terminal-closure-receipt.json`;if(!fs.existsSync(p))throw Error('INVOCATION_RECEIPT_MISSING');const w=JSON.parse(fs.readFileSync(p));
+          if(w.schema!=='REMOTE_OPERATION_TERMINAL_CLOSURE_INVOCATION_RECEIPT_v1'||w.routeId!==process.env.ROUTE_ID||w.canonicalIdentityResolvedAtRuntime!==true||w.nativeReceiptRewritten!==false||w.directLedgerEditPerformed!==false||w.genericCommandAuthority!==false||w.semanticAuthorityCreated!==false)throw Error('INVOCATION_RECEIPT_IDENTITY_MISMATCH');
+          if(w.result==='TERMINAL_CLOSURE_COMMITTED'){const np=`${process.env.RUNNER_TEMP}/native-remote-closure-receipt.json`,b=fs.readFileSync(np),n=JSON.parse(b);if(n.schema!=='REPOSITORY_OPERATION_REMOTE_CLOSURE_RECEIPT_v1'||n.result!=='TERMINAL_CLOSURE_COMMITTED'||n.lockReleased!==true)throw Error('NATIVE_RECEIPT_NOT_CLOSED');if(crypto.createHash('sha256').update(b).digest('hex')!==w.nativeReceiptSha256)throw Error('NATIVE_RECEIPT_DIGEST_MISMATCH');}
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: remote-operation-terminal-closure-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/remote-operation-terminal-closure-receipt.json
+            ${{ runner.temp }}/native-remote-closure-receipt.json
+            ${{ runner.temp }}/workflow-failure-receipt.json
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Return receipt to invoking conversation
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPOSITORY: ${{ github.repository }}
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const c=[`${process.env.RUNNER_TEMP}/remote-operation-terminal-closure-receipt.json`,`${process.env.RUNNER_TEMP}/workflow-failure-receipt.json`],f=c.find(x=>fs.existsSync(x));const r=f?JSON.parse(fs.readFileSync(f)):{schema:'REMOTE_OPERATION_TERMINAL_CLOSURE_WORKFLOW_FAILURE_RECEIPT_v1',result:'FAIL_CLOSED_NO_CLOSURE',routeId:process.env.ROUTE_ID,errorCode:'RECEIPT_NOT_PRODUCED',directLedgerEditPerformed:false,genericCommandAuthority:false};
+          const response=await fetch(`https://api.github.com/repos/${process.env.REPOSITORY}/issues/${process.env.ISSUE_NUMBER}/comments`,{method:'POST',headers:{Accept:'application/vnd.github+json',Authorization:`Bearer ${process.env.GITHUB_TOKEN}`,'X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'},body:JSON.stringify({body:`REMOTE_OPERATION_TERMINAL_CLOSURE_RECEIPT_V1\n\n\`\`\`json\n${JSON.stringify(r,null,2)}\n\`\`\``})});if(!response.ok)throw Error(`RECEIPT_COMMENT_RETURN_FAILED:${response.status}`);
+          NODE
+      - name: Enforce fail-closed result
+        if: always()
+        env:
+          PARSE_STATUS: ${{ steps.parse.outputs.status }}
+          CLOSURE_STATUS: ${{ steps.closure.outputs.status }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$PARSE_STATUS" = "0"
+          test "$CLOSURE_STATUS" = "0"

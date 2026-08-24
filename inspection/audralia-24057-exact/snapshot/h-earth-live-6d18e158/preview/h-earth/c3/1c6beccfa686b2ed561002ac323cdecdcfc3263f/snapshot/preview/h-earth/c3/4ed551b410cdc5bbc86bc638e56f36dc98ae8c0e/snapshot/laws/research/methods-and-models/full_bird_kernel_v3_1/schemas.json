@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:full-bird-kernel:3.1:schemas",
+  "title": "Full Bird Kernel v3.1 canonical structural schemas",
+  "$defs": {
+    "routeClass": {"enum":["FORWARD_CANDIDATE","LOCAL_REPAIR","UNDERBOUND","WRONG_SLOT","REJECT_REQUIRED"]},
+    "disposition": {"enum":["PASS_FORWARD","CORRECT_AND_RETURN","HOLD_IN_MOTION","RESLOT_AND_REDIRECT","REJECT"]},
+    "lifecycleStage": {"enum":["EXECUTING","GLOCK_QUALIFIED","PROVISIONALLY_SEALED","HOME_RETURN_VERIFIED","FINAL_CLOSED"]},
+    "sha256": {"type":"string","pattern":"^[a-f0-9]{64}$"},
+    "context": {
+      "type":"object",
+      "additionalProperties":false,
+      "required":["scope_id","construct_id","kernel_version","parameter_set_id","governance_assignment_id","semantic_adjudication_assignment_id","evidence_window_id"],
+      "properties": {
+        "scope_id":{"type":"string","minLength":1},
+        "construct_id":{"type":"string","minLength":1},
+        "kernel_version":{"const":"3.1.0"},
+        "parameter_set_id":{"type":"string","minLength":1},
+        "governance_assignment_id":{"type":"string","minLength":1},
+        "semantic_adjudication_assignment_id":{"type":"string","minLength":1},
+        "evidence_window_id":{"type":"string","minLength":1}
+      }
+    },
+    "governanceReceipt": {
+      "type":"object",
+      "required":["receipt_id","predicate_name","predicate_value","object_id","scope_id","construct_id","kernel_version","execution_history_id","edge_id","status","receipt_hash"],
+      "properties": {
+        "receipt_id":{"type":"string","minLength":1},
+        "predicate_name":{"enum":["g_scope","g_class","g_invariant","g_name","g_sequence","g_layer_binding","g_metadata_runtime_separation","g_free_will","g_contradiction_clear","g_illicit_skip_clear","g_semantic_leakage_clear","g_hidden_fail_clear","g_threshold_lock","g_evidence_complete","g_receipt_correspondence"]},
+        "predicate_value":{"type":"boolean"},
+        "object_id":{"type":"string","minLength":1},
+        "scope_id":{"type":"string","minLength":1},
+        "construct_id":{"type":"string","minLength":1},
+        "kernel_version":{"const":"3.1.0"},
+        "execution_history_id":{"type":"string","minLength":1},
+        "edge_id":{"type":"string","minLength":1},
+        "status":{"const":"VERIFIED"},
+        "receipt_hash":{"$ref":"#/$defs/sha256"}
+      }
+    },
+    "semanticReceipt": {
+      "type":"object",
+      "required":["adjudication_receipt_id","object_real","route_class","object_id","scope_id","construct_id","kernel_version","execution_history_id","edge_id","status","receipt_hash"],
+      "properties": {
+        "adjudication_receipt_id":{"type":"string","minLength":1},
+        "object_real":{"type":"boolean"},
+        "route_class":{"$ref":"#/$defs/routeClass"},
+        "object_id":{"type":"string","minLength":1},
+        "scope_id":{"type":"string","minLength":1},
+        "construct_id":{"type":"string","minLength":1},
+        "kernel_version":{"const":"3.1.0"},
+        "execution_history_id":{"type":"string","minLength":1},
+        "edge_id":{"type":"string","minLength":1},
+        "status":{"const":"VERIFIED"},
+        "receipt_hash":{"$ref":"#/$defs/sha256"}
+      }
+    },
+    "executionEdgeRecord": {
+      "type":"object",
+      "required":["record_type","kernel_version","object_id","origin_id","execution_history_id","edge_id","context","source_microstate","target_microstate","M_score","HFnum","HFgov","HFdisp","HFv3","Av3_score","disposition","F_score","edge_hash"],
+      "properties": {
+        "record_type":{"const":"EXECUTION_EDGE_RECORD"},
+        "kernel_version":{"const":"3.1.0"},
+        "context":{"$ref":"#/$defs/context"},
+        "disposition":{"$ref":"#/$defs/disposition"},
+        "edge_hash":{"$ref":"#/$defs/sha256"}
+      }
+    }
+  }
+}

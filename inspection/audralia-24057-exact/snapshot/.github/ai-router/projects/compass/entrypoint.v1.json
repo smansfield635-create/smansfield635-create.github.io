@@ -1,0 +1,94 @@
+{
+  "schema": "REPOSITORY_AI_PROJECT_ENTRYPOINT_v1",
+  "projectId": "COMPASS",
+  "status": "ACTIVE_REGISTERED_PROJECT",
+  "ownedPathPrefixes": ["assets/compass/"],
+  "ownedExactPaths": [
+    "index.html",
+    ".github/workflows/compass-display-continuity-validation.yml",
+    ".github/workflows/compass-performance-successor-validation.yml",
+    ".github/workflows/compass-carousel-successor-live-qualification.yml",
+    ".github/workflows/pages-direct-deploy.yml"
+  ],
+  "entrypoint": ".github/ai-router/projects/compass/entrypoint.v1.json",
+  "authorityBoundary": [
+    "THIS_ENTRYPOINT_ROUTES_AND_DOES_NOT_CREATE_MUTATION_AUTHORITY",
+    "COMPASS_IS_GLOBAL_ORIENTATION_AND_CARDINAL_AUTHORITY_ONLY",
+    "COMPASS_MAY_NOT_ABSORB_DOOR_HOME_LOCAL_DOMAIN_OR_SCIENTIFIC_AUTHORITY",
+    "DISPLAY_CONTINUITY_CONSTITUTION_IS_MANDATORY_DEVELOPMENT_CONTEXT_AND_CREATES_NO_AUTHORITY",
+    "COMPASS_PAGE_RECONSTRUCTION_EXECUTION_PLAN_DISPLAY_FIDELITY_AMENDMENT_INFORMATION_DELIVERY_AMENDMENT_NARRATIVE_TRANSITION_COHERENCE_AMENDMENT_AND_INTERACTION_DIAGNOSTIC_AMENDMENT_ARE_MANDATORY_CONSTRUCTION_CONTEXT_AND_CREATE_NO_AUTHORITY",
+    "AWARD_FILM_CYCLICAL_PRODUCTION_PROTOCOL_IS_MANDATORY_FOR_COMPASS_AWARD_FILM_AND_CHAPTER_VIDEO_WORK_AND_CREATES_NO_MUTATION_PUBLICATION_OR_DEPLOYMENT_AUTHORITY",
+    "AWARD_FILM_PRODUCTION_MUST_REUSE_VERIFIED_EXISTING_SOLUTIONS_BEFORE_CREATING_NEW_TRANSPORT_RECOVERY_WORKFLOW_GOVERNANCE_OR_EXECUTION_INFRASTRUCTURE",
+    "DOOR_AND_HOME_REMAIN_OUT_OF_SCOPE_UNTIL_CANONICAL_COMPASS_CLOSURE",
+    "STOP_RATHER_THAN_INFER_MISSING_AUTHORITY_OR_REQUIRED_QUALIFICATION"
+  ],
+  "requiredInstructions": [
+    "AGENTS.md",
+    "AI_ENTRYPOINT.json",
+    ".github/ai-router/display-continuity-constitution-v1/display-constitution.v1.json",
+    "control-plane/whole-estate/narrative-continuity-development-map-v1/map.v1.json",
+    ".github/ai-router/projects/compass/route-display-contract.v1.json",
+    ".github/ai-router/projects/compass/construction-execution-plan.v2.json",
+    ".github/ai-router/projects/compass/construction-execution-plan.v2.display-fidelity-amendment.json",
+    ".github/ai-router/projects/compass/construction-execution-plan.v2.information-delivery-amendment.json",
+    ".github/ai-router/projects/compass/construction-execution-plan.v2.narrative-transition-coherence-amendment.json",
+    ".github/ai-router/projects/compass/construction-execution-plan.v2.interaction-diagnostic-amendment.json",
+    ".github/ai-router/projects/compass/AWARD_FILM_CYCLICAL_PRODUCTION_PROTOCOL_v1.md"
+  ],
+  "registries": [
+    ".github/ai-router/router.v1.json",
+    ".github/ai-router/shared-procedures.v1.json"
+  ],
+  "procedures": {
+    "operationAdmission": "CANONICAL_REPOSITORY_OPERATION_INTAKE_REQUIRED_BEFORE_MUTATION",
+    "displayContinuity": "WHOLE_ESTATE_DISPLAY_CONTINUITY",
+    "routeDisplayContract": ".github/ai-router/projects/compass/route-display-contract.v1.json",
+    "constructionPlan": ".github/ai-router/projects/compass/construction-execution-plan.v2.json",
+    "constructionPlanDisplayFidelityAmendment": ".github/ai-router/projects/compass/construction-execution-plan.v2.display-fidelity-amendment.json",
+    "constructionPlanInformationDeliveryAmendment": ".github/ai-router/projects/compass/construction-execution-plan.v2.information-delivery-amendment.json",
+    "constructionPlanNarrativeTransitionCoherenceAmendment": ".github/ai-router/projects/compass/construction-execution-plan.v2.narrative-transition-coherence-amendment.json",
+    "constructionPlanInteractionDiagnosticAmendment": ".github/ai-router/projects/compass/construction-execution-plan.v2.interaction-diagnostic-amendment.json",
+    "awardFilmCyclicalProductionProtocol": ".github/ai-router/projects/compass/AWARD_FILM_CYCLICAL_PRODUCTION_PROTOCOL_v1.md",
+    "awardFilmCycleLaw": "BASELINE_PLUS_SOURCES_TO_INSPECT_TO_BOUNDED_CONSTRUCTION_TO_RENDER_TO_TECHNICAL_QC_TO_CINEMATIC_QC_TO_OWNER_INSPECTION_TO_PUBLISH_TO_FREEZE_SUCCESSOR_TO_NEXT_FILM",
+    "awardFilmReuseLaw": "REUSE_VERIFIED_EXISTING_SOURCE_CUSTODY_MASTERS_HASHES_RECEIPTS_MATERIALIZERS_CARRIERS_AND_TOOLS_BEFORE_CREATING_NEW_INFRASTRUCTURE",
+    "awardFilmTransportLaw": "EXACT_BYTE_GIT_GITHUB_OR_REMOTE_RECOVERY_IS_FALLBACK_ONLY_WHEN_AUTHORITATIVE_MEDIA_CANNOT_OTHERWISE_BE_INSPECTED_OR_MATERIALIZED; TRANSPORT_ROUTE_DOES_NOT_DEFINE_MEDIA_IDENTITY",
+    "awardFilmGovernanceBoundaryLaw": "REPOSITORY_AND_LIVE_MUTATIONS_REMAIN_GOVERNED; REDUNDANT_GOVERNANCE_OR_TRANSPORT_MUST_NOT_BLOCK_AUTHORIZED_PREPUBLICATION_MEDIA_WORK_WHEN_EXACT_SOURCE_IDENTITY_IS_ALREADY_PROVEN",
+    "awardFilmOverEngineeringStop": "DO_NOT_ADD_A_PREREQUISITE_TOOL_CARRIER_WORKFLOW_REGISTRY_OR_GOVERNANCE_OBJECT_IF_AN_EXISTING_VERIFIED_SOLUTION_ALREADY_HANDLES_THE_NEED_OR_IF_THE_ADDITION_DOES_NOT_MATERIALLY_IMPROVE_MEDIA_QUALITY_SOURCE_TRUTH_NONREGRESSION_QUALIFICATION_PUBLICATION_INTEGRITY_SAFETY_OR_DURABLE_HANDOFF",
+    "constructionContextLaw": "LOAD_V2_DISPLAY_FIDELITY_AMENDMENT_INFORMATION_DELIVERY_AMENDMENT_NARRATIVE_TRANSITION_COHERENCE_AMENDMENT_AND_INTERACTION_DIAGNOSTIC_AMENDMENT_TOGETHER; NONE_MAY_BE_USED_TO_ERASE_WEAKEN_OR_BYPASS_ANOTHER",
+    "informationDeliveryLaw": "STABLE_FRAME + PERSISTENT_CHOICES + ONE_ACTIVE_INFORMATION_STATE + STATE_DRIVEN_REPLACEMENT",
+    "narrativeTransitionCoherenceLaw": "DISCOVERY_PROPOSITION + FIND_THE_DOOR_TO_MIRRORLAND + READABLE_CARDINAL_EQUALS_RENDERED_FOREGROUND_CARDINAL",
+    "interactionDiagnosticLaw": "LOCAL_ACCURATE_SWIPE_GUIDANCE + STATE_CORRECT_FUNCTION_AND_RETURN_CONTROLS + ANATOMICALLY_RECOGNIZABLE_BRAIN",
+    "failClosedVerifier": ".github/ai-router/projects/compass/verify-display-continuity.v1.mjs",
+    "routerCommand": "node tools/repository-ai-entry-router.mjs --path <PATH> --task <TASK> [--mutation-intent] --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/compass-router-receipt.json"
+  },
+  "localExecution": {
+    "allowed": true,
+    "requirements": [
+      "FULL_REPOSITORY_CHECKOUT",
+      "EXACT_SUBJECT_HEAD",
+      "COMMAND_EMITTED_ADMISSION_RECEIPT",
+      "ROUTER_RECEIPT_FOR_EVERY_AFFECTED_PATH",
+      "LOAD_AND_MAP_EVERY_COMPASS_MUTATION_TO_CONSTRUCTION_EXECUTION_PLAN_V2_DISPLAY_FIDELITY_AMENDMENT_INFORMATION_DELIVERY_AMENDMENT_NARRATIVE_TRANSITION_COHERENCE_AMENDMENT_AND_INTERACTION_DIAGNOSTIC_AMENDMENT",
+      "FOR_AWARD_FILM_OR_CHAPTER_VIDEO_WORK_LOAD_AWARD_FILM_CYCLICAL_PRODUCTION_PROTOCOL_AND_CONTINUE_FROM_THE_FIRST_GENUINELY_INCOMPLETE_PRODUCTION_GATE_RATHER_THAN_REBUILDING_SOLVED_INFRASTRUCTURE"
+    ]
+  },
+  "githubActionsExecution": {
+    "routerValidationWorkflow": ".github/workflows/repository-ai-entry-router-validation.yml",
+    "displayContinuityValidationWorkflow": ".github/workflows/compass-display-continuity-validation.yml",
+    "performanceSuccessorValidationWorkflow": ".github/workflows/compass-performance-successor-validation.yml",
+    "liveQualificationWorkflow": ".github/workflows/compass-carousel-successor-live-qualification.yml",
+    "deploymentWorkflow": ".github/workflows/pages-direct-deploy.yml"
+  },
+  "stoppingRules": [
+    "STOP_IF_CANONICAL_INTAKE_IS_NOT_ADMITTED_AND_LOCKED",
+    "STOP_IF_ROUTER_DISPOSITION_IS_BLOCK_OR_STOP",
+    "STOP_IF_ROUTE_DISPLAY_CONTRACT_IS_INCOMPLETE",
+    "STOP_IF_CONSTRUCTION_EXECUTION_PLAN_V2_DISPLAY_FIDELITY_AMENDMENT_INFORMATION_DELIVERY_AMENDMENT_NARRATIVE_TRANSITION_COHERENCE_AMENDMENT_OR_INTERACTION_DIAGNOSTIC_AMENDMENT_IS_MISSING_UNLOCKED_OR_UNMAPPED",
+    "STOP_IF_AWARD_FILM_OR_CHAPTER_VIDEO_WORK_HAS_NOT_LOADED_THE_AWARD_FILM_CYCLICAL_PRODUCTION_PROTOCOL",
+    "STOP_IF_A_FRESH_ROOM_PROPOSES_NEW_AWARD_FILM_TRANSPORT_RECOVERY_WORKFLOW_REGISTRY_OR_EXECUTION_INFRASTRUCTURE_BEFORE_CHECKING_EXISTING_VERIFIED_SOLUTIONS_AND_CUSTODY",
+    "STOP_IF_CARDINAL_AUTHORITY_WOULD_BE_CORRUPTED",
+    "STOP_IF_DOOR_OR_HOME_MUTATION_IS_REQUIRED",
+    "STOP_IF_REQUIRED_QUALIFICATION_OR_RUNTIME_EVIDENCE_IS_MISSING",
+    "STOP_BEFORE_MERGE_UNTIL_EXACT_CANDIDATE_ENGINEERING_PLAYWRIGHT_DISPLAY_FIDELITY_AND_REQUIRED_VISUAL_PERCEPTUAL_QUALIFICATION_PASSES"
+  ]
+}

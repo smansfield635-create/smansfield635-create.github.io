@@ -1,0 +1,304 @@
+{
+  "contract": "LAWS_COMPLETE_NARRATIVE_MAP_COMPLETENESS_AMENDMENT_v1",
+  "mode": "NON_PRODUCT_DESIGN_AUTHORITY_SUCCESSOR",
+  "status": "FREEZE_ELIGIBLE_PENDING_USER_FREEZE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "base_map": {
+    "contract": "LAWS_COMPLETE_NARRATIVE_MAP_v1",
+    "path": "laws/control-plane/narrative/laws-complete-narrative-map-v1.json",
+    "core_24_route_narrative": "ACCEPTED_UNCHANGED",
+    "replacement": false,
+    "amendment_relationship": "CONTROLLING_COMPLETENESS_SUCCESSOR"
+  },
+  "disposition": {
+    "pr_489_current_disposition": "AMENDMENT_COMPLETE_PENDING_USER_FREEZE",
+    "core_24_route_narrative": "ACCEPTED",
+    "complete_chamber_authority": "AMENDED_AND_FREEZE_ELIGIBLE",
+    "product_implementation": "HELD",
+    "representative_implementation": "HELD",
+    "user_freeze_recorded": false,
+    "automatic_freeze": false
+  },
+  "coverage_classes": {
+    "child_narrative_routes": 24,
+    "canonical_migrated_records": 48,
+    "complete_cp6_custody_population": 138,
+    "test_records": 14,
+    "research_records": 34,
+    "main_records": 63,
+    "shared_foundation_records": 23,
+    "historical_archive_records": 2,
+    "deleted_stale_records": 2,
+    "legacy_and_source_presentation_routes": "EXPLICITLY_INVENTORIED_FROM_CP6_CUSTODY_AND_ROUTE_RETIREMENT_AUTHORITIES"
+  },
+  "record_population_authorities": [
+    {
+      "path": "laws/control-plane/cp6-3/migration-ledger.json",
+      "contract": "LAWS_CHAMBER_CP6_3_CANONICAL_CONTENT_MIGRATION_LEDGER_v1",
+      "governs": "THE_48_CANONICAL_TEST_AND_RESEARCH_RECORDS"
+    },
+    {
+      "path": "laws/control-plane/cp6-4-5/content-reduction-custody-ledger.json",
+      "governs": "THE_COMPLETE_138_ROW_CP6_CUSTODY_POPULATION"
+    },
+    {
+      "path": "laws/control-plane/cp6-1/route-retirement-ledger.json",
+      "contract": "LAWS_CHAMBER_CP6_1_ROUTE_RETIREMENT_LEDGER_v1",
+      "governs": "RETIRED_AND_RETAINED_LEGACY_ROUTE_DISPOSITIONS"
+    }
+  ],
+  "reference_hierarchy": {
+    "visual_and_mathematical_expression_authority": "MAIN_DIAMOND_GATE_BRIDGE_COMPASS",
+    "main_compass_authority_scope": [
+      "ATMOSPHERIC_AND_COSMIC_DEPTH",
+      "PRACTICAL_MATHEMATICAL_CONTEXT",
+      "NESTED_FORMULA_AND_LENS_SURFACES",
+      "EXPERIENTIAL_HIERARCHY",
+      "MOBILE_SPECIFIC_COMPOSITION",
+      "REDUCED_MOTION_EQUIVALENCE",
+      "STATIC_EQUIVALENCE"
+    ],
+    "interaction_organization_reference": "R.O.B._AND_W.A.V.E._TAB_AND_DISCLOSURE_SYSTEM",
+    "rob_wave_reference_scope": [
+      "TAB_COMPARTMENTALIZATION",
+      "NESTED_DISCLOSURE_BEHAVIOR",
+      "ACTIVE_LENS_ORGANIZATION",
+      "COLLAPSED_DETAIL_ACCESS"
+    ],
+    "rob_wave_excluded_authority": [
+      "VISUAL_IDENTITY",
+      "CAMPAIGN_IDENTITY",
+      "MATHEMATICAL_EXPRESSION",
+      "COPY",
+      "CONTENT",
+      "CLAIM_STATUS"
+    ],
+    "campaign_visual_identity_copy": "PROHIBITED",
+    "campaign_copy_reuse": "PROHIBITED",
+    "tabs_placed_above_unchanged_monolithic_content": "PROHIBITED",
+    "controlling_rule": "The Main Compass supplies visual, mathematical, practical, and experiential quality authority. R.O.B. and W.A.V.E. supply compartmentalization mechanics only."
+  },
+  "equation_expression_contract": {
+    "required_sequence": [
+      "WHY_IT_MATTERS",
+      "FORMAL_SELECTABLE_NOTATION",
+      "VISUAL_RELATIONSHIP",
+      "VARIABLE_DEFINITIONS",
+      "PRACTICAL_LENS",
+      "ENGINEERING_LENS",
+      "EMPIRICAL_STATUS",
+      "CLAIM_BOUNDARY",
+      "COLLAPSED_CUSTODY_RECORD"
+    ],
+    "formal_notation": {
+      "selectable": true,
+      "copyable": true,
+      "semantic_html_or_mathml_preferred": true,
+      "image_only_math": "PROHIBITED",
+      "terminal_style_block_as_primary_delivery": "PROHIBITED",
+      "aesthetic_formula_mutation": "PROHIBITED"
+    },
+    "required_context": [
+      "VARIABLE_NAME_AND_DEFINITION",
+      "UNIT_OR_DIMENSION",
+      "DOMAIN_AND_OPERATING_RANGE",
+      "DENOMINATOR_AND_NORMALIZATION",
+      "ZERO_NULL_AND_SAFE_MODE_BEHAVIOR",
+      "THRESHOLD_AND_DECISION_RULE",
+      "ASSUMPTIONS",
+      "SCOPE_AND_EXCLUSIONS",
+      "EXACT_SOURCE_AND_CANONICAL_RECORD"
+    ],
+    "status_vocabulary": [
+      "SPECIFIED",
+      "EXECUTED",
+      "VALIDATED_WITHIN_STATED_DOMAIN",
+      "UNDER_REVIEW",
+      "NOT_EXECUTED",
+      "NOT_ESTABLISHED"
+    ],
+    "relationship_delivery": "Every equation must be accompanied by a visual account of how variables, constraints, states, and outputs relate. Decoration cannot substitute for interpretation.",
+    "lens_rule": "Practical, Engineering, and Empirical interpretations remain separately selectable and cannot silently upgrade one another.",
+    "responsive_rule": "Full-motion, reduced-motion, and static versions must preserve identical notation, variables, relationships, status, and claim boundary without mobile overflow.",
+    "custody_rule": "Hashes, source paths, versions, implementation ownership, and migration receipts remain in a collapsed canonical audit record."
+  },
+  "canonical_record_presentation_rule": {
+    "source_copy_policy": "PRESERVED_TRANSITIONAL_SOURCE_COPY_UNTIL_SEPARATELY_RECONCILED",
+    "no_ungoverned_monolith": true,
+    "public_record_delivery": "PAGE_SPECIFIC_STORY_SLICE_WITH_COLLAPSED_CUSTODY",
+    "technical_record_delivery": "COLLAPSED_CANONICAL_AUDIT_LAYER",
+    "complete_study_delivery": "FRONTIER_ONLY",
+    "rule": "Every migrated record must be delivered through its canonical narrative owner, a renewed equation representative, or a collapsed audit layer. Canonical migration alone does not establish presentation renewal."
+  },
+  "canonical_records": [
+    {"content_id":"CP6-CONTENT-026","title":"Results & Records","canonical_owner":"Test / Result and Record","canonical_route":"/laws/test/result-and-record/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-057","title":"Source Custody Rule","canonical_owner":"Test / Admission and Baseline","canonical_route":"/laws/test/admission-and-baseline/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-058","title":"Formula Context","canonical_owner":"Research / Methods and Models","canonical_route":"/laws/research/methods-and-models/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE","equation_contract_required":true},
+    {"content_id":"CP6-CONTENT-059","title":"Universal Diagnostic Collapse Predicate","canonical_owner":"Research / Methods and Models","canonical_route":"/laws/research/methods-and-models/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE","formula_or_data_dependency":"UNIVERSAL_DIAGNOSTIC_COLLAPSE_PREDICATE","equation_contract_required":true},
+    {"content_id":"CP6-CONTENT-060","title":"451 Structural Envelope","canonical_owner":"Research / Methods and Models","canonical_route":"/laws/research/methods-and-models/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE","formula_or_data_dependency":"451_ASSESSMENT_STRUCTURAL_ENVELOPE","equation_contract_required":true},
+    {"content_id":"CP6-CONTENT-061","title":"A3D-E / PCR Kernel","canonical_owner":"Research / Methods and Models","canonical_route":"/laws/research/methods-and-models/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE","formula_or_data_dependency":"A3D_E_PCR_KERNEL","equation_contract_required":true},
+    {"content_id":"CP6-CONTENT-062","title":"Zero-Aware Product Discipline","canonical_owner":"Research / Methods and Models","canonical_route":"/laws/research/methods-and-models/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE","formula_or_data_dependency":"ZERO_AWARE_PRODUCT_DISCIPLINE","equation_contract_required":true},
+    {"content_id":"CP6-CONTENT-063","title":"Industrial Closure Equation","canonical_owner":"Research / Methods and Models","canonical_route":"/laws/research/methods-and-models/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE","formula_or_data_dependency":"INDUSTRIAL_CLOSURE_EQUATION","equation_contract_required":true,"representative_surface":"/laws/industrial-posture/"},
+    {"content_id":"CP6-CONTENT-064","title":"Energy Loop Law","canonical_owner":"Research / Methods and Models","canonical_route":"/laws/research/methods-and-models/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE","formula_or_data_dependency":"ENERGY_LOOP_LAW","equation_contract_required":true},
+    {"content_id":"CP6-CONTENT-065","title":"Notation Boundary","canonical_owner":"Research / Methods and Models","canonical_route":"/laws/research/methods-and-models/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE","formula_or_data_dependency":"NOTATION_BOUNDARY","equation_contract_required":true},
+    {"content_id":"CP6-CONTENT-067","title":"Source Matching","canonical_owner":"Research / Evidence and Sources","canonical_route":"/laws/research/evidence-and-sources/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-068","title":"No-Match Discipline","canonical_owner":"Research / Methods and Models","canonical_route":"/laws/research/methods-and-models/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE","equation_contract_required":true},
+    {"content_id":"CP6-CONTENT-069","title":"Threshold Distinction","canonical_owner":"Test / Admission and Baseline","canonical_route":"/laws/test/admission-and-baseline/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE","equation_contract_required":true},
+    {"content_id":"CP6-CONTENT-070","title":"Multi-Gate Verification","canonical_owner":"Test / Forward Construction","canonical_route":"/laws/test/forward-construction/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE","formula_or_data_dependency":"INDUSTRIAL_WATER_MULTI_GATE_SEQUENCE","equation_contract_required":true},
+    {"content_id":"CP6-CONTENT-071","title":"Diagnostic Boundary","canonical_owner":"Research / Findings and Boundaries","canonical_route":"/laws/research/findings-and-boundaries/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-074","title":"Finance Track A","canonical_owner":"Research / Evidence and Sources","canonical_route":"/laws/research/evidence-and-sources/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-075","title":"Finance Track B","canonical_owner":"Research / Evidence and Sources","canonical_route":"/laws/research/evidence-and-sources/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-076","title":"Pathway 8 Storage SOH","canonical_owner":"Research / Evidence and Sources","canonical_route":"/laws/research/evidence-and-sources/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-077","title":"Luxra Warranty Provenance","canonical_owner":"Research / Evidence and Sources","canonical_route":"/laws/research/evidence-and-sources/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-078","title":"Synthetic Fixtures","canonical_owner":"Research / Methods and Models","canonical_route":"/laws/research/methods-and-models/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE","equation_contract_required":true},
+    {"content_id":"CP6-CONTENT-079","title":"Real Telemetry Corridor","canonical_owner":"Research / Evidence and Sources","canonical_route":"/laws/research/evidence-and-sources/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-080","title":"Observation Gate","canonical_owner":"Research / Findings and Boundaries","canonical_route":"/laws/research/findings-and-boundaries/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-082","title":"Research Standing","canonical_owner":"Research / Findings and Boundaries","canonical_route":"/laws/research/findings-and-boundaries/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-083","title":"Strongest Bounded Supports","canonical_owner":"Research / Findings and Boundaries","canonical_route":"/laws/research/findings-and-boundaries/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-084","title":"Bounded or Mixed Lanes","canonical_owner":"Research / Findings and Boundaries","canonical_route":"/laws/research/findings-and-boundaries/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-085","title":"Non-Validation Signals","canonical_owner":"Research / Findings and Boundaries","canonical_route":"/laws/research/findings-and-boundaries/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-086","title":"Candidate Outputs","canonical_owner":"Research / Findings and Boundaries","canonical_route":"/laws/research/findings-and-boundaries/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-087","title":"Applied Systems / Frontier Link-Outs","canonical_owner":"Research / Applied Investigations","canonical_route":"/laws/research/applied-investigations/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-088","title":"Energy","canonical_owner":"Research / Applied Investigations","canonical_route":"/laws/research/applied-investigations/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-089","title":"Water","canonical_owner":"Research / Applied Investigations","canonical_route":"/laws/research/applied-investigations/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-090","title":"Industrial Water","canonical_owner":"Research / Applied Investigations","canonical_route":"/laws/research/applied-investigations/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE","formula_or_data_dependency":"INDUSTRIAL_WATER","equation_contract_required":true},
+    {"content_id":"CP6-CONTENT-091","title":"Closed-Loop Waste / ICE","canonical_owner":"Research / Applied Investigations","canonical_route":"/laws/research/applied-investigations/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-092","title":"Energy Safety Boundary","canonical_owner":"Research / Applied Investigations","canonical_route":"/laws/research/applied-investigations/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-093","title":"Water Threshold Example","canonical_owner":"Research / Applied Investigations","canonical_route":"/laws/research/applied-investigations/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-094","title":"HomeWater Claim Discipline","canonical_owner":"Research / Applied Investigations","canonical_route":"/laws/research/applied-investigations/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-095","title":"IW-CLPP","canonical_owner":"Research / Applied Investigations","canonical_route":"/laws/research/applied-investigations/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE","formula_or_data_dependency":"IW_CLPP","equation_contract_required":true},
+    {"content_id":"CP6-CONTENT-107","title":"Pathway 6 Transport","canonical_owner":"Research / Applied Investigations","canonical_route":"/laws/research/applied-investigations/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-108","title":"Pathway 8 Storage","canonical_owner":"Research / Applied Investigations","canonical_route":"/laws/research/applied-investigations/","presentation_status":"RENEW_AS_PUBLIC_STORY_PAGE"},
+    {"content_id":"CP6-CONTENT-119","title":"Controller Registry Source","canonical_owner":"Test / Reverse Audit","canonical_route":"/laws/test/reverse-audit/","presentation_status":"COLLAPSE_INTO_CANONICAL_AUDIT_LAYER"},
+    {"content_id":"CP6-CONTENT-121","title":"Evidence Artifact Rule","canonical_owner":"Test / Reverse Audit","canonical_route":"/laws/test/reverse-audit/","presentation_status":"COLLAPSE_INTO_CANONICAL_AUDIT_LAYER"},
+    {"content_id":"CP6-CONTENT-122","title":"Receipts, Graphics, and ACK Packets","canonical_owner":"Test / Reverse Audit","canonical_route":"/laws/test/reverse-audit/","presentation_status":"COLLAPSE_INTO_CANONICAL_AUDIT_LAYER"},
+    {"content_id":"CP6-CONTENT-123","title":"Controller","canonical_owner":"Test / Result and Record","canonical_route":"/laws/test/result-and-record/","presentation_status":"COLLAPSE_INTO_CANONICAL_AUDIT_LAYER"},
+    {"content_id":"CP6-CONTENT-124","title":"Compositor","canonical_owner":"Test / Result and Record","canonical_route":"/laws/test/result-and-record/","presentation_status":"COLLAPSE_INTO_CANONICAL_AUDIT_LAYER"},
+    {"content_id":"CP6-CONTENT-125","title":"Crystals","canonical_owner":"Test / Result and Record","canonical_route":"/laws/test/result-and-record/","presentation_status":"COLLAPSE_INTO_CANONICAL_AUDIT_LAYER"},
+    {"content_id":"CP6-CONTENT-126","title":"Interactions","canonical_owner":"Test / Result and Record","canonical_route":"/laws/test/result-and-record/","presentation_status":"COLLAPSE_INTO_CANONICAL_AUDIT_LAYER"},
+    {"content_id":"CP6-CONTENT-127","title":"Cosmos","canonical_owner":"Test / Result and Record","canonical_route":"/laws/test/result-and-record/","presentation_status":"COLLAPSE_INTO_CANONICAL_AUDIT_LAYER"},
+    {"content_id":"CP6-CONTENT-129","title":"Center Planet","canonical_owner":"Test / Result and Record","canonical_route":"/laws/test/result-and-record/","presentation_status":"COLLAPSE_INTO_CANONICAL_AUDIT_LAYER"},
+    {"content_id":"CP6-CONTENT-137","title":"HTML Custody Receipt Structural Provenance","canonical_owner":"Test / Reverse Audit","canonical_route":"/laws/test/reverse-audit/","presentation_status":"COLLAPSE_INTO_CANONICAL_AUDIT_LAYER"}
+  ],
+  "canonical_record_validation": {
+    "record_count": 48,
+    "unique_record_count": 48,
+    "destination_counts": {
+      "Test / Admission and Baseline": 2,
+      "Test / Forward Construction": 1,
+      "Test / Reverse Audit": 4,
+      "Test / Result and Record": 7,
+      "Research / Evidence and Sources": 6,
+      "Research / Methods and Models": 10,
+      "Research / Applied Investigations": 11,
+      "Research / Findings and Boundaries": 7
+    },
+    "test_total": 14,
+    "research_total": 34
+  },
+  "complete_custody_population": {
+    "record_count": 138,
+    "disposition_counts": {
+      "TEST": 14,
+      "RESEARCH": 34,
+      "MAIN": 63,
+      "SHARED_FOUNDATION": 23,
+      "ARCHIVE": 2,
+      "DELETE": 2
+    },
+    "shared_foundation_record_ids": [
+      "CP6-CONTENT-004","CP6-CONTENT-053","CP6-CONTENT-054","CP6-CONTENT-055","CP6-CONTENT-056","CP6-CONTENT-072","CP6-CONTENT-073","CP6-CONTENT-081","CP6-CONTENT-110","CP6-CONTENT-111","CP6-CONTENT-112","CP6-CONTENT-113","CP6-CONTENT-114","CP6-CONTENT-115","CP6-CONTENT-116","CP6-CONTENT-118","CP6-CONTENT-120","CP6-CONTENT-131","CP6-CONTENT-132","CP6-CONTENT-133","CP6-CONTENT-134","CP6-CONTENT-135","CP6-CONTENT-136"
+    ],
+    "archive_record_ids": ["CP6-CONTENT-117","CP6-CONTENT-128"],
+    "deleted_stale_record_ids": ["CP6-CONTENT-130","CP6-CONTENT-138"],
+    "rule": "The 48 canonical records are part of the complete 138-row custody population. Route coverage cannot substitute for custody-population coverage."
+  },
+  "legacy_and_source_presentation_routes": [
+    {"route":"/laws/","surviving":true,"status":"RENEW_AS_PUBLIC_STORY_PAGE","canonical_owner":"/laws/","reason":"The Compass root is the controlling chamber orientation; migrated source copies may not reappear as a monolithic primary experience."},
+    {"route":"/laws/industrial-posture/","surviving":true,"status":"RENEW_AS_PUBLIC_STORY_PAGE","canonical_owner":"/laws/research/methods-and-models/#cp6-content-063-industrial-closure-equation","reason":"Fifth representative proving equation-record transformation while canonical ownership remains with Methods and Models."},
+    {"route":"/laws/battery-heldout-study/","surviving":true,"status":"RETAIN_AS_COMPATIBILITY_WRAPPER","canonical_owner":"/laws/research/applied-investigations/#cp6-battery-study-index","complete_record":"/frontier/energy/battery-coherence-study/"},
+    {"route":"/laws/scientific-law/","surviving":true,"status":"RETAIN_AS_COMPATIBILITY_WRAPPER","canonical_owner":"/laws/","reason":"Legacy scientific-law entrance must hand off to the current six-authority chamber and Reality/Research owners."},
+    {"route":"/laws/scientific-law/battery-heldout-study/","surviving":true,"status":"RETAIN_AS_COMPATIBILITY_WRAPPER","canonical_owner":"/laws/research/findings-and-boundaries/#cp6-battery-findings","complete_record":"/frontier/energy/battery-coherence-study/"},
+    {"route":"/laws/categories/reality/battery-heldout-study/","surviving":true,"status":"RETAIN_AS_COMPATIBILITY_WRAPPER","canonical_owner":"/laws/categories/reality/evidence/","complete_record":"/frontier/energy/battery-coherence-study/"},
+    {"route":"/laws/categories/reality/theory.html","surviving":true,"status":"RETAIN_AS_COMPATIBILITY_WRAPPER","canonical_owner":"/laws/categories/reality/theory/"},
+    {"route":"/laws/categories/structure/constraints.html","surviving":true,"status":"RETAIN_AS_COMPATIBILITY_WRAPPER","canonical_owner":"/laws/categories/structure/constraints/"},
+    {"route":"/laws/categories/structure/governance.html","surviving":true,"status":"RETAIN_AS_COMPATIBILITY_WRAPPER","canonical_owner":"/laws/categories/structure/governance/"},
+    {"route":"/laws/categories/flow/a/","surviving":false,"status":"ROUTE_TO_CANONICAL_OWNER","canonical_owner":"/laws/categories/flow/","historical_disposition":"RETIRED_BY_CP6_1"},
+    {"route":"/laws/categories/flow/a/one/","surviving":false,"status":"PRESERVE_SOURCE_ONLY","canonical_owner":null,"historical_disposition":"NO_DIRECT_SUBSTANTIVE_REPLACEMENT"},
+    {"route":"/laws/categories/flow/a/two/","surviving":false,"status":"PRESERVE_SOURCE_ONLY","canonical_owner":null,"historical_disposition":"NO_DIRECT_SUBSTANTIVE_REPLACEMENT"},
+    {"route":"/laws/categories/flow/a/three/","surviving":false,"status":"PRESERVE_SOURCE_ONLY","canonical_owner":null,"historical_disposition":"NO_DIRECT_SUBSTANTIVE_REPLACEMENT"},
+    {"route":"/laws/categories/flow/a/four/","surviving":false,"status":"PRESERVE_SOURCE_ONLY","canonical_owner":null,"historical_disposition":"NO_DIRECT_SUBSTANTIVE_REPLACEMENT"},
+    {"route":"/laws/categories/structure/a/","surviving":false,"status":"ROUTE_TO_CANONICAL_OWNER","canonical_owner":"/laws/categories/structure/constraints/","historical_disposition":"RETIRED_BY_CP6_1"},
+    {"route":"/laws/categories/structure/a/one/","surviving":false,"status":"PRESERVE_SOURCE_ONLY","canonical_owner":null,"historical_disposition":"NO_DIRECT_SUBSTANTIVE_REPLACEMENT"},
+    {"route":"/laws/categories/structure/a/two/","surviving":false,"status":"PRESERVE_SOURCE_ONLY","canonical_owner":null,"historical_disposition":"NO_DIRECT_SUBSTANTIVE_REPLACEMENT"},
+    {"route":"/laws/categories/structure/a/three/","surviving":false,"status":"PRESERVE_SOURCE_ONLY","canonical_owner":null,"historical_disposition":"NO_DIRECT_SUBSTANTIVE_REPLACEMENT"},
+    {"route":"/laws/categories/structure/a/four/","surviving":false,"status":"PRESERVE_SOURCE_ONLY","canonical_owner":null,"historical_disposition":"NO_DIRECT_SUBSTANTIVE_REPLACEMENT"},
+    {"route":"/laws/categories/structure/b/one/","surviving":false,"status":"ROUTE_TO_CANONICAL_OWNER","canonical_owner":"/laws/categories/structure/governance/","historical_disposition":"RETIRED_BY_CP6_1"},
+    {"route":"/laws/categories/structure/b/two/","surviving":false,"status":"ROUTE_TO_CANONICAL_OWNER","canonical_owner":"/laws/categories/structure/governance/","historical_disposition":"RETIRED_BY_CP6_1"},
+    {"route":"/laws/categories/structure/b/three/","surviving":false,"status":"ROUTE_TO_CANONICAL_OWNER","canonical_owner":"/laws/categories/structure/governance/","historical_disposition":"RETIRED_BY_CP6_1"},
+    {"route":"/laws/categories/structure/b/four/","surviving":false,"status":"ROUTE_TO_CANONICAL_OWNER","canonical_owner":"/laws/categories/structure/governance/","historical_disposition":"RETIRED_BY_CP6_1"}
+  ],
+  "legacy_surface_rules": {
+    "allowed_statuses": [
+      "RENEW_AS_PUBLIC_STORY_PAGE",
+      "COLLAPSE_INTO_CANONICAL_AUDIT_LAYER",
+      "RETAIN_AS_COMPATIBILITY_WRAPPER",
+      "ROUTE_TO_CANONICAL_OWNER",
+      "PRESERVE_SOURCE_ONLY"
+    ],
+    "no_obsolete_public_monolith": "Every surviving public back page must be renewed as a story page, reduced to a compatibility wrapper, or visibly hand off to its canonical owner.",
+    "source_only_rule": "PRESERVE_SOURCE_ONLY material is not a primary public destination and retains custody without independent narrative authority.",
+    "no_route_mutation_authority": true
+  },
+  "representative_pages_after_freeze": [
+    {"route":"/laws/categories/flow/signals/","proof_role":"SIGNAL_ORIENTED_LAW_RELATIONSHIP"},
+    {"route":"/laws/categories/reality/measure/","proof_role":"QUANTITATIVE_MEASUREMENT_PRESENTATION"},
+    {"route":"/laws/test/reverse-audit/","proof_role":"ADVERSARIAL_PROCEDURAL_PRESENTATION"},
+    {"route":"/laws/research/findings-and-boundaries/","proof_role":"SYNTHESIS_BOUNDARY_AND_FRONTIER_RETURN"},
+    {"route":"/laws/industrial-posture/","proof_role":"TERMINAL_STYLE_EQUATION_RECORD_TRANSFORMATION","canonical_record":"CP6-CONTENT-063","canonical_owner":"/laws/research/methods-and-models/#cp6-content-063-industrial-closure-equation"}
+  ],
+  "industrial_posture_representative_contract": {
+    "route": "/laws/industrial-posture/",
+    "canonical_record": "CP6-CONTENT-063",
+    "canonical_owner": "/laws/research/methods-and-models/#cp6-content-063-industrial-closure-equation",
+    "required_sequence": [
+      "WHY_IT_MATTERS",
+      "FORMAL_SELECTABLE_NOTATION",
+      "VISUAL_RELATIONSHIP",
+      "VARIABLE_DEFINITIONS",
+      "PRACTICAL_LENS",
+      "ENGINEERING_LENS",
+      "EMPIRICAL_STATUS",
+      "CLAIM_BOUNDARY",
+      "COLLAPSED_CUSTODY_RECORD"
+    ],
+    "boundary": "Presentation may be renewed, but the equation, source custody, canonical ownership, evidence status, and claim ceiling may not be changed."
+  },
+  "freeze_gate": {
+    "freeze_eligible": true,
+    "user_freeze_required": true,
+    "user_freeze_recorded": false,
+    "product_implementation_authorized": false,
+    "representative_implementation_authorized": false,
+    "batch_migration_authorized": false,
+    "required_before_implementation": [
+      "EXPLICIT_USER_FREEZE_OF_BASE_MAP_AND_THIS_AMENDMENT",
+      "REPRESENTATIVE_SCOPE_AUTHORIZATION",
+      "ROLLBACK_BASELINE_AND_PROTECTED_PATH_INVENTORY"
+    ]
+  },
+  "verification": {
+    "core_24_route_map_changed": false,
+    "canonical_record_count": 48,
+    "canonical_record_ids_unique": true,
+    "canonical_destination_count_sum": 48,
+    "complete_custody_population_count": 138,
+    "reference_hierarchy_bound": true,
+    "equation_expression_contract_bound": true,
+    "industrial_posture_representative_added": true,
+    "product_files_mutated": 0,
+    "route_mutations_authorized": 0,
+    "evidence_status_upgrades_authorized": 0,
+    "user_freeze_recorded": false
+  }
+}

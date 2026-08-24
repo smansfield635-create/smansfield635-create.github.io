@@ -1,0 +1,71 @@
+{
+  "schema": "COMPASS_EXPERIENCE_CONSOLIDATION_AMENDMENT_v2",
+  "operationId": "COMPASS_EXPERIENCE_INTERACTION_RESTORATION_SUCCESSOR_20260819_v2",
+  "lockGeneration": 1553,
+  "governingHead": "cfd1924c485893dedeeb2fd1fefcb91c521d7c2a",
+  "governingIssue": 1011,
+  "governingStandardComment": 5337684472,
+  "preconstructionPackageComment": 5338156600,
+  "law": "PRESERVE_CAPABILITY_REDUCE_VISIBLE_MECHANISM_RECOMPOSE_REMAINDER",
+  "interactionLaw": "REDUCE_INTERFACE_NOT_INTERACTION",
+  "acceptance": "ENGINEERING_PASS_AND_EXPERIENCE_PASS_AND_RENDERED_AWARD_READINESS_REVIEW",
+  "constructionOrder": ["INVENTORY","PRESERVE","REMOVE","DEMOTE","MERGE","DISSOLVE","RECOMPOSE","ADD_ONLY_IF_NECESSARY"],
+  "hardZero": [
+    "visualSystemCoherence",
+    "narrativeContinuity",
+    "interactionLegibility",
+    "responsiveRecomposition",
+    "evidenceHierarchy",
+    "categoryPreservation",
+    "visibleGeometryIntegrity",
+    "traversalContinuity",
+    "stateLayerExclusivity"
+  ],
+  "productMutationEnvelope": [
+    "index.html",
+    "assets/compass/compass.css",
+    "assets/compass/compass.statement-carousel.css",
+    "assets/compass/compass.capability-carousel.css",
+    "assets/compass/compass.identity-3d.css",
+    "assets/compass/compass.controller.js",
+    "assets/compass/compass.mirrorland-window.js"
+  ],
+  "controllerException": {
+    "path": "assets/compass/compass.controller.js",
+    "purpose": "RESTORE_EXISTING_ROOM_SELECTION_DESCENT_AND_RETURN_TO_ORBIT_SYMMETRY_ONLY",
+    "requiredSignals": ["schedulePanelDescent(id)","setPanelDescended(true)","scheduleSceneAscent(wing)"]
+  },
+  "mirrorlandException": {
+    "path": "assets/compass/compass.mirrorland-window.js",
+    "purpose": "STATE_LAYER_EXCLUSIVITY_ONLY_IF_PRESENTATION_STATE_CANNOT_CLOSE_DEFECT",
+    "optional": true
+  },
+  "protectedRuntimePaths": [
+    "assets/compass/compass.crystals.js",
+    "assets/compass/compass.cosmos.js",
+    "assets/compass/compass.laws-spacecraft.js",
+    "assets/compass/compass.identity-3d.js",
+    "assets/compass/compass.statement-carousel.js",
+    "assets/compass/compass.capability-carousel.js",
+    "assets/compass/compass.brain.js",
+    "assets/compass/compass.brain-scene.js"
+  ],
+  "requiredViewports": [
+    {"id":"desktop","width":1440,"height":1000},
+    {"id":"tablet","width":1024,"height":1366},
+    {"id":"phone","width":390,"height":844}
+  ],
+  "requiredStates": ["constellation","cluster-open","room-selected","return-orbit","mirrorland-revealing","mirrorland-focused","brain","trophy","house","trl","tra","conclusion"],
+  "failClosed": [
+    "ANY_HARD_ZERO_FALSE",
+    "ANY_CRITICAL_VISIBLE_ELEMENT_CLIPPED",
+    "ROOM_SELECTION_DOES_NOT_DESCEND",
+    "RETURN_TO_ORBIT_DOES_NOT_RESTORE_COMPASS",
+    "MUTUALLY_EXCLUSIVE_MIRRORLAND_LAYERS_VISIBLE_TOGETHER",
+    "RESPONSIVE_DESKTOP_COMPRESSION_INSTEAD_OF_RECOMPOSITION",
+    "PUBLIC_CLAIM_AND_EVIDENCE_CONFLATED",
+    "GENERIC_SERVICE_CATEGORY_ENDING",
+    "UNRELATED_RUNTIME_MUTATION",
+    "CANDIDATE_MATERIALLY_WEAKER_THAN_LIVE_BASELINE"
+  ]
+}

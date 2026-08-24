@@ -1,0 +1,37 @@
+{
+  "schema": "DIAMOND_GATE_TTS_ENGINE_ADAPTER_CONTRACT_v1",
+  "status": "CONSTRUCTION_CANDIDATE",
+  "purpose": "Keep character acoustic identity stable while allowing the underlying TTS engine to be replaced or benchmarked.",
+  "input": {
+    "characterId": "string",
+    "text": "string",
+    "deliveryMode": "string",
+    "profileVersion": "string",
+    "semanticEmphasis": "optional structured emphasis metadata",
+    "targetDurationMs": "optional integer",
+    "referenceBindingId": "optional authorized reference binding"
+  },
+  "output": {
+    "audio": "wav or lossless master-compatible audio",
+    "sampleRate": "recorded in artifact metadata",
+    "durationMs": "integer",
+    "engineId": "string",
+    "engineVersion": "string",
+    "profileHash": "string",
+    "textHash": "string",
+    "settingsHash": "string",
+    "artifactId": "stable content/settings-derived identifier"
+  },
+  "laws": [
+    "The adapter may render but may not rewrite character text.",
+    "The adapter may not infer unresolved demographic/accent/timbre properties from narrative biography.",
+    "The adapter may not silently substitute another character or reference identity.",
+    "Reference-conditioned generation requires an authorized provenance record.",
+    "An accepted artifact remains pinned to its engine/profile/text/settings identity.",
+    "Changing engine version or acoustic profile creates a new candidate artifact rather than mutating an accepted artifact.",
+    "Film integration and website streaming are consumers of this contract, not owners of character identity."
+  ],
+  "cacheKeyLaw": "HASH(engineId, engineVersion, characterId, profileVersion, text, deliveryMode, semanticEmphasis, targetDurationMs, referenceBindingId)",
+  "firstConsumer": "COMPASS_CHAPTER_01_FILM",
+  "websiteConsumer": "FUTURE_BOUNDED_SPEECH_ENDPOINT_NOT_AUTHORIZED_BY_THIS_PACKAGE"
+}

@@ -1,0 +1,76 @@
+{
+  "schema": "COMPASS_PAGE_RECONSTRUCTION_EXECUTION_PLAN_v2_INFORMATION_DELIVERY_AMENDMENT",
+  "status": "LOCKED_DIRECT_REFERENCE_REQUIRED",
+  "amends": [
+    ".github/ai-router/projects/compass/construction-execution-plan.v2.json",
+    ".github/ai-router/projects/compass/construction-execution-plan.v2.display-fidelity-amendment.json"
+  ],
+  "scope": "COMPASS_ONLY",
+  "source": "Owner clarification and live Laws Chamber tablet screenshots supplied on 2026-08-14.",
+  "purpose": "Clarify that the Laws Chamber donor is not merely a side-by-side layout precedent. Its deeper architectural value is state-driven information delivery: keep only a limited amount of high-value information visible at once, retain a stable control/object frame, and let visitor interaction replace the active information in place without accumulating parallel explanatory blocks.",
+  "lawsInformationDeliveryReference": {
+    "reference": "CURRENT_LAWS_CHAMBER_ACTIVE_STATE_INFORMATION_DELIVERY",
+    "observedTabletPattern": [
+      "PERSISTENT_INTERACTIVE_OR_SELECTION_FRAME_REMAINS_AVAILABLE",
+      "ONE_ACTIVE_INFORMATION_STATE_DOMINATES",
+      "ACTIVE_PREVIEW_OR_QUESTION_CHANGES_WITH_VISITOR_SELECTION",
+      "PEER_OPTIONS_REMAIN_DISCOVERABLE_WITHOUT_EXPANDING_ALL_PEER_DETAIL",
+      "OBJECT_AND_CURRENT_EXPLANATION_ARE_PERCEPTUALLY_COUPLED",
+      "ENTER_OR_PREVIEW_ACTION_IS BOUND_TO_THE_CURRENT_ACTIVE_STATE"
+    ],
+    "requiredAdoption": [
+      "LIMIT_SIMULTANEOUS_INFORMATION_ON_SCREEN",
+      "ACTIVE_STATE_DETERMINES_VISIBLE_EXPLANATION",
+      "USER_ACTION_REPLACES_INFORMATION_IN_PLACE",
+      "PEER_INFORMATION_RECEDES_OR_HIDES_UNTIL_ACTIVE",
+      "PRESERVE_CONTEXT_WHILE_CHANGING_CONTENT",
+      "PERSISTENT_CHOICES_MAY_REMAIN_VISIBLE_WHILE_DETAIL_SWAPS",
+      "AVOID_VERTICAL_ACCUMULATION_OF_EQUIVALENT_DETAIL"
+    ],
+    "law": "The Compass should behave like an instrument with a stable presentation surface whose content changes with active state, not like a document that reveals every available explanation at once.",
+    "notJustLayout": "Side-by-side composition is secondary to the architectural delivery model. The essential donor is bounded visible information plus interactive state substitution inside a stable frame.",
+    "failure": "MULTIPLE_PEER_EXPLANATIONS_VISIBLE_SIMULTANEOUSLY_WHEN_ONE_ACTIVE_STATE_CAN_CARRY_THE_REQUIRED_INFORMATION"
+  },
+  "deliveryArchitecture": {
+    "formula": "STABLE_FRAME + PERSISTENT_CHOICES + ONE_ACTIVE_INFORMATION_STATE + STATE_DRIVEN_REPLACEMENT",
+    "choiceVisibilityLaw": "The visitor may see the available choices or controls concurrently, but only the currently active choice should expose its full explanatory payload.",
+    "informationBudgetLaw": "Primary screen area is reserved for the active state. Peer states remain identifiable or selectable without each consuming a full explanatory card.",
+    "replacementLaw": "Changing foreground, tab, selected feature, room, or proof state replaces the active content within the designated information surface rather than appending a new equivalent surface below it.",
+    "continuityLaw": "The presentation frame remains spatially stable enough that the visitor understands that the information changed because their selection changed.",
+    "responsiveInvariant": "Desktop, tablet, and phone may use different physical arrangements, but all must preserve the same bounded active-state substitution model."
+  },
+  "compassApplication": {
+    "spatialLabels": "Exactly one active spatial label is visually readable at a time; changing foreground state changes that label in place.",
+    "contextSurface": "Exactly one current cardinal/room explanation should dominate the contextual surface. Rotating or selecting replaces the active explanation rather than adding another block.",
+    "featureDelivery": "Where lower-page features contain peer or alternate proof/information states, prefer persistent compact choices plus one active detail surface over stacking all equivalent details simultaneously.",
+    "coherenceAndHouse": "Coherence Diagnostic and Talk to the House may remain simultaneously discoverable as peer choices, but should not each require a fully expanded equal-weight explanatory card if a shared active detail surface can preserve clarity.",
+    "builtDifferent": "Built Different proof points should use a compact selector or equivalent persistent choice mechanism with one active proof explanation where this reduces card accumulation without hiding the existence of the proof set.",
+    "lawsSideBySideRelationship": "On wide viewports, pair the active object/control or compact choice set with its current information surface. The content surface may update while its spatial role remains stable.",
+    "tabletRelationship": "Tablet should preserve the Laws Chamber behavior visible in the owner-supplied reference: stable selection affordances, a bounded active preview/detail area, and no requirement to expose every peer explanation at once.",
+    "mobileRelationship": "On phone, preserve the same active-state information architecture even when the visual layout collapses vertically. Mobile collapse must not become information accumulation.",
+    "progressiveDisclosure": "Additional depth remains available through explicit visitor intent, but only the currently useful layer should occupy primary visual attention."
+  },
+  "preserve": [
+    "FOUR_CARDINAL_AUTHORITY",
+    "ALL_19_ROOM_IDENTITIES_AND_ROUTES",
+    "CURRENT_COMPASS_GEOMETRY",
+    "FOREGROUND_CONTEXT_SYNCHRONIZATION",
+    "MIRRORLAND_THRESHOLD_AND_ROUTE_CHOOSER",
+    "EXPLICIT_ENTER_AUTHORITY",
+    "AQUARIUM_AUDIO_BEHAVIOR",
+    "KEYBOARD_TOUCH_REDUCED_MOTION_AND_SCREEN_READER_EQUIVALENCE"
+  ],
+  "minimumVerification": [
+    "ONLY_ONE_ACTIVE_SPATIAL_LABEL_IS_VISUALLY_READABLE",
+    "ONLY_ONE_PEER_DESTINATION_EXPLANATION_DOMINATES_AT_A_TIME",
+    "PERSISTENT_CHOICES_REMAIN_DISCOVERABLE_WHILE_ONLY_ACTIVE_DETAIL_IS_EXPANDED",
+    "CHANGING_ACTIVE_STATE_REPLACES_VISIBLE_INFORMATION_WITHOUT_STACKING_NEW_EQUIVALENT_BLOCKS",
+    "ACTIVE_INFORMATION_MATCHES_FOREGROUND_OR_SELECTED_OBJECT",
+    "WIDE_VIEW_USES_STABLE_OBJECT_OR_CHOICE_SET_PLUS_ACTIVE_INFORMATION_RELATIONSHIP_WHERE_APPROPRIATE",
+    "TABLET_PRESERVES_BOUNDED_ACTIVE_PREVIEW_WITH_PERSISTENT_SELECTION_AFFORDANCE",
+    "PHONE_REFLOW_PRESERVES_ACTIVE_STATE_SUBSTITUTION_INSTEAD_OF_INFORMATION_ACCUMULATION",
+    "HIDDEN_OR_RECESSED_PEER_INFORMATION_RETAINS_SEMANTIC_AND_NAVIGATIONAL_ACCESS"
+  ],
+  "reviewPosture": "BOUNDED_DISPLAY_AND_INFORMATION_ARCHITECTURE_REFINEMENT_NO_EXTREME_AUDIT_CYCLE",
+  "stopLaw": "If implementation requires new destination topology, new Compass geometry, route changes, scientific authority changes, or replacement of direct manipulation with surrogate navigation, stop and reclassify before construction."
+}

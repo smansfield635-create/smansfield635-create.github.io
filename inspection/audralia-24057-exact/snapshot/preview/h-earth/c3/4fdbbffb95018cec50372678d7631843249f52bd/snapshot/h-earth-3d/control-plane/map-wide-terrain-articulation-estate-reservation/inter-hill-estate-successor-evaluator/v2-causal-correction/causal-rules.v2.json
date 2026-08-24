@@ -1,0 +1,79 @@
+{
+  "candidateTraceRequiredFields": [
+    "candidateId",
+    "generated",
+    "finalDisposition",
+    "constraintEvaluations",
+    "causalDisposition",
+    "evidenceRefs"
+  ],
+  "errorPrecedence": [
+    "INVALID_INPUT",
+    "UNEVALUABLE_MISSING_OR_UNKNOWN_EVIDENCE",
+    "EVALUATOR_OR_MEASUREMENT_INSUFFICIENCY",
+    "DECLARED_HARD_CONSTRAINT_REJECTION",
+    "EXPLICIT_INFEASIBILITY_PROOF",
+    "FEASIBLE_ARRANGEMENT_FOUND"
+  ],
+  "nonEquivalenceLaw": [
+    "GENERATION_FAILURE",
+    "CONSTRAINT_REJECTION",
+    "MEASUREMENT_FAILURE",
+    "TERRAIN_INFEASIBILITY",
+    "ESTATE_INFEASIBILITY"
+  ],
+  "operationId": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_002",
+  "proofRules": {
+    "estate": {
+      "booleanRequirements": {
+        "allEstateConfigurationsRejected": true,
+        "complete": true,
+        "exhaustive": true,
+        "terrainFeasible": true
+      },
+      "requiredFields": [
+        "complete",
+        "exhaustive",
+        "terrainFeasible",
+        "allEstateConfigurationsRejected",
+        "evidenceRefs",
+        "ruleId"
+      ],
+      "ruleId": "ESTATE_INFEASIBILITY_EXHAUSTIVE_PROOF"
+    },
+    "terrain": {
+      "booleanRequirements": {
+        "allTerrainStatesRejected": true,
+        "complete": true,
+        "estateModelIndependent": true,
+        "exhaustive": true
+      },
+      "requiredFields": [
+        "complete",
+        "exhaustive",
+        "allTerrainStatesRejected",
+        "estateModelIndependent",
+        "evidenceRefs",
+        "ruleId"
+      ],
+      "ruleId": "TERRAIN_INFEASIBILITY_EXHAUSTIVE_PROOF"
+    }
+  },
+  "resultClasses": [
+    "NO_CANDIDATE_ARRANGEMENTS_GENERATED",
+    "CANDIDATE_ARRANGEMENTS_GENERATED_BUT_REJECTED",
+    "REJECTION_CAUSED_BY_DECLARED_HARD_CONSTRAINTS",
+    "REJECTION_CAUSED_BY_INPUT_OR_OBSERVABILITY_LIMITATION",
+    "REJECTION_CAUSED_BY_EVALUATOR_OR_MEASUREMENT_INSUFFICIENCY",
+    "EVIDENCE_SUPPORTING_TERRAIN_INFEASIBILITY",
+    "EVIDENCE_SUPPORTING_ESTATE_INFEASIBILITY",
+    "FEASIBLE_ARRANGEMENT_FOUND"
+  ],
+  "schema": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_RULES_v2",
+  "unknownEvidenceDisposition": "UNEVALUABLE",
+  "zeroPassRule": {
+    "required": true,
+    "ruleId": "ZERO_PASS_NON_INFERENCE",
+    "statement": "A passing-arrangement count of zero never establishes terrain or estate infeasibility without a separately valid explicit proof."
+  }
+}

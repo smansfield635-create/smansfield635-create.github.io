@@ -1,0 +1,192 @@
+name: Metaverse 3D Benchmark Disposition Compiler Installation Gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [main]
+    paths:
+      - ".github/workflows/metaverse-3d-benchmark-disposition-compiler.yml"
+      - "tools/metaverse-3d-benchmark-disposition-*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: metaverse-3d-benchmark-disposition-compiler-install-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  INSTALL_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  INSTALL_BASE_SHA: ${{ github.event.pull_request.base.sha || '13522102d63ac121ce89a3ff6fd3a590ef1d8945' }}
+  D4_ARTIFACT_ID: "8621910872"
+  D4_ARTIFACT_SIZE: "24864"
+  D4_ARTIFACT_SHA256: 18290e7b2a70b63d47e53d449cdf87a812cd03612b98b26ff867c6d48f67c7a5
+  D4_ARTIFACT_ROOT: ${{ github.workspace }}/artifacts/metaverse-3d-benchmark-disposition-d4-input
+  D5_ARTIFACT_ROOT: ${{ github.workspace }}/artifacts/metaverse-3d-benchmark-disposition-compiler-install
+
+jobs:
+  install-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout exact clean installation occurrence
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.INSTALL_HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Configure Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify current-main ancestry and exact 30-path scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$INSTALL_HEAD_SHA"
+          git merge-base --is-ancestor "$INSTALL_BASE_SHA" HEAD
+          ACTUAL="$(git diff --name-only "$INSTALL_BASE_SHA"..HEAD | sort)"
+          EXPECTED="$(printf '%s\n' \
+            '.github/workflows/metaverse-3d-benchmark-disposition-compiler.yml' \
+            'tools/metaverse-3d-benchmark-disposition-d0r-authority-lock.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d0r-contract.json' \
+            'tools/metaverse-3d-benchmark-disposition-d0r-controls.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d1-contract.json' \
+            'tools/metaverse-3d-benchmark-disposition-d1-controls.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d1-intake.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d2-contract.json' \
+            'tools/metaverse-3d-benchmark-disposition-d2-controls.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d2-normalize.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d2s-t3-contract.json' \
+            'tools/metaverse-3d-benchmark-disposition-d2s-t3-controls.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d2s-t3-core.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d2s-t3-facts.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d2s-t3-normalize.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d3-classify.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d3-contract.json' \
+            'tools/metaverse-3d-benchmark-disposition-d3-controls.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d3-core.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d3-rules.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d4-contract.json' \
+            'tools/metaverse-3d-benchmark-disposition-d4-controls.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d4-core.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d4-rules.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d4-weight.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d5-compile.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d5-contract.json' \
+            'tools/metaverse-3d-benchmark-disposition-d5-controls.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d5-core.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d5-rules.mjs' | sort)"
+          test "$ACTUAL" = "$EXPECTED"
+          test "$(git diff --name-only "$INSTALL_BASE_SHA"..HEAD | wc -l)" -eq 30
+
+      - name: Verify exact compiler source custody
+        shell: bash
+        run: |
+          set -euo pipefail
+          while read -r sha path; do
+            test "$(git hash-object "$path")" = "$sha"
+          done <<'EOF'
+          523ec511ad5b8d6e2e0bf09c1544c56a649348c1 tools/metaverse-3d-benchmark-disposition-d0r-authority-lock.mjs
+          5e29b55088f58cbbc54ba4a34c0d481f8e15918b tools/metaverse-3d-benchmark-disposition-d0r-contract.json
+          c63cb1a54430b0338709e8cbd72e8b9e34b20539 tools/metaverse-3d-benchmark-disposition-d0r-controls.mjs
+          b83228120ccea9241ad20e5d224c091f4a548f1f tools/metaverse-3d-benchmark-disposition-d1-contract.json
+          e64d0205922c43f1a47fc16e957073660b5082fb tools/metaverse-3d-benchmark-disposition-d1-controls.mjs
+          13fb6c992dc9d89b337766a5c5a91f98ca281c44 tools/metaverse-3d-benchmark-disposition-d1-intake.mjs
+          f4460f1108f09ab6cfc6ed98ba94a840b80cd522 tools/metaverse-3d-benchmark-disposition-d2-contract.json
+          966c6ed0c21feafffe55b61aa59693d62ebdf6e7 tools/metaverse-3d-benchmark-disposition-d2-controls.mjs
+          d5fdabc37c3cedfc1c02679bc6389cda2cb06dc4 tools/metaverse-3d-benchmark-disposition-d2-normalize.mjs
+          dd3585e19165f63178560a54405b713ca529d232 tools/metaverse-3d-benchmark-disposition-d2s-t3-contract.json
+          9d6ab024da4bff4713e1ab0a297ba13738ab7346 tools/metaverse-3d-benchmark-disposition-d2s-t3-controls.mjs
+          08c3131254f01c0026004d039c640e2d4ef34a76 tools/metaverse-3d-benchmark-disposition-d2s-t3-core.mjs
+          827c56add4e5e5ba420a15b0f46ac0e3af052393 tools/metaverse-3d-benchmark-disposition-d2s-t3-facts.mjs
+          e6f84b979ab64bdae04f4e88ad39fd518770c750 tools/metaverse-3d-benchmark-disposition-d2s-t3-normalize.mjs
+          17275c5a16136fb1e0af3cbbd25f41ce8e4a0232 tools/metaverse-3d-benchmark-disposition-d3-classify.mjs
+          2a65b502007d5b80490bed57641cc8ea6a83ad01 tools/metaverse-3d-benchmark-disposition-d3-contract.json
+          9cab299e1068fb413a45f9c6daf9358c142905ca tools/metaverse-3d-benchmark-disposition-d3-controls.mjs
+          67ecf2f936ec4dab0a5211d865000c0c16de4484 tools/metaverse-3d-benchmark-disposition-d3-core.mjs
+          a0bc5cb831c9f4008ed9d99e46c56642999d3f62 tools/metaverse-3d-benchmark-disposition-d3-rules.mjs
+          2974061e789e968ae0814fec0e7977bf707dbaf2 tools/metaverse-3d-benchmark-disposition-d4-contract.json
+          f71874bf06175d9078edfc5e6743250293c3cc2a tools/metaverse-3d-benchmark-disposition-d4-controls.mjs
+          2fbb6f2e7f90c92b0af5414d2c0718269cbd6f98 tools/metaverse-3d-benchmark-disposition-d4-core.mjs
+          ef0255db5b7a1c6303317fb5fe267757bb81de4f tools/metaverse-3d-benchmark-disposition-d4-rules.mjs
+          7841afeb32c745c642c2dde487f18a865a989b1d tools/metaverse-3d-benchmark-disposition-d4-weight.mjs
+          43850416e3e25bc183929ecf3af7c054d698ae28 tools/metaverse-3d-benchmark-disposition-d5-compile.mjs
+          892f49a7753e6d3f0fe8ffc917eb0f50cdb99ed1 tools/metaverse-3d-benchmark-disposition-d5-contract.json
+          2d62f57475a760813cbdd8a5ddfd1cc07375dec4 tools/metaverse-3d-benchmark-disposition-d5-controls.mjs
+          b9643b68aba0bb870662bc1f562eb6330003b8aa tools/metaverse-3d-benchmark-disposition-d5-core.mjs
+          cf2d13eab89f8cf038023dcee9c92bfba720cb26 tools/metaverse-3d-benchmark-disposition-d5-rules.mjs
+          EOF
+
+      - name: Validate all installed source syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          find tools -maxdepth 1 -type f -name 'metaverse-3d-benchmark-disposition-*.mjs' -print0 | sort -z | xargs -0 -n1 node --check
+          find tools -maxdepth 1 -type f -name 'metaverse-3d-benchmark-disposition-*.json' -print0 | sort -z | xargs -0 -n1 node -e "JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'))"
+
+      - name: Download and verify exact D4 evidence-weight package
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          rm -rf "$D4_ARTIFACT_ROOT" "$D5_ARTIFACT_ROOT"
+          mkdir -p "$D4_ARTIFACT_ROOT" "$D5_ARTIFACT_ROOT"
+          curl --fail --location --retry 3 \
+            --header "Authorization: Bearer $GITHUB_TOKEN" \
+            --header "Accept: application/vnd.github+json" \
+            --header "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$D4_ARTIFACT_ID/zip" \
+            --output /tmp/d4.zip
+          test "$(stat -c '%s' /tmp/d4.zip)" = "$D4_ARTIFACT_SIZE"
+          echo "$D4_ARTIFACT_SHA256  /tmp/d4.zip" | sha256sum --check --strict
+          unzip -q /tmp/d4.zip -d "$D4_ARTIFACT_ROOT"
+
+      - name: Execute final compiler closure from installed source
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/metaverse-3d-benchmark-disposition-d5-controls.mjs | tee "$D5_ARTIFACT_ROOT/execution.log"
+
+      - name: Verify final deterministic closure and emit installation receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { readFile, writeFile } from 'node:fs/promises';
+          const root = process.env.D5_ARTIFACT_ROOT;
+          const aggregate = JSON.parse(await readFile(`${root}/d5.aggregate.receipt.json`, 'utf8'));
+          if (aggregate.status !== 'PASS_CLOSED') throw new Error('INSTALL_D5_STATUS_MISMATCH');
+          if (aggregate.compilerConstructionComplete !== true || aggregate.compilerVerified !== true) throw new Error('INSTALL_COMPILER_CLOSURE_MISMATCH');
+          if (aggregate.deterministicReceiptSha256 !== '6a4ba976d117d46053c54e921612fcddfd6679fc8429e7b87f4467361b15c8d6') throw new Error('INSTALL_D5_RECEIPT_MISMATCH');
+          const body = {
+            schema: 'METAVERSE_3D_BENCHMARK_DISPOSITION_COMPILER_INSTALLATION_RECEIPT_v1',
+            status: 'PASS_INSTALLABLE',
+            installationHead: process.env.INSTALL_HEAD_SHA,
+            installationBase: process.env.INSTALL_BASE_SHA,
+            installedSourcePathCount: 29,
+            operationalWorkflowCount: 1,
+            productFilesChanged: 0,
+            hEarthFilesChanged: 0,
+            compilerConstructionComplete: true,
+            compilerVerified: true,
+            d5AggregateReceiptSha256: aggregate.deterministicReceiptSha256
+          };
+          const stable = value => Array.isArray(value) ? value.map(stable) : value && typeof value === 'object'
+            ? Object.fromEntries(Object.keys(value).sort().map(key => [key, stable(value[key])])) : value;
+          const digest = createHash('sha256').update(JSON.stringify(stable(body))).digest('hex');
+          await writeFile(`${root}/installation.receipt.json`, JSON.stringify({ ...body, deterministicReceiptSha256: digest }, null, 2) + '\n');
+          NODE
+
+      - name: Upload clean installation evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: metaverse-3d-benchmark-disposition-compiler-install-${{ env.INSTALL_HEAD_SHA }}
+          path: ${{ env.D5_ARTIFACT_ROOT }}
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,31 @@
+{
+  "schema": "H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_CONTINUITY_INSTRUMENT_SCHEMA_v1",
+  "instrumentId": "H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_CONTINUITY_INSTRUMENT_v1",
+  "definitions": {
+    "checkpointRecord": {
+      "required": ["id", "name", "prerequisites", "requiresUserDifferential", "changesLiveExperience", "requiredDeliverables", "completionCriterion", "status"],
+      "allowedStatus": ["NOT_STARTED", "OPEN", "BLOCKED_NONTERMINAL", "PASS_CLOSED", "FAIL_CLOSED", "SUPERSEDED"]
+    },
+    "continuityState": {
+      "required": ["stateVersion", "currentCheckpoint", "latestDurableAuthoringSource", "nextLawfulAction", "roomPrivateStateAuthoritative"],
+      "roomPrivateStateAuthoritative": false
+    },
+    "visualDifferential": {
+      "required": ["candidateHead", "comparisonBaseline", "userDisposition", "materialDefects", "nextAction"],
+      "allowedDisposition": ["MATERIAL_IMPROVEMENT", "MATERIAL_SIGNIFICANT_IMPROVEMENT", "NO_MATERIAL_IMPROVEMENT", "REGRESSION", "DIRECTION_APPROVED_WITH_MATERIAL_DEFECTS"]
+    },
+    "resolutionState": {
+      "levels": ["UNKNOWN", "DISCOVERED", "GEOGRAPHICALLY_RESOLVED", "NARRATIVELY_REVEALED", "ENTERABLE"]
+    },
+    "recoveryReceipt": {
+      "schema": "H_EARTH_AUDRALIA_OPEN_WORLD_SUCCESSOR_ROOM_RECOVERY_RECEIPT_v1",
+      "required": ["currentMain", "instrumentIdentity", "currentCheckpoint", "latestDurableAuthoringSource", "activeOrPendingLocks", "nextLawfulAction", "ambiguities", "result"]
+    }
+  },
+  "mutationRules": [
+    "STATE_ADVANCEMENT_REQUIRES_FRESH_CANONICAL_OPERATION_ADMISSION",
+    "FULL_FILE_REPLACEMENT_ONLY",
+    "CHECKPOINT_CANNOT_SKIP_UNSATISFIED_PREREQUISITE",
+    "LIVE_CHANGE_CHECKPOINT_REQUIRES_USER_DIFFERENTIAL_BEFORE_CLOSURE"
+  ]
+}

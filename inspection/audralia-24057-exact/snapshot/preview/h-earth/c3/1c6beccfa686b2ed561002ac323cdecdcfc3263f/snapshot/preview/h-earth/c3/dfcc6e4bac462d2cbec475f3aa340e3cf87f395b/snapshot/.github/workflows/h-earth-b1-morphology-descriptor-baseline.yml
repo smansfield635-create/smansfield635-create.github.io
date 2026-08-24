@@ -1,0 +1,46 @@
+name: H-Earth B1 Morphology Descriptor Baseline
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-b1-morphology-descriptor-baseline.yml'
+      - 'h-earth-3d/analysis/morphology/h-earth.b1-*'
+      - 'h-earth-3d/control-plane/post-cp2-round2/morphology/h-earth.b1-*'
+      - 'h-earth-3d/validation/morphology/h-earth.b1-*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-morphology-descriptor-baseline:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact B1 candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute B1 verifier first pass
+        run: node h-earth-3d/validation/morphology/h-earth.b1-morphology-descriptor-baseline.mjs > /tmp/b1-first.json
+      - name: Execute B1 verifier second pass
+        run: node h-earth-3d/validation/morphology/h-earth.b1-morphology-descriptor-baseline.mjs > /tmp/b1-second.json
+      - name: Require identical receipts
+        run: cmp /tmp/b1-first.json /tmp/b1-second.json
+      - name: Upload B1 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-b1-morphology-descriptor-baseline
+          path: /tmp/b1-first.json
+      - name: Enforce B1 pass
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const receipt = JSON.parse(fs.readFileSync('/tmp/b1-first.json', 'utf8'));
+          if (receipt.pass !== true || receipt.result !== 'B1_MORPHOLOGY_DESCRIPTOR_BASELINE_PASS_CLOSED') process.exit(1);
+          console.log(`B1_PASS:${receipt.summary.baselineDigest}:${receipt.canonicalReceiptSha256}`);
+          NODE

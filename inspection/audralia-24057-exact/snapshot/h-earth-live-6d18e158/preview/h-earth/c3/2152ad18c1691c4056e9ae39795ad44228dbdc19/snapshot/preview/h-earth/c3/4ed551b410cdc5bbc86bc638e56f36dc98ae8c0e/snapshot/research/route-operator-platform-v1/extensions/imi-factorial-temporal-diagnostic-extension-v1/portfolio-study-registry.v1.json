@@ -1,0 +1,68 @@
+{
+  "registry_id": "IMI_EXISTING_STUDY_PORTFOLIO_FOR_FACTORIAL_TEMPORAL_EXTENSION_v1",
+  "version": "1.0.0",
+  "governing_repository_head": "6ca63ec4ba34b9c84e783aaaf5aa73c4604f4fb6",
+  "studies": [
+    {
+      "study_id": "NASA_CMAPSS_FD001_UNTOUCHED_VALIDATION_v1",
+      "domain": "ENGINE_DEGRADATION",
+      "source_locator": {
+        "repository_path": "research/route-operator-platform-v1/extensions/imi-falsification-route-extension-v1/validations/cmapss-fd001-untouched-validation-v1/",
+        "pr": 648,
+        "merge_commit": "6ca63ec4ba34b9c84e783aaaf5aa73c4604f4fb6"
+      },
+      "repeated_comparable_observations": true,
+      "outcome_separated_before_freeze": true
+    },
+    {
+      "study_id": "IMI_AGRICULTURAL_COLONY_RESILIENCE_EXPLORATORY_LONGITUDINAL_v1",
+      "domain": "AGRICULTURAL_COLONY_RESILIENCE",
+      "source_locator": {
+        "drive_folder_id": "1FXxYOVY0UkKbmkLJ8gIsDFQLwnFIzMfv",
+        "drive_spreadsheet_id": "1kPNUmJXwxAlw9G1jVl9B63cnDNBJMG5VDbBIgB6selA",
+        "existing_execution_pr": 640,
+        "existing_execution_path": "research/route-operator-platform-v1/extensions/imi-falsification-route-extension-v1/executions/agricultural-colony-cs4-next-quarter-loss-retrospective-temporal-block-v1/"
+      },
+      "repeated_comparable_observations": true,
+      "outcome_separated_before_freeze": false
+    },
+    {
+      "study_id": "IMI_EMPIRICAL_STUDY_01_HOSPITAL_GENERAL_INFORMATION_EXPLORATORY_v1",
+      "domain": "HOSPITAL_GENERAL_INFORMATION",
+      "source_locator": {
+        "drive_folder_id": "1QifJ0cu0RoieHb_INFwCRpwRNNDTeOXx",
+        "manifest_file_id": "1-ZABa36M7MwCYNtsb4z_7mcuOY9D4Zl_"
+      },
+      "repeated_comparable_observations": false,
+      "outcome_separated_before_freeze": false
+    },
+    {
+      "study_id": "HOSPITAL_MEASURE_LEVEL_IMI_ROBUSTNESS_EXTENSION_1B_v1",
+      "domain": "HOSPITAL_MEASURE_LEVEL_ROBUSTNESS",
+      "source_locator": {
+        "drive_folder_id": "1Rd6K8L6vvkN0ZpFwGsxwVZn5A0i_g3ms"
+      },
+      "repeated_comparable_observations": false,
+      "outcome_separated_before_freeze": false
+    },
+    {
+      "study_id": "IMI_EMPIRICAL_STUDY_02_SPONTANEOUS_SPEECH_EXPLORATORY_v1",
+      "domain": "SPONTANEOUS_SPEECH",
+      "source_locator": {
+        "drive_folder_id": "1GxeZDNiSg7tH13VEReSc2a4D5CncqiqB",
+        "report_file_id": "1G9xjn8PIhWPmne9TnKIg_uGIkFRmoGc5KHKjcNyFIVc"
+      },
+      "repeated_comparable_observations": false,
+      "outcome_separated_before_freeze": false
+    },
+    {
+      "study_id": "DSSI_SOVEREIGN_DEBT_PAYMENT_SCHEDULE_BOOTSTRAP_v1",
+      "domain": "SOVEREIGN_DEBT_PAYMENT_SCHEDULE",
+      "source_locator": {
+        "status": "EXACT_REPOSITORY_OR_DRIVE_IDENTITY_NOT_RESOLVED_IN_CURRENT_AUDIT"
+      },
+      "repeated_comparable_observations": false,
+      "outcome_separated_before_freeze": false
+    }
+  ]
+}

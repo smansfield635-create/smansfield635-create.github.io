@@ -1,0 +1,80 @@
+{
+  "allowedBlindInputs": [
+    {
+      "basename": "train_FD001.txt",
+      "contentClass": "DEVELOPMENT_INPUT",
+      "logicalId": "FD001_DEVELOPMENT"
+    },
+    {
+      "basename": "test_FD001.txt",
+      "contentClass": "BLIND_FEATURE_INPUT",
+      "logicalId": "FD001_UNTOUCHED_FEATURES"
+    },
+    {
+      "basename": "cmapss-fd001-source-binding-receipt.v1.json",
+      "contentClass": "PROVENANCE_RECEIPT",
+      "logicalId": "FD001_SOURCE_BINDING_RECEIPT"
+    }
+  ],
+  "executionAuthority": {
+    "blindTrial": false,
+    "heldOutOutcomeAccess": false,
+    "merge": false,
+    "scientificClaim": false,
+    "sourceAcquisition": false,
+    "sourceBinding": false
+  },
+  "forbiddenBlindInputs": [
+    {
+      "basename": "RUL_FD001.txt",
+      "classification": "HELD_OUT_OUTCOME"
+    },
+    {
+      "contentClass": "HISTORICAL_RESULT_OR_SCIENTIFIC_REPORT"
+    },
+    {
+      "contentClass": "OUTCOME_DERIVED_SIGNAL"
+    },
+    {
+      "contentClass": "NASA_SOURCE_ARCHIVE"
+    }
+  ],
+  "historicalPreOutcomeContract": {
+    "blob": "2f1bdd32a2646087c4b5db697014bd64c6fa0ab9",
+    "classification": "READ_ONLY_PRE_OUTCOME_PRECEDENT",
+    "merge": "6ca63ec4ba34b9c84e783aaaf5aa73c4604f4fb6"
+  },
+  "phase": "PHASE_A_PACKET_FREEZE_ONLY",
+  "phaseBPrerequisites": [
+    "PHASE_A_CANDIDATE_RATIFIED",
+    "SOURCE_BINDING_EXECUTION_SEPARATELY_ADMITTED_AND_PASS_CLOSED",
+    "SAFE_OBJECT_HASHES_FROZEN",
+    "BLIND_EXECUTOR_IDENTITY_SEPARATELY_ADMITTED",
+    "EXPERIMENT_CODE_AND_PROCEDURE_FROZEN_WITH_REPRODUCIBLE_EXECUTION_IDENTITY",
+    "NO_HELD_OUT_OUTCOME_OR_DERIVED_SIGNAL_IN_BLIND_CONTEXT"
+  ],
+  "programId": "CONTROL_PLANE_PRODUCT_QUALIFICATION_BATTERY_V1",
+  "roleSeparation": {
+    "blindExecutor": "UNASSIGNED_SEPARATE_ADMISSION_REQUIRED",
+    "blindExecutorAssignmentRequiresSeparateAdmission": true,
+    "pairwiseDistinctRequired": true,
+    "sourceBindingExecutor": "UNASSIGNED_SEPARATE_ADMISSION_REQUIRED",
+    "translationBuilder": "GALAXY_TAB_A9_RESEARCH_TRANSFERABILITY_TRANSLATION_BUILDER"
+  },
+  "schema": "CONTROL_PLANE_CMAPSS_FD001_BLIND_EXECUTION_PACKET_v1",
+  "sourceBindingContract": "source-binding.v1.json",
+  "sourceBindingReceiptRequirements": {
+    "archiveRetained": false,
+    "expectedArchiveMd5": "a83e8f128c59fc5614a4ca2e42a2e30c",
+    "officialSourceAuthority": "NASA_AMES_PROGNOSTICS_CENTER_OF_EXCELLENCE",
+    "outcomeBytesRead": false,
+    "outcomeExtracted": false,
+    "safeObjectSha256Required": true,
+    "safeObjectUnitAndColumnValidationRequired": true,
+    "schema": "CONTROL_PLANE_CMAPSS_FD001_SOURCE_BINDING_RECEIPT_v1",
+    "status": "SOURCE_BOUND_SAFE_HANDOFF_READY"
+  },
+  "status": "FROZEN_PHASE_A_CANDIDATE_NO_PHASE_B_EXECUTION_AUTHORITY",
+  "stopBoundary": "STOP_BEFORE_SOURCE_BINDING_EXECUTION_OR_PHASE_B_BLIND_TRIAL",
+  "trialId": "NASA_CMAPSS_FD001_FIRST_BLIND_TRANSFER_TRIAL_V1"
+}

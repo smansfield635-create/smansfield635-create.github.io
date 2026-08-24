@@ -1,0 +1,53 @@
+{
+  "schema": "WHOLE_ESTATE_INVARIANT_REGISTRY_v1",
+  "status": "CHECKPOINT_6_CONSTRUCTION_CANDIDATE",
+  "governingMain": "b2533139bacbf876f818892a06c691824fa216dd",
+  "registeredIntervention": "CONSTRUCT_MACHINE_VERIFIABLE_NARRATIVE_STATE_ROUTING_EVIDENCE_AND_LENS_INVARIANTS",
+  "preservedCapacities": [
+    "CANONICAL_STATE",
+    "EVIDENCE_BOUNDARIES",
+    "AUTHORITY_BOUNDARIES",
+    "RETURN_CONTEXT"
+  ],
+  "contracts": [
+    {"id":"NARRATIVE","file":"narrative-invariant-contract.v1.json"},
+    {"id":"CANONICAL_STATE","file":"canonical-state-invariant-contract.v1.json"},
+    {"id":"ROUTING_RETURN_CONTEXT","file":"routing-return-context-invariant-contract.v1.json"},
+    {"id":"EVIDENCE_STANDING","file":"evidence-standing-invariant-contract.v1.json"},
+    {"id":"LENS_VIEW","file":"lens-view-invariant-contract.v1.json"},
+    {"id":"SCIENTIFIC_DELTA_INGRESS","file":"scientific-delta-ingress-contract.v1.json"}
+  ],
+  "globalInvariants": [
+    "NAVIGATION_MAY_CHANGE_LOCATION_BUT_MAY_NOT_CHANGE_SCIENTIFIC_MEANING",
+    "INTERFACE_STATE_MAY_CHANGE_VIEW_BUT_MAY_NOT_CHANGE_EVIDENCE_STATE",
+    "RETURN_CONTEXT_MUST_BE_EXPLICIT_AND_DETERMINISTIC",
+    "DELTA_D_DOES_NOT_IMPLY_DELTA_I",
+    "NAVIGABLE_RELATION_REQUIRES_DECLARED_SEMANTIC_RELATION",
+    "OUTWARD_TRAVERSAL_IS_CONSTRAINED_BY_GIVEN_THAT_STANDING",
+    "REPRESENTATION_AUTHORITY_NOT_PERSUASION_AUTHORITY",
+    "NAVIGATIONAL_IMPORTANCE_NOT_EVIDENTIARY_STRENGTH",
+    "SIMPLIFICATION_MAY_REDUCE_DETAIL_BUT_MAY_NOT_REMOVE_A_CONDITION_NECESSARY_TO_INTERPRET_THE_CLAIM"
+  ],
+  "registeredFalsifiers": [
+    "NAVIGATION_SILENTLY_CHANGES_SCIENTIFIC_MEANING",
+    "INTERFACE_CHANGES_EVIDENCE_STATE",
+    "STATE_RESTORATION_IS_AMBIGUOUS"
+  ],
+  "constructionPrecondition": [
+    "SCIENTIFIC_OBJECT_REGISTRY",
+    "IDENTITY_DELIVERY_CROSSWALK",
+    "TYPED_SEMANTIC_RELATION_GRAPH",
+    "SPATIAL_TOPOLOGY",
+    "GEOMETRY"
+  ],
+  "constructionModel": {
+    "required": "G=f(T(X(C,P)))",
+    "prohibited": "G=f(P)"
+  },
+  "crosswalkMaterializedByCheckpoint6": false,
+  "typedSemanticGraphMaterializedByCheckpoint6": false,
+  "spatialTopologyFreezeAuthorized": false,
+  "geometryAuthorized": false,
+  "publicMutationAuthorized": false,
+  "scientificClaimUpgradeAuthorized": false
+}

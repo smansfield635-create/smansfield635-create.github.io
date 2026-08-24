@@ -1,0 +1,702 @@
+<!-- TNT — /products/coherence-diagnostic/index.html
+     COHERENCE DIAGNOSTIC · NO FOREGROUND DIAMONDS · UNIFORM LONG-BUBBLE FORMAT · EN/中文/ES
+     STRUCTURE:
+       - Top: BACK / EXIT (left) + Language (right)
+       - Hero (opal/red)
+       - Toggles: MODE (ENGINE / PLATFORM) + TONE (INFORMAL / FORMAL)
+       - Content: 4 long accordion bubbles (single-open; tap again closes)
+       - No modals, no overlays, no inline onclick
+     ROUTES:
+       - BACK → /products/
+       - EXIT → /index.html
+       - Dock → DOOR / PRODUCTS / LAWS / GAUGES
+     STATE:
+       - URL + LS: gd_lang/gd_style/gd_time/gd_depth
+       - Preserve state on every jump
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - Does NOT style html/body background (ui.css owns field)
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Coherence Diagnostic</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+body::before,body::after{pointer-events:none!important}
+
+/* top */
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:220;
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
+}
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:220;
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
+}
+.top-left .btn,.top-right .btn{white-space:nowrap}
+
+/* page */
+:root{--dockH:92px}
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:84px 0 calc(var(--dockH) + 18px);
+  display:flex;flex-direction:column;gap:12px;
+  position:relative;z-index:10;
+}
+
+/* hero (red + dark opal) */
+.hero{
+  border-radius:26px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 18% 34%, rgba(210,190,255,.16), transparent 72%),
+    radial-gradient(circle at 78% 40%, rgba(120,70,255,.12), transparent 74%),
+    radial-gradient(circle at 55% 110%, rgba(90,210,255,.08), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.34), rgba(0,0,0,.14));
+  backdrop-filter:blur(12px);
+  box-shadow:0 34px 120px rgba(0,0,0,.55);
+  padding:16px 16px 14px;
+}
+.k{
+  margin:0 0 6px;
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:.78;
+}
+.h1{
+  margin:0;
+  font-weight:950;
+  font-size:28px;
+  letter-spacing:.6px;
+  line-height:1.12;
+}
+.s{
+  margin:10px 0 0;
+  font-size:13.75px;
+  opacity:.90;
+  line-height:1.5;
+  max-width:980px;
+}
+.rule{
+  margin:12px 0 0;
+  padding:10px 12px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.08), transparent 58%),
+    linear-gradient(160deg, rgba(12,22,38,.62), rgba(6,10,16,.72));
+  box-shadow:0 14px 48px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06);
+  font-size:12.75px;
+  color:rgba(255,255,255,.84);
+  line-height:1.45;
+}
+
+/* toggles */
+.toggleRow{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items:center;
+}
+.pills{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.pill{
+  padding:10px 14px;
+  border-radius:999px;
+  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 14px 36px rgba(0,0,0,.60);
+  cursor:pointer;
+  font-weight:900;
+  letter-spacing:.2px;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.pill.active{
+  border-color:rgba(212,175,55,.60);
+  box-shadow:0 18px 50px rgba(0,0,0,.85), 0 0 14px rgba(212,175,55,.22);
+}
+
+/* band */
+.band{
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.12);
+  font-weight:950;
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.86);
+}
+
+/* accordion */
+.stack{display:flex;flex-direction:column;gap:12px}
+.card{
+  position:relative;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 58%),
+    radial-gradient(circle at 78% 30%, rgba(210,190,255,.10), transparent 62%),
+    linear-gradient(160deg, rgba(12,22,38,.78), rgba(6,10,16,.84));
+  box-shadow:0 18px 60px rgba(0,0,0,.50), inset 0 2px 0 rgba(255,255,255,.06);
+  overflow:hidden;
+}
+.card::before{
+  content:"";
+  position:absolute;inset:0;border-radius:inherit;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.22) 50%, transparent 100%);
+  opacity:.40;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;
+}
+.head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;
+  padding:14px 16px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.hL{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.dot{
+  width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
+  background:var(--c, rgba(212,175,55,.85));
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;margin-top:4px;
+}
+.tit{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.subt{margin-top:6px;font-size:12.75px;opacity:.80;line-height:1.35;max-width:92ch}
+.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.body{
+  display:none;
+  padding:14px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+}
+.card.open .body{display:block}
+.p{
+  margin:0;
+  color:rgba(255,255,255,.88);
+  line-height:1.62;
+  font-size:13.25px;
+}
+.p + .p{margin-top:10px}
+.actions{
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px
+}
+.actions .btn{border-radius:999px;padding:10px 14px}
+
+/* dock */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
+}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:102px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-left">
+  <a class="btn" id="btnBack" href="/products/">BACK</a>
+  <a class="btn" id="btnExit" href="/index.html">EXIT</a>
+</div>
+
+<div class="top-right" aria-label="Language">
+  <button class="btn" id="btnEN" type="button">EN</button>
+  <button class="btn" id="btnZH" type="button">中文</button>
+  <button class="btn" id="btnES" type="button">ES</button>
+</div>
+
+<div class="page">
+
+  <div class="hero" aria-label="Hero">
+    <p class="k" id="k0">PRODUCTS</p>
+    <h1 class="h1" id="h0">COHERENCE DIAGNOSTIC</h1>
+    <p class="s" id="s0">Calibrate self → align teams → stabilize scale.</p>
+    <div class="rule" id="r0">Rule: if you can’t point to receipts, it stays bounded. If a lens switch doesn’t change content, it’s wrong.</div>
+
+    <div class="toggleRow" style="margin-top:12px">
+      <div class="pills" aria-label="Mode toggle">
+        <div class="pill active" id="pillEngine" role="button" tabindex="0">ENGINE</div>
+        <div class="pill" id="pillPlatform" role="button" tabindex="0">PLATFORM</div>
+      </div>
+      <div class="pills" aria-label="Tone toggle">
+        <div class="pill active" id="pillInformal" role="button" tabindex="0">INFORMAL</div>
+        <div class="pill" id="pillFormal" role="button" tabindex="0">FORMAL</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="band" id="band">OPEN ONE · FOCUS</div>
+  <div class="stack" id="stack"></div>
+
+</div>
+
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockDoor" href="/door/">DOOR</a>
+  <a class="btn active" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+</nav>
+
+<script>
+(function(){
+  // ===== canonical state =====
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="informal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
+  }
+
+  // hard-wire nav (avoid history back-jumps)
+  document.getElementById("btnBack").href="/products/"+q();
+  document.getElementById("btnExit").href="/index.html"+q();
+  document.getElementById("dockDoor").href="/door/"+q();
+  document.getElementById("dockProducts").href="/products/"+q();
+  document.getElementById("dockLaws").href="/laws/"+q();
+  document.getElementById("dockGauges").href="/gauges/"+q();
+
+  // ===== language =====
+  function paintLang(){
+    document.getElementById("btnEN").classList.toggle("active", lang==="en");
+    document.getElementById("btnZH").classList.toggle("active", lang==="zh");
+    document.getElementById("btnES").classList.toggle("active", lang==="es");
+  }
+  paintLang();
+
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang);}catch(e){}
+    window.location.href = window.location.pathname + q({lang:lang});
+  }
+  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); });
+  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); });
+  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); });
+
+  // ===== mode + tone =====
+  var mode="engine"; // engine|platform
+  var tone="informal"; // informal|formal
+
+  var pillEngine=document.getElementById("pillEngine");
+  var pillPlatform=document.getElementById("pillPlatform");
+  var pillInformal=document.getElementById("pillInformal");
+  var pillFormal=document.getElementById("pillFormal");
+
+  function paintMode(){
+    pillEngine.classList.toggle("active", mode==="engine");
+    pillPlatform.classList.toggle("active", mode==="platform");
+  }
+  function paintTone(){
+    pillInformal.classList.toggle("active", tone==="informal");
+    pillFormal.classList.toggle("active", tone==="formal");
+  }
+
+  function setMode(next){
+    mode = (next==="platform") ? "platform" : "engine";
+    paintMode();
+    render();
+  }
+  function setTone(next){
+    tone = (next==="formal") ? "formal" : "informal";
+    paintTone();
+    // also keep in gd_style (site-wide lens)
+    style = tone;
+    try{ localStorage.setItem("gd_style",style);}catch(e){}
+    render();
+  }
+
+  function bindPill(el, fn){
+    el.addEventListener("click", fn);
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); fn(); }
+    });
+  }
+  bindPill(pillEngine, function(){ setMode("engine"); });
+  bindPill(pillPlatform, function(){ setMode("platform"); });
+  bindPill(pillInformal, function(){ setTone("informal"); });
+  bindPill(pillFormal, function(){ setTone("formal"); });
+
+  // init from saved style
+  tone = (style==="formal") ? "formal" : "informal";
+  paintMode(); paintTone();
+
+  // ===== copy packs (TED talk informal, formal is abstract) =====
+  function pickLang(o){ return (lang==="zh")?o.zh:(lang==="es")?o.es:o.en; }
+
+  var COPY = {
+    en:{
+      hero:{
+        k:"PRODUCTS",
+        h:"COHERENCE DIAGNOSTIC",
+        s:"Calibrate self → align teams → stabilize scale.",
+        r:"Rule: if you can’t point to receipts, it stays bounded. If a lens switch doesn’t change content, it’s wrong."
+      },
+      band:"OPEN ONE · FOCUS",
+      buttons:{open:"OPEN", back:"BACK", exit:"EXIT", door:"DOOR", products:"PRODUCTS", laws:"LAWS", gauges:"GAUGES"},
+      modes:{
+        engine:{
+          cards:[
+            {c:"#F59E0B",
+             t:"Overview",
+             sub:"Stop drift before it compounds.",
+             pI:[
+               "This is a calibration tool first. You run it on yourself before you run it on anyone else.",
+               "It turns the fog into a shortlist: what’s supported, what’s missing, and what to do next—without story mode."
+             ],
+             pF:[
+               "A bounded classifier over an evidence stream under declared scope and measurement rules.",
+               "Outputs are reason-coded and observer-invariant: same receipts → same result."
+             ],
+             jump:{label:"OPEN: LAWS (PROOF)", href:"/laws/"}
+            },
+            {c:"#93C5FD",
+             t:"Use",
+             sub:"Receipts in. Bounded outputs out.",
+             pI:[
+               "Bring receipts (timestamps, logs, measurements). Name the scope (what we’re deciding).",
+               "The diagnostic returns one of three moves: proceed, hold, or contain—with reasons you can point to."
+             ],
+             pF:[
+               "Inputs: scope_id + evidence set + declared rules. Constraints: invariants + admissibility gates.",
+               "Outputs: bounded action recommendation + missing-receipt checklist + next safe route."
+             ],
+             jump:{label:"OPEN: GAUGES (MEASURE)", href:"/gauges/"}
+            },
+            {c:"#D4AF37",
+             t:"Rules",
+             sub:"What it refuses to let you fake.",
+             pI:[
+               "No receipts means no upgrade. No silent edits. No scaling while confused.",
+               "If the system can be gamed, that’s a signal: the rules need tightening—explicitly."
+             ],
+             pF:[
+               "Non-contradiction, scope lock, receipt integrity, and epoch rollover on correction.",
+               "Confusion is treated as an accelerator once instability exists; containment is prioritized under ambiguity."
+             ],
+             jump:{label:"OPEN: PRELUDE", href:"/prelude/"}
+            },
+            {c:"#60A5FA",
+             t:"Deploy",
+             sub:"Self → relationship → team → organization.",
+             pI:[
+               "You don’t start with an institution. You start with one person making clean decisions.",
+               "Then you repeat the same method at bigger scales, keeping the same boundaries."
+             ],
+             pF:[
+               "Deployment is staged scaling under unchanged invariants. Outputs remain bounded by evidence.",
+               "Integration routes: Laws for doctrine, Gauges for measurement, Products for adoption surfaces."
+             ],
+             jump:{label:"OPEN: PRODUCTS", href:"/products/"}
+            }
+          ]
+        },
+        platform:{
+          cards:[
+            {c:"#F59E0B",
+             t:"Overview",
+             sub:"A calm interface that keeps meaning stable.",
+             pI:[
+               "Platform mode is the user experience contract: clean navigation, clean state carry, no dead ends.",
+               "It prevents the classic failure: everything routes into one page and nobody can find truth again."
+             ],
+             pF:[
+               "Platform posture defines surfaces, routing rules, and state propagation invariants.",
+               "Failure condition: missing propagation or ambiguous routes."
+             ],
+             jump:{label:"OPEN: DOOR", href:"/door/"}
+            },
+            {c:"#93C5FD",
+             t:"How it stays fair",
+             sub:"No inferred intent. Only observed behavior.",
+             pI:[
+               "This tool doesn’t guess motives. It reads behavior and receipts.",
+               "That makes disagreements boring: you either have the receipt or you don’t."
+             ],
+             pF:[
+               "Observer-invariant evaluation under declared measurement rules.",
+               "Reason codes + replay posture prevent post-hoc narrative edits."
+             ],
+             jump:{label:"OPEN: LAWS", href:"/laws/"}
+            },
+            {c:"#D4AF37",
+             t:"Scaling posture",
+             sub:"Bigger = stricter, not looser.",
+             pI:[
+               "The larger the audience, the tighter the rules. Scale amplifies error.",
+               "So the platform keeps you honest: no widening claims without widening receipts."
+             ],
+             pF:[
+               "No further tightening without new event class. New epoch on correction.",
+               "Correlation penalties and containment gates are preferred over compensation."
+             ],
+             jump:{label:"OPEN: GAUGES", href:"/gauges/"}
+            },
+            {c:"#60A5FA",
+             t:"What it connects to",
+             sub:"Proof, measurement, adoption.",
+             pI:[
+               "This page is the bridge. Laws is the proof posture. Gauges is the measurement output. Products is what you can use.",
+               "Everything stays wired so you never ‘fall into’ the wrong destination."
+             ],
+             pF:[
+               "Routing layer binds each surface to a single responsibility: proof vs measurement vs adoption.",
+               "State keys remain canonical: gd_lang/gd_style/gd_time/gd_depth."
+             ],
+             jump:{label:"OPEN: PRODUCTS", href:"/products/"}
+            }
+          ]
+        }
+      }
+    },
+
+    zh:{
+      hero:{
+        k:"产品",
+        h:"一致性诊断",
+        s:"先校准自我 → 再对齐团队 → 再稳定规模。",
+        r:"规则：没有收据就不升级主张。透镜切换不改内容，就是失败。"
+      },
+      band:"一次只开一个 · 专注阅读",
+      buttons:{open:"打开", back:"返回", exit:"退出", door:"门", products:"产品", laws:"法则", gauges:"量规"},
+      modes:{
+        engine:{cards:[]},
+        platform:{cards:[]}
+      }
+    },
+
+    es:{
+      hero:{
+        k:"PRODUCTOS",
+        h:"DIAGNÓSTICO DE COHERENCIA",
+        s:"Calibra el yo → alinea equipos → estabiliza la escala.",
+        r:"Regla: sin recibos, queda acotado. Si cambiar lente no cambia contenido, es un fallo."
+      },
+      band:"ABRE UNO · ENFOQUE",
+      buttons:{open:"ABRIR", back:"VOLVER", exit:"SALIR", door:"PUERTA", products:"PRODUCTOS", laws:"LEYES", gauges:"MEDIDORES"},
+      modes:{
+        engine:{cards:[]},
+        platform:{cards:[]}
+      }
+    }
+  };
+
+  // For zh/es: reuse EN structure but translate key labels + keep copy English for now (no blank UI)
+  function ensureFallback(){
+    if(COPY.zh.modes.engine.cards.length===0){
+      COPY.zh.modes.engine.cards = COPY.en.modes.engine.cards;
+      COPY.zh.modes.platform.cards = COPY.en.modes.platform.cards;
+    }
+    if(COPY.es.modes.engine.cards.length===0){
+      COPY.es.modes.engine.cards = COPY.en.modes.engine.cards;
+      COPY.es.modes.platform.cards = COPY.en.modes.platform.cards;
+    }
+  }
+  ensureFallback();
+
+  // apply hero i18n
+  function applyHero(){
+    var P=(lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en;
+    document.getElementById("k0").textContent=P.hero.k;
+    document.getElementById("h0").textContent=P.hero.h;
+    document.getElementById("s0").textContent=P.hero.s;
+    document.getElementById("r0").textContent=P.hero.r;
+    document.getElementById("band").textContent=P.band;
+
+    document.getElementById("btnBack").textContent=P.buttons.back;
+    document.getElementById("btnExit").textContent=P.buttons.exit;
+
+    document.getElementById("dockDoor").textContent=P.buttons.door;
+    document.getElementById("dockProducts").textContent=P.buttons.products;
+    document.getElementById("dockLaws").textContent=P.buttons.laws;
+    document.getElementById("dockGauges").textContent=P.buttons.gauges;
+
+    // pill labels
+    document.getElementById("pillEngine").textContent = (lang==="zh") ? "引擎" : (lang==="es") ? "MOTOR" : "ENGINE";
+    document.getElementById("pillPlatform").textContent = (lang==="zh") ? "平台" : (lang==="es") ? "PLATAFORMA" : "PLATFORM";
+    document.getElementById("pillInformal").textContent = (lang==="zh") ? "通俗" : (lang==="es") ? "INFORMAL" : "INFORMAL";
+    document.getElementById("pillFormal").textContent = (lang==="zh") ? "正式" : (lang==="es") ? "FORMAL" : "FORMAL";
+  }
+  applyHero();
+
+  // ===== accordion rendering =====
+  var stack=document.getElementById("stack");
+
+  function closeAll(){
+    stack.querySelectorAll(".card").forEach(function(x){
+      x.classList.remove("open");
+      var ch=x.querySelector(".chev");
+      if(ch) ch.textContent="▸";
+    });
+  }
+
+  function makeCard(card){
+    var wrap=document.createElement("div");
+    wrap.className="card";
+    wrap.style.setProperty("--c", card.c || "rgba(212,175,55,.85)");
+
+    var head=document.createElement("div");
+    head.className="head";
+
+    var hL=document.createElement("div");
+    hL.className="hL";
+
+    var dot=document.createElement("div");
+    dot.className="dot";
+    dot.style.background = card.c;
+
+    var left=document.createElement("div");
+    left.style.minWidth="0";
+
+    var tit=document.createElement("div");
+    tit.className="tit";
+    tit.textContent=card.t;
+
+    var subt=document.createElement("div");
+    subt.className="subt";
+    subt.textContent=card.sub;
+
+    left.appendChild(tit);
+    left.appendChild(subt);
+
+    hL.appendChild(dot);
+    hL.appendChild(left);
+
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.textContent="▸";
+
+    head.appendChild(hL);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="body";
+
+    var p1=document.createElement("p");
+    p1.className="p";
+    var p2=document.createElement("p");
+    p2.className="p";
+
+    var P=(tone==="formal") ? card.pF : card.pI;
+    p1.textContent=P[0] || "";
+    p2.textContent=P[1] || "";
+
+    var actions=document.createElement("div");
+    actions.className="actions";
+
+    var a=document.createElement("a");
+    a.className="btn";
+    a.textContent = (lang==="zh") ? "打开" : (lang==="es") ? "ABRIR" : "OPEN";
+    a.textContent = card.jump && card.jump.label ? card.jump.label : a.textContent;
+    a.href = (card.jump && card.jump.href ? card.jump.href : "/products/") + q();
+
+    actions.appendChild(a);
+
+    body.appendChild(p1);
+    body.appendChild(p2);
+    body.appendChild(actions);
+
+    head.addEventListener("click", function(){
+      var willOpen = !wrap.classList.contains("open");
+      closeAll();
+      wrap.classList.toggle("open", willOpen);
+      chev.textContent = willOpen ? "▾" : "▸";
+    });
+
+    head.setAttribute("role","button");
+    head.tabIndex=0;
+    head.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); head.click(); }
+    });
+
+    wrap.appendChild(head);
+    wrap.appendChild(body);
+    return wrap;
+  }
+
+  function render(){
+    // keep state
+    try{ localStorage.setItem("gd_style", tone); }catch(e){}
+    applyHero();
+
+    var P=(lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en;
+    var cards = P.modes[mode].cards;
+
+    stack.innerHTML="";
+    cards.forEach(function(c){ stack.appendChild(makeCard(c)); });
+
+    // default open first (focus) — but user can close it
+    var first = stack.querySelector(".card");
+    if(first){
+      first.classList.add("open");
+      var ch=first.querySelector(".chev");
+      if(ch) ch.textContent="▾";
+    }
+  }
+
+  // initial render
+  render();
+
+})();
+</script>
+
+</body>
+</html>

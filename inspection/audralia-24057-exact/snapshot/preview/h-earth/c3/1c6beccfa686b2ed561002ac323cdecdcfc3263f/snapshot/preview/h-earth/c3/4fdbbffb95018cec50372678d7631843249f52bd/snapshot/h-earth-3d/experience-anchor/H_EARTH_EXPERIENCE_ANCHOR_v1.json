@@ -1,0 +1,58 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_v1",
+  "status": "HARD_ACCEPTANCE_CRITERION",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "sourceVideo": {
+    "originalFilename": "22713.mp4",
+    "sha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+    "durationSeconds": 32.0635,
+    "width": 1920,
+    "height": 1080,
+    "frameRate": 30,
+    "videoCodec": "hevc",
+    "audioCodec": "aac",
+    "byteSize": 50012274
+  },
+  "repositoryVisualProxy": {
+    "path": "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "sha256": "1b63b7f83ab5bd399f1210051474179182d2c10dedf1f4d4860198e1c6d7b07b",
+    "purpose": "Durable in-repository visual proxy for future H-Earth upgrade review. The original-video SHA-256 remains the controlling source identity."
+  },
+  "controllingLaw": "AN_H_EARTH_UPGRADE_FAILS_IF_ENTERING_H_EARTH_FEELS_LIKE_ENTERING_A_DIFFERENT_PRODUCT",
+  "sameWorldLaw": "PLANETARY_GLOBE_REGIONAL_AND_LOCAL_GROUND_VIEWS_MUST_READ_AS_SCALE_CHANGES_WITHIN_ONE_CANONICAL_NAVIGABLE_WORLD",
+  "requiredInvariants": [
+    "SAME_CANONICAL_WORLD_IDENTITY",
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY",
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE",
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE",
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION",
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD",
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE",
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT",
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE",
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD",
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT"
+  ],
+  "protectedExperiencePaths": [
+    "showroom/globe/h-earth/",
+    "showroom/globe/audralia/",
+    "h-earth-3d/"
+  ],
+  "upgradeAcceptance": {
+    "comparisonAgainstAnchorRequired": true,
+    "visualEvidenceRequired": true,
+    "interactionEvidenceRequired": true,
+    "continuityEvidenceRequired": true,
+    "receiptRequired": true,
+    "receiptDirectory": "h-earth-3d/experience-anchor/receipts/",
+    "allRequiredInvariantsMustPass": true,
+    "failureDisposition": "BLOCK_H_EARTH_EXPERIENCE_UPGRADE",
+    "mayWaiveWithoutExplicitUserReplacementOfAnchor": false
+  },
+  "authority": {
+    "createsProductMutationAuthority": false,
+    "createsMergeAuthority": false,
+    "createsCanonicalWorldAuthority": false,
+    "controlsAcceptanceOfExperienceChangingUpgrades": true
+  }
+}

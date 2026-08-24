@@ -1,0 +1,548 @@
+<!-- TARGET FILE: /elara/index.html -->
+<!-- TNT FULL-FILE REPLACEMENT -->
+<!-- ELARA_CONVERSATION_FIRST_DEDUPLICATED_GUIDE_SURFACE_HTML_TNT_v3 -->
+<!--
+  Purpose:
+  - Keep Elara's conversation as the primary movement instrument.
+  - Remove duplicate destination sections and repeated route choices.
+  - Allow the active conversation to reveal one contextual destination at a time.
+  - Preserve only one compact AI-team ownership map below the conversation.
+  - Preserve accessible fallbacks when the runtime cannot load.
+
+  Owns:
+  - Elara's public page structure
+  - compact identity header
+  - hero
+  - conversation mounts
+  - compact Signal Bearer dossier
+  - one concise AI-team ownership map
+  - non-JavaScript fallback
+
+  Does not own:
+  - Elara's voice
+  - personality flares
+  - conversation sequencing
+  - route execution
+  - visual styling
+  - destination-page content
+-->
+
+<!doctype html>
+<html
+  lang="en"
+  data-route="/elara/"
+  data-page="elara-agent"
+  data-contract="ELARA_CONVERSATION_FIRST_DEDUPLICATED_GUIDE_SURFACE_HTML_TNT_v3"
+  data-previous-contract="ELARA_SIGNAL_BEARER_MODERN_AGENT_SURFACE_HTML_TNT_v2"
+  data-status="active"
+  data-agent="elara"
+  data-agent-name-lock="Elara"
+  data-agent-role="signal-bearer"
+  data-primary-quality="vision"
+  data-guide-law="doorway-not-destination"
+  data-conversation-first="true"
+  data-contextual-route-limit="1"
+  data-duplicate-pathway-sections-retired="true"
+  data-human-pathways-section-retired="true"
+  data-contextual-handoffs-section-retired="true"
+  data-ai-team-map-count="1"
+  data-automatic-opening-message-limit="2"
+  data-voice-authority="/elara/elara.voice.js"
+  data-runtime-authority="/elara/index.js"
+  data-css-authority="/elara/index.css"
+  data-no-inline-dialogue-engine="true"
+  data-no-inline-css="true"
+  data-mirrorland-name-lock="Mirrorland's"
+>
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,viewport-fit=cover"
+  >
+
+  <meta
+    name="color-scheme"
+    content="dark"
+  >
+
+  <title>
+    Elara · Signal Bearer · Diamond Gate Bridge
+  </title>
+
+  <meta
+    name="description"
+    content="Talk with Elara, the Signal Bearer guiding visitors toward Sean Mansfield, The Nine Summits of Love, and the next meaningful room in Diamond Gate Bridge."
+  >
+
+  <link
+    rel="stylesheet"
+    href="/elara/index.css?v=ELARA_SIGNAL_BEARER_MODERN_AGENT_SURFACE_CSS_TNT_v2"
+    data-elara-css-authority="true"
+  >
+</head>
+
+<body>
+  <a
+    class="skip-link"
+    href="#elara-conversation"
+  >
+    Skip to Elara
+  </a>
+
+  <main
+    id="elara-main"
+    class="elara-page"
+    data-elara-page="true"
+    data-agent-root-page="true"
+  >
+    <header
+      class="elara-header"
+      aria-label="Elara header"
+    >
+      <a
+        class="elara-brand"
+        href="/elara/"
+        aria-label="Elara home"
+      >
+        <span
+          class="elara-brand-mark"
+          aria-hidden="true"
+        >
+          E
+        </span>
+
+        <span class="elara-brand-copy">
+          <span>
+            Diamond Gate Bridge · AI Team
+          </span>
+
+          <strong>
+            Elara · Signal Bearer
+          </strong>
+        </span>
+      </a>
+
+      <div class="elara-header-tools">
+        <a
+          class="elara-compass-link"
+          href="/"
+        >
+          Compass
+        </a>
+
+        <details class="elara-house-paths">
+          <summary>
+            House Paths
+          </summary>
+
+          <nav
+            class="elara-house-menu"
+            aria-label="House guide paths"
+          >
+            <a href="/showroom/globe/hearth/jeeves/">
+              Jeeves · Whole House
+            </a>
+
+            <a href="/products/auren/">
+              Auren · Practical Systems
+            </a>
+
+            <a href="/coherence-diagnostic/">
+              Soren · Diagnostic Orientation
+            </a>
+          </nav>
+        </details>
+      </div>
+    </header>
+
+    <section
+      class="elara-hero"
+      aria-labelledby="elara-title"
+    >
+      <div class="elara-hero-copy">
+        <div class="elara-kicker">
+          Signal Bearer · Human Threshold Guide
+        </div>
+
+        <h1 id="elara-title">
+          Elara makes the future visible without exposing what must be protected.
+        </h1>
+
+        <p class="elara-hero-lead">
+          She gives visitors enough meaning to choose the next door—
+          without replacing the story waiting beyond it.
+        </p>
+
+        <p class="elara-hero-line">
+          “Reveal enough to invite. Protect enough to preserve meaning.”
+        </p>
+      </div>
+    </section>
+
+    <section
+      id="elara-conversation"
+      class="elara-console-section"
+      aria-labelledby="elara-console-title"
+    >
+      <div
+        class="elara-console-shell"
+        data-elara-app
+        data-elara-root
+        data-elara-mode="meet_sean"
+        data-elara-ready="false"
+        data-elara-speaking="false"
+        data-single-contextual-destination="true"
+        tabindex="0"
+      >
+        <header class="elara-console-head">
+          <div class="elara-console-heading">
+            <div class="elara-console-identity">
+              <div
+                class="elara-avatar"
+                aria-hidden="true"
+              >
+                E
+              </div>
+
+              <div class="elara-console-identity-copy">
+                <span data-elara-mode-label>
+                  Human Threshold
+                </span>
+
+                <strong>
+                  Elara
+                </strong>
+              </div>
+            </div>
+
+            <div
+              class="elara-status"
+              data-elara-status
+              aria-live="polite"
+            >
+              Elara is gathering the signal.
+            </div>
+          </div>
+
+          <div class="elara-console-copy">
+            <div class="elara-kicker">
+              Talk to Elara
+            </div>
+
+            <h2
+              id="elara-console-title"
+              data-elara-mode-title
+            >
+              Find the person behind the House.
+            </h2>
+
+            <p>
+              Ask one question. Elara will answer briefly and reveal the
+              most relevant next door.
+            </p>
+          </div>
+
+          <div
+            class="elara-mode-tabs"
+            role="tablist"
+            aria-label="Elara conversation mode"
+          >
+            <button
+              type="button"
+              role="tab"
+              data-elara-mode-button="meet_sean"
+              aria-pressed="true"
+              aria-selected="true"
+              data-active="true"
+              tabindex="0"
+            >
+              Meet Sean
+            </button>
+
+            <button
+              type="button"
+              role="tab"
+              data-elara-mode-button="nine_summits_love"
+              aria-pressed="false"
+              aria-selected="false"
+              data-active="false"
+              tabindex="-1"
+            >
+              Nine Summits of Love
+            </button>
+          </div>
+        </header>
+
+        <section
+          class="elara-console"
+          aria-label="Conversation with Elara"
+        >
+          <div class="elara-thread-screen">
+            <div
+              class="elara-thread"
+              data-elara-thread
+              aria-live="polite"
+              aria-label="Elara conversation thread"
+            ></div>
+
+            <div
+              class="elara-typing"
+              data-elara-typing="false"
+              aria-hidden="true"
+              hidden
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+
+          <div
+            class="elara-context-route"
+            data-elara-context-route
+            data-route-card-limit="1"
+            aria-live="polite"
+          ></div>
+
+          <div class="elara-prompt-dock">
+            <div
+              class="elara-prompt-label"
+              data-elara-prompt-label
+            >
+              Where should we begin?
+            </div>
+
+            <div
+              class="elara-options"
+              data-elara-options
+              data-single-prompt-dock="true"
+              aria-label="Elara conversation options"
+            ></div>
+          </div>
+        </section>
+
+        <div class="elara-runtime-fallback">
+          <p>
+            Elara’s conversation is unavailable, but her two primary
+            story paths remain open.
+          </p>
+
+          <div class="elara-runtime-fallback-links">
+            <a href="/meet-sean-mansfield/">
+              Meet Sean
+            </a>
+
+            <a href="/nine-summits-of-love/">
+              Open the Book
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="elara-section elara-dossier"
+      aria-labelledby="elara-dossier-title"
+    >
+      <div class="elara-dossier-head">
+        <div class="elara-kicker">
+          Core Class
+        </div>
+
+        <h2 id="elara-dossier-title">
+          Signal Bearer
+        </h2>
+
+        <p>
+          Elara introduces meaning, protects the boundary, and moves the
+          visitor forward before the conversation becomes the destination.
+        </p>
+      </div>
+
+      <div class="elara-dossier-grid">
+        <article class="elara-dossier-card">
+          <span>
+            Surface
+          </span>
+
+          <strong>
+            Public-facing clarity
+          </strong>
+
+          <p>
+            Warm, articulate, confident, and socially fluent.
+          </p>
+        </article>
+
+        <article class="elara-dossier-card">
+          <span>
+            Core
+          </span>
+
+          <strong>
+            Selective revelation
+          </strong>
+
+          <p>
+            She reveals what creates readiness and protects what requires
+            deeper custody.
+          </p>
+        </article>
+
+        <article class="elara-dossier-card">
+          <span>
+            Guide Law
+          </span>
+
+          <strong>
+            Doorway, not destination
+          </strong>
+
+          <p>
+            She answers, lands the point, and opens the correct next room.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section
+      class="elara-section elara-panel elara-team-map"
+      aria-labelledby="elara-team-title"
+    >
+      <div class="elara-pathways-head">
+        <div class="elara-kicker">
+          AI Team Ownership
+        </div>
+
+        <h2
+          id="elara-team-title"
+          class="elara-section-title"
+        >
+          Four guides. No blurred authority.
+        </h2>
+
+        <p class="elara-section-copy">
+          Elara handles human meaning. The other guides take over when
+          the visitor’s question changes.
+        </p>
+      </div>
+
+      <div class="elara-team-grid">
+        <article
+          class="elara-team-card"
+          aria-current="page"
+        >
+          <span>
+            Human Meaning
+          </span>
+
+          <strong>
+            Elara
+          </strong>
+
+          <p>
+            Sean, the Book threshold, public Mission, visibility ethics,
+            and Mirrorland’s emotional climate.
+          </p>
+        </article>
+
+        <a
+          class="elara-team-card"
+          href="/showroom/globe/hearth/jeeves/"
+        >
+          <span>
+            Whole House
+          </span>
+
+          <strong>
+            Jeeves
+          </strong>
+
+          <p>
+            Estate orientation, room ownership, system context, and the
+            complete House map.
+          </p>
+        </a>
+
+        <a
+          class="elara-team-card"
+          href="/products/auren/"
+        >
+          <span>
+            Practical Systems
+          </span>
+
+          <strong>
+            Auren
+          </strong>
+
+          <p>
+            Products, Education, 1,001 Traversal, and implementation.
+          </p>
+        </a>
+
+        <a
+          class="elara-team-card"
+          href="/coherence-diagnostic/"
+        >
+          <span>
+            Diagnostic Orientation
+          </span>
+
+          <strong>
+            Soren
+          </strong>
+
+          <p>
+            Coherence assessment, diagnostic boundaries, and structural
+            orientation.
+          </p>
+        </a>
+      </div>
+    </section>
+
+    <footer class="elara-footer">
+      <span>
+        Elara · Signal Bearer · Diamond Gate Bridge
+      </span>
+
+      <a href="/">
+        Return to Compass
+      </a>
+    </footer>
+  </main>
+
+  <noscript>
+    <section class="elara-runtime-fallback">
+      <p>
+        Elara’s interactive conversation requires JavaScript. Her two
+        primary story paths remain available.
+      </p>
+
+      <div class="elara-runtime-fallback-links">
+        <a href="/meet-sean-mansfield/">
+          Meet Sean
+        </a>
+
+        <a href="/nine-summits-of-love/">
+          Open the Book
+        </a>
+      </div>
+    </section>
+  </noscript>
+
+  <script
+    src="/elara/elara.voice.js?v=ELARA_SIGNAL_BEARER_CONCISE_GUIDE_AND_PERSONALITY_FLARE_VOICE_TNT_v2"
+    defer
+    data-elara-child="voice"
+  ></script>
+
+  <script
+    src="/elara/index.js?v=ELARA_REGISTER_AWARE_CONVERSATION_RUNTIME_TNT_v1"
+    defer
+    data-elara-child="runtime"
+  ></script>
+</body>
+</html>

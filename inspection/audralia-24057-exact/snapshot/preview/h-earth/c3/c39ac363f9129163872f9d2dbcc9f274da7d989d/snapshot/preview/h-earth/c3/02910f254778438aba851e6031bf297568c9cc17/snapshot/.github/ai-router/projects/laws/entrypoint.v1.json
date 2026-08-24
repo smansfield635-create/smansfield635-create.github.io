@@ -1,0 +1,71 @@
+{
+  "schema": "REPOSITORY_AI_PROJECT_ENTRYPOINT_v1",
+  "projectId": "LAWS",
+  "status": "ACTIVE_REGISTERED_PROJECT",
+  "ownedPathPrefixes": [
+    "laws/"
+  ],
+  "ownedExactPaths": [
+    ".github/workflows/laws-orbital-tranche-a0-a3.yml"
+  ],
+  "entrypoint": ".github/ai-router/projects/laws/entrypoint.v1.json",
+  "authorityBoundary": [
+    "ROUTING_DOES_NOT_CREATE_SCIENTIFIC_AUTHORITY",
+    "ROUTING_DOES_NOT_AUTHORIZE_MUTATION_WITHOUT_CANONICAL_REPOSITORY_OPERATION_INTAKE",
+    "PUBLIC_PAGE_EXCELLENCE_IMPLEMENTATION_RETIRED_PRIVATE_SUCCESSOR_QUALIFICATION_REQUIRED_WHEN_APPLICABLE",
+    "PRESENTATION_MAY_RESOLVE_EXISTING_LAWS_AUTHORITY_BUT_MAY_NOT_MANUFACTURE_IT",
+    "TESTS_PROJECTION_AND_BATTERY_LINEAGE_REMAIN_OUTSIDE_ROUTER_REGISTRATION_AUTHORITY"
+  ],
+  "requiredInstructions": [
+    "AGENTS.md",
+    "AI_ENTRYPOINT.json"
+  ],
+  "registries": [
+    ".github/ai-router/router.v1.json",
+    ".github/ai-router/shared-procedures.v1.json",
+    ".github/ai-router/execution-backends.v1.json"
+  ],
+  "qualityQualificationHandoff": {
+    "schema": "PUBLIC_QUALITY_INSTRUMENTATION_RETIREMENT_HANDOFF_v1",
+    "result": "PUBLIC_PAGE_EXCELLENCE_IMPLEMENTATION_RETIRED",
+    "publicExecutionAuthorized": false,
+    "forwardingPerformed": false,
+    "privateSuccessorRepository": "smansfield635-create/geodiametrics1",
+    "privateSuccessorEvidenceHead": "840b885db8d3b0331e9ac3bd207df3d32baf8fb6",
+    "privateSuccessorAuthorityInheritedFromPublicMetadata": false,
+    "qualityQualificationRequiredWhenOperationContractRequiresIt": true
+  },
+  "procedures": {
+    "operationAdmission": "CANONICAL_REPOSITORY_OPERATION_INTAKE_REQUIRED_BEFORE_MUTATION",
+    "qualityQualification": "RESOLVE_AUTHORIZED_PRIVATE_SUCCESSOR_QUALIFICATION_OUTSIDE_PUBLIC_REPOSITORY_WHEN_REQUIRED_BY_OPERATION_CONTRACT",
+    "routerCommand": "node tools/repository-ai-entry-router.mjs --path <PATH> --task <TASK> [--mutation-intent] --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/laws-router-receipt.json",
+    "pageMutationOrder": [
+      "CANONICAL_INTAKE_ADMITTED_AND_LOCKED",
+      "REPOSITORY_AI_ROUTER_PASS",
+      "REQUIRED_PRIVATE_QUALITY_QUALIFICATION_IF_APPLICABLE",
+      "BOUNDED_CONSTRUCTION",
+      "REQUIRED_RUNTIME_EVIDENCE",
+      "PERCEPTUAL_ACCEPTANCE_REQUEST"
+    ]
+  },
+  "localExecution": {
+    "allowed": true,
+    "requirements": [
+      "FULL_REPOSITORY_CHECKOUT",
+      "EXACT_SUBJECT_HEAD",
+      "COMMAND_EMITTED_ADMISSION_RECEIPT",
+      "ROUTER_RECEIPT_FOR_EVERY_AFFECTED_PATH"
+    ]
+  },
+  "githubActionsExecution": {
+    "routerValidationWorkflow": ".github/workflows/repository-ai-entry-router-validation.yml",
+    "publicPageExcellenceExecutionAvailable": false
+  },
+  "stoppingRules": [
+    "STOP_IF_CANONICAL_INTAKE_IS_NOT_ADMITTED_AND_LOCKED",
+    "STOP_IF_ROUTER_DISPOSITION_IS_BLOCK_OR_STOP",
+    "STOP_IF_REQUIRED_PRIVATE_QUALITY_QUALIFICATION_IS_NOT_RESOLVED",
+    "STOP_IF_REQUIRED_RUNTIME_EVIDENCE_IS_MISSING",
+    "STOP_IF_PRESENTATION_IS_USED_TO_INFER_SCIENTIFIC_AUTHORITY"
+  ]
+}

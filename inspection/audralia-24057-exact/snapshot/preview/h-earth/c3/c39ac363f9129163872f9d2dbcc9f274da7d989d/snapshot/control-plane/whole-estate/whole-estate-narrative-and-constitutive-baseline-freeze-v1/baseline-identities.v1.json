@@ -1,0 +1,78 @@
+{
+  "schema": "WHOLE_ESTATE_BASELINE_IDENTITIES_v1",
+  "status": "CHECKPOINT_1_CONSTRUCTION_CANDIDATE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "governingBaseline": {
+    "main": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
+    "tree": "3116d5c35bfdd575922dac614fb2e9f1d4f61ec5",
+    "gate0Pr": 708,
+    "gate0Merge": "fb2d34cb3c187fc5d6526c6108b383fca4ed0801",
+    "gate0Candidate": "3e26cc4e49bf2c2291a7a5db4093e8a31f5a54f4",
+    "gate0PostMergeWorkflowRun": 31142801853,
+    "gate0PostMergeWorkflowConclusion": "SUCCESS"
+  },
+  "currentMainDeltaAfterGate0": {
+    "pr": 712,
+    "mergeCommit": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
+    "changedPaths": 4,
+    "classification": "H_EARTH_REGISTRY_PREREQUISITE_ONLY",
+    "publicSurfaceMutation": false,
+    "terrainConstructionAuthorizedByThisDelta": false,
+    "estateConstructionAuthorizedByThisDelta": false,
+    "previewOrDeploymentAuthorizedByThisDelta": false,
+    "constructionLockGeneration": 411,
+    "constructionLockStatusFromPr": "PRESERVED_ACTIVE"
+  },
+  "publicSurfaceBlobs": {
+    "mainCompass": {"path": "index.html", "sha": "1cc9a1de90bb58de6463bafe52a1b1f91c5bef4a"},
+    "manorRouteRegistry": {"path": "assets/manor-blueprint/manor.blueprint.registry.js", "sha": "f7e72cb61e02ff3001ae059d0ad73e6d7a75986f"},
+    "siteGuide": {"path": "site-guide/index.html", "sha": "ca5a10863121d8fbabbf87080ae29a54946dd349"},
+    "laws": {"path": "laws/index.html", "sha": "df2fc6b74da5791cedf07f0d01449ccf72243c36"},
+    "lawsResearch": {"path": "laws/research/index.html", "sha": "58b06514bf03bf8c32d8c1ed4d6d39a8693df9cd"},
+    "methodsModels": {"path": "laws/research/methods-and-models/index.html", "sha": "2a84f9a272d051041dd639d95e1dca4dbd5db144"},
+    "coherenceDiagnostic": {"path": "coherence-diagnostic/index.html", "sha": "ffb0e320e73eed49ccd4c90c16b1256f9fcdb253"},
+    "frontier": {"path": "explore/frontier/index.html", "sha": "e95d2b96c735da4bb9a3efd67a374cdb60197c2e"},
+    "products": {"path": "products/index.html", "sha": "76f506b3eb56c2210e8f403fd58e6f9d8439fe35"},
+    "characters": {"path": "characters/index.html", "sha": "abafc0bc1f4b6538028833c47103596411ff3f3a"},
+    "showroom": {"path": "showroom/index.html", "sha": "6393e9882ad61331056afb51aad090a31f75ce3b"},
+    "gauges": {"path": "gauges/index.html", "sha": "869b4a9c63a6bbfbadc1ca88599f9a0e7f73a708"},
+    "sitemap": {"path": "sitemap.xml", "sha": "185c1d9901e418586ae36121542e41a7ede95b66"}
+  },
+  "gate0PackageBlobs": {
+    "README.md": "cd50bad98ac8f9ae1ce7a772df5db6b82daa0929",
+    "canonical-hierarchy.v1.json": "c2d7383ff6377cdbe6b31710011db1d4287e49e4",
+    "evidence-and-execution-state.v1.json": "9b80c1f4ad492037fd5bfc825ffdd933f9812b2f",
+    "human-and-3d-integration-contract.v1.json": "76b379fa1823f99bad5fb8b9bae5a00ae3e4491f",
+    "legacy-mapping.v1.json": "4df9983a406c97ef99770671a0bfc995f0a028df",
+    "methods-sequence.v1.json": "4fbebc22d2cf0bf8d4fa28c8857b915e7c28bd16",
+    "model-registry.v1.json": "61304f3a7230e1cc1a1ec89804b3fda45e3c9ced",
+    "universal-object-model.v1.json": "034b1e5d546782d7a6a019b0af6b80c1407d616f",
+    "verify.v1.mjs": "32e0be7e3b95bc8b77a06d6b668601e73bedaaad"
+  },
+  "postGate0EvidenceDelta": {
+    "pr": 709,
+    "mergedIntoMain": false,
+    "authoritativeHead": "54e0f3cf59cffab6a195c9c2ffe4f104185b5e81",
+    "resultBlob": "8a0aaca5d8edcccbf6e90d352a0612de56e69b19",
+    "selectionAndScoringBlob": "509ca8a97abf4a38a46f443d099e444cec118431",
+    "closureBlob": "8002788fc9f96ed08197f1d98cc30f1b792cb80b",
+    "classification": "PROCESS_SEPARATED_RETROSPECTIVE_EXTERNAL_REPLICATION",
+    "terminalDisposition": "UCIC_ROUTE_SPECIFICITY_SUPPORTED_EXTERNAL_CSB",
+    "evidenceCeiling": "EXPLORATORY_EXTERNAL_ROUTE_CONCORDANCE_AND_SPECIFICITY_SUPPORT_ONLY",
+    "medianRouteHitRate": 1.0,
+    "medianCausalCoverage": 1.0,
+    "medianTrueMinusDecoyAdvantage": 0.8333333333333334,
+    "positiveAdvantageCases": "5/5",
+    "outcomeBlindness": "NOT_ESTABLISHED",
+    "publicOutcomeContamination": "PRESENT",
+    "prospectiveConfirmation": "NOT_ESTABLISHED",
+    "independentHumanConfirmation": "NOT_ESTABLISHED",
+    "universality": "NOT_ESTABLISHED"
+  },
+  "deployment": {
+    "publicPageMutation": false,
+    "visualConstructionStarted": false,
+    "deploymentAuthorized": false,
+    "userVisualApprovalRequiredBeforePublicFacingMerge": true
+  }
+}

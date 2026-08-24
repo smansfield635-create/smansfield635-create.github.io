@@ -1,0 +1,72 @@
+{
+  "authorization_class": "ONE_EXACT_CANDIDATE_FOR_IMPLEMENTATION_AND_EMPIRICAL_EVALUATION_NOT_PROVEN_SUCCESS",
+  "authorized_correction_mode": "EXPLICIT_PITCH",
+  "authorized_pitch_degrees": 8.0,
+  "authorized_product_mutation_paths": [
+    "showroom/globe/h-earth/functional-landscape/navigation.js"
+  ],
+  "authorized_symbol_change": {
+    "from": -8.0,
+    "symbol": "H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS.COAST.pitchDegrees",
+    "to": 8.0
+  },
+  "baseline_candidate_head": "501505fe66dbeede467240d8c7d93f194f7d10d2",
+  "candidate_dispositions": [
+    {
+      "candidate_pitch_degrees": 4.0,
+      "disposition": "NOT_AUTHORIZED",
+      "reason": "OUTSIDE_FROZEN_PLUS8_TO_PLUS12_COMPOSITION_SEARCH_INTERVAL; CLEARANCE_ONLY_IS_INSUFFICIENT"
+    },
+    {
+      "candidate_pitch_degrees": 8.0,
+      "disposition": "AUTHORIZED_FOR_IMPLEMENTATION_AND_TEST",
+      "reason": "LOWEST_PITCH_IN_FROZEN_ADMISSIBLE_SEARCH_INTERVAL; 4.588964_DEGREE_MARGIN_ABOVE_CONTINUOUS_BOUND; MINIMUM_CHANGE_RULE"
+    },
+    {
+      "candidate_pitch_degrees": 12.0,
+      "disposition": "NOT_CURRENTLY_AUTHORIZED_RESERVED_FALLBACK",
+      "reason": "LARGER_THAN_NECESSARY_INITIAL_CHANGE_AND GREATER BEACH_FOREGROUND_LOSS_RISK; MAY REQUIRE NEW VERSION IF PLUS8_FAILS"
+    }
+  ],
+  "correction_manifest_id": "H_EARTH_COAST_ENTRY_TO_GRATITUDE_V4_PLUS_8_CORRECTION_MANIFEST_v1",
+  "correction_manifest_sha256": "e05e896cd2e791508d65824c17298ef42b4fd0cafde9d14a348a6cc1c4eab1bb",
+  "current_hypothesis": "EXPLICIT_PITCH_PLUS_8_DEGREES",
+  "determination_id": "H_EARTH_COAST_ENTRY_TO_GRATITUDE_V4_ROLE6_REMEDY_DETERMINATION_v1",
+  "determination_sha256": "309f8836399ce33f593fc3472b578a1c5127fde11aaf937c409dca04f498b889",
+  "empirical_observer_agreement_established": false,
+  "freeze_timestamp": "2026-08-02T22:32:24Z",
+  "governing_release": "IMI_H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_DEPLOYABLE_RELEASE_v4",
+  "governing_release_sha256": "49162b7ff730a9efc71bd2151ad00b34e8b9f46271018a015defb5534c7fb3b2",
+  "governing_route": "H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_v4",
+  "governing_route_version": "4.0.0",
+  "package_id": "H_EARTH_C2_R1_ROLE_6_IMI_V4_PLUS_8_REMEDY_AND_EVIDENCE_CONTRACT_PACKET_v1",
+  "product_mutation_performed_by_this_packet": false,
+  "prohibited_changes": [
+    "COAST_X",
+    "COAST_Z",
+    "COAST_YAW",
+    "VERTICAL_FOV",
+    "EYE_HEIGHT",
+    "TERRAIN",
+    "MATERIALS",
+    "PLACEMENTS",
+    "BERM_WAYPOINT",
+    "OTHER_WAYPOINTS",
+    "RENDERER",
+    "CAMERA_CAPACITY",
+    "PUBLIC_MAPPING",
+    "FINAL_GRATITUDE_COORDINATES"
+  ],
+  "repair_success_established": false,
+  "role5_ratification_authorized": false,
+  "selection_law": [
+    "PRESERVE_COAST_X0_Z_MINUS96_YAW0_FOV56_CANONICAL_TERRAIN_MATERIALS_PLACEMENTS_AND_NAVIGATION",
+    "USE_PRIOR_ROLE6_BOUNDED_COMPOSITION_SEARCH_INTERVAL_PLUS8_THROUGH_PLUS12",
+    "SELECT_MINIMUM_CHANGE_WITHIN_ADMISSIBLE_INTERVAL_TO_MAXIMIZE_BEACH_FOREGROUND_PRESERVATION",
+    "REQUIRE_PITCH_TO_EXCEED_EXACT_AND_CONTINUOUS_CENTERLINE_CLEARING_BOUNDS",
+    "REQUIRE_V4_MULTIFACTOR_POST_IMPLEMENTATION_EVIDENCE_BEFORE_ANY_SUCCESS_CLAIM"
+  ],
+  "status": "FROZEN_INSTRUMENT_BOUND_REMEDY_AUTHORIZATION",
+  "target_correspondence_disposition": "NOT_CURRENTLY_AUTHORIZED_BECAUSE_FINAL_GRATITUDE_COORDINATE_AUTHORITY_IS_FALSE_AND_EXPLICIT_PITCH_IS_THE_ONLY_FULLY_INSTANTIABLE_CURRENT_MODE",
+  "user_differential_required": true
+}

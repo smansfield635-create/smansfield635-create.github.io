@@ -1,0 +1,141 @@
+name: Brain Gen1 Anatomical Extraction
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/brain-gen1-anatomical-extraction.yml'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/brain-gen1-anatomical-extraction.yml'
+
+permissions:
+  contents: read
+  packages: read
+
+env:
+  SOURCE_DATASET: ds006072
+  SOURCE_SNAPSHOT: '1.1.0'
+  SOURCE_SUBJECT: sub-P1
+  SOURCE_SESSION: ses-1
+  T1_PATH: sub-P1/ses-1/anat/sub-P1_ses-1_acq-t1mpr0p9mm_rec-NDNORM_run-1_T1w.nii.gz
+  T2_PATH: sub-P1/ses-1/anat/sub-P1_ses-1_acq-t2spc0p9mmiso_rec-NDNORM_run-1_T2w.nii.gz
+  T1_SHA256: 15472257ccf51b7a95c5239ccb7e1f457ba6e4d73a4233af3e4167fef504863f
+  T2_SHA256: 67dcc82e1c1c61c78484bae0e0a8e59356e8c615f265e9eb554c4134e3d33fca
+  FREESURFER_IMAGE: freesurfer/freesurfer:7.4.1@sha256:10b6468cbd9fcd2db3708f4651d59ad75d4da849a2c5d8bb6dba217f08b8c46b
+  VTK_TAG: ghcr.io/smansfield635-create/brain-gen1-vtk:c5e3268da33bd2cf57ab9b290f02d27b02ce498d
+
+jobs:
+  contract-preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify frozen source and execution constants
+        run: |
+          set -euo pipefail
+          test "$SOURCE_DATASET" = ds006072
+          test "$SOURCE_SNAPSHOT" = 1.1.0
+          test "$SOURCE_SUBJECT" = sub-P1
+          test "$SOURCE_SESSION" = ses-1
+          test "$T1_SHA256" = 15472257ccf51b7a95c5239ccb7e1f457ba6e4d73a4233af3e4167fef504863f
+          test "$T2_SHA256" = 67dcc82e1c1c61c78484bae0e0a8e59356e8c615f265e9eb554c4134e3d33fca
+          test "$FREESURFER_IMAGE" = 'freesurfer/freesurfer:7.4.1@sha256:10b6468cbd9fcd2db3708f4651d59ad75d4da849a2c5d8bb6dba217f08b8c46b'
+          printf 'GEN1_EXTRACTION_CONTRACT_PREFLIGHT=PASS\n'
+
+  extract:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: contract-preflight
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Resolve immutable VTK receipt identity
+        run: |
+          set -euo pipefail
+          docker pull "$VTK_TAG"
+          VTK_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' "$VTK_TAG")
+          test -n "$VTK_DIGEST"
+          printf '%s\n' "$VTK_DIGEST" | tee vtk-image-digest.txt
+      - name: Retrieve exact frozen OpenNeuro source volumes
+        run: |
+          set -euo pipefail
+          mkdir -p input
+          aws s3 cp --no-sign-request --only-show-errors "s3://openneuro.org/${SOURCE_DATASET}/${T1_PATH}" input/T1w.nii.gz
+          aws s3 cp --no-sign-request --only-show-errors "s3://openneuro.org/${SOURCE_DATASET}/${T2_PATH}" input/T2w.nii.gz
+          echo "${T1_SHA256}  input/T1w.nii.gz" | sha256sum -c -
+          echo "${T2_SHA256}  input/T2w.nii.gz" | sha256sum -c -
+          test "$(stat -c %s input/T1w.nii.gz)" = 8963163
+          test "$(stat -c %s input/T2w.nii.gz)" = 8276862
+      - name: Pull immutable FreeSurfer execution environment
+        run: |
+          set -euo pipefail
+          docker pull "$FREESURFER_IMAGE"
+      - name: Prepare FreeSurfer license credential
+        env:
+          FREESURFER_LICENSE_SECRET: ${{ secrets.FREESURFER_LICENSE }}
+        run: |
+          set -euo pipefail
+          if [ -n "$FREESURFER_LICENSE_SECRET" ]; then
+            printf '%s\n' "$FREESURFER_LICENSE_SECRET" > license.txt
+            chmod 600 license.txt
+            echo 'LICENSE_MODE=SECRET' >> "$GITHUB_ENV"
+          elif docker run --rm "$FREESURFER_IMAGE" bash -lc 'test -s /usr/local/freesurfer/license.txt'; then
+            echo 'LICENSE_MODE=IMAGE' >> "$GITHUB_ENV"
+          else
+            echo 'FreeSurfer execution requires repository secret FREESURFER_LICENSE or a license embedded in the frozen image.' >&2
+            exit 78
+          fi
+      - name: Execute frozen FreeSurfer reconstruction
+        run: |
+          set -euo pipefail
+          mkdir -p subjects
+          COMMON=(--rm -v "$PWD/input:/input:ro" -v "$PWD/subjects:/subjects" -e SUBJECTS_DIR=/subjects)
+          if [ "$LICENSE_MODE" = SECRET ]; then
+            COMMON+=( -v "$PWD/license.txt:/license.txt:ro" -e FS_LICENSE=/license.txt )
+          fi
+          docker run "${COMMON[@]}" "$FREESURFER_IMAGE" \
+            recon-all -all -subjid GEN1_P1 -i /input/T1w.nii.gz -T2 /input/T2w.nii.gz -T2pial
+          docker run "${COMMON[@]}" "$FREESURFER_IMAGE" segmentBS.sh GEN1_P1 /subjects
+      - name: Export frozen cerebral surfaces and segmentation volumes
+        run: |
+          set -euo pipefail
+          mkdir -p exported
+          COMMON=(--rm -v "$PWD/subjects:/subjects" -v "$PWD/exported:/exported" -e SUBJECTS_DIR=/subjects)
+          if [ "$LICENSE_MODE" = SECRET ]; then
+            COMMON+=( -v "$PWD/license.txt:/license.txt:ro" -e FS_LICENSE=/license.txt )
+          fi
+          docker run "${COMMON[@]}" "$FREESURFER_IMAGE" mris_convert /subjects/GEN1_P1/surf/lh.pial /exported/lh.pial.stl
+          docker run "${COMMON[@]}" "$FREESURFER_IMAGE" mris_convert /subjects/GEN1_P1/surf/rh.pial /exported/rh.pial.stl
+          docker run "${COMMON[@]}" "$FREESURFER_IMAGE" mri_convert /subjects/GEN1_P1/mri/aseg.mgz /exported/aseg.nii.gz
+          BS=$(find subjects/GEN1_P1/mri -maxdepth 1 -type f -name '*brainstem*FSvoxelSpace*.mgz' -o -name '*brainstem*Labels*.mgz' | head -n 1)
+          test -n "$BS"
+          docker run "${COMMON[@]}" "$FREESURFER_IMAGE" mri_convert "/subjects/GEN1_P1/mri/$(basename "$BS")" /exported/brainstem-labels.nii.gz
+      - name: Freeze execution receipt and output identities
+        run: |
+          set -euo pipefail
+          {
+            echo "MAIN_SHA=$GITHUB_SHA"
+            echo "SOURCE_DATASET=$SOURCE_DATASET"
+            echo "SOURCE_SNAPSHOT=$SOURCE_SNAPSHOT"
+            echo "T1_SHA256=$T1_SHA256"
+            echo "T2_SHA256=$T2_SHA256"
+            echo "FREESURFER=$FREESURFER_IMAGE"
+            printf 'VTK='; cat vtk-image-digest.txt
+            echo 'RECON_COMMAND=recon-all -all -subjid GEN1_P1 -i /input/T1w.nii.gz -T2 /input/T2w.nii.gz -T2pial'
+            echo 'BRAINSTEM_COMMAND=segmentBS.sh GEN1_P1 /subjects'
+            find exported -maxdepth 1 -type f -print0 | sort -z | xargs -0 sha256sum
+          } | tee gen1-extraction-receipt.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: brain-gen1-first-anatomical-extraction-${{ github.run_id }}
+          path: |
+            exported/
+            gen1-extraction-receipt.txt
+          if-no-files-found: error
+          retention-days: 30

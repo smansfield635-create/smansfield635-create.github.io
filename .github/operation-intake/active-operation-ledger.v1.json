@@ -1871,29 +1871,30 @@
       "state": "ADMITTED_LOCKED"
     },
     "99ffb39e511cc2c8cd68698915bd123716d7cdeaa06bb9d13d5b3e619ca1d3d1": {
-      "governingHead": "558f8301f3408db5f2850a8c4587c58f60cb6193",
-      "lockGeneration": 1630,
+      "governingHead": "57302a9b955475f57a14bcd80940eb89d55094d8",
+      "lockGeneration": 1635,
       "lockScope": "ESTATE_INSTRUMENTS_NAVIGATION_AND_LABORATORY_IDENTITY",
-      "operationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_004",
+      "operationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_005",
       "predecessor": {
         "authorityInherited": false,
         "exactHeadRevalidationRequired": true,
-        "governingHead": "bc4078f8f884921e8c58fe5a30f6a7c9c577d6f0",
-        "lockGeneration": 1626,
+        "governingHead": "558f8301f3408db5f2850a8c4587c58f60cb6193",
+        "lockGeneration": 1630,
         "lockScope": "ESTATE_INSTRUMENTS_NAVIGATION_AND_LABORATORY_IDENTITY",
-        "operationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_003",
+        "operationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_004",
         "preservedEvidenceRefs": [
-          "issue:#1968:operation-003-admission",
-          "branch:ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_003@5714ca9bc7ccb0d67dc60e6b043261eaa63c219b:NONAUTHORITATIVE_STALE_CANDIDATE_EVIDENCE_ONLY",
-          "check-run:67628908748:FAILED_CONSTRUCTOR_EVIDENCE_ONLY"
+          "issue:#1968:operation-004-admission",
+          "candidate:232d673faa0cb4df5bd6542fe57242371f8c9633:INSPECTED_STALE_CANDIDATE_EVIDENCE_ONLY",
+          "differential-receipt:issuecomment-5401985203:CARRY_FORWARD_APPROVED_COMPLETE_DISJOINT_CHANGE_PROVEN",
+          "failed-invocation-R2:FINGERPRINT_DOMAIN_MISMATCH_NO_LEDGER_MUTATION"
         ],
         "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
         "terminalDisposition": "SUPERSEDED",
-        "transitionId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_003_TO_004"
+        "transitionId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_004_TO_005_R3"
       },
-      "procedureLocatorDigest": "ec82b2136dea850aa9d02cd374c84d4126383e2db88ab1ae6a6a6d8a4c7133a2",
+      "procedureLocatorDigest": "7586c1d6024726335241a96adaeba05baa6c6c175c1488f756e8bf923f0e8502",
       "released": false,
-      "requestDigest": "b32f8f8cd2558eb96fe49cb08f0bb230b67187688332d00fc4153d80a1bbe249",
+      "requestDigest": "336f83620c9a44565930efec683b0d82c5b877f7624225c55e2fe8dcdc93187e",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "99ffb39e511cc2c8cd68698915bd123716d7cdeaa06bb9d13d5b3e619ca1d3d1",
       "state": "ADMITTED_LOCKED"
@@ -3416,7 +3417,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1634,
+  "lockGeneration": 1635,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -25245,6 +25246,52 @@
         "successorLockScope": "AUDRALIA_WEATHER_PRESENTATION",
         "successorOperationId": "AUDRALIA_PLANETARY_CLOUD_FIELD_COVERAGE_20260824_001",
         "transitionId": "AUDRALIA_PLANETARY_CLOUD_FIELD_SUCCESSOR_20260824_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "558f8301f3408db5f2850a8c4587c58f60cb6193",
+      "lockGeneration": 1630,
+      "lockScope": "ESTATE_INSTRUMENTS_NAVIGATION_AND_LABORATORY_IDENTITY",
+      "operationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_004",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "bc4078f8f884921e8c58fe5a30f6a7c9c577d6f0",
+        "lockGeneration": 1626,
+        "lockScope": "ESTATE_INSTRUMENTS_NAVIGATION_AND_LABORATORY_IDENTITY",
+        "operationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_003",
+        "preservedEvidenceRefs": [
+          "issue:#1968:operation-003-admission",
+          "branch:ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_003@5714ca9bc7ccb0d67dc60e6b043261eaa63c219b:NONAUTHORITATIVE_STALE_CANDIDATE_EVIDENCE_ONLY",
+          "check-run:67628908748:FAILED_CONSTRUCTOR_EVIDENCE_ONLY"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_003_TO_004"
+      },
+      "procedureLocatorDigest": "ec82b2136dea850aa9d02cd374c84d4126383e2db88ab1ae6a6a6d8a4c7133a2",
+      "released": true,
+      "requestDigest": "b32f8f8cd2558eb96fe49cb08f0bb230b67187688332d00fc4153d80a1bbe249",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "99ffb39e511cc2c8cd68698915bd123716d7cdeaa06bb9d13d5b3e619ca1d3d1",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:#1968:operation-004-admission",
+          "candidate:232d673faa0cb4df5bd6542fe57242371f8c9633:INSPECTED_STALE_CANDIDATE_EVIDENCE_ONLY",
+          "differential-receipt:issuecomment-5401985203:CARRY_FORWARD_APPROVED_COMPLETE_DISJOINT_CHANGE_PROVEN",
+          "failed-invocation-R2:FINGERPRINT_DOMAIN_MISMATCH_NO_LEDGER_MUTATION"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "57302a9b955475f57a14bcd80940eb89d55094d8",
+        "successorLockGeneration": 1635,
+        "successorLockScope": "ESTATE_INSTRUMENTS_NAVIGATION_AND_LABORATORY_IDENTITY",
+        "successorOperationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_005",
+        "transitionId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_004_TO_005_R3"
       },
       "terminalDisposition": "SUPERSEDED"
     }

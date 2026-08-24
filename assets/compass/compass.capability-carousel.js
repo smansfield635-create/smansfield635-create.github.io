@@ -26,5 +26,5 @@ function installLiveComposite(){
   load(`/compass-composite/composite.js?v=${LIVE_COMPOSITE_BUILD}-live-20260823-r2`,'data-compass-live-composite-runtime');
 }
 installLiveComposite();
-requirePresentationOwner(()=>{declareControllerSettledLabelAuthority();load('/assets/compass/compass.statement-orbit.js?v=statement-orbit-restoration-v2&cb=980dbbe68b46','data-compass-statement-orbit-runtime',()=>{installGen1591Bounds();load('/assets/compass/compass.capability-carousel.core.js?v=capability-continuity-v4-single-owner&cb=20260821-1577','data-compass-capability-carousel-core');});});
+requirePresentationOwner(()=>{declareControllerSettledLabelAuthority();load('/assets/compass/compass.statement-orbit.js?v=statement-orbit-restoration-v2&cb=980dbbe68b46','data-compass-statement-orbit-runtime',()=>{installGen1591Bounds();load('/assets/compass/compass.hra-brain-scene.js?v=brain-gen1-hra-passive-v1&g=1607&cb=20260824-brain-gen1-hra-passive-v1','data-compass-hra-brain-scene',()=>{load('/assets/compass/compass.capability-carousel.core.js?v=capability-continuity-v4-single-owner&cb=20260821-1577','data-compass-capability-carousel-core');});});});
 })();

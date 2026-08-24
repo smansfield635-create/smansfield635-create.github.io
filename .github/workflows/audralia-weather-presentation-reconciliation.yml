@@ -17,14 +17,22 @@ jobs:
   structural-reconciliation:
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout structural reconciliation working set
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /showroom/globe/audralia/weather-presentation-reconciliation/
-            /tools/audralia-weather-presentation-reconciliation-ci.mjs
+      - name: Materialize structural reconciliation sparse index
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "+${GITHUB_REF}:refs/remotes/origin/qualification"
+          git sparse-checkout init --cone --sparse-index
+          git sparse-checkout set showroom/globe/audralia/weather-presentation-reconciliation
+          git checkout --detach refs/remotes/origin/qualification
+          mkdir -p tools
+          git show HEAD:tools/audralia-weather-presentation-reconciliation-ci.mjs > tools/audralia-weather-presentation-reconciliation-ci.mjs
+          test "$(git config --bool index.sparse)" = "true"
+          sparse_entries=$(git ls-files --sparse | wc -l)
+          test "$sparse_entries" -lt 2000
+          printf 'AUDRALIA_STRUCTURAL_SPARSE_INDEX_ENTRIES=%s\n' "$sparse_entries"
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -56,35 +64,42 @@ jobs:
   exact-page-runtime-reconciliation:
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout exact Audralia runtime qualification working set
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /showroom/globe/audralia/
-            /showroom/globe/h-earth/terrain-estate-construction-v1/
-            /showroom/globe/h-earth/render/
-            /h-earth-3d/integration/
-            /h-earth-3d/terrain/
-            /h-earth-3d/control-plane/run-8/
-            /h-earth-3d/objects/
-            /h-earth-3d/zones/
-            /h-earth-3d/cells/
-            /h-earth-3d/environment/
-            /h-earth-3d/h-earth.matrix.js
-            /inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/
-            /inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/
-            /inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/render/
-            /inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/
-            /inspection/audralia-24057-exact/snapshot/h-earth-3d/terrain/
-            /inspection/audralia-24057-exact/snapshot/h-earth-3d/control-plane/run-8/
-            /inspection/audralia-24057-exact/snapshot/h-earth-3d/objects/
-            /inspection/audralia-24057-exact/snapshot/h-earth-3d/zones/
-            /inspection/audralia-24057-exact/snapshot/h-earth-3d/cells/
-            /inspection/audralia-24057-exact/snapshot/h-earth-3d/environment/
-            /inspection/audralia-24057-exact/snapshot/h-earth-3d/h-earth.matrix.js
-            /tools/audralia-weather-presentation-reconciliation-ci.mjs
+      - name: Materialize exact Audralia runtime sparse index
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "+${GITHUB_REF}:refs/remotes/origin/qualification"
+          git sparse-checkout init --cone --sparse-index
+          git sparse-checkout set \
+            showroom/globe/audralia \
+            showroom/globe/h-earth/terrain-estate-construction-v1 \
+            showroom/globe/h-earth/render \
+            h-earth-3d/integration \
+            h-earth-3d/terrain \
+            h-earth-3d/control-plane/run-8 \
+            h-earth-3d/objects \
+            h-earth-3d/zones \
+            h-earth-3d/cells \
+            h-earth-3d/environment \
+            inspection/audralia-24057-exact/snapshot/showroom/globe/audralia \
+            inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1 \
+            inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/render \
+            inspection/audralia-24057-exact/snapshot/h-earth-3d/integration \
+            inspection/audralia-24057-exact/snapshot/h-earth-3d/terrain \
+            inspection/audralia-24057-exact/snapshot/h-earth-3d/control-plane/run-8 \
+            inspection/audralia-24057-exact/snapshot/h-earth-3d/objects \
+            inspection/audralia-24057-exact/snapshot/h-earth-3d/zones \
+            inspection/audralia-24057-exact/snapshot/h-earth-3d/cells \
+            inspection/audralia-24057-exact/snapshot/h-earth-3d/environment
+          git checkout --detach refs/remotes/origin/qualification
+          mkdir -p tools
+          git show HEAD:tools/audralia-weather-presentation-reconciliation-ci.mjs > tools/audralia-weather-presentation-reconciliation-ci.mjs
+          test "$(git config --bool index.sparse)" = "true"
+          sparse_entries=$(git ls-files --sparse | wc -l)
+          test "$sparse_entries" -lt 5000
+          printf 'AUDRALIA_RUNTIME_SPARSE_INDEX_ENTRIES=%s\n' "$sparse_entries"
       - name: Verify browser module dependency closure
         shell: bash
         run: |

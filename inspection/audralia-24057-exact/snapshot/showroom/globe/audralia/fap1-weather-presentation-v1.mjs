@@ -1,4 +1,4 @@
-const POLICY_ID='AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v4';
+const POLICY_ID='AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v5';
 const previousShaderSource=WebGL2RenderingContext.prototype.shaderSource;
 let patched=0;
 let rejected=0;
@@ -111,6 +111,74 @@ vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   ice+=cycloneLow*.34+outflow*.97;
   precip+=cycloneLow*.95;
 
+  // WSD5-1 — Marine stratus / stratocumulus bank.
+  // A broad low deck with open-cell breakup. It occupies new longitude rather
+  // than scaling any existing cloud system.
+  vec2 mq=fap1Local(lat,lon,.383972,2.303835+t*.007);
+  float marineEnvelope=fap1Ellipse(mq,vec2(0.0),vec2(.46,.28),-.08);
+  float marineCellWave=.5+.5*sin(mq.x*34.0+sin(mq.y*22.0+t*.55)*1.35);
+  float marineNoise=fbm(radial*24.0+vec3(t*.13,-t*.27,t*.19));
+  float marineOpenCells=smoothstep(.38,.73,marineNoise*.62+marineCellWave*.38);
+  float marineDeck=marineEnvelope*fap1Band(h,30.0,49.0)*(.20+.58*marineOpenCells)*.60;
+  mass+=marineDeck;
+  precip+=marineDeck*.06;
+
+  // WSD5-2 — Trade-cumulus streets.
+  // Narrow parallel rows are separated by deliberate clear-air lanes.
+  vec2 tq=fap1Local(lat,lon,-.122173,2.757620-t*.009);
+  float tradeEnvelope=fap1Ellipse(tq,vec2(0.0),vec2(.43,.33),.12);
+  float tradeAxis=tq.x*.94+tq.y*.34;
+  float tradeRows=.5+.5*sin(tradeAxis*56.0+t*.72);
+  float tradeCells=fbm(radial*35.0+vec3(-t*.31,t*.16,t*.23));
+  float tradeStreet=smoothstep(.68,.90,tradeRows)*smoothstep(.49,.73,tradeCells);
+  float tradeCumulus=tradeEnvelope*fap1Band(h,30.0,57.0)*tradeStreet*.72;
+  mass+=tradeCumulus;
+  precip+=tradeCumulus*.10;
+
+  // WSD5-3 — Midlatitude comma cloud and frontal tail.
+  // A compact shield wraps into a long broken front with a dry-slot incision.
+  vec2 jq=fap1Local(lat,lon,.785398,3.071779+t*.011);
+  float commaHead=fap1Ellipse(jq,vec2(-.05,.035),vec2(.22,.18),-.28);
+  float commaWrap=fap1Ellipse(jq,vec2(.105,.045),vec2(.30,.060),.46);
+  float commaTailA=fap1Ellipse(jq,vec2(.28,-.075),vec2(.34,.052),.18);
+  float commaTailB=fap1Ellipse(jq,vec2(.49,-.145),vec2(.30,.044),.10);
+  float commaDrySlot=fap1Ellipse(jq,vec2(.025,-.025),vec2(.105,.070),-.38);
+  float commaShape=max(commaHead,max(commaWrap,max(commaTailA,commaTailB)))*(1.0-.78*commaDrySlot);
+  float commaBreak=mix(.24,1.0,fap1CloudBreak(radial,t,15.0,.34,.69));
+  float commaMid=commaShape*fap1Band(h,46.0,84.0)*commaBreak*.60;
+  float commaIce=max(commaHead,commaWrap)*fap1Band(h,73.0,104.0)*mix(.22,1.0,fap1CloudBreak(radial,t,20.0,.35,.70))*.38;
+  mass+=commaMid+commaIce;
+  ice+=commaMid*.36+commaIce*.98;
+  precip+=commaMid*.28;
+
+  // WSD5-4 — Mesoscale convective complex.
+  // Several deep towers feed one shared anvil, intentionally distinct from the
+  // organized tropical cyclone and from the earlier two-tower convection.
+  vec2 xq=fap1Local(lat,lon,.139626,-2.722714-t*.010);
+  float mcc1=fap1Ellipse(xq,vec2(-.105,-.035),vec2(.095,.125),-.16);
+  float mcc2=fap1Ellipse(xq,vec2(.015,.020),vec2(.100,.145),.10);
+  float mcc3=fap1Ellipse(xq,vec2(.125,-.010),vec2(.090,.120),.24);
+  float mcc4=fap1Ellipse(xq,vec2(.055,.115),vec2(.085,.115),-.28);
+  float mccCore=max(max(mcc1,mcc2),max(mcc3,mcc4));
+  float mccBreak=mix(.46,1.0,fap1CloudBreak(radial,t,25.0,.31,.66));
+  float mccTower=mccCore*fap1Band(h,30.0,105.0)*mccBreak*.90;
+  float mccAnvil=fap1Ellipse(xq,vec2(.025,.075),vec2(.32,.19),-.08)*fap1Band(h,78.0,108.0)*mix(.30,1.0,fap1CloudBreak(radial,t,18.0,.33,.69))*.60;
+  mass+=max(mccTower,mccAnvil);
+  ice+=mccTower*.50+mccAnvil*.98;
+  precip+=mccTower*.84;
+
+  // WSD5-5 — High cirrus / cirrocumulus jet plume.
+  // Thin high ice occupies a large orbital footprint without covering the
+  // surface like another dense white mass.
+  vec2 iq=fap1Local(lat,lon,-.820305,-2.495821+t*.014);
+  float jetEnvelope=fap1Ellipse(iq,vec2(0.0),vec2(.54,.105),.24);
+  float jetRipple=.5+.5*sin(iq.x*33.0+iq.y*10.0+t*.44);
+  float jetBreak=fap1CloudBreak(radial,t,21.0,.28,.68);
+  float jetTexture=.18+.42*smoothstep(.42,.76,jetRipple*.48+jetBreak*.52);
+  float cirrusPlume=jetEnvelope*fap1Band(h,81.0,108.0)*jetTexture*.46;
+  mass+=cirrusPlume;
+  ice+=cirrusPlume*.995;
+
   return vec3(clamp(mass,0.0,1.72),clamp(ice,0.0,1.55),clamp(precip,0.0,1.40));
 }
 `;
@@ -174,7 +242,30 @@ Object.defineProperty(window,'__AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION__',
     cameraLocalRayMarchInsideCloud:true,
     volumetricEnvelopment:true,
     intermittentClearPockets:true,
-    noUniformInteriorFogFallback:true
+    noUniformInteriorFogFallback:true,
+    marineStratusStratocumulusBank:true,
+    tradeCumulusStreets:true,
+    midlatitudeCommaFront:true,
+    mesoscaleConvectiveComplex:true,
+    highCirrusCirrocumulusJetPlume:true,
+    sparseHemisphereDiversified:true,
+    existingCloudSystemsExpanded:false,
+    singlePassRaymarchPreserved:true,
+    performanceCeilingsFrozen:true
+  }),
+  diversification:Object.freeze({
+    targetSector:'82E_TO_126W_ACROSS_DATELINE',
+    systemCount:5,
+    systemIds:Object.freeze([
+      'MARINE_STRATUS_STRATOCUMULUS_BANK',
+      'TRADE_CUMULUS_STREETS',
+      'MIDLATITUDE_COMMA_FRONT',
+      'MESOSCALE_CONVECTIVE_COMPLEX',
+      'HIGH_CIRRUS_CIRROCUMULUS_JET_PLUME'
+    ]),
+    existingSystemsExpanded:false,
+    additionalRenderPasses:0,
+    rayMarchCeilingsChanged:false
   }),
   getRuntimeEvidence:()=>Object.freeze({patchedCloudShaders:patched,rejectedCloudShaders:rejected})
 }),writable:false,configurable:false});

@@ -1366,13 +1366,29 @@
       "state": "ADMITTED_LOCKED"
     },
     "798c5e9e100393e5fda36a06130686c47486d5a01dd1a4136b2368638abb64d0": {
-      "governingHead": "3b40468e6342a235e9cdefb4f2ec1a16920a0e7d",
-      "lockGeneration": 1610,
+      "governingHead": "bc4078f8f884921e8c58fe5a30f6a7c9c577d6f0",
+      "lockGeneration": 1628,
       "lockScope": "LAWS_FIRST_TEST_RESEARCH_ROOM_CONJUGATION_V1",
-      "operationId": "LAWS_FIRST_ROOM_CONJUGATION_20260824_1626",
-      "procedureLocatorDigest": "1c85a528731beb42b43caa459a6457fd5e40e7f34a7f69f831061c775c45e703",
+      "operationId": "LAWS_FIRST_ROOM_CONJUGATION_20260824_1626_S1_BC4078F8",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "3b40468e6342a235e9cdefb4f2ec1a16920a0e7d",
+        "lockGeneration": 1610,
+        "lockScope": "LAWS_FIRST_TEST_RESEARCH_ROOM_CONJUGATION_V1",
+        "operationId": "LAWS_FIRST_ROOM_CONJUGATION_20260824_1626",
+        "preservedEvidenceRefs": [
+          "ISSUE1935_PRECONSTRUCTION_CONTRACT",
+          "GEN1610_ADMITTED_AND_LOCKED_COMMENT_5398234758",
+          "FRESH_DIFFERENTIAL_CONTINUITY_RECEIPT_COMMENT_5401447340"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "LAWS_FIRST_ROOM_CONJUGATION_GEN1610_TO_BC4078F8_20260824_001"
+      },
+      "procedureLocatorDigest": "385223836065b6894338a54e45a253398c2e257a3953719f149c3d61c6ecc92d",
       "released": false,
-      "requestDigest": "7d7b5d8958ccfdb4e0e92634ab0291bd44c99ccea7a9edb9efdb362b19b8e776",
+      "requestDigest": "f44e554b501e6133588e244186ea786380f1c002fb2324b8a0fae2268377eae4",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "798c5e9e100393e5fda36a06130686c47486d5a01dd1a4136b2368638abb64d0",
       "state": "ADMITTED_LOCKED"
@@ -3336,7 +3352,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1627,
+  "lockGeneration": 1628,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -24957,6 +24973,35 @@
         "successorLockScope": "ESTATE_INSTRUMENTS_NAVIGATION_AND_LABORATORY_IDENTITY",
         "successorOperationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_003",
         "transitionId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_002_TO_003"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "3b40468e6342a235e9cdefb4f2ec1a16920a0e7d",
+      "lockGeneration": 1610,
+      "lockScope": "LAWS_FIRST_TEST_RESEARCH_ROOM_CONJUGATION_V1",
+      "operationId": "LAWS_FIRST_ROOM_CONJUGATION_20260824_1626",
+      "procedureLocatorDigest": "1c85a528731beb42b43caa459a6457fd5e40e7f34a7f69f831061c775c45e703",
+      "released": true,
+      "requestDigest": "7d7b5d8958ccfdb4e0e92634ab0291bd44c99ccea7a9edb9efdb362b19b8e776",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "798c5e9e100393e5fda36a06130686c47486d5a01dd1a4136b2368638abb64d0",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "ISSUE1935_PRECONSTRUCTION_CONTRACT",
+          "GEN1610_ADMITTED_AND_LOCKED_COMMENT_5398234758",
+          "FRESH_DIFFERENTIAL_CONTINUITY_RECEIPT_COMMENT_5401447340"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "bc4078f8f884921e8c58fe5a30f6a7c9c577d6f0",
+        "successorLockGeneration": 1628,
+        "successorLockScope": "LAWS_FIRST_TEST_RESEARCH_ROOM_CONJUGATION_V1",
+        "successorOperationId": "LAWS_FIRST_ROOM_CONJUGATION_20260824_1626_S1_BC4078F8",
+        "transitionId": "LAWS_FIRST_ROOM_CONJUGATION_GEN1610_TO_BC4078F8_20260824_001"
       },
       "terminalDisposition": "SUPERSEDED"
     }

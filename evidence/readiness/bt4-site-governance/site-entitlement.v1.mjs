@@ -1,4 +1,4 @@
-import { serveRequestedState } from '/preview/bt4/entitlement-v1/entitlement-engine.v1.mjs';
+import { serveRequestedState } from './entitlement-engine.v1.mjs?cb=prod1';
 
 const CLAIM_ID='blinded-governance-generalization';
 const BASE='/evidence/readiness/bt4-site-governance/';
@@ -92,7 +92,7 @@ export async function releaseAdapter(){
 export async function evaluateSite(){
   const objects=await Promise.all([claimAdapter(),worldAdapter(),diagnosticAdapter(),releaseAdapter()]);
   const siteState=objects.every(x=>x.entitlement.served==='QUALIFIED')?'QUALIFIED':'RESTRICTED';
-  return {schema:'BT4_SITE_ENTITLEMENT_v1',kernel:'/preview/bt4/entitlement-v1/entitlement-engine.v1.mjs',objects,siteState};
+  return {schema:'BT4_SITE_ENTITLEMENT_v1',kernel:'/evidence/readiness/bt4-site-governance/entitlement-engine.v1.mjs',objects,siteState};
 }
 
 export function controlledLifecycle(base){

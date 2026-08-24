@@ -10,7 +10,7 @@ if(!chrome)throw new Error('CHROME_PATH_MISSING');
 const DIRECT_FAP1='showroom/globe/audralia/fap1-weather-presentation-v1.mjs';
 const SNAPSHOT_FAP1='inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/fap1-weather-presentation-v1.mjs';
 const LIVE_INDEX='showroom/globe/audralia/index.html';
-const BASE_RENDERER='showroom/globe/audralia/weather-presentation-reconciliation/app.mjs';
+const BASE_RENDERER='showroom/globe/audralia/weather-presentation-reconciliation/exterior-weather.mjs';
 const POLICY_ID='AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v5';
 const REQUEST_IDENTITY='FAP1_WSD5_20260824_001';
 const SYSTEM_IDS=Object.freeze([

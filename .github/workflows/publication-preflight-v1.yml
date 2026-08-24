@@ -37,10 +37,17 @@ jobs:
           test "$requested" = "$dispatched"
           echo "target_sha=$requested" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/checkout@v4
+      - name: Checkout bounded publication working set
+        uses: actions/checkout@v4
         with:
           ref: ${{ steps.resolve.outputs.target_sha }}
           fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/preview/
+            !/h-earth-live-6d18e158/
+            !/inspection/audralia-24057-exact/
 
       - name: Validate registered surface
         id: surface

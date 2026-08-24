@@ -17,7 +17,14 @@ jobs:
   structural-reconciliation:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout structural reconciliation working set
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /showroom/globe/audralia/weather-presentation-reconciliation/
+            /tools/audralia-weather-presentation-reconciliation-ci.mjs
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -49,7 +56,21 @@ jobs:
   exact-page-runtime-reconciliation:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout exact Audralia runtime qualification working set
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /showroom/globe/audralia/
+            /showroom/globe/h-earth/terrain-estate-construction-v1/
+            /h-earth-3d/integration/
+            /h-earth-3d/terrain/
+            /inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/
+            /inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/
+            /inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/
+            /inspection/audralia-24057-exact/snapshot/h-earth-3d/terrain/
+            /tools/audralia-weather-presentation-reconciliation-ci.mjs
       - uses: actions/setup-node@v4
         with:
           node-version: '22'

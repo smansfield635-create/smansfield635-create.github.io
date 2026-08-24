@@ -25,6 +25,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /evidence/index.html
+            /evidence/current-public-condition.css
+            /evidence/current-public-condition.mjs
+            /research/bt4/verify-current-public-condition-live.v1.mjs
       - name: Verify public language and source binding
         if: github.event_name == 'pull_request'
         run: node research/bt4/verify-current-public-condition-live.v1.mjs --static

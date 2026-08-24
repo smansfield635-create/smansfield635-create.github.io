@@ -32,11 +32,19 @@ jobs:
     if: github.event_name != 'issue_comment'
     runs-on: ubuntu-latest
     steps:
-      - name: Check out exact candidate head
+      - name: Check out bounded successor validation working set
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 0
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /AI_ENTRYPOINT.json
+            /.github/workflows/remote-operation-successor-v1.yml
+            /.github/ai-router/router.v1.json
+            /.github/ai-router/system-continuity/gap-registry.v1.json
+            /.github/ai-router/operation-lifecycle/
+            /tools/operation-intake/
 
       - name: Set up Node 22
         uses: actions/setup-node@v4
@@ -139,11 +147,19 @@ jobs:
       contents: write
       issues: write
     steps:
-      - name: Check out exact installed event head
+      - name: Check out bounded successor execution working set
         uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
-          fetch-depth: 0
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /AI_ENTRYPOINT.json
+            /.github/workflows/remote-operation-successor-v1.yml
+            /.github/ai-router/router.v1.json
+            /.github/ai-router/system-continuity/gap-registry.v1.json
+            /.github/ai-router/operation-lifecycle/
+            /tools/operation-intake/
 
       - name: Set up Node 22
         uses: actions/setup-node@v4
@@ -313,7 +329,7 @@ jobs:
         with:
           github-token: ${{ github.token }}
           script: |
-            const fs = require('node:fs');
+            const fs = require('fs');
             const fallback = JSON.stringify({
               schema: 'REMOTE_OPERATION_SUCCESSOR_WORKFLOW_FAILURE_RECEIPT_v1',
               result: 'FAIL_CLOSED',

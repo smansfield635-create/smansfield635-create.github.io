@@ -32,7 +32,8 @@ assert(contract.universality?.scope === 'ALL_PUBLIC_SURFACES_IN_REPOSITORY', 'Re
 assert(contract.rules.includes('MERGE_IS_NOT_DEPLOYMENT'), 'Merge/deploy separation missing');
 assert(contract.rules.includes('DEPLOYMENT_IS_NOT_VERIFIED_LIVE_RELEASE'), 'Deploy/verified-release separation missing');
 assert(contract.rules.includes('PUBLIC_RELEASE_REQUIRES_SURFACE_SPECIFIC_BYTE_PROOF'), 'Surface byte proof requirement missing');
-assert(workflow.includes('test "$requested" = "$main_sha"'), 'Exact-current-main gate missing from real release workflow');
+assert(workflow.includes('DISPATCHED_HEAD_SHA: ${{ github.sha }}'), 'Immutable workflow-dispatch head binding missing from real release workflow');
+assert(workflow.includes('if [ "$requested" != "$dispatched" ]'), 'Exact dispatched-head gate missing from real release workflow');
 assert(workflow.includes('node tools/publication-live-verify.mjs static'), 'Static live verification missing from real release workflow');
 assert(workflow.includes('node tools/publication-live-verify.mjs runtime'), 'Runtime live verification missing from real release workflow');
 assert(workflow.includes('.well-known/dgb-release.json'), 'Exact-head public release marker missing from real release workflow');

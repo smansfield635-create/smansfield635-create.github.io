@@ -22,6 +22,17 @@
     "mergeAllowed": false
   },
   "capabilities": {
+    "PUBLICATION_FAST_PREFLIGHT": {
+      "workflow": "publication-preflight-v1.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "target_sha": {"source": "REQUEST", "required": true, "userOverrideAllowed": true},
+        "surface_id": {"source": "REQUEST", "required": true, "userOverrideAllowed": true}
+      },
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "successResult": "PREFLIGHT_PASS"
+    },
     "PAGES_EXACT_HEAD_DEPLOY": {
       "workflow": "pages-exact-head-deploy-v3.yml",
       "ref": "main",
@@ -30,7 +41,10 @@
         "surface_id": {"source": "REQUEST", "required": true, "userOverrideAllowed": true}
       },
       "workflowDispatchRegistrationRequired": true,
-      "failureLocalizationRequiredBeforeReplacementCarrier": true
+      "failureLocalizationRequiredBeforeReplacementCarrier": true,
+      "preflightRequiredBeforePagesMutation": true,
+      "preflightCapabilityId": "PUBLICATION_FAST_PREFLIGHT",
+      "productionWorkflowRechecksPreflightLocally": true
     },
     "H_EARTH_STAGE1_COST_QUALIFY": {
       "workflow": "h-earth-stage1-cost-qualify.yml",

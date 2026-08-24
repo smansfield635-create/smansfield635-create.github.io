@@ -1,13 +1,12 @@
 import { evaluateSite } from '/evidence/readiness/bt4-site-governance/site-entitlement.v1.mjs?cb=prod3';
 
-export async function startCurrentPublicCondition(root=document.querySelector('[data-current-public-condition]')){
- if(!root)return;
+const root=document.querySelector('[data-current-public-condition]');
+if(root){
  const aggregate=root.querySelector('[data-condition-state]');
  const objects=root.querySelector('[data-condition-objects]');
  const inspect=root.querySelector('[data-condition-inspect]');
  const error=root.querySelector('[data-condition-error]');
  const status=root.querySelector('.current-condition__loading');
- const stillWritable=()=>root.dataset.bootstrapTerminal!=='true';
  const restoration=x=>{
    const s=x.state||{};
    if(x.entitlement.served==='QUALIFIED')return 'No restoration required. Current qualification remains admitted.';
@@ -28,16 +27,13 @@ export async function startCurrentPublicCondition(root=document.querySelector('[
    return kept.length?kept.join(', '):'No stronger authority inferred.';
  };
  const show=x=>{
-   if(!stillWritable())return;
    inspect.innerHTML=`<h3>${x.label} · ${x.entitlement.served}</h3><p>${x.detail?.error?'Live authority adapter unavailable; this object fails closed independently.':x.entitlement.reason}</p><div class="condition-facts"><div class="condition-fact"><strong>Why this state</strong><span>${x.detail?.error?'This object could not establish its live authority and therefore cannot inherit a stronger state.':x.entitlement.blocked?'The requested stronger representation is blocked by current entitlement.':'The current supporting conditions admit this representation.'}</span></div><div class="condition-fact"><strong>Authority still valid</strong><span>${preserved(x)}</span></div><div class="condition-fact"><strong>What restores it</strong><span>${restoration(x)}</span></div></div>`;
    objects.querySelectorAll('button').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.object===x.id)));
  };
  try{
    const result=await evaluateSite();
-   if(!stillWritable())return;
    aggregate.textContent=result.siteState;
    root.dataset.ready='true';
-   root.dataset.terminal='resolved';
    root.dataset.aggregate=result.siteState;
    document.documentElement.dataset.currentPublicCondition=result.siteState;
    if(status)status.textContent=result.partialFailure?'Current public authority resolved with one or more objects held closed.':'Current public authority resolved.';
@@ -50,8 +46,7 @@ export async function startCurrentPublicCondition(root=document.querySelector('[
    const restricting=result.objects.find(x=>x.entitlement.served!=='QUALIFIED');
    show(restricting||result.objects[0]);
  }catch(e){
-   if(!stillWritable())return;
-   aggregate.textContent='RESTRICTED'; root.dataset.ready='true'; root.dataset.terminal='error'; if(status)status.textContent='Current public authority could not be evaluated.'; error.textContent='Current condition could not be fully established. The public surface remains restricted rather than inferring a stronger state.';
+   aggregate.textContent='RESTRICTED'; root.dataset.ready='error'; if(status)status.textContent='Current public authority could not be evaluated.'; error.textContent='Current condition could not be fully established. The public surface remains restricted rather than inferring a stronger state.';
    document.documentElement.dataset.currentPublicCondition='RESTRICTED';
  }
 }

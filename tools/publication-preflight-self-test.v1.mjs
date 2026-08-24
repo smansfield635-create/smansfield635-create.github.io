@@ -20,24 +20,33 @@ check('sha256-deterministic',sha256(Buffer.from('diamond-gate'))===sha256(Buffer
 
 const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'publication-preflight-self-test-'));
 try{
-  const repo=path.join(tmp,'repo');const stage=path.join(tmp,'stage');
+  const repo=path.join(tmp,'repo');const stage=path.join(tmp,'stage');const audraliaStage=path.join(tmp,'audralia-stage');
   fs.mkdirSync(path.join(repo,'.github/ai-router/publication-surfaces'),{recursive:true});
   fs.mkdirSync(path.join(repo,'demo'),{recursive:true});
   fs.mkdirSync(path.join(repo,'preview/should-not-ship'),{recursive:true});
   fs.mkdirSync(path.join(repo,'.github/private'),{recursive:true});
   fs.mkdirSync(path.join(repo,'node_modules/puppeteer-core'),{recursive:true});
   fs.mkdirSync(path.join(repo,'h-earth-live-6d18e158/legacy'),{recursive:true});
-  fs.mkdirSync(path.join(repo,'inspection/audralia-24057-exact/snapshot'),{recursive:true});
+  fs.mkdirSync(path.join(repo,'inspection/audralia-24057-exact/snapshot/runtime/shared'),{recursive:true});
   fs.mkdirSync(path.join(repo,'inspection/compass/live'),{recursive:true});
+  fs.mkdirSync(path.join(repo,'showroom/globe/audralia'),{recursive:true});
   fs.writeFileSync(path.join(repo,'demo/index.html'),'<title>Demo</title>\nTOKEN_OK\n');
   fs.writeFileSync(path.join(repo,'preview/should-not-ship/secret.txt'),'nope');
   fs.writeFileSync(path.join(repo,'.github/private/secret.txt'),'nope');
   fs.writeFileSync(path.join(repo,'node_modules/puppeteer-core/runtime-only.txt'),'must-not-ship');
   fs.writeFileSync(path.join(repo,'h-earth-live-6d18e158/legacy/clone.txt'),'must-not-ship');
   fs.writeFileSync(path.join(repo,'inspection/audralia-24057-exact/snapshot/clone.txt'),'must-not-ship');
+  fs.writeFileSync(path.join(repo,'inspection/audralia-24057-exact/snapshot/runtime/entry.mjs'),"import './child.mjs';\nexport const READY=true;\n");
+  fs.writeFileSync(path.join(repo,'inspection/audralia-24057-exact/snapshot/runtime/child.mjs'),"export const CHILD=()=>import('../runtime/shared/grandchild.mjs');\n");
+  fs.writeFileSync(path.join(repo,'inspection/audralia-24057-exact/snapshot/runtime/shared/grandchild.mjs'),'export const VALUE=1;\n');
+  fs.writeFileSync(path.join(repo,'inspection/audralia-24057-exact/snapshot/runtime/style.css'),".fixture{background-image:url('./texture.svg')}\n");
+  fs.writeFileSync(path.join(repo,'inspection/audralia-24057-exact/snapshot/runtime/texture.svg'),'<svg xmlns="http://www.w3.org/2000/svg"></svg>\n');
   fs.writeFileSync(path.join(repo,'inspection/compass/live/index.html'),'must-ship');
+  fs.writeFileSync(path.join(repo,'showroom/globe/audralia/index.html'),'<!doctype html><div class="audralia-loading-version">LIVE BUILD</div><link rel="stylesheet" href="/inspection/audralia-24057-exact/snapshot/runtime/style.css?cb=1"><script type="module" src="/inspection/audralia-24057-exact/snapshot/runtime/entry.mjs?cb=1"></script>\n');
   const manifest={schema:'PUBLICATION_SURFACE_VERIFICATION_v1',surfaceId:'demo',checks:[{path:'/demo/',includes:['TOKEN_OK'],excludes:[]}],runtime:{enabled:false}};
+  const audraliaManifest={schema:'PUBLICATION_SURFACE_VERIFICATION_v1',surfaceId:'audralia',checks:[{path:'/showroom/globe/audralia/',includes:['LIVE BUILD'],excludes:[]}],runtime:{enabled:false}};
   fs.writeFileSync(path.join(repo,'.github/ai-router/publication-surfaces/demo.json'),JSON.stringify(manifest,null,2));
+  fs.writeFileSync(path.join(repo,'.github/ai-router/publication-surfaces/audralia.json'),JSON.stringify(audraliaManifest,null,2));
   const built=await buildPayload({repoRoot:repo,targetSha:'b'.repeat(40),surfaceId:'demo',stage});
   check('positive-fixture-payload-built',fs.existsSync(path.join(stage,'demo/index.html')));
   check('positive-fixture-release-marker',fs.existsSync(path.join(stage,'.well-known/dgb-release.json')));
@@ -50,6 +59,26 @@ try{
   check('positive-fixture-digest',/^[0-9a-f]{64}$/.test(built.payloadDigest));
   check('positive-fixture-payload-bytes',Number.isInteger(built.payloadBytes)&&built.payloadBytes>0);
   check('positive-fixture-top-level-breakdown',Array.isArray(built.topLevelBytes)&&built.topLevelBytes.some(row=>row.path==='demo'&&row.bytes>0));
+  check('non-authorized-surface-closure-not-required',built.authorizedExcludedRuntimeDependencies?.status==='NOT_REQUIRED');
+
+  const audraliaBuilt=await buildPayload({repoRoot:repo,targetSha:'c'.repeat(40),surfaceId:'audralia',stage:audraliaStage});
+  const promotedRoot=path.join(audraliaStage,'inspection/audralia-24057-exact/snapshot/runtime');
+  check('authorized-closure-entry-promoted',fs.existsSync(path.join(promotedRoot,'entry.mjs')));
+  check('authorized-closure-static-import-promoted',fs.existsSync(path.join(promotedRoot,'child.mjs')));
+  check('authorized-closure-dynamic-import-promoted',fs.existsSync(path.join(promotedRoot,'shared/grandchild.mjs')));
+  check('authorized-closure-stylesheet-promoted',fs.existsSync(path.join(promotedRoot,'style.css')));
+  check('authorized-closure-css-url-promoted',fs.existsSync(path.join(promotedRoot,'texture.svg')));
+  check('authorized-closure-unreferenced-snapshot-excluded',!fs.existsSync(path.join(audraliaStage,'inspection/audralia-24057-exact/snapshot/clone.txt')));
+  check('authorized-closure-receipt-pass',audraliaBuilt.authorizedExcludedRuntimeDependencies?.status==='PROMOTED'&&audraliaBuilt.authorizedExcludedRuntimeDependencies?.mode==='EXACT_REFERENCED_CLOSURE_ONLY');
+  check('authorized-closure-receipt-count',audraliaBuilt.authorizedExcludedRuntimeDependencies?.fileCount===5);
+  check('authorized-closure-receipt-digest',/^[0-9a-f]{64}$/.test(audraliaBuilt.authorizedExcludedRuntimeDependencies?.digest||''));
+
+  let missingDependencyRejected=false;
+  fs.writeFileSync(path.join(repo,'showroom/globe/audralia/index.html'),'<!doctype html><div class="audralia-loading-version">LIVE BUILD</div><script type="module" src="/inspection/audralia-24057-exact/snapshot/runtime/missing.mjs"></script>\n');
+  try{await buildPayload({repoRoot:repo,targetSha:'d'.repeat(40),surfaceId:'audralia',stage:path.join(tmp,'missing-stage')});}
+  catch(error){missingDependencyRejected=String(error).includes('AUTHORIZED_RUNTIME_DEPENDENCY_MISSING');}
+  check('authorized-closure-missing-dependency-rejected',missingDependencyRejected);
+
   let rejected=false;
   try{await buildPayload({repoRoot:repo,targetSha:'bad',surfaceId:'demo',stage:path.join(tmp,'bad')});}catch{rejected=true;}
   check('negative-fixture-invalid-sha-rejected',rejected);

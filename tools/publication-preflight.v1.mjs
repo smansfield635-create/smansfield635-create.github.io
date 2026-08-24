@@ -18,6 +18,13 @@ const PUBLIC_PAYLOAD_EXCLUDES=[
   'h-earth-live-6d18e158',
   'inspection/audralia-24057-exact'
 ];
+const AUTHORIZED_EXCLUDED_RUNTIME_DEPENDENCIES=Object.freeze({
+  audralia:Object.freeze({
+    mode:'EXACT_REFERENCED_CLOSURE_ONLY',
+    entryPath:'showroom/globe/audralia/index.html',
+    allowedPrefix:'inspection/audralia-24057-exact/snapshot/'
+  })
+});
 
 export function sha256(value){return crypto.createHash('sha256').update(value).digest('hex');}
 export function validateSurfaceId(id){return typeof id==='string'&&/^[a-z0-9][a-z0-9._-]{0,79}$/.test(id);}
@@ -71,6 +78,93 @@ function stampAudralia(stage,targetSha){
   text=text.replace(old,next);fs.writeFileSync(file,text);
   if(!text.includes(`data-audralia-build-sha="${targetSha}"`)||!text.includes(`BUILD ${short}`))throw new Error('AUDRALIA_BUILD_FINGERPRINT_VERIFY_FAILED');
 }
+function appendMatches(target,text,re){let match;while((match=re.exec(text))!==null){if(match[1])target.push(match[1]);}}
+function extractResourceSpecifiers(rel,text){
+  const ext=path.posix.extname(rel).toLowerCase();
+  const refs=[];
+  if(ext==='.html'||ext==='.htm'){
+    appendMatches(refs,text,/<(?:script|link|img|source|video|audio|iframe)\b[^>]*?\b(?:src|href)\s*=\s*["']([^"']+)["'][^>]*>/gi);
+  }
+  if(ext==='.mjs'||ext==='.js'||ext==='.cjs'){
+    appendMatches(refs,text,/\b(?:import|export)\s+(?:[^'";]*?\s+from\s*)?["']([^"']+)["']/gs);
+    appendMatches(refs,text,/\bimport\s*\(\s*["']([^"']+)["']\s*\)/gs);
+    appendMatches(refs,text,/\bnew\s+URL\s*\(\s*["']([^"']+)["']\s*,\s*import\.meta\.url\s*\)/gs);
+    appendMatches(refs,text,/\bfetch\s*\(\s*["']([^"']+)["']/gs);
+    appendMatches(refs,text,/\b(?:Worker|SharedWorker)\s*\(\s*["']([^"']+)["']/gs);
+  }
+  if(ext==='.css'){
+    appendMatches(refs,text,/@import\s+(?:url\(\s*)?["']?([^"')\s;]+)["']?\s*\)?/gi);
+    appendMatches(refs,text,/url\(\s*["']?([^"')]+)["']?\s*\)/gi);
+  }
+  if(ext==='.svg')appendMatches(refs,text,/\b(?:href|xlink:href)\s*=\s*["']([^"']+)["']/gi);
+  return [...new Set(refs)];
+}
+function resolveResourcePath(importerRel,specifier){
+  if(typeof specifier!=='string')return null;
+  const value=specifier.trim();
+  if(!value||value.startsWith('#')||value.startsWith('//')||/^[A-Za-z][A-Za-z0-9+.-]*:/.test(value))return null;
+  if(!value.startsWith('.')&&!value.startsWith('/'))return null;
+  const resource=value.split(/[?#]/,1)[0];
+  if(!resource)return null;
+  const candidate=resource.startsWith('/')?resource.slice(1):path.posix.join(path.posix.dirname(importerRel),resource);
+  const normalized=path.posix.normalize(candidate);
+  if(!normalized||normalized==='.'||normalized==='..'||normalized.startsWith('../')||normalized.includes('\0'))throw new Error(`PUBLIC_RUNTIME_DEPENDENCY_PATH_INVALID:${importerRel}:${specifier}`);
+  return normalized;
+}
+function sourceFile(repoRoot,rel){
+  const root=path.resolve(repoRoot),file=path.resolve(repoRoot,...rel.split('/'));
+  if(file!==root&&!file.startsWith(`${root}${path.sep}`))throw new Error(`PUBLIC_RUNTIME_DEPENDENCY_PATH_ESCAPE:${rel}`);
+  return file;
+}
+export function promoteAuthorizedExcludedRuntimeDependencies({repoRoot=REPO_ROOT,stage,surfaceId}){
+  const policy=AUTHORIZED_EXCLUDED_RUNTIME_DEPENDENCIES[surfaceId];
+  if(!policy)return Object.freeze({status:'NOT_REQUIRED',mode:'NOT_REQUIRED',fileCount:0,bytes:0,digest:null,files:[]});
+  const entryFile=path.join(stage,...policy.entryPath.split('/'));
+  if(!fs.existsSync(entryFile))throw new Error(`AUTHORIZED_RUNTIME_ENTRYPOINT_MISSING:${policy.entryPath}`);
+  const direct=extractResourceSpecifiers(policy.entryPath,fs.readFileSync(entryFile,'utf8'))
+    .map(specifier=>resolveResourcePath(policy.entryPath,specifier))
+    .filter(rel=>rel?.startsWith(policy.allowedPrefix));
+  if(!direct.length)throw new Error(`AUTHORIZED_RUNTIME_DEPENDENCY_ENTRY_REFERENCES_MISSING:${surfaceId}`);
+  const queue=[...new Set(direct)],seen=new Set(),files=[];
+  while(queue.length){
+    const rel=queue.shift();
+    if(seen.has(rel))continue;
+    seen.add(rel);
+    if(!rel.startsWith(policy.allowedPrefix))throw new Error(`AUTHORIZED_RUNTIME_DEPENDENCY_OUTSIDE_PREFIX:${rel}`);
+    const from=sourceFile(repoRoot,rel);
+    if(!fs.existsSync(from)||!fs.statSync(from).isFile())throw new Error(`AUTHORIZED_RUNTIME_DEPENDENCY_MISSING:${rel}`);
+    const to=path.join(stage,...rel.split('/'));
+    fs.mkdirSync(path.dirname(to),{recursive:true});fs.copyFileSync(from,to);
+    const bytes=fs.statSync(from).size,fileSha256=sha256(fs.readFileSync(from));
+    files.push({path:rel,bytes,sha256:fileSha256});
+    const text=fs.readFileSync(from,'utf8');
+    for(const specifier of extractResourceSpecifiers(rel,text)){
+      const dependency=resolveResourcePath(rel,specifier);
+      if(!dependency)continue;
+      if(excluded(dependency)){
+        if(!dependency.startsWith(policy.allowedPrefix))throw new Error(`AUTHORIZED_RUNTIME_DEPENDENCY_CROSSES_EXCLUDED_ROOT:${rel}:${dependency}`);
+        queue.push(dependency);
+        continue;
+      }
+      const dependencySource=sourceFile(repoRoot,dependency);
+      if(fs.existsSync(dependencySource)&&fs.statSync(dependencySource).isFile()&&!fs.existsSync(path.join(stage,...dependency.split('/'))))throw new Error(`PUBLIC_RUNTIME_DEPENDENCY_MISSING_FROM_STAGE:${rel}:${dependency}`);
+    }
+  }
+  files.sort((a,b)=>a.path.localeCompare(b.path));
+  const digest=crypto.createHash('sha256');
+  for(const file of files){digest.update(file.path);digest.update('\0');digest.update(file.sha256);digest.update('\0');}
+  return Object.freeze({
+    status:'PROMOTED',
+    mode:policy.mode,
+    entryPath:policy.entryPath,
+    allowedPrefix:policy.allowedPrefix,
+    entryReferenceCount:direct.length,
+    fileCount:files.length,
+    bytes:files.reduce((sum,file)=>sum+file.bytes,0),
+    digest:digest.digest('hex'),
+    files
+  });
+}
 async function bindBrainAsset(stage){
   const root=path.join(stage,'inspection/compass/brain-gen1-hra');
   const asset=path.join(root,'Allen_M_Brain.glb');
@@ -101,6 +195,7 @@ export async function buildPayload({repoRoot=REPO_ROOT,targetSha,surfaceId,stage
   const markerPath=path.join(stage,RELEASE_MARKER);fs.mkdirSync(path.dirname(markerPath),{recursive:true});
   writeJson(markerPath,{schema:'DGB_PUBLIC_RELEASE_MARKER_v3',commit:targetSha,surface:surfaceId,verificationManifest:`${SURFACE_DIR}/${surfaceId}.json`,verificationManifestSha256:manifestSha256});
   if(surfaceId==='audralia')stampAudralia(stage,targetSha);
+  const authorizedExcludedRuntimeDependencies=promoteAuthorizedExcludedRuntimeDependencies({repoRoot,stage,surfaceId});
   if(surfaceId==='brain-gen1-hra')await bindBrainAsset(stage);
   const payloadBytes=treeBytes(stage);
   const topLevelBytes=topLevelBreakdown(stage);
@@ -109,7 +204,7 @@ export async function buildPayload({repoRoot=REPO_ROOT,targetSha,surfaceId,stage
     error.code='PAGES_PAYLOAD_TOO_LARGE';error.payloadBytes=payloadBytes;error.pagesLimitBytes=PAGES_LIMIT_BYTES;error.topLevelBytes=topLevelBytes.slice(0,20);
     throw error;
   }
-  return {manifest,manifestPath,manifestSha256,payloadDigest:digestTree(stage),payloadBytes,topLevelBytes};
+  return {manifest,manifestPath,manifestSha256,payloadDigest:digestTree(stage),payloadBytes,topLevelBytes,authorizedExcludedRuntimeDependencies};
 }
 function run(cmd,args,env=process.env){return new Promise((resolve,reject)=>{const child=spawn(cmd,args,{stdio:'inherit',env});child.on('error',reject);child.on('exit',code=>code===0?resolve():reject(new Error(`COMMAND_FAILED:${cmd}:${code}`)));});}
 
@@ -183,14 +278,14 @@ async function main(){
       const manifest=JSON.parse(fs.readFileSync(manifestPath,'utf8'));
       const prior=JSON.parse(fs.readFileSync(receiptPath,'utf8'));
       if(prior.schema!=='PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1'||prior.result!=='PAYLOAD_BUILT'||prior.targetSha!==targetSha||prior.surfaceId!==surfaceId)throw new Error('PAYLOAD_BUILD_RECEIPT_MISMATCH');
-      built={manifest,manifestPath,manifestSha256:prior.manifestSha256,payloadDigest:prior.payloadDigest,payloadBytes:prior.payloadBytes,topLevelBytes:prior.topLevelBytes||[]};
+      built={manifest,manifestPath,manifestSha256:prior.manifestSha256,payloadDigest:prior.payloadDigest,payloadBytes:prior.payloadBytes,topLevelBytes:prior.topLevelBytes||[],authorizedExcludedRuntimeDependencies:prior.authorizedExcludedRuntimeDependencies||{status:'UNKNOWN',mode:'UNKNOWN',fileCount:0,bytes:0,digest:null,files:[]}};
       await verifyLocal({stage,manifestPath,manifest});
     }else{
       built=await buildPayload({targetSha,surfaceId,stage});
       if(mode==='preflight')await verifyLocal({stage,manifestPath:built.manifestPath,manifest:built.manifest});
     }
     const result=mode==='build'?'PAYLOAD_BUILT':'PREFLIGHT_PASS';
-    receipt={schema:'PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1',targetSha,surfaceId,manifestSha256:built.manifestSha256,payloadDigest:built.payloadDigest,payloadBytes:built.payloadBytes,pagesLimitBytes:PAGES_LIMIT_BYTES,topLevelBytes:built.topLevelBytes,excludedPayloadRoots:PUBLIC_PAYLOAD_EXCLUDES,result,checks:{exactSha:'PASS',surfaceManifest:'PASS',diffScope:'BOUNDED_PAYLOAD',requiredAssets:'PASS',environmentBinding:'PASS',payloadBuild:'PASS',staticChecks:mode==='build'?'NOT_RUN':'PASS',runtimeReadiness:mode==='build'?'NOT_RUN':(built.manifest.runtime?.enabled===true?'PASS':'NOT_REQUIRED')},deploymentPerformed:false};
+    receipt={schema:'PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1',targetSha,surfaceId,manifestSha256:built.manifestSha256,payloadDigest:built.payloadDigest,payloadBytes:built.payloadBytes,pagesLimitBytes:PAGES_LIMIT_BYTES,topLevelBytes:built.topLevelBytes,excludedPayloadRoots:PUBLIC_PAYLOAD_EXCLUDES,authorizedExcludedRuntimeDependencies:built.authorizedExcludedRuntimeDependencies,result,checks:{exactSha:'PASS',surfaceManifest:'PASS',diffScope:'BOUNDED_PAYLOAD',requiredAssets:'PASS',environmentBinding:'PASS',authorizedRuntimeDependencyClosure:built.authorizedExcludedRuntimeDependencies.status==='PROMOTED'?'PASS':'NOT_REQUIRED',payloadBuild:'PASS',staticChecks:mode==='build'?'NOT_RUN':'PASS',runtimeReadiness:mode==='build'?'NOT_RUN':(built.manifest.runtime?.enabled===true?'PASS':'NOT_REQUIRED')},deploymentPerformed:false};
     writeJson(receiptPath,receipt);console.log(JSON.stringify(receipt,null,2));
   }catch(error){receipt={schema:'PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1',targetSha:targetSha||null,surfaceId:surfaceId||null,result:'PREFLIGHT_FAIL',errorCode:error?.code||null,error:String(error?.stack||error),payloadBytes:error?.payloadBytes??null,pagesLimitBytes:error?.pagesLimitBytes??PAGES_LIMIT_BYTES,topLevelBytes:error?.topLevelBytes??[],excludedPayloadRoots:PUBLIC_PAYLOAD_EXCLUDES,deploymentPerformed:false};writeJson(receiptPath,receipt);console.error(JSON.stringify(receipt,null,2));process.exitCode=1;}
 }

@@ -11,6 +11,24 @@
       "h-earth-live-6d18e158",
       "inspection/audralia-24057-exact"
     ],
+    "authorizedRuntimeDependencyPromotion": {
+      "rule": "AN_EXCLUDED_ROOT_MAY_CONTRIBUTE_ONLY_THE_EXACT_TRANSITIVE_FILE_CLOSURE_REACHABLE_FROM_AN_EXPLICITLY_REGISTERED_ACTIVE_SURFACE_ENTRYPOINT",
+      "unreferencedFilesShip": false,
+      "missingReferencedFileDisposition": "FAIL_CLOSED_BEFORE_DEPLOYMENT",
+      "surfaces": {
+        "audralia": {
+          "mode": "EXACT_REFERENCED_CLOSURE_ONLY",
+          "entryPath": "showroom/globe/audralia/index.html",
+          "allowedPrefix": "inspection/audralia-24057-exact/snapshot/",
+          "identityEvidence": [
+            "PATH",
+            "BYTE_LENGTH",
+            "SHA256",
+            "CLOSURE_DIGEST"
+          ]
+        }
+      }
+    },
     "sizeAuditRole": "INFRASTRUCTURE_GUARD_NOT_ROUTINE_VISUAL_REQUALIFICATION"
   },
   "riskLanes": {
@@ -21,7 +39,7 @@
     },
     "STRUCTURAL": {
       "examples": ["camera", "projection", "globe geometry", "pointer/touch/input", "loader/readiness", "major renderer architecture", "asset binding", "publication infrastructure"],
-      "requiredChecks": ["EXACT_SHA", "SURFACE_MANIFEST", "DIFF_SCOPE", "REQUIRED_ASSETS", "ENVIRONMENT_BINDING", "PAYLOAD_BUILD", "STATIC_CHECKS", "RUNTIME_READINESS", "PREFLIGHT_PASS", "POST_DEPLOY_LIVE_PROOF"],
+      "requiredChecks": ["EXACT_SHA", "SURFACE_MANIFEST", "DIFF_SCOPE", "REQUIRED_ASSETS", "ENVIRONMENT_BINDING", "AUTHORIZED_RUNTIME_DEPENDENCY_CLOSURE", "PAYLOAD_BUILD", "STATIC_CHECKS", "RUNTIME_READINESS", "PREFLIGHT_PASS", "POST_DEPLOY_LIVE_PROOF"],
       "inheritsUntouchedEvidence": false
     }
   },
@@ -32,6 +50,7 @@
     "PAYLOAD_BUILD",
     "REQUIRED_ASSETS",
     "ENVIRONMENT_BINDING",
+    "AUTHORIZED_RUNTIME_DEPENDENCY_CLOSURE",
     "STATIC_CHECKS",
     "RUNTIME_READINESS",
     "PREFLIGHT_PASS",
@@ -39,7 +58,7 @@
     "POST_DEPLOY_LIVE_PROOF"
   ],
   "receiptSchema": "PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1",
-  "receiptFingerprintFields": ["targetSha", "surfaceId", "manifestSha256", "payloadDigest", "result"],
+  "receiptFingerprintFields": ["targetSha", "surfaceId", "manifestSha256", "payloadDigest", "authorizedExcludedRuntimeDependencies.digest", "result"],
   "successResult": "PREFLIGHT_PASS",
   "deploymentOnFailure": false,
   "productMutationAuthority": false,

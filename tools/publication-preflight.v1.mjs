@@ -27,6 +27,7 @@ export function stable(value){
   if(value&&typeof value==='object')return Object.fromEntries(Object.keys(value).sort().map(k=>[k,stable(value[k])]));
   return value;
 }
+const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 function writeJson(file,value){fs.mkdirSync(path.dirname(path.resolve(file)),{recursive:true});fs.writeFileSync(path.resolve(file),JSON.stringify(stable(value),null,2)+'\n');}
 function excluded(rel){return PUBLIC_PAYLOAD_EXCLUDES.some(root=>rel===root||rel.startsWith(`${root}/`));}
 function copyTree(src,dst,relative=''){
@@ -111,18 +112,56 @@ export async function buildPayload({repoRoot=REPO_ROOT,targetSha,surfaceId,stage
   return {manifest,manifestPath,manifestSha256,payloadDigest:digestTree(stage),payloadBytes,topLevelBytes};
 }
 function run(cmd,args,env=process.env){return new Promise((resolve,reject)=>{const child=spawn(cmd,args,{stdio:'inherit',env});child.on('error',reject);child.on('exit',code=>code===0?resolve():reject(new Error(`COMMAND_FAILED:${cmd}:${code}`)));});}
+
+export async function waitForLocalHttpServer({url,server,timeoutMs=15000,pollMs=100}){
+  if(!url||!server)throw new Error('LOCAL_PREFLIGHT_SERVER_WAIT_ARGUMENT_MISSING');
+  const deadline=Date.now()+timeoutMs;
+  let spawnError=null;
+  let lastFailure='NOT_ATTEMPTED';
+  server.once('error',error=>{spawnError=error;});
+  while(Date.now()<deadline){
+    if(spawnError)throw new Error(`LOCAL_PREFLIGHT_SERVER_SPAWN_FAILED:${spawnError.message}`);
+    if(server.exitCode!==null)throw new Error(`LOCAL_PREFLIGHT_SERVER_EXITED:${server.exitCode}`);
+    try{
+      const remaining=Math.max(1,deadline-Date.now());
+      const response=await fetch(url,{redirect:'manual',signal:AbortSignal.timeout(Math.min(1000,remaining))});
+      if(response.ok){await response.body?.cancel();return;}
+      lastFailure=`HTTP_${response.status}`;
+      await response.body?.cancel();
+    }catch(error){
+      lastFailure=error?.cause?.code||error?.name||error?.message||String(error);
+    }
+    await sleep(pollMs);
+  }
+  if(spawnError)throw new Error(`LOCAL_PREFLIGHT_SERVER_SPAWN_FAILED:${spawnError.message}`);
+  if(server.exitCode!==null)throw new Error(`LOCAL_PREFLIGHT_SERVER_EXITED:${server.exitCode}`);
+  throw new Error(`LOCAL_PREFLIGHT_SERVER_NOT_READY:${lastFailure}`);
+}
+
+async function stopChild(child){
+  if(!child||child.exitCode!==null)return;
+  const exited=new Promise(resolve=>child.once('exit',resolve));
+  child.kill('SIGTERM');
+  await Promise.race([exited,sleep(2000)]);
+  if(child.exitCode===null){
+    const killed=new Promise(resolve=>child.once('exit',resolve));
+    child.kill('SIGKILL');
+    await Promise.race([killed,sleep(1000)]);
+  }
+}
+
 async function verifyLocal({stage,manifestPath,manifest}){
   const port=18000+Math.floor(Math.random()*1000);
   const server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',stage],{stdio:'ignore'});
   const base=`http://127.0.0.1:${port}`;
   try{
-    await new Promise(r=>setTimeout(r,700));
+    await waitForLocalHttpServer({url:`${base}/${RELEASE_MARKER}`,server});
     await run(process.execPath,['tools/publication-live-verify.mjs','static',base,manifestPath]);
     if(manifest.runtime?.enabled===true){
       if(!process.env.CHROME_PATH)throw new Error('CHROME_PATH_REQUIRED_FOR_RUNTIME_PREFLIGHT');
       await run(process.execPath,['tools/publication-live-verify.mjs','runtime',base,manifestPath],process.env);
     }
-  }finally{server.kill('SIGTERM');}
+  }finally{await stopChild(server);}
 }
 function parse(argv){const out={};for(let i=0;i<argv.length;i++){const k=argv[i];if(!k.startsWith('--'))throw new Error(`UNKNOWN_ARGUMENT:${k}`);const key=k.slice(2);const value=argv[++i];if(value===undefined)throw new Error(`MISSING_ARGUMENT_VALUE:${key}`);out[key]=value;}return out;}
 

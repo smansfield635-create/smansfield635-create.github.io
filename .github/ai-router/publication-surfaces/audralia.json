@@ -51,7 +51,7 @@
   "runtime": {
     "enabled": true,
     "path": "/showroom/globe/audralia/",
-    "timeoutMs": 60000,
+    "timeoutMs": 120000,
     "readySelector": "[data-audralia-loader].is-ready",
     "binding": {
       "mode": "direct-document",

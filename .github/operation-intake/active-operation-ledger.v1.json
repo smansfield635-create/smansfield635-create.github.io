@@ -2548,13 +2548,29 @@
       "state": "ADMITTED_LOCKED"
     },
     "d9882ffe1d9d17d89e76f8e0b2e742a29571da9e81f22d13aa3d80511e7edb97": {
-      "governingHead": "3ed6572c82820302a7f29b6eb5a29ab15c450e72",
-      "lockGeneration": 1598,
+      "governingHead": "0761c1995be02f0b042faba6d2fe00ab1d161f06",
+      "lockGeneration": 1599,
       "lockScope": "PUBLIC_EVIDENCE_CURRENT_CONDITION",
-      "operationId": "CURRENT_PUBLIC_CONDITION_EVIDENCE_INTEGRATION_20260823",
-      "procedureLocatorDigest": "10cb38ac8b6c3ee1b66493d45bf9163b0cd34a51d28d4f36e52a2a8434de940c",
+      "operationId": "CURRENT_PUBLIC_CONDITION_EVIDENCE_INTEGRATION_20260823_S3",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "3ed6572c82820302a7f29b6eb5a29ab15c450e72",
+        "lockGeneration": 1598,
+        "lockScope": "PUBLIC_EVIDENCE_CURRENT_CONDITION",
+        "operationId": "CURRENT_PUBLIC_CONDITION_EVIDENCE_INTEGRATION_20260823",
+        "preservedEvidenceRefs": [
+          "issue:1858#issuecomment-5389663039",
+          "workflow:32679704613",
+          "issue:1858#issuecomment-5389695148"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "CURRENT_PUBLIC_CONDITION_HEAD_ADVANCE_3ED6572_TO_0761C199"
+      },
+      "procedureLocatorDigest": "1a5f433b5ba0dcf8acdc5574b2117927c26478afc32fecd34d6220d46348d782",
       "released": false,
-      "requestDigest": "68caccd846435d0c75e3c9984e5361cb4b40c1a67346c86b49d597de0060d93a",
+      "requestDigest": "e45cae9c16c6b5373853ce2884f329afa9eb06c45e9d0021bcb5032912571a6e",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "d9882ffe1d9d17d89e76f8e0b2e742a29571da9e81f22d13aa3d80511e7edb97",
       "state": "ADMITTED_LOCKED"
@@ -3034,7 +3050,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1598,
+  "lockGeneration": 1599,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -24129,6 +24145,35 @@
         "successorLockScope": "COMPASS:ISOLATED:CLEAN_INTEGRATED_SUCCESSOR:20260822:001",
         "successorOperationId": "COMPASS_CLEAN_INTEGRATED_SUCCESSOR_20260822_001",
         "transitionId": "COMPASS_CLEAN_INTEGRATED_SUCCESSOR_SUPERSESSION_20260822_002"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "3ed6572c82820302a7f29b6eb5a29ab15c450e72",
+      "lockGeneration": 1598,
+      "lockScope": "PUBLIC_EVIDENCE_CURRENT_CONDITION",
+      "operationId": "CURRENT_PUBLIC_CONDITION_EVIDENCE_INTEGRATION_20260823",
+      "procedureLocatorDigest": "10cb38ac8b6c3ee1b66493d45bf9163b0cd34a51d28d4f36e52a2a8434de940c",
+      "released": true,
+      "requestDigest": "68caccd846435d0c75e3c9984e5361cb4b40c1a67346c86b49d597de0060d93a",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "d9882ffe1d9d17d89e76f8e0b2e742a29571da9e81f22d13aa3d80511e7edb97",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:1858#issuecomment-5389663039",
+          "workflow:32679704613",
+          "issue:1858#issuecomment-5389695148"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "0761c1995be02f0b042faba6d2fe00ab1d161f06",
+        "successorLockGeneration": 1599,
+        "successorLockScope": "PUBLIC_EVIDENCE_CURRENT_CONDITION",
+        "successorOperationId": "CURRENT_PUBLIC_CONDITION_EVIDENCE_INTEGRATION_20260823_S3",
+        "transitionId": "CURRENT_PUBLIC_CONDITION_HEAD_ADVANCE_3ED6572_TO_0761C199"
       },
       "terminalDisposition": "SUPERSEDED"
     }

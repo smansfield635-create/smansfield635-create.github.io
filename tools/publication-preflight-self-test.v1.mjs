@@ -47,22 +47,30 @@ try{
   const audraliaManifest={schema:'PUBLICATION_SURFACE_VERIFICATION_v1',surfaceId:'audralia',checks:[{path:'/showroom/globe/audralia/',includes:['LIVE BUILD'],excludes:[]}],runtime:{enabled:false}};
   fs.writeFileSync(path.join(repo,'.github/ai-router/publication-surfaces/demo.json'),JSON.stringify(manifest,null,2));
   fs.writeFileSync(path.join(repo,'.github/ai-router/publication-surfaces/audralia.json'),JSON.stringify(audraliaManifest,null,2));
-  const built=await buildPayload({repoRoot:repo,targetSha:'b'.repeat(40),surfaceId:'demo',stage});
+
+  const demoSha='b'.repeat(40);
+  const built=await buildPayload({repoRoot:repo,targetSha:demoSha,surfaceId:'demo',stage});
+  const promotedDemoRoot=path.join(stage,'inspection/audralia-24057-exact/snapshot/runtime');
+  const stagedAudralia=fs.readFileSync(path.join(stage,'showroom/globe/audralia/index.html'),'utf8');
   check('positive-fixture-payload-built',fs.existsSync(path.join(stage,'demo/index.html')));
   check('positive-fixture-release-marker',fs.existsSync(path.join(stage,'.well-known/dgb-release.json')));
   check('negative-fixture-preview-excluded',!fs.existsSync(path.join(stage,'preview')));
   check('negative-fixture-control-plane-excluded',!fs.existsSync(path.join(stage,'.github')));
   check('negative-fixture-node-modules-excluded',!fs.existsSync(path.join(stage,'node_modules')));
   check('negative-fixture-old-h-earth-clone-excluded',!fs.existsSync(path.join(stage,'h-earth-live-6d18e158')));
-  check('negative-fixture-audralia-snapshot-excluded',!fs.existsSync(path.join(stage,'inspection/audralia-24057-exact')));
   check('positive-fixture-live-inspection-preserved',fs.existsSync(path.join(stage,'inspection/compass/live/index.html')));
   check('positive-fixture-digest',/^[0-9a-f]{64}$/.test(built.payloadDigest));
   check('positive-fixture-payload-bytes',Number.isInteger(built.payloadBytes)&&built.payloadBytes>0);
   check('positive-fixture-top-level-breakdown',Array.isArray(built.topLevelBytes)&&built.topLevelBytes.some(row=>row.path==='demo'&&row.bytes>0));
-  check('non-authorized-surface-closure-not-required',built.authorizedExcludedRuntimeDependencies?.status==='NOT_REQUIRED');
+  check('protected-closure-preserved-on-non-protected-surface',built.authorizedExcludedRuntimeDependencies?.status==='PROMOTED'&&built.authorizedExcludedRuntimeDependencies?.protectedSurfaceId==='audralia'&&built.authorizedExcludedRuntimeDependencies?.requestedSurfaceId==='demo');
+  check('protected-closure-entry-on-non-protected-surface',fs.existsSync(path.join(promotedDemoRoot,'entry.mjs')));
+  check('protected-closure-unreferenced-snapshot-excluded-on-non-protected-surface',!fs.existsSync(path.join(stage,'inspection/audralia-24057-exact/snapshot/clone.txt')));
+  check('protected-audralia-exact-head-stamped-on-non-protected-surface',stagedAudralia.includes(`data-audralia-build-sha="${demoSha}"`)&&stagedAudralia.includes('BUILD BBBBBBBB'));
 
-  const audraliaBuilt=await buildPayload({repoRoot:repo,targetSha:'c'.repeat(40),surfaceId:'audralia',stage:audraliaStage});
+  const audraliaSha='c'.repeat(40);
+  const audraliaBuilt=await buildPayload({repoRoot:repo,targetSha:audraliaSha,surfaceId:'audralia',stage:audraliaStage});
   const promotedRoot=path.join(audraliaStage,'inspection/audralia-24057-exact/snapshot/runtime');
+  const stagedAudraliaDirect=fs.readFileSync(path.join(audraliaStage,'showroom/globe/audralia/index.html'),'utf8');
   check('authorized-closure-entry-promoted',fs.existsSync(path.join(promotedRoot,'entry.mjs')));
   check('authorized-closure-static-import-promoted',fs.existsSync(path.join(promotedRoot,'child.mjs')));
   check('authorized-closure-dynamic-import-promoted',fs.existsSync(path.join(promotedRoot,'shared/grandchild.mjs')));
@@ -72,12 +80,13 @@ try{
   check('authorized-closure-receipt-pass',audraliaBuilt.authorizedExcludedRuntimeDependencies?.status==='PROMOTED'&&audraliaBuilt.authorizedExcludedRuntimeDependencies?.mode==='EXACT_REFERENCED_CLOSURE_ONLY');
   check('authorized-closure-receipt-count',audraliaBuilt.authorizedExcludedRuntimeDependencies?.fileCount===5);
   check('authorized-closure-receipt-digest',/^[0-9a-f]{64}$/.test(audraliaBuilt.authorizedExcludedRuntimeDependencies?.digest||''));
+  check('authorized-direct-audralia-exact-head-stamped',stagedAudraliaDirect.includes(`data-audralia-build-sha="${audraliaSha}"`)&&stagedAudraliaDirect.includes('BUILD CCCCCCCC'));
 
   let missingDependencyRejected=false;
   fs.writeFileSync(path.join(repo,'showroom/globe/audralia/index.html'),'<!doctype html><div class="audralia-loading-version">LIVE BUILD</div><script type="module" src="/inspection/audralia-24057-exact/snapshot/runtime/missing.mjs"></script>\n');
-  try{await buildPayload({repoRoot:repo,targetSha:'d'.repeat(40),surfaceId:'audralia',stage:path.join(tmp,'missing-stage')});}
+  try{await buildPayload({repoRoot:repo,targetSha:'d'.repeat(40),surfaceId:'demo',stage:path.join(tmp,'missing-stage')});}
   catch(error){missingDependencyRejected=String(error).includes('AUTHORIZED_RUNTIME_DEPENDENCY_MISSING');}
-  check('authorized-closure-missing-dependency-rejected',missingDependencyRejected);
+  check('protected-closure-missing-dependency-rejected-on-non-protected-surface',missingDependencyRejected);
 
   let rejected=false;
   try{await buildPayload({repoRoot:repo,targetSha:'bad',surfaceId:'demo',stage:path.join(tmp,'bad')});}catch{rejected=true;}

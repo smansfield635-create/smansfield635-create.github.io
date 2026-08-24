@@ -96,6 +96,12 @@ jobs:
             --receipt "$RECEIPT"
           jq -e '.schema=="PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1" and .result=="PREFLIGHT_PASS" and .deploymentPerformed==false' "$RECEIPT" >/dev/null
           echo "PUBLICATION_FAST_PREFLIGHT_PASS=$TARGET_SHA:$SURFACE_ID"
+          if [ "$SURFACE_ID" = "audralia" ]; then
+            short_sha="$(printf '%s' "$TARGET_SHA" | cut -c1-8 | tr '[:lower:]' '[:upper:]')"
+            grep -Fq "data-audralia-build-sha=\"$TARGET_SHA\"" "$STAGE/showroom/globe/audralia/index.html"
+            grep -Fq "BUILD $short_sha" "$STAGE/showroom/globe/audralia/index.html"
+            echo "AUDRALIA_VISIBLE_BUILD_FINGERPRINT=$short_sha"
+          fi
 
       - uses: actions/upload-artifact@v4
         with:

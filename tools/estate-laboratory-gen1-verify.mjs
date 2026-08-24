@@ -4,21 +4,26 @@ import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 
 const ROOT=process.cwd();
-const HTML_PATH='showroom/globe/audralia/disposition/index.html';
-const JS_PATH='showroom/globe/audralia/disposition/laboratory.js';
+const HTML_PATH='instruments/index.html';
+const JS_PATH='instruments/laboratory.js';
+const COCKPIT_PATH='showroom/globe/audralia/disposition/index.html';
+const COMPASS_PATH='index.html';
 const ANCHOR_GATE_PATH='tools/h-earth-experience-anchor-gate.mjs';
 const OUTPUT_DIR=process.env.OUTPUT_DIR||'estate-laboratory-gen1-verification';
 const mode=process.argv.includes('--runtime')?'runtime':'static';
 const fail=code=>{throw new Error(`ESTATE_LABORATORY_GEN1_VERIFY_FAIL:${code}`)};
 const read=p=>fs.readFileSync(path.join(ROOT,p),'utf8');
-const html=read(HTML_PATH),js=read(JS_PATH),anchorGate=read(ANCHOR_GATE_PATH);
+const html=read(HTML_PATH),js=read(JS_PATH),cockpit=read(COCKPIT_PATH),compass=read(COMPASS_PATH),anchorGate=read(ANCHOR_GATE_PATH);
 
 function staticVerification(){
   const requiredHtml=[
-    'data-page="estate-laboratory-cockpit"',
+    'data-page="estate-laboratory"',
+    'data-role="governed-observability-and-diagnostic-environment"',
+    'data-version="ESTATE_LABORATORY_GOVERNED_OBSERVABILITY_GEN1_v1"',
     'data-lab-shell',
     'data-heavy-runtime-loaded="false"',
     'Estate Laboratory',
+    'Governed observability · diagnostic environment',
     'Run all lightweight tests',
     'data-instrument-grid',
     'data-run-selected',
@@ -28,7 +33,8 @@ function staticVerification(){
     '/showroom/globe/h-earth/diagnostic/',
     '/showroom/globe/hearth/diagnostic/',
     '/coherence-diagnostic/',
-    '/showroom/globe/audralia/disposition/laboratory.js?v=ESTATE_LABORATORY_COCKPIT_GEN1_v1'
+    'target="_blank" rel="noopener"',
+    '/instruments/laboratory.js?v=ESTATE_LABORATORY_GOVERNED_OBSERVABILITY_GEN1_v1'
   ];
   for(const token of requiredHtml)if(!html.includes(token))fail(`HTML_TOKEN_MISSING:${token}`);
   if(/<iframe\b/i.test(html))fail('STATIC_IFRAME_FORBIDDEN');
@@ -43,27 +49,48 @@ function staticVerification(){
   for(const token of ['ESTATE_LABORATORY_LIGHTWEIGHT_TEST_RESULT_v1','mode: "light"','mode: "deep"','createTargetFrame','teardownTarget','runAllLightweight','AUDRALIA_READY_TIMEOUT_MS = 120000'])if(!js.includes(token))fail(`RUNTIME_TOKEN_MISSING:${token}`);
   if(js.includes('productionMutationAuthorized: true')||js.includes('data-production-mutation-authorized="true"'))fail('PRODUCTION_MUTATION_AUTHORITY_FORBIDDEN');
 
+  for(const token of [
+    'data-page="audralia-command-cockpit"',
+    'data-public-facing-name="Audralia Command Cockpit"',
+    'Enter the world. Then look beneath it.',
+    'Five questions beneath the world',
+    'World State',
+    'Diagnostics',
+    'Construction',
+    'Evidence',
+    'Next Move'
+  ])if(!cockpit.includes(token))fail(`AUDRALIA_COCKPIT_RESTORATION_TOKEN_MISSING:${token}`);
+  if(cockpit.includes('data-page="estate-laboratory"')||cockpit.includes('ESTATE_LABORATORY_GOVERNED_OBSERVABILITY_GEN1_v1'))fail('AUDRALIA_COCKPIT_STILL_OWNS_ESTATE_LABORATORY_IDENTITY');
+
+  const compassTokens=[
+    'data-coordinate-label="Instruments"',
+    'data-route="/instruments/" data-cardinal-route="/instruments/"',
+    'data-room-id="south-4" data-label="Estate Laboratory" data-route="/instruments/"',
+    'data-local-coordinate="Governed Observability"',
+    'href="/instruments/">Estate Laboratory</a>',
+    '<a href="/instruments/">Instruments</a>'
+  ];
+  for(const token of compassTokens)if(!compass.includes(token))fail(`COMPASS_NAVIGATION_TOKEN_MISSING:${token}`);
+  if(compass.includes('data-room-id="south-4" data-label="Control Cockpit"'))fail('COMPASS_OLD_ESTATE_LAB_IDENTITY_REMAINS');
+  if(!compass.includes('data-panel-body="Explore prototypes, energy, water, infrastructure, and long-range construction."'))fail('UNRELATED_FRONTIER_COPY_DRIFT');
+
+  if(anchorGate.includes('NON_EXPERIENCE_AUDRALIA_PREFIXES'))fail('AUDRALIA_DISPOSITION_EXEMPTION_STILL_PRESENT');
+
   const syntax=spawnSync(process.execPath,['--check',JS_PATH],{cwd:ROOT,encoding:'utf8'});
   if(syntax.status!==0)fail(`JAVASCRIPT_SYNTAX:${String(syntax.stderr||syntax.stdout).trim().slice(0,800)}`);
-
-  const exemption=anchorGate.match(/const NON_EXPERIENCE_AUDRALIA_PREFIXES=\[([\s\S]*?)\];/);
-  if(!exemption)fail('ANCHOR_GATE_NONEXPERIENCE_SET_MISSING');
-  const body=exemption[1];
-  if(!body.includes("'showroom/globe/audralia/disposition/'"))fail('DISPOSITION_EXEMPTION_MISSING');
-  if(body.includes("'showroom/globe/audralia/'"))fail('AUDRALIA_PRODUCT_ROOT_EXEMPTION_FORBIDDEN');
-  const entries=[...body.matchAll(/'([^']+)'/g)].map(match=>match[1]);
-  if(entries.length!==1||entries[0]!=='showroom/globe/audralia/disposition/')fail('ANCHOR_GATE_EXEMPTION_SCOPE_WIDENED');
-  if(!anchorGate.includes("if(p.startsWith('showroom/globe/audralia/'))return !NON_EXPERIENCE_AUDRALIA_PREFIXES.some(prefix=>p.startsWith(prefix));"))fail('ANCHOR_GATE_EXEMPTION_NOT_BOUND');
 
   return {
     schema:'ESTATE_LABORATORY_GEN1_STATIC_VERIFICATION_v1',
     result:'PASS',
     laboratoryPaths:[HTML_PATH,JS_PATH],
+    canonicalLaboratoryRoute:'/instruments/',
     instrumentCount:instrumentIds.length,
     lightweightInstrumentCount:7,
     deepInstrumentCount:2,
     staticIframeCount:0,
-    audraliaNonExperienceExemptions:entries,
+    audraliaCommandCockpitRestored:true,
+    audraliaDispositionExemptionRemoved:true,
+    compassInstrumentsIdentityReconciled:true,
     audraliaProductRootProtected:true,
     javascriptSyntax:'PASS'
   };
@@ -91,6 +118,8 @@ const terminal=new Set(['PASS','FINDING','UNRESOLVED']);
 const browser=await puppeteer.launch({executablePath:chromePath,headless:'new',args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
 const viewportReceipts=[];
 let deepEvidenceCarousel=null;
+let cockpitRuntime=null;
+let compassRuntime=null;
 
 try{
   for(const viewport of viewports){
@@ -99,12 +128,15 @@ try{
     page.on('pageerror',error=>pageErrors.push(String(error?.stack||error)));
     page.on('console',message=>{if(message.type()==='error')consoleErrors.push(message.text())});
     await page.setViewport({width:viewport.width,height:viewport.height,deviceScaleFactor:1});
-    await page.goto(`${baseUrl}/showroom/globe/audralia/disposition/?verify=${Date.now()}`,{waitUntil:'domcontentloaded',timeout:60000});
+    await page.goto(`${baseUrl}/instruments/?verify=${Date.now()}`,{waitUntil:'domcontentloaded',timeout:60000});
     await page.waitForFunction(()=>document.querySelectorAll('.instrument-card').length===9,{timeout:15000});
 
     const initial=await page.evaluate(()=>{
       const rects=selectors=>selectors.flatMap(selector=>[...document.querySelectorAll(selector)].filter(el=>!el.hidden).map(el=>{const r=el.getBoundingClientRect();return{selector,width:r.width,height:r.height}}));
       return {
+        route:location.pathname,
+        page:document.documentElement.dataset.page||null,
+        role:document.documentElement.dataset.role||null,
         viewport:{width:innerWidth,height:innerHeight},
         documentScrollWidth:document.documentElement.scrollWidth,
         bodyScrollWidth:document.body.scrollWidth,
@@ -113,6 +145,7 @@ try{
         controls:rects(['[data-run-all]','[data-run-selected]','.instrument-card'])
       };
     });
+    if(initial.route!=='/instruments/'||initial.page!=='estate-laboratory'||initial.role!=='governed-observability-and-diagnostic-environment')fail(`CANONICAL_LAB_ROUTE_IDENTITY_FAILURE:${viewport.id}`);
     if(initial.documentScrollWidth>viewport.width+1||initial.bodyScrollWidth>viewport.width+1)fail(`HORIZONTAL_OVERFLOW_INITIAL:${viewport.id}:${initial.documentScrollWidth}:${initial.bodyScrollWidth}`);
     if(initial.heavyRuntimeLoaded!=='false'||initial.iframeCount!==0)fail(`HEAVY_RUNTIME_LOADED_AT_START:${viewport.id}`);
     const undersized=initial.controls.filter(control=>control.height<44||control.width<44);
@@ -157,16 +190,40 @@ try{
       if(deepEvidenceCarousel.heavyRuntimeLoaded!=='true'||deepEvidenceCarousel.iframeCount!==1)fail('DEEP_TEST_ISOLATION_CHAMBER_NOT_OBSERVED');
       await page.click('[data-teardown-target]');
       await page.waitForFunction(()=>document.querySelectorAll('iframe').length===0&&document.documentElement.dataset.heavyRuntimeLoaded==='false',{timeout:5000});
+
+      const cockpitPage=await browser.newPage();
+      await cockpitPage.setViewport({width:1440,height:1000,deviceScaleFactor:1});
+      await cockpitPage.goto(`${baseUrl}/showroom/globe/audralia/disposition/?verify=${Date.now()}`,{waitUntil:'domcontentloaded',timeout:60000});
+      cockpitRuntime=await cockpitPage.evaluate(()=>({
+        title:document.title,
+        page:document.documentElement.dataset.page||null,
+        publicFacingName:document.documentElement.dataset.publicFacingName||null,
+        hero:document.querySelector('h1')?.textContent?.trim()||null,
+        hasWorldState:[...document.querySelectorAll('[data-plane-target]')].some(el=>el.textContent.trim()==='World State')
+      }));
+      if(cockpitRuntime.page!=='audralia-command-cockpit'||cockpitRuntime.hero!=='Enter the world. Then look beneath it.'||cockpitRuntime.hasWorldState!==true)fail(`AUDRALIA_COCKPIT_RUNTIME_NOT_RESTORED:${JSON.stringify(cockpitRuntime)}`);
+      await cockpitPage.close();
+
+      const compassPage=await browser.newPage();
+      await compassPage.setViewport({width:1440,height:1000,deviceScaleFactor:1});
+      await compassPage.goto(`${baseUrl}/?verify=${Date.now()}`,{waitUntil:'domcontentloaded',timeout:60000});
+      compassRuntime=await compassPage.evaluate(()=>{
+        const south=document.querySelector('[data-compass-cardinal][data-wing="south"]');
+        const estateLab=document.querySelector('[data-compass-room][data-room-id="south-4"]');
+        return {
+          roomCount:document.querySelectorAll('[data-compass-room]').length,
+          southRoute:south?.dataset.route||null,
+          southLabel:south?.dataset.coordinateLabel||null,
+          estateLabLabel:estateLab?.dataset.label||null,
+          estateLabRoute:estateLab?.dataset.route||null,
+          oldControlCockpitRoom:Boolean(document.querySelector('[data-compass-room][data-room-id="south-4"][data-label="Control Cockpit"]'))
+        };
+      });
+      if(compassRuntime.roomCount!==19||compassRuntime.southRoute!=='/instruments/'||compassRuntime.southLabel!=='Instruments'||compassRuntime.estateLabLabel!=='Estate Laboratory'||compassRuntime.estateLabRoute!=='/instruments/'||compassRuntime.oldControlCockpitRoom)fail(`COMPASS_NAVIGATION_RUNTIME_FAILURE:${JSON.stringify(compassRuntime)}`);
+      await compassPage.close();
     }
 
-    viewportReceipts.push({
-      viewport,
-      initial,
-      afterSuite,
-      pageErrors,
-      consoleErrors,
-      screenshot
-    });
+    viewportReceipts.push({viewport,initial,afterSuite,pageErrors,consoleErrors,screenshot});
     await page.close();
   }
 }finally{
@@ -195,7 +252,13 @@ const receipt={
     }))
   },
   deepEvidenceCarousel,
+  cockpitRuntime,
+  compassRuntime,
   boundaries:{
+    canonicalLaboratoryRoute:'/instruments/',
+    governedObservabilityIdentity:true,
+    audraliaCommandCockpitRestored:true,
+    compassInstrumentsIdentityReconciled:true,
     audraliaProductRootProtected:true,
     staticIframeForbidden:true,
     lightweightHeavyRuntimeBootForbidden:true,

@@ -1,4 +1,4 @@
-import { evaluateSite } from '/evidence/readiness/bt4-site-governance/site-entitlement.v1.mjs?cb=prod2';
+import { evaluateSite } from '/evidence/readiness/bt4-site-governance/site-entitlement.v1.mjs?cb=prod3';
 
 const root=document.querySelector('[data-current-public-condition]');
 if(root){

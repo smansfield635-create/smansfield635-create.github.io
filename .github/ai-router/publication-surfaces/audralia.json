@@ -38,6 +38,11 @@
     "path": "/showroom/globe/audralia/",
     "timeoutMs": 60000,
     "readySelector": "[data-audralia-loader].is-ready",
-    "failOnConsoleErrors": false
+    "binding": {
+      "mode": "direct-document",
+      "path": "/showroom/globe/audralia/"
+    },
+    "failOnConsoleErrors": false,
+    "failOnPageErrors": true
   }
 }

@@ -33,12 +33,15 @@ function requireStaticCandidate(){
   assert.match(index,new RegExp(`fap1-weather-presentation-v1\\.mjs\\?cb=${REQUEST_IDENTITY}`),'FAP1_FRESH_REQUEST_IDENTITY_MISSING');
   assert.match(renderer,/const REST_STEPS=32,INTERACTION_STEPS=15,REST_MAX_PIXELS=230000,INTERACTION_MAX_PIXELS=90000;/,'FAP1_PERFORMANCE_CEILINGS_CHANGED');
   assert.match(renderer,/uSysA\[8\]/,'FAP1_EXISTING_SYSTEM_ARRAY_CONTRACT_CHANGED');
+  assert.doesNotMatch(direct,/createElement\(\s*['"]canvas['"]\s*\)/,'FAP1_ADDITIONAL_RENDER_CANVAS_SOURCE_DETECTED');
+  assert.doesNotMatch(direct,/new\s+OffscreenCanvas\s*\(/,'FAP1_OFFSCREEN_RENDER_CANVAS_SOURCE_DETECTED');
   return {
     policyId:POLICY_ID,
     systemIds:SYSTEM_IDS,
     byteParity:true,
     requestIdentity:REQUEST_IDENTITY,
-    performanceCeilingsFrozen:true
+    performanceCeilingsFrozen:true,
+    renderCanvasSourcePreserved:true
   };
 }
 
@@ -163,6 +166,7 @@ try{
     loaderBuild:document.querySelector('.audralia-loading-version')?.textContent?.trim()||null,
     status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null,
     nav:[...document.querySelectorAll('.audralia-live-nav a')].map(a=>a.textContent.trim()),
+    worldCanvasCount:document.querySelectorAll('[data-h-earth-map-wide-canvas]').length,
     canvasCount:document.querySelectorAll('canvas').length
   }));
   console.log(JSON.stringify({liveFap1,liveAuthoritative,live:liveResult,...liveCapture},null,2));
@@ -178,7 +182,7 @@ try{
   assert.deepEqual(liveResult.nav.includes('H-Earth · Play'),true,'LIVE_NAV_H_EARTH_MISSING');
   assert.deepEqual(liveResult.nav.includes('Compass'),true,'LIVE_NAV_COMPASS_MISSING');
   assert.deepEqual(liveResult.nav.includes('Mirrorland'),true,'LIVE_NAV_MIRRORLAND_MISSING');
-  assert.equal(liveResult.canvasCount,1,'LIVE_ADDITIONAL_RENDER_CANVAS_DETECTED');
+  assert.equal(liveResult.worldCanvasCount,1,'LIVE_PRIMARY_WORLD_CANVAS_MULTIPLIED');
   assert.equal(liveCapture.pageErrors.length,0,'LIVE_PAGE_ERROR');
 
   const fap1=liveResult.fap1;
@@ -214,6 +218,8 @@ try{
     patchedCloudShaders:liveResult.fap1Evidence.patchedCloudShaders,
     existingSystemsExpanded:false,
     additionalRenderPasses:0,
+    runtimeCanvasCount:liveResult.canvasCount,
+    primaryWorldCanvasCount:liveResult.worldCanvasCount,
     performanceCeilingsFrozen:true,
     productionDeploymentPerformed:false
   },null,2));

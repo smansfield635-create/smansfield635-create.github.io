@@ -4,6 +4,7 @@ import path from 'node:path';
 
 const root = process.cwd();
 const readJson = (p) => JSON.parse(fs.readFileSync(path.join(root, p), 'utf8'));
+const readText = (p) => fs.readFileSync(path.join(root, p), 'utf8');
 const fail = (message) => { process.stderr.write(`${message}\n`); process.exitCode = 1; };
 
 const entry = readJson('AI_ENTRYPOINT.json');
@@ -28,6 +29,44 @@ if (release.deployment?.capabilityId !== 'PAGES_EXACT_HEAD_DEPLOY') fail('RELEAS
 if (policy.publicationPathConsistency?.canonicalCapabilityId !== 'PAGES_EXACT_HEAD_DEPLOY') fail('POLICY_CANONICAL_PUBLICATION_CAPABILITY_DRIFT');
 if (policy.evidenceProgressLaw?.maxEquivalentProbeAttempts !== 2) fail('EQUIVALENT_PROBE_LIMIT_DRIFT');
 if (policy.evidenceProgressLaw?.sameProbeWithoutNewEvidenceAllowed !== false) fail('REDUNDANT_PROBE_NOT_FAIL_CLOSED');
+if (policy.checkoutLocality?.defaultMode !== 'BOUNDED_WORKING_SET_REQUIRED') fail('CHECKOUT_LOCALITY_DEFAULT_MODE_DRIFT');
+if (policy.checkoutLocality?.unrestrictedCheckoutAllowedByDefault !== false) fail('UNRESTRICTED_CHECKOUT_NOT_FAIL_CLOSED');
+if (policy.checkoutLocality?.materializeExcludedRootsThenDiscardAllowed !== false) fail('EXCLUDED_ROOT_MATERIALIZATION_NOT_FORBIDDEN');
+if (policy.checkoutLocality?.exactCommitObjectReadbackForExcludedProtectedClosuresAllowed !== true) fail('PROTECTED_OBJECT_READBACK_NOT_ALLOWED');
+if (!policy.forbiddenPatterns?.includes('UNRESTRICTED_CHECKOUT_WITHOUT_EXPLICIT_WHOLE_REPOSITORY_EXCEPTION')) fail('UNRESTRICTED_CHECKOUT_FORBIDDEN_PATTERN_MISSING');
+
+const requireSparseCheckout = (workflowPath, {bridge = false, publication = false} = {}) => {
+  const text = readText(workflowPath);
+  if (!text.includes('uses: actions/checkout@v4')) fail(`CHECKOUT_ACTION_MISSING:${workflowPath}`);
+  if (!text.includes('sparse-checkout-cone-mode: false')) fail(`NON_CONE_SPARSE_CHECKOUT_MISSING:${workflowPath}`);
+  if (!text.includes('sparse-checkout: |')) fail(`SPARSE_WORKING_SET_MISSING:${workflowPath}`);
+  if (bridge) {
+    for (const required of [
+      '/.github/ai-router/workflow-dispatch-capability.v1.json',
+      '/tools/ai-entry-workflow-dispatch-bridge.mjs'
+    ]) if (!text.includes(required)) fail(`BRIDGE_WORKING_SET_PATH_MISSING:${workflowPath}:${required}`);
+    if (text.includes('\n            /*\n')) fail(`BRIDGE_WORKING_SET_TOO_BROAD:${workflowPath}`);
+  }
+  if (publication) {
+    if (!text.includes('\n            /*\n')) fail(`PUBLICATION_ROOT_INCLUDE_PATTERN_MISSING:${workflowPath}`);
+    for (const excluded of [
+      '!/preview/',
+      '!/h-earth-live-6d18e158/',
+      '!/inspection/audralia-24057-exact/'
+    ]) if (!text.includes(excluded)) fail(`PUBLICATION_BULK_EXCLUSION_MISSING:${workflowPath}:${excluded}`);
+  }
+  return text;
+};
+
+const bridgeWorkflow = policy.checkoutLocality?.centralWorkflows?.aiEntryBridge;
+const preflightWorkflow = policy.checkoutLocality?.centralWorkflows?.publicationPreflight;
+const deployWorkflow = policy.checkoutLocality?.centralWorkflows?.publicationDeploy;
+if (!bridgeWorkflow || !preflightWorkflow || !deployWorkflow) fail('CENTRAL_CHECKOUT_LOCALITY_WORKFLOW_BINDINGS_MISSING');
+else {
+  requireSparseCheckout(bridgeWorkflow, {bridge: true});
+  requireSparseCheckout(preflightWorkflow, {publication: true});
+  requireSparseCheckout(deployWorkflow, {publication: true});
+}
 
 if (expectedWorkflow) {
   const workflowPath = path.join(root, expectedWorkflow);
@@ -45,6 +84,9 @@ if (!process.exitCode) {
     canonicalPublicationCapability: 'PAGES_EXACT_HEAD_DEPLOY',
     canonicalPublicationWorkflow: expectedWorkflow,
     maxEquivalentProbeAttempts: policy.evidenceProgressLaw.maxEquivalentProbeAttempts,
-    noRepeatedEquivalentProbeWithoutNewEvidence: true
+    noRepeatedEquivalentProbeWithoutNewEvidence: true,
+    checkoutLocalityDefault: policy.checkoutLocality.defaultMode,
+    unrestrictedCheckoutAllowedByDefault: false,
+    centralSparseCheckoutVerified: [bridgeWorkflow, preflightWorkflow, deployWorkflow]
   }, null, 2) + '\n');
 }

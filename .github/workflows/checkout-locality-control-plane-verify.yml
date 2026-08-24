@@ -1,0 +1,60 @@
+name: Checkout Locality Control Plane Verify
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/ai-entry-workflow-dispatch-bridge.yml'
+      - '.github/workflows/publication-preflight-v1.yml'
+      - '.github/workflows/pages-exact-head-deploy-v3.yml'
+      - 'tools/publication-preflight.v1.mjs'
+      - '.github/ai-router/execution-efficiency-policy.v1.json'
+      - '.github/ai-router/execution-efficiency-self-test.v1.mjs'
+      - 'tools/checkout-locality-self-test.v1.mjs'
+      - '.github/workflows/checkout-locality-control-plane-verify.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout locality verification working set
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /AI_ENTRYPOINT.json
+            /.github/ai-router/execution-efficiency-policy.v1.json
+            /.github/ai-router/execution-efficiency-self-test.v1.mjs
+            /.github/ai-router/shared-procedures.v1.json
+            /.github/ai-router/workflow-dispatch-capability.v1.json
+            /.github/ai-router/publication-release-contract.v1.json
+            /.github/workflows/ai-entry-workflow-dispatch-bridge.yml
+            /.github/workflows/publication-preflight-v1.yml
+            /.github/workflows/pages-exact-head-deploy-v3.yml
+            /.github/workflows/checkout-locality-control-plane-verify.yml
+            /tools/publication-preflight.v1.mjs
+            /tools/publication-preflight-self-test.v1.mjs
+            /tools/checkout-locality-self-test.v1.mjs
+
+      - name: Run admitted checkout locality verification
+        env:
+          CHECKOUT_LOCALITY_RECEIPT: ${{ runner.temp }}/checkout-locality-control-plane-receipt.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/checkout-locality-self-test.v1.mjs && \
+          node .github/ai-router/execution-efficiency-self-test.v1.mjs && \
+          node tools/publication-preflight-self-test.v1.mjs
+
+      - name: Upload checkout locality receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: checkout-locality-control-plane-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/checkout-locality-control-plane-receipt.json
+          if-no-files-found: error
+          retention-days: 90

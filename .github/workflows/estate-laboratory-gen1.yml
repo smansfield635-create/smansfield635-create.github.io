@@ -12,11 +12,26 @@ jobs:
   construct:
     runs-on: ubuntu-24.04
     steps:
-      - name: Check out admitted successor
+      - name: Check out bounded admitted successor
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 4
           persist-credentials: true
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /index.html
+            /site-guide/index.html
+            /instruments/index.html
+            /instruments/laboratory.js
+            /showroom/globe/audralia/disposition/index.html
+            /showroom/globe/audralia/disposition/laboratory.js
+            /showroom/globe/audralia/diagnostic/index.html
+            /showroom/globe/h-earth/diagnostic/index.html
+            /showroom/globe/hearth/diagnostic/index.html
+            /coherence-diagnostic/index.html
+            /tools/estate-laboratory-gen1-verify.mjs
+            /tools/h-earth-experience-anchor-gate.mjs
+            /.github/workflows/estate-laboratory-gen1.yml
 
       - name: Construct bounded navigation candidate
         shell: bash
@@ -25,11 +40,11 @@ jobs:
           BASE='57302a9b955475f57a14bcd80940eb89d55094d8'
           STALE='232d673faa0cb4df5bd6542fe57242371f8c9633'
           test "$GITHUB_REF_NAME" = 'ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_005'
-          git fetch --no-tags origin main
+          git fetch --no-tags --depth=1 origin main
           test "$(git rev-parse origin/main^{commit})" = "$BASE"
           test "$(git merge-base HEAD "$BASE")" = "$BASE"
-          git fetch --no-tags origin "$STALE" || true
-          git cat-file -e "$STALE^{commit}"
+          git fetch --no-tags --depth=1 origin ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_002:refs/remotes/origin/estate-lab-predecessor
+          test "$(git rev-parse refs/remotes/origin/estate-lab-predecessor^{commit})" = "$STALE"
 
           for p in \
             index.html \

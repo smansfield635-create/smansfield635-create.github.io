@@ -1,4 +1,4 @@
-const POLICY_ID='AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v5';
+const POLICY_ID='AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v6';
 const previousShaderSource=WebGL2RenderingContext.prototype.shaderSource;
 let patched=0;
 let rejected=0;
@@ -179,6 +179,63 @@ vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   mass+=cirrusPlume;
   ice+=cirrusPlume*.995;
 
+  // WSD6-1 — Distributed cirrus fields.
+  // Four long high-level filaments occupy different planetary sectors.
+  vec2 c6a=fap1Local(lat,lon,.610865,-2.827433+t*.006);
+  vec2 c6b=fap1Local(lat,lon,-.401426,-1.047198-t*.005);
+  vec2 c6c=fap1Local(lat,lon,.209440,.191986+t*.004);
+  vec2 c6d=fap1Local(lat,lon,-.698132,1.989675-t*.006);
+  float cirrusEnvA=fap1Ellipse(c6a,vec2(0.0),vec2(.82,.095),.30);
+  float cirrusEnvB=fap1Ellipse(c6b,vec2(0.0),vec2(.74,.090),-.24);
+  float cirrusEnvC=fap1Ellipse(c6c,vec2(0.0),vec2(.86,.100),.18);
+  float cirrusEnvD=fap1Ellipse(c6d,vec2(0.0),vec2(.78,.090),-.31);
+  float cirrusNoise=fap1CloudBreak(radial,t,19.0,.27,.69);
+  float cirrusWaveA=.5+.5*sin(c6a.x*27.0+c6a.y*8.0+t*.38);
+  float cirrusWaveB=.5+.5*sin(c6b.x*31.0-c6b.y*7.0-t*.31);
+  float cirrusWaveC=.5+.5*sin(c6c.x*25.0+c6c.y*10.0+t*.28);
+  float cirrusWaveD=.5+.5*sin(c6d.x*29.0-c6d.y*9.0-t*.34);
+  float cirrusTextureA=.12+.38*smoothstep(.36,.77,cirrusWaveA*.55+cirrusNoise*.45);
+  float cirrusTextureB=.12+.36*smoothstep(.38,.78,cirrusWaveB*.52+cirrusNoise*.48);
+  float cirrusTextureC=.12+.37*smoothstep(.37,.77,cirrusWaveC*.56+cirrusNoise*.44);
+  float cirrusTextureD=.12+.35*smoothstep(.39,.79,cirrusWaveD*.54+cirrusNoise*.46);
+  float cirrusFields=(cirrusEnvA*cirrusTextureA+cirrusEnvB*cirrusTextureB+cirrusEnvC*cirrusTextureC+cirrusEnvD*cirrusTextureD)*fap1Band(h,84.0,108.0)*.50;
+  cirrusFields*=1.0-.72*fap1ClearCorridor(lat,lon);
+  mass+=cirrusFields;
+  ice+=cirrusFields*.997;
+
+  // WSD6-2 — Distributed cirrostratus veils.
+  // Three broad translucent shields bridge gaps between organized systems.
+  vec2 s6a=fap1Local(lat,lon,.506145,-2.042035+t*.003);
+  vec2 s6b=fap1Local(lat,lon,-.191986,.872665-t*.003);
+  vec2 s6c=fap1Local(lat,lon,-.541052,2.652900+t*.002);
+  float veilA=fap1Ellipse(s6a,vec2(0.0),vec2(.96,.30),-.12);
+  float veilB=fap1Ellipse(s6b,vec2(0.0),vec2(.92,.28),.16);
+  float veilC=fap1Ellipse(s6c,vec2(0.0),vec2(.88,.27),-.20);
+  float veilBreak=.18+.45*fap1CloudBreak(radial,t,10.0,.20,.64);
+  float cirrostratus=max(veilA,max(veilB,veilC))*fap1Band(h,76.0,104.0)*veilBreak*.58;
+  cirrostratus*=1.0-.82*fap1ClearCorridor(lat,lon);
+  mass+=cirrostratus;
+  ice+=cirrostratus*.992;
+
+  // WSD6-3 — Distributed altocumulus fields.
+  // Four mid-level patch fields create mesoscale texture without closing the sky.
+  vec2 a6a=fap1Local(lat,lon,.314159,-1.570796-t*.004);
+  vec2 a6b=fap1Local(lat,lon,-.087266,.349066+t*.004);
+  vec2 a6c=fap1Local(lat,lon,.733038,1.745329-t*.003);
+  vec2 a6d=fap1Local(lat,lon,-.523599,-2.967060+t*.003);
+  float altoEnvA=fap1Ellipse(a6a,vec2(0.0),vec2(.58,.34),.08);
+  float altoEnvB=fap1Ellipse(a6b,vec2(0.0),vec2(.62,.36),-.12);
+  float altoEnvC=fap1Ellipse(a6c,vec2(0.0),vec2(.56,.32),.18);
+  float altoEnvD=fap1Ellipse(a6d,vec2(0.0),vec2(.60,.35),-.06);
+  float altoNoise=fbm(radial*30.0+vec3(t*.21,-t*.16,t*.12));
+  float altoRipple=.5+.5*sin(lon*24.0+lat*17.0+t*.45);
+  float altoCells=smoothstep(.48,.72,altoNoise*.72+altoRipple*.28);
+  float altocumulus=(altoEnvA+altoEnvB+altoEnvC+altoEnvD)*fap1Band(h,52.0,79.0)*(.12+.64*altoCells)*.48;
+  altocumulus*=1.0-.76*fap1ClearCorridor(lat,lon);
+  mass+=altocumulus;
+  ice+=altocumulus*.22;
+  precip+=altocumulus*.035;
+
   return vec3(clamp(mass,0.0,1.72),clamp(ice,0.0,1.55),clamp(precip,0.0,1.40));
 }
 `;
@@ -249,6 +306,11 @@ Object.defineProperty(window,'__AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION__',
     mesoscaleConvectiveComplex:true,
     highCirrusCirrocumulusJetPlume:true,
     sparseHemisphereDiversified:true,
+    planetaryCloudFieldCoverage:true,
+    cirrusFieldMultiplicity:true,
+    cirrostratusVeilMultiplicity:true,
+    altocumulusFieldMultiplicity:true,
+    clearAirWindowsPreserved:true,
     existingCloudSystemsExpanded:false,
     singlePassRaymarchPreserved:true,
     performanceCeilingsFrozen:true
@@ -264,6 +326,22 @@ Object.defineProperty(window,'__AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION__',
       'HIGH_CIRRUS_CIRROCUMULUS_JET_PLUME'
     ]),
     existingSystemsExpanded:false,
+    additionalRenderPasses:0,
+    rayMarchCeilingsChanged:false
+  }),
+  planetaryCoverage:Object.freeze({
+    target:'MULTI_HEMISPHERE_DISTRIBUTED',
+    familyIds:Object.freeze([
+      'CIRRUS_FIELD',
+      'CIRROSTRATUS_VEIL',
+      'ALTOCUMULUS_FIELD'
+    ]),
+    cirrusFieldCount:4,
+    cirrostratusVeilCount:3,
+    altocumulusFieldCount:4,
+    totalFieldInstances:11,
+    multiplicityRequired:true,
+    clearAirWindowsPreserved:true,
     additionalRenderPasses:0,
     rayMarchCeilingsChanged:false
   }),

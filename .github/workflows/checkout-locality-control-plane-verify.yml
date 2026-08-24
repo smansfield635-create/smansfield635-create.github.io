@@ -8,6 +8,7 @@ on:
       - '.github/workflows/remote-operation-successor-v1.yml'
       - '.github/workflows/publication-preflight-v1.yml'
       - '.github/workflows/pages-exact-head-deploy-v3.yml'
+      - '.github/workflows/audralia-weather-presentation-reconciliation.yml'
       - 'tools/publication-preflight.v1.mjs'
       - '.github/ai-router/execution-efficiency-policy.v1.json'
       - '.github/ai-router/execution-efficiency-self-test.v1.mjs'
@@ -39,6 +40,7 @@ jobs:
             /.github/workflows/remote-operation-successor-v1.yml
             /.github/workflows/publication-preflight-v1.yml
             /.github/workflows/pages-exact-head-deploy-v3.yml
+            /.github/workflows/audralia-weather-presentation-reconciliation.yml
             /.github/workflows/checkout-locality-control-plane-verify.yml
             /tools/publication-preflight.v1.mjs
             /tools/checkout-locality-self-test.v1.mjs

@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "estate-laboratory-publication-preflight-20260824-002",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 1962,
+  "requestBranch": "ai-dispatch-request-estate-lab-preflight-20260824-002",
+  "requestCommit": "04c6602ffac5f7654c02f4ce3b6cd86fe9354c67",
+  "requestCommitParent": "55e6af4cbee08effd3b008d124908d518493d14c",
+  "currentMainSha": "55e6af4cbee08effd3b008d124908d518493d14c",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "55e6af4cbee08effd3b008d124908d518493d14c",
+    "surface_id": "estate-laboratory"
+  },
+  "bridgeRunId": "32765810375",
+  "dispatchedRunId": 32766099862,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/32766099862",
+  "dispatchedRunHeadSha": "55e6af4cbee08effd3b008d124908d518493d14c",
+  "dispatchedAt": "2026-08-24T19:05:03.659Z",
+  "resolvedAt": "2026-08-24T19:05:07.045Z"
+}

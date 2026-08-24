@@ -19,7 +19,7 @@
   <div class="audralia-loading-screen" data-audralia-loader role="status" aria-live="polite" aria-label="Audralia is loading">
     <div class="audralia-loading-panel" data-audralia-loader-panel>
       <div class="audralia-loading-kicker">DIAMOND GATE · WORLD SYSTEM</div>
-      <div class="audralia-loading-version">LIVE BUILD · COLOR ARRIVAL v4 · STARTUP TRACE v1</div>
+      <div class="audralia-loading-version">LIVE BUILD · APPROVED MODEL · STARTUP TRACE v1</div>
       <div class="audralia-loading-mark" aria-hidden="true"><span>A</span></div>
       <div class="audralia-loading-title">Audralia</div>
       <div class="audralia-loading-subtitle">Entering a continuous planetary world</div>
@@ -65,7 +65,7 @@
 
   <script>
     window.__AUDRALIA_LIVE_PLANETARY_INTEGRATION__ = Object.freeze({
-      schema: 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v4',
+      schema: 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v5',
       legacyPlanetActive: false,
       canonicalWeatherSpatialLod: true,
       weatherPresentationReconciliation: true,
@@ -73,14 +73,16 @@
       acf1CloudPresentation: true,
       fap1XYZVolumetricDepth: true,
       fap1OrganizedWeatherCandidate: true,
-      directDenseCloudCoverage: true,
+      approvedModelAuthority: '1d45379f81ea4089e9c5f3d7d9688e702be9add3',
+      directDenseCloudCoverage: false,
+      cloudCoverageUpgradeDeferred: true,
       loadingContinuity: 'AUDRALIA_LOADING_CONTINUITY_v4',
-      startupArchitecture: 'RENDERER_FIRST_PROGRESSIVE_ENRICHMENT_v1',
+      startupArchitecture: 'APPROVED_PRESENTATION_PRE_RENDER_v1',
       startupInstrumentation: 'AUDRALIA_STARTUP_DIAGNOSTIC_v1'
     });
   </script>
-  <script type="module" src="./weather-presentation-reconciliation/loader-progress.mjs?cb=AUDRALIA_STARTUP_DIAGNOSTIC_v1"></script>
-  <script type="module" src="./startup-bootstrap-v2.mjs?cb=AUDRALIA_STARTUP_DIAGNOSTIC_v1"></script>
-  <script type="module" src="./progressive-enrichment-bootstrap-v1.mjs?cb=RENDERER_FIRST_PROGRESSIVE_ENRICHMENT_v1"></script>
+  <script type="module" src="./weather-presentation-reconciliation/loader-progress.mjs?cb=AUDRALIA_APPROVED_MODEL_BOOT_v1"></script>
+  <script type="module" src="./startup-bootstrap-v2.mjs?cb=AUDRALIA_APPROVED_MODEL_BOOT_v1"></script>
+  <script type="module" src="./progressive-enrichment-bootstrap-v1.mjs?cb=POST_RENDER_OPTIONAL_ENRICHMENT_v2"></script>
 </body>
 </html>

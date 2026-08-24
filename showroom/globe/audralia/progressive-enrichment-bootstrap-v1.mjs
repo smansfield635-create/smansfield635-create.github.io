@@ -4,10 +4,11 @@ const rendererReady=()=>Boolean(window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIE
 
 const publish=(phase,extra={})=>{
   window.__AUDRALIA_PROGRESSIVE_ENRICHMENT_STATE__=Object.freeze({
-    schema:'AUDRALIA_PROGRESSIVE_ENRICHMENT_BOOTSTRAP_v1',
+    schema:'AUDRALIA_PROGRESSIVE_ENRICHMENT_BOOTSTRAP_v2',
     phase,
     elapsedMs:Math.round(performance.now()-started),
     rendererReady:rendererReady(),
+    approvedPresentationPreinstalled:true,
     ...extra
   });
 };
@@ -42,11 +43,10 @@ async function initialize(){
   await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
   publish('WORLD_VISIBLE_ENRICHMENT_BEGIN');
 
+  // Visual/cloud presentation is intentionally NOT loaded here. Those modules
+  // patch shader construction and therefore must be installed before renderer
+  // creation by startup-bootstrap-v2.mjs.
   const results=[];
-  results.push(await importLayer('ACF1_CLOUD_PRESENTATION','./acf1-cloud-presentation-v1.mjs?cb=ACF1_v3'));
-  results.push(await importLayer('FAP1_XYZ_VOLUMETRIC_DEPTH','./fap1-xyz-volumetric-depth-v1.mjs?cb=FAP1_XYZ_DEPTH_v2'));
-  results.push(await importLayer('FAP1_ORBITAL_SUPPORT','./fap1-orbital-support-tuning-v1.mjs?cb=DIRECT_DENSITY_v4'));
-  results.push(await importLayer('FAP1_ORGANIZED_WEATHER','./fap1-weather-presentation-v1.mjs?cb=FAP1_INTEGRATED_COVERAGE_v5'));
   results.push(await importLayer('CELESTIAL_CONTEXT','./celestial-bootstrap-v2.mjs?cb=AUDRALIA_CELESTIAL_BOOTSTRAP_v3'));
   results.push(await importLayer('COMPOSITION_AUTHORITY','./composition-authority-repair-v1.mjs?cb=COMPOSITION_AUTHORITY_v1'));
 

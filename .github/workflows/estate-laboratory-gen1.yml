@@ -1,74 +1,114 @@
-name: Estate Laboratory Gen1 Qualification
+name: Estate Laboratory Successor 006 Constructor
 
 on:
-  pull_request:
-    paths:
-      - 'showroom/globe/audralia/disposition/index.html'
-      - 'showroom/globe/audralia/disposition/laboratory.js'
-      - 'tools/estate-laboratory-gen1-verify.mjs'
-      - 'tools/h-earth-experience-anchor-gate.mjs'
-      - '.github/workflows/estate-laboratory-gen1.yml'
-  workflow_dispatch:
+  push:
+    branches:
+      - ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_006
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  responsive-laboratory:
-    runs-on: ubuntu-latest
+  construct:
+    runs-on: ubuntu-24.04
     steps:
-      - name: Check out exact candidate
+      - name: Check out bounded admitted successor
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 4
+          persist-credentials: true
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /index.html
+            /site-guide/index.html
+            /instruments/index.html
+            /instruments/laboratory.js
+            /showroom/globe/audralia/disposition/index.html
+            /showroom/globe/audralia/disposition/laboratory.js
+            /showroom/globe/audralia/diagnostic/index.html
+            /showroom/globe/h-earth/diagnostic/index.html
+            /showroom/globe/hearth/diagnostic/index.html
+            /coherence-diagnostic/index.html
+            /tools/estate-laboratory-gen1-verify.mjs
+            /tools/h-earth-experience-anchor-gate.mjs
+            /.github/workflows/estate-laboratory-gen1.yml
 
-      - name: Set up Node 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Verify static laboratory contract
-        run: node tools/estate-laboratory-gen1-verify.mjs --static
-
-      - name: Set up Chrome
-        uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: stable
-
-      - name: Install browser driver
-        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
-
-      - name: Start exact candidate server
+      - name: Construct bounded navigation candidate
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/estate-laboratory-http.log 2>&1 &
-          echo $! > /tmp/estate-laboratory-http.pid
-          for i in {1..30}; do
-            if curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/disposition/ >/dev/null; then
-              exit 0
-            fi
-            sleep 1
+          BASE='af46884873acf993400ab51915fc8044bd022e93'
+          STALE='232d673faa0cb4df5bd6542fe57242371f8c9633'
+          test "$GITHUB_REF_NAME" = 'ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_006'
+          git fetch --no-tags --depth=1 origin main
+          test "$(git rev-parse origin/main^{commit})" = "$BASE"
+          test "$(git merge-base HEAD "$BASE")" = "$BASE"
+          git fetch --no-tags --depth=1 origin ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_002:refs/remotes/origin/estate-lab-predecessor
+          test "$(git rev-parse refs/remotes/origin/estate-lab-predecessor^{commit})" = "$STALE"
+
+          for p in \
+            index.html \
+            site-guide/index.html \
+            instruments/index.html \
+            instruments/laboratory.js \
+            showroom/globe/audralia/disposition/index.html \
+            showroom/globe/audralia/diagnostic/index.html \
+            showroom/globe/h-earth/diagnostic/index.html \
+            showroom/globe/hearth/diagnostic/index.html \
+            tools/estate-laboratory-gen1-verify.mjs \
+            tools/h-earth-experience-anchor-gate.mjs; do
+            mkdir -p "$(dirname "$p")"
+            git show "$STALE:$p" > "$p"
           done
-          cat /tmp/estate-laboratory-http.log || true
-          exit 1
+          rm -f showroom/globe/audralia/disposition/laboratory.js
 
-      - name: Verify phone tablet and desktop operation
-        env:
-          BASE_URL: http://127.0.0.1:4173
-          OUTPUT_DIR: estate-laboratory-gen1-verification
-        shell: bash
-        run: |
-          set -euo pipefail
-          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
-          test -n "$CHROME_PATH"
-          node tools/estate-laboratory-gen1-verify.mjs --runtime
+          python3 -c 'from pathlib import Path; p=Path("coherence-diagnostic/index.html"); s=p.read_text(); old="      <nav class=\"route-links\" aria-label=\"Route links\">\n        <a href=\"/\">Compass</a>\n        <a href=\"/showroom/globe/\">Mirrorland</a>\n        <a href=\"/gauges/\">Triple G</a>\n      </nav>"; new="      <nav class=\"route-links\" aria-label=\"Route links\">\n        <a href=\"/\">Compass</a>\n        <a href=\"/showroom/globe/\">Mirrorland</a>\n        <a href=\"/instruments/\" data-estate-laboratory-return>Estate Laboratory</a>\n        <a href=\"/gauges/\">Triple G</a>\n      </nav>"; count=s.count(old); assert count == 1, f"COHERENCE_DIAGNOSTIC_RETURN_PATCH_MATCH_COUNT:{count}"; p.write_text(s.replace(old,new,1))'
+          git diff --check -- coherence-diagnostic/index.html
+          test "$(git diff --numstat "$BASE" -- coherence-diagnostic/index.html | awk '{print $1":"$2}')" = '1:0'
 
-      - name: Upload qualification evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: estate-laboratory-gen1-verification-${{ github.run_id }}-${{ github.run_attempt }}
-          path: estate-laboratory-gen1-verification/
-          if-no-files-found: warn
-          retention-days: 30
+          git show "$STALE:.github/workflows/estate-laboratory-gen1.yml" > /tmp/estate-laboratory-qualifier.yml
+          python3 -c 'from pathlib import Path; p=Path("/tmp/estate-laboratory-qualifier.yml"); s=p.read_text(); old="6419f78d2c048d51827bb6c631e557d83fe4f061"; new="af46884873acf993400ab51915fc8044bd022e93"; assert old in s, "FINAL_QUALIFIER_OLD_BASE_BINDING_NOT_FOUND"; p.write_text(s.replace(old,new))'
+          cp /tmp/estate-laboratory-qualifier.yml .github/workflows/estate-laboratory-gen1.yml
+          grep -Fq 'name: Estate Laboratory Governed Observability Qualification' .github/workflows/estate-laboratory-gen1.yml
+          grep -Fq 'contents: read' .github/workflows/estate-laboratory-gen1.yml
+          ! grep -Fq 'contents: write' .github/workflows/estate-laboratory-gen1.yml
+          grep -Fq "$BASE" .github/workflows/estate-laboratory-gen1.yml
+
+          allowed='^(index.html|site-guide/index.html|instruments/index.html|instruments/laboratory.js|showroom/globe/audralia/disposition/index.html|showroom/globe/audralia/disposition/laboratory.js|showroom/globe/audralia/diagnostic/index.html|showroom/globe/h-earth/diagnostic/index.html|showroom/globe/hearth/diagnostic/index.html|coherence-diagnostic/index.html|tools/estate-laboratory-gen1-verify.mjs|tools/h-earth-experience-anchor-gate.mjs|\.github/workflows/estate-laboratory-gen1.yml)$'
+          changed="$(git diff --name-only "$BASE")"
+          test -n "$changed"
+          if printf '%s\n' "$changed" | grep -Ev "$allowed"; then
+            echo 'ESTATE_LABORATORY_CONSTRUCTOR_OUT_OF_SCOPE_PATH' >&2
+            exit 1
+          fi
+          for prohibited in showroom/globe/audralia/index.html showroom/globe/audralia/render.js showroom/globe/audralia/world_kernel.js evidence/readiness/governance-gen3-entitlement/evidence-identity.v1.json; do
+            if printf '%s\n' "$changed" | grep -Fxq "$prohibited"; then
+              echo "ESTATE_LABORATORY_CONSTRUCTOR_PROHIBITED_PATH:$prohibited" >&2
+              exit 1
+            fi
+          done
+          grep -Fq 'data-page="estate-laboratory"' instruments/index.html
+          grep -Fq 'data-page="audralia-command-cockpit"' showroom/globe/audralia/disposition/index.html
+          grep -Fq 'data-estate-laboratory-return' showroom/globe/audralia/diagnostic/index.html
+          grep -Fq 'data-estate-laboratory-return' showroom/globe/h-earth/diagnostic/index.html
+          grep -Fq 'data-estate-laboratory-return' showroom/globe/hearth/diagnostic/index.html
+          grep -Fq 'data-estate-laboratory-return' coherence-diagnostic/index.html
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A -- \
+            index.html \
+            site-guide/index.html \
+            instruments/index.html \
+            instruments/laboratory.js \
+            showroom/globe/audralia/disposition/index.html \
+            showroom/globe/audralia/disposition/laboratory.js \
+            showroom/globe/audralia/diagnostic/index.html \
+            showroom/globe/h-earth/diagnostic/index.html \
+            showroom/globe/hearth/diagnostic/index.html \
+            coherence-diagnostic/index.html \
+            tools/estate-laboratory-gen1-verify.mjs \
+            tools/h-earth-experience-anchor-gate.mjs \
+            .github/workflows/estate-laboratory-gen1.yml
+          git commit -m 'Estate Laboratory: construct exact-current-main navigation candidate'
+          git push origin "HEAD:$GITHUB_REF_NAME"

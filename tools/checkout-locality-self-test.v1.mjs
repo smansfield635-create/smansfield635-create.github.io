@@ -13,6 +13,8 @@ const readJson=p=>JSON.parse(read(p));
 
 const policy=readJson('.github/ai-router/execution-efficiency-policy.v1.json');
 const bridge=read('.github/workflows/ai-entry-workflow-dispatch-bridge.yml');
+const canonicalIntake=read('.github/workflows/canonical-operation-intake-transport-v1.yml');
+const successorGateway=read('.github/workflows/remote-operation-successor-v1.yml');
 const preflight=read('.github/workflows/publication-preflight-v1.yml');
 const deploy=read('.github/workflows/pages-exact-head-deploy-v3.yml');
 const builder=read('tools/publication-preflight.v1.mjs');
@@ -22,13 +24,22 @@ check('policy-unrestricted-checkout-denied',policy.checkoutLocality?.unrestricte
 check('policy-excluded-root-materialization-denied',policy.checkoutLocality?.materializeExcludedRootsThenDiscardAllowed===false);
 check('policy-exact-object-readback-allowed',policy.checkoutLocality?.exactCommitObjectReadbackForExcludedProtectedClosuresAllowed===true);
 
-for(const [name,text] of [['bridge',bridge],['preflight',preflight],['deploy',deploy]]){
-  check(`${name}-checkout-present`,text.includes('uses: actions/checkout@v4'));
-  check(`${name}-non-cone-sparse`,text.includes('sparse-checkout-cone-mode: false'));
-  check(`${name}-sparse-working-set`,text.includes('sparse-checkout: |'));
+for(const [name,text] of [['bridge',bridge],['canonical-intake',canonicalIntake],['successor-gateway',successorGateway],['preflight',preflight],['deploy',deploy]]){
+  const checkoutCount=(text.match(/uses:\s*actions\/checkout@v4/g)||[]).length;
+  const sparseCount=(text.match(/sparse-checkout:\s*\|/g)||[]).length;
+  const nonConeCount=(text.match(/sparse-checkout-cone-mode:\s*false/g)||[]).length;
+  check(`${name}-checkout-present`,checkoutCount>0);
+  check(`${name}-every-checkout-sparse`,sparseCount===checkoutCount,JSON.stringify({checkoutCount,sparseCount}));
+  check(`${name}-every-checkout-non-cone`,nonConeCount===checkoutCount,JSON.stringify({checkoutCount,nonConeCount}));
 }
 for(const required of ['/.github/ai-router/workflow-dispatch-capability.v1.json','/tools/ai-entry-workflow-dispatch-bridge.mjs'])check(`bridge-path-${required}`,bridge.includes(required));
 check('bridge-not-root-wide',!bridge.includes('\n            /*\n'));
+for(const required of ['/.github/operation-intake/locator.v1.json','/tools/operation-intake/'])check(`canonical-intake-path-${required}`,canonicalIntake.includes(required));
+check('canonical-intake-not-root-wide',!canonicalIntake.includes('\n            /*\n'));
+for(const required of ['/AI_ENTRYPOINT.json','/.github/workflows/remote-operation-successor-v1.yml','/.github/ai-router/router.v1.json','/.github/ai-router/system-continuity/gap-registry.v1.json','/.github/ai-router/operation-lifecycle/','/tools/operation-intake/'])check(`successor-gateway-path-${required}`,successorGateway.includes(required));
+check('successor-gateway-not-root-wide',!successorGateway.includes('\n            /*\n'));
+check('successor-frozen-gate-identity-preserved',successorGateway.includes('8b254c43abc53d769e82524c6eded1c07eaffc61'));
+check('successor-frozen-self-test-identity-preserved',successorGateway.includes('edba8f3b024e832fd3da6207ba786ce292aad54c'));
 for(const text of [preflight,deploy])for(const excluded of ['!/preview/','!/h-earth-live-6d18e158/','!/inspection/audralia-24057-exact/'])check(`publication-exclusion-${excluded}-${text===preflight?'preflight':'deploy'}`,text.includes(excluded));
 check('builder-exact-object-reader',builder.includes("source:'EXACT_COMMIT_OBJECT'"));
 check('builder-git-object-show',builder.includes("spawnSync('git',['-C',repoRoot,'show',objectPath]"));
@@ -75,6 +86,7 @@ const receipt={
   defaultMode:'BOUNDED_WORKING_SET_REQUIRED',
   unrestrictedCheckoutAllowedByDefault:false,
   exactCommitObjectReadbackVerified:true,
+  governedLaneGatewaysSparse:true,
   checkCount:checks.length,
   checks
 };

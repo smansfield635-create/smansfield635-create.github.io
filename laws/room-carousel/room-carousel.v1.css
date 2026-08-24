@@ -1,156 +1,154 @@
-@layer laws-room-carousel {
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] {
+  --lrc-accent: #d7bb82;
+  --lrc-text: #edf2f7;
+  --lrc-muted: #9ba8b3;
+  --lrc-panel: rgba(16, 21, 27, .97);
+  --lrc-border: rgba(222, 230, 238, .16);
+  --lrc-step: clamp(15rem, 27vw, 25rem);
+  --lrc-depth: clamp(5rem, 9vw, 10rem);
+  position: relative;
+  min-height: clamp(34rem, 68vh, 48rem);
+  overflow: clip;
+  isolation: isolate;
+}
+
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-viewport] {
+  position: relative;
+  min-height: inherit;
+  perspective: 1800px;
+  perspective-origin: 50% 45%;
+  touch-action: pan-y;
+  user-select: text;
+  cursor: grab;
+  outline: none;
+}
+
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-viewport]:focus-visible {
+  outline: 1px solid rgba(215, 187, 130, .72);
+  outline-offset: -2px;
+}
+
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-viewport][data-dragging="true"] {
+  cursor: grabbing;
+  user-select: none;
+}
+
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-track] {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] {
+  --lrc-offset: 0;
+  --lrc-depth-factor: 1;
+  --lrc-scale: 1;
+  --lrc-opacity: 1;
+  box-sizing: border-box;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(78vw, 42rem);
+  min-height: min(30rem, 60vh);
+  max-height: min(72vh, 48rem);
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  padding: clamp(1rem, 2.4vw, 1.65rem);
+  transform:
+    translate(-50%, -50%)
+    translateX(calc(var(--lrc-offset) * var(--lrc-step)))
+    translateZ(calc(var(--lrc-depth-factor) * var(--lrc-depth)))
+    rotateY(calc(var(--lrc-offset) * -11deg))
+    scale(var(--lrc-scale));
+  transform-origin: 50% 50%;
+  opacity: var(--lrc-opacity);
+  border: 1px solid var(--lrc-border);
+  border-radius: 1.25rem;
+  background: linear-gradient(150deg, rgba(27, 34, 41, .98), var(--lrc-panel));
+  box-shadow: 0 28px 72px rgba(0, 0, 0, .36);
+  transition: transform 520ms cubic-bezier(.2,.78,.18,1), opacity 360ms ease, border-color 360ms ease;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card][data-active="true"] {
+  z-index: 5;
+  opacity: 1;
+  border-color: rgba(215, 187, 130, .58);
+  pointer-events: auto;
+}
+
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card][data-adjacent="true"] { z-index: 3; }
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card][data-distant="true"] { visibility: hidden; }
+
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] :is(a, button, input, select, textarea, summary) { pointer-events: auto; }
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card]:not([data-active="true"]) :is(a, button, input, select, textarea, summary) { pointer-events: none; }
+
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-live] {
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  bottom: 1rem;
+  transform: translateX(-50%);
+  margin: 0;
+  max-width: min(70vw, 36rem);
+  color: var(--lrc-muted);
+  font-size: .78rem;
+  letter-spacing: .08em;
+  text-align: center;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-controls] {
+  position: absolute;
+  z-index: 12;
+  inset: auto 1rem 1rem auto;
+  display: flex;
+  gap: .5rem;
+}
+
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-controls] button {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  border: 1px solid rgba(215, 187, 130, .42);
+  border-radius: 999px;
+  background: rgba(8, 11, 15, .88);
+  color: var(--lrc-accent);
+  cursor: pointer;
+}
+
+[data-lrc-static] { display: block; }
+.lr-js [data-lrc-static] { display: none; }
+
+@media (max-width: 760px) {
   html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] {
-    --lrc-accent: #d7bb82;
-    --lrc-text: #edf2f7;
-    --lrc-muted: #9ba8b3;
-    --lrc-panel: rgba(16, 21, 27, .97);
-    --lrc-border: rgba(222, 230, 238, .16);
-    --lrc-step: clamp(15rem, 27vw, 25rem);
-    --lrc-depth: clamp(5rem, 9vw, 10rem);
-    position: relative;
-    min-height: clamp(34rem, 68vh, 48rem);
-    overflow: clip;
-    isolation: isolate;
+    --lrc-step: clamp(12rem, 72vw, 19rem);
+    --lrc-depth: 4rem;
+    min-height: clamp(34rem, 72vh, 44rem);
   }
-
-  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-viewport] {
-    position: relative;
-    min-height: inherit;
-    perspective: 1800px;
-    perspective-origin: 50% 45%;
-    touch-action: pan-y;
-    user-select: text;
-    cursor: grab;
-    outline: none;
-  }
-
-  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-viewport]:focus-visible {
-    outline: 1px solid rgba(215, 187, 130, .72);
-    outline-offset: -2px;
-  }
-
-  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-viewport][data-dragging="true"] {
-    cursor: grabbing;
-    user-select: none;
-  }
-
-  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-track] {
-    position: absolute;
-    inset: 0;
-    transform-style: preserve-3d;
-  }
-
   html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] {
-    --lrc-offset: 0;
-    --lrc-depth-factor: 1;
-    --lrc-scale: 1;
-    --lrc-opacity: 1;
-    box-sizing: border-box;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: min(78vw, 42rem);
-    min-height: min(30rem, 60vh);
-    max-height: min(72vh, 48rem);
-    overflow: auto;
-    overscroll-behavior: contain;
-    scrollbar-gutter: stable;
-    padding: clamp(1rem, 2.4vw, 1.65rem);
-    transform:
-      translate(-50%, -50%)
-      translateX(calc(var(--lrc-offset) * var(--lrc-step)))
-      translateZ(calc(var(--lrc-depth-factor) * var(--lrc-depth)))
-      rotateY(calc(var(--lrc-offset) * -11deg))
-      scale(var(--lrc-scale));
-    transform-origin: 50% 50%;
-    opacity: var(--lrc-opacity);
-    border: 1px solid var(--lrc-border);
-    border-radius: 1.25rem;
-    background: linear-gradient(150deg, rgba(27, 34, 41, .98), var(--lrc-panel));
-    box-shadow: 0 28px 72px rgba(0, 0, 0, .36);
-    transition: transform 520ms cubic-bezier(.2,.78,.18,1), opacity 360ms ease, border-color 360ms ease;
-    pointer-events: none;
-    will-change: transform, opacity;
+    width: min(86vw, 32rem);
+    min-height: min(29rem, 62vh);
+    max-height: min(68vh, 42rem);
+    padding: 1rem;
   }
-
-  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card][data-active="true"] {
-    z-index: 5;
-    opacity: 1;
-    border-color: rgba(215, 187, 130, .58);
-    pointer-events: auto;
-  }
-
-  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card][data-adjacent="true"] { z-index: 3; }
-  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card][data-distant="true"] { visibility: hidden; }
-
-  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] :is(a, button, input, select, textarea, summary) { pointer-events: auto; }
-  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card]:not([data-active="true"]) :is(a, button, input, select, textarea, summary) { pointer-events: none; }
-
   html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-live] {
-    position: absolute;
-    z-index: 10;
-    left: 50%;
-    bottom: 1rem;
-    transform: translateX(-50%);
-    margin: 0;
-    max-width: min(70vw, 36rem);
-    color: var(--lrc-muted);
-    font-size: .78rem;
-    letter-spacing: .08em;
-    text-align: center;
-    text-transform: uppercase;
-    pointer-events: none;
+    left: 1rem;
+    right: 7rem;
+    bottom: 1.15rem;
+    transform: none;
+    max-width: none;
+    text-align: left;
   }
+}
 
-  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-controls] {
-    position: absolute;
-    z-index: 12;
-    inset: auto 1rem 1rem auto;
-    display: flex;
-    gap: .5rem;
-  }
+@media (prefers-reduced-motion: reduce) {
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] { transition: none; }
+}
 
-  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-controls] button {
-    min-width: 2.75rem;
-    min-height: 2.75rem;
-    border: 1px solid rgba(215, 187, 130, .42);
-    border-radius: 999px;
-    background: rgba(8, 11, 15, .88);
-    color: var(--lrc-accent);
-    cursor: pointer;
-  }
-
-  [data-lrc-static] { display: block; }
-  .lr-js [data-lrc-static] { display: none; }
-
-  @media (max-width: 760px) {
-    html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] {
-      --lrc-step: clamp(12rem, 72vw, 19rem);
-      --lrc-depth: 4rem;
-      min-height: clamp(34rem, 72vh, 44rem);
-    }
-    html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] {
-      width: min(86vw, 32rem);
-      min-height: min(29rem, 62vh);
-      max-height: min(68vh, 42rem);
-      padding: 1rem;
-    }
-    html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-live] {
-      left: 1rem;
-      right: 7rem;
-      bottom: 1.15rem;
-      transform: none;
-      max-width: none;
-      text-align: left;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] { transition: none; }
-  }
-
-  @media (forced-colors: active) {
-    html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] { border: 1px solid CanvasText; background: Canvas; color: CanvasText; }
-    html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-controls] button { border: 1px solid ButtonText; }
-  }
+@media (forced-colors: active) {
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] { border: 1px solid CanvasText; background: Canvas; color: CanvasText; }
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-controls] button { border: 1px solid ButtonText; }
 }

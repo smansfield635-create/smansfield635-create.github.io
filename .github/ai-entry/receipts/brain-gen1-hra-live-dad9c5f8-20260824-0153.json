@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "brain-gen1-hra-live-dad9c5f8-20260824-0153",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 1929,
+  "requestBranch": "ai-dispatch-request-brain-gen1-hra-dad9c5f8-0153",
+  "requestCommit": "0f456e3300f70e062df259dd223dcc2fe94241fc",
+  "requestCommitParent": "dad9c5f8ab766aa2df9135c5db6b9fb5963515be",
+  "currentMainSha": "dad9c5f8ab766aa2df9135c5db6b9fb5963515be",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "dad9c5f8ab766aa2df9135c5db6b9fb5963515be",
+    "surface_id": "brain-gen1-hra"
+  },
+  "bridgeRunId": "32695245330",
+  "dispatchedRunId": 32695417408,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/32695417408",
+  "dispatchedRunHeadSha": "dad9c5f8ab766aa2df9135c5db6b9fb5963515be",
+  "dispatchedAt": "2026-08-24T05:58:03.409Z",
+  "resolvedAt": "2026-08-24T05:58:07.663Z"
+}

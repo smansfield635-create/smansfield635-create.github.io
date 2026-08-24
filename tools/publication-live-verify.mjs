@@ -47,20 +47,37 @@ try{
   await page.setViewport({width:720,height:1280,deviceScaleFactor:1});
   const pageErrors=[];
   const consoleErrors=[];
+  const evidenceInteractions=[];
   page.on('pageerror',error=>pageErrors.push(String(error?.stack||error)));
   page.on('console',message=>{if(message.type()==='error')consoleErrors.push(message.text());});
   const url=pageUrl+spec.path;
   await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});
 
+  const verifyEvidenceCarousel=async phase=>{
+    if(manifest.surfaceId!=='evidence'||spec.requireEvidenceCarouselInteraction!==true)return;
+    try{
+      await page.waitForFunction(()=>Boolean(document.querySelector('[data-carousel]')?.dataset.activeId),{timeout:10000});
+      const before=await page.$eval('[data-carousel]',el=>el.dataset.activeId||'');
+      const target=before==='orientation'?1:0;
+      await page.click(`[data-tabs] [data-index="${target}"]`);
+      await page.waitForFunction(previous=>{
+        const current=document.querySelector('[data-carousel]')?.dataset.activeId||'';
+        return Boolean(current&&current!==previous);
+      },{timeout:5000},before);
+      const after=await page.$eval('[data-carousel]',el=>el.dataset.activeId||'');
+      evidenceInteractions.push({phase,before,after,ok:Boolean(after&&after!==before)});
+    }catch(error){
+      evidenceInteractions.push({phase,ok:false,error:String(error?.stack||error)});
+    }
+  };
+
+  await verifyEvidenceCarousel('BEFORE_CONDITION_TERMINAL');
+
   const captureRuntimeDiagnostic=async failure=>page.evaluate(({spec,surfaceId,failure})=>{
     const serializeError=value=>{
       if(!value)return null;
       if(typeof value==='string')return {message:value};
-      return {
-        name:value.name||null,
-        message:value.message||String(value),
-        stack:value.stack||null
-      };
+      return {name:value.name||null,message:value.message||String(value),stack:value.stack||null};
     };
     const loader=document.querySelector('[data-audralia-loader]');
     const base={
@@ -70,42 +87,24 @@ try{
       readySelector:spec.readySelector||null,
       readySelectorPresent:spec.readySelector?Boolean(document.querySelector(spec.readySelector)):null,
       readyAttribute:spec.readyAttribute||null,
+      currentPublicCondition:document.querySelector('[data-condition-state]')?.textContent?.trim()||null,
+      carouselActiveId:document.querySelector('[data-carousel]')?.dataset.activeId||null,
       failure
     };
     if(surfaceId!=='audralia')return base;
     let reconciliationRuntime=null;
     let reconciliationRuntimeError=null;
-    try{
-      reconciliationRuntime=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.()||null;
-    }catch(error){
-      reconciliationRuntimeError=serializeError(error);
-    }
+    try{reconciliationRuntime=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.()||null;}catch(error){reconciliationRuntimeError=serializeError(error);}
     return {
       ...base,
       audralia:{
-        loader:loader?{
-          className:loader.className,
-          dataset:{...loader.dataset},
-          stage:document.querySelector('[data-audralia-loader-stage]')?.textContent?.trim()||null,
-          progress:document.querySelector('[data-audralia-loader-progress]')?.textContent?.trim()||null,
-          elapsed:document.querySelector('[data-audralia-loader-elapsed]')?.textContent?.trim()||null
-        }:null,
+        loader:loader?{className:loader.className,dataset:{...loader.dataset},stage:document.querySelector('[data-audralia-loader-stage]')?.textContent?.trim()||null,progress:document.querySelector('[data-audralia-loader-progress]')?.textContent?.trim()||null,elapsed:document.querySelector('[data-audralia-loader-elapsed]')?.textContent?.trim()||null}:null,
         startupDiagnostic:window.__AUDRALIA_STARTUP_DIAGNOSTIC__||null,
         startupPhase:window.__AUDRALIA_STARTUP_PHASE__||null,
         reconciliationError:serializeError(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__),
-        reconciliationRuntime:reconciliationRuntime?{
-          invariants:reconciliationRuntime.invariants||null,
-          status:reconciliationRuntime.status||null,
-          state:reconciliationRuntime.state||null
-        }:null,
+        reconciliationRuntime:reconciliationRuntime?{invariants:reconciliationRuntime.invariants||null,status:reconciliationRuntime.status||null,state:reconciliationRuntime.state||null}:null,
         reconciliationRuntimeError,
-        milestones:{
-          renderer:Boolean(window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW__?.renderer),
-          clearAtmosphere:Boolean(document.querySelector('[data-audralia-clear-atmosphere="true"]')),
-          orbitalCloud:Boolean(globalThis.__AUDRALIA_FAP1_ORBITAL_SUPPORT_TUNING__),
-          regionalWeather:Boolean(document.querySelector('[data-audralia-exterior-weather="true"]')),
-          localContinuity:Boolean(document.querySelector('[data-canonical-weather-projection="true"]'))
-        }
+        milestones:{renderer:Boolean(window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW__?.renderer),clearAtmosphere:Boolean(document.querySelector('[data-audralia-clear-atmosphere="true"]')),orbitalCloud:Boolean(globalThis.__AUDRALIA_FAP1_ORBITAL_SUPPORT_TUNING__),regionalWeather:Boolean(document.querySelector('[data-audralia-exterior-weather="true"]')),localContinuity:Boolean(document.querySelector('[data-canonical-weather-projection="true"]'))}
       }
     };
   },{spec,surfaceId:manifest.surfaceId,failure:String(failure?.stack||failure)});
@@ -121,31 +120,17 @@ try{
     }
   }catch(error){
     let diagnostic=null;
-    try{
-      diagnostic=await captureRuntimeDiagnostic(error);
-    }catch(diagnosticError){
-      diagnostic={captureError:String(diagnosticError?.stack||diagnosticError)};
-    }
-    console.error(JSON.stringify({
-      schema:'PUBLICATION_SURFACE_RUNTIME_DIAGNOSTIC_v1',
-      surfaceId:manifest.surfaceId,
-      url,
-      result:'FAIL',
-      phase:'READINESS_WAIT',
-      failure:String(error?.stack||error),
-      diagnostics:{pageErrors,consoleErrors,failures:['RUNTIME_READINESS_FAILED']},
-      diagnostic
-    },null,2));
+    try{diagnostic=await captureRuntimeDiagnostic(error);}catch(diagnosticError){diagnostic={captureError:String(diagnosticError?.stack||diagnosticError)};}
+    console.error(JSON.stringify({schema:'PUBLICATION_SURFACE_RUNTIME_DIAGNOSTIC_v1',surfaceId:manifest.surfaceId,url,result:'FAIL',phase:'READINESS_WAIT',failure:String(error?.stack||error),diagnostics:{pageErrors,consoleErrors,evidenceInteractions,failures:['RUNTIME_READINESS_FAILED']},diagnostic},null,2));
     throw error;
   }
+
+  await verifyEvidenceCarousel('AFTER_CONDITION_TERMINAL');
 
   const binding=spec.binding||{mode:'direct-document'};
   const result=await page.evaluate(({spec,binding})=>{
     const currentUrl=new URL(location.href);
-    const normalized=value=>{
-      const path=String(value||'/').replace(/\/+$/,'')||'/';
-      return path.startsWith('/')?path:`/${path}`;
-    };
+    const normalized=value=>{const path=String(value||'/').replace(/\/+$/,'')||'/';return path.startsWith('/')?path:`/${path}`;};
     const expectedPath=normalized(binding.path||spec.path);
     let bindingResult={mode:binding.mode||'direct-document',expectedPath,ok:false};
     if(bindingResult.mode==='direct-document'){
@@ -165,6 +150,8 @@ try{
       finalUrl:currentUrl.href,
       readySelector:spec.readySelector?Boolean(document.querySelector(spec.readySelector)):null,
       attributeValue:spec.readyAttribute?document.querySelector(spec.readyAttribute.selector)?.getAttribute(spec.readyAttribute.name)||null:null,
+      currentPublicCondition:document.querySelector('[data-condition-state]')?.textContent?.trim()||null,
+      carouselActiveId:document.querySelector('[data-carousel]')?.dataset.activeId||null,
       binding:bindingResult
     };
   },{spec,binding});
@@ -176,15 +163,10 @@ try{
   if(!result.binding.ok)failures.push('RUNTIME_PUBLICATION_BINDING_FAILED');
   if(spec.failOnPageErrors!==false&&pageErrors.length)failures.push('PAGE_ERROR');
   if(spec.failOnConsoleErrors!==false&&actionableConsoleErrors.length)failures.push('CONSOLE_ERROR');
+  if(spec.requireEvidenceCarouselInteraction===true&&evidenceInteractions.some(x=>!x.ok))failures.push('EVIDENCE_CAROUSEL_INTERACTION_FAILED');
+  if(manifest.surfaceId==='evidence'&&result.currentPublicCondition==='CHECKING')failures.push('EVIDENCE_CONDITION_NOT_TERMINAL');
 
-  const receipt={
-    schema:'PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1',
-    surfaceId:manifest.surfaceId,
-    url,
-    result:failures.length?'FAIL':'PASS',
-    runtime:result,
-    diagnostics:{pageErrors,consoleErrors,ignoredConsoleErrors,actionableConsoleErrors,failures}
-  };
+  const receipt={schema:'PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1',surfaceId:manifest.surfaceId,url,result:failures.length?'FAIL':'PASS',runtime:result,diagnostics:{pageErrors,consoleErrors,ignoredConsoleErrors,actionableConsoleErrors,evidenceInteractions,failures}};
   console.log(JSON.stringify(receipt,null,2));
   if(failures.length)process.exitCode=1;
 }finally{

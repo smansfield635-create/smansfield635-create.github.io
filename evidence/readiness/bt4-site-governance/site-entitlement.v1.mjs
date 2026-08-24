@@ -1,10 +1,8 @@
 import { serveRequestedState } from './entitlement-engine.v1.mjs?cb=prod1';
 
 const CLAIM_ID='blinded-governance-generalization';
-const BASE='/evidence/readiness/bt4-site-governance/';
 const FETCH_DEADLINE_MS=10000;
-const WORLD_READY_DEADLINE_MS=30000;
-const ADAPTER_DEADLINE_MS=35000;
+const ADAPTER_DEADLINE_MS=15000;
 
 async function fetchBounded(url,init={}){
   const controller=new AbortController();
@@ -34,24 +32,18 @@ export async function claimAdapter(){
   return out('claim','Scientific claim',state,{subject:CLAIM_ID,phase:binding.phase});
 }
 
-async function waitForAudraliaReady(timeoutMs=WORLD_READY_DEADLINE_MS){
-  const frame=document.createElement('iframe');
-  frame.hidden=true; frame.setAttribute('aria-hidden','true'); frame.src=`/showroom/globe/audralia/?bt4-site=${Date.now()}`;
-  document.body.append(frame);
-  const started=performance.now();
-  try{
-    while(performance.now()-started<timeoutMs){
-      try{const doc=frame.contentDocument;if(doc?.querySelector('[data-audralia-loader].is-error'))return false;if(doc?.querySelector('[data-audralia-loader].is-ready'))return true;}catch{}
-      await new Promise(r=>setTimeout(r,250));
-    }
-    return false;
-  } finally { frame.remove(); }
-}
-
 export async function worldAdapter(){
-  const [html,loader,runtimeReady]=await Promise.all([getText('/showroom/globe/audralia/'),getText('/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs'),waitForAudraliaReady()]);
-  const state={epoch:1,provenance:html.includes('directDenseCloudCoverage: true')&&loader.includes("classList.add('is-ready')"),reproduction:runtimeReady,evidence:'supporting',authority:true,receiptEpoch:1};
-  return out('world','Audralia world/runtime',state,{runtimeReady});
+  const [html,loader]=await Promise.all([
+    getText('/showroom/globe/audralia/'),
+    getText('/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs')
+  ]);
+  const provenance=html.includes('directDenseCloudCoverage: true')&&loader.includes("classList.add('is-ready')");
+  const state={epoch:1,provenance,reproduction:false,evidence:'supporting',authority:true,receiptEpoch:1};
+  return out('world','Audralia world/runtime',state,{
+    runtimeReady:false,
+    runtimeAuthority:'LIVE_RUNTIME_PROBE_DECOUPLED_FROM_EVIDENCE_PAGE',
+    reason:'The Evidence page does not boot a hidden Audralia WebGL runtime. Until a lightweight post-deploy runtime receipt is available to this adapter, runtime reproduction is held closed.'
+  });
 }
 
 function parseDiagnosticContracts(source){

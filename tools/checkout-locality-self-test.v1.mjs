@@ -1,0 +1,82 @@
+#!/usr/bin/env node
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {execFileSync} from 'node:child_process';
+import {buildPayload} from './publication-preflight.v1.mjs';
+
+const root=process.cwd();
+const checks=[];
+const check=(name,ok,detail=null)=>{checks.push({name,ok:Boolean(ok),detail});if(!ok)throw new Error(`CHECKOUT_LOCALITY_SELF_TEST_FAILED:${name}${detail?':'+detail:''}`);};
+const read=p=>fs.readFileSync(path.join(root,p),'utf8');
+const readJson=p=>JSON.parse(read(p));
+
+const policy=readJson('.github/ai-router/execution-efficiency-policy.v1.json');
+const bridge=read('.github/workflows/ai-entry-workflow-dispatch-bridge.yml');
+const preflight=read('.github/workflows/publication-preflight-v1.yml');
+const deploy=read('.github/workflows/pages-exact-head-deploy-v3.yml');
+const builder=read('tools/publication-preflight.v1.mjs');
+
+check('policy-bounded-working-set-default',policy.checkoutLocality?.defaultMode==='BOUNDED_WORKING_SET_REQUIRED');
+check('policy-unrestricted-checkout-denied',policy.checkoutLocality?.unrestrictedCheckoutAllowedByDefault===false);
+check('policy-excluded-root-materialization-denied',policy.checkoutLocality?.materializeExcludedRootsThenDiscardAllowed===false);
+check('policy-exact-object-readback-allowed',policy.checkoutLocality?.exactCommitObjectReadbackForExcludedProtectedClosuresAllowed===true);
+
+for(const [name,text] of [['bridge',bridge],['preflight',preflight],['deploy',deploy]]){
+  check(`${name}-checkout-present`,text.includes('uses: actions/checkout@v4'));
+  check(`${name}-non-cone-sparse`,text.includes('sparse-checkout-cone-mode: false'));
+  check(`${name}-sparse-working-set`,text.includes('sparse-checkout: |'));
+}
+for(const required of ['/.github/ai-router/workflow-dispatch-capability.v1.json','/tools/ai-entry-workflow-dispatch-bridge.mjs'])check(`bridge-path-${required}`,bridge.includes(required));
+check('bridge-not-root-wide',!bridge.includes('\n            /*\n'));
+for(const text of [preflight,deploy])for(const excluded of ['!/preview/','!/h-earth-live-6d18e158/','!/inspection/audralia-24057-exact/'])check(`publication-exclusion-${excluded}-${text===preflight?'preflight':'deploy'}`,text.includes(excluded));
+check('builder-exact-object-reader',builder.includes("source:'EXACT_COMMIT_OBJECT'"));
+check('builder-git-object-show',builder.includes("spawnSync('git',['-C',repoRoot,'show',objectPath]"));
+check('builder-target-sha-bound-promotion',builder.includes('promoteAuthorizedExcludedRuntimeDependencies({repoRoot,stage,targetSha,surfaceId})'));
+
+const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'checkout-locality-self-test-'));
+try{
+  const repo=path.join(tmp,'repo');
+  const stage=path.join(tmp,'stage');
+  fs.mkdirSync(path.join(repo,'.github/ai-router/publication-surfaces'),{recursive:true});
+  fs.mkdirSync(path.join(repo,'showroom/globe/audralia'),{recursive:true});
+  fs.mkdirSync(path.join(repo,'inspection/audralia-24057-exact/snapshot/runtime'),{recursive:true});
+  fs.mkdirSync(path.join(repo,'public'),{recursive:true});
+  fs.writeFileSync(path.join(repo,'showroom/globe/audralia/index.html'),'<!doctype html><div class="audralia-loading-version">LIVE BUILD</div><script type="module" src="/inspection/audralia-24057-exact/snapshot/runtime/entry.mjs"></script>\n');
+  fs.writeFileSync(path.join(repo,'inspection/audralia-24057-exact/snapshot/runtime/entry.mjs'),"import './child.mjs';\nexport const READY=true;\n");
+  fs.writeFileSync(path.join(repo,'inspection/audralia-24057-exact/snapshot/runtime/child.mjs'),'export const CHILD=true;\n');
+  fs.writeFileSync(path.join(repo,'inspection/audralia-24057-exact/snapshot/unreferenced.txt'),'must-not-stage');
+  fs.writeFileSync(path.join(repo,'public/index.html'),'public-root\n');
+  const manifest={schema:'PUBLICATION_SURFACE_VERIFICATION_v1',surfaceId:'audralia',checks:[{path:'/showroom/globe/audralia/',includes:['LIVE BUILD'],excludes:[]}],runtime:{enabled:false}};
+  fs.writeFileSync(path.join(repo,'.github/ai-router/publication-surfaces/audralia.json'),JSON.stringify(manifest,null,2));
+  execFileSync('git',['init'],{cwd:repo,stdio:'ignore'});
+  execFileSync('git',['config','user.email','checkout-locality@example.invalid'],{cwd:repo});
+  execFileSync('git',['config','user.name','Checkout Locality Self Test'],{cwd:repo});
+  execFileSync('git',['add','.'],{cwd:repo});
+  execFileSync('git',['commit','-m','fixture'],{cwd:repo,stdio:'ignore'});
+  const targetSha=execFileSync('git',['rev-parse','HEAD'],{cwd:repo,encoding:'utf8'}).trim();
+  fs.rmSync(path.join(repo,'inspection/audralia-24057-exact'),{recursive:true,force:true});
+  check('fixture-protected-tree-not-materialized',!fs.existsSync(path.join(repo,'inspection/audralia-24057-exact')));
+  const built=await buildPayload({repoRoot:repo,targetSha,surfaceId:'audralia',stage});
+  const closure=built.authorizedExcludedRuntimeDependencies;
+  check('exact-object-closure-promoted',closure?.status==='PROMOTED');
+  check('exact-object-readback-count',closure?.exactCommitObjectReadbackCount===2,JSON.stringify({count:closure?.exactCommitObjectReadbackCount,files:closure?.files}));
+  check('exact-object-entry-staged',fs.existsSync(path.join(stage,'inspection/audralia-24057-exact/snapshot/runtime/entry.mjs')));
+  check('exact-object-child-staged',fs.existsSync(path.join(stage,'inspection/audralia-24057-exact/snapshot/runtime/child.mjs')));
+  check('unreferenced-excluded-object-not-staged',!fs.existsSync(path.join(stage,'inspection/audralia-24057-exact/snapshot/unreferenced.txt')));
+  check('closure-sources-exact-commit',closure.files.every(file=>file.source==='EXACT_COMMIT_OBJECT'));
+}finally{
+  fs.rmSync(tmp,{recursive:true,force:true});
+}
+
+const receipt={
+  schema:'CHECKOUT_LOCALITY_CONTROL_PLANE_RECEIPT_v1',
+  result:'PASS_CLOSED',
+  defaultMode:'BOUNDED_WORKING_SET_REQUIRED',
+  unrestrictedCheckoutAllowedByDefault:false,
+  exactCommitObjectReadbackVerified:true,
+  checkCount:checks.length,
+  checks
+};
+if(process.env.CHECKOUT_LOCALITY_RECEIPT)fs.writeFileSync(process.env.CHECKOUT_LOCALITY_RECEIPT,JSON.stringify(receipt,null,2)+'\n');
+console.log(JSON.stringify(receipt,null,2));

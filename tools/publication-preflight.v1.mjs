@@ -25,6 +25,7 @@ function copyTree(src,dst,relative=''){
     if(rel==='.git'||rel.startsWith('.git/'))continue;
     if(rel==='.github'||rel.startsWith('.github/'))continue;
     if(rel==='preview'||rel.startsWith('preview/'))continue;
+    if(rel==='node_modules'||rel.startsWith('node_modules/'))continue;
     const from=path.join(src,entry.name),to=path.join(dst,entry.name);
     if(entry.isDirectory()){fs.mkdirSync(to,{recursive:true});copyTree(from,to,rel);}
     else if(entry.isFile()){fs.mkdirSync(path.dirname(to),{recursive:true});fs.copyFileSync(from,to);}

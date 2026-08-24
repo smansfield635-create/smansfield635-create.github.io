@@ -1,10 +1,10 @@
 {
   "schema": "LAWS_DESTINATION_ROOM_CONJUGATION_PRECONSTRUCTION_CONTRACT_v1",
   "status": "MATERIALIZED_SHARED_RUNTIME_BOUNDARY",
-  "operationId": "LAWS_FIRST_ROOM_CONJUGATION_20260824_1626_S1_BC4078F8",
+  "operationId": "LAWS_FIRST_ROOM_CONJUGATION_20260824_1626_S3_D8E0CFAE",
   "lockScope": "LAWS_FIRST_TEST_RESEARCH_ROOM_CONJUGATION_V1",
-  "lockGeneration": 1628,
-  "exactGoverningHead": "bc4078f8f884921e8c58fe5a30f6a7c9c577d6f0",
+  "lockGeneration": 1638,
+  "exactGoverningHead": "d8e0cfaee7c685888db028aaf6c37c722af684c1",
   "candidateBranch": "agent/laws-first-room-conjugation-20260824-s1",
   "implementationClass": "EXISTING_CONSTRUCT_ADOPTION",
   "protectedReference": "laws/research/methods-and-models/",

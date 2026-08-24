@@ -27,12 +27,13 @@ jobs:
           git sparse-checkout init --cone --sparse-index
           git sparse-checkout set showroom/globe/audralia/weather-presentation-reconciliation
           git checkout --detach refs/remotes/origin/qualification
-          mkdir -p tools
-          git show HEAD:tools/audralia-weather-presentation-reconciliation-ci.mjs > tools/audralia-weather-presentation-reconciliation-ci.mjs
           test "$(git config --bool index.sparse)" = "true"
           sparse_entries=$(git ls-files --sparse | wc -l)
           test "$sparse_entries" -lt 2000
           printf 'AUDRALIA_STRUCTURAL_SPARSE_INDEX_ENTRIES=%s\n' "$sparse_entries"
+          git show HEAD:tools/audralia-weather-presentation-reconciliation-ci.mjs > "${RUNNER_TEMP}/audralia-weather-presentation-reconciliation-ci.mjs"
+          mkdir -p tools
+          cp "${RUNNER_TEMP}/audralia-weather-presentation-reconciliation-ci.mjs" tools/audralia-weather-presentation-reconciliation-ci.mjs
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -94,12 +95,13 @@ jobs:
             inspection/audralia-24057-exact/snapshot/h-earth-3d/cells \
             inspection/audralia-24057-exact/snapshot/h-earth-3d/environment
           git checkout --detach refs/remotes/origin/qualification
-          mkdir -p tools
-          git show HEAD:tools/audralia-weather-presentation-reconciliation-ci.mjs > tools/audralia-weather-presentation-reconciliation-ci.mjs
           test "$(git config --bool index.sparse)" = "true"
           sparse_entries=$(git ls-files --sparse | wc -l)
           test "$sparse_entries" -lt 5000
           printf 'AUDRALIA_RUNTIME_SPARSE_INDEX_ENTRIES=%s\n' "$sparse_entries"
+          git show HEAD:tools/audralia-weather-presentation-reconciliation-ci.mjs > "${RUNNER_TEMP}/audralia-weather-presentation-reconciliation-ci.mjs"
+          mkdir -p tools
+          cp "${RUNNER_TEMP}/audralia-weather-presentation-reconciliation-ci.mjs" tools/audralia-weather-presentation-reconciliation-ci.mjs
       - name: Verify browser module dependency closure
         shell: bash
         run: |

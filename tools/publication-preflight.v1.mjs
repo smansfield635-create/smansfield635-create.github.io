@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 import crypto from 'node:crypto';
-import {spawn} from 'node:child_process';
+import {spawn,spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 
 const REPO_ROOT=process.cwd();
@@ -115,6 +115,18 @@ function sourceFile(repoRoot,rel){
   if(file!==root&&!file.startsWith(`${root}${path.sep}`))throw new Error(`PUBLIC_RUNTIME_DEPENDENCY_PATH_ESCAPE:${rel}`);
   return file;
 }
+function readExactRepositoryFile({repoRoot,targetSha,rel}){
+  if(!validateSha(targetSha))throw new Error('EXACT_SHA_INVALID');
+  const from=sourceFile(repoRoot,rel);
+  if(fs.existsSync(from)&&fs.statSync(from).isFile())return {bytes:fs.readFileSync(from),source:'WORKTREE'};
+  const objectPath=`${targetSha}:${rel}`;
+  const result=spawnSync('git',['-C',repoRoot,'show',objectPath],{encoding:null,maxBuffer:64*1024*1024});
+  if(result.error||result.status!==0){
+    const detail=result.error?.message||Buffer.from(result.stderr||'').toString('utf8').trim()||`status=${result.status}`;
+    throw new Error(`AUTHORIZED_RUNTIME_DEPENDENCY_MISSING:${rel}:${detail}`);
+  }
+  return {bytes:Buffer.from(result.stdout),source:'EXACT_COMMIT_OBJECT'};
+}
 function loadSurfaceManifest(repoRoot,surfaceId){
   const manifestPath=path.join(repoRoot,SURFACE_DIR,`${surfaceId}.json`);
   if(!fs.existsSync(manifestPath))throw new Error(`SURFACE_MANIFEST_MISSING:${surfaceId}`);
@@ -122,7 +134,7 @@ function loadSurfaceManifest(repoRoot,surfaceId){
   if(manifest.schema!=='PUBLICATION_SURFACE_VERIFICATION_v1'||manifest.surfaceId!==surfaceId||!Array.isArray(manifest.checks)||!manifest.checks.length)throw new Error(`SURFACE_MANIFEST_INVALID:${surfaceId}`);
   return {manifestPath,manifest};
 }
-function promoteProtectedSurface({repoRoot,stage,protectedSurfaceId,policy}){
+function promoteProtectedSurface({repoRoot,stage,targetSha,protectedSurfaceId,policy}){
   const entryFile=path.join(stage,...policy.entryPath.split('/'));
   if(!fs.existsSync(entryFile))throw new Error(`AUTHORIZED_RUNTIME_ENTRYPOINT_MISSING:${policy.entryPath}`);
   const direct=extractResourceSpecifiers(policy.entryPath,fs.readFileSync(entryFile,'utf8'))
@@ -135,13 +147,12 @@ function promoteProtectedSurface({repoRoot,stage,protectedSurfaceId,policy}){
     if(seen.has(rel))continue;
     seen.add(rel);
     if(!rel.startsWith(policy.allowedPrefix))throw new Error(`AUTHORIZED_RUNTIME_DEPENDENCY_OUTSIDE_PREFIX:${rel}`);
-    const from=sourceFile(repoRoot,rel);
-    if(!fs.existsSync(from)||!fs.statSync(from).isFile())throw new Error(`AUTHORIZED_RUNTIME_DEPENDENCY_MISSING:${rel}`);
+    const recovered=readExactRepositoryFile({repoRoot,targetSha,rel});
     const to=path.join(stage,...rel.split('/'));
-    fs.mkdirSync(path.dirname(to),{recursive:true});fs.copyFileSync(from,to);
-    const bytes=fs.statSync(from).size,fileSha256=sha256(fs.readFileSync(from));
-    files.push({path:rel,bytes,sha256:fileSha256});
-    const text=fs.readFileSync(from,'utf8');
+    fs.mkdirSync(path.dirname(to),{recursive:true});fs.writeFileSync(to,recovered.bytes);
+    const bytes=recovered.bytes.length,fileSha256=sha256(recovered.bytes);
+    files.push({path:rel,bytes,sha256:fileSha256,source:recovered.source});
+    const text=recovered.bytes.toString('utf8');
     for(const specifier of extractResourceSpecifiers(rel,text)){
       const dependency=resolveResourcePath(rel,specifier);
       if(!dependency)continue;
@@ -161,6 +172,8 @@ function promoteProtectedSurface({repoRoot,stage,protectedSurfaceId,policy}){
     protectedSurfaceId,
     status:'PROMOTED',
     mode:policy.mode,
+    readbackMode:'WORKTREE_OR_EXACT_COMMIT_OBJECT',
+    exactCommitObjectReadbackCount:files.filter(file=>file.source==='EXACT_COMMIT_OBJECT').length,
     entryPath:policy.entryPath,
     allowedPrefix:policy.allowedPrefix,
     entryReferenceCount:direct.length,
@@ -170,17 +183,18 @@ function promoteProtectedSurface({repoRoot,stage,protectedSurfaceId,policy}){
     files
   });
 }
-export function promoteAuthorizedExcludedRuntimeDependencies({repoRoot=REPO_ROOT,stage,surfaceId}){
+export function promoteAuthorizedExcludedRuntimeDependencies({repoRoot=REPO_ROOT,stage,targetSha,surfaceId}){
   const promoted=Object.entries(AUTHORIZED_EXCLUDED_RUNTIME_DEPENDENCIES)
-    .map(([protectedSurfaceId,policy])=>promoteProtectedSurface({repoRoot,stage,protectedSurfaceId,policy}));
+    .map(([protectedSurfaceId,policy])=>promoteProtectedSurface({repoRoot,stage,targetSha,protectedSurfaceId,policy}));
   if(!promoted.length)return Object.freeze({status:'NOT_REQUIRED',mode:'NOT_REQUIRED',requestedSurfaceId:surfaceId,fileCount:0,bytes:0,digest:null,files:[]});
   if(promoted.length===1)return Object.freeze({...promoted[0],requestedSurfaceId:surfaceId,protectedSurfaceCount:1});
   const files=promoted.flatMap(item=>item.files).sort((a,b)=>a.path.localeCompare(b.path));
   const digest=crypto.createHash('sha256');
   for(const item of promoted){digest.update(item.protectedSurfaceId);digest.update('\0');digest.update(item.digest);digest.update('\0');}
   return Object.freeze({
-    status:'PROMOTED',mode:'PROTECTED_SURFACE_CLOSURES',requestedSurfaceId:surfaceId,
+    status:'PROMOTED',mode:'PROTECTED_SURFACE_CLOSURES',readbackMode:'WORKTREE_OR_EXACT_COMMIT_OBJECT',requestedSurfaceId:surfaceId,
     protectedSurfaceCount:promoted.length,surfaces:promoted,fileCount:files.length,
+    exactCommitObjectReadbackCount:files.filter(file=>file.source==='EXACT_COMMIT_OBJECT').length,
     bytes:promoted.reduce((sum,item)=>sum+item.bytes,0),digest:digest.digest('hex'),files
   });
 }
@@ -211,7 +225,7 @@ export async function buildPayload({repoRoot=REPO_ROOT,targetSha,surfaceId,stage
   const markerPath=path.join(stage,RELEASE_MARKER);fs.mkdirSync(path.dirname(markerPath),{recursive:true});
   writeJson(markerPath,{schema:'DGB_PUBLIC_RELEASE_MARKER_v3',commit:targetSha,surface:surfaceId,verificationManifest:`${SURFACE_DIR}/${surfaceId}.json`,verificationManifestSha256:manifestSha256});
   if(PROTECTED_SURFACE_IDS.includes('audralia'))stampAudralia(stage,targetSha);
-  const authorizedExcludedRuntimeDependencies=promoteAuthorizedExcludedRuntimeDependencies({repoRoot,stage,surfaceId});
+  const authorizedExcludedRuntimeDependencies=promoteAuthorizedExcludedRuntimeDependencies({repoRoot,stage,targetSha,surfaceId});
   if(surfaceId==='brain-gen1-hra')await bindBrainAsset(stage);
   const payloadBytes=treeBytes(stage);
   const topLevelBytes=topLevelBreakdown(stage);

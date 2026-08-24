@@ -1729,18 +1729,6 @@
       "scopeHash": "9485a119ec533eed9ce9e0d01e6d0d672d2384d21fc0b70a6f0fd8ab413071ab",
       "state": "ADMITTED_LOCKED"
     },
-    "95f9e03476ee40d2d42383f797d279dbb3878aac00c7078e7e061ef3ab34e823": {
-      "governingHead": "2108d00e80d908b3c14d4fbf3e6ffea758013b6b",
-      "lockGeneration": 1620,
-      "lockScope": "AUDRALIA_ACTIVE_RUNTIME_PAYLOAD_CLOSURE",
-      "operationId": "AUDRALIA_PUBLICATION_ACTIVE_RUNTIME_CLOSURE_REPAIR_20260824_001",
-      "procedureLocatorDigest": "0afd1ad3c4608c8211d63b8f510d6c553f03dc9d02d88038302d7a019ecd5950",
-      "released": false,
-      "requestDigest": "8db36cf118416ef0000ff41717efef6b3fe1d36cedc014ba27e43acb550cb67b",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "95f9e03476ee40d2d42383f797d279dbb3878aac00c7078e7e061ef3ab34e823",
-      "state": "ADMITTED_LOCKED"
-    },
     "961b7888499ecbe8fde655fe945fd2b91be8842c0fcbd972345e66aea23ed28f": {
       "governingHead": "36152fc4c64cde138272d35060a9c1cdfc905e2d",
       "lockGeneration": 264,
@@ -24811,6 +24799,19 @@
         "successorOperationId": "H_EARTH_ESTATE_LABORATORY_COCKPIT_GEN1_QUALIFICATION_20260824_009",
         "transitionId": "H_EARTH_ESTATE_LABORATORY_GEN1_QUALIFICATION_SUCCESSOR_20260824_009"
       },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "2108d00e80d908b3c14d4fbf3e6ffea758013b6b",
+      "lockGeneration": 1620,
+      "lockScope": "AUDRALIA_ACTIVE_RUNTIME_PAYLOAD_CLOSURE",
+      "operationId": "AUDRALIA_PUBLICATION_ACTIVE_RUNTIME_CLOSURE_REPAIR_20260824_001",
+      "procedureLocatorDigest": "0afd1ad3c4608c8211d63b8f510d6c553f03dc9d02d88038302d7a019ecd5950",
+      "released": true,
+      "requestDigest": "8db36cf118416ef0000ff41717efef6b3fe1d36cedc014ba27e43acb550cb67b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "95f9e03476ee40d2d42383f797d279dbb3878aac00c7078e7e061ef3ab34e823",
+      "state": "TERMINAL",
       "terminalDisposition": "SUPERSEDED"
     }
   ]

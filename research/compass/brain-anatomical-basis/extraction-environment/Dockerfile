@@ -1,4 +1,4 @@
-FROM python:3.11.9-slim-bookworm@sha256:4795fdbd55343fbc6e9c74b76c5d5b43d1ca3bcbf4f75850cb1d6d3b8a2d16c3 AS vtk_runtime
+FROM python:3.11.9-slim-bookworm@sha256:2856e6af199e8128161abd320575eb9b341f3b76f017b5d0c9cd364f60d8a050 AS vtk_runtime
 RUN python -m pip install --no-cache-dir --disable-pip-version-check --target=/opt/diamondgate-vtk 'vtk==9.3.0'
 
 FROM freesurfer/freesurfer:7.4.1@sha256:10b6468cbd9fcd2db3708f4651d59ad75d4da849a2c5d8bb6dba217f08b8c46b
@@ -11,4 +11,5 @@ ENV PATH="/opt/diamondgate-python/bin:${PATH}" \
 LABEL org.diamondgate.contract="GEN1_EXTRACTION_ENVIRONMENT_V2" \
       org.diamondgate.freesurfer="7.4.1" \
       org.diamondgate.python="3.11.9" \
+      org.diamondgate.python_amd64_manifest="sha256:2856e6af199e8128161abd320575eb9b341f3b76f017b5d0c9cd364f60d8a050" \
       org.diamondgate.vtk="9.3.0"

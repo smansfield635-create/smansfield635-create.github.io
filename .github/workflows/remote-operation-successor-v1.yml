@@ -29,6 +29,8 @@ concurrency:
   cancel-in-progress: false
 
 env:
+  C7_PREDECESSOR_GATE_BLOB: 8b254c43abc53d769e82524c6eded1c07eaffc61
+  C7_PREDECESSOR_SELF_TEST_BLOB: edba8f3b024e832fd3da6207ba786ce292aad54c
   C7_GATE_BLOB: 4961e0abbfdcd62a5b2f2856667ba8e30cd81fce
   C7_SELF_TEST_BLOB: 174528c6083ea5ca2660982ee8e3f3ac130d1830
 
@@ -47,6 +49,7 @@ jobs:
             /AI_ENTRYPOINT.json
             /.github/workflows/remote-operation-successor-v1.yml
             /.github/ai-router/router.v1.json
+            /.github/ai-router/system-continuity/gap-registry.v1.json
             /.github/ai-router/system-continuity/
             /.github/ai-router/operation-lifecycle/
             /tools/operation-intake/
@@ -153,6 +156,7 @@ jobs:
             /AI_ENTRYPOINT.json
             /.github/workflows/remote-operation-successor-v1.yml
             /.github/ai-router/router.v1.json
+            /.github/ai-router/system-continuity/gap-registry.v1.json
             /.github/ai-router/system-continuity/
             /.github/ai-router/operation-lifecycle/
             /tools/operation-intake/

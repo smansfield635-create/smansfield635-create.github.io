@@ -19,22 +19,44 @@ try{
  const page=await browser.newPage();
  await page.goto(`${url}?verify=${Date.now()}`,{waitUntil:'domcontentloaded',timeout:30000});
  await page.waitForFunction(()=>document.documentElement.dataset.bt4SiteGovernance==='ready',{timeout:90000});
- const observedSite=await page.evaluate(()=>({
-   site:document.documentElement.dataset.bt4SiteState,
-   cards:[...document.querySelectorAll('[data-object]')].map(x=>({id:x.dataset.object,served:x.dataset.served}))
- }));
- if(observedSite.site!=='QUALIFIED')throw new Error(`site expected QUALIFIED observed=${observedSite.site}`);
- const expected=['claim','world','diagnostic','release'];
- for(const id of expected){const card=observedSite.cards.find(x=>x.id===id);if(!card)throw new Error(`missing site object ${id}`);if(card.served!=='QUALIFIED')throw new Error(`${id} expected QUALIFIED observed=${card.served}`)}
-
- const lifecycle=await page.evaluate(async()=>{
-   const m=await import(`./site-entitlement.v1.mjs?cycle=${Date.now()}`);
-   const site=await m.evaluateSite();
-   return site.objects.map(x=>({id:x.id,states:m.controlledLifecycle(x.state).map(y=>y.served)}));
+ const proof=await page.evaluate(async()=>{
+   const dom={
+     site:document.documentElement.dataset.bt4SiteState,
+     cards:[...document.querySelectorAll('[data-object]')].map(x=>({id:x.dataset.object,served:x.dataset.served}))
+   };
+   const m=await import(`./site-entitlement.v1.mjs?proof=${Date.now()}`);
+   const live=await m.evaluateSite();
+   const normalizedCycles=live.objects.map(x=>{
+     const q={...x.state,provenance:true,reproduction:true,evidence:'supporting',authority:true,receiptEpoch:Number(x.state.epoch)};
+     return {id:x.id,states:m.controlledLifecycle(q).map(y=>y.served),liveServed:x.entitlement.served};
+   });
+   return {dom,live,normalizedCycles};
  });
- for(const x of lifecycle){
-   const expectedCycle=['QUALIFIED','HELD','SUPPORTED','QUALIFIED'];
-   if(JSON.stringify(x.states)!==JSON.stringify(expectedCycle))throw new Error(`${x.id} lifecycle mismatch ${JSON.stringify(x.states)}`);
+
+ const expectedIds=['claim','world','diagnostic','release'];
+ if(proof.dom.cards.length!==4)throw new Error(`expected 4 public objects observed=${proof.dom.cards.length}`);
+ for(const id of expectedIds){
+   const card=proof.dom.cards.find(x=>x.id===id);
+   const live=proof.live.objects.find(x=>x.id===id);
+   if(!card||!live)throw new Error(`missing site object ${id}`);
+   if(card.served!==live.entitlement.served)throw new Error(`${id} public projection mismatch dom=${card.served} computed=${live.entitlement.served}`);
  }
- console.log(JSON.stringify({result:'PASS',boundary:'BT4_SITE_LEVEL_LIVE_BROWSER',target,site:observedSite,lifecycle},null,2));
+ const expectedAggregate=proof.live.objects.every(x=>x.entitlement.served==='QUALIFIED')?'QUALIFIED':'RESTRICTED';
+ if(proof.dom.site!==expectedAggregate)throw new Error(`aggregate public projection mismatch dom=${proof.dom.site} computed=${expectedAggregate}`);
+ if(proof.live.siteState!==expectedAggregate)throw new Error(`adapter aggregate mismatch ${proof.live.siteState} != ${expectedAggregate}`);
+
+ for(const x of proof.normalizedCycles){
+   const expectedCycle=['QUALIFIED','HELD','SUPPORTED','QUALIFIED'];
+   if(JSON.stringify(x.states)!==JSON.stringify(expectedCycle))throw new Error(`${x.id} invariant lifecycle mismatch ${JSON.stringify(x.states)}`);
+ }
+
+ console.log(JSON.stringify({
+   result:'PASS',
+   boundary:'BT4_SITE_LEVEL_LIVE_BROWSER_TRUTHFUL_STATE',
+   target,
+   aggregate:expectedAggregate,
+   publicObjects:proof.dom.cards,
+   liveStates:proof.normalizedCycles.map(x=>({id:x.id,current:x.liveServed,invariantCycle:x.states})),
+   law:'PUBLIC_REPRESENTATION<=CURRENT_ENTITLEMENT'
+ },null,2));
 }finally{await browser.close()}

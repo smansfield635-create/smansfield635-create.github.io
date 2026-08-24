@@ -1,74 +1,369 @@
-name: Estate Laboratory Gen1 Qualification
+name: Estate Laboratory Navigation Reconciliation Constructor
 
 on:
-  pull_request:
+  push:
+    branches:
+      - 'ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_002'
     paths:
-      - 'showroom/globe/audralia/disposition/index.html'
-      - 'showroom/globe/audralia/disposition/laboratory.js'
-      - 'tools/estate-laboratory-gen1-verify.mjs'
-      - 'tools/h-earth-experience-anchor-gate.mjs'
       - '.github/workflows/estate-laboratory-gen1.yml'
-  workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  responsive-laboratory:
-    runs-on: ubuntu-latest
+  construct:
+    if: github.event.head_commit.message != 'Estate Laboratory: complete navigation reconciliation [lab-constructed]'
+    runs-on: ubuntu-24.04
     steps:
-      - name: Check out exact candidate
+      - name: Check out exact authorized branch
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.ref_name }}
           fetch-depth: 0
+          persist-credentials: true
 
       - name: Set up Node 22
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Verify static laboratory contract
-        run: node tools/estate-laboratory-gen1-verify.mjs --static
-
-      - name: Set up Chrome
-        uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: stable
-
-      - name: Install browser driver
-        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
-
-      - name: Start exact candidate server
+      - name: Revalidate exact governing base and AI Entry routing
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/estate-laboratory-http.log 2>&1 &
-          echo $! > /tmp/estate-laboratory-http.pid
-          for i in {1..30}; do
-            if curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/disposition/ >/dev/null; then
-              exit 0
-            fi
-            sleep 1
+          BASE='6419f78d2c048d51827bb6c631e557d83fe4f061'
+          test "${GITHUB_REF_NAME}" = 'ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_002'
+          test "$(git merge-base HEAD "$BASE")" = "$BASE"
+          git fetch --no-tags origin main
+          test "$(git rev-parse origin/main^{commit})" = "$BASE"
+          node tools/repository-ai-entry-router.mjs \
+            --mutation-intent \
+            --task ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_002 \
+            --path index.html \
+            --path site-guide/index.html \
+            --path instruments/index.html \
+            --path instruments/laboratory.js \
+            --path showroom/globe/audralia/disposition/index.html \
+            --path showroom/globe/audralia/disposition/laboratory.js \
+            --path showroom/globe/audralia/diagnostic/index.html \
+            --path showroom/globe/h-earth/diagnostic/index.html \
+            --path showroom/globe/hearth/diagnostic/index.html \
+            --path coherence-diagnostic/index.html \
+            --path tools/estate-laboratory-gen1-verify.mjs \
+            --path tools/h-earth-experience-anchor-gate.mjs \
+            --path .github/workflows/estate-laboratory-gen1.yml \
+            --output "$RUNNER_TEMP/router-receipt.json"
+          node - <<'NODE'
+          const fs=require('fs');
+          const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/router-receipt.json','utf8'));
+          if(r.disposition!=='PASS'){
+            console.error(JSON.stringify(r,null,2));
+            process.exit(1);
+          }
+          console.log(`AI_ENTRY_ROUTE_PASS routes=${r.routes?.length ?? 0}`);
+          NODE
+
+      - name: Reconcile Guide and deep-chamber return semantics
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path, old, new, label):
+              p=Path(path)
+              text=p.read_text()
+              count=text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{label}: expected exactly one match, observed {count}')
+              p.write_text(text.replace(old,new,1))
+
+          # Guide Desk: canonical Instruments entry becomes the Estate Laboratory,
+          # while Triple G / gauges remains a separate measurement-readiness instrument.
+          replace_once(
+              'site-guide/index.html',
+              '<a href="/gauges/">The Lab</a>',
+              '<a href="/instruments/">Estate Laboratory</a>',
+              'SITE_GUIDE_PRIMARY_LAB_ROUTE'
+          )
+          replace_once(
+              'site-guide/index.html',
+              'Compass orients, Atrium opens the story layer, Atlas Study holds the worlds, The Lab checks proof, and Product Gallery points toward usable value.',
+              'Compass orients, Atrium opens the story layer, Atlas Study holds the worlds, Estate Laboratory coordinates observability and diagnostics, Triple G measures readiness, and Product Gallery points toward usable value.',
+              'SITE_GUIDE_ESTATE_MODEL_IDENTITY'
+          )
+          replace_once(
+              'site-guide/index.html',
+              '<div class="mini-node" style="--x:50;--y:84"><b>The Lab</b><span>Proof and readiness</span></div>',
+              '<div class="mini-node" style="--x:50;--y:84"><b>Estate Laboratory</b><span>Observability and diagnostics</span></div>',
+              'SITE_GUIDE_MINI_MAP_IDENTITY'
+          )
+
+          audralia_old='''        <a
+          class="command-button command-button--ghost"
+          id="returnToAudralia"
+          href="/showroom/globe/audralia/"
+        >
+          Return to Audralia
+        </a>'''
+          audralia_new=audralia_old+'''\n\n        <a
+          class="command-button command-button--ghost"
+          data-estate-laboratory-return
+          href="/instruments/"
+        >
+          Return to Estate Laboratory
+        </a>'''
+          replace_once(
+              'showroom/globe/audralia/diagnostic/index.html',
+              audralia_old,audralia_new,
+              'AUDRALIA_DIAGNOSTIC_LAB_RETURN'
+          )
+
+          h_earth_old='''      <nav class="command-crown__routes" aria-label="Authority routes">
+        <a href="/showroom/globe/h-earth/">Return to H-Earth</a>
+        <a href="/">Return to Orbit</a>
+      </nav>'''
+          h_earth_new='''      <nav class="command-crown__routes" aria-label="Authority routes">
+        <a href="/showroom/globe/h-earth/">Return to H-Earth</a>
+        <a href="/instruments/" data-estate-laboratory-return>Return to Estate Laboratory</a>
+        <a href="/">Return to Orbit</a>
+      </nav>'''
+          replace_once(
+              'showroom/globe/h-earth/diagnostic/index.html',
+              h_earth_old,h_earth_new,
+              'H_EARTH_DIAGNOSTIC_LAB_RETURN'
+          )
+
+          hearth_old='''        <a
+          class="button-link ghost"
+          href="/showroom/globe/hearth/"
+        >
+          Return to Hearth
+        </a>'''
+          hearth_new=hearth_old+'''\n\n        <a
+          class="button-link ghost"
+          data-estate-laboratory-return
+          href="/instruments/"
+        >
+          Return to Estate Laboratory
+        </a>'''
+          replace_once(
+              'showroom/globe/hearth/diagnostic/index.html',
+              hearth_old,hearth_new,
+              'HEARTH_DIAGNOSTIC_LAB_RETURN'
+          )
+
+          coherence_old='''        <a href="/">Compass</a>
+        <a href="/showroom/globe/">Mirrorland</a>
+        <a href="/gauges/">Triple G</a>'''
+          coherence_new='''        <a href="/">Compass</a>
+        <a href="/showroom/globe/">Mirrorland</a>
+        <a href="/instruments/" data-estate-laboratory-return>Estate Laboratory</a>
+        <a href="/gauges/">Triple G</a>'''
+          replace_once(
+              'coherence-diagnostic/index.html',
+              coherence_old,coherence_new,
+              'COHERENCE_DIAGNOSTIC_LAB_RETURN'
+          )
+          PY
+
+      - name: Reapply inspected verifier basis and extend round-trip qualification
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin 'estate-laboratory/observability-navigation-reconciliation-v1:refs/remotes/origin/estate-laboratory-predecessor-v1'
+          git show refs/remotes/origin/estate-laboratory-predecessor-v1:tools/estate-laboratory-gen1-verify.mjs > tools/estate-laboratory-gen1-verify.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tools/estate-laboratory-gen1-verify.mjs')
+          s=p.read_text()
+
+          def one(old,new,label):
+              global s
+              count=s.count(old)
+              if count != 1:
+                  raise SystemExit(f'{label}: expected exactly one match, observed {count}')
+              s=s.replace(old,new,1)
+
+          one(
+              "const COMPASS_PATH='index.html';\n",
+              "const COMPASS_PATH='index.html';\nconst SITE_GUIDE_PATH='site-guide/index.html';\nconst DEEP_CHAMBER_PATHS=['showroom/globe/audralia/diagnostic/index.html','showroom/globe/h-earth/diagnostic/index.html','showroom/globe/hearth/diagnostic/index.html','coherence-diagnostic/index.html'];\n",
+              'VERIFIER_PATH_CONSTANTS'
+          )
+          one(
+              "const html=read(HTML_PATH),js=read(JS_PATH),cockpit=read(COCKPIT_PATH),compass=read(COMPASS_PATH),anchorGate=read(ANCHOR_GATE_PATH);",
+              "const html=read(HTML_PATH),js=read(JS_PATH),cockpit=read(COCKPIT_PATH),compass=read(COMPASS_PATH),siteGuide=read(SITE_GUIDE_PATH),anchorGate=read(ANCHOR_GATE_PATH);\nconst deepChambers=Object.fromEntries(DEEP_CHAMBER_PATHS.map(p=>[p,read(p)]));",
+              'VERIFIER_READ_SURFACES'
+          )
+          anchor="  if(compass.includes('data-room-id=\"south-4\" data-label=\"Control Cockpit\"'))fail('COMPASS_OLD_ESTATE_LAB_IDENTITY_REMAINS');\n"
+          insert=anchor+'''\n  for(const token of [\n    '<a href="/instruments/">Estate Laboratory</a>',\n    '<b>Estate Laboratory</b><span>Observability and diagnostics</span>'\n  ])if(!siteGuide.includes(token))fail(`SITE_GUIDE_NAVIGATION_TOKEN_MISSING:${token}`);\n  if(siteGuide.includes('<a href="/gauges/">The Lab</a>'))fail('SITE_GUIDE_OLD_LAB_PRIMARY_ROUTE_REMAINS');\n  for(const [deepPath,deepHtml] of Object.entries(deepChambers)){\n    if(!deepHtml.includes('data-estate-laboratory-return')||!deepHtml.includes('href="/instruments/"'))fail(`DEEP_CHAMBER_LAB_RETURN_MISSING:${deepPath}`);\n  }\n'''
+          one(anchor,insert,'VERIFIER_STATIC_RETURN_CHECKS')
+          one(
+              '    compassInstrumentsIdentityReconciled:true,\n',
+              '    compassInstrumentsIdentityReconciled:true,\n    siteGuideInstrumentsIdentityReconciled:true,\n    deepChamberReturnSemantics:true,\n',
+              'VERIFIER_STATIC_RECEIPT_FIELDS'
+          )
+          one(
+              'let deepEvidenceCarousel=null;\nlet cockpitRuntime=null;\nlet compassRuntime=null;\n',
+              'let deepEvidenceCarousel=null;\nlet cockpitRuntime=null;\nlet compassRuntime=null;\nlet deepRoundTrips=[];\n',
+              'VERIFIER_RUNTIME_STATE'
+          )
+          close_anchor='      await compassPage.close();\n'
+          roundtrip=close_anchor+'''\n\n      const roundTripRooms=[\n        {id:'audralia-diagnostic',href:'/showroom/globe/audralia/diagnostic/'},\n        {id:'h-earth-diagnostic',href:'/showroom/globe/h-earth/diagnostic/'},\n        {id:'hearth-diagnostic',href:'/showroom/globe/hearth/diagnostic/'},\n        {id:'coherence-diagnostic',href:'/coherence-diagnostic/'}\n      ];\n      for(const room of roundTripRooms){\n        const targetPromise=browser.waitForTarget(target=>target.opener()===page.target(),{timeout:15000});\n        await page.click(`.room-link[href="${room.href}"]`);\n        const target=await targetPromise;\n        const deepPage=await target.page();\n        if(!deepPage)fail(`DEEP_CHAMBER_TARGET_PAGE_MISSING:${room.id}`);\n        await deepPage.waitForFunction(expected=>location.pathname===expected,{timeout:30000},room.href);\n        await deepPage.waitForSelector('[data-estate-laboratory-return][href="/instruments/"]',{timeout:15000});\n        const openedPath=await deepPage.evaluate(()=>location.pathname);\n        await Promise.all([\n          deepPage.waitForNavigation({waitUntil:'domcontentloaded',timeout:30000}),\n          deepPage.click('[data-estate-laboratory-return][href="/instruments/"]')\n        ]);\n        const returnedPath=await deepPage.evaluate(()=>location.pathname);\n        if(openedPath!==room.href||returnedPath!=='/instruments/')fail(`DEEP_CHAMBER_ROUND_TRIP_FAILURE:${room.id}:${openedPath}:${returnedPath}`);\n        deepRoundTrips.push({id:room.id,from:'/instruments/',deepRoute:openedPath,returnRoute:returnedPath});\n        await deepPage.close();\n      }\n'''
+          one(close_anchor,roundtrip,'VERIFIER_RUNTIME_ROUND_TRIPS')
+          one(
+              '  compassRuntime,\n',
+              '  compassRuntime,\n  deepRoundTrips,\n',
+              'VERIFIER_RUNTIME_RECEIPT_ROUND_TRIPS'
+          )
+          one(
+              '    compassInstrumentsIdentityReconciled:true,\n    audraliaProductRootProtected:true,\n',
+              '    compassInstrumentsIdentityReconciled:true,\n    siteGuideInstrumentsIdentityReconciled:true,\n    deepChamberReturnSemantics:deepRoundTrips.length===4,\n    audraliaProductRootProtected:true,\n',
+              'VERIFIER_BOUNDARY_FIELDS'
+          )
+          p.write_text(s)
+          PY
+
+      - name: Install final read-only qualification workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > .github/workflows/estate-laboratory-gen1.yml <<'YAML'
+          name: Estate Laboratory Governed Observability Qualification
+
+          on:
+            pull_request:
+              paths:
+                - 'index.html'
+                - 'site-guide/index.html'
+                - 'instruments/index.html'
+                - 'instruments/laboratory.js'
+                - 'showroom/globe/audralia/disposition/index.html'
+                - 'showroom/globe/audralia/disposition/laboratory.js'
+                - 'showroom/globe/audralia/diagnostic/index.html'
+                - 'showroom/globe/h-earth/diagnostic/index.html'
+                - 'showroom/globe/hearth/diagnostic/index.html'
+                - 'coherence-diagnostic/index.html'
+                - 'tools/estate-laboratory-gen1-verify.mjs'
+                - 'tools/h-earth-experience-anchor-gate.mjs'
+                - '.github/workflows/estate-laboratory-gen1.yml'
+            workflow_dispatch:
+
+          permissions:
+            contents: read
+
+          jobs:
+            responsive-laboratory:
+              runs-on: ubuntu-24.04
+              steps:
+                - name: Check out exact candidate head
+                  uses: actions/checkout@v4
+                  with:
+                    ref: ${{ github.event.pull_request.head.sha || github.sha }}
+                    fetch-depth: 0
+                    persist-credentials: false
+
+                - name: Set up Node 22
+                  uses: actions/setup-node@v4
+                  with:
+                    node-version: 22
+
+                - name: Verify exact bounded scope
+                  shell: bash
+                  run: |
+                    set -euo pipefail
+                    BASE='6419f78d2c048d51827bb6c631e557d83fe4f061'
+                    test "$(git merge-base HEAD "$BASE")" = "$BASE"
+                    allowed='^(index.html|site-guide/index.html|instruments/index.html|instruments/laboratory.js|showroom/globe/audralia/disposition/index.html|showroom/globe/audralia/disposition/laboratory.js|showroom/globe/audralia/diagnostic/index.html|showroom/globe/h-earth/diagnostic/index.html|showroom/globe/hearth/diagnostic/index.html|coherence-diagnostic/index.html|tools/estate-laboratory-gen1-verify.mjs|tools/h-earth-experience-anchor-gate.mjs|\.github/workflows/estate-laboratory-gen1.yml)$'
+                    changed="$(git diff --name-only "$BASE"...HEAD)"
+                    test -n "$changed"
+                    if printf '%s\n' "$changed" | grep -Ev "$allowed"; then
+                      echo 'OUT_OF_SCOPE_PATH' >&2
+                      exit 1
+                    fi
+
+                - name: Verify static observability navigation and return contract
+                  run: node tools/estate-laboratory-gen1-verify.mjs --static
+
+                - name: Set up Chrome
+                  uses: browser-actions/setup-chrome@v1
+                  with:
+                    chrome-version: stable
+
+                - name: Install browser driver
+                  run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+                - name: Start exact candidate server
+                  shell: bash
+                  run: |
+                    set -euo pipefail
+                    python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/estate-laboratory-http.log 2>&1 &
+                    echo $! > /tmp/estate-laboratory-http.pid
+                    for i in {1..30}; do
+                      if curl -fsS http://127.0.0.1:4173/instruments/ >/dev/null; then
+                        exit 0
+                      fi
+                      sleep 1
+                    done
+                    cat /tmp/estate-laboratory-http.log || true
+                    exit 1
+
+                - name: Verify responsive laboratory and deep-chamber round trips
+                  env:
+                    BASE_URL: http://127.0.0.1:4173
+                    OUTPUT_DIR: estate-laboratory-gen1-verification
+                  shell: bash
+                  run: |
+                    set -euo pipefail
+                    export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+                    test -n "$CHROME_PATH"
+                    node tools/estate-laboratory-gen1-verify.mjs --runtime
+
+                - name: Upload qualification evidence
+                  if: always()
+                  uses: actions/upload-artifact@v4
+                  with:
+                    name: estate-laboratory-gen1-verification-${{ github.run_id }}-${{ github.run_attempt }}
+                    path: estate-laboratory-gen1-verification/
+                    if-no-files-found: warn
+                    retention-days: 30
+          YAML
+
+      - name: Prove static candidate before repository write
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/estate-laboratory-gen1-verify.mjs --static > "$RUNNER_TEMP/static-verification.json"
+          node -e "const r=require(process.env.RUNNER_TEMP+'/static-verification.json'); if(r.result!=='PASS'||r.canonicalLaboratoryRoute!=='/instruments/'||r.deepChamberReturnSemantics!==true||r.siteGuideInstrumentsIdentityReconciled!==true)process.exit(1)"
+
+      - name: Enforce exact admitted mutation scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          allowed='^(index.html|site-guide/index.html|instruments/index.html|instruments/laboratory.js|showroom/globe/audralia/disposition/index.html|showroom/globe/audralia/disposition/laboratory.js|showroom/globe/audralia/diagnostic/index.html|showroom/globe/h-earth/diagnostic/index.html|showroom/globe/hearth/diagnostic/index.html|coherence-diagnostic/index.html|tools/estate-laboratory-gen1-verify.mjs|tools/h-earth-experience-anchor-gate.mjs|\.github/workflows/estate-laboratory-gen1.yml)$'
+          changed="$(git diff --name-only)"
+          test -n "$changed"
+          if printf '%s\n' "$changed" | grep -Ev "$allowed"; then
+            echo 'OUT_OF_SCOPE_CONSTRUCTION_DIFF' >&2
+            exit 1
+          fi
+          for required in site-guide/index.html showroom/globe/audralia/diagnostic/index.html showroom/globe/h-earth/diagnostic/index.html showroom/globe/hearth/diagnostic/index.html coherence-diagnostic/index.html tools/estate-laboratory-gen1-verify.mjs .github/workflows/estate-laboratory-gen1.yml; do
+            printf '%s\n' "$changed" | grep -Fxq "$required"
           done
-          cat /tmp/estate-laboratory-http.log || true
-          exit 1
 
-      - name: Verify phone tablet and desktop operation
-        env:
-          BASE_URL: http://127.0.0.1:4173
-          OUTPUT_DIR: estate-laboratory-gen1-verification
+      - name: Commit bounded constructed candidate
         shell: bash
         run: |
           set -euo pipefail
-          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
-          test -n "$CHROME_PATH"
-          node tools/estate-laboratory-gen1-verify.mjs --runtime
-
-      - name: Upload qualification evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: estate-laboratory-gen1-verification-${{ github.run_id }}-${{ github.run_attempt }}
-          path: estate-laboratory-gen1-verification/
-          if-no-files-found: warn
-          retention-days: 30
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- \
+            site-guide/index.html \
+            showroom/globe/audralia/diagnostic/index.html \
+            showroom/globe/h-earth/diagnostic/index.html \
+            showroom/globe/hearth/diagnostic/index.html \
+            coherence-diagnostic/index.html \
+            tools/estate-laboratory-gen1-verify.mjs \
+            .github/workflows/estate-laboratory-gen1.yml
+          git commit -m 'Estate Laboratory: complete navigation reconciliation [lab-constructed]'
+          git push origin "HEAD:${GITHUB_REF_NAME}"

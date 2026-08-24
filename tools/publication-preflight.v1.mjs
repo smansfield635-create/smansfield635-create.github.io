@@ -9,6 +9,7 @@ import {fileURLToPath} from 'node:url';
 const REPO_ROOT=process.cwd();
 const SURFACE_DIR='.github/ai-router/publication-surfaces';
 const RELEASE_MARKER='.well-known/dgb-release.json';
+const PAGES_LIMIT_BYTES=1073741824;
 
 export function sha256(value){return crypto.createHash('sha256').update(value).digest('hex');}
 export function validateSurfaceId(id){return typeof id==='string'&&/^[a-z0-9][a-z0-9._-]{0,79}$/.test(id);}
@@ -38,6 +39,16 @@ function digestTree(root){
   const h=crypto.createHash('sha256');
   for(const rel of files){h.update(rel);h.update('\0');h.update(fs.readFileSync(path.join(root,rel)));h.update('\0');}
   return h.digest('hex');
+}
+function treeBytes(root){let total=0;const walk=d=>{for(const e of fs.readdirSync(d,{withFileTypes:true})){const p=path.join(d,e.name);if(e.isDirectory())walk(p);else if(e.isFile())total+=fs.statSync(p).size;}};walk(root);return total;}
+function topLevelBreakdown(root){
+  const rows=[];
+  for(const e of fs.readdirSync(root,{withFileTypes:true})){
+    const p=path.join(root,e.name);
+    const bytes=e.isDirectory()?treeBytes(p):(e.isFile()?fs.statSync(p).size:0);
+    rows.push({path:e.name,bytes});
+  }
+  return rows.sort((a,b)=>b.bytes-a.bytes);
 }
 function stampAudralia(stage,targetSha){
   const file=path.join(stage,'showroom/globe/audralia/index.html');
@@ -84,9 +95,14 @@ export async function buildPayload({repoRoot=REPO_ROOT,targetSha,surfaceId,stage
   writeJson(markerPath,{schema:'DGB_PUBLIC_RELEASE_MARKER_v3',commit:targetSha,surface:surfaceId,verificationManifest:`${SURFACE_DIR}/${surfaceId}.json`,verificationManifestSha256:manifestSha256});
   if(surfaceId==='audralia')stampAudralia(stage,targetSha);
   if(surfaceId==='brain-gen1-hra')await bindBrainAsset(stage);
-  let total=0;const walk=d=>{for(const e of fs.readdirSync(d,{withFileTypes:true})){const p=path.join(d,e.name);if(e.isDirectory())walk(p);else if(e.isFile())total+=fs.statSync(p).size;}};walk(stage);
-  if(total>=1073741824)throw new Error('PAGES_PAYLOAD_TOO_LARGE');
-  return {manifest,manifestPath,manifestSha256,payloadDigest:digestTree(stage),payloadBytes:total};
+  const payloadBytes=treeBytes(stage);
+  const topLevelBytes=topLevelBreakdown(stage);
+  if(payloadBytes>=PAGES_LIMIT_BYTES){
+    const error=new Error(`PAGES_PAYLOAD_TOO_LARGE:${payloadBytes}`);
+    error.code='PAGES_PAYLOAD_TOO_LARGE';error.payloadBytes=payloadBytes;error.pagesLimitBytes=PAGES_LIMIT_BYTES;error.topLevelBytes=topLevelBytes.slice(0,20);
+    throw error;
+  }
+  return {manifest,manifestPath,manifestSha256,payloadDigest:digestTree(stage),payloadBytes,topLevelBytes};
 }
 function run(cmd,args,env=process.env){return new Promise((resolve,reject)=>{const child=spawn(cmd,args,{stdio:'inherit',env});child.on('error',reject);child.on('exit',code=>code===0?resolve():reject(new Error(`COMMAND_FAILED:${cmd}:${code}`)));});}
 async function verifyLocal({stage,manifestPath,manifest}){
@@ -106,18 +122,32 @@ function parse(argv){const out={};for(let i=0;i<argv.length;i++){const k=argv[i]
 
 async function main(){
   const mode=process.argv[2];
-  if(!['build','preflight'].includes(mode)){console.error('usage: node tools/publication-preflight.v1.mjs <build|preflight> --target-sha <sha> --surface-id <id> --stage <dir> --receipt <file>');process.exit(2);}
+  if(!['build','verify','preflight'].includes(mode)){console.error('usage: node tools/publication-preflight.v1.mjs <build|verify|preflight> --target-sha <sha> --surface-id <id> --stage <dir> --receipt <file>');process.exit(2);}
   const args=parse(process.argv.slice(3));
   const stage=args.stage||path.join(os.tmpdir(),'publication-preflight-stage');
   const receiptPath=args.receipt||path.join(os.tmpdir(),'publication-preflight-receipt.json');
   const targetSha=args['target-sha'];const surfaceId=args['surface-id'];
   let receipt;
   try{
-    const built=await buildPayload({targetSha,surfaceId,stage});
-    if(mode==='preflight')await verifyLocal({stage,manifestPath:built.manifestPath,manifest:built.manifest});
-    receipt={schema:'PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1',targetSha,surfaceId,manifestSha256:built.manifestSha256,payloadDigest:built.payloadDigest,payloadBytes:built.payloadBytes,result:mode==='preflight'?'PREFLIGHT_PASS':'PAYLOAD_BUILT',checks:{exactSha:'PASS',surfaceManifest:'PASS',diffScope:'BOUNDED_PAYLOAD',requiredAssets:'PASS',environmentBinding:'PASS',payloadBuild:'PASS',staticChecks:mode==='preflight'?'PASS':'NOT_RUN',runtimeReadiness:mode==='preflight'?(built.manifest.runtime?.enabled===true?'PASS':'NOT_REQUIRED'):'NOT_RUN'},deploymentPerformed:false};
+    let built;
+    if(mode==='verify'){
+      if(!validateSha(targetSha))throw new Error('EXACT_SHA_INVALID');
+      if(!validateSurfaceId(surfaceId))throw new Error('SURFACE_ID_INVALID');
+      if(!fs.existsSync(stage))throw new Error('STAGED_PAYLOAD_MISSING');
+      const manifestPath=path.join(REPO_ROOT,SURFACE_DIR,`${surfaceId}.json`);
+      const manifest=JSON.parse(fs.readFileSync(manifestPath,'utf8'));
+      const prior=JSON.parse(fs.readFileSync(receiptPath,'utf8'));
+      if(prior.schema!=='PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1'||prior.result!=='PAYLOAD_BUILT'||prior.targetSha!==targetSha||prior.surfaceId!==surfaceId)throw new Error('PAYLOAD_BUILD_RECEIPT_MISMATCH');
+      built={manifest,manifestPath,manifestSha256:prior.manifestSha256,payloadDigest:prior.payloadDigest,payloadBytes:prior.payloadBytes,topLevelBytes:prior.topLevelBytes||[]};
+      await verifyLocal({stage,manifestPath,manifest});
+    }else{
+      built=await buildPayload({targetSha,surfaceId,stage});
+      if(mode==='preflight')await verifyLocal({stage,manifestPath:built.manifestPath,manifest:built.manifest});
+    }
+    const result=mode==='build'?'PAYLOAD_BUILT':'PREFLIGHT_PASS';
+    receipt={schema:'PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1',targetSha,surfaceId,manifestSha256:built.manifestSha256,payloadDigest:built.payloadDigest,payloadBytes:built.payloadBytes,pagesLimitBytes:PAGES_LIMIT_BYTES,topLevelBytes:built.topLevelBytes,result,checks:{exactSha:'PASS',surfaceManifest:'PASS',diffScope:'BOUNDED_PAYLOAD',requiredAssets:'PASS',environmentBinding:'PASS',payloadBuild:'PASS',staticChecks:mode==='build'?'NOT_RUN':'PASS',runtimeReadiness:mode==='build'?'NOT_RUN':(built.manifest.runtime?.enabled===true?'PASS':'NOT_REQUIRED')},deploymentPerformed:false};
     writeJson(receiptPath,receipt);console.log(JSON.stringify(receipt,null,2));
-  }catch(error){receipt={schema:'PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1',targetSha:targetSha||null,surfaceId:surfaceId||null,result:'PREFLIGHT_FAIL',error:String(error?.stack||error),deploymentPerformed:false};writeJson(receiptPath,receipt);console.error(JSON.stringify(receipt,null,2));process.exitCode=1;}
+  }catch(error){receipt={schema:'PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1',targetSha:targetSha||null,surfaceId:surfaceId||null,result:'PREFLIGHT_FAIL',errorCode:error?.code||null,error:String(error?.stack||error),payloadBytes:error?.payloadBytes??null,pagesLimitBytes:error?.pagesLimitBytes??PAGES_LIMIT_BYTES,topLevelBytes:error?.topLevelBytes??[],deploymentPerformed:false};writeJson(receiptPath,receipt);console.error(JSON.stringify(receipt,null,2));process.exitCode=1;}
 }
 
 if(process.argv[1]&&fileURLToPath(import.meta.url)===path.resolve(process.argv[1]))main();

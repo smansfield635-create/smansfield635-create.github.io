@@ -1728,13 +1728,27 @@
       "state": "ADMITTED_LOCKED"
     },
     "91684c5071256e3e17781b5339bbfec38f0843cc605bde557fe61b1b573f4760": {
-      "governingHead": "d8e0cfaee7c685888db028aaf6c37c722af684c1",
-      "lockGeneration": 1641,
+      "governingHead": "adfebb0ac443dca6d18c4568a9faa95d38995bae",
+      "lockGeneration": 1644,
       "lockScope": "LAWS_CP6_FINAL_CONTRACT_VERIFIER_COMPATIBILITY_V1",
-      "operationId": "LAWS_CP6_VERIFIER_COMPATIBILITY_REPAIR_20260824_1948",
-      "procedureLocatorDigest": "6c536fff223b338880c8249b50a6aff202f377ab33fedf5308509625290e9b5a",
+      "operationId": "LAWS_CP6_VERIFIER_COMPATIBILITY_REPAIR_20260824_1948_S2_ADFEBB0A",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "d8e0cfaee7c685888db028aaf6c37c722af684c1",
+        "lockGeneration": 1641,
+        "lockScope": "LAWS_CP6_FINAL_CONTRACT_VERIFIER_COMPATIBILITY_V1",
+        "operationId": "LAWS_CP6_VERIFIER_COMPATIBILITY_REPAIR_20260824_1948",
+        "preservedEvidenceRefs": [
+          "GEN1641_INTAKE_RECEIPT_ISSUE_2004"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "LAWS_CP6_VERIFIER_COMPATIBILITY_S1_TO_S2_ADFEBB0A_20260824"
+      },
+      "procedureLocatorDigest": "56ee29c6b3123ec3196c666c58d0c6ddecbdea5118eb7fa4937cc219045b6777",
       "released": false,
-      "requestDigest": "65f9f00b372b826f078072196a276867140b5de4b4c5ff67cbc9aab985ec37cb",
+      "requestDigest": "5e6bd6394b0d5cff3c18f971d9f6a374ac0d600646c1d40c359cc9b526a37b4f",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "91684c5071256e3e17781b5339bbfec38f0843cc605bde557fe61b1b573f4760",
       "state": "ADMITTED_LOCKED"
@@ -3472,7 +3486,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1643,
+  "lockGeneration": 1644,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -25542,6 +25556,33 @@
         "successorLockScope": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_C7",
         "successorOperationId": "C7_AUTHORITY_LEDGER_PROVENANCE_INTEGRITY_20260824_001_S2_D8E0CFAE",
         "transitionId": "C7_AUTHORITY_PROVENANCE_SUCCESSOR_20260824_002_D8E0CFAE"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "d8e0cfaee7c685888db028aaf6c37c722af684c1",
+      "lockGeneration": 1641,
+      "lockScope": "LAWS_CP6_FINAL_CONTRACT_VERIFIER_COMPATIBILITY_V1",
+      "operationId": "LAWS_CP6_VERIFIER_COMPATIBILITY_REPAIR_20260824_1948",
+      "procedureLocatorDigest": "6c536fff223b338880c8249b50a6aff202f377ab33fedf5308509625290e9b5a",
+      "released": true,
+      "requestDigest": "65f9f00b372b826f078072196a276867140b5de4b4c5ff67cbc9aab985ec37cb",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "91684c5071256e3e17781b5339bbfec38f0843cc605bde557fe61b1b573f4760",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "GEN1641_INTAKE_RECEIPT_ISSUE_2004"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "adfebb0ac443dca6d18c4568a9faa95d38995bae",
+        "successorLockGeneration": 1644,
+        "successorLockScope": "LAWS_CP6_FINAL_CONTRACT_VERIFIER_COMPATIBILITY_V1",
+        "successorOperationId": "LAWS_CP6_VERIFIER_COMPATIBILITY_REPAIR_20260824_1948_S2_ADFEBB0A",
+        "transitionId": "LAWS_CP6_VERIFIER_COMPATIBILITY_S1_TO_S2_ADFEBB0A_20260824"
       },
       "terminalDisposition": "SUPERSEDED"
     }

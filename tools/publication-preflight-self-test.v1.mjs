@@ -2,10 +2,14 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import {buildPayload,sha256,validateSha,validateSurfaceId} from './publication-preflight.v1.mjs';
+import {spawn} from 'node:child_process';
+import {createServer} from 'node:net';
+import {buildPayload,sha256,validateSha,validateSurfaceId,waitForLocalHttpServer} from './publication-preflight.v1.mjs';
 
 const checks=[];
 const check=(name,ok,detail=null)=>{checks.push({name,ok:Boolean(ok),detail});if(!ok)throw new Error(`SELF_TEST_FAILED:${name}${detail?':'+detail:''}`);};
+const listen=server=>new Promise((resolve,reject)=>{server.once('error',reject);server.listen(0,'127.0.0.1',resolve);});
+const close=server=>new Promise((resolve,reject)=>server.close(error=>error?reject(error):resolve()));
 
 check('surface-id-positive',validateSurfaceId('audralia'));
 check('surface-id-negative-uppercase',!validateSurfaceId('Audralia'));
@@ -49,6 +53,26 @@ try{
   let rejected=false;
   try{await buildPayload({repoRoot:repo,targetSha:'bad',surfaceId:'demo',stage:path.join(tmp,'bad')});}catch{rejected=true;}
   check('negative-fixture-invalid-sha-rejected',rejected);
+
+  const reservation=createServer();
+  await listen(reservation);
+  const address=reservation.address();
+  const delayedPort=typeof address==='object'&&address?address.port:null;
+  await close(reservation);
+  check('local-server-ephemeral-port-resolved',Number.isInteger(delayedPort)&&delayedPort>0);
+  const delayedScript=`const http=require('node:http');setTimeout(()=>http.createServer((request,response)=>{response.statusCode=200;response.end('ready');}).listen(${delayedPort},'127.0.0.1'),900);`;
+  const delayedServer=spawn(process.execPath,['-e',delayedScript],{stdio:'ignore'});
+  const readinessStarted=Date.now();
+  try{
+    await waitForLocalHttpServer({url:`http://127.0.0.1:${delayedPort}/`,server:delayedServer,timeoutMs:5000,pollMs:50});
+    check('local-server-readiness-waits-for-listener',Date.now()-readinessStarted>=800);
+  }finally{if(delayedServer.exitCode===null)delayedServer.kill('SIGTERM');}
+
+  const earlyExit=spawn(process.execPath,['-e','process.exit(7)'],{stdio:'ignore'});
+  let earlyExitRejected=false;
+  try{await waitForLocalHttpServer({url:'http://127.0.0.1:1/',server:earlyExit,timeoutMs:2000,pollMs:25});}
+  catch(error){earlyExitRejected=String(error).includes('LOCAL_PREFLIGHT_SERVER_EXITED:7');}
+  check('local-server-early-exit-rejected',earlyExitRejected);
 }finally{fs.rmSync(tmp,{recursive:true,force:true});}
 
 const receipt={schema:'PUBLICATION_FAST_PREFLIGHT_SELF_TEST_RECEIPT_v1',result:'PASS_CLOSED',checkCount:checks.length,checks,deploymentPerformed:false};

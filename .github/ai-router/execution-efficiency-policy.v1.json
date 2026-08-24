@@ -1,14 +1,15 @@
 {
   "schema": "AI_PROCEDURAL_EXECUTION_EFFICIENCY_POLICY_v1",
   "status": "ACTIVE_FAIL_CLOSED",
-  "purpose": "Prevent redundant execution loops, force evidence-bearing progress, and require transport escalation when a probe does not materially advance the operation.",
+  "purpose": "Prevent redundant execution loops, force evidence-bearing progress, require transport escalation when a probe does not materially advance the operation, and prevent repository-scale checkout for bounded work.",
   "scope": [
     "AI_ENTRY_POINT",
     "CONNECTED_GITHUB_OPERATIONS",
     "GITHUB_ACTIONS_INSPECTION",
     "WORKFLOW_LOG_RETRIEVAL",
     "PUBLICATION_VERIFICATION",
-    "CONTROL_PLANE_DIAGNOSTICS"
+    "CONTROL_PLANE_DIAGNOSTICS",
+    "WORKFLOW_CHECKOUT_LOCALITY"
   ],
   "evidenceProgressLaw": {
     "materialProgressDefinition": "A probe materially progresses only when it yields a new immutable identity, new exact assertion, new log/artifact content, new state transition, or a newly eliminated hypothesis.",
@@ -42,6 +43,35 @@
     "successfulDeployDoesNotEqualVerifiedPublication": true,
     "failedVerificationDoesNotAuthorizeProductMutation": true
   },
+  "checkoutLocality": {
+    "defaultMode": "BOUNDED_WORKING_SET_REQUIRED",
+    "unrestrictedCheckoutAllowedByDefault": false,
+    "wholeRepositoryCheckoutExceptionRequires": [
+      "EXPLICIT_MACHINE_READABLE_JUSTIFICATION",
+      "EXPLICIT_POLICY_ALLOWLIST",
+      "PROOF_BOUNDED_WORKING_SET_CANNOT_SATISFY_OPERATION"
+    ],
+    "materializeExcludedRootsThenDiscardAllowed": false,
+    "exactCommitObjectReadbackForExcludedProtectedClosuresAllowed": true,
+    "centralWorkflows": {
+      "aiEntryBridge": ".github/workflows/ai-entry-workflow-dispatch-bridge.yml",
+      "publicationPreflight": ".github/workflows/publication-preflight-v1.yml",
+      "publicationDeploy": ".github/workflows/pages-exact-head-deploy-v3.yml"
+    },
+    "publicationBulkRootsExcludedFromWorktree": [
+      "preview",
+      "h-earth-live-6d18e158",
+      "inspection/audralia-24057-exact"
+    ],
+    "protectedClosureReadback": {
+      "surfaceId": "audralia",
+      "mode": "EXACT_COMMIT_OBJECT_ON_DEMAND",
+      "allowedPrefix": "inspection/audralia-24057-exact/snapshot/",
+      "wholeExcludedTreeMaterializationAllowed": false
+    },
+    "prospectiveEnforcement": "NEW_OR_MODIFIED_WORKFLOWS_MUST_DECLARE_BOUNDED_SPARSE_WORKING_SET_OR_EXPLICIT_APPROVED_EXCEPTION",
+    "legacyUnrestrictedWorkflows": "MIGRATION_DEBT_NOT_PRECEDENT"
+  },
   "publicationPathConsistency": {
     "canonicalCapabilityId": "PAGES_EXACT_HEAD_DEPLOY",
     "capabilityRegistry": ".github/ai-router/workflow-dispatch-capability.v1.json",
@@ -56,7 +86,9 @@
     "BLIND_RERUN_BEFORE_FAILED_ASSERTION_LOCALIZATION",
     "SPECULATIVE_PRODUCT_MUTATION_FROM_VERIFICATION_FAILURE",
     "STATUS_ONLY_RESPONSE_WHEN_A_LAWFUL_EXECUTION_STEP_IS_AVAILABLE",
-    "CLAIMING_FETCH_OR_ANALYSIS_IS_IN_PROGRESS_AFTER_THE_ATTEMPT_HAS_ALREADY_ENDED"
+    "CLAIMING_FETCH_OR_ANALYSIS_IS_IN_PROGRESS_AFTER_THE_ATTEMPT_HAS_ALREADY_ENDED",
+    "UNRESTRICTED_CHECKOUT_WITHOUT_EXPLICIT_WHOLE_REPOSITORY_EXCEPTION",
+    "MATERIALIZE_EXCLUDED_PUBLICATION_ROOTS_THEN_DISCARD"
   ],
   "selfTest": ".github/ai-router/execution-efficiency-self-test.v1.mjs",
   "authorityCreated": false,

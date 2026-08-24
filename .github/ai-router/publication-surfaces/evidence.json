@@ -9,7 +9,7 @@
         "Current Public Condition",
         "What can the estate say right now?",
         "data-current-public-condition",
-        "/evidence/current-public-condition.mjs?v=1&cb=prod5"
+        "/evidence/current-public-condition.mjs?v=1&cb=prod6"
       ],
       "excludes": [
         "Breakthrough 4",
@@ -19,7 +19,7 @@
       ]
     },
     {
-      "path": "/evidence/current-public-condition.mjs?v=1&cb=prod5",
+      "path": "/evidence/current-public-condition.mjs?v=1&cb=prod6",
       "includes": [
         "SITE_ENTITLEMENT_URL",
         "site-entitlement.v1.mjs?cb=prod5",

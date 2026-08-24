@@ -19,11 +19,11 @@
   <div class="audralia-loading-screen" data-audralia-loader role="status" aria-live="polite" aria-label="Audralia is loading">
     <div class="audralia-loading-panel" data-audralia-loader-panel>
       <div class="audralia-loading-kicker">DIAMOND GATE · WORLD SYSTEM</div>
-      <div class="audralia-loading-version">LIVE BUILD · COLOR ARRIVAL v4</div>
+      <div class="audralia-loading-version">LIVE BUILD · COLOR ARRIVAL v4 · STARTUP TRACE v1</div>
       <div class="audralia-loading-mark" aria-hidden="true"><span>A</span></div>
       <div class="audralia-loading-title">Audralia</div>
       <div class="audralia-loading-subtitle">Entering a continuous planetary world</div>
-      <div class="audralia-loading-stage" data-audralia-loader-stage>Preparing terrain, atmosphere, and camera…</div>
+      <div class="audralia-loading-stage" data-audralia-loader-stage>Preparing page shell…</div>
       <div class="audralia-loading-systems" aria-label="World initialization systems">
         <div class="audralia-loading-system" data-loader-system="surface"><span>Surface + atmosphere</span><b>waiting</b></div>
         <div class="audralia-loading-system" data-loader-system="clouds"><span>Orbital cloud field</span><b>waiting</b></div>
@@ -75,11 +75,12 @@
       fap1OrganizedWeatherCandidate: true,
       directDenseCloudCoverage: true,
       loadingContinuity: 'AUDRALIA_LOADING_CONTINUITY_v4',
-      startupArchitecture: 'RENDERER_FIRST_PROGRESSIVE_ENRICHMENT_v1'
+      startupArchitecture: 'RENDERER_FIRST_PROGRESSIVE_ENRICHMENT_v1',
+      startupInstrumentation: 'AUDRALIA_STARTUP_DIAGNOSTIC_v1'
     });
   </script>
-  <script type="module" src="./weather-presentation-reconciliation/loader-progress.mjs?cb=AUDRALIA_LOADING_CONTINUITY_v4"></script>
-  <script type="module" src="./weather-presentation-reconciliation/app.mjs?cb=c7aa1038b54b29b2"></script>
+  <script type="module" src="./weather-presentation-reconciliation/loader-progress.mjs?cb=AUDRALIA_STARTUP_DIAGNOSTIC_v1"></script>
+  <script type="module" src="./startup-bootstrap-v2.mjs?cb=AUDRALIA_STARTUP_DIAGNOSTIC_v1"></script>
   <script type="module" src="./progressive-enrichment-bootstrap-v1.mjs?cb=RENDERER_FIRST_PROGRESSIVE_ENRICHMENT_v1"></script>
 </body>
 </html>

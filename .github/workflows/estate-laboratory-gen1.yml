@@ -33,7 +33,7 @@ jobs:
             /tools/h-earth-experience-anchor-gate.mjs
             /.github/workflows/estate-laboratory-gen1.yml
 
-      - name: Construct bounded navigation candidate
+      - name: Construct and push bounded website candidate
         shell: bash
         run: |
           set -euo pipefail
@@ -65,14 +65,6 @@ jobs:
           python3 -c 'from pathlib import Path; p=Path("coherence-diagnostic/index.html"); s=p.read_text(); old="      <nav\n        class=\"route-links\"\n        aria-label=\"Route links\"\n      >\n        <a href=\"/\">Compass</a>\n        <a href=\"/showroom/globe/\">Mirrorland</a>\n        <a href=\"/gauges/\">Triple G</a>\n      </nav>"; new="      <nav\n        class=\"route-links\"\n        aria-label=\"Route links\"\n      >\n        <a href=\"/\">Compass</a>\n        <a href=\"/showroom/globe/\">Mirrorland</a>\n        <a href=\"/instruments/\" data-estate-laboratory-return>Estate Laboratory</a>\n        <a href=\"/gauges/\">Triple G</a>\n      </nav>"; count=s.count(old); assert count == 1, f"COHERENCE_DIAGNOSTIC_RETURN_PATCH_MATCH_COUNT:{count}"; p.write_text(s.replace(old,new,1))'
           git diff --check -- coherence-diagnostic/index.html
           test "$(git diff --numstat "$BASE" -- coherence-diagnostic/index.html | awk '{print $1":"$2}')" = '1:0'
-
-          git show "$STALE:.github/workflows/estate-laboratory-gen1.yml" > /tmp/estate-laboratory-qualifier.yml
-          python3 -c 'from pathlib import Path; p=Path("/tmp/estate-laboratory-qualifier.yml"); s=p.read_text(); old="6419f78d2c048d51827bb6c631e557d83fe4f061"; new="af46884873acf993400ab51915fc8044bd022e93"; assert old in s, "FINAL_QUALIFIER_OLD_BASE_BINDING_NOT_FOUND"; p.write_text(s.replace(old,new))'
-          cp /tmp/estate-laboratory-qualifier.yml .github/workflows/estate-laboratory-gen1.yml
-          grep -Fq 'name: Estate Laboratory Governed Observability Qualification' .github/workflows/estate-laboratory-gen1.yml
-          grep -Fq 'contents: read' .github/workflows/estate-laboratory-gen1.yml
-          ! grep -Fq 'contents: write' .github/workflows/estate-laboratory-gen1.yml
-          grep -Fq "$BASE" .github/workflows/estate-laboratory-gen1.yml
 
           allowed='^(index.html|site-guide/index.html|instruments/index.html|instruments/laboratory.js|showroom/globe/audralia/disposition/index.html|showroom/globe/audralia/disposition/laboratory.js|showroom/globe/audralia/diagnostic/index.html|showroom/globe/h-earth/diagnostic/index.html|showroom/globe/hearth/diagnostic/index.html|coherence-diagnostic/index.html|tools/estate-laboratory-gen1-verify.mjs|tools/h-earth-experience-anchor-gate.mjs|\.github/workflows/estate-laboratory-gen1.yml)$'
           changed="$(git diff --name-only "$BASE")"
@@ -108,7 +100,6 @@ jobs:
             showroom/globe/hearth/diagnostic/index.html \
             coherence-diagnostic/index.html \
             tools/estate-laboratory-gen1-verify.mjs \
-            tools/h-earth-experience-anchor-gate.mjs \
-            .github/workflows/estate-laboratory-gen1.yml
+            tools/h-earth-experience-anchor-gate.mjs
           git commit -m 'Estate Laboratory: construct exact-current-main navigation candidate'
           git push origin "HEAD:$GITHUB_REF_NAME"

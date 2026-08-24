@@ -2427,6 +2427,18 @@
       "scopeHash": "c71c085369f79f8f2af850ec50e01b4f099e49f28d4c8a869dec2a847169736b",
       "state": "ADMITTED_LOCKED"
     },
+    "c741f04e2c0d6d80298d66debdf940cecdb250a77af64fc3747b25c94355ab34": {
+      "governingHead": "81f588401c7f38c25f788331ea457fbc9f83d102",
+      "lockGeneration": 1615,
+      "lockScope": "H_EARTH:ESTATE_LABORATORY:GEN1:RESPONSIVE_QUALIFICATION_AND_NONEXPERIENCE_CLASSIFICATION:V3:5_PATH_SCOPE",
+      "operationId": "H_EARTH_ESTATE_LABORATORY_COCKPIT_GEN1_QUALIFICATION_20260824_003",
+      "procedureLocatorDigest": "495a932ef4c8d958de6c19ba64083eacb73ecd47ab1e690a2b56ad0fc35703c1",
+      "released": false,
+      "requestDigest": "ca12fc3ab374cf284cf0ee3f3381cf01fb766d1a6161991d8e540842470fc4c2",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c741f04e2c0d6d80298d66debdf940cecdb250a77af64fc3747b25c94355ab34",
+      "state": "ADMITTED_LOCKED"
+    },
     "c8170225ecfd16b065547b18e3190cc6c6531cbef77ab380a628c0413467b267": {
       "governingHead": "d3e15d44eacd7bfc30b708721dca6ad4c175c887",
       "lockGeneration": 20,
@@ -3215,7 +3227,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1614,
+  "lockGeneration": 1615,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

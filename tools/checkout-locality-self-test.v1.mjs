@@ -51,6 +51,9 @@ for(const required of [
   '/h-earth-3d/control-plane/run-8/',
   '/h-earth-3d/objects/',
   '/h-earth-3d/zones/',
+  '/h-earth-3d/cells/',
+  '/h-earth-3d/environment/',
+  '/h-earth-3d/h-earth.matrix.js',
   '/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/',
   '/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/',
   '/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/render/',
@@ -59,10 +62,14 @@ for(const required of [
   '/inspection/audralia-24057-exact/snapshot/h-earth-3d/control-plane/run-8/',
   '/inspection/audralia-24057-exact/snapshot/h-earth-3d/objects/',
   '/inspection/audralia-24057-exact/snapshot/h-earth-3d/zones/',
+  '/inspection/audralia-24057-exact/snapshot/h-earth-3d/cells/',
+  '/inspection/audralia-24057-exact/snapshot/h-earth-3d/environment/',
+  '/inspection/audralia-24057-exact/snapshot/h-earth-3d/h-earth.matrix.js',
   '/tools/audralia-weather-presentation-reconciliation-ci.mjs'
 ])check(`audralia-weather-qualification-path-${required}`,audraliaWeatherQualification.includes(required));
 check('audralia-weather-qualification-two-bounded-checkouts',(audraliaWeatherQualification.match(/uses:\s*actions\/checkout@v4/g)||[]).length===2);
 check('audralia-weather-qualification-not-root-wide',!audraliaWeatherQualification.includes('\n            /*\n'));
+check('audralia-weather-qualification-module-closure-guard',audraliaWeatherQualification.includes('Verify browser module dependency closure'));
 for(const text of [preflight,deploy])for(const excluded of ['!/preview/','!/h-earth-live-6d18e158/','!/inspection/audralia-24057-exact/'])check(`publication-exclusion-${excluded}-${text===preflight?'preflight':'deploy'}`,text.includes(excluded));
 check('builder-exact-object-reader',builder.includes("source:'EXACT_COMMIT_OBJECT'"));
 check('builder-git-object-show',builder.includes("spawnSync('git',['-C',repoRoot,'show',objectPath]"));
@@ -111,6 +118,7 @@ const receipt={
   exactCommitObjectReadbackVerified:true,
   governedLaneGatewaysSparse:true,
   audraliaWeatherQualificationSparse:true,
+  audraliaWeatherQualificationModuleClosureGuard:true,
   checkCount:checks.length,
   checks
 };

@@ -7,8 +7,8 @@ const base='http://127.0.0.1:4173';
 const chrome=process.env.CHROME_PATH;
 if(!chrome)throw new Error('CHROME_PATH_MISSING');
 
-const DIRECT_FAP1='showroom/globe/audralia/fap1-weather-presentation-v1.mjs';
-const SNAPSHOT_FAP1='inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/fap1-weather-presentation-v1.mjs';
+const DIRECT_FAP1=['showroom','globe','audralia','fap1-weather-presentation-v1.mjs'].join('/');
+const SNAPSHOT_FAP1=['inspection','audralia-24057-exact','snapshot','showroom','globe','audralia','fap1-weather-presentation-v1.mjs'].join('/');
 const LIVE_INDEX='showroom/globe/audralia/index.html';
 const BASE_RENDERER='showroom/globe/audralia/weather-presentation-reconciliation/exterior-weather.mjs';
 const POLICY_ID='AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v6';

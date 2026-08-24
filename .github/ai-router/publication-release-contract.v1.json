@@ -6,7 +6,7 @@
   "releaseClasses": {
     "BOUNDED_PAGE_RELEASE": {
       "includes": ["STATIC_EDITORIAL_MICRO", "BOUNDED_LAYOUT", "BOUNDED_STYLE", "BOUNDED_COPY", "BOUNDED_PRESENTATION_ORDER", "BOUNDED_EXISTING_INTERACTION_REPAIR_WITHOUT_NEW_RUNTIME_AUTHORITY"],
-      "requiredSequence": ["APPROVED_COMMIT", "PREFLIGHT_PASS", "EXPLICIT_DEPLOYMENT", "LIVE_EXACT_HEAD_VERIFICATION"],
+      "requiredSequence": ["APPROVED_COMMIT", "EXPLICIT_DEPLOYMENT", "LIVE_EXACT_HEAD_VERIFICATION"],
       "canonicalOperationIntakeRequired": false,
       "pageExcellenceChainRequired": false,
       "newReleaseBranchRequired": false,
@@ -15,7 +15,7 @@
     },
     "RUNTIME_OR_NEW_DEVELOPMENT": {
       "includes": ["NEW_RUNTIME_OWNER", "STATE_MACHINE_CHANGE", "CONTROLLER_CHANGE", "NEW_INTERACTIVE_SYSTEM", "NEW_ENVIRONMENT", "NEW_PRODUCT", "ARCHITECTURE_OR_AUTHORITY_CHANGE", "AMBIGUOUS_OR_MIXED_SCOPE"],
-      "requiredSequence": ["APPLICABLE_GOVERNANCE_AND_QUALIFICATION", "APPROVED_COMMIT", "PREFLIGHT_PASS", "EXPLICIT_DEPLOYMENT", "LIVE_EXACT_HEAD_VERIFICATION"],
+      "requiredSequence": ["APPLICABLE_GOVERNANCE_AND_QUALIFICATION", "APPROVED_COMMIT", "EXPLICIT_DEPLOYMENT", "LIVE_EXACT_HEAD_VERIFICATION"],
       "canonicalOperationIntakeRequired": true
     }
   },
@@ -30,7 +30,8 @@
     "deploymentOnFailure": false,
     "samePayloadConstructionRequired": true,
     "reuseLiveVerifier": "tools/publication-live-verify.mjs",
-    "requiredBeforeProductionMutation": true
+    "requiredBeforeProductionMutation": true,
+    "relationToCanonicalReleaseSequence": "PREFLIGHT_IS_A_MANDATORY_DEPLOYMENT_PREREQUISITE_AND_DOES_NOT_REDEFINE_THE_EXISTING_RELEASE_CLASS_SEQUENCE"
   },
   "deployment": {
     "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",

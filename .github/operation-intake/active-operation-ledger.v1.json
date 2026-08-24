@@ -2321,32 +2321,31 @@
       "state": "ADMITTED_LOCKED"
     },
     "c71c085369f79f8f2af850ec50e01b4f099e49f28d4c8a869dec2a847169736b": {
-      "governingHead": "bb14b3af38f2ac77e2c602c09bebed218edb7ae0",
-      "lockGeneration": 1607,
+      "governingHead": "2679b55e712e77c809eb9304ea06e2d673eef28d",
+      "lockGeneration": 1608,
       "lockScope": "COMPASS_ROOT_CAPABILITY_CAROUSEL_BRAIN_GEN1",
-      "operationId": "COMPASS_BRAIN_GEN1_PASSIVE_HRA_MERGE_20260824_0124",
+      "operationId": "COMPASS_BRAIN_GEN1_PASSIVE_HRA_MERGE_20260824_0128",
       "predecessor": {
         "authorityInherited": false,
         "exactHeadRevalidationRequired": true,
-        "governingHead": "d3d64e74d1466e398f0c1a2e40f29bd0cb2eaa2f",
-        "lockGeneration": 1605,
-        "lockScope": "COMPASS_ROOT_BRAIN_GEN1_AND_AUDIT_SETTLEMENT",
-        "operationId": "COMPASS_BRAIN_GEN1_AND_AUDIT_SETTLEMENT_20260824_0058",
+        "governingHead": "bb14b3af38f2ac77e2c602c09bebed218edb7ae0",
+        "lockGeneration": 1607,
+        "lockScope": "COMPASS_ROOT_CAPABILITY_CAROUSEL_BRAIN_GEN1",
+        "operationId": "COMPASS_BRAIN_GEN1_PASSIVE_HRA_MERGE_20260824_0124",
         "preservedEvidenceRefs": [
+          "PR#1928 candidate 5ba95862e703835029b17e514bfbedc7b568c82b",
           "PR#1904@dcb7b4be66c9b5aa0828981dfe385740c25070de",
           "issue#1909",
           "COMPASS_BRAIN_GEN1_HRA_GEOMETRY_FREEZE_v1",
-          "runs#32690680676,#32690680652,#32690680801",
-          "owner clarification: Compass is protected baseline and must not be repaired or changed by Brain Gen1",
-          "successor-attempt-0120:SUCCESSOR_REASON_INVALID"
+          "compare bb14b3af..2679b55e: no production Compass path changed; intervening changes are Evidence/Audralia inspection snapshot only"
         ],
         "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
         "terminalDisposition": "SUPERSEDED",
-        "transitionId": "COMPASS_BRAIN_GEN1_PASSIVE_MERGE_SUCCESSOR_20260824_0124"
+        "transitionId": "COMPASS_BRAIN_GEN1_PASSIVE_MERGE_SUCCESSOR_20260824_0128"
       },
-      "procedureLocatorDigest": "3d91c82a44d311e7c2fe55c325179fe9f13bf4173ec84cda88d72b0168676ae2",
+      "procedureLocatorDigest": "f544c1c798105180df61f621c43837984d11786da6572878abf18797bacbfc3b",
       "released": false,
-      "requestDigest": "657b24f79d97dc6b330d0bd9933ce9e122ed716af32d3d505fbf6f8bd636cd23",
+      "requestDigest": "1dba34018cff7ba594a1313a3769994f20429b7d868e2727cba2138f47283d70",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "c71c085369f79f8f2af850ec50e01b4f099e49f28d4c8a869dec2a847169736b",
       "state": "ADMITTED_LOCKED"
@@ -3139,7 +3138,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1607,
+  "lockGeneration": 1608,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -24457,6 +24456,56 @@
         "successorLockScope": "COMPASS_ROOT_CAPABILITY_CAROUSEL_BRAIN_GEN1",
         "successorOperationId": "COMPASS_BRAIN_GEN1_PASSIVE_HRA_MERGE_20260824_0124",
         "transitionId": "COMPASS_BRAIN_GEN1_PASSIVE_MERGE_SUCCESSOR_20260824_0124"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "bb14b3af38f2ac77e2c602c09bebed218edb7ae0",
+      "lockGeneration": 1607,
+      "lockScope": "COMPASS_ROOT_CAPABILITY_CAROUSEL_BRAIN_GEN1",
+      "operationId": "COMPASS_BRAIN_GEN1_PASSIVE_HRA_MERGE_20260824_0124",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "d3d64e74d1466e398f0c1a2e40f29bd0cb2eaa2f",
+        "lockGeneration": 1605,
+        "lockScope": "COMPASS_ROOT_BRAIN_GEN1_AND_AUDIT_SETTLEMENT",
+        "operationId": "COMPASS_BRAIN_GEN1_AND_AUDIT_SETTLEMENT_20260824_0058",
+        "preservedEvidenceRefs": [
+          "PR#1904@dcb7b4be66c9b5aa0828981dfe385740c25070de",
+          "issue#1909",
+          "COMPASS_BRAIN_GEN1_HRA_GEOMETRY_FREEZE_v1",
+          "runs#32690680676,#32690680652,#32690680801",
+          "owner clarification: Compass is protected baseline and must not be repaired or changed by Brain Gen1",
+          "successor-attempt-0120:SUCCESSOR_REASON_INVALID"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_BRAIN_GEN1_PASSIVE_MERGE_SUCCESSOR_20260824_0124"
+      },
+      "procedureLocatorDigest": "3d91c82a44d311e7c2fe55c325179fe9f13bf4173ec84cda88d72b0168676ae2",
+      "released": true,
+      "requestDigest": "657b24f79d97dc6b330d0bd9933ce9e122ed716af32d3d505fbf6f8bd636cd23",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c71c085369f79f8f2af850ec50e01b4f099e49f28d4c8a869dec2a847169736b",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "PR#1928 candidate 5ba95862e703835029b17e514bfbedc7b568c82b",
+          "PR#1904@dcb7b4be66c9b5aa0828981dfe385740c25070de",
+          "issue#1909",
+          "COMPASS_BRAIN_GEN1_HRA_GEOMETRY_FREEZE_v1",
+          "compare bb14b3af..2679b55e: no production Compass path changed; intervening changes are Evidence/Audralia inspection snapshot only"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "2679b55e712e77c809eb9304ea06e2d673eef28d",
+        "successorLockGeneration": 1608,
+        "successorLockScope": "COMPASS_ROOT_CAPABILITY_CAROUSEL_BRAIN_GEN1",
+        "successorOperationId": "COMPASS_BRAIN_GEN1_PASSIVE_HRA_MERGE_20260824_0128",
+        "transitionId": "COMPASS_BRAIN_GEN1_PASSIVE_MERGE_SUCCESSOR_20260824_0128"
       },
       "terminalDisposition": "SUPERSEDED"
     }

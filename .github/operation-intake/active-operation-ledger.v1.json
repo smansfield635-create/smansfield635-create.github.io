@@ -2440,32 +2440,35 @@
       "state": "ADMITTED_LOCKED"
     },
     "c741f04e2c0d6d80298d66debdf940cecdb250a77af64fc3747b25c94355ab34": {
-      "governingHead": "e00254629f158ea6980eb822628f6545f226462c",
-      "lockGeneration": 1617,
+      "governingHead": "2108d00e80d908b3c14d4fbf3e6ffea758013b6b",
+      "lockGeneration": 1619,
       "lockScope": "H_EARTH:ESTATE_LABORATORY:GEN1:RESPONSIVE_QUALIFICATION_AND_NONEXPERIENCE_CLASSIFICATION:V3:5_PATH_SCOPE",
-      "operationId": "H_EARTH_ESTATE_LABORATORY_COCKPIT_GEN1_QUALIFICATION_20260824_008",
+      "operationId": "H_EARTH_ESTATE_LABORATORY_COCKPIT_GEN1_QUALIFICATION_20260824_009",
       "predecessor": {
         "authorityInherited": false,
         "exactHeadRevalidationRequired": true,
-        "governingHead": "6ebca4a53465bc349757bafb4c58caed666191af",
-        "lockGeneration": 1616,
+        "governingHead": "e00254629f158ea6980eb822628f6545f226462c",
+        "lockGeneration": 1617,
         "lockScope": "H_EARTH:ESTATE_LABORATORY:GEN1:RESPONSIVE_QUALIFICATION_AND_NONEXPERIENCE_CLASSIFICATION:V3:5_PATH_SCOPE",
-        "operationId": "H_EARTH_ESTATE_LABORATORY_COCKPIT_GEN1_QUALIFICATION_20260824_007",
+        "operationId": "H_EARTH_ESTATE_LABORATORY_COCKPIT_GEN1_QUALIFICATION_20260824_008",
         "preservedEvidenceRefs": [
           "issue#1940",
-          "PR#1950",
-          "successor007-head:e4de3a54f1e3a126411751af1e791259d8a51502",
-          "estate-laboratory-run:32761052929:PASS",
-          "h-earth-anchor-run:32761053094:PASS",
-          "main-advance:PR#1949:one-unrelated-audralia-manifest-path"
+          "PR#1953",
+          "successor008-head:dfdc8acca6936f895f3078703b8ebb888514edfc",
+          "estate-laboratory-run:32762350406:PASS",
+          "h-earth-anchor-run:32762350313:PASS",
+          "static-asset-identity-run:32762350404:PASS",
+          "showroom-label-run:32762350336:PASS",
+          "showroom-four-compass-run:32762350450:PASS",
+          "main-advance:PR#1954:three-disjoint-publication-preflight-control-plane-paths"
         ],
         "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
         "terminalDisposition": "SUPERSEDED",
-        "transitionId": "H_EARTH_ESTATE_LABORATORY_GEN1_QUALIFICATION_SUCCESSOR_20260824_1315"
+        "transitionId": "H_EARTH_ESTATE_LABORATORY_GEN1_QUALIFICATION_SUCCESSOR_20260824_009"
       },
-      "procedureLocatorDigest": "095316b81ba4c6bcaae9f632af1b5543b2f4ebd1cb566c85d50647baa225d266",
+      "procedureLocatorDigest": "2bb28d9047ec51ec07085674ca530b1e206801e80db4c6f8a7b24efb965e79f1",
       "released": false,
-      "requestDigest": "f93c824cc7aa8b396cdcf118168ad66ef85a8829073492eec18078d9f426980c",
+      "requestDigest": "58a45f1f64e52661ecead137ec8d191c72cc5801beb1c25407b1055895f622be",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "c741f04e2c0d6d80298d66debdf940cecdb250a77af64fc3747b25c94355ab34",
       "state": "ADMITTED_LOCKED"
@@ -3258,7 +3261,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1618,
+  "lockGeneration": 1619,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -24741,6 +24744,60 @@
         "successorLockScope": "H_EARTH:ESTATE_LABORATORY:GEN1:RESPONSIVE_QUALIFICATION_AND_NONEXPERIENCE_CLASSIFICATION:V3:5_PATH_SCOPE",
         "successorOperationId": "H_EARTH_ESTATE_LABORATORY_COCKPIT_GEN1_QUALIFICATION_20260824_008",
         "transitionId": "H_EARTH_ESTATE_LABORATORY_GEN1_QUALIFICATION_SUCCESSOR_20260824_1315"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "e00254629f158ea6980eb822628f6545f226462c",
+      "lockGeneration": 1617,
+      "lockScope": "H_EARTH:ESTATE_LABORATORY:GEN1:RESPONSIVE_QUALIFICATION_AND_NONEXPERIENCE_CLASSIFICATION:V3:5_PATH_SCOPE",
+      "operationId": "H_EARTH_ESTATE_LABORATORY_COCKPIT_GEN1_QUALIFICATION_20260824_008",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "6ebca4a53465bc349757bafb4c58caed666191af",
+        "lockGeneration": 1616,
+        "lockScope": "H_EARTH:ESTATE_LABORATORY:GEN1:RESPONSIVE_QUALIFICATION_AND_NONEXPERIENCE_CLASSIFICATION:V3:5_PATH_SCOPE",
+        "operationId": "H_EARTH_ESTATE_LABORATORY_COCKPIT_GEN1_QUALIFICATION_20260824_007",
+        "preservedEvidenceRefs": [
+          "issue#1940",
+          "PR#1950",
+          "successor007-head:e4de3a54f1e3a126411751af1e791259d8a51502",
+          "estate-laboratory-run:32761052929:PASS",
+          "h-earth-anchor-run:32761053094:PASS",
+          "main-advance:PR#1949:one-unrelated-audralia-manifest-path"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "H_EARTH_ESTATE_LABORATORY_GEN1_QUALIFICATION_SUCCESSOR_20260824_1315"
+      },
+      "procedureLocatorDigest": "095316b81ba4c6bcaae9f632af1b5543b2f4ebd1cb566c85d50647baa225d266",
+      "released": true,
+      "requestDigest": "f93c824cc7aa8b396cdcf118168ad66ef85a8829073492eec18078d9f426980c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c741f04e2c0d6d80298d66debdf940cecdb250a77af64fc3747b25c94355ab34",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue#1940",
+          "PR#1953",
+          "successor008-head:dfdc8acca6936f895f3078703b8ebb888514edfc",
+          "estate-laboratory-run:32762350406:PASS",
+          "h-earth-anchor-run:32762350313:PASS",
+          "static-asset-identity-run:32762350404:PASS",
+          "showroom-label-run:32762350336:PASS",
+          "showroom-four-compass-run:32762350450:PASS",
+          "main-advance:PR#1954:three-disjoint-publication-preflight-control-plane-paths"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "2108d00e80d908b3c14d4fbf3e6ffea758013b6b",
+        "successorLockGeneration": 1619,
+        "successorLockScope": "H_EARTH:ESTATE_LABORATORY:GEN1:RESPONSIVE_QUALIFICATION_AND_NONEXPERIENCE_CLASSIFICATION:V3:5_PATH_SCOPE",
+        "successorOperationId": "H_EARTH_ESTATE_LABORATORY_COCKPIT_GEN1_QUALIFICATION_20260824_009",
+        "transitionId": "H_EARTH_ESTATE_LABORATORY_GEN1_QUALIFICATION_SUCCESSOR_20260824_009"
       },
       "terminalDisposition": "SUPERSEDED"
     }

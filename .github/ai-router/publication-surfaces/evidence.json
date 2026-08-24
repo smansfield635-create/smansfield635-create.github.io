@@ -9,7 +9,7 @@
         "Current Public Condition",
         "What can the estate say right now?",
         "data-current-public-condition",
-        "/evidence/current-public-condition.mjs?v=1&cb=prod1"
+        "/evidence/current-public-condition.mjs?v=1&cb=prod3"
       ],
       "excludes": [
         "Breakthrough 4",
@@ -20,7 +20,7 @@
       "path": "/evidence/current-public-condition.mjs",
       "includes": [
         "evaluateSite",
-        "site-entitlement.v1.mjs?cb=prod1",
+        "site-entitlement.v1.mjs?cb=prod3",
         "data-condition-state",
         "data-condition-objects",
         "What restores it"
@@ -33,6 +33,10 @@
       "path": "/evidence/readiness/bt4-site-governance/site-entitlement.v1.mjs",
       "includes": [
         "./entitlement-engine.v1.mjs?cb=prod1",
+        "FETCH_DEADLINE_MS=10000",
+        "WORLD_READY_DEADLINE_MS=30000",
+        "ADAPTER_DEADLINE_MS=35000",
+        "Promise.allSettled",
         "Scientific claim",
         "Audralia world/runtime",
         "Audralia diagnostic authority",
@@ -57,10 +61,10 @@
     "path": "/evidence/",
     "readyAttribute": {
       "selector": "[data-current-public-condition]",
-      "name": "data-aggregate",
-      "contains": "RESTRICTED"
+      "name": "data-ready",
+      "contains": "true"
     },
-    "timeoutMs": 90000,
+    "timeoutMs": 45000,
     "failOnConsoleErrors": true
   }
 }

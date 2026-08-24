@@ -581,6 +581,18 @@
       "scopeHash": "3774dc0ae012f09ec1f5bf4311aaf1235b5688fb85a4515e235c644c454bea8e",
       "state": "ADMITTED_LOCKED"
     },
+    "386d281a2a72927a21854098359792dfe56ed606736573890fc1de31eac4e39c": {
+      "governingHead": "d8e0cfaee7c685888db028aaf6c37c722af684c1",
+      "lockGeneration": 1639,
+      "lockScope": "AUDRALIA_WEATHER_QUALIFICATION_CHECKOUT_LOCALITY",
+      "operationId": "AUDRALIA_WEATHER_QUALIFICATION_CHECKOUT_LOCALITY_20260824_001",
+      "procedureLocatorDigest": "f50adca134eef5d422ef055849457805971d6d11505540d0f63815d13214f4bc",
+      "released": false,
+      "requestDigest": "6b7a5670bab865dedbfa105643745ebed631651639f76668c3a698448442de5f",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "386d281a2a72927a21854098359792dfe56ed606736573890fc1de31eac4e39c",
+      "state": "ADMITTED_LOCKED"
+    },
     "39d5500dfb4466816b038c15780fde4d09c8b96014e19e826f3f655a04211718": {
       "governingHead": "f8eefd20fc1cdcdc777e070f008bb2e2b8580da1",
       "lockGeneration": 1526,
@@ -3422,7 +3434,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1638,
+  "lockGeneration": 1639,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

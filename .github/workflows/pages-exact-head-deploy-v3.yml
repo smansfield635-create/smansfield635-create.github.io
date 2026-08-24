@@ -63,6 +63,8 @@ jobs:
           manifest=".github/ai-router/publication-surfaces/${SURFACE_ID}.json"
           test -f "$manifest"
           jq -e --arg id "$SURFACE_ID" '.schema=="PUBLICATION_SURFACE_VERIFICATION_v1" and .surfaceId==$id and (.checks|type=="array") and (.checks|length>0)' "$manifest" >/dev/null
+          test -f '.github/ai-router/publication-surfaces/audralia.json'
+          jq -e '.schema=="PUBLICATION_SURFACE_VERIFICATION_v1" and .surfaceId=="audralia" and (.checks|type=="array") and (.checks|length>0)' '.github/ai-router/publication-surfaces/audralia.json' >/dev/null
           echo "manifest=$manifest" >> "$GITHUB_OUTPUT"
           echo "runtime=$(jq -r 'if .runtime?.enabled == true then "true" else "false" end' "$manifest")" >> "$GITHUB_OUTPUT"
 
@@ -80,17 +82,16 @@ jobs:
             --surface-id "$SURFACE_ID" \
             --stage "$STAGE" \
             --receipt "$RECEIPT"
-          jq -e '.schema=="PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1" and .result=="PAYLOAD_BUILT" and .deploymentPerformed==false' "$RECEIPT" >/dev/null
+          jq -e '.schema=="PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1" and .result=="PAYLOAD_BUILT" and .deploymentPerformed==false and (.protectedSurfaceIds|index("audralia")!=null) and .authorizedExcludedRuntimeDependencies.status=="PROMOTED"' "$RECEIPT" >/dev/null
           echo "PAGES_PAYLOAD_BYTES=$(jq -r '.payloadBytes' "$RECEIPT")"
+          echo "PROTECTED_AUDRALIA_DEPENDENCY_FILES=$(jq -r '.authorizedExcludedRuntimeDependencies.fileCount' "$RECEIPT")"
 
       - name: Set up Chrome for preflight
-        if: ${{ steps.surface.outputs.runtime == 'true' }}
         uses: browser-actions/setup-chrome@v1
         with:
           chrome-version: stable
 
       - name: Install runtime verifier for preflight
-        if: ${{ steps.surface.outputs.runtime == 'true' }}
         run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
 
       - name: Require local exact-payload preflight pass
@@ -102,23 +103,19 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [ "${{ steps.surface.outputs.runtime }}" = "true" ]; then
-            export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
-            test -n "$CHROME_PATH"
-          fi
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          test -n "$CHROME_PATH"
           node tools/publication-preflight.v1.mjs verify \
             --target-sha "$TARGET_SHA" \
             --surface-id "$SURFACE_ID" \
             --stage "$STAGE" \
             --receipt "$RECEIPT"
-          jq -e '.schema=="PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1" and .result=="PREFLIGHT_PASS" and .deploymentPerformed==false' "$RECEIPT" >/dev/null
+          jq -e '.schema=="PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1" and .result=="PREFLIGHT_PASS" and .deploymentPerformed==false and .checks.authorizedRuntimeDependencyClosure=="PASS" and .checks.runtimeReadiness=="PASS"' "$RECEIPT" >/dev/null
           echo "PUBLICATION_FAST_PREFLIGHT_PASS=$TARGET_SHA:$SURFACE_ID"
-          if [ "$SURFACE_ID" = "audralia" ]; then
-            short_sha="$(printf '%s' "$TARGET_SHA" | cut -c1-8 | tr '[:lower:]' '[:upper:]')"
-            grep -Fq "data-audralia-build-sha=\"$TARGET_SHA\"" "$STAGE/showroom/globe/audralia/index.html"
-            grep -Fq "BUILD $short_sha" "$STAGE/showroom/globe/audralia/index.html"
-            echo "AUDRALIA_VISIBLE_BUILD_FINGERPRINT=$short_sha"
-          fi
+          short_sha="$(printf '%s' "$TARGET_SHA" | cut -c1-8 | tr '[:lower:]' '[:upper:]')"
+          grep -Fq "data-audralia-build-sha=\"$TARGET_SHA\"" "$STAGE/showroom/globe/audralia/index.html"
+          grep -Fq "BUILD $short_sha" "$STAGE/showroom/globe/audralia/index.html"
+          echo "PROTECTED_AUDRALIA_VISIBLE_BUILD_FINGERPRINT=$short_sha"
 
       - uses: actions/upload-artifact@v4
         with:
@@ -135,12 +132,13 @@ jobs:
         id: deploy
         uses: actions/deploy-pages@v4
 
-      - name: Verify static public surface
+      - name: Verify static public surfaces
         env:
           PAGE_URL: ${{ steps.deploy.outputs.page_url }}
           MANIFEST: ${{ steps.surface.outputs.manifest }}
           TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
           SURFACE_ID: ${{ inputs.surface_id }}
+          AUDRALIA_MANIFEST: .github/ai-router/publication-surfaces/audralia.json
         shell: bash
         run: |
           set -euo pipefail
@@ -149,16 +147,14 @@ jobs:
             observed="$(printf '%s' "$marker" | jq -r '.commit // empty' 2>/dev/null || true)"
             observed_surface="$(printf '%s' "$marker" | jq -r '.surface // empty' 2>/dev/null || true)"
             if [ "$observed" = "$TARGET_SHA" ] && [ "$observed_surface" = "$SURFACE_ID" ]; then
-              if [ "$SURFACE_ID" = "audralia" ]; then
-                short_sha="$(printf '%s' "$TARGET_SHA" | cut -c1-8 | tr '[:lower:]' '[:upper:]')"
-                audralia_url="${PAGE_URL%/}/showroom/globe/audralia/"
-                public_html="$(curl --fail --silent --show-error -L --max-time 20 "$audralia_url")"
-                if ! printf '%s' "$public_html" | grep -Fq "data-audralia-build-sha=\"$TARGET_SHA\"" || ! printf '%s' "$public_html" | grep -Fq "BUILD $short_sha"; then
-                  echo "PUBLIC_BUILD_FINGERPRINT_MISMATCH expected=$short_sha observed=NONE" >&2
-                  exit 1
-                fi
-                echo "PUBLIC_BUILD_FINGERPRINT_VERIFIED=$short_sha"
+              short_sha="$(printf '%s' "$TARGET_SHA" | cut -c1-8 | tr '[:lower:]' '[:upper:]')"
+              audralia_url="${PAGE_URL%/}/showroom/globe/audralia/"
+              public_html="$(curl --fail --silent --show-error -L --max-time 20 "$audralia_url")"
+              if ! printf '%s' "$public_html" | grep -Fq "data-audralia-build-sha=\"$TARGET_SHA\"" || ! printf '%s' "$public_html" | grep -Fq "BUILD $short_sha"; then
+                echo "PROTECTED_PUBLIC_BUILD_FINGERPRINT_MISMATCH expected=$short_sha observed=NONE" >&2
+                exit 1
               fi
+              echo "PROTECTED_PUBLIC_BUILD_FINGERPRINT_VERIFIED=$short_sha"
               if [ "$SURFACE_ID" = "brain-gen1-hra" ]; then
                 brain_url="${PAGE_URL%/}/inspection/compass/brain-gen1-hra/Allen_M_Brain.glb"
                 brain_tmp="$(mktemp)"
@@ -169,19 +165,32 @@ jobs:
                 echo 'BRAIN_GEN1_HRA_PUBLIC_ASSET_IDENTITY_VERIFIED'
               fi
               node tools/publication-live-verify.mjs static "$PAGE_URL" "$MANIFEST"
+              if [ "$SURFACE_ID" != "audralia" ]; then
+                node tools/publication-live-verify.mjs static "$PAGE_URL" "$AUDRALIA_MANIFEST"
+              fi
+              echo "PROTECTED_STATIC_SURFACE_CONTINUITY_VERIFIED=$TARGET_SHA"
               exit 0
             fi
             sleep 10
           done
           exit 1
 
-      - name: Verify runtime public surface
-        if: ${{ steps.surface.outputs.runtime == 'true' }}
+      - name: Verify runtime public surfaces
         env:
           PAGE_URL: ${{ steps.deploy.outputs.page_url }}
           MANIFEST: ${{ steps.surface.outputs.manifest }}
+          SURFACE_ID: ${{ inputs.surface_id }}
+          REQUESTED_RUNTIME: ${{ steps.surface.outputs.runtime }}
+          AUDRALIA_MANIFEST: .github/ai-router/publication-surfaces/audralia.json
         shell: bash
         run: |
           set -euo pipefail
           export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
-          node tools/publication-live-verify.mjs runtime "$PAGE_URL" "$MANIFEST"
+          test -n "$CHROME_PATH"
+          if [ "$REQUESTED_RUNTIME" = "true" ]; then
+            node tools/publication-live-verify.mjs runtime "$PAGE_URL" "$MANIFEST"
+          fi
+          if [ "$SURFACE_ID" != "audralia" ]; then
+            node tools/publication-live-verify.mjs runtime "$PAGE_URL" "$AUDRALIA_MANIFEST"
+          fi
+          echo "PROTECTED_RUNTIME_SURFACE_CONTINUITY_VERIFIED"

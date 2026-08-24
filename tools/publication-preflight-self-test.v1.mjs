@@ -35,6 +35,8 @@ try{
   check('negative-fixture-control-plane-excluded',!fs.existsSync(path.join(stage,'.github')));
   check('negative-fixture-node-modules-excluded',!fs.existsSync(path.join(stage,'node_modules')));
   check('positive-fixture-digest',/^[0-9a-f]{64}$/.test(built.payloadDigest));
+  check('positive-fixture-payload-bytes',Number.isInteger(built.payloadBytes)&&built.payloadBytes>0);
+  check('positive-fixture-top-level-breakdown',Array.isArray(built.topLevelBytes)&&built.topLevelBytes.some(row=>row.path==='demo'&&row.bytes>0));
   let rejected=false;
   try{await buildPayload({repoRoot:repo,targetSha:'bad',surfaceId:'demo',stage:path.join(tmp,'bad')});}catch{rejected=true;}
   check('negative-fixture-invalid-sha-rejected',rejected);

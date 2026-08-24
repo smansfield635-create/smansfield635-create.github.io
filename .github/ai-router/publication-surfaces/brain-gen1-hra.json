@@ -42,6 +42,14 @@
       "name": "data-meshes",
       "contains": "283"
     },
-    "failOnConsoleErrors": true
+    "binding": {
+      "mode": "direct-document",
+      "path": "/inspection/compass/brain-gen1-hra/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [
+      "CONTEXT_LOST_WEBGL"
+    ]
   }
 }

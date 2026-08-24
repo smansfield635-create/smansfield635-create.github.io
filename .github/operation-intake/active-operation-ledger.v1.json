@@ -2077,30 +2077,32 @@
       "state": "ADMITTED_LOCKED"
     },
     "a746eff833311b24e633dfed78711b6521e946e9d3b47596ef22a4e535f84a43": {
-      "governingHead": "57302a9b955475f57a14bcd80940eb89d55094d8",
-      "lockGeneration": 1632,
+      "governingHead": "d8e0cfaee7c685888db028aaf6c37c722af684c1",
+      "lockGeneration": 1640,
       "lockScope": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_C7",
-      "operationId": "C7_AUTHORITY_LEDGER_PROVENANCE_INTEGRITY_20260824_001_S1_57302A9B",
+      "operationId": "C7_AUTHORITY_LEDGER_PROVENANCE_INTEGRITY_20260824_001_S2_D8E0CFAE",
       "predecessor": {
         "authorityInherited": false,
         "exactHeadRevalidationRequired": true,
-        "governingHead": "558f8301f3408db5f2850a8c4587c58f60cb6193",
-        "lockGeneration": 1631,
+        "governingHead": "57302a9b955475f57a14bcd80940eb89d55094d8",
+        "lockGeneration": 1632,
         "lockScope": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_C7",
-        "operationId": "C7_AUTHORITY_LEDGER_PROVENANCE_INTEGRITY_20260824_001",
+        "operationId": "C7_AUTHORITY_LEDGER_PROVENANCE_INTEGRITY_20260824_001_S1_57302A9B",
         "preservedEvidenceRefs": [
           "issue:1984",
-          "workflow-run:32780343979",
-          "predecessor-generation:1631",
-          "main-merge:57302a9b955475f57a14bcd80940eb89d55094d8"
+          "pr:1989",
+          "candidate-head:0315f84de1ff796ecf53e81e2bb808e8cd05d829",
+          "predecessor-generation:1632",
+          "predecessor-transition:99ec134ce6bd58422a7491398a7504561e2b96c8",
+          "main-merge:d8e0cfaee7c685888db028aaf6c37c722af684c1"
         ],
         "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
         "terminalDisposition": "SUPERSEDED",
-        "transitionId": "C7_AUTHORITY_PROVENANCE_SUCCESSOR_20260824_001"
+        "transitionId": "C7_AUTHORITY_PROVENANCE_SUCCESSOR_20260824_002_D8E0CFAE"
       },
-      "procedureLocatorDigest": "cab6ca01428542f2af639967ddf6158c226ec326de556b85431a7ba59de136e2",
+      "procedureLocatorDigest": "79d1cc22addade041a9d5d0ebebb9bdc2a4b6b35ca7c22e727f956b4edef7440",
       "released": false,
-      "requestDigest": "b730f6f7a611c865b54941976b6e6b07aea23ec546f70ce837dbd14debc54c85",
+      "requestDigest": "a90d3fcdabc9357aef7865351bf8a10ead30b2c0d70bc5cf9165e0fd727481d3",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "a746eff833311b24e633dfed78711b6521e946e9d3b47596ef22a4e535f84a43",
       "state": "ADMITTED_LOCKED"
@@ -3434,7 +3436,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1639,
+  "lockGeneration": 1640,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -25455,6 +25457,55 @@
         "successorLockScope": "LAWS_FIRST_TEST_RESEARCH_ROOM_CONJUGATION_V1",
         "successorOperationId": "LAWS_FIRST_ROOM_CONJUGATION_20260824_1626_S3_D8E0CFAE",
         "transitionId": "LAWS_FIRST_ROOM_CONJUGATION_GEN1633_TO_D8E0CFAE_20260824_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "57302a9b955475f57a14bcd80940eb89d55094d8",
+      "lockGeneration": 1632,
+      "lockScope": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_C7",
+      "operationId": "C7_AUTHORITY_LEDGER_PROVENANCE_INTEGRITY_20260824_001_S1_57302A9B",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "558f8301f3408db5f2850a8c4587c58f60cb6193",
+        "lockGeneration": 1631,
+        "lockScope": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_C7",
+        "operationId": "C7_AUTHORITY_LEDGER_PROVENANCE_INTEGRITY_20260824_001",
+        "preservedEvidenceRefs": [
+          "issue:1984",
+          "workflow-run:32780343979",
+          "predecessor-generation:1631",
+          "main-merge:57302a9b955475f57a14bcd80940eb89d55094d8"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "C7_AUTHORITY_PROVENANCE_SUCCESSOR_20260824_001"
+      },
+      "procedureLocatorDigest": "cab6ca01428542f2af639967ddf6158c226ec326de556b85431a7ba59de136e2",
+      "released": true,
+      "requestDigest": "b730f6f7a611c865b54941976b6e6b07aea23ec546f70ce837dbd14debc54c85",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a746eff833311b24e633dfed78711b6521e946e9d3b47596ef22a4e535f84a43",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:1984",
+          "pr:1989",
+          "candidate-head:0315f84de1ff796ecf53e81e2bb808e8cd05d829",
+          "predecessor-generation:1632",
+          "predecessor-transition:99ec134ce6bd58422a7491398a7504561e2b96c8",
+          "main-merge:d8e0cfaee7c685888db028aaf6c37c722af684c1"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "d8e0cfaee7c685888db028aaf6c37c722af684c1",
+        "successorLockGeneration": 1640,
+        "successorLockScope": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_C7",
+        "successorOperationId": "C7_AUTHORITY_LEDGER_PROVENANCE_INTEGRITY_20260824_001_S2_D8E0CFAE",
+        "transitionId": "C7_AUTHORITY_PROVENANCE_SUCCESSOR_20260824_002_D8E0CFAE"
       },
       "terminalDisposition": "SUPERSEDED"
     }

@@ -22,10 +22,16 @@ try{
   fs.mkdirSync(path.join(repo,'preview/should-not-ship'),{recursive:true});
   fs.mkdirSync(path.join(repo,'.github/private'),{recursive:true});
   fs.mkdirSync(path.join(repo,'node_modules/puppeteer-core'),{recursive:true});
+  fs.mkdirSync(path.join(repo,'h-earth-live-6d18e158/legacy'),{recursive:true});
+  fs.mkdirSync(path.join(repo,'inspection/audralia-24057-exact/snapshot'),{recursive:true});
+  fs.mkdirSync(path.join(repo,'inspection/compass/live'),{recursive:true});
   fs.writeFileSync(path.join(repo,'demo/index.html'),'<title>Demo</title>\nTOKEN_OK\n');
   fs.writeFileSync(path.join(repo,'preview/should-not-ship/secret.txt'),'nope');
   fs.writeFileSync(path.join(repo,'.github/private/secret.txt'),'nope');
   fs.writeFileSync(path.join(repo,'node_modules/puppeteer-core/runtime-only.txt'),'must-not-ship');
+  fs.writeFileSync(path.join(repo,'h-earth-live-6d18e158/legacy/clone.txt'),'must-not-ship');
+  fs.writeFileSync(path.join(repo,'inspection/audralia-24057-exact/snapshot/clone.txt'),'must-not-ship');
+  fs.writeFileSync(path.join(repo,'inspection/compass/live/index.html'),'must-ship');
   const manifest={schema:'PUBLICATION_SURFACE_VERIFICATION_v1',surfaceId:'demo',checks:[{path:'/demo/',includes:['TOKEN_OK'],excludes:[]}],runtime:{enabled:false}};
   fs.writeFileSync(path.join(repo,'.github/ai-router/publication-surfaces/demo.json'),JSON.stringify(manifest,null,2));
   const built=await buildPayload({repoRoot:repo,targetSha:'b'.repeat(40),surfaceId:'demo',stage});
@@ -34,6 +40,9 @@ try{
   check('negative-fixture-preview-excluded',!fs.existsSync(path.join(stage,'preview')));
   check('negative-fixture-control-plane-excluded',!fs.existsSync(path.join(stage,'.github')));
   check('negative-fixture-node-modules-excluded',!fs.existsSync(path.join(stage,'node_modules')));
+  check('negative-fixture-old-h-earth-clone-excluded',!fs.existsSync(path.join(stage,'h-earth-live-6d18e158')));
+  check('negative-fixture-audralia-snapshot-excluded',!fs.existsSync(path.join(stage,'inspection/audralia-24057-exact')));
+  check('positive-fixture-live-inspection-preserved',fs.existsSync(path.join(stage,'inspection/compass/live/index.html')));
   check('positive-fixture-digest',/^[0-9a-f]{64}$/.test(built.payloadDigest));
   check('positive-fixture-payload-bytes',Number.isInteger(built.payloadBytes)&&built.payloadBytes>0);
   check('positive-fixture-top-level-breakdown',Array.isArray(built.topLevelBytes)&&built.topLevelBytes.some(row=>row.path==='demo'&&row.bytes>0));

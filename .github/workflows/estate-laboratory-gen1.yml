@@ -1,69 +1,151 @@
-name: Estate Laboratory Successor 006 Compass Repair
+name: Estate Laboratory Governed Observability Qualification
 
 on:
-  push:
-    branches:
-      - ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_006
+  pull_request:
     paths:
+      - 'index.html'
+      - 'site-guide/index.html'
+      - 'instruments/index.html'
+      - 'instruments/laboratory.js'
+      - 'showroom/globe/audralia/disposition/index.html'
+      - 'showroom/globe/audralia/disposition/laboratory.js'
+      - 'showroom/globe/audralia/diagnostic/index.html'
+      - 'showroom/globe/h-earth/diagnostic/index.html'
+      - 'showroom/globe/hearth/diagnostic/index.html'
+      - 'coherence-diagnostic/index.html'
+      - 'tools/estate-laboratory-gen1-verify.mjs'
+      - 'tools/h-earth-experience-anchor-gate.mjs'
       - '.github/workflows/estate-laboratory-gen1.yml'
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  repair-compass:
+  responsive-laboratory:
     runs-on: ubuntu-24.04
     steps:
-      - name: Check out bounded successor
+      - name: Check out bounded exact candidate head
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 8
-          persist-credentials: true
+          persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /index.html
+            /site-guide/index.html
+            /instruments/index.html
+            /instruments/laboratory.js
+            /showroom/globe/audralia/disposition/index.html
+            /showroom/globe/audralia/disposition/laboratory.js
+            /showroom/globe/audralia/diagnostic/index.html
+            /showroom/globe/h-earth/diagnostic/index.html
+            /showroom/globe/hearth/diagnostic/index.html
+            /coherence-diagnostic/index.html
+            /tools/estate-laboratory-gen1-verify.mjs
+            /tools/h-earth-experience-anchor-gate.mjs
             /.github/workflows/estate-laboratory-gen1.yml
 
-      - name: Rebuild Compass navigation from exact current-main bytes
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact admitted scope and governing ancestry
         shell: bash
         run: |
           set -euo pipefail
           BASE='af46884873acf993400ab51915fc8044bd022e93'
-          git fetch --no-tags --depth=1 origin main
-          test "$(git rev-parse origin/main^{commit})" = "$BASE"
-          git show "$BASE:index.html" > index.html
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('index.html')
-          s=p.read_text()
-          replacements=[
-            (
-              'data-coordinate-label="Instruments" data-coordinate-function="Measurement, standards, governance, diagnostics, and operational control." data-title="Instruments" data-route="/gauges/" data-cardinal-route="/gauges/" data-panel-title="Instruments" data-panel-body="Go here for measurement tools, laws, governance, diagnostics, and operational control." data-panel-why="Open South when you need to measure, verify, govern, or decide what may happen next."',
-              'data-coordinate-label="Instruments" data-coordinate-function="Measurement, observability, diagnostics, standards, governance, and operational control." data-title="Instruments" data-route="/instruments/" data-cardinal-route="/instruments/" data-panel-title="Instruments" data-panel-body="Open the Estate Laboratory for governed observability, or choose a specialized room for measurement, law, governance, or diagnostics." data-panel-why="Open South when you need to observe, measure, verify, govern, or decide what may happen next."'
-            ),
-            (
-              'data-room-id="south-4" data-label="Control Cockpit" data-route="/showroom/globe/audralia/disposition/" data-local-coordinate="Operational Control" data-local-function="Turn findings into a bounded next action." data-preview="Turn findings into a bounded next action." data-why-enter="Use the cockpit when evidence and authority support a controlled next step." href="/showroom/globe/audralia/disposition/">Control Cockpit</a>',
-              'data-room-id="south-4" data-label="Estate Laboratory" data-route="/instruments/" data-local-coordinate="Governed Observability" data-local-function="Query estate systems lightly, escalate deliberately, inspect deeply, and preserve machine-readable evidence." data-preview="Query estate systems lightly, escalate deliberately, inspect deeply, and preserve machine-readable evidence." data-why-enter="Use the Estate Laboratory when you need estate-wide observation and diagnostic escalation without granting mutation authority." href="/instruments/">Estate Laboratory</a>'
-            ),
-            (
-              '<a href="/gauges/">Instruments</a>',
-              '<a href="/instruments/">Instruments</a>'
-            )
-          ]
-          for old,new in replacements:
-            count=s.count(old)
-            if count != 1:
-              raise SystemExit(f'COMPASS_REPAIR_MATCH_COUNT:{count}:{old[:80]}')
-            s=s.replace(old,new,1)
-          p.write_text(s)
-          PY
-          grep -Fq 'data-panel-body="Explore prototypes, energy, water, infrastructure, and long-range construction."' index.html
-          grep -Fq 'data-route="/instruments/" data-cardinal-route="/instruments/"' index.html
-          grep -Fq 'data-room-id="south-4" data-label="Estate Laboratory" data-route="/instruments/"' index.html
-          grep -Fq '<a href="/instruments/">Instruments</a>' index.html
-          git diff --check -- index.html
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- index.html
-          git commit -m 'Estate Laboratory: preserve current Compass copy while reconciling navigation'
-          git push origin "HEAD:$GITHUB_REF_NAME"
+          test "$(git merge-base HEAD "$BASE")" = "$BASE"
+          allowed='^(index.html|site-guide/index.html|instruments/index.html|instruments/laboratory.js|showroom/globe/audralia/disposition/index.html|showroom/globe/audralia/disposition/laboratory.js|showroom/globe/audralia/diagnostic/index.html|showroom/globe/h-earth/diagnostic/index.html|showroom/globe/hearth/diagnostic/index.html|coherence-diagnostic/index.html|tools/estate-laboratory-gen1-verify.mjs|tools/h-earth-experience-anchor-gate.mjs|\.github/workflows/estate-laboratory-gen1.yml)$'
+          changed="$(git diff --name-only "$BASE"...HEAD)"
+          test -n "$changed"
+          if printf '%s\n' "$changed" | grep -Ev "$allowed"; then
+            echo 'ESTATE_LABORATORY_OUT_OF_SCOPE_PATH' >&2
+            exit 1
+          fi
+          for prohibited in \
+            showroom/globe/audralia/index.html \
+            showroom/globe/audralia/render.js \
+            showroom/globe/audralia/world_kernel.js \
+            evidence/readiness/governance-gen3-entitlement/evidence-identity.v1.json; do
+            if printf '%s\n' "$changed" | grep -Fxq "$prohibited"; then
+              echo "ESTATE_LABORATORY_PROHIBITED_PATH:$prohibited" >&2
+              exit 1
+            fi
+          done
+          echo 'ESTATE_LABORATORY_EXACT_SCOPE_PASS'
+
+      - name: Verify static observability navigation and authority contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p estate-laboratory-gen1-verification
+          node tools/estate-laboratory-gen1-verify.mjs --static | tee estate-laboratory-gen1-verification/static-verification.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const r=JSON.parse(fs.readFileSync('estate-laboratory-gen1-verification/static-verification.json','utf8'));
+          if(r.result!=='PASS')process.exit(1);
+          if(r.canonicalLaboratoryRoute!=='/instruments/')process.exit(1);
+          if(r.audraliaCommandCockpitRestored!==true)process.exit(1);
+          if(r.compassInstrumentsIdentityReconciled!==true)process.exit(1);
+          if(r.siteGuideInstrumentsIdentityReconciled!==true)process.exit(1);
+          if(r.deepChamberReturnSemantics!==true)process.exit(1);
+          if(r.experienceAnchorObservabilityBoundaryPreserved!==true)process.exit(1);
+          if(r.audraliaProductRootProtected!==true)process.exit(1);
+          NODE
+
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Start exact candidate server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/estate-laboratory-http.log 2>&1 &
+          echo $! > /tmp/estate-laboratory-http.pid
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/instruments/ >/dev/null; then
+              echo 'ESTATE_LABORATORY_LOCAL_SERVER_READY'
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/estate-laboratory-http.log || true
+          exit 1
+
+      - name: Verify responsive laboratory and deep-chamber round trips
+        env:
+          BASE_URL: http://127.0.0.1:4173
+          OUTPUT_DIR: estate-laboratory-gen1-verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          test -n "$CHROME_PATH"
+          node tools/estate-laboratory-gen1-verify.mjs --runtime
+          node - <<'NODE'
+          const fs=require('fs');
+          const r=JSON.parse(fs.readFileSync('estate-laboratory-gen1-verification/receipt.json','utf8'));
+          if(r.result!=='PASS')process.exit(1);
+          if(!Array.isArray(r.deepRoundTrips)||r.deepRoundTrips.length!==4)process.exit(1);
+          if(r.deepRoundTrips.some(x=>x.from!=='/instruments/'||x.returnRoute!=='/instruments/'))process.exit(1);
+          if(r.boundaries?.deepChamberReturnSemantics!==true)process.exit(1);
+          if(r.boundaries?.productionMutationAuthority!==false)process.exit(1);
+          if(r.boundaries?.audraliaProductRootProtected!==true)process.exit(1);
+          NODE
+
+      - name: Upload qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: estate-laboratory-gen1-verification-${{ github.run_id }}-${{ github.run_attempt }}
+          path: estate-laboratory-gen1-verification/
+          if-no-files-found: warn
+          retention-days: 30

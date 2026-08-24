@@ -70,6 +70,9 @@ jobs:
             /h-earth-3d/control-plane/run-8/
             /h-earth-3d/objects/
             /h-earth-3d/zones/
+            /h-earth-3d/cells/
+            /h-earth-3d/environment/
+            /h-earth-3d/h-earth.matrix.js
             /inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/
             /inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/
             /inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/render/
@@ -78,6 +81,9 @@ jobs:
             /inspection/audralia-24057-exact/snapshot/h-earth-3d/control-plane/run-8/
             /inspection/audralia-24057-exact/snapshot/h-earth-3d/objects/
             /inspection/audralia-24057-exact/snapshot/h-earth-3d/zones/
+            /inspection/audralia-24057-exact/snapshot/h-earth-3d/cells/
+            /inspection/audralia-24057-exact/snapshot/h-earth-3d/environment/
+            /inspection/audralia-24057-exact/snapshot/h-earth-3d/h-earth.matrix.js
             /tools/audralia-weather-presentation-reconciliation-ci.mjs
       - name: Verify browser module dependency closure
         shell: bash

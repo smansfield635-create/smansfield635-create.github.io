@@ -89,3 +89,5 @@ console.log(JSON.stringify({
   sameWorldContinuityRequired:true,
   differentProductExperienceForbidden:true
 },null,2));
+
+// CONSTRUCTOR_TRIGGER_CHILD_ONLY: this branch exists solely to emit a pull_request event against the admitted operation branch.

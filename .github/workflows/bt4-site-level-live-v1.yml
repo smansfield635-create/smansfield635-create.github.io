@@ -11,6 +11,8 @@ on:
 
 permissions:
   contents: read
+  issues: write
+  pull-requests: write
 
 jobs:
   live-site-governance:
@@ -28,6 +30,7 @@ jobs:
       - name: Install browser driver
         run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
       - name: Verify exact-head live four-domain governance
+        id: proof
         env:
           TARGET_SHA: ${{ github.sha }}
         shell: bash
@@ -35,4 +38,16 @@ jobs:
           set -euo pipefail
           export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
           test -x "$CHROME_PATH"
-          node research/bt4/verify-site-level-live-browser.v1.mjs
+          node research/bt4/verify-site-level-live-browser.v1.mjs | tee /tmp/bt4-site-proof.json
+      - name: Record live proof success
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue comment 1852 --repo "${{ github.repository }}" --body "BT4 site-level live proof SUCCESS on exact main \`${{ github.sha }}\`. The bounded four-domain public governance surface matched current entitlement for scientific claim, Audralia world/runtime, diagnostic authority, and software/release, while each normalized domain preserved the unchanged lifecycle QUALIFIED → HELD → SUPPORTED → QUALIFIED. Workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}."
+      - name: Record live proof failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue comment 1852 --repo "${{ github.repository }}" --body "BT4 site-level live proof FAILED/HELD on exact main \`${{ github.sha }}\`. No site-level breakthrough claim is authorized from this run. Inspect workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}."

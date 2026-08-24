@@ -27,7 +27,7 @@
         "data-condition-state",
         "data-condition-objects",
         "What restores it",
-        "The Evidence carousel remains independently available"
+        "the Evidence carousel remains independently available"
       ],
       "excludes": [
         "import { evaluateSite }",

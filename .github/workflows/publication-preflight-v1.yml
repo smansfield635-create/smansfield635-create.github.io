@@ -1,0 +1,95 @@
+name: Publication Fast Preflight v1
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        description: Exact candidate commit SHA to preflight
+        required: true
+        type: string
+      surface_id:
+        description: Registered public surface verification id
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publication-preflight-${{ inputs.surface_id }}-${{ inputs.target_sha }}
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require exact dispatched head
+        id: resolve
+        env:
+          REQUESTED_SHA: ${{ inputs.target_sha }}
+          DISPATCHED_HEAD_SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          requested="$(printf '%s' "$REQUESTED_SHA" | tr -d '[:space:]')"
+          dispatched="$(printf '%s' "$DISPATCHED_HEAD_SHA" | tr -d '[:space:]')"
+          printf '%s' "$requested" | grep -Eq '^[0-9a-f]{40}$'
+          test "$requested" = "$dispatched"
+          echo "target_sha=$requested" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.resolve.outputs.target_sha }}
+          fetch-depth: 1
+
+      - name: Validate registered surface
+        id: surface
+        env:
+          SURFACE_ID: ${{ inputs.surface_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s' "$SURFACE_ID" | grep -Eq '^[a-z0-9][a-z0-9._-]{0,79}$'
+          manifest=".github/ai-router/publication-surfaces/${SURFACE_ID}.json"
+          test -f "$manifest"
+          jq -e --arg id "$SURFACE_ID" '.schema=="PUBLICATION_SURFACE_VERIFICATION_v1" and .surfaceId==$id and (.checks|type=="array") and (.checks|length>0)' "$manifest" >/dev/null
+          echo "manifest=$manifest" >> "$GITHUB_OUTPUT"
+          echo "runtime=$(jq -r 'if .runtime?.enabled == true then "true" else "false" end' "$manifest")" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Chrome
+        if: ${{ steps.surface.outputs.runtime == 'true' }}
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install runtime verifier
+        if: ${{ steps.surface.outputs.runtime == 'true' }}
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Run exact payload preflight
+        env:
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+          SURFACE_ID: ${{ inputs.surface_id }}
+          STAGE: ${{ runner.temp }}/pages-site
+          RECEIPT: ${{ runner.temp }}/publication-preflight-receipt.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ steps.surface.outputs.runtime }}" = "true" ]; then
+            export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+            test -n "$CHROME_PATH"
+          fi
+          node tools/publication-preflight.v1.mjs preflight \
+            --target-sha "$TARGET_SHA" \
+            --surface-id "$SURFACE_ID" \
+            --stage "$STAGE" \
+            --receipt "$RECEIPT"
+          jq -e '.schema=="PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1" and .result=="PREFLIGHT_PASS" and .deploymentPerformed==false' "$RECEIPT" >/dev/null
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: publication-fast-preflight-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/publication-preflight-receipt.json
+          if-no-files-found: error
+          retention-days: 90

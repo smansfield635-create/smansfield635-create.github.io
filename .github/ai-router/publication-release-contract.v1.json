@@ -19,6 +19,20 @@
       "canonicalOperationIntakeRequired": true
     }
   },
+  "preflight": {
+    "required": true,
+    "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+    "workflow": ".github/workflows/publication-preflight-v1.yml",
+    "runner": "tools/publication-preflight.v1.mjs",
+    "selfTest": "tools/publication-preflight-self-test.v1.mjs",
+    "contract": ".github/ai-router/publication-preflight-contract.v1.json",
+    "successResult": "PREFLIGHT_PASS",
+    "deploymentOnFailure": false,
+    "samePayloadConstructionRequired": true,
+    "reuseLiveVerifier": "tools/publication-live-verify.mjs",
+    "requiredBeforeProductionMutation": true,
+    "relationToCanonicalReleaseSequence": "PREFLIGHT_IS_A_MANDATORY_DEPLOYMENT_PREREQUISITE_AND_DOES_NOT_REDEFINE_THE_EXISTING_RELEASE_CLASS_SEQUENCE"
+  },
   "deployment": {
     "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
     "capabilityRegistry": ".github/ai-router/workflow-dispatch-capability.v1.json",
@@ -31,7 +45,8 @@
     "surfaceManifestRoot": ".github/ai-router/publication-surfaces/",
     "surfaceManifestSchema": ".github/ai-router/publication-surfaces/schema.v1.json",
     "surfaceResolutionRule": "SURFACE_ID_RESOLVES_ONLY_TO_COMMITTED_DECLARATIVE_VERIFICATION_MANIFEST_AT_TARGET_SHA",
-    "bindingRule": "WORKFLOW_IDENTITY_MUST_MATCH_AI_ENTRYPOINT_AND_PAGES_EXACT_HEAD_DEPLOY_CAPABILITY"
+    "bindingRule": "WORKFLOW_IDENTITY_MUST_MATCH_AI_ENTRYPOINT_AND_PAGES_EXACT_HEAD_DEPLOY_CAPABILITY",
+    "preflightEnforcement": "PRODUCTION_WORKFLOW_MUST_COMPLETE_LOCAL_EXACT_PAYLOAD_PREFLIGHT_BEFORE_CONFIGURE_UPLOAD_OR_DEPLOY"
   },
   "verification": {
     "required": true,
@@ -44,7 +59,8 @@
     "runtimeProofRequiredWhenManifestDeclaresRuntime": true,
     "failedAssertionLocalizationRequiredBeforeRepair": true,
     "blindRerunAllowed": false,
-    "verificationFailureCreatesProductMutationAuthority": false
+    "verificationFailureCreatesProductMutationAuthority": false,
+    "postDeployPurpose": "PROVE_ALREADY_PREFLIGHT_QUALIFIED_ARTIFACT_REACHED_PRODUCTION"
   },
   "universality": {
     "scope": "ALL_PUBLIC_SURFACES_IN_REPOSITORY",
@@ -56,6 +72,9 @@
   },
   "rules": [
     "MERGE_IS_NOT_DEPLOYMENT",
+    "PREFLIGHT_PASS_IS_REQUIRED_BEFORE_PRODUCTION_DEPLOYMENT",
+    "PREFLIGHT_FAILURE_MUST_STOP_BEFORE_PAGES_MUTATION",
+    "PREFLIGHT_AND_PRODUCTION_MUST_SHARE_PAYLOAD_CONSTRUCTION_CODE",
     "DEPLOYMENT_IS_NOT_VERIFIED_LIVE_RELEASE",
     "LOCALIZE_EXACT_FAILED_ASSERTION_BEFORE_PUBLICATION_REPAIR",
     "DO_NOT_BLINDLY_RERUN_AN_UNCHANGED_FAILED_PUBLICATION",

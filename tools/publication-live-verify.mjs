@@ -50,14 +50,94 @@ try{
   page.on('console',message=>{if(message.type()==='error')errors.push(message.text());});
   const url=pageUrl+spec.path;
   await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});
-  if(spec.readySelector)await page.waitForSelector(spec.readySelector,{timeout:spec.timeoutMs||45000});
-  if(spec.readyAttribute){
-    await page.waitForFunction(({selector,name,contains})=>{
-      const element=document.querySelector(selector);
-      if(!element)return false;
-      return String(element.getAttribute(name)||'').includes(contains);
-    },{timeout:spec.timeoutMs||45000},spec.readyAttribute);
+
+  const captureRuntimeDiagnostic=async failure=>page.evaluate(({spec,surfaceId,failure})=>{
+    const serializeError=value=>{
+      if(!value)return null;
+      if(typeof value==='string')return {message:value};
+      return {
+        name:value.name||null,
+        message:value.message||String(value),
+        stack:value.stack||null
+      };
+    };
+    const loader=document.querySelector('[data-audralia-loader]');
+    const base={
+      title:document.title,
+      href:location.href,
+      readyState:document.readyState,
+      readySelector:spec.readySelector||null,
+      readySelectorPresent:spec.readySelector?Boolean(document.querySelector(spec.readySelector)):null,
+      readyAttribute:spec.readyAttribute||null,
+      failure
+    };
+    if(surfaceId!=='audralia')return base;
+    let reconciliationRuntime=null;
+    let reconciliationRuntimeError=null;
+    try{
+      reconciliationRuntime=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.()||null;
+    }catch(error){
+      reconciliationRuntimeError=serializeError(error);
+    }
+    return {
+      ...base,
+      audralia:{
+        loader:loader?{
+          className:loader.className,
+          dataset:{...loader.dataset},
+          stage:document.querySelector('[data-audralia-loader-stage]')?.textContent?.trim()||null,
+          progress:document.querySelector('[data-audralia-loader-progress]')?.textContent?.trim()||null,
+          elapsed:document.querySelector('[data-audralia-loader-elapsed]')?.textContent?.trim()||null
+        }:null,
+        startupDiagnostic:window.__AUDRALIA_STARTUP_DIAGNOSTIC__||null,
+        startupPhase:window.__AUDRALIA_STARTUP_PHASE__||null,
+        reconciliationError:serializeError(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__),
+        reconciliationRuntime:reconciliationRuntime?{
+          invariants:reconciliationRuntime.invariants||null,
+          status:reconciliationRuntime.status||null,
+          state:reconciliationRuntime.state||null
+        }:null,
+        reconciliationRuntimeError,
+        milestones:{
+          renderer:Boolean(window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW__?.renderer),
+          clearAtmosphere:Boolean(document.querySelector('[data-audralia-clear-atmosphere="true"]')),
+          orbitalCloud:Boolean(globalThis.__AUDRALIA_FAP1_ORBITAL_SUPPORT_TUNING__),
+          regionalWeather:Boolean(document.querySelector('[data-audralia-exterior-weather="true"]')),
+          localContinuity:Boolean(document.querySelector('[data-canonical-weather-projection="true"]'))
+        }
+      }
+    };
+  },{spec,surfaceId:manifest.surfaceId,failure:String(failure?.stack||failure)});
+
+  try{
+    if(spec.readySelector)await page.waitForSelector(spec.readySelector,{timeout:spec.timeoutMs||45000});
+    if(spec.readyAttribute){
+      await page.waitForFunction(({selector,name,contains})=>{
+        const element=document.querySelector(selector);
+        if(!element)return false;
+        return String(element.getAttribute(name)||'').includes(contains);
+      },{timeout:spec.timeoutMs||45000},spec.readyAttribute);
+    }
+  }catch(error){
+    let diagnostic=null;
+    try{
+      diagnostic=await captureRuntimeDiagnostic(error);
+    }catch(diagnosticError){
+      diagnostic={captureError:String(diagnosticError?.stack||diagnosticError)};
+    }
+    console.error(JSON.stringify({
+      schema:'PUBLICATION_SURFACE_RUNTIME_DIAGNOSTIC_v1',
+      surfaceId:manifest.surfaceId,
+      url,
+      result:'FAIL',
+      phase:'READINESS_WAIT',
+      failure:String(error?.stack||error),
+      errors,
+      diagnostic
+    },null,2));
+    throw error;
   }
+
   const result=await page.evaluate(spec=>({
     title:document.title,
     readySelector:spec.readySelector?Boolean(document.querySelector(spec.readySelector)):null,

@@ -1,12 +1,16 @@
-name: Estate Laboratory Gen1 Qualification
+name: Estate Laboratory Governed Observability Qualification
 
 on:
   pull_request:
     paths:
+      - 'instruments/index.html'
+      - 'instruments/laboratory.js'
       - 'showroom/globe/audralia/disposition/index.html'
       - 'showroom/globe/audralia/disposition/laboratory.js'
+      - 'index.html'
       - 'tools/estate-laboratory-gen1-verify.mjs'
       - 'tools/h-earth-experience-anchor-gate.mjs'
+      - '.github/ai-router/publication-surfaces/estate-laboratory.json'
       - '.github/workflows/estate-laboratory-gen1.yml'
   workflow_dispatch:
 
@@ -27,7 +31,7 @@ jobs:
         with:
           node-version: 22
 
-      - name: Verify static laboratory contract
+      - name: Verify static observability and navigation contract
         run: node tools/estate-laboratory-gen1-verify.mjs --static
 
       - name: Set up Chrome
@@ -45,7 +49,7 @@ jobs:
           python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/estate-laboratory-http.log 2>&1 &
           echo $! > /tmp/estate-laboratory-http.pid
           for i in {1..30}; do
-            if curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/disposition/ >/dev/null; then
+            if curl -fsS http://127.0.0.1:4173/instruments/ >/dev/null; then
               exit 0
             fi
             sleep 1
@@ -53,7 +57,7 @@ jobs:
           cat /tmp/estate-laboratory-http.log || true
           exit 1
 
-      - name: Verify phone tablet and desktop operation
+      - name: Verify governed observability, restored cockpit, and Compass navigation
         env:
           BASE_URL: http://127.0.0.1:4173
           OUTPUT_DIR: estate-laboratory-gen1-verification

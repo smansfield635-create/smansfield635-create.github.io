@@ -1743,13 +1743,29 @@
       "state": "ADMITTED_LOCKED"
     },
     "9c8030b6cc851ee0011e217d39569671e903e6e6da8184d89a54b72afa3cd092": {
-      "governingHead": "08b165ab31f7c5f4d65dc8080439f440d66db609",
-      "lockGeneration": 1601,
+      "governingHead": "d22af1ea80733895a59756c23c5a0c79724870d9",
+      "lockGeneration": 1604,
       "lockScope": "PUBLIC_INFRASTRUCTURE:AUDRALIA_RUNTIME_READINESS_VERIFICATION:V1",
-      "operationId": "AUDRALIA_PUBLICATION_RUNTIME_READINESS_BUDGET_REPAIR_20260824_003",
-      "procedureLocatorDigest": "30668602669405912603042dbdb1ad0eb51db6f90a0df4ac4356913abfe906a0",
+      "operationId": "AUDRALIA_PUBLICATION_RUNTIME_READINESS_BUDGET_REPAIR_20260824_004",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "08b165ab31f7c5f4d65dc8080439f440d66db609",
+        "lockGeneration": 1601,
+        "lockScope": "PUBLIC_INFRASTRUCTURE:AUDRALIA_RUNTIME_READINESS_VERIFICATION:V1",
+        "operationId": "AUDRALIA_PUBLICATION_RUNTIME_READINESS_BUDGET_REPAIR_20260824_003",
+        "preservedEvidenceRefs": [
+          "RUN_32688626472_RUNTIME_READY_AT_66036MS",
+          "AUDRALIA_RUNTIME_READY",
+          "CANDIDATE_EA3C17B_ONE_PATH_DIFF_PROOF"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "AUDRALIA_PUBLICATION_RUNTIME_READINESS_BUDGET_REPAIR_SUCCESSOR_20260824_004_R3"
+      },
+      "procedureLocatorDigest": "8f0e779b563b46787759b48cb568ed2b092ffc188e4c8f518ac519b10c7369d2",
       "released": false,
-      "requestDigest": "93305f91353e3437dc1acc1be5fd34126f7b60d731ad65d6483e01781f12d294",
+      "requestDigest": "b88a3442442677f9143dedf60ad5b63e0ffb0e6275115f559aff22ad483af60b",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "9c8030b6cc851ee0011e217d39569671e903e6e6da8184d89a54b72afa3cd092",
       "state": "ADMITTED_LOCKED"
@@ -3086,7 +3102,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1603,
+  "lockGeneration": 1604,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -24255,6 +24271,35 @@
         "successorLockScope": "PUBLIC_EVIDENCE_CURRENT_CONDITION",
         "successorOperationId": "CURRENT_PUBLIC_CONDITION_EVIDENCE_INTEGRATION_20260823_S4",
         "transitionId": "CURRENT_PUBLIC_CONDITION_HEAD_ADVANCE_0761C199_TO_FB936DEF"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "08b165ab31f7c5f4d65dc8080439f440d66db609",
+      "lockGeneration": 1601,
+      "lockScope": "PUBLIC_INFRASTRUCTURE:AUDRALIA_RUNTIME_READINESS_VERIFICATION:V1",
+      "operationId": "AUDRALIA_PUBLICATION_RUNTIME_READINESS_BUDGET_REPAIR_20260824_003",
+      "procedureLocatorDigest": "30668602669405912603042dbdb1ad0eb51db6f90a0df4ac4356913abfe906a0",
+      "released": true,
+      "requestDigest": "93305f91353e3437dc1acc1be5fd34126f7b60d731ad65d6483e01781f12d294",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "9c8030b6cc851ee0011e217d39569671e903e6e6da8184d89a54b72afa3cd092",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "RUN_32688626472_RUNTIME_READY_AT_66036MS",
+          "AUDRALIA_RUNTIME_READY",
+          "CANDIDATE_EA3C17B_ONE_PATH_DIFF_PROOF"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "d22af1ea80733895a59756c23c5a0c79724870d9",
+        "successorLockGeneration": 1604,
+        "successorLockScope": "PUBLIC_INFRASTRUCTURE:AUDRALIA_RUNTIME_READINESS_VERIFICATION:V1",
+        "successorOperationId": "AUDRALIA_PUBLICATION_RUNTIME_READINESS_BUDGET_REPAIR_20260824_004",
+        "transitionId": "AUDRALIA_PUBLICATION_RUNTIME_READINESS_BUDGET_REPAIR_SUCCESSOR_20260824_004_R3"
       },
       "terminalDisposition": "SUPERSEDED"
     }

@@ -1,0 +1,492 @@
+/* Compass editorial orbital successor v5 */
+
+.compass-statement-orbit{
+  position:relative;
+  max-width:760px;
+  min-height:8.45rem;
+  margin:1rem auto .9rem;
+  display:grid;
+  grid-template-rows:minmax(5.9rem,auto) auto;
+  row-gap:.45rem;
+  place-items:center;
+  isolation:isolate;
+  overflow:visible;
+  outline:0;
+}
+
+.compass-statement-object{
+  grid-area:1/1;
+  position:relative;
+  width:min(92%,720px);
+  margin:0!important;
+  padding:.25rem .5rem!important;
+  border:0!important;
+  background:none!important;
+  box-shadow:none!important;
+  color:rgba(249,244,226,.96);
+  font-family:var(--font-display,Georgia,serif);
+  font-size:clamp(1.02rem,2.25vw,1.32rem);
+  font-style:italic;
+  line-height:1.48;
+  text-align:center;
+  text-shadow:0 0 18px rgba(244,214,128,.10);
+  transition:transform .44s cubic-bezier(.2,.82,.2,1),opacity .44s ease,filter .44s ease,color .3s ease;
+  will-change:transform,opacity,filter;
+}
+
+.compass-statement-object[data-slot="front"]{
+  z-index:2;
+  transform:translate3d(0,0,0) scale(1);
+  opacity:1;
+  filter:blur(0);
+  pointer-events:auto;
+}
+
+.compass-statement-object[data-slot="rear"]{
+  z-index:1;
+  transform:translate3d(8%,-2%,0) scale(.84);
+  opacity:.25;
+  filter:blur(4px);
+  pointer-events:none;
+  color:rgba(170,210,222,.68);
+}
+
+.compass-statement-object.is-arriving{animation:compassStatementArrival .62s ease-out 1}
+
+.compass-statement-guidance{
+  grid-area:2/1;
+  position:relative;
+  z-index:4;
+  width:min(92%,640px);
+  margin:0;
+  color:rgba(185,218,226,.64);
+  font:760 clamp(.68rem,1.5vw,.76rem)/1.35 Inter,ui-sans-serif,system-ui,sans-serif;
+  letter-spacing:.065em;
+  text-align:center;
+  text-transform:uppercase;
+  text-shadow:0 1px 10px rgba(0,0,0,.5);
+}
+
+.compass-statement-sparkles{
+  position:absolute;
+  inset:-15%;
+  pointer-events:none;
+  overflow:visible;
+}
+
+.compass-statement-sparkles i{
+  position:absolute;
+  left:var(--sx);
+  top:var(--sy);
+  width:3px;
+  height:3px;
+  border-radius:50%;
+  background:rgba(255,239,175,.95);
+  box-shadow:0 0 8px rgba(255,232,144,.95),0 0 15px rgba(102,205,224,.55);
+  opacity:0;
+  animation:compassSpark .55s ease-out var(--delay) 1;
+}
+
+@keyframes compassStatementArrival{
+  0%{filter:brightness(1);text-shadow:0 0 0 transparent}
+  28%{filter:brightness(1.45);text-shadow:0 0 22px rgba(244,214,128,.48),0 0 36px rgba(102,205,224,.22)}
+  100%{filter:brightness(1);text-shadow:0 0 18px rgba(244,214,128,.10)}
+}
+
+@keyframes compassSpark{
+  0%{opacity:0;transform:scale(.2)}
+  32%{opacity:1;transform:scale(1.35)}
+  100%{opacity:0;transform:scale(.1) translateY(-8px)}
+}
+
+.compass-capability-orbit{
+  position:relative;
+  max-width:760px;
+  min-height:28rem;
+  margin:clamp(42px,7vw,76px) auto 0;
+  display:grid;
+  grid-template-rows:minmax(0,1fr) auto;
+  row-gap:.85rem;
+  place-items:center;
+  isolation:isolate;
+  overflow:visible;
+  perspective:1100px;
+  outline:0;
+}
+
+.compass-orbit-plaque{
+  box-sizing:border-box;
+  grid-area:1/1;
+  position:relative;
+  width:min(78vw,620px);
+  min-height:320px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(172px,34%);
+  gap:clamp(.8rem,2vw,1.25rem);
+  align-items:center;
+  padding:clamp(1.25rem,3vw,1.75rem);
+  border:1px solid rgba(214,226,230,.28);
+  border-radius:26px;
+  background:radial-gradient(circle at 16% 12%,rgba(244,214,128,.095),transparent 35%),linear-gradient(145deg,rgba(12,26,36,.985),rgba(6,15,24,.98));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.15),inset 0 0 0 1px rgba(100,205,224,.035),0 30px 66px rgba(0,0,0,.36),0 0 35px rgba(103,196,222,.06);
+  transition:transform .44s cubic-bezier(.2,.82,.2,1),opacity .44s ease,filter .44s ease,box-shadow .44s ease;
+  transform-style:preserve-3d;
+  will-change:transform,opacity,filter;
+}
+
+.compass-orbit-plaque::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+  background:linear-gradient(118deg,rgba(255,255,255,.17),transparent 18% 65%,rgba(137,117,230,.10) 82%,transparent 96%);
+  mix-blend-mode:screen;
+}
+
+.compass-orbit-plaque[data-slot="front"]{
+  z-index:3;
+  transform:translate3d(0,0,0) scale(1);
+  opacity:1;
+  filter:blur(0) brightness(1) saturate(1);
+  pointer-events:auto;
+}
+
+.compass-orbit-plaque[data-slot="rear"]{
+  z-index:1;
+  transform:translate3d(20%,-3%,0) scale(.72);
+  opacity:1;
+  filter:blur(2.6px) brightness(.42) saturate(.70);
+  pointer-events:none;
+}
+
+.compass-orbit-plaque[data-slot="front"]::before{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  border-radius:inherit;
+  pointer-events:none;
+  box-shadow:0 0 0 1px rgba(244,214,128,.11),0 0 26px rgba(102,205,224,.09);
+}
+
+.compass-plaque-copy{position:relative;z-index:2}
+
+.compass-house-parent{grid-column:1/-1}
+
+.compass-orbit-plaque h2{
+  max-width:15ch;
+  margin:.25rem 0 .7rem;
+  font-family:var(--font-display,Georgia,serif);
+  font-size:clamp(1.75rem,4vw,2.8rem);
+  line-height:1;
+}
+
+.compass-orbit-plaque p{
+  max-width:43ch;
+  margin:.4rem 0;
+  color:rgba(236,237,229,.84);
+  line-height:1.52;
+}
+
+.compass-orbit-plaque[data-slot="rear"] .compass-plaque-copy,
+.compass-orbit-plaque[data-slot="rear"] .compass-plaque-actions{
+  visibility:hidden;
+}
+
+.compass-orbit-plaque[data-slot="rear"] .compass-brain-shell{
+  opacity:.12;
+  filter:blur(2px);
+}
+
+.compass-plaque-actions{
+  position:relative;
+  z-index:3;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:.65rem;
+  margin-top:1.1rem;
+}
+
+.compass-plaque-actions--single{grid-template-columns:1fr}
+
+.compass-orbit-action{
+  min-height:52px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:.72rem .9rem;
+  border:1px solid rgba(244,214,128,.50);
+  border-radius:14px;
+  background:linear-gradient(145deg,rgba(244,214,128,.16),rgba(86,197,218,.08));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09);
+  color:rgba(255,248,224,.98);
+  font:850 .76rem/1 Inter,ui-sans-serif,system-ui,sans-serif;
+  letter-spacing:.095em;
+  text-align:center;
+  text-transform:uppercase;
+  text-decoration:none;
+  cursor:pointer;
+  transition:transform .16s ease,border-color .16s ease,background .16s ease;
+}
+
+.compass-orbit-action:hover,
+.compass-orbit-action:focus-visible{
+  transform:translateY(-1px);
+  border-color:rgba(244,214,128,.80);
+  background:linear-gradient(145deg,rgba(244,214,128,.22),rgba(86,197,218,.12));
+}
+
+.compass-orbit-action:focus-visible,
+.compass-capability-orbit:focus-visible,
+.compass-statement-orbit:focus-visible{
+  outline:3px solid rgba(103,211,232,.88);
+  outline-offset:4px;
+}
+
+.compass-orbit-action--secondary{
+  border-color:rgba(105,203,221,.38);
+  background:rgba(7,18,28,.76);
+}
+
+.compass-capability-guidance{
+  box-sizing:border-box;
+  grid-area:2/1;
+  position:relative;
+  z-index:6;
+  width:min(92%,610px);
+  margin:0;
+  padding:.64rem .9rem;
+  border:1px solid rgba(102,205,224,.15);
+  border-radius:999px;
+  background:rgba(5,14,22,.72);
+  box-shadow:0 12px 30px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.04);
+  color:rgba(211,235,240,.72);
+  font:760 clamp(.70rem,1.45vw,.78rem)/1.35 Inter,ui-sans-serif,system-ui,sans-serif;
+  letter-spacing:.045em;
+  text-align:center;
+  backdrop-filter:blur(10px);
+}
+
+.compass-orbit-status{
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  padding:0!important;
+  margin:-1px!important;
+  overflow:hidden!important;
+  clip:rect(0 0 0 0)!important;
+  white-space:nowrap!important;
+  border:0!important;
+}
+
+.compass-brain-shell{
+  position:relative;
+  z-index:2;
+  width:100%;
+  min-height:210px;
+  aspect-ratio:1/1.04;
+  display:grid;
+  place-items:center;
+  overflow:visible;
+  transition:opacity .3s ease,filter .3s ease;
+}
+
+.compass-brain-human{
+  display:block;
+  width:100%;
+  height:100%;
+  touch-action:none;
+  cursor:grab;
+  filter:drop-shadow(0 13px 23px rgba(0,0,0,.34)) drop-shadow(0 0 15px rgba(91,201,224,.16));
+}
+
+.compass-brain-human:active{cursor:grabbing}
+
+.compass-house-parent[hidden],
+.house-orbit[hidden]{display:none!important}
+
+.house-orbit{
+  position:relative;
+  z-index:4;
+  grid-column:1/-1;
+  width:100%;
+  min-height:280px;
+  display:grid;
+  place-items:center;
+  isolation:isolate;
+  overflow:visible;
+}
+
+.house-orbit-member{
+  box-sizing:border-box;
+  grid-area:1/1;
+  position:relative;
+  width:min(78%,430px);
+  min-height:238px;
+  padding:1.15rem 1.2rem;
+  border:1px solid rgba(214,226,230,.25);
+  border-radius:22px;
+  background:radial-gradient(circle at 18% 12%,rgba(244,214,128,.09),transparent 34%),linear-gradient(145deg,rgba(11,25,35,.985),rgba(6,15,23,.98));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.13),0 24px 48px rgba(0,0,0,.32);
+  transition:transform .44s cubic-bezier(.2,.82,.2,1),opacity .44s ease,filter .44s ease;
+  will-change:transform,opacity,filter;
+}
+
+.house-orbit-member::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+  background:linear-gradient(120deg,rgba(255,255,255,.14),transparent 21% 67%,rgba(115,196,222,.075) 84%,transparent 96%);
+  mix-blend-mode:screen;
+}
+
+.house-orbit-member[data-slot="front"]{
+  z-index:3;
+  transform:translate3d(0,0,0) scale(1);
+  opacity:1;
+  filter:blur(0) brightness(1) saturate(1);
+  pointer-events:auto;
+}
+
+.house-orbit-member[data-slot="rear-left"]{
+  z-index:1;
+  transform:translate3d(-30%,-4%,0) scale(.64);
+  opacity:1;
+  filter:blur(2.6px) brightness(.40) saturate(.68);
+  pointer-events:none;
+}
+
+.house-orbit-member[data-slot="rear-right"]{
+  z-index:2;
+  transform:translate3d(30%,-4%,0) scale(.64);
+  opacity:1;
+  filter:blur(2.6px) brightness(.40) saturate(.68);
+  pointer-events:none;
+}
+
+.house-orbit-member:not([data-slot="front"])>*{visibility:hidden}
+
+.house-orbit-member h3{
+  margin:.2rem 0 .55rem;
+  font-family:var(--font-display,Georgia,serif);
+  font-size:clamp(1.55rem,3vw,2.2rem);
+}
+
+.house-member-status{
+  color:rgba(244,214,128,.76);
+  font-size:.71rem;
+  letter-spacing:.085em;
+  text-transform:uppercase;
+}
+
+@media(max-width:760px){
+  .compass-statement-orbit{
+    min-height:8.6rem;
+    grid-template-rows:minmax(6.15rem,auto) auto;
+  }
+
+  .compass-statement-object[data-slot="rear"]{transform:translate3d(7%,-2%,0) scale(.85)}
+
+  .compass-statement-guidance{
+    width:min(90%,33rem);
+    font-size:.66rem;
+    letter-spacing:.05em;
+  }
+
+  .compass-capability-orbit{
+    min-height:39rem;
+    row-gap:.7rem;
+  }
+
+  .compass-orbit-plaque{
+    width:min(91vw,520px);
+    min-height:420px;
+    grid-template-columns:1fr;
+    align-content:start;
+  }
+
+  .compass-orbit-plaque[data-slot="rear"]{
+    transform:translate3d(18%,-3%,0) scale(.76);
+    filter:blur(2.2px) brightness(.42) saturate(.70);
+  }
+
+  .compass-brain-shell{
+    width:min(72%,230px);
+    min-height:165px;
+    justify-self:center;
+    margin-top:.15rem;
+  }
+
+  .compass-plaque-actions{grid-template-columns:1fr 1fr}
+  .compass-plaque-actions--single{grid-template-columns:1fr}
+
+  .house-orbit{min-height:310px}
+  .house-orbit-member{width:min(78%,390px)}
+  .house-orbit-member[data-slot="rear-left"]{transform:translate3d(-27%,-3%,0) scale(.66)}
+  .house-orbit-member[data-slot="rear-right"]{transform:translate3d(27%,-3%,0) scale(.66)}
+}
+
+@media(max-width:420px){
+  .compass-statement-orbit,
+  .compass-capability-orbit{overflow-x:clip}
+
+  .compass-statement-sparkles{
+    inset:-15% 0;
+    overflow:hidden;
+  }
+
+  .compass-statement-guidance{
+    width:94%;
+    font-size:.63rem;
+    letter-spacing:.035em;
+  }
+
+  .compass-capability-orbit{min-height:40.5rem}
+
+  .compass-orbit-plaque{
+    width:92vw;
+    min-height:430px;
+    padding:1.1rem;
+    border-radius:23px;
+  }
+
+  .compass-orbit-plaque[data-slot="rear"]{transform:translate3d(18%,-2%,0) scale(.78)}
+
+  .compass-plaque-actions{grid-template-columns:1fr}
+  .compass-orbit-action{min-height:52px}
+
+  .compass-capability-guidance{
+    width:calc(100% - 24px);
+    padding:.58rem .72rem;
+    border-radius:18px;
+    font-size:.68rem;
+  }
+
+  .compass-brain-shell{
+    width:min(74%,210px);
+    min-height:150px;
+  }
+
+  .house-orbit-member{width:80%}
+  .house-orbit-member[data-slot="rear-left"]{transform:translate3d(-25%,-3%,0) scale(.68)}
+  .house-orbit-member[data-slot="rear-right"]{transform:translate3d(25%,-3%,0) scale(.68)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .compass-statement-object,
+  .compass-orbit-plaque,
+  .house-orbit-member{
+    transition-duration:.1s!important;
+  }
+
+  .compass-statement-object.is-arriving{animation:compassStatementReduced .22s ease-out 1}
+  .compass-statement-sparkles{display:none}
+
+  @keyframes compassStatementReduced{
+    0%{filter:brightness(1)}
+    45%{filter:brightness(1.28)}
+    100%{filter:brightness(1)}
+  }
+}

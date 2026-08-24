@@ -1,0 +1,288 @@
+name: Direct GitHub Pages Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+    steps:
+      - name: Checkout exact deployment head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - name: Verify exact head and applicable Compass successor contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$GITHUB_SHA"
+          scope_base="$(git rev-parse HEAD^1)"
+          compass_revalidation_paths=(
+            assets/compass/compass.orbit-input.js
+            assets/compass/compass.statement-carousel.js
+            assets/compass/compass.statement-carousel.css
+            assets/compass/compass.brain-scene.js
+            assets/compass/compass.trophy-scene.js
+            assets/compass/compass.capability-carousel.js
+            assets/compass/compass.capability-carousel.css
+            .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
+            .github/ai-router/projects/compass/verify-performance-successor.mjs
+            .github/workflows/compass-display-continuity-validation.yml
+            .github/workflows/compass-performance-successor-validation.yml
+            .github/workflows/compass-carousel-successor-live-qualification.yml
+          )
+          mapfile -t changed < <(git diff --name-only "${scope_base}...HEAD")
+          requires_compass_revalidation=false
+          for file in "${changed[@]}"; do
+            for protected in "${compass_revalidation_paths[@]}"; do
+              if [ "$file" = "$protected" ]; then
+                requires_compass_revalidation=true
+                break 2
+              fi
+            done
+          done
+          if [ "$requires_compass_revalidation" = true ]; then
+            echo "Compass-scoped runtime change detected; binding historical Gen1515 verifier to immediate predecessor ${scope_base}."
+            COMPASS_SCOPE_BASE="$scope_base" COMPASS_CANDIDATE_HEAD="$GITHUB_SHA" node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
+            COMPASS_CANDIDATE_HEAD="$GITHUB_SHA" node .github/ai-router/projects/compass/verify-performance-successor.mjs
+          else
+            echo "No historical Gen1515 runtime/qualification path changed; historical mutation-scope verifier is not applicable to this deployment head."
+          fi
+          node .github/ai-router/platform/pages-deployment-resilience-controller.v1.mjs --self-test
+      - name: Resolve authoritative Pages topology
+        id: topology
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          api="https://api.github.com/repos/${GITHUB_REPOSITORY}/pages"
+          payload="$(curl --fail-with-body --silent --show-error \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "$api")"
+          mode="$(jq -r '.build_type // empty' <<<"$payload")"
+          branch="$(jq -r '.source.branch // empty' <<<"$payload")"
+          path="$(jq -r '.source.path // empty' <<<"$payload")"
+          if [ "$mode" = "legacy" ]; then
+            test "$branch" = "main"
+            test "$path" = "/"
+            echo "mode=legacy" >> "$GITHUB_OUTPUT"
+          elif [ "$mode" = "workflow" ]; then
+            echo "mode=workflow" >> "$GITHUB_OUTPUT"
+          else
+            echo "Unsupported GitHub Pages build_type: $mode" >&2
+            exit 1
+          fi
+          printf '%s\n' "$payload" > /tmp/compass-pages-topology.json
+      - name: Prepare byte-identical site artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf _site
+          mkdir _site
+          rsync -a --exclude '.git' --exclude '_site' ./ _site/
+          product=(
+            index.html
+            assets/compass/compass.orbit-input.js
+            assets/compass/compass.statement-carousel.js
+            assets/compass/compass.statement-carousel.css
+            assets/compass/compass.brain-scene.js
+            assets/compass/compass.trophy-scene.js
+            assets/compass/compass.capability-carousel.js
+            assets/compass/compass.capability-carousel.css
+          )
+          sha256sum "${product[@]}" > /tmp/compass-source.sha256
+          (cd _site && sha256sum "${product[@]}") > /tmp/compass-site.sha256
+          diff -u /tmp/compass-source.sha256 /tmp/compass-site.sha256
+          mapfile -t parents < <(git show -s --format='%P' HEAD | tr ' ' '\n')
+          if [ "${#parents[@]}" -eq 2 ]; then
+            candidate="${parents[1]}"
+            git diff --quiet "$candidate" HEAD -- "${product[@]}"
+          else
+            candidate="$GITHUB_SHA"
+          fi
+          COMPASS_DEPLOY_CANDIDATE="$candidate" PAGES_MODE="${{ steps.topology.outputs.mode }}" node --input-type=module <<'NODE'
+          import fs from 'node:fs';import crypto from 'node:crypto';
+          const version='compass-root-award-finish-successor-v1',html=fs.readFileSync('index.html','utf8');
+          if((html.match(new RegExp(version,'g'))||[]).length!==6)throw new Error('SUCCESSOR_REFERENCE_COUNT');
+          if(html.includes('compass.carousel.js')||html.includes('compass.carousel.css'))throw new Error('LEGACY_REFERENCE');
+          const lines=fs.readFileSync('/tmp/compass-source.sha256','utf8').trim().split('\n');
+          const files=Object.fromEntries(lines.map(line=>{const [sha,...name]=line.trim().split(/\s+/);return[name.join(' '),sha]}));
+          const receipt={schema:'COMPASS_VOLUMETRIC_PAGES_BYTE_IDENTITY_RECEIPT_v1',operationId:'COMPASS_VOLUMETRIC_ARTIFACTS_BOUNDED_SUCCESSOR_20260817_v1',lockGeneration:1515,mergeHead:process.env.GITHUB_SHA,candidateHead:process.env.COMPASS_DEPLOY_CANDIDATE,protectedFloorHead:'5166e04086efb2eb1bdd1ab043c18c84cef739ad',productIdentity:version,deploymentTopology:process.env.PAGES_MODE==='legacy'?'DIRECT_GITHUB_PAGES_LEGACY_MAIN_ROOT':'DIRECT_GITHUB_PAGES_ACTIONS',files,manifestSha256:crypto.createHash('sha256').update(JSON.stringify(files)).digest('hex'),result:'PASS_CLOSED'};
+          fs.writeFileSync('/tmp/compass-pages-byte-identity.json',JSON.stringify(receipt,null,2)+'\n');
+          NODE
+      - name: Upload deployment identity
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-pages-byte-identity
+          path: |
+            /tmp/compass-source.sha256
+            /tmp/compass-site.sha256
+            /tmp/compass-pages-byte-identity.json
+            /tmp/compass-pages-topology.json
+      - name: Configure workflow-based Pages
+        if: steps.topology.outputs.mode == 'workflow'
+        uses: actions/configure-pages@v5
+      - name: Upload workflow-based site artifact
+        if: steps.topology.outputs.mode == 'workflow'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+      - name: Deploy workflow-based GitHub Pages
+        if: steps.topology.outputs.mode == 'workflow'
+        id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Verify and recover repository-configured legacy Pages deployment
+        if: steps.topology.outputs.mode == 'legacy'
+        id: resilience
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          api_root="https://api.github.com/repos/${GITHUB_REPOSITORY}"
+          headers=(
+            -H "Accept: application/vnd.github+json"
+            -H "Authorization: Bearer ${GH_TOKEN}"
+            -H "X-GitHub-Api-Version: 2022-11-28"
+          )
+          gh_get() { curl --fail-with-body --silent --show-error -L "${headers[@]}" "$1"; }
+          gh_post() { curl --fail-with-body --silent --show-error -L -X POST "${headers[@]}" "$1"; }
+          build_request="$(gh_post "${api_root}/pages/builds")"
+          build_request_status="$(jq -r '.status // empty' <<<"$build_request")"
+          if [ "$build_request_status" != "queued" ] && [ "$build_request_status" != "building" ] && [ "$build_request_status" != "built" ]; then
+            echo "Explicit legacy Pages build request returned unexpected status: ${build_request_status:-empty}" >&2
+            printf '%s\n' "$build_request" >&2
+            exit 1
+          fi
+          echo "Explicit legacy Pages build request accepted with status: $build_request_status"
+          retried_run_id=""
+          for attempt in $(seq 1 60); do
+            pages_payload="$(gh_get "${api_root}/pages/builds/latest")"
+            pages_commit="$(jq -r '.commit // empty' <<<"$pages_payload")"
+            pages_status="$(jq -r '.status // "unknown"' <<<"$pages_payload")"
+            if [ "$pages_commit" = "$GITHUB_SHA" ] && [ "$pages_status" = "built" ]; then
+              printf '%s\n' "$pages_payload" > /tmp/compass-pages-build.json
+              jq -n \
+                --arg expectedHead "$GITHUB_SHA" --arg observedHead "$GITHUB_SHA" \
+                --arg topology legacy --arg pagesBuildStatus built \
+                '{expectedHead:$expectedHead,observedHead:$observedHead,topology:$topology,pagesBuildStatus:$pagesBuildStatus}' \
+                > /tmp/pages-resilience-input.json
+              node .github/ai-router/platform/pages-deployment-resilience-controller.v1.mjs \
+                --input /tmp/pages-resilience-input.json --output /tmp/pages-deployment-resilience-receipt.json >/dev/null
+              echo "disposition=READY" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+
+            runs_payload="$(gh_get "${api_root}/actions/runs?head_sha=${GITHUB_SHA}&per_page=100")"
+            dynamic_run="$(jq -c '[.workflow_runs[] | select(.name == "pages build and deployment" and .event == "dynamic")] | sort_by(.created_at) | last // {}' <<<"$runs_payload")"
+            run_id="$(jq -r '.id // empty' <<<"$dynamic_run")"
+            run_status="$(jq -r '.status // "unknown"' <<<"$dynamic_run")"
+            run_conclusion="$(jq -r '.conclusion // empty' <<<"$dynamic_run")"
+            run_attempt="$(jq -r '.run_attempt // 0' <<<"$dynamic_run")"
+            artifact_bytes=0
+            deployment_state=""
+            provider_statuses='[]'
+            deploy_job_id=""
+
+            if [ -n "$run_id" ]; then
+              artifacts_payload="$(gh_get "${api_root}/actions/runs/${run_id}/artifacts?per_page=100" || echo '{"artifacts":[]}')"
+              artifact_bytes="$(jq -r '[.artifacts[]? | select(.name == "github-pages") | .size_in_bytes] | max // 0' <<<"$artifacts_payload")"
+              jobs_payload="$(gh_get "${api_root}/actions/runs/${run_id}/jobs?per_page=100" || echo '{"jobs":[]}')"
+              deploy_job_id="$(jq -r '[.jobs[]? | select(.name == "deploy" and .conclusion == "failure") | .id] | last // empty' <<<"$jobs_payload")"
+              if [ -n "$deploy_job_id" ]; then
+                logs="$(gh_get "${api_root}/actions/jobs/${deploy_job_id}/logs" 2>/dev/null || true)"
+                provider_code="$(grep -oE 'Failed to create deployment \(status: 5[0-9]{2}\)' <<<"$logs" | tail -1 | grep -oE '5[0-9]{2}' || true)"
+                if [ -n "$provider_code" ]; then
+                  provider_statuses="[$provider_code]"
+                fi
+              fi
+            fi
+
+            deployments_payload="$(gh_get "${api_root}/deployments?sha=${GITHUB_SHA}&environment=github-pages&per_page=100" || echo '[]')"
+            deployment_id="$(jq -r 'sort_by(.created_at) | last.id // empty' <<<"$deployments_payload")"
+            if [ -n "$deployment_id" ]; then
+              statuses_payload="$(gh_get "${api_root}/deployments/${deployment_id}/statuses?per_page=100" || echo '[]')"
+              deployment_state="$(jq -r 'first.state // empty' <<<"$statuses_payload")"
+            fi
+
+            jq -n \
+              --arg expectedHead "$GITHUB_SHA" --arg observedHead "${pages_commit:-$GITHUB_SHA}" \
+              --arg topology legacy --arg pagesBuildStatus "$pages_status" \
+              --arg dynamicRunConclusion "${run_conclusion:-}" --arg deploymentState "${deployment_state:-}" \
+              --argjson artifactBytes "${artifact_bytes:-0}" --argjson providerHttpStatuses "$provider_statuses" \
+              --argjson providerFailureCount "${run_attempt:-0}" --argjson maxProviderRetries 2 \
+              '({expectedHead:$expectedHead,observedHead:$observedHead,topology:$topology,pagesBuildStatus:$pagesBuildStatus,artifactBytes:$artifactBytes,providerHttpStatuses:$providerHttpStatuses,providerFailureCount:$providerFailureCount,maxProviderRetries:$maxProviderRetries}
+                + (if ($dynamicRunConclusion|length) > 0 then {dynamicRunConclusion:$dynamicRunConclusion} else {} end)
+                + (if ($deploymentState|length) > 0 then {deploymentState:$deploymentState} else {} end))' \
+              > /tmp/pages-resilience-input.json
+            test -s /tmp/pages-resilience-input.json
+            jq -e 'type == "object" and (.expectedHead|length) > 0 and (.topology == "legacy")' /tmp/pages-resilience-input.json >/dev/null
+            node .github/ai-router/platform/pages-deployment-resilience-controller.v1.mjs \
+              --input /tmp/pages-resilience-input.json --output /tmp/pages-deployment-resilience-receipt.json >/dev/null
+            disposition="$(jq -r '.disposition' /tmp/pages-deployment-resilience-receipt.json)"
+            echo "Pages resilience attempt ${attempt}: ${disposition}; pages=${pages_status}; dynamic=${run_status}/${run_conclusion:-none}; run_attempt=${run_attempt}; artifact=${artifact_bytes}"
+
+            if [ "$disposition" = "RETRYABLE_PROVIDER_FAILURE" ] && [ -n "$run_id" ] && [ "$retried_run_id" != "$run_id" ]; then
+              gh_post "${api_root}/actions/runs/${run_id}/rerun-failed-jobs" >/dev/null
+              retried_run_id="$run_id"
+              echo "Bounded retry requested for exact dynamic Pages run ${run_id}."
+              sleep 10
+              continue
+            fi
+            if [ "$disposition" = "WAITING_EXTERNAL_SERVICE" ] || [ "$disposition" = "REPOSITORY_DEFECT" ] || [ "$disposition" = "TOPOLOGY_FAILURE" ]; then
+              echo "disposition=$disposition" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            if [ "$disposition" = "ARTIFACT_LIMIT_FAILURE" ] && [ "$run_status" = "completed" ]; then
+              echo "disposition=$disposition" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            sleep 10
+          done
+          jq -n --arg expectedHead "$GITHUB_SHA" --arg observedHead "$GITHUB_SHA" --arg topology legacy \
+            '{expectedHead:$expectedHead,observedHead:$observedHead,topology:$topology,pagesBuildStatus:"timeout",providerFailureCount:0,providerHttpStatuses:[],maxProviderRetries:2}' \
+            > /tmp/pages-resilience-input.json
+          node .github/ai-router/platform/pages-deployment-resilience-controller.v1.mjs \
+            --input /tmp/pages-resilience-input.json --output /tmp/pages-deployment-resilience-receipt.json >/dev/null
+          disposition="$(jq -r '.disposition' /tmp/pages-deployment-resilience-receipt.json)"
+          echo "disposition=$disposition" >> "$GITHUB_OUTPUT"
+      - name: Upload Pages resilience receipt
+        if: always() && steps.topology.outputs.mode == 'legacy'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pages-deployment-resilience
+          path: |
+            /tmp/pages-resilience-input.json
+            /tmp/pages-deployment-resilience-receipt.json
+          if-no-files-found: error
+      - name: Upload authoritative Pages build receipt
+        if: always() && steps.topology.outputs.mode == 'legacy'
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-pages-authoritative-build
+          path: /tmp/compass-pages-build.json
+          if-no-files-found: ignore
+      - name: Enforce Pages resilience disposition
+        if: steps.topology.outputs.mode == 'legacy' && steps.resilience.outputs.disposition != 'READY'
+        shell: bash
+        run: |
+          echo "GitHub Pages did not reach READY. Deterministic disposition: ${{ steps.resilience.outputs.disposition }}" >&2
+          exit 1

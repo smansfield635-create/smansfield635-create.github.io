@@ -1,0 +1,48 @@
+{
+  "identityId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4F_FINALIZATION_IDENTITY_AND_BOUNDARY_v1",
+  "targetNumber": 4,
+  "targetSubtarget": "4F-1",
+  "status": "COMPLETE_CANDIDATE_NOT_ACCEPTED",
+  "accepted": false,
+  "canonical": false,
+  "purpose": "Reconcile final package status, execute one bounded actual-branch closure audit, establish durable custody, and stop before user acceptance or merge.",
+  "criticalPath": {
+    "target2Registry": "COMPLETE",
+    "target3ToolInstruction": "COMPLETE",
+    "target4AValidatorContract": "COMPLETE",
+    "target4BValidatorEngine": "COMPLETE",
+    "target4CFixtureSuite": "COMPLETE",
+    "target4DPortability": "OPTIONAL_DEFERRED_GENERALIZATION_LANE",
+    "target4EAutomaticActivationAndSystemicComprehension": "COMPLETE",
+    "target4FFinalization": "IN_PROGRESS"
+  },
+  "requiredTerminalState": {
+    "candidatePackageComplete": true,
+    "userAcceptance": false,
+    "mergeAuthorized": false,
+    "merged": false,
+    "mainActivated": false,
+    "mainChanged": false
+  },
+  "boundaries": {
+    "registryRewriteAuthorized": false,
+    "validatorSemanticRewriteAuthorized": false,
+    "portabilityConstructionAuthorized": false,
+    "fixtureExpansionAuthorized": false,
+    "sourceAuthorityCreated": false,
+    "mutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "canonicalizationAuthorityCreated": false,
+    "runtimeAuthorityCreated": false,
+    "rendererAuthorityCreated": false,
+    "deploymentAuthorityCreated": false,
+    "productionAuthorityCreated": false,
+    "userAcceptanceMayBeInferred": false,
+    "pr61MayBeMerged": false
+  },
+  "stoppingCondition": {
+    "identityAndBoundaryComplete": true,
+    "advanceBeyondTarget4F1": false,
+    "nextAuthorizedSubtarget": "4F-2"
+  }
+}

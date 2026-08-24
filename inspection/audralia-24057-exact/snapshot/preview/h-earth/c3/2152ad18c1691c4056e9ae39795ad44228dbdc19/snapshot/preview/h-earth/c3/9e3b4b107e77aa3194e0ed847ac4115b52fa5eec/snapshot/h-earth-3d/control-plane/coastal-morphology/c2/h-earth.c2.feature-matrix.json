@@ -1,0 +1,8 @@
+{
+  "C2.1": {"visibleBeach": true, "sandbarProfile": true, "boundedGeometry": true},
+  "C2.2": {"submergedSand": true, "wetSand": true, "drySand": true, "coastalTransition": true, "inlandTerrain": true},
+  "C2.3": {"actualDepthProxy": "DISTANCE_AND_RESHAPED_PROFILE_CORRESPONDENCE", "shallowTurquoise": true, "deepWaterDarkening": true, "seabedTransparency": true},
+  "C2.4": {"animatedSurface": true, "shorelineSwash": true, "sandbarBreakerFoam": true},
+  "C2.5": {"landscapeScaleMacroDefinition": true, "runtimeMicrodetail": true},
+  "publicDefaultMutated": false
+}

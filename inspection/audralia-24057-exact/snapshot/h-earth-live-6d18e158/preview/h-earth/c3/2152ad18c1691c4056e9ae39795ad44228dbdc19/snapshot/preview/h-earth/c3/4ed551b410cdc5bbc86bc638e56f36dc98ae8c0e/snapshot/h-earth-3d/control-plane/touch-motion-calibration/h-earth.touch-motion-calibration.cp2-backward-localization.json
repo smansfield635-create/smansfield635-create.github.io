@@ -1,0 +1,71 @@
+{
+  "artifactId": "H_EARTH_TOUCH_MOTION_CALIBRATION_CP2_BACKWARD_LOCALIZATION_v1",
+  "program": "H_EARTH_TOUCH_MOTION_CALIBRATION_AND_FLUIDITY",
+  "checkpoint": "CP2_BACKWARD_DIRECTION_LOCALIZATION",
+  "status": "PASS_BOUNDED_LOCALIZATION_WITH_PHYSICAL_BROWSER_BOUNDARY_HOLD",
+  "parentHead": "f8d91418dfae5548eaa1e5a888052f832e619d72",
+  "physicalObservation": {
+    "moveBackwardIntendedInput": "PRESENT",
+    "expectedBackwardDisplacement": "NOT_OBSERVED",
+    "observedResult": "FORWARD_OR_OTHER_INCORRECT_MOTION",
+    "functionalDisposition": "FAIL_WRONG_DIRECTION"
+  },
+  "sourceIdentities": {
+    "pointerTouchIntake": "f9689f0accd1fe0067c36bc0d1e4b199cf6c9fe5",
+    "navigation": "8ab3446c536fc24423d5601acce232b19fa71c91",
+    "liveRendererContract": "4e187fc38780dfb2020482b674ac331f5a65b2c1"
+  },
+  "executedHarness": {
+    "path": "/h-earth-3d/validation/h-earth.touch-motion-calibration.cp2-backward-sign.harness.mjs",
+    "runtime": "NODE_JS",
+    "caseCount": 15,
+    "yawDegrees": [0, 18, 90, 180, 270],
+    "pitchDegrees": [-8, 0, 20],
+    "centerDeltaYForward": -20,
+    "centerDeltaYBackward": 20,
+    "distanceDelta": 0,
+    "result": "PASS",
+    "firstSignDivergence": "NOT_REPRODUCED_IN_EXACT_SOURCE_FORMULAS"
+  },
+  "localizedFindings": {
+    "classifierDirectionalMapping": "PASS_IN_ISOLATED_EXECUTION",
+    "navigationBackwardNegation": "PASS_IN_ISOLATED_EXECUTION",
+    "cameraForwardVectorConsistency": "PASS_IN_ISOLATED_EXECUTION",
+    "forwardBackwardSignedTravelOpposition": "PASS_IN_ALL_15_CASES",
+    "productionPhysicalFailureResolved": false,
+    "remainingLocalizationBoundary": [
+      "PHYSICAL_POINTER_EVENT_SEQUENCE",
+      "TWO_CONTACT_EVENT_INTERLEAVING",
+      "PINCH_VERSUS_TRAVEL_RECLASSIFICATION_DURING_REAL_GESTURE",
+      "PROPOSAL_TO_VISIBLE_FRAME_CORRESPONDENCE",
+      "USER_VISIBLE_SPATIAL_INTERPRETATION"
+    ]
+  },
+  "requiredPhysicalTraceFields": [
+    "rawPointerCoordinates",
+    "previousAndCurrentCentroids",
+    "signedCenterDeltaY",
+    "distanceDelta",
+    "pinchDominant",
+    "emittedProposalType",
+    "emittedProposalMagnitude",
+    "navigationStateBeforeAndAfter",
+    "cameraPositionBeforeAndAfter",
+    "cameraForwardVectorBefore",
+    "signedTravel",
+    "presentedFrameSequence",
+    "visibleUserDisposition"
+  ],
+  "authorityDisposition": {
+    "moveBackwardCorrectionAuthorized": false,
+    "productionMutationPerformed": false,
+    "rendererMutationPerformed": false,
+    "navigationMutationPerformed": false,
+    "touchRuntimeMutationPerformed": false,
+    "cp1Reopened": false,
+    "cp2SourceLocalizationClosed": true,
+    "cp2PhysicalBrowserLocalizationClosed": false
+  },
+  "nextCheckpoint": "CP2B_PHYSICAL_BROWSER_EVENT_AND_VISIBLE_FRAME_TRACE",
+  "stoppingBoundary": "STOP_BEFORE_ANY_MOVE_BACKWARD_CORRECTION_OR_GENERAL_MOTION_CALIBRATION"
+}

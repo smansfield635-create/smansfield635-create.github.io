@@ -1,0 +1,50 @@
+/* METHODS_MODELS_SPATIAL_FIELD_v1
+   First bounded geometry construction under admitted generation 1481.
+   Presentation only: does not alter scientific identity or evidence standing. */
+[data-mm-spatial-field-v1]{--mm-drag-x:0px;--mm-drag-y:0px;--mm-drag-z:0px;--mm-tilt-x:0deg;--mm-tilt-y:0deg;--mm-spatial-depth:148px;--mm-spatial-perspective:1280px}
+[data-mm-spatial-field-v1] .mm-stage{position:relative;perspective:var(--mm-spatial-perspective);perspective-origin:50% 42%;transform-style:preserve-3d;overflow:clip;isolation:isolate}
+[data-mm-spatial-field-v1] .mm-stage::before{content:"";position:absolute;inset:12% 4% 18%;pointer-events:none;border:1px solid color-mix(in srgb,currentColor 14%,transparent);border-radius:50%;transform:rotateX(67deg) translateZ(-180px);opacity:.45}
+[data-mm-spatial-field-v1] .mm-family-tabs,[data-mm-spatial-field-v1] .mm-instrument,[data-mm-spatial-field-v1] .mm-lens{transform-style:preserve-3d;will-change:transform}
+[data-mm-spatial-field-v1] .mm-family-tabs{position:relative;min-height:7.5rem;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem;align-items:center;transform:translate3d(0,var(--mm-drag-z),0) rotateX(var(--mm-tilt-x));touch-action:none;user-select:none}
+[data-mm-spatial-field-v1] .mm-family-tab{position:relative;min-height:5.75rem;transform-origin:50% 50%;transition:transform 420ms cubic-bezier(.2,.8,.2,1),opacity 320ms ease;cursor:grab}
+[data-mm-spatial-field-v1] .mm-family-tab[data-mm-z-position="active"]{transform:translate3d(0,0,72px) scale(1);opacity:1;z-index:4}
+[data-mm-spatial-field-v1] .mm-family-tab[data-mm-z-position="previous"]{transform:translate3d(0,-.7rem,-148px) scale(.945);opacity:.72}
+[data-mm-spatial-field-v1] .mm-family-tab[data-mm-z-position="next"]{transform:translate3d(0,.7rem,-148px) scale(.945);opacity:.72}
+[data-mm-spatial-field-v1] .mm-family-tab[data-mm-z-position="far"]{transform:translate3d(0,1.4rem,-296px) scale(.89);opacity:.5}
+[data-mm-spatial-field-v1][data-mm-z-dragging="true"] .mm-family-tab{transition:none;cursor:grabbing}
+[data-mm-spatial-field-v1] .mm-instrument{position:relative;min-height:clamp(28rem,61vh,47rem);transform:translate3d(var(--mm-drag-x),var(--mm-drag-y),0) rotateX(var(--mm-tilt-x)) rotateY(var(--mm-tilt-y));transition:transform 220ms ease-out;touch-action:none}
+[data-mm-spatial-field-v1][data-mm-x-dragging="true"] .mm-instrument,[data-mm-spatial-field-v1][data-mm-field-dragging="true"] .mm-instrument{transition:none}
+[data-mm-spatial-field-v1] .mm-model-deck{position:relative;min-height:clamp(25rem,56vh,42rem);transform-style:preserve-3d;perspective:1100px;overflow:visible;touch-action:none;user-select:none;cursor:grab}
+[data-mm-spatial-field-v1][data-mm-x-dragging="true"] .mm-model-deck{cursor:grabbing}
+[data-mm-spatial-field-v1] .mm-model-card{transform-origin:50% 50%;backface-visibility:hidden;transition:transform 460ms cubic-bezier(.2,.8,.2,1),opacity 300ms ease,filter 300ms ease}
+[data-mm-spatial-field-v1] .mm-model-card[data-mm-x-position="active"]{transform:translate3d(0,0,72px) rotateY(0) scale(1);opacity:1;filter:none}
+[data-mm-spatial-field-v1] .mm-model-card[data-mm-x-position="previous"]{transform:translate3d(-62%,4%,-110px) rotateY(20deg) scale(.9);opacity:.48}
+[data-mm-spatial-field-v1] .mm-model-card[data-mm-x-position="next"]{transform:translate3d(62%,4%,-110px) rotateY(-20deg) scale(.9);opacity:.48}
+[data-mm-spatial-field-v1] .mm-model-card[data-mm-x-position="previous-far"]{transform:translate3d(-92%,7%,-240px) rotateY(30deg) scale(.78);opacity:.2}
+[data-mm-spatial-field-v1] .mm-model-card[data-mm-x-position="next-far"]{transform:translate3d(92%,7%,-240px) rotateY(-30deg) scale(.78);opacity:.2}
+[data-mm-spatial-field-v1] .mm-model-card[data-mm-x-position="rear"]{transform:translate3d(0,10%,-330px) scale(.7);opacity:.08}
+[data-mm-spatial-field-v1] .mm-lens{position:relative;transform:translate3d(0,var(--mm-drag-y),44px) rotateX(calc(var(--mm-tilt-x) * .35));transition:transform 260ms ease-out}
+[data-mm-spatial-field-v1][data-mm-y-dragging="true"] .mm-lens{transition:none}
+[data-mm-spatial-field-v1] .mm-lens-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.65rem;transform-style:preserve-3d;touch-action:none;user-select:none}
+[data-mm-spatial-field-v1] .mm-lens-tab{transition:transform 360ms cubic-bezier(.2,.8,.2,1),opacity 260ms ease;cursor:grab}
+[data-mm-spatial-field-v1] .mm-lens-tab[data-mm-y-position="active"]{transform:translate3d(0,0,54px) rotateX(0);opacity:1}
+[data-mm-spatial-field-v1] .mm-lens-tab[data-mm-y-position="previous"]{transform:translate3d(0,-1.15rem,-72px) rotateX(4deg);opacity:.72}
+[data-mm-spatial-field-v1] .mm-lens-tab[data-mm-y-position="next"]{transform:translate3d(0,1.15rem,-72px) rotateX(-4deg);opacity:.72}
+[data-mm-spatial-field-v1][data-mm-y-dragging="true"] .mm-lens-tab{transition:none;cursor:grabbing}
+
+/* Preserve the inherited Euclidean centering transform while reducing only the
+   active card's projected footprint enough to remain inside every audited
+   viewport. This is geometry containment, not a surrogate control. */
+html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] [data-mm-spatial-field-v1] .mm-model-card[data-mm-x-position="active"]{transform:translate3d(-50%,-50%,125px) rotateY(0deg) scale(.88)!important}
+[data-mm-spatial-field-v1][data-mm-spatial-reopening="true"] .mm-model-card{transition:none!important;animation:none!important}
+
+/* Already-bound historical state hooks are moved here by spatial-field-v1.js.
+   The nodes retain their inherited listeners but present no perceivable control. */
+[data-mm-spatial-field-v1] .mm-deck-controls,[data-mm-spatial-field-v1] .mm-z-axis-controls{display:none!important}
+[data-mm-spatial-field-v1] .mm-machine-hooks{position:fixed!important;top:0!important;left:0!important;display:grid!important;grid-template-columns:repeat(4,12px)!important;width:48px!important;height:12px!important;margin:0!important;padding:0!important;border:0!important;overflow:visible!important;opacity:0!important;z-index:2147483647!important;pointer-events:auto!important;transform:none!important}
+[data-mm-spatial-field-v1] .mm-machine-hooks button{position:relative!important;display:block!important;width:10px!important;height:10px!important;min-width:10px!important;min-height:10px!important;margin:0!important;padding:0!important;border:0!important;opacity:0!important;color:transparent!important;background:transparent!important;font-size:0!important;line-height:0!important;pointer-events:auto!important;transform:none!important}
+[data-mm-spatial-field-v1] .mm-dock__controls [data-mm-dock-previous],[data-mm-spatial-field-v1] .mm-dock__controls [data-mm-dock-next]{display:none!important}
+[data-mm-spatial-field-v1] .mm-coordinate-spatial-note{display:block;margin-top:.45rem;font-size:.76rem;line-height:1.4;opacity:.7}
+[data-mm-spatial-field-v1][data-mm-field-dragging="true"] .mm-euclidean-coordinate{transform:translateZ(96px)}
+@media(max-width:760px){[data-mm-spatial-field-v1]{--mm-spatial-depth:92px;--mm-spatial-perspective:900px}[data-mm-spatial-field-v1] .mm-stage{perspective-origin:50% 37%}[data-mm-spatial-field-v1] .mm-family-tabs{grid-template-columns:repeat(2,minmax(0,1fr));min-height:11rem}[data-mm-spatial-field-v1] .mm-family-tab{min-height:4.6rem}[data-mm-spatial-field-v1] .mm-instrument{min-height:31rem}[data-mm-spatial-field-v1] .mm-model-card[data-mm-x-position="previous"]{transform:translate3d(-54%,5%,-82px) rotateY(16deg) scale(.88)}[data-mm-spatial-field-v1] .mm-model-card[data-mm-x-position="next"]{transform:translate3d(54%,5%,-82px) rotateY(-16deg) scale(.88)}}
+@media(prefers-reduced-motion:reduce){[data-mm-spatial-field-v1] .mm-model-card,[data-mm-spatial-field-v1] .mm-family-tab,[data-mm-spatial-field-v1] .mm-lens-tab,[data-mm-spatial-field-v1] .mm-instrument,[data-mm-spatial-field-v1] .mm-lens{transition-duration:1ms!important}}

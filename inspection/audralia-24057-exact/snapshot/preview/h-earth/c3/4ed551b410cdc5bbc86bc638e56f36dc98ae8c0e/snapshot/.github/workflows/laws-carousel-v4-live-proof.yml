@@ -1,0 +1,42 @@
+name: Laws Carousel V6 Live Proof
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'laws/index.html'
+      - 'laws/index.destination-carousel.js'
+      - 'laws/index.mobile-background-tabs.js'
+      - '.github/workflows/laws-carousel-v4-live-proof.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  live-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify public Laws V6 delivery
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 36); do
+            stamp="${GITHUB_SHA}-${attempt}"
+            html="$(curl -fsSL -H 'Cache-Control: no-cache' "https://diamondgatebridge.com/laws/?v6-proof=${stamp}" || true)"
+            bootstrap="$(curl -fsSL -H 'Cache-Control: no-cache' "https://diamondgatebridge.com/laws/index.mobile-background-tabs.js?v=LAWS_DESTINATION_STAGE_LIVE_20260816F&v6-proof=${stamp}" || true)"
+            runtime="$(curl -fsSL -H 'Cache-Control: no-cache' "https://diamondgatebridge.com/laws/index.destination-carousel.js?v=LAWS_DESTINATION_CAROUSEL_RUNTIME_V6_20260816A&v6-proof=${stamp}" || true)"
+            if grep -q 'LAWS_DESTINATION_STAGE_LIVE_20260816F' <<<"$html" \
+              && grep -q 'LAWS_DESTINATION_CAROUSEL_RUNTIME_V6_20260816A' <<<"$bootstrap" \
+              && grep -q 'LAWS_DESTINATION_CAROUSEL_RUNTIME_v6' <<<"$runtime" \
+              && grep -q 'continuousPointerGeometry: true' <<<"$runtime" \
+              && grep -q 'fractionalOrbitPosition: true' <<<"$runtime" \
+              && grep -q 'selectionDuringDrag: false' <<<"$runtime" \
+              && grep -q 'settleToNearestDetent: true' <<<"$runtime" \
+              && grep -q 'verticalGesturePassthrough: true' <<<"$runtime" \
+              && grep -q 'directionOnlyGesture: false' <<<"$runtime" \
+              && grep -q 'liveGestureGeometry: true' <<<"$runtime" \
+              && grep -q 'atomicRotation: false' <<<"$runtime"; then
+              echo 'LIVE_LAWS_CAROUSEL_V6_CONTINUOUS_POINTER_VERIFIED'; exit 0
+            fi
+            echo "V6 public delivery not settled yet: $attempt/36"; sleep 10
+          done
+          exit 1

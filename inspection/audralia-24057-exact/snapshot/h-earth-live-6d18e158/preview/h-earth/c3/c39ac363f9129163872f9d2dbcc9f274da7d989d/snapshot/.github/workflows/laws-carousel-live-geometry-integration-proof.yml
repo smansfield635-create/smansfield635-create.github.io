@@ -1,0 +1,79 @@
+name: Laws Carousel Live Geometry Integration Proof
+
+on:
+  pull_request:
+    paths:
+      - 'laws/index.mobile-background-tabs.js'
+      - 'laws/index.destination-carousel.css'
+      - 'laws/index.destination-carousel.js'
+      - '.github/workflows/laws-carousel-live-geometry-integration-proof.yml'
+
+permissions: { contents: read }
+
+jobs:
+  live-geometry-integration-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: '${{ github.event.pull_request.head.sha }}', fetch-depth: 1 }
+      - name: Verify carousel stylesheet is wired into bootstrap
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          loader=Path('laws/index.mobile-background-tabs.js').read_text()
+          assert 'index.destination-carousel.css?v=LAWS_DESTINATION_CAROUSEL_PRODUCT_GEOMETRY_20260816G' in loader
+          assert 'data-laws-destination-carousel-css' in loader
+          assert 'lawsDestinationCarouselCss = "active"' in loader
+          print('LAWS_CAROUSEL_STYLESHEET_WIRING_STATIC_PASS')
+          PY
+      - name: Install Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null
+      - name: Serve exact candidate
+        run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/laws-live-geometry.log 2>&1 &
+      - name: Prove rendered object permanence and shared ring traversal
+        run: |
+          node <<'NODE'
+          const {chromium}=require('playwright');
+          const A=(x,m)=>{if(!x)throw Error(m)};
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const context=await browser.newContext({viewport:{width:960,height:1536},hasTouch:true,isMobile:true,deviceScaleFactor:1});
+            const page=await context.newPage();
+            await page.goto('http://127.0.0.1:4173/laws/',{waitUntil:'networkidle'});
+            await page.waitForSelector('html[data-laws-destination-carousel-css="active"]',{timeout:15000});
+            const field=page.locator('[data-laws-root-rolodex-section] .laws-rolodex-field[data-destination-stage-state="active"]').first();
+            const viewport=field.locator('.laws-rolodex-viewport');
+            const track=field.locator('.laws-rolodex-track');
+            const cards=field.locator('.laws-rolodex-card');
+            A(await cards.count()>=3,'not enough cards for a carousel');
+            A(await page.locator('link[data-laws-destination-carousel-css]').count()===1,'carousel stylesheet link absent');
+            const style=await track.evaluate(n=>({width:getComputedStyle(n).width,transform:getComputedStyle(n).transform,transition:getComputedStyle(n).transitionDuration}));
+            A(parseFloat(style.width)===0,'shared ring anchor is not zero-width: '+JSON.stringify(style));
+            A(style.transform!=='none','shared ring transform absent');
+            const boxes=[];
+            for(let i=0;i<Math.min(3,await cards.count());i++) boxes.push(await cards.nth(i).boundingBox());
+            A(boxes.every(Boolean),'card geometry missing');
+            const centers=boxes.map(b=>Math.round(b.x+b.width/2));
+            A(new Set(centers).size>=2,'cards do not occupy distinct spatial positions: '+JSON.stringify(centers));
+            const opacity=await cards.evaluateAll(ns=>ns.map(n=>Number(getComputedStyle(n).opacity)));
+            A(opacity.filter(v=>v>=0.25).length>=2,'neighbor object permanence absent: '+JSON.stringify(opacity));
+            const before=await track.evaluate(n=>getComputedStyle(n).transform);
+            const beforeIndex=Number(await field.getAttribute('data-carousel-index'));
+            const sample=()=>field.evaluate(el=>{const t=el.querySelector('.laws-rolodex-track');const cs=getComputedStyle(t);return {phase:el.dataset.carouselGestureState,index:Number(el.dataset.carouselIndex),angle:Number(el.dataset.carouselOrbitAngle),transform:cs.transform,transition:cs.transitionDuration,barrier:el.dataset.carouselTransitionFrame||''};});
+            await viewport.focus();
+            await page.keyboard.press('ArrowRight');
+            const samples=[];
+            for(const delay of [40,100,180,300,460,620]){await page.waitForTimeout(delay-(samples.at(-1)?.delay||0));samples.push({delay,...await sample()});}
+            console.log(JSON.stringify({style,centers,opacity,before,beforeIndex,samples},null,2));
+            A(samples.some(s=>s.transform!==before),'shared ring never visibly traversed');
+            A(samples.some(s=>s.transition!=='0s'),'transition authority never became active');
+            await page.waitForTimeout(300);
+            const after=await sample();
+            A(after.index!==beforeIndex,'system-owned one-step did not advance');
+            A(await field.getAttribute('data-carousel-canonical-landing')==='true','canonical landing absent');
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE

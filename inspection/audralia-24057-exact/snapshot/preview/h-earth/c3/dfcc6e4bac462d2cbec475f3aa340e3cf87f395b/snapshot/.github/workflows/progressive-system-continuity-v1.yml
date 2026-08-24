@@ -1,0 +1,210 @@
+name: Progressive System Continuity v1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'AGENTS.md'
+      - 'AI_ENTRYPOINT.json'
+      - '.github/ai-router/router.v1.json'
+      - '.github/ai-router/system-continuity/**'
+      - '.github/workflows/progressive-system-continuity-v1.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'AGENTS.md'
+      - 'AI_ENTRYPOINT.json'
+      - '.github/ai-router/router.v1.json'
+      - '.github/ai-router/system-continuity/**'
+      - '.github/workflows/progressive-system-continuity-v1.yml'
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: progressive-system-continuity-${{ github.event_name }}-${{ github.ref || github.event.issue.number }}
+  cancel-in-progress: false
+
+env:
+  PROTOCOL_PATH: .github/ai-router/system-continuity/progressive-system-continuity-protocol.v1.json
+  GATE_PATH: .github/ai-router/system-continuity/progressive-system-continuity-gate.v1.mjs
+  SELF_TEST_PATH: .github/ai-router/system-continuity/progressive-system-continuity-self-test.v1.mjs
+  GAP_REGISTRY_PATH: .github/ai-router/system-continuity/gap-registry.v1.json
+  WORKFLOW_PATH: .github/workflows/progressive-system-continuity-v1.yml
+  REMOTE_MARKER: PROGRESSIVE_SYSTEM_CONTINUITY_REQUEST_V1
+
+jobs:
+  validate:
+    if: github.event_name != 'issue_comment'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify continuity package and router ownership
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f "$PROTOCOL_PATH"
+          test -f "$GATE_PATH"
+          test -f "$SELF_TEST_PATH"
+          test -f "$GAP_REGISTRY_PATH"
+          test -f "$WORKFLOW_PATH"
+          node -e "const p=require('./${PROTOCOL_PATH}'),g=require('./${GAP_REGISTRY_PATH}'),e=require('./AI_ENTRYPOINT.json'),r=require('./.github/ai-router/router.v1.json'); if(p.protocolId!=='REPOSITORY_PROGRESSIVE_SYSTEM_CONTINUITY_TRACK_v1'||g.status!=='ACTIVE_FAIL_CLOSED'||e.systemContinuityTrack?.protocol!==process.env.PROTOCOL_PATH||!r.routerInfrastructure.ownedExactPaths.includes(process.env.WORKFLOW_PATH)) process.exit(1)"
+          node tools/repository-ai-entry-router.mjs --self-test --output "$RUNNER_TEMP/router-self-test.json"
+          node tools/repository-ai-entry-router.mjs --mutation-intent --task "Progressive system continuity route verification" \
+            --path AGENTS.md \
+            --path AI_ENTRYPOINT.json \
+            --path .github/ai-router/router.v1.json \
+            --path "$PROTOCOL_PATH" \
+            --path "$GATE_PATH" \
+            --path "$SELF_TEST_PATH" \
+            --path "$GAP_REGISTRY_PATH" \
+            --path "$WORKFLOW_PATH" \
+            --output "$RUNNER_TEMP/router-eight-path.json"
+          node - <<'NODE'
+          const fs=require('fs');
+          const x=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/router-eight-path.json','utf8'));
+          if(x.disposition!=='PASS'||x.routes.length!==8||x.routes.some(r=>r.disposition!=='PASS'||r.projectId!=='REPOSITORY_AI_ROUTER_INFRASTRUCTURE')) process.exit(1);
+          NODE
+
+      - name: Record candidate change surface without permanent cross-system prohibitions
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            BASE="${{ github.event.before }}"
+          else
+            BASE="HEAD^"
+          fi
+          git diff --name-only "$BASE" HEAD | sort > "$RUNNER_TEMP/changed.txt"
+          if [ "${GITHUB_HEAD_REF:-}" = "agent/progressive-system-continuity-track-v1" ]; then
+            allowed=(
+              AGENTS.md
+              AI_ENTRYPOINT.json
+              .github/ai-router/router.v1.json
+              .github/ai-router/system-continuity/progressive-system-continuity-protocol.v1.json
+              .github/ai-router/system-continuity/progressive-system-continuity-gate.v1.mjs
+              .github/ai-router/system-continuity/progressive-system-continuity-self-test.v1.mjs
+              .github/ai-router/system-continuity/gap-registry.v1.json
+              .github/workflows/progressive-system-continuity-v1.yml
+            )
+            printf '%s\n' "${allowed[@]}" | sort > "$RUNNER_TEMP/allowed.txt"
+            if comm -23 "$RUNNER_TEMP/changed.txt" "$RUNNER_TEMP/allowed.txt" | grep -q .; then
+              echo "PATH_OUTSIDE_ADMITTED_INSTALLATION_SCOPE" >&2
+              comm -23 "$RUNNER_TEMP/changed.txt" "$RUNNER_TEMP/allowed.txt" >&2
+              exit 1
+            fi
+          fi
+
+      - name: Run exact progressive continuity self-test
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          node "$SELF_TEST_PATH" --output "$RUNNER_TEMP/self-test.json"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          node -e "const r=require(process.env.RUNNER_TEMP+'/self-test.json'); if(r.result!=='PASS'||r.failedCount!==0||r.productMutationPerformed!==false||r.repositoryMutationPerformedBySelfTest!==false||r.lifecycleMutationPerformed!==false||r.genericCommandAuthority!==false) process.exit(1)"
+
+      - name: Build validation receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/progressive-system-continuity
+          cp "$RUNNER_TEMP/self-test.json" artifacts/progressive-system-continuity/self-test.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs'; import crypto from 'node:crypto'; import cp from 'node:child_process';
+          const head=cp.execFileSync('git',['rev-parse','HEAD^{commit}'],{encoding:'utf8'}).trim();
+          const self=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/self-test.json','utf8'));
+          const router=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/router-eight-path.json','utf8'));
+          const digest=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+          const changed=fs.readFileSync(process.env.RUNNER_TEMP+'/changed.txt','utf8').trim().split('\n').filter(Boolean);
+          const receipt={schema:'PROGRESSIVE_SYSTEM_CONTINUITY_VALIDATION_RECEIPT_v1',result:'PASS',head,event:process.env.GITHUB_EVENT_NAME,routerDisposition:router.disposition,routerPathCount:router.routes.length,selfTestResult:self.result,selfTestScenarioCount:self.scenarioCount,protocolSha256:digest(process.env.PROTOCOL_PATH),gateSha256:digest(process.env.GATE_PATH),gapRegistrySha256:digest(process.env.GAP_REGISTRY_PATH),observedChangedPathCount:changed.length,permanentCrossSystemMutationProhibition:false,productMutationPerformed:false,lifecycleMutationPerformed:false,genericCommandAuthority:false};
+          fs.writeFileSync('artifacts/progressive-system-continuity/validation.json',JSON.stringify(receipt,null,2)+'\n');
+          NODE
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: progressive-system-continuity-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/progressive-system-continuity/
+          if-no-files-found: error
+          retention-days: 90
+
+  remote-assessment:
+    if: >-
+      github.event_name == 'issue_comment' &&
+      github.event.issue.pull_request == null &&
+      (github.event.comment.author_association == 'OWNER' || github.event.comment.author_association == 'MEMBER' || github.event.comment.author_association == 'COLLABORATOR') &&
+      startsWith(github.event.comment.body, 'PROGRESSIVE_SYSTEM_CONTINUITY_REQUEST_V1')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Parse exact read-only continuity request
+        shell: bash
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        run: |
+          set -euo pipefail
+          ACTIVE_HEAD="$(git rev-parse HEAD^{commit})"
+          export ACTIVE_HEAD
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const marker=process.env.REMOTE_MARKER;
+          const body=process.env.COMMENT_BODY ?? '';
+          if(!body.startsWith(marker)) throw new Error('REMOTE_MARKER_MISMATCH');
+          const raw=body.slice(marker.length).trim();
+          if(!raw || raw.length>131072) throw new Error('REMOTE_REQUEST_SIZE_INVALID');
+          const request=JSON.parse(raw);
+          if(request.schema!=='PROGRESSIVE_SYSTEM_CONTINUITY_ASSESSMENT_REQUEST_v1') throw new Error('REMOTE_REQUEST_SCHEMA_MISMATCH');
+          if(request.subjectHead!==process.env.ACTIVE_HEAD) throw new Error(`REMOTE_SUBJECT_HEAD_MISMATCH:${request.subjectHead}:${process.env.ACTIVE_HEAD}`);
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/assessment-request.json',JSON.stringify(request,null,2)+'\n');
+          NODE
+
+      - name: Execute read-only continuity gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          set +e
+          node "$GATE_PATH" --input "$RUNNER_TEMP/assessment-request.json" --registry "$GAP_REGISTRY_PATH" --output "$RUNNER_TEMP/remote-assessment.json"
+          status=$?
+          set -e
+          if [ "$status" -ne 0 ] && [ "$status" -ne 2 ]; then exit "$status"; fi
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          node -e "const r=require(process.env.RUNNER_TEMP+'/remote-assessment.json'); if(!['PASS','BLOCK'].includes(r.result)||r.repositoryWritesAuthorized!==false||r.lifecycleAuthorityGranted!==false||r.terminalClosureAuthorityGranted!==false||r.successorAuthorityGranted!==false||r.mergeAuthorityGranted!==false||r.productMutationAuthorityGranted!==false||r.genericCommandAuthority!==false) process.exit(1)"
+          mkdir -p artifacts/progressive-system-continuity
+          cp "$RUNNER_TEMP/remote-assessment.json" artifacts/progressive-system-continuity/remote-assessment.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: progressive-system-continuity-remote-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/progressive-system-continuity/remote-assessment.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Return compact continuity receipt to issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const r = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/remote-assessment.json','utf8'));
+            const compact = {schema:r.schema,result:r.result,classification:r.classification,errorCode:r.errorCode,subjectHead:r.subjectHead,systemId:r.systemId,systemClosureGranted:r.systemClosureGranted,repositoryWritesAuthorized:r.repositoryWritesAuthorized,lifecycleAuthorityGranted:r.lifecycleAuthorityGranted,genericCommandAuthority:r.genericCommandAuthority,workflowRunId:Number(process.env.GITHUB_RUN_ID)};
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:'PROGRESSIVE_SYSTEM_CONTINUITY_RECEIPT_V1\n```json\n'+JSON.stringify(compact,null,2)+'\n```'});

@@ -1,0 +1,73 @@
+{
+  "contract": "LAWS_CP6_OSF_DERIVATIVE_METHODS_V1",
+  "status": "PASS",
+  "checked_at": "2026-08-02T01:17:43.983Z",
+  "destination_pages": 6,
+  "child_archive_byte_preservation": {
+    "laws/test/admission-and-baseline/index.html": true,
+    "laws/test/forward-construction/index.html": true,
+    "laws/test/reverse-audit/index.html": true,
+    "laws/test/result-and-record/index.html": true,
+    "laws/research/evidence-and-sources/index.html": true,
+    "laws/research/methods-and-models/index.html": true
+  },
+  "method_layer_counts": {
+    "laws/test/admission-and-baseline/index.html": 1,
+    "laws/test/forward-construction/index.html": 1,
+    "laws/test/reverse-audit/index.html": 1,
+    "laws/test/result-and-record/index.html": 1,
+    "laws/research/evidence-and-sources/index.html": 1,
+    "laws/research/methods-and-models/index.html": 1
+  },
+  "protected_runtime_diff": {
+    "laws/index.html": "ZERO",
+    "laws/index.controller.js": "ZERO",
+    "laws/index.compositor.js": "ZERO",
+    "laws/index.crystals.js": "ZERO",
+    "laws/index.interactions.js": "ZERO",
+    "laws/index.cosmos.js": "ZERO",
+    "laws/index.planet.js": "ZERO",
+    "assets/audralia/audralia.planet.js": "ZERO"
+  },
+  "source_identity": {
+    "7jnxq": {
+      "metadata_sha256": "467beb4017f844fddd7328d69b654483324235d4f941b031e4a7eb20004c5530",
+      "status": "PASS"
+    },
+    "9ut2z": {
+      "metadata_sha256": "82735851ff27ee32bb19c5ac5cf99da57805d8dc3be48bdad83dd24be6799a2f",
+      "status": "PASS"
+    },
+    "7vkgs": {
+      "metadata_sha256": "d77b87050afb73108e62c34aae8a54d93cc04756785c0bdc2dfc31b1900df979",
+      "status": "PASS"
+    },
+    "n82xh": {
+      "metadata_sha256": "12d75fd447aa5686c695264bf9387d35546d02933644eafbdaed251ed141cada",
+      "status": "PASS"
+    },
+    "rjdms": {
+      "metadata_sha256": "695a0d8ccb59b57135758a2ea89b54b5c27119f74024b98de6da1becc8bf437c",
+      "status": "PASS"
+    }
+  },
+  "claim_boundary": {
+    "empirical_validation_claimed": false,
+    "independent_replication_established": false,
+    "executed_study_established": false,
+    "public_dataset_recovered": false,
+    "public_analytic_code_recovered": false,
+    "executed_result_tables_recovered": false,
+    "derivative_is_new_method": false
+  },
+  "pinned_source_admission": {
+    "receipt_id": "OSF_LAWS_CP6_PINNED_SOURCE_ADMISSION_RECEIPT_v1",
+    "status": "PINNED_SOURCE_ADMITTED",
+    "source_count": 5,
+    "registry_pull_request_head": "ae2ccedd4f74ef1afdcc5181a4056c30c83fa20d",
+    "source_snapshot_head": "dbd508fc5cacaa463abed0c159812a1e02635c1d"
+  },
+  "changed_paths": [
+    "laws/control-plane/osf-derivative-methods/manifest.json"
+  ]
+}

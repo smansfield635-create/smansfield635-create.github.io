@@ -1,0 +1,96 @@
+name: Repository AI Entry Router Validation
+on:
+  pull_request:
+    branches: [main]
+    paths: ['AGENTS.md','AI_ENTRYPOINT.json','.github/ai-router/**','tools/repository-ai-entry-router.mjs','.github/workflows/repository-ai-entry-router-validation.yml','tools/operation-intake/canonical-operation-intake-transport.v1.mjs','.github/workflows/canonical-operation-intake-transport-v1.yml']
+  push:
+    branches: [main]
+    paths: ['AGENTS.md','AI_ENTRYPOINT.json','.github/ai-router/**','tools/repository-ai-entry-router.mjs','.github/workflows/repository-ai-entry-router-validation.yml','tools/operation-intake/canonical-operation-intake-transport.v1.mjs','.github/workflows/canonical-operation-intake-transport-v1.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+jobs:
+  validate-router:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify exact head and canonical router
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$EXPECTED_HEAD"
+          node tools/repository-ai-entry-router.mjs --self-test --output /tmp/router-self-test.json
+          node -e "const r=require('/tmp/router-self-test.json');if(r.result!=='PASS'||r.failedCount!==0||r.parallelGovernancePresent!==false||r.staleMissingExactRegistrationsActive!==false)process.exit(1)"
+      - name: Verify installed bounded binary transfer paths exist and route correctly
+        shell: bash
+        run: |
+          set -euo pipefail
+          paths=(
+            '.github/workflows/bounded-binary-object-transfer-v1.yml'
+            'tools/ai-room-transport/bounded-binary-object-transfer.v1.mjs'
+            'tools/ai-room-transport/bounded-binary-object-transfer.v1.test.mjs'
+            '.github/ai-toolset-transport/bounded-binary-object-transfer.v1.json'
+          )
+          for p in "${paths[@]}"; do
+            test -e "$p"
+          done
+          node tools/repository-ai-entry-router.mjs --mutation-intent \
+            --path "${paths[0]}" --path "${paths[1]}" --path "${paths[2]}" --path "${paths[3]}" \
+            --output /tmp/binary-transfer-installed-path-router-receipt.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const r=JSON.parse(fs.readFileSync('/tmp/binary-transfer-installed-path-router-receipt.json','utf8'));
+          if(r.disposition!=='PASS'||r.routes?.length!==4) process.exit(1);
+          for(const x of r.routes){
+            if(x.disposition!=='PASS'||x.routeClass!=='ROUTER_INFRASTRUCTURE'||x.projectId!=='REPOSITORY_AI_ROUTER_INFRASTRUCTURE') process.exit(1);
+          }
+          NODE
+      - name: Verify all live exact-path registrations exist and route correctly
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {spawnSync} from 'node:child_process';
+          const R=JSON.parse(fs.readFileSync('.github/ai-router/router.v1.json'));
+          const owners=[R.routerInfrastructure,...(R.projects||[]).filter(x=>x.status==='ACTIVE_REGISTERED_PROJECT')].filter(Boolean);
+          const failures=[];
+          for(const owner of owners){
+            for(const q of new Set(owner.ownedExactPaths||[])){
+              if(!fs.existsSync(q)){ failures.push([owner.projectId,q,'MISSING_REGISTERED_PATH']); continue; }
+              const out='/tmp/route-'+Buffer.from(q).toString('hex').slice(0,32)+'.json';
+              const c=spawnSync(process.execPath,['tools/repository-ai-entry-router.mjs','--path',q,'--task','Exact-path conformance','--output',out],{encoding:'utf8'});
+              let r; try{ r=JSON.parse(fs.readFileSync(out)); } catch { failures.push([owner.projectId,q,'NO_RECEIPT']); continue; }
+              if(c.status!==0||!['PASS','REVIEW_REQUIRED'].includes(r.disposition)||r.routes?.[0]?.projectId!==owner.projectId) failures.push([owner.projectId,q,r.disposition]);
+            }
+          }
+          fs.writeFileSync('/tmp/exact-path-conformance.json',JSON.stringify({result:failures.length?'FAIL':'PASS',failureCount:failures.length,failures},null,2)+'\n');
+          if(failures.length){ console.error(JSON.stringify(failures,null,2)); process.exit(1); }
+          NODE
+      - name: Verify unregistered mutation remains blocked
+        shell: bash
+        run: |
+          set +e
+          node tools/repository-ai-entry-router.mjs --mutation-intent --path future-project/example.txt --output /tmp/unregistered.json
+          s=$?
+          set -e
+          test "$s" = 1
+          jq -e '.disposition == "BLOCK"' /tmp/unregistered.json >/dev/null
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: repository-ai-entry-router-validation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/router-self-test.json
+            /tmp/binary-transfer-installed-path-router-receipt.json
+            /tmp/exact-path-conformance.json
+            /tmp/unregistered.json
+          if-no-files-found: warn

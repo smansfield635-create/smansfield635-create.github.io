@@ -1,0 +1,278 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_OUTPUT_v1",
+  "type": "object",
+  "required": [
+    "schema",
+    "identityVerification",
+    "estateIdentityCorrection",
+    "sourceModeComparison",
+    "realTerrainPartition",
+    "partitionCoverageReceipt",
+    "realAdjacencyReceipt",
+    "hillAndGullyRelationship",
+    "estateSearchDomain",
+    "candidateArrangementCount",
+    "rejectedCandidateSummary",
+    "paretoFrontier",
+    "selectedArrangement",
+    "estateSubzoneMasks",
+    "requiredEstateSubzones",
+    "principalManorCapacity",
+    "formalGroundsCapacity",
+    "gardenCapacity",
+    "outbuildingCapacity",
+    "futureExpansionCapacity",
+    "primaryRoute",
+    "serviceRoute",
+    "mountainViewCorridor",
+    "oceanViewCorridor",
+    "gradingAndTransitionBuffers",
+    "r06c10PreservationOverlay",
+    "cavernPreservationOverlay",
+    "operatorFamilyAdmissionMatrix",
+    "candidateConstructionBudgets",
+    "role1PotentialPathBoundary",
+    "verificationPlan",
+    "validationEvidence",
+    "disposition",
+    "outputDigest"
+  ],
+  "properties": {
+    "schema": {
+      "const": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_OUTPUT_INSTANCE_v1"
+    },
+    "identityVerification": {
+      "type": "object",
+      "required": [
+        "governingMain",
+        "currentBlob",
+        "acceptedDeltaBlob",
+        "acceptedSuccessorBlob",
+        "acceptedReferenceMergedMain",
+        "pass"
+      ],
+      "properties": {
+        "governingMain": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "currentBlob": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "acceptedDeltaBlob": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "acceptedSuccessorBlob": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "acceptedReferenceMergedMain": {
+          "type": "boolean"
+        },
+        "pass": {
+          "type": "boolean"
+        },
+        "materializedAcceptedDeltaSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "estateIdentityCorrection": {
+      "type": "object",
+      "required": [
+        "acceptedLineageCenter",
+        "rejectedReservation",
+        "correctionRecord"
+      ]
+    },
+    "sourceModeComparison": {
+      "type": "object"
+    },
+    "realTerrainPartition": {
+      "type": "object",
+      "required": [
+        "mode",
+        "rows",
+        "columns",
+        "landformCounts",
+        "macrozoneCount",
+        "rearMountainNodeCount"
+      ]
+    },
+    "partitionCoverageReceipt": {
+      "type": "object",
+      "required": [
+        "nodeCount",
+        "requiredNodeCount",
+        "pass",
+        "partitionDigest"
+      ]
+    },
+    "realAdjacencyReceipt": {
+      "type": "object",
+      "required": [
+        "fourNeighborEdgeCount",
+        "eightNeighborEdgeCount",
+        "requiredFour",
+        "requiredEight",
+        "pass",
+        "adjacencyDigest"
+      ]
+    },
+    "hillAndGullyRelationship": {
+      "type": "object"
+    },
+    "estateSearchDomain": {
+      "type": "object"
+    },
+    "candidateArrangementCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "rejectedCandidateSummary": {
+      "type": "array"
+    },
+    "paretoFrontier": {
+      "type": "array"
+    },
+    "selectedArrangement": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object"
+        }
+      ]
+    },
+    "estateSubzoneMasks": {
+      "type": "object"
+    },
+    "requiredEstateSubzones": {
+      "type": "array",
+      "minItems": 15,
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "principalManorCapacity": {},
+    "formalGroundsCapacity": {},
+    "gardenCapacity": {},
+    "outbuildingCapacity": {},
+    "futureExpansionCapacity": {},
+    "primaryRoute": {},
+    "serviceRoute": {},
+    "mountainViewCorridor": {},
+    "oceanViewCorridor": {},
+    "gradingAndTransitionBuffers": {},
+    "r06c10PreservationOverlay": {
+      "type": "object",
+      "required": [
+        "bounds",
+        "deltaAuthorized",
+        "intrusionCount"
+      ]
+    },
+    "cavernPreservationOverlay": {
+      "type": "object",
+      "required": [
+        "intrusionCount",
+        "status"
+      ]
+    },
+    "operatorFamilyAdmissionMatrix": {
+      "type": "array"
+    },
+    "candidateConstructionBudgets": {
+      "type": "object"
+    },
+    "role1PotentialPathBoundary": {
+      "type": "object",
+      "required": [
+        "pathCount",
+        "additiveOnly",
+        "terrainConstructionAuthority",
+        "manorConstructionAuthority",
+        "mergeAuthority"
+      ],
+      "properties": {
+        "pathCount": {
+          "type": "integer"
+        },
+        "additiveOnly": {
+          "type": "boolean"
+        },
+        "terrainConstructionAuthority": {
+          "type": "boolean"
+        },
+        "manorConstructionAuthority": {
+          "type": "boolean"
+        },
+        "mergeAuthority": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "verificationPlan": {
+      "type": "object",
+      "required": [
+        "freshRole3Required",
+        "twoIdenticalPositiveExecutions",
+        "negativeFixtureCount"
+      ]
+    },
+    "validationEvidence": {
+      "type": "object",
+      "required": [
+        "inputSchemaId",
+        "outputSchemaId",
+        "inputSchemaValidatedBeforeTerrainLoad",
+        "outputSchemaValidatedBeforeDigestFinalization",
+        "finalOutputValidatedBeforeWrite"
+      ],
+      "properties": {
+        "inputSchemaId": {
+          "const": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_INPUT_v1"
+        },
+        "outputSchemaId": {
+          "const": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_OUTPUT_v1"
+        },
+        "inputSchemaValidatedBeforeTerrainLoad": {
+          "const": true
+        },
+        "outputSchemaValidatedBeforeDigestFinalization": {
+          "const": true
+        },
+        "finalOutputValidatedBeforeWrite": {
+          "const": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "disposition": {
+      "enum": [
+        "EVALUATOR_COMPLETE_FEASIBLE_ARRANGEMENT_IDENTIFIED",
+        "EVALUATOR_COMPLETE_NO_HARD_GATE_PASSING_ARRANGEMENT"
+      ]
+    },
+    "outputDigest": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      ]
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,49 @@
+{
+  "schema": "IMI_METHODS_MODELS_METHODS_SEQUENCE_v1",
+  "status": "SUCCESSOR_NORMALIZATION_CANDIDATE",
+  "sequence": [
+    {"order": 1, "id": "TARGET_REGISTRATION", "custody": "SOURCE_SIDE", "requires": []},
+    {"order": 2, "id": "SOURCE_CUTOFF", "custody": "SOURCE_SIDE", "requires": ["TARGET_REGISTRATION"]},
+    {"order": 3, "id": "SOURCE_ACQUISITION", "custody": "SOURCE_SIDE", "requires": ["SOURCE_CUTOFF"]},
+    {"order": 4, "id": "PRE_OUTCOME_PACKET", "custody": "SOURCE_SIDE", "requires": ["SOURCE_ACQUISITION"]},
+    {"order": 5, "id": "CASE_NEUTRALIZATION", "custody": "SOURCE_SIDE", "requires": ["PRE_OUTCOME_PACKET"]},
+    {"order": 6, "id": "PRIOR_FAMILIARITY_SCREEN", "custody": "ANALYST_SIDE", "requires": ["CASE_NEUTRALIZATION"]},
+    {"order": 7, "id": "INDEPENDENT_ROLE_ASSIGNMENT", "custody": "ANALYST_SIDE", "requires": ["CASE_NEUTRALIZATION"]},
+    {"order": 8, "id": "ANALYST_QUALIFICATION", "custody": "ANALYST_SIDE", "requires": ["PRIOR_FAMILIARITY_SCREEN", "INDEPENDENT_ROLE_ASSIGNMENT"]},
+    {"order": 9, "id": "ROUTE_AND_COMPARATOR_SUBMISSION", "custody": "ANALYST_SIDE", "requires": ["ANALYST_QUALIFICATION"]},
+    {"order": 10, "id": "PREDICTION_HASH_AND_FREEZE", "custody": "ANALYST_SIDE", "requires": ["ROUTE_AND_COMPARATOR_SUBMISSION"]},
+    {"order": 11, "id": "OUTCOME_SEQUESTRATION", "custody": "OUTCOME_SIDE", "requires": ["SOURCE_CUTOFF"]},
+    {"order": 12, "id": "AUTHORIZED_UNBLINDING", "custody": "OUTCOME_SIDE", "requires": ["PREDICTION_HASH_AND_FREEZE", "OUTCOME_SEQUESTRATION"]},
+    {"order": 13, "id": "BLINDED_SCORING", "custody": "SCORING_SIDE", "requires": ["AUTHORIZED_UNBLINDING"]},
+    {"order": 14, "id": "COMPARATOR_EVALUATION", "custody": "SCORING_SIDE", "requires": ["BLINDED_SCORING"]},
+    {"order": 15, "id": "TERMINAL_DISPOSITION", "custody": "SCORING_SIDE", "requires": ["COMPARATOR_EVALUATION"]}
+  ],
+  "independentRoles": [
+    "SOURCE_ACQUISITION_CUSTODIAN",
+    "OUTCOME_KEY_CUSTODIAN",
+    "ANALYST_COORDINATOR",
+    "BLINDED_SCORING_TEAM",
+    "CONSTITUTIVE_ROUTE_ANALYSTS_4_PLUS",
+    "GENERIC_GRAPH_ANALYSTS_4_PLUS",
+    "COMPARATOR_ANALYST_OR_FROZEN_MODEL"
+  ],
+  "submissionFields": [
+    "SYSTEM_BOUNDARY",
+    "IDENTITY_CRITERION",
+    "REQUIRED_CAPACITIES",
+    "CONSTITUTIVE_ROUTES",
+    "LAWFUL_ALTERNATIVES",
+    "PREDICTED_FAILED_RELATIONS",
+    "PREDICTED_PRESERVED_CAPACITIES",
+    "SUPPORT_OR_SUBSTITUTION_CLASSIFICATION",
+    "UNCERTAINTY",
+    "EXPLICIT_FALSIFIERS"
+  ],
+  "noncompensatoryGates": [
+    "INDEPENDENT_ROUTE_RECOVERY",
+    "SELECTIVE_NONCOMPENSATION",
+    "SUPPORTED_OUTPUT_PROVENANCE",
+    "RESTORATION_SPECIFICITY"
+  ],
+  "averageScoreMayConcealGateFailure": false
+}

@@ -1,0 +1,380 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R1_PHYSICAL_SAMSUNG_PROFILING_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R1_PHYSICAL_PROFILE_CAPTURED_NOT_CLOSURE_PASS",
+  "generatedAt": "2026-07-27T02:19:27.378Z",
+  "device": {
+    "userAgent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36",
+    "platform": "Linux armv81",
+    "viewport": {
+      "width": 321,
+      "height": 495,
+      "devicePixelRatio": 2.8125
+    },
+    "hardwareConcurrency": 8,
+    "deviceMemoryGiB": 8
+  },
+  "interaction": {
+    "pointerEventReceiptCount": 190,
+    "pointerMoveCount": 190,
+    "previewTransformMutationCount": 21,
+    "firstPointerToNavigationMilliseconds": [],
+    "p95PointerToNavigationMilliseconds": 0,
+    "releaseToSettledFrameMilliseconds": [],
+    "p95ReleaseToSettledFrameMilliseconds": 0,
+    "maximumGestureBacklogDepth": 1,
+    "droppedOrSupersededInputCount": 4,
+    "directInspectionDiagnostics": {
+      "interactionModel": "DIRECT_MANIPULATION_PRESERVED",
+      "oneFingerLook": true,
+      "twoFingerTravel": true,
+      "pinchZoom": true,
+      "visibleControllerPresent": false,
+      "pointerMoveCount": 190,
+      "navigationIntentCount": 14,
+      "previewFrameCount": 190,
+      "committedRenderCount": 7,
+      "coalescedCommitCount": 4,
+      "maximumNavigationLatencyMilliseconds": 1.800000011920929,
+      "lastNavigationLatencyMilliseconds": 0,
+      "lastIntent": "PITCH_UP",
+      "lastError": null,
+      "activePointerCount": 0,
+      "pendingIntentPresent": false,
+      "previewActive": false,
+      "controllerElementPresent": false
+    },
+    "schedulingDiagnostics": {
+      "renderRequestCount": 8,
+      "coalescedRenderRequestCount": 0,
+      "completedRenderCount": 8,
+      "lastRenderDurationMilliseconds": 7558.900000035763,
+      "rendering": false,
+      "pendingWaiterCount": 0,
+      "directManipulationPreserved": true,
+      "visibleControllerPresent": false
+    }
+  },
+  "mainThread": {
+    "longTaskCount": 18,
+    "longestMainThreadTaskMilliseconds": 7421,
+    "longAnimationFrameCount": 0,
+    "longestAnimationFrameMilliseconds": 0,
+    "garbageCollectionEntryCount": 0
+  },
+  "memory": {
+    "heapStartBytes": 47400000,
+    "heapEndBytes": 47400000,
+    "heapDeltaBytes": 0
+  },
+  "stateEvidence": {
+    "baselineNavigation": {
+      "ready": true,
+      "state": {
+        "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+        "stateId": "H_EARTH_NAVIGATION_STATE_0001",
+        "sequence": 1,
+        "action": "GOTO_WAYPOINT:COAST",
+        "accepted": true,
+        "recovered": false,
+        "rejectionReason": null,
+        "position": {
+          "x": 0,
+          "y": 3.776628584078394,
+          "z": -96
+        },
+        "yawDegrees": 0,
+        "pitchDegrees": -8,
+        "verticalFovDegrees": 56,
+        "terrainElevation": 1.526628584078394,
+        "minimumCameraY": 3.126628584078394,
+        "clearance": 2.25,
+        "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+        "physicalRole": "COASTAL_FOREGROUND_TERRAIN",
+        "formationIds": [],
+        "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R03:C08",
+        "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+        "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0001",
+        "canonicalCameraStateAuthority": false,
+        "collisionOrPhysicsClaim": false
+      },
+      "receipt": {
+        "receiptType": "H_EARTH_FUNCTIONAL_LANDSCAPE_RUN_6F_BROWSER_RECEIPT",
+        "eligible": true,
+        "status": "RUN_6F_BROWSER_FRAME_COMPLETE",
+        "renderSequence": 2,
+        "frameId": "H_EARTH_FUNCTIONAL_LANDSCAPE_RUN_6F_BROWSER_BASE_FRAME:CAMERA_REVISION_2",
+        "cameraRevision": 2,
+        "position": {
+          "x": 0,
+          "y": 3.776628584078394,
+          "z": -96
+        },
+        "terrainElevation": 1.526628584078394,
+        "clearance": 2.25,
+        "recovered": false,
+        "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+        "physicalRole": "COASTAL_FOREGROUND_TERRAIN",
+        "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R03:C08",
+        "formationIds": [],
+        "visitedWaypoints": [
+          "COAST"
+        ],
+        "viewport": {
+          "cssWidth": 286,
+          "cssHeight": 520,
+          "internalWidth": 200,
+          "internalHeight": 320,
+          "orientation": "PORTRAIT"
+        },
+        "admittedPrimitiveCount": 18,
+        "semanticAddressCount": 256,
+        "terrainAddressCount": 124,
+        "shorelineWaterAddressCount": 96,
+        "proxyAddressCount": 36,
+        "acceptedTriangleCount": 195,
+        "rejectedFragmentCount": 1605,
+        "writtenPixelCount": 57394,
+        "skyAlphaClosed": true,
+        "semanticSelectionPresent": true,
+        "cameraTerrainClearancePass": true,
+        "packet001Altered": false,
+        "existingPublicRouteReplaced": false,
+        "productionAuthority": false,
+        "issues": []
+      },
+      "handoff": {
+        "status": "FUNCTIONAL_LANDSCAPE_COMPOSITOR_HANDOFF_COMPLETE",
+        "frameOccurrenceId": "H_EARTH_FUNCTIONAL_LANDSCAPE_RUN_6F_BROWSER_BASE_FRAME:CAMERA_REVISION_2",
+        "frameRevision": 3,
+        "cameraRevision": 2,
+        "visiblePrimitiveCount": 18,
+        "plannedPrimitiveCount": 7
+      }
+    },
+    "finalNavigation": {
+      "ready": true,
+      "state": {
+        "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+        "stateId": "H_EARTH_NAVIGATION_STATE_0015",
+        "sequence": 15,
+        "action": "PITCH_UP",
+        "accepted": true,
+        "recovered": false,
+        "rejectionReason": null,
+        "position": {
+          "x": 0,
+          "y": 3.550450887784489,
+          "z": -95
+        },
+        "yawDegrees": 18.78125,
+        "pitchDegrees": 5.732640584309896,
+        "verticalFovDegrees": 40.26376446567334,
+        "terrainElevation": 1.3004508877844891,
+        "minimumCameraY": 2.9004508877844892,
+        "clearance": 2.25,
+        "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+        "physicalRole": "COASTAL_FOREGROUND_TERRAIN",
+        "formationIds": [],
+        "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R03:C08",
+        "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+        "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0015",
+        "canonicalCameraStateAuthority": false,
+        "collisionOrPhysicsClaim": false
+      },
+      "receipt": {
+        "receiptType": "H_EARTH_FUNCTIONAL_LANDSCAPE_RUN_6F_BROWSER_RECEIPT",
+        "eligible": true,
+        "status": "RUN_6F_BROWSER_FRAME_COMPLETE",
+        "renderSequence": 2,
+        "frameId": "H_EARTH_FUNCTIONAL_LANDSCAPE_RUN_6F_BROWSER_BASE_FRAME:CAMERA_REVISION_2",
+        "cameraRevision": 2,
+        "position": {
+          "x": 0,
+          "y": 3.776628584078394,
+          "z": -96
+        },
+        "terrainElevation": 1.526628584078394,
+        "clearance": 2.25,
+        "recovered": false,
+        "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+        "physicalRole": "COASTAL_FOREGROUND_TERRAIN",
+        "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R03:C08",
+        "formationIds": [],
+        "visitedWaypoints": [
+          "COAST"
+        ],
+        "viewport": {
+          "cssWidth": 286,
+          "cssHeight": 520,
+          "internalWidth": 200,
+          "internalHeight": 320,
+          "orientation": "PORTRAIT"
+        },
+        "admittedPrimitiveCount": 18,
+        "semanticAddressCount": 256,
+        "terrainAddressCount": 124,
+        "shorelineWaterAddressCount": 96,
+        "proxyAddressCount": 36,
+        "acceptedTriangleCount": 195,
+        "rejectedFragmentCount": 1605,
+        "writtenPixelCount": 57394,
+        "skyAlphaClosed": true,
+        "semanticSelectionPresent": true,
+        "cameraTerrainClearancePass": true,
+        "packet001Altered": false,
+        "existingPublicRouteReplaced": false,
+        "productionAuthority": false,
+        "issues": []
+      },
+      "handoff": {
+        "status": "FUNCTIONAL_LANDSCAPE_COMPOSITOR_HANDOFF_COMPLETE",
+        "frameOccurrenceId": "H_EARTH_FUNCTIONAL_LANDSCAPE_RUN_6F_BROWSER_BASE_FRAME:CAMERA_REVISION_2",
+        "frameRevision": 3,
+        "cameraRevision": 2,
+        "visiblePrimitiveCount": 18,
+        "plannedPrimitiveCount": 7
+      }
+    },
+    "baselineRender": {
+      "ready": true,
+      "receipt": {
+        "receiptType": "H_EARTH_RUN_8E_PUBLIC_ROUTE_BRANCH_RECEIPT",
+        "eligible": true,
+        "status": "RUN_8E_PUBLIC_ROUTE_BRANCH_EXECUTION_PASS",
+        "renderSequence": 1,
+        "frameId": "H_EARTH_RUN_8E_PUBLIC_ROUTE_FRAME_0001",
+        "navigationStateId": "H_EARTH_NAVIGATION_STATE_0001",
+        "position": {
+          "x": 0,
+          "y": 3.776628584078394,
+          "z": -96
+        },
+        "terrainElevation": 1.526628584078394,
+        "clearance": 2.25,
+        "cameraReconciledToSuccessorTerrain": true,
+        "admittedPrimitiveCount": 35,
+        "terrainPrimitiveCount": 1,
+        "shorelinePrimitiveCount": 7,
+        "vegetationPrimitiveCount": 27,
+        "projectedTriangleCount": 8468,
+        "rejectedFragmentCount": 40912,
+        "writtenPixelCount": 62272,
+        "skyPixelCount": 2026,
+        "sunPixelCount": 0,
+        "terrainVisiblePixelCount": 37974,
+        "vegetationVisiblePixelCount": 0,
+        "vegetationTerrainDepthInteractionCount": 5,
+        "actualTerrainVegetationDepthInteractionExecuted": true,
+        "sameWorldToCameraTransformForTerrainAndVegetation": true,
+        "singlePhysicalDepthDomainExecuted": true,
+        "singleSkyAuthorityMaterialized": true,
+        "sunDiscIntegrationActive": true,
+        "sunDiscMaterialized": false,
+        "alphaClosed": true,
+        "publicRouteBranchExecution": true,
+        "physicalSamsungExecution": false,
+        "samsungBrowserEmulation": false,
+        "deployment": false,
+        "liveIdentityProof": false,
+        "run8EPassClosed": false,
+        "issues": [],
+        "renderScheduling": {
+          "reason": "DEFERRED_INITIAL_SUCCESSOR_RENDER",
+          "renderRequestCount": 1,
+          "coalescedRenderRequestCount": 0,
+          "completedRenderCount": 1,
+          "lastRenderDurationMilliseconds": 6989.400000035763,
+          "directManipulationPreserved": true,
+          "visibleControllerPresent": false,
+          "fullRenderDuringActiveGesture": false
+        }
+      },
+      "frame": {
+        "frameId": "H_EARTH_RUN_8E_PUBLIC_ROUTE_FRAME_0001",
+        "primitiveCount": 35,
+        "terrainTriangleColorCount": 48076
+      },
+      "raster": {
+        "width": 200,
+        "height": 200,
+        "writtenPixelCount": 62272,
+        "skyPixelCount": 2026,
+        "sunPixelCount": 0
+      }
+    },
+    "finalRender": {
+      "ready": true,
+      "receipt": {
+        "receiptType": "H_EARTH_RUN_8E_PUBLIC_ROUTE_BRANCH_RECEIPT",
+        "eligible": true,
+        "status": "RUN_8E_PUBLIC_ROUTE_BRANCH_EXECUTION_PASS",
+        "renderSequence": 8,
+        "frameId": "H_EARTH_RUN_8E_PUBLIC_ROUTE_FRAME_0008",
+        "navigationStateId": "H_EARTH_NAVIGATION_STATE_0015",
+        "position": {
+          "x": 0,
+          "y": 3.550450887784489,
+          "z": -95
+        },
+        "terrainElevation": 1.3004508877844891,
+        "clearance": 2.25,
+        "cameraReconciledToSuccessorTerrain": true,
+        "admittedPrimitiveCount": 35,
+        "terrainPrimitiveCount": 1,
+        "shorelinePrimitiveCount": 7,
+        "vegetationPrimitiveCount": 27,
+        "projectedTriangleCount": 6431,
+        "rejectedFragmentCount": 42825,
+        "writtenPixelCount": 62039,
+        "skyPixelCount": 9265,
+        "sunPixelCount": 227,
+        "terrainVisiblePixelCount": 30733,
+        "vegetationVisiblePixelCount": 0,
+        "vegetationTerrainDepthInteractionCount": 0,
+        "actualTerrainVegetationDepthInteractionExecuted": false,
+        "sameWorldToCameraTransformForTerrainAndVegetation": true,
+        "singlePhysicalDepthDomainExecuted": true,
+        "singleSkyAuthorityMaterialized": true,
+        "sunDiscIntegrationActive": true,
+        "sunDiscMaterialized": true,
+        "alphaClosed": true,
+        "publicRouteBranchExecution": true,
+        "physicalSamsungExecution": false,
+        "samsungBrowserEmulation": false,
+        "deployment": false,
+        "liveIdentityProof": false,
+        "run8EPassClosed": false,
+        "issues": [],
+        "renderScheduling": {
+          "reason": "PUBLIC_REFRESH",
+          "renderRequestCount": 8,
+          "coalescedRenderRequestCount": 0,
+          "completedRenderCount": 8,
+          "lastRenderDurationMilliseconds": 7558.900000035763,
+          "directManipulationPreserved": true,
+          "visibleControllerPresent": false,
+          "fullRenderDuringActiveGesture": false
+        }
+      },
+      "frame": {
+        "frameId": "H_EARTH_RUN_8E_PUBLIC_ROUTE_FRAME_0008",
+        "primitiveCount": 35,
+        "terrainTriangleColorCount": 48076
+      },
+      "raster": {
+        "width": 200,
+        "height": 200,
+        "writtenPixelCount": 62039,
+        "skyPixelCount": 9265,
+        "sunPixelCount": 227
+      }
+    }
+  },
+  "failureClassification": {
+    "truthfulContinuousRealtimeInteractionEstablished": false,
+    "currentCpuPublicSuitability": "FAILED_PHYSICAL_EVIDENCE",
+    "flatBitmapPreviewFramesObserved": 21,
+    "run8EPassClosed": false
+  }
+}

@@ -1,0 +1,159 @@
+{
+  "schema": "H_EARTH_OW01_PUBLIC_CONSTRUCTION_EXECUTION_PLAN_v1",
+  "status": "LOCKED_DIRECT_REFERENCE_REQUIRED",
+  "projectId": "H_EARTH",
+  "checkpointId": "OW01",
+  "installedAgainstPublicMain": "912136084305ffa50f61c2b25fdccdea7414da8d",
+  "purpose": "Keep OW01 product construction, qualification, visual review, promotion, and environmental acoustic realization aligned to one repository-local plan so implementation cannot drift between private control-plane discussion, copied source trees, and the actual public H-Earth runtime graph.",
+  "constructionLaw": "NO_OW01_PRODUCT_OR_RUNTIME_MUTATION_MAY_BE_QUALIFIED_UNLESS_IT_MAPS_TO_THIS_PLAN PRESERVES_ALL_LOCKED_TRUTHS AND OCCURS_IN_THE_PUBLIC_H_EARTH_PRODUCT_REPOSITORY_UNDER_SEPARATELY_VALID_AUTHORITY.",
+  "repositorySeparation": {
+    "privateControlPlane": {
+      "repository": "smansfield635-create/geodiametrics1",
+      "role": "GOVERN_INSPECT_SHADOW_EVALUATE_QUALIFY_AND_EMIT_EVIDENCE",
+      "mayOwnPublicProductSource": false,
+      "maySubstituteCopiedPrivateProductTreeForPublicRuntimeGraph": false,
+      "mayCreateUserVisualApproval": false,
+      "mayCreatePublicMergeOrLivePromotionAuthority": false
+    },
+    "publicProductPlane": {
+      "repository": "smansfield635-create/smansfield635-create.github.io",
+      "role": "CONSTRUCT_RENDER_REVIEW_AND_IF_SEPARATELY_APPROVED_PROMOTE_H_EARTH_PRODUCT",
+      "candidateBranchRequiredBeforeProductMutation": true,
+      "candidateIsLive": false,
+      "candidateIsApproved": false,
+      "mainOrLiveMutationBeforeApproval": false
+    },
+    "bindingLaw": "PRIVATE_INSTRUMENTATION_EVALUATES_THE_EXACT_PUBLIC_CANDIDATE_IDENTITY; PRODUCT_SOURCE_IS_NOT_TRANSPLANTED_FROM_PRIVATE_TO_PUBLIC_AFTER_APPROVAL."
+  },
+  "currentContinuityEvidence": {
+    "privateControlPlaneHeadAtPlanInstall": "814a8ed467ee20a31daac11ad530295544107741",
+    "latestPrivateOW01Generation": 244,
+    "latestShadowDisposition": "WOULD_ALLOW",
+    "shadowCreatesAuthority": false,
+    "shadowMutatesProduct": false,
+    "privateCandidateBranchIsProductDestination": false,
+    "privateMissingRun8BDependencyFinding": "WRONG_REPOSITORY_BOUNDARY_SIGNAL_NOT_AUTOMATIC_PRIVATE_DEPENDENCY_REPAIR_AUTHORITY",
+    "law": "These facts are continuity evidence only. Fresh authority and exact-candidate qualification remain required at each governed boundary."
+  },
+  "frozenConstructionTargets": [
+    "TRUE_COASTAL_HARBOR_BINDING",
+    "ASYMMETRIC_ORGANIC_GRATITUDE_SKELETON",
+    "MOUNTAIN_WATERSHED_CONTINUATION_TO_COAST",
+    "GLOBAL_REGIONAL_GEOGRAPHY_MAPPING",
+    "PRESERVE_FULL_SCALE_LOCAL_GRATITUDE",
+    "SPATIALLY_CORRELATED_ENVIRONMENTAL_AUDIO"
+  ],
+  "causalConstructionOrder": [
+    "CONTINENTAL_COAST",
+    "GRATITUDE_BAY",
+    "GRATITUDE_HARBOR",
+    "HEADLANDS",
+    "BEACHES",
+    "SANDBARS",
+    "ASYMMETRIC_CONTINENTAL_MORPHOLOGY",
+    "MOUNTAIN_AND_WATERSHED_CONTINUATION_TO_COAST",
+    "EXPLICIT_GLOBAL_TO_REGIONAL_AND_REGIONAL_TO_GLOBAL_ALIGNMENT",
+    "SPATIALLY_CORRELATED_ENVIRONMENTAL_AUDIO_REALIZATION"
+  ],
+  "lockedPreserve": [
+    "PRESERVE_EXISTING_LIVE_H_EARTH_AUTHORITY_UNTIL_SEPARATE_PROMOTION",
+    "PRESERVE_FULL_SCALE_LOCAL_GRATITUDE",
+    "PRESERVE_EXISTING_CANONICAL_PLANETARY_TO_REGIONAL_RELATIONSHIP",
+    "PRESERVE_MOUNTAINS_AS_CONTINUING_GEOGRAPHY_NOT_WORLD_WALL",
+    "PRESERVE_TRUE_COAST_TO_BAY_TO_HARBOR_CAUSAL_RELATIONSHIP",
+    "PRESERVE_PROTECTED_REGIONAL_TRUTH_DURING_GLOBAL_ARTICULATION",
+    "PRESERVE_NEWS_SEMANTICS_AS_DIRECTIONAL_OBSERVATION_NOT_GEOGRAPHIC_AUTHORITY",
+    "PRESERVE_FIBONACCI_AS_OBSERVATION_HORIZON_EXPANSION_ONLY",
+    "PRESERVE_USER_VISUAL_APPROVAL_AS_A_SEPARATE_POST_QUALIFICATION_BOUNDARY",
+    "PRESERVE_AUDIO_AS_A_SPATIAL_EXPRESSION_OF_CANONICAL_GEOGRAPHY_NOT_A_UNIFORM_DECORATIVE_LOOP"
+  ],
+  "prohibitedSubstitutions": [
+    "DO_NOT_BUILD_THE_FINAL_OW01_PRODUCT_IN_GEODIAMETRICS1",
+    "DO_NOT_COPY_A_PRIVATE_CANDIDATE_TREE_INTO_PUBLIC_AS_A_LATE_TRANSPLANT",
+    "DO_NOT_REPAIR_PUBLIC_RUNTIME_DEPENDENCIES_IN_PRIVATE_MERELY_TO_MAKE_A_PRIVATE_COPY_EXECUTE",
+    "DO_NOT_TREAT_REVISION_10_AS_FINAL_GEOGRAPHY_WITHOUT_THE_FROZEN_RECONCILIATIONS",
+    "DO_NOT_COMPRESS_GRATITUDE_TO_MAKE_GLOBAL_MAPPING_EASIER",
+    "DO_NOT_USE_MOUNTAINS_AS_A_FLAT_REAR_OR_WORLD_BOUNDARY",
+    "DO_NOT_REPLACE_ORGANIC_CONTINENTAL_MORPHOLOGY_WITH_A_RADIAL_BLOB",
+    "DO_NOT_USE_A_UNIFORM_FULL_MAP_BEACH_AUDIO_LOOP_WHERE_DISTANCE_SHOULD_MATTER",
+    "DO_NOT_TREAT_WOULD_ALLOW_AS_PRODUCT_MUTATION_MERGE_LIVE_OR_CHECKPOINT_CLOSURE_AUTHORITY",
+    "DO_NOT_PROMOTE_TO_PUBLIC_MAIN_OR_LIVE_BEFORE_USER_VISUAL_APPROVAL"
+  ],
+  "sourceAdoption": {
+    "revision10": {
+      "sourceRepository": "smansfield635-create/smansfield635-create.github.io",
+      "sourceCommit": "ad9e72adb97df7ab867af1fe20df2c29de763d28",
+      "classification": "IMMUTABLE_MIGRATION_SOURCE_REVISION_10_CONTINUOUS_MULTISCALE_WORLD_MODEL",
+      "role": "IMPLEMENTATION_AND_DESIGN_SOURCE_WITH_EXACT_IDENTITY",
+      "finalGeographyAuthority": false,
+      "lossyReconstructionAllowed": false
+    },
+    "currentPublicRuntime": {
+      "role": "AUTHORITATIVE_DEPENDENCY_GRAPH_AND_PRODUCT_CONSTRUCTION_CONTEXT",
+      "mustBeInspectedBeforeMutation": true,
+      "missingDependencyMayBeInferredFromPrivateCopy": false
+    }
+  },
+  "environmentalAcousticContinuity": {
+    "required": true,
+    "contract": ".github/ai-router/projects/h-earth/ow01-environmental-acoustic-continuity.v1.json",
+    "law": "ENVIRONMENTAL_AUDIO_MUST_CORRELATE_WITH_PLAYER_POSITION_GEOGRAPHY_AND_WORLD_CONTEXT AND MUST_BE_QUALIFIED_ON_THE_EXACT_PUBLIC_CANDIDATE_SHA.",
+    "minimumSoundFamilies": ["WIND", "OCEAN_SURF", "DISTANT_COASTAL_BIRDS"],
+    "uniformFullMapCoastalLoopAllowed": false
+  },
+  "executionStages": [
+    {"stage": 1, "action": "RESOLVE_FRESH_PUBLIC_MAIN_AND_PUBLIC_H_EARTH_PROJECT_ROUTING", "productMutationAllowed": false},
+    {"stage": 2, "action": "BIND_SEPARATELY_VALID_PRIVATE_CONTROL_PLANE_AUTHORITY_TO_EXACT_PUBLIC_REPOSITORY_CANDIDATE_SCOPE", "productMutationAllowed": false},
+    {"stage": 3, "action": "INSPECT_PUBLIC_H_EARTH_RUNTIME_DEPENDENCY_GRAPH_REVISION_10_SOURCE_IDENTITIES_AND_APPLICABLE_AUDIO_RUNTIME_SURFACE", "productMutationAllowed": false},
+    {"stage": 4, "action": "RUN_REQUIRED_PRIVATE_PREMUTATION_ROUTER_PAGE_EXCELLENCE_SHADOW_AND_CONTEXT_GATES_AGAINST_THE_EXACT_PUBLIC_CANDIDATE_IDENTITY", "productMutationAllowed": false},
+    {"stage": 5, "action": "CREATE_BOUNDED_PUBLIC_OW01_PRODUCT_CANDIDATE_BRANCH_FROM_EXACT_PUBLIC_MAIN", "productMutationAllowed": false},
+    {"stage": 6, "action": "CONSTRUCT_ONLY_THE_FROZEN_OW01_GEOGRAPHIC_AND_SPATIALLY_CORRELATED_ENVIRONMENTAL_AUDIO_TARGETS_IN_CAUSAL_ORDER_INSIDE_THE_PUBLIC_RUNTIME_GRAPH", "productMutationAllowed": true},
+    {"stage": 7, "action": "RUN_EXACT_PUBLIC_CANDIDATE_STATIC_RUNTIME_SPATIAL_AUDIO_PLAYWRIGHT_PAGE_EXCELLENCE_RESPONSIVE_MOTION_AWARDS_AND_OWNER_INSPECTION_QUALIFICATION", "productMutationAllowed": false},
+    {"stage": 8, "action": "PRESENT_THE_QUALIFIED_PUBLIC_CANDIDATE_FOR_USER_VISUAL_AND_EXPERIENTIAL_APPROVAL", "productMutationAllowed": false},
+    {"stage": 9, "action": "ONLY_AFTER_SEPARATE_USER_APPROVAL_AND_PROMOTION_AUTHORITY_MERGE_OR_PROMOTE_WITHIN_THE_SAME_PUBLIC_REPOSITORY_GRAPH", "productMutationAllowed": false}
+  ],
+  "candidateIdentityContract": {
+    "required": [
+      "PUBLIC_REPOSITORY_FULL_NAME",
+      "PUBLIC_BASE_MAIN_SHA",
+      "PUBLIC_CANDIDATE_BRANCH",
+      "PUBLIC_CANDIDATE_HEAD_SHA",
+      "EXACT_CHANGED_PATH_SET",
+      "SOURCE_BLOB_IDENTITIES_FOR_ADOPTED_REVISION_10_MATERIAL",
+      "PRIVATE_QUALIFICATION_RECEIPT_IDENTITIES_BOUND_TO_THE_PUBLIC_CANDIDATE_HEAD"
+    ],
+    "law": "QUALIFICATION_EVIDENCE_FOR_ONE_PUBLIC_CANDIDATE_HEAD_MAY_NOT_BE_RELABELLED_AS_QUALIFICATION_FOR_ANOTHER_HEAD."
+  },
+  "visualApprovalBoundary": {
+    "engineeringQualificationPrecedesUserReview": true,
+    "userReviewSurface": "ACTUAL_PUBLIC_REPOSITORY_CANDIDATE_RENDER_AND_ITS_BOUND_ENVIRONMENTAL_AUDIO_EXPERIENCE",
+    "approvalMeans": "USER_ACCEPTS_THE_QUALIFIED_VISUAL_GEOGRAPHIC_AND_EXPERIENTIAL_RESULT_FOR_PROMOTION_CONSIDERATION",
+    "approvalDoesNotMean": [
+      "PRIVATE_INSTRUMENTATION_PASS_INHERITANCE",
+      "AUTOMATIC_MERGE",
+      "AUTOMATIC_DEPLOYMENT",
+      "AUTOMATIC_OW01_CHECKPOINT_CLOSURE"
+    ]
+  },
+  "driftChecks": [
+    "FAIL_IF_PRODUCT_CONSTRUCTION_TARGETS_A_PRIVATE_REPOSITORY_COPY",
+    "FAIL_IF_PUBLIC_CANDIDATE_IS_NOT_BOUND_TO_EXACT_BASE_AND_HEAD_SHA",
+    "FAIL_IF_ANY_FROZEN_CONSTRUCTION_TARGET_DISAPPEARS_OR_IS_RENAMED_WITHOUT_EXPLICIT_PLAN_SUCCESSOR",
+    "FAIL_IF_CAUSAL_CONSTRUCTION_ORDER_IS_BYPASSED_WITHOUT_EXPLICIT_PLAN_SUCCESSOR",
+    "FAIL_IF_PRIVATE_QUALIFICATION_IS_NOT_BOUND_TO_THE_EXACT_PUBLIC_CANDIDATE",
+    "FAIL_IF_REQUIRED_SPATIAL_AUDIO_IS_UNIFORM_OR_CONTRADICTS_CANONICAL_GEOGRAPHY",
+    "FAIL_IF_USER_VISUAL_APPROVAL_IS_REPLACED_BY_PRIVATE_OR_AUTOMATED_APPROVAL",
+    "FAIL_IF_MERGE_LIVE_PROMOTION_OR_OW01_CLOSURE_IS_INFERRED_FROM_THIS_PLAN"
+  ],
+  "authorityBoundary": {
+    "createsProductAuthority": false,
+    "createsPrivateQualificationAuthority": false,
+    "createsBranchAuthority": false,
+    "createsMergeAuthority": false,
+    "createsDeploymentAuthority": false,
+    "createsLivePromotionAuthority": false,
+    "createsCheckpointClosureAuthority": false,
+    "createsUserApproval": false,
+    "effect": "MANDATORY_CONSTRUCTION_CONTEXT_AND_DRIFT_PREVENTION_ONLY"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "schema": "IMI_METHODS_MODELS_HUMAN_AND_3D_INTEGRATION_CONTRACT_v1",
+  "status": "SUCCESSOR_NORMALIZATION_CANDIDATE",
+  "semanticTextPrimary": true,
+  "guided3dPermitted": true,
+  "synchronizedTextAnd3dStateRequired": true,
+  "freeCameraAsSolePrimaryInterface": false,
+  "webglAuthority": "SUPPORTING_IMPLEMENTATION_NONSCIENTIFIC",
+  "interactionInvariants": [
+    "ONE_CANONICAL_OBJECT_ID_ACROSS_TEXT_AND_3D",
+    "ONE_ACTIVE_FOCUS_OBJECT_PER_CONTEXT",
+    "SELECTED_OBJECT_ADVANCES_RELATED_OBJECTS_RECEDE",
+    "EXACT_CONTEXTUAL_RETURN",
+    "KEYBOARD_EQUIVALENCE",
+    "REDUCED_MOTION_EQUIVALENCE",
+    "STANDARD_TEXT_SCROLLING_AVAILABLE",
+    "INTERFACE_MAY_NOT_PROMOTE_EVIDENCE_CLAIM",
+    "INTERFACE_MAY_NOT_CHANGE_EXECUTION_OR_CUSTODY_STATE"
+  ],
+  "canonicalStateFields": [
+    "activeObjectClass",
+    "activeObjectId",
+    "activeMethodStage",
+    "activeModelId",
+    "activeEvidenceObjectId",
+    "activePortfolioTargetId",
+    "activeLens",
+    "activeSubcontext",
+    "textScrollPosition",
+    "priorFocusTarget",
+    "reducedMotion",
+    "contentVersion"
+  ],
+  "humanLenses": [
+    "PRACTICAL",
+    "ENGINEERING",
+    "EVIDENCE"
+  ],
+  "spatialGroups": [
+    "INSTRUMENT",
+    "INVARIANT_CANDIDATE",
+    "METHODS",
+    "MODELS",
+    "EVIDENCE",
+    "PROSPECTIVE_PORTFOLIO",
+    "TERMINAL_DISPOSITIONS"
+  ],
+  "scientificAuthority": false
+}

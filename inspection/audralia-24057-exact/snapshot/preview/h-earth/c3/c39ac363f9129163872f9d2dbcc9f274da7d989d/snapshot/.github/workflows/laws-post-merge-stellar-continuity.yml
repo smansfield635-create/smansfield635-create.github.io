@@ -1,0 +1,17 @@
+name: Laws post-merge stellar continuity — manual archive
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  archive-notice:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report verification custody
+        run: |
+          echo 'This fixed-branch stellar-continuity verifier is retired from automatic pull-request execution.'
+          echo 'Original workflow blob: 040e7934689d66cdfd3b86d089c3946289cb416d'
+          echo 'The original YAML remains recoverable from Git history; the final CP6 matrix and retained main-page suites now cover the active candidate.'

@@ -1,0 +1,196 @@
+{
+  "schema": "REPOSITORY_AI_ROUTER_REGISTRY_v1",
+  "routerId": "SMANSFIELD_REPOSITORY_AI_ROUTER_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "projectRegistrationSchema": ".github/ai-router/project-registration.schema.v1.json",
+  "sharedProcedureRegistry": ".github/ai-router/shared-procedures.v1.json",
+  "entryReceiptSchema": ".github/ai-router/schemas/repository-ai-entry-router.receipt.schema.v1.json",
+  "publicQualityInstrumentationHandoff": {
+    "schema": "PUBLIC_QUALITY_INSTRUMENTATION_RETIREMENT_HANDOFF_v1",
+    "result": "PUBLIC_PAGE_EXCELLENCE_IMPLEMENTATION_RETIRED",
+    "publicExecutionAuthorized": false,
+    "publicMutationAuthorityCreated": false,
+    "forwardingPerformed": false,
+    "privateSuccessorRepository": "smansfield635-create/geodiametrics1",
+    "privateSuccessorEvidenceHead": "840b885db8d3b0331e9ac3bd207df3d32baf8fb6",
+    "privateSuccessorAuthorityInheritedFromPublicMetadata": false,
+    "qualityQualificationResolution": "FAIL_CLOSED_TO_SEPARATELY_AUTHORIZED_PRIVATE_SUCCESSOR_WHEN_OPERATION_CONTRACT_REQUIRES_IT"
+  },
+  "routerInfrastructure": {
+    "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+    "ownedExactPaths": [
+      "AGENTS.md",
+      "AI_ENTRYPOINT.json",
+      "tools/repository-ai-entry-router.mjs",
+      ".github/workflows/repository-ai-entry-router-validation.yml",
+      ".github/workflows/ai-room-authorized-toolset-bootstrap-validation.yml",
+      "tools/ai-room-transport/active-conformance.v1.mjs",
+      "tools/ai-room-transport/successor-compatibility-validator.v1.mjs",
+      "tools/ai-room-transport/toolset-resolver.v1.mjs",
+      "tools/ai-room-transport/fixed-command-dispatcher.v1.mjs",
+      "tools/ai-room-transport/successor-compatibility-self-test.v1.mjs",
+      ".github/workflows/repository-operation-intake-validation.yml",
+      ".github/workflows/progressive-system-continuity-v1.yml"
+    ],
+    "ownedPathPrefixes": [
+      ".github/ai-router/",
+      ".github/workflows/remote-operation-successor-v1.yml",
+      ".github/workflows/bounded-binary-object-transfer-v1.yml",
+      "tools/ai-room-transport/bounded-binary-object-transfer.v1.mjs",
+      "tools/ai-room-transport/bounded-binary-object-transfer.v1.test.mjs",
+      ".github/ai-toolset-transport/bounded-binary-object-transfer.v1.json"
+    ],
+    "validationCommand": "node tools/repository-ai-entry-router.mjs --self-test --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/router-self-test-receipt.json"
+  },
+  "projects": [
+    {
+      "projectId": "H_EARTH",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["h-earth-3d/", "showroom/globe/h-earth/"],
+      "ownedExactPaths": [
+        ".github/workflows/h-earth-repository-registry-preflight.yml",
+        ".github/workflows/h-earth-r06-c10-candidate-admission.yml",
+        ".github/ai-toolset-transport/AGENTS.md",
+        ".github/ai-toolset-transport/authorized-toolset-registry.v1.json",
+        ".github/ai-toolset-transport/changed-path-manifest.v1.json",
+        ".github/ai-toolset-transport/negative-fixtures.v1.json",
+        ".github/ai-toolset-transport/progress-ledger.v1.json",
+        ".github/ai-toolset-transport/schemas.v1.json",
+        ".github/ai-toolset-transport/h-earth-registry-two-path-toolset-registration.v1.json",
+        "tools/h-earth-registry-two-path-toolset/lib.v1.mjs",
+        "tools/h-earth-registry-two-path-toolset/reproduction-harness.v1.mjs",
+        "tools/h-earth-registry-two-path-toolset/receipt-validator.v1.mjs",
+        "tools/h-earth-registry-two-path-toolset/fresh-verifier.v1.mjs",
+        "tools/h-earth-registry-two-path-toolset/termination.v1.mjs",
+        "tools/h-earth-registry-two-path-toolset/fixtures.v1.json",
+        "tools/h-earth-registry-two-path-toolset/self-test.v1.mjs",
+        ".github/workflows/h-earth-registry-two-path-toolset-registration-validation.yml",
+        "tools/h-earth-map-wide-terrain/bootstrap-authority-terminator.v1.mjs",
+        "tools/h-earth-map-wide-terrain/continuous-map-orchestration-compiler.v1.mjs",
+        "tools/h-earth-map-wide-terrain/cumulative-constraint-evaluator.v1.mjs",
+        "tools/h-earth-map-wide-terrain/estate-reservation-validator.v1.mjs",
+        "tools/h-earth-map-wide-terrain/fresh-verifier.v1.mjs",
+        "tools/h-earth-map-wide-terrain/lib.v1.mjs",
+        "tools/h-earth-map-wide-terrain/preview-package-planner.v1.mjs",
+        "tools/h-earth-map-wide-terrain/self-test.v1.mjs",
+        "tools/h-earth-map-wide-terrain/terrain-census.v1.mjs",
+        "tools/h-earth-map-wide-terrain/variance-repetition-detector.v1.mjs",
+        "tools/h-earth-map-wide-terrain/zone-articulation-plan-compiler.v1.mjs",
+        ".github/workflows/h-earth-map-wide-terrain-articulation-estate-reservation-bootstrap-validation.yml",
+        ".github/workflows/h-earth-v2-router-instruction-lock-closure-successor.yml",
+        ".github/workflows/h-earth-audralia-open-world-spatial-migration-continuity.yml",
+        "tools/h-earth-audralia-open-world-spatial-migration/continuity-verifier.v1.mjs",
+        ".github/ai-toolset-transport/h-earth-repository-preflight-execution-binding.v1.json",
+        ".github/workflows/h-earth-repository-preflight-execution-binding-validation.yml",
+        "tools/ai-room-transport/h-earth-repository-preflight-remote-execution.v1.mjs",
+        ".github/workflows/h-earth-repository-preflight-remote-execution.yml",
+        ".github/workflows/h-earth-premutation-preflight-installation-lock-closure.yml"
+      ],
+      "entrypoint": ".github/ai-router/projects/h-earth/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "METHODS_INFORMATION_BENCHMARK",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": [],
+      "ownedExactPaths": [
+        ".github/workflows/methods-context-displacement-existing-spatial-construct-adoption-v1.yml",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/source-identity-manifest.v1.json",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/component-discovery.v1.json",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/contextual-architecture-findings.v1.json",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/adoption-matrix.v1.json",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/prohibited-substitute-architectures.v1.json",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/required-runtime-conditions.v1.json",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/architecture-receipt-bundle.v1.json",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/verify.v1.mjs",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/receipts/builder.receipt.v1.json",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/receipts/fresh-verifier.receipt.v1.json",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/receipts/independent-equality.receipt.v1.json",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/receipts/operation-closure.receipt.v1.json"
+      ],
+      "entrypoint": ".github/ai-router/projects/methods-information-benchmark/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "LAWS",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["laws/"],
+      "ownedExactPaths": [],
+      "entrypoint": ".github/ai-router/projects/laws/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "LINEAGE_RECEIPT_PROTOCOL",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["infrastructure/lineage-receipt-protocol-v1/"],
+      "ownedExactPaths": [".github/workflows/lrpv1-conformance.yml"],
+      "entrypoint": ".github/ai-router/projects/lineage-receipt-protocol/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "ESTATE_VALIDATION",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["validation/"],
+      "ownedExactPaths": [".github/workflows/estate-validation-v1.yml"],
+      "entrypoint": ".github/ai-router/projects/estate-validation/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "STATE_BOUND_ADMISSIBILITY_KERNEL",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["infrastructure/state-bound-admissibility-kernel-v1/"],
+      "ownedExactPaths": [],
+      "entrypoint": ".github/ai-router/projects/state-bound-admissibility-kernel/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "CONTROL_PLANE_TRANSFERABILITY",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["control-plane/transferability-program/"],
+      "ownedExactPaths": [],
+      "entrypoint": ".github/ai-router/projects/control-plane-transferability/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "OPEN_WORLD",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["open-world/"],
+      "ownedExactPaths": [],
+      "entrypoint": ".github/ai-router/projects/open-world/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "COMPASS",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["assets/compass/"],
+      "ownedExactPaths": [
+        "index.html",
+        ".github/workflows/compass-display-continuity-validation.yml",
+        ".github/workflows/compass-performance-successor-validation.yml",
+        ".github/workflows/compass-carousel-successor-live-qualification.yml",
+        ".github/workflows/pages-direct-deploy.yml"
+      ],
+      "entrypoint": ".github/ai-router/projects/compass/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "PUBLIC_LEGITIMACY",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["developer/", "evidence/", "governance/"],
+      "ownedExactPaths": [],
+      "entrypoint": ".github/ai-router/projects/public-legitimacy/entrypoint.v1.json",
+      "priority": 100
+    }
+  ],
+  "unregisteredPathPolicy": {
+    "readOnlyDisposition": "REVIEW_REQUIRED",
+    "mutationDisposition": "BLOCK",
+    "reason": "NO_REGISTERED_PROJECT_AUTHORITY",
+    "registrationTemplate": ".github/ai-router/project-registration.schema.v1.json"
+  },
+  "ambiguityPolicy": {
+    "disposition": "STOP",
+    "reason": "MULTIPLE_EQUAL_PRIORITY_PROJECT_ROUTES"
+  }
+}

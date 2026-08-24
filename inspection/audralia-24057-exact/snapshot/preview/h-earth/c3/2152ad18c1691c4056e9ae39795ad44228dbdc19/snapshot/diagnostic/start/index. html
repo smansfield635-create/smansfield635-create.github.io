@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Diagnostic · Start · Geodiametrics</title>
+  <link rel="icon" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
+  <style>
+    .box{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:14px 16px;margin:0 0 12px;line-height:1.5}
+    .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+  </style>
+</head>
+<body>
+<main class="gPage">
+  <header class="gHeader">
+    <h1 class="gTitle">Start</h1>
+    <p class="gSub">Preflight.</p>
+  </header>
+
+  <section class="gPanel" aria-label="Diagnostic start">
+    <div class="box">
+      <p><strong>What this is</strong> A short readiness check, then personality lock-in, then the exam.</p>
+      <p><strong>What this is not</strong> A quiz, therapy, or prediction engine.</p>
+    </div>
+
+    <div class="row">
+      <a class="gBtn" href="/diagnostic/">Back</a>
+      <button class="gBtn" type="button" id="reset">Reset</button>
+      <a class="gBtn" href="/diagnostic/ready/">Continue</a>
+    </div>
+
+    <footer class="gFooter">RECEIPT-GATED · © GEODIAMETRICS</footer>
+  </section>
+</main>
+
+<script>
+  document.getElementById('reset').addEventListener('click', ()=>{
+    localStorage.removeItem('GD_DIAG_READY');
+    localStorage.removeItem('GD_DIAG_TYPE');
+    localStorage.removeItem('GD_DIAG_RECEIPT');
+    localStorage.removeItem('GD_DIAG_STARTED_AT');
+    alert('Reset complete.');
+  });
+</script>
+</body>
+</html>

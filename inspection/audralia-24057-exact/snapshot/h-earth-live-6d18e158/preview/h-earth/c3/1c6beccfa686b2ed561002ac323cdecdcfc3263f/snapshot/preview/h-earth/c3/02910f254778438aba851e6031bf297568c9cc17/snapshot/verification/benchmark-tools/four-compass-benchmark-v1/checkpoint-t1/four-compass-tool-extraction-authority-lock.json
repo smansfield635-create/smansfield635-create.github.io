@@ -1,0 +1,273 @@
+{
+  "artifactId": "METAVERSE_BENCHMARK_FOUR_COMPASS_TOOL_EXTRACTION_AUTHORITY_LOCK_v1",
+  "phase": "TOOL_CORRECTION_AND_CONSTRUCTION",
+  "checkpoint": "T1",
+  "status": "PASS_FOUR_COMPASS_TOOL_EXTRACTION_AUTHORITY_LOCKED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "baselineMainCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+  "parentReconciliationCommit": "2651bac70cba5b4329631a36d2c62a44aeb694c8",
+  "parentR8Blob": "db297983bcb4a2a2b4f63c02d8196de279a83012",
+  "toolBranch": "agent/metaverse-benchmark-four-compass-tool-t1-001",
+  "recordedDate": "2026-07-25",
+  "mode": "READ_EXTRACT_RECLASSIFY_RENAME_SEPARATE_AUTHORIZE_CONSTRUCTION",
+  "sourceOccurrence": {
+    "pullRequest": 136,
+    "pullRequestState": "CLOSED_UNMERGED_DRAFT",
+    "executionHead": "d4825b09f8186699bbf4025981c12f50e710df9a",
+    "sourcePackageStatus": "SUPERSEDED_FIVE_ENTRY_MODEL_FUNCTIONAL_PRECEDENT",
+    "installationDisposition": "WITHHELD_UNCHANGED",
+    "reversionRequired": false,
+    "sourceFiles": [
+      {
+        "path": ".github/workflows/metaverse-benchmark-cp7-2-smoke-capture.yml",
+        "gitBlob": "3c55b538addd30c9c56180bffaf2b8a858ea5b40",
+        "classification": "EXTRACTABLE_WORKFLOW_PRECEDENT_REWORK_REQUIRED"
+      },
+      {
+        "path": ".github/workflows/metaverse-benchmark-cp7-visual-spatial.yml",
+        "gitBlob": "50e4cf09699088e03e7dada6f953d6a1801da1aa",
+        "classification": "EXTRACTABLE_WORKFLOW_PRECEDENT_REWORK_REQUIRED"
+      },
+      {
+        "path": "verification/benchmark-corpus/inventory-pass-v1/checkpoint-07/cp7-2-smoke-capture.mjs",
+        "gitBlob": "655e99f52ef4f5e6c8628e5e20ef3597697cbf45",
+        "classification": "EXTRACTABLE_SMOKE_PRECEDENT_REWORK_REQUIRED"
+      },
+      {
+        "path": "verification/benchmark-corpus/inventory-pass-v1/checkpoint-07/visual-and-spatial-realization-baseline.mjs",
+        "gitBlob": "231799a777d803272ea35262c5f677343087961d",
+        "classification": "EXTRACTABLE_BROWSER_BASELINE_PRECEDENT_REWORK_REQUIRED"
+      }
+    ]
+  },
+  "sourceDefectBoundary": {
+    "descriptiveHomeAwarenessPresent": true,
+    "governingCorpusSeparationPresent": false,
+    "defects": [
+      "HOMEPAGE_COMPASS_RETAINS_ACTIVE_EXECUTION_KEY",
+      "HOME_RECORDS_ENTER_SHARED_RECORDS_COLLECTION",
+      "OBJECT_KEYS_CONFIG_DRIVES_FIVE_MEMBER_SUMMARIES",
+      "HOME_FINDINGS_ENTER_SHARED_VISUAL_FINDINGS",
+      "HOME_CAPTURES_ENTER_SHARED_SCREENSHOT_MANIFEST",
+      "ALL_FIVE_ROUTES_ASSERTION_GOVERNS_PASS",
+      "FIVE_MEMBER_ASSERTIONS_SUMMARIES_FINDINGS_AND_MANIFEST_ENTER_VISUAL_BASELINE_DIGEST",
+      "SMOKE_RECEIPT_RETAINS_CP7_2_IDENTITY",
+      "SMOKE_NEXT_CHECKPOINT_RETAINS_RETIRED_CP7_3_SEQUENCE",
+      "WORKFLOW_NAMES_PATHS_OUTPUTS_AND_ARTIFACTS_RETAIN_CP7_INVENTORY_IDENTITY"
+    ]
+  },
+  "canonicalTargetTaxonomy": {
+    "compassCorpus": [
+      {
+        "id": "MAIN_COMPASS",
+        "route": "/"
+      },
+      {
+        "id": "ARCHCOIN_COMPASS",
+        "route": "/products/archcoin/"
+      },
+      {
+        "id": "SHOWROOM_COMPASS",
+        "route": "/showroom/"
+      },
+      {
+        "id": "LAWS_COMPASS",
+        "route": "/laws/"
+      }
+    ],
+    "auxiliaryControls": [
+      {
+        "id": "WEBSITE_HOME_RECEIVER_CONTROL",
+        "route": "/home/",
+        "compassAuthority": false,
+        "lane": "AUXILIARY_CONTROL"
+      }
+    ],
+    "invalidActiveIdentities": [
+      "HOMEPAGE_COMPASS",
+      "SHOWROOM",
+      "LAWS_CHAMBER_POST_PR128"
+    ]
+  },
+  "requiredTargetArchitecture": {
+    "authorityLanes": {
+      "FOUR_COMPASS_CORPUS": {
+        "memberCount": 4,
+        "executionRecords": "SEPARATE",
+        "summaries": "SEPARATE",
+        "findings": "SEPARATE",
+        "screenshotManifest": "SEPARATE",
+        "digests": "SEPARATE"
+      },
+      "HOME_AUXILIARY_CONTROL": {
+        "memberCount": 1,
+        "executionRecords": "SEPARATE",
+        "summaries": "SEPARATE",
+        "findings": "SEPARATE",
+        "screenshotManifest": "SEPARATE",
+        "digests": "SEPARATE"
+      }
+    },
+    "sharedMechanismsAllowed": true,
+    "sharedGoverningAggregateAllowed": false,
+    "crossLaneEvidenceDuplicationAllowed": false,
+    "crossLaneEvidenceOmissionAllowed": false
+  },
+  "extractionMatrix": [
+    {
+      "mechanism": "BROWSER_LAUNCH_AND_PROFILE_SETUP",
+      "sourceDisposition": "EXTRACT",
+      "requiredCorrection": "RENAME_AND_MOVE_TO_TARGET_TOOL_PACKAGE"
+    },
+    {
+      "mechanism": "EXACT_EXECUTION_HEAD_CHECKOUT_AND_IDENTITY_VALIDATION",
+      "sourceDisposition": "EXTRACT",
+      "requiredCorrection": "PRESERVE_WITH_TARGET_WORKFLOW_IDENTITIES"
+    },
+    {
+      "mechanism": "NAVIGATION_AND_NETWORK_IDLE_CONTROL",
+      "sourceDisposition": "EXTRACT",
+      "requiredCorrection": "PARAMETERIZE_BY_CANONICAL_LANE_AND_ROUTE"
+    },
+    {
+      "mechanism": "SCREENSHOT_CAPTURE_BYTE_LENGTH_AND_SHA256_CUSTODY",
+      "sourceDisposition": "EXTRACT",
+      "requiredCorrection": "EMIT_SEPARATE_COMPASS_AND_AUXILIARY_MANIFESTS"
+    },
+    {
+      "mechanism": "CONSOLE_PAGE_ERROR_REQUEST_FAILURE_AND_NAVIGATION_TELEMETRY",
+      "sourceDisposition": "EXTRACT",
+      "requiredCorrection": "PRESERVE_PER_LANE_WITH_NO_AGGREGATE_CROSSING"
+    },
+    {
+      "mechanism": "DOM_GEOMETRY_VIEWPORT_COVERAGE_OVERFLOW_AND_OVERLAP_OBSERVATION",
+      "sourceDisposition": "EXTRACT",
+      "requiredCorrection": "PRESERVE_RECORDS_WITH_CANONICAL_IDENTITIES"
+    },
+    {
+      "mechanism": "POINTER_TOUCH_SELECTION_DRAG_RETURN_AND_HOME_DISCLOSURE_ACTIONS",
+      "sourceDisposition": "EXTRACT",
+      "requiredCorrection": "DISPATCH_THROUGH_DISTINCT_COMPASS_AND_AUXILIARY_EXECUTION_LANES"
+    },
+    {
+      "mechanism": "WORKFLOW_ARTIFACT_UPLOAD_AND_CHECKPOINT_SUMMARY",
+      "sourceDisposition": "EXTRACT",
+      "requiredCorrection": "REMOVE_CP7_NAMES_AND_BIND_TO_T2_T3_TOOL_IDENTITIES"
+    },
+    {
+      "mechanism": "FIVE_ENTRY_CONFIG_AND_SHARED_AGGREGATION",
+      "sourceDisposition": "DO_NOT_EXTRACT",
+      "requiredCorrection": "REPLACE_WITH_EXPLICIT_FOUR_COMPASS_AND_AUXILIARY_AUTHORITIES"
+    },
+    {
+      "mechanism": "CP7_CP7_2_CP7_3_SEQUENCE_AND_OUTPUT_IDENTITIES",
+      "sourceDisposition": "DO_NOT_EXTRACT",
+      "requiredCorrection": "REPLACE_WITH_T2_T3_TOOL_SEQUENCE"
+    }
+  ],
+  "authorizedT2PathSet": [
+    "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-benchmark.config.mjs",
+    "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-browser-baseline.mjs",
+    "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-smoke-capture.mjs",
+    ".github/workflows/metaverse-benchmark-four-compass-tool.yml",
+    ".github/workflows/metaverse-benchmark-four-compass-tool-smoke.yml",
+    "verification/benchmark-tools/four-compass-benchmark-v1/checkpoint-t2/corrected-harness-and-workflow-construction.receipt.json"
+  ],
+  "targetOutputIdentities": {
+    "baselineReceipt": "four-compass-benchmark-tool-baseline.json",
+    "auxiliaryReceipt": "website-home-receiver-control-baseline.json",
+    "screenshotRoot": "four-compass-benchmark-tool-screenshots/",
+    "auxiliaryScreenshotRoot": "website-home-receiver-control-screenshots/",
+    "workflowArtifact": "metaverse-benchmark-four-compass-tool-evidence",
+    "smokeArtifact": "metaverse-benchmark-four-compass-tool-smoke-evidence"
+  },
+  "authority": {
+    "readPR136Sources": true,
+    "extractMechanisms": true,
+    "constructCorrectedToolAtT2": true,
+    "executeCorrectedTool": false,
+    "installCorrectedTool": false,
+    "mergeCorrectedTool": false,
+    "lawsRepair": false,
+    "productMutation": false,
+    "mainWrite": false
+  },
+  "prohibited": [
+    "COPY_PR_136_PACKAGE_UNCHANGED",
+    "INSTALL_OR_MERGE_PR_136_UNCHANGED",
+    "REINTRODUCE_HOMEPAGE_COMPASS",
+    "AGGREGATE_HOME_IN_FOUR_COMPASS_RECORDS_SUMMARIES_FINDINGS_MANIFESTS_OR_DIGESTS",
+    "WRITE_OUTSIDE_AUTHORIZED_T2_PATH_SET",
+    "EXECUTE_T2_CONSTRUCTION_AS_ACCEPTED_TOOL",
+    "BEGIN_LAWS_REPAIR",
+    "CHANGE_PRODUCT_FILES",
+    "CHANGE_MAIN",
+    "GRANT_MERGE_AUTHORITY"
+  ],
+  "authorityDigest": {
+    "algorithm": "SHA-256(JSON.stringify(authorityCore))",
+    "authorityCore": {
+      "sourceOccurrence": {
+        "pullRequest": 136,
+        "executionHead": "d4825b09f8186699bbf4025981c12f50e710df9a",
+        "sourceFileCount": 4
+      },
+      "targetTaxonomy": {
+        "compassCount": 4,
+        "compassIds": [
+          "MAIN_COMPASS",
+          "ARCHCOIN_COMPASS",
+          "SHOWROOM_COMPASS",
+          "LAWS_COMPASS"
+        ],
+        "auxiliaryControlId": "WEBSITE_HOME_RECEIVER_CONTROL"
+      },
+      "oldPackageInstallation": "WITHHELD",
+      "sourceEvidence": "RETAIN",
+      "implementationMechanisms": "EXTRACTABLE_WITH_REWORK",
+      "constructionAuthorized": true,
+      "executionAuthorized": false,
+      "installationAuthorized": false,
+      "lawsRepairAuthorized": false,
+      "nextCheckpoint": "T2_CORRECTED_HARNESS_AND_WORKFLOW_CONSTRUCTION"
+    },
+    "sha256": "c5055c810ea11058f3714b5f05e7ef4396d3044c0392bb302c9af13ec07b0602"
+  },
+  "assertions": {
+    "r8ParentExact": true,
+    "pr136SourceFileCount": 4,
+    "allPR136SourceBlobsLocked": true,
+    "fourCompassCountExact": true,
+    "homeAuxiliaryLaneExact": true,
+    "unchangedOldToolInstallationWithheld": true,
+    "correctedToolConstructionAuthorized": true,
+    "correctedToolExecutionAuthorized": false,
+    "correctedToolInstallationAuthorized": false,
+    "lawsRepairAuthorized": false,
+    "productFilesChanged": 0,
+    "mainChanged": false,
+    "mergeAuthority": "NONE"
+  },
+  "stoppingBoundary": {
+    "proves": [
+      "EXACT_PR_136_SOURCE_CUSTODY",
+      "EXTRACTION_AND_REJECTION_MATRIX",
+      "FOUR_COMPASS_AND_AUXILIARY_TARGET_ARCHITECTURE",
+      "AUTHORIZED_T2_PATH_SET",
+      "CORRECTED_TOOL_CONSTRUCTION_AUTHORITY"
+    ],
+    "doesNotProve": [
+      "CORRECTED_TOOL_SOURCE_EXISTS",
+      "CORRECTED_TOOL_SYNTAX_PASS",
+      "CORRECTED_TOOL_EXECUTION",
+      "CORRECTED_TOOL_EVIDENCE_VALIDATION",
+      "CORRECTED_TOOL_INSTALLATION_READINESS",
+      "LAWS_REPAIR_READINESS",
+      "MERGE_AUTHORITY"
+    ],
+    "authorizes": [
+      "T2_CORRECTED_HARNESS_AND_WORKFLOW_CONSTRUCTION"
+    ]
+  },
+  "nextCheckpoint": "T2_CORRECTED_HARNESS_AND_WORKFLOW_CONSTRUCTION"
+}

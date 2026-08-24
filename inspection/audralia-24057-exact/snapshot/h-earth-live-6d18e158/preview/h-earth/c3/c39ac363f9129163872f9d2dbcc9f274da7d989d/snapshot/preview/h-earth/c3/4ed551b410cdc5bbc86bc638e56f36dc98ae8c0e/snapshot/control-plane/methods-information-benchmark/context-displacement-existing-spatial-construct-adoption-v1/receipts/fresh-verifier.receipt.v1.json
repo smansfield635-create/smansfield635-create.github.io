@@ -1,0 +1,20 @@
+{
+  "schema": "METHODS_SPATIAL_ADOPTION_FRESH_VERIFIER_RECEIPT_v1",
+  "status": "PASS",
+  "operationId": "METHODS_CONTEXT_DISPLACEMENT_EXISTING_SPATIAL_CONSTRUCT_ADOPTION_v1",
+  "governingHead": "3b21d30763ca0368110811351bb3d3c8a042af47",
+  "candidateHeadEvaluated": "ca796757e4767bfd7621f35cbb0b51b733f42574",
+  "workflowRun": 31055513313,
+  "workflowJob": 92472073445,
+  "fingerprint": "59da453bc620ff7992d71d6db4f075d28db9f35530c570961a6a0a14a2ef7252",
+  "sourceIdentityCount": 22,
+  "componentCount": 4,
+  "adoptionRowCount": 14,
+  "inspirationOnlyRowCount": 0,
+  "runtimeConditionCount": 18,
+  "distinctFromBuilder": true,
+  "rejectedVisualFoundationExcluded": true,
+  "pageImplementationExecuted": false,
+  "publicOrVisualMutation": false,
+  "mergeAuthorized": false
+}

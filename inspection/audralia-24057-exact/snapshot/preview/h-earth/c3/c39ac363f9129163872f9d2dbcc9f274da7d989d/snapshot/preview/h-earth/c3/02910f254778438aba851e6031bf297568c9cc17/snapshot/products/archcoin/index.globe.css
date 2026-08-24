@@ -1,0 +1,40 @@
+/* /prototypes/universal-compass/archcoin.index.round4.laws-globe.css
+   Exact Laws Audralia participant presentation for the accepted Round 4 center.
+*/
+.archcoin-round4-globe {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  border: 0;
+  border-radius: 50%;
+  isolation: isolate;
+  pointer-events: none;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.archcoin-round4-globe::before,
+.archcoin-round4-globe::after {
+  display: none !important;
+  content: none !important;
+}
+
+.archcoin-round4-laws-globe-canvas {
+  position: absolute !important;
+  inset: -10% !important;
+  z-index: 4 !important;
+  display: block !important;
+  width: 120% !important;
+  height: 120% !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  pointer-events: none !important;
+  filter: drop-shadow(0 0 10px rgba(82, 190, 255, 0.32));
+}
+
+.archcoin-scene__upstream-compass-control {
+  cursor: pointer !important;
+}

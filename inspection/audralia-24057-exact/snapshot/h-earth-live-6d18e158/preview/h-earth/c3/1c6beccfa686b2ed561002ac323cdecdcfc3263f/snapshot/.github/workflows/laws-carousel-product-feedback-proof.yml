@@ -1,0 +1,79 @@
+name: Laws Carousel Product Feedback Proof
+
+on:
+  pull_request:
+    paths:
+      - 'laws/index.destination-carousel.js'
+      - 'laws/index.destination-carousel.css'
+      - 'laws/index.mobile-background-tabs.js'
+      - '.github/workflows/laws-carousel-product-feedback-proof.yml'
+
+permissions: { contents: read }
+
+jobs:
+  product-feedback-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: '${{ github.event.pull_request.head.sha }}', fetch-depth: 1 }
+      - name: Verify bounded perceptual feedback and runtime traversal contract
+        run: |
+          node --check laws/index.destination-carousel.js
+          python3 - <<'PY'
+          from pathlib import Path
+          js=Path('laws/index.destination-carousel.js').read_text()
+          css=Path('laws/index.destination-carousel.css').read_text()
+          loader=Path('laws/index.mobile-background-tabs.js').read_text()
+          required_js=['20260816G_RUNTIME_OWNED_RING_TRAVERSAL','boundedGestureFeedback: true','COMMIT_PX = 24','TRAVERSAL_MS = 500','runtimeOwnedTraversal: true','carouselFeedback','carouselTarget','carouselLandingPulse','setFeedback','liveGestureGeometry: false','oneGestureOneStep: true']
+          required_css=['data-carousel-feedback="previous"','data-carousel-feedback="next"','data-carousel-target="true"','data-carousel-landing-pulse="true"','--laws-gesture-pressure','transition:transform 500ms']
+          for token in required_js: assert token in js, f'missing product traversal runtime token: {token}'
+          for token in required_css: assert token in css, f'missing product feedback CSS token: {token}'
+          assert '20260816G_RUNTIME_OWNED_RING_TRAVERSAL' in loader
+          assert 'state.pointerStartAngle' not in js
+          print('LAWS_PRODUCT_TRAVERSAL_STATIC_PASS')
+          PY
+      - name: Install Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null
+      - name: Serve exact candidate
+        run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/laws-product-feedback.log 2>&1 &
+      - name: Prove feedback without positional custody and decisive landing
+        run: |
+          node <<'NODE'
+          const {chromium}=require('playwright');
+          const A=(x,m)=>{if(!x)throw Error(m)};
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const context=await browser.newContext({viewport:{width:960,height:1536},hasTouch:true,isMobile:true,deviceScaleFactor:1});
+            const page=await context.newPage();
+            await page.goto('http://127.0.0.1:4173/laws/',{waitUntil:'networkidle'});
+            await page.waitForSelector('html[data-laws-destination-carousel-runtime="active"]',{timeout:15000});
+            const runtime=await page.evaluate(()=>globalThis.DGB_LAWS_DESTINATION_CAROUSEL);
+            A(runtime?.boundedGestureFeedback===true&&runtime.runtimeOwnedTraversal===true,'runtime traversal authority absent');
+            A(runtime.liveGestureGeometry===false&&runtime.oneGestureOneStep===true,'custody law regressed');
+            const field=page.locator('[data-laws-root-rolodex-section] .laws-rolodex-field[data-destination-stage-state="active"]').first();
+            const viewport=field.locator('.laws-rolodex-viewport');
+            await viewport.scrollIntoViewIfNeeded();
+            const box=await viewport.boundingBox(); A(box,'no viewport');
+            const before=await field.evaluate(el=>({index:+el.dataset.carouselIndex,ring:getComputedStyle(el.querySelector('.laws-rolodex-track')).transform}));
+            const cdp=await context.newCDPSession(page); const sx=box.x+box.width*.72,sy=box.y+box.height*.5;
+            await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:sx,y:sy,id:51,radiusX:2,radiusY:2,force:1}]});
+            await page.waitForTimeout(30);
+            await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:sx-box.width*.28,y:sy,id:51,radiusX:2,radiusY:2,force:1}]});
+            await page.waitForTimeout(120);
+            const during=await field.evaluate(el=>({index:+el.dataset.carouselIndex,ring:getComputedStyle(el.querySelector('.laws-rolodex-track')).transform,feedback:el.dataset.carouselFeedback,pressure:parseFloat(getComputedStyle(el).getPropertyValue('--laws-gesture-pressure')||'0')}));
+            A(during.index===before.index&&during.ring===before.ring,'gesture gained positional custody');
+            A(during.feedback==='next'&&during.pressure>0,'visible bounded feedback absent');
+            await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+            await page.waitForTimeout(160);
+            const travelling=await field.evaluate(el=>({target:el.querySelector('.laws-rolodex-card[data-carousel-target="true"]')?.dataset.destinationId||'',phase:el.dataset.carouselGestureState,transition:getComputedStyle(el.querySelector('.laws-rolodex-track')).transitionDuration}));
+            A(travelling.target&&travelling.phase==='settling'&&travelling.transition!=='0s','incoming target not visibly traversing');
+            await page.waitForTimeout(620);
+            const landed=await field.evaluate(el=>({index:+el.dataset.carouselIndex,canonical:el.dataset.carouselCanonicalLanding,pulse:el.dataset.carouselLandingPulse}));
+            A(landed.index===(before.index+1)%4&&landed.canonical==='true','one-step canonical landing failed');
+            console.log(JSON.stringify({before,during,travelling,landed},null,2));
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE

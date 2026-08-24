@@ -1,6 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "audralia-startup-first-visual-c00842b4",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
-  "inputs": {"target_sha":"c00842b45f5e0efa38853229448b128b22521f01"}
+  "requestId": "audralia-weather-v5-preflight-db22a67e",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "inputs": {
+    "target_sha": "db22a67efc610298f8796829f57d39032c5010a1",
+    "surface_id": "audralia"
+  }
 }

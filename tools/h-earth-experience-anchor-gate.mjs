@@ -14,6 +14,9 @@ const NON_EXPERIENCE_H_EARTH_PREFIXES=[
   'h-earth-3d/evaluation/',
   'h-earth-3d/evidence/'
 ];
+const NON_EXPERIENCE_AUDRALIA_PREFIXES=[
+  'showroom/globe/audralia/disposition/'
+];
 const INSTRUCTION_ONLY_PATHS=new Set([
   'h-earth-3d/AGENTS.md',
   'showroom/globe/h-earth/AGENTS.md',
@@ -46,13 +49,13 @@ if(base&&base!=='0000000000000000000000000000000000000000'){
 const isExperiencePath=p=>{
   if(INSTRUCTION_ONLY_PATHS.has(p))return false;
   if(p.startsWith('showroom/globe/h-earth/'))return true;
-  if(p.startsWith('showroom/globe/audralia/'))return true;
+  if(p.startsWith('showroom/globe/audralia/'))return !NON_EXPERIENCE_AUDRALIA_PREFIXES.some(prefix=>p.startsWith(prefix));
   return p.startsWith('h-earth-3d/')&&!NON_EXPERIENCE_H_EARTH_PREFIXES.some(prefix=>p.startsWith(prefix));
 };
 
 const experienceChanges=changed.filter(isExperiencePath).sort();
 if(experienceChanges.length===0){
-  console.log(JSON.stringify({schema:'H_EARTH_EXPERIENCE_ANCHOR_GATE_RECEIPT_v1',result:'PASS',reason:'NO_EXPERIENCE_SURFACE_CHANGE',anchorSha256:anchor.sourceVideo.sha256,changedPathCount:changed.length},null,2));
+  console.log(JSON.stringify({schema:'H_EARTH_EXPERIENCE_ANCHOR_GATE_RECEIPT_v1',result:'PASS',reason:'NO_EXPERIENCE_SURFACE_CHANGE',anchorSha256:anchor.sourceVideo.sha256,changedPathCount:changed.length,nonExperienceAudraliaPrefixes:NON_EXPERIENCE_AUDRALIA_PREFIXES},null,2));
   process.exit(0);
 }
 

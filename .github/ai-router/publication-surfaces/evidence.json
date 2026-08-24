@@ -9,7 +9,7 @@
         "Current Public Condition",
         "What can the estate say right now?",
         "data-current-public-condition",
-        "/evidence/current-public-condition.mjs?v=1&cb=prod4"
+        "/evidence/current-public-condition.mjs?v=1&cb=prod5"
       ],
       "excludes": [
         "Breakthrough 4",
@@ -19,21 +19,23 @@
       ]
     },
     {
-      "path": "/evidence/current-public-condition.mjs",
+      "path": "/evidence/current-public-condition.mjs?v=1&cb=prod5",
       "includes": [
-        "evaluateSite",
-        "site-entitlement.v1.mjs?cb=prod4",
+        "SITE_ENTITLEMENT_URL",
+        "site-entitlement.v1.mjs?cb=prod5",
+        "await import(SITE_ENTITLEMENT_URL)",
         "data-condition-state",
         "data-condition-objects",
         "What restores it",
         "The Evidence carousel remains independently available"
       ],
       "excludes": [
+        "import { evaluateSite }",
         "document.write"
       ]
     },
     {
-      "path": "/evidence/readiness/bt4-site-governance/site-entitlement.v1.mjs",
+      "path": "/evidence/readiness/bt4-site-governance/site-entitlement.v1.mjs?cb=prod5",
       "includes": [
         "./entitlement-engine.v1.mjs?cb=prod1",
         "FETCH_DEADLINE_MS=10000",

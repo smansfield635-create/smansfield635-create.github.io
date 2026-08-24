@@ -1,4 +1,4 @@
-import { evaluateSite } from '/evidence/readiness/bt4-site-governance/site-entitlement.v1.mjs?cb=prod4';
+const SITE_ENTITLEMENT_URL='/evidence/readiness/bt4-site-governance/site-entitlement.v1.mjs?cb=prod5';
 
 const root=document.querySelector('[data-current-public-condition]');
 if(root){
@@ -19,6 +19,7 @@ if(root){
    if(error)error.textContent=message||'Current condition could not be fully established. The public surface remains restricted rather than inferring a stronger state.';
    document.documentElement.dataset.currentPublicCondition='RESTRICTED';
  };
+ const deadline=setTimeout(()=>terminalRestricted('Current authority evaluation exceeded its bounded deadline. The public surface is restricted; the Evidence carousel remains independently available.'),18000);
  const restoration=x=>{
    const s=x.state||{};
    if(x.entitlement.served==='QUALIFIED')return 'No restoration required. Current qualification remains admitted.';
@@ -42,8 +43,9 @@ if(root){
    inspect.innerHTML=`<h3>${x.label} · ${x.entitlement.served}</h3><p>${x.detail?.error?'Live authority adapter unavailable; this object fails closed independently.':x.detail?.reason||x.entitlement.reason}</p><div class="condition-facts"><div class="condition-fact"><strong>Why this state</strong><span>${x.detail?.error?'This object could not establish its live authority and therefore cannot inherit a stronger state.':x.entitlement.blocked?'The requested stronger representation is blocked by current entitlement.':'The current supporting conditions admit this representation.'}</span></div><div class="condition-fact"><strong>Authority still valid</strong><span>${preserved(x)}</span></div><div class="condition-fact"><strong>What restores it</strong><span>${restoration(x)}</span></div></div>`;
    objects.querySelectorAll('button').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.object===x.id)));
  };
- const deadline=setTimeout(()=>terminalRestricted('Current authority evaluation exceeded its bounded deadline. The public surface is restricted; the Evidence carousel remains independently available.'),18000);
  try{
+   const {evaluateSite}=await import(SITE_ENTITLEMENT_URL);
+   if(terminal)return;
    const result=await evaluateSite();
    if(terminal)return;
    terminal=true;

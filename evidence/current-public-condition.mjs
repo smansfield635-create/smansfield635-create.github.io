@@ -37,6 +37,7 @@ export async function startCurrentPublicCondition(root=document.querySelector('[
    if(!stillWritable())return;
    aggregate.textContent=result.siteState;
    root.dataset.ready='true';
+   root.dataset.terminal='resolved';
    root.dataset.aggregate=result.siteState;
    document.documentElement.dataset.currentPublicCondition=result.siteState;
    if(status)status.textContent=result.partialFailure?'Current public authority resolved with one or more objects held closed.':'Current public authority resolved.';
@@ -50,7 +51,7 @@ export async function startCurrentPublicCondition(root=document.querySelector('[
    show(restricting||result.objects[0]);
  }catch(e){
    if(!stillWritable())return;
-   aggregate.textContent='RESTRICTED'; root.dataset.ready='error'; if(status)status.textContent='Current public authority could not be evaluated.'; error.textContent='Current condition could not be fully established. The public surface remains restricted rather than inferring a stronger state.';
+   aggregate.textContent='RESTRICTED'; root.dataset.ready='true'; root.dataset.terminal='error'; if(status)status.textContent='Current public authority could not be evaluated.'; error.textContent='Current condition could not be fully established. The public surface remains restricted rather than inferring a stronger state.';
    document.documentElement.dataset.currentPublicCondition='RESTRICTED';
  }
 }

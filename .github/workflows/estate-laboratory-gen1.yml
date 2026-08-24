@@ -25,12 +25,27 @@ jobs:
   responsive-laboratory:
     runs-on: ubuntu-24.04
     steps:
-      - name: Check out exact candidate head
+      - name: Check out bounded exact candidate head
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 0
+          fetch-depth: 8
           persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /index.html
+            /site-guide/index.html
+            /instruments/index.html
+            /instruments/laboratory.js
+            /showroom/globe/audralia/disposition/index.html
+            /showroom/globe/audralia/disposition/laboratory.js
+            /showroom/globe/audralia/diagnostic/index.html
+            /showroom/globe/h-earth/diagnostic/index.html
+            /showroom/globe/hearth/diagnostic/index.html
+            /coherence-diagnostic/index.html
+            /tools/estate-laboratory-gen1-verify.mjs
+            /tools/h-earth-experience-anchor-gate.mjs
+            /.github/workflows/estate-laboratory-gen1.yml
 
       - name: Set up Node 22
         uses: actions/setup-node@v4

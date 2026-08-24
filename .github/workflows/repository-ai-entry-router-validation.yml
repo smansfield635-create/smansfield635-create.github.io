@@ -2,10 +2,32 @@ name: Repository AI Entry Router Validation
 on:
   pull_request:
     branches: [main]
-    paths: ['AGENTS.md','AI_ENTRYPOINT.json','.github/ai-router/**','tools/repository-ai-entry-router.mjs','.github/workflows/repository-ai-entry-router-validation.yml','tools/operation-intake/canonical-operation-intake-transport.v1.mjs','.github/workflows/canonical-operation-intake-transport-v1.yml']
+    paths:
+      - AGENTS.md
+      - AI_ENTRYPOINT.json
+      - .github/ai-router/**
+      - tools/repository-ai-entry-router.mjs
+      - .github/workflows/repository-ai-entry-router-validation.yml
+      - tools/operation-intake/canonical-operation-intake-transport.v1.mjs
+      - .github/workflows/canonical-operation-intake-transport-v1.yml
+      - tools/publication-preflight.v1.mjs
+      - tools/publication-preflight-self-test.v1.mjs
+      - .github/workflows/publication-preflight-v1.yml
+      - .github/workflows/pages-exact-head-deploy-v3.yml
   push:
     branches: [main]
-    paths: ['AGENTS.md','AI_ENTRYPOINT.json','.github/ai-router/**','tools/repository-ai-entry-router.mjs','.github/workflows/repository-ai-entry-router-validation.yml','tools/operation-intake/canonical-operation-intake-transport.v1.mjs','.github/workflows/canonical-operation-intake-transport-v1.yml']
+    paths:
+      - AGENTS.md
+      - AI_ENTRYPOINT.json
+      - .github/ai-router/**
+      - tools/repository-ai-entry-router.mjs
+      - .github/workflows/repository-ai-entry-router-validation.yml
+      - tools/operation-intake/canonical-operation-intake-transport.v1.mjs
+      - .github/workflows/canonical-operation-intake-transport-v1.yml
+      - tools/publication-preflight.v1.mjs
+      - tools/publication-preflight-self-test.v1.mjs
+      - .github/workflows/publication-preflight-v1.yml
+      - .github/workflows/pages-exact-head-deploy-v3.yml
   workflow_dispatch:
 permissions:
   contents: read
@@ -30,6 +52,12 @@ jobs:
           test "$(git rev-parse HEAD^{commit})" = "$EXPECTED_HEAD"
           node tools/repository-ai-entry-router.mjs --self-test --output /tmp/router-self-test.json
           node -e "const r=require('/tmp/router-self-test.json');if(r.result!=='PASS'||!Array.isArray(r.scenarios)||!r.scenarios.length||!r.scenarios.every(x=>x.pass===true)||r.legacyRouterSelfTest!=='PASS')process.exit(1)"
+      - name: Verify publication preflight control plane
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/publication-preflight-self-test.v1.mjs > /tmp/publication-preflight-self-test.json
+          node -e "const r=require('/tmp/publication-preflight-self-test.json');if(r.result!=='PASS_CLOSED'||!Number.isInteger(r.checkCount)||r.checkCount<1||!Array.isArray(r.checks)||r.checks.length!==r.checkCount||!r.checks.every(x=>x.ok===true)||r.deploymentPerformed!==false)process.exit(1)"
       - name: Verify installed bounded binary transfer paths exist and route correctly
         shell: bash
         run: |
@@ -90,6 +118,7 @@ jobs:
           name: repository-ai-entry-router-validation-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             /tmp/router-self-test.json
+            /tmp/publication-preflight-self-test.json
             /tmp/binary-transfer-installed-path-router-receipt.json
             /tmp/exact-path-conformance.json
             /tmp/unregistered.json

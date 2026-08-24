@@ -66,77 +66,43 @@ jobs:
           echo "manifest=$manifest" >> "$GITHUB_OUTPUT"
           echo "runtime=$(jq -r 'if .runtime?.enabled == true then "true" else "false" end' "$manifest")" >> "$GITHUB_OUTPUT"
 
-      - name: Build bounded Pages payload
+      - name: Set up Chrome for preflight
+        if: ${{ steps.surface.outputs.runtime == 'true' }}
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install runtime verifier for preflight
+        if: ${{ steps.surface.outputs.runtime == 'true' }}
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Require local exact-payload preflight pass
         env:
           TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
           SURFACE_ID: ${{ inputs.surface_id }}
-          MANIFEST: ${{ steps.surface.outputs.manifest }}
           STAGE: ${{ runner.temp }}/pages-site
+          RECEIPT: ${{ runner.temp }}/publication-preflight-receipt.json
         shell: bash
         run: |
           set -euo pipefail
-          rm -rf "$STAGE"
-          mkdir -p "$STAGE"
-          rsync -a --prune-empty-dirs --exclude='.git/' --exclude='.github/' --exclude='preview/' ./ "$STAGE/"
-          mkdir -p "$STAGE/.well-known"
-          manifest_sha="$(sha256sum "$MANIFEST" | awk '{print $1}')"
-          jq -n --arg schema DGB_PUBLIC_RELEASE_MARKER_v3 --arg commit "$TARGET_SHA" --arg surface "$SURFACE_ID" --arg manifest "$MANIFEST" --arg manifestSha256 "$manifest_sha" '{schema:$schema,commit:$commit,surface:$surface,verificationManifest:$manifest,verificationManifestSha256:$manifestSha256}' > "$STAGE/.well-known/dgb-release.json"
-
-          if [ "$SURFACE_ID" = "audralia" ]; then
-            audralia_index="$STAGE/showroom/globe/audralia/index.html"
-            test -f "$audralia_index"
-            short_sha="$(printf '%s' "$TARGET_SHA" | cut -c1-8 | tr '[:lower:]' '[:upper:]')"
-            python3 - "$audralia_index" "$short_sha" "$TARGET_SHA" <<'PY'
-          from pathlib import Path
-          import re
-          import sys
-          path = Path(sys.argv[1])
-          short_sha = sys.argv[2]
-          full_sha = sys.argv[3]
-          text = path.read_text()
-          pattern = re.compile(r'<div class="audralia-loading-version"(?: data-audralia-build-sha="[^"]*")?>([^<]*)</div>')
-          matches = list(pattern.finditer(text))
-          if len(matches) != 1:
-              raise SystemExit(f'AUDRALIA_BUILD_FINGERPRINT_STAMP_CARDINALITY:{len(matches)}')
-          label = re.sub(r'\s*·\s*BUILD\s+[A-Fa-f0-9]{8}\s*$', '', matches[0].group(1)).strip()
-          new = f'<div class="audralia-loading-version" data-audralia-build-sha="{full_sha}">{label} · BUILD {short_sha}</div>'
-          text = text[:matches[0].start()] + new + text[matches[0].end():]
-          path.write_text(text)
-          PY
-            grep -Fq "data-audralia-build-sha=\"$TARGET_SHA\"" "$audralia_index"
-            grep -Fq "BUILD $short_sha" "$audralia_index"
-            echo "AUDRALIA_VISIBLE_BUILD_FINGERPRINT=$short_sha"
+          if [ "${{ steps.surface.outputs.runtime }}" = "true" ]; then
+            export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+            test -n "$CHROME_PATH"
           fi
+          node tools/publication-preflight.v1.mjs preflight \
+            --target-sha "$TARGET_SHA" \
+            --surface-id "$SURFACE_ID" \
+            --stage "$STAGE" \
+            --receipt "$RECEIPT"
+          jq -e '.schema=="PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1" and .result=="PREFLIGHT_PASS" and .deploymentPerformed==false' "$RECEIPT" >/dev/null
+          echo "PUBLICATION_FAST_PREFLIGHT_PASS=$TARGET_SHA:$SURFACE_ID"
 
-          if [ "$SURFACE_ID" = "brain-gen1-hra" ]; then
-            brain_root="$STAGE/inspection/compass/brain-gen1-hra"
-            brain_asset="$brain_root/Allen_M_Brain.glb"
-            brain_runtime="$brain_root/inspector.js"
-            source_url='https://ccf-ontology.hubmapconsortium.org/objects/v1.2/Allen_M_Brain.glb'
-            expected_sha='2b9ad5b53e40e9f0936da74f7be38d2eed15604e26358c3870a0ea13499b9a35'
-            expected_bytes='11977312'
-            test -f "$brain_runtime"
-            curl --fail --location --retry 3 "$source_url" -o "$brain_asset"
-            observed_sha="$(sha256sum "$brain_asset" | awk '{print $1}')"
-            observed_bytes="$(stat -c '%s' "$brain_asset")"
-            test "$observed_sha" = "$expected_sha"
-            test "$observed_bytes" = "$expected_bytes"
-            python3 - "$brain_runtime" <<'PY'
-          from pathlib import Path
-          import sys
-          path = Path(sys.argv[1])
-          text = path.read_text()
-          old = "const SOURCE='https://ccf-ontology.hubmapconsortium.org/objects/v1.2/Allen_M_Brain.glb';"
-          new = "const SOURCE='./Allen_M_Brain.glb';"
-          if text.count(old) != 1:
-              raise SystemExit(f'BRAIN_GEN1_SOURCE_REWRITE_CARDINALITY:{text.count(old)}')
-          path.write_text(text.replace(old, new))
-          PY
-            grep -Fq "const SOURCE='./Allen_M_Brain.glb';" "$brain_runtime"
-            echo "BRAIN_GEN1_HRA_SAME_ORIGIN_ASSET_BOUND sha256=$observed_sha bytes=$observed_bytes"
-          fi
-
-          test "$(du -sb "$STAGE" | awk '{print $1}')" -lt 1073741824
+      - uses: actions/upload-artifact@v4
+        with:
+          name: production-publication-preflight-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/publication-preflight-receipt.json
+          if-no-files-found: error
+          retention-days: 90
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
@@ -186,14 +152,6 @@ jobs:
           done
           exit 1
 
-      - name: Set up Chrome
-        if: ${{ steps.surface.outputs.runtime == 'true' }}
-        uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: stable
-      - name: Install runtime verifier
-        if: ${{ steps.surface.outputs.runtime == 'true' }}
-        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
       - name: Verify runtime public surface
         if: ${{ steps.surface.outputs.runtime == 'true' }}
         env:

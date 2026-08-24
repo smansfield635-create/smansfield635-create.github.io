@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "evidence",
-  "description": "Diamond Gate public Evidence surface with current public condition inspection and terminal cold-refresh bootstrap.",
+  "description": "Diamond Gate public Evidence surface with current public condition inspection.",
   "checks": [
     {
       "path": "/evidence/",
@@ -9,9 +9,7 @@
         "Current Public Condition",
         "What can the estate say right now?",
         "data-current-public-condition",
-        "MODULE_OR_RUNTIME_DEADLINE",
-        "bootstrapTerminal",
-        "/evidence/current-public-condition.mjs?v=1&cb=prod4"
+        "/evidence/current-public-condition.mjs?v=1&cb=prod3"
       ],
       "excludes": [
         "Breakthrough 4",
@@ -21,10 +19,8 @@
     {
       "path": "/evidence/current-public-condition.mjs",
       "includes": [
-        "startCurrentPublicCondition",
         "evaluateSite",
         "site-entitlement.v1.mjs?cb=prod3",
-        "bootstrapTerminal",
         "data-condition-state",
         "data-condition-objects",
         "What restores it"
@@ -68,7 +64,7 @@
       "name": "data-ready",
       "contains": "true"
     },
-    "timeoutMs": 55000,
+    "timeoutMs": 45000,
     "failOnConsoleErrors": true
   }
 }

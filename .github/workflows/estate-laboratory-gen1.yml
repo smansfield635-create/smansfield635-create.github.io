@@ -1,20 +1,13 @@
 name: Estate Laboratory Navigation Reconciliation Constructor
 
 on:
+  push:
+    branches:
+      - 'ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_003'
+    paths:
+      - '.github/workflows/estate-laboratory-gen1.yml'
   pull_request:
     paths:
-      - 'index.html'
-      - 'site-guide/index.html'
-      - 'instruments/index.html'
-      - 'instruments/laboratory.js'
-      - 'showroom/globe/audralia/disposition/index.html'
-      - 'showroom/globe/audralia/disposition/laboratory.js'
-      - 'showroom/globe/audralia/diagnostic/index.html'
-      - 'showroom/globe/h-earth/diagnostic/index.html'
-      - 'showroom/globe/hearth/diagnostic/index.html'
-      - 'coherence-diagnostic/index.html'
-      - 'tools/estate-laboratory-gen1-verify.mjs'
-      - 'tools/h-earth-experience-anchor-gate.mjs'
       - '.github/workflows/estate-laboratory-gen1.yml'
 
 permissions:
@@ -22,13 +15,13 @@ permissions:
 
 jobs:
   construct-final-candidate:
-    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_003'
+    if: github.event_name == 'push'
     runs-on: ubuntu-24.04
     steps:
-      - name: Check out exact admitted candidate head
+      - name: Check out exact admitted branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.ref_name }}
           fetch-depth: 0
           persist-credentials: true
 
@@ -37,14 +30,12 @@ jobs:
         with:
           node-version: 22
 
-      - name: Revalidate exact governing head and bounded scope
+      - name: Revalidate governing head and scope
         shell: bash
         run: |
           set -euo pipefail
           BASE='bc4078f8f884921e8c58fe5a30f6a7c9c577d6f0'
-          test "${{ github.event.pull_request.base.ref }}" = 'main'
-          test "${{ github.event.pull_request.base.sha }}" = "$BASE"
-          test "${{ github.event.pull_request.head.ref }}" = 'ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_003'
+          test "$GITHUB_REF_NAME" = 'ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_003'
           git fetch --no-tags origin main
           test "$(git rev-parse origin/main^{commit})" = "$BASE"
           test "$(git merge-base HEAD "$BASE")" = "$BASE"
@@ -62,7 +53,7 @@ jobs:
             fi
           done
 
-      - name: Patch only Coherence Diagnostic Laboratory return
+      - name: Apply one-line Coherence Laboratory return
         shell: bash
         run: |
           set -euo pipefail
@@ -89,146 +80,27 @@ jobs:
           git diff --check -- coherence-diagnostic/index.html
           test "$(git diff --numstat -- coherence-diagnostic/index.html | awk '{print $1":"$2}')" = '1:0'
 
-      - name: Install final exact-head qualification workflow
+      - name: Restore final read-only exact-head qualifier
         shell: bash
         run: |
           set -euo pipefail
-          cat > .github/workflows/estate-laboratory-gen1.yml <<'YAML'
-          name: Estate Laboratory Governed Observability Qualification
+          git fetch --no-tags origin 'ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_002:refs/remotes/origin/estate-laboratory-stale-002'
+          git show refs/remotes/origin/estate-laboratory-stale-002:.github/workflows/estate-laboratory-gen1.yml > .github/workflows/estate-laboratory-gen1.yml
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('.github/workflows/estate-laboratory-gen1.yml')
+          s=p.read_text()
+          old='6419f78d2c048d51827bb6c631e557d83fe4f061'
+          new='bc4078f8f884921e8c58fe5a30f6a7c9c577d6f0'
+          count=s.count(old)
+          if count < 1:
+              raise SystemExit('FINAL_QUALIFIER_OLD_BASE_BINDING_NOT_FOUND')
+          p.write_text(s.replace(old,new))
+          PY
+          grep -Fq 'bc4078f8f884921e8c58fe5a30f6a7c9c577d6f0' .github/workflows/estate-laboratory-gen1.yml
+          ! grep -Fq '6419f78d2c048d51827bb6c631e557d83fe4f061' .github/workflows/estate-laboratory-gen1.yml
 
-          on:
-            pull_request:
-              paths:
-                - 'index.html'
-                - 'site-guide/index.html'
-                - 'instruments/index.html'
-                - 'instruments/laboratory.js'
-                - 'showroom/globe/audralia/disposition/index.html'
-                - 'showroom/globe/audralia/disposition/laboratory.js'
-                - 'showroom/globe/audralia/diagnostic/index.html'
-                - 'showroom/globe/h-earth/diagnostic/index.html'
-                - 'showroom/globe/hearth/diagnostic/index.html'
-                - 'coherence-diagnostic/index.html'
-                - 'tools/estate-laboratory-gen1-verify.mjs'
-                - 'tools/h-earth-experience-anchor-gate.mjs'
-                - '.github/workflows/estate-laboratory-gen1.yml'
-            workflow_dispatch:
-
-          permissions:
-            contents: read
-
-          jobs:
-            responsive-laboratory:
-              runs-on: ubuntu-24.04
-              steps:
-                - name: Check out exact candidate head
-                  uses: actions/checkout@v4
-                  with:
-                    ref: ${{ github.event.pull_request.head.sha || github.sha }}
-                    fetch-depth: 0
-                    persist-credentials: false
-
-                - name: Set up Node 22
-                  uses: actions/setup-node@v4
-                  with:
-                    node-version: 22
-
-                - name: Verify exact admitted scope and governing ancestry
-                  shell: bash
-                  run: |
-                    set -euo pipefail
-                    BASE='bc4078f8f884921e8c58fe5a30f6a7c9c577d6f0'
-                    test "$(git merge-base HEAD "$BASE")" = "$BASE"
-                    allowed='^(index.html|site-guide/index.html|instruments/index.html|instruments/laboratory.js|showroom/globe/audralia/disposition/index.html|showroom/globe/audralia/disposition/laboratory.js|showroom/globe/audralia/diagnostic/index.html|showroom/globe/h-earth/diagnostic/index.html|showroom/globe/hearth/diagnostic/index.html|coherence-diagnostic/index.html|tools/estate-laboratory-gen1-verify.mjs|tools/h-earth-experience-anchor-gate.mjs|\.github/workflows/estate-laboratory-gen1.yml)$'
-                    changed="$(git diff --name-only "$BASE"...HEAD)"
-                    test -n "$changed"
-                    if printf '%s\n' "$changed" | grep -Ev "$allowed"; then
-                      echo 'ESTATE_LABORATORY_OUT_OF_SCOPE_PATH' >&2
-                      exit 1
-                    fi
-                    for prohibited in showroom/globe/audralia/index.html showroom/globe/audralia/render.js showroom/globe/audralia/world_kernel.js evidence/readiness/governance-gen3-entitlement/evidence-identity.v1.json; do
-                      if printf '%s\n' "$changed" | grep -Fxq "$prohibited"; then
-                        echo "ESTATE_LABORATORY_PROHIBITED_PATH:$prohibited" >&2
-                        exit 1
-                      fi
-                    done
-                    echo 'ESTATE_LABORATORY_EXACT_SCOPE_PASS'
-
-                - name: Verify static observability navigation and authority contract
-                  shell: bash
-                  run: |
-                    set -euo pipefail
-                    mkdir -p estate-laboratory-gen1-verification
-                    node tools/estate-laboratory-gen1-verify.mjs --static | tee estate-laboratory-gen1-verification/static-verification.json
-                    node - <<'NODE'
-                    const fs=require('fs');
-                    const r=JSON.parse(fs.readFileSync('estate-laboratory-gen1-verification/static-verification.json','utf8'));
-                    if(r.result!=='PASS')process.exit(1);
-                    if(r.canonicalLaboratoryRoute!=='/instruments/')process.exit(1);
-                    if(r.audraliaCommandCockpitRestored!==true)process.exit(1);
-                    if(r.compassInstrumentsIdentityReconciled!==true)process.exit(1);
-                    if(r.siteGuideInstrumentsIdentityReconciled!==true)process.exit(1);
-                    if(r.deepChamberReturnSemantics!==true)process.exit(1);
-                    if(r.experienceAnchorObservabilityBoundaryPreserved!==true)process.exit(1);
-                    if(r.audraliaProductRootProtected!==true)process.exit(1);
-                    NODE
-
-                - name: Set up Chrome
-                  uses: browser-actions/setup-chrome@v1
-                  with:
-                    chrome-version: stable
-
-                - name: Install browser driver
-                  run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
-
-                - name: Start exact candidate server
-                  shell: bash
-                  run: |
-                    set -euo pipefail
-                    python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/estate-laboratory-http.log 2>&1 &
-                    echo $! > /tmp/estate-laboratory-http.pid
-                    for i in {1..30}; do
-                      if curl -fsS http://127.0.0.1:4173/instruments/ >/dev/null; then
-                        echo 'ESTATE_LABORATORY_LOCAL_SERVER_READY'
-                        exit 0
-                      fi
-                      sleep 1
-                    done
-                    cat /tmp/estate-laboratory-http.log || true
-                    exit 1
-
-                - name: Verify responsive laboratory and deep-chamber round trips
-                  env:
-                    BASE_URL: http://127.0.0.1:4173
-                    OUTPUT_DIR: estate-laboratory-gen1-verification
-                  shell: bash
-                  run: |
-                    set -euo pipefail
-                    export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
-                    test -n "$CHROME_PATH"
-                    node tools/estate-laboratory-gen1-verify.mjs --runtime
-                    node - <<'NODE'
-                    const fs=require('fs');
-                    const r=JSON.parse(fs.readFileSync('estate-laboratory-gen1-verification/receipt.json','utf8'));
-                    if(r.result!=='PASS')process.exit(1);
-                    if(!Array.isArray(r.deepRoundTrips)||r.deepRoundTrips.length!==4)process.exit(1);
-                    if(r.deepRoundTrips.some(x=>x.from!=='/instruments/'||x.returnRoute!=='/instruments/'))process.exit(1);
-                    if(r.boundaries?.deepChamberReturnSemantics!==true)process.exit(1);
-                    if(r.boundaries?.productionMutationAuthority!==false)process.exit(1);
-                    if(r.boundaries?.audraliaProductRootProtected!==true)process.exit(1);
-                    NODE
-
-                - name: Upload qualification evidence
-                  if: always()
-                  uses: actions/upload-artifact@v4
-                  with:
-                    name: estate-laboratory-gen1-verification-${{ github.run_id }}-${{ github.run_attempt }}
-                    path: estate-laboratory-gen1-verification/
-                    if-no-files-found: warn
-                    retention-days: 30
-          YAML
-
-      - name: Prove constructed static candidate before write
+      - name: Prove static final candidate before write
         shell: bash
         run: |
           set -euo pipefail
@@ -239,7 +111,7 @@ jobs:
           if(r.result!=='PASS'||r.canonicalLaboratoryRoute!=='/instruments/'||r.deepChamberReturnSemantics!==true||r.siteGuideInstrumentsIdentityReconciled!==true)process.exit(1);
           NODE
 
-      - name: Commit only constructor-owned finalization bytes
+      - name: Commit only finalization bytes
         shell: bash
         run: |
           set -euo pipefail
@@ -251,4 +123,4 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -- coherence-diagnostic/index.html .github/workflows/estate-laboratory-gen1.yml
           git commit -m 'Estate Laboratory: finalize Coherence return and exact-head qualifier [constructed]'
-          git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
+          git push origin "HEAD:$GITHUB_REF_NAME"

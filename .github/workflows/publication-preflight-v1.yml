@@ -56,6 +56,23 @@ jobs:
           echo "manifest=$manifest" >> "$GITHUB_OUTPUT"
           echo "runtime=$(jq -r 'if .runtime?.enabled == true then "true" else "false" end' "$manifest")" >> "$GITHUB_OUTPUT"
 
+      - name: Build and size-check exact Pages payload
+        env:
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+          SURFACE_ID: ${{ inputs.surface_id }}
+          STAGE: ${{ runner.temp }}/pages-site
+          RECEIPT: ${{ runner.temp }}/publication-preflight-receipt.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/publication-preflight.v1.mjs build \
+            --target-sha "$TARGET_SHA" \
+            --surface-id "$SURFACE_ID" \
+            --stage "$STAGE" \
+            --receipt "$RECEIPT"
+          jq -e '.schema=="PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1" and .result=="PAYLOAD_BUILT" and .deploymentPerformed==false' "$RECEIPT" >/dev/null
+          echo "PAGES_PAYLOAD_BYTES=$(jq -r '.payloadBytes' "$RECEIPT")"
+
       - name: Set up Chrome
         if: ${{ steps.surface.outputs.runtime == 'true' }}
         uses: browser-actions/setup-chrome@v1
@@ -66,7 +83,7 @@ jobs:
         if: ${{ steps.surface.outputs.runtime == 'true' }}
         run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
 
-      - name: Run exact payload preflight
+      - name: Verify exact staged payload
         env:
           TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
           SURFACE_ID: ${{ inputs.surface_id }}
@@ -79,7 +96,7 @@ jobs:
             export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
             test -n "$CHROME_PATH"
           fi
-          node tools/publication-preflight.v1.mjs preflight \
+          node tools/publication-preflight.v1.mjs verify \
             --target-sha "$TARGET_SHA" \
             --surface-id "$SURFACE_ID" \
             --stage "$STAGE" \

@@ -18,7 +18,7 @@ const diagnostic=read('showroom/globe/audralia/diagnostic/index.inspection.autho
 const binding=json('evidence/readiness/governance-gen3-entitlement/binding.v1.json');
 const releaseContract=json('.github/ai-router/publication-release-contract.v1.json');
 
-assert(adapter.includes("from '/evidence/readiness/bt4-site-governance/entitlement-engine.v1.mjs'"),'site adapters do not import the production BT4 kernel');
+assert(/from ['"]\.\/entitlement-engine\.v1\.mjs(?:\?[^'"]*)?['"]/.test(adapter),'site adapters do not import the production BT4 kernel');
 assert(productionKernel===previewKernel,'production BT4 kernel copy diverges from the unchanged preview kernel');
 for(const name of ['claimAdapter','worldAdapter','diagnosticAdapter','releaseAdapter','evaluateSite'])assert(adapter.includes(`function ${name}`),`missing adapter: ${name}`);
 assert(page.includes("./site-entitlement.v1.mjs"),'public governance surface is not bound to shared site adapters');

@@ -468,6 +468,40 @@
       "scopeHash": "30aafa8cd70c2229714d2737d9e771d42657aa675aaf3505acceaf10d6c71bc1",
       "state": "ADMITTED_LOCKED"
     },
+    "31e05d4d99d76173003e7af2ddf7d375420eef6794acec766e48852c39ca35df": {
+      "governingHead": "d3d64e74d1466e398f0c1a2e40f29bd0cb2eaa2f",
+      "lockGeneration": 1605,
+      "lockScope": "COMPASS_ROOT_BRAIN_GEN1_AND_AUDIT_SETTLEMENT",
+      "operationId": "COMPASS_BRAIN_GEN1_AND_AUDIT_SETTLEMENT_20260824_0058",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "08b165ab31f7c5f4d65dc8080439f440d66db609",
+        "lockGeneration": 1602,
+        "lockScope": "COMPASS_ROOT_CAPABILITY_CAROUSEL_BRAIN_GEN1",
+        "operationId": "COMPASS_BRAIN_GEN1_PASSIVE_HRA_CAROUSEL_20260824_0032",
+        "preservedEvidenceRefs": [
+          "PR#1904",
+          "issue#1909",
+          "PR#1688",
+          "issue#1685",
+          "run#32690680636",
+          "run#32609756119",
+          "COMPASS_BRAIN_GEN1_HRA_GEOMETRY_FREEZE_v1",
+          "docs/COMPASS_AUDIT_DERIVED_ACCEPTANCE_CONTRACT_20260822.md",
+          "successor-attempt-20260824-0047:FINGERPRINT_DOMAIN_MISMATCH"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_BRAIN_GEN1_AUDIT_SETTLEMENT_SUCCESSOR_20260824_0058"
+      },
+      "procedureLocatorDigest": "26b83888191a77c16010907a3360b4a2561620cd241793bf324902516fd2a5f6",
+      "released": false,
+      "requestDigest": "1317f2adf581f75daf0f157ee5ea30be387554d9c6cdb651f0e12fe533c4eaf6",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "31e05d4d99d76173003e7af2ddf7d375420eef6794acec766e48852c39ca35df",
+      "state": "ADMITTED_LOCKED"
+    },
     "3260334210612761568271d95f8d7e558fb52fe338fdaa7fd2809e31d44a7095": {
       "governingHead": "e52fe4e8fa9e6f6d65710e32ce0dfa6f54b8382e",
       "lockGeneration": 980,
@@ -2302,18 +2336,6 @@
       "scopeHash": "c69e36ab428ae19cd898a5701a460585c7b2736289f8ac6684f5322da7861bbf",
       "state": "ADMITTED_LOCKED"
     },
-    "c71c085369f79f8f2af850ec50e01b4f099e49f28d4c8a869dec2a847169736b": {
-      "governingHead": "08b165ab31f7c5f4d65dc8080439f440d66db609",
-      "lockGeneration": 1602,
-      "lockScope": "COMPASS_ROOT_CAPABILITY_CAROUSEL_BRAIN_GEN1",
-      "operationId": "COMPASS_BRAIN_GEN1_PASSIVE_HRA_CAROUSEL_20260824_0032",
-      "procedureLocatorDigest": "a552e7c987d42fc14591f9e180b5981dffd84a42e050062772642b4fb9a4f184",
-      "released": false,
-      "requestDigest": "4d3444f544d93977f3f91c2aab2654f4370a21bd4570525b899538d4f46a5694",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "c71c085369f79f8f2af850ec50e01b4f099e49f28d4c8a869dec2a847169736b",
-      "state": "ADMITTED_LOCKED"
-    },
     "c8170225ecfd16b065547b18e3190cc6c6531cbef77ab380a628c0413467b267": {
       "governingHead": "d3e15d44eacd7bfc30b708721dca6ad4c175c887",
       "lockGeneration": 20,
@@ -3102,7 +3124,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1604,
+  "lockGeneration": 1605,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -24300,6 +24322,41 @@
         "successorLockScope": "PUBLIC_INFRASTRUCTURE:AUDRALIA_RUNTIME_READINESS_VERIFICATION:V1",
         "successorOperationId": "AUDRALIA_PUBLICATION_RUNTIME_READINESS_BUDGET_REPAIR_20260824_004",
         "transitionId": "AUDRALIA_PUBLICATION_RUNTIME_READINESS_BUDGET_REPAIR_SUCCESSOR_20260824_004_R3"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "08b165ab31f7c5f4d65dc8080439f440d66db609",
+      "lockGeneration": 1602,
+      "lockScope": "COMPASS_ROOT_CAPABILITY_CAROUSEL_BRAIN_GEN1",
+      "operationId": "COMPASS_BRAIN_GEN1_PASSIVE_HRA_CAROUSEL_20260824_0032",
+      "procedureLocatorDigest": "a552e7c987d42fc14591f9e180b5981dffd84a42e050062772642b4fb9a4f184",
+      "released": true,
+      "requestDigest": "4d3444f544d93977f3f91c2aab2654f4370a21bd4570525b899538d4f46a5694",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c71c085369f79f8f2af850ec50e01b4f099e49f28d4c8a869dec2a847169736b",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "PR#1904",
+          "issue#1909",
+          "PR#1688",
+          "issue#1685",
+          "run#32690680636",
+          "run#32609756119",
+          "COMPASS_BRAIN_GEN1_HRA_GEOMETRY_FREEZE_v1",
+          "docs/COMPASS_AUDIT_DERIVED_ACCEPTANCE_CONTRACT_20260822.md",
+          "successor-attempt-20260824-0047:FINGERPRINT_DOMAIN_MISMATCH"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "d3d64e74d1466e398f0c1a2e40f29bd0cb2eaa2f",
+        "successorLockGeneration": 1605,
+        "successorLockScope": "COMPASS_ROOT_BRAIN_GEN1_AND_AUDIT_SETTLEMENT",
+        "successorOperationId": "COMPASS_BRAIN_GEN1_AND_AUDIT_SETTLEMENT_20260824_0058",
+        "transitionId": "COMPASS_BRAIN_GEN1_AUDIT_SETTLEMENT_SUCCESSOR_20260824_0058"
       },
       "terminalDisposition": "SUPERSEDED"
     }

@@ -6,19 +6,25 @@ on:
       - 'ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_002'
     paths:
       - '.github/workflows/estate-laboratory-gen1.yml'
+  pull_request:
+    branches:
+      - 'ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_002'
 
 permissions:
   contents: write
 
 jobs:
   construct:
-    if: github.event.head_commit.message != 'Estate Laboratory: complete navigation reconciliation [lab-constructed]'
+    if: github.event_name == 'pull_request' || github.event.head_commit.message != 'Estate Laboratory: complete navigation reconciliation [lab-constructed]'
     runs-on: ubuntu-24.04
+    env:
+      TARGET_BRANCH: ${{ github.event.pull_request.base.ref || github.ref_name }}
+      EVENT_BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
     steps:
       - name: Check out exact authorized branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ env.TARGET_BRANCH }}
           fetch-depth: 0
           persist-credentials: true
 
@@ -32,7 +38,11 @@ jobs:
         run: |
           set -euo pipefail
           BASE='6419f78d2c048d51827bb6c631e557d83fe4f061'
-          test "${GITHUB_REF_NAME}" = 'ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_002'
+          test "$TARGET_BRANCH" = 'ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_002'
+          if [ "${{ github.event_name }}" = 'pull_request' ]; then
+            test -n "$EVENT_BASE_SHA"
+            test "$(git rev-parse HEAD^{commit})" = "$EVENT_BASE_SHA"
+          fi
           test "$(git merge-base HEAD "$BASE")" = "$BASE"
           git fetch --no-tags origin main
           test "$(git rev-parse origin/main^{commit})" = "$BASE"
@@ -78,8 +88,6 @@ jobs:
                   raise SystemExit(f'{label}: expected exactly one match, observed {count}')
               p.write_text(text.replace(old,new,1))
 
-          # Guide Desk: canonical Instruments entry becomes the Estate Laboratory,
-          # while Triple G / gauges remains a separate measurement-readiness instrument.
           replace_once(
               'site-guide/index.html',
               '<a href="/gauges/">The Lab</a>',
@@ -366,4 +374,4 @@ jobs:
             tools/estate-laboratory-gen1-verify.mjs \
             .github/workflows/estate-laboratory-gen1.yml
           git commit -m 'Estate Laboratory: complete navigation reconciliation [lab-constructed]'
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+          git push origin "HEAD:${TARGET_BRANCH}"

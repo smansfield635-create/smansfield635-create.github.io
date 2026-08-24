@@ -1477,6 +1477,18 @@
       "scopeHash": "8454f0f1162ba0263b05c2d1d48a6c70d398cf753a1ddb5ca4f56f0e038180c4",
       "state": "ADMITTED_LOCKED"
     },
+    "848a948144db7c24e083cb4be07a426e12adbd2dfe3def546012e2205a4bed8b": {
+      "governingHead": "55e6af4cbee08effd3b008d124908d518493d14c",
+      "lockGeneration": 1622,
+      "lockScope": "ESTATE_LABORATORY_OBSERVABILITY_NAVIGATION_IDENTITY",
+      "operationId": "ESTATE_LABORATORY_GOVERNED_OBSERVABILITY_NAVIGATION_RECONCILIATION_20260824_001",
+      "procedureLocatorDigest": "21ddb2d5361b32ac7d26ce7d38a067b15ab33175a234d54e6ea95cd3149c3d90",
+      "released": false,
+      "requestDigest": "cfa9f1eeedb47a58614b00039b4f1dd0431ad196113f451bcb8f2ce1b1823964",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "848a948144db7c24e083cb4be07a426e12adbd2dfe3def546012e2205a4bed8b",
+      "state": "ADMITTED_LOCKED"
+    },
     "858e4ae75d0f74722bc34a122711309729eafbfd69183c5f8e81a57255b76dd6": {
       "governingHead": "7917ecb7b07a32e8a653a6e1534397b232cccd6b",
       "lockGeneration": 1472,
@@ -3273,7 +3285,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1621,
+  "lockGeneration": 1622,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

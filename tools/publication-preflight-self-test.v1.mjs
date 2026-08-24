@@ -21,9 +21,11 @@ try{
   fs.mkdirSync(path.join(repo,'demo'),{recursive:true});
   fs.mkdirSync(path.join(repo,'preview/should-not-ship'),{recursive:true});
   fs.mkdirSync(path.join(repo,'.github/private'),{recursive:true});
+  fs.mkdirSync(path.join(repo,'node_modules/puppeteer-core'),{recursive:true});
   fs.writeFileSync(path.join(repo,'demo/index.html'),'<title>Demo</title>\nTOKEN_OK\n');
   fs.writeFileSync(path.join(repo,'preview/should-not-ship/secret.txt'),'nope');
   fs.writeFileSync(path.join(repo,'.github/private/secret.txt'),'nope');
+  fs.writeFileSync(path.join(repo,'node_modules/puppeteer-core/runtime-only.txt'),'must-not-ship');
   const manifest={schema:'PUBLICATION_SURFACE_VERIFICATION_v1',surfaceId:'demo',checks:[{path:'/demo/',includes:['TOKEN_OK'],excludes:[]}],runtime:{enabled:false}};
   fs.writeFileSync(path.join(repo,'.github/ai-router/publication-surfaces/demo.json'),JSON.stringify(manifest,null,2));
   const built=await buildPayload({repoRoot:repo,targetSha:'b'.repeat(40),surfaceId:'demo',stage});
@@ -31,6 +33,7 @@ try{
   check('positive-fixture-release-marker',fs.existsSync(path.join(stage,'.well-known/dgb-release.json')));
   check('negative-fixture-preview-excluded',!fs.existsSync(path.join(stage,'preview')));
   check('negative-fixture-control-plane-excluded',!fs.existsSync(path.join(stage,'.github')));
+  check('negative-fixture-node-modules-excluded',!fs.existsSync(path.join(stage,'node_modules')));
   check('positive-fixture-digest',/^[0-9a-f]{64}$/.test(built.payloadDigest));
   let rejected=false;
   try{await buildPayload({repoRoot:repo,targetSha:'bad',surfaceId:'demo',stage:path.join(tmp,'bad')});}catch{rejected=true;}

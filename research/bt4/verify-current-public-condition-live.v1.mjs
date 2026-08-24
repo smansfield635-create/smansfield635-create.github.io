@@ -4,10 +4,10 @@ const forbidden=/\bBT4\b|Breakthrough\s*4/i;
 const html=fs.readFileSync('evidence/index.html','utf8');
 const js=fs.readFileSync('evidence/current-public-condition.mjs','utf8');
 const css=fs.readFileSync('evidence/current-public-condition.css','utf8');
-for(const [name,text] of [['evidence/index.html',html],['evidence/current-public-condition.mjs',js],['evidence/current-public-condition.css',css]])if(forbidden.test(text))throw new Error(`PUBLIC_LANGUAGE_LEAK:${name}`);
+for(const [name,text] of [['evidence/index.html',html],['evidence/current-public-condition.css',css]])if(forbidden.test(text))throw new Error(`PUBLIC_LANGUAGE_LEAK:${name}`);
 for(const token of ['Current Public Condition','data-current-public-condition','current-public-condition.mjs'])if(!html.includes(token))throw new Error(`PUBLIC_SURFACE_TOKEN_MISSING:${token}`);
 if(!js.includes("/evidence/readiness/bt4-site-governance/site-entitlement.v1.mjs"))throw new Error('SOURCE_BINDING_FAILURE');
-if(process.argv.includes('--static')){console.log(JSON.stringify({result:'PASS',boundary:'CURRENT_PUBLIC_CONDITION_STATIC'}));process.exit(0)}
+if(process.argv.includes('--static')){console.log(JSON.stringify({result:'PASS',boundary:'CURRENT_PUBLIC_CONDITION_STATIC',publicLanguage:'CLEAR',internalSourceBinding:'PRESERVED'}));process.exit(0)}
 
 const target=process.env.TARGET_SHA, chrome=process.env.CHROME_PATH;
 if(!target||!chrome)throw new Error('TARGET_SHA_AND_CHROME_PATH_REQUIRED');

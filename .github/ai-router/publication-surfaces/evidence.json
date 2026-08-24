@@ -1,0 +1,35 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "evidence",
+  "description": "Diamond Gate public Evidence surface with current public condition inspection.",
+  "checks": [
+    {
+      "path": "/evidence/",
+      "includes": [
+        "Current Public Condition",
+        "What can the estate say right now?",
+        "data-current-public-condition",
+        "/evidence/current-public-condition.mjs?v=1&cb=2db211344582"
+      ],
+      "excludes": [
+        "Breakthrough 4",
+        "BT4 ·"
+      ]
+    },
+    {
+      "path": "/evidence/current-public-condition.mjs",
+      "includes": [
+        "evaluateSite",
+        "data-condition-state",
+        "data-condition-objects",
+        "What restores it"
+      ],
+      "excludes": [
+        "document.write"
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": false
+  }
+}

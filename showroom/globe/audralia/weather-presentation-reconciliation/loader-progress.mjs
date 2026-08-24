@@ -80,6 +80,7 @@ function observe(){
   }
   if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.()?.invariants?.pass===true){
     commit(5,'Audralia ready');
+    if(loader)loader.classList.add('is-ready');
     return;
   }
 

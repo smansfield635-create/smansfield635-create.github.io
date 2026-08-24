@@ -35,18 +35,22 @@ if (policy.checkoutLocality?.materializeExcludedRootsThenDiscardAllowed !== fals
 if (policy.checkoutLocality?.exactCommitObjectReadbackForExcludedProtectedClosuresAllowed !== true) fail('PROTECTED_OBJECT_READBACK_NOT_ALLOWED');
 if (!policy.forbiddenPatterns?.includes('UNRESTRICTED_CHECKOUT_WITHOUT_EXPLICIT_WHOLE_REPOSITORY_EXCEPTION')) fail('UNRESTRICTED_CHECKOUT_FORBIDDEN_PATTERN_MISSING');
 
-const requireSparseCheckout = (workflowPath, {bridge = false, publication = false} = {}) => {
+const requireSparseCheckout = (workflowPath, {bridge = false, publication = false, requiredPaths = [], forbidRootWide = false} = {}) => {
   const text = readText(workflowPath);
-  if (!text.includes('uses: actions/checkout@v4')) fail(`CHECKOUT_ACTION_MISSING:${workflowPath}`);
-  if (!text.includes('sparse-checkout-cone-mode: false')) fail(`NON_CONE_SPARSE_CHECKOUT_MISSING:${workflowPath}`);
-  if (!text.includes('sparse-checkout: |')) fail(`SPARSE_WORKING_SET_MISSING:${workflowPath}`);
+  const checkoutCount = (text.match(/uses:\s*actions\/checkout@v4/g) || []).length;
+  const sparseCount = (text.match(/sparse-checkout:\s*\|/g) || []).length;
+  const nonConeCount = (text.match(/sparse-checkout-cone-mode:\s*false/g) || []).length;
+  if (!checkoutCount) fail(`CHECKOUT_ACTION_MISSING:${workflowPath}`);
+  if (sparseCount !== checkoutCount) fail(`UNBOUNDED_CHECKOUT_BLOCK_PRESENT:${workflowPath}:checkout=${checkoutCount}:sparse=${sparseCount}`);
+  if (nonConeCount !== checkoutCount) fail(`NON_CONE_SPARSE_CHECKOUT_COUNT_MISMATCH:${workflowPath}:checkout=${checkoutCount}:nonCone=${nonConeCount}`);
   if (bridge) {
     for (const required of [
       '/.github/ai-router/workflow-dispatch-capability.v1.json',
       '/tools/ai-entry-workflow-dispatch-bridge.mjs'
     ]) if (!text.includes(required)) fail(`BRIDGE_WORKING_SET_PATH_MISSING:${workflowPath}:${required}`);
-    if (text.includes('\n            /*\n')) fail(`BRIDGE_WORKING_SET_TOO_BROAD:${workflowPath}`);
   }
+  for (const required of requiredPaths) if (!text.includes(required)) fail(`WORKING_SET_PATH_MISSING:${workflowPath}:${required}`);
+  if (forbidRootWide && text.includes('\n            /*\n')) fail(`WORKING_SET_TOO_BROAD:${workflowPath}`);
   if (publication) {
     if (!text.includes('\n            /*\n')) fail(`PUBLICATION_ROOT_INCLUDE_PATTERN_MISSING:${workflowPath}`);
     for (const excluded of [
@@ -58,12 +62,23 @@ const requireSparseCheckout = (workflowPath, {bridge = false, publication = fals
   return text;
 };
 
-const bridgeWorkflow = policy.checkoutLocality?.centralWorkflows?.aiEntryBridge;
-const preflightWorkflow = policy.checkoutLocality?.centralWorkflows?.publicationPreflight;
-const deployWorkflow = policy.checkoutLocality?.centralWorkflows?.publicationDeploy;
-if (!bridgeWorkflow || !preflightWorkflow || !deployWorkflow) fail('CENTRAL_CHECKOUT_LOCALITY_WORKFLOW_BINDINGS_MISSING');
+const workflows = policy.checkoutLocality?.centralWorkflows || {};
+const bridgeWorkflow = workflows.aiEntryBridge;
+const canonicalIntakeWorkflow = workflows.canonicalIntake;
+const successorGatewayWorkflow = workflows.successorGateway;
+const preflightWorkflow = workflows.publicationPreflight;
+const deployWorkflow = workflows.publicationDeploy;
+if (!bridgeWorkflow || !canonicalIntakeWorkflow || !successorGatewayWorkflow || !preflightWorkflow || !deployWorkflow) fail('CENTRAL_CHECKOUT_LOCALITY_WORKFLOW_BINDINGS_MISSING');
 else {
-  requireSparseCheckout(bridgeWorkflow, {bridge: true});
+  requireSparseCheckout(bridgeWorkflow, {bridge: true, forbidRootWide: true});
+  requireSparseCheckout(canonicalIntakeWorkflow, {
+    requiredPaths: policy.checkoutLocality?.canonicalGatewayWorkingSets?.canonicalIntake || [],
+    forbidRootWide: true
+  });
+  requireSparseCheckout(successorGatewayWorkflow, {
+    requiredPaths: policy.checkoutLocality?.canonicalGatewayWorkingSets?.successorGateway || [],
+    forbidRootWide: true
+  });
   requireSparseCheckout(preflightWorkflow, {publication: true});
   requireSparseCheckout(deployWorkflow, {publication: true});
 }
@@ -78,6 +93,7 @@ if (expectedWorkflow) {
 }
 
 if (!process.exitCode) {
+  const centralSparseCheckoutVerified = [bridgeWorkflow, canonicalIntakeWorkflow, successorGatewayWorkflow, preflightWorkflow, deployWorkflow];
   process.stdout.write(JSON.stringify({
     schema: 'AI_PROCEDURAL_EXECUTION_EFFICIENCY_SELF_TEST_RECEIPT_v1',
     result: 'PASS',
@@ -87,6 +103,6 @@ if (!process.exitCode) {
     noRepeatedEquivalentProbeWithoutNewEvidence: true,
     checkoutLocalityDefault: policy.checkoutLocality.defaultMode,
     unrestrictedCheckoutAllowedByDefault: false,
-    centralSparseCheckoutVerified: [bridgeWorkflow, preflightWorkflow, deployWorkflow]
+    centralSparseCheckoutVerified
   }, null, 2) + '\n');
 }

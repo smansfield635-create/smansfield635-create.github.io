@@ -1,0 +1,51 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "estate-laboratory",
+  "description": "Diamond Gate Estate Laboratory diagnostic cockpit at /showroom/globe/audralia/disposition/, preserving lightweight-first operation, explicit deep targets, and no implicit production authority.",
+  "checks": [
+    {
+      "path": "/showroom/globe/audralia/disposition/",
+      "includes": [
+        "Estate Laboratory · Diamond Gate Bridge",
+        "data-page=\"estate-laboratory-cockpit\"",
+        "data-version=\"ESTATE_LABORATORY_COCKPIT_GEN1_v1\"",
+        "data-production-mutation-authorized=\"false\"",
+        "data-heavy-runtime-loaded=\"false\"",
+        "/showroom/globe/audralia/disposition/laboratory.js?v=ESTATE_LABORATORY_COCKPIT_GEN1_v1"
+      ],
+      "excludes": [
+        "data-production-mutation-authorized=\"true\"",
+        "data-runtime-repair-authorized=\"true\""
+      ]
+    },
+    {
+      "path": "/showroom/globe/audralia/disposition/laboratory.js?v=ESTATE_LABORATORY_COCKPIT_GEN1_v1",
+      "includes": [
+        "ESTATE_LABORATORY_LIGHTWEIGHT_TEST_RESULT_v1",
+        "release-identity",
+        "evidence-surface",
+        "claim-identity",
+        "audralia-surface",
+        "diagnostic-authority",
+        "compass-surface",
+        "h-earth-surface",
+        "audralia-runtime",
+        "evidence-carousel",
+        "Laboratory ready. Lightweight instruments do not boot 3D product runtimes."
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/showroom/globe/audralia/disposition/",
+    "timeoutMs": 15000,
+    "readySelector": "[data-instrument-id=\"release-identity\"]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/showroom/globe/audralia/disposition/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true
+  }
+}

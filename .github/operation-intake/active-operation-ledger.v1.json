@@ -1871,30 +1871,30 @@
       "state": "ADMITTED_LOCKED"
     },
     "99ffb39e511cc2c8cd68698915bd123716d7cdeaa06bb9d13d5b3e619ca1d3d1": {
-      "governingHead": "57302a9b955475f57a14bcd80940eb89d55094d8",
-      "lockGeneration": 1635,
+      "governingHead": "af46884873acf993400ab51915fc8044bd022e93",
+      "lockGeneration": 1636,
       "lockScope": "ESTATE_INSTRUMENTS_NAVIGATION_AND_LABORATORY_IDENTITY",
-      "operationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_005",
+      "operationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_006",
       "predecessor": {
         "authorityInherited": false,
         "exactHeadRevalidationRequired": true,
-        "governingHead": "558f8301f3408db5f2850a8c4587c58f60cb6193",
-        "lockGeneration": 1630,
+        "governingHead": "57302a9b955475f57a14bcd80940eb89d55094d8",
+        "lockGeneration": 1635,
         "lockScope": "ESTATE_INSTRUMENTS_NAVIGATION_AND_LABORATORY_IDENTITY",
-        "operationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_004",
+        "operationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_005",
         "preservedEvidenceRefs": [
-          "issue:#1968:operation-004-admission",
+          "issue:#1968:operation-005-admission",
           "candidate:232d673faa0cb4df5bd6542fe57242371f8c9633:INSPECTED_STALE_CANDIDATE_EVIDENCE_ONLY",
-          "differential-receipt:issuecomment-5401985203:CARRY_FORWARD_APPROVED_COMPLETE_DISJOINT_CHANGE_PROVEN",
-          "failed-invocation-R2:FINGERPRINT_DOMAIN_MISMATCH_NO_LEDGER_MUTATION"
+          "differential-receipt:issuecomment-5402461182:STRICT_SUCCESSOR_REQUIRED_DEPENDENCY_OVERLAP",
+          "failed-constructor-run:32785550673:LIVE_GOVERNING_HEAD_MISMATCH_NO_CANDIDATE_MUTATION"
         ],
         "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
         "terminalDisposition": "SUPERSEDED",
-        "transitionId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_004_TO_005_R3"
+        "transitionId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_005_TO_006"
       },
-      "procedureLocatorDigest": "7586c1d6024726335241a96adaeba05baa6c6c175c1488f756e8bf923f0e8502",
+      "procedureLocatorDigest": "eb927456f60104d5632e4355f7a47008bf3dbb8789bb7f2695c875eb66498491",
       "released": false,
-      "requestDigest": "336f83620c9a44565930efec683b0d82c5b877f7624225c55e2fe8dcdc93187e",
+      "requestDigest": "8cb80a383d1ff3771c6c475a80dc6a6578cd93698f96c38121c0c88935956808",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "99ffb39e511cc2c8cd68698915bd123716d7cdeaa06bb9d13d5b3e619ca1d3d1",
       "state": "ADMITTED_LOCKED"
@@ -3417,7 +3417,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1635,
+  "lockGeneration": 1636,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -25292,6 +25292,53 @@
         "successorLockScope": "ESTATE_INSTRUMENTS_NAVIGATION_AND_LABORATORY_IDENTITY",
         "successorOperationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_005",
         "transitionId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_004_TO_005_R3"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "57302a9b955475f57a14bcd80940eb89d55094d8",
+      "lockGeneration": 1635,
+      "lockScope": "ESTATE_INSTRUMENTS_NAVIGATION_AND_LABORATORY_IDENTITY",
+      "operationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_005",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "558f8301f3408db5f2850a8c4587c58f60cb6193",
+        "lockGeneration": 1630,
+        "lockScope": "ESTATE_INSTRUMENTS_NAVIGATION_AND_LABORATORY_IDENTITY",
+        "operationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_004",
+        "preservedEvidenceRefs": [
+          "issue:#1968:operation-004-admission",
+          "candidate:232d673faa0cb4df5bd6542fe57242371f8c9633:INSPECTED_STALE_CANDIDATE_EVIDENCE_ONLY",
+          "differential-receipt:issuecomment-5401985203:CARRY_FORWARD_APPROVED_COMPLETE_DISJOINT_CHANGE_PROVEN",
+          "failed-invocation-R2:FINGERPRINT_DOMAIN_MISMATCH_NO_LEDGER_MUTATION"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_004_TO_005_R3"
+      },
+      "procedureLocatorDigest": "7586c1d6024726335241a96adaeba05baa6c6c175c1488f756e8bf923f0e8502",
+      "released": true,
+      "requestDigest": "336f83620c9a44565930efec683b0d82c5b877f7624225c55e2fe8dcdc93187e",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "99ffb39e511cc2c8cd68698915bd123716d7cdeaa06bb9d13d5b3e619ca1d3d1",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:#1968:operation-005-admission",
+          "candidate:232d673faa0cb4df5bd6542fe57242371f8c9633:INSPECTED_STALE_CANDIDATE_EVIDENCE_ONLY",
+          "differential-receipt:issuecomment-5402461182:STRICT_SUCCESSOR_REQUIRED_DEPENDENCY_OVERLAP",
+          "failed-constructor-run:32785550673:LIVE_GOVERNING_HEAD_MISMATCH_NO_CANDIDATE_MUTATION"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "af46884873acf993400ab51915fc8044bd022e93",
+        "successorLockGeneration": 1636,
+        "successorLockScope": "ESTATE_INSTRUMENTS_NAVIGATION_AND_LABORATORY_IDENTITY",
+        "successorOperationId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_006",
+        "transitionId": "ESTATE_LABORATORY_NAVIGATION_RECONCILIATION_20260824_005_TO_006"
       },
       "terminalDisposition": "SUPERSEDED"
     }

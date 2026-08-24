@@ -1,94 +1,34 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  AUTHORITY_INVOCATION_SCHEMA,
+  buildAuthorityProvenance,
+  canonical,
   closeRemote,
-  scopeHash
+  LEGACY_AUTHORITY_CUTOVER_COMMIT,
+  LEGACY_AUTHORITY_SNAPSHOT_BLOBS,
+  scopeHash,
+  sha,
+  verifyAuthorityProvenanceBinding,
+  verifyCanonicalLockRefLineage,
+  verifyRemoteAuthorityProvenance
 } from './repository-operation-lock-manager.v1.mjs';
 
-const SCOPE = 'TEST:REMOTE:CLOSURE:RECEIPT:V1';
-const OPERATION_ID = 'REMOTE_RECEIPT_SCHEMA_REGRESSION_v1';
-const LOCK_GENERATION = 7;
-const HEAD = 'a'.repeat(40);
-const OBSERVED_BLOB = 'b'.repeat(40);
-const COMMITTED_BLOB = 'c'.repeat(40);
-const COMMIT = 'd'.repeat(40);
+const SCOPE='TEST:REMOTE:CLOSURE:RECEIPT:V1',OPERATION_ID='REMOTE_RECEIPT_SCHEMA_REGRESSION_v1',LOCK_GENERATION=7;
+const HEAD='a'.repeat(40),OBSERVED_BLOB='b'.repeat(40),COMMITTED_BLOB='c'.repeat(40),COMMIT='d'.repeat(40);
+const response=(status,value)=>({status,async text(){return JSON.stringify(value)}});
+function lockFixture(overrides={}){const lockScope=overrides.lockScope||SCOPE,hash=scopeHash(lockScope);return{schema:'REPOSITORY_OPERATION_LOCK_v1',operationId:OPERATION_ID,lockScope,scopeHash:hash,state:'ADMITTED_LOCKED',governingHead:'e'.repeat(40),requestDigest:'f'.repeat(64),procedureLocatorDigest:'1'.repeat(64),lockGeneration:LOCK_GENERATION,released:false,...overrides,scopeHash:overrides.scopeHash||hash}}
+function ledgerFixture(lock=lockFixture()){return{schema:'REPOSITORY_ACTIVE_OPERATION_LEDGER_v1',lockGeneration:Math.max(LOCK_GENERATION,lock.lockGeneration),activeScopes:{[lock.scopeHash]:lock},terminalHistory:[]}}
+function invocationFixture(marker='CANONICAL_OPERATION_INTAKE_REQUEST_V1'){return{schema:AUTHORITY_INVOCATION_SCHEMA,eventName:'issue_comment',eventAction:'created',repository:'example/repository',issueNumber:42,commentId:123,commentAuthorLogin:'owner',commentAuthorAssociation:'OWNER',commentBodySha256:'0'.repeat(64),marker,workflowRunId:9001,workflowRunAttempt:1,workflowRef:'example/repository/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main',workflowSha:'2'.repeat(40)}}
 
-function response(status, value) {
-  return {
-    status,
-    async text() {
-      return JSON.stringify(value);
-    }
-  };
-}
+test('closeRemote preserves the remote closure receipt schema after local receipt composition',async()=>{const ledger=ledgerFixture(),originalFetch=globalThis.fetch,calls=[];globalThis.fetch=async(url,options={})=>{calls.push({url:String(url),method:options.method??'GET'});if(calls.length===1)return response(200,{object:{sha:HEAD}});if(calls.length===2)return response(200,{sha:OBSERVED_BLOB,content:Buffer.from(JSON.stringify(ledger)).toString('base64')});if(calls.length===3)return response(200,{commit:{sha:COMMIT},content:{sha:COMMITTED_BLOB}});throw new Error(`UNEXPECTED_FETCH_CALL:${calls.length}`)};try{const receipt=await closeRemote({repository:'example/repository',token:'test-token',operationId:OPERATION_ID,lockScope:SCOPE,lockGeneration:LOCK_GENERATION,terminalDisposition:'PASS_CLOSED',authorityVerifier:async()=>({result:'SELF_TEST_AUTHORITY_VERIFIED'})});assert.equal(receipt.schema,'REPOSITORY_OPERATION_REMOTE_CLOSURE_RECEIPT_v1');assert.equal(receipt.result,'TERMINAL_CLOSURE_COMMITTED');assert.equal(receipt.operationId,OPERATION_ID);assert.equal(receipt.lockScope,SCOPE);assert.equal(receipt.lockGeneration,LOCK_GENERATION);assert.equal(receipt.terminalDisposition,'PASS_CLOSED');assert.equal(receipt.lockReleased,true);assert.equal(receipt.authorityVerification.result,'SELF_TEST_AUTHORITY_VERIFIED');assert.equal(receipt.observedBranchHead,HEAD);assert.equal(receipt.observedLedgerBlobSha,OBSERVED_BLOB);assert.equal(receipt.committedLedgerBlobSha,COMMITTED_BLOB);assert.equal(receipt.closureCommitSha,COMMIT);assert.equal(calls.length,3)}finally{globalThis.fetch=originalFetch}});
 
-function ledgerFixture() {
-  const hash = scopeHash(SCOPE);
-  const lock = {
-    schema: 'REPOSITORY_OPERATION_LOCK_v1',
-    operationId: OPERATION_ID,
-    lockScope: SCOPE,
-    scopeHash: hash,
-    state: 'ADMITTED_LOCKED',
-    governingHead: 'e'.repeat(40),
-    requestDigest: 'f'.repeat(64),
-    procedureLocatorDigest: '1'.repeat(64),
-    lockGeneration: LOCK_GENERATION,
-    released: false
-  };
-  return {
-    schema: 'REPOSITORY_ACTIVE_OPERATION_LEDGER_v1',
-    lockGeneration: LOCK_GENERATION,
-    activeScopes: { [hash]: lock },
-    terminalHistory: []
-  };
-}
+test('C7 provenance binding rejects replayed authority identity',()=>{const lock=lockFixture({lockGeneration:2000}),invocation=invocationFixture(),provenance=buildAuthorityProvenance(lock,invocation,'CANONICAL_INTAKE',LEGACY_AUTHORITY_CUTOVER_COMMIT),bound={...lock,authorityProvenance:provenance};assert.equal(verifyAuthorityProvenanceBinding(bound).result,'AUTHORITY_PROVENANCE_BOUND');assert.throws(()=>verifyAuthorityProvenanceBinding({...bound,operationId:'PLAUSIBLE_UNAUTHORIZED_REPLAY'}),error=>error.code==='AUTHORITY_PROVENANCE_BINDING_MISMATCH')});
 
-test('closeRemote preserves the remote closure receipt schema after local receipt composition', async () => {
-  const ledger = ledgerFixture();
-  const originalFetch = globalThis.fetch;
-  const calls = [];
-  globalThis.fetch = async (url, options = {}) => {
-    calls.push({ url: String(url), method: options.method ?? 'GET' });
-    if (calls.length === 1) return response(200, { object: { sha: HEAD } });
-    if (calls.length === 2) {
-      return response(200, {
-        sha: OBSERVED_BLOB,
-        content: Buffer.from(JSON.stringify(ledger)).toString('base64')
-      });
-    }
-    if (calls.length === 3) {
-      return response(200, {
-        commit: { sha: COMMIT },
-        content: { sha: COMMITTED_BLOB }
-      });
-    }
-    throw new Error(`UNEXPECTED_FETCH_CALL:${calls.length}`);
-  };
+test('C7 legacy authority is accepted only when anchored in the immutable snapshot',async()=>{const lock=lockFixture({lockGeneration:1632}),frozen=ledgerFixture(lock),originalFetch=globalThis.fetch;globalThis.fetch=async url=>{assert.ok(String(url).endsWith(`/git/blobs/${LEGACY_AUTHORITY_SNAPSHOT_BLOBS[0]}`));return response(200,{encoding:'base64',content:Buffer.from(JSON.stringify(frozen)).toString('base64')})};try{const receipt=await verifyRemoteAuthorityProvenance({repository:'example/repository',token:'test-token',lock,branchHead:LEGACY_AUTHORITY_CUTOVER_COMMIT});assert.equal(receipt.result,'LEGACY_AUTHORITY_SNAPSHOT_ANCHORED');assert.equal(receipt.lineage.result,'CANONICAL_LOCK_REF_LINEAGE_VERIFIED')}finally{globalThis.fetch=originalFetch}});
 
-  try {
-    const receipt = await closeRemote({
-      repository: 'example/repository',
-      token: 'test-token',
-      operationId: OPERATION_ID,
-      lockScope: SCOPE,
-      lockGeneration: LOCK_GENERATION,
-      terminalDisposition: 'PASS_CLOSED'
-    });
+test('C7 plausible unauthorized legacy-shaped row fails closed when absent from snapshot',async()=>{const forged=lockFixture({operationId:'PLAUSIBLE_UNAUTHORIZED_ROW',lockGeneration:1632}),legitimate=lockFixture({operationId:'LEGITIMATE_ROW',lockGeneration:1632}),frozen=ledgerFixture(legitimate),originalFetch=globalThis.fetch;globalThis.fetch=async()=>response(200,{encoding:'base64',content:Buffer.from(JSON.stringify(frozen)).toString('base64')});try{await assert.rejects(()=>verifyRemoteAuthorityProvenance({repository:'example/repository',token:'test-token',lock:forged,branchHead:LEGACY_AUTHORITY_CUTOVER_COMMIT}),error=>error.code==='AUTHORITY_PROVENANCE_MISSING')}finally{globalThis.fetch=originalFetch}});
 
-    assert.equal(receipt.schema, 'REPOSITORY_OPERATION_REMOTE_CLOSURE_RECEIPT_v1');
-    assert.equal(receipt.result, 'TERMINAL_CLOSURE_COMMITTED');
-    assert.equal(receipt.operationId, OPERATION_ID);
-    assert.equal(receipt.lockScope, SCOPE);
-    assert.equal(receipt.lockGeneration, LOCK_GENERATION);
-    assert.equal(receipt.terminalDisposition, 'PASS_CLOSED');
-    assert.equal(receipt.lockReleased, true);
-    assert.equal(receipt.observedBranchHead, HEAD);
-    assert.equal(receipt.observedLedgerBlobSha, OBSERVED_BLOB);
-    assert.equal(receipt.committedLedgerBlobSha, COMMITTED_BLOB);
-    assert.equal(receipt.closureCommitSha, COMMIT);
-    assert.equal(calls.length, 3);
-  } finally {
-    globalThis.fetch = originalFetch;
-  }
-});
+test('C7 canonical provenance requires authenticated source and workflow-bot admission receipt',async()=>{const operationRequest={operationId:OPERATION_ID,lockScope:SCOPE,exactGoverningHead:'e'.repeat(40)},constructionProcedure={procedureId:'P',exactGoverningHead:'e'.repeat(40)},body=`CANONICAL_OPERATION_INTAKE_REQUEST_V1\n${JSON.stringify({operationRequest,constructionProcedure})}`,invocation={...invocationFixture(),commentBodySha256:sha(body)};let lock=lockFixture({lockGeneration:2000,requestDigest:sha(canonical(operationRequest)),procedureLocatorDigest:sha(canonical(constructionProcedure))});lock={...lock,authorityProvenance:buildAuthorityProvenance(lock,invocation,'CANONICAL_INTAKE',LEGACY_AUTHORITY_CUTOVER_COMMIT)};const originalFetch=globalThis.fetch;globalThis.fetch=async url=>{const value=String(url);if(value.endsWith('/issues/comments/123'))return response(200,{id:123,issue_url:'https://api.github.com/repos/example/repository/issues/42',user:{login:'owner'},author_association:'OWNER',body});if(value.includes('/issues/42/comments?'))return response(200,[{user:{login:'github-actions[bot]'},body:`CANONICAL_OPERATION_INTAKE_RETURN_V1\ncanonicalResult = ADMITTED_AND_LOCKED\noperationId = ${OPERATION_ID}\nlockGeneration = 2000\nworkflowRun = 9001`}]);throw new Error(`UNEXPECTED_URL:${value}`)};try{const receipt=await verifyRemoteAuthorityProvenance({repository:'example/repository',token:'test-token',lock,branchHead:LEGACY_AUTHORITY_CUTOVER_COMMIT});assert.equal(receipt.result,'AUTHENTICATED_CANONICAL_AUTHORITY');assert.equal(receipt.origin,'CANONICAL_INTAKE')}finally{globalThis.fetch=originalFetch}});
+
+test('C7 manual post-cutover ledger mutation fails canonical lineage verification',async()=>{const manualHead='7'.repeat(40),originalFetch=globalThis.fetch;globalThis.fetch=async url=>{const value=String(url);if(value.includes(`/compare/${LEGACY_AUTHORITY_CUTOVER_COMMIT}...${manualHead}`))return response(200,{status:'ahead',total_commits:1,files:[{filename:'.github/operation-intake/active-operation-ledger.v1.json'}],commits:[{sha:manualHead,author:{login:'owner'},commit:{message:'Acquire operation lock 1633: PLAUSIBLE_UNAUTHORIZED_ROW',verification:{verified:true}}}]});throw new Error(`UNEXPECTED_URL:${value}`)};try{await assert.rejects(()=>verifyCanonicalLockRefLineage({repository:'example/repository',token:'test-token',branchHead:manualHead}),error=>error.code==='AUTHORITY_LEDGER_LINEAGE_UNTRUSTED')}finally{globalThis.fetch=originalFetch}});

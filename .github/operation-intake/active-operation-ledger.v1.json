@@ -1730,6 +1730,18 @@
       "scopeHash": "9c7969cf12c94c7ba1cac334c89cc7b68167ed8d04be7848cc3bfe9b48d1b1de",
       "state": "ADMITTED_LOCKED"
     },
+    "9c8030b6cc851ee0011e217d39569671e903e6e6da8184d89a54b72afa3cd092": {
+      "governingHead": "08b165ab31f7c5f4d65dc8080439f440d66db609",
+      "lockGeneration": 1601,
+      "lockScope": "PUBLIC_INFRASTRUCTURE:AUDRALIA_RUNTIME_READINESS_VERIFICATION:V1",
+      "operationId": "AUDRALIA_PUBLICATION_RUNTIME_READINESS_BUDGET_REPAIR_20260824_003",
+      "procedureLocatorDigest": "30668602669405912603042dbdb1ad0eb51db6f90a0df4ac4356913abfe906a0",
+      "released": false,
+      "requestDigest": "93305f91353e3437dc1acc1be5fd34126f7b60d731ad65d6483e01781f12d294",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "9c8030b6cc851ee0011e217d39569671e903e6e6da8184d89a54b72afa3cd092",
+      "state": "ADMITTED_LOCKED"
+    },
     "9c850779361a182bd67b97d19d5a5bb38e3f8090c40ac0a270122646fb69f004": {
       "governingHead": "93b14911bf658b31699dde5a82a01ba4541ffa59",
       "lockGeneration": 1461,
@@ -3050,7 +3062,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1600,
+  "lockGeneration": 1601,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

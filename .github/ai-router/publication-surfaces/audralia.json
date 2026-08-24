@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "audralia",
-  "description": "Live Audralia planetary environment using the approved preserved model authority with informative loading continuity and the qualified diversified-weather v5 successor enabled.",
+  "description": "Live Audralia planetary environment using the approved preserved model authority with informative loading continuity and the qualified distributed-weather v6 successor enabled.",
   "checks": [
     {
       "path": "/showroom/globe/audralia/",
@@ -22,21 +22,29 @@
     {
       "path": "/showroom/globe/audralia/fap1-weather-presentation-v1.mjs",
       "includes": [
-        "AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v5",
+        "AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v6",
         "MARINE_STRATUS_STRATOCUMULUS_BANK",
         "TRADE_CUMULUS_STREETS",
         "MIDLATITUDE_COMMA_FRONT",
         "MESOSCALE_CONVECTIVE_COMPLEX",
         "HIGH_CIRRUS_CIRROCUMULUS_JET_PLUME",
+        "CIRRUS_FIELD",
+        "CIRROSTRATUS_VEIL",
+        "ALTOCUMULUS_FIELD",
         "immersiveCloudInterior:true",
         "structuredCyclone:true",
         "sparseHemisphereDiversified:true",
+        "planetaryCloudFieldCoverage:true",
+        "cirrusFieldMultiplicity:true",
+        "cirrostratusVeilMultiplicity:true",
+        "altocumulusFieldMultiplicity:true",
+        "clearAirWindowsPreserved:true",
         "existingCloudSystemsExpanded:false",
         "singlePassRaymarchPreserved:true",
         "performanceCeilingsFrozen:true"
       ],
       "excludes": [
-        "AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v5_INTEGRATED_COVERAGE"
+        "AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v6_INTEGRATED_COVERAGE"
       ]
     },
     {

@@ -9,7 +9,7 @@
         "Current Public Condition",
         "What can the estate say right now?",
         "data-current-public-condition",
-        "/evidence/current-public-condition.mjs?v=1&cb=2db211344582"
+        "/evidence/current-public-condition.mjs?v=1&cb=prod1"
       ],
       "excludes": [
         "Breakthrough 4",
@@ -20,6 +20,7 @@
       "path": "/evidence/current-public-condition.mjs",
       "includes": [
         "evaluateSite",
+        "site-entitlement.v1.mjs?cb=prod1",
         "data-condition-state",
         "data-condition-objects",
         "What restores it"
@@ -27,9 +28,39 @@
       "excludes": [
         "document.write"
       ]
+    },
+    {
+      "path": "/evidence/readiness/bt4-site-governance/site-entitlement.v1.mjs",
+      "includes": [
+        "./entitlement-engine.v1.mjs?cb=prod1",
+        "Scientific claim",
+        "Audralia world/runtime",
+        "Audralia diagnostic authority",
+        "Exact-head public release"
+      ],
+      "excludes": [
+        "/preview/bt4/entitlement-v1/entitlement-engine.v1.mjs"
+      ]
+    },
+    {
+      "path": "/evidence/readiness/bt4-site-governance/entitlement-engine.v1.mjs",
+      "includes": [
+        "serveRequestedState",
+        "computeEntitlement",
+        "QUALIFIED",
+        "HELD"
+      ]
     }
   ],
   "runtime": {
-    "enabled": false
+    "enabled": true,
+    "path": "/evidence/",
+    "readyAttribute": {
+      "selector": "[data-current-public-condition]",
+      "name": "data-aggregate",
+      "contains": "RESTRICTED"
+    },
+    "timeoutMs": 90000,
+    "failOnConsoleErrors": true
   }
 }

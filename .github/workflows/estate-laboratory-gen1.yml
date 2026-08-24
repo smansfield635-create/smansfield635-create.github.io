@@ -43,6 +43,8 @@ jobs:
             /showroom/globe/h-earth/diagnostic/index.html
             /showroom/globe/hearth/diagnostic/index.html
             /coherence-diagnostic/index.html
+            /evidence/
+            /assets/public-legitimacy/
             /tools/estate-laboratory-gen1-verify.mjs
             /tools/h-earth-experience-anchor-gate.mjs
             /.github/workflows/estate-laboratory-gen1.yml

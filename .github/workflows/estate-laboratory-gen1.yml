@@ -28,7 +28,7 @@ jobs:
           git fetch --no-tags origin main
           test "$(git rev-parse origin/main^{commit})" = "$BASE"
           test "$(git merge-base HEAD "$BASE")" = "$BASE"
-          git fetch --no-tags origin "$STALE"
+          git fetch --no-tags origin "$STALE" || true
           git cat-file -e "$STALE^{commit}"
 
           for p in \
@@ -47,40 +47,12 @@ jobs:
           done
           rm -f showroom/globe/audralia/disposition/laboratory.js
 
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('coherence-diagnostic/index.html')
-          s=p.read_text()
-          old='''      <nav class="route-links" aria-label="Route links">
-        <a href="/">Compass</a>
-        <a href="/showroom/globe/">Mirrorland</a>
-        <a href="/gauges/">Triple G</a>
-      </nav>'''
-          new='''      <nav class="route-links" aria-label="Route links">
-        <a href="/">Compass</a>
-        <a href="/showroom/globe/">Mirrorland</a>
-        <a href="/instruments/" data-estate-laboratory-return>Estate Laboratory</a>
-        <a href="/gauges/">Triple G</a>
-      </nav>'''
-          count=s.count(old)
-          if count != 1:
-              raise SystemExit(f'COHERENCE_DIAGNOSTIC_RETURN_PATCH_MATCH_COUNT:{count}')
-          p.write_text(s.replace(old,new,1))
-          PY
+          python3 -c 'from pathlib import Path; p=Path("coherence-diagnostic/index.html"); s=p.read_text(); old="      <nav class=\"route-links\" aria-label=\"Route links\">\n        <a href=\"/\">Compass</a>\n        <a href=\"/showroom/globe/\">Mirrorland</a>\n        <a href=\"/gauges/\">Triple G</a>\n      </nav>"; new="      <nav class=\"route-links\" aria-label=\"Route links\">\n        <a href=\"/\">Compass</a>\n        <a href=\"/showroom/globe/\">Mirrorland</a>\n        <a href=\"/instruments/\" data-estate-laboratory-return>Estate Laboratory</a>\n        <a href=\"/gauges/\">Triple G</a>\n      </nav>"; count=s.count(old); assert count == 1, f"COHERENCE_DIAGNOSTIC_RETURN_PATCH_MATCH_COUNT:{count}"; p.write_text(s.replace(old,new,1))'
           git diff --check -- coherence-diagnostic/index.html
           test "$(git diff --numstat "$BASE" -- coherence-diagnostic/index.html | awk '{print $1":"$2}')" = '1:0'
 
           git show "$STALE:.github/workflows/estate-laboratory-gen1.yml" > /tmp/estate-laboratory-qualifier.yml
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('/tmp/estate-laboratory-qualifier.yml')
-          s=p.read_text()
-          old='6419f78d2c048d51827bb6c631e557d83fe4f061'
-          new='57302a9b955475f57a14bcd80940eb89d55094d8'
-          if old not in s:
-              raise SystemExit('FINAL_QUALIFIER_OLD_BASE_BINDING_NOT_FOUND')
-          p.write_text(s.replace(old,new))
-          PY
+          python3 -c 'from pathlib import Path; p=Path("/tmp/estate-laboratory-qualifier.yml"); s=p.read_text(); old="6419f78d2c048d51827bb6c631e557d83fe4f061"; new="57302a9b955475f57a14bcd80940eb89d55094d8"; assert old in s, "FINAL_QUALIFIER_OLD_BASE_BINDING_NOT_FOUND"; p.write_text(s.replace(old,new))'
           cp /tmp/estate-laboratory-qualifier.yml .github/workflows/estate-laboratory-gen1.yml
           grep -Fq 'name: Estate Laboratory Governed Observability Qualification' .github/workflows/estate-laboratory-gen1.yml
           grep -Fq 'contents: read' .github/workflows/estate-laboratory-gen1.yml

@@ -33,6 +33,11 @@ if(manifest.runtime?.enabled!==true){
   process.exit(0);
 }
 
+const normalizePath=value=>{
+  const path=String(value||'/').replace(/\/+$/,'')||'/';
+  return path.startsWith('/')?path:`/${path}`;
+};
+
 const {default:puppeteer}=await import('puppeteer-core');
 const executablePath=process.env.CHROME_PATH;
 if(!executablePath)throw new Error('CHROME_PATH is required for runtime verification');
@@ -45,9 +50,10 @@ const browser=await puppeteer.launch({
 try{
   const page=await browser.newPage();
   await page.setViewport({width:720,height:1280,deviceScaleFactor:1});
-  const errors=[];
-  page.on('pageerror',error=>errors.push(String(error?.stack||error)));
-  page.on('console',message=>{if(message.type()==='error')errors.push(message.text());});
+  const pageErrors=[];
+  const consoleErrors=[];
+  page.on('pageerror',error=>pageErrors.push(String(error?.stack||error)));
+  page.on('console',message=>{if(message.type()==='error')consoleErrors.push(message.text());});
   const url=pageUrl+spec.path;
   await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});
   if(spec.readySelector)await page.waitForSelector(spec.readySelector,{timeout:spec.timeoutMs||45000});
@@ -58,13 +64,55 @@ try{
       return String(element.getAttribute(name)||'').includes(contains);
     },{timeout:spec.timeoutMs||45000},spec.readyAttribute);
   }
-  const result=await page.evaluate(spec=>({
-    title:document.title,
-    readySelector:spec.readySelector?Boolean(document.querySelector(spec.readySelector)):null,
-    attributeValue:spec.readyAttribute?document.querySelector(spec.readyAttribute.selector)?.getAttribute(spec.readyAttribute.name)||null:null
-  }),spec);
-  console.log(JSON.stringify({schema:'PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1',surfaceId:manifest.surfaceId,url,result,errors},null,2));
-  if(spec.failOnConsoleErrors!==false&&errors.length)process.exitCode=1;
+
+  const binding=spec.binding||{mode:'direct-document'};
+  const result=await page.evaluate(({spec,binding})=>{
+    const currentUrl=new URL(location.href);
+    const normalized=value=>{
+      const path=String(value||'/').replace(/\/+$/,'')||'/';
+      return path.startsWith('/')?path:`/${path}`;
+    };
+    const expectedPath=normalized(binding.path||spec.path);
+    let bindingResult={mode:binding.mode||'direct-document',expectedPath,ok:false};
+    if(bindingResult.mode==='direct-document'){
+      bindingResult={...bindingResult,observedPath:normalized(currentUrl.pathname),ok:normalized(currentUrl.pathname)===expectedPath};
+    }else if(bindingResult.mode==='iframe'){
+      const selector=binding.selector||'iframe';
+      const frame=document.querySelector(selector);
+      const rawSrc=frame?.getAttribute('src')||'';
+      let observedPath='';
+      try{observedPath=rawSrc?normalized(new URL(rawSrc,currentUrl.href).pathname):'';}catch{}
+      bindingResult={...bindingResult,selector,rawSrc,observedPath,ok:Boolean(frame&&rawSrc&&observedPath===expectedPath)};
+    }else{
+      bindingResult={...bindingResult,error:'UNSUPPORTED_BINDING_MODE'};
+    }
+    return {
+      title:document.title,
+      finalUrl:currentUrl.href,
+      readySelector:spec.readySelector?Boolean(document.querySelector(spec.readySelector)):null,
+      attributeValue:spec.readyAttribute?document.querySelector(spec.readyAttribute.selector)?.getAttribute(spec.readyAttribute.name)||null:null,
+      binding:bindingResult
+    };
+  },{spec,binding});
+
+  const ignoreTokens=spec.ignoreConsoleErrorIncludes||[];
+  const ignoredConsoleErrors=consoleErrors.filter(error=>ignoreTokens.some(token=>error.includes(token)));
+  const actionableConsoleErrors=consoleErrors.filter(error=>!ignoreTokens.some(token=>error.includes(token)));
+  const failures=[];
+  if(!result.binding.ok)failures.push('RUNTIME_PUBLICATION_BINDING_FAILED');
+  if(spec.failOnPageErrors!==false&&pageErrors.length)failures.push('PAGE_ERROR');
+  if(spec.failOnConsoleErrors!==false&&actionableConsoleErrors.length)failures.push('CONSOLE_ERROR');
+
+  const receipt={
+    schema:'PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1',
+    surfaceId:manifest.surfaceId,
+    url,
+    result:failures.length?'FAIL':'PASS',
+    runtime:result,
+    diagnostics:{pageErrors,consoleErrors,ignoredConsoleErrors,actionableConsoleErrors,failures}
+  };
+  console.log(JSON.stringify(receipt,null,2));
+  if(failures.length)process.exitCode=1;
 }finally{
   await browser.close();
 }

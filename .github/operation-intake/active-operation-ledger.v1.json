@@ -1382,30 +1382,31 @@
       "state": "ADMITTED_LOCKED"
     },
     "798c5e9e100393e5fda36a06130686c47486d5a01dd1a4136b2368638abb64d0": {
-      "governingHead": "57302a9b955475f57a14bcd80940eb89d55094d8",
-      "lockGeneration": 1633,
+      "governingHead": "d8e0cfaee7c685888db028aaf6c37c722af684c1",
+      "lockGeneration": 1638,
       "lockScope": "LAWS_FIRST_TEST_RESEARCH_ROOM_CONJUGATION_V1",
-      "operationId": "LAWS_FIRST_ROOM_CONJUGATION_20260824_1626_S2_57302A9B",
+      "operationId": "LAWS_FIRST_ROOM_CONJUGATION_20260824_1626_S3_D8E0CFAE",
       "predecessor": {
         "authorityInherited": false,
         "exactHeadRevalidationRequired": true,
-        "governingHead": "bc4078f8f884921e8c58fe5a30f6a7c9c577d6f0",
-        "lockGeneration": 1628,
+        "governingHead": "57302a9b955475f57a14bcd80940eb89d55094d8",
+        "lockGeneration": 1633,
         "lockScope": "LAWS_FIRST_TEST_RESEARCH_ROOM_CONJUGATION_V1",
-        "operationId": "LAWS_FIRST_ROOM_CONJUGATION_20260824_1626_S1_BC4078F8",
+        "operationId": "LAWS_FIRST_ROOM_CONJUGATION_20260824_1626_S2_57302A9B",
         "preservedEvidenceRefs": [
           "ISSUE1935_PRECONSTRUCTION_CONTRACT",
-          "GEN1628_ACTIVE_LEDGER_READBACK",
-          "PR1981_EXACT_UNFINISHED_DIFF_HEAD_1E9784C4",
-          "DIFFERENTIAL_CONTINUITY_REQUEST_COMMENT_5401810169"
+          "GEN1633_SUCCESSOR_RECEIPT_COMMENT_5401870959",
+          "PR1981_EXACT_HEAD_EFB534EB",
+          "PR1981_CHANGED_PATHS_22_REVALIDATED",
+          "STATIC_VERIFIER_STALE_BINDING_AUDIT_20260824"
         ],
         "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
         "terminalDisposition": "SUPERSEDED",
-        "transitionId": "LAWS_FIRST_ROOM_CONJUGATION_GEN1628_TO_57302A9B_20260824_001"
+        "transitionId": "LAWS_FIRST_ROOM_CONJUGATION_GEN1633_TO_D8E0CFAE_20260824_001"
       },
-      "procedureLocatorDigest": "95af301ee94c48959ab94471146c9f508456237898d78d4a1051c4f745a4fdf1",
+      "procedureLocatorDigest": "cc6c9da30b981635d4761eac12b3901bf8d7ef323e31b07e5e07c5cb9b659409",
       "released": false,
-      "requestDigest": "c981a33fcb8201815bb04fc59cc20eb5358864a0b23bbc04889a67fd93b9045b",
+      "requestDigest": "b1017161d12bb30c53f6c4c7fcae05e23524917b09dc638ef897914c9378bd11",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "798c5e9e100393e5fda36a06130686c47486d5a01dd1a4136b2368638abb64d0",
       "state": "ADMITTED_LOCKED"
@@ -3421,7 +3422,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1637,
+  "lockGeneration": 1638,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -25394,6 +25395,54 @@
         "successorLockScope": "AUDRALIA_WEATHER_PRESENTATION",
         "successorOperationId": "AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION_REPAIR_20260824_001",
         "transitionId": "AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION_SUCCESSOR_20260824_004"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "57302a9b955475f57a14bcd80940eb89d55094d8",
+      "lockGeneration": 1633,
+      "lockScope": "LAWS_FIRST_TEST_RESEARCH_ROOM_CONJUGATION_V1",
+      "operationId": "LAWS_FIRST_ROOM_CONJUGATION_20260824_1626_S2_57302A9B",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "bc4078f8f884921e8c58fe5a30f6a7c9c577d6f0",
+        "lockGeneration": 1628,
+        "lockScope": "LAWS_FIRST_TEST_RESEARCH_ROOM_CONJUGATION_V1",
+        "operationId": "LAWS_FIRST_ROOM_CONJUGATION_20260824_1626_S1_BC4078F8",
+        "preservedEvidenceRefs": [
+          "ISSUE1935_PRECONSTRUCTION_CONTRACT",
+          "GEN1628_ACTIVE_LEDGER_READBACK",
+          "PR1981_EXACT_UNFINISHED_DIFF_HEAD_1E9784C4",
+          "DIFFERENTIAL_CONTINUITY_REQUEST_COMMENT_5401810169"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "LAWS_FIRST_ROOM_CONJUGATION_GEN1628_TO_57302A9B_20260824_001"
+      },
+      "procedureLocatorDigest": "95af301ee94c48959ab94471146c9f508456237898d78d4a1051c4f745a4fdf1",
+      "released": true,
+      "requestDigest": "c981a33fcb8201815bb04fc59cc20eb5358864a0b23bbc04889a67fd93b9045b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "798c5e9e100393e5fda36a06130686c47486d5a01dd1a4136b2368638abb64d0",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "ISSUE1935_PRECONSTRUCTION_CONTRACT",
+          "GEN1633_SUCCESSOR_RECEIPT_COMMENT_5401870959",
+          "PR1981_EXACT_HEAD_EFB534EB",
+          "PR1981_CHANGED_PATHS_22_REVALIDATED",
+          "STATIC_VERIFIER_STALE_BINDING_AUDIT_20260824"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "d8e0cfaee7c685888db028aaf6c37c722af684c1",
+        "successorLockGeneration": 1638,
+        "successorLockScope": "LAWS_FIRST_TEST_RESEARCH_ROOM_CONJUGATION_V1",
+        "successorOperationId": "LAWS_FIRST_ROOM_CONJUGATION_20260824_1626_S3_D8E0CFAE",
+        "transitionId": "LAWS_FIRST_ROOM_CONJUGATION_GEN1633_TO_D8E0CFAE_20260824_001"
       },
       "terminalDisposition": "SUPERSEDED"
     }

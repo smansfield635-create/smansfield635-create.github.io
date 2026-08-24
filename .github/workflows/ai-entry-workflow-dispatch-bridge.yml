@@ -25,11 +25,15 @@ jobs:
       startsWith(github.event.pull_request.head.ref, 'ai-dispatch-request-')
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout authoritative bridge runtime from main
+      - name: Checkout authoritative bridge working set from main
         uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/ai-router/workflow-dispatch-capability.v1.json
+            /tools/ai-entry-workflow-dispatch-bridge.mjs
 
       - name: Execute bounded native workflow dispatch
         env:

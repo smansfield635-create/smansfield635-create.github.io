@@ -1,0 +1,10 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_v1",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "d8fa69a896f270e38dc24137e769bf33b7d64b84",
+    "surface_id": "brain-gen1-hra"
+  },
+  "intent": "Publish the isolated Brain Gen1 HRA owner-inspection surface from exact current main after same-origin qualified-asset repair. Do not integrate or modify the live Compass brain."
+}

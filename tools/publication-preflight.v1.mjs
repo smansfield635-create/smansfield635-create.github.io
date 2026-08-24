@@ -10,6 +10,14 @@ const REPO_ROOT=process.cwd();
 const SURFACE_DIR='.github/ai-router/publication-surfaces';
 const RELEASE_MARKER='.well-known/dgb-release.json';
 const PAGES_LIMIT_BYTES=1073741824;
+const PUBLIC_PAYLOAD_EXCLUDES=[
+  '.git',
+  '.github',
+  'preview',
+  'node_modules',
+  'h-earth-live-6d18e158',
+  'inspection/audralia-24057-exact'
+];
 
 export function sha256(value){return crypto.createHash('sha256').update(value).digest('hex');}
 export function validateSurfaceId(id){return typeof id==='string'&&/^[a-z0-9][a-z0-9._-]{0,79}$/.test(id);}
@@ -20,13 +28,11 @@ export function stable(value){
   return value;
 }
 function writeJson(file,value){fs.mkdirSync(path.dirname(path.resolve(file)),{recursive:true});fs.writeFileSync(path.resolve(file),JSON.stringify(stable(value),null,2)+'\n');}
+function excluded(rel){return PUBLIC_PAYLOAD_EXCLUDES.some(root=>rel===root||rel.startsWith(`${root}/`));}
 function copyTree(src,dst,relative=''){
   for(const entry of fs.readdirSync(src,{withFileTypes:true})){
     const rel=path.posix.join(relative,entry.name);
-    if(rel==='.git'||rel.startsWith('.git/'))continue;
-    if(rel==='.github'||rel.startsWith('.github/'))continue;
-    if(rel==='preview'||rel.startsWith('preview/'))continue;
-    if(rel==='node_modules'||rel.startsWith('node_modules/'))continue;
+    if(excluded(rel))continue;
     const from=path.join(src,entry.name),to=path.join(dst,entry.name);
     if(entry.isDirectory()){fs.mkdirSync(to,{recursive:true});copyTree(from,to,rel);}
     else if(entry.isFile()){fs.mkdirSync(path.dirname(to),{recursive:true});fs.copyFileSync(from,to);}
@@ -145,9 +151,9 @@ async function main(){
       if(mode==='preflight')await verifyLocal({stage,manifestPath:built.manifestPath,manifest:built.manifest});
     }
     const result=mode==='build'?'PAYLOAD_BUILT':'PREFLIGHT_PASS';
-    receipt={schema:'PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1',targetSha,surfaceId,manifestSha256:built.manifestSha256,payloadDigest:built.payloadDigest,payloadBytes:built.payloadBytes,pagesLimitBytes:PAGES_LIMIT_BYTES,topLevelBytes:built.topLevelBytes,result,checks:{exactSha:'PASS',surfaceManifest:'PASS',diffScope:'BOUNDED_PAYLOAD',requiredAssets:'PASS',environmentBinding:'PASS',payloadBuild:'PASS',staticChecks:mode==='build'?'NOT_RUN':'PASS',runtimeReadiness:mode==='build'?'NOT_RUN':(built.manifest.runtime?.enabled===true?'PASS':'NOT_REQUIRED')},deploymentPerformed:false};
+    receipt={schema:'PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1',targetSha,surfaceId,manifestSha256:built.manifestSha256,payloadDigest:built.payloadDigest,payloadBytes:built.payloadBytes,pagesLimitBytes:PAGES_LIMIT_BYTES,topLevelBytes:built.topLevelBytes,excludedPayloadRoots:PUBLIC_PAYLOAD_EXCLUDES,result,checks:{exactSha:'PASS',surfaceManifest:'PASS',diffScope:'BOUNDED_PAYLOAD',requiredAssets:'PASS',environmentBinding:'PASS',payloadBuild:'PASS',staticChecks:mode==='build'?'NOT_RUN':'PASS',runtimeReadiness:mode==='build'?'NOT_RUN':(built.manifest.runtime?.enabled===true?'PASS':'NOT_REQUIRED')},deploymentPerformed:false};
     writeJson(receiptPath,receipt);console.log(JSON.stringify(receipt,null,2));
-  }catch(error){receipt={schema:'PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1',targetSha:targetSha||null,surfaceId:surfaceId||null,result:'PREFLIGHT_FAIL',errorCode:error?.code||null,error:String(error?.stack||error),payloadBytes:error?.payloadBytes??null,pagesLimitBytes:error?.pagesLimitBytes??PAGES_LIMIT_BYTES,topLevelBytes:error?.topLevelBytes??[],deploymentPerformed:false};writeJson(receiptPath,receipt);console.error(JSON.stringify(receipt,null,2));process.exitCode=1;}
+  }catch(error){receipt={schema:'PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1',targetSha:targetSha||null,surfaceId:surfaceId||null,result:'PREFLIGHT_FAIL',errorCode:error?.code||null,error:String(error?.stack||error),payloadBytes:error?.payloadBytes??null,pagesLimitBytes:error?.pagesLimitBytes??PAGES_LIMIT_BYTES,topLevelBytes:error?.topLevelBytes??[],excludedPayloadRoots:PUBLIC_PAYLOAD_EXCLUDES,deploymentPerformed:false};writeJson(receiptPath,receipt);console.error(JSON.stringify(receipt,null,2));process.exitCode=1;}
 }
 
 if(process.argv[1]&&fileURLToPath(import.meta.url)===path.resolve(process.argv[1]))main();

@@ -1,17 +1,37 @@
 {
   "schema": "PUBLICATION_FAST_PREFLIGHT_CONTRACT_v1",
   "status": "ACTIVE_FAIL_CLOSED",
-  "purpose": "Reject release-critical publication defects before production deployment.",
+  "purpose": "Reject release-critical publication defects before production deployment while keeping routine surface iteration proportional to mutation risk.",
   "productionRule": "PREFLIGHT_PASS_REQUIRED_BEFORE_PAGES_DEPLOY",
   "payloadParityRule": "PREFLIGHT_AND_PRODUCTION_MUST_USE_THE_SAME_PAYLOAD_CONSTRUCTION_RUNNER",
   "verificationReuseRule": "REUSE_TOOLS_PUBLICATION_LIVE_VERIFY_MJS_FOR_STATIC_AND_RUNTIME_CHECKS",
+  "publicPayloadBoundary": {
+    "rule": "HISTORICAL_SNAPSHOTS_AND_NONAUTHORITATIVE_CLONES_DO_NOT_SHIP_IN_THE_PUBLIC_PAGES_ARTIFACT",
+    "excludedRoots": [
+      "h-earth-live-6d18e158",
+      "inspection/audralia-24057-exact"
+    ],
+    "sizeAuditRole": "INFRASTRUCTURE_GUARD_NOT_ROUTINE_VISUAL_REQUALIFICATION"
+  },
+  "riskLanes": {
+    "FAST_VISUAL": {
+      "examples": ["cloud coverage", "weather morphology", "terrain tuning", "material tuning"],
+      "requiredChecks": ["EXACT_SHA", "ALLOWED_DIFF_SCOPE", "TARGETED_RUNTIME_SMOKE", "RUNTIME_READINESS", "POST_DEPLOY_LIVE_PROOF"],
+      "inheritsUntouchedEvidence": true
+    },
+    "STRUCTURAL": {
+      "examples": ["camera", "projection", "globe geometry", "pointer/touch/input", "loader/readiness", "major renderer architecture", "asset binding", "publication infrastructure"],
+      "requiredChecks": ["EXACT_SHA", "SURFACE_MANIFEST", "DIFF_SCOPE", "REQUIRED_ASSETS", "ENVIRONMENT_BINDING", "PAYLOAD_BUILD", "STATIC_CHECKS", "RUNTIME_READINESS", "PREFLIGHT_PASS", "POST_DEPLOY_LIVE_PROOF"],
+      "inheritsUntouchedEvidence": false
+    }
+  },
   "requiredOrder": [
     "EXACT_SHA",
     "SURFACE_MANIFEST",
     "DIFF_SCOPE",
+    "PAYLOAD_BUILD",
     "REQUIRED_ASSETS",
     "ENVIRONMENT_BINDING",
-    "PAYLOAD_BUILD",
     "STATIC_CHECKS",
     "RUNTIME_READINESS",
     "PREFLIGHT_PASS",

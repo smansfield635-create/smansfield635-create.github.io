@@ -8,19 +8,149 @@ const statusNode=document.querySelector('[data-h-earth-status]');
 const started=performance.now();
 const TOTAL=5;
 let completed=-1;
-let lastAdvance=started;
 let delayed=false;
 let lastPhase='PAGE_BOOT';
 let lastPhaseAt=started;
-const rows={surface:document.querySelector('[data-loader-system="surface"]'),clouds:document.querySelector('[data-loader-system="clouds"]'),regional:document.querySelector('[data-loader-system="regional"]'),local:document.querySelector('[data-loader-system="local"]')};
-function setRow(name,state){const row=rows[name];if(!row)return;row.dataset.state=state;const out=row.querySelector('b');if(out)out.textContent=state==='ready'?'ready':'waiting';}
-function publishDiagnostic(phase,status='ACTIVE',extra={}){const now=performance.now();if(phase!==lastPhase){lastPhase=phase;lastPhaseAt=now;delayed=false;if(loader)delete loader.dataset.delayed;}const receipt=Object.freeze({schema:'AUDRALIA_STARTUP_DIAGNOSTIC_v1',phase,status,elapsedMs:Math.round(now-started),phaseElapsedMs:Math.round(now-lastPhaseAt),completedStage:Math.max(0,completed),lastSuccessfulStage:Math.max(0,completed),build:document.querySelector('.audralia-loading-version')?.textContent?.trim()||null,...extra});window.__AUDRALIA_STARTUP_DIAGNOSTIC__=receipt;if(loader){loader.dataset.startupPhase=phase;loader.dataset.startupStatus=status;}return receipt;}
-function inferPhase(){const explicit=window.__AUDRALIA_STARTUP_PHASE__?.phase;const state=statusNode?.dataset?.status||'';if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__)return 'CORE_RECONCILIATION_ERROR';if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.()?.invariants?.pass===true)return 'RUNTIME_INVARIANTS_READY';if(document.querySelector('[data-canonical-weather-projection="true"]'))return 'LOCAL_CONTINUITY_READY';if(document.querySelector('[data-audralia-exterior-weather="true"]'))return 'REGIONAL_WEATHER_READY';if(globalThis.__AUDRALIA_FAP1_ORBITAL_SUPPORT_TUNING__)return 'ORBITAL_CLOUD_READY';if(document.querySelector('[data-audralia-clear-atmosphere="true"]'))return 'SURFACE_ATMOSPHERE_READY';if(window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW__?.renderer)return 'RENDERER_READY';if(state==='AUDRALIA_WEATHER_RECONCILIATION_BUILDING')return 'CORE_RENDERER_BOOT';if(explicit==='APP_MODULE_EVALUATED')return 'CORE_RENDERER_BOOT';return explicit||'PAGE_BOOT';}
-function phaseLabel(phase){return ({PAGE_BOOT:'Preparing page shell',PAGE_SHELL_READY:'Page shell ready',FIRST_PAINT_RELEASED:'First paint released',APP_MODULE_REQUESTED:'Loading Audralia runtime graph',APP_MODULE_EVALUATED:'Audralia runtime graph evaluated',CORE_RENDERER_BOOT:'Building renderer and first world frame',RENDERER_READY:'Renderer ready',SURFACE_ATMOSPHERE_READY:'Surface and atmosphere resolved',ORBITAL_CLOUD_READY:'Planetary cloud field online',REGIONAL_WEATHER_READY:'Regional weather online',LOCAL_CONTINUITY_READY:'Local weather continuity online',RUNTIME_INVARIANTS_READY:'Audralia ready',CORE_RECONCILIATION_ERROR:'Core reconciliation failed',APP_MODULE_FAILED:'Application module failed'})[phase]||phase;}
-function commit(next,label){if(next<=completed)return;completed=next;lastAdvance=performance.now();delayed=false;if(loader)delete loader.dataset.delayed;const bounded=Math.max(0,Math.min(TOTAL,next));const ratio=bounded/TOTAL;if(stage)stage.textContent=label;if(progress)progress.textContent=`${Math.round(ratio*100)}% · ${bounded} of ${TOTAL} stages`;if(track){track.setAttribute('aria-valuenow',String(bounded));track.dataset.completed=String(bounded);}if(fill)fill.style.width=`${Math.round(ratio*100)}%`;if(loader)loader.dataset.progress=String(bounded);}
-function markDelayed(now,phase){if(delayed||completed>=TOTAL||now-lastPhaseAt<15000)return;delayed=true;const code=`STALLED_${phase}`;if(loader){loader.dataset.delayed='true';loader.dataset.stallCode=code;}if(stage)stage.textContent=`${phaseLabel(phase)} · ${code}`;if(progress)progress.textContent=`${Math.max(0,completed)*20}% · diagnostic ${code}`;publishDiagnostic(phase,'STALLED',{code,stalledForMs:Math.round(now-lastPhaseAt)});}
-function markError(error){if(!error||loader?.classList.contains('is-error'))return false;const code=error?.message||'AUDRALIA_RENDERER_INITIALIZATION_FAILED';if(loader){loader.classList.add('is-error');loader.dataset.errorCode=code;}if(stage)stage.textContent=`Audralia startup stopped · ${code}`;if(progress)progress.textContent=`${Math.max(0,completed)*20}% · startup error ${code}`;publishDiagnostic('CORE_RECONCILIATION_ERROR','ERROR',{code,message:error?.message||String(error)});return true;}
-function observe(){const now=performance.now();if(elapsed)elapsed.textContent=`${((now-started)/1000).toFixed(1)}s`;if(loader?.classList.contains('is-error'))return;const reconciliationError=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__;if(markError(reconciliationError))return;const phase=inferPhase();const diag=publishDiagnostic(phase);if(completed===0&&stage&&!delayed)stage.textContent=`${phaseLabel(phase)} · ${phase}`;if(document.querySelector('[data-audralia-clear-atmosphere="true"]')){setRow('surface','ready');commit(1,'Surface and atmosphere resolved');}if(globalThis.__AUDRALIA_FAP1_ORBITAL_SUPPORT_TUNING__){setRow('clouds','ready');commit(2,'Planetary cloud field online');}if(document.querySelector('[data-audralia-exterior-weather="true"]')){setRow('regional','ready');commit(3,'Regional weather online');}if(document.querySelector('[data-canonical-weather-projection="true"]')){setRow('local','ready');commit(4,'Local weather continuity online');}if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.()?.invariants?.pass===true){commit(5,'Audralia ready');publishDiagnostic('RUNTIME_INVARIANTS_READY','READY',{code:'AUDRALIA_RUNTIME_READY'});if(loader)loader.classList.add('is-ready');return;}markDelayed(now,diag.phase);requestAnimationFrame(observe);}
+const rows={
+  surface:document.querySelector('[data-loader-system="surface"]'),
+  clouds:document.querySelector('[data-loader-system="clouds"]'),
+  regional:document.querySelector('[data-loader-system="regional"]'),
+  local:document.querySelector('[data-loader-system="local"]')
+};
+
+const cloudPresentationReady=()=>Boolean(
+  globalThis.__AUDRALIA_ACF1_PRESENTATION__ &&
+  globalThis.__AUDRALIA_FAP1_XYZ_VOLUMETRIC_DEPTH__ &&
+  globalThis.__AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION__
+);
+const surfaceReady=()=>Boolean(document.querySelector('[data-audralia-clear-atmosphere="true"]'));
+
+function setRow(name,state){
+  const row=rows[name];
+  if(!row)return;
+  row.dataset.state=state;
+  const out=row.querySelector('b');
+  if(out)out.textContent=state==='ready'?'ready':'waiting';
+}
+
+function publishDiagnostic(phase,status='ACTIVE',extra={}){
+  const now=performance.now();
+  if(phase!==lastPhase){
+    lastPhase=phase;
+    lastPhaseAt=now;
+    delayed=false;
+    if(loader)delete loader.dataset.delayed;
+  }
+  const receipt=Object.freeze({
+    schema:'AUDRALIA_STARTUP_DIAGNOSTIC_v1',
+    phase,status,
+    elapsedMs:Math.round(now-started),
+    phaseElapsedMs:Math.round(now-lastPhaseAt),
+    completedStage:Math.max(0,completed),
+    lastSuccessfulStage:Math.max(0,completed),
+    approvedPresentationReady:cloudPresentationReady(),
+    build:document.querySelector('.audralia-loading-version')?.textContent?.trim()||null,
+    ...extra
+  });
+  window.__AUDRALIA_STARTUP_DIAGNOSTIC__=receipt;
+  if(loader){loader.dataset.startupPhase=phase;loader.dataset.startupStatus=status;}
+  return receipt;
+}
+
+function inferPhase(){
+  const explicit=window.__AUDRALIA_STARTUP_PHASE__?.phase;
+  const state=statusNode?.dataset?.status||'';
+  if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__)return 'CORE_RECONCILIATION_ERROR';
+  if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.()?.invariants?.pass===true)return 'RUNTIME_INVARIANTS_READY';
+  if(document.querySelector('[data-canonical-weather-projection="true"]'))return 'LOCAL_CONTINUITY_READY';
+  if(document.querySelector('[data-audralia-exterior-weather="true"]'))return 'REGIONAL_WEATHER_READY';
+  if(surfaceReady()&&cloudPresentationReady())return 'ORBITAL_CLOUD_READY';
+  if(surfaceReady())return 'SURFACE_ATMOSPHERE_READY';
+  if(window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW__?.renderer)return 'RENDERER_READY';
+  if(state==='AUDRALIA_WEATHER_RECONCILIATION_BUILDING')return 'CORE_RENDERER_BOOT';
+  if(explicit==='APP_MODULE_EVALUATED')return 'CORE_RENDERER_BOOT';
+  return explicit||'PAGE_BOOT';
+}
+
+function phaseLabel(phase){
+  return ({
+    PAGE_BOOT:'Preparing page shell',
+    PAGE_SHELL_READY:'Page shell ready',
+    FIRST_PAINT_RELEASED:'First paint released',
+    PRESENTATION_STACK_REQUESTED:'Installing approved world presentation',
+    PRESENTATION_STACK_EVALUATED:'Approved world presentation installed',
+    PRESENTATION_STACK_FAILED:'Approved world presentation failed',
+    APP_MODULE_REQUESTED:'Loading Audralia runtime graph',
+    APP_MODULE_EVALUATED:'Audralia runtime graph evaluated',
+    CORE_RENDERER_BOOT:'Building renderer and first world frame',
+    RENDERER_READY:'Renderer ready',
+    SURFACE_ATMOSPHERE_READY:'Surface and atmosphere resolved',
+    ORBITAL_CLOUD_READY:'Planetary cloud field online',
+    REGIONAL_WEATHER_READY:'Regional weather online',
+    LOCAL_CONTINUITY_READY:'Local weather continuity online',
+    RUNTIME_INVARIANTS_READY:'Audralia ready',
+    CORE_RECONCILIATION_ERROR:'Core reconciliation failed',
+    APP_MODULE_FAILED:'Application module failed'
+  })[phase]||phase;
+}
+
+function commit(next,label){
+  if(next<=completed)return;
+  completed=next;
+  delayed=false;
+  if(loader)delete loader.dataset.delayed;
+  const bounded=Math.max(0,Math.min(TOTAL,next));
+  const ratio=bounded/TOTAL;
+  if(stage)stage.textContent=label;
+  if(progress)progress.textContent=`${Math.round(ratio*100)}% · ${bounded} of ${TOTAL} stages`;
+  if(track){track.setAttribute('aria-valuenow',String(bounded));track.dataset.completed=String(bounded);}
+  if(fill)fill.style.width=`${Math.round(ratio*100)}%`;
+  if(loader)loader.dataset.progress=String(bounded);
+}
+
+function markDelayed(now,phase){
+  if(delayed||completed>=TOTAL||now-lastPhaseAt<15000)return;
+  delayed=true;
+  const code=`STALLED_${phase}`;
+  if(loader){loader.dataset.delayed='true';loader.dataset.stallCode=code;}
+  if(stage)stage.textContent=`${phaseLabel(phase)} · ${code}`;
+  if(progress)progress.textContent=`${Math.max(0,completed)*20}% · diagnostic ${code}`;
+  publishDiagnostic(phase,'STALLED',{code,stalledForMs:Math.round(now-lastPhaseAt)});
+}
+
+function markError(error){
+  if(!error||loader?.classList.contains('is-error'))return false;
+  const code=error?.message||'AUDRALIA_RENDERER_INITIALIZATION_FAILED';
+  if(loader){loader.classList.add('is-error');loader.dataset.errorCode=code;}
+  if(stage)stage.textContent=`Audralia startup stopped · ${code}`;
+  if(progress)progress.textContent=`${Math.max(0,completed)*20}% · startup error ${code}`;
+  publishDiagnostic('CORE_RECONCILIATION_ERROR','ERROR',{code,message:error?.message||String(error)});
+  return true;
+}
+
+function observe(){
+  const now=performance.now();
+  if(elapsed)elapsed.textContent=`${((now-started)/1000).toFixed(1)}s`;
+  if(loader?.classList.contains('is-error'))return;
+  const reconciliationError=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__;
+  if(markError(reconciliationError))return;
+  const phase=inferPhase();
+  const diag=publishDiagnostic(phase);
+  if(completed===0&&stage&&!delayed)stage.textContent=`${phaseLabel(phase)} · ${phase}`;
+  if(surfaceReady()){setRow('surface','ready');commit(1,'Surface and atmosphere resolved');}
+  if(surfaceReady()&&cloudPresentationReady()){setRow('clouds','ready');commit(2,'Approved planetary cloud field online');}
+  if(document.querySelector('[data-audralia-exterior-weather="true"]')){setRow('regional','ready');commit(3,'Regional weather online');}
+  if(document.querySelector('[data-canonical-weather-projection="true"]')){setRow('local','ready');commit(4,'Local weather continuity online');}
+  if(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.()?.invariants?.pass===true){
+    commit(5,'Audralia ready');
+    publishDiagnostic('RUNTIME_INVARIANTS_READY','READY',{code:'AUDRALIA_RUNTIME_READY'});
+    if(loader)loader.classList.add('is-ready');
+    return;
+  }
+  markDelayed(now,diag.phase);
+  requestAnimationFrame(observe);
+}
+
 commit(0,'Preparing page shell…');
 publishDiagnostic('PAGE_BOOT');
 requestAnimationFrame(observe);

@@ -29,17 +29,16 @@ function requestedQualityMode(){
 
 export function createFAP1CandidateAReconciliationAdapter({exterior,sky}={}){
   if(!exterior?.overlay||!sky?.overlay)throw new Error('FAP1_CANDIDATE_A_PREVIEW_INPUT_INVALID');
-  let interacting=false,lastPlan=null,lastEffectiveOpacity=1,lastOrbitalBlend=0;
+  let interacting=false,lastPlan=null;
 
   function render(camera){
     const location=cameraWeatherLocation(camera);
     const qualityMode=requestedQualityMode();
-    const viewDistance=camera.snapshot?.distance??512;
     const plan=buildHEarthFAP1AtmosphereCandidate({
       ...location,
       canonicalTimeHours:0,
       observerElevation:Math.max(0,Math.hypot(...sub(camera.eye,PLANET_CENTER))-PLANET_RADIUS),
-      viewDistance,
+      viewDistance:camera.snapshot?.distance??512,
       qualityMode
     });
     const evaluation=evaluateHEarthFAP1AtmosphereCandidate(plan);
@@ -48,13 +47,7 @@ export function createFAP1CandidateAReconciliationAdapter({exterior,sky}={}){
     const cloud=plan.weather.cloudOccupancy;
     const clear=plan.weather.clearAirSupport;
     const haze=plan.optics.hazeExtinctionSupport;
-    const localWeatherOpacity=clamp(.34+cloud*.88,clear>.55?.28:.34,1);
-
-    // The exterior volumetric field owns orbital weather occupancy. Candidate-A
-    // local weather state may modulate local/regional presentation, but it must
-    // never globally suppress the already-rendered planetary cloud field.
-    const orbitalBlend=clamp((viewDistance-900)/900,0,1);
-    const weatherOpacity=localWeatherOpacity+(1-localWeatherOpacity)*orbitalBlend;
+    const weatherOpacity=clamp(.34+cloud*.88,clear>.55?.28:.34,1);
     const skySaturation=clamp(1.02+clear*.20-haze*.08,.94,1.22);
     const skyBrightness=clamp(1.01+clear*.08-haze*.07,.94,1.12);
 
@@ -65,9 +58,6 @@ export function createFAP1CandidateAReconciliationAdapter({exterior,sky}={}){
     exterior.overlay.dataset.fap1ClearAirSupport=clear.toFixed(3);
     exterior.overlay.dataset.fap1QualityMode=qualityMode;
     exterior.overlay.dataset.fap1EmptyAirCheap=String(plan.weather.skipVolumeTraversalEligible===true);
-    exterior.overlay.dataset.fap1OpacityAuthority='INTEGRATED_DISTANCE_AWARE_EXTERIOR_FIELD';
-    exterior.overlay.dataset.fap1OrbitalBlend=orbitalBlend.toFixed(3);
-    exterior.overlay.dataset.fap1EffectiveOpacity=weatherOpacity.toFixed(3);
 
     sky.overlay.style.filter=`saturate(${skySaturation.toFixed(3)}) brightness(${skyBrightness.toFixed(3)})`;
     sky.overlay.dataset.fap1ClearAirSupport=clear.toFixed(3);
@@ -75,15 +65,10 @@ export function createFAP1CandidateAReconciliationAdapter({exterior,sky}={}){
     sky.overlay.dataset.fap1GrayFallback='false';
 
     lastPlan=plan;
-    lastEffectiveOpacity=weatherOpacity;
-    lastOrbitalBlend=orbitalBlend;
     globalThis.__AUDRALIA_FAP1_CANDIDATE_A_RUNTIME__=Object.freeze({
       location,
       qualityMode,
       interacting,
-      viewDistance,
-      orbitalBlend,
-      effectiveExteriorOpacity:weatherOpacity,
       plan,
       evaluation
     });
@@ -96,7 +81,7 @@ export function createFAP1CandidateAReconciliationAdapter({exterior,sky}={}){
     endInteraction:()=>{interacting=false;},
     getPlan:()=>lastPlan,
     getEvidence:()=>Object.freeze({
-      schema:'AUDRALIA_FAP1_CANDIDATE_A_EXISTING_HARNESS_ADAPTER_v2',
+      schema:'AUDRALIA_FAP1_CANDIDATE_A_EXISTING_HARNESS_ADAPTER_v1',
       reusesExistingPreviewHarness:true,
       createsPreviewRoute:false,
       createsCamera:false,
@@ -105,10 +90,7 @@ export function createFAP1CandidateAReconciliationAdapter({exterior,sky}={}){
       mutatesLiveRoute:false,
       opticsDrivenByCandidateA:true,
       weatherStateDrivenByCandidateA:true,
-      orbitalWeatherFieldSuppressionPermitted:false,
-      orbitalExteriorOpacityFloor:1,
-      effectiveExteriorOpacity:lastEffectiveOpacity,
-      orbitalBlend:lastOrbitalBlend,
+      stableCoverageFromExistingRegimes:true,
       qualityMode:requestedQualityMode(),
       lastWeatherClass:lastPlan?.weather?.weatherClass??null,
       lastWeatherIdentity:lastPlan?.weather?.stateIdentity??null

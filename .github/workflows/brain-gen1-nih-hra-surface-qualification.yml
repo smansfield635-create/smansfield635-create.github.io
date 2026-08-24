@@ -1,0 +1,85 @@
+name: Brain Gen1 NIH HRA Surface Qualification
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/brain-gen1-nih-hra-surface-qualification.yml'
+      - 'docs/compass/gen1-nih-hra-surface-candidate.md'
+
+permissions:
+  contents: read
+
+jobs:
+  qualify-surface:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch exact NIH/HRA GLB candidate
+        run: |
+          set -euo pipefail
+          mkdir -p candidate
+          curl --fail --location --retry 3 \
+            'https://ccf-ontology.hubmapconsortium.org/objects/v1.2/Allen_M_Brain.glb' \
+            -o candidate/Allen_M_Brain.glb
+          sha256sum candidate/Allen_M_Brain.glb | tee candidate/sha256.txt
+          stat -c 'BYTES=%s' candidate/Allen_M_Brain.glb | tee candidate/size.txt
+      - name: Inspect GLB topology and component naming without modification
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, struct, pathlib
+          p = pathlib.Path('candidate/Allen_M_Brain.glb')
+          b = p.read_bytes()
+          if b[:4] != b'glTF': raise SystemExit('NOT_GLB')
+          version, total = struct.unpack_from('<II', b, 4)
+          if version != 2 or total != len(b): raise SystemExit('GLB_HEADER_FAIL')
+          off = 12
+          chunks=[]
+          while off < len(b):
+              n,t=struct.unpack_from('<II',b,off); off+=8
+              chunks.append((t,b[off:off+n])); off+=n
+          js = next(data for typ,data in chunks if typ == 0x4E4F534A)
+          g = json.loads(js.decode('utf-8').rstrip(' \t\r\n\x00'))
+          names=[]
+          for coll in ('nodes','meshes','materials'):
+              for x in g.get(coll,[]):
+                  if isinstance(x,dict) and x.get('name'): names.append(x['name'])
+          primitives=sum(len(m.get('primitives',[])) for m in g.get('meshes',[]))
+          tri=0
+          for m in g.get('meshes',[]):
+              for pr in m.get('primitives',[]):
+                  ai=pr.get('indices')
+                  if ai is not None:
+                      count=g['accessors'][ai].get('count',0)
+                      mode=pr.get('mode',4)
+                      if mode==4: tri += count//3
+          low='\n'.join(names).lower()
+          report={
+            'glb_version':version,
+            'bytes':len(b),
+            'nodes':len(g.get('nodes',[])),
+            'meshes':len(g.get('meshes',[])),
+            'materials':len(g.get('materials',[])),
+            'accessors':len(g.get('accessors',[])),
+            'primitives':primitives,
+            'indexed_triangle_count_if_mode4':tri,
+            'name_hits':{
+              'cerebell': 'cerebell' in low,
+              'brainstem_or_brain_stem': ('brainstem' in low or 'brain stem' in low),
+              'cortex_or_cerebr': ('cortex' in low or 'cerebr' in low),
+            },
+            'sample_names':names[:80],
+          }
+          pathlib.Path('candidate/glb-report.json').write_text(json.dumps(report,indent=2))
+          print(json.dumps(report,indent=2))
+          if len(g.get('meshes',[])) < 3: raise SystemExit('INSUFFICIENT_COMPONENTIZATION')
+          if tri < 100000: raise SystemExit('INSUFFICIENT_TRIANGLE_RESOLUTION')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: brain-gen1-nih-hra-surface-qualification-${{ github.run_id }}
+          path: |
+            candidate/sha256.txt
+            candidate/size.txt
+            candidate/glb-report.json
+          if-no-files-found: error

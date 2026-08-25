@@ -4,7 +4,7 @@ import hashlib, json, os, pathlib, re, shutil, subprocess, time, urllib.request
 ROOT = pathlib.Path('/tmp/agentic-frontier-ir01')
 DG = ROOT / 'diamond-gate'
 OH = ROOT / 'openhands'
-MODEL = os.environ.get('OLLAMA_MODEL', 'qwen2.5-coder:1.5b')
+MODEL = os.environ.get('OLLAMA_MODEL', 'qwen2.5-coder:7b')
 OLLAMA = os.environ.get('OLLAMA_HOST_URL', 'http://127.0.0.1:11434')
 TASK = 'Repair slugify: lowercase ASCII, trim, collapse non-alphanumeric runs to one hyphen, no edge hyphens. Modify slug.mjs only. Run node test.mjs and finish only when it passes.'
 INITIAL = "export function slugify(input) {\n  return String(input).toLowerCase().replace(/\\s+/g, '-');\n}\n"
@@ -49,45 +49,90 @@ def generate(prompt):
 def clean_code(text):
     text = text.strip()
     m = re.search(r'```(?:javascript|js)?\s*(.*?)```', text, re.S|re.I)
-    if m: text = m.group(1).strip()
+    if m:
+        text = m.group(1).strip()
     if 'export function slugify' in text:
         text = text[text.index('export function slugify'):]
     return text.strip() + '\n'
 
 def diamond_gate_lane():
     start = time.monotonic()
-    attempts=[]
-    feedback='No verifier result yet.'
-    for i in range(1,4):
-        current=(DG/'slug.mjs').read_text()
-        prompt=f'''You are the implementation lane in a governed repair loop.\nFrozen task: {TASK}\nOnly slug.mjs may change. Return ONLY the complete replacement slug.mjs source, no markdown or explanation.\nCurrent slug.mjs:\n{current}\nVerifier feedback from prior attempt:\n{feedback}\n'''
-        raw=generate(prompt)
-        candidate=clean_code(raw)
+    attempts = []
+    feedback = 'No verifier result yet.'
+    prior_candidate = None
+    for i in range(1, 4):
+        current = (DG/'slug.mjs').read_text()
+        retry_rule = ''
+        if i > 1:
+            retry_rule = '''\nThis is a repair retry after a verifier failure. You MUST diagnose the exact failed behavior from the verifier output and produce a materially revised implementation. Repeating the prior candidate is forbidden. In particular, the frozen contract requires every RUN of one-or-more non-alphanumeric ASCII characters (including existing hyphens, underscores, spaces and punctuation) to collapse to exactly one hyphen, then edge hyphens to be removed.\n'''
+        prompt = f'''You are the implementation lane in a governed diagnose -> rewrite -> verify loop.\nFrozen task: {TASK}\nOnly slug.mjs may change. Return ONLY the complete replacement slug.mjs source, no markdown or explanation.\nCurrent slug.mjs:\n{current}\nVerifier feedback from prior attempt:\n{feedback}\n{retry_rule}\n'''
+        raw = generate(prompt)
+        candidate = clean_code(raw)
+        if prior_candidate is not None and candidate == prior_candidate:
+            feedback = feedback + '\nCONTROLLER: Candidate repeated byte-for-byte after failure. This is invalid. Replace the defective normalization strategy rather than resubmitting it.'
+            attempts.append({'attempt': i, 'pass': False, 'verifier': feedback[-1600:], 'repeated_candidate': True})
+            continue
         (DG/'slug.mjs').write_text(candidate)
-        passed,out=test(DG)
-        attempts.append({'attempt':i,'pass':passed,'verifier':out[-1200:]})
+        passed, out = test(DG)
+        attempts.append({'attempt': i, 'pass': passed, 'verifier': out[-1600:], 'repeated_candidate': False})
+        prior_candidate = candidate
         if passed:
-            return {'pass':True,'attempts':attempts,'elapsed_s':round(time.monotonic()-start,3),'output':candidate}
-        feedback=out
-    return {'pass':False,'attempts':attempts,'elapsed_s':round(time.monotonic()-start,3),'output':(DG/'slug.mjs').read_text()}
+            return {'pass': True, 'attempts': attempts, 'elapsed_s': round(time.monotonic()-start,3), 'output': candidate}
+        feedback = out
+    return {'pass': False, 'attempts': attempts, 'elapsed_s': round(time.monotonic()-start,3), 'output': (DG/'slug.mjs').read_text()}
 
 def openhands_lane():
-    start=time.monotonic()
-    env=os.environ.copy()
-    env.update({'LLM_API_KEY':'local-placeholder','LLM_MODEL':'openai/'+MODEL,'LLM_BASE_URL':OLLAMA+'/v1'})
-    cmd=['openhands','--headless','--json','--always-approve','--override-with-envs','-t',TASK]
-    p=run(cmd,cwd=OH,env=env,timeout=1200)
-    passed,out=test(OH)
-    return {'pass':passed,'exit_code':p.returncode,'elapsed_s':round(time.monotonic()-start,3),'agent_log_tail':p.stdout[-5000:],'verifier':out[-1200:],'output':(OH/'slug.mjs').read_text()}
+    start = time.monotonic()
+    env = os.environ.copy()
+    env.update({
+        'LLM_API_KEY': 'local-placeholder',
+        'LLM_MODEL': 'openai/' + MODEL,
+        'LLM_BASE_URL': OLLAMA + '/v1',
+        'WORKSPACE_DIR': str(OH),
+        'OPENHANDS_SUPPRESS_BANNER': '1',
+    })
+    task = TASK + ' Work directly in the current workspace. Inspect the existing files, use executable shell/editor tools to change slug.mjs, run node test.mjs, and continue until the tests pass. Do not stop at a plan or task list.'
+    cmd = ['openhands','--headless','--json','--always-approve','--override-with-envs','-t',task]
+    p = run(cmd, cwd=OH, env=env, timeout=1200)
+    passed, out = test(OH)
+    return {
+        'pass': passed,
+        'exit_code': p.returncode,
+        'elapsed_s': round(time.monotonic()-start,3),
+        'agent_log_tail': p.stdout[-8000:],
+        'verifier': out[-1600:],
+        'output': (OH/'slug.mjs').read_text(),
+    }
 
-def sha(text): return hashlib.sha256(text.encode()).hexdigest()
+def sha(text):
+    return hashlib.sha256(text.encode()).hexdigest()
 
-if ROOT.exists(): shutil.rmtree(ROOT)
-fixture(DG); fixture(OH)
-dg=diamond_gate_lane()
-oh=openhands_lane()
-receipt={'schema':'AGENTIC_FRONTIER_PAIRED_SMOKE_AF_IR_01_v1','task_id':'AF-IR-01','task':TASK,'model':MODEL,'ollama':OLLAMA,'diamond_gate':dg,'openhands':oh,'initial_sha256':sha(INITIAL),'diamond_gate_output_sha256':sha(dg['output']),'openhands_output_sha256':sha(oh['output']),'result':'PAIR_PASS' if dg['pass'] and oh['pass'] else 'PAIR_INCOMPLETE'}
-path=pathlib.Path(os.environ.get('GITHUB_WORKSPACE','.'))/'agentic-frontier-ir01-paired-receipt.json'
-path.write_text(json.dumps(receipt,indent=2))
-print(json.dumps({'result':receipt['result'],'diamond_gate_pass':dg['pass'],'openhands_pass':oh['pass'],'diamond_gate_elapsed_s':dg['elapsed_s'],'openhands_elapsed_s':oh['elapsed_s']},indent=2))
-raise SystemExit(0 if receipt['result']=='PAIR_PASS' else 3)
+if ROOT.exists():
+    shutil.rmtree(ROOT)
+fixture(DG)
+fixture(OH)
+dg = diamond_gate_lane()
+oh = openhands_lane()
+receipt = {
+    'schema': 'AGENTIC_FRONTIER_PAIRED_SMOKE_AF_IR_01_v2',
+    'task_id': 'AF-IR-01',
+    'task': TASK,
+    'model': MODEL,
+    'ollama': OLLAMA,
+    'diamond_gate': dg,
+    'openhands': oh,
+    'initial_sha256': sha(INITIAL),
+    'diamond_gate_output_sha256': sha(dg['output']),
+    'openhands_output_sha256': sha(oh['output']),
+    'result': 'PAIR_PASS' if dg['pass'] and oh['pass'] else 'PAIR_INCOMPLETE',
+}
+path = pathlib.Path(os.environ.get('GITHUB_WORKSPACE','.'))/'agentic-frontier-ir01-paired-receipt.json'
+path.write_text(json.dumps(receipt, indent=2))
+print(json.dumps({
+    'result': receipt['result'],
+    'diamond_gate_pass': dg['pass'],
+    'openhands_pass': oh['pass'],
+    'diamond_gate_elapsed_s': dg['elapsed_s'],
+    'openhands_elapsed_s': oh['elapsed_s'],
+}, indent=2))
+raise SystemExit(0 if receipt['result'] == 'PAIR_PASS' else 3)

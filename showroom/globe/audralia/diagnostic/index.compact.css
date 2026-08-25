@@ -62,15 +62,28 @@
   padding: 12px 14px;
 }
 
-.report-chamber:not(.has-report) .report-panel--read {
+.report-chamber:has(#copyReadableReport:disabled) .report-panel--read {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
 }
 
-.report-chamber:not(.has-report) .read-region {
+.report-chamber:has(#copyReadableReport:disabled) .read-region {
   min-height: 0;
   padding: 14px;
+}
+
+.observation-lens,
+.lens-panel {
+  min-height: 0 !important;
+}
+
+.observation-lens .panel-heading {
+  padding: 14px 14px 0;
+}
+
+.lens-panel {
+  padding: 12px 14px 14px;
 }
 
 .observation-list {
@@ -122,6 +135,18 @@
   .control-pad-primary-selectors {
     gap: 8px;
   }
+
+  .selected-audit-header,
+  .control-pad-heading,
+  .instrument-deck__header {
+    padding: 14px;
+  }
+
+  .orbit-panel,
+  .report-panel,
+  .instrument-chamber {
+    padding: 14px;
+  }
 }
 
 @media (max-width: 700px) {
@@ -133,7 +158,7 @@
     grid-column: 1 / -1;
   }
 
-  .report-chamber:not(.has-report) .report-panel--read,
+  .report-chamber:has(#copyReadableReport:disabled) .report-panel--read,
   .observation-list {
     grid-template-columns: 1fr;
   }

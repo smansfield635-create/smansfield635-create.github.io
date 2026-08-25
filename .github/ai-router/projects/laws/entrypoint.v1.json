@@ -6,7 +6,9 @@
     "laws/"
   ],
   "ownedExactPaths": [
-    ".github/workflows/laws-orbital-tranche-a0-a3.yml"
+    ".github/workflows/laws-orbital-tranche-a0-a3.yml",
+    "scripts/laws_cp6_final_browser_verify.mjs",
+    "scripts/laws_cp6_final_browser_verify_runner.mjs"
   ],
   "entrypoint": ".github/ai-router/projects/laws/entrypoint.v1.json",
   "authorityBoundary": [

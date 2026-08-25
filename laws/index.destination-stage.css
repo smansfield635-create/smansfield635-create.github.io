@@ -311,37 +311,3 @@ html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-
     transition: none !important;
   }
 }
-
-/* Numbered family rail and room for the independent record rail beneath it. */
-html[data-laws-destination-stage="active"] .laws-destination-stage__tab {
-  display: grid;
-  grid-template-rows: auto auto;
-  gap: .24rem;
-  text-align: left;
-}
-html[data-laws-destination-stage="active"] .laws-destination-stage__tab-ordinal {
-  color: rgba(128,224,255,.68);
-  font-size: .62rem;
-  letter-spacing: .14em;
-}
-html[data-laws-destination-stage="active"] .laws-destination-stage__tab-label {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-html[data-laws-destination-stage="active"] .laws-destination-stage__field {
-  min-height: clamp(34rem, 48vw, 42rem);
-}
-html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-rolodex-field__browser {
-  min-height: clamp(33rem, 46vw, 40rem) !important;
-}
-@media (max-width:900px) {
-  html[data-laws-destination-stage="active"] .laws-destination-stage__field {
-    min-height: 35rem;
-  }
-}
-@media (max-width:560px) {
-  html[data-laws-destination-stage="active"] .laws-destination-stage__field {
-    min-height: 36rem;
-  }
-}

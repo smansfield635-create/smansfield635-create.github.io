@@ -6,6 +6,7 @@ on:
       - '.github/workflows/ai-entry-workflow-dispatch-bridge.yml'
       - '.github/workflows/canonical-operation-intake-transport-v1.yml'
       - '.github/workflows/remote-operation-successor-v1.yml'
+      - '.github/workflows/ai-entry-auto-release.yml'
       - '.github/workflows/publication-preflight-v1.yml'
       - '.github/workflows/pages-exact-head-deploy-v3.yml'
       - '.github/workflows/audralia-weather-presentation-reconciliation.yml'
@@ -48,6 +49,7 @@ jobs:
             .github/workflows/ai-entry-workflow-dispatch-bridge.yml \
             .github/workflows/canonical-operation-intake-transport-v1.yml \
             .github/workflows/remote-operation-successor-v1.yml \
+            .github/workflows/ai-entry-auto-release.yml \
             .github/workflows/publication-preflight-v1.yml \
             .github/workflows/pages-exact-head-deploy-v3.yml \
             .github/workflows/audralia-weather-presentation-reconciliation.yml \

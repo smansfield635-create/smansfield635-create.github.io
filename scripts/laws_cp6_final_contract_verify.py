@@ -155,7 +155,7 @@ def main() -> None:
     laws = (ROOT / "laws/index.html").read_text(encoding="utf-8")
     assert laws.count('id="cp6-work-behind-laws"') == 1
     assert laws.find('id="research-comes-first"') < laws.find('id="cp6-work-behind-laws"')
-    assert laws.find('id="cp6-work-behind-laws"') < laws.find('aria-label="Laws supporting orientation"')
+    assert laws.find('aria-label="Laws supporting orientation"') < laws.find('data-laws-supporting-panel="evidence-applied"') < laws.find('id="cp6-work-behind-laws"')
     assert 'data-laws-method-acronym="FIRST"' in laws
     assert 'data-laws-test-method="four-member-reversible-admissibility-cluster"' in laws
     assert 'data-laws-primary-star-count="4"' in laws

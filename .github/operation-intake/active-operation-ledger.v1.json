@@ -2930,18 +2930,6 @@
       "scopeHash": "d254f06be4037d19be1a066f1692f348d7cda8b118d1d8803c42d4abf1f23bf8",
       "state": "ADMITTED_LOCKED"
     },
-    "d26788b20759e3ba55ec60653dbaa81ff1433c17b67582e43e4309a52e1436b3": {
-      "governingHead": "ac9a12293885121ed97602b6a08a91a5561abf84",
-      "lockGeneration": 1659,
-      "lockScope": "LAWS_CP6_BROWSER_RUNNER_ROLODEX_ACTIVE_CARD_V1",
-      "operationId": "LAWS_CP6_ROLODEX_ACTIVE_CARD_RUNNER_REPAIR_20260824_AC9A1229_R2",
-      "procedureLocatorDigest": "be92a6f1311f2c2d013039c42307e2c2db509fc227191c44fab27a8685f8e630",
-      "released": false,
-      "requestDigest": "a7fbe7fa00e0c23b3f8f639a6d3bda140bcac5bf7c8467508a28cf07f6d3dc89",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "d26788b20759e3ba55ec60653dbaa81ff1433c17b67582e43e4309a52e1436b3",
-      "state": "ADMITTED_LOCKED"
-    },
     "d281c29dd7a53349c09f92cb2f2b3f008d5e1bbe31ee11d958dafa634ab4dc6e": {
       "governingHead": "bc0ebc1c7671f3e32ce3d83869018f70e4cddb4a",
       "lockGeneration": 1421,
@@ -26021,6 +26009,19 @@
       "requestDigest": "9df4e3ceb997480ccbf140e085b8946efb7cfd8ffbee8d7c087c2c3dd71f5769",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "0845cd5f96021f6e589d6cc9a766a48cf00ea73d7380bb5e715654bd35dc7b2b",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "governingHead": "ac9a12293885121ed97602b6a08a91a5561abf84",
+      "lockGeneration": 1659,
+      "lockScope": "LAWS_CP6_BROWSER_RUNNER_ROLODEX_ACTIVE_CARD_V1",
+      "operationId": "LAWS_CP6_ROLODEX_ACTIVE_CARD_RUNNER_REPAIR_20260824_AC9A1229_R2",
+      "procedureLocatorDigest": "be92a6f1311f2c2d013039c42307e2c2db509fc227191c44fab27a8685f8e630",
+      "released": true,
+      "requestDigest": "a7fbe7fa00e0c23b3f8f639a6d3bda140bcac5bf7c8467508a28cf07f6d3dc89",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "d26788b20759e3ba55ec60653dbaa81ff1433c17b67582e43e4309a52e1436b3",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
     }

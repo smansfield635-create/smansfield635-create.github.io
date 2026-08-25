@@ -3,7 +3,8 @@
 // Full-file replacement.
 // Controls own UI binding, target preparation, target lifecycle, and user-facing rendering.
 // Diagnostic index.js owns report/direct/cycle production.
-// Renews v10 with bounded active target-frame preparation before Nine-Cycle gate.
+// v11.1 removes first-touch command interception, bounds receipt publication cost,
+// and loads the compact presentation-only diagnostic layout.
 // No production mutation. No readiness claim. No visual-pass claim. No cycle-pass claim.
 
 (function installAudraliaDistributedDiagnosticControlsV11(global) {
@@ -15,8 +16,9 @@
 
   var CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v11";
   var PREVIOUS_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v10";
-  var VERSION = "11.0.0";
+  var VERSION = "11.1.0";
   var FILE = "/showroom/globe/audralia/diagnostic/index.controls.js";
+  var COMPACT_PRESENTATION_STYLESHEET = "/showroom/globe/audralia/diagnostic/index.compact.css?v=AUDRALIA_DIAGNOSTIC_COMPACT_INTERACTION_LAYOUT_20260825_1";
 
   var DIAGNOSTIC_ENGINE_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v5";
   var DGB_ENGINE_CONTRACT = "DGB_INTERACTIVE_RUNTIME_ENGINE_CORE_NEWS_FIBONACCI_SPEC_OPS_TNT_v1";
@@ -156,6 +158,16 @@
 
   function frozenClone(value) { return deepFreeze(clone(value)); }
 
+  function shallowSnapshot(value) {
+    if (!value || typeof value !== "object") return value;
+    try {
+      if (Array.isArray(value)) return Object.freeze(value.slice());
+      return Object.freeze(Object.assign({}, value));
+    } catch (_e) {
+      return value;
+    }
+  }
+
   function safeJson(value) {
     try { return JSON.stringify(clone(value), null, 2); } catch (_e) { return String(value); }
   }
@@ -227,6 +239,19 @@
     node.disabled = Boolean(disabled);
     node.setAttribute("aria-disabled", disabled ? "true" : "false");
     return true;
+  }
+
+  function ensureCompactPresentation() {
+    var id = "audraliaDiagnosticCompactLayout";
+    var link = byId(id);
+    if (!link) {
+      link = doc.createElement("link");
+      link.id = id;
+      link.rel = "stylesheet";
+      link.href = COMPACT_PRESENTATION_STYLESHEET;
+      (doc.head || doc.documentElement).appendChild(link);
+    }
+    if (doc.documentElement) doc.documentElement.classList.add("diagnostic-compact-layout");
   }
 
   function normalizeRoutePath(value) {
@@ -397,7 +422,11 @@
   }
 
   function publishReceipt() {
-    root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT = deepFreeze({
+    var declarations = state.controls.distributedDeclarations.map(function (entry) {
+      return shallowSnapshot(entry);
+    });
+
+    root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT = Object.freeze({
       schema: CONTROL_RECEIPT_SCHEMA,
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
@@ -406,17 +435,17 @@
       initialized: state.initialized,
       initializedAt: state.initializedAt,
       delegatedEventsActive: state.controls.delegatedEventsActive,
-      engine: frozenClone(state.engine),
-      dgbEvidence: frozenClone(state.dgbEvidence),
-      inspectionLane: frozenClone(state.inspectionLane),
-      targetLifecycle: compactTargetLifecycle(state.target),
-      targetLifecycleFull: frozenClone(state.target),
+      engine: shallowSnapshot(state.engine),
+      dgbEvidence: shallowSnapshot(state.dgbEvidence),
+      inspectionLane: shallowSnapshot(state.inspectionLane),
+      targetLifecycle: Object.freeze(compactTargetLifecycle(state.target)),
+      targetLifecycleFull: shallowSnapshot(state.target),
       controlManifestCount: CONTROL_IDS.length,
       discoveredControlCount: state.controls.discoveredCount,
       missingControlCount: state.controls.missingCount,
-      missingControls: state.controls.missing.slice(),
+      missingControls: Object.freeze(state.controls.missing.slice()),
       distributedDeclarationCount: state.controls.distributedDeclarationCount,
-      distributedDeclarations: frozenClone(state.controls.distributedDeclarations),
+      distributedDeclarations: Object.freeze(declarations),
       currentReportId: state.report.current ? state.report.current.reportId || null : null,
       currentReportSource: state.report.source,
       reportAvailable: Boolean(state.report.current),
@@ -436,8 +465,8 @@
       actionCount: state.actionCount,
       clickCount: state.clickCount,
       errorCount: state.errorCount,
-      lastAction: frozenClone(state.lastAction),
-      lastError: frozenClone(state.lastError),
+      lastAction: state.lastAction,
+      lastError: state.lastError,
       presentationStationMap: STATIONS,
       requirements: REQUIREMENTS,
       reportProducerOwner: "DIAGNOSTIC_OBSERVATORY_ENGINE_INDEX_JS",
@@ -1588,7 +1617,8 @@
   }
 
   function setEngineSelection() {
-    var engine = resolveDiagnosticEngine();
+    var resolved = resolveFirst(DIAGNOSTIC_ENGINE_PATHS);
+    var engine = resolved ? resolved.value : null;
     if (engine && isFn(engine.setSelection)) {
       try {
         engine.setSelection({
@@ -1736,11 +1766,6 @@
 
     state.clickCount += 1;
 
-    if (handleParticipantSelection(target)) {
-      event.preventDefault();
-      return;
-    }
-
     id = target.id || "";
     cmd = target.getAttribute("data-report-command");
 
@@ -1810,7 +1835,12 @@
     if (id === "expandTargetWindow") { event.preventDefault(); setTargetExpanded(!state.ui.targetExpanded); return; }
     if (id === "reloadTargetFrame") { event.preventDefault(); reloadTargetFrame(); return; }
     if (id === "reloadObservatory") { event.preventDefault(); root.location.reload(); return; }
-    if (target.hasAttribute("data-receipt-index")) { event.preventDefault(); selectReceipt(target.getAttribute("data-receipt-index")); }
+    if (target.hasAttribute("data-receipt-index")) { event.preventDefault(); selectReceipt(target.getAttribute("data-receipt-index")); return; }
+
+    if (handleParticipantSelection(target)) {
+      event.preventDefault();
+      return;
+    }
   }
 
   function handleDocumentClick(event) {
@@ -1944,6 +1974,7 @@
     state.initialized = true;
     state.initializedAt = nowIso();
 
+    ensureCompactPresentation();
     publishApi();
     bindEvents();
     inspectInspectionLane();

@@ -6,15 +6,18 @@ html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] {
   --lrc-border: rgba(222, 230, 238, .16);
   --lrc-step: clamp(15rem, 27vw, 25rem);
   --lrc-depth: clamp(5rem, 9vw, 10rem);
+  --lrc-active-height: 30rem;
   position: relative;
-  min-height: clamp(34rem, 68vh, 48rem);
+  height: calc(var(--lrc-active-height) + 6rem);
+  min-height: calc(var(--lrc-active-height) + 6rem);
   overflow: clip;
   isolation: isolate;
 }
 
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-viewport] {
   position: relative;
-  min-height: inherit;
+  height: 100%;
+  min-height: 100%;
   perspective: 1800px;
   perspective-origin: 50% 45%;
   touch-action: pan-y;
@@ -47,17 +50,18 @@ html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] {
   box-sizing: border-box;
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 1.5rem;
   width: min(78vw, 42rem);
-  min-height: min(30rem, 60vh);
-  max-height: min(72vh, 48rem);
-  overflow: auto;
-  overscroll-behavior: contain;
-  scrollbar-gutter: stable;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  overflow: visible;
+  overscroll-behavior: auto;
+  scrollbar-gutter: auto;
   padding: clamp(1rem, 2.4vw, 1.65rem);
   animation: none;
   transform:
-    translate(-50%, -50%)
+    translateX(-50%)
     translateX(calc(var(--lrc-offset) * var(--lrc-step)))
     translateZ(calc(var(--lrc-depth-factor) * var(--lrc-depth)))
     rotateY(calc(var(--lrc-offset) * -11deg))
@@ -93,7 +97,7 @@ html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-live] {
   bottom: 1rem;
   transform: translateX(-50%);
   margin: 0;
-  max-width: min(70vw, 36rem);
+  max-width: min(76vw, 40rem);
   color: var(--lrc-muted);
   font-size: .78rem;
   letter-spacing: .08em;
@@ -102,66 +106,41 @@ html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-live] {
   pointer-events: none;
 }
 
-html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-controls] {
-  position: absolute;
-  z-index: 12;
-  inset: auto 1rem 1rem auto;
-  display: flex;
-  gap: .5rem;
-}
-
-html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-controls] button {
-  min-width: 2.75rem;
-  min-height: 2.75rem;
-  border: 1px solid rgba(215, 187, 130, .42);
-  border-radius: 999px;
-  background: rgba(8, 11, 15, .88);
-  color: var(--lrc-accent);
-  cursor: pointer;
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-controls],
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-prev],
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-next] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 [data-lrc-static] { display: block; }
 .lr-js [data-lrc-static] { display: none; }
 
-@media (max-width: 760px) {
+@media (max-width: 780px) {
   html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] {
     --lrc-step: clamp(18rem, 84vw, 22rem);
     --lrc-depth: 4rem;
-    min-height: clamp(34rem, 72vh, 44rem);
-  }
-  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-track] {
-    bottom: 5.75rem;
   }
   html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] {
-    width: min(82vw, 30rem);
-    min-height: min(24rem, 45vh);
-    max-height: min(50vh, 30rem);
+    width: 86vw;
+    top: 1rem;
     padding: 1rem;
   }
-  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-controls] {
-    left: 1rem;
-    right: auto;
-  }
   html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-live] {
-    left: 7rem;
-    right: 1rem;
-    bottom: 1.15rem;
-    transform: none;
-    max-width: none;
-    text-align: right;
+    left: 50%;
+    right: auto;
+    bottom: 1rem;
+    transform: translateX(-50%);
+    width: 86vw;
+    max-width: 86vw;
+    text-align: center;
   }
 }
 
 @media (min-width: 1000px) {
   html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] {
     --lrc-step: clamp(34rem, 50vw, 46rem);
-  }
-  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-track] {
-    bottom: 6rem;
-  }
-  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] {
-    min-height: min(26rem, 46vh);
-    max-height: min(52vh, 34rem);
   }
 }
 
@@ -171,5 +150,4 @@ html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-controls
 
 @media (forced-colors: active) {
   html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] { border: 1px solid CanvasText; background: Canvas; color: CanvasText; }
-  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-controls] button { border: 1px solid ButtonText; }
 }

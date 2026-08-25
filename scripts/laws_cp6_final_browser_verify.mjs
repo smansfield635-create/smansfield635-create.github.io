@@ -425,7 +425,7 @@ async function landingCheck(page, profile) {
   assert(await appliedRoute.getAttribute('href') === '/laws/research/applied-investigations/', '/laws/: applied investigations route drift');
   await page.keyboard.press('Escape');
   assert(await page.locator('[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"]').count() === 1, '/laws/: protected landing identity missing');
-  assert(await page.locator('[data-laws-experience-indicator]').count() === 5, '/laws/: FIRST indicator count');
+  assert(await page.locator('html[data-first-authorities="FLOW-INTEGRITY-REALITY-STRUCTURE-TEST"]').count() === 1, '/laws/: protected FIRST authority declaration missing');
 }
 
 async function verifyProfiles(browser) {
@@ -847,7 +847,7 @@ async function main() {
     staticNoJavaScriptExecutions: countCheck('static-no-js'),
     zeroOpenExclusiveOrZeroReadings: failureIncludes('reading') || failureIncludes('panel') ? 'FAIL' : 'PASS',
     collapsibleNavigation: failureIncludes('nav ') ? 'FAIL' : 'PASS',
-    persistentFirstRail: failureIncludes('FIRST rail') ? 'FAIL' : 'PASS',
+    protectedFirstAuthorityDeclaration: failureIncludes('FIRST authority declaration') ? 'FAIL' : 'PASS',
     auditDisclosure: failureIncludes('audit ') ? 'FAIL' : 'PASS',
     horizontalOverflow: failures.filter(failure => failure.message.includes('overflow')).length,
     browserErrors: failures.filter(failure => /pageerror:|console:|response:\d+/.test(failure.message)).length,

@@ -2270,6 +2270,18 @@
       "scopeHash": "a365baf8431c2bdb220a6c24b91422372536cedc20efd42126d572af814b259e",
       "state": "ADMITTED_LOCKED"
     },
+    "a4e3b18eb0080dc1092dcd1fca38b33738e07aa743a955a460d6f81d83d9e0c8": {
+      "governingHead": "19ea91e77e45454602952906961e9a182cfd7368",
+      "lockGeneration": 1693,
+      "lockScope": "H_EARTH:AUDRALIA_DIAGNOSTIC_TOUCH_COLLAPSE_AND_CLIPPING_REPAIR:V1",
+      "operationId": "AUDRALIA_DIAGNOSTIC_TOUCH_COLLAPSE_AND_CLIPPING_REPAIR_20260825_1312",
+      "procedureLocatorDigest": "670286367f435a0301d96903e486e18d5fa4ff4b01f1fcdb26c383f247bd3678",
+      "released": false,
+      "requestDigest": "40067f3e60ea5ab89855e11166e418d3810fc3513c88884ced1ff553a1e4cab5",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a4e3b18eb0080dc1092dcd1fca38b33738e07aa743a955a460d6f81d83d9e0c8",
+      "state": "ADMITTED_LOCKED"
+    },
     "a560a48139369f71a75bd11892350f5a65543bd2463caac1e1364c1e07b87245": {
       "governingHead": "8007d88820fa55d2b4e752d47b548e974fc73a68",
       "lockGeneration": 76,
@@ -3793,7 +3805,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1692,
+  "lockGeneration": 1693,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

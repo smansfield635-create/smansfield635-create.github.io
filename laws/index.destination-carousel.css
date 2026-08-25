@@ -107,3 +107,70 @@ html[data-laws-destination-stage="active"][data-laws-root-rolodex="active"] [dat
   html[data-laws-root-rolodex="active"] .laws-rolodex-viewport::before,
   html[data-laws-root-rolodex="active"] .laws-rolodex-viewport::after { display:none; }
 }
+
+/* Complete direct-selection rail: navigation is separate from the orbit card. */
+html[data-laws-root-rolodex="active"] .laws-rolodex-record-tabs {
+  position: relative;
+  z-index: 24;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(6.35rem, 1fr);
+  gap: .22rem;
+  width: min(calc(100% - 1.4rem), 64rem);
+  margin: 0 auto .35rem;
+  padding: .12rem 0 .42rem;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(128,224,255,.3) transparent;
+}
+html[data-laws-root-rolodex="active"] .laws-rolodex-record-tab {
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: .24rem;
+  min-width: 0;
+  min-height: 3.55rem;
+  padding: .58rem .65rem .52rem;
+  border: 0;
+  border-top: 1px solid rgba(128,224,255,.11);
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
+  background: linear-gradient(180deg,rgba(95,199,239,.035),transparent);
+  color: rgba(190,210,226,.54);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+html[data-laws-root-rolodex="active"] .laws-rolodex-record-tab[aria-selected="true"] {
+  color: rgba(241,249,255,.96);
+  border-top-color: rgba(128,224,255,.68);
+  border-bottom-color: rgba(128,224,255,.3);
+  background: linear-gradient(180deg,rgba(95,199,239,.09),transparent);
+}
+html[data-laws-root-rolodex="active"] .laws-rolodex-record-tab:focus-visible {
+  outline: 1px solid rgba(128,224,255,.82);
+  outline-offset: -1px;
+}
+html[data-laws-root-rolodex="active"] .laws-rolodex-record-tab__ordinal {
+  color: rgba(128,224,255,.76);
+  font-size: .63rem;
+  font-weight: 760;
+  letter-spacing: .13em;
+}
+html[data-laws-root-rolodex="active"] .laws-rolodex-record-tab__label {
+  overflow: hidden;
+  font-size: .67rem;
+  font-weight: 700;
+  line-height: 1.18;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (max-width:780px) {
+  html[data-laws-root-rolodex="active"] .laws-rolodex-record-tabs {
+    grid-auto-columns: minmax(5.6rem,6.4rem);
+    width: calc(100% - .7rem);
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  html[data-laws-root-rolodex="active"] .laws-rolodex-record-tab { transition:none!important; }
+}

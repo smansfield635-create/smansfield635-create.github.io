@@ -15,6 +15,8 @@ const SNAPSHOT_RENDERER=['inspection','audralia-24057-exact','snapshot','showroo
 const POLICY_ID='AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION_v1';
 const LIVE_SCHEMA='AUDRALIA_LIVE_PLANETARY_INTEGRATION_v8_FINAL_CLOUD_COMPOSITION';
 const FIXED_TIME_MS=Date.parse('2026-08-24T22:00:00.000Z');
+const BASELINE_PRODUCT_HEAD='1a4d75c136fd20eca5c24bb21a96ae4ddbd4b1d8';
+const BASELINE_SCHEMA='AUDRALIA_SPHERICAL_VISIBLE_WEATHER_BASELINE_v1';
 
 const REQUIRED_STAGES=Object.freeze([
   'FAP1_ORGANIZED_WEATHER_V6',
@@ -54,6 +56,7 @@ function staticCandidate(){
   return Object.freeze({
     policyId:POLICY_ID,
     liveSchema:LIVE_SCHEMA,
+    baselineProductHead:BASELINE_PRODUCT_HEAD,
     fap1ByteParity:true,
     requiredStages:REQUIRED_STAGES,
     v6Families:V6_FAMILIES,
@@ -95,6 +98,13 @@ async function waitForComposition(page,{timeout=20000,label='composition'}={}){
       return {
         present:Boolean(c),
         policyId:c?.policyId||null,
+        contract:c?{
+          singleVolumetricPassPreserved:c.singleVolumetricPassPreserved,
+          additionalRenderPasses:c.additionalRenderPasses,
+          additionalCanvases:c.additionalCanvases,
+          rayMarchCeilingsChanged:c.rayMarchCeilingsChanged,
+          pixelCeilingsChanged:c.pixelCeilingsChanged
+        }:null,
         evidence:c?.getRuntimeEvidence?.()||null
       };
     });
@@ -133,6 +143,41 @@ const PROBES=Object.freeze([
   Object.freeze({id:'ALTOCUMULUS_C',...targetFromLatLon(.733038,1.745329),distance:5000,pitch:1.08,yaw:-.28}),
   Object.freeze({id:'CIRRUS_C_NEAR_GRATITUDE',...targetFromLatLon(.209440,.191986),distance:5000,pitch:1.08,yaw:.18})
 ]);
+
+const SWEEP_VIEWPORT=Object.freeze({width:320,height:180,deviceScaleFactor:1});
+const SWEEP_LAT_CENTERS_DEG=Object.freeze([-75,-45,-15,15,45,75]);
+const SWEEP_LON_CENTERS_DEG=Object.freeze([-165,-135,-105,-75,-45,-15,15,45,75,105,135,165]);
+const REGION_LEVELS=Object.freeze([
+  Object.freeze({id:'VISIBLE_2_PERCENT',metric:'nonzeroFraction',threshold:.02}),
+  Object.freeze({id:'STRONG_1_PERCENT',metric:'strongFraction',threshold:.01}),
+  Object.freeze({id:'MEAN_ALPHA_1_PERCENT',metric:'meanAlpha',threshold:.01})
+]);
+
+function degToRad(value){return value*Math.PI/180;}
+
+function buildSweepSectors(){
+  const sectors=[];
+  for(let row=0;row<SWEEP_LAT_CENTERS_DEG.length;row++){
+    const latDeg=SWEEP_LAT_CENTERS_DEG[row];
+    const latLoDeg=Math.max(-90,latDeg-15),latHiDeg=Math.min(90,latDeg+15);
+    for(let col=0;col<SWEEP_LON_CENTERS_DEG.length;col++){
+      const lonDeg=SWEEP_LON_CENTERS_DEG[col];
+      const lonLoDeg=lonDeg-15,lonHiDeg=lonDeg+15;
+      const solidAngleSteradians=degToRad(lonHiDeg-lonLoDeg)*
+        (Math.sin(degToRad(latHiDeg))-Math.sin(degToRad(latLoDeg)));
+      sectors.push(Object.freeze({
+        id:`LAT_${latDeg>=0?'P':'M'}${Math.abs(latDeg)}_LON_${lonDeg>=0?'P':'M'}${Math.abs(lonDeg)}`,
+        row,col,latDeg,lonDeg,latLoDeg,latHiDeg,lonLoDeg,lonHiDeg,
+        solidAngleSteradians,
+        ...targetFromLatLon(degToRad(latDeg),degToRad(lonDeg)),
+        distance:5000,pitch:1.08,yaw:0
+      }));
+    }
+  }
+  return Object.freeze(sectors);
+}
+
+const SWEEP_SECTORS=buildSweepSectors();
 
 async function captureExteriorMetrics(page,probe){
   return page.evaluate(async probe=>{
@@ -173,6 +218,129 @@ async function captureExteriorMetrics(page,probe){
   },probe);
 }
 
+function connectedRegions(sectors,level){
+  const columns=SWEEP_LON_CENTERS_DEG.length;
+  const rows=SWEEP_LAT_CENTERS_DEG.length;
+  const byCell=new Map(sectors.map(sector=>[`${sector.row}:${sector.col}`,sector]));
+  const occupied=new Set(sectors.filter(sector=>sector[level.metric]>=level.threshold).map(sector=>`${sector.row}:${sector.col}`));
+  const seen=new Set(),regions=[];
+  const neighbors=(row,col)=>[
+    [row,(col+columns-1)%columns],
+    [row,(col+1)%columns],
+    [row-1,col],
+    [row+1,col]
+  ].filter(([r])=>r>=0&&r<rows);
+
+  for(const key of occupied){
+    if(seen.has(key))continue;
+    const queue=[key],members=[];
+    seen.add(key);
+    while(queue.length){
+      const current=queue.shift();
+      const sector=byCell.get(current);
+      members.push(sector);
+      for(const [nr,nc] of neighbors(sector.row,sector.col)){
+        const neighborKey=`${nr}:${nc}`;
+        if(occupied.has(neighborKey)&&!seen.has(neighborKey)){
+          seen.add(neighborKey);
+          queue.push(neighborKey);
+        }
+      }
+    }
+    const solidAngleSteradians=members.reduce((sum,sector)=>sum+sector.solidAngleSteradians,0);
+    regions.push(Object.freeze({
+      sectorCount:members.length,
+      solidAngleSteradians,
+      sphereFraction:solidAngleSteradians/(4*Math.PI),
+      sectorIds:Object.freeze(members.map(sector=>sector.id).sort())
+    }));
+  }
+  regions.sort((a,b)=>b.solidAngleSteradians-a.solidAngleSteradians);
+  const occupiedSolidAngle=sectors.filter(sector=>sector[level.metric]>=level.threshold)
+    .reduce((sum,sector)=>sum+sector.solidAngleSteradians,0);
+  return Object.freeze({
+    ...level,
+    occupiedSectorCount:occupied.size,
+    occupiedSphereFraction:occupiedSolidAngle/(4*Math.PI),
+    disconnectedRegionCount:regions.length,
+    regions:Object.freeze(regions)
+  });
+}
+
+function analyzeSphericalBaseline(samples){
+  assert.equal(samples.length,SWEEP_SECTORS.length,'SPHERICAL_BASELINE_SECTOR_COUNT_MISMATCH');
+  const totalSolidAngle=samples.reduce((sum,sector)=>sum+sector.solidAngleSteradians,0);
+  assert.ok(Math.abs(totalSolidAngle-4*Math.PI)<1e-9,'SPHERICAL_BASELINE_INCOMPLETE_SOLID_ANGLE');
+  const weighted=metric=>samples.reduce((sum,sector)=>sum+sector[metric]*sector.solidAngleSteradians,0)/totalSolidAngle;
+  const rankedEmptySectors=[...samples].sort((a,b)=>
+    a.strongFraction-b.strongFraction||
+    a.meanAlpha-b.meanAlpha||
+    a.nonzeroFraction-b.nonzeroFraction||
+    a.row-b.row||
+    a.col-b.col
+  ).slice(0,12).map(sector=>Object.freeze({
+    id:sector.id,
+    row:sector.row,col:sector.col,
+    latDeg:sector.latDeg,lonDeg:sector.lonDeg,
+    strongFraction:sector.strongFraction,
+    nonzeroFraction:sector.nonzeroFraction,
+    meanAlpha:sector.meanAlpha,
+    solidAngleSteradians:sector.solidAngleSteradians
+  }));
+  const regionAnalyses=REGION_LEVELS.map(level=>connectedRegions(samples,level));
+  return Object.freeze({
+    schema:BASELINE_SCHEMA,
+    productHead:BASELINE_PRODUCT_HEAD,
+    candidateHead:process.env.GITHUB_SHA||null,
+    fixedTimeIso:new Date(FIXED_TIME_MS).toISOString(),
+    measurementUnit:'FRAMEBUFFER_FRACTION_PER_ANGULAR_CELL',
+    camera:Object.freeze({distance:5000,pitch:1.08,yaw:0}),
+    viewport:SWEEP_VIEWPORT,
+    grid:Object.freeze({
+      latitudeBands:SWEEP_LAT_CENTERS_DEG.length,
+      longitudeSectors:SWEEP_LON_CENTERS_DEG.length,
+      sectorCount:samples.length,
+      sectorSpanDegrees:30,
+      totalSolidAngleSteradians:totalSolidAngle,
+      fullSphereSolidAngleSteradians:4*Math.PI,
+      fullAngularCoverage:true
+    }),
+    global:Object.freeze({
+      areaWeightedNonzeroFraction:weighted('nonzeroFraction'),
+      areaWeightedStrongFraction:weighted('strongFraction'),
+      areaWeightedMeanAlpha:weighted('meanAlpha'),
+      areaWeightedMeanRgb:weighted('meanRgb')
+    }),
+    regionAnalyses:Object.freeze(regionAnalyses),
+    rankedEmptySectors:Object.freeze(rankedEmptySectors),
+    sectors:Object.freeze(samples)
+  });
+}
+
+async function captureSphericalBaseline(page){
+  await page.setViewport(SWEEP_VIEWPORT);
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  const samples=[];
+  for(const sector of SWEEP_SECTORS){
+    const metrics=await captureExteriorMetrics(page,sector);
+    samples.push(Object.freeze({
+      id:sector.id,
+      row:sector.row,col:sector.col,
+      latDeg:sector.latDeg,lonDeg:sector.lonDeg,
+      latLoDeg:sector.latLoDeg,latHiDeg:sector.latHiDeg,
+      lonLoDeg:sector.lonLoDeg,lonHiDeg:sector.lonHiDeg,
+      solidAngleSteradians:sector.solidAngleSteradians,
+      width:metrics.width,height:metrics.height,
+      nonzeroFraction:metrics.nonzeroFraction,
+      strongFraction:metrics.strongFraction,
+      meanAlpha:metrics.meanAlpha,
+      meanRgb:metrics.meanRgb,
+      weightedChecksum:metrics.weightedChecksum
+    }));
+  }
+  return analyzeSphericalBaseline(samples);
+}
+
 async function captureVariant(browser,{ablateV6=false}={}){
   const page=await browser.newPage();
   await page.setViewport({width:720,height:1280,deviceScaleFactor:1});
@@ -200,8 +368,9 @@ async function captureVariant(browser,{ablateV6=false}={}){
   }));
   const probes=[];
   for(const probe of PROBES)probes.push(await captureExteriorMetrics(page,probe));
+  const sphericalBaseline=ablateV6?null:await captureSphericalBaseline(page);
   await page.close();
-  return Object.freeze({ablateV6,authoritative,composition,live,probes,errors});
+  return Object.freeze({ablateV6,authoritative,composition,live,probes,sphericalBaseline,errors});
 }
 
 function compareCausality(enabled,ablated){
@@ -261,6 +430,11 @@ try{
     assert.ok(String(variant.live.status).includes('USER_REVIEW_REQUIRED'),'LIVE_RUNTIME_NOT_READY');
     assert.equal(variant.live.worldCanvasCount,1,'LIVE_PRIMARY_WORLD_CANVAS_MULTIPLIED');
     assert.equal(variant.composition.policyId,POLICY_ID,'FINAL_COMPOSITION_POLICY_DRIFT');
+    assert.equal(variant.composition.contract?.singleVolumetricPassPreserved,true,'FINAL_COMPOSITION_SINGLE_PASS_NOT_PRESERVED');
+    assert.equal(variant.composition.contract?.additionalRenderPasses,0,'FINAL_COMPOSITION_RENDER_PASS_MULTIPLIED');
+    assert.equal(variant.composition.contract?.additionalCanvases,0,'FINAL_COMPOSITION_CANVAS_MULTIPLIED');
+    assert.equal(variant.composition.contract?.rayMarchCeilingsChanged,false,'FINAL_COMPOSITION_RAY_MARCH_CEILING_CHANGED');
+    assert.equal(variant.composition.contract?.pixelCeilingsChanged,false,'FINAL_COMPOSITION_PIXEL_CEILING_CHANGED');
     assert.equal(variant.composition.evidence?.finalStageEvidence?.pass,true,'FINAL_COMPOSITION_STAGE_FAILURE');
     assert.equal(variant.composition.evidence?.composedCloudShaders,1,'FINAL_COMPOSITION_EXPECTED_ONE_CLOUD_SHADER');
     assert.equal(variant.composition.evidence?.rejectedCloudShaders,0,'FINAL_COMPOSITION_REJECTED_SHADER');
@@ -276,8 +450,18 @@ try{
   assert.notEqual(enabled.composition.evidence.finalShaderSha256,ablated.composition.evidence.finalShaderSha256,'V6_ABLATION_FINAL_SHADER_HASH_IDENTICAL');
 
   const causality=compareCausality(enabled,ablated);
-  console.log(JSON.stringify({schema:'AUDRALIA_FINAL_CLOUD_SHADER_CAUSALITY_QUALIFICATION_v1',staticEvidence,enabled,ablated,causality},null,2));
+  console.log(JSON.stringify({schema:'AUDRALIA_FINAL_CLOUD_SHADER_CAUSALITY_QUALIFICATION_v1',staticEvidence,enabled:{...enabled,sphericalBaseline:undefined},ablated,causality},null,2));
   if(!causality.pass)throw new Error(`FRAMEBUFFER_CAUSALITY_FAILURE ${JSON.stringify({positiveProbeCount:causality.positiveProbeCount,materialProbeCount:causality.materialProbeCount,maxMeanAlphaDelta:causality.maxMeanAlphaDelta,maxCoverageDelta:causality.maxCoverageDelta})}`);
+
+  const sphericalBaseline=enabled.sphericalBaseline;
+  assert.equal(sphericalBaseline?.schema,BASELINE_SCHEMA,'SPHERICAL_BASELINE_SCHEMA_MISSING');
+  assert.equal(sphericalBaseline?.productHead,BASELINE_PRODUCT_HEAD,'SPHERICAL_BASELINE_PRODUCT_HEAD_DRIFT');
+  assert.equal(sphericalBaseline?.grid?.sectorCount,72,'SPHERICAL_BASELINE_SECTOR_COUNT_FAILURE');
+  assert.equal(sphericalBaseline?.grid?.fullAngularCoverage,true,'SPHERICAL_BASELINE_ANGULAR_COVERAGE_FAILURE');
+  assert.equal(sphericalBaseline?.regionAnalyses?.length,REGION_LEVELS.length,'SPHERICAL_BASELINE_REGION_ANALYSIS_MISSING');
+  assert.ok(sphericalBaseline.rankedEmptySectors.length>=1,'SPHERICAL_BASELINE_EMPTY_SECTOR_RANKING_MISSING');
+
+  console.log(JSON.stringify(sphericalBaseline,null,2));
 
   console.log(JSON.stringify({
     schema:'AUDRALIA_FINAL_CLOUD_SHADER_CAUSALITY_QUALIFICATION_v1',
@@ -291,6 +475,21 @@ try{
       materialProbeCount:causality.materialProbeCount,
       maxMeanAlphaDelta:causality.maxMeanAlphaDelta,
       maxCoverageDelta:causality.maxCoverageDelta
+    }),
+    sphericalVisibleWeatherBaseline:Object.freeze({
+      schema:sphericalBaseline.schema,
+      productHead:sphericalBaseline.productHead,
+      sectorCount:sphericalBaseline.grid.sectorCount,
+      fullAngularCoverage:sphericalBaseline.grid.fullAngularCoverage,
+      global:sphericalBaseline.global,
+      regionAnalyses:sphericalBaseline.regionAnalyses.map(region=>({
+        id:region.id,
+        metric:region.metric,
+        threshold:region.threshold,
+        occupiedSphereFraction:region.occupiedSphereFraction,
+        disconnectedRegionCount:region.disconnectedRegionCount
+      })),
+      rankedEmptySectors:sphericalBaseline.rankedEmptySectors
     }),
     singleVolumetricPassPreserved:true,
     performanceCeilingsFrozen:true,

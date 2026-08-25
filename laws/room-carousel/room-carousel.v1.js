@@ -133,7 +133,7 @@
 
     const nativeChildren = Array.from(root.children).filter(node => {
       if (!(node instanceof HTMLElement)) return false;
-      if (node.matches("details.lr-audit,[data-lrc-depth],[data-lrc-static],[data-lrc-tabs],[data-lrc-viewport]")) return false;
+      if (node.matches("details.lr-audit,[data-lrc-depth],[data-lrc-static],[data-lrc-tabs],[data-lrc-viewport],[data-lrc-continuation]")) return false;
       return node.matches("section,article,aside,nav,div");
     });
     if (nativeChildren.length < 1) return null;
@@ -163,12 +163,35 @@
     return { viewport, track, cards: nativeChildren, live };
   }
 
+  function ensureContinuation(root) {
+    const hasLowerContent = Boolean(
+      root.querySelector(":scope > details.lr-audit,:scope > [data-lrc-continuation]") ||
+      document.querySelector(".lr-footer, footer")
+    );
+    if (hasLowerContent) return;
+
+    const continuation = document.createElement("section");
+    continuation.dataset.lrcContinuation = "";
+    continuation.setAttribute("aria-labelledby", "lrc-continuation-title");
+    const kicker = document.createElement("p");
+    kicker.dataset.lrcContinuationKicker = "";
+    kicker.textContent = "Continue through the Laws record";
+    const title = document.createElement("h2");
+    title.id = "lrc-continuation-title";
+    title.textContent = "Every numbered stage remains available above.";
+    const copy = document.createElement("p");
+    copy.textContent = "Choose any tab for its orbit summary, then inspect that stage for the complete page-specific information.";
+    continuation.append(kicker, title, copy);
+    root.append(continuation);
+  }
+
   function mount(root) {
     const adopted = adoptNativeStoryboard(root);
     if (!adopted) return;
     const { viewport, cards, live } = adopted;
     if (!viewport || cards.length < 1) return;
     const { tabs, buttons } = createTabs(root, viewport, cards);
+    ensureContinuation(root);
 
     const state = {
       index: clamp(Number(root.dataset.lrcInitial || 0) || 0, 0, cards.length - 1),

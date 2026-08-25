@@ -39,6 +39,15 @@ INTEGRATED_ROUTES = [
 METHODS_SHOWROOM_ROUTE = "/laws/research/methods-and-models/"
 METHODS_SHOWROOM_CONTRACT = "METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1"
 METHODS_CANONICAL_ARCHIVE = "METHODS_MODELS_CANONICAL_ARCHIVE_v1_DRAFT"
+ROOM_CAROUSEL_ASSET_IDENTITY = "LAWS_BACK_PAGE_CAROUSEL_CORRECTION_20260825A"
+ROOM_CAROUSEL_CSS_HREF = f"/laws/room-carousel/room-carousel.v1.css?v={ROOM_CAROUSEL_ASSET_IDENTITY}"
+ROOM_CAROUSEL_JS_SRC = f"/laws/room-carousel/room-carousel.v1.js?v={ROOM_CAROUSEL_ASSET_IDENTITY}"
+FAMILY_CAROUSEL_ROUTES = [
+    "/laws/categories/flow/",
+    "/laws/categories/integrity/",
+    "/laws/categories/reality/",
+    "/laws/categories/structure/",
+]
 
 OBSOLETE = [
     ".github/workflows/laws-complete-renewal-batch-materialize.yml",
@@ -70,6 +79,12 @@ PROTECTED_RUNTIME = {
 def require(condition: bool, message: str) -> None:
     if not condition:
         raise AssertionError(message)
+
+
+def served_route(route: str) -> str:
+    if route in STORY_TO_SERVED:
+        return f"/{STORY_TO_SERVED[route]}"
+    return route
 
 
 def route_path(route: str) -> Path:
@@ -134,15 +149,43 @@ def main() -> int:
                 require('aria-selected="true"' not in text, f"SOURCE_PRESELECTED_TAB:{path}")
                 require('aria-expanded="true"' not in text, f"SOURCE_PREOPENED_CONTROL:{path}")
 
-    room_carousel_routes = [route for route in child_routes if route != METHODS_SHOWROOM_ROUTE] + ["/laws/research/"]
-    require(len(room_carousel_routes) == 24, f"ROOM_CAROUSEL_ROUTE_COUNT:{len(room_carousel_routes)}")
-    require(len(set(room_carousel_routes)) == 24, "DUPLICATE_ROOM_CAROUSEL_ROUTE")
+    story_carousel_pages = [page for page in pages if page["route"] != METHODS_SHOWROOM_ROUTE]
+    story_carousel_routes = [page["route"] for page in story_carousel_pages]
+    room_carousel_routes = (
+        story_carousel_routes
+        + ["/laws/research/", "/laws/categories/reality/battery-heldout-study/"]
+        + FAMILY_CAROUSEL_ROUTES
+    )
+    require(len(story_carousel_routes) == 23, f"STORY_CAROUSEL_ROUTE_COUNT:{len(story_carousel_routes)}")
+    require(len(FAMILY_CAROUSEL_ROUTES) == 4, f"FAMILY_CAROUSEL_ROUTE_COUNT:{len(FAMILY_CAROUSEL_ROUTES)}")
+    require(len(room_carousel_routes) == 29, f"ROOM_CAROUSEL_ROUTE_COUNT:{len(room_carousel_routes)}")
+    require(len(set(room_carousel_routes)) == 29, "DUPLICATE_ROOM_CAROUSEL_ROUTE")
+    require(METHODS_SHOWROOM_ROUTE not in room_carousel_routes, "METHODS_SHOWROOM_ENTERED_SHARED_CAROUSEL")
     for route in room_carousel_routes:
         path = route_path(route)
         text = source(path)
-        require("data-laws-room-carousel" in text, f"ROOM_CAROUSEL_ROOT_MISSING:{path}")
-        require("/laws/room-carousel/room-carousel.v1.css" in text, f"ROOM_CAROUSEL_CSS_MISSING:{path}")
-        require("/laws/room-carousel/room-carousel.v1.js" in text, f"ROOM_CAROUSEL_JS_MISSING:{path}")
+        require(text.count("data-laws-room-carousel") == 1, f"ROOM_CAROUSEL_ROOT_COUNT:{path}")
+        require(text.count(f'href="{ROOM_CAROUSEL_CSS_HREF}"') == 1, f"ROOM_CAROUSEL_CSS_IDENTITY:{path}")
+        require(text.count(f'src="{ROOM_CAROUSEL_JS_SRC}"') == 1, f"ROOM_CAROUSEL_JS_IDENTITY:{path}")
+
+    for page in story_carousel_pages:
+        path = route_path(page["route"])
+        text = source(path)
+        story_nav = re.search(r'<nav class="lr-story-nav"[^>]*>(.*?)</nav>', text, re.S)
+        require(story_nav is not None, f"STORY_NAVIGATION_MISSING:{path}")
+        hrefs = re.findall(r'<a href="([^"]+)"', story_nav.group(1))
+        expected_hrefs = [
+            served_route(page["previous_story_beat"]["route"]),
+            served_route(page["next_story_beat"]["route"]),
+        ]
+        require(hrefs == expected_hrefs, f"STORY_NAVIGATION_ROUTE_DRIFT:{path}:{hrefs}")
+        require("Previous" in story_nav.group(1), f"STORY_NAVIGATION_BACKWARD_LABEL_MISSING:{path}")
+
+    carousel_runtime = source(ROOT / "laws/room-carousel/room-carousel.v1.js")
+    require(
+        'details.lr-audit,.lr-story-nav,[data-lrc-depth]' in carousel_runtime,
+        "STORY_NAVIGATION_CAROUSEL_ADOPTION_EXCLUSION_MISSING",
+    )
 
     landing = source(ROOT / "laws/index.html")
     for marker in (
@@ -153,7 +196,7 @@ def main() -> int:
         "20-cycle warning horizon",
         "AUROC 0.9394",
         "AUROC 0.9704",
-        "laws-first-rail",
+        'data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"',
     ):
         require(marker in landing, f"LANDING_MARKER_MISSING:{marker}")
 
@@ -205,8 +248,12 @@ def main() -> int:
         "integratedRoutes": 33,
         "batteryPublicSurfaces": 27,
         "methodsModelsAlternateContract": "PASS",
-        "roomCarouselRoutes": 24,
+        "roomCarouselRoutes": 29,
+        "roomCarouselStoryRoutes": 23,
+        "roomCarouselFamilyRoots": 4,
+        "roomCarouselAssetIdentity": ROOM_CAROUSEL_ASSET_IDENTITY,
         "roomCarouselStaticBinding": "PASS",
+        "roomCarouselBottomStoryNavigation": "PASS",
         "zeroOpenSourceContract": "PASS",
         "formulaNodeSplitRule": "ARROWS_ONLY_INTERNAL_PLUS_PRESERVED",
         "protectedRuntimeMutations": 0,

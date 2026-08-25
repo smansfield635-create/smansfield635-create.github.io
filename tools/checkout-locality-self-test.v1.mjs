@@ -15,6 +15,7 @@ const policy=readJson('.github/ai-router/execution-efficiency-policy.v1.json');
 const bridge=read('.github/workflows/ai-entry-workflow-dispatch-bridge.yml');
 const canonicalIntake=read('.github/workflows/canonical-operation-intake-transport-v1.yml');
 const successorGateway=read('.github/workflows/remote-operation-successor-v1.yml');
+const automaticRelease=read('.github/workflows/ai-entry-auto-release.yml');
 const preflight=read('.github/workflows/publication-preflight-v1.yml');
 const deploy=read('.github/workflows/pages-exact-head-deploy-v3.yml');
 const audraliaWeatherQualification=read('.github/workflows/audralia-weather-presentation-reconciliation.yml');
@@ -24,6 +25,10 @@ check('policy-bounded-working-set-default',policy.checkoutLocality?.defaultMode=
 check('policy-unrestricted-checkout-denied',policy.checkoutLocality?.unrestrictedCheckoutAllowedByDefault===false);
 check('policy-excluded-root-materialization-denied',policy.checkoutLocality?.materializeExcludedRootsThenDiscardAllowed===false);
 check('policy-exact-object-readback-allowed',policy.checkoutLocality?.exactCommitObjectReadbackForExcludedProtectedClosuresAllowed===true);
+check('policy-automatic-release-enrolled',policy.checkoutLocality?.centralWorkflows?.automaticRelease==='.github/workflows/ai-entry-auto-release.yml');
+check('policy-automatic-release-protected-closure-excluded',policy.checkoutLocality?.automaticReleaseWorkingSet?.excludedProtectedClosure==='inspection/audralia-24057-exact');
+check('policy-automatic-release-entry-bound',policy.checkoutLocality?.automaticReleaseWorkingSet?.sparseIndexEntryLimitExclusive===20000);
+check('policy-automatic-release-file-bound',policy.checkoutLocality?.automaticReleaseWorkingSet?.materializedFileLimitExclusive===20000);
 
 for(const [name,text] of [['bridge',bridge],['canonical-intake',canonicalIntake],['successor-gateway',successorGateway]]){
   const checkoutCount=(text.match(/uses:\s*actions\/checkout@v4/g)||[]).length;
@@ -41,6 +46,31 @@ for(const required of ['/AI_ENTRYPOINT.json','/.github/workflows/remote-operatio
 check('successor-gateway-not-root-wide',!successorGateway.includes('\n            /*\n'));
 check('successor-frozen-gate-identity-preserved',successorGateway.includes('8b254c43abc53d769e82524c6eded1c07eaffc61'));
 check('successor-frozen-self-test-identity-preserved',successorGateway.includes('edba8f3b024e832fd3da6207ba786ce292aad54c'));
+
+check('automatic-release-no-actions-checkout',!automaticRelease.includes('actions/checkout@v4'));
+check('automatic-release-partial-fetch',automaticRelease.includes('fetch --no-tags --depth=1 --filter=blob:none origin "$TARGET_SHA"'));
+check('automatic-release-sparse-index-init',automaticRelease.includes('git sparse-checkout init --cone --sparse-index'));
+check('automatic-release-sparse-index-asserted',automaticRelease.includes('git config --bool index.sparse'));
+check('automatic-release-root-tree-enumeration',automaticRelease.includes('git ls-tree -d --name-only FETCH_HEAD'));
+check('automatic-release-inspection-child-enumeration',automaticRelease.includes('git ls-tree -d --name-only "FETCH_HEAD:inspection"'));
+check('automatic-release-bounded-index-threshold',automaticRelease.includes('test "$sparse_entries" -lt 20000'));
+check('automatic-release-bounded-materialized-threshold',automaticRelease.includes('test "$materialized_files" -lt 20000'));
+check('automatic-release-bulk-roots-excluded',automaticRelease.includes('.github|preview|node_modules|h-earth-live-6d18e158'));
+check('automatic-release-protected-snapshot-excluded-from-worktree',automaticRelease.includes('test "$child" = "audralia-24057-exact" && continue'));
+check('automatic-release-protected-snapshot-absence-asserted',automaticRelease.includes('test ! -e inspection/audralia-24057-exact'));
+check('automatic-release-no-noncone-index-walk',!automaticRelease.includes('sparse-checkout-cone-mode: false'));
+check('automatic-release-no-root-wide-negative-sparse-pattern',!automaticRelease.includes('\n            /*\n'));
+for(const required of [
+  'preview/bt4/entitlement-v1',
+  'preview/bt4/operational-release-v1',
+  'h-earth-live-6d18e158/showroom/globe/h-earth'
+])check(`automatic-release-required-subtree-${required}`,automaticRelease.includes(required));
+for(const preserved of [
+  'node preview/bt4/entitlement-v1/verify-entitlement-preview.v1.mjs',
+  'BT4_BOUNDED_PREVIEWS_STAGED=PASS',
+  'BT4_REAL_OBJECT_EVIDENCE_IDENTITY=PASS',
+  'rsync -a --delete h-earth-live-6d18e158/showroom/globe/h-earth/'
+])check(`automatic-release-publication-semantics-${preserved}`,automaticRelease.includes(preserved));
 
 for(const [name,text] of [['publication-preflight',preflight],['pages-deploy',deploy]]){
   check(`${name}-no-actions-checkout`,!text.includes('actions/checkout@v4'));
@@ -172,6 +202,10 @@ const receipt={
   unrestrictedCheckoutAllowedByDefault:false,
   exactCommitObjectReadbackVerified:true,
   governedLaneGatewaysSparse:true,
+  automaticReleaseSparseIndex:true,
+  automaticReleaseActionsCheckout:false,
+  automaticReleaseNoFullIndexTraversalContract:true,
+  automaticReleaseProtectedSnapshotMaterialized:false,
   publicationPreflightSparseIndex:true,
   publicationDeploySparseIndex:true,
   publicationActionsCheckout:false,

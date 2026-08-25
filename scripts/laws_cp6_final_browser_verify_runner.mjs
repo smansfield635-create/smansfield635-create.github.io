@@ -21,22 +21,28 @@ const corrections = [
   },
   {
     from: `await applied.locator('button.laws-rolodex-enter').click();`,
-    to: `const appliedField = rolodex.locator('.laws-rolodex-field[data-rolodex-id]').filter({ has: applied });
-        assert(await appliedField.count() === 1, '/laws/: applied investigations rolodex field missing');
+    to: `const appliedField = rolodex.locator('.laws-rolodex-field[data-rolodex-id="research"]');
+        assert(await appliedField.count() === 1, '/laws/: research rolodex field missing');
+        assert(await appliedField.locator('.laws-rolodex-card[data-destination-id="applied-investigations"]').count() === 1, '/laws/: applied investigations not in research rolodex field');
+        if (await appliedField.getAttribute('aria-hidden') === 'true') {
+          const appliedFieldId = await appliedField.getAttribute('id');
+          assert(appliedFieldId, '/laws/: research rolodex field id missing');
+          const researchTab = rolodex.locator(\`.laws-destination-stage__tab[aria-controls="\${appliedFieldId}"]\`);
+          assert(await researchTab.count() === 1, '/laws/: research destination-family tab missing');
+          await researchTab.click();
+          await page.waitForFunction(
+            () => document.querySelector('.laws-rolodex-field[data-rolodex-id="research"]')?.getAttribute('aria-hidden') === 'false',
+          );
+        }
         const appliedViewport = appliedField.locator('.laws-rolodex-viewport');
         const appliedCardCount = await appliedField.locator('.laws-rolodex-card').count();
-        const appliedRolodexId = await appliedField.getAttribute('data-rolodex-id');
-        assert(appliedRolodexId, '/laws/: applied investigations rolodex id missing');
         await appliedViewport.focus();
         for (let step = 0; step < appliedCardCount && await applied.getAttribute('data-active') !== 'true'; step += 1) {
           const previousDestinationId = await appliedField.locator('.laws-rolodex-card[data-active="true"]').getAttribute('data-destination-id');
           await page.keyboard.press('ArrowRight');
           await page.waitForFunction(
-            ({ rolodexId, previous }) => {
-              const field = Array.from(document.querySelectorAll('.laws-rolodex-field[data-rolodex-id]')).find(node => node.dataset.rolodexId === rolodexId);
-              return field?.querySelector('.laws-rolodex-card[data-active="true"]')?.dataset.destinationId !== previous;
-            },
-            { rolodexId: appliedRolodexId, previous: previousDestinationId },
+            previous => document.querySelector('.laws-rolodex-field[data-rolodex-id="research"] .laws-rolodex-card[data-active="true"]')?.dataset.destinationId !== previous,
+            previousDestinationId,
           );
         }
         assert(await applied.getAttribute('data-active') === 'true', '/laws/: applied investigations card did not become active');

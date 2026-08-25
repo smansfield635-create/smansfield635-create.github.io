@@ -317,18 +317,6 @@
       "scopeHash": "18db711e273cc5148e33aa5cdac3765243a14ec935cd4553808debfefa58bc05",
       "state": "ADMITTED_LOCKED"
     },
-    "1a25aee2ce5f0c3abc272c247784a2c2c4b230c553d6fb6110705f1eb622fc52": {
-      "governingHead": "ee78616b12539d98537512d5f8546ad40a33c15e",
-      "lockGeneration": 1689,
-      "lockScope": "H_EARTH:AUDRALIA_DIAGNOSTIC_GUIDED_WORKSPACE_ARCHITECTURE:V1",
-      "operationId": "AUDRALIA_DIAGNOSTIC_GUIDED_WORKSPACE_ARCHITECTURE_20260825_1146",
-      "procedureLocatorDigest": "ba9b7164f5bdf2af707a92602ef18f197c20ffb961b79c147e7261ae3733b0d1",
-      "released": false,
-      "requestDigest": "27873c7212872d08a87b5bb9bd6ec75ab40acd87e245a01bf996d50d78d3652f",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "1a25aee2ce5f0c3abc272c247784a2c2c4b230c553d6fb6110705f1eb622fc52",
-      "state": "ADMITTED_LOCKED"
-    },
     "1ae1b91f6e782e73a926087a9891b430c0dbdb107a6f156a63c9eab0996a9c9b": {
       "governingHead": "331284949940c95db80a332235492de4c80d3d43",
       "lockGeneration": 831,
@@ -26715,6 +26703,19 @@
         "transitionId": "LAWS_TABBED_ORBIT_INSPECTION_EE78616B_TO_54993443_20260825"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "ee78616b12539d98537512d5f8546ad40a33c15e",
+      "lockGeneration": 1689,
+      "lockScope": "H_EARTH:AUDRALIA_DIAGNOSTIC_GUIDED_WORKSPACE_ARCHITECTURE:V1",
+      "operationId": "AUDRALIA_DIAGNOSTIC_GUIDED_WORKSPACE_ARCHITECTURE_20260825_1146",
+      "procedureLocatorDigest": "ba9b7164f5bdf2af707a92602ef18f197c20ffb961b79c147e7261ae3733b0d1",
+      "released": true,
+      "requestDigest": "27873c7212872d08a87b5bb9bd6ec75ab40acd87e245a01bf996d50d78d3652f",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "1a25aee2ce5f0c3abc272c247784a2c2c4b230c553d6fb6110705f1eb622fc52",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

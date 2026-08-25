@@ -2139,13 +2139,25 @@
       "state": "ADMITTED_LOCKED"
     },
     "9d490fd0a24cad344385b77f4727142870b01f6500c4690fe26ec51c6c8cfcce": {
-      "governingHead": "f684d1fb2c2cbb765aa7d66cdb90adbbe5844606",
-      "lockGeneration": 1671,
+      "governingHead": "a28330f618d587a0683a8c59a2fe23756a6a2e8c",
+      "lockGeneration": 1672,
       "lockScope": "ROUTER:LAWS_CP6_VERIFIER_EXACT_PATH_REGISTRATION:V1",
-      "operationId": "LAWS_CP6_VERIFIER_PATH_ROUTER_REGISTRATION_20260824_F684D1FB_R1",
-      "procedureLocatorDigest": "54bdc2fde8d1cbafc1e9c7d9614ed3f7390c2b37be148dcd973181c285b863ac",
+      "operationId": "LAWS_CP6_VERIFIER_PATH_ROUTER_REGISTRATION_20260824_A28330F6_S1",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "f684d1fb2c2cbb765aa7d66cdb90adbbe5844606",
+        "lockGeneration": 1671,
+        "lockScope": "ROUTER:LAWS_CP6_VERIFIER_EXACT_PATH_REGISTRATION:V1",
+        "operationId": "LAWS_CP6_VERIFIER_PATH_ROUTER_REGISTRATION_20260824_F684D1FB_R1",
+        "preservedEvidenceRefs": [],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "LAWS_CP6_VERIFIER_PATH_ROUTER_REGISTRATION_F684D1FB_TO_A28330F6_20260824"
+      },
+      "procedureLocatorDigest": "131ff9fe95986b8cbe6197948d13aee53357e470b27fda1bd8f5f6832c1cf619",
       "released": false,
-      "requestDigest": "9987d32361f5c93c48d4caf15d80833dd4d4ebef31cce9fe00b8e2bc9f0ae922",
+      "requestDigest": "6323384677b7a30443590fe6c7b18beb9e5252acd39b6e0741ff0f1efa0cf46c",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "9d490fd0a24cad344385b77f4727142870b01f6500c4690fe26ec51c6c8cfcce",
       "state": "ADMITTED_LOCKED"
@@ -3695,7 +3707,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1671,
+  "lockGeneration": 1672,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -26309,6 +26321,31 @@
       "scopeHash": "93aafe658b187c58b7b42c3495d30b5ea15b259b5bf56c6dff28d6b100c9c683",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "f684d1fb2c2cbb765aa7d66cdb90adbbe5844606",
+      "lockGeneration": 1671,
+      "lockScope": "ROUTER:LAWS_CP6_VERIFIER_EXACT_PATH_REGISTRATION:V1",
+      "operationId": "LAWS_CP6_VERIFIER_PATH_ROUTER_REGISTRATION_20260824_F684D1FB_R1",
+      "procedureLocatorDigest": "54bdc2fde8d1cbafc1e9c7d9614ed3f7390c2b37be148dcd973181c285b863ac",
+      "released": true,
+      "requestDigest": "9987d32361f5c93c48d4caf15d80833dd4d4ebef31cce9fe00b8e2bc9f0ae922",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "9d490fd0a24cad344385b77f4727142870b01f6500c4690fe26ec51c6c8cfcce",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "a28330f618d587a0683a8c59a2fe23756a6a2e8c",
+        "successorLockGeneration": 1672,
+        "successorLockScope": "ROUTER:LAWS_CP6_VERIFIER_EXACT_PATH_REGISTRATION:V1",
+        "successorOperationId": "LAWS_CP6_VERIFIER_PATH_ROUTER_REGISTRATION_20260824_A28330F6_S1",
+        "transitionId": "LAWS_CP6_VERIFIER_PATH_ROUTER_REGISTRATION_F684D1FB_TO_A28330F6_20260824"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

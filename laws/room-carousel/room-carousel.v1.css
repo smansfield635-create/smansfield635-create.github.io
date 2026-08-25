@@ -345,6 +345,44 @@ html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"][data-lrc-inspectin
   display: none;
 }
 
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] > [data-lrc-continuation] {
+  width: min(calc(100% - 2rem), 72rem);
+  margin: clamp(1rem, 3vw, 2.4rem) auto 0;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  border: 1px solid rgba(128, 224, 255, .14);
+  border-radius: 1.4rem;
+  background:
+    linear-gradient(135deg, rgba(95, 199, 239, .055), transparent 58%),
+    rgba(5, 11, 21, .72);
+  color: rgba(213, 222, 230, .78);
+}
+
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] > [data-lrc-continuation] > * {
+  max-width: 52rem;
+}
+
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-continuation-kicker] {
+  margin: 0 0 .65rem;
+  color: rgba(128, 224, 255, .82);
+  font-size: .72rem;
+  font-weight: 760;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] > [data-lrc-continuation] h2 {
+  margin: 0;
+  color: #f3ead8;
+  font-size: clamp(1.45rem, 3.2vw, 2.35rem);
+  line-height: 1.08;
+}
+
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] > [data-lrc-continuation] p:last-child {
+  margin: .85rem 0 0;
+  font-size: clamp(.95rem, 1.7vw, 1.08rem);
+  line-height: 1.62;
+}
+
 [data-lrc-static] { display: block; }
 .lr-js [data-lrc-static] { display: none; }
 

@@ -21,6 +21,14 @@
     document.head.append(link);
   }
 
+  function installTabbedStyles() {
+    if (document.querySelector("style[data-laws-destination-stage-tabbed-css]")) return;
+    const style = document.createElement("style");
+    style.dataset.lawsDestinationStageTabbedCss = "true";
+    style.textContent = "\nhtml[data-laws-destination-stage=\"active\"] .laws-destination-stage__tab{display:grid;grid-template-rows:auto auto;gap:.24rem;text-align:left}\nhtml[data-laws-destination-stage=\"active\"] .laws-destination-stage__tab-ordinal{color:rgba(128,224,255,.68);font-size:.62rem;letter-spacing:.14em}\nhtml[data-laws-destination-stage=\"active\"] .laws-destination-stage__tab-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}\nhtml[data-laws-destination-stage=\"active\"] .laws-destination-stage__field{min-height:clamp(34rem,48vw,42rem)}\nhtml[data-laws-destination-stage=\"active\"] .laws-destination-stage__field .laws-rolodex-field__browser{min-height:clamp(33rem,46vw,40rem)!important}\n@media(max-width:900px){html[data-laws-destination-stage=\"active\"] .laws-destination-stage__field{min-height:35rem}}\n@media(max-width:560px){html[data-laws-destination-stage=\"active\"] .laws-destination-stage__field{min-height:36rem}}\n";
+    document.head.append(style);
+  }
+
   function copyFor(field, index) {
     return {
       eyebrow: field.querySelector(".laws-rolodex-field__heading > p")?.textContent?.trim() || `Destination family ${index + 1}`,
@@ -43,6 +51,7 @@
     if (fields.length !== 3) return false;
 
     installStyles();
+    installTabbedStyles();
     mounted = true;
     document.documentElement.dataset.lawsDestinationStage = "active";
     section.dataset.lawsDestinationStage = "active";

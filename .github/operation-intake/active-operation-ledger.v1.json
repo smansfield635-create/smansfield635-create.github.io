@@ -3426,36 +3426,6 @@
       "scopeHash": "e1ad0405fe22b0c4fc88220bd7c935ee21f6810cfcb88eceecbb131e8ad1cdb3",
       "state": "ADMITTED_LOCKED"
     },
-    "e3e4cc2df26390a76d3e56ce238068aa14ab169452721a4379eb7c0d6538a119": {
-      "governingHead": "ee3a920afb99e018fd59bacc9bbd61995e2319f0",
-      "lockGeneration": 1700,
-      "lockScope": "ROUTER:LAWS_RENEWAL_RUNTIME_EXACT_PATH_REGISTRATION:V1",
-      "operationId": "LAWS_RENEWAL_RUNTIME_OWNERSHIP_REGISTRATION_20260825_EE3A920A_S2",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "572580788a53e605cdcb1023b7e6d52d2d768067",
-        "lockGeneration": 1697,
-        "lockScope": "ROUTER:LAWS_RENEWAL_RUNTIME_EXACT_PATH_REGISTRATION:V1",
-        "operationId": "LAWS_RENEWAL_RUNTIME_OWNERSHIP_REGISTRATION_20260825_57258078_S1",
-        "preservedEvidenceRefs": [
-          "ISSUE_2062_GEN1697_SUCCESSOR_ADMISSION",
-          "PR_2068_HEAD_DDCE1280_PREDECESSOR_QUALIFIED_CANDIDATE_ONLY",
-          "MAIN_ADVANCE_57258078_TO_EE3A920A_THREE_COMMITS_TWO_PATHS",
-          "MAIN_ADVANCE_ROOT_ROUTER_OVERLAP_ADDITIVE_MATERIAL_WORK_AUDIT_REGISTRATION",
-          "ROUTER_RUN_32886350933_CURRENT_HEAD_PASS"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "LAWS_RENEWAL_RUNTIME_OWNERSHIP_57258078_TO_EE3A920A_20260825"
-      },
-      "procedureLocatorDigest": "d551506fd3d2e25958ba8d83a5c04ed1d08024f270d502c8334d809bbabfafa5",
-      "released": false,
-      "requestDigest": "1acf2d3fc5488c1629e54475de673236dbbb736932b2ce1339b258caef25c019",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "e3e4cc2df26390a76d3e56ce238068aa14ab169452721a4379eb7c0d6538a119",
-      "state": "ADMITTED_LOCKED"
-    },
     "e4d12b6a0ca7f045bab13ffbed689e4ea6c24bdf85324c4be5100a0a2cbf711c": {
       "governingHead": "92a9d54f0d8c90fd3dffb869efd06bca2642fb02",
       "lockGeneration": 1482,
@@ -26991,6 +26961,37 @@
         "transitionId": "LAWS_RENEWAL_RUNTIME_OWNERSHIP_57258078_TO_EE3A920A_20260825"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "ee3a920afb99e018fd59bacc9bbd61995e2319f0",
+      "lockGeneration": 1700,
+      "lockScope": "ROUTER:LAWS_RENEWAL_RUNTIME_EXACT_PATH_REGISTRATION:V1",
+      "operationId": "LAWS_RENEWAL_RUNTIME_OWNERSHIP_REGISTRATION_20260825_EE3A920A_S2",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "572580788a53e605cdcb1023b7e6d52d2d768067",
+        "lockGeneration": 1697,
+        "lockScope": "ROUTER:LAWS_RENEWAL_RUNTIME_EXACT_PATH_REGISTRATION:V1",
+        "operationId": "LAWS_RENEWAL_RUNTIME_OWNERSHIP_REGISTRATION_20260825_57258078_S1",
+        "preservedEvidenceRefs": [
+          "ISSUE_2062_GEN1697_SUCCESSOR_ADMISSION",
+          "PR_2068_HEAD_DDCE1280_PREDECESSOR_QUALIFIED_CANDIDATE_ONLY",
+          "MAIN_ADVANCE_57258078_TO_EE3A920A_THREE_COMMITS_TWO_PATHS",
+          "MAIN_ADVANCE_ROOT_ROUTER_OVERLAP_ADDITIVE_MATERIAL_WORK_AUDIT_REGISTRATION",
+          "ROUTER_RUN_32886350933_CURRENT_HEAD_PASS"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "LAWS_RENEWAL_RUNTIME_OWNERSHIP_57258078_TO_EE3A920A_20260825"
+      },
+      "procedureLocatorDigest": "d551506fd3d2e25958ba8d83a5c04ed1d08024f270d502c8334d809bbabfafa5",
+      "released": true,
+      "requestDigest": "1acf2d3fc5488c1629e54475de673236dbbb736932b2ce1339b258caef25c019",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "e3e4cc2df26390a76d3e56ce238068aa14ab169452721a4379eb7c0d6538a119",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

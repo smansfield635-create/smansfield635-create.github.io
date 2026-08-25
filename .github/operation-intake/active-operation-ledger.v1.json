@@ -2472,6 +2472,18 @@
       "scopeHash": "b23dcdb4bbbbf5d972b342e7811418489cb33435adfeaf32f041f31672f415ee",
       "state": "ADMITTED_LOCKED"
     },
+    "b42c26ef3367f05ccd87a3c60fb35363dce3bd05a022915803b7a280cfa230ad": {
+      "governingHead": "6bc9362653cd44d1beedd3f30c89d2a13d29bddd",
+      "lockGeneration": 1683,
+      "lockScope": "LAWS:ROOM_CAROUSEL:SHARED_RUNTIME_AND_VERIFIER",
+      "operationId": "LAWS_ROOM_CAROUSEL_PRECEDENT_REPAIR_20260825_6BC93626_R2",
+      "procedureLocatorDigest": "572616ddef5b5608b7321e73ad28c9f5923f5609f7f7cfca47480a1c70d7a921",
+      "released": false,
+      "requestDigest": "335afc2da627af9012137babab09b57047e88ea96ca64398a20cf4a449967c70",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "b42c26ef3367f05ccd87a3c60fb35363dce3bd05a022915803b7a280cfa230ad",
+      "state": "ADMITTED_LOCKED"
+    },
     "b42c855020ac097941aaabe6e2524e0b60f9262518a3f23e73c93e8f14c5469c": {
       "governingHead": "11d4e10cddb4320014adbcd754d5fe15077ebeaa",
       "lockGeneration": 1653,
@@ -3749,7 +3761,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1682,
+  "lockGeneration": 1683,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

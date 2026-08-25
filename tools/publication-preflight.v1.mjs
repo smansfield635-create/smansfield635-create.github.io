@@ -87,6 +87,7 @@ function extractResourceSpecifiers(rel,text){
   if(ext==='.mjs'||ext==='.js'||ext==='.cjs'){
     appendMatches(refs,text,/\b(?:import|export)\s+(?:[^'";]*?\s+from\s*)?["']([^"']+)["']/gs);
     appendMatches(refs,text,/\bimport\s*\(\s*["']([^"']+)["']\s*\)/gs);
+    appendMatches(refs,text,/\bimportWrapper\s*\(\s*["'][^"']+["']\s*,\s*["']([^"']+)["']\s*\)/gs);
     appendMatches(refs,text,/\bnew\s+URL\s*\(\s*["']([^"']+)["']\s*,\s*import\.meta\.url\s*\)/gs);
     appendMatches(refs,text,/\bfetch\s*\(\s*["']([^"']+)["']/gs);
     appendMatches(refs,text,/\b(?:Worker|SharedWorker)\s*\(\s*["']([^"']+)["']/gs);
@@ -137,34 +138,40 @@ function loadSurfaceManifest(repoRoot,surfaceId){
 function promoteProtectedSurface({repoRoot,stage,targetSha,protectedSurfaceId,policy}){
   const entryFile=path.join(stage,...policy.entryPath.split('/'));
   if(!fs.existsSync(entryFile))throw new Error(`AUTHORIZED_RUNTIME_ENTRYPOINT_MISSING:${policy.entryPath}`);
-  const direct=extractResourceSpecifiers(policy.entryPath,fs.readFileSync(entryFile,'utf8'))
+  const entryReferences=extractResourceSpecifiers(policy.entryPath,fs.readFileSync(entryFile,'utf8'))
     .map(specifier=>resolveResourcePath(policy.entryPath,specifier))
-    .filter(rel=>rel?.startsWith(policy.allowedPrefix));
-  if(!direct.length)throw new Error(`AUTHORIZED_RUNTIME_DEPENDENCY_ENTRY_REFERENCES_MISSING:${protectedSurfaceId}`);
-  const queue=[...new Set(direct)],seen=new Set(),files=[];
+    .filter(Boolean);
+  const queue=[policy.entryPath],seen=new Set(),files=[];
   while(queue.length){
     const rel=queue.shift();
     if(seen.has(rel))continue;
     seen.add(rel);
-    if(!rel.startsWith(policy.allowedPrefix))throw new Error(`AUTHORIZED_RUNTIME_DEPENDENCY_OUTSIDE_PREFIX:${rel}`);
-    const recovered=readExactRepositoryFile({repoRoot,targetSha,rel});
-    const to=path.join(stage,...rel.split('/'));
-    fs.mkdirSync(path.dirname(to),{recursive:true});fs.writeFileSync(to,recovered.bytes);
-    const bytes=recovered.bytes.length,fileSha256=sha256(recovered.bytes);
-    files.push({path:rel,bytes,sha256:fileSha256,source:recovered.source});
-    const text=recovered.bytes.toString('utf8');
+    let bytes;
+    let source;
+    if(excluded(rel)){
+      if(!rel.startsWith(policy.allowedPrefix))throw new Error(`AUTHORIZED_RUNTIME_DEPENDENCY_CROSSES_EXCLUDED_ROOT:${rel}`);
+      const recovered=readExactRepositoryFile({repoRoot,targetSha,rel});
+      bytes=recovered.bytes;
+      source=recovered.source;
+      const to=path.join(stage,...rel.split('/'));
+      fs.mkdirSync(path.dirname(to),{recursive:true});
+      fs.writeFileSync(to,bytes);
+      files.push({path:rel,bytes:bytes.length,sha256:sha256(bytes),source});
+    }else{
+      const staged=path.join(stage,...rel.split('/'));
+      if(!fs.existsSync(staged)||!fs.statSync(staged).isFile())throw new Error(`PUBLIC_RUNTIME_DEPENDENCY_MISSING_FROM_STAGE:${rel}`);
+      bytes=fs.readFileSync(staged);
+      source='STAGED_PUBLIC_PAYLOAD';
+    }
+    const text=bytes.toString('utf8');
     for(const specifier of extractResourceSpecifiers(rel,text)){
       const dependency=resolveResourcePath(rel,specifier);
       if(!dependency)continue;
-      if(excluded(dependency)){
-        if(!dependency.startsWith(policy.allowedPrefix))throw new Error(`AUTHORIZED_RUNTIME_DEPENDENCY_CROSSES_EXCLUDED_ROOT:${rel}:${dependency}`);
-        queue.push(dependency);
-        continue;
-      }
-      const dependencySource=sourceFile(repoRoot,dependency);
-      if(fs.existsSync(dependencySource)&&fs.statSync(dependencySource).isFile()&&!fs.existsSync(path.join(stage,...dependency.split('/'))))throw new Error(`PUBLIC_RUNTIME_DEPENDENCY_MISSING_FROM_STAGE:${rel}:${dependency}`);
+      if(excluded(dependency)&&!dependency.startsWith(policy.allowedPrefix))throw new Error(`AUTHORIZED_RUNTIME_DEPENDENCY_CROSSES_EXCLUDED_ROOT:${rel}:${dependency}`);
+      if(!seen.has(dependency))queue.push(dependency);
     }
   }
+  if(!files.length)throw new Error(`AUTHORIZED_RUNTIME_DEPENDENCY_ENTRY_REFERENCES_MISSING:${protectedSurfaceId}`);
   files.sort((a,b)=>a.path.localeCompare(b.path));
   const digest=crypto.createHash('sha256');
   for(const file of files){digest.update(file.path);digest.update('\0');digest.update(file.sha256);digest.update('\0');}
@@ -176,7 +183,8 @@ function promoteProtectedSurface({repoRoot,stage,targetSha,protectedSurfaceId,po
     exactCommitObjectReadbackCount:files.filter(file=>file.source==='EXACT_COMMIT_OBJECT').length,
     entryPath:policy.entryPath,
     allowedPrefix:policy.allowedPrefix,
-    entryReferenceCount:direct.length,
+    entryReferenceCount:entryReferences.length,
+    traversedResourceCount:seen.size,
     fileCount:files.length,
     bytes:files.reduce((sum,file)=>sum+file.bytes,0),
     digest:digest.digest('hex'),

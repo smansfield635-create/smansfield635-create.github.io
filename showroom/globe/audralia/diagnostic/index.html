@@ -1,14 +1,14 @@
 <!-- /showroom/globe/audralia/diagnostic/index.html -->
-<!-- AUDRALIA_MIRRORLAND_GUIDED_DIAGNOSTIC_WORKSPACE_HTML_TNT_v15 -->
-<!-- Guided workspace recomposition. CSS v5, compact CSS, index.js v5, controls v11 contract, and all diagnostic participant implementations retained. -->
+<!-- AUDRALIA_MIRRORLAND_GUIDED_DIAGNOSTIC_WORKSPACE_HTML_TNT_v16 -->
+<!-- Stable tablet workspace. CSS v5, compact CSS, index.js v5, controls v11 contract, and all diagnostic participant implementations retained. -->
 
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/globe/audralia/diagnostic/"
-  data-page="audralia-dreamscape-compact-educational-diagnostic-chamber"
-  data-contract="AUDRALIA_MIRRORLAND_GUIDED_DIAGNOSTIC_WORKSPACE_HTML_TNT_v15"
-  data-previous-contract="AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_HTML_TNT_v14"
+  data-page="audralia-dreamscape-stable-tablet-diagnostic-chamber"
+  data-contract="AUDRALIA_MIRRORLAND_GUIDED_DIAGNOSTIC_WORKSPACE_HTML_TNT_v16"
+  data-previous-contract="AUDRALIA_MIRRORLAND_GUIDED_DIAGNOSTIC_WORKSPACE_HTML_TNT_v15"
   data-target-route="/showroom/globe/audralia/"
   data-diagnostic-route="/showroom/globe/audralia/diagnostic/"
   data-diagnostic-family-root="/assets/audralia/"
@@ -36,7 +36,7 @@
   data-diagnostic-workspace-count="6"
   data-diagnostic-workspace-default="work"
   data-target-frame-id="audraliaDiagnosticTargetFrame"
-  data-target-frame-loading-policy="eager"
+  data-target-frame-loading-policy="explicit-on-demand"
   data-target-frame-hidden-container-policy="controls-may-prepare-before-cycle"
   data-production-mutation-authorized="false"
   data-runtime-restart-authorized="false"
@@ -68,11 +68,11 @@
   />
   <meta
     name="audralia-diagnostic-html-contract"
-    content="AUDRALIA_MIRRORLAND_GUIDED_DIAGNOSTIC_WORKSPACE_HTML_TNT_v15"
+    content="AUDRALIA_MIRRORLAND_GUIDED_DIAGNOSTIC_WORKSPACE_HTML_TNT_v16"
   />
   <meta
     name="audralia-diagnostic-html-previous-contract"
-    content="AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_HTML_TNT_v14"
+    content="AUDRALIA_MIRRORLAND_GUIDED_DIAGNOSTIC_WORKSPACE_HTML_TNT_v15"
   />
   <meta
     name="audralia-diagnostic-css-contract"
@@ -112,9 +112,134 @@
     href="/showroom/globe/audralia/diagnostic/index.css?v=AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_STYLE_TNT_v5"
   />
   <link
+    id="audraliaDiagnosticCompactLayout"
     rel="stylesheet"
     href="/showroom/globe/audralia/diagnostic/index.compact.css?v=AUDRALIA_DIAGNOSTIC_COMPACT_INTERACTION_LAYOUT_20260825_1"
   />
+  <style id="audraliaDiagnosticTabletStability" data-contract="AUDRALIA_DIAGNOSTIC_TABLET_STABILITY_PRESENTATION_v1">
+    /* Registered-host override for unregistered predecessor stylesheets. */
+    html {
+      scroll-behavior: auto;
+    }
+
+    .educational-deck,
+    .diagnostic-control-pad,
+    .report-chamber,
+    .observation-lens,
+    .instrument-deck {
+      content-visibility: visible !important;
+      contain: none !important;
+      contain-intrinsic-size: none !important;
+    }
+
+    .diagnostic-observatory,
+    .diagnostic-observatory > *,
+    .orbit-panel,
+    .report-panel,
+    .lens-panel,
+    .instrument-chamber,
+    .educational-category,
+    .educational-category summary > span:last-child,
+    .cycle-map li,
+    .cycle-map li > div {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .diagnostic-observatory p,
+    .diagnostic-observatory span,
+    .diagnostic-observatory strong,
+    .diagnostic-observatory small,
+    .diagnostic-observatory dt,
+    .diagnostic-observatory dd,
+    .diagnostic-observatory h1,
+    .diagnostic-observatory h2,
+    .diagnostic-observatory h3,
+    .diagnostic-observatory h4,
+    .diagnostic-observatory button,
+    .diagnostic-observatory a,
+    .diagnostic-observatory summary,
+    .diagnostic-observatory em {
+      word-break: normal;
+      overflow-wrap: break-word;
+    }
+
+    .report-panel pre,
+    .cycle-ledger pre,
+    .archive-raw pre,
+    .selected-receipt-detail pre {
+      max-height: none !important;
+      overflow-x: auto;
+      overflow-y: visible !important;
+      overscroll-behavior: auto;
+      word-break: normal;
+      overflow-wrap: anywhere;
+    }
+
+    .participant-list,
+    .receipt-list,
+    .cycle-receipt-list,
+    .registry-record-list,
+    .archive-report-list,
+    .archive-error-list {
+      max-height: none !important;
+      overflow: visible !important;
+      overscroll-behavior: auto;
+    }
+
+    @media (max-width: 1100px) {
+      .educational-category-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      }
+
+      .educational-category[open] {
+        grid-column: 1 / -1 !important;
+      }
+
+      .cycle-map,
+      .registry-detail-grid,
+      .archive-snapshot-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+      }
+
+      .cycle-map li {
+        min-height: 0;
+      }
+
+      .panel-tablist {
+        display: flex;
+        gap: 8px;
+        max-width: 100%;
+        padding-bottom: 4px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        overscroll-behavior-inline: contain;
+        scroll-snap-type: inline proximity;
+        scrollbar-width: thin;
+      }
+
+      .panel-tablist > button {
+        flex: 1 0 8.5rem;
+        min-width: 8.5rem;
+        scroll-snap-align: start;
+        white-space: normal;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .educational-category-grid,
+      .report-chamber:has(#copyReadableReport:disabled) .report-panel--read,
+      .observation-list {
+        grid-template-columns: minmax(0, 1fr) !important;
+      }
+
+      .diagnostic-observatory {
+        padding-inline:
+          max(10px, env(safe-area-inset-left))
+          max(10px, env(safe-area-inset-right));
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -972,10 +1097,11 @@
           <iframe
             id="audraliaDiagnosticTargetFrame"
             title="Audralia target route diagnostic observation frame"
-            src="/showroom/globe/audralia/"
+            src="about:blank"
+            loading="lazy"
             data-target-route="/showroom/globe/audralia/"
             data-diagnostic-target-frame="true"
-            data-loading-policy="eager"
+            data-loading-policy="explicit-on-demand"
           ></iframe>
         </div>
       </section>
@@ -1158,6 +1284,6 @@
   <script src="/showroom/globe/audralia/diagnostic/index.control.bridge.js?v=AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_COMPATIBILITY_BRIDGE_TNT_v12" defer data-audralia-diagnostic-control-bridge-script="true" data-contract="AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_COMPATIBILITY_BRIDGE_TNT_v12" data-participant-role="THIN_CONTROL_COMPATIBILITY_BRIDGE" data-participant-required="true" data-compatibility-owner="true" data-relational-correspondence-owner="true" data-family-synchronization-certification-owner="true" data-control-owner="false" data-dom-event-binding-owner="false" data-report-owner="false" data-execution-owner="false" data-load-order="15"></script>
   <script src="/showroom/globe/audralia/diagnostic/index.inspection.lane.js?v=AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_TNT_v3" defer data-audralia-diagnostic-inspection-lane-script="true" data-contract="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_TNT_v3" data-participant-role="DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE" data-participant-required="true" data-inspection-owner="true" data-control-owner="false" data-dom-event-binding-owner="false" data-load-order="16"></script>
   <script src="/showroom/globe/audralia/diagnostic/index.js?v=AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v5" defer data-audralia-diagnostic-engine-script="true" data-contract="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v5" data-participant-role="DROP_WITH_READ_DIAGNOSTIC_ENGINE" data-participant-required="true" data-diagnostic-state-owner="true" data-report-owner="true" data-observation-owner="true" data-direct-execution-owner="true" data-nine-cycle-owner="true" data-control-owner="false" data-dom-event-binding-owner="false" data-report-nonblocking="true" data-load-order="17"></script>
-  <script src="/showroom/globe/audralia/diagnostic/index.controls.js?v=AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v11&amp;asset=GEN2047_TOUCH_RESPONSIVENESS_20260825_1" defer data-audralia-diagnostic-control-panel-script="true" data-contract="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v11" data-participant-role="DROP_WITH_READ_CONTROL_PANEL" data-participant-required="true" data-control-owner="true" data-dom-event-binding-owner="true" data-dropdown-owner="true" data-tab-owner="true" data-clipboard-owner="true" data-receipt-filter-owner="true" data-receipt-selection-owner="true" data-target-lifecycle-owner="true" data-target-preparation-owner="true" data-independent-binding="true" data-engine-fallback-report="true" data-no-silent-failure="true" data-load-order="18"></script>
+  <script src="/showroom/globe/audralia/diagnostic/index.controls.js?v=AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v11&amp;asset=GEN2061_TABLET_STABILITY_20260825_1" defer data-audralia-diagnostic-control-panel-script="true" data-contract="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v11" data-participant-role="DROP_WITH_READ_CONTROL_PANEL" data-participant-required="true" data-control-owner="true" data-dom-event-binding-owner="true" data-dropdown-owner="true" data-tab-owner="true" data-clipboard-owner="true" data-receipt-filter-owner="true" data-receipt-selection-owner="true" data-target-lifecycle-owner="true" data-target-preparation-owner="true" data-independent-binding="true" data-engine-fallback-report="true" data-no-silent-failure="true" data-load-order="18"></script>
 </body>
 </html>

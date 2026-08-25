@@ -1,0 +1,165 @@
+/* /showroom/globe/audralia/diagnostic/index.compact.css */
+/* AUDRALIA_DIAGNOSTIC_COMPACT_INTERACTION_LAYOUT_20260825_1 */
+/* Presentation-only refinement. No diagnostic state, execution, or evidence authority. */
+
+.diagnostic-observatory {
+  gap: 12px;
+}
+
+.command-crown,
+.educational-deck,
+.diagnostic-control-pad,
+.report-chamber,
+.observation-lens,
+.instrument-deck {
+  border-radius: 20px;
+}
+
+.educational-deck,
+.diagnostic-control-pad,
+.report-chamber,
+.observation-lens,
+.instrument-deck {
+  padding: 18px;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 420px;
+}
+
+.educational-deck .section-preface {
+  gap: 4px;
+}
+
+.educational-deck .section-preface > p:last-child {
+  max-width: 72ch;
+  margin-bottom: 8px;
+}
+
+.educational-category-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.educational-category > summary {
+  min-height: 92px;
+  padding: 12px;
+}
+
+.educational-category summary em {
+  display: none;
+}
+
+.educational-category__symbol {
+  width: 42px;
+  height: 42px;
+}
+
+.control-pad-disclosures {
+  gap: 8px;
+}
+
+.control-disclosure > summary {
+  min-height: 64px;
+  padding: 12px 14px;
+}
+
+.report-chamber:has(#copyReadableReport:disabled) .report-panel--read {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.report-chamber:has(#copyReadableReport:disabled) .read-region {
+  min-height: 0;
+  padding: 14px;
+}
+
+.observation-lens,
+.lens-panel {
+  min-height: 0 !important;
+}
+
+.observation-lens .panel-heading {
+  padding: 14px 14px 0;
+}
+
+.lens-panel {
+  padding: 12px 14px 14px;
+}
+
+.observation-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.observation-list > div {
+  min-height: 0;
+  padding: 10px 12px;
+}
+
+@media (max-width: 1100px) {
+  .diagnostic-observatory {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "crown"
+      "controls"
+      "report"
+      "education"
+      "observation"
+      "instruments";
+    gap: 10px;
+    padding:
+      calc(10px + var(--safe-top))
+      calc(12px + var(--safe-right))
+      calc(28px + var(--safe-bottom))
+      calc(12px + var(--safe-left));
+  }
+
+  .educational-category-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .educational-category > summary {
+    min-height: 78px;
+  }
+
+  .educational-category summary small {
+    display: none;
+  }
+
+  .control-pad-heading,
+  .report-state {
+    margin-bottom: 10px;
+  }
+
+  .control-pad-primary-selectors {
+    gap: 8px;
+  }
+
+  .selected-audit-header,
+  .control-pad-heading,
+  .instrument-deck__header {
+    padding: 14px;
+  }
+
+  .orbit-panel,
+  .report-panel,
+  .instrument-chamber {
+    padding: 14px;
+  }
+}
+
+@media (max-width: 700px) {
+  .educational-category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .educational-category:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .report-chamber:has(#copyReadableReport:disabled) .report-panel--read,
+  .observation-list {
+    grid-template-columns: 1fr;
+  }
+}

@@ -25,7 +25,7 @@ check('policy-unrestricted-checkout-denied',policy.checkoutLocality?.unrestricte
 check('policy-excluded-root-materialization-denied',policy.checkoutLocality?.materializeExcludedRootsThenDiscardAllowed===false);
 check('policy-exact-object-readback-allowed',policy.checkoutLocality?.exactCommitObjectReadbackForExcludedProtectedClosuresAllowed===true);
 
-for(const [name,text] of [['bridge',bridge],['canonical-intake',canonicalIntake],['successor-gateway',successorGateway],['preflight',preflight],['deploy',deploy],['audralia-weather-qualification',audraliaWeatherQualification]]){
+for(const [name,text] of [['bridge',bridge],['canonical-intake',canonicalIntake],['successor-gateway',successorGateway],['preflight',preflight],['deploy',deploy]]){
   const checkoutCount=(text.match(/uses:\s*actions\/checkout@v4/g)||[]).length;
   const sparseCount=(text.match(/sparse-checkout:\s*\|/g)||[]).length;
   const nonConeCount=(text.match(/sparse-checkout-cone-mode:\s*false/g)||[]).length;
@@ -41,39 +41,74 @@ for(const required of ['/AI_ENTRYPOINT.json','/.github/workflows/remote-operatio
 check('successor-gateway-not-root-wide',!successorGateway.includes('\n            /*\n'));
 check('successor-frozen-gate-identity-preserved',successorGateway.includes('8b254c43abc53d769e82524c6eded1c07eaffc61'));
 check('successor-frozen-self-test-identity-preserved',successorGateway.includes('edba8f3b024e832fd3da6207ba786ce292aad54c'));
+
+check('audralia-weather-qualification-no-actions-checkout',!audraliaWeatherQualification.includes('actions/checkout@v4'));
+check('audralia-weather-qualification-two-partial-fetches',(audraliaWeatherQualification.match(/fetch --no-tags --depth=1 --filter=blob:none/g)||[]).length===2);
+check('audralia-weather-qualification-exact-workflow-ref',(audraliaWeatherQualification.match(/\$\{GITHUB_REF\}/g)||[]).length===2);
+check('audralia-weather-qualification-two-sparse-index-inits',(audraliaWeatherQualification.match(/git sparse-checkout init --cone --sparse-index/g)||[]).length===2);
+check('audralia-weather-qualification-sparse-index-asserted',(audraliaWeatherQualification.match(/git config --bool index\.sparse/g)||[]).length===2);
+check('audralia-weather-qualification-bounded-index-thresholds',audraliaWeatherQualification.includes('test "$sparse_entries" -lt 2000')&&audraliaWeatherQualification.includes('test "$sparse_entries" -lt 5000'));
+check('audralia-weather-qualification-no-noncone-index-walk',!audraliaWeatherQualification.includes('sparse-checkout-cone-mode: false'));
+check('audralia-weather-qualification-exact-tool-readback',(audraliaWeatherQualification.match(/git show HEAD:tools\/audralia-weather-presentation-reconciliation-ci\.mjs/g)||[]).length===2);
 for(const required of [
-  '/showroom/globe/audralia/weather-presentation-reconciliation/',
-  '/showroom/globe/audralia/',
-  '/showroom/globe/h-earth/terrain-estate-construction-v1/',
-  '/showroom/globe/h-earth/render/',
-  '/h-earth-3d/integration/',
-  '/h-earth-3d/terrain/',
-  '/h-earth-3d/control-plane/run-8/',
-  '/h-earth-3d/objects/',
-  '/h-earth-3d/zones/',
-  '/h-earth-3d/cells/',
-  '/h-earth-3d/environment/',
-  '/h-earth-3d/h-earth.matrix.js',
-  '/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/',
-  '/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/',
-  '/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/render/',
-  '/inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/',
-  '/inspection/audralia-24057-exact/snapshot/h-earth-3d/terrain/',
-  '/inspection/audralia-24057-exact/snapshot/h-earth-3d/control-plane/run-8/',
-  '/inspection/audralia-24057-exact/snapshot/h-earth-3d/objects/',
-  '/inspection/audralia-24057-exact/snapshot/h-earth-3d/zones/',
-  '/inspection/audralia-24057-exact/snapshot/h-earth-3d/cells/',
-  '/inspection/audralia-24057-exact/snapshot/h-earth-3d/environment/',
-  '/inspection/audralia-24057-exact/snapshot/h-earth-3d/h-earth.matrix.js',
-  '/tools/audralia-weather-presentation-reconciliation-ci.mjs'
+  'showroom/globe/audralia/weather-presentation-reconciliation',
+  'showroom/globe/audralia',
+  'showroom/globe/h-earth/terrain-estate-construction-v1',
+  'showroom/globe/h-earth/render',
+  'h-earth-3d/integration',
+  'h-earth-3d/terrain',
+  'h-earth-3d/control-plane/run-8',
+  'h-earth-3d/objects',
+  'h-earth-3d/zones',
+  'h-earth-3d/cells',
+  'h-earth-3d/environment',
+  'inspection/audralia-24057-exact/snapshot/showroom/globe/audralia',
+  'inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1',
+  'inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/render',
+  'inspection/audralia-24057-exact/snapshot/h-earth-3d/integration',
+  'inspection/audralia-24057-exact/snapshot/h-earth-3d/terrain',
+  'inspection/audralia-24057-exact/snapshot/h-earth-3d/control-plane/run-8',
+  'inspection/audralia-24057-exact/snapshot/h-earth-3d/objects',
+  'inspection/audralia-24057-exact/snapshot/h-earth-3d/zones',
+  'inspection/audralia-24057-exact/snapshot/h-earth-3d/cells',
+  'inspection/audralia-24057-exact/snapshot/h-earth-3d/environment'
 ])check(`audralia-weather-qualification-path-${required}`,audraliaWeatherQualification.includes(required));
-check('audralia-weather-qualification-two-bounded-checkouts',(audraliaWeatherQualification.match(/uses:\s*actions\/checkout@v4/g)||[]).length===2);
-check('audralia-weather-qualification-not-root-wide',!audraliaWeatherQualification.includes('\n            /*\n'));
 check('audralia-weather-qualification-module-closure-guard',audraliaWeatherQualification.includes('Verify browser module dependency closure'));
+check('audralia-weather-qualification-no-root-wide-sparse-set',!audraliaWeatherQualification.includes('git sparse-checkout set /'));
 for(const text of [preflight,deploy])for(const excluded of ['!/preview/','!/h-earth-live-6d18e158/','!/inspection/audralia-24057-exact/'])check(`publication-exclusion-${excluded}-${text===preflight?'preflight':'deploy'}`,text.includes(excluded));
 check('builder-exact-object-reader',builder.includes("source:'EXACT_COMMIT_OBJECT'"));
 check('builder-git-object-show',builder.includes("spawnSync('git',['-C',repoRoot,'show',objectPath]"));
 check('builder-target-sha-bound-promotion',builder.includes('promoteAuthorizedExcludedRuntimeDependencies({repoRoot,stage,targetSha,surfaceId})'));
+
+const sparseTmp=fs.mkdtempSync(path.join(os.tmpdir(),'sparse-index-self-test-'));
+try{
+  const source=path.join(sparseTmp,'source');
+  const work=path.join(sparseTmp,'work');
+  fs.mkdirSync(path.join(source,'keep/deep'),{recursive:true});
+  fs.mkdirSync(path.join(source,'exclude/deep'),{recursive:true});
+  fs.writeFileSync(path.join(source,'keep/deep/kept.txt'),'kept\n');
+  fs.writeFileSync(path.join(source,'exclude/deep/excluded.txt'),'excluded\n');
+  execFileSync('git',['init'],{cwd:source,stdio:'ignore'});
+  execFileSync('git',['config','user.email','checkout-locality@example.invalid'],{cwd:source});
+  execFileSync('git',['config','user.name','Checkout Locality Self Test'],{cwd:source});
+  execFileSync('git',['add','.'],{cwd:source});
+  execFileSync('git',['commit','-m','fixture'],{cwd:source,stdio:'ignore'});
+  const targetSha=execFileSync('git',['rev-parse','HEAD'],{cwd:source,encoding:'utf8'}).trim();
+  fs.mkdirSync(work,{recursive:true});
+  execFileSync('git',['init'],{cwd:work,stdio:'ignore'});
+  execFileSync('git',['remote','add','origin',source],{cwd:work});
+  execFileSync('git',['fetch','--no-tags','--depth=1','origin',targetSha],{cwd:work,stdio:'ignore'});
+  execFileSync('git',['sparse-checkout','init','--cone','--sparse-index'],{cwd:work});
+  execFileSync('git',['sparse-checkout','set','keep/deep'],{cwd:work});
+  execFileSync('git',['checkout','--detach','FETCH_HEAD'],{cwd:work,stdio:'ignore'});
+  check('sparse-index-functional-config',execFileSync('git',['config','--bool','index.sparse'],{cwd:work,encoding:'utf8'}).trim()==='true');
+  check('sparse-index-functional-kept',fs.existsSync(path.join(work,'keep/deep/kept.txt')));
+  check('sparse-index-functional-excluded',!fs.existsSync(path.join(work,'exclude/deep/excluded.txt')));
+  const sparseIndexEntries=execFileSync('git',['ls-files','--sparse'],{cwd:work,encoding:'utf8'}).trim().split('\n').filter(Boolean);
+  check('sparse-index-functional-compressed',sparseIndexEntries.includes('exclude/'),JSON.stringify(sparseIndexEntries));
+}finally{
+  fs.rmSync(sparseTmp,{recursive:true,force:true});
+}
 
 const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'checkout-locality-self-test-'));
 try{
@@ -117,7 +152,9 @@ const receipt={
   unrestrictedCheckoutAllowedByDefault:false,
   exactCommitObjectReadbackVerified:true,
   governedLaneGatewaysSparse:true,
-  audraliaWeatherQualificationSparse:true,
+  audraliaWeatherQualificationSparseIndex:true,
+  audraliaWeatherQualificationActionsCheckout:false,
+  audraliaWeatherQualificationNoFullIndexTraversalContract:true,
   audraliaWeatherQualificationModuleClosureGuard:true,
   checkCount:checks.length,
   checks

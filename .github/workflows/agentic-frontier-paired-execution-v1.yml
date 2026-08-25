@@ -15,7 +15,7 @@ jobs:
       contains(github.event.comment.body, 'AGENTIC_FRONTIER_PAIRED_SMOKE_AF_IR_01_V1')
     runs-on: ubuntu-latest
     env:
-      OLLAMA_MODEL: qwen2.5-coder:1.5b
+      OLLAMA_MODEL: qwen2.5-coder:7b
       OLLAMA_HOST_URL: http://127.0.0.1:11434
     steps:
       - name: Checkout paired runner from main

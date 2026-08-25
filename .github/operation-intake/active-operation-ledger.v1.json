@@ -928,6 +928,18 @@
       "scopeHash": "4943ff7c798b57432d8a426021f5d80f0009acc498840e8b9d6f2ec58ad306a1",
       "state": "ADMITTED_LOCKED"
     },
+    "49c82c7f3069a13dab17d4cb34b3865485255ec196cf1840d9bccb8edb43ad91": {
+      "governingHead": "4abee910e521229ec1a90004372d77dee233e297",
+      "lockGeneration": 1713,
+      "lockScope": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION",
+      "operationId": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION_20260825_001",
+      "procedureLocatorDigest": "08cd9c2fc6e6c4e0edca0d46d80e7b100f841857525039e2458fb1a3c3cc7a0e",
+      "released": false,
+      "requestDigest": "32edfddc8499d2927d1b6c88a3c8dc8ce50b6ea62003d2c69881eb7143bb90d2",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "49c82c7f3069a13dab17d4cb34b3865485255ec196cf1840d9bccb8edb43ad91",
+      "state": "ADMITTED_LOCKED"
+    },
     "4a6b4ce6afb3c33f212ae6bc8e7ca2c981903867395f5f31eceb3a63e0114df9": {
       "governingHead": "ad3357e817f50cb66b7074e0d620888f2bc5407f",
       "lockGeneration": 1541,
@@ -3942,7 +3954,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1712,
+  "lockGeneration": 1713,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

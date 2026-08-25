@@ -1356,6 +1356,18 @@
       "scopeHash": "717694845676c377c79911d3ad810c72092bb79532b98add81d2ec1e26ff0c37",
       "state": "ADMITTED_LOCKED"
     },
+    "718aadd02ac238f1732d7b5400b06fed069dbcfbb5e685cc6a698666b69cc586": {
+      "governingHead": "d03ae11e1ee57596647bfa367a13160d33d16008",
+      "lockGeneration": 1682,
+      "lockScope": "AUDRALIA_FINAL_DENSITY_CLOUD_EXPANSION",
+      "operationId": "AUDRALIA_FINAL_DENSITY_CLOUD_COVERAGE_EXPANSION_20260824_001",
+      "procedureLocatorDigest": "d68e9a79aed720c7d955a20be5f989cdd463eb69534dbcd5707f103aac82cd02",
+      "released": false,
+      "requestDigest": "9d6a170f68dde2a308fa9a1b9b11354e6158030aa5a3fb1c9ede85c55c5e83e0",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "718aadd02ac238f1732d7b5400b06fed069dbcfbb5e685cc6a698666b69cc586",
+      "state": "ADMITTED_LOCKED"
+    },
     "72258889edde8bc7e3b0fc272d34a3c067cf9a80d2d925323982309def876c6d": {
       "governingHead": "d27e6157147e1a96951422fd25b319ff3142ecec",
       "lockGeneration": 1425,
@@ -3737,7 +3749,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1681,
+  "lockGeneration": 1682,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

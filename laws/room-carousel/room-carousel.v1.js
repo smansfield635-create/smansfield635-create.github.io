@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "LAWS_ROOM_CAROUSEL_TABBED_ORBIT_INSPECTION_v2";
-  const REFERENCE = "PUBLIC_LEGITIMACY_CAROUSEL_PARITY_AND_LAWS_DIRECTION_ONLY_ATOMIC";
+  const CONTRACT = "LAWS_ROOM_CAROUSEL_BACK_PAGE_PARITY_v3";
+  const REFERENCE = "LAWS_BACK_PAGE_CAROUSEL_PARITY_AND_BOTTOM_STORY_NAVIGATION";
   const CLASSIFY_PX = 8;
   const COMMIT_PX = 24;
   const AXIS_RATIO = 1.12;
@@ -133,7 +133,7 @@
 
     const nativeChildren = Array.from(root.children).filter(node => {
       if (!(node instanceof HTMLElement)) return false;
-      if (node.matches("details.lr-audit,[data-lrc-depth],[data-lrc-static],[data-lrc-tabs],[data-lrc-viewport],[data-lrc-continuation]")) return false;
+      if (node.matches("details.lr-audit,.lr-story-nav,[data-lrc-depth],[data-lrc-static],[data-lrc-tabs],[data-lrc-viewport],[data-lrc-continuation]")) return false;
       return node.matches("section,article,aside,nav,div");
     });
     if (nativeChildren.length < 1) return null;
@@ -190,6 +190,7 @@
     if (!adopted) return;
     const { viewport, cards, live } = adopted;
     if (!viewport || cards.length < 1) return;
+    const storyNav = root.querySelector(":scope > .lr-story-nav");
     const { tabs, buttons } = createTabs(root, viewport, cards);
     ensureContinuation(root);
 
@@ -234,6 +235,7 @@
           directionOnlyGesture: true,
           oneGestureOneStep: true,
           visibleDirectionalControls: false,
+          bottomStoryNavigationPreserved: Boolean(storyNav),
           sourceCompletenessClaimed: false,
           scientificValidationClaimed: false,
           productAcceptanceGranted: false
@@ -399,6 +401,7 @@
     root.dataset.lrcContract = CONTRACT;
     root.dataset.lrcReferenceContract = REFERENCE;
     root.dataset.lrcTabCount = String(cards.length);
+    root.dataset.lrcStoryNavigation = storyNav ? "bottom" : "not-declared";
     render("init");
   }
 

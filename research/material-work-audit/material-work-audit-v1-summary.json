@@ -1,0 +1,142 @@
+{
+  "schema": "MATERIAL_WORK_AUDIT_V1_SUMMARY_v1",
+  "population": {
+    "count": 906,
+    "cutoff": "2026-08-25T18:25:55Z",
+    "uniquePrs": true
+  },
+  "v1": {
+    "totals": {
+      "PARAMOUNT": 16,
+      "STANDARD": 623,
+      "SUPPORT": 267,
+      "total": 906
+    },
+    "material": 639,
+    "materialPct": 70.5298,
+    "windows": {
+      "pre": {
+        "dates": "2026-07-25..2026-08-03",
+        "days": 10,
+        "PARAMOUNT": 4,
+        "STANDARD": 193,
+        "SUPPORT": 41,
+        "total": 238,
+        "material": 197,
+        "materialPerDay": 19.7
+      },
+      "install": {
+        "dates": "2026-08-04..2026-08-13",
+        "days": 10,
+        "PARAMOUNT": 3,
+        "STANDARD": 130,
+        "SUPPORT": 74,
+        "total": 207,
+        "material": 133,
+        "materialPerDay": 13.3
+      },
+      "aug14": {
+        "dates": "2026-08-14",
+        "PARAMOUNT": 2,
+        "STANDARD": 29,
+        "SUPPORT": 11,
+        "total": 42
+      },
+      "mature": {
+        "dates": "2026-08-15..2026-08-24",
+        "days": 10,
+        "PARAMOUNT": 7,
+        "STANDARD": 257,
+        "SUPPORT": 134,
+        "total": 398,
+        "material": 264,
+        "materialPerDay": 26.4
+      },
+      "aug25Cutoff": {
+        "dates": "2026-08-25T00:00:00Z..18:25:55Z",
+        "PARAMOUNT": 0,
+        "STANDARD": 14,
+        "SUPPORT": 7,
+        "total": 21
+      }
+    }
+  },
+  "v0": {
+    "source": "issue #2052 aggregate result + material-work-audit-v1.md",
+    "totals": {
+      "PARAMOUNT": 143,
+      "STANDARD": 253,
+      "SUPPORT": 510,
+      "total": 906
+    },
+    "material": 396,
+    "windows": {
+      "pre": {
+        "PARAMOUNT": 42,
+        "STANDARD": 84,
+        "SUPPORT": 112,
+        "total": 238
+      },
+      "install": {
+        "PARAMOUNT": 12,
+        "STANDARD": 26,
+        "SUPPORT": 169,
+        "total": 207
+      },
+      "mature": {
+        "PARAMOUNT": 78,
+        "STANDARD": 127,
+        "SUPPORT": 193,
+        "total": 398
+      }
+    },
+    "rowLevelRecord": "NOT_PERSISTED"
+  },
+  "aggregateDelta": {
+    "PARAMOUNT": -127,
+    "STANDARD": 370,
+    "SUPPORT": -243,
+    "material": 243
+  },
+  "reproducibility": {
+    "overall": "REPRODUCIBILITY_FAIL_CLOSED",
+    "exactThreeClass": {
+      "target": 0.9,
+      "status": "FAIL_CLOSED_FROM_MARGINAL_UPPER_BOUND",
+      "marginalBounds": {
+        "min": 0,
+        "max": 0.5916114790286976
+      }
+    },
+    "paramountBinary": {
+      "target": 0.85,
+      "status": "UNEVALUABLE_PAIRING_MISSING",
+      "marginalBounds": {
+        "min": 0.8245033112582781,
+        "max": 0.8598233995584988
+      }
+    },
+    "rowLevelPairingAvailable": false
+  },
+  "transition": {
+    "v1InstallVsPreMaterialRatePct": -32.49,
+    "v1MatureVsPreMaterialRatePct": 34.01
+  },
+  "provenance": {
+    "v1FrozenCommit": "bebb401aa0d2486f7c0d67504c1413efb356f131",
+    "v1LedgerPath": "research/material-work-audit/material-work-audit-v1-classifications.jsonl",
+    "v0Issue": 2052,
+    "v0RowLevelRecoveryEvidence": {
+      "explicitMissing": true,
+      "rowPatterns": 0,
+      "commentCount": 4,
+      "sourceIssue": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2052"
+    },
+    "researchDirectoryAtFreeze": [
+      "material-work-audit-v1-classifications.jsonl",
+      "material-work-audit-v1.md"
+    ],
+    "incident": "main briefly advanced through accidental placeholder cab6c3d31f200d79f66fc82878a44ed020cee9c3 and was immediately removed by 52915a8082255a319670b744eeae15e86fe7b049; net audit artifact content unchanged; ancestry event preserved."
+  },
+  "claimCeiling": "No world-record or causal-productivity claim is authorized by this audit."
+}

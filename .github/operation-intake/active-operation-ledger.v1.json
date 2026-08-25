@@ -2138,30 +2138,6 @@
       "scopeHash": "9c9207a9b98ba8474e0868542503ed8ef858877b3d96bc700546d4f30b3139c0",
       "state": "ADMITTED_LOCKED"
     },
-    "9d490fd0a24cad344385b77f4727142870b01f6500c4690fe26ec51c6c8cfcce": {
-      "governingHead": "a28330f618d587a0683a8c59a2fe23756a6a2e8c",
-      "lockGeneration": 1672,
-      "lockScope": "ROUTER:LAWS_CP6_VERIFIER_EXACT_PATH_REGISTRATION:V1",
-      "operationId": "LAWS_CP6_VERIFIER_PATH_ROUTER_REGISTRATION_20260824_A28330F6_S1",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "f684d1fb2c2cbb765aa7d66cdb90adbbe5844606",
-        "lockGeneration": 1671,
-        "lockScope": "ROUTER:LAWS_CP6_VERIFIER_EXACT_PATH_REGISTRATION:V1",
-        "operationId": "LAWS_CP6_VERIFIER_PATH_ROUTER_REGISTRATION_20260824_F684D1FB_R1",
-        "preservedEvidenceRefs": [],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "LAWS_CP6_VERIFIER_PATH_ROUTER_REGISTRATION_F684D1FB_TO_A28330F6_20260824"
-      },
-      "procedureLocatorDigest": "131ff9fe95986b8cbe6197948d13aee53357e470b27fda1bd8f5f6832c1cf619",
-      "released": false,
-      "requestDigest": "6323384677b7a30443590fe6c7b18beb9e5252acd39b6e0741ff0f1efa0cf46c",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "9d490fd0a24cad344385b77f4727142870b01f6500c4690fe26ec51c6c8cfcce",
-      "state": "ADMITTED_LOCKED"
-    },
     "9dddf7da98478eaf8a997d8b6e4dc4cf92b5ec9016f05359a3fe89c19cae0465": {
       "governingHead": "80d4f819075aec3a89536edb3886b319b640ce19",
       "lockGeneration": 98,
@@ -26358,6 +26334,31 @@
         "transitionId": "LAWS_CP6_VERIFIER_PATH_ROUTER_REGISTRATION_F684D1FB_TO_A28330F6_20260824"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "a28330f618d587a0683a8c59a2fe23756a6a2e8c",
+      "lockGeneration": 1672,
+      "lockScope": "ROUTER:LAWS_CP6_VERIFIER_EXACT_PATH_REGISTRATION:V1",
+      "operationId": "LAWS_CP6_VERIFIER_PATH_ROUTER_REGISTRATION_20260824_A28330F6_S1",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "f684d1fb2c2cbb765aa7d66cdb90adbbe5844606",
+        "lockGeneration": 1671,
+        "lockScope": "ROUTER:LAWS_CP6_VERIFIER_EXACT_PATH_REGISTRATION:V1",
+        "operationId": "LAWS_CP6_VERIFIER_PATH_ROUTER_REGISTRATION_20260824_F684D1FB_R1",
+        "preservedEvidenceRefs": [],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "LAWS_CP6_VERIFIER_PATH_ROUTER_REGISTRATION_F684D1FB_TO_A28330F6_20260824"
+      },
+      "procedureLocatorDigest": "131ff9fe95986b8cbe6197948d13aee53357e470b27fda1bd8f5f6832c1cf619",
+      "released": true,
+      "requestDigest": "6323384677b7a30443590fe6c7b18beb9e5252acd39b6e0741ff0f1efa0cf46c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "9d490fd0a24cad344385b77f4727142870b01f6500c4690fe26ec51c6c8cfcce",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

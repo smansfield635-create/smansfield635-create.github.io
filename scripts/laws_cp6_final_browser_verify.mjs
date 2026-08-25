@@ -202,7 +202,18 @@ async function verifyProfiles(browser) {
       await gotoChecked(page, descriptor.route);
       const state = await health(page, descriptor.route, errors);
       if (descriptor.route === '/laws/') {
-        assert(await page.locator('#cp6-work-behind-laws.lr-battery-landing').count() === 1, '/laws/: battery module missing');
+        const rolodex = page.locator('[data-laws-root-rolodex-section]');
+        await rolodex.waitFor({ state: 'visible', timeout: 5000 });
+        assert(await page.locator('html').getAttribute('data-laws-root-rolodex') === 'active', '/laws/: root rolodex not active');
+        assert(await rolodex.count() === 1, '/laws/: root rolodex missing');
+        const applied = rolodex.locator('.laws-rolodex-card[data-destination-id="applied-investigations"]');
+        assert(await applied.count() === 1, '/laws/: applied investigations destination missing');
+        assert((await applied.textContent() || '').toLowerCase().includes('battery health'), '/laws/: battery-health context missing from applied investigations destination');
+        await applied.locator('button.laws-rolodex-enter').click();
+        const appliedRoute = page.locator('.laws-exhibit-route');
+        await appliedRoute.waitFor({ state: 'visible', timeout: 5000 });
+        assert(await appliedRoute.getAttribute('href') === '/laws/research/applied-investigations/', '/laws/: applied investigations route drift');
+        await page.keyboard.press('Escape');
         assert(await page.locator('.laws-first-rail').count() === 1, '/laws/: persistent FIRST rail missing');
         assert(await page.locator('[data-laws-experience-indicator]').count() === 5, '/laws/: FIRST indicator count');
       } else if (descriptor.methodsShowroom) {
@@ -251,21 +262,22 @@ async function verifyStatic(browser) {
     const errors = collectErrors(page);
     await gotoChecked(page, descriptor.route);
     await health(page, descriptor.route, errors);
-    if (descriptor.route !== '/laws/') {
-      if (descriptor.methodsShowroom) {
-        assert(await page.locator('.mm-nav').count() === 1 && await page.locator('.mm-nav').isVisible(), `${descriptor.route}: static showroom nav missing`);
-        assert(await page.locator('.mm-disclosure').count() >= 1, `${descriptor.route}: static showroom disclosure missing`);
-        assert(await page.locator('noscript .mm-disclosure').count() === 1, `${descriptor.route}: static showroom noscript boundary missing`);
-      } else {
-        assert(await page.locator('.lr-nav-toggle').count() === 0, `${descriptor.route}: JS toggle exists in static mode`);
-        assert(await page.locator('.lr-topbar .lr-nav').isVisible(), `${descriptor.route}: static nav hidden`);
-        if (descriptor.expectedReadings) {
-          const buttons = page.locator('[data-lr-tabs] .lr-tab');
-          const panels = page.locator('[data-lr-tabs] .lr-panel');
-          assert(await buttons.count() === descriptor.expectedReadings, `${descriptor.route}: static reading count`);
-          for (let index = 0; index < descriptor.expectedReadings; index += 1) {
-            assert(await panels.nth(index).isVisible(), `${descriptor.route}: static panel ${index} hidden`);
-          }
+    if (descriptor.route === '/laws/') {
+      assert(await page.locator('#cp6-work-behind-laws.lr-battery-landing').count() === 1, '/laws/: static battery module missing');
+      assert(await page.locator('[data-laws-supporting-panel="evidence-applied"] #cp6-work-behind-laws').count() === 1, '/laws/: static battery module custody drift');
+    } else if (descriptor.methodsShowroom) {
+      assert(await page.locator('.mm-nav').count() === 1 && await page.locator('.mm-nav').isVisible(), `${descriptor.route}: static showroom nav missing`);
+      assert(await page.locator('.mm-disclosure').count() >= 1, `${descriptor.route}: static showroom disclosure missing`);
+      assert(await page.locator('noscript .mm-disclosure').count() === 1, `${descriptor.route}: static showroom noscript boundary missing`);
+    } else {
+      assert(await page.locator('.lr-nav-toggle').count() === 0, `${descriptor.route}: JS toggle exists in static mode`);
+      assert(await page.locator('.lr-topbar .lr-nav').isVisible(), `${descriptor.route}: static nav hidden`);
+      if (descriptor.expectedReadings) {
+        const buttons = page.locator('[data-lr-tabs] .lr-tab');
+        const panels = page.locator('[data-lr-tabs] .lr-panel');
+        assert(await buttons.count() === descriptor.expectedReadings, `${descriptor.route}: static reading count`);
+        for (let index = 0; index < descriptor.expectedReadings; index += 1) {
+          assert(await panels.nth(index).isVisible(), `${descriptor.route}: static panel ${index} hidden`);
         }
       }
     }

@@ -174,7 +174,6 @@
   const speakerBody = document.querySelector("[data-laws-experience-speaker-body]");
   const speakerState = document.querySelector("[data-laws-experience-speaker-state]");
   const questionNodes = Array.from(document.querySelectorAll("[data-laws-experience-question]"));
-  const indicatorNodes = Array.from(document.querySelectorAll("[data-laws-experience-indicator]"));
   const stageNodes = Array.from(document.querySelectorAll("[data-laws-experience-stage]"));
   const firstDisclosure = document.querySelector("details[data-laws-first-disclosure]");
   const firstDisclosureSummary = firstDisclosure?.querySelector(":scope > summary") || null;
@@ -243,12 +242,6 @@
       node.dataset.lawsExperienceActive = String(Boolean(normalized && nodeDirection === normalized));
     }
 
-    for (const node of indicatorNodes) {
-      const nodeDirection = normalizeDirection(node.dataset.lawsExperienceIndicator);
-      const isActive = Boolean(normalized && nodeDirection === normalized);
-      node.dataset.lawsExperienceActive = String(isActive);
-      node.setAttribute("aria-current", isActive ? "true" : "false");
-    }
 
     globalThis.dispatchEvent(new CustomEvent("LAWS_EXPERIENCE_CORRESPONDENCE", {
       detail: Object.freeze({

@@ -587,3 +587,118 @@ html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclo
     padding: 0.85rem 0 0 1.45rem;
   }
 }
+
+/*
+ * LAWS_ROOT_WAYFINDING_INTEGRATION_v1
+ * Owner-directed removal of the obsolete five-light F.I.R.S.T. rail.
+ * Aligns the opening with the estate Compass language without changing
+ * route, controller, compositor, interaction, evidence, or claim authority.
+ */
+html[data-laws-opening-integration="estate-compass-v1"] .laws-experience-hero {
+  align-items: start;
+  gap: clamp(1.4rem, 3vw, 3.2rem);
+}
+
+html[data-laws-opening-integration="estate-compass-v1"] .laws-first {
+  align-self: start;
+  padding: clamp(1.4rem, 3vw, 2.35rem);
+  border: 1px solid rgba(245, 240, 228, 0.13);
+  border-radius: clamp(1.1rem, 2vw, 1.7rem);
+  background:
+    radial-gradient(circle at 12% 8%, rgba(121, 234, 255, 0.07), transparent 21rem),
+    linear-gradient(155deg, rgba(4, 10, 20, 0.78), rgba(2, 6, 14, 0.52));
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(245, 240, 228, 0.04);
+}
+
+html[data-laws-opening-integration="estate-compass-v1"] .laws-first__prelude {
+  color: rgba(235, 207, 137, 0.88);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+html[data-laws-opening-integration="estate-compass-v1"] .laws-first__prelude::before {
+  background: linear-gradient(90deg, rgba(235, 207, 137, 0.9), rgba(121, 234, 255, 0.36));
+}
+
+html[data-laws-opening-integration="estate-compass-v1"] .laws-first__summary-copy h1 {
+  max-width: 8.4ch;
+  color: #f5f0e4;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(3.3rem, 6.2vw, 6.7rem);
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 0.88;
+  text-wrap: balance;
+}
+
+html[data-laws-opening-integration="estate-compass-v1"] .laws-first__summary-copy h1 span {
+  color: #ebcf89;
+  background: none !important;
+  -webkit-background-clip: border-box !important;
+  -webkit-text-fill-color: currentColor !important;
+  text-shadow: 0 0 28px rgba(235, 207, 137, 0.12);
+}
+
+html[data-laws-opening-integration="estate-compass-v1"] .laws-first__summary-copy p:last-child {
+  max-width: 31rem;
+  color: rgba(245, 240, 228, 0.72);
+  font-size: clamp(1rem, 1.35vw, 1.14rem);
+  line-height: 1.72;
+}
+
+html[data-laws-opening-integration="estate-compass-v1"] .laws-first__expand-label {
+  width: fit-content;
+  min-height: 3.25rem;
+  padding: 0.82rem 1.08rem;
+  border: 1px solid rgba(121, 234, 255, 0.25);
+  border-radius: 0.9rem;
+  background: rgba(3, 9, 18, 0.64);
+  color: #f5f0e4;
+  box-shadow:
+    inset 0 1px 0 rgba(245, 240, 228, 0.05),
+    0 14px 34px rgba(0, 0, 0, 0.16);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.035em;
+  text-transform: none;
+}
+
+html[data-laws-opening-integration="estate-compass-v1"] .laws-first__disclosure > summary:hover .laws-first__expand-label,
+html[data-laws-opening-integration="estate-compass-v1"] .laws-first__disclosure > summary:focus-visible .laws-first__expand-label {
+  border-color: rgba(235, 207, 137, 0.52);
+  background: rgba(235, 207, 137, 0.08);
+  color: #fff7e2;
+}
+
+html[data-laws-opening-integration="estate-compass-v1"] .laws-compass-primary {
+  border-color: rgba(245, 240, 228, 0.13);
+  box-shadow:
+    0 28px 78px rgba(0, 0, 0, 0.26),
+    inset 0 1px 0 rgba(245, 240, 228, 0.035);
+}
+
+@media (max-width: 780px) {
+  html[data-laws-opening-integration="estate-compass-v1"] .laws-first {
+    padding: 1.25rem;
+    border-radius: 1.1rem;
+  }
+
+  html[data-laws-opening-integration="estate-compass-v1"] .laws-first__summary-copy h1 {
+    max-width: 9ch;
+    font-size: clamp(3.25rem, 16vw, 5.4rem);
+  }
+
+  html[data-laws-opening-integration="estate-compass-v1"] .laws-first__expand-label {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-laws-opening-integration="estate-compass-v1"] .laws-first__expand-label {
+    transition: none !important;
+  }
+}

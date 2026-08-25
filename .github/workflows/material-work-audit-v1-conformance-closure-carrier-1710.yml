@@ -1,0 +1,43 @@
+name: Material Work Audit v1 Conformance Closure Carrier 1710
+
+on:
+  push:
+    branches:
+      - agent/material-work-audit-v1-conformance-carrier-1710
+    paths:
+      - research/material-work-audit/conformance-closure-carrier-1710.mjs
+      - .github/workflows/material-work-audit-v1-conformance-closure-carrier-1710.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: material-work-audit-v1-conformance-closure-1710
+  cancel-in-progress: false
+
+jobs:
+  close-research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Materialize carrier source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir work
+          cd work
+          git init
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth=1 --filter=blob:none origin "${GITHUB_SHA}"
+          git sparse-checkout init --cone
+          git sparse-checkout set research/material-work-audit
+          git checkout --detach FETCH_HEAD
+          test -f research/material-work-audit/conformance-closure-carrier-1710.mjs
+      - name: Execute Gen1710 conformance closure
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          cd work
+          node research/material-work-audit/conformance-closure-carrier-1710.mjs

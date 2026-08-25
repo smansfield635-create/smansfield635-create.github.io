@@ -114,6 +114,27 @@
     "prMutationAuthorityCreated": false,
     "admissionSemanticsDuplicated": false
   },
+  "remoteRouterReceiptTransport": {
+    "schema": "REPOSITORY_AI_ROUTER_REMOTE_TRANSPORT_CAPABILITY_v1",
+    "status": "ACTIVE_FAIL_CLOSED",
+    "invocationMarker": "REPOSITORY_AI_ROUTER_REMOTE_REQUEST_V1",
+    "invocationSchema": "REPOSITORY_AI_ROUTER_REMOTE_INVOCATION_REQUEST_v1",
+    "returnSchema": "REPOSITORY_AI_ROUTER_REMOTE_RETURN_v1",
+    "executionWorkflow": ".github/workflows/repository-ai-entry-router-validation.yml",
+    "fixedCommand": "node tools/repository-ai-entry-router.mjs --mutation-intent --task <TASK> --path <PATH> [--path <PATH> ...] --output <RUNNER_TEMP>/remote-router-receipt.json",
+    "exactCurrentMainHeadRequired": true,
+    "callerSuppliedExecutableAllowed": false,
+    "callerSuppliedWorkflowAllowed": false,
+    "callerSuppliedRefAllowed": false,
+    "callerSuppliedEnvironmentAllowed": false,
+    "callerSuppliedOutputPathAllowed": false,
+    "authorityCreated": false,
+    "productMutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "deploymentAuthorityCreated": false,
+    "releaseAuthorityCreated": false,
+    "genericCommandAuthority": false
+  },
   "publicQualityInstrumentationHandoff": {
     "schema": "PUBLIC_QUALITY_INSTRUMENTATION_RETIREMENT_HANDOFF_v1",
     "result": "PUBLIC_PAGE_EXCELLENCE_IMPLEMENTATION_RETIRED",

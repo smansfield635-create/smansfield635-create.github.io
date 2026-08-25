@@ -28,13 +28,17 @@ on:
       - tools/publication-preflight-self-test.v1.mjs
       - .github/workflows/publication-preflight-v1.yml
       - .github/workflows/pages-exact-head-deploy-v3.yml
+  issue_comment:
+    types: [created]
   workflow_dispatch:
 permissions:
   contents: read
 env:
   EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+  REMOTE_ROUTER_MARKER: REPOSITORY_AI_ROUTER_REMOTE_REQUEST_V1
 jobs:
   validate-router:
+    if: github.event_name != 'issue_comment'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -112,6 +116,48 @@ jobs:
           set -e
           test "$s" = 1
           jq -e '.disposition == "BLOCK"' /tmp/unregistered.json >/dev/null
+      - name: Verify fixed remote router receipt transport contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const workflow=fs.readFileSync('.github/workflows/repository-ai-entry-router-validation.yml','utf8');
+          const entry=JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json','utf8'));
+          const binding=entry.remoteRouterReceiptTransport;
+          const requiredTokens=[
+            'REPOSITORY_AI_ROUTER_REMOTE_REQUEST_V1',
+            'REPOSITORY_AI_ROUTER_REMOTE_INVOCATION_REQUEST_v1',
+            'REPOSITORY_AI_ROUTER_REMOTE_RETURN_v1',
+            'github.event.issue.pull_request == null',
+            "contains(fromJSON('[\"OWNER\",\"MEMBER\",\"COLLABORATOR\"]')",
+            'node tools/repository-ai-entry-router.mjs --mutation-intent',
+            'REMOTE_SUBJECT_HEAD_MISMATCH',
+            'REMOTE_PATH_INVALID',
+            'issues: write'
+          ];
+          if(!binding||binding.status!=='ACTIVE_FAIL_CLOSED'||binding.invocationMarker!=='REPOSITORY_AI_ROUTER_REMOTE_REQUEST_V1'||binding.executionWorkflow!=='.github/workflows/repository-ai-entry-router-validation.yml'||binding.authorityCreated!==false||binding.productMutationAuthorityCreated!==false||binding.mergeAuthorityCreated!==false||binding.deploymentAuthorityCreated!==false) throw new Error('REMOTE_ROUTER_BINDING_INVALID');
+          for(const token of requiredTokens) if(!workflow.includes(token)) throw new Error('REMOTE_ROUTER_TRANSPORT_TOKEN_MISSING:'+token);
+          if(/contents:\s*write/.test(workflow)) throw new Error('REMOTE_ROUTER_CONTENTS_WRITE_FORBIDDEN');
+          const validate=(q,head)=>{
+            const exact=['paths','requestNonce','schema','subjectHead','task'].sort();
+            if(!q||typeof q!=='object'||Array.isArray(q)||JSON.stringify(Object.keys(q).sort())!==JSON.stringify(exact)) throw new Error('REMOTE_REQUEST_KEYSET_INVALID');
+            if(q.schema!=='REPOSITORY_AI_ROUTER_REMOTE_INVOCATION_REQUEST_v1') throw new Error('REMOTE_REQUEST_SCHEMA_INVALID');
+            if(q.subjectHead!==head||!/^[0-9a-f]{40}$/.test(q.subjectHead)) throw new Error('REMOTE_SUBJECT_HEAD_MISMATCH');
+            if(typeof q.task!=='string'||!q.task.trim()||q.task.length>512||/[\r\n]/.test(q.task)) throw new Error('REMOTE_TASK_INVALID');
+            if(!Array.isArray(q.paths)||q.paths.length<1||q.paths.length>64) throw new Error('REMOTE_PATHS_INVALID');
+            const normalized=q.paths.map((value)=>{const p=String(value??'').trim().replaceAll('\\','/').replace(/^\.\/+/, '');if(!p||p.length>512||p.startsWith('/')||p==='..'||p.startsWith('../')||p.includes('/../')||p.includes('//')||p.includes('\0'))throw new Error('REMOTE_PATH_INVALID');return p;});
+            if(new Set(normalized).size!==normalized.length) throw new Error('REMOTE_PATH_DUPLICATE');
+            if(!/^[0-9a-f]{64}$/.test(q.requestNonce)) throw new Error('REMOTE_NONCE_INVALID');
+            return normalized;
+          };
+          const head=process.env.EXPECTED_HEAD;
+          const good={schema:'REPOSITORY_AI_ROUTER_REMOTE_INVOCATION_REQUEST_v1',subjectHead:head,task:'LRP candidate route verification',paths:['infrastructure/lineage-receipt-protocol-v1/MANIFEST.json'],requestNonce:'a'.repeat(64)};
+          if(validate(good,head)[0]!==good.paths[0]) throw new Error('REMOTE_POSITIVE_FIXTURE_FAILED');
+          let stale=false; try{validate({...good,subjectHead:'0'.repeat(40)},head)}catch(e){stale=e.message==='REMOTE_SUBJECT_HEAD_MISMATCH'} if(!stale) throw new Error('REMOTE_STALE_HEAD_NEGATIVE_FAILED');
+          let malformed=false; try{validate({...good,command:'echo nope'},head)}catch(e){malformed=e.message==='REMOTE_REQUEST_KEYSET_INVALID'} if(!malformed) throw new Error('REMOTE_MALFORMED_REQUEST_NEGATIVE_FAILED');
+          fs.writeFileSync('/tmp/remote-router-transport-contract.json',JSON.stringify({schema:'REPOSITORY_AI_ROUTER_REMOTE_TRANSPORT_VALIDATION_RECEIPT_v1',result:'PASS_CLOSED',candidateHead:head,marker:binding.invocationMarker,workflow:binding.executionWorkflow,positiveFixture:true,staleHeadRejected:true,malformedRequestRejected:true,contentsWritePermission:false,authorityCreated:false,productMutationAuthorityCreated:false,mergeAuthorityCreated:false,deploymentAuthorityCreated:false,genericCommandAuthority:false},null,2)+'\n');
+          NODE
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -122,4 +168,123 @@ jobs:
             /tmp/binary-transfer-installed-path-router-receipt.json
             /tmp/exact-path-conformance.json
             /tmp/unregistered.json
+            /tmp/remote-router-transport-contract.json
           if-no-files-found: warn
+
+  remote-router-receipt:
+    if: >-
+      github.event_name == 'issue_comment' &&
+      github.event.issue.pull_request == null &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association) &&
+      startsWith(github.event.comment.body, 'REPOSITORY_AI_ROUTER_REMOTE_REQUEST_V1')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Parse closed exact-head router request
+        id: parse
+        shell: bash
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        run: |
+          set +e
+          CURRENT_HEAD="$(git rev-parse HEAD^{commit})"
+          export CURRENT_HEAD
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const out=process.env.RUNNER_TEMP+'/remote-router-request-validation.json';
+          const write=(value)=>fs.writeFileSync(out,JSON.stringify(value,null,2)+'\n');
+          try{
+            const marker=process.env.REMOTE_ROUTER_MARKER;
+            const body=String(process.env.COMMENT_BODY??'').replace(/\r\n/g,'\n').trim();
+            if(!body.startsWith(marker+'\n')) throw new Error('REMOTE_REQUEST_MARKER_INVALID');
+            const tail=body.slice(marker.length).trim();
+            if(!tail.startsWith('{')||!tail.endsWith('}')) throw new Error('REMOTE_REQUEST_JSON_INVALID');
+            const q=JSON.parse(tail);
+            const exact=['paths','requestNonce','schema','subjectHead','task'].sort();
+            if(!q||typeof q!=='object'||Array.isArray(q)||JSON.stringify(Object.keys(q).sort())!==JSON.stringify(exact)) throw new Error('REMOTE_REQUEST_KEYSET_INVALID');
+            if(q.schema!=='REPOSITORY_AI_ROUTER_REMOTE_INVOCATION_REQUEST_v1') throw new Error('REMOTE_REQUEST_SCHEMA_INVALID');
+            if(q.subjectHead!==process.env.CURRENT_HEAD||!/^[0-9a-f]{40}$/.test(q.subjectHead)) throw new Error('REMOTE_SUBJECT_HEAD_MISMATCH');
+            if(typeof q.task!=='string'||!q.task.trim()||q.task.length>512||/[\r\n]/.test(q.task)) throw new Error('REMOTE_TASK_INVALID');
+            if(!Array.isArray(q.paths)||q.paths.length<1||q.paths.length>64) throw new Error('REMOTE_PATHS_INVALID');
+            const normalized=q.paths.map((value)=>{const p=String(value??'').trim().replaceAll('\\','/').replace(/^\.\/+/, '');if(!p||p.length>512||p.startsWith('/')||p==='..'||p.startsWith('../')||p.includes('/../')||p.includes('//')||p.includes('\0'))throw new Error('REMOTE_PATH_INVALID');return p;});
+            if(new Set(normalized).size!==normalized.length) throw new Error('REMOTE_PATH_DUPLICATE');
+            if(!/^[0-9a-f]{64}$/.test(q.requestNonce)) throw new Error('REMOTE_NONCE_INVALID');
+            fs.writeFileSync(process.env.RUNNER_TEMP+'/remote-router-paths.txt',normalized.join('\n')+'\n');
+            fs.writeFileSync(process.env.RUNNER_TEMP+'/remote-router-task.txt',q.task);
+            fs.writeFileSync(process.env.RUNNER_TEMP+'/remote-router-request.json',JSON.stringify({...q,paths:normalized},null,2)+'\n');
+            write({schema:'REPOSITORY_AI_ROUTER_REMOTE_REQUEST_VALIDATION_v1',result:'PASS_CLOSED',subjectHead:q.subjectHead,requestNonce:q.requestNonce,pathCount:normalized.length});
+          }catch(error){
+            write({schema:'REPOSITORY_AI_ROUTER_REMOTE_REQUEST_VALIDATION_v1',result:'FAIL_CLOSED',subjectHead:process.env.CURRENT_HEAD,errorCode:error.message});
+            process.exitCode=1;
+          }
+          NODE
+          status=$?
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Execute existing repository AI router only
+        id: execute
+        if: steps.parse.outputs.status == '0'
+        shell: bash
+        run: |
+          set +e
+          mapfile -t ROUTER_PATHS < "$RUNNER_TEMP/remote-router-paths.txt"
+          ARGS=()
+          for p in "${ROUTER_PATHS[@]}"; do ARGS+=(--path "$p"); done
+          node tools/repository-ai-entry-router.mjs --mutation-intent --task "$(cat "$RUNNER_TEMP/remote-router-task.txt")" "${ARGS[@]}" --output "$RUNNER_TEMP/remote-router-receipt.json"
+          status=$?
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Build compact unrewritten return
+        if: always()
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const parse=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/remote-router-request-validation.json','utf8'));
+          let out;
+          if(parse.result==='PASS_CLOSED'&&fs.existsSync(process.env.RUNNER_TEMP+'/remote-router-receipt.json')){
+            const native=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/remote-router-receipt.json','utf8'));
+            out={schema:'REPOSITORY_AI_ROUTER_REMOTE_RETURN_v1',result:'ROUTER_RECEIPT_RETURNED',subjectHead:parse.subjectHead,requestNonce:parse.requestNonce,nativeSchema:native.schema,nativeDisposition:native.disposition,nativeGoverningHead:native.governingHead,routeCount:Array.isArray(native.routes)?native.routes.length:0,routes:(native.routes||[]).map(x=>({path:x.path,routeClass:x.routeClass,projectId:x.projectId,disposition:x.disposition})),reasonCodes:native.reasonCodes??[],workflowRunId:Number(process.env.GITHUB_RUN_ID),authorityCreated:false,productMutationAuthorityCreated:false,mergeAuthorityCreated:false,deploymentAuthorityCreated:false,genericCommandAuthority:false};
+          }else{
+            out={schema:'REPOSITORY_AI_ROUTER_REMOTE_RETURN_v1',result:'FAIL_CLOSED',subjectHead:parse.subjectHead??null,requestNonce:parse.requestNonce??null,errorCode:parse.errorCode??'REMOTE_ROUTER_RECEIPT_MISSING',nativeDisposition:null,workflowRunId:Number(process.env.GITHUB_RUN_ID),authorityCreated:false,productMutationAuthorityCreated:false,mergeAuthorityCreated:false,deploymentAuthorityCreated:false,genericCommandAuthority:false};
+          }
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/remote-router-return.json',JSON.stringify(out,null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: repository-ai-router-remote-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/remote-router-request-validation.json
+            ${{ runner.temp }}/remote-router-request.json
+            ${{ runner.temp }}/remote-router-receipt.json
+            ${{ runner.temp }}/remote-router-return.json
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Return compact router receipt to issue
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs=require('fs');
+            const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/remote-router-return.json','utf8'));
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:'REPOSITORY_AI_ROUTER_REMOTE_RETURN_V1\n```json\n'+JSON.stringify(r,null,2)+'\n```'});
+      - name: Enforce exact router pass
+        if: always()
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/remote-router-return.json','utf8'));
+          if(r.result!=='ROUTER_RECEIPT_RETURNED'||r.nativeDisposition!=='PASS'||r.nativeGoverningHead!==r.subjectHead||!r.routeCount||r.routes.some(x=>x.disposition!=='PASS')) process.exit(1);
+          NODE

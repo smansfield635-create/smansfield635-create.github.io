@@ -3415,30 +3415,31 @@
       "state": "ADMITTED_LOCKED"
     },
     "e3e4cc2df26390a76d3e56ce238068aa14ab169452721a4379eb7c0d6538a119": {
-      "governingHead": "572580788a53e605cdcb1023b7e6d52d2d768067",
-      "lockGeneration": 1697,
+      "governingHead": "ee3a920afb99e018fd59bacc9bbd61995e2319f0",
+      "lockGeneration": 1700,
       "lockScope": "ROUTER:LAWS_RENEWAL_RUNTIME_EXACT_PATH_REGISTRATION:V1",
-      "operationId": "LAWS_RENEWAL_RUNTIME_OWNERSHIP_REGISTRATION_20260825_57258078_S1",
+      "operationId": "LAWS_RENEWAL_RUNTIME_OWNERSHIP_REGISTRATION_20260825_EE3A920A_S2",
       "predecessor": {
         "authorityInherited": false,
         "exactHeadRevalidationRequired": true,
-        "governingHead": "52915a8082255a319670b744eeae15e86fe7b049",
-        "lockGeneration": 1695,
+        "governingHead": "572580788a53e605cdcb1023b7e6d52d2d768067",
+        "lockGeneration": 1697,
         "lockScope": "ROUTER:LAWS_RENEWAL_RUNTIME_EXACT_PATH_REGISTRATION:V1",
-        "operationId": "LAWS_RENEWAL_RUNTIME_OWNERSHIP_REGISTRATION_20260825_52915A80_R1",
+        "operationId": "LAWS_RENEWAL_RUNTIME_OWNERSHIP_REGISTRATION_20260825_57258078_S1",
         "preservedEvidenceRefs": [
-          "ISSUE_2062_GEN1695_ADMISSION",
-          "PR_2066_HEAD_DD17E2EC_PREDECESSOR_CANDIDATE_ONLY",
-          "MAIN_ADVANCE_52915A80_TO_57258078_DISJOINT_AUDRALIA_DIAGNOSTIC_TWO_FILE_CHANGE",
-          "ROUTER_RUN_32884881038_CURRENT_HEAD_PASS"
+          "ISSUE_2062_GEN1697_SUCCESSOR_ADMISSION",
+          "PR_2068_HEAD_DDCE1280_PREDECESSOR_QUALIFIED_CANDIDATE_ONLY",
+          "MAIN_ADVANCE_57258078_TO_EE3A920A_THREE_COMMITS_TWO_PATHS",
+          "MAIN_ADVANCE_ROOT_ROUTER_OVERLAP_ADDITIVE_MATERIAL_WORK_AUDIT_REGISTRATION",
+          "ROUTER_RUN_32886350933_CURRENT_HEAD_PASS"
         ],
         "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
         "terminalDisposition": "SUPERSEDED",
-        "transitionId": "LAWS_RENEWAL_RUNTIME_OWNERSHIP_52915A80_TO_57258078_20260825"
+        "transitionId": "LAWS_RENEWAL_RUNTIME_OWNERSHIP_57258078_TO_EE3A920A_20260825"
       },
-      "procedureLocatorDigest": "891f5b6eb7d9aec5d366f1239cba7f905367b8e6a0bf9262f81f6cc6498f2ba4",
+      "procedureLocatorDigest": "d551506fd3d2e25958ba8d83a5c04ed1d08024f270d502c8334d809bbabfafa5",
       "released": false,
-      "requestDigest": "765cfc2df71c36b51c08d21cdb963c5f681c6a848830c36847b1e124495b6d9d",
+      "requestDigest": "1acf2d3fc5488c1629e54475de673236dbbb736932b2ce1339b258caef25c019",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "e3e4cc2df26390a76d3e56ce238068aa14ab169452721a4379eb7c0d6538a119",
       "state": "ADMITTED_LOCKED"
@@ -3858,7 +3859,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1699,
+  "lockGeneration": 1700,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -26930,6 +26931,54 @@
       "scopeHash": "a4e3b18eb0080dc1092dcd1fca38b33738e07aa743a955a460d6f81d83d9e0c8",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "572580788a53e605cdcb1023b7e6d52d2d768067",
+      "lockGeneration": 1697,
+      "lockScope": "ROUTER:LAWS_RENEWAL_RUNTIME_EXACT_PATH_REGISTRATION:V1",
+      "operationId": "LAWS_RENEWAL_RUNTIME_OWNERSHIP_REGISTRATION_20260825_57258078_S1",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "52915a8082255a319670b744eeae15e86fe7b049",
+        "lockGeneration": 1695,
+        "lockScope": "ROUTER:LAWS_RENEWAL_RUNTIME_EXACT_PATH_REGISTRATION:V1",
+        "operationId": "LAWS_RENEWAL_RUNTIME_OWNERSHIP_REGISTRATION_20260825_52915A80_R1",
+        "preservedEvidenceRefs": [
+          "ISSUE_2062_GEN1695_ADMISSION",
+          "PR_2066_HEAD_DD17E2EC_PREDECESSOR_CANDIDATE_ONLY",
+          "MAIN_ADVANCE_52915A80_TO_57258078_DISJOINT_AUDRALIA_DIAGNOSTIC_TWO_FILE_CHANGE",
+          "ROUTER_RUN_32884881038_CURRENT_HEAD_PASS"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "LAWS_RENEWAL_RUNTIME_OWNERSHIP_52915A80_TO_57258078_20260825"
+      },
+      "procedureLocatorDigest": "891f5b6eb7d9aec5d366f1239cba7f905367b8e6a0bf9262f81f6cc6498f2ba4",
+      "released": true,
+      "requestDigest": "765cfc2df71c36b51c08d21cdb963c5f681c6a848830c36847b1e124495b6d9d",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "e3e4cc2df26390a76d3e56ce238068aa14ab169452721a4379eb7c0d6538a119",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "ISSUE_2062_GEN1697_SUCCESSOR_ADMISSION",
+          "PR_2068_HEAD_DDCE1280_PREDECESSOR_QUALIFIED_CANDIDATE_ONLY",
+          "MAIN_ADVANCE_57258078_TO_EE3A920A_THREE_COMMITS_TWO_PATHS",
+          "MAIN_ADVANCE_ROOT_ROUTER_OVERLAP_ADDITIVE_MATERIAL_WORK_AUDIT_REGISTRATION",
+          "ROUTER_RUN_32886350933_CURRENT_HEAD_PASS"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "ee3a920afb99e018fd59bacc9bbd61995e2319f0",
+        "successorLockGeneration": 1700,
+        "successorLockScope": "ROUTER:LAWS_RENEWAL_RUNTIME_EXACT_PATH_REGISTRATION:V1",
+        "successorOperationId": "LAWS_RENEWAL_RUNTIME_OWNERSHIP_REGISTRATION_20260825_EE3A920A_S2",
+        "transitionId": "LAWS_RENEWAL_RUNTIME_OWNERSHIP_57258078_TO_EE3A920A_20260825"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

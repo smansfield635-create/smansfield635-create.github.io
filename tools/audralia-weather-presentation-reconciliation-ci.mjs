@@ -212,12 +212,15 @@ function buildAtlasViews(){
       }));
     }
   }
-  for(const [id,latDeg] of [['ATLAS_POLE_NORTH',90],['ATLAS_POLE_SOUTH',-90]]){
-    views.push(Object.freeze({
-      id,latDeg,lonDeg:0,
-      ...targetFromLatLon(latDeg*Math.PI/180,0),
-      distance:5000,pitch:1.08,yaw:0
-    }));
+  const poleYaws=Object.freeze([0,Math.PI/8,Math.PI/4,3*Math.PI/8,Math.PI/2,5*Math.PI/8,3*Math.PI/4,7*Math.PI/8]);
+  for(const [poleId,latDeg] of [['NORTH',90],['SOUTH',-90]]){
+    for(let yawIndex=0;yawIndex<poleYaws.length;yawIndex++){
+      views.push(Object.freeze({
+        id:'ATLAS_POLE_'+poleId+'_YAW_'+yawIndex,latDeg,lonDeg:0,
+        ...targetFromLatLon(latDeg*Math.PI/180,0),
+        distance:5000,pitch:1.08,yaw:poleYaws[yawIndex]
+      }));
+    }
   }
   return Object.freeze(views);
 }
@@ -357,6 +360,35 @@ async function captureSphericalAtlas(page){
   });
   assert.equal(atlas.frameCount,ATLAS_VIEWS.length,'ATLAS_VIEW_COUNT_MISMATCH');
   return Object.freeze({...atlas,frames:Object.freeze(frames)});
+}
+
+function summarizeAtlasCoverage(atlas){
+  const missingByRow=[];
+  const missingCellExamples=[];
+  let missingCells=0;
+  for(let row=0;row<atlas.rows;row++){
+    let rowMissing=0;
+    for(let column=0;column<atlas.columns;column++){
+      if(atlas.count[row*atlas.columns+column]>0)continue;
+      missingCells++;
+      rowMissing++;
+      if(missingCellExamples.length<40)missingCellExamples.push({
+        row,column,
+        latCenterDeg:-90+(row+.5)*180/atlas.rows,
+        lonCenterDeg:-180+(column+.5)*360/atlas.columns
+      });
+    }
+    if(rowMissing>0)missingByRow.push({row,missingCells:rowMissing});
+  }
+  return Object.freeze({
+    rows:atlas.rows,
+    columns:atlas.columns,
+    viewCount:atlas.frameCount,
+    mappedPixelCount:atlas.mappedPixelCount,
+    missingCells,
+    missingByRow:Object.freeze(missingByRow),
+    missingCellExamples:Object.freeze(missingCellExamples)
+  });
 }
 
 function cellSphereFraction(row,rows,columns){
@@ -730,6 +762,9 @@ const browser=await puppeteer.launch({
 
 try{
   const enabled=await captureVariant(browser,{ablation:'none',withAtlas:true,withProbes:true});
+  const enabledCoverage=summarizeAtlasCoverage(enabled.atlas);
+  console.log(JSON.stringify({enabledCoverage},null,2));
+  assert.equal(enabledCoverage.missingCells,0,'INCOMPLETE_ENABLED_SPHERICAL_COVERAGE '+JSON.stringify(enabledCoverage));
   const v6Ablated=await captureVariant(browser,{ablation:'v6',withProbes:true});
   const finalExpansionAblated=await captureVariant(browser,{ablation:'finalExpansion',withAtlas:true});
   const isolatedExpansion=await captureVariant(browser,{ablation:'none',withAtlas:true,isolatedExpansion:true});

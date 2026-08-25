@@ -353,6 +353,18 @@
       "scopeHash": "1bbc100f974e1cb61f1bc9a2b59a09a3e51e5233871d5acb3b5b3cf5c1b85dc8",
       "state": "ADMITTED_LOCKED"
     },
+    "1d9d8d95d3f6a61a708cf328302c426749126870c51f0e81d18fbda94c0cd952": {
+      "governingHead": "0e21f21314d3c453880da19605e3ce2566964b78",
+      "lockGeneration": 1686,
+      "lockScope": "H_EARTH:AUDRALIA_DIAGNOSTIC_FIRST_TOUCH_AND_TABLET_LAYOUT:V1",
+      "operationId": "AUDRALIA_DIAGNOSTIC_FIRST_TOUCH_TABLET_QUALIFICATION_20260825_1114",
+      "procedureLocatorDigest": "c1326c7e7c8aa69dfd432966a14c90e58828d76f9513c5dc629299d85416d6a6",
+      "released": false,
+      "requestDigest": "b909fca547d14d7daa66c245f9de427fb05a01353630746b39f1450c1602620f",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "1d9d8d95d3f6a61a708cf328302c426749126870c51f0e81d18fbda94c0cd952",
+      "state": "ADMITTED_LOCKED"
+    },
     "1e15c6ce4033764ff21796dd1618918d575702bd56793bad4606f01a7258099e": {
       "governingHead": "730b3e628d2ab339904fd4d25015461bc1aaa9ae",
       "lockGeneration": 233,
@@ -3781,7 +3793,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1685,
+  "lockGeneration": 1686,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -929,13 +929,28 @@
       "state": "ADMITTED_LOCKED"
     },
     "49c82c7f3069a13dab17d4cb34b3865485255ec196cf1840d9bccb8edb43ad91": {
-      "governingHead": "4abee910e521229ec1a90004372d77dee233e297",
-      "lockGeneration": 1713,
+      "governingHead": "d9e7c71997b37a42173730dab4613c0a468d9337",
+      "lockGeneration": 1714,
       "lockScope": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION",
-      "operationId": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION_20260825_001",
-      "procedureLocatorDigest": "08cd9c2fc6e6c4e0edca0d46d80e7b100f841857525039e2458fb1a3c3cc7a0e",
+      "operationId": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION_20260825_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "4abee910e521229ec1a90004372d77dee233e297",
+        "lockGeneration": 1713,
+        "lockScope": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION",
+        "operationId": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION_20260825_001",
+        "preservedEvidenceRefs": [
+          "PREDECESSOR_CANONICAL_ADMISSION_GENERATION_1713",
+          "FROZEN_C3_COMPOSITOR_BLOB_e5bcbe65abb051fc5648a3c8bf1e16a4ecc2837e"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION_20260825_001_TO_002"
+      },
+      "procedureLocatorDigest": "d92fd3347690e6e85f3bb318f67413cd8e2e8f4de3e76a82fa99a1d7de4cf909",
       "released": false,
-      "requestDigest": "32edfddc8499d2927d1b6c88a3c8dc8ce50b6ea62003d2c69881eb7143bb90d2",
+      "requestDigest": "dcb23319f345ff55094c9a070ce964aff7031156a403cfda01c7c4bca2638fe4",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "49c82c7f3069a13dab17d4cb34b3865485255ec196cf1840d9bccb8edb43ad91",
       "state": "ADMITTED_LOCKED"
@@ -3954,7 +3969,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1713,
+  "lockGeneration": 1714,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -27172,6 +27187,34 @@
         "successorLockScope": "LAWS:BACK_PAGE_CAROUSEL_PARITY_AND_STORY_NAVIGATION:V1",
         "successorOperationId": "LAWS_BACK_PAGE_CAROUSEL_PARITY_CORRECTION_20260825_EF83A4C5_S1",
         "transitionId": "LAWS_BACK_PAGE_CAROUSEL_DDBE7924_TO_EF83A4C5_20260825"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "4abee910e521229ec1a90004372d77dee233e297",
+      "lockGeneration": 1713,
+      "lockScope": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION",
+      "operationId": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION_20260825_001",
+      "procedureLocatorDigest": "08cd9c2fc6e6c4e0edca0d46d80e7b100f841857525039e2458fb1a3c3cc7a0e",
+      "released": true,
+      "requestDigest": "32edfddc8499d2927d1b6c88a3c8dc8ce50b6ea62003d2c69881eb7143bb90d2",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "49c82c7f3069a13dab17d4cb34b3865485255ec196cf1840d9bccb8edb43ad91",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "PREDECESSOR_CANONICAL_ADMISSION_GENERATION_1713",
+          "FROZEN_C3_COMPOSITOR_BLOB_e5bcbe65abb051fc5648a3c8bf1e16a4ecc2837e"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "d9e7c71997b37a42173730dab4613c0a468d9337",
+        "successorLockGeneration": 1714,
+        "successorLockScope": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION",
+        "successorOperationId": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION_20260825_002",
+        "transitionId": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION_20260825_001_TO_002"
       },
       "terminalDisposition": "SUPERSEDED"
     }

@@ -252,6 +252,7 @@ async function activateReadingRoom(page, group, route) {
       rootIndex => document.querySelectorAll('[data-laws-room-carousel]')[rootIndex]?.dataset.lrcInspecting === 'true',
       target.rootIndex,
     );
+    if (settleMs > 0) await page.waitForTimeout(Math.min(settleMs + 60, 1200));
     openedInspection = true;
   }
   assert(await group.isVisible(), `${route}: reading group hidden after inspection open`);

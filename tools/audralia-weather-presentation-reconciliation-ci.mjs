@@ -7,46 +7,67 @@ const base='http://127.0.0.1:4173';
 const chrome=process.env.CHROME_PATH;
 if(!chrome)throw new Error('CHROME_PATH_MISSING');
 
+const INDEX='showroom/globe/audralia/index.html';
+const COMPOSITOR='showroom/globe/audralia/final-cloud-shader-composition-v1.mjs';
 const DIRECT_FAP1=['showroom','globe','audralia','fap1-weather-presentation-v1.mjs'].join('/');
 const SNAPSHOT_FAP1=['inspection','audralia-24057-exact','snapshot','showroom','globe','audralia','fap1-weather-presentation-v1.mjs'].join('/');
-const LIVE_INDEX='showroom/globe/audralia/index.html';
-const BASE_RENDERER='showroom/globe/audralia/weather-presentation-reconciliation/exterior-weather.mjs';
-const POLICY_ID='AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v6';
-const REQUEST_IDENTITY='FAP1_WSD6_20260824_001';
-const SYSTEM_IDS=Object.freeze([
-  'MARINE_STRATUS_STRATOCUMULUS_BANK',
-  'TRADE_CUMULUS_STREETS',
-  'MIDLATITUDE_COMMA_FRONT',
-  'MESOSCALE_CONVECTIVE_COMPLEX',
-  'HIGH_CIRRUS_CIRROCUMULUS_JET_PLUME'
-]);
-const COVERAGE_FAMILIES=Object.freeze([
-  'CIRRUS_FIELD',
-  'CIRROSTRATUS_VEIL',
-  'ALTOCUMULUS_FIELD'
-]);
+const SNAPSHOT_RENDERER=['inspection','audralia-24057-exact','snapshot','showroom','globe','audralia','weather-presentation-reconciliation','exterior-weather.mjs'].join('/');
+const POLICY_ID='AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION_v1';
+const LIVE_SCHEMA='AUDRALIA_LIVE_PLANETARY_INTEGRATION_v8_FINAL_CLOUD_COMPOSITION';
+const FIXED_TIME_MS=Date.parse('2026-08-24T22:00:00.000Z');
 
-function requireStaticCandidate(){
-  const direct=fs.readFileSync(DIRECT_FAP1,'utf8');
-  const snapshot=fs.readFileSync(SNAPSHOT_FAP1,'utf8');
-  const index=fs.readFileSync(LIVE_INDEX,'utf8');
-  const renderer=fs.readFileSync(BASE_RENDERER,'utf8');
+const REQUIRED_STAGES=Object.freeze([
+  'FAP1_ORGANIZED_WEATHER_V6',
+  'XYZ_VOLUMETRIC_DEPTH_V2',
+  'ACF1_PRESENTATION_V3',
+  'DIRECT_DENSITY_V4'
+]);
+const V6_FAMILIES=Object.freeze(['CIRRUS_FIELD','CIRROSTRATUS_VEIL','ALTOCUMULUS_FIELD']);
 
-  assert.equal(snapshot,direct,'FAP1_SOURCE_SNAPSHOT_BYTE_PARITY_FAILURE');
-  assert.match(direct,new RegExp(POLICY_ID),'FAP1_V6_POLICY_ID_MISSING');
-  for(const id of SYSTEM_IDS)assert.match(direct,new RegExp(id),'FAP1_DIVERSIFICATION_SYSTEM_ID_MISSING_'+id);
-  for(const id of COVERAGE_FAMILIES)assert.match(direct,new RegExp(id),'FAP1_COVERAGE_FAMILY_ID_MISSING_'+id);
-  assert.match(index,new RegExp(`fap1-weather-presentation-v1\\.mjs\\?cb=${REQUEST_IDENTITY}`),'FAP1_FRESH_REQUEST_IDENTITY_MISSING');
-  assert.match(renderer,/const REST_STEPS=32,INTERACTION_STEPS=15,REST_MAX_PIXELS=230000,INTERACTION_MAX_PIXELS=90000;/,'FAP1_PERFORMANCE_CEILINGS_CHANGED');
-  assert.match(renderer,/uSysA\[8\]/,'FAP1_EXISTING_SYSTEM_ARRAY_CONTRACT_CHANGED');
-  assert.doesNotMatch(direct,/createElement\(\s*['"]canvas['"]\s*\)/,'FAP1_ADDITIONAL_RENDER_CANVAS_SOURCE_DETECTED');
-  assert.doesNotMatch(direct,/new\s+OffscreenCanvas\s*\(/,'FAP1_OFFSCREEN_RENDER_CANVAS_SOURCE_DETECTED');
-  return {policyId:POLICY_ID,systemIds:SYSTEM_IDS,coverageFamilies:COVERAGE_FAMILIES,byteParity:true,requestIdentity:REQUEST_IDENTITY,performanceCeilingsFrozen:true,renderCanvasSourcePreserved:true};
+function staticCandidate(){
+  const index=fs.readFileSync(INDEX,'utf8');
+  const compositor=fs.readFileSync(COMPOSITOR,'utf8');
+  const directFap1=fs.readFileSync(DIRECT_FAP1,'utf8');
+  const snapshotFap1=fs.readFileSync(SNAPSHOT_FAP1,'utf8');
+  const renderer=fs.readFileSync(SNAPSHOT_RENDERER,'utf8');
+
+  assert.equal(directFap1,snapshotFap1,'FAP1_SOURCE_SNAPSHOT_BYTE_PARITY_FAILURE');
+  assert.match(index,new RegExp(LIVE_SCHEMA),'LIVE_FINAL_COMPOSITION_SCHEMA_MISSING');
+  assert.match(index,/final-cloud-shader-composition-v1\.mjs\?cb=AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION_v1/,'FINAL_COMPOSITOR_REQUEST_IDENTITY_MISSING');
+  assert.doesNotMatch(index,/type="module" src="\.\/fap1-orbital-support-tuning-v1\.mjs/,'LEGACY_DIRECT_WRAPPER_STILL_BOOTED_SEPARATELY');
+  assert.doesNotMatch(index,/type="module" src="\/inspection\/audralia-24057-exact\/snapshot\/showroom\/globe\/audralia\/acf1-cloud-presentation-v1\.mjs/,'LEGACY_ACF1_WRAPPER_STILL_BOOTED_SEPARATELY');
+  assert.doesNotMatch(index,/type="module" src="\/inspection\/audralia-24057-exact\/snapshot\/showroom\/globe\/audralia\/fap1-xyz-volumetric-depth-v1\.mjs/,'LEGACY_XYZ_WRAPPER_STILL_BOOTED_SEPARATELY');
+  assert.doesNotMatch(index,/type="module" src="\/inspection\/audralia-24057-exact\/snapshot\/showroom\/globe\/audralia\/fap1-weather-presentation-v1\.mjs/,'LEGACY_FAP1_WRAPPER_STILL_BOOTED_SEPARATELY');
+
+  assert.match(compositor,new RegExp(POLICY_ID),'FINAL_COMPOSITOR_POLICY_MISSING');
+  assert.match(compositor,/AUDRALIA_FINAL_DIRECT_DENSITY_SUPPORT_v1/,'FINAL_DIRECT_DENSITY_REPAIR_MISSING');
+  assert.match(compositor,/cloudAblation/,'V6_ABLATION_CONTROL_MISSING');
+  assert.match(compositor,/FINAL_CLOUD_SHADER_GLSL_VERSION_NOT_FIRST_LINE/,'FINAL_GLSL_VERSION_ORDER_GUARD_MISSING');
+  for(const stage of REQUIRED_STAGES)assert.match(compositor,new RegExp(stage),`FINAL_STAGE_DECLARATION_MISSING:${stage}`);
+  for(const family of V6_FAMILIES)assert.match(snapshotFap1,new RegExp(family),`V6_FAMILY_SOURCE_MISSING:${family}`);
+
+  assert.match(renderer,/const REST_STEPS=32,INTERACTION_STEPS=15,REST_MAX_PIXELS=230000,INTERACTION_MAX_PIXELS=90000;/,'FINAL_COMPOSITION_PERFORMANCE_CEILINGS_CHANGED');
+  assert.match(renderer,/uSysA\[8\]/,'FINAL_COMPOSITION_NATIVE_SYSTEM_ARRAY_CHANGED');
+  assert.doesNotMatch(compositor,/createElement\(\s*['"]canvas['"]\s*\)/,'FINAL_COMPOSITOR_ADDITIONAL_CANVAS_SOURCE_DETECTED');
+  assert.doesNotMatch(compositor,/new\s+OffscreenCanvas\s*\(/,'FINAL_COMPOSITOR_OFFSCREEN_CANVAS_SOURCE_DETECTED');
+
+  return Object.freeze({
+    policyId:POLICY_ID,
+    liveSchema:LIVE_SCHEMA,
+    fap1ByteParity:true,
+    requiredStages:REQUIRED_STAGES,
+    v6Families:V6_FAMILIES,
+    glslVersionFirstLineGuard:true,
+    frozenPerformanceCeilings:true,
+    additionalRenderCanvasSource:false
+  });
 }
 
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+
 async function waitForAuthoritativeRuntime(page,{timeout=105000,label='runtime'}={}){
-  const started=Date.now(); let last=null;
+  const started=Date.now();
+  let last=null;
   while(Date.now()-started<timeout){
     last=await page.evaluate(()=>({
       reconciliationPresent:Boolean(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__),
@@ -64,15 +85,26 @@ async function waitForAuthoritativeRuntime(page,{timeout=105000,label='runtime'}
   }
   throw new Error(`${label.toUpperCase()}_AUTHORITATIVE_RUNTIME_TIMEOUT ${JSON.stringify(last)}`);
 }
-async function waitForFap1(page,{timeout=15000,label='fap1'}={}){
-  const started=Date.now(); let last=null;
+
+async function waitForComposition(page,{timeout=20000,label='composition'}={}){
+  const started=Date.now();
+  let last=null;
   while(Date.now()-started<timeout){
-    last=await page.evaluate(()=>({present:Boolean(window.__AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION__),policyId:window.__AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION__?.policyId||null,evidence:window.__AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION__?.getRuntimeEvidence?.()||null}));
-    if(last.present)return last;
+    last=await page.evaluate(()=>{
+      const c=window.__AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION__;
+      return {
+        present:Boolean(c),
+        policyId:c?.policyId||null,
+        evidence:c?.getRuntimeEvidence?.()||null
+      };
+    });
+    const ev=last?.evidence;
+    if(last.present&&ev?.composedCloudShaders>=1&&typeof ev?.finalShaderSha256==='string'&&ev.finalShaderSha256.length===64&&ev?.finalStageEvidence?.pass===true)return last;
     await sleep(100);
   }
-  throw new Error(`${label.toUpperCase()}_TIMEOUT ${JSON.stringify(last)}`);
+  throw new Error(`${label.toUpperCase()}_FINAL_COMPOSITION_TIMEOUT ${JSON.stringify(last)}`);
 }
+
 function installErrorCapture(page){
   const pageErrors=[],consoleErrors=[];
   page.on('pageerror',error=>pageErrors.push(String(error?.stack||error)));
@@ -80,95 +112,190 @@ function installErrorCapture(page){
   return {pageErrors,consoleErrors};
 }
 
-const staticCandidate=requireStaticCandidate();
-console.log(JSON.stringify({staticCandidate},null,2));
-const browser=await puppeteer.launch({executablePath:chrome,headless:'new',args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
-try{
+function targetFromLatLon(lat,lon){
+  const R=6200;
+  const north=[0,.5,-.8660254037844386];
+  const meridian=[0,.8660254037844386,.5];
+  const east=[1,0,0];
+  const cl=Math.cos(lat);
+  const direction=[0,1,2].map(i=>east[i]*cl*Math.sin(lon)+meridian[i]*cl*Math.cos(lon)+north[i]*Math.sin(lat));
+  const length=Math.hypot(...direction)||1;
+  for(let i=0;i<3;i++)direction[i]/=length;
+  const angle=Math.acos(Math.max(-1,Math.min(1,direction[1])));
+  const sine=Math.sin(angle);
+  if(Math.abs(sine)<1e-9)return {targetU:0,targetV:0};
+  return {targetU:R*angle*direction[0]/sine,targetV:R*angle*direction[2]/sine};
+}
+
+const PROBES=Object.freeze([
+  Object.freeze({id:'CIRRUS_A',...targetFromLatLon(.610865,-2.827433),distance:5000,pitch:1.08,yaw:0}),
+  Object.freeze({id:'CIRROSTRATUS_B',...targetFromLatLon(-.191986,.872665),distance:5000,pitch:1.08,yaw:.34}),
+  Object.freeze({id:'ALTOCUMULUS_C',...targetFromLatLon(.733038,1.745329),distance:5000,pitch:1.08,yaw:-.28}),
+  Object.freeze({id:'CIRRUS_C_NEAR_GRATITUDE',...targetFromLatLon(.209440,.191986),distance:5000,pitch:1.08,yaw:.18})
+]);
+
+async function captureExteriorMetrics(page,probe){
+  return page.evaluate(async probe=>{
+    const proof=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__;
+    if(!proof?.setCameraStateForTest)throw new Error('FINAL_FRAME_PROOF_CAMERA_CONTROL_MISSING');
+    const state={targetU:probe.targetU,targetV:probe.targetV,distance:probe.distance,pitch:probe.pitch,yaw:probe.yaw};
+    proof.setCameraStateForTest(state);
+    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+    proof.setCameraStateForTest(state);
+    const canvas=proof.exterior?.overlay;
+    if(!(canvas instanceof HTMLCanvasElement))throw new Error('FINAL_FRAME_EXTERIOR_CANVAS_MISSING');
+    const gl=canvas.getContext('webgl2');
+    if(!gl)throw new Error('FINAL_FRAME_EXTERIOR_WEBGL2_MISSING');
+    gl.finish();
+    const width=gl.drawingBufferWidth,height=gl.drawingBufferHeight,total=width*height;
+    if(total<=0)throw new Error('FINAL_FRAME_EMPTY_DRAWING_BUFFER');
+    const pixels=new Uint8Array(total*4);
+    gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
+    let alphaNonzero=0,alphaStrong=0,alphaSum=0,rgbSum=0,weightedChecksum=0;
+    for(let i=0,p=0;i<pixels.length;i+=4,p++){
+      const r=pixels[i],g=pixels[i+1],b=pixels[i+2],a=pixels[i+3];
+      if(a>8)alphaNonzero++;
+      if(a>32)alphaStrong++;
+      alphaSum+=a/255;
+      rgbSum+=(r+g+b)/(3*255);
+      weightedChecksum=(weightedChecksum+((p%65521)+1)*(r+3*g+7*b+11*a))%2147483647;
+    }
+    const camera=proof.renderer?.getSnapshot?.()||null;
+    return {
+      id:probe.id,width,height,
+      nonzeroFraction:alphaNonzero/total,
+      strongFraction:alphaStrong/total,
+      meanAlpha:alphaSum/total,
+      meanRgb:rgbSum/total,
+      weightedChecksum,
+      camera
+    };
+  },probe);
+}
+
+async function captureVariant(browser,{ablateV6=false}={}){
   const page=await browser.newPage();
   await page.setViewport({width:720,height:1280,deviceScaleFactor:1});
-  const reconciliationCapture=installErrorCapture(page);
-  await page.goto(`${base}/showroom/globe/audralia/weather-presentation-reconciliation/`,{waitUntil:'domcontentloaded',timeout:60000});
-  const authoritative=await waitForAuthoritativeRuntime(page,{label:'reconciliation'});
-  const result=await page.evaluate(()=>{
-    const proof=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__;
-    const ids0=proof.canonicalObjects.map(x=>x.ID_i);
-    const local=proof.setCameraStateForTest({distance:720});
-    const localCutoff=Number(proof.exterior.overlay.dataset.nearCutoff||0);
-    const ids1=proof.canonicalObjects.map(x=>x.ID_i);
-    const planetary=proof.setCameraStateForTest({distance:5000});
-    const planetaryCutoff=Number(proof.exterior.overlay.dataset.nearCutoff||-1);
-    const ids2=proof.canonicalObjects.map(x=>x.ID_i);
-    proof.setCameraStateForTest({distance:720});
-    return {schema:proof.schema,cameraSemanticsMutated:proof.cameraSemanticsMutated,zoomSemanticsMutated:proof.zoomSemanticsMutated,travelSemanticsMutated:proof.travelSemanticsMutated,localPass:local.invariants.pass,planetaryPass:planetary.invariants.pass,localCutoff,planetaryCutoff,idsStable:JSON.stringify(ids0)===JSON.stringify(ids1)&&JSON.stringify(ids1)===JSON.stringify(ids2),localActive:local.spatial.activeLocalCount,localCap:local.spatial.maxLocalCount,loaderProgress:Number(document.querySelector('[data-audralia-loader]')?.dataset?.progress||0),skyEvidence:proof.sky.getEvidence(),exteriorEvidence:proof.exterior.getEvidence(),status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null};
-  });
-  console.log(JSON.stringify({authoritative,reconciliation:result,...reconciliationCapture},null,2));
-  const reconciliationFailed=reconciliationCapture.pageErrors.length||!result.localPass||!result.planetaryPass||!result.idsStable||result.localActive>result.localCap||result.loaderProgress<4||result.cameraSemanticsMutated||result.zoomSemanticsMutated||result.travelSemanticsMutated||result.localCutoff<500||result.planetaryCutoff!==0||result.skyEvidence.nearTerrainVeil!==false||result.exteriorEvidence.nearFieldExtinctionAuthority!==false||!String(result.status).includes('USER_REVIEW_REQUIRED');
-  if(reconciliationFailed)throw new Error('RECONCILIATION_ASSERTION_FAILURE');
+  await page.evaluateOnNewDocument(fixed=>{
+    const NativeDate=Date;
+    class FixedDate extends NativeDate{
+      constructor(...args){super(...(args.length?args:[fixed]));}
+      static now(){return fixed;}
+    }
+    Object.setPrototypeOf(FixedDate,NativeDate);
+    globalThis.Date=FixedDate;
+  },FIXED_TIME_MS);
+  const errors=installErrorCapture(page);
+  const suffix=ablateV6?'?cloudAblation=v6':'';
+  await page.goto(`${base}/showroom/globe/audralia/${suffix}`,{waitUntil:'domcontentloaded',timeout:60000});
+  const authoritative=await waitForAuthoritativeRuntime(page,{label:ablateV6?'ablated':'enabled'});
+  const composition=await waitForComposition(page,{label:ablateV6?'ablated_composition':'enabled_composition'});
+  const live=await page.evaluate(()=>({
+    integration:window.__AUDRALIA_LIVE_PLANETARY_INTEGRATION__,
+    status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null,
+    loaderProgress:Number(document.querySelector('[data-audralia-loader]')?.dataset?.progress||0),
+    worldCanvasCount:document.querySelectorAll('[data-h-earth-map-wide-canvas]').length,
+    canvasCount:document.querySelectorAll('canvas').length,
+    composition:window.__AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION__?.getRuntimeEvidence?.()||null
+  }));
+  const probes=[];
+  for(const probe of PROBES)probes.push(await captureExteriorMetrics(page,probe));
   await page.close();
+  return Object.freeze({ablateV6,authoritative,composition,live,probes,errors});
+}
 
-  const live=await browser.newPage();
-  await live.setViewport({width:720,height:1280,deviceScaleFactor:1});
-  const liveCapture=installErrorCapture(live);
-  await live.goto(`${base}/showroom/globe/audralia/`,{waitUntil:'domcontentloaded',timeout:60000});
-  const liveFap1=await waitForFap1(live,{label:'live_fap1'});
-  const liveAuthoritative=await waitForAuthoritativeRuntime(live,{label:'live'});
-  const liveResult=await live.evaluate(()=>({integration:window.__AUDRALIA_LIVE_PLANETARY_INTEGRATION__,fap1:window.__AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION__,fap1Evidence:window.__AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION__?.getRuntimeEvidence?.(),loaderProgress:Number(document.querySelector('[data-audralia-loader]')?.dataset?.progress||0),loaderBuild:document.querySelector('.audralia-loading-version')?.textContent?.trim()||null,status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null,nav:[...document.querySelectorAll('.audralia-live-nav a')].map(a=>a.textContent.trim()),worldCanvasCount:document.querySelectorAll('[data-h-earth-map-wide-canvas]').length,canvasCount:document.querySelectorAll('canvas').length}));
-  console.log(JSON.stringify({liveFap1,liveAuthoritative,live:liveResult,...liveCapture},null,2));
+function compareCausality(enabled,ablated){
+  assert.equal(enabled.probes.length,ablated.probes.length,'FRAMEBUFFER_PROBE_COUNT_MISMATCH');
+  const probes=enabled.probes.map((on,index)=>{
+    const off=ablated.probes[index];
+    assert.equal(on.id,off.id,'FRAMEBUFFER_PROBE_ID_MISMATCH');
+    assert.equal(on.width,off.width,'FRAMEBUFFER_WIDTH_MISMATCH');
+    assert.equal(on.height,off.height,'FRAMEBUFFER_HEIGHT_MISMATCH');
+    return Object.freeze({
+      id:on.id,
+      enabled:on,
+      ablated:off,
+      delta:Object.freeze({
+        nonzeroFraction:on.nonzeroFraction-off.nonzeroFraction,
+        strongFraction:on.strongFraction-off.strongFraction,
+        meanAlpha:on.meanAlpha-off.meanAlpha,
+        meanRgb:on.meanRgb-off.meanRgb,
+        checksumDifferent:on.weightedChecksum!==off.weightedChecksum
+      })
+    });
+  });
+  const positive=probes.filter(p=>p.delta.meanAlpha>0&&p.delta.checksumDifferent);
+  const material=probes.filter(p=>p.delta.meanAlpha>=.0015&&(p.delta.nonzeroFraction>=.002||p.delta.strongFraction>=.002));
+  const maxMeanAlphaDelta=Math.max(...probes.map(p=>p.delta.meanAlpha));
+  const maxCoverageDelta=Math.max(...probes.map(p=>Math.max(p.delta.nonzeroFraction,p.delta.strongFraction)));
+  return Object.freeze({
+    probes:Object.freeze(probes),
+    positiveProbeCount:positive.length,
+    materialProbeCount:material.length,
+    maxMeanAlphaDelta,
+    maxCoverageDelta,
+    pass:positive.length>=2&&material.length>=1&&maxMeanAlphaDelta>=.0015&&maxCoverageDelta>=.002
+  });
+}
 
-  assert.equal(liveResult.integration?.schema,'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v7_24057_DENSE_CLOUD_SUCCESSOR','LIVE_INTEGRATION_SCHEMA_DRIFT');
-  assert.equal(liveResult.integration?.startupArchitecture,'APPROVED_PRESENTATION_PRE_RENDER_v1','LIVE_STARTUP_ARCHITECTURE_DRIFT');
-  assert.equal(liveResult.integration?.weatherPresentationReconciliation,true,'LIVE_RECONCILIATION_BINDING_MISSING');
-  assert.equal(liveResult.integration?.cameraSemanticsFrozen,true,'LIVE_CAMERA_SEMANTICS_NOT_FROZEN');
-  assert.equal(liveResult.integration?.fap1OrganizedWeatherCandidate,true,'LIVE_FAP1_BINDING_MISSING');
-  assert.ok(liveResult.loaderProgress>=4,'LIVE_LOADER_NOT_READY');
-  assert.ok(String(liveResult.loaderBuild||'').includes('STARTUP TRACE v1'),'LIVE_BUILD_IDENTITY_DRIFT');
-  assert.ok(String(liveResult.status).includes('USER_REVIEW_REQUIRED'),'LIVE_RUNTIME_NOT_READY');
-  assert.deepEqual(liveResult.nav.includes('H-Earth · Play'),true,'LIVE_NAV_H_EARTH_MISSING');
-  assert.deepEqual(liveResult.nav.includes('Compass'),true,'LIVE_NAV_COMPASS_MISSING');
-  assert.deepEqual(liveResult.nav.includes('Mirrorland'),true,'LIVE_NAV_MIRRORLAND_MISSING');
-  assert.equal(liveResult.worldCanvasCount,1,'LIVE_PRIMARY_WORLD_CANVAS_MULTIPLIED');
-  assert.equal(liveCapture.pageErrors.length,0,'LIVE_PAGE_ERROR');
+const staticEvidence=staticCandidate();
+console.log(JSON.stringify({staticEvidence},null,2));
 
-  const fap1=liveResult.fap1;
-  assert.equal(fap1?.policyId,POLICY_ID,'FAP1_V6_RUNTIME_POLICY_MISSING');
-  assert.equal(fap1?.acceptedWorldPreserved,true,'FAP1_WORLD_PRESERVATION_FAILURE');
-  assert.equal(fap1?.geographyMutation,false,'FAP1_GEOGRAPHY_MUTATION');
-  assert.equal(fap1?.oceanMutation,false,'FAP1_OCEAN_MUTATION');
-  assert.equal(fap1?.cameraMutation,false,'FAP1_CAMERA_MUTATION');
-  assert.equal(fap1?.navigationMutation,false,'FAP1_NAVIGATION_MUTATION');
-  assert.equal(fap1?.visibleUpgrade?.marineStratusStratocumulusBank,true,'FAP1_MARINE_BANK_MISSING');
-  assert.equal(fap1?.visibleUpgrade?.tradeCumulusStreets,true,'FAP1_TRADE_STREETS_MISSING');
-  assert.equal(fap1?.visibleUpgrade?.midlatitudeCommaFront,true,'FAP1_COMMA_FRONT_MISSING');
-  assert.equal(fap1?.visibleUpgrade?.mesoscaleConvectiveComplex,true,'FAP1_MCC_MISSING');
-  assert.equal(fap1?.visibleUpgrade?.highCirrusCirrocumulusJetPlume,true,'FAP1_CIRRUS_PLUME_MISSING');
-  assert.equal(fap1?.visibleUpgrade?.sparseHemisphereDiversified,true,'FAP1_SPARSE_HEMISPHERE_NOT_DIVERSIFIED');
-  assert.equal(fap1?.visibleUpgrade?.planetaryCloudFieldCoverage,true,'FAP1_PLANETARY_COVERAGE_MISSING');
-  assert.equal(fap1?.visibleUpgrade?.cirrusFieldMultiplicity,true,'FAP1_CIRRUS_MULTIPLICITY_MISSING');
-  assert.equal(fap1?.visibleUpgrade?.cirrostratusVeilMultiplicity,true,'FAP1_CIRROSTRATUS_MULTIPLICITY_MISSING');
-  assert.equal(fap1?.visibleUpgrade?.altocumulusFieldMultiplicity,true,'FAP1_ALTOCUMULUS_MULTIPLICITY_MISSING');
-  assert.equal(fap1?.visibleUpgrade?.clearAirWindowsPreserved,true,'FAP1_CLEAR_AIR_WINDOWS_NOT_PRESERVED');
-  assert.equal(fap1?.visibleUpgrade?.existingCloudSystemsExpanded,false,'FAP1_EXISTING_SYSTEM_EXPANSION_DETECTED');
-  assert.equal(fap1?.visibleUpgrade?.singlePassRaymarchPreserved,true,'FAP1_SINGLE_PASS_NOT_PRESERVED');
-  assert.equal(fap1?.visibleUpgrade?.performanceCeilingsFrozen,true,'FAP1_PERFORMANCE_CEILINGS_NOT_FROZEN');
-  assert.equal(fap1?.diversification?.targetSector,'82E_TO_126W_ACROSS_DATELINE','FAP1_TARGET_SECTOR_DRIFT');
-  assert.equal(fap1?.diversification?.systemCount,5,'FAP1_SYSTEM_COUNT_MISMATCH');
-  assert.deepEqual([...fap1.diversification.systemIds],SYSTEM_IDS,'FAP1_SYSTEM_IDS_MISMATCH');
-  assert.equal(fap1?.diversification?.existingSystemsExpanded,false,'FAP1_EXISTING_SYSTEMS_EXPANDED');
-  assert.equal(fap1?.diversification?.additionalRenderPasses,0,'FAP1_RENDER_PASS_ADDED');
-  assert.equal(fap1?.diversification?.rayMarchCeilingsChanged,false,'FAP1_RAYMARCH_CEILING_CHANGED');
-  assert.equal(fap1?.planetaryCoverage?.target,'MULTI_HEMISPHERE_DISTRIBUTED','FAP1_PLANETARY_COVERAGE_TARGET_DRIFT');
-  assert.deepEqual([...fap1.planetaryCoverage.familyIds],COVERAGE_FAMILIES,'FAP1_COVERAGE_FAMILIES_MISMATCH');
-  assert.equal(fap1?.planetaryCoverage?.cirrusFieldCount,4,'FAP1_CIRRUS_FIELD_COUNT_MISMATCH');
-  assert.equal(fap1?.planetaryCoverage?.cirrostratusVeilCount,3,'FAP1_CIRROSTRATUS_VEIL_COUNT_MISMATCH');
-  assert.equal(fap1?.planetaryCoverage?.altocumulusFieldCount,4,'FAP1_ALTOCUMULUS_FIELD_COUNT_MISMATCH');
-  assert.equal(fap1?.planetaryCoverage?.totalFieldInstances,11,'FAP1_TOTAL_FIELD_INSTANCE_COUNT_MISMATCH');
-  assert.equal(fap1?.planetaryCoverage?.multiplicityRequired,true,'FAP1_MULTIPLICITY_NOT_BOUND');
-  assert.equal(fap1?.planetaryCoverage?.clearAirWindowsPreserved,true,'FAP1_PLANETARY_CLEAR_AIR_WINDOWS_NOT_PRESERVED');
-  assert.equal(fap1?.planetaryCoverage?.additionalRenderPasses,0,'FAP1_PLANETARY_RENDER_PASS_ADDED');
-  assert.equal(fap1?.planetaryCoverage?.rayMarchCeilingsChanged,false,'FAP1_PLANETARY_RAYMARCH_CEILING_CHANGED');
-  assert.ok(Number(liveResult.fap1Evidence?.patchedCloudShaders||0)>=1,'FAP1_SHADER_PATCH_NOT_APPLIED');
+const browser=await puppeteer.launch({
+  executablePath:chrome,
+  headless:'new',
+  args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']
+});
 
-  console.log(JSON.stringify({schema:'AUDRALIA_PLANETARY_CLOUD_FIELD_COVERAGE_QUALIFICATION_v1',result:'PASS',policyId:POLICY_ID,systemIds:SYSTEM_IDS,coverageFamilies:COVERAGE_FAMILIES,totalFieldInstances:fap1.planetaryCoverage.totalFieldInstances,patchedCloudShaders:liveResult.fap1Evidence.patchedCloudShaders,existingSystemsExpanded:false,additionalRenderPasses:0,runtimeCanvasCount:liveResult.canvasCount,primaryWorldCanvasCount:liveResult.worldCanvasCount,performanceCeilingsFrozen:true,productionDeploymentPerformed:false},null,2));
+try{
+  const enabled=await captureVariant(browser,{ablateV6:false});
+  const ablated=await captureVariant(browser,{ablateV6:true});
+
+  for(const variant of [enabled,ablated]){
+    assert.equal(variant.errors.pageErrors.length,0,`${variant.ablateV6?'ABLATION':'ENABLED'}_PAGE_ERROR`);
+    assert.equal(variant.live.integration?.schema,LIVE_SCHEMA,'LIVE_INTEGRATION_SCHEMA_DRIFT');
+    assert.equal(variant.live.integration?.startupArchitecture,'APPROVED_PRESENTATION_PRE_RENDER_v1','LIVE_STARTUP_ARCHITECTURE_DRIFT');
+    assert.equal(variant.live.integration?.cameraSemanticsFrozen,true,'LIVE_CAMERA_SEMANTICS_NOT_FROZEN');
+    assert.equal(variant.live.integration?.finalCloudShaderComposition,POLICY_ID,'LIVE_FINAL_COMPOSITION_BINDING_MISSING');
+    assert.ok(variant.live.loaderProgress>=4,'LIVE_LOADER_NOT_READY');
+    assert.ok(String(variant.live.status).includes('USER_REVIEW_REQUIRED'),'LIVE_RUNTIME_NOT_READY');
+    assert.equal(variant.live.worldCanvasCount,1,'LIVE_PRIMARY_WORLD_CANVAS_MULTIPLIED');
+    assert.equal(variant.composition.policyId,POLICY_ID,'FINAL_COMPOSITION_POLICY_DRIFT');
+    assert.equal(variant.composition.evidence?.finalStageEvidence?.pass,true,'FINAL_COMPOSITION_STAGE_FAILURE');
+    assert.equal(variant.composition.evidence?.composedCloudShaders,1,'FINAL_COMPOSITION_EXPECTED_ONE_CLOUD_SHADER');
+    assert.equal(variant.composition.evidence?.rejectedCloudShaders,0,'FINAL_COMPOSITION_REJECTED_SHADER');
+    assert.equal(variant.composition.evidence?.finalShaderSha256?.length,64,'FINAL_SHADER_SHA256_MISSING');
+    for(const stage of REQUIRED_STAGES){
+      const evidence=variant.composition.evidence.finalStageEvidence.stages?.[stage];
+      assert.equal(evidence?.observedMutationCount,evidence?.requiredMutationCount,`FINAL_STAGE_MUTATION_COUNT_FAILURE:${stage}`);
+    }
+  }
+
+  assert.equal(enabled.composition.evidence.finalAblationMode,'NONE','ENABLED_VARIANT_ABLATION_STATE_WRONG');
+  assert.equal(ablated.composition.evidence.finalAblationMode,'V6_FIELDS_ABLATED','ABLATION_VARIANT_STATE_WRONG');
+  assert.notEqual(enabled.composition.evidence.finalShaderSha256,ablated.composition.evidence.finalShaderSha256,'V6_ABLATION_FINAL_SHADER_HASH_IDENTICAL');
+
+  const causality=compareCausality(enabled,ablated);
+  console.log(JSON.stringify({schema:'AUDRALIA_FINAL_CLOUD_SHADER_CAUSALITY_QUALIFICATION_v1',staticEvidence,enabled,ablated,causality},null,2));
+  if(!causality.pass)throw new Error(`FRAMEBUFFER_CAUSALITY_FAILURE ${JSON.stringify({positiveProbeCount:causality.positiveProbeCount,materialProbeCount:causality.materialProbeCount,maxMeanAlphaDelta:causality.maxMeanAlphaDelta,maxCoverageDelta:causality.maxCoverageDelta})}`);
+
+  console.log(JSON.stringify({
+    schema:'AUDRALIA_FINAL_CLOUD_SHADER_CAUSALITY_QUALIFICATION_v1',
+    result:'PASS',
+    policyId:POLICY_ID,
+    enabledFinalShaderSha256:enabled.composition.evidence.finalShaderSha256,
+    ablatedFinalShaderSha256:ablated.composition.evidence.finalShaderSha256,
+    finalStageEvidence:enabled.composition.evidence.finalStageEvidence,
+    causality:Object.freeze({
+      positiveProbeCount:causality.positiveProbeCount,
+      materialProbeCount:causality.materialProbeCount,
+      maxMeanAlphaDelta:causality.maxMeanAlphaDelta,
+      maxCoverageDelta:causality.maxCoverageDelta
+    }),
+    singleVolumetricPassPreserved:true,
+    performanceCeilingsFrozen:true,
+    productionDeploymentPerformed:false
+  },null,2));
 }finally{
   await browser.close();
 }

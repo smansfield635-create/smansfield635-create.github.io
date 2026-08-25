@@ -148,9 +148,10 @@ const SWEEP_VIEWPORT=Object.freeze({width:320,height:180,deviceScaleFactor:1});
 const SWEEP_LAT_CENTERS_DEG=Object.freeze([-75,-45,-15,15,45,75]);
 const SWEEP_LON_CENTERS_DEG=Object.freeze([-165,-135,-105,-75,-45,-15,15,45,75,105,135,165]);
 const REGION_LEVELS=Object.freeze([
-  Object.freeze({id:'VISIBLE_2_PERCENT',metric:'nonzeroFraction',threshold:.02}),
-  Object.freeze({id:'STRONG_1_PERCENT',metric:'strongFraction',threshold:.01}),
-  Object.freeze({id:'MEAN_ALPHA_1_PERCENT',metric:'meanAlpha',threshold:.01})
+  Object.freeze({id:'ALPHA64_2_PERCENT',metric:'alpha64Fraction',threshold:.02}),
+  Object.freeze({id:'ALPHA96_1_PERCENT',metric:'alpha96Fraction',threshold:.01}),
+  Object.freeze({id:'ALPHA128_HALF_PERCENT',metric:'alpha128Fraction',threshold:.005}),
+  Object.freeze({id:'ALPHA160_QUARTER_PERCENT',metric:'alpha160Fraction',threshold:.0025})
 ]);
 
 function degToRad(value){return value*Math.PI/180;}
@@ -196,11 +197,15 @@ async function captureExteriorMetrics(page,probe){
     if(total<=0)throw new Error('FINAL_FRAME_EMPTY_DRAWING_BUFFER');
     const pixels=new Uint8Array(total*4);
     gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
-    let alphaNonzero=0,alphaStrong=0,alphaSum=0,rgbSum=0,weightedChecksum=0;
+    let alphaNonzero=0,alphaStrong=0,alpha64=0,alpha96=0,alpha128=0,alpha160=0,alphaSum=0,rgbSum=0,weightedChecksum=0;
     for(let i=0,p=0;i<pixels.length;i+=4,p++){
       const r=pixels[i],g=pixels[i+1],b=pixels[i+2],a=pixels[i+3];
       if(a>8)alphaNonzero++;
       if(a>32)alphaStrong++;
+      if(a>64)alpha64++;
+      if(a>96)alpha96++;
+      if(a>128)alpha128++;
+      if(a>160)alpha160++;
       alphaSum+=a/255;
       rgbSum+=(r+g+b)/(3*255);
       weightedChecksum=(weightedChecksum+((p%65521)+1)*(r+3*g+7*b+11*a))%2147483647;
@@ -210,6 +215,10 @@ async function captureExteriorMetrics(page,probe){
       id:probe.id,width,height,
       nonzeroFraction:alphaNonzero/total,
       strongFraction:alphaStrong/total,
+      alpha64Fraction:alpha64/total,
+      alpha96Fraction:alpha96/total,
+      alpha128Fraction:alpha128/total,
+      alpha160Fraction:alpha160/total,
       meanAlpha:alphaSum/total,
       meanRgb:rgbSum/total,
       weightedChecksum,
@@ -273,21 +282,30 @@ function analyzeSphericalBaseline(samples){
   assert.ok(Math.abs(totalSolidAngle-4*Math.PI)<1e-9,'SPHERICAL_BASELINE_INCOMPLETE_SOLID_ANGLE');
   const weighted=metric=>samples.reduce((sum,sector)=>sum+sector[metric]*sector.solidAngleSteradians,0)/totalSolidAngle;
   const rankedEmptySectors=[...samples].sort((a,b)=>
+    a.alpha128Fraction-b.alpha128Fraction||
+    a.alpha96Fraction-b.alpha96Fraction||
+    a.alpha64Fraction-b.alpha64Fraction||
     a.strongFraction-b.strongFraction||
     a.meanAlpha-b.meanAlpha||
-    a.nonzeroFraction-b.nonzeroFraction||
     a.row-b.row||
     a.col-b.col
   ).slice(0,12).map(sector=>Object.freeze({
     id:sector.id,
     row:sector.row,col:sector.col,
     latDeg:sector.latDeg,lonDeg:sector.lonDeg,
+    alpha64Fraction:sector.alpha64Fraction,
+    alpha96Fraction:sector.alpha96Fraction,
+    alpha128Fraction:sector.alpha128Fraction,
+    alpha160Fraction:sector.alpha160Fraction,
     strongFraction:sector.strongFraction,
     nonzeroFraction:sector.nonzeroFraction,
     meanAlpha:sector.meanAlpha,
     solidAngleSteradians:sector.solidAngleSteradians
   }));
   const regionAnalyses=REGION_LEVELS.map(level=>connectedRegions(samples,level));
+  const discriminatingRegionAnalysis=regionAnalyses.find(region=>
+    region.occupiedSectorCount>=4&&region.occupiedSectorCount<=60&&region.disconnectedRegionCount>=1
+  )||null;
   return Object.freeze({
     schema:BASELINE_SCHEMA,
     productHead:BASELINE_PRODUCT_HEAD,
@@ -308,10 +326,15 @@ function analyzeSphericalBaseline(samples){
     global:Object.freeze({
       areaWeightedNonzeroFraction:weighted('nonzeroFraction'),
       areaWeightedStrongFraction:weighted('strongFraction'),
+      areaWeightedAlpha64Fraction:weighted('alpha64Fraction'),
+      areaWeightedAlpha96Fraction:weighted('alpha96Fraction'),
+      areaWeightedAlpha128Fraction:weighted('alpha128Fraction'),
+      areaWeightedAlpha160Fraction:weighted('alpha160Fraction'),
       areaWeightedMeanAlpha:weighted('meanAlpha'),
       areaWeightedMeanRgb:weighted('meanRgb')
     }),
     regionAnalyses:Object.freeze(regionAnalyses),
+    discriminatingRegionAnalysis,
     rankedEmptySectors:Object.freeze(rankedEmptySectors),
     sectors:Object.freeze(samples)
   });
@@ -333,6 +356,10 @@ async function captureSphericalBaseline(page){
       width:metrics.width,height:metrics.height,
       nonzeroFraction:metrics.nonzeroFraction,
       strongFraction:metrics.strongFraction,
+      alpha64Fraction:metrics.alpha64Fraction,
+      alpha96Fraction:metrics.alpha96Fraction,
+      alpha128Fraction:metrics.alpha128Fraction,
+      alpha160Fraction:metrics.alpha160Fraction,
       meanAlpha:metrics.meanAlpha,
       meanRgb:metrics.meanRgb,
       weightedChecksum:metrics.weightedChecksum
@@ -459,6 +486,7 @@ try{
   assert.equal(sphericalBaseline?.grid?.sectorCount,72,'SPHERICAL_BASELINE_SECTOR_COUNT_FAILURE');
   assert.equal(sphericalBaseline?.grid?.fullAngularCoverage,true,'SPHERICAL_BASELINE_ANGULAR_COVERAGE_FAILURE');
   assert.equal(sphericalBaseline?.regionAnalyses?.length,REGION_LEVELS.length,'SPHERICAL_BASELINE_REGION_ANALYSIS_MISSING');
+  assert.ok(sphericalBaseline?.discriminatingRegionAnalysis,'SPHERICAL_BASELINE_VISIBILITY_THRESHOLDS_NONDISCRIMINATING');
   assert.ok(sphericalBaseline.rankedEmptySectors.length>=1,'SPHERICAL_BASELINE_EMPTY_SECTOR_RANKING_MISSING');
 
   console.log(JSON.stringify(sphericalBaseline,null,2));
@@ -482,10 +510,12 @@ try{
       sectorCount:sphericalBaseline.grid.sectorCount,
       fullAngularCoverage:sphericalBaseline.grid.fullAngularCoverage,
       global:sphericalBaseline.global,
+      discriminatingRegionAnalysis:sphericalBaseline.discriminatingRegionAnalysis,
       regionAnalyses:sphericalBaseline.regionAnalyses.map(region=>({
         id:region.id,
         metric:region.metric,
         threshold:region.threshold,
+        occupiedSectorCount:region.occupiedSectorCount,
         occupiedSphereFraction:region.occupiedSphereFraction,
         disconnectedRegionCount:region.disconnectedRegionCount
       })),

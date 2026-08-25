@@ -87,9 +87,6 @@ html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card][da
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card][data-adjacent="true"] { z-index: 3; }
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card][data-distant="true"] { visibility: hidden; }
 
-html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] :is(a, button, input, select, textarea, summary) { pointer-events: auto; }
-html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card]:not([data-active="true"]) :is(a, button, input, select, textarea, summary) { pointer-events: none; }
-
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-live] {
   position: absolute;
   z-index: 10;

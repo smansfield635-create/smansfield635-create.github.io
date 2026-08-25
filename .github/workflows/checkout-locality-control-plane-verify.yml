@@ -23,27 +23,41 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout locality verification working set
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /AI_ENTRYPOINT.json
-            /.github/ai-router/execution-efficiency-policy.v1.json
-            /.github/ai-router/execution-efficiency-self-test.v1.mjs
-            /.github/ai-router/shared-procedures.v1.json
-            /.github/ai-router/workflow-dispatch-capability.v1.json
-            /.github/ai-router/publication-release-contract.v1.json
-            /.github/workflows/ai-entry-workflow-dispatch-bridge.yml
-            /.github/workflows/canonical-operation-intake-transport-v1.yml
-            /.github/workflows/remote-operation-successor-v1.yml
-            /.github/workflows/publication-preflight-v1.yml
-            /.github/workflows/pages-exact-head-deploy-v3.yml
-            /.github/workflows/audralia-weather-presentation-reconciliation.yml
-            /.github/workflows/checkout-locality-control-plane-verify.yml
-            /tools/publication-preflight.v1.mjs
-            /tools/checkout-locality-self-test.v1.mjs
+      - name: Materialize locality verifier sparse index
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "+${GITHUB_REF}:refs/remotes/origin/verification"
+          git sparse-checkout init --cone --sparse-index
+          git sparse-checkout set .github/ai-router .github/workflows tools
+          git checkout --detach refs/remotes/origin/verification
+          test "$(git config --bool index.sparse)" = "true"
+          sparse_entries="$(git ls-files --sparse | wc -l | tr -d '[:space:]')"
+          materialized_files="$(find . -type f -not -path './.git/*' | wc -l | tr -d '[:space:]')"
+          test "$sparse_entries" -lt 10000
+          test "$materialized_files" -lt 10000
+          for required in \
+            AI_ENTRYPOINT.json \
+            .github/ai-router/execution-efficiency-policy.v1.json \
+            .github/ai-router/execution-efficiency-self-test.v1.mjs \
+            .github/ai-router/shared-procedures.v1.json \
+            .github/ai-router/workflow-dispatch-capability.v1.json \
+            .github/ai-router/publication-release-contract.v1.json \
+            .github/workflows/ai-entry-workflow-dispatch-bridge.yml \
+            .github/workflows/canonical-operation-intake-transport-v1.yml \
+            .github/workflows/remote-operation-successor-v1.yml \
+            .github/workflows/publication-preflight-v1.yml \
+            .github/workflows/pages-exact-head-deploy-v3.yml \
+            .github/workflows/audralia-weather-presentation-reconciliation.yml \
+            .github/workflows/checkout-locality-control-plane-verify.yml \
+            tools/publication-preflight.v1.mjs \
+            tools/checkout-locality-self-test.v1.mjs; do
+            test -f "$required"
+          done
+          echo "CHECKOUT_LOCALITY_VERIFY_SPARSE_INDEX_ENTRIES=$sparse_entries"
+          echo "CHECKOUT_LOCALITY_VERIFY_MATERIALIZED_FILES=$materialized_files"
 
       - name: Run admitted checkout locality verification
         env:

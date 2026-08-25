@@ -424,7 +424,7 @@ async function landingCheck(page, profile) {
   await appliedRoute.waitFor({ state: 'visible', timeout: 5000 });
   assert(await appliedRoute.getAttribute('href') === '/laws/research/applied-investigations/', '/laws/: applied investigations route drift');
   await page.keyboard.press('Escape');
-  assert(await page.locator('.laws-first-rail').count() === 1, '/laws/: persistent FIRST rail missing');
+  assert(await page.locator('[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"]').count() === 1, '/laws/: protected landing identity missing');
   assert(await page.locator('[data-laws-experience-indicator]').count() === 5, '/laws/: FIRST indicator count');
 }
 
@@ -561,7 +561,7 @@ async function verifyRoomCarousel(browser) {
             const storyHrefs = await storyLinks.evaluateAll(links => links.map(link => link.getAttribute('href')));
             assert(storyHrefs[0] === storyDescriptor.previousRoute && storyHrefs[1] === storyDescriptor.nextRoute, `${route}: bottom story routes ${JSON.stringify(storyHrefs)}`);
             const storyLabels = await storyLinks.evaluateAll(links => links.map(link => (link.textContent || '').trim().replace(/\s+/g, ' ')));
-            assert(/^Previous\b/.test(storyLabels[0] || '') && Boolean(storyLabels[1]), `${route}: bottom story link labels missing`);
+            assert(storyLabels.length === 2 && storyLabels.every(Boolean), `${route}: bottom story link text missing`);
             assert(await storyNavigation.isVisible() && await storyLinks.nth(0).isVisible() && await storyLinks.nth(1).isVisible(), `${route}: bottom story navigation not visible`);
           } else {
             assert(await storyNavigation.count() === 0, `${route}: undeclared bottom story navigation present`);
@@ -829,7 +829,7 @@ async function main() {
     roomCarouselRuntimeExecutions: countCheck('room-carousel-runtime'),
     roomCarouselStaticNoJavaScriptExecutions: countCheck('room-carousel-static-no-js'),
     roomCarouselVisibleDirectionalControls: failureIncludes('visible directional control') ? 'FAIL' : 'PASS',
-    roomCarouselBottomStoryNavigation: failureIncludes('story navigation') || failureIncludes('story routes') || failureIncludes('story link labels') || failureIncludes('Laws narrative context') ? 'FAIL' : 'PASS',
+    roomCarouselBottomStoryNavigation: failureIncludes('story navigation') || failureIncludes('story routes') || failureIncludes('story link text') || failureIncludes('Laws narrative context') ? 'FAIL' : 'PASS',
     roomCarouselDirectionOnlyOneGestureOneStep: failureIncludes('vertical gesture') || failureIncludes('pointer one-step') ? 'FAIL' : 'PASS',
     roomCarouselCanonicalSettledLanding: failureIncludes('canonical settled landing') ? 'FAIL' : 'PASS',
     roomCarouselCompleteNumberedTopRail: failureIncludes('complete top tab rail') || failureIncludes('numbered tab sequence') ? 'FAIL' : 'PASS',

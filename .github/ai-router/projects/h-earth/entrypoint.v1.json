@@ -11,7 +11,8 @@
     ".github/workflows/h-earth-r06-c10-candidate-admission.yml",
     "showroom/globe/audralia/diagnostic/index.html",
     "showroom/globe/audralia/diagnostic/index.controls.js",
-    "showroom/globe/audralia/diagnostic/index.inspection.lane.js"
+    "showroom/globe/audralia/diagnostic/index.inspection.lane.js",
+    "showroom/globe/audralia/final-cloud-shader-composition-v1.mjs"
   ],
   "entrypoint": ".github/ai-router/projects/h-earth/entrypoint.v1.json",
   "authorityBoundary": [

@@ -36,6 +36,10 @@ INTEGRATED_ROUTES = [
     "/frontier/energy/battery-coherence-study/",
 ]
 
+METHODS_SHOWROOM_ROUTE = "/laws/research/methods-and-models/"
+METHODS_SHOWROOM_CONTRACT = "METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1"
+METHODS_CANONICAL_ARCHIVE = "METHODS_MODELS_CANONICAL_ARCHIVE_v1_DRAFT"
+
 OBSOLETE = [
     ".github/workflows/laws-complete-renewal-batch-materialize.yml",
     ".github/workflows/laws-complete-renewal-batch-verification.yml",
@@ -110,11 +114,35 @@ def main() -> int:
         require("<title>" in text.lower(), f"TITLE_MISSING:{path}")
         if route != "/laws/":
             renewed_paths.append(path)
-            if "battery-heldout-study" not in route:
-                require("lr-boundary" in text, f"BOUNDARY_MISSING:{path}")
-                require("lr-audit" in text, f"AUDIT_MISSING:{path}")
-            require('aria-selected="true"' not in text, f"SOURCE_PRESELECTED_TAB:{path}")
-            require('aria-expanded="true"' not in text, f"SOURCE_PREOPENED_CONTROL:{path}")
+            if route == METHODS_SHOWROOM_ROUTE:
+                require(
+                    f'data-methods-models-contract="{METHODS_SHOWROOM_CONTRACT}"' in text,
+                    f"METHODS_SHOWROOM_CONTRACT_MISSING:{path}",
+                )
+                require(
+                    f'data-canonical-archive="{METHODS_CANONICAL_ARCHIVE}"' in text,
+                    f"METHODS_CANONICAL_ARCHIVE_BINDING_MISSING:{path}",
+                )
+                require('data-source-completeness="open"' in text, f"METHODS_SOURCE_COMPLETENESS_DRIFT:{path}")
+                manifest = source(ROOT / "laws/research/methods-and-models/canonical-records-v1.html")
+                require('data-record-class="READ_ONLY_CANONICAL_MANIFEST"' in manifest, "METHODS_CANONICAL_MANIFEST_CONTRACT_MISSING")
+                require(METHODS_CANONICAL_ARCHIVE in manifest, "METHODS_CANONICAL_MANIFEST_ARCHIVE_MISMATCH")
+            else:
+                if "battery-heldout-study" not in route:
+                    require("lr-boundary" in text, f"BOUNDARY_MISSING:{path}")
+                    require("lr-audit" in text, f"AUDIT_MISSING:{path}")
+                require('aria-selected="true"' not in text, f"SOURCE_PRESELECTED_TAB:{path}")
+                require('aria-expanded="true"' not in text, f"SOURCE_PREOPENED_CONTROL:{path}")
+
+    room_carousel_routes = [route for route in child_routes if route != METHODS_SHOWROOM_ROUTE] + ["/laws/research/"]
+    require(len(room_carousel_routes) == 24, f"ROOM_CAROUSEL_ROUTE_COUNT:{len(room_carousel_routes)}")
+    require(len(set(room_carousel_routes)) == 24, "DUPLICATE_ROOM_CAROUSEL_ROUTE")
+    for route in room_carousel_routes:
+        path = route_path(route)
+        text = source(path)
+        require("data-laws-room-carousel" in text, f"ROOM_CAROUSEL_ROOT_MISSING:{path}")
+        require("/laws/room-carousel/room-carousel.v1.css" in text, f"ROOM_CAROUSEL_CSS_MISSING:{path}")
+        require("/laws/room-carousel/room-carousel.v1.js" in text, f"ROOM_CAROUSEL_JS_MISSING:{path}")
 
     landing = source(ROOT / "laws/index.html")
     for marker in (
@@ -176,6 +204,9 @@ def main() -> int:
         "childRoutes": 24,
         "integratedRoutes": 33,
         "batteryPublicSurfaces": 27,
+        "methodsModelsAlternateContract": "PASS",
+        "roomCarouselRoutes": 24,
+        "roomCarouselStaticBinding": "PASS",
         "zeroOpenSourceContract": "PASS",
         "formulaNodeSplitRule": "ARROWS_ONLY_INTERNAL_PLUS_PRESERVED",
         "protectedRuntimeMutations": 0,

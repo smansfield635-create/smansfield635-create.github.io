@@ -9,24 +9,57 @@ permissions:
   actions: read
 
 jobs:
-  preflight:
+  local-model-preflight:
     if: >-
       github.event.issue.number == 2089 &&
-      contains(github.event.comment.body, 'AGENTIC_FRONTIER_PAIRED_EXECUTION_RUN_V1')
+      contains(github.event.comment.body, 'AGENTIC_FRONTIER_LOCAL_MODEL_PREFLIGHT_V1')
     runs-on: ubuntu-latest
     env:
-      LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-      LLM_MODEL: ${{ vars.LLM_MODEL }}
+      LLM_API_KEY: local-placeholder
+      LLM_MODEL: ollama/qwen2.5-coder:1.5b
+      OLLAMA_MODEL: qwen2.5-coder:1.5b
+      OLLAMA_HOST_URL: http://127.0.0.1:11434
     steps:
       - name: Checkout current main runner
         uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 1
+
       - name: Use Node 22
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+
+      - name: Start pinned local Ollama runtime
+        run: |
+          set -euo pipefail
+          docker pull ollama/ollama:0.32.14
+          docker run -d --name agentic-frontier-ollama -p 11434:11434 ollama/ollama:0.32.14
+          for i in $(seq 1 60); do
+            if curl -fsS "$OLLAMA_HOST_URL/api/tags" >/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs agentic-frontier-ollama || true
+          exit 1
+
+      - name: Pull frozen local model
+        run: |
+          set -euo pipefail
+          docker exec agentic-frontier-ollama ollama pull "$OLLAMA_MODEL"
+          docker exec agentic-frontier-ollama ollama list
+
+      - name: Verify local model generation
+        run: |
+          set -euo pipefail
+          curl -fsS "$OLLAMA_HOST_URL/api/generate" \
+            -H 'Content-Type: application/json' \
+            -d "{\"model\":\"$OLLAMA_MODEL\",\"prompt\":\"Return exactly READY\",\"stream\":false,\"options\":{\"temperature\":0}}" \
+            > agentic-frontier-local-model-smoke.json
+          node -e "const r=require('./agentic-frontier-local-model-smoke.json'); if(typeof r.response!=='string'||!r.response.trim()) process.exit(2); console.log(JSON.stringify({model:r.model,response:r.response.trim(),done:r.done}))"
+
       - name: Run frozen-study preflight
         id: preflight
         run: |
@@ -35,12 +68,24 @@ jobs:
           code=${PIPESTATUS[0]}
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
           exit 0
-      - name: Upload preflight receipt
+
+      - name: Pull pinned OpenHands adversary image
+        run: |
+          set -euo pipefail
+          docker pull ghcr.io/openhands/agent-canvas:1.14.0
+          docker image inspect ghcr.io/openhands/agent-canvas:1.14.0 --format '{{json .RepoDigests}}' > agentic-frontier-openhands-image.json
+          test -s agentic-frontier-openhands-image.json
+
+      - name: Upload local-runtime preflight evidence
         uses: actions/upload-artifact@v4
         with:
-          name: agentic-frontier-paired-execution-preflight-v1
-          path: agentic-frontier-preflight-v1.json
+          name: agentic-frontier-local-model-preflight-v1
+          path: |
+            agentic-frontier-preflight-v1.json
+            agentic-frontier-local-model-smoke.json
+            agentic-frontier-openhands-image.json
           if-no-files-found: error
-      - name: Enforce preflight
+
+      - name: Enforce local-model preflight
         run: |
           test "${{ steps.preflight.outputs.exit_code }}" = "0"

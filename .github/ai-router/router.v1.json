@@ -185,6 +185,14 @@
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/public-legitimacy/entrypoint.v1.json",
       "priority": 100
+    },
+    {
+      "projectId": "MATERIAL_WORK_AUDIT",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["research/material-work-audit/"],
+      "ownedExactPaths": [],
+      "entrypoint": ".github/ai-router/projects/material-work-audit/entrypoint.v1.json",
+      "priority": 100
     }
   ],
   "unregisteredPathPolicy": {

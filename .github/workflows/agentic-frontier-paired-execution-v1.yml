@@ -1,0 +1,46 @@
+name: Agentic Frontier Paired Execution v1
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  preflight:
+    if: >-
+      github.event.issue.number == 2089 &&
+      contains(github.event.comment.body, 'AGENTIC_FRONTIER_PAIRED_EXECUTION_RUN_V1')
+    runs-on: ubuntu-latest
+    env:
+      LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+      LLM_MODEL: ${{ vars.LLM_MODEL }}
+    steps:
+      - name: Checkout exact main
+        uses: actions/checkout@v4
+        with:
+          ref: ec6bc3dd5e5c361a1e8fa195a415d395b86e96d9
+          fetch-depth: 1
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run frozen-study preflight
+        id: preflight
+        run: |
+          set +e
+          node tools/research/agentic-frontier/preflight-v1.mjs | tee agentic-frontier-preflight-v1.json
+          code=${PIPESTATUS[0]}
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Upload preflight receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: agentic-frontier-paired-execution-preflight-v1
+          path: agentic-frontier-preflight-v1.json
+          if-no-files-found: error
+      - name: Enforce preflight
+        run: |
+          test "${{ steps.preflight.outputs.exit_code }}" = "0"

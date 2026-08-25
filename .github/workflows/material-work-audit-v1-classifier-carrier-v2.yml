@@ -1,0 +1,43 @@
+name: Material Work Audit v1 Blinded Classifier Carrier v2
+
+on:
+  push:
+    branches:
+      - agent/material-work-audit-v1-classifier-carrier-ddbe792
+    paths:
+      - research/material-work-audit/classify-v1-carrier-v2.mjs
+      - .github/workflows/material-work-audit-v1-classifier-carrier-v2.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: material-work-audit-v1-blinded-classifier-v2
+  cancel-in-progress: false
+
+jobs:
+  classify-v2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Materialize bounded carrier source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir work
+          cd work
+          git init
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth=1 --filter=blob:none origin "${GITHUB_SHA}"
+          git sparse-checkout init --cone
+          git sparse-checkout set research/material-work-audit
+          git checkout --detach FETCH_HEAD
+          test -f research/material-work-audit/classify-v1-carrier-v2.mjs
+      - name: Freeze blinded v1 ledger onto official audit branch
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          cd work
+          node research/material-work-audit/classify-v1-carrier-v2.mjs

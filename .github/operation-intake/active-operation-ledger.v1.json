@@ -647,6 +647,18 @@
       "scopeHash": "386d281a2a72927a21854098359792dfe56ed606736573890fc1de31eac4e39c",
       "state": "ADMITTED_LOCKED"
     },
+    "392a3772a4b8a039f089394d2675236c68c5b056dfe154350c5ac04557aabf2b": {
+      "governingHead": "5499344368a60f20014694965913e4521cd158ec",
+      "lockGeneration": 1691,
+      "lockScope": "H_EARTH:AUDRALIA_DIAGNOSTIC_TOUCH_RESPONSIVENESS_REPAIR:V1",
+      "operationId": "AUDRALIA_DIAGNOSTIC_TOUCH_RESPONSIVENESS_REPAIR_20260825_1229",
+      "procedureLocatorDigest": "a2c7f58d86143a4a3733f500e46ceb69fff8458142f16737b89c773000025e16",
+      "released": false,
+      "requestDigest": "892f07f0de3899bb0dfbc48527647a3b2f13f2864649edd99c008e7da7b84e4c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "392a3772a4b8a039f089394d2675236c68c5b056dfe154350c5ac04557aabf2b",
+      "state": "ADMITTED_LOCKED"
+    },
     "39d5500dfb4466816b038c15780fde4d09c8b96014e19e826f3f655a04211718": {
       "governingHead": "f8eefd20fc1cdcdc777e070f008bb2e2b8580da1",
       "lockGeneration": 1526,
@@ -3822,7 +3834,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1690,
+  "lockGeneration": 1691,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

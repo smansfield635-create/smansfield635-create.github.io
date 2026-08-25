@@ -8,16 +8,15 @@ html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] {
   --lrc-depth: clamp(5rem, 9vw, 10rem);
   --lrc-active-height: 30rem;
   position: relative;
-  height: calc(var(--lrc-active-height) + 6rem);
-  min-height: calc(var(--lrc-active-height) + 6rem);
+  min-height: 0;
   overflow: clip;
   isolation: isolate;
 }
 
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-viewport] {
   position: relative;
-  height: 100%;
-  min-height: 100%;
+  height: calc(var(--lrc-active-height) + 6rem);
+  min-height: calc(var(--lrc-active-height) + 6rem);
   perspective: 1800px;
   perspective-origin: 50% 45%;
   touch-action: pan-y;

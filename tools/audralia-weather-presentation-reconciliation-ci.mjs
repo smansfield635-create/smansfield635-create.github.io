@@ -212,6 +212,13 @@ function buildAtlasViews(){
       }));
     }
   }
+  for(const [id,latDeg] of [['ATLAS_POLE_NORTH',90],['ATLAS_POLE_SOUTH',-90]]){
+    views.push(Object.freeze({
+      id,latDeg,lonDeg:0,
+      ...targetFromLatLon(latDeg*Math.PI/180,0),
+      distance:5000,pitch:1.08,yaw:0
+    }));
+  }
   return Object.freeze(views);
 }
 const ATLAS_VIEWS=buildAtlasViews();

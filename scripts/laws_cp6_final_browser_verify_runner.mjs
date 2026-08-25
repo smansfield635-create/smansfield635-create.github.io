@@ -20,6 +20,43 @@ const corrections = [
     label: 'direct audit-summary locators',
   },
   {
+    from: `  const group = groups.first();`,
+    to: `  const group = groups.first();
+  const roomCarouselTarget = await group.evaluate(node => {
+    const root = node.closest('[data-laws-room-carousel]');
+    const card = node.closest('[data-lrc-card]');
+    if (!root || !card) return null;
+    const roots = Array.from(document.querySelectorAll('[data-laws-room-carousel]'));
+    const cards = Array.from(root.querySelectorAll('[data-lrc-card]')).filter(candidate => candidate.closest('[data-laws-room-carousel]') === root);
+    return { rootIndex: roots.indexOf(root), targetIndex: cards.indexOf(card) };
+  });
+  if (roomCarouselTarget) {
+    assert(roomCarouselTarget.rootIndex >= 0 && roomCarouselTarget.targetIndex >= 0, descriptor.route + ': reading room carousel target unresolved');
+    const roomRoot = page.locator('[data-laws-room-carousel]').nth(roomCarouselTarget.rootIndex);
+    const roomViewport = roomRoot.locator('[data-lrc-viewport]').first();
+    assert(await roomRoot.getAttribute('data-lrc-mounted') === 'true', descriptor.route + ': room carousel not mounted before reading check');
+    assert(await roomViewport.count() === 1, descriptor.route + ': room carousel viewport missing before reading check');
+    if (Number(await roomRoot.getAttribute('data-lrc-index')) !== roomCarouselTarget.targetIndex) {
+      await roomViewport.focus();
+      await page.keyboard.press('Home');
+      await page.waitForFunction(
+        rootIndex => document.querySelectorAll('[data-laws-room-carousel]')[rootIndex]?.dataset.lrcIndex === '0',
+        roomCarouselTarget.rootIndex,
+      );
+      for (let step = 0; step < roomCarouselTarget.targetIndex; step += 1) {
+        await page.keyboard.press('ArrowRight');
+        await page.waitForFunction(
+          ({ rootIndex, expected }) => document.querySelectorAll('[data-laws-room-carousel]')[rootIndex]?.dataset.lrcIndex === expected,
+          { rootIndex: roomCarouselTarget.rootIndex, expected: String(step + 1) },
+        );
+      }
+    }
+    assert(await group.evaluate(node => node.closest('[data-lrc-card]')?.dataset.active === 'true'), descriptor.route + ': reading room carousel card not active');
+  }`,
+    expected: 1,
+    label: 'reading room-carousel activation point',
+  },
+  {
     from: `await applied.locator('button.laws-rolodex-enter').click();`,
     to: `const appliedField = rolodex.locator('.laws-rolodex-field[data-rolodex-id="research"]');
         assert(await appliedField.count() === 1, '/laws/: research rolodex field missing');

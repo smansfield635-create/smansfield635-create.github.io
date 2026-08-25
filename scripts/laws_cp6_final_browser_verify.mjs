@@ -493,14 +493,93 @@ async function verifyRoomCarousel(browser) {
           const cards = carouselRoot.locator('[data-lrc-card]');
           const cardCount = await cards.count();
           assert(cardCount >= 2, `${route}: insufficient spatial states ${cardCount}`);
+          const controls = carouselRoot.locator('[data-lrc-controls],[data-lrc-prev],[data-lrc-next]');
+          assert(await controls.count() === 0, `${route}: visible directional control retained`);
+          const viewport = carouselRoot.locator('[data-lrc-viewport]').first();
           const before = await carouselRoot.getAttribute('data-lrc-index');
-          await carouselRoot.locator('[data-lrc-viewport]').focus();
+          await viewport.focus();
           await page.keyboard.press('ArrowRight');
           await page.waitForTimeout(30);
           const after = await carouselRoot.getAttribute('data-lrc-index');
           assert(before !== after, `${route}: carousel keyboard one-step failed`);
           assert(await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches), `${route}: room reduced motion media not active`);
-          return { cardCount, activeBefore: before, activeAfter: after };
+
+          const activeCard = carouselRoot.locator('[data-lrc-card][data-active="true"]').first();
+          assert(await activeCard.count() === 1, `${route}: active room card count`);
+          const layout = await activeCard.evaluate(node => {
+            const root = node.closest('[data-laws-room-carousel]');
+            const viewportNode = root?.querySelector('[data-lrc-viewport]');
+            const audit = root?.querySelector(':scope > details.lr-audit');
+            const rect = node.getBoundingClientRect();
+            const viewportRect = viewportNode?.getBoundingClientRect();
+            const auditRect = audit?.getBoundingClientRect();
+            const style = getComputedStyle(node);
+            return {
+              overflowY: style.overflowY,
+              scrollHeight: node.scrollHeight,
+              clientHeight: node.clientHeight,
+              left: rect.left,
+              right: rect.right,
+              viewportWidth: innerWidth,
+              carouselBottom: viewportRect?.bottom ?? null,
+              auditTop: auditRect?.top ?? null,
+            };
+          });
+          assert(!['auto', 'scroll'].includes(layout.overflowY), `${route}: internal reading scroll overflow ${layout.overflowY}`);
+          assert(layout.scrollHeight <= layout.clientHeight + 1, `${route}: internal reading scroll geometry ${layout.scrollHeight}/${layout.clientHeight}`);
+          assert(layout.left >= -1 && layout.right <= layout.viewportWidth + 1, `${route}: mobile containment ${layout.left}/${layout.right}/${layout.viewportWidth}`);
+          if (layout.auditTop !== null && layout.carouselBottom !== null) {
+            assert(layout.auditTop >= layout.carouselBottom - 1, `${route}: audit overlaps carousel ${layout.auditTop}/${layout.carouselBottom}`);
+          }
+
+          const gesturePoint = await activeCard.evaluate(node => {
+            const rect = node.getBoundingClientRect();
+            const candidates = [
+              [rect.left + 14, rect.top + 14],
+              [rect.right - 14, rect.top + 14],
+              [rect.left + 14, Math.min(rect.bottom - 14, innerHeight - 24)],
+              [rect.right - 14, Math.min(rect.bottom - 14, innerHeight - 24)],
+            ];
+            for (const [x, y] of candidates) {
+              if (x < 1 || y < 1 || x >= innerWidth - 1 || y >= innerHeight - 1) continue;
+              const hit = document.elementFromPoint(x, y);
+              if (hit && node.contains(hit) && !hit.closest('a,button,input,textarea,select,summary')) {
+                return { x, y, viewportHeight: innerHeight };
+              }
+            }
+            return null;
+          });
+          assert(gesturePoint, `${route}: carousel gesture surface unavailable`);
+          const verticalDy = gesturePoint.y < gesturePoint.viewportHeight - 72 ? 52 : -52;
+          await page.mouse.move(gesturePoint.x, gesturePoint.y);
+          await page.mouse.down();
+          await page.mouse.move(gesturePoint.x + 2, gesturePoint.y + verticalDy, { steps: 4 });
+          await page.mouse.up();
+          await page.waitForTimeout(20);
+          assert(await carouselRoot.getAttribute('data-lrc-index') === after, `${route}: vertical gesture changed room`);
+
+          const pointerDx = gesturePoint.x > 72 ? -56 : 56;
+          await page.mouse.move(gesturePoint.x, gesturePoint.y);
+          await page.mouse.down();
+          await page.mouse.move(gesturePoint.x + pointerDx, gesturePoint.y + 2, { steps: 4 });
+          await page.mouse.up();
+          await page.waitForTimeout(30);
+          const pointerAfter = await carouselRoot.getAttribute('data-lrc-index');
+          const expectedPointer = String((Number(after) + (pointerDx < 0 ? 1 : -1) + cardCount) % cardCount);
+          assert(pointerAfter === expectedPointer, `${route}: pointer one-step ${pointerAfter}/${expectedPointer}`);
+          assert(await carouselRoot.getAttribute('data-lrc-gesture-state') === 'idle', `${route}: canonical settled landing missing`);
+          return {
+            cardCount,
+            activeBefore: before,
+            activeAfter: after,
+            pointerAfter,
+            visibleDirectionalControls: 0,
+            activeCardInternalScroll: false,
+            mobileContained: true,
+            auditBelowCarousel: true,
+            directionOnlyOneGestureOneStep: true,
+            canonicalSettledLanding: true,
+          };
         });
       }
     } finally {
@@ -577,6 +656,12 @@ async function main() {
     roomCarouselRoutes: 24,
     roomCarouselRuntimeExecutions: countCheck('room-carousel-runtime'),
     roomCarouselStaticNoJavaScriptExecutions: countCheck('room-carousel-static-no-js'),
+    roomCarouselVisibleDirectionalControls: failureIncludes('visible directional control') ? 'FAIL' : 'PASS',
+    roomCarouselDirectionOnlyOneGestureOneStep: failureIncludes('vertical gesture') || failureIncludes('pointer one-step') ? 'FAIL' : 'PASS',
+    roomCarouselCanonicalSettledLanding: failureIncludes('canonical settled landing') ? 'FAIL' : 'PASS',
+    roomCarouselActiveCardInternalScroll: failureIncludes('internal reading scroll') ? 'FAIL' : 'PASS',
+    roomCarouselMobileContainment: failureIncludes('mobile containment') ? 'FAIL' : 'PASS',
+    roomCarouselAuditSeparation: failureIncludes('audit overlaps carousel') ? 'FAIL' : 'PASS',
     profiles: profiles.map(profile => profile.name),
     profilePageExecutions: countCheck('profile'),
     reducedMotionExecutions: countCheck('reduced-motion'),

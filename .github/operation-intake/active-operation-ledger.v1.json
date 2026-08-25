@@ -193,13 +193,30 @@
       "state": "ADMITTED_LOCKED"
     },
     "119d9d71c14b4434b7b0b862bbed2f93ae4693e36beec89c92d1ab65297ec2ad": {
-      "governingHead": "ac9a12293885121ed97602b6a08a91a5561abf84",
-      "lockGeneration": 1660,
+      "governingHead": "8a7f54a1686bc2f027ef66c3d92e3bb14df1b591",
+      "lockGeneration": 1667,
       "lockScope": "EXECUTION_EFFICIENCY_PUBLICATION_SPARSE_INDEX_ASSERTION",
-      "operationId": "EXECUTION_EFFICIENCY_PUBLICATION_SPARSE_INDEX_ASSERTION_REPAIR_20260824_001",
-      "procedureLocatorDigest": "5c5713b28d5341684761f1f5250c54fa4f8e98e5a1c79105ed817ddbcd251c65",
+      "operationId": "EXECUTION_EFFICIENCY_PUBLICATION_SPARSE_INDEX_ASSERTION_REPAIR_20260824_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "ac9a12293885121ed97602b6a08a91a5561abf84",
+        "lockGeneration": 1660,
+        "lockScope": "EXECUTION_EFFICIENCY_PUBLICATION_SPARSE_INDEX_ASSERTION",
+        "operationId": "EXECUTION_EFFICIENCY_PUBLICATION_SPARSE_INDEX_ASSERTION_REPAIR_20260824_001",
+        "preservedEvidenceRefs": [
+          "PR_2017_HEAD_23eac3a297c6a0f8bae74b78671ebfa878c93fa8",
+          "MAIN_ADVANCE_AC9A1229_TO_8A7F54A1_DISJOINT_FROM_AUTHORIZED_PATHS",
+          "EXECUTION_EFFICIENCY_RUN_32798276572",
+          "FAILED_SUCCESSOR_SCOPE_STRING_5403949959"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "EXEC_EFF_1660_TO_8A7F54A1_20260824_R1"
+      },
+      "procedureLocatorDigest": "43bc45c1491d3385ec7a44cb847b6104ec32066cf1b1c8787a190a57c27e78ec",
       "released": false,
-      "requestDigest": "cf00eba67ffacb1db1e25d855766640d76fd1437880d07291b0390355d70f003",
+      "requestDigest": "7fa1065fbf66f7282d153b1d1d9bcbe722ecc1bf987157c9553cb5b127a96266",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "119d9d71c14b4434b7b0b862bbed2f93ae4693e36beec89c92d1ab65297ec2ad",
       "state": "ADMITTED_LOCKED"
@@ -3656,7 +3673,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1666,
+  "lockGeneration": 1667,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -26109,6 +26126,36 @@
       "scopeHash": "643bd54599d2795c3b31d73e1ccbfe076a8922a35c303c7e83da1e23f6c66382",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "governingHead": "ac9a12293885121ed97602b6a08a91a5561abf84",
+      "lockGeneration": 1660,
+      "lockScope": "EXECUTION_EFFICIENCY_PUBLICATION_SPARSE_INDEX_ASSERTION",
+      "operationId": "EXECUTION_EFFICIENCY_PUBLICATION_SPARSE_INDEX_ASSERTION_REPAIR_20260824_001",
+      "procedureLocatorDigest": "5c5713b28d5341684761f1f5250c54fa4f8e98e5a1c79105ed817ddbcd251c65",
+      "released": true,
+      "requestDigest": "cf00eba67ffacb1db1e25d855766640d76fd1437880d07291b0390355d70f003",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "119d9d71c14b4434b7b0b862bbed2f93ae4693e36beec89c92d1ab65297ec2ad",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "PR_2017_HEAD_23eac3a297c6a0f8bae74b78671ebfa878c93fa8",
+          "MAIN_ADVANCE_AC9A1229_TO_8A7F54A1_DISJOINT_FROM_AUTHORIZED_PATHS",
+          "EXECUTION_EFFICIENCY_RUN_32798276572",
+          "FAILED_SUCCESSOR_SCOPE_STRING_5403949959"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "8a7f54a1686bc2f027ef66c3d92e3bb14df1b591",
+        "successorLockGeneration": 1667,
+        "successorLockScope": "EXECUTION_EFFICIENCY_PUBLICATION_SPARSE_INDEX_ASSERTION",
+        "successorOperationId": "EXECUTION_EFFICIENCY_PUBLICATION_SPARSE_INDEX_ASSERTION_REPAIR_20260824_002",
+        "transitionId": "EXEC_EFF_1660_TO_8A7F54A1_20260824_R1"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

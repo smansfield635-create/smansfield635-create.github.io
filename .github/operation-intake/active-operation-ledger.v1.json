@@ -3338,13 +3338,30 @@
       "state": "ADMITTED_LOCKED"
     },
     "ea3c1daaebdb8162884dbda2b0068de332b8d14a8b4189dbe22c322ad4f5d35d": {
-      "governingHead": "ac9a12293885121ed97602b6a08a91a5561abf84",
-      "lockGeneration": 1658,
+      "governingHead": "8a7f54a1686bc2f027ef66c3d92e3bb14df1b591",
+      "lockGeneration": 1665,
       "lockScope": "PUBLICATION_PREFLIGHT_LOCALITY_AND_PROTECTED_CLOSURE",
-      "operationId": "PUBLICATION_PREFLIGHT_LOCALITY_AND_PROTECTED_CLOSURE_REPAIR_20260824_001",
-      "procedureLocatorDigest": "a4810033b3827cde26df61593f2d49076f85696211f2505424496631455351e2",
+      "operationId": "PUBLICATION_PREFLIGHT_LOCALITY_AND_PROTECTED_CLOSURE_REPAIR_20260824_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "ac9a12293885121ed97602b6a08a91a5561abf84",
+        "lockGeneration": 1658,
+        "lockScope": "PUBLICATION_PREFLIGHT_LOCALITY_AND_PROTECTED_CLOSURE",
+        "operationId": "PUBLICATION_PREFLIGHT_LOCALITY_AND_PROTECTED_CLOSURE_REPAIR_20260824_001",
+        "preservedEvidenceRefs": [
+          "PR_2017_HEAD_23eac3a297c6a0f8bae74b78671ebfa878c93fa8",
+          "MAIN_ADVANCE_AC9A1229_TO_8A7F54A1_DISJOINT_FROM_AUTHORIZED_PATHS",
+          "CHECKOUT_LOCALITY_RUN_32798276614",
+          "ROUTER_VALIDATION_RUN_32798276626"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "PUB_PREFLIGHT_1658_TO_8A7F54A1_20260824"
+      },
+      "procedureLocatorDigest": "4c0b67510594be420181d9317ac043ffd376a5d1b0768c1946142aa79d5f92e6",
       "released": false,
-      "requestDigest": "7de08972561c14f4ab2b9bfaed7103051f7430969e03b297c1fcc261e0527391",
+      "requestDigest": "9aae66ee6708a203ed5635d60758473950e0d8a741c704d9ee73eaefe447c522",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "ea3c1daaebdb8162884dbda2b0068de332b8d14a8b4189dbe22c322ad4f5d35d",
       "state": "ADMITTED_LOCKED"
@@ -3639,7 +3656,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1664,
+  "lockGeneration": 1665,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -26049,6 +26066,36 @@
       "scopeHash": "0845cd5f96021f6e589d6cc9a766a48cf00ea73d7380bb5e715654bd35dc7b2b",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "ac9a12293885121ed97602b6a08a91a5561abf84",
+      "lockGeneration": 1658,
+      "lockScope": "PUBLICATION_PREFLIGHT_LOCALITY_AND_PROTECTED_CLOSURE",
+      "operationId": "PUBLICATION_PREFLIGHT_LOCALITY_AND_PROTECTED_CLOSURE_REPAIR_20260824_001",
+      "procedureLocatorDigest": "a4810033b3827cde26df61593f2d49076f85696211f2505424496631455351e2",
+      "released": true,
+      "requestDigest": "7de08972561c14f4ab2b9bfaed7103051f7430969e03b297c1fcc261e0527391",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ea3c1daaebdb8162884dbda2b0068de332b8d14a8b4189dbe22c322ad4f5d35d",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "PR_2017_HEAD_23eac3a297c6a0f8bae74b78671ebfa878c93fa8",
+          "MAIN_ADVANCE_AC9A1229_TO_8A7F54A1_DISJOINT_FROM_AUTHORIZED_PATHS",
+          "CHECKOUT_LOCALITY_RUN_32798276614",
+          "ROUTER_VALIDATION_RUN_32798276626"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "8a7f54a1686bc2f027ef66c3d92e3bb14df1b591",
+        "successorLockGeneration": 1665,
+        "successorLockScope": "PUBLICATION_PREFLIGHT_LOCALITY_AND_PROTECTED_CLOSURE",
+        "successorOperationId": "PUBLICATION_PREFLIGHT_LOCALITY_AND_PROTECTED_CLOSURE_REPAIR_20260824_002",
+        "transitionId": "PUB_PREFLIGHT_1658_TO_8A7F54A1_20260824"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

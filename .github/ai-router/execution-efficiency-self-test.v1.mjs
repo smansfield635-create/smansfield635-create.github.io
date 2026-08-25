@@ -74,13 +74,37 @@ const requirePublicationSparseIndex = (workflowPath) => {
   return text;
 };
 
+const requireAutomaticReleaseSparseIndex = (workflowPath) => {
+  const text = readText(workflowPath);
+  if ((text.match(/uses:\s*actions\/checkout@v4/g) || []).length !== 0) fail(`AUTO_RELEASE_ACTIONS_CHECKOUT_FORBIDDEN:${workflowPath}`);
+  if (!text.includes('git -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$TARGET_SHA"')) fail(`AUTO_RELEASE_EXACT_PARTIAL_FETCH_MISSING:${workflowPath}`);
+  if (!text.includes('git sparse-checkout init --cone --sparse-index')) fail(`AUTO_RELEASE_SPARSE_INDEX_INIT_MISSING:${workflowPath}`);
+  if (!text.includes('git config --bool index.sparse')) fail(`AUTO_RELEASE_SPARSE_INDEX_ASSERTION_MISSING:${workflowPath}`);
+  if (!text.includes('git ls-tree -d --name-only FETCH_HEAD')) fail(`AUTO_RELEASE_ROOT_TREE_ENUMERATION_MISSING:${workflowPath}`);
+  if (!text.includes('git ls-tree -d --name-only "FETCH_HEAD:inspection"')) fail(`AUTO_RELEASE_INSPECTION_TREE_ENUMERATION_MISSING:${workflowPath}`);
+  if (!text.includes('test "$child" = "audralia-24057-exact" && continue')) fail(`AUTO_RELEASE_PROTECTED_SNAPSHOT_WORKTREE_EXCLUSION_MISSING:${workflowPath}`);
+  if (!text.includes('test ! -e inspection/audralia-24057-exact')) fail(`AUTO_RELEASE_PROTECTED_SNAPSHOT_ABSENCE_ASSERTION_MISSING:${workflowPath}`);
+  if (!text.includes('test "$sparse_entries" -lt 20000')) fail(`AUTO_RELEASE_SPARSE_INDEX_BOUND_MISSING:${workflowPath}`);
+  if (!text.includes('test "$materialized_files" -lt 20000')) fail(`AUTO_RELEASE_MATERIALIZED_FILE_BOUND_MISSING:${workflowPath}`);
+  if (text.includes('sparse-checkout-cone-mode: false')) fail(`AUTO_RELEASE_NON_CONE_CHECKOUT_FORBIDDEN:${workflowPath}`);
+  if (text.includes('\n            /*\n')) fail(`AUTO_RELEASE_ROOT_WIDE_NEGATIVE_PATTERN_FORBIDDEN:${workflowPath}`);
+  for (const required of [
+    'preview/bt4/entitlement-v1',
+    'preview/bt4/operational-release-v1',
+    'h-earth-live-6d18e158/showroom/globe/h-earth'
+  ]) if (!text.includes(required)) fail(`AUTO_RELEASE_REQUIRED_SUBTREE_MISSING:${workflowPath}:${required}`);
+  if (!text.includes('.github|preview|node_modules|h-earth-live-6d18e158')) fail(`AUTO_RELEASE_BULK_EXCLUSION_SET_MISSING:${workflowPath}`);
+  return text;
+};
+
 const workflows = policy.checkoutLocality?.centralWorkflows || {};
 const bridgeWorkflow = workflows.aiEntryBridge;
 const canonicalIntakeWorkflow = workflows.canonicalIntake;
 const successorGatewayWorkflow = workflows.successorGateway;
+const automaticReleaseWorkflow = workflows.automaticRelease;
 const preflightWorkflow = workflows.publicationPreflight;
 const deployWorkflow = workflows.publicationDeploy;
-if (!bridgeWorkflow || !canonicalIntakeWorkflow || !successorGatewayWorkflow || !preflightWorkflow || !deployWorkflow) fail('CENTRAL_CHECKOUT_LOCALITY_WORKFLOW_BINDINGS_MISSING');
+if (!bridgeWorkflow || !canonicalIntakeWorkflow || !successorGatewayWorkflow || !automaticReleaseWorkflow || !preflightWorkflow || !deployWorkflow) fail('CENTRAL_CHECKOUT_LOCALITY_WORKFLOW_BINDINGS_MISSING');
 else {
   requireSparseCheckout(bridgeWorkflow, {bridge: true, forbidRootWide: true});
   requireSparseCheckout(canonicalIntakeWorkflow, {
@@ -91,6 +115,7 @@ else {
     requiredPaths: policy.checkoutLocality?.canonicalGatewayWorkingSets?.successorGateway || [],
     forbidRootWide: true
   });
+  requireAutomaticReleaseSparseIndex(automaticReleaseWorkflow);
   requirePublicationSparseIndex(preflightWorkflow);
   requirePublicationSparseIndex(deployWorkflow);
 }
@@ -105,7 +130,7 @@ if (expectedWorkflow) {
 }
 
 if (!process.exitCode) {
-  const centralSparseCheckoutVerified = [bridgeWorkflow, canonicalIntakeWorkflow, successorGatewayWorkflow, preflightWorkflow, deployWorkflow];
+  const centralSparseCheckoutVerified = [bridgeWorkflow, canonicalIntakeWorkflow, successorGatewayWorkflow, automaticReleaseWorkflow, preflightWorkflow, deployWorkflow];
   process.stdout.write(JSON.stringify({
     schema: 'AI_PROCEDURAL_EXECUTION_EFFICIENCY_SELF_TEST_RECEIPT_v1',
     result: 'PASS',
@@ -115,6 +140,9 @@ if (!process.exitCode) {
     noRepeatedEquivalentProbeWithoutNewEvidence: true,
     checkoutLocalityDefault: policy.checkoutLocality.defaultMode,
     unrestrictedCheckoutAllowedByDefault: false,
+    automaticReleaseCheckoutMode: 'EXACT_REF_PARTIAL_FETCH_CONE_SPARSE_INDEX',
+    automaticReleaseActionsCheckoutAllowed: false,
+    automaticReleaseFullIndexTraversalAllowed: false,
     publicationCheckoutMode: 'EXACT_REF_PARTIAL_FETCH_CONE_SPARSE_INDEX',
     publicationActionsCheckoutAllowed: false,
     publicationFullIndexTraversalAllowed: false,

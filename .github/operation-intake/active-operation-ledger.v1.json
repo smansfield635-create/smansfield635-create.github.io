@@ -1308,18 +1308,6 @@
       "scopeHash": "6da62b42406e020e753a2570c63c0d9ad4d196bf5947a42919d20a9e5259cf6b",
       "state": "ADMITTED_LOCKED"
     },
-    "6de7f4b5c035d83fa462a270a3f06a2b54ca7944313295331c01482eb6687009": {
-      "governingHead": "ac9a12293885121ed97602b6a08a91a5561abf84",
-      "lockGeneration": 1663,
-      "lockScope": "LAWS_CP6_BROWSER_RUNNER_ROOM_CAROUSEL_READING_ACTIVATION_V1",
-      "operationId": "LAWS_CP6_ROOM_CAROUSEL_READING_RUNNER_REPAIR_20260824_AC9A1229_R1",
-      "procedureLocatorDigest": "bbcaadea50f942e0f90c745cd585dc720a4e7a643e117db5ccd457c95b1ff62d",
-      "released": false,
-      "requestDigest": "783109a7554c4526c650564bbc4714a39263101617ddf9085fdece04e8debde3",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "6de7f4b5c035d83fa462a270a3f06a2b54ca7944313295331c01482eb6687009",
-      "state": "ADMITTED_LOCKED"
-    },
     "7134a2ba0f38a426070bac6da4c63e369fc55654ddd7b4bd27a93f1cc6e9a87d": {
       "governingHead": "e876e6107d3e01a19e76c9fd487b6de0d511cb25",
       "lockGeneration": 387,
@@ -26250,6 +26238,19 @@
         "transitionId": "CURRENT_PR_1662_TO_8A7F54A1_20260824"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "ac9a12293885121ed97602b6a08a91a5561abf84",
+      "lockGeneration": 1663,
+      "lockScope": "LAWS_CP6_BROWSER_RUNNER_ROOM_CAROUSEL_READING_ACTIVATION_V1",
+      "operationId": "LAWS_CP6_ROOM_CAROUSEL_READING_RUNNER_REPAIR_20260824_AC9A1229_R1",
+      "procedureLocatorDigest": "bbcaadea50f942e0f90c745cd585dc720a4e7a643e117db5ccd457c95b1ff62d",
+      "released": true,
+      "requestDigest": "783109a7554c4526c650564bbc4714a39263101617ddf9085fdece04e8debde3",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "6de7f4b5c035d83fa462a270a3f06a2b54ca7944313295331c01482eb6687009",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

@@ -1715,13 +1715,30 @@
       "state": "ADMITTED_LOCKED"
     },
     "8a0744a9ddba85f4b4d5b8bf607a4161c055a74d4a64cc5f0333feb5ff3ef3b2": {
-      "governingHead": "ac9a12293885121ed97602b6a08a91a5561abf84",
-      "lockGeneration": 1662,
+      "governingHead": "8a7f54a1686bc2f027ef66c3d92e3bb14df1b591",
+      "lockGeneration": 1669,
       "lockScope": "STATIC_ASSET_AND_ROUTER_VALIDATION_CHECKOUT_LOCALITY",
-      "operationId": "CURRENT_PR_CHECKS_SPARSE_INDEX_REPAIR_20260824_001",
-      "procedureLocatorDigest": "803841b3cbde33386e9f568524f8d695b89d19a5563cdcf341274515a30d510d",
+      "operationId": "CURRENT_PR_CHECKS_SPARSE_INDEX_REPAIR_20260824_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "ac9a12293885121ed97602b6a08a91a5561abf84",
+        "lockGeneration": 1662,
+        "lockScope": "STATIC_ASSET_AND_ROUTER_VALIDATION_CHECKOUT_LOCALITY",
+        "operationId": "CURRENT_PR_CHECKS_SPARSE_INDEX_REPAIR_20260824_001",
+        "preservedEvidenceRefs": [
+          "PR_2017_HEAD_23eac3a297c6a0f8bae74b78671ebfa878c93fa8",
+          "MAIN_ADVANCE_AC9A1229_TO_8A7F54A1_DISJOINT_FROM_AUTHORIZED_PATHS",
+          "STATIC_ASSET_PROOF_206_INDEX_118_FILES",
+          "ROUTER_VALIDATION_RUN_32798276626"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "CURRENT_PR_1662_TO_8A7F54A1_20260824"
+      },
+      "procedureLocatorDigest": "79f7c8b7c0dcc59cedbd724a8b5d846f5c335a2790532a1e1e0a5d09a541ba30",
       "released": false,
-      "requestDigest": "77523da6c045020fd34b1afcbaabfb0376182f8f1e5fc7024746aac6fe6375f1",
+      "requestDigest": "3263f508aae17fb95342755f0b3101921ab7277ec7bdaf837ce043d72603eb4e",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "8a0744a9ddba85f4b4d5b8bf607a4161c055a74d4a64cc5f0333feb5ff3ef3b2",
       "state": "ADMITTED_LOCKED"
@@ -3690,7 +3707,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1668,
+  "lockGeneration": 1669,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -26201,6 +26218,36 @@
         "successorLockScope": "LOCALITY_VERIFIER_WORKFLOW_SPARSE_INDEX",
         "successorOperationId": "LOCALITY_VERIFIER_WORKFLOW_SPARSE_INDEX_REPAIR_20260824_002",
         "transitionId": "LOCALITY_WF_1661_TO_8A7F54A1_20260824"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "ac9a12293885121ed97602b6a08a91a5561abf84",
+      "lockGeneration": 1662,
+      "lockScope": "STATIC_ASSET_AND_ROUTER_VALIDATION_CHECKOUT_LOCALITY",
+      "operationId": "CURRENT_PR_CHECKS_SPARSE_INDEX_REPAIR_20260824_001",
+      "procedureLocatorDigest": "803841b3cbde33386e9f568524f8d695b89d19a5563cdcf341274515a30d510d",
+      "released": true,
+      "requestDigest": "77523da6c045020fd34b1afcbaabfb0376182f8f1e5fc7024746aac6fe6375f1",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "8a0744a9ddba85f4b4d5b8bf607a4161c055a74d4a64cc5f0333feb5ff3ef3b2",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "PR_2017_HEAD_23eac3a297c6a0f8bae74b78671ebfa878c93fa8",
+          "MAIN_ADVANCE_AC9A1229_TO_8A7F54A1_DISJOINT_FROM_AUTHORIZED_PATHS",
+          "STATIC_ASSET_PROOF_206_INDEX_118_FILES",
+          "ROUTER_VALIDATION_RUN_32798276626"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "8a7f54a1686bc2f027ef66c3d92e3bb14df1b591",
+        "successorLockGeneration": 1669,
+        "successorLockScope": "STATIC_ASSET_AND_ROUTER_VALIDATION_CHECKOUT_LOCALITY",
+        "successorOperationId": "CURRENT_PR_CHECKS_SPARSE_INDEX_REPAIR_20260824_002",
+        "transitionId": "CURRENT_PR_1662_TO_8A7F54A1_20260824"
       },
       "terminalDisposition": "SUPERSEDED"
     }

@@ -120,7 +120,10 @@
       "projectId": "LAWS",
       "status": "ACTIVE_REGISTERED_PROJECT",
       "ownedPathPrefixes": ["laws/"],
-      "ownedExactPaths": [],
+      "ownedExactPaths": [
+        "scripts/laws_cp6_final_browser_verify.mjs",
+        "scripts/laws_cp6_final_browser_verify_runner.mjs"
+      ],
       "entrypoint": ".github/ai-router/projects/laws/entrypoint.v1.json",
       "priority": 100
     },

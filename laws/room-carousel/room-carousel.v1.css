@@ -55,6 +55,7 @@ html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] {
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
   padding: clamp(1rem, 2.4vw, 1.65rem);
+  animation: none;
   transform:
     translate(-50%, -50%)
     translateX(calc(var(--lrc-offset) * var(--lrc-step)))

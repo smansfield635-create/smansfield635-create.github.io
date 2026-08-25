@@ -2647,6 +2647,18 @@
       "scopeHash": "b8f407e3498f703352e151108b4fcead1b369b8bb391b392a8b1a736fa09a38d",
       "state": "ADMITTED_LOCKED"
     },
+    "b9605978444cdd1f9810727f2b1ddd1547205f2d2782d233e41ea615ef6bede1": {
+      "governingHead": "0e21f21314d3c453880da19605e3ce2566964b78",
+      "lockGeneration": 1687,
+      "lockScope": "LAWS:TABBED_ORBIT_INSPECTION:SHARED_ROOMS_ROOT_AND_VERIFIER",
+      "operationId": "LAWS_TABBED_ORBIT_INSPECTION_PARITY_20260825_0E21F213_R2",
+      "procedureLocatorDigest": "eb9d00449f5208f7104c1770f1426371a21dfb1c54ba86f64b5ee5a7ec587c4f",
+      "released": false,
+      "requestDigest": "9789399fae475180148976880c99326fa31bf00bde06881377cbeebc5fae516b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "b9605978444cdd1f9810727f2b1ddd1547205f2d2782d233e41ea615ef6bede1",
+      "state": "ADMITTED_LOCKED"
+    },
     "b97df7525443f153ed5ce9410430bebb6d692bb9040df2810e892126f3a10198": {
       "governingHead": "7ab3408099c80a0eeb6cf29b39cc28c8ca0bd602",
       "lockGeneration": 373,
@@ -3793,7 +3805,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1686,
+  "lockGeneration": 1687,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

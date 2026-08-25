@@ -2099,13 +2099,33 @@
       "state": "ADMITTED_LOCKED"
     },
     "9beeac2932b89e112e2afb556e031bd10cd3fb33116f4cf040672e4a3d466fe2": {
-      "governingHead": "1a4d75c136fd20eca5c24bb21a96ae4ddbd4b1d8",
-      "lockGeneration": 1676,
+      "governingHead": "c3a88dc4bdb47bb9116acd6cfd1cfc4e30ade4ff",
+      "lockGeneration": 1684,
       "lockScope": "AUDRALIA_WEATHER_QUALIFICATION",
-      "operationId": "AUDRALIA_SPHERICAL_VISIBLE_WEATHER_BASELINE_20260824_001",
-      "procedureLocatorDigest": "12517ff7a92526936fdadc4527ff834fcf3f5e6d4ffb62e70352f757380da29b",
+      "operationId": "AUDRALIA_FINAL_EXPANSION_FAIL_FIRST_VISUAL_VERIFIER_20260825_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "1a4d75c136fd20eca5c24bb21a96ae4ddbd4b1d8",
+        "lockGeneration": 1676,
+        "lockScope": "AUDRALIA_WEATHER_QUALIFICATION",
+        "operationId": "AUDRALIA_SPHERICAL_VISIBLE_WEATHER_BASELINE_20260824_001",
+        "preservedEvidenceRefs": [
+          "ISSUE_2027_GEN1676_ADMISSION",
+          "PR_2028_HEAD_e2a901e413682c1033b3b45af2961510a1363950_HISTORICAL_VERIFIER_EVIDENCE_ONLY",
+          "PR_2032_MERGE_c3a88dc4bdb47bb9116acd6cfd1cfc4e30ade4ff_FAILING_PRODUCT_CORPUS",
+          "PR_2032_CONTRACT_VISUAL_ACCEPTANCE_REQUIRED",
+          "ANCHOR_RUN_32809185759_EXPERIENCE_CHANGE_WITHOUT_ANCHOR_RECEIPT",
+          "OWNER_RECORDING_43_39_SECONDS_BYTES_UNBOUND",
+          "C3_EXACT_ENVELOPE_TOPOLOGY_AUDIT_THREE_COMPONENTS_AT_0_25_0_50_0_75"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "AUDRALIA_WEATHER_QUALIFICATION_GEN1676_TO_C3_FAIL_FIRST_20260825_001"
+      },
+      "procedureLocatorDigest": "f0ca5618bbf38dfe53606777a7f1bd34ab4a85d292d6a4272174d5f42fa53876",
       "released": false,
-      "requestDigest": "3caf6796bb5d7f24887eaf0e83b2e9b92e9071f0787ca83d341d6f741bd4d1cd",
+      "requestDigest": "69c28c1292d6b67c58fafb01f4ac5e750d82d1cf9eb664a4016e40c30a7beae2",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "9beeac2932b89e112e2afb556e031bd10cd3fb33116f4cf040672e4a3d466fe2",
       "state": "ADMITTED_LOCKED"
@@ -3761,7 +3781,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1683,
+  "lockGeneration": 1684,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -26521,6 +26541,39 @@
       "scopeHash": "2dd933d0007ee79b52135b66bb22434ed2dcf425a2fe95d34e08c9bbb991c212",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "governingHead": "1a4d75c136fd20eca5c24bb21a96ae4ddbd4b1d8",
+      "lockGeneration": 1676,
+      "lockScope": "AUDRALIA_WEATHER_QUALIFICATION",
+      "operationId": "AUDRALIA_SPHERICAL_VISIBLE_WEATHER_BASELINE_20260824_001",
+      "procedureLocatorDigest": "12517ff7a92526936fdadc4527ff834fcf3f5e6d4ffb62e70352f757380da29b",
+      "released": true,
+      "requestDigest": "3caf6796bb5d7f24887eaf0e83b2e9b92e9071f0787ca83d341d6f741bd4d1cd",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "9beeac2932b89e112e2afb556e031bd10cd3fb33116f4cf040672e4a3d466fe2",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "ISSUE_2027_GEN1676_ADMISSION",
+          "PR_2028_HEAD_e2a901e413682c1033b3b45af2961510a1363950_HISTORICAL_VERIFIER_EVIDENCE_ONLY",
+          "PR_2032_MERGE_c3a88dc4bdb47bb9116acd6cfd1cfc4e30ade4ff_FAILING_PRODUCT_CORPUS",
+          "PR_2032_CONTRACT_VISUAL_ACCEPTANCE_REQUIRED",
+          "ANCHOR_RUN_32809185759_EXPERIENCE_CHANGE_WITHOUT_ANCHOR_RECEIPT",
+          "OWNER_RECORDING_43_39_SECONDS_BYTES_UNBOUND",
+          "C3_EXACT_ENVELOPE_TOPOLOGY_AUDIT_THREE_COMPONENTS_AT_0_25_0_50_0_75"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "c3a88dc4bdb47bb9116acd6cfd1cfc4e30ade4ff",
+        "successorLockGeneration": 1684,
+        "successorLockScope": "AUDRALIA_WEATHER_QUALIFICATION",
+        "successorOperationId": "AUDRALIA_FINAL_EXPANSION_FAIL_FIRST_VISUAL_VERIFIER_20260825_001",
+        "transitionId": "AUDRALIA_WEATHER_QUALIFICATION_GEN1676_TO_C3_FAIL_FIRST_20260825_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

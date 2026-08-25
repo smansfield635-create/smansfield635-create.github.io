@@ -2294,13 +2294,31 @@
       "state": "ADMITTED_LOCKED"
     },
     "ab86d1d5550ceac4ba6c51c2d7d145fe3cb72af11263381dcef963c5727d583b": {
-      "governingHead": "a28330f618d587a0683a8c59a2fe23756a6a2e8c",
-      "lockGeneration": 1673,
+      "governingHead": "1a4d75c136fd20eca5c24bb21a96ae4ddbd4b1d8",
+      "lockGeneration": 1675,
       "lockScope": "H_EARTH:AUDRALIA_DIAGNOSTIC_ATOMIC_RECONCILIATION:V1",
-      "operationId": "H_EARTH_AUDRALIA_DIAGNOSTIC_ATOMIC_RECONCILIATION_20260824_2115",
-      "procedureLocatorDigest": "99a58545a6e83ca17b8f4cf51c47bac39d2f92fb45534030cb54c8359f338703",
+      "operationId": "H_EARTH_AUDRALIA_DIAGNOSTIC_ATOMIC_RECONCILIATION_20260824_2119_S1",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "a28330f618d587a0683a8c59a2fe23756a6a2e8c",
+        "lockGeneration": 1673,
+        "lockScope": "H_EARTH:AUDRALIA_DIAGNOSTIC_ATOMIC_RECONCILIATION:V1",
+        "operationId": "H_EARTH_AUDRALIA_DIAGNOSTIC_ATOMIC_RECONCILIATION_20260824_2115",
+        "preservedEvidenceRefs": [
+          "GEN1673_POST_ADMISSION_ROUTER_PASS_NONAUTHORITY_EVIDENCE_ONLY",
+          "AUDRALIA_PREMUTATION_RUN_32800318203_PASS",
+          "AUDRALIA_PREMUTATION_ARTIFACT_9546253081_PASS",
+          "PR_2026_DISJOINT_FROM_DIAGNOSTIC_PRODUCT_PATHS",
+          "COHERENCE_PRESTATE_EIGHT_PROTECTED_BLOBS_UNCHANGED"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "H_EARTH_AUDRALIA_DIAGNOSTIC_ATOMIC_RECONCILIATION_20260824_2119_S1"
+      },
+      "procedureLocatorDigest": "e260081fc5d4bca0e477676a87269743f425b0e029e01bb8496bc62bad9b9263",
       "released": false,
-      "requestDigest": "6e0b11725a880970b97fb6e420156728e155b092b65ae9789a99bf62e3934e5b",
+      "requestDigest": "6d202c2fe25f3ce4a79e0b1577e2dd73b96eafc87649f4da911b661d9735f63a",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "ab86d1d5550ceac4ba6c51c2d7d145fe3cb72af11263381dcef963c5727d583b",
       "state": "ADMITTED_LOCKED"
@@ -3707,7 +3725,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1674,
+  "lockGeneration": 1675,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -26371,6 +26389,37 @@
       "scopeHash": "9d490fd0a24cad344385b77f4727142870b01f6500c4690fe26ec51c6c8cfcce",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "a28330f618d587a0683a8c59a2fe23756a6a2e8c",
+      "lockGeneration": 1673,
+      "lockScope": "H_EARTH:AUDRALIA_DIAGNOSTIC_ATOMIC_RECONCILIATION:V1",
+      "operationId": "H_EARTH_AUDRALIA_DIAGNOSTIC_ATOMIC_RECONCILIATION_20260824_2115",
+      "procedureLocatorDigest": "99a58545a6e83ca17b8f4cf51c47bac39d2f92fb45534030cb54c8359f338703",
+      "released": true,
+      "requestDigest": "6e0b11725a880970b97fb6e420156728e155b092b65ae9789a99bf62e3934e5b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ab86d1d5550ceac4ba6c51c2d7d145fe3cb72af11263381dcef963c5727d583b",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "GEN1673_POST_ADMISSION_ROUTER_PASS_NONAUTHORITY_EVIDENCE_ONLY",
+          "AUDRALIA_PREMUTATION_RUN_32800318203_PASS",
+          "AUDRALIA_PREMUTATION_ARTIFACT_9546253081_PASS",
+          "PR_2026_DISJOINT_FROM_DIAGNOSTIC_PRODUCT_PATHS",
+          "COHERENCE_PRESTATE_EIGHT_PROTECTED_BLOBS_UNCHANGED"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "1a4d75c136fd20eca5c24bb21a96ae4ddbd4b1d8",
+        "successorLockGeneration": 1675,
+        "successorLockScope": "H_EARTH:AUDRALIA_DIAGNOSTIC_ATOMIC_RECONCILIATION:V1",
+        "successorOperationId": "H_EARTH_AUDRALIA_DIAGNOSTIC_ATOMIC_RECONCILIATION_20260824_2119_S1",
+        "transitionId": "H_EARTH_AUDRALIA_DIAGNOSTIC_ATOMIC_RECONCILIATION_20260824_2119_S1"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

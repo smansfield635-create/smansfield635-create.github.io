@@ -92,7 +92,14 @@ def openhands_lane():
         'OPENHANDS_SUPPRESS_BANNER': '1',
     })
     task = TASK + ' Work directly in the current workspace. Inspect the existing files, use executable shell/editor tools to change slug.mjs, run node test.mjs, and continue until the tests pass. Do not stop at a plan or task list.'
-    cmd = ['openhands','--headless','--json','--always-approve','--override-with-envs','-t',task]
+    # The local Ollama OpenAI-compatible endpoint returned Qwen tool-call JSON as plain
+    # message content when native tool calling was enabled. Force OpenHands' own
+    # prompt-based/CodeAct tool adapter so the identical model can issue executable
+    # actions instead of inert pseudo-tool text. Task, tests, model and DG lane stay fixed.
+    cmd = [
+        'openhands','--headless','--json','--always-approve','--override-with-envs',
+        '--llm-native-tool-calling','false','-t',task
+    ]
     p = run(cmd, cwd=OH, env=env, timeout=1200)
     passed, out = test(OH)
     return {
@@ -114,11 +121,12 @@ fixture(OH)
 dg = diamond_gate_lane()
 oh = openhands_lane()
 receipt = {
-    'schema': 'AGENTIC_FRONTIER_PAIRED_SMOKE_AF_IR_01_v2',
+    'schema': 'AGENTIC_FRONTIER_PAIRED_SMOKE_AF_IR_01_v3',
     'task_id': 'AF-IR-01',
     'task': TASK,
     'model': MODEL,
     'ollama': OLLAMA,
+    'openhands_native_tool_calling': False,
     'diamond_gate': dg,
     'openhands': oh,
     'initial_sha256': sha(INITIAL),

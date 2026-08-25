@@ -65,7 +65,7 @@ jobs:
           fi
 
           grep -E '^(h-earth-3d/|showroom/globe/h-earth/|showroom/globe/audralia/diagnostic/(index\.html|index\.controls\.js|index\.inspection\.lane\.js)$)' /tmp/all-changed-paths.txt \
-            | grep -Ev '^(h-earth-3d/registry/|h-earth-3d/experience-anchor/(evidence|receipts)/|h-earth-3d/AGENTS\.md$|showroom/globe/h-earth/AGENTS\.md$)' \
+            | grep -Ev '^(h-earth-3d/registry/|h-earth-3d/experience-anchor/(evidence|receipts)/|h-earth-3d/AGENTS\.md$|h-earth-3d/validation/h-earth-audralia-diagnostic-path-recognition-verifier\.v1\.mjs$|showroom/globe/h-earth/AGENTS\.md$)' \
             | sort -u > /tmp/h-earth-changed-paths.txt || true
 
           cat /tmp/h-earth-changed-paths.txt

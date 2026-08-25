@@ -26,10 +26,25 @@ def canonical_content_ids(path: str) -> set[str]:
     """Return canonical CP6 content identities declared by one destination.
 
     The complete renewal preserves canonical identities while allowing the
-    public presentation markup to evolve. Verification therefore follows the
-    record IDs themselves rather than a legacy presentation-row attribute.
+    public presentation markup to evolve. Verification therefore follows each
+    destination's current canonical identity surface rather than assuming one
+    presentation-row attribute.
     """
     text = (ROOT / path).read_text(encoding="utf-8")
+    if path == "laws/research/methods-and-models/index.html":
+        archive = "METHODS_MODELS_CANONICAL_ARCHIVE_v1_DRAFT"
+        assert f'data-canonical-archive="{archive}"' in text, (
+            f"{path}: missing canonical archive binding"
+        )
+        manifest_path = "laws/research/methods-and-models/canonical-records-v1.html"
+        manifest = (ROOT / manifest_path).read_text(encoding="utf-8")
+        assert 'data-record-class="READ_ONLY_CANONICAL_MANIFEST"' in manifest, (
+            f"{manifest_path}: missing read-only canonical manifest contract"
+        )
+        assert archive in manifest, (
+            f"{manifest_path}: canonical archive identity mismatch"
+        )
+        return set(re.findall(r"<span>(CP6-CONTENT-\d+)</span>", manifest))
     return set(re.findall(r'data-content-id="(CP6-CONTENT-\d+)"', text))
 
 

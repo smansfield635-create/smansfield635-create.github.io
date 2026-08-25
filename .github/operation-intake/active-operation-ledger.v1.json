@@ -2150,18 +2150,6 @@
       "scopeHash": "9c9207a9b98ba8474e0868542503ed8ef858877b3d96bc700546d4f30b3139c0",
       "state": "ADMITTED_LOCKED"
     },
-    "9d503b23bd1bbd0c248868ae356517df91eebfcd825a0317a3262eda39980d20": {
-      "governingHead": "1a4d75c136fd20eca5c24bb21a96ae4ddbd4b1d8",
-      "lockGeneration": 1678,
-      "lockScope": "LAWS_CP6_ROOM_CAROUSEL_PHONE_CONTROL_HIT_TARGET_V1",
-      "operationId": "LAWS_CP6_ROOM_CAROUSEL_PHONE_CONTROL_HIT_TARGET_REPAIR_20260824_378F8310_R3",
-      "procedureLocatorDigest": "df36c6d3b72085f930f05d720b1a28fd0d4503584f850e6ebbbc8c32aba37968",
-      "released": false,
-      "requestDigest": "dc3612e2bd524a87e17663e71080ad9e43a62d0281605f8fbdd03ab992ffc74a",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "9d503b23bd1bbd0c248868ae356517df91eebfcd825a0317a3262eda39980d20",
-      "state": "ADMITTED_LOCKED"
-    },
     "9dddf7da98478eaf8a997d8b6e4dc4cf92b5ec9016f05359a3fe89c19cae0465": {
       "governingHead": "80d4f819075aec3a89536edb3886b319b640ce19",
       "lockGeneration": 98,
@@ -26458,6 +26446,19 @@
       "scopeHash": "c6126967efa5bbef40585ac17924aa7be89dc2a710417bb72ae9a9f3e3bc28d8",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "governingHead": "1a4d75c136fd20eca5c24bb21a96ae4ddbd4b1d8",
+      "lockGeneration": 1678,
+      "lockScope": "LAWS_CP6_ROOM_CAROUSEL_PHONE_CONTROL_HIT_TARGET_V1",
+      "operationId": "LAWS_CP6_ROOM_CAROUSEL_PHONE_CONTROL_HIT_TARGET_REPAIR_20260824_378F8310_R3",
+      "procedureLocatorDigest": "df36c6d3b72085f930f05d720b1a28fd0d4503584f850e6ebbbc8c32aba37968",
+      "released": true,
+      "requestDigest": "dc3612e2bd524a87e17663e71080ad9e43a62d0281605f8fbdd03ab992ffc74a",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "9d503b23bd1bbd0c248868ae356517df91eebfcd825a0317a3262eda39980d20",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

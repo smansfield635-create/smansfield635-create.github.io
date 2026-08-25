@@ -2,14 +2,15 @@
   "use strict";
 
   const CONTRACT = "LAWS_ROOM_CAROUSEL_L1_v1";
+  const REFERENCE = "LAWS_DESTINATION_CAROUSEL_RUNTIME_v11_DIRECTION_ONLY_ATOMIC";
+  const CLASSIFY_PX = 8;
+  const COMMIT_PX = 24;
+  const AXIS_RATIO = 1.12;
   document.documentElement.classList.add("lr-js");
 
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
   const wrap = (value, count) => ((value % count) + count) % count;
-  const slug = value => String(value || "room")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "") || "room";
+  const slug = value => String(value || "room").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "room";
 
   function nativeLabel(card, index) {
     const heading = card.querySelector("h1,h2,h3");
@@ -21,6 +22,7 @@
     const existingViewport = root.querySelector(":scope > [data-lrc-viewport]");
     const existingTrack = existingViewport?.querySelector(":scope > [data-lrc-track]");
     if (existingViewport && existingTrack) {
+      existingViewport.querySelectorAll("[data-lrc-controls],[data-lrc-prev],[data-lrc-next]").forEach(node => node.remove());
       return {
         viewport: existingViewport,
         track: existingTrack,
@@ -59,38 +61,27 @@
     live.setAttribute("aria-live", "polite");
     live.setAttribute("aria-atomic", "true");
 
-    const controls = document.createElement("div");
-    controls.dataset.lrcControls = "";
-    const previous = document.createElement("button");
-    previous.type = "button";
-    previous.dataset.lrcPrev = "";
-    previous.setAttribute("aria-label", "Previous reading room");
-    previous.textContent = "←";
-    const next = document.createElement("button");
-    next.type = "button";
-    next.dataset.lrcNext = "";
-    next.setAttribute("aria-label", "Next reading room");
-    next.textContent = "→";
-    controls.append(previous, next);
-
-    viewport.append(track, live, controls);
+    viewport.append(track, live);
     root.insertBefore(viewport, root.firstChild);
-
     return { viewport, track, cards: nativeChildren, live };
   }
 
   function mount(root) {
     const adopted = adoptNativeStoryboard(root);
     if (!adopted) return;
-    const { viewport, track, cards, live } = adopted;
-    if (!viewport || !track || cards.length < 2) return;
+    const { viewport, cards, live } = adopted;
+    if (!viewport || cards.length < 2) return;
 
     const state = {
       index: clamp(Number(root.dataset.lrcInitial || 0) || 0, 0, cards.length - 1),
       pointerId: null,
       startX: 0,
+      startY: 0,
       lastX: 0,
+      lastY: 0,
       travel: 0,
+      classification: "none",
+      direction: 0,
       dragging: false
     };
 
@@ -102,10 +93,20 @@
       return delta;
     }
 
+    function sizeToActive() {
+      const active = cards[state.index];
+      if (!active) return;
+      requestAnimationFrame(() => {
+        const height = Math.ceil(active.getBoundingClientRect().height || active.scrollHeight || 0);
+        if (height > 0) root.style.setProperty("--lrc-active-height", `${height}px`);
+      });
+    }
+
     function publish(reason) {
       const active = cards[state.index];
       root.dataset.lrcIndex = String(state.index);
       root.dataset.lrcId = active.dataset.lrcId || String(state.index);
+      root.dataset.lrcGestureState = state.dragging ? state.classification : "idle";
       if (live) {
         const label = active.dataset.lrcLabel || active.getAttribute("aria-label") || `Room ${state.index + 1}`;
         live.textContent = `${label} · ${state.index + 1} of ${cards.length}`;
@@ -113,9 +114,13 @@
       globalThis.dispatchEvent(new CustomEvent("LAWS_ROOM_CAROUSEL_CHANGED", {
         detail: Object.freeze({
           contract: CONTRACT,
+          referenceContract: REFERENCE,
           reason,
           index: state.index,
           roomId: root.dataset.lrcId,
+          directionOnlyGesture: true,
+          oneGestureOneStep: true,
+          visibleDirectionalControls: false,
           sourceCompletenessClaimed: false,
           scientificValidationClaimed: false,
           productAcceptanceGranted: false
@@ -149,6 +154,7 @@
           }
         });
       });
+      sizeToActive();
       publish(reason);
     }
 
@@ -161,9 +167,6 @@
         target.focus?.({ preventScroll: true });
       }
     }
-
-    root.querySelector("[data-lrc-prev]")?.addEventListener("click", () => select(state.index - 1, "previous-control", true));
-    root.querySelector("[data-lrc-next]")?.addEventListener("click", () => select(state.index + 1, "next-control", true));
 
     viewport.addEventListener("keydown", event => {
       if (event.target.closest("input,textarea,select")) return;
@@ -185,9 +188,11 @@
     viewport.addEventListener("pointerdown", event => {
       if (event.target.closest("a,button,input,textarea,select,summary") || (event.pointerType === "mouse" && event.button !== 0)) return;
       state.pointerId = event.pointerId;
-      state.startX = event.clientX;
-      state.lastX = event.clientX;
+      state.startX = state.lastX = event.clientX;
+      state.startY = state.lastY = event.clientY;
       state.travel = 0;
+      state.classification = "none";
+      state.direction = 0;
       state.dragging = true;
       viewport.dataset.dragging = "true";
       viewport.setPointerCapture?.(event.pointerId);
@@ -195,31 +200,46 @@
 
     viewport.addEventListener("pointermove", event => {
       if (!state.dragging || event.pointerId !== state.pointerId) return;
-      const dx = event.clientX - state.lastX;
-      state.travel += Math.abs(dx);
+      const totalX = event.clientX - state.startX;
+      const totalY = event.clientY - state.startY;
       state.lastX = event.clientX;
-    });
+      state.lastY = event.clientY;
+      if (state.classification === "none" && Math.max(Math.abs(totalX), Math.abs(totalY)) >= CLASSIFY_PX) {
+        state.classification = Math.abs(totalX) >= Math.abs(totalY) * AXIS_RATIO ? "horizontal" : "vertical";
+      }
+      if (state.classification === "horizontal") {
+        state.travel = Math.abs(totalX);
+        state.direction = totalX < 0 ? 1 : -1;
+        event.preventDefault();
+      }
+      root.dataset.lrcGestureState = state.classification;
+    }, { passive: false });
 
     function release(event, cancelled = false) {
       if (!state.dragging || event.pointerId !== state.pointerId) return;
-      const total = event.clientX - state.startX;
-      const threshold = Math.max(44, Math.min(96, viewport.clientWidth * .12));
+      const direction = !cancelled && state.classification === "horizontal" && state.travel >= COMMIT_PX ? state.direction : 0;
       state.dragging = false;
       viewport.dataset.dragging = "false";
       try { viewport.releasePointerCapture?.(event.pointerId); } catch {}
       state.pointerId = null;
-      if (cancelled || Math.abs(total) < threshold) {
-        render(cancelled ? "pointer-cancel" : "pointer-return");
+      state.classification = "none";
+      state.travel = 0;
+      state.direction = 0;
+      if (!direction) {
+        render(cancelled ? "pointer-cancel-noop" : "pointer-unclassified-noop");
         return;
       }
-      select(state.index + (total < 0 ? 1 : -1), "pointer-one-step");
+      select(state.index + direction, "pointer-one-step");
     }
 
     viewport.addEventListener("pointerup", event => release(event, false));
     viewport.addEventListener("pointercancel", event => release(event, true));
+    addEventListener("resize", sizeToActive, { passive: true });
 
+    root.querySelectorAll("[data-lrc-controls],[data-lrc-prev],[data-lrc-next]").forEach(node => node.remove());
     root.dataset.lrcMounted = "true";
     root.dataset.lrcContract = CONTRACT;
+    root.dataset.lrcReferenceContract = REFERENCE;
     render("init");
   }
 

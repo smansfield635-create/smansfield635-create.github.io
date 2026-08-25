@@ -2282,35 +2282,6 @@
       "scopeHash": "a365baf8431c2bdb220a6c24b91422372536cedc20efd42126d572af814b259e",
       "state": "ADMITTED_LOCKED"
     },
-    "a4e3b18eb0080dc1092dcd1fca38b33738e07aa743a955a460d6f81d83d9e0c8": {
-      "governingHead": "52915a8082255a319670b744eeae15e86fe7b049",
-      "lockGeneration": 1694,
-      "lockScope": "H_EARTH:AUDRALIA_DIAGNOSTIC_TOUCH_COLLAPSE_AND_CLIPPING_REPAIR:V1",
-      "operationId": "AUDRALIA_DIAGNOSTIC_TOUCH_COLLAPSE_AND_CLIPPING_REPAIR_SUCCESSOR_20260825_1334",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "19ea91e77e45454602952906961e9a182cfd7368",
-        "lockGeneration": 1693,
-        "lockScope": "H_EARTH:AUDRALIA_DIAGNOSTIC_TOUCH_COLLAPSE_AND_CLIPPING_REPAIR:V1",
-        "operationId": "AUDRALIA_DIAGNOSTIC_TOUCH_COLLAPSE_AND_CLIPPING_REPAIR_20260825_1312",
-        "preservedEvidenceRefs": [
-          "ISSUE_2061_REMOTE_ROUTER_RECEIPT_COMMENT_5414701337",
-          "ISSUE_2061_CANONICAL_INTAKE_RECEIPT_COMMENT_5414735278",
-          "ISSUE_2061_FAILED_SUCCESSOR_RECEIPT_COMMENT_5414910274",
-          "PR_2064_TARGET_FILE_IDENTITIES_UNCHANGED_AT_52915A80"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "AUDRALIA_DIAGNOSTIC_TOUCH_COLLAPSE_SUCCESSOR_TRANSITION_20260825_1334"
-      },
-      "procedureLocatorDigest": "0a7c112c7e281ae8467fb6e80ff7ecd6e4816779dc9c52cdb85f104e2a6772db",
-      "released": false,
-      "requestDigest": "ab61c67c084a9ef7073d791ef05ea65aa598827685e97c89478bb08e692737bd",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "a4e3b18eb0080dc1092dcd1fca38b33738e07aa743a955a460d6f81d83d9e0c8",
-      "state": "ADMITTED_LOCKED"
-    },
     "a560a48139369f71a75bd11892350f5a65543bd2463caac1e1364c1e07b87245": {
       "governingHead": "8007d88820fa55d2b4e752d47b548e974fc73a68",
       "lockGeneration": 76,
@@ -26929,6 +26900,36 @@
         "transitionId": "LAWS_RENEWAL_RUNTIME_OWNERSHIP_52915A80_TO_57258078_20260825"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "52915a8082255a319670b744eeae15e86fe7b049",
+      "lockGeneration": 1694,
+      "lockScope": "H_EARTH:AUDRALIA_DIAGNOSTIC_TOUCH_COLLAPSE_AND_CLIPPING_REPAIR:V1",
+      "operationId": "AUDRALIA_DIAGNOSTIC_TOUCH_COLLAPSE_AND_CLIPPING_REPAIR_SUCCESSOR_20260825_1334",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "19ea91e77e45454602952906961e9a182cfd7368",
+        "lockGeneration": 1693,
+        "lockScope": "H_EARTH:AUDRALIA_DIAGNOSTIC_TOUCH_COLLAPSE_AND_CLIPPING_REPAIR:V1",
+        "operationId": "AUDRALIA_DIAGNOSTIC_TOUCH_COLLAPSE_AND_CLIPPING_REPAIR_20260825_1312",
+        "preservedEvidenceRefs": [
+          "ISSUE_2061_REMOTE_ROUTER_RECEIPT_COMMENT_5414701337",
+          "ISSUE_2061_CANONICAL_INTAKE_RECEIPT_COMMENT_5414735278",
+          "ISSUE_2061_FAILED_SUCCESSOR_RECEIPT_COMMENT_5414910274",
+          "PR_2064_TARGET_FILE_IDENTITIES_UNCHANGED_AT_52915A80"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "AUDRALIA_DIAGNOSTIC_TOUCH_COLLAPSE_SUCCESSOR_TRANSITION_20260825_1334"
+      },
+      "procedureLocatorDigest": "0a7c112c7e281ae8467fb6e80ff7ecd6e4816779dc9c52cdb85f104e2a6772db",
+      "released": true,
+      "requestDigest": "ab61c67c084a9ef7073d791ef05ea65aa598827685e97c89478bb08e692737bd",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a4e3b18eb0080dc1092dcd1fca38b33738e07aa743a955a460d6f81d83d9e0c8",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

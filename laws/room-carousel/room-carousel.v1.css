@@ -124,14 +124,17 @@ html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-controls
 
 @media (max-width: 760px) {
   html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] {
-    --lrc-step: clamp(12rem, 72vw, 19rem);
+    --lrc-step: clamp(18rem, 84vw, 22rem);
     --lrc-depth: 4rem;
     min-height: clamp(34rem, 72vh, 44rem);
   }
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-track] {
+    bottom: 5.75rem;
+  }
   html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] {
-    width: min(86vw, 32rem);
-    min-height: min(29rem, 62vh);
-    max-height: min(68vh, 42rem);
+    width: min(82vw, 30rem);
+    min-height: min(24rem, 45vh);
+    max-height: min(50vh, 30rem);
     padding: 1rem;
   }
   html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-live] {
@@ -141,6 +144,19 @@ html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-controls
     transform: none;
     max-width: none;
     text-align: left;
+  }
+}
+
+@media (min-width: 1000px) {
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] {
+    --lrc-step: clamp(34rem, 50vw, 46rem);
+  }
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-track] {
+    bottom: 6rem;
+  }
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] {
+    min-height: min(26rem, 46vh);
+    max-height: min(52vh, 34rem);
   }
 }
 

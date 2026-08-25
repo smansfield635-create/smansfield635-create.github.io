@@ -1,10 +1,10 @@
 // /showroom/globe/audralia/diagnostic/index.controls.js
-// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v11.2.1
+// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v11.2.2
 // Full-file replacement.
 // Controls own UI binding, target preparation, target lifecycle, and user-facing rendering.
 // Diagnostic index.js owns report/direct/cycle production.
-// v11.2.1 keeps guided navigation and context selection on the presentation
-// path; diagnostic evidence is published only at explicit state boundaries.
+// v11.2.2 keeps guided navigation on the presentation frame, defers evidence
+// collection until after paint, and prepares the embedded world only on demand.
 // No production mutation. No readiness claim. No visual-pass claim. No cycle-pass claim.
 
 (function installAudraliaDistributedDiagnosticControlsV11(global) {
@@ -16,7 +16,7 @@
 
   var CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v11";
   var PREVIOUS_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v10";
-  var VERSION = "11.2.1";
+  var VERSION = "11.2.2";
   var FILE = "/showroom/globe/audralia/diagnostic/index.controls.js";
   var COMPACT_PRESENTATION_STYLESHEET = "/showroom/globe/audralia/diagnostic/index.compact.css?v=AUDRALIA_DIAGNOSTIC_COMPACT_INTERACTION_LAYOUT_20260825_1";
 
@@ -186,6 +186,17 @@
     if (text.length <= MAX_PRESENTATION_JSON_CHARS) return text;
     return text.slice(0, MAX_PRESENTATION_JSON_CHARS) +
       "\n\n/* AUDRALIA_BOUNDED_PRESENTATION_TRUNCATED: full receipt retained in runtime state; user-facing output bounded. */";
+  }
+
+  function summarizeReceipt(value) {
+    if (!value || typeof value !== "object") return null;
+    return Object.freeze({
+      schema: typeof value.schema === "string" ? value.schema : null,
+      contract: typeof value.contract === "string" ? value.contract : null,
+      status: typeof value.status === "string" ? value.status : null,
+      result: typeof value.result === "string" ? value.result : null,
+      receiptId: typeof value.receiptId === "string" ? value.receiptId : null
+    });
   }
 
   function escapeHtml(value) {
@@ -409,6 +420,26 @@
     lastError: null
   };
 
+  var deferredPresentationTasks = Object.create(null);
+
+  function scheduleAfterPaint(taskId, callback) {
+    var id = String(taskId || "presentation");
+    var tokenId = Number(deferredPresentationTasks[id] || 0) + 1;
+    var frame = isFn(root.requestAnimationFrame)
+      ? root.requestAnimationFrame.bind(root)
+      : function (fn) { return root.setTimeout(fn, 0); };
+
+    deferredPresentationTasks[id] = tokenId;
+    frame(function () {
+      frame(function () {
+        root.setTimeout(function () {
+          if (deferredPresentationTasks[id] !== tokenId) return;
+          callback();
+        }, 0);
+      });
+    });
+  }
+
   function compactTargetLifecycle(target) {
     var t = target || state.target || emptyTarget();
     var observed = t.observedRoute || t.declaredSrc || null;
@@ -565,7 +596,7 @@
       directInterfacePresent: Boolean(isFn(api.runDirect) || isFn(api.runDirectCheck) || isFn(api.directCheck)),
       cycleInterfacePresent: isFn(api.runNineCycle),
       receiptPresent: Boolean(receipt),
-      receipt: frozenClone(receipt)
+      receiptSummary: summarizeReceipt(receipt)
     };
 
     publishReceipt();
@@ -603,8 +634,8 @@
       runtimeReceiptPresent: Boolean(receipt),
       authorityReceiptPresent: Boolean(authorityReceipt),
       dgbRuntimeCompatible: contract === DGB_ENGINE_CONTRACT,
-      runtimeReceipt: frozenClone(receipt),
-      authorityReceipt: frozenClone(authorityReceipt)
+      runtimeReceiptSummary: summarizeReceipt(receipt),
+      authorityReceiptSummary: summarizeReceipt(authorityReceipt)
     };
 
     publishReceipt();
@@ -1000,7 +1031,7 @@
     setText("controllerState", source === "CONTROL_FALLBACK" ? "ENGINE HELD" : "REPORT READY");
     setStatus("controllerState", source === "CONTROL_FALLBACK" ? "HELD" : "READY");
 
-    refreshReceiptInventory({ publish: false, render: true });
+    refreshReceiptInventory({ publish: false, render: true, returnSnapshot: false });
     publishReceipt();
     return frozenClone(state.report.current);
   }
@@ -1071,7 +1102,7 @@
       directReceipt: receipt
     }));
 
-    refreshReceiptInventory({ publish: false, render: true });
+    refreshReceiptInventory({ publish: false, render: true, returnSnapshot: false });
     publishReceipt();
     return frozenClone(state.direct.rawReceipt);
   }
@@ -1469,13 +1500,20 @@
   function openReceiptChamber() {
     activateWorkspace("instruments");
     activateInstrumentChamber("receipts");
-    refreshReceiptInventory({ publish: true, render: true });
+    setHtml("receiptList", '<article class="empty-state"><h4>Collecting receipts</h4><p>The chamber is yielding the interaction frame before assembling current evidence.</p></article>');
+    scheduleAfterPaint("receipt-inventory", function () {
+      refreshReceiptInventory({ publish: false, render: true, returnSnapshot: false });
+      recordAction("openReceiptChamber", { receiptCount: state.normalizedReceipts.length });
+    });
   }
 
   function openArchiveChamber() {
     activateWorkspace("instruments");
     activateInstrumentChamber("archive");
-    createDeepArchive();
+    setText("archiveRawOutput", "Preparing the current-session archive after the interaction frame.");
+    scheduleAfterPaint("archive-inventory", function () {
+      createDeepArchive();
+    });
   }
 
   function applyCommandContext(node) {
@@ -1572,7 +1610,9 @@
     if (settings.render !== false) renderVisibleReceiptInventory();
 
     if (settings.publish !== false) publishReceipt();
-    return frozenClone(state.normalizedReceipts);
+    return settings.returnSnapshot === false
+      ? state.normalizedReceipts.length
+      : frozenClone(state.normalizedReceipts);
   }
 
   function renderVisibleReceiptInventory() {
@@ -1715,7 +1755,13 @@
 
   function activateObservationLens(lens) {
     activatePanel("[data-observation-lens]", "data-observation-lens", lens || "target", "observationLens");
-    if (lens === "window") setTargetVisible(true, { publish: false, inspect: false });
+    if (lens === "window") {
+      setTargetVisible(true, { publish: false, inspect: false });
+      scheduleAfterPaint("target-window-load", function () {
+        if (state.ui.workspace !== "observe" || state.ui.observationLens !== "window") return;
+        activelyPrepareTargetFrame("OBSERVATION_WINDOW_EXPLICIT_OPEN");
+      });
+    }
   }
 
   function activateInstrumentChamber(chamber) {
@@ -1802,12 +1848,16 @@
   }
 
   function handleClick(event) {
-    var target = event.target && isFn(event.target.closest)
-      ? event.target.closest("button, a[href], summary, [role='button'], [role='tab'], [role='option'], [data-participant-role]")
+    var source = event.target;
+    var canResolve = source && isFn(source.closest);
+    var insideSelector = canResolve ? source.closest(".custom-selector") : null;
+    var target = canResolve
+      ? source.closest("button, a[href], summary, [role='button'], [role='tab'], [role='option'], [data-participant-role]")
       : null;
     var id;
     var cmd;
 
+    if (!insideSelector) closeAllSelectors();
     if (!target) return;
 
     state.clickCount += 1;
@@ -1934,14 +1984,8 @@
     }
   }
 
-  function handleDocumentClick(event) {
-    var insideSelector = event.target && isFn(event.target.closest) ? event.target.closest(".custom-selector") : null;
-    if (!insideSelector) closeAllSelectors();
-  }
-
   function bindEvents() {
     doc.addEventListener("click", handleClick);
-    doc.addEventListener("click", handleDocumentClick);
     var workspaceTabs = byId("diagnosticWorkspaceTabs");
     if (workspaceTabs) workspaceTabs.addEventListener("keydown", handleWorkspaceKeydown);
     var frame = byId(TARGET_FRAME_ID);
@@ -2059,8 +2103,8 @@
     activateInstrumentChamber(state.ui.instrumentChamber);
     activateReportMode(state.ui.reportMode);
     applyReceiptFilter(state.ui.receiptFilter);
-    setTargetVisible(false);
-    setTargetExpanded(false);
+    setTargetVisible(false, { publish: false, inspect: false });
+    setTargetExpanded(false, { publish: false });
   }
 
   function init() {
@@ -2079,7 +2123,7 @@
     resolveDgbEvidence();
     renderCommittedCycleChamber();
     initializeUiState();
-    refreshReceiptInventory({ publish: false, render: true });
+    renderVisibleReceiptInventory();
     publishReceipt();
 
     setText("controllerContract", CONTRACT);

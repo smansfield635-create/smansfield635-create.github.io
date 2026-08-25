@@ -328,6 +328,17 @@ async function landingCheck(page, profile) {
     assert(appliedFieldId, '/laws/: research rolodex field id missing');
     const researchTab = rolodex.locator(`.laws-destination-stage__tab[aria-controls="${appliedFieldId}"]`);
     assert(await researchTab.count() === 1, '/laws/: research destination-family tab missing');
+    const researchTabInViewport = await researchTab.evaluate(node => {
+      const rect = node.getBoundingClientRect();
+      const visible = rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.right > 0 && rect.top < innerHeight && rect.left < innerWidth;
+      if (visible) return true;
+      const targetTop = Math.max(0, window.scrollY + rect.top - Math.max(16, (innerHeight - rect.height) / 2));
+      window.scrollTo({ top: targetTop, behavior: 'instant' });
+      const next = node.getBoundingClientRect();
+      return next.width > 0 && next.height > 0 && next.bottom > 0 && next.right > 0 && next.top < innerHeight && next.left < innerWidth;
+    });
+    assert(researchTabInViewport, '/laws/: research destination-family tab could not be brought into viewport');
+    await page.waitForTimeout(20);
     await measuredPointerClick(page, researchTab, '/laws/: activate research destination family', { route: '/laws/', profile });
     await page.waitForFunction(
       () => document.querySelector('.laws-rolodex-field[data-rolodex-id="research"]')?.getAttribute('aria-hidden') === 'false',

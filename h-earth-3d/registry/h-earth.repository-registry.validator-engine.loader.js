@@ -1,6 +1,6 @@
 /**
- * H-Earth repository registry validator dependency loader v20 successor.
- * Preserves inherited identity and adds exact Audralia PC1 geography path recognition.
+ * H-Earth repository registry validator dependency loader v21 successor.
+ * Preserves inherited identity and adds exact Audralia diagnostic path recognition.
  */
 import {
   loadHEarthRepositoryRegistryValidatorDependencies as loadBaseDependencies,
@@ -11,7 +11,8 @@ import { verifyHEarthOW04ExactPathRecognition } from './accepted-amendments/h-ea
 import { verifyHEarthOW04ParentPromotionReceiptRecognition } from './accepted-amendments/h-earth.repository-registry.ow04-parent-promotion-receipt-recognition.js';
 import { verifyHEarthC3CoastalReconstructionAuthorityRecognition } from './accepted-amendments/h-earth.repository-registry.c3-coastal-reconstruction-authority-recognition.js';
 import { verifyHEarthC3D1CoastalPlacementRecognition } from './accepted-amendments/h-earth.repository-registry.c3d1-coastal-placement-recognition.js';
-import registryFacade, { verifyHEarthAudraliaPC1GeographyPathRecognition } from './accepted-amendments/h-earth.repository-registry.audralia-pc1-geography-path-recognition.js';
+import { verifyHEarthAudraliaPC1GeographyPathRecognition } from './accepted-amendments/h-earth.repository-registry.audralia-pc1-geography-path-recognition.js';
+import registryFacade, { verifyHEarthAudraliaDiagnosticPathRecognition } from './accepted-amendments/h-earth.repository-registry.audralia-diagnostic-path-recognition.js';
 import { deepFreeze } from './h-earth.repository-registry.validator-engine.identity.js';
 
 export function loadHEarthRepositoryRegistryValidatorDependencies() {
@@ -22,6 +23,7 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
   const c3Verification = verifyHEarthC3CoastalReconstructionAuthorityRecognition();
   const c3d1Verification = verifyHEarthC3D1CoastalPlacementRecognition();
   const pc1Verification = verifyHEarthAudraliaPC1GeographyPathRecognition();
+  const diagnosticVerification = verifyHEarthAudraliaDiagnosticPathRecognition();
   const registryInstance = registryFacade.getHEarthRepositoryRegistryInstance();
   const discovery = registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
 
@@ -49,6 +51,11 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
     audraliaPC1ExactTwoPathsResolved: pc1Verification.checks.exactTargetPathCount === true && pc1Verification.checks.allTargetPathsResolve === true,
     audraliaPC1CandidateOccurrencesPresent: pc1Verification.checks.candidateOccurrencesPresent === true,
     audraliaPC1AuditOnlyNoAuthorityLeak: pc1Verification.checks.auditOnly === true && pc1Verification.checks.pathResolutionOnly === true && pc1Verification.checks.noProductAuthority === true && pc1Verification.checks.noGeographyAuthority === true && pc1Verification.checks.noWeatherCloudAuthority === true && pc1Verification.checks.noPublicationAuthority === true && pc1Verification.checks.noAnchorWaiverAuthority === true,
+    audraliaDiagnosticPathRecognitionEligible: diagnosticVerification.eligible === true,
+    audraliaDiagnosticExactThreePathsResolved: diagnosticVerification.checks.exactTargetPathCount === true && diagnosticVerification.checks.allTargetPathsResolve === true,
+    audraliaDiagnosticGoverningOccurrencesPresent: diagnosticVerification.checks.governingOccurrencesPresent === true,
+    audraliaDiagnosticExactPathOnly: diagnosticVerification.checks.exactPathOnly === true && diagnosticVerification.checks.noPrefixRegistration === true,
+    audraliaDiagnosticAuditOnlyNoAuthorityLeak: diagnosticVerification.checks.auditOnly === true && diagnosticVerification.checks.pathResolutionOnly === true && diagnosticVerification.checks.noProductRuntimeAuthority === true && diagnosticVerification.checks.noRendererAuthority === true && diagnosticVerification.checks.noDiagnosticByteAuthority === true && diagnosticVerification.checks.noPrefixWideAuthority === true && diagnosticVerification.checks.noPublicationAuthority === true && diagnosticVerification.checks.noAnchorWaiverAuthority === true,
     registryIdPreserved: registryInstance.registryId === base.registryInstance.registryId,
     registryVersionPreserved: registryInstance.registryVersion === base.registryInstance.registryVersion,
     schemaIdPreserved: registryInstance.schemaId === base.registryInstance.schemaId,
@@ -62,7 +69,7 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
 
   return deepFreeze({
     ...base,
-    loaderId: 'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v20_AUDRALIA_PC1_GEOGRAPHY_PATH_RECOGNITION_SUCCESSOR',
+    loaderId: 'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v21_AUDRALIA_DIAGNOSTIC_EXACT_PATH_RECOGNITION_SUCCESSOR',
     registryFacade,
     registryInstance,
     discovery,
@@ -74,43 +81,49 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       c3CoastalReconstructionAuthorityRecognition: c3Verification.eligible === true,
       c3d1CoastalPlacementRecognition: c3d1Verification.eligible === true,
       audraliaPC1GeographyPathRecognition: pc1Verification.eligible === true,
-      audraliaPC1GeographyPathRecognitionSuccessorIntegrity: successorIntegrityVerified
+      audraliaDiagnosticPathRecognition: diagnosticVerification.eligible === true,
+      audraliaDiagnosticPathRecognitionSuccessorIntegrity: successorIntegrityVerified
     }),
     identityVerified: base.identityVerified,
     inheritedIdentityPreserved: base.identityVerified === false,
     successorIntegrityVerified,
-    audraliaPC1GeographyPathRecognitionSuccessorChecks: deepFreeze(successorChecks),
+    audraliaDiagnosticPathRecognitionSuccessorChecks: deepFreeze(successorChecks),
     ow03ExperienceAnchorEvidencePathRecognitionVerification: ow03Verification,
     ow04ExactPathRecognitionVerification: ow04Verification,
     ow04ParentPromotionReceiptRecognitionVerification: parentPromotionVerification,
     c3CoastalReconstructionAuthorityRecognitionVerification: c3Verification,
     c3d1CoastalPlacementRecognitionVerification: c3d1Verification,
     audraliaPC1GeographyPathRecognitionVerification: pc1Verification,
+    audraliaDiagnosticPathRecognitionVerification: diagnosticVerification,
     boundary: deepFreeze({
       ...base.boundary,
       c3CoastalReconstructionAuthorityRecognitionOnly: true,
       c3d1CoastalPlacementRecognitionOnly: true,
       audraliaPC1GeographyPathRecognitionOnly: true,
-      audraliaPC1ProductMutationAuthorityCreated: false,
-      audraliaPC1GeographyMutationAuthorityCreated: false,
-      audraliaPC1WeatherCloudMutationAuthorityCreated: false,
-      audraliaPC1PreviewPublicationAuthorityCreated: false,
-      audraliaPC1ProductionPublicationAuthorityCreated: false,
-      audraliaPC1ExperienceAnchorWaiverAuthorityCreated: false
+      audraliaDiagnosticExactPathRecognitionOnly: true,
+      audraliaDiagnosticProductMutationAuthorityCreated: false,
+      audraliaDiagnosticRuntimeMutationAuthorityCreated: false,
+      audraliaDiagnosticRendererMutationAuthorityCreated: false,
+      audraliaDiagnosticPrefixWideRegistrationAuthorityCreated: false,
+      audraliaDiagnosticPreviewPublicationAuthorityCreated: false,
+      audraliaDiagnosticProductionPublicationAuthorityCreated: false,
+      audraliaDiagnosticExperienceAnchorWaiverAuthorityCreated: false
     }),
     stoppingCondition: deepFreeze({
       ...base.stoppingCondition,
       c3CoastalReconstructionAuthorityRecognitionLoaded: true,
       c3d1CoastalPlacementRecognitionLoaded: true,
       audraliaPC1GeographyPathRecognitionLoaded: true,
-      audraliaPC1GeographyPathRecognitionSuccessorIntegrityVerified: successorIntegrityVerified,
+      audraliaDiagnosticPathRecognitionLoaded: true,
+      audraliaDiagnosticPathRecognitionSuccessorIntegrityVerified: successorIntegrityVerified,
       inheritedIdentityStatePreserved: true,
-      audraliaPC1ProductMutationAuthorized: false,
-      audraliaPC1GeographyMutationAuthorized: false,
-      audraliaPC1WeatherCloudMutationAuthorized: false,
-      audraliaPC1PreviewPublicationAuthorized: false,
-      audraliaPC1ProductionPublicationAuthorized: false,
-      audraliaPC1ExperienceAnchorWaiverAuthorized: false
+      audraliaDiagnosticProductMutationAuthorized: false,
+      audraliaDiagnosticRuntimeMutationAuthorized: false,
+      audraliaDiagnosticRendererMutationAuthorized: false,
+      audraliaDiagnosticPrefixWideRegistrationAuthorized: false,
+      audraliaDiagnosticPreviewPublicationAuthorized: false,
+      audraliaDiagnosticProductionPublicationAuthorized: false,
+      audraliaDiagnosticExperienceAnchorWaiverAuthorized: false
     })
   });
 }

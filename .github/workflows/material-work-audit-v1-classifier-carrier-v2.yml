@@ -20,27 +20,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
-      - name: Wait for bounded REST quota
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          while true; do
-            headers="$(curl -sS -D - -o /dev/null -H "Authorization: Bearer ${GH_TOKEN}" -H "Accept: application/vnd.github+json" https://api.github.com/rate_limit | tr -d '\r')"
-            remaining="$(printf '%s\n' "$headers" | awk 'BEGIN{IGNORECASE=1}/^x-ratelimit-remaining:/{print $2; exit}')"
-            reset="$(printf '%s\n' "$headers" | awk 'BEGIN{IGNORECASE=1}/^x-ratelimit-reset:/{print $2; exit}')"
-            remaining="${remaining:-0}"
-            reset="${reset:-0}"
-            echo "core remaining=${remaining} reset=${reset}"
-            if [ "$remaining" -ge 2500 ]; then
-              break
-            fi
-            now="$(date +%s)"
-            wait=$(( reset > now ? reset - now + 10 : 60 ))
-            if [ "$wait" -gt 900 ]; then wait=900; fi
-            echo "REST quota below safe Gen1710 floor; waiting ${wait}s"
-            sleep "$wait"
-          done
       - name: Materialize bounded carrier source
         env:
           GH_TOKEN: ${{ github.token }}
@@ -55,6 +34,16 @@ jobs:
           git sparse-checkout set research/material-work-audit
           git checkout --detach FETCH_HEAD
           test -f research/material-work-audit/classify-v1-carrier-v2.mjs
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('research/material-work-audit/classify-v1-carrier-v2.mjs')
+          s=p.read_text()
+          old="function git(args,opts={}){return execFileSync('git',args,{encoding:'utf8',stdio:opts.stdio||['ignore','pipe','pipe']}).trim()}"
+          new="function git(args,opts={}){return execFileSync('git',args,{encoding:'utf8',maxBuffer:32*1024*1024,stdio:opts.stdio||['ignore','pipe','pipe']}).trim()}"
+          if old not in s:
+              raise SystemExit('git helper signature not found')
+          p.write_text(s.replace(old,new,1))
+          PY
       - name: Execute Gen1710 conformance closure
         env:
           GITHUB_TOKEN: ${{ github.token }}

@@ -1,32 +1,46 @@
-# Laws back-page dual-carousel and continuity audit handoff
+# Laws back-page information-depth and continuity audit handoff
 
-Status: audit complete; implementation not started  
+Status: audit complete; architecture reconciled; implementation not started  
 Audit date: 2026-08-25  
 Audited production head: `482756414d65a0aff3a5ba42f09ee5ec858629c6`  
-Issue: [#2082](https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2082)  
-Intake operation: `LAWS_BACK_PAGE_DUAL_CAROUSEL_AUDIT_HANDOFF_20260825_48275641_R1`  
-Intake receipt: `ADMITTED_AND_LOCKED`, lock generation `1711`, workflow run `32904910379`
+Issue: #2082  
+Draft PR: #2084  
+Original intake operation: `LAWS_BACK_PAGE_DUAL_CAROUSEL_AUDIT_HANDOFF_20260825_48275641_R1`  
+Original intake receipt: `ADMITTED_AND_LOCKED`, lock generation `1711`, workflow run `32904910379`
 
 ## Stop boundary for this room
 
-This document is the only authorized repository change from the audit room. It does not authorize or perform production construction.
+This document remains a documentation-only audit and construction handoff. It does not authorize or perform production construction.
 
-Do not merge this handoff as if it were the product change. Do not deploy from this room. Do not modify HTML, CSS, JavaScript, carousel runtime, verifiers, workflows, protected pages, or public routes under this operation.
+Do not merge this handoff as if it were the product change. Do not deploy from this room. Do not modify production HTML, CSS, JavaScript, carousel runtime, verifiers, workflows, protected pages, or public routes under the original audit operation.
 
-The next construction room must enter through the repository AI entry point at the then-current exact `main` head, route every intended production path, obtain a fresh canonical intake, implement, independently qualify, explicitly merge/deploy only with the required authority, and verify the live pages.
+The construction room must enter through the repository AI entry point at the then-current exact `main` head, route every intended production path, obtain a fresh canonical intake, implement, independently qualify, explicitly merge/deploy only with the required authority, and verify the live pages.
 
-## Owner decision to preserve
+## Architecture reconciliation — controlling construction direction
 
-Every Laws article/back page that carries study and audit material should use exactly two coordinated carousels:
+The audit began under a two-coordinated-carousel remedy. That proposal is preserved as historical design reasoning, but it is superseded for construction by the later owner-directed comparison against the existing Methods and Models information-depth architecture.
 
-1. A study/material carousel for readable conceptual, explanatory, engineering, empirical, and boundary content.
-2. An audit/checkpoint/artifact carousel for procedural, custody, source, evidence, receipt, and disposition material.
+The controlling production target is:
 
-The carousels sit one above the other and quietly align by sequence. Page-level Previous and Next continuity controls sit below both carousels. Audit material remains inspectable without expanding into a continuous legacy page dump.
+`ONE PRIMARY CAROUSEL → METHODS-AND-MODELS-STYLE PROGRESSIVE INFORMATION INLAY → PAGE-LEVEL PREVIOUS/NEXT CONTINUITY`
+
+The audit diagnosis, route inventory, measurements, continuity matrix, protected-page boundary, and representative-first construction discipline remain authoritative. Only the proposed second-carousel remedy is superseded.
+
+### Why the remedy changed
+
+The two-carousel model correctly recognized that study material and audit/custody material must correspond by stage, but it represented one intellectual object as two synchronized navigation systems. Source inspection of the current shared back-page runtime and the protected Methods and Models reference established a simpler path:
+
+- the current shared back-page carousel already has a stage summary state and a bounded stage inspection state;
+- Methods and Models demonstrates progressive information depth inside one selected object: plain-language reading first, then deeper engineering/evidence/failure/limits material;
+- therefore stage correspondence can be intrinsic rather than synchronized: each stage owns both its readable interpretation and its corresponding record depth;
+- this removes paired-index synchronization, duplicate tab/focus systems, paired history state, and mobile coordination burden;
+- it also preserves a single narrative axis from orientation through evidence and boundary to page-level continuation.
+
+The Methods and Models page is an architectural reference, not a code template. It remains protected and must not be modified under this construction.
 
 ## Audit scope and method
 
-The audit covered all 29 current, non-protected Laws back-page routes mounted by the shared carousel runtime at the audited commit. It combined exact-head source inspection with live DOM inspection at `https://diamondgatebridge.com`.
+The audit covered all 29 current, non-protected Laws back-page routes mounted by the shared carousel runtime at the audited commit. It combined exact-head source inspection with live DOM inspection at the public host.
 
 For each route, the audit recorded:
 
@@ -38,7 +52,7 @@ For each route, the audit recorded:
 - page-level continuity navigation presence and targets;
 - current DOM order.
 
-Protected routes were examined only to establish the boundary and must remain untouched:
+Protected routes were examined only to establish the boundary and reference architecture and must remain untouched:
 
 - `/laws/`
 - `/laws/research/methods-and-models/`
@@ -64,7 +78,7 @@ The present narrative-route DOM order is:
 3. page-level `.lr-story-nav`;
 4. `details.lr-audit` containing the legacy source.
 
-That order is structurally wrong for the two-carousel model. When the audit becomes the second carousel, page-level continuity must move below both carousels.
+That order is structurally wrong because the audit record is detached from the stage it qualifies and appears after story continuation. Under the reconciled model, audit/custody material moves into the appropriate stage inspection depth and page-level continuity remains below the complete carousel experience.
 
 ## Full route audit
 
@@ -104,53 +118,80 @@ That order is structurally wrong for the two-carousel model. When the audit beco
 
 ## Required target information architecture
 
-For each of the 28 audit-bearing routes, the required document order is:
+For each audit-bearing route, the target document order is:
 
 1. Page header and bounded orientation material.
-2. Study/material carousel.
-3. Audit/checkpoint/artifact carousel.
-4. Page-level Previous and Next continuity controls.
+2. One primary carousel with the existing page-specific stage count.
+3. Within each stage: concise reading surface plus bounded progressive inspection depth containing the corresponding evidence/audit/custody material.
+4. Page-level Previous and Next continuity controls below the complete carousel experience.
 5. Footer or return links.
 
-Do not place page-level Previous/Next continuity inside either carousel or create it as a final carousel stage.
+No second carousel is required. No continuous legacy audit/source dump remains beneath the carousel. Page-level Previous/Next is not a carousel stage.
 
-### Study/material carousel
+### Three information depths
 
-This is the primary reading experience. It owns readable explanation, conceptual structure, practical application, engineering interpretation, empirical result, and boundary/next-step material. Existing useful material should be redistributed into the available stages so the carousel is not visually sparse while the legacy source remains enormous below it.
+The shared conceptual model is:
 
-### Audit/checkpoint/artifact carousel
+1. **Orbit / summary** — identity, orientation, stage title, short synopsis, and one clear inspection action.
+2. **Reading / interpretation** — plain-language meaning, relationship, practical or engineering interpretation, and why the material matters.
+3. **Record / inspection** — the stage-specific evidence, method/procedure, source/custody, checkpoints, disposition, failure behavior, limits/claim ceiling, unresolved items, and bounded artifact/receipt access where warranted.
 
-This is the secondary inspection experience. It owns source custody, route identity, evidence status, method/procedure, checkpoints, receipts, negative or mixed findings, claim ceiling, prohibited claims, unresolved items, and implementation ownership.
-
-The audit carousel must replace the one-shot legacy disclosure. A slide may contain a bounded “Inspect record” action or nested artifact view when necessary, but opening one control must never reveal the entire legacy page as a single continuous word dump.
-
-### Coordination contract
-
-- Each paired carousel on a route has the same stage count.
-- Stage `N` in the study carousel corresponds to stage `N` in the audit carousel.
-- Selecting stage `N` in either carousel updates the other to stage `N` without recursion or feedback loops.
-- The relationship is quiet: no forced animation, auto-advance, or attention-grabbing synchronization treatment.
-- One click, key action, or swipe advances one stage.
-- Both carousels expose operable controls at mobile and desktop widths.
-- Current stage, total stages, accessible name, selected tab state, focus order, and reduced-motion behavior remain correct for each carousel independently.
-- Deep links and browser history must not produce conflicting paired indices.
-- With JavaScript unavailable, all content remains reachable in a readable source order and the page-level continuity links remain usable.
+The stage is the unit of meaning. Do not force every possible record heading into every stage. Use the common semantic vocabulary only where the source material warrants it.
 
 ### Stage semantics
 
-Use the existing primary stage count on each page as the governing count. Distribute both tracks into the same sequence rather than inventing a universal extra stage:
+Use the existing primary stage count on each page as the governing count. Redistribute the useful legacy record into the stage it actually qualifies:
 
-1. Orientation / identity and custody.
+1. Orientation / identity / custody.
 2. Concept or relationship / sources and controls.
 3. Practical or engineering reading / procedure and checkpoints.
 4. Evidence or result / observed record and disposition.
 5. Boundary or continuation / claim ceiling, unresolved items, and handoff.
 
-Four-stage pages combine adjacent roles without losing custody or boundary material. `/laws/research/` is a three-stage hub with no audit record and is excluded from the mandatory second-carousel conversion.
+Four-stage pages combine adjacent roles without losing custody or boundary material. `/laws/research/` remains a three-stage hub with no audit record and does not gain invented record depth.
+
+### Progressive-inlay contract
+
+- One carousel index remains authoritative per route.
+- Each stage owns its own corresponding record depth; no cross-carousel synchronization exists.
+- Entering inspection does not navigate to a detached reader or expose the entire page audit wholesale.
+- A stage may contain one major progressive-depth action and only the bounded nested artifact disclosures actually needed by that stage.
+- Returning from inspection restores the same stage and predictable focus.
+- One click, key action, or swipe advances one carousel stage.
+- Current stage, total stages, accessible name, selected tab state, focus order, keyboard operation, touch behavior, and reduced-motion behavior remain correct.
+- Deep links and browser history have one carousel index, not competing paired indices.
+- The existing shared back-page runtime should be extended rather than replaced unless qualification proves that impossible.
+
+### Source-first / no-JavaScript law
+
+Methods and Models is the information-depth reference, but its JavaScript-generated progressive markup must not be copied as the only source of the record.
+
+For converted back pages:
+
+`SOURCE HTML = COMPLETE AUTHORITATIVE RECORD`
+
+`JAVASCRIPT = PRESENTATION AND SPATIAL ENHANCEMENT`
+
+With JavaScript unavailable, all substantive material must remain reachable in readable source order and page-level continuity links must remain usable. Enhancement may compact, reveal, arrange, or spatially present the record; it must not be the sole custody location for that record.
+
+### Anti-word-dump rules
+
+- Do not move a 1,000–1,600-word legacy audit wholesale into a prettier inspection card.
+- Decompose legacy material by semantic relationship to the existing stages.
+- Do not replace one word dump with a stack of empty or repetitive cards.
+- Do not duplicate substantial prose between summary, reading, and record depth.
+- Preserve exact evidence standing, negative findings, claim ceilings, receipts, custody, and unresolved items even when prose is compressed.
+- Raw or unusually large artifacts may receive a bounded inspect action, but one action must never reveal the entire legacy page as a continuous uncontrolled body.
+
+## Visual continuity contract
+
+The owner video comparison establishes Methods and Models as the visual reference for the stronger star-field/background treatment. Construction should reconcile the reusable Laws cosmic/star treatment across the applicable back-page family without copying protected page-specific motion or changing Methods and Models itself.
+
+Priority is the background field and spatial depth. Motion parity is secondary. The visual change must not compromise text contrast, interaction stability, reduced-motion behavior, mobile performance, or content reachability.
 
 ## Bottom continuity contract
 
-The 23 existing narrative Previous/Next pairs are correct and must be preserved exactly while moving below both carousels:
+The 23 existing narrative Previous/Next pairs are correct and must be preserved exactly:
 
 | Current route | Previous | Next |
 |---|---|---|
@@ -168,73 +209,4 @@ The 23 existing narrative Previous/Next pairs are correct and must be preserved 
 | `/laws/categories/reality/theory.html` | `/laws/categories/integrity/coherence/` | `/laws/categories/reality/evidence.html` |
 | `/laws/categories/structure/boundaries.html` | `/laws/categories/structure/interfaces.html` | `/laws/categories/structure/governance.html` |
 | `/laws/categories/structure/constraints.html` | `/laws/categories/reality/limits.html` | `/laws/categories/structure/interfaces.html` |
-| `/laws/categories/structure/governance.html` | `/laws/categories/structure/boundaries.html` | `/laws/test/admission-and-baseline/` |
-| `/laws/categories/structure/interfaces.html` | `/laws/categories/structure/constraints.html` | `/laws/categories/structure/boundaries.html` |
-| `/laws/research/applied-investigations/` | `/laws/` | `/laws/research/evidence-and-sources/` |
-| `/laws/research/evidence-and-sources/` | `/laws/research/applied-investigations/` | `/laws/research/methods-and-models/` |
-| `/laws/research/findings-and-boundaries/` | `/laws/test/result-and-record/` | `/frontier/energy/battery-coherence-study/` |
-| `/laws/test/admission-and-baseline/` | `/laws/categories/structure/governance.html` | `/laws/test/forward-construction/` |
-| `/laws/test/forward-construction/` | `/laws/test/admission-and-baseline/` | `/laws/test/reverse-audit/` |
-| `/laws/test/result-and-record/` | `/laws/test/reverse-audit/` | `/laws/research/findings-and-boundaries/` |
-| `/laws/test/reverse-audit/` | `/laws/test/forward-construction/` | `/laws/test/result-and-record/` |
-
-The four family roots must receive the category-spine continuity that Reality currently lacks:
-
-| Family root | Previous | Next |
-|---|---|---|
-| `/laws/categories/flow/` | `/laws/categories/` | `/laws/categories/integrity/` |
-| `/laws/categories/integrity/` | `/laws/categories/flow/` | `/laws/categories/reality/` |
-| `/laws/categories/reality/` | `/laws/categories/integrity/` | `/laws/categories/structure/` |
-| `/laws/categories/structure/` | `/laws/categories/reality/` | `/laws/` |
-
-The labels should follow the established bottom navigation language and make both direction and destination visible. Reality must not be a family-root exception.
-
-`/laws/categories/reality/battery-heldout-study/` has an audit disclosure but no current story navigation. Its canonical page-level Previous/Next placement is not established by the current narrative map. The construction room must resolve that route explicitly before batch mutation; it must not silently guess or leave it as an unexplained exception.
-
-## Required construction sequence for the next room
-
-1. Re-enter through `AGENTS.md` and `AI_ENTRYPOINT.json` at the then-current `main` head.
-2. Reconfirm the protected-page boundary and the full intended production path list.
-3. Route all intended HTML, shared carousel CSS/JS, verifier, and workflow paths.
-4. Obtain a fresh canonical intake and single-flight lock for production construction.
-5. Freeze the per-route stage map, including exact audit-to-study correspondence and the battery-wrapper continuity decision.
-6. Implement one representative high-load page first: `/laws/categories/reality/`.
-7. Prove paired carousel behavior, information density, continuity placement, accessibility, reduced motion, no-JavaScript reachability, and protected-page identity.
-8. Expand to representative page types before the 28-route batch: family root, narrative child, Test page, Research page, and wrapper.
-9. Batch only after representative qualification passes.
-10. Independently verify exact-head source and rendered behavior at desktop and narrow mobile widths.
-11. Obtain explicit merge/deployment authority, merge, deploy, and verify live route behavior and static asset identity.
-
-## Acceptance criteria
-
-The production change is complete only when all of the following pass:
-
-- Exactly two coordinated carousels appear on every audit-bearing article/back page in scope.
-- `/laws/research/` remains a hub and does not gain an invented empty audit carousel.
-- No continuous legacy-source word dump remains outside the carousels.
-- Study material is meaningfully distributed across its stages instead of leaving the primary carousel sparse.
-- Audit material is meaningfully partitioned across the paired stages, not placed wholesale in one audit slide.
-- The paired carousels share a stable per-page index and do not enter event loops.
-- Page-level Previous/Next controls occur after both carousels, never as a carousel stage.
-- All 23 established narrative link pairs remain exact.
-- Flow, Integrity, Reality, and Structure roots receive the category-spine Previous/Next matrix above.
-- The battery-wrapper continuity decision is explicit and verified.
-- Keyboard, touch, swipe, focus, tab semantics, live announcements, reduced motion, and no-JavaScript reachability pass.
-- Narrow mobile layouts show usable carousel and page-continuity controls without horizontal overflow or hidden content.
-- `/laws/` and `/laws/research/methods-and-models/` are byte-identical to the construction base unless separately routed and explicitly authorized by the owner.
-- Static asset references resolve to the qualified build and live responses match the deployed commit.
-- Independent verification is recorded before merge and repeated against the public site after deployment.
-
-## Explicit non-goals
-
-- No redesign of the protected Laws landing page.
-- No change to the protected Methods and Models page.
-- No new study claims, causal claims, evidence upgrades, or research conclusions.
-- No duplication of the complete Frontier study record.
-- No third carousel.
-- No auto-rotation.
-- No production action from this audit room.
-
-## Handoff state
-
-The audit is complete. The defect is reproduced in source and live DOM. The product contract and continuity matrix are frozen in this document. Production construction, qualification, merge, deployment, and live verification remain for a separately authorized room.
+| `/laws/categories/structure/governance

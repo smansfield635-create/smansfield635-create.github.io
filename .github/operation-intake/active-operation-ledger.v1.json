@@ -2930,13 +2930,32 @@
       "state": "ADMITTED_LOCKED"
     },
     "d835c288d260c678c52c9a2ccebd570303539eaf4e9ba9eeaf953f2151bc080d": {
-      "governingHead": "adfebb0ac443dca6d18c4568a9faa95d38995bae",
-      "lockGeneration": 1643,
+      "governingHead": "f9e63ce0e08e1c3bbf69c1afcffe8de6aed41c13",
+      "lockGeneration": 1649,
       "lockScope": "ESTATE_DIAGNOSTIC_RECEIPT_PROTECTION",
-      "operationId": "ESTATE_DIAGNOSTIC_RECEIPT_PROTECTION_20260824_001",
-      "procedureLocatorDigest": "91a93c5d3dabb23c46b630b435328a3535f704d4e39d9bcbe65b615ed8d9fa62",
+      "operationId": "ESTATE_DIAGNOSTIC_RECEIPT_PROTECTION_20260824_1911",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "adfebb0ac443dca6d18c4568a9faa95d38995bae",
+        "lockGeneration": 1643,
+        "lockScope": "ESTATE_DIAGNOSTIC_RECEIPT_PROTECTION",
+        "operationId": "ESTATE_DIAGNOSTIC_RECEIPT_PROTECTION_20260824_001",
+        "preservedEvidenceRefs": [
+          "issue#2005",
+          "canonical-intake-run:32791473240",
+          "predecessor-generation:1643",
+          "read-only-audralia-family-audit",
+          "LRPv1-specification-and-reference-implementation",
+          "router-transport-installed-by-PR#2008"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "ESTATE_DIAGNOSTIC_RECEIPT_PROTECTION_SUCCESSOR_20260824_1911"
+      },
+      "procedureLocatorDigest": "168a9681d9e6ac8e95973e819f88084fdbc8fa794216083cd7582b4b83e91f5f",
       "released": false,
-      "requestDigest": "c49d886c086e16a0b88f1a5d3d4de9455931f57009e51c17d29bf458ce245ae2",
+      "requestDigest": "5d8f118bc3faac1335c2b93235f63d5e8176a109e763527c2044646f2a4053e3",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "d835c288d260c678c52c9a2ccebd570303539eaf4e9ba9eeaf953f2151bc080d",
       "state": "ADMITTED_LOCKED"
@@ -3496,7 +3515,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1648,
+  "lockGeneration": 1649,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -25742,6 +25761,38 @@
         "successorLockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:REMOTE_ROUTER_RECEIPT_TRANSPORT:V1",
         "successorOperationId": "REPOSITORY_ROUTER_REMOTE_RECEIPT_TRANSPORT_20260824_1904",
         "transitionId": "REPOSITORY_ROUTER_REMOTE_RECEIPT_TRANSPORT_SUCCESSOR_20260824_1904"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "adfebb0ac443dca6d18c4568a9faa95d38995bae",
+      "lockGeneration": 1643,
+      "lockScope": "ESTATE_DIAGNOSTIC_RECEIPT_PROTECTION",
+      "operationId": "ESTATE_DIAGNOSTIC_RECEIPT_PROTECTION_20260824_001",
+      "procedureLocatorDigest": "91a93c5d3dabb23c46b630b435328a3535f704d4e39d9bcbe65b615ed8d9fa62",
+      "released": true,
+      "requestDigest": "c49d886c086e16a0b88f1a5d3d4de9455931f57009e51c17d29bf458ce245ae2",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "d835c288d260c678c52c9a2ccebd570303539eaf4e9ba9eeaf953f2151bc080d",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue#2005",
+          "canonical-intake-run:32791473240",
+          "predecessor-generation:1643",
+          "read-only-audralia-family-audit",
+          "LRPv1-specification-and-reference-implementation",
+          "router-transport-installed-by-PR#2008"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "f9e63ce0e08e1c3bbf69c1afcffe8de6aed41c13",
+        "successorLockGeneration": 1649,
+        "successorLockScope": "ESTATE_DIAGNOSTIC_RECEIPT_PROTECTION",
+        "successorOperationId": "ESTATE_DIAGNOSTIC_RECEIPT_PROTECTION_20260824_1911",
+        "transitionId": "ESTATE_DIAGNOSTIC_RECEIPT_PROTECTION_SUCCESSOR_20260824_1911"
       },
       "terminalDisposition": "SUPERSEDED"
     }

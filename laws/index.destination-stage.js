@@ -7,7 +7,7 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "LAWS_DESTINATION_STAGE_v1";
+  const CONTRACT = "LAWS_DESTINATION_STAGE_TABBED_v2";
   const ROOT = "[data-laws-root-rolodex-section]";
   const FIELD = ".laws-rolodex-field[data-rolodex-id]";
   let mounted = false;
@@ -100,7 +100,13 @@
       button.role = "tab";
       button.className = "laws-destination-stage__tab";
       button.dataset.destinationFamilyIndex = String(index);
-      button.textContent = copy.eyebrow;
+      const ordinal = document.createElement("span");
+      ordinal.className = "laws-destination-stage__tab-ordinal";
+      ordinal.textContent = String(index + 1).padStart(2, "0");
+      const label = document.createElement("span");
+      label.className = "laws-destination-stage__tab-label";
+      label.textContent = copy.eyebrow;
+      button.append(ordinal, label);
       button.setAttribute("aria-controls", field.id || (field.id = `laws-destination-family-${field.dataset.rolodexId || index + 1}`));
       tabs.append(button);
       return button;
@@ -147,6 +153,7 @@
       else activate(activeIndex + (event.key === "ArrowRight" ? 1 : -1), "tab-arrow", true);
     });
 
+    section.dataset.destinationFamilyTabCount = String(buttons.length);
     activate(activeIndex, "mount");
 
     globalThis.DGB_LAWS_DESTINATION_STAGE = Object.freeze({

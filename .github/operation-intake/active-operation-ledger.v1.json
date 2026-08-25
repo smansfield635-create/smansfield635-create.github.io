@@ -1901,34 +1901,6 @@
       "scopeHash": "93492f953dfda80ce2e528609802c1c28c9ba73fb126b13c692b72ac97762c65",
       "state": "ADMITTED_LOCKED"
     },
-    "93aafe658b187c58b7b42c3495d30b5ea15b259b5bf56c6dff28d6b100c9c683": {
-      "governingHead": "f684d1fb2c2cbb765aa7d66cdb90adbbe5844606",
-      "lockGeneration": 1670,
-      "lockScope": "REPOSITORY_AI_ROUTER:H_EARTH_AUDRALIA_DIAGNOSTIC_EXACT_PATH_REGISTRATION:V1",
-      "operationId": "REPOSITORY_AI_ROUTER_H_EARTH_AUDRALIA_DIAGNOSTIC_EXACT_PATH_REGISTRATION_20260824_2101_S1",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "8a7f54a1686bc2f027ef66c3d92e3bb14df1b591",
-        "lockGeneration": 1666,
-        "lockScope": "REPOSITORY_AI_ROUTER:H_EARTH_AUDRALIA_DIAGNOSTIC_EXACT_PATH_REGISTRATION:V1",
-        "operationId": "REPOSITORY_AI_ROUTER_H_EARTH_AUDRALIA_DIAGNOSTIC_EXACT_PATH_REGISTRATION_20260824_2047",
-        "preservedEvidenceRefs": [
-          "PR_2022_CANDIDATE_603cba0de7c8914be32fa50d17de525b3b5a9133_EXACT_TWO_PATH_DIFF",
-          "ROUTER_QUALIFICATION_RUN_32799432882_PASS_HISTORICAL_ONLY",
-          "PR_2017_DISJOINT_FROM_ROUTER_REGISTRATION_PATHS"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "REPOSITORY_AI_ROUTER_H_EARTH_AUDRALIA_DIAGNOSTIC_EXACT_PATH_REGISTRATION_20260824_2101_S1"
-      },
-      "procedureLocatorDigest": "6a06c72dde1b1fb0058829463d5fd87ecaac70fda178d02db56fccc4aa5fad04",
-      "released": false,
-      "requestDigest": "2d4270b48b6d56d3494c8d4cebc9e9dc9653bdc4d38ca3c765321d23b9fcfd66",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "93aafe658b187c58b7b42c3495d30b5ea15b259b5bf56c6dff28d6b100c9c683",
-      "state": "ADMITTED_LOCKED"
-    },
     "93aee9439848438f31d7c68527013580205fb6c33f38925f11094bf1d133c3e2": {
       "governingHead": "4bf41fcd22e5acbf24491ed6586802f0cc6782b9",
       "lockGeneration": 926,
@@ -26308,6 +26280,35 @@
         "transitionId": "REPOSITORY_AI_ROUTER_H_EARTH_AUDRALIA_DIAGNOSTIC_EXACT_PATH_REGISTRATION_20260824_2101_S1"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "f684d1fb2c2cbb765aa7d66cdb90adbbe5844606",
+      "lockGeneration": 1670,
+      "lockScope": "REPOSITORY_AI_ROUTER:H_EARTH_AUDRALIA_DIAGNOSTIC_EXACT_PATH_REGISTRATION:V1",
+      "operationId": "REPOSITORY_AI_ROUTER_H_EARTH_AUDRALIA_DIAGNOSTIC_EXACT_PATH_REGISTRATION_20260824_2101_S1",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "8a7f54a1686bc2f027ef66c3d92e3bb14df1b591",
+        "lockGeneration": 1666,
+        "lockScope": "REPOSITORY_AI_ROUTER:H_EARTH_AUDRALIA_DIAGNOSTIC_EXACT_PATH_REGISTRATION:V1",
+        "operationId": "REPOSITORY_AI_ROUTER_H_EARTH_AUDRALIA_DIAGNOSTIC_EXACT_PATH_REGISTRATION_20260824_2047",
+        "preservedEvidenceRefs": [
+          "PR_2022_CANDIDATE_603cba0de7c8914be32fa50d17de525b3b5a9133_EXACT_TWO_PATH_DIFF",
+          "ROUTER_QUALIFICATION_RUN_32799432882_PASS_HISTORICAL_ONLY",
+          "PR_2017_DISJOINT_FROM_ROUTER_REGISTRATION_PATHS"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "REPOSITORY_AI_ROUTER_H_EARTH_AUDRALIA_DIAGNOSTIC_EXACT_PATH_REGISTRATION_20260824_2101_S1"
+      },
+      "procedureLocatorDigest": "6a06c72dde1b1fb0058829463d5fd87ecaac70fda178d02db56fccc4aa5fad04",
+      "released": true,
+      "requestDigest": "2d4270b48b6d56d3494c8d4cebc9e9dc9653bdc4d38ca3c765321d23b9fcfd66",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "93aafe658b187c58b7b42c3495d30b5ea15b259b5bf56c6dff28d6b100c9c683",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

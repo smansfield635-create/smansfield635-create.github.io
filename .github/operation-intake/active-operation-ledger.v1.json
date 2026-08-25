@@ -3118,13 +3118,28 @@
       "state": "ADMITTED_LOCKED"
     },
     "deeb7089d9e25420cb38cf013c7bb9b1f3d546523c68d30d7fb0f505f299766a": {
-      "governingHead": "cd1b287ee23bc052cabd2a59790571dfb7ccb032",
-      "lockGeneration": 1648,
+      "governingHead": "f9e63ce0e08e1c3bbf69c1afcffe8de6aed41c13",
+      "lockGeneration": 1651,
       "lockScope": "LAWS_CP6_FINAL_SYNC_METHODS_SHOWROOM_COMPATIBILITY_V1",
-      "operationId": "LAWS_CP6_FINAL_SYNC_METHODS_SHOWROOM_COMPATIBILITY_20260824_CD1B287E_R2",
-      "procedureLocatorDigest": "549dac06dd173e2f223e383615cc61fc12f981670300d682e0339f486613ee3a",
+      "operationId": "LAWS_CP6_FINAL_SYNC_METHODS_SHOWROOM_COMPATIBILITY_20260824_F9E63CE0_S2",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "cd1b287ee23bc052cabd2a59790571dfb7ccb032",
+        "lockGeneration": 1648,
+        "lockScope": "LAWS_CP6_FINAL_SYNC_METHODS_SHOWROOM_COMPATIBILITY_V1",
+        "operationId": "LAWS_CP6_FINAL_SYNC_METHODS_SHOWROOM_COMPATIBILITY_20260824_CD1B287E_R2",
+        "preservedEvidenceRefs": [
+          "GEN1648_INTAKE_RECEIPT_ISSUE_2004",
+          "PR1981_24_OF_24_HEAD_4368A2EF"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "LAWS_CP6_FINAL_SYNC_METHODS_SHOWROOM_COMPATIBILITY_R2_TO_S2_F9E63CE0_20260824"
+      },
+      "procedureLocatorDigest": "70f6963a57ecb55fecbd44e243b9adfa0706a85dfdeb028dbc8a5629a62bf1fd",
       "released": false,
-      "requestDigest": "8f0559be7167363142986ed5da4beb1df9abf497ab2c074449bf618794c319f2",
+      "requestDigest": "f0f9b27b7ce23638f65f0174047fabebdf84da059b81f1940519a248ca482e82",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "deeb7089d9e25420cb38cf013c7bb9b1f3d546523c68d30d7fb0f505f299766a",
       "state": "ADMITTED_LOCKED"
@@ -3527,7 +3542,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1650,
+  "lockGeneration": 1651,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -25805,6 +25820,34 @@
         "successorLockScope": "ESTATE_DIAGNOSTIC_RECEIPT_PROTECTION",
         "successorOperationId": "ESTATE_DIAGNOSTIC_RECEIPT_PROTECTION_20260824_1911",
         "transitionId": "ESTATE_DIAGNOSTIC_RECEIPT_PROTECTION_SUCCESSOR_20260824_1911"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "cd1b287ee23bc052cabd2a59790571dfb7ccb032",
+      "lockGeneration": 1648,
+      "lockScope": "LAWS_CP6_FINAL_SYNC_METHODS_SHOWROOM_COMPATIBILITY_V1",
+      "operationId": "LAWS_CP6_FINAL_SYNC_METHODS_SHOWROOM_COMPATIBILITY_20260824_CD1B287E_R2",
+      "procedureLocatorDigest": "549dac06dd173e2f223e383615cc61fc12f981670300d682e0339f486613ee3a",
+      "released": true,
+      "requestDigest": "8f0559be7167363142986ed5da4beb1df9abf497ab2c074449bf618794c319f2",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "deeb7089d9e25420cb38cf013c7bb9b1f3d546523c68d30d7fb0f505f299766a",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "GEN1648_INTAKE_RECEIPT_ISSUE_2004",
+          "PR1981_24_OF_24_HEAD_4368A2EF"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "f9e63ce0e08e1c3bbf69c1afcffe8de6aed41c13",
+        "successorLockGeneration": 1651,
+        "successorLockScope": "LAWS_CP6_FINAL_SYNC_METHODS_SHOWROOM_COMPATIBILITY_V1",
+        "successorOperationId": "LAWS_CP6_FINAL_SYNC_METHODS_SHOWROOM_COMPATIBILITY_20260824_F9E63CE0_S2",
+        "transitionId": "LAWS_CP6_FINAL_SYNC_METHODS_SHOWROOM_COMPATIBILITY_R2_TO_S2_F9E63CE0_20260824"
       },
       "terminalDisposition": "SUPERSEDED"
     }

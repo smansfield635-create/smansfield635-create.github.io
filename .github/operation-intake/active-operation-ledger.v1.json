@@ -928,33 +928,6 @@
       "scopeHash": "4943ff7c798b57432d8a426021f5d80f0009acc498840e8b9d6f2ec58ad306a1",
       "state": "ADMITTED_LOCKED"
     },
-    "49c82c7f3069a13dab17d4cb34b3865485255ec196cf1840d9bccb8edb43ad91": {
-      "governingHead": "5644116fd0bcfccc53261ecdfdd064051d938d68",
-      "lockGeneration": 1715,
-      "lockScope": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION",
-      "operationId": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION_20260825_003",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "d9e7c71997b37a42173730dab4613c0a468d9337",
-        "lockGeneration": 1714,
-        "lockScope": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION",
-        "operationId": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION_20260825_002",
-        "preservedEvidenceRefs": [
-          "PREDECESSOR_SUCCESSOR_ADMISSION_GENERATION_1714",
-          "FROZEN_C3_COMPOSITOR_BLOB_e5bcbe65abb051fc5648a3c8bf1e16a4ecc2837e"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION_20260825_002_TO_003"
-      },
-      "procedureLocatorDigest": "05d6d0dc1e499ab8b90a0c5f6d5ff4d29edd46f5bfdbbfcbcb6ee3e3f6df6fc2",
-      "released": false,
-      "requestDigest": "8d85abd04008d9f913a0d5b5f014ea65943af1fe49eb94fdc68a228f39f5cf18",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "49c82c7f3069a13dab17d4cb34b3865485255ec196cf1840d9bccb8edb43ad91",
-      "state": "ADMITTED_LOCKED"
-    },
     "4a6b4ce6afb3c33f212ae6bc8e7ca2c981903867395f5f31eceb3a63e0114df9": {
       "governingHead": "ad3357e817f50cb66b7074e0d620888f2bc5407f",
       "lockGeneration": 1541,
@@ -27260,6 +27233,34 @@
         "transitionId": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION_20260825_002_TO_003"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "5644116fd0bcfccc53261ecdfdd064051d938d68",
+      "lockGeneration": 1715,
+      "lockScope": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION",
+      "operationId": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION_20260825_003",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "d9e7c71997b37a42173730dab4613c0a468d9337",
+        "lockGeneration": 1714,
+        "lockScope": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION",
+        "operationId": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION_20260825_002",
+        "preservedEvidenceRefs": [
+          "PREDECESSOR_SUCCESSOR_ADMISSION_GENERATION_1714",
+          "FROZEN_C3_COMPOSITOR_BLOB_e5bcbe65abb051fc5648a3c8bf1e16a4ecc2837e"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION_20260825_002_TO_003"
+      },
+      "procedureLocatorDigest": "05d6d0dc1e499ab8b90a0c5f6d5ff4d29edd46f5bfdbbfcbcb6ee3e3f6df6fc2",
+      "released": true,
+      "requestDigest": "8d85abd04008d9f913a0d5b5f014ea65943af1fe49eb94fdc68a228f39f5cf18",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "49c82c7f3069a13dab17d4cb34b3865485255ec196cf1840d9bccb8edb43ad91",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

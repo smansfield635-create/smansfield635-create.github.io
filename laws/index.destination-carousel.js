@@ -8,8 +8,9 @@
   "use strict";
   const CONTRACT = "LAWS_DESTINATION_CAROUSEL_RUNTIME_v11_DIRECTION_ONLY_ATOMIC";
   const REFERENCE = "METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1";
-  const BUILD = "20260825_TABBED_DIRECT_SELECTION";
-  const PRODUCT_REFINEMENT = "20260825_COMPLETE_NUMBERED_TOP_RAIL";
+  const BUILD = "20260816E_DIRECTION_ONLY_CANONICAL";
+  const PRODUCT_REFINEMENT = "20260816G_RUNTIME_OWNED_RING_TRAVERSAL";
+  const UX_REFINEMENT = "20260825_COMPLETE_NUMBERED_TOP_RAIL";
   const ROOT_SELECTOR = "[data-laws-root-rolodex-section]";
   const FIELD_SELECTOR = ".laws-rolodex-field[data-rolodex-id]";
   const CLASSIFY_PX = 8;
@@ -57,7 +58,7 @@
 
   function publish(field, state, reason) {
     const card = state.cards[state.index];
-    globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_CHANGED", { detail: Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, productRefinement: PRODUCT_REFINEMENT, reason, rolodexId: field.dataset.rolodexId || "", index: state.index, count: state.cards.length, destinationId: card?.dataset.destinationId || "", orbitAngle: state.angle, detent: state.detent, targetDetent: state.targetDetent, transactionId: state.transactionId, transactionPhase: state.gestureState, direction: state.direction, gesturePressure: state.pressure, boundedGestureFeedback: true, directionOnlyGesture: true, liveGestureGeometry: false, atomicRotation: true, oneGestureOneStep: true, canonicalFrameLockedDuringGesture: true, runtimeOwnedTraversal: true, traversalMs: TRAVERSAL_MS, velocityProjection: false, momentumTraversal: false, postLandingGuardMs: POST_LANDING_GUARD_MS, navigationAuthority: false, contentAuthority: false, routeAuthority: false, evidenceAuthority: false }) }));
+    globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_CHANGED", { detail: Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, productRefinement: PRODUCT_REFINEMENT, uxRefinement: UX_REFINEMENT, reason, rolodexId: field.dataset.rolodexId || "", index: state.index, count: state.cards.length, destinationId: card?.dataset.destinationId || "", orbitAngle: state.angle, detent: state.detent, targetDetent: state.targetDetent, transactionId: state.transactionId, transactionPhase: state.gestureState, direction: state.direction, gesturePressure: state.pressure, boundedGestureFeedback: true, directionOnlyGesture: true, liveGestureGeometry: false, atomicRotation: true, oneGestureOneStep: true, canonicalFrameLockedDuringGesture: true, runtimeOwnedTraversal: true, traversalMs: TRAVERSAL_MS, velocityProjection: false, momentumTraversal: false, postLandingGuardMs: POST_LANDING_GUARD_MS, navigationAuthority: false, contentAuthority: false, routeAuthority: false, evidenceAuthority: false }) }));
   }
 
   function applyCanonicalSemantics(field, state, reason = "geometry") {
@@ -301,6 +302,7 @@
     field.dataset.carouselSpatialKernel = "methods-canonical-shared-ring";
     field.dataset.carouselGestureLaw = "direction-only-release-one-atomic-step";
     field.dataset.carouselProductRefinement = PRODUCT_REFINEMENT;
+    field.dataset.carouselUxRefinement = UX_REFINEMENT;
     setFeedback(field, state, "idle", 0);
     setTraversalTransition(state, false);
     viewport.style.touchAction = "pan-y";
@@ -425,8 +427,8 @@
     document.documentElement.dataset.lawsCarouselBuild = BUILD;
     document.documentElement.dataset.lawsCarouselGestureLaw = "direction-only-release-one-atomic-step";
     document.documentElement.dataset.lawsCarouselProductRefinement = PRODUCT_REFINEMENT;
-    globalThis.DGB_LAWS_DESTINATION_CAROUSEL = Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, productRefinement: PRODUCT_REFINEMENT, installed: true, sharedRingAuthority: true, completeNumberedTopRail: true, directNonAdjacentSelection: true, directManipulation: false, directionOnlyGesture: true, liveGestureGeometry: false, boundedGestureFeedback: true, atomicRotation: true, oneGestureOneStep: true, canonicalFrameLockedDuringGesture: true, runtimeOwnedTraversal: true, traversalMs: TRAVERSAL_MS, velocityProjection: false, momentumTraversal: false, verticalGesturePassthrough: true, postLandingGuardMs: POST_LANDING_GUARD_MS, surrogateNavigation: false, restoreOrbitState, getState: snapshot, getTransactionTrace, navigationAuthority: false, contentAuthority: false, routeAuthority: false, evidenceAuthority: false });
-    globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_READY", { detail: Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, productRefinement: PRODUCT_REFINEMENT, fieldCount: fields.length, completeNumberedTopRail: true, directNonAdjacentSelection: true, boundedGestureFeedback: true, directionOnlyGesture: true, liveGestureGeometry: false, atomicRotation: true, oneGestureOneStep: true, canonicalFrameLockedDuringGesture: true, runtimeOwnedTraversal: true, traversalMs: TRAVERSAL_MS, postLandingGuardMs: POST_LANDING_GUARD_MS }) }));
+    globalThis.DGB_LAWS_DESTINATION_CAROUSEL = Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, productRefinement: PRODUCT_REFINEMENT, uxRefinement: UX_REFINEMENT, installed: true, sharedRingAuthority: true, completeNumberedTopRail: true, directNonAdjacentSelection: true, directManipulation: false, directionOnlyGesture: true, liveGestureGeometry: false, boundedGestureFeedback: true, atomicRotation: true, oneGestureOneStep: true, canonicalFrameLockedDuringGesture: true, runtimeOwnedTraversal: true, traversalMs: TRAVERSAL_MS, velocityProjection: false, momentumTraversal: false, verticalGesturePassthrough: true, postLandingGuardMs: POST_LANDING_GUARD_MS, surrogateNavigation: false, restoreOrbitState, getState: snapshot, getTransactionTrace, navigationAuthority: false, contentAuthority: false, routeAuthority: false, evidenceAuthority: false });
+    globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_READY", { detail: Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, productRefinement: PRODUCT_REFINEMENT, uxRefinement: UX_REFINEMENT, fieldCount: fields.length, completeNumberedTopRail: true, directNonAdjacentSelection: true, boundedGestureFeedback: true, directionOnlyGesture: true, liveGestureGeometry: false, atomicRotation: true, oneGestureOneStep: true, canonicalFrameLockedDuringGesture: true, runtimeOwnedTraversal: true, traversalMs: TRAVERSAL_MS, postLandingGuardMs: POST_LANDING_GUARD_MS }) }));
     return true;
   }
 

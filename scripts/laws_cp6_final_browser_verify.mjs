@@ -216,6 +216,28 @@ async function activateReadingRoom(page, group, route) {
     }
   }
   assert(await group.evaluate(node => node.closest('[data-lrc-card]')?.dataset.active === 'true'), `${route}: reading room carousel card not active`);
+  const settleMs = await group.evaluate(node => {
+    const card = node.closest('[data-lrc-card]');
+    if (!card) return 0;
+    const style = getComputedStyle(card);
+    const toMilliseconds = value => {
+      const text = String(value || '').trim();
+      if (text.endsWith('ms')) return Number.parseFloat(text) || 0;
+      if (text.endsWith('s')) return (Number.parseFloat(text) || 0) * 1000;
+      return 0;
+    };
+    const durations = style.transitionDuration.split(',').map(toMilliseconds);
+    const delays = style.transitionDelay.split(',').map(toMilliseconds);
+    const count = Math.max(durations.length, delays.length);
+    let maximum = 0;
+    for (let index = 0; index < count; index += 1) {
+      const duration = durations[index % durations.length] || 0;
+      const delay = delays[index % delays.length] || 0;
+      maximum = Math.max(maximum, duration + delay);
+    }
+    return Math.ceil(maximum);
+  });
+  if (settleMs > 0) await page.waitForTimeout(Math.min(settleMs + 60, 1200));
 }
 async function navCheck(page, route, profile) {
   const toggle = page.locator('.lr-nav-toggle');

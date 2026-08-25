@@ -19,6 +19,31 @@ const corrections = [
     expected: 2,
     label: 'direct audit-summary locators',
   },
+  {
+    from: `await applied.locator('button.laws-rolodex-enter').click();`,
+    to: `const appliedField = rolodex.locator('.laws-rolodex-field[data-rolodex-id]').filter({ has: applied });
+        assert(await appliedField.count() === 1, '/laws/: applied investigations rolodex field missing');
+        const appliedViewport = appliedField.locator('.laws-rolodex-viewport');
+        const appliedCardCount = await appliedField.locator('.laws-rolodex-card').count();
+        const appliedRolodexId = await appliedField.getAttribute('data-rolodex-id');
+        assert(appliedRolodexId, '/laws/: applied investigations rolodex id missing');
+        await appliedViewport.focus();
+        for (let step = 0; step < appliedCardCount && await applied.getAttribute('data-active') !== 'true'; step += 1) {
+          const previousDestinationId = await appliedField.locator('.laws-rolodex-card[data-active="true"]').getAttribute('data-destination-id');
+          await page.keyboard.press('ArrowRight');
+          await page.waitForFunction(
+            ({ rolodexId, previous }) => {
+              const field = Array.from(document.querySelectorAll('.laws-rolodex-field[data-rolodex-id]')).find(node => node.dataset.rolodexId === rolodexId);
+              return field?.querySelector('.laws-rolodex-card[data-active="true"]')?.dataset.destinationId !== previous;
+            },
+            { rolodexId: appliedRolodexId, previous: previousDestinationId },
+          );
+        }
+        assert(await applied.getAttribute('data-active') === 'true', '/laws/: applied investigations card did not become active');
+        await applied.locator('button.laws-rolodex-enter').click();`,
+    expected: 1,
+    label: 'Applied Investigations inactive-card click',
+  },
 ];
 
 let corrected = fs.readFileSync(sourcePath, 'utf8');

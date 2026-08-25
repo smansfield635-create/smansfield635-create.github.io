@@ -1,6 +1,7 @@
 /**
- * H-Earth repository registry validator dependency loader v21 successor.
- * Preserves inherited identity and adds exact Audralia diagnostic path recognition.
+ * H-Earth repository registry validator dependency loader v22 successor.
+ * Preserves inherited identity and adds exact Audralia final-cloud compositor
+ * path recognition after the existing diagnostic recognition overlay.
  */
 import {
   loadHEarthRepositoryRegistryValidatorDependencies as loadBaseDependencies,
@@ -12,7 +13,8 @@ import { verifyHEarthOW04ParentPromotionReceiptRecognition } from './accepted-am
 import { verifyHEarthC3CoastalReconstructionAuthorityRecognition } from './accepted-amendments/h-earth.repository-registry.c3-coastal-reconstruction-authority-recognition.js';
 import { verifyHEarthC3D1CoastalPlacementRecognition } from './accepted-amendments/h-earth.repository-registry.c3d1-coastal-placement-recognition.js';
 import { verifyHEarthAudraliaPC1GeographyPathRecognition } from './accepted-amendments/h-earth.repository-registry.audralia-pc1-geography-path-recognition.js';
-import registryFacade, { verifyHEarthAudraliaDiagnosticPathRecognition } from './accepted-amendments/h-earth.repository-registry.audralia-diagnostic-path-recognition.js';
+import { verifyHEarthAudraliaDiagnosticPathRecognition } from './accepted-amendments/h-earth.repository-registry.audralia-diagnostic-path-recognition.js';
+import registryFacade, { verifyHEarthAudraliaFinalCloudCompositorPathRecognition } from './accepted-amendments/h-earth.repository-registry.audralia-final-cloud-compositor-path-recognition.js';
 import { deepFreeze } from './h-earth.repository-registry.validator-engine.identity.js';
 
 export function loadHEarthRepositoryRegistryValidatorDependencies() {
@@ -24,6 +26,7 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
   const c3d1Verification = verifyHEarthC3D1CoastalPlacementRecognition();
   const pc1Verification = verifyHEarthAudraliaPC1GeographyPathRecognition();
   const diagnosticVerification = verifyHEarthAudraliaDiagnosticPathRecognition();
+  const finalCloudCompositorVerification = verifyHEarthAudraliaFinalCloudCompositorPathRecognition();
   const registryInstance = registryFacade.getHEarthRepositoryRegistryInstance();
   const discovery = registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
 
@@ -56,6 +59,20 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
     audraliaDiagnosticGoverningOccurrencesPresent: diagnosticVerification.checks.governingOccurrencesPresent === true,
     audraliaDiagnosticExactPathOnly: diagnosticVerification.checks.exactPathOnly === true && diagnosticVerification.checks.noPrefixRegistration === true,
     audraliaDiagnosticAuditOnlyNoAuthorityLeak: diagnosticVerification.checks.auditOnly === true && diagnosticVerification.checks.pathResolutionOnly === true && diagnosticVerification.checks.noProductRuntimeAuthority === true && diagnosticVerification.checks.noRendererAuthority === true && diagnosticVerification.checks.noDiagnosticByteAuthority === true && diagnosticVerification.checks.noPrefixWideAuthority === true && diagnosticVerification.checks.noPublicationAuthority === true && diagnosticVerification.checks.noAnchorWaiverAuthority === true,
+    audraliaFinalCloudCompositorPathRecognitionEligible: finalCloudCompositorVerification.eligible === true,
+    audraliaFinalCloudCompositorExactPathResolved: finalCloudCompositorVerification.checks.exactTargetPathCount === true && finalCloudCompositorVerification.checks.targetPathResolves === true,
+    audraliaFinalCloudCompositorGoverningOccurrencePresent: finalCloudCompositorVerification.checks.governingOccurrencePresent === true,
+    audraliaFinalCloudCompositorExactPathOnly: finalCloudCompositorVerification.checks.exactPathOnly === true && finalCloudCompositorVerification.checks.noPrefixRegistration === true,
+    audraliaFinalCloudCompositorAuditOnlyNoAuthorityLeak:
+      finalCloudCompositorVerification.checks.auditOnly === true &&
+      finalCloudCompositorVerification.checks.pathResolutionOnly === true &&
+      finalCloudCompositorVerification.checks.noProductRuntimeAuthority === true &&
+      finalCloudCompositorVerification.checks.noCloudEnvelopeAuthority === true &&
+      finalCloudCompositorVerification.checks.noRendererAuthority === true &&
+      finalCloudCompositorVerification.checks.noPrefixWideAuthority === true &&
+      finalCloudCompositorVerification.checks.openGapPreserved === true &&
+      finalCloudCompositorVerification.checks.noAnchorWaiverAuthority === true &&
+      finalCloudCompositorVerification.checks.noPublicationAuthority === true,
     registryIdPreserved: registryInstance.registryId === base.registryInstance.registryId,
     registryVersionPreserved: registryInstance.registryVersion === base.registryInstance.registryVersion,
     schemaIdPreserved: registryInstance.schemaId === base.registryInstance.schemaId,
@@ -69,7 +86,7 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
 
   return deepFreeze({
     ...base,
-    loaderId: 'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v21_AUDRALIA_DIAGNOSTIC_EXACT_PATH_RECOGNITION_SUCCESSOR',
+    loaderId: 'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v22_AUDRALIA_FINAL_CLOUD_COMPOSITOR_EXACT_PATH_RECOGNITION_SUCCESSOR',
     registryFacade,
     registryInstance,
     discovery,
@@ -82,7 +99,9 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       c3d1CoastalPlacementRecognition: c3d1Verification.eligible === true,
       audraliaPC1GeographyPathRecognition: pc1Verification.eligible === true,
       audraliaDiagnosticPathRecognition: diagnosticVerification.eligible === true,
-      audraliaDiagnosticPathRecognitionSuccessorIntegrity: successorIntegrityVerified
+      audraliaDiagnosticPathRecognitionSuccessorIntegrity: diagnosticVerification.eligible === true,
+      audraliaFinalCloudCompositorPathRecognition: finalCloudCompositorVerification.eligible === true,
+      audraliaFinalCloudCompositorPathRecognitionSuccessorIntegrity: successorIntegrityVerified
     }),
     identityVerified: base.identityVerified,
     inheritedIdentityPreserved: base.identityVerified === false,
@@ -95,6 +114,7 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
     c3d1CoastalPlacementRecognitionVerification: c3d1Verification,
     audraliaPC1GeographyPathRecognitionVerification: pc1Verification,
     audraliaDiagnosticPathRecognitionVerification: diagnosticVerification,
+    audraliaFinalCloudCompositorPathRecognitionVerification: finalCloudCompositorVerification,
     boundary: deepFreeze({
       ...base.boundary,
       c3CoastalReconstructionAuthorityRecognitionOnly: true,
@@ -107,7 +127,16 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       audraliaDiagnosticPrefixWideRegistrationAuthorityCreated: false,
       audraliaDiagnosticPreviewPublicationAuthorityCreated: false,
       audraliaDiagnosticProductionPublicationAuthorityCreated: false,
-      audraliaDiagnosticExperienceAnchorWaiverAuthorityCreated: false
+      audraliaDiagnosticExperienceAnchorWaiverAuthorityCreated: false,
+      audraliaFinalCloudCompositorExactPathRecognitionOnly: true,
+      audraliaFinalCloudCompositorProductMutationAuthorityCreated: false,
+      audraliaFinalCloudCompositorCloudEnvelopeMutationAuthorityCreated: false,
+      audraliaFinalCloudCompositorRendererMutationAuthorityCreated: false,
+      audraliaFinalCloudCompositorPrefixWideRegistrationAuthorityCreated: false,
+      audraliaFinalCloudCompositorExecutionBackendAuthorityCreated: false,
+      audraliaFinalCloudCompositorOpenGapClosureAuthorityCreated: false,
+      audraliaFinalCloudCompositorExperienceAnchorWaiverAuthorityCreated: false,
+      audraliaFinalCloudCompositorDeploymentPublicationAuthorityCreated: false
     }),
     stoppingCondition: deepFreeze({
       ...base.stoppingCondition,
@@ -115,7 +144,9 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       c3d1CoastalPlacementRecognitionLoaded: true,
       audraliaPC1GeographyPathRecognitionLoaded: true,
       audraliaDiagnosticPathRecognitionLoaded: true,
-      audraliaDiagnosticPathRecognitionSuccessorIntegrityVerified: successorIntegrityVerified,
+      audraliaDiagnosticPathRecognitionSuccessorIntegrityVerified: diagnosticVerification.eligible === true,
+      audraliaFinalCloudCompositorPathRecognitionLoaded: true,
+      audraliaFinalCloudCompositorPathRecognitionSuccessorIntegrityVerified: successorIntegrityVerified,
       inheritedIdentityStatePreserved: true,
       audraliaDiagnosticProductMutationAuthorized: false,
       audraliaDiagnosticRuntimeMutationAuthorized: false,
@@ -123,7 +154,15 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       audraliaDiagnosticPrefixWideRegistrationAuthorized: false,
       audraliaDiagnosticPreviewPublicationAuthorized: false,
       audraliaDiagnosticProductionPublicationAuthorized: false,
-      audraliaDiagnosticExperienceAnchorWaiverAuthorized: false
+      audraliaDiagnosticExperienceAnchorWaiverAuthorized: false,
+      audraliaFinalCloudCompositorProductMutationAuthorized: false,
+      audraliaFinalCloudCompositorCloudEnvelopeMutationAuthorized: false,
+      audraliaFinalCloudCompositorRendererMutationAuthorized: false,
+      audraliaFinalCloudCompositorPrefixWideRegistrationAuthorized: false,
+      audraliaFinalCloudCompositorExecutionBackendAuthorized: false,
+      audraliaFinalCloudCompositorOpenGapClosureAuthorized: false,
+      audraliaFinalCloudCompositorExperienceAnchorWaiverAuthorized: false,
+      audraliaFinalCloudCompositorDeploymentPublicationAuthorized: false
     })
   });
 }

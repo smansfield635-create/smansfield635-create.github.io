@@ -13,6 +13,7 @@ on:
       - 'showroom/globe/audralia/diagnostic/index.html'
       - 'showroom/globe/audralia/diagnostic/index.controls.js'
       - 'showroom/globe/audralia/diagnostic/index.inspection.lane.js'
+      - 'showroom/globe/audralia/final-cloud-shader-composition-v1.mjs'
   push:
     paths:
       - 'h-earth-3d/**'
@@ -25,6 +26,7 @@ on:
       - 'showroom/globe/audralia/diagnostic/index.html'
       - 'showroom/globe/audralia/diagnostic/index.controls.js'
       - 'showroom/globe/audralia/diagnostic/index.inspection.lane.js'
+      - 'showroom/globe/audralia/final-cloud-shader-composition-v1.mjs'
   issue_comment:
     types:
       - created
@@ -64,8 +66,8 @@ jobs:
             git show --pretty='' --name-only "$CURRENT_SHA" > /tmp/all-changed-paths.txt
           fi
 
-          grep -E '^(h-earth-3d/|showroom/globe/h-earth/|showroom/globe/audralia/diagnostic/(index\.html|index\.controls\.js|index\.inspection\.lane\.js)$)' /tmp/all-changed-paths.txt \
-            | grep -Ev '^(h-earth-3d/registry/|h-earth-3d/experience-anchor/(evidence|receipts)/|h-earth-3d/AGENTS\.md$|h-earth-3d/validation/h-earth-audralia-diagnostic-path-recognition-verifier\.v1\.mjs$|showroom/globe/h-earth/AGENTS\.md$)' \
+          grep -E '^(h-earth-3d/|showroom/globe/h-earth/|showroom/globe/audralia/diagnostic/(index\.html|index\.controls\.js|index\.inspection\.lane\.js)$|showroom/globe/audralia/final-cloud-shader-composition-v1\.mjs$)' /tmp/all-changed-paths.txt \
+            | grep -Ev '^(h-earth-3d/registry/|h-earth-3d/experience-anchor/(evidence|receipts)/|h-earth-3d/AGENTS\.md$|h-earth-3d/validation/h-earth-audralia-diagnostic-path-recognition-verifier\.v1\.mjs$|h-earth-3d/validation/h-earth-audralia-final-cloud-compositor-path-recognition-verifier\.v1\.mjs$|showroom/globe/h-earth/AGENTS\.md$)' \
             | sort -u > /tmp/h-earth-changed-paths.txt || true
 
           cat /tmp/h-earth-changed-paths.txt
@@ -301,5 +303,120 @@ jobs:
         with:
           name: audralia-diagnostic-path-governance-fingerprint-match
           path: /tmp/audralia-diagnostic-governance-fingerprint-match.json
+          if-no-files-found: error
+          retention-days: 30
+
+  audralia-final-cloud-compositor-registration-builder:
+    if: >-
+      ${{
+        github.event_name == 'pull_request' &&
+        github.event.pull_request.head.ref == 'agent/audralia-final-cloud-compositor-registration-gen1713-20260825'
+      }}
+    needs: automatic-h-earth-preflight
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact registration candidate for builder
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run exact registration candidate builder verifier
+        run: |
+          node h-earth-3d/validation/h-earth-audralia-final-cloud-compositor-path-recognition-verifier.v1.mjs \
+            --verify \
+            --role BUILDER \
+            --output /tmp/audralia-final-cloud-compositor-registration-builder.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: audralia-final-cloud-compositor-registration-builder
+          path: /tmp/audralia-final-cloud-compositor-registration-builder.json
+          if-no-files-found: error
+          retention-days: 30
+
+  audralia-final-cloud-compositor-registration-fresh-verifier:
+    if: >-
+      ${{
+        github.event_name == 'pull_request' &&
+        github.event.pull_request.head.ref == 'agent/audralia-final-cloud-compositor-registration-gen1713-20260825'
+      }}
+    needs: automatic-h-earth-preflight
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact registration candidate for fresh verifier
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run fresh independent registration verifier
+        run: |
+          node h-earth-3d/validation/h-earth-audralia-final-cloud-compositor-path-recognition-verifier.v1.mjs \
+            --verify \
+            --role ROLE_3 \
+            --output /tmp/audralia-final-cloud-compositor-registration-fresh.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: audralia-final-cloud-compositor-registration-fresh
+          path: /tmp/audralia-final-cloud-compositor-registration-fresh.json
+          if-no-files-found: error
+          retention-days: 30
+
+  audralia-final-cloud-compositor-registration-fingerprint-match:
+    if: ${{ github.event_name == 'pull_request' }}
+    needs:
+      - audralia-final-cloud-compositor-registration-builder
+      - audralia-final-cloud-compositor-registration-fresh-verifier
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: audralia-final-cloud-compositor-registration-builder
+          path: /tmp/builder
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: audralia-final-cloud-compositor-registration-fresh
+          path: /tmp/fresh
+
+      - name: Require matching independent registration fingerprints
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const builder = JSON.parse(fs.readFileSync('/tmp/builder/audralia-final-cloud-compositor-registration-builder.json', 'utf8'));
+          const fresh = JSON.parse(fs.readFileSync('/tmp/fresh/audralia-final-cloud-compositor-registration-fresh.json', 'utf8'));
+          if (builder.result !== 'PASS' || fresh.result !== 'PASS') throw new Error('VERIFIER_RESULT_NOT_PASS');
+          if (builder.role !== 'BUILDER' || fresh.role !== 'ROLE_3') throw new Error('VERIFIER_ROLE_MISMATCH');
+          if (builder.candidateHead !== fresh.candidateHead) throw new Error('VERIFIER_CANDIDATE_HEAD_MISMATCH');
+          if (builder.fingerprint !== fresh.fingerprint) throw new Error('FRESH_VERIFIER_MISMATCH');
+          const receipt = {
+            schema: 'H_EARTH_AUDRALIA_FINAL_CLOUD_COMPOSITOR_PATH_REGISTRATION_FINGERPRINT_MATCH_RECEIPT_v1',
+            result: 'PASS',
+            candidateHead: builder.candidateHead,
+            builderFingerprint: builder.fingerprint,
+            freshVerifierFingerprint: fresh.fingerprint,
+            fingerprintsMatch: true
+          };
+          fs.writeFileSync('/tmp/audralia-final-cloud-compositor-registration-match.json', JSON.stringify(receipt, null, 2) + '\n');
+          NODE
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: audralia-final-cloud-compositor-registration-match
+          path: /tmp/audralia-final-cloud-compositor-registration-match.json
           if-no-files-found: error
           retention-days: 30

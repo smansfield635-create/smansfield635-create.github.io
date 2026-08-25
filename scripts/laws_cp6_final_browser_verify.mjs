@@ -120,7 +120,7 @@ async function health(page, route, errors) {
 }
 async function measuredPointerClick(page, locator, label, metadata = {}) {
   assert(await locator.count() === 1, `${label}: pointer target count ${await locator.count()}`);
-  await locator.evaluate(node => node.scrollIntoView({ block: 'center', inline: 'center', behavior: 'instant' }));
+  await locator.scrollIntoViewIfNeeded();
   await page.waitForTimeout(20);
   const geometry = await locator.evaluate(node => {
     const describe = element => {

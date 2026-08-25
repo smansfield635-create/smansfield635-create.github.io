@@ -1,14 +1,14 @@
 <!-- /showroom/globe/audralia/diagnostic/index.html -->
-<!-- AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_HTML_TNT_v14 -->
-<!-- Full-file replacement. Target-loading renewal. CSS v5 retained. index.js v5 retained. Controls v11 retained. Target-loading renewal. -->
+<!-- AUDRALIA_MIRRORLAND_GUIDED_DIAGNOSTIC_WORKSPACE_HTML_TNT_v15 -->
+<!-- Guided workspace recomposition. CSS v5, compact CSS, index.js v5, controls v11 contract, and all diagnostic participant implementations retained. -->
 
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/globe/audralia/diagnostic/"
   data-page="audralia-dreamscape-compact-educational-diagnostic-chamber"
-  data-contract="AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_HTML_TNT_v14"
-  data-previous-contract="AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_HTML_TNT_v13"
+  data-contract="AUDRALIA_MIRRORLAND_GUIDED_DIAGNOSTIC_WORKSPACE_HTML_TNT_v15"
+  data-previous-contract="AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_HTML_TNT_v14"
   data-target-route="/showroom/globe/audralia/"
   data-diagnostic-route="/showroom/globe/audralia/diagnostic/"
   data-diagnostic-family-root="/assets/audralia/"
@@ -33,6 +33,8 @@
   data-cycle-station-count="9"
   data-cycle-auxiliary-count="1"
   data-receipt-filter-count="5"
+  data-diagnostic-workspace-count="6"
+  data-diagnostic-workspace-default="work"
   data-target-frame-id="audraliaDiagnosticTargetFrame"
   data-target-frame-loading-policy="eager"
   data-target-frame-hidden-container-policy="controls-may-prepare-before-cycle"
@@ -62,15 +64,15 @@
 
   <meta
     name="description"
-    content="Audralia Dreamscape diagnostic chamber: DROP, READ, 3D Engine System, Audralia, and Mirrorland."
+    content="Audralia Dreamscape diagnostic workspace with guided Work, Report, Observe, Instruments, System, and DREAM reference views."
   />
   <meta
     name="audralia-diagnostic-html-contract"
-    content="AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_HTML_TNT_v14"
+    content="AUDRALIA_MIRRORLAND_GUIDED_DIAGNOSTIC_WORKSPACE_HTML_TNT_v15"
   />
   <meta
     name="audralia-diagnostic-html-previous-contract"
-    content="AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_HTML_TNT_v13"
+    content="AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_HTML_TNT_v14"
   />
   <meta
     name="audralia-diagnostic-css-contract"
@@ -178,7 +180,7 @@
 
         <a
           class="command-button command-button--primary"
-          href="#diagnosticControlPad"
+          href="#diagnosticWorkspaceTabs"
         >
           Enter Diagnostic Chamber
         </a>
@@ -227,7 +229,9 @@
     <section
       class="educational-deck"
       id="educationalDeck"
-      aria-labelledby="educationalDeckTitle"
+      role="tabpanel"
+      aria-labelledby="workspaceGuideButton educationalDeckTitle"
+      hidden
     >
       <header class="section-preface">
         <p class="eyebrow">Audralia Dreamscape</p>
@@ -241,6 +245,17 @@
           for diagnosis.
         </p>
       </header>
+
+      <article class="orbit-instruction">
+        <strong>How to use Guide</strong>
+        <p>
+          Read these cards when a chamber term is unfamiliar. They explain the
+          relationship between evidence, interpretation, runtime architecture,
+          the visible Audralia world, and its diagnostic reflection. Opening a
+          card changes presentation only; it does not run a report or cycle.
+        </p>
+        <p><a class="command-button command-button--ghost" href="#diagnosticWorkspaceTabs" data-return-diagnostic-workspaces>Return to workspace choices</a></p>
+      </article>
 
       <div
         class="educational-category-grid"
@@ -396,7 +411,7 @@
           <strong>Continue from DREAM into the diagnostic track.</strong>
           <span>Choose the report context, then open deeper controls only when needed.</span>
         </div>
-        <a href="#diagnosticControlPad">Open the Control Pad</a>
+        <a href="#diagnosticWorkspaceTabs" data-open-diagnostic-workspace="work">Open Work workspace</a>
       </div>
     </section>
 
@@ -408,8 +423,12 @@
       <header class="control-pad-heading">
         <div>
           <p class="eyebrow">Focused diagnostic track</p>
-          <h2 id="diagnosticControlPadTitle">Diagnostic Control Pad</h2>
-          <p>Selection does not execute. Create the report when its context is ready.</p>
+          <h2 id="diagnosticControlPadTitle">Diagnostic Workspace</h2>
+          <p>
+            Choose one workspace at a time. Tabs change what is shown; only a
+            labeled operation creates a report, runs a direct check, or starts
+            Nine-Cycle.
+          </p>
         </div>
         <span
           class="control-pad-state"
@@ -418,6 +437,48 @@
           REPORT AVAILABLE
         </span>
       </header>
+
+      <div
+        class="panel-tablist"
+        id="diagnosticWorkspaceTabs"
+        role="tablist"
+        aria-orientation="horizontal"
+        aria-label="Audralia diagnostic workspaces"
+      >
+        <button type="button" role="tab" id="workspaceWorkButton" aria-selected="true" aria-controls="workspaceWorkPanel" tabindex="0" data-diagnostic-workspace="work">Work</button>
+        <button type="button" role="tab" id="workspaceReportButton" aria-selected="false" aria-controls="reportChamber" tabindex="-1" data-diagnostic-workspace="report">Report</button>
+        <button type="button" role="tab" id="workspaceObserveButton" aria-selected="false" aria-controls="observationLens" tabindex="-1" data-diagnostic-workspace="observe">Observe</button>
+        <button type="button" role="tab" id="workspaceInstrumentsButton" aria-selected="false" aria-controls="instrumentDeck" tabindex="-1" data-diagnostic-workspace="instruments">Instruments</button>
+        <button type="button" role="tab" id="workspaceSystemButton" aria-selected="false" aria-controls="workspaceSystemPanel" tabindex="-1" data-diagnostic-workspace="system">System</button>
+        <button type="button" role="tab" id="workspaceGuideButton" aria-selected="false" aria-controls="educationalDeck" tabindex="-1" data-diagnostic-workspace="guide">Guide</button>
+      </div>
+
+      <div
+        class="participant-summary orbit-panel"
+        id="diagnosticWorkspaceContext"
+        aria-label="Current diagnostic context"
+        aria-live="polite"
+      >
+        <span>Workspace <strong id="diagnosticWorkspaceState">Work</strong></span>
+        <span>Category <strong id="workspaceCategoryState">Observatory / Receiver</strong></span>
+        <span>Audit <strong id="workspaceAuditState">Observatory Index</strong></span>
+        <span>Participant <strong id="workspaceParticipantState">None selected</strong></span>
+      </div>
+
+      <section
+        id="workspaceWorkPanel"
+        role="tabpanel"
+        aria-labelledby="workspaceWorkButton"
+      >
+        <article class="orbit-instruction">
+          <strong>How to use Work</strong>
+          <p>
+            Choose Category and Audit to define the report context. Use
+            Participant Context only for a direct check. Selection alone is
+            read-only; Create Report, Run Direct Check, and Run Nine-Cycle are
+            the only operations here that request new diagnostic state.
+          </p>
+        </article>
 
       <div
         class="panel-tablist left-orbit-tablist"
@@ -635,49 +696,6 @@
         <details class="control-disclosure">
           <summary>
             <span>
-              <small>Read-only evidence</small>
-              <strong>Observation Lens</strong>
-            </span>
-            <em>Target · Runtime · Surface · Window</em>
-          </summary>
-          <div
-            class="panel-tablist observation-control-grid"
-            id="observationLensTabs"
-            role="tablist"
-            aria-label="Observation lenses"
-          >
-            <button type="button" role="tab" id="targetLensButton" aria-selected="true" aria-controls="targetLens" data-observation-lens="target">Target</button>
-            <button type="button" role="tab" id="runtimeLensButton" aria-selected="false" aria-controls="runtimeLens" data-observation-lens="runtime">Runtime</button>
-            <button type="button" role="tab" id="surfaceLensButton" aria-selected="false" aria-controls="surfaceLens" data-observation-lens="surface">Surface</button>
-            <button type="button" role="tab" id="targetWindowButton" aria-selected="false" aria-controls="targetWindow" data-observation-lens="window">Window</button>
-          </div>
-        </details>
-
-        <details class="control-disclosure">
-          <summary>
-            <span>
-              <small>Lower evidence field</small>
-              <strong>Instrument Chamber</strong>
-            </span>
-            <em>Cycle · Registry · Receipts · Archive · Boundary</em>
-          </summary>
-          <div
-            class="panel-tablist instrument-control-grid"
-            id="instrumentDeckTabs"
-            role="tablist"
-            aria-label="Instrument chambers"
-          >
-            <button type="button" role="tab" id="cycleChamberButton" aria-selected="true" aria-controls="cycleChamber" data-instrument-chamber="cycle">Cycle</button>
-            <button type="button" role="tab" id="registryChamberButton" aria-selected="false" aria-controls="registryChamber" data-instrument-chamber="registry">Registry</button>
-            <button type="button" role="tab" id="receiptChamberButton" aria-selected="false" aria-controls="receiptChamber" data-instrument-chamber="receipts" data-report-command="open-receipts" data-report-chamber="receipts" data-report-source="CONTROL_PAD_RECEIPTS">Receipts</button>
-            <button type="button" role="tab" id="archiveChamberButton" aria-selected="false" aria-controls="archiveChamber" data-instrument-chamber="archive" data-report-command="open-archive" data-report-chamber="archive" data-report-source="CONTROL_PAD_ARCHIVE">Archive</button>
-            <button type="button" role="tab" id="boundaryChamberButton" aria-selected="false" aria-controls="boundaryChamber" data-instrument-chamber="boundary">Boundary</button>
-          </div>
-        </details>
-
-        <details class="control-disclosure">
-          <summary>
-            <span>
               <small>Explicit and secondary commands</small>
               <strong>More Operations</strong>
             </span>
@@ -699,14 +717,34 @@
           </p>
         </details>
 
-        <details class="control-disclosure control-disclosure--status">
-          <summary>
-            <span>
-              <small>Current diagnostic evidence</small>
-              <strong>System Status</strong>
-            </span>
-            <em>Expand for target, runtime, station, mount, and frame state</em>
-          </summary>
+      </div>
+      </section>
+
+      <section
+        class="orbit-panel"
+        id="workspaceSystemPanel"
+        role="tabpanel"
+        aria-labelledby="workspaceSystemButton"
+        hidden
+      >
+          <header class="panel-heading">
+            <div>
+              <p class="eyebrow">Current diagnostic evidence</p>
+              <h2>System Status</h2>
+              <p>Target, runtime, station, mount, frame, and DROP lane state.</p>
+            </div>
+          </header>
+
+          <article class="orbit-instruction">
+            <strong>How to read System</strong>
+            <p>
+              Status chips summarize what the chamber has observed, not what
+              presentation implies. Unknown means no bounded evidence has been
+              established; Held means an attempted path could not proceed.
+              Return to Work to request a report or explicit execution.
+            </p>
+            <p><a class="command-button command-button--ghost" href="#diagnosticWorkspaceTabs" data-return-diagnostic-workspaces>Return to workspace choices</a></p>
+          </article>
 
           <div
             class="evidence-status-rail"
@@ -738,14 +776,15 @@
             <article class="drop-status-cell drop-status-cell--observation" id="dropObservationCell" data-lane="OBSERVATION" data-status="OBSERVING"><header><span class="drop-letter">O</span><div><p>Observation</p><strong id="dropObservationState">OBSERVING</strong></div></header><dl><div><dt>Available</dt><dd id="dropObservationAvailableCount">0</dd></div><div><dt>Held</dt><dd id="dropObservationHeldCount">0</dd></div></dl><p id="dropObservationLastAction">Lightweight observation begins after diagnostic-engine boot.</p></article>
             <article class="drop-status-cell drop-status-cell--participant" id="dropParticipantCell" data-lane="PARTICIPANT" data-status="LOADING"><header><span class="drop-letter">P</span><div><p>Participant</p><strong id="dropParticipantState">LOADING</strong></div></header><dl><div><dt>Available</dt><dd id="dropParticipantAvailableCount">0</dd></div><div><dt>Held</dt><dd id="dropParticipantHeldCount">0</dd></div></dl><p id="dropParticipantLastAction">Inspecting shell-preloaded diagnostic participants.</p></article>
           </section>
-        </details>
-      </div>
+      </section>
     </section>
 
     <section
       class="report-chamber"
       id="reportChamber"
-      aria-labelledby="selectedAuditTitle"
+      role="tabpanel"
+      aria-labelledby="workspaceReportButton selectedAuditTitle"
+      hidden
     >
       <header
         class="selected-audit-header"
@@ -769,6 +808,17 @@
           <strong id="selectedAuditClassification">SAFE_REPORT</strong>
         </div>
       </header>
+
+      <article class="orbit-instruction">
+        <strong>How to read Report</strong>
+        <p>
+          READ separates Result, Evidence, Absence, and Direction so a finding
+          is not confused with missing proof or a suggested next step. The
+          report establishes only the selected context and current evidence.
+          READ, Packet, Raw, and Evidence tabs change presentation only.
+        </p>
+        <p><a class="command-button command-button--ghost" href="#diagnosticWorkspaceTabs" data-return-diagnostic-workspaces>Return to workspace choices</a></p>
+      </article>
 
       <div class="report-state">
         <div><span>Status</span><strong id="reportStatus" data-status="READY">AVAILABLE</strong></div>
@@ -812,7 +862,9 @@
     <aside
       class="observation-lens"
       id="observationLens"
-      aria-label="Observation evidence"
+      role="tabpanel"
+      aria-labelledby="workspaceObserveButton"
+      hidden
     >
       <header class="panel-heading">
         <div>
@@ -820,6 +872,29 @@
           <h2>Observation Lens</h2>
         </div>
       </header>
+
+      <article class="orbit-instruction">
+        <strong>How to read Observe</strong>
+        <p>
+          Target describes the loaded page, Runtime describes mounted behavior,
+          Surface describes the F8 evidence authority, and Window exposes the
+          isolated target. These lenses are read-only. A lens tab never runs a
+          report, direct check, or diagnostic cycle.
+        </p>
+        <p><a class="command-button command-button--ghost" href="#diagnosticWorkspaceTabs" data-return-diagnostic-workspaces>Return to workspace choices</a></p>
+      </article>
+
+      <div
+        class="panel-tablist observation-control-grid"
+        id="observationLensTabs"
+        role="tablist"
+        aria-label="Observation lenses"
+      >
+        <button type="button" role="tab" id="targetLensButton" aria-selected="true" aria-controls="targetLens" data-observation-lens="target">Target</button>
+        <button type="button" role="tab" id="runtimeLensButton" aria-selected="false" aria-controls="runtimeLens" data-observation-lens="runtime">Runtime</button>
+        <button type="button" role="tab" id="surfaceLensButton" aria-selected="false" aria-controls="surfaceLens" data-observation-lens="surface">Surface</button>
+        <button type="button" role="tab" id="targetWindowButton" aria-selected="false" aria-controls="targetWindow" data-observation-lens="window">Window</button>
+      </div>
 
       <section
         class="lens-panel"
@@ -909,7 +984,9 @@
     <section
       class="instrument-deck"
       id="instrumentDeck"
-      aria-labelledby="instrumentDeckTitle"
+      role="tabpanel"
+      aria-labelledby="workspaceInstrumentsButton instrumentDeckTitle"
+      hidden
     >
       <header class="instrument-deck__header">
         <div>
@@ -918,6 +995,30 @@
         </div>
         <span class="instrument-deck__status">Diagnostic only · Read-only</span>
       </header>
+
+      <article class="orbit-instruction">
+        <strong>How to use Instruments</strong>
+        <p>
+          Choose Cycle, Registry, Receipts, Archive, or Boundary to inspect one
+          evidence family. Chamber tabs change presentation only. Nine-Cycle
+          runs only from its labeled Work operation; Registry and Boundary do
+          not certify runtime readiness.
+        </p>
+        <p><a class="command-button command-button--ghost" href="#diagnosticWorkspaceTabs" data-return-diagnostic-workspaces>Return to workspace choices</a></p>
+      </article>
+
+      <div
+        class="panel-tablist instrument-control-grid"
+        id="instrumentDeckTabs"
+        role="tablist"
+        aria-label="Instrument chambers"
+      >
+        <button type="button" role="tab" id="cycleChamberButton" aria-selected="true" aria-controls="cycleChamber" data-instrument-chamber="cycle">Cycle</button>
+        <button type="button" role="tab" id="registryChamberButton" aria-selected="false" aria-controls="registryChamber" data-instrument-chamber="registry">Registry</button>
+        <button type="button" role="tab" id="receiptChamberButton" aria-selected="false" aria-controls="receiptChamber" data-instrument-chamber="receipts" data-report-command="open-receipts" data-report-chamber="receipts" data-report-source="INSTRUMENTS_RECEIPTS">Receipts</button>
+        <button type="button" role="tab" id="archiveChamberButton" aria-selected="false" aria-controls="archiveChamber" data-instrument-chamber="archive" data-report-command="open-archive" data-report-chamber="archive" data-report-source="INSTRUMENTS_ARCHIVE">Archive</button>
+        <button type="button" role="tab" id="boundaryChamberButton" aria-selected="false" aria-controls="boundaryChamber" data-instrument-chamber="boundary">Boundary</button>
+      </div>
 
       <section
         class="instrument-chamber"
@@ -940,6 +1041,11 @@
           <article id="cycleExecutionSummary"><span>Execution</span><strong>Not run</strong><p>No conductor cycle exists during this session.</p></article>
         </div>
 
+        <details class="control-disclosure">
+          <summary>
+            <span><small>Station navigator</small><strong>F1 → F89 station map</strong></span>
+            <em>Nine station questions and current receipt state</em>
+          </summary>
         <ol
           class="cycle-map"
           id="cycleMap"
@@ -955,12 +1061,21 @@
           <li data-station="SOUTH_RESTITUTION_INTERPRETATION" data-role="SOUTH_RESTITUTION_INTERPRETATION" data-position="8" data-fibonacci="F55" data-status="UNKNOWN"><span class="cycle-position">8</span><div><b>South Restitution</b><p>What owner or continuation is recommended?</p></div><small>F55</small></li>
           <li data-station="RAIL_TERMINAL_SYNTHESIS" data-role="RAIL_TERMINAL_SYNTHESIS" data-position="9" data-fibonacci="F89" data-status="UNKNOWN"><span class="cycle-position">9</span><div><b>Rail Synthesis</b><p>What is the final diagnostic reading?</p></div><small>F89</small></li>
         </ol>
+        </details>
 
-        <div class="cycle-ledger">
-          <h4>Cycle Ledger</h4>
+        <details class="control-disclosure cycle-ledger">
+          <summary>
+            <span><small>Technical record</small><strong>Cycle Ledger</strong></span>
+            <em>Bounded raw rendering state</em>
+          </summary>
           <pre id="cycleLedgerOutput">No cycle ledger has been produced.</pre>
-        </div>
+        </details>
 
+        <details class="control-disclosure">
+          <summary>
+            <span><small>Returned evidence</small><strong>Station Receipts</strong></span>
+            <em>Receipts created only by explicit Nine-Cycle execution</em>
+          </summary>
         <div
           class="cycle-receipt-list"
           id="cycleReceiptList"
@@ -971,6 +1086,7 @@
             <p>Run Nine-Cycle explicitly to create station receipts.</p>
           </article>
         </div>
+        </details>
       </section>
 
       <section class="instrument-chamber" id="registryChamber" role="tabpanel" aria-labelledby="registryChamberButton" hidden>
@@ -992,7 +1108,7 @@
         <div class="archive-report-list" id="archiveReportList"><article class="empty-state"><h4>No archived reports</h4><p>Create a report and add it to the archive.</p></article></div>
         <div class="archive-error-list" id="archiveErrorList"><article class="empty-state"><h4>No archived errors</h4><p>Engine and control errors will be recorded here.</p></article></div>
         <div class="archive-snapshot-grid"><article id="archiveParticipantSnapshot"><h4>Participant Snapshot</h4><p>No participant snapshot has been archived.</p></article><article id="archiveObservationSnapshot"><h4>Observation Snapshot</h4><p>No observation snapshot has been archived.</p></article></div>
-        <div class="archive-raw"><h4>Deep Archive</h4><pre id="archiveRawOutput">No deep archive has been created.</pre></div>
+        <details class="control-disclosure archive-raw"><summary><span><small>Technical record</small><strong>Deep Archive</strong></span><em>Bounded raw session evidence</em></summary><pre id="archiveRawOutput">No deep archive has been created.</pre></details>
       </section>
 
       <section class="instrument-chamber" id="boundaryChamber" role="tabpanel" aria-labelledby="boundaryChamberButton" hidden>
@@ -1042,6 +1158,6 @@
   <script src="/showroom/globe/audralia/diagnostic/index.control.bridge.js?v=AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_COMPATIBILITY_BRIDGE_TNT_v12" defer data-audralia-diagnostic-control-bridge-script="true" data-contract="AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_COMPATIBILITY_BRIDGE_TNT_v12" data-participant-role="THIN_CONTROL_COMPATIBILITY_BRIDGE" data-participant-required="true" data-compatibility-owner="true" data-relational-correspondence-owner="true" data-family-synchronization-certification-owner="true" data-control-owner="false" data-dom-event-binding-owner="false" data-report-owner="false" data-execution-owner="false" data-load-order="15"></script>
   <script src="/showroom/globe/audralia/diagnostic/index.inspection.lane.js?v=AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_TNT_v3" defer data-audralia-diagnostic-inspection-lane-script="true" data-contract="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_TNT_v3" data-participant-role="DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE" data-participant-required="true" data-inspection-owner="true" data-control-owner="false" data-dom-event-binding-owner="false" data-load-order="16"></script>
   <script src="/showroom/globe/audralia/diagnostic/index.js?v=AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v5" defer data-audralia-diagnostic-engine-script="true" data-contract="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v5" data-participant-role="DROP_WITH_READ_DIAGNOSTIC_ENGINE" data-participant-required="true" data-diagnostic-state-owner="true" data-report-owner="true" data-observation-owner="true" data-direct-execution-owner="true" data-nine-cycle-owner="true" data-control-owner="false" data-dom-event-binding-owner="false" data-report-nonblocking="true" data-load-order="17"></script>
-  <script src="/showroom/globe/audralia/diagnostic/index.controls.js?v=AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v11&amp;asset=GEN2037_INTERACTION_LAYOUT_20260825_1" defer data-audralia-diagnostic-control-panel-script="true" data-contract="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v11" data-participant-role="DROP_WITH_READ_CONTROL_PANEL" data-participant-required="true" data-control-owner="true" data-dom-event-binding-owner="true" data-dropdown-owner="true" data-tab-owner="true" data-clipboard-owner="true" data-receipt-filter-owner="true" data-receipt-selection-owner="true" data-target-lifecycle-owner="true" data-target-preparation-owner="true" data-independent-binding="true" data-engine-fallback-report="true" data-no-silent-failure="true" data-load-order="18"></script>
+  <script src="/showroom/globe/audralia/diagnostic/index.controls.js?v=AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v11&amp;asset=GEN2043_GUIDED_WORKSPACES_20260825_1" defer data-audralia-diagnostic-control-panel-script="true" data-contract="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v11" data-participant-role="DROP_WITH_READ_CONTROL_PANEL" data-participant-required="true" data-control-owner="true" data-dom-event-binding-owner="true" data-dropdown-owner="true" data-tab-owner="true" data-clipboard-owner="true" data-receipt-filter-owner="true" data-receipt-selection-owner="true" data-target-lifecycle-owner="true" data-target-preparation-owner="true" data-independent-binding="true" data-engine-fallback-report="true" data-no-silent-failure="true" data-load-order="18"></script>
 </body>
 </html>

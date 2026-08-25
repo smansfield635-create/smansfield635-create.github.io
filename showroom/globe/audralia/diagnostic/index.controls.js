@@ -1,10 +1,10 @@
 // /showroom/globe/audralia/diagnostic/index.controls.js
-// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v11.2
+// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v11.2.1
 // Full-file replacement.
 // Controls own UI binding, target preparation, target lifecycle, and user-facing rendering.
 // Diagnostic index.js owns report/direct/cycle production.
-// v11.2 adds the guided top-level workspace orbit, explicit context projection,
-// and progressive disclosure while retaining v11 runtime and command ownership.
+// v11.2.1 keeps guided navigation and context selection on the presentation
+// path; diagnostic evidence is published only at explicit state boundaries.
 // No production mutation. No readiness claim. No visual-pass claim. No cycle-pass claim.
 
 (function installAudraliaDistributedDiagnosticControlsV11(global) {
@@ -16,7 +16,7 @@
 
   var CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v11";
   var PREVIOUS_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v10";
-  var VERSION = "11.2.0";
+  var VERSION = "11.2.1";
   var FILE = "/showroom/globe/audralia/diagnostic/index.controls.js";
   var COMPACT_PRESENTATION_STYLESHEET = "/showroom/globe/audralia/diagnostic/index.compact.css?v=AUDRALIA_DIAGNOSTIC_COMPACT_INTERACTION_LAYOUT_20260825_1";
 
@@ -1021,16 +1021,6 @@
       diagnosticEngineContract: state.engine.contract
     });
 
-    if (engine && isFn(engine.setSelection)) {
-      try {
-        engine.setSelection({
-          category: settings.category,
-          audit: settings.audit,
-          participant: settings.participant
-        });
-      } catch (_e0) {}
-    }
-
     if (engine && isFn(engine.createReport)) {
       try {
         return Promise.resolve(engine.createReport(settings)).then(function (report) {
@@ -1517,15 +1507,18 @@
   }
 
   function normalizeReceipt(record, source, path) {
-    return {
+    var filterText = safeJson(record).toLowerCase();
+    var normalized = {
       type: token(record && (record.type || record.status || record.reportStatus || "observation")).toLowerCase(),
       sourceAuthority: source || "UNKNOWN",
       label: record && (record.label || record.title || record.schema || record.contract) || source || "Receipt",
       record: frozenClone(record),
       receiptId: record && (record.receiptId || record.id || record.reportId || record.cycleId) || null,
       path: path || null,
-      groups: ["observation"].concat(record && /held|error|fail|missing/i.test(safeJson(record)) ? ["error"] : [])
+      groups: ["observation"].concat(record && /held|error|fail|missing/i.test(filterText) ? ["error"] : [])
     };
+    try { Object.defineProperty(normalized, "filterText", { value: filterText, enumerable: false }); } catch (_e) {}
+    return normalized;
   }
 
   function collectReceiptFamilies() {
@@ -1560,7 +1553,7 @@
 
   function receiptMatchesFilter(entry, filter) {
     var f = String(filter || "all").toLowerCase();
-    var text = safeJson(entry).toLowerCase();
+    var text = entry && entry.filterText ? entry.filterText : safeJson(entry).toLowerCase();
     if (f === "all") return true;
     if (f === "participant") return /participant|station|f1|f3|f5|f8|f13|f21|f34|f55|f89|north|east|west|south|rail/.test(text);
     if (f === "observation") return /observation|inspection|target|runtime|engine|dgb/.test(text);
@@ -1576,19 +1569,21 @@
       return receiptMatchesFilter(entry, state.ui.receiptFilter);
     });
 
-    if (settings.render !== false) {
-      setHtml("receiptList", state.visibleReceipts.length
-        ? state.visibleReceipts.map(function (entry, index) {
-            return '<article tabindex="0" role="button" data-receipt-index="' + index + '">' +
-              "<h4>" + escapeHtml(entry.label) + "</h4><p>" + escapeHtml(entry.sourceAuthority) + "</p>" +
-              (entry.receiptId ? "<small>" + escapeHtml(entry.receiptId) + "</small>" : "") +
-              "</article>";
-          }).join("")
-        : '<article class="empty-state"><h4>No receipts</h4><p>No receipts are currently available for this filter.</p></article>');
-    }
+    if (settings.render !== false) renderVisibleReceiptInventory();
 
     if (settings.publish !== false) publishReceipt();
     return frozenClone(state.normalizedReceipts);
+  }
+
+  function renderVisibleReceiptInventory() {
+    setHtml("receiptList", state.visibleReceipts.length
+      ? state.visibleReceipts.map(function (entry, index) {
+          return '<article tabindex="0" role="button" data-receipt-index="' + index + '">' +
+            "<h4>" + escapeHtml(entry.label) + "</h4><p>" + escapeHtml(entry.sourceAuthority) + "</p>" +
+            (entry.receiptId ? "<small>" + escapeHtml(entry.receiptId) + "</small>" : "") +
+            "</article>";
+        }).join("")
+      : '<article class="empty-state"><h4>No receipts</h4><p>No receipts are currently available for this filter.</p></article>');
   }
 
   function applyReceiptFilter(filter) {
@@ -1598,7 +1593,10 @@
       node.setAttribute("aria-pressed", node.getAttribute("data-receipt-filter") === state.ui.receiptFilter ? "true" : "false");
     });
 
-    refreshReceiptInventory({ publish: true, render: true });
+    state.visibleReceipts = state.normalizedReceipts.filter(function (entry) {
+      return receiptMatchesFilter(entry, state.ui.receiptFilter);
+    });
+    renderVisibleReceiptInventory();
   }
 
   function selectReceipt(index) {
@@ -1607,7 +1605,6 @@
     setHtml("selectedReceiptDetail", entry
       ? "<h4>" + escapeHtml(entry.label) + "</h4><pre>" + escapeHtml(boundedJson(entry.record)) + "</pre>"
       : "<h4>Receipt unavailable</h4>");
-    publishReceipt();
   }
 
   function closeAllSelectors(except) {
@@ -1635,20 +1632,6 @@
     return true;
   }
 
-  function setEngineSelection() {
-    var resolved = resolveFirst(DIAGNOSTIC_ENGINE_PATHS);
-    var engine = resolved ? resolved.value : null;
-    if (engine && isFn(engine.setSelection)) {
-      try {
-        engine.setSelection({
-          category: state.ui.selectedCategory,
-          audit: state.ui.selectedAudit,
-          participant: state.ui.selectedParticipant
-        });
-      } catch (_e) {}
-    }
-  }
-
   function selectCategory(categoryId, label) {
     state.ui.selectedCategory = categoryId || state.ui.selectedCategory;
     var visibleLabel = label || state.ui.selectedCategory;
@@ -1657,9 +1640,7 @@
     Array.prototype.slice.call(doc.querySelectorAll("[data-category-id]")).forEach(function (node) {
       node.setAttribute("aria-selected", node.getAttribute("data-category-id") === state.ui.selectedCategory ? "true" : "false");
     });
-    setEngineSelection();
     closeAllSelectors();
-    publishReceipt();
   }
 
   function selectAudit(auditId, label) {
@@ -1670,9 +1651,7 @@
     Array.prototype.slice.call(doc.querySelectorAll("[data-audit-id]")).forEach(function (node) {
       node.setAttribute("aria-selected", node.getAttribute("data-audit-id") === state.ui.selectedAudit ? "true" : "false");
     });
-    setEngineSelection();
     closeAllSelectors();
-    publishReceipt();
   }
 
   function activatePanel(buttonSelector, panelAttribute, value, stateKey) {
@@ -1685,7 +1664,6 @@
       if (panel) panel.hidden = !selected;
     });
     state.ui[stateKey] = value;
-    publishReceipt();
   }
 
   function activateWorkspace(workspace, options) {
@@ -1737,7 +1715,7 @@
 
   function activateObservationLens(lens) {
     activatePanel("[data-observation-lens]", "data-observation-lens", lens || "target", "observationLens");
-    if (lens === "window") setTargetVisible(true);
+    if (lens === "window") setTargetVisible(true, { publish: false, inspect: false });
   }
 
   function activateInstrumentChamber(chamber) {
@@ -1785,28 +1763,28 @@
       "<p>Selected for direct-execution context only. Selection does not certify availability or execute the participant.</p>"
     );
 
-    setEngineSelection();
-    publishReceipt();
     return true;
   }
 
-  function setTargetVisible(visible) {
+  function setTargetVisible(visible, options) {
+    var settings = options || {};
     state.ui.targetVisible = Boolean(visible);
     var button = byId("toggleObservationTarget");
     var targetWindow = byId("targetWindow");
     if (button) button.setAttribute("aria-expanded", state.ui.targetVisible ? "true" : "false");
     if (targetWindow) targetWindow.hidden = !state.ui.targetVisible;
-    publishReceipt();
-    if (state.ui.targetVisible) inspectTargetFrame();
+    if (settings.publish !== false) publishReceipt();
+    if (state.ui.targetVisible && settings.inspect !== false) inspectTargetFrame();
   }
 
-  function setTargetExpanded(expanded) {
+  function setTargetExpanded(expanded, options) {
+    var settings = options || {};
     state.ui.targetExpanded = Boolean(expanded);
     var button = byId("expandTargetWindow");
     var windowNode = byId("targetWindow");
     if (windowNode) windowNode.classList.toggle("is-expanded", state.ui.targetExpanded);
     if (button) button.setAttribute("aria-pressed", state.ui.targetExpanded ? "true" : "false");
-    publishReceipt();
+    if (settings.publish !== false) publishReceipt();
   }
 
   function reloadTargetFrame() {
@@ -1938,14 +1916,14 @@
     if (id === "createDeepArchive") { event.preventDefault(); createDeepArchive(); return; }
     if (id === "toggleObservationTarget") {
       event.preventDefault();
-      if (state.ui.targetVisible) setTargetVisible(false);
+      if (state.ui.targetVisible) setTargetVisible(false, { publish: false, inspect: false });
       else {
         activateWorkspace("observe");
         activateObservationLens("window");
       }
       return;
     }
-    if (id === "expandTargetWindow") { event.preventDefault(); setTargetExpanded(!state.ui.targetExpanded); return; }
+    if (id === "expandTargetWindow") { event.preventDefault(); setTargetExpanded(!state.ui.targetExpanded, { publish: false }); return; }
     if (id === "reloadTargetFrame") { event.preventDefault(); reloadTargetFrame(); return; }
     if (id === "reloadObservatory") { event.preventDefault(); root.location.reload(); return; }
     if (target.hasAttribute("data-receipt-index")) { event.preventDefault(); selectReceipt(target.getAttribute("data-receipt-index")); return; }

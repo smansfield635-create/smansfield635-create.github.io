@@ -15,6 +15,9 @@ const batteryScope = JSON.parse(fs.readFileSync('laws/control-plane/renewal/laws
 const methodsShowroomRoute = '/laws/research/methods-and-models/';
 const methodsShowroomContract = 'METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1';
 const methodsCanonicalArchive = 'METHODS_MODELS_CANONICAL_ARCHIVE_v1_DRAFT';
+const roomCarouselAssetIdentity = 'LAWS_BACK_PAGE_CAROUSEL_CORRECTION_20260825A';
+const roomCarouselCssHref = `/laws/room-carousel/room-carousel.v1.css?v=${roomCarouselAssetIdentity}`;
+const roomCarouselJsSrc = `/laws/room-carousel/room-carousel.v1.js?v=${roomCarouselAssetIdentity}`;
 
 const storyToServed = new Map([
   ['/laws/categories/reality/theory/', '/laws/categories/reality/theory.html'],
@@ -33,6 +36,8 @@ const childPages = narrative.pages.map(page => ({
   canonicalRoute: page.route,
   name: `${page.authority}-${page.page_title}`,
   methodsShowroom: page.route === methodsShowroomRoute,
+  previousRoute: servedRoute(page.previous_story_beat.route),
+  nextRoute: servedRoute(page.next_story_beat.route),
   expectedReadings: page.route === methodsShowroomRoute ? 0 : (['FLOW', 'INTEGRITY', 'REALITY', 'STRUCTURE'].includes(page.authority) ? 3 : 5),
 }));
 const familyPages = ['/laws/categories/flow/', '/laws/categories/integrity/', '/laws/categories/reality/', '/laws/categories/structure/']
@@ -43,7 +48,10 @@ const frontier = { route: '/frontier/energy/battery-coherence-study/', name: 'fr
 const landing = { route: '/laws/', name: 'laws-landing', expectedReadings: null, methodsShowroom: false };
 const renewedPages = [...childPages, ...familyPages, ...wrapperPages, frontier];
 const allPages = [landing, ...renewedPages];
-const roomCarouselRoutes = [...childPages.filter(page => !page.methodsShowroom).map(page => page.route), '/laws/research/', '/laws/categories/reality/battery-heldout-study/'];
+const storyCarouselPages = childPages.filter(page => !page.methodsShowroom);
+const storyCarouselByRoute = new Map(storyCarouselPages.map(page => [page.route, page]));
+const familyCarouselRoutes = familyPages.map(page => page.route);
+const roomCarouselRoutes = [...storyCarouselPages.map(page => page.route), '/laws/research/', '/laws/categories/reality/battery-heldout-study/', ...familyCarouselRoutes];
 
 const profiles = [
   { name: 'phone', viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true },
@@ -416,8 +424,8 @@ async function landingCheck(page, profile) {
   await appliedRoute.waitFor({ state: 'visible', timeout: 5000 });
   assert(await appliedRoute.getAttribute('href') === '/laws/research/applied-investigations/', '/laws/: applied investigations route drift');
   await page.keyboard.press('Escape');
-  assert(await page.locator('.laws-first-rail').count() === 1, '/laws/: persistent FIRST rail missing');
-  assert(await page.locator('[data-laws-experience-indicator]').count() === 5, '/laws/: FIRST indicator count');
+  assert(await page.locator('[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"]').count() === 1, '/laws/: protected landing identity missing');
+  assert(await page.locator('html[data-first-authorities="FLOW-INTEGRITY-REALITY-STRUCTURE-TEST"]').count() === 1, '/laws/: protected FIRST authority declaration missing');
 }
 
 async function verifyProfiles(browser) {
@@ -509,8 +517,8 @@ async function verifyStatic(browser) {
   }
 }
 async function verifyRoomCarousel(browser) {
-  assert(roomCarouselRoutes.length === 25, `Room carousel route count ${roomCarouselRoutes.length}`);
-  assert(new Set(roomCarouselRoutes).size === 25, 'Duplicate room carousel route');
+  assert(roomCarouselRoutes.length === 29, `Room carousel route count ${roomCarouselRoutes.length}`);
+  assert(new Set(roomCarouselRoutes).size === 29, 'Duplicate room carousel route');
 
   for (const profile of profiles) {
     const context = await contextOrFailure(browser, { viewport: profile.viewport, isMobile: profile.isMobile, hasTouch: profile.hasTouch, reducedMotion: 'reduce', deviceScaleFactor: 1 }, { suite: 'room-carousel-runtime', profile: profile.name });
@@ -538,6 +546,26 @@ async function verifyRoomCarousel(browser) {
 
           const controls = carouselRoot.locator('[data-lrc-controls],[data-lrc-prev],[data-lrc-next]');
           assert(await controls.count() === 0, `${route}: visible directional control retained`);
+          assert(await page.locator(`link[href="${roomCarouselCssHref}"]`).count() === 1, `${route}: cache-bound carousel CSS missing`);
+          assert(await page.locator(`script[src="${roomCarouselJsSrc}"]`).count() === 1, `${route}: cache-bound carousel JavaScript missing`);
+          assert(await carouselRoot.locator('[data-lrc-track] .lr-story-nav').count() === 0, `${route}: Laws narrative context was adopted as a carousel tab`);
+          const tabLabels = await tabs.locator('[data-lrc-tab-label]').allTextContents();
+          assert(!tabLabels.some(label => label.trim() === 'Laws narrative context'), `${route}: Laws narrative context tab retained`);
+          const storyDescriptor = storyCarouselByRoute.get(route);
+          const storyNavigation = carouselRoot.locator(':scope > .lr-story-nav');
+          if (storyDescriptor) {
+            assert(await storyNavigation.count() === 1, `${route}: bottom story navigation missing`);
+            assert(await carouselRoot.getAttribute('data-lrc-story-navigation') === 'bottom', `${route}: bottom story navigation receipt missing`);
+            const storyLinks = storyNavigation.locator(':scope > a');
+            assert(await storyLinks.count() === 2, `${route}: bottom story navigation link count`);
+            const storyHrefs = await storyLinks.evaluateAll(links => links.map(link => link.getAttribute('href')));
+            assert(storyHrefs[0] === storyDescriptor.previousRoute && storyHrefs[1] === storyDescriptor.nextRoute, `${route}: bottom story routes ${JSON.stringify(storyHrefs)}`);
+            const storyLabels = await storyLinks.evaluateAll(links => links.map(link => (link.textContent || '').trim().replace(/\s+/g, ' ')));
+            assert(storyLabels.length === 2 && storyLabels.every(Boolean), `${route}: bottom story link text missing`);
+            assert(await storyNavigation.isVisible() && await storyLinks.nth(0).isVisible() && await storyLinks.nth(1).isVisible(), `${route}: bottom story navigation not visible`);
+          } else {
+            assert(await storyNavigation.count() === 0, `${route}: undeclared bottom story navigation present`);
+          }
           const viewport = carouselRoot.locator('[data-lrc-viewport]').first();
           const stageHeightBefore = await viewport.evaluate(node => node.getBoundingClientRect().height);
           const directIndex = cardCount > 2 ? cardCount - 1 : Math.max(0, cardCount - 1);
@@ -597,6 +625,7 @@ async function verifyRoomCarousel(browser) {
               tabsBottom: tabsRect?.bottom ?? null,
               lowerTop: lowerRect?.top ?? null,
               lowerExists: Boolean(lower),
+              storyNavigationTop: root?.querySelector(':scope > .lr-story-nav')?.getBoundingClientRect().top ?? null,
               summaryContained,
               documentContained: document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1
             };
@@ -608,6 +637,9 @@ async function verifyRoomCarousel(browser) {
           assert(layout.documentContained, `${route}: descendant horizontal document overflow`);
           assert(layout.lowerExists, `${route}: ordinary lower page content missing`);
           assert(layout.lowerTop === null || layout.stageBottom === null || layout.lowerTop >= layout.stageBottom - 2, `${route}: lower page content overlaps carousel ${layout.lowerTop}/${layout.stageBottom}`);
+          if (storyCarouselByRoute.has(route)) {
+            assert(layout.storyNavigationTop !== null && layout.stageBottom !== null && layout.storyNavigationTop >= layout.stageBottom - 2, `${route}: bottom story navigation overlaps carousel ${layout.storyNavigationTop}/${layout.stageBottom}`);
+          }
 
           const gesturePoint = await activeCard.evaluate(node => {
             const rect = node.getBoundingClientRect();
@@ -700,7 +732,8 @@ async function verifyRoomCarousel(browser) {
             descendantContainment: true,
             visibleDirectionalControls: 0,
             directionOnlyOneGestureOneStep: true,
-            canonicalSettledLanding: true
+            canonicalSettledLanding: true,
+            bottomStoryNavigation: storyCarouselByRoute.has(route) ? 'visible-below-stage' : 'not-declared'
           };
         });
       }
@@ -720,6 +753,20 @@ async function verifyRoomCarousel(browser) {
           const carouselRoot = page.locator('[data-laws-room-carousel]').first();
           assert(await carouselRoot.count() === 1, `${route}: static carousel root missing`);
           assert(await carouselRoot.getAttribute('data-lrc-mounted') !== 'true', `${route}: runtime mounted with JavaScript disabled`);
+          assert(await page.locator(`link[href="${roomCarouselCssHref}"]`).count() === 1, `${route}: static cache-bound carousel CSS missing`);
+          assert(await page.locator(`script[src="${roomCarouselJsSrc}"]`).count() === 1, `${route}: static cache-bound carousel JavaScript missing`);
+          const storyDescriptor = storyCarouselByRoute.get(route);
+          const storyNavigation = carouselRoot.locator(':scope > .lr-story-nav');
+          if (storyDescriptor) {
+            assert(await storyNavigation.count() === 1 && await storyNavigation.isVisible(), `${route}: static bottom story navigation missing`);
+            const storyLinks = storyNavigation.locator(':scope > a');
+            assert(await storyLinks.count() === 2, `${route}: static bottom story navigation link count`);
+            const storyHrefs = await storyLinks.evaluateAll(links => links.map(link => link.getAttribute('href')));
+            assert(storyHrefs[0] === storyDescriptor.previousRoute && storyHrefs[1] === storyDescriptor.nextRoute, `${route}: static bottom story routes ${JSON.stringify(storyHrefs)}`);
+            assert(await storyLinks.nth(0).isVisible() && await storyLinks.nth(1).isVisible(), `${route}: static Previous/Next links not visible`);
+          } else {
+            assert(await storyNavigation.count() === 0, `${route}: undeclared static story navigation present`);
+          }
         });
       }
     } finally {
@@ -742,7 +789,7 @@ async function main() {
   assert(childPages.length === 24, `Child route count ${childPages.length}`);
   assert(batteryScope.public_surface_count === 27, 'Battery scope drift');
   assert(allPages.length === 33, `Integrated route count ${allPages.length}`);
-  assert(roomCarouselRoutes.length === 25, `Room carousel route count ${roomCarouselRoutes.length}`);
+  assert(roomCarouselRoutes.length === 29, `Room carousel route count ${roomCarouselRoutes.length}`);
 
   const browser = await chromium.launch({ headless: true });
   try {
@@ -775,10 +822,14 @@ async function main() {
     integratedRoutes: 33,
     batteryPublicSurfaces: 27,
     methodsModelsAlternateContract: failures.some(failure => failure.route === methodsShowroomRoute) ? 'FAIL' : 'PASS',
-    roomCarouselRoutes: 25,
+    roomCarouselRoutes: 29,
+    roomCarouselStoryRoutes: 23,
+    roomCarouselFamilyRoots: 4,
+    roomCarouselAssetIdentity,
     roomCarouselRuntimeExecutions: countCheck('room-carousel-runtime'),
     roomCarouselStaticNoJavaScriptExecutions: countCheck('room-carousel-static-no-js'),
     roomCarouselVisibleDirectionalControls: failureIncludes('visible directional control') ? 'FAIL' : 'PASS',
+    roomCarouselBottomStoryNavigation: failureIncludes('story navigation') || failureIncludes('story routes') || failureIncludes('story link text') || failureIncludes('Laws narrative context') ? 'FAIL' : 'PASS',
     roomCarouselDirectionOnlyOneGestureOneStep: failureIncludes('vertical gesture') || failureIncludes('pointer one-step') ? 'FAIL' : 'PASS',
     roomCarouselCanonicalSettledLanding: failureIncludes('canonical settled landing') ? 'FAIL' : 'PASS',
     roomCarouselCompleteNumberedTopRail: failureIncludes('complete top tab rail') || failureIncludes('numbered tab sequence') ? 'FAIL' : 'PASS',
@@ -796,7 +847,7 @@ async function main() {
     staticNoJavaScriptExecutions: countCheck('static-no-js'),
     zeroOpenExclusiveOrZeroReadings: failureIncludes('reading') || failureIncludes('panel') ? 'FAIL' : 'PASS',
     collapsibleNavigation: failureIncludes('nav ') ? 'FAIL' : 'PASS',
-    persistentFirstRail: failureIncludes('FIRST rail') ? 'FAIL' : 'PASS',
+    protectedFirstAuthorityDeclaration: failureIncludes('FIRST authority declaration') ? 'FAIL' : 'PASS',
     auditDisclosure: failureIncludes('audit ') ? 'FAIL' : 'PASS',
     horizontalOverflow: failures.filter(failure => failure.message.includes('overflow')).length,
     browserErrors: failures.filter(failure => /pageerror:|console:|response:\d+/.test(failure.message)).length,

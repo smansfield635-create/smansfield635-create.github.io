@@ -444,3 +444,33 @@ html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] > [data-lrc-contin
 @media (forced-colors: active) {
   html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] { border: 1px solid CanvasText !important; background: Canvas !important; color: CanvasText; }
 }
+
+
+/* LAWS_BACK_PAGE_CAROUSEL_CORRECTION_20260825A: preserve native inter-page story navigation below the carousel stage. */
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] > .lr-story-nav {
+  position: relative;
+  z-index: 12;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(.65rem, 1.8vw, 1rem);
+  width: min(94vw, 72rem);
+  margin: clamp(.9rem, 2.2vw, 1.5rem) auto 0;
+}
+
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] > .lr-story-nav > a {
+  min-width: 0;
+}
+
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] > .lr-story-nav > a:last-child {
+  text-align: right;
+}
+
+@media (max-width: 640px) {
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] > .lr-story-nav {
+    grid-template-columns: 1fr;
+  }
+
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] > .lr-story-nav > a:last-child {
+    text-align: left;
+  }
+}

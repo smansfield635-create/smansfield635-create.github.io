@@ -1,10 +1,10 @@
 // /showroom/globe/audralia/diagnostic/index.controls.js
-// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v11
+// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v11.2
 // Full-file replacement.
 // Controls own UI binding, target preparation, target lifecycle, and user-facing rendering.
 // Diagnostic index.js owns report/direct/cycle production.
-// v11.1 removes first-touch command interception, bounds receipt publication cost,
-// and loads the compact presentation-only diagnostic layout.
+// v11.2 adds the guided top-level workspace orbit, explicit context projection,
+// and progressive disclosure while retaining v11 runtime and command ownership.
 // No production mutation. No readiness claim. No visual-pass claim. No cycle-pass claim.
 
 (function installAudraliaDistributedDiagnosticControlsV11(global) {
@@ -16,7 +16,7 @@
 
   var CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v11";
   var PREVIOUS_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v10";
-  var VERSION = "11.1.0";
+  var VERSION = "11.2.0";
   var FILE = "/showroom/globe/audralia/diagnostic/index.controls.js";
   var COMPACT_PRESENTATION_STYLESHEET = "/showroom/globe/audralia/diagnostic/index.compact.css?v=AUDRALIA_DIAGNOSTIC_COMPACT_INTERACTION_LAYOUT_20260825_1";
 
@@ -79,6 +79,15 @@
     Object.freeze({ position: 7, fibonacci: "F34", role: "SOUTH_PROBE_HANDOFF", direction: "SOUTH" }),
     Object.freeze({ position: 8, fibonacci: "F55", role: "SOUTH_RESTITUTION_INTERPRETATION", direction: "SOUTH" }),
     Object.freeze({ position: 9, fibonacci: "F89", role: "RAIL_TERMINAL_SYNTHESIS", direction: "RAIL" })
+  ]);
+
+  var WORKSPACES = Object.freeze([
+    Object.freeze({ id: "work", label: "Work" }),
+    Object.freeze({ id: "report", label: "Report" }),
+    Object.freeze({ id: "observe", label: "Observe" }),
+    Object.freeze({ id: "instruments", label: "Instruments" }),
+    Object.freeze({ id: "system", label: "System" }),
+    Object.freeze({ id: "guide", label: "Guide" })
   ]);
 
   var NO_CLAIMS = Object.freeze({
@@ -337,6 +346,9 @@
     schema: CONTROL_REQUIREMENTS_SCHEMA,
     controlsContract: CONTRACT,
     previousControlsContract: PREVIOUS_CONTRACT,
+    presentationWorkspaces: WORKSPACES.map(function (entry) { return entry.id; }),
+    defaultWorkspace: "work",
+    workspaceSelectionExecutes: false,
     expectedDiagnosticEngineContract: DIAGNOSTIC_ENGINE_CONTRACT,
     expectedEngineContract: DGB_ENGINE_CONTRACT,
     expectedInspectionLaneContract: INSPECTION_CONTRACT,
@@ -370,6 +382,7 @@
       distributedDeclarations: []
     },
     ui: {
+      workspace: "work",
       targetVisible: false,
       targetExpanded: false,
       receiptFilter: "all",
@@ -468,6 +481,7 @@
       lastAction: state.lastAction,
       lastError: state.lastError,
       presentationStationMap: STATIONS,
+      activeWorkspace: state.ui.workspace,
       requirements: REQUIREMENTS,
       reportProducerOwner: "DIAGNOSTIC_OBSERVATORY_ENGINE_INDEX_JS",
       directCheckProducerOwner: "DIAGNOSTIC_OBSERVATORY_ENGINE_INDEX_JS",
@@ -1463,11 +1477,13 @@
   }
 
   function openReceiptChamber() {
+    activateWorkspace("instruments");
     activateInstrumentChamber("receipts");
     refreshReceiptInventory({ publish: true, render: true });
   }
 
   function openArchiveChamber() {
+    activateWorkspace("instruments");
     activateInstrumentChamber("archive");
     createDeepArchive();
   }
@@ -1485,7 +1501,10 @@
     state.ui.lastReportCommand = cmd;
     applyCommandContext(target);
 
-    if (cmd === "create") { createReport({ source: state.ui.lastReportCommandSource, command: cmd }); return true; }
+    if (cmd === "create") {
+      createReport({ source: state.ui.lastReportCommandSource, command: cmd }).then(function () { activateWorkspace("report"); });
+      return true;
+    }
     if (cmd === "view") return viewCurrentReport();
     if (cmd === "copy-readable") { copyReadableReport(); return true; }
     if (cmd === "copy-packet") { copyPacketReport(); return true; }
@@ -1632,7 +1651,9 @@
 
   function selectCategory(categoryId, label) {
     state.ui.selectedCategory = categoryId || state.ui.selectedCategory;
-    setText("categorySelectorLabel", label || state.ui.selectedCategory);
+    var visibleLabel = label || state.ui.selectedCategory;
+    setText("categorySelectorLabel", visibleLabel);
+    setText("workspaceCategoryState", visibleLabel);
     Array.prototype.slice.call(doc.querySelectorAll("[data-category-id]")).forEach(function (node) {
       node.setAttribute("aria-selected", node.getAttribute("data-category-id") === state.ui.selectedCategory ? "true" : "false");
     });
@@ -1643,7 +1664,9 @@
 
   function selectAudit(auditId, label) {
     state.ui.selectedAudit = auditId || state.ui.selectedAudit;
-    setText("auditSelectorLabel", label || state.ui.selectedAudit);
+    var visibleLabel = label || state.ui.selectedAudit;
+    setText("auditSelectorLabel", visibleLabel);
+    setText("workspaceAuditState", visibleLabel);
     Array.prototype.slice.call(doc.querySelectorAll("[data-audit-id]")).forEach(function (node) {
       node.setAttribute("aria-selected", node.getAttribute("data-audit-id") === state.ui.selectedAudit ? "true" : "false");
     });
@@ -1657,11 +1680,55 @@
     buttons.forEach(function (button) {
       var selected = button.getAttribute(panelAttribute) === value;
       button.setAttribute("aria-selected", selected ? "true" : "false");
+      if (button.getAttribute("role") === "tab") button.tabIndex = selected ? 0 : -1;
       var panel = byId(button.getAttribute("aria-controls"));
       if (panel) panel.hidden = !selected;
     });
     state.ui[stateKey] = value;
     publishReceipt();
+  }
+
+  function activateWorkspace(workspace, options) {
+    var requested = String(workspace || "work").toLowerCase();
+    var known = WORKSPACES.some(function (entry) { return entry.id === requested; });
+    var active = known ? requested : "work";
+    var settings = options || {};
+
+    activatePanel("[data-diagnostic-workspace]", "data-diagnostic-workspace", active, "workspace");
+    setText("diagnosticWorkspaceState", WORKSPACES.filter(function (entry) { return entry.id === active; })[0].label);
+    closeAllSelectors();
+
+    if (settings.focusTab) {
+      var activeTab = doc.querySelector('[data-diagnostic-workspace="' + active + '"]');
+      if (activeTab && isFn(activeTab.focus)) activeTab.focus();
+    }
+
+    return active;
+  }
+
+  function focusWorkspaceOrbit() {
+    var activeTab = doc.querySelector('[data-diagnostic-workspace][aria-selected="true"]');
+    var orbit = byId("diagnosticWorkspaceTabs");
+    if (orbit && isFn(orbit.scrollIntoView)) orbit.scrollIntoView({ block: "start" });
+    if (activeTab && isFn(activeTab.focus)) activeTab.focus();
+  }
+
+  function handleWorkspaceKeydown(event) {
+    var target = event.target && isFn(event.target.closest) ? event.target.closest("[data-diagnostic-workspace]") : null;
+    if (!target) return;
+
+    var tabs = Array.prototype.slice.call(doc.querySelectorAll("[data-diagnostic-workspace]"));
+    var index = tabs.indexOf(target);
+    var next = null;
+
+    if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = (index - 1 + tabs.length) % tabs.length;
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") next = (index + 1) % tabs.length;
+    if (event.key === "Home") next = 0;
+    if (event.key === "End") next = tabs.length - 1;
+    if (next === null || !tabs[next]) return;
+
+    event.preventDefault();
+    tabs[next].focus();
   }
 
   function activateLeftOrbit(view) {
@@ -1707,6 +1774,7 @@
     if (!node) return false;
 
     state.ui.selectedParticipant = node.getAttribute("data-participant-role") || "ALL";
+    setText("workspaceParticipantState", node.querySelector("strong") ? node.querySelector("strong").textContent : state.ui.selectedParticipant);
 
     Array.prototype.slice.call(doc.querySelectorAll("[data-participant-role]")).forEach(function (entry) {
       entry.setAttribute("aria-selected", entry === node ? "true" : "false");
@@ -1769,6 +1837,25 @@
     id = target.id || "";
     cmd = target.getAttribute("data-report-command");
 
+    if (target.getAttribute("data-diagnostic-workspace")) {
+      event.preventDefault();
+      activateWorkspace(target.getAttribute("data-diagnostic-workspace"));
+      return;
+    }
+
+    if (target.getAttribute("data-open-diagnostic-workspace")) {
+      event.preventDefault();
+      activateWorkspace(target.getAttribute("data-open-diagnostic-workspace"), { focusTab: true });
+      focusWorkspaceOrbit();
+      return;
+    }
+
+    if (target.hasAttribute("data-return-diagnostic-workspaces")) {
+      event.preventDefault();
+      focusWorkspaceOrbit();
+      return;
+    }
+
     if (target.getAttribute("data-left-orbit-view")) {
       event.preventDefault();
       activateLeftOrbit(target.getAttribute("data-left-orbit-view"));
@@ -1783,6 +1870,7 @@
 
     if (target.getAttribute("data-instrument-chamber")) {
       event.preventDefault();
+      activateWorkspace("instruments");
       activateInstrumentChamber(target.getAttribute("data-instrument-chamber"));
       if (cmd) executeDistributedReportCommand(target, cmd);
       return;
@@ -1821,9 +1909,26 @@
       return;
     }
 
-    if (id === "createReport") { event.preventDefault(); createReport({ source: "CANONICAL_CREATE_REPORT_BUTTON" }); return; }
-    if (id === "runDirectCheck") { event.preventDefault(); runDirectCheck(); return; }
-    if (id === "runNineCycle") { event.preventDefault(); runNineCycle(); return; }
+    if (id === "createReport") {
+      event.preventDefault();
+      createReport({ source: "CANONICAL_CREATE_REPORT_BUTTON" }).then(function () { activateWorkspace("report"); });
+      return;
+    }
+    if (id === "runDirectCheck") {
+      event.preventDefault();
+      runDirectCheck().then(function () {
+        activateWorkspace("report");
+        activateReportMode("raw");
+      });
+      return;
+    }
+    if (id === "runNineCycle") {
+      event.preventDefault();
+      activateWorkspace("instruments");
+      activateInstrumentChamber("cycle");
+      runNineCycle();
+      return;
+    }
     if (id === "copyReadableReport") { event.preventDefault(); copyReadableReport(); return; }
     if (id === "copyPacketReport") { event.preventDefault(); copyPacketReport(); return; }
     if (id === "copyRawReport") { event.preventDefault(); copyRawReport(); return; }
@@ -1831,7 +1936,15 @@
     if (id === "resetCurrentReport") { event.preventDefault(); resetCurrentReport(); return; }
     if (id === "resetWorkbench") { event.preventDefault(); resetWorkbench(); return; }
     if (id === "createDeepArchive") { event.preventDefault(); createDeepArchive(); return; }
-    if (id === "toggleObservationTarget") { event.preventDefault(); setTargetVisible(!state.ui.targetVisible); return; }
+    if (id === "toggleObservationTarget") {
+      event.preventDefault();
+      if (state.ui.targetVisible) setTargetVisible(false);
+      else {
+        activateWorkspace("observe");
+        activateObservationLens("window");
+      }
+      return;
+    }
     if (id === "expandTargetWindow") { event.preventDefault(); setTargetExpanded(!state.ui.targetExpanded); return; }
     if (id === "reloadTargetFrame") { event.preventDefault(); reloadTargetFrame(); return; }
     if (id === "reloadObservatory") { event.preventDefault(); root.location.reload(); return; }
@@ -1851,6 +1964,8 @@
   function bindEvents() {
     doc.addEventListener("click", handleClick);
     doc.addEventListener("click", handleDocumentClick);
+    var workspaceTabs = byId("diagnosticWorkspaceTabs");
+    if (workspaceTabs) workspaceTabs.addEventListener("keydown", handleWorkspaceKeydown);
     var frame = byId(TARGET_FRAME_ID);
     if (frame) frame.addEventListener("load", function () {
       state.target.navigationPending = false;
@@ -1927,6 +2042,7 @@
       resolveDgbEvidence: resolveDgbEvidence,
       resolveEngine: resolveDiagnosticEngine,
       closeAllSelectors: closeAllSelectors,
+      activateWorkspace: activateWorkspace,
       renderCycleChamber: renderCommittedCycleChamber,
       refreshCycleChamber: renderCommittedCycleChamber,
       getState: getPublicState,
@@ -1959,6 +2075,7 @@
   }
 
   function initializeUiState() {
+    activateWorkspace(state.ui.workspace);
     activateLeftOrbit(state.ui.leftOrbitView);
     activateObservationLens(state.ui.observationLens);
     activateInstrumentChamber(state.ui.instrumentChamber);

@@ -37,6 +37,9 @@ jobs:
       - name: Run ECMAScript reference conformance
         run: node infrastructure/lineage-receipt-protocol-v1/tests/test_javascript_reference.mjs
 
+      - name: Run Estate Diagnostic Receipt Profile conformance
+        run: node infrastructure/lineage-receipt-protocol-v1/integrations/estate-diagnostic/estate_diagnostic_profile.v1.mjs --self-test --output /tmp/estate-diagnostic-profile-self-test.json
+
       - name: Run cross-language interoperability
         run: python3 infrastructure/lineage-receipt-protocol-v1/tests/test_cross_language.py
 
@@ -46,6 +49,7 @@ jobs:
           python3 -m json.tool infrastructure/lineage-receipt-protocol-v1/schema/lrpv1-receipt.schema.json >/dev/null
           python3 -m json.tool infrastructure/lineage-receipt-protocol-v1/vectors/lrpv1_conformance_vectors.json >/dev/null
           python3 -m json.tool infrastructure/lineage-receipt-protocol-v1/vectors/route_operator_canonical_v1_legacy_vectors.json >/dev/null
+          python3 -m json.tool infrastructure/lineage-receipt-protocol-v1/integrations/estate-diagnostic/estate_diagnostic_receipt_profile.schema.v1.json >/dev/null
 
       - name: Verify product manifest
         run: |
@@ -94,4 +98,5 @@ jobs:
             infrastructure/lineage-receipt-protocol-v1/vectors/lrpv1_conformance_vectors.json
             infrastructure/lineage-receipt-protocol-v1/vectors/route_operator_canonical_v1_legacy_vectors.json
             /tmp/lrpv1-benchmark.json
+            /tmp/estate-diagnostic-profile-self-test.json
           retention-days: 30

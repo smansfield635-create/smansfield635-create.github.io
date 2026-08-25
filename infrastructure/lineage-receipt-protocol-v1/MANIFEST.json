@@ -2,7 +2,7 @@
   "canonicalization": "JCS-RFC8785-SAFEINT",
   "digest_algorithm": "SHA-256",
   "files": {
-    ".github/workflows/lrpv1-conformance.yml": "5dec40c8bcdf339548be1472a91d122ce44e2f3d3ae7bd6cc6ffd2776800a376",
+    ".github/workflows/lrpv1-conformance.yml": "b4e0721da205bfd8bc72a622414b70dff332bd47804cce68321f029b56d83f71",
     "infrastructure/lineage-receipt-protocol-v1/README.md": "d65d022472a201f07b78c1fd9df19bde9ef5e04872c5cca2afdfa245331d606c",
     "infrastructure/lineage-receipt-protocol-v1/SPECIFICATION.md": "95c81b74a3d865e8270b1b0cdf852c022b827f55b2e127786efff0d0e6208270",
     "infrastructure/lineage-receipt-protocol-v1/benchmarks/benchmark_lrpv1.py": "d30f64969c3a4a94e5c8d8f453d9aba7a523cad03117ae635b5170160400f12d",
@@ -15,10 +15,15 @@
     "infrastructure/lineage-receipt-protocol-v1/tests/test_javascript_reference.mjs": "4d667931ca300c9e284bdc90f20bd401e0e394f4e1e7341a329f5cfb2372f152",
     "infrastructure/lineage-receipt-protocol-v1/tests/test_python_reference.py": "ac48388f7773e32e0fe8cd044c61d1cb577904579d57887d1ae4e4982ad29c21",
     "infrastructure/lineage-receipt-protocol-v1/vectors/lrpv1_conformance_vectors.json": "10e332d6daec59ec5ae780045b5291b18203a8e8bc66395747e7baf1d3de35e1",
-    "infrastructure/lineage-receipt-protocol-v1/vectors/route_operator_canonical_v1_legacy_vectors.json": "b00dc54af92a9fddd45e283bebdd7ec315539a1baf055f28e64c4358cee5e9a5"
+    "infrastructure/lineage-receipt-protocol-v1/vectors/route_operator_canonical_v1_legacy_vectors.json": "b00dc54af92a9fddd45e283bebdd7ec315539a1baf055f28e64c4358cee5e9a5",
+    "infrastructure/lineage-receipt-protocol-v1/integrations/estate-diagnostic/estate_diagnostic_receipt_profile.schema.v1.json": "542a71b07ea815985583bdb224778bf9867265d0d4e9600b86cea3510dc4a365",
+    "infrastructure/lineage-receipt-protocol-v1/integrations/estate-diagnostic/estate_diagnostic_profile.v1.mjs": "e38ef30e14f0fee3a39f461bc907837b63a5d3a5a30b93a92b660b791f06429e"
   },
   "legacy_integrations": [
     "ROUTE_OPERATOR_CANONICAL_V1"
+  ],
+  "profile_integrations": [
+    "ESTATE_DIAGNOSTIC_RECEIPT_PROFILE_v1"
   ],
   "product": "LINEAGE_RECEIPT_PROTOCOL_v1",
   "protocol": "LRP",
@@ -27,6 +32,7 @@
     "javascript"
   ],
   "route_operator_legacy_hashes_reinterpreted": false,
+  "estate_diagnostic_legacy_receipts_reinterpreted": false,
   "scientific_semantics_mutated": false,
   "status": "CANDIDATE_STANDARD_v1",
   "version": "1.0.0"

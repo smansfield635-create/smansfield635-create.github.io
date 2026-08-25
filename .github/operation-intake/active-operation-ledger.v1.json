@@ -2305,6 +2305,18 @@
       "scopeHash": "aa69ccdcb39c22fcfcdaeae916dedf200459595412a499e69b8e5cf7689dc954",
       "state": "ADMITTED_LOCKED"
     },
+    "ab86d1d5550ceac4ba6c51c2d7d145fe3cb72af11263381dcef963c5727d583b": {
+      "governingHead": "a28330f618d587a0683a8c59a2fe23756a6a2e8c",
+      "lockGeneration": 1673,
+      "lockScope": "H_EARTH:AUDRALIA_DIAGNOSTIC_ATOMIC_RECONCILIATION:V1",
+      "operationId": "H_EARTH_AUDRALIA_DIAGNOSTIC_ATOMIC_RECONCILIATION_20260824_2115",
+      "procedureLocatorDigest": "99a58545a6e83ca17b8f4cf51c47bac39d2f92fb45534030cb54c8359f338703",
+      "released": false,
+      "requestDigest": "6e0b11725a880970b97fb6e420156728e155b092b65ae9789a99bf62e3934e5b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ab86d1d5550ceac4ba6c51c2d7d145fe3cb72af11263381dcef963c5727d583b",
+      "state": "ADMITTED_LOCKED"
+    },
     "abe1bbea45186f434c0e75459ebbdee92c7f14d183c6294078688029ff703d54": {
       "governingHead": "adfebb0ac443dca6d18c4568a9faa95d38995bae",
       "lockGeneration": 1642,
@@ -3707,7 +3719,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1672,
+  "lockGeneration": 1673,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -241,6 +241,21 @@ async function activateReadingRoom(page, group, route) {
     return Math.ceil(maximum);
   });
   if (settleMs > 0) await page.waitForTimeout(Math.min(settleMs + 60, 1200));
+  const roomCard = roomRoot.locator('[data-lrc-track] > [data-lrc-card]').nth(target.targetIndex);
+  const alreadyInspecting = await roomRoot.getAttribute('data-lrc-inspecting') === 'true';
+  let openedInspection = false;
+  if (!alreadyInspecting) {
+    const inspect = roomCard.locator(':scope > [data-lrc-summary] [data-lrc-inspect]');
+    assert(await inspect.count() === 1, `${route}: reading room inspection action missing`);
+    await measuredPointerClick(page, inspect, `${route}: open reading inspection`, { route, readingRoomIndex: target.targetIndex });
+    await page.waitForFunction(
+      rootIndex => document.querySelectorAll('[data-laws-room-carousel]')[rootIndex]?.dataset.lrcInspecting === 'true',
+      target.rootIndex,
+    );
+    openedInspection = true;
+  }
+  assert(await group.isVisible(), `${route}: reading group hidden after inspection open`);
+  return { rootIndex: target.rootIndex, targetIndex: target.targetIndex, openedInspection };
 }
 async function navCheck(page, route, profile) {
   const toggle = page.locator('.lr-nav-toggle');
@@ -269,7 +284,7 @@ async function readingCheck(page, descriptor, profile) {
   const groups = page.locator('[data-lr-tabs]');
   assert(await groups.count() === 1, `${descriptor.route}: reading group count ${await groups.count()}`);
   const group = groups.first();
-  await activateReadingRoom(page, group, descriptor.route);
+  const readingRoom = await activateReadingRoom(page, group, descriptor.route);
   const buttons = group.locator('.lr-tab');
   const panels = group.locator('.lr-panel');
   const expanded = group.locator('.lr-tab[aria-expanded="true"]');
@@ -298,6 +313,13 @@ async function readingCheck(page, descriptor, profile) {
   assert(await buttons.nth(next).getAttribute('aria-expanded') === 'true', `${descriptor.route}: next reading did not open`);
   assert(await expanded.count() === 1, `${descriptor.route}: exclusive reading state failed`);
   assert(!(await panels.nth(second).isVisible()), `${descriptor.route}: previous panel remained visible`);
+  if (readingRoom?.openedInspection) {
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(
+      rootIndex => !document.querySelectorAll('[data-laws-room-carousel]')[rootIndex]?.dataset.lrcInspecting,
+      readingRoom.rootIndex,
+    );
+  }
 }
 async function auditCheck(page, route, profile) {
   const audit = page.locator('details.lr-audit').first();
@@ -546,7 +568,7 @@ async function verifyRoomCarousel(browser) {
             const tabsNode = root?.querySelector(':scope > [data-lrc-tabs]');
             const summary = node.querySelector(':scope > [data-lrc-summary]');
             const audit = root?.querySelector(':scope > details.lr-audit');
-            const lower = audit || document.querySelector('.lr-footer, footer');
+            const lower = audit || root?.querySelector(':scope > [data-lrc-continuation]') || document.querySelector('.lr-footer, footer');
             const rect = node.getBoundingClientRect();
             const viewportRect = viewportNode?.getBoundingClientRect();
             const tabsRect = tabsNode?.getBoundingClientRect();

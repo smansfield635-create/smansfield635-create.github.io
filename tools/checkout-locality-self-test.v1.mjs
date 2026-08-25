@@ -25,7 +25,7 @@ check('policy-unrestricted-checkout-denied',policy.checkoutLocality?.unrestricte
 check('policy-excluded-root-materialization-denied',policy.checkoutLocality?.materializeExcludedRootsThenDiscardAllowed===false);
 check('policy-exact-object-readback-allowed',policy.checkoutLocality?.exactCommitObjectReadbackForExcludedProtectedClosuresAllowed===true);
 
-for(const [name,text] of [['bridge',bridge],['canonical-intake',canonicalIntake],['successor-gateway',successorGateway],['preflight',preflight],['deploy',deploy]]){
+for(const [name,text] of [['bridge',bridge],['canonical-intake',canonicalIntake],['successor-gateway',successorGateway]]){
   const checkoutCount=(text.match(/uses:\s*actions\/checkout@v4/g)||[]).length;
   const sparseCount=(text.match(/sparse-checkout:\s*\|/g)||[]).length;
   const nonConeCount=(text.match(/sparse-checkout-cone-mode:\s*false/g)||[]).length;
@@ -41,6 +41,22 @@ for(const required of ['/AI_ENTRYPOINT.json','/.github/workflows/remote-operatio
 check('successor-gateway-not-root-wide',!successorGateway.includes('\n            /*\n'));
 check('successor-frozen-gate-identity-preserved',successorGateway.includes('8b254c43abc53d769e82524c6eded1c07eaffc61'));
 check('successor-frozen-self-test-identity-preserved',successorGateway.includes('edba8f3b024e832fd3da6207ba786ce292aad54c'));
+
+for(const [name,text] of [['publication-preflight',preflight],['pages-deploy',deploy]]){
+  check(`${name}-no-actions-checkout`,!text.includes('actions/checkout@v4'));
+  check(`${name}-partial-fetch`,text.includes('fetch --no-tags --depth=1 --filter=blob:none origin "$TARGET_SHA"'));
+  check(`${name}-sparse-index-init`,text.includes('git sparse-checkout init --cone --sparse-index'));
+  check(`${name}-sparse-index-asserted`,text.includes('git config --bool index.sparse'));
+  check(`${name}-root-tree-enumeration`,text.includes('git ls-tree -d --name-only FETCH_HEAD'));
+  check(`${name}-inspection-child-enumeration`,text.includes('git ls-tree -d --name-only "FETCH_HEAD:inspection"'));
+  check(`${name}-bounded-index-threshold`,text.includes('test "$sparse_entries" -lt 20000'));
+  check(`${name}-bounded-materialized-threshold`,text.includes('test "$materialized_files" -lt 20000'));
+  check(`${name}-manifest-control-plane-included`,text.includes('.github/ai-router/publication-surfaces'));
+  check(`${name}-preview-excluded`,text.includes('.github|preview|node_modules|h-earth-live-6d18e158'));
+  check(`${name}-protected-snapshot-excluded-from-worktree`,text.includes('test "$child" = "audralia-24057-exact" && continue'));
+  check(`${name}-no-noncone-index-walk`,!text.includes('sparse-checkout-cone-mode: false'));
+  check(`${name}-no-root-wide-negative-sparse-pattern`,!text.includes('\n            /*\n'));
+}
 
 check('audralia-weather-qualification-no-actions-checkout',!audraliaWeatherQualification.includes('actions/checkout@v4'));
 check('audralia-weather-qualification-two-partial-fetches',(audraliaWeatherQualification.match(/fetch --no-tags --depth=1 --filter=blob:none/g)||[]).length===2);
@@ -75,10 +91,12 @@ for(const required of [
 ])check(`audralia-weather-qualification-path-${required}`,audraliaWeatherQualification.includes(required));
 check('audralia-weather-qualification-module-closure-guard',audraliaWeatherQualification.includes('Verify browser module dependency closure'));
 check('audralia-weather-qualification-no-root-wide-sparse-set',!audraliaWeatherQualification.includes('git sparse-checkout set /'));
-for(const text of [preflight,deploy])for(const excluded of ['!/preview/','!/h-earth-live-6d18e158/','!/inspection/audralia-24057-exact/'])check(`publication-exclusion-${excluded}-${text===preflight?'preflight':'deploy'}`,text.includes(excluded));
+
 check('builder-exact-object-reader',builder.includes("source:'EXACT_COMMIT_OBJECT'"));
 check('builder-git-object-show',builder.includes("spawnSync('git',['-C',repoRoot,'show',objectPath]"));
 check('builder-target-sha-bound-promotion',builder.includes('promoteAuthorizedExcludedRuntimeDependencies({repoRoot,stage,targetSha,surfaceId})'));
+check('builder-recurses-staged-public-modules',builder.includes("source='STAGED_PUBLIC_PAYLOAD'")&&builder.includes('traversedResourceCount'));
+check('builder-import-wrapper-literal-discovery',builder.includes('importWrapper\\s*\\('));
 
 const sparseTmp=fs.mkdtempSync(path.join(os.tmpdir(),'sparse-index-self-test-'));
 try{
@@ -118,7 +136,8 @@ try{
   fs.mkdirSync(path.join(repo,'showroom/globe/audralia'),{recursive:true});
   fs.mkdirSync(path.join(repo,'inspection/audralia-24057-exact/snapshot/runtime'),{recursive:true});
   fs.mkdirSync(path.join(repo,'public'),{recursive:true});
-  fs.writeFileSync(path.join(repo,'showroom/globe/audralia/index.html'),'<!doctype html><div class="audralia-loading-version">LIVE BUILD</div><script type="module" src="/inspection/audralia-24057-exact/snapshot/runtime/entry.mjs"></script>\n');
+  fs.writeFileSync(path.join(repo,'showroom/globe/audralia/local-compositor.mjs'),"async function importWrapper(label,url){return import(url);}\nawait importWrapper('WRAPPED','/inspection/audralia-24057-exact/snapshot/runtime/entry.mjs');\n");
+  fs.writeFileSync(path.join(repo,'showroom/globe/audralia/index.html'),'<!doctype html><div class="audralia-loading-version">LIVE BUILD</div><script type="module" src="./local-compositor.mjs"></script>\n');
   fs.writeFileSync(path.join(repo,'inspection/audralia-24057-exact/snapshot/runtime/entry.mjs'),"import './child.mjs';\nexport const READY=true;\n");
   fs.writeFileSync(path.join(repo,'inspection/audralia-24057-exact/snapshot/runtime/child.mjs'),'export const CHILD=true;\n');
   fs.writeFileSync(path.join(repo,'inspection/audralia-24057-exact/snapshot/unreferenced.txt'),'must-not-stage');
@@ -139,6 +158,7 @@ try{
   check('exact-object-readback-count',closure?.exactCommitObjectReadbackCount===2,JSON.stringify({count:closure?.exactCommitObjectReadbackCount,files:closure?.files}));
   check('exact-object-entry-staged',fs.existsSync(path.join(stage,'inspection/audralia-24057-exact/snapshot/runtime/entry.mjs')));
   check('exact-object-child-staged',fs.existsSync(path.join(stage,'inspection/audralia-24057-exact/snapshot/runtime/child.mjs')));
+  check('exact-object-local-compositor-traversed',closure?.traversedResourceCount>=4,JSON.stringify({traversed:closure?.traversedResourceCount}));
   check('unreferenced-excluded-object-not-staged',!fs.existsSync(path.join(stage,'inspection/audralia-24057-exact/snapshot/unreferenced.txt')));
   check('closure-sources-exact-commit',closure.files.every(file=>file.source==='EXACT_COMMIT_OBJECT'));
 }finally{
@@ -152,6 +172,10 @@ const receipt={
   unrestrictedCheckoutAllowedByDefault:false,
   exactCommitObjectReadbackVerified:true,
   governedLaneGatewaysSparse:true,
+  publicationPreflightSparseIndex:true,
+  publicationDeploySparseIndex:true,
+  publicationActionsCheckout:false,
+  publicationNoFullIndexTraversalContract:true,
   audraliaWeatherQualificationSparseIndex:true,
   audraliaWeatherQualificationActionsCheckout:false,
   audraliaWeatherQualificationNoFullIndexTraversalContract:true,

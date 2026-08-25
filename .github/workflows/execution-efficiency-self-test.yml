@@ -21,7 +21,30 @@ jobs:
   self-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Materialize execution-efficiency verifier sparse index
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "+${GITHUB_REF}:refs/remotes/origin/verification"
+          git sparse-checkout init --cone --sparse-index
+          git sparse-checkout set .github/ai-router .github/workflows tools
+          git checkout --detach refs/remotes/origin/verification
+          test "$(git config --bool index.sparse)" = "true"
+          sparse_entries="$(git ls-files --sparse | wc -l | tr -d '[:space:]')"
+          materialized_files="$(find . -type f -not -path './.git/*' | wc -l | tr -d '[:space:]')"
+          test "$sparse_entries" -lt 10000
+          test "$materialized_files" -lt 10000
+          test -f AI_ENTRYPOINT.json
+          test -f .github/ai-router/execution-efficiency-policy.v1.json
+          test -f .github/ai-router/execution-efficiency-self-test.v1.mjs
+          test -f .github/ai-router/shared-procedures.v1.json
+          test -f .github/ai-router/workflow-dispatch-capability.v1.json
+          test -f .github/ai-router/publication-release-contract.v1.json
+          test -f .github/workflows/pages-exact-head-deploy-v3.yml
+          echo "EXECUTION_EFFICIENCY_SPARSE_INDEX_ENTRIES=$sparse_entries"
+          echo "EXECUTION_EFFICIENCY_MATERIALIZED_FILES=$materialized_files"
       - uses: actions/setup-node@v4
         with:
           node-version: '22'

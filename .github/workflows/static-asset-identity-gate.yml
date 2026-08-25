@@ -11,9 +11,33 @@ jobs:
   verify-static-asset-identity:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - name: Materialize exact PR comparison with cone sparse index
+        shell: bash
+        env:
+          STATIC_IDENTITY_BASE: ${{ github.event.pull_request.base.sha }}
+          STATIC_IDENTITY_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c protocol.version=2 fetch --no-tags --filter=blob:none origin "$STATIC_IDENTITY_BASE"
+          git update-ref refs/remotes/origin/static-identity-base FETCH_HEAD
+          git -c protocol.version=2 fetch --no-tags --filter=blob:none origin "$STATIC_IDENTITY_HEAD"
+          git update-ref refs/remotes/origin/static-identity-head FETCH_HEAD
+          git sparse-checkout init --cone --sparse-index
+          git sparse-checkout set .github/ai-router
+          git checkout --detach refs/remotes/origin/static-identity-head
+          test "$(git config --bool index.sparse)" = "true"
+          test "$(git rev-parse refs/remotes/origin/static-identity-base^{commit})" = "$STATIC_IDENTITY_BASE"
+          test "$(git rev-parse HEAD^{commit})" = "$STATIC_IDENTITY_HEAD"
+          git merge-base "$STATIC_IDENTITY_BASE" "$STATIC_IDENTITY_HEAD" >/dev/null
+          sparse_entries="$(git ls-files --sparse | wc -l | tr -d '[:space:]')"
+          materialized_files="$(find . -type f -not -path './.git/*' | wc -l | tr -d '[:space:]')"
+          test "$sparse_entries" -lt 10000
+          test "$materialized_files" -lt 10000
+          test -f .github/ai-router/platform/verify-static-asset-identity.v1.mjs
+          echo "STATIC_ASSET_GATE_SPARSE_INDEX_ENTRIES=$sparse_entries"
+          echo "STATIC_ASSET_GATE_MATERIALIZED_FILES=$materialized_files"
       - name: Verify changed browser assets have fresh request identities
         env:
           STATIC_IDENTITY_BASE: ${{ github.event.pull_request.base.sha }}

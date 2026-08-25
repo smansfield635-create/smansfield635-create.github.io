@@ -35,7 +35,7 @@ if (policy.checkoutLocality?.materializeExcludedRootsThenDiscardAllowed !== fals
 if (policy.checkoutLocality?.exactCommitObjectReadbackForExcludedProtectedClosuresAllowed !== true) fail('PROTECTED_OBJECT_READBACK_NOT_ALLOWED');
 if (!policy.forbiddenPatterns?.includes('UNRESTRICTED_CHECKOUT_WITHOUT_EXPLICIT_WHOLE_REPOSITORY_EXCEPTION')) fail('UNRESTRICTED_CHECKOUT_FORBIDDEN_PATTERN_MISSING');
 
-const requireSparseCheckout = (workflowPath, {bridge = false, publication = false, requiredPaths = [], forbidRootWide = false} = {}) => {
+const requireSparseCheckout = (workflowPath, {bridge = false, requiredPaths = [], forbidRootWide = false} = {}) => {
   const text = readText(workflowPath);
   const checkoutCount = (text.match(/uses:\s*actions\/checkout@v4/g) || []).length;
   const sparseCount = (text.match(/sparse-checkout:\s*\|/g) || []).length;
@@ -51,13 +51,25 @@ const requireSparseCheckout = (workflowPath, {bridge = false, publication = fals
   }
   for (const required of requiredPaths) if (!text.includes(required)) fail(`WORKING_SET_PATH_MISSING:${workflowPath}:${required}`);
   if (forbidRootWide && text.includes('\n            /*\n')) fail(`WORKING_SET_TOO_BROAD:${workflowPath}`);
-  if (publication) {
-    if (!text.includes('\n            /*\n')) fail(`PUBLICATION_ROOT_INCLUDE_PATTERN_MISSING:${workflowPath}`);
-    for (const excluded of [
-      '!/preview/',
-      '!/h-earth-live-6d18e158/',
-      '!/inspection/audralia-24057-exact/'
-    ]) if (!text.includes(excluded)) fail(`PUBLICATION_BULK_EXCLUSION_MISSING:${workflowPath}:${excluded}`);
+  return text;
+};
+
+const requirePublicationSparseIndex = (workflowPath) => {
+  const text = readText(workflowPath);
+  if ((text.match(/uses:\s*actions\/checkout@v4/g) || []).length !== 0) fail(`PUBLICATION_ACTIONS_CHECKOUT_FORBIDDEN:${workflowPath}`);
+  if (!text.includes('git -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$TARGET_SHA"')) fail(`PUBLICATION_EXACT_PARTIAL_FETCH_MISSING:${workflowPath}`);
+  if (!text.includes('git sparse-checkout init --cone --sparse-index')) fail(`PUBLICATION_SPARSE_INDEX_INIT_MISSING:${workflowPath}`);
+  if (!text.includes('git config --bool index.sparse')) fail(`PUBLICATION_SPARSE_INDEX_ASSERTION_MISSING:${workflowPath}`);
+  if (!text.includes('git ls-tree -d --name-only FETCH_HEAD')) fail(`PUBLICATION_ROOT_TREE_ENUMERATION_MISSING:${workflowPath}`);
+  if (!text.includes('git ls-tree -d --name-only "FETCH_HEAD:inspection"')) fail(`PUBLICATION_INSPECTION_TREE_ENUMERATION_MISSING:${workflowPath}`);
+  if (!text.includes('test "$child" = "audralia-24057-exact" && continue')) fail(`PUBLICATION_PROTECTED_SNAPSHOT_WORKTREE_EXCLUSION_MISSING:${workflowPath}`);
+  if (!text.includes('.github/ai-router/publication-surfaces')) fail(`PUBLICATION_SURFACE_MANIFEST_WORKING_SET_MISSING:${workflowPath}`);
+  if (!text.includes('test "$sparse_entries" -lt 20000')) fail(`PUBLICATION_SPARSE_INDEX_BOUND_MISSING:${workflowPath}`);
+  if (!text.includes('test "$materialized_files" -lt 20000')) fail(`PUBLICATION_MATERIALIZED_FILE_BOUND_MISSING:${workflowPath}`);
+  if (text.includes('sparse-checkout-cone-mode: false')) fail(`PUBLICATION_NON_CONE_CHECKOUT_FORBIDDEN:${workflowPath}`);
+  if (text.includes('\n            /*\n')) fail(`PUBLICATION_ROOT_WIDE_NEGATIVE_PATTERN_FORBIDDEN:${workflowPath}`);
+  for (const excluded of ['preview', 'node_modules', 'h-earth-live-6d18e158']) {
+    if (!text.includes(excluded)) fail(`PUBLICATION_BULK_EXCLUSION_MISSING:${workflowPath}:${excluded}`);
   }
   return text;
 };
@@ -79,8 +91,8 @@ else {
     requiredPaths: policy.checkoutLocality?.canonicalGatewayWorkingSets?.successorGateway || [],
     forbidRootWide: true
   });
-  requireSparseCheckout(preflightWorkflow, {publication: true});
-  requireSparseCheckout(deployWorkflow, {publication: true});
+  requirePublicationSparseIndex(preflightWorkflow);
+  requirePublicationSparseIndex(deployWorkflow);
 }
 
 if (expectedWorkflow) {
@@ -103,6 +115,9 @@ if (!process.exitCode) {
     noRepeatedEquivalentProbeWithoutNewEvidence: true,
     checkoutLocalityDefault: policy.checkoutLocality.defaultMode,
     unrestrictedCheckoutAllowedByDefault: false,
+    publicationCheckoutMode: 'EXACT_REF_PARTIAL_FETCH_CONE_SPARSE_INDEX',
+    publicationActionsCheckoutAllowed: false,
+    publicationFullIndexTraversalAllowed: false,
     centralSparseCheckoutVerified
   }, null, 2) + '\n');
 }

@@ -47,17 +47,51 @@ jobs:
           echo "target_sha=$requested" >> "$GITHUB_OUTPUT"
           echo "EXACT_DISPATCH_HEAD_VERIFIED=$requested"
 
-      - name: Checkout bounded publication working set
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ steps.resolve.outputs.target_sha }}
-          fetch-depth: 1
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /*
-            !/preview/
-            !/h-earth-live-6d18e158/
-            !/inspection/audralia-24057-exact/
+      - name: Materialize bounded publication sparse index
+        env:
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$TARGET_SHA"
+          git sparse-checkout init --cone --sparse-index
+
+          mapfile -t top_dirs < <(git ls-tree -d --name-only FETCH_HEAD)
+          sparse_paths=(".github/ai-router/publication-surfaces")
+          for root in "${top_dirs[@]}"; do
+            case "$root" in
+              .github|preview|node_modules|h-earth-live-6d18e158)
+                ;;
+              inspection)
+                while IFS= read -r child; do
+                  test -n "$child" || continue
+                  test "$child" = "audralia-24057-exact" && continue
+                  sparse_paths+=("inspection/$child")
+                done < <(git ls-tree -d --name-only "FETCH_HEAD:inspection")
+                ;;
+              *)
+                sparse_paths+=("$root")
+                ;;
+            esac
+          done
+
+          git sparse-checkout set -- "${sparse_paths[@]}"
+          git checkout --detach FETCH_HEAD
+          test "$(git config --bool index.sparse)" = "true"
+          sparse_entries="$(git ls-files --sparse | wc -l | tr -d '[:space:]')"
+          materialized_files="$(find . -type f -not -path './.git/*' | wc -l | tr -d '[:space:]')"
+          test "$sparse_entries" -lt 20000
+          test "$materialized_files" -lt 20000
+          test -f tools/publication-preflight.v1.mjs
+          test -f tools/publication-live-verify.mjs
+          test -d .github/ai-router/publication-surfaces
+          test ! -e preview
+          test ! -e h-earth-live-6d18e158
+          test ! -e inspection/audralia-24057-exact
+          echo "PUBLICATION_SPARSE_INDEX_ENTRIES=$sparse_entries"
+          echo "PUBLICATION_MATERIALIZED_FILES=$materialized_files"
 
       - name: Validate registered surface
         id: surface

@@ -22,6 +22,7 @@ const FROZEN_C3_COMPOSITOR_SHA256='8dd2dcb76f090b6e7f4520160d5ec7d2c5c52c7fe59f4
 const FAIL_FIRST_SCHEMA='AUDRALIA_FINAL_EXPANSION_FAIL_FIRST_VISUAL_VERIFIER_v1';
 const FAILING_CORPUS_SCHEMA='AUDRALIA_C3_FAILING_CORPUS_RECEIPT_v1';
 const ATLAS_ROWS=90,ATLAS_COLUMNS=180,ATLAS_RADIUS=6405;
+const POLAR_PIXEL_FOOTPRINT_HALF_WIDTH_COLUMNS=2;
 const SWEEP_LATITUDES_DEG=Object.freeze([-75,-45,-15,15,45,75]);
 const SWEEP_LONGITUDES_DEG=Object.freeze([-165,-135,-105,-75,-45,-15,15,45,75,105,135,165]);
 const MATERIAL_COMPONENT_MIN_SPHERE_FRACTION=.0025;
@@ -318,22 +319,29 @@ async function accumulateAtlasFrame(page,probe){
         const lon=Math.atan2(dot(radial,east),dot(radial,meridian));
         const row=Math.max(0,Math.min(rows-1,Math.floor((lat+Math.PI/2)/Math.PI*rows)));
         const column=Math.max(0,Math.min(columns-1,Math.floor((lon+Math.PI)/(2*Math.PI)*columns)));
-        const cell=row*columns+column,pixel=(y*width+x)*4;
+        const pixel=(y*width+x)*4;
         const r=pixels[pixel],g=pixels[pixel+1],blue=pixels[pixel+2],a=pixels[pixel+3];
-        atlas.count[cell]++;
-        atlas.sumR[cell]+=r;
-        atlas.sumG[cell]+=g;
-        atlas.sumB[cell]+=blue;
-        atlas.sumA[cell]+=a;
-        atlas.maxA[cell]=Math.max(atlas.maxA[cell],a);
-        atlas.maxLuma[cell]=Math.max(atlas.maxLuma[cell],Math.round((r+g+blue)/3));
+        const luma=Math.round((r+g+blue)/3);
+        const polar=row===0||row===rows-1;
+        const halfWidth=polar?input.polarFootprintHalfWidthColumns:0;
+        for(let offset=-halfWidth;offset<=halfWidth;offset++){
+          const footprintColumn=(column+offset+columns)%columns;
+          const cell=row*columns+footprintColumn;
+          atlas.count[cell]++;
+          atlas.sumR[cell]+=r;
+          atlas.sumG[cell]+=g;
+          atlas.sumB[cell]+=blue;
+          atlas.sumA[cell]+=a;
+          atlas.maxA[cell]=Math.max(atlas.maxA[cell],a);
+          atlas.maxLuma[cell]=Math.max(atlas.maxLuma[cell],luma);
+        }
         mapped++;
       }
     }
     atlas.frameCount++;
     atlas.mappedPixelCount+=mapped;
     return {id:input.id,width,height,mapped,frameCount:atlas.frameCount};
-  },{...probe,rows:ATLAS_ROWS,columns:ATLAS_COLUMNS,radius:ATLAS_RADIUS});
+  },{...probe,rows:ATLAS_ROWS,columns:ATLAS_COLUMNS,radius:ATLAS_RADIUS,polarFootprintHalfWidthColumns:POLAR_PIXEL_FOOTPRINT_HALF_WIDTH_COLUMNS});
 }
 
 async function captureSphericalAtlas(page){
@@ -385,6 +393,7 @@ function summarizeAtlasCoverage(atlas){
     columns:atlas.columns,
     viewCount:atlas.frameCount,
     mappedPixelCount:atlas.mappedPixelCount,
+    polarPixelFootprintHalfWidthColumns:POLAR_PIXEL_FOOTPRINT_HALF_WIDTH_COLUMNS,
     missingCells,
     missingByRow:Object.freeze(missingByRow),
     missingCellExamples:Object.freeze(missingCellExamples)

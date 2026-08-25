@@ -10,6 +10,9 @@ on:
       - '!h-earth-3d/AGENTS.md'
       - 'showroom/globe/h-earth/**'
       - '!showroom/globe/h-earth/AGENTS.md'
+      - 'showroom/globe/audralia/diagnostic/index.html'
+      - 'showroom/globe/audralia/diagnostic/index.controls.js'
+      - 'showroom/globe/audralia/diagnostic/index.inspection.lane.js'
   push:
     paths:
       - 'h-earth-3d/**'
@@ -19,18 +22,29 @@ on:
       - '!h-earth-3d/AGENTS.md'
       - 'showroom/globe/h-earth/**'
       - '!showroom/globe/h-earth/AGENTS.md'
+      - 'showroom/globe/audralia/diagnostic/index.html'
+      - 'showroom/globe/audralia/diagnostic/index.controls.js'
+      - 'showroom/globe/audralia/diagnostic/index.inspection.lane.js'
+  issue_comment:
+    types:
+      - created
 
 permissions:
   contents: read
+  actions: read
+  issues: read
+  pull-requests: read
 
 jobs:
   automatic-h-earth-preflight:
+    if: ${{ github.event_name != 'issue_comment' }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Discover changed governed H-Earth paths
         shell: bash
@@ -50,14 +64,8 @@ jobs:
             git show --pretty='' --name-only "$CURRENT_SHA" > /tmp/all-changed-paths.txt
           fi
 
-          # Experience-anchor evidence and acceptance receipts are generated
-          # qualification records. They are governed by the dedicated hard
-          # Experience Anchor Gate and are not product/projection paths in the
-          # static repository registry. Keep the registry preflight focused on
-          # governed implementation paths while retaining fail-closed anchor
-          # validation for these dynamic evidence objects.
-          grep -E '^(h-earth-3d/|showroom/globe/h-earth/)' /tmp/all-changed-paths.txt \
-            | grep -Ev '^(h-earth-3d/registry/|h-earth-3d/experience-anchor/(evidence|receipts)/|h-earth-3d/AGENTS\.md$|showroom/globe/h-earth/AGENTS\.md$)' \
+          grep -E '^(h-earth-3d/|showroom/globe/h-earth/|showroom/globe/audralia/diagnostic/(index\.html|index\.controls\.js|index\.inspection\.lane\.js)$)' /tmp/all-changed-paths.txt \
+            | grep -Ev '^(h-earth-3d/registry/|h-earth-3d/experience-anchor/(evidence|receipts)/|h-earth-3d/AGENTS\.md$|h-earth-3d/validation/h-earth-audralia-diagnostic-path-recognition-verifier\.v1\.mjs$|showroom/globe/h-earth/AGENTS\.md$)' \
             | sort -u > /tmp/h-earth-changed-paths.txt || true
 
           cat /tmp/h-earth-changed-paths.txt
@@ -77,5 +85,221 @@ jobs:
         with:
           name: h-earth-automatic-preflight-receipt
           path: /tmp/h-earth-automatic-preflight-receipt.json
+          if-no-files-found: error
+          retention-days: 30
+
+  audralia-diagnostic-premutation-preflight:
+    if: >-
+      ${{
+        github.event_name == 'issue_comment' &&
+        github.event.comment.author_association == 'OWNER' &&
+        startsWith(github.event.comment.body, 'H_EARTH_AUDRALIA_DIAGNOSTIC_PREMUTATION_PREFLIGHT_V1')
+      }}
+    runs-on: ubuntu-latest
+    outputs:
+      subject_head: ${{ steps.request.outputs.subject_head }}
+    steps:
+      - name: Parse fixed read-only pre-mutation request
+        id: request
+        shell: bash
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const marker = 'H_EARTH_AUDRALIA_DIAGNOSTIC_PREMUTATION_PREFLIGHT_V1';
+          const body = String(process.env.COMMENT_BODY || '');
+          if (!body.startsWith(marker)) throw new Error('PREMUTATION_MARKER_MISMATCH');
+          let payload = body.slice(marker.length).trim();
+          if (payload.startsWith('```json')) payload = payload.slice(7);
+          else if (payload.startsWith('```')) payload = payload.slice(3);
+          if (payload.endsWith('```')) payload = payload.slice(0, -3);
+          const request = JSON.parse(payload.trim());
+          if (request.schema !== 'H_EARTH_AUDRALIA_DIAGNOSTIC_PREMUTATION_PREFLIGHT_REQUEST_v1') {
+            throw new Error('PREMUTATION_SCHEMA_MISMATCH');
+          }
+          if (!/^[0-9a-f]{40}$/.test(String(request.subjectHead || ''))) {
+            throw new Error('PREMUTATION_SUBJECT_HEAD_INVALID');
+          }
+          const headers = {
+            Accept: 'application/vnd.github+json',
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+            'X-GitHub-Api-Version': '2022-11-28'
+          };
+          (async () => {
+            const response = await fetch('https://api.github.com/repos/smansfield635-create/smansfield635-create.github.io/git/ref/heads/main', {headers});
+            const text = await response.text();
+            if (!response.ok) throw new Error(`PREMUTATION_MAIN_FETCH_FAILED:${response.status}:${text}`);
+            const ref = JSON.parse(text);
+            if (ref.object.sha !== request.subjectHead) {
+              throw new Error(`PREMUTATION_GOVERNING_HEAD_MISMATCH:${ref.object.sha}`);
+            }
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `subject_head=${request.subjectHead}\n`);
+          })().catch((error) => {
+            console.error(error.stack || error.message);
+            process.exit(1);
+          });
+          NODE
+
+      - name: Check out exact subject head narrowly
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.request.outputs.subject_head }}
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            h-earth-3d/registry/
+            tools/h-earth-repository-registry-auto-preflight.mjs
+            showroom/globe/audralia/diagnostic/index.html
+            showroom/globe/audralia/diagnostic/index.controls.js
+            showroom/globe/audralia/diagnostic/index.inspection.lane.js
+
+      - name: Run fixed exact-three-path read-only pre-mutation preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/audralia-diagnostic-premutation-paths.txt <<'PATHS'
+          showroom/globe/audralia/diagnostic/index.html
+          showroom/globe/audralia/diagnostic/index.controls.js
+          showroom/globe/audralia/diagnostic/index.inspection.lane.js
+          PATHS
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/audralia-diagnostic-premutation-paths.txt \
+            --task "Audralia diagnostic fixed read-only pre-mutation preflight" \
+            --mutation-intent \
+            --output /tmp/audralia-diagnostic-premutation-preflight-receipt.json
+
+      - name: Upload read-only pre-mutation receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audralia-diagnostic-premutation-preflight-receipt
+          path: /tmp/audralia-diagnostic-premutation-preflight-receipt.json
+          if-no-files-found: error
+          retention-days: 30
+
+  audralia-diagnostic-governance-builder:
+    if: >-
+      ${{
+        github.event_name == 'pull_request' &&
+        github.event.pull_request.head.ref == 'agent/audralia-diagnostic-governance-gen1656-20260824'
+      }}
+    needs: automatic-h-earth-preflight
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact candidate for builder
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run exact candidate builder verifier
+        run: |
+          node h-earth-3d/validation/h-earth-audralia-diagnostic-path-recognition-verifier.v1.mjs \
+            --verify \
+            --role BUILDER \
+            --output /tmp/audralia-diagnostic-path-builder.json
+
+      - name: Upload builder receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: audralia-diagnostic-path-governance-builder
+          path: /tmp/audralia-diagnostic-path-builder.json
+          if-no-files-found: error
+          retention-days: 30
+
+  audralia-diagnostic-governance-fresh-verifier:
+    if: >-
+      ${{
+        github.event_name == 'pull_request' &&
+        github.event.pull_request.head.ref == 'agent/audralia-diagnostic-governance-gen1656-20260824'
+      }}
+    needs: automatic-h-earth-preflight
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact candidate for fresh verifier
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up fresh Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run fresh independent verifier
+        run: |
+          node h-earth-3d/validation/h-earth-audralia-diagnostic-path-recognition-verifier.v1.mjs \
+            --verify \
+            --role ROLE_3 \
+            --output /tmp/audralia-diagnostic-path-fresh-verifier.json
+
+      - name: Upload fresh verifier receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: audralia-diagnostic-path-governance-fresh-verifier
+          path: /tmp/audralia-diagnostic-path-fresh-verifier.json
+          if-no-files-found: error
+          retention-days: 30
+
+  audralia-diagnostic-governance-fingerprint-match:
+    if: ${{ github.event_name == 'pull_request' }}
+    needs:
+      - audralia-diagnostic-governance-builder
+      - audralia-diagnostic-governance-fresh-verifier
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download builder receipt
+        uses: actions/download-artifact@v4
+        with:
+          name: audralia-diagnostic-path-governance-builder
+          path: /tmp/builder
+
+      - name: Download fresh verifier receipt
+        uses: actions/download-artifact@v4
+        with:
+          name: audralia-diagnostic-path-governance-fresh-verifier
+          path: /tmp/fresh
+
+      - name: Require matching independent fingerprints
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const builder = JSON.parse(fs.readFileSync('/tmp/builder/audralia-diagnostic-path-builder.json', 'utf8'));
+          const fresh = JSON.parse(fs.readFileSync('/tmp/fresh/audralia-diagnostic-path-fresh-verifier.json', 'utf8'));
+          if (builder.result !== 'PASS' || fresh.result !== 'PASS') throw new Error('VERIFIER_RESULT_NOT_PASS');
+          if (builder.role !== 'BUILDER' || fresh.role !== 'ROLE_3') throw new Error('VERIFIER_ROLE_MISMATCH');
+          if (builder.candidateHead !== fresh.candidateHead) throw new Error('VERIFIER_CANDIDATE_HEAD_MISMATCH');
+          if (builder.fingerprint !== fresh.fingerprint) throw new Error('FRESH_VERIFIER_MISMATCH');
+          const receipt = {
+            schema: 'H_EARTH_AUDRALIA_DIAGNOSTIC_GOVERNANCE_FINGERPRINT_MATCH_RECEIPT_v1',
+            result: 'PASS',
+            candidateHead: builder.candidateHead,
+            builderFingerprint: builder.fingerprint,
+            freshVerifierFingerprint: fresh.fingerprint,
+            fingerprintsMatch: true
+          };
+          fs.writeFileSync('/tmp/audralia-diagnostic-governance-fingerprint-match.json', JSON.stringify(receipt, null, 2) + '\n');
+          NODE
+
+      - name: Upload fingerprint match receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: audralia-diagnostic-path-governance-fingerprint-match
+          path: /tmp/audralia-diagnostic-governance-fingerprint-match.json
           if-no-files-found: error
           retention-days: 30

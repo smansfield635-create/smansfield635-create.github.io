@@ -2659,35 +2659,6 @@
       "scopeHash": "b8f407e3498f703352e151108b4fcead1b369b8bb391b392a8b1a736fa09a38d",
       "state": "ADMITTED_LOCKED"
     },
-    "b9605978444cdd1f9810727f2b1ddd1547205f2d2782d233e41ea615ef6bede1": {
-      "governingHead": "5499344368a60f20014694965913e4521cd158ec",
-      "lockGeneration": 1690,
-      "lockScope": "LAWS:TABBED_ORBIT_INSPECTION:SHARED_ROOMS_ROOT_AND_VERIFIER",
-      "operationId": "LAWS_TABBED_ORBIT_INSPECTION_PARITY_20260825_54993443_R4",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "ee78616b12539d98537512d5f8546ad40a33c15e",
-        "lockGeneration": 1688,
-        "lockScope": "LAWS:TABBED_ORBIT_INSPECTION:SHARED_ROOMS_ROOT_AND_VERIFIER",
-        "operationId": "LAWS_TABBED_ORBIT_INSPECTION_PARITY_20260825_EE78616B_R3",
-        "preservedEvidenceRefs": [
-          "OWNER_SCREENSHOT_GROUPS_CURRENT_TURN",
-          "REMOTE_ROUTER_RECEIPT_RUN_32873132379_PREDECESSOR_HEAD",
-          "REMOTE_ROUTER_RECEIPT_RUN_32876900184_SUCCESSOR_HEAD",
-          "CP6_RUN_32876068007_CAROUSEL_CONTRACTS_PASS_AND_263_OF_264_MATRIX"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "LAWS_TABBED_ORBIT_INSPECTION_EE78616B_TO_54993443_20260825"
-      },
-      "procedureLocatorDigest": "3aee361db461b815b68767739bcdeadf4c43b73d3a024d6e8be5b6252b1327b4",
-      "released": false,
-      "requestDigest": "6aed66266e7b217c8b167701b97c31c484ffce1617c3c9b8c2b0d173f846acfc",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "b9605978444cdd1f9810727f2b1ddd1547205f2d2782d233e41ea615ef6bede1",
-      "state": "ADMITTED_LOCKED"
-    },
     "b97df7525443f153ed5ce9410430bebb6d692bb9040df2810e892126f3a10198": {
       "governingHead": "7ab3408099c80a0eeb6cf29b39cc28c8ca0bd602",
       "lockGeneration": 373,
@@ -26726,6 +26697,36 @@
       "requestDigest": "27873c7212872d08a87b5bb9bd6ec75ab40acd87e245a01bf996d50d78d3652f",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "1a25aee2ce5f0c3abc272c247784a2c2c4b230c553d6fb6110705f1eb622fc52",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "5499344368a60f20014694965913e4521cd158ec",
+      "lockGeneration": 1690,
+      "lockScope": "LAWS:TABBED_ORBIT_INSPECTION:SHARED_ROOMS_ROOT_AND_VERIFIER",
+      "operationId": "LAWS_TABBED_ORBIT_INSPECTION_PARITY_20260825_54993443_R4",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "ee78616b12539d98537512d5f8546ad40a33c15e",
+        "lockGeneration": 1688,
+        "lockScope": "LAWS:TABBED_ORBIT_INSPECTION:SHARED_ROOMS_ROOT_AND_VERIFIER",
+        "operationId": "LAWS_TABBED_ORBIT_INSPECTION_PARITY_20260825_EE78616B_R3",
+        "preservedEvidenceRefs": [
+          "OWNER_SCREENSHOT_GROUPS_CURRENT_TURN",
+          "REMOTE_ROUTER_RECEIPT_RUN_32873132379_PREDECESSOR_HEAD",
+          "REMOTE_ROUTER_RECEIPT_RUN_32876900184_SUCCESSOR_HEAD",
+          "CP6_RUN_32876068007_CAROUSEL_CONTRACTS_PASS_AND_263_OF_264_MATRIX"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "LAWS_TABBED_ORBIT_INSPECTION_EE78616B_TO_54993443_20260825"
+      },
+      "procedureLocatorDigest": "3aee361db461b815b68767739bcdeadf4c43b73d3a024d6e8be5b6252b1327b4",
+      "released": true,
+      "requestDigest": "6aed66266e7b217c8b167701b97c31c484ffce1617c3c9b8c2b0d173f846acfc",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "b9605978444cdd1f9810727f2b1ddd1547205f2d2782d233e41ea615ef6bede1",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

@@ -126,20 +126,44 @@
   position: relative;
 }
 
-.lr-story-nav {
+.lr-story-nav,
+.lr-family-continuity {
   position: relative;
   z-index: 4;
 }
 
+/* Family-root continuity is deliberately distinct from the verifier-reserved
+   .lr-story-nav contract used only by declared story routes. */
+.lr-family-continuity {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(.65rem, 1.8vw, 1rem);
+  width: min(94vw, 72rem);
+  margin: clamp(.9rem, 2.2vw, 1.5rem) auto 0;
+}
+
+.lr-family-continuity > a {
+  min-width: 0;
+}
+
+.lr-family-continuity > a:last-child {
+  text-align: right;
+}
+
 @media (max-width: 760px) {
   .lr-depth-grid,
-  .lr-depth-stat-grid {
+  .lr-depth-stat-grid,
+  .lr-family-continuity {
     grid-template-columns: 1fr;
   }
 
   .lr-depth-actions a {
     width: 100%;
     justify-content: center;
+  }
+
+  .lr-family-continuity > a:last-child {
+    text-align: left;
   }
 }
 

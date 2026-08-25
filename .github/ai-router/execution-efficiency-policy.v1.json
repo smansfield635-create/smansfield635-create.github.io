@@ -57,6 +57,7 @@
       "aiEntryBridge": ".github/workflows/ai-entry-workflow-dispatch-bridge.yml",
       "canonicalIntake": ".github/workflows/canonical-operation-intake-transport-v1.yml",
       "successorGateway": ".github/workflows/remote-operation-successor-v1.yml",
+      "automaticRelease": ".github/workflows/ai-entry-auto-release.yml",
       "publicationPreflight": ".github/workflows/publication-preflight-v1.yml",
       "publicationDeploy": ".github/workflows/pages-exact-head-deploy-v3.yml"
     },
@@ -86,7 +87,24 @@
       "wholeExcludedTreeMaterializationAllowed": false
     },
     "prospectiveEnforcement": "NEW_OR_MODIFIED_WORKFLOWS_MUST_DECLARE_BOUNDED_SPARSE_WORKING_SET_OR_EXPLICIT_APPROVED_EXCEPTION",
-    "legacyUnrestrictedWorkflows": "MIGRATION_DEBT_NOT_PRECEDENT"
+    "legacyUnrestrictedWorkflows": "MIGRATION_DEBT_NOT_PRECEDENT",
+    "automaticReleaseWorkingSet": {
+      "ordinaryPublicRoots": "DYNAMIC_TOP_LEVEL_ROOTS_EXCLUDING_BULK_AND_CONTROL_PLANE_ROOTS",
+      "excludedTopLevelRoots": [
+        ".github",
+        "preview",
+        "node_modules",
+        "h-earth-live-6d18e158"
+      ],
+      "excludedProtectedClosure": "inspection/audralia-24057-exact",
+      "explicitIncludedSubtrees": [
+        "preview/bt4/entitlement-v1",
+        "preview/bt4/operational-release-v1",
+        "h-earth-live-6d18e158/showroom/globe/h-earth"
+      ],
+      "sparseIndexEntryLimitExclusive": 20000,
+      "materializedFileLimitExclusive": 20000
+    }
   },
   "publicationPathConsistency": {
     "canonicalCapabilityId": "PAGES_EXACT_HEAD_DEPLOY",

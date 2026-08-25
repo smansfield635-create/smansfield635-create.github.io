@@ -52,6 +52,9 @@
       "ownedExactPaths": [
         ".github/workflows/h-earth-repository-registry-preflight.yml",
         ".github/workflows/h-earth-r06-c10-candidate-admission.yml",
+        "showroom/globe/audralia/diagnostic/index.html",
+        "showroom/globe/audralia/diagnostic/index.controls.js",
+        "showroom/globe/audralia/diagnostic/index.inspection.lane.js",
         ".github/ai-toolset-transport/AGENTS.md",
         ".github/ai-toolset-transport/authorized-toolset-registry.v1.json",
         ".github/ai-toolset-transport/changed-path-manifest.v1.json",

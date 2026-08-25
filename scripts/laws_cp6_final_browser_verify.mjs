@@ -43,7 +43,7 @@ const frontier = { route: '/frontier/energy/battery-coherence-study/', name: 'fr
 const landing = { route: '/laws/', name: 'laws-landing', expectedReadings: null, methodsShowroom: false };
 const renewedPages = [...childPages, ...familyPages, ...wrapperPages, frontier];
 const allPages = [landing, ...renewedPages];
-const roomCarouselRoutes = [...childPages.filter(page => !page.methodsShowroom).map(page => page.route), '/laws/research/'];
+const roomCarouselRoutes = [...childPages.filter(page => !page.methodsShowroom).map(page => page.route), '/laws/research/', '/laws/categories/reality/battery-heldout-study/'];
 
 const profiles = [
   { name: 'phone', viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true },
@@ -54,6 +54,9 @@ const screenshots = new Set([
   '/laws/',
   '/laws/categories/flow/cycles/',
   '/laws/categories/integrity/accountability/',
+  '/laws/categories/integrity/coherence/',
+  '/laws/research/',
+  '/laws/categories/reality/battery-heldout-study/',
   '/laws/categories/reality/evidence.html',
   '/laws/categories/structure/constraints.html',
   '/laws/test/reverse-audit/',
@@ -117,7 +120,7 @@ async function health(page, route, errors) {
 }
 async function measuredPointerClick(page, locator, label, metadata = {}) {
   assert(await locator.count() === 1, `${label}: pointer target count ${await locator.count()}`);
-  await locator.evaluate(node => node.scrollIntoView({ block: 'center', inline: 'center', behavior: 'instant' }));
+  await locator.scrollIntoViewIfNeeded();
   await page.waitForTimeout(20);
   const geometry = await locator.evaluate(node => {
     const describe = element => {
@@ -238,6 +241,22 @@ async function activateReadingRoom(page, group, route) {
     return Math.ceil(maximum);
   });
   if (settleMs > 0) await page.waitForTimeout(Math.min(settleMs + 60, 1200));
+  const roomCard = roomRoot.locator('[data-lrc-track] > [data-lrc-card]').nth(target.targetIndex);
+  const alreadyInspecting = await roomRoot.getAttribute('data-lrc-inspecting') === 'true';
+  let openedInspection = false;
+  if (!alreadyInspecting) {
+    const inspect = roomCard.locator(':scope > [data-lrc-summary] [data-lrc-inspect]');
+    assert(await inspect.count() === 1, `${route}: reading room inspection action missing`);
+    await measuredPointerClick(page, inspect, `${route}: open reading inspection`, { route, readingRoomIndex: target.targetIndex });
+    await page.waitForFunction(
+      rootIndex => document.querySelectorAll('[data-laws-room-carousel]')[rootIndex]?.dataset.lrcInspecting === 'true',
+      target.rootIndex,
+    );
+    if (settleMs > 0) await page.waitForTimeout(Math.min(settleMs + 60, 1200));
+    openedInspection = true;
+  }
+  assert(await group.isVisible(), `${route}: reading group hidden after inspection open`);
+  return { rootIndex: target.rootIndex, targetIndex: target.targetIndex, openedInspection };
 }
 async function navCheck(page, route, profile) {
   const toggle = page.locator('.lr-nav-toggle');
@@ -266,7 +285,7 @@ async function readingCheck(page, descriptor, profile) {
   const groups = page.locator('[data-lr-tabs]');
   assert(await groups.count() === 1, `${descriptor.route}: reading group count ${await groups.count()}`);
   const group = groups.first();
-  await activateReadingRoom(page, group, descriptor.route);
+  const readingRoom = await activateReadingRoom(page, group, descriptor.route);
   const buttons = group.locator('.lr-tab');
   const panels = group.locator('.lr-panel');
   const expanded = group.locator('.lr-tab[aria-expanded="true"]');
@@ -295,6 +314,13 @@ async function readingCheck(page, descriptor, profile) {
   assert(await buttons.nth(next).getAttribute('aria-expanded') === 'true', `${descriptor.route}: next reading did not open`);
   assert(await expanded.count() === 1, `${descriptor.route}: exclusive reading state failed`);
   assert(!(await panels.nth(second).isVisible()), `${descriptor.route}: previous panel remained visible`);
+  if (readingRoom?.openedInspection) {
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(
+      rootIndex => !document.querySelectorAll('[data-laws-room-carousel]')[rootIndex]?.dataset.lrcInspecting,
+      readingRoom.rootIndex,
+    );
+  }
 }
 async function auditCheck(page, route, profile) {
   const audit = page.locator('details.lr-audit').first();
@@ -337,8 +363,19 @@ async function methodsShowroomCheck(page, route) {
 async function landingCheck(page, profile) {
   const rolodex = page.locator('[data-laws-root-rolodex-section]');
   await rolodex.waitFor({ state: 'visible', timeout: 5000 });
+  await page.waitForFunction(() => document.querySelector('[data-laws-root-rolodex-section]')?.dataset.lawsDestinationStage === 'active');
   assert(await page.locator('html').getAttribute('data-laws-root-rolodex') === 'active', '/laws/: root rolodex not active');
   assert(await rolodex.count() === 1, '/laws/: root rolodex missing');
+  const familyTabs = rolodex.locator('.laws-destination-stage__tab');
+  assert(await familyTabs.count() === 3, `/laws/: complete family tab rail ${await familyTabs.count()}/3`);
+  const familyOrdinals = await familyTabs.locator('.laws-destination-stage__tab-ordinal').allTextContents();
+  assert(familyOrdinals.join(',') === '01,02,03', `/laws/: family tab numbering ${familyOrdinals.join(',')}`);
+  const fieldTabTopology = await rolodex.locator('.laws-rolodex-field[data-rolodex-id]').evaluateAll(fields => fields.map(field => ({
+    cards: field.querySelectorAll('.laws-rolodex-card').length,
+    tabs: field.querySelectorAll('.laws-rolodex-record-tab').length,
+    declared: Number(field.dataset.carouselTabCount || 0)
+  })));
+  assert(fieldTabTopology.every(item => item.cards > 0 && item.tabs === item.cards && item.declared === item.cards), `/laws/: record tab topology ${JSON.stringify(fieldTabTopology)}`);
   const applied = rolodex.locator('.laws-rolodex-card[data-destination-id="applied-investigations"]');
   assert(await applied.count() === 1, '/laws/: applied investigations destination missing');
   assert((await applied.textContent() || '').toLowerCase().includes('battery health'), '/laws/: battery-health context missing from applied investigations destination');
@@ -366,17 +403,13 @@ async function landingCheck(page, profile) {
       () => document.querySelector('.laws-rolodex-field[data-rolodex-id="research"]')?.getAttribute('aria-hidden') === 'false',
     );
   }
-  const appliedViewport = appliedField.locator('.laws-rolodex-viewport');
-  const appliedCardCount = await appliedField.locator('.laws-rolodex-card').count();
-  await appliedViewport.focus();
-  for (let step = 0; step < appliedCardCount && await applied.getAttribute('data-active') !== 'true'; step += 1) {
-    const previousDestinationId = await appliedField.locator('.laws-rolodex-card[data-active="true"]').getAttribute('data-destination-id');
-    await page.keyboard.press('ArrowRight');
-    await page.waitForFunction(
-      previous => document.querySelector('.laws-rolodex-field[data-rolodex-id="research"] .laws-rolodex-card[data-active="true"]')?.dataset.destinationId !== previous,
-      previousDestinationId,
-    );
-  }
+  const appliedCardIndex = await applied.evaluate(node => Array.from(node.parentElement.children).indexOf(node));
+  const appliedRecordTab = appliedField.locator(`.laws-rolodex-record-tab[data-rolodex-record-index="${appliedCardIndex}"]`);
+  assert(await appliedRecordTab.count() === 1, '/laws/: applied investigations direct record tab missing');
+  await measuredPointerClick(page, appliedRecordTab, '/laws/: direct-select applied investigations', { route: '/laws/', profile });
+  await page.waitForFunction(
+    () => document.querySelector('.laws-rolodex-card[data-destination-id="applied-investigations"]')?.getAttribute('data-active') === 'true',
+  );
   assert(await applied.getAttribute('data-active') === 'true', '/laws/: applied investigations card did not become active');
   await measuredPointerClick(page, applied.locator('button.laws-rolodex-enter'), '/laws/: enter applied investigations', { route: '/laws/', profile });
   const appliedRoute = page.locator('.laws-exhibit-route');
@@ -476,61 +509,105 @@ async function verifyStatic(browser) {
   }
 }
 async function verifyRoomCarousel(browser) {
-  assert(roomCarouselRoutes.length === 24, `Room carousel route count ${roomCarouselRoutes.length}`);
-  assert(new Set(roomCarouselRoutes).size === 24, 'Duplicate room carousel route');
+  assert(roomCarouselRoutes.length === 25, `Room carousel route count ${roomCarouselRoutes.length}`);
+  assert(new Set(roomCarouselRoutes).size === 25, 'Duplicate room carousel route');
 
-  const context = await contextOrFailure(browser, { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, reducedMotion: 'reduce' }, { suite: 'room-carousel-runtime' });
-  if (context) {
+  for (const profile of profiles) {
+    const context = await contextOrFailure(browser, { viewport: profile.viewport, isMobile: profile.isMobile, hasTouch: profile.hasTouch, reducedMotion: 'reduce', deviceScaleFactor: 1 }, { suite: 'room-carousel-runtime', profile: profile.name });
+    if (!context) continue;
     try {
       for (const route of roomCarouselRoutes) {
-        await executePageCase(context, { check: 'room-carousel-runtime', route }, async page => {
+        await executePageCase(context, { check: 'room-carousel-runtime', profile: profile.name, route }, async page => {
           const errors = collectErrors(page);
           await gotoChecked(page, route);
           await health(page, route, errors);
           const carouselRoot = page.locator('[data-laws-room-carousel]').first();
           assert(await carouselRoot.count() === 1, `${route}: carousel root missing`);
+          await page.waitForFunction(() => document.querySelector('[data-laws-room-carousel]')?.dataset.lrcMounted === 'true');
           assert(await carouselRoot.getAttribute('data-lrc-mounted') === 'true', `${route}: carousel runtime not mounted`);
+
           const cards = carouselRoot.locator('[data-lrc-card]');
+          const tabs = carouselRoot.locator(':scope > [data-lrc-tabs] [data-lrc-tab]');
           const cardCount = await cards.count();
-          assert(cardCount >= 2, `${route}: insufficient spatial states ${cardCount}`);
+          const tabCount = await tabs.count();
+          assert(cardCount >= 1, `${route}: no orbit states`);
+          assert(tabCount === cardCount, `${route}: complete top tab rail ${tabCount}/${cardCount}`);
+          assert(await carouselRoot.getAttribute('data-lrc-tab-count') === String(cardCount), `${route}: declared tab count drift`);
+          const ordinals = await tabs.locator('[data-lrc-tab-number]').allTextContents();
+          assert(ordinals.every((value, index) => value.trim() === String(index + 1).padStart(2, '0')), `${route}: numbered tab sequence ${JSON.stringify(ordinals)}`);
+
           const controls = carouselRoot.locator('[data-lrc-controls],[data-lrc-prev],[data-lrc-next]');
           assert(await controls.count() === 0, `${route}: visible directional control retained`);
           const viewport = carouselRoot.locator('[data-lrc-viewport]').first();
-          const before = await carouselRoot.getAttribute('data-lrc-index');
+          const stageHeightBefore = await viewport.evaluate(node => node.getBoundingClientRect().height);
+          const directIndex = cardCount > 2 ? cardCount - 1 : Math.max(0, cardCount - 1);
+          await tabs.nth(directIndex).click();
+          await page.waitForFunction(index => document.querySelector('[data-laws-room-carousel]')?.dataset.lrcIndex === String(index), directIndex);
+          assert(await tabs.nth(directIndex).getAttribute('aria-selected') === 'true', `${route}: direct tab selection state missing`);
+          const stageHeightAfterDirect = await viewport.evaluate(node => node.getBoundingClientRect().height);
+          assert(Math.abs(stageHeightAfterDirect - stageHeightBefore) <= 1, `${route}: orbit stage height changed after direct selection ${stageHeightBefore}/${stageHeightAfterDirect}`);
+
           await viewport.focus();
+          const keyboardBefore = Number(await carouselRoot.getAttribute('data-lrc-index'));
           await page.keyboard.press('ArrowRight');
           await page.waitForTimeout(30);
-          const after = await carouselRoot.getAttribute('data-lrc-index');
-          assert(before !== after, `${route}: carousel keyboard one-step failed`);
+          const keyboardAfter = Number(await carouselRoot.getAttribute('data-lrc-index'));
+          const expectedKeyboard = (keyboardBefore + 1) % cardCount;
+          assert(keyboardAfter === expectedKeyboard, `${route}: carousel keyboard one-step ${keyboardAfter}/${expectedKeyboard}`);
+          const stageHeightAfterKeyboard = await viewport.evaluate(node => node.getBoundingClientRect().height);
+          assert(Math.abs(stageHeightAfterKeyboard - stageHeightBefore) <= 1, `${route}: orbit stage geometry unstable ${stageHeightBefore}/${stageHeightAfterKeyboard}`);
           assert(await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches), `${route}: room reduced motion media not active`);
 
-          const activeCard = carouselRoot.locator('[data-lrc-card][data-active="true"]').first();
+          let activeCard = carouselRoot.locator('[data-lrc-card][data-active="true"]').first();
           assert(await activeCard.count() === 1, `${route}: active room card count`);
+          assert(await activeCard.locator(':scope > [data-lrc-summary]').isVisible(), `${route}: orbit summary missing`);
+          assert(await activeCard.locator(':scope > [data-lrc-source-child]').evaluateAll(nodes => nodes.length > 0 && nodes.every(node => node.hidden)), `${route}: informational source leaked into orbit`);
+
           const layout = await activeCard.evaluate(node => {
             const root = node.closest('[data-laws-room-carousel]');
             const viewportNode = root?.querySelector('[data-lrc-viewport]');
+            const tabsNode = root?.querySelector(':scope > [data-lrc-tabs]');
+            const summary = node.querySelector(':scope > [data-lrc-summary]');
             const audit = root?.querySelector(':scope > details.lr-audit');
+            const lower = audit || root?.querySelector(':scope > [data-lrc-continuation]') || document.querySelector('.lr-footer, footer');
             const rect = node.getBoundingClientRect();
             const viewportRect = viewportNode?.getBoundingClientRect();
-            const auditRect = audit?.getBoundingClientRect();
-            const style = getComputedStyle(node);
+            const tabsRect = tabsNode?.getBoundingClientRect();
+            const summaryRect = summary?.getBoundingClientRect();
+            const lowerRect = lower?.getBoundingClientRect();
+            const visibleSummaryNodes = summary ? Array.from(summary.querySelectorAll('*')).filter(child => {
+              const style = getComputedStyle(child);
+              const childRect = child.getBoundingClientRect();
+              return style.display !== 'none' && style.visibility !== 'hidden' && childRect.width > 0 && childRect.height > 0;
+            }) : [];
+            const summaryContained = Boolean(summaryRect) && visibleSummaryNodes.every(child => {
+              const childRect = child.getBoundingClientRect();
+              return childRect.left >= rect.left - 2 && childRect.right <= rect.right + 2 && childRect.top >= rect.top - 2 && childRect.bottom <= rect.bottom + 2;
+            });
             return {
-              overflowY: style.overflowY,
-              scrollHeight: node.scrollHeight,
-              clientHeight: node.clientHeight,
               left: rect.left,
               right: rect.right,
+              top: rect.top,
+              bottom: rect.bottom,
               viewportWidth: innerWidth,
-              carouselBottom: viewportRect?.bottom ?? null,
-              auditTop: auditRect?.top ?? null,
+              viewportHeight: innerHeight,
+              stageHeight: viewportRect?.height ?? null,
+              stageTop: viewportRect?.top ?? null,
+              stageBottom: viewportRect?.bottom ?? null,
+              tabsBottom: tabsRect?.bottom ?? null,
+              lowerTop: lowerRect?.top ?? null,
+              lowerExists: Boolean(lower),
+              summaryContained,
+              documentContained: document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1
             };
           });
-          assert(!['auto', 'scroll'].includes(layout.overflowY), `${route}: internal reading scroll overflow ${layout.overflowY}`);
-          assert(layout.scrollHeight <= layout.clientHeight + 1, `${route}: internal reading scroll geometry ${layout.scrollHeight}/${layout.clientHeight}`);
-          assert(layout.left >= -1 && layout.right <= layout.viewportWidth + 1, `${route}: mobile containment ${layout.left}/${layout.right}/${layout.viewportWidth}`);
-          if (layout.auditTop !== null && layout.carouselBottom !== null) {
-            assert(layout.auditTop >= layout.carouselBottom - 1, `${route}: audit overlaps carousel ${layout.auditTop}/${layout.carouselBottom}`);
-          }
+          assert(layout.left >= -1 && layout.right <= layout.viewportWidth + 1, `${route}: profile containment ${profile.name} ${layout.left}/${layout.right}/${layout.viewportWidth}`);
+          assert(layout.stageTop !== null && layout.top >= layout.stageTop - 2 && layout.bottom <= layout.stageBottom + 2, `${route}: active orbit card escaped stable stage`);
+          assert(layout.tabsBottom !== null && layout.stageTop !== null && layout.tabsBottom <= layout.stageTop + 2, `${route}: top tab rail overlaps informational stage`);
+          assert(layout.summaryContained, `${route}: orbit summary descendant clipping`);
+          assert(layout.documentContained, `${route}: descendant horizontal document overflow`);
+          assert(layout.lowerExists, `${route}: ordinary lower page content missing`);
+          assert(layout.lowerTop === null || layout.stageBottom === null || layout.lowerTop >= layout.stageBottom - 2, `${route}: lower page content overlaps carousel ${layout.lowerTop}/${layout.stageBottom}`);
 
           const gesturePoint = await activeCard.evaluate(node => {
             const rect = node.getBoundingClientRect();
@@ -538,25 +615,24 @@ async function verifyRoomCarousel(browser) {
               [rect.left + 14, rect.top + 14],
               [rect.right - 14, rect.top + 14],
               [rect.left + 14, Math.min(rect.bottom - 14, innerHeight - 24)],
-              [rect.right - 14, Math.min(rect.bottom - 14, innerHeight - 24)],
+              [rect.right - 14, Math.min(rect.bottom - 14, innerHeight - 24)]
             ];
             for (const [x, y] of candidates) {
               if (x < 1 || y < 1 || x >= innerWidth - 1 || y >= innerHeight - 1) continue;
               const hit = document.elementFromPoint(x, y);
-              if (hit && node.contains(hit) && !hit.closest('a,button,input,textarea,select,summary')) {
-                return { x, y, viewportHeight: innerHeight };
-              }
+              if (hit && node.contains(hit) && !hit.closest('a,button,input,textarea,select,summary')) return { x, y, viewportHeight: innerHeight };
             }
             return null;
           });
           assert(gesturePoint, `${route}: carousel gesture surface unavailable`);
+          const gestureBefore = await carouselRoot.getAttribute('data-lrc-index');
           const verticalDy = gesturePoint.y < gesturePoint.viewportHeight - 72 ? 52 : -52;
           await page.mouse.move(gesturePoint.x, gesturePoint.y);
           await page.mouse.down();
           await page.mouse.move(gesturePoint.x + 2, gesturePoint.y + verticalDy, { steps: 4 });
           await page.mouse.up();
           await page.waitForTimeout(20);
-          assert(await carouselRoot.getAttribute('data-lrc-index') === after, `${route}: vertical gesture changed room`);
+          assert(await carouselRoot.getAttribute('data-lrc-index') === gestureBefore, `${route}: vertical gesture changed room`);
 
           const pointerDx = gesturePoint.x > 72 ? -56 : 56;
           await page.mouse.move(gesturePoint.x, gesturePoint.y);
@@ -565,20 +641,66 @@ async function verifyRoomCarousel(browser) {
           await page.mouse.up();
           await page.waitForTimeout(30);
           const pointerAfter = await carouselRoot.getAttribute('data-lrc-index');
-          const expectedPointer = String((Number(after) + (pointerDx < 0 ? 1 : -1) + cardCount) % cardCount);
+          const expectedPointer = String((Number(gestureBefore) + (pointerDx < 0 ? 1 : -1) + cardCount) % cardCount);
           assert(pointerAfter === expectedPointer, `${route}: pointer one-step ${pointerAfter}/${expectedPointer}`);
           assert(await carouselRoot.getAttribute('data-lrc-gesture-state') === 'idle', `${route}: canonical settled landing missing`);
+
+          activeCard = carouselRoot.locator('[data-lrc-card][data-active="true"]').first();
+          const inspect = activeCard.locator(':scope > [data-lrc-summary] [data-lrc-inspect]');
+          assert(await inspect.count() === 1, `${route}: inspect action missing`);
+          await inspect.click();
+          await page.waitForFunction(() => document.querySelector('[data-laws-room-carousel]')?.dataset.lrcInspecting === 'true');
+          const inspection = await activeCard.evaluate(node => {
+            const rect = node.getBoundingClientRect();
+            const style = getComputedStyle(node);
+            const source = Array.from(node.querySelectorAll(':scope > [data-lrc-source-child]'));
+            const visibleSource = source.filter(child => !child.hidden);
+            const horizontallyContained = visibleSource.every(child => {
+              const childRect = child.getBoundingClientRect();
+              return childRect.left >= rect.left - 2 && childRect.right <= rect.right + 2;
+            });
+            return {
+              overflowY: style.overflowY,
+              width: rect.width,
+              height: rect.height,
+              left: rect.left,
+              right: rect.right,
+              top: rect.top,
+              bottom: rect.bottom,
+              viewportWidth: innerWidth,
+              viewportHeight: innerHeight,
+              scrollHeight: node.scrollHeight,
+              clientHeight: node.clientHeight,
+              sourceCount: source.length,
+              visibleSourceCount: visibleSource.length,
+              summaryHidden: node.querySelector(':scope > [data-lrc-summary]')?.hidden === true,
+              returnVisible: !node.querySelector(':scope > [data-lrc-return]')?.hidden,
+              horizontallyContained
+            };
+          });
+          assert(['auto', 'scroll'].includes(inspection.overflowY), `${route}: bounded inspection scroll missing ${inspection.overflowY}`);
+          assert(inspection.left >= -1 && inspection.right <= inspection.viewportWidth + 1 && inspection.top >= -1 && inspection.bottom <= inspection.viewportHeight + 1, `${route}: inspection escaped viewport ${JSON.stringify(inspection)}`);
+          assert(inspection.height <= inspection.viewportHeight + 1, `${route}: inspection height unbounded`);
+          assert(inspection.sourceCount > 0 && inspection.visibleSourceCount === inspection.sourceCount, `${route}: complete informational plane not visible`);
+          assert(inspection.summaryHidden && inspection.returnVisible, `${route}: orbit and inspection planes not separated`);
+          assert(inspection.horizontallyContained, `${route}: inspection descendant horizontal clipping`);
+          await page.keyboard.press('Escape');
+          await page.waitForFunction(() => !document.querySelector('[data-laws-room-carousel]')?.dataset.lrcInspecting);
+          assert(await activeCard.locator(':scope > [data-lrc-source-child]').evaluateAll(nodes => nodes.every(node => node.hidden)), `${route}: informational plane remained open`);
+
           return {
             cardCount,
-            activeBefore: before,
-            activeAfter: after,
-            pointerAfter,
+            tabCount,
+            completeNumberedTopRail: true,
+            directNonAdjacentSelection: cardCount > 2,
+            stableOrbitStage: true,
+            orbitInspectionSeparated: true,
+            boundedInspectionScroll: true,
+            lowerPageContentBelowStage: true,
+            descendantContainment: true,
             visibleDirectionalControls: 0,
-            activeCardInternalScroll: false,
-            mobileContained: true,
-            auditBelowCarousel: true,
             directionOnlyOneGestureOneStep: true,
-            canonicalSettledLanding: true,
+            canonicalSettledLanding: true
           };
         });
       }
@@ -620,7 +742,7 @@ async function main() {
   assert(childPages.length === 24, `Child route count ${childPages.length}`);
   assert(batteryScope.public_surface_count === 27, 'Battery scope drift');
   assert(allPages.length === 33, `Integrated route count ${allPages.length}`);
-  assert(roomCarouselRoutes.length === 24, `Room carousel route count ${roomCarouselRoutes.length}`);
+  assert(roomCarouselRoutes.length === 25, `Room carousel route count ${roomCarouselRoutes.length}`);
 
   const browser = await chromium.launch({ headless: true });
   try {
@@ -632,7 +754,7 @@ async function main() {
     await browser.close();
   }
 
-  const expectedMatrixExecutions = allPages.length * profiles.length + renewedPages.length + allPages.length + roomCarouselRoutes.length * 2;
+  const expectedMatrixExecutions = allPages.length * profiles.length + renewedPages.length + allPages.length + roomCarouselRoutes.length * (profiles.length + 1);
   const matrixExecutions = results.filter(result => matrixChecks.has(result.check)).length;
   const fullMatrixCompleted = matrixExecutions === expectedMatrixExecutions;
   if (!fullMatrixCompleted) {
@@ -653,13 +775,19 @@ async function main() {
     integratedRoutes: 33,
     batteryPublicSurfaces: 27,
     methodsModelsAlternateContract: failures.some(failure => failure.route === methodsShowroomRoute) ? 'FAIL' : 'PASS',
-    roomCarouselRoutes: 24,
+    roomCarouselRoutes: 25,
     roomCarouselRuntimeExecutions: countCheck('room-carousel-runtime'),
     roomCarouselStaticNoJavaScriptExecutions: countCheck('room-carousel-static-no-js'),
     roomCarouselVisibleDirectionalControls: failureIncludes('visible directional control') ? 'FAIL' : 'PASS',
     roomCarouselDirectionOnlyOneGestureOneStep: failureIncludes('vertical gesture') || failureIncludes('pointer one-step') ? 'FAIL' : 'PASS',
     roomCarouselCanonicalSettledLanding: failureIncludes('canonical settled landing') ? 'FAIL' : 'PASS',
-    roomCarouselActiveCardInternalScroll: failureIncludes('internal reading scroll') ? 'FAIL' : 'PASS',
+    roomCarouselCompleteNumberedTopRail: failureIncludes('complete top tab rail') || failureIncludes('numbered tab sequence') ? 'FAIL' : 'PASS',
+    roomCarouselDirectNonAdjacentSelection: failureIncludes('direct tab selection') ? 'FAIL' : 'PASS',
+    roomCarouselStableOrbitStage: failureIncludes('stage height') || failureIncludes('geometry unstable') ? 'FAIL' : 'PASS',
+    roomCarouselOrbitInspectionSeparation: failureIncludes('planes not separated') ? 'FAIL' : 'PASS',
+    roomCarouselBoundedInspectionScroll: failureIncludes('bounded inspection') ? 'FAIL' : 'PASS',
+    roomCarouselLowerPageFlow: failureIncludes('lower page content') ? 'FAIL' : 'PASS',
+    roomCarouselDescendantContainment: failureIncludes('descendant') ? 'FAIL' : 'PASS',
     roomCarouselMobileContainment: failureIncludes('mobile containment') ? 'FAIL' : 'PASS',
     roomCarouselAuditSeparation: failureIncludes('audit overlaps carousel') ? 'FAIL' : 'PASS',
     profiles: profiles.map(profile => profile.name),

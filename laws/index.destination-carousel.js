@@ -10,6 +10,7 @@
   const REFERENCE = "METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1";
   const BUILD = "20260816E_DIRECTION_ONLY_CANONICAL";
   const PRODUCT_REFINEMENT = "20260816G_RUNTIME_OWNED_RING_TRAVERSAL";
+  const UX_REFINEMENT = "20260825_COMPLETE_NUMBERED_TOP_RAIL";
   const ROOT_SELECTOR = "[data-laws-root-rolodex-section]";
   const FIELD_SELECTOR = ".laws-rolodex-field[data-rolodex-id]";
   const CLASSIFY_PX = 8;
@@ -57,7 +58,7 @@
 
   function publish(field, state, reason) {
     const card = state.cards[state.index];
-    globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_CHANGED", { detail: Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, productRefinement: PRODUCT_REFINEMENT, reason, rolodexId: field.dataset.rolodexId || "", index: state.index, count: state.cards.length, destinationId: card?.dataset.destinationId || "", orbitAngle: state.angle, detent: state.detent, targetDetent: state.targetDetent, transactionId: state.transactionId, transactionPhase: state.gestureState, direction: state.direction, gesturePressure: state.pressure, boundedGestureFeedback: true, directionOnlyGesture: true, liveGestureGeometry: false, atomicRotation: true, oneGestureOneStep: true, canonicalFrameLockedDuringGesture: true, runtimeOwnedTraversal: true, traversalMs: TRAVERSAL_MS, velocityProjection: false, momentumTraversal: false, postLandingGuardMs: POST_LANDING_GUARD_MS, navigationAuthority: false, contentAuthority: false, routeAuthority: false, evidenceAuthority: false }) }));
+    globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_CHANGED", { detail: Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, productRefinement: PRODUCT_REFINEMENT, uxRefinement: UX_REFINEMENT, reason, rolodexId: field.dataset.rolodexId || "", index: state.index, count: state.cards.length, destinationId: card?.dataset.destinationId || "", orbitAngle: state.angle, detent: state.detent, targetDetent: state.targetDetent, transactionId: state.transactionId, transactionPhase: state.gestureState, direction: state.direction, gesturePressure: state.pressure, boundedGestureFeedback: true, directionOnlyGesture: true, liveGestureGeometry: false, atomicRotation: true, oneGestureOneStep: true, canonicalFrameLockedDuringGesture: true, runtimeOwnedTraversal: true, traversalMs: TRAVERSAL_MS, velocityProjection: false, momentumTraversal: false, postLandingGuardMs: POST_LANDING_GUARD_MS, navigationAuthority: false, contentAuthority: false, routeAuthority: false, evidenceAuthority: false }) }));
   }
 
   function applyCanonicalSemantics(field, state, reason = "geometry") {
@@ -73,6 +74,11 @@
       card.setAttribute("aria-hidden", active ? "false" : "true");
       const enter = card.querySelector(".laws-rolodex-enter");
       if (enter) enter.tabIndex = active ? 0 : -1;
+    });
+    state.tabButtons.forEach((button, index) => {
+      const active = index === state.index;
+      button.setAttribute("aria-selected", String(active));
+      button.tabIndex = active ? 0 : -1;
     });
     state.position.textContent = `${state.index + 1} / ${count}`;
     field.dataset.carouselIndex = String(state.index);
@@ -261,21 +267,64 @@
     const track = field.querySelector(".laws-rolodex-track");
     const cards = Array.from(field.querySelectorAll(".laws-rolodex-card"));
     const position = field.querySelector(".laws-rolodex-position");
-    if (!viewport || !track || !position || cards.length < 2) return;
+    if (!viewport || !track || !position || cards.length < 1) return;
     field.querySelectorAll(".laws-rolodex-control").forEach(control => control.remove());
+
+    const recordTabs = document.createElement("div");
+    recordTabs.className = "laws-rolodex-record-tabs";
+    recordTabs.setAttribute("role", "tablist");
+    recordTabs.setAttribute("aria-label", `${field.querySelector(".laws-rolodex-field__heading > p")?.textContent?.trim() || "Laws"} destinations`);
+    const tabButtons = cards.map((card, index) => {
+      if (!card.id) card.id = `laws-rolodex-card-${field.dataset.rolodexId || "field"}-${index + 1}`;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "laws-rolodex-record-tab";
+      button.dataset.rolodexRecordIndex = String(index);
+      button.setAttribute("role", "tab");
+      button.setAttribute("aria-controls", card.id);
+      const ordinal = document.createElement("span");
+      ordinal.className = "laws-rolodex-record-tab__ordinal";
+      ordinal.textContent = String(index + 1).padStart(2, "0");
+      const label = document.createElement("span");
+      label.className = "laws-rolodex-record-tab__label";
+      label.textContent = card.querySelector("h4")?.textContent?.trim() || `Destination ${index + 1}`;
+      button.append(ordinal, label);
+      recordTabs.append(button);
+      return button;
+    });
+    viewport.before(recordTabs);
+    field.dataset.carouselTabCount = String(tabButtons.length);
     const initialIndex = Math.max(0, cards.findIndex(card => card.dataset.active === "true"));
-    const state = { viewport, track, cards, position, index: initialIndex, detent: initialIndex, targetDetent: initialIndex, angle: angleForDetent(initialIndex, cards.length), gestureState: "idle", classification: "none", direction: 0, pressure: 0, travel: 0, pointerId: null, startX: 0, startY: 0, transactionId: null, suppressClick: false, settleTimer: null, landingCommitted: false, lastLandingTime: 0, guardUntil: 0, trace: [] };
+    const state = { viewport, track, cards, position, recordTabs, tabButtons, index: initialIndex, detent: initialIndex, targetDetent: initialIndex, angle: angleForDetent(initialIndex, cards.length), gestureState: "idle", classification: "none", direction: 0, pressure: 0, travel: 0, pointerId: null, startX: 0, startY: 0, transactionId: null, suppressClick: false, settleTimer: null, landingCommitted: false, lastLandingTime: 0, guardUntil: 0, trace: [] };
     stateByField.set(field, state);
     fieldById.set(field.dataset.rolodexId || "", field);
     field.dataset.lawsDestinationCarousel = "active";
     field.dataset.carouselSpatialKernel = "methods-canonical-shared-ring";
     field.dataset.carouselGestureLaw = "direction-only-release-one-atomic-step";
     field.dataset.carouselProductRefinement = PRODUCT_REFINEMENT;
+    field.dataset.carouselUxRefinement = UX_REFINEMENT;
     setFeedback(field, state, "idle", 0);
     setTraversalTransition(state, false);
     viewport.style.touchAction = "pan-y";
     viewport.setAttribute("aria-roledescription", "carousel");
     viewport.setAttribute("aria-label", `${field.querySelector(".laws-rolodex-field__heading > p")?.textContent?.trim() || "Laws"} destinations. Swipe horizontally to rotate exactly one neighboring record after release. Vertical gestures scroll the page.`);
+
+    recordTabs.addEventListener("click", event => {
+      const button = event.target.closest("[data-rolodex-record-index]");
+      if (!button || isBusy(state)) return;
+      selectIndex(field, state, Number(button.dataset.rolodexRecordIndex), "record-tab-direct-select");
+    });
+
+    recordTabs.addEventListener("keydown", event => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key) || isBusy(state)) return;
+      event.preventDefault();
+      let index = state.index;
+      if (event.key === "Home") index = 0;
+      else if (event.key === "End") index = cards.length - 1;
+      else index = normalize(state.index + (event.key === "ArrowRight" ? 1 : -1), cards.length);
+      selectIndex(field, state, index, "record-tab-keyboard-select");
+      tabButtons[index]?.focus({ preventScroll: true });
+    });
 
     viewport.addEventListener("pointerdown", event => {
       if (isBusy(state) || (event.pointerType === "mouse" && event.button !== 0) || event.target.closest("button, a")) return;
@@ -378,8 +427,8 @@
     document.documentElement.dataset.lawsCarouselBuild = BUILD;
     document.documentElement.dataset.lawsCarouselGestureLaw = "direction-only-release-one-atomic-step";
     document.documentElement.dataset.lawsCarouselProductRefinement = PRODUCT_REFINEMENT;
-    globalThis.DGB_LAWS_DESTINATION_CAROUSEL = Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, productRefinement: PRODUCT_REFINEMENT, installed: true, sharedRingAuthority: true, directManipulation: false, directionOnlyGesture: true, liveGestureGeometry: false, boundedGestureFeedback: true, atomicRotation: true, oneGestureOneStep: true, canonicalFrameLockedDuringGesture: true, runtimeOwnedTraversal: true, traversalMs: TRAVERSAL_MS, velocityProjection: false, momentumTraversal: false, verticalGesturePassthrough: true, postLandingGuardMs: POST_LANDING_GUARD_MS, surrogateNavigation: false, restoreOrbitState, getState: snapshot, getTransactionTrace, navigationAuthority: false, contentAuthority: false, routeAuthority: false, evidenceAuthority: false });
-    globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_READY", { detail: Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, productRefinement: PRODUCT_REFINEMENT, fieldCount: fields.length, boundedGestureFeedback: true, directionOnlyGesture: true, liveGestureGeometry: false, atomicRotation: true, oneGestureOneStep: true, canonicalFrameLockedDuringGesture: true, runtimeOwnedTraversal: true, traversalMs: TRAVERSAL_MS, postLandingGuardMs: POST_LANDING_GUARD_MS }) }));
+    globalThis.DGB_LAWS_DESTINATION_CAROUSEL = Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, productRefinement: PRODUCT_REFINEMENT, uxRefinement: UX_REFINEMENT, installed: true, sharedRingAuthority: true, completeNumberedTopRail: true, directNonAdjacentSelection: true, directManipulation: false, directionOnlyGesture: true, liveGestureGeometry: false, boundedGestureFeedback: true, atomicRotation: true, oneGestureOneStep: true, canonicalFrameLockedDuringGesture: true, runtimeOwnedTraversal: true, traversalMs: TRAVERSAL_MS, velocityProjection: false, momentumTraversal: false, verticalGesturePassthrough: true, postLandingGuardMs: POST_LANDING_GUARD_MS, surrogateNavigation: false, restoreOrbitState, getState: snapshot, getTransactionTrace, navigationAuthority: false, contentAuthority: false, routeAuthority: false, evidenceAuthority: false });
+    globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_READY", { detail: Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, productRefinement: PRODUCT_REFINEMENT, uxRefinement: UX_REFINEMENT, fieldCount: fields.length, completeNumberedTopRail: true, directNonAdjacentSelection: true, boundedGestureFeedback: true, directionOnlyGesture: true, liveGestureGeometry: false, atomicRotation: true, oneGestureOneStep: true, canonicalFrameLockedDuringGesture: true, runtimeOwnedTraversal: true, traversalMs: TRAVERSAL_MS, postLandingGuardMs: POST_LANDING_GUARD_MS }) }));
     return true;
   }
 

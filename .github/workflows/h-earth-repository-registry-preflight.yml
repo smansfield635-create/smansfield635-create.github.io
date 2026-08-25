@@ -333,6 +333,7 @@ jobs:
           sparse-checkout: |
             /AI_ENTRYPOINT.json
             /.github/ai-router/
+            /.github/operation-intake/locator.v1.json
             /.github/workflows/h-earth-repository-registry-preflight.yml
             /.github/workflows/h-earth-experience-anchor-gate.yml
             /tools/repository-ai-entry-router.mjs
@@ -380,6 +381,7 @@ jobs:
           sparse-checkout: |
             /AI_ENTRYPOINT.json
             /.github/ai-router/
+            /.github/operation-intake/locator.v1.json
             /.github/workflows/h-earth-repository-registry-preflight.yml
             /.github/workflows/h-earth-experience-anchor-gate.yml
             /tools/repository-ai-entry-router.mjs

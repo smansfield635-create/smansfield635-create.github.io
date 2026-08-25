@@ -648,13 +648,29 @@
       "state": "ADMITTED_LOCKED"
     },
     "392a3772a4b8a039f089394d2675236c68c5b056dfe154350c5ac04557aabf2b": {
-      "governingHead": "5499344368a60f20014694965913e4521cd158ec",
-      "lockGeneration": 1691,
+      "governingHead": "0621a357e489f98f32cc44268978656f7a659325",
+      "lockGeneration": 1692,
       "lockScope": "H_EARTH:AUDRALIA_DIAGNOSTIC_TOUCH_RESPONSIVENESS_REPAIR:V1",
-      "operationId": "AUDRALIA_DIAGNOSTIC_TOUCH_RESPONSIVENESS_REPAIR_20260825_1229",
-      "procedureLocatorDigest": "a2c7f58d86143a4a3733f500e46ceb69fff8458142f16737b89c773000025e16",
+      "operationId": "AUDRALIA_DIAGNOSTIC_TOUCH_RESPONSIVENESS_REPAIR_SUCCESSOR_20260825_1238",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "5499344368a60f20014694965913e4521cd158ec",
+        "lockGeneration": 1691,
+        "lockScope": "H_EARTH:AUDRALIA_DIAGNOSTIC_TOUCH_RESPONSIVENESS_REPAIR:V1",
+        "operationId": "AUDRALIA_DIAGNOSTIC_TOUCH_RESPONSIVENESS_REPAIR_20260825_1229",
+        "preservedEvidenceRefs": [
+          "issue:2047:canonical-intake-comment:5414200757",
+          "workflow:32878189244",
+          "pull-request:2048:predecessor-head:e0be79c853c0c027fa8bb96302dc27e7b14a0530"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "AUDRALIA_DIAGNOSTIC_TOUCH_RESPONSIVENESS_HEAD_ADVANCE_54993443_TO_0621A357_20260825_1238"
+      },
+      "procedureLocatorDigest": "c36ad74d5f59b5e3370fe3b6867537fdc3c459314a6edeeb8e003c3b8c79624e",
       "released": false,
-      "requestDigest": "892f07f0de3899bb0dfbc48527647a3b2f13f2864649edd99c008e7da7b84e4c",
+      "requestDigest": "e667e212ce68e1d2b7553b3f91267aae833b874c4f577c4553ff59f831df13f1",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "392a3772a4b8a039f089394d2675236c68c5b056dfe154350c5ac04557aabf2b",
       "state": "ADMITTED_LOCKED"
@@ -3805,7 +3821,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1691,
+  "lockGeneration": 1692,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -26729,6 +26745,35 @@
       "scopeHash": "b9605978444cdd1f9810727f2b1ddd1547205f2d2782d233e41ea615ef6bede1",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "5499344368a60f20014694965913e4521cd158ec",
+      "lockGeneration": 1691,
+      "lockScope": "H_EARTH:AUDRALIA_DIAGNOSTIC_TOUCH_RESPONSIVENESS_REPAIR:V1",
+      "operationId": "AUDRALIA_DIAGNOSTIC_TOUCH_RESPONSIVENESS_REPAIR_20260825_1229",
+      "procedureLocatorDigest": "a2c7f58d86143a4a3733f500e46ceb69fff8458142f16737b89c773000025e16",
+      "released": true,
+      "requestDigest": "892f07f0de3899bb0dfbc48527647a3b2f13f2864649edd99c008e7da7b84e4c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "392a3772a4b8a039f089394d2675236c68c5b056dfe154350c5ac04557aabf2b",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:2047:canonical-intake-comment:5414200757",
+          "workflow:32878189244",
+          "pull-request:2048:predecessor-head:e0be79c853c0c027fa8bb96302dc27e7b14a0530"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "0621a357e489f98f32cc44268978656f7a659325",
+        "successorLockGeneration": 1692,
+        "successorLockScope": "H_EARTH:AUDRALIA_DIAGNOSTIC_TOUCH_RESPONSIVENESS_REPAIR:V1",
+        "successorOperationId": "AUDRALIA_DIAGNOSTIC_TOUCH_RESPONSIVENESS_REPAIR_SUCCESSOR_20260825_1238",
+        "transitionId": "AUDRALIA_DIAGNOSTIC_TOUCH_RESPONSIVENESS_HEAD_ADVANCE_54993443_TO_0621A357_20260825_1238"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

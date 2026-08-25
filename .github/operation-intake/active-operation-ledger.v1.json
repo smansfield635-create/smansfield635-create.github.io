@@ -2320,31 +2320,32 @@
       "state": "ADMITTED_LOCKED"
     },
     "b42c855020ac097941aaabe6e2524e0b60f9262518a3f23e73c93e8f14c5469c": {
-      "governingHead": "cd1b287ee23bc052cabd2a59790571dfb7ccb032",
-      "lockGeneration": 1646,
+      "governingHead": "11d4e10cddb4320014adbcd754d5fe15077ebeaa",
+      "lockGeneration": 1653,
       "lockScope": "AUDRALIA_WEATHER_PRESENTATION",
-      "operationId": "AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION_REPAIR_20260824_002",
+      "operationId": "AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION_REPAIR_20260824_003",
       "predecessor": {
         "authorityInherited": false,
         "exactHeadRevalidationRequired": true,
-        "governingHead": "af46884873acf993400ab51915fc8044bd022e93",
-        "lockGeneration": 1637,
+        "governingHead": "cd1b287ee23bc052cabd2a59790571dfb7ccb032",
+        "lockGeneration": 1646,
         "lockScope": "AUDRALIA_WEATHER_PRESENTATION",
-        "operationId": "AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION_REPAIR_20260824_001",
+        "operationId": "AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION_REPAIR_20260824_002",
         "preservedEvidenceRefs": [
-          "PR#2000",
-          "candidate:69e947e90d3703dd85431c19f9ccbd695c65c084",
-          "run:32788788191",
-          "failure:EXTERIOR_WEATHER_SHADER_COMPILE_FAILED_VERSION_NOT_FIRST_LINE",
-          "checkout-locality-merge:cd1b287ee23bc052cabd2a59790571dfb7ccb032"
+          "PR#2009",
+          "candidate:25cd974df50e4e94adab42135bb977af97a3f351",
+          "run:32792337643:AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_PASS",
+          "run:32792337635:STATIC_ASSET_IDENTITY_PASS",
+          "main-advance:11d4e10cddb4320014adbcd754d5fe15077ebeaa",
+          "compare:cd1b287e..11d4e10c:DISJOINT_FROM_THREE_CLOUD_PATHS"
         ],
         "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
         "terminalDisposition": "SUPERSEDED",
-        "transitionId": "AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION_SUCCESSOR_20260824_005"
+        "transitionId": "AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION_SUCCESSOR_20260824_007"
       },
-      "procedureLocatorDigest": "bdbb59231336fd5aabf92108cbbb1ea2a7f52d6cdb8010b76af4dcc1b139fd21",
+      "procedureLocatorDigest": "fbcab0eda20f698634bed4a21faf8c764e67e00d84acec96635f7232d131d48a",
       "released": false,
-      "requestDigest": "06f113434239df1bc8ac09005a54517c7296ae45905a30fe36d49d2feb314177",
+      "requestDigest": "06cce2749539eb542e0e0095f3e3004420be79fe1de738e84d213c482e7fae92",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "b42c855020ac097941aaabe6e2524e0b60f9262518a3f23e73c93e8f14c5469c",
       "state": "ADMITTED_LOCKED"
@@ -3554,7 +3555,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1652,
+  "lockGeneration": 1653,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -25860,6 +25861,56 @@
         "successorLockScope": "LAWS_CP6_FINAL_SYNC_METHODS_SHOWROOM_COMPATIBILITY_V1",
         "successorOperationId": "LAWS_CP6_FINAL_SYNC_METHODS_SHOWROOM_COMPATIBILITY_20260824_F9E63CE0_S2",
         "transitionId": "LAWS_CP6_FINAL_SYNC_METHODS_SHOWROOM_COMPATIBILITY_R2_TO_S2_F9E63CE0_20260824"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "cd1b287ee23bc052cabd2a59790571dfb7ccb032",
+      "lockGeneration": 1646,
+      "lockScope": "AUDRALIA_WEATHER_PRESENTATION",
+      "operationId": "AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION_REPAIR_20260824_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "af46884873acf993400ab51915fc8044bd022e93",
+        "lockGeneration": 1637,
+        "lockScope": "AUDRALIA_WEATHER_PRESENTATION",
+        "operationId": "AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION_REPAIR_20260824_001",
+        "preservedEvidenceRefs": [
+          "PR#2000",
+          "candidate:69e947e90d3703dd85431c19f9ccbd695c65c084",
+          "run:32788788191",
+          "failure:EXTERIOR_WEATHER_SHADER_COMPILE_FAILED_VERSION_NOT_FIRST_LINE",
+          "checkout-locality-merge:cd1b287ee23bc052cabd2a59790571dfb7ccb032"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION_SUCCESSOR_20260824_005"
+      },
+      "procedureLocatorDigest": "bdbb59231336fd5aabf92108cbbb1ea2a7f52d6cdb8010b76af4dcc1b139fd21",
+      "released": true,
+      "requestDigest": "06f113434239df1bc8ac09005a54517c7296ae45905a30fe36d49d2feb314177",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "b42c855020ac097941aaabe6e2524e0b60f9262518a3f23e73c93e8f14c5469c",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "PR#2009",
+          "candidate:25cd974df50e4e94adab42135bb977af97a3f351",
+          "run:32792337643:AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_PASS",
+          "run:32792337635:STATIC_ASSET_IDENTITY_PASS",
+          "main-advance:11d4e10cddb4320014adbcd754d5fe15077ebeaa",
+          "compare:cd1b287e..11d4e10c:DISJOINT_FROM_THREE_CLOUD_PATHS"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "11d4e10cddb4320014adbcd754d5fe15077ebeaa",
+        "successorLockGeneration": 1653,
+        "successorLockScope": "AUDRALIA_WEATHER_PRESENTATION",
+        "successorOperationId": "AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION_REPAIR_20260824_003",
+        "transitionId": "AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION_SUCCESSOR_20260824_007"
       },
       "terminalDisposition": "SUPERSEDED"
     }

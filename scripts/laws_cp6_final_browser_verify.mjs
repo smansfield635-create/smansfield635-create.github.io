@@ -10,6 +10,10 @@ fs.mkdirSync(artifactDir, { recursive: true });
 const narrative = JSON.parse(fs.readFileSync('laws/control-plane/narrative/laws-complete-narrative-map-v1.json', 'utf8'));
 const batteryScope = JSON.parse(fs.readFileSync('laws/control-plane/renewal/laws-complete-renewal-battery-study-presentation-scope-v1.json', 'utf8'));
 
+const methodsShowroomRoute = '/laws/research/methods-and-models/';
+const methodsShowroomContract = 'METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1';
+const methodsCanonicalArchive = 'METHODS_MODELS_CANONICAL_ARCHIVE_v1_DRAFT';
+
 const storyToServed = new Map([
   ['/laws/categories/reality/theory/', '/laws/categories/reality/theory.html'],
   ['/laws/categories/reality/evidence/', '/laws/categories/reality/evidence.html'],
@@ -24,17 +28,20 @@ const servedRoute = route => storyToServed.get(route) || route;
 
 const childPages = narrative.pages.map(page => ({
   route: servedRoute(page.route),
+  canonicalRoute: page.route,
   name: `${page.authority}-${page.page_title}`,
-  expectedReadings: ['FLOW', 'INTEGRITY', 'REALITY', 'STRUCTURE'].includes(page.authority) ? 3 : 5,
+  methodsShowroom: page.route === methodsShowroomRoute,
+  expectedReadings: page.route === methodsShowroomRoute ? 0 : (['FLOW', 'INTEGRITY', 'REALITY', 'STRUCTURE'].includes(page.authority) ? 3 : 5),
 }));
 const familyPages = ['/laws/categories/flow/', '/laws/categories/integrity/', '/laws/categories/reality/', '/laws/categories/structure/']
-  .map(route => ({ route, name: `family-${route}`, expectedReadings: 3 }));
+  .map(route => ({ route, name: `family-${route}`, expectedReadings: 3, methodsShowroom: false }));
 const wrapperPages = ['/laws/battery-heldout-study/', '/laws/scientific-law/battery-heldout-study/', '/laws/categories/reality/battery-heldout-study/']
-  .map(route => ({ route, name: `wrapper-${route}`, expectedReadings: 0 }));
-const frontier = { route: '/frontier/energy/battery-coherence-study/', name: 'frontier-battery', expectedReadings: 3 };
-const landing = { route: '/laws/', name: 'laws-landing', expectedReadings: null };
+  .map(route => ({ route, name: `wrapper-${route}`, expectedReadings: 0, methodsShowroom: false }));
+const frontier = { route: '/frontier/energy/battery-coherence-study/', name: 'frontier-battery', expectedReadings: 3, methodsShowroom: false };
+const landing = { route: '/laws/', name: 'laws-landing', expectedReadings: null, methodsShowroom: false };
 const renewedPages = [...childPages, ...familyPages, ...wrapperPages, frontier];
 const allPages = [landing, ...renewedPages];
+const roomCarouselRoutes = [...childPages.filter(page => !page.methodsShowroom).map(page => page.route), '/laws/research/'];
 
 const profiles = [
   { name: 'phone', viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true },
@@ -164,6 +171,27 @@ async function auditCheck(page, route, profile) {
   }
   await audit.locator('summary').click();
 }
+async function methodsShowroomCheck(page, route) {
+  const contract = await page.locator('html').getAttribute('data-methods-models-contract');
+  assert(contract === methodsShowroomContract, `${route}: showroom contract ${contract}`);
+  assert(await page.locator('html').getAttribute('data-canonical-archive') === methodsCanonicalArchive, `${route}: canonical archive binding`);
+  assert(await page.locator('html').getAttribute('data-source-completeness') === 'open', `${route}: source completeness drift`);
+  assert(await page.locator('.mm-nav').count() === 1 && await page.locator('.mm-nav').isVisible(), `${route}: showroom nav missing`);
+  await page.locator('[data-mm-carousel] .mm-card[data-active="true"]').waitFor({ state: 'visible', timeout: 15000 });
+  const tabs = page.locator('.mm-family-tab');
+  const cards = page.locator('.mm-card');
+  assert(await tabs.count() === 5, `${route}: family tabs ${await tabs.count()}/5`);
+  assert(await cards.count() === 5, `${route}: family cards ${await cards.count()}/5`);
+  assert(await page.locator('.mm-card[data-active="true"]').count() === 1, `${route}: active card count`);
+  assert(await page.locator('dialog').count() === 0, `${route}: detached dialog present`);
+  assert(await page.locator('.mm-disclosure').count() >= 1, `${route}: disclosure missing`);
+  const initialFamily = await page.locator('.mm-card[data-active="true"]').getAttribute('data-family-id');
+  await page.locator('[data-mm-viewport]').focus();
+  await page.keyboard.press('ArrowRight');
+  await page.waitForFunction(previous => document.querySelector('.mm-card[data-active="true"]')?.dataset.familyId !== previous, initialFamily);
+  const nextFamily = await page.locator('.mm-card[data-active="true"]').getAttribute('data-family-id');
+  assert(nextFamily && nextFamily !== initialFamily, `${route}: showroom keyboard movement failed`);
+}
 
 async function verifyProfiles(browser) {
   for (const profile of profiles) {
@@ -177,6 +205,8 @@ async function verifyProfiles(browser) {
         assert(await page.locator('#cp6-work-behind-laws.lr-battery-landing').count() === 1, '/laws/: battery module missing');
         assert(await page.locator('.laws-first-rail').count() === 1, '/laws/: persistent FIRST rail missing');
         assert(await page.locator('[data-laws-experience-indicator]').count() === 5, '/laws/: FIRST indicator count');
+      } else if (descriptor.methodsShowroom) {
+        await methodsShowroomCheck(page, descriptor.route);
       } else {
         await navCheck(page, descriptor.route, profile.name);
         await readingCheck(page, descriptor);
@@ -188,7 +218,7 @@ async function verifyProfiles(browser) {
       if (screenshots.has(descriptor.route) && ['phone', 'desktop'].includes(profile.name)) {
         await page.screenshot({ path: path.join(artifactDir, `${profile.name}-${safeName(descriptor.route)}.png`), fullPage: false });
       }
-      results.push({ check: 'profile', profile: profile.name, route: descriptor.route, status: 'PASS', title: state.title, h1: state.h1 });
+      results.push({ check: descriptor.methodsShowroom ? 'methods-showroom-profile' : 'profile', profile: profile.name, route: descriptor.route, status: 'PASS', title: state.title, h1: state.h1 });
       await page.close();
     }
     await context.close();
@@ -201,7 +231,12 @@ async function verifyReduced(browser) {
     const page = await context.newPage();
     const errors = collectErrors(page);
     await gotoChecked(page, descriptor.route);
-    assert(await page.locator('html').getAttribute('data-lr-motion') === 'reduced', `${descriptor.route}: reduced motion not declared`);
+    if (descriptor.methodsShowroom) {
+      assert(await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches), `${descriptor.route}: reduced motion media not active`);
+      await page.locator('[data-mm-carousel] .mm-card[data-active="true"]').waitFor({ state: 'visible', timeout: 15000 });
+    } else {
+      assert(await page.locator('html').getAttribute('data-lr-motion') === 'reduced', `${descriptor.route}: reduced motion not declared`);
+    }
     await health(page, descriptor.route, errors);
     results.push({ check: 'reduced-motion', route: descriptor.route, status: 'PASS' });
     await page.close();
@@ -217,14 +252,20 @@ async function verifyStatic(browser) {
     await gotoChecked(page, descriptor.route);
     await health(page, descriptor.route, errors);
     if (descriptor.route !== '/laws/') {
-      assert(await page.locator('.lr-nav-toggle').count() === 0, `${descriptor.route}: JS toggle exists in static mode`);
-      assert(await page.locator('.lr-topbar .lr-nav').isVisible(), `${descriptor.route}: static nav hidden`);
-      if (descriptor.expectedReadings) {
-        const buttons = page.locator('[data-lr-tabs] .lr-tab');
-        const panels = page.locator('[data-lr-tabs] .lr-panel');
-        assert(await buttons.count() === descriptor.expectedReadings, `${descriptor.route}: static reading count`);
-        for (let index = 0; index < descriptor.expectedReadings; index += 1) {
-          assert(await panels.nth(index).isVisible(), `${descriptor.route}: static panel ${index} hidden`);
+      if (descriptor.methodsShowroom) {
+        assert(await page.locator('.mm-nav').count() === 1 && await page.locator('.mm-nav').isVisible(), `${descriptor.route}: static showroom nav missing`);
+        assert(await page.locator('.mm-disclosure').count() >= 1, `${descriptor.route}: static showroom disclosure missing`);
+        assert(await page.locator('noscript .mm-disclosure').count() === 1, `${descriptor.route}: static showroom noscript boundary missing`);
+      } else {
+        assert(await page.locator('.lr-nav-toggle').count() === 0, `${descriptor.route}: JS toggle exists in static mode`);
+        assert(await page.locator('.lr-topbar .lr-nav').isVisible(), `${descriptor.route}: static nav hidden`);
+        if (descriptor.expectedReadings) {
+          const buttons = page.locator('[data-lr-tabs] .lr-tab');
+          const panels = page.locator('[data-lr-tabs] .lr-panel');
+          assert(await buttons.count() === descriptor.expectedReadings, `${descriptor.route}: static reading count`);
+          for (let index = 0; index < descriptor.expectedReadings; index += 1) {
+            assert(await panels.nth(index).isVisible(), `${descriptor.route}: static panel ${index} hidden`);
+          }
         }
       }
     }
@@ -234,16 +275,60 @@ async function verifyStatic(browser) {
   await context.close();
 }
 
+async function verifyRoomCarousel(browser) {
+  assert(roomCarouselRoutes.length === 24, `Room carousel route count ${roomCarouselRoutes.length}`);
+  assert(new Set(roomCarouselRoutes).size === 24, 'Duplicate room carousel route');
+
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, reducedMotion: 'reduce' });
+  for (const route of roomCarouselRoutes) {
+    const page = await context.newPage();
+    const errors = collectErrors(page);
+    await gotoChecked(page, route);
+    await health(page, route, errors);
+    const root = page.locator('[data-laws-room-carousel]').first();
+    assert(await root.count() === 1, `${route}: carousel root missing`);
+    assert(await root.getAttribute('data-lrc-mounted') === 'true', `${route}: carousel runtime not mounted`);
+    const cards = root.locator('[data-lrc-card]');
+    assert(await cards.count() >= 2, `${route}: insufficient spatial states ${await cards.count()}`);
+    const before = await root.getAttribute('data-lrc-index');
+    await root.locator('[data-lrc-viewport]').focus();
+    await page.keyboard.press('ArrowRight');
+    await page.waitForTimeout(30);
+    const after = await root.getAttribute('data-lrc-index');
+    assert(before !== after, `${route}: carousel keyboard one-step failed`);
+    assert(await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches), `${route}: room reduced motion media not active`);
+    results.push({ check: 'room-carousel-runtime', route, status: 'PASS', cardCount: await cards.count(), activeBefore: before, activeAfter: after });
+    await page.close();
+  }
+  await context.close();
+
+  const staticContext = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, javaScriptEnabled: false });
+  for (const route of roomCarouselRoutes) {
+    const page = await staticContext.newPage();
+    const errors = collectErrors(page);
+    await gotoChecked(page, route);
+    await health(page, route, errors);
+    const root = page.locator('[data-laws-room-carousel]').first();
+    assert(await root.count() === 1, `${route}: static carousel root missing`);
+    assert(await root.getAttribute('data-lrc-mounted') !== 'true', `${route}: runtime mounted with JavaScript disabled`);
+    results.push({ check: 'room-carousel-static-no-js', route, status: 'PASS' });
+    await page.close();
+  }
+  await staticContext.close();
+}
+
 async function main() {
   assert(childPages.length === 24, `Child route count ${childPages.length}`);
   assert(batteryScope.public_surface_count === 27, 'Battery scope drift');
   assert(allPages.length === 33, `Integrated route count ${allPages.length}`);
+  assert(roomCarouselRoutes.length === 24, `Room carousel route count ${roomCarouselRoutes.length}`);
 
   const browser = await chromium.launch({ headless: true });
   try {
     await verifyProfiles(browser);
     await verifyReduced(browser);
     await verifyStatic(browser);
+    await verifyRoomCarousel(browser);
   } finally {
     await browser.close();
   }
@@ -255,6 +340,10 @@ async function main() {
     childRoutes: 24,
     integratedRoutes: 33,
     batteryPublicSurfaces: 27,
+    methodsModelsAlternateContract: 'PASS',
+    roomCarouselRoutes: 24,
+    roomCarouselRuntimeExecutions: 24,
+    roomCarouselStaticNoJavaScriptExecutions: 24,
     profiles: profiles.map(profile => profile.name),
     profilePageExecutions: allPages.length * profiles.length,
     reducedMotionExecutions: renewedPages.length,

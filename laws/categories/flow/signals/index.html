@@ -10,134 +10,39 @@
   <script>document.documentElement.classList.add('lr-js')</script>
   <link rel="stylesheet" href="/assets/laws-destination/renewal.css?v=LAWS_COMPLETE_RENEWAL_V3">
   <link rel="stylesheet" href="/laws/room-carousel/room-carousel.v1.css?v=LAWS_BACK_PAGE_CAROUSEL_CORRECTION_20260825A">
+  <link rel="stylesheet" href="/laws/room-carousel/information-depth.v1.css?v=LAWS_INFORMATION_DEPTH_V1">
   <script defer src="/assets/laws-destination/renewal.js?v=LAWS_COMPLETE_RENEWAL_V3"></script>
 </head>
-<body>
+<body data-laws-root>
 <a class="lr-skip" href="#main">Skip to Signals</a>
 <div class="lr-shell">
-  <header class="lr-topbar">
-    <a class="lr-brand" href="/laws/" aria-label="Return to Laws Chamber">
-      <span class="lr-brand__mark" aria-hidden="true"><span>LAW</span></span>
-      <span class="lr-brand__copy"><small>Flow · Story 4 of 24</small><strong>Signals</strong></span>
-    </a>
-    <nav class="lr-nav" aria-label="Signals navigation">
-      <a href="/">Main Compass</a>
-      <a href="/laws/">Laws Compass</a>
-      <a href="/laws/categories/flow/#signals">Flow family record</a>
-    </nav>
-  </header>
-
-  <main class="lr-main" id="main" data-laws-room-carousel>
-    <section class="lr-hero" aria-labelledby="page-title">
-      <p class="lr-kicker">Flow · Detection before interpretation</p>
-      <h1 class="lr-title" id="page-title">Signals</h1>
-      <p class="lr-question">What changed, and how was that change detected?</p>
-      <p class="lr-lede">A signal is the detectable trace of a change moving from a source through a channel to a receiver. Detection can support a bounded relationship without establishing cause, mechanism, or readiness to act.</p>
-      <details class="lr-page-facts" open>
-        <summary>Page facts</summary>
-        <div class="lr-page-facts__body">
-        <dl class="lr-status-grid">
-          <div><dt>Public route</dt><dd>/laws/categories/flow/signals/</dd></div>
-          <div><dt>Route shape</dt><dd>Former family-section alias; renewed in place</dd></div>
-          <div><dt>Evidence posture</dt><dd>Relationship-specific; no universal validation</dd></div>
-        </dl>
-        </div>
-      </details>
-    </section>
-
-    <section class="lr-section" aria-labelledby="relationship-title">
-      <header class="lr-section__head">
-        <p class="lr-kicker">Primary relationship</p>
-        <h2 id="relationship-title">Change becomes knowable only after it survives the path.</h2>
-        <p>The source, channel, receiver, noise, delay, and threshold remain separate. A reading that arrives is not automatically a trustworthy signal, and a trustworthy signal is not automatically a causal explanation.</p>
-      </header>
-      <div class="lr-stage" aria-label="Signal path from source change through detection">
-        <span class="lr-stage__label">SOURCE CHANGE → SIGNAL → CHANNEL → RECEIVER → DETECTION</span>
-        <div class="lr-chain">
-          <div class="lr-chain__node"><strong>Source change</strong><span>A state differs from its prior or reference condition.</span></div>
-          <div class="lr-chain__node"><strong>Signal</strong><span>The change produces an observable trace.</span></div>
-          <div class="lr-chain__node"><strong>Channel</strong><span>The trace moves through a medium or measurement process.</span></div>
-          <div class="lr-chain__node"><strong>Receiver</strong><span>A sensor, observer, or system accepts the trace.</span></div>
-          <div class="lr-chain__node"><strong>Detection</strong><span>The trace crosses a declared decision rule.</span></div>
-        </div>
-        <div class="lr-noise" aria-hidden="true"></div>
-      </div>
-    </section>
-
-    <section class="lr-section" aria-labelledby="lenses-title">
-      <header class="lr-section__head">
-        <p class="lr-kicker">Reading layers</p>
-        <h2 id="lenses-title">One relationship, three distinct interpretations.</h2>
-        <p>Practical, Engineering, and Empirical readings are selectable but cannot silently substitute for one another.</p>
-      </header>
-      <div class="lr-tabs" data-lr-tabs>
-        <div class="lr-tablist" role="tablist" aria-label="Signals reading layers">
-          <button class="lr-tab" id="signals-tab-practical" role="tab" aria-selected="false" aria-expanded="false" type="button">Practical</button>
-          <button class="lr-tab" id="signals-tab-engineering" role="tab" aria-selected="false" aria-expanded="false" type="button">Engineering</button>
-          <button class="lr-tab" id="signals-tab-empirical" role="tab" aria-selected="false" aria-expanded="false" type="button">Empirical</button>
-        </div>
-        <div class="lr-panels">
-          <article class="lr-panel" id="signals-panel-practical" role="tabpanel">
-            <h3>What warning or reading appeared?</h3>
-            <p>In practical use, a signal is the first observable indication that a system may be changing. The useful question is not whether the display moved, but whether the movement was detected consistently enough to support attention.</p>
-            <ul><li>Name the real change being watched.</li><li>State who or what receives the warning.</li><li>Keep the decision consequence separate from the detection itself.</li></ul>
-          </article>
-          <article class="lr-panel" id="signals-panel-engineering" role="tabpanel">
-            <h3>How did the trace survive the path?</h3>
-            <p>Engineering requires an explicit source, channel, observation process, latency, noise model, threshold, and receiver state. Missingness, saturation, drift, and timing can change the meaning of the same apparent reading.</p>
-            <div class="lr-formula"><span class="lr-formula__label">Signal contract</span><pre><code>Detected = observation crosses a declared threshold
-
-Reliable detection additionally requires:
-source identity + channel integrity + receiver readiness</code></pre></div>
-          </article>
-          <article class="lr-panel" id="signals-panel-empirical" role="tabpanel">
-            <h3>What was actually observed?</h3>
-            <p>In the selected battery study, the defined near-term event was evaluated within the next 20 cycles. A combined representation ranked that event strongly in three complete cells excluded from development: AUROC 0.9394 across 1,653 final-test records. That is bounded held-out support for detection of the defined event, not proof of a distinct mechanism.</p>
-            <div class="lr-metric-grid">
-              <article><h4>Observed support</h4><p>Combined representation: AUROC 0.9394 in the named cell-disjoint evaluation.</p></article>
-              <article><h4>Competing signal</h4><p>Burden alone reached AUROC 0.9704, leaving conventional aging or accumulated use open.</p></article>
-              <article><h4>Negative component result</h4><p>Raw plus H* reached 0.7770 versus raw 0.7850; incremental delta −0.0080.</p></article>
-              <article><h4>Threshold failure</h4><p>The hard MQ conjunction produced zero sensitivity and balanced accuracy 0.4994.</p></article>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <aside class="lr-boundary" aria-label="Signals claim boundary">
-      <strong>Claim boundary</strong>
-      <p>A detected signal may predict or correspond to change without establishing cause, mechanism, universal transfer, or operational readiness. The battery example remains limited to its named three-cell held-out evaluation; independent external replication and deployment calibration are incomplete.</p>
-    </aside>
-
-    <nav class="lr-story-nav" aria-label="Laws story context">
-      <a href="/laws/research/methods-and-models/"><small>Previous story beat</small><strong>Research · Methods and Models</strong></a>
-      <a href="/laws/categories/flow/feedback/"><small>Next story beat</small><strong>Flow · Feedback</strong></a>
-    </nav>
-
-    <details class="lr-audit" open>
-      <summary>Canonical audit and route custody</summary>
-      <div class="lr-audit__body">
-        <article class="lr-record">
-          <p class="lr-record__id">LAWS_NARRATIVE_AUDIT_FLOW_SIGNALS_v1</p>
-          <h3>Signals route and ownership record</h3>
-          <p>This route was previously an automatic alias to the authoritative Signals section on the Flow family page. The route-shape reconciliation authorizes renewal in place while preserving the family section and its current ownership history.</p>
-          <dl>
-            <div><dt>Narrative route</dt><dd>/laws/categories/flow/signals/</dd></div>
-            <div><dt>Public route</dt><dd>/laws/categories/flow/signals/</dd></div>
-            <div><dt>Historical family owner</dt><dd>/laws/categories/flow/#signals</dd></div>
-            <div><dt>Implementation</dt><dd>CONVERT_ALIAS_TO_STORY_PAGE_WITHOUT_DELETING_FAMILY_SECTION</dd></div>
-            <div><dt>Related study</dt><dd>BATTERY_COHERENCE_HELDOUT_STUDY_v1</dd></div>
-            <div><dt>Relationship status</dt><dd>MATERIAL_LAW_RELATIONSHIP_ADMITTED</dd></div>
-            <div><dt>Complete study custody</dt><dd><a href="/frontier/energy/battery-coherence-study/">Frontier battery-coherence record</a></dd></div>
-            <div><dt>Evidence status</dt><dd>Strong domain-specific held-out support; mechanism, transfer, replication, and operational use unresolved</dd></div>
-          </dl>
-        </article>
-      </div>
-    </details>
-  </main>
-
-  <footer class="lr-footer"><span>Signals · Flow · Complete Laws renewal representative</span><a href="#main">Return to top</a></footer>
+<header class="lr-topbar"><a class="lr-brand" href="/laws/" aria-label="Return to Laws Chamber"><span class="lr-brand__mark" aria-hidden="true"><span>LAW</span></span><span class="lr-brand__copy"><small>Flow · Story 4 of 24</small><strong>Signals</strong></span></a><nav class="lr-nav" aria-label="Signals navigation"><a href="/">Main Compass</a><a href="/laws/">Laws Compass</a><a href="/laws/categories/flow/#signals">Flow family record</a></nav></header>
+<main class="lr-main" id="main" data-laws-room-carousel data-laws-scene-field>
+<section class="lr-hero lr-cosmos-stage" aria-labelledby="page-title">
+  <div data-laws-cosmic-field aria-hidden="true"></div>
+  <p class="lr-kicker">Flow · Detection before interpretation</p><h1 class="lr-title" id="page-title">Signals</h1><p class="lr-question">What changed, and how was that change detected?</p><p class="lr-lede">A signal is the detectable trace of a change moving from a source through a channel to a receiver. Detection can support a bounded relationship without establishing cause, mechanism, or readiness to act.</p>
+  <dl class="lr-status-grid"><div><dt>Public route</dt><dd>/laws/categories/flow/signals/</dd></div><div><dt>Route shape</dt><dd>Former family-section alias; renewed in place</dd></div><div><dt>Evidence posture</dt><dd>Relationship-specific; no universal validation</dd></div></dl>
+  <div class="lr-information-depth" aria-label="Signals identity and custody"><article class="lr-depth-card"><p class="lr-depth-label">Plain-language reading</p><p>Detection starts with a real state change and ends only when the trace survives the declared observation path strongly enough to cross a decision rule.</p><div class="lr-depth-grid"><div><strong>Source</strong><p>The underlying state changes.</p></div><div><strong>Channel</strong><p>The trace moves through a medium or measurement process.</p></div><div><strong>Receiver</strong><p>A sensor, observer, or system accepts the trace.</p></div><div><strong>Detection</strong><p>The trace crosses a declared threshold.</p></div></div></article><article class="lr-depth-card"><p class="lr-depth-label">Custody</p><div class="lr-depth-grid"><div><strong>Audit record</strong><p>LAWS_NARRATIVE_AUDIT_FLOW_SIGNALS_v1</p></div><div><strong>Historical family owner</strong><p>/laws/categories/flow/#signals</p></div><div><strong>Implementation</strong><p>Alias converted to a story page without deleting family ownership.</p></div><div><strong>Complete study custody</strong><p>Frontier battery-coherence record.</p></div></div></article></div>
+</section>
+<section class="lr-section" aria-labelledby="relationship-title">
+  <header class="lr-section__head"><p class="lr-kicker">Primary relationship</p><h2 id="relationship-title">Change becomes knowable only after it survives the path.</h2><p>The source, channel, receiver, noise, delay, and threshold remain separate. A reading that arrives is not automatically a trustworthy signal, and a trustworthy signal is not automatically a causal explanation.</p></header>
+  <div class="lr-stage" aria-label="Signal path from source change through detection"><span class="lr-stage__label">SOURCE CHANGE → SIGNAL → CHANNEL → RECEIVER → DETECTION</span><div class="lr-chain"><div class="lr-chain__node"><strong>Source change</strong><span>A state differs from its prior or reference condition.</span></div><div class="lr-chain__node"><strong>Signal</strong><span>The change produces an observable trace.</span></div><div class="lr-chain__node"><strong>Channel</strong><span>The trace moves through a medium or measurement process.</span></div><div class="lr-chain__node"><strong>Receiver</strong><span>A sensor, observer, or system accepts the trace.</span></div><div class="lr-chain__node"><strong>Detection</strong><span>The trace crosses a declared decision rule.</span></div></div><div class="lr-noise" aria-hidden="true"></div></div>
+  <div class="lr-information-depth" aria-label="Signals engineering controls"><article class="lr-depth-card"><p class="lr-depth-label">Engineering controls</p><p>Reliable detection requires source identity, channel integrity, receiver readiness, latency awareness, noise handling, threshold definition, and explicit handling of missingness, saturation, and drift.</p></article><article class="lr-depth-card"><p class="lr-depth-label">Failure behavior</p><p>A trace can arrive and still be unreliable. Reliability is lost when the path changes silently, the receiver is not ready, or the threshold is undefined or unstable.</p></article></div>
+</section>
+<section class="lr-section" aria-labelledby="lenses-title">
+  <header class="lr-section__head"><p class="lr-kicker">Reading layers</p><h2 id="lenses-title">One relationship, three distinct interpretations.</h2><p>Practical, Engineering, and Empirical readings are selectable but cannot silently substitute for one another.</p></header>
+  <div class="lr-tabs" data-lr-tabs><div class="lr-tablist" role="tablist" aria-label="Signals reading layers"><button class="lr-tab" id="signals-tab-practical" role="tab" aria-selected="false" aria-expanded="false" type="button">Practical</button><button class="lr-tab" id="signals-tab-engineering" role="tab" aria-selected="false" aria-expanded="false" type="button">Engineering</button><button class="lr-tab" id="signals-tab-empirical" role="tab" aria-selected="false" aria-expanded="false" type="button">Empirical</button></div><div class="lr-panels"><article class="lr-panel" id="signals-panel-practical" role="tabpanel"><h3>What warning or reading appeared?</h3><p>Name the real change being watched, the receiver, and the consequence separately from detection.</p></article><article class="lr-panel" id="signals-panel-engineering" role="tabpanel"><h3>How did the trace survive the path?</h3><p>Declare source, channel, observation process, latency, noise model, threshold, and receiver state.</p></article><article class="lr-panel" id="signals-panel-empirical" role="tabpanel"><h3>What was actually observed?</h3><p>The named battery study evaluated a 20-cycle event in three development-excluded cells.</p></article></div></div>
+  <div class="lr-information-depth" aria-label="Signals empirical record"><article class="lr-depth-card"><p class="lr-depth-label">Observed support</p><div class="lr-depth-stat-grid"><div><span>Combined representation</span><strong>AUROC 0.9394</strong></div><div><span>Burden alone</span><strong>AUROC 0.9704</strong></div><div><span>Final-test records</span><strong>1,653</strong></div></div><ul class="lr-depth-list"><li>Raw plus H*: AUROC 0.7770 versus raw 0.7850; incremental delta −0.0080.</li><li>Hard MQ conjunction: zero sensitivity; balanced accuracy 0.4994.</li><li>The burden comparator outperforming the combined model remains a preserved negative or mixed finding.</li></ul></article><article class="lr-depth-card lr-audit-inlay"><p class="lr-depth-label">Evidence standing</p><p>Strong domain-specific held-out support for the defined event relationship; mechanism, transfer, independent external replication, deployment calibration, and operational use remain unresolved.</p></article></div>
+</section>
+<aside class="lr-boundary" aria-label="Signals claim boundary">
+  <strong>Claim boundary</strong><p>A detected signal may predict or correspond to change without establishing cause, mechanism, universal transfer, or operational readiness. The battery example remains limited to its named three-cell held-out evaluation; independent external replication and deployment calibration are incomplete.</p>
+  <div class="lr-information-depth" aria-label="Signals final disposition"><article class="lr-depth-card"><p class="lr-depth-label">Disposition</p><p>The route may present the materially admitted Signals relationship while preserving its historical family ownership and the Frontier study as the complete evidence custodian.</p></article><article class="lr-depth-card"><p class="lr-depth-label">No upgrade</p><p>No universal validation, causal mechanism, route-registry authority, or deployment authority is created here.</p></article></div>
+</aside>
+<nav class="lr-story-nav" aria-label="Laws story context"><a href="/laws/research/methods-and-models/"><small>Previous story beat</small><strong>Research · Methods and Models</strong></a><a href="/laws/categories/flow/feedback/"><small>Next story beat</small><strong>Flow · Feedback</strong></a></nav>
+</main>
+<footer class="lr-footer"><span>Signals · Flow · Complete Laws renewal representative</span><a href="#main">Return to top</a></footer>
 </div>
+<script defer src="/laws/index.cosmos.js?v=LAWS_COSMOS_ARCHCOIN_SCENE_FIELD_V5"></script>
 <script defer src="/laws/room-carousel/room-carousel.v1.js?v=LAWS_BACK_PAGE_CAROUSEL_CORRECTION_20260825A"></script>
 </body>
 </html>

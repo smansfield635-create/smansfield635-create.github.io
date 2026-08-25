@@ -18,10 +18,10 @@ jobs:
       LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
       LLM_MODEL: ${{ vars.LLM_MODEL }}
     steps:
-      - name: Checkout exact main
+      - name: Checkout current main runner
         uses: actions/checkout@v4
         with:
-          ref: ec6bc3dd5e5c361a1e8fa195a415d395b86e96d9
+          ref: main
           fetch-depth: 1
       - name: Use Node 22
         uses: actions/setup-node@v4

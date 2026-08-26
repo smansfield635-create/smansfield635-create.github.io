@@ -1,4 +1,4 @@
-# retrigger: 2026-08-26T16:58Z
+# retrigger: 2026-08-26T17:14Z
 name: Issue Comment Fanout Consolidation v1
 
 on:
@@ -35,10 +35,19 @@ jobs:
           import fs from 'node:fs';
           const p = 'evidence/control-plane/issue-comment-fanout-consolidation.receipt.json';
           const r = JSON.parse(fs.readFileSync(p, 'utf8'));
-          if (r.retainedCount !== 1) throw new Error(`retainedCount=${r.retainedCount}`);
+          const expected = [
+            'ai-room-execution-transport.yml',
+            'canonical-operation-intake-transport-v1.yml',
+            'public-private-successor-execution-v1.yml',
+            'public-private-terminal-closure-carrier-v1.yml',
+            'remote-operation-terminal-closure-v1.yml',
+            'remote-operation-terminal-closure-v2.yml'
+          ].sort();
+          const retained = [...r.retainedIssueCommentListeners].sort();
+          if (r.retainedCount !== expected.length) throw new Error(`retainedCount=${r.retainedCount}`);
           if (r.retiredCount < 20) throw new Error(`retiredCount=${r.retiredCount}`);
-          if (JSON.stringify(r.retainedIssueCommentListeners) !== JSON.stringify(['ai-room-execution-transport.yml'])) {
-            throw new Error(`unexpected retained listeners: ${JSON.stringify(r.retainedIssueCommentListeners)}`);
+          if (JSON.stringify(retained) !== JSON.stringify(expected)) {
+            throw new Error(`unexpected retained listeners: ${JSON.stringify(retained)}`);
           }
           console.log(`ISSUE_COMMENT_CONSOLIDATION retired=${r.retiredCount} retained=${r.retainedCount}`);
           NODE
@@ -53,5 +62,5 @@ jobs:
             echo 'No changes to commit.'
             exit 0
           fi
-          git commit -m 'Control plane: collapse issue-comment workflow fanout'
+          git commit -m 'Control plane: collapse legacy issue-comment workflow fanout'
           git push origin HEAD:main

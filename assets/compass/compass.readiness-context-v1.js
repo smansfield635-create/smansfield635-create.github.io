@@ -28,3 +28,4 @@ q(':scope > .compass-readiness-tabs',stage).addEventListener('keydown',event=>{i
 setFamily('research');stage.dataset.readinessOwner='context-v2';
 globalThis.DGB_COMPASS_READINESS_CONTEXT_V1=globalThis[GLOBAL]=Object.freeze({mounted:true,version:'context-v2',readinessPresentationOwner:'STATIC_MARKUP_PLUS_DGB_COMPASS_READINESS_CONTEXT_V2',familyOrder:FAMILY_ORDER,defaultFamily:'research',defaultResearchCard:'Agentic Frontier',slideCounts:Object.freeze({research:4,trl:4,tra:4}),stageReplacement:false,initialStateInMarkup:true,geometryChanged:false,compassStateChanged:false});
 })();
+// AUDIT_ONLY_CONTROL_TRIGGER_20260826 — inert; never merge.

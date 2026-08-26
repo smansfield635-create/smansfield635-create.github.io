@@ -176,7 +176,9 @@
       "ownedPathPrefixes": ["assets/compass/"],
       "ownedExactPaths": [
         "index.html",
-        ".github/workflows/pages-direct-deploy.yml"
+        ".github/workflows/pages-direct-deploy.yml",
+        ".github/live-qualification/verifiers/compass-root.v1.mjs",
+        ".github/workflows/compass-audit-derived-candidate-qualification.yml"
       ],
       "entrypoint": ".github/ai-router/projects/compass/entrypoint.v1.json",
       "priority": 100

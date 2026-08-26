@@ -1012,6 +1012,18 @@
       "scopeHash": "4f452f63f9e07948dd86396c9e2acad4e55744c872aaa064e49abd2bf21693dd",
       "state": "ADMITTED_LOCKED"
     },
+    "51d43e76f9fcaff01fdb601a1edcb375e79f0a5ec03d5332295296336fbbe7a0": {
+      "governingHead": "40990c093d80228517bbb71be0d981776771f7ce",
+      "lockGeneration": 1726,
+      "lockScope": "ROUTER_REGISTER_COMPASS_QUALIFIER_PATHS_2104",
+      "operationId": "COMPASS_QUALIFIER_PATH_REGISTRATION_20260826_v1",
+      "procedureLocatorDigest": "9918879b111fcdf5e0b7fe363e237800e302da72a98a746b75db358fc5c561fd",
+      "released": false,
+      "requestDigest": "b471e436b14b190050023311341ff3bf7bc5bab7f7212d2386d7cf79f40782dc",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "51d43e76f9fcaff01fdb601a1edcb375e79f0a5ec03d5332295296336fbbe7a0",
+      "state": "ADMITTED_LOCKED"
+    },
     "5486754a5840916d35b367bd549d43ab762b6b08ce33b50bc6a484ac0af79c64": {
       "governingHead": "11d4e10cddb4320014adbcd754d5fe15077ebeaa",
       "lockGeneration": 1655,
@@ -4025,7 +4037,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1725,
+  "lockGeneration": 1726,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

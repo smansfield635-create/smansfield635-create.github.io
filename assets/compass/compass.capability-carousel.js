@@ -5,30 +5,6 @@ const LIVE_COMPOSITE_BUILD='gen1596-surgical-composite-5';
 function load(src,attr,next){const existing=document.querySelector(`script[${attr}]`);if(existing){if(existing.dataset.loaded==='true'||existing.readyState==='complete')next?.();else existing.addEventListener('load',()=>next?.(),{once:true});return;}const script=document.createElement('script');script.src=src;script.defer=true;script.setAttribute(attr,'true');script.addEventListener('load',()=>{script.dataset.loaded='true';next?.()},{once:true});document.head.append(script);}
 function requirePresentationOwner(next){let frames=0;const ready=()=>{let owner=globalThis[PRESENTATION_OWNER];if(!owner?.mounted){const mounted=globalThis.DGB_COMPASS_PRESENTATION_RETIREMENT_V2;if(mounted?.mounted){owner=globalThis[PRESENTATION_OWNER]=Object.freeze({mounted:true,version:'presentation-convergence-v8-root-bound-gen1591',rootIdentity:'gen1591-r4',legacyGuardClearedBeforeFetch:true,presentationReceipt:mounted});}}if(owner?.mounted&&owner.version==='presentation-convergence-v8-root-bound-gen1591'&&owner.legacyGuardClearedBeforeFetch===true){next();return;}if(frames++<120){requestAnimationFrame(ready);return;}throw new Error('COMPASS_GEN1591_PRESENTATION_OWNER_NOT_MOUNTED');};if(document.readyState==='complete'||document.readyState==='interactive')queueMicrotask(ready);else document.addEventListener('DOMContentLoaded',ready,{once:true});}
 function declareControllerSettledLabelAuthority(){globalThis.DGB_COMPASS_LAWS_LABEL_BINDING=Object.freeze({mounted:true,source:'DGB_COMPASS_CONTROLLER:[data-compass-cardinal][data-primary=true]',previewSource:null,policy:'ALL_FOUR_STARS_PRESENT_ONE_CONTROLLER_COMMITTED_READABLE_LABEL',settlement:'CONTROLLER_DATA_PRIMARY_DIRECT_PRESENTATION',observer:false});}
-function deferAmbientUntilIntent(){
-  const ambient=document.querySelector('[data-compass-ambient-audio]');
-  const source=ambient?.querySelector('source[src]');
-  const src=source?.getAttribute('src')||'';
-  if(!ambient||!source||!src)return;
-  source.dataset.compassDeferredSrc=src;
-  source.removeAttribute('src');
-  ambient.removeAttribute('autoplay');
-  ambient.preload='none';
-  ambient.pause();
-  ambient.load();
-  const resume=()=>{
-    const deferred=source.dataset.compassDeferredSrc||'';
-    if(!deferred)return;
-    source.setAttribute('src',deferred);
-    delete source.dataset.compassDeferredSrc;
-    ambient.preload='auto';
-    ambient.load();
-    const playback=ambient.play();
-    playback?.catch?.(()=>{});
-  };
-  ['pointerdown','touchstart','click','keydown','wheel'].forEach(type=>document.addEventListener(type,resume,{once:true,passive:type!=='keydown'}));
-  globalThis.DGB_COMPASS_AMBIENT_FIRST_PAINT=Object.freeze({deferredUntilIntent:true,externalStreamAtFirstPaint:false});
-}
 function bindStaticFirstPaintAuthority(){
   const path=location.pathname.replace(/\/index\.html$/,'/');if(path!=='/')return;
   const css=document.querySelector('link[data-compass-live-composite][data-first-paint-authority="static"]');
@@ -38,7 +14,6 @@ function bindStaticFirstPaintAuthority(){
   globalThis.DGB_COMPASS_LIVE_COMPOSITE_PROMOTION=Object.freeze({mounted:true,build:LIVE_COMPOSITE_BUILD,source:'/compass-composite/',delivery:'STATIC_DOCUMENT_FIRST_PAINT'});
   globalThis.DGB_COMPASS_GEN1591_BOUNDS=Object.freeze({mounted:true,ownershipPolicy:'STATIC_DOCUMENT_FIRST_PAINT',readinessPolicy:'UNCLIPPED_SPATIAL_CAROUSEL_RESERVATION',tabletContextPolicy:'MEASURED_SCENE_COLUMN_COLLAPSE_AT_TABLET',releaseSettlementAuthority:'CONTROLLER_DATA_PRIMARY_DIRECT_PRESENTATION',capabilityStability:'COMMITTED_SELECTION_SNAPS_FRONT_TROPHY_HEIGHT_NORMALIZED'});
 }
-deferAmbientUntilIntent();
 declareControllerSettledLabelAuthority();
 requirePresentationOwner(()=>{
   bindStaticFirstPaintAuthority();

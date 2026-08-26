@@ -4,7 +4,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const BASE_HEAD = '8df17b219c277b1a1c181431686b000352d60594';
+const BASE_HEAD = 'd381472c0dd07d5d52a2fb99943a124873608223';
 const TARGET = 'showroom/globe/audralia/final-cloud-shader-composition-v1.mjs';
 const TARGET_REGISTRY_PATH = `/${TARGET}`;
 const TARGET_GIT_BLOB = 'e5bcbe65abb051fc5648a3c8bf1e16a4ecc2837e';

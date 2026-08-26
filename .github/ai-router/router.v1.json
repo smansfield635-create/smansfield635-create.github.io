@@ -50,8 +50,8 @@
       ".github/workflows/trusted-intake-fixture-carrier-v1.yml",
       ".github/workflows/video-conform-renderer-v1.yml",
       ".github/workflows/workflow-lifecycle-continuity-v2-actions-inventory.yml",
-      ".github/workflows/workflow-lifecycle-continuity-v2-authenticated-assessment-v1.yml",
-      ".github/workflows/workflow-lifecycle-continuity-v2-consumer-discovery-v1.yml",
+      ".github/workflows/workflow-lifecycle-continuity-v2-authenticated-assessment.yml",
+      ".github/workflows/workflow-lifecycle-continuity-v2-consumer-discovery.yml",
       "tools/issue-comment-fanout-consolidation-v1.mjs"
     ],
     "ownedPathPrefixes": [

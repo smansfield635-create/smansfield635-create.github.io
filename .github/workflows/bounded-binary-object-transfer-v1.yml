@@ -7,8 +7,6 @@ on:
       - 'tools/ai-room-transport/bounded-binary-object-transfer.v1.mjs'
       - 'tools/ai-room-transport/bounded-binary-object-transfer.v1.test.mjs'
       - '.github/ai-toolset-transport/bounded-binary-object-transfer.v1.json'
-  issue_comment:
-    types: [created]
 
 permissions:
   contents: read

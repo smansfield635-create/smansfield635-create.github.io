@@ -952,6 +952,18 @@
       "scopeHash": "4bb36ddb4634b9a6f7cf6526f0145547e65a205b9f93e8388e85e64d5ab46a8e",
       "state": "ADMITTED_LOCKED"
     },
+    "4bd2361a0a054afa8551ee492e4eb35639f3ebc23ff98185e9dec98dd788e00c": {
+      "governingHead": "d381472c0dd07d5d52a2fb99943a124873608223",
+      "lockGeneration": 1718,
+      "lockScope": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_MERGE_READINESS_RECOVERY",
+      "operationId": "AUDRALIA_FINAL_CLOUD_COMPOSITOR_MERGE_READINESS_RECOVERY_20260825_001",
+      "procedureLocatorDigest": "d3a48aa5d951cb7bfa96379b87097069d954d8a9a27e7e726688ed86dd141631",
+      "released": false,
+      "requestDigest": "7a79db3840c75ee25c01ddb8800b22d90b976e48241be499b5b576068c71f5ab",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "4bd2361a0a054afa8551ee492e4eb35639f3ebc23ff98185e9dec98dd788e00c",
+      "state": "ADMITTED_LOCKED"
+    },
     "4c8ebe4a58daa3f054ab0e21962928f569e1f83c5aa711fa9b9664a18c201294": {
       "governingHead": "14c57c639e868d7e8e8a2fb9a94a5928b960e7d5",
       "lockGeneration": 664,
@@ -3954,7 +3966,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1717,
+  "lockGeneration": 1718,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

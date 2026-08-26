@@ -101,7 +101,21 @@ for (const name of entries) {
   }
 }
 
+// Retire this repair workflow's own one-shot issue_comment trigger after it has done the migration.
+const selfPath = path.join(workflowDir, self);
+if (fs.existsSync(selfPath)) {
+  const selfSource = fs.readFileSync(selfPath, 'utf8');
+  if (hasTopLevelIssueCommentTrigger(selfSource.split('\n'))) {
+    const result = stripIssueCommentTrigger(selfSource);
+    if (result.changed) {
+      fs.writeFileSync(selfPath, result.source);
+      changed.push(self);
+    }
+  }
+}
+
 retained.sort();
+changed.sort();
 const receipt = {
   schema: 'ISSUE_COMMENT_FANOUT_CONSOLIDATION_RECEIPT_v1',
   retainedIssueCommentListeners: retained,

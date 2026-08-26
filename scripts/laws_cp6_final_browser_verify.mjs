@@ -15,7 +15,7 @@ const batteryScope = JSON.parse(fs.readFileSync('laws/control-plane/renewal/laws
 const methodsShowroomRoute = '/laws/research/methods-and-models/';
 const methodsShowroomContract = 'METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1';
 const methodsCanonicalArchive = 'METHODS_MODELS_CANONICAL_ARCHIVE_v1_DRAFT';
-const roomCarouselAssetIdentity = 'LAWS_BACK_PAGE_CAROUSEL_CORRECTION_20260825A';
+const roomCarouselAssetIdentity = 'LAWS_GEN1738_FIVE_SCENE_CAROUSEL_20260826';
 const roomCarouselCssHref = `/laws/room-carousel/room-carousel.v1.css?v=${roomCarouselAssetIdentity}`;
 const roomCarouselJsSrc = `/laws/room-carousel/room-carousel.v1.js?v=${roomCarouselAssetIdentity}`;
 

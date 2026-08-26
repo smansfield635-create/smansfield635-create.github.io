@@ -1,8 +1,8 @@
 {
   "schema": "LAWS_FIVE_SCENE_CONTINUITY_CONTRACT_v1",
-  "status": "GEN1738_CONSTRUCTION_ACTIVE",
-  "operationId": "LAWS_CAROUSEL_CONTINUITY_FIVE_SCENE_BOTTOM_TABS_20260826_003",
-  "lockGeneration": 1738,
+  "status": "GEN1740_CONSTRUCTION_ACTIVE",
+  "operationId": "LAWS_CAROUSEL_CONTINUITY_FIVE_SCENE_BOTTOM_TABS_20260826_005",
+  "lockGeneration": 1740,
   "exactGoverningHead": "2e7780f2cdde6b0d4d50ef3b271fd88f35d88720",
   "candidateBranch": "laws-carousel/gen1738-five-scene-successor-20260826",
   "protectedReference": "laws/research/methods-and-models/",

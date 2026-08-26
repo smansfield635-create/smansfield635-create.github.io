@@ -55,6 +55,7 @@
         "showroom/globe/audralia/diagnostic/index.html",
         "showroom/globe/audralia/diagnostic/index.controls.js",
         "showroom/globe/audralia/diagnostic/index.inspection.lane.js",
+        "showroom/globe/audralia/final-cloud-shader-composition-v1.mjs",
         ".github/ai-toolset-transport/AGENTS.md",
         ".github/ai-toolset-transport/authorized-toolset-registry.v1.json",
         ".github/ai-toolset-transport/changed-path-manifest.v1.json",

@@ -3866,6 +3866,18 @@
       "scopeHash": "f54587a999ee440a2453ba47011d2d9598d7a882bb5ff39ca4ae51e6a5aa374c",
       "state": "ADMITTED_LOCKED"
     },
+    "f74adb3896842c399662213636c027dc0bead95c0175c520262ca0686124c38e": {
+      "governingHead": "11d995a6e547525eb01379607f3bd92fcfbe2c17",
+      "lockGeneration": 1720,
+      "lockScope": "COMPASS_ROOT_AGENTIC_FRONTIER_PUBLIC_RESEARCH_2101",
+      "operationId": "COMPASS_AGENTIC_FRONTIER_FIRST_PAINT_20260825_v1",
+      "procedureLocatorDigest": "712c5a5137adc9ad2fa4827ecddeecd0aabae18aff78b0144514157e2db7037a",
+      "released": false,
+      "requestDigest": "89f0525704fff0057f9ae28f0835e21cfea32539014711779a117bdd896e9d2a",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "f74adb3896842c399662213636c027dc0bead95c0175c520262ca0686124c38e",
+      "state": "ADMITTED_LOCKED"
+    },
     "f82fe94305cfa25f098c075a46c7b4c0a5c5d6565014f8b18196a08c5195ca1f": {
       "governingHead": "9eb636d33cff36b2344bb721726db7b4e8dcd2bc",
       "lockGeneration": 598,
@@ -3954,7 +3966,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1719,
+  "lockGeneration": 1720,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

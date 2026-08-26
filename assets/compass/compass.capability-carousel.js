@@ -14,9 +14,9 @@ function bindStaticFirstPaintAuthority(){
   globalThis.DGB_COMPASS_LIVE_COMPOSITE_PROMOTION=Object.freeze({mounted:true,build:LIVE_COMPOSITE_BUILD,source:'/compass-composite/',delivery:'STATIC_DOCUMENT_FIRST_PAINT'});
   globalThis.DGB_COMPASS_GEN1591_BOUNDS=Object.freeze({mounted:true,ownershipPolicy:'STATIC_DOCUMENT_FIRST_PAINT',readinessPolicy:'UNCLIPPED_SPATIAL_CAROUSEL_RESERVATION',tabletContextPolicy:'MEASURED_SCENE_COLUMN_COLLAPSE_AT_TABLET',releaseSettlementAuthority:'CONTROLLER_DATA_PRIMARY_DIRECT_PRESENTATION',capabilityStability:'COMMITTED_SELECTION_SNAPS_FRONT_TROPHY_HEIGHT_NORMALIZED'});
 }
+declareControllerSettledLabelAuthority();
 requirePresentationOwner(()=>{
   bindStaticFirstPaintAuthority();
-  declareControllerSettledLabelAuthority();
   load('/assets/compass/compass.statement-orbit.js?v=statement-orbit-restoration-v2&cb=980dbbe68b46','data-compass-statement-orbit-runtime');
   load('/assets/compass/compass.hra-brain-scene.js?v=brain-gen1-hra-passive-v1&g=1607&cb=20260824-brain-gen1-hra-passive-v1','data-compass-hra-brain-scene',()=>{
     load('/assets/compass/compass.capability-carousel.core.js?v=capability-continuity-v4-single-owner&cb=20260821-1577','data-compass-capability-carousel-core');

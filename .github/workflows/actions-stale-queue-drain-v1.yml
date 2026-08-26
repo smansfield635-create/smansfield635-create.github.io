@@ -1,0 +1,75 @@
+name: Actions Stale Queue Drain v1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/actions-stale-queue-drain-v1.yml'
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: actions-stale-queue-drain-v1
+  cancel-in-progress: true
+
+jobs:
+  drain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Cancel stale queued workflow runs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const cutoff = new Date(context.payload.head_commit?.timestamp || new Date().toISOString());
+            let cancelled = 0;
+            let examined = 0;
+            for (let pass = 0; pass < 5; pass++) {
+              const runs = await github.paginate(github.rest.actions.listWorkflowRunsForRepo, {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                status: 'queued',
+                per_page: 100
+              });
+              let passCancelled = 0;
+              for (const run of runs) {
+                examined++;
+                if (run.id === context.runId) continue;
+                const created = new Date(run.created_at);
+                if (!(created < cutoff)) continue;
+                try {
+                  await github.rest.actions.cancelWorkflowRun({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    run_id: run.id
+                  });
+                  cancelled++;
+                  passCancelled++;
+                } catch (error) {
+                  core.warning(`cancel failed run=${run.id} status=${run.status}: ${error.message}`);
+                }
+              }
+              if (passCancelled === 0) break;
+              await new Promise(resolve => setTimeout(resolve, 1500));
+            }
+            core.info(`STALE_QUEUE_DRAIN examined=${examined} cancelled=${cancelled}`);
+            core.setOutput('cancelled', String(cancelled));
+
+      - name: Verify no pre-repair queued runs remain
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const cutoff = new Date(context.payload.head_commit?.timestamp || new Date().toISOString());
+            const runs = await github.paginate(github.rest.actions.listWorkflowRunsForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              status: 'queued',
+              per_page: 100
+            });
+            const stale = runs.filter(run => run.id !== context.runId && new Date(run.created_at) < cutoff);
+            core.info(`STALE_QUEUE_REMAINDER=${stale.length}`);
+            if (stale.length) {
+              core.warning(`Some stale runs remain: ${stale.slice(0,20).map(r => r.id).join(',')}`);
+            }

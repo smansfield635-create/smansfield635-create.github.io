@@ -202,9 +202,9 @@ try{
   // captures that complete result, then adds coverage to the same final densityAt
   // field immediately before its inherited return.
   await importWrapper('DIRECT_DENSITY_V4','./fap1-orbital-support-tuning-v1.mjs?cb=FINAL_COMPOSITION_v1');
-  await importWrapper('ACF1_PRESENTATION_V3','/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/acf1-cloud-presentation-v1.mjs?cb=FINAL_COMPOSITION_v1');
-  await importWrapper('XYZ_VOLUMETRIC_DEPTH_V2','/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/fap1-xyz-volumetric-depth-v1.mjs?cb=FINAL_COMPOSITION_v1');
-  await importWrapper('FAP1_ORGANIZED_WEATHER_V6','/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/fap1-weather-presentation-v1.mjs?cb=FINAL_COMPOSITION_v1');
+  await importWrapper('ACF1_PRESENTATION_V3','./acf1-cloud-presentation-v1.mjs?cb=FINAL_COMPOSITION_v1');
+  await importWrapper('XYZ_VOLUMETRIC_DEPTH_V2','./fap1-xyz-volumetric-depth-v1.mjs?cb=FINAL_COMPOSITION_v1');
+  await importWrapper('FAP1_ORGANIZED_WEATHER_V6','./fap1-weather-presentation-v1.mjs?cb=FINAL_COMPOSITION_v1');
   composedWrapper=WebGL2RenderingContext.prototype.shaderSource;
 }finally{
   WebGL2RenderingContext.prototype.shaderSource=nativeShaderSource;

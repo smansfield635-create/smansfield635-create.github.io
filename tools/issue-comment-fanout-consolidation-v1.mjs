@@ -8,8 +8,7 @@ const allowIssueComment = new Set([
   'canonical-operation-intake-transport-v1.yml',
   'public-private-successor-execution-v1.yml',
   'public-private-terminal-closure-carrier-v1.yml',
-  'remote-operation-terminal-closure-v1.yml',
-  'remote-operation-terminal-closure-v2.yml'
+  'remote-operation-terminal-closure-v1.yml'
 ]);
 const expectedRetained = [...allowIssueComment].sort();
 const self = 'issue-comment-fanout-consolidation-v1.yml';
@@ -122,6 +121,36 @@ if (fs.existsSync(selfPath)) {
 
 retained.sort();
 changed.sort();
+const receiptPath = path.join(
+  root,
+  'evidence',
+  'control-plane',
+  'issue-comment-fanout-consolidation.receipt.json'
+);
+if (
+  changed.length === 0 &&
+  untouched.length === 0 &&
+  JSON.stringify(retained) === JSON.stringify(expectedRetained) &&
+  fs.existsSync(receiptPath)
+) {
+  const priorReceipt = JSON.parse(fs.readFileSync(receiptPath, 'utf8'));
+  const priorRetained = [...(priorReceipt.retainedIssueCommentListeners || [])].sort();
+  const priorRetired = priorReceipt.retiredIssueCommentListeners || [];
+  const priorUnmodified = priorReceipt.unmodifiedMatches || [];
+  if (
+    priorReceipt.schema === 'ISSUE_COMMENT_FANOUT_CONSOLIDATION_RECEIPT_v1' &&
+    JSON.stringify(priorRetained) === JSON.stringify(expectedRetained) &&
+    priorReceipt.retainedCount === expectedRetained.length &&
+    priorReceipt.retiredCount >= 20 &&
+    priorRetired.length === priorReceipt.retiredCount &&
+    priorRetired.includes(self) &&
+    priorUnmodified.length === 0
+  ) {
+    console.log(JSON.stringify(priorReceipt));
+    process.exit(0);
+  }
+}
+
 const receipt = {
   schema: 'ISSUE_COMMENT_FANOUT_CONSOLIDATION_RECEIPT_v1',
   retainedIssueCommentListeners: retained,
@@ -132,7 +161,7 @@ const receipt = {
 };
 fs.mkdirSync(path.join(root, 'evidence', 'control-plane'), { recursive: true });
 fs.writeFileSync(
-  path.join(root, 'evidence', 'control-plane', 'issue-comment-fanout-consolidation.receipt.json'),
+  receiptPath,
   JSON.stringify(receipt, null, 2) + '\n'
 );
 console.log(JSON.stringify(receipt));

@@ -6,9 +6,6 @@ on:
     paths:
       - 'tools/ai-room-transport/workflow-lifecycle-continuity-v2-remote-execution.v1.mjs'
       - '.github/workflows/workflow-lifecycle-continuity-v2-authenticated-assessment.yml'
-  issue_comment:
-    types: [created]
-
 permissions: {}
 
 env:

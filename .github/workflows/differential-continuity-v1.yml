@@ -9,8 +9,6 @@ on:
       - 'tools/operation-intake/repository-operation-intake-gate.v1.mjs'
       - 'tools/operation-intake/repository-operation-intake-gate.v1.operation-class.test.mjs'
       - '.github/ai-router/system-continuity/gap-registry.v1.json'
-  issue_comment:
-    types: [created]
   workflow_dispatch:
 
 permissions: {}

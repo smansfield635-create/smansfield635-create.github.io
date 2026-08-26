@@ -18,9 +18,6 @@ on:
       - '.github/ai-router/router.v1.json'
       - 'AI_ENTRYPOINT.json'
       - 'tools/operation-intake/**'
-  issue_comment:
-    types: [created]
-
 permissions:
   contents: read
 

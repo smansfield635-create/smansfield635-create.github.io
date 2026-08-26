@@ -6,9 +6,6 @@ on:
       - main
     paths:
       - '.github/workflows/issue-comment-fanout-consolidation-v1.yml'
-  issue_comment:
-    types: [created]
-
 permissions:
   contents: write
 
@@ -49,8 +46,7 @@ jobs:
             'canonical-operation-intake-transport-v1.yml',
             'public-private-successor-execution-v1.yml',
             'public-private-terminal-closure-carrier-v1.yml',
-            'remote-operation-terminal-closure-v1.yml',
-            'remote-operation-terminal-closure-v2.yml'
+            'remote-operation-terminal-closure-v1.yml'
           ].sort();
           const retained = [...r.retainedIssueCommentListeners].sort();
           if (r.retainedCount !== expected.length) throw new Error(`retainedCount=${r.retainedCount}`);

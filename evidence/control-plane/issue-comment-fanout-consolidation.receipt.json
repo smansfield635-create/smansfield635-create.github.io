@@ -1,0 +1,40 @@
+{
+  "schema": "ISSUE_COMMENT_FANOUT_CONSOLIDATION_RECEIPT_v1",
+  "retainedIssueCommentListeners": [
+    "ai-room-execution-transport.yml",
+    "canonical-operation-intake-transport-v1.yml",
+    "public-private-successor-execution-v1.yml",
+    "public-private-terminal-closure-carrier-v1.yml",
+    "remote-operation-terminal-closure-v1.yml"
+  ],
+  "retiredIssueCommentListeners": [
+    "agentic-frontier-paired-execution-v1.yml",
+    "bounded-exact-head-execution-carrier-v1.yml",
+    "differential-continuity-v1.yml",
+    "h-earth-h1-admission-remote-dispatch-bridge-v1.yml",
+    "h-earth-repository-preflight-remote-execution.yml",
+    "h-earth-repository-registry-preflight.yml",
+    "h-earth-v2-causal-evidence-lock-closure.yml",
+    "h-earth-v2-registry-role4-exact-head-carrier-v2.yml",
+    "h-earth-v2-registry-role4-exact-head-carrier.yml",
+    "h-earth-v2-router-instruction-lock-closure-successor.yml",
+    "issue-comment-fanout-consolidation-v1.yml",
+    "progressive-system-continuity-v1.yml",
+    "public-private-bounded-exact-head-execution-v1.yml",
+    "public-private-canonical-execution-request-router-v1.yml",
+    "public-private-connected-github-cas-closure-v1.yml",
+    "public-private-gen288-closure-qualification-v1.yml",
+    "public-private-operation-close-v1.yml",
+    "public-private-router-self-test-invocation-adapter-v1.yml",
+    "remote-operation-successor-v1.yml",
+    "repository-ai-entry-router-validation.yml",
+    "trusted-intake-fixture-carrier-v1.yml",
+    "video-conform-renderer-v1.yml",
+    "workflow-lifecycle-continuity-v2-actions-inventory.yml",
+    "workflow-lifecycle-continuity-v2-authenticated-assessment.yml",
+    "workflow-lifecycle-continuity-v2-consumer-discovery.yml"
+  ],
+  "unmodifiedMatches": [],
+  "retiredCount": 25,
+  "retainedCount": 5
+}

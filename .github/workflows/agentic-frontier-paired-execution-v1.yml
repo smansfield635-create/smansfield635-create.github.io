@@ -14,12 +14,14 @@ jobs:
       github.event.issue.number == 2089 &&
       contains(github.event.comment.body, 'AGENTIC_FRONTIER_PAIRED_SMOKE_AF_IR_01_V1')
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 18
     env:
-      OLLAMA_MODEL: qwen2.5-coder:14b
+      OLLAMA_MODEL: qwen2.5-coder:7b
       OLLAMA_HOST_URL: http://127.0.0.1:11434
-      OPENHANDS_INACTIVITY_S: '240'
-      OPENHANDS_HARD_TIMEOUT_S: '900'
+      MODEL_FIRST_TOKEN_TIMEOUT_S: '90'
+      MODEL_HARD_TIMEOUT_S: '240'
+      OPENHANDS_INACTIVITY_S: '180'
+      OPENHANDS_HARD_TIMEOUT_S: '600'
       PAIR_HEARTBEAT_S: '15'
       PYTHONUNBUFFERED: '1'
     steps:
@@ -38,6 +40,18 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
+      - name: Report runner capacity
+        run: |
+          set -euo pipefail
+          echo "CPU cores: $(nproc)"
+          free -h
+          mem_kb=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
+          if [ "$mem_kb" -lt 6000000 ]; then
+            echo "Insufficient RAM for bounded 7B local comparison lane"
+            exit 2
+          fi
+          echo "Capacity gate passed for qwen2.5-coder:7b"
 
       - name: Restore pinned OpenHands environment
         id: openhands-cache
@@ -63,7 +77,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.ollama/models
-          key: ${{ runner.os }}-ollama-qwen2.5-coder-14b-v1
+          key: ${{ runner.os }}-ollama-qwen2.5-coder-7b-v1
 
       - name: Start common local model runtime
         run: |
@@ -71,22 +85,22 @@ jobs:
           mkdir -p "$HOME/.ollama/models"
           docker pull ollama/ollama:0.32.14
           docker run -d --name agentic-frontier-ollama \
-            -e OLLAMA_CONTEXT_LENGTH=32768 \
+            -e OLLAMA_CONTEXT_LENGTH=8192 \
             -v "$HOME/.ollama:/root/.ollama" \
             -p 11434:11434 \
             ollama/ollama:0.32.14
-          for i in $(seq 1 60); do
+          for i in $(seq 1 45); do
             curl -fsS "$OLLAMA_HOST_URL/api/tags" >/dev/null && break
             sleep 2
           done
           if docker exec agentic-frontier-ollama ollama list | grep -Fq "$OLLAMA_MODEL"; then
-            echo "Model $OLLAMA_MODEL restored from cache; skipping heavy pull."
+            echo "Model $OLLAMA_MODEL restored from cache; skipping pull."
           else
             echo "Model $OLLAMA_MODEL absent from cache; pulling once."
             docker exec agentic-frontier-ollama ollama pull "$OLLAMA_MODEL"
           fi
 
-      - name: Execute frozen AF-IR-01 pair with live heartbeat
+      - name: Execute frozen AF-IR-01 pair with fail-fast model gate
         id: pair
         run: |
           set +e

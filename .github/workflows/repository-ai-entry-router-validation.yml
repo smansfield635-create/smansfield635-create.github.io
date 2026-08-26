@@ -28,8 +28,6 @@ on:
       - tools/publication-preflight-self-test.v1.mjs
       - .github/workflows/publication-preflight-v1.yml
       - .github/workflows/pages-exact-head-deploy-v3.yml
-  issue_comment:
-    types: [created]
   workflow_dispatch:
 permissions:
   contents: read

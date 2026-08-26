@@ -1,9 +1,7 @@
 name: H-Earth V2 Causal Evidence Lock Closure
 
 on:
-  issue_comment:
-    types: [created]
-
+  workflow_dispatch:
 permissions:
   contents: write
   issues: read

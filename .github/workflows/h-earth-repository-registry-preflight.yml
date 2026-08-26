@@ -31,10 +31,6 @@ on:
       - 'showroom/globe/audralia/diagnostic/index.controls.js'
       - 'showroom/globe/audralia/diagnostic/index.inspection.lane.js'
       - 'showroom/globe/audralia/final-cloud-shader-composition-v1.mjs'
-  issue_comment:
-    types:
-      - created
-
 permissions:
   contents: read
   actions: read

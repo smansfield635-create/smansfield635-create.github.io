@@ -1,8 +1,6 @@
 name: H-Earth Pre-Mutation Preflight Remote Execution
 
 on:
-  issue_comment:
-    types: [created]
   workflow_dispatch:
     inputs:
       request_json:

@@ -11,9 +11,6 @@ on:
     paths:
       - .github/workflows/h-earth-v2-router-instruction-lock-closure-successor.yml
       - h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/contract.v1.json
-  issue_comment:
-    types:
-      - created
   workflow_dispatch:
     inputs:
       request_type:

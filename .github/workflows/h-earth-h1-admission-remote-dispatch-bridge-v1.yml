@@ -1,9 +1,7 @@
 name: H-Earth H1 Admission Remote Dispatch Bridge v1
 
 on:
-  issue_comment:
-    types: [created]
-
+  workflow_dispatch:
 permissions:
   contents: read
   actions: write

@@ -8,8 +8,7 @@ const allowIssueComment = new Set([
   'canonical-operation-intake-transport-v1.yml',
   'public-private-successor-execution-v1.yml',
   'public-private-terminal-closure-carrier-v1.yml',
-  'remote-operation-terminal-closure-v1.yml',
-  'remote-operation-terminal-closure-v2.yml'
+  'remote-operation-terminal-closure-v1.yml'
 ]);
 const expectedRetained = [...allowIssueComment].sort();
 const self = 'issue-comment-fanout-consolidation-v1.yml';

@@ -17,8 +17,6 @@ on:
       - '.github/ai-router/router.v1.json'
       - '.github/ai-router/system-continuity/**'
       - '.github/workflows/progressive-system-continuity-v1.yml'
-  issue_comment:
-    types: [created]
   workflow_dispatch:
 
 permissions:

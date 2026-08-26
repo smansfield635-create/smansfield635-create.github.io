@@ -6,9 +6,6 @@ on:
       - '.github/ai-router/video-conform/**'
       - 'tools/video-conform/video-conform-renderer.v1.mjs'
       - '.github/workflows/video-conform-renderer-v1.yml'
-  issue_comment:
-    types: [created]
-
 permissions:
   contents: read
   issues: write

@@ -2,7 +2,7 @@
 import baseFacade from './h-earth.repository-registry.audralia-diagnostic-path-recognition.js';
 
 const REPOSITORY = 'smansfield635-create/smansfield635-create.github.io';
-const GOVERNING_HEAD = 'd381472c0dd07d5d52a2fb99943a124873608223';
+const GOVERNING_HEAD = '1d2b6dd21903625846d3515af2f8283a0c325bfb';
 const NODE_ID = 'H_EARTH_AUDRALIA_FINAL_CLOUD_COMPOSITOR_EXACT_PATH_RECOGNITION_SCOPE';
 const TARGET = '/showroom/globe/audralia/final-cloud-shader-composition-v1.mjs';
 const TARGET_GIT_BLOB = 'e5bcbe65abb051fc5648a3c8bf1e16a4ecc2837e';

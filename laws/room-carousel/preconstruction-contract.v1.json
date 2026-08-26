@@ -1,96 +1,80 @@
 {
-  "schema": "LAWS_DESTINATION_ROOM_CONJUGATION_PRECONSTRUCTION_CONTRACT_v1",
-  "status": "MATERIALIZED_SHARED_RUNTIME_BOUNDARY",
-  "operationId": "LAWS_FIRST_ROOM_CONJUGATION_20260824_1626_S3_D8E0CFAE",
-  "lockScope": "LAWS_FIRST_TEST_RESEARCH_ROOM_CONJUGATION_V1",
-  "lockGeneration": 1638,
-  "exactGoverningHead": "d8e0cfaee7c685888db028aaf6c37c722af684c1",
-  "candidateBranch": "agent/laws-first-room-conjugation-20260824-s1",
-  "implementationClass": "EXISTING_CONSTRUCT_ADOPTION",
+  "schema": "LAWS_FIVE_SCENE_CONTINUITY_CONTRACT_v1",
+  "status": "GEN1740_CONSTRUCTION_ACTIVE",
+  "operationId": "LAWS_CAROUSEL_CONTINUITY_FIVE_SCENE_BOTTOM_TABS_20260826_005",
+  "lockGeneration": 1740,
+  "exactGoverningHead": "2e7780f2cdde6b0d4d50ef3b271fd88f35d88720",
+  "candidateBranch": "laws-carousel/gen1738-five-scene-successor-20260826",
   "protectedReference": "laws/research/methods-and-models/",
-  "protectedGateway": "laws/index.html",
   "protectedReferenceMutationAllowed": false,
+  "protectedGateway": "laws/index.html",
   "protectedGatewayMutationAllowed": false,
-  "runtimeCeiling": "L1_LIGHT_MOTION",
-  "constructionSequence": [
-    "FREEZE_CONTRACT_AND_INSTALL_SHARED_RUNTIME_AND_VERIFIERS",
-    "CONJUGATE_FIRST_16_DESTINATIONS_IN_FOUR_NATIVE_CLUSTERS",
-    "CONJUGATE_TEST_4_AND_PROVE_STRUCTURE_TO_TEST_CONTINUITY",
-    "RENEW_RESEARCH_GATEWAY_AND_THREE_MUTABLE_RESEARCH_DESTINATIONS",
-    "RUN_EXACT_CANDIDATE_STATIC_BROWSER_ACCESSIBILITY_CONTINUITY_AND_PROTECTED_SURFACE_PROOFS",
-    "REQUEST_OWNER_PERCEPTUAL_ACCEPTANCE"
+  "sceneCount": 5,
+  "sceneSchema": [
+    "IDENTITY_MEANING",
+    "PRIMARY_RELATIONSHIP",
+    "READING_EVIDENCE",
+    "CUSTODY_LIMITS",
+    "CONTINUATION_HANDOFF"
   ],
-  "firstConstellation": {
-    "Flow": ["Signals", "Feedback", "Cycles", "Handoffs"],
-    "Integrity": ["Consistency", "Accountability", "Continuity", "Coherence"],
-    "Reality": ["Theory", "Evidence", "Measure", "Limits"],
-    "Structure": ["Constraints", "Interfaces", "Boundaries", "Governance"]
+  "bottomTabs": {
+    "onePerScene": true,
+    "selectedStateVisible": true,
+    "clickTouchKeyboard": true,
+    "swipeSynchronized": true,
+    "detachedSixthState": false,
+    "previousNextRouteHandoffOutsideSceneCount": true
   },
-  "testSequence": [
-    "Admission and Baseline",
-    "Forward Construction",
-    "Reverse Audit",
-    "Result and Record"
+  "informationHierarchy": {
+    "readerFirst": true,
+    "formalIdentitySecond": true,
+    "progressiveEngineeringDepth": true,
+    "purposeFailureLimitsDistinct": true,
+    "oneCenterOfAttention": true,
+    "longIdentifiersMayNotControlGeometry": true,
+    "informationLossAllowed": false
+  },
+  "preservation": {
+    "scientificClaims": true,
+    "formulas": true,
+    "evidenceStanding": true,
+    "sourceCustody": true,
+    "canonicalRoutes": true,
+    "previousNextStorySequence": true,
+    "noJavaScriptSourceReadability": true,
+    "reducedMotionSemanticEquivalence": true
+  },
+  "routeInventory": [
+    "laws/categories/flow/signals/index.html",
+    "laws/categories/flow/feedback/index.html",
+    "laws/categories/flow/cycles/index.html",
+    "laws/categories/flow/handoffs/index.html",
+    "laws/categories/integrity/consistency/index.html",
+    "laws/categories/integrity/accountability/index.html",
+    "laws/categories/integrity/continuity/index.html",
+    "laws/categories/integrity/coherence/index.html",
+    "laws/categories/reality/theory.html",
+    "laws/categories/reality/evidence.html",
+    "laws/categories/reality/measure.html",
+    "laws/categories/reality/limits.html",
+    "laws/categories/structure/constraints.html",
+    "laws/categories/structure/interfaces.html",
+    "laws/categories/structure/boundaries.html",
+    "laws/categories/structure/governance.html"
   ],
-  "researchComposition": [
-    "Evidence and Sources",
-    "Methods and Models",
-    "Applied Investigations",
-    "Findings and Boundaries"
+  "excludedUnregisteredStyles": [
+    "assets/laws-destination/renewal.css",
+    "assets/laws-destination/renewal-navigation.css",
+    "assets/laws-destination/renewal-batch.css"
   ],
-  "interactionLaw": {
-    "dominantForegroundObject": true,
-    "adjacentObjectsPerceptible": true,
-    "oneCommittedGestureOneStep": true,
-    "keyboardEquivalent": true,
-    "touchAndPointerDirectManipulation": true,
-    "inspectionPreservesPosition": true,
-    "deterministicReturn": true,
-    "mobileSpecificComposition": true,
-    "reducedMotionSemanticEquivalence": true,
-    "staticNoJavaScriptReadingComplete": true
-  },
-  "semanticLaw": {
-    "roomIdentityPreserved": true,
-    "nativeStoryboardPreserved": true,
-    "equationsPreserved": true,
-    "evidenceStandingPreserved": true,
-    "claimCeilingsPreserved": true,
-    "canonicalRoutesPreserved": true,
-    "chamberProgressionSeparateFromInformationDepth": true,
-    "historicalCustodyDoesNotAutoPromoteToVisibleState": true
-  },
-  "governanceJunction": {
-    "continueToTest": true,
-    "depthForkAllowed": true,
-    "depthForkMustRestoreOriginatingState": true
-  },
-  "sharedRuntime": {
-    "css": "laws/room-carousel/room-carousel.v1.css",
-    "js": "laws/room-carousel/room-carousel.v1.js",
+  "qualification": {
     "staticVerifier": "laws/room-carousel/verify.v1.mjs",
     "browserVerifier": "laws/room-carousel/browser-proof.v1.mjs",
-    "contract": "LAWS_ROOM_CAROUSEL_L1_v1"
+    "cp6Static": "scripts/verify-laws-cp6-final-synchronization.py",
+    "cp6Browser": "scripts/laws_cp6_final_browser_verify.mjs",
+    "workflow": ".github/workflows/laws-cp6-final-synchronization-verification.yml"
   },
-  "materializationBoundary": {
-    "sharedRuntimeAndVerifiersInstalled": true,
-    "destinationPagesMutated": false,
-    "finalQualificationClaimed": false,
-    "ownerPerceptualAcceptanceClaimed": false,
-    "mergeAuthorityCreated": false,
-    "publicationAuthorityCreated": false
-  },
-  "stopConditions": [
-    "PROTECTED_METHODS_MODELS_BYTE_DRIFT",
-    "PROTECTED_LAWS_GATEWAY_BYTE_DRIFT",
-    "SCIENTIFIC_OR_CLAIM_AUTHORITY_DRIFT",
-    "ROUTE_OR_CANONICAL_IDENTITY_DRIFT",
-    "STORYBOARD_CONTINUITY_FAILURE",
-    "DEPTH_PROGRESSION_CONFLATION",
-    "ACCESSIBILITY_OR_REDUCED_MOTION_FAILURE",
-    "STATIC_NO_JS_INCOMPLETE",
-    "BROWSER_INTERACTION_FAILURE",
-    "ROOT_LAWS_REGRESSION",
-    "UNRELATED_DIFF"
-  ]
+  "mergeAuthorityCreated": false,
+  "deploymentAuthorityCreated": false,
+  "publicationAuthorityCreated": false
 }

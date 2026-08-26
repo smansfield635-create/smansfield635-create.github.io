@@ -1,0 +1,17 @@
+name: Public Hosted Runner Allocation Probe
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/public-hosted-runner-allocation-probe.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Confirm public hosted allocation
+        run: echo PUBLIC_HOSTED_RUNNER_ALLOCATED

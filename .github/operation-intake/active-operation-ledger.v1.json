@@ -940,18 +940,6 @@
       "scopeHash": "48a9e935779a71abefddaba119d27ce2cac165ad543855500fb6aa7eaec967ff",
       "state": "ADMITTED_LOCKED"
     },
-    "48bc78086373dc4c55a6584969b3431d59978dffc4c69d8b37e6ad34b7893ac9": {
-      "governingHead": "f34e0b7d172d37a3facff875d05c0c13edfacf07",
-      "lockGeneration": 1733,
-      "lockScope": "LAWS/CAROUSEL_CONTINUITY/SHARED_RUNTIME_AND_16_CHILDREN",
-      "operationId": "LAWS_CAROUSEL_CONTINUITY_FIVE_SCENE_BOTTOM_TABS_20260826_002",
-      "procedureLocatorDigest": "1c172412c011e51d25d82274d783db65f8bd5c7c57106e94bf1e0096235c0b94",
-      "released": false,
-      "requestDigest": "ce09c00779b4b3d0a19ff48b7879472d52c23339ee7c34442d67bc2d6e45213f",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "48bc78086373dc4c55a6584969b3431d59978dffc4c69d8b37e6ad34b7893ac9",
-      "state": "ADMITTED_LOCKED"
-    },
     "4943ff7c798b57432d8a426021f5d80f0009acc498840e8b9d6f2ec58ad306a1": {
       "governingHead": "b38bc63c99411da65f1fa254a14c84ffea77ee0b",
       "lockGeneration": 244,
@@ -27620,6 +27608,19 @@
       "procedureLocatorDigest": "a26bfd3386bebf26f93a518b586939a9f0fe54c5cbddefe5fadc74aa1db2c151",
       "released": true,
       "requestDigest": "1ede856c8e45229f32084bf9c1da2f7701b029c5772aaff19ea1d1a6475d67a5",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "48bc78086373dc4c55a6584969b3431d59978dffc4c69d8b37e6ad34b7893ac9",
+      "state": "TERMINAL",
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "f34e0b7d172d37a3facff875d05c0c13edfacf07",
+      "lockGeneration": 1733,
+      "lockScope": "LAWS/CAROUSEL_CONTINUITY/SHARED_RUNTIME_AND_16_CHILDREN",
+      "operationId": "LAWS_CAROUSEL_CONTINUITY_FIVE_SCENE_BOTTOM_TABS_20260826_002",
+      "procedureLocatorDigest": "1c172412c011e51d25d82274d783db65f8bd5c7c57106e94bf1e0096235c0b94",
+      "released": true,
+      "requestDigest": "ce09c00779b4b3d0a19ff48b7879472d52c23339ee7c34442d67bc2d6e45213f",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "48bc78086373dc4c55a6584969b3431d59978dffc4c69d8b37e6ad34b7893ac9",
       "state": "TERMINAL",

@@ -4,8 +4,14 @@ import path from 'node:path';
 const root = process.cwd();
 const workflowDir = path.join(root, '.github', 'workflows');
 const allowIssueComment = new Set([
-  'ai-room-execution-transport.yml'
+  'ai-room-execution-transport.yml',
+  'canonical-operation-intake-transport-v1.yml',
+  'public-private-successor-execution-v1.yml',
+  'public-private-terminal-closure-carrier-v1.yml',
+  'remote-operation-terminal-closure-v1.yml',
+  'remote-operation-terminal-closure-v2.yml'
 ]);
+const expectedRetained = [...allowIssueComment].sort();
 const self = 'issue-comment-fanout-consolidation-v1.yml';
 
 function indentOf(line) {
@@ -33,12 +39,11 @@ function stripIssueCommentTrigger(source) {
 
   let issueIndex = -1;
   let issueIndent = -1;
-  let onEnd = lines.length;
   for (let i = onIndex + 1; i < lines.length; i++) {
     const line = lines[i];
     if (!line.trim() || /^\s*#/.test(line)) continue;
     const indent = indentOf(line);
-    if (indent === 0) { onEnd = i; break; }
+    if (indent === 0) break;
     if (/^\s+issue_comment:\s*(?:#.*)?$/.test(line)) {
       issueIndex = i;
       issueIndent = indent;
@@ -56,7 +61,6 @@ function stripIssueCommentTrigger(source) {
   }
   lines.splice(issueIndex, removeEnd - issueIndex);
 
-  // Recompute the on-block and ensure it still contains at least one event.
   let hasEvent = false;
   for (let i = onIndex + 1; i < lines.length; i++) {
     const line = lines[i];
@@ -85,7 +89,7 @@ for (const name of entries) {
   const source = fs.readFileSync(full, 'utf8');
   if (!hasTopLevelIssueCommentTrigger(source)) continue;
   if (allowIssueComment.has(name) || name === self) {
-    retained.push(name);
+    if (allowIssueComment.has(name)) retained.push(name);
     continue;
   }
   const result = stripIssueCommentTrigger(source);
@@ -97,6 +101,7 @@ for (const name of entries) {
   }
 }
 
+retained.sort();
 const receipt = {
   schema: 'ISSUE_COMMENT_FANOUT_CONSOLIDATION_RECEIPT_v1',
   retainedIssueCommentListeners: retained,
@@ -116,7 +121,7 @@ if (changed.length < 20) {
   console.error(`Refusing weak consolidation: only ${changed.length} listeners retired`);
   process.exit(2);
 }
-if (retained.length !== 1 || retained[0] !== 'ai-room-execution-transport.yml') {
+if (JSON.stringify(retained) !== JSON.stringify(expectedRetained)) {
   console.error(`Unexpected retained listener set: ${retained.join(',')}`);
   process.exit(3);
 }

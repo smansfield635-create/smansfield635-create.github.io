@@ -940,6 +940,18 @@
       "scopeHash": "48a9e935779a71abefddaba119d27ce2cac165ad543855500fb6aa7eaec967ff",
       "state": "ADMITTED_LOCKED"
     },
+    "48bc78086373dc4c55a6584969b3431d59978dffc4c69d8b37e6ad34b7893ac9": {
+      "governingHead": "a35da65189e7e447a7ca1dd02f3aaef2d585bc68",
+      "lockGeneration": 1729,
+      "lockScope": "LAWS/CAROUSEL_CONTINUITY/SHARED_RUNTIME_AND_16_CHILDREN",
+      "operationId": "LAWS_CAROUSEL_CONTINUITY_FIVE_SCENE_BOTTOM_TABS_20260826_001",
+      "procedureLocatorDigest": "a26bfd3386bebf26f93a518b586939a9f0fe54c5cbddefe5fadc74aa1db2c151",
+      "released": false,
+      "requestDigest": "1ede856c8e45229f32084bf9c1da2f7701b029c5772aaff19ea1d1a6475d67a5",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "48bc78086373dc4c55a6584969b3431d59978dffc4c69d8b37e6ad34b7893ac9",
+      "state": "ADMITTED_LOCKED"
+    },
     "4943ff7c798b57432d8a426021f5d80f0009acc498840e8b9d6f2ec58ad306a1": {
       "governingHead": "b38bc63c99411da65f1fa254a14c84ffea77ee0b",
       "lockGeneration": 244,
@@ -4061,7 +4073,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1728,
+  "lockGeneration": 1729,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

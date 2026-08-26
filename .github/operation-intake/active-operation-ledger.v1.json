@@ -1452,42 +1452,6 @@
       "scopeHash": "717694845676c377c79911d3ad810c72092bb79532b98add81d2ec1e26ff0c37",
       "state": "ADMITTED_LOCKED"
     },
-    "718aadd02ac238f1732d7b5400b06fed069dbcfbb5e685cc6a698666b69cc586": {
-      "governingHead": "f34e0b7d172d37a3facff875d05c0c13edfacf07",
-      "lockGeneration": 1732,
-      "lockScope": "AUDRALIA_FINAL_DENSITY_CLOUD_EXPANSION",
-      "operationId": "AUDRALIA_FINAL_CLOUD_CLEAR_SECTOR_RELOCATION_20260825_003",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "744a4808e4eba721a9302cabe868ff605f874f7f",
-        "lockGeneration": 1723,
-        "lockScope": "AUDRALIA_FINAL_DENSITY_CLOUD_EXPANSION",
-        "operationId": "AUDRALIA_FINAL_CLOUD_ENVELOPE_TOPOLOGY_REDESIGN_20260825_002",
-        "preservedEvidenceRefs": [
-          "GEN1723_SUCCESSOR_ADMISSION_TRANSITION_7a45a145b12984e08ba9884b8b08df4cf13ce2eb",
-          "ISSUE2031_GEN1723_TERMINAL_REPORT_COMMENT5420476248",
-          "GEN1723_LOCAL_ITERATION3_SHA256_71a429465fcdd3237228f3bcd4dd7b4cb1a7954b3b4d25c95016a86d86cc9213",
-          "GEN1723_LOCAL_ITERATION3_GIT_BLOB_8b081a6790615e8594b80987653872a5acbcdf47",
-          "GEN1723_LOCAL_ITERATION3_UNQUALIFIED_FORENSIC_INPUT_ONLY",
-          "CURRENT_MAIN_COMPOSITOR_GIT_BLOB_e5bcbe65abb051fc5648a3c8bf1e16a4ecc2837e",
-          "CURRENT_MAIN_COMPOSITOR_SHA256_8dd2dcb76f090b6e7f4520160d5ec7d2c5c52c7fe59f422ddfad2a5ed156c4e2",
-          "PR2039_VERIFIER_HEAD_544df229e80015cdfb4c99a9ce3a1e3d6113071d",
-          "PR2039_VERIFIER_SHA256_841b031b21e65138834dd68741016866acc62d7a2b03420dfdf12f5422c8e0bf",
-          "REMOTE_AI_ROUTER_PASS_RUN_32932115872_COMMENT5420797333",
-          "OWNER_TOTAL_VISIBLE_CLOUD_COVER_TARGET_55_TO_65_PERCENT"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "AUDRALIA_FINAL_CLOUD_ENVELOPE_TOPOLOGY_REDESIGN_744A4808_TO_F34E0B7_CLEAR_SECTORS_20260825"
-      },
-      "procedureLocatorDigest": "cbc85741cdbe74c1aea04d26a58846e03fd6fe1de92e7fbba3e07ebaa07e9734",
-      "released": false,
-      "requestDigest": "998e03538484f54bacb2258cbe9acc2c8dfc7f2544758ab7bd8d9ab27bf2e3dc",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "718aadd02ac238f1732d7b5400b06fed069dbcfbb5e685cc6a698666b69cc586",
-      "state": "ADMITTED_LOCKED"
-    },
     "72258889edde8bc7e3b0fc272d34a3c067cf9a80d2d925323982309def876c6d": {
       "governingHead": "d27e6157147e1a96951422fd25b319ff3142ecec",
       "lockGeneration": 1425,
@@ -27680,6 +27644,43 @@
         "transitionId": "C7_AUTHORITY_PROVENANCE_SUCCESSOR_20260826_006"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "f34e0b7d172d37a3facff875d05c0c13edfacf07",
+      "lockGeneration": 1732,
+      "lockScope": "AUDRALIA_FINAL_DENSITY_CLOUD_EXPANSION",
+      "operationId": "AUDRALIA_FINAL_CLOUD_CLEAR_SECTOR_RELOCATION_20260825_003",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "744a4808e4eba721a9302cabe868ff605f874f7f",
+        "lockGeneration": 1723,
+        "lockScope": "AUDRALIA_FINAL_DENSITY_CLOUD_EXPANSION",
+        "operationId": "AUDRALIA_FINAL_CLOUD_ENVELOPE_TOPOLOGY_REDESIGN_20260825_002",
+        "preservedEvidenceRefs": [
+          "GEN1723_SUCCESSOR_ADMISSION_TRANSITION_7a45a145b12984e08ba9884b8b08df4cf13ce2eb",
+          "ISSUE2031_GEN1723_TERMINAL_REPORT_COMMENT5420476248",
+          "GEN1723_LOCAL_ITERATION3_SHA256_71a429465fcdd3237228f3bcd4dd7b4cb1a7954b3b4d25c95016a86d86cc9213",
+          "GEN1723_LOCAL_ITERATION3_GIT_BLOB_8b081a6790615e8594b80987653872a5acbcdf47",
+          "GEN1723_LOCAL_ITERATION3_UNQUALIFIED_FORENSIC_INPUT_ONLY",
+          "CURRENT_MAIN_COMPOSITOR_GIT_BLOB_e5bcbe65abb051fc5648a3c8bf1e16a4ecc2837e",
+          "CURRENT_MAIN_COMPOSITOR_SHA256_8dd2dcb76f090b6e7f4520160d5ec7d2c5c52c7fe59f422ddfad2a5ed156c4e2",
+          "PR2039_VERIFIER_HEAD_544df229e80015cdfb4c99a9ce3a1e3d6113071d",
+          "PR2039_VERIFIER_SHA256_841b031b21e65138834dd68741016866acc62d7a2b03420dfdf12f5422c8e0bf",
+          "REMOTE_AI_ROUTER_PASS_RUN_32932115872_COMMENT5420797333",
+          "OWNER_TOTAL_VISIBLE_CLOUD_COVER_TARGET_55_TO_65_PERCENT"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "AUDRALIA_FINAL_CLOUD_ENVELOPE_TOPOLOGY_REDESIGN_744A4808_TO_F34E0B7_CLEAR_SECTORS_20260825"
+      },
+      "procedureLocatorDigest": "cbc85741cdbe74c1aea04d26a58846e03fd6fe1de92e7fbba3e07ebaa07e9734",
+      "released": true,
+      "requestDigest": "998e03538484f54bacb2258cbe9acc2c8dfc7f2544758ab7bd8d9ab27bf2e3dc",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "718aadd02ac238f1732d7b5400b06fed069dbcfbb5e685cc6a698666b69cc586",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

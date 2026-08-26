@@ -539,7 +539,7 @@ async function verifyRoomCarousel(browser) {
           const cardCount = await cards.count();
           const tabCount = await tabs.count();
           assert(cardCount >= 1, `${route}: no orbit states`);
-          assert(tabCount === cardCount, `${route}: complete top tab rail ${tabCount}/${cardCount}`);
+          assert(tabCount === cardCount, `${route}: complete bottom tab rail ${tabCount}/${cardCount}`);
           assert(await carouselRoot.getAttribute('data-lrc-tab-count') === String(cardCount), `${route}: declared tab count drift`);
           const ordinals = await tabs.locator('[data-lrc-tab-number]').allTextContents();
           assert(ordinals.every((value, index) => value.trim() === String(index + 1).padStart(2, '0')), `${route}: numbered tab sequence ${JSON.stringify(ordinals)}`);
@@ -622,6 +622,7 @@ async function verifyRoomCarousel(browser) {
               stageHeight: viewportRect?.height ?? null,
               stageTop: viewportRect?.top ?? null,
               stageBottom: viewportRect?.bottom ?? null,
+              tabsTop: tabsRect?.top ?? null,
               tabsBottom: tabsRect?.bottom ?? null,
               lowerTop: lowerRect?.top ?? null,
               lowerExists: Boolean(lower),
@@ -632,7 +633,7 @@ async function verifyRoomCarousel(browser) {
           });
           assert(layout.left >= -1 && layout.right <= layout.viewportWidth + 1, `${route}: profile containment ${profile.name} ${layout.left}/${layout.right}/${layout.viewportWidth}`);
           assert(layout.stageTop !== null && layout.top >= layout.stageTop - 2 && layout.bottom <= layout.stageBottom + 2, `${route}: active orbit card escaped stable stage`);
-          assert(layout.tabsBottom !== null && layout.stageTop !== null && layout.tabsBottom <= layout.stageTop + 2, `${route}: top tab rail overlaps informational stage`);
+          assert(layout.tabsTop !== null && layout.stageBottom !== null && layout.tabsTop >= layout.stageBottom - 2, `${route}: bottom tab rail overlaps informational stage ${layout.tabsTop}/${layout.stageBottom}`);
           assert(layout.summaryContained, `${route}: orbit summary descendant clipping`);
           assert(layout.documentContained, `${route}: descendant horizontal document overflow`);
           assert(layout.lowerExists, `${route}: ordinary lower page content missing`);
@@ -723,7 +724,7 @@ async function verifyRoomCarousel(browser) {
           return {
             cardCount,
             tabCount,
-            completeNumberedTopRail: true,
+            completeNumberedBottomRail: true,
             directNonAdjacentSelection: cardCount > 2,
             stableOrbitStage: true,
             orbitInspectionSeparated: true,
@@ -832,7 +833,7 @@ async function main() {
     roomCarouselBottomStoryNavigation: failureIncludes('story navigation') || failureIncludes('story routes') || failureIncludes('story link text') || failureIncludes('Laws narrative context') ? 'FAIL' : 'PASS',
     roomCarouselDirectionOnlyOneGestureOneStep: failureIncludes('vertical gesture') || failureIncludes('pointer one-step') ? 'FAIL' : 'PASS',
     roomCarouselCanonicalSettledLanding: failureIncludes('canonical settled landing') ? 'FAIL' : 'PASS',
-    roomCarouselCompleteNumberedTopRail: failureIncludes('complete top tab rail') || failureIncludes('numbered tab sequence') ? 'FAIL' : 'PASS',
+    roomCarouselCompleteNumberedBottomRail: failureIncludes('complete bottom tab rail') || failureIncludes('numbered tab sequence') || failureIncludes('bottom tab rail overlaps') ? 'FAIL' : 'PASS',
     roomCarouselDirectNonAdjacentSelection: failureIncludes('direct tab selection') ? 'FAIL' : 'PASS',
     roomCarouselStableOrbitStage: failureIncludes('stage height') || failureIncludes('geometry unstable') ? 'FAIL' : 'PASS',
     roomCarouselOrbitInspectionSeparation: failureIncludes('planes not separated') ? 'FAIL' : 'PASS',

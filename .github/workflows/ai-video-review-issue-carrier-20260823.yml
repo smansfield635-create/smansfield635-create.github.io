@@ -1,8 +1,7 @@
 name: AI Video Review Issue Carrier 20260823
 
 on:
-  issue_comment:
-    types: [created]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -12,7 +11,6 @@ permissions:
 
 jobs:
   materialize-proxy:
-    if: contains(github.event.comment.body, 'AI_VIDEO_REVIEW_20260823_RUN')
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -40,14 +38,3 @@ jobs:
           name: diamond-gate-seven-minute-review-proxy-${{ github.run_id }}
           path: review/
           retention-days: 7
-      - name: Return run identity
-        if: always()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body: `AI_VIDEO_REVIEW_RETURN_v1\nrun_id=${context.runId}\nrun_attempt=${process.env.GITHUB_RUN_ATTEMPT}`
-            })

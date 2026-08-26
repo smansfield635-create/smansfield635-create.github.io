@@ -19,7 +19,13 @@ function indentOf(line) {
   return m ? m[1].length : 0;
 }
 
-function hasTopLevelIssueCommentTrigger(lines) {
+function normalizeLines(input) {
+  if (Array.isArray(input)) return input;
+  return String(input).split('\n');
+}
+
+function hasTopLevelIssueCommentTrigger(input) {
+  const lines = normalizeLines(input);
   const onIndex = lines.findIndex(line => /^on:\s*(?:#.*)?$/.test(line));
   if (onIndex < 0) return false;
   for (let i = onIndex + 1; i < lines.length; i++) {
@@ -105,7 +111,7 @@ for (const name of entries) {
 const selfPath = path.join(workflowDir, self);
 if (fs.existsSync(selfPath)) {
   const selfSource = fs.readFileSync(selfPath, 'utf8');
-  if (hasTopLevelIssueCommentTrigger(selfSource.split('\n'))) {
+  if (hasTopLevelIssueCommentTrigger(selfSource)) {
     const result = stripIssueCommentTrigger(selfSource);
     if (result.changed) {
       fs.writeFileSync(selfPath, result.source);

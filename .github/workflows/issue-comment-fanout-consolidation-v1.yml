@@ -3,7 +3,7 @@ name: Issue Comment Fanout Consolidation v1
 on:
   push:
     branches:
-      - infra/issue-comment-fanout-consolidation-20260826
+      - main
     paths:
       - '.github/workflows/issue-comment-fanout-consolidation-v1.yml'
 
@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: infra/issue-comment-fanout-consolidation-20260826
+          ref: main
           fetch-depth: 0
 
       - name: Consolidate legacy issue_comment listeners
@@ -35,7 +35,7 @@ jobs:
           test "$count" -eq 1
           grep -q 'issue_comment:' .github/workflows/ai-room-execution-transport.yml
 
-      - name: Commit bounded consolidation to repair branch
+      - name: Commit bounded consolidation to main
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
@@ -46,4 +46,4 @@ jobs:
             exit 0
           fi
           git commit -m 'Control plane: collapse issue-comment workflow fanout'
-          git push origin HEAD:infra/issue-comment-fanout-consolidation-20260826
+          git push origin HEAD:main

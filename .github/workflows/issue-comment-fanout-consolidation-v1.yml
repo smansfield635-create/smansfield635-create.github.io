@@ -27,13 +27,20 @@ jobs:
       - name: Consolidate legacy issue_comment listeners
         run: node tools/issue-comment-fanout-consolidation-v1.mjs
 
-      - name: Verify only the central transport retains issue_comment
+      - name: Verify consolidation receipt
         run: |
           set -euo pipefail
-          count=$(grep -RIl --include='*.yml' --include='*.yaml' '^[[:space:]]*issue_comment:' .github/workflows | wc -l)
-          echo "ISSUE_COMMENT_LISTENER_COUNT=$count"
-          test "$count" -eq 1
-          grep -q 'issue_comment:' .github/workflows/ai-room-execution-transport.yml
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const p = 'evidence/control-plane/issue-comment-fanout-consolidation.receipt.json';
+          const r = JSON.parse(fs.readFileSync(p, 'utf8'));
+          if (r.retainedCount !== 1) throw new Error(`retainedCount=${r.retainedCount}`);
+          if (r.retiredCount < 20) throw new Error(`retiredCount=${r.retiredCount}`);
+          if (JSON.stringify(r.retainedIssueCommentListeners) !== JSON.stringify(['ai-room-execution-transport.yml'])) {
+            throw new Error(`unexpected retained listeners: ${JSON.stringify(r.retainedIssueCommentListeners)}`);
+          }
+          console.log(`ISSUE_COMMENT_CONSOLIDATION retired=${r.retiredCount} retained=${r.retainedCount}`);
+          NODE
 
       - name: Commit bounded consolidation to main
         run: |

@@ -42,3 +42,5 @@ jobs:
           REQUEST_BRANCH: ${{ github.event.pull_request.head.ref }}
           PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
         run: node tools/ai-entry-workflow-dispatch-bridge.mjs
+
+# 2026-08-26 bounded public hosted-runner allocation probe; no semantic change.

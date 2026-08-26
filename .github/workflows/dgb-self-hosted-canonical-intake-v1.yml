@@ -1,0 +1,113 @@
+name: DGB Self-Hosted Canonical Intake v1
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: dgb-self-hosted-intake-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  admit:
+    if: >-
+      github.event.issue.pull_request == null &&
+      (github.event.comment.author_association == 'OWNER' ||
+       github.event.comment.author_association == 'MEMBER' ||
+       github.event.comment.author_association == 'COLLABORATOR') &&
+      startsWith(github.event.comment.body, 'DGB_SELF_HOSTED_CANONICAL_INTAKE_V1')
+    runs-on: self-hosted
+    timeout-minutes: 15
+    steps:
+      - name: Checkout canonical intake working set
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/operation-intake/locator.v1.json
+            /tools/operation-intake/
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Parse bounded self-hosted intake envelope
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        shell: node {0}
+        run: |
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const marker = 'DGB_SELF_HOSTED_CANONICAL_INTAKE_V1';
+          const body = String(process.env.COMMENT_BODY || '').replace(/\r\n/g, '\n');
+          if (!body.startsWith(marker)) throw new Error('SELF_HOSTED_INTAKE_MARKER_MISMATCH');
+          const raw = body.slice(marker.length).trim();
+          if (!raw || raw.length > 262144) throw new Error('SELF_HOSTED_INTAKE_ENVELOPE_SIZE_INVALID');
+          const envelope = JSON.parse(raw);
+          if (envelope.schema !== 'CANONICAL_OPERATION_INTAKE_TRANSPORT_REQUEST_v1') throw new Error('SELF_HOSTED_INTAKE_SCHEMA_INVALID');
+          fs.writeFileSync(path.join(process.env.RUNNER_TEMP, 'canonical-intake-envelope.json'), JSON.stringify(envelope, null, 2) + '\n');
+
+      - name: Execute existing canonical intake transport
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: node {0}
+        run: |
+          const { spawnSync } = require('node:child_process');
+          const path = require('node:path');
+          const input = path.join(process.env.RUNNER_TEMP, 'canonical-intake-envelope.json');
+          const output = path.join(process.env.RUNNER_TEMP, 'canonical-intake-transport-receipt.json');
+          const r = spawnSync(process.execPath, [
+            'tools/operation-intake/canonical-operation-intake-transport.v1.mjs',
+            '--input', input,
+            '--output', output
+          ], { stdio: 'inherit', env: process.env });
+          if (r.error) throw r.error;
+          if (r.status !== 0) process.exit(r.status ?? 1);
+
+      - name: Verify canonical admission receipt
+        shell: node {0}
+        run: |
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const p = path.join(process.env.RUNNER_TEMP, 'canonical-intake-transport-receipt.json');
+          const r = JSON.parse(fs.readFileSync(p, 'utf8'));
+          if (r.schema !== 'CANONICAL_OPERATION_INTAKE_TRANSPORT_RECEIPT_v1') throw new Error('SELF_HOSTED_TRANSPORT_RECEIPT_SCHEMA_INVALID');
+          if (r.admissionSemanticsDuplicated !== false || r.authorityCreated !== false || r.mergeAuthorityCreated !== false) throw new Error('SELF_HOSTED_AUTHORITY_BOUNDARY_INVALID');
+          if (r.result !== 'CANONICAL_RECEIPT_PRESERVED') throw new Error('SELF_HOSTED_TRANSPORT_NONPASS');
+          if (r.canonicalReceiptJson?.result !== 'ADMITTED_AND_LOCKED') throw new Error('SELF_HOSTED_CANONICAL_ADMISSION_NONPASS');
+
+      - name: Return compact self-hosted receipt
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const p = path.join(process.env.RUNNER_TEMP, 'canonical-intake-transport-receipt.json');
+            let r = {};
+            try { r = JSON.parse(fs.readFileSync(p, 'utf8')); } catch {}
+            const c = r.canonicalReceiptJson || {};
+            const body = [
+              'DGB_SELF_HOSTED_CANONICAL_INTAKE_RETURN_V1',
+              '',
+              `transportResult = ${r.result || 'UNKNOWN'}`,
+              `canonicalResult = ${c.result || 'UNKNOWN'}`,
+              `operationId = ${c.operationId || 'UNKNOWN'}`,
+              `lockGeneration = ${c.lock?.lockGeneration ?? c.lockGeneration ?? 'UNKNOWN'}`,
+              `workflowRun = ${context.runId}`,
+              'authorityCreated = false'
+            ].join('\n');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: '```text\n' + body + '\n```'
+            });

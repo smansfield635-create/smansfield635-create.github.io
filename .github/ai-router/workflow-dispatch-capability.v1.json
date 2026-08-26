@@ -67,6 +67,15 @@
       "inputPolicy": {
         "candidate_sha": {"source": "REQUEST", "required": true, "userOverrideAllowed": true}
       }
+    },
+    "ACTIONS_STALE_QUEUE_DRAIN": {
+      "workflow": "actions-stale-queue-drain-v1.yml",
+      "ref": "main",
+      "inputPolicy": {},
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false
     }
   },
   "continuity": {

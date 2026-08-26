@@ -1452,6 +1452,49 @@
       "scopeHash": "717694845676c377c79911d3ad810c72092bb79532b98add81d2ec1e26ff0c37",
       "state": "ADMITTED_LOCKED"
     },
+    "718aadd02ac238f1732d7b5400b06fed069dbcfbb5e685cc6a698666b69cc586": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "2e7780f2cdde6b0d4d50ef3b271fd88f35d88720",
+          "lockGeneration": 1739,
+          "lockScope": "AUDRALIA_FINAL_DENSITY_CLOUD_EXPANSION",
+          "operationId": "AUDRALIA_FINAL_CLOUD_CLEAR_AIR_ENVELOPE_REDESIGN_20260826_006",
+          "procedureLocatorDigest": "655e9318c5cfd6743c787d27f967720a321e45a6bff790ca7623152116b0bad3",
+          "requestDigest": "63a8db5224f59004e7447e3281ceb0a1c31d094d3fdf99ee22028d0df17c511f",
+          "scopeHash": "718aadd02ac238f1732d7b5400b06fed069dbcfbb5e685cc6a698666b69cc586"
+        },
+        "bindingDigest": "4e55b4f0bd596e39fade0fd2c2b22bc45cd33de31984af8092d7c35406f33863",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "c9b03d5f9a8a6b30a0a6539d919bcdcd642ac6957b43fdb661ccdf537ee3e347",
+          "commentId": 5429715851,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2031,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33002194287,
+          "workflowSha": "2e7780f2cdde6b0d4d50ef3b271fd88f35d88720"
+        },
+        "lineageAnchorCommitSha": "80d6a52dee5660f5c90f80e0b436adc4d88de8da",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "2e7780f2cdde6b0d4d50ef3b271fd88f35d88720",
+      "lockGeneration": 1739,
+      "lockScope": "AUDRALIA_FINAL_DENSITY_CLOUD_EXPANSION",
+      "operationId": "AUDRALIA_FINAL_CLOUD_CLEAR_AIR_ENVELOPE_REDESIGN_20260826_006",
+      "procedureLocatorDigest": "655e9318c5cfd6743c787d27f967720a321e45a6bff790ca7623152116b0bad3",
+      "released": false,
+      "requestDigest": "63a8db5224f59004e7447e3281ceb0a1c31d094d3fdf99ee22028d0df17c511f",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "718aadd02ac238f1732d7b5400b06fed069dbcfbb5e685cc6a698666b69cc586",
+      "state": "ADMITTED_LOCKED"
+    },
     "72258889edde8bc7e3b0fc272d34a3c067cf9a80d2d925323982309def876c6d": {
       "governingHead": "d27e6157147e1a96951422fd25b319ff3142ecec",
       "lockGeneration": 1425,
@@ -4095,7 +4138,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1738,
+  "lockGeneration": 1739,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

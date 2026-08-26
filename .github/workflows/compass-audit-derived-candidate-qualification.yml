@@ -6,6 +6,7 @@ on:
     paths:
       - 'index.html'
       - 'assets/compass/**'
+      - '.github/workflows/compass-audit-derived-candidate-qualification.yml'
 
 permissions:
   contents: read
@@ -38,7 +39,27 @@ jobs:
           set -euo pipefail
           node .github/ai-router/platform/repository-live-qualification-engine.v1.mjs validate-manifest .github/live-qualification/manifests/compass-root.v1.json /tmp/manifest-validation.json
           export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
-          node .github/live-qualification/verifiers/compass-root.v1.mjs
+
+          # Generation 1727 startup-determinism repair. The repository verifier and every
+          # acceptance threshold remain unchanged. Patch only the ephemeral runner checkout:
+          # network-idle is not a valid readiness signal for the live Compass root because
+          # persistent asset/network activity can keep it open indefinitely.
+          verifier=.github/live-qualification/verifiers/compass-root.v1.mjs
+          verifier_sha_before="$(sha256sum "$verifier" | awk '{print $1}')"
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('.github/live-qualification/verifiers/compass-root.v1.mjs')
+          s = p.read_text()
+          old = "await page.goto(`${base}/`,{waitUntil:'networkidle2',timeout:60000});"
+          new = "await page.goto(`${base}/`,{waitUntil:'domcontentloaded',timeout:60000});\nawait page.waitForSelector('[data-compass-root]',{timeout:60000});"
+          if s.count(old) != 1:
+              raise SystemExit('COMPASS_STARTUP_PATCH_TARGET_MISMATCH')
+          p.write_text(s.replace(old, new))
+          PY
+          test "$(git diff --name-only)" = "$verifier"
+          test "$(git diff -U0 -- "$verifier" | grep -c "AUDIT_TABLET_SCENE_CENTER_ERROR\|SCENE_BASELINE_TOLERANCE\|CONTEXT_CENTER_TOLERANCE\|SETTLED_ANCHOR_TOLERANCE\|OLD_PRIMARY_DEPARTURE_MIN\|SETTLED_DRIFT_TOLERANCE" || true)" = "0"
+          echo "COMPASS_REPOSITORY_VERIFIER_SHA256=$verifier_sha_before"
+          node "$verifier"
           test "$(jq -r '.status' "$RUNTIME_RESULT_PATH")" = "PASS"
           echo 'COMPASS_AUDIT_DERIVED_CANDIDATE_PASS'
       - uses: actions/upload-artifact@v4

@@ -50,8 +50,8 @@
       ".github/workflows/trusted-intake-fixture-carrier-v1.yml",
       ".github/workflows/video-conform-renderer-v1.yml",
       ".github/workflows/workflow-lifecycle-continuity-v2-actions-inventory.yml",
-      ".github/workflows/workflow-lifecycle-continuity-v2-authenticated-assessment.yml",
-      ".github/workflows/workflow-lifecycle-continuity-v2-consumer-discovery.yml",
+      ".github/workflows/workflow-lifecycle-continuity-v2-authenticated-assessment-v1.yml",
+      ".github/workflows/workflow-lifecycle-continuity-v2-consumer-discovery-v1.yml",
       "tools/issue-comment-fanout-consolidation-v1.mjs"
     ],
     "ownedPathPrefixes": [
@@ -68,10 +68,7 @@
     {
       "projectId": "H_EARTH",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": [
-        "h-earth-3d/",
-        "showroom/globe/h-earth/"
-      ],
+      "ownedPathPrefixes": ["h-earth-3d/", "showroom/globe/h-earth/"],
       "ownedExactPaths": [
         ".github/workflows/h-earth-repository-registry-preflight.yml",
         ".github/workflows/h-earth-r06-c10-candidate-admission.yml",
@@ -143,9 +140,7 @@
     {
       "projectId": "LAWS",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": [
-        "laws/"
-      ],
+      "ownedPathPrefixes": ["laws/"],
       "ownedExactPaths": [
         "scripts/laws_cp6_final_browser_verify.mjs",
         "scripts/laws_cp6_final_browser_verify_runner.mjs",
@@ -158,33 +153,23 @@
     {
       "projectId": "LINEAGE_RECEIPT_PROTOCOL",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": [
-        "infrastructure/lineage-receipt-protocol-v1/"
-      ],
-      "ownedExactPaths": [
-        ".github/workflows/lrpv1-conformance.yml"
-      ],
+      "ownedPathPrefixes": ["infrastructure/lineage-receipt-protocol-v1/"],
+      "ownedExactPaths": [".github/workflows/lrpv1-conformance.yml"],
       "entrypoint": ".github/ai-router/projects/lineage-receipt-protocol/entrypoint.v1.json",
       "priority": 100
     },
     {
       "projectId": "ESTATE_VALIDATION",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": [
-        "validation/"
-      ],
-      "ownedExactPaths": [
-        ".github/workflows/estate-validation-v1.yml"
-      ],
+      "ownedPathPrefixes": ["validation/"],
+      "ownedExactPaths": [".github/workflows/estate-validation-v1.yml"],
       "entrypoint": ".github/ai-router/projects/estate-validation/entrypoint.v1.json",
       "priority": 100
     },
     {
       "projectId": "STATE_BOUND_ADMISSIBILITY_KERNEL",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": [
-        "infrastructure/state-bound-admissibility-kernel-v1/"
-      ],
+      "ownedPathPrefixes": ["infrastructure/state-bound-admissibility-kernel-v1/"],
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/state-bound-admissibility-kernel/entrypoint.v1.json",
       "priority": 100
@@ -192,9 +177,7 @@
     {
       "projectId": "CONTROL_PLANE_TRANSFERABILITY",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": [
-        "control-plane/transferability-program/"
-      ],
+      "ownedPathPrefixes": ["control-plane/transferability-program/"],
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/control-plane-transferability/entrypoint.v1.json",
       "priority": 100
@@ -202,9 +185,7 @@
     {
       "projectId": "OPEN_WORLD",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": [
-        "open-world/"
-      ],
+      "ownedPathPrefixes": ["open-world/"],
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/open-world/entrypoint.v1.json",
       "priority": 100
@@ -212,9 +193,7 @@
     {
       "projectId": "COMPASS",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": [
-        "assets/compass/"
-      ],
+      "ownedPathPrefixes": ["assets/compass/"],
       "ownedExactPaths": [
         "index.html",
         ".github/workflows/pages-direct-deploy.yml",
@@ -227,11 +206,7 @@
     {
       "projectId": "PUBLIC_LEGITIMACY",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": [
-        "developer/",
-        "evidence/",
-        "governance/"
-      ],
+      "ownedPathPrefixes": ["developer/", "evidence/", "governance/"],
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/public-legitimacy/entrypoint.v1.json",
       "priority": 100
@@ -239,9 +214,7 @@
     {
       "projectId": "MATERIAL_WORK_AUDIT",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": [
-        "research/material-work-audit/"
-      ],
+      "ownedPathPrefixes": ["research/material-work-audit/"],
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/material-work-audit/entrypoint.v1.json",
       "priority": 100

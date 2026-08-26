@@ -22,6 +22,8 @@ if (!executable.includes("complete bottom tab rail") || !executable.includes("or
   throw new Error('PRESERVED_CP6_INVARIANTS_MISSING');
 }
 
-const tempPath = `${process.env.RUNNER_TEMP || '/tmp'}/laws_cp6_final_browser_verify.gen1740.mjs`;
+// Keep the generated verifier inside the checkout so Node's ESM package
+// resolution can reach this run's pinned ./node_modules/playwright install.
+const tempPath = `${process.cwd()}/scripts/.laws_cp6_final_browser_verify.gen1740.mjs`;
 fs.writeFileSync(tempPath, executable, 'utf8');
 await import(`${pathToFileURL(tempPath).href}?candidate=${encodeURIComponent(process.env.EXECUTION_COMMIT || 'LOCAL')}`);

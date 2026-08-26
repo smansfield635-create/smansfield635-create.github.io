@@ -1417,36 +1417,36 @@
       "state": "ADMITTED_LOCKED"
     },
     "718aadd02ac238f1732d7b5400b06fed069dbcfbb5e685cc6a698666b69cc586": {
-      "governingHead": "11d995a6e547525eb01379607f3bd92fcfbe2c17",
-      "lockGeneration": 1721,
+      "governingHead": "744a4808e4eba721a9302cabe868ff605f874f7f",
+      "lockGeneration": 1723,
       "lockScope": "AUDRALIA_FINAL_DENSITY_CLOUD_EXPANSION",
-      "operationId": "AUDRALIA_FINAL_CLOUD_ENVELOPE_TOPOLOGY_REDESIGN_20260825_001",
+      "operationId": "AUDRALIA_FINAL_CLOUD_ENVELOPE_TOPOLOGY_REDESIGN_20260825_002",
       "predecessor": {
         "authorityInherited": false,
         "exactHeadRevalidationRequired": true,
-        "governingHead": "d03ae11e1ee57596647bfa367a13160d33d16008",
-        "lockGeneration": 1682,
+        "governingHead": "11d995a6e547525eb01379607f3bd92fcfbe2c17",
+        "lockGeneration": 1721,
         "lockScope": "AUDRALIA_FINAL_DENSITY_CLOUD_EXPANSION",
-        "operationId": "AUDRALIA_FINAL_DENSITY_CLOUD_COVERAGE_EXPANSION_20260824_001",
+        "operationId": "AUDRALIA_FINAL_CLOUD_ENVELOPE_TOPOLOGY_REDESIGN_20260825_001",
         "preservedEvidenceRefs": [
-          "GEN1682_ADMISSION_ISSUE2031_COMMENT5405008566",
-          "PR2032_MERGE_c3a88dc4bdb47bb9116acd6cfd1cfc4e30ade4ff",
-          "FROZEN_C3_COMPOSITOR_BLOB_e5bcbe65abb051fc5648a3c8bf1e16a4ecc2837e",
-          "FROZEN_C3_COMPOSITOR_SHA256_8dd2dcb76f090b6e7f4520160d5ec7d2c5c52c7fe59f422ddfad2a5ed156c4e2",
+          "GEN1721_SUCCESSOR_ADMISSION_LOCK_COMMIT_9feba1539ef9e8e9cd5d472da98107aff4401ca9",
+          "GEN1721_LOCAL_CANDIDATE_GIT_BLOB_12829f2f3f53f1b80d69b8571b13605e5457b84f",
+          "GEN1721_LOCAL_CANDIDATE_SHA256_d64679b0352a37e8fd2119e7d2e932f7ceaa098747676ef1f13894b60952fae5",
+          "GEN1721_LOCAL_CANDIDATE_BYTE_COUNT_12047",
+          "CURRENT_MAIN_COMPOSITOR_BLOB_UNCHANGED_e5bcbe65abb051fc5648a3c8bf1e16a4ecc2837e",
+          "MAIN_ADVANCE_11D995A6_TO_744A4808_DISJOINT_FROM_THREE_ALLOWED_PATHS",
           "PR2039_VERIFIER_HEAD_544df229e80015cdfb4c99a9ce3a1e3d6113071d",
           "FAIL_FIRST_RUN_32874144591_C3_FAILING_CORPUS_CONFIRMED",
-          "PR2039_COMMENT5413946934_FULL_SPHERE_FAILURE_RECEIPT",
           "PR2095_MERGE_11d995a6e547525eb01379607f3bd92fcfbe2c17",
-          "GEN1719_PASS_CLOSED_LOCK_RELEASED",
-          "DIFFERENTIAL_CONTINUITY_STRICT_SUCCESSOR_DEPENDENCY_OVERLAP"
+          "GEN1719_PASS_CLOSED_LOCK_RELEASED"
         ],
         "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
         "terminalDisposition": "SUPERSEDED",
-        "transitionId": "AUDRALIA_FINAL_DENSITY_CLOUD_EXPANSION_GEN1682_TO_TOPOLOGY_REDESIGN_20260825_001"
+        "transitionId": "AUDRALIA_FINAL_CLOUD_ENVELOPE_TOPOLOGY_REDESIGN_11D995A6_TO_744A4808_20260825"
       },
-      "procedureLocatorDigest": "5a0c626749e310ab55bd9f6a108ff5f5456c7d4d668d05790aa659f923b47569",
+      "procedureLocatorDigest": "c3cec7d2bfd1fcb3c1115c72235d6243d36dedb93229e14af28d9ef7ce794257",
       "released": false,
-      "requestDigest": "3fc18edc013f9e1290d379134095d40b7e4ad5a4bf7ca94e842105b0c2b63212",
+      "requestDigest": "8ae42ee8462bc4a3a71069e3a25cf62f4a91262f99a8b5baa5046bc12e7f6510",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "718aadd02ac238f1732d7b5400b06fed069dbcfbb5e685cc6a698666b69cc586",
       "state": "ADMITTED_LOCKED"
@@ -4001,7 +4001,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1722,
+  "lockGeneration": 1723,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -27393,6 +27393,65 @@
         "successorLockScope": "AUDRALIA_FINAL_DENSITY_CLOUD_EXPANSION",
         "successorOperationId": "AUDRALIA_FINAL_CLOUD_ENVELOPE_TOPOLOGY_REDESIGN_20260825_001",
         "transitionId": "AUDRALIA_FINAL_DENSITY_CLOUD_EXPANSION_GEN1682_TO_TOPOLOGY_REDESIGN_20260825_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "11d995a6e547525eb01379607f3bd92fcfbe2c17",
+      "lockGeneration": 1721,
+      "lockScope": "AUDRALIA_FINAL_DENSITY_CLOUD_EXPANSION",
+      "operationId": "AUDRALIA_FINAL_CLOUD_ENVELOPE_TOPOLOGY_REDESIGN_20260825_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "d03ae11e1ee57596647bfa367a13160d33d16008",
+        "lockGeneration": 1682,
+        "lockScope": "AUDRALIA_FINAL_DENSITY_CLOUD_EXPANSION",
+        "operationId": "AUDRALIA_FINAL_DENSITY_CLOUD_COVERAGE_EXPANSION_20260824_001",
+        "preservedEvidenceRefs": [
+          "GEN1682_ADMISSION_ISSUE2031_COMMENT5405008566",
+          "PR2032_MERGE_c3a88dc4bdb47bb9116acd6cfd1cfc4e30ade4ff",
+          "FROZEN_C3_COMPOSITOR_BLOB_e5bcbe65abb051fc5648a3c8bf1e16a4ecc2837e",
+          "FROZEN_C3_COMPOSITOR_SHA256_8dd2dcb76f090b6e7f4520160d5ec7d2c5c52c7fe59f422ddfad2a5ed156c4e2",
+          "PR2039_VERIFIER_HEAD_544df229e80015cdfb4c99a9ce3a1e3d6113071d",
+          "FAIL_FIRST_RUN_32874144591_C3_FAILING_CORPUS_CONFIRMED",
+          "PR2039_COMMENT5413946934_FULL_SPHERE_FAILURE_RECEIPT",
+          "PR2095_MERGE_11d995a6e547525eb01379607f3bd92fcfbe2c17",
+          "GEN1719_PASS_CLOSED_LOCK_RELEASED",
+          "DIFFERENTIAL_CONTINUITY_STRICT_SUCCESSOR_DEPENDENCY_OVERLAP"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "AUDRALIA_FINAL_DENSITY_CLOUD_EXPANSION_GEN1682_TO_TOPOLOGY_REDESIGN_20260825_001"
+      },
+      "procedureLocatorDigest": "5a0c626749e310ab55bd9f6a108ff5f5456c7d4d668d05790aa659f923b47569",
+      "released": true,
+      "requestDigest": "3fc18edc013f9e1290d379134095d40b7e4ad5a4bf7ca94e842105b0c2b63212",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "718aadd02ac238f1732d7b5400b06fed069dbcfbb5e685cc6a698666b69cc586",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "GEN1721_SUCCESSOR_ADMISSION_LOCK_COMMIT_9feba1539ef9e8e9cd5d472da98107aff4401ca9",
+          "GEN1721_LOCAL_CANDIDATE_GIT_BLOB_12829f2f3f53f1b80d69b8571b13605e5457b84f",
+          "GEN1721_LOCAL_CANDIDATE_SHA256_d64679b0352a37e8fd2119e7d2e932f7ceaa098747676ef1f13894b60952fae5",
+          "GEN1721_LOCAL_CANDIDATE_BYTE_COUNT_12047",
+          "CURRENT_MAIN_COMPOSITOR_BLOB_UNCHANGED_e5bcbe65abb051fc5648a3c8bf1e16a4ecc2837e",
+          "MAIN_ADVANCE_11D995A6_TO_744A4808_DISJOINT_FROM_THREE_ALLOWED_PATHS",
+          "PR2039_VERIFIER_HEAD_544df229e80015cdfb4c99a9ce3a1e3d6113071d",
+          "FAIL_FIRST_RUN_32874144591_C3_FAILING_CORPUS_CONFIRMED",
+          "PR2095_MERGE_11d995a6e547525eb01379607f3bd92fcfbe2c17",
+          "GEN1719_PASS_CLOSED_LOCK_RELEASED"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "744a4808e4eba721a9302cabe868ff605f874f7f",
+        "successorLockGeneration": 1723,
+        "successorLockScope": "AUDRALIA_FINAL_DENSITY_CLOUD_EXPANSION",
+        "successorOperationId": "AUDRALIA_FINAL_CLOUD_ENVELOPE_TOPOLOGY_REDESIGN_20260825_002",
+        "transitionId": "AUDRALIA_FINAL_CLOUD_ENVELOPE_TOPOLOGY_REDESIGN_11D995A6_TO_744A4808_20260825"
       },
       "terminalDisposition": "SUPERSEDED"
     }

@@ -12,7 +12,7 @@ const requireText = (path, needle, code) => {
 };
 
 if (contract.schema !== "LAWS_FIVE_SCENE_CONTINUITY_CONTRACT_v1") failures.push("CONTRACT_SCHEMA");
-if (contract.operationId !== "LAWS_CAROUSEL_CONTINUITY_FIVE_SCENE_BOTTOM_TABS_20260826_003" || contract.lockGeneration !== 1738) failures.push("GEN1738_BINDING");
+if (contract.operationId !== "LAWS_CAROUSEL_CONTINUITY_FIVE_SCENE_BOTTOM_TABS_20260826_005" || contract.lockGeneration !== 1740) failures.push("GEN1740_BINDING");
 if (contract.exactGoverningHead !== "2e7780f2cdde6b0d4d50ef3b271fd88f35d88720") failures.push("GOVERNING_HEAD_BINDING");
 if (contract.candidateBranch !== "laws-carousel/gen1738-five-scene-successor-20260826") failures.push("CANDIDATE_BRANCH_BINDING");
 if (contract.sceneCount !== 5 || contract.sceneSchema?.length !== 5) failures.push("SCENE_COUNT");

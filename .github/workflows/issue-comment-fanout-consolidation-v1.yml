@@ -1,0 +1,49 @@
+name: Issue Comment Fanout Consolidation v1
+
+on:
+  push:
+    branches:
+      - infra/issue-comment-fanout-consolidation-20260826
+    paths:
+      - '.github/workflows/issue-comment-fanout-consolidation-v1.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: issue-comment-fanout-consolidation-v1
+  cancel-in-progress: true
+
+jobs:
+  consolidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: infra/issue-comment-fanout-consolidation-20260826
+          fetch-depth: 0
+
+      - name: Consolidate legacy issue_comment listeners
+        run: node tools/issue-comment-fanout-consolidation-v1.mjs
+
+      - name: Verify only the central transport retains issue_comment
+        run: |
+          set -euo pipefail
+          count=$(grep -RIl --include='*.yml' --include='*.yaml' '^[[:space:]]*issue_comment:' .github/workflows | wc -l)
+          echo "ISSUE_COMMENT_LISTENER_COUNT=$count"
+          test "$count" -eq 1
+          grep -q 'issue_comment:' .github/workflows/ai-room-execution-transport.yml
+
+      - name: Commit bounded consolidation to repair branch
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/workflows evidence/control-plane/issue-comment-fanout-consolidation.receipt.json
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Control plane: collapse issue-comment workflow fanout'
+          git push origin HEAD:infra/issue-comment-fanout-consolidation-20260826

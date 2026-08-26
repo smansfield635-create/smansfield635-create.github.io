@@ -6,6 +6,7 @@ on:
     paths:
       - 'index.html'
       - 'assets/compass/**'
+      - '.github/workflows/compass-audit-derived-candidate-qualification.yml'
 
 permissions:
   contents: read

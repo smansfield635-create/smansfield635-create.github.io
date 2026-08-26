@@ -1,0 +1,49 @@
+{
+  "schema": "LOCA_RETROSPECTIVE_CAMPAIGN_FAMILIES_v1",
+  "auditWindow": {
+    "start": "2026-08-04",
+    "end": "2026-08-25",
+    "timezone": "America/Chicago"
+  },
+  "prospectiveBaseline": "2026-08-26",
+  "countingLaw": "ONE_UNDERLYING_OBJECTIVE_EQUALS_ONE_CAMPAIGN_LINEAGE; PRS_CARRIERS_VERIFIERS_REPAIRS_REBINDS_AND_SUCCESSORS_DO_NOT_INDEPENDENTLY_INCREMENT_C",
+  "retrospectiveHumanSupervisoryHours": null,
+  "retrospectiveLLOCA": null,
+  "continuousCMaxStatus": "NOT_YET_FULLY_RECONSTRUCTED",
+  "campaignDayConcurrencyLowerBound": 4,
+  "families": [
+    {"id":"METHODS_INFORMATION_BENCHMARK","class":"RESEARCH_GOVERNANCE","evidence":"PRs including 551 and 586","endToEndSubcampaigns":true},
+    {"id":"METHODS_SPATIAL_PRODUCT","class":"PRODUCT_REPRESENTATION","evidence":"Methods spatial/category and 3D product lineages","endToEndSubcampaigns":true},
+    {"id":"H_EARTH_WORLD_DEVELOPMENT","class":"WORLD_PRODUCT","evidence":"terrain, evaluator, regional, locomotion, manifold, atmosphere/weather lineages","endToEndSubcampaigns":true},
+    {"id":"REPOSITORY_AI_CONTROL_PLANE","class":"INFRASTRUCTURE","evidence":"intake, routing, locks, receipts, workflow dispatch, publication/locality repair","endToEndSubcampaigns":true},
+    {"id":"IMI_MANEUVERABILITY_RESEARCH","class":"RESEARCH","evidence":"agriculture, NASA, banking, grid, wastewater and corporate test lineages","endToEndSubcampaigns":true},
+    {"id":"LAWS_PRODUCT","class":"PRODUCT","evidence":"contextual 3D, carousel, root integration and information-depth lineages","endToEndSubcampaigns":true},
+    {"id":"OPEN_WORLD_REPRESENTATION","class":"PRODUCT_RESEARCH","evidence":"registered Open World representation lineages","endToEndSubcampaigns":true},
+    {"id":"PUBLIC_LEGITIMACY","class":"PUBLIC_EVIDENCE_PRODUCT","evidence":"Developer/Evidence/Governance surface construction and qualification","endToEndSubcampaigns":true},
+    {"id":"COMPASS_PRODUCT","class":"PRODUCT","evidence":"flagship, recovery, capability, composite and readiness lineages","endToEndSubcampaigns":true},
+    {"id":"AWARDS_CHAPTER_MEDIA","class":"MEDIA_PRODUCTION","evidence":"Chapter One derivative/master transfer and Chapter Two workspace","endToEndSubcampaigns":true},
+    {"id":"AUDRALIA_PLANETARY","class":"WORLD_PRODUCT","evidence":"planetary geography, weather/cloud, diagnostic and publication lineages","endToEndSubcampaigns":true},
+    {"id":"BRAIN_ISOLATED_SUCCESSOR","class":"ISOLATED_PRODUCT","evidence":"Brain V9 construction/inspection/qualification lineages","endToEndSubcampaigns":false},
+    {"id":"BT_EPISTEMIC_ENTITLEMENT_RESEARCH","class":"RESEARCH","evidence":"BT1/BT3/BT4 and epistemic-control/served-entitlement lineages","endToEndSubcampaigns":true},
+    {"id":"MATERIAL_WORK_AUDIT","class":"RESEARCH_AUDIT","evidence":"PR 2063 through conformance closure PR 2083","endToEndSubcampaigns":true},
+    {"id":"AGENTIC_FRONTIER_COMPARATIVE_STUDY","class":"COMPARATIVE_RESEARCH","evidence":"frozen 24-task protocol and paired execution lineages beginning PR 2088","endToEndSubcampaigns":false}
+  ],
+  "exactTimestampAnchors": [
+    {"pr":551,"createdAt":"2026-08-04T14:51:36Z","role":"METHODS_GENESIS_ANCHOR"},
+    {"pr":586,"createdAt":"2026-08-05T03:17:51Z","closedAt":"2026-08-05T03:39:52Z","role":"METHODS_ROLE6_AUDIT_TERMINAL_CARRIER"},
+    {"pr":2063,"createdAt":"2026-08-25T18:21:02Z","closedAt":"2026-08-25T18:25:56Z","role":"MATERIAL_WORK_AUDIT_RUBRIC"},
+    {"pr":2064,"createdAt":"2026-08-25T18:26:17Z","closedAt":"2026-08-25T18:37:02Z","role":"AUDRALIA_DIAGNOSTIC_SUCCESSOR"},
+    {"pr":2069,"createdAt":"2026-08-25T18:42:16Z","closedAt":"2026-08-25T18:42:40Z","role":"AUDRALIA_PUBLICATION_CARRIER"},
+    {"pr":2073,"createdAt":"2026-08-25T19:31:26Z","closedAt":"2026-08-25T19:40:45Z","role":"LAWS_ROOT_INTEGRATION"},
+    {"pr":2083,"createdAt":"2026-08-25T22:07:56Z","closedAt":"2026-08-25T22:14:48Z","role":"MATERIAL_WORK_AUDIT_CLOSURE"}
+  ],
+  "dispositions": {
+    "retrospectivePreHypothesisGovernedConcurrency": "SUPPORTED",
+    "retrospectiveHigherOrderCampaignDayConcurrency": "SUPPORTED",
+    "retrospectiveExactContinuousCMax": "NOT_YET_FULLY_RECONSTRUCTED",
+    "retrospectiveGovernedFailureRecovery": "SUPPORTED",
+    "retrospectiveHumanSupervisoryHours": "UNOBSERVABLE_FROM_REPOSITORY_ALONE",
+    "retrospectiveLLOCA": "NOT_ESTIMATED",
+    "prospectiveLOCABaselineDate": "2026-08-26"
+  }
+}

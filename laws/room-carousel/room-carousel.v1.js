@@ -1,6 +1,7 @@
 (() => {
   "use strict";
   const CONTRACT = "LAWS_FIVE_SCENE_CONTINUITY_CAROUSEL_v1";
+  const ADOPTION_EXCLUSION_SELECTOR = "details.lr-audit,.lr-story-nav,[data-lrc-depth]";
   const SCENES = [
     ["identity-meaning", "Identity / Meaning"],
     ["primary-relationship", "Primary Relationship"],
@@ -14,7 +15,7 @@
 
   function sourceNodes(root){
     return direct(root,"section,article,aside,div").filter(n =>
-      !n.matches("[data-lrc-viewport],[data-lrc-tabs],[data-lrc-continuation],.lr-story-nav,details.lr-audit") &&
+      !n.matches(`${ADOPTION_EXCLUSION_SELECTOR},[data-lrc-viewport],[data-lrc-tabs],[data-lrc-continuation]`) &&
       !n.hasAttribute("data-lrc-runtime")
     );
   }

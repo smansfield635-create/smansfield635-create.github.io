@@ -32,7 +32,27 @@
       "tools/ai-room-transport/successor-compatibility-self-test.v1.mjs",
       ".github/workflows/repository-operation-intake-validation.yml",
       ".github/workflows/progressive-system-continuity-v1.yml",
-      "_config.yml"
+      "_config.yml",
+      ".github/workflows/agentic-frontier-paired-execution-v1.yml",
+      ".github/workflows/bounded-exact-head-execution-carrier-v1.yml",
+      ".github/workflows/differential-continuity-v1.yml",
+      ".github/workflows/h-earth-h1-admission-remote-dispatch-bridge-v1.yml",
+      ".github/workflows/h-earth-v2-causal-evidence-lock-closure.yml",
+      ".github/workflows/h-earth-v2-registry-role4-exact-head-carrier-v2.yml",
+      ".github/workflows/h-earth-v2-registry-role4-exact-head-carrier.yml",
+      ".github/workflows/issue-comment-fanout-consolidation-v1.yml",
+      ".github/workflows/public-private-bounded-exact-head-execution-v1.yml",
+      ".github/workflows/public-private-canonical-execution-request-router-v1.yml",
+      ".github/workflows/public-private-connected-github-cas-closure-v1.yml",
+      ".github/workflows/public-private-gen288-closure-qualification-v1.yml",
+      ".github/workflows/public-private-operation-close-v1.yml",
+      ".github/workflows/public-private-router-self-test-invocation-adapter-v1.yml",
+      ".github/workflows/trusted-intake-fixture-carrier-v1.yml",
+      ".github/workflows/video-conform-renderer-v1.yml",
+      ".github/workflows/workflow-lifecycle-continuity-v2-actions-inventory.yml",
+      ".github/workflows/workflow-lifecycle-continuity-v2-authenticated-assessment.yml",
+      ".github/workflows/workflow-lifecycle-continuity-v2-consumer-discovery.yml",
+      "tools/issue-comment-fanout-consolidation-v1.mjs"
     ],
     "ownedPathPrefixes": [
       ".github/ai-router/",
@@ -48,7 +68,10 @@
     {
       "projectId": "H_EARTH",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["h-earth-3d/", "showroom/globe/h-earth/"],
+      "ownedPathPrefixes": [
+        "h-earth-3d/",
+        "showroom/globe/h-earth/"
+      ],
       "ownedExactPaths": [
         ".github/workflows/h-earth-repository-registry-preflight.yml",
         ".github/workflows/h-earth-r06-c10-candidate-admission.yml",
@@ -120,7 +143,9 @@
     {
       "projectId": "LAWS",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["laws/"],
+      "ownedPathPrefixes": [
+        "laws/"
+      ],
       "ownedExactPaths": [
         "scripts/laws_cp6_final_browser_verify.mjs",
         "scripts/laws_cp6_final_browser_verify_runner.mjs",
@@ -133,23 +158,33 @@
     {
       "projectId": "LINEAGE_RECEIPT_PROTOCOL",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["infrastructure/lineage-receipt-protocol-v1/"],
-      "ownedExactPaths": [".github/workflows/lrpv1-conformance.yml"],
+      "ownedPathPrefixes": [
+        "infrastructure/lineage-receipt-protocol-v1/"
+      ],
+      "ownedExactPaths": [
+        ".github/workflows/lrpv1-conformance.yml"
+      ],
       "entrypoint": ".github/ai-router/projects/lineage-receipt-protocol/entrypoint.v1.json",
       "priority": 100
     },
     {
       "projectId": "ESTATE_VALIDATION",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["validation/"],
-      "ownedExactPaths": [".github/workflows/estate-validation-v1.yml"],
+      "ownedPathPrefixes": [
+        "validation/"
+      ],
+      "ownedExactPaths": [
+        ".github/workflows/estate-validation-v1.yml"
+      ],
       "entrypoint": ".github/ai-router/projects/estate-validation/entrypoint.v1.json",
       "priority": 100
     },
     {
       "projectId": "STATE_BOUND_ADMISSIBILITY_KERNEL",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["infrastructure/state-bound-admissibility-kernel-v1/"],
+      "ownedPathPrefixes": [
+        "infrastructure/state-bound-admissibility-kernel-v1/"
+      ],
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/state-bound-admissibility-kernel/entrypoint.v1.json",
       "priority": 100
@@ -157,7 +192,9 @@
     {
       "projectId": "CONTROL_PLANE_TRANSFERABILITY",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["control-plane/transferability-program/"],
+      "ownedPathPrefixes": [
+        "control-plane/transferability-program/"
+      ],
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/control-plane-transferability/entrypoint.v1.json",
       "priority": 100
@@ -165,7 +202,9 @@
     {
       "projectId": "OPEN_WORLD",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["open-world/"],
+      "ownedPathPrefixes": [
+        "open-world/"
+      ],
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/open-world/entrypoint.v1.json",
       "priority": 100
@@ -173,7 +212,9 @@
     {
       "projectId": "COMPASS",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["assets/compass/"],
+      "ownedPathPrefixes": [
+        "assets/compass/"
+      ],
       "ownedExactPaths": [
         "index.html",
         ".github/workflows/pages-direct-deploy.yml",
@@ -186,7 +227,11 @@
     {
       "projectId": "PUBLIC_LEGITIMACY",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["developer/", "evidence/", "governance/"],
+      "ownedPathPrefixes": [
+        "developer/",
+        "evidence/",
+        "governance/"
+      ],
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/public-legitimacy/entrypoint.v1.json",
       "priority": 100
@@ -194,7 +239,9 @@
     {
       "projectId": "MATERIAL_WORK_AUDIT",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["research/material-work-audit/"],
+      "ownedPathPrefixes": [
+        "research/material-work-audit/"
+      ],
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/material-work-audit/entrypoint.v1.json",
       "priority": 100

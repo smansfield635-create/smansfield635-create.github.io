@@ -73,3 +73,5 @@ jobs:
           fi
           git commit -m 'Control plane: collapse legacy issue-comment workflow fanout'
           git push origin HEAD:main
+
+# recovery nonce: trigger bounded push execution after parser repair

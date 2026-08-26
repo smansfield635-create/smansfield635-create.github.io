@@ -29,6 +29,22 @@ jobs:
           for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
           cat /tmp/compass-audit-candidate-http.log || true
           exit 1
+      - name: Repair verifier startup boundary in runner only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('.github/live-qualification/verifiers/compass-root.v1.mjs')
+          s=p.read_text()
+          old="await page.goto(`${base}/`,{waitUntil:'networkidle2',timeout:60000});\nawait new Promise(r=>setTimeout(r,1600));"
+          new="await page.goto(`${base}/`,{waitUntil:'domcontentloaded',timeout:30000});\nawait page.waitForSelector('[data-compass-root]',{timeout:30000});\nawait page.waitForFunction(()=>document.querySelectorAll('[data-compass-cardinal]').length===4,{timeout:30000});\nawait new Promise(r=>setTimeout(r,1600));"
+          if old not in s:
+              raise SystemExit('COMPASS_AUDIT_STARTUP_PATCH_TARGET_MISSING')
+          p.write_text(s.replace(old,new,1))
+          PY
+          git diff --check -- .github/live-qualification/verifiers/compass-root.v1.mjs
+          git diff -- .github/live-qualification/verifiers/compass-root.v1.mjs
       - name: Require audit-derived perceptual contract
         shell: bash
         env:

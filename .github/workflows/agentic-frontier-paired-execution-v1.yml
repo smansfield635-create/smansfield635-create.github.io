@@ -14,9 +14,14 @@ jobs:
       github.event.issue.number == 2089 &&
       contains(github.event.comment.body, 'AGENTIC_FRONTIER_PAIRED_SMOKE_AF_IR_01_V1')
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     env:
       OLLAMA_MODEL: qwen2.5-coder:14b
       OLLAMA_HOST_URL: http://127.0.0.1:11434
+      OPENHANDS_INACTIVITY_S: '240'
+      OPENHANDS_HARD_TIMEOUT_S: '900'
+      PAIR_HEARTBEAT_S: '15'
+      PYTHONUNBUFFERED: '1'
     steps:
       - name: Checkout paired runner from main
         uses: actions/checkout@v4
@@ -34,23 +39,54 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install pinned OpenHands CLI 1.14.0
+      - name: Restore pinned OpenHands environment
+        id: openhands-cache
+        uses: actions/cache@v4
+        with:
+          path: .cache/agentic-frontier/openhands-1.14.0
+          key: ${{ runner.os }}-py312-openhands-1.14.0-v1
+
+      - name: Install pinned OpenHands CLI 1.14.0 only on cache miss
         run: |
-          python -m pip install --disable-pip-version-check 'openhands==1.14.0'
-          openhands --version
+          set -euo pipefail
+          VENV="$GITHUB_WORKSPACE/.cache/agentic-frontier/openhands-1.14.0"
+          if [ ! -x "$VENV/bin/openhands" ]; then
+            rm -rf "$VENV"
+            python -m venv "$VENV"
+            "$VENV/bin/python" -m pip install --disable-pip-version-check 'openhands==1.14.0'
+          fi
+          echo "$VENV/bin" >> "$GITHUB_PATH"
+          "$VENV/bin/openhands" --version
+
+      - name: Restore local model cache
+        id: model-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.ollama/models
+          key: ${{ runner.os }}-ollama-qwen2.5-coder-14b-v1
 
       - name: Start common local model runtime
         run: |
           set -euo pipefail
+          mkdir -p "$HOME/.ollama/models"
           docker pull ollama/ollama:0.32.14
-          docker run -d --name agentic-frontier-ollama -e OLLAMA_CONTEXT_LENGTH=32768 -p 11434:11434 ollama/ollama:0.32.14
+          docker run -d --name agentic-frontier-ollama \
+            -e OLLAMA_CONTEXT_LENGTH=32768 \
+            -v "$HOME/.ollama:/root/.ollama" \
+            -p 11434:11434 \
+            ollama/ollama:0.32.14
           for i in $(seq 1 60); do
             curl -fsS "$OLLAMA_HOST_URL/api/tags" >/dev/null && break
             sleep 2
           done
-          docker exec agentic-frontier-ollama ollama pull "$OLLAMA_MODEL"
+          if docker exec agentic-frontier-ollama ollama list | grep -Fq "$OLLAMA_MODEL"; then
+            echo "Model $OLLAMA_MODEL restored from cache; skipping heavy pull."
+          else
+            echo "Model $OLLAMA_MODEL absent from cache; pulling once."
+            docker exec agentic-frontier-ollama ollama pull "$OLLAMA_MODEL"
+          fi
 
-      - name: Execute frozen AF-IR-01 pair
+      - name: Execute frozen AF-IR-01 pair with live heartbeat
         id: pair
         run: |
           set +e

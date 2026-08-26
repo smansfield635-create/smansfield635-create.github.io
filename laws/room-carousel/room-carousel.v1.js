@@ -3,7 +3,7 @@
 
   const CONTRACT = "LAWS_FIVE_SCENE_CONTINUITY_CAROUSEL_v2";
   const REFERENCE = "LAWS_BACK_PAGE_CAROUSEL_PARITY_AND_BOTTOM_STORY_NAVIGATION";
-  const ADOPTION_EXCLUSION_SELECTOR = "details.lr-audit,.lr-story-nav,[data-lrc-depth]";
+  const ADOPTION_EXCLUSION_SELECTOR = "details.lr-audit,.lr-story-nav,[data-lrc-depth],.lr-family-continuity";
   const COMMIT_PX = 24;
   const AXIS_RATIO = 1.12;
   const SCENES = Object.freeze([

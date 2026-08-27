@@ -1,0 +1,18 @@
+{
+  "schema": "AUDRALIA_GEN1754_EXECUTION_CAPABILITY_STATE_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "issue": 2171,
+  "candidateHead": "41a63ace8b540f2b3ce7f73b6395f90234c7dc3f",
+  "result": "EXECUTION_CAPABILITY_UNAVAILABLE",
+  "repositoryMaterialized": false,
+  "dependenciesReady": false,
+  "commandExecutionAvailable": false,
+  "githubActionsUsedAsAgentExecutionTransport": false,
+  "hook3RerunAuthorized": false,
+  "hook4RevealAuthorized": false,
+  "nextMaterialBoundary": "PROVISION_NON_ACTIONS_NATIVE_EXECUTOR_AND_ISSUE_EXECUTION_CAPABILITY_READY_RECEIPT",
+  "productMutationAuthorityCreated": false,
+  "mergeAuthorityCreated": false,
+  "deploymentAuthorityCreated": false,
+  "releaseAuthorityCreated": false
+}

@@ -12,6 +12,15 @@ export const OWNER_PROVENANCE_SCHEMA = 'OWNER_AUTHENTICATED_CANONICAL_INTAKE_PRO
 export const OWNER_SUCCESSOR_TRANSPORT = 'OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1';
 export const OWNER_SUCCESSOR_PROVENANCE_SCHEMA = 'OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1';
 export const LEDGER_PATH = '.github/operation-intake/active-operation-ledger.v1.json';
+export const GEN1767_EXACT_OWNER_INTAKE_RECOVERY = Object.freeze({
+  operationId: 'AUDRALIA_WORK_EXECUTOR_PORTABLE_BOOTSTRAP_20260827_001',
+  lockGeneration: 1767,
+  lockScope: 'AUDRALIA:WORK_EXECUTOR_PORTABLE_BOOTSTRAP:V1',
+  governingHead: '5d74b9b60ee7ab55cd58362ba1f62d7df263995d',
+  commitSha: 'e24fd158777c8df4000d6ae6c36f1ab1073c3222',
+  ledgerBlobSha: '35cd3351cee5884e707c5f5c3d5074c7d46af868',
+  message: 'Acquire operation lock for AUDRALIA_WORK_EXECUTOR_PORTABLE_BOOTSTRAP_20260827_001'
+});
 
 function reject(code, detail = null) {
   const e = new Error(`${code}${detail ? ':' + detail : ''}`);
@@ -105,8 +114,33 @@ function verifySupersededPredecessor(resultingLedger, provenance, predecessorGen
   return row;
 }
 
+export function verifyExactGen1767OwnerIntakeRecovery({ commit, changedPaths, resultingLedger }) {
+  const exact = GEN1767_EXACT_OWNER_INTAKE_RECOVERY;
+  const commitSha = commit?.sha ?? commit?.commitSha ?? null;
+  if (commitSha !== exact.commitSha) return null;
+  if (!Array.isArray(changedPaths) || changedPaths.length !== 1 || changedPaths[0] !== LEDGER_PATH) reject('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED', 'GEN1767_RECOVERY_PATH_MISMATCH');
+  const message = commit?.commit?.message ?? commit?.message;
+  if (message !== exact.message) reject('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED', 'GEN1767_RECOVERY_MESSAGE_MISMATCH');
+  const ledgerFile = Array.isArray(commit?.files) ? commit.files.find(file => file?.filename === LEDGER_PATH) : null;
+  if (!ledgerFile || ledgerFile.sha !== exact.ledgerBlobSha) reject('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED', 'GEN1767_RECOVERY_LEDGER_BLOB_MISMATCH');
+  const row = findAdmissionRow(resultingLedger, exact.lockGeneration, exact.operationId);
+  if (!row) reject('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED', 'GEN1767_RECOVERY_ROW_NOT_FOUND');
+  if (row.lockScope !== exact.lockScope || row.governingHead !== exact.governingHead) reject('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED', 'GEN1767_RECOVERY_ROW_IDENTITY_MISMATCH');
+  const provenance = verifyOwnerProvenance(row);
+  return stable({
+    result: 'CANONICAL_LEDGER_COMMIT_VERIFIED',
+    principal: OWNER_TRANSPORT,
+    operationId: exact.operationId,
+    lockGeneration: exact.lockGeneration,
+    verificationMode: 'GEN1767_EXACT_OWNER_INTAKE_RECOVERY',
+    provenance
+  });
+}
+
 export function verifyCanonicalLedgerCommitV2({ commit, changedPaths, resultingLedger }) {
   if (!Array.isArray(changedPaths) || changedPaths.length !== 1 || changedPaths[0] !== LEDGER_PATH) reject('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED', 'NON_LEDGER_PATH_MUTATION');
+  const exactRecovery = verifyExactGen1767OwnerIntakeRecovery({ commit, changedPaths, resultingLedger });
+  if (exactRecovery) return exactRecovery;
   const message = commit?.commit?.message ?? commit?.message;
   if (!validCanonicalMessage(message)) reject('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED', 'NON_CANONICAL_MUTATION_MESSAGE');
 

@@ -8,6 +8,28 @@ import { fileURLToPath } from 'node:url';
 const CANDIDATE='41a63ace8b540f2b3ce7f73b6395f90234c7dc3f';
 const BASE='bb8b57eaf8c2b89a0ac1f75140654b6a2cf74122';
 const OPERATION='AUDRALIA_WEATHER_POPULATION_SECOND_FAILING_CORPUS_20260827_001_SUCCESSOR_001';
+const SPARSE_PATHS=[
+  'showroom/globe/audralia',
+  'showroom/globe/h-earth/terrain-estate-construction-v1',
+  'showroom/globe/h-earth/render',
+  'h-earth-3d/integration',
+  'h-earth-3d/terrain',
+  'h-earth-3d/control-plane/run-8',
+  'h-earth-3d/objects',
+  'h-earth-3d/zones',
+  'h-earth-3d/cells',
+  'h-earth-3d/environment',
+  'inspection/audralia-24057-exact/snapshot/showroom/globe/audralia',
+  'inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1',
+  'inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/render',
+  'inspection/audralia-24057-exact/snapshot/h-earth-3d/integration',
+  'inspection/audralia-24057-exact/snapshot/h-earth-3d/terrain',
+  'inspection/audralia-24057-exact/snapshot/h-earth-3d/control-plane/run-8',
+  'inspection/audralia-24057-exact/snapshot/h-earth-3d/objects',
+  'inspection/audralia-24057-exact/snapshot/h-earth-3d/zones',
+  'inspection/audralia-24057-exact/snapshot/h-earth-3d/cells',
+  'inspection/audralia-24057-exact/snapshot/h-earth-3d/environment'
+];
 
 function args(argv){
   const out={};
@@ -34,8 +56,8 @@ function findChrome(){
   }
   return null;
 }
-function git(cwd,argv,allow=false){
-  const r=run('git',argv,{cwd,timeout:120000});
+function git(cwd,argv,allow=false,timeout=120000){
+  const r=run('git',argv,{cwd,timeout});
   if(!allow&&r.status!==0)throw new Error(`GIT_FAILED:${argv.join(' ')}:${r.stderr||r.error}`);
   return r;
 }
@@ -54,13 +76,27 @@ function main(){
   let server=null;
   let receipt;
   try{
-    if(git(root,['cat-file','-e',`${CANDIDATE}^{commit}`],true).status!==0){
-      const fetched=git(root,['fetch','--no-tags','origin',CANDIDATE],true);
-      if(fetched.status!==0)throw new Error(`CANDIDATE_FETCH_FAILED:${firstAssertion(fetched.stderr)}`);
-    }
-    git(root,['worktree','add','--detach',subject,CANDIDATE]);
+    const origin=git(root,['config','--get','remote.origin.url']).stdout.trim();
+    if(!origin)throw new Error('ORIGIN_URL_UNAVAILABLE');
+    fs.mkdirSync(subject,{recursive:true});
+    git(subject,['init','.']);
+    git(subject,['remote','add','origin',origin]);
+    const fetched=git(subject,['-c','protocol.version=2','fetch','--no-tags','--depth=1','--filter=blob:none','origin',CANDIDATE],true,120000);
+    if(fetched.status!==0)throw new Error(`CANDIDATE_FETCH_FAILED:${firstAssertion(fetched.stderr||fetched.stdout)}`);
+    git(subject,['sparse-checkout','init','--cone','--sparse-index']);
+    git(subject,['sparse-checkout','set',...SPARSE_PATHS]);
+    git(subject,['checkout','--detach','FETCH_HEAD'],false,120000);
     const exact=git(subject,['rev-parse','HEAD^{commit}']).stdout.trim();
     if(exact!==CANDIDATE)throw new Error(`EXACT_CANDIDATE_MISMATCH:${exact}`);
+    const sparseIndex=git(subject,['config','--bool','index.sparse']).stdout.trim();
+    if(sparseIndex!=='true')throw new Error(`SPARSE_INDEX_NOT_ACTIVE:${sparseIndex||'unset'}`);
+    const sparseEntries=git(subject,['ls-files','--sparse']).stdout.split(/\r?\n/).filter(Boolean).length;
+    if(sparseEntries>=5000)throw new Error(`SPARSE_INDEX_BOUND_EXCEEDED:${sparseEntries}`);
+
+    const verifier=git(subject,['show','HEAD:tools/audralia-weather-presentation-reconciliation-ci.mjs'],true);
+    if(verifier.status!==0)throw new Error(`VERIFIER_EXACT_OBJECT_READBACK_FAILED:${firstAssertion(verifier.stderr||verifier.stdout)}`);
+    fs.mkdirSync(path.join(subject,'tools'),{recursive:true});
+    fs.writeFileSync(path.join(subject,'tools/audralia-weather-presentation-reconciliation-ci.mjs'),verifier.stdout);
 
     const checks=[
       'showroom/globe/audralia/weather-presentation-reconciliation/exterior-classification.mjs',
@@ -107,6 +143,8 @@ function main(){
       baseHead:BASE,
       candidateHead:CANDIDATE,
       exactCandidateConfirmed:true,
+      checkoutMode:'BOUNDED_SPARSE_INDEX_EXACT_CANDIDATE',
+      sparseIndexEntries:sparseEntries,
       workflowLogRecoveryUsed:false,
       productMutationPerformed:false,
       mergePerformed:false,
@@ -139,7 +177,6 @@ function main(){
     process.exitCode=1;
   }finally{
     try{server?.kill('SIGTERM');}catch{}
-    try{git(root,['worktree','remove','--force',subject],true);}catch{}
     try{fs.rmSync(temp,{recursive:true,force:true});}catch{}
   }
 }

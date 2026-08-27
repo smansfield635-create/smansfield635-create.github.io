@@ -2491,13 +2491,65 @@
       "state": "ADMITTED_LOCKED"
     },
     "a900d21ae76b8e98c445ffe6e7788a53d0ca42721b555bd65903482ef3655970": {
-      "governingHead": "f34e0b7d172d37a3facff875d05c0c13edfacf07",
-      "lockGeneration": 1731,
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "e7fb119cfbc3b6053bec7a25cbdc9fd3b5873800",
+          "lockGeneration": 1749,
+          "lockScope": "AGENTIC_FRONTIER_CINEMATIC_SUCCESSOR_COMPASS_CARDINAL_LABEL_PARITY_2119",
+          "operationId": "COMPASS_AGENTIC_FRONTIER_RENEWAL_20260827_002",
+          "procedureLocatorDigest": "883c7c565c988a2b0f9a2fdd780ff76e49e0fcdf6c3e11f3f417614d657ce29c",
+          "requestDigest": "4c4c1d075940957a205e0487ddf8cbe97e42ff11e780f2be6e83cba7d196fbeb",
+          "scopeHash": "a900d21ae76b8e98c445ffe6e7788a53d0ca42721b555bd65903482ef3655970"
+        },
+        "bindingDigest": "7265ca45886249c67ffc50ac21b5c479245d6c58a8ca810ca93e47b2a8f2a7d2",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "6aab454821eb337aa8cff7ea99df4ed888678b95f0076d50836e3008d029d1e9",
+          "commentId": 5433760530,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2119,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33034696999,
+          "workflowSha": "e7fb119cfbc3b6053bec7a25cbdc9fd3b5873800"
+        },
+        "lineageAnchorCommitSha": "8cbfe51492e8990c400d64b7ec44de33197145a4",
+        "origin": "CANONICAL_SUCCESSOR",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "e7fb119cfbc3b6053bec7a25cbdc9fd3b5873800",
+      "lockGeneration": 1749,
       "lockScope": "AGENTIC_FRONTIER_CINEMATIC_SUCCESSOR_COMPASS_CARDINAL_LABEL_PARITY_2119",
-      "operationId": "AGENTIC_FRONTIER_CINEMATIC_CAROUSEL_COMPASS_LABEL_PARITY_20260826_v1",
-      "procedureLocatorDigest": "7a92a834563ab7bb9d657e496431e5b603c9c379b8ea980855cf4931a17979c2",
+      "operationId": "COMPASS_AGENTIC_FRONTIER_RENEWAL_20260827_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "f34e0b7d172d37a3facff875d05c0c13edfacf07",
+        "lockGeneration": 1731,
+        "lockScope": "AGENTIC_FRONTIER_CINEMATIC_SUCCESSOR_COMPASS_CARDINAL_LABEL_PARITY_2119",
+        "operationId": "AGENTIC_FRONTIER_CINEMATIC_CAROUSEL_COMPASS_LABEL_PARITY_20260826_v1",
+        "preservedEvidenceRefs": [
+          "issue:2119#5420728936",
+          "issue:2146#5433582327",
+          "issue:2146#5433700304",
+          "issue:2154",
+          "pr:2156",
+          "pr:2157",
+          "router-run:33034623636",
+          "gen1748-terminal-pass"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_AGENTIC_FRONTIER_GEN1731_TO_CURRENT_20260827_002"
+      },
+      "procedureLocatorDigest": "883c7c565c988a2b0f9a2fdd780ff76e49e0fcdf6c3e11f3f417614d657ce29c",
       "released": false,
-      "requestDigest": "2b8bf0b00c8e39b764a617c3eee5e9a0019c3287ba0acdf2dc5b4c9c199dbf91",
+      "requestDigest": "4c4c1d075940957a205e0487ddf8cbe97e42ff11e780f2be6e83cba7d196fbeb",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "a900d21ae76b8e98c445ffe6e7788a53d0ca42721b555bd65903482ef3655970",
       "state": "ADMITTED_LOCKED"
@@ -4095,7 +4147,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1748,
+  "lockGeneration": 1749,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -28265,6 +28317,40 @@
       "scopeHash": "be6ff47dc66d8244aa2b7882cee422f318d21c4564ac42f042a9ff3fa53a1705",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "f34e0b7d172d37a3facff875d05c0c13edfacf07",
+      "lockGeneration": 1731,
+      "lockScope": "AGENTIC_FRONTIER_CINEMATIC_SUCCESSOR_COMPASS_CARDINAL_LABEL_PARITY_2119",
+      "operationId": "AGENTIC_FRONTIER_CINEMATIC_CAROUSEL_COMPASS_LABEL_PARITY_20260826_v1",
+      "procedureLocatorDigest": "7a92a834563ab7bb9d657e496431e5b603c9c379b8ea980855cf4931a17979c2",
+      "released": true,
+      "requestDigest": "2b8bf0b00c8e39b764a617c3eee5e9a0019c3287ba0acdf2dc5b4c9c199dbf91",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a900d21ae76b8e98c445ffe6e7788a53d0ca42721b555bd65903482ef3655970",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:2119#5420728936",
+          "issue:2146#5433582327",
+          "issue:2146#5433700304",
+          "issue:2154",
+          "pr:2156",
+          "pr:2157",
+          "router-run:33034623636",
+          "gen1748-terminal-pass"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "e7fb119cfbc3b6053bec7a25cbdc9fd3b5873800",
+        "successorLockGeneration": 1749,
+        "successorLockScope": "AGENTIC_FRONTIER_CINEMATIC_SUCCESSOR_COMPASS_CARDINAL_LABEL_PARITY_2119",
+        "successorOperationId": "COMPASS_AGENTIC_FRONTIER_RENEWAL_20260827_002",
+        "transitionId": "COMPASS_AGENTIC_FRONTIER_GEN1731_TO_CURRENT_20260827_002"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="/assets/laws-destination/renewal.css?v=LAWS_COMPLETE_RENEWAL_V1">
   <link rel="stylesheet" href="/assets/laws-destination/renewal-navigation.css?v=LAWS_COMPLETE_RENEWAL_COLLAPSIBLE_NAVIGATION_V1">
   <link rel="stylesheet" href="/assets/laws-destination/renewal-batch.css?v=LAWS_COMPLETE_RENEWAL_BATCH_V1">
-  <link rel="stylesheet" href="/laws/room-carousel/room-carousel.v1.css?v=LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827">
+  <link rel="stylesheet" href="/laws/room-carousel/room-carousel.v1.css?v=LAWS_SEMANTIC_CELL_ENRICHMENT_GEN1755_20260827">
   <script defer src="/assets/laws-destination/renewal.js?v=LAWS_COMPLETE_RENEWAL_COLLAPSIBLE_NAVIGATION_V1"></script>
 </head>
 <body>
@@ -69,159 +69,175 @@
     </section>
     <section class="lr-boundary" aria-labelledby="boundary-title"><p class="lr-kicker">Claim boundary</p><h2 id="boundary-title">Where the interpretation stops</h2><p>A test is not interpretable when case admission, target definition, or baseline selection can move after results are known.</p></section>
   <section class="lrc-semantic-fallback" data-lrc-static aria-labelledby="lrc-static-laws-test-admission-and-baseline">
-    <header><p class="lr-kicker">Layered contextual reading</p><h2 id="lrc-static-laws-test-admission-and-baseline">Subjects, stories, and reading lenses</h2><p>Each subject contains four or five story layers. Practical, Engineering, and Empirical are parallel readings of each layer.</p></header>
-    <article class="lrc-static-card">
+    <header><p class="lr-kicker">Layered contextual reading</p><h2 id="lrc-static-laws-test-admission-and-baseline">Shared premise, story focus, and lens-specific additions</h2><p>Each subject declares what remains constant, then separates the selected story focus from the Practical, Engineering, or Empirical material added by that selection.</p></header>
+    <article class="lrc-static-card" data-lrc-static-card="test-object">
       <p>01 / 04</p>
       <h3>Test Object</h3>
-      <p>Name the proposition, system, and outcome under test.</p>
+      <div class="lrc-static-shared" data-lrc-shared-premise><h4>Shared premise</h4><p>Name the proposition, system, and outcome under test.</p></div>
       <ol>
-        <li>
+        <li data-lrc-static-story="bind-target">
           <h4>Bind target</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Attach target to Test Object so the reader cannot carry the conclusion into a different target, population, or decision without noticing the change.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Name the proposition, system, and outcome under test. Make the question understandable before introducing a score.</dd></div>
-            <div><dt>Engineering</dt><dd>Name the proposition, system, and outcome under test. Bind target.</dd></div>
-            <div><dt>Empirical</dt><dd>Name the proposition, system, and outcome under test. A moving test object makes later results uninterpretable.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Make the question understandable before introducing a score. Read Test Object as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Make the question understandable before introducing a score. Attach target to Test Object so the reader cannot carry the conclusion into a different target, population, or decision without noticing the change.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Bind target, population, horizon, and unit of evaluation. Encode Test Object through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Implement the binding for target with stable identifiers and referential checks that fail when either side is missing or substituted.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> A moving test object makes later results uninterpretable. Require repeatable observed-versus-expected records for Test Object, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> A moving test object makes later results uninterpretable. Verify the target binding by tracing each reported result back to the exact source, target, and evaluation record.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="population">
           <h4>Population</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates population within Test Object. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Name the proposition, system, and outcome under test. Make the question understandable before introducing a score.</dd></div>
-            <div><dt>Engineering</dt><dd>Name the proposition, system, and outcome under test. Population.</dd></div>
-            <div><dt>Empirical</dt><dd>Name the proposition, system, and outcome under test. A moving test object makes later results uninterpretable.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Make the question understandable before introducing a score. Read Test Object as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Make the question understandable before introducing a score. This selection isolates population within Test Object. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Bind target, population, horizon, and unit of evaluation. Encode Test Object through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat population as a distinct control point inside Test Object. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> A moving test object makes later results uninterpretable. Require repeatable observed-versus-expected records for Test Object, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> A moving test object makes later results uninterpretable. Evidence for population must identify the observed unit, context, comparison, and boundary. Without those records, Test Object remains a conceptual or procedural classification at this layer. Require repeatable observed-versus-expected records for Test Object, including failed cases and the exact environment.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="horizon">
           <h4>Horizon</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates horizon within Test Object. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Name the proposition, system, and outcome under test. Make the question understandable before introducing a score.</dd></div>
-            <div><dt>Engineering</dt><dd>Name the proposition, system, and outcome under test. Horizon.</dd></div>
-            <div><dt>Empirical</dt><dd>Name the proposition, system, and outcome under test. A moving test object makes later results uninterpretable.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Make the question understandable before introducing a score. Read Test Object as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Make the question understandable before introducing a score. This selection isolates horizon within Test Object. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Bind target, population, horizon, and unit of evaluation. Encode Test Object through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat horizon as a distinct control point inside Test Object. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> A moving test object makes later results uninterpretable. Require repeatable observed-versus-expected records for Test Object, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> A moving test object makes later results uninterpretable. Evidence for horizon must identify the observed unit, context, comparison, and boundary. Without those records, Test Object remains a conceptual or procedural classification at this layer. Require repeatable observed-versus-expected records for Test Object, including failed cases and the exact environment.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="unit-of-evaluation">
           <h4>Unit of evaluation</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates unit of evaluation within Test Object. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Name the proposition, system, and outcome under test. Make the question understandable before introducing a score.</dd></div>
-            <div><dt>Engineering</dt><dd>Name the proposition, system, and outcome under test. Unit of evaluation.</dd></div>
-            <div><dt>Empirical</dt><dd>Name the proposition, system, and outcome under test. A moving test object makes later results uninterpretable.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Make the question understandable before introducing a score. Read Test Object as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Make the question understandable before introducing a score. This selection isolates unit of evaluation within Test Object. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Bind target, population, horizon, and unit of evaluation. Encode Test Object through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat unit of evaluation as a distinct control point inside Test Object. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> A moving test object makes later results uninterpretable. Require repeatable observed-versus-expected records for Test Object, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> A moving test object makes later results uninterpretable. Evidence for unit of evaluation must identify the observed unit, context, comparison, and boundary. Without those records, Test Object remains a conceptual or procedural classification at this layer. Require repeatable observed-versus-expected records for Test Object, including failed cases and the exact environment.</p></dd></div>
           </dl>
         </li>
       </ol>
     </article>
-    <article class="lrc-static-card">
+    <article class="lrc-static-card" data-lrc-static-card="admission">
       <p>02 / 04</p>
       <h3>Admission</h3>
-      <p>Fix what evidence and cases enter or stay out.</p>
+      <div class="lrc-static-shared" data-lrc-shared-premise><h4>Shared premise</h4><p>Fix what evidence and cases enter or stay out.</p></div>
       <ol>
-        <li>
+        <li data-lrc-static-story="declare-inclusion">
           <h4>Declare inclusion</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> The practical difference is that inclusion becomes explicit before anyone acts on Admission; leaving it unnamed forces the reader to infer a rule that may not exist.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Fix what evidence and cases enter or stay out. Show why each case belongs in the test.</dd></div>
-            <div><dt>Engineering</dt><dd>Fix what evidence and cases enter or stay out. Declare inclusion.</dd></div>
-            <div><dt>Empirical</dt><dd>Fix what evidence and cases enter or stay out. Preserve excluded cases.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Show why each case belongs in the test. Read Admission as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Show why each case belongs in the test. The practical difference is that inclusion becomes explicit before anyone acts on Admission; leaving it unnamed forces the reader to infer a rule that may not exist.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Declare inclusion, exclusion, leakage, quality, and missingness rules. Encode Admission through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Encode inclusion in the governing Admission record with its owner, applicable state, and change boundary so downstream behavior does not depend on a hidden default.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Preserve excluded cases and post-admission failures. Require repeatable observed-versus-expected records for Admission, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Evidence for inclusion requires a recoverable declaration, the time and context in which it applied, and a check that the observed case actually matched it.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="declare-exclusion">
           <h4>Declare exclusion</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> The practical difference is that exclusion becomes explicit before anyone acts on Admission; leaving it unnamed forces the reader to infer a rule that may not exist.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Fix what evidence and cases enter or stay out. Show why each case belongs in the test.</dd></div>
-            <div><dt>Engineering</dt><dd>Fix what evidence and cases enter or stay out. Declare exclusion.</dd></div>
-            <div><dt>Empirical</dt><dd>Fix what evidence and cases enter or stay out. Preserve post-admission failures.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Show why each case belongs in the test. Read Admission as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Show why each case belongs in the test. The practical difference is that exclusion becomes explicit before anyone acts on Admission; leaving it unnamed forces the reader to infer a rule that may not exist.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Declare inclusion, exclusion, leakage, quality, and missingness rules. Encode Admission through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Encode exclusion in the governing Admission record with its owner, applicable state, and change boundary so downstream behavior does not depend on a hidden default.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Preserve excluded cases and post-admission failures. Require repeatable observed-versus-expected records for Admission, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Evidence for exclusion requires a recoverable declaration, the time and context in which it applied, and a check that the observed case actually matched it.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="declare-leakage">
           <h4>Declare leakage</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> The practical difference is that leakage becomes explicit before anyone acts on Admission; leaving it unnamed forces the reader to infer a rule that may not exist.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Fix what evidence and cases enter or stay out. Show why each case belongs in the test.</dd></div>
-            <div><dt>Engineering</dt><dd>Fix what evidence and cases enter or stay out. Declare leakage.</dd></div>
-            <div><dt>Empirical</dt><dd>Fix what evidence and cases enter or stay out. Preserve excluded cases.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Show why each case belongs in the test. Read Admission as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Show why each case belongs in the test. The practical difference is that leakage becomes explicit before anyone acts on Admission; leaving it unnamed forces the reader to infer a rule that may not exist.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Declare inclusion, exclusion, leakage, quality, and missingness rules. Encode Admission through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Encode leakage in the governing Admission record with its owner, applicable state, and change boundary so downstream behavior does not depend on a hidden default.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Preserve excluded cases and post-admission failures. Require repeatable observed-versus-expected records for Admission, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Evidence for leakage requires a recoverable declaration, the time and context in which it applied, and a check that the observed case actually matched it.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="declare-quality">
           <h4>Declare quality</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> The practical difference is that quality becomes explicit before anyone acts on Admission; leaving it unnamed forces the reader to infer a rule that may not exist.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Fix what evidence and cases enter or stay out. Show why each case belongs in the test.</dd></div>
-            <div><dt>Engineering</dt><dd>Fix what evidence and cases enter or stay out. Declare quality.</dd></div>
-            <div><dt>Empirical</dt><dd>Fix what evidence and cases enter or stay out. Preserve post-admission failures.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Show why each case belongs in the test. Read Admission as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Show why each case belongs in the test. The practical difference is that quality becomes explicit before anyone acts on Admission; leaving it unnamed forces the reader to infer a rule that may not exist.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Declare inclusion, exclusion, leakage, quality, and missingness rules. Encode Admission through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Encode quality in the governing Admission record with its owner, applicable state, and change boundary so downstream behavior does not depend on a hidden default.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Preserve excluded cases and post-admission failures. Require repeatable observed-versus-expected records for Admission, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Evidence for quality requires a recoverable declaration, the time and context in which it applied, and a check that the observed case actually matched it.</p></dd></div>
           </dl>
         </li>
       </ol>
     </article>
-    <article class="lrc-static-card">
+    <article class="lrc-static-card" data-lrc-static-card="baseline">
       <p>03 / 04</p>
       <h3>Baseline</h3>
-      <p>Choose the ordinary comparison the proposition must beat or clarify.</p>
+      <div class="lrc-static-shared" data-lrc-shared-premise><h4>Shared premise</h4><p>Choose the ordinary comparison the proposition must beat or clarify.</p></div>
       <ol>
-        <li>
+        <li data-lrc-static-story="freeze-baseline-identity">
           <h4>Freeze baseline identity</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Freeze baseline identity before reading the result; otherwise the conclusion can be improved after the evidence is already known.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Choose the ordinary comparison the proposition must beat or clarify. Compare the new claim with what a simpler approach already provides.</dd></div>
-            <div><dt>Engineering</dt><dd>Choose the ordinary comparison the proposition must beat or clarify. Freeze baseline identity.</dd></div>
-            <div><dt>Empirical</dt><dd>Choose the ordinary comparison the proposition must beat or clarify. A stronger baseline remains a controlling finding.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Compare the new claim with what a simpler approach already provides. Read Baseline as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Compare the new claim with what a simpler approach already provides. Freeze baseline identity before reading the result; otherwise the conclusion can be improved after the evidence is already known.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Freeze baseline identity, inputs, metric, and implementation before evaluation. Encode Baseline through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Bind baseline identity to an immutable version or digest and make any later change a new evaluation rather than an in-place revision.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> A stronger baseline remains a controlling finding. Require repeatable observed-versus-expected records for Baseline, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> A stronger baseline remains a controlling finding. Evidence must show when baseline identity was frozen, which cases were evaluated afterward, and whether any post-freeze change occurred.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="freeze-inputs">
           <h4>Freeze inputs</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Freeze inputs before reading the result; otherwise the conclusion can be improved after the evidence is already known.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Choose the ordinary comparison the proposition must beat or clarify. Compare the new claim with what a simpler approach already provides.</dd></div>
-            <div><dt>Engineering</dt><dd>Choose the ordinary comparison the proposition must beat or clarify. Freeze inputs.</dd></div>
-            <div><dt>Empirical</dt><dd>Choose the ordinary comparison the proposition must beat or clarify. A stronger baseline remains a controlling finding.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Compare the new claim with what a simpler approach already provides. Read Baseline as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Compare the new claim with what a simpler approach already provides. Freeze inputs before reading the result; otherwise the conclusion can be improved after the evidence is already known.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Freeze baseline identity, inputs, metric, and implementation before evaluation. Encode Baseline through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Bind inputs to an immutable version or digest and make any later change a new evaluation rather than an in-place revision.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> A stronger baseline remains a controlling finding. Require repeatable observed-versus-expected records for Baseline, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> A stronger baseline remains a controlling finding. Evidence must show when inputs was frozen, which cases were evaluated afterward, and whether any post-freeze change occurred.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="freeze-metric">
           <h4>Freeze metric</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Freeze metric before reading the result; otherwise the conclusion can be improved after the evidence is already known.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Choose the ordinary comparison the proposition must beat or clarify. Compare the new claim with what a simpler approach already provides.</dd></div>
-            <div><dt>Engineering</dt><dd>Choose the ordinary comparison the proposition must beat or clarify. Freeze metric.</dd></div>
-            <div><dt>Empirical</dt><dd>Choose the ordinary comparison the proposition must beat or clarify. A stronger baseline remains a controlling finding.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Compare the new claim with what a simpler approach already provides. Read Baseline as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Compare the new claim with what a simpler approach already provides. Freeze metric before reading the result; otherwise the conclusion can be improved after the evidence is already known.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Freeze baseline identity, inputs, metric, and implementation before evaluation. Encode Baseline through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Bind metric to an immutable version or digest and make any later change a new evaluation rather than an in-place revision.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> A stronger baseline remains a controlling finding. Require repeatable observed-versus-expected records for Baseline, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> A stronger baseline remains a controlling finding. Evidence must show when metric was frozen, which cases were evaluated afterward, and whether any post-freeze change occurred.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="freeze-implementation-before-evaluation">
           <h4>Freeze implementation before evaluation</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Freeze implementation before evaluation before reading the result; otherwise the conclusion can be improved after the evidence is already known.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Choose the ordinary comparison the proposition must beat or clarify. Compare the new claim with what a simpler approach already provides.</dd></div>
-            <div><dt>Engineering</dt><dd>Choose the ordinary comparison the proposition must beat or clarify. Freeze implementation before evaluation.</dd></div>
-            <div><dt>Empirical</dt><dd>Choose the ordinary comparison the proposition must beat or clarify. A stronger baseline remains a controlling finding.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Compare the new claim with what a simpler approach already provides. Read Baseline as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Compare the new claim with what a simpler approach already provides. Freeze implementation before evaluation before reading the result; otherwise the conclusion can be improved after the evidence is already known.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Freeze baseline identity, inputs, metric, and implementation before evaluation. Encode Baseline through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Bind implementation before evaluation to an immutable version or digest and make any later change a new evaluation rather than an in-place revision.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> A stronger baseline remains a controlling finding. Require repeatable observed-versus-expected records for Baseline, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> A stronger baseline remains a controlling finding. Evidence must show when implementation before evaluation was frozen, which cases were evaluated afterward, and whether any post-freeze change occurred.</p></dd></div>
           </dl>
         </li>
       </ol>
     </article>
-    <article class="lrc-static-card">
+    <article class="lrc-static-card" data-lrc-static-card="entry-receipt">
       <p>04 / 04</p>
       <h3>Entry Receipt</h3>
-      <p>Record the admitted state before forward construction begins.</p>
+      <div class="lrc-static-shared" data-lrc-shared-premise><h4>Shared premise</h4><p>Record the admitted state before forward construction begins.</p></div>
       <ol>
-        <li>
+        <li data-lrc-static-story="preserve-source">
           <h4>Preserve source</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Keep source attached while Entry Receipt moves forward so the next reader inherits the reason for the result rather than only its final label.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Record the admitted state before forward construction begins. Make later changes visible.</dd></div>
-            <div><dt>Engineering</dt><dd>Record the admitted state before forward construction begins. Preserve source.</dd></div>
-            <div><dt>Empirical</dt><dd>Record the admitted state before forward construction begins. A receipt proves custody of declarations.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Make later changes visible. Read Entry Receipt as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Keep source attached while Entry Receipt moves forward so the next reader inherits the reason for the result rather than only its final label.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Preserve source, target, split, baseline, exclusions, and fingerprints. Encode Entry Receipt through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Carry source through version, ownership, and handoff boundaries; record any transformation instead of silently replacing the original state.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> A receipt proves custody of declarations, not scientific truth. Require repeatable observed-versus-expected records for Entry Receipt, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> A receipt proves custody of declarations. Demonstrate preservation of source with before-and-after records and a reconciliation that exposes loss, mutation, or unresolved difference.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="preserve-target">
           <h4>Preserve target</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Keep target attached while Entry Receipt moves forward so the next reader inherits the reason for the result rather than only its final label.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Record the admitted state before forward construction begins. Make later changes visible.</dd></div>
-            <div><dt>Engineering</dt><dd>Record the admitted state before forward construction begins. Preserve target.</dd></div>
-            <div><dt>Empirical</dt><dd>Record the admitted state before forward construction begins. Not scientific truth.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Make later changes visible. Read Entry Receipt as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Keep target attached while Entry Receipt moves forward so the next reader inherits the reason for the result rather than only its final label.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Preserve source, target, split, baseline, exclusions, and fingerprints. Encode Entry Receipt through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Carry target through version, ownership, and handoff boundaries; record any transformation instead of silently replacing the original state.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> A receipt proves custody of declarations, not scientific truth. Require repeatable observed-versus-expected records for Entry Receipt, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Demonstrate preservation of target with before-and-after records and a reconciliation that exposes loss, mutation, or unresolved difference.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="preserve-split">
           <h4>Preserve split</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Keep split attached while Entry Receipt moves forward so the next reader inherits the reason for the result rather than only its final label.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Record the admitted state before forward construction begins. Make later changes visible.</dd></div>
-            <div><dt>Engineering</dt><dd>Record the admitted state before forward construction begins. Preserve split.</dd></div>
-            <div><dt>Empirical</dt><dd>Record the admitted state before forward construction begins. A receipt proves custody of declarations.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Make later changes visible. Read Entry Receipt as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Keep split attached while Entry Receipt moves forward so the next reader inherits the reason for the result rather than only its final label.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Preserve source, target, split, baseline, exclusions, and fingerprints. Encode Entry Receipt through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Carry split through version, ownership, and handoff boundaries; record any transformation instead of silently replacing the original state.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> A receipt proves custody of declarations, not scientific truth. Require repeatable observed-versus-expected records for Entry Receipt, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> A receipt proves custody of declarations. Demonstrate preservation of split with before-and-after records and a reconciliation that exposes loss, mutation, or unresolved difference.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="preserve-baseline">
           <h4>Preserve baseline</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Keep baseline attached while Entry Receipt moves forward so the next reader inherits the reason for the result rather than only its final label.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Record the admitted state before forward construction begins. Make later changes visible.</dd></div>
-            <div><dt>Engineering</dt><dd>Record the admitted state before forward construction begins. Preserve baseline.</dd></div>
-            <div><dt>Empirical</dt><dd>Record the admitted state before forward construction begins. Not scientific truth. <strong>Claim boundary:</strong> A test is not interpretable when case admission, target definition, or baseline selection can move after results are known.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Make later changes visible. Read Entry Receipt as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Keep baseline attached while Entry Receipt moves forward so the next reader inherits the reason for the result rather than only its final label.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Preserve source, target, split, baseline, exclusions, and fingerprints. Encode Entry Receipt through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Carry baseline through version, ownership, and handoff boundaries; record any transformation instead of silently replacing the original state.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> A receipt proves custody of declarations, not scientific truth. Require repeatable observed-versus-expected records for Entry Receipt, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Demonstrate preservation of baseline with before-and-after records and a reconciliation that exposes loss, mutation, or unresolved difference.</p><aside><strong>Claim boundary.</strong> A test is not interpretable when case admission, target definition, or baseline selection can move after results are known.</aside></dd></div>
           </dl>
         </li>
       </ol>
@@ -245,6 +261,6 @@
   </main>
   <footer class="lr-footer"><span>Diamond Gate Bridge · Laws Chamber</span><a href="/laws/">Return to the Laws Compass</a></footer>
 </div>
-<script defer src="/laws/room-carousel/room-carousel.v1.js?v=LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827"></script>
+<script defer src="/laws/room-carousel/room-carousel.v1.js?v=LAWS_SEMANTIC_CELL_ENRICHMENT_GEN1755_20260827"></script>
 </body>
 </html>

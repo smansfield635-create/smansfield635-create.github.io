@@ -1,6 +1,11 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "audralia-startup-first-visual-c00842b4",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
-  "inputs": {"target_sha":"c00842b45f5e0efa38853229448b128b22521f01"}
+  "requestId": "LAWS_GEN1751_PUBLICATION_PREFLIGHT_20260827_001",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "bb8b57eaf8c2b89a0ac1f75140654b6a2cf74122",
+    "surface_id": "laws"
+  }
 }

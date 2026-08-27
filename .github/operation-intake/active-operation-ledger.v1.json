@@ -72,49 +72,6 @@
       "scopeHash": "0501ae249d87ccf7e89e5afa5b15554a071e9fc1083ab13db3f081a07a5079cf",
       "state": "ADMITTED_LOCKED"
     },
-    "08018e630cf132ae3acf5dc9918efa5a183e42ca7a81fb3545b450e4ad426bdf": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "eab4c7c57667e6ab285c4bc16c45f26e238cadef",
-          "lockGeneration": 1745,
-          "lockScope": "LAWS/CAROUSEL/KNOWN_GOOD_D583_ROLLBACK/36_PATHS",
-          "operationId": "LAWS_CAROUSEL_KNOWN_GOOD_ROLLBACK_20260827_002",
-          "procedureLocatorDigest": "d3a4fca2dbb337269358fb2fc58d82ae37c1f8c7ba8acf0fd3431e07a656774c",
-          "requestDigest": "cd49650a608cedc62f1cf1c32ceb990b5d9d4a1ee9c078faf54c9fd59ef9bd07",
-          "scopeHash": "08018e630cf132ae3acf5dc9918efa5a183e42ca7a81fb3545b450e4ad426bdf"
-        },
-        "bindingDigest": "f98ad1885796766bf172ad12bdccfa9eae03e9d755ca3f0a4e47d39d648f5aba",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "67708673bac3a404c83dd75fed9664f1a81c0de57bcdec25a46983effb11c40c",
-          "commentId": 5432931603,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2116,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 33028508875,
-          "workflowSha": "eab4c7c57667e6ab285c4bc16c45f26e238cadef"
-        },
-        "lineageAnchorCommitSha": "3a47b96e4aabd5d6b89d6ee892f13ce1f5c10f07",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "eab4c7c57667e6ab285c4bc16c45f26e238cadef",
-      "lockGeneration": 1745,
-      "lockScope": "LAWS/CAROUSEL/KNOWN_GOOD_D583_ROLLBACK/36_PATHS",
-      "operationId": "LAWS_CAROUSEL_KNOWN_GOOD_ROLLBACK_20260827_002",
-      "procedureLocatorDigest": "d3a4fca2dbb337269358fb2fc58d82ae37c1f8c7ba8acf0fd3431e07a656774c",
-      "released": false,
-      "requestDigest": "cd49650a608cedc62f1cf1c32ceb990b5d9d4a1ee9c078faf54c9fd59ef9bd07",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "08018e630cf132ae3acf5dc9918efa5a183e42ca7a81fb3545b450e4ad426bdf",
-      "state": "ADMITTED_LOCKED"
-    },
     "08e56fd88a3fb60792990d5287e6e83fc0d7a7116302f8f4e78c8f11c926a7d0": {
       "governingHead": "23214cf857c1591c1b6eac34a12af1e346882a95",
       "lockGeneration": 1567,
@@ -28128,6 +28085,50 @@
       "procedureLocatorDigest": "4948cc134ab2a99d7b381a4a1dff44f61d16ee4437458f2299223133795aabc9",
       "released": true,
       "requestDigest": "77395514d4e4bbf9b4bee10f72c536858924da1264515dcdb9b8012cbf21bb84",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "08018e630cf132ae3acf5dc9918efa5a183e42ca7a81fb3545b450e4ad426bdf",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "eab4c7c57667e6ab285c4bc16c45f26e238cadef",
+          "lockGeneration": 1745,
+          "lockScope": "LAWS/CAROUSEL/KNOWN_GOOD_D583_ROLLBACK/36_PATHS",
+          "operationId": "LAWS_CAROUSEL_KNOWN_GOOD_ROLLBACK_20260827_002",
+          "procedureLocatorDigest": "d3a4fca2dbb337269358fb2fc58d82ae37c1f8c7ba8acf0fd3431e07a656774c",
+          "requestDigest": "cd49650a608cedc62f1cf1c32ceb990b5d9d4a1ee9c078faf54c9fd59ef9bd07",
+          "scopeHash": "08018e630cf132ae3acf5dc9918efa5a183e42ca7a81fb3545b450e4ad426bdf"
+        },
+        "bindingDigest": "f98ad1885796766bf172ad12bdccfa9eae03e9d755ca3f0a4e47d39d648f5aba",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "67708673bac3a404c83dd75fed9664f1a81c0de57bcdec25a46983effb11c40c",
+          "commentId": 5432931603,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2116,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33028508875,
+          "workflowSha": "eab4c7c57667e6ab285c4bc16c45f26e238cadef"
+        },
+        "lineageAnchorCommitSha": "3a47b96e4aabd5d6b89d6ee892f13ce1f5c10f07",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "eab4c7c57667e6ab285c4bc16c45f26e238cadef",
+      "lockGeneration": 1745,
+      "lockScope": "LAWS/CAROUSEL/KNOWN_GOOD_D583_ROLLBACK/36_PATHS",
+      "operationId": "LAWS_CAROUSEL_KNOWN_GOOD_ROLLBACK_20260827_002",
+      "procedureLocatorDigest": "d3a4fca2dbb337269358fb2fc58d82ae37c1f8c7ba8acf0fd3431e07a656774c",
+      "released": true,
+      "requestDigest": "cd49650a608cedc62f1cf1c32ceb990b5d9d4a1ee9c078faf54c9fd59ef9bd07",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "08018e630cf132ae3acf5dc9918efa5a183e42ca7a81fb3545b450e4ad426bdf",
       "state": "TERMINAL",

@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - 'showroom/globe/audralia/index.html'
+      - 'showroom/globe/audralia/fap1-weather-presentation-v1.mjs'
+      - 'showroom/globe/audralia/final-cloud-shader-composition-v1.mjs'
       - 'showroom/globe/audralia/loading-continuity-v3.css'
       - 'showroom/globe/audralia/weather-presentation-reconciliation/**'
       - 'tools/audralia-weather-presentation-reconciliation-ci.mjs'

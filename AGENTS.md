@@ -2,6 +2,18 @@
 
 Read `AI_ENTRYPOINT.json` first and classify the requested page mutation before escalating into repository-operation authority.
 
+## Canonical abstraction before implementation
+
+Before constructing any control-plane workaround, determine whether `AI_ENTRYPOINT.json`, its registered router/procedure registries, or an existing canonical workflow already exposes the required capability. Existing canonical abstractions outrank room-invented lower-level mechanisms.
+
+For canonical operation admission, the operation ledger is an implementation detail of the registered intake gate. Do **not** reconstruct, truncate, partially rewrite, synthesize, or directly mutate the canonical operation ledger merely because a room can inspect it or because its connector cannot perform the desired low-level Git operation. Use the canonical operation-intake transport/gate declared by `AI_ENTRYPOINT.json` and continue only on its authentic command-emitted receipt.
+
+A direct operation-ledger mutation is permitted only under separate explicit control-plane repair authority that names the intake implementation itself as the repair target. Without that authority, any attempted descent into blob/tree/commit/ref manipulation must fail closed and return to canonical intake.
+
+If canonical intake transport is unavailable or fails, preserve the exact transport/gate failure and report `CANONICAL_INTAKE_TRANSPORT_UNAVAILABLE_OR_FAILED`. Do not treat transport/tool limitation as authority to invent a replacement admission mechanism. Before spending material execution time on a workaround, ask: `DOES_THE_CANONICAL_SPINE_ALREADY_EXPOSE_THIS_CAPABILITY?` If yes, use it. If no—or the registered capability demonstrably fails—escalate that capability as the repair target rather than bypassing it.
+
+Durable incident/lesson record: issue #2191.
+
 ## Procedural execution efficiency
 
 Load `.github/ai-router/execution-efficiency-policy.v1.json` and apply shared procedure `EVIDENCE_BEARING_EXECUTION` to diagnostics, GitHub Actions inspection, workflow-log retrieval, publication verification, and control-plane troubleshooting.

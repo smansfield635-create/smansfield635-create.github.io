@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "AI_EXECUTION_CAPSULE_SOURCE_MATERIALIZATION_RECEIPT_SCHEMA_v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "sourceId",
+    "provider",
+    "localPath",
+    "capsuleBytes",
+    "capsuleSha256",
+    "predicates",
+    "githubActionsUsedAsAgentExecutionTransport",
+    "result"
+  ],
+  "properties": {
+    "schema": {"const": "AI_EXECUTION_CAPSULE_SOURCE_MATERIALIZATION_RECEIPT_v1"},
+    "sourceId": {"type": "string", "minLength": 1},
+    "provider": {"type": "string", "minLength": 1},
+    "localPath": {"type": "string", "minLength": 1},
+    "capsuleBytes": {"type": "integer", "minimum": 1},
+    "capsuleSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "manifestSha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "candidateHead": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
+    "baseHead": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
+    "fixedCommand": {"type": ["string", "null"]},
+    "predicates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "REGISTERED_ID",
+        "LOCAL_FILE_READABLE",
+        "CAPSULE_BYTE_SIZE_MATCH",
+        "CAPSULE_SHA256_MATCH",
+        "MANIFEST_VALID",
+        "CANDIDATE_IDENTITY_VALID",
+        "BASE_IDENTITY_VALID",
+        "TOOLING_IDENTITY_VALID",
+        "DECLARED_PATHS_COMPLETE",
+        "PINNED_RUNTIME_VALID",
+        "NO_NETWORK_EXACT_CHECKOUT_OR_READBACK_PASS",
+        "FIXED_COMMAND_AVAILABLE"
+      ],
+      "properties": {
+        "REGISTERED_ID": {"type": "boolean"},
+        "LOCAL_FILE_READABLE": {"type": "boolean"},
+        "CAPSULE_BYTE_SIZE_MATCH": {"type": "boolean"},
+        "CAPSULE_SHA256_MATCH": {"type": "boolean"},
+        "MANIFEST_VALID": {"type": "boolean"},
+        "CANDIDATE_IDENTITY_VALID": {"type": "boolean"},
+        "BASE_IDENTITY_VALID": {"type": "boolean"},
+        "TOOLING_IDENTITY_VALID": {"type": "boolean"},
+        "DECLARED_PATHS_COMPLETE": {"type": "boolean"},
+        "PINNED_RUNTIME_VALID": {"type": "boolean"},
+        "NO_NETWORK_EXACT_CHECKOUT_OR_READBACK_PASS": {"type": "boolean"},
+        "FIXED_COMMAND_AVAILABLE": {"type": "boolean"}
+      }
+    },
+    "githubActionsUsedAsAgentExecutionTransport": {"const": false},
+    "result": {"enum": ["PASS_CLOSED", "FAIL_CLOSED"]}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"result": {"const": "PASS_CLOSED"}}},
+      "then": {
+        "properties": {
+          "predicates": {
+            "properties": {
+              "REGISTERED_ID": {"const": true},
+              "LOCAL_FILE_READABLE": {"const": true},
+              "CAPSULE_BYTE_SIZE_MATCH": {"const": true},
+              "CAPSULE_SHA256_MATCH": {"const": true},
+              "MANIFEST_VALID": {"const": true},
+              "CANDIDATE_IDENTITY_VALID": {"const": true},
+              "BASE_IDENTITY_VALID": {"const": true},
+              "TOOLING_IDENTITY_VALID": {"const": true},
+              "DECLARED_PATHS_COMPLETE": {"const": true},
+              "PINNED_RUNTIME_VALID": {"const": true},
+              "NO_NETWORK_EXACT_CHECKOUT_OR_READBACK_PASS": {"const": true},
+              "FIXED_COMMAND_AVAILABLE": {"const": true}
+            }
+          }
+        }
+      }
+    }
+  ]
+}

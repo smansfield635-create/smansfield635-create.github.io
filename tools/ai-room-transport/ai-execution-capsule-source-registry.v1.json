@@ -1,0 +1,8 @@
+{
+  "schema": "AI_EXECUTION_CAPSULE_SOURCE_REGISTRY_v1",
+  "status": "GOVERNING_CLOSED_WORLD_SOURCE_REGISTRY",
+  "operation": "MATERIALIZE_REGISTERED_EXECUTION_CAPSULE_SOURCE",
+  "arbitraryProviderIdsAllowed": false,
+  "arbitraryUrlsAllowed": false,
+  "sources": {}
+}

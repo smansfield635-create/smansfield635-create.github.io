@@ -424,7 +424,7 @@ async function landingCheck(page, profile) {
   const appliedRoute = page.locator('.laws-exhibit-route');
   await appliedRoute.waitFor({ state: 'visible', timeout: 5000 });
   assert(await appliedRoute.getAttribute('href') === '/laws/research/applied-investigations/', '/laws/: applied investigations route drift');
-  await page.keyboard.press('Escape');
+  await measuredPointerClick(page, page.locator('.laws-exhibit-return'), '/laws/: return from destination exhibit', { route: '/laws/', profile });
   await page.waitForFunction(() => !document.documentElement.classList.contains('laws-exhibit-open'));
   assert(await page.locator('.laws-exhibit-layer').count() === 0, '/laws/: destination exhibit remained open after Escape');
   assert(await page.locator('[data-laws-root] #laws-orbit').count() === 1, '/laws/: current compass orbit missing after destination return');

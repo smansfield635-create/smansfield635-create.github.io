@@ -1,9 +1,8 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "COMPASS_GEN1752_EXACT_HEAD_DEPLOY_BBD35117_20260827",
+  "requestId": "COMPASS_GEN1752_EXACT_HEAD_DEPLOY_BBD35117_20260827_R2",
   "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
   "inputs": {
-    "target_sha": "bbd35117ee158c2688825e6807b58ee0b84e5b49",
     "surface_id": "compass-gen1752"
   }
 }

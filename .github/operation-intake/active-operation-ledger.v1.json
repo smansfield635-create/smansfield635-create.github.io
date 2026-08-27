@@ -2381,49 +2381,6 @@
       "scopeHash": "9dddf7da98478eaf8a997d8b6e4dc4cf92b5ec9016f05359a3fe89c19cae0465",
       "state": "ADMITTED_LOCKED"
     },
-    "9f68adb7c79c7222d23d10fa6cd37a360e595ee6a3aa6af3a6b97fc18d2a3989": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "eab4c7c57667e6ab285c4bc16c45f26e238cadef",
-          "lockGeneration": 1746,
-          "lockScope": "LAWS/CAROUSEL/D583_PRODUCT_ROLLBACK_CURRENT_HARNESS/35_PATHS",
-          "operationId": "LAWS_CAROUSEL_PRODUCT_ROLLBACK_CURRENT_HARNESS_20260827_001",
-          "procedureLocatorDigest": "00cf23233aa1075369d191918d6952fdc04a8fdb5ccfe8f71607f3bae1dd5f02",
-          "requestDigest": "0f588388359a16bc4b00c974aa993733afba6e6518965273ee0385ef22362db8",
-          "scopeHash": "9f68adb7c79c7222d23d10fa6cd37a360e595ee6a3aa6af3a6b97fc18d2a3989"
-        },
-        "bindingDigest": "ef9d8644547a4db878eb6ac2eb9e51fdb5469b44a23bc29aacb697b82a9e51fd",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "08c5794532fde6f81a12d443ad210b04afdc0963f57dc65378b0913f77ac286d",
-          "commentId": 5433016783,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2116,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 33029189605,
-          "workflowSha": "eab4c7c57667e6ab285c4bc16c45f26e238cadef"
-        },
-        "lineageAnchorCommitSha": "c08b457d937c5b07bc378ef2222ebcb10e76ed9e",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "eab4c7c57667e6ab285c4bc16c45f26e238cadef",
-      "lockGeneration": 1746,
-      "lockScope": "LAWS/CAROUSEL/D583_PRODUCT_ROLLBACK_CURRENT_HARNESS/35_PATHS",
-      "operationId": "LAWS_CAROUSEL_PRODUCT_ROLLBACK_CURRENT_HARNESS_20260827_001",
-      "procedureLocatorDigest": "00cf23233aa1075369d191918d6952fdc04a8fdb5ccfe8f71607f3bae1dd5f02",
-      "released": false,
-      "requestDigest": "0f588388359a16bc4b00c974aa993733afba6e6518965273ee0385ef22362db8",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "9f68adb7c79c7222d23d10fa6cd37a360e595ee6a3aa6af3a6b97fc18d2a3989",
-      "state": "ADMITTED_LOCKED"
-    },
     "a03669e7f956cc5d5b0db95a92424835b45401bd5f57fa65d5f841a5ed0efc91": {
       "governingHead": "ac3b541321bba992d117b2bb357209764f077c29",
       "lockGeneration": 1543,
@@ -28261,6 +28218,50 @@
       "requestDigest": "9faf6874fca9626a8c7acfec40844ba7c22b1e0ba6dad03fb189120946bc0e24",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "45ee48f9f68d15e6bea26c2137701e14f259fd75f9d8af4c3053e636f3005d22",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "eab4c7c57667e6ab285c4bc16c45f26e238cadef",
+          "lockGeneration": 1746,
+          "lockScope": "LAWS/CAROUSEL/D583_PRODUCT_ROLLBACK_CURRENT_HARNESS/35_PATHS",
+          "operationId": "LAWS_CAROUSEL_PRODUCT_ROLLBACK_CURRENT_HARNESS_20260827_001",
+          "procedureLocatorDigest": "00cf23233aa1075369d191918d6952fdc04a8fdb5ccfe8f71607f3bae1dd5f02",
+          "requestDigest": "0f588388359a16bc4b00c974aa993733afba6e6518965273ee0385ef22362db8",
+          "scopeHash": "9f68adb7c79c7222d23d10fa6cd37a360e595ee6a3aa6af3a6b97fc18d2a3989"
+        },
+        "bindingDigest": "ef9d8644547a4db878eb6ac2eb9e51fdb5469b44a23bc29aacb697b82a9e51fd",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "08c5794532fde6f81a12d443ad210b04afdc0963f57dc65378b0913f77ac286d",
+          "commentId": 5433016783,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2116,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33029189605,
+          "workflowSha": "eab4c7c57667e6ab285c4bc16c45f26e238cadef"
+        },
+        "lineageAnchorCommitSha": "c08b457d937c5b07bc378ef2222ebcb10e76ed9e",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "eab4c7c57667e6ab285c4bc16c45f26e238cadef",
+      "lockGeneration": 1746,
+      "lockScope": "LAWS/CAROUSEL/D583_PRODUCT_ROLLBACK_CURRENT_HARNESS/35_PATHS",
+      "operationId": "LAWS_CAROUSEL_PRODUCT_ROLLBACK_CURRENT_HARNESS_20260827_001",
+      "procedureLocatorDigest": "00cf23233aa1075369d191918d6952fdc04a8fdb5ccfe8f71607f3bae1dd5f02",
+      "released": true,
+      "requestDigest": "0f588388359a16bc4b00c974aa993733afba6e6518965273ee0385ef22362db8",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "9f68adb7c79c7222d23d10fa6cd37a360e595ee6a3aa6af3a6b97fc18d2a3989",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

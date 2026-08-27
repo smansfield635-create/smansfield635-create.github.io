@@ -1,0 +1,32 @@
+{
+  "schema": "THREE_TIER_CODESPACE_OUTAGE_CONTINUITY_POLICY_v1",
+  "status": "ACTIVE_ADOPTION_CANDIDATE",
+  "primaryPrinciple": "EXECUTION_PROOF_MUST_SURVIVE_LOSS_OF_ANY_SINGLE_INTERACTIVE_ENVIRONMENT",
+  "backendOrder": [
+    "CODESPACE_DISPOSABLE_EXECUTION",
+    "LOCAL_CLEAN_GIT",
+    "AUTHORIZED_EXTERNAL_DISPOSABLE_BUILDER"
+  ],
+  "fallbackRules": [
+    {
+      "from": "CODESPACE_DISPOSABLE_EXECUTION",
+      "to": "LOCAL_CLEAN_GIT",
+      "when": "CODESPACE_UNAVAILABLE_BUT_EXACT_COMMITS_AND_RUNTIME_AVAILABLE"
+    },
+    {
+      "from": "LOCAL_CLEAN_GIT",
+      "to": "AUTHORIZED_EXTERNAL_DISPOSABLE_BUILDER",
+      "when": "LOCAL_EXECUTION_UNAVAILABLE_AND_AN_AUTHORIZED_NON_ACTIONS_BUILDER_IS_CONNECTED"
+    }
+  ],
+  "githubActionsFallbackForAgentExecution": "RETIRED_BY_AI_ENTRYPOINT_NON_ACTIONS_POLICY",
+  "githubActionsPermittedRoles": [
+    "PASSIVE_CI_AFTER_REPOSITORY_CHANGE",
+    "HISTORICAL_EVIDENCE_INSPECTION",
+    "SEPARATELY_AUTHORIZED_LATER_REPLAY"
+  ],
+  "noActiveFallbackDisposition": "BLOCKED_NONTERMINAL_EXECUTION_SURFACE_UNAVAILABLE",
+  "manualMetadataReconstructionAsExecutionProof": false,
+  "movingTargetSubstitutionAllowed": false,
+  "resultSubstitutionAllowed": false
+}

@@ -1,9 +1,11 @@
 {
-  "schema": "LAWS_SEMANTIC_CELL_ENRICHMENT_PRECONSTRUCTION_CONTRACT_v4",
-  "operationId": "LAWS_SEMANTIC_CELL_ENRICHMENT_AND_VISIBLE_DELTA_READING_20260827_002",
-  "lockGeneration": 1756,
+  "schema": "LAWS_CONTEXTUAL_CORPUS_EXPRESSION_PRECONSTRUCTION_CONTRACT_v5",
+  "operationId": "LAWS_CONTEXTUAL_CORPUS_AND_EXPRESSION_RECONSTRUCTION_20260827_005",
+  "lockGeneration": 1763,
   "lockScope": "LAWS:BACK_PAGE_CONTEXTUAL_DELIVERY:V1",
-  "governingHead": "539c324f0c7de395bd42747dba550a85360a66be",
+  "governingHead": "591bc644f6818d7d8323dadb3964d06a1a269559",
+  "constructionBranch": "laws/contextual-corpus-expression-gen1763",
+  "substrateReplayHead": "75fc1e52dcd18a84c946e7e131ef84568ee4f5ce",
   "assetIdentity": "LAWS_SEMANTIC_CELL_ENRICHMENT_GEN1755_20260827",
   "reference": {
     "route": "/laws/research/methods-and-models/",
@@ -14,13 +16,11 @@
   "protected": {
     "lawsRoot": {
       "path": "laws/index.html",
-      "mutationAllowed": false,
-      "blob": "d6de5558a6ba38e66ad6284a80c03de67682628b"
+      "mutationAllowed": false
     },
     "methodsAndModelsTree": {
       "path": "laws/research/methods-and-models/",
-      "mutationAllowed": false,
-      "tree": "101b195cbde339505d3b3c76fd2368d7dfd341e1"
+      "mutationAllowed": false
     }
   },
   "frozenInteractionGrammar": [
@@ -64,30 +64,53 @@
     "sharedPremiseMayAppearInsideSelectionDelta": false,
     "exactDuplicateDeltaAllowedInsideCard": false,
     "genericPlaceholderAllowed": false,
-    "sparseEmpiricalTreatment": "EXPLICIT_REQUIRED_RECORD_OR_EVIDENCE_BOUNDARY",
-    "visualTreatment": {
-      "practical": "WARM_GOLD",
-      "engineering": "COOL_BLUE",
-      "empirical": "EVIDENCE_GREEN",
-      "storyFocus": "PAGE_FAMILY_ACCENT",
-      "sharedPremise": "NEUTRAL",
-      "colorOnlyInformation": false,
-      "persistentLabelAndBorderRequired": true
-    }
+    "sparseEmpiricalTreatment": "EXPLICIT_REQUIRED_RECORD_OR_EVIDENCE_BOUNDARY"
+  },
+  "gen1763HumanGrounding": {
+    "objective": "REPLACE_TEMPLATE_LIKE_SEMANTIC_EXPANSION_WITH_PAGE_AND_STORY_SPECIFIC_HUMAN_GROUNDED_READING",
+    "substrateReplayIsAcceptance": false,
+    "constructionOrder": [
+      "REPRESENTATIVE_CORPUS_RECONSTRUCTION",
+      "REPRESENTATIVE_STATIC_AND_RENDERED_QUALIFICATION",
+      "FULL_29_ROUTE_RECONSTRUCTION",
+      "EXACT_CANDIDATE_QUALIFICATION",
+      "ADOPTION",
+      "EXACT_HEAD_DEPLOYMENT",
+      "LIVE_VERIFICATION",
+      "TERMINAL_CLOSURE"
+    ],
+    "representativeRoutes": [
+      "/laws/categories/flow/cycles/",
+      "/laws/categories/flow/handoffs/",
+      "/laws/categories/reality/",
+      "/laws/research/findings-and-boundaries/"
+    ],
+    "requiredExpressionProperties": [
+      "STORY_FOCUS_CHANGES_THE_READER_QUESTION_OR_DECISION",
+      "PRACTICAL_DELTA_STATES_A_READER_OBSERVATION_OR_DECISION",
+      "ENGINEERING_DELTA_NAMES_SPECIFIC_STATE_INPUT_OUTPUT_INTERFACE_OR_FAILURE",
+      "EMPIRICAL_DELTA_NAMES_OBSERVATION_MEASURE_RECORD_OR_EXPLICIT_EVIDENCE_BOUNDARY",
+      "CARD_LANGUAGE_PRESERVES_LOCAL_PAGE_IDENTITY",
+      "SPARSE_EVIDENCE_IS_NOT_INFLATED"
+    ],
+    "forbiddenTemplatePatterns": [
+      "This selection isolates <story> within <card>",
+      "It shows which decision changes at this layer",
+      "Treat <story> as a distinct control point inside <card>",
+      "Give it an owner, explicit state, transition rule, and failure output",
+      "Evidence for <story> must identify the observed unit, context, comparison, and boundary",
+      "Without those records, <card> remains a conceptual or procedural classification at this layer"
+    ],
+    "templatePhraseMayPassByWordCountAlone": false,
+    "genericBoilerplateCountsAsDistinctAuthorship": false,
+    "runtimeOrCarouselRewriteAuthorized": false
   },
   "representatives": {
     "cycles": ["recurrence", "rhythm", "feedback", "renewal", "engineering-addendum"],
     "handoffs": ["transfer-object", "state-context", "interface", "acceptance", "receipt-continuity", "failure-boundary"],
     "reality": ["reality", "theory", "evidence", "measure", "limits", "audit"],
     "findingsAndBoundaries": ["supported"],
-    "startupHookReceipt": 5434918086,
-    "representativeHookReceipt": 5435073428,
-    "successorTransitionReceipt": 5435144219,
-    "successorRouterReceipt": 5435153627,
-    "hook6CheckReceipt": 5435191933,
-    "hook6DispositionReceipt": 5435193730,
-    "renderedCasesRequired": 12,
-    "phoneTabletDesktopDisposition": "PASS_SUCCESSOR_EXACT_HEAD_12_OF_12"
+    "renderedCasesRequired": 12
   },
   "realityCorrection": {
     "existingDeepRoutes": [
@@ -112,15 +135,20 @@
     "noJsSourceAndCustodyReachable": true
   },
   "qualification": {
-    "staticRoutes": 29,
-    "cards": 134,
-    "cells": 1653,
-    "distinctAuthoredDeltas": 1627,
-    "authoredDeltasUnder15Words": 3,
-    "exactSubjectHead": "539c324f0c7de395bd42747dba550a85360a66be",
-    "representativeRenderedCases": "PASS_SUCCESSOR_EXACT_HEAD_12_OF_12",
-    "fullRenderedCases": "PASS_SUCCESSOR_EXACT_HEAD_87_OF_87",
-    "representativeHookReceipt": 5435073428
+    "currentStage": "FULL_SUBSTRATE_REPLAY_COMPLETE_AWAITING_HUMAN_GROUNDED_RECONSTRUCTION",
+    "currentBranchHeadBeforeThisContractUpdate": "75fc1e52dcd18a84c946e7e131ef84568ee4f5ce",
+    "previousGen1756StaticQualification": "PASS_REFERENCE_ONLY",
+    "previousGen1756RenderedQualification": "PASS_87_OF_87_REFERENCE_ONLY",
+    "gen1763Acceptance": "NOT_YET",
+    "gen1763RemoteQualification": "NOT_YET",
+    "gen1763Publication": "NOT_YET"
+  },
+  "hookProtocol": {
+    "surface": 2150,
+    "lastTerminalHook": 8,
+    "nextHookRevealed": false,
+    "noNewHookDisposition": "NOOP_CONTINUE",
+    "oneAtATime": true
   },
   "authorityBoundary": {
     "scientificValidationClaimed": false,

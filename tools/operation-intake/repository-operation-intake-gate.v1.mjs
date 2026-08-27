@@ -15,6 +15,11 @@ import {
 export const REQUEST_SCHEMA = 'REPOSITORY_OPERATION_REQUEST_v1';
 export const PROCEDURE_SCHEMA = 'REPOSITORY_CONSTRUCTION_PROCEDURE_v1';
 export const SOURCE_READBACK_OPERATION_CLASS = 'SOURCE_READBACK';
+export const INTAKE_COMPLETENESS_SCHEMA = 'INTAKE_COMPLETENESS_RECEIPT_v1';
+export const COMPLETE_INTAKE_RESULTS = new Set([
+  'COMPLETE_NO_QUESTIONS_REQUIRED',
+  'COMPLETE_AFTER_USER_DISPOSITION'
+]);
 
 const FIELDS = [
   'operationId','projectId','lockScope','exactGoverningHead','subjectIdentity',
@@ -70,6 +75,40 @@ export const incomplete = e => stable({
   lock: null
 });
 
+export function validateIntakeCompleteness(value, source = 'operation-request') {
+  const field = 'intakeCompletenessReceipt';
+  if (!Object.hasOwn(value || {}, field)) {
+    bad('HUMAN_DISPOSITION_COMPLETENESS_MISSING_NOT_STARTED', field, source);
+  }
+  const c = obj(value[field], field, source);
+  if (c.schema !== INTAKE_COMPLETENESS_SCHEMA) {
+    bad('COMPLETENESS_RECEIPT_INVALID', `${field}.schema`, source);
+  }
+  str(c.receiptId, `${field}.receiptId`, source);
+  str(c.receiptDigest, `${field}.receiptDigest`, source);
+  if (c.authorityEffect !== 'NONE_BY_INTAKE_COMPLETENESS_RECEIPT') {
+    bad('HUMAN_DISPOSITION_AUTHORITY_LEAK', `${field}.authorityEffect`, source);
+  }
+  if (!Array.isArray(c.unresolvedMaterialQuestions)) {
+    bad('COMPLETENESS_RECEIPT_INVALID', `${field}.unresolvedMaterialQuestions`, source);
+  }
+  c.unresolvedMaterialQuestions.forEach((x, i) => str(x, `${field}.unresolvedMaterialQuestions[${i}]`, source));
+
+  if (c.result === 'INCOMPLETE_HUMAN_INPUT_REQUIRED') {
+    bad('HUMAN_INPUT_REQUIRED_NOT_STARTED', `${field}.result`, source);
+  }
+  if (c.result === 'INCOMPLETE_SCOPE_AMBIGUOUS') {
+    bad('SCOPE_AMBIGUITY_REQUIRES_USER_DISPOSITION', `${field}.result`, source);
+  }
+  if (!COMPLETE_INTAKE_RESULTS.has(c.result)) {
+    bad('COMPLETENESS_RECEIPT_INVALID', `${field}.result`, source);
+  }
+  if (c.unresolvedMaterialQuestions.length !== 0) {
+    bad('MATERIAL_UNKNOWN_UNDECLARED', `${field}.unresolvedMaterialQuestions`, source);
+  }
+  return stable(c);
+}
+
 export function validateRequest(value) {
   const s = 'operation-request';
   const r = obj(value, '$', s);
@@ -95,6 +134,8 @@ export function validateRequest(value) {
     str(x.id, `requiredInputs[${i}].id`, s);
     if (x.resolved !== true) bad('MISSING_REQUIRED_REQUEST_FIELD', `requiredInputs[${i}].resolved`, s, x.id);
   });
+
+  validateIntakeCompleteness(r, s);
 
   for (const f of ['allowedPaths','prohibitedPaths','requiredOutputs','errorPrecedence','stopConditions','terminalDispositions']) {
     r[f].forEach((x, i) => str(x, `${f}[${i}]`, s));

@@ -1,96 +1,130 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "LAWS_ROOM_CAROUSEL_BACK_PAGE_PARITY_v3";
-  const REFERENCE = "LAWS_BACK_PAGE_CAROUSEL_PARITY_AND_BOTTOM_STORY_NAVIGATION";
+  const CONTRACT = "LAWS_CONTEXTUAL_DELIVERY_CAROUSEL_v2";
+  const REFERENCE = "LAWS_METHODS_CONTEXTUAL_INSPECTION_WITH_RESTORED_OUTER_ORBIT";
   const CLASSIFY_PX = 8;
   const COMMIT_PX = 24;
   const AXIS_RATIO = 1.12;
+  const LAYERS = Object.freeze([["practical", "Practical"], ["engineering", "Engineering"], ["empirical", "Empirical"]]);
+  const scriptSource = document.currentScript?.src || "/laws/room-carousel/room-carousel.v1.js";
+  const mapUrl = new URL("./route-card-map.v2.json", scriptSource).href;
+
   document.documentElement.classList.add("lr-js");
 
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
   const wrap = (value, count) => ((value % count) + count) % count;
-  const slug = value => String(value || "room").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "room";
+  const slug = value => String(value || "subject").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "subject";
   const textOf = node => node?.textContent?.replace(/\s+/g, " ").trim() || "";
+  const escapeHtml = value => String(value || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 
-  function nativeLabel(card, index) {
-    return textOf(card.querySelector("h1,h2,h3")) || textOf(card.querySelector(".lr-kicker,.kicker")) || card.getAttribute("aria-label") || `Room ${index + 1}`;
+  function routeOf(root) {
+    const declared = root.dataset.lrcRoute || document.documentElement.dataset.route;
+    if (declared) return declared;
+    return location.pathname.endsWith(".html") || location.pathname.endsWith("/") ? location.pathname : `${location.pathname}/`;
   }
 
-  function synopsisFor(card, label) {
-    const candidates = [
-      card.querySelector(".lr-question"),
-      card.querySelector(".lr-lede"),
-      card.querySelector(".lr-section__head p:not(.lr-kicker)"),
-      card.querySelector(".lr-study-card > p"),
-      card.querySelector("p:not(.lr-kicker):not(.kicker)")
-    ];
-    return candidates.map(textOf).find(value => value && value !== label) || "Open this stage to read its complete page-specific record.";
-  }
-
-  function sourceChildren(card) {
-    return Array.from(card.querySelectorAll(":scope > [data-lrc-source-child]"));
-  }
-
-  function setSourceVisible(card, visible) {
-    sourceChildren(card).forEach(node => {
-      node.hidden = !visible || node.dataset.lrcOriginallyHidden === "true";
+  function directSourceNodes(root) {
+    return Array.from(root.children).filter(node => {
+      if (!(node instanceof HTMLElement)) return false;
+      if (node.matches("details.lr-audit,.lr-story-nav,[data-lrc-tabs],[data-lrc-viewport],[data-lrc-runtime],[data-lrc-static]")) return false;
+      return node.matches("section,article,aside,nav,div");
     });
   }
 
-  function prepareCard(card, index, count) {
-    const label = nativeLabel(card, index);
-    card.dataset.lrcCard = "";
-    card.dataset.lrcLabel = label;
-    card.dataset.lrcId = card.id || `${slug(label)}-${index + 1}`;
-    if (!card.id) card.id = `lrc-${card.dataset.lrcId}`;
-    card.setAttribute("role", "tabpanel");
-    card.setAttribute("aria-label", `${label}, ${index + 1} of ${count}`);
-
-    if (!card.querySelector(":scope > [data-lrc-summary]")) {
-      const originalChildren = Array.from(card.children);
-      const kicker = textOf(card.querySelector(".lr-kicker,.kicker"));
-
-      originalChildren.forEach(node => {
-        node.dataset.lrcSourceChild = "";
-        node.dataset.lrcOriginallyHidden = String(node.hidden);
-        node.hidden = true;
-      });
-
-      const summary = document.createElement("div");
-      summary.dataset.lrcSummary = "";
-      summary.innerHTML = `
-        <p data-lrc-summary-count>${String(index + 1).padStart(2, "0")} / ${String(count).padStart(2, "0")}</p>
-        ${kicker && kicker !== label ? `<p data-lrc-summary-kicker></p>` : ""}
-        <h2 data-lrc-summary-title></h2>
-        <p data-lrc-summary-copy></p>
-        <button type="button" data-lrc-inspect>Inspect this stage</button>`;
-      const summaryKicker = summary.querySelector("[data-lrc-summary-kicker]");
-      if (summaryKicker) summaryKicker.textContent = kicker;
-      summary.querySelector("[data-lrc-summary-title]").textContent = label;
-      summary.querySelector("[data-lrc-summary-copy]").textContent = synopsisFor(card, label);
-      summary.querySelector("[data-lrc-inspect]").setAttribute("aria-controls", card.id);
-
-      const close = document.createElement("button");
-      close.type = "button";
-      close.dataset.lrcReturn = "";
-      close.textContent = "↶ Return to Orbit";
-      close.setAttribute("aria-label", `Return ${label} to the carousel orbit`);
-      close.hidden = true;
-      card.prepend(close, summary);
-    }
+  function routeContext(root) {
+    const lens = kind => textOf(root.querySelector(`[id*="panel-${kind}"],.lr-panel[data-tab-kind="${kind}"],[data-tab-kind="${kind}"].section-tab-panel`));
+    const relationship = root.querySelector("#relationship-title,#reverse-title");
+    const relation = textOf(relationship?.closest("section")?.querySelector(".lr-section__head p:last-child"));
+    const boundaryNode = root.querySelector(".lr-boundary,aside[aria-label*='boundary' i]");
+    const noStudy = /no current admitted study/i.test(textOf(root))
+      ? "No current admitted study. This subject remains conceptual or procedural until a separate source is admitted."
+      : "";
+    return {
+      relation,
+      practical: lens("practical"),
+      engineering: lens("engineering"),
+      empirical: lens("empirical"),
+      boundary: textOf(boundaryNode?.querySelector("p:last-child")) || textOf(boundaryNode),
+      noStudy
+    };
   }
 
-  function createTabs(root, viewport, cards) {
-    const existing = root.querySelector(":scope > [data-lrc-tabs]");
-    if (existing) return { tabs: existing, buttons: Array.from(existing.querySelectorAll("[data-lrc-tab]")) };
+  function sourceMaterial(root, definition, context) {
+    const source = definition.sourceSelector ? root.querySelector(definition.sourceSelector) : null;
+    const sourceSummary = textOf(source?.querySelector("summary p"));
+    const sourcePanel = kinds => {
+      for (const kind of kinds) {
+        const panel = source?.querySelector(`.section-tab-panel[data-tab-kind="${kind}"],[role="tabpanel"][data-tab-kind="${kind}"]`);
+        if (panel) return panel.innerHTML;
+      }
+      return "";
+    };
+    const manualLayer = (kind, value) => {
+      const parts = [];
+      if (value) parts.push(`<p>${escapeHtml(value)}</p>`);
+      if (kind === "practical" && context.relation) parts.push(`<p class="lrc-route-context"><strong>Structural context.</strong> ${escapeHtml(context.relation)}</p>`);
+      if (context[kind] && context[kind] !== value) parts.push(`<p class="lrc-route-context"><strong>Route reading.</strong> ${escapeHtml(context[kind])}</p>`);
+      if (kind === "empirical" && context.noStudy && !/no current admitted study/i.test(value || "")) parts.push(`<p class="lrc-study-boundary">${escapeHtml(context.noStudy)}</p>`);
+      return parts.join("") || "<p>This layer is intentionally compact on this subject.</p>";
+    };
+    return {
+      label: definition.label || definition.id,
+      summary: definition.summary || sourceSummary || definition.practical || context.relation || "Open this subject for its complete contextual reading.",
+      practical: sourcePanel(["platform", "practical"]) || manualLayer("practical", definition.practical),
+      engineering: sourcePanel(["engineering"]) || manualLayer("engineering", definition.engineering),
+      empirical: sourcePanel(["evidence", "empirical"]) || manualLayer("empirical", definition.empirical),
+      boundary: definition.boundary || context.boundary,
+      href: definition.href || ""
+    };
+  }
 
+  function makeCard(root, route, family, definition, index, count, context) {
+    const material = sourceMaterial(root, definition, context);
+    const id = slug(definition.id || material.label);
+    const card = document.createElement("section");
+    card.dataset.lrcCard = "";
+    card.dataset.lrcRuntime = "true";
+    card.dataset.lrcId = id;
+    card.dataset.lrcLabel = material.label;
+    card.dataset.lrcFamily = family;
+    card.id = `lrc-${slug(route)}-${id}`;
+    card.setAttribute("role", "tabpanel");
+    card.setAttribute("aria-label", `${material.label}, ${index + 1} of ${count}`);
+
+    const summary = document.createElement("div");
+    summary.dataset.lrcSummary = "";
+    summary.innerHTML = `
+      <p data-lrc-summary-count>${String(index + 1).padStart(2, "0")} / ${String(count).padStart(2, "0")}</p>
+      <p data-lrc-summary-kicker>${escapeHtml(family)} subject</p>
+      <h2 data-lrc-summary-title>${escapeHtml(material.label)}</h2>
+      <p data-lrc-summary-copy>${escapeHtml(material.summary)}</p>
+      <button type="button" data-lrc-inspect aria-controls="${escapeHtml(card.id)}">Open ${escapeHtml(material.label)}</button>`;
+
+    const inspection = document.createElement("div");
+    inspection.dataset.lrcInspection = "";
+    inspection.hidden = true;
+    inspection.innerHTML = `
+      <button type="button" data-lrc-return>↶ Return to Orbit</button>
+      <header class="lrc-inspection-head"><p>${escapeHtml(family)} · contextual inspection</p><h2>${escapeHtml(material.label)}</h2><span>${escapeHtml(material.summary)}</span></header>
+      <div data-lrc-inner-tabs role="tablist" aria-label="${escapeHtml(material.label)} contextual readings">
+        ${LAYERS.map(([kind, label], layerIndex) => `<button type="button" role="tab" data-lrc-inner-tab="${kind}" data-lrc-layer-index="${layerIndex}" aria-controls="${escapeHtml(card.id)}-${kind}">${label}</button>`).join("")}
+      </div>
+      <div data-lrc-inner-panels>
+        ${LAYERS.map(([kind, label]) => `<article id="${escapeHtml(card.id)}-${kind}" role="tabpanel" data-lrc-inner-panel="${kind}"><p class="lrc-layer-label">${label}</p>${material[kind]}${kind === "empirical" && material.boundary ? `<aside data-lrc-claim-boundary><strong>Claim boundary</strong><p>${escapeHtml(material.boundary)}</p></aside>` : ""}</article>`).join("")}
+      </div>
+      ${material.href ? `<p class="lrc-deep-route"><a href="${escapeHtml(material.href)}">Continue to ${escapeHtml(material.label)}</a></p>` : ""}`;
+    card.append(summary, inspection);
+    return card;
+  }
+
+  function createOuterTabs(root, viewport, cards) {
     const tabs = document.createElement("div");
     tabs.dataset.lrcTabs = "";
+    tabs.dataset.lrcRuntime = "true";
     tabs.setAttribute("role", "tablist");
-    tabs.setAttribute("aria-label", "Choose any part of this Laws reading sequence");
+    tabs.setAttribute("aria-label", "Choose a page-specific Laws subject");
     tabs.style.setProperty("--lrc-count", String(cards.length));
-
     const buttons = cards.map((card, index) => {
       const button = document.createElement("button");
       button.type = "button";
@@ -98,105 +132,74 @@
       button.dataset.lrcTabIndex = String(index);
       button.setAttribute("role", "tab");
       button.setAttribute("aria-controls", card.id);
-      const number = document.createElement("span");
-      number.dataset.lrcTabNumber = "";
-      number.textContent = String(index + 1).padStart(2, "0");
-      const label = document.createElement("span");
-      label.dataset.lrcTabLabel = "";
-      label.textContent = card.dataset.lrcLabel || `Room ${index + 1}`;
-      button.append(number, label);
+      button.innerHTML = `<span data-lrc-tab-number>${String(index + 1).padStart(2, "0")}</span><span data-lrc-tab-label>${escapeHtml(card.dataset.lrcLabel)}</span>`;
       tabs.append(button);
       return button;
     });
-
     root.insertBefore(tabs, viewport);
     return { tabs, buttons };
   }
 
-  function adoptNativeStoryboard(root) {
-    const existingViewport = root.querySelector(":scope > [data-lrc-viewport]");
-    const existingTrack = existingViewport?.querySelector(":scope > [data-lrc-track]");
-    if (existingViewport && existingTrack) {
-      existingViewport.querySelectorAll("[data-lrc-controls],[data-lrc-prev],[data-lrc-next]").forEach(node => node.remove());
-      const cards = Array.from(existingTrack.querySelectorAll(":scope > [data-lrc-card]"));
-      cards.forEach((card, index) => prepareCard(card, index, cards.length));
-      let live = existingViewport.querySelector(":scope > [data-lrc-live]");
-      if (!live) {
-        live = document.createElement("p");
-        live.dataset.lrcLive = "";
-        live.setAttribute("aria-live", "polite");
-        live.setAttribute("aria-atomic", "true");
-        existingViewport.append(live);
-      }
-      return { viewport: existingViewport, track: existingTrack, cards, live };
+  function mount(root, map) {
+    if (root.dataset.lrcMounted === "true") return;
+    const route = routeOf(root);
+    const routeMap = map.routes?.[route];
+    if (!routeMap?.cards?.length) {
+      root.dataset.lrcFailure = "route-map-missing";
+      return;
+    }
+    const declaredIds = (root.dataset.lrcCards || "").split(/\s+/).filter(Boolean);
+    const mappedIds = routeMap.cards.map(card => card.id);
+    if (declaredIds.length && declaredIds.join("|") !== mappedIds.join("|")) {
+      root.dataset.lrcFailure = "route-declaration-mismatch";
+      return;
     }
 
-    const nativeChildren = Array.from(root.children).filter(node => {
-      if (!(node instanceof HTMLElement)) return false;
-      if (node.matches("details.lr-audit,.lr-story-nav,[data-lrc-depth],[data-lrc-static],[data-lrc-tabs],[data-lrc-viewport],[data-lrc-continuation]")) return false;
-      return node.matches("section,article,aside,nav,div");
+    root.dataset.lrcRoute = route;
+    root.dataset.lrcFamily = routeMap.family;
+    root.dataset.lrcOuterCards = mappedIds.join(" ");
+    root.dataset.lrcInternalTabs = "practical engineering empirical";
+    root.dataset.lrcCustody = "collapsed-subordinate";
+    root.dataset.lrcGreaterNavigation = root.querySelector(":scope > .lr-story-nav") ? "bottom" : "not-declared";
+
+    const storyNav = root.querySelector(":scope > .lr-story-nav");
+    const audit = root.querySelector(":scope > details.lr-audit");
+    if (audit) {
+      audit.open = false;
+      audit.dataset.lrcRole = "custody";
+    }
+    if (storyNav) storyNav.dataset.lrcRole = "greater-laws-navigation";
+
+    const context = routeContext(root);
+    directSourceNodes(root).forEach(node => {
+      node.dataset.lrcContextSource = "";
+      node.dataset.lrcOriginallyHidden = String(node.hidden);
+      node.hidden = true;
     });
-    if (nativeChildren.length < 1) return null;
 
     const viewport = document.createElement("section");
     viewport.dataset.lrcViewport = "";
+    viewport.dataset.lrcRuntime = "true";
     viewport.tabIndex = 0;
     viewport.setAttribute("role", "region");
     viewport.setAttribute("aria-roledescription", "carousel");
-    viewport.setAttribute("aria-label", `${document.title.split("·")[0].trim()} reading sequence`);
-
+    viewport.setAttribute("aria-label", `${textOf(root.querySelector("h1")) || "Laws"} subjects`);
     const track = document.createElement("div");
     track.dataset.lrcTrack = "";
-
-    nativeChildren.forEach((card, index) => {
-      prepareCard(card, index, nativeChildren.length);
-      track.appendChild(card);
-    });
-
+    const cards = routeMap.cards.map((definition, index) => makeCard(root, route, routeMap.family, definition, index, routeMap.cards.length, context));
+    cards.forEach(card => track.append(card));
     const live = document.createElement("p");
     live.dataset.lrcLive = "";
     live.setAttribute("aria-live", "polite");
     live.setAttribute("aria-atomic", "true");
-
     viewport.append(track, live);
     root.insertBefore(viewport, root.firstChild);
-    return { viewport, track, cards: nativeChildren, live };
-  }
-
-  function ensureContinuation(root) {
-    const hasLowerContent = Boolean(
-      root.querySelector(":scope > details.lr-audit,:scope > [data-lrc-continuation]") ||
-      document.querySelector(".lr-footer, footer")
-    );
-    if (hasLowerContent) return;
-
-    const continuation = document.createElement("section");
-    continuation.dataset.lrcContinuation = "";
-    continuation.setAttribute("aria-labelledby", "lrc-continuation-title");
-    const kicker = document.createElement("p");
-    kicker.dataset.lrcContinuationKicker = "";
-    kicker.textContent = "Continue through the Laws record";
-    const title = document.createElement("h2");
-    title.id = "lrc-continuation-title";
-    title.textContent = "Every numbered stage remains available above.";
-    const copy = document.createElement("p");
-    copy.textContent = "Choose any tab for its orbit summary, then inspect that stage for the complete page-specific information.";
-    continuation.append(kicker, title, copy);
-    root.append(continuation);
-  }
-
-  function mount(root) {
-    const adopted = adoptNativeStoryboard(root);
-    if (!adopted) return;
-    const { viewport, cards, live } = adopted;
-    if (!viewport || cards.length < 1) return;
-    const storyNav = root.querySelector(":scope > .lr-story-nav");
-    const { tabs, buttons } = createTabs(root, viewport, cards);
-    ensureContinuation(root);
+    const { tabs, buttons } = createOuterTabs(root, viewport, cards);
 
     const state = {
       index: clamp(Number(root.dataset.lrcInitial || 0) || 0, 0, cards.length - 1),
       inspecting: false,
+      layers: cards.map(() => 0),
       pointerId: null,
       startX: 0,
       startY: 0,
@@ -216,25 +219,26 @@
 
     function publish(reason) {
       const active = cards[state.index];
+      const layer = LAYERS[state.layers[state.index]]?.[0] || "practical";
       root.dataset.lrcIndex = String(state.index);
-      root.dataset.lrcId = active.dataset.lrcId || String(state.index);
+      root.dataset.lrcId = active.dataset.lrcId;
+      root.dataset.lrcLayer = state.inspecting ? layer : "orbit";
       root.dataset.lrcGestureState = state.dragging ? state.classification : "idle";
-      if (live) live.textContent = `${active.dataset.lrcLabel || `Room ${state.index + 1}`} · ${state.index + 1} of ${cards.length}`;
+      live.textContent = `${active.dataset.lrcLabel} · ${state.index + 1} of ${cards.length}`;
       globalThis.dispatchEvent(new CustomEvent("LAWS_ROOM_CAROUSEL_CHANGED", {
         detail: Object.freeze({
           contract: CONTRACT,
           referenceContract: REFERENCE,
           reason,
+          route,
+          family: routeMap.family,
+          count: cards.length,
           index: state.index,
-          roomId: root.dataset.lrcId,
+          subjectId: active.dataset.lrcId,
           inspecting: state.inspecting,
-          completeNumberedTabRail: true,
-          directNonAdjacentSelection: true,
-          stableOrbitStage: true,
-          boundedInspectionScroll: true,
-          directionOnlyGesture: true,
-          oneGestureOneStep: true,
-          visibleDirectionalControls: false,
+          internalLayer: state.inspecting ? layer : null,
+          explicitInventory: true,
+          internalStateIndependent: true,
           bottomStoryNavigationPreserved: Boolean(storyNav),
           sourceCompletenessClaimed: false,
           scientificValidationClaimed: false,
@@ -261,13 +265,16 @@
         card.setAttribute("aria-current", active ? "true" : "false");
         card.setAttribute("aria-hidden", active ? "false" : "true");
         if ("inert" in card) card.inert = !active;
-        const summary = card.querySelector(":scope > [data-lrc-summary]");
-        const close = card.querySelector(":scope > [data-lrc-return]");
-        if (summary) summary.hidden = inspecting;
-        if (close) close.hidden = !inspecting;
-        setSourceVisible(card, inspecting);
+        card.querySelector(":scope > [data-lrc-summary]").hidden = inspecting;
+        card.querySelector(":scope > [data-lrc-inspection]").hidden = !inspecting;
+        const activeLayer = state.layers[index];
+        card.querySelectorAll("[data-lrc-inner-tab]").forEach((button, layerIndex) => {
+          const selected = layerIndex === activeLayer;
+          button.setAttribute("aria-selected", String(selected));
+          button.tabIndex = selected ? 0 : -1;
+        });
+        card.querySelectorAll("[data-lrc-inner-panel]").forEach((panel, layerIndex) => panel.hidden = layerIndex !== activeLayer);
       });
-
       buttons.forEach((button, index) => {
         const active = index === state.index;
         button.setAttribute("aria-selected", String(active));
@@ -290,6 +297,7 @@
 
     function openInspection(reason = "inspection-open") {
       if (state.inspecting) return;
+      state.layers[state.index] = 0;
       state.inspecting = true;
       root.dataset.lrcInspecting = "true";
       document.documentElement.dataset.lrcInspectionOpen = "true";
@@ -304,23 +312,42 @@
       if (focus) buttons[state.index]?.focus({ preventScroll: true });
     }
 
+    function selectLayer(cardIndex, next, reason = "inner-tab-select", focus = false) {
+      if (!state.inspecting || cardIndex !== state.index) return;
+      state.layers[cardIndex] = wrap(next, LAYERS.length);
+      render(reason);
+      if (focus) cards[cardIndex].querySelectorAll("[data-lrc-inner-tab]")[state.layers[cardIndex]]?.focus({ preventScroll: true });
+    }
+
     tabs.addEventListener("click", event => {
       const button = event.target.closest("[data-lrc-tab]");
-      if (!button) return;
-      select(Number(button.dataset.lrcTabIndex), "tab-direct-select");
+      if (button) select(Number(button.dataset.lrcTabIndex), "outer-tab-direct-select");
     });
-
     tabs.addEventListener("keydown", event => {
       if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
       event.preventDefault();
-      if (event.key === "Home") select(0, "tab-home", true);
-      else if (event.key === "End") select(cards.length - 1, "tab-end", true);
-      else select(state.index + (event.key === "ArrowRight" ? 1 : -1), "tab-arrow", true);
+      if (event.key === "Home") select(0, "outer-tab-home", true);
+      else if (event.key === "End") select(cards.length - 1, "outer-tab-end", true);
+      else select(state.index + (event.key === "ArrowRight" ? 1 : -1), "outer-tab-arrow", true);
     });
 
     root.addEventListener("click", event => {
-      if (event.target.closest("[data-lrc-inspect]")) openInspection();
-      else if (event.target.closest("[data-lrc-return]")) closeInspection();
+      if (event.target.closest("[data-lrc-inspect]")) return openInspection();
+      if (event.target.closest("[data-lrc-return]")) return closeInspection();
+      const inner = event.target.closest("[data-lrc-inner-tab]");
+      if (inner) {
+        event.stopPropagation();
+        selectLayer(state.index, Number(inner.dataset.lrcLayerIndex));
+      }
+    });
+    root.addEventListener("keydown", event => {
+      const inner = event.target.closest("[data-lrc-inner-tab]");
+      if (!inner || !["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const current = Number(inner.dataset.lrcLayerIndex);
+      const next = event.key === "Home" ? 0 : event.key === "End" ? LAYERS.length - 1 : current + (event.key === "ArrowRight" ? 1 : -1);
+      selectLayer(state.index, next, "inner-tab-keyboard", true);
     });
 
     viewport.addEventListener("keydown", event => {
@@ -346,7 +373,7 @@
     });
 
     viewport.addEventListener("pointerdown", event => {
-      if (state.inspecting || event.target.closest("a,button,input,textarea,select,summary") || (event.pointerType === "mouse" && event.button !== 0)) return;
+      if (state.inspecting || event.target.closest("a,button,input,textarea,select,summary,[data-lrc-inner-tabs]") || (event.pointerType === "mouse" && event.button !== 0)) return;
       state.pointerId = event.pointerId;
       state.startX = event.clientX;
       state.startY = event.clientY;
@@ -357,14 +384,11 @@
       viewport.dataset.dragging = "true";
       viewport.setPointerCapture?.(event.pointerId);
     });
-
     viewport.addEventListener("pointermove", event => {
       if (!state.dragging || event.pointerId !== state.pointerId) return;
       const totalX = event.clientX - state.startX;
       const totalY = event.clientY - state.startY;
-      if (state.classification === "none" && Math.max(Math.abs(totalX), Math.abs(totalY)) >= CLASSIFY_PX) {
-        state.classification = Math.abs(totalX) >= Math.abs(totalY) * AXIS_RATIO ? "horizontal" : "vertical";
-      }
+      if (state.classification === "none" && Math.max(Math.abs(totalX), Math.abs(totalY)) >= CLASSIFY_PX) state.classification = Math.abs(totalX) >= Math.abs(totalY) * AXIS_RATIO ? "horizontal" : "vertical";
       if (state.classification === "horizontal") {
         state.travel = Math.abs(totalX);
         state.direction = totalX < 0 ? 1 : -1;
@@ -383,27 +407,25 @@
       state.classification = "none";
       state.travel = 0;
       state.direction = 0;
-      if (!direction) {
-        render(cancelled ? "pointer-cancel-noop" : "pointer-unclassified-noop");
-        return;
-      }
-      select(state.index + direction, "pointer-one-step");
+      if (direction) select(state.index + direction, "pointer-one-step");
+      else render(cancelled ? "pointer-cancel-noop" : "pointer-unclassified-noop");
     }
-
     viewport.addEventListener("pointerup", event => release(event, false));
     viewport.addEventListener("pointercancel", event => release(event, true));
-    document.addEventListener("keydown", event => {
-      if (event.key === "Escape" && state.inspecting) closeInspection();
-    });
 
     root.querySelectorAll("[data-lrc-controls],[data-lrc-prev],[data-lrc-next]").forEach(node => node.remove());
     root.dataset.lrcMounted = "true";
     root.dataset.lrcContract = CONTRACT;
     root.dataset.lrcReferenceContract = REFERENCE;
     root.dataset.lrcTabCount = String(cards.length);
-    root.dataset.lrcStoryNavigation = storyNav ? "bottom" : "not-declared";
     render("init");
   }
 
-  document.querySelectorAll("[data-laws-room-carousel]").forEach(mount);
+  fetch(mapUrl, { credentials: "same-origin" })
+    .then(response => {
+      if (!response.ok) throw new Error(`route-card-map:${response.status}`);
+      return response.json();
+    })
+    .then(map => document.querySelectorAll("[data-laws-room-carousel]").forEach(root => mount(root, map)))
+    .catch(error => document.documentElement.dataset.lrcMapFailure = error?.message || "route-card-map-unavailable");
 })();

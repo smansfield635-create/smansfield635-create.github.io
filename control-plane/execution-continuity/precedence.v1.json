@@ -1,0 +1,16 @@
+{
+  "schema": "REPOSITORY_EXECUTION_POLICY_PRECEDENCE_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "precedence": [
+    "AI_ENTRYPOINT.json#/agentExecutionSurface",
+    ".github/ai-router/execution-capability-gate.v1.json",
+    ".github/ai-router/shared-procedures.v1.json"
+  ],
+  "rules": [
+    "A_SHARED_PROCEDURE_MAY_NOT_AUTHORIZE_A_BACKEND_PROHIBITED_BY_AI_ENTRYPOINT",
+    "GITHUB_ACTIONS_FALLBACK_IS_RETIRED_FOR_AI_AGENT_EXECUTION",
+    "EXECUTABLE_HOOK_ASSIGNMENT_REQUIRES_EXECUTION_CAPABILITY_READY",
+    "FAIL_CLOSED_WHEN_REPOSITORY_DEPENDENCIES_OR_NATIVE_EXECUTOR_ARE_UNAVAILABLE"
+  ],
+  "authorityCreated": false
+}

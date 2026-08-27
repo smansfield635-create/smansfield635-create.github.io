@@ -32,6 +32,11 @@ jobs:
         with:
           ref: ${{ github.event.repository.default_branch }}
           fetch-depth: 0
+          filter: blob:none
+          sparse-checkout: |
+            tools/ai-room-transport
+            .github/ai-toolset-transport
+          sparse-checkout-cone-mode: true
           persist-credentials: false
 
       - name: Set up Node 22
@@ -150,6 +155,8 @@ jobs:
               `toolId = ${receipt.toolId ?? 'UNKNOWN'}`,
               `exactToolingHead = ${receipt.exactToolingHead ?? 'UNKNOWN'}`,
               `selectedBackend = ${receipt.selectedBackend ?? 'UNKNOWN'}`,
+              `toolingMaterializationMode = ${receipt.toolingMaterializationMode ?? 'UNKNOWN'}`,
+              `outputStreamingMode = ${receipt.outputStreamingMode ?? 'UNKNOWN'}`,
               `errorCode = ${receipt.errorCode ?? 'NONE'}`,
               `workflowRun = ${context.runId}`,
               `artifactName = ai-room-command-execution-receipt-${context.runId}-${process.env.GITHUB_RUN_ATTEMPT}`,

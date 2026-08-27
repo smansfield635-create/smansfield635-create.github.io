@@ -488,20 +488,20 @@
     "27fb1701d5a3773b61f078bbce912bb70269795b56953031ae87f9f9b275e456": {
       "authorityProvenance": {
         "authorityIdentity": {
-          "governingHead": "539c324f0c7de395bd42747dba550a85360a66be",
-          "lockGeneration": 1756,
+          "governingHead": "bbd35117ee158c2688825e6807b58ee0b84e5b49",
+          "lockGeneration": 1759,
           "lockScope": "LAWS:BACK_PAGE_CONTEXTUAL_DELIVERY:V1",
-          "operationId": "LAWS_SEMANTIC_CELL_ENRICHMENT_AND_VISIBLE_DELTA_READING_20260827_002",
-          "procedureLocatorDigest": "4bed525d7d26e7ef88736ece22fbf463aa2b40da581171a7448147791b247bac",
-          "requestDigest": "34e460e030bbd3e8a0bca672f6e51d463e719c2794c6187070657256cfdff269",
+          "operationId": "LAWS_SEMANTIC_CELL_ENRICHMENT_AND_VISIBLE_DELTA_READING_20260827_003",
+          "procedureLocatorDigest": "e8a86c2adbb729270754d13aa16938c73fcd8594c174c6d0a377028ee0b3e535",
+          "requestDigest": "bd36b648934b8ddc755a83b1f48c53167e6ef7f13aceba1e217c4d971ecee04c",
           "scopeHash": "27fb1701d5a3773b61f078bbce912bb70269795b56953031ae87f9f9b275e456"
         },
-        "bindingDigest": "d66651206dfc8e0225314f1adcd15f0b0b64da4c1f4a104d3946bae249f0a2be",
+        "bindingDigest": "c4b2daac8ae20b539939c17410c543e169fed1c4b4a0d0dba2d9fd3226e74510",
         "invocation": {
           "commentAuthorAssociation": "OWNER",
           "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "37e737375b555aa7981c122757c1e2a3eb2f99c4c03feaf8184548343fea5d6c",
-          "commentId": 5435141096,
+          "commentBodySha256": "6ca1e60018570e2f2b3a4ca1f82f63ac7892c4efd9cd37118ea9912e558472c7",
+          "commentId": 5435628335,
           "eventAction": "created",
           "eventName": "issue_comment",
           "issueNumber": 2170,
@@ -510,35 +510,36 @@
           "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
           "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
           "workflowRunAttempt": 1,
-          "workflowRunId": 33045350951,
-          "workflowSha": "539c324f0c7de395bd42747dba550a85360a66be"
+          "workflowRunId": 33048936022,
+          "workflowSha": "bbd35117ee158c2688825e6807b58ee0b84e5b49"
         },
-        "lineageAnchorCommitSha": "f35e9ab49bacd43f61883e2bdf019fc222850869",
+        "lineageAnchorCommitSha": "22675beee8ed674ccf10793a6c763c3bbe89a757",
         "origin": "CANONICAL_SUCCESSOR",
         "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
       },
-      "governingHead": "539c324f0c7de395bd42747dba550a85360a66be",
-      "lockGeneration": 1756,
+      "governingHead": "bbd35117ee158c2688825e6807b58ee0b84e5b49",
+      "lockGeneration": 1759,
       "lockScope": "LAWS:BACK_PAGE_CONTEXTUAL_DELIVERY:V1",
-      "operationId": "LAWS_SEMANTIC_CELL_ENRICHMENT_AND_VISIBLE_DELTA_READING_20260827_002",
+      "operationId": "LAWS_SEMANTIC_CELL_ENRICHMENT_AND_VISIBLE_DELTA_READING_20260827_003",
       "predecessor": {
         "authorityInherited": false,
         "exactHeadRevalidationRequired": true,
-        "governingHead": "bb8b57eaf8c2b89a0ac1f75140654b6a2cf74122",
-        "lockGeneration": 1755,
+        "governingHead": "539c324f0c7de395bd42747dba550a85360a66be",
+        "lockGeneration": 1756,
         "lockScope": "LAWS:BACK_PAGE_CONTEXTUAL_DELIVERY:V1",
-        "operationId": "LAWS_SEMANTIC_CELL_ENRICHMENT_AND_VISIBLE_DELTA_READING_20260827_001",
+        "operationId": "LAWS_SEMANTIC_CELL_ENRICHMENT_AND_VISIBLE_DELTA_READING_20260827_002",
         "preservedEvidenceRefs": [
-          "issue-comment://2170/5434913022",
-          "issue-comment://2150/5435114531"
+          "issue-comment://2170/5435144219",
+          "issue-comment://2170/5435319553",
+          "pull-request://2173"
         ],
         "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
         "terminalDisposition": "SUPERSEDED",
-        "transitionId": "LAWS_SEMANTIC_CELL_ENRICHMENT_GEN1755_TO_CURRENT_MAIN_20260827_001"
+        "transitionId": "LAWS_SEMANTIC_CELL_ENRICHMENT_GEN1756_TO_CURRENT_MAIN_20260827_002"
       },
-      "procedureLocatorDigest": "4bed525d7d26e7ef88736ece22fbf463aa2b40da581171a7448147791b247bac",
+      "procedureLocatorDigest": "e8a86c2adbb729270754d13aa16938c73fcd8594c174c6d0a377028ee0b3e535",
       "released": false,
-      "requestDigest": "34e460e030bbd3e8a0bca672f6e51d463e719c2794c6187070657256cfdff269",
+      "requestDigest": "bd36b648934b8ddc755a83b1f48c53167e6ef7f13aceba1e217c4d971ecee04c",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "27fb1701d5a3773b61f078bbce912bb70269795b56953031ae87f9f9b275e456",
       "state": "ADMITTED_LOCKED"
@@ -4245,7 +4246,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1758,
+  "lockGeneration": 1759,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -28811,6 +28812,81 @@
       "scopeHash": "a7692e96cee6f206ae21cc5fd395ab1b71b68c30d7eeb27252f3b66b84bd766e",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "539c324f0c7de395bd42747dba550a85360a66be",
+          "lockGeneration": 1756,
+          "lockScope": "LAWS:BACK_PAGE_CONTEXTUAL_DELIVERY:V1",
+          "operationId": "LAWS_SEMANTIC_CELL_ENRICHMENT_AND_VISIBLE_DELTA_READING_20260827_002",
+          "procedureLocatorDigest": "4bed525d7d26e7ef88736ece22fbf463aa2b40da581171a7448147791b247bac",
+          "requestDigest": "34e460e030bbd3e8a0bca672f6e51d463e719c2794c6187070657256cfdff269",
+          "scopeHash": "27fb1701d5a3773b61f078bbce912bb70269795b56953031ae87f9f9b275e456"
+        },
+        "bindingDigest": "d66651206dfc8e0225314f1adcd15f0b0b64da4c1f4a104d3946bae249f0a2be",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "37e737375b555aa7981c122757c1e2a3eb2f99c4c03feaf8184548343fea5d6c",
+          "commentId": 5435141096,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2170,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33045350951,
+          "workflowSha": "539c324f0c7de395bd42747dba550a85360a66be"
+        },
+        "lineageAnchorCommitSha": "f35e9ab49bacd43f61883e2bdf019fc222850869",
+        "origin": "CANONICAL_SUCCESSOR",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "539c324f0c7de395bd42747dba550a85360a66be",
+      "lockGeneration": 1756,
+      "lockScope": "LAWS:BACK_PAGE_CONTEXTUAL_DELIVERY:V1",
+      "operationId": "LAWS_SEMANTIC_CELL_ENRICHMENT_AND_VISIBLE_DELTA_READING_20260827_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "bb8b57eaf8c2b89a0ac1f75140654b6a2cf74122",
+        "lockGeneration": 1755,
+        "lockScope": "LAWS:BACK_PAGE_CONTEXTUAL_DELIVERY:V1",
+        "operationId": "LAWS_SEMANTIC_CELL_ENRICHMENT_AND_VISIBLE_DELTA_READING_20260827_001",
+        "preservedEvidenceRefs": [
+          "issue-comment://2170/5434913022",
+          "issue-comment://2150/5435114531"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "LAWS_SEMANTIC_CELL_ENRICHMENT_GEN1755_TO_CURRENT_MAIN_20260827_001"
+      },
+      "procedureLocatorDigest": "4bed525d7d26e7ef88736ece22fbf463aa2b40da581171a7448147791b247bac",
+      "released": true,
+      "requestDigest": "34e460e030bbd3e8a0bca672f6e51d463e719c2794c6187070657256cfdff269",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "27fb1701d5a3773b61f078bbce912bb70269795b56953031ae87f9f9b275e456",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue-comment://2170/5435144219",
+          "issue-comment://2170/5435319553",
+          "pull-request://2173"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "bbd35117ee158c2688825e6807b58ee0b84e5b49",
+        "successorLockGeneration": 1759,
+        "successorLockScope": "LAWS:BACK_PAGE_CONTEXTUAL_DELIVERY:V1",
+        "successorOperationId": "LAWS_SEMANTIC_CELL_ENRICHMENT_AND_VISIBLE_DELTA_READING_20260827_003",
+        "transitionId": "LAWS_SEMANTIC_CELL_ENRICHMENT_GEN1756_TO_CURRENT_MAIN_20260827_002"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

@@ -6,16 +6,6 @@ import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
-const require = createRequire(import.meta.url);
-let chromium;
-try {
-  ({ chromium } = require("playwright"));
-} catch {
-  const runtimeModules = process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES;
-  if (!runtimeModules) throw new Error("Playwright is required for browser qualification");
-  ({ chromium } = require(path.join(runtimeModules, "playwright")));
-}
-
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "../..");
 const manifest = JSON.parse(fs.readFileSync(path.join(here, "route-card-map.v2.json"), "utf8"));
@@ -58,6 +48,16 @@ for (const route of routes) {
 if (staticOnly) {
   console.log(JSON.stringify({ result: "PASS", mode: "static", routes: routes.length }));
   process.exit(0);
+}
+
+const require = createRequire(import.meta.url);
+let chromium;
+try {
+  ({ chromium } = require("playwright"));
+} catch {
+  const runtimeModules = process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES;
+  if (!runtimeModules) throw new Error("Playwright is required for browser qualification");
+  ({ chromium } = require(path.join(runtimeModules, "playwright")));
 }
 
 const browser = await chromium.launch({ headless: true });

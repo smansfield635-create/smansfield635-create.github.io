@@ -92,6 +92,19 @@
       "closureRequirements": ["COMPILER_ADVERSARIAL_SELF_TEST_PASS", "EXISTING_ATOMIC_SUCCESSOR_REGRESSION_PASS", "REMOTE_COMPILE_AND_EXECUTE_VALIDATION_PASS", "POST_MERGE_PUSH_VALIDATION_PASS", "REAL_GEN1168_POST_RATIFICATION_SUCCESSOR_HANDOFF_PROOF"],
       "relatedOpenGapNotSuperseded": "EXACT_HEAD_NON_IMPACTING_CHANGE_PROOF_CHURN",
       "authorityCreated": false
+    },
+    {
+      "gapId": "OWNER_CONNECTOR_CANONICAL_SUCCESSOR_EXECUTION_CONTINUITY",
+      "status": "OPEN",
+      "discoveredAtHead": "f13a14e1d329616acbab75a1674584b27d3e042c",
+      "coordinationIssue": 2197,
+      "summary": "Owner-authenticated canonical intake already has an Actions-independent GitHub connector transport, but moving-head successor continuity lacked the equivalent owner connector execution surface. This repair delegates to the existing successorLocal semantics, adds SHA-guarded owner successor provenance and lineage acceptance, and remains open until a real post-merge Laws Gen1763 successor transition proves the installed path end to end.",
+      "interfaceKeys": ["OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1", "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1", "REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1", "LEDGER_BLOB_SHA_COMPARE_AND_SWAP", "LOCK_REF_SHA_COMPARE_AND_SWAP"],
+      "pathScopes": ["AI_ENTRYPOINT.json", "tools/operation-intake/repository-operation-lock-lineage.v2.mjs", ".github/ai-router/operation-lifecycle/owner-connector-successor-contract.v1.json", ".github/ai-router/operation-lifecycle/owner-connector-canonical-successor.v1.mjs", ".github/ai-router/operation-lifecycle/owner-connector-successor-self-test.v1.mjs"],
+      "evidenceRefs": ["PR_2189_OWNER_CONNECTOR_CANONICAL_INTAKE", "PR_1240_TRANSPORT_ONLY_SUCCESSOR_PRECEDENT", "ISSUE_2197", "GENERATION_1766_ADMITTED_LOCKED"],
+      "closureRequirements": ["OWNER_CONNECTOR_SUCCESSOR_SELF_TEST_PASS", "EXISTING_SUCCESSOR_LOCAL_REGRESSION_PASS", "OWNER_SUCCESSOR_LINEAGE_ACCEPTANCE_PASS", "EXACT_CANDIDATE_ROUTER_PASS", "POST_MERGE_REAL_LAWS_GEN1763_SUCCESSOR_PROOF", "NO_PACKET_COMPILER_GAP_CLOSURE"],
+      "relatedOpenGapNotSuperseded": "POST_RATIFICATION_STRICT_SUCCESSOR_PACKET_RECONSTRUCTION",
+      "authorityCreated": false
     }
   ]
 }

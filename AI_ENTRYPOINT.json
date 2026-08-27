@@ -113,6 +113,25 @@
       "exactHeadRevalidationRequired": true,
       "oneLedgerCompareAndSwapRequired": true,
       "command": "GITHUB_TOKEN=<token> node .github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs --transition <TRANSITION.json> --request <SUCCESSOR_REQUEST.json> --procedure <SUCCESSOR_PROCEDURE.json> --repository smansfield635-create/smansfield635-create.github.io --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 --output <SUCCESSOR_RECEIPT.json>",
+      "ownerConnectorSuccessorTransport": {
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_CAPABILITY_v1",
+        "status": "ACTIVE_FAIL_CLOSED",
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1",
+        "contract": ".github/ai-router/operation-lifecycle/owner-connector-successor-contract.v1.json",
+        "planner": ".github/ai-router/operation-lifecycle/owner-connector-canonical-successor.v1.mjs",
+        "selfTest": ".github/ai-router/operation-lifecycle/owner-connector-successor-self-test.v1.mjs",
+        "sourceMarker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+        "canonicalSemantics": ".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs#successorLocal",
+        "exactCurrentMainRequired": true,
+        "predecessorProvenanceRequired": true,
+        "ledgerBlobCompareAndSwapRequired": true,
+        "lockRefCompareAndSwapRequired": true,
+        "oneLedgerMutationRequired": true,
+        "authorityInherited": false,
+        "actionsAgentExecutionRequired": false,
+        "planIsReceipt": false,
+        "successResult": "SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED"
+      },
       "remoteInvocationMarker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
       "remoteInvocationWorkflow": ".github/workflows/remote-operation-successor-v1.yml",
       "remoteInvocationSchema": "REMOTE_OPERATION_SUCCESSOR_INVOCATION_REQUEST_v1",
@@ -240,6 +259,7 @@
     "FAIL_CLOSED_ON_GENUINE_AMBIGUITY_OR_CONTRADICTORY_EVIDENCE",
     "PUBLIC_METADATA_GRANTS_NO_PRIVATE_AUTHORITY",
     "TRANSPORT_DOES_NOT_DEFINE_ADMISSION_LOCK_OR_CLOSURE_SEMANTICS",
+    "OWNER_CONNECTOR_SUCCESSOR_MUST_REUSE_CANONICAL_SUCCESSOR_LOCAL_AND_SHA_GUARDED_SINGLE_CAS",
     "DISPLAY_CONTINUITY_CONSTITUTION_REQUIRED_FOR_APPLICABLE_CONSTRUCTION"
   ]
 }

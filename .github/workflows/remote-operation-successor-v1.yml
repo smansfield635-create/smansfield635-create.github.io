@@ -1,6 +1,8 @@
 name: Remote Operation Successor v1
 
 on:
+  issue_comment:
+    types: [created]
   pull_request:
     paths:
       - '.github/workflows/remote-operation-successor-v1.yml'

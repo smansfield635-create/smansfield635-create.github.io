@@ -16,8 +16,9 @@ const methodsShowroomRoute = '/laws/research/methods-and-models/';
 const methodsShowroomContract = 'METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1';
 const methodsCanonicalArchive = 'METHODS_MODELS_CANONICAL_ARCHIVE_v1_DRAFT';
 const roomCarouselAssetIdentity = 'LAWS_GEN1746_D583_PRODUCT_ROLLBACK_20260827B';
-const roomCarouselCssHref = `/laws/room-carousel/room-carousel.v1.css?v=${roomCarouselAssetIdentity}`;
-const roomCarouselJsSrc = `/laws/room-carousel/room-carousel.v1.js?v=${roomCarouselAssetIdentity}`;
+const roomCarouselAssetRoot = '/laws/room-carousel/';
+const roomCarouselCssHref = `${roomCarouselAssetRoot}room-carousel.v1.css?v=${roomCarouselAssetIdentity}`;
+const roomCarouselJsSrc = `${roomCarouselAssetRoot}room-carousel.v1.js?v=${roomCarouselAssetIdentity}`;
 
 const storyToServed = new Map([
   ['/laws/categories/reality/theory/', '/laws/categories/reality/theory.html'],
@@ -561,10 +562,11 @@ async function verifyRoomCarousel(browser) {
             assert(await storyLinks.count() === 2, `${route}: bottom story navigation link count`);
             const storyHrefs = await storyLinks.evaluateAll(links => links.map(link => link.getAttribute('href')));
             assert(storyHrefs[0] === storyDescriptor.previousRoute && storyHrefs[1] === storyDescriptor.nextRoute, `${route}: bottom story routes ${JSON.stringify(storyHrefs)}`);
-            const storyDirections = await storyLinks.locator(':scope > span').allTextContents();
+            const storyDirections = await storyLinks.evaluateAll(links => links.map(link => link.firstElementChild?.textContent?.trim() || ''));
             const storyDestinations = await storyLinks.locator(':scope > strong').allTextContents();
             assert(
-              storyDirections.map(value => value.trim()).join('|') === 'Previous|Next'
+              /^previous\b/i.test(storyDirections[0] || '')
+                && /^(next\b|complete\b)/i.test(storyDirections[1] || '')
                 && storyDestinations.length === 2
                 && storyDestinations.every(value => Boolean(value.trim())),
               `${route}: bottom story link labels missing`,

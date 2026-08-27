@@ -21,17 +21,20 @@ import { resolveToolset } from './toolset-resolver.v1.mjs';
 import { selectBackend } from './backend-selector.v1.mjs';
 
 function run(command, args, options = {}) {
+  const visible = options.visible === true;
   const result = cp.spawnSync(command, args, {
     cwd: options.cwd,
     env: options.env,
-    encoding: 'utf8',
+    encoding: visible ? undefined : 'utf8',
+    stdio: visible ? 'inherit' : undefined,
     maxBuffer: 64 * 1024 * 1024
   });
   return {
     status: result.status ?? 1,
-    stdout: result.stdout ?? '',
-    stderr: result.stderr ?? '',
-    error: result.error ? result.error.message : null
+    stdout: visible ? '' : (result.stdout ?? ''),
+    stderr: visible ? '' : (result.stderr ?? ''),
+    error: result.error ? result.error.message : null,
+    visible
   };
 }
 
@@ -88,6 +91,36 @@ function validateChangedPaths(descriptor, paths) {
   }
 }
 
+function materializeToolingRoot(root, descriptor, worktreeParent) {
+  const toolRoot = path.join(worktreeParent, 'tooling');
+  const materialization = descriptor.toolingMaterialization ?? null;
+  if (materialization?.mode !== 'BOUNDED_SPARSE_INDEX') {
+    git(root, ['worktree', 'add', '--detach', toolRoot, descriptor.exactToolingHead]);
+    return { toolRoot, mode: 'LEGACY_FULL_WORKTREE', cleanup: () => git(root, ['worktree', 'remove', '--force', toolRoot], true) };
+  }
+
+  const sparsePaths = Array.isArray(materialization.sparsePaths) ? materialization.sparsePaths.map(value => assertRepositoryPath(value, 'TOOLING_SPARSE_PATH_INVALID')) : [];
+  if (sparsePaths.length === 0) fail('TOOLING_SPARSE_PATHS_REQUIRED');
+  const entryLimitExclusive = Number(materialization.sparseIndexEntryLimitExclusive ?? 5000);
+  if (!Number.isInteger(entryLimitExclusive) || entryLimitExclusive < 2) fail('TOOLING_SPARSE_ENTRY_LIMIT_INVALID');
+  const origin = git(root, ['config', '--get', 'remote.origin.url']).stdout.trim();
+  if (!origin) fail('TOOLING_ORIGIN_URL_UNAVAILABLE');
+
+  fs.mkdirSync(toolRoot, { recursive: true });
+  git(toolRoot, ['init', '.']);
+  git(toolRoot, ['remote', 'add', 'origin', origin]);
+  const fetched = run('git', ['-c', 'protocol.version=2', 'fetch', '--no-tags', '--depth=1', '--filter=blob:none', 'origin', descriptor.exactToolingHead], { cwd: toolRoot, env: process.env });
+  if (fetched.status !== 0 || fetched.error) fail('EXACT_TOOLING_HEAD_SPARSE_FETCH_FAILED', fetched.stderr || fetched.error);
+  git(toolRoot, ['sparse-checkout', 'init', '--cone', '--sparse-index']);
+  git(toolRoot, ['sparse-checkout', 'set', ...sparsePaths]);
+  git(toolRoot, ['checkout', '--detach', 'FETCH_HEAD']);
+  if (git(toolRoot, ['config', '--bool', 'index.sparse']).stdout.trim() !== 'true') fail('TOOLING_SPARSE_INDEX_NOT_ACTIVE');
+  const entries = git(toolRoot, ['ls-files', '--sparse']).stdout.split(/\r?\n/).filter(Boolean).length;
+  if (entries >= entryLimitExclusive) fail('TOOLING_SPARSE_INDEX_BOUND_EXCEEDED', `${entries}:${entryLimitExclusive}`);
+  console.log(`AI_TOOLING_PHASE BOUNDED_SPARSE_TOOLING_READY entries=${entries}`);
+  return { toolRoot, mode: 'BOUNDED_SPARSE_INDEX', cleanup: () => fs.rmSync(toolRoot, { recursive: true, force: true }) };
+}
+
 function failClosedReceipt(request, error, selectedBackend = null) {
   const descriptorId = request?.descriptorId ?? 'UNRESOLVED_DESCRIPTOR';
   const operationId = request?.operationId ?? 'UNRESOLVED_OPERATION';
@@ -117,7 +150,7 @@ function failClosedReceipt(request, error, selectedBackend = null) {
 
 export function dispatchLoaded({ request, registry, admissionReceipt, admissionReceiptIdentity = null, routerReceipt, root, allowCandidate = false }) {
   let selection = null;
-  let toolRoot = null;
+  let cleanupTooling = null;
   try {
     const resolution = resolveToolset({ request, registry, admissionReceipt, admissionReceiptIdentity, routerReceipt, allowCandidate });
     selection = selectBackend({ resolutionReceipt: resolution, capabilities: request.availableCapabilities });
@@ -125,14 +158,18 @@ export function dispatchLoaded({ request, registry, admissionReceipt, admissionR
     if (selection.selectedBackend !== 'GITHUB_ACTIONS_CLEAN_EXECUTION' && selection.selectedBackend !== 'LOCAL_CLEAN_GIT') fail('SELECTED_BACKEND_NOT_EXECUTABLE', selection.selectedBackend);
     ensureToolingHead(root, descriptor.exactToolingHead);
     const worktreeParent = fs.mkdtempSync(path.join(os.tmpdir(), 'ai-room-tool-'));
-    toolRoot = path.join(worktreeParent, 'tooling');
-    git(root, ['worktree', 'add', '--detach', toolRoot, descriptor.exactToolingHead]);
+    const tooling = materializeToolingRoot(root, descriptor, worktreeParent);
+    const toolRoot = tooling.toolRoot;
+    cleanupTooling = tooling.cleanup;
     const actualHead = git(toolRoot, ['rev-parse', 'HEAD^{commit}']).stdout.trim();
     if (actualHead !== descriptor.exactToolingHead) fail('EXACT_TOOLING_HEAD_MISMATCH', `${descriptor.exactToolingHead}:${actualHead}`);
     if (changedPaths(toolRoot).length !== 0) fail('TOOLING_WORKTREE_NOT_CLEAN_BEFORE_EXECUTION');
     const payloadReceiptPath = path.join(worktreeParent, 'command-payload-receipt.json');
     const fixed = buildFixedCommand(descriptor, resolution.validatedInputs, payloadReceiptPath);
-    const execution = run(fixed.executable, fixed.args, { cwd: toolRoot, env: safeEnvironment() });
+    const streamOutput = descriptor.commandSpecification?.streamOutput === true;
+    if (streamOutput) console.log('AI_TOOLING_PHASE REGISTERED_COMMAND_START');
+    const execution = run(fixed.executable, fixed.args, { cwd: toolRoot, env: safeEnvironment(), visible: streamOutput });
+    if (streamOutput) console.log(`AI_TOOLING_PHASE REGISTERED_COMMAND_END status=${execution.status}`);
     const afterPaths = changedPaths(toolRoot);
     validateChangedPaths(descriptor, afterPaths);
     const outputDigests = {};
@@ -160,6 +197,7 @@ export function dispatchLoaded({ request, registry, admissionReceipt, admissionR
       toolId: descriptor.toolId,
       exactToolingHead: descriptor.exactToolingHead,
       selectedBackend: selection.selectedBackend,
+      toolingMaterializationMode: tooling.mode,
       commandDigest: fixed.digest,
       inputDigest: hashObject(resolution.validatedInputs),
       outputDigests,
@@ -168,8 +206,9 @@ export function dispatchLoaded({ request, registry, admissionReceipt, admissionR
       exitStatus: execution.status,
       executionDisposition: passed ? 'COMMAND_EXECUTED_AND_PASSED' : 'COMMAND_EXECUTED_AND_FAILED',
       prohibitedSideEffectsObserved: false,
-      stdoutSha256: sha256(Buffer.from(execution.stdout, 'utf8')),
-      stderrSha256: sha256(Buffer.from(execution.stderr, 'utf8')),
+      outputStreamingMode: streamOutput ? 'INHERITED_LIVE' : 'CAPTURED',
+      stdoutSha256: streamOutput ? null : sha256(Buffer.from(execution.stdout, 'utf8')),
+      stderrSha256: streamOutput ? null : sha256(Buffer.from(execution.stderr, 'utf8')),
       workflowRunId: process.env.GITHUB_RUN_ID ?? null,
       workflowJobId: process.env.GITHUB_JOB ?? null,
       descriptorDigest: resolution.descriptorDigest,
@@ -178,7 +217,7 @@ export function dispatchLoaded({ request, registry, admissionReceipt, admissionR
   } catch (error) {
     return failClosedReceipt(request, error, selection?.selectedBackend ?? null);
   } finally {
-    if (toolRoot) git(root, ['worktree', 'remove', '--force', toolRoot], true);
+    try { cleanupTooling?.(); } catch {}
   }
 }
 

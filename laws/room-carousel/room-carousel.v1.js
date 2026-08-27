@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "LAWS_LAYERED_INFORMATION_GRID_CAROUSEL_v3";
-  const REFERENCE = "LAWS_METHODS_CONTEXTUAL_INSPECTION_WITH_RESTORED_OUTER_ORBIT_AND_INTERNAL_STORY_RAIL";
+  const CONTRACT = "LAWS_SEMANTIC_CELL_ENRICHMENT_CAROUSEL_v4";
+  const REFERENCE = "LAWS_GEN1751_LAYERED_GRID_WITH_SHARED_PREMISE_STORY_FOCUS_LENS_FRAME_AND_AUTHORED_DELTA";
   const CLASSIFY_PX = 8;
   const COMMIT_PX = 24;
   const AXIS_RATIO = 1.12;
@@ -69,12 +69,15 @@
       return parts.join("") || "<p>This layer is intentionally compact on this subject.</p>";
     };
     const stories = Array.isArray(definition.stories) ? definition.stories.filter(story => {
-      if (!story || !story.id || !story.label || !story.readings) return false;
-      return LAYERS.every(([kind]) => typeof story.readings[kind] === "string" && story.readings[kind].trim());
+      if (!story || !story.id || !story.label || !story.focus || !story.deltas) return false;
+      return LAYERS.every(([kind]) => typeof story.deltas[kind] === "string" && story.deltas[kind].trim());
     }) : [];
+    const lensFrames = definition.lensFrames || {};
     return {
       label: definition.label || definition.id,
       summary: definition.summary || sourceSummary || definition.practical || context.relation || "Open this subject for its complete contextual reading.",
+      sharedPremise: definition.sharedPremise || definition.summary || sourceSummary || definition.practical || context.relation || "This card declares its stable premise before the selected story and lens add detail.",
+      lensFrames: Object.fromEntries(LAYERS.map(([kind]) => [kind, lensFrames[kind] || textOf(source?.querySelector(`[data-tab-kind="${kind}"]`)) || definition[kind] || context[kind] || "This lens remains explicitly bounded by the source material available on this route."])),
       practical: sourcePanel(["platform", "practical"]) || manualLayer("practical", definition.practical),
       engineering: sourcePanel(["engineering"]) || manualLayer("engineering", definition.engineering),
       empirical: sourcePanel(["evidence", "empirical"]) || manualLayer("empirical", definition.empirical),
@@ -116,15 +119,19 @@
     inspection.innerHTML = `
       <button type="button" data-lrc-return>↶ Return to Orbit</button>
       <header class="lrc-inspection-head"><p>${escapeHtml(family)} · contextual inspection</p><h2>${escapeHtml(material.label)}</h2><span>${escapeHtml(material.summary)}</span></header>
-      <div data-lrc-information-grid>
+      <div data-lrc-information-grid data-lrc-content-model="shared-premise-story-focus-lens-frame-authored-delta">
         <div data-lrc-inner-tabs role="tablist" aria-label="${escapeHtml(material.label)} reading lenses">
           ${LAYERS.map(([kind, label], layerIndex) => `<button type="button" role="tab" data-lrc-inner-tab="${kind}" data-lrc-layer-index="${layerIndex}">${label}</button>`).join("")}
         </div>
+        <section data-lrc-shared-premise aria-label="Shared premise">
+          <strong>Shared premise</strong>
+          <p>${escapeHtml(material.sharedPremise)}</p>
+        </section>
         <div data-lrc-story-rail role="tablist" aria-orientation="vertical" aria-label="${escapeHtml(material.label)} story layers">
           ${stories.map((story, storyIndex) => `<button type="button" role="tab" data-lrc-story-tab="${escapeHtml(story.id)}" data-lrc-story-index="${storyIndex}"><span>${String(storyIndex + 1).padStart(2, "0")}</span><strong>${escapeHtml(story.label)}</strong></button>`).join("")}
         </div>
         <div data-lrc-grid-cells>
-          ${stories.map((story, storyIndex) => LAYERS.map(([kind, label], layerIndex) => `<article id="${escapeHtml(card.id)}-${escapeHtml(story.id)}-${kind}" role="tabpanel" data-lrc-grid-cell data-lrc-story-index="${storyIndex}" data-lrc-layer-index="${layerIndex}" data-lrc-story-id="${escapeHtml(story.id)}" data-lrc-lens="${kind}"><p class="lrc-layer-label">${escapeHtml(story.label)} · ${label}</p><p>${escapeHtml(story.readings[kind])}</p>${kind === "empirical" && story.boundary ? `<aside data-lrc-claim-boundary><strong>Claim boundary</strong><p>${escapeHtml(story.boundary)}</p></aside>` : ""}</article>`).join("")).join("")}
+          ${stories.map((story, storyIndex) => LAYERS.map(([kind, label], layerIndex) => `<article id="${escapeHtml(card.id)}-${escapeHtml(story.id)}-${kind}" role="tabpanel" data-lrc-grid-cell data-lrc-story-index="${storyIndex}" data-lrc-layer-index="${layerIndex}" data-lrc-story-id="${escapeHtml(story.id)}" data-lrc-lens="${kind}"><p class="lrc-layer-label">${escapeHtml(story.label)} · ${label}</p><section data-lrc-story-focus aria-label="Story focus"><strong>Story focus</strong><p>${escapeHtml(story.focus)}</p></section><section data-lrc-lens-frame aria-label="${label} lens frame"><strong>${label} lens frame</strong><p>${escapeHtml(material.lensFrames[kind])}</p></section><section data-lrc-selection-delta aria-label="What this selection adds"><strong>What this selection adds</strong><p>${escapeHtml(story.deltas[kind])}</p></section>${kind === "empirical" && story.boundary ? `<aside data-lrc-claim-boundary><strong>Claim boundary</strong><p>${escapeHtml(story.boundary)}</p></aside>` : ""}</article>`).join("")).join("")}
         </div>
       </div>
       ${material.href ? `<p class="lrc-deep-route"><a href="${escapeHtml(material.href)}">Continue to ${escapeHtml(material.label)}</a></p>` : ""}`;
@@ -174,6 +181,7 @@
     root.dataset.lrcOuterCards = mappedIds.join(" ");
     root.dataset.lrcInternalTabs = "practical engineering empirical";
     root.dataset.lrcCustody = "collapsed-subordinate";
+    root.dataset.lrcContentModel = "shared-premise-story-focus-lens-frame-authored-delta";
     root.dataset.lrcGreaterNavigation = root.querySelector(":scope > .lr-story-nav") ? "bottom" : "not-declared";
 
     const storyNav = root.querySelector(":scope > .lr-story-nav");
@@ -256,6 +264,9 @@
           internalLayer: state.inspecting ? layer : null,
           internalStoryId: state.inspecting && story ? story.id : null,
           layeredInformationGrid: true,
+          semanticCellEnrichment: true,
+          authoredSelectionDelta: true,
+          colorOnlyDifferenceSignaling: false,
           explicitInventory: true,
           internalStateIndependent: true,
           bottomStoryNavigationPreserved: Boolean(storyNav),

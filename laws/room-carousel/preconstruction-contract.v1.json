@@ -1,10 +1,10 @@
 {
-  "schema": "LAWS_LAYERED_INFORMATION_GRID_PRECONSTRUCTION_CONTRACT_v3",
-  "operationId": "LAWS_LAYERED_INFORMATION_GRID_RECONSTRUCTION_20260827_001",
-  "lockGeneration": 1751,
+  "schema": "LAWS_SEMANTIC_CELL_ENRICHMENT_PRECONSTRUCTION_CONTRACT_v4",
+  "operationId": "LAWS_SEMANTIC_CELL_ENRICHMENT_AND_VISIBLE_DELTA_READING_20260827_002",
+  "lockGeneration": 1756,
   "lockScope": "LAWS:BACK_PAGE_CONTEXTUAL_DELIVERY:V1",
-  "governingHead": "b405c91b89df10ee9e51b784d7bd2686c17df6ac",
-  "assetIdentity": "LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827",
+  "governingHead": "539c324f0c7de395bd42747dba550a85360a66be",
+  "assetIdentity": "LAWS_SEMANTIC_CELL_ENRICHMENT_GEN1755_20260827",
   "reference": {
     "route": "/laws/research/methods-and-models/",
     "role": "CONTEXTUAL_DELIVERY_ARCHITECTURE_REFERENCE_ONLY",
@@ -19,7 +19,8 @@
     },
     "methodsAndModelsTree": {
       "path": "laws/research/methods-and-models/",
-      "mutationAllowed": false
+      "mutationAllowed": false,
+      "tree": "101b195cbde339505d3b3c76fd2368d7dfd341e1"
     }
   },
   "frozenInteractionGrammar": [
@@ -54,13 +55,39 @@
     "noJsRole": "STRUCTURED_SEMANTIC_GRID",
     "claimBoundaryRole": "VISIBLE_INSIDE_RELEVANT_EMPIRICAL_LAYER"
   },
+  "semanticCellEnrichment": {
+    "cellCount": 1653,
+    "sharedPremise": "ONE_PER_CARD_RENDERED_ONCE",
+    "storyFocus": "ONE_DISTINCT_FOCUS_PER_VERTICAL_STORY",
+    "lensFrames": ["practical", "engineering", "empirical"],
+    "selectionDelta": "ONE_AUTHORED_NONEMPTY_ADDITION_PER_STORY_BY_LENS_CELL",
+    "sharedPremiseMayAppearInsideSelectionDelta": false,
+    "exactDuplicateDeltaAllowedInsideCard": false,
+    "genericPlaceholderAllowed": false,
+    "sparseEmpiricalTreatment": "EXPLICIT_REQUIRED_RECORD_OR_EVIDENCE_BOUNDARY",
+    "visualTreatment": {
+      "practical": "WARM_GOLD",
+      "engineering": "COOL_BLUE",
+      "empirical": "EVIDENCE_GREEN",
+      "storyFocus": "PAGE_FAMILY_ACCENT",
+      "sharedPremise": "NEUTRAL",
+      "colorOnlyInformation": false,
+      "persistentLabelAndBorderRequired": true
+    }
+  },
   "representatives": {
     "cycles": ["recurrence", "rhythm", "feedback", "renewal", "engineering-addendum"],
     "handoffs": ["transfer-object", "state-context", "interface", "acceptance", "receipt-continuity", "failure-boundary"],
     "reality": ["reality", "theory", "evidence", "measure", "limits", "audit"],
-    "representativeHookReceipt": 5434488841,
-    "renderedCases": 6,
-    "phoneTabletDisposition": "PASS"
+    "findingsAndBoundaries": ["supported"],
+    "startupHookReceipt": 5434918086,
+    "representativeHookReceipt": 5435073428,
+    "successorTransitionReceipt": 5435144219,
+    "successorRouterReceipt": 5435153627,
+    "hook6CheckReceipt": 5435191933,
+    "hook6DispositionReceipt": 5435193730,
+    "renderedCasesRequired": 12,
+    "phoneTabletDesktopDisposition": "PASS_SUCCESSOR_EXACT_HEAD_12_OF_12"
   },
   "realityCorrection": {
     "existingDeepRoutes": [
@@ -83,6 +110,17 @@
     "nestedHorizontalScrollingAllowed": false,
     "reducedMotionRetainsSemantics": true,
     "noJsSourceAndCustodyReachable": true
+  },
+  "qualification": {
+    "staticRoutes": 29,
+    "cards": 134,
+    "cells": 1653,
+    "distinctAuthoredDeltas": 1627,
+    "authoredDeltasUnder15Words": 3,
+    "exactSubjectHead": "539c324f0c7de395bd42747dba550a85360a66be",
+    "representativeRenderedCases": "PASS_SUCCESSOR_EXACT_HEAD_12_OF_12",
+    "fullRenderedCases": "PASS_SUCCESSOR_EXACT_HEAD_87_OF_87",
+    "representativeHookReceipt": 5435073428
   },
   "authorityBoundary": {
     "scientificValidationClaimed": false,

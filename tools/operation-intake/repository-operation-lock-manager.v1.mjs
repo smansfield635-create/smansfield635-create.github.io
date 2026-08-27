@@ -43,6 +43,15 @@ export const LEGACY_EXACT_ISSUANCE_RECOVERIES = [stable({
   workflowRunId: 32931494268
 })];
 
+export const EXACT_LOCK_REF_LINEAGE_RECOVERIES = [stable({
+  commitSha: 'e24fd158777c8df4000d6ae6c36f1ab1073c3222',
+  parentSha: 'e26e26ad24c106c51fc4135d58f0aa43cfd5f4f7',
+  authorLogin: 'smansfield635-create',
+  committerLogin: 'smansfield635-create',
+  message: 'Acquire operation lock 1767: AUDRALIA_WORK_EXECUTOR_PORTABLE_BOOTSTRAP_20260827_001',
+  ledgerBlobSha: '35cd3351cee5884e707c5f5c3d5074c7d46af868'
+})];
+
 function validateActiveLock(lock, key) {
   const source = 'active-operation-ledger';
   if (!lock || typeof lock !== 'object' || Array.isArray(lock)) throw err('INVALID_ACTIVE_LOCK', key, source);
@@ -176,13 +185,25 @@ async function verifyLegacyAuthority({repository,token,lock}){
 }
 
 function canonicalMutationMessage(message){return typeof message==='string'&&(/^Acquire operation lock \d+: .+/.test(message)||/^Supersede operation \d+ with successor \d+: .+/.test(message)||/^Close operation lock \d+: .+ (PASS_CLOSED|FAIL_CLOSED|REJECTED_CLOSED|WITHDRAWN|SUPERSEDED|VOIDED|EXPIRED)$/.test(message))}
+async function verifyExactLockRefLineageRecovery({repository,token,summary,recovery}){
+  if(summary?.sha!==recovery.commitSha)return false;
+  const detail=await req(`${base(repository)}/commits/${recovery.commitSha}`,{headers:H(token)});
+  const files=Array.isArray(detail?.files)?detail.files:[],parents=Array.isArray(detail?.parents)?detail.parents:[];
+  if(detail?.sha!==recovery.commitSha||detail?.author?.login!==recovery.authorLogin||detail?.committer?.login!==recovery.committerLogin||detail?.commit?.message!==recovery.message||detail?.commit?.verification?.verified!==false||parents.length!==1||parents[0]?.sha!==recovery.parentSha||files.length!==1||files[0]?.filename!==LEDGER_PATH||files[0]?.sha!==recovery.ledgerBlobSha)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.commits','authority-lineage',recovery.commitSha);
+  return true;
+}
 export async function verifyCanonicalLockRefLineage({repository,token,branchHead,anchorCommitSha=LEGACY_AUTHORITY_CUTOVER_COMMIT}) {
   const head=dig(branchHead,40,'branchHead','authority-lineage'),anchor=dig(anchorCommitSha,40,'anchorCommitSha','authority-lineage');
   if(head===anchor)return stable({result:'CANONICAL_LOCK_REF_LINEAGE_VERIFIED',anchorCommitSha:anchor,branchHead:head,commitCount:0});
   const u=base(repository);let page=1,total=null,seen=[];
   while(page<=64){const c=await req(`${u}/compare/${anchor}...${head}?per_page=100&page=${page}`,{headers:H(token)});if(!['ahead','identical'].includes(c?.status))throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.status','authority-lineage',String(c?.status));if(page===1){total=Number(c?.total_commits);if(!Number.isInteger(total)||total<0)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.total_commits','authority-lineage');const files=Array.isArray(c?.files)?c.files:[];if(files.some(f=>f?.filename!==LEDGER_PATH))throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.files','authority-lineage','NON_LEDGER_PATH_MUTATION')}const commits=Array.isArray(c?.commits)?c.commits:[];seen.push(...commits);if(seen.length>=total||commits.length<100)break;page++}
   if(seen.length!==total)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.commits','authority-lineage',`expected=${total}:observed=${seen.length}`);
-  for(const c of seen)if(c?.author?.login!=='github-actions[bot]'||c?.commit?.verification?.verified!==true||!canonicalMutationMessage(c?.commit?.message))throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.commits','authority-lineage',String(c?.sha||'UNKNOWN_COMMIT'));
+  for(const c of seen){
+    if(c?.author?.login==='github-actions[bot]'&&c?.commit?.verification?.verified===true&&canonicalMutationMessage(c?.commit?.message))continue;
+    const recovery=EXACT_LOCK_REF_LINEAGE_RECOVERIES.find(value=>value.commitSha===c?.sha);
+    if(recovery&&await verifyExactLockRefLineageRecovery({repository,token,summary:c,recovery}))continue;
+    throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.commits','authority-lineage',String(c?.sha||'UNKNOWN_COMMIT'));
+  }
   return stable({result:'CANONICAL_LOCK_REF_LINEAGE_VERIFIED',anchorCommitSha:anchor,branchHead:head,commitCount:seen.length});
 }
 

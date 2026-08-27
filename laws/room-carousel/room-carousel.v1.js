@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "LAWS_CONTEXTUAL_DELIVERY_CAROUSEL_v2";
-  const REFERENCE = "LAWS_METHODS_CONTEXTUAL_INSPECTION_WITH_RESTORED_OUTER_ORBIT";
+  const CONTRACT = "LAWS_LAYERED_INFORMATION_GRID_CAROUSEL_v3";
+  const REFERENCE = "LAWS_METHODS_CONTEXTUAL_INSPECTION_WITH_RESTORED_OUTER_ORBIT_AND_INTERNAL_STORY_RAIL";
   const CLASSIFY_PX = 8;
   const COMMIT_PX = 24;
   const AXIS_RATIO = 1.12;
@@ -68,6 +68,10 @@
       if (kind === "empirical" && context.noStudy && !/no current admitted study/i.test(value || "")) parts.push(`<p class="lrc-study-boundary">${escapeHtml(context.noStudy)}</p>`);
       return parts.join("") || "<p>This layer is intentionally compact on this subject.</p>";
     };
+    const stories = Array.isArray(definition.stories) ? definition.stories.filter(story => {
+      if (!story || !story.id || !story.label || !story.readings) return false;
+      return LAYERS.every(([kind]) => typeof story.readings[kind] === "string" && story.readings[kind].trim());
+    }) : [];
     return {
       label: definition.label || definition.id,
       summary: definition.summary || sourceSummary || definition.practical || context.relation || "Open this subject for its complete contextual reading.",
@@ -75,7 +79,8 @@
       engineering: sourcePanel(["engineering"]) || manualLayer("engineering", definition.engineering),
       empirical: sourcePanel(["evidence", "empirical"]) || manualLayer("empirical", definition.empirical),
       boundary: definition.boundary || context.boundary,
-      href: definition.href || ""
+      href: definition.href || "",
+      stories
     };
   }
 
@@ -104,14 +109,23 @@
     const inspection = document.createElement("div");
     inspection.dataset.lrcInspection = "";
     inspection.hidden = true;
+    const stories = material.stories;
+    if (stories.length < 4 || stories.length > 5) {
+      card.dataset.lrcGridFailure = "story-count";
+    }
     inspection.innerHTML = `
       <button type="button" data-lrc-return>↶ Return to Orbit</button>
       <header class="lrc-inspection-head"><p>${escapeHtml(family)} · contextual inspection</p><h2>${escapeHtml(material.label)}</h2><span>${escapeHtml(material.summary)}</span></header>
-      <div data-lrc-inner-tabs role="tablist" aria-label="${escapeHtml(material.label)} contextual readings">
-        ${LAYERS.map(([kind, label], layerIndex) => `<button type="button" role="tab" data-lrc-inner-tab="${kind}" data-lrc-layer-index="${layerIndex}" aria-controls="${escapeHtml(card.id)}-${kind}">${label}</button>`).join("")}
-      </div>
-      <div data-lrc-inner-panels>
-        ${LAYERS.map(([kind, label]) => `<article id="${escapeHtml(card.id)}-${kind}" role="tabpanel" data-lrc-inner-panel="${kind}"><p class="lrc-layer-label">${label}</p>${material[kind]}${kind === "empirical" && material.boundary ? `<aside data-lrc-claim-boundary><strong>Claim boundary</strong><p>${escapeHtml(material.boundary)}</p></aside>` : ""}</article>`).join("")}
+      <div data-lrc-information-grid>
+        <div data-lrc-inner-tabs role="tablist" aria-label="${escapeHtml(material.label)} reading lenses">
+          ${LAYERS.map(([kind, label], layerIndex) => `<button type="button" role="tab" data-lrc-inner-tab="${kind}" data-lrc-layer-index="${layerIndex}">${label}</button>`).join("")}
+        </div>
+        <div data-lrc-story-rail role="tablist" aria-orientation="vertical" aria-label="${escapeHtml(material.label)} story layers">
+          ${stories.map((story, storyIndex) => `<button type="button" role="tab" data-lrc-story-tab="${escapeHtml(story.id)}" data-lrc-story-index="${storyIndex}"><span>${String(storyIndex + 1).padStart(2, "0")}</span><strong>${escapeHtml(story.label)}</strong></button>`).join("")}
+        </div>
+        <div data-lrc-grid-cells>
+          ${stories.map((story, storyIndex) => LAYERS.map(([kind, label], layerIndex) => `<article id="${escapeHtml(card.id)}-${escapeHtml(story.id)}-${kind}" role="tabpanel" data-lrc-grid-cell data-lrc-story-index="${storyIndex}" data-lrc-layer-index="${layerIndex}" data-lrc-story-id="${escapeHtml(story.id)}" data-lrc-lens="${kind}"><p class="lrc-layer-label">${escapeHtml(story.label)} · ${label}</p><p>${escapeHtml(story.readings[kind])}</p>${kind === "empirical" && story.boundary ? `<aside data-lrc-claim-boundary><strong>Claim boundary</strong><p>${escapeHtml(story.boundary)}</p></aside>` : ""}</article>`).join("")).join("")}
+        </div>
       </div>
       ${material.href ? `<p class="lrc-deep-route"><a href="${escapeHtml(material.href)}">Continue to ${escapeHtml(material.label)}</a></p>` : ""}`;
     card.append(summary, inspection);
@@ -200,6 +214,7 @@
       index: clamp(Number(root.dataset.lrcInitial || 0) || 0, 0, cards.length - 1),
       inspecting: false,
       layers: cards.map(() => 0),
+      stories: cards.map(() => 0),
       pointerId: null,
       startX: 0,
       startY: 0,
@@ -220,9 +235,11 @@
     function publish(reason) {
       const active = cards[state.index];
       const layer = LAYERS[state.layers[state.index]]?.[0] || "practical";
+      const story = routeMap.cards[state.index]?.stories?.[state.stories[state.index]] || null;
       root.dataset.lrcIndex = String(state.index);
       root.dataset.lrcId = active.dataset.lrcId;
       root.dataset.lrcLayer = state.inspecting ? layer : "orbit";
+      root.dataset.lrcStory = state.inspecting && story ? story.id : "orbit";
       root.dataset.lrcGestureState = state.dragging ? state.classification : "idle";
       live.textContent = `${active.dataset.lrcLabel} · ${state.index + 1} of ${cards.length}`;
       globalThis.dispatchEvent(new CustomEvent("LAWS_ROOM_CAROUSEL_CHANGED", {
@@ -237,6 +254,8 @@
           subjectId: active.dataset.lrcId,
           inspecting: state.inspecting,
           internalLayer: state.inspecting ? layer : null,
+          internalStoryId: state.inspecting && story ? story.id : null,
+          layeredInformationGrid: true,
           explicitInventory: true,
           internalStateIndependent: true,
           bottomStoryNavigationPreserved: Boolean(storyNav),
@@ -268,12 +287,20 @@
         card.querySelector(":scope > [data-lrc-summary]").hidden = inspecting;
         card.querySelector(":scope > [data-lrc-inspection]").hidden = !inspecting;
         const activeLayer = state.layers[index];
+        const activeStory = state.stories[index];
         card.querySelectorAll("[data-lrc-inner-tab]").forEach((button, layerIndex) => {
           const selected = layerIndex === activeLayer;
           button.setAttribute("aria-selected", String(selected));
           button.tabIndex = selected ? 0 : -1;
         });
-        card.querySelectorAll("[data-lrc-inner-panel]").forEach((panel, layerIndex) => panel.hidden = layerIndex !== activeLayer);
+        card.querySelectorAll("[data-lrc-story-tab]").forEach((button, storyIndex) => {
+          const selected = storyIndex === activeStory;
+          button.setAttribute("aria-selected", String(selected));
+          button.tabIndex = selected ? 0 : -1;
+        });
+        card.querySelectorAll("[data-lrc-grid-cell]").forEach(panel => {
+          panel.hidden = Number(panel.dataset.lrcStoryIndex) !== activeStory || Number(panel.dataset.lrcLayerIndex) !== activeLayer;
+        });
       });
       buttons.forEach((button, index) => {
         const active = index === state.index;
@@ -298,6 +325,7 @@
     function openInspection(reason = "inspection-open") {
       if (state.inspecting) return;
       state.layers[state.index] = 0;
+      state.stories[state.index] = 0;
       state.inspecting = true;
       root.dataset.lrcInspecting = "true";
       document.documentElement.dataset.lrcInspectionOpen = "true";
@@ -319,6 +347,15 @@
       if (focus) cards[cardIndex].querySelectorAll("[data-lrc-inner-tab]")[state.layers[cardIndex]]?.focus({ preventScroll: true });
     }
 
+    function selectStory(cardIndex, next, reason = "story-tab-select", focus = false) {
+      if (!state.inspecting || cardIndex !== state.index) return;
+      const storyCount = routeMap.cards[cardIndex]?.stories?.length || 0;
+      if (!storyCount) return;
+      state.stories[cardIndex] = wrap(next, storyCount);
+      render(reason);
+      if (focus) cards[cardIndex].querySelectorAll("[data-lrc-story-tab]")[state.stories[cardIndex]]?.focus({ preventScroll: true });
+    }
+
     tabs.addEventListener("click", event => {
       const button = event.target.closest("[data-lrc-tab]");
       if (button) select(Number(button.dataset.lrcTabIndex), "outer-tab-direct-select");
@@ -338,16 +375,32 @@
       if (inner) {
         event.stopPropagation();
         selectLayer(state.index, Number(inner.dataset.lrcLayerIndex));
+        return;
+      }
+      const story = event.target.closest("[data-lrc-story-tab]");
+      if (story) {
+        event.stopPropagation();
+        selectStory(state.index, Number(story.dataset.lrcStoryIndex));
       }
     });
     root.addEventListener("keydown", event => {
       const inner = event.target.closest("[data-lrc-inner-tab]");
-      if (!inner || !["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+      if (inner && ["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+        event.preventDefault();
+        event.stopPropagation();
+        const current = Number(inner.dataset.lrcLayerIndex);
+        const next = event.key === "Home" ? 0 : event.key === "End" ? LAYERS.length - 1 : current + (event.key === "ArrowRight" ? 1 : -1);
+        selectLayer(state.index, next, "inner-tab-keyboard", true);
+        return;
+      }
+      const story = event.target.closest("[data-lrc-story-tab]");
+      if (!story || !["ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) return;
       event.preventDefault();
       event.stopPropagation();
-      const current = Number(inner.dataset.lrcLayerIndex);
-      const next = event.key === "Home" ? 0 : event.key === "End" ? LAYERS.length - 1 : current + (event.key === "ArrowRight" ? 1 : -1);
-      selectLayer(state.index, next, "inner-tab-keyboard", true);
+      const storyCount = routeMap.cards[state.index]?.stories?.length || 0;
+      const current = Number(story.dataset.lrcStoryIndex);
+      const next = event.key === "Home" ? 0 : event.key === "End" ? storyCount - 1 : current + (event.key === "ArrowDown" ? 1 : -1);
+      selectStory(state.index, next, "story-tab-keyboard", true);
     });
 
     viewport.addEventListener("keydown", event => {

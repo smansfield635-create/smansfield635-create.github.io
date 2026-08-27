@@ -13,7 +13,7 @@ const baseUrl = (process.argv.find(arg => arg.startsWith("--base-url=")) || "--b
 const representativesOnly = process.argv.includes("--representatives");
 const staticOnly = process.argv.includes("--static-only");
 const routes = representativesOnly
-  ? ["/laws/categories/flow/cycles/", "/laws/categories/flow/handoffs/"]
+  ? ["/laws/categories/flow/cycles/", "/laws/categories/flow/handoffs/", "/laws/categories/reality/"]
   : Object.keys(manifest.routes);
 const viewports = representativesOnly
   ? [{ name: "phone", width: 390, height: 844 }, { name: "tablet", width: 768, height: 1024 }]
@@ -26,6 +26,7 @@ const screenshotRoutes = new Set([
   "/laws/research/",
   "/laws/test/reverse-audit/"
 ]);
+const greaterNavigationRoutes = new Set();
 
 function routeFile(route) {
   return path.join(root, route.endsWith(".html") ? route.slice(1) : route.slice(1), route.endsWith(".html") ? "" : "index.html");
@@ -35,9 +36,10 @@ function declared(html, name) {
   return html.match(new RegExp(`${name}="([^"]*)"`))?.[1] || "";
 }
 
-assert.equal(manifest.schema, "LAWS_CONTEXTUAL_DELIVERY_ROUTE_CARD_MAP_v2");
+assert.equal(manifest.schema, "LAWS_LAYERED_INFORMATION_GRID_ROUTE_CARD_MAP_v3");
 assert.equal(Object.keys(manifest.routes).length, 29);
 assert.ok(new Set(Object.values(manifest.routes).map(route => route.cards.length)).size > 1, "inventories must not be forced to one count");
+assert.deepEqual(manifest.internalStoryAxis, { minimum: 4, maximum: 5, labels: "PAGE_AND_CARD_SPECIFIC", visibleCellCount: 1 });
 
 for (const route of routes) {
   const file = routeFile(route);
@@ -47,10 +49,26 @@ for (const route of routes) {
   assert.equal(declared(html, "data-lrc-route"), route, `${route}: explicit route declaration`);
   assert.equal(declared(html, "data-lrc-cards"), ids, `${route}: explicit outer inventory`);
   assert.equal(declared(html, "data-lrc-internal-tabs"), "practical engineering empirical", `${route}: explicit inner controls`);
+  assert.equal(declared(html, "data-lrc-story-axis"), "vertical", `${route}: explicit vertical story axis`);
   assert.equal(declared(html, "data-lrc-custody-selector"), "details.lr-audit", `${route}: explicit custody role`);
   assert.equal(declared(html, "data-lrc-greater-navigation-selector"), ".lr-story-nav", `${route}: explicit greater-navigation role`);
-  assert.ok(html.includes("room-carousel.v1.js?v=LAWS_CONTEXTUAL_DELIVERY_GEN1750_20260827"), `${route}: runtime identity`);
-  assert.ok(html.includes("room-carousel.v1.css?v=LAWS_CONTEXTUAL_DELIVERY_GEN1750_20260827"), `${route}: stylesheet identity`);
+  assert.ok(html.includes("room-carousel.v1.js?v=LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827"), `${route}: runtime identity`);
+  assert.ok(html.includes("room-carousel.v1.css?v=LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827"), `${route}: stylesheet identity`);
+  assert.ok(html.includes("data-lrc-static"), `${route}: semantic no-script grid`);
+  assert.ok(html.includes("Source custody"), `${route}: compact custody`);
+  assert.ok(!html.includes("lr-legacy-source"), `${route}: raw legacy presentation mirror retired`);
+  if (html.includes('class="lr-story-nav"')) greaterNavigationRoutes.add(route);
+  for (const card of manifest.routes[route].cards) {
+    assert.ok(Array.isArray(card.stories) && card.stories.length >= 4 && card.stories.length <= 5, `${route}/${card.id}: four or five story layers`);
+    assert.equal(new Set(card.stories.map(story => story.id)).size, card.stories.length, `${route}/${card.id}: unique story ids`);
+    assert.equal(new Set(card.stories.map(story => story.label)).size, card.stories.length, `${route}/${card.id}: distinct story labels`);
+    for (const story of card.stories) {
+      assert.ok(!/\bboundary \d+\b/i.test(story.label), `${route}/${card.id}/${story.id}: no generated placeholder label`);
+      for (const lens of ["practical", "engineering", "empirical"]) {
+        assert.ok(String(story.readings?.[lens] || "").trim(), `${route}/${card.id}/${story.id}: ${lens} cell populated`);
+      }
+    }
+  }
 }
 
 if (staticOnly) {
@@ -68,7 +86,10 @@ try {
   ({ chromium } = require(path.join(runtimeModules, "playwright")));
 }
 
-const browser = await chromium.launch({ headless: true });
+const browser = await chromium.launch({
+  headless: true,
+  ...(process.env.LAWS_BROWSER_EXECUTABLE ? { executablePath: process.env.LAWS_BROWSER_EXECUTABLE } : {})
+});
 const artifactDir = path.join(root, "artifacts/laws-cp6-final-synchronization");
 fs.mkdirSync(artifactDir, { recursive: true });
 try {
@@ -86,6 +107,7 @@ try {
       assert.equal(await page.locator("[data-lrc-tab]").count(), expected.length, `${route} ${viewport.name}: outer count`);
       assert.deepEqual(await page.locator("[data-lrc-tab-label]").allTextContents(), expected.map(card => card.label), `${route} ${viewport.name}: outer labels`);
       assert.equal(await page.locator("[data-lrc-inner-tabs]:visible").count(), 0, `${route} ${viewport.name}: inner controls hidden in orbit`);
+      assert.equal(await page.locator("[data-lrc-story-rail]:visible").count(), 0, `${route} ${viewport.name}: story controls hidden in orbit`);
       assert.equal(await page.locator("details.lr-audit[open]").count(), 0, `${route} ${viewport.name}: custody collapsed`);
 
       const targetIndex = Math.min(1, expected.length - 1);
@@ -104,11 +126,23 @@ try {
       const activeId = await page.locator(rootSelector).getAttribute("data-lrc-id");
       await page.locator("[data-lrc-card][data-active='true'] [data-lrc-inspect]").click();
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-layer"), "practical", `${route} ${viewport.name}: practical on open`);
+      assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-story"), expected[targetIndex].stories[0].id, `${route} ${viewport.name}: first story on open`);
       assert.equal(await page.locator("[data-lrc-inner-tabs]:visible").count(), 1, `${route} ${viewport.name}: inner controls visible on open`);
+      assert.equal(await page.locator("[data-lrc-story-rail]:visible").count(), 1, `${route} ${viewport.name}: vertical story controls visible on open`);
+      assert.equal(await page.locator("[data-lrc-card][data-active='true'] [data-lrc-story-tab]").count(), expected[targetIndex].stories.length, `${route} ${viewport.name}: story layer count`);
+      assert.equal(await page.locator("[data-lrc-card][data-active='true'] [data-lrc-grid-cell]:visible").count(), 1, `${route} ${viewport.name}: exactly one grid cell visible`);
+      const secondStory = expected[targetIndex].stories[1].id;
+      await page.locator("[data-lrc-card][data-active='true'] [data-lrc-story-tab]").nth(1).click();
+      assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-story"), secondStory, `${route} ${viewport.name}: vertical story changes`);
+      assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-layer"), "practical", `${route} ${viewport.name}: story change preserves lens`);
+      assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-index"), String(targetIndex), `${route} ${viewport.name}: story change preserves outer index`);
+      assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-id"), activeId, `${route} ${viewport.name}: story change preserves card`);
       await page.locator("[data-lrc-card][data-active='true'] [data-lrc-inner-tab='engineering']").click();
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-layer"), "engineering", `${route} ${viewport.name}: inner layer change`);
+      assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-story"), secondStory, `${route} ${viewport.name}: lens change preserves story`);
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-index"), String(targetIndex), `${route} ${viewport.name}: inner layer preserves outer index`);
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-id"), activeId, `${route} ${viewport.name}: inner layer preserves card`);
+      assert.equal(await page.locator("[data-lrc-card][data-active='true'] [data-lrc-grid-cell]:visible").count(), 1, `${route} ${viewport.name}: one cell remains visible after both-axis changes`);
 
       const geometry = await page.evaluate(() => {
         const returnControl = document.querySelector("[data-lrc-card][data-active='true'] [data-lrc-return]");
@@ -117,12 +151,14 @@ try {
         return {
           viewportOverflow: document.documentElement.scrollWidth - innerWidth,
           innerOverflow: innerTabs.scrollWidth - innerTabs.clientWidth,
+          storyOverflow: document.querySelector("[data-lrc-card][data-active='true'] [data-lrc-story-rail]").scrollWidth - document.querySelector("[data-lrc-card][data-active='true'] [data-lrc-story-rail]").clientWidth,
           returnTop: rect.top,
           returnBottom: rect.bottom
         };
       });
       assert.ok(geometry.viewportOverflow <= 1, `${route} ${viewport.name}: no page horizontal overflow`);
       assert.ok(geometry.innerOverflow <= 1, `${route} ${viewport.name}: no nested horizontal scroll`);
+      assert.ok(geometry.storyOverflow <= 1, `${route} ${viewport.name}: no story-rail horizontal scroll`);
       assert.ok(geometry.returnTop >= -1 && geometry.returnBottom <= viewport.height, `${route} ${viewport.name}: return immediately available`);
       if ((representativesOnly || screenshotRoutes.has(route)) && viewport.name !== "desktop") {
         const name = route.replace(/^\/laws\//, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "");
@@ -132,11 +168,32 @@ try {
       await page.locator("[data-lrc-card][data-active='true'] [data-lrc-return]").click();
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-layer"), "orbit", `${route} ${viewport.name}: return to orbit`);
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-id"), activeId, `${route} ${viewport.name}: return to same card`);
-      const storyLinks = page.locator(":scope > .lr-story-nav a").filter({ visible: true });
+      const recordCardIndex = expected.findIndex(card => card.stories.some(story => story.id === "battery-study-relationship" || story.id === "held-out-battery-record"));
+      if (recordCardIndex >= 0) {
+        const record = expected[recordCardIndex];
+        const recordStoryIndex = record.stories.findIndex(story => story.id === "battery-study-relationship" || story.id === "held-out-battery-record");
+        await page.locator("[data-lrc-tab]").nth(recordCardIndex).click();
+        await page.locator("[data-lrc-card][data-active='true'] [data-lrc-inspect]").click();
+        await page.locator("[data-lrc-card][data-active='true'] [data-lrc-story-tab]").nth(recordStoryIndex).click();
+        await page.locator("[data-lrc-card][data-active='true'] [data-lrc-inner-tab='empirical']").click();
+        const recordText = await page.locator("[data-lrc-card][data-active='true'] [data-lrc-grid-cell]:visible").innerText();
+        assert.match(recordText, /AUROC 0\.9394/, `${route} ${viewport.name}: admitted combined result in layered card`);
+        assert.match(recordText, /AUROC 0\.9704/, `${route} ${viewport.name}: stronger comparator in layered card`);
+        assert.equal(await page.locator("[data-lrc-card][data-active='true'] [data-lrc-grid-cell]:visible").count(), 1, `${route} ${viewport.name}: record remains one visible cell`);
+        if ((route === "/laws/categories/reality/" || route === "/laws/research/applied-investigations/") && viewport.name === "phone") {
+          const recordName = route.replace(/^\/laws\//, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "");
+          await page.screenshot({ path: path.join(artifactDir, `layered-record-${viewport.name}-${recordName}.png`), fullPage: false });
+        }
+        await page.locator("[data-lrc-card][data-active='true'] [data-lrc-return]").click();
+      }
       const storyCount = await page.locator(".lr-story-nav a").count();
-      if (storyCount) {
-        const destination = await page.locator(".lr-story-nav a").first().getAttribute("href");
-        assert.ok(destination?.startsWith("/laws/"), `${route} ${viewport.name}: bottom route navigation`);
+      const expectedStoryCount = greaterNavigationRoutes.has(route) ? 2 : 0;
+      assert.equal(storyCount, expectedStoryCount, `${route} ${viewport.name}: declared greater-navigation count`);
+      const destinations = await page.locator(".lr-story-nav a").evaluateAll(nodes => nodes.map(node => node.getAttribute("href")));
+      assert.ok(destinations.every(destination => destination?.startsWith("/laws/") || destination?.startsWith("/frontier/")), `${route} ${viewport.name}: declared bottom destinations`);
+      if (route === "/laws/categories/reality/") assert.deepEqual(destinations, ["/laws/categories/integrity/", "/laws/categories/structure/"], `${route} ${viewport.name}: Reality continuity destinations`);
+      if (destinations.length) {
+        const destination = destinations[0];
         await Promise.all([
           page.waitForNavigation({ waitUntil: "domcontentloaded" }),
           page.locator(".lr-story-nav a").first().click()
@@ -144,7 +201,7 @@ try {
         assert.equal(new URL(page.url()).pathname, new URL(destination, baseUrl).pathname, `${route} ${viewport.name}: bottom route navigation used`);
       }
       assert.deepEqual(errors, [], `${route} ${viewport.name}: no page errors`);
-      evidence.push({ route, viewport: viewport.name, card: activeId, layer: "engineering", storyNavigation: storyCount > 0 });
+      evidence.push({ route, viewport: viewport.name, card: activeId, story: secondStory, lens: "engineering", storyNavigation: destinations.length > 0 });
       await page.close();
     }
     await context.close();

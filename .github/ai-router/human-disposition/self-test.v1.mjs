@@ -2,7 +2,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { validateIntakeCompleteness } from '../../../tools/operation-intake/repository-operation-intake-gate.v1.mjs';
+import {
+  prepare,
+  validateIntakeCompleteness,
+  RUNTIME_OR_AUTHORITY_OPERATION_CLASS
+} from '../../../tools/operation-intake/repository-operation-intake-gate.v1.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '../../..');
@@ -34,6 +38,8 @@ assert(s.ledger.properties.authorityEffect.const === 'NONE_BY_HUMAN_DECISION_LED
 assert(s.completeness.properties.authorityEffect.const === 'NONE_BY_INTAKE_COMPLETENESS_RECEIPT', 'completeness authority leak');
 assert(s.checkpoint.properties.authorityEffect.const === 'NONE_BY_HUMAN_CHECKPOINT_RECEIPT', 'checkpoint authority leak');
 assert(s.request.properties.intakeCompletenessReceipt, 'operation request lacks intake completeness binding');
+assert(s.request.properties.intakeCompletenessReceipt.properties.humanDispositionManifestId, 'embedded completeness receipt lacks manifest id binding');
+assert(s.request.properties.intakeCompletenessReceipt.properties.humanDispositionManifestDigest, 'embedded completeness receipt lacks manifest digest binding');
 
 const binding = s.entry.humanDispositionPlane;
 assert(binding?.status === 'ACTIVE_FAIL_CLOSED', 'AI Entry human disposition binding not active');
@@ -47,6 +53,8 @@ const base = {
   receiptId: 'ICR-TEST-001',
   result: 'COMPLETE_NO_QUESTIONS_REQUIRED',
   unresolvedMaterialQuestions: [],
+  humanDispositionManifestId: 'HDM-TEST-001',
+  humanDispositionManifestDigest: 'manifest-digest',
   receiptDigest: 'test-digest',
   authorityEffect: 'NONE_BY_INTAKE_COMPLETENESS_RECEIPT'
 };
@@ -61,11 +69,61 @@ expectCode('MATERIAL_UNKNOWN_UNDECLARED', () => validateIntakeCompleteness(wrap(
 expectCode('HUMAN_DISPOSITION_AUTHORITY_LEAK', () => validateIntakeCompleteness(wrap({ ...base, authorityEffect: 'MERGE_AUTHORIZED' })));
 expectCode('COMPLETENESS_RECEIPT_INVALID', () => validateIntakeCompleteness(wrap({ ...base, result: 'UNKNOWN' })));
 
+const HEAD = '1111111111111111111111111111111111111111';
+const makeRequest = () => ({
+  schema: 'REPOSITORY_OPERATION_REQUEST_v1',
+  operationId: 'HDM_COMPAT_TEST_001',
+  projectId: 'TEST_PROJECT',
+  lockScope: 'TEST_PROJECT:HDM_COMPAT',
+  exactGoverningHead: HEAD,
+  subjectIdentity: { subject: 'compatibility' },
+  requestingAuthority: { source: 'test' },
+  executingRole: { role: 'test' },
+  independentVerifier: { mode: 'test' },
+  constructionProcedureLocator: 'HDM_COMPAT_PROCEDURE',
+  requiredInputs: [{ id: 'INPUT_1', resolved: true }],
+  allowedPaths: ['test/path.txt'],
+  prohibitedPaths: ['other/path.txt'],
+  requiredOutputs: ['OUTPUT_1'],
+  exactTestCommand: 'node test.mjs',
+  workflowPath: '.github/workflows/test.yml',
+  artifactPaths: ['/tmp/test.json'],
+  fingerprintDomain: { domain: 'test' },
+  errorPrecedence: ['ERROR_1'],
+  stopConditions: ['STOP_1'],
+  terminalDispositions: ['PASS_CLOSED']
+});
+const makeProcedure = operationClass => ({
+  schema: 'REPOSITORY_CONSTRUCTION_PROCEDURE_v1',
+  procedureId: 'HDM_COMPAT_PROCEDURE',
+  operationClass,
+  exactGoverningHead: HEAD,
+  exactAllowedRepositoryPaths: ['test/path.txt'],
+  exactBranchAndCommitSequence: [{ step: 1, action: 'TEST' }],
+  evaluationToolingHeadBindingRule: 'exact',
+  canonicalInputSchemas: ['REPOSITORY_OPERATION_REQUEST_v1'],
+  canonicalOutputSchemas: ['REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1'],
+  errorCodeAndValidationPrecedence: ['ERROR_1'],
+  exactTestRunnerCommand: 'node test.mjs',
+  independentVerifierDefinition: { distinct: true },
+  workflowAndArtifactPackagingPaths: {
+    workflowPath: '.github/workflows/test.yml',
+    artifactPaths: ['/tmp/test.json']
+  },
+  bridgeOutputFingerprintDomain: { domain: 'test' },
+  priorAttemptInspectionLimits: { maxEquivalentAttempts: 1 }
+});
+
+prepare(makeRequest(), makeProcedure('WORKFLOW_BACKED_TEST'));
+expectCode('HUMAN_DISPOSITION_COMPLETENESS_MISSING_NOT_STARTED', () => prepare(makeRequest(), makeProcedure(RUNTIME_OR_AUTHORITY_OPERATION_CLASS)));
+prepare({ ...makeRequest(), intakeCompletenessReceipt: base }, makeProcedure(RUNTIME_OR_AUTHORITY_OPERATION_CLASS));
+
 const receipt = {
   schema: 'HUMAN_DISPOSITION_MVP_SELF_TEST_RECEIPT_v1',
   result: 'PASS',
   invariant: 'NO_MATERIAL_HUMAN_UNKNOWN_ENTERS_INTAKE_UNDECLARED',
-  assertions: 20,
+  assertions: 25,
+  compatibilityBoundary: 'RUNTIME_OR_AUTHORITY_ONLY',
   authorityEffect: 'NONE',
   testedFiles: Object.values(files)
 };

@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "laws-deploy-08436cae-20260827",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 2153,
+  "requestBranch": "ai-dispatch-request-laws-deploy-08436cae-20260827",
+  "requestCommit": "fccc66030f14fa64693a0a216d35391305986079",
+  "requestCommitParent": "08436cae15fe9eac22470b1b2d50a88098b00721",
+  "currentMainSha": "08436cae15fe9eac22470b1b2d50a88098b00721",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "08436cae15fe9eac22470b1b2d50a88098b00721",
+    "surface_id": "laws"
+  },
+  "bridgeRunId": "33033043677",
+  "dispatchedRunId": 33033051404,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/33033051404",
+  "dispatchedRunHeadSha": "08436cae15fe9eac22470b1b2d50a88098b00721",
+  "dispatchedAt": "2026-08-27T02:21:55.744Z",
+  "resolvedAt": "2026-08-27T02:21:59.609Z"
+}

@@ -1526,6 +1526,49 @@
       "scopeHash": "7140d688e6fadb96d7f4126aeca72ff8bd29708b5e646e5abba9d7c1379bea53",
       "state": "ADMITTED_LOCKED"
     },
+    "7150d2c8864a8183f1af4cc46b67995f059e033ec7d5512f596db2305135b49a": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "86d74f150af7ca46de991fb187aeee0f3fa7239a",
+          "lockGeneration": 1753,
+          "lockScope": "AUDRALIA_WEATHER_POPULATION_SECOND_FAILING_CORPUS",
+          "operationId": "AUDRALIA_WEATHER_POPULATION_SECOND_FAILING_CORPUS_20260827_001",
+          "procedureLocatorDigest": "c4410d6eeb4e4672bb43d083d69ea32f9b7f2863c59610b7010d1283e9af083c",
+          "requestDigest": "6cbe14b5534a43c95f4afb22a725fd605a058407ab120f4552a3aae48638cfbf",
+          "scopeHash": "7150d2c8864a8183f1af4cc46b67995f059e033ec7d5512f596db2305135b49a"
+        },
+        "bindingDigest": "86faecfea7a446e261f7ef37e678fc977200689078e51cf2964d2d39cab50f8c",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "fa03a5e1182c8d3b142c08342d3324586bb3a43e92c1081ef35f7ff394994dcc",
+          "commentId": 5434659365,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2031,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33041707449,
+          "workflowSha": "86d74f150af7ca46de991fb187aeee0f3fa7239a"
+        },
+        "lineageAnchorCommitSha": "bc66d4b40fb49c11b36774bcdd028a84ff93ef5a",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "86d74f150af7ca46de991fb187aeee0f3fa7239a",
+      "lockGeneration": 1753,
+      "lockScope": "AUDRALIA_WEATHER_POPULATION_SECOND_FAILING_CORPUS",
+      "operationId": "AUDRALIA_WEATHER_POPULATION_SECOND_FAILING_CORPUS_20260827_001",
+      "procedureLocatorDigest": "c4410d6eeb4e4672bb43d083d69ea32f9b7f2863c59610b7010d1283e9af083c",
+      "released": false,
+      "requestDigest": "6cbe14b5534a43c95f4afb22a725fd605a058407ab120f4552a3aae48638cfbf",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "7150d2c8864a8183f1af4cc46b67995f059e033ec7d5512f596db2305135b49a",
+      "state": "ADMITTED_LOCKED"
+    },
     "717694845676c377c79911d3ad810c72092bb79532b98add81d2ec1e26ff0c37": {
       "governingHead": "9eb636d33cff36b2344bb721726db7b4e8dcd2bc",
       "lockGeneration": 602,
@@ -4169,7 +4212,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1752,
+  "lockGeneration": 1753,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

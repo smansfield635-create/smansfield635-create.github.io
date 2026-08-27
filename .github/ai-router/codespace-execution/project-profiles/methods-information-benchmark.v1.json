@@ -1,0 +1,20 @@
+{
+  "schema": "THREE_TIER_CODESPACE_PROJECT_EXECUTION_PROFILE_v1",
+  "projectId": "METHODS_INFORMATION_BENCHMARK",
+  "status": "ACTIVE_CONTRACT_CANDIDATE",
+  "substrateId": "THREE_TIER_CODESPACE_EXECUTION_SUBSTRATE_v1",
+  "operationClasses": [
+    "NONMUTATING_BUILDER_VERIFICATION",
+    "FRESH_VERIFIER_REPRODUCTION",
+    "DETERMINISTIC_ARTIFACT_COMPARISON"
+  ],
+  "targetIdentityRule": "EXACT_40_CHARACTER_COMMIT_ONLY",
+  "commandRule": "PROJECT_DECLARED_FIXED_COMMAND_ONLY",
+  "builderFreshVerifierSeparation": "REQUIRED",
+  "outputs": "OUTSIDE_REPOSITORY_OR_IGNORED_UNLESS_SEPARATELY_AUTHORIZED",
+  "productMutationAuthorityCreated": false,
+  "mergeAuthorityCreated": false,
+  "scientificClaimAuthorityCreated": false,
+  "nativeTerminalTransportRequired": false,
+  "failureDisposition": "FAIL_CLOSED"
+}

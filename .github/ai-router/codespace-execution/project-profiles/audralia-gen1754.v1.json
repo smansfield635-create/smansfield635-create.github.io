@@ -1,0 +1,35 @@
+{
+  "schema": "THREE_TIER_CODESPACE_PROJECT_EXECUTION_PROFILE_v1",
+  "projectId": "AUDRALIA",
+  "profileId": "AUDRALIA_GEN1754_EXACT_CANDIDATE_REPRODUCTION_v1",
+  "status": "ACTIVE_ADOPTION_CANDIDATE",
+  "substrateId": "THREE_TIER_CODESPACE_EXECUTION_SUBSTRATE_v1",
+  "operationClasses": [
+    "AUDRALIA_EXACT_CANDIDATE_CAUSAL_RUNTIME_REPRODUCTION"
+  ],
+  "exactTargetHead": "41a63ace8b540f2b3ce7f73b6395f90234c7dc3f",
+  "baseHead": "bb8b57eaf8c2b89a0ac1f75140654b6a2cf74122",
+  "declaredCommand": "node tools/ai-room-transport/audralia-gen1754-reproduction.v1.mjs --candidate-head 41a63ace8b540f2b3ce7f73b6395f90234c7dc3f --base-head bb8b57eaf8c2b89a0ac1f75140654b6a2cf74122 --execution-holder <EXECUTION_HOLDER> --output <OUTSIDE_REPOSITORY>/audralia-gen1754-reproduction-receipt.json",
+  "targetIdentityRule": "EXACT_40_CHARACTER_COMMIT_ONLY",
+  "commandRule": "DECLARED_FIXED_COMMAND_ONLY",
+  "builderFreshVerifierSeparation": "REQUIRED",
+  "requiredRuntime": {
+    "nodeMajor": 22,
+    "browser": "CHROMIUM_OR_GOOGLE_CHROME",
+    "puppeteerCore": "24.15.0",
+    "python3": true,
+    "curl": true,
+    "fullGitHistory": true
+  },
+  "expectedPrimaryDisposition": [
+    "CAUSAL_RUNTIME_PASS",
+    "FIRST_ASSERTION_CAPTURED"
+  ],
+  "productMutationAuthorityCreated": false,
+  "candidateMutationAuthorityCreated": false,
+  "mergeAuthorityCreated": false,
+  "deploymentAuthorityCreated": false,
+  "releaseAuthorityCreated": false,
+  "hook4AuthorityCreated": false,
+  "failureDisposition": "FAIL_CLOSED"
+}

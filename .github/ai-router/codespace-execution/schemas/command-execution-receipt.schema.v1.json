@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "THREE_TIER_CODESPACE_COMMAND_EXECUTION_RECEIPT_SCHEMA_v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "environmentId", "operationId", "exactTargetHead", "declaredCommand", "commandDigest", "exitStatus", "outputDigests", "changedPaths", "result"],
+  "properties": {
+    "schema": {"const": "THREE_TIER_CODESPACE_COMMAND_EXECUTION_RECEIPT_v1"},
+    "environmentId": {"type": "string", "minLength": 1},
+    "operationId": {"type": "string", "minLength": 1},
+    "exactTargetHead": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "declaredCommand": {"type": "string", "minLength": 1},
+    "commandDigest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "exitStatus": {"type": "integer"},
+    "outputDigests": {"type": "object", "additionalProperties": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
+    "changedPaths": {"type": "array", "items": {"type": "string"}},
+    "result": {"enum": ["PASS", "FAIL_CLOSED"]}
+  }
+}

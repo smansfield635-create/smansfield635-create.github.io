@@ -1,4 +1,4 @@
-const POLICY_ID='AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v6';
+const POLICY_ID='AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v7';
 const previousShaderSource=WebGL2RenderingContext.prototype.shaderSource;
 let patched=0;
 let rejected=0;
@@ -115,11 +115,11 @@ vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   // A broad low deck with open-cell breakup. It occupies new longitude rather
   // than scaling any existing cloud system.
   vec2 mq=fap1Local(lat,lon,.383972,2.303835+t*.007);
-  float marineEnvelope=fap1Ellipse(mq,vec2(0.0),vec2(.46,.28),-.08);
+  float marineEnvelope=fap1Ellipse(mq,vec2(0.0),vec2(.68,.42),-.08);
   float marineCellWave=.5+.5*sin(mq.x*34.0+sin(mq.y*22.0+t*.55)*1.35);
   float marineNoise=fbm(radial*24.0+vec3(t*.13,-t*.27,t*.19));
   float marineOpenCells=smoothstep(.38,.73,marineNoise*.62+marineCellWave*.38);
-  float marineDeck=marineEnvelope*fap1Band(h,30.0,49.0)*(.20+.58*marineOpenCells)*.60;
+  float marineDeck=marineEnvelope*fap1Band(h,30.0,49.0)*(.20+.58*marineOpenCells)*.72;
   mass+=marineDeck;
   precip+=marineDeck*.06;
 
@@ -131,7 +131,7 @@ vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   float tradeRows=.5+.5*sin(tradeAxis*56.0+t*.72);
   float tradeCells=fbm(radial*35.0+vec3(-t*.31,t*.16,t*.23));
   float tradeStreet=smoothstep(.68,.90,tradeRows)*smoothstep(.49,.73,tradeCells);
-  float tradeCumulus=tradeEnvelope*fap1Band(h,30.0,57.0)*tradeStreet*.72;
+  float tradeCumulus=tradeEnvelope*fap1Band(h,30.0,57.0)*tradeStreet*.84;
   mass+=tradeCumulus;
   precip+=tradeCumulus*.10;
 
@@ -145,8 +145,8 @@ vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   float commaDrySlot=fap1Ellipse(jq,vec2(.025,-.025),vec2(.105,.070),-.38);
   float commaShape=max(commaHead,max(commaWrap,max(commaTailA,commaTailB)))*(1.0-.78*commaDrySlot);
   float commaBreak=mix(.24,1.0,fap1CloudBreak(radial,t,15.0,.34,.69));
-  float commaMid=commaShape*fap1Band(h,46.0,84.0)*commaBreak*.60;
-  float commaIce=max(commaHead,commaWrap)*fap1Band(h,73.0,104.0)*mix(.22,1.0,fap1CloudBreak(radial,t,20.0,.35,.70))*.38;
+  float commaMid=commaShape*fap1Band(h,46.0,84.0)*commaBreak*.72;
+  float commaIce=max(commaHead,commaWrap)*fap1Band(h,73.0,104.0)*mix(.22,1.0,fap1CloudBreak(radial,t,20.0,.35,.70))*.46;
   mass+=commaMid+commaIce;
   ice+=commaMid*.36+commaIce*.98;
   precip+=commaMid*.28;
@@ -161,8 +161,8 @@ vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   float mcc4=fap1Ellipse(xq,vec2(.055,.115),vec2(.085,.115),-.28);
   float mccCore=max(max(mcc1,mcc2),max(mcc3,mcc4));
   float mccBreak=mix(.46,1.0,fap1CloudBreak(radial,t,25.0,.31,.66));
-  float mccTower=mccCore*fap1Band(h,30.0,105.0)*mccBreak*.90;
-  float mccAnvil=fap1Ellipse(xq,vec2(.025,.075),vec2(.32,.19),-.08)*fap1Band(h,78.0,108.0)*mix(.30,1.0,fap1CloudBreak(radial,t,18.0,.33,.69))*.60;
+  float mccTower=mccCore*fap1Band(h,30.0,105.0)*mccBreak*.96;
+  float mccAnvil=fap1Ellipse(xq,vec2(.025,.075),vec2(.32,.19),-.08)*fap1Band(h,78.0,108.0)*mix(.30,1.0,fap1CloudBreak(radial,t,18.0,.33,.69))*.68;
   mass+=max(mccTower,mccAnvil);
   ice+=mccTower*.50+mccAnvil*.98;
   precip+=mccTower*.84;
@@ -174,8 +174,8 @@ vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   float jetEnvelope=fap1Ellipse(iq,vec2(0.0),vec2(.54,.105),.24);
   float jetRipple=.5+.5*sin(iq.x*33.0+iq.y*10.0+t*.44);
   float jetBreak=fap1CloudBreak(radial,t,21.0,.28,.68);
-  float jetTexture=.18+.42*smoothstep(.42,.76,jetRipple*.48+jetBreak*.52);
-  float cirrusPlume=jetEnvelope*fap1Band(h,81.0,108.0)*jetTexture*.46;
+  float jetTexture=.22+.46*smoothstep(.42,.76,jetRipple*.48+jetBreak*.52);
+  float cirrusPlume=jetEnvelope*fap1Band(h,81.0,108.0)*jetTexture*.58;
   mass+=cirrusPlume;
   ice+=cirrusPlume*.995;
 
@@ -194,11 +194,11 @@ vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   float cirrusWaveB=.5+.5*sin(c6b.x*31.0-c6b.y*7.0-t*.31);
   float cirrusWaveC=.5+.5*sin(c6c.x*25.0+c6c.y*10.0+t*.28);
   float cirrusWaveD=.5+.5*sin(c6d.x*29.0-c6d.y*9.0-t*.34);
-  float cirrusTextureA=.12+.38*smoothstep(.36,.77,cirrusWaveA*.55+cirrusNoise*.45);
-  float cirrusTextureB=.12+.36*smoothstep(.38,.78,cirrusWaveB*.52+cirrusNoise*.48);
-  float cirrusTextureC=.12+.37*smoothstep(.37,.77,cirrusWaveC*.56+cirrusNoise*.44);
-  float cirrusTextureD=.12+.35*smoothstep(.39,.79,cirrusWaveD*.54+cirrusNoise*.46);
-  float cirrusFields=(cirrusEnvA*cirrusTextureA+cirrusEnvB*cirrusTextureB+cirrusEnvC*cirrusTextureC+cirrusEnvD*cirrusTextureD)*fap1Band(h,84.0,108.0)*.50;
+  float cirrusTextureA=.17+.44*smoothstep(.36,.77,cirrusWaveA*.55+cirrusNoise*.45);
+  float cirrusTextureB=.17+.42*smoothstep(.38,.78,cirrusWaveB*.52+cirrusNoise*.48);
+  float cirrusTextureC=.17+.43*smoothstep(.37,.77,cirrusWaveC*.56+cirrusNoise*.44);
+  float cirrusTextureD=.17+.41*smoothstep(.39,.79,cirrusWaveD*.54+cirrusNoise*.46);
+  float cirrusFields=(cirrusEnvA*cirrusTextureA+cirrusEnvB*cirrusTextureB+cirrusEnvC*cirrusTextureC+cirrusEnvD*cirrusTextureD)*fap1Band(h,84.0,108.0)*.68;
   cirrusFields*=1.0-.72*fap1ClearCorridor(lat,lon);
   mass+=cirrusFields;
   ice+=cirrusFields*.997;
@@ -211,8 +211,8 @@ vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   float veilA=fap1Ellipse(s6a,vec2(0.0),vec2(.96,.30),-.12);
   float veilB=fap1Ellipse(s6b,vec2(0.0),vec2(.92,.28),.16);
   float veilC=fap1Ellipse(s6c,vec2(0.0),vec2(.88,.27),-.20);
-  float veilBreak=.18+.45*fap1CloudBreak(radial,t,10.0,.20,.64);
-  float cirrostratus=max(veilA,max(veilB,veilC))*fap1Band(h,76.0,104.0)*veilBreak*.58;
+  float veilBreak=.22+.52*fap1CloudBreak(radial,t,10.0,.20,.64);
+  float cirrostratus=max(veilA,max(veilB,veilC))*fap1Band(h,76.0,104.0)*veilBreak*.72;
   cirrostratus*=1.0-.82*fap1ClearCorridor(lat,lon);
   mass+=cirrostratus;
   ice+=cirrostratus*.992;
@@ -225,12 +225,12 @@ vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   vec2 a6d=fap1Local(lat,lon,-.523599,-2.967060+t*.003);
   float altoEnvA=fap1Ellipse(a6a,vec2(0.0),vec2(.58,.34),.08);
   float altoEnvB=fap1Ellipse(a6b,vec2(0.0),vec2(.62,.36),-.12);
-  float altoEnvC=fap1Ellipse(a6c,vec2(0.0),vec2(.56,.32),.18);
+  float altoEnvC=fap1Ellipse(a6c,vec2(0.0),vec2(.70,.40),.18);
   float altoEnvD=fap1Ellipse(a6d,vec2(0.0),vec2(.60,.35),-.06);
   float altoNoise=fbm(radial*30.0+vec3(t*.21,-t*.16,t*.12));
   float altoRipple=.5+.5*sin(lon*24.0+lat*17.0+t*.45);
   float altoCells=smoothstep(.48,.72,altoNoise*.72+altoRipple*.28);
-  float altocumulus=(altoEnvA+altoEnvB+altoEnvC+altoEnvD)*fap1Band(h,52.0,79.0)*(.12+.64*altoCells)*.48;
+  float altocumulus=(altoEnvA+altoEnvB+altoEnvC+altoEnvD)*fap1Band(h,52.0,79.0)*(.18+.70*altoCells)*.64;
   altocumulus*=1.0-.76*fap1ClearCorridor(lat,lon);
   mass+=altocumulus;
   ice+=altocumulus*.22;
@@ -311,7 +311,9 @@ Object.defineProperty(window,'__AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION__',
     cirrostratusVeilMultiplicity:true,
     altocumulusFieldMultiplicity:true,
     clearAirWindowsPreserved:true,
-    existingCloudSystemsExpanded:false,
+    existingCloudSystemsExpanded:true,
+    secondFailingCorpusRepair:true,
+    orbitalSurvivalBoost:true,
     singlePassRaymarchPreserved:true,
     performanceCeilingsFrozen:true
   }),
@@ -325,7 +327,7 @@ Object.defineProperty(window,'__AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION__',
       'MESOSCALE_CONVECTIVE_COMPLEX',
       'HIGH_CIRRUS_CIRROCUMULUS_JET_PLUME'
     ]),
-    existingSystemsExpanded:false,
+    existingSystemsExpanded:true,
     additionalRenderPasses:0,
     rayMarchCeilingsChanged:false
   }),
@@ -341,6 +343,7 @@ Object.defineProperty(window,'__AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION__',
     altocumulusFieldCount:4,
     totalFieldInstances:11,
     multiplicityRequired:true,
+    orbitalSurvivalBoost:true,
     clearAirWindowsPreserved:true,
     additionalRenderPasses:0,
     rayMarchCeilingsChanged:false

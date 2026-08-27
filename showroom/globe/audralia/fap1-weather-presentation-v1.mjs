@@ -115,7 +115,7 @@ vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   // A broad low deck with open-cell breakup. It occupies new longitude rather
   // than scaling any existing cloud system.
   vec2 mq=fap1Local(lat,lon,.383972,2.303835+t*.007);
-  float marineEnvelope=fap1Ellipse(mq,vec2(0.0),vec2(.46,.28),-.08);
+  float marineEnvelope=fap1Ellipse(mq,vec2(0.0),vec2(.68,.42),-.08);
   float marineCellWave=.5+.5*sin(mq.x*34.0+sin(mq.y*22.0+t*.55)*1.35);
   float marineNoise=fbm(radial*24.0+vec3(t*.13,-t*.27,t*.19));
   float marineOpenCells=smoothstep(.38,.73,marineNoise*.62+marineCellWave*.38);
@@ -225,7 +225,7 @@ vec3 fap1OrganizedWeather(vec3 radial,float h,float lat,float lon){
   vec2 a6d=fap1Local(lat,lon,-.523599,-2.967060+t*.003);
   float altoEnvA=fap1Ellipse(a6a,vec2(0.0),vec2(.58,.34),.08);
   float altoEnvB=fap1Ellipse(a6b,vec2(0.0),vec2(.62,.36),-.12);
-  float altoEnvC=fap1Ellipse(a6c,vec2(0.0),vec2(.56,.32),.18);
+  float altoEnvC=fap1Ellipse(a6c,vec2(0.0),vec2(.70,.40),.18);
   float altoEnvD=fap1Ellipse(a6d,vec2(0.0),vec2(.60,.35),-.06);
   float altoNoise=fbm(radial*30.0+vec3(t*.21,-t*.16,t*.12));
   float altoRipple=.5+.5*sin(lon*24.0+lat*17.0+t*.45);

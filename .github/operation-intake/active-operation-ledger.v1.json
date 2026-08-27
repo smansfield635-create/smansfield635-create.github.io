@@ -2860,49 +2860,6 @@
       "scopeHash": "bcb1c9d8558143897010a4a9a9bdc29be0ffceb7606184e072f8bfbbe71be0c2",
       "state": "ADMITTED_LOCKED"
     },
-    "be6ff47dc66d8244aa2b7882cee422f318d21c4564ac42f042a9ff3fa53a1705": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "08436cae15fe9eac22470b1b2d50a88098b00721",
-          "lockGeneration": 1748,
-          "lockScope": "GEN1731_EXACT_ISSUANCE_PROVENANCE_RECOVERY_2154",
-          "operationId": "GEN1731_EXACT_ISSUANCE_PROVENANCE_RECOVERY_20260827_002",
-          "procedureLocatorDigest": "5d790bc4c24d2ad06b4c2e96a989a297b98ef3506529723a66275ac7a500dc5c",
-          "requestDigest": "6d906f81371e2d77d44ed57138e9949a19f7c579b3c36a090353614cd9abe135",
-          "scopeHash": "be6ff47dc66d8244aa2b7882cee422f318d21c4564ac42f042a9ff3fa53a1705"
-        },
-        "bindingDigest": "f1c2b168929d0d803202fc3c722a772dff1ad653c059a2e4cad71344576e2074",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "0a31074879c3ba9fe06c37ab62320a1b6b8ac43857dcd0559066d4fac1576fdf",
-          "commentId": 5433575272,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2154,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 33033243598,
-          "workflowSha": "08436cae15fe9eac22470b1b2d50a88098b00721"
-        },
-        "lineageAnchorCommitSha": "d84bea516940533644279549d0936b80114abace",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "08436cae15fe9eac22470b1b2d50a88098b00721",
-      "lockGeneration": 1748,
-      "lockScope": "GEN1731_EXACT_ISSUANCE_PROVENANCE_RECOVERY_2154",
-      "operationId": "GEN1731_EXACT_ISSUANCE_PROVENANCE_RECOVERY_20260827_002",
-      "procedureLocatorDigest": "5d790bc4c24d2ad06b4c2e96a989a297b98ef3506529723a66275ac7a500dc5c",
-      "released": false,
-      "requestDigest": "6d906f81371e2d77d44ed57138e9949a19f7c579b3c36a090353614cd9abe135",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "be6ff47dc66d8244aa2b7882cee422f318d21c4564ac42f042a9ff3fa53a1705",
-      "state": "ADMITTED_LOCKED"
-    },
     "bf7503f65660de95e6d18a151ff8bd7008f82e46fdcd7a534adb7e31e99c9637": {
       "governingHead": "7f832b749617b0360ad6bbfafadc37508d328dc3",
       "lockGeneration": 1379,
@@ -28262,6 +28219,50 @@
       "requestDigest": "0f588388359a16bc4b00c974aa993733afba6e6518965273ee0385ef22362db8",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "9f68adb7c79c7222d23d10fa6cd37a360e595ee6a3aa6af3a6b97fc18d2a3989",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "08436cae15fe9eac22470b1b2d50a88098b00721",
+          "lockGeneration": 1748,
+          "lockScope": "GEN1731_EXACT_ISSUANCE_PROVENANCE_RECOVERY_2154",
+          "operationId": "GEN1731_EXACT_ISSUANCE_PROVENANCE_RECOVERY_20260827_002",
+          "procedureLocatorDigest": "5d790bc4c24d2ad06b4c2e96a989a297b98ef3506529723a66275ac7a500dc5c",
+          "requestDigest": "6d906f81371e2d77d44ed57138e9949a19f7c579b3c36a090353614cd9abe135",
+          "scopeHash": "be6ff47dc66d8244aa2b7882cee422f318d21c4564ac42f042a9ff3fa53a1705"
+        },
+        "bindingDigest": "f1c2b168929d0d803202fc3c722a772dff1ad653c059a2e4cad71344576e2074",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "0a31074879c3ba9fe06c37ab62320a1b6b8ac43857dcd0559066d4fac1576fdf",
+          "commentId": 5433575272,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2154,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33033243598,
+          "workflowSha": "08436cae15fe9eac22470b1b2d50a88098b00721"
+        },
+        "lineageAnchorCommitSha": "d84bea516940533644279549d0936b80114abace",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "08436cae15fe9eac22470b1b2d50a88098b00721",
+      "lockGeneration": 1748,
+      "lockScope": "GEN1731_EXACT_ISSUANCE_PROVENANCE_RECOVERY_2154",
+      "operationId": "GEN1731_EXACT_ISSUANCE_PROVENANCE_RECOVERY_20260827_002",
+      "procedureLocatorDigest": "5d790bc4c24d2ad06b4c2e96a989a297b98ef3506529723a66275ac7a500dc5c",
+      "released": true,
+      "requestDigest": "6d906f81371e2d77d44ed57138e9949a19f7c579b3c36a090353614cd9abe135",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "be6ff47dc66d8244aa2b7882cee422f318d21c4564ac42f042a9ff3fa53a1705",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

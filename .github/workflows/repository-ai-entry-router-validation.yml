@@ -1,5 +1,7 @@
 name: Repository AI Entry Router Validation
 on:
+  issue_comment:
+    types: [created]
   pull_request:
     branches: [main]
     paths:

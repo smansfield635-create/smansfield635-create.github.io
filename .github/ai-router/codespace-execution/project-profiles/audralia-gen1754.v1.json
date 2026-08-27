@@ -15,11 +15,36 @@
   "builderFreshVerifierSeparation": "REQUIRED",
   "requiredRuntime": {
     "nodeMajor": 22,
-    "browser": "CHROMIUM_OR_GOOGLE_CHROME",
+    "browser": "CHROMIUM_HEADLESS_SHELL_FOR_TESTING_151.0.7922.34",
     "puppeteerCore": "24.15.0",
     "python3": true,
     "curl": true,
     "fullGitHistory": true
+  },
+  "portableBootstrap": {
+    "script": ".github/ai-router/codespace-execution/bootstrap-audralia-work-executor.v1.mjs",
+    "operationId": "AUDRALIA_WEATHER_POPULATION_SECOND_FAILING_CORPUS_20260827_001_SUCCESSOR_001",
+    "command": "node .github/ai-router/codespace-execution/bootstrap-audralia-work-executor.v1.mjs --operation-id AUDRALIA_WEATHER_POPULATION_SECOND_FAILING_CORPUS_20260827_001_SUCCESSOR_001 --exact-target-head 41a63ace8b540f2b3ce7f73b6395f90234c7dc3f --install-root <OUTSIDE_REPOSITORY>/audralia-work-executor --output <OUTSIDE_REPOSITORY>/audralia-work-executor-environment-receipt.json",
+    "nodeVersion": "22.23.2",
+    "browser": {
+      "product": "CHROMIUM_HEADLESS_SHELL_FOR_TESTING",
+      "version": "151.0.7922.34",
+      "archiveUrl": "https://storage.googleapis.com/chrome-for-testing-public/151.0.7922.34/linux64/chrome-headless-shell-linux64.zip",
+      "archiveSha256": "3cfc2bd00d1bafcf8a68dc74c9c92bb7150ddc8d26ade948a776316e1cec4f14",
+      "resolvedCommand": "google-chrome-stable",
+      "executableMode": "0755"
+    },
+    "readyReceipt": {
+      "schema": "THREE_TIER_CODESPACE_ENVIRONMENT_RECEIPT_v1",
+      "result": "PASS_ENVIRONMENT_READY",
+      "requiredConditions": [
+        "REPOSITORY_MATERIALIZED",
+        "DEPENDENCIES_READY",
+        "COMMAND_EXECUTION_AVAILABLE"
+      ],
+      "githubActionsUsedAsAgentExecutionTransport": false
+    },
+    "executionActivation": "Prepend receipt.runtime.commands.pathPrefix to PATH, then execute declaredCommand unchanged."
   },
   "expectedPrimaryDisposition": [
     "CAUSAL_RUNTIME_PASS",

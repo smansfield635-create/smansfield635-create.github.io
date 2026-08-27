@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "REPOSITORY_EXECUTION_CAPABILITY_RECEIPT_v1",
+  "title": "Repository execution capability receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "result",
+    "governingHead",
+    "operationId",
+    "executionHolder",
+    "repositoryMaterialized",
+    "dependenciesReady",
+    "commandExecutionAvailable",
+    "githubActionsUsedAsAgentExecutionTransport",
+    "evidence"
+  ],
+  "properties": {
+    "schema": {"const": "REPOSITORY_EXECUTION_CAPABILITY_RECEIPT_v1"},
+    "result": {"enum": ["EXECUTION_CAPABILITY_READY", "EXECUTION_CAPABILITY_UNAVAILABLE"]},
+    "governingHead": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "operationId": {"type": "string", "minLength": 1},
+    "executionHolder": {"type": "string", "minLength": 1},
+    "repositoryMaterialized": {"type": "boolean"},
+    "dependenciesReady": {"type": "boolean"},
+    "commandExecutionAvailable": {"type": "boolean"},
+    "githubActionsUsedAsAgentExecutionTransport": {"const": false},
+    "evidence": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["repository", "dependencies", "executor"],
+      "properties": {
+        "repository": {"type": ["string", "object"]},
+        "dependencies": {"type": ["string", "object"]},
+        "executor": {"type": ["string", "object"]}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"result": {"const": "EXECUTION_CAPABILITY_READY"}}},
+      "then": {
+        "properties": {
+          "repositoryMaterialized": {"const": true},
+          "dependenciesReady": {"const": true},
+          "commandExecutionAvailable": {"const": true}
+        }
+      }
+    }
+  ]
+}

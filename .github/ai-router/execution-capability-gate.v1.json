@@ -1,0 +1,87 @@
+{
+  "schema": "REPOSITORY_EXECUTION_CAPABILITY_GATE_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "governingPolicy": "AI_ENTRYPOINT.json#/agentExecutionSurface",
+  "purpose": "Prevent executable construction, verification, or reproduction work from being assigned to an AI room unless a genuinely available non-Actions native execution substrate has been proven ready.",
+  "policyPrecedence": {
+    "rule": "AI_ENTRYPOINT_AGENT_EXECUTION_SURFACE_OVERRIDES_SHARED_PROCEDURE_BACKEND_SUGGESTIONS",
+    "conflictingProcedureId": "GITHUB_ACTIONS_FALLBACK",
+    "conflictingProcedureDisposition": "RETIRED_FOR_AGENT_EXECUTION",
+    "githubActionsMaySatisfyExecutionCapability": false,
+    "githubActionsPermittedOnlyFor": [
+      "PASSIVE_CI_AFTER_REPOSITORY_CHANGE",
+      "HISTORICAL_EVIDENCE_INSPECTION",
+      "LATER_REPLAY_WHEN_SEPARATELY_AUTHORIZED"
+    ]
+  },
+  "requiredBeforeExecutableHookReveal": true,
+  "requiredChecks": [
+    {
+      "id": "REPOSITORY_MATERIALIZED",
+      "requirement": "The exact governing and candidate commits required by the operation are present in a native repository checkout or detached worktree available to the room.",
+      "failWhen": ["NO_LOCAL_REPOSITORY", "REQUIRED_COMMIT_UNAVAILABLE", "EXACT_HEAD_UNRESOLVABLE"]
+    },
+    {
+      "id": "DEPENDENCIES_READY",
+      "requirement": "All locked runtime dependencies needed by the declared command are already installed or reproducibly materializable without a prohibited transport.",
+      "failWhen": ["LOCKED_DEPENDENCY_UNAVAILABLE", "PACKAGE_INSTALL_REQUIRES_BLOCKED_NETWORK", "BROWSER_RUNTIME_UNAVAILABLE"]
+    },
+    {
+      "id": "COMMAND_EXECUTION_AVAILABLE",
+      "requirement": "The room has a native command executor capable of invoking the repository-declared fixed command and returning its terminal output and receipt.",
+      "failWhen": ["NO_NATIVE_EXECUTOR", "CONNECTOR_READ_WRITE_ONLY", "EXECUTION_OUTPUT_UNRECOVERABLE"]
+    }
+  ],
+  "successDisposition": "EXECUTION_CAPABILITY_READY",
+  "failureDisposition": "EXECUTION_CAPABILITY_UNAVAILABLE_DO_NOT_REVEAL_EXECUTABLE_HOOK",
+  "failureBehavior": [
+    "Do not assign construction, runtime verification, exact-candidate reproduction, dependency installation, or native verifier execution.",
+    "Do not dispatch GitHub Actions as a substitute executor.",
+    "Preserve the current hook and operation state without pretending progress occurred.",
+    "Return the failed capability check and the missing substrate capability as the current boundary.",
+    "Resume the executable hook only after a fresh EXECUTION_CAPABILITY_READY receipt exists."
+  ],
+  "receiptSchema": {
+    "schema": "REPOSITORY_EXECUTION_CAPABILITY_RECEIPT_v1",
+    "required": [
+      "schema",
+      "result",
+      "governingHead",
+      "operationId",
+      "executionHolder",
+      "repositoryMaterialized",
+      "dependenciesReady",
+      "commandExecutionAvailable",
+      "githubActionsUsedAsAgentExecutionTransport",
+      "evidence"
+    ],
+    "resultAllowed": ["EXECUTION_CAPABILITY_READY", "EXECUTION_CAPABILITY_UNAVAILABLE"],
+    "readyInvariants": {
+      "repositoryMaterialized": true,
+      "dependenciesReady": true,
+      "commandExecutionAvailable": true,
+      "githubActionsUsedAsAgentExecutionTransport": false
+    }
+  },
+  "hookContract": {
+    "executableHookRevealPrecondition": "LATEST_RECEIPT.result == EXECUTION_CAPABILITY_READY",
+    "receiptMustBindExactGoverningHead": true,
+    "receiptMustBindOperationId": true,
+    "receiptMustIdentifyExecutionHolder": true,
+    "receiptMayNotBeInferredFromPriorRoomSuccess": true,
+    "receiptMayNotBeSatisfiedByConnectorRepositoryReadWrite": true,
+    "receiptMayNotBeSatisfiedByHistoricalActionsExecution": true
+  },
+  "audraliaGen1754Application": {
+    "issue": 2171,
+    "candidateHead": "41a63ace8b540f2b3ce7f73b6395f90234c7dc3f",
+    "currentDisposition": "EXECUTION_CAPABILITY_UNAVAILABLE",
+    "nextMaterialBoundary": "PROVISION_NON_ACTIONS_NATIVE_EXECUTOR_THEN_REISSUE_CAPABILITY_RECEIPT",
+    "rerunBeforeReadyReceiptAllowed": false
+  },
+  "authorityCreated": false,
+  "productMutationAuthorityCreated": false,
+  "mergeAuthorityCreated": false,
+  "deploymentAuthorityCreated": false,
+  "releaseAuthorityCreated": false
+}

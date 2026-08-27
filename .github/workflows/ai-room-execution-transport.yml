@@ -1,7 +1,7 @@
 name: AI Room Authorized Toolset Execution Transport
 
 on:
-  issue_comment: 
+  issue_comment:
     types: [created]
   workflow_dispatch:
     inputs:
@@ -57,6 +57,27 @@ jobs:
               --output "$RUNNER_TEMP/ai-room-execution-request.json"
           fi
 
+      - name: Build active closed-world registry
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const basePath='.github/ai-toolset-transport/authorized-toolset-registry.v1.json';
+          const extensionPath='.github/ai-toolset-transport/authorized-toolset-registry.audralia-execution-succession.v1.json';
+          const base=JSON.parse(fs.readFileSync(basePath,'utf8'));
+          const extension=JSON.parse(fs.readFileSync(extensionPath,'utf8'));
+          for(const registry of [base,extension]){
+            if(registry.schema!=='REPOSITORY_AUTHORIZED_TOOLSET_REGISTRY_v1')throw new Error('REGISTRY_SCHEMA_MISMATCH');
+            if(registry.status!=='ACTIVE_CERTIFIED'||registry.closedWorld!==true||registry.arbitraryCommandAccepted!==false||registry.movingToolingRefsAccepted!==false)throw new Error('REGISTRY_NOT_FAIL_CLOSED');
+            if(!Array.isArray(registry.tools)||registry.tools.length===0)throw new Error('REGISTRY_EMPTY');
+          }
+          const tools=[...base.tools,...extension.tools];
+          const ids=tools.map(tool=>tool.descriptorId);
+          if(new Set(ids).size!==ids.length)throw new Error('AUTHORIZED_TOOLSET_AMBIGUOUS');
+          const active={...base,registryId:'SMANSFIELD_AUTHORIZED_TOOLSET_REGISTRY_WITH_AUDRALIA_EXECUTION_SUCCESSION_V1',tools};
+          fs.writeFileSync(`${process.env.RUNNER_TEMP}/active-authorized-toolset-registry.json`,JSON.stringify(active,null,2)+'\n');
+          NODE
+
       - name: Execute only the registered fixed command
         id: dispatch
         env:
@@ -66,7 +87,7 @@ jobs:
           node tools/ai-room-transport/fixed-command-dispatcher.v1.mjs \
             --root . \
             --request "$RUNNER_TEMP/ai-room-execution-request.json" \
-            --registry .github/ai-toolset-transport/authorized-toolset-registry.v1.json \
+            --registry "$RUNNER_TEMP/active-authorized-toolset-registry.json" \
             --output "$RUNNER_TEMP/command-execution-receipt.json"
           status=$?
           echo "status=$status" >> "$GITHUB_OUTPUT"

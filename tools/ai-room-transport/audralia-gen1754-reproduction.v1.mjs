@@ -30,6 +30,8 @@ const SPARSE_PATHS=[
   'inspection/audralia-24057-exact/snapshot/h-earth-3d/cells',
   'inspection/audralia-24057-exact/snapshot/h-earth-3d/environment'
 ];
+const started=Date.now();
+function phase(name,detail=''){console.log(`AUDRALIA_REPRO_PHASE ${name} elapsedMs=${Date.now()-started}${detail?` ${detail}`:''}`);}
 
 function args(argv){
   const out={};
@@ -44,9 +46,15 @@ function run(command,argv,{cwd,env=process.env,timeout=240000}={}){
   const r=cp.spawnSync(command,argv,{cwd,env,encoding:'utf8',timeout,maxBuffer:64*1024*1024});
   return {status:r.status??1,stdout:r.stdout??'',stderr:r.stderr??'',error:r.error?.message??null};
 }
-function firstAssertion(text){
-  const lines=String(text||'').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
-  return lines.find(x=>/(AssertionError|Error:|ERR_ASSERTION|_TIMEOUT|_MISSING|_DRIFT|_CHANGED|_FAILED)/.test(x))||lines[0]||null;
+function firstAssertion(stderr,stdout=''){
+  const structural=/^[\s{}\[\],]*$/;
+  const signal=/(AssertionError|ERR_ASSERTION|\bError:|_TIMEOUT\b|_MISSING\b|_DRIFT\b|_CHANGED\b|_FAILED\b|_FAILURE\b|CAUSALITY_FAILURE)/;
+  for(const source of [stderr,stdout]){
+    const lines=String(source||'').split(/\r?\n/).map(x=>x.trim()).filter(x=>x&&!structural.test(x));
+    const exact=lines.find(x=>signal.test(x));
+    if(exact)return exact;
+  }
+  return null;
 }
 function write(file,value){fs.mkdirSync(path.dirname(path.resolve(file)),{recursive:true});fs.writeFileSync(path.resolve(file),JSON.stringify(value,null,2)+'\n');}
 function findChrome(){
@@ -76,15 +84,21 @@ function main(){
   let server=null;
   let receipt;
   try{
+    phase('START');
     const origin=git(root,['config','--get','remote.origin.url']).stdout.trim();
     if(!origin)throw new Error('ORIGIN_URL_UNAVAILABLE');
     fs.mkdirSync(subject,{recursive:true});
     git(subject,['init','.']);
     git(subject,['remote','add','origin',origin]);
+
+    phase('SPARSE_FETCH_START');
     const fetched=git(subject,['-c','protocol.version=2','fetch','--no-tags','--depth=1','--filter=blob:none','origin',CANDIDATE],true,120000);
-    if(fetched.status!==0)throw new Error(`CANDIDATE_FETCH_FAILED:${firstAssertion(fetched.stderr||fetched.stdout)}`);
+    if(fetched.status!==0)throw new Error(`CANDIDATE_FETCH_FAILED:${firstAssertion(fetched.stderr,fetched.stdout)||fetched.error||'UNKNOWN'}`);
+    phase('SPARSE_FETCH_DONE');
+
     git(subject,['sparse-checkout','init','--cone','--sparse-index']);
     git(subject,['sparse-checkout','set',...SPARSE_PATHS]);
+    phase('SPARSE_CHECKOUT_START');
     git(subject,['checkout','--detach','FETCH_HEAD'],false,120000);
     const exact=git(subject,['rev-parse','HEAD^{commit}']).stdout.trim();
     if(exact!==CANDIDATE)throw new Error(`EXACT_CANDIDATE_MISMATCH:${exact}`);
@@ -92,11 +106,14 @@ function main(){
     if(sparseIndex!=='true')throw new Error(`SPARSE_INDEX_NOT_ACTIVE:${sparseIndex||'unset'}`);
     const sparseEntries=git(subject,['ls-files','--sparse']).stdout.split(/\r?\n/).filter(Boolean).length;
     if(sparseEntries>=5000)throw new Error(`SPARSE_INDEX_BOUND_EXCEEDED:${sparseEntries}`);
+    phase('SPARSE_CHECKOUT_DONE',`entries=${sparseEntries}`);
 
+    phase('VERIFIER_READBACK_START');
     const verifier=git(subject,['show','HEAD:tools/audralia-weather-presentation-reconciliation-ci.mjs'],true);
-    if(verifier.status!==0)throw new Error(`VERIFIER_EXACT_OBJECT_READBACK_FAILED:${firstAssertion(verifier.stderr||verifier.stdout)}`);
+    if(verifier.status!==0)throw new Error(`VERIFIER_EXACT_OBJECT_READBACK_FAILED:${firstAssertion(verifier.stderr,verifier.stdout)||verifier.error||'UNKNOWN'}`);
     fs.mkdirSync(path.join(subject,'tools'),{recursive:true});
     fs.writeFileSync(path.join(subject,'tools/audralia-weather-presentation-reconciliation-ci.mjs'),verifier.stdout);
+    phase('VERIFIER_READBACK_DONE');
 
     const checks=[
       'showroom/globe/audralia/weather-presentation-reconciliation/exterior-classification.mjs',
@@ -108,17 +125,24 @@ function main(){
       'showroom/globe/audralia/final-cloud-shader-composition-v1.mjs',
       'tools/audralia-weather-presentation-reconciliation-ci.mjs'
     ];
+    phase('SYNTAX_START');
     for(const file of checks){
       const r=run('node',['--check',file],{cwd:subject,timeout:30000});
-      if(r.status!==0)throw new Error(`SYNTAX_REPRODUCTION_FAILED:${file}:${firstAssertion(r.stderr||r.stdout)}`);
+      if(r.status!==0)throw new Error(`SYNTAX_REPRODUCTION_FAILED:${file}:${firstAssertion(r.stderr,r.stdout)||r.error||'UNKNOWN'}`);
     }
+    phase('SYNTAX_DONE');
 
-    const install=run('npm',['install','--no-save','--no-package-lock','puppeteer-core@24.15.0'],{cwd:subject,timeout:180000});
-    if(install.status!==0)throw new Error(`PUPPETEER_INSTALL_FAILED:${firstAssertion(install.stderr||install.stdout)}`);
+    phase('PUPPETEER_INSTALL_START');
+    const install=run('npm',['install','--no-save','--no-package-lock','--no-audit','--no-fund','--prefer-offline','puppeteer-core@24.15.0'],{cwd:subject,timeout:180000});
+    if(install.status!==0)throw new Error(`PUPPETEER_INSTALL_FAILED:${firstAssertion(install.stderr,install.stdout)||install.error||'UNKNOWN'}`);
+    phase('PUPPETEER_INSTALL_DONE');
+
     const chrome=findChrome();
     if(!chrome)throw new Error('CHROME_BINARY_UNAVAILABLE');
+    phase('BROWSER_READY',`chrome=${path.basename(chrome)}`);
 
     server=cp.spawn('python3',['-m','http.server','4173','--bind','127.0.0.1'],{cwd:subject,stdio:'ignore'});
+    phase('SERVER_START');
     let ready=false;
     for(let i=0;i<40;i++){
       const probe=run('curl',['-fsS','http://127.0.0.1:4173/showroom/globe/audralia/weather-presentation-reconciliation/'],{cwd:subject,timeout:5000});
@@ -126,15 +150,19 @@ function main(){
       Atomics.wait(new Int32Array(new SharedArrayBuffer(4)),0,0,250);
     }
     if(!ready)throw new Error('EXACT_HEAD_SERVER_START_FAILED');
+    phase('SERVER_READY');
 
+    phase('VERIFIER_RUNNING');
     const execution=run('node',['tools/audralia-weather-presentation-reconciliation-ci.mjs'],{
       cwd:subject,
       env:{...process.env,CHROME_PATH:chrome},
-      timeout:240000
+      timeout:300000
     });
-    const combined=`${execution.stderr}\n${execution.stdout}`;
-    const assertion=firstAssertion(combined);
+    if(execution.error)throw new Error(`VERIFIER_EXECUTION_TRANSPORT_FAILURE:${execution.error}`);
+    const assertion=execution.status===0?null:firstAssertion(execution.stderr,execution.stdout);
+    if(execution.status!==0&&!assertion)throw new Error('VERIFIER_FAILED_WITHOUT_EXTRACTABLE_ASSERTION');
     const disposition=execution.status===0?'CAUSAL_RUNTIME_PASS':'FIRST_ASSERTION_CAPTURED';
+    phase('VERIFIER_DONE',`status=${execution.status} disposition=${disposition}`);
     receipt={
       schema:'AUDRALIA_GEN1754_EXACT_CANDIDATE_REPRODUCTION_RECEIPT_v1',
       result:disposition,
@@ -151,12 +179,13 @@ function main(){
       hook4Revealed:false,
       chromePathResolved:true,
       reproductionExitStatus:execution.status,
-      firstAssertion:execution.status===0?null:assertion,
+      firstAssertion:assertion,
       causalRuntimePass:execution.status===0
     };
     write(output,receipt);
-    if(disposition!=='CAUSAL_RUNTIME_PASS'&&!assertion)process.exitCode=1;
+    phase('RECEIPT_WRITTEN',`result=${disposition}`);
   }catch(error){
+    phase('FAIL_CLOSED',String(error?.message||error).slice(0,180));
     receipt={
       schema:'AUDRALIA_GEN1754_EXACT_CANDIDATE_REPRODUCTION_RECEIPT_v1',
       result:'REPRODUCTION_INFRASTRUCTURE_FAIL_CLOSED',

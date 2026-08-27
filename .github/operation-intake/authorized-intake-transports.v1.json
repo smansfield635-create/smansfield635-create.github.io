@@ -1,0 +1,36 @@
+{
+  "schema": "REPOSITORY_OPERATION_INTAKE_TRANSPORT_REGISTRY_v1",
+  "registryId": "REPOSITORY_OPERATION_INTAKE_TRANSPORTS_V1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "selectionPolicy": "EXACTLY_ONE_MATCH_OR_FAIL_CLOSED",
+  "transports": [
+    {
+      "transportId": "GITHUB_ACTIONS_CANONICAL_INTAKE_V1",
+      "status": "ACTIVE_LEGACY_COMPATIBLE",
+      "principal": "github-actions[bot]",
+      "invocationMarker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+      "authorityCreated": false,
+      "admissionSemanticsDuplicated": false
+    },
+    {
+      "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1",
+      "status": "ACTIVE_CERTIFIED",
+      "principal": "smansfield635-create",
+      "authentication": [
+        "OWNER_AUTHORED_CANONICAL_SOURCE_COMMENT",
+        "EXACT_CURRENT_MAIN_BINDING",
+        "SHA_GUARDED_LEDGER_COMPARE_AND_SWAP",
+        "LEDGER_ONLY_MUTATION",
+        "CANONICAL_MUTATION_MESSAGE"
+      ],
+      "invocationMarker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+      "allowedMutationPaths": [
+        ".github/operation-intake/active-operation-ledger.v1.json"
+      ],
+      "authorityCreated": false,
+      "admissionSemanticsDuplicated": false,
+      "canonicalSemantics": "tools/operation-intake/repository-operation-lock-manager.v1.mjs",
+      "failureDisposition": "FAIL_CLOSED"
+    }
+  ]
+}

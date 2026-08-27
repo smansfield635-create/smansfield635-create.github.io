@@ -15,6 +15,7 @@ import {
 export const REQUEST_SCHEMA = 'REPOSITORY_OPERATION_REQUEST_v1';
 export const PROCEDURE_SCHEMA = 'REPOSITORY_CONSTRUCTION_PROCEDURE_v1';
 export const SOURCE_READBACK_OPERATION_CLASS = 'SOURCE_READBACK';
+export const RUNTIME_OR_AUTHORITY_OPERATION_CLASS = 'RUNTIME_OR_AUTHORITY';
 export const INTAKE_COMPLETENESS_SCHEMA = 'INTAKE_COMPLETENESS_RECEIPT_v1';
 export const COMPLETE_INTAKE_RESULTS = new Set([
   'COMPLETE_NO_QUESTIONS_REQUIRED',
@@ -135,8 +136,6 @@ export function validateRequest(value) {
     if (x.resolved !== true) bad('MISSING_REQUIRED_REQUEST_FIELD', `requiredInputs[${i}].resolved`, s, x.id);
   });
 
-  validateIntakeCompleteness(r, s);
-
   for (const f of ['allowedPaths','prohibitedPaths','requiredOutputs','errorPrecedence','stopConditions','terminalDispositions']) {
     r[f].forEach((x, i) => str(x, `${f}[${i}]`, s));
     if (new Set(r[f]).size !== r[f].length) bad('MISSING_REQUIRED_REQUEST_FIELD', f, s, 'duplicate');
@@ -178,6 +177,7 @@ export function prepare(r0, p0) {
 
   if (requestSourceReadback !== procedureSourceReadback) bad('OPERATION_CLASS_MISMATCH', 'operationClass', 'request-and-procedure');
   if (requestSourceReadback && r.operationClass !== p.operationClass) bad('OPERATION_CLASS_MISMATCH', 'operationClass', 'request-and-procedure');
+  if (p.operationClass === RUNTIME_OR_AUTHORITY_OPERATION_CLASS) validateIntakeCompleteness(r, 'operation-request');
   if (r.exactGoverningHead !== p.exactGoverningHead) bad('GOVERNING_HEAD_MISMATCH', 'exactGoverningHead', 'request-and-procedure');
   if (!eq(r.allowedPaths, p.exactAllowedRepositoryPaths)) bad('SCOPE_MISMATCH', 'allowedPaths', 'request-and-procedure');
   for (const x of r.prohibitedPaths) if (r.allowedPaths.includes(x)) bad('PROHIBITED_PATH_REQUESTED', 'prohibitedPaths', 'operation-request', x);

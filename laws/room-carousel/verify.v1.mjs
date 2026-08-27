@@ -12,10 +12,11 @@ if (run.stderr) process.stderr.write(run.stderr);
 if (run.status !== 0) process.exit(run.status || 1);
 
 console.log(JSON.stringify({
-  contract: "LAWS_LAYERED_INFORMATION_GRID_VERIFIER_ENTRY_v3",
+  contract: "LAWS_SEMANTIC_CELL_ENRICHMENT_VERIFIER_ENTRY_v4",
   status: "PASS",
   routes: 29,
   cards: 134,
   cells: 1653,
+  contentModel: "shared-premise-story-focus-lens-frame-authored-delta",
   browserCommand: "node laws/room-carousel/verify-contextual-delivery.v2.mjs --base-url=http://127.0.0.1:4173"
 }));

@@ -13,20 +13,29 @@ const baseUrl = (process.argv.find(arg => arg.startsWith("--base-url=")) || "--b
 const representativesOnly = process.argv.includes("--representatives");
 const staticOnly = process.argv.includes("--static-only");
 const routes = representativesOnly
-  ? ["/laws/categories/flow/cycles/", "/laws/categories/flow/handoffs/", "/laws/categories/reality/"]
+  ? ["/laws/research/findings-and-boundaries/", "/laws/categories/flow/cycles/", "/laws/categories/flow/handoffs/", "/laws/categories/reality/"]
   : Object.keys(manifest.routes);
 const viewports = representativesOnly
-  ? [{ name: "phone", width: 390, height: 844 }, { name: "tablet", width: 768, height: 1024 }]
+  ? [{ name: "phone", width: 390, height: 844 }, { name: "tablet", width: 768, height: 1024 }, { name: "desktop", width: 1440, height: 1000 }]
   : [{ name: "phone", width: 390, height: 844 }, { name: "tablet", width: 768, height: 1024 }, { name: "desktop", width: 1440, height: 1000 }];
 const screenshotRoutes = new Set([
   "/laws/categories/flow/cycles/",
   "/laws/categories/flow/handoffs/",
   "/laws/categories/reality/",
+  "/laws/research/findings-and-boundaries/",
   "/laws/categories/structure/",
   "/laws/research/",
   "/laws/test/reverse-audit/"
 ]);
 const greaterNavigationRoutes = new Set();
+const semanticRepresentativeCards = new Map([
+  ["/laws/research/findings-and-boundaries/", "supported"],
+  ["/laws/categories/flow/cycles/", "rhythm"],
+  ["/laws/categories/flow/handoffs/", "failure-boundary"],
+  ["/laws/categories/reality/", "evidence"]
+]);
+const wordCount = value => String(value || "").trim().split(/\s+/).filter(Boolean).length;
+const normalized = value => String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 
 function routeFile(route) {
   return path.join(root, route.endsWith(".html") ? route.slice(1) : route.slice(1), route.endsWith(".html") ? "" : "index.html");
@@ -36,7 +45,7 @@ function declared(html, name) {
   return html.match(new RegExp(`${name}="([^"]*)"`))?.[1] || "";
 }
 
-assert.equal(manifest.schema, "LAWS_LAYERED_INFORMATION_GRID_ROUTE_CARD_MAP_v3");
+assert.equal(manifest.schema, "LAWS_SEMANTIC_CELL_ENRICHMENT_ROUTE_CARD_MAP_v4");
 assert.equal(Object.keys(manifest.routes).length, 29);
 assert.ok(new Set(Object.values(manifest.routes).map(route => route.cards.length)).size > 1, "inventories must not be forced to one count");
 assert.deepEqual(manifest.internalStoryAxis, { minimum: 4, maximum: 5, labels: "PAGE_AND_CARD_SPECIFIC", visibleCellCount: 1 });
@@ -52,22 +61,35 @@ for (const route of routes) {
   assert.equal(declared(html, "data-lrc-story-axis"), "vertical", `${route}: explicit vertical story axis`);
   assert.equal(declared(html, "data-lrc-custody-selector"), "details.lr-audit", `${route}: explicit custody role`);
   assert.equal(declared(html, "data-lrc-greater-navigation-selector"), ".lr-story-nav", `${route}: explicit greater-navigation role`);
-  assert.ok(html.includes("room-carousel.v1.js?v=LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827"), `${route}: runtime identity`);
-  assert.ok(html.includes("room-carousel.v1.css?v=LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827"), `${route}: stylesheet identity`);
+  assert.ok(html.includes("room-carousel.v1.js?v=LAWS_SEMANTIC_CELL_ENRICHMENT_GEN1755_20260827"), `${route}: runtime identity`);
+  assert.ok(html.includes("room-carousel.v1.css?v=LAWS_SEMANTIC_CELL_ENRICHMENT_GEN1755_20260827"), `${route}: stylesheet identity`);
   assert.ok(html.includes("data-lrc-static"), `${route}: semantic no-script grid`);
+  assert.equal((html.match(/data-lrc-shared-premise/g) || []).length, manifest.routes[route].cards.length, `${route}: one static shared premise per card`);
+  assert.equal((html.match(/data-lrc-static-delta/g) || []).length, manifest.routes[route].cards.reduce((sum, card) => sum + card.stories.length * 3, 0), `${route}: one static authored delta per cell`);
   assert.ok(html.includes("Source custody"), `${route}: compact custody`);
   assert.ok(!html.includes("lr-legacy-source"), `${route}: raw legacy presentation mirror retired`);
   if (html.includes('class="lr-story-nav"')) greaterNavigationRoutes.add(route);
   for (const card of manifest.routes[route].cards) {
+    assert.ok(wordCount(card.sharedPremise) >= 8, `${route}/${card.id}: substantive shared premise`);
+    assert.equal(new Set(["practical", "engineering", "empirical"].map(lens => normalized(card.lensFrames?.[lens]))).size, 3, `${route}/${card.id}: distinct lens frames`);
+    for (const lens of ["practical", "engineering", "empirical"]) assert.ok(wordCount(card.lensFrames?.[lens]) >= 12, `${route}/${card.id}: substantive ${lens} frame`);
     assert.ok(Array.isArray(card.stories) && card.stories.length >= 4 && card.stories.length <= 5, `${route}/${card.id}: four or five story layers`);
     assert.equal(new Set(card.stories.map(story => story.id)).size, card.stories.length, `${route}/${card.id}: unique story ids`);
     assert.equal(new Set(card.stories.map(story => story.label)).size, card.stories.length, `${route}/${card.id}: distinct story labels`);
+    assert.equal(new Set(card.stories.map(story => normalized(story.focus))).size, card.stories.length, `${route}/${card.id}: distinct story focus`);
+    const cardDeltas = [];
     for (const story of card.stories) {
       assert.ok(!/\bboundary \d+\b/i.test(story.label), `${route}/${card.id}/${story.id}: no generated placeholder label`);
+      assert.ok(wordCount(story.focus) >= 12, `${route}/${card.id}/${story.id}: substantive story focus`);
       for (const lens of ["practical", "engineering", "empirical"]) {
-        assert.ok(String(story.readings?.[lens] || "").trim(), `${route}/${card.id}/${story.id}: ${lens} cell populated`);
+        const delta = String(story.deltas?.[lens] || "").trim();
+        assert.ok(wordCount(delta) >= 12, `${route}/${card.id}/${story.id}: ${lens} authored delta substantive`);
+        assert.ok(!/^(design|procedural|scope|claim|test|record)\.?$/i.test(delta), `${route}/${card.id}/${story.id}: ${lens} no placeholder delta`);
+        assert.ok(!normalized(delta).includes(normalized(card.sharedPremise)), `${route}/${card.id}/${story.id}: ${lens} shared premise not repeated in delta`);
+        cardDeltas.push(normalized(delta));
       }
     }
+    assert.equal(new Set(cardDeltas).size, cardDeltas.length, `${route}/${card.id}: no exact duplicate authored delta`);
   }
 }
 
@@ -110,7 +132,9 @@ try {
       assert.equal(await page.locator("[data-lrc-story-rail]:visible").count(), 0, `${route} ${viewport.name}: story controls hidden in orbit`);
       assert.equal(await page.locator("details.lr-audit[open]").count(), 0, `${route} ${viewport.name}: custody collapsed`);
 
-      const targetIndex = Math.min(1, expected.length - 1);
+      const representativeCardId = semanticRepresentativeCards.get(route);
+      const representativeIndex = representativeCardId ? expected.findIndex(card => card.id === representativeCardId) : -1;
+      const targetIndex = representativeIndex >= 0 ? representativeIndex : Math.min(1, expected.length - 1);
       if (route.includes("/flow/cycles/") || route.includes("/flow/handoffs/")) {
         const box = await page.locator("[data-lrc-viewport]").boundingBox();
         assert.ok(box, `${route} ${viewport.name}: viewport geometry`);
@@ -118,7 +142,9 @@ try {
         await page.mouse.down();
         await page.mouse.move(box.x + box.width * 0.34, box.y + box.height * 0.55, { steps: 5 });
         await page.mouse.up();
-        assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-index"), String(targetIndex), `${route} ${viewport.name}: one swipe one outer step`);
+        const swipedIndex = Math.min(1, expected.length - 1);
+        assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-index"), String(swipedIndex), `${route} ${viewport.name}: one swipe one outer step`);
+        if (targetIndex !== swipedIndex) await page.locator("[data-lrc-tab]").nth(targetIndex).click();
       } else {
         await page.locator("[data-lrc-tab]").nth(targetIndex).click();
       }
@@ -131,18 +157,57 @@ try {
       assert.equal(await page.locator("[data-lrc-story-rail]:visible").count(), 1, `${route} ${viewport.name}: vertical story controls visible on open`);
       assert.equal(await page.locator("[data-lrc-card][data-active='true'] [data-lrc-story-tab]").count(), expected[targetIndex].stories.length, `${route} ${viewport.name}: story layer count`);
       assert.equal(await page.locator("[data-lrc-card][data-active='true'] [data-lrc-grid-cell]:visible").count(), 1, `${route} ${viewport.name}: exactly one grid cell visible`);
+      assert.equal(await page.locator("[data-lrc-card][data-active='true'] [data-lrc-shared-premise]:visible").count(), 1, `${route} ${viewport.name}: shared premise rendered once`);
+      assert.equal(await page.locator("[data-lrc-card][data-active='true'] [data-lrc-story-focus]:visible").count(), 1, `${route} ${viewport.name}: one visible story focus`);
+      assert.equal(await page.locator("[data-lrc-card][data-active='true'] [data-lrc-lens-frame]:visible").count(), 1, `${route} ${viewport.name}: one visible lens frame`);
+      assert.equal(await page.locator("[data-lrc-card][data-active='true'] [data-lrc-selection-delta]:visible").count(), 1, `${route} ${viewport.name}: one visible authored delta`);
+      assert.equal((await page.locator("[data-lrc-card][data-active='true'] [data-lrc-selection-delta]:visible > strong").textContent()).trim(), "What this selection adds", `${route} ${viewport.name}: delta is explicitly labelled`);
+
+      const visibleText = async selector => normalized(await page.locator(`[data-lrc-card][data-active='true'] ${selector}:visible > p`).innerText());
+      const visibleDeltaColor = () => page.locator("[data-lrc-card][data-active='true'] [data-lrc-selection-delta]:visible").evaluate(node => getComputedStyle(node).borderLeftColor);
+      const initialShared = await visibleText("[data-lrc-shared-premise]");
+      const initialFocus = await visibleText("[data-lrc-story-focus]");
+      const practicalFrame = await visibleText("[data-lrc-lens-frame]");
+      const initialDelta = await visibleText("[data-lrc-selection-delta]");
+      const practicalColor = await visibleDeltaColor();
       const secondStory = expected[targetIndex].stories[1].id;
       await page.locator("[data-lrc-card][data-active='true'] [data-lrc-story-tab]").nth(1).click();
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-story"), secondStory, `${route} ${viewport.name}: vertical story changes`);
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-layer"), "practical", `${route} ${viewport.name}: story change preserves lens`);
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-index"), String(targetIndex), `${route} ${viewport.name}: story change preserves outer index`);
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-id"), activeId, `${route} ${viewport.name}: story change preserves card`);
+      const secondShared = await visibleText("[data-lrc-shared-premise]");
+      const secondFocus = await visibleText("[data-lrc-story-focus]");
+      const secondPracticalFrame = await visibleText("[data-lrc-lens-frame]");
+      const secondPracticalDelta = await visibleText("[data-lrc-selection-delta]");
+      assert.equal(secondShared, initialShared, `${route} ${viewport.name}: story change preserves one shared premise`);
+      assert.notEqual(secondFocus, initialFocus, `${route} ${viewport.name}: story change changes authored focus`);
+      assert.equal(secondPracticalFrame, practicalFrame, `${route} ${viewport.name}: story change preserves selected lens frame`);
+      assert.notEqual(secondPracticalDelta, initialDelta, `${route} ${viewport.name}: story change changes authored delta`);
       await page.locator("[data-lrc-card][data-active='true'] [data-lrc-inner-tab='engineering']").click();
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-layer"), "engineering", `${route} ${viewport.name}: inner layer change`);
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-story"), secondStory, `${route} ${viewport.name}: lens change preserves story`);
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-index"), String(targetIndex), `${route} ${viewport.name}: inner layer preserves outer index`);
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-id"), activeId, `${route} ${viewport.name}: inner layer preserves card`);
       assert.equal(await page.locator("[data-lrc-card][data-active='true'] [data-lrc-grid-cell]:visible").count(), 1, `${route} ${viewport.name}: one cell remains visible after both-axis changes`);
+      const engineeringShared = await visibleText("[data-lrc-shared-premise]");
+      const engineeringFocus = await visibleText("[data-lrc-story-focus]");
+      const engineeringFrame = await visibleText("[data-lrc-lens-frame]");
+      const engineeringDelta = await visibleText("[data-lrc-selection-delta]");
+      const engineeringColor = await visibleDeltaColor();
+      assert.equal(engineeringShared, initialShared, `${route} ${viewport.name}: lens change preserves shared premise`);
+      assert.equal(engineeringFocus, secondFocus, `${route} ${viewport.name}: lens change preserves selected story focus`);
+      assert.notEqual(engineeringFrame, practicalFrame, `${route} ${viewport.name}: engineering changes the lens frame`);
+      assert.notEqual(engineeringDelta, secondPracticalDelta, `${route} ${viewport.name}: engineering changes the authored delta`);
+      await page.locator("[data-lrc-card][data-active='true'] [data-lrc-inner-tab='empirical']").click();
+      const empiricalFrame = await visibleText("[data-lrc-lens-frame]");
+      const empiricalDelta = await visibleText("[data-lrc-selection-delta]");
+      const empiricalColor = await visibleDeltaColor();
+      assert.notEqual(empiricalFrame, engineeringFrame, `${route} ${viewport.name}: empirical changes the lens frame`);
+      assert.notEqual(empiricalDelta, engineeringDelta, `${route} ${viewport.name}: empirical changes the authored delta`);
+      assert.equal(new Set([practicalColor, engineeringColor, empiricalColor]).size, 3, `${route} ${viewport.name}: each lens has a distinct delta color`);
+      assert.equal((await page.locator("[data-lrc-card][data-active='true'] [data-lrc-lens-frame]:visible > strong").textContent()).trim(), "Empirical lens frame", `${route} ${viewport.name}: color difference is paired with a lens label`);
+      await page.locator("[data-lrc-card][data-active='true'] [data-lrc-inner-tab='engineering']").click();
 
       const geometry = await page.evaluate(() => {
         const returnControl = document.querySelector("[data-lrc-card][data-active='true'] [data-lrc-return]");

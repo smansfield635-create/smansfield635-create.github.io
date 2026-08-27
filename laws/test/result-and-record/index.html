@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="/assets/laws-destination/renewal.css?v=LAWS_COMPLETE_RENEWAL_V1">
   <link rel="stylesheet" href="/assets/laws-destination/renewal-navigation.css?v=LAWS_COMPLETE_RENEWAL_COLLAPSIBLE_NAVIGATION_V1">
   <link rel="stylesheet" href="/assets/laws-destination/renewal-batch.css?v=LAWS_COMPLETE_RENEWAL_BATCH_V1">
-  <link rel="stylesheet" href="/laws/room-carousel/room-carousel.v1.css?v=LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827">
+  <link rel="stylesheet" href="/laws/room-carousel/room-carousel.v1.css?v=LAWS_SEMANTIC_CELL_ENRICHMENT_GEN1755_20260827">
   <script defer src="/assets/laws-destination/renewal.js?v=LAWS_COMPLETE_RENEWAL_COLLAPSIBLE_NAVIGATION_V1"></script>
 </head>
 <body>
@@ -69,198 +69,218 @@
     </section>
     <section class="lr-boundary" aria-labelledby="boundary-title"><p class="lr-kicker">Claim boundary</p><h2 id="boundary-title">Where the interpretation stops</h2><p>The preserved record cannot be promoted beyond its claim ceiling by later presentation, routing, or implementation.</p></section>
   <section class="lrc-semantic-fallback" data-lrc-static aria-labelledby="lrc-static-laws-test-result-and-record">
-    <header><p class="lr-kicker">Layered contextual reading</p><h2 id="lrc-static-laws-test-result-and-record">Subjects, stories, and reading lenses</h2><p>Each subject contains four or five story layers. Practical, Engineering, and Empirical are parallel readings of each layer.</p></header>
-    <article class="lrc-static-card">
+    <header><p class="lr-kicker">Layered contextual reading</p><h2 id="lrc-static-laws-test-result-and-record">Shared premise, story focus, and lens-specific additions</h2><p>Each subject declares what remains constant, then separates the selected story focus from the Practical, Engineering, or Empirical material added by that selection.</p></header>
+    <article class="lrc-static-card" data-lrc-static-card="result">
       <p>01 / 05</p>
       <h3>Result</h3>
-      <p>State the evaluated outcome without promotion.</p>
+      <div class="lrc-static-shared" data-lrc-shared-premise><h4>Shared premise</h4><p>State the evaluated outcome without promotion. This condition remains common to every reading lens.</p></div>
       <ol>
-        <li>
+        <li data-lrc-static-story="bind-metric">
           <h4>Bind metric</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Attach metric to Result so the reader cannot carry the conclusion into a different target, population, or decision without noticing the change.</p>
           <dl>
-            <div><dt>Practical</dt><dd>State the evaluated outcome without promotion. Explain what happened in the test.</dd></div>
-            <div><dt>Engineering</dt><dd>State the evaluated outcome without promotion. Bind metric.</dd></div>
-            <div><dt>Empirical</dt><dd>State the evaluated outcome without promotion. Report all positive.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Explain what happened in the test. Read Result as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Explain what happened in the test. Attach metric to Result so the reader cannot carry the conclusion into a different target, population, or decision without noticing the change.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Bind metric, population, target, comparator, and execution identity. Encode Result through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Implement the binding for metric with stable identifiers and referential checks that fail when either side is missing or substituted.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Report all positive, negative, mixed, and unresolved outcomes. Require repeatable observed-versus-expected records for Result, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Verify the metric binding by tracing each reported result back to the exact source, target, and evaluation record.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="population">
           <h4>Population</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates population within Result. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>State the evaluated outcome without promotion. Explain what happened in the test.</dd></div>
-            <div><dt>Engineering</dt><dd>State the evaluated outcome without promotion. Population.</dd></div>
-            <div><dt>Empirical</dt><dd>State the evaluated outcome without promotion. Report negative.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Explain what happened in the test. Read Result as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Explain what happened in the test. This selection isolates population within Result. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Bind metric, population, target, comparator, and execution identity. Encode Result through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat population as a distinct control point inside Result. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Report all positive, negative, mixed, and unresolved outcomes. Require repeatable observed-versus-expected records for Result, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Evidence for population must identify the observed unit, context, comparison, and boundary. Without those records, Result remains a conceptual or procedural classification at this layer. Require repeatable observed-versus-expected records for Result, including failed cases and the exact environment.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="target">
           <h4>Target</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates target within Result. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>State the evaluated outcome without promotion. Explain what happened in the test.</dd></div>
-            <div><dt>Engineering</dt><dd>State the evaluated outcome without promotion. Target.</dd></div>
-            <div><dt>Empirical</dt><dd>State the evaluated outcome without promotion. Report mixed.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Explain what happened in the test. Read Result as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Explain what happened in the test. This selection isolates target within Result. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Bind metric, population, target, comparator, and execution identity. Encode Result through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat target as a distinct control point inside Result. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Report all positive, negative, mixed, and unresolved outcomes. Require repeatable observed-versus-expected records for Result, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Evidence for target must identify the observed unit, context, comparison, and boundary. Without those records, Result remains a conceptual or procedural classification at this layer. Require repeatable observed-versus-expected records for Result, including failed cases and the exact environment.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="comparator">
           <h4>Comparator</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates comparator within Result. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>State the evaluated outcome without promotion. Explain what happened in the test.</dd></div>
-            <div><dt>Engineering</dt><dd>State the evaluated outcome without promotion. Comparator.</dd></div>
-            <div><dt>Empirical</dt><dd>State the evaluated outcome without promotion. Report unresolved outcomes.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Explain what happened in the test. Read Result as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Explain what happened in the test. This selection isolates comparator within Result. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Bind metric, population, target, comparator, and execution identity. Encode Result through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat comparator as a distinct control point inside Result. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Report all positive, negative, mixed, and unresolved outcomes. Require repeatable observed-versus-expected records for Result, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Evidence for comparator must identify the observed unit, context, comparison, and boundary. Without those records, Result remains a conceptual or procedural classification at this layer. Require repeatable observed-versus-expected records for Result, including failed cases and the exact environment.</p></dd></div>
           </dl>
         </li>
       </ol>
     </article>
-    <article class="lrc-static-card">
+    <article class="lrc-static-card" data-lrc-static-card="comparison">
       <p>02 / 05</p>
       <h3>Comparison</h3>
-      <p>Place the target beside its baseline and rival explanations.</p>
+      <div class="lrc-static-shared" data-lrc-shared-premise><h4>Shared premise</h4><p>Place the target beside its baseline and rival explanations.</p></div>
       <ol>
-        <li>
+        <li data-lrc-static-story="preserve-identical-windows">
           <h4>Preserve identical windows</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Keep identical windows attached while Comparison moves forward so the next reader inherits the reason for the result rather than only its final label.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Place the target beside its baseline and rival explanations. Show what the result adds beyond ordinary methods.</dd></div>
-            <div><dt>Engineering</dt><dd>Place the target beside its baseline and rival explanations. Preserve identical windows.</dd></div>
-            <div><dt>Empirical</dt><dd>Place the target beside its baseline and rival explanations. The stronger burden comparator remains visible beside the combined result.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Show what the result adds beyond ordinary methods. Read Comparison as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Show what the result adds beyond ordinary methods. Keep identical windows attached while Comparison moves forward so the next reader inherits the reason for the result rather than only its final label.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Preserve identical windows, metrics, and admissible inputs. Encode Comparison through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Carry identical windows through version, ownership, and handoff boundaries; record any transformation instead of silently replacing the original state.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> The stronger burden comparator remains visible beside the combined result. Require repeatable observed-versus-expected records for Comparison, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> The stronger burden comparator remains visible beside the combined result. Demonstrate preservation of identical windows with before-and-after records and a reconciliation that exposes loss, mutation, or unresolved difference.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="preserve-metrics">
           <h4>Preserve metrics</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Keep metrics attached while Comparison moves forward so the next reader inherits the reason for the result rather than only its final label.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Place the target beside its baseline and rival explanations. Show what the result adds beyond ordinary methods.</dd></div>
-            <div><dt>Engineering</dt><dd>Place the target beside its baseline and rival explanations. Preserve metrics.</dd></div>
-            <div><dt>Empirical</dt><dd>Place the target beside its baseline and rival explanations. The stronger burden comparator remains visible beside the combined result.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Show what the result adds beyond ordinary methods. Read Comparison as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Show what the result adds beyond ordinary methods. Keep metrics attached while Comparison moves forward so the next reader inherits the reason for the result rather than only its final label.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Preserve identical windows, metrics, and admissible inputs. Encode Comparison through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Carry metrics through version, ownership, and handoff boundaries; record any transformation instead of silently replacing the original state.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> The stronger burden comparator remains visible beside the combined result. Require repeatable observed-versus-expected records for Comparison, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> The stronger burden comparator remains visible beside the combined result. Demonstrate preservation of metrics with before-and-after records and a reconciliation that exposes loss, mutation, or unresolved difference.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="preserve-admissible-inputs">
           <h4>Preserve admissible inputs</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Keep admissible inputs attached while Comparison moves forward so the next reader inherits the reason for the result rather than only its final label.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Place the target beside its baseline and rival explanations. Show what the result adds beyond ordinary methods.</dd></div>
-            <div><dt>Engineering</dt><dd>Place the target beside its baseline and rival explanations. Preserve admissible inputs.</dd></div>
-            <div><dt>Empirical</dt><dd>Place the target beside its baseline and rival explanations. The stronger burden comparator remains visible beside the combined result.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Show what the result adds beyond ordinary methods. Read Comparison as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Show what the result adds beyond ordinary methods. Keep admissible inputs attached while Comparison moves forward so the next reader inherits the reason for the result rather than only its final label.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Preserve identical windows, metrics, and admissible inputs. Encode Comparison through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Carry admissible inputs through version, ownership, and handoff boundaries; record any transformation instead of silently replacing the original state.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> The stronger burden comparator remains visible beside the combined result. Require repeatable observed-versus-expected records for Comparison, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> The stronger burden comparator remains visible beside the combined result. Demonstrate preservation of admissible inputs with before-and-after records and a reconciliation that exposes loss, mutation, or unresolved difference.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="show-what-the-result-adds-beyond-ordinary-methods">
           <h4>Show what the result adds beyond ordinary methods</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates show what the result adds beyond ordinary methods within Comparison. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Place the target beside its baseline and rival explanations. Show what the result adds beyond ordinary methods.</dd></div>
-            <div><dt>Engineering</dt><dd>Place the target beside its baseline and rival explanations. Preserve identical windows.</dd></div>
-            <div><dt>Empirical</dt><dd>Place the target beside its baseline and rival explanations. The stronger burden comparator remains visible beside the combined result.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Show what the result adds beyond ordinary methods. Read Comparison as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> This selection isolates show what the result adds beyond ordinary methods within Comparison. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Preserve identical windows, metrics, and admissible inputs. Encode Comparison through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat show what the result adds beyond ordinary methods as a distinct control point inside Comparison. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> The stronger burden comparator remains visible beside the combined result. Require repeatable observed-versus-expected records for Comparison, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> The stronger burden comparator remains visible beside the combined result. Evidence for show what the result adds beyond ordinary methods must identify the observed unit, context, comparison, and boundary. Without those records, Comparison remains a conceptual or procedural classification at this layer. Require repeatable observed-versus-expected records for Comparison, including failed cases and the exact environment.</p></dd></div>
           </dl>
         </li>
       </ol>
     </article>
-    <article class="lrc-static-card">
+    <article class="lrc-static-card" data-lrc-static-card="failure-meaning">
       <p>03 / 05</p>
       <h3>Failure Meaning</h3>
-      <p>Interpret failed components and thresholds as findings.</p>
+      <div class="lrc-static-shared" data-lrc-shared-premise><h4>Shared premise</h4><p>Interpret failed components and thresholds as findings. This condition remains common to every reading lens.</p></div>
       <ol>
-        <li>
+        <li data-lrc-static-story="record-ablation">
           <h4>Record ablation</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Make ablation recoverable so later decisions do not depend on memory, confidence, or the availability of the original operator.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Interpret failed components and thresholds as findings. Show what should not be used or assumed.</dd></div>
-            <div><dt>Engineering</dt><dd>Interpret failed components and thresholds as findings. Record ablation.</dd></div>
-            <div><dt>Empirical</dt><dd>Interpret failed components and thresholds as findings. Failure constrains the public conclusion.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Show what should not be used or assumed. Read Failure Meaning as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Show what should not be used or assumed. Make ablation recoverable so later decisions do not depend on memory, confidence, or the availability of the original operator.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Record ablation, sensitivity, zero-true-positive, and calibration failures. Encode Failure Meaning through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Store ablation with identity, timestamp, source, version, and disposition fields sufficient to reconstruct how it entered the system.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Failure constrains the public conclusion and next design. Require repeatable observed-versus-expected records for Failure Meaning, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Failure constrains the public conclusion. A valid record of ablation must be inspectable, attributable, and comparable with the state it is claimed to describe.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="record-sensitivity">
           <h4>Record sensitivity</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Make sensitivity recoverable so later decisions do not depend on memory, confidence, or the availability of the original operator.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Interpret failed components and thresholds as findings. Show what should not be used or assumed.</dd></div>
-            <div><dt>Engineering</dt><dd>Interpret failed components and thresholds as findings. Record sensitivity.</dd></div>
-            <div><dt>Empirical</dt><dd>Interpret failed components and thresholds as findings. Next design.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Show what should not be used or assumed. Read Failure Meaning as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Show what should not be used or assumed. Make sensitivity recoverable so later decisions do not depend on memory, confidence, or the availability of the original operator.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Record ablation, sensitivity, zero-true-positive, and calibration failures. Encode Failure Meaning through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Store sensitivity with identity, timestamp, source, version, and disposition fields sufficient to reconstruct how it entered the system.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Failure constrains the public conclusion and next design. Require repeatable observed-versus-expected records for Failure Meaning, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> A valid record of sensitivity must be inspectable, attributable, and comparable with the state it is claimed to describe.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="record-zero-true-positive">
           <h4>Record zero-true-positive</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Make zero-true-positive recoverable so later decisions do not depend on memory, confidence, or the availability of the original operator.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Interpret failed components and thresholds as findings. Show what should not be used or assumed.</dd></div>
-            <div><dt>Engineering</dt><dd>Interpret failed components and thresholds as findings. Record zero-true-positive.</dd></div>
-            <div><dt>Empirical</dt><dd>Interpret failed components and thresholds as findings. Failure constrains the public conclusion.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Show what should not be used or assumed. Read Failure Meaning as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Show what should not be used or assumed. Make zero-true-positive recoverable so later decisions do not depend on memory, confidence, or the availability of the original operator.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Record ablation, sensitivity, zero-true-positive, and calibration failures. Encode Failure Meaning through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Store zero-true-positive with identity, timestamp, source, version, and disposition fields sufficient to reconstruct how it entered the system.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Failure constrains the public conclusion and next design. Require repeatable observed-versus-expected records for Failure Meaning, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Failure constrains the public conclusion. A valid record of zero-true-positive must be inspectable, attributable, and comparable with the state it is claimed to describe.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="record-calibration-failures">
           <h4>Record calibration failures</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Make calibration failures recoverable so later decisions do not depend on memory, confidence, or the availability of the original operator.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Interpret failed components and thresholds as findings. Show what should not be used or assumed.</dd></div>
-            <div><dt>Engineering</dt><dd>Interpret failed components and thresholds as findings. Record calibration failures.</dd></div>
-            <div><dt>Empirical</dt><dd>Interpret failed components and thresholds as findings. Next design.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Show what should not be used or assumed. Read Failure Meaning as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Show what should not be used or assumed. Make calibration failures recoverable so later decisions do not depend on memory, confidence, or the availability of the original operator.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Record ablation, sensitivity, zero-true-positive, and calibration failures. Encode Failure Meaning through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Store calibration failures with identity, timestamp, source, version, and disposition fields sufficient to reconstruct how it entered the system.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Failure constrains the public conclusion and next design. Require repeatable observed-versus-expected records for Failure Meaning, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> A valid record of calibration failures must be inspectable, attributable, and comparable with the state it is claimed to describe.</p></dd></div>
           </dl>
         </li>
       </ol>
     </article>
-    <article class="lrc-static-card">
+    <article class="lrc-static-card" data-lrc-static-card="claim-ceiling">
       <p>04 / 05</p>
       <h3>Claim Ceiling</h3>
-      <p>Fix the strongest permitted statement.</p>
+      <div class="lrc-static-shared" data-lrc-shared-premise><h4>Shared premise</h4><p>Fix the strongest permitted statement. This condition remains common to every reading lens.</p></div>
       <ol>
-        <li>
+        <li data-lrc-static-story="bind-prohibited-claims">
           <h4>Bind prohibited claims</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Attach prohibited claims to Claim Ceiling so the reader cannot carry the conclusion into a different target, population, or decision without noticing the change.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Fix the strongest permitted statement. Tell the reader where interpretation stops.</dd></div>
-            <div><dt>Engineering</dt><dd>Fix the strongest permitted statement. Bind prohibited claims.</dd></div>
-            <div><dt>Empirical</dt><dd>Fix the strongest permitted statement. Later presentation cannot raise the ceiling.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Tell the reader where interpretation stops. Read Claim Ceiling as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Tell the reader where interpretation stops. Attach prohibited claims to Claim Ceiling so the reader cannot carry the conclusion into a different target, population, or decision without noticing the change.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Bind prohibited claims and review conditions to the record. Encode Claim Ceiling through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Implement the binding for prohibited claims with stable identifiers and referential checks that fail when either side is missing or substituted.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Later presentation cannot raise the ceiling. Require repeatable observed-versus-expected records for Claim Ceiling, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Later presentation cannot raise the ceiling. Verify the prohibited claims binding by tracing each reported result back to the exact source, target, and evaluation record.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="review-conditions-to-the-record">
           <h4>Review conditions to the record</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates review conditions to the record within Claim Ceiling. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Fix the strongest permitted statement. Tell the reader where interpretation stops.</dd></div>
-            <div><dt>Engineering</dt><dd>Fix the strongest permitted statement. Review conditions to the record.</dd></div>
-            <div><dt>Empirical</dt><dd>Fix the strongest permitted statement. Later presentation cannot raise the ceiling.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Tell the reader where interpretation stops. Read Claim Ceiling as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Tell the reader where interpretation stops. This selection isolates review conditions to the record within Claim Ceiling. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Bind prohibited claims and review conditions to the record. Encode Claim Ceiling through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat review conditions to the record as a distinct control point inside Claim Ceiling. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Later presentation cannot raise the ceiling. Require repeatable observed-versus-expected records for Claim Ceiling, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Later presentation cannot raise the ceiling. Evidence for review conditions to the record must identify the observed unit, context, comparison, and boundary. Without those records, Claim Ceiling remains a conceptual or procedural classification at this layer. Require repeatable observed-versus-expected records for Claim Ceiling, including failed cases and the exact environment.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="tell-the-reader-where-interpretation-stops">
           <h4>Tell the reader where interpretation stops</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates tell the reader where interpretation stops within Claim Ceiling. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Fix the strongest permitted statement. Tell the reader where interpretation stops.</dd></div>
-            <div><dt>Engineering</dt><dd>Fix the strongest permitted statement. Bind prohibited claims.</dd></div>
-            <div><dt>Empirical</dt><dd>Fix the strongest permitted statement. Later presentation cannot raise the ceiling.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Tell the reader where interpretation stops. Read Claim Ceiling as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> This selection isolates tell the reader where interpretation stops within Claim Ceiling. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Bind prohibited claims and review conditions to the record. Encode Claim Ceiling through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat tell the reader where interpretation stops as a distinct control point inside Claim Ceiling. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Later presentation cannot raise the ceiling. Require repeatable observed-versus-expected records for Claim Ceiling, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Later presentation cannot raise the ceiling. Evidence for tell the reader where interpretation stops must identify the observed unit, context, comparison, and boundary. Without those records, Claim Ceiling remains a conceptual or procedural classification at this layer. Require repeatable observed-versus-expected records for Claim Ceiling, including failed cases and the exact environment.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="later-presentation-cannot-raise-the-ceiling">
           <h4>Later presentation cannot raise the ceiling</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates later presentation cannot raise the ceiling within Claim Ceiling. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Fix the strongest permitted statement. Tell the reader where interpretation stops.</dd></div>
-            <div><dt>Engineering</dt><dd>Fix the strongest permitted statement. Review conditions to the record.</dd></div>
-            <div><dt>Empirical</dt><dd>Fix the strongest permitted statement. Later presentation cannot raise the ceiling.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Tell the reader where interpretation stops. Read Claim Ceiling as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Tell the reader where interpretation stops. This selection isolates later presentation cannot raise the ceiling within Claim Ceiling. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Bind prohibited claims and review conditions to the record. Encode Claim Ceiling through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Review conditions to the record. Treat later presentation cannot raise the ceiling as a distinct control point inside Claim Ceiling. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Later presentation cannot raise the ceiling. Require repeatable observed-versus-expected records for Claim Ceiling, including failed cases and the exact environment. A passing label without recoverable evidence does not establish the tested condition.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Evidence for later presentation cannot raise the ceiling must identify the observed unit, context, comparison, and boundary. Without those records, Claim Ceiling remains a conceptual or procedural classification at this layer. Require repeatable observed-versus-expected records for Claim Ceiling, including failed cases and the exact environment.</p></dd></div>
           </dl>
         </li>
       </ol>
     </article>
-    <article class="lrc-static-card">
+    <article class="lrc-static-card" data-lrc-static-card="record">
       <p>05 / 05</p>
       <h3>Record</h3>
-      <p>Preserve result, custody, and next question together.</p>
+      <div class="lrc-static-shared" data-lrc-shared-premise><h4>Shared premise</h4><p>Preserve result, custody, and next question together. This condition remains common to every reading lens.</p></div>
       <ol>
-        <li>
+        <li data-lrc-static-story="store-evidence-locators">
           <h4>Store evidence locators</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates store evidence locators within Record. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Preserve result, custody, and next question together. Leave a durable path for inspection.</dd></div>
-            <div><dt>Engineering</dt><dd>Preserve result, custody, and next question together. Store evidence locators.</dd></div>
-            <div><dt>Empirical</dt><dd>Preserve result, custody, and next question together. A record documents the evaluated state.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Leave a durable path for inspection. Read Record as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Leave a durable path for inspection. This selection isolates store evidence locators within Record. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Store evidence locators, procedure identity, receipts, disposition, and next test. Encode Record through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat store evidence locators as a distinct control point inside Record. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> A record documents the evaluated state; it does not create new validation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> A record documents the evaluated state. Evidence for store evidence locators must identify the observed unit, context, comparison, and boundary. Without those records, Record remains a conceptual or procedural classification at this layer. Require repeatable observed-versus-expected records for Record, including failed cases and the exact environment.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="procedure-identity">
           <h4>Procedure identity</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates procedure identity within Record. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Preserve result, custody, and next question together. Leave a durable path for inspection.</dd></div>
-            <div><dt>Engineering</dt><dd>Preserve result, custody, and next question together. Procedure identity.</dd></div>
-            <div><dt>Empirical</dt><dd>Preserve result, custody, and next question together. It does not create new validation.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Leave a durable path for inspection. Read Record as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Leave a durable path for inspection. This selection isolates procedure identity within Record. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Store evidence locators, procedure identity, receipts, disposition, and next test. Encode Record through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat procedure identity as a distinct control point inside Record. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> A record documents the evaluated state; it does not create new validation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> It does not create new validation. Evidence for procedure identity must identify the observed unit, context, comparison, and boundary. Without those records, Record remains a conceptual or procedural classification at this layer. Require repeatable observed-versus-expected records for Record, including failed cases and the exact environment.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="receipts">
           <h4>Receipts</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates receipts within Record. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Preserve result, custody, and next question together. Leave a durable path for inspection.</dd></div>
-            <div><dt>Engineering</dt><dd>Preserve result, custody, and next question together. Receipts.</dd></div>
-            <div><dt>Empirical</dt><dd>Preserve result, custody, and next question together. A record documents the evaluated state.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Leave a durable path for inspection. Read Record as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Leave a durable path for inspection. This selection isolates receipts within Record. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Store evidence locators, procedure identity, receipts, disposition, and next test. Encode Record through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat receipts as a distinct control point inside Record. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> A record documents the evaluated state; it does not create new validation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> A record documents the evaluated state. Evidence for receipts must identify the observed unit, context, comparison, and boundary. Without those records, Record remains a conceptual or procedural classification at this layer. Require repeatable observed-versus-expected records for Record, including failed cases and the exact environment.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="disposition">
           <h4>Disposition</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates disposition within Record. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Preserve result, custody, and next question together. Leave a durable path for inspection.</dd></div>
-            <div><dt>Engineering</dt><dd>Preserve result, custody, and next question together. Disposition.</dd></div>
-            <div><dt>Empirical</dt><dd>Preserve result, custody, and next question together. It does not create new validation. <strong>Claim boundary:</strong> The preserved record cannot be promoted beyond its claim ceiling by later presentation, routing, or implementation.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Leave a durable path for inspection. Read Record as a checkpoint that changes what may proceed. The practical question is what was required, what was observed, and what decision follows from the difference.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Leave a durable path for inspection. This selection isolates disposition within Record. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Store evidence locators, procedure identity, receipts, disposition, and next test. Encode Record through preconditions, fixture identity, input, expected state, assertion, failure output, and receipt. A test without these controls cannot govern continuation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat disposition as a distinct control point inside Record. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> A record documents the evaluated state; it does not create new validation.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> It does not create new validation. Evidence for disposition must identify the observed unit, context, comparison, and boundary. Without those records, Record remains a conceptual or procedural classification at this layer. Require repeatable observed-versus-expected records for Record, including failed cases and the exact environment.</p><aside><strong>Claim boundary.</strong> The preserved record cannot be promoted beyond its claim ceiling by later presentation, routing, or implementation.</aside></dd></div>
           </dl>
         </li>
       </ol>
@@ -284,6 +304,6 @@
   </main>
   <footer class="lr-footer"><span>Diamond Gate Bridge · Laws Chamber</span><a href="/laws/">Return to the Laws Compass</a></footer>
 </div>
-<script defer src="/laws/room-carousel/room-carousel.v1.js?v=LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827"></script>
+<script defer src="/laws/room-carousel/room-carousel.v1.js?v=LAWS_SEMANTIC_CELL_ENRICHMENT_GEN1755_20260827"></script>
 </body>
 </html>

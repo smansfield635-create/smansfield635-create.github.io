@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="/assets/laws-destination/renewal.css?v=LAWS_COMPLETE_RENEWAL_V1">
   <link rel="stylesheet" href="/assets/laws-destination/renewal-navigation.css?v=LAWS_COMPLETE_RENEWAL_COLLAPSIBLE_NAVIGATION_V1">
   <link rel="stylesheet" href="/assets/laws-destination/renewal-batch.css?v=LAWS_COMPLETE_RENEWAL_BATCH_V1">
-  <link rel="stylesheet" href="/laws/room-carousel/room-carousel.v1.css?v=LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827">
+  <link rel="stylesheet" href="/laws/room-carousel/room-carousel.v1.css?v=LAWS_SEMANTIC_CELL_ENRICHMENT_GEN1755_20260827">
   <script defer src="/assets/laws-destination/renewal.js?v=LAWS_COMPLETE_RENEWAL_COLLAPSIBLE_NAVIGATION_V1"></script>
 </head>
 <body>
@@ -69,198 +69,218 @@
     </section>
     <section class="lr-boundary" aria-labelledby="boundary-title"><p class="lr-kicker">Claim boundary</p><h2 id="boundary-title">Where the interpretation stops</h2><p>Source existence is not validation; provenance and observation volume do not establish mechanism, transfer, or deployment fitness.</p></section>
   <section class="lrc-semantic-fallback" data-lrc-static aria-labelledby="lrc-static-laws-research-evidence-and-sources">
-    <header><p class="lr-kicker">Layered contextual reading</p><h2 id="lrc-static-laws-research-evidence-and-sources">Subjects, stories, and reading lenses</h2><p>Each subject contains four or five story layers. Practical, Engineering, and Empirical are parallel readings of each layer.</p></header>
-    <article class="lrc-static-card">
+    <header><p class="lr-kicker">Layered contextual reading</p><h2 id="lrc-static-laws-research-evidence-and-sources">Shared premise, story focus, and lens-specific additions</h2><p>Each subject declares what remains constant, then separates the selected story focus from the Practical, Engineering, or Empirical material added by that selection.</p></header>
+    <article class="lrc-static-card" data-lrc-static-card="source-identity">
       <p>01 / 05</p>
       <h3>Source Identity</h3>
-      <p>Name the dataset, record, observation, or artifact.</p>
+      <div class="lrc-static-shared" data-lrc-shared-premise><h4>Shared premise</h4><p>Name the dataset, record, observation, or artifact. This condition remains common to every reading lens.</p></div>
       <ol>
-        <li>
+        <li data-lrc-static-story="bind-locator">
           <h4>Bind locator</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Attach locator to Source Identity so the reader cannot carry the conclusion into a different target, population, or decision without noticing the change.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Name the dataset, record, observation, or artifact. Make the origin understandable to a reader deciding what to trust.</dd></div>
-            <div><dt>Engineering</dt><dd>Name the dataset, record, observation, or artifact. Bind locator.</dd></div>
-            <div><dt>Empirical</dt><dd>Name the dataset, record, observation, or artifact. Identity is necessary for evidence but is not itself validation.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Make the origin understandable to a reader deciding what to trust. Read Source Identity as one stage in a bounded investigation. The practical task is to preserve the useful conclusion while keeping the question, population, and unresolved work attached.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Make the origin understandable to a reader deciding what to trust. Attach locator to Source Identity so the reader cannot carry the conclusion into a different target, population, or decision without noticing the change.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Bind locator, version, owner, format, and acquisition condition. Represent Source Identity through protocol, data lineage, version, split, metric, comparator, and review state. Each element must remain recoverable before the result can be reproduced or extended.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Implement the binding for locator with stable identifiers and referential checks that fail when either side is missing or substituted.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Identity is necessary for evidence but is not itself validation. Require an inspectable record for Source Identity: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling. Missing evidence remains visible instead of being converted into confidence.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Identity is necessary for evidence but is not itself validation. Verify the locator binding by tracing each reported result back to the exact source, target, and evaluation record.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="version">
           <h4>Version</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates version within Source Identity. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Name the dataset, record, observation, or artifact. Make the origin understandable to a reader deciding what to trust.</dd></div>
-            <div><dt>Engineering</dt><dd>Name the dataset, record, observation, or artifact. Version.</dd></div>
-            <div><dt>Empirical</dt><dd>Name the dataset, record, observation, or artifact. Identity is necessary for evidence but is not itself validation.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Make the origin understandable to a reader deciding what to trust. Read Source Identity as one stage in a bounded investigation. The practical task is to preserve the useful conclusion while keeping the question, population, and unresolved work attached.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Make the origin understandable to a reader deciding what to trust. This selection isolates version within Source Identity. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Bind locator, version, owner, format, and acquisition condition. Represent Source Identity through protocol, data lineage, version, split, metric, comparator, and review state. Each element must remain recoverable before the result can be reproduced or extended.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat version as a distinct control point inside Source Identity. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Identity is necessary for evidence but is not itself validation. Require an inspectable record for Source Identity: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling. Missing evidence remains visible instead of being converted into confidence.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Identity is necessary for evidence but is not itself validation. Evidence for version must identify the observed unit, context, comparison, and boundary. Without those records, Source Identity remains a conceptual or procedural classification at this layer. Require an inspectable record for Source Identity: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="owner">
           <h4>Owner</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates owner within Source Identity. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Name the dataset, record, observation, or artifact. Make the origin understandable to a reader deciding what to trust.</dd></div>
-            <div><dt>Engineering</dt><dd>Name the dataset, record, observation, or artifact. Owner.</dd></div>
-            <div><dt>Empirical</dt><dd>Name the dataset, record, observation, or artifact. Identity is necessary for evidence but is not itself validation.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Make the origin understandable to a reader deciding what to trust. Read Source Identity as one stage in a bounded investigation. The practical task is to preserve the useful conclusion while keeping the question, population, and unresolved work attached.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Make the origin understandable to a reader deciding what to trust. This selection isolates owner within Source Identity. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Bind locator, version, owner, format, and acquisition condition. Represent Source Identity through protocol, data lineage, version, split, metric, comparator, and review state. Each element must remain recoverable before the result can be reproduced or extended.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat owner as a distinct control point inside Source Identity. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Identity is necessary for evidence but is not itself validation. Require an inspectable record for Source Identity: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling. Missing evidence remains visible instead of being converted into confidence.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Identity is necessary for evidence but is not itself validation. Evidence for owner must identify the observed unit, context, comparison, and boundary. Without those records, Source Identity remains a conceptual or procedural classification at this layer. Require an inspectable record for Source Identity: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="format">
           <h4>Format</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates format within Source Identity. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Name the dataset, record, observation, or artifact. Make the origin understandable to a reader deciding what to trust.</dd></div>
-            <div><dt>Engineering</dt><dd>Name the dataset, record, observation, or artifact. Format.</dd></div>
-            <div><dt>Empirical</dt><dd>Name the dataset, record, observation, or artifact. Identity is necessary for evidence but is not itself validation.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Make the origin understandable to a reader deciding what to trust. Read Source Identity as one stage in a bounded investigation. The practical task is to preserve the useful conclusion while keeping the question, population, and unresolved work attached.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Make the origin understandable to a reader deciding what to trust. This selection isolates format within Source Identity. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Bind locator, version, owner, format, and acquisition condition. Represent Source Identity through protocol, data lineage, version, split, metric, comparator, and review state. Each element must remain recoverable before the result can be reproduced or extended.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat format as a distinct control point inside Source Identity. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Identity is necessary for evidence but is not itself validation. Require an inspectable record for Source Identity: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling. Missing evidence remains visible instead of being converted into confidence.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Identity is necessary for evidence but is not itself validation. Evidence for format must identify the observed unit, context, comparison, and boundary. Without those records, Source Identity remains a conceptual or procedural classification at this layer. Require an inspectable record for Source Identity: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling.</p></dd></div>
           </dl>
         </li>
       </ol>
     </article>
-    <article class="lrc-static-card">
+    <article class="lrc-static-card" data-lrc-static-card="provenance">
       <p>02 / 05</p>
       <h3>Provenance</h3>
-      <p>Trace how the source arrived and changed.</p>
+      <div class="lrc-static-shared" data-lrc-shared-premise><h4>Shared premise</h4><p>Trace how the source arrived and changed. This condition remains common to every reading lens.</p></div>
       <ol>
-        <li>
+        <li data-lrc-static-story="record-transformations">
           <h4>Record transformations</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Make transformations recoverable so later decisions do not depend on memory, confidence, or the availability of the original operator.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Trace how the source arrived and changed. Show the path from origin to the present claim.</dd></div>
-            <div><dt>Engineering</dt><dd>Trace how the source arrived and changed. Record transformations.</dd></div>
-            <div><dt>Empirical</dt><dd>Trace how the source arrived and changed. Untraceable transformation lowers or blocks evidentiary standing.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Show the path from origin to the present claim. Read Provenance as one stage in a bounded investigation. The practical task is to preserve the useful conclusion while keeping the question, population, and unresolved work attached.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Show the path from origin to the present claim. Make transformations recoverable so later decisions do not depend on memory, confidence, or the availability of the original operator.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Record transformations, exclusions, hashes, custody changes, and missing steps. Represent Provenance through protocol, data lineage, version, split, metric, comparator, and review state. Each element must remain recoverable before the result can be reproduced or extended.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Store transformations with identity, timestamp, source, version, and disposition fields sufficient to reconstruct how it entered the system.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Untraceable transformation lowers or blocks evidentiary standing. Require an inspectable record for Provenance: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling. Missing evidence remains visible instead of being converted into confidence.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Untraceable transformation lowers or blocks evidentiary standing. A valid record of transformations must be inspectable, attributable, and comparable with the state it is claimed to describe.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="record-exclusions">
           <h4>Record exclusions</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Make exclusions recoverable so later decisions do not depend on memory, confidence, or the availability of the original operator.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Trace how the source arrived and changed. Show the path from origin to the present claim.</dd></div>
-            <div><dt>Engineering</dt><dd>Trace how the source arrived and changed. Record exclusions.</dd></div>
-            <div><dt>Empirical</dt><dd>Trace how the source arrived and changed. Untraceable transformation lowers or blocks evidentiary standing.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Show the path from origin to the present claim. Read Provenance as one stage in a bounded investigation. The practical task is to preserve the useful conclusion while keeping the question, population, and unresolved work attached.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Show the path from origin to the present claim. Make exclusions recoverable so later decisions do not depend on memory, confidence, or the availability of the original operator.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Record transformations, exclusions, hashes, custody changes, and missing steps. Represent Provenance through protocol, data lineage, version, split, metric, comparator, and review state. Each element must remain recoverable before the result can be reproduced or extended.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Store exclusions with identity, timestamp, source, version, and disposition fields sufficient to reconstruct how it entered the system.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Untraceable transformation lowers or blocks evidentiary standing. Require an inspectable record for Provenance: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling. Missing evidence remains visible instead of being converted into confidence.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Untraceable transformation lowers or blocks evidentiary standing. A valid record of exclusions must be inspectable, attributable, and comparable with the state it is claimed to describe.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="record-hashes">
           <h4>Record hashes</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Make hashes recoverable so later decisions do not depend on memory, confidence, or the availability of the original operator.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Trace how the source arrived and changed. Show the path from origin to the present claim.</dd></div>
-            <div><dt>Engineering</dt><dd>Trace how the source arrived and changed. Record hashes.</dd></div>
-            <div><dt>Empirical</dt><dd>Trace how the source arrived and changed. Untraceable transformation lowers or blocks evidentiary standing.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Show the path from origin to the present claim. Read Provenance as one stage in a bounded investigation. The practical task is to preserve the useful conclusion while keeping the question, population, and unresolved work attached.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Show the path from origin to the present claim. Make hashes recoverable so later decisions do not depend on memory, confidence, or the availability of the original operator.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Record transformations, exclusions, hashes, custody changes, and missing steps. Represent Provenance through protocol, data lineage, version, split, metric, comparator, and review state. Each element must remain recoverable before the result can be reproduced or extended.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Store hashes with identity, timestamp, source, version, and disposition fields sufficient to reconstruct how it entered the system.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Untraceable transformation lowers or blocks evidentiary standing. Require an inspectable record for Provenance: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling. Missing evidence remains visible instead of being converted into confidence.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Untraceable transformation lowers or blocks evidentiary standing. A valid record of hashes must be inspectable, attributable, and comparable with the state it is claimed to describe.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="record-custody-changes">
           <h4>Record custody changes</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Make custody changes recoverable so later decisions do not depend on memory, confidence, or the availability of the original operator.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Trace how the source arrived and changed. Show the path from origin to the present claim.</dd></div>
-            <div><dt>Engineering</dt><dd>Trace how the source arrived and changed. Record custody changes.</dd></div>
-            <div><dt>Empirical</dt><dd>Trace how the source arrived and changed. Untraceable transformation lowers or blocks evidentiary standing.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Show the path from origin to the present claim. Read Provenance as one stage in a bounded investigation. The practical task is to preserve the useful conclusion while keeping the question, population, and unresolved work attached.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Show the path from origin to the present claim. Make custody changes recoverable so later decisions do not depend on memory, confidence, or the availability of the original operator.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Record transformations, exclusions, hashes, custody changes, and missing steps. Represent Provenance through protocol, data lineage, version, split, metric, comparator, and review state. Each element must remain recoverable before the result can be reproduced or extended.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Store custody changes with identity, timestamp, source, version, and disposition fields sufficient to reconstruct how it entered the system.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Untraceable transformation lowers or blocks evidentiary standing. Require an inspectable record for Provenance: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling. Missing evidence remains visible instead of being converted into confidence.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Untraceable transformation lowers or blocks evidentiary standing. A valid record of custody changes must be inspectable, attributable, and comparable with the state it is claimed to describe.</p></dd></div>
           </dl>
         </li>
       </ol>
     </article>
-    <article class="lrc-static-card">
+    <article class="lrc-static-card" data-lrc-static-card="admission">
       <p>03 / 05</p>
       <h3>Admission</h3>
-      <p>Declare why the source belongs in this question.</p>
+      <div class="lrc-static-shared" data-lrc-shared-premise><h4>Shared premise</h4><p>Declare why the source belongs in this question.</p></div>
       <ol>
-        <li>
+        <li data-lrc-static-story="fix-inclusion">
           <h4>Fix inclusion</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Hold inclusion constant before comparison so a later difference can be attributed to the evaluated change instead of a moving definition.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Declare why the source belongs in this question. Separate relevant material from nearby but inapplicable material.</dd></div>
-            <div><dt>Engineering</dt><dd>Declare why the source belongs in this question. Fix inclusion.</dd></div>
-            <div><dt>Empirical</dt><dd>Declare why the source belongs in this question. Post-result admission changes make the interpretation unreliable.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Separate relevant material from nearby but inapplicable material. Read Admission as one stage in a bounded investigation. The practical task is to preserve the useful conclusion while keeping the question, population, and unresolved work attached.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Separate relevant material from nearby but inapplicable material. Hold inclusion constant before comparison so a later difference can be attributed to the evaluated change instead of a moving definition.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Fix inclusion, exclusion, time-window, quality, and leakage rules. Represent Admission through protocol, data lineage, version, split, metric, comparator, and review state. Each element must remain recoverable before the result can be reproduced or extended.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Freeze inclusion in the versioned procedure and reject execution when the runtime value no longer matches the admitted definition.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Post-result admission changes make the interpretation unreliable. Require an inspectable record for Admission: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling. Missing evidence remains visible instead of being converted into confidence.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Post-result admission changes make the interpretation unreliable. The record must show the fixed value of inclusion for every evaluated case and disclose any deviation before results are compared.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="fix-exclusion">
           <h4>Fix exclusion</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Hold exclusion constant before comparison so a later difference can be attributed to the evaluated change instead of a moving definition.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Declare why the source belongs in this question. Separate relevant material from nearby but inapplicable material.</dd></div>
-            <div><dt>Engineering</dt><dd>Declare why the source belongs in this question. Fix exclusion.</dd></div>
-            <div><dt>Empirical</dt><dd>Declare why the source belongs in this question. Post-result admission changes make the interpretation unreliable.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Separate relevant material from nearby but inapplicable material. Read Admission as one stage in a bounded investigation. The practical task is to preserve the useful conclusion while keeping the question, population, and unresolved work attached.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Separate relevant material from nearby but inapplicable material. Hold exclusion constant before comparison so a later difference can be attributed to the evaluated change instead of a moving definition.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Fix inclusion, exclusion, time-window, quality, and leakage rules. Represent Admission through protocol, data lineage, version, split, metric, comparator, and review state. Each element must remain recoverable before the result can be reproduced or extended.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Freeze exclusion in the versioned procedure and reject execution when the runtime value no longer matches the admitted definition.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Post-result admission changes make the interpretation unreliable. Require an inspectable record for Admission: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling. Missing evidence remains visible instead of being converted into confidence.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Post-result admission changes make the interpretation unreliable. The record must show the fixed value of exclusion for every evaluated case and disclose any deviation before results are compared.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="fix-time-window">
           <h4>Fix time-window</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Hold time-window constant before comparison so a later difference can be attributed to the evaluated change instead of a moving definition.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Declare why the source belongs in this question. Separate relevant material from nearby but inapplicable material.</dd></div>
-            <div><dt>Engineering</dt><dd>Declare why the source belongs in this question. Fix time-window.</dd></div>
-            <div><dt>Empirical</dt><dd>Declare why the source belongs in this question. Post-result admission changes make the interpretation unreliable.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Separate relevant material from nearby but inapplicable material. Read Admission as one stage in a bounded investigation. The practical task is to preserve the useful conclusion while keeping the question, population, and unresolved work attached.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Separate relevant material from nearby but inapplicable material. Hold time-window constant before comparison so a later difference can be attributed to the evaluated change instead of a moving definition.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Fix inclusion, exclusion, time-window, quality, and leakage rules. Represent Admission through protocol, data lineage, version, split, metric, comparator, and review state. Each element must remain recoverable before the result can be reproduced or extended.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Freeze time-window in the versioned procedure and reject execution when the runtime value no longer matches the admitted definition.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Post-result admission changes make the interpretation unreliable. Require an inspectable record for Admission: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling. Missing evidence remains visible instead of being converted into confidence.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Post-result admission changes make the interpretation unreliable. The record must show the fixed value of time-window for every evaluated case and disclose any deviation before results are compared.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="fix-quality">
           <h4>Fix quality</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> Hold quality constant before comparison so a later difference can be attributed to the evaluated change instead of a moving definition.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Declare why the source belongs in this question. Separate relevant material from nearby but inapplicable material.</dd></div>
-            <div><dt>Engineering</dt><dd>Declare why the source belongs in this question. Fix quality.</dd></div>
-            <div><dt>Empirical</dt><dd>Declare why the source belongs in this question. Post-result admission changes make the interpretation unreliable.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Separate relevant material from nearby but inapplicable material. Read Admission as one stage in a bounded investigation. The practical task is to preserve the useful conclusion while keeping the question, population, and unresolved work attached.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Separate relevant material from nearby but inapplicable material. Hold quality constant before comparison so a later difference can be attributed to the evaluated change instead of a moving definition.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Fix inclusion, exclusion, time-window, quality, and leakage rules. Represent Admission through protocol, data lineage, version, split, metric, comparator, and review state. Each element must remain recoverable before the result can be reproduced or extended.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Freeze quality in the versioned procedure and reject execution when the runtime value no longer matches the admitted definition.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Post-result admission changes make the interpretation unreliable. Require an inspectable record for Admission: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling. Missing evidence remains visible instead of being converted into confidence.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Post-result admission changes make the interpretation unreliable. The record must show the fixed value of quality for every evaluated case and disclose any deviation before results are compared.</p></dd></div>
           </dl>
         </li>
       </ol>
     </article>
-    <article class="lrc-static-card">
+    <article class="lrc-static-card" data-lrc-static-card="observation">
       <p>04 / 05</p>
       <h3>Observation</h3>
-      <p>Separate source material from the actual unit observed.</p>
+      <div class="lrc-static-shared" data-lrc-shared-premise><h4>Shared premise</h4><p>Separate source material from the actual unit observed.</p></div>
       <ol>
-        <li>
+        <li data-lrc-static-story="declare-observation-unit">
           <h4>Declare observation unit</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> The practical difference is that observation unit becomes explicit before anyone acts on Observation; leaving it unnamed forces the reader to infer a rule that may not exist.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Separate source material from the actual unit observed. Show what was counted.</dd></div>
-            <div><dt>Engineering</dt><dd>Separate source material from the actual unit observed. Declare observation unit.</dd></div>
-            <div><dt>Empirical</dt><dd>Separate source material from the actual unit observed. Report counts.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Show what was counted, measured, classified, or compared. Read Observation as one stage in a bounded investigation. The practical task is to preserve the useful conclusion while keeping the question, population, and unresolved work attached.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> The practical difference is that observation unit becomes explicit before anyone acts on Observation; leaving it unnamed forces the reader to infer a rule that may not exist.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Declare observation unit, population, missingness, and dependence. Represent Observation through protocol, data lineage, version, split, metric, comparator, and review state. Each element must remain recoverable before the result can be reproduced or extended.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Encode observation unit in the governing Observation record with its owner, applicable state, and change boundary so downstream behavior does not depend on a hidden default.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Report counts and preserve negative, mixed, and absent observations. Require an inspectable record for Observation: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling. Missing evidence remains visible instead of being converted into confidence.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Evidence for observation unit requires a recoverable declaration, the time and context in which it applied, and a check that the observed case actually matched it.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="declare-population">
           <h4>Declare population</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> The practical difference is that population becomes explicit before anyone acts on Observation; leaving it unnamed forces the reader to infer a rule that may not exist.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Separate source material from the actual unit observed. Show measured.</dd></div>
-            <div><dt>Engineering</dt><dd>Separate source material from the actual unit observed. Declare population.</dd></div>
-            <div><dt>Empirical</dt><dd>Separate source material from the actual unit observed. Report preserve negative.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Show what was counted, measured, classified, or compared. Read Observation as one stage in a bounded investigation. The practical task is to preserve the useful conclusion while keeping the question, population, and unresolved work attached.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> The practical difference is that population becomes explicit before anyone acts on Observation; leaving it unnamed forces the reader to infer a rule that may not exist.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Declare observation unit, population, missingness, and dependence. Represent Observation through protocol, data lineage, version, split, metric, comparator, and review state. Each element must remain recoverable before the result can be reproduced or extended.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Encode population in the governing Observation record with its owner, applicable state, and change boundary so downstream behavior does not depend on a hidden default.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Report counts and preserve negative, mixed, and absent observations. Require an inspectable record for Observation: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling. Missing evidence remains visible instead of being converted into confidence.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Evidence for population requires a recoverable declaration, the time and context in which it applied, and a check that the observed case actually matched it.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="declare-missingness">
           <h4>Declare missingness</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> The practical difference is that missingness becomes explicit before anyone acts on Observation; leaving it unnamed forces the reader to infer a rule that may not exist.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Separate source material from the actual unit observed. Show classified.</dd></div>
-            <div><dt>Engineering</dt><dd>Separate source material from the actual unit observed. Declare missingness.</dd></div>
-            <div><dt>Empirical</dt><dd>Separate source material from the actual unit observed. Report mixed.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Show what was counted, measured, classified, or compared. Read Observation as one stage in a bounded investigation. The practical task is to preserve the useful conclusion while keeping the question, population, and unresolved work attached.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> The practical difference is that missingness becomes explicit before anyone acts on Observation; leaving it unnamed forces the reader to infer a rule that may not exist.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Declare observation unit, population, missingness, and dependence. Represent Observation through protocol, data lineage, version, split, metric, comparator, and review state. Each element must remain recoverable before the result can be reproduced or extended.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Encode missingness in the governing Observation record with its owner, applicable state, and change boundary so downstream behavior does not depend on a hidden default.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Report counts and preserve negative, mixed, and absent observations. Require an inspectable record for Observation: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling. Missing evidence remains visible instead of being converted into confidence.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Evidence for missingness requires a recoverable declaration, the time and context in which it applied, and a check that the observed case actually matched it.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="declare-dependence">
           <h4>Declare dependence</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> The practical difference is that dependence becomes explicit before anyone acts on Observation; leaving it unnamed forces the reader to infer a rule that may not exist.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Separate source material from the actual unit observed. Show or compared.</dd></div>
-            <div><dt>Engineering</dt><dd>Separate source material from the actual unit observed. Declare dependence.</dd></div>
-            <div><dt>Empirical</dt><dd>Separate source material from the actual unit observed. Report absent observations.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Show what was counted, measured, classified, or compared. Read Observation as one stage in a bounded investigation. The practical task is to preserve the useful conclusion while keeping the question, population, and unresolved work attached.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> The practical difference is that dependence becomes explicit before anyone acts on Observation; leaving it unnamed forces the reader to infer a rule that may not exist.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Declare observation unit, population, missingness, and dependence. Represent Observation through protocol, data lineage, version, split, metric, comparator, and review state. Each element must remain recoverable before the result can be reproduced or extended.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Encode dependence in the governing Observation record with its owner, applicable state, and change boundary so downstream behavior does not depend on a hidden default.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Report counts and preserve negative, mixed, and absent observations. Require an inspectable record for Observation: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling. Missing evidence remains visible instead of being converted into confidence.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Evidence for dependence requires a recoverable declaration, the time and context in which it applied, and a check that the observed case actually matched it.</p></dd></div>
           </dl>
         </li>
       </ol>
     </article>
-    <article class="lrc-static-card">
+    <article class="lrc-static-card" data-lrc-static-card="claim-link">
       <p>05 / 05</p>
       <h3>Claim Link</h3>
-      <p>State how directly the source and observation support the claim.</p>
+      <div class="lrc-static-shared" data-lrc-shared-premise><h4>Shared premise</h4><p>State how directly the source and observation support the claim.</p></div>
       <ol>
-        <li>
+        <li data-lrc-static-story="map-dependencies">
           <h4>Map dependencies</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This story layer narrows Claim Link around one explicit distinction: tell the reader whether the record proves.</p>
           <dl>
-            <div><dt>Practical</dt><dd>State how directly the source and observation support the claim. Tell the reader whether the record proves.</dd></div>
-            <div><dt>Engineering</dt><dd>State how directly the source and observation support the claim. Map dependencies.</dd></div>
-            <div><dt>Empirical</dt><dd>State how directly the source and observation support the claim. Provenance.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Tell the reader whether the record proves, suggests, constrains, or fails to answer.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Tell the reader whether the record proves. This selection isolates map dependencies within Claim Link. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Map dependencies, alternatives, and claim ceiling. Represent Claim Link through protocol, data lineage, version, split, metric, comparator, and review state. Each element must remain recoverable before the result can be reproduced or extended.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat map dependencies as a distinct control point inside Claim Link. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Provenance and volume do not establish mechanism, transfer, or deployment fitness. Require an inspectable record for Claim Link: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling. Missing evidence remains visible instead of being converted into confidence.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Evidence for map dependencies must identify the observed unit, context, comparison, and boundary. Without those records, Claim Link remains a conceptual or procedural classification at this layer. Require an inspectable record for Claim Link: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="alternatives">
           <h4>Alternatives</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates alternatives within Claim Link. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>State how directly the source and observation support the claim. Suggests.</dd></div>
-            <div><dt>Engineering</dt><dd>State how directly the source and observation support the claim. Alternatives.</dd></div>
-            <div><dt>Empirical</dt><dd>State how directly the source and observation support the claim. Volume do not establish mechanism.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Tell the reader whether the record proves, suggests, constrains, or fails to answer.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> This selection isolates alternatives within Claim Link. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Map dependencies, alternatives, and claim ceiling. Represent Claim Link through protocol, data lineage, version, split, metric, comparator, and review state. Each element must remain recoverable before the result can be reproduced or extended.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat alternatives as a distinct control point inside Claim Link. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Provenance and volume do not establish mechanism, transfer, or deployment fitness. Require an inspectable record for Claim Link: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling. Missing evidence remains visible instead of being converted into confidence.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Volume do not establish mechanism. Evidence for alternatives must identify the observed unit, context, comparison, and boundary. Without those records, Claim Link remains a conceptual or procedural classification at this layer. Require an inspectable record for Claim Link: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="claim-ceiling">
           <h4>Claim ceiling</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates claim ceiling within Claim Link. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>State how directly the source and observation support the claim. Constrains.</dd></div>
-            <div><dt>Engineering</dt><dd>State how directly the source and observation support the claim. Claim ceiling.</dd></div>
-            <div><dt>Empirical</dt><dd>State how directly the source and observation support the claim. Transfer.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Tell the reader whether the record proves, suggests, constrains, or fails to answer.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> This selection isolates claim ceiling within Claim Link. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Map dependencies, alternatives, and claim ceiling. Represent Claim Link through protocol, data lineage, version, split, metric, comparator, and review state. Each element must remain recoverable before the result can be reproduced or extended.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat claim ceiling as a distinct control point inside Claim Link. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Provenance and volume do not establish mechanism, transfer, or deployment fitness. Require an inspectable record for Claim Link: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling. Missing evidence remains visible instead of being converted into confidence.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Evidence for claim ceiling must identify the observed unit, context, comparison, and boundary. Without those records, Claim Link remains a conceptual or procedural classification at this layer. Require an inspectable record for Claim Link: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="tell-the-reader-whether-the-record-proves">
           <h4>Tell the reader whether the record proves</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates tell the reader whether the record proves within Claim Link. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>State how directly the source and observation support the claim. Or fails to answer.</dd></div>
-            <div><dt>Engineering</dt><dd>State how directly the source and observation support the claim. Map dependencies.</dd></div>
-            <div><dt>Empirical</dt><dd>State how directly the source and observation support the claim. Or deployment fitness. <strong>Claim boundary:</strong> Source existence is not validation; provenance and observation volume do not establish mechanism, transfer, or deployment fitness.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Tell the reader whether the record proves, suggests, constrains, or fails to answer.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> This selection isolates tell the reader whether the record proves within Claim Link. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> Map dependencies, alternatives, and claim ceiling. Represent Claim Link through protocol, data lineage, version, split, metric, comparator, and review state. Each element must remain recoverable before the result can be reproduced or extended.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat tell the reader whether the record proves as a distinct control point inside Claim Link. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> Provenance and volume do not establish mechanism, transfer, or deployment fitness. Require an inspectable record for Claim Link: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling. Missing evidence remains visible instead of being converted into confidence.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Evidence for tell the reader whether the record proves must identify the observed unit, context, comparison, and boundary. Without those records, Claim Link remains a conceptual or procedural classification at this layer. Require an inspectable record for Claim Link: observations, exclusions, design, measure, comparator, uncertainty, and claim ceiling.</p><aside><strong>Claim boundary.</strong> Source existence is not validation; provenance and observation volume do not establish mechanism, transfer, or deployment fitness.</aside></dd></div>
           </dl>
         </li>
       </ol>
@@ -284,6 +304,6 @@
   </main>
   <footer class="lr-footer"><span>Diamond Gate Bridge · Laws Chamber</span><a href="/laws/">Return to the Laws Compass</a></footer>
 </div>
-<script defer src="/laws/room-carousel/room-carousel.v1.js?v=LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827"></script>
+<script defer src="/laws/room-carousel/room-carousel.v1.js?v=LAWS_SEMANTIC_CELL_ENRICHMENT_GEN1755_20260827"></script>
 </body>
 </html>

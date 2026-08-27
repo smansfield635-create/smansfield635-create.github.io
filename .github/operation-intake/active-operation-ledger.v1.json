@@ -72,6 +72,49 @@
       "scopeHash": "0501ae249d87ccf7e89e5afa5b15554a071e9fc1083ab13db3f081a07a5079cf",
       "state": "ADMITTED_LOCKED"
     },
+    "08018e630cf132ae3acf5dc9918efa5a183e42ca7a81fb3545b450e4ad426bdf": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "d97bc001d94af810ab659e726e23efd07caf6db9",
+          "lockGeneration": 1744,
+          "lockScope": "LAWS/CAROUSEL/KNOWN_GOOD_D583_ROLLBACK/36_PATHS",
+          "operationId": "LAWS_CAROUSEL_KNOWN_GOOD_ROLLBACK_20260827_001",
+          "procedureLocatorDigest": "4948cc134ab2a99d7b381a4a1dff44f61d16ee4437458f2299223133795aabc9",
+          "requestDigest": "77395514d4e4bbf9b4bee10f72c536858924da1264515dcdb9b8012cbf21bb84",
+          "scopeHash": "08018e630cf132ae3acf5dc9918efa5a183e42ca7a81fb3545b450e4ad426bdf"
+        },
+        "bindingDigest": "6fdd7555add042486983337a1d70966ffbb34f8bfbeb5a198a08c9e9d3e305e2",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "6f2a0a9febd40858bb5830b684d13f43814bc5719cf7b79db03933e336292038",
+          "commentId": 5432887833,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2116,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33028155859,
+          "workflowSha": "eab4c7c57667e6ab285c4bc16c45f26e238cadef"
+        },
+        "lineageAnchorCommitSha": "41abb2720fb1f9a8ece647fb5505b07bd0555923",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "d97bc001d94af810ab659e726e23efd07caf6db9",
+      "lockGeneration": 1744,
+      "lockScope": "LAWS/CAROUSEL/KNOWN_GOOD_D583_ROLLBACK/36_PATHS",
+      "operationId": "LAWS_CAROUSEL_KNOWN_GOOD_ROLLBACK_20260827_001",
+      "procedureLocatorDigest": "4948cc134ab2a99d7b381a4a1dff44f61d16ee4437458f2299223133795aabc9",
+      "released": false,
+      "requestDigest": "77395514d4e4bbf9b4bee10f72c536858924da1264515dcdb9b8012cbf21bb84",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "08018e630cf132ae3acf5dc9918efa5a183e42ca7a81fb3545b450e4ad426bdf",
+      "state": "ADMITTED_LOCKED"
+    },
     "08e56fd88a3fb60792990d5287e6e83fc0d7a7116302f8f4e78c8f11c926a7d0": {
       "governingHead": "23214cf857c1591c1b6eac34a12af1e346882a95",
       "lockGeneration": 1567,
@@ -4095,7 +4138,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1743,
+  "lockGeneration": 1744,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -16,6 +16,6 @@ console.log(JSON.stringify({
   status: "PASS",
   routes: 29,
   cards: 134,
-  cells: 1620,
+  cells: 1653,
   browserCommand: "node laws/room-carousel/verify-contextual-delivery.v2.mjs --base-url=http://127.0.0.1:4173"
 }));

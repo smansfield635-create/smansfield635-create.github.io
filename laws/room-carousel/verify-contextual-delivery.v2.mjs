@@ -168,6 +168,24 @@ try {
       await page.locator("[data-lrc-card][data-active='true'] [data-lrc-return]").click();
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-layer"), "orbit", `${route} ${viewport.name}: return to orbit`);
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-id"), activeId, `${route} ${viewport.name}: return to same card`);
+      const recordCardIndex = expected.findIndex(card => card.stories.some(story => story.id === "battery-study-relationship" || story.id === "held-out-battery-record"));
+      if (recordCardIndex >= 0) {
+        const record = expected[recordCardIndex];
+        const recordStoryIndex = record.stories.findIndex(story => story.id === "battery-study-relationship" || story.id === "held-out-battery-record");
+        await page.locator("[data-lrc-tab]").nth(recordCardIndex).click();
+        await page.locator("[data-lrc-card][data-active='true'] [data-lrc-inspect]").click();
+        await page.locator("[data-lrc-card][data-active='true'] [data-lrc-story-tab]").nth(recordStoryIndex).click();
+        await page.locator("[data-lrc-card][data-active='true'] [data-lrc-inner-tab='empirical']").click();
+        const recordText = await page.locator("[data-lrc-card][data-active='true'] [data-lrc-grid-cell]:visible").innerText();
+        assert.match(recordText, /AUROC 0\.9394/, `${route} ${viewport.name}: admitted combined result in layered card`);
+        assert.match(recordText, /AUROC 0\.9704/, `${route} ${viewport.name}: stronger comparator in layered card`);
+        assert.equal(await page.locator("[data-lrc-card][data-active='true'] [data-lrc-grid-cell]:visible").count(), 1, `${route} ${viewport.name}: record remains one visible cell`);
+        if ((route === "/laws/categories/reality/" || route === "/laws/research/applied-investigations/") && viewport.name === "phone") {
+          const recordName = route.replace(/^\/laws\//, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "");
+          await page.screenshot({ path: path.join(artifactDir, `layered-record-${viewport.name}-${recordName}.png`), fullPage: false });
+        }
+        await page.locator("[data-lrc-card][data-active='true'] [data-lrc-return]").click();
+      }
       const storyCount = await page.locator(".lr-story-nav a").count();
       const expectedStoryCount = greaterNavigationRoutes.has(route) ? 2 : 0;
       assert.equal(storyCount, expectedStoryCount, `${route} ${viewport.name}: declared greater-navigation count`);

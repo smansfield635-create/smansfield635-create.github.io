@@ -52,6 +52,20 @@
                 "engineering": "Signals map to event emission, telemetry, detection thresholds, routing, noise filtering, state notification, and observable change. Classify whether the signal triggers a state change.",
                 "empirical": "For Signals requires records that show an emitted signal was received, missed, changed, amplified, or filtered. Failure mode: reaction is expected without a reliable received signal."
               }
+            },
+            {
+              "id": "battery-study-relationship",
+              "label": "Battery study relationship",
+              "readings": {
+                "practical": "Cycle-level measurements and derived axes were evaluated as warning signals for a defined near-term capacity event. This relationship connects the law subject to an observed battery study without changing the study's evidence standing.",
+                "engineering": "Study: Battery health. Primary Frontier domain: Power and Energy. The complete execution owner remains the Frontier battery study.",
+                "empirical": "Current evidence: domain-specific cell-disjoint held-out empirical support. The combined model reached AUROC 0.9394 across 1,653 held-out cycle records; the burden comparator reached AUROC 0.9704."
+              },
+              "boundary": "Signal ranking does not establish physical cause or operational alert readiness.",
+              "relationship": {
+                "explains": "Cycle-level measurements and derived axes were evaluated as warning signals for a defined near-term capacity event.",
+                "stops": "Signal ranking does not establish physical cause or operational alert readiness."
+              }
             }
           ]
         },
@@ -139,6 +153,20 @@
                 "practical": "Cycles are not repetition alone. A cycle is a return pattern that changes the system each time it comes back. Does the cycle renew, escalate, or degrade?",
                 "engineering": "Cycles map to recurrence, interval, amplitude, phase, feedback, state change, Fibonacci synchronization posture, and NEWS directional reading. Use the Cycles page for the Fibonacci Synchronization Metric and NEWS Protocol explanation.",
                 "empirical": "For Cycles requires repeated passes with enough timing and state data to distinguish a real cycle from isolated recurrence. Failure mode: one repeated theme is treated as a measured cycle without pass data."
+              }
+            },
+            {
+              "id": "battery-study-relationship",
+              "label": "Battery study relationship",
+              "readings": {
+                "practical": "The observation unit was cycle-level and the target horizon was the next 20 cycles. This relationship connects the law subject to an observed battery study without changing the study's evidence standing.",
+                "engineering": "Study: Battery health. Primary Frontier domain: Power and Energy. The complete execution owner remains the Frontier battery study.",
+                "empirical": "Current evidence: domain-specific cell-disjoint held-out empirical support. The combined model reached AUROC 0.9394 across 1,653 held-out cycle records; the burden comparator reached AUROC 0.9704."
+              },
+              "boundary": "The 20-cycle horizon is study-specific, not a universal warning interval.",
+              "relationship": {
+                "explains": "The observation unit was cycle-level and the target horizon was the next 20 cycles.",
+                "stops": "The 20-cycle horizon is study-specific, not a universal warning interval."
               }
             }
           ]
@@ -1215,6 +1243,20 @@
                 "empirical": "For Consistency requires repeated observations across time and context. A single good result is not enough. Boundary: consistency does not prove truth; it proves repeatability under declared conditions."
               },
               "boundary": "Consistency does not prove truth; it proves repeatability under declared conditions."
+            },
+            {
+              "id": "battery-study-relationship",
+              "label": "Battery study relationship",
+              "readings": {
+                "practical": "The final test asked whether ranking remained informative after evaluation moved to three cells excluded from development. This relationship connects the law subject to an observed battery study without changing the study's evidence standing.",
+                "engineering": "Study: Battery health. Primary Frontier domain: Power and Energy. The complete execution owner remains the Frontier battery study.",
+                "empirical": "Current evidence: domain-specific cell-disjoint held-out empirical support. The combined model reached AUROC 0.9394 across 1,653 held-out cycle records; the burden comparator reached AUROC 0.9704."
+              },
+              "boundary": "The result does not establish consistency across all cells or chemistries.",
+              "relationship": {
+                "explains": "The final test asked whether ranking remained informative after evaluation moved to three cells excluded from development.",
+                "stops": "The result does not establish consistency across all cells or chemistries."
+              }
             }
           ]
         },
@@ -1305,6 +1347,20 @@
                 "empirical": "For Consistency requires repeated observations across time and context. A single good result is not enough. Boundary: consistency does not prove truth; it proves repeatability under declared conditions."
               },
               "boundary": "Consistency does not prove truth; it proves repeatability under declared conditions."
+            },
+            {
+              "id": "battery-study-relationship",
+              "label": "Battery study relationship",
+              "readings": {
+                "practical": "Earlier battery-health warning could support future inspection or intervention before battery-supported service is interrupted. This relationship connects the law subject to an observed battery study without changing the study's evidence standing.",
+                "engineering": "Study: Battery health. Primary Frontier domain: Power and Energy. The complete execution owner remains the Frontier battery study.",
+                "empirical": "Current evidence: domain-specific cell-disjoint held-out empirical support. The combined model reached AUROC 0.9394 across 1,653 held-out cycle records; the burden comparator reached AUROC 0.9704."
+              },
+              "boundary": "No continuity benefit was validated in a deployed critical system.",
+              "relationship": {
+                "explains": "Earlier battery-health warning could support future inspection or intervention before battery-supported service is interrupted.",
+                "stops": "No continuity benefit was validated in a deployed critical system."
+              }
             }
           ]
         },
@@ -1350,6 +1406,20 @@
                 "empirical": "For Consistency requires repeated observations across time and context. A single good result is not enough. Boundary: consistency does not prove truth; it proves repeatability under declared conditions."
               },
               "boundary": "Consistency does not prove truth; it proves repeatability under declared conditions."
+            },
+            {
+              "id": "battery-study-relationship",
+              "label": "Battery study relationship",
+              "readings": {
+                "practical": "The combined B/P/E/I/V representation was tested jointly while component failures and rival explanations were preserved. This relationship connects the law subject to an observed battery study without changing the study's evidence standing.",
+                "engineering": "Study: Battery health. Primary Frontier domain: Power and Energy. The complete execution owner remains the Frontier battery study.",
+                "empirical": "Current evidence: domain-specific cell-disjoint held-out empirical support. The combined model reached AUROC 0.9394 across 1,653 held-out cycle records; the burden comparator reached AUROC 0.9704."
+              },
+              "boundary": "A distinct coherence mechanism remains unresolved because burden and conventional aging may explain the result.",
+              "relationship": {
+                "explains": "The combined B/P/E/I/V representation was tested jointly while component failures and rival explanations were preserved.",
+                "stops": "A distinct coherence mechanism remains unresolved because burden and conventional aging may explain the result."
+              }
             }
           ]
         }
@@ -2249,6 +2319,20 @@
                 "empirical": "For Evidence sounds redundant, but it is the core discipline: the evidence itself must carry enough information to be checked. Boundary: evidence without provenance is weak support for durable inference."
               },
               "boundary": "Evidence without provenance is weak support for durable inference."
+            },
+            {
+              "id": "battery-study-relationship",
+              "label": "Battery study relationship",
+              "readings": {
+                "practical": "The admitted record contains 1,653 held-out cycle-level observations from CS2_34, CS2_36, and CS2_38. This relationship connects the law subject to an observed battery study without changing the study's evidence standing.",
+                "engineering": "Study: Battery health. Primary Frontier domain: Power and Energy. The complete execution owner remains the Frontier battery study.",
+                "empirical": "Current evidence: domain-specific cell-disjoint held-out empirical support. The combined model reached AUROC 0.9394 across 1,653 held-out cycle records; the burden comparator reached AUROC 0.9704."
+              },
+              "boundary": "This operation did not reopen raw execution artifacts or establish external replication.",
+              "relationship": {
+                "explains": "The admitted record contains 1,653 held-out cycle-level observations from CS2_34, CS2_36, and CS2_38.",
+                "stops": "This operation did not reopen raw execution artifacts or establish external replication."
+              }
             }
           ]
         },
@@ -2294,6 +2378,20 @@
                 "empirical": "For Measure requires proof that different qualified observers can classify the same condition under the same measurement contract. Boundary: measurement is a shared contract, not personal interpretation."
               },
               "boundary": "Measurement is a shared contract, not personal interpretation."
+            },
+            {
+              "id": "battery-study-relationship",
+              "label": "Battery study relationship",
+              "readings": {
+                "practical": "AUROC and threshold outcomes distinguish the primary model, comparators, mixed result, and failed MQ test. This relationship connects the law subject to an observed battery study without changing the study's evidence standing.",
+                "engineering": "Study: Battery health. Primary Frontier domain: Power and Energy. The complete execution owner remains the Frontier battery study.",
+                "empirical": "Current evidence: domain-specific cell-disjoint held-out empirical support. The combined model reached AUROC 0.9394 across 1,653 held-out cycle records; the burden comparator reached AUROC 0.9704."
+              },
+              "boundary": "AUROC measures ranking; it does not prove causation or deployment utility.",
+              "relationship": {
+                "explains": "AUROC and threshold outcomes distinguish the primary model, comparators, mixed result, and failed MQ test.",
+                "stops": "AUROC measures ranking; it does not prove causation or deployment utility."
+              }
             }
           ]
         },
@@ -2339,6 +2437,20 @@
                 "empirical": "For Limits requires named uncertainty and visible boundaries around the claim. Boundary: certainty without boundaries is narrative, not stable Reality classification."
               },
               "boundary": "Certainty without boundaries is narrative, not stable Reality classification."
+            },
+            {
+              "id": "battery-study-relationship",
+              "label": "Battery study relationship",
+              "readings": {
+                "practical": "The record separates battery-domain support from mechanism, chemistry transfer, replication, and deployment claims. This relationship connects the law subject to an observed battery study without changing the study's evidence standing.",
+                "engineering": "Study: Battery health. Primary Frontier domain: Power and Energy. The complete execution owner remains the Frontier battery study.",
+                "empirical": "Current evidence: domain-specific cell-disjoint held-out empirical support. The combined model reached AUROC 0.9394 across 1,653 held-out cycle records; the burden comparator reached AUROC 0.9704."
+              },
+              "boundary": "The claim ceiling remains domain-specific held-out empirical support only.",
+              "relationship": {
+                "explains": "The record separates battery-domain support from mechanism, chemistry transfer, replication, and deployment claims.",
+                "stops": "The claim ceiling remains domain-specific held-out empirical support only."
+              }
             }
           ]
         },
@@ -3621,6 +3733,20 @@
                 "empirical": "For Constraints requires measurable limits, explicit rules, threshold history, and named tradeoffs. Boundary: a constraint is not a preference unless enforcement and crossing conditions are defined."
               },
               "boundary": "A constraint is not a preference unless enforcement and crossing conditions are defined."
+            },
+            {
+              "id": "battery-study-relationship",
+              "label": "Battery study relationship",
+              "readings": {
+                "practical": "Case selection, a fixed event, a fixed horizon, comparators, and required controls shaped what the study could conclude. This relationship connects the law subject to an observed battery study without changing the study's evidence standing.",
+                "engineering": "Study: Battery health. Primary Frontier domain: Power and Energy. The complete execution owner remains the Frontier battery study.",
+                "empirical": "Current evidence: domain-specific cell-disjoint held-out empirical support. The combined model reached AUROC 0.9394 across 1,653 held-out cycle records; the burden comparator reached AUROC 0.9704."
+              },
+              "boundary": "Changing those constraints creates a different study requiring new evaluation.",
+              "relationship": {
+                "explains": "Case selection, a fixed event, a fixed horizon, comparators, and required controls shaped what the study could conclude.",
+                "stops": "Changing those constraints creates a different study requiring new evaluation."
+              }
             }
           ]
         },
@@ -3711,6 +3837,20 @@
                 "empirical": "For Constraints requires measurable limits, explicit rules, threshold history, and named tradeoffs. Boundary: a constraint is not a preference unless enforcement and crossing conditions are defined."
               },
               "boundary": "A constraint is not a preference unless enforcement and crossing conditions are defined."
+            },
+            {
+              "id": "battery-study-relationship",
+              "label": "Battery study relationship",
+              "readings": {
+                "practical": "The record marks the boundary between a strong held-out battery result and unproven mechanism, transfer, deployment, or universal law. This relationship connects the law subject to an observed battery study without changing the study's evidence standing.",
+                "engineering": "Study: Battery health. Primary Frontier domain: Power and Energy. The complete execution owner remains the Frontier battery study.",
+                "empirical": "Current evidence: domain-specific cell-disjoint held-out empirical support. The combined model reached AUROC 0.9394 across 1,653 held-out cycle records; the burden comparator reached AUROC 0.9704."
+              },
+              "boundary": "No Laws relationship may imply stronger evidence than the complete Frontier record supports.",
+              "relationship": {
+                "explains": "The record marks the boundary between a strong held-out battery result and unproven mechanism, transfer, deployment, or universal law.",
+                "stops": "No Laws relationship may imply stronger evidence than the complete Frontier record supports."
+              }
             }
           ]
         },
@@ -5099,6 +5239,16 @@
                 "engineering": "State what survived evaluation inside the applied domain. Exact observation count.",
                 "empirical": "State what survived evaluation inside the applied domain. Preserve mixed outcomes together."
               }
+            },
+            {
+              "id": "held-out-battery-record",
+              "label": "Held-out battery record",
+              "readings": {
+                "practical": "System examined: research battery cells evaluated through cycle-level operating records. Primary Frontier authority: Power and Energy; the current compatibility path is /explore/frontier/energy/.",
+                "engineering": "Data or observations: 1,653 final-test cycle records from CS2_34, CS2_36, and CS2_38, evaluated against the below-80%-retained-capacity event within 20 cycles.",
+                "empirical": "Current evidence status: domain-specific cell-disjoint held-out empirical support. The combined model reached AUROC 0.9394; the ordinary burden comparator reached AUROC 0.9704."
+              },
+              "boundary": "This applied record does not establish causation, deployment fitness, external replication, or a universal law."
             }
           ]
         },

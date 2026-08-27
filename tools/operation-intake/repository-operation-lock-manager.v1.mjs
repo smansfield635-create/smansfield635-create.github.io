@@ -27,6 +27,22 @@ const str = (v,f,s) => { if (typeof v !== 'string' || !v) throw err('MISSING_OR_
 const dig = (v,n,f,s) => { str(v,f,s); if (!new RegExp(`^[0-9a-f]{${n}}$`).test(v)) throw err('MISSING_OR_INVALID_DIGEST',f,s); return v; };
 const pos = (v,f,s) => { if (!Number.isInteger(v) || v < 1) throw err('MISSING_OR_INVALID_FIELD',f,s); return v; };
 
+export const LEGACY_EXACT_ISSUANCE_RECOVERIES = [stable({
+  authorityIdentity: {
+    operationId: 'AGENTIC_FRONTIER_CINEMATIC_CAROUSEL_COMPASS_LABEL_PARITY_20260826_v1',
+    lockScope: 'AGENTIC_FRONTIER_CINEMATIC_SUCCESSOR_COMPASS_CARDINAL_LABEL_PARITY_2119',
+    scopeHash: 'a900d21ae76b8e98c445ffe6e7788a53d0ca42721b555bd65903482ef3655970',
+    governingHead: 'f34e0b7d172d37a3facff875d05c0c13edfacf07',
+    requestDigest: '2b8bf0b00c8e39b764a617c3eee5e9a0019c3287ba0acdf2dc5b4c9c199dbf91',
+    procedureLocatorDigest: '7a92a834563ab7bb9d657e496431e5b603c9c379b8ea980855cf4931a17979c2',
+    lockGeneration: 1731
+  },
+  issueNumber: 2119,
+  sourceCommentId: 5420728936,
+  receiptCommentId: 5420731064,
+  workflowRunId: 32931494268
+})];
+
 function validateActiveLock(lock, key) {
   const source = 'active-operation-ledger';
   if (!lock || typeof lock !== 'object' || Array.isArray(lock)) throw err('INVALID_ACTIVE_LOCK', key, source);
@@ -143,7 +159,21 @@ async function put({repository,lockRef=LOCK_REF,token,blob,next,message}) {
 }
 async function readLedgerBlob({repository,token,blobSha}){const g=await req(`${base(repository)}/git/blobs/${dig(blobSha,40,'legacySnapshotBlob','authority-provenance')}`,{headers:H(token)});if(g.encoding!=='base64')throw err('AUTHORITY_LEGACY_SNAPSHOT_ENCODING_UNSUPPORTED','encoding','authority-provenance',String(g.encoding));return decodeContent(g.content,'authority-legacy-snapshot')}
 function identityMatches(a,b){return canonical(authorityIdentity(a))===canonical(authorityIdentity(b))}
-async function verifyLegacyAuthority({repository,token,lock}){for(const blobSha of LEGACY_AUTHORITY_SNAPSHOT_BLOBS){const frozen=await readLedgerBlob({repository,token,blobSha}),anchored=frozen.activeScopes?.[lock.scopeHash];if(anchored&&identityMatches(anchored,lock))return stable({result:'LEGACY_AUTHORITY_SNAPSHOT_ANCHORED',snapshotBlobSha:blobSha,authorityIdentity:authorityIdentity(lock)})}throw err('AUTHORITY_PROVENANCE_MISSING','authorityProvenance','authority-provenance','NOT_IN_FROZEN_LEGACY_SNAPSHOT')}
+
+async function verifyLegacyAuthority({repository,token,lock}){
+  for(const blobSha of LEGACY_AUTHORITY_SNAPSHOT_BLOBS){
+    const frozen=await readLedgerBlob({repository,token,blobSha}),anchored=frozen.activeScopes?.[lock.scopeHash];
+    if(anchored&&identityMatches(anchored,lock))return stable({result:'LEGACY_AUTHORITY_SNAPSHOT_ANCHORED',snapshotBlobSha:blobSha,authorityIdentity:authorityIdentity(lock)});
+  }
+  const recovery=LEGACY_EXACT_ISSUANCE_RECOVERIES.find(value=>canonical(value.authorityIdentity)===canonical(authorityIdentity(lock)));
+  if(!recovery)throw err('AUTHORITY_PROVENANCE_MISSING','authorityProvenance','authority-provenance','NOT_IN_FROZEN_LEGACY_SNAPSHOT');
+  const source=await fetchComment(repository,token,recovery.sourceCommentId);
+  if(source?.id!==recovery.sourceCommentId||source?.issue_url?.split('/').pop()!==String(recovery.issueNumber)||!TRUSTED_ASSOCIATIONS.has(source?.author_association)||markerFromBody(source?.body)!==CANONICAL_MARKER)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','comment','authority-provenance','RECOVERED_SOURCE_COMMENT_MISMATCH');
+  verifyCanonicalSourceComment(lock,source.body);
+  const receipt=await fetchComment(repository,token,recovery.receiptCommentId);
+  if(receipt?.id!==recovery.receiptCommentId||receipt?.issue_url?.split('/').pop()!==String(recovery.issueNumber)||receipt?.user?.login!=='github-actions[bot]'||!botReceiptMatches(lock,[receipt],'CANONICAL_INTAKE',recovery.workflowRunId))throw err('AUTHORITY_WORKFLOW_RECEIPT_NOT_FOUND','issue.comments','authority-provenance','RECOVERED_BOT_RECEIPT_MISMATCH');
+  return stable({result:'AUTHENTICATED_CANONICAL_AUTHORITY',origin:'RECOVERED_LEGACY_CANONICAL_INTAKE',authorityIdentity:authorityIdentity(lock),issueNumber:recovery.issueNumber,commentId:recovery.sourceCommentId,receiptCommentId:recovery.receiptCommentId,workflowRunId:recovery.workflowRunId});
+}
 
 function canonicalMutationMessage(message){return typeof message==='string'&&(/^Acquire operation lock \d+: .+/.test(message)||/^Supersede operation \d+ with successor \d+: .+/.test(message)||/^Close operation lock \d+: .+ (PASS_CLOSED|FAIL_CLOSED|REJECTED_CLOSED|WITHDRAWN|SUPERSEDED|VOIDED|EXPIRED)$/.test(message))}
 export async function verifyCanonicalLockRefLineage({repository,token,branchHead,anchorCommitSha=LEGACY_AUTHORITY_CUTOVER_COMMIT}) {

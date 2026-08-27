@@ -39,7 +39,7 @@ INTEGRATED_ROUTES = [
 METHODS_SHOWROOM_ROUTE = "/laws/research/methods-and-models/"
 METHODS_SHOWROOM_CONTRACT = "METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1"
 METHODS_CANONICAL_ARCHIVE = "METHODS_MODELS_CANONICAL_ARCHIVE_v1_DRAFT"
-ROOM_CAROUSEL_ASSET_IDENTITY = "LAWS_GEN1738_FIVE_SCENE_CAROUSEL_20260826"
+ROOM_CAROUSEL_ASSET_IDENTITY = "LAWS_GEN1746_D583_PRODUCT_ROLLBACK_20260827B"
 ROOM_CAROUSEL_CSS_HREF = f"/laws/room-carousel/room-carousel.v1.css?v={ROOM_CAROUSEL_ASSET_IDENTITY}"
 ROOM_CAROUSEL_JS_SRC = f"/laws/room-carousel/room-carousel.v1.js?v={ROOM_CAROUSEL_ASSET_IDENTITY}"
 FAMILY_CAROUSEL_ROUTES = [
@@ -186,6 +186,16 @@ def main() -> int:
         'details.lr-audit,.lr-story-nav,[data-lrc-depth]' in carousel_runtime,
         "STORY_NAVIGATION_CAROUSEL_ADOPTION_EXCLUSION_MISSING",
     )
+    require('root.insertBefore(tabs, viewport)' in carousel_runtime, "NUMBERED_RAIL_NOT_ABOVE_PAGE_CAROUSEL")
+    require('viewport.after(tabs)' not in carousel_runtime, "NUMBERED_RAIL_REGRESSED_BELOW_PAGE_CAROUSEL")
+    require(':scope > [data-lrc-source-child]' in carousel_runtime, "CARD_INTERNAL_CONTENT_DESCENDENCY_MISSING")
+    require('↶ Return to Orbit' in carousel_runtime, "RETURN_TO_ORBIT_ACTION_MISSING")
+    require('[data-lrc-return]' in carousel_runtime, "RETURN_TO_ORBIT_STATE_CONTROL_MISSING")
+
+    carousel_css = source(ROOT / "laws/room-carousel/room-carousel.v1.css")
+    require('[data-lrc-tabs]' in carousel_css, "NUMBERED_RAIL_STYLE_MISSING")
+    require('[data-lrc-card][data-inspecting="true"] > [data-lrc-source-child]' in carousel_css, "OPENED_CARD_INTERNAL_CONTENT_STYLE_MISSING")
+    require('html[data-lrc-inspection-open="true"] .lr-topbar' in carousel_css, "RETURN_TO_ORBIT_STICKY_HEADER_PROTECTION_MISSING")
 
     landing = source(ROOT / "laws/index.html")
     for marker in (
@@ -253,7 +263,10 @@ def main() -> int:
         "roomCarouselFamilyRoots": 4,
         "roomCarouselAssetIdentity": ROOM_CAROUSEL_ASSET_IDENTITY,
         "roomCarouselStaticBinding": "PASS",
+        "roomCarouselNumberedTopRail": "PASS",
+        "roomCarouselInternalTabsInsideOpenedCard": "PASS",
         "roomCarouselBottomStoryNavigation": "PASS",
+        "roomCarouselReturnToOrbitControl": "PASS",
         "zeroOpenSourceContract": "PASS",
         "formulaNodeSplitRule": "ARROWS_ONLY_INTERNAL_PLUS_PRESERVED",
         "protectedRuntimeMutations": 0,

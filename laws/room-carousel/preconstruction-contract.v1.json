@@ -1,50 +1,47 @@
 {
-  "schema": "LAWS_FIVE_SCENE_CONTINUITY_CONTRACT_v1",
-  "status": "GEN1740_CONSTRUCTION_ACTIVE",
-  "operationId": "LAWS_CAROUSEL_CONTINUITY_FIVE_SCENE_BOTTOM_TABS_20260826_005",
-  "lockGeneration": 1740,
-  "exactGoverningHead": "2e7780f2cdde6b0d4d50ef3b271fd88f35d88720",
-  "candidateBranch": "laws-carousel/gen1738-five-scene-successor-20260826",
-  "protectedReference": "laws/research/methods-and-models/",
-  "protectedReferenceMutationAllowed": false,
-  "protectedGateway": "laws/index.html",
-  "protectedGatewayMutationAllowed": false,
-  "sceneCount": 5,
-  "sceneSchema": [
-    "IDENTITY_MEANING",
-    "PRIMARY_RELATIONSHIP",
-    "READING_EVIDENCE",
-    "CUSTODY_LIMITS",
-    "CONTINUATION_HANDOFF"
-  ],
-  "bottomTabs": {
-    "onePerScene": true,
-    "selectedStateVisible": true,
-    "clickTouchKeyboard": true,
-    "swipeSynchronized": true,
-    "detachedSixthState": false,
-    "previousNextRouteHandoffOutsideSceneCount": true
-  },
-  "informationHierarchy": {
-    "readerFirst": true,
-    "formalIdentitySecond": true,
-    "progressiveEngineeringDepth": true,
-    "purposeFailureLimitsDistinct": true,
-    "oneCenterOfAttention": true,
-    "longIdentifiersMayNotControlGeometry": true,
-    "informationLossAllowed": false
-  },
-  "preservation": {
-    "scientificClaims": true,
-    "formulas": true,
-    "evidenceStanding": true,
-    "sourceCustody": true,
-    "canonicalRoutes": true,
-    "previousNextStorySequence": true,
-    "noJavaScriptSourceReadability": true,
-    "reducedMotionSemanticEquivalence": true
-  },
+  "schema": "LAWS_CAROUSEL_PRODUCT_ROLLBACK_CONTRACT_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "operationId": "LAWS_CAROUSEL_PRODUCT_ROLLBACK_CURRENT_HARNESS_20260827_001",
+  "lockGeneration": 1746,
+  "exactGoverningHead": "eab4c7c57667e6ab285c4bc16c45f26e238cadef",
+  "knownGoodProductBaseline": "d583e033392c306f6dab55cabc22055a0f216219",
+  "failedDeployedCandidate": "79440e6caf42ef3b23e6ee4f6596295019116c36",
+  "candidateBranch": "laws-carousel/gen1746-d583-product-rollback-20260827",
+  "assetIdentity": "LAWS_GEN1746_D583_PRODUCT_ROLLBACK_20260827B",
+  "routeCount": 29,
+  "storyRouteCount": 23,
   "routeInventory": [
+    "laws/categories/flow/index.html",
+    "laws/categories/flow/signals/index.html",
+    "laws/categories/flow/feedback/index.html",
+    "laws/categories/flow/cycles/index.html",
+    "laws/categories/flow/handoffs/index.html",
+    "laws/categories/integrity/index.html",
+    "laws/categories/integrity/consistency/index.html",
+    "laws/categories/integrity/accountability/index.html",
+    "laws/categories/integrity/continuity/index.html",
+    "laws/categories/integrity/coherence/index.html",
+    "laws/categories/reality/index.html",
+    "laws/categories/reality/theory.html",
+    "laws/categories/reality/evidence.html",
+    "laws/categories/reality/measure.html",
+    "laws/categories/reality/limits.html",
+    "laws/categories/reality/battery-heldout-study/index.html",
+    "laws/categories/structure/index.html",
+    "laws/categories/structure/constraints.html",
+    "laws/categories/structure/interfaces.html",
+    "laws/categories/structure/boundaries.html",
+    "laws/categories/structure/governance.html",
+    "laws/research/index.html",
+    "laws/research/evidence-and-sources/index.html",
+    "laws/research/applied-investigations/index.html",
+    "laws/research/findings-and-boundaries/index.html",
+    "laws/test/admission-and-baseline/index.html",
+    "laws/test/forward-construction/index.html",
+    "laws/test/reverse-audit/index.html",
+    "laws/test/result-and-record/index.html"
+  ],
+  "storyRouteInventory": [
     "laws/categories/flow/signals/index.html",
     "laws/categories/flow/feedback/index.html",
     "laws/categories/flow/cycles/index.html",
@@ -60,21 +57,37 @@
     "laws/categories/structure/constraints.html",
     "laws/categories/structure/interfaces.html",
     "laws/categories/structure/boundaries.html",
-    "laws/categories/structure/governance.html"
+    "laws/categories/structure/governance.html",
+    "laws/research/evidence-and-sources/index.html",
+    "laws/research/applied-investigations/index.html",
+    "laws/research/findings-and-boundaries/index.html",
+    "laws/test/admission-and-baseline/index.html",
+    "laws/test/forward-construction/index.html",
+    "laws/test/reverse-audit/index.html",
+    "laws/test/result-and-record/index.html"
   ],
-  "excludedUnregisteredStyles": [
-    "assets/laws-destination/renewal.css",
-    "assets/laws-destination/renewal-navigation.css",
-    "assets/laws-destination/renewal-batch.css"
-  ],
-  "qualification": {
-    "staticVerifier": "laws/room-carousel/verify.v1.mjs",
-    "browserVerifier": "laws/room-carousel/browser-proof.v1.mjs",
-    "cp6Static": "scripts/verify-laws-cp6-final-synchronization.py",
-    "cp6Browser": "scripts/laws_cp6_final_browser_verify.mjs",
-    "workflow": ".github/workflows/laws-cp6-final-synchronization-verification.yml"
+  "navigationHierarchy": {
+    "greaterLawsCarousel": "BOTTOM_PREVIOUS_NEXT_ROUTE_HANDOFF",
+    "pageCarousel": "TOP_NUMBERED_RAIL_PLUS_SWIPE_DRAG_KEYBOARD",
+    "openedCard": "INTERNAL_READING_TABS_ONLY_INSIDE_ACTIVE_CARD",
+    "return": "RETURN_TO_ORBIT_RESTORES_SAME_PAGE_CAROUSEL_INDEX"
   },
-  "mergeAuthorityCreated": false,
-  "deploymentAuthorityCreated": false,
-  "publicationAuthorityCreated": false
+  "productBindings": {
+    "htmlStructureAndContent": "D583_EXCEPT_FRESH_ASSET_QUERY_IDENTITY",
+    "sharedCarouselCss": "D583_PLUS_CURRENT_STICKY_HEADER_INSPECTION_COMPATIBILITY",
+    "sharedCarouselJs": "EXACT_D583_GIT_BLOB",
+    "currentShellCompatibility": "HIDE_STICKY_LAWS_TOPBAR_ONLY_WHILE_CARD_INSPECTION_IS_OPEN",
+    "methodsAndModels": "REFERENCE_ONLY_BYTE_IDENTICAL",
+    "informationDepthStylesheet": "PRESERVED_UNMODIFIED_AND_NOT_A_PAGE_DEPENDENCY"
+  },
+  "prohibitions": [
+    "PAGE_LEVEL_TABS_AS_CAROUSEL_SUBSTITUTE",
+    "NUMBERED_RAIL_BELOW_PAGE_CAROUSEL",
+    "VERTICALLY_STACKED_PRIMARY_SCENES",
+    "SINGLE_PANEL_PAGE_REPLACEMENT",
+    "INTERNAL_READING_TABS_VISIBLE_OUTSIDE_OPENED_CARD",
+    "RETURN_TO_ORBIT_CHANGES_PAGE_CAROUSEL_INDEX",
+    "METHODS_AND_MODELS_MUTATION",
+    "SCIENTIFIC_CONTENT_REINTERPRETATION"
+  ]
 }

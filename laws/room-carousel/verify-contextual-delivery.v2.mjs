@@ -18,6 +18,14 @@ const routes = representativesOnly
 const viewports = representativesOnly
   ? [{ name: "phone", width: 390, height: 844 }, { name: "tablet", width: 768, height: 1024 }]
   : [{ name: "phone", width: 390, height: 844 }, { name: "tablet", width: 768, height: 1024 }, { name: "desktop", width: 1440, height: 1000 }];
+const screenshotRoutes = new Set([
+  "/laws/categories/flow/cycles/",
+  "/laws/categories/flow/handoffs/",
+  "/laws/categories/reality/",
+  "/laws/categories/structure/",
+  "/laws/research/",
+  "/laws/test/reverse-audit/"
+]);
 
 function routeFile(route) {
   return path.join(root, route.endsWith(".html") ? route.slice(1) : route.slice(1), route.endsWith(".html") ? "" : "index.html");
@@ -81,7 +89,17 @@ try {
       assert.equal(await page.locator("details.lr-audit[open]").count(), 0, `${route} ${viewport.name}: custody collapsed`);
 
       const targetIndex = Math.min(1, expected.length - 1);
-      await page.locator("[data-lrc-tab]").nth(targetIndex).click();
+      if (route.includes("/flow/cycles/") || route.includes("/flow/handoffs/")) {
+        const box = await page.locator("[data-lrc-viewport]").boundingBox();
+        assert.ok(box, `${route} ${viewport.name}: viewport geometry`);
+        await page.mouse.move(box.x + box.width * 0.66, box.y + box.height * 0.55);
+        await page.mouse.down();
+        await page.mouse.move(box.x + box.width * 0.34, box.y + box.height * 0.55, { steps: 5 });
+        await page.mouse.up();
+        assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-index"), String(targetIndex), `${route} ${viewport.name}: one swipe one outer step`);
+      } else {
+        await page.locator("[data-lrc-tab]").nth(targetIndex).click();
+      }
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-index"), String(targetIndex), `${route} ${viewport.name}: outer rotate`);
       const activeId = await page.locator(rootSelector).getAttribute("data-lrc-id");
       await page.locator("[data-lrc-card][data-active='true'] [data-lrc-inspect]").click();
@@ -106,8 +124,8 @@ try {
       assert.ok(geometry.viewportOverflow <= 1, `${route} ${viewport.name}: no page horizontal overflow`);
       assert.ok(geometry.innerOverflow <= 1, `${route} ${viewport.name}: no nested horizontal scroll`);
       assert.ok(geometry.returnTop >= -1 && geometry.returnBottom <= viewport.height, `${route} ${viewport.name}: return immediately available`);
-      if (representativesOnly) {
-        const name = route.includes("cycles") ? "cycles" : "handoffs";
+      if ((representativesOnly || screenshotRoutes.has(route)) && viewport.name !== "desktop") {
+        const name = route.replace(/^\/laws\//, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "");
         await page.screenshot({ path: path.join(artifactDir, `contextual-${viewport.name}-${name}-engineering.png`), fullPage: false });
       }
 
@@ -119,6 +137,11 @@ try {
       if (storyCount) {
         const destination = await page.locator(".lr-story-nav a").first().getAttribute("href");
         assert.ok(destination?.startsWith("/laws/"), `${route} ${viewport.name}: bottom route navigation`);
+        await Promise.all([
+          page.waitForNavigation({ waitUntil: "domcontentloaded" }),
+          page.locator(".lr-story-nav a").first().click()
+        ]);
+        assert.equal(new URL(page.url()).pathname, new URL(destination, baseUrl).pathname, `${route} ${viewport.name}: bottom route navigation used`);
       }
       assert.deepEqual(errors, [], `${route} ${viewport.name}: no page errors`);
       evidence.push({ route, viewport: viewport.name, card: activeId, layer: "engineering", storyNavigation: storyCount > 0 });

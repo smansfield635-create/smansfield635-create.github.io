@@ -17,6 +17,7 @@
   const slug = value => String(value || "subject").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "subject";
   const textOf = node => node?.textContent?.replace(/\s+/g, " ").trim() || "";
   const escapeHtml = value => String(value || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  const stripLabel = (value, label) => String(value || "").replace(new RegExp(`^${label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\.?\\s*`, "i"), "").trim();
 
   function routeOf(root) {
     const declared = root.dataset.lrcRoute || document.documentElement.dataset.route;
@@ -50,6 +51,26 @@
     };
   }
 
+  function staticStoryOverrides(root, definition) {
+    const staticCard = Array.from(root.querySelectorAll("[data-lrc-static-card]")).find(node => node.dataset.lrcStaticCard === definition.id);
+    if (!staticCard) return new Map();
+    const overrides = new Map();
+    staticCard.querySelectorAll("[data-lrc-static-story]").forEach(node => {
+      const id = node.dataset.lrcStaticStory;
+      if (!id) return;
+      const focus = stripLabel(textOf(node.querySelector(".lrc-static-focus")), "Story focus");
+      const deltas = {};
+      LAYERS.forEach(([kind]) => {
+        const deltaNode = node.querySelector(`[data-lrc-static-lens="${kind}"] [data-lrc-static-delta]`);
+        const delta = stripLabel(textOf(deltaNode), "What this selection adds");
+        if (delta) deltas[kind] = delta;
+      });
+      const boundary = stripLabel(textOf(node.querySelector("aside")), "Claim boundary");
+      overrides.set(id, { focus, deltas, boundary });
+    });
+    return overrides;
+  }
+
   function sourceMaterial(root, definition, context) {
     const source = definition.sourceSelector ? root.querySelector(definition.sourceSelector) : null;
     const sourceSummary = textOf(source?.querySelector("summary p"));
@@ -68,7 +89,17 @@
       if (kind === "empirical" && context.noStudy && !/no current admitted study/i.test(value || "")) parts.push(`<p class="lrc-study-boundary">${escapeHtml(context.noStudy)}</p>`);
       return parts.join("") || "<p>This layer is intentionally compact on this subject.</p>";
     };
-    const stories = Array.isArray(definition.stories) ? definition.stories.filter(story => {
+    const staticOverrides = staticStoryOverrides(root, definition);
+    const stories = Array.isArray(definition.stories) ? definition.stories.map(story => {
+      const override = staticOverrides.get(story?.id);
+      if (!override) return story;
+      return {
+        ...story,
+        focus: override.focus || story.focus,
+        deltas: { ...story.deltas, ...override.deltas },
+        boundary: override.boundary || story.boundary
+      };
+    }).filter(story => {
       if (!story || !story.id || !story.label || !story.focus || !story.deltas) return false;
       return LAYERS.every(([kind]) => typeof story.deltas[kind] === "string" && story.deltas[kind].trim());
     }) : [];

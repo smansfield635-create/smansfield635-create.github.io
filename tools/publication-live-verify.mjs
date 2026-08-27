@@ -150,10 +150,26 @@ export const main=async()=>{
     await page.setViewport({width:720,height:1280,deviceScaleFactor:1});
     const pageErrors=[];
     const consoleErrors=[];
+    const consoleErrorDetails=[];
+    const httpFailures=[];
+    const requestFailures=[];
     const evidenceInteractions=[];
     let declaredInteractions=[];
     page.on('pageerror',error=>pageErrors.push(String(error?.stack||error)));
-    page.on('console',message=>{if(message.type()==='error')consoleErrors.push(message.text());});
+    page.on('console',message=>{
+      if(message.type()!=='error')return;
+      const text=message.text();
+      const location=message.location?.()||{};
+      consoleErrors.push(text);
+      consoleErrorDetails.push({text,url:location.url||'',lineNumber:location.lineNumber??null,columnNumber:location.columnNumber??null});
+    });
+    page.on('response',response=>{
+      const status=response.status();
+      if(status<400)return;
+      const request=response.request();
+      httpFailures.push({status,url:response.url(),resourceType:request?.resourceType?.()||null});
+    });
+    page.on('requestfailed',request=>requestFailures.push({url:request.url(),resourceType:request.resourceType?.()||null,errorText:request.failure?.()?.errorText||null}));
     const url=pageUrl+spec.path;
     await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});
 
@@ -225,7 +241,7 @@ export const main=async()=>{
     }catch(error){
       let diagnostic=null;
       try{diagnostic=await captureRuntimeDiagnostic(error);}catch(diagnosticError){diagnostic={captureError:String(diagnosticError?.stack||diagnosticError)};}
-      console.error(JSON.stringify({schema:'PUBLICATION_SURFACE_RUNTIME_DIAGNOSTIC_v1',surfaceId:manifest.surfaceId,url,result:'FAIL',phase:'READINESS_WAIT',failure:String(error?.stack||error),diagnostics:{pageErrors,consoleErrors,evidenceInteractions,declaredInteractions,failures:['RUNTIME_READINESS_FAILED']},diagnostic},null,2));
+      console.error(JSON.stringify({schema:'PUBLICATION_SURFACE_RUNTIME_DIAGNOSTIC_v1',surfaceId:manifest.surfaceId,url,result:'FAIL',phase:'READINESS_WAIT',failure:String(error?.stack||error),diagnostics:{pageErrors,consoleErrors,consoleErrorDetails,httpFailures,requestFailures,evidenceInteractions,declaredInteractions,failures:['RUNTIME_READINESS_FAILED']},diagnostic},null,2));
       throw error;
     }
 
@@ -272,7 +288,7 @@ export const main=async()=>{
     if(declaredInteractions.some(x=>!x.ok))failures.push('DECLARED_INTERACTION_FAILED');
     if(manifest.surfaceId==='evidence'&&result.currentPublicCondition==='CHECKING')failures.push('EVIDENCE_CONDITION_NOT_TERMINAL');
 
-    const receipt={schema:'PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1',surfaceId:manifest.surfaceId,url,result:failures.length?'FAIL':'PASS',runtime:result,diagnostics:{pageErrors,consoleErrors,ignoredConsoleErrors,actionableConsoleErrors,evidenceInteractions,declaredInteractions,failures}};
+    const receipt={schema:'PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1',surfaceId:manifest.surfaceId,url,result:failures.length?'FAIL':'PASS',runtime:result,diagnostics:{pageErrors,consoleErrors,consoleErrorDetails,httpFailures,requestFailures,ignoredConsoleErrors,actionableConsoleErrors,evidenceInteractions,declaredInteractions,failures}};
     console.log(JSON.stringify(receipt,null,2));
     if(failures.length)process.exitCode=1;
   }finally{

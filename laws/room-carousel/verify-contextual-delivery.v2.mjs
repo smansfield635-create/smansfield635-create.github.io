@@ -61,6 +61,8 @@ try {
 }
 
 const browser = await chromium.launch({ headless: true });
+const artifactDir = path.join(root, "artifacts/laws-cp6-final-synchronization");
+fs.mkdirSync(artifactDir, { recursive: true });
 try {
   const evidence = [];
   for (const viewport of viewports) {
@@ -104,6 +106,10 @@ try {
       assert.ok(geometry.viewportOverflow <= 1, `${route} ${viewport.name}: no page horizontal overflow`);
       assert.ok(geometry.innerOverflow <= 1, `${route} ${viewport.name}: no nested horizontal scroll`);
       assert.ok(geometry.returnTop >= -1 && geometry.returnBottom <= viewport.height, `${route} ${viewport.name}: return immediately available`);
+      if (representativesOnly) {
+        const name = route.includes("cycles") ? "cycles" : "handoffs";
+        await page.screenshot({ path: path.join(artifactDir, `contextual-${viewport.name}-${name}-engineering.png`), fullPage: false });
+      }
 
       await page.locator("[data-lrc-card][data-active='true'] [data-lrc-return]").click();
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-layer"), "orbit", `${route} ${viewport.name}: return to orbit`);
@@ -120,7 +126,9 @@ try {
     }
     await context.close();
   }
-  console.log(JSON.stringify({ result: "PASS", mode: representativesOnly ? "representatives" : "full", routes: routes.length, viewports: viewports.length, evidence }, null, 2));
+  const result = { result: "PASS", mode: representativesOnly ? "representatives" : "full", routes: routes.length, viewports: viewports.length, evidence };
+  fs.writeFileSync(path.join(artifactDir, "contextual-delivery-browser-result.json"), `${JSON.stringify(result, null, 2)}\n`);
+  console.log(JSON.stringify(result, null, 2));
 } finally {
   await browser.close();
 }

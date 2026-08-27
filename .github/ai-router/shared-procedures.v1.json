@@ -25,13 +25,7 @@
         "When a lawful next execution step is available, execute it rather than returning a status-only response.",
         "After execution, report completed action, new evidence or none, current boundary, and next lawful action or blocker."
       ],
-      "failClosedWhen": [
-        "REPEATED_EQUIVALENT_PROBE_WITHOUT_NEW_EVIDENCE",
-        "REPAIR_PROPOSED_BEFORE_FAULT_LOCALIZATION",
-        "SPECULATIVE_MUTATION_FROM_VERIFICATION_FAILURE",
-        "PROGRESS_CLAIM_WITHOUT_NEW_EVIDENCE",
-        "KNOWN_LAWFUL_EXECUTION_STEP_REPLACED_BY_STATUS_ONLY_RESPONSE"
-      ],
+      "failClosedWhen": ["REPEATED_EQUIVALENT_PROBE_WITHOUT_NEW_EVIDENCE", "REPAIR_PROPOSED_BEFORE_FAULT_LOCALIZATION", "SPECULATIVE_MUTATION_FROM_VERIFICATION_FAILURE", "PROGRESS_CLAIM_WITHOUT_NEW_EVIDENCE", "KNOWN_LAWFUL_EXECUTION_STEP_REPLACED_BY_STATUS_ONLY_RESPONSE"],
       "authorityCreated": false
     },
     {
@@ -48,34 +42,67 @@
     },
     {
       "procedureId": "GITHUB_ACTIONS_FALLBACK",
-      "purpose": "Provide a clean execution backend when a local room cannot clone or run the repository.",
-      "steps": ["Use the procedure-specific workflow declared by the project entrypoint.", "Checkout the exact governing head with full history.", "Pass the exact target commit as an explicit workflow input.", "Run the same repository gate or validator used by the local backend.", "Upload the command-emitted receipt and fingerprint even when the gate fails.", "Bind the result to workflow run, job, artifact, governing head, and target commit identities."],
-      "forbiddenSubstitute": "MANUAL_METADATA_RECONSTRUCTION_AS_EXECUTION_PROOF"
+      "status": "RETIRED_FOR_AI_AGENT_EXECUTION",
+      "purpose": "Historical procedure retained only to make prior records interpretable. It is not an executable fallback for AI rooms.",
+      "agentExecutionAllowed": false,
+      "supersededBy": "AI_ENTRYPOINT.json#agentExecutionSurface",
+      "permittedRoles": ["PASSIVE_CI_AFTER_REPOSITORY_CHANGE", "HISTORICAL_EVIDENCE_INSPECTION", "SEPARATELY_AUTHORIZED_LATER_REPLAY"],
+      "steps": ["Do not invoke this procedure to perform AI agent construction, verification, reproduction, or other native command work.", "If no authorized non-Actions execution surface is connected, fail closed with execution surface unavailable."],
+      "forbiddenSubstitute": "GITHUB_ACTIONS_AS_AGENT_EXECUTION_TRANSPORT"
     },
     {
       "procedureId": "AI_ENTRY_NATIVE_WORKFLOW_DISPATCH",
-      "purpose": "Continuously preserve the AI entry point's ability to start an allowlisted native GitHub Actions workflow even when the connected GitHub tool does not expose workflow_dispatch directly.",
+      "purpose": "Preserve allowlisted GitHub Actions dispatch only for roles separately permitted by AI_ENTRYPOINT.json; never use it as AI agent native execution transport.",
+      "agentExecutionAllowed": false,
+      "permittedRoles": ["PASSIVE_CI_AFTER_REPOSITORY_CHANGE", "SEPARATELY_AUTHORIZED_LATER_REPLAY", "EXPLICIT_DEPLOYMENT_WHEN_SEPARATELY_AUTHORIZED"],
       "capabilityRegistry": ".github/ai-router/workflow-dispatch-capability.v1.json",
       "preferredTransport": "DIRECT_CONNECTED_GITHUB_WORKFLOW_DISPATCH",
       "fallbackTransport": "SAME_REPOSITORY_PR_NATIVE_WORKFLOW_DISPATCH_BRIDGE",
       "steps": [
+        "Before dispatch, verify the requested workflow role is permitted by AI_ENTRYPOINT.json and is not AI agent execution.",
         "Prefer the connected GitHub workflow_dispatch write primitive whenever it is available.",
         "If direct dispatch is unavailable, read .github/ai-router/workflow-dispatch-capability.v1.json and select only an allowlisted capabilityId.",
         "Resolve exact current main and create a fresh ephemeral branch named ai-dispatch-request-<requestId> from that exact commit. Never reset or reuse an older request branch.",
         "Create one request commit on that branch containing only .github/ai-entry/workflow-dispatch-request.json with schema AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1, a unique requestId, and the allowlisted capabilityId.",
         "Open a same-repository execution-only pull request from the ephemeral request branch to main with an AI Dispatch: title. The transport PR must never be merged.",
-        "The ordinary pull_request bridge runs only for same-repository ai-dispatch-request-* branches, checks out authoritative main, validates that the request commit parent equals current main, resolves protected inputs such as CURRENT_MAIN_SHA, calls GitHub's native workflow_dispatch API, and recovers the resulting workflow run ID.",
+        "The ordinary pull_request bridge runs only for same-repository ai-dispatch-request-* branches, checks out authoritative main, validates that the request commit parent equals current main, resolves protected inputs, calls GitHub's native workflow_dispatch API, and recovers the resulting workflow run ID.",
         "Read .github/ai-entry/receipts/<requestId>.json from ai-dispatch-receipts and require NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED before treating the target workflow as started.",
-        "Use dispatchedRunId from the receipt for all subsequent jobs, steps, logs, artifacts, deployment, and verification inspection.",
-        "On success, the bridge closes the transport PR and deletes the ephemeral request branch. The durable receipt remains on ai-dispatch-receipts.",
-        "Failed transport PRs remain unmerged and diagnosable; they never become product or release commits.",
-        "Before creating a replacement carrier after failure, localize the bridge or target-workflow assertion. Do not generate serial carriers for an unchanged unresolved failure.",
-        "Never substitute a dummy product commit, release-branch nudge, issue-comment carrier, generic command workflow, destructive branch reset, or manual UI action when this capability is available."
+        "Use dispatchedRunId from the receipt for subsequent permitted-role inspection.",
+        "On success, the bridge closes the transport PR and deletes the ephemeral request branch.",
+        "Before creating a replacement carrier after failure, localize the bridge or target-workflow assertion."
       ],
-      "failClosedWhen": ["UNKNOWN_CAPABILITY_ID", "REQUEST_BRANCH_NOT_FRESH_FROM_CURRENT_MAIN", "TRANSPORT_PR_NOT_SAME_REPOSITORY", "UNDECLARED_OR_OVERRIDDEN_PROTECTED_INPUT", "NATIVE_WORKFLOW_DISPATCH_NOT_ACCEPTED", "DISPATCHED_RUN_ID_NOT_RESOLVED", "REPEATED_CARRIER_WITHOUT_FAILURE_LOCALIZATION"],
+      "failClosedWhen": ["REQUEST_IS_AI_AGENT_EXECUTION", "UNKNOWN_CAPABILITY_ID", "REQUEST_BRANCH_NOT_FRESH_FROM_CURRENT_MAIN", "TRANSPORT_PR_NOT_SAME_REPOSITORY", "UNDECLARED_OR_OVERRIDDEN_PROTECTED_INPUT", "NATIVE_WORKFLOW_DISPATCH_NOT_ACCEPTED", "DISPATCHED_RUN_ID_NOT_RESOLVED", "REPEATED_CARRIER_WITHOUT_FAILURE_LOCALIZATION"],
       "authorityCreated": false,
       "genericCommandAuthorityCreated": false,
       "transportPullRequestMergeAuthorityCreated": false
+    },
+    {
+      "procedureId": "DISPOSABLE_EXECUTION_REQUEST",
+      "purpose": "Turn a separately admitted request into exact-head nonmutating command execution on an authorized non-Actions disposable executor.",
+      "contract": ".github/ai-router/codespace-execution/execution-environment-contract.v1.json",
+      "transport": ".github/ai-router/codespace-execution/callable-transport.v1.json",
+      "steps": ["Resolve the separately admitted operation and owning project profile.", "Require a connected transport with callableByCurrentChatGPTRoom=true.", "Resolve the exact target commit and declared fixed command.", "Create or attach to a disposable clean environment permitted by the project profile.", "Checkout the target commit detached with full history when lineage is tested.", "Verify a clean worktree before execution.", "Execute only the declared command with outputs outside the repository or in an ignored disposable path.", "Emit environment and command-execution receipts.", "Destroy or invalidate the mutable environment after receipt capture."],
+      "failClosedWhen": ["TRANSPORT_UNAVAILABLE", "REPOSITORY_NOT_MATERIALIZED", "DEPENDENCIES_NOT_READY", "COMMAND_EXECUTION_UNAVAILABLE"],
+      "authorityCreated": false
+    },
+    {
+      "procedureId": "FRESH_VERIFIER_REEXECUTION",
+      "purpose": "Reexecute the same frozen target and command in a distinct clean environment with no mutable-state reuse.",
+      "profile": ".github/ai-router/codespace-execution/fresh-verifier-profile.v1.json",
+      "steps": ["Create a fresh environment with a distinct environment identity.", "Resolve the same exact target commit independently.", "Execute the same declared command without builder mutable outputs.", "Emit a fresh-verifier command receipt and output digests."],
+      "authorityCreated": false
+    },
+    {
+      "procedureId": "INDEPENDENT_EXECUTION_EQUALITY",
+      "purpose": "Compare builder and fresh-verifier immutable outputs without favorable-result substitution.",
+      "steps": ["Bind builder and fresh-verifier receipt digests.", "Compare the declared equality domain exactly.", "Emit PASS_EXACT_EQUALITY or FAIL_CLOSED_MISMATCH.", "Do not reinterpret mismatches as success."],
+      "authorityCreated": false
+    },
+    {
+      "procedureId": "EXECUTION_ENVIRONMENT_DESTRUCTION",
+      "purpose": "Prove that a disposable environment is no longer relied upon as continuing authority after execution.",
+      "steps": ["Record environment identity and last exact target.", "Remove the disposable environment when transport permits, or mark it detached nonauthoritative.", "Emit the destruction receipt.", "Never treat a long-lived environment as canonical custody."],
+      "authorityCreated": false
     },
     {
       "procedureId": "BRANCH_MAIN_COMPARISON",

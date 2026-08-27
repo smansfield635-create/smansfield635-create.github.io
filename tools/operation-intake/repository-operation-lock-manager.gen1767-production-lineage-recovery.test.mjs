@@ -7,10 +7,9 @@ import {
 } from './repository-operation-lock-manager.v1.mjs';
 
 const response=(status,value)=>({status,async text(){return JSON.stringify(value)}});
-const exact=EXACT_LOCK_REF_LINEAGE_RECOVERIES[0];
 const head='9'.repeat(40);
 
-function compareCommit(overrides={}){
+function compareCommit(exact,overrides={}){
   return {
     sha:exact.commitSha,
     author:{login:exact.authorLogin},
@@ -18,7 +17,7 @@ function compareCommit(overrides={}){
     ...overrides
   };
 }
-function detail(overrides={}){
+function detail(exact,overrides={}){
   return {
     sha:exact.commitSha,
     author:{login:exact.authorLogin},
@@ -30,7 +29,7 @@ function detail(overrides={}){
   };
 }
 
-async function run(summary=compareCommit(),commitDetail=detail()){
+async function run(exact,summary=compareCommit(exact),commitDetail=detail(exact)){
   const originalFetch=globalThis.fetch;
   globalThis.fetch=async url=>{
     const value=String(url);
@@ -42,24 +41,27 @@ async function run(summary=compareCommit(),commitDetail=detail()){
   finally{globalThis.fetch=originalFetch;}
 }
 
-test('exact historical Gen1767 owner-connector lineage commit is accepted',async()=>{
-  const result=await run();
-  assert.equal(result.result,'CANONICAL_LOCK_REF_LINEAGE_VERIFIED');
-  assert.equal(result.commitCount,1);
-});
+for (const exact of EXACT_LOCK_REF_LINEAGE_RECOVERIES) {
+  test(`exact owner-connector lineage commit ${exact.commitSha} is accepted`,async()=>{
+    const result=await run(exact);
+    assert.equal(result.result,'CANONICAL_LOCK_REF_LINEAGE_VERIFIED');
+    assert.equal(result.commitCount,1);
+  });
 
-test('altered historical Gen1767 author remains fail closed',async()=>{
-  await assert.rejects(()=>run(compareCommit(),detail({author:{login:'attacker'}})),error=>error.code==='AUTHORITY_LEDGER_LINEAGE_UNTRUSTED');
-});
+  test(`altered owner for ${exact.commitSha} remains fail closed`,async()=>{
+    await assert.rejects(()=>run(exact,compareCommit(exact),detail(exact,{author:{login:'attacker'}})),error=>error.code==='AUTHORITY_LEDGER_LINEAGE_UNTRUSTED');
+  });
 
-test('altered historical Gen1767 message remains fail closed',async()=>{
-  await assert.rejects(()=>run(compareCommit(),detail({commit:{message:`${exact.message} altered`,verification:{verified:false}}})),error=>error.code==='AUTHORITY_LEDGER_LINEAGE_UNTRUSTED');
-});
+  test(`altered message for ${exact.commitSha} remains fail closed`,async()=>{
+    await assert.rejects(()=>run(exact,compareCommit(exact),detail(exact,{commit:{message:`${exact.message} altered`,verification:{verified:false}}})),error=>error.code==='AUTHORITY_LEDGER_LINEAGE_UNTRUSTED');
+  });
 
-test('altered historical Gen1767 ledger blob remains fail closed',async()=>{
-  await assert.rejects(()=>run(compareCommit(),detail({files:[{filename:'.github/operation-intake/active-operation-ledger.v1.json',sha:'0'.repeat(40)}]})),error=>error.code==='AUTHORITY_LEDGER_LINEAGE_UNTRUSTED');
-});
+  test(`altered ledger blob for ${exact.commitSha} remains fail closed`,async()=>{
+    await assert.rejects(()=>run(exact,compareCommit(exact),detail(exact,{files:[{filename:'.github/operation-intake/active-operation-ledger.v1.json',sha:'0'.repeat(40)}]})),error=>error.code==='AUTHORITY_LEDGER_LINEAGE_UNTRUSTED');
+  });
+}
 
 test('unrelated unsigned owner commit remains fail closed',async()=>{
-  await assert.rejects(()=>run(compareCommit({sha:'8'.repeat(40)}),detail()),error=>error.code==='AUTHORITY_LEDGER_LINEAGE_UNTRUSTED');
+  const exact=EXACT_LOCK_REF_LINEAGE_RECOVERIES[0];
+  await assert.rejects(()=>run(exact,compareCommit(exact,{sha:'8'.repeat(40)}),detail(exact)),error=>error.code==='AUTHORITY_LEDGER_LINEAGE_UNTRUSTED');
 });

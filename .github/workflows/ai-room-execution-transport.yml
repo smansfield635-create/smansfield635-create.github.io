@@ -100,6 +100,18 @@ jobs:
           test -s "$RUNNER_TEMP/command-execution-receipt.json"
           node -e "const fs=require('fs');const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/command-execution-receipt.json'));if(r.schema!=='COMMAND_EXECUTION_RECEIPT_v1')process.exit(1)"
 
+      - name: Materialize command payload receipt
+        if: always()
+        run: |
+          set -euo pipefail
+          mapfile -t payloads < <(find /tmp -maxdepth 2 -type f -path '/tmp/ai-room-tool-*/command-payload-receipt.json' -print)
+          if [ "${#payloads[@]}" -eq 1 ]; then
+            cp "${payloads[0]}" "$RUNNER_TEMP/command-payload-receipt.json"
+          elif [ "${#payloads[@]}" -gt 1 ]; then
+            printf 'AMBIGUOUS_COMMAND_PAYLOAD_RECEIPTS=%s\n' "${#payloads[@]}" >&2
+            exit 1
+          fi
+
       - name: Upload returned command receipt
         if: always()
         uses: actions/upload-artifact@v4
@@ -109,6 +121,15 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+      - name: Upload returned command payload receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-room-command-payload-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/command-payload-receipt.json
+          if-no-files-found: ignore
+          retention-days: 30
+
       - name: Return bounded receipt metadata to issue or pull request
         if: always() && github.event_name == 'issue_comment'
         uses: actions/github-script@v7
@@ -116,6 +137,7 @@ jobs:
           script: |
             const fs = require('fs');
             const path = `${process.env.RUNNER_TEMP}/command-execution-receipt.json`;
+            const payloadPath = `${process.env.RUNNER_TEMP}/command-payload-receipt.json`;
             let receipt;
             try { receipt = JSON.parse(fs.readFileSync(path, 'utf8')); }
             catch { receipt = { executionDisposition: 'COMMAND_NOT_EXECUTED_FAIL_CLOSED', errorCode: 'MISSING_COMMAND_RECEIPT' }; }
@@ -130,7 +152,8 @@ jobs:
               `selectedBackend = ${receipt.selectedBackend ?? 'UNKNOWN'}`,
               `errorCode = ${receipt.errorCode ?? 'NONE'}`,
               `workflowRun = ${context.runId}`,
-              `artifactName = ai-room-command-execution-receipt-${context.runId}-${process.env.GITHUB_RUN_ATTEMPT}`
+              `artifactName = ai-room-command-execution-receipt-${context.runId}-${process.env.GITHUB_RUN_ATTEMPT}`,
+              `payloadArtifactName = ${fs.existsSync(payloadPath) ? `ai-room-command-payload-receipt-${context.runId}-${process.env.GITHUB_RUN_ATTEMPT}` : 'NONE'}`
             ];
             await github.rest.issues.createComment({
               owner: context.repo.owner,

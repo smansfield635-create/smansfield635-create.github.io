@@ -1,0 +1,28 @@
+{
+  "schema": "THREE_TIER_CODESPACE_FRESH_VERIFIER_PROFILE_v1",
+  "roleId": "FRESH_THREE_TIER_CODESPACE_EXECUTION_SUBSTRATE_VERIFIER",
+  "status": "ACTIVE_CONTRACT_CANDIDATE",
+  "environmentContract": ".github/ai-router/codespace-execution/execution-environment-contract.v1.json",
+  "distinctFromBuilder": true,
+  "freshCleanEnvironmentRequired": true,
+  "builderMutableStateReuseProhibited": true,
+  "builderOutputReusePolicy": "IMMUTABLE_DECLARED_INPUTS_AND_RECEIPT_DIGESTS_ONLY",
+  "requiredInputs": [
+    "repository",
+    "operationId",
+    "projectProfile",
+    "exactTargetHead",
+    "declaredCommand",
+    "authorityReceiptIdentity"
+  ],
+  "requiredOutputs": [
+    "environmentReceipt",
+    "commandExecutionReceipt"
+  ],
+  "mayRepairCandidate": false,
+  "mayMutateTarget": false,
+  "mayMutateOperationLock": false,
+  "mayMerge": false,
+  "equalityRequirement": "DECLARED_OUTPUT_DOMAIN_EXACT",
+  "failureDisposition": "FAIL_CLOSED"
+}

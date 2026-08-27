@@ -1,0 +1,114 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "compass-gen1752",
+  "description": "Gen1752 accepted Compass root publication contract with bounded practice/readiness interaction proof.",
+  "checks": [
+    {
+      "path": "/",
+      "includes": [
+        "data-compass-plan=\"COMPASS_HOOK6_RECOVERED_RENEWAL_20260827\"",
+        "data-compass-static-introduction",
+        "data-practice-tab=\"explore\"",
+        "data-practice-tab=\"build\"",
+        "data-practice-tab=\"verify\"",
+        "data-practice-tab=\"community\"",
+        "data-readiness-tab=\"research\"",
+        "data-readiness-tab=\"trl\"",
+        "data-readiness-tab=\"tra\"",
+        "PROTOCOL_CANDIDATE = NOT_YET",
+        "FRONTIER_CONTRIBUTION = UNPROVEN_PENDING_INDEPENDENT_REPRODUCTION",
+        "/evidence/agentic-frontier/"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/",
+    "timeoutMs": 45000,
+    "readySelector": "[data-compass-root]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "interactions": [
+      {
+        "name": "practice build tab activates",
+        "action": {
+          "type": "click",
+          "selector": "[data-practice-tab=\"build\"]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-practice-tab=\"build\"]",
+            "name": "aria-selected",
+            "value": "true"
+          }
+        ]
+      },
+      {
+        "name": "practice verify tab activates",
+        "action": {
+          "type": "click",
+          "selector": "[data-practice-tab=\"verify\"]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-practice-tab=\"verify\"]",
+            "name": "aria-selected",
+            "value": "true"
+          }
+        ]
+      },
+      {
+        "name": "readiness trl tab activates",
+        "action": {
+          "type": "click",
+          "selector": "[data-readiness-tab=\"trl\"]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-readiness-tab=\"trl\"]",
+            "name": "aria-selected",
+            "value": "true"
+          }
+        ]
+      },
+      {
+        "name": "readiness tra tab activates",
+        "action": {
+          "type": "click",
+          "selector": "[data-readiness-tab=\"tra\"]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-readiness-tab=\"tra\"]",
+            "name": "aria-selected",
+            "value": "true"
+          }
+        ]
+      },
+      {
+        "name": "readiness research tab restores",
+        "action": {
+          "type": "click",
+          "selector": "[data-readiness-tab=\"research\"]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-readiness-tab=\"research\"]",
+            "name": "aria-selected",
+            "value": "true"
+          }
+        ]
+      }
+    ]
+  }
+}

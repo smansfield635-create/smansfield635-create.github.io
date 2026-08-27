@@ -4178,67 +4178,6 @@
       "scopeHash": "ee3af515a137fb58c6e16f544c57877c6a6a1585a7ca013f5b5271ef201ec139",
       "state": "ADMITTED_LOCKED"
     },
-    "eea23008987e2f59e963dc7c990b80b389120173dbe47ae5a75f2c45dfdc8bb2": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "9923e9f346c8d1301ff4c79ec162fcd53340f361",
-          "lockGeneration": 1772,
-          "lockScope": "COMPASS_RENEWAL_CORRECTED_2162",
-          "operationId": "COMPASS_RENEWAL_CORRECTED_20260827_008",
-          "procedureLocatorDigest": "3717ae6e66a50ef90f5e803461af54d6c07894356498ae959467618e310fd170",
-          "requestDigest": "f3cae3f28bf1956fc53dbecd2bd1abc508077eb95f0a94feece95a2e73c4b5a3",
-          "scopeHash": "eea23008987e2f59e963dc7c990b80b389120173dbe47ae5a75f2c45dfdc8bb2"
-        },
-        "bindingDigest": "98fecfdee53801c5f60e9d18d4896a5bb66241b3e91c2f69b1ac8e1677e0faeb",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "091ebfdf42169f687bbffad47b5864889d2fcb7cf05c56970607b9cd41ef8849",
-          "commentId": 5445318631,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2162,
-          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 33117338394,
-          "workflowSha": "9923e9f346c8d1301ff4c79ec162fcd53340f361"
-        },
-        "lineageAnchorCommitSha": "bf49347f437f673eac46d1b9cbb4cb42b7518362",
-        "origin": "CANONICAL_SUCCESSOR",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "9923e9f346c8d1301ff4c79ec162fcd53340f361",
-      "lockGeneration": 1772,
-      "lockScope": "COMPASS_RENEWAL_CORRECTED_2162",
-      "operationId": "COMPASS_RENEWAL_CORRECTED_20260827_008",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "db4f294cbf18702d05fe7cb3833ce8f843e7b3d9",
-        "lockGeneration": 1764,
-        "lockScope": "COMPASS_RENEWAL_CORRECTED_2162",
-        "operationId": "COMPASS_RENEWAL_CORRECTED_20260827_006",
-        "preservedEvidenceRefs": [
-          "issue:2162#issuecomment-5443716766",
-          "issue:2162#issuecomment-5442755897",
-          "issue:2162#issuecomment-5442911477",
-          "issue:2162#issuecomment-5444100244",
-          "PR:2208"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "COMPASS_RENEWAL_CORRECTED_2162_SUCCESSOR_1764_20260827_002"
-      },
-      "procedureLocatorDigest": "3717ae6e66a50ef90f5e803461af54d6c07894356498ae959467618e310fd170",
-      "released": false,
-      "requestDigest": "f3cae3f28bf1956fc53dbecd2bd1abc508077eb95f0a94feece95a2e73c4b5a3",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "eea23008987e2f59e963dc7c990b80b389120173dbe47ae5a75f2c45dfdc8bb2",
-      "state": "ADMITTED_LOCKED"
-    },
     "eec498a511b1c6f95d0fd580aabf1e3125a057729a9d9a53e1665ab0f0138f25": {
       "governingHead": "12499ab31ff01c1b086eb4336fd2957323cfd184",
       "lockGeneration": 317,
@@ -29696,6 +29635,68 @@
         "transitionId": "COMPASS_RENEWAL_CORRECTED_2162_SUCCESSOR_1764_20260827_002"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "9923e9f346c8d1301ff4c79ec162fcd53340f361",
+          "lockGeneration": 1772,
+          "lockScope": "COMPASS_RENEWAL_CORRECTED_2162",
+          "operationId": "COMPASS_RENEWAL_CORRECTED_20260827_008",
+          "procedureLocatorDigest": "3717ae6e66a50ef90f5e803461af54d6c07894356498ae959467618e310fd170",
+          "requestDigest": "f3cae3f28bf1956fc53dbecd2bd1abc508077eb95f0a94feece95a2e73c4b5a3",
+          "scopeHash": "eea23008987e2f59e963dc7c990b80b389120173dbe47ae5a75f2c45dfdc8bb2"
+        },
+        "bindingDigest": "98fecfdee53801c5f60e9d18d4896a5bb66241b3e91c2f69b1ac8e1677e0faeb",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "091ebfdf42169f687bbffad47b5864889d2fcb7cf05c56970607b9cd41ef8849",
+          "commentId": 5445318631,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2162,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33117338394,
+          "workflowSha": "9923e9f346c8d1301ff4c79ec162fcd53340f361"
+        },
+        "lineageAnchorCommitSha": "bf49347f437f673eac46d1b9cbb4cb42b7518362",
+        "origin": "CANONICAL_SUCCESSOR",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "9923e9f346c8d1301ff4c79ec162fcd53340f361",
+      "lockGeneration": 1772,
+      "lockScope": "COMPASS_RENEWAL_CORRECTED_2162",
+      "operationId": "COMPASS_RENEWAL_CORRECTED_20260827_008",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "db4f294cbf18702d05fe7cb3833ce8f843e7b3d9",
+        "lockGeneration": 1764,
+        "lockScope": "COMPASS_RENEWAL_CORRECTED_2162",
+        "operationId": "COMPASS_RENEWAL_CORRECTED_20260827_006",
+        "preservedEvidenceRefs": [
+          "issue:2162#issuecomment-5443716766",
+          "issue:2162#issuecomment-5442755897",
+          "issue:2162#issuecomment-5442911477",
+          "issue:2162#issuecomment-5444100244",
+          "PR:2208"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_RENEWAL_CORRECTED_2162_SUCCESSOR_1764_20260827_002"
+      },
+      "procedureLocatorDigest": "3717ae6e66a50ef90f5e803461af54d6c07894356498ae959467618e310fd170",
+      "released": true,
+      "requestDigest": "f3cae3f28bf1956fc53dbecd2bd1abc508077eb95f0a94feece95a2e73c4b5a3",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "eea23008987e2f59e963dc7c990b80b389120173dbe47ae5a75f2c45dfdc8bb2",
+      "state": "TERMINAL",
+      "terminalDisposition": "WITHDRAWN"
     }
   ]
 }

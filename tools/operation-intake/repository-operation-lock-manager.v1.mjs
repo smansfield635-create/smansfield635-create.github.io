@@ -43,14 +43,24 @@ export const LEGACY_EXACT_ISSUANCE_RECOVERIES = [stable({
   workflowRunId: 32931494268
 })];
 
-export const EXACT_LOCK_REF_LINEAGE_RECOVERIES = [stable({
-  commitSha: 'e24fd158777c8df4000d6ae6c36f1ab1073c3222',
-  parentSha: 'e26e26ad24c106c51fc4135d58f0aa43cfd5f4f7',
-  authorLogin: 'smansfield635-create',
-  committerLogin: 'smansfield635-create',
-  message: 'Acquire operation lock 1767: AUDRALIA_WORK_EXECUTOR_PORTABLE_BOOTSTRAP_20260827_001',
-  ledgerBlobSha: '35cd3351cee5884e707c5f5c3d5074c7d46af868'
-})];
+export const EXACT_LOCK_REF_LINEAGE_RECOVERIES = [
+  stable({
+    commitSha: 'e24fd158777c8df4000d6ae6c36f1ab1073c3222',
+    parentSha: 'e26e26ad24c106c51fc4135d58f0aa43cfd5f4f7',
+    authorLogin: 'smansfield635-create',
+    committerLogin: 'smansfield635-create',
+    message: 'Acquire operation lock 1767: AUDRALIA_WORK_EXECUTOR_PORTABLE_BOOTSTRAP_20260827_001',
+    ledgerBlobSha: '35cd3351cee5884e707c5f5c3d5074c7d46af868'
+  }),
+  stable({
+    commitSha: '385658998e2582e935decbc490db8c3eae4f065d',
+    parentSha: 'e24fd158777c8df4000d6ae6c36f1ab1073c3222',
+    authorLogin: 'smansfield635-create',
+    committerLogin: 'smansfield635-create',
+    message: 'Supersede operation 1767 with successor 1768: AUDRALIA_WORK_EXECUTOR_PORTABLE_BOOTSTRAP_20260827_001_SUCCESSOR_001',
+    ledgerBlobSha: '14be590a6c78969d1931306c331928f16e7b44dc'
+  })
+];
 
 function validateActiveLock(lock, key) {
   const source = 'active-operation-ledger';

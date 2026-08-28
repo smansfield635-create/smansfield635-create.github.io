@@ -967,49 +967,6 @@
       "scopeHash": "39f2877f74288d2df31f1bf51fe8ff2a76435d0f118e5c44b6380e1b23159a6f",
       "state": "ADMITTED_LOCKED"
     },
-    "3a3178debcf47c71c4c3f89df764b8bea4a506c29d59880252c52d06b5b1110f": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "a72822e5413684fa885b5f6c65e03795cf5ece8b",
-          "lockGeneration": 1789,
-          "lockScope": "LAWS:METHODS_DERIVED_VISUAL_RECONSTRUCTION:V1:ASSET_IDENTITY_CORRECTION",
-          "operationId": "LAWS_METHODS_DERIVED_VISUAL_RECONSTRUCTION_20260828_002",
-          "procedureLocatorDigest": "b1bae65b313f495bb60708a1b36a455748cafa4873346e5f24e1b67c1c0a383f",
-          "requestDigest": "ebd9df1149f59f595d125666c451fa379010db0fd000af7a90b7cd029a50b267",
-          "scopeHash": "3a3178debcf47c71c4c3f89df764b8bea4a506c29d59880252c52d06b5b1110f"
-        },
-        "bindingDigest": "c4c948ea3dbe928ee36c67d7e92a90737bbb40722fe688a7b6fd095425ece868",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "a94b03fd51a8a3057a9fa770ca2d920801fbf81af096c5608e25cf0a6f8cddd7",
-          "commentId": 5454055652,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2245,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 33182573766,
-          "workflowSha": "a72822e5413684fa885b5f6c65e03795cf5ece8b"
-        },
-        "lineageAnchorCommitSha": "7d9f9325e649463f453cb68f7273229f558a145c",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "a72822e5413684fa885b5f6c65e03795cf5ece8b",
-      "lockGeneration": 1789,
-      "lockScope": "LAWS:METHODS_DERIVED_VISUAL_RECONSTRUCTION:V1:ASSET_IDENTITY_CORRECTION",
-      "operationId": "LAWS_METHODS_DERIVED_VISUAL_RECONSTRUCTION_20260828_002",
-      "procedureLocatorDigest": "b1bae65b313f495bb60708a1b36a455748cafa4873346e5f24e1b67c1c0a383f",
-      "released": false,
-      "requestDigest": "ebd9df1149f59f595d125666c451fa379010db0fd000af7a90b7cd029a50b267",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "3a3178debcf47c71c4c3f89df764b8bea4a506c29d59880252c52d06b5b1110f",
-      "state": "ADMITTED_LOCKED"
-    },
     "3ca05f8a89b5caf0137a1a389bd84cca4972eba3d67ad2589e9138c05ecd87ba": {
       "governingHead": "67c03ff5072ab35da1713d6ddef197078b7e7bbc",
       "lockGeneration": 263,
@@ -3708,6 +3665,66 @@
       "scopeHash": "c409768312d3a3e6d47bc4d54003156029c87d0e4d25a4fd211b5213f80c8643",
       "state": "ADMITTED_LOCKED"
     },
+    "c4a6c80d043347df4fe4f1fa2846d903656e6e668355c6b9049b1af3a6cfbadf": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "ef443c9e37a532447a9fe7eea1f328b2f6679f35",
+          "lockGeneration": 1795,
+          "lockScope": "LAWS:REALITY_AWARDS_PARITY_REPAIR:V1",
+          "operationId": "LAWS_REALITY_AWARDS_PARITY_REPAIR_20260828_001",
+          "procedureLocatorDigest": "9c4c2834cae7458aee116fc9636a5bd4c43cbe70a8183b7248340c6cb90fd299",
+          "requestDigest": "db8b409b5c32ad544059bfab68c9425e30c6532303e7bff583e60b2824fca751",
+          "scopeHash": "c4a6c80d043347df4fe4f1fa2846d903656e6e668355c6b9049b1af3a6cfbadf"
+        },
+        "bindingDigest": "feff0fb5a1797fee88788ce05981639002a360de17e1590f598be501cac9821a",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "a767840da9941da96c989d79c8b2f67d2c2937f932d33ee59541dab13bd210b6",
+          "commentId": 5455070200,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2253,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33190352658,
+          "workflowSha": "ef443c9e37a532447a9fe7eea1f328b2f6679f35"
+        },
+        "lineageAnchorCommitSha": "947b24caba162e40223eb76459b21033f3b92732",
+        "origin": "CANONICAL_SUCCESSOR",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "ef443c9e37a532447a9fe7eea1f328b2f6679f35",
+      "lockGeneration": 1795,
+      "lockScope": "LAWS:REALITY_AWARDS_PARITY_REPAIR:V1",
+      "operationId": "LAWS_REALITY_AWARDS_PARITY_REPAIR_20260828_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "a72822e5413684fa885b5f6c65e03795cf5ece8b",
+        "lockGeneration": 1789,
+        "lockScope": "LAWS:METHODS_DERIVED_VISUAL_RECONSTRUCTION:V1:ASSET_IDENTITY_CORRECTION",
+        "operationId": "LAWS_METHODS_DERIVED_VISUAL_RECONSTRUCTION_20260828_002",
+        "preservedEvidenceRefs": [
+          "PUBLIC_ISSUE_2245_GEN1789_CONSTRUCTION_FREEZE",
+          "PUBLIC_ISSUE_2253_AWARDS_PARITY_REPAIR_BOUNDARY",
+          "PRIVATE_ISSUE_342_PAGE_EXCELLENCE_AND_AWARDS_RECEIPTS",
+          "REALITY_CANDIDATE_38f7125938b2b1c7bd40fb9d11e8e03cb582d9be"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "LAWS_GEN1789_TO_REALITY_AWARDS_PARITY_REPAIR_20260828_002"
+      },
+      "procedureLocatorDigest": "9c4c2834cae7458aee116fc9636a5bd4c43cbe70a8183b7248340c6cb90fd299",
+      "released": false,
+      "requestDigest": "db8b409b5c32ad544059bfab68c9425e30c6532303e7bff583e60b2824fca751",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c4a6c80d043347df4fe4f1fa2846d903656e6e668355c6b9049b1af3a6cfbadf",
+      "state": "ADMITTED_LOCKED"
+    },
     "c69e36ab428ae19cd898a5701a460585c7b2736289f8ac6684f5322da7861bbf": {
       "governingHead": "ffaaabdbd7691dd1079a7afdb81a62310fda706a",
       "lockGeneration": 180,
@@ -4927,7 +4944,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1794,
+  "lockGeneration": 1795,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -30898,6 +30915,67 @@
         "successorLockScope": "COMPASS_ROOT_RENEWAL_OWNER_INTENT_20260828",
         "successorOperationId": "COMPASS_ROOT_RENEWAL_20260828_002",
         "transitionId": "COMPASS_ROOT_RENEWAL_STALE_HEAD_SUCCESSOR_20260828_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "a72822e5413684fa885b5f6c65e03795cf5ece8b",
+          "lockGeneration": 1789,
+          "lockScope": "LAWS:METHODS_DERIVED_VISUAL_RECONSTRUCTION:V1:ASSET_IDENTITY_CORRECTION",
+          "operationId": "LAWS_METHODS_DERIVED_VISUAL_RECONSTRUCTION_20260828_002",
+          "procedureLocatorDigest": "b1bae65b313f495bb60708a1b36a455748cafa4873346e5f24e1b67c1c0a383f",
+          "requestDigest": "ebd9df1149f59f595d125666c451fa379010db0fd000af7a90b7cd029a50b267",
+          "scopeHash": "3a3178debcf47c71c4c3f89df764b8bea4a506c29d59880252c52d06b5b1110f"
+        },
+        "bindingDigest": "c4c948ea3dbe928ee36c67d7e92a90737bbb40722fe688a7b6fd095425ece868",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "a94b03fd51a8a3057a9fa770ca2d920801fbf81af096c5608e25cf0a6f8cddd7",
+          "commentId": 5454055652,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2245,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33182573766,
+          "workflowSha": "a72822e5413684fa885b5f6c65e03795cf5ece8b"
+        },
+        "lineageAnchorCommitSha": "7d9f9325e649463f453cb68f7273229f558a145c",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "a72822e5413684fa885b5f6c65e03795cf5ece8b",
+      "lockGeneration": 1789,
+      "lockScope": "LAWS:METHODS_DERIVED_VISUAL_RECONSTRUCTION:V1:ASSET_IDENTITY_CORRECTION",
+      "operationId": "LAWS_METHODS_DERIVED_VISUAL_RECONSTRUCTION_20260828_002",
+      "procedureLocatorDigest": "b1bae65b313f495bb60708a1b36a455748cafa4873346e5f24e1b67c1c0a383f",
+      "released": true,
+      "requestDigest": "ebd9df1149f59f595d125666c451fa379010db0fd000af7a90b7cd029a50b267",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "3a3178debcf47c71c4c3f89df764b8bea4a506c29d59880252c52d06b5b1110f",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "PUBLIC_ISSUE_2245_GEN1789_CONSTRUCTION_FREEZE",
+          "PUBLIC_ISSUE_2253_AWARDS_PARITY_REPAIR_BOUNDARY",
+          "PRIVATE_ISSUE_342_PAGE_EXCELLENCE_AND_AWARDS_RECEIPTS",
+          "REALITY_CANDIDATE_38f7125938b2b1c7bd40fb9d11e8e03cb582d9be"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "ef443c9e37a532447a9fe7eea1f328b2f6679f35",
+        "successorLockGeneration": 1795,
+        "successorLockScope": "LAWS:REALITY_AWARDS_PARITY_REPAIR:V1",
+        "successorOperationId": "LAWS_REALITY_AWARDS_PARITY_REPAIR_20260828_001",
+        "transitionId": "LAWS_GEN1789_TO_REALITY_AWARDS_PARITY_REPAIR_20260828_002"
       },
       "terminalDisposition": "SUPERSEDED"
     }

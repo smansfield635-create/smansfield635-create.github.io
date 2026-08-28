@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "AUDRALIA_RESTORE_LIVE_AFTER_COMPASS_ROLLBACK_20260828_001",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 2247,
+  "requestBranch": "ai-dispatch-request-audralia-restore-live-20260828",
+  "requestCommit": "38e615366f66486811fdc0c6da5475e404806bae",
+  "requestCommitParent": "a72822e5413684fa885b5f6c65e03795cf5ece8b",
+  "currentMainSha": "a72822e5413684fa885b5f6c65e03795cf5ece8b",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "a72822e5413684fa885b5f6c65e03795cf5ece8b",
+    "surface_id": "audralia"
+  },
+  "bridgeRunId": "33184853811",
+  "dispatchedRunId": 33184871840,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/33184871840",
+  "dispatchedRunHeadSha": "a72822e5413684fa885b5f6c65e03795cf5ece8b",
+  "dispatchedAt": "2026-08-28T15:23:05.913Z",
+  "resolvedAt": "2026-08-28T15:23:10.407Z"
+}

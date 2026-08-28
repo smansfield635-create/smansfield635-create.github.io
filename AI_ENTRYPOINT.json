@@ -10,21 +10,9 @@
     "githubActionsAllowedForAgentExecution": false,
     "githubActionsAllowedAsExecutionTransport": false,
     "githubActionsAllowedForManualAgentDispatch": false,
-    "githubActionsPermittedRoles": [
-      "PASSIVE_CI_AFTER_REPOSITORY_CHANGE",
-      "HISTORICAL_EVIDENCE_INSPECTION",
-      "LATER_REPLAY_WHEN_SEPARATELY_AUTHORIZED"
-    ],
-    "requiredExecutionPreference": [
-      "CONNECTED_GITHUB_API_OR_NATIVE_AGENT_TOOLS",
-      "AUTHORIZED_CODESPACE_OR_DISPOSABLE_BUILDER",
-      "LOCAL_OR_EXTERNAL_EXACT_HEAD_EXECUTION_SUBSTRATE"
-    ],
-    "prohibited": [
-      "DO_NOT_DISPATCH_GITHUB_ACTIONS_TO_PERFORM_AGENT_WORK",
-      "DO_NOT_USE_WORKFLOW_RUNS_AS_A_SUBSTITUTE_FOR_NATIVE_EXECUTION",
-      "DO_NOT_CREATE_SERIAL_ACTIONS_CARRIERS_WHEN_NATIVE_EXECUTION_IS_AVAILABLE"
-    ],
+    "githubActionsPermittedRoles": ["PASSIVE_CI_AFTER_REPOSITORY_CHANGE","HISTORICAL_EVIDENCE_INSPECTION","LATER_REPLAY_WHEN_SEPARATELY_AUTHORIZED"],
+    "requiredExecutionPreference": ["CONNECTED_GITHUB_API_OR_NATIVE_AGENT_TOOLS","AUTHORIZED_CODESPACE_OR_DISPOSABLE_BUILDER","LOCAL_OR_EXTERNAL_EXACT_HEAD_EXECUTION_SUBSTRATE"],
+    "prohibited": ["DO_NOT_DISPATCH_GITHUB_ACTIONS_TO_PERFORM_AGENT_WORK","DO_NOT_USE_WORKFLOW_RUNS_AS_A_SUBSTITUTE_FOR_NATIVE_EXECUTION","DO_NOT_CREATE_SERIAL_ACTIONS_CARRIERS_WHEN_NATIVE_EXECUTION_IS_AVAILABLE"],
     "failureDisposition": "REPORT_NATIVE_EXECUTION_SURFACE_UNAVAILABLE_DO_NOT_FALL_BACK_TO_GITHUB_ACTIONS",
     "precedent": "Issue #678 three-tier Codespace execution substrate integration separates disposable builder/fresh-verifier execution from later GitHub Actions replay."
   },
@@ -58,30 +46,13 @@
     "intakeInvariant": "NO_MATERIAL_HUMAN_UNKNOWN_ENTERS_INTAKE_UNDECLARED",
     "defaultQuestionCount": 0,
     "autoResolveRepositoryFactsFirst": true,
-    "askOnlyIfAnswerCanChange": [
-      "SCOPE",
-      "AUTHORITY_REQUEST",
-      "IMPLEMENTATION_DIRECTION",
-      "ACCEPTANCE",
-      "PUBLICATION"
-    ],
+    "askOnlyIfAnswerCanChange": ["SCOPE","AUTHORITY_REQUEST","IMPLEMENTATION_DIRECTION","ACCEPTANCE","PUBLICATION"],
     "humanDispositionCreatesAuthority": false,
     "humanDispositionReplacesOperationLedger": false,
-    "separationLaw": {
-      "humanDisposition": "WHAT_IS_INTENDED_OR_ACCEPTED",
-      "governance": "WHAT_IS_AUTHORIZED",
-      "evidence": "WHAT_IS_PROVEN",
-      "execution": "WHAT_OCCURRED"
-    },
+    "separationLaw": {"humanDisposition":"WHAT_IS_INTENDED_OR_ACCEPTED","governance":"WHAT_IS_AUTHORIZED","evidence":"WHAT_IS_PROVEN","execution":"WHAT_OCCURRED"},
     "requiredBeforeCanonicalIntakeForGovernedMutation": true,
-    "completeResults": [
-      "COMPLETE_NO_QUESTIONS_REQUIRED",
-      "COMPLETE_AFTER_USER_DISPOSITION"
-    ],
-    "failClosedResults": [
-      "INCOMPLETE_HUMAN_INPUT_REQUIRED",
-      "INCOMPLETE_SCOPE_AMBIGUOUS"
-    ]
+    "completeResults": ["COMPLETE_NO_QUESTIONS_REQUIRED","COMPLETE_AFTER_USER_DISPOSITION"],
+    "failClosedResults": ["INCOMPLETE_HUMAN_INPUT_REQUIRED","INCOMPLETE_SCOPE_AMBIGUOUS"]
   },
   "pageMutationProportionality": {
     "schema": "PAGE_MUTATION_PROPORTIONALITY_POLICY_v1",
@@ -96,12 +67,7 @@
     "runtimeBehaviorAuthorityOrAmbiguousCanonicalAdmissionRequired": true,
     "ambiguityDisposition": "RUNTIME_OR_AUTHORITY",
     "mixedPathDisposition": "RUNTIME_OR_AUTHORITY",
-    "requiredStaticProofs": [
-      "EXACT_HEAD",
-      "DECLARED_PATHS_ONLY",
-      "NO_EXECUTABLE_RUNTIME_DELTA",
-      "NO_UNRELATED_DIFF"
-    ]
+    "requiredStaticProofs": ["EXACT_HEAD","DECLARED_PATHS_ONLY","NO_EXECUTABLE_RUNTIME_DELTA","NO_UNRELATED_DIFF"]
   },
   "publicationRelease": {
     "schema": "PUBLICATION_RELEASE_BINDING_v1",
@@ -109,35 +75,26 @@
     "deploymentCapabilityId": "PAGES_EXACT_HEAD_DEPLOY",
     "deploymentCapabilityRegistry": ".github/ai-router/workflow-dispatch-capability.v1.json",
     "deploymentWorkflow": ".github/workflows/pages-exact-head-deploy-v3.yml",
-    "boundedPageReleaseSequence": [
-      "APPROVED_COMMIT",
-      "EXPLICIT_DEPLOYMENT",
-      "LIVE_EXACT_HEAD_VERIFICATION"
-    ],
-    "runtimeOrNewDevelopmentSequence": [
-      "APPLICABLE_GOVERNANCE_AND_QUALIFICATION",
-      "APPROVED_COMMIT",
-      "EXPLICIT_DEPLOYMENT",
-      "LIVE_EXACT_HEAD_VERIFICATION"
-    ],
+    "boundedPageReleaseSequence": ["APPROVED_COMMIT","EXPLICIT_DEPLOYMENT","LIVE_EXACT_HEAD_VERIFICATION"],
+    "runtimeOrNewDevelopmentSequence": ["APPLICABLE_GOVERNANCE_AND_QUALIFICATION","APPROVED_COMMIT","EXPLICIT_DEPLOYMENT","LIVE_EXACT_HEAD_VERIFICATION"],
     "explicitDeploymentInput": "target_sha",
     "liveVerificationMarker": ".well-known/dgb-release.json",
     "successResult": "LIVE_EXACT_HEAD_VERIFIED",
     "mergeAloneIsLiveRelease": false,
     "dummyReleaseCommitAllowed": false,
     "legacyImplicitPagesTriggerAllowed": false,
-    "releaseBranchNudgeAllowed": false
+    "releaseBranchNudgeAllowed": false,
+    "vercelAuthoritative": false,
+    "vercelStatusMayBlockQualification": false,
+    "vercelStatusMayBlockMerge": false,
+    "vercelStatusMayBlockPublication": false,
+    "vercelDisposition": "INFORMATIONAL_NON_AUTHORITATIVE_IGNORE_FOR_RELEASE_GATING"
   },
   "operationIntakeGate": {
     "locator": ".github/operation-intake/locator.v1.json",
     "mandatoryBeforeMutationRouting": false,
-    "requiredForMutationClasses": [
-      "RUNTIME_OR_AUTHORITY"
-    ],
-    "notRequiredForMutationClasses": [
-      "STATIC_EDITORIAL_MICRO",
-      "BOUNDED_PAGE_RELEASE"
-    ],
+    "requiredForMutationClasses": ["RUNTIME_OR_AUTHORITY"],
+    "notRequiredForMutationClasses": ["STATIC_EDITORIAL_MICRO","BOUNDED_PAGE_RELEASE"],
     "humanDispositionCompletenessRequired": true,
     "humanDispositionInvariant": "NO_MATERIAL_HUMAN_UNKNOWN_ENTERS_INTAKE_UNDECLARED",
     "successorLifecycle": {
@@ -255,10 +212,7 @@
   "systemContinuityTrack": {
     "status": "ACTIVE_FAIL_CLOSED",
     "protocol": ".github/ai-router/system-continuity/progressive-system-continuity-protocol.v1.json",
-    "mandatoryFor": [
-      "SHARED_CONTROL_PLANE_INTERFACE_CHANGE",
-      "SYSTEM_GAP_CLOSED_CLAIM"
-    ],
+    "mandatoryFor": ["SHARED_CONTROL_PLANE_INTERFACE_CHANGE","SYSTEM_GAP_CLOSED_CLAIM"],
     "authorityCreated": false,
     "replacementAuthorityCreated": false
   },
@@ -289,6 +243,7 @@
     "STATIC_EDITORIAL_MICRO_REQUIRES_EXACT_HEAD_BOUNDED_DIFF_VERIFICATION_NOT_CANONICAL_INTAKE",
     "BOUNDED_PAGE_RELEASE_USES_APPROVED_COMMIT_THEN_EXPLICIT_DEPLOYMENT_THEN_LIVE_EXACT_HEAD_VERIFICATION",
     "BOUNDED_PAGE_RELEASE_MUST_NOT_USE_DUMMY_RELEASE_COMMITS_RELEASE_BRANCH_NUDGES_OR_LEGACY_IMPLICIT_PAGES_TRIGGERS",
+    "VERCEL_STATUS_IS_NON_AUTHORITATIVE_AND_MUST_NOT_BLOCK_QUALIFICATION_MERGE_OR_PUBLICATION",
     "RUNTIME_BEHAVIOR_AUTHORITY_OR_AMBIGUOUS_MUTATION_REQUIRES_CANONICAL_INTAKE",
     "NO_MATERIAL_HUMAN_UNKNOWN_ENTERS_INTAKE_UNDECLARED",
     "HUMAN_DISPOSITION_RECORDS_INTENT_NOT_AUTHORITY",

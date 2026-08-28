@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Strict static gate for the Gen1788 Laws Methods-derived visual reconstruction."""
+"""Strict static gate for the Gen1789 Laws Methods-derived visual reconstruction."""
 
 from __future__ import annotations
 
@@ -12,7 +12,10 @@ ROOT = Path(__file__).resolve().parents[1]
 GOVERNING_HEAD = "a72822e5413684fa885b5f6c65e03795cf5ece8b"
 MAP_PATH = ROOT / "laws/room-carousel/route-card-map.v2.json"
 ASSET_IDENTITY = "LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827"
-METHODS_ALLOWED = "laws/research/methods-and-models/carousel-final-polish.css"
+METHODS_POLISH = "laws/research/methods-and-models/carousel-final-polish.css"
+METHODS_INDEX = "laws/research/methods-and-models/index.html"
+METHODS_OLD_TOKEN = "carousel-final-polish.css?v=METHODS_FINAL_SPATIAL_POLISH_V2"
+METHODS_NEW_TOKEN = "carousel-final-polish.css?v=METHODS_FINAL_SPATIAL_POLISH_GEN1789_20260828"
 SHARED_ALLOWED = {
     "laws/room-carousel/preconstruction-contract.v1.json",
     "laws/room-carousel/room-carousel.v1.css",
@@ -23,7 +26,8 @@ SHARED_ALLOWED = {
     "laws/room-carousel/information-depth.v1.css",
     "scripts/laws_cp6_final_browser_verify.mjs",
     "scripts/verify-laws-cp6-final-synchronization.py",
-    METHODS_ALLOWED,
+    METHODS_POLISH,
+    METHODS_INDEX,
 }
 
 
@@ -55,10 +59,9 @@ def main() -> int:
     require(not outside, f"OUT_OF_SCOPE_PATHS:{outside}")
     require("laws/index.html" not in changed, "LAWS_ROOT_MUTATED")
     methods_changed = sorted(path for path in changed if path.startswith("laws/research/methods-and-models/"))
-    require(methods_changed in ([], [METHODS_ALLOWED]), f"METHODS_SCOPE_DRIFT:{methods_changed}")
+    require(methods_changed == sorted([METHODS_POLISH, METHODS_INDEX]), f"METHODS_SCOPE_DRIFT:{methods_changed}")
     require(git("diff", "--quiet", GOVERNING_HEAD, "--", "laws/index.html").returncode == 0, "LAWS_ROOT_BYTES")
     for path in (
-        "laws/research/methods-and-models/index.html",
         "laws/research/methods-and-models/carousel.js",
         "laws/research/methods-and-models/carousel-data.js",
         "laws/research/methods-and-models/carousel.css",
@@ -66,6 +69,12 @@ def main() -> int:
         "laws/research/methods-and-models/carousel-progressive.css",
     ):
         require(git("diff", "--quiet", GOVERNING_HEAD, "--", path).returncode == 0, f"METHODS_PROTECTED_BYTES:{path}")
+
+    base_methods_index = git("show", f"{GOVERNING_HEAD}:{METHODS_INDEX}").stdout
+    current_methods_index = (ROOT / METHODS_INDEX).read_text(encoding="utf-8")
+    require(base_methods_index.count(METHODS_OLD_TOKEN) == 1, "METHODS_BASE_IDENTITY_TOKEN")
+    require(current_methods_index.count(METHODS_NEW_TOKEN) == 1, "METHODS_NEW_IDENTITY_TOKEN")
+    require(current_methods_index == base_methods_index.replace(METHODS_OLD_TOKEN, METHODS_NEW_TOKEN), "METHODS_INDEX_NON_IDENTITY_DRIFT")
 
     generic = {"hero", "primary relationship", "reading layers", "study", "claim boundary"}
     for route, spec in routes.items():
@@ -129,7 +138,7 @@ def main() -> int:
         require(marker in stylesheet, f"METHODS_DERIVED_STYLE_MARKER:{marker}")
     require(re.search(r"perspective\s*:\s*3200px", stylesheet), "METHODS_DERIVED_PERSPECTIVE")
 
-    methods_polish = (ROOT / METHODS_ALLOWED).read_text(encoding="utf-8")
+    methods_polish = (ROOT / METHODS_POLISH).read_text(encoding="utf-8")
     require("calc(39% + .5in)" in methods_polish, "METHODS_DESKTOP_HALF_INCH_DELTA")
     require("calc(48% + .5in)" in methods_polish, "METHODS_TABLET_HALF_INCH_DELTA")
     require("calc(49% + .5in)" in methods_polish, "METHODS_PHONE_HALF_INCH_DELTA")
@@ -140,13 +149,14 @@ def main() -> int:
         "contract": "LAWS_METHODS_DERIVED_VISUAL_RECONSTRUCTION_STRICT_STATIC_MATRIX_v1",
         "status": "PASS",
         "governing_head": GOVERNING_HEAD,
-        "operation": "LAWS_METHODS_DERIVED_VISUAL_RECONSTRUCTION_20260828_001",
-        "lock_generation": 1788,
+        "operation": "LAWS_METHODS_DERIVED_VISUAL_RECONSTRUCTION_20260828_002",
+        "lock_generation": 1789,
         "routes": len(routes),
         "cards": 134,
         "cells": sum(len(card["stories"]) * 3 for route in routes.values() for card in route["cards"]),
         "card_counts": [4, 5, 6],
         "methods_bounded_half_inch_adjustment": True,
+        "methods_index_identity_only": True,
         "methods_other_bytes_protected": True,
         "methods_derived_shared_visual_grammar": True,
         "laws_root_protected": True,

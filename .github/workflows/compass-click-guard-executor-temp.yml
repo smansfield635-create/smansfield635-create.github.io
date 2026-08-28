@@ -1,0 +1,70 @@
+name: Compass click guard executor temp
+
+on:
+  push:
+    branches:
+      - compass-click-guard-executor-temp
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Compass candidate branch sparsely
+        uses: actions/checkout@v4
+        with:
+          ref: compass-renewal-corrected-gen1772
+          fetch-depth: 2
+          filter: blob:none
+          sparse-checkout: |
+            assets/compass/compass.crystals.js
+          sparse-checkout-cone-mode: false
+
+      - name: Apply bounded post-gesture click guard
+        shell: python
+        run: |
+          from pathlib import Path
+          path=Path('assets/compass/compass.crystals.js')
+          s=path.read_text(encoding='utf-8')
+          marker='COMPASS_POST_GESTURE_ROOT_CLICK_GUARD_v1'
+          if marker in s:
+              print('already present')
+              raise SystemExit(0)
+
+          old='''  function handleSceneClickCapture(\n    event\n  ) {\n    if (\n      performance.now() <\n      state.suppressClickUntil\n    ) {\n      event.preventDefault();\n      event.stopPropagation();\n      event.stopImmediatePropagation();\n    }\n  }'''
+          new='''  // COMPASS_POST_GESTURE_ROOT_CLICK_GUARD_v1\n  function handleSceneClickCapture(\n    event\n  ) {\n    const insideCompass =\n      !state.root ||\n      !event.target ||\n      state.root.contains(\n        event.target\n      );\n\n    if (\n      insideCompass &&\n      performance.now() <\n      state.suppressClickUntil\n    ) {\n      event.preventDefault();\n      event.stopPropagation();\n      event.stopImmediatePropagation();\n    }\n  }'''
+          if s.count(old)!=1:
+              raise SystemExit(f'handler anchor count={s.count(old)}')
+          s=s.replace(old,new,1)
+
+          bind='''    state.scene.addEventListener(\n      "click",\n      handleSceneClickCapture,\n      true\n    );'''
+          bind_new=bind+'''\n\n    document.addEventListener(\n      "click",\n      handleSceneClickCapture,\n      true\n    );\n\n    document.addEventListener(\n      "auxclick",\n      handleSceneClickCapture,\n      true\n    );'''
+          if s.count(bind)!=1:
+              raise SystemExit(f'bind anchor count={s.count(bind)}')
+          s=s.replace(bind,bind_new,1)
+
+          unbind='''    state.scene.removeEventListener(\n      "click",\n      handleSceneClickCapture,\n      true\n    );'''
+          unbind_new=unbind+'''\n\n    document.removeEventListener(\n      "click",\n      handleSceneClickCapture,\n      true\n    );\n\n    document.removeEventListener(\n      "auxclick",\n      handleSceneClickCapture,\n      true\n    );'''
+          if s.count(unbind)!=1:
+              raise SystemExit(f'unbind anchor count={s.count(unbind)}')
+          s=s.replace(unbind,unbind_new,1)
+          path.write_text(s,encoding='utf-8')
+
+      - name: Sanity
+        run: |
+          set -euo pipefail
+          node --check assets/compass/compass.crystals.js
+          git diff --check
+          grep -Fq COMPASS_POST_GESTURE_ROOT_CLICK_GUARD_v1 assets/compass/compass.crystals.js
+
+      - name: Commit to Compass candidate branch
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- assets/compass/compass.crystals.js; then exit 0; fi
+          git config user.name 'smansfield635-create'
+          git config user.email 'smansfield635@gmail.com'
+          git add assets/compass/compass.crystals.js
+          git commit -m 'Compass: suppress post-gesture root clicks'
+          git push origin HEAD:compass-renewal-corrected-gen1772

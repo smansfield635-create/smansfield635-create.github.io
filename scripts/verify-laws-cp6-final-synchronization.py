@@ -9,9 +9,10 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-GOVERNING_HEAD = "b405c91b89df10ee9e51b784d7bd2686c17df6ac"
+GOVERNING_HEAD = "0b855a29a7b082953eef2363eeddc02a58df2f22"
 MAP_PATH = ROOT / "laws/room-carousel/route-card-map.v2.json"
 ASSET_IDENTITY = "LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827"
+FEEDBACK_JS_IDENTITY = "LAWS_LAYERED_INFORMATION_GRID_GEN1828_20260828"
 SHARED_ALLOWED = {
     "laws/room-carousel/preconstruction-contract.v1.json",
     "laws/room-carousel/room-carousel.v1.css",
@@ -72,7 +73,8 @@ def main() -> int:
         for name, value in declarations.items():
             require(source.count(f'{name}="{value}"') == 1, f"DECLARATION:{route}:{name}")
         require(source.count(f"room-carousel.v1.css?v={ASSET_IDENTITY}") == 1, f"CSS_IDENTITY:{route}")
-        require(source.count(f"room-carousel.v1.js?v={ASSET_IDENTITY}") == 1, f"JS_IDENTITY:{route}")
+        js_identity = FEEDBACK_JS_IDENTITY if route == "/laws/categories/flow/feedback/" else ASSET_IDENTITY
+        require(source.count(f"room-carousel.v1.js?v={js_identity}") == 1, f"JS_IDENTITY:{route}")
         require(source.count("data-lrc-static") == 1, f"SEMANTIC_GRID_COUNT:{route}")
         require(source.count("Source custody") == 1, f"COMPACT_CUSTODY_COUNT:{route}")
         require("lr-legacy-source" not in source, f"RAW_LEGACY_MIRROR:{route}")
@@ -84,7 +86,7 @@ def main() -> int:
             require(len({story["id"] for story in stories}) == len(stories), f"STORY_IDS:{route}:{card['id']}")
             require(len({story["label"] for story in stories}) == len(stories), f"STORY_LABELS:{route}:{card['id']}")
             for story in stories:
-                require(not re.search(r"\\bboundary \\d+\\b", story["label"], re.I), f"PLACEHOLDER_STORY:{route}:{card['id']}:{story['id']}")
+                require(not re.search(r"\bboundary \d+\b", story["label"], re.I), f"PLACEHOLDER_STORY:{route}:{card['id']}:{story['id']}")
                 for lens in ("practical", "engineering", "empirical"):
                     require(story.get("readings", {}).get(lens, "").strip(), f"EMPTY_CELL:{route}:{card['id']}:{story['id']}:{lens}")
 
@@ -115,7 +117,8 @@ def main() -> int:
         "[data-lrc-grid-cell]",
         "state.layers[state.index] = 0",
         "state.stories[state.index] = 0",
-        "internalStateIndependent: true",
+        "layers:cards.map(() => 0)",
+        "stories:cards.map(() => 0)",
         "↶ Return to Orbit",
         "audit.open = false",
     ):

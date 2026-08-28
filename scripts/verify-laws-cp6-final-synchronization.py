@@ -22,6 +22,7 @@ SHARED_ALLOWED = {
     "laws/room-carousel/verify-contextual-delivery.v2.mjs",
     "laws/room-carousel/verify.v1.mjs",
     "scripts/laws_cp6_final_browser_verify.mjs",
+    "scripts/laws_cp6_final_browser_verify_runner.mjs",
     "scripts/verify-laws-cp6-final-synchronization.py",
 }
 

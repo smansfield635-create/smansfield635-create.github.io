@@ -1,0 +1,90 @@
+{
+  "schema": "ESTATE_SOUNDTRACK_PROVENANCE_LICENSE_MANIFEST_v1",
+  "status": "REMOTE_CANONICAL_SOURCES_READY_LOCAL_CUSTODY_DEFERRED",
+  "canonicalAuthority": {
+    "issue": 2141,
+    "locator": "CANONICAL_ESTATE_SOUNDTRACK_AUTHORITY_v1",
+    "ownerDispositionV3Comment": 5448127051
+  },
+  "coordinationIssue": 2233,
+  "projectId": "ESTATE_SOUNDTRACK",
+  "assetRoot": "assets/audio/estate-soundtrack/",
+  "custodyMode": "REMOTE_CANONICAL_SOURCE_LOCAL_CUSTODY_DEFERRED",
+  "authorityBoundary": {
+    "pageBindingAuthority": false,
+    "excerptAuthority": false,
+    "runtimeAuthority": false,
+    "deploymentAuthority": false,
+    "publicationAuthority": false,
+    "releaseAuthority": false
+  },
+  "masters": [
+    {
+      "id": "GYMNOPEDIE_NO1_MACLEOD_CC_BY_3",
+      "role": "GLOBE_MAP_EXPLORATION",
+      "work": {
+        "composer": "Erik Satie",
+        "title": "Gymnopédie No. 1"
+      },
+      "recording": {
+        "performer": "Kevin MacLeod",
+        "isrc": "US-UAN-11-00787",
+        "ownerApprovedFallback": true
+      },
+      "source": {
+        "authority": "Wikimedia Commons",
+        "descriptionUrl": "https://commons.wikimedia.org/wiki/File:Gymnopedie_No._1_(ISRC_USUAN1100787).mp3",
+        "playableUrl": "https://upload.wikimedia.org/wikipedia/commons/2/2a/Gymnopedie_No._1_%28ISRC_USUAN1100787%29.mp3",
+        "origin": "Incompetech / Kevin MacLeod"
+      },
+      "license": {
+        "identity": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0/",
+        "attributionRequired": true
+      },
+      "sourceMedia": {
+        "container": "MP3",
+        "durationSeconds": 269,
+        "listedSize": "4.28 MB"
+      },
+      "custodyStatus": "REMOTE_CANONICAL_SOURCE",
+      "localRepositoryPath": null,
+      "localCustodyDeferred": true,
+      "pageBindingsOrExcerpts": []
+    },
+    {
+      "id": "SWAN_LAKE_ACT1_BALLET_FRANCAISE_PUBLIC_DOMAIN",
+      "role": "GLOBE_LOADING_CUE",
+      "work": {
+        "composer": "Pyotr Ilyich Tchaikovsky",
+        "title": "Swan Lake — Extract from Act 1"
+      },
+      "recording": {
+        "performer": "Ballet Francaise Symphony Orchestra",
+        "recordingDate": "1958-01-01",
+        "ownerApprovedFallback": true
+      },
+      "source": {
+        "authority": "Wikimedia Commons",
+        "descriptionUrl": "https://commons.wikimedia.org/wiki/File:Peter_Ilyich_Tchaikovsky-_Swan_Lake-_Extract_from_Act_1.ogg",
+        "playableUrl": "https://upload.wikimedia.org/wikipedia/commons/4/4d/Peter_Ilyich_Tchaikovsky-_Swan_Lake-_Extract_from_Act_1.ogg",
+        "mp3TranscodeUrl": "https://upload.wikimedia.org/wikipedia/commons/transcoded/4/4d/Peter_Ilyich_Tchaikovsky-_Swan_Lake-_Extract_from_Act_1.ogg/Peter_Ilyich_Tchaikovsky-_Swan_Lake-_Extract_from_Act_1.ogg.mp3?download="
+      },
+      "license": {
+        "identity": "Public Domain",
+        "structuredDataLicense": "CC0",
+        "attributionRequired": false
+      },
+      "sourceMedia": {
+        "container": "Ogg",
+        "codec": "Vorbis",
+        "durationSeconds": 160,
+        "listedSize": "1.85 MB"
+      },
+      "custodyStatus": "REMOTE_CANONICAL_SOURCE",
+      "localRepositoryPath": null,
+      "localCustodyDeferred": true,
+      "pageBindingsOrExcerpts": []
+    }
+  ]
+}

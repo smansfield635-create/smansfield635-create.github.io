@@ -90,64 +90,7 @@ WebGL2RenderingContext.prototype.shaderSource=function(shader,source){
   return nativeShaderSource.call(this,shader,next);
 };
 
-function installPolarContinuity(){
-  const receipt=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__;
-  const canvas=document.querySelector('[data-h-earth-map-wide-canvas]');
-  if(!receipt?.renderer?.state||typeof receipt.setCameraStateForTest!=='function'||!(canvas instanceof HTMLCanvasElement))return false;
-  const state=receipt.renderer.state;
-  const pointers=new Map();
-  let lastSingle=null;
-
-  canvas.addEventListener('pointerdown',event=>{
-    pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
-    lastSingle=pointers.size===1?{x:event.clientX,y:event.clientY}:null;
-  },{capture:true,passive:true});
-
-  canvas.addEventListener('pointermove',event=>{
-    if(!pointers.has(event.pointerId))return;
-    const next={x:event.clientX,y:event.clientY};
-    pointers.set(event.pointerId,next);
-    if(pointers.size!==1||!lastSingle){lastSingle=next;return;}
-    const dy=Math.max(-64,Math.min(64,next.y-lastSingle.y));
-    const proposed=state.pitch+dy*.0032;
-    const upper=1.49,lower=.46;
-    let crossed=false;
-    let pitch=state.pitch,yaw=state.yaw;
-    if(proposed>upper){
-      pitch=Math.max(lower,upper-(proposed-upper));
-      yaw=Math.atan2(Math.sin(yaw+Math.PI),Math.cos(yaw+Math.PI));
-      crossed=true;
-    }else if(proposed<lower){
-      pitch=Math.min(upper,lower+(lower-proposed));
-      yaw=Math.atan2(Math.sin(yaw+Math.PI),Math.cos(yaw+Math.PI));
-      crossed=true;
-    }
-    if(crossed){
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      poleCrossings++;
-      receipt.setCameraStateForTest({pitch,yaw});
-    }
-    lastSingle=next;
-  },{capture:true,passive:false});
-
-  const clear=event=>{
-    pointers.delete(event.pointerId);
-    lastSingle=pointers.size===1?[...pointers.values()][0]:null;
-  };
-  canvas.addEventListener('pointerup',clear,{capture:true,passive:true});
-  canvas.addEventListener('pointercancel',clear,{capture:true,passive:true});
-  canvas.addEventListener('lostpointercapture',clear,{capture:true,passive:true});
-  return true;
-}
-
 let continuityInstalled=false;
-const installTimer=setInterval(()=>{
-  if(continuityInstalled)return;
-  continuityInstalled=installPolarContinuity();
-  if(continuityInstalled)clearInterval(installTimer);
-},40);
-setTimeout(()=>clearInterval(installTimer),15000);
 
 Object.defineProperty(globalThis,'__AUDRALIA_HOOK5_OWNER_VISIBLE_CONTINUITY__',{value:Object.freeze({
   policyId:POLICY_ID,

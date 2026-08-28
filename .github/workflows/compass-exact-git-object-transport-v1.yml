@@ -18,6 +18,7 @@ jobs:
       PUBLIC_REPOSITORY: smansfield635-create/smansfield635-create.github.io
       CANDIDATE_SHA: 0251792801761778b1492b2b97f60b4ebc6dbbb9
       BASE_SHA: d63c1b3e60bdd2af9d8b868247559a5222c26d31
+      SOURCE_SHA: ef443c9e37a532447a9fe7eea1f328b2f6679f35
       PLAYWRIGHT_VERSION: 1.55.0
     steps:
       - name: Prepare empty transport workspace
@@ -34,9 +35,10 @@ jobs:
           rm -rf "$RUNNER_TEMP/exact-public"
           git init -q "$RUNNER_TEMP/exact-public"
           git -C "$RUNNER_TEMP/exact-public" remote add origin "https://github.com/${PUBLIC_REPOSITORY}.git"
-          git -C "$RUNNER_TEMP/exact-public" fetch --no-tags origin "$CANDIDATE_SHA" "$BASE_SHA"
+          git -C "$RUNNER_TEMP/exact-public" fetch --no-tags origin "$CANDIDATE_SHA" "$BASE_SHA" "$SOURCE_SHA"
           git -C "$RUNNER_TEMP/exact-public" update-ref refs/transport/candidate "$CANDIDATE_SHA"
           git -C "$RUNNER_TEMP/exact-public" update-ref refs/transport/base "$BASE_SHA"
+          git -C "$RUNNER_TEMP/exact-public" update-ref refs/transport/source "$SOURCE_SHA"
 
       - name: Verify exact candidate lineage and object presence
         shell: bash
@@ -44,13 +46,14 @@ jobs:
           set -euo pipefail
           test "$(git -C "$RUNNER_TEMP/exact-public" rev-parse refs/transport/candidate^{commit})" = "$CANDIDATE_SHA"
           test "$(git -C "$RUNNER_TEMP/exact-public" rev-parse refs/transport/base^{commit})" = "$BASE_SHA"
+          test "$(git -C "$RUNNER_TEMP/exact-public" rev-parse refs/transport/source^{commit})" = "$SOURCE_SHA"
           git -C "$RUNNER_TEMP/exact-public" cat-file -p "$CANDIDATE_SHA" | grep -Fx "parent $BASE_SHA"
 
       - name: Create Git-native bundle
         shell: bash
         run: |
           set -euo pipefail
-          git -C "$RUNNER_TEMP/exact-public" bundle create "$GITHUB_WORKSPACE/transport/compass-02517928.bundle" refs/transport/candidate refs/transport/base
+          git -C "$RUNNER_TEMP/exact-public" bundle create "$GITHUB_WORKSPACE/transport/compass-02517928.bundle" refs/transport/candidate refs/transport/base refs/transport/source
           git -C "$RUNNER_TEMP/exact-public" bundle verify "$GITHUB_WORKSPACE/transport/compass-02517928.bundle"
 
       - name: Prove bundle reconstructs the exact Git subject
@@ -59,9 +62,10 @@ jobs:
           set -euo pipefail
           rm -rf "$RUNNER_TEMP/reconstructed"
           git init -q "$RUNNER_TEMP/reconstructed"
-          git -C "$RUNNER_TEMP/reconstructed" fetch --no-tags "$GITHUB_WORKSPACE/transport/compass-02517928.bundle" refs/transport/candidate:refs/transport/candidate refs/transport/base:refs/transport/base
+          git -C "$RUNNER_TEMP/reconstructed" fetch --no-tags "$GITHUB_WORKSPACE/transport/compass-02517928.bundle" refs/transport/candidate:refs/transport/candidate refs/transport/base:refs/transport/base refs/transport/source:refs/transport/source
           test "$(git -C "$RUNNER_TEMP/reconstructed" rev-parse refs/transport/candidate^{commit})" = "$CANDIDATE_SHA"
           test "$(git -C "$RUNNER_TEMP/reconstructed" rev-parse refs/transport/base^{commit})" = "$BASE_SHA"
+          test "$(git -C "$RUNNER_TEMP/reconstructed" rev-parse refs/transport/source^{commit})" = "$SOURCE_SHA"
           git -C "$RUNNER_TEMP/reconstructed" cat-file -p refs/transport/candidate | grep -Fx "parent $BASE_SHA"
 
       - uses: actions/setup-node@v4
@@ -204,6 +208,7 @@ jobs:
             "repository": "$PUBLIC_REPOSITORY",
             "candidateSha": "$CANDIDATE_SHA",
             "baseSha": "$BASE_SHA",
+            "sourceSha": "$SOURCE_SHA",
             "format": "GIT_BUNDLE",
             "bundleSha256": "$BUNDLE_SHA256",
             "bundleVerified": true,

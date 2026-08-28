@@ -1,0 +1,42 @@
+{
+  "schema": "LAWS_FAMILY_CONTINUITY_CONSTRUCTION_RECEIPT_v1",
+  "operationId": "LAWS_CONTEXTUAL_CORPUS_AND_EXPRESSION_RECONSTRUCTION_20260827_018",
+  "lockGeneration": 1776,
+  "governingHead": "cba4fdccb217d40341f1d5146fbce1842cba5ddf",
+  "candidateBranch": "laws/full-family-continuity-gen1776-20260828",
+  "reference": {
+    "route": "/laws/research/methods-and-models/",
+    "pageExcellence": "PASS_CLOSED",
+    "pageExcellenceReceiptDigest": "db632fafe7076151d0ee896535082f50a6f216e3dfefa01961ec802321b3e5eb",
+    "perceptualDisposition": "AWARDS_CONVERSATION_ADMISSIBLE"
+  },
+  "construction": {
+    "routeCount": 29,
+    "outerCardCount": 134,
+    "deliveryArchitecture": [
+      "NUMBERED_TOP_CAROUSEL_RAIL",
+      "CONTEXTUAL_TABS_INSIDE_OPENED_CARDS_ONLY",
+      "VERTICAL_PAGE_SPECIFIC_STORY_LAYERS",
+      "RETURN_TO_ORBIT_SAME_CARD",
+      "BOTTOM_PREVIOUS_NEXT_GREATER_LAWS_ROUTE_NAVIGATION"
+    ],
+    "implementationMode": "SHARED_RUNTIME_PLUS_ROUTE_DECLARATIONS",
+    "rewriteEveryPageWhenAlreadyConformant": false,
+    "partialFamilyAcceptanceAllowed": false
+  },
+  "qualificationRequired": {
+    "staticRouteCount": 29,
+    "renderedRouteProfileCases": 87,
+    "profiles": ["PHONE", "TABLET", "DESKTOP"],
+    "noJs": true,
+    "reducedMotion": true,
+    "protectedMethodsModels": true,
+    "protectedLawsLanding": true,
+    "privatePageExcellenceRequalification": true,
+    "ownerPerceptualAcceptanceBeforeAdoption": true
+  },
+  "currentDisposition": "CONSTRUCTION_CANDIDATE_REQUIRES_INDEPENDENT_QUALIFICATION",
+  "productAcceptanceCreated": false,
+  "mergeAuthorityCreated": false,
+  "deploymentAuthorityCreated": false
+}

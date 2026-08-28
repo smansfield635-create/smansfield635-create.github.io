@@ -49,8 +49,6 @@ function exportFailure(error){
   }
 }
 
-// Preserve every assertion from the exact governing-head verifier. Place the
-// temporary copy under tools/ so normal node_modules resolution remains intact.
 run('git',['-c','protocol.version=2','fetch','--no-tags','--depth=1','origin',GOVERNING_HEAD]);
 const originalSource=run('git',['show',`FETCH_HEAD:${ORIGINAL}`],{capture:true});
 const originalPath=path.join(process.cwd(),'tools','.audralia-weather-presentation-reconciliation-governing-head.mjs');
@@ -58,8 +56,6 @@ fs.writeFileSync(originalPath,originalSource);
 run(process.execPath,[originalPath]);
 fs.rmSync(originalPath,{force:true});
 
-// The workflow sparse index intentionally excludes diagnostic-only paths. Materialize
-// them from the exact qualification tree without changing tracked product state.
 for(const file of [HARNESS,ADAPTER,CONTRACT]){
   fs.mkdirSync(path.dirname(file),{recursive:true});
   fs.writeFileSync(file,run('git',['show',`HEAD:${file}`],{capture:true}));
@@ -75,7 +71,7 @@ let browser=null;
 try{
   browser=await puppeteer.launch({
     executablePath:chrome,headless:'new',
-    args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']
+    args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader-webgl','--enable-unsafe-swiftshader']
   });
   const page=await browser.newPage();
   await page.setViewport({width:412,height:915,deviceScaleFactor:1,isMobile:true,hasTouch:true});

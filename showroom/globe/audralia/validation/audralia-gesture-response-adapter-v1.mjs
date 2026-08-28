@@ -41,44 +41,35 @@ export async function runAudraliaGestureResponseDiagnostic(page,{candidateHead='
   assert.equal(initial.hookEvidence?.continuityInstalled,false,'SYNTHETIC_POLE_INTERCEPTION_STILL_INSTALLED');
   assert.equal(initial.hookEvidence?.poleCrossings,0,'SYNTHETIC_POLE_CROSSING_ALREADY_RECORDED');
 
-  // One-finger LOOK: horizontal dominant drag must alter yaw/pitch through the native orbit path.
   const lookStart=await readState(page);
   await dispatchTouchPointer(page,{selector:SELECTOR,type:'pointerdown',pointerId:101,x:c.x-40,y:c.y});
-  const lookMoveStarted=Date.now();
   await dispatchTouchPointer(page,{selector:SELECTOR,type:'pointermove',pointerId:101,x:c.x+34,y:c.y-8});
   const lookResponse=await waitForStateChange(page,{readState,changedFrom:s=>angularDelta(lookStart,s)>1e-5,label:'ONE_FINGER_LOOK_RESPONSE'});
-  lookResponse.latencyMs=Date.now()-lookMoveStarted;
   await dispatchTouchPointer(page,{selector:SELECTOR,type:'pointerup',pointerId:101,x:c.x+34,y:c.y-8});
   const lookReleased=await readState(page);
   const lookPost=await measurePostRelease(page,{readState,baselineState:lookReleased,delta:angularDelta});
 
-  // Two-finger common translation: first movement classifies TRAVEL; second movement must change targetU/V.
   const travelStart=await readState(page);
   await dispatchTouchPointer(page,{selector:SELECTOR,type:'pointerdown',pointerId:201,x:c.x-35,y:c.y+55,isPrimary:true});
   await dispatchTouchPointer(page,{selector:SELECTOR,type:'pointerdown',pointerId:202,x:c.x+35,y:c.y+55,isPrimary:false});
   await dispatchTouchPointer(page,{selector:SELECTOR,type:'pointermove',pointerId:201,x:c.x-35,y:c.y+25,isPrimary:true});
   await dispatchTouchPointer(page,{selector:SELECTOR,type:'pointermove',pointerId:202,x:c.x+35,y:c.y+25,isPrimary:false});
-  const travelMoveStarted=Date.now();
   await dispatchTouchPointer(page,{selector:SELECTOR,type:'pointermove',pointerId:201,x:c.x-35,y:c.y-15,isPrimary:true});
   await dispatchTouchPointer(page,{selector:SELECTOR,type:'pointermove',pointerId:202,x:c.x+35,y:c.y-15,isPrimary:false});
   const travelResponse=await waitForStateChange(page,{readState,changedFrom:s=>travelDelta(travelStart,s)>1e-4,label:'TWO_FINGER_TRAVEL_RESPONSE'});
-  travelResponse.latencyMs=Date.now()-travelMoveStarted;
   await dispatchTouchPointer(page,{selector:SELECTOR,type:'pointerup',pointerId:201,x:c.x-35,y:c.y-15,isPrimary:true});
   await dispatchTouchPointer(page,{selector:SELECTOR,type:'pointerup',pointerId:202,x:c.x+35,y:c.y-15,isPrimary:false});
   const travelReleased=await readState(page);
   const travelPost=await measurePostRelease(page,{readState,baselineState:travelReleased,delta:travelDelta});
 
-  // Pinch: opposing movement must alter distance while geographic target remains materially stable.
   const pinchStart=await readState(page);
   await dispatchTouchPointer(page,{selector:SELECTOR,type:'pointerdown',pointerId:301,x:c.x-28,y:c.y,isPrimary:true});
   await dispatchTouchPointer(page,{selector:SELECTOR,type:'pointerdown',pointerId:302,x:c.x+28,y:c.y,isPrimary:false});
   await dispatchTouchPointer(page,{selector:SELECTOR,type:'pointermove',pointerId:301,x:c.x-48,y:c.y,isPrimary:true});
   await dispatchTouchPointer(page,{selector:SELECTOR,type:'pointermove',pointerId:302,x:c.x+48,y:c.y,isPrimary:false});
-  const pinchMoveStarted=Date.now();
   await dispatchTouchPointer(page,{selector:SELECTOR,type:'pointermove',pointerId:301,x:c.x-72,y:c.y,isPrimary:true});
   await dispatchTouchPointer(page,{selector:SELECTOR,type:'pointermove',pointerId:302,x:c.x+72,y:c.y,isPrimary:false});
   const pinchResponse=await waitForStateChange(page,{readState,changedFrom:s=>zoomDelta(pinchStart,s)>1e-4,label:'PINCH_ZOOM_RESPONSE'});
-  pinchResponse.latencyMs=Date.now()-pinchMoveStarted;
   await dispatchTouchPointer(page,{selector:SELECTOR,type:'pointerup',pointerId:301,x:c.x-72,y:c.y,isPrimary:true});
   await dispatchTouchPointer(page,{selector:SELECTOR,type:'pointerup',pointerId:302,x:c.x+72,y:c.y,isPrimary:false});
   const pinchReleased=await readState(page);
@@ -99,8 +90,7 @@ export async function runAudraliaGestureResponseDiagnostic(page,{candidateHead='
   for(const [label,value] of [['look',lookResponse.latencyMs],['travel',travelResponse.latencyMs],['pinch',pinchResponse.latencyMs]])requireFiniteMeasurement(value,`${label.toUpperCase()}_FIRST_RESPONSE_LATENCY_MS`);
 
   return Object.freeze({
-    schema:AUDRALIA_GESTURE_RESPONSE_SCHEMA,
-    harnessSchema:GESTURE_RESPONSE_HARNESS_SCHEMA,
+    schema:AUDRALIA_GESTURE_RESPONSE_SCHEMA,harnessSchema:GESTURE_RESPONSE_HARNESS_SCHEMA,
     result:'PASS',candidateHead,
     preservation:Object.freeze({originalHEarthRun8EChamberMutated:false,audraliaProductControlLawMutated:false,syntheticPoleInterceptionInstalled:false,syntheticPoleCrossingsObserved:0}),
     oneFingerLook:Object.freeze({stateDelta:lookMagnitude,firstResponseLatencyMs:lookResponse.latencyMs,postReleaseDelta:lookPost.delta}),

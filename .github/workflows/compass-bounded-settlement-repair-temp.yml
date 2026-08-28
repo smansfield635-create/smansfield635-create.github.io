@@ -8,10 +8,6 @@ on:
 permissions:
   contents: write
 
-concurrency:
-  group: compass-bounded-settlement-repair-temp
-  cancel-in-progress: true
-
 jobs:
   repair:
     runs-on: ubuntu-latest
@@ -40,86 +36,72 @@ jobs:
               print('bounded settlement repair already present')
               raise SystemExit(0)
 
-          helper = '''  // COMPASS_PHYSICAL_SETTLEMENT_BEFORE_COMMIT_v1
-          const SETTLEMENT_TRANSFORM_KEYS = Object.freeze([
-            "x",
-            "y",
-            "z",
-            "sx",
-            "sy",
-            "sz",
-            "prominence",
-            "halo",
-            "rotationSpeed",
-            "float"
-          ]);
-
-          function completeConstellationSettlementGeometry() {
-            /*
-             * A cardinal release is a discrete settlement boundary. The renderer
-             * owns the physical node and camera interpolation, so complete those
-             * renderer-owned targets before the controller is allowed to publish
-             * COMMITTED. This preserves the controller state machine while making
-             * foreground-star geometry and controller commitment the same event.
-             */
-            updateTargets();
-
-            state.registry.forEach(
-              node => {
-                if (
-                  !node.transform ||
-                  !node.target
-                ) {
-                  return;
-                }
-
-                SETTLEMENT_TRANSFORM_KEYS.forEach(
-                  key => {
-                    node.transform[key] =
-                      node.target[key];
-                  }
-                );
-              }
-            );
-
-            for (
-              let index = 0;
-              index < 3;
-              index += 1
-            ) {
-              state.camera.eye[index] =
-                state.camera.nextEye[index];
-
-              state.camera.target[index] =
-                state.camera.nextTarget[index];
-            }
-
-            state.view =
-              lookAt4(
-                state.camera.eye,
-                state.camera.target,
-                [0, 1, 0]
-              );
-
-            syncSemanticObjects();
-          }
-
-'''
+          helper_lines = [
+              '  // COMPASS_PHYSICAL_SETTLEMENT_BEFORE_COMMIT_v1',
+              '  const SETTLEMENT_TRANSFORM_KEYS = Object.freeze([',
+              '    "x",',
+              '    "y",',
+              '    "z",',
+              '    "sx",',
+              '    "sy",',
+              '    "sz",',
+              '    "prominence",',
+              '    "halo",',
+              '    "rotationSpeed",',
+              '    "float"',
+              '  ]);',
+              '',
+              '  function completeConstellationSettlementGeometry() {',
+              '    updateTargets();',
+              '',
+              '    state.registry.forEach(',
+              '      node => {',
+              '        if (!node.transform || !node.target) {',
+              '          return;',
+              '        }',
+              '',
+              '        SETTLEMENT_TRANSFORM_KEYS.forEach(',
+              '          key => {',
+              '            node.transform[key] = node.target[key];',
+              '          }',
+              '        );',
+              '      }',
+              '    );',
+              '',
+              '    for (let index = 0; index < 3; index += 1) {',
+              '      state.camera.eye[index] = state.camera.nextEye[index];',
+              '      state.camera.target[index] = state.camera.nextTarget[index];',
+              '    }',
+              '',
+              '    state.view = lookAt4(',
+              '      state.camera.eye,',
+              '      state.camera.target,',
+              '      [0, 1, 0]',
+              '    );',
+              '',
+              '    syncSemanticObjects();',
+              '  }',
+              '',
+              ''
+          ]
+          helper = '\n'.join(helper_lines)
 
           helper_index = source.find('  function lerp(')
           if helper_index < 0:
               raise SystemExit('helper anchor not found')
           source = source[:helper_index] + helper + source[helper_index:]
 
-          commit_anchor = '''    const committed =
-              requestControllerOrbitCommit('''
-          commit_index = source.find(commit_anchor)
-          if commit_index < 0:
-              raise SystemExit('orbit commit anchor not found')
+          fn_start = source.find('  function finishConstellationDrag(')
+          fn_end = source.find('  function finishClusterDrag(', fn_start)
+          if fn_start < 0 or fn_end < 0:
+              raise SystemExit('constellation finish function boundary not found')
+          local_commit = source.find('    const committed =', fn_start, fn_end)
+          if local_commit < 0:
+              raise SystemExit('constellation orbit commit anchor not found')
           source = (
-              source[:commit_index]
+              source[:local_commit]
               + '    completeConstellationSettlementGeometry();\n\n'
-              + source[commit_index:]
+              + source[local_commit:]
           )
 
           path.write_text(source, encoding='utf-8')

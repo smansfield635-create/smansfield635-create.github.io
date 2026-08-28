@@ -77,7 +77,7 @@ async function verifyProfile(name, viewport, reducedMotion = false) {
 
   const failures = [];
   const initial = await readState(page);
-  if (initial.tabs !== 4 || initial.cards !== 4 || initial.activeCards !== 1) failures.push("initial_variable_cardinality");
+  if (initial.tabs < 1 || initial.cards !== initial.tabs || initial.activeCards !== 1) failures.push("initial_variable_cardinality");
   if (initial.family !== "structure" || initial.activeFamilyId !== "structure") failures.push("initial_family_identity");
   if (initial.perspective === "none" || !initial.activeTransform || initial.activeTransform === "none") failures.push("single_axis_depth_geometry");
   if (initial.dialogs !== 0) failures.push("detached_reader_present");

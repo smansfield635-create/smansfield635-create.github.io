@@ -26,7 +26,6 @@ const screenshotRoutes = new Set([
   "/laws/research/",
   "/laws/test/reverse-audit/"
 ]);
-const greaterNavigationRoutes = new Set();
 
 function routeFile(route) {
   return path.join(root, route.endsWith(".html") ? route.slice(1) : route.slice(1), route.endsWith(".html") ? "" : "index.html");
@@ -57,7 +56,11 @@ for (const route of routes) {
   assert.ok(html.includes("data-lrc-static"), `${route}: semantic no-script grid`);
   assert.ok(html.includes("Source custody"), `${route}: compact custody`);
   assert.ok(!html.includes("lr-legacy-source"), `${route}: raw legacy presentation mirror retired`);
-  if (html.includes('class="lr-story-nav"')) greaterNavigationRoutes.add(route);
+  assert.ok(html.includes('class="lr-story-nav"'), `${route}: bottom Previous/Next greater-Laws navigation required`);
+  const navBlock = html.match(/<nav class="lr-story-nav"[\s\S]*?<\/nav>/)?.[0] || "";
+  assert.equal((navBlock.match(/<a\s/g) || []).length, 2, `${route}: exactly two bottom route links`);
+  assert.equal((navBlock.match(/<span>Previous<\/span>/g) || []).length, 1, `${route}: one Previous route control`);
+  assert.equal((navBlock.match(/<span>Next<\/span>/g) || []).length, 1, `${route}: one Next route control`);
   for (const card of manifest.routes[route].cards) {
     assert.ok(Array.isArray(card.stories) && card.stories.length >= 4 && card.stories.length <= 5, `${route}/${card.id}: four or five story layers`);
     assert.equal(new Set(card.stories.map(story => story.id)).size, card.stories.length, `${route}/${card.id}: unique story ids`);
@@ -72,7 +75,7 @@ for (const route of routes) {
 }
 
 if (staticOnly) {
-  console.log(JSON.stringify({ result: "PASS", mode: "static", routes: routes.length }));
+  console.log(JSON.stringify({ result: "PASS", mode: "static", routes: routes.length, bottomPreviousNextRequiredOnAllRoutes: true }));
   process.exit(0);
 }
 
@@ -187,26 +190,24 @@ try {
         await page.locator("[data-lrc-card][data-active='true'] [data-lrc-return]").click();
       }
       const storyCount = await page.locator(".lr-story-nav a").count();
-      const expectedStoryCount = greaterNavigationRoutes.has(route) ? 2 : 0;
-      assert.equal(storyCount, expectedStoryCount, `${route} ${viewport.name}: declared greater-navigation count`);
+      assert.equal(storyCount, 2, `${route} ${viewport.name}: exactly two bottom greater-Laws route controls`);
+      assert.deepEqual(await page.locator(".lr-story-nav a span").allTextContents(), ["Previous", "Next"], `${route} ${viewport.name}: Previous/Next labels`);
       const destinations = await page.locator(".lr-story-nav a").evaluateAll(nodes => nodes.map(node => node.getAttribute("href")));
       assert.ok(destinations.every(destination => destination?.startsWith("/laws/") || destination?.startsWith("/frontier/")), `${route} ${viewport.name}: declared bottom destinations`);
       if (route === "/laws/categories/reality/") assert.deepEqual(destinations, ["/laws/categories/integrity/", "/laws/categories/structure/"], `${route} ${viewport.name}: Reality continuity destinations`);
-      if (destinations.length) {
-        const destination = destinations[0];
-        await Promise.all([
-          page.waitForNavigation({ waitUntil: "domcontentloaded" }),
-          page.locator(".lr-story-nav a").first().click()
-        ]);
-        assert.equal(new URL(page.url()).pathname, new URL(destination, baseUrl).pathname, `${route} ${viewport.name}: bottom route navigation used`);
-      }
+      const destination = destinations[0];
+      await Promise.all([
+        page.waitForNavigation({ waitUntil: "domcontentloaded" }),
+        page.locator(".lr-story-nav a").first().click()
+      ]);
+      assert.equal(new URL(page.url()).pathname, new URL(destination, baseUrl).pathname, `${route} ${viewport.name}: bottom route navigation used`);
       assert.deepEqual(errors, [], `${route} ${viewport.name}: no page errors`);
-      evidence.push({ route, viewport: viewport.name, card: activeId, story: secondStory, lens: "engineering", storyNavigation: destinations.length > 0 });
+      evidence.push({ route, viewport: viewport.name, card: activeId, story: secondStory, lens: "engineering", storyNavigation: true });
       await page.close();
     }
     await context.close();
   }
-  const result = { result: "PASS", mode: representativesOnly ? "representatives" : "full", routes: routes.length, viewports: viewports.length, evidence };
+  const result = { result: "PASS", mode: representativesOnly ? "representatives" : "full", routes: routes.length, viewports: viewports.length, evidence, familyContinuity: "METHODS_MODELS_ALIGNED", bottomPreviousNextRequiredOnAllRoutes: true };
   fs.writeFileSync(path.join(artifactDir, "contextual-delivery-browser-result.json"), `${JSON.stringify(result, null, 2)}\n`);
   console.log(JSON.stringify(result, null, 2));
 } finally {

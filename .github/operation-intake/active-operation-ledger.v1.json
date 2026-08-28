@@ -4383,6 +4383,49 @@
       "scopeHash": "e0574efc6c7bae5631face44f6483191d180c8506e53f5c3cf7551dfd6829281",
       "state": "ADMITTED_LOCKED"
     },
+    "e0afbe88a456ad87f347be4573ca315813c133c3a52707763d410d890e8f783f": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "822ff5e124d7aca48817d99aa9c1569c5587f8d6",
+          "lockGeneration": 1800,
+          "lockScope": "LAWS:FAMILY_PROPAGATION:V1",
+          "operationId": "LAWS_FAMILY_PROPAGATION_20260828_001",
+          "procedureLocatorDigest": "ea327fb68a7e179ec11d959b86919ef3051480568de411e5a278692740cd4153",
+          "requestDigest": "0e186cadf11d4294158f893a5ed976d857155f0f54fc0cc85e9579c3b1ee9e9a",
+          "scopeHash": "e0afbe88a456ad87f347be4573ca315813c133c3a52707763d410d890e8f783f"
+        },
+        "bindingDigest": "1e1c1bbb3a19780256ebf6839d51f57f62997ef47bdf7b2718615a390fd74c7a",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "7aef2a6c34ef2065d48716087fd7216c914c0b57eaf74fa1c13073c4b31b125a",
+          "commentId": 5456055949,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2253,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33197933755,
+          "workflowSha": "822ff5e124d7aca48817d99aa9c1569c5587f8d6"
+        },
+        "lineageAnchorCommitSha": "f165d86039c6ce9d330dc11e4a108a49b8c8b85f",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "822ff5e124d7aca48817d99aa9c1569c5587f8d6",
+      "lockGeneration": 1800,
+      "lockScope": "LAWS:FAMILY_PROPAGATION:V1",
+      "operationId": "LAWS_FAMILY_PROPAGATION_20260828_001",
+      "procedureLocatorDigest": "ea327fb68a7e179ec11d959b86919ef3051480568de411e5a278692740cd4153",
+      "released": false,
+      "requestDigest": "0e186cadf11d4294158f893a5ed976d857155f0f54fc0cc85e9579c3b1ee9e9a",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "e0afbe88a456ad87f347be4573ca315813c133c3a52707763d410d890e8f783f",
+      "state": "ADMITTED_LOCKED"
+    },
     "e1ad0405fe22b0c4fc88220bd7c935ee21f6810cfcb88eceecbb131e8ad1cdb3": {
       "governingHead": "3bc5306d0aaa3c023f59b1022bf4e0caed8010fa",
       "lockGeneration": 690,
@@ -5030,7 +5073,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1799,
+  "lockGeneration": 1800,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

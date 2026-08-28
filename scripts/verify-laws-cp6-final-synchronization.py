@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Strict static gate for the Gen1751 Laws layered-information-grid reconstruction."""
+"""Strict static gate for the Gen1776 Laws full-family continuity reconstruction."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-GOVERNING_HEAD = "b405c91b89df10ee9e51b784d7bd2686c17df6ac"
+GOVERNING_HEAD = "cba4fdccb217d40341f1d5146fbce1842cba5ddf"
 MAP_PATH = ROOT / "laws/room-carousel/route-card-map.v2.json"
 ASSET_IDENTITY = "LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827"
 SHARED_ALLOWED = {
@@ -23,19 +23,15 @@ SHARED_ALLOWED = {
     "scripts/verify-laws-cp6-final-synchronization.py",
 }
 
-
 def require(condition: bool, message: str) -> None:
     if not condition:
         raise AssertionError(message)
 
-
 def route_path(route: str) -> Path:
     return ROOT / (route.strip("/") if route.endswith(".html") else f"{route.strip('/')}/index.html")
 
-
 def git(*args: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(["git", *args], cwd=ROOT, text=True, capture_output=True)
-
 
 def main() -> int:
     manifest = json.loads(MAP_PATH.read_text(encoding="utf-8"))
@@ -90,16 +86,12 @@ def main() -> int:
 
     reality = routes["/laws/categories/reality/"]["cards"]
     reality_actions = {card["id"]: card.get("href") for card in reality if card.get("href")}
-    require(
-        reality_actions
-        == {
-            "theory": "/laws/categories/reality/theory.html",
-            "evidence": "/laws/categories/reality/evidence.html",
-            "measure": "/laws/categories/reality/measure.html",
-            "limits": "/laws/categories/reality/limits.html",
-        },
-        f"REALITY_ACTIONS:{reality_actions}",
-    )
+    require(reality_actions == {
+        "theory": "/laws/categories/reality/theory.html",
+        "evidence": "/laws/categories/reality/evidence.html",
+        "measure": "/laws/categories/reality/measure.html",
+        "limits": "/laws/categories/reality/limits.html",
+    }, f"REALITY_ACTIONS:{reality_actions}")
     require(not next(card for card in reality if card["id"] == "audit").get("href"), "INVENTED_AUDIT_ROUTE")
     reality_source = route_path("/laws/categories/reality/").read_text(encoding="utf-8")
     require('href="/laws/categories/integrity/"' in reality_source, "REALITY_PREVIOUS_CONTINUITY")
@@ -108,16 +100,9 @@ def main() -> int:
     runtime = (ROOT / "laws/room-carousel/room-carousel.v1.js").read_text(encoding="utf-8")
     stylesheet = (ROOT / "laws/room-carousel/room-carousel.v1.css").read_text(encoding="utf-8")
     for marker in (
-        "route-card-map.v2.json",
-        "routeMap.cards.map",
-        "[data-lrc-inner-tab]",
-        "[data-lrc-story-tab]",
-        "[data-lrc-grid-cell]",
-        "state.layers[state.index] = 0",
-        "state.stories[state.index] = 0",
-        "internalStateIndependent: true",
-        "↶ Return to Orbit",
-        "audit.open = false",
+        "route-card-map.v2.json", "routeMap.cards.map", "[data-lrc-inner-tab]", "[data-lrc-story-tab]",
+        "[data-lrc-grid-cell]", "state.layers[state.index] = 0", "state.stories[state.index] = 0",
+        "internalStateIndependent: true", "↶ Return to Orbit", "audit.open = false",
     ):
         require(marker in runtime, f"RUNTIME_MARKER:{marker}")
     require("nativeChildren" not in runtime, "DIRECT_CHILD_CARD_INFERENCE_RETURNED")
@@ -125,25 +110,16 @@ def main() -> int:
     for marker in ("[data-lrc-inner-tabs]", "[data-lrc-story-rail]", "[data-lrc-story-tab]", "[data-lrc-grid-cell]", "[data-lrc-claim-boundary]", "data-lrc-family"):
         require(marker in stylesheet, f"STYLESHEET_MARKER:{marker}")
 
-    subprocess.run(
-        ["node", "laws/room-carousel/verify-contextual-delivery.v2.mjs", "--static-only"],
-        cwd=ROOT,
-        check=True,
-    )
+    subprocess.run(["node", "laws/room-carousel/verify-contextual-delivery.v2.mjs", "--static-only"], cwd=ROOT, check=True)
     result = {
-        "contract": "LAWS_LAYERED_INFORMATION_GRID_STRICT_STATIC_MATRIX_v3",
-        "status": "PASS",
-        "governing_head": GOVERNING_HEAD,
-        "routes": len(routes),
-        "cards": 134,
+        "contract": "LAWS_LAYERED_INFORMATION_GRID_STRICT_STATIC_MATRIX_v4",
+        "status": "PASS", "governing_head": GOVERNING_HEAD, "routes": len(routes), "cards": 134,
         "story_counts": {
             "four": sum(1 for route in routes.values() for card in route["cards"] if len(card["stories"]) == 4),
             "five": sum(1 for route in routes.values() for card in route["cards"] if len(card["stories"]) == 5),
         },
         "cells": sum(len(card["stories"]) * 3 for route in routes.values() for card in route["cards"]),
-        "card_counts": [4, 5, 6],
-        "methods_byte_identical": True,
-        "laws_root_protected": True,
+        "card_counts": [4, 5, 6], "methods_byte_identical": True, "laws_root_protected": True,
         "reality_existing_deep_routes": sorted(reality_actions),
         "reality_previous_next": ["/laws/categories/integrity/", "/laws/categories/structure/"],
     }
@@ -152,7 +128,6 @@ def main() -> int:
     artifact.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(result, indent=2))
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

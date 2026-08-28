@@ -1,0 +1,31 @@
+{
+  "schema": "LAWS_FEEDBACK_RETURN_SIGNAL_SEMANTIC_REPAIR_v1",
+  "route": "/laws/categories/flow/feedback/",
+  "subject": "return-signal",
+  "operationId": "LAWS_FAMILY_FINAL_CONTINUITY_EDITORIAL_REFINEMENT_20260828_008",
+  "lockGeneration": 1820,
+  "states": {
+    "declare-observation-state": {
+      "label": "Declare observation state",
+      "lead": "Declare observation state fixes the condition of the feedback observation at the moment the return is inspected. It records what the receiver or measured system was actually showing before interpretation or response is applied.",
+      "why": "Observation state matters because the same returned quantity can mean different things when the receiving system begins from different conditions. State therefore identifies the context in which the return was observed, not the value carried by the return itself.",
+      "engineering": "Bind the observation state to the receiver or measured-system state vector at the declared sampling instant: operating mode, relevant control state, baseline or prior state, validity flags, and any conditions needed to interpret the return.",
+      "evidence": "Use a timestamped state snapshot, receiver telemetry, controller-state record, or equivalent observation record showing the condition in which the return was seen independently of the returned quantity.",
+      "failure": "Observation state fails when the surrounding system condition is inferred from the returned value, reconstructed only after the response, or mixed across incompatible operating states.",
+      "limits": "Observation state establishes the context in which feedback was observed; it does not establish the numeric or categorical value that returned, the sampling location, or the action taken from that observation."
+    },
+    "declare-returned-value": {
+      "label": "Declare returned value",
+      "lead": "Declare returned value records the quantity, category, or bounded payload that actually came back through the feedback path. It identifies the content of the return rather than the condition of the system that received it.",
+      "why": "A feedback loop cannot be evaluated from receiver state alone. The returned value must be explicit so magnitude, sign, category, units, and change from the emitted output can be compared without confusing payload with observation context.",
+      "engineering": "Bind the returned value to the exact feedback payload at the declared return boundary: value or category, units and scale, sign or direction where applicable, encoding, validity or quality flag, and the source-output identity to which it corresponds.",
+      "evidence": "Use the received feedback record, decoded payload, loop trace, or paired send/return receipt that preserves the returned quantity or category independently from the receiver's surrounding state.",
+      "failure": "Returned value fails when the payload is inferred from the receiver's reaction, when units or scale are missing, when a transformed downstream value is substituted for the received return, or when absence is treated as a zero value.",
+      "limits": "Returned value establishes what came back through the feedback path; it does not establish the receiver's observation state, why that value occurred, or whether the controller was authorized to act on it."
+    }
+  },
+  "distinction": "Observation state answers 'what condition was the receiver or measured system in when the return was observed?'; returned value answers 'what quantity or category actually came back through the feedback path?'.",
+  "verifierThresholdChanged": false,
+  "titleOnlyRepair": false,
+  "tokenOnlyRepair": false
+}

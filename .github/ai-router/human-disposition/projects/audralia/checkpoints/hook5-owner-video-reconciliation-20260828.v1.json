@@ -1,0 +1,47 @@
+{
+  "schema": "HUMAN_CHECKPOINT_RECEIPT_v1",
+  "checkpointReceiptId": "AUDRALIA_HCR_HOOK5_OWNER_VIDEO_RECONCILIATION_20260828_001",
+  "projectId": "AUDRALIA",
+  "scopeIdentity": "AUDRALIA_PLANETARY_ENVIRONMENT_OWNER_INTENT_AND_FAILURE_MEMORY",
+  "candidateIdentity": "e2d68feb38b730eab429822d18691577c3b7cb90",
+  "checkpointType": "LIVE_DIFFERENTIAL",
+  "disposition": "PASS_INITIALIZATION_FAIL_CAMERA_FAIL_WEATHER_PARTIAL_FAIL_NIGHT",
+  "source": "USER_EXPLICIT_OWNER_VIDEO_OBSERVATION",
+  "evidenceLocator": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2171",
+  "bindingClass": "CANDIDATE_BOUND",
+  "observations": {
+    "initialization": "PASS_LATEST",
+    "loaderCleared": true,
+    "environmentRendered": true,
+    "environmentRemainedInteractive": true,
+    "cameraStabilizationAndPolarTraversal": "FAIL",
+    "weatherDifferentiation": "FAIL",
+    "nightReadability": "FAIL_OR_PARTIAL",
+    "terminalAcceptance": "NOT_REACHED"
+  },
+  "historicalComparison": {
+    "priorCheckpoint": ".github/ai-router/human-disposition/projects/audralia/checkpoints/hook5-live-differential-20260828.v1.json",
+    "priorInitializationDisposition": "FAIL",
+    "latestInitializationDisposition": "PASS",
+    "causalRelationshipKnown": false,
+    "loaderRootCauseResolved": false,
+    "loaderCurrentReproducibility": "NOT_CURRENTLY_REPRODUCED",
+    "loaderRiskRetention": "INTERMITTENT_OR_ENVIRONMENT_SENSITIVE_STARTUP_RISK"
+  },
+  "supersedesOnly": [
+    "CURRENT_ACTIVE_INITIALIZATION_FAILURE_CLASSIFICATION"
+  ],
+  "doesNotErase": [
+    "HISTORICAL_OWNER_DEVICE_INITIALIZATION_FAILURE",
+    "UNRESOLVED_LOADER_ROOT_CAUSE",
+    "STARTUP_ARCHITECTURAL_RISK"
+  ],
+  "revalidateOn": [
+    "OWNER_VISIBLE_SUPERSEDING_CANDIDATE",
+    "LOADER_FAILURE_REPRODUCES",
+    "CAMERA_OWNER_VISIBLE_DIFFERENTIAL_AFTER_REPAIR",
+    "WEATHER_OR_NIGHT_OWNER_VISIBLE_DIFFERENTIAL"
+  ],
+  "governingAuthorityLocator": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2171",
+  "authorityEffect": "NONE_BY_HUMAN_CHECKPOINT_RECEIPT"
+}

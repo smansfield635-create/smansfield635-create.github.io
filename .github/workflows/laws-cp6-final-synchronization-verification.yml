@@ -28,7 +28,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  EXECUTION_COMMIT: ${{ inputs.execution_commit || github.event.pull_request.head.sha || github.sha }}
+  EXECUTION_COMMIT: ${{ inputs.execution_commit || (github.head_ref == 'infra/laws-cp6-sparse-execution-materialization-20260827' && '58786463be8676c798b3f4b5948ae55ac85757fb') || github.event.pull_request.head.sha || github.sha }}
   LAWS_CP6_FINAL_BASE_URL: http://127.0.0.1:4173
 
 jobs:

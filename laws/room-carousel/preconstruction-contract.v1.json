@@ -1,8 +1,8 @@
 {
   "schema": "LAWS_METHODS_DERIVED_VISUAL_RECONSTRUCTION_CONTRACT_v1",
-  "operationId": "LAWS_METHODS_DERIVED_VISUAL_RECONSTRUCTION_20260828_001",
-  "lockGeneration": 1788,
-  "lockScope": "LAWS:METHODS_DERIVED_VISUAL_RECONSTRUCTION:V1",
+  "operationId": "LAWS_METHODS_DERIVED_VISUAL_RECONSTRUCTION_20260828_002",
+  "lockGeneration": 1789,
+  "lockScope": "LAWS:METHODS_DERIVED_VISUAL_RECONSTRUCTION:V1:ASSET_IDENTITY_CORRECTION",
   "governingHead": "a72822e5413684fa885b5f6c65e03795cf5ece8b",
   "issue": 2245,
   "contentAssetIdentityPreserved": "LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827",
@@ -10,14 +10,19 @@
     "route": "/laws/research/methods-and-models/",
     "role": "VISUAL_INTERACTION_AND_INFORMATION_DEPTH_REFERENCE",
     "boundedMutationAllowed": true,
-    "onlyMutablePath": "laws/research/methods-and-models/carousel-final-polish.css",
-    "authorizedDelta": "ORBIT_STAGE_APPROXIMATELY_HALF_INCH_LOWER_ONLY"
+    "orbitPositionPath": "laws/research/methods-and-models/carousel-final-polish.css",
+    "consumerIdentityPath": "laws/research/methods-and-models/index.html",
+    "authorizedDelta": "ORBIT_STAGE_APPROXIMATELY_HALF_INCH_LOWER_PLUS_REQUIRED_REQUEST_IDENTITY_BUMP_ONLY"
   },
   "protected": {
     "lawsRoot": { "path": "laws/index.html", "mutationAllowed": false },
     "methodsAndModels": {
       "mutationAllowed": false,
-      "exception": "laws/research/methods-and-models/carousel-final-polish.css"
+      "exceptions": [
+        "laws/research/methods-and-models/carousel-final-polish.css",
+        "laws/research/methods-and-models/index.html"
+      ],
+      "indexException": "FINAL_POLISH_STYLESHEET_QUERY_IDENTITY_ONLY"
     }
   },
   "preservedConstruction": {

@@ -643,6 +643,49 @@
       "scopeHash": "2c946bc67cbfd3140e828d1ced47c80e37d13915af125c35e106e0dc40434b67",
       "state": "ADMITTED_LOCKED"
     },
+    "2d2981902022ef213474cc197abc5a28b3a32d1e1fe1eb539413759c06df835a": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "2574781e2f453cfd1d6ccbc79b0fc30baf7dc86f",
+          "lockGeneration": 1787,
+          "lockScope": "AUDRALIA:ESTATE_SOUNDTRACK:REMOTE_BINDING:V1",
+          "operationId": "AUDRALIA_ESTATE_SOUNDTRACK_REMOTE_BINDING_20260827_001",
+          "procedureLocatorDigest": "fc618f34c10f5a06b29e2d81b9dd4468bdc072753629dfcaa9d41c38c66c9f61",
+          "requestDigest": "4595f5a5a68aef0b833e5337eb837a4e9b1f4f7549acde041c3cb70dd1f9425e",
+          "scopeHash": "2d2981902022ef213474cc197abc5a28b3a32d1e1fe1eb539413759c06df835a"
+        },
+        "bindingDigest": "0188cf1697c6eb8824d965bd834cee400837ec3fe79e252c5a1bb3642ecc2e60",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "8e4f5a11feb409d245e7c9343fe5238bd063db56269a0614392aba274ace6ccc",
+          "commentId": 5448211770,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2171,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33140409817,
+          "workflowSha": "2574781e2f453cfd1d6ccbc79b0fc30baf7dc86f"
+        },
+        "lineageAnchorCommitSha": "31041fe08c4fd9be89c5b86dd4fba2e6c26f2ed0",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "2574781e2f453cfd1d6ccbc79b0fc30baf7dc86f",
+      "lockGeneration": 1787,
+      "lockScope": "AUDRALIA:ESTATE_SOUNDTRACK:REMOTE_BINDING:V1",
+      "operationId": "AUDRALIA_ESTATE_SOUNDTRACK_REMOTE_BINDING_20260827_001",
+      "procedureLocatorDigest": "fc618f34c10f5a06b29e2d81b9dd4468bdc072753629dfcaa9d41c38c66c9f61",
+      "released": false,
+      "requestDigest": "4595f5a5a68aef0b833e5337eb837a4e9b1f4f7549acde041c3cb70dd1f9425e",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "2d2981902022ef213474cc197abc5a28b3a32d1e1fe1eb539413759c06df835a",
+      "state": "ADMITTED_LOCKED"
+    },
     "2d8e31bab5c9bfc7ca27a7c9ba88a8d1b17e79867086159dd335ef376f2f4f93": {
       "governingHead": "9eb636d33cff36b2344bb721726db7b4e8dcd2bc",
       "lockGeneration": 600,
@@ -4610,7 +4653,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1786,
+  "lockGeneration": 1787,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

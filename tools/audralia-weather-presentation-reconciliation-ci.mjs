@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import puppeteer from 'puppeteer-core';
@@ -19,16 +18,17 @@ function run(command,args,{capture=false}={}){
   return result.stdout||'';
 }
 
-// Preserve every assertion from the exact governing-head verifier. The candidate
-// wrapper runs that immutable verifier first; diagnostic assertions are additive.
+// Preserve every assertion from the exact governing-head verifier. Place the
+// temporary copy under tools/ so normal node_modules resolution remains intact.
 run('git',['-c','protocol.version=2','fetch','--no-tags','--depth=1','origin',GOVERNING_HEAD]);
 const originalSource=run('git',['show',`FETCH_HEAD:${ORIGINAL}`],{capture:true});
-const originalPath=path.join(os.tmpdir(),'audralia-weather-presentation-reconciliation-governing-head.mjs');
+const originalPath=path.join(process.cwd(),'tools','.audralia-weather-presentation-reconciliation-governing-head.mjs');
 fs.writeFileSync(originalPath,originalSource);
 run(process.execPath,[originalPath]);
+fs.rmSync(originalPath,{force:true});
 
 // The workflow sparse index intentionally excludes diagnostic-only paths. Materialize
-// them from the exact qualification tree without changing the checked-out product.
+// them from the exact qualification tree without changing tracked product state.
 for(const file of [HARNESS,ADAPTER,CONTRACT]){
   fs.mkdirSync(path.dirname(file),{recursive:true});
   fs.writeFileSync(file,run('git',['show',`HEAD:${file}`],{capture:true}));

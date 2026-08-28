@@ -3967,6 +3967,49 @@
       "scopeHash": "df68cdb1b095c7a15cfe509326091939316db96df4a6ed8b55b594773726407d",
       "state": "ADMITTED_LOCKED"
     },
+    "df950c0d401738b7942765f495c8b30b97b5f7e7fc746665b2a6d8e5ec89a72d": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "862a5c3e56c987214397a5d9b41fe62ed2ef31a5",
+          "lockGeneration": 1781,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:ESTATE_SOUNDTRACK_SHARED_ASSET_ROUTER:V1",
+          "operationId": "ESTATE_SOUNDTRACK_SHARED_ASSET_ROUTER_REGISTRATION_20260827_001",
+          "procedureLocatorDigest": "d10d2e7cfadeb612905513c5f8d47b52de8086131f9c33904930f3d1ca117cbb",
+          "requestDigest": "125a71b983c5870bb3f665190d1f7476e690c1d7f49f8fafaeaa7fb0e4007cd5",
+          "scopeHash": "df950c0d401738b7942765f495c8b30b97b5f7e7fc746665b2a6d8e5ec89a72d"
+        },
+        "bindingDigest": "e800ef40efb4ef9c4529f987cad6a19e117d731444729f82f0fdf59ba9537706",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "b7a2d72f434e2935b863fdae411432509f4e47af5459f3371b3dad5dd06ed9d7",
+          "commentId": 5447879095,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2233,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33137823840,
+          "workflowSha": "862a5c3e56c987214397a5d9b41fe62ed2ef31a5"
+        },
+        "lineageAnchorCommitSha": "f893b01c3c05a208072fc9e4b99a9aa233b6e15d",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "862a5c3e56c987214397a5d9b41fe62ed2ef31a5",
+      "lockGeneration": 1781,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:ESTATE_SOUNDTRACK_SHARED_ASSET_ROUTER:V1",
+      "operationId": "ESTATE_SOUNDTRACK_SHARED_ASSET_ROUTER_REGISTRATION_20260827_001",
+      "procedureLocatorDigest": "d10d2e7cfadeb612905513c5f8d47b52de8086131f9c33904930f3d1ca117cbb",
+      "released": false,
+      "requestDigest": "125a71b983c5870bb3f665190d1f7476e690c1d7f49f8fafaeaa7fb0e4007cd5",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "df950c0d401738b7942765f495c8b30b97b5f7e7fc746665b2a6d8e5ec89a72d",
+      "state": "ADMITTED_LOCKED"
+    },
     "e0574efc6c7bae5631face44f6483191d180c8506e53f5c3cf7551dfd6829281": {
       "governingHead": "8aba830c716a819c7f83e4134048cb614e32cbe8",
       "lockGeneration": 324,
@@ -4567,7 +4610,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1780,
+  "lockGeneration": 1781,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

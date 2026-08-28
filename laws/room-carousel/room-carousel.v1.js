@@ -1,8 +1,9 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "LAWS_METHODS_REFERENCE_FAMILY_ARCHITECTURE_v4";
+  const CONTRACT = "LAWS_METHODS_REFERENCE_FAMILY_ARCHITECTURE_v5_SEMANTIC";
   const REFERENCE = "METHODS_AND_MODELS_PROGRESSIVE_CARD_ARCHITECTURE_BYTE_FROZEN";
+  const SEMANTIC_CONTRACT = "LAWS_DISTINCT_READING_SEMANTICS_v1";
   const CLASSIFY_PX = 8;
   const COMMIT_PX = 24;
   const AXIS_RATIO = 1.12;
@@ -19,6 +20,48 @@
   const escapeHtml = value => String(value || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   const sentences = value => String(value || "").trim().match(/[^.!?]+[.!?]+|[^.!?]+$/g)?.map(part => part.trim()).filter(Boolean) || [];
   const withoutTerminal = value => String(value || "").replace(/[.?!]+$/, "").trim();
+  const normalized = value => String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  const tokens = value => new Set(normalized(value).split(/\s+/).filter(token => token.length > 2));
+  const similarity = (a,b) => {
+    const aa = tokens(a), bb = tokens(b);
+    if (!aa.size || !bb.size) return 0;
+    let shared = 0;
+    aa.forEach(token => { if (bb.has(token)) shared += 1; });
+    return shared / Math.max(aa.size,bb.size);
+  };
+
+  const SEMANTIC_RULES = Object.freeze([
+    { re:/\b(source|origin|emission|input)\b/i, lead:(s,m)=>`${s} establishes where ${m} begins. Identify the originating event, condition, or object before interpreting anything downstream.`, why:(s,m)=>`If ${s.toLowerCase()} is vague, later readings can be precise about the wrong thing. A trustworthy ${m} chain starts by fixing origin.`, engineering:(s,m)=>`Represent ${s} as an explicit origin node for ${m}: bind source state, observation point, time, and ownership before routing or comparison.`, evidence:(s,m)=>`Use records that connect the named ${s.toLowerCase()} to the observed ${m} reading under the same time and state conditions.`, failure:(s)=>`${s} fails when a display, report, or downstream effect is mistaken for the originating condition.` },
+    { re:/\b(locator|location|address|where)\b/i, lead:(s,m)=>`${s} makes the ${m} object retrievable. Bind the reading to a stable place or identifier so another reader can reach the same thing.`, why:(s)=>`Without a stable ${s.toLowerCase()}, evidence can silently drift to a similarly named but different object.`, engineering:(s,m)=>`Store ${s} as a reproducible retrieval coordinate for ${m}; prefer immutable identifiers or a path plus the context needed to resolve it.`, evidence:(s)=>`Evidence should show that the recorded ${s.toLowerCase()} resolves to the same artifact across independent retrievals.`, failure:(s)=>`${s} fails when the reference resolves ambiguously, changes target, or depends on hidden local context.` },
+    { re:/\b(version|revision|edition|generation)\b/i, lead:(s,m)=>`${s} freezes which state of ${m} is being discussed. Similar names are not enough when the underlying object can change.`, why:(s)=>`A missing ${s.toLowerCase()} turns later comparison into guesswork because readers cannot tell whether differences came from the system or from a changed artifact.`, engineering:(s,m)=>`Bind ${s} to an immutable digest, commit, release, generation, or timestamped revision for ${m}.`, evidence:(s)=>`Require a receipt or identifier that independently resolves the exact ${s.toLowerCase()} used by the claim.`, failure:(s)=>`${s} fails when a mutable latest-state reference is treated as an exact historical identity.` },
+    { re:/\b(owner|custodian|custody|responsib|authority)\b/i, lead:(s,m)=>`${s} identifies who is accountable for preserving and explaining this part of ${m}.`, why:(s)=>`A reading without clear ${s.toLowerCase()} can move through the system while responsibility for its meaning disappears.`, engineering:(s,m)=>`Represent ${s} as an explicit responsibility edge in ${m}, including handoff conditions and the authority actually held.`, evidence:(s)=>`Use custody records, signed receipts, role assignments, or accepted handoffs that show the named ${s.toLowerCase()} really held the object.`, failure:(s)=>`${s} fails when responsibility is implied by proximity rather than established by a traceable handoff or role.` },
+    { re:/\b(format|encoding|representation|schema)\b/i, lead:(s,m)=>`${s} determines how ${m} is represented so its meaning survives storage, transport, and reading.`, why:(s)=>`A valid value in the wrong ${s.toLowerCase()} can become unreadable or be interpreted under the wrong rules.`, engineering:(s,m)=>`Declare the ${s.toLowerCase()} contract for ${m}, including syntax, units, field meaning, and any conversion needed for another system to consume it.`, evidence:(s)=>`Use parseable examples or schema validation showing that the recorded ${s.toLowerCase()} preserves the intended fields and units.`, failure:(s)=>`${s} fails when interpretation depends on undocumented assumptions or lossy conversion.` },
+    { re:/\b(reception|receive|arrival|receiver)\b/i, lead:(s,m)=>`${s} asks whether the ${m} signal actually reached the intended receiver, not merely whether it was sent.`, why:(s)=>`Transmission without confirmed ${s.toLowerCase()} cannot explain a downstream response or absence of response.`, engineering:(s,m)=>`Track ${s} as a receive-side event in ${m}: receiver identity, route, timestamp, acknowledgement, and any filtering before state change.`, evidence:(s)=>`Look for acknowledgements, receive logs, route traces, or receiver-state changes tied to the same emitted event.`, failure:(s)=>`${s} fails when send-side evidence is used as proof that the receiving side observed the signal.` },
+    { re:/\b(noise|distortion|interference|artifact)\b/i, lead:(s,m)=>`${s} separates information that belongs to ${m} from variation introduced by measurement, transport, or unrelated activity.`, why:(s)=>`If ${s.toLowerCase()} is not separated from signal, the system may react confidently to something that was never part of the underlying event.`, engineering:(s,m)=>`Model ${s} explicitly in ${m}: define expected background variation, filtering rules, and the threshold at which a reading becomes unreliable.`, evidence:(s)=>`Use baseline runs, repeated measurements, controls, or residual analysis that shows how much of the observed change can be attributed to ${s.toLowerCase()}.`, failure:(s)=>`${s} handling fails when filtering removes the event of interest or when background variation is promoted to signal.` },
+    { re:/\b(quality|reliability|confidence|strength)\b/i, lead:(s,m)=>`${s} asks whether the ${m} reading is dependable enough for the decision being made.`, why:(s)=>`A visible reading is not automatically a usable reading; ${s.toLowerCase()} determines whether the next step is warranted.`, engineering:(s,m)=>`Define ${s} for ${m} using measurable error, completeness, latency, stability, or confidence criteria tied to the intended use.`, evidence:(s)=>`Use repeated observations or benchmark checks that quantify the relevant ${s.toLowerCase()} dimension rather than asserting it qualitatively.`, failure:(s)=>`${s} fails when a threshold is chosen after seeing the desired outcome or when uncertainty is hidden.` },
+    { re:/\b(return|feedback)\b/i, lead:(s,m)=>`${s} traces what comes back after ${m} acts, and whether that return changes the next state.`, why:(s)=>`A repeated output is not feedback unless consequence returns into the system and influences what happens next.`, engineering:(s,m)=>`Represent ${s} as an output-to-input loop in ${m}; bind the emitted action, returned state, latency, and resulting adjustment.`, evidence:(s)=>`Use before/after state, loop traces, control logs, or returned signals demonstrating that the consequence re-entered the system.`, failure:(s)=>`${s} fails when recurrence is mistaken for a causal return path.` },
+    { re:/\b(amplif|escalat|gain)\b/i, lead:(s,m)=>`${s} asks whether a return through ${m} increases the magnitude or persistence of the next response.`, why:(s)=>`Amplification can look like progress or instability; separating it reveals whether the loop is strengthening the desired state or compounding error.`, engineering:(s,m)=>`Measure ${s} in ${m} as the change in response magnitude across successive passes, with the same scale and comparable starting conditions.`, evidence:(s)=>`Use sequential state measurements showing that each return produces a larger response under comparable inputs.`, failure:(s)=>`${s} fails when larger outputs are caused by larger inputs rather than by the loop itself.` },
+    { re:/\b(damp|attenuat|reduce|stabil)\b/i, lead:(s,m)=>`${s} asks whether ${m} absorbs or reduces the effect of a returning disturbance.`, why:(s)=>`A stabilizing loop should reduce error without erasing the information needed to correct it.`, engineering:(s,m)=>`Measure ${s} as the decline in response or error across comparable passes of ${m}; preserve the sign and timing of the correction.`, evidence:(s)=>`Use sequential measurements showing a consistent reduction in deviation after the return path engages.`, failure:(s)=>`${s} fails when the apparent reduction comes from lost measurement, saturation, or removal of the driving input.` },
+    { re:/\b(adjust|correction|control|response)\b/i, lead:(s,m)=>`${s} is the state change ${m} makes after receiving information about its prior behavior.`, why:(s)=>`A loop that observes but cannot ${s.toLowerCase()} is descriptive, not corrective.`, engineering:(s,m)=>`Bind ${s} to the specific control action, changed parameter, and next-state effect inside ${m}.`, evidence:(s)=>`Use control records or before/after state showing that the system changed a named parameter in response to the returned information.`, failure:(s)=>`${s} fails when change occurs but cannot be tied to the observed return or control rule.` },
+    { re:/\b(recurr|repeat|cycle)\b/i, lead:(s,m)=>`${s} establishes that ${m} has returned often enough to be treated as a pattern rather than an isolated event.`, why:(s)=>`One repetition can be coincidence; ${s.toLowerCase()} becomes useful only when the return is documented with enough timing and state context to compare passes.`, engineering:(s,m)=>`Represent ${s} as an ordered sequence of ${m} events with timestamps, state snapshots, and a declared rule for what counts as the same kind of return.`, evidence:(s)=>`Use multiple timestamped passes showing the same defined event class under comparable observation rules.`, failure:(s)=>`${s} fails when a narrative theme is called a cycle without repeated measured passes.` },
+    { re:/\b(rhythm|interval|cadence|timing|phase)\b/i, lead:(s,m)=>`${s} characterizes when ${m} returns: spacing, cadence, and relative position matter as much as recurrence itself.`, why:(s)=>`Two patterns can recur equally often but behave differently because their ${s.toLowerCase()} differs.`, engineering:(s,m)=>`Measure ${s} from ordered timestamps in ${m}; preserve interval variance and phase rather than reducing the sequence to a single average.`, evidence:(s)=>`Use timestamped sequences that permit independent calculation of spacing and phase across multiple passes.`, failure:(s)=>`${s} fails when irregular timing is compressed into a regular cadence that the observations do not support.` },
+    { re:/\b(renew|recover|restore|reset)\b/i, lead:(s,m)=>`${s} asks whether ${m} returns with usable capacity restored, not merely whether activity repeats.`, why:(s)=>`A system can recur while degrading. ${s} distinguishes genuine restoration from another pass through the same failure pattern.`, engineering:(s,m)=>`Define ${s} with an explicit post-cycle state in ${m}: which capacities must be restored, which may remain changed, and how the restored state is tested.`, evidence:(s)=>`Use pre/post measurements demonstrating that the required capacities returned after the cycle rather than only showing renewed activity.`, failure:(s)=>`${s} fails when resumed activity is treated as restored capacity without measuring the underlying state.` },
+    { re:/\b(transfer|handoff|pass|exchange)\b/i, lead:(s,m)=>`${s} is the moment ${m} moves from one holder, process, or state boundary to another.`, why:(s)=>`Movement alone is not continuity; a valid ${s.toLowerCase()} preserves identity, responsibility, timing, and enough context for the receiver to continue.`, engineering:(s,m)=>`Model ${s} as a custody transition in ${m}, binding sender, receiver, payload identity, acceptance, and required context.`, evidence:(s)=>`Use paired send/receive records or a transfer receipt showing the same object was accepted with the required context.`, failure:(s)=>`${s} fails when the object moves but identity, context, or responsibility is lost in transit.` },
+    { re:/\b(continuity|preserv|carry)\b/i, lead:(s,m)=>`${s} asks what must remain invariant while ${m} changes state, holder, or presentation.`, why:(s)=>`Without explicit invariants, a process can look continuous while silently replacing the object or meaning being carried.`, engineering:(s,m)=>`Declare the invariants for ${s} in ${m}: identity, required fields, ordering, authority, and any state that must survive transition.`, evidence:(s)=>`Use before/after receipts showing that the declared invariants are present on both sides of the transition.`, failure:(s)=>`${s} fails when the receiving state can no longer prove correspondence to the sending state.` },
+    { re:/\b(result|outcome|finding|supported)\b/i, lead:(s,m)=>`${s} states what ${m} actually established after the admitted evaluation, without promoting it beyond the measured outcome.`, why:(s)=>`A result becomes misleading when interpretation outruns the metric, population, comparison, or evidence that produced it.`, engineering:(s,m)=>`Bind ${s} to the exact metric, population, target, comparator, and evaluation split used by ${m}.`, evidence:(s)=>`Use the evaluation receipt or result table that contains the exact reported metric under the declared population and target.`, failure:(s)=>`${s} fails when a measured outcome is restated as causation, universality, or operational readiness without additional evidence.` },
+    { re:/\b(compar|baseline|control|counterfactual)\b/i, lead:(s,m)=>`${s} defines what the ${m} result is being judged against. The comparator is part of the claim, not an optional footnote.`, why:(s)=>`Without a meaningful ${s.toLowerCase()}, improvement or degradation has no stable reference point.`, engineering:(s,m)=>`Specify ${s} with the same population, target, split, and metric as ${m}; change only the factor the comparison is intended to test.`, evidence:(s)=>`Use side-by-side results produced under matched evaluation conditions.`, failure:(s)=>`${s} fails when the compared cases differ in hidden ways that can explain the observed gap.` },
+    { re:/\b(failure|negative|reject|miss)\b/i, lead:(s,m)=>`${s} records where ${m} did not meet its stated criterion and preserves that outcome as information rather than erasing it.`, why:(s)=>`Negative evidence constrains the next claim and prevents repeated work from being remembered only through successful cases.`, engineering:(s,m)=>`Bind ${s} to the failed criterion, observed value, population, and exact conditions under which ${m} was tested.`, evidence:(s)=>`Use the failed assertion, metric, trace, or adjudication record that shows the criterion was not met.`, failure:(s)=>`${s} handling fails when unsuccessful cases are omitted, relabeled, or evaluated under a different threshold after the fact.` },
+    { re:/\b(mixed|ambiguous|inconclusive|uncertain)\b/i, lead:(s,m)=>`${s} separates the parts of ${m} that support a claim from the parts that do not, without forcing one verdict over heterogeneous evidence.`, why:(s)=>`Mixed evidence is informative only when its disagreement is preserved rather than averaged into false certainty.`, engineering:(s,m)=>`Partition ${s} by condition, subgroup, metric, or observation regime inside ${m}, and report where direction or strength changes.`, evidence:(s)=>`Use subgroup or condition-level results that expose both supporting and opposing observations.`, failure:(s)=>`${s} fails when conflicting evidence is collapsed into a single headline statistic that hides the disagreement.` },
+    { re:/\b(claim|ceiling|boundary|limit|scope)\b/i, lead:(s,m)=>`${s} defines the furthest inference ${m} can support before additional evidence or authority is required.`, why:(s)=>`A clear ${s.toLowerCase()} keeps a useful result from becoming an inflated universal, causal, or operational claim.`, engineering:(s,m)=>`Encode ${s} as explicit excluded inferences for ${m}: populations, causes, domains, time horizons, or decisions not established by the current evidence.`, evidence:(s)=>`Use the study design, source authority, and evaluation conditions to show exactly where the supported inference stops.`, failure:(s)=>`${s} fails when a statement crosses into an untested population, causal explanation, or decision authority.` },
+    { re:/\b(record|evidence|receipt|source)\b/i, lead:(s,m)=>`${s} makes the ${m} claim inspectable by pointing to the object that carries the supporting observation or decision.`, why:(s)=>`A claim that cannot be traced to a specific ${s.toLowerCase()} cannot be independently checked or distinguished from recollection.`, engineering:(s,m)=>`Bind ${s} to an immutable or reproducible evidence object for ${m}, including identity, provenance, and the field that supports the reading.`, evidence:(s)=>`The ${s.toLowerCase()} itself should be retrievable and contain the observation, result, or authority being cited.`, failure:(s)=>`${s} fails when citation points only to a summary that cannot reproduce or locate the underlying evidence.` },
+    { re:/\b(next|study|question|future|unresolved)\b/i, lead:(s,m)=>`${s} identifies what ${m} has not resolved and turns that gap into the next bounded investigation rather than an implied conclusion.`, why:(s)=>`Explicit unresolved work prevents uncertainty from being silently converted into confidence.`, engineering:(s,m)=>`Define ${s} as a testable successor question for ${m}: target, population, comparator, evidence requirement, and decision rule must be stated before execution.`, evidence:(s)=>`Use the current limits and failed or incomplete evidence to justify why this successor question is necessary.`, failure:(s)=>`${s} fails when the proposed work cannot distinguish between the competing explanations left open by the current result.` },
+    { re:/\b(threshold|gate|saturat|admissib|qualif)\b/i, lead:(s,m)=>`${s} states the condition ${m} must satisfy before the next state, claim, or action is allowed.`, why:(s)=>`A gate protects the system only when its criterion is defined before the outcome and is applied consistently.`, engineering:(s,m)=>`Encode ${s} as a deterministic predicate over named ${m} inputs, including comparison direction, units, and the exact effect of pass versus hold.`, evidence:(s)=>`Use the evaluated inputs and predicate receipt showing whether the criterion was satisfied under the declared rule.`, failure:(s)=>`${s} fails when the criterion moves after evaluation or when a pass is inferred without the required inputs.` },
+    { re:/\b(structur|dependency|envelope|anchor|spine|component)\b/i, lead:(s,m)=>`${s} identifies the part of ${m} that must exist or remain connected for the larger system to stay coherent.`, why:(s)=>`A structural reading distinguishes load-bearing relationships from nearby detail that can change without collapsing the system.`, engineering:(s,m)=>`Represent ${s} as an explicit node, boundary, or dependency in ${m}, and state which functions depend on it.`, evidence:(s)=>`Use architecture, dependency traces, or controlled removal tests showing the consequence of changing ${s.toLowerCase()}.`, failure:(s)=>`${s} fails when a decorative association is mistaken for a required dependency.` },
+    { re:/\b(coheren|consisten|integrity|align|correspond)\b/i, lead:(s,m)=>`${s} asks whether the parts of ${m} agree with one another strongly enough to describe one system rather than conflicting fragments.`, why:(s)=>`Internal agreement matters because a polished output can still be invalid when identity, rules, evidence, and execution contradict each other.`, engineering:(s,m)=>`Evaluate ${s} across the relevant ${m} representations and transitions; name the invariants that must correspond and the contradictions that force hold.`, evidence:(s)=>`Use cross-checks, replay, paired receipts, or invariant tests that compare the same state across independent representations.`, failure:(s)=>`${s} fails when incompatible states are accepted as equivalent or when contradictions are hidden by aggregation.` },
+    { re:/\b(metric|measure|score|rate|index)\b/i, lead:(s,m)=>`${s} defines the quantity used to read ${m}; its meaning depends on exactly what is counted, scaled, and compared.`, why:(s)=>`A number is only informative when its construction matches the decision it is being used to support.`, engineering:(s,m)=>`Specify ${s} for ${m} with numerator, denominator or transformation, units, aggregation rule, and handling of missing or censored observations.`, evidence:(s)=>`Use raw observations and a reproducible calculation that yields the reported ${s.toLowerCase()}.`, failure:(s)=>`${s} fails when the calculation changes across cases or when the score is interpreted outside the construct it measures.` },
+    { re:/\b(population|sample|cohort|domain)\b/i, lead:(s,m)=>`${s} defines who or what the ${m} reading actually describes.`, why:(s)=>`Evidence can be strong inside one ${s.toLowerCase()} and still say nothing about another.`, engineering:(s,m)=>`Bind ${s} to explicit inclusion, exclusion, grouping, and independence rules for ${m}.`, evidence:(s)=>`Use source records showing how observations entered the declared ${s.toLowerCase()} and whether evaluation units remained independent.`, failure:(s)=>`${s} fails when observations outside the declared group are silently mixed in or when leakage destroys independence.` },
+    { re:/\b(target|objective|endpoint|criterion)\b/i, lead:(s,m)=>`${s} states exactly what ${m} is trying to detect, explain, preserve, or decide.`, why:(s)=>`A precise ${s.toLowerCase()} keeps the evaluation from drifting toward whichever outcome happened to look strongest after inspection.`, engineering:(s,m)=>`Encode ${s} before evaluation with its event definition, time horizon, units, and decision relation to ${m}.`, evidence:(s)=>`Use the predeclared target definition and labeled observations that show how the endpoint was assigned.`, failure:(s)=>`${s} fails when the endpoint is redefined after results are known or when labels depend on information unavailable at decision time.` }
+  ]);
 
   function installReferenceStyles() {
     if (document.getElementById("lrc-methods-reference-styles")) return;
@@ -135,27 +178,77 @@
     };
   }
 
+  function readingRepeated(story, material, kind) {
+    const current = story?.readings?.[kind] || "";
+    return material.stories.some(other => other !== story && similarity(current,other?.readings?.[kind] || "") >= .78);
+  }
+
+  function semanticRule(story) {
+    const key = `${story?.label || ""} ${story?.id || ""}`;
+    return SEMANTIC_RULES.find(rule => rule.re.test(key)) || null;
+  }
+
+  function semanticFallback(story, material) {
+    const subject = story.label;
+    const parent = material.label;
+    return {
+      lead: `${subject} isolates a distinct decision inside ${parent}. Define what changes at this stage before moving to the next reading.`,
+      why: `Treating ${subject.toLowerCase()} as its own step prevents ${parent} from collapsing several different questions into one generic explanation.`,
+      engineering: `Model ${subject} as a named state or transition inside ${parent}; declare its inputs, transformation, output, and the condition that makes this step complete.`,
+      evidence: `Use a record that specifically demonstrates ${subject.toLowerCase()} rather than relying on evidence for a neighboring stage of ${parent}.`,
+      failure: `${subject} fails when the named distinction cannot be observed independently from the neighboring readings.`,
+      limits: `Evidence for ${subject.toLowerCase()} supports this stage of ${parent}; it does not automatically establish the other stages or a broader causal claim.`
+    };
+  }
+
+  function semanticReading(story, material) {
+    const rule = semanticRule(story);
+    if (!rule) return semanticFallback(story,material);
+    const subject = story.label;
+    const parent = material.label;
+    return {
+      lead: rule.lead(subject,parent),
+      why: rule.why(subject,parent),
+      engineering: rule.engineering(subject,parent),
+      evidence: rule.evidence(subject,parent),
+      failure: rule.failure(subject,parent),
+      limits: rule.limits ? rule.limits(subject,parent) : `Keep ${subject.toLowerCase()} bounded to its declared role inside ${parent}; it does not by itself establish the neighboring stages, cause, or universality.`
+    };
+  }
+
   function storyArchitecture(story, material, context) {
+    const authored = semanticReading(story,material);
     const practicalParts = sentences(story.readings.practical);
     const question = [...practicalParts].reverse().find(part => /\?$/.test(part));
-    const readerTitle = story.readerTitle || question || story.label;
+    const readerTitle = story.readerTitle || story.label;
     const leadParts = question ? practicalParts.filter(part => part !== question) : practicalParts;
-    const lead = leadParts[0] || story.readings.practical;
-    const why = story.why || leadParts.slice(1).join(" ") || material.summary;
+    const sourceLead = leadParts[0] || story.readings.practical;
+    const sourceWhy = story.why || leadParts.slice(1).join(" ") || material.summary;
+    const repeatedPractical = readingRepeated(story,material,"practical") || similarity(sourceLead,material.summary) >= .82;
+    const lead = story.lead || (repeatedPractical ? authored.lead : sourceLead);
+    const why = story.why || (repeatedPractical || similarity(sourceWhy,lead) >= .7 ? authored.why : sourceWhy);
+
     const engineeringParts = sentences(story.readings.engineering);
     const formalTitle = story.formalTitle || story.engineeringTitle || story.label;
-    const formalCaption = story.formalCaption || withoutTerminal(engineeringParts[0] || story.label);
+    const formalCaptionSource = withoutTerminal(engineeringParts.at(-1) || engineeringParts[0] || story.label);
+    const repeatedEngineering = readingRepeated(story,material,"engineering");
+    const formalCaption = story.formalCaption || (repeatedEngineering ? `Technical role · ${story.label}` : formalCaptionSource);
+    const engineering = repeatedEngineering ? authored.engineering : story.readings.engineering;
+
     const empirical = String(story.readings.empirical || "").trim();
     const failureMatch = empirical.match(/(?:Failure mode|Failure behavior)\s*:\s*([^]+)$/i);
-    const evidence = (failureMatch ? empirical.slice(0, failureMatch.index) : empirical).trim() || empirical;
-    const failure = story.failure || failureMatch?.[1]?.trim() || `The ${story.label.toLowerCase()} reading fails when its required distinction cannot be supported by the named record or state.`;
-    const limits = story.limits || story.boundary || story.relationship?.stops || material.boundary || context.noStudy || `Keep this reading bounded to ${material.label}; it does not by itself establish cause, universality, or authority outside the page's stated evidence.`;
-    return { readerTitle, lead, why, formalTitle, formalCaption, engineering: story.readings.engineering, evidence, failure, limits };
+    const evidenceSource = (failureMatch ? empirical.slice(0, failureMatch.index) : empirical).trim() || empirical;
+    const repeatedEmpirical = readingRepeated(story,material,"empirical");
+    const evidence = repeatedEmpirical ? authored.evidence : evidenceSource;
+    const failure = story.failure || failureMatch?.[1]?.trim() || authored.failure;
+    const limits = story.limits || story.boundary || story.relationship?.stops || material.boundary || context.noStudy || authored.limits;
+    const semanticFingerprint = normalized([readerTitle,lead,why,engineering,evidence,failure,limits].join(" "));
+    return { readerTitle, lead, why, formalTitle, formalCaption, engineering, evidence, failure, limits, semanticFingerprint, semanticReauthored: repeatedPractical || repeatedEngineering || repeatedEmpirical };
   }
 
   function storyPanel(cardId, story, storyIndex, material, context) {
     const a = storyArchitecture(story, material, context);
-    return `<article id="${escapeHtml(cardId)}-${escapeHtml(story.id)}" role="tabpanel" data-lrc-grid-cell data-lrc-story-index="${storyIndex}" data-lrc-story-id="${escapeHtml(story.id)}">
+    return `<article id="${escapeHtml(cardId)}-${escapeHtml(story.id)}" role="tabpanel" data-lrc-grid-cell data-lrc-story-index="${storyIndex}" data-lrc-story-id="${escapeHtml(story.id)}" data-lrc-semantic-reauthored="${a.semanticReauthored}">
       <div class="lrc-progressive-detail">
         <section class="lrc-reader-first">
           <p class="lrc-depth-label">Plain-language reading</p>
@@ -191,9 +284,14 @@
     card.dataset.lrcId = id;
     card.dataset.lrcLabel = material.label;
     card.dataset.lrcFamily = family;
+    card.dataset.lrcSemanticContract = SEMANTIC_CONTRACT;
     card.id = `lrc-${slug(route)}-${id}`;
     card.setAttribute("role", "tabpanel");
     card.setAttribute("aria-label", `${material.label}, ${index + 1} of ${count}`);
+
+    const architectures = material.stories.map(story => storyArchitecture(story,material,context));
+    const uniqueFingerprints = new Set(architectures.map(a => a.semanticFingerprint));
+    if (uniqueFingerprints.size !== architectures.length) card.dataset.lrcSemanticFailure = "duplicate-visible-reading";
 
     const summary = document.createElement("div");
     summary.dataset.lrcSummary = "";
@@ -262,6 +360,8 @@
     root.dataset.lrcOuterCards = mappedIds.join(" ");
     root.dataset.lrcInternalTabs = "reading engineering evidence";
     root.dataset.lrcReferenceArchitecture = "methods-and-models";
+    root.dataset.lrcSemanticContract = SEMANTIC_CONTRACT;
+    root.dataset.lrcSemanticRedesign = "complete-family-v1";
     root.dataset.lrcCustody = "collapsed-subordinate";
     root.dataset.lrcGreaterNavigation = root.querySelector(":scope > .lr-story-nav") ? "bottom" : "not-declared";
 
@@ -283,6 +383,7 @@
     track.dataset.lrcTrack = "";
     const cards = routeMap.cards.map((definition,index) => makeCard(root,route,routeMap.family,definition,index,routeMap.cards.length,context));
     cards.forEach(card => track.append(card));
+    if (cards.some(card => card.dataset.lrcSemanticFailure)) root.dataset.lrcSemanticFailure = "duplicate-visible-reading";
     const live = document.createElement("p");
     live.dataset.lrcLive = "";
     live.setAttribute("aria-live","polite");
@@ -311,7 +412,7 @@
       root.dataset.lrcStory = state.inspecting && story ? story.id : "orbit";
       root.dataset.lrcGestureState = state.dragging ? state.classification : "idle";
       live.textContent = `${active.dataset.lrcLabel} · ${state.index + 1} of ${cards.length}`;
-      globalThis.dispatchEvent(new CustomEvent("LAWS_ROOM_CAROUSEL_CHANGED", { detail:Object.freeze({ contract:CONTRACT, referenceContract:REFERENCE, reason, route, family:routeMap.family, count:cards.length, index:state.index, subjectId:active.dataset.lrcId, inspecting:state.inspecting, internalLayer:state.inspecting ? layer : null, internalStoryId:state.inspecting && story ? story.id : null, methodsReferenceArchitecture:true, sameObjectContinuity:true, bottomStoryNavigationPreserved:Boolean(storyNav), sourceCompletenessClaimed:false, scientificValidationClaimed:false, productAcceptanceGranted:false }) }));
+      globalThis.dispatchEvent(new CustomEvent("LAWS_ROOM_CAROUSEL_CHANGED", { detail:Object.freeze({ contract:CONTRACT, referenceContract:REFERENCE, semanticContract:SEMANTIC_CONTRACT, reason, route, family:routeMap.family, count:cards.length, index:state.index, subjectId:active.dataset.lrcId, inspecting:state.inspecting, internalLayer:state.inspecting ? layer : null, internalStoryId:state.inspecting && story ? story.id : null, methodsReferenceArchitecture:true, semanticDistinctness:true, sameObjectContinuity:true, bottomStoryNavigationPreserved:Boolean(storyNav), sourceCompletenessClaimed:false, scientificValidationClaimed:false, productAcceptanceGranted:false }) }));
     }
 
     function render(reason = "render") {

@@ -1,4 +1,4 @@
-name: Compass publishability verification
+name: Compass four-way publishability verification
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
 jobs:
   smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 7
     steps:
       - uses: actions/checkout@v4
         with:
@@ -34,40 +34,23 @@ jobs:
           python3 -m http.server 4173 >/tmp/compass-http.log 2>&1 &
           for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
           exit 1
-      - name: Verify practical Compass behavior
+      - name: Verify four-way real drag cycle
         shell: bash
         run: |
           export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
           node --input-type=module <<'NODE'
           import puppeteer from 'puppeteer-core';
           const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
-          const page=await browser.newPage(); await page.setViewport({width:900,height:1000,deviceScaleFactor:1});
-          const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
-          await page.goto('http://127.0.0.1:4173/',{waitUntil:'domcontentloaded',timeout:60000}); await new Promise(r=>setTimeout(r,1800));
-          const scene=await page.$('[data-compass-scene]'); if(!scene) throw new Error('NO_COMPASS_SCENE'); await scene.evaluate(el=>el.scrollIntoView({block:'center'})); await new Promise(r=>setTimeout(r,250));
-          const snap=()=>page.evaluate(()=>{const rr=e=>{const r=e?.getBoundingClientRect();return r?{cx:r.x+r.width/2,cy:r.y+r.height/2,width:r.width,height:r.height,x:r.x,y:r.y}:null};const root=document.querySelector('[data-compass-root]');const heading=document.querySelector('.compass-orbit-intro h2');const cs=[...document.querySelectorAll('[data-compass-cardinal]')].map(e=>({wing:e.dataset.wing,primary:e.dataset.primary==='true',rect:rr(e),visible:[...e.querySelectorAll(':scope>span')].some(s=>{const c=getComputedStyle(s),r=s.getBoundingClientRect();return c.visibility!=='hidden'&&Number(c.opacity)>.5&&r.width>0&&r.height>0})}));return{url:location.href,focus:root?.dataset.orbitFocus||'',phase:root?.dataset.orbitPhase||'',scene:rr(document.querySelector('[data-compass-scene]')),heading:rr(heading),cardinals:cs,primary:cs.filter(x=>x.primary).map(x=>x.wing),visible:cs.filter(x=>x.visible).map(x=>x.wing),overflow:document.documentElement.scrollWidth-innerWidth,receipt:globalThis.DGB_COMPASS_CRYSTALS_RECEIPT||null};});
-          const initial=await snap();
-          if(initial.cardinals.length!==4) throw new Error('FOUR_STAR_FAIL');
-          if(initial.primary.length!==1||initial.visible.length!==1||initial.primary[0]!==initial.focus||initial.visible[0]!==initial.focus) throw new Error('INITIAL_CORRESPONDENCE_FAIL');
-          if(Math.abs(initial.scene.cx-450)>18||Math.abs(initial.heading.cx-450)>12||Math.abs(initial.overflow)>1) throw new Error('TABLET_PRESENTATION_FAIL');
-          const visited=new Set([initial.focus]); const transitions=[];
-          for(let attempt=0;attempt<12&&visited.size<4;attempt++){
-            const before=await snap(),active=before.cardinals.find(x=>x.primary); if(!active) throw new Error('NO_PRIMARY');
-            const dir=attempt%2===0?-1:1,sx=active.rect.cx,sy=active.rect.cy,ex=Math.max(before.scene.x+24,Math.min(before.scene.x+before.scene.width-24,sx+dir*before.scene.width*.48));
-            await page.mouse.move(sx,sy); await page.mouse.down(); for(let i=1;i<=24;i++){const t=i/24;await page.mouse.move(sx+(ex-sx)*t,sy,{steps:1});await new Promise(r=>setTimeout(r,20));} await page.mouse.up();
-            await new Promise(r=>setTimeout(r,300)); const early=await snap(); await new Promise(r=>setTimeout(r,700)); const after=await snap();
-            if(after.url!=='http://127.0.0.1:4173/') throw new Error(`ACCIDENTAL_NAVIGATION:${after.url}`);
-            const correspondence=after.primary.length===1&&after.visible.length===1&&after.primary[0]===after.focus&&after.visible[0]===after.focus;
-            if(!correspondence) throw new Error(`CORRESPONDENCE_FAIL:${after.focus}:${after.primary}:${after.visible}`);
-            if(after.focus!==before.focus&&after.phase==='COMMITTED'){
-              const incoming=after.cardinals.find(x=>x.wing===after.focus),ie=early.cardinals.find(x=>x.wing===after.focus); const drift=Math.hypot(incoming.rect.cx-ie.rect.cx,incoming.rect.cy-ie.rect.cy);
-              if(drift>8) throw new Error(`RELEASE_STABILITY_FAIL:${after.focus}:${drift}`);
-              visited.add(after.focus); transitions.push({from:before.focus,to:after.focus,drift,gesture:after.receipt?.lastGestureType||null});
-              console.log('TRANSITION',JSON.stringify(transitions.at(-1)));
-            }
+          const page=await browser.newPage(); await page.setViewport({width:900,height:1000,deviceScaleFactor:1}); const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
+          await page.goto('http://127.0.0.1:4173/',{waitUntil:'domcontentloaded',timeout:60000}); await new Promise(r=>setTimeout(r,1800)); const scene=await page.$('[data-compass-scene]'); if(!scene)throw new Error('NO_SCENE'); await scene.evaluate(el=>el.scrollIntoView({block:'center'})); await new Promise(r=>setTimeout(r,250));
+          const snap=()=>page.evaluate(()=>{const rr=e=>{const r=e?.getBoundingClientRect();return r?{cx:r.x+r.width/2,cy:r.y+r.height/2,width:r.width,height:r.height,x:r.x,y:r.y}:null};const root=document.querySelector('[data-compass-root]'),heading=document.querySelector('.compass-orbit-intro h2');const cs=[...document.querySelectorAll('[data-compass-cardinal]')].map(e=>({wing:e.dataset.wing,primary:e.dataset.primary==='true',rect:rr(e),visible:[...e.querySelectorAll(':scope>span')].some(s=>{const c=getComputedStyle(s),r=s.getBoundingClientRect();return c.visibility!=='hidden'&&Number(c.opacity)>.5&&r.width>0&&r.height>0})}));return{url:location.href,focus:root?.dataset.orbitFocus||'',phase:root?.dataset.orbitPhase||'',scene:rr(document.querySelector('[data-compass-scene]')),heading:rr(heading),cardinals:cs,primary:cs.filter(x=>x.primary).map(x=>x.wing),visible:cs.filter(x=>x.visible).map(x=>x.wing),overflow:document.documentElement.scrollWidth-innerWidth,receipt:globalThis.DGB_COMPASS_CRYSTALS_RECEIPT||null};});
+          const initial=await snap(); if(initial.cardinals.length!==4||initial.primary.length!==1||initial.visible.length!==1||initial.primary[0]!==initial.focus||initial.visible[0]!==initial.focus)throw new Error('INITIAL_FAIL'); if(Math.abs(initial.scene.cx-450)>18||Math.abs(initial.heading.cx-450)>12||Math.abs(initial.overflow)>1)throw new Error('TABLET_FAIL');
+          const visited=new Set([initial.focus]), transitions=[];
+          for(let attempt=0;attempt<8&&visited.size<4;attempt++){
+            const before=await snap(),active=before.cardinals.find(x=>x.primary); const sx=active.rect.cx,sy=active.rect.cy,ex=Math.max(before.scene.x+24,sx-before.scene.width*.48);
+            await page.mouse.move(sx,sy);await page.mouse.down();for(let i=1;i<=24;i++){const t=i/24;await page.mouse.move(sx+(ex-sx)*t,sy,{steps:1});await new Promise(r=>setTimeout(r,20));}await page.mouse.up();await new Promise(r=>setTimeout(r,300));const early=await snap();await new Promise(r=>setTimeout(r,700));const after=await snap();
+            if(after.url!=='http://127.0.0.1:4173/')throw new Error(`NAV:${after.url}`);const correspondence=after.primary.length===1&&after.visible.length===1&&after.primary[0]===after.focus&&after.visible[0]===after.focus;if(!correspondence)throw new Error(`CORRESPONDENCE:${after.focus}:${after.primary}:${after.visible}`);
+            if(after.focus!==before.focus&&after.phase==='COMMITTED'){const incoming=after.cardinals.find(x=>x.wing===after.focus),ie=early.cardinals.find(x=>x.wing===after.focus),drift=Math.hypot(incoming.rect.cx-ie.rect.cx,incoming.rect.cy-ie.rect.cy);if(drift>8)throw new Error(`STABILITY:${after.focus}:${drift}`);visited.add(after.focus);transitions.push({from:before.focus,to:after.focus,drift,gesture:after.receipt?.lastGestureType||null});console.log('TRANSITION',JSON.stringify(transitions.at(-1)));}
           }
-          if(visited.size<3) throw new Error(`INSUFFICIENT_REAL_TRANSITIONS:${[...visited].join(',')}`);
-          if(errors.length) throw new Error(`BROWSER_ERRORS:${errors.join('|')}`);
-          console.log('COMPASS_PUBLISHABILITY_PASS',JSON.stringify({candidate:'da3efd998f9000b99457a6c97c2235433a19b1d4',visited:[...visited],transitions,tablet:{sceneCenterError:initial.scene.cx-450,headingCenterError:initial.heading.cx-450},errors}));
-          await browser.close();
+          if(visited.size!==4)throw new Error(`FOUR_WAY_NOT_REACHED:${[...visited].join(',')}`);if(errors.length)throw new Error(`BROWSER_ERRORS:${errors.join('|')}`);console.log('COMPASS_FOUR_WAY_PASS',JSON.stringify({candidate:'da3efd998f9000b99457a6c97c2235433a19b1d4',visited:[...visited],transitions,tablet:{sceneCenterError:initial.scene.cx-450,headingCenterError:initial.heading.cx-450}}));await browser.close();
           NODE

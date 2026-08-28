@@ -3392,7 +3392,10 @@
     if (
       state.current ===
         STATES.CLUSTER_OPEN &&
-      state.selectedCardinal
+      state.selectedCardinal &&
+      findCardinalElement(
+        state.selectedCardinal
+      )
     ) {
       const cardinal =
         findCardinalElement(
@@ -5341,7 +5344,7 @@
         0
       );
 
-    if (roomCount !== 19) {
+    if (roomCount !== 16) {
       throw new Error(
         `CLUSTER_ROOM_COUNT_INVALID:${roomCount}`
       );

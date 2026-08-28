@@ -566,6 +566,49 @@
       "scopeHash": "2206589091e26f45d03402568f121e3f3f13210569fddef7db74f3d5819c26b1",
       "state": "ADMITTED_LOCKED"
     },
+    "24fa9c5a47aaa63c03b39c5a0cea1aa722dbca6fae7694318b115a0faeb4b0f6": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "0b855a29a7b082953eef2363eeddc02a58df2f22",
+          "lockGeneration": 1830,
+          "lockScope": "AUDRALIA:OWNER_TRAVEL_AND_NAVIGATION_REPAIR:V1",
+          "operationId": "AUDRALIA_OWNER_TRAVEL_AND_NAVIGATION_REPAIR_20260828_001",
+          "procedureLocatorDigest": "f49ef337ce50241401bab64245e9dcba6ccff51427ff33b9628b7849cc0d8915",
+          "requestDigest": "99c76d4825005c0336df41222d4159026df9721d12d90886d001e417e6389f6f",
+          "scopeHash": "24fa9c5a47aaa63c03b39c5a0cea1aa722dbca6fae7694318b115a0faeb4b0f6"
+        },
+        "bindingDigest": "60c41fa6c36f697c308cbdeb051d658726a993b6734eba0a4548819abb834912",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "08c8bb1ae54635d432124b795a624e80e4a23b0be9bf8ca5631ce73575768654",
+          "commentId": 5458957044,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2171,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33221803415,
+          "workflowSha": "0b855a29a7b082953eef2363eeddc02a58df2f22"
+        },
+        "lineageAnchorCommitSha": "0451c198a667593f026d1ac17fa518024a42dcdf",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "0b855a29a7b082953eef2363eeddc02a58df2f22",
+      "lockGeneration": 1830,
+      "lockScope": "AUDRALIA:OWNER_TRAVEL_AND_NAVIGATION_REPAIR:V1",
+      "operationId": "AUDRALIA_OWNER_TRAVEL_AND_NAVIGATION_REPAIR_20260828_001",
+      "procedureLocatorDigest": "f49ef337ce50241401bab64245e9dcba6ccff51427ff33b9628b7849cc0d8915",
+      "released": false,
+      "requestDigest": "99c76d4825005c0336df41222d4159026df9721d12d90886d001e417e6389f6f",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "24fa9c5a47aaa63c03b39c5a0cea1aa722dbca6fae7694318b115a0faeb4b0f6",
+      "state": "ADMITTED_LOCKED"
+    },
     "260ed067eef1da73c6db72e44fa19c2a8f05afb99acce0a3fd1ee9ede6200773": {
       "governingHead": "67b999c80ced56c7f2a15d63ea6dab79ceecbe13",
       "lockGeneration": 788,
@@ -5605,7 +5648,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1829,
+  "lockGeneration": 1830,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

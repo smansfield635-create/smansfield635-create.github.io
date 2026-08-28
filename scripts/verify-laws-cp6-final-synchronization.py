@@ -9,7 +9,7 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-GOVERNING_HEAD = "b405c91b89df10ee9e51b784d7bd2686c17df6ac"
+GOVERNING_HEAD = "822ff5e124d7aca48817d99aa9c1569c5587f8d6"
 MAP_PATH = ROOT / "laws/room-carousel/route-card-map.v2.json"
 ASSET_IDENTITY = "LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827"
 SHARED_ALLOWED = {

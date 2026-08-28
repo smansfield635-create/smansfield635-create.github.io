@@ -108,6 +108,49 @@
       "scopeHash": "09bf95ed0b631e0161641a0ac2b0ed7e1b4e154372645434a7dd54cfcf5a508f",
       "state": "ADMITTED_LOCKED"
     },
+    "0ad8ffadaaebeccf3ce15908bb6af8f22e89633c138bfb9b9831b785f03efeef": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "9923e9f346c8d1301ff4c79ec162fcd53340f361",
+          "lockGeneration": 1774,
+          "lockScope": "AUDRALIA_HOOK5_VISIBLE_WEATHER_NIGHT_POLAR_RUNTIME",
+          "operationId": "AUDRALIA_HOOK5_OWNER_VISIBLE_REALIZATION_20260828_001",
+          "procedureLocatorDigest": "aa3617027b5ec78053b4e9313fd03173980b4c80369af7322e80a4b366ef25f7",
+          "requestDigest": "8d273050b474f7b2c5806dce3217bdc515e1579fa299643cd1dabcd9a8db5d21",
+          "scopeHash": "0ad8ffadaaebeccf3ce15908bb6af8f22e89633c138bfb9b9831b785f03efeef"
+        },
+        "bindingDigest": "62cf5e720416fa522c01c0cffe9b2b846f22eafc5c5b248bd90d8158b04002f0",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "6127d01a02e20501334154a1f1948f31ad9c1910125555a2213bb93aebd581e0",
+          "commentId": 5446833521,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2171,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33129779658,
+          "workflowSha": "9923e9f346c8d1301ff4c79ec162fcd53340f361"
+        },
+        "lineageAnchorCommitSha": "90050a3d95ccc96bd26e20adf565203e53ab0174",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "9923e9f346c8d1301ff4c79ec162fcd53340f361",
+      "lockGeneration": 1774,
+      "lockScope": "AUDRALIA_HOOK5_VISIBLE_WEATHER_NIGHT_POLAR_RUNTIME",
+      "operationId": "AUDRALIA_HOOK5_OWNER_VISIBLE_REALIZATION_20260828_001",
+      "procedureLocatorDigest": "aa3617027b5ec78053b4e9313fd03173980b4c80369af7322e80a4b366ef25f7",
+      "released": false,
+      "requestDigest": "8d273050b474f7b2c5806dce3217bdc515e1579fa299643cd1dabcd9a8db5d21",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "0ad8ffadaaebeccf3ce15908bb6af8f22e89633c138bfb9b9831b785f03efeef",
+      "state": "ADMITTED_LOCKED"
+    },
     "0b32492db52675bf274cc2bb6acdf9e3ab5a5078f2c49e19ac17f4b404a27e76": {
       "governingHead": "38da390a802c25a615366c6f896d7501558c0811",
       "lockGeneration": 611,
@@ -4463,7 +4506,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1773,
+  "lockGeneration": 1774,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

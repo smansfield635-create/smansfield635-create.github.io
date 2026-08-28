@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Strict static gate for the Gen1751 Laws layered-information-grid reconstruction."""
+"""Strict static gate for the Laws Methods-reference family reconstruction."""
 
 from __future__ import annotations
 
@@ -9,9 +9,11 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-GOVERNING_HEAD = "b405c91b89df10ee9e51b784d7bd2686c17df6ac"
+GOVERNING_HEAD = "4aa0ce352cbc28f0cdd38c1288f858b17ae8cb63"
 MAP_PATH = ROOT / "laws/room-carousel/route-card-map.v2.json"
 ASSET_IDENTITY = "LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827"
+METHODS_JS_BLOB = "e9e22bc13f8b98dfbe3ea02a63efd0459a599ead"
+METHODS_CSS_BLOB = "90e63e37ad67ca96e01650e0ec90c55b2ff3a6c8"
 SHARED_ALLOWED = {
     "laws/room-carousel/preconstruction-contract.v1.json",
     "laws/room-carousel/room-carousel.v1.css",
@@ -37,6 +39,10 @@ def git(*args: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(["git", *args], cwd=ROOT, text=True, capture_output=True)
 
 
+def git_blob(relative_path: str) -> str:
+    return git("hash-object", relative_path).stdout.strip()
+
+
 def main() -> int:
     manifest = json.loads(MAP_PATH.read_text(encoding="utf-8"))
     routes = manifest["routes"]
@@ -54,6 +60,8 @@ def main() -> int:
     require(not any(path.startswith("laws/research/methods-and-models/") for path in changed), "METHODS_MUTATED")
     require(git("diff", "--quiet", GOVERNING_HEAD, "--", "laws/index.html").returncode == 0, "LAWS_ROOT_BYTES")
     require(git("diff", "--quiet", GOVERNING_HEAD, "--", "laws/research/methods-and-models").returncode == 0, "METHODS_BYTES")
+    require(git_blob("laws/research/methods-and-models/carousel-progressive.js") == METHODS_JS_BLOB, "METHODS_JS_BLOB")
+    require(git_blob("laws/research/methods-and-models/carousel-progressive.css") == METHODS_CSS_BLOB, "METHODS_CSS_BLOB")
 
     generic = {"hero", "primary relationship", "reading layers", "study", "claim boundary"}
     for route, spec in routes.items():
@@ -84,7 +92,7 @@ def main() -> int:
             require(len({story["id"] for story in stories}) == len(stories), f"STORY_IDS:{route}:{card['id']}")
             require(len({story["label"] for story in stories}) == len(stories), f"STORY_LABELS:{route}:{card['id']}")
             for story in stories:
-                require(not re.search(r"\\bboundary \\d+\\b", story["label"], re.I), f"PLACEHOLDER_STORY:{route}:{card['id']}:{story['id']}")
+                require(not re.search(r"\bboundary \d+\b", story["label"], re.I), f"PLACEHOLDER_STORY:{route}:{card['id']}:{story['id']}")
                 for lens in ("practical", "engineering", "empirical"):
                     require(story.get("readings", {}).get(lens, "").strip(), f"EMPTY_CELL:{route}:{card['id']}:{story['id']}:{lens}")
 
@@ -108,14 +116,22 @@ def main() -> int:
     runtime = (ROOT / "laws/room-carousel/room-carousel.v1.js").read_text(encoding="utf-8")
     stylesheet = (ROOT / "laws/room-carousel/room-carousel.v1.css").read_text(encoding="utf-8")
     for marker in (
-        "route-card-map.v2.json",
-        "routeMap.cards.map",
+        "METHODS_AND_MODELS_PROGRESSIVE_CARD_ARCHITECTURE_BYTE_FROZEN",
+        "Plain-language reading",
+        "Why it matters",
+        "Engineering detail",
+        "Formal / technical reading",
+        "Evidence standing",
+        "Failure behavior",
+        "Limits",
+        "data-lrc-summary-stories",
+        "methodsReferenceArchitecture:true",
+        "sameObjectContinuity:true",
         "[data-lrc-inner-tab]",
         "[data-lrc-story-tab]",
         "[data-lrc-grid-cell]",
         "state.layers[state.index] = 0",
         "state.stories[state.index] = 0",
-        "internalStateIndependent: true",
         "↶ Return to Orbit",
         "audit.open = false",
     ):
@@ -131,7 +147,7 @@ def main() -> int:
         check=True,
     )
     result = {
-        "contract": "LAWS_LAYERED_INFORMATION_GRID_STRICT_STATIC_MATRIX_v3",
+        "contract": "LAWS_METHODS_REFERENCE_STRICT_STATIC_MATRIX_v1",
         "status": "PASS",
         "governing_head": GOVERNING_HEAD,
         "routes": len(routes),
@@ -143,6 +159,7 @@ def main() -> int:
         "cells": sum(len(card["stories"]) * 3 for route in routes.values() for card in route["cards"]),
         "card_counts": [4, 5, 6],
         "methods_byte_identical": True,
+        "methods_reference_architecture": True,
         "laws_root_protected": True,
         "reality_existing_deep_routes": sorted(reality_actions),
         "reality_previous_next": ["/laws/categories/integrity/", "/laws/categories/structure/"],

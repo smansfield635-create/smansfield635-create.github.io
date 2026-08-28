@@ -5118,6 +5118,51 @@
     ];
   }
 
+  // COMPASS_PHYSICAL_SETTLEMENT_BEFORE_COMMIT_v1
+  const SETTLEMENT_TRANSFORM_KEYS = Object.freeze([
+    "x",
+    "y",
+    "z",
+    "sx",
+    "sy",
+    "sz",
+    "prominence",
+    "halo",
+    "rotationSpeed",
+    "float"
+  ]);
+
+  function completeConstellationSettlementGeometry() {
+    updateTargets();
+
+    state.registry.forEach(
+      node => {
+        if (!node.transform || !node.target) {
+          return;
+        }
+
+        SETTLEMENT_TRANSFORM_KEYS.forEach(
+          key => {
+            node.transform[key] = node.target[key];
+          }
+        );
+      }
+    );
+
+    for (let index = 0; index < 3; index += 1) {
+      state.camera.eye[index] = state.camera.nextEye[index];
+      state.camera.target[index] = state.camera.nextTarget[index];
+    }
+
+    state.view = lookAt4(
+      state.camera.eye,
+      state.camera.target,
+      [0, 1, 0]
+    );
+
+    syncSemanticObjects();
+  }
+
   function lerp(
     a,
     b,
@@ -6990,9 +7035,15 @@
       ) *
       GESTURE.radiansPerViewport;
 
+    const horizontalAxis =
+      pointer.gestureScope ===
+        "constellation"
+        ? [0, 0, 1]
+        : [0, 1, 0];
+
     const yawQuaternion =
       quaternionFromAxisAngle(
-        [0, 1, 0],
+        horizontalAxis,
         yaw
       );
 
@@ -7540,10 +7591,10 @@
     state.constellationTargetQuaternion =
       settledQuaternion.slice();
 
-    if (state.reducedMotion) {
-      state.constellationQuaternion =
-        settledQuaternion.slice();
-    }
+    state.constellationQuaternion =
+      settledQuaternion.slice();
+
+    completeConstellationSettlementGeometry();
 
     const committed =
       requestControllerOrbitCommit(
@@ -8022,10 +8073,19 @@
     );
   }
 
+  // COMPASS_POST_GESTURE_ROOT_CLICK_GUARD_v1
   function handleSceneClickCapture(
     event
   ) {
+    const insideCompass =
+      !state.root ||
+      !event.target ||
+      state.root.contains(
+        event.target
+      );
+
     if (
+      insideCompass &&
       performance.now() <
       state.suppressClickUntil
     ) {
@@ -8107,6 +8167,18 @@
       true
     );
 
+    document.addEventListener(
+      "click",
+      handleSceneClickCapture,
+      true
+    );
+
+    document.addEventListener(
+      "auxclick",
+      handleSceneClickCapture,
+      true
+    );
+
     globalThis.addEventListener(
       "blur",
       handleWindowBlur
@@ -8161,6 +8233,18 @@
 
     state.scene.removeEventListener(
       "click",
+      handleSceneClickCapture,
+      true
+    );
+
+    document.removeEventListener(
+      "click",
+      handleSceneClickCapture,
+      true
+    );
+
+    document.removeEventListener(
+      "auxclick",
       handleSceneClickCapture,
       true
     );

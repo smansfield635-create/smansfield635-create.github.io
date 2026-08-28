@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-"""Strict static gate for the Gen1751 Laws layered-information-grid reconstruction."""
+"""Strict static gate for the Gen1776 Laws full-family continuity reconstruction."""
 
 from __future__ import annotations
 
 import json
 import re
 import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-GOVERNING_HEAD = "b405c91b89df10ee9e51b784d7bd2686c17df6ac"
+GOVERNING_HEAD = "7437775b431a846e3fec388cc8d2dee2e490753c"
 MAP_PATH = ROOT / "laws/room-carousel/route-card-map.v2.json"
 ASSET_IDENTITY = "LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827"
 SHARED_ALLOWED = {
@@ -23,19 +24,15 @@ SHARED_ALLOWED = {
     "scripts/verify-laws-cp6-final-synchronization.py",
 }
 
-
 def require(condition: bool, message: str) -> None:
     if not condition:
         raise AssertionError(message)
 
-
 def route_path(route: str) -> Path:
     return ROOT / (route.strip("/") if route.endswith(".html") else f"{route.strip('/')}/index.html")
 
-
 def git(*args: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(["git", *args], cwd=ROOT, text=True, capture_output=True)
-
 
 def main() -> int:
     manifest = json.loads(MAP_PATH.read_text(encoding="utf-8"))
@@ -84,22 +81,18 @@ def main() -> int:
             require(len({story["id"] for story in stories}) == len(stories), f"STORY_IDS:{route}:{card['id']}")
             require(len({story["label"] for story in stories}) == len(stories), f"STORY_LABELS:{route}:{card['id']}")
             for story in stories:
-                require(not re.search(r"\\bboundary \\d+\\b", story["label"], re.I), f"PLACEHOLDER_STORY:{route}:{card['id']}:{story['id']}")
+                require(not re.search(r"\bboundary \d+\b", story["label"], re.I), f"PLACEHOLDER_STORY:{route}:{card['id']}:{story['id']}")
                 for lens in ("practical", "engineering", "empirical"):
                     require(story.get("readings", {}).get(lens, "").strip(), f"EMPTY_CELL:{route}:{card['id']}:{story['id']}:{lens}")
 
     reality = routes["/laws/categories/reality/"]["cards"]
     reality_actions = {card["id"]: card.get("href") for card in reality if card.get("href")}
-    require(
-        reality_actions
-        == {
-            "theory": "/laws/categories/reality/theory.html",
-            "evidence": "/laws/categories/reality/evidence.html",
-            "measure": "/laws/categories/reality/measure.html",
-            "limits": "/laws/categories/reality/limits.html",
-        },
-        f"REALITY_ACTIONS:{reality_actions}",
-    )
+    require(reality_actions == {
+        "theory": "/laws/categories/reality/theory.html",
+        "evidence": "/laws/categories/reality/evidence.html",
+        "measure": "/laws/categories/reality/measure.html",
+        "limits": "/laws/categories/reality/limits.html",
+    }, f"REALITY_ACTIONS:{reality_actions}")
     require(not next(card for card in reality if card["id"] == "audit").get("href"), "INVENTED_AUDIT_ROUTE")
     reality_source = route_path("/laws/categories/reality/").read_text(encoding="utf-8")
     require('href="/laws/categories/integrity/"' in reality_source, "REALITY_PREVIOUS_CONTINUITY")
@@ -108,16 +101,9 @@ def main() -> int:
     runtime = (ROOT / "laws/room-carousel/room-carousel.v1.js").read_text(encoding="utf-8")
     stylesheet = (ROOT / "laws/room-carousel/room-carousel.v1.css").read_text(encoding="utf-8")
     for marker in (
-        "route-card-map.v2.json",
-        "routeMap.cards.map",
-        "[data-lrc-inner-tab]",
-        "[data-lrc-story-tab]",
-        "[data-lrc-grid-cell]",
-        "state.layers[state.index] = 0",
-        "state.stories[state.index] = 0",
-        "internalStateIndependent: true",
-        "↶ Return to Orbit",
-        "audit.open = false",
+        "route-card-map.v2.json", "routeMap.cards.map", "[data-lrc-inner-tab]", "[data-lrc-story-tab]",
+        "[data-lrc-grid-cell]", "state.layers[state.index] = 0", "state.stories[state.index] = 0",
+        "internalStateIndependent: true", "↶ Return to Orbit", "audit.open = false",
     ):
         require(marker in runtime, f"RUNTIME_MARKER:{marker}")
     require("nativeChildren" not in runtime, "DIRECT_CHILD_CARD_INFERENCE_RETURNED")
@@ -125,25 +111,30 @@ def main() -> int:
     for marker in ("[data-lrc-inner-tabs]", "[data-lrc-story-rail]", "[data-lrc-story-tab]", "[data-lrc-grid-cell]", "[data-lrc-claim-boundary]", "data-lrc-family"):
         require(marker in stylesheet, f"STYLESHEET_MARKER:{marker}")
 
-    subprocess.run(
+    nested = subprocess.run(
         ["node", "laws/room-carousel/verify-contextual-delivery.v2.mjs", "--static-only"],
         cwd=ROOT,
-        check=True,
+        text=True,
+        capture_output=True,
     )
+    if nested.stdout:
+        print(nested.stdout, end="")
+    if nested.stderr:
+        print(nested.stderr, end="", file=sys.stderr)
+    if nested.returncode != 0:
+        detail = (nested.stderr or nested.stdout or f"exit {nested.returncode}").strip().replace("\n", " | ")
+        print(f"::error title=Laws contextual static assertion::{detail[-3000:]}")
+        raise SystemExit(nested.returncode)
+
     result = {
-        "contract": "LAWS_LAYERED_INFORMATION_GRID_STRICT_STATIC_MATRIX_v3",
-        "status": "PASS",
-        "governing_head": GOVERNING_HEAD,
-        "routes": len(routes),
-        "cards": 134,
+        "contract": "LAWS_LAYERED_INFORMATION_GRID_STRICT_STATIC_MATRIX_v4",
+        "status": "PASS", "governing_head": GOVERNING_HEAD, "routes": len(routes), "cards": 134,
         "story_counts": {
             "four": sum(1 for route in routes.values() for card in route["cards"] if len(card["stories"]) == 4),
             "five": sum(1 for route in routes.values() for card in route["cards"] if len(card["stories"]) == 5),
         },
         "cells": sum(len(card["stories"]) * 3 for route in routes.values() for card in route["cards"]),
-        "card_counts": [4, 5, 6],
-        "methods_byte_identical": True,
-        "laws_root_protected": True,
+        "card_counts": [4, 5, 6], "methods_byte_identical": True, "laws_root_protected": True,
         "reality_existing_deep_routes": sorted(reality_actions),
         "reality_previous_next": ["/laws/categories/integrity/", "/laws/categories/structure/"],
     }
@@ -153,6 +144,9 @@ def main() -> int:
     print(json.dumps(result, indent=2))
     return 0
 
-
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except AssertionError as exc:
+        print(f"::error title=Laws CP6 strict static assertion::{exc}")
+        raise

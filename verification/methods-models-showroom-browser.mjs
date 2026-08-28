@@ -19,7 +19,7 @@ const source = {
 
 const sourceAssertions = {
   contract: source.html.includes('data-methods-models-contract="METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1"'),
-  carouselAssetsLoaded: source.html.includes("carousel.css?v=METHODS_MODELS_SINGLE_AXIS_CAROUSEL_V1") && source.html.includes("carousel.js?v=METHODS_MODELS_SINGLE_AXIS_CAROUSEL_V1") && source.html.includes("carousel-data.js?v=METHODS_MODELS_SINGLE_AXIS_CAROUSEL_DATA_V1"),
+  carouselAssetsLoaded: source.html.includes("carousel.css?v=METHODS_MODELS_SINGLE_AXIS_CAROUSEL_V1") && source.html.includes("carousel.js?v=METHODS_MODELS_SINGLE_AXIS_CAROUSEL_V1") && source.html.includes("carousel-data.js?v=METHODS_MODELS_SINGLE_AXIS_CAROUSEL_DATA_V2_20260822"),
   oneAxisGeometry: source.js.includes("rotateY(") && source.js.includes("translateZ(") && source.css.includes("perspective:") && source.css.includes("transform-style: preserve-3d"),
   directManipulation: ["pointerdown", "pointermove", "pointerup", "pointercancel", "setPointerCapture"].every(token => source.js.includes(token)),
   variableCardinality: source.js.includes("const count = families.length") && source.js.includes("const step = 360 / count"),

@@ -4268,42 +4268,60 @@
     "eea23008987e2f59e963dc7c990b80b389120173dbe47ae5a75f2c45dfdc8bb2": {
       "authorityProvenance": {
         "authorityIdentity": {
-          "governingHead": "9923e9f346c8d1301ff4c79ec162fcd53340f361",
-          "lockGeneration": 1773,
+          "governingHead": "51700a627e32f9117cdc12f5156cecb7661f3ea0",
+          "lockGeneration": 1777,
           "lockScope": "COMPASS_RENEWAL_CORRECTED_2162",
-          "operationId": "COMPASS_RENEWAL_CORRECTED_20260827_010",
-          "procedureLocatorDigest": "541bd2c98792191d2cf078fd3a4c4689299ef6a0c61b055424d5a5b363e4fdca",
-          "requestDigest": "ae652969601440361f3b4612abeae5c2f025936f5ed4df6afc34ab70d1f4a9ff",
+          "operationId": "COMPASS_RENEWAL_CORRECTED_20260827_011",
+          "procedureLocatorDigest": "4bf83639f7df43a40598bc7deb319d9b319a154e41d322fd43e80517cee02a41",
+          "requestDigest": "ecd98c909c88b6a49a1d2fbfb0d42afc3bac67a65a9d0b865e1ec32e71f45172",
           "scopeHash": "eea23008987e2f59e963dc7c990b80b389120173dbe47ae5a75f2c45dfdc8bb2"
         },
-        "bindingDigest": "ca84bd64e938f8f79fc0cc7b9c4d70dc9e126a35173f6bedfd4c5e463e9338f4",
+        "bindingDigest": "98a4df27615cfc05681b98362c0848e6fbd6cdac12081c63ffc518d9e7fe68fd",
         "invocation": {
           "commentAuthorAssociation": "OWNER",
           "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "62222ddc39b6a2059c234be1d80cafbb57ec3e03f986df4c29e8a7dbfb33590a",
-          "commentId": 5446807764,
+          "commentBodySha256": "0ec09ebcb8de35deaee2545bb0dcbad9915a9200fd13610190a9df88285c7dcb",
+          "commentId": 5447578773,
           "eventAction": "created",
           "eventName": "issue_comment",
           "issueNumber": 2162,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
           "repository": "smansfield635-create/smansfield635-create.github.io",
           "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
           "workflowRunAttempt": 1,
-          "workflowRunId": 33129575402,
-          "workflowSha": "9923e9f346c8d1301ff4c79ec162fcd53340f361"
+          "workflowRunId": 33135522468,
+          "workflowSha": "51700a627e32f9117cdc12f5156cecb7661f3ea0"
         },
-        "lineageAnchorCommitSha": "329bc7919f287559bac8e18658b2d1cb4b26a3be",
-        "origin": "CANONICAL_INTAKE",
+        "lineageAnchorCommitSha": "7c07682ac98f87c58e7c2420aaf6e699d93a015e",
+        "origin": "CANONICAL_SUCCESSOR",
         "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
       },
-      "governingHead": "9923e9f346c8d1301ff4c79ec162fcd53340f361",
-      "lockGeneration": 1773,
+      "governingHead": "51700a627e32f9117cdc12f5156cecb7661f3ea0",
+      "lockGeneration": 1777,
       "lockScope": "COMPASS_RENEWAL_CORRECTED_2162",
-      "operationId": "COMPASS_RENEWAL_CORRECTED_20260827_010",
-      "procedureLocatorDigest": "541bd2c98792191d2cf078fd3a4c4689299ef6a0c61b055424d5a5b363e4fdca",
+      "operationId": "COMPASS_RENEWAL_CORRECTED_20260827_011",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "9923e9f346c8d1301ff4c79ec162fcd53340f361",
+        "lockGeneration": 1773,
+        "lockScope": "COMPASS_RENEWAL_CORRECTED_2162",
+        "operationId": "COMPASS_RENEWAL_CORRECTED_20260827_010",
+        "preservedEvidenceRefs": [
+          "issue:2162#issuecomment-5446809428",
+          "PR:2210",
+          "PR:2210#issuecomment-5447006853",
+          "PR:2210#issuecomment-5447485718",
+          "commit:24bfaa8a2cd2aa2dfe18d8d58edcc272ee129f6b"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_RENEWAL_CORRECTED_2162_SUCCESSOR_1773_20260827_002"
+      },
+      "procedureLocatorDigest": "4bf83639f7df43a40598bc7deb319d9b319a154e41d322fd43e80517cee02a41",
       "released": false,
-      "requestDigest": "ae652969601440361f3b4612abeae5c2f025936f5ed4df6afc34ab70d1f4a9ff",
+      "requestDigest": "ecd98c909c88b6a49a1d2fbfb0d42afc3bac67a65a9d0b865e1ec32e71f45172",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "eea23008987e2f59e963dc7c990b80b389120173dbe47ae5a75f2c45dfdc8bb2",
       "state": "ADMITTED_LOCKED"
@@ -4550,7 +4568,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1776,
+  "lockGeneration": 1777,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -29906,6 +29924,68 @@
         "successorLockScope": "LAWS:BACK_PAGE_CONTEXTUAL_DELIVERY:V1",
         "successorOperationId": "LAWS_CONTEXTUAL_CORPUS_AND_EXPRESSION_RECONSTRUCTION_20260827_018",
         "transitionId": "LAWS_GEN1771_TO_CBA4FDCC_FULL_FAMILY_CONTINUITY_20260827_003"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "9923e9f346c8d1301ff4c79ec162fcd53340f361",
+          "lockGeneration": 1773,
+          "lockScope": "COMPASS_RENEWAL_CORRECTED_2162",
+          "operationId": "COMPASS_RENEWAL_CORRECTED_20260827_010",
+          "procedureLocatorDigest": "541bd2c98792191d2cf078fd3a4c4689299ef6a0c61b055424d5a5b363e4fdca",
+          "requestDigest": "ae652969601440361f3b4612abeae5c2f025936f5ed4df6afc34ab70d1f4a9ff",
+          "scopeHash": "eea23008987e2f59e963dc7c990b80b389120173dbe47ae5a75f2c45dfdc8bb2"
+        },
+        "bindingDigest": "ca84bd64e938f8f79fc0cc7b9c4d70dc9e126a35173f6bedfd4c5e463e9338f4",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "62222ddc39b6a2059c234be1d80cafbb57ec3e03f986df4c29e8a7dbfb33590a",
+          "commentId": 5446807764,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2162,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33129575402,
+          "workflowSha": "9923e9f346c8d1301ff4c79ec162fcd53340f361"
+        },
+        "lineageAnchorCommitSha": "329bc7919f287559bac8e18658b2d1cb4b26a3be",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "9923e9f346c8d1301ff4c79ec162fcd53340f361",
+      "lockGeneration": 1773,
+      "lockScope": "COMPASS_RENEWAL_CORRECTED_2162",
+      "operationId": "COMPASS_RENEWAL_CORRECTED_20260827_010",
+      "procedureLocatorDigest": "541bd2c98792191d2cf078fd3a4c4689299ef6a0c61b055424d5a5b363e4fdca",
+      "released": true,
+      "requestDigest": "ae652969601440361f3b4612abeae5c2f025936f5ed4df6afc34ab70d1f4a9ff",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "eea23008987e2f59e963dc7c990b80b389120173dbe47ae5a75f2c45dfdc8bb2",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:2162#issuecomment-5446809428",
+          "PR:2210",
+          "PR:2210#issuecomment-5447006853",
+          "PR:2210#issuecomment-5447485718",
+          "commit:24bfaa8a2cd2aa2dfe18d8d58edcc272ee129f6b"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "51700a627e32f9117cdc12f5156cecb7661f3ea0",
+        "successorLockGeneration": 1777,
+        "successorLockScope": "COMPASS_RENEWAL_CORRECTED_2162",
+        "successorOperationId": "COMPASS_RENEWAL_CORRECTED_20260827_011",
+        "transitionId": "COMPASS_RENEWAL_CORRECTED_2162_SUCCESSOR_1773_20260827_002"
       },
       "terminalDisposition": "SUPERSEDED"
     }

@@ -72,9 +72,12 @@
       if (!story || !story.id || !story.label || !story.readings) return false;
       return LAYERS.every(([kind]) => typeof story.readings[kind] === "string" && story.readings[kind].trim());
     }) : [];
+    const realityAuthoredSummary = routeOf(root) === "/laws/categories/reality/"
+      ? String(stories[0]?.readings?.practical || "").trim()
+      : "";
     return {
       label: definition.label || definition.id,
-      summary: definition.summary || sourceSummary || definition.practical || context.relation || "Open this subject for its complete contextual reading.",
+      summary: definition.summary || sourceSummary || realityAuthoredSummary || definition.practical || context.relation || "Open this subject for its complete contextual reading.",
       practical: sourcePanel(["platform", "practical"]) || manualLayer("practical", definition.practical),
       engineering: sourcePanel(["engineering"]) || manualLayer("engineering", definition.engineering),
       empirical: sourcePanel(["evidence", "empirical"]) || manualLayer("empirical", definition.empirical),

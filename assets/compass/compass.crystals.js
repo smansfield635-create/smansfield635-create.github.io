@@ -4,7 +4,7 @@
    spherical room-cluster manipulation.
 
    Full-file replacement scope:
-   - Preserve all four cardinal stars and nineteen room stars.
+   - Preserve all four cardinal stars and sixteen room stars.
    - Preserve authoritative cardinal declarations, room declarations,
      routes, accessibility metadata, semantic controls, materials,
      Mirrorland recession behavior, WebGL rendering, and receipts.
@@ -43,7 +43,7 @@
    Ownership:
    - Celestial scene background.
    - Four cardinal crystal stars.
-   - Nineteen room crystal stars.
+   - Sixteen room crystal stars.
    - Cardinal spherical orientation rendering.
    - Active room-cluster spherical orientation rendering.
    - Crystal shaders, materials, camera, projection, semantic positioning,
@@ -3908,7 +3908,7 @@
       );
     }
 
-    if (roomCount !== 19) {
+    if (roomCount !== 16) {
       throw new Error(
         `ROOM_COUNT_INVALID:${roomCount}`
       );
@@ -4162,7 +4162,7 @@
       }
     );
 
-    if (proxies.size !== 19) {
+    if (proxies.size !== 16) {
       throw new Error(
         `ROOM_PROXY_COUNT_INVALID:${proxies.size}`
       );
@@ -7113,7 +7113,7 @@
     if (pointer.controllerGestureBegan) {
       if (
         pointer.gestureScope ===
-        "constellation"
+          "constellation"
       ) {
         requestControllerOrbitCancel(
           reason
@@ -8059,7 +8059,7 @@
   function handleVisibilityChange() {
     if (
       document.visibilityState ===
-      "hidden"
+        "hidden"
     ) {
       abortActivePointer(
         "document-hidden"
@@ -8860,7 +8860,7 @@
   function bindReducedMotion() {
     if (
       typeof globalThis.matchMedia !==
-      "function"
+        "function"
     ) {
       state.reducedMotionMediaQuery =
         null;
@@ -8909,7 +8909,7 @@
 
     if (
       typeof query.removeEventListener ===
-      "function"
+        "function"
     ) {
       query.removeEventListener(
         "change",
@@ -8917,7 +8917,7 @@
       );
     } else if (
       typeof query.removeListener ===
-      "function"
+        "function"
     ) {
       query.removeListener(
         handleReducedMotionChange
@@ -9258,7 +9258,7 @@
         4,
 
       registryRoomCount:
-        19,
+        16,
 
       mirrorlandRegistryPresent:
         false,
@@ -10086,7 +10086,7 @@
           4,
 
         registryRoomCount:
-          19,
+          16,
 
         mirrorlandRegistryPresent:
           false,
@@ -10146,7 +10146,7 @@
 
   if (
     document.readyState ===
-    "loading"
+      "loading"
   ) {
     document.addEventListener(
       "DOMContentLoaded",

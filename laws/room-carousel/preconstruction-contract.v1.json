@@ -1,93 +1,106 @@
 {
-  "schema": "LAWS_LAYERED_INFORMATION_GRID_PRECONSTRUCTION_CONTRACT_v3",
-  "operationId": "LAWS_LAYERED_INFORMATION_GRID_RECONSTRUCTION_20260827_001",
-  "lockGeneration": 1751,
+  "schema": "LAWS_LAYERED_INFORMATION_GRID_PRECONSTRUCTION_CONTRACT_v4",
+  "operationId": "LAWS_CONTEXTUAL_CORPUS_AND_EXPRESSION_RECONSTRUCTION_20260828_019",
+  "lockGeneration": 1778,
   "lockScope": "LAWS:BACK_PAGE_CONTEXTUAL_DELIVERY:V1",
-  "governingHead": "b405c91b89df10ee9e51b784d7bd2686c17df6ac",
+  "governingHead": "51700a627e32f9117cdc12f5156cecb7661f3ea0",
+  "constructionBranch": "laws/full-family-continuity-gen1778-20260828",
   "assetIdentity": "LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827",
+  "familyContinuityQualification": "LAWS_METHODS_MODELS_CONTINUITY_GEN1778_20260828",
   "reference": {
     "route": "/laws/research/methods-and-models/",
-    "role": "CONTEXTUAL_DELIVERY_ARCHITECTURE_REFERENCE_ONLY",
+    "role": "QUALIFIED_CONTEXTUAL_DELIVERY_IMPLEMENTATION_SOURCE",
     "mutationAllowed": false,
-    "indexBlob": "d48ca6648aec91fd19254bfa8de97e72cb0eebc5"
+    "indexBlob": "d48ca6648aec91fd19254bfa8de97e72cb0eebc5",
+    "pageExcellenceResult": "PASS_CLOSED",
+    "pageExcellenceReceiptDigest": "db632fafe7076151d0ee896535082f50a6f216e3dfefa01961ec802321b3e5eb",
+    "perceptualAwardsDisposition": "AWARDS_CONVERSATION_ADMISSIBLE",
+    "perceptualReason": "REFERENCE_CLASS_MATURITY_REACHED",
+    "perceptualEvidenceDigest": "9292b40c292f39d8989e8568a98ff6a5e79def14448f6cd3448c60a37b5eee25"
   },
   "protected": {
-    "lawsRoot": {
-      "path": "laws/index.html",
-      "mutationAllowed": false,
-      "blob": "d6de5558a6ba38e66ad6284a80c03de67682628b"
-    },
-    "methodsAndModelsTree": {
-      "path": "laws/research/methods-and-models/",
-      "mutationAllowed": false
-    }
+    "lawsRoot": {"path": "laws/index.html", "mutationAllowed": false},
+    "methodsAndModelsTree": {"path": "laws/research/methods-and-models/", "mutationAllowed": false}
+  },
+  "familyScope": {
+    "routeMap": "laws/room-carousel/route-card-map.v2.json",
+    "routeCount": 29,
+    "outerCardCount": 134,
+    "allMappedRoutesMustConform": true,
+    "partialFamilyPassAllowed": false
   },
   "frozenInteractionGrammar": [
     "NUMBERED_TOP_CAROUSEL_RAIL",
     "OUTER_SWIPE_KEYBOARD_AND_CARD_ROTATION",
+    "CONTEXTUAL_TABS_ONLY_INSIDE_OPENED_APPLICABLE_CARDS",
     "RETURN_TO_ORBIT_RESTORES_SAME_CARD",
-    "BOTTOM_PREVIOUS_NEXT_GREATER_LAWS_NAVIGATION",
+    "BOTTOM_PREVIOUS_NEXT_GREATER_LAWS_NAVIGATION_ON_EVERY_MAPPED_ROUTE",
     "THREE_HORIZONTAL_LENSES_INDEPENDENT_FROM_VERTICAL_STORY_LAYERS"
   ],
-  "reconstructedContextualDelivery": {
-    "routeMap": "laws/room-carousel/route-card-map.v2.json",
+  "greaterLawsNavigation": {
+    "selector": ".lr-story-nav",
+    "placement": "BOTTOM_OUTSIDE_CAROUSEL",
+    "requiredOnEveryMappedRoute": true,
+    "requiredLinkCount": 2,
+    "requiredLabels": ["Previous", "Next"],
+    "routeNavigationOnly": true,
+    "mayActAsInternalLensTabs": false,
+    "mustRemainAvailableAfterReturnToOrbit": true
+  },
+  "contextualDelivery": {
     "routeCount": 29,
     "cardCount": 134,
     "allowedCardCounts": [4, 5, 6],
     "outerCardAuthority": "EXPLICIT_ROUTE_DECLARATION_AND_ROUTE_MAP_ONLY",
     "directPageSectionInferenceAllowed": false,
     "internalLayers": ["practical", "engineering", "empirical"],
-    "internalStoryAxis": {
-      "orientation": "VERTICAL",
-      "minimumPerCard": 4,
-      "maximumPerCard": 5,
-      "labels": "PAGE_AND_CARD_SPECIFIC",
-      "visibleCellCount": 1
-    },
+    "internalTabsPlacement": "INSIDE_OPENED_CARD_ONLY",
+    "internalTabsVisibleInOrbit": false,
+    "internalStoryAxis": {"orientation": "VERTICAL", "minimumPerCard": 4, "maximumPerCard": 5, "labels": "PAGE_AND_CARD_SPECIFIC", "visibleCellCount": 1},
     "initialInternalLayer": "practical_after_explicit_open",
     "initialStoryLayer": "first_story_after_explicit_open",
     "internalLayerMayMoveOuterCarousel": false,
     "storyLayerMayMoveOuterCarousel": false,
     "lensAndStoryAxesPreserveEachOther": true,
+    "returnToOrbitPreservesOuterCard": true,
     "custodyRole": "COMPACT_COLLAPSED_SOURCE_IDENTITY_AND_CLAIM_STANDING_ONLY",
     "rawLegacyPresentationMirrorAllowed": false,
     "noJsRole": "STRUCTURED_SEMANTIC_GRID",
     "claimBoundaryRole": "VISIBLE_INSIDE_RELEVANT_EMPIRICAL_LAYER"
   },
-  "representatives": {
-    "cycles": ["recurrence", "rhythm", "feedback", "renewal", "engineering-addendum"],
-    "handoffs": ["transfer-object", "state-context", "interface", "acceptance", "receipt-continuity", "failure-boundary"],
-    "reality": ["reality", "theory", "evidence", "measure", "limits", "audit"],
-    "representativeHookReceipt": 5434488841,
-    "renderedCases": 6,
-    "phoneTabletDisposition": "PASS"
-  },
-  "realityCorrection": {
-    "existingDeepRoutes": [
-      "/laws/categories/reality/theory.html",
-      "/laws/categories/reality/evidence.html",
-      "/laws/categories/reality/measure.html",
-      "/laws/categories/reality/limits.html"
-    ],
-    "inventAuditRoute": false,
-    "previousRoute": "/laws/categories/integrity/",
-    "nextRoute": "/laws/categories/structure/"
-  },
   "responsiveContract": {
+    "requiredProfiles": ["PHONE", "TABLET", "DESKTOP"],
     "orbitOnPhoneAndTablet": true,
     "innerControlsHiddenUntilOpen": true,
     "openedCardIsReadingSurface": true,
     "returnImmediatelyAvailable": true,
+    "bottomPreviousNextAvailableAfterOrbitReturn": true,
     "innerTabsConflictWithOuterSwipe": false,
     "verticalStoryRailRemainsVisibleOnPhone": true,
     "nestedHorizontalScrollingAllowed": false,
     "reducedMotionRetainsSemantics": true,
     "noJsSourceAndCustodyReachable": true
   },
+  "qualificationContract": {
+    "staticAllRoutesRequired": true,
+    "browserRouteCount": 29,
+    "browserProfiles": 3,
+    "browserCaseCount": 87,
+    "topCarouselRequired": true,
+    "contextualTabsInsideOpenedCardsRequired": true,
+    "bottomPreviousNextRequired": true,
+    "returnStateRequired": true,
+    "noHorizontalOverflowRequired": true,
+    "noPageErrorsRequired": true,
+    "protectedByteIdentityRequired": true,
+    "privatePageExcellenceRequalificationRequired": true,
+    "ownerPerceptualAcceptanceRequiredBeforeAdoption": true
+  },
   "authorityBoundary": {
     "scientificValidationClaimed": false,
     "universalLawProven": false,
     "productAcceptanceGrantedByContract": false,
+    "ownerAcceptanceGrantedByContract": false,
     "mergeAuthorityGrantedByContract": false,
     "deploymentAuthorityGrantedByContract": false
   }

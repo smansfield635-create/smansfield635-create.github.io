@@ -319,8 +319,8 @@
     const decision = delay?.stories?.find(story => story.id === "decision");
     const transport = delay?.stories?.find(story => story.id === "transport");
     const stability = map.routes?.[route]?.cards?.find(card => card.id === "stability");
-    const oscillation = stability?.stories?.find(story => story.id === "oscillation");
-    const runaway = stability?.stories?.find(story => story.id === "runaway" || story.id === "runaway-paths");
+    const oscillation = stability?.stories?.find(story => story.id === "inspect-oscillation");
+    const runaway = stability?.stories?.find(story => story.id === "inspect-runaway-paths");
     if (decision) decision.readings = decisionReadings;
     if (transport) transport.readings = transportReadings;
     if (oscillation) oscillation.readings = oscillationReadings;

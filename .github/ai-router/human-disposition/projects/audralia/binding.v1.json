@@ -4,14 +4,14 @@
   "projectId": "AUDRALIA",
   "parentProjectId": "H_EARTH",
   "scopeIdentity": "AUDRALIA_PLANETARY_ENVIRONMENT_OWNER_INTENT_AND_FAILURE_MEMORY",
-  "appliesTo": [
-    "showroom/globe/audralia/**"
-  ],
+  "appliesTo": ["showroom/globe/audralia/**"],
   "canonicalManifest": ".github/ai-router/human-disposition/projects/audralia/manifest.v1.json",
   "decisionLedger": ".github/ai-router/human-disposition/projects/audralia/decision-ledger.v1.json",
   "activeHumanCheckpoints": [
-    ".github/ai-router/human-disposition/projects/audralia/checkpoints/hook5-live-differential-20260828.v1.json"
+    ".github/ai-router/human-disposition/projects/audralia/checkpoints/hook5-live-differential-20260828.v1.json",
+    ".github/ai-router/human-disposition/projects/audralia/checkpoints/hook5-owner-video-reconciliation-20260828.v1.json"
   ],
+  "checkpointResolutionLaw": "PRESERVE_ALL_CHECKPOINTS; LATEST_NON_SUPERSEDED_OBSERVATION_CONTROLS_CURRENT_CLASSIFICATION; HISTORICAL_FAILURE_REMAINS_PROVEN_HISTORY",
   "mutableStateAuthority": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2171",
   "humanDispositionSourceRecord": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2220",
   "rootHumanDispositionProtocol": ".github/ai-router/human-disposition/",
@@ -24,22 +24,17 @@
     "ISSUE_2171_MUTABLE_CURRENT_STATE",
     "EXACT_CURRENT_OPERATION_EVIDENCE_ONLY_AS_NEEDED"
   ],
-  "requiredBefore": [
-    "AUDRALIA_RECOVERY_OR_SUCCESSION",
-    "AUDRALIA_MUTATION",
-    "AUDRALIA_QUALIFICATION",
-    "AUDRALIA_MERGE_OR_ADOPTION_DISPOSITION",
-    "AUDRALIA_PUBLICATION_OR_LIVE_REVIEW",
-    "AUDRALIA_TERMINAL_CLOSURE"
-  ],
+  "requiredBefore": ["AUDRALIA_RECOVERY_OR_SUCCESSION","AUDRALIA_MUTATION","AUDRALIA_QUALIFICATION","AUDRALIA_MERGE_OR_ADOPTION_DISPOSITION","AUDRALIA_PUBLICATION_OR_LIVE_REVIEW","AUDRALIA_TERMINAL_CLOSURE"],
   "rules": [
     "DO_NOT_RECONSTRUCT_OWNER_INTENT_FROM_PRIVATE_CONVERSATION_HISTORY",
     "HUMAN_DISPOSITION_STATES_WHAT_IS_INTENDED_OR_ACCEPTED_AND_CREATES_NO_AUTHORITY",
     "GOVERNANCE_STATES_WHAT_IS_AUTHORIZED",
     "EVIDENCE_STATES_WHAT_IS_PROVEN",
     "EXECUTION_STATES_WHAT_OCCURRED",
-    "PRESERVE_FAILED_OWNER_CHECKPOINTS_UNTIL_EXPLICITLY_SUPERSEDED",
+    "PRESERVE_FAILED_OWNER_CHECKPOINTS_UNTIL_EXPLICITLY_SUPERSEDED_AS_CURRENT_CLASSIFICATION",
+    "HISTORICAL_FAILURE_IS_NOT_CURRENT_ACTIVE_FAILURE_WITHOUT_CURRENT_REPRODUCTION",
     "DO_NOT_CONVERT_AUTOMATED_RUNTIME_PASS_INTO_OWNER_VISIBLE_ACCEPTANCE",
+    "DO_NOT_TREAT_UNREPRODUCED_RISK_AS_PROVEN_ROOT_CAUSE",
     "DO_NOT_REASK_ESTABLISHED_INTENT_UNLESS_A_REVALIDATION_TRIGGER_FIRES",
     "NO_MATERIAL_HUMAN_UNKNOWN_ENTERS_INTAKE_UNDECLARED"
   ],

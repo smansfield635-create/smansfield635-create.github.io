@@ -1,0 +1,45 @@
+{
+  "schema": "REPOSITORY_AI_PROJECT_ENTRYPOINT_v1",
+  "projectId": "ESTATE_SOUNDTRACK",
+  "status": "ACTIVE_REGISTERED_PROJECT",
+  "ownedPathPrefixes": [
+    "assets/audio/estate-soundtrack/"
+  ],
+  "ownedExactPaths": [],
+  "entrypoint": ".github/ai-router/projects/estate-soundtrack/entrypoint.v1.json",
+  "authorityBoundary": [
+    "ESTATE_SOUNDTRACK_OWNS_ONLY_THE_SHARED_ESTATE_SOUNDTRACK_PREFIX",
+    "NO_BROADER_assets/audio/_OR_assets/_PREFIX_IS_AUTHORIZED",
+    "SHARED_MASTER_CUSTODY_DOES_NOT_CREATE_PAGE_BINDING_PRODUCT_MERGE_DEPLOYMENT_OR_RELEASE_AUTHORITY",
+    "RECORDING_RIGHTS_AND_PROVENANCE_MUST_BE_VERIFIED_PER_CANONICAL_ESTATE_SOUNDTRACK_AUTHORITY_V1_ISSUE_2141",
+    "COORDINATION_AND_CURRENT_PHASE_AUTHORITY_IS_ISSUE_2233"
+  ],
+  "requiredInstructions": [
+    "AGENTS.md",
+    "AI_ENTRYPOINT.json"
+  ],
+  "registries": [
+    ".github/ai-router/router.v1.json"
+  ],
+  "procedures": {
+    "operationAdmission": "CANONICAL_REPOSITORY_OPERATION_INTAKE_REQUIRED_BEFORE_MUTATION",
+    "routerCommand": "node tools/repository-ai-entry-router.mjs --path <PATH> [--path <PATH> ...] --task <TASK> [--mutation-intent] --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/estate-soundtrack-router-receipt.json",
+    "custodyModel": "RIGHTS-VERIFIED MASTER -> ONE-TIME INGEST -> assets/audio/estate-soundtrack/ -> PROVENANCE/LICENSE MANIFEST -> PAGE-SPECIFIC BINDING/CLIP",
+    "implementationOrder": [
+      "CANONICAL_INTAKE_ADMITTED_AND_LOCKED",
+      "REPOSITORY_AI_ROUTER_PASS",
+      "RIGHTS_AND_SOURCE_IDENTITY_VERIFIED",
+      "ONE_TIME_SHARED_MASTER_INGEST",
+      "SHA256_AND_PROVENANCE_MANIFEST_FROZEN",
+      "PAGE_BINDING_OR_EXCERPT_SEPARATELY_AUTHORIZED"
+    ]
+  },
+  "stoppingRules": [
+    "STOP_IF_CANONICAL_INTAKE_IS_NOT_ADMITTED_AND_LOCKED",
+    "STOP_IF_ROUTER_DISPOSITION_IS_BLOCK_REVIEW_REQUIRED_OR_STOP_FOR_A_MUTATION_PATH",
+    "STOP_IF_MUTATION_ESCAPES_assets/audio/estate-soundtrack/",
+    "STOP_IF_RECORDING_RIGHTS_OR_EXACT_MASTER_IDENTITY_IS_UNRESOLVED",
+    "STOP_IF_A_SUBSTITUTE_MASTER_IS_PROPOSED_FOR_A_FROZEN_RECORDING_IDENTITY",
+    "STOP_BEFORE_PAGE_BINDING_MERGE_DEPLOYMENT_OR_RELEASE_WITHOUT_SEPARATE_AUTHORITY"
+  ]
+}

@@ -11,7 +11,8 @@
     "ESTATE_SOUNDTRACK_OWNS_ONLY_THE_SHARED_ESTATE_SOUNDTRACK_PREFIX",
     "NO_BROADER_assets/audio/_OR_assets/_PREFIX_IS_AUTHORIZED",
     "SHARED_MASTER_CUSTODY_DOES_NOT_CREATE_PAGE_BINDING_PRODUCT_MERGE_DEPLOYMENT_OR_RELEASE_AUTHORITY",
-    "RECORDING_RIGHTS_AND_PROVENANCE_MUST_BE_VERIFIED_PER_CANONICAL_ESTATE_SOUNDTRACK_AUTHORITY_V1"
+    "RECORDING_RIGHTS_AND_PROVENANCE_MUST_BE_VERIFIED_PER_CANONICAL_ESTATE_SOUNDTRACK_AUTHORITY_V1_ISSUE_2141",
+    "COORDINATION_AND_CURRENT_PHASE_AUTHORITY_IS_ISSUE_2233"
   ],
   "requiredInstructions": [
     "AGENTS.md",
@@ -20,16 +21,10 @@
   "registries": [
     ".github/ai-router/router.v1.json"
   ],
-  "canonicalAuthority": {
-    "locator": "CANONICAL_ESTATE_SOUNDTRACK_AUTHORITY_v1",
-    "issue": 2141,
-    "coordinationIssue": 2233,
-    "assetRoot": "assets/audio/estate-soundtrack/",
-    "custodyModel": "RIGHTS-VERIFIED MASTER -> ONE-TIME INGEST -> SHARED ESTATE AUDIO SURFACE -> PROVENANCE/LICENSE MANIFEST -> PAGE-SPECIFIC BINDING/CLIP"
-  },
   "procedures": {
     "operationAdmission": "CANONICAL_REPOSITORY_OPERATION_INTAKE_REQUIRED_BEFORE_MUTATION",
     "routerCommand": "node tools/repository-ai-entry-router.mjs --path <PATH> [--path <PATH> ...] --task <TASK> [--mutation-intent] --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/estate-soundtrack-router-receipt.json",
+    "custodyModel": "RIGHTS-VERIFIED MASTER -> ONE-TIME INGEST -> assets/audio/estate-soundtrack/ -> PROVENANCE/LICENSE MANIFEST -> PAGE-SPECIFIC BINDING/CLIP",
     "implementationOrder": [
       "CANONICAL_INTAKE_ADMITTED_AND_LOCKED",
       "REPOSITORY_AI_ROUTER_PASS",

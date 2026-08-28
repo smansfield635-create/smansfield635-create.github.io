@@ -5341,7 +5341,7 @@
         0
       );
 
-    if (roomCount !== 19) {
+    if (roomCount !== 16) {
       throw new Error(
         `CLUSTER_ROOM_COUNT_INVALID:${roomCount}`
       );

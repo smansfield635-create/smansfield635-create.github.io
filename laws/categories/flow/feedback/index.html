@@ -204,17 +204,17 @@
         <li>
           <h4>Decision</h4>
           <dl>
-            <div><dt>Practical</dt><dd>Treat timing as part of the loop, not as decoration. Explain how a response arriving too late can reverse the value of feedback.</dd></div>
-            <div><dt>Engineering</dt><dd>Treat timing as part of the loop, not as decoration. Decision.</dd></div>
-            <div><dt>Empirical</dt><dd>Treat timing as part of the loop, not as decoration. Use lag.</dd></div>
+            <div><dt>Practical</dt><dd>Decision delay is the time the controller spends evaluating an observed return before selecting the next command. It belongs to computation or deliberation after observation, not to movement of the signal between locations.</dd></div>
+            <div><dt>Engineering</dt><dd>Measure decision latency from the instant the required feedback state is available to the controller until the decision function commits a command, preserving queueing, evaluation, and branch-selection time separately.</dd></div>
+            <div><dt>Empirical</dt><dd>Use controller-side timestamps or decision traces that pair feedback availability with command commitment; do not count network propagation or actuator motion as decision time.</dd></div>
           </dl>
         </li>
         <li>
           <h4>Transport</h4>
           <dl>
-            <div><dt>Practical</dt><dd>Treat timing as part of the loop, not as decoration. Explain how a response arriving too late can reverse the value of feedback.</dd></div>
-            <div><dt>Engineering</dt><dd>Treat timing as part of the loop, not as decoration. Transport.</dd></div>
-            <div><dt>Empirical</dt><dd>Treat timing as part of the loop, not as decoration. Use oscillation.</dd></div>
+            <div><dt>Practical</dt><dd>Transport delay is the time a feedback signal spends travelling across the declared return path before it reaches the controller boundary. It concerns propagation through the channel, not the controller's later choice.</dd></div>
+            <div><dt>Engineering</dt><dd>Measure transport latency between declared send and receive boundaries on the feedback channel, including routing, serialization, buffering, and transmission while excluding controller decision processing.</dd></div>
+            <div><dt>Empirical</dt><dd>Use matched send-and-receive timestamps or route traces for the same returned signal to calculate channel delay independently from decision and actuation intervals.</dd></div>
           </dl>
         </li>
         <li>
@@ -284,6 +284,36 @@
   </main>
   <footer class="lr-footer"><span>Diamond Gate Bridge · Laws Chamber</span><a href="/laws/">Return to the Laws Compass</a></footer>
 </div>
+<script>
+(() => {
+  const nativeFetch = window.fetch.bind(window);
+  const route = "/laws/categories/flow/feedback/";
+  const decisionReadings = {
+    practical: "Decision delay is the time the controller spends evaluating an observed return before selecting the next command. It belongs to computation or deliberation after observation, not to movement of the signal between locations.",
+    engineering: "Measure decision latency from the instant the required feedback state is available to the controller until the decision function commits a command, preserving queueing, evaluation, and branch-selection time separately.",
+    empirical: "Use controller-side timestamps or decision traces that pair feedback availability with command commitment; do not count network propagation or actuator motion as decision time."
+  };
+  const transportReadings = {
+    practical: "Transport delay is the time a feedback signal spends travelling across the declared return path before it reaches the controller boundary. It concerns propagation through the channel, not the controller's later choice.",
+    engineering: "Measure transport latency between declared send and receive boundaries on the feedback channel, including routing, serialization, buffering, and transmission while excluding controller decision processing.",
+    empirical: "Use matched send-and-receive timestamps or route traces for the same returned signal to calculate channel delay independently from decision and actuation intervals."
+  };
+  window.fetch = async (...args) => {
+    const response = await nativeFetch(...args);
+    const request = args[0];
+    const url = String(request instanceof Request ? request.url : request || "");
+    if (!url.includes("/laws/room-carousel/route-card-map.v2.json")) return response;
+    window.fetch = nativeFetch;
+    const map = await response.clone().json();
+    const delay = map.routes?.[route]?.cards?.find(card => card.id === "delay");
+    const decision = delay?.stories?.find(story => story.id === "decision");
+    const transport = delay?.stories?.find(story => story.id === "transport");
+    if (decision) decision.readings = decisionReadings;
+    if (transport) transport.readings = transportReadings;
+    return new Response(JSON.stringify(map), { status:response.status, statusText:response.statusText, headers:response.headers });
+  };
+})();
+</script>
 <script defer src="/laws/room-carousel/room-carousel.v1.js?v=LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827"></script>
 </body>
 </html>

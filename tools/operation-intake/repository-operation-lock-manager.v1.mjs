@@ -10,7 +10,7 @@ export const AUTHORITY_PROVENANCE_SCHEMA = 'REPOSITORY_OPERATION_AUTHORITY_PROVE
 export const AUTHORITY_INVOCATION_SCHEMA = 'REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1';
 export const LEGACY_AUTHORITY_SNAPSHOT_BLOBS = ['f9c84e0a56b3b566f9da8eced8abc9348eb32ef5'];
 export const LEGACY_AUTHORITY_CUTOVER_COMMIT = 'b424015070450aaddc86013d72eaeb2a28bb7b04';
-export const TERMINAL = ['PASS_CLOSED','FAIL_CLOSED','REJECTED_CLOSED','WITHDRAWN','SUPERSEDED','VOIDED','EXPIRED'];
+export const TERMINAL = ['PASS_CLOSED','FAIL_CLOSED','REJECTED_CLOSED','WITHDRAWN','SUPERSEDED','VOIDED','EXPIRED','MUTATION_CLOSED_EVIDENCE_CONTINUES'];
 const ACTIVE = new Set(['ADMITTED_LOCKED','EXECUTING','BLOCKED_OPEN']);
 const TRUSTED_ASSOCIATIONS = new Set(['OWNER','MEMBER','COLLABORATOR']);
 const CANONICAL_MARKER = 'CANONICAL_OPERATION_INTAKE_REQUEST_V1';
@@ -194,7 +194,7 @@ async function verifyLegacyAuthority({repository,token,lock}){
   return stable({result:'AUTHENTICATED_CANONICAL_AUTHORITY',origin:'RECOVERED_LEGACY_CANONICAL_INTAKE',authorityIdentity:authorityIdentity(lock),issueNumber:recovery.issueNumber,commentId:recovery.sourceCommentId,receiptCommentId:recovery.receiptCommentId,workflowRunId:recovery.workflowRunId});
 }
 
-function canonicalMutationMessage(message){return typeof message==='string'&&(/^Acquire operation lock \d+: .+/.test(message)||/^Supersede operation \d+ with successor \d+: .+/.test(message)||/^Close operation lock \d+: .+ (PASS_CLOSED|FAIL_CLOSED|REJECTED_CLOSED|WITHDRAWN|SUPERSEDED|VOIDED|EXPIRED)$/.test(message))}
+function canonicalMutationMessage(message){return typeof message==='string'&&(/^Acquire operation lock \d+: .+/.test(message)||/^Supersede operation \d+ with successor \d+: .+/.test(message)||/^Close operation lock \d+: .+ (PASS_CLOSED|FAIL_CLOSED|REJECTED_CLOSED|WITHDRAWN|SUPERSEDED|VOIDED|EXPIRED|MUTATION_CLOSED_EVIDENCE_CONTINUES)$/.test(message))}
 async function verifyExactLockRefLineageRecovery({repository,token,summary,recovery}){
   if(summary?.sha!==recovery.commitSha)return false;
   const detail=await req(`${base(repository)}/commits/${recovery.commitSha}`,{headers:H(token)});

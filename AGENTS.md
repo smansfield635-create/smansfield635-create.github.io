@@ -52,6 +52,12 @@ node tools/operation-intake/repository-operation-intake-gate.v1.mjs --request <R
 
 For governed mutations, no branch creation, repository write, workflow execution, or implementation inference is authorized unless the command-emitted receipt returns `ADMITTED_AND_LOCKED`. `INPUT_INCOMPLETE_NOT_STARTED` means no governed operation exists. `ACTIVE_SCOPE_ALREADY_LOCKED` blocks a competing governed operation in the same canonical scope. `BLOCKED_OPEN` retains the lock until a terminal closure receipt is committed.
 
+### Release mutation scope before read-only evidence waits
+
+A governed mutation lock protects repository mutation, not the elapsed duration of downstream read-only evidence collection. Once every authorized repository write is complete, the exact candidate head is immutable, and no further mutation is authorized while CI, browser, Page Excellence, Awards, or other read-only evidence executes, close the active mutation scope through canonical terminal closure with `MUTATION_CLOSED_EVIDENCE_CONTINUES` before waiting on that evidence. This disposition must release the active scope and preserve the operation in terminal history; it does not convert pending evidence into a pass and does not grant any new authority.
+
+Evidence collected after this release remains bound to the exact frozen candidate. If that evidence identifies a defect requiring any repository mutation, obtain a fresh ordinary admission or lawful successor before changing bytes. Do not use `MUTATION_CLOSED_EVIDENCE_CONTINUES` while an authorized write, candidate-finalization step, or mutation-dependent commit is still pending.
+
 ## Moving-head successor continuity
 
 If an already-active governed operation becomes stale because its recorded governing head is no longer the current `refs/heads/main`, do not manually close the predecessor and separately reacquire a replacement lock. Prepare a fresh successor operation request and construction procedure bound to the new exact `main`, plus a `REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_REQUEST_v1`, then run:

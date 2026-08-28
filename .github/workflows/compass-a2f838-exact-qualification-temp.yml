@@ -1,4 +1,4 @@
-name: Compass exact a2f838 qualification temp
+name: Compass exact aee18d qualification temp
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
       - name: Checkout exact candidate sparsely
         uses: actions/checkout@v4
         with:
-          ref: a2f838c01447cb140005e44d2e8788590074889e
+          ref: aee18d9eb7f72e75f78e2fbb1c8cdaacbe9bdd5d
           fetch-depth: 1
           filter: blob:none
           sparse-checkout: |
@@ -27,7 +27,7 @@ jobs:
             docs/COMPASS_AUDIT_DERIVED_ACCEPTANCE_CONTRACT_20260822.md
           sparse-checkout-cone-mode: true
       - name: Prove exact candidate
-        run: test "$(git rev-parse HEAD)" = "a2f838c01447cb140005e44d2e8788590074889e"
+        run: test "$(git rev-parse HEAD)" = "aee18d9eb7f72e75f78e2fbb1c8cdaacbe9bdd5d"
       - uses: browser-actions/setup-chrome@v1
         with:
           chrome-version: stable
@@ -45,7 +45,7 @@ jobs:
         shell: bash
         env:
           PUBLIC_BASE_URL: http://127.0.0.1:4173
-          RUNTIME_RESULT_PATH: /tmp/compass-a2f838-exact.json
+          RUNTIME_RESULT_PATH: /tmp/compass-aee18d-exact.json
         run: |
           set -euo pipefail
           node .github/ai-router/platform/repository-live-qualification-engine.v1.mjs validate-manifest .github/live-qualification/manifests/compass-root.v1.json /tmp/manifest-validation.json
@@ -53,13 +53,13 @@ jobs:
           node .github/live-qualification/verifiers/compass-root.v1.mjs
           cat "$RUNTIME_RESULT_PATH"
           test "$(jq -r '.status' "$RUNTIME_RESULT_PATH")" = "PASS"
-          echo COMPASS_A2F838_EXACT_MECHANICAL_PASS
+          echo COMPASS_AEE18D_EXACT_MECHANICAL_PASS
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: compass-a2f838-exact-qualification
+          name: compass-aee18d-exact-qualification
           path: |
-            /tmp/compass-a2f838-exact.json
+            /tmp/compass-aee18d-exact.json
             /tmp/manifest-validation.json
           if-no-files-found: warn
           retention-days: 30

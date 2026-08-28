@@ -5112,6 +5112,51 @@
     ];
   }
 
+  // COMPASS_PHYSICAL_SETTLEMENT_BEFORE_COMMIT_v1
+  const SETTLEMENT_TRANSFORM_KEYS = Object.freeze([
+    "x",
+    "y",
+    "z",
+    "sx",
+    "sy",
+    "sz",
+    "prominence",
+    "halo",
+    "rotationSpeed",
+    "float"
+  ]);
+
+  function completeConstellationSettlementGeometry() {
+    updateTargets();
+
+    state.registry.forEach(
+      node => {
+        if (!node.transform || !node.target) {
+          return;
+        }
+
+        SETTLEMENT_TRANSFORM_KEYS.forEach(
+          key => {
+            node.transform[key] = node.target[key];
+          }
+        );
+      }
+    );
+
+    for (let index = 0; index < 3; index += 1) {
+      state.camera.eye[index] = state.camera.nextEye[index];
+      state.camera.target[index] = state.camera.nextTarget[index];
+    }
+
+    state.view = lookAt4(
+      state.camera.eye,
+      state.camera.target,
+      [0, 1, 0]
+    );
+
+    syncSemanticObjects();
+  }
+
   function lerp(
     a,
     b,
@@ -7541,6 +7586,8 @@
 
     state.constellationQuaternion =
       settledQuaternion.slice();
+
+    completeConstellationSettlementGeometry();
 
     const committed =
       requestControllerOrbitCommit(

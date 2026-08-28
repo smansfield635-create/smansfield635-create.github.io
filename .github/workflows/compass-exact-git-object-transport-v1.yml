@@ -104,6 +104,49 @@ jobs:
           grep -Fx '            --use-angle=swiftshader \' transport/launch-chromium-webgl.sh
           grep -Fx '            --enable-unsafe-swiftshader \' transport/launch-chromium-webgl.sh
 
+      - name: Verify transported Chromium exposes WebGL through SwiftShader
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          import { chromium } from "./transport/playwright-runtime/node_modules/playwright/index.mjs";
+
+          const browser = await chromium.launch({
+            executablePath: "./transport/launch-chromium-webgl.sh",
+            headless: true,
+            args: ["--no-sandbox", "--disable-dev-shm-usage"]
+          });
+          const page = await browser.newPage();
+          const capability = await page.evaluate(() => {
+            const canvas = document.createElement("canvas");
+            const webgl = canvas.getContext("webgl");
+            const webgl2 = canvas.getContext("webgl2");
+            return {
+              webgl: Boolean(webgl),
+              webgl2: Boolean(webgl2),
+              renderer: webgl
+                ? String(webgl.getParameter(webgl.RENDERER) || "")
+                : webgl2
+                  ? String(webgl2.getParameter(webgl2.RENDERER) || "")
+                  : ""
+            };
+          });
+          await browser.close();
+
+          const receipt = {
+            schema: "COMPASS_TRANSPORT_WEBGL_CAPABILITY_v1",
+            result: capability.webgl ? "PASS_CLOSED" : "FAIL_CLOSED",
+            ...capability
+          };
+          fs.writeFileSync(
+            "transport/webgl-capability.json",
+            JSON.stringify(receipt, null, 2)
+          );
+          console.log(JSON.stringify(receipt, null, 2));
+          if (!capability.webgl) process.exitCode = 1;
+          NODE
+
       - name: Emit transport-only provenance receipt
         shell: bash
         run: |
@@ -124,6 +167,8 @@ jobs:
             "playwrightRuntimeTransported": true,
             "browserLaunchProfile": "SWIFTSHADER_WEBGL_EXPLICIT_OPT_IN_v1",
             "browserLaunchProfileTransported": true,
+            "webglCapabilityReceipt": "webgl-capability.json",
+            "webglCapabilityRequired": true,
             "browserLaunchFlags": [
               "--use-gl=angle",
               "--use-angle=swiftshader",

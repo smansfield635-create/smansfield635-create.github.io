@@ -224,6 +224,7 @@ html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-inspect]
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-return]:focus-visible { outline:2px solid var(--lrc-family-accent); outline-offset:3px; }
 
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-live] { position:absolute; z-index:12; left:50%; bottom:1.15rem; transform:translateX(-50%); width:min(90%,52rem); margin:0; color:#74818c; font-size:.72rem; letter-spacing:.06em; text-align:center; text-transform:uppercase; pointer-events:none; }
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"][data-lrc-inspecting="true"] [data-lrc-live] { display:none; }
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-controls],
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-prev],
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-next] { display:none !important; visibility:hidden !important; pointer-events:none !important; }

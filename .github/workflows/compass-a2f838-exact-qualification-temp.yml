@@ -58,7 +58,7 @@ jobs:
             const intro=document.querySelector('.compass-orbit-intro');
             const heading=intro?.querySelector('h2');
             const cardinals=[...document.querySelectorAll('[data-compass-cardinal]')].map(e=>({wing:e.dataset.wing,primary:e.dataset.primary==='true',rect:rr(e),labelVisible:[...e.querySelectorAll(':scope>span')].some(s=>{const cs=getComputedStyle(s),r=s.getBoundingClientRect();return cs.visibility!=='hidden'&&Number(cs.opacity)>.5&&r.width>0&&r.height>0})}));
-            return {url:location.href,focus:root?.dataset.orbitFocus||'',phase:root?.dataset.orbitPhase||'',dragging:root?.dataset.compassDragging||'',scene:rr(document.querySelector('[data-compass-scene]')),heading:rr(heading),cardinals,primary:cardinals.filter(x=>x.primary).map(x=>x.wing),visible:cardinals.filter(x=>x.labelVisible).map(x=>x.wing),overflow:document.documentElement.scrollWidth-innerWidth};
+            return {url:location.href,focus:root?.dataset.orbitFocus||'',preview:root?.dataset.orbitPreviewFocus||'',phase:root?.dataset.orbitPhase||'',dragging:root?.dataset.compassDragging||'',gestureScope:root?.dataset.compassGestureScope||'',scene:rr(document.querySelector('[data-compass-scene]')),heading:rr(heading),cardinals,primary:cardinals.filter(x=>x.primary).map(x=>x.wing),visible:cardinals.filter(x=>x.labelVisible).map(x=>x.wing),overflow:document.documentElement.scrollWidth-innerWidth,crystalsReceipt:globalThis.DGB_COMPASS_CRYSTALS_RECEIPT||null,controllerReceipt:globalThis.DGB_COMPASS_CONTROLLER_RECEIPT||null};
           });
           const initial=await snap();
           if(initial.cardinals.length!==4) throw new Error('FOUR_STAR_PRESENCE_FAIL');
@@ -66,31 +66,28 @@ jobs:
           if(Math.abs(initial.scene.cx-450)>18) throw new Error('TABLET_SCENE_ALIGNMENT_FAIL');
           if(Math.abs(initial.heading.cx-450)>12) throw new Error('TABLET_HEADING_ALIGNMENT_FAIL');
           if(Math.abs(initial.overflow)>1) throw new Error('HORIZONTAL_OVERFLOW_FAIL');
-          const initialPrimary=initial.cardinals.find(x=>x.primary);
-          const anchor={cx:initialPrimary.rect.cx,cy:initialPrimary.rect.cy};
-          const safe=await page.evaluate(()=>{
-            const scene=document.querySelector('[data-compass-scene]');
-            const r=scene.getBoundingClientRect();
-            const ys=[.35,.45,.55,.65];
-            const xs=[.78,.72,.66,.60];
-            for(const yf of ys){for(const xf of xs){const x=r.x+r.width*xf,y=r.y+r.height*yf,el=document.elementFromPoint(x,y);if(el&&scene.contains(el)&&!el.closest('a,button,input,select,textarea,[data-compass-object="mirrorland"],[data-compass-block-gesture]'))return{x,y,endX:r.x+r.width*(1-xf),target:el.tagName,cls:el.className||''};}}
-            return null;
-          });
-          if(!safe) throw new Error('NO_UNBLOCKED_DRAG_TERRITORY');
-          console.log('SAFE_DRAG_START',JSON.stringify(safe));
+          const anchor={cx:initial.cardinals.find(x=>x.primary).rect.cx,cy:initial.cardinals.find(x=>x.primary).rect.cy};
           const visited=new Set([initial.focus]);
           const transitions=[];
           for(let attempt=0;attempt<6&&visited.size<4;attempt++){
             const before=await snap();
-            await page.mouse.move(safe.x,safe.y);
+            const active=before.cardinals.find(x=>x.primary);
+            if(!active?.rect) throw new Error('NO_ACTIVE_PRIMARY_RECT');
+            const startX=active.rect.cx,startY=active.rect.cy;
+            const sceneWidth=before.scene.width;
+            const direction=attempt%2===0?-1:1;
+            const endX=Math.max(before.scene.x+24,Math.min(before.scene.x+before.scene.width-24,startX+direction*sceneWidth*.48));
+            await page.mouse.move(startX,startY);
             await page.mouse.down();
-            for(let i=1;i<=24;i++){const t=i/24;await page.mouse.move(safe.x+(safe.endX-safe.x)*t,safe.y,{steps:1});await new Promise(r=>setTimeout(r,20));}
+            for(let i=1;i<=24;i++){const t=i/24;await page.mouse.move(startX+(endX-startX)*t,startY,{steps:1});await new Promise(r=>setTimeout(r,20));}
+            const during=await snap();
+            console.log('DURING',attempt+1,JSON.stringify({focus:during.focus,preview:during.preview,phase:during.phase,dragging:during.dragging,scope:during.gestureScope,crystals:during.crystalsReceipt?.lastGestureType||null}));
             await page.mouse.up();
             await new Promise(r=>setTimeout(r,300));
             const early=await snap();
             await new Promise(r=>setTimeout(r,650));
             const after=await snap();
-            console.log('ATTEMPT',attempt+1,JSON.stringify({before:before.focus,early:early.focus,after:after.focus,phase:after.phase,url:after.url,dragging:after.dragging}));
+            console.log('AFTER',attempt+1,JSON.stringify({from:before.focus,to:after.focus,phase:after.phase,url:after.url,primary:after.primary,visible:after.visible,crystals:after.crystalsReceipt?.lastGestureType||null}));
             if(after.url!=='http://127.0.0.1:4173/') throw new Error(`ACCIDENTAL_NAVIGATION:${after.url}`);
             if(after.focus!==before.focus&&after.phase==='COMMITTED'){
               visited.add(after.focus);
@@ -105,7 +102,7 @@ jobs:
               if(!correspondence) throw new Error(`CARDINAL_CORRESPONDENCE_FAIL:${after.focus}`);
             }
           }
-          if(visited.size<3) throw new Error(`INSUFFICIENT_REAL_DRAG_TRANSITIONS:${[...visited].join(',')}`);
+          if(visited.size<3) throw new Error(`INSUFFICIENT_PRIMARY_STAR_DRAG_TRANSITIONS:${[...visited].join(',')}`);
           if(errors.length) throw new Error(`BROWSER_ERRORS:${errors.join('|')}`);
           console.log(JSON.stringify({status:'PASS',candidate:'aee18d9eb7f72e75f78e2fbb1c8cdaacbe9bdd5d',visited:[...visited],transitions,tablet:{sceneCenterError:initial.scene.cx-450,headingCenterError:initial.heading.cx-450},errors},null,2));
           await browser.close();

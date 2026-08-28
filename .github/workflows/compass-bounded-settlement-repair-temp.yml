@@ -40,12 +40,6 @@ jobs:
               print('bounded settlement repair already present')
               raise SystemExit(0)
 
-          helper_anchor = '''  function lerp(
-            a,
-            b,
-            amount
-          ) {'''
-
           helper = '''  // COMPASS_PHYSICAL_SETTLEMENT_BEFORE_COMMIT_v1
           const SETTLEMENT_TRANSFORM_KEYS = Object.freeze([
             "x",
@@ -110,31 +104,24 @@ jobs:
             syncSemanticObjects();
           }
 
-          function lerp(
-            a,
-            b,
-            amount
-          ) {'''
+'''
 
-          commit_anchor = '''    state.constellationQuaternion =
-              settledQuaternion.slice();
+          helper_index = source.find('  function lerp(')
+          if helper_index < 0:
+              raise SystemExit('helper anchor not found')
+          source = source[:helper_index] + helper + source[helper_index:]
 
-            const committed ='''
+          commit_anchor = '''    const committed =
+              requestControllerOrbitCommit('''
+          commit_index = source.find(commit_anchor)
+          if commit_index < 0:
+              raise SystemExit('orbit commit anchor not found')
+          source = (
+              source[:commit_index]
+              + '    completeConstellationSettlementGeometry();\n\n'
+              + source[commit_index:]
+          )
 
-          commit_replacement = '''    state.constellationQuaternion =
-              settledQuaternion.slice();
-
-            completeConstellationSettlementGeometry();
-
-            const committed ='''
-
-          if source.count(helper_anchor) != 1:
-              raise SystemExit(f'helper anchor count={source.count(helper_anchor)}')
-          if source.count(commit_anchor) != 1:
-              raise SystemExit(f'commit anchor count={source.count(commit_anchor)}')
-
-          source = source.replace(helper_anchor, helper, 1)
-          source = source.replace(commit_anchor, commit_replacement, 1)
           path.write_text(source, encoding='utf-8')
 
       - name: Mechanical source sanity
@@ -144,7 +131,7 @@ jobs:
           node --check assets/compass/compass.crystals.js
           git diff --check
           grep -Fq 'COMPASS_PHYSICAL_SETTLEMENT_BEFORE_COMMIT_v1' assets/compass/compass.crystals.js
-          grep -Fq 'completeConstellationSettlementGeometry();' assets/compass/compass.crystals.js
+          test "$(grep -Fc 'completeConstellationSettlementGeometry();' assets/compass/compass.crystals.js)" -eq 1
 
       - name: Commit bounded repair if changed
         shell: bash

@@ -158,7 +158,8 @@ jobs:
           rm -rf "$RUNNER_TEMP/compass-runtime-root"
           mkdir -p "$RUNNER_TEMP/compass-runtime-root"
           git -C "$RUNNER_TEMP/exact-public" archive "$CANDIDATE_SHA" \
-            index.html assets/compass compass-composite laws showroom/globe/h-earth/awards/media \
+            index.html assets/compass compass-composite laws \
+            showroom/globe/h-earth/render showroom/globe/h-earth/awards/media \
             | tar -x -C "$RUNNER_TEMP/compass-runtime-root"
           python3 -m http.server 4173 --bind 127.0.0.1 --directory "$RUNNER_TEMP/compass-runtime-root" \
             > "$RUNNER_TEMP/compass-runtime-server.log" 2>&1 &

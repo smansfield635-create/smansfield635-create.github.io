@@ -17,6 +17,10 @@ jobs:
         with:
           ref: compass-renewal-corrected-gen1772
           fetch-depth: 2
+          filter: blob:none
+          sparse-checkout: |
+            assets/compass
+          sparse-checkout-cone-mode: true
       - name: Prove expected Compass head
         run: test "$(git rev-parse HEAD)" = "aee18d9eb7f72e75f78e2fbb1c8cdaacbe9bdd5d"
       - name: Align canonical east-west settlement
@@ -34,7 +38,6 @@ jobs:
           p.write_text(s.replace(old, new))
           PY
           git diff --check
-          git diff -- assets/compass/compass.controller.js
       - name: Commit bounded repair
         shell: bash
         run: |

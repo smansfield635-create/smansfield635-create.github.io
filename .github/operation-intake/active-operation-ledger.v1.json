@@ -480,64 +480,6 @@
       "scopeHash": "2206589091e26f45d03402568f121e3f3f13210569fddef7db74f3d5819c26b1",
       "state": "ADMITTED_LOCKED"
     },
-    "25727be93fc4ab89650b2a1a88c4970a0928753755942ea1f38d2e27c9aa832c": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "1c636db0972a6db575f47faba37da6d8b79bb7f8",
-          "lockGeneration": 1786,
-          "lockScope": "ESTATE_SOUNDTRACK:REMOTE_CANONICAL_SOURCE_CUSTODY:V1",
-          "operationId": "ESTATE_SOUNDTRACK_REMOTE_CANONICAL_SOURCE_CUSTODY_20260827_002",
-          "procedureLocatorDigest": "f42c5742e74c258941071e5723b502e8e6b0206b38aec52fea8d5d70d4f7f9c6",
-          "requestDigest": "79405f8963647fffac8f02e2c1eb79ce3266d7d1934c22fa8f72ed02a062d8af",
-          "scopeHash": "25727be93fc4ab89650b2a1a88c4970a0928753755942ea1f38d2e27c9aa832c"
-        },
-        "bindingDigest": "45a4e1ce20c1036136247b8b808e7efd7ce01c5c9d9a527fd420539383091e72",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "b10624afe044d736a38626717ab537aba1c24c165e631d3249240448a6f5c5b4",
-          "commentId": 5448176005,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2233,
-          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 33140125619,
-          "workflowSha": "1c636db0972a6db575f47faba37da6d8b79bb7f8"
-        },
-        "lineageAnchorCommitSha": "d80228ca7dcc78c3cb9a2375b912f9e16d9b1555",
-        "origin": "CANONICAL_SUCCESSOR",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "1c636db0972a6db575f47faba37da6d8b79bb7f8",
-      "lockGeneration": 1786,
-      "lockScope": "ESTATE_SOUNDTRACK:REMOTE_CANONICAL_SOURCE_CUSTODY:V1",
-      "operationId": "ESTATE_SOUNDTRACK_REMOTE_CANONICAL_SOURCE_CUSTODY_20260827_002",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "192092a3d998ebb0cef76fed4140a5f3b4fa9256",
-        "lockGeneration": 1785,
-        "lockScope": "ESTATE_SOUNDTRACK:REMOTE_CANONICAL_SOURCE_CUSTODY:V1",
-        "operationId": "ESTATE_SOUNDTRACK_REMOTE_CANONICAL_SOURCE_CUSTODY_20260827_001",
-        "preservedEvidenceRefs": [
-          "issue-comment://2141/5448127051",
-          "issue-comment://2233/5448145063"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "ESTATE_SOUNDTRACK_REMOTE_CANONICAL_SOURCE_CUSTODY_GEN1785_TO_CURRENT_MAIN_20260827_001"
-      },
-      "procedureLocatorDigest": "f42c5742e74c258941071e5723b502e8e6b0206b38aec52fea8d5d70d4f7f9c6",
-      "released": false,
-      "requestDigest": "79405f8963647fffac8f02e2c1eb79ce3266d7d1934c22fa8f72ed02a062d8af",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "25727be93fc4ab89650b2a1a88c4970a0928753755942ea1f38d2e27c9aa832c",
-      "state": "ADMITTED_LOCKED"
-    },
     "260ed067eef1da73c6db72e44fa19c2a8f05afb99acce0a3fd1ee9ede6200773": {
       "governingHead": "67b999c80ced56c7f2a15d63ea6dab79ceecbe13",
       "lockGeneration": 788,
@@ -30522,6 +30464,65 @@
         "transitionId": "ESTATE_SOUNDTRACK_REMOTE_CANONICAL_SOURCE_CUSTODY_GEN1785_TO_CURRENT_MAIN_20260827_001"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "1c636db0972a6db575f47faba37da6d8b79bb7f8",
+          "lockGeneration": 1786,
+          "lockScope": "ESTATE_SOUNDTRACK:REMOTE_CANONICAL_SOURCE_CUSTODY:V1",
+          "operationId": "ESTATE_SOUNDTRACK_REMOTE_CANONICAL_SOURCE_CUSTODY_20260827_002",
+          "procedureLocatorDigest": "f42c5742e74c258941071e5723b502e8e6b0206b38aec52fea8d5d70d4f7f9c6",
+          "requestDigest": "79405f8963647fffac8f02e2c1eb79ce3266d7d1934c22fa8f72ed02a062d8af",
+          "scopeHash": "25727be93fc4ab89650b2a1a88c4970a0928753755942ea1f38d2e27c9aa832c"
+        },
+        "bindingDigest": "45a4e1ce20c1036136247b8b808e7efd7ce01c5c9d9a527fd420539383091e72",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "b10624afe044d736a38626717ab537aba1c24c165e631d3249240448a6f5c5b4",
+          "commentId": 5448176005,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2233,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33140125619,
+          "workflowSha": "1c636db0972a6db575f47faba37da6d8b79bb7f8"
+        },
+        "lineageAnchorCommitSha": "d80228ca7dcc78c3cb9a2375b912f9e16d9b1555",
+        "origin": "CANONICAL_SUCCESSOR",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "1c636db0972a6db575f47faba37da6d8b79bb7f8",
+      "lockGeneration": 1786,
+      "lockScope": "ESTATE_SOUNDTRACK:REMOTE_CANONICAL_SOURCE_CUSTODY:V1",
+      "operationId": "ESTATE_SOUNDTRACK_REMOTE_CANONICAL_SOURCE_CUSTODY_20260827_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "192092a3d998ebb0cef76fed4140a5f3b4fa9256",
+        "lockGeneration": 1785,
+        "lockScope": "ESTATE_SOUNDTRACK:REMOTE_CANONICAL_SOURCE_CUSTODY:V1",
+        "operationId": "ESTATE_SOUNDTRACK_REMOTE_CANONICAL_SOURCE_CUSTODY_20260827_001",
+        "preservedEvidenceRefs": [
+          "issue-comment://2141/5448127051",
+          "issue-comment://2233/5448145063"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "ESTATE_SOUNDTRACK_REMOTE_CANONICAL_SOURCE_CUSTODY_GEN1785_TO_CURRENT_MAIN_20260827_001"
+      },
+      "procedureLocatorDigest": "f42c5742e74c258941071e5723b502e8e6b0206b38aec52fea8d5d70d4f7f9c6",
+      "released": true,
+      "requestDigest": "79405f8963647fffac8f02e2c1eb79ce3266d7d1934c22fa8f72ed02a062d8af",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "25727be93fc4ab89650b2a1a88c4970a0928753755942ea1f38d2e27c9aa832c",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

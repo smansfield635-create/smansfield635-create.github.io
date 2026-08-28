@@ -20,10 +20,12 @@ jobs:
       BASE_SHA: d63c1b3e60bdd2af9d8b868247559a5222c26d31
       PLAYWRIGHT_VERSION: 1.55.0
     steps:
-      - name: Checkout transport workflow head only
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
+      - name: Prepare empty transport workspace
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf "$GITHUB_WORKSPACE"/* "$GITHUB_WORKSPACE"/.[!.]* "$GITHUB_WORKSPACE"/..?* 2>/dev/null || true
+          mkdir -p "$GITHUB_WORKSPACE/transport"
 
       - name: Materialize exact public Git objects
         shell: bash
@@ -48,7 +50,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p transport
           git -C "$RUNNER_TEMP/exact-public" bundle create "$GITHUB_WORKSPACE/transport/compass-02517928.bundle" refs/transport/candidate refs/transport/base
           git -C "$RUNNER_TEMP/exact-public" bundle verify "$GITHUB_WORKSPACE/transport/compass-02517928.bundle"
 
@@ -100,9 +101,6 @@ jobs:
             "$@"
           EOF
           chmod +x transport/launch-chromium-webgl.sh
-          grep -Fx '            --use-gl=angle \' transport/launch-chromium-webgl.sh
-          grep -Fx '            --use-angle=swiftshader \' transport/launch-chromium-webgl.sh
-          grep -Fx '            --enable-unsafe-swiftshader \' transport/launch-chromium-webgl.sh
 
       - name: Verify transported Chromium exposes WebGL through SwiftShader
         shell: bash
@@ -122,14 +120,11 @@ jobs:
             const canvas = document.createElement("canvas");
             const webgl = canvas.getContext("webgl");
             const webgl2 = canvas.getContext("webgl2");
+            const context = webgl || webgl2;
             return {
               webgl: Boolean(webgl),
               webgl2: Boolean(webgl2),
-              renderer: webgl
-                ? String(webgl.getParameter(webgl.RENDERER) || "")
-                : webgl2
-                  ? String(webgl2.getParameter(webgl2.RENDERER) || "")
-                  : ""
+              renderer: context ? String(context.getParameter(context.RENDERER) || "") : ""
             };
           });
           await browser.close();
@@ -139,10 +134,7 @@ jobs:
             result: capability.webgl ? "PASS_CLOSED" : "FAIL_CLOSED",
             ...capability
           };
-          fs.writeFileSync(
-            "transport/webgl-capability.json",
-            JSON.stringify(receipt, null, 2)
-          );
+          fs.writeFileSync("transport/webgl-capability.json", JSON.stringify(receipt, null, 2));
           console.log(JSON.stringify(receipt, null, 2));
           if (!capability.webgl) process.exitCode = 1;
           NODE

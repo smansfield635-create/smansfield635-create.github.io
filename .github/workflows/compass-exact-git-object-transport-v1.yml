@@ -13,7 +13,7 @@ permissions:
 jobs:
   package-exact-git-objects:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     env:
       PUBLIC_REPOSITORY: smansfield635-create/smansfield635-create.github.io
       CANDIDATE_SHA: 0251792801761778b1492b2b97f60b4ebc6dbbb9
@@ -91,13 +91,20 @@ jobs:
             echo "TRANSPORTED_CHROMIUM_EXECUTABLE_NOT_FOUND" >&2
             exit 1
           fi
-          exec "$browser" \
+          filtered=()
+          for arg in "$@"; do
+            case "$arg" in
+              --use-gl=*|--use-angle=*|--enable-unsafe-swiftshader|--disable-webgl|--disable-gpu)
+                ;;
+              *) filtered+=("$arg") ;;
+            esac
+          done
+          exec "$browser" "${filtered[@]}" \
             --use-gl=angle \
             --use-angle=swiftshader \
             --enable-unsafe-swiftshader \
             --enable-webgl \
-            --ignore-gpu-blocklist \
-            "$@"
+            --ignore-gpu-blocklist
           EOF
           chmod +x transport/launch-chromium-webgl.sh
 
@@ -108,7 +115,6 @@ jobs:
           node --input-type=module <<'NODE'
           import fs from "node:fs";
           import { chromium } from "./transport/playwright-runtime/node_modules/playwright/index.mjs";
-
           const browser = await chromium.launch({
             executablePath: "./transport/launch-chromium-webgl.sh",
             headless: true,
@@ -120,22 +126,69 @@ jobs:
             const webgl = canvas.getContext("webgl");
             const webgl2 = canvas.getContext("webgl2");
             const context = webgl || webgl2;
-            return {
-              webgl: Boolean(webgl),
-              webgl2: Boolean(webgl2),
-              renderer: context ? String(context.getParameter(context.RENDERER) || "") : ""
-            };
+            return {webgl:Boolean(webgl),webgl2:Boolean(webgl2),renderer:context?String(context.getParameter(context.RENDERER)||""):""};
           });
           await browser.close();
+          const receipt={schema:"COMPASS_TRANSPORT_WEBGL_CAPABILITY_v1",result:capability.webgl?"PASS_CLOSED":"FAIL_CLOSED",...capability};
+          fs.writeFileSync("transport/webgl-capability.json",JSON.stringify(receipt,null,2));
+          console.log(JSON.stringify(receipt,null,2));
+          if(!capability.webgl) process.exitCode=1;
+          NODE
 
-          const receipt = {
-            schema: "COMPASS_TRANSPORT_WEBGL_CAPABILITY_v1",
-            result: capability.webgl ? "PASS_CLOSED" : "FAIL_CLOSED",
-            ...capability
-          };
-          fs.writeFileSync("transport/webgl-capability.json", JSON.stringify(receipt, null, 2));
-          console.log(JSON.stringify(receipt, null, 2));
-          if (!capability.webgl) process.exitCode = 1;
+      - name: Package exact external runtime dependencies for connected reproduction
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p transport/external-runtime/ccf-ontology transport/external-runtime/wikimedia
+          curl --fail --location --retry 3 \
+            'https://ccf-ontology.hubmapconsortium.org/objects/v1.2/Allen_M_Brain.glb' \
+            -o transport/external-runtime/ccf-ontology/Allen_M_Brain.glb
+          curl --fail --location --retry 3 \
+            'https://upload.wikimedia.org/wikipedia/commons/c/c2/Saint-Saens_-_The_Carnival_of_the_Animals_-_07_Aquarium.ogg' \
+            -o transport/external-runtime/wikimedia/Aquarium.ogg
+          sha256sum \
+            transport/external-runtime/ccf-ontology/Allen_M_Brain.glb \
+            transport/external-runtime/wikimedia/Aquarium.ogg \
+            > transport/external-runtime/sha256.txt
+
+      - name: Verify exact composed Compass root under transported browser host
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf "$RUNNER_TEMP/compass-runtime-root"
+          mkdir -p "$RUNNER_TEMP/compass-runtime-root"
+          git -C "$RUNNER_TEMP/exact-public" archive "$CANDIDATE_SHA" \
+            index.html assets/compass compass-composite laws showroom/globe/h-earth/awards/media \
+            | tar -x -C "$RUNNER_TEMP/compass-runtime-root"
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory "$RUNNER_TEMP/compass-runtime-root" \
+            > "$RUNNER_TEMP/compass-runtime-server.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for i in $(seq 1 40); do curl -fsS http://127.0.0.1:4173/ >/dev/null && break; sleep .25; done
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          import {chromium} from "./transport/playwright-runtime/node_modules/playwright/index.mjs";
+          const browser=await chromium.launch({executablePath:"./transport/launch-chromium-webgl.sh",headless:true,args:["--no-sandbox","--disable-dev-shm-usage"]});
+          const page=await browser.newPage({viewport:{width:1440,height:900}});
+          const consoleErrors=[]; const pageErrors=[]; const failures=[];
+          page.on("console",m=>{if(m.type()==="error")consoleErrors.push(m.text())});
+          page.on("pageerror",e=>pageErrors.push(String(e?.message||e)));
+          page.on("requestfailed",r=>failures.push({url:r.url(),error:r.failure()?.errorText||""}));
+          const response=await page.goto("http://127.0.0.1:4173/",{waitUntil:"networkidle",timeout:60000});
+          await page.waitForTimeout(2500);
+          const state=await page.evaluate(()=>({
+            webgl:!!document.createElement("canvas").getContext("webgl"),
+            webgl2:!!document.createElement("canvas").getContext("webgl2"),
+            canvasCount:document.querySelectorAll("canvas").length,
+            spacecraftSource:document.querySelector('[data-compass-root]')?.dataset?.compassSpacecraftSource||"",
+            spacecraftFailure:document.querySelector('[data-compass-root]')?.dataset?.compassSpacecraftFailure||"",
+            spacecraftApi:Boolean(globalThis.DGB_LAWS_SPACECRAFT)
+          }));
+          const receipt={schema:"COMPASS_COMPOSED_ROOT_HOST_PROBE_v1",result:response?.ok()&&state.webgl&&consoleErrors.length===0&&pageErrors.length===0?"PASS_CLOSED":"FAIL_CLOSED",httpStatus:response?.status()??null,state,consoleErrors,pageErrors,requestFailures:failures};
+          fs.writeFileSync("transport/composed-root-host-probe.json",JSON.stringify(receipt,null,2));
+          console.log(JSON.stringify(receipt,null,2));
+          await browser.close();
+          if(receipt.result!=="PASS_CLOSED") process.exitCode=1;
           NODE
 
       - name: Emit transport-only provenance receipt
@@ -159,14 +212,9 @@ jobs:
             "browserLaunchProfile": "SWIFTSHADER_WEBGL_EXPLICIT_OPT_IN_v1",
             "browserLaunchProfileTransported": true,
             "webglCapabilityReceipt": "webgl-capability.json",
-            "webglCapabilityRequired": true,
-            "browserLaunchFlags": [
-              "--use-gl=angle",
-              "--use-angle=swiftshader",
-              "--enable-unsafe-swiftshader",
-              "--enable-webgl",
-              "--ignore-gpu-blocklist"
-            ],
+            "composedRootHostProbeReceipt": "composed-root-host-probe.json",
+            "externalRuntimeDependenciesTransported": true,
+            "browserLaunchFlags": ["--use-gl=angle","--use-angle=swiftshader","--enable-unsafe-swiftshader","--enable-webgl","--ignore-gpu-blocklist"],
             "qualificationAuthorityCreated": false,
             "productMutationAuthorityCreated": false,
             "mergeAuthorityCreated": false,

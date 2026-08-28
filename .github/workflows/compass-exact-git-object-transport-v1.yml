@@ -60,10 +60,9 @@ jobs:
           rm -rf "$RUNNER_TEMP/reconstructed"
           git init -q "$RUNNER_TEMP/reconstructed"
           git -C "$RUNNER_TEMP/reconstructed" fetch --no-tags "$GITHUB_WORKSPACE/transport/compass-02517928.bundle" refs/transport/candidate:refs/transport/candidate refs/transport/base:refs/transport/base
-          git -C "$RUNNER_TEMP/reconstructed" checkout -q --detach refs/transport/candidate
-          test "$(git -C "$RUNNER_TEMP/reconstructed" rev-parse HEAD^{commit})" = "$CANDIDATE_SHA"
-          test -z "$(git -C "$RUNNER_TEMP/reconstructed" status --porcelain=v1 --untracked-files=all)"
-          git -C "$RUNNER_TEMP/reconstructed" cat-file -p HEAD | grep -Fx "parent $BASE_SHA"
+          test "$(git -C "$RUNNER_TEMP/reconstructed" rev-parse refs/transport/candidate^{commit})" = "$CANDIDATE_SHA"
+          test "$(git -C "$RUNNER_TEMP/reconstructed" rev-parse refs/transport/base^{commit})" = "$BASE_SHA"
+          git -C "$RUNNER_TEMP/reconstructed" cat-file -p refs/transport/candidate | grep -Fx "parent $BASE_SHA"
 
       - uses: actions/setup-node@v4
         with:

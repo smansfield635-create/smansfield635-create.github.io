@@ -1,4 +1,4 @@
-name: Compass canonical settlement repair
+name: Compass repaired settlement smoke
 
 on:
   push:
@@ -6,45 +6,75 @@ on:
       - compass-a2f838-exact-qualification-temp
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  repair:
+  smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: compass-renewal-corrected-gen1772
-          fetch-depth: 2
+          ref: 6cc7deaed4ea562ea2f7b9147d234e68192abc30
+          fetch-depth: 1
           filter: blob:none
           sparse-checkout: |
+            index.html
             assets/compass
           sparse-checkout-cone-mode: true
-      - name: Prove expected Compass head
-        run: test "$(git rev-parse HEAD)" = "aee18d9eb7f72e75f78e2fbb1c8cdaacbe9bdd5d"
-      - name: Align canonical east-west settlement
+      - name: Prove exact repaired head
+        run: test "$(git rev-parse HEAD)" = "6cc7deaed4ea562ea2f7b9147d234e68192abc30"
+      - uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+      - name: Install browser dependency
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Serve candidate
+        run: |
+          python3 -m http.server 4173 >/tmp/compass-http.log 2>&1 &
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/compass-http.log || true
+          exit 1
+      - name: Verify real cardinal settlement
         shell: bash
         run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
-          p = Path('assets/compass/compass.controller.js')
-          s = p.read_text()
-          old = '''    east:\n      Object.freeze({\n        yaw: -Math.PI / 2,\n        pitch: 0,\n        roll: 0\n      }),\n\n    south:\n      Object.freeze({\n        yaw: Math.PI,\n        pitch: 0,\n        roll: 0\n      }),\n\n    west:\n      Object.freeze({\n        yaw: Math.PI / 2,\n        pitch: 0,\n        roll: 0\n      })'''
-          new = '''    east:\n      Object.freeze({\n        yaw: Math.PI / 2,\n        pitch: 0,\n        roll: 0\n      }),\n\n    south:\n      Object.freeze({\n        yaw: Math.PI,\n        pitch: 0,\n        roll: 0\n      }),\n\n    west:\n      Object.freeze({\n        yaw: -Math.PI / 2,\n        pitch: 0,\n        roll: 0\n      })'''
-          if s.count(old) != 1:
-              raise SystemExit(f'expected one canonical block, found {s.count(old)}')
-          p.write_text(s.replace(old, new))
-          PY
-          git diff --check
-      - name: Commit bounded repair
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name "smansfield635-create"
-          git config user.email "smansfield635@gmail.com"
-          git add assets/compass/compass.controller.js
-          test "$(git diff --cached --name-only)" = "assets/compass/compass.controller.js"
-          git commit -m "Compass: align canonical east-west settlement"
-          git push origin HEAD:compass-renewal-corrected-gen1772
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          node --input-type=module <<'NODE'
+          import puppeteer from 'puppeteer-core';
+          const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+          const page=await browser.newPage();
+          await page.setViewport({width:900,height:1000,deviceScaleFactor:1});
+          const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
+          await page.goto('http://127.0.0.1:4173/',{waitUntil:'domcontentloaded',timeout:60000});
+          await new Promise(r=>setTimeout(r,1800));
+          const scene=await page.$('[data-compass-scene]'); if(!scene) throw new Error('NO_COMPASS_SCENE');
+          await scene.evaluate(el=>el.scrollIntoView({block:'center'})); await new Promise(r=>setTimeout(r,250));
+          const snap=()=>page.evaluate(()=>{const rr=e=>{const r=e?.getBoundingClientRect();return r?{cx:r.x+r.width/2,cy:r.y+r.height/2,width:r.width,height:r.height,x:r.x,y:r.y}:null};const root=document.querySelector('[data-compass-root]');const heading=document.querySelector('.compass-orbit-intro h2');const cs=[...document.querySelectorAll('[data-compass-cardinal]')].map(e=>({wing:e.dataset.wing,primary:e.dataset.primary==='true',rect:rr(e),visible:[...e.querySelectorAll(':scope>span')].some(s=>{const c=getComputedStyle(s),r=s.getBoundingClientRect();return c.visibility!=='hidden'&&Number(c.opacity)>.5&&r.width>0&&r.height>0})}));return{url:location.href,focus:root?.dataset.orbitFocus||'',phase:root?.dataset.orbitPhase||'',scene:rr(document.querySelector('[data-compass-scene]')),heading:rr(heading),cardinals:cs,primary:cs.filter(x=>x.primary).map(x=>x.wing),visible:cs.filter(x=>x.visible).map(x=>x.wing),overflow:document.documentElement.scrollWidth-innerWidth};});
+          const initial=await snap();
+          if(initial.cardinals.length!==4) throw new Error('FOUR_STAR_FAIL');
+          if(initial.primary.length!==1||initial.visible.length!==1||initial.primary[0]!==initial.focus||initial.visible[0]!==initial.focus) throw new Error('INITIAL_CORRESPONDENCE_FAIL');
+          if(Math.abs(initial.scene.cx-450)>18||Math.abs(initial.heading.cx-450)>12||Math.abs(initial.overflow)>1) throw new Error('TABLET_PRESENTATION_FAIL');
+          const anchor={cx:initial.cardinals.find(x=>x.wing===initial.focus).rect.cx,cy:initial.cardinals.find(x=>x.wing===initial.focus).rect.cy};
+          const visited=new Set([initial.focus]); const transitions=[];
+          for(let attempt=0;attempt<8&&visited.size<4;attempt++){
+            const before=await snap(); const active=before.cardinals.find(x=>x.primary); if(!active) throw new Error('NO_PRIMARY');
+            const dir=attempt%2===0?-1:1; const sx=active.rect.cx,sy=active.rect.cy; const ex=Math.max(before.scene.x+24,Math.min(before.scene.x+before.scene.width-24,sx+dir*before.scene.width*.48));
+            await page.mouse.move(sx,sy); await page.mouse.down(); for(let i=1;i<=24;i++){const t=i/24;await page.mouse.move(sx+(ex-sx)*t,sy,{steps:1});await new Promise(r=>setTimeout(r,20));} await page.mouse.up();
+            await new Promise(r=>setTimeout(r,300)); const early=await snap(); await new Promise(r=>setTimeout(r,700)); const after=await snap();
+            if(after.url!=='http://127.0.0.1:4173/') throw new Error('ACCIDENTAL_NAVIGATION');
+            if(after.focus!==before.focus&&after.phase==='COMMITTED'){
+              const incoming=after.cardinals.find(x=>x.wing===after.focus), incomingEarly=early.cardinals.find(x=>x.wing===after.focus);
+              const anchorError=Math.hypot(incoming.rect.cx-anchor.cx,incoming.rect.cy-anchor.cy); const drift=Math.hypot(incoming.rect.cx-incomingEarly.rect.cx,incoming.rect.cy-incomingEarly.rect.cy);
+              const correspondence=after.primary.length===1&&after.visible.length===1&&after.primary[0]===after.focus&&after.visible[0]===after.focus;
+              console.log('TRANSITION',JSON.stringify({from:before.focus,to:after.focus,anchorError,drift,correspondence}));
+              if(anchorError>24) throw new Error(`FOREGROUND_SETTLEMENT_FAIL:${after.focus}:${anchorError}`);
+              if(drift>8) throw new Error(`RELEASE_STABILITY_FAIL:${after.focus}:${drift}`);
+              if(!correspondence) throw new Error(`CORRESPONDENCE_FAIL:${after.focus}:${after.primary}:${after.visible}`);
+              visited.add(after.focus); transitions.push({from:before.focus,to:after.focus,anchorError,drift});
+            }
+          }
+          if(visited.size<3) throw new Error(`INSUFFICIENT_TRANSITIONS:${[...visited].join(',')}`);
+          if(errors.length) throw new Error(`BROWSER_ERRORS:${errors.join('|')}`);
+          console.log('COMPASS_REPAIRED_SETTLEMENT_PASS',JSON.stringify({visited:[...visited],transitions}));
+          await browser.close();
+          NODE

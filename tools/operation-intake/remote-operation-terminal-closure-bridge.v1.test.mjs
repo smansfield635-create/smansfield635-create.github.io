@@ -5,6 +5,10 @@ import {
   REQUEST_SCHEMA,
   validateClosureRequest
 } from './remote-operation-terminal-closure-bridge.v1.mjs';
+import {
+  closeLocal,
+  scopeHash
+} from './repository-operation-lock-manager.v1.mjs';
 
 const valid = () => ({
   schema: REQUEST_SCHEMA,
@@ -23,6 +27,46 @@ function rejects(mutator, code) {
 
 test('accepts the exact closed request schema', () => {
   assert.deepEqual(validateClosureRequest(valid()), valid());
+});
+
+test('accepts mutation-closed evidence-continuation disposition', () => {
+  const request = valid();
+  request.terminalDisposition = 'MUTATION_CLOSED_EVIDENCE_CONTINUES';
+  assert.equal(validateClosureRequest(request).terminalDisposition, 'MUTATION_CLOSED_EVIDENCE_CONTINUES');
+});
+
+test('mutation-closed evidence-continuation releases scope and preserves terminal history', () => {
+  const lockScope = 'TEST:MUTATION_CLOSED_EVIDENCE_CONTINUES:V1';
+  const key = scopeHash(lockScope);
+  const lock = {
+    schema: 'REPOSITORY_OPERATION_LOCK_v1',
+    operationId: 'TEST_MUTATION_EARLY_RELEASE_001',
+    lockScope,
+    scopeHash: key,
+    state: 'ADMITTED_LOCKED',
+    governingHead: 'a'.repeat(40),
+    requestDigest: 'b'.repeat(64),
+    procedureLocatorDigest: 'c'.repeat(64),
+    lockGeneration: 7,
+    released: false
+  };
+  const source = {
+    schema: 'REPOSITORY_ACTIVE_OPERATION_LEDGER_v1',
+    lockGeneration: 7,
+    activeScopes: { [key]: lock },
+    terminalHistory: []
+  };
+  const result = closeLocal(source, {
+    operationId: lock.operationId,
+    lockScope,
+    lockGeneration: 7,
+    terminalDisposition: 'MUTATION_CLOSED_EVIDENCE_CONTINUES'
+  });
+  assert.equal(result.receipt.lockReleased, true);
+  assert.equal(result.receipt.terminalHistoryPreserved, true);
+  assert.equal(result.ledger.activeScopes[key], undefined);
+  assert.equal(result.ledger.terminalHistory.at(-1).terminalDisposition, 'MUTATION_CLOSED_EVIDENCE_CONTINUES');
+  assert.equal(result.ledger.terminalHistory.at(-1).released, true);
 });
 
 test('preserves existing lowercase operation identifiers', () => {

@@ -125,8 +125,9 @@ def main() -> int:
     require("Identity / Meaning" not in runtime, "GENERIC_SCENE_INVENTORY_RETURNED")
     for marker in ("[data-lrc-inner-tabs]", "[data-lrc-story-rail]", "[data-lrc-story-tab]", "[data-lrc-grid-cell]", "[data-lrc-claim-boundary]", "data-lrc-family"):
         require(marker in stylesheet, f"STYLESHEET_MARKER:{marker}")
-    for marker in ("Georgia", "perspective:3200px", "var(--lrc-family-accent)", "radial-gradient", "subordinate"):
+    for marker in ("Georgia", "perspective", "var(--lrc-family-accent)", "radial-gradient", "subordinate"):
         require(marker in stylesheet, f"METHODS_DERIVED_STYLE_MARKER:{marker}")
+    require(re.search(r"perspective\s*:\s*3200px", stylesheet), "METHODS_DERIVED_PERSPECTIVE")
 
     methods_polish = (ROOT / METHODS_ALLOWED).read_text(encoding="utf-8")
     require("calc(39% + .5in)" in methods_polish, "METHODS_DESKTOP_HALF_INCH_DELTA")

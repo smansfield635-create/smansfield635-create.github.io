@@ -3797,49 +3797,6 @@
       "scopeHash": "c13316d92060cee436bc80408b5199bb2d8fce092537c6727f3b5796a703d527",
       "state": "ADMITTED_LOCKED"
     },
-    "c159881342e0d764a3543dbd894352e00757dfa252d7362e4dc604e7e03d8c27": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "0b855a29a7b082953eef2363eeddc02a58df2f22",
-          "lockGeneration": 1810,
-          "lockScope": "AUDRALIA_HOOK5_DIAGNOSTIC_WAITFORFUNCTION_REPAIR",
-          "operationId": "AUDRALIA_HOOK5_GESTURE_WAITFORFUNCTION_REPAIR_20260828_001",
-          "procedureLocatorDigest": "15c8d7cfb223a0f552c13640220516c891e386036e034100a392060b8c8f026e",
-          "requestDigest": "85a7d82dac10ddf19e2b56c1767cb4916a7530f7a902692afeba3e6c2392ed74",
-          "scopeHash": "c159881342e0d764a3543dbd894352e00757dfa252d7362e4dc604e7e03d8c27"
-        },
-        "bindingDigest": "ed73e82d43f7c21b1c73aecf518917db4f3562054f9aaa83b6d0d82c29f19590",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "fa52f615c03d0f1c025e7b7af32a541d3763d9989fb37d2164a097bbfa3defc6",
-          "commentId": 5456954146,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2171,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 33204640700,
-          "workflowSha": "0b855a29a7b082953eef2363eeddc02a58df2f22"
-        },
-        "lineageAnchorCommitSha": "cd0ed2a3573145c799181d64a1cfcca2fe652ffc",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "0b855a29a7b082953eef2363eeddc02a58df2f22",
-      "lockGeneration": 1810,
-      "lockScope": "AUDRALIA_HOOK5_DIAGNOSTIC_WAITFORFUNCTION_REPAIR",
-      "operationId": "AUDRALIA_HOOK5_GESTURE_WAITFORFUNCTION_REPAIR_20260828_001",
-      "procedureLocatorDigest": "15c8d7cfb223a0f552c13640220516c891e386036e034100a392060b8c8f026e",
-      "released": false,
-      "requestDigest": "85a7d82dac10ddf19e2b56c1767cb4916a7530f7a902692afeba3e6c2392ed74",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "c159881342e0d764a3543dbd894352e00757dfa252d7362e4dc604e7e03d8c27",
-      "state": "ADMITTED_LOCKED"
-    },
     "c1861a8006582709e66afe47cb60d1ec14e2d3d3f28bdcaf69542df63faf2026": {
       "governingHead": "e8ba6e748f5605e642e22de58931aef379cbefc8",
       "lockGeneration": 1441,
@@ -31663,6 +31620,50 @@
         "transitionId": "COMPASS_GEN1804_TO_CURRENT_MAIN_20260828_001"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "0b855a29a7b082953eef2363eeddc02a58df2f22",
+          "lockGeneration": 1810,
+          "lockScope": "AUDRALIA_HOOK5_DIAGNOSTIC_WAITFORFUNCTION_REPAIR",
+          "operationId": "AUDRALIA_HOOK5_GESTURE_WAITFORFUNCTION_REPAIR_20260828_001",
+          "procedureLocatorDigest": "15c8d7cfb223a0f552c13640220516c891e386036e034100a392060b8c8f026e",
+          "requestDigest": "85a7d82dac10ddf19e2b56c1767cb4916a7530f7a902692afeba3e6c2392ed74",
+          "scopeHash": "c159881342e0d764a3543dbd894352e00757dfa252d7362e4dc604e7e03d8c27"
+        },
+        "bindingDigest": "ed73e82d43f7c21b1c73aecf518917db4f3562054f9aaa83b6d0d82c29f19590",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "fa52f615c03d0f1c025e7b7af32a541d3763d9989fb37d2164a097bbfa3defc6",
+          "commentId": 5456954146,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2171,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33204640700,
+          "workflowSha": "0b855a29a7b082953eef2363eeddc02a58df2f22"
+        },
+        "lineageAnchorCommitSha": "cd0ed2a3573145c799181d64a1cfcca2fe652ffc",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "0b855a29a7b082953eef2363eeddc02a58df2f22",
+      "lockGeneration": 1810,
+      "lockScope": "AUDRALIA_HOOK5_DIAGNOSTIC_WAITFORFUNCTION_REPAIR",
+      "operationId": "AUDRALIA_HOOK5_GESTURE_WAITFORFUNCTION_REPAIR_20260828_001",
+      "procedureLocatorDigest": "15c8d7cfb223a0f552c13640220516c891e386036e034100a392060b8c8f026e",
+      "released": true,
+      "requestDigest": "85a7d82dac10ddf19e2b56c1767cb4916a7530f7a902692afeba3e6c2392ed74",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c159881342e0d764a3543dbd894352e00757dfa252d7362e4dc604e7e03d8c27",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

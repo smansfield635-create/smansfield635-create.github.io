@@ -172,6 +172,14 @@
       "priority": 100
     },
     {
+      "projectId": "ESTATE_SOUNDTRACK",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["assets/audio/estate-soundtrack/"],
+      "ownedExactPaths": [],
+      "entrypoint": ".github/ai-router/projects/estate-soundtrack/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
       "projectId": "STATE_BOUND_ADMISSIBILITY_KERNEL",
       "status": "ACTIVE_REGISTERED_PROJECT",
       "ownedPathPrefixes": ["infrastructure/state-bound-admissibility-kernel-v1/"],

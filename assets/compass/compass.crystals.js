@@ -8066,10 +8066,19 @@
     );
   }
 
+  // COMPASS_POST_GESTURE_ROOT_CLICK_GUARD_v1
   function handleSceneClickCapture(
     event
   ) {
+    const insideCompass =
+      !state.root ||
+      !event.target ||
+      state.root.contains(
+        event.target
+      );
+
     if (
+      insideCompass &&
       performance.now() <
       state.suppressClickUntil
     ) {
@@ -8151,6 +8160,18 @@
       true
     );
 
+    document.addEventListener(
+      "click",
+      handleSceneClickCapture,
+      true
+    );
+
+    document.addEventListener(
+      "auxclick",
+      handleSceneClickCapture,
+      true
+    );
+
     globalThis.addEventListener(
       "blur",
       handleWindowBlur
@@ -8205,6 +8226,18 @@
 
     state.scene.removeEventListener(
       "click",
+      handleSceneClickCapture,
+      true
+    );
+
+    document.removeEventListener(
+      "click",
+      handleSceneClickCapture,
+      true
+    );
+
+    document.removeEventListener(
+      "auxclick",
       handleSceneClickCapture,
       true
     );

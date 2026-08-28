@@ -4332,11 +4332,11 @@
   ) {
     const canonicalAngle =
       wing === "east"
-        ? -Math.PI / 2
+        ? Math.PI / 2
         : wing === "south"
           ? Math.PI
           : wing === "west"
-            ? Math.PI / 2
+            ? -Math.PI / 2
             : 0;
 
     return quaternionFromAxisAngle(

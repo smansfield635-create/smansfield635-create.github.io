@@ -204,17 +204,17 @@
         <li>
           <h4>Decision</h4>
           <dl>
-            <div><dt>Practical</dt><dd>Treat timing as part of the loop, not as decoration. Explain how a response arriving too late can reverse the value of feedback.</dd></div>
-            <div><dt>Engineering</dt><dd>Treat timing as part of the loop, not as decoration. Decision.</dd></div>
-            <div><dt>Empirical</dt><dd>Treat timing as part of the loop, not as decoration. Use lag.</dd></div>
+            <div><dt>Practical</dt><dd>Decision delay is the time the controller spends evaluating an observed return before selecting the next command. It belongs to computation or deliberation after observation, not to movement of the signal between locations.</dd></div>
+            <div><dt>Engineering</dt><dd>Measure decision latency from the instant the required feedback state is available to the controller until the decision function commits a command, preserving queueing, evaluation, and branch-selection time separately.</dd></div>
+            <div><dt>Empirical</dt><dd>Use controller-side timestamps or decision traces that pair feedback availability with command commitment; do not count network propagation or actuator motion as decision time.</dd></div>
           </dl>
         </li>
         <li>
           <h4>Transport</h4>
           <dl>
-            <div><dt>Practical</dt><dd>Treat timing as part of the loop, not as decoration. Explain how a response arriving too late can reverse the value of feedback.</dd></div>
-            <div><dt>Engineering</dt><dd>Treat timing as part of the loop, not as decoration. Transport.</dd></div>
-            <div><dt>Empirical</dt><dd>Treat timing as part of the loop, not as decoration. Use oscillation.</dd></div>
+            <div><dt>Practical</dt><dd>Transport delay is the time a feedback signal spends travelling across the declared return path before it reaches the controller boundary. It concerns propagation through the channel, not the controller's later choice.</dd></div>
+            <div><dt>Engineering</dt><dd>Measure transport latency between declared send and receive boundaries on the feedback channel, including routing, serialization, buffering, and transmission while excluding controller decision processing.</dd></div>
+            <div><dt>Empirical</dt><dd>Use matched send-and-receive timestamps or route traces for the same returned signal to calculate channel delay independently from decision and actuation intervals.</dd></div>
           </dl>
         </li>
         <li>
@@ -251,17 +251,17 @@
         <li>
           <h4>Inspect oscillation</h4>
           <dl>
-            <div><dt>Practical</dt><dd>Determine whether the loop dampens, amplifies, or destabilizes change. Show whether repeated response settles the system or makes the problem grow.</dd></div>
-            <div><dt>Engineering</dt><dd>Determine whether the loop dampens, amplifies, or destabilizes change. Inspect oscillation.</dd></div>
-            <div><dt>Empirical</dt><dd>Determine whether the loop dampens, amplifies, or destabilizes change. Observe successive states.</dd></div>
+            <div><dt>Practical</dt><dd>Look for repeated corrections that overshoot the target in alternating directions, so the system keeps crossing back and forth instead of settling.</dd></div>
+            <div><dt>Engineering</dt><dd>Inspect whether feedback delay, phase, and loop gain produce recurrent sign reversals around a reference or equilibrium; oscillation is alternating error, not simply growing magnitude.</dd></div>
+            <div><dt>Empirical</dt><dd>Use a successive-state trace showing repeated crossings of the reference or alternating error direction. A one-way departure from the reference is not evidence of oscillation.</dd></div>
           </dl>
         </li>
         <li>
           <h4>Inspect runaway paths</h4>
           <dl>
-            <div><dt>Practical</dt><dd>Determine whether the loop dampens, amplifies, or destabilizes change. Show whether repeated response settles the system or makes the problem grow.</dd></div>
-            <div><dt>Engineering</dt><dd>Determine whether the loop dampens, amplifies, or destabilizes change. Inspect runaway paths.</dd></div>
-            <div><dt>Empirical</dt><dd>Determine whether the loop dampens, amplifies, or destabilizes change. Observe alternative explanations before calling the path stabilizing or destabilizing. <strong>Claim boundary:</strong> Temporal return does not prove a functioning feedback mechanism unless the return path and resulting change are observed.</dd></div>
+            <div><dt>Practical</dt><dd>Look for a reinforcing response in which each return drives the next state farther in the same harmful direction, so the error compounds rather than reversing around a target.</dd></div>
+            <div><dt>Engineering</dt><dd>Inspect for positive or effectively reinforcing feedback that increases deviation on successive passes without bounded settling; runaway is directional divergence, even when no oscillatory crossing occurs.</dd></div>
+            <div><dt>Empirical</dt><dd>Use successive measurements showing deviation increasing away from the declared reference in a consistent direction, while ruling out external drift or a moving reference. <strong>Claim boundary:</strong> Alternating crossings alone establish oscillation, not runaway; temporal return alone proves neither mechanism.</dd></div>
           </dl>
         </li>
       </ol>
@@ -284,6 +284,51 @@
   </main>
   <footer class="lr-footer"><span>Diamond Gate Bridge · Laws Chamber</span><a href="/laws/">Return to the Laws Compass</a></footer>
 </div>
+<script>
+(() => {
+  const nativeFetch = window.fetch.bind(window);
+  const route = "/laws/categories/flow/feedback/";
+  const decisionReadings = {
+    practical: "Decision delay is the time the controller spends evaluating an observed return before selecting the next command. It belongs to computation or deliberation after observation, not to movement of the signal between locations.",
+    engineering: "Measure decision latency from the instant the required feedback state is available to the controller until the decision function commits a command, preserving queueing, evaluation, and branch-selection time separately.",
+    empirical: "Use controller-side timestamps or decision traces that pair feedback availability with command commitment; do not count network propagation or actuator motion as decision time."
+  };
+  const transportReadings = {
+    practical: "Transport delay is the time a feedback signal spends travelling across the declared return path before it reaches the controller boundary. It concerns propagation through the channel, not the controller's later choice.",
+    engineering: "Measure transport latency between declared send and receive boundaries on the feedback channel, including routing, serialization, buffering, and transmission while excluding controller decision processing.",
+    empirical: "Use matched send-and-receive timestamps or route traces for the same returned signal to calculate channel delay independently from decision and actuation intervals."
+  };
+  const oscillationReadings = {
+    practical: "Look for repeated corrections that overshoot the target in alternating directions, so the system keeps crossing back and forth instead of settling.",
+    engineering: "Inspect whether feedback delay, phase, and loop gain produce recurrent sign reversals around a reference or equilibrium; oscillation is alternating error, not simply growing magnitude.",
+    empirical: "Use a successive-state trace showing repeated crossings of the reference or alternating error direction. A one-way departure from the reference is not evidence of oscillation."
+  };
+  const runawayReadings = {
+    practical: "Look for a reinforcing response in which each return drives the next state farther in the same harmful direction, so the error compounds rather than reversing around a target.",
+    engineering: "Inspect for positive or effectively reinforcing feedback that increases deviation on successive passes without bounded settling; runaway is directional divergence, even when no oscillatory crossing occurs.",
+    empirical: "Use successive measurements showing deviation increasing away from the declared reference in a consistent direction, while ruling out external drift or a moving reference. Alternating crossings alone establish oscillation, not runaway; temporal return alone proves neither mechanism."
+  };
+  window.fetch = async (...args) => {
+    const response = await nativeFetch(...args);
+    const request = args[0];
+    const url = String(request instanceof Request ? request.url : request || "");
+    if (!url.includes("/laws/room-carousel/route-card-map.v2.json")) return response;
+    window.fetch = nativeFetch;
+    const map = await response.clone().json();
+    const delay = map.routes?.[route]?.cards?.find(card => card.id === "delay");
+    const decision = delay?.stories?.find(story => story.id === "decision");
+    const transport = delay?.stories?.find(story => story.id === "transport");
+    const stability = map.routes?.[route]?.cards?.find(card => card.id === "stability");
+    const oscillation = stability?.stories?.find(story => story.id === "inspect-oscillation");
+    const runaway = stability?.stories?.find(story => story.id === "inspect-runaway-paths");
+    if (decision) decision.readings = decisionReadings;
+    if (transport) transport.readings = transportReadings;
+    if (oscillation) oscillation.readings = oscillationReadings;
+    if (runaway) runaway.readings = runawayReadings;
+    return new Response(JSON.stringify(map), { status:response.status, statusText:response.statusText, headers:response.headers });
+  };
+})();
+</script>
 <script defer src="/laws/room-carousel/room-carousel.v1.js?v=LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827"></script>
 </body>
 </html>

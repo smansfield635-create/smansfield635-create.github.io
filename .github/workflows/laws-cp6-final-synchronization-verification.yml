@@ -14,6 +14,11 @@ on:
       - 'scripts/laws_cp6_final_browser_verify_runner.mjs'
       - 'scripts/laws_cp6_final_contract_verify.py'
   workflow_dispatch:
+    inputs:
+      execution_commit:
+        description: Exact Laws product candidate SHA to qualify
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -23,7 +28,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  EXECUTION_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+  EXECUTION_COMMIT: ${{ inputs.execution_commit || github.event.pull_request.head.sha || github.sha }}
   LAWS_CP6_FINAL_BASE_URL: http://127.0.0.1:4173
 
 jobs:
@@ -31,17 +36,30 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - name: Check out exact candidate head
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXECUTION_COMMIT }}
-          fetch-depth: 0
+      - name: Materialize exact candidate with cone sparse index
+        shell: bash
+        env:
+          LAWS_CP6_GOVERNING_HEAD: 862a5c3e56c987214397a5d9b41fe62ed2ef31a5
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c protocol.version=2 fetch --no-tags --filter=blob:none origin "$EXECUTION_COMMIT"
+          git update-ref refs/remotes/origin/laws-cp6-candidate FETCH_HEAD
+          git -c protocol.version=2 fetch --no-tags --filter=blob:none origin "$LAWS_CP6_GOVERNING_HEAD"
+          git update-ref refs/remotes/origin/laws-cp6-governing FETCH_HEAD
+          git sparse-checkout init --cone --sparse-index
+          git sparse-checkout set laws scripts assets/laws-destination frontier
+          git checkout --detach refs/remotes/origin/laws-cp6-candidate
+          test "$(git config --bool index.sparse)" = "true"
+          test "$(git rev-parse refs/remotes/origin/laws-cp6-governing^{commit})" = "$LAWS_CP6_GOVERNING_HEAD"
+          test "$(git rev-parse HEAD^{commit})" = "$EXECUTION_COMMIT"
 
       - name: Verify exact checkout identity
         run: test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
 
       - name: Fetch current main
-        run: git fetch origin main
+        run: git -c protocol.version=2 fetch --no-tags --filter=blob:none origin main
 
       - name: Verify existing CP6 authority and custody contract
         run: python3 scripts/laws_cp6_final_contract_verify.py

@@ -4267,20 +4267,20 @@
     "eea23008987e2f59e963dc7c990b80b389120173dbe47ae5a75f2c45dfdc8bb2": {
       "authorityProvenance": {
         "authorityIdentity": {
-          "governingHead": "51700a627e32f9117cdc12f5156cecb7661f3ea0",
-          "lockGeneration": 1777,
+          "governingHead": "862a5c3e56c987214397a5d9b41fe62ed2ef31a5",
+          "lockGeneration": 1780,
           "lockScope": "COMPASS_RENEWAL_CORRECTED_2162",
-          "operationId": "COMPASS_RENEWAL_CORRECTED_20260827_011",
-          "procedureLocatorDigest": "4bf83639f7df43a40598bc7deb319d9b319a154e41d322fd43e80517cee02a41",
-          "requestDigest": "ecd98c909c88b6a49a1d2fbfb0d42afc3bac67a65a9d0b865e1ec32e71f45172",
+          "operationId": "COMPASS_RENEWAL_CORRECTED_20260827_012",
+          "procedureLocatorDigest": "bee99410bf8dcf24e1e16c56d92dbf65565d08091c9d10c24cd17d275e4314bc",
+          "requestDigest": "81a5cdd232204478fb59b37b5523c5e6773a25a070e5d21aabe06730b5a47a1f",
           "scopeHash": "eea23008987e2f59e963dc7c990b80b389120173dbe47ae5a75f2c45dfdc8bb2"
         },
-        "bindingDigest": "98a4df27615cfc05681b98362c0848e6fbd6cdac12081c63ffc518d9e7fe68fd",
+        "bindingDigest": "d65682fc3c3b67ffa39e5454c6453bb9cd745e67ff3221e2dda8eb573010c0f4",
         "invocation": {
           "commentAuthorAssociation": "OWNER",
           "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "0ec09ebcb8de35deaee2545bb0dcbad9915a9200fd13610190a9df88285c7dcb",
-          "commentId": 5447578773,
+          "commentBodySha256": "cbc3e64e1247b4133031b0a0fc79ec2af0627a52dadc830c34afeb039a7f8fc7",
+          "commentId": 5447716605,
           "eventAction": "created",
           "eventName": "issue_comment",
           "issueNumber": 2162,
@@ -4289,38 +4289,38 @@
           "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
           "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
           "workflowRunAttempt": 1,
-          "workflowRunId": 33135522468,
-          "workflowSha": "51700a627e32f9117cdc12f5156cecb7661f3ea0"
+          "workflowRunId": 33136575123,
+          "workflowSha": "862a5c3e56c987214397a5d9b41fe62ed2ef31a5"
         },
-        "lineageAnchorCommitSha": "7c07682ac98f87c58e7c2420aaf6e699d93a015e",
+        "lineageAnchorCommitSha": "d8d3c85d6319f587078d16ae8774b8d886f71654",
         "origin": "CANONICAL_SUCCESSOR",
         "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
       },
-      "governingHead": "51700a627e32f9117cdc12f5156cecb7661f3ea0",
-      "lockGeneration": 1777,
+      "governingHead": "862a5c3e56c987214397a5d9b41fe62ed2ef31a5",
+      "lockGeneration": 1780,
       "lockScope": "COMPASS_RENEWAL_CORRECTED_2162",
-      "operationId": "COMPASS_RENEWAL_CORRECTED_20260827_011",
+      "operationId": "COMPASS_RENEWAL_CORRECTED_20260827_012",
       "predecessor": {
         "authorityInherited": false,
         "exactHeadRevalidationRequired": true,
-        "governingHead": "9923e9f346c8d1301ff4c79ec162fcd53340f361",
-        "lockGeneration": 1773,
+        "governingHead": "51700a627e32f9117cdc12f5156cecb7661f3ea0",
+        "lockGeneration": 1777,
         "lockScope": "COMPASS_RENEWAL_CORRECTED_2162",
-        "operationId": "COMPASS_RENEWAL_CORRECTED_20260827_010",
+        "operationId": "COMPASS_RENEWAL_CORRECTED_20260827_011",
         "preservedEvidenceRefs": [
-          "issue:2162#issuecomment-5446809428",
+          "issue:2162#issuecomment-5447580604",
           "PR:2210",
-          "PR:2210#issuecomment-5447006853",
-          "PR:2210#issuecomment-5447485718",
-          "commit:24bfaa8a2cd2aa2dfe18d8d58edcc272ee129f6b"
+          "commit:24bfaa8a2cd2aa2dfe18d8d58edcc272ee129f6b",
+          "PR:2231",
+          "commit:862a5c3e56c987214397a5d9b41fe62ed2ef31a5"
         ],
         "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
         "terminalDisposition": "SUPERSEDED",
-        "transitionId": "COMPASS_RENEWAL_CORRECTED_2162_SUCCESSOR_1773_20260827_002"
+        "transitionId": "COMPASS_RENEWAL_CORRECTED_2162_SUCCESSOR_1777_20260827_003"
       },
-      "procedureLocatorDigest": "4bf83639f7df43a40598bc7deb319d9b319a154e41d322fd43e80517cee02a41",
+      "procedureLocatorDigest": "bee99410bf8dcf24e1e16c56d92dbf65565d08091c9d10c24cd17d275e4314bc",
       "released": false,
-      "requestDigest": "ecd98c909c88b6a49a1d2fbfb0d42afc3bac67a65a9d0b865e1ec32e71f45172",
+      "requestDigest": "81a5cdd232204478fb59b37b5523c5e6773a25a070e5d21aabe06730b5a47a1f",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "eea23008987e2f59e963dc7c990b80b389120173dbe47ae5a75f2c45dfdc8bb2",
       "state": "ADMITTED_LOCKED"
@@ -4567,7 +4567,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1779,
+  "lockGeneration": 1780,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -30148,6 +30148,86 @@
         "successorLockScope": "LAWS:BACK_PAGE_CONTEXTUAL_DELIVERY:V1",
         "successorOperationId": "LAWS_CONTEXTUAL_CORPUS_AND_EXPRESSION_RECONSTRUCTION_20260828_020",
         "transitionId": "LAWS_GEN1778_TO_30615D88_FULL_FAMILY_CONTINUITY_20260828_002"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "51700a627e32f9117cdc12f5156cecb7661f3ea0",
+          "lockGeneration": 1777,
+          "lockScope": "COMPASS_RENEWAL_CORRECTED_2162",
+          "operationId": "COMPASS_RENEWAL_CORRECTED_20260827_011",
+          "procedureLocatorDigest": "4bf83639f7df43a40598bc7deb319d9b319a154e41d322fd43e80517cee02a41",
+          "requestDigest": "ecd98c909c88b6a49a1d2fbfb0d42afc3bac67a65a9d0b865e1ec32e71f45172",
+          "scopeHash": "eea23008987e2f59e963dc7c990b80b389120173dbe47ae5a75f2c45dfdc8bb2"
+        },
+        "bindingDigest": "98a4df27615cfc05681b98362c0848e6fbd6cdac12081c63ffc518d9e7fe68fd",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "0ec09ebcb8de35deaee2545bb0dcbad9915a9200fd13610190a9df88285c7dcb",
+          "commentId": 5447578773,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2162,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33135522468,
+          "workflowSha": "51700a627e32f9117cdc12f5156cecb7661f3ea0"
+        },
+        "lineageAnchorCommitSha": "7c07682ac98f87c58e7c2420aaf6e699d93a015e",
+        "origin": "CANONICAL_SUCCESSOR",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "51700a627e32f9117cdc12f5156cecb7661f3ea0",
+      "lockGeneration": 1777,
+      "lockScope": "COMPASS_RENEWAL_CORRECTED_2162",
+      "operationId": "COMPASS_RENEWAL_CORRECTED_20260827_011",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "9923e9f346c8d1301ff4c79ec162fcd53340f361",
+        "lockGeneration": 1773,
+        "lockScope": "COMPASS_RENEWAL_CORRECTED_2162",
+        "operationId": "COMPASS_RENEWAL_CORRECTED_20260827_010",
+        "preservedEvidenceRefs": [
+          "issue:2162#issuecomment-5446809428",
+          "PR:2210",
+          "PR:2210#issuecomment-5447006853",
+          "PR:2210#issuecomment-5447485718",
+          "commit:24bfaa8a2cd2aa2dfe18d8d58edcc272ee129f6b"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_RENEWAL_CORRECTED_2162_SUCCESSOR_1773_20260827_002"
+      },
+      "procedureLocatorDigest": "4bf83639f7df43a40598bc7deb319d9b319a154e41d322fd43e80517cee02a41",
+      "released": true,
+      "requestDigest": "ecd98c909c88b6a49a1d2fbfb0d42afc3bac67a65a9d0b865e1ec32e71f45172",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "eea23008987e2f59e963dc7c990b80b389120173dbe47ae5a75f2c45dfdc8bb2",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:2162#issuecomment-5447580604",
+          "PR:2210",
+          "commit:24bfaa8a2cd2aa2dfe18d8d58edcc272ee129f6b",
+          "PR:2231",
+          "commit:862a5c3e56c987214397a5d9b41fe62ed2ef31a5"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "862a5c3e56c987214397a5d9b41fe62ed2ef31a5",
+        "successorLockGeneration": 1780,
+        "successorLockScope": "COMPASS_RENEWAL_CORRECTED_2162",
+        "successorOperationId": "COMPASS_RENEWAL_CORRECTED_20260827_012",
+        "transitionId": "COMPASS_RENEWAL_CORRECTED_2162_SUCCESSOR_1777_20260827_003"
       },
       "terminalDisposition": "SUPERSEDED"
     }

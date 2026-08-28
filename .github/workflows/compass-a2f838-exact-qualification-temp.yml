@@ -1,0 +1,65 @@
+name: Compass exact a2f838 qualification temp
+
+on:
+  push:
+    branches:
+      - compass-a2f838-exact-qualification-temp
+
+permissions:
+  contents: read
+
+jobs:
+  exact-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact candidate sparsely
+        uses: actions/checkout@v4
+        with:
+          ref: a2f838c01447cb140005e44d2e8788590074889e
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            index.html
+            assets/compass
+            .github/live-qualification
+            .github/ai-router/platform
+            docs/COMPASS_AUDIT_DERIVED_ACCEPTANCE_CONTRACT_20260822.md
+          sparse-checkout-cone-mode: true
+      - name: Prove exact candidate
+        run: test "$(git rev-parse HEAD)" = "a2f838c01447cb140005e44d2e8788590074889e"
+      - uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+      - name: Install verifier dependency
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Serve exact candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 >/tmp/compass-exact-http.log 2>&1 &
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/compass-exact-http.log || true
+          exit 1
+      - name: Run unchanged Compass mechanical matrix
+        shell: bash
+        env:
+          PUBLIC_BASE_URL: http://127.0.0.1:4173
+          RUNTIME_RESULT_PATH: /tmp/compass-a2f838-exact.json
+        run: |
+          set -euo pipefail
+          node .github/ai-router/platform/repository-live-qualification-engine.v1.mjs validate-manifest .github/live-qualification/manifests/compass-root.v1.json /tmp/manifest-validation.json
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          node .github/live-qualification/verifiers/compass-root.v1.mjs
+          cat "$RUNTIME_RESULT_PATH"
+          test "$(jq -r '.status' "$RUNTIME_RESULT_PATH")" = "PASS"
+          echo COMPASS_A2F838_EXACT_MECHANICAL_PASS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compass-a2f838-exact-qualification
+          path: |
+            /tmp/compass-a2f838-exact.json
+            /tmp/manifest-validation.json
+          if-no-files-found: warn
+          retention-days: 30

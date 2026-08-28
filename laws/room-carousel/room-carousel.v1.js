@@ -32,6 +32,25 @@
     });
   }
 
+  function ensureGreaterNavigation(root, map, route) {
+    const existing = root.querySelector(":scope > .lr-story-nav");
+    if (existing) return existing;
+    const routeOrder = Object.keys(map.routes || {});
+    const index = routeOrder.indexOf(route);
+    if (index < 0 || routeOrder.length < 2) return null;
+    const previous = routeOrder[wrap(index - 1, routeOrder.length)];
+    const next = routeOrder[wrap(index + 1, routeOrder.length)];
+    const nav = document.createElement("nav");
+    nav.className = "lr-story-nav";
+    nav.dataset.lrcRuntime = "true";
+    nav.dataset.lrcSynthesized = "greater-laws-navigation";
+    nav.setAttribute("aria-label", "Laws story context");
+    nav.innerHTML = `<a href="${escapeHtml(previous)}"><span>Previous</span><strong>${escapeHtml(previous)}</strong></a><a href="${escapeHtml(next)}"><span>Next</span><strong>${escapeHtml(next)}</strong></a>`;
+    const audit = root.querySelector(":scope > details.lr-audit");
+    root.insertBefore(nav, audit || null);
+    return nav;
+  }
+
   function routeContext(root) {
     const lens = kind => textOf(root.querySelector(`[id*="panel-${kind}"],.lr-panel[data-tab-kind="${kind}"],[data-tab-kind="${kind}"].section-tab-panel`));
     const relationship = root.querySelector("#relationship-title,#reverse-title");
@@ -174,9 +193,9 @@
     root.dataset.lrcOuterCards = mappedIds.join(" ");
     root.dataset.lrcInternalTabs = "practical engineering empirical";
     root.dataset.lrcCustody = "collapsed-subordinate";
-    root.dataset.lrcGreaterNavigation = root.querySelector(":scope > .lr-story-nav") ? "bottom" : "not-declared";
 
-    const storyNav = root.querySelector(":scope > .lr-story-nav");
+    const storyNav = ensureGreaterNavigation(root, map, route);
+    root.dataset.lrcGreaterNavigation = storyNav ? "bottom" : "not-declared";
     const audit = root.querySelector(":scope > details.lr-audit");
     if (audit) {
       audit.open = false;

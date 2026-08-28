@@ -466,6 +466,14 @@ html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] > .lr-story-nav > 
   min-width: 0;
 }
 
+html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] > .lr-story-nav strong {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] > .lr-story-nav > a:last-child {
   text-align: right;
 }

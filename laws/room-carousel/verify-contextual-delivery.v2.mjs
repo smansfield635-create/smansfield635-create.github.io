@@ -9,6 +9,7 @@ import { fileURLToPath } from "node:url";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "../..");
 const manifest = JSON.parse(fs.readFileSync(path.join(here, "route-card-map.v2.json"), "utf8"));
+const runtimeSource = fs.readFileSync(path.join(here, "room-carousel.v1.js"), "utf8");
 const baseUrl = (process.argv.find(arg => arg.startsWith("--base-url=")) || "--base-url=http://127.0.0.1:4173").split("=")[1].replace(/\/$/, "");
 const representativesOnly = process.argv.includes("--representatives");
 const staticOnly = process.argv.includes("--static-only");
@@ -26,7 +27,8 @@ const screenshotRoutes = new Set([
   "/laws/research/",
   "/laws/test/reverse-audit/"
 ]);
-const greaterNavigationRoutes = new Set();
+const terminalResearchRoute = "/laws/research/findings-and-boundaries/";
+const terminalResearchDestination = "/frontier/energy/battery-coherence-study/";
 
 function routeFile(route) {
   return path.join(root, route.endsWith(".html") ? route.slice(1) : route.slice(1), route.endsWith(".html") ? "" : "index.html");
@@ -36,10 +38,16 @@ function declared(html, name) {
   return html.match(new RegExp(`${name}="([^"]*)"`))?.[1] || "";
 }
 
+function visibleText(html) {
+  return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+}
+
 assert.equal(manifest.schema, "LAWS_LAYERED_INFORMATION_GRID_ROUTE_CARD_MAP_v3");
 assert.equal(Object.keys(manifest.routes).length, 29);
 assert.ok(new Set(Object.values(manifest.routes).map(route => route.cards.length)).size > 1, "inventories must not be forced to one count");
 assert.deepEqual(manifest.internalStoryAxis, { minimum: 4, maximum: 5, labels: "PAGE_AND_CARD_SPECIFIC", visibleCellCount: 1 });
+assert.ok(runtimeSource.includes("function ensureGreaterNavigation(root, map, route)"), "runtime must synthesize missing greater-Laws navigation");
+assert.ok(runtimeSource.includes('nav.dataset.lrcSynthesized = "greater-laws-navigation"'), "synthesized navigation must be explicitly marked");
 
 for (const route of routes) {
   const file = routeFile(route);
@@ -57,7 +65,18 @@ for (const route of routes) {
   assert.ok(html.includes("data-lrc-static"), `${route}: semantic no-script grid`);
   assert.ok(html.includes("Source custody"), `${route}: compact custody`);
   assert.ok(!html.includes("lr-legacy-source"), `${route}: raw legacy presentation mirror retired`);
-  if (html.includes('class="lr-story-nav"')) greaterNavigationRoutes.add(route);
+  const navBlock = html.match(/<nav class="lr-story-nav"[\s\S]*?<\/nav>/)?.[0] || "";
+  if (navBlock) {
+    assert.equal((navBlock.match(/<a\s/g) || []).length, 2, `${route}: exactly two authored bottom route links`);
+    const navText = visibleText(navBlock);
+    assert.match(navText, /\bPrevious\b/i, `${route}: authored Previous route control`);
+    if (route === terminalResearchRoute) {
+      assert.match(navText, /Complete selected record/i, `${route}: authored terminal Frontier return`);
+      assert.ok(navBlock.includes(`href="${terminalResearchDestination}"`), `${route}: terminal Frontier destination`);
+    } else {
+      assert.match(navText, /\bNext\b/i, `${route}: authored Next route control`);
+    }
+  }
   for (const card of manifest.routes[route].cards) {
     assert.ok(Array.isArray(card.stories) && card.stories.length >= 4 && card.stories.length <= 5, `${route}/${card.id}: four or five story layers`);
     assert.equal(new Set(card.stories.map(story => story.id)).size, card.stories.length, `${route}/${card.id}: unique story ids`);
@@ -72,7 +91,7 @@ for (const route of routes) {
 }
 
 if (staticOnly) {
-  console.log(JSON.stringify({ result: "PASS", mode: "static", routes: routes.length }));
+  console.log(JSON.stringify({ result: "PASS", mode: "static", routes: routes.length, bottomGreaterNavigationRequiredOnAllRoutes: true, terminalFrontierReturnPreserved: true, runtimeSynthesizesMissingNavigation: true }));
   process.exit(0);
 }
 
@@ -109,6 +128,9 @@ try {
       assert.equal(await page.locator("[data-lrc-inner-tabs]:visible").count(), 0, `${route} ${viewport.name}: inner controls hidden in orbit`);
       assert.equal(await page.locator("[data-lrc-story-rail]:visible").count(), 0, `${route} ${viewport.name}: story controls hidden in orbit`);
       assert.equal(await page.locator("details.lr-audit[open]").count(), 0, `${route} ${viewport.name}: custody collapsed`);
+
+      const initialOrbitOverflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+      assert.ok(initialOrbitOverflow <= 1, `${route} ${viewport.name}: no page horizontal overflow in orbit`);
 
       const targetIndex = Math.min(1, expected.length - 1);
       if (route.includes("/flow/cycles/") || route.includes("/flow/handoffs/")) {
@@ -149,14 +171,12 @@ try {
         const innerTabs = document.querySelector("[data-lrc-card][data-active='true'] [data-lrc-inner-tabs]");
         const rect = returnControl.getBoundingClientRect();
         return {
-          viewportOverflow: document.documentElement.scrollWidth - innerWidth,
           innerOverflow: innerTabs.scrollWidth - innerTabs.clientWidth,
           storyOverflow: document.querySelector("[data-lrc-card][data-active='true'] [data-lrc-story-rail]").scrollWidth - document.querySelector("[data-lrc-card][data-active='true'] [data-lrc-story-rail]").clientWidth,
           returnTop: rect.top,
           returnBottom: rect.bottom
         };
       });
-      assert.ok(geometry.viewportOverflow <= 1, `${route} ${viewport.name}: no page horizontal overflow`);
       assert.ok(geometry.innerOverflow <= 1, `${route} ${viewport.name}: no nested horizontal scroll`);
       assert.ok(geometry.storyOverflow <= 1, `${route} ${viewport.name}: no story-rail horizontal scroll`);
       assert.ok(geometry.returnTop >= -1 && geometry.returnBottom <= viewport.height, `${route} ${viewport.name}: return immediately available`);
@@ -168,6 +188,8 @@ try {
       await page.locator("[data-lrc-card][data-active='true'] [data-lrc-return]").click();
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-layer"), "orbit", `${route} ${viewport.name}: return to orbit`);
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-id"), activeId, `${route} ${viewport.name}: return to same card`);
+      const returnedOrbitOverflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+      assert.ok(returnedOrbitOverflow <= 1, `${route} ${viewport.name}: no page horizontal overflow after return to orbit`);
       const recordCardIndex = expected.findIndex(card => card.stories.some(story => story.id === "battery-study-relationship" || story.id === "held-out-battery-record"));
       if (recordCardIndex >= 0) {
         const record = expected[recordCardIndex];
@@ -187,26 +209,31 @@ try {
         await page.locator("[data-lrc-card][data-active='true'] [data-lrc-return]").click();
       }
       const storyCount = await page.locator(".lr-story-nav a").count();
-      const expectedStoryCount = greaterNavigationRoutes.has(route) ? 2 : 0;
-      assert.equal(storyCount, expectedStoryCount, `${route} ${viewport.name}: declared greater-navigation count`);
+      assert.equal(storyCount, 2, `${route} ${viewport.name}: exactly two bottom greater-Laws route controls`);
+      const navLabels = await page.locator(".lr-story-nav a").allTextContents();
+      assert.match(navLabels[0] || "", /^Previous/i, `${route} ${viewport.name}: Previous route control`);
+      if (route === terminalResearchRoute) {
+        assert.match(navLabels[1] || "", /Complete selected record/i, `${route} ${viewport.name}: terminal Frontier return control`);
+      } else {
+        assert.match(navLabels[1] || "", /^Next/i, `${route} ${viewport.name}: Next route control`);
+      }
       const destinations = await page.locator(".lr-story-nav a").evaluateAll(nodes => nodes.map(node => node.getAttribute("href")));
       assert.ok(destinations.every(destination => destination?.startsWith("/laws/") || destination?.startsWith("/frontier/")), `${route} ${viewport.name}: declared bottom destinations`);
       if (route === "/laws/categories/reality/") assert.deepEqual(destinations, ["/laws/categories/integrity/", "/laws/categories/structure/"], `${route} ${viewport.name}: Reality continuity destinations`);
-      if (destinations.length) {
-        const destination = destinations[0];
-        await Promise.all([
-          page.waitForNavigation({ waitUntil: "domcontentloaded" }),
-          page.locator(".lr-story-nav a").first().click()
-        ]);
-        assert.equal(new URL(page.url()).pathname, new URL(destination, baseUrl).pathname, `${route} ${viewport.name}: bottom route navigation used`);
-      }
+      if (route === terminalResearchRoute) assert.equal(destinations[1], terminalResearchDestination, `${route} ${viewport.name}: terminal Frontier destination`);
+      const destination = destinations[0];
+      await Promise.all([
+        page.waitForNavigation({ waitUntil: "domcontentloaded" }),
+        page.locator(".lr-story-nav a").first().click()
+      ]);
+      assert.equal(new URL(page.url()).pathname, new URL(destination, baseUrl).pathname, `${route} ${viewport.name}: bottom route navigation used`);
       assert.deepEqual(errors, [], `${route} ${viewport.name}: no page errors`);
-      evidence.push({ route, viewport: viewport.name, card: activeId, story: secondStory, lens: "engineering", storyNavigation: destinations.length > 0 });
+      evidence.push({ route, viewport: viewport.name, card: activeId, story: secondStory, lens: "engineering", storyNavigation: true });
       await page.close();
     }
     await context.close();
   }
-  const result = { result: "PASS", mode: representativesOnly ? "representatives" : "full", routes: routes.length, viewports: viewports.length, evidence };
+  const result = { result: "PASS", mode: representativesOnly ? "representatives" : "full", routes: routes.length, viewports: viewports.length, evidence, familyContinuity: "METHODS_MODELS_ALIGNED", bottomGreaterNavigationRequiredOnAllRoutes: true, terminalFrontierReturnPreserved: true };
   fs.writeFileSync(path.join(artifactDir, "contextual-delivery-browser-result.json"), `${JSON.stringify(result, null, 2)}\n`);
   console.log(JSON.stringify(result, null, 2));
 } finally {

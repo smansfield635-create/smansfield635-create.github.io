@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "AUDRALIA_SOUNDTRACK_LIVE_DEPLOY_20260827_001",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 2242,
+  "requestBranch": "ai-dispatch-request-audralia-soundtrack-live-20260827",
+  "requestCommit": "fdee12e34e840822b2b4e445550fdd7b5e32b820",
+  "requestCommitParent": "7437775b431a846e3fec388cc8d2dee2e490753c",
+  "currentMainSha": "7437775b431a846e3fec388cc8d2dee2e490753c",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "7437775b431a846e3fec388cc8d2dee2e490753c",
+    "surface_id": "audralia"
+  },
+  "bridgeRunId": "33142825402",
+  "dispatchedRunId": 33142833181,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/33142833181",
+  "dispatchedRunHeadSha": "7437775b431a846e3fec388cc8d2dee2e490753c",
+  "dispatchedAt": "2026-08-28T04:47:29.318Z",
+  "resolvedAt": "2026-08-28T04:47:33.452Z"
+}

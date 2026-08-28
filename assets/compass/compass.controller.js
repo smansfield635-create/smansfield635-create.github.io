@@ -222,7 +222,7 @@
 
     east:
       Object.freeze({
-        yaw: Math.PI / 2,
+        yaw: -Math.PI / 2,
         pitch: 0,
         roll: 0
       }),
@@ -236,7 +236,7 @@
 
     west:
       Object.freeze({
-        yaw: -Math.PI / 2,
+        yaw: Math.PI / 2,
         pitch: 0,
         roll: 0
       })

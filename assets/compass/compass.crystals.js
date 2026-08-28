@@ -4328,20 +4328,26 @@
   }
 
   function settledConstellationQuaternion(
-    wing
+    wing,
+    currentQuaternion
   ) {
-    const canonicalAngle =
-      wing === "east"
-        ? Math.PI / 2
-        : wing === "south"
-          ? Math.PI
-          : wing === "west"
-            ? -Math.PI / 2
-            : 0;
+    const currentVector =
+      rotatedCardinalUnitVector(
+        wing,
+        currentQuaternion
+      );
 
-    return quaternionFromAxisAngle(
-      [0, 0, 1],
-      canonicalAngle
+    const alignment =
+      quaternionFromUnitVectors(
+        currentVector,
+        constellationAnchorVector()
+      );
+
+    return quaternionNormalize(
+      quaternionMultiply(
+        alignment,
+        currentQuaternion
+      )
     );
   }
 
@@ -7572,7 +7578,8 @@
 
     const settledQuaternion =
       settledConstellationQuaternion(
-        primaryWing
+        primaryWing,
+        currentQuaternion
       );
 
     state.settledPrimaryWing =

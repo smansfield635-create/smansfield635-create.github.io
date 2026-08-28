@@ -236,8 +236,68 @@
     };
   }
 
+  function semanticStageReading(story, material) {
+    const subject = story.label;
+    const parent = material.label;
+    const storyIndex = Math.max(0, material.stories.indexOf(story));
+    const role = Math.min(storyIndex,4);
+    const practicalParts = sentences(story.readings.practical);
+    const engineeringParts = sentences(story.readings.engineering);
+    const empiricalParts = sentences(story.readings.empirical);
+    const practicalSpecific = withoutTerminal(practicalParts.at(-1) || story.readings.practical || subject);
+    const engineeringSpecific = withoutTerminal(engineeringParts.at(-1) || story.readings.engineering || subject);
+    const empiricalSpecific = withoutTerminal(empiricalParts.at(-1) || story.readings.empirical || subject);
+    if (role === 0) return {
+      lead: `${subject} fixes the identity and entry condition for this part of ${parent}. ${practicalSpecific}.`,
+      why: `Identity errors propagate: if ${subject.toLowerCase()} is not fixed first, later ${parent} conclusions may describe a different object, origin, owner, or starting condition.`,
+      engineering: `Encode ${subject} as an explicit identity state. ${engineeringSpecific}. Preserve identifiers, declared inputs, initial conditions, responsible source, and the criterion that establishes this state before transition.`,
+      evidence: `Direct evidence for ${subject.toLowerCase()} should establish the named object or starting condition. ${empiricalSpecific}. Prefer source records, identity receipts, baseline snapshots, and contemporaneous observations that let another reviewer locate the same state.`,
+      failure: `${subject} fails when origin, object identity, baseline, ownership, or entry condition cannot be reproduced from the record.`,
+      limits: `${subject} fixes identity and entry conditions only; it does not establish later transition behavior, comparative performance, or final disposition.`
+    };
+    if (role === 1) return {
+      lead: `${subject} traces the operating transition inside ${parent}. ${practicalSpecific}.`,
+      why: `Operational evidence answers how the state moves; separating ${subject.toLowerCase()} from identity prevents a named object from being mistaken for proof that a process occurred.`,
+      engineering: `Represent ${subject} as an ordered operating transition. ${engineeringSpecific}. Record trigger, pre-state, rule or mechanism, intermediate change, resulting state, and completion event so the process can be replayed.`,
+      evidence: `Evidence for ${subject.toLowerCase()} should show the operation occurring through time. ${empiricalSpecific}. Use transition logs, paired before-and-after states, decisions, timestamps, transfer traces, or execution records rather than identity evidence alone.`,
+      failure: `${subject} fails when the transition, decision, timing, or resulting state is inferred without an observable process trace.`,
+      limits: `${subject} establishes an operating transition inside ${parent}; it does not by itself validate the starting identity, comparative interpretation, or terminal boundary.`
+    };
+    if (role === 2) return {
+      lead: `${subject} is the diagnostic reading inside ${parent}. ${practicalSpecific}.`,
+      why: `A diagnostic claim must discriminate, not merely describe. ${subject} matters only when the record can show why this reading differs from competing interpretations of ${parent}.`,
+      engineering: `Specify ${subject} as a measurable diagnostic test. ${engineeringSpecific}. Bind observation unit, comparison basis, metric or classification rule, uncertainty, threshold behavior, and the result used to distinguish this state.`,
+      evidence: `Support for ${subject.toLowerCase()} requires discriminating observations. ${empiricalSpecific}. Use measurements, matched comparisons, error records, counterexamples, sensitivity checks, or repeated observations that can separate the proposed condition from alternatives.`,
+      failure: `${subject} fails when measurements cannot distinguish the condition, when comparison rules move after inspection, or when contrary observations are suppressed.`,
+      limits: `${subject} supports a bounded diagnostic comparison; it does not establish identity, causal mechanism, universality, or authority to act.`
+    };
+    if (role === 3) return {
+      lead: `${subject} defines where this ${parent} interpretation stops. ${practicalSpecific}.`,
+      why: `Boundaries protect meaning. ${subject} prevents a useful ${parent} reading from being promoted beyond the condition actually demonstrated.`,
+      engineering: `Implement ${subject} as a fail-closed boundary or terminal condition. ${engineeringSpecific}. Declare rejection and hold predicates, excluded states, escalation or rollback behavior, unresolved cases, and the event that closes this stage.`,
+      evidence: `Evidence for ${subject.toLowerCase()} must expose limits and failures as first-class records. ${empiricalSpecific}. Preserve rejected cases, boundary crossings, missing prerequisites, unresolved contradictions, stop receipts, and negative results instead of converting them into success.`,
+      failure: `${subject} is invalid when a prohibited or unresolved state is silently accepted, when the stop criterion changes after outcome review, or when failure evidence is omitted.`,
+      limits: `${subject} defines the stopping edge for this ${parent} story. Crossing that edge requires new evidence or authority; this boundary does not create either.`
+    };
+    return {
+      lead: `${subject} tracks what remains available after the earlier ${parent} stages. ${practicalSpecific}.`,
+      why: `Inheritance differs from a terminal boundary: ${subject} asks what survives transition and whether the next state can prove correspondence to the prior ${parent} state.`,
+      engineering: `Model ${subject} as an inheritance or evidence-custody relation. ${engineeringSpecific}. Bind predecessor state, transmitted fields, preserved constraints, version or receipt identity, successor state, and the correspondence test proving what survived the transition.`,
+      evidence: `Evidence for ${subject.toLowerCase()} must demonstrate preservation across a boundary. ${empiricalSpecific}. Use lineage records, immutable receipts, before-and-after correspondence, retained constraints, or exact study artifacts that show what was carried forward and what was not.`,
+      failure: `${subject} fails when the successor state cannot trace its inherited condition to the predecessor, when constraints disappear silently, or when a summary is substituted for the preserved evidence object.`,
+      limits: `${subject} establishes bounded continuity or evidence custody across a transition; it does not upgrade the underlying evidence, prove a new mechanism, or authorize claims beyond the inherited record.`
+    };
+  }
+
+  function semanticReadingBundle(story, reading) {
+    return [story?.label || "", reading?.lead || "", reading?.why || "", reading?.engineering || "", reading?.evidence || "", reading?.failure || "", reading?.limits || ""].join(" ");
+  }
+
+  function semanticReadingCollides(story, material, authored) {
+    return material.stories.some(other => other !== story && similarity(semanticReadingBundle(story,authored), semanticReadingBundle(other,semanticReading(other,material))) >= .82);
+  }
+
   function storyArchitecture(story, material, context) {
-    const authored = semanticReading(story,material);
     const practicalParts = sentences(story.readings.practical);
     const question = [...practicalParts].reverse().find(part => /\?$/.test(part));
     const readerTitle = story.readerTitle || story.label;
@@ -245,25 +305,29 @@
     const sourceLead = leadParts[0] || story.readings.practical;
     const sourceWhy = story.why || leadParts.slice(1).join(" ") || material.summary;
     const repeatedPractical = readingRepeated(story,material,"practical") || similarity(sourceLead,material.summary) >= .82;
-    const lead = story.lead || (repeatedPractical ? authored.lead : sourceLead);
-    const why = story.why || (repeatedPractical || similarity(sourceWhy,lead) >= .7 ? authored.why : sourceWhy);
 
     const engineeringParts = sentences(story.readings.engineering);
     const formalTitle = story.formalTitle || story.engineeringTitle || story.label;
     const formalCaptionSource = withoutTerminal(engineeringParts.at(-1) || engineeringParts[0] || story.label);
     const repeatedEngineering = readingRepeated(story,material,"engineering");
-    const formalCaption = story.formalCaption || (repeatedEngineering ? `Technical role · ${story.label}` : formalCaptionSource);
-    const engineering = repeatedEngineering ? authored.engineering : story.readings.engineering;
 
     const empirical = String(story.readings.empirical || "").trim();
     const failureMatch = empirical.match(/(?:Failure mode|Failure behavior)\s*:\s*([^]+)$/i);
     const evidenceSource = (failureMatch ? empirical.slice(0, failureMatch.index) : empirical).trim() || empirical;
     const repeatedEmpirical = readingRepeated(story,material,"empirical");
+
+    const baseAuthored = semanticReading(story,material);
+    const requiresReauthored = repeatedPractical || repeatedEngineering || repeatedEmpirical;
+    const authored = requiresReauthored && semanticReadingCollides(story,material,baseAuthored) ? semanticStageReading(story,material) : baseAuthored;
+    const lead = story.lead || (repeatedPractical ? authored.lead : sourceLead);
+    const why = story.why || (repeatedPractical || similarity(sourceWhy,lead) >= .7 ? authored.why : sourceWhy);
+    const formalCaption = story.formalCaption || (repeatedEngineering ? `Technical role · ${story.label}` : formalCaptionSource);
+    const engineering = repeatedEngineering ? authored.engineering : story.readings.engineering;
     const evidence = repeatedEmpirical ? authored.evidence : evidenceSource;
     const failure = story.failure || failureMatch?.[1]?.trim() || authored.failure;
     const limits = story.limits || story.boundary || story.relationship?.stops || material.boundary || context.noStudy || authored.limits;
     const semanticFingerprint = normalized([readerTitle,lead,why,engineering,evidence,failure,limits].join(" "));
-    return { readerTitle, lead, why, formalTitle, formalCaption, engineering, evidence, failure, limits, semanticFingerprint, semanticReauthored: repeatedPractical || repeatedEngineering || repeatedEmpirical };
+    return { readerTitle, lead, why, formalTitle, formalCaption, engineering, evidence, failure, limits, semanticFingerprint, semanticReauthored: requiresReauthored };
   }
 
   function storyPanel(cardId, story, storyIndex, material, context) {

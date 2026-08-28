@@ -78,6 +78,32 @@ jobs:
           test "$(node -p "require('./transport/playwright-runtime/node_modules/playwright/package.json').version")" = "$PLAYWRIGHT_VERSION"
           test -n "$(find transport/playwright-browsers -type f \( -name chrome -o -name headless_shell \) | head -1)"
 
+      - name: Package explicit SwiftShader WebGL launch profile
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > transport/launch-chromium-webgl.sh <<'EOF'
+          #!/usr/bin/env bash
+          set -euo pipefail
+          transport_root="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+          browser="$(find "$transport_root/playwright-browsers" -type f \( -name chrome -o -name headless_shell \) -perm -111 | head -1)"
+          if [ -z "$browser" ]; then
+            echo "TRANSPORTED_CHROMIUM_EXECUTABLE_NOT_FOUND" >&2
+            exit 1
+          fi
+          exec "$browser" \
+            --use-gl=angle \
+            --use-angle=swiftshader \
+            --enable-unsafe-swiftshader \
+            --enable-webgl \
+            --ignore-gpu-blocklist \
+            "$@"
+          EOF
+          chmod +x transport/launch-chromium-webgl.sh
+          grep -Fx '            --use-gl=angle \' transport/launch-chromium-webgl.sh
+          grep -Fx '            --use-angle=swiftshader \' transport/launch-chromium-webgl.sh
+          grep -Fx '            --enable-unsafe-swiftshader \' transport/launch-chromium-webgl.sh
+
       - name: Emit transport-only provenance receipt
         shell: bash
         run: |
@@ -96,6 +122,15 @@ jobs:
             "reconstructionVerified": true,
             "playwrightVersion": "$PLAYWRIGHT_VERSION",
             "playwrightRuntimeTransported": true,
+            "browserLaunchProfile": "SWIFTSHADER_WEBGL_EXPLICIT_OPT_IN_v1",
+            "browserLaunchProfileTransported": true,
+            "browserLaunchFlags": [
+              "--use-gl=angle",
+              "--use-angle=swiftshader",
+              "--enable-unsafe-swiftshader",
+              "--enable-webgl",
+              "--ignore-gpu-blocklist"
+            ],
             "qualificationAuthorityCreated": false,
             "productMutationAuthorityCreated": false,
             "mergeAuthorityCreated": false,

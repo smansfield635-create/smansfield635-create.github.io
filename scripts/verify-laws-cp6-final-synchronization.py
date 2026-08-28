@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Strict static gate for the Gen1751 Laws layered-information-grid reconstruction."""
+"""Strict static gate for the Gen1756 Laws semantic-cell enrichment successor."""
 
 from __future__ import annotations
 
@@ -9,9 +9,9 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-GOVERNING_HEAD = "b405c91b89df10ee9e51b784d7bd2686c17df6ac"
+GOVERNING_HEAD = "539c324f0c7de395bd42747dba550a85360a66be"
 MAP_PATH = ROOT / "laws/room-carousel/route-card-map.v2.json"
-ASSET_IDENTITY = "LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827"
+ASSET_IDENTITY = "LAWS_SEMANTIC_CELL_ENRICHMENT_GEN1755_20260827"
 SHARED_ALLOWED = {
     "laws/room-carousel/preconstruction-contract.v1.json",
     "laws/room-carousel/room-carousel.v1.css",
@@ -29,6 +29,14 @@ def require(condition: bool, message: str) -> None:
         raise AssertionError(message)
 
 
+def word_count(value: str) -> int:
+    return len(str(value or "").strip().split())
+
+
+def normalized(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", " ", str(value or "").lower()).strip()
+
+
 def route_path(route: str) -> Path:
     return ROOT / (route.strip("/") if route.endswith(".html") else f"{route.strip('/')}/index.html")
 
@@ -40,7 +48,8 @@ def git(*args: str) -> subprocess.CompletedProcess[str]:
 def main() -> int:
     manifest = json.loads(MAP_PATH.read_text(encoding="utf-8"))
     routes = manifest["routes"]
-    require(manifest["schema"] == "LAWS_LAYERED_INFORMATION_GRID_ROUTE_CARD_MAP_v3", "MAP_SCHEMA")
+    require(manifest["schema"] == "LAWS_SEMANTIC_CELL_ENRICHMENT_ROUTE_CARD_MAP_v4", "MAP_SCHEMA")
+    require(manifest["contract"] == "LAWS_SHARED_PREMISE_STORY_FOCUS_LENS_FRAME_AUTHORED_DELTA_v1", "CONTENT_CONTRACT")
     require(len(routes) == 29, f"ROUTE_COUNT:{len(routes)}")
     require(sum(len(route["cards"]) for route in routes.values()) == 134, "CARD_TOTAL")
     require({len(route["cards"]) for route in routes.values()} == {4, 5, 6}, "VARIABLE_CARD_COUNTS")
@@ -73,20 +82,50 @@ def main() -> int:
             require(source.count(f'{name}="{value}"') == 1, f"DECLARATION:{route}:{name}")
         require(source.count(f"room-carousel.v1.css?v={ASSET_IDENTITY}") == 1, f"CSS_IDENTITY:{route}")
         require(source.count(f"room-carousel.v1.js?v={ASSET_IDENTITY}") == 1, f"JS_IDENTITY:{route}")
-        require(source.count("data-lrc-static") == 1, f"SEMANTIC_GRID_COUNT:{route}")
+        require(source.count("data-lrc-static aria-labelledby=") == 1, f"SEMANTIC_GRID_COUNT:{route}")
+        require(source.count("data-lrc-shared-premise") == len(spec["cards"]), f"SHARED_PREMISE_COUNT:{route}")
+        expected_cells = sum(len(card["stories"]) * 3 for card in spec["cards"])
+        require(source.count("data-lrc-static-delta") == expected_cells, f"STATIC_DELTA_COUNT:{route}")
         require(source.count("Source custody") == 1, f"COMPACT_CUSTODY_COUNT:{route}")
         require("lr-legacy-source" not in source, f"RAW_LEGACY_MIRROR:{route}")
         labels = {card["label"].strip().lower() for card in spec["cards"]}
         require(not labels.intersection(generic), f"GENERIC_CARD:{route}:{labels.intersection(generic)}")
         for card in spec["cards"]:
             stories = card.get("stories", [])
+            require(word_count(card.get("sharedPremise", "")) >= 8, f"SHARED_PREMISE:{route}:{card['id']}")
+            lens_frames = card.get("lensFrames", {})
+            require(
+                len({normalized(lens_frames.get(lens, "")) for lens in ("practical", "engineering", "empirical")}) == 3,
+                f"DISTINCT_LENS_FRAMES:{route}:{card['id']}",
+            )
+            for lens in ("practical", "engineering", "empirical"):
+                require(word_count(lens_frames.get(lens, "")) >= 12, f"LENS_FRAME:{route}:{card['id']}:{lens}")
             require(4 <= len(stories) <= 5, f"STORY_COUNT:{route}:{card['id']}:{len(stories)}")
             require(len({story["id"] for story in stories}) == len(stories), f"STORY_IDS:{route}:{card['id']}")
             require(len({story["label"] for story in stories}) == len(stories), f"STORY_LABELS:{route}:{card['id']}")
+            require(len({normalized(story.get("focus", "")) for story in stories}) == len(stories), f"STORY_FOCUS_DISTINCT:{route}:{card['id']}")
+            card_deltas = []
             for story in stories:
-                require(not re.search(r"\\bboundary \\d+\\b", story["label"], re.I), f"PLACEHOLDER_STORY:{route}:{card['id']}:{story['id']}")
+                require(not re.search(r"\bboundary \d+\b", story["label"], re.I), f"PLACEHOLDER_STORY:{route}:{card['id']}:{story['id']}")
+                require(word_count(story.get("focus", "")) >= 12, f"STORY_FOCUS:{route}:{card['id']}:{story['id']}")
                 for lens in ("practical", "engineering", "empirical"):
                     require(story.get("readings", {}).get(lens, "").strip(), f"EMPTY_CELL:{route}:{card['id']}:{story['id']}:{lens}")
+                    delta = story.get("deltas", {}).get(lens, "").strip()
+                    require(word_count(delta) >= 12, f"AUTHORED_DELTA:{route}:{card['id']}:{story['id']}:{lens}")
+                    require(normalized(card["sharedPremise"]) not in normalized(delta), f"SHARED_REPEAT:{route}:{card['id']}:{story['id']}:{lens}")
+                    card_deltas.append(normalized(delta))
+            require(len(set(card_deltas)) == len(card_deltas), f"DUPLICATE_CARD_DELTA:{route}:{card['id']}")
+
+    all_deltas = [
+        normalized(story["deltas"][lens])
+        for spec in routes.values()
+        for card in spec["cards"]
+        for story in card["stories"]
+        for lens in ("practical", "engineering", "empirical")
+    ]
+    require(len(all_deltas) == 1653, f"DELTA_TOTAL:{len(all_deltas)}")
+    require(len(set(all_deltas)) >= 1600, f"DELTA_DISTINCT:{len(set(all_deltas))}")
+    require(sum(1 for delta in all_deltas if word_count(delta) < 15) <= 5, "THIN_DELTA_LIMIT")
 
     reality = routes["/laws/categories/reality/"]["cards"]
     reality_actions = {card["id"]: card.get("href") for card in reality if card.get("href")}
@@ -113,16 +152,23 @@ def main() -> int:
         "[data-lrc-inner-tab]",
         "[data-lrc-story-tab]",
         "[data-lrc-grid-cell]",
+        "data-lrc-shared-premise",
+        "data-lrc-story-focus",
+        "data-lrc-lens-frame",
+        "data-lrc-selection-delta",
         "state.layers[state.index] = 0",
         "state.stories[state.index] = 0",
         "internalStateIndependent: true",
+        "semanticCellEnrichment: true",
+        "authoredSelectionDelta: true",
+        "colorOnlyDifferenceSignaling: false",
         "↶ Return to Orbit",
         "audit.open = false",
     ):
         require(marker in runtime, f"RUNTIME_MARKER:{marker}")
     require("nativeChildren" not in runtime, "DIRECT_CHILD_CARD_INFERENCE_RETURNED")
     require("Identity / Meaning" not in runtime, "GENERIC_SCENE_INVENTORY_RETURNED")
-    for marker in ("[data-lrc-inner-tabs]", "[data-lrc-story-rail]", "[data-lrc-story-tab]", "[data-lrc-grid-cell]", "[data-lrc-claim-boundary]", "data-lrc-family"):
+    for marker in ("[data-lrc-inner-tabs]", "[data-lrc-story-rail]", "[data-lrc-story-tab]", "[data-lrc-grid-cell]", "[data-lrc-shared-premise]", "[data-lrc-story-focus]", "[data-lrc-lens-frame]", "[data-lrc-selection-delta]", "[data-lrc-claim-boundary]", "data-lrc-family"):
         require(marker in stylesheet, f"STYLESHEET_MARKER:{marker}")
 
     subprocess.run(
@@ -131,7 +177,7 @@ def main() -> int:
         check=True,
     )
     result = {
-        "contract": "LAWS_LAYERED_INFORMATION_GRID_STRICT_STATIC_MATRIX_v3",
+        "contract": "LAWS_SEMANTIC_CELL_ENRICHMENT_STRICT_STATIC_MATRIX_v4",
         "status": "PASS",
         "governing_head": GOVERNING_HEAD,
         "routes": len(routes),
@@ -141,6 +187,8 @@ def main() -> int:
             "five": sum(1 for route in routes.values() for card in route["cards"] if len(card["stories"]) == 5),
         },
         "cells": sum(len(card["stories"]) * 3 for route in routes.values() for card in route["cards"]),
+        "distinct_authored_deltas": len(set(all_deltas)),
+        "thin_deltas_under_15_words": sum(1 for delta in all_deltas if word_count(delta) < 15),
         "card_counts": [4, 5, 6],
         "methods_byte_identical": True,
         "laws_root_protected": True,

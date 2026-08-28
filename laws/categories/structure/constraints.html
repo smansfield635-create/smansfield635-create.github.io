@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="/assets/laws-destination/renewal.css?v=LAWS_COMPLETE_RENEWAL_V1">
   <link rel="stylesheet" href="/assets/laws-destination/renewal-navigation.css?v=LAWS_COMPLETE_RENEWAL_COLLAPSIBLE_NAVIGATION_V1">
   <link rel="stylesheet" href="/assets/laws-destination/renewal-batch.css?v=LAWS_COMPLETE_RENEWAL_BATCH_V1">
-  <link rel="stylesheet" href="/laws/room-carousel/room-carousel.v1.css?v=LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827">
+  <link rel="stylesheet" href="/laws/room-carousel/room-carousel.v1.css?v=LAWS_SEMANTIC_CELL_ENRICHMENT_GEN1755_20260827">
   <script defer src="/assets/laws-destination/renewal.js?v=LAWS_COMPLETE_RENEWAL_COLLAPSIBLE_NAVIGATION_V1"></script>
 </head>
 <body>
@@ -77,159 +77,175 @@
     </section>
     <section class="lr-boundary" aria-labelledby="boundary-title"><p class="lr-kicker">Claim boundary</p><h2 id="boundary-title">Where the interpretation stops</h2><p>A result obtained inside one constrained region cannot be transferred outside it without new evidence.</p></section>
   <section class="lrc-semantic-fallback" data-lrc-static aria-labelledby="lrc-static-laws-categories-structure-constraints-html">
-    <header><p class="lr-kicker">Layered contextual reading</p><h2 id="lrc-static-laws-categories-structure-constraints-html">Subjects, stories, and reading lenses</h2><p>Each subject contains four or five story layers. Practical, Engineering, and Empirical are parallel readings of each layer.</p></header>
-    <article class="lrc-static-card">
+    <header><p class="lr-kicker">Layered contextual reading</p><h2 id="lrc-static-laws-categories-structure-constraints-html">Shared premise, story focus, and lens-specific additions</h2><p>Each subject declares what remains constant, then separates the selected story focus from the Practical, Engineering, or Empirical material added by that selection.</p></header>
+    <article class="lrc-static-card" data-lrc-static-card="capacity">
       <p>01 / 04</p>
       <h3>Capacity</h3>
-      <p></p>
+      <div class="lrc-static-shared" data-lrc-shared-premise><h4>Shared premise</h4><p>Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion.</p></div>
       <ol>
-        <li>
+        <li data-lrc-static-story="available-resource">
           <h4>Available resource</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This story layer narrows Capacity around one explicit distinction: name what the system can hold.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion. Name what the system can hold.</dd></div>
-            <div><dt>Engineering</dt><dd>In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins. Measure load against available capacity.</dd></div>
-            <div><dt>Empirical</dt><dd>For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins. Strong evidence: load tests, utilization records, saturation curves, stress results, recovery measurements.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Name what the system can hold. This selection isolates available resource within Capacity. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Measure load against available capacity. Treat available resource as a distinct control point inside Capacity. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Strong evidence: load tests, utilization records, saturation curves, stress results, recovery measurements. Evidence for available resource must identify the observed unit, context, comparison, and boundary. Without those records, Capacity remains a conceptual or procedural classification at this layer. Require records showing how Capacity behaved at ordinary load and at its boundary: crossings, rejected inputs, exceptions, enforcement, and resulting state.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="load-limit">
           <h4>Load limit</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This story layer narrows Capacity around one explicit distinction: name what the system cannot hold.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion. Name what the system cannot hold.</dd></div>
-            <div><dt>Engineering</dt><dd>In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins. Track utilization before saturation.</dd></div>
-            <div><dt>Empirical</dt><dd>For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins. Useful evidence: capacity planning, queue records, peak-load history, resource budgets.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Name what the system cannot hold. This selection isolates load limit within Capacity. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat load limit as a distinct control point inside Capacity. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Useful evidence: capacity planning, queue records, peak-load history, resource budgets. Evidence for load limit must identify the observed unit, context, comparison, and boundary. Without those records, Capacity remains a conceptual or procedural classification at this layer. Require records showing how Capacity behaved at ordinary load and at its boundary: crossings, rejected inputs, exceptions, enforcement, and resulting state.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="system-tolerance">
           <h4>System tolerance</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates system tolerance within Capacity. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion. Separate ambition from available capacity.</dd></div>
-            <div><dt>Engineering</dt><dd>In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins. Preserve headroom for volatility and recovery.</dd></div>
-            <div><dt>Empirical</dt><dd>For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins. Failure mode: promises exceed measurable carrying capacity.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Separate ambition from available capacity. This selection isolates system tolerance within Capacity. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Preserve headroom for volatility and recovery. Treat system tolerance as a distinct control point inside Capacity. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Failure mode: promises exceed measurable carrying capacity. Evidence for system tolerance must identify the observed unit, context, comparison, and boundary. Without those records, Capacity remains a conceptual or procedural classification at this layer. Require records showing how Capacity behaved at ordinary load and at its boundary: crossings, rejected inputs, exceptions, enforcement, and resulting state.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="failure-margin">
           <h4>Failure margin</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This story layer narrows Capacity around one explicit distinction: do not treat overload as a character defect when capacity is the constraint.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion. Do not treat overload as a character defect when capacity is the constraint.</dd></div>
-            <div><dt>Engineering</dt><dd>In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins. Do not use average load to hide peak failure risk.</dd></div>
-            <div><dt>Empirical</dt><dd>For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins. Boundary: unused capacity is not always available capacity if recovery, safety, or reserve margins are required. <strong>Claim boundary:</strong> Unused capacity is not always available capacity if recovery, safety, or reserve margins are required.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Do not treat overload as a character defect when capacity is the constraint. This selection isolates failure margin within Capacity. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Do not use average load to hide peak failure risk. Treat failure margin as a distinct control point inside Capacity. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Boundary: unused capacity is not always available capacity if recovery, safety, or reserve margins are required. Evidence for failure margin must identify the observed unit, context, comparison, and boundary. Without those records, Capacity remains a conceptual or procedural classification at this layer. Require records showing how Capacity behaved at ordinary load and at its boundary: crossings, rejected inputs, exceptions, enforcement, and resulting state.</p><aside><strong>Claim boundary.</strong> Unused capacity is not always available capacity if recovery, safety, or reserve margins are required.</aside></dd></div>
           </dl>
         </li>
       </ol>
     </article>
-    <article class="lrc-static-card">
+    <article class="lrc-static-card" data-lrc-static-card="rules">
       <p>02 / 04</p>
       <h3>Rules</h3>
-      <p></p>
+      <div class="lrc-static-shared" data-lrc-shared-premise><h4>Shared premise</h4><p>Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion.</p></div>
       <ol>
-        <li>
+        <li data-lrc-static-story="available-resource">
           <h4>Available resource</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This story layer narrows Rules around one explicit distinction: name what the system can hold.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion. Name what the system can hold.</dd></div>
-            <div><dt>Engineering</dt><dd>In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins. Measure load against available capacity.</dd></div>
-            <div><dt>Empirical</dt><dd>For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins. Strong evidence: load tests, utilization records, saturation curves, stress results, recovery measurements.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Name what the system can hold. This selection isolates available resource within Rules. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Measure load against available capacity. Treat available resource as a distinct control point inside Rules. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Strong evidence: load tests, utilization records, saturation curves, stress results, recovery measurements. Evidence for available resource must identify the observed unit, context, comparison, and boundary. Without those records, Rules remains a conceptual or procedural classification at this layer. Require records showing how Rules behaved at ordinary load and at its boundary: crossings, rejected inputs, exceptions, enforcement, and resulting state.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="load-limit">
           <h4>Load limit</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This story layer narrows Rules around one explicit distinction: name what the system cannot hold.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion. Name what the system cannot hold.</dd></div>
-            <div><dt>Engineering</dt><dd>In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins. Track utilization before saturation.</dd></div>
-            <div><dt>Empirical</dt><dd>For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins. Useful evidence: capacity planning, queue records, peak-load history, resource budgets.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Name what the system cannot hold. This selection isolates load limit within Rules. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat load limit as a distinct control point inside Rules. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Useful evidence: capacity planning, queue records, peak-load history, resource budgets. Evidence for load limit must identify the observed unit, context, comparison, and boundary. Without those records, Rules remains a conceptual or procedural classification at this layer. Require records showing how Rules behaved at ordinary load and at its boundary: crossings, rejected inputs, exceptions, enforcement, and resulting state.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="system-tolerance">
           <h4>System tolerance</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates system tolerance within Rules. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion. Separate ambition from available capacity.</dd></div>
-            <div><dt>Engineering</dt><dd>In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins. Preserve headroom for volatility and recovery.</dd></div>
-            <div><dt>Empirical</dt><dd>For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins. Failure mode: promises exceed measurable carrying capacity.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Separate ambition from available capacity. This selection isolates system tolerance within Rules. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Preserve headroom for volatility and recovery. Treat system tolerance as a distinct control point inside Rules. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Failure mode: promises exceed measurable carrying capacity. Evidence for system tolerance must identify the observed unit, context, comparison, and boundary. Without those records, Rules remains a conceptual or procedural classification at this layer. Require records showing how Rules behaved at ordinary load and at its boundary: crossings, rejected inputs, exceptions, enforcement, and resulting state.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="failure-margin">
           <h4>Failure margin</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This story layer narrows Rules around one explicit distinction: do not treat overload as a character defect when capacity is the constraint.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion. Do not treat overload as a character defect when capacity is the constraint.</dd></div>
-            <div><dt>Engineering</dt><dd>In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins. Do not use average load to hide peak failure risk.</dd></div>
-            <div><dt>Empirical</dt><dd>For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins. Boundary: unused capacity is not always available capacity if recovery, safety, or reserve margins are required. <strong>Claim boundary:</strong> Unused capacity is not always available capacity if recovery, safety, or reserve margins are required.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Do not treat overload as a character defect when capacity is the constraint. This selection isolates failure margin within Rules. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Do not use average load to hide peak failure risk. Treat failure margin as a distinct control point inside Rules. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Boundary: unused capacity is not always available capacity if recovery, safety, or reserve margins are required. Evidence for failure margin must identify the observed unit, context, comparison, and boundary. Without those records, Rules remains a conceptual or procedural classification at this layer. Require records showing how Rules behaved at ordinary load and at its boundary: crossings, rejected inputs, exceptions, enforcement, and resulting state.</p><aside><strong>Claim boundary.</strong> Unused capacity is not always available capacity if recovery, safety, or reserve margins are required.</aside></dd></div>
           </dl>
         </li>
       </ol>
     </article>
-    <article class="lrc-static-card">
+    <article class="lrc-static-card" data-lrc-static-card="thresholds">
       <p>03 / 04</p>
       <h3>Thresholds</h3>
-      <p></p>
+      <div class="lrc-static-shared" data-lrc-shared-premise><h4>Shared premise</h4><p>Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion.</p></div>
       <ol>
-        <li>
+        <li data-lrc-static-story="available-resource">
           <h4>Available resource</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This story layer narrows Thresholds around one explicit distinction: name what the system can hold.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion. Name what the system can hold.</dd></div>
-            <div><dt>Engineering</dt><dd>In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins. Measure load against available capacity.</dd></div>
-            <div><dt>Empirical</dt><dd>For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins. Strong evidence: load tests, utilization records, saturation curves, stress results, recovery measurements.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Name what the system can hold. This selection isolates available resource within Thresholds. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Measure load against available capacity. Treat available resource as a distinct control point inside Thresholds. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Strong evidence: load tests, utilization records, saturation curves, stress results, recovery measurements. Evidence for available resource must identify the observed unit, context, comparison, and boundary. Without those records, Thresholds remains a conceptual or procedural classification at this layer. Require records showing how Thresholds behaved at ordinary load and at its boundary: crossings, rejected inputs, exceptions, enforcement, and resulting state.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="load-limit">
           <h4>Load limit</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This story layer narrows Thresholds around one explicit distinction: name what the system cannot hold.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion. Name what the system cannot hold.</dd></div>
-            <div><dt>Engineering</dt><dd>In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins. Track utilization before saturation.</dd></div>
-            <div><dt>Empirical</dt><dd>For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins. Useful evidence: capacity planning, queue records, peak-load history, resource budgets.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Name what the system cannot hold. This selection isolates load limit within Thresholds. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat load limit as a distinct control point inside Thresholds. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Useful evidence: capacity planning, queue records, peak-load history, resource budgets. Evidence for load limit must identify the observed unit, context, comparison, and boundary. Without those records, Thresholds remains a conceptual or procedural classification at this layer. Require records showing how Thresholds behaved at ordinary load and at its boundary: crossings, rejected inputs, exceptions, enforcement, and resulting state.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="system-tolerance">
           <h4>System tolerance</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates system tolerance within Thresholds. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion. Separate ambition from available capacity.</dd></div>
-            <div><dt>Engineering</dt><dd>In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins. Preserve headroom for volatility and recovery.</dd></div>
-            <div><dt>Empirical</dt><dd>For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins. Failure mode: promises exceed measurable carrying capacity.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Separate ambition from available capacity. This selection isolates system tolerance within Thresholds. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Preserve headroom for volatility and recovery. Treat system tolerance as a distinct control point inside Thresholds. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Failure mode: promises exceed measurable carrying capacity. Evidence for system tolerance must identify the observed unit, context, comparison, and boundary. Without those records, Thresholds remains a conceptual or procedural classification at this layer. Require records showing how Thresholds behaved at ordinary load and at its boundary: crossings, rejected inputs, exceptions, enforcement, and resulting state.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="failure-margin">
           <h4>Failure margin</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This story layer narrows Thresholds around one explicit distinction: do not treat overload as a character defect when capacity is the constraint.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion. Do not treat overload as a character defect when capacity is the constraint.</dd></div>
-            <div><dt>Engineering</dt><dd>In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins. Do not use average load to hide peak failure risk.</dd></div>
-            <div><dt>Empirical</dt><dd>For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins. Boundary: unused capacity is not always available capacity if recovery, safety, or reserve margins are required. <strong>Claim boundary:</strong> Unused capacity is not always available capacity if recovery, safety, or reserve margins are required.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Do not treat overload as a character defect when capacity is the constraint. This selection isolates failure margin within Thresholds. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Do not use average load to hide peak failure risk. Treat failure margin as a distinct control point inside Thresholds. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Boundary: unused capacity is not always available capacity if recovery, safety, or reserve margins are required. Evidence for failure margin must identify the observed unit, context, comparison, and boundary. Without those records, Thresholds remains a conceptual or procedural classification at this layer. Require records showing how Thresholds behaved at ordinary load and at its boundary: crossings, rejected inputs, exceptions, enforcement, and resulting state.</p><aside><strong>Claim boundary.</strong> Unused capacity is not always available capacity if recovery, safety, or reserve margins are required.</aside></dd></div>
           </dl>
         </li>
       </ol>
     </article>
-    <article class="lrc-static-card">
+    <article class="lrc-static-card" data-lrc-static-card="tradeoffs">
       <p>04 / 04</p>
       <h3>Tradeoffs</h3>
-      <p></p>
+      <div class="lrc-static-shared" data-lrc-shared-premise><h4>Shared premise</h4><p>Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion.</p></div>
       <ol>
-        <li>
+        <li data-lrc-static-story="available-resource">
           <h4>Available resource</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This story layer narrows Tradeoffs around one explicit distinction: name what the system can hold.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion. Name what the system can hold.</dd></div>
-            <div><dt>Engineering</dt><dd>In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins. Measure load against available capacity.</dd></div>
-            <div><dt>Empirical</dt><dd>For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins. Strong evidence: load tests, utilization records, saturation curves, stress results, recovery measurements.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Name what the system can hold. This selection isolates available resource within Tradeoffs. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Measure load against available capacity. Treat available resource as a distinct control point inside Tradeoffs. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Strong evidence: load tests, utilization records, saturation curves, stress results, recovery measurements. Evidence for available resource must identify the observed unit, context, comparison, and boundary. Without those records, Tradeoffs remains a conceptual or procedural classification at this layer. Require records showing how Tradeoffs behaved at ordinary load and at its boundary: crossings, rejected inputs, exceptions, enforcement, and resulting state.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="load-limit">
           <h4>Load limit</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This story layer narrows Tradeoffs around one explicit distinction: name what the system cannot hold.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion. Name what the system cannot hold.</dd></div>
-            <div><dt>Engineering</dt><dd>In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins. Track utilization before saturation.</dd></div>
-            <div><dt>Empirical</dt><dd>For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins. Useful evidence: capacity planning, queue records, peak-load history, resource budgets.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Name what the system cannot hold. This selection isolates load limit within Tradeoffs. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Treat load limit as a distinct control point inside Tradeoffs. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Useful evidence: capacity planning, queue records, peak-load history, resource budgets. Evidence for load limit must identify the observed unit, context, comparison, and boundary. Without those records, Tradeoffs remains a conceptual or procedural classification at this layer. Require records showing how Tradeoffs behaved at ordinary load and at its boundary: crossings, rejected inputs, exceptions, enforcement, and resulting state.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="system-tolerance">
           <h4>System tolerance</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This selection isolates system tolerance within Tradeoffs. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion. Separate ambition from available capacity.</dd></div>
-            <div><dt>Engineering</dt><dd>In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins. Preserve headroom for volatility and recovery.</dd></div>
-            <div><dt>Empirical</dt><dd>For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins. Failure mode: promises exceed measurable carrying capacity.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Separate ambition from available capacity. This selection isolates system tolerance within Tradeoffs. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Preserve headroom for volatility and recovery. Treat system tolerance as a distinct control point inside Tradeoffs. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Failure mode: promises exceed measurable carrying capacity. Evidence for system tolerance must identify the observed unit, context, comparison, and boundary. Without those records, Tradeoffs remains a conceptual or procedural classification at this layer. Require records showing how Tradeoffs behaved at ordinary load and at its boundary: crossings, rejected inputs, exceptions, enforcement, and resulting state.</p></dd></div>
           </dl>
         </li>
-        <li>
+        <li data-lrc-static-story="failure-margin">
           <h4>Failure margin</h4>
+          <p class="lrc-static-focus"><strong>Story focus.</strong> This story layer narrows Tradeoffs around one explicit distinction: do not treat overload as a character defect when capacity is the constraint.</p>
           <dl>
-            <div><dt>Practical</dt><dd>Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion. Do not treat overload as a character defect when capacity is the constraint.</dd></div>
-            <div><dt>Engineering</dt><dd>In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins. Do not use average load to hide peak failure risk.</dd></div>
-            <div><dt>Empirical</dt><dd>For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins. Boundary: unused capacity is not always available capacity if recovery, safety, or reserve margins are required. <strong>Claim boundary:</strong> Unused capacity is not always available capacity if recovery, safety, or reserve margins are required.</dd></div>
+            <div data-lrc-static-lens="practical"><dt>Practical</dt><dd><p><strong>Lens frame.</strong> Capacity is not desire. It is the real amount of burden a system can carry before promises become distortion.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Do not treat overload as a character defect when capacity is the constraint. This selection isolates failure margin within Tradeoffs. It shows which decision changes at this layer and prevents the card-level premise from standing in for the unresolved detail.</p></dd></div>
+            <div data-lrc-static-lens="engineering"><dt>Engineering</dt><dd><p><strong>Lens frame.</strong> In engineering terms, capacity maps to throughput, memory, bandwidth, queue depth, processing limits, resource budgets, latency tolerance, and saturation margins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Do not use average load to hide peak failure risk. Treat failure margin as a distinct control point inside Tradeoffs. Give it an owner, explicit state, transition rule, and failure output so the implementation cannot hide it inside a general label.</p></dd></div>
+            <div data-lrc-static-lens="empirical"><dt>Empirical</dt><dd><p><strong>Lens frame.</strong> For capacity requires measured limits, not optimism. The system must show what it can sustain and where degradation begins.</p><p data-lrc-static-delta><strong>What this selection adds.</strong> Boundary: unused capacity is not always available capacity if recovery, safety, or reserve margins are required. Evidence for failure margin must identify the observed unit, context, comparison, and boundary. Without those records, Tradeoffs remains a conceptual or procedural classification at this layer. Require records showing how Tradeoffs behaved at ordinary load and at its boundary: crossings, rejected inputs, exceptions, enforcement, and resulting state.</p><aside><strong>Claim boundary.</strong> Unused capacity is not always available capacity if recovery, safety, or reserve margins are required.</aside></dd></div>
           </dl>
         </li>
       </ol>
@@ -252,6 +268,6 @@
   </main>
   <footer class="lr-footer"><span>Diamond Gate Bridge · Laws Chamber</span><a href="/laws/">Return to the Laws Compass</a></footer>
 </div>
-<script defer src="/laws/room-carousel/room-carousel.v1.js?v=LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827"></script>
+<script defer src="/laws/room-carousel/room-carousel.v1.js?v=LAWS_SEMANTIC_CELL_ENRICHMENT_GEN1755_20260827"></script>
 </body>
 </html>

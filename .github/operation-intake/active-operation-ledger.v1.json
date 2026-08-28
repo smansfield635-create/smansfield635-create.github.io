@@ -2525,6 +2525,49 @@
       "scopeHash": "88a29052bda5c7ccc0d609c948f2fa60ddbf17efcfa957afb2edcb5ffba39412",
       "state": "ADMITTED_LOCKED"
     },
+    "894570fcdbc91d7abe929b502f743ebe878564e5668813d63daad3853fae15b2": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "4aa0ce352cbc28f0cdd38c1288f858b17ae8cb63",
+          "lockGeneration": 1804,
+          "lockScope": "DGB_PUBLIC_PRODUCT:COMPASS:ROOT_RENEWAL_16_ROOM_CONTROLLER_COMPATIBILITY:V1",
+          "operationId": "COMPASS_ROOT_RENEWAL_16_ROOM_CONTROLLER_COMPATIBILITY_20260828_001",
+          "procedureLocatorDigest": "6c4ecb3dc21bcde65d33b66778f54a2575cb77c54848f25fda2138ea6009fac4",
+          "requestDigest": "a07dc2e8f469571209248d58b8f5c54cb8437b7b08d9d745b4f0e9f553989a4c",
+          "scopeHash": "894570fcdbc91d7abe929b502f743ebe878564e5668813d63daad3853fae15b2"
+        },
+        "bindingDigest": "7317949ae57073207b994adbc57becb2700930d60de4c5ea3bce0076d74a415e",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "2fbd84dfe6181eef2f91562eb46d1aaf62ac241d2dea940b3111c981545b3837",
+          "commentId": 5456492726,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2162,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33201352406,
+          "workflowSha": "4aa0ce352cbc28f0cdd38c1288f858b17ae8cb63"
+        },
+        "lineageAnchorCommitSha": "90bcb9385f3de955c77e223411b70309ba47f9e1",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "4aa0ce352cbc28f0cdd38c1288f858b17ae8cb63",
+      "lockGeneration": 1804,
+      "lockScope": "DGB_PUBLIC_PRODUCT:COMPASS:ROOT_RENEWAL_16_ROOM_CONTROLLER_COMPATIBILITY:V1",
+      "operationId": "COMPASS_ROOT_RENEWAL_16_ROOM_CONTROLLER_COMPATIBILITY_20260828_001",
+      "procedureLocatorDigest": "6c4ecb3dc21bcde65d33b66778f54a2575cb77c54848f25fda2138ea6009fac4",
+      "released": false,
+      "requestDigest": "a07dc2e8f469571209248d58b8f5c54cb8437b7b08d9d745b4f0e9f553989a4c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "894570fcdbc91d7abe929b502f743ebe878564e5668813d63daad3853fae15b2",
+      "state": "ADMITTED_LOCKED"
+    },
     "89661cfa4b8e42d4400a81b617cce9a250473c8dd981156f494bf6e2d0ae0e2e": {
       "governingHead": "f5c4238adee4161cb1f3583cc52ed13eebfffa2b",
       "lockGeneration": 462,
@@ -5116,7 +5159,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1803,
+  "lockGeneration": 1804,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

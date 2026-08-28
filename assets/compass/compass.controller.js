@@ -3392,10 +3392,7 @@
     if (
       state.current ===
         STATES.CLUSTER_OPEN &&
-      state.selectedCardinal &&
-      findCardinalElement(
-        state.selectedCardinal
-      )
+      state.selectedCardinal
     ) {
       const cardinal =
         findCardinalElement(

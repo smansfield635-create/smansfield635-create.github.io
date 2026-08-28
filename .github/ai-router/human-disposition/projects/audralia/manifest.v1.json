@@ -1,0 +1,152 @@
+{
+  "schema": "HUMAN_DISPOSITION_MANIFEST_v1",
+  "manifestId": "AUDRALIA_HDM_V1_20260828",
+  "projectId": "AUDRALIA",
+  "operationId": "AUDRALIA_HOOK5_OWNER_VISIBLE_REALIZATION_20260828_001",
+  "scopeIdentity": "AUDRALIA_PLANETARY_ENVIRONMENT_OWNER_INTENT_AND_FAILURE_MEMORY",
+  "governingHeadObserved": "e2d68feb38b730eab429822d18691577c3b7cb90",
+  "decisions": [
+    {
+      "decisionId": "AUDRALIA-HD-001",
+      "decisionType": "WEATHER_ARCHITECTURE_IDENTITY",
+      "value": {"existingWeatherSystemsOnly": true, "existingFinalCompositorOnly": true, "secondRendererAllowed": false, "secondCanvasAllowed": false, "secondCloudLayerAllowed": false, "secondCloudPassAllowed": false},
+      "source": "USER_EXPLICIT",
+      "evidenceLocator": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2220",
+      "bindingClass": "HEAD_INVARIANT",
+      "revalidateOn": ["OWNER_EXPLICIT_ARCHITECTURE_CHANGE"],
+      "supersedes": null,
+      "status": "ACTIVE"
+    },
+    {
+      "decisionId": "AUDRALIA-HD-002",
+      "decisionType": "PERCEPTUAL_WEATHER_ACCEPTANCE",
+      "value": {"scalarCountsSufficient": false, "approximatelyThreeDominantVisibleStructures": "FAIL", "missingDeclaredSystemsMustBeSeparatelyVisible": true, "bothPolesRequireOrganizedWeather": true},
+      "source": "USER_EXPLICIT",
+      "evidenceLocator": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2220",
+      "bindingClass": "HEAD_INVARIANT",
+      "revalidateOn": ["OWNER_EXPLICIT_ACCEPTANCE_CHANGE"],
+      "supersedes": null,
+      "status": "ACTIVE"
+    },
+    {
+      "decisionId": "AUDRALIA-HD-003",
+      "decisionType": "NOCTURNAL_PRESENTATION",
+      "value": {"restrainedMoonDerivedReadability": true, "preserveNightDayContrast": true, "genericAmbientWashAllowed": false, "darkHemisphereDaylightConversionAllowed": false},
+      "source": "USER_EXPLICIT",
+      "evidenceLocator": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2220",
+      "bindingClass": "HEAD_INVARIANT",
+      "revalidateOn": ["OWNER_EXPLICIT_LIGHTING_DIRECTION_CHANGE"],
+      "supersedes": null,
+      "status": "ACTIVE"
+    },
+    {
+      "decisionId": "AUDRALIA-HD-004",
+      "decisionType": "POLAR_NAVIGATION_CONTINUITY",
+      "value": {"approachEitherPole": true, "crossOrRoundEitherPole": true, "continueOppositeHemisphere": true, "returnLowerLatitudes": true, "singularityLockAllowed": false, "snapbackAllowed": false, "unusableInversionAllowed": false},
+      "source": "USER_EXPLICIT",
+      "evidenceLocator": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2220",
+      "bindingClass": "HEAD_INVARIANT",
+      "revalidateOn": ["OWNER_EXPLICIT_NAVIGATION_CHANGE"],
+      "supersedes": null,
+      "status": "ACTIVE"
+    },
+    {
+      "decisionId": "AUDRALIA-HD-005",
+      "decisionType": "PROTECTED_SURFACE_AND_PERFORMANCE",
+      "value": {"protected24057Immutable": true, "raisePerformanceCeilingsMerelyToObtainResult": false},
+      "source": "USER_EXPLICIT",
+      "evidenceLocator": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2220",
+      "bindingClass": "HEAD_INVARIANT",
+      "revalidateOn": ["OWNER_EXPLICIT_PROTECTION_CHANGE", "GOVERNING_CONTRACT_CHANGE"],
+      "supersedes": null,
+      "status": "ACTIVE"
+    },
+    {
+      "decisionId": "AUDRALIA-HD-006",
+      "decisionType": "EXCELLENCE_AWARDS_DISPOSITION",
+      "value": {"audraliaIsCycleExcellenceStandard": true, "additionalPageExcellenceRequired": false, "additionalAwardsMatrixRequired": false, "additionalComparativeDesignMatrixRequired": false},
+      "source": "USER_EXPLICIT",
+      "evidenceLocator": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2220",
+      "bindingClass": "SCOPE_BOUND",
+      "revalidateOn": ["OWNER_REOPENS_EXCELLENCE_OR_AWARDS_QUESTION", "HOOK5_SCOPE_SUPERSEDED"],
+      "supersedes": null,
+      "status": "ACTIVE"
+    },
+    {
+      "decisionId": "AUDRALIA-HD-007",
+      "decisionType": "QUALIFICATION_EFFICIENCY",
+      "value": {"fastFailMeansWeakenedVerification": false, "repeatUnchangedLongProbeWithoutNewEvidence": false, "exposeFirstDecisiveAssertionAsSoonAsKnowable": true},
+      "source": "USER_EXPLICIT",
+      "evidenceLocator": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2220",
+      "bindingClass": "HEAD_INVARIANT",
+      "revalidateOn": ["GOVERNING_EXECUTION_EFFICIENCY_POLICY_CHANGE"],
+      "supersedes": null,
+      "status": "ACTIVE"
+    },
+    {
+      "decisionId": "AUDRALIA-HD-008",
+      "decisionType": "FAILURE_MEMORY_WEATHER_BASELINE",
+      "value": {"nominalSystemCount": 8, "dominantVisibleStructuresApproximate": 3, "largeVisuallyEmptySectorsObserved": true, "polarWeatherCodeCanExistWhilePolesReadEmpty": true, "machineMaterialCountsAloneAreAcceptance": false},
+      "source": "REPOSITORY_DERIVED",
+      "evidenceLocator": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2220",
+      "bindingClass": "HEAD_INVARIANT",
+      "revalidateOn": ["OWNER_VISIBLE_SUPERSEDING_WEATHER_BASELINE_ACCEPTED"],
+      "supersedes": null,
+      "status": "ACTIVE"
+    },
+    {
+      "decisionId": "AUDRALIA-HD-009",
+      "decisionType": "FAILURE_MEMORY_EXECUTION_INTERPRETATION",
+      "value": {"newInstrumentationEnvelopeEqualsProductBlocker": false, "roomToolDisplayLimitEqualsRepositoryBlocker": false, "reopenOldExecutorWebGLInvestigationWithoutNewCapabilityFailure": false},
+      "source": "REPOSITORY_DERIVED",
+      "evidenceLocator": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2220",
+      "bindingClass": "HEAD_INVARIANT",
+      "revalidateOn": ["NEW_EXECUTION_CAPABILITY_FAILURE_EVIDENCE"],
+      "supersedes": null,
+      "status": "ACTIVE"
+    },
+    {
+      "decisionId": "AUDRALIA-HD-010",
+      "decisionType": "LIVE_ACCEPTANCE_SEQUENCE",
+      "value": {"sequence": ["CORRECTNESS_RUNTIME_QUALIFICATION", "MERGE_PUBLISH_TO_LIVE_INSPECTION_SURFACE", "OWNER_VISIBLE_LIVE_ACCEPTANCE", "TERMINAL_PRODUCT_CLOSURE"], "livePublicationIsOwnerInspectionSurface": true, "ownerAcceptanceWaived": false},
+      "source": "USER_EXPLICIT",
+      "evidenceLocator": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2220",
+      "bindingClass": "SCOPE_BOUND",
+      "revalidateOn": ["OWNER_EXPLICIT_RELEASE_SEQUENCE_CHANGE", "HOOK5_SCOPE_SUPERSEDED"],
+      "supersedes": "AUDRALIA_2171_OWNER_VISIBLE_ACCEPTANCE_BEFORE_MERGE_ORDERING",
+      "status": "ACTIVE"
+    },
+    {
+      "decisionId": "AUDRALIA-HD-011",
+      "decisionType": "LIVE_DEVICE_INITIALIZATION_CHECKPOINT",
+      "value": {"automatedLiveRuntimePassOverridesOwnerDeviceFailure": false, "loaderVisibleEnvironmentNotRendered": "FAIL", "waitingAfterCompletedDeploymentIsRemedy": false, "candidate": "e2d68feb38b730eab429822d18691577c3b7cb90"},
+      "source": "USER_EXPLICIT",
+      "evidenceLocator": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2220",
+      "bindingClass": "CANDIDATE_BOUND",
+      "revalidateOn": ["OWNER_VISIBLE_LIVE_SUCCESS_ON_SUPERSEDING_CANDIDATE"],
+      "supersedes": null,
+      "status": "ACTIVE"
+    }
+  ],
+  "unresolvedMaterialQuestions": [
+    "HOOK5_LIVE_DEVICE_INITIALIZATION_ROOT_CAUSE",
+    "HOOK5_OWNER_VISIBLE_WEATHER_NIGHT_POLAR_ACCEPTANCE_AFTER_LIVE_REPAIR"
+  ],
+  "requiredHumanCheckpoints": [
+    "OWNER_VISIBLE_LIVE_INITIALIZATION",
+    "OWNER_VISIBLE_WEATHER_REALIZATION",
+    "OWNER_VISIBLE_DARK_SIDE_READABILITY",
+    "OWNER_VISIBLE_POLAR_TRAVERSAL",
+    "TERMINAL_OUTCOME_DISPOSITION"
+  ],
+  "delegatedAutonomy": {
+    "continueBoundedDiagnosisWithoutReaskingEstablishedIntent": true,
+    "mayRepairFirstExactFailureWithinLawfulAuthority": true,
+    "mayInferOwnerAcceptance": false,
+    "mayWeakenVerifier": false,
+    "mayCreateReplacementWeatherSystem": false
+  },
+  "qualityObligationManifestDigest": null,
+  "authorityEffect": "NONE_BY_HUMAN_DISPOSITION",
+  "manifestDigest": "sha256:46af68971369d4aaf50d7eebeaa67bec4268e5bf908adf7f055bd3f4f2de5b6c"
+}

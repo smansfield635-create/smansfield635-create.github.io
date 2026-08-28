@@ -1,4 +1,4 @@
-name: Compass settlement mapping inspection
+name: Compass renderer settlement repair
 
 on:
   push:
@@ -6,36 +6,45 @@ on:
       - compass-a2f838-exact-qualification-temp
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  inspect:
+  repair:
     runs-on: ubuntu-latest
-    timeout-minutes: 4
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 6cc7deaed4ea562ea2f7b9147d234e68192abc30
-          fetch-depth: 1
+          ref: compass-renewal-corrected-gen1772
+          fetch-depth: 2
           filter: blob:none
           sparse-checkout: |
             assets/compass
           sparse-checkout-cone-mode: true
-      - name: Print settlement authorities
+      - name: Prove expected Compass head
+        run: test "$(git rev-parse HEAD)" = "6cc7deaed4ea562ea2f7b9147d234e68192abc30"
+      - name: Align renderer canonical east-west settlement
         shell: bash
         run: |
+          set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
-          for f,names in [
-            ('assets/compass/compass.crystals.js',['constellationAnchorVector','nearestPrimaryWing','settledConstellationQuaternion','finishConstellationDrag']),
-            ('assets/compass/compass.controller.js',['CANONICAL_CONSTELLATION_EULER','canonicalConstellationOrientation','requestOrbitCommit'])
-          ]:
-            s=Path(f).read_text().splitlines()
-            print('\n###',f)
-            for name in names:
-              hits=[i for i,l in enumerate(s) if name in l]
-              print('\n##',name,'hits', [i+1 for i in hits])
-              for i in hits[:2]:
-                a=max(0,i-8); b=min(len(s),i+90)
-                print('\n'.join(f'{j+1}: {s[j]}' for j in range(a,b)))
+          p=Path('assets/compass/compass.crystals.js')
+          s=p.read_text()
+          old='''    const canonicalAngle =\n      wing === "east"\n        ? -Math.PI / 2\n        : wing === "south"\n          ? Math.PI\n          : wing === "west"\n            ? Math.PI / 2\n            : 0;'''
+          new='''    const canonicalAngle =\n      wing === "east"\n        ? Math.PI / 2\n        : wing === "south"\n          ? Math.PI\n          : wing === "west"\n            ? -Math.PI / 2\n            : 0;'''
+          if s.count(old)!=1:
+              raise SystemExit(f'expected one settled cardinal map, found {s.count(old)}')
+          p.write_text(s.replace(old,new))
           PY
+          git diff --check
+      - name: Commit bounded renderer repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "smansfield635-create"
+          git config user.email "smansfield635@gmail.com"
+          git add assets/compass/compass.crystals.js
+          test "$(git diff --cached --name-only)" = "assets/compass/compass.crystals.js"
+          git commit -m "Compass: align renderer cardinal settlement"
+          git push origin HEAD:compass-renewal-corrected-gen1772

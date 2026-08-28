@@ -28,14 +28,14 @@
   filter: brightness(1.7) drop-shadow(0 0 6px rgba(246, 237, 205, .62));
 }
 
-/* Use more of the lower stage so the foreground object has a deliberate clear border beneath the family tabs. */
+/* Owner-authorized positional correction: lower the orbit assembly by one-half CSS inch without changing card geometry or interaction. */
 .mm-ring {
-  top: 39%;
+  top: calc(39% + .5in);
 }
 
 @media (max-width: 1100px) {
   .mm-ring {
-    top: 48%;
+    top: calc(48% + .5in);
   }
 
   .mm-fibonacci-field {
@@ -45,7 +45,7 @@
 
 @media (max-width: 760px) {
   .mm-ring {
-    top: 49%;
+    top: calc(49% + .5in);
   }
 
   .mm-fibonacci-field {

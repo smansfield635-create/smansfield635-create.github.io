@@ -11,7 +11,7 @@ permissions:
 jobs:
   live:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
         with:
@@ -29,42 +29,26 @@ jobs:
           chrome-version: stable
       - name: Install browser dependency
         run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
-      - name: Wait for exact files on live domain
+      - name: Prove exact merged files are live
         shell: bash
         run: |
           set -euo pipefail
-          expected_index="$(sha256sum index.html | awk '{print $1}')"
-          expected_crystals="$(sha256sum assets/compass/compass.crystals.js | awk '{print $1}')"
-          echo "EXPECTED_INDEX=$expected_index"
-          echo "EXPECTED_CRYSTALS=$expected_crystals"
-          for i in $(seq 1 36); do
-            stamp="$(date +%s)-$i"
-            if curl -fsSL --retry 2 "https://diamondgatebridge.com/?release=$stamp" -o /tmp/live-index.html && \
-               curl -fsSL --retry 2 "https://diamondgatebridge.com/assets/compass/compass.crystals.js?release=$stamp" -o /tmp/live-crystals.js; then
-              live_index="$(sha256sum /tmp/live-index.html | awk '{print $1}')"
-              live_crystals="$(sha256sum /tmp/live-crystals.js | awk '{print $1}')"
-              echo "ATTEMPT=$i LIVE_INDEX=$live_index LIVE_CRYSTALS=$live_crystals"
-              if [ "$live_index" = "$expected_index" ] && [ "$live_crystals" = "$expected_crystals" ]; then
-                echo "COMPASS_EXACT_FILES_LIVE"
-                exit 0
-              fi
-            fi
-            sleep 10
-          done
-          echo "Exact merged files did not reach live domain in bounded wait" >&2
-          exit 1
-      - name: Verify live Compass interaction
+          stamp="$(date +%s)"
+          curl -fsSL "https://diamondgatebridge.com/?release=$stamp" -o /tmp/live-index.html
+          curl -fsSL "https://diamondgatebridge.com/assets/compass/compass.crystals.js?release=$stamp" -o /tmp/live-crystals.js
+          test "$(sha256sum /tmp/live-index.html | awk '{print $1}')" = "$(sha256sum index.html | awk '{print $1}')"
+          test "$(sha256sum /tmp/live-crystals.js | awk '{print $1}')" = "$(sha256sum assets/compass/compass.crystals.js | awk '{print $1}')"
+          echo COMPASS_EXACT_FILES_LIVE
+      - name: Verify all four live cardinal states
         shell: bash
         run: |
           export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
           node --input-type=module <<'NODE'
           import puppeteer from 'puppeteer-core';
           const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
-          const page=await browser.newPage(); await page.setViewport({width:900,height:1000,deviceScaleFactor:1}); const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
-          const base='https://diamondgatebridge.com/';
+          const page=await browser.newPage(); await page.setViewport({width:900,height:1000,deviceScaleFactor:1}); const errors=[];page.on('pageerror',e=>errors.push(String(e)));
           const snap=()=>page.evaluate(()=>{const rr=e=>{const r=e?.getBoundingClientRect();return r?{cx:r.x+r.width/2,cy:r.y+r.height/2,width:r.width,height:r.height,x:r.x,y:r.y}:null};const root=document.querySelector('[data-compass-root]'),heading=document.querySelector('.compass-orbit-intro h2');const cs=[...document.querySelectorAll('[data-compass-cardinal]')].map(e=>({wing:e.dataset.wing,primary:e.dataset.primary==='true',rect:rr(e),visible:[...e.querySelectorAll(':scope>span')].some(s=>{const c=getComputedStyle(s),r=s.getBoundingClientRect();return c.visibility!=='hidden'&&Number(c.opacity)>.5&&r.width>0&&r.height>0})}));return{url:location.href,focus:root?.dataset.orbitFocus||'',phase:root?.dataset.orbitPhase||'',scene:rr(document.querySelector('[data-compass-scene]')),heading:rr(heading),cardinals:cs,primary:cs.filter(x=>x.primary).map(x=>x.wing),visible:cs.filter(x=>x.visible).map(x=>x.wing),overflow:document.documentElement.scrollWidth-innerWidth,receipt:globalThis.DGB_COMPASS_CRYSTALS_RECEIPT||null};});
-          async function load(){await page.goto(base+'?liveverify='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});await new Promise(r=>setTimeout(r,1800));const scene=await page.$('[data-compass-scene]');if(!scene)throw new Error('NO_LIVE_SCENE');await scene.evaluate(el=>el.scrollIntoView({block:'center'}));await new Promise(r=>setTimeout(r,250));const s=await snap();if(s.cardinals.length!==4||s.primary.length!==1||s.visible.length!==1||s.primary[0]!==s.focus||s.visible[0]!==s.focus)throw new Error(`LIVE_INITIAL:${s.focus}:${s.primary}:${s.visible}`);if(Math.abs(s.scene.cx-450)>18||Math.abs(s.heading.cx-450)>12||Math.abs(s.overflow)>1)throw new Error('LIVE_TABLET_PRESENTATION');return s;}
-          async function drag(direction){const before=await snap(),active=before.cardinals.find(x=>x.primary);const sx=active.rect.cx,sy=active.rect.cy;const ex=Math.max(before.scene.x+24,Math.min(before.scene.x+before.scene.width-24,sx+direction*before.scene.width*.48));await page.mouse.move(sx,sy);await page.mouse.down();for(let i=1;i<=24;i++){const t=i/24;await page.mouse.move(sx+(ex-sx)*t,sy,{steps:1});await new Promise(r=>setTimeout(r,20));}await page.mouse.up();await new Promise(r=>setTimeout(r,300));const early=await snap();await new Promise(r=>setTimeout(r,700));const after=await snap();if(new URL(after.url).origin!=='https://diamondgatebridge.com')throw new Error(`LIVE_NAV:${after.url}`);const correspondence=after.primary.length===1&&after.visible.length===1&&after.primary[0]===after.focus&&after.visible[0]===after.focus;if(!correspondence)throw new Error(`LIVE_CORRESPONDENCE:${after.focus}:${after.primary}:${after.visible}`);const incoming=after.cardinals.find(x=>x.wing===after.focus),ie=early.cardinals.find(x=>x.wing===after.focus),drift=Math.hypot(incoming.rect.cx-ie.rect.cx,incoming.rect.cy-ie.rect.cy);if(drift>8)throw new Error(`LIVE_STABILITY:${after.focus}:${drift}`);const r={from:before.focus,to:after.focus,drift,gesture:after.receipt?.lastGestureType||null};console.log('LIVE_TRANSITION',JSON.stringify(r));return r;}
-          const transitions=[]; await load(); transitions.push(await drag(-1)); transitions.push(await drag(-1)); await load(); transitions.push(await drag(1));
-          const visited=new Set(['north',...transitions.flatMap(x=>[x.from,x.to])]); if(!['north','east','south','west'].every(x=>visited.has(x)))throw new Error(`LIVE_FOUR_WAY_MISSING:${[...visited].join(',')}`);if(errors.length)throw new Error(`LIVE_BROWSER_ERRORS:${errors.join('|')}`);console.log('COMPASS_LIVE_VERIFIED',JSON.stringify({merge:'7437775b431a846e3fec388cc8d2dee2e490753c',visited:[...visited],transitions}));await browser.close();
+          async function load(){await page.goto('https://diamondgatebridge.com/?liveverify='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});await new Promise(r=>setTimeout(r,1800));const scene=await page.$('[data-compass-scene]');if(!scene)throw new Error('NO_LIVE_SCENE');await scene.evaluate(el=>el.scrollIntoView({block:'center'}));await new Promise(r=>setTimeout(r,250));const s=await snap();if(s.cardinals.length!==4||s.primary.length!==1||s.visible.length!==1||s.primary[0]!==s.focus||s.visible[0]!==s.focus)throw new Error(`INITIAL:${s.focus}:${s.primary}:${s.visible}`);if(Math.abs(s.scene.cx-450)>18||Math.abs(s.heading.cx-450)>12||Math.abs(s.overflow)>1)throw new Error('TABLET');return s;}
+          async function drag(direction){const before=await snap(),a=before.cardinals.find(x=>x.primary),sx=a.rect.cx,sy=a.rect.cy,ex=Math.max(before.scene.x+24,Math.min(before.scene.x+before.scene.width-24,sx+direction*before.scene.width*.48));await page.mouse.move(sx,sy);await page.mouse.down();for(let i=1;i<=24;i++){const t=i/24;await page.mouse.move(sx+(ex-sx)*t,sy,{steps:1});await new Promise(r=>setTimeout(r,20));}await page.mouse.up();await new Promise(r=>setTimeout(r,300));const early=await snap();await new Promise(r=>setTimeout(r,700));const after=await snap();if(new URL(after.url).origin!=='https://diamondgatebridge.com')throw new Error(`NAV:${after.url}`);if(!(after.primary.length===1&&after.visible.length===1&&after.primary[0]===after.focus&&after.visible[0]===after.focus))throw new Error(`CORRESPONDENCE:${after.focus}:${after.primary}:${after.visible}`);const incoming=after.cardinals.find(x=>x.wing===after.focus),ie=early.cardinals.find(x=>x.wing===after.focus),drift=Math.hypot(incoming.rect.cx-ie.rect.cx,incoming.rect.cy-ie.rect.cy);if(drift>8)throw new Error(`STABILITY:${after.focus}:${drift}`);const r={from:before.focus,to:after.focus,drift,gesture:after.receipt?.lastGestureType||null};console.log('LIVE_TRANSITION',JSON.stringify(r));return r;}
+          const transitions=[];await load();for(let i=0;i<3;i++)transitions.push(await drag(-1));await load();transitions.push(await drag(1));const visited=new Set(['north',...transitions.flatMap(x=>[x.from,x.to])]);if(!['north','east','south','west'].every(x=>visited.has(x)))throw new Error(`MISSING:${[...visited].join(',')}`);if(errors.length)throw new Error(`BROWSER_ERRORS:${errors.join('|')}`);console.log('COMPASS_LIVE_VERIFIED',JSON.stringify({merge:'7437775b431a846e3fec388cc8d2dee2e490753c',visited:[...visited],transitions}));await browser.close();
           NODE

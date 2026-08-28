@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "AUDRALIA_HOOK5_DEPLOY_E2D68F_20260828_001",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 2218,
+  "requestBranch": "ai-dispatch-request-audralia-hook5-deploy-e2d68f",
+  "requestCommit": "871b6f66b94f178b767c755d747796ca60f7bdfa",
+  "currentMainSha": "e2d68feb38b730eab429822d18691577c3b7cb90",
+  "bridgeRunId": "33131936959",
+  "error": "Input may not be user supplied: target_sha",
+  "failedAt": "2026-08-28T01:08:46.033Z"
+}

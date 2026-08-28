@@ -1,0 +1,99 @@
+{
+  "schema": "ESTATE_SOUNDTRACK_PROVENANCE_LICENSE_MANIFEST_v1",
+  "status": "PARTIAL_CUSTODY_PENDING_EXACT_BINARY_TRANSFER",
+  "canonicalAuthority": {
+    "issue": 2141,
+    "locator": "CANONICAL_ESTATE_SOUNDTRACK_AUTHORITY_v1"
+  },
+  "coordinationIssue": 2233,
+  "projectId": "ESTATE_SOUNDTRACK",
+  "assetRoot": "assets/audio/estate-soundtrack/",
+  "custodyLaw": "RIGHTS-VERIFIED MASTER -> ONE-TIME INGEST -> SHARED ESTATE AUDIO SURFACE -> PROVENANCE/LICENSE MANIFEST -> PAGE-SPECIFIC BINDING/CLIP",
+  "authorityBoundary": {
+    "pageBindingAuthority": false,
+    "excerptAuthority": false,
+    "runtimeAuthority": false,
+    "deploymentAuthority": false,
+    "publicationAuthority": false,
+    "releaseAuthority": false
+  },
+  "masters": [
+    {
+      "id": "GYMNOPEDIE_NO1_TEKNOPAZZO_CC0",
+      "role": "GLOBE_MAP_EXPLORATION",
+      "work": {
+        "composer": "Erik Satie",
+        "title": "Gymnopédie No. 1"
+      },
+      "recording": {
+        "performer": "Teknopazzo",
+        "identityStatus": "FROZEN_NO_SUBSTITUTE"
+      },
+      "source": {
+        "authority": "Wikimedia Commons",
+        "fileIdentity": "File:Gymnopedie No. 1..ogg",
+        "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Gymnopedie_No._1..ogg",
+        "descriptionUrl": "https://commons.wikimedia.org/wiki/File:Gymnopedie_No._1..ogg"
+      },
+      "license": {
+        "identity": "CC0 1.0 Universal",
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/"
+      },
+      "sourceMedia": {
+        "container": "Ogg",
+        "codec": "FLAC",
+        "durationSeconds": 204.799546,
+        "expectedByteSize": 6502597,
+        "expectedSha256": "13e4e03797169392166b9f11d9bf9c421c022b48ad87d9b10bd441ce068502da"
+      },
+      "repository": {
+        "path": "assets/audio/estate-soundtrack/gymnopedie-no1-teknopazzo-cc0.ogg",
+        "byteSize": null,
+        "sha256": null,
+        "readbackVerified": false
+      },
+      "ingestStatus": "PENDING_EXACT_BINARY_TRANSFER",
+      "pageBindingsOrExcerpts": [],
+      "substituteMasterAllowed": false
+    },
+    {
+      "id": "SWAN_LAKE_SUITE_OP20A_GAJEWSKI_IMSLP_917973",
+      "role": "GLOBE_LOADING_CUE",
+      "work": {
+        "composer": "Pyotr Ilyich Tchaikovsky",
+        "title": "Swan Lake Suite, Op. 20a"
+      },
+      "recording": {
+        "performer": "Gene/Eugene Gajewski",
+        "performanceType": "synthesized performance",
+        "identityStatus": "FROZEN_NO_SUBSTITUTE"
+      },
+      "source": {
+        "authority": "IMSLP",
+        "fileIdentity": "#917973",
+        "originalUrl": null
+      },
+      "license": {
+        "identity": "CC0 1.0",
+        "url": null
+      },
+      "sourceMedia": {
+        "container": null,
+        "codec": null,
+        "listedDuration": "24:13",
+        "listedSize": "33.10 MB",
+        "expectedByteSize": null,
+        "expectedSha256": null
+      },
+      "repository": {
+        "path": "assets/audio/estate-soundtrack/swan-lake-suite-op20a-gajewski-cc0.mp3",
+        "byteSize": null,
+        "sha256": null,
+        "readbackVerified": false
+      },
+      "ingestStatus": "PENDING_INGEST_EXTERNAL_GATE",
+      "pageBindingsOrExcerpts": [],
+      "substituteMasterAllowed": false
+    }
+  ]
+}

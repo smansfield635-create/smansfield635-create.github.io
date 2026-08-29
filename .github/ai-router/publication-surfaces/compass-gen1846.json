@@ -1,0 +1,32 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "compass-gen1846",
+  "description": "Gen1846 Compass root publication contract after qualified restoration, gesture reconciliation, and asset identity refresh.",
+  "checks": [
+    {
+      "path": "/",
+      "includes": [
+        "data-compass-plan=\"COMPASS_INFORMATION_DELIVERY_20260814\"",
+        "data-compass-root-renewal=\"gen1844-continuity\"",
+        "data-compass-static-introduction",
+        "data-compass-scene",
+        "/assets/compass/compass.crystals.js?v=gen1846&cb=988607d5e41e1a53",
+        "/assets/compass/compass.orbit-input.js?v=gen1846&cb=681410dac29d2dae",
+        "/evidence/agentic-frontier/"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/",
+    "timeoutMs": 45000,
+    "readySelector": "[data-compass-root]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true
+  }
+}

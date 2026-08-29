@@ -21,6 +21,10 @@ jobs:
     steps:
       - name: Checkout exact study authority
         uses: actions/checkout@v4
+      - name: Validate Study 2 source rebind without execution
+        env:
+          STUDY2_VALIDATE_ONLY: '1'
+        run: python tools/research/agentic-frontier/study2-runner-v1.py
       - name: Require OpenAI credential before outcomes
         run: |
           set -euo pipefail

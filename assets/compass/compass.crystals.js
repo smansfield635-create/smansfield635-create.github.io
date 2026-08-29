@@ -7036,10 +7036,7 @@
       GESTURE.radiansPerViewport;
 
     const horizontalAxis =
-      pointer.gestureScope ===
-        "constellation"
-        ? [0, 0, 1]
-        : [0, 1, 0];
+      [0, 1, 0];
 
     const yawQuaternion =
       quaternionFromAxisAngle(

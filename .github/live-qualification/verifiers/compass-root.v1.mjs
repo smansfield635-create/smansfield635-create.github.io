@@ -12,14 +12,13 @@ const CONTEXT_CENTER_TOLERANCE=12;
 const SETTLED_ANCHOR_TOLERANCE=20;
 const OLD_PRIMARY_DEPARTURE_MIN=28;
 const SETTLED_DRIFT_TOLERANCE=6;
+const DRAG_FRACTION=.42;
 
 const browser=await puppeteer.launch({executablePath:chrome,headless:'new',args:['--no-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
 const page=await browser.newPage();
 await page.setViewport({width:900,height:1000,deviceScaleFactor:1,isMobile:false,hasTouch:false});
 const pageErrors=[];
 page.on('pageerror',e=>pageErrors.push(String(e)));
-// The Compass intentionally carries long-lived media/runtime requests. Mechanical readiness
-// depends on the DOM and governed runtime settling, not on network quiescence.
 await page.goto(`${base}/`,{waitUntil:'domcontentloaded',timeout:60000});
 await new Promise(r=>setTimeout(r,1600));
 const auditStartUrl=page.url();
@@ -30,10 +29,6 @@ page.on('framenavigated',frame=>{
   }
 });
 
-// Mechanical qualification follows the accepted Laws/Main Compass interaction boundary:
-// exercise the actual browser pointer transaction, then observe physical settlement and the
-// controller's committed cardinal correspondence. Click/auxclick navigation remains suppressed
-// because this audit measures rotation/settlement rather than semantic tap intent.
 await page.evaluate(()=>{
   const suppress=e=>e.preventDefault();
   document.addEventListener('click',suppress,true);
@@ -65,7 +60,14 @@ const snapshot=()=>page.evaluate(()=>{
   });
   return{
     viewport:{width:innerWidth,height:innerHeight,center},
-    root:{mode:root?.dataset.compassMode||'',focus:root?.dataset.orbitFocus||'',preview:root?.dataset.orbitPreviewFocus||'',phase:root?.dataset.orbitPhase||''},
+    root:{
+      mode:root?.dataset.compassMode||'',
+      focus:root?.dataset.orbitFocus||'',
+      preview:root?.dataset.orbitPreviewFocus||'',
+      phase:root?.dataset.orbitPhase||'',
+      dragging:root?.dataset.compassDragging||'',
+      gestureScope:root?.dataset.compassGestureScope||''
+    },
     scene:rect(scene),
     sceneCenterError:scene?rect(scene).cx-center:null,
     context:{heading:textUnion(heading),guidance:textUnion(guidance)},
@@ -101,43 +103,80 @@ const contextAligned=initial.contextCenterError.heading!==null&&initial.contextC
 add('AUDIT_CONTEXTUAL_ALIGNMENT',contextAligned,{tolerance:CONTEXT_CENTER_TOLERANCE,errors:initial.contextCenterError,rects:initial.context});
 add('AUDIT_NO_HORIZONTAL_OVERFLOW',Math.abs(initial.overflow)<=1,{overflow:initial.overflow});
 
-// Pointer coordinates are viewport-relative, so exercise the transition only after bringing the
-// scene into view. The physical foreground anchor is sampled again after scrolling so geometry
-// comparisons use one coordinate frame. Acceptance criteria are unchanged; only the input
-// transport is rebound from raw CDP touch injection to the real pointer transaction used by the
-// accepted Laws/Main Compass interaction contract.
 const sceneHandle=await page.$('[data-compass-scene]');
 await sceneHandle?.evaluate(el=>el.scrollIntoView({block:'center',inline:'nearest'}));
-await new Promise(r=>setTimeout(r,150));
+await new Promise(r=>setTimeout(r,180));
 const interactionBaseline=await snapshot();
 const primary0=interactionBaseline.cardinals.find(x=>x.primary)||interactionBaseline.cardinals.find(x=>x.wing===(interactionBaseline.root.focus||'north'));
 const anchor=primary0?.rect?{cx:primary0.rect.cx,cy:primary0.rect.cy}:null;
+
 if(!anchor){
+  add('AUDIT_POINTER_TRANSACTION_BINDING',false,{reason:'NO_INITIAL_FOREGROUND_ANCHOR'});
   add('AUDIT_SETTLED_GEOMETRY',false,{reason:'NO_INITIAL_FOREGROUND_ANCHOR'});
+  add('AUDIT_SINGLE_SETTLED_LABEL',false,{reason:'NO_INITIAL_FOREGROUND_ANCHOR'});
+  add('AUDIT_RELEASE_STABILITY',false,{reason:'NO_INITIAL_FOREGROUND_ANCHOR'});
 }else{
   const b=await sceneHandle?.boundingBox();
   if(!b){
+    add('AUDIT_POINTER_TRANSACTION_BINDING',false,{reason:'NO_SCENE_BOUNDS'});
     add('AUDIT_SETTLED_GEOMETRY',false,{reason:'NO_SCENE_BOUNDS'});
+    add('AUDIT_SINGLE_SETTLED_LABEL',false,{reason:'NO_SCENE_BOUNDS'});
+    add('AUDIT_RELEASE_STABILITY',false,{reason:'NO_SCENE_BOUNDS'});
   }else{
-    const patterns=[[.84,.50,.16,.50],[.50,.80,.50,.20],[.16,.50,.84,.50],[.50,.20,.50,.80]];
     const transitions=[];
+    const attempts=[];
     let transitionNavigation=null;
+    let acceptedPointerCount=0;
+    let dragBoundCount=0;
+    let previewChangedCount=0;
+    let committedChangeCount=0;
+
     for(let attempt=0;attempt<8&&new Set([interactionBaseline.root.focus,...transitions.map(t=>t.after.root.focus)].filter(Boolean)).size<4;attempt++){
-      const g=patterns[attempt%patterns.length];
-      const [sx,sy,ex,ey]=g;
-      const x1=b.x+b.width*sx,y1=b.y+b.height*sy,x2=b.x+b.width*ex,y2=b.y+b.height*ey;
       const beforeResult=await safeSnapshot(`attempt-${attempt+1}-before`);
       if(!beforeResult.value){transitionNavigation=beforeResult.error;break;}
       const before=beforeResult.value;
+      const currentPrimary=before.cardinals.find(x=>x.primary)||before.cardinals.find(x=>x.wing===before.root.focus);
+      if(!currentPrimary?.rect){
+        attempts.push({attempt:attempt+1,stage:'NO_CURRENT_PRIMARY'});
+        continue;
+      }
+
+      const x1=currentPrimary.rect.cx;
+      const y1=currentPrimary.rect.cy;
+      const direction=attempt%2===0?1:-1;
+      const proposed=x1+direction*b.width*DRAG_FRACTION;
+      const x2=Math.min(b.x+b.width-18,Math.max(b.x+18,proposed));
+      const y2=y1;
       navigationObserved=null;
+
       await page.mouse.move(x1,y1);
       await page.mouse.down({button:'left'});
-      for(let i=1;i<=18;i++){
+      await new Promise(r=>setTimeout(r,35));
+      const downResult=await safeSnapshot(`attempt-${attempt+1}-down`);
+      if(!downResult.value){transitionNavigation=downResult.error;break;}
+      acceptedPointerCount+=1;
+
+      const thresholdX=x1+Math.sign(x2-x1)*Math.min(18,Math.abs(x2-x1));
+      await page.mouse.move(thresholdX,y1,{steps:1});
+      await new Promise(r=>setTimeout(r,45));
+      const thresholdResult=await safeSnapshot(`attempt-${attempt+1}-threshold`);
+      if(!thresholdResult.value){transitionNavigation=thresholdResult.error;break;}
+      const threshold=thresholdResult.value;
+      const dragBound=threshold.root.dragging==='true'&&threshold.root.gestureScope==='constellation';
+      if(dragBound)dragBoundCount+=1;
+
+      for(let i=2;i<=18;i++){
         const t=i/18;
-        await page.mouse.move(x1+(x2-x1)*t,y1+(y2-y1)*t,{steps:1});
+        await page.mouse.move(x1+(x2-x1)*t,y1,{steps:1});
         await new Promise(r=>setTimeout(r,22));
       }
-      await new Promise(r=>setTimeout(r,100));
+      await new Promise(r=>setTimeout(r,90));
+      const previewResult=await safeSnapshot(`attempt-${attempt+1}-preview`);
+      if(!previewResult.value){transitionNavigation=previewResult.error;break;}
+      const preview=previewResult.value;
+      const previewChanged=Boolean(preview.root.preview&&preview.root.preview!==before.root.focus);
+      if(previewChanged)previewChangedCount+=1;
+
       await page.mouse.up({button:'left'});
       await new Promise(r=>setTimeout(r,260));
       if(navigationObserved){transitionNavigation={stage:`attempt-${attempt+1}-post-release-early`,...navigationObserved};break;}
@@ -149,11 +188,28 @@ if(!anchor){
       const afterResult=await safeSnapshot(`attempt-${attempt+1}-after`);
       if(!afterResult.value){transitionNavigation=afterResult.error;break;}
       const after=afterResult.value;
-      if(after.root.phase==='COMMITTED'&&after.root.focus&&after.root.focus!==before.root.focus)transitions.push({before,early,after});
+      const committedChange=after.root.phase==='COMMITTED'&&Boolean(after.root.focus)&&after.root.focus!==before.root.focus;
+      if(committedChange){
+        committedChangeCount+=1;
+        transitions.push({before,threshold,preview,early,after});
+      }
+      attempts.push({
+        attempt:attempt+1,
+        from:before.root.focus,
+        start:{x:x1,y:y1},
+        end:{x:x2,y:y2},
+        down:{phase:downResult.value.root.phase,dragging:downResult.value.root.dragging,gestureScope:downResult.value.root.gestureScope},
+        threshold:{phase:threshold.root.phase,focus:threshold.root.focus,preview:threshold.root.preview,dragging:threshold.root.dragging,gestureScope:threshold.root.gestureScope,dragBound},
+        preview:{phase:preview.root.phase,focus:preview.root.focus,preview:preview.root.preview,dragging:preview.root.dragging,gestureScope:preview.root.gestureScope,previewChanged},
+        after:{phase:after.root.phase,focus:after.root.focus,preview:after.root.preview,committedChange}
+      });
     }
 
+    const bindingPass=!transitionNavigation&&acceptedPointerCount>0&&dragBoundCount>0&&previewChangedCount>0&&committedChangeCount>0;
+    add('AUDIT_POINTER_TRANSACTION_BINDING',bindingPass,{acceptedPointerCount,dragBoundCount,previewChangedCount,committedChangeCount,inputBoundary:'LAWS_STYLE_POINTER_TRANSACTION',attempts});
+
     if(transitionNavigation)add('AUDIT_TRANSITION_NAVIGATION',false,transitionNavigation);
-    else add('AUDIT_TRANSITION_NAVIGATION',true,{navigationObserved:false,inputBoundary:'POINTER_TRANSACTION'});
+    else add('AUDIT_TRANSITION_NAVIGATION',true,{navigationObserved:false,inputBoundary:'LAWS_STYLE_POINTER_TRANSACTION'});
 
     const geometryEvidence=[];
     let geometryPass=!transitionNavigation&&transitions.length>=3;
@@ -169,15 +225,15 @@ if(!anchor){
       geometryPass&&=onePass;
       geometryEvidence.push({from:t.before.root.focus,to:t.after.root.focus,phase:t.after.root.phase,anchorError,outgoingDistance,settledDrift:drift,primary:t.after.primary,visibleLabels:t.after.visibleLabels,status:onePass?'PASS':'FAIL'});
     }
-    add('AUDIT_SETTLED_GEOMETRY',geometryPass,{requiredDistinctTransitions:3,observedTransitions:transitions.length,anchor,tolerances:{anchor:SETTLED_ANCHOR_TOLERANCE,outgoingDeparture:OLD_PRIMARY_DEPARTURE_MIN,drift:SETTLED_DRIFT_TOLERANCE},navigation:transitionNavigation,inputBoundary:'POINTER_TRANSACTION',transitions:geometryEvidence});
-    add('AUDIT_SINGLE_SETTLED_LABEL',!transitionNavigation&&transitions.length>=1&&transitions.every(t=>t.after.visibleLabels.length===1&&t.after.primary.length===1&&t.after.visibleLabels[0]===t.after.root.focus&&t.after.primary[0]===t.after.root.focus),{navigation:transitionNavigation,inputBoundary:'POINTER_TRANSACTION',transitions:geometryEvidence.map(x=>({from:x.from,to:x.to,primary:x.primary,visibleLabels:x.visibleLabels}))});
-    add('AUDIT_RELEASE_STABILITY',!transitionNavigation&&transitions.length>=1&&geometryEvidence.every(x=>x.settledDrift<=SETTLED_DRIFT_TOLERANCE),{navigation:transitionNavigation,inputBoundary:'POINTER_TRANSACTION',drifts:geometryEvidence.map(x=>({to:x.to,drift:x.settledDrift}))});
+    add('AUDIT_SETTLED_GEOMETRY',geometryPass,{requiredDistinctTransitions:3,observedTransitions:transitions.length,anchor,tolerances:{anchor:SETTLED_ANCHOR_TOLERANCE,outgoingDeparture:OLD_PRIMARY_DEPARTURE_MIN,drift:SETTLED_DRIFT_TOLERANCE},navigation:transitionNavigation,inputBoundary:'LAWS_STYLE_POINTER_TRANSACTION',transactions:attempts,transitions:geometryEvidence});
+    add('AUDIT_SINGLE_SETTLED_LABEL',!transitionNavigation&&transitions.length>=1&&transitions.every(t=>t.after.visibleLabels.length===1&&t.after.primary.length===1&&t.after.visibleLabels[0]===t.after.root.focus&&t.after.primary[0]===t.after.root.focus),{navigation:transitionNavigation,inputBoundary:'LAWS_STYLE_POINTER_TRANSACTION',transitions:geometryEvidence.map(x=>({from:x.from,to:x.to,primary:x.primary,visibleLabels:x.visibleLabels}))});
+    add('AUDIT_RELEASE_STABILITY',!transitionNavigation&&transitions.length>=1&&geometryEvidence.every(x=>x.settledDrift<=SETTLED_DRIFT_TOLERANCE),{navigation:transitionNavigation,inputBoundary:'LAWS_STYLE_POINTER_TRANSACTION',drifts:geometryEvidence.map(x=>({to:x.to,drift:x.settledDrift}))});
   }
 }
 
 add('AUDIT_NO_BROWSER_ERRORS',pageErrors.length===0,{errors:pageErrors});
 const status=failures.length?'FAIL':'PASS';
-const result={status,schema:'DGB_COMPASS_AUDIT_DERIVED_RUNTIME_v1',publicUrl:`${base}/`,auditAuthority:'docs/COMPASS_LAWS_PRECEDENT_AND_STATE_TRANSITION_AUDIT_20260822.md + docs/COMPASS_RELEASE_SETTLEMENT_AND_TABLET_CONTEXT_CYCLE_20260822.md',inputBoundary:'POINTER_TRANSACTION',checks,failures,initial};
+const result={status,schema:'DGB_COMPASS_AUDIT_DERIVED_RUNTIME_v1',publicUrl:`${base}/`,auditAuthority:'docs/COMPASS_LAWS_PRECEDENT_AND_STATE_TRANSITION_AUDIT_20260822.md + docs/COMPASS_RELEASE_SETTLEMENT_AND_TABLET_CONTEXT_CYCLE_20260822.md',inputBoundary:'LAWS_STYLE_POINTER_TRANSACTION',checks,failures,initial};
 fs.writeFileSync(out,JSON.stringify(result,null,2));
 console.log(JSON.stringify(result,null,2));
 await browser.close();

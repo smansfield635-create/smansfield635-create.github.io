@@ -1,12 +1,132 @@
 # Remaining-Room Mining Contribution — D05 / D06v3 / D07v2 Governing Literal Artifact Family
 
-Status: repository audit/mining contribution. This record contains only substantive rules directly supported by the available D05 / D06v3 / D07v2 artifact family. It does not assert exhaustive mining of Rooms 01, 02, 06, or 11.
+Status: repository audit/mining contribution. This record contains substantive rules directly supported by the available D05 / D06v3 / D07v2 artifact family plus locally established Room 01 schema-identity canon. It does not assert exhaustive mining of Room 02, 06, or 11.
 
 ## Room 01 — foundational schema / identity
 
-Mining value: **limited but nonzero**.
+Mining value: **high; foundational lane substance recovered**.
 
-The available artifact family establishes a reusable transport-identity construction:
+Room 01 establishes a cross-parent Schema Identity authority. It does not replace D05, D06, or D07, and the three parent schemas remain sovereign and independently identifiable.
+
+### Definitive identity custody
+
+The controlling corrected Room 01 custody inventory contains seven distinct top-level field occurrences:
+
+- D05: `schema`, `version`
+- D06: `schema`, `contract`, `version`
+- D07: `schema`, `version`
+
+Controlling values:
+
+- D05 `schema = AUDRALIA_DIAGNOSTIC_SOURCE_BUNDLE_v1`
+- D05 `version = 1.0.0`
+- D06 `schema = AUDRALIA_DIAGNOSTIC_AUTHORITY_RECEIPT_v3`
+- D06 `contract = AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_AUTHORITY_CHILD_TNT_v1`
+- D06 `version = 3.0.0`
+- D07 `schema = AUDRALIA_DIAGNOSTIC_TRANSPORT_ENVELOPE_v2`
+- D07 `version = 2.0.0`
+
+The earlier Room 01 birth text counted eight occurrences and included D07 `messageType`; the later corrective establishment record controls the current Room 01 canon with seven occurrences. The superseded count is retained as history rather than silently rewritten.
+
+### Identity separation mathematics
+
+Room 01 establishes the following non-substitution relations:
+
+`SCHEMA_IDENTITY != CONTRACT_IDENTITY`
+
+`SCHEMA_IDENTITY != MESSAGE_TYPE`
+
+`SCHEMA_VERSION != CONTRACT_VERSION UNLESS EXPLICITLY DECLARED`
+
+`DOCUMENT_IDENTITY != INSTANCE_IDENTITY`
+
+`SCHEMA_IDENTITY != ENVELOPE_IDENTITY`
+
+`SCHEMA_IDENTITY != INSTALLATION_IDENTITY`
+
+`SCHEMA_IDENTITY != HASH_IDENTITY`
+
+No identifier acquires another field's semantics merely because both occur in the same artifact family.
+
+Candidate repository object:
+
+`SCHEMA_IDENTITY_SEPARATION_AND_NON_SUBSTITUTION`
+
+### Schema identity semantics
+
+A schema identifier is the canonical identifier of the document structure to which an instance claims conformance. It must distinguish:
+
+1. document purpose;
+2. document family;
+3. major structural generation;
+4. incompatible semantic revisions.
+
+A version is the explicit version of the identified schema, contract, or document structure and is not interchangeable with the schema identifier.
+
+The D06 contract identifies the operational contract whose result is expressed by the receipt. Contract identity is related to, but distinct from, receipt schema identity.
+
+### Compatibility is explicit, not inferred
+
+Room 01 requires explicit compatibility determination. Recognized classes include:
+
+- `IDENTICAL`
+- `BACKWARD_COMPATIBLE`
+- `FORWARD_COMPATIBLE`
+- `BIDIRECTIONALLY_COMPATIBLE`
+- `ADDITIVE_WITH_EXTENSION`
+- `SEMANTICALLY_REVISED`
+- `STRUCTURALLY_INCOMPATIBLE`
+- `SUPERSEDED`
+- `DEPRECATED`
+- `RETIRED`
+- `HELD`
+
+Negative laws:
+
+- shared field names do not prove compatibility;
+- shared values do not prove compatibility;
+- matching versions do not prove compatibility;
+- hash equality does not prove semantic compatibility unless the compared hash domains and source bytes are also equivalent.
+
+Candidate repository object:
+
+`EXPLICIT_SCHEMA_COMPATIBILITY_CLASSIFICATION`
+
+### Versioned supersession and retained history
+
+Room 01 prohibits silent renaming, incompatible identity reuse, and destructive replacement of historical identity records.
+
+A governed identity change requires an explicit change record covering the current identity, proposed identity, identity kind, affected parent and lane schemas, compatibility classification, supersession relation, retained historical identity, fixture impact, serialization impact, hash impact, envelope-ID impact where applicable, D06 impact where applicable, cross-room dependency impact, specialist determination, independent verification, and governing admission or rejection.
+
+The controlling establishment correction further fixes the rule that future change requires explicit versioned supersession, independent review, applicable Receipt Schema Authority determination, and Governing Authority admission.
+
+Candidate repository object:
+
+`VERSIONED_IDENTITY_SUPERSESSION_WITH_RETAINED_HISTORY`
+
+### Parent sovereignty and authority noncollapse
+
+Room 01 supplies schema/version/contract identity inputs downstream without absorbing downstream custody.
+
+Receipt Schema Authority retains final D06 identity, contract, serialization, and adoption authority.
+
+Governing Authority retains admission, hold, rejection, supersession, and release authority.
+
+A Room 01 specialist determination is not automatic governing admission.
+
+Candidate invariant:
+
+`LANE_IDENTITY_CUSTODY != PARENT_SCHEMA_SOVEREIGNTY != SPECIALIST_ADOPTION_AUTHORITY != GOVERNING_ADMISSION_AUTHORITY`
+
+### Expression consequences
+
+Faithful implementation-facing expression must preserve the seven identity occurrences separately, preserve exact current values, reject silent substitution or normalization, validate schema/version/contract relationships independently, retain historical identities after supersession, and prevent downstream semantic custody from being inferred from identity references.
+
+These are expression requirements derived from Room 01 canon; they are not evidence that implementation has occurred.
+
+### Separate D07 transport-identity derivation
+
+The artifact family also establishes a reusable transport-identity construction:
 
 1. Envelope identity is not merely an arbitrary literal.
 2. A separate projection object defines the identity-bearing field set.
@@ -28,7 +148,21 @@ Candidate universal object:
 
 `SEMANTIC_TRANSPORT_IDENTITY_DERIVATION`
 
-Claim ceiling: this supports an explicit identity-derivation pattern for the D07 transport family. It does not establish the complete foundational schema or identity mathematics of Room 01.
+This transport derivation is related to Room 01 identity concerns but must not be collapsed into schema identity itself.
+
+### Three-corpus classification consequence
+
+For future mining and replacement work, Room 01 identity material must preserve separation among:
+
+- Legacy Evidence Corpus: historical/recovered identity evidence and unresolved physical-byte status;
+- Governing Invariant and Transition Corpus: the seven-field custody, identity separation law, compatibility law, supersession/change-control law, and authority boundaries;
+- Replacement Target Corpus: future authorized target-facing schemas, registries, fixtures, or expression artifacts with explicit lineage.
+
+Equal names, paths, digests, roles, functions, or authority families do not establish legacy/replacement identity. Explicit lineage or authority determination is required.
+
+### Room 01 claim ceiling
+
+This mining materially closes the previously identified foundational Room 01 gap for schema identity separation, compatibility, custody, and supersession law. It does not establish an executable lane-schema file, registry file, fixture family, implementation conformance, or construction/release authority; those artifacts were identified as future construction targets and remain distinct from the recovered governing semantics.
 
 ## Room 02 — subject / scope semantics
 
@@ -151,6 +285,24 @@ Additional supported rule:
 
 `IMMUTABILITY_IS_A_DECLARED_PROPERTY_NOT_A_SUBSTITUTE_FOR_HASH_OR_PROVENANCE_VERIFICATION`
 
+### Supersession and lineage calibration now available
+
+The later three-corpus calibration standard adds a repository-relevant supersession/lineage law without reopening completed room determinations:
+
+- legacy and replacement identities are distinct by default;
+- equality of name, path, digest, role, function, or authority family does not establish identity;
+- same institutional identity requires explicit authority decision;
+- lineage must be expressed through explicit relations such as `REPLACED_BY`, `IMPLEMENTS_INVARIANT_OF`, `PRESERVES_BEHAVIOR_OF`, `PRESERVES_PUBLIC_CONTRACT_OF`, `MIGRATES_STATE_FROM`, `INTENTIONALLY_DIVERGES_FROM`, `CONSOLIDATES`, `SPLITS`, `DEPRECATES`, `RETAINS_HISTORY_OF`, `SUPERSEDES`, `SUPERSEDED_BY`, `DERIVED_FROM`, `EMBEDS`, `PROJECTS`, `HASH_OF`, `CORRECTS`, `CANONICAL_ENCODING_OF`, `PHYSICAL_INSTANCE_OF`, `EXECUTION_OF`, and `DEPLOYMENT_OF`;
+- reclassification is permitted only with prior classification, new classification, triggering evidence or target decision, affected replacement surface, determining authority, effective time, and retained history;
+- prior classification may not be deleted;
+- reclassification may not evade blocking burden.
+
+Candidate repository object:
+
+`EXPLICIT_ARTIFACT_LINEAGE_AND_NONDESTRUCTIVE_RECLASSIFICATION`
+
+This is classification/transition calibration, not construction or release authority.
+
 ## Source-hash domain status
 
 This artifact family must not be used to claim semantic-domain closure.
@@ -169,23 +321,22 @@ Therefore value correspondence, version correspondence, and semantic-domain corr
 
 ## Mining disposition after this contribution
 
-- **Room 01:** still inspect for original foundational mathematics and identity definitions.
-- **Room 02:** still inspect for full subject ontology and variable semantics.
-- **Room 06:** materially mined by this artifact family; inspect further only for relationships beyond evidence-state separation/noncollapse.
-- **Room 11:** materially mined for provenance/custody/extension/immutability; inspect further for supersession or provenance laws not represented here.
+- **Room 01:** foundational schema/identity substance is now materially mined: seven-field custody, exact current identities, identity non-substitution, compatibility classification, parent sovereignty, and versioned supersession/retained-history law are repository-native. Follow-up is justified only for exact artifacts or additional identity mathematics not represented here.
+- **Room 02:** remains the primary high-priority mining frontier for full subject ontology and diagnostic-variable semantics.
+- **Room 06:** materially mined; inspect further only for relationships beyond evidence-state separation/noncollapse.
+- **Room 11:** materially mined, including a targeted supersession/lineage calibration. Follow-up should focus only on provenance or retirement laws not represented here.
+- **Room 04:** substantively complete for audit-relevant correspondence substance.
 
 ## Claim ceiling
 
-This contribution proves repository-relevant structural knowledge preserved by the available D05 / D06v3 / D07v2 artifact family.
+This contribution preserves repository-relevant structural and governing knowledge supported by the available artifact family and established Room 01 canon.
 
 It does **not** prove:
 
-- exhaustive Room 01 recovery;
 - exhaustive Room 02 recovery;
 - exhaustive Room 06 recovery;
 - exhaustive Room 11 recovery;
 - implementation conformance;
 - runtime connection;
 - independent execution;
-- source-hash semantic-domain resolution;
-- universal applicability beyond what the artifacts directly support.
+- universal applicability beyond what the underlying records directly support.

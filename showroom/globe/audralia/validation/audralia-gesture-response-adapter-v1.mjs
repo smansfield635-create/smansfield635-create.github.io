@@ -1,0 +1,54 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
+export const AUDRALIA_GESTURE_RESPONSE_ADAPTER_SCHEMA='AUDRALIA_GESTURE_RESPONSE_ADAPTER_v1';
+
+const read=(root,relative)=>fs.readFileSync(path.join(root,relative),'utf8');
+const has=(text,fragment)=>text.includes(fragment);
+
+export function evaluateAudraliaConstruction(root=process.cwd()){
+  const rendererPath='showroom/globe/audralia/renderer-continuous-travel-v1.mjs';
+  const appPath='showroom/globe/audralia/weather-presentation-reconciliation/app.mjs';
+  const indexPath='showroom/globe/audralia/index.html';
+  const renderer=read(root,rendererPath);
+  const app=read(root,appPath);
+  const index=read(root,indexPath);
+
+  const checks={
+    rendererSuccessorPresent:has(renderer,"AUDRALIA_CONTINUOUS_TRAVEL_RENDERER_v1"),
+    hardTargetArcCapRemoved:!has(renderer,'MAX_TARGET_ARC')&&!has(renderer,'Math.PI*.9')&&!has(renderer,'Math.PI * .9'),
+    periodicTargetNormalizationPresent:has(renderer,'normalizeTarget')&&has(renderer,'Math.PI*2'),
+    panScreenStillDrivesPan:has(renderer,'function panScreen')&&has(renderer,'pan('),
+    localAppUsesSuccessor:has(app,"../renderer-continuous-travel-v1.mjs"),
+    localAppNoProtectedRendererImport:!has(app,"../../h-earth/terrain-estate-construction-v1/renderer.mjs"),
+    liveIndexUsesLocalApp:has(index,'./weather-presentation-reconciliation/app.mjs?cb=AUDRALIA_CONTINUOUS_TRAVEL_v1'),
+    liveIndexPreloadsSuccessor:has(index,'./renderer-continuous-travel-v1.mjs?cb=AUDRALIA_CONTINUOUS_TRAVEL_v1'),
+    focusPrimary:has(index,'audralia-live-action-primary')&&has(index,'data-fit-world>focus Gratitude</button>'),
+    soundtrackUtilityPresent:has(index,'data-audralia-soundtrack-toggle'),
+    returnToCompassSingle:((index.match(/data-return-to-compass/g)||[]).length===1)&&has(index,'>Return to Compass</a>'),
+    hEarthTopNavRemoved:!has(index,'>H-Earth · Play</a>'),
+    mirrorlandTopNavRemoved:!has(index,'>Mirrorland</a>'),
+    oneFingerLookPreserved:has(app,"if(pointers.size===1){renderer.orbit"),
+    twoFingerTravelPreserved:has(app,"gesture.mode='TRAVEL'")&&has(app,'renderer.panScreen'),
+    pinchSpreadPreserved:has(app,"gesture.mode='ZOOM'")&&has(app,'renderer.zoomByFactor')
+  };
+  const failures=Object.entries(checks).filter(([,pass])=>!pass).map(([id])=>id);
+  return Object.freeze({schema:AUDRALIA_GESTURE_RESPONSE_ADAPTER_SCHEMA,pass:failures.length===0,checks:Object.freeze(checks),failures:Object.freeze(failures)});
+}
+
+export function evaluateContinuousTravelModel({planetRadius=6200,steps=160,stepDistance=180}={}){
+  let u=0,v=0;
+  const positions=[];
+  for(let i=0;i<steps;i++){
+    v+=stepDistance;
+    const radius=Math.hypot(u,v);
+    const circumference=planetRadius*Math.PI*2;
+    if(radius>circumference){const wrapped=radius%circumference,scale=wrapped/(radius||1);u*=scale;v*=scale;}
+    positions.push(Math.hypot(u,v));
+  }
+  const cap=planetRadius*Math.PI*.9;
+  const crossedCap=positions.some(r=>r>cap+stepDistance*.25);
+  const crossedAntipode=positions.some(r=>r>planetRadius*Math.PI+stepDistance*.25);
+  const laterMotion=positions.slice(-8).every((r,i,a)=>i===0||Math.abs(r-a[i-1])>1e-6);
+  return Object.freeze({pass:crossedCap&&crossedAntipode&&laterMotion,crossedCap,crossedAntipode,laterMotion,finalRadius:positions.at(-1),cap,antipode:planetRadius*Math.PI});
+}

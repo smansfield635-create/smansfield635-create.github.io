@@ -1670,6 +1670,49 @@
       "scopeHash": "4f452f63f9e07948dd86396c9e2acad4e55744c872aaa064e49abd2bf21693dd",
       "state": "ADMITTED_LOCKED"
     },
+    "511f47c7711cd7343ef18816c34b6efe9b865a992ae0c9d9a659999d39b1aabb": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "24c1bca8858499c86262a2534c5a84b54be537f2",
+          "lockGeneration": 1843,
+          "lockScope": "LAWS:METHODS_FROZEN_DIMENSIONAL_FAMILY_CONFORMANCE:V1",
+          "operationId": "LAWS_METHODS_FROZEN_DIMENSIONAL_CONFORMANCE_20260829_002",
+          "procedureLocatorDigest": "85c5aaee5fffa8c7e73d6d1d369fe10642f972f9951517d7765d958a0feb5347",
+          "requestDigest": "eb89b62a35e888440e33872a3f963faec76087db1eed43c06a8ce53e0bda9a71",
+          "scopeHash": "511f47c7711cd7343ef18816c34b6efe9b865a992ae0c9d9a659999d39b1aabb"
+        },
+        "bindingDigest": "05e6f8e5a330b3a1a4cfc7821fb5aa801cc75449ac71c69059dc64b78d7384f5",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "ecc954bf9c31835622c37e07c7391956407998eefda7ec956610adcbbf735954",
+          "commentId": 5460486716,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2307,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33235405086,
+          "workflowSha": "24c1bca8858499c86262a2534c5a84b54be537f2"
+        },
+        "lineageAnchorCommitSha": "4a957749438f219e56bcf94f48c0bdd820cc0828",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "24c1bca8858499c86262a2534c5a84b54be537f2",
+      "lockGeneration": 1843,
+      "lockScope": "LAWS:METHODS_FROZEN_DIMENSIONAL_FAMILY_CONFORMANCE:V1",
+      "operationId": "LAWS_METHODS_FROZEN_DIMENSIONAL_CONFORMANCE_20260829_002",
+      "procedureLocatorDigest": "85c5aaee5fffa8c7e73d6d1d369fe10642f972f9951517d7765d958a0feb5347",
+      "released": false,
+      "requestDigest": "eb89b62a35e888440e33872a3f963faec76087db1eed43c06a8ce53e0bda9a71",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "511f47c7711cd7343ef18816c34b6efe9b865a992ae0c9d9a659999d39b1aabb",
+      "state": "ADMITTED_LOCKED"
+    },
     "514f09983e622eda84859dbe0c08e5a74e1fd5bef4da582ea4d7b7e557d5dcca": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -5905,7 +5948,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1842,
+  "lockGeneration": 1843,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

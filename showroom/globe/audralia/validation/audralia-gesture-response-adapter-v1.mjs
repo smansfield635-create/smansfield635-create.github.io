@@ -16,11 +16,13 @@ export function evaluateAudraliaConstruction(root=process.cwd()){
 
   const checks={
     rendererSuccessorPresent:has(renderer,"AUDRALIA_CONTINUOUS_TRAVEL_RENDERER_v1"),
-    hardTargetArcCapRemoved:!has(renderer,'MAX_TARGET_ARC')&&!has(renderer,'Math.PI*.9')&&!has(renderer,'Math.PI * .9'),
-    periodicTargetNormalizationPresent:has(renderer,'normalizeTarget')&&has(renderer,'Math.PI*2'),
-    panScreenStillDrivesPan:has(renderer,'function panScreen')&&has(renderer,'pan('),
+    immutable24057BaselineBound:has(renderer,"/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs?cb=EXACT_24057"),
+    obsoleteCapUsedOnlyAsIdentityInput:has(renderer,"const TARGET_CAP = 'const MAX_TARGET_ARC=PLANET_RADIUS*Math.PI*.9;';")&&has(renderer,"if (source.includes('MAX_TARGET_ARC')) throw new Error('AUDRALIA_CONTINUOUS_TRAVEL_HARD_CAP_SURVIVED_TRANSFORM')"),
+    periodicTargetNormalizationPresent:has(renderer,"const TARGET_PERIOD = 'const TARGET_PERIOD=PLANET_RADIUS*Math.PI*2;';")&&has(renderer,'radius%TARGET_PERIOD'),
+    infiniteCapNotUsed:!has(renderer,'Number.POSITIVE_INFINITY'),
+    singleRendererPassDeclared:has(renderer,'rendererCount: 1')&&has(renderer,'renderPassCount: 1'),
     localAppUsesSuccessor:has(app,"../renderer-continuous-travel-v1.mjs"),
-    localAppNoProtectedRendererImport:!has(app,"../../h-earth/terrain-estate-construction-v1/renderer.mjs"),
+    localAppNoHEarthRendererImport:!has(app,"../../h-earth/terrain-estate-construction-v1/renderer.mjs"),
     liveIndexUsesLocalApp:has(index,'./weather-presentation-reconciliation/app.mjs?cb=AUDRALIA_CONTINUOUS_TRAVEL_v1'),
     liveIndexPreloadsSuccessor:has(index,'./renderer-continuous-travel-v1.mjs?cb=AUDRALIA_CONTINUOUS_TRAVEL_v1'),
     focusPrimary:has(index,'audralia-live-action-primary')&&has(index,'data-fit-world>focus Gratitude</button>'),
@@ -46,9 +48,11 @@ export function evaluateContinuousTravelModel({planetRadius=6200,steps=160,stepD
     if(radius>circumference){const wrapped=radius%circumference,scale=wrapped/(radius||1);u*=scale;v*=scale;}
     positions.push(Math.hypot(u,v));
   }
-  const cap=planetRadius*Math.PI*.9;
-  const crossedCap=positions.some(r=>r>cap+stepDistance*.25);
-  const crossedAntipode=positions.some(r=>r>planetRadius*Math.PI+stepDistance*.25);
-  const laterMotion=positions.slice(-8).every((r,i,a)=>i===0||Math.abs(r-a[i-1])>1e-6);
-  return Object.freeze({pass:crossedCap&&crossedAntipode&&laterMotion,crossedCap,crossedAntipode,laterMotion,finalRadius:positions.at(-1),cap,antipode:planetRadius*Math.PI});
+  const oldCap=planetRadius*Math.PI*.9;
+  const antipode=planetRadius*Math.PI;
+  const crossedOldCap=positions.some(r=>r>oldCap+stepDistance*.25);
+  const crossedAntipode=positions.some(r=>r>antipode+stepDistance*.25);
+  const postAntipode=positions.filter(r=>r>antipode+stepDistance*.25);
+  const postAntipodeMotion=postAntipode.length>=8&&postAntipode.slice(1,8).every((r,i)=>Math.abs(r-postAntipode[i])>1e-6);
+  return Object.freeze({pass:crossedOldCap&&crossedAntipode&&postAntipodeMotion,crossedOldCap,crossedAntipode,postAntipodeMotion,oldCap,antipode,finalRadius:positions.at(-1)});
 }

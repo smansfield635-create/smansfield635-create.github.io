@@ -23,7 +23,9 @@ has('What is Diamond Gate Bridge?', 'Diamond Gate disclosure');
 has('data-compass-scene', 'Compass scene');
 has('Built Different', 'Built Different evidence');
 has('data-compass-capability-switcher', 'Track A capability placeholder');
-has('Build Your Own Custom Site', 'final custom build CTA');
+has('class="compass-build-cta"', 'final custom build CTA section');
+has('id="build-custom-title"', 'final custom build CTA title anchor');
+has('Build Your Own Website', 'final custom build CTA title');
 has('data-editorial-fallback="true"', 'keyboard-accessible destination fallback');
 has('<summary>All destinations</summary>', 'collapsed destination fallback summary');
 absent('The Compass exposes the same destinations to keyboard, touch, pointer, and reduced-motion users.', 'legacy bottom disclosure');
@@ -39,7 +41,7 @@ has('/' + finalMaster.livePromotionTarget, 'owner-approved 65-second Chapter One
 const compassAt = indexOf('data-compass-scene');
 const builtAt = indexOf('Built Different');
 const capabilityAt = indexOf('data-compass-capability-switcher');
-const ctaAt = indexOf('Build Your Own Custom Site');
+const ctaAt = indexOf('class="compass-build-cta"');
 if (!(compassAt < builtAt && builtAt < capabilityAt && capabilityAt < ctaAt)) {
   fail(`editorial order invalid: ${JSON.stringify({compassAt,builtAt,capabilityAt,ctaAt})}`);
 }

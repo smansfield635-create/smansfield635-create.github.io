@@ -1,5 +1,6 @@
 (()=>{'use strict';
 const BUILD='gen1596-surgical-composite-5';
+const PRESENTATION_OWNER='DGB_COMPASS_PRESENTATION_OWNER_GEN1591';
 const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
 const force=(el,prop,value)=>el?.style?.setProperty(prop,value,'important');
 const CARDINALS={
@@ -13,6 +14,7 @@ const start=()=>{
   if(!root){requestAnimationFrame(start);return;}
   document.documentElement.dataset.compassComposite=BUILD;
   root.dataset.compassComposite=BUILD;
+  root.dataset.compassCompositeOwnership='subordinate-presentation-augmentation';
   let interactionCommitted=false;
   let lastForeground='';
 
@@ -47,8 +49,9 @@ const start=()=>{
   };
 
   /* Preserve native cardinal ownership. The Compass controller alone decides
-     which cardinal is readable. The composite only removes a label shell when
-     that rendered wing has no actually visible label text. */
+     which cardinal is readable. The composite is a subordinate visual
+     augmentation and only removes a label shell when that rendered wing has
+     no actually visible label text. */
   const suppressEmptyWingShells=()=>{
     if((root.dataset.compassMode||'CONSTELLATION')!=='CONSTELLATION')return;
     qa('[data-compass-cardinal]',root).forEach(wing=>{
@@ -110,5 +113,20 @@ const start=()=>{
   sync();
   setTimeout(sync,60);setTimeout(sync,120);setTimeout(sync,250);setTimeout(sync,500);setTimeout(sync,900);setTimeout(sync,1600);
 };
-start();
+const startSubordinate=()=>{
+  let frames=0;
+  const ready=()=>{
+    const owner=globalThis[PRESENTATION_OWNER];
+    const receipt=globalThis.DGB_COMPASS_PRESENTATION_RETIREMENT_V2;
+    if(owner?.mounted&&receipt?.mounted){
+      globalThis.DGB_COMPASS_COMPOSITE_SUBORDINATE=Object.freeze({mounted:true,build:BUILD,owner:PRESENTATION_OWNER,ownership:'SUBORDINATE_PRESENTATION_AUGMENTATION',mechanicsAuthority:'DGB_COMPASS_CONTROLLER'});
+      start();
+      return;
+    }
+    if(frames++<120){requestAnimationFrame(ready);return;}
+    throw new Error('COMPASS_COMPOSITE_PRESENTATION_OWNER_NOT_MOUNTED');
+  };
+  if(document.readyState==='complete'||document.readyState==='interactive')queueMicrotask(ready);else document.addEventListener('DOMContentLoaded',ready,{once:true});
+};
+startSubordinate();
 })();

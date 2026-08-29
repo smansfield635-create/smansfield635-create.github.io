@@ -40,6 +40,29 @@ function gitBlob(relativePath) {
   return execFileSync("git", ["hash-object", relativePath], { cwd: root, encoding: "utf8" }).trim();
 }
 
+function normalizeText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/\b(the|a|an|and|or|to|of|in|on|for|with|as|is|are|be|by|that|this|it|its|from|at|into|than|then|when|where|what|who|how)\b/g, " ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+}
+
+function jaccard(a, b) {
+  const left = new Set(normalizeText(a));
+  const right = new Set(normalizeText(b));
+  if (!left.size && !right.size) return 1;
+  const intersection = [...left].filter(token => right.has(token)).length;
+  const union = new Set([...left, ...right]).size;
+  return union ? intersection / union : 0;
+}
+
+function readingFingerprint(story) {
+  return [story.label, story.readings?.practical, story.readings?.engineering, story.readings?.empirical].join("\n");
+}
+
 assert.equal(manifest.schema, "LAWS_LAYERED_INFORMATION_GRID_ROUTE_CARD_MAP_v3");
 assert.equal(allRoutes.length, 29);
 assert.equal(gitBlob("laws/research/methods-and-models/carousel-progressive.js"), "e9e22bc13f8b98dfbe3ea02a63efd0459a599ead", "Methods progressive JS remains byte-identical");
@@ -61,6 +84,9 @@ for (const token of [
   "methodsReferenceArchitecture:true"
 ]) assert.ok(runtimeSource.includes(token), `shared runtime includes Methods reference token: ${token}`);
 
+const exactReadingOwners = new Map();
+let storyCount = 0;
+let pairCount = 0;
 for (const route of routes) {
   const file = routeFile(route);
   assert.ok(fs.existsSync(file), `${route}: source file exists`);
@@ -74,15 +100,32 @@ for (const route of routes) {
     assert.ok(Array.isArray(card.stories) && card.stories.length >= 4 && card.stories.length <= 5, `${route}/${card.id}: four or five authored story layers`);
     assert.equal(new Set(card.stories.map(story => story.id)).size, card.stories.length, `${route}/${card.id}: unique story ids`);
     assert.equal(new Set(card.stories.map(story => story.label)).size, card.stories.length, `${route}/${card.id}: distinct story labels`);
+    storyCount += card.stories.length;
     for (const story of card.stories) {
       assert.ok(String(story.label || "").trim(), `${route}/${card.id}/${story.id}: authored reader identity`);
       for (const lens of ["practical", "engineering", "empirical"]) assert.ok(String(story.readings?.[lens] || "").trim(), `${route}/${card.id}/${story.id}: ${lens} source material populated`);
+      const exact = readingFingerprint(story).replace(/\s+/g, " ").trim();
+      const owner = `${route}/${card.id}/${story.id}`;
+      assert.ok(!exactReadingOwners.has(exact), `${owner}: exact chapter duplicate of ${exactReadingOwners.get(exact) || "none"}`);
+      exactReadingOwners.set(exact, owner);
+    }
+    for (let i = 0; i < card.stories.length; i += 1) {
+      for (let j = i + 1; j < card.stories.length; j += 1) {
+        pairCount += 1;
+        const left = card.stories[i];
+        const right = card.stories[j];
+        const similarity = jaccard(readingFingerprint(left), readingFingerprint(right));
+        assert.ok(similarity < 0.84, `${route}/${card.id}: semantically over-reused chapters ${left.id} vs ${right.id} (${similarity.toFixed(3)})`);
+      }
     }
   }
 }
 
+assert.equal(storyCount, 551, `chapter inventory remains 551, received ${storyCount}`);
+assert.equal(pairCount, 864, `within-card pair inventory remains 864, received ${pairCount}`);
+
 if (staticOnly) {
-  console.log(JSON.stringify({ result: "PASS", mode: "static-methods-reference", routes: routes.length, methodsReferenceFrozen: true }));
+  console.log(JSON.stringify({ result: "PASS", mode: "static-methods-reference", routes: routes.length, storyCount, pairCount, methodsReferenceFrozen: true }));
   process.exit(0);
 }
 
@@ -176,8 +219,8 @@ try {
     }
     await context.close();
   }
-  fs.writeFileSync(path.join(artifactDir, "methods-reference-family-runtime.json"), JSON.stringify({ result: "PASS", routes: routes.length, viewports: viewports.map(v => v.name), evidence }, null, 2) + "\n");
-  console.log(JSON.stringify({ result: "PASS", mode: "methods-reference-runtime", routes: routes.length, viewportCount: viewports.length, checks: evidence.length }));
+  fs.writeFileSync(path.join(artifactDir, "methods-reference-family-runtime.json"), JSON.stringify({ result: "PASS", routes: routes.length, viewports: viewports.map(v => v.name), storyCount, pairCount, evidence }, null, 2) + "\n");
+  console.log(JSON.stringify({ result: "PASS", mode: "methods-reference-runtime", routes: routes.length, viewportCount: viewports.length, storyCount, pairCount, checks: evidence.length }));
 } finally {
   await browser.close();
 }

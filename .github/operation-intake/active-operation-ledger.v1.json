@@ -1898,6 +1898,65 @@
       "scopeHash": "57f1964b5ea75cd4ce6a71ea83c8aa26e15590d6cc5ad71b4f08861f882cb961",
       "state": "ADMITTED_LOCKED"
     },
+    "580dd562c7cb8b4c760bfe1de96daccb36c7d4ad52b884e20ed8e573a8fc216e": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "e6e928933a1e60524e7ecade8626b27558745841",
+          "lockGeneration": 1852,
+          "lockScope": "COMPASS:RUNTIME_SHELL_EXPOSURE_RECONCILIATION:V1",
+          "operationId": "COMPASS_RUNTIME_SHELL_EXPOSURE_RECONCILIATION_20260829_001",
+          "procedureLocatorDigest": "ab470eb4c7c923f121e56b2621cc909502d4aa52b6c30f28a435fa865b7de74f",
+          "requestDigest": "3d5b8dcd91953e92409fab95ddccf8893f661e1446bb94d447bd471d9e69c86d",
+          "scopeHash": "580dd562c7cb8b4c760bfe1de96daccb36c7d4ad52b884e20ed8e573a8fc216e"
+        },
+        "bindingDigest": "6bbc758556d17148bd22bbaa9157e95f81e9add64343492df1f153fcaf42fcbd",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "e2e9e48ccc667441e37aefb7587c6593062a8d90c7ead68cc4b57811fc915037",
+          "commentId": 5465512441,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2333,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33281228792,
+          "workflowSha": "e6e928933a1e60524e7ecade8626b27558745841"
+        },
+        "lineageAnchorCommitSha": "fd23e49aec2b8d464a19b93a260615c97e62acc8",
+        "origin": "CANONICAL_SUCCESSOR",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "e6e928933a1e60524e7ecade8626b27558745841",
+      "lockGeneration": 1852,
+      "lockScope": "COMPASS:RUNTIME_SHELL_EXPOSURE_RECONCILIATION:V1",
+      "operationId": "COMPASS_RUNTIME_SHELL_EXPOSURE_RECONCILIATION_20260829_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "68c74dd05bd7441d91ea995e5972a1ac173e69b1",
+        "lockGeneration": 1850,
+        "lockScope": "REPOSITORY-AI-ROUTER/COMPASS-STALE-QUALIFICATION-BINDING-RECONCILIATION",
+        "operationId": "COMPASS_STALE_QUALIFICATION_BINDING_RECONCILIATION_20260829_001",
+        "preservedEvidenceRefs": [
+          "PR-2331@c4e64eb7b258059df01f2d9003e0d685c20e535d:FOUR_CONSTRUCTION_GATES_PASS",
+          "PR-2334@3a22308ba05d58a9cefb2eaf614d6084707ff110:CONTROL_PLANE_REPAIR_VALIDATED",
+          "OWNER_DISPOSITION:MECHANICAL_PASS_SUFFICIENT_NO_ADDITIONAL_VISUAL_SIGNOFF"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "GEN1850_TO_COMPASS_RUNTIME_SHELL_EXPOSURE_RECONCILIATION_20260829_002"
+      },
+      "procedureLocatorDigest": "ab470eb4c7c923f121e56b2621cc909502d4aa52b6c30f28a435fa865b7de74f",
+      "released": false,
+      "requestDigest": "3d5b8dcd91953e92409fab95ddccf8893f661e1446bb94d447bd471d9e69c86d",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "580dd562c7cb8b4c760bfe1de96daccb36c7d4ad52b884e20ed8e573a8fc216e",
+      "state": "ADMITTED_LOCKED"
+    },
     "58185bc73a55d5818fc4f191d2f77edf6d710f90d4d6169167f0ca783da7a652": {
       "governingHead": "5123ad418fcb1b88795470120e4632705ceaf288",
       "lockGeneration": 340,
@@ -1908,49 +1967,6 @@
       "requestDigest": "3a653a973a5f0ef20e26def73e96a2f7807fd6a5f7b8a81e3a9f448e42333e00",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "58185bc73a55d5818fc4f191d2f77edf6d710f90d4d6169167f0ca783da7a652",
-      "state": "ADMITTED_LOCKED"
-    },
-    "58823589e8aa35c93f7edb0a19b8b9b9a3c4c79fb49b030bf5f32c3c4ae037a7": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "68c74dd05bd7441d91ea995e5972a1ac173e69b1",
-          "lockGeneration": 1850,
-          "lockScope": "REPOSITORY-AI-ROUTER/COMPASS-STALE-QUALIFICATION-BINDING-RECONCILIATION",
-          "operationId": "COMPASS_STALE_QUALIFICATION_BINDING_RECONCILIATION_20260829_001",
-          "procedureLocatorDigest": "6f872217eb94e523c05d4244f34b0599860f326003d663e32f3653f41dc1f2b0",
-          "requestDigest": "fb3f749f5fa4ce5d5d7ecf23d8cb3da5e52ab9db4718a25b56c14fe80ed81b3b",
-          "scopeHash": "58823589e8aa35c93f7edb0a19b8b9b9a3c4c79fb49b030bf5f32c3c4ae037a7"
-        },
-        "bindingDigest": "b9e6230909adf58d856f4c3764210a3333d22f60e2b3aa6f0f9295fe123a6344",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "1d4a87a3732f5bf5e0b632089c3a8911e0be1df52540c72b79dcca60afcd8e0c",
-          "commentId": 5465296039,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2333,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 33279151709,
-          "workflowSha": "68c74dd05bd7441d91ea995e5972a1ac173e69b1"
-        },
-        "lineageAnchorCommitSha": "1d8b0812ef83317cda8a945b49dd894711b87557",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "68c74dd05bd7441d91ea995e5972a1ac173e69b1",
-      "lockGeneration": 1850,
-      "lockScope": "REPOSITORY-AI-ROUTER/COMPASS-STALE-QUALIFICATION-BINDING-RECONCILIATION",
-      "operationId": "COMPASS_STALE_QUALIFICATION_BINDING_RECONCILIATION_20260829_001",
-      "procedureLocatorDigest": "6f872217eb94e523c05d4244f34b0599860f326003d663e32f3653f41dc1f2b0",
-      "released": false,
-      "requestDigest": "fb3f749f5fa4ce5d5d7ecf23d8cb3da5e52ab9db4718a25b56c14fe80ed81b3b",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "58823589e8aa35c93f7edb0a19b8b9b9a3c4c79fb49b030bf5f32c3c4ae037a7",
       "state": "ADMITTED_LOCKED"
     },
     "58fd695623b73437bd875b2af63462b9ba0f798e460267d014d60b7eba8afaf3": {
@@ -6226,7 +6242,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1851,
+  "lockGeneration": 1852,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -33589,6 +33605,66 @@
         "successorLockScope": "COMPASS_PUBLIC_CONTINUITY_RENEWAL",
         "successorOperationId": "COMPASS_CONTINUITY_RENEWAL_20260829_v4",
         "transitionId": "COMPASS_CONTINUITY_RENEWAL_24C1BCA8_TO_A50E23F9_VERIFIER_RECONCILIATION_20260829_v1"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "68c74dd05bd7441d91ea995e5972a1ac173e69b1",
+          "lockGeneration": 1850,
+          "lockScope": "REPOSITORY-AI-ROUTER/COMPASS-STALE-QUALIFICATION-BINDING-RECONCILIATION",
+          "operationId": "COMPASS_STALE_QUALIFICATION_BINDING_RECONCILIATION_20260829_001",
+          "procedureLocatorDigest": "6f872217eb94e523c05d4244f34b0599860f326003d663e32f3653f41dc1f2b0",
+          "requestDigest": "fb3f749f5fa4ce5d5d7ecf23d8cb3da5e52ab9db4718a25b56c14fe80ed81b3b",
+          "scopeHash": "58823589e8aa35c93f7edb0a19b8b9b9a3c4c79fb49b030bf5f32c3c4ae037a7"
+        },
+        "bindingDigest": "b9e6230909adf58d856f4c3764210a3333d22f60e2b3aa6f0f9295fe123a6344",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "1d4a87a3732f5bf5e0b632089c3a8911e0be1df52540c72b79dcca60afcd8e0c",
+          "commentId": 5465296039,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2333,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33279151709,
+          "workflowSha": "68c74dd05bd7441d91ea995e5972a1ac173e69b1"
+        },
+        "lineageAnchorCommitSha": "1d8b0812ef83317cda8a945b49dd894711b87557",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "68c74dd05bd7441d91ea995e5972a1ac173e69b1",
+      "lockGeneration": 1850,
+      "lockScope": "REPOSITORY-AI-ROUTER/COMPASS-STALE-QUALIFICATION-BINDING-RECONCILIATION",
+      "operationId": "COMPASS_STALE_QUALIFICATION_BINDING_RECONCILIATION_20260829_001",
+      "procedureLocatorDigest": "6f872217eb94e523c05d4244f34b0599860f326003d663e32f3653f41dc1f2b0",
+      "released": true,
+      "requestDigest": "fb3f749f5fa4ce5d5d7ecf23d8cb3da5e52ab9db4718a25b56c14fe80ed81b3b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "58823589e8aa35c93f7edb0a19b8b9b9a3c4c79fb49b030bf5f32c3c4ae037a7",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "PR-2331@c4e64eb7b258059df01f2d9003e0d685c20e535d:FOUR_CONSTRUCTION_GATES_PASS",
+          "PR-2334@3a22308ba05d58a9cefb2eaf614d6084707ff110:CONTROL_PLANE_REPAIR_VALIDATED",
+          "OWNER_DISPOSITION:MECHANICAL_PASS_SUFFICIENT_NO_ADDITIONAL_VISUAL_SIGNOFF"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "e6e928933a1e60524e7ecade8626b27558745841",
+        "successorLockGeneration": 1852,
+        "successorLockScope": "COMPASS:RUNTIME_SHELL_EXPOSURE_RECONCILIATION:V1",
+        "successorOperationId": "COMPASS_RUNTIME_SHELL_EXPOSURE_RECONCILIATION_20260829_001",
+        "transitionId": "GEN1850_TO_COMPASS_RUNTIME_SHELL_EXPOSURE_RECONCILIATION_20260829_002"
       },
       "terminalDisposition": "SUPERSEDED"
     }

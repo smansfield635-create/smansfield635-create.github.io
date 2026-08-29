@@ -338,7 +338,7 @@ html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] > details.lr-audit
 }
 
 @media (max-width: 519px) {
-  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] { --lrc-depth:clamp(245px,72vw,330px); }
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] { --lrc-depth:clamp(245px,75vw,330px); }
 }
 
 @media (max-width: 440px) {

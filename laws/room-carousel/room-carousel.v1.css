@@ -28,7 +28,7 @@ html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] {
   --lrc-muted: #9aa7b2;
   --lrc-border: rgba(220, 230, 238, .12);
   --lrc-step: clamp(18rem, 32vw, 31rem);
-  --lrc-depth: clamp(3rem, 7vw, 8rem);
+  --lrc-depth: clamp(430px, 49vw, 650px);
   --lrc-stage-height: clamp(37rem, 70vh, 42rem);
   position: relative;
   isolation: isolate;
@@ -83,7 +83,6 @@ html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"][data-lrc-family="s
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"][data-lrc-family="research"] { --lrc-family-accent:#c3a7f2; --lrc-family-soft:rgba(195,167,242,.09); }
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"][data-lrc-family="test"] { --lrc-family-accent:#eaa184; --lrc-family-soft:rgba(234,161,132,.09); }
 
-/* Numbered outer rail: the page-level carousel authority. */
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-tabs] {
   position: relative;
   z-index: 30;
@@ -125,7 +124,6 @@ html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-tab]:foc
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-tab-number] { display:block; margin-bottom:.28rem; color:var(--lrc-family-accent); font-size:.63rem; font-weight:760; letter-spacing:.16em; }
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-tab-label] { display:block; max-width:15rem; overflow:hidden; color:inherit; font-size:.76rem; font-weight:680; line-height:1.2; text-overflow:ellipsis; white-space:nowrap; }
 
-/* Frozen-Methods dimensional stage. */
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-viewport] {
   position: relative;
   z-index: 10;
@@ -229,7 +227,6 @@ html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-controls
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-prev],
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-next] { display:none !important; visibility:hidden !important; pointer-events:none !important; }
 
-/* Inspection stays inside the selected card and reveals the contextual axes. */
 html[data-lrc-inspection-open="true"] .lr-topbar { visibility:hidden; pointer-events:none; }
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"][data-lrc-inspecting="true"] [data-lrc-tabs] { opacity:.28; pointer-events:none; }
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"][data-lrc-inspecting="true"] [data-lrc-viewport] {
@@ -294,7 +291,6 @@ html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-claim-bo
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] .lrc-deep-route { margin:1rem 0 0; text-align:right; }
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] .lrc-deep-route a { display:inline-flex; min-height:2.7rem; align-items:center; padding:.65rem .95rem; border:1px solid color-mix(in srgb,var(--lrc-family-accent) 45%,transparent); border-radius:999px; background:var(--lrc-family-soft); color:#e8e2d7; font-weight:720; text-decoration:none; }
 
-/* Greater Laws route continuity remains outside the card orbit. */
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] > .lr-story-nav {
   position:relative;
   z-index:20;
@@ -308,20 +304,20 @@ html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] > .lr-story-nav {
 }
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] > .lr-story-nav > a { min-width:0; }
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] > .lr-story-nav > a:last-child { text-align:right; }
-
-/* Source custody remains subordinate and readable; it is never promoted into the carousel. */
 html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] > details.lr-audit { width:min(calc(100% - 2rem),72rem); margin:1rem auto 0; color:#7f8c97; }
 
 [data-lrc-static] { display:block; }
 .lr-js [data-lrc-static] { display:none; }
 
 @media (max-width: 1100px) {
-  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] { --lrc-step:clamp(22rem,52vw,34rem); --lrc-stage-height:36rem; }
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] { --lrc-step:clamp(22rem,52vw,34rem); --lrc-depth:clamp(320px,58vw,440px); --lrc-stage-height:36rem; }
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-viewport] { perspective:2200px; perspective-origin:50% 44%; }
   html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] { width:min(72vw,27rem) !important; height:31rem !important; top:3.4rem !important; }
 }
 
 @media (max-width: 760px) {
-  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] { --lrc-step:86vw; --lrc-depth:3rem; --lrc-stage-height:34rem; border-inline:0; border-radius:0; }
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] { --lrc-step:86vw; --lrc-stage-height:34rem; border-inline:0; border-radius:0; }
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-viewport] { perspective:1800px; perspective-origin:50% 40%; }
   html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-tabs] { width:calc(100vw - 1rem); padding-left:.25rem; padding-right:.25rem; }
   html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-tab] { min-width:7.1rem; }
   html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-card] { width:min(82vw,21rem) !important; max-width:min(82vw,21rem) !important; height:29rem !important; top:2rem !important; }
@@ -339,6 +335,10 @@ html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] > details.lr-audit
   html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-grid-cell] { min-height:17rem; padding:.85rem; }
   html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] > .lr-story-nav { grid-template-columns:1fr; }
   html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] > .lr-story-nav > a:last-child { text-align:left; }
+}
+
+@media (max-width: 519px) {
+  html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] { --lrc-depth:clamp(245px,72vw,330px); }
 }
 
 @media (max-width: 440px) {

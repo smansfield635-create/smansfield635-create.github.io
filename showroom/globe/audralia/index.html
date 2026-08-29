@@ -8,7 +8,7 @@
   <meta name="description" content="Explore Audralia continuously from planetary scale to Gratitude and back again.">
   <title>Audralia · Planetary World</title>
   <link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/audralia/">
-  <link rel="modulepreload" href="/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs?cb=EXACT_24057">
+  <link rel="modulepreload" href="./renderer-continuous-travel-v1.mjs?cb=AUDRALIA_CONTINUOUS_TRAVEL_v1">
   <link rel="modulepreload" href="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/canonical-weather-spatial-lod-proof/weather-model.mjs?cb=EXACT_24057">
   <link rel="modulepreload" href="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/canonical-weather-spatial-lod-proof/weather-renderer.mjs?cb=EXACT_24057">
   <link rel="stylesheet" href="./index.css?v=AUDRALIA_LOADING_CONTINUITY_v4">
@@ -42,9 +42,7 @@
       <nav class="audralia-live-nav" aria-label="World navigation">
         <button class="audralia-live-action audralia-live-action-primary" type="button" data-fit-world>focus Gratitude</button>
         <button class="audralia-live-action" type="button" data-audralia-soundtrack-toggle aria-pressed="false" aria-describedby="audralia-soundtrack-credit">soundtrack · on</button>
-        <a class="audralia-live-action" href="../h-earth/">H-Earth · Play</a>
-        <a class="audralia-live-action" href="../../../index.html">Compass</a>
-        <a class="audralia-live-action" href="../../">Mirrorland</a>
+        <a class="audralia-live-action" data-return-to-compass href="../../../index.html">Return to Compass</a>
       </nav>
       <span class="audralia-sr-only" data-h-earth-status aria-live="polite">booting Audralia</span>
       <span class="audralia-sr-only" data-audralia-soundtrack-status aria-live="polite">Swan Lake loading soundtrack</span>
@@ -69,6 +67,7 @@
       canonicalWeatherSpatialLod: true,
       weatherPresentationReconciliation: true,
       cameraSemanticsFrozen: true,
+      continuousTravelRenderer: true,
       hook5PolarContinuity: true,
       hook5EphemeralMoonGlow: true,
       hook5ExistingWeatherRealization: true,
@@ -85,14 +84,14 @@
       startupArchitecture: 'APPROVED_PRESENTATION_PRE_RENDER_v1',
       startupInstrumentation: 'AUDRALIA_STARTUP_DIAGNOSTIC_v1',
       estateSoundtrack: 'AUDRALIA_ESTATE_SOUNDTRACK_RUNTIME_v1',
-      environmentBinding: 'IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993'
+      environmentBinding: 'AUDRALIA_CONTINUOUS_TRAVEL_RENDERER_v1_FROM_EXACT_24057_BASELINE'
     });
   </script>
   <script type="module" src="./audio/estate-soundtrack-v1.mjs?cb=AUDRALIA_ESTATE_SOUNDTRACK_RUNTIME_v1"></script>
   <script type="module" src="./hook5-owner-visible-continuity-v1.mjs?cb=AUDRALIA_HOOK5_OWNER_VISIBLE_CONTINUITY_v1"></script>
   <script type="module" src="./final-cloud-shader-composition-v1.mjs?cb=AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION_v1"></script>
   <script type="module" src="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs?cb=EXACT_24057"></script>
-  <script type="module" src="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs?cb=EXACT_24057"></script>
+  <script type="module" src="./weather-presentation-reconciliation/app.mjs?cb=AUDRALIA_CONTINUOUS_TRAVEL_v1"></script>
   <script type="module" src="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/celestial-checkpoint-1.mjs?cb=EXACT_24057"></script>
 </body>
 </html>

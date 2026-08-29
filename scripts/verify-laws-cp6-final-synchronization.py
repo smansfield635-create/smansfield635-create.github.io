@@ -116,7 +116,7 @@ def main() -> int:
         "[data-lrc-grid-cell]",
         "state.layers[state.index] = 0",
         "state.stories[state.index] = 0",
-        "internalStateIndependent: true",
+        "sameObjectContinuity:true",
         "↶ Return to Orbit",
         "audit.open = false",
     ):

@@ -158,6 +158,25 @@
         "carryForwardDoesNotExpandAuthority": true,
         "fallbackOnOverlapAmbiguityDivergenceOrIncompleteEvidence": "STRICT_SUCCESSOR"
       }
+    },
+    "ownerConnectorTerminalClosureTransport": {
+      "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_CAPABILITY_v1",
+      "status": "ACTIVE_FAIL_CLOSED",
+      "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1",
+      "contract": ".github/operation-intake/owner-connector-terminal-closure-contract.v1.json",
+      "planner": "tools/operation-intake/owner-connector-canonical-terminal-closure.v1.mjs",
+      "selfTest": "tools/operation-intake/owner-connector-terminal-closure-self-test.v1.mjs",
+      "sourceMarker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+      "canonicalSemantics": "tools/operation-intake/repository-operation-lock-manager.v1.mjs#closeLocal/closeRemote",
+      "exactCurrentMainRequired": true,
+      "activeLockProvenanceRequired": true,
+      "terminalLineageCertificationRequired": true,
+      "ledgerBlobCompareAndSwapRequired": true,
+      "lockRefCompareAndSwapRequired": true,
+      "oneLedgerMutationRequired": true,
+      "actionsAgentExecutionRequired": false,
+      "planIsReceipt": false,
+      "successResult": "TERMINAL_CLOSURE_COMMITTED"
     }
   },
   "remoteCanonicalIntakeTransport": {
@@ -257,6 +276,7 @@
     "PUBLIC_METADATA_GRANTS_NO_PRIVATE_AUTHORITY",
     "TRANSPORT_DOES_NOT_DEFINE_ADMISSION_LOCK_OR_CLOSURE_SEMANTICS",
     "OWNER_CONNECTOR_SUCCESSOR_MUST_REUSE_CANONICAL_SUCCESSOR_LOCAL_AND_SHA_GUARDED_SINGLE_CAS",
+    "OWNER_CONNECTOR_TERMINAL_CLOSURE_MUST_REUSE_CANONICAL_CLOSE_LOCAL_OR_CLOSE_REMOTE_AND_SHA_GUARDED_SINGLE_CAS",
     "DISPLAY_CONTINUITY_CONSTITUTION_REQUIRED_FOR_APPLICABLE_CONSTRUCTION"
   ]
 }

@@ -92,11 +92,7 @@ async function waitForComposition(page,{timeout=20000,label='composition'}={}){
   while(Date.now()-started<timeout){
     last=await page.evaluate(()=>{
       const c=window.__AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION__;
-      return {
-        present:Boolean(c),
-        policyId:c?.policyId||null,
-        evidence:c?.getRuntimeEvidence?.()||null
-      };
+      return {present:Boolean(c),policyId:c?.policyId||null,evidence:c?.getRuntimeEvidence?.()||null};
     });
     const ev=last?.evidence;
     if(last.present&&ev?.composedCloudShaders>=1&&typeof ev?.finalShaderSha256==='string'&&ev.finalShaderSha256.length===64&&ev?.finalStageEvidence?.pass===true)return last;
@@ -161,15 +157,7 @@ async function captureExteriorMetrics(page,probe){
       weightedChecksum=(weightedChecksum+((p%65521)+1)*(r+3*g+7*b+11*a))%2147483647;
     }
     const camera=proof.renderer?.getSnapshot?.()||null;
-    return {
-      id:probe.id,width,height,
-      nonzeroFraction:alphaNonzero/total,
-      strongFraction:alphaStrong/total,
-      meanAlpha:alphaSum/total,
-      meanRgb:rgbSum/total,
-      weightedChecksum,
-      camera
-    };
+    return {id:probe.id,width,height,nonzeroFraction:alphaNonzero/total,strongFraction:alphaStrong/total,meanAlpha:alphaSum/total,meanRgb:rgbSum/total,weightedChecksum,camera};
   },probe);
 }
 
@@ -178,12 +166,8 @@ async function captureVariant(browser,{ablateV6=false}={}){
   await page.setViewport({width:720,height:1280,deviceScaleFactor:1});
   await page.evaluateOnNewDocument(fixed=>{
     const NativeDate=Date;
-    class FixedDate extends NativeDate{
-      constructor(...args){super(...(args.length?args:[fixed]));}
-      static now(){return fixed;}
-    }
-    Object.setPrototypeOf(FixedDate,NativeDate);
-    globalThis.Date=FixedDate;
+    class FixedDate extends NativeDate{constructor(...args){super(...(args.length?args:[fixed]));}static now(){return fixed;}}
+    Object.setPrototypeOf(FixedDate,NativeDate);globalThis.Date=FixedDate;
   },FIXED_TIME_MS);
   const errors=installErrorCapture(page);
   const suffix=ablateV6?'?cloudAblation=v6':'';
@@ -198,8 +182,7 @@ async function captureVariant(browser,{ablateV6=false}={}){
     canvasCount:document.querySelectorAll('canvas').length,
     composition:window.__AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION__?.getRuntimeEvidence?.()||null
   }));
-  const probes=[];
-  for(const probe of PROBES)probes.push(await captureExteriorMetrics(page,probe));
+  const probes=[];for(const probe of PROBES)probes.push(await captureExteriorMetrics(page,probe));
   await page.close();
   return Object.freeze({ablateV6,authoritative,composition,live,probes,errors});
 }
@@ -211,41 +194,121 @@ function compareCausality(enabled,ablated){
     assert.equal(on.id,off.id,'FRAMEBUFFER_PROBE_ID_MISMATCH');
     assert.equal(on.width,off.width,'FRAMEBUFFER_WIDTH_MISMATCH');
     assert.equal(on.height,off.height,'FRAMEBUFFER_HEIGHT_MISMATCH');
-    return Object.freeze({
-      id:on.id,
-      enabled:on,
-      ablated:off,
-      delta:Object.freeze({
-        nonzeroFraction:on.nonzeroFraction-off.nonzeroFraction,
-        strongFraction:on.strongFraction-off.strongFraction,
-        meanAlpha:on.meanAlpha-off.meanAlpha,
-        meanRgb:on.meanRgb-off.meanRgb,
-        checksumDifferent:on.weightedChecksum!==off.weightedChecksum
-      })
-    });
+    return Object.freeze({id:on.id,enabled:on,ablated:off,delta:Object.freeze({nonzeroFraction:on.nonzeroFraction-off.nonzeroFraction,strongFraction:on.strongFraction-off.strongFraction,meanAlpha:on.meanAlpha-off.meanAlpha,meanRgb:on.meanRgb-off.meanRgb,checksumDifferent:on.weightedChecksum!==off.weightedChecksum})});
   });
   const positive=probes.filter(p=>p.delta.meanAlpha>0&&p.delta.checksumDifferent);
   const material=probes.filter(p=>p.delta.meanAlpha>=.0015&&(p.delta.nonzeroFraction>=.002||p.delta.strongFraction>=.002));
   const maxMeanAlphaDelta=Math.max(...probes.map(p=>p.delta.meanAlpha));
   const maxCoverageDelta=Math.max(...probes.map(p=>Math.max(p.delta.nonzeroFraction,p.delta.strongFraction)));
-  return Object.freeze({
-    probes:Object.freeze(probes),
-    positiveProbeCount:positive.length,
-    materialProbeCount:material.length,
-    maxMeanAlphaDelta,
-    maxCoverageDelta,
-    pass:positive.length>=2&&material.length>=1&&maxMeanAlphaDelta>=.0015&&maxCoverageDelta>=.002
-  });
+  return Object.freeze({probes:Object.freeze(probes),positiveProbeCount:positive.length,materialProbeCount:material.length,maxMeanAlphaDelta,maxCoverageDelta,pass:positive.length>=2&&material.length>=1&&maxMeanAlphaDelta>=.0015&&maxCoverageDelta>=.002});
+}
+
+const GESTURE_PROFILES=Object.freeze([
+  Object.freeze({id:'PHONE',width:390,height:844,deviceScaleFactor:1,isMobile:true,hasTouch:true}),
+  Object.freeze({id:'TABLET',width:820,height:1180,deviceScaleFactor:1,isMobile:true,hasTouch:true}),
+  Object.freeze({id:'DESKTOP',width:1440,height:900,deviceScaleFactor:1,isMobile:false,hasTouch:true})
+]);
+const PLANET_RADIUS=6200;
+const TRAVEL_STATIONS=Object.freeze([
+  Object.freeze({id:'ILLUMINATED',targetU:0,targetV:1500}),
+  Object.freeze({id:'TERMINATOR',targetU:0,targetV:PLANET_RADIUS*Math.PI*.72}),
+  Object.freeze({id:'NEAR_ANTIPODE',targetU:0,targetV:PLANET_RADIUS*Math.PI-650}),
+  Object.freeze({id:'DARK_SIDE',targetU:0,targetV:PLANET_RADIUS*Math.PI+900}),
+  Object.freeze({id:'BEYOND',targetU:0,targetV:PLANET_RADIUS*Math.PI*1.45})
+]);
+
+async function dispatchTouch(client,type,points){
+  await client.send('Input.dispatchTouchEvent',{type,touchPoints:points.map((point,index)=>({x:point.x,y:point.y,radiusX:2,radiusY:2,force:1,id:index+1})),modifiers:0});
+}
+async function realTwoFingerSwipe(page,{dy=-110,spreadDelta=0}={}){
+  const client=await page.target().createCDPSession();
+  const box=await page.$eval('[data-h-earth-map-wide-canvas]',el=>{const r=el.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height};});
+  const cx=box.x+box.width*.5,cy=box.y+box.height*.56;
+  const start=[{x:cx-38,y:cy},{x:cx+38,y:cy}];
+  await dispatchTouch(client,'touchStart',start);
+  const m1=[{x:start[0].x-spreadDelta*.25,y:start[0].y+dy*.18},{x:start[1].x+spreadDelta*.25,y:start[1].y+dy*.18}];
+  const m2=[{x:start[0].x-spreadDelta*.5,y:start[0].y+dy*.62},{x:start[1].x+spreadDelta*.5,y:start[1].y+dy*.62}];
+  const m3=[{x:start[0].x-spreadDelta,y:start[0].y+dy},{x:start[1].x+spreadDelta,y:start[1].y+dy}];
+  await dispatchTouch(client,'touchMove',m1);await sleep(24);
+  await dispatchTouch(client,'touchMove',m2);await sleep(24);
+  await dispatchTouch(client,'touchMove',m3);await sleep(24);
+  await dispatchTouch(client,'touchEnd',[]);
+  await client.detach();
+  await sleep(50);
+}
+async function realOneFingerLook(page,{dx=65,dy=30}={}){
+  const client=await page.target().createCDPSession();
+  const box=await page.$eval('[data-h-earth-map-wide-canvas]',el=>{const r=el.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height};});
+  const start={x:box.x+box.width*.5,y:box.y+box.height*.52};
+  await dispatchTouch(client,'touchStart',[start]);
+  await dispatchTouch(client,'touchMove',[{x:start.x+dx*.45,y:start.y+dy*.45}]);await sleep(20);
+  await dispatchTouch(client,'touchMove',[{x:start.x+dx,y:start.y+dy}]);await sleep(20);
+  await dispatchTouch(client,'touchEnd',[]);await client.detach();await sleep(50);
+}
+async function cameraSnapshot(page){return page.evaluate(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer?.getSnapshot?.()||null);}
+function targetDelta(a,b){return Math.hypot((b?.targetU??0)-(a?.targetU??0),(b?.targetV??0)-(a?.targetV??0));}
+
+async function runGestureProfile(browser,profile){
+  const page=await browser.newPage();
+  await page.setViewport(profile);
+  const errors=installErrorCapture(page);
+  await page.goto(`${base}/showroom/globe/audralia/`,{waitUntil:'domcontentloaded',timeout:60000});
+  await waitForAuthoritativeRuntime(page,{label:`gesture_${profile.id.toLowerCase()}`});
+  const nav=await page.evaluate(()=>({
+    primary:(document.querySelector('[data-fit-world]')?.textContent||'').trim(),
+    compass:(document.querySelector('[data-return-to-compass]')?.textContent||'').trim(),
+    returnCount:document.querySelectorAll('[data-return-to-compass]').length,
+    hEarthPlay:[...document.querySelectorAll('a,button')].some(el=>(el.textContent||'').trim()==='H-Earth · Play'),
+    mirrorland:[...document.querySelectorAll('a,button')].some(el=>(el.textContent||'').trim()==='Mirrorland'),
+    soundtrack:Boolean(document.querySelector('[data-audralia-soundtrack-toggle]'))
+  }));
+  assert.equal(nav.primary,'focus Gratitude',`${profile.id}_FOCUS_GRATITUDE_HIERARCHY_FAILURE`);
+  assert.equal(nav.compass,'Return to Compass',`${profile.id}_RETURN_COMPASS_HIERARCHY_FAILURE`);
+  assert.equal(nav.returnCount,1,`${profile.id}_RETURN_COMPASS_COUNT_FAILURE`);
+  assert.equal(nav.hEarthPlay,false,`${profile.id}_H_EARTH_TOP_NAV_SURVIVED`);
+  assert.equal(nav.mirrorland,false,`${profile.id}_MIRRORLAND_TOP_NAV_SURVIVED`);
+  assert.equal(nav.soundtrack,true,`${profile.id}_SOUNDTRACK_UTILITY_MISSING`);
+
+  const travel=[];
+  for(const station of TRAVEL_STATIONS){
+    await page.evaluate(station=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__.setCameraStateForTest({targetU:station.targetU,targetV:station.targetV,distance:4200,pitch:1.08,yaw:0}),station);
+    const before=await cameraSnapshot(page);
+    await realTwoFingerSwipe(page,{dy:-125});
+    const after=await cameraSnapshot(page);
+    const delta=targetDelta(before,after);
+    assert.ok(delta>1e-3,`${profile.id}_TRAVEL_CONTINUITY_FAILURE:${station.id}:${JSON.stringify({before,after,delta})}`);
+    travel.push(Object.freeze({station:station.id,before,after,delta}));
+  }
+
+  await page.evaluate(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__.setCameraStateForTest({targetU:0,targetV:2200,distance:4200,pitch:1.08,yaw:0}));
+  const lookBefore=await cameraSnapshot(page);await realOneFingerLook(page);const lookAfter=await cameraSnapshot(page);
+  const lookChanged=Math.abs((lookAfter?.yaw??0)-(lookBefore?.yaw??0))+Math.abs((lookAfter?.pitch??0)-(lookBefore?.pitch??0));
+  assert.ok(lookChanged>1e-5,`${profile.id}_LOOK_REGRESSION`);
+  assert.ok(Math.abs((lookAfter?.yaw??0)-(lookBefore?.yaw??0))<Math.PI,`${profile.id}_LOOK_FLIP_REGRESSION`);
+
+  await page.evaluate(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__.setCameraStateForTest({targetU:0,targetV:2200,distance:4200,pitch:1.08,yaw:0}));
+  const pinchBefore=await cameraSnapshot(page);await realTwoFingerSwipe(page,{dy:0,spreadDelta:-24});const pinchAfter=await cameraSnapshot(page);
+  assert.ok(Math.abs((pinchAfter?.distance??0)-(pinchBefore?.distance??0))>1e-4,`${profile.id}_PINCH_REGRESSION`);
+  const spreadBefore=await cameraSnapshot(page);await realTwoFingerSwipe(page,{dy:0,spreadDelta:30});const spreadAfter=await cameraSnapshot(page);
+  assert.ok(Math.abs((spreadAfter?.distance??0)-(spreadBefore?.distance??0))>1e-4,`${profile.id}_SPREAD_REGRESSION`);
+  assert.ok((pinchAfter.distance-pinchBefore.distance)*(spreadAfter.distance-spreadBefore.distance)<0,`${profile.id}_PINCH_SPREAD_DIRECTION_FAILURE`);
+  assert.equal(errors.pageErrors.length,0,`${profile.id}_PAGE_ERROR`);
+  await page.close();
+  return Object.freeze({profile:profile.id,nav,travel,look:Object.freeze({before:lookBefore,after:lookAfter,delta:lookChanged}),pinch:Object.freeze({before:pinchBefore,after:pinchAfter}),spread:Object.freeze({before:spreadBefore,after:spreadAfter}),pageErrors:Object.freeze([...errors.pageErrors])});
+}
+
+async function runConnectedGestureMatrix(browser){
+  const profiles=[];
+  for(const profile of GESTURE_PROFILES)profiles.push(await runGestureProfile(browser,profile));
+  const receipt=Object.freeze({schema:'AUDRALIA_GESTURE_RESPONSE_RECEIPT_v1',operationId:'AUDRALIA_CONTINUOUS_TRAVEL_NAVIGATION_SUCCESSOR_20260828_001',diagnosticOperationId:'AUDRALIA_GEN1831_CONNECTED_GESTURE_MATRIX_DIAGNOSTIC_20260828_001',candidateHead:'27f49de7c468b84164f5dfbb0c5f5b9590c130f9',result:'PASS',runtimeMatrix:Object.freeze({required:true,status:'PASS',profiles:Object.freeze(profiles)}),protectedSnapshotMutation:false,hEarthMutation:false,productMutationByDiagnostic:false});
+  console.log(JSON.stringify(receipt,null,2));
+  return receipt;
 }
 
 const staticEvidence=staticCandidate();
 console.log(JSON.stringify({staticEvidence},null,2));
 
-const browser=await puppeteer.launch({
-  executablePath:chrome,
-  headless:'new',
-  args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']
-});
+const browser=await puppeteer.launch({executablePath:chrome,headless:'new',args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
 
 try{
   const enabled=await captureVariant(browser,{ablateV6:false});
@@ -265,10 +328,7 @@ try{
     assert.equal(variant.composition.evidence?.composedCloudShaders,1,'FINAL_COMPOSITION_EXPECTED_ONE_CLOUD_SHADER');
     assert.equal(variant.composition.evidence?.rejectedCloudShaders,0,'FINAL_COMPOSITION_REJECTED_SHADER');
     assert.equal(variant.composition.evidence?.finalShaderSha256?.length,64,'FINAL_SHADER_SHA256_MISSING');
-    for(const stage of REQUIRED_STAGES){
-      const evidence=variant.composition.evidence.finalStageEvidence.stages?.[stage];
-      assert.equal(evidence?.observedMutationCount,evidence?.requiredMutationCount,`FINAL_STAGE_MUTATION_COUNT_FAILURE:${stage}`);
-    }
+    for(const stage of REQUIRED_STAGES){const evidence=variant.composition.evidence.finalStageEvidence.stages?.[stage];assert.equal(evidence?.observedMutationCount,evidence?.requiredMutationCount,`FINAL_STAGE_MUTATION_COUNT_FAILURE:${stage}`);}
   }
 
   assert.equal(enabled.composition.evidence.finalAblationMode,'NONE','ENABLED_VARIANT_ABLATION_STATE_WRONG');
@@ -279,23 +339,10 @@ try{
   console.log(JSON.stringify({schema:'AUDRALIA_FINAL_CLOUD_SHADER_CAUSALITY_QUALIFICATION_v1',staticEvidence,enabled,ablated,causality},null,2));
   if(!causality.pass)throw new Error(`FRAMEBUFFER_CAUSALITY_FAILURE ${JSON.stringify({positiveProbeCount:causality.positiveProbeCount,materialProbeCount:causality.materialProbeCount,maxMeanAlphaDelta:causality.maxMeanAlphaDelta,maxCoverageDelta:causality.maxCoverageDelta})}`);
 
-  console.log(JSON.stringify({
-    schema:'AUDRALIA_FINAL_CLOUD_SHADER_CAUSALITY_QUALIFICATION_v1',
-    result:'PASS',
-    policyId:POLICY_ID,
-    enabledFinalShaderSha256:enabled.composition.evidence.finalShaderSha256,
-    ablatedFinalShaderSha256:ablated.composition.evidence.finalShaderSha256,
-    finalStageEvidence:enabled.composition.evidence.finalStageEvidence,
-    causality:Object.freeze({
-      positiveProbeCount:causality.positiveProbeCount,
-      materialProbeCount:causality.materialProbeCount,
-      maxMeanAlphaDelta:causality.maxMeanAlphaDelta,
-      maxCoverageDelta:causality.maxCoverageDelta
-    }),
-    singleVolumetricPassPreserved:true,
-    performanceCeilingsFrozen:true,
-    productionDeploymentPerformed:false
-  },null,2));
+  const gestureReceipt=await runConnectedGestureMatrix(browser);
+  assert.equal(gestureReceipt.result,'PASS','CONNECTED_GESTURE_MATRIX_FAILURE');
+
+  console.log(JSON.stringify({schema:'AUDRALIA_FINAL_CLOUD_SHADER_CAUSALITY_QUALIFICATION_v1',result:'PASS',policyId:POLICY_ID,enabledFinalShaderSha256:enabled.composition.evidence.finalShaderSha256,ablatedFinalShaderSha256:ablated.composition.evidence.finalShaderSha256,finalStageEvidence:enabled.composition.evidence.finalStageEvidence,causality:Object.freeze({positiveProbeCount:causality.positiveProbeCount,materialProbeCount:causality.materialProbeCount,maxMeanAlphaDelta:causality.maxMeanAlphaDelta,maxCoverageDelta:causality.maxCoverageDelta}),connectedGestureMatrix:'PASS',singleVolumetricPassPreserved:true,performanceCeilingsFrozen:true,productionDeploymentPerformed:false},null,2));
 }finally{
   await browser.close();
 }

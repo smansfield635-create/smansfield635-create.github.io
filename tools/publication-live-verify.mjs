@@ -154,6 +154,12 @@ export const main=async()=>{
     let declaredInteractions=[];
     page.on('pageerror',error=>pageErrors.push(String(error?.stack||error)));
     page.on('console',message=>{if(message.type()==='error')consoleErrors.push(message.text());});
+    page.on('response',response=>{
+      const status=response.status();
+      if(status<400)return;
+      const request=response.request();
+      console.error(`PUBLICATION_RUNTIME_HTTP_ERROR status=${status} method=${request.method()} resourceType=${request.resourceType()} url=${response.url()}`);
+    });
     const url=pageUrl+spec.path;
     await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});
 

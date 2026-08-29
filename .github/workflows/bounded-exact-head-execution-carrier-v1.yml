@@ -1,32 +1,23 @@
 name: Bounded Exact-Head Execution Carrier v1
 
 on:
-  push:
-    branches:
-      - agent/bounded-exact-head-execution-carrier-v1-003
-    paths:
-      - '.github/ai-router/router.v1.json'
-      - '.github/ai-router/execution-backends.v1.json'
-      - '.github/ai-router/system-continuity/gap-registry.v1.json'
-      - '.github/ai-router/bounded-exact-head-execution-carrier/**'
-      - '.github/workflows/bounded-exact-head-execution-carrier-v1.yml'
   pull_request:
     paths:
-      - '.github/ai-router/router.v1.json'
-      - '.github/ai-router/execution-backends.v1.json'
-      - '.github/ai-router/system-continuity/gap-registry.v1.json'
-      - '.github/ai-router/bounded-exact-head-execution-carrier/**'
+      - 'AI_ENTRYPOINT.json'
+      - '.github/ai-router/workflow-dispatch-capability.v1.json'
       - '.github/workflows/bounded-exact-head-execution-carrier-v1.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'AI_ENTRYPOINT.json'
+      - '.github/ai-router/workflow-dispatch-capability.v1.json'
+      - '.github/workflows/bounded-exact-head-execution-carrier-v1.yml'
+
 permissions:
   contents: read
-  issues: write
-
-env:
-  GEN839_SUCCESSOR_RECEIPT_B64: ewogICJhdXRob3JpdHlJbmhlcml0ZWQiOiBmYWxzZSwKICAiYXV0aG9yaXR5UG9saWN5IjogIkZSRVNIX1NVQ0NFU1NPUl9SRVFVRVNUX1JFUVVJUkVEX05PX0lNUExJQ0lUX0lOSEVSSVRBTkNFIiwKICAiYXV0aG9yaXR5U291cmNlIjogIkZSRVNIX1NVQ0NFU1NPUl9SRVFVRVNUX0FORF9DT05TVFJVQ1RJT05fUFJPQ0VEVVJFIiwKICAiYnJhbmNoQ3JlYXRpb25BdXRob3JpemVkIjogdHJ1ZSwKICAiY2FzQXR0ZW1wdCI6IDEsCiAgImNhc1JldHJ5TGltaXQiOiA4LAogICJjb21taXR0ZWRMZWRnZXJCbG9iU2hhIjogIjY1NzYwYzM0NGQ2YmQ2ODEzODNlYmEyYjExYjBmN2I4MTVhMDEzMGEiLAogICJldmlkZW5jZVBvbGljeSI6ICJFWEFDVF9IRUFEX1JFVkFMSURBVElPTl9SRVFVSVJFRCIsCiAgImV4YWN0SGVhZFJldmFsaWRhdGlvblJlcXVpcmVkIjogdHJ1ZSwKICAiZ292ZXJuaW5nUmVmIjogInJlZnMvaGVhZHMvbWFpbiIsCiAgImltcGxlbWVudGF0aW9uSW5mZXJlbmNlQXV0aG9yaXplZCI6IGZhbHNlLAogICJsZWRnZXJDb21wYXJlQW5kU3dhcENvbW1pdHRlZCI6IHRydWUsCiAgImxlZGdlckdlbmVyYXRpb25BZnRlciI6IDgzOSwKICAibGVkZ2VyR2VuZXJhdGlvbkJlZm9yZSI6IDgzOCwKICAibGl2ZUdvdmVybmluZ0hlYWQiOiAiZjYyNGI1NTA5NmM2OWM2MzkwOWQ0ZWUyNjBmY2Q1NjE1ZjhkOWFhNiIsCiAgIm9ic2VydmVkTGVkZ2VyQmxvYlNoYSI6ICJkYTJiMWU5ZTdkMDZmZTUyZGMzNzNlZWJlM2JiNmMxNTNmZjJiMzBmIiwKICAib2JzZXJ2ZWRMb2NrUmVmSGVhZCI6ICIzMTk3M2YzZThlNzAyODlhZjU0ZDAxZmZkY2Y0YzdmMjkwNjA2YjZkIiwKICAib25lTGVkZ2VyTXV0YXRpb25SZXF1aXJlZCI6IHRydWUsCiAgIm9wZXJhdGlvblN0YXJ0ZWQiOiB0cnVlLAogICJwcmVkZWNlc3NvciI6IHsKICAgICJnb3Zlcm5pbmdIZWFkIjogIjMzMTI4NDk0OTk0MGM5NWRiODBhMzMyMjM1NDkyZGU0YzgwZDNkNDMiLAogICAgImxvY2tHZW5lcmF0aW9uIjogODMyLAogICAgImxvY2tTY29wZSI6ICJSRVBPU0lUT1JZX0NPTlRST0xfUExBTkU6Qk9VTkRFRF9FWEFDVF9IRUFEX0VYRUNVVElPTl9DQVJSSUVSOklOU1RBTExBVElPTjpWMSIsCiAgICAib3BlcmF0aW9uSWQiOiAiQk9VTkRFRF9FWEFDVF9IRUFEX0VYRUNVVElPTl9DQVJSSUVSX1YxX0lOU1RBTExBVElPTl8yMDI2MDgwOV8wMDIiLAogICAgInNjb3BlSGFzaCI6ICI5MWE4YWM0YjQ4MGFiNzJlNDQwYzA3MGJhYTY5ZDE4OTY0NDM1OGQ3YjI3MDlkMTNhMWM5NGZkYjE4NzgzZWExIiwKICAgICJ0ZXJtaW5hbERpc3Bvc2l0aW9uIjogIlNVUEVSU0VERUQiLAogICAgInRlcm1pbmFsSGlzdG9yeVByZXNlcnZlZCI6IHRydWUKICB9LAogICJwcmVzZXJ2ZWRFdmlkZW5jZVJlZnMiOiBbCiAgICAiR0VORVJBVElPTl84MzJfQ0FOT05JQ0FMX0FETUlTU0lPTiIsCiAgICAiUlVOXzMxMzMzNjI5NDcwX0JPT1RTVFJBUF9ST1VURVJfOF9PRl84X1BBU1MiLAogICAgIlJVTl8zMTMzNDAwNjg3MF9GUkVTSF9DQVJSSUVSX1ZFUklGSUNBVElPTl8xOF9PRl8xOF9QQVNTIiwKICAgICJQUl84NDVfQ0FORElEQVRFX0hFQURfMEU0NzIxRkM5NkQ1M0VBOEVBRUVFMTQyMENGMzQ4RDM3MTdCRDg3RCIsCiAgICAiUlVOXzMxMzM0MDA2ODQ4X0RJRkZFUkVOVElBTF9SRUdSRVNTSU9OX1BBU1MiLAogICAgIlBSXzg0NF9NQUlOX0FEVkFOQ0VfRjYyNEI1NTBfRElTSk9JTlRfRlJPTV9DQVJSSUVSX0VJR0hUX1BBVEhfRE9NQUlOIgogIF0sCiAgInJlYXNvbkNvZGUiOiAiR09WRVJOSU5HX0hFQURfQURWQU5DRUQiLAogICJyZXBvc2l0b3J5V3JpdGVzQXV0aG9yaXplZCI6IHRydWUsCiAgInJlc3VsdCI6ICJTVUNDRVNTT1JfQURNSVRURURfUFJFREVDRVNTT1JfU1VQRVJTRURFRCIsCiAgInNjaGVtYSI6ICJSRVBPU0lUT1JZX09QRVJBVElPTl9TVUNDRVNTT1JfVFJBTlNJVElPTl9SRUNFSVBUX3YxIiwKICAic3VjY2Vzc29yIjogewogICAgImdvdmVybmluZ0hlYWQiOiAiZjYyNGI1NTA5NmM2OWM2MzkwOWQ0ZWUyNjBmY2Q1NjE1ZjhkOWFhNiIsCiAgICAibG9ja0dlbmVyYXRpb24iOiA4MzksCiAgICAibG9ja1Njb3BlIjogIlJFUE9TSVRPUllfQ09OVFJPTF9QTEFORTpCT1VOREVEX0VYQUNUX0hFQURfRVhFQ1VUSU9OX0NBUlJJRVI6SU5TVEFMTEFUSU9OOlYxIiwKICAgICJvcGVyYXRpb25JZCI6ICJCT1VOREVEX0VYQUNUX0hFQURfRVhFQ1VUSU9OX0NBUlJJRVJfVjFfSU5TVEFMTEFUSU9OXzIwMjYwODA5XzAwMl9TVUNDRVNTT1JfMDAxIiwKICAgICJwcm9jZWR1cmVMb2NhdG9yRGlnZXN0IjogIjgzYWRlMGU2NTA4MzdiNTc3NTNkMTQzNzE5M2RmZDZkYmE4ZmQyNjU0NjliNWFjMzVhYjg0NWQ3YmQ5MTk3MmMiLAogICAgInByb2plY3RJZCI6ICJSRVBPU0lUT1JZX0FJX1JPVVRFUl9JTkZSQVNUUlVDVFVSRSIsCiAgICAicmVxdWVzdERpZ2VzdCI6ICIxNDc0OTZjMDljZGFjMmM4NmE0YWU2NDAwNTk4MTE0ZGYxZGM2MmI0OGI5Y2JmYWVkYTFiZGFiNjA3NzYzYjZlIiwKICAgICJzY29wZUhhc2giOiAiOTFhOGFjNGI0ODBhYjcyZTQ0MGMwNzBiYWE2OWQxODk2NDQzNThkN2IyNzA5ZDEzYTFjOTRmZGIxODc4M2VhMSIsCiAgICAic3RhdGUiOiAiQURNSVRURURfTE9DS0VEIgogIH0sCiAgInRyYW5zaXRpb25Db21taXRTaGEiOiAiZTI1YjNmZmQ3OTYzM2IwY2Y5NGM4Njg4M2UzYTlkOTZmMjA2YWI5YSIsCiAgInRyYW5zaXRpb25JZCI6ICJCT1VOREVEX0VYQUNUX0hFQURfQ0FSUklFUl9HRU44MzJfVE9fRjYyNEI1NTBfMjAyNjA4MDlfMDAxIiwKICAid29ya2Zsb3dFeGVjdXRpb25BdXRob3JpemVkIjogdHJ1ZQp9Cg==
 
 jobs:
-  verify-candidate:
-    if: github.event_name == 'push' || github.event_name == 'pull_request'
+  verify-current-execution-surface:
     runs-on: ubuntu-24.04
     steps:
       - name: Check out exact candidate head
@@ -41,146 +32,45 @@ jobs:
         with:
           node-version: 22
 
-      - name: Verify exact head and clean worktree
+      - name: Verify exact checked-out head
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD^{commit})" = "${{ github.sha }}"
           test -z "$(git status --porcelain=v1 --untracked-files=all)"
 
-      - name: Verify canonical generation-839 successor identity
+      - name: Verify legacy portable-carrier requirement is retired
         shell: bash
         run: |
           set -euo pipefail
-          printf '%s' "$GEN839_SUCCESSOR_RECEIPT_B64" | base64 --decode > "$RUNNER_TEMP/gen839-successor.json"
-          node - <<'NODE'
-          const fs=require('fs');
-          const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/gen839-successor.json','utf8'));
-          const s=r.successor||{};
-          if(r.schema!=='REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1'||r.result!=='SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED'||r.authorityInherited!==false||r.exactHeadRevalidationRequired!==true||s.operationId!=='BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_V1_INSTALLATION_20260809_002_SUCCESSOR_001'||s.lockGeneration!==839||s.governingHead!=='f624b55096c69c63909d4ee260fcd5615f8d9aa6'||s.requestDigest!=='147496c09cdac2c86a4ae6400598114df1dc62b48b9cbfaeda1bdab607763b6e'||s.procedureLocatorDigest!=='83ade0e650837b57753d1437193dfd6dba8fd265469b5ac35ab845d7bd91972c')process.exit(1);
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const aiText = fs.readFileSync('AI_ENTRYPOINT.json','utf8');
+          const ai = JSON.parse(aiText);
+          const dispatch = JSON.parse(fs.readFileSync('.github/ai-router/workflow-dispatch-capability.v1.json','utf8'));
+          const fail = (message) => { throw new Error(message); };
+          if (ai.status !== 'ACTIVE_FAIL_CLOSED') fail('AI entry point must remain ACTIVE_FAIL_CLOSED');
+          if (ai.agentExecutionSurface?.githubActionsAllowedForAgentExecution !== false) fail('GitHub Actions must remain prohibited for agent execution');
+          if (ai.agentExecutionSurface?.githubActionsAllowedAsExecutionTransport !== false) fail('GitHub Actions must remain prohibited as agent execution transport');
+          if (!ai.agentExecutionSurface?.requiredExecutionPreference?.includes('CONNECTED_GITHUB_API_OR_NATIVE_AGENT_TOOLS')) fail('native connected execution preference missing');
+          if (dispatch.status !== 'ACTIVE_FAIL_CLOSED') fail('workflow dispatch capability must remain ACTIVE_FAIL_CLOSED');
+          if (dispatch.preferredTransport !== 'DIRECT_CONNECTED_GITHUB_WORKFLOW_DISPATCH') fail('current direct connected GitHub transport binding missing');
+          if (/portable[ -]carrier/i.test(aiText)) fail('obsolete portable-carrier advertisement was reintroduced into AI entry point');
+          fs.writeFileSync(process.env.RUNNER_TEMP + '/bounded-carrier-retirement-receipt.json', JSON.stringify({
+            schema: 'BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_RETIREMENT_RECEIPT_v1',
+            result: 'PASS',
+            legacyPortableCarrierAdvertisementRequired: false,
+            legacyPortableCarrierAdvertisementPresent: false,
+            githubActionsAgentExecutionAllowed: false,
+            currentExecutionPreference: 'CONNECTED_GITHUB_API_OR_NATIVE_AGENT_TOOLS',
+            currentDispatchTransport: dispatch.preferredTransport,
+            passiveCiOnly: true
+          }, null, 2) + '\n');
           NODE
 
-      - name: Recompute exact eight-path repository Router gate
-        shell: bash
-        run: |
-          set -euo pipefail
-          node tools/repository-ai-entry-router.mjs \
-            --mutation-intent \
-            --path .github/ai-router/router.v1.json \
-            --path .github/ai-router/execution-backends.v1.json \
-            --path .github/ai-router/system-continuity/gap-registry.v1.json \
-            --path .github/ai-router/bounded-exact-head-execution-carrier/protocol.v1.json \
-            --path .github/ai-router/bounded-exact-head-execution-carrier/registry.v1.json \
-            --path .github/ai-router/bounded-exact-head-execution-carrier/carrier.v1.mjs \
-            --path .github/ai-router/bounded-exact-head-execution-carrier/self-test.v1.mjs \
-            --path .github/workflows/bounded-exact-head-execution-carrier-v1.yml \
-            --task BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_V1_INSTALLATION_20260809_002_SUCCESSOR_001 \
-            --output "$RUNNER_TEMP/router-receipt.json"
-          node -e "const r=require(process.env.RUNNER_TEMP+'/router-receipt.json'); if(r.disposition!=='PASS'||r.routes?.length!==8||!r.routes.every(x=>x.projectId==='REPOSITORY_AI_ROUTER_INFRASTRUCTURE'&&x.disposition==='PASS'))process.exit(1)"
-
-      - name: Run adversarial carrier self-test
-        shell: bash
-        run: |
-          set -euo pipefail
-          node .github/ai-router/bounded-exact-head-execution-carrier/self-test.v1.mjs --output "$RUNNER_TEMP/self-test.json"
-          node -e "const r=require(process.env.RUNNER_TEMP+'/self-test.json'); if(r.result!=='PASS'||r.passed!==r.total||r.total<18||r.authorityInflationObserved!==false||r.arbitraryCommandAccepted!==false)process.exit(1)"
-          test -z "$(git status --porcelain=v1 --untracked-files=all)"
-
-      - name: Emit fresh generation-839 verification receipt
-        shell: bash
-        run: |
-          set -euo pipefail
-          node - <<'NODE'
-          const fs=require('fs'); const p=process.env.RUNNER_TEMP;
-          const router=JSON.parse(fs.readFileSync(p+'/router-receipt.json','utf8'));
-          const self=JSON.parse(fs.readFileSync(p+'/self-test.json','utf8'));
-          const out={schema:'BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_VERIFICATION_RECEIPT_v1',result:'PASS',generation:839,operationId:'BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_V1_INSTALLATION_20260809_002_SUCCESSOR_001',head:process.env.GITHUB_SHA,governingHead:'f624b55096c69c63909d4ee260fcd5615f8d9aa6',routerDisposition:router.disposition,routerRouteCount:router.routes.length,selfTestResult:self.result,selfTestPassed:self.passed,selfTestTotal:self.total,authorityInherited:false,arbitraryCommandAuthority:false,repositoryWriteAuthority:false,semanticAuthority:false};
-          fs.writeFileSync(p+'/verification.json',JSON.stringify(out,null,2)+'\n');
-          NODE
-
-      - name: Upload verification evidence
-        if: always()
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: bounded-exact-head-carrier-verification-${{ github.run_id }}-${{ github.run_attempt }}
-          path: |
-            ${{ runner.temp }}/gen839-successor.json
-            ${{ runner.temp }}/router-receipt.json
-            ${{ runner.temp }}/self-test.json
-            ${{ runner.temp }}/verification.json
-          if-no-files-found: warn
+          name: bounded-carrier-retirement-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/bounded-carrier-retirement-receipt.json
+          if-no-files-found: error
           retention-days: 90
-
-  execute-registered-command:
-    if: >-
-      github.event_name == 'issue_comment' &&
-      github.event.issue.number == 578 &&
-      github.actor == 'smansfield635-create' &&
-      startsWith(github.event.comment.body, 'BOUNDED_EXACT_HEAD_EXECUTION_REQUEST_V1')
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Check out ratified default branch carrier
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.repository.default_branch }}
-          fetch-depth: 0
-          persist-credentials: false
-
-      - name: Set up Node 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Parse bounded request without shell evaluation
-        shell: bash
-        env:
-          REQUEST_BODY: ${{ github.event.comment.body }}
-        run: |
-          set -euo pipefail
-          node - <<'NODE'
-          const fs=require('fs');
-          const marker='BOUNDED_EXACT_HEAD_EXECUTION_REQUEST_V1';
-          const body=process.env.REQUEST_BODY ?? '';
-          if(!body.startsWith(marker)) process.exit(2);
-          const raw=body.slice(marker.length).trim();
-          fs.writeFileSync(process.env.RUNNER_TEMP+'/request.json',JSON.stringify(JSON.parse(raw),null,2)+'\n');
-          NODE
-
-      - name: Execute registered command through bounded carrier
-        id: carrier
-        continue-on-error: true
-        shell: bash
-        run: |
-          set -euo pipefail
-          node .github/ai-router/bounded-exact-head-execution-carrier/carrier.v1.mjs \
-            --input "$RUNNER_TEMP/request.json" \
-            --output "$RUNNER_TEMP/execution-receipt.json"
-
-      - name: Upload bounded execution evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: bounded-exact-head-carrier-execution-${{ github.run_id }}-${{ github.run_attempt }}
-          path: |
-            ${{ runner.temp }}/request.json
-            ${{ runner.temp }}/execution-receipt.json
-          if-no-files-found: warn
-          retention-days: 90
-
-      - name: Return bounded execution receipt
-        if: always()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs=require('fs');
-            const p=process.env.RUNNER_TEMP+'/execution-receipt.json';
-            let r={schema:'BOUNDED_EXACT_HEAD_EXECUTION_FAILURE_v1',result:'FAIL_CLOSED',errorCode:'EXECUTION_RECEIPT_MISSING'};
-            if(fs.existsSync(p)) r=JSON.parse(fs.readFileSync(p,'utf8'));
-            const n=r.nativeReceipt??null;
-            const projection={schema:r.schema,result:r.result,errorCode:r.errorCode??null,descriptorId:r.descriptorId??null,operationId:r.operationId??null,lockGeneration:r.lockGeneration??null,targetHead:r.targetHead??null,exactHeadVerified:r.exactHeadVerified??false,workingTreeCleanBeforeAndAfter:r.workingTreeCleanBeforeAndAfter??false,nativeReceiptSchema:r.nativeReceiptSchema??n?.schema??null,nativeReceiptDisposition:n?.disposition??null,nativeReceiptDigest:r.nativeReceiptDigest??null,nativeReceiptRewritten:r.nativeReceiptRewritten??null,repositoryWritesPerformed:r.repositoryWritesPerformed??false,arbitraryCommandAuthority:r.arbitraryCommandAuthority??false,semanticAuthorityCreated:r.semanticAuthorityCreated??false};
-            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:578,body:'BOUNDED_EXACT_HEAD_EXECUTION_RETURN_V1\n```json\n'+JSON.stringify(projection,null,2)+'\n```'});
-
-      - name: Fail closed if carrier execution was nonpass
-        if: steps.carrier.outcome != 'success'
-        shell: bash
-        run: exit 1

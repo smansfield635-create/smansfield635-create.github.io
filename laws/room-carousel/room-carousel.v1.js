@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "LAWS_METHODS_REFERENCE_FAMILY_ARCHITECTURE_v4";
-  const REFERENCE = "METHODS_AND_MODELS_PROGRESSIVE_CARD_ARCHITECTURE_BYTE_FROZEN";
+  const CONTRACT = "LAWS_METHODS_REFERENCE_FAMILY_CONTINUITY_v5";
+  const REFERENCE = "METHODS_AND_MODELS_PROGRESSIVE_CARD_ARCHITECTURE_TWO_EXCEPTION_CONTINUITY";
   const CLASSIFY_PX = 8;
   const COMMIT_PX = 24;
   const AXIS_RATIO = 1.12;
@@ -27,9 +27,9 @@
     style.textContent = `
       html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-inspection] { width:min(100%,64rem); }
       html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] .lrc-inspection-head { margin-bottom:1.25rem; }
-      html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-information-grid] { grid-template-columns:minmax(13rem,16.5rem) minmax(0,1fr); grid-template-areas:"stories cells"; gap:1rem 1.35rem; align-items:start; }
-      html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-inner-tabs] { position:absolute !important; width:1px !important; height:1px !important; margin:-1px !important; padding:0 !important; overflow:hidden !important; clip:rect(0 0 0 0) !important; white-space:nowrap !important; border:0 !important; }
-      html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-story-rail] { grid-area:stories; top:4.2rem; border-right:1px solid rgba(255,255,255,.09); }
+      html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-information-grid] { grid-template-columns:minmax(13rem,16.5rem) minmax(0,1fr); grid-template-areas:"lenses lenses" "stories cells"; gap:.8rem 1.35rem; align-items:start; }
+      html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-inner-tabs] { grid-area:lenses; position:sticky; z-index:9; top:3.35rem; }
+      html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-story-rail] { grid-area:stories; top:7.05rem; border-right:1px solid rgba(255,255,255,.09); }
       html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-story-tab] { grid-template-columns:1fr; gap:.18rem; min-height:4.25rem; padding:.72rem .85rem; }
       html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-story-tab] > span { font-size:.58rem; letter-spacing:.13em; }
       html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-story-tab] > strong { color:inherit; font-size:.86rem; line-height:1.2; }
@@ -59,14 +59,21 @@
       html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] .lrc-engineering-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.7rem; }
       html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] .lrc-engineering-grid section { padding:.78rem; border:1px solid rgba(255,255,255,.07); border-radius:.72rem; background:rgba(255,255,255,.018); }
       html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] .lrc-engineering-grid p { margin:0; color:#99a6af; font-size:.81rem; line-height:1.52; }
-      html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-grid-cell][data-depth-focus="empirical"] .lrc-engineering-grid section:first-child { border-color:color-mix(in srgb,var(--lrc-family-accent) 38%,transparent); background:var(--lrc-family-soft); }
+      html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-grid-cell][data-depth-focus="practical"] .lrc-engineering-depth { display:none; }
+      html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-grid-cell][data-depth-focus="engineering"] .lrc-reader-first,
+      html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-grid-cell][data-depth-focus="empirical"] .lrc-reader-first { display:none; }
+      html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-grid-cell][data-depth-focus="empirical"] .lrc-engineering-depth > summary,
+      html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-grid-cell][data-depth-focus="empirical"] .lrc-engineering-identity { display:none; }
+      html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-grid-cell][data-depth-focus="empirical"] .lrc-engineering-body { padding-top:1.1rem; border-top:0; }
+      html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-grid-cell][data-depth-focus="empirical"] .lrc-engineering-grid section:first-child { border-color:color-mix(in srgb,var(--lrc-family-accent) 48%,transparent); background:var(--lrc-family-soft); }
       html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-summary-stories] { display:grid; gap:.35rem; width:100%; margin:.95rem 0 0; padding-top:.8rem; border-top:1px solid rgba(255,255,255,.07); }
       html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-summary-stories] span { display:flex; gap:.55rem; align-items:baseline; color:#82909b; font-size:.7rem; line-height:1.25; }
       html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-summary-stories] b { color:var(--lrc-family-accent); font-size:.58rem; letter-spacing:.12em; }
       html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-inspect] { margin-top:auto; }
       @media (max-width:780px) {
-        html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-information-grid] { grid-template-columns:minmax(8rem,34%) minmax(0,1fr); grid-template-areas:"stories cells"; gap:.65rem; }
-        html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-story-rail] { top:3.8rem; }
+        html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-information-grid] { grid-template-columns:minmax(8rem,34%) minmax(0,1fr); grid-template-areas:"lenses lenses" "stories cells"; gap:.65rem; }
+        html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-inner-tabs] { top:calc(max(0px,env(safe-area-inset-top)) + 3.2rem); }
+        html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-story-rail] { top:calc(max(0px,env(safe-area-inset-top)) + 6.65rem); }
         html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-story-tab] { min-height:3.8rem; padding:.58rem .55rem; }
         html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-story-tab] > strong { font-size:.74rem; }
         html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-story-tab] > small { font-size:.56rem; }
@@ -75,7 +82,7 @@
         html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] .lrc-engineering-grid { grid-template-columns:1fr; }
       }
       @media (max-width:480px) {
-        html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-information-grid] { grid-template-columns:1fr; grid-template-areas:"stories" "cells"; }
+        html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-information-grid] { grid-template-columns:1fr; grid-template-areas:"lenses" "stories" "cells"; }
         html.lr-js [data-laws-room-carousel][data-lrc-mounted="true"] [data-lrc-story-rail] { position:relative; top:auto; grid-template-columns:repeat(2,minmax(0,1fr)); border-right:0; }
       }
       @media (prefers-reduced-motion:reduce) {
@@ -157,7 +164,7 @@
     const a = storyArchitecture(story, material, context);
     return `<article id="${escapeHtml(cardId)}-${escapeHtml(story.id)}" role="tabpanel" data-lrc-grid-cell data-lrc-story-index="${storyIndex}" data-lrc-story-id="${escapeHtml(story.id)}">
       <div class="lrc-progressive-detail">
-        <section class="lrc-reader-first">
+        <section class="lrc-reader-first" data-lrc-practical-depth>
           <p class="lrc-depth-label">Plain-language reading</p>
           <h3>${escapeHtml(a.readerTitle)}</h3>
           <p class="lrc-reader-lead">${escapeHtml(a.lead)}</p>
@@ -166,12 +173,12 @@
         <details class="lrc-engineering-depth" data-lrc-engineering-depth>
           <summary><span>Engineering detail</span><small>${escapeHtml(a.formalCaption)}</small></summary>
           <div class="lrc-engineering-body">
-            <div class="lrc-engineering-identity">
+            <div class="lrc-engineering-identity" data-lrc-formal-depth>
               <p class="lrc-depth-label">Formal / technical reading</p>
               <h4>${escapeHtml(a.formalTitle)}</h4>
               <p class="lrc-engineering-statement">${escapeHtml(a.engineering)}</p>
             </div>
-            <div class="lrc-engineering-grid">
+            <div class="lrc-engineering-grid" data-lrc-evidence-depth>
               <section><strong>Evidence standing</strong><p>${escapeHtml(a.evidence)}</p></section>
               <section><strong>Failure behavior</strong><p>${escapeHtml(a.failure)}</p></section>
               <section><strong>Limits</strong><p>${escapeHtml(a.limits)}</p></section>
@@ -214,8 +221,8 @@
       <button type="button" data-lrc-return>↶ Return to Orbit</button>
       <header class="lrc-inspection-head"><p>${escapeHtml(family)} · contextual inspection</p><h2>${escapeHtml(material.label)}</h2><span>${escapeHtml(material.summary)}</span></header>
       <div data-lrc-information-grid>
-        <div data-lrc-inner-tabs aria-hidden="true">${DEPTHS.map(([kind,label],i) => `<button type="button" tabindex="-1" data-lrc-inner-tab="${kind}" data-lrc-layer-index="${i}">${label}</button>`).join("")}</div>
-        <div data-lrc-story-rail role="tablist" aria-orientation="vertical" aria-label="${escapeHtml(material.label)} readings">
+        <div data-lrc-inner-tabs role="tablist" aria-label="${escapeHtml(material.label)} reading lens">${DEPTHS.map(([kind,label],i) => `<button type="button" role="tab" data-lrc-inner-tab="${kind}" data-lrc-layer-index="${i}">${label}</button>`).join("")}</div>
+        <div data-lrc-story-rail role="tablist" aria-orientation="vertical" aria-label="${escapeHtml(material.label)} stories">
           ${stories.map((story, storyIndex) => { const a = storyArchitecture(story, material, context); return `<button type="button" role="tab" data-lrc-story-tab="${escapeHtml(story.id)}" data-lrc-story-index="${storyIndex}"><span>${String(storyIndex + 1).padStart(2,"0")} / ${String(stories.length).padStart(2,"0")}</span><strong>${escapeHtml(a.readerTitle)}</strong><small>${escapeHtml(a.formalCaption)}</small></button>`; }).join("")}
         </div>
         <div data-lrc-grid-cells>${stories.map((story, storyIndex) => storyPanel(card.id, story, storyIndex, material, context)).join("")}</div>
@@ -239,7 +246,7 @@
       button.dataset.lrcTabIndex = String(index);
       button.setAttribute("role", "tab");
       button.setAttribute("aria-controls", card.id);
-      button.innerHTML = `<span data-lrc-tab-number>${String(index + 1).padStart(2,"0")}</span><span data-lrc-tab-label>${escapeHtml(card.dataset.lrcLabel)}</span>`;
+      button.innerHTML = `<span data-lrc-tab-number>${String(index + 1).padStart(2, "0")}</span><span data-lrc-tab-label>${escapeHtml(card.dataset.lrcLabel)}</span>`;
       tabs.append(button);
       return button;
     });
@@ -336,7 +343,7 @@
         card.querySelector(":scope > [data-lrc-inspection]").hidden = !inspecting;
         const activeLayer = state.layers[index];
         const activeStory = state.stories[index];
-        card.querySelectorAll("[data-lrc-inner-tab]").forEach((button,layerIndex) => button.setAttribute("aria-selected",String(layerIndex === activeLayer)));
+        card.querySelectorAll("[data-lrc-inner-tab]").forEach((button,layerIndex) => { const selected = layerIndex === activeLayer; button.setAttribute("aria-selected",String(selected)); button.tabIndex = selected ? 0 : -1; });
         card.querySelectorAll("[data-lrc-story-tab]").forEach((button,storyIndex) => { const selected = storyIndex === activeStory; button.setAttribute("aria-selected",String(selected)); button.tabIndex = selected ? 0 : -1; });
         card.querySelectorAll("[data-lrc-grid-cell]").forEach(panel => {
           const selected = Number(panel.dataset.lrcStoryIndex) === activeStory;
@@ -364,8 +371,6 @@
 
     function openInspection(reason = "inspection-open") {
       if (state.inspecting) return;
-      state.layers[state.index] = 0;
-      state.stories[state.index] = 0;
       state.inspecting = true;
       root.dataset.lrcInspecting = "true";
       document.documentElement.dataset.lrcInspectionOpen = "true";
@@ -380,10 +385,11 @@
       if (focus) buttons[state.index]?.focus({ preventScroll:true });
     }
 
-    function selectLayer(cardIndex,next,reason = "depth-select") {
+    function selectLayer(cardIndex,next,reason = "depth-select",focus = false) {
       if (!state.inspecting || cardIndex !== state.index) return;
       state.layers[cardIndex] = wrap(next,DEPTHS.length);
       render(reason);
+      if (focus) cards[cardIndex].querySelectorAll("[data-lrc-inner-tab]")[state.layers[cardIndex]]?.focus({ preventScroll:true });
     }
 
     function selectStory(cardIndex,next,reason = "story-tab-select",focus = false) {
@@ -391,7 +397,6 @@
       const storyCount = routeMap.cards[cardIndex]?.stories?.length || 0;
       if (!storyCount) return;
       state.stories[cardIndex] = wrap(next,storyCount);
-      state.layers[cardIndex] = 0;
       render(reason);
       if (focus) cards[cardIndex].querySelectorAll("[data-lrc-story-tab]")[state.stories[cardIndex]]?.focus({ preventScroll:true });
     }
@@ -414,6 +419,14 @@
       if (story) { event.stopPropagation(); selectStory(state.index,Number(story.dataset.lrcStoryIndex)); }
     });
     root.addEventListener("keydown",event => {
+      const inner = event.target.closest("[data-lrc-inner-tab]");
+      if (inner && ["ArrowLeft","ArrowRight","Home","End"].includes(event.key)) {
+        event.preventDefault(); event.stopPropagation();
+        const current = Number(inner.dataset.lrcLayerIndex);
+        const next = event.key === "Home" ? 0 : event.key === "End" ? DEPTHS.length - 1 : current + (event.key === "ArrowRight" ? 1 : -1);
+        selectLayer(state.index,next,"depth-tab-keyboard",true);
+        return;
+      }
       const story = event.target.closest("[data-lrc-story-tab]");
       if (!story || !["ArrowUp","ArrowDown","Home","End"].includes(event.key)) return;
       event.preventDefault(); event.stopPropagation();

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Strict static gate for the Gen1751 Laws layered-information-grid reconstruction."""
+"""Strict static gate for the Gen1841 Methods-derived Laws continuity pass."""
 
 from __future__ import annotations
 
@@ -10,9 +10,13 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-GOVERNING_HEAD = os.environ.get("EXECUTION_BASE", "b405c91b89df10ee9e51b784d7bd2686c17df6ac")
+GOVERNING_HEAD = os.environ.get("EXECUTION_BASE", "b14781bc331713bd0869bc6c7fd5f145376788e9")
 MAP_PATH = ROOT / "laws/room-carousel/route-card-map.v2.json"
 ASSET_IDENTITY = "LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827"
+METHODS_EXCEPTIONS = {
+    "laws/research/methods-and-models/index.html",
+    "laws/research/methods-and-models/carousel-final-polish.css",
+}
 SHARED_ALLOWED = {
     "laws/room-carousel/preconstruction-contract.v1.json",
     "laws/room-carousel/room-carousel.v1.css",
@@ -22,6 +26,14 @@ SHARED_ALLOWED = {
     "laws/room-carousel/verify.v1.mjs",
     "scripts/laws_cp6_final_browser_verify.mjs",
     "scripts/verify-laws-cp6-final-synchronization.py",
+} | METHODS_EXCEPTIONS
+PROTECTED_METHODS = {
+    "laws/research/methods-and-models/carousel.css",
+    "laws/research/methods-and-models/carousel-coherence.css",
+    "laws/research/methods-and-models/carousel-progressive.css",
+    "laws/research/methods-and-models/carousel.js",
+    "laws/research/methods-and-models/carousel-progressive.js",
+    "laws/research/methods-and-models/carousel-data.js",
 }
 
 
@@ -52,9 +64,14 @@ def main() -> int:
     outside = sorted(set(changed) - allowed)
     require(not outside, f"OUT_OF_SCOPE_PATHS:{outside}")
     require("laws/index.html" not in changed, "LAWS_ROOT_MUTATED")
-    require(not any(path.startswith("laws/research/methods-and-models/") for path in changed), "METHODS_MUTATED")
+    methods_changed = {path for path in changed if path.startswith("laws/research/methods-and-models/")}
+    require(methods_changed == METHODS_EXCEPTIONS, f"METHODS_EXCEPTION_SCOPE:{sorted(methods_changed)}")
     require(git("diff", "--quiet", GOVERNING_HEAD, "--", "laws/index.html").returncode == 0, "LAWS_ROOT_BYTES")
-    require(git("diff", "--quiet", GOVERNING_HEAD, "--", "laws/research/methods-and-models").returncode == 0, "METHODS_BYTES")
+    for protected in PROTECTED_METHODS:
+        require(git("diff", "--quiet", GOVERNING_HEAD, "--", protected).returncode == 0, f"PROTECTED_METHODS_BYTES:{protected}")
+    require(git("diff", "--quiet", GOVERNING_HEAD, "--", "laws/room-carousel/route-card-map.v2.json").returncode == 0, "GEN1833_ROUTE_CARD_MAP_BYTES")
+    for route_file in route_files:
+        require(git("diff", "--quiet", GOVERNING_HEAD, "--", route_file).returncode == 0, f"GEN1833_CONTEXT_BYTES:{route_file}")
 
     generic = {"hero", "primary relationship", "reading layers", "study", "claim boundary"}
     for route, spec in routes.items():
@@ -91,16 +108,12 @@ def main() -> int:
 
     reality = routes["/laws/categories/reality/"]["cards"]
     reality_actions = {card["id"]: card.get("href") for card in reality if card.get("href")}
-    require(
-        reality_actions
-        == {
-            "theory": "/laws/categories/reality/theory.html",
-            "evidence": "/laws/categories/reality/evidence.html",
-            "measure": "/laws/categories/reality/measure.html",
-            "limits": "/laws/categories/reality/limits.html",
-        },
-        f"REALITY_ACTIONS:{reality_actions}",
-    )
+    require(reality_actions == {
+        "theory": "/laws/categories/reality/theory.html",
+        "evidence": "/laws/categories/reality/evidence.html",
+        "measure": "/laws/categories/reality/measure.html",
+        "limits": "/laws/categories/reality/limits.html",
+    }, f"REALITY_ACTIONS:{reality_actions}")
     require(not next(card for card in reality if card["id"] == "audit").get("href"), "INVENTED_AUDIT_ROUTE")
     reality_source = route_path("/laws/categories/reality/").read_text(encoding="utf-8")
     require('href="/laws/categories/integrity/"' in reality_source, "REALITY_PREVIOUS_CONTINUITY")
@@ -114,37 +127,44 @@ def main() -> int:
         "[data-lrc-inner-tab]",
         "[data-lrc-story-tab]",
         "[data-lrc-grid-cell]",
-        "state.layers[state.index] = 0",
-        "state.stories[state.index] = 0",
+        "depth-tab-keyboard",
         "sameObjectContinuity:true",
         "↶ Return to Orbit",
         "audit.open = false",
+        "METHODS_AND_MODELS_PROGRESSIVE_CARD_ARCHITECTURE_TWO_EXCEPTION_CONTINUITY",
     ):
         require(marker in runtime, f"RUNTIME_MARKER:{marker}")
+    select_story = re.search(r"function selectStory[\s\S]*?\n    }", runtime)
+    open_inspection = re.search(r"function openInspection[\s\S]*?\n    }", runtime)
+    require(select_story and "state.layers[cardIndex] = 0" not in select_story.group(0), "STORY_RESETS_LENS")
+    require(open_inspection and "state.layers[state.index] = 0" not in open_inspection.group(0), "OPEN_RESETS_LENS")
+    require(open_inspection and "state.stories[state.index] = 0" not in open_inspection.group(0), "OPEN_RESETS_STORY")
     require("nativeChildren" not in runtime, "DIRECT_CHILD_CARD_INFERENCE_RETURNED")
     require("Identity / Meaning" not in runtime, "GENERIC_SCENE_INVENTORY_RETURNED")
     for marker in ("[data-lrc-inner-tabs]", "[data-lrc-story-rail]", "[data-lrc-story-tab]", "[data-lrc-grid-cell]", "[data-lrc-claim-boundary]", "data-lrc-family"):
         require(marker in stylesheet, f"STYLESHEET_MARKER:{marker}")
 
-    subprocess.run(
-        ["node", "laws/room-carousel/verify-contextual-delivery.v2.mjs", "--static-only"],
-        cwd=ROOT,
-        check=True,
-    )
+    methods_polish = (ROOT / "laws/research/methods-and-models/carousel-final-polish.css").read_text(encoding="utf-8")
+    methods_index = (ROOT / "laws/research/methods-and-models/index.html").read_text(encoding="utf-8")
+    require("top: calc(39% + 3rem)" in methods_polish, "METHODS_HALF_INCH_SETTLEMENT")
+    require('class="mm-story-nav"' in methods_index, "METHODS_BOTTOM_CONTINUITY")
+    require('href="/laws/research/evidence-and-sources/"' in methods_index, "METHODS_PREVIOUS")
+    require('href="/laws/research/applied-investigations/"' in methods_index, "METHODS_NEXT")
+
+    subprocess.run(["node", "laws/room-carousel/verify-contextual-delivery.v2.mjs", "--static-only"], cwd=ROOT, check=True)
     result = {
-        "contract": "LAWS_LAYERED_INFORMATION_GRID_STRICT_STATIC_MATRIX_v3",
+        "contract": "LAWS_METHODS_DERIVED_CONTINUITY_STATIC_MATRIX_v1",
         "status": "PASS",
         "governing_head": GOVERNING_HEAD,
         "routes": len(routes),
         "cards": 134,
-        "story_counts": {
-            "four": sum(1 for route in routes.values() for card in route["cards"] if len(card["stories"]) == 4),
-            "five": sum(1 for route in routes.values() for card in route["cards"] if len(card["stories"]) == 5),
-        },
         "cells": sum(len(card["stories"]) * 3 for route in routes.values() for card in route["cards"]),
         "card_counts": [4, 5, 6],
-        "methods_byte_identical": True,
+        "gen1833_context_corpus_preserved": True,
+        "methods_protected_with_exact_two_exceptions": sorted(METHODS_EXCEPTIONS),
         "laws_root_protected": True,
+        "internal_lens_state_independent": True,
+        "reopen_state_restoration_required": True,
         "reality_existing_deep_routes": sorted(reality_actions),
         "reality_previous_next": ["/laws/categories/integrity/", "/laws/categories/structure/"],
     }

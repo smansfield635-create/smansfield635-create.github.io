@@ -1,6 +1,7 @@
 /*
  * METHODS & MODELS — final spatial polish
- * Scope: vertical stage balance + established Laws Fibonacci star field integration.
+ * Scope: vertical stage balance + established Laws Fibonacci star field integration
+ *        + greater-Laws Previous/Next continuity.
  * No carousel geometry, card sizing, content, interaction, inspection, or return semantics are changed.
  */
 
@@ -28,14 +29,14 @@
   filter: brightness(1.7) drop-shadow(0 0 6px rgba(246, 237, 205, .62));
 }
 
-/* Use more of the lower stage so the foreground object has a deliberate clear border beneath the family tabs. */
+/* Bounded continuity exception: settle the foreground orbit about one-half inch lower. */
 .mm-ring {
-  top: 39%;
+  top: calc(39% + 3rem);
 }
 
 @media (max-width: 1100px) {
   .mm-ring {
-    top: 48%;
+    top: calc(48% + 3rem);
   }
 
   .mm-fibonacci-field {
@@ -45,7 +46,7 @@
 
 @media (max-width: 760px) {
   .mm-ring {
-    top: 49%;
+    top: calc(49% + 3rem);
   }
 
   .mm-fibonacci-field {
@@ -56,6 +57,41 @@
 /* Inspection retains the established centered custody state. */
 .mm-carousel[data-inspecting="true"] .mm-ring {
   top: 50%;
+}
+
+/* Bounded continuity exception: greater-Laws route handoff remains outside the spatial instrument. */
+.mm-story-nav {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:.8rem;
+  width:min(100%,72rem);
+  margin:1.15rem auto 0;
+  padding-top:1rem;
+  border-top:1px solid rgba(255,255,255,.10);
+}
+
+.mm-story-nav a {
+  display:grid;
+  gap:.2rem;
+  min-width:0;
+  min-height:3.4rem;
+  padding:.75rem .9rem;
+  border:1px solid rgba(215,187,130,.18);
+  border-radius:.85rem;
+  background:rgba(255,255,255,.018);
+  color:#d9dfe5;
+  text-decoration:none;
+}
+
+.mm-story-nav a:last-child { text-align:right; }
+.mm-story-nav span { color:#8d9aa5; font-size:.65rem; font-weight:760; letter-spacing:.12em; text-transform:uppercase; }
+.mm-story-nav strong { color:#eee9df; font-size:.84rem; line-height:1.35; }
+.mm-story-nav a:hover { border-color:rgba(215,187,130,.38); background:rgba(215,187,130,.045); }
+.mm-story-nav a:focus-visible { outline:2px solid #d7bb82; outline-offset:3px; }
+
+@media (max-width: 620px) {
+  .mm-story-nav { grid-template-columns:1fr; }
+  .mm-story-nav a:last-child { text-align:left; }
 }
 
 @media (prefers-reduced-motion: reduce) {

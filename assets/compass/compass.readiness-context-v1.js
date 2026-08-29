@@ -22,9 +22,9 @@ const style=document.createElement('style');
 style.id='compass-complete-human-intent-completion-v1';
 style.textContent=`
 /* SINGLE_CARDINAL_LABEL_OWNER_v1 */
-.compass-editorial-brand{display:none!important}
+html body .compass-estate__header .compass-editorial-brand{display:none!important}
 .compass-estate__header{position:relative}
-.compass-estate__header::after{content:"THE COMPASS";display:block;margin:.7rem auto 0;width:max-content;max-width:100%;padding:.38rem .72rem;border:1px solid rgba(244,214,128,.22);border-radius:999px;color:rgba(244,226,170,.82);font:800 .68rem/1 Inter,ui-sans-serif,system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;background:rgba(6,14,22,.28);box-shadow:0 0 24px rgba(244,214,128,.055)}
+.compass-estate__header::after{content:none!important;display:none!important}
 [data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing>span{opacity:0!important;visibility:hidden!important;display:none!important}
 [data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing.is-readable-cardinal>span:first-child{display:grid!important;opacity:1!important;visibility:visible!important}
 [data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing>span:nth-child(n+2){display:none!important;opacity:0!important;visibility:hidden!important}

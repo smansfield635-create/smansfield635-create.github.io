@@ -15,7 +15,7 @@ const SETTLED_DRIFT_TOLERANCE=6;
 
 const browser=await puppeteer.launch({executablePath:chrome,headless:'new',args:['--no-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
 const page=await browser.newPage();
-await page.setViewport({width:900,height:1000,deviceScaleFactor:1,isMobile:false,hasTouch:true});
+await page.setViewport({width:900,height:1000,deviceScaleFactor:1,isMobile:false,hasTouch:false});
 const pageErrors=[];
 page.on('pageerror',e=>pageErrors.push(String(e)));
 // The Compass intentionally carries long-lived media/runtime requests. Mechanical readiness
@@ -30,9 +30,10 @@ page.on('framenavigated',frame=>{
   }
 });
 
-// The audit exercises repeated synthetic swipes rather than user click intent. Prevent any
-// browser-default click/auxclick action synthesized after touch release from navigating away
-// while leaving the touch stream itself untouched for the Compass controller.
+// Mechanical qualification follows the accepted Laws/Main Compass interaction boundary:
+// exercise the actual browser pointer transaction, then observe physical settlement and the
+// controller's committed cardinal correspondence. Click/auxclick navigation remains suppressed
+// because this audit measures rotation/settlement rather than semantic tap intent.
 await page.evaluate(()=>{
   const suppress=e=>e.preventDefault();
   document.addEventListener('click',suppress,true);
@@ -100,10 +101,11 @@ const contextAligned=initial.contextCenterError.heading!==null&&initial.contextC
 add('AUDIT_CONTEXTUAL_ALIGNMENT',contextAligned,{tolerance:CONTEXT_CENTER_TOLERANCE,errors:initial.contextCenterError,rects:initial.context});
 add('AUDIT_NO_HORIZONTAL_OVERFLOW',Math.abs(initial.overflow)<=1,{overflow:initial.overflow});
 
-// Synthetic touch coordinates are viewport-relative, so exercise the transition only after
-// bringing the scene into view. The physical foreground anchor must be sampled again after
-// scrolling so geometry comparisons use one coordinate frame. This changes only the harness
-// input boundary, not acceptance criteria.
+// Pointer coordinates are viewport-relative, so exercise the transition only after bringing the
+// scene into view. The physical foreground anchor is sampled again after scrolling so geometry
+// comparisons use one coordinate frame. Acceptance criteria are unchanged; only the input
+// transport is rebound from raw CDP touch injection to the real pointer transaction used by the
+// accepted Laws/Main Compass interaction contract.
 const sceneHandle=await page.$('[data-compass-scene]');
 await sceneHandle?.evaluate(el=>el.scrollIntoView({block:'center',inline:'nearest'}));
 await new Promise(r=>setTimeout(r,150));
@@ -117,8 +119,6 @@ if(!anchor){
   if(!b){
     add('AUDIT_SETTLED_GEOMETRY',false,{reason:'NO_SCENE_BOUNDS'});
   }else{
-    const client=await page.target().createCDPSession();
-    const point=(x,y)=>[{x,y,radiusX:1,radiusY:1,force:1,id:1}];
     const patterns=[[.84,.50,.16,.50],[.50,.80,.50,.20],[.16,.50,.84,.50],[.50,.20,.50,.80]];
     const transitions=[];
     let transitionNavigation=null;
@@ -130,10 +130,15 @@ if(!anchor){
       if(!beforeResult.value){transitionNavigation=beforeResult.error;break;}
       const before=beforeResult.value;
       navigationObserved=null;
-      await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:point(x1,y1)});
-      for(let i=1;i<=18;i++){const t=i/18;await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:point(x1+(x2-x1)*t,y1+(y2-y1)*t)});await new Promise(r=>setTimeout(r,22))}
+      await page.mouse.move(x1,y1);
+      await page.mouse.down({button:'left'});
+      for(let i=1;i<=18;i++){
+        const t=i/18;
+        await page.mouse.move(x1+(x2-x1)*t,y1+(y2-y1)*t,{steps:1});
+        await new Promise(r=>setTimeout(r,22));
+      }
       await new Promise(r=>setTimeout(r,100));
-      await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+      await page.mouse.up({button:'left'});
       await new Promise(r=>setTimeout(r,260));
       if(navigationObserved){transitionNavigation={stage:`attempt-${attempt+1}-post-release-early`,...navigationObserved};break;}
       const earlyResult=await safeSnapshot(`attempt-${attempt+1}-early`);
@@ -148,7 +153,7 @@ if(!anchor){
     }
 
     if(transitionNavigation)add('AUDIT_TRANSITION_NAVIGATION',false,transitionNavigation);
-    else add('AUDIT_TRANSITION_NAVIGATION',true,{navigationObserved:false});
+    else add('AUDIT_TRANSITION_NAVIGATION',true,{navigationObserved:false,inputBoundary:'POINTER_TRANSACTION'});
 
     const geometryEvidence=[];
     let geometryPass=!transitionNavigation&&transitions.length>=3;
@@ -164,15 +169,15 @@ if(!anchor){
       geometryPass&&=onePass;
       geometryEvidence.push({from:t.before.root.focus,to:t.after.root.focus,phase:t.after.root.phase,anchorError,outgoingDistance,settledDrift:drift,primary:t.after.primary,visibleLabels:t.after.visibleLabels,status:onePass?'PASS':'FAIL'});
     }
-    add('AUDIT_SETTLED_GEOMETRY',geometryPass,{requiredDistinctTransitions:3,observedTransitions:transitions.length,anchor,tolerances:{anchor:SETTLED_ANCHOR_TOLERANCE,outgoingDeparture:OLD_PRIMARY_DEPARTURE_MIN,drift:SETTLED_DRIFT_TOLERANCE},navigation:transitionNavigation,transitions:geometryEvidence});
-    add('AUDIT_SINGLE_SETTLED_LABEL',!transitionNavigation&&transitions.length>=1&&transitions.every(t=>t.after.visibleLabels.length===1&&t.after.primary.length===1&&t.after.visibleLabels[0]===t.after.root.focus&&t.after.primary[0]===t.after.root.focus),{navigation:transitionNavigation,transitions:geometryEvidence.map(x=>({from:x.from,to:x.to,primary:x.primary,visibleLabels:x.visibleLabels}))});
-    add('AUDIT_RELEASE_STABILITY',!transitionNavigation&&transitions.length>=1&&geometryEvidence.every(x=>x.settledDrift<=SETTLED_DRIFT_TOLERANCE),{navigation:transitionNavigation,drifts:geometryEvidence.map(x=>({to:x.to,drift:x.settledDrift}))});
+    add('AUDIT_SETTLED_GEOMETRY',geometryPass,{requiredDistinctTransitions:3,observedTransitions:transitions.length,anchor,tolerances:{anchor:SETTLED_ANCHOR_TOLERANCE,outgoingDeparture:OLD_PRIMARY_DEPARTURE_MIN,drift:SETTLED_DRIFT_TOLERANCE},navigation:transitionNavigation,inputBoundary:'POINTER_TRANSACTION',transitions:geometryEvidence});
+    add('AUDIT_SINGLE_SETTLED_LABEL',!transitionNavigation&&transitions.length>=1&&transitions.every(t=>t.after.visibleLabels.length===1&&t.after.primary.length===1&&t.after.visibleLabels[0]===t.after.root.focus&&t.after.primary[0]===t.after.root.focus),{navigation:transitionNavigation,inputBoundary:'POINTER_TRANSACTION',transitions:geometryEvidence.map(x=>({from:x.from,to:x.to,primary:x.primary,visibleLabels:x.visibleLabels}))});
+    add('AUDIT_RELEASE_STABILITY',!transitionNavigation&&transitions.length>=1&&geometryEvidence.every(x=>x.settledDrift<=SETTLED_DRIFT_TOLERANCE),{navigation:transitionNavigation,inputBoundary:'POINTER_TRANSACTION',drifts:geometryEvidence.map(x=>({to:x.to,drift:x.settledDrift}))});
   }
 }
 
 add('AUDIT_NO_BROWSER_ERRORS',pageErrors.length===0,{errors:pageErrors});
 const status=failures.length?'FAIL':'PASS';
-const result={status,schema:'DGB_COMPASS_AUDIT_DERIVED_RUNTIME_v1',publicUrl:`${base}/`,auditAuthority:'docs/COMPASS_LAWS_PRECEDENT_AND_STATE_TRANSITION_AUDIT_20260822.md + docs/COMPASS_RELEASE_SETTLEMENT_AND_TABLET_CONTEXT_CYCLE_20260822.md',checks,failures,initial};
+const result={status,schema:'DGB_COMPASS_AUDIT_DERIVED_RUNTIME_v1',publicUrl:`${base}/`,auditAuthority:'docs/COMPASS_LAWS_PRECEDENT_AND_STATE_TRANSITION_AUDIT_20260822.md + docs/COMPASS_RELEASE_SETTLEMENT_AND_TABLET_CONTEXT_CYCLE_20260822.md',inputBoundary:'POINTER_TRANSACTION',checks,failures,initial};
 fs.writeFileSync(out,JSON.stringify(result,null,2));
 console.log(JSON.stringify(result,null,2));
 await browser.close();

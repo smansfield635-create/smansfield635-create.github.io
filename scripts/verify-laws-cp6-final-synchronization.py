@@ -4,12 +4,13 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-GOVERNING_HEAD = "b405c91b89df10ee9e51b784d7bd2686c17df6ac"
+GOVERNING_HEAD = os.environ.get("EXECUTION_BASE", "b405c91b89df10ee9e51b784d7bd2686c17df6ac")
 MAP_PATH = ROOT / "laws/room-carousel/route-card-map.v2.json"
 ASSET_IDENTITY = "LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827"
 SHARED_ALLOWED = {

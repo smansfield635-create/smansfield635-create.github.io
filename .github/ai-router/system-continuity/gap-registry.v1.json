@@ -105,6 +105,18 @@
       "closureRequirements": ["OWNER_CONNECTOR_SUCCESSOR_SELF_TEST_PASS", "EXISTING_SUCCESSOR_LOCAL_REGRESSION_PASS", "OWNER_SUCCESSOR_LINEAGE_ACCEPTANCE_PASS", "EXACT_CANDIDATE_ROUTER_PASS", "POST_MERGE_REAL_LAWS_GEN1763_SUCCESSOR_PROOF", "NO_PACKET_COMPILER_GAP_CLOSURE"],
       "relatedOpenGapNotSuperseded": "POST_RATIFICATION_STRICT_SUCCESSOR_PACKET_RECONSTRUCTION",
       "authorityCreated": false
+    },
+    {
+      "gapId": "OWNER_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_EXECUTION_CONTINUITY",
+      "status": "OPEN",
+      "discoveredAtHead": "e0fc91f3c30a1486754d616ccd56682ba697649f",
+      "coordinationIssue": 2292,
+      "summary": "Canonical terminal closure exists and is lineage-certified, but an owner-authenticated connected GitHub session lacked an Actions-independent terminal-closure execution surface. Gen1836 installs a planner that delegates to canonical closeLocal/closeRemote semantics, binds owner source identity and exact current main, requires active authority provenance plus ledger/blob and lock-ref CAS, and leaves the gap open until the installed connector closes real Laws Gen1833 PASS_CLOSED and the resulting lock-ref commit is reread and accepted by lineage verification.",
+      "interfaceKeys": ["OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1", "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1", "REPOSITORY_OPERATION_REMOTE_CLOSURE_RECEIPT_v1", "LEDGER_BLOB_SHA_COMPARE_AND_SWAP", "LOCK_REF_SHA_COMPARE_AND_SWAP"],
+      "pathScopes": ["AI_ENTRYPOINT.json", ".github/operation-intake/owner-connector-terminal-closure-contract.v1.json", "tools/operation-intake/owner-connector-canonical-terminal-closure.v1.mjs", "tools/operation-intake/owner-connector-terminal-closure-self-test.v1.mjs", "tools/operation-intake/repository-operation-lock-lineage.v2.mjs"],
+      "evidenceRefs": ["ISSUE_2292", "GENERATION_1834_PRECONSTRUCTION_STOP", "PR_2295_GEN1835_TERMINAL_CLOSURE_LINEAGE_CERTIFICATION", "GENERATION_1836_SUCCESSOR_ADMISSION"],
+      "closureRequirements": ["OWNER_CONNECTOR_TERMINAL_CLOSURE_SELF_TEST_PASS", "TERMINAL_CLOSURE_LINEAGE_SELF_TEST_PASS", "EXACT_CANDIDATE_ROUTER_PASS", "POST_MERGE_REAL_GEN1833_PASS_CLOSED_RELEASE_PROOF", "NO_ACTIONS_AGENT_EXECUTION", "NO_SECOND_LEDGER_OR_GENERIC_COMMAND_AUTHORITY"],
+      "authorityCreated": false
     }
   ]
 }

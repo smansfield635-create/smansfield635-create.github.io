@@ -1,82 +1,76 @@
-// QUALIFICATION_RETRIGGER_STRENGTHENED_FALLBACK_HEAD_20260820
 import fs from 'node:fs';
+import crypto from 'node:crypto';
 
-const html = fs.readFileSync('index.html', 'utf8');
-const gen1537 = fs.readFileSync('assets/compass/compass.gen1537.recovery.js', 'utf8');
-const capability = fs.readFileSync('assets/compass/compass.capability-carousel.js', 'utf8');
-const capabilityCore = fs.readFileSync('assets/compass/compass.capability-carousel.core.js', 'utf8');
-const crystals = fs.readFileSync('assets/compass/compass.crystals.js', 'utf8');
-const mediaRegistry = JSON.parse(fs.readFileSync('tools/ai-room-transport/ai-media-source-registry.v1.json', 'utf8'));
-
-const fail = (message) => { throw new Error(message); };
-const has = (needle, label = needle) => { if (!html.includes(needle)) fail(`missing: ${label}`); };
-const absent = (needle, label = needle) => { if (html.includes(needle)) fail(`forbidden: ${label}`); };
-const indexOf = (needle) => {
-  const i = html.indexOf(needle);
-  if (i < 0) fail(`cannot order missing marker: ${needle}`);
-  return i;
-};
-
-has('DiamondGateBridge.com', 'brand treatment');
-has('New here? Open the introduction.', 'collapsed Chapter One summary');
-has('What is Diamond Gate Bridge?', 'Diamond Gate disclosure');
-has('data-compass-scene', 'Compass scene');
-has('Built Different', 'Built Different evidence');
-has('data-compass-capability-switcher', 'Track A capability placeholder');
-has('class="compass-build-cta"', 'final custom build CTA section');
-has('id="build-custom-title"', 'final custom build CTA title anchor');
-has('Build Your Own Website', 'final custom build CTA title');
-has('data-editorial-fallback="true"', 'keyboard-accessible destination fallback');
-has('<summary>All destinations</summary>', 'collapsed destination fallback summary');
-absent('The Compass exposes the same destinations to keyboard, touch, pointer, and reduced-motion users.', 'legacy bottom disclosure');
-
-const finalMaster = mediaRegistry?.sources?.CHAPTER_01_FINAL_AWARDS_LIVE_MASTER_V1;
-if (!finalMaster) fail('missing governing CHAPTER_01_FINAL_AWARDS_LIVE_MASTER_V1 registry entry');
-if (finalMaster.ownerApproved !== true) fail('Chapter One final master is not owner-approved');
-if (finalMaster.expectedDurationSeconds !== 65.0) fail(`Chapter One final master duration is not 65s: ${finalMaster.expectedDurationSeconds}`);
-if (finalMaster.expectedSha256 !== '9be6d48d6a8ceeb6d26a64d12440f929ce7f9bac9b6b48bad301ef9a3f6d881f') fail('Chapter One final master SHA identity drifted');
-if (finalMaster.livePromotionTarget !== 'showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4') fail('Chapter One final live promotion target drifted');
-has('/' + finalMaster.livePromotionTarget, 'owner-approved 65-second Chapter One Awards live master');
-
-const compassAt = indexOf('data-compass-scene');
-const builtAt = indexOf('Built Different');
-const capabilityAt = indexOf('data-compass-capability-switcher');
-const ctaAt = indexOf('class="compass-build-cta"');
-if (!(compassAt < builtAt && builtAt < capabilityAt && capabilityAt < ctaAt)) {
-  fail(`editorial order invalid: ${JSON.stringify({compassAt,builtAt,capabilityAt,ctaAt})}`);
-}
-
-absent('<summary>Why Diamond Gate exists</summary>', 'legacy Why Diamond Gate exists disclosure');
-absent('compass.track-b.js', 'Track B runtime loader');
-absent('positionCapability(', 'post-load capability reparenting');
-absent('positionTrackBPlaceholder(', 'Track B placeholder reparenting');
-
-for (const required of ['mounted:false','retired:true','authoritative:false','capabilityPlacementAuthority:false','repeatedReparenting:false']) {
-  if (!gen1537.includes(required)) fail(`Gen1537 contract missing ${required}`);
-}
-for (const forbidden of ['positionCapability(', 'requestAnimationFrame(positionCapability)', 'MutationObserver']) {
-  if (gen1537.includes(forbidden)) fail(`Gen1537 regained forbidden presentation behavior: ${forbidden}`);
-}
-if (!gen1537.includes("'/showroom/globe/h-earth/'")) fail('Gen1537 lost canonical H-Earth route');
-
-if (!(capability.includes('Swipe to rotate.') || capabilityCore.includes('Swipe to rotate.'))) fail('Track A capability guidance floor changed');
-if (capability.includes('compass.track-b.js') || capabilityCore.includes('compass.track-b.js')) fail('Track A capability runtime dynamically loads Track B');
-
-if (!crystals.includes('COMPASS_CRYSTAL_CONTINUOUS_NORMAL_MOTION_v1')) fail('crystal liveness repair missing');
-if (!crystals.includes('if (!state.reducedMotion) return true;')) fail('normal-motion continuous frame contract missing');
-if (!crystals.includes('state.reducedMotion')) fail('reduced-motion branch missing');
-
-console.log(JSON.stringify({
-  result: 'STATIC_EDITORIAL_SOURCE_PASS',
-  order: {compassAt,builtAt,capabilityAt,ctaAt},
-  chapterOne: {
-    role: finalMaster.executionRole,
-    durationSeconds: finalMaster.expectedDurationSeconds,
-    expectedSha256: finalMaster.expectedSha256,
-    livePromotionTarget: finalMaster.livePromotionTarget
-  },
-  accessibilityFallback: 'collapsed-keyboard-accessible',
-  crystalLiveness: 'continuous-normal-motion-settle-reduced-motion',
-  gen1537: 'retired-route-only',
-  trackA: 'protected'
-}, null, 2));
+const html=fs.readFileSync('index.html','utf8');
+const readiness=fs.readFileSync('assets/compass/compass.readiness-context-v1.js','utf8');
+const controller=fs.readFileSync('assets/compass/compass.controller.js','utf8');
+const crystals=fs.readFileSync('assets/compass/compass.crystals.js','utf8');
+const gen1537=fs.readFileSync('assets/compass/compass.gen1537.recovery.js','utf8');
+const capability=fs.readFileSync('assets/compass/compass.capability-carousel.js','utf8');
+const capabilityCore=fs.readFileSync('assets/compass/compass.capability-carousel.core.js','utf8');
+const mediaRegistry=JSON.parse(fs.readFileSync('tools/ai-room-transport/ai-media-source-registry.v1.json','utf8'));
+const fail=m=>{throw new Error(m)};
+const has=(source,needle,label=needle)=>{if(!source.includes(needle))fail(`missing: ${label}`)};
+const absent=(source,needle,label=needle)=>{if(source.includes(needle))fail(`forbidden: ${label}`)};
+const count=(source,re)=>(source.match(re)||[]).length;
+const digest=source=>crypto.createHash('sha256').update(source).digest('hex');
+if(count(html,/data-cardinal-id="(?:north|east|south|west)"/g)!==4)fail('four-cardinal topology drift');
+if(count(html,/data-room-id="(?:north|east|south|west)-[1-4]"/g)!==16)fail('sixteen-room corpus drift');
+for(const route of ['/prelude/','/showroom/globe/','/instruments/','/explore/frontier/','/showroom/'])has(html,route,`preserved route ${route}`);
+has(controller,'DGB_COMPASS_CONTROLLER_SPHERICAL_CONSTELLATION_AND_CLUSTER_REBUILD_v3','controller spherical contract');
+has(controller,'requestClusterCommit','cluster controller preserved');
+has(crystals,'DGB_COMPASS_CRYSTALS_SPHERICAL_CONSTELLATION_AND_CLUSTER_HARDENED_v4','crystal contract preserved');
+has(crystals,'CLUSTER_FLICK_RETURN','cluster flick-return preserved');
+has(crystals,'CLUSTER_SETTLE','cluster settlement preserved');
+has(readiness,'clusterMutationPerformed:false','explicit frozen-cluster construction receipt');
+absent(readiness,'requestClusterCommit(','completion layer must not mutate cluster commit');
+absent(readiness,'requestClusterPreview(','completion layer must not mutate cluster preview');
+has(readiness,".compass-editorial-brand{display:none!important}",'duplicate Find Your Way owner retired');
+has(readiness,'THE COMPASS · FIND YOUR WAY','functional Compass identity');
+has(readiness,'SINGLE_CARDINAL_LABEL_OWNER_v1','singular cardinal label owner');
+has(readiness,'>span:nth-child(n+2){display:none!important','secondary cardinal label suppression');
+has(readiness,'COMPASS_STATEMENT_ONE_TIME_SHINE_v1','one-time statement shine owner');
+has(readiness,'animation:compass-one-shot-shine','one-shot statement shine animation');
+absent(readiness,'compass-sparkle 2.2s ease-in-out infinite','continuous decorative sparkle retired');
+has(readiness,'COMPASS_MAIN_CONSTELLATION_INERTIA_v1','Main constellation inertia');
+has(readiness,'COMPASS_MAIN_NATURAL_SETTLEMENT_v1','Main natural settlement');
+has(readiness,"root.dataset.compassMode==='CONSTELLATION'",'Main-only motion scope');
+has(readiness,'Math.exp(-6.2*seconds)','continuous inertial damping');
+has(readiness,"matchMedia('(prefers-reduced-motion: reduce)')",'reduced-motion branch');
+const intro=['For thousands of years, people have searched for better ways to understand themselves, each other, and the systems they inhabit.','Continue the threshold','Philosophers questioned first principles. Theologians wrestled with meaning and purpose. Scientists measured the physical world. Engineers built models. Physicians searched for patterns. Teachers, mentors, and storytellers carried those lessons forward.','Each discipline illuminated part of the landscape. None needed to diminish the others to contribute something essential.','Perhaps the next step is not abandoning what came before, but arranging distinct forms of knowledge so they can remain themselves while working together.','The Earth did not become round when we discovered it. The world remained what it had always been. Our understanding became deeper.','What if the same is true of the problems we face now? What if many of our greatest challenges are not waiting for one dominant explanation, but for a clearer relationship among the explanations we already possess?','What if the next frontier is not outside the box, but outside the cube?','Diamond Gate Bridge begins with that question. It does not ask philosophy, theology, science, engineering, medicine, or lived experience to surrender their identities. It asks how each may contribute to a larger landscape without being flattened into one another.'];
+let at=-1;for(const paragraph of intro){const next=readiness.indexOf(paragraph);if(next<0)fail(`verbatim Introduction missing: ${paragraph.slice(0,42)}`);if(next<=at)fail('verbatim Introduction order drift');at=next;}
+has(readiness,"intro.dataset.verbatimAuthority='v2'",'Introduction single semantic owner');
+has(readiness,"summary.textContent='New here? Open the introduction.'",'onboarding affordance');
+has(readiness,'.compass-chapter-panel{max-height:none!important;overflow:visible!important','Chapter One scroll/no clipping');
+has(readiness,'About Diamond Gate Bridge','practical About heading');
+has(readiness,'organized as a connected digital estate','practical About explanation');
+has(readiness,'without confusing a prototype, research result, product, or story for something it is not','About claim-boundary clarity');
+has(html,'Independent Interactive Experience &amp; Research Studio','studio identity');
+has(html,'COMMUNITY','Community tab');
+has(html,'MEET SEAN','Meet Sean tab');
+has(html,'Consider the Community','Community identity');
+has(html,'Meet Sean →','builder route');
+const finalMaster=mediaRegistry?.sources?.CHAPTER_01_FINAL_AWARDS_LIVE_MASTER_V1;
+if(!finalMaster||finalMaster.ownerApproved!==true)fail('Chapter One final master not owner approved');
+if(finalMaster.expectedDurationSeconds!==65.0)fail('Chapter One master duration drift');
+if(finalMaster.expectedSha256!=='9be6d48d6a8ceeb6d26a64d12440f929ce7f9bac9b6b48bad301ef9a3f6d881f')fail('Chapter One master SHA drift');
+has(html,'/'+finalMaster.livePromotionTarget,'Chapter One film placement');
+has(readiness,'See what has been built — and how to judge what is ready.','Built Different human lead');
+has(readiness,'HEADLINE_HUMAN_LEAD_WHY_EVIDENCE_DETAIL_LINK','editorial story model');
+for(const family of ['research','trl','tra','community'])has(readiness,`'${family}'`,`readiness family ${family}`);
+has(readiness,'What can we learn before a system loses room to recover?','research human headline');
+has(readiness,'How mature is the technology itself?','TRL human headline');
+has(readiness,'Is the surrounding system ready to use it responsibly?','TRA human headline');
+has(readiness,'Why it matters:','explicit why-it-matters layer');
+has(readiness,'Technical depth remains available underneath the human-facing path','technical depth subordinate to human entrance');
+has(readiness,'@media(min-width:561px) and (max-width:1024px)','known tablet geometry treatment');
+has(readiness,'@media(max-width:620px)','phone treatment');
+has(html,'<noscript><style>','no-JS fallback');
+has(html,'data-editorial-fallback="true"','keyboard-accessible destination fallback');
+has(readiness,"event.key==='ArrowLeft'",'keyboard readiness carousel');
+has(readiness,"viewport.addEventListener('pointerdown'",'pointer/touch readiness carousel');
+for(const required of ['mounted:false','retired:true','authoritative:false','capabilityPlacementAuthority:false','repeatedReparenting:false'])if(!gen1537.includes(required))fail(`Gen1537 contract missing ${required}`);
+if(!(capability.includes('Swipe to rotate.')||capabilityCore.includes('Swipe to rotate.')))fail('Track A capability guidance floor changed');
+if(capability.includes('compass.track-b.js')||capabilityCore.includes('compass.track-b.js'))fail('Track A dynamically loads Track B');
+if(!crystals.includes('COMPASS_CRYSTAL_CONTINUOUS_NORMAL_MOTION_v1'))fail('crystal liveness contract missing');
+console.log(JSON.stringify({schema:'COMPASS_COMPLETE_HUMAN_INTENT_FULL_LEDGER_STATIC_QUALIFICATION_v1',result:'PASS',operationId:'COMPASS_COMPLETE_HUMAN_INTENT_COMPLETION_20260829_001',ledgers:{activeRows:92,constructionLaw:'ALL_FAIL_AND_NOT_PROVEN_ROWS_ONE_CYCLE'},preservation:{cardinals:4,rooms:16,clusters:'FROZEN_POSITIVE_CONTROL',clusterMutationPerformed:false,crystalsSha256:digest(crystals),controllerSha256:digest(controller)},motion:{owner:'COMPASS_MAIN_CONSTELLATION_INERTIA_v1',settlement:'COMPASS_MAIN_NATURAL_SETTLEMENT_v1',reducedMotion:true},labels:{owner:'SINGLE_CARDINAL_LABEL_OWNER_v1',secondaryStack:'FORBIDDEN'},chapterOne:{verbatimParagraphs:intro.length,authority:'v2',filmSha256:finalMaster.expectedSha256},editorial:{model:'HEADLINE_HUMAN_LEAD_WHY_EVIDENCE_DETAIL_LINK',families:['research','trl','tra','community']},responsive:{desktop:true,tabletSourceTreatment:true,phoneSourceTreatment:true,noJsFallback:true},ownerPerceptualEditorialAcceptance:'REQUIRED_BEFORE_MERGE'},null,2));

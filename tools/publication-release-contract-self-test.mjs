@@ -78,12 +78,16 @@ assert(audralia.checks?.length >= 1, 'Audralia requires static public verificati
 
 for (const required of [
   'workflow_dispatch:', 'target_sha:', 'surface_id:', 'pages: write', 'id-token: write',
-  'actions/checkout@v4', 'actions/configure-pages@v5',
-  'actions/upload-pages-artifact@v3', 'actions/deploy-pages@v4',
+  'EXACT_DISPATCH_HEAD_VERIFIED=', 'git checkout --detach FETCH_HEAD',
+  'actions/configure-pages@v5', 'actions/upload-pages-artifact@v3', 'actions/deploy-pages@v4',
   '.well-known/dgb-release.json', '.github/ai-router/publication-surfaces/',
   'PUBLICATION_SURFACE_VERIFICATION_v1',
   'AUDRALIA_VISIBLE_BUILD_FINGERPRINT=', 'data-audralia-build-sha=', 'BUILD $short_sha'
 ]) assert(workflow.includes(required), `deployment workflow missing required token: ${required}`);
+
+assert(workflow.includes('fetch --no-tags --depth=1 --filter=blob:none origin "$TARGET_SHA"'), 'deployment workflow missing exact target SHA fetch proof');
+assert(workflow.includes('REQUESTED_SHA: ${{ inputs.target_sha }}'), 'deployment workflow missing requested SHA binding');
+assert(workflow.includes('DISPATCHED_HEAD_SHA: ${{ github.sha }}'), 'deployment workflow missing dispatched-head equality binding');
 
 for (const forbidden of [
   'Manual Diagnostic Only', 'dummy release', 'public-release',

@@ -4,7 +4,7 @@
    spherical room-cluster manipulation.
 
    Full-file replacement scope:
-   - Preserve all four cardinal stars and nineteen room stars.
+   - Preserve all four cardinal stars and sixteen room stars.
    - Preserve authoritative cardinal declarations, room declarations,
      routes, accessibility metadata, semantic controls, materials,
      Mirrorland recession behavior, WebGL rendering, and receipts.
@@ -43,7 +43,7 @@
    Ownership:
    - Celestial scene background.
    - Four cardinal crystal stars.
-   - Nineteen room crystal stars.
+   - Sixteen room crystal stars.
    - Cardinal spherical orientation rendering.
    - Active room-cluster spherical orientation rendering.
    - Crystal shaders, materials, camera, projection, semantic positioning,
@@ -3908,7 +3908,7 @@
       );
     }
 
-    if (roomCount !== 19) {
+    if (roomCount !== 16) {
       throw new Error(
         `ROOM_COUNT_INVALID:${roomCount}`
       );
@@ -4162,7 +4162,7 @@
       }
     );
 
-    if (proxies.size !== 19) {
+    if (proxies.size !== 16) {
       throw new Error(
         `ROOM_PROXY_COUNT_INVALID:${proxies.size}`
       );
@@ -5116,6 +5116,51 @@
       0.02,
       0.06
     ];
+  }
+
+  // COMPASS_PHYSICAL_SETTLEMENT_BEFORE_COMMIT_v1
+  const SETTLEMENT_TRANSFORM_KEYS = Object.freeze([
+    "x",
+    "y",
+    "z",
+    "sx",
+    "sy",
+    "sz",
+    "prominence",
+    "halo",
+    "rotationSpeed",
+    "float"
+  ]);
+
+  function completeConstellationSettlementGeometry() {
+    updateTargets();
+
+    state.registry.forEach(
+      node => {
+        if (!node.transform || !node.target) {
+          return;
+        }
+
+        SETTLEMENT_TRANSFORM_KEYS.forEach(
+          key => {
+            node.transform[key] = node.target[key];
+          }
+        );
+      }
+    );
+
+    for (let index = 0; index < 3; index += 1) {
+      state.camera.eye[index] = state.camera.nextEye[index];
+      state.camera.target[index] = state.camera.nextTarget[index];
+    }
+
+    state.view = lookAt4(
+      state.camera.eye,
+      state.camera.target,
+      [0, 1, 0]
+    );
+
+    syncSemanticObjects();
   }
 
   function lerp(
@@ -6990,9 +7035,15 @@
       ) *
       GESTURE.radiansPerViewport;
 
+    const horizontalAxis =
+      pointer.gestureScope ===
+        "constellation"
+        ? [0, 0, 1]
+        : [0, 1, 0];
+
     const yawQuaternion =
       quaternionFromAxisAngle(
-        [0, 1, 0],
+        horizontalAxis,
         yaw
       );
 
@@ -7062,7 +7113,7 @@
     if (pointer.controllerGestureBegan) {
       if (
         pointer.gestureScope ===
-        "constellation"
+          "constellation"
       ) {
         requestControllerOrbitCancel(
           reason
@@ -7540,10 +7591,10 @@
     state.constellationTargetQuaternion =
       settledQuaternion.slice();
 
-    if (state.reducedMotion) {
-      state.constellationQuaternion =
-        settledQuaternion.slice();
-    }
+    state.constellationQuaternion =
+      settledQuaternion.slice();
+
+    completeConstellationSettlementGeometry();
 
     const committed =
       requestControllerOrbitCommit(
@@ -8008,7 +8059,7 @@
   function handleVisibilityChange() {
     if (
       document.visibilityState ===
-      "hidden"
+        "hidden"
     ) {
       abortActivePointer(
         "document-hidden"
@@ -8022,10 +8073,19 @@
     );
   }
 
+  // COMPASS_POST_GESTURE_ROOT_CLICK_GUARD_v1
   function handleSceneClickCapture(
     event
   ) {
+    const insideCompass =
+      !state.root ||
+      !event.target ||
+      state.root.contains(
+        event.target
+      );
+
     if (
+      insideCompass &&
       performance.now() <
       state.suppressClickUntil
     ) {
@@ -8107,6 +8167,18 @@
       true
     );
 
+    document.addEventListener(
+      "click",
+      handleSceneClickCapture,
+      true
+    );
+
+    document.addEventListener(
+      "auxclick",
+      handleSceneClickCapture,
+      true
+    );
+
     globalThis.addEventListener(
       "blur",
       handleWindowBlur
@@ -8161,6 +8233,18 @@
 
     state.scene.removeEventListener(
       "click",
+      handleSceneClickCapture,
+      true
+    );
+
+    document.removeEventListener(
+      "click",
+      handleSceneClickCapture,
+      true
+    );
+
+    document.removeEventListener(
+      "auxclick",
       handleSceneClickCapture,
       true
     );
@@ -8776,7 +8860,7 @@
   function bindReducedMotion() {
     if (
       typeof globalThis.matchMedia !==
-      "function"
+        "function"
     ) {
       state.reducedMotionMediaQuery =
         null;
@@ -8825,7 +8909,7 @@
 
     if (
       typeof query.removeEventListener ===
-      "function"
+        "function"
     ) {
       query.removeEventListener(
         "change",
@@ -8833,7 +8917,7 @@
       );
     } else if (
       typeof query.removeListener ===
-      "function"
+        "function"
     ) {
       query.removeListener(
         handleReducedMotionChange
@@ -9174,7 +9258,7 @@
         4,
 
       registryRoomCount:
-        19,
+        16,
 
       mirrorlandRegistryPresent:
         false,
@@ -10002,7 +10086,7 @@
           4,
 
         registryRoomCount:
-          19,
+          16,
 
         mirrorlandRegistryPresent:
           false,
@@ -10062,7 +10146,7 @@
 
   if (
     document.readyState ===
-    "loading"
+      "loading"
   ) {
     document.addEventListener(
       "DOMContentLoaded",

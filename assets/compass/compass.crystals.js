@@ -230,8 +230,8 @@
         primaryAnchor:
           Object.freeze([
             0,
-            0.78,
-            0.625
+            0.625,
+            0.78
           ]),
 
         vectors:

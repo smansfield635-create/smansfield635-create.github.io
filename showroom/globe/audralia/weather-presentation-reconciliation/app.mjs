@@ -74,7 +74,7 @@ async function initialize(){
   try{
     if(!(canvas instanceof HTMLCanvasElement))throw new Error('AUDRALIA_RECONCILIATION_CANVAS_MISSING');
     setStatus('building…','AUDRALIA_WEATHER_RECONCILIATION_BUILDING');if(loaderStage)loaderStage.textContent='Reconciling sky and FAP1 weather…';
-    const rendererModule=await import('../../h-earth/terrain-estate-construction-v1/renderer.mjs');
+    const rendererModule=await import('../renderer-continuous-travel-v1.mjs');
     const renderer=rendererModule.createMapWideEnvironmentRenderer(canvas);renderer.render();
     const objects=buildCanonicalWeatherObjects(sampleCanonicalSurface);
     const sky=createClearAtmosphereLayer({renderer,worldCanvas:canvas,getSunDirection});
@@ -85,7 +85,7 @@ async function initialize(){
     const first=controls.renderAll();
     const receipt=Object.freeze({
       schema:RECONCILIATION_SCHEMA,videoCameraRegression:VIDEO_CAMERA_REGRESSION,functionalWorldAuthority:FUNCTIONAL_WORLD_AUTHORITY,functionalVisualParent:FUNCTIONAL_VISUAL_PARENT,canonicalWeatherProofHead:CANONICAL_WEATHER_PROOF_HEAD,
-      cameraSemanticsMutated:false,zoomSemanticsMutated:false,travelSemanticsMutated:false,
+      cameraSemanticsMutated:false,zoomSemanticsMutated:false,travelSemanticsMutated:true,
       renderer,canonicalObjects:objects,sky,exterior,canonicalWeather:canonical,fap1CandidateA:fap1,
       classification:EXTERIOR_COMPONENT_CLASSIFICATION,invariants:RECONCILIATION_INVARIANTS,
       getCameraFrame:()=>cameraFrame(renderer),getRuntime:()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_RUNTIME__,getFAP1Plan:()=>fap1.getPlan(),

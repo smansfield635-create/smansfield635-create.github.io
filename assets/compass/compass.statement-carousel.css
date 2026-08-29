@@ -145,4 +145,11 @@ html body [data-compass-root][data-award-narrative="identity-experience-purpose-
  [data-compass-root] .compass-build-cta h3{font-size:1.15rem!important}
 }
 
-@media(prefers-reduced-motion:reduce){.compass-statement-object{transition:none}.compass-statement-object.is-arriving{animation:none}}
+/* Gen1844 continuity renewal: restore the sayings as a luminous signal without returning to a card treatment. */
+[data-compass-root] .compass-statement-orbit{isolation:isolate!important;filter:drop-shadow(0 0 18px rgba(244,214,128,.07))!important}
+[data-compass-root] .compass-statement-object{color:rgba(255,247,220,.98)!important;text-shadow:0 0 20px rgba(244,214,128,.20),0 0 32px rgba(102,205,224,.08)!important;transition:opacity .24s ease,text-shadow .34s ease,filter .34s ease!important}
+[data-compass-root] .compass-statement-object[data-slot="front"]{filter:brightness(1.08)!important}
+[data-compass-root] .compass-statement-object.is-arriving{animation:compassThoughtArrivalGen1844 .55s cubic-bezier(.2,.78,.18,1) 1!important}
+@keyframes compassThoughtArrivalGen1844{0%{opacity:.22;filter:brightness(.82);text-shadow:0 0 0 transparent}48%{opacity:1;filter:brightness(1.24);text-shadow:0 0 34px rgba(244,214,128,.56),0 0 48px rgba(102,205,224,.22)}100%{opacity:1;filter:brightness(1.08);text-shadow:0 0 20px rgba(244,214,128,.20),0 0 32px rgba(102,205,224,.08)}}
+
+@media(prefers-reduced-motion:reduce){.compass-statement-object{transition:none}.compass-statement-object.is-arriving{animation:none!important}}

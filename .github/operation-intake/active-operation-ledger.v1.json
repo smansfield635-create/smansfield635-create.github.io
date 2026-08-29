@@ -3797,6 +3797,49 @@
       "scopeHash": "a03669e7f956cc5d5b0db95a92424835b45401bd5f57fa65d5f841a5ed0efc91",
       "state": "ADMITTED_LOCKED"
     },
+    "a0ac1d7567ae8e0d058871db030bc032026e8c95e27e48dd7354b964dce8aec4": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "0e5d45dc06c5a762e9a62b05026380ba64261ea1",
+          "lockGeneration": 1846,
+          "lockScope": "COMPASS_PUBLIC_FULL_RESTORATION_AND_RENEWAL",
+          "operationId": "COMPASS_FULL_RESTORATION_AND_RENEWAL_20260829_v6",
+          "procedureLocatorDigest": "684df83acd3b4656768b50e1f65132d503ee4f2fcfa16b2e2c586a7aba5e7aa4",
+          "requestDigest": "622fffefb30861ad8573aeac9180c01f2870004d1e1aab7f2c506d02a7a5e96e",
+          "scopeHash": "a0ac1d7567ae8e0d058871db030bc032026e8c95e27e48dd7354b964dce8aec4"
+        },
+        "bindingDigest": "70b9160240e823127bec09506595775aba04e590a2041c9ed36ecc25463d1041",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "47bb36cf47ccf1d0dcec3951037eae91551262e935ca83f855cdedea308e4be4",
+          "commentId": 5463426674,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 1011,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33261944957,
+          "workflowSha": "0e5d45dc06c5a762e9a62b05026380ba64261ea1"
+        },
+        "lineageAnchorCommitSha": "f141a7e3f6a297bb4859c6cc63a5720243a24993",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "0e5d45dc06c5a762e9a62b05026380ba64261ea1",
+      "lockGeneration": 1846,
+      "lockScope": "COMPASS_PUBLIC_FULL_RESTORATION_AND_RENEWAL",
+      "operationId": "COMPASS_FULL_RESTORATION_AND_RENEWAL_20260829_v6",
+      "procedureLocatorDigest": "684df83acd3b4656768b50e1f65132d503ee4f2fcfa16b2e2c586a7aba5e7aa4",
+      "released": false,
+      "requestDigest": "622fffefb30861ad8573aeac9180c01f2870004d1e1aab7f2c506d02a7a5e96e",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a0ac1d7567ae8e0d058871db030bc032026e8c95e27e48dd7354b964dce8aec4",
+      "state": "ADMITTED_LOCKED"
+    },
     "a365baf8431c2bdb220a6c24b91422372536cedc20efd42126d572af814b259e": {
       "governingHead": "21ee87e945a62492b8f9447a5049f4ae0ab1ceb9",
       "lockGeneration": 1537,
@@ -5968,7 +6011,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1845,
+  "lockGeneration": 1846,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

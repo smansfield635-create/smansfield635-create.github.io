@@ -5437,6 +5437,49 @@
       "scopeHash": "eb98fc14b2a34388fd93ba2bbbe054241a954510f7837759f283ac2357d3f488",
       "state": "ADMITTED_LOCKED"
     },
+    "ecba633d5d154578464f9e907e1f167162323aadf6f4812bea0f892a7003d8ce": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "1141de7fe6e5494dfab54fd7b3097cfad4e14efb",
+          "lockGeneration": 1839,
+          "lockScope": "REPOSITORY_CONTROL_PLANE:SHARED_CI_STALE_ASSERTION_RECONCILIATION:V2",
+          "operationId": "SHARED_CI_STALE_ASSERTION_RECONCILIATION_20260828_002",
+          "procedureLocatorDigest": "fab9e7a4fcdbd4953558d0ae12321dceca373e619d2ff69e4607e227c60b4f9e",
+          "requestDigest": "965e35291c7e48074b082304c8cffc7dd1fa8c929dff92555f22eb241ecebab0",
+          "scopeHash": "ecba633d5d154578464f9e907e1f167162323aadf6f4812bea0f892a7003d8ce"
+        },
+        "bindingDigest": "04ecb6c8d527fc1a8e6b2a76e48a03da402b2922f010ea6aaeda1ebcf3640792",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "cb7648efa3b7bba2b8c5e688086d2e5e76fbb7889884ef33104c6881b8330614",
+          "commentId": 5460144841,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2299,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33232314535,
+          "workflowSha": "1141de7fe6e5494dfab54fd7b3097cfad4e14efb"
+        },
+        "lineageAnchorCommitSha": "82a88f91ac08bcaf366a19303cd176de3b6071a5",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "1141de7fe6e5494dfab54fd7b3097cfad4e14efb",
+      "lockGeneration": 1839,
+      "lockScope": "REPOSITORY_CONTROL_PLANE:SHARED_CI_STALE_ASSERTION_RECONCILIATION:V2",
+      "operationId": "SHARED_CI_STALE_ASSERTION_RECONCILIATION_20260828_002",
+      "procedureLocatorDigest": "fab9e7a4fcdbd4953558d0ae12321dceca373e619d2ff69e4607e227c60b4f9e",
+      "released": false,
+      "requestDigest": "965e35291c7e48074b082304c8cffc7dd1fa8c929dff92555f22eb241ecebab0",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ecba633d5d154578464f9e907e1f167162323aadf6f4812bea0f892a7003d8ce",
+      "state": "ADMITTED_LOCKED"
+    },
     "eda01b18bf0bdaf287a61a576788a1b1bb87646c283eb5c476630a723b50d6fa": {
       "governingHead": "275a639d647f5bf156fd4fe39c1be386594e6888",
       "lockGeneration": 746,
@@ -5819,7 +5862,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1838,
+  "lockGeneration": 1839,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

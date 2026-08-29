@@ -4214,49 +4214,6 @@
       "scopeHash": "c4a6c80d043347df4fe4f1fa2846d903656e6e668355c6b9049b1af3a6cfbadf",
       "state": "ADMITTED_LOCKED"
     },
-    "c4b963dab85731f2e2ff30344c17833dfa1c30f4400073e6ca4fd1ebec18eb43": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "0b855a29a7b082953eef2363eeddc02a58df2f22",
-          "lockGeneration": 1825,
-          "lockScope": "DGB_PUBLIC_PRODUCT:COMPASS:ROOT_RENEWAL_QUALIFICATION_REPAIR:V1",
-          "operationId": "COMPASS_ROOT_RENEWAL_QUALIFICATION_REPAIR_20260828_001",
-          "procedureLocatorDigest": "4762832acbe80cdef6b349fa8146f621db0eb8d7a45aa58db55c4f6550653457",
-          "requestDigest": "7502a204dbc7ef6be9dc6809d91fdfbdd1967d9e4d16035b4cec46812b68b2ec",
-          "scopeHash": "c4b963dab85731f2e2ff30344c17833dfa1c30f4400073e6ca4fd1ebec18eb43"
-        },
-        "bindingDigest": "2d5505942c6be6519feb6ce53f334d1de6abdf4e9a3a2ff2b7f1885bbd48892f",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "d5da4254a5dec0692ed95cccabcd8dc5c34fe41ec03d949cc474ba95c6da6973",
-          "commentId": 5458546985,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2162,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 33218091940,
-          "workflowSha": "0b855a29a7b082953eef2363eeddc02a58df2f22"
-        },
-        "lineageAnchorCommitSha": "ec5e560b2fef3daaf2cdcbe889ec309c9af48967",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "0b855a29a7b082953eef2363eeddc02a58df2f22",
-      "lockGeneration": 1825,
-      "lockScope": "DGB_PUBLIC_PRODUCT:COMPASS:ROOT_RENEWAL_QUALIFICATION_REPAIR:V1",
-      "operationId": "COMPASS_ROOT_RENEWAL_QUALIFICATION_REPAIR_20260828_001",
-      "procedureLocatorDigest": "4762832acbe80cdef6b349fa8146f621db0eb8d7a45aa58db55c4f6550653457",
-      "released": false,
-      "requestDigest": "7502a204dbc7ef6be9dc6809d91fdfbdd1967d9e4d16035b4cec46812b68b2ec",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "c4b963dab85731f2e2ff30344c17833dfa1c30f4400073e6ca4fd1ebec18eb43",
-      "state": "ADMITTED_LOCKED"
-    },
     "c69e36ab428ae19cd898a5701a460585c7b2736289f8ac6684f5322da7861bbf": {
       "governingHead": "ffaaabdbd7691dd1079a7afdb81a62310fda706a",
       "lockGeneration": 180,
@@ -32534,6 +32491,50 @@
       "scopeHash": "5bb91edc9db7d1b676c8462d9318a9b275762f93dc271c2ad704ac7e212a6939",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "0b855a29a7b082953eef2363eeddc02a58df2f22",
+          "lockGeneration": 1825,
+          "lockScope": "DGB_PUBLIC_PRODUCT:COMPASS:ROOT_RENEWAL_QUALIFICATION_REPAIR:V1",
+          "operationId": "COMPASS_ROOT_RENEWAL_QUALIFICATION_REPAIR_20260828_001",
+          "procedureLocatorDigest": "4762832acbe80cdef6b349fa8146f621db0eb8d7a45aa58db55c4f6550653457",
+          "requestDigest": "7502a204dbc7ef6be9dc6809d91fdfbdd1967d9e4d16035b4cec46812b68b2ec",
+          "scopeHash": "c4b963dab85731f2e2ff30344c17833dfa1c30f4400073e6ca4fd1ebec18eb43"
+        },
+        "bindingDigest": "2d5505942c6be6519feb6ce53f334d1de6abdf4e9a3a2ff2b7f1885bbd48892f",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "d5da4254a5dec0692ed95cccabcd8dc5c34fe41ec03d949cc474ba95c6da6973",
+          "commentId": 5458546985,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2162,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33218091940,
+          "workflowSha": "0b855a29a7b082953eef2363eeddc02a58df2f22"
+        },
+        "lineageAnchorCommitSha": "ec5e560b2fef3daaf2cdcbe889ec309c9af48967",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "0b855a29a7b082953eef2363eeddc02a58df2f22",
+      "lockGeneration": 1825,
+      "lockScope": "DGB_PUBLIC_PRODUCT:COMPASS:ROOT_RENEWAL_QUALIFICATION_REPAIR:V1",
+      "operationId": "COMPASS_ROOT_RENEWAL_QUALIFICATION_REPAIR_20260828_001",
+      "procedureLocatorDigest": "4762832acbe80cdef6b349fa8146f621db0eb8d7a45aa58db55c4f6550653457",
+      "released": true,
+      "requestDigest": "7502a204dbc7ef6be9dc6809d91fdfbdd1967d9e4d16035b4cec46812b68b2ec",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c4b963dab85731f2e2ff30344c17833dfa1c30f4400073e6ca4fd1ebec18eb43",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

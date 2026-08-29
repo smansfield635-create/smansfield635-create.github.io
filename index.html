@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 },{once:true});
 </script>
 <script src="/assets/compass/compass.readiness-context-v1.js?v=readiness-context-v4-gen1793" defer data-compass-readiness-context-owner="context-v4"></script>
-<script src="/assets/compass/compass.controller.js?v=gen1532-live-binding-v1&cb=568a6b2cd608a4cb" defer></script><script src="/assets/compass/compass.crystals.js?v=gen1532-live-binding-v1&cb=07423a484baab522" defer></script><script src="/assets/compass/compass.mirrorland-window.js?v=gen1532-live-binding-v1" defer></script><script src="/assets/compass/compass.cosmos.js?v=gen1532-live-binding-v1&cb=e0f0fb6f2455d5b9" defer></script>
+<script src="/assets/compass/compass.controller.js?v=gen1532-live-binding-v1&cb=568a6b2cd608a4cb" defer></script><script src="/assets/compass/compass.crystals.js?v=gen1846&cb=988607d5e41e1a53" defer></script><script src="/assets/compass/compass.mirrorland-window.js?v=gen1532-live-binding-v1" defer></script><script src="/assets/compass/compass.cosmos.js?v=gen1532-live-binding-v1&cb=e0f0fb6f2455d5b9" defer></script>
 <script>
 document.addEventListener('DOMContentLoaded',()=>{
   const root=document.querySelector('[data-compass-root]');
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   const renderProjectedRoomLabel=()=>{const mode=root.dataset.compassMode||'';const id=(mode==='CLUSTER_OPEN'||mode==='ROOM_SELECTED')?(root.dataset.selectedRoom||root.dataset.clusterPreviewPrimaryRoom||root.dataset.clusterPrimaryRoom||''):'';const declaration=id?room(id):null;const proxy=id?document.querySelector(`[data-compass-room-proxy][data-room-id="${id}"]`):null;if(!id||!declaration||!proxy){projectedRoomLabel.hidden=true;projectedRoomLabel.textContent='';projectedRoomLabel.dataset.roomId='';requestAnimationFrame(renderProjectedRoomLabel);return;}const label=(declaration.dataset.label||'').trim();const sceneRect=scene.getBoundingClientRect();const proxyRect=proxy.getBoundingClientRect();if(!label||proxyRect.width<=0||proxyRect.height<=0){projectedRoomLabel.hidden=true;projectedRoomLabel.textContent='';projectedRoomLabel.dataset.roomId=id;requestAnimationFrame(renderProjectedRoomLabel);return;}projectedRoomLabel.textContent=label;projectedRoomLabel.dataset.roomId=id;projectedRoomLabel.style.left=`${proxyRect.left+proxyRect.width/2-sceneRect.left}px`;projectedRoomLabel.style.top=`${proxyRect.bottom-sceneRect.top+6}px`;projectedRoomLabel.hidden=false;requestAnimationFrame(renderProjectedRoomLabel);};requestAnimationFrame(renderProjectedRoomLabel);
 });
 </script>
-<script src="/assets/compass/compass.orbit-input.js?v=compass-root-award-finish-successor-v1&g=1532-live-binding-v1" defer></script>
+<script src="/assets/compass/compass.orbit-input.js?v=gen1846&cb=681410dac29d2dae" defer></script>
 <script src="/compass-composite/composite.js?v=gen1596-surgical-composite-5-live-20260825-static" defer data-compass-live-composite-runtime="true" data-first-paint-authority="static"></script>
 <script src="/assets/compass/compass.capability-carousel.js?v=compass-root-first-paint-agentic-frontier&g=1720&cb=20260825" defer data-compass-capability-loader="gen1720"></script>
 </body>

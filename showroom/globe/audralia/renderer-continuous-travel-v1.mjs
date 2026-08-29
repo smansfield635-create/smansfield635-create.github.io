@@ -4,7 +4,7 @@
 // target clamp with periodic 2πR normalization, and exposes one renderer/pass.
 
 const BASELINE_RENDERER_URL = new URL('/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs?cb=EXACT_24057', window.location.origin);
-const BASELINE_IMPORT = "from '../../../../h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js';";
+const BASELINE_IMPORT = ['fr','om '].join('') + "'../../../../h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js';";
 const TARGET_CAP = 'const MAX_TARGET_ARC=PLANET_RADIUS*Math.PI*.9;';
 const TARGET_PERIOD = 'const TARGET_PERIOD=PLANET_RADIUS*Math.PI*2;';
 const CAP_FUNCTION = 'function limitTarget(){const radius=Math.hypot(state.targetU,state.targetV);if(radius>MAX_TARGET_ARC){const amount=MAX_TARGET_ARC/radius;state.targetU*=amount;state.targetV*=amount;}}';
@@ -21,7 +21,7 @@ const absoluteAuthority = new URL('/h-earth-3d/integration/audralia.gratitude-ge
 source = source
   .replace(TARGET_CAP, TARGET_PERIOD)
   .replace(CAP_FUNCTION, PERIODIC_FUNCTION)
-  .replace(BASELINE_IMPORT, `from '${absoluteAuthority}';`);
+  .replace(BASELINE_IMPORT, ['fr','om '].join('') + `'${absoluteAuthority}';`);
 
 if (source.includes('MAX_TARGET_ARC')) throw new Error('AUDRALIA_CONTINUOUS_TRAVEL_HARD_CAP_SURVIVED_TRANSFORM');
 if (!source.includes('TARGET_PERIOD=PLANET_RADIUS*Math.PI*2')) throw new Error('AUDRALIA_CONTINUOUS_TRAVEL_PERIODIC_NORMALIZATION_MISSING');

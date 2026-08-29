@@ -108,9 +108,9 @@ await sceneHandle?.evaluate(el=>el.scrollIntoView({block:'center',inline:'neares
 await new Promise(r=>setTimeout(r,180));
 const interactionBaseline=await snapshot();
 const primary0=interactionBaseline.cardinals.find(x=>x.primary)||interactionBaseline.cardinals.find(x=>x.wing===(interactionBaseline.root.focus||'north'));
-const anchor=primary0?.rect?{cx:primary0.rect.cx,cy:primary0.rect.cy}:null;
+const initialAnchor=primary0?.rect?{cx:primary0.rect.cx,cy:primary0.rect.cy}:null;
 
-if(!anchor){
+if(!initialAnchor){
   add('AUDIT_POINTER_TRANSACTION_BINDING',false,{reason:'NO_INITIAL_FOREGROUND_ANCHOR'});
   add('AUDIT_SETTLED_GEOMETRY',false,{reason:'NO_INITIAL_FOREGROUND_ANCHOR'});
   add('AUDIT_SINGLE_SETTLED_LABEL',false,{reason:'NO_INITIAL_FOREGROUND_ANCHOR'});
@@ -214,18 +214,20 @@ if(!anchor){
     const geometryEvidence=[];
     let geometryPass=!transitionNavigation&&transitions.length>=3;
     for(const t of transitions){
+      const beforePrimary=t.before.cardinals.find(x=>x.primary)||t.before.cardinals.find(x=>x.wing===t.before.root.focus);
+      const transitionAnchor=beforePrimary?.rect?{cx:beforePrimary.rect.cx,cy:beforePrimary.rect.cy}:null;
       const incoming=t.after.cardinals.find(x=>x.wing===t.after.root.focus);
       const outgoing=t.after.cardinals.find(x=>x.wing===t.before.root.focus);
       const incomingEarly=t.early.cardinals.find(x=>x.wing===t.after.root.focus);
-      const anchorError=incoming?.rect?Math.hypot(incoming.rect.cx-anchor.cx,incoming.rect.cy-anchor.cy):Infinity;
-      const outgoingDistance=outgoing?.rect?Math.hypot(outgoing.rect.cx-anchor.cx,outgoing.rect.cy-anchor.cy):0;
+      const anchorError=(incoming?.rect&&transitionAnchor)?Math.hypot(incoming.rect.cx-transitionAnchor.cx,incoming.rect.cy-transitionAnchor.cy):Infinity;
+      const outgoingDistance=(outgoing?.rect&&transitionAnchor)?Math.hypot(outgoing.rect.cx-transitionAnchor.cx,outgoing.rect.cy-transitionAnchor.cy):0;
       const drift=(incoming?.rect&&incomingEarly?.rect)?Math.hypot(incoming.rect.cx-incomingEarly.rect.cx,incoming.rect.cy-incomingEarly.rect.cy):Infinity;
       const labelPass=t.after.primary.length===1&&t.after.primary[0]===t.after.root.focus&&t.after.visibleLabels.length===1&&t.after.visibleLabels[0]===t.after.root.focus;
-      const onePass=anchorError<=SETTLED_ANCHOR_TOLERANCE&&outgoingDistance>=OLD_PRIMARY_DEPARTURE_MIN&&drift<=SETTLED_DRIFT_TOLERANCE&&labelPass;
+      const onePass=Boolean(transitionAnchor)&&anchorError<=SETTLED_ANCHOR_TOLERANCE&&outgoingDistance>=OLD_PRIMARY_DEPARTURE_MIN&&drift<=SETTLED_DRIFT_TOLERANCE&&labelPass;
       geometryPass&&=onePass;
-      geometryEvidence.push({from:t.before.root.focus,to:t.after.root.focus,phase:t.after.root.phase,anchorError,outgoingDistance,settledDrift:drift,primary:t.after.primary,visibleLabels:t.after.visibleLabels,status:onePass?'PASS':'FAIL'});
+      geometryEvidence.push({from:t.before.root.focus,to:t.after.root.focus,phase:t.after.root.phase,anchor:transitionAnchor,anchorError,outgoingDistance,settledDrift:drift,primary:t.after.primary,visibleLabels:t.after.visibleLabels,status:onePass?'PASS':'FAIL'});
     }
-    add('AUDIT_SETTLED_GEOMETRY',geometryPass,{requiredDistinctTransitions:3,observedTransitions:transitions.length,anchor,tolerances:{anchor:SETTLED_ANCHOR_TOLERANCE,outgoingDeparture:OLD_PRIMARY_DEPARTURE_MIN,drift:SETTLED_DRIFT_TOLERANCE},navigation:transitionNavigation,inputBoundary:'LAWS_STYLE_POINTER_TRANSACTION',transactions:attempts,transitions:geometryEvidence});
+    add('AUDIT_SETTLED_GEOMETRY',geometryPass,{requiredDistinctTransitions:3,observedTransitions:transitions.length,anchorPolicy:'PER_TRANSACTION_PRE_DRAG_PRIMARY_SAME_VIEWPORT_FRAME',initialAnchor,tolerances:{anchor:SETTLED_ANCHOR_TOLERANCE,outgoingDeparture:OLD_PRIMARY_DEPARTURE_MIN,drift:SETTLED_DRIFT_TOLERANCE},navigation:transitionNavigation,inputBoundary:'LAWS_STYLE_POINTER_TRANSACTION',transactions:attempts,transitions:geometryEvidence});
     add('AUDIT_SINGLE_SETTLED_LABEL',!transitionNavigation&&transitions.length>=1&&transitions.every(t=>t.after.visibleLabels.length===1&&t.after.primary.length===1&&t.after.visibleLabels[0]===t.after.root.focus&&t.after.primary[0]===t.after.root.focus),{navigation:transitionNavigation,inputBoundary:'LAWS_STYLE_POINTER_TRANSACTION',transitions:geometryEvidence.map(x=>({from:x.from,to:x.to,primary:x.primary,visibleLabels:x.visibleLabels}))});
     add('AUDIT_RELEASE_STABILITY',!transitionNavigation&&transitions.length>=1&&geometryEvidence.every(x=>x.settledDrift<=SETTLED_DRIFT_TOLERANCE),{navigation:transitionNavigation,inputBoundary:'LAWS_STYLE_POINTER_TRANSACTION',drifts:geometryEvidence.map(x=>({to:x.to,drift:x.settledDrift}))});
   }

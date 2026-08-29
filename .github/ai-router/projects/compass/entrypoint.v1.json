@@ -87,9 +87,9 @@
   },
   "githubActionsExecution": {
     "routerValidationWorkflow": ".github/workflows/repository-ai-entry-router-validation.yml",
-    "displayContinuityValidationWorkflow": ".github/workflows/compass-display-continuity-validation.yml",
-    "performanceSuccessorValidationWorkflow": ".github/workflows/compass-performance-successor-validation.yml",
-    "liveQualificationWorkflow": ".github/workflows/compass-carousel-successor-live-qualification.yml",
+    "displayContinuityValidationWorkflow": ".github/workflows/compass-audit-derived-candidate-qualification.yml",
+    "performanceSuccessorValidationWorkflow": ".github/workflows/compass-static-editorial-rendered-qualification.yml",
+    "liveQualificationWorkflow": ".github/workflows/compass-static-editorial-interaction-qualification.yml",
     "deploymentCapability": "PAGES_EXACT_HEAD_DEPLOY",
     "deploymentWorkflow": ".github/workflows/pages-exact-head-deploy-v3.yml",
     "deploymentInput": "target_sha",

@@ -1,0 +1,55 @@
+{
+  "schema": "ADMINISTRATIVE_OBSERVATORY_POLICY_v1",
+  "version": "1.0.0",
+  "status": "ACTIVE_READ_ONLY_CANDIDATE",
+  "purpose": "Define the Administrative Observatory as a read-only semantic control-plane interpretation layer that consumes existing receipts, workflow signals, and durable evidence references without creating operation authority.",
+  "authorityBoundary": {
+    "repositoryMutationAuthority": false,
+    "lockAuthority": false,
+    "admissionAuthority": false,
+    "successorAuthority": false,
+    "deploymentAuthority": false,
+    "releaseAuthority": false,
+    "workflowDispatchAuthority": false,
+    "operationLedgerMutationAuthority": false
+  },
+  "permittedInputs": [
+    "workflowRunSummary",
+    "workflowJobSummary",
+    "canonicalReceipt",
+    "issueReturnComment",
+    "artifactReference",
+    "gmailNotificationSummary",
+    "repositoryHeadObservation",
+    "researchRunSummary"
+  ],
+  "permittedOutputs": [
+    "ADMINISTRATIVE_FAILURE_NORMALIZATION_RECEIPT_v1",
+    "ESTATE_OPERATION_STATE_INDEX_RECORD_v1"
+  ],
+  "failureClasses": [
+    "PRODUCT_FAILURE",
+    "CONTROL_PLANE_REJECTION",
+    "REQUEST_CONTRACT_MISMATCH",
+    "VERIFIER_FAILURE",
+    "EXECUTION_INFRASTRUCTURE_FAILURE",
+    "RESEARCH_EXPERIMENT_FAILURE",
+    "DEPLOYMENT_FAILURE",
+    "EVIDENCE_TRANSPORT_FAILURE",
+    "INSUFFICIENT_DURABLE_DETAIL"
+  ],
+  "interpretationRules": {
+    "failClosedRejectionWithDurableReceipt": "HEALTHY_PROTECTION",
+    "redWorkflowBadgeAlone": "SEMANTICALLY_INSUFFICIENT",
+    "researchExperimentFailure": "DOES_NOT_IMPLICATE_SHARED_CONTROL_PLANE_WITHOUT_LINKED_CONTROL_PLANE_EVIDENCE",
+    "rawLogUnavailable": "EVIDENCE_TRANSPORT_LIMIT_UNLESS_DURABLE_RECEIPT_IS_ALSO_MISSING",
+    "rerunWithoutCorrectingContractMismatch": "NOT_USEFUL"
+  },
+  "prohibitedInferences": [
+    "DO_NOT_TREAT_ANY_RED_ACTIONS_BADGE_AS_A_SINGLE_SEMANTIC_CLASS",
+    "DO_NOT_TREAT_FAIL_CLOSED_REJECTION_AS_PLATFORM_UNHEALTHY_BY_DEFAULT",
+    "DO_NOT_TREAT_RESEARCH_EXPERIMENT_FAILURE_AS_CONTROL_PLANE_FAILURE_BY_DEFAULT",
+    "DO_NOT_INFER_AUTHORITY_FROM_OBSERVATORY_CLASSIFICATION",
+    "DO_NOT_MUTATE_REPOSITORY_CONTENT_FROM_OBSERVATORY_OUTPUT"
+  ]
+}

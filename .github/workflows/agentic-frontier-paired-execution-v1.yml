@@ -1,7 +1,9 @@
 name: Agentic Frontier Paired Execution v1
 
 on:
-  workflow_dispatch:
+  issue_comment:
+    types: [created]
+
 permissions:
   contents: read
   actions: read
@@ -23,42 +25,88 @@ jobs:
       PAIR_HEARTBEAT_S: '15'
       PYTHONUNBUFFERED: '1'
     steps:
-      - name: Checkout paired runner from main
+      - uses: actions/checkout@v4
+        with: {ref: main, fetch-depth: 1}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/cache@v4
+        with:
+          path: .cache/agentic-frontier/openhands-1.14.0
+          key: ${{ runner.os }}-py312-openhands-1.14.0-v1
+      - run: |
+          VENV="$GITHUB_WORKSPACE/.cache/agentic-frontier/openhands-1.14.0"
+          if [ ! -x "$VENV/bin/openhands" ]; then python -m venv "$VENV"; "$VENV/bin/python" -m pip install 'openhands==1.14.0'; fi
+          echo "$VENV/bin" >> "$GITHUB_PATH"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.ollama/models
+          key: ${{ runner.os }}-ollama-qwen2.5-coder-7b-v1
+      - run: |
+          mkdir -p "$HOME/.ollama/models"
+          docker pull ollama/ollama:0.32.14
+          docker run -d --name agentic-frontier-ollama -e OLLAMA_CONTEXT_LENGTH=8192 -v "$HOME/.ollama:/root/.ollama" -p 11434:11434 ollama/ollama:0.32.14
+          for i in $(seq 1 45); do curl -fsS "$OLLAMA_HOST_URL/api/tags" >/dev/null && break; sleep 2; done
+          docker exec agentic-frontier-ollama ollama list | grep -Fq "$OLLAMA_MODEL" || docker exec agentic-frontier-ollama ollama pull "$OLLAMA_MODEL"
+      - id: pair
+        run: |
+          set +e
+          python tools/research/agentic-frontier/paired-smoke-ir01-v1.py
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+          exit 0
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agentic-frontier-paired-smoke-af-ir-01-v1
+          path: agentic-frontier-ir01-paired-receipt.json
+          if-no-files-found: error
+      - run: test "${{ steps.pair.outputs.exit_code }}" = "0"
+
+  full-population-shard:
+    if: >-
+      github.event.issue.number == 2089 &&
+      contains(github.event.comment.body, 'AGENTIC_FRONTIER_FULL24_EXECUTE_V1')
+    strategy:
+      fail-fast: false
+      matrix:
+        stratum: [IMPLEMENTATION_REPAIR, LONG_HORIZON, COLLABORATIVE_HANDOFF, FAILURE_RECOVERY]
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      AF_STRATUM: ${{ matrix.stratum }}
+      OLLAMA_MODEL: qwen2.5-coder:7b
+      OLLAMA_HOST_URL: http://127.0.0.1:11434
+      MODEL_FIRST_TOKEN_TIMEOUT_S: '90'
+      MODEL_HARD_TIMEOUT_S: '240'
+      OPENHANDS_INACTIVITY_S: '180'
+      OPENHANDS_HARD_TIMEOUT_S: '600'
+      PAIR_HEARTBEAT_S: '15'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - name: Checkout frozen study runner
         uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 1
-
       - name: Use Node 22
         uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
+        with: {node-version: '22'}
       - name: Use Python 3.12
         uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
+        with: {python-version: '3.12'}
       - name: Report runner capacity
         run: |
-          set -euo pipefail
           echo "CPU cores: $(nproc)"
           free -h
           mem_kb=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
-          if [ "$mem_kb" -lt 6000000 ]; then
-            echo "Insufficient RAM for bounded 7B local comparison lane"
-            exit 2
-          fi
-          echo "Capacity gate passed for qwen2.5-coder:7b"
-
+          test "$mem_kb" -ge 6000000
       - name: Restore pinned OpenHands environment
-        id: openhands-cache
         uses: actions/cache@v4
         with:
           path: .cache/agentic-frontier/openhands-1.14.0
           key: ${{ runner.os }}-py312-openhands-1.14.0-v1
-
-      - name: Install pinned OpenHands CLI 1.14.0 only on cache miss
+      - name: Ensure stock OpenHands 1.14.0
         run: |
           set -euo pipefail
           VENV="$GITHUB_WORKSPACE/.cache/agentic-frontier/openhands-1.14.0"
@@ -69,15 +117,12 @@ jobs:
           fi
           echo "$VENV/bin" >> "$GITHUB_PATH"
           "$VENV/bin/openhands" --version
-
-      - name: Restore local model cache
-        id: model-cache
+      - name: Restore common 7B model
         uses: actions/cache@v4
         with:
           path: ~/.ollama/models
           key: ${{ runner.os }}-ollama-qwen2.5-coder-7b-v1
-
-      - name: Start common local model runtime
+      - name: Start common model runtime
         run: |
           set -euo pipefail
           mkdir -p "$HOME/.ollama/models"
@@ -87,34 +132,42 @@ jobs:
             -v "$HOME/.ollama:/root/.ollama" \
             -p 11434:11434 \
             ollama/ollama:0.32.14
-          for i in $(seq 1 45); do
-            curl -fsS "$OLLAMA_HOST_URL/api/tags" >/dev/null && break
-            sleep 2
-          done
-          if docker exec agentic-frontier-ollama ollama list | grep -Fq "$OLLAMA_MODEL"; then
-            echo "Model $OLLAMA_MODEL restored from cache; skipping pull."
-          else
-            echo "Model $OLLAMA_MODEL absent from cache; pulling once."
+          for i in $(seq 1 45); do curl -fsS "$OLLAMA_HOST_URL/api/tags" >/dev/null && break; sleep 2; done
+          if ! docker exec agentic-frontier-ollama ollama list | grep -Fq "$OLLAMA_MODEL"; then
             docker exec agentic-frontier-ollama ollama pull "$OLLAMA_MODEL"
           fi
-
-      - name: Execute frozen AF-IR-01 pair with fail-fast model gate
-        id: pair
-        run: |
-          set +e
-          python tools/research/agentic-frontier/paired-smoke-ir01-v1.py
-          code=$?
-          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
-          exit 0
-
-      - name: Upload paired evidence
+      - name: Execute frozen stratum
+        run: python tools/research/agentic-frontier/full-study-v1.py
+      - name: Upload raw stratum receipts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: agentic-frontier-paired-smoke-af-ir-01-v1
-          path: agentic-frontier-ir01-paired-receipt.json
+          name: full24-shard-${{ matrix.stratum }}
+          path: agentic-frontier-full24/${{ matrix.stratum }}/
           if-no-files-found: error
 
-      - name: Enforce paired smoke
-        run: |
-          test "${{ steps.pair.outputs.exit_code }}" = "0"
+  aggregate-full-population:
+    if: >-
+      github.event.issue.number == 2089 &&
+      contains(github.event.comment.body, 'AGENTIC_FRONTIER_FULL24_EXECUTE_V1')
+    needs: full-population-shard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout aggregate authority
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - name: Download four stratum artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: full24-shard-*
+          path: downloaded
+      - name: Aggregate only after 24 unique receipts exist
+        run: python tools/research/agentic-frontier/aggregate-full24-v1.py
+      - name: Upload aggregate study receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: agentic-frontier-full24-aggregate-v1
+          path: aggregate/
+          if-no-files-found: error

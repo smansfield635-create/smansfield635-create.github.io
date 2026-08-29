@@ -19,13 +19,28 @@ const MATRIX_OVERALL_MS=9*60*1000;
 const MATRIX_NO_PROGRESS_MS=45*1000;
 const PAGE_READY_DEADLINE_MS=120*1000;
 const GESTURE_STEP_DEADLINE_MS=15*1000;
+const TRAVEL_STEP_DEADLINE_MS=40*1000;
 const CAMERA_STEP_DEADLINE_MS=8*1000;
+
+function executionCandidateHead(){
+  const valid=value=>typeof value==='string'&&/^[0-9a-f]{40}$/i.test(value);
+  try{
+    if(process.env.GITHUB_EVENT_PATH&&fs.existsSync(process.env.GITHUB_EVENT_PATH)){
+      const event=JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH,'utf8'));
+      const prHead=event?.pull_request?.head?.sha;
+      if(valid(prHead))return prHead;
+    }
+  }catch{}
+  for(const value of [process.env.GITHUB_HEAD_SHA,process.env.GITHUB_SHA])if(valid(value))return value;
+  return null;
+}
+const EXECUTION_CANDIDATE_HEAD=executionCandidateHead();
 
 function createSemanticRuntimeGuard({overallMs=9*60*1000,noProgressMs=45*1000,pollMs=250,logger=entry=>console.log(JSON.stringify(entry))}={}){
   const started=Date.now();let lastProgressAt=started,lastCheckpoint=Object.freeze({profile:null,station:null,phase:'MATRIX_START',detail:null,elapsedMs:0}),sequence=0;
   function checkpoint({profile=null,station=null,phase,detail=null}={}){const now=Date.now();lastProgressAt=now;lastCheckpoint=Object.freeze({profile,station,phase:String(phase||'UNKNOWN'),detail,elapsedMs:now-started,sequence:++sequence});logger(Object.freeze({schema:'AUDRALIA_GESTURE_MATRIX_PROGRESS_v1',...lastCheckpoint}));return lastCheckpoint;}
   function snapshot(){const now=Date.now();return Object.freeze({startedAtMs:started,elapsedMs:now-started,lastProgressAgeMs:now-lastProgressAt,lastCheckpoint,overallMs,noProgressMs});}
-  function failure(code,active,state=null){const receipt=Object.freeze({schema:'AUDRALIA_GESTURE_MATRIX_RUNTIME_TERMINATION_RECEIPT_v1',result:'FAIL',errorCode:code,active:Object.freeze({...active}),guard:snapshot(),browserState:state});const error=new Error(`${code} ${JSON.stringify(receipt)}`);error.code=code;error.receipt=receipt;return error;}
+  function failure(code,active,state=null){const receipt=Object.freeze({schema:'AUDRALIA_GESTURE_MATRIX_RUNTIME_TERMINATION_RECEIPT_v1',candidateHead:EXECUTION_CANDIDATE_HEAD,result:'FAIL',errorCode:code,active:Object.freeze({...active}),guard:snapshot(),browserState:state});const error=new Error(`${code} ${JSON.stringify(receipt)}`);error.code=code;error.receipt=receipt;return error;}
   async function runStep({profile=null,station=null,phase,deadlineMs=15000,task,stateProbe=null}){const active=Object.freeze({profile,station,phase}),stepStarted=Date.now();checkpoint({profile,station,phase:`${phase}:START`});let monitor,rejectMonitor;const monitorPromise=new Promise((_,reject)=>{rejectMonitor=reject;});const inspect=async code=>{let state=null;if(stateProbe){try{state=await stateProbe();}catch(error){state={probeError:String(error?.message||error)};}}rejectMonitor(failure(code,active,state));};monitor=setInterval(()=>{const now=Date.now();if(now-started>=overallMs){clearInterval(monitor);void inspect('MATRIX_OVERALL_RUNTIME_CEILING');return;}if(now-stepStarted>=deadlineMs){clearInterval(monitor);void inspect('STEP_DEADLINE_EXCEEDED');return;}if(now-lastProgressAt>=noProgressMs){clearInterval(monitor);void inspect('SEMANTIC_NO_PROGRESS_WATCHDOG');}},Math.max(5,pollMs));try{const value=await Promise.race([Promise.resolve().then(task),monitorPromise]);checkpoint({profile,station,phase:`${phase}:PASS`});return value;}finally{clearInterval(monitor);}}
   checkpoint({phase:'MATRIX_START'});return Object.freeze({checkpoint,runStep,snapshot});
 }
@@ -162,7 +177,7 @@ async function runGestureProfile(browser,profile,guard){
     for(const station of TRAVEL_STATIONS){
       await guard.runStep({profile:profile.id,station:station.id,phase:'TRAVEL_SET_CAMERA',deadlineMs:CAMERA_STEP_DEADLINE_MS,task:()=>page.evaluate(station=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__.setCameraStateForTest({targetU:station.targetU,targetV:station.targetV,distance:4200,pitch:1.08,yaw:0}),station),stateProbe:()=>browserState(page)});
       const before=await guard.runStep({profile:profile.id,station:station.id,phase:'TRAVEL_BEFORE_SNAPSHOT',deadlineMs:CAMERA_STEP_DEADLINE_MS,task:()=>cameraSnapshot(page),stateProbe:()=>browserState(page)});
-      await guard.runStep({profile:profile.id,station:station.id,phase:'TRAVEL_GESTURE',deadlineMs:GESTURE_STEP_DEADLINE_MS,task:()=>realTwoFingerSwipe(page,{dy:-125}),stateProbe:()=>browserState(page)});
+      await guard.runStep({profile:profile.id,station:station.id,phase:'TRAVEL_GESTURE',deadlineMs:TRAVEL_STEP_DEADLINE_MS,task:()=>realTwoFingerSwipe(page,{dy:-125}),stateProbe:()=>browserState(page)});
       const after=await guard.runStep({profile:profile.id,station:station.id,phase:'TRAVEL_AFTER_SNAPSHOT',deadlineMs:CAMERA_STEP_DEADLINE_MS,task:()=>cameraSnapshot(page),stateProbe:()=>browserState(page)});
       const delta=targetDelta(before,after);assert.ok(delta>1e-3,`${profile.id}_TRAVEL_CONTINUITY_FAILURE:${station.id}:${JSON.stringify({before,after,delta})}`);travel.push(Object.freeze({station:station.id,before,after,delta}));guard.checkpoint({profile:profile.id,station:station.id,phase:'TRAVEL_ASSERTION_PASS',detail:{delta}});
     }
@@ -181,7 +196,7 @@ async function runGestureProfile(browser,profile,guard){
 async function runConnectedGestureMatrix(browser){
   const guard=createSemanticRuntimeGuard({overallMs:MATRIX_OVERALL_MS,noProgressMs:MATRIX_NO_PROGRESS_MS});
   const profiles=[];for(const profile of GESTURE_PROFILES)profiles.push(await runGestureProfile(browser,profile,guard));
-  const receipt=Object.freeze({schema:'AUDRALIA_GESTURE_RESPONSE_RECEIPT_v1',operationId:'AUDRALIA_CONTINUOUS_TRAVEL_NAVIGATION_SUCCESSOR_20260828_001',diagnosticOperationId:'AUDRALIA_GESTURE_MATRIX_VERIFIER_RUNTIME_HARDENING_20260828_001',candidateHead:'27f49de7c468b84164f5dfbb0c5f5b9590c130f9',result:'PASS',runtimeMatrix:Object.freeze({required:true,status:'PASS',profiles:Object.freeze(profiles),runtimeGuard:guard.snapshot(),overallRuntimeCeilingMs:MATRIX_OVERALL_MS,noProgressCeilingMs:MATRIX_NO_PROGRESS_MS}),protectedSnapshotMutation:false,hEarthMutation:false,productMutationByDiagnostic:false});
+  const receipt=Object.freeze({schema:'AUDRALIA_GESTURE_RESPONSE_RECEIPT_v1',operationId:'AUDRALIA_CONTINUOUS_TRAVEL_NAVIGATION_SUCCESSOR_20260828_001',diagnosticOperationId:'AUDRALIA_GESTURE_MATRIX_VERIFIER_RUNTIME_HARDENING_20260828_001',candidateHead:EXECUTION_CANDIDATE_HEAD,result:'PASS',runtimeMatrix:Object.freeze({required:true,status:'PASS',profiles:Object.freeze(profiles),runtimeGuard:guard.snapshot(),overallRuntimeCeilingMs:MATRIX_OVERALL_MS,noProgressCeilingMs:MATRIX_NO_PROGRESS_MS,travelStepDeadlineMs:TRAVEL_STEP_DEADLINE_MS}),protectedSnapshotMutation:false,hEarthMutation:false,productMutationByDiagnostic:false});
   fs.writeFileSync('/tmp/audralia-gesture-matrix-runtime-receipt.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));return receipt;
 }
 

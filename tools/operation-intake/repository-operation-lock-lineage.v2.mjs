@@ -11,6 +11,8 @@ export const OWNER_TRANSPORT = 'OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_I
 export const OWNER_PROVENANCE_SCHEMA = 'OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1';
 export const OWNER_SUCCESSOR_TRANSPORT = 'OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1';
 export const OWNER_SUCCESSOR_PROVENANCE_SCHEMA = 'OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1';
+export const OWNER_TERMINAL_CLOSURE_TRANSPORT = 'OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1';
+export const OWNER_TERMINAL_CLOSURE_PROVENANCE_SCHEMA = 'OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1';
 export const LEDGER_PATH = '.github/operation-intake/active-operation-ledger.v1.json';
 export const GEN1767_EXACT_OWNER_INTAKE_RECOVERY = Object.freeze({
   operationId: 'AUDRALIA_WORK_EXECUTOR_PORTABLE_BOOTSTRAP_20260827_001',
@@ -97,9 +99,55 @@ export function verifyOwnerSuccessorProvenance(lock) {
   return stable({ result: 'OWNER_CONNECTOR_SUCCESSOR_PROVENANCE_VERIFIED', authorityIdentity: identity, transitionIdentity: p.transitionIdentity });
 }
 
+export function verifyOwnerTerminalClosureProvenance(row) {
+  const p = row?.independentClosureProvenance;
+  if (!p || p.schema !== OWNER_TERMINAL_CLOSURE_PROVENANCE_SCHEMA || p.transportId !== OWNER_TERMINAL_CLOSURE_TRANSPORT) reject('OWNER_CONNECTOR_TERMINAL_CLOSURE_PROVENANCE_MISSING');
+  if (p.source?.authorLogin !== OWNER_LOGIN || p.source?.authorAssociation !== 'OWNER') reject('OWNER_CONNECTOR_TERMINAL_CLOSURE_SOURCE_NOT_OWNER');
+  if (p.source?.marker !== 'REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1') reject('OWNER_CONNECTOR_TERMINAL_CLOSURE_SOURCE_MARKER_MISMATCH');
+  if (!/^[0-9a-f]{64}$/.test(p.source?.commentBodySha256 || '')) reject('OWNER_CONNECTOR_TERMINAL_CLOSURE_SOURCE_DIGEST_INVALID');
+  if (!/^[0-9a-f]{40}$/.test(p.compareAndSwap?.observedLedgerBlobSha || '')) reject('OWNER_CONNECTOR_TERMINAL_CLOSURE_LEDGER_CAS_BINDING_INVALID');
+  if (!/^[0-9a-f]{40}$/.test(p.compareAndSwap?.observedLockRefHead || '')) reject('OWNER_CONNECTOR_TERMINAL_CLOSURE_LOCK_REF_BINDING_INVALID');
+  const authorityIdentity = {
+    operationId: row.operationId,
+    lockScope: row.lockScope,
+    scopeHash: row.scopeHash,
+    governingHead: row.governingHead,
+    requestDigest: row.requestDigest,
+    procedureLocatorDigest: row.procedureLocatorDigest,
+    lockGeneration: row.lockGeneration
+  };
+  const terminalIdentity = {
+    operationId: row.operationId,
+    lockScope: row.lockScope,
+    scopeHash: row.scopeHash,
+    governingHead: row.governingHead,
+    lockGeneration: row.lockGeneration,
+    terminalDisposition: row.terminalDisposition,
+    state: row.state,
+    released: row.released
+  };
+  if (canonical(p.authorityIdentity) !== canonical(authorityIdentity)) reject('OWNER_CONNECTOR_TERMINAL_CLOSURE_AUTHORITY_IDENTITY_MISMATCH');
+  if (canonical(p.terminalIdentity) !== canonical(terminalIdentity)) reject('OWNER_CONNECTOR_TERMINAL_CLOSURE_TERMINAL_IDENTITY_MISMATCH');
+  const core = stable({
+    schema: p.schema,
+    transportId: p.transportId,
+    source: p.source,
+    authorityIdentity: p.authorityIdentity,
+    terminalIdentity: p.terminalIdentity,
+    compareAndSwap: p.compareAndSwap
+  });
+  if (p.bindingDigest !== sha(canonical(core))) reject('OWNER_CONNECTOR_TERMINAL_CLOSURE_PROVENANCE_BINDING_MISMATCH');
+  return stable({ result: 'OWNER_CONNECTOR_TERMINAL_CLOSURE_PROVENANCE_VERIFIED', authorityIdentity, terminalIdentity });
+}
+
 function findAdmissionRow(resultingLedger, generation, operationId) {
   const l = ledger(resultingLedger);
   return Object.values(l.activeScopes).find(lock => lock.lockGeneration === generation && lock.operationId === operationId) || null;
+}
+
+function findTerminalRow(resultingLedger, generation, operationId) {
+  const l = ledger(resultingLedger);
+  return l.terminalHistory.find(entry => entry.lockGeneration === generation && entry.operationId === operationId) || null;
 }
 
 function verifySupersededPredecessor(resultingLedger, provenance, predecessorGeneration) {
@@ -182,6 +230,25 @@ export function verifyCanonicalLedgerCommitV2({ commit, changedPaths, resultingL
       principal: OWNER_SUCCESSOR_TRANSPORT,
       operationId,
       lockGeneration: successorGeneration,
+      provenance
+    });
+  }
+
+  const closure = message.match(/^Close operation lock (\d+): (.+) (PASS_CLOSED|FAIL_CLOSED|REJECTED_CLOSED|WITHDRAWN|SUPERSEDED|VOIDED|EXPIRED)$/);
+  if (closure) {
+    const generation = Number(closure[1]);
+    const operationId = closure[2];
+    const terminalDisposition = closure[3];
+    const row = findTerminalRow(resultingLedger, generation, operationId);
+    if (!row) reject('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED', 'RESULTING_TERMINAL_ROW_NOT_FOUND');
+    if (row.state !== 'TERMINAL' || row.released !== true || row.terminalDisposition !== terminalDisposition) reject('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED', 'RESULTING_TERMINAL_ROW_MISMATCH');
+    const provenance = verifyOwnerTerminalClosureProvenance(row);
+    return stable({
+      result: 'CANONICAL_LEDGER_COMMIT_VERIFIED',
+      principal: OWNER_TERMINAL_CLOSURE_TRANSPORT,
+      operationId,
+      lockGeneration: generation,
+      terminalDisposition,
       provenance
     });
   }

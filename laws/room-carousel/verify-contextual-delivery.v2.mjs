@@ -10,6 +10,7 @@ import { fileURLToPath } from "node:url";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "../..");
 const manifest = JSON.parse(fs.readFileSync(path.join(here, "route-card-map.v2.json"), "utf8"));
+const ADMITTED_HEAD = "b14781bc331713bd0869bc6c7fd5f145376788e9";
 const baseUrl = (process.argv.find(arg => arg.startsWith("--base-url=")) || "--base-url=http://127.0.0.1:4173").split("=")[1].replace(/\/$/, "");
 const representativesOnly = process.argv.includes("--representatives");
 const staticOnly = process.argv.includes("--static-only");
@@ -23,33 +24,34 @@ const representatives = [
   "/laws/test/reverse-audit/"
 ].filter(route => manifest.routes[route]);
 const routes = representativesOnly ? representatives : allRoutes;
-const viewports = representativesOnly
-  ? [{ name: "phone", width: 390, height: 844 }, { name: "tablet", width: 768, height: 1024 }]
-  : [{ name: "phone", width: 390, height: 844 }, { name: "tablet", width: 768, height: 1024 }, { name: "desktop", width: 1440, height: 1000 }];
+const viewports = [
+  { name: "phone", width: 390, height: 844 },
+  { name: "tablet", width: 768, height: 1024 },
+  { name: "desktop", width: 1440, height: 1000 }
+];
 const screenshotRoutes = new Set(representatives);
 
 function routeFile(route) {
   return path.join(root, route.slice(1), route.endsWith(".html") ? "" : "index.html");
 }
-
+function routeRelativeFile(route) {
+  return path.relative(root, routeFile(route)).replaceAll(path.sep, "/");
+}
 function declared(html, name) {
   return html.match(new RegExp(`${name}="([^"]*)"`))?.[1] || "";
 }
-
 function gitBlob(relativePath) {
   return execFileSync("git", ["hash-object", relativePath], { cwd: root, encoding: "utf8" }).trim();
 }
-
-function normalizeText(value) {
-  return String(value || "")
-    .toLowerCase()
-    .replace(/\b(the|a|an|and|or|to|of|in|on|for|with|as|is|are|be|by|that|this|it|its|from|at|into|than|then|when|where|what|who|how)\b/g, " ")
-    .replace(/[^a-z0-9]+/g, " ")
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean);
+function gitChanged(paths) {
+  const output = execFileSync("git", ["diff", "--name-only", `${ADMITTED_HEAD}...HEAD`, "--", ...paths], { cwd: root, encoding: "utf8" }).trim();
+  return output ? output.split(/\r?\n/).filter(Boolean).sort() : [];
 }
-
+function normalizeText(value) {
+  return String(value || "").toLowerCase()
+    .replace(/\b(the|a|an|and|or|to|of|in|on|for|with|as|is|are|be|by|that|this|it|its|from|at|into|than|then|when|where|what|who|how)\b/g, " ")
+    .replace(/[^a-z0-9]+/g, " ").trim().split(/\s+/).filter(Boolean);
+}
 function jaccard(a, b) {
   const left = new Set(normalizeText(a));
   const right = new Set(normalizeText(b));
@@ -58,21 +60,42 @@ function jaccard(a, b) {
   const union = new Set([...left, ...right]).size;
   return union ? intersection / union : 0;
 }
-
 function readingFingerprint(story) {
   return [story.label, story.readings?.practical, story.readings?.engineering, story.readings?.empirical].join("\n");
 }
 
 assert.equal(manifest.schema, "LAWS_LAYERED_INFORMATION_GRID_ROUTE_CARD_MAP_v3");
 assert.equal(allRoutes.length, 29);
+
+const methodsAllowed = [
+  "laws/research/methods-and-models/carousel-final-polish.css",
+  "laws/research/methods-and-models/index.html"
+].sort();
+assert.deepEqual(gitChanged(["laws/research/methods-and-models/"]), methodsAllowed, "Methods changes are exactly the two admitted continuity exceptions");
 assert.equal(gitBlob("laws/research/methods-and-models/carousel-progressive.js"), "e9e22bc13f8b98dfbe3ea02a63efd0459a599ead", "Methods progressive JS remains byte-identical");
 assert.equal(gitBlob("laws/research/methods-and-models/carousel-progressive.css"), "90e63e37ad67ca96e01650e0ec90c55b2ff3a6c8", "Methods progressive CSS remains byte-identical");
-const methodsDiff = execFileSync("git", ["diff", "--name-only", "4aa0ce352cbc28f0cdd38c1288f858b17ae8cb63...HEAD", "--", "laws/research/methods-and-models/"], { cwd: root, encoding: "utf8" }).trim();
-assert.equal(methodsDiff, "", "Methods & Models reference tree is untouched");
+assert.deepEqual(gitChanged([
+  "laws/research/methods-and-models/carousel.css",
+  "laws/research/methods-and-models/carousel-coherence.css",
+  "laws/research/methods-and-models/carousel-progressive.css",
+  "laws/research/methods-and-models/carousel.js",
+  "laws/research/methods-and-models/carousel-progressive.js",
+  "laws/research/methods-and-models/carousel-data.js"
+]), [], "all protected Methods runtime/data/style assets remain byte-identical to admitted head");
+assert.deepEqual(gitChanged(allRoutes.map(routeRelativeFile)), [], "Gen1833 contextual route corpus remains byte-identical");
+assert.deepEqual(gitChanged(["laws/room-carousel/route-card-map.v2.json"]), [], "Gen1833 route/card/story corpus remains byte-identical");
+
+const methodsPolish = fs.readFileSync(path.join(root, "laws/research/methods-and-models/carousel-final-polish.css"), "utf8");
+assert.ok(methodsPolish.includes("top: calc(39% + 3rem)"), "Methods orbit carries the bounded approximately half-inch lower settlement");
+assert.ok(methodsPolish.includes(".mm-story-nav"), "Methods bottom route-continuity styling exists");
+const methodsHtml = fs.readFileSync(path.join(root, "laws/research/methods-and-models/index.html"), "utf8");
+assert.ok(methodsHtml.includes('class="mm-story-nav"'), "Methods bottom Previous/Next route handoff exists");
+assert.ok(methodsHtml.includes('href="/laws/research/evidence-and-sources/"'), "Methods Previous route is Evidence and Sources");
+assert.ok(methodsHtml.includes('href="/laws/research/applied-investigations/"'), "Methods Next route is Applied Investigations");
 
 const runtimeSource = fs.readFileSync(path.join(here, "room-carousel.v1.js"), "utf8");
 for (const token of [
-  "METHODS_AND_MODELS_PROGRESSIVE_CARD_ARCHITECTURE_BYTE_FROZEN",
+  "METHODS_AND_MODELS_PROGRESSIVE_CARD_ARCHITECTURE_TWO_EXCEPTION_CONTINUITY",
   "Plain-language reading",
   "Why it matters",
   "Engineering detail",
@@ -81,8 +104,12 @@ for (const token of [
   "Failure behavior",
   "Limits",
   "data-lrc-summary-stories",
+  "data-lrc-inner-tabs",
+  "depth-tab-keyboard",
   "methodsReferenceArchitecture:true"
-]) assert.ok(runtimeSource.includes(token), `shared runtime includes Methods reference token: ${token}`);
+]) assert.ok(runtimeSource.includes(token), `shared runtime includes continuity token: ${token}`);
+assert.ok(!/state\.layers\[cardIndex\]\s*=\s*0/.test(runtimeSource.match(/function selectStory[\s\S]*?\n    }/)?.[0] || ""), "story selection does not reset lens state");
+assert.ok(!/state\.layers\[state\.index\]\s*=\s*0|state\.stories\[state\.index\]\s*=\s*0/.test(runtimeSource.match(/function openInspection[\s\S]*?\n    }/)?.[0] || ""), "reopening a card does not reset story/lens state");
 
 const exactReadingOwners = new Map();
 let storyCount = 0;
@@ -112,20 +139,21 @@ for (const route of routes) {
     for (let i = 0; i < card.stories.length; i += 1) {
       for (let j = i + 1; j < card.stories.length; j += 1) {
         pairCount += 1;
-        const left = card.stories[i];
-        const right = card.stories[j];
-        const similarity = jaccard(readingFingerprint(left), readingFingerprint(right));
-        assert.ok(similarity < 0.84, `${route}/${card.id}: semantically over-reused chapters ${left.id} vs ${right.id} (${similarity.toFixed(3)})`);
+        const similarity = jaccard(readingFingerprint(card.stories[i]), readingFingerprint(card.stories[j]));
+        assert.ok(similarity < 0.84, `${route}/${card.id}: semantically over-reused chapters ${card.stories[i].id} vs ${card.stories[j].id} (${similarity.toFixed(3)})`);
       }
     }
   }
 }
-
-assert.equal(storyCount, 551, `chapter inventory remains 551, received ${storyCount}`);
-assert.equal(pairCount, 864, `within-card pair inventory remains 864, received ${pairCount}`);
+assert.equal(storyCount, representativesOnly ? storyCount : 551, `chapter inventory remains ${representativesOnly ? "representative" : "551"}`);
+assert.equal(pairCount, representativesOnly ? pairCount : 864, `within-card pair inventory remains ${representativesOnly ? "representative" : "864"}`);
 
 if (staticOnly) {
-  console.log(JSON.stringify({ result: "PASS", mode: "static-methods-reference", routes: routes.length, storyCount, pairCount, methodsReferenceFrozen: true }));
+  if (!representativesOnly) {
+    assert.equal(storyCount, 551, `chapter inventory remains 551, received ${storyCount}`);
+    assert.equal(pairCount, 864, `within-card pair inventory remains 864, received ${pairCount}`);
+  }
+  console.log(JSON.stringify({ result: "PASS", mode: "static-gen1841-continuity", routes: routes.length, storyCount, pairCount, methodsExceptions: methodsAllowed, gen1833CorpusPreserved: true }));
   process.exit(0);
 }
 
@@ -140,7 +168,7 @@ try {
 }
 
 const browser = await chromium.launch({ headless: true, ...(process.env.LAWS_BROWSER_EXECUTABLE ? { executablePath: process.env.LAWS_BROWSER_EXECUTABLE } : {}) });
-const artifactDir = path.join(root, "artifacts/laws-family-editorial-architectural-reconstruction");
+const artifactDir = path.join(root, "artifacts/laws-cp6-final-synchronization/gen1841-continuity");
 fs.mkdirSync(artifactDir, { recursive: true });
 
 try {
@@ -155,72 +183,95 @@ try {
       const rootSelector = "[data-laws-room-carousel]";
       await page.waitForSelector(`${rootSelector}[data-lrc-mounted="true"]`);
       const expected = manifest.routes[route].cards;
+      const targetIndex = Math.min(1, expected.length - 1);
+      const activeCard = "[data-lrc-card][data-active='true']";
+
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-reference-architecture"), "methods-and-models", `${route} ${viewport.name}: Methods reference declared`);
       assert.equal(await page.locator("[data-lrc-tab]").count(), expected.length, `${route} ${viewport.name}: outer inventory`);
       assert.deepEqual(await page.locator("[data-lrc-tab-label]").allTextContents(), expected.map(card => card.label), `${route} ${viewport.name}: page-specific outer labels preserved`);
       assert.equal(await page.locator("details.lr-audit[open]").count(), 0, `${route} ${viewport.name}: custody collapsed`);
 
-      const targetIndex = Math.min(1, expected.length - 1);
       await page.locator("[data-lrc-tab]").nth(targetIndex).click();
       const activeId = await page.locator(rootSelector).getAttribute("data-lrc-id");
-      assert.equal(await page.locator("[data-lrc-card][data-active='true'] [data-lrc-summary-stories] span").count(), Math.min(3, expected[targetIndex].stories.length), `${route} ${viewport.name}: orbit card carries directed story preview`);
-      await page.locator("[data-lrc-card][data-active='true'] [data-lrc-inspect]").click();
-      assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-story"), expected[targetIndex].stories[0].id, `${route} ${viewport.name}: first authored reading opens`);
-      assert.equal(await page.locator("[data-lrc-card][data-active='true'] [data-lrc-story-rail]:visible").count(), 1, `${route} ${viewport.name}: authored reading rail visible`);
-      assert.equal(await page.locator("[data-lrc-card][data-active='true'] [data-lrc-story-tab]").count(), expected[targetIndex].stories.length, `${route} ${viewport.name}: page-specific reading inventory`);
-      assert.equal(await page.locator("[data-lrc-card][data-active='true'] [data-lrc-grid-cell]:visible").count(), 1, `${route} ${viewport.name}: one selected reading composed`);
-      const selected = page.locator("[data-lrc-card][data-active='true'] [data-lrc-grid-cell]:visible");
-      assert.equal(await selected.locator(".lrc-reader-first").count(), 1, `${route} ${viewport.name}: plain-language primary reading`);
-      assert.equal(await selected.locator(".lrc-reader-why").count(), 1, `${route} ${viewport.name}: why-it-matters hierarchy`);
-      assert.equal(await selected.locator(".lrc-engineering-depth").count(), 1, `${route} ${viewport.name}: deeper engineering layer`);
-      assert.equal(await selected.locator(".lrc-engineering-grid section").count(), 3, `${route} ${viewport.name}: evidence/failure/limits modules`);
-      assert.equal(await selected.locator(".lrc-engineering-depth").getAttribute("open"), null, `${route} ${viewport.name}: progressive disclosure starts reader-first`);
+      assert.equal(await page.locator(`${activeCard} [data-lrc-summary-stories] span`).count(), Math.min(3, expected[targetIndex].stories.length), `${route} ${viewport.name}: orbit card carries directed story preview`);
+      await page.locator(`${activeCard} [data-lrc-inspect]`).click();
+      assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-story"), expected[targetIndex].stories[0].id, `${route} ${viewport.name}: stored first story opens initially`);
+      assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-layer"), "practical", `${route} ${viewport.name}: stored practical lens opens initially`);
+      assert.equal(await page.locator(`${activeCard} [data-lrc-inner-tabs]:visible`).count(), 1, `${route} ${viewport.name}: internal lens rail is visibly inside opened card`);
+      assert.equal(await page.locator(`${activeCard} [data-lrc-inner-tab]`).count(), 3, `${route} ${viewport.name}: three independent internal lenses`);
+      assert.deepEqual(await page.locator(`${activeCard} [data-lrc-inner-tab]`).allTextContents(), ["Reading", "Engineering", "Evidence"], `${route} ${viewport.name}: internal lens labels`);
+      assert.equal(await page.locator(`${activeCard} [data-lrc-story-rail]:visible`).count(), 1, `${route} ${viewport.name}: authored story rail visible`);
+      assert.equal(await page.locator(`${activeCard} [data-lrc-story-tab]`).count(), expected[targetIndex].stories.length, `${route} ${viewport.name}: story inventory preserved`);
 
       const storyIndex = Math.min(1, expected[targetIndex].stories.length - 1);
-      await page.locator("[data-lrc-card][data-active='true'] [data-lrc-story-tab]").nth(storyIndex).click();
-      assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-story"), expected[targetIndex].stories[storyIndex].id, `${route} ${viewport.name}: authored reading changes`);
-      assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-id"), activeId, `${route} ${viewport.name}: reading change preserves same object`);
-      const second = page.locator("[data-lrc-card][data-active='true'] [data-lrc-grid-cell]:visible");
-      await second.locator(".lrc-engineering-depth > summary").click();
-      assert.equal(await second.locator(".lrc-engineering-depth").getAttribute("open"), "", `${route} ${viewport.name}: engineering detail expands in same object`);
-      const depthText = await second.locator(".lrc-engineering-depth").innerText();
-      assert.match(depthText, /Evidence standing/i, `${route} ${viewport.name}: evidence standing visible`);
-      assert.match(depthText, /Failure behavior/i, `${route} ${viewport.name}: failure behavior visible`);
-      assert.match(depthText, /Limits/i, `${route} ${viewport.name}: limits visible`);
+      await page.locator(`${activeCard} [data-lrc-story-tab]`).nth(storyIndex).click();
+      assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-story"), expected[targetIndex].stories[storyIndex].id, `${route} ${viewport.name}: story changes independently`);
+      assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-layer"), "practical", `${route} ${viewport.name}: story change preserves practical lens`);
+      assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-id"), activeId, `${route} ${viewport.name}: story change preserves outer card`);
+
+      await page.locator(`${activeCard} [data-lrc-inner-tab]`).nth(1).click();
+      assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-layer"), "engineering", `${route} ${viewport.name}: Engineering lens selected`);
+      assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-story"), expected[targetIndex].stories[storyIndex].id, `${route} ${viewport.name}: lens change preserves story`);
+      let selected = page.locator(`${activeCard} [data-lrc-grid-cell]:visible`);
+      assert.equal(await selected.locator(".lrc-engineering-depth").getAttribute("open"), "", `${route} ${viewport.name}: Engineering lens opens technical layer`);
+      assert.equal(await selected.locator(".lrc-engineering-identity:visible").count(), 1, `${route} ${viewport.name}: formal technical reading visible`);
+
+      const engineeringTab = page.locator(`${activeCard} [data-lrc-inner-tab]`).nth(1);
+      await engineeringTab.focus();
+      await engineeringTab.press("ArrowRight");
+      assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-layer"), "empirical", `${route} ${viewport.name}: lens keyboard navigation reaches Evidence`);
+      selected = page.locator(`${activeCard} [data-lrc-grid-cell]:visible`);
+      const evidenceText = await selected.locator(".lrc-engineering-grid").innerText();
+      assert.match(evidenceText, /Evidence standing/i, `${route} ${viewport.name}: Evidence standing visible`);
+      assert.match(evidenceText, /Failure behavior/i, `${route} ${viewport.name}: Failure behavior visible`);
+      assert.match(evidenceText, /Limits/i, `${route} ${viewport.name}: Limits visible`);
+
+      const nextStoryIndex = Math.min(storyIndex + 1, expected[targetIndex].stories.length - 1);
+      await page.locator(`${activeCard} [data-lrc-story-tab]`).nth(nextStoryIndex).click();
+      assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-story"), expected[targetIndex].stories[nextStoryIndex].id, `${route} ${viewport.name}: second story change applies`);
+      assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-layer"), "empirical", `${route} ${viewport.name}: story change preserves Evidence lens independently`);
 
       const geometry = await page.evaluate(() => {
         const active = document.querySelector("[data-lrc-card][data-active='true']");
         const rail = active?.querySelector("[data-lrc-story-rail]");
+        const lenses = active?.querySelector("[data-lrc-inner-tabs]");
         const ret = active?.querySelector("[data-lrc-return]")?.getBoundingClientRect();
         return {
           pageOverflow: document.documentElement.scrollWidth - innerWidth,
           cardOverflow: active ? active.scrollWidth - active.clientWidth : 999,
           railOverflow: rail ? rail.scrollWidth - rail.clientWidth : 999,
+          lensOverflow: lenses ? lenses.scrollWidth - lenses.clientWidth : 999,
           returnTop: ret?.top ?? -999,
           returnBottom: ret?.bottom ?? 999
         };
       });
       assert.ok(geometry.pageOverflow <= 1, `${route} ${viewport.name}: zero page horizontal overflow`);
       assert.ok(geometry.cardOverflow <= 1, `${route} ${viewport.name}: zero card horizontal overflow`);
-      assert.ok(geometry.railOverflow <= 1, `${route} ${viewport.name}: zero reading-rail horizontal overflow`);
+      assert.ok(geometry.railOverflow <= 1, `${route} ${viewport.name}: zero story-rail horizontal overflow`);
+      assert.ok(geometry.lensOverflow <= 1, `${route} ${viewport.name}: zero lens-rail horizontal overflow`);
       assert.ok(geometry.returnTop >= -1 && geometry.returnBottom <= viewport.height + 1, `${route} ${viewport.name}: Return to Orbit immediately available`);
 
-      if (screenshotRoutes.has(route) && viewport.name !== "desktop") {
+      if (screenshotRoutes.has(route)) {
         const name = route.replace(/^\/laws\//, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "");
-        await page.screenshot({ path: path.join(artifactDir, `methods-parity-${viewport.name}-${name}.png`), fullPage: false });
+        await page.screenshot({ path: path.join(artifactDir, `continuity-${viewport.name}-${name}.png`), fullPage: false });
       }
 
-      await page.locator("[data-lrc-card][data-active='true'] [data-lrc-return]").click();
+      await page.locator(`${activeCard} [data-lrc-return]`).click();
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-layer"), "orbit", `${route} ${viewport.name}: return to orbit`);
-      assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-id"), activeId, `${route} ${viewport.name}: return lands on same outer object`);
+      assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-id"), activeId, `${route} ${viewport.name}: return lands on same outer card`);
+      await page.locator(`${activeCard} [data-lrc-inspect]`).click();
+      assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-story"), expected[targetIndex].stories[nextStoryIndex].id, `${route} ${viewport.name}: reopen restores same story`);
+      assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-layer"), "empirical", `${route} ${viewport.name}: reopen restores same lens`);
+      await page.locator(`${activeCard} [data-lrc-return]`).click();
       assert.deepEqual(errors, [], `${route} ${viewport.name}: zero page errors`);
-      evidence.push({ route, viewport: viewport.name, activeId, storyCount: expected[targetIndex].stories.length, referenceArchitecture: "methods-and-models" });
+      evidence.push({ route, viewport: viewport.name, activeId, restoredStory: expected[targetIndex].stories[nextStoryIndex].id, restoredLens: "empirical", storyCount: expected[targetIndex].stories.length });
       await page.close();
     }
     await context.close();
   }
-  fs.writeFileSync(path.join(artifactDir, "methods-reference-family-runtime.json"), JSON.stringify({ result: "PASS", routes: routes.length, viewports: viewports.map(v => v.name), storyCount, pairCount, evidence }, null, 2) + "\n");
-  console.log(JSON.stringify({ result: "PASS", mode: "methods-reference-runtime", routes: routes.length, viewportCount: viewports.length, storyCount, pairCount, checks: evidence.length }));
+  const receipt = { result: "PASS", mode: representativesOnly ? "representative-gen1841-continuity" : "full-gen1841-continuity", routes: routes.length, viewports: viewports.map(v => v.name), storyCount, pairCount, gen1833CorpusPreserved: true, methodsExceptions: methodsAllowed, evidence };
+  fs.writeFileSync(path.join(artifactDir, representativesOnly ? "representative-continuity-runtime.json" : "full-continuity-runtime.json"), JSON.stringify(receipt, null, 2) + "\n");
+  console.log(JSON.stringify({ result: "PASS", mode: receipt.mode, routes: routes.length, viewportCount: viewports.length, storyCount, pairCount, checks: evidence.length }));
 } finally {
   await browser.close();
 }

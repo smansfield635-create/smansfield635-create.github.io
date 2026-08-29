@@ -235,3 +235,99 @@ jobs:
             node tools/publication-live-verify.mjs runtime "$PAGE_URL" "$AUDRALIA_MANIFEST"
           fi
           echo "PROTECTED_RUNTIME_SURFACE_CONTINUITY_VERIFIED"
+
+      - name: Verify custom-domain alias convergence
+        env:
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+          SURFACE_ID: ${{ inputs.surface_id }}
+          STAGE: ${{ runner.temp }}/pages-site
+          CUSTOM_DOMAIN: https://diamondgatebridge.com
+          RECEIPT: /tmp/public-alias-convergence-receipt.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected="$STAGE/index.html"
+          test -f "$expected"
+          expected_sha="$(sha256sum "$expected" | awk '{print $1}')"
+          work="$(mktemp -d)"
+          trap 'rm -rf "$work"' EXIT
+
+          fetch_plain() {
+            curl --fail --silent --show-error -L --max-time 30 \
+              -H 'Cache-Control: no-cache' \
+              -H 'Pragma: no-cache' \
+              "$1" -o "$2"
+          }
+
+          for attempt in $(seq 1 30); do
+            marker_url="${CUSTOM_DOMAIN}/.well-known/dgb-release.json?dgb_release=${TARGET_SHA}&attempt=${attempt}"
+            marker="$(curl --fail --silent --show-error -L --max-time 20 \
+              -H 'Cache-Control: no-cache' \
+              -H 'Pragma: no-cache' \
+              "$marker_url" 2>/dev/null || true)"
+            observed="$(printf '%s' "$marker" | jq -r '.commit // empty' 2>/dev/null || true)"
+            observed_surface="$(printf '%s' "$marker" | jq -r '.surface // empty' 2>/dev/null || true)"
+            if [ "$observed" != "$TARGET_SHA" ] || [ "$observed_surface" != "$SURFACE_ID" ]; then
+              sleep 10
+              continue
+            fi
+
+            if ! fetch_plain "${CUSTOM_DOMAIN}/" "$work/root.html"; then
+              sleep 10
+              continue
+            fi
+            if ! fetch_plain "${CUSTOM_DOMAIN}/index.html" "$work/index.html"; then
+              sleep 10
+              continue
+            fi
+
+            www_final="$(curl --fail --silent --show-error -L --max-time 30 \
+              -H 'Cache-Control: no-cache' \
+              -H 'Pragma: no-cache' \
+              -o "$work/www.html" -w '%{url_effective}' \
+              'https://www.diamondgatebridge.com/' 2>/dev/null || true)"
+            root_sha="$(sha256sum "$work/root.html" | awk '{print $1}')"
+            index_sha="$(sha256sum "$work/index.html" | awk '{print $1}')"
+            www_sha="$(test -f "$work/www.html" && sha256sum "$work/www.html" | awk '{print $1}' || true)"
+
+            case "$www_final" in
+              https://diamondgatebridge.com|https://diamondgatebridge.com/|https://diamondgatebridge.com/*) ;;
+              *)
+                sleep 10
+                continue
+                ;;
+            esac
+
+            if [ "$root_sha" = "$expected_sha" ] && \
+               [ "$index_sha" = "$expected_sha" ] && \
+               [ "$www_sha" = "$expected_sha" ]; then
+              jq -n \
+                --arg targetSha "$TARGET_SHA" \
+                --arg surfaceId "$SURFACE_ID" \
+                --arg expectedSha256 "$expected_sha" \
+                --arg apexRootSha256 "$root_sha" \
+                --arg apexIndexSha256 "$index_sha" \
+                --arg wwwSha256 "$www_sha" \
+                --arg wwwFinalUrl "$www_final" \
+                '{schema:"PAGES_PUBLIC_ALIAS_CONVERGENCE_RECEIPT_v1",result:"PASS_CLOSED",targetSha:$targetSha,surfaceId:$surfaceId,customDomain:"diamondgatebridge.com",releaseMarkerCommit:$targetSha,expectedStagedIndexSha256:$expectedSha256,apexRootSha256:$apexRootSha256,apexIndexHtmlSha256:$apexIndexSha256,wwwSha256:$wwwSha256,wwwFinalUrl:$wwwFinalUrl,ordinaryAliasBytesConverged:true,productMutationPerformed:false}' \
+                > "$RECEIPT"
+              echo "APEX_ROOT_MATCHES_EXACT_STAGED_INDEX=$expected_sha"
+              echo "APEX_INDEX_HTML_MATCHES_EXACT_STAGED_INDEX=$expected_sha"
+              echo "WWW_CONVERGES_TO_APEX_CURRENT_RELEASE=$www_final"
+              echo "CUSTOM_DOMAIN_RELEASE_MARKER_MATCHES_TARGET_SHA=$TARGET_SHA"
+              echo "NO_COMPASS_PRODUCT_MUTATION=true"
+              echo "LIVE_EXACT_HEAD_VERIFIED=$TARGET_SHA"
+              exit 0
+            fi
+            sleep 10
+          done
+
+          echo "PUBLIC_ALIAS_CONVERGENCE_FAILURE expected=$expected_sha" >&2
+          exit 1
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: public-alias-convergence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/public-alias-convergence-receipt.json
+          if-no-files-found: error
+          retention-days: 90

@@ -1910,6 +1910,49 @@
       "scopeHash": "58185bc73a55d5818fc4f191d2f77edf6d710f90d4d6169167f0ca783da7a652",
       "state": "ADMITTED_LOCKED"
     },
+    "58823589e8aa35c93f7edb0a19b8b9b9a3c4c79fb49b030bf5f32c3c4ae037a7": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "68c74dd05bd7441d91ea995e5972a1ac173e69b1",
+          "lockGeneration": 1850,
+          "lockScope": "REPOSITORY-AI-ROUTER/COMPASS-STALE-QUALIFICATION-BINDING-RECONCILIATION",
+          "operationId": "COMPASS_STALE_QUALIFICATION_BINDING_RECONCILIATION_20260829_001",
+          "procedureLocatorDigest": "6f872217eb94e523c05d4244f34b0599860f326003d663e32f3653f41dc1f2b0",
+          "requestDigest": "fb3f749f5fa4ce5d5d7ecf23d8cb3da5e52ab9db4718a25b56c14fe80ed81b3b",
+          "scopeHash": "58823589e8aa35c93f7edb0a19b8b9b9a3c4c79fb49b030bf5f32c3c4ae037a7"
+        },
+        "bindingDigest": "b9e6230909adf58d856f4c3764210a3333d22f60e2b3aa6f0f9295fe123a6344",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "1d4a87a3732f5bf5e0b632089c3a8911e0be1df52540c72b79dcca60afcd8e0c",
+          "commentId": 5465296039,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2333,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33279151709,
+          "workflowSha": "68c74dd05bd7441d91ea995e5972a1ac173e69b1"
+        },
+        "lineageAnchorCommitSha": "1d8b0812ef83317cda8a945b49dd894711b87557",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "68c74dd05bd7441d91ea995e5972a1ac173e69b1",
+      "lockGeneration": 1850,
+      "lockScope": "REPOSITORY-AI-ROUTER/COMPASS-STALE-QUALIFICATION-BINDING-RECONCILIATION",
+      "operationId": "COMPASS_STALE_QUALIFICATION_BINDING_RECONCILIATION_20260829_001",
+      "procedureLocatorDigest": "6f872217eb94e523c05d4244f34b0599860f326003d663e32f3653f41dc1f2b0",
+      "released": false,
+      "requestDigest": "fb3f749f5fa4ce5d5d7ecf23d8cb3da5e52ab9db4718a25b56c14fe80ed81b3b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "58823589e8aa35c93f7edb0a19b8b9b9a3c4c79fb49b030bf5f32c3c4ae037a7",
+      "state": "ADMITTED_LOCKED"
+    },
     "58fd695623b73437bd875b2af63462b9ba0f798e460267d014d60b7eba8afaf3": {
       "governingHead": "1012e4630b4c04cf919379df6723ee427e6de606",
       "lockGeneration": 1198,
@@ -6140,7 +6183,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1849,
+  "lockGeneration": 1850,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

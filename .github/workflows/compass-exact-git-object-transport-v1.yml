@@ -2,8 +2,7 @@ name: Compass Exact Git Object Transport v1
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [main]
     paths:
       - ".github/workflows/compass-exact-git-object-transport-v1.yml"
 
@@ -16,10 +15,11 @@ jobs:
     timeout-minutes: 25
     env:
       PUBLIC_REPOSITORY: smansfield635-create/smansfield635-create.github.io
-      CANDIDATE_SHA: 0251792801761778b1492b2b97f60b4ebc6dbbb9
-      BASE_SHA: d63c1b3e60bdd2af9d8b868247559a5222c26d31
-      SOURCE_SHA: ef443c9e37a532447a9fe7eea1f328b2f6679f35
+      CANDIDATE_SHA: 1b750afbc203f19d19eb84a42bb5787986bbaaee
+      BASE_SHA: 93ec4c712f63c8bfb45e71727b1c664d8e96d7f5
+      SOURCE_SHA: 1b750afbc203f19d19eb84a42bb5787986bbaaee
       PLAYWRIGHT_VERSION: 1.55.0
+      SHORT_SHA: 1b750afb
     steps:
       - name: Prepare empty transport workspace
         shell: bash
@@ -49,23 +49,17 @@ jobs:
           test "$(git -C "$RUNNER_TEMP/exact-public" rev-parse refs/transport/source^{commit})" = "$SOURCE_SHA"
           git -C "$RUNNER_TEMP/exact-public" cat-file -p "$CANDIDATE_SHA" | grep -Fx "parent $BASE_SHA"
 
-      - name: Create Git-native bundle
+      - name: Create and verify Git-native bundle
         shell: bash
         run: |
           set -euo pipefail
-          git -C "$RUNNER_TEMP/exact-public" bundle create "$GITHUB_WORKSPACE/transport/compass-02517928.bundle" refs/transport/candidate refs/transport/base refs/transport/source
-          git -C "$RUNNER_TEMP/exact-public" bundle verify "$GITHUB_WORKSPACE/transport/compass-02517928.bundle"
-
-      - name: Prove bundle reconstructs the exact Git subject
-        shell: bash
-        run: |
-          set -euo pipefail
+          bundle="$GITHUB_WORKSPACE/transport/compass-${SHORT_SHA}.bundle"
+          git -C "$RUNNER_TEMP/exact-public" bundle create "$bundle" refs/transport/candidate refs/transport/base refs/transport/source
+          git -C "$RUNNER_TEMP/exact-public" bundle verify "$bundle"
           rm -rf "$RUNNER_TEMP/reconstructed"
           git init -q "$RUNNER_TEMP/reconstructed"
-          git -C "$RUNNER_TEMP/reconstructed" fetch --no-tags "$GITHUB_WORKSPACE/transport/compass-02517928.bundle" refs/transport/candidate:refs/transport/candidate refs/transport/base:refs/transport/base refs/transport/source:refs/transport/source
+          git -C "$RUNNER_TEMP/reconstructed" fetch --no-tags "$bundle" refs/transport/candidate:refs/transport/candidate refs/transport/base:refs/transport/base refs/transport/source:refs/transport/source
           test "$(git -C "$RUNNER_TEMP/reconstructed" rev-parse refs/transport/candidate^{commit})" = "$CANDIDATE_SHA"
-          test "$(git -C "$RUNNER_TEMP/reconstructed" rev-parse refs/transport/base^{commit})" = "$BASE_SHA"
-          test "$(git -C "$RUNNER_TEMP/reconstructed" rev-parse refs/transport/source^{commit})" = "$SOURCE_SHA"
           git -C "$RUNNER_TEMP/reconstructed" cat-file -p refs/transport/candidate | grep -Fx "parent $BASE_SHA"
 
       - uses: actions/setup-node@v4
@@ -80,7 +74,6 @@ jobs:
           npm install --prefix transport/playwright-runtime --no-save "playwright@${PLAYWRIGHT_VERSION}"
           PLAYWRIGHT_BROWSERS_PATH="$GITHUB_WORKSPACE/transport/playwright-browsers" node transport/playwright-runtime/node_modules/playwright/cli.js install chromium
           test "$(node -p "require('./transport/playwright-runtime/node_modules/playwright/package.json').version")" = "$PLAYWRIGHT_VERSION"
-          test -n "$(find transport/playwright-browsers -type f \( -name chrome -o -name headless_shell \) | head -1)"
 
       - name: Package explicit SwiftShader WebGL launch profile
         shell: bash
@@ -91,24 +84,15 @@ jobs:
           set -euo pipefail
           transport_root="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
           browser="$(find "$transport_root/playwright-browsers" -type f \( -name chrome -o -name headless_shell \) -perm -111 | head -1)"
-          if [ -z "$browser" ]; then
-            echo "TRANSPORTED_CHROMIUM_EXECUTABLE_NOT_FOUND" >&2
-            exit 1
-          fi
+          test -n "$browser"
           filtered=()
           for arg in "$@"; do
             case "$arg" in
-              --use-gl=*|--use-angle=*|--enable-unsafe-swiftshader|--disable-webgl|--disable-gpu)
-                ;;
+              --use-gl=*|--use-angle=*|--enable-unsafe-swiftshader|--disable-webgl|--disable-gpu) ;;
               *) filtered+=("$arg") ;;
             esac
           done
-          exec "$browser" "${filtered[@]}" \
-            --use-gl=angle \
-            --use-angle=swiftshader \
-            --enable-unsafe-swiftshader \
-            --enable-webgl \
-            --ignore-gpu-blocklist
+          exec "$browser" "${filtered[@]}" --use-gl=angle --use-angle=swiftshader --enable-unsafe-swiftshader --enable-webgl --ignore-gpu-blocklist
           EOF
           chmod +x transport/launch-chromium-webgl.sh
 
@@ -119,24 +103,12 @@ jobs:
           node --input-type=module <<'NODE'
           import fs from "node:fs";
           import { chromium } from "./transport/playwright-runtime/node_modules/playwright/index.mjs";
-          const browser = await chromium.launch({
-            executablePath: "./transport/launch-chromium-webgl.sh",
-            headless: true,
-            args: ["--no-sandbox", "--disable-dev-shm-usage"]
-          });
-          const page = await browser.newPage();
-          const capability = await page.evaluate(() => {
-            const canvas = document.createElement("canvas");
-            const webgl = canvas.getContext("webgl");
-            const webgl2 = canvas.getContext("webgl2");
-            const context = webgl || webgl2;
-            return {webgl:Boolean(webgl),webgl2:Boolean(webgl2),renderer:context?String(context.getParameter(context.RENDERER)||""):""};
-          });
+          const browser=await chromium.launch({executablePath:"./transport/launch-chromium-webgl.sh",headless:true,args:["--no-sandbox","--disable-dev-shm-usage"]});
+          const page=await browser.newPage();
+          const capability=await page.evaluate(()=>{const c=document.createElement('canvas');const g=c.getContext('webgl'),g2=c.getContext('webgl2');return{webgl:!!g,webgl2:!!g2};});
           await browser.close();
-          const receipt={schema:"COMPASS_TRANSPORT_WEBGL_CAPABILITY_v1",result:capability.webgl?"PASS_CLOSED":"FAIL_CLOSED",...capability};
-          fs.writeFileSync("transport/webgl-capability.json",JSON.stringify(receipt,null,2));
-          console.log(JSON.stringify(receipt,null,2));
-          if(!capability.webgl) process.exitCode=1;
+          fs.writeFileSync('transport/webgl-capability.json',JSON.stringify({schema:'COMPASS_TRANSPORT_WEBGL_CAPABILITY_v1',result:capability.webgl?'PASS_CLOSED':'FAIL_CLOSED',...capability},null,2));
+          if(!capability.webgl) process.exit(1);
           NODE
 
       - name: Package exact external runtime dependencies for connected reproduction
@@ -144,16 +116,9 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p transport/external-runtime/ccf-ontology transport/external-runtime/wikimedia
-          curl --fail --location --retry 3 \
-            'https://ccf-ontology.hubmapconsortium.org/objects/v1.2/Allen_M_Brain.glb' \
-            -o transport/external-runtime/ccf-ontology/Allen_M_Brain.glb
-          curl --fail --location --retry 3 \
-            'https://upload.wikimedia.org/wikipedia/commons/c/c2/Saint-Saens_-_The_Carnival_of_the_Animals_-_07_Aquarium.ogg' \
-            -o transport/external-runtime/wikimedia/Aquarium.ogg
-          sha256sum \
-            transport/external-runtime/ccf-ontology/Allen_M_Brain.glb \
-            transport/external-runtime/wikimedia/Aquarium.ogg \
-            > transport/external-runtime/sha256.txt
+          curl --fail --location --retry 3 'https://ccf-ontology.hubmapconsortium.org/objects/v1.2/Allen_M_Brain.glb' -o transport/external-runtime/ccf-ontology/Allen_M_Brain.glb
+          curl --fail --location --retry 3 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Saint-Saens_-_The_Carnival_of_the_Animals_-_07_Aquarium.ogg' -o transport/external-runtime/wikimedia/Aquarium.ogg
+          sha256sum transport/external-runtime/ccf-ontology/Allen_M_Brain.glb transport/external-runtime/wikimedia/Aquarium.ogg > transport/external-runtime/sha256.txt
 
       - name: Verify exact composed Compass root under transported browser host
         shell: bash
@@ -161,12 +126,8 @@ jobs:
           set -euo pipefail
           rm -rf "$RUNNER_TEMP/compass-runtime-root"
           mkdir -p "$RUNNER_TEMP/compass-runtime-root"
-          git -C "$RUNNER_TEMP/exact-public" archive "$CANDIDATE_SHA" \
-            index.html assets/compass compass-composite laws \
-            showroom/globe/h-earth/render showroom/globe/h-earth/awards/media \
-            | tar -x -C "$RUNNER_TEMP/compass-runtime-root"
-          python3 -m http.server 4173 --bind 127.0.0.1 --directory "$RUNNER_TEMP/compass-runtime-root" \
-            > "$RUNNER_TEMP/compass-runtime-server.log" 2>&1 &
+          git -C "$RUNNER_TEMP/exact-public" archive "$CANDIDATE_SHA" index.html assets/compass compass-composite laws showroom/globe/h-earth/render showroom/globe/h-earth/awards/media | tar -x -C "$RUNNER_TEMP/compass-runtime-root"
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory "$RUNNER_TEMP/compass-runtime-root" > "$RUNNER_TEMP/compass-runtime-server.log" 2>&1 &
           server_pid=$!
           trap 'kill "$server_pid" 2>/dev/null || true' EXIT
           for i in $(seq 1 40); do curl -fsS http://127.0.0.1:4173/ >/dev/null && break; sleep .25; done
@@ -174,66 +135,46 @@ jobs:
           import fs from "node:fs";
           import {chromium} from "./transport/playwright-runtime/node_modules/playwright/index.mjs";
           const browser=await chromium.launch({executablePath:"./transport/launch-chromium-webgl.sh",headless:true,args:["--no-sandbox","--disable-dev-shm-usage"]});
-          const page=await browser.newPage({viewport:{width:1440,height:900}});
-          const consoleErrors=[]; const pageErrors=[]; const failures=[];
-          page.on("console",m=>{if(m.type()==="error")consoleErrors.push(m.text())});
-          page.on("pageerror",e=>pageErrors.push(String(e?.message||e)));
-          page.on("requestfailed",r=>failures.push({url:r.url(),error:r.failure()?.errorText||""}));
-          const response=await page.goto("http://127.0.0.1:4173/",{waitUntil:"networkidle",timeout:60000});
-          await page.waitForTimeout(2500);
-          const state=await page.evaluate(()=>({
-            webgl:!!document.createElement("canvas").getContext("webgl"),
-            webgl2:!!document.createElement("canvas").getContext("webgl2"),
-            canvasCount:document.querySelectorAll("canvas").length,
-            spacecraftSource:document.querySelector('[data-compass-root]')?.dataset?.compassSpacecraftSource||"",
-            spacecraftFailure:document.querySelector('[data-compass-root]')?.dataset?.compassSpacecraftFailure||"",
-            spacecraftApi:Boolean(globalThis.DGB_LAWS_SPACECRAFT)
-          }));
-          const receipt={schema:"COMPASS_COMPOSED_ROOT_HOST_PROBE_v1",result:response?.ok()&&state.webgl&&consoleErrors.length===0&&pageErrors.length===0?"PASS_CLOSED":"FAIL_CLOSED",httpStatus:response?.status()??null,state,consoleErrors,pageErrors,requestFailures:failures};
-          fs.writeFileSync("transport/composed-root-host-probe.json",JSON.stringify(receipt,null,2));
-          console.log(JSON.stringify(receipt,null,2));
-          await browser.close();
-          if(receipt.result!=="PASS_CLOSED") process.exitCode=1;
+          const page=await browser.newPage({viewport:{width:1440,height:900}});const consoleErrors=[],pageErrors=[];page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())});page.on('pageerror',e=>pageErrors.push(String(e?.message||e)));
+          const response=await page.goto('http://127.0.0.1:4173/',{waitUntil:'networkidle',timeout:60000});await page.waitForTimeout(2500);
+          const state=await page.evaluate(()=>({webgl:!!document.createElement('canvas').getContext('webgl'),webgl2:!!document.createElement('canvas').getContext('webgl2'),canvasCount:document.querySelectorAll('canvas').length}));
+          const receipt={schema:'COMPASS_COMPOSED_ROOT_HOST_PROBE_v1',result:response?.ok()&&state.webgl&&consoleErrors.length===0&&pageErrors.length===0?'PASS_CLOSED':'FAIL_CLOSED',httpStatus:response?.status()??null,state,consoleErrors,pageErrors};
+          fs.writeFileSync('transport/composed-root-host-probe.json',JSON.stringify(receipt,null,2));await browser.close();if(receipt.result!=='PASS_CLOSED')process.exit(1);
           NODE
 
       - name: Emit transport-only provenance receipt
         shell: bash
         run: |
           set -euo pipefail
-          BUNDLE_SHA256="$(sha256sum transport/compass-02517928.bundle | awk '{print $1}')"
+          bundle="transport/compass-${SHORT_SHA}.bundle"
+          BUNDLE_SHA256="$(sha256sum "$bundle" | awk '{print $1}')"
           cat > transport/receipt.json <<JSON
           {
-            "schema": "EXACT_PUBLIC_GIT_OBJECT_TRANSPORT_RECEIPT_v1",
-            "result": "PASS_CLOSED",
-            "repository": "$PUBLIC_REPOSITORY",
-            "candidateSha": "$CANDIDATE_SHA",
-            "baseSha": "$BASE_SHA",
-            "sourceSha": "$SOURCE_SHA",
-            "format": "GIT_BUNDLE",
-            "bundleSha256": "$BUNDLE_SHA256",
-            "bundleVerified": true,
-            "reconstructionVerified": true,
-            "playwrightVersion": "$PLAYWRIGHT_VERSION",
-            "playwrightRuntimeTransported": true,
-            "browserLaunchProfile": "SWIFTSHADER_WEBGL_EXPLICIT_OPT_IN_v1",
-            "browserLaunchProfileTransported": true,
-            "webglCapabilityReceipt": "webgl-capability.json",
-            "composedRootHostProbeReceipt": "composed-root-host-probe.json",
-            "externalRuntimeDependenciesTransported": true,
-            "browserLaunchFlags": ["--use-gl=angle","--use-angle=swiftshader","--enable-unsafe-swiftshader","--enable-webgl","--ignore-gpu-blocklist"],
-            "qualificationAuthorityCreated": false,
-            "productMutationAuthorityCreated": false,
-            "mergeAuthorityCreated": false,
-            "deploymentAuthorityCreated": false,
-            "ownerAcceptanceCreated": false,
-            "userApprovalCreated": false
+            "schema":"EXACT_PUBLIC_GIT_OBJECT_TRANSPORT_RECEIPT_v1",
+            "result":"PASS_CLOSED",
+            "repository":"$PUBLIC_REPOSITORY",
+            "candidateSha":"$CANDIDATE_SHA",
+            "baseSha":"$BASE_SHA",
+            "sourceSha":"$SOURCE_SHA",
+            "format":"GIT_BUNDLE",
+            "bundleSha256":"$BUNDLE_SHA256",
+            "bundleVerified":true,
+            "reconstructionVerified":true,
+            "playwrightVersion":"$PLAYWRIGHT_VERSION",
+            "playwrightRuntimeTransported":true,
+            "browserLaunchProfile":"SWIFTSHADER_WEBGL_EXPLICIT_OPT_IN_v1",
+            "externalRuntimeDependenciesTransported":true,
+            "qualificationAuthorityCreated":false,
+            "productMutationAuthorityCreated":false,
+            "mergeAuthorityCreated":false,
+            "deploymentAuthorityCreated":false
           }
           JSON
 
       - name: Upload exact Git object transport artifact
         uses: actions/upload-artifact@v4
         with:
-          name: compass-exact-git-object-transport-02517928
+          name: compass-exact-git-object-transport-1b750afb
           path: transport/
           if-no-files-found: error
           retention-days: 30

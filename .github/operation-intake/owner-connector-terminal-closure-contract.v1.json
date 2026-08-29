@@ -1,0 +1,49 @@
+{
+  "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_CONTRACT_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "ownerLogin": "smansfield635-create",
+  "sourceMarker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+  "invocationSchema": "REMOTE_OPERATION_TERMINAL_CLOSURE_INVOCATION_REQUEST_v1",
+  "closureRequestSchema": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_v1",
+  "ledgerPath": ".github/operation-intake/active-operation-ledger.v1.json",
+  "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+  "canonicalSemantics": "tools/operation-intake/repository-operation-lock-manager.v1.mjs#closeLocal/closeRemote",
+  "requiredAuthentication": [
+    "SOURCE_COMMENT_AUTHOR_IS_OWNER_LOGIN",
+    "SOURCE_COMMENT_AUTHOR_ASSOCIATION_IS_OWNER",
+    "SOURCE_COMMENT_MARKER_MATCHES",
+    "SOURCE_COMMENT_ENVELOPE_MATCHES_EXACT_CLOSURE_REQUEST",
+    "SOURCE_COMMENT_BINDS_EXACT_CURRENT_MAIN",
+    "EXACT_ACTIVE_LOCK_HAS_CANONICAL_OR_CERTIFIED_OWNER_AUTHORITY_PROVENANCE",
+    "OBSERVED_LEDGER_BLOB_SHA_IS_CURRENT_AT_WRITE",
+    "OBSERVED_LOCK_REF_HEAD_IS_CURRENT_AT_WRITE"
+  ],
+  "writeLaw": {
+    "exactAllowedPaths": [
+      ".github/operation-intake/active-operation-ledger.v1.json"
+    ],
+    "compareAndSwap": "REQUIRED",
+    "canonicalCommitMessage": "Close operation lock <GENERATION>: <OPERATION_ID> <TERMINAL_DISPOSITION>",
+    "secondLedger": false,
+    "forceRefUpdate": false,
+    "authorityWidening": false,
+    "oneLedgerMutationRequired": true
+  },
+  "lineageLaw": {
+    "ownerConnectorClosureCommitCanonicalOnlyWhenIndependentClosureProvenanceMatchesSourceActiveAuthorityTerminalRowAndExactCAS": true,
+    "unsignedOwnerClosureCommitWithoutMatchingProvenance": "REJECT",
+    "unrelatedOwnerLedgerMutation": "REJECT",
+    "nonLedgerMutationOnLockRef": "REJECT"
+  },
+  "planResult": "TERMINAL_CLOSURE_PLANNED",
+  "successResult": "TERMINAL_CLOSURE_COMMITTED",
+  "planIsReceipt": false,
+  "finalReceiptRequiresCommitRereadAndLineageVerification": true,
+  "authorityInherited": false,
+  "closureSemanticsDuplicated": false,
+  "actionsAgentExecutionRequired": false,
+  "genericCommandAuthority": false,
+  "failureDisposition": "FAIL_CLOSED"
+}

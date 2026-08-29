@@ -10,7 +10,8 @@ import {
   ledger,
   sha,
   stable,
-  text
+  text,
+  verifyAuthorityProvenanceBinding
 } from './repository-operation-lock-manager.v1.mjs';
 import {
   verifyOwnerProvenance,
@@ -71,15 +72,14 @@ function validateClosureRequest(value) {
 }
 
 export function verifyCanonicalActiveAuthority(lock) {
-  try { return verifyOwnerSuccessorProvenance(lock); }
-  catch (successorError) {
-    try { return verifyOwnerProvenance(lock); }
-    catch (ownerError) {
-      const canonical = lock?.authorityProvenance;
-      if (canonical?.schema === 'REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1') {
-        return stable({ result: 'CANONICAL_AUTHORITY_PROVENANCE_PRESENT', origin: canonical.origin ?? null, authorityIdentity: authorityIdentity(lock) });
+  try { return verifyAuthorityProvenanceBinding(lock); }
+  catch (canonicalError) {
+    try { return verifyOwnerSuccessorProvenance(lock); }
+    catch (successorError) {
+      try { return verifyOwnerProvenance(lock); }
+      catch (ownerError) {
+        fail('ACTIVE_LOCK_PROVENANCE_FAILURE', 'activeLock', `${canonicalError.code || canonicalError.message}|${successorError.code || successorError.message}|${ownerError.code || ownerError.message}`);
       }
-      fail('ACTIVE_LOCK_PROVENANCE_FAILURE', 'activeLock', `${successorError.code || successorError.message}|${ownerError.code || ownerError.message}`);
     }
   }
 }
@@ -116,14 +116,7 @@ export function buildIndependentClosureProvenance({ source, activeLock, terminal
   return stable({ ...core, bindingDigest: sha(canonical(core)) });
 }
 
-export function planOwnerConnectorTerminalClosure({
-  closureRequest,
-  rawLedger,
-  sourceComment,
-  observedMainHead,
-  observedLedgerBlobSha,
-  observedLockRefHead
-}) {
+export function planOwnerConnectorTerminalClosure({ closureRequest, rawLedger, sourceComment, observedMainHead, observedLedgerBlobSha, observedLockRefHead }) {
   const request = validateClosureRequest(closureRequest);
   const source = parseOwnerSource(sourceComment);
   const mainHead = digest(observedMainHead, 40, 'observedMainHead');
@@ -138,7 +131,6 @@ export function planOwnerConnectorTerminalClosure({
   if (!activeLock) fail('ACTIVE_LOCK_PROVENANCE_FAILURE', 'activeLock', 'ACTIVE_LOCK_NOT_FOUND');
   if (activeLock.operationId !== request.operationId || activeLock.lockGeneration !== request.lockGeneration) fail('SOURCE_OPERATION_IDENTITY_MISMATCH', 'closureRequest');
   const activeAuthorityVerification = verifyCanonicalActiveAuthority(activeLock);
-
   const local = closeLocal(baseLedger, request);
   const terminalIndex = local.ledger.terminalHistory.findIndex(row => row.operationId === request.operationId && row.lockGeneration === request.lockGeneration);
   if (terminalIndex < 0) fail('TERMINAL_ROW_CORRESPONDENCE_FAILURE', 'terminalHistory');
@@ -150,70 +142,20 @@ export function planOwnerConnectorTerminalClosure({
   const nextLedger = stable({ ...local.ledger, terminalHistory });
   const commitMessage = `Close operation lock ${request.lockGeneration}: ${request.operationId} ${request.terminalDisposition}`;
 
-  return stable({
-    schema: PLAN_SCHEMA,
-    result: 'TERMINAL_CLOSURE_PLANNED',
-    transportId: TRANSPORT_ID,
-    nativeResult: local.receipt,
-    operationId: request.operationId,
-    lockScope: request.lockScope,
-    lockGeneration: request.lockGeneration,
-    terminalDisposition: request.terminalDisposition,
-    activeAuthorityVerification,
-    independentClosureProvenance,
-    observedMainHead: mainHead,
-    observedLedgerBlobSha,
-    observedLockRefHead,
-    exactMutationPath: LEDGER_PATH,
-    lockRef: LOCK_REF,
-    commitMessage,
-    ledgerMutationAuthorized: true,
-    oneLedgerMutationRequired: true,
-    planIsReceipt: false,
-    finalReceiptRequiresCommitRereadAndLineageVerification: true,
-    nextLedger
-  });
+  return stable({ schema: PLAN_SCHEMA, result: 'TERMINAL_CLOSURE_PLANNED', transportId: TRANSPORT_ID, nativeResult: local.receipt, operationId: request.operationId, lockScope: request.lockScope, lockGeneration: request.lockGeneration, terminalDisposition: request.terminalDisposition, activeAuthorityVerification, independentClosureProvenance, observedMainHead: mainHead, observedLedgerBlobSha, observedLockRefHead, exactMutationPath: LEDGER_PATH, lockRef: LOCK_REF, commitMessage, ledgerMutationAuthorized: true, oneLedgerMutationRequired: true, planIsReceipt: false, finalReceiptRequiresCommitRereadAndLineageVerification: true, nextLedger });
 }
 
-function args(argv) {
-  const out = {};
-  for (let index = 0; index < argv.length; index++) {
-    if (!argv[index].startsWith('--')) fail('UNKNOWN_ARGUMENT', argv[index]);
-    out[argv[index].slice(2)] = argv[++index] ?? null;
-  }
-  return out;
-}
-function readJson(file, field) {
-  try { return JSON.parse(fs.readFileSync(path.resolve(file), 'utf8')); }
-  catch (error) { fail('INPUT_READ_FAILED', field, error.message); }
-}
-function write(file, value) {
-  if (!file) return process.stdout.write(text(value));
-  fs.mkdirSync(path.dirname(path.resolve(file)), { recursive: true });
-  fs.writeFileSync(path.resolve(file), text(value));
-}
+function args(argv) { const out = {}; for (let index = 0; index < argv.length; index++) { if (!argv[index].startsWith('--')) fail('UNKNOWN_ARGUMENT', argv[index]); out[argv[index].slice(2)] = argv[++index] ?? null; } return out; }
+function readJson(file, field) { try { return JSON.parse(fs.readFileSync(path.resolve(file), 'utf8')); } catch (error) { fail('INPUT_READ_FAILED', field, error.message); } }
+function write(file, value) { if (!file) return process.stdout.write(text(value)); fs.mkdirSync(path.dirname(path.resolve(file)), { recursive: true }); fs.writeFileSync(path.resolve(file), text(value)); }
 
 async function main() {
   const a = args(process.argv.slice(2));
   try {
-    const plan = planOwnerConnectorTerminalClosure({
-      closureRequest: readJson(a.request, 'request'),
-      rawLedger: readJson(a.ledger, 'ledger'),
-      sourceComment: readJson(a['source-comment'], 'source-comment'),
-      observedMainHead: a['observed-main-head'],
-      observedLedgerBlobSha: a['observed-ledger-blob-sha'],
-      observedLockRefHead: a['observed-lock-ref-head']
-    });
+    const plan = planOwnerConnectorTerminalClosure({ closureRequest: readJson(a.request, 'request'), rawLedger: readJson(a.ledger, 'ledger'), sourceComment: readJson(a['source-comment'], 'source-comment'), observedMainHead: a['observed-main-head'], observedLedgerBlobSha: a['observed-ledger-blob-sha'], observedLockRefHead: a['observed-lock-ref-head'] });
     write(a.output, plan);
   } catch (error) {
-    write(a.output, stable({
-      schema: PLAN_SCHEMA,
-      result: 'FAIL_CLOSED',
-      errorCode: error.code || 'UNEXPECTED_ERROR',
-      field: error.field || null,
-      detail: error.detail || null,
-      ledgerMutationAuthorized: false
-    }));
+    write(a.output, stable({ schema: PLAN_SCHEMA, result: 'FAIL_CLOSED', errorCode: error.code || 'UNEXPECTED_ERROR', field: error.field || null, detail: error.detail || null, ledgerMutationAuthorized: false }));
     process.exitCode = 1;
   }
 }

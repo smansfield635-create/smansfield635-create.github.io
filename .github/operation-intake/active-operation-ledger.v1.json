@@ -4920,6 +4920,45 @@
       "scopeHash": "ca2a3443af8f938ae9a4b50b2ec2ab1c3be6e3abe7c942914f97f0add03f32fb",
       "state": "ADMITTED_LOCKED"
     },
+    "cc02f86a52bd8a2405aee3b46292e15bb30f6b55f0887bd22bc06e36b8012577": {
+      "governingHead": "743f472191daf08d27c3e460532360f7276af4de",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "743f472191daf08d27c3e460532360f7276af4de",
+          "lockGeneration": 1879,
+          "lockScope": "PUBLIC_LEGITIMACY:RESEARCH_FRONTIER:PUBLICATION_PREFLIGHT_RECONCILIATION:V1",
+          "operationId": "RESEARCH_FRONTIER_DUAL_FACE_PREFLIGHT_INTERACTION_RECONCILIATION_20260830_009",
+          "procedureLocatorDigest": "f2f3c07ef959837bb5c43ba0aaa0770e11c66be805699fd4a11941e3bd540c5d",
+          "requestDigest": "c90082b04292a38e238ee853bd6d53a67977b188ca61efd86c20e54282bde0ee",
+          "scopeHash": "cc02f86a52bd8a2405aee3b46292e15bb30f6b55f0887bd22bc06e36b8012577"
+        },
+        "bindingDigest": "01e5aafca90b43eb226fbe5ab6672f1aad69e7c7dfe2623dd78e8ed9517ef7e1",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "b4ee88a043285afbe737cd98cede0697bc1a9b97",
+          "observedLockRefHead": "3a8c86de85f2dd508678806d7a32967218e738d9"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "6e88efb3a19ddf02064bffb55ae34f43c3f3b76ee82d3a928eb916f07f16d871",
+          "commentId": 5471039592,
+          "issueNumber": 2341,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "lockGeneration": 1879,
+      "lockScope": "PUBLIC_LEGITIMACY:RESEARCH_FRONTIER:PUBLICATION_PREFLIGHT_RECONCILIATION:V1",
+      "operationId": "RESEARCH_FRONTIER_DUAL_FACE_PREFLIGHT_INTERACTION_RECONCILIATION_20260830_009",
+      "procedureLocatorDigest": "f2f3c07ef959837bb5c43ba0aaa0770e11c66be805699fd4a11941e3bd540c5d",
+      "released": false,
+      "requestDigest": "c90082b04292a38e238ee853bd6d53a67977b188ca61efd86c20e54282bde0ee",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "cc02f86a52bd8a2405aee3b46292e15bb30f6b55f0887bd22bc06e36b8012577",
+      "state": "ADMITTED_LOCKED"
+    },
     "cd48c853659becba53b2c3aa0013fbdcdac958862cc11d23d29296f91786dd27": {
       "governingHead": "6b2ff2e318ae434e05bb9f1b008a1ee756af0a78",
       "lockGeneration": 144,
@@ -6242,7 +6281,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1878,
+  "lockGeneration": 1879,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -129,6 +129,37 @@ jobs:
           rm -rf "$PAGES_STAGE/showroom/globe/h-earth"
           mkdir -p "$PAGES_STAGE/showroom/globe/h-earth"
           rsync -a --delete h-earth-live-6d18e158/showroom/globe/h-earth/ "$PAGES_STAGE/showroom/globe/h-earth/"
+
+          # Audralia uses the exact-head renderer and FAP1 weather adapter, both of
+          # which sit beneath the canonical H-Earth source tree that the frozen
+          # public H-Earth replacement removes. Preserve only that declared
+          # Audralia dependency pair in the staged public artifact.
+          audralia_renderer_src="showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs"
+          audralia_weather_src="showroom/globe/h-earth/render/environment-atmosphere.fap1-candidate-a.js"
+          audralia_runtime_dir="$PAGES_STAGE/showroom/globe/audralia/runtime-dependencies"
+          audralia_app="$PAGES_STAGE/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs"
+          audralia_weather_dst="$PAGES_STAGE/showroom/globe/h-earth/render/environment-atmosphere.fap1-candidate-a.js"
+          test -f "$audralia_renderer_src"
+          test -f "$audralia_weather_src"
+          test -f "$audralia_app"
+          mkdir -p "$audralia_runtime_dir" "$(dirname "$audralia_weather_dst")"
+          cp "$audralia_renderer_src" "$audralia_runtime_dir/renderer.mjs"
+          cp "$audralia_weather_src" "$audralia_weather_dst"
+          python3 - "$audralia_app" <<'PY'
+from pathlib import Path
+import sys
+path=Path(sys.argv[1])
+text=path.read_text()
+old="../../h-earth/terrain-estate-construction-v1/renderer.mjs"
+new="../runtime-dependencies/renderer.mjs"
+if text.count(old) != 1:
+    raise SystemExit(f"AUDRALIA_RENDERER_IMPORT_REWRITE_CARDINALITY:{text.count(old)}")
+path.write_text(text.replace(old,new))
+PY
+          test "$(sha256sum "$audralia_renderer_src" | awk '{print $1}')" = "$(sha256sum "$audralia_runtime_dir/renderer.mjs" | awk '{print $1}')"
+          test "$(sha256sum "$audralia_weather_src" | awk '{print $1}')" = "$(sha256sum "$audralia_weather_dst" | awk '{print $1}')"
+          grep -Fq "../runtime-dependencies/renderer.mjs" "$audralia_app"
+          echo "AUDRALIA_PUBLIC_RUNTIME_DEPENDENCIES=PASS"
           test -f "$PAGES_STAGE/.well-known/dgb-release.json"
           test -f "$PAGES_STAGE/index.html"
           staged_bytes="$(du -sb "$PAGES_STAGE" | awk '{print $1}')"

@@ -168,20 +168,59 @@ jobs:
             cp "$support_src" "$support_dst"
             test "$(sha256sum "$support_src" | awk '{print $1}')" = "$(sha256sum "$support_dst" | awk '{print $1}')"
           done
-          python3 - "$audralia_app" <<'PY'
+          python3 - "$audralia_app" "$PAGES_STAGE" <<'PY'
           from pathlib import Path
+          import re
           import sys
-          path=Path(sys.argv[1])
-          text=path.read_text()
+
+          entry=Path(sys.argv[1]).resolve()
+          root=Path(sys.argv[2]).resolve()
+          cache_key="AUDRALIA_PUBLIC_RUNTIME_GRAPH_v3"
           old="../../h-earth/terrain-estate-construction-v1/renderer.mjs"
-          new="../runtime-dependencies/renderer.mjs"
-          if text.count(old) != 1:
-              raise SystemExit(f"AUDRALIA_RENDERER_IMPORT_REWRITE_CARDINALITY:{text.count(old)}")
-          path.write_text(text.replace(old,new))
+          new="../runtime-dependencies/renderer.mjs?cb="+cache_key
+          entry_text=entry.read_text()
+          if entry_text.count(old) != 1:
+              raise SystemExit("AUDRALIA_RENDERER_IMPORT_REWRITE_CARDINALITY:"+str(entry_text.count(old)))
+          entry.write_text(entry_text.replace(old,new))
+
+          from_pattern=re.compile(r"\bfrom\s*(['\"])(\.[^'\"]+)\1")
+          dynamic_pattern=re.compile(r"\bimport\(\s*(['\"])(\.[^'\"]+)\1\s*\)")
+          visited=set()
+
+          def resolve(source,specifier):
+              local=specifier.split("?",1)[0].split("#",1)[0]
+              target=(source.parent/local).resolve()
+              if root not in target.parents or not target.is_file():
+                  raise SystemExit("AUDRALIA_RUNTIME_GRAPH_DEPENDENCY_MISSING:"+str(source.relative_to(root))+":"+specifier)
+              return target
+
+          def rewrite(path):
+              if path in visited:
+                  return
+              visited.add(path)
+              source=path.read_text()
+              dependencies=[]
+
+              def replace(match):
+                  specifier=match.group(2)
+                  dependencies.append(resolve(path,specifier))
+                  updated=specifier if "?" in specifier else specifier+"?cb="+cache_key
+                  return match.group(0).replace(specifier,updated,1)
+
+              source=from_pattern.sub(replace,source)
+              source=dynamic_pattern.sub(replace,source)
+              path.write_text(source)
+              for dependency in dependencies:
+                  rewrite(dependency)
+
+          rewrite(entry)
+          if len(visited)<20:
+              raise SystemExit("AUDRALIA_RUNTIME_GRAPH_TOO_SHALLOW:"+str(len(visited)))
+          print("AUDRALIA_RUNTIME_GRAPH_CACHE_VERSIONED=PASS files="+str(len(visited)))
           PY
           test "$(sha256sum "$audralia_renderer_src" | awk '{print $1}')" = "$(sha256sum "$audralia_runtime_dir/renderer.mjs" | awk '{print $1}')"
           test "$(sha256sum "$audralia_weather_src" | awk '{print $1}')" = "$(sha256sum "$audralia_weather_dst" | awk '{print $1}')"
-          grep -Fq "../runtime-dependencies/renderer.mjs" "$audralia_app"
+          grep -Fq "../runtime-dependencies/renderer.mjs?cb=AUDRALIA_PUBLIC_RUNTIME_GRAPH_v3" "$audralia_app"
           echo "AUDRALIA_PUBLIC_RUNTIME_DEPENDENCIES=PASS"
           test -f "$PAGES_STAGE/.well-known/dgb-release.json"
           test -f "$PAGES_STAGE/index.html"

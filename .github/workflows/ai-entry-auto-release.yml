@@ -177,7 +177,7 @@ jobs:
 
           entry=Path(sys.argv[1]).resolve()
           root=Path(sys.argv[2]).resolve()
-          cache_key="AUDRALIA_PUBLIC_RUNTIME_GRAPH_v3"
+          cache_key="AUDRALIA_PUBLIC_RUNTIME_GRAPH_v4"
           old="../../h-earth/terrain-estate-construction-v1/renderer.mjs"
           new="../runtime-dependencies/renderer.mjs?cb="+cache_key
           entry_text=entry.read_text()
@@ -220,7 +220,7 @@ jobs:
               raise SystemExit("AUDRALIA_RUNTIME_GRAPH_TOO_SHALLOW:"+str(len(visited)))
           print("AUDRALIA_RUNTIME_GRAPH_CACHE_VERSIONED=PASS files="+str(len(visited)))
           PY
-          grep -Fq "../runtime-dependencies/renderer.mjs?cb=AUDRALIA_PUBLIC_RUNTIME_GRAPH_v3" "$audralia_app"
+          grep -Fq "../runtime-dependencies/renderer.mjs?cb=AUDRALIA_PUBLIC_RUNTIME_GRAPH_v4" "$audralia_app"
           echo "AUDRALIA_PUBLIC_RUNTIME_DEPENDENCIES=PASS"
           test -f "$PAGES_STAGE/.well-known/dgb-release.json"
           test -f "$PAGES_STAGE/index.html"

@@ -168,6 +168,8 @@ jobs:
             cp "$support_src" "$support_dst"
             test "$(sha256sum "$support_src" | awk '{print $1}')" = "$(sha256sum "$support_dst" | awk '{print $1}')"
           done
+          test "$(sha256sum "$audralia_renderer_src" | awk '{print $1}')" = "$(sha256sum "$audralia_runtime_dir/renderer.mjs" | awk '{print $1}')"
+          test "$(sha256sum "$audralia_weather_src" | awk '{print $1}')" = "$(sha256sum "$audralia_weather_dst" | awk '{print $1}')"
           python3 - "$audralia_app" "$PAGES_STAGE" <<'PY'
           from pathlib import Path
           import re
@@ -218,8 +220,6 @@ jobs:
               raise SystemExit("AUDRALIA_RUNTIME_GRAPH_TOO_SHALLOW:"+str(len(visited)))
           print("AUDRALIA_RUNTIME_GRAPH_CACHE_VERSIONED=PASS files="+str(len(visited)))
           PY
-          test "$(sha256sum "$audralia_renderer_src" | awk '{print $1}')" = "$(sha256sum "$audralia_runtime_dir/renderer.mjs" | awk '{print $1}')"
-          test "$(sha256sum "$audralia_weather_src" | awk '{print $1}')" = "$(sha256sum "$audralia_weather_dst" | awk '{print $1}')"
           grep -Fq "../runtime-dependencies/renderer.mjs?cb=AUDRALIA_PUBLIC_RUNTIME_GRAPH_v3" "$audralia_app"
           echo "AUDRALIA_PUBLIC_RUNTIME_DEPENDENCIES=PASS"
           test -f "$PAGES_STAGE/.well-known/dgb-release.json"

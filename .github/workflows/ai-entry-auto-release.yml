@@ -145,6 +145,29 @@ jobs:
           mkdir -p "$audralia_runtime_dir" "$(dirname "$audralia_weather_dst")"
           cp "$audralia_renderer_src" "$audralia_runtime_dir/renderer.mjs"
           cp "$audralia_weather_src" "$audralia_weather_dst"
+
+          # The geographic transfer’s static closure also uses these exact-head
+          # terrain support modules. They are public dependencies of Audralia
+          # only; the frozen H-Earth entry page remains otherwise untouched.
+          audralia_render_support=(
+            geometry-kernel.js
+            geometry-kernel.north.js
+            geometry-kernel.east.js
+            geometry-kernel.south.js
+            geometry-kernel.west.js
+            geometry-landscape.js
+            geometry-distant-context.js
+            geometry-shoreline.js
+            planetary-world-frame.js
+          )
+          for support_file in "${audralia_render_support[@]}"; do
+            support_src="showroom/globe/h-earth/render/$support_file"
+            support_dst="$PAGES_STAGE/showroom/globe/h-earth/render/$support_file"
+            test -f "$support_src"
+            mkdir -p "$(dirname "$support_dst")"
+            cp "$support_src" "$support_dst"
+            test "$(sha256sum "$support_src" | awk '{print $1}')" = "$(sha256sum "$support_dst" | awk '{print $1}')"
+          done
           python3 - "$audralia_app" <<'PY'
           from pathlib import Path
           import sys

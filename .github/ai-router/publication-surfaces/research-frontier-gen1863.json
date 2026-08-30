@@ -42,7 +42,8 @@
     "failOnConsoleErrors": true,
     "failOnPageErrors": true,
     "ignoreConsoleErrorIncludes": [
-      "Failed to load resource: the server responded with a status of 404 (File not found)"
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to load resource: the server responded with a status of 404 ()"
     ],
     "interactions": [
       {

@@ -53,6 +53,21 @@
     "failOnPageErrors": true,
     "interactions": [
       {
+        "name": "Open Chapter One before tab interaction",
+        "action": {
+          "type": "click",
+          "selector": "[data-compass-static-introduction] > summary"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-compass-static-introduction]",
+            "name": "open",
+            "value": ""
+          }
+        ]
+      },
+      {
         "name": "Studio tab opens exact approved headline",
         "action": {
           "type": "click",
@@ -138,12 +153,12 @@
         "name": "TRL family opens directly into preserved cards",
         "action": {
           "type": "click",
-          "selector": ".compass-readiness-tabs > .compass-readiness-tab:nth-child(2)"
+          "selector": "[data-compass-readiness-static=\"v3\"] > .compass-readiness-tabs > .compass-readiness-tab:nth-child(2)"
         },
         "assertions": [
           {
             "type": "attributeEquals",
-            "selector": ".compass-readiness-tabs > .compass-readiness-tab:nth-child(2)",
+            "selector": "[data-compass-readiness-static=\"v3\"] > .compass-readiness-tabs > .compass-readiness-tab:nth-child(2)",
             "name": "aria-selected",
             "value": "true"
           },

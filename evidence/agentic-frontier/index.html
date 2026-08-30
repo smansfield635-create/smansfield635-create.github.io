@@ -114,6 +114,36 @@ body{position:relative;isolation:isolate;overflow-x:clip}
 .orbit-card-title{display:block;max-width:9ch;margin:auto 0 .8rem;font:700 clamp(2.2rem,4vw,3.5rem)/.94 Georgia,"Times New Roman",serif;letter-spacing:-.04em}.orbit-card-copy{display:block;margin:0;color:#a9babf;font-size:.88rem}
 @media(prefers-reduced-motion:reduce){.rf-reader-open .evidence-field{transition:none}}
 </style>
+<style id="multi-card-orbital-completion">
+.orbit-stage{min-height:min(63svh,41rem)}
+.orbit-card{width:min(68vw,22rem);min-height:19rem;border-color:rgba(198,220,227,.2);filter:saturate(.78)}
+.orbit-card[data-active="true"]{border-color:rgba(236,211,142,.52);filter:none;box-shadow:0 38px 100px rgba(0,0,0,.58),0 0 66px rgba(112,218,238,.14),inset 0 1px rgba(255,255,255,.08)}
+.orbit-card[data-active="false"]:hover,.orbit-card[data-active="false"]:focus-visible{border-color:rgba(120,221,239,.48)}
+.orbit-card-inner{min-height:19rem}
+.orbit-card-title{max-width:10ch;font-size:clamp(2rem,3.7vw,3.15rem)}
+.orbit-card-copy{font-size:.82rem}
+.orbit-controls{display:block;padding:.2rem 1rem 1rem}
+.orbit-status{min-height:3.1rem}
+.orbit-status strong{color:#f4e6b7}
+.orbit-position{display:inline-block;margin-right:.45rem;color:var(--cyan);font:900 .66rem/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em}
+.orbit-note{margin-top:.8rem}
+.object-reader[hidden],.shared-bridge[hidden]{display:none!important}
+.object-reader{width:min(100%,61rem);margin:auto;padding:clamp(1.1rem,4vw,3.4rem)}
+.object-reader h2{max-width:12ch;margin:.7rem 0 1rem;font:700 clamp(2.7rem,7vw,6.2rem)/.92 Georgia,"Times New Roman",serif;letter-spacing:-.05em}
+.reader-topbar{align-items:center}
+.reader-topbar button{flex:0 1 auto}
+.shared-bridge{position:absolute;left:50%;top:50%;z-index:8;width:min(calc(100% - 1.3rem),70rem);height:min(84svh,52rem);transform:translate(-50%,-50%);overflow-y:auto;overscroll-behavior:contain;border:1px solid rgba(236,211,142,.28);border-radius:1.4rem;background:linear-gradient(150deg,rgba(18,18,31,.995),rgba(2,8,13,.995));box-shadow:0 48px 140px rgba(0,0,0,.72),inset 0 1px rgba(255,255,255,.06)}
+.shared-bridge-top{position:sticky;top:0;z-index:2;display:flex;justify-content:flex-end;padding:.7rem;background:linear-gradient(180deg,rgba(5,10,17,.99),rgba(5,10,17,.88));border-bottom:1px solid rgba(198,220,227,.11)}
+.shared-bridge-top button{min-height:44px;padding:.65rem .9rem;border:1px solid rgba(236,211,142,.24);border-radius:999px;background:rgba(18,22,31,.84);color:#f4ead0;font-size:.7rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.shared-bridge-top button:hover,.shared-bridge-top button:focus-visible{border-color:rgba(120,221,239,.68);outline:none}
+.shared-bridge-content{width:min(100%,61rem);margin:auto;padding:clamp(1.1rem,4vw,3.4rem)}
+.shared-bridge-content h2{max-width:12ch;margin:.7rem 0 1rem;font:700 clamp(2.7rem,7vw,6.2rem)/.92 Georgia,"Times New Roman",serif;letter-spacing:-.05em}
+.reader[data-bridge-open="true"] .reader-turn{visibility:hidden}
+.reader[data-bridge-open="true"] .reader-swipe-cue{display:none}
+@media(max-width:800px){.orbit-card{width:min(72vw,21rem)}.object-reader{padding:1rem}.object-reader h2,.shared-bridge-content h2{font-size:clamp(2.5rem,12vw,4.8rem)}.shared-bridge{height:calc(100svh - max(5rem,env(safe-area-inset-top)) - max(.8rem,env(safe-area-inset-bottom)))}.reader-topbar{display:grid;grid-template-columns:1fr 1fr}.reader-topbar [data-open-bridge]{grid-column:1/-1;grid-row:2}.reader-topbar button{max-width:none}}
+@media(max-width:520px){.orbit-card{width:min(76vw,20rem)}.orbit-card-inner{padding:1.1rem}.orbit-card-title{font-size:clamp(1.85rem,9.5vw,2.8rem)}.orbit-card-copy{font-size:.76rem}.orbit-controls{padding-inline:.65rem}.shared-bridge{border-radius:1rem}.shared-bridge-content{padding:1rem}}
+@media(prefers-reduced-motion:reduce){.orbit-card{filter:none}.reader[data-bridge-open="true"] .reader-turn{display:none}}
+</style>
 </head>
 <body>
 <a class="skip" href="#research-frontier">Skip to research</a>
@@ -124,94 +154,217 @@ body{position:relative;isolation:isolate;overflow-x:clip}
 <div class="holo h3" data-field="governance"><strong>ACCOUNTABLE STATE</strong><br>ROUTE → LOCK → BUILD → VERIFY<br>→ MERGE → RELEASE<br>exact head · bounded paths · independent verifier</div>
 <div class="holo h4" data-field="observatory"><strong>OBSERVABILITY</strong><br>INTAKE → EXECUTION → QUALIFICATION<br>→ CLOSURE → DEPLOYMENT → LIVE VERIFY<br><span class="pass">classify before response</span></div>
 </div>
-<header class="top"><div class="top-inner"><a href="/">← Compass</a><span>Research Frontier · Scientific Challenge · Agentic Research</span></div></header>
+<header class="top"><div class="top-inner"><a href="/">Compass</a><span>Research Frontier · Scientific Challenge · Agentic Research</span></div></header>
 <main id="research-frontier">
 <section class="hero" aria-labelledby="frontier-title">
 <div class="hero-inner">
-<div><p class="eyebrow">Diamond Gate Bridge · Research Frontier</p><h1 id="frontier-title">A proposition should survive its strongest attack.</h1><p class="proposition">We are testing whether the geometry of a system’s remaining viable futures contains predictive information about what happens next—and whether the machinery used to conduct that research can itself become more accountable, recoverable, and inspectable.</p><p class="challenge-line">Think we’re wrong? Try to break it.</p><div class="actions"><a class="action primary" href="#frontier-chapters">Explore the Frontier</a><a class="action" href="#frontier-chapters" data-open-reader data-open-lens="limits">Challenge the Result</a></div></div>
+<div><p class="eyebrow">Diamond Gate Bridge · Research Frontier</p><h1 id="frontier-title">A proposition should survive its strongest attack.</h1><p class="proposition">We are testing whether the geometry of a system’s remaining viable futures contains predictive information about what happens next—and whether the machinery used to conduct that research can itself become more accountable, recoverable, and inspectable.</p><p class="challenge-line">Think we’re wrong? Try to break it.</p><div class="actions"><a class="action primary" href="#frontier-chapters">Explore the Frontier</a><a class="action" href="#frontier-chapters" data-open-reader data-open-object="limits" data-open-lens="missing">Challenge the Result</a></div></div>
 <aside class="hero-proof" aria-label="Current research standing"><small>Current standing</small><div class="status"><div><b>Scientific strand</b><span>Prospective testing and replication are being extended. Broad cross-domain generality and independent replication remain open.</span></div><div><b>Agentic strand</b><span>Multi-strand experimentally grounded research program. Broader comparative replication remains in progress.</span></div><div class="bounded"><b>Claim ceiling</b><span>This page distinguishes demonstrated observations from hypotheses, synthesis, and evidence still missing.</span></div></div></aside>
 </div>
 </section>
 <section class="orbital-frontier" id="frontier-chapters" aria-labelledby="orbit-title">
 <div class="orbital-intro">
-<div><p class="eyebrow">One object · Two governing perspectives</p><h2 id="orbit-title">Rotate the research. Inspect its depth.</h2><p>Horizontal motion chooses the object while it is in orbit. Opening suspends the orbit: vertical motion reads, and horizontal motion turns the same research object between its Scientific and Agentic faces.</p></div>
+<div><p class="eyebrow">One carousel · Four research objects · One shared bridge</p><h2 id="orbit-title">Rotate the research. Inspect its depth.</h2><p>Horizontal motion chooses an object while it is in orbit. Opening suspends the orbit: vertical motion reads, and horizontal motion turns that object between its Scientific and Agentic faces.</p></div>
 <aside class="orbit-law"><strong>Interaction law</strong>Clarity tracks contextual relevance to the selected object. It does not imply stronger evidence, greater confidence, or truth.</aside>
 </div>
 <div class="orbit-shell" data-orbit-shell>
-<div class="orbit-stage" data-orbit-stage tabindex="0" role="group" aria-label="Research object orbit. Drag horizontally or use the previous and next controls. Press Enter to inspect the active object.">
+<div class="orbit-stage" data-orbit-stage tabindex="0" role="group" aria-label="Four-object research carousel. Drag or swipe horizontally to rotate. Keyboard users may use Left and Right, then press Enter to inspect the active object.">
 <div class="orbit-ring" data-orbit-ring aria-hidden="true"></div>
 <div class="orbit-calibration" aria-hidden="true"><i class="orbit-node"></i><i class="orbit-node"></i><i class="orbit-node"></i><i class="orbit-node"></i></div>
-<button class="orbit-card" type="button" data-orbit-card aria-haspopup="dialog" aria-controls="frontier-reader">
-<span class="orbit-card-inner"><span class="orbit-index">Proof object · 01</span><span><span class="orbit-card-title">The Strongest Attack</span><span class="orbit-card-copy">One research object containing two equal, separately bounded frontiers: what the proposition predicts, and how its evidence is governed.</span></span><span class="two-sided"><span>Two-sided object</span><span data-face-preview>Scientific ↔ Agentic</span></span></span>
+<button class="orbit-card" type="button" data-orbit-card data-object="attack" aria-haspopup="dialog" aria-controls="frontier-reader">
+<span class="orbit-card-inner"><span class="orbit-index">Research object · 01</span><span><span class="orbit-card-title">The Strongest Attack</span><span class="orbit-card-copy">The falsifiable proposition, its cleanest challenge, and the governed chain that keeps outcomes from rewriting the procedure.</span></span><span class="two-sided"><span>Two-sided object</span><span data-face-preview>Scientific ↔ Agentic</span></span></span>
+</button>
+<button class="orbit-card" type="button" data-orbit-card data-object="evidence" aria-haspopup="dialog" aria-controls="frontier-reader">
+<span class="orbit-card-inner"><span class="orbit-index">Research object · 02</span><span><span class="orbit-card-title">The Evidence Held</span><span class="orbit-card-copy">What the public record actually observes, paired with the observability needed to classify where a research operation stands.</span></span><span class="two-sided"><span>Two-sided object</span><span data-face-preview>Scientific ↔ Agentic</span></span></span>
+</button>
+<button class="orbit-card" type="button" data-orbit-card data-object="limits" aria-haspopup="dialog" aria-controls="frontier-reader">
+<span class="orbit-card-inner"><span class="orbit-index">Research object · 03</span><span><span class="orbit-card-title">The Missing Evidence</span><span class="orbit-card-copy">Negative results, unavailable resolution, and claim ceilings paired with durable custody and recovery of contradiction.</span></span><span class="two-sided"><span>Two-sided object</span><span data-face-preview>Scientific ↔ Agentic</span></span></span>
+</button>
+<button class="orbit-card" type="button" data-orbit-card data-object="reproduce" aria-haspopup="dialog" aria-controls="frontier-reader">
+<span class="orbit-card-inner"><span class="orbit-index">Research object · 04</span><span><span class="orbit-card-title">The Reproduction Boundary</span><span class="orbit-card-copy">An independent path for testing the claim, paired with machinery designed to survive implementation change and succession.</span></span><span class="two-sided"><span>Two-sided object</span><span data-face-preview>Scientific ↔ Agentic</span></span></span>
 </button>
 </div>
-<div class="orbit-controls" aria-label="Orbit controls">
-<button class="orbit-control" type="button" data-orbit-previous aria-label="Rotate orbit backward">←</button>
-<div class="orbit-status" role="status" aria-live="polite" data-orbit-status><strong>The Strongest Attack</strong><span>Front position · Opens on Scientific</span></div>
-<button class="orbit-control" type="button" data-orbit-next aria-label="Rotate orbit forward">→</button>
+<div class="orbit-controls">
+<div class="orbit-status" role="status" aria-live="polite" data-orbit-status><strong><span class="orbit-position">01 / 04</span>The Strongest Attack</strong><span>Front position · Opens on Scientific</span></div>
 </div>
 </div>
-<p class="orbit-note">Drag or use the arrow controls to rotate · Open the card to inspect · A two-sided indicator appears on every research object</p>
+<p class="orbit-note">Drag, swipe, or use Left and Right on a keyboard to rotate · Open the front card to inspect · Every research object has Scientific and Agentic faces</p>
 
-<div class="reader" id="frontier-reader" data-reader data-face="scientific" role="dialog" aria-modal="true" aria-labelledby="scientific-title" hidden>
+<div class="reader" id="frontier-reader" data-reader data-face="scientific" role="dialog" aria-modal="true" aria-labelledby="scientific-attack-title" hidden>
 <div class="reader-turn" data-reader-turn>
-<section class="reader-face scientific-face" data-reader-face="scientific" tabindex="-1" aria-labelledby="scientific-title">
-<div class="reader-topbar"><button type="button" data-return-orbit>← Return to Orbit</button><button type="button" data-flip-face="agentic">View Agentic side →</button></div>
-<div class="reader-content">
-<p class="reader-kicker">Scientific Frontier · Equal face 01</p>
-<h2 id="scientific-title">Do viable futures reveal fragility?</h2>
+<section class="reader-face scientific-face" data-reader-face="scientific" tabindex="-1" aria-labelledby="scientific-attack-title">
+<div class="reader-topbar"><button type="button" data-return-orbit>Return to Orbit</button><button type="button" data-open-bridge>Inspect Shared Bridge</button><button type="button" data-flip-face="agentic">View Agentic Side</button></div>
+
+<article class="object-reader" data-object-reader="attack">
+<p class="reader-kicker">Scientific Frontier · Object 01 · Equal face 01</p>
+<h2 id="scientific-attack-title">Do viable futures reveal fragility?</h2>
 <p class="reader-deck">The falsifiable proposition is that information in the geometry of a system’s remaining viable transitions may add predictive information beyond a description of its present state alone.</p>
 <p class="face-boundary"><strong>Scientific evidence boundary:</strong> prospective testing and replication are being extended. Broad cross-domain generality, independent replication, and a universal law are not claimed.</p>
-<div class="face-tabs" role="tablist" aria-label="Scientific evidence views">
-<button type="button" role="tab" id="scientific-tab-proposition" aria-controls="scientific-panel-proposition" aria-selected="true" data-lens-tab="proposition">Proposition</button>
-<button type="button" role="tab" id="scientific-tab-evidence" aria-controls="scientific-panel-evidence" aria-selected="false" data-lens-tab="evidence" tabindex="-1">Evidence</button>
-<button type="button" role="tab" id="scientific-tab-limits" aria-controls="scientific-panel-limits" aria-selected="false" data-lens-tab="limits" tabindex="-1">Limits</button>
+<div class="face-tabs" role="tablist" aria-label="Strongest attack views">
+<button type="button" role="tab" id="scientific-attack-tab-proposition" aria-controls="scientific-attack-panel-proposition" aria-selected="true" data-lens-tab="proposition">Proposition</button>
+<button type="button" role="tab" id="scientific-attack-tab-challenge" aria-controls="scientific-attack-panel-challenge" aria-selected="false" data-lens-tab="challenge" tabindex="-1">Strongest Attack</button>
 </div>
-<div class="lens-panel" id="scientific-panel-proposition" role="tabpanel" aria-labelledby="scientific-tab-proposition" data-lens-panel="proposition">
-<div class="evidence-grid"><article class="evidence-block full"><h3>Try to falsify it</h3><p>Preserve the predeclared evaluation boundary and ask whether the apparent signal disappears under a stronger comparator, a clean implementation, or a genuinely untouched benchmark.</p></article><article class="evidence-block"><h3>Freeze first</h3><p>Define the exact claim, benchmark, comparator, and stopping conditions before outcomes can steer the procedure.</p></article><article class="evidence-block"><h3>Keep contradictions</h3><p>Negative, null, and contradictory results belong in the record beside successful findings.</p></article></div>
-<p class="reader-end">Scroll vertically to read this face. Use its tabs for evidence detail; use the visible perspective control or a horizontal swipe to turn the object over.</p>
+<div class="lens-panel" id="scientific-attack-panel-proposition" role="tabpanel" aria-labelledby="scientific-attack-tab-proposition" data-lens-panel="proposition">
+<div class="evidence-grid"><article class="evidence-block full"><h3>A claim designed to be broken</h3><p>The proposition predicts that viable-transition geometry can add information beyond a present-state description. A useful test must make it possible for that added signal to disappear.</p></article><article class="evidence-block"><h3>Freeze first</h3><p>Define the exact claim, benchmark, comparator, and stopping conditions before outcomes can steer the procedure.</p></article><article class="evidence-block"><h3>Keep contradictions</h3><p>Negative, null, and contradictory results belong in the record beside successful findings.</p></article></div>
+<p class="reader-end">Scroll vertically to read this face. Use its tabs for evidence detail; use the perspective control or a horizontal swipe to turn the object over.</p>
 </div>
-<div class="lens-panel" id="scientific-panel-evidence" role="tabpanel" aria-labelledby="scientific-tab-evidence" data-lens-panel="evidence" hidden>
+<div class="lens-panel" id="scientific-attack-panel-challenge" role="tabpanel" aria-labelledby="scientific-attack-tab-challenge" data-lens-panel="challenge" hidden>
+<div class="evidence-grid"><article class="evidence-block full"><h3>Try to falsify it</h3><p>Preserve the predeclared evaluation boundary and ask whether the apparent signal disappears under a stronger comparator, a clean implementation, or a genuinely untouched benchmark.</p></article><article class="evidence-block"><h3>What would count as progress</h3><p>Independent reproduction, stronger matched controls, clean-room implementation agreement, or a clear falsification that explains the existing observations.</p></article><article class="evidence-block"><h3>What would not</h3><p>Retuning the procedure after seeing the outcome or quietly removing contradictions from the record.</p></article></div>
+<p class="reader-end">The strongest attack is part of the research object, not an appendix to it.</p>
+</div>
+</article>
+
+<article class="object-reader" data-object-reader="evidence" hidden>
+<p class="reader-kicker">Scientific Frontier · Object 02 · Equal face 01</p>
+<h2 id="scientific-evidence-title">Start with what is actually observed.</h2>
+<p class="reader-deck">The public record contains longitudinal production evidence and one bounded controlled comparison. These observations remain useful because they are not promoted into larger causal claims automatically.</p>
+<p class="face-boundary"><strong>Scientific evidence boundary:</strong> repository history can establish activity, sequence, retained evidence, and the stated comparison outcome. It does not by itself prove causal efficacy or general superiority.</p>
+<div class="face-tabs" role="tablist" aria-label="Evidence held views">
+<button type="button" role="tab" id="scientific-evidence-tab-record" aria-controls="scientific-evidence-panel-record" aria-selected="true" data-lens-tab="record">Public Record</button>
+<button type="button" role="tab" id="scientific-evidence-tab-comparison" aria-controls="scientific-evidence-panel-comparison" aria-selected="false" data-lens-tab="comparison" tabindex="-1">AF-IR-01</button>
+</div>
+<div class="lens-panel" id="scientific-evidence-panel-record" role="tabpanel" aria-labelledby="scientific-evidence-tab-record" data-lens-panel="record">
 <div class="metric-row"><div><strong>906</strong><span>Corrected PR population</span></div><div><strong>699</strong><span>Material retained</span></div><div><strong>17</strong><span>PARAMOUNT</span></div><div><strong>682</strong><span>STANDARD</span></div></div>
-<div class="evidence-grid"><article class="evidence-block full"><h3>AF-IR-01 · Controlled comparison</h3><p>Under one frozen common task, model, runtime, and verifier condition, the Diamond Gate lane passed while the stock OpenHands lane ended FAIL/INACTIVE.</p><p class="mono">RESULT SCOPE = ONE BOUNDED CONTROLLED COMPARISON</p></article><article class="evidence-block"><h3>Observed</h3><p>Activity, sequence, retained evidence, and the stated comparison outcome are inspectable within their public boundaries.</p></article><article class="evidence-block"><h3>Not established</h3><p>Repository throughput does not establish causal efficacy, general performance superiority, or cross-domain validity.</p></article></div>
-<p class="reader-end">A negative or constraining record may become perfectly clear because it is relevant—not because it supports the proposition.</p>
+<div class="evidence-grid"><article class="evidence-block full"><h3>Observed before interpreted</h3><p>Activity, sequence, retained evidence, and explicit claim boundaries are inspectable. Throughput remains an observation, not a causal explanation.</p></article></div>
+<p class="reader-end">Clarity here means relevance to this object—not stronger evidence, greater confidence, or truth.</p>
 </div>
-<div class="lens-panel" id="scientific-panel-limits" role="tabpanel" aria-labelledby="scientific-tab-limits" data-lens-panel="limits" hidden>
-<div class="evidence-grid"><article class="evidence-block full"><h3>Missing evidence stays missing</h3><p>The original v0 audit survives only as aggregate totals. Row-level agreement, Cohen’s kappa, and a disagreement ledger cannot legitimately be reconstructed from evidence that no longer exists at that resolution.</p></article><article class="evidence-block"><h3>What can raise the claim</h3><p>External validation, a larger frozen comparative battery, clean-room reproduction, and stronger cross-domain testing.</p></article><article class="evidence-block"><h3>What cannot</h3><p>More confident language, repeated internal inspection, or additional internally generated artifacts cannot substitute for independent evidence.</p></article><article class="evidence-block full"><h3>Current ceiling</h3><p>This is an active research proposition with bounded observations. Universal superiority, settled generality, and causal efficacy remain outside the demonstrated boundary.</p></article></div>
-<p class="reader-end">The strongest attack is part of the object, not an appendix to it.</p>
+<div class="lens-panel" id="scientific-evidence-panel-comparison" role="tabpanel" aria-labelledby="scientific-evidence-tab-comparison" data-lens-panel="comparison" hidden>
+<div class="evidence-grid"><article class="evidence-block full"><h3>AF-IR-01 · Controlled comparison</h3><p>Under one frozen common task, model, runtime, and verifier condition, the Diamond Gate lane passed while the stock OpenHands lane ended FAIL/INACTIVE.</p><p class="mono">RESULT SCOPE = ONE BOUNDED CONTROLLED COMPARISON</p></article><article class="evidence-block"><h3>Observed</h3><p>The outcomes under the stated common condition and the retained public evidence.</p></article><article class="evidence-block"><h3>Not established</h3><p>General performance superiority, cross-domain validity, or a causal effect of the governance architecture.</p></article></div>
+<p class="reader-end">A broader frozen comparative battery and independent replication remain ahead.</p>
 </div>
+</article>
+
+<article class="object-reader" data-object-reader="limits" hidden>
+<p class="reader-kicker">Scientific Frontier · Object 03 · Equal face 01</p>
+<h2 id="scientific-limits-title">The missing evidence stays visible.</h2>
+<p class="reader-deck">A research frontier is not a highlight reel. Failed tests, superseded methods, contaminated attempts, and unavailable evidence constrain what can be claimed next.</p>
+<p class="face-boundary"><strong>Scientific evidence boundary:</strong> the original v0 audit survives only as aggregate totals. Row-level agreement, Cohen’s kappa, and a disagreement ledger cannot legitimately be reconstructed.</p>
+<div class="face-tabs" role="tablist" aria-label="Missing evidence views">
+<button type="button" role="tab" id="scientific-limits-tab-missing" aria-controls="scientific-limits-panel-missing" aria-selected="true" data-lens-tab="missing">Missing Evidence</button>
+<button type="button" role="tab" id="scientific-limits-tab-ceiling" aria-controls="scientific-limits-panel-ceiling" aria-selected="false" data-lens-tab="ceiling" tabindex="-1">Claim Ceiling</button>
 </div>
+<div class="lens-panel" id="scientific-limits-panel-missing" role="tabpanel" aria-labelledby="scientific-limits-tab-missing" data-lens-panel="missing">
+<div class="evidence-grid"><article class="evidence-block full"><h3>Do not synthesize what was never observed</h3><p>Missing row-level evidence remains missing. It is not inferred backward from aggregate totals and relabeled as a measurement.</p></article><article class="evidence-block"><h3>Negative results remain evidence</h3><p>Nulls, contradictions, and methodologically compromised attempts constrain the next procedure even when they do not support the proposition.</p></article><article class="evidence-block"><h3>Contamination is terminal</h3><p>A compromised evaluation boundary should be stopped, retained, and replaced with a clean test.</p></article></div>
+<p class="reader-end">The missing resolution remains a visible limit instead of disappearing behind summary totals.</p>
+</div>
+<div class="lens-panel" id="scientific-limits-panel-ceiling" role="tabpanel" aria-labelledby="scientific-limits-tab-ceiling" data-lens-panel="ceiling" hidden>
+<div class="evidence-grid"><article class="evidence-block"><h3>What can raise the claim</h3><p>External validation, a larger frozen comparative battery, clean-room reproduction, and stronger cross-domain testing.</p></article><article class="evidence-block"><h3>What cannot</h3><p>More confident language, repeated internal inspection, or additional internally generated artifacts.</p></article><article class="evidence-block full"><h3>Current ceiling</h3><p>This is an active research proposition with bounded observations. Universal superiority, settled generality, and causal efficacy remain outside the demonstrated boundary.</p></article></div>
+<p class="reader-end">Confidence stops where the retained evidence stops.</p>
+</div>
+</article>
+
+<article class="object-reader" data-object-reader="reproduce" hidden>
+<p class="reader-kicker">Scientific Frontier · Object 04 · Equal face 01</p>
+<h2 id="scientific-reproduce-title">Don’t trust the page. Inspect the boundary.</h2>
+<p class="reader-deck">The purpose of this destination is to make scrutiny easier: understand the claim, inspect the strongest public evidence and limits, and identify what would falsify or strengthen the result.</p>
+<p class="face-boundary"><strong>Scientific evidence boundary:</strong> only public, authorized evidence belongs on this surface. Private artifacts and inaccessible evidence are not implied by their absence.</p>
+<div class="face-tabs" role="tablist" aria-label="Reproduction boundary views">
+<button type="button" role="tab" id="scientific-reproduce-tab-path" aria-controls="scientific-reproduce-panel-path" aria-selected="true" data-lens-tab="path">Challenge Path</button>
+<button type="button" role="tab" id="scientific-reproduce-tab-destinations" aria-controls="scientific-reproduce-panel-destinations" aria-selected="false" data-lens-tab="destinations" tabindex="-1">Public Destinations</button>
+</div>
+<div class="lens-panel" id="scientific-reproduce-panel-path" role="tabpanel" aria-labelledby="scientific-reproduce-tab-path" data-lens-panel="path">
+<div class="reader-chain"><div><b>1</b><span>Define the exact claim being tested.</span></div><div><b>2</b><span>Freeze the benchmark and comparator before outcomes.</span></div><div><b>3</b><span>Use a clean implementation when independence matters.</span></div><div><b>4</b><span>Publish failures and nulls beside positive results.</span></div><div><b>5</b><span>Submit the reproduction record or falsification for inspection.</span></div></div>
+<p class="reader-end">External validation remains distinct from internal evidence.</p>
+</div>
+<div class="lens-panel" id="scientific-reproduce-panel-destinations" role="tabpanel" aria-labelledby="scientific-reproduce-tab-destinations" data-lens-panel="destinations" hidden>
+<div class="evidence-grid"><article class="evidence-block"><h3>Evidence Room</h3><p>Inspect the public evidence surface and its retained boundaries.</p><p><a href="/evidence/">Open Evidence Room</a></p></article><article class="evidence-block"><h3>Governance</h3><p>Inspect the authority, qualification, and publication separation.</p><p><a href="/governance/">Open Governance</a></p></article><article class="evidence-block full"><h3>Laws and Methods</h3><p>Inspect the governing method boundaries used to keep claims and procedures distinct.</p><p><a href="/laws/">Open Laws and Methods</a></p></article></div>
+<p class="reader-end">Reproduction is invited; contradictions should remain intact.</p>
+</div>
+</article>
 </section>
 
-<section class="reader-face agentic-face" data-reader-face="agentic" tabindex="-1" aria-labelledby="agentic-title" aria-hidden="true" inert>
-<div class="reader-topbar"><button type="button" data-return-orbit>← Return to Orbit</button><button type="button" data-flip-face="scientific">← View Scientific side</button></div>
-<div class="reader-content">
-<p class="reader-kicker">Agentic Frontier · Equal face 02</p>
-<h2 id="agentic-title">Can agency scale without losing the trail?</h2>
+<section class="reader-face agentic-face" data-reader-face="agentic" tabindex="-1" aria-labelledby="agentic-attack-title" aria-hidden="true" inert>
+<div class="reader-topbar"><button type="button" data-return-orbit>Return to Orbit</button><button type="button" data-open-bridge>Inspect Shared Bridge</button><button type="button" data-flip-face="scientific">View Scientific Side</button></div>
+
+<article class="object-reader" data-object-reader="attack">
+<p class="reader-kicker">Agentic Frontier · Object 01 · Equal face 02</p>
+<h2 id="agentic-attack-title">Can agency scale without losing the trail?</h2>
 <p class="reader-deck">The Agentic program asks whether substantial software and research work can continue while authority, exact state, qualification, provenance, recovery, and publication remain inspectable.</p>
-<p class="face-boundary"><strong>Agentic evidence boundary:</strong> this is a multi-strand, experimentally grounded program. Documented coordination and successful production do not yet prove an efficiency improvement or general causal superiority.</p>
-<div class="face-tabs" role="tablist" aria-label="Agentic evidence views">
-<button type="button" role="tab" id="agentic-tab-coordination" aria-controls="agentic-panel-coordination" aria-selected="true" data-lens-tab="coordination">Coordination</button>
-<button type="button" role="tab" id="agentic-tab-observability" aria-controls="agentic-panel-observability" aria-selected="false" data-lens-tab="observability" tabindex="-1">Observability</button>
-<button type="button" role="tab" id="agentic-tab-bridge" aria-controls="agentic-panel-bridge" aria-selected="false" data-lens-tab="bridge" tabindex="-1">The Bridge</button>
+<p class="face-boundary"><strong>Agentic evidence boundary:</strong> documented coordination and successful production do not yet prove an efficiency improvement or general causal superiority.</p>
+<div class="face-tabs" role="tablist" aria-label="Agentic strongest attack views">
+<button type="button" role="tab" id="agentic-attack-tab-coordination" aria-controls="agentic-attack-panel-coordination" aria-selected="true" data-lens-tab="coordination">Coordination</button>
+<button type="button" role="tab" id="agentic-attack-tab-recovery" aria-controls="agentic-attack-panel-recovery" aria-selected="false" data-lens-tab="recovery" tabindex="-1">Recovery</button>
 </div>
-<div class="lens-panel" id="agentic-panel-coordination" role="tabpanel" aria-labelledby="agentic-tab-coordination" data-lens-panel="coordination">
+<div class="lens-panel" id="agentic-attack-panel-coordination" role="tabpanel" aria-labelledby="agentic-attack-tab-coordination" data-lens-panel="coordination">
 <div class="reader-chain"><div><b>A</b><span>Route work to the owning project and authority boundary.</span></div><div><b>B</b><span>Bind construction to an exact governing head and bounded paths.</span></div><div><b>C</b><span>Qualify the exact candidate with an independent verifier role.</span></div><div><b>D</b><span>Separate candidate, qualification, merge, deployment, and live verification.</span></div></div>
-<div class="evidence-grid" style="margin-top:.75rem"><article class="evidence-block full"><h3>Recovery is part of the experiment</h3><p>The Gen1731 lineage was recovered from durable repository state; PR #2156 restored the provenance boundary, PR #2157 repaired successor transport, and a fresh successor was admitted at Gen1749.</p><p class="mono">CONTINUITY TEST = DURABLE STATE, NOT PRIVATE MEMORY</p></article></div>
-<p class="reader-end">The evidence shows inspectable coordination and recovery. Comparative efficiency remains a separate proposition.</p>
+<p class="reader-end">The chain is inspectable. Comparative efficiency remains a separate proposition.</p>
 </div>
-<div class="lens-panel" id="agentic-panel-observability" role="tabpanel" aria-labelledby="agentic-tab-observability" data-lens-panel="observability" hidden>
+<div class="lens-panel" id="agentic-attack-panel-recovery" role="tabpanel" aria-labelledby="agentic-attack-tab-recovery" data-lens-panel="recovery" hidden>
+<div class="evidence-grid"><article class="evidence-block full"><h3>Recovery is part of the experiment</h3><p>The Gen1731 lineage was recovered from durable repository state; PR #2156 restored the provenance boundary, PR #2157 repaired successor transport, and a fresh successor was admitted at Gen1749.</p><p class="mono">CONTINUITY TEST = DURABLE STATE, NOT PRIVATE MEMORY</p></article><article class="evidence-block"><h3>What survived</h3><p>Exact identity, evidence lineage, authority boundaries, and the unfinished work.</p></article><article class="evidence-block"><h3>What is not claimed</h3><p>That recovery proves general superiority or measures the efficiency benefit of the architecture.</p></article></div>
+<p class="reader-end">A recoverable procedure can still fail; its failure should remain classifiable.</p>
+</div>
+</article>
+
+<article class="object-reader" data-object-reader="evidence" hidden>
+<p class="reader-kicker">Agentic Frontier · Object 02 · Equal face 02</p>
+<h2 id="agentic-evidence-title">Classify the failure before responding.</h2>
+<p class="reader-deck">A read-only observatory can separate product failure from execution, qualification, evidence, deployment, or governance failure before another operator reacts.</p>
+<p class="face-boundary"><strong>Agentic evidence boundary:</strong> operational classification capability can be shown where supported. Reduced reruns, localization time, false promotions, false holds, and recovery effort are not claimed as measured effects.</p>
+<div class="face-tabs" role="tablist" aria-label="Agentic evidence held views">
+<button type="button" role="tab" id="agentic-evidence-tab-observatory" aria-controls="agentic-evidence-panel-observatory" aria-selected="true" data-lens-tab="observatory">Observatory</button>
+<button type="button" role="tab" id="agentic-evidence-tab-impact" aria-controls="agentic-evidence-panel-impact" aria-selected="false" data-lens-tab="impact" tabindex="-1">Impact Boundary</button>
+</div>
+<div class="lens-panel" id="agentic-evidence-panel-observatory" role="tabpanel" aria-labelledby="agentic-evidence-tab-observatory" data-lens-panel="observatory">
 <div class="reader-chain"><div><b>1</b><span>INTAKE · Was the operation admitted and complete?</span></div><div><b>2</b><span>EXECUTION · Did the intended carrier actually run?</span></div><div><b>3</b><span>QUALIFICATION · Did the candidate satisfy the governing checks?</span></div><div><b>4</b><span>CLOSURE · Was the operation terminally dispositioned?</span></div><div><b>5</b><span>DEPLOYMENT · Was the approved exact head published?</span></div><div><b>6</b><span>LIVE VERIFY · Did the visitor receive the intended product?</span></div></div>
-<div class="evidence-grid" style="margin-top:.75rem"><article class="evidence-block full"><h3>Primary proposition</h3><p class="mono">FAILURE CAN BE CLASSIFIED BEFORE RESPONSE</p><p>Operational classification capability can be shown where supported. Reduced reruns, localization time, false promotions, false holds, and recovery effort are not claimed here as measured effects.</p></article></div>
-<p class="reader-end">Classification is an inspectable capability. Its downstream impact remains to be measured.</p>
+<p class="reader-end">The public chain makes state legible before response.</p>
 </div>
-<div class="lens-panel" id="agentic-panel-bridge" role="tabpanel" aria-labelledby="agentic-tab-bridge" data-lens-panel="bridge" hidden>
-<div class="evidence-grid"><article class="evidence-block full"><h3>The same object, turned over</h3><p>The programs meet where research machinery changes how evidence is handled: leakage detection, prospective boundaries, negative-result preservation, implementation independence, succession after failure, and exact-state recovery.</p></article><article class="evidence-block"><h3>Leakage detection</h3><p>Compromised evaluation should be stopped rather than rationalized after a favorable outcome appears.</p></article><article class="evidence-block"><h3>Prospective boundaries</h3><p>Frozen protocols, untouched tests, and clean implementations strengthen the separation between hypothesis formation and evaluation.</p></article><article class="evidence-block"><h3>Evidence custody</h3><p>Negative results, exact identities, succession records, and claim ceilings remain available to constrain the next operation.</p></article><article class="evidence-block"><h3>Causal limit</h3><p>These cases motivate the bridge. They do not establish that the agentic architecture caused superior scientific outcomes across domains.</p></article></div>
-<p class="reader-end">Return to Orbit restores the larger context while preserving this selected perspective.</p>
+<div class="lens-panel" id="agentic-evidence-panel-impact" role="tabpanel" aria-labelledby="agentic-evidence-tab-impact" data-lens-panel="impact" hidden>
+<div class="evidence-grid"><article class="evidence-block full"><h3>Primary proposition</h3><p class="mono">FAILURE CAN BE CLASSIFIED BEFORE RESPONSE</p><p>Classification is an inspectable capability. Its downstream impact remains to be measured.</p></article><article class="evidence-block"><h3>Supported here</h3><p>Distinct intake, execution, qualification, closure, deployment, and live-verification states.</p></article><article class="evidence-block"><h3>Not measured here</h3><p>Reduced reruns, faster localization, fewer false promotions, fewer false holds, or lower recovery effort.</p></article></div>
+<p class="reader-end">Capability and measured effect remain separate claims.</p>
 </div>
+</article>
+
+<article class="object-reader" data-object-reader="limits" hidden>
+<p class="reader-kicker">Agentic Frontier · Object 03 · Equal face 02</p>
+<h2 id="agentic-limits-title">Can contradiction survive the operation?</h2>
+<p class="reader-deck">Accountable research machinery must retain negative results, unavailable evidence, exact identities, and claim ceilings so the next operation inherits constraints rather than a polished myth.</p>
+<p class="face-boundary"><strong>Agentic evidence boundary:</strong> durable custody and recovery cases are documented. A general causal effect on scientific quality has not been established.</p>
+<div class="face-tabs" role="tablist" aria-label="Agentic missing evidence views">
+<button type="button" role="tab" id="agentic-limits-tab-custody" aria-controls="agentic-limits-panel-custody" aria-selected="true" data-lens-tab="custody">Evidence Custody</button>
+<button type="button" role="tab" id="agentic-limits-tab-continuity" aria-controls="agentic-limits-panel-continuity" aria-selected="false" data-lens-tab="continuity" tabindex="-1">Continuity</button>
 </div>
+<div class="lens-panel" id="agentic-limits-panel-custody" role="tabpanel" aria-labelledby="agentic-limits-tab-custody" data-lens-panel="custody">
+<div class="evidence-grid"><article class="evidence-block full"><h3>Retain the constraint</h3><p>Negative results, exact identities, succession records, and claim ceilings remain available to constrain the next operation.</p></article><article class="evidence-block"><h3>No synthetic resolution</h3><p>Missing evidence is carried as missing instead of being reconstructed from a summary.</p></article><article class="evidence-block"><h3>No favorable erasure</h3><p>Contradictions are not removed merely because they weaken the preferred interpretation.</p></article></div>
+<p class="reader-end">Custody is demonstrated as a record property, not yet as a measured quality improvement.</p>
+</div>
+<div class="lens-panel" id="agentic-limits-panel-continuity" role="tabpanel" aria-labelledby="agentic-limits-tab-continuity" data-lens-panel="continuity" hidden>
+<div class="reader-chain"><div><b>A</b><span>Bind each operation to an exact state and admitted scope.</span></div><div><b>B</b><span>Preserve terminal failures and superseded attempts.</span></div><div><b>C</b><span>Recover from durable evidence rather than private memory.</span></div><div><b>D</b><span>Carry the surviving claim ceiling into the successor.</span></div></div>
+<p class="reader-end">Continuity means the constraint survives succession, not that every successor succeeds.</p>
+</div>
+</article>
+
+<article class="object-reader" data-object-reader="reproduce" hidden>
+<p class="reader-kicker">Agentic Frontier · Object 04 · Equal face 02</p>
+<h2 id="agentic-reproduce-title">Can the procedure survive its author?</h2>
+<p class="reader-deck">Implementation independence, exact-state recovery, and explicit succession make it possible to test whether a procedure can be repeated without relying on one operator’s memory.</p>
+<p class="face-boundary"><strong>Agentic evidence boundary:</strong> the architecture exposes independence and succession constraints. It does not establish that every implementation is independent or every recovery is complete.</p>
+<div class="face-tabs" role="tablist" aria-label="Agentic reproduction boundary views">
+<button type="button" role="tab" id="agentic-reproduce-tab-independence" aria-controls="agentic-reproduce-panel-independence" aria-selected="true" data-lens-tab="independence">Independence</button>
+<button type="button" role="tab" id="agentic-reproduce-tab-succession" aria-controls="agentic-reproduce-panel-succession" aria-selected="false" data-lens-tab="succession" tabindex="-1">Succession</button>
+</div>
+<div class="lens-panel" id="agentic-reproduce-panel-independence" role="tabpanel" aria-labelledby="agentic-reproduce-tab-independence" data-lens-panel="independence">
+<div class="evidence-grid"><article class="evidence-block full"><h3>Separate hypothesis from evaluation</h3><p>Frozen protocols, untouched tests, and clean implementations strengthen the boundary between forming a claim and judging its outcome.</p></article><article class="evidence-block"><h3>Exact starting state</h3><p>A reproducer should know which governing head, task, model, runtime, comparator, and verifier condition were used.</p></article><article class="evidence-block"><h3>Independent implementation</h3><p>Where independence matters, the implementation should not inherit hidden decisions from the result it is meant to test.</p></article></div>
+<p class="reader-end">The procedure should be inspectable enough to be challenged outside its original execution context.</p>
+</div>
+<div class="lens-panel" id="agentic-reproduce-panel-succession" role="tabpanel" aria-labelledby="agentic-reproduce-tab-succession" data-lens-panel="succession" hidden>
+<div class="reader-chain"><div><b>1</b><span>Recover the last durable exact state.</span></div><div><b>2</b><span>Identify terminal and incomplete work without rewriting it.</span></div><div><b>3</b><span>Admit a bounded successor under current authority.</span></div><div><b>4</b><span>Requalify the successor as a new exact candidate.</span></div></div>
+<p class="reader-end">Succession preserves the trail; it does not inherit qualification automatically.</p>
+</div>
+</article>
 </section>
 </div>
+
+<aside class="shared-bridge" data-shared-bridge role="region" aria-labelledby="shared-bridge-title" hidden>
+<div class="shared-bridge-top"><button type="button" data-close-bridge>Return to Selected Face</button></div>
+<div class="shared-bridge-content">
+<p class="reader-kicker">One shared bridge · Scientific ↔ Agentic</p>
+<h2 id="shared-bridge-title">Did better machinery improve scientific conduct?</h2>
+<p class="reader-deck">The programs meet where research machinery changes how evidence is handled: leakage detection, prospective boundaries, negative-result preservation, implementation independence, succession after failure, and exact-state recovery.</p>
+<p class="face-boundary"><strong>Bridge evidence boundary:</strong> these cases motivate a research question. They do not establish that the agentic architecture caused superior scientific outcomes across domains.</p>
+<div class="evidence-grid"><article class="evidence-block"><h3>Leakage detection</h3><p>Compromised evaluation should be stopped rather than rationalized after a favorable outcome appears.</p></article><article class="evidence-block"><h3>Prospective boundaries</h3><p>Frozen protocols, untouched tests, and clean implementations strengthen the separation between hypothesis formation and evaluation.</p></article><article class="evidence-block"><h3>Evidence custody</h3><p>Negative results, exact identities, succession records, and claim ceilings remain available to constrain the next operation.</p></article><article class="evidence-block"><h3>Implementation independence</h3><p>Clean-room reproduction can test whether an observation survives decisions outside the original machinery.</p></article><article class="evidence-block full"><h3>Causal limit</h3><p>The bridge is a falsifiable program of inquiry, not a declaration that accountable machinery has already caused better science.</p></article></div>
+<p class="reader-end">Close the shared bridge to return to the selected object and retained perspective.</p>
+</div>
+</aside>
 <span class="reader-swipe-cue" aria-hidden="true">Swipe horizontally to change perspective</span>
 </div>
 </section>
@@ -266,7 +419,7 @@ body{position:relative;isolation:isolate;overflow-x:clip}
 </section>
 </main>
 <footer class="footer"><p>Research Frontier is a public research entry point, not a declaration that every active proposition has been proven. Scientific and Agentic strands are presented with different evidentiary maturity, and the broader Frontier family remains structurally separate while cross-domain research continues.</p><nav><a href="/">Compass</a><a href="/evidence/">Evidence</a><a href="/governance/">Governance</a><a href="/laws/">Laws</a></nav></footer>
-<script>
+<script id="multi-card-orbital-runtime">
 (()=>{
   'use strict';
   document.documentElement.classList.add('rf-js');
@@ -275,40 +428,67 @@ body{position:relative;isolation:isolate;overflow-x:clip}
   const holograms=[...document.querySelectorAll('.evidence-field .holo')];
   const stage=document.querySelector('[data-orbit-stage]');
   const ring=document.querySelector('[data-orbit-ring]');
-  const card=document.querySelector('[data-orbit-card]');
+  const cards=[...document.querySelectorAll('[data-orbit-card]')];
   const status=document.querySelector('[data-orbit-status]');
-  const facePreview=document.querySelector('[data-face-preview]');
   const reader=document.querySelector('[data-reader]');
+  const readerTurn=document.querySelector('[data-reader-turn]');
   const faces=[...document.querySelectorAll('[data-reader-face]')];
+  const sharedBridge=document.querySelector('[data-shared-bridge]');
   const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)');
+  const objectIds=cards.map(card=>card.dataset.object);
+  const step=360/cards.length;
   const clamp=(value,min,max)=>Math.min(max,Math.max(min,value));
-  const readState=(key,fallback)=>{try{return sessionStorage.getItem(key)||fallback}catch{return fallback}};
-  const writeState=(key,value)=>{try{sessionStorage.setItem(key,String(value))}catch{}}
+  const modulo=(value,base)=>((value%base)+base)%base;
+  const readState=(key,fallback)=>{try{return sessionStorage.getItem(key)??fallback}catch{return fallback}};
+  const writeState=(key,value)=>{try{sessionStorage.setItem(key,String(value))}catch{}};
+  const storedIndex=Number.parseInt(readState('research-frontier-object','0'),10);
+  let selectedIndex=Number.isFinite(storedIndex)?clamp(storedIndex,0,cards.length-1):0;
   let selectedFace=readState('research-frontier-face','scientific')==='agentic'?'agentic':'scientific';
-  let angle=Number.parseFloat(readState('research-frontier-orbit','0'))||0;
+  let angle=-selectedIndex*step;
   let animationFrame=0;
   let animating=false;
   let inspecting=false;
+  let bridgeOpen=false;
   let gesture=null;
   let suppressCardClick=false;
   let lastFocus=null;
 
   const faceName=()=>selectedFace[0].toUpperCase()+selectedFace.slice(1);
-  function updateStatus(message){
-    status.innerHTML=`<strong>The Strongest Attack</strong><span>${message||`Front position · Opens on ${faceName()}`}</span>`;
-    facePreview.textContent=`Scientific ↔ Agentic · ${faceName()} retained`;
-    card.setAttribute('aria-label',`Open The Strongest Attack on its ${faceName()} face`);
+  const selectedObject=()=>objectIds[selectedIndex];
+  const cardTitle=index=>cards[index].querySelector('.orbit-card-title')?.textContent.trim()||`Research object ${index+1}`;
+  const nearestIndex=value=>modulo(Math.round(-value/step),cards.length);
+  const evidenceState={attack:'challenge',evidence:'evidence',limits:'limits',reproduce:'reproduce'};
+  const weights={
+    attack:{scientific:[.34,1,.42,.28],agentic:[.34,.48,1,.66]},
+    evidence:{scientific:[1,.94,.38,.32],agentic:[.58,.5,.76,1]},
+    limits:{scientific:[.9,.76,.32,.3],agentic:[.62,.4,.92,.84]},
+    reproduce:{scientific:[.56,.84,.8,.42],agentic:[.34,.42,1,.76]}
+  };
+
+  function updateStatus(message,index=selectedIndex){
+    const position=String(index+1).padStart(2,'0');
+    status.innerHTML=`<strong><span class="orbit-position">${position} / ${String(cards.length).padStart(2,'0')}</span>${cardTitle(index)}</strong><span>${message||`Front position · Opens on ${faceName()}`}</span>`;
+    cards.forEach((card,cardIndex)=>{
+      const active=cardIndex===index;
+      card.dataset.active=active?'true':'false';
+      card.tabIndex=active?0:-1;
+      card.setAttribute('aria-current',active?'true':'false');
+      card.setAttribute('aria-label',active?`Open ${cardTitle(cardIndex)} on its ${faceName()} face`:`Rotate ${cardTitle(cardIndex)} into the front position`);
+      const preview=card.querySelector('[data-face-preview]');
+      if(preview)preview.textContent=`Scientific ↔ Agentic · ${faceName()} retained`;
+    });
   }
 
-  function applyEvidence(){
-    const weights=selectedFace==='scientific'?[1,.92,.42,.36]:[.4,.34,1,.92];
+  function applyEvidence(index=selectedIndex){
+    const objectId=objectIds[index];
+    const relevanceWeights=weights[objectId][selectedFace];
     const phase=[0,83,191,277];
-    holograms.forEach((hologram,index)=>{
-      const orbitWave=Math.cos((angle+phase[index])*Math.PI/180);
-      const relevance=clamp(weights[index]+(inspecting?0:orbitWave*.08),.18,1);
-      const depth=Math.round(-22+relevance*64+orbitWave*9);
-      const driftX=Math.sin((angle+phase[index])*Math.PI/180)*18;
-      const driftY=Math.cos((angle*.7+phase[index])*Math.PI/180)*9;
+    holograms.forEach((hologram,hologramIndex)=>{
+      const orbitWave=Math.cos((angle+phase[hologramIndex])*Math.PI/180);
+      const relevance=clamp(relevanceWeights[hologramIndex]+(inspecting?0:orbitWave*.07),.16,1);
+      const depth=Math.round(-22+relevance*64+orbitWave*8);
+      const driftX=Math.sin((angle+phase[hologramIndex])*Math.PI/180)*18;
+      const driftY=Math.cos((angle*.7+phase[hologramIndex])*Math.PI/180)*9;
       const blur=(1-relevance)*4.6;
       const scale=.92+relevance*.09;
       hologram.style.transition=reduceMotion.matches?'none':'transform 420ms ease,filter 420ms ease,opacity 420ms ease';
@@ -320,64 +500,79 @@ body{position:relative;isolation:isolate;overflow-x:clip}
       hologram.style.zIndex=String(Math.round(relevance*4));
     });
     field.dataset.face=selectedFace;
+    field.dataset.activeEvidence=evidenceState[objectId];
     field.dataset.inspecting=inspecting?'true':'false';
   }
 
   function applyOrbit(){
-    const radians=angle*Math.PI/180;
     const width=stage.getBoundingClientRect().width||800;
-    const radiusX=Math.min(width*.29,260);
-    const x=Math.sin(radians)*radiusX;
-    const depth=Math.cos(radians);
-    const y=depth*34;
-    const scale=.68+(depth+1)*.16;
-    const opacity=.44+(depth+1)*.28;
-    card.style.transform=`translate(calc(-50% + ${x.toFixed(2)}px),calc(-50% + ${y.toFixed(2)}px)) scale(${scale.toFixed(3)}) rotateY(${(-Math.sin(radians)*15).toFixed(2)}deg)`;
-    card.style.opacity=String(clamp(opacity,.42,1));
-    card.style.zIndex=String(Math.round((depth+1)*5+2));
+    const radiusX=Math.min(width*.34,310);
+    const radiusY=Math.min(width*.055,44);
+    const frontIndex=gesture?.axis==='horizontal'?nearestIndex(angle):selectedIndex;
+    cards.forEach((card,index)=>{
+      const radians=(angle+index*step)*Math.PI/180;
+      const x=Math.sin(radians)*radiusX;
+      const depth=Math.cos(radians);
+      const y=depth*radiusY;
+      const scale=.54+(depth+1)*.22;
+      const opacity=.13+(depth+1)*.435;
+      card.style.transform=`translate(calc(-50% + ${x.toFixed(2)}px),calc(-50% + ${y.toFixed(2)}px)) scale(${scale.toFixed(3)}) rotateY(${(-Math.sin(radians)*22).toFixed(2)}deg)`;
+      card.style.opacity=String(clamp(opacity,.13,1));
+      card.style.zIndex=String(Math.round((depth+1)*10+2));
+      card.style.pointerEvents=depth>.05?'auto':'none';
+    });
     ring.style.transform=`translate(-50%,-50%) rotateZ(${angle.toFixed(2)}deg) rotateX(71deg)`;
-    applyEvidence();
+    applyEvidence(frontIndex);
   }
 
-  function settleOrbit(target){
-    angle=((target%360)+360)%360;
-    if(Math.abs(angle-360)<.01||Math.abs(angle)<.01)angle=0;
-    writeState('research-frontier-orbit',angle.toFixed(2));
+  function finishAnimation(index){
+    selectedIndex=modulo(index,cards.length);
+    angle=-selectedIndex*step;
+    writeState('research-frontier-object',selectedIndex);
     animating=false;
-    card.setAttribute('aria-disabled','false');
+    cards.forEach(card=>card.setAttribute('aria-disabled','false'));
     updateStatus();
     applyOrbit();
   }
 
-  function animateOrbit(target,label='Evidence recomposing'){
+  function animateTo(index,target,label='Evidence recomposing'){
     cancelAnimationFrame(animationFrame);
+    const nextIndex=modulo(index,cards.length);
     const start=angle;
     const distance=target-start;
-    const duration=reduceMotion.matches?0:1050;
+    const duration=reduceMotion.matches?0:760;
     animating=true;
-    card.setAttribute('aria-disabled','true');
-    updateStatus(label);
-    if(!duration){settleOrbit(target);return}
+    cards.forEach(card=>card.setAttribute('aria-disabled','true'));
+    updateStatus(label,selectedIndex);
+    if(!duration){finishAnimation(nextIndex);return}
     const began=performance.now();
     const frame=now=>{
       const progress=clamp((now-began)/duration,0,1);
       const eased=1-Math.pow(1-progress,3);
       angle=start+distance*eased;
       applyOrbit();
-      if(progress<1)animationFrame=requestAnimationFrame(frame);else settleOrbit(target);
+      if(progress<1)animationFrame=requestAnimationFrame(frame);else finishAnimation(nextIndex);
     };
     animationFrame=requestAnimationFrame(frame);
   }
 
   function rotateOrbit(direction){
     if(animating||inspecting)return;
-    const base=Math.round(angle/360)*360;
-    animateOrbit(base+direction*360,direction>0?'Orbit moving forward · Evidence recomposing':'Orbit moving backward · Evidence recomposing');
+    const nextIndex=modulo(selectedIndex+direction,cards.length);
+    animateTo(nextIndex,angle-direction*step,direction>0?'Next research object · Evidence recomposing':'Previous research object · Evidence recomposing');
   }
 
-  function activateLens(faceElement,id,focus=false){
-    const tabs=[...faceElement.querySelectorAll('[data-lens-tab]')];
-    const panels=[...faceElement.querySelectorAll('[data-lens-panel]')];
+  function rotateCardToFront(index){
+    if(animating||inspecting||index===selectedIndex)return;
+    let target=-index*step;
+    while(target-angle>180)target-=360;
+    while(angle-target>180)target+=360;
+    animateTo(index,target,'Selected object moving to front · Evidence recomposing');
+  }
+
+  function activateLens(scope,id,focus=false){
+    const tabs=[...scope.querySelectorAll('[data-lens-tab]')];
+    const panels=[...scope.querySelectorAll('[data-lens-panel]')];
     if(!tabs.some(tab=>tab.dataset.lensTab===id))return;
     tabs.forEach(tab=>{
       const active=tab.dataset.lensTab===id;
@@ -388,10 +583,10 @@ body{position:relative;isolation:isolate;overflow-x:clip}
     panels.forEach(panel=>{panel.hidden=panel.dataset.lensPanel!==id});
   }
 
-  faces.forEach(face=>{
-    const tabs=[...face.querySelectorAll('[data-lens-tab]')];
+  document.querySelectorAll('[data-object-reader]').forEach(objectReader=>{
+    const tabs=[...objectReader.querySelectorAll('[data-lens-tab]')];
     tabs.forEach((tab,index)=>{
-      tab.addEventListener('click',()=>activateLens(face,tab.dataset.lensTab));
+      tab.addEventListener('click',()=>activateLens(objectReader,tab.dataset.lensTab));
       tab.addEventListener('keydown',event=>{
         let next=index;
         if(event.key==='ArrowRight')next=(index+1)%tabs.length;
@@ -400,14 +595,35 @@ body{position:relative;isolation:isolate;overflow-x:clip}
         else if(event.key==='End')next=tabs.length-1;
         else return;
         event.preventDefault();
-        activateLens(face,tabs[next].dataset.lensTab,true);
+        activateLens(objectReader,tabs[next].dataset.lensTab,true);
       });
     });
   });
 
+  function applyObject(reset=false){
+    const objectId=selectedObject();
+    faces.forEach(face=>{
+      const readers=[...face.querySelectorAll('[data-object-reader]')];
+      readers.forEach(objectReader=>{
+        const active=objectReader.dataset.objectReader===objectId;
+        objectReader.hidden=!active;
+        if(active&&reset){
+          const firstTab=objectReader.querySelector('[data-lens-tab]');
+          if(firstTab)activateLens(objectReader,firstTab.dataset.lensTab);
+        }
+      });
+      const activeReader=readers.find(objectReader=>objectReader.dataset.objectReader===objectId);
+      const title=activeReader?.querySelector('h2[id]');
+      if(title)face.setAttribute('aria-labelledby',title.id);
+      if(reset)face.scrollTop=0;
+    });
+    const activeFace=faces.find(face=>face.dataset.readerFace===selectedFace);
+    const activeTitle=activeFace?.querySelector(`[data-object-reader="${objectId}"] h2[id]`);
+    if(activeTitle)reader.setAttribute('aria-labelledby',activeTitle.id);
+  }
+
   function applyFace(reset=false,focus=false){
     reader.dataset.face=selectedFace;
-    reader.setAttribute('aria-labelledby',`${selectedFace}-title`);
     faces.forEach(face=>{
       const active=face.dataset.readerFace===selectedFace;
       face.setAttribute('aria-hidden',active?'false':'true');
@@ -415,76 +631,106 @@ body{position:relative;isolation:isolate;overflow-x:clip}
       if(active&&reset)face.scrollTop=0;
       if(active&&focus)requestAnimationFrame(()=>face.focus({preventScroll:true}));
     });
+    applyObject(reset);
     writeState('research-frontier-face',selectedFace);
     updateStatus();
     applyEvidence();
   }
 
   function flipFace(target,focus=true){
-    if(target===selectedFace)return;
+    if(target===selectedFace||bridgeOpen)return;
     selectedFace=target;
     applyFace(true,false);
     requestAnimationFrame(()=>{
       const active=faces.find(face=>face.dataset.readerFace===selectedFace);
-      if(focus)active?.querySelector(`[data-flip-face]`)?.focus({preventScroll:true});
+      if(focus)active?.querySelector('[data-flip-face]')?.focus({preventScroll:true});
       else active?.focus({preventScroll:true});
     });
   }
 
-  function openReader(lens){
+  function openBridge(){
+    if(!inspecting||bridgeOpen)return;
+    bridgeOpen=true;
+    sharedBridge.hidden=false;
+    reader.dataset.bridgeOpen='true';
+    readerTurn.inert=true;
+    requestAnimationFrame(()=>sharedBridge.querySelector('[data-close-bridge]')?.focus({preventScroll:true}));
+  }
+
+  function closeBridge(){
+    if(!bridgeOpen)return;
+    bridgeOpen=false;
+    sharedBridge.hidden=true;
+    delete reader.dataset.bridgeOpen;
+    readerTurn.inert=false;
+    const active=faces.find(face=>face.dataset.readerFace===selectedFace);
+    requestAnimationFrame(()=>active?.querySelector('[data-open-bridge]')?.focus({preventScroll:true}));
+  }
+
+  function openReader(objectId,lens){
     if(animating||inspecting)return;
+    const requestedIndex=objectIds.indexOf(objectId);
+    if(requestedIndex>=0){
+      selectedIndex=requestedIndex;
+      angle=-selectedIndex*step;
+      writeState('research-frontier-object',selectedIndex);
+      updateStatus();
+      applyOrbit();
+    }
     lastFocus=document.activeElement;
     inspecting=true;
     reader.hidden=false;
     document.body.classList.add('rf-reader-open');
     stage.inert=true;
     stage.setAttribute('aria-hidden','true');
-    applyFace(false,true);
+    applyFace(true,true);
     if(lens){
-      const scientific=faces.find(face=>face.dataset.readerFace==='scientific');
-      selectedFace='scientific';
-      activateLens(scientific,lens);
-      applyFace(false,true);
+      const activeFace=faces.find(face=>face.dataset.readerFace===selectedFace);
+      const activeObject=activeFace?.querySelector(`[data-object-reader="${selectedObject()}"]`);
+      if(activeObject)activateLens(activeObject,lens);
     }
   }
 
   function closeReader(){
     if(!inspecting)return;
+    if(bridgeOpen)closeBridge();
     inspecting=false;
     reader.hidden=true;
     document.body.classList.remove('rf-reader-open');
     stage.inert=false;
     stage.removeAttribute('aria-hidden');
     applyEvidence();
-    card.scrollIntoView({block:'center',behavior:reduceMotion.matches?'auto':'smooth'});
-    requestAnimationFrame(()=>card.focus({preventScroll:true}));
+    const activeCard=cards[selectedIndex];
+    activeCard.scrollIntoView({block:'center',behavior:reduceMotion.matches?'auto':'smooth'});
+    requestAnimationFrame(()=>activeCard.focus({preventScroll:true}));
     lastFocus=null;
   }
 
-  card.addEventListener('click',event=>{
+  cards.forEach((card,index)=>card.addEventListener('click',event=>{
     if(suppressCardClick){event.preventDefault();suppressCardClick=false;return}
-    openReader();
-  });
+    if(index===selectedIndex)openReader(card.dataset.object);
+    else rotateCardToFront(index);
+  }));
   document.querySelectorAll('[data-open-reader]').forEach(control=>control.addEventListener('click',event=>{
     event.preventDefault();
-    openReader(control.dataset.openLens);
+    const objectId=control.dataset.openObject||(control.dataset.openLens==='limits'?'limits':selectedObject());
+    openReader(objectId,control.dataset.openLens);
   }));
   document.querySelectorAll('[data-return-orbit]').forEach(control=>control.addEventListener('click',closeReader));
   document.querySelectorAll('[data-flip-face]').forEach(control=>control.addEventListener('click',()=>flipFace(control.dataset.flipFace)));
-  document.querySelector('[data-orbit-previous]').addEventListener('click',()=>rotateOrbit(-1));
-  document.querySelector('[data-orbit-next]').addEventListener('click',()=>rotateOrbit(1));
+  document.querySelectorAll('[data-open-bridge]').forEach(control=>control.addEventListener('click',openBridge));
+  document.querySelector('[data-close-bridge]').addEventListener('click',closeBridge);
 
   stage.addEventListener('keydown',event=>{
-    if(event.target!==stage)return;
     if(event.key==='ArrowLeft'){event.preventDefault();rotateOrbit(-1)}
     else if(event.key==='ArrowRight'){event.preventDefault();rotateOrbit(1)}
-    else if(event.key==='Enter'||event.key===' '){event.preventDefault();openReader()}
+    else if((event.key==='Enter'||event.key===' ')&&event.target===stage){event.preventDefault();openReader(selectedObject())}
   });
 
   stage.addEventListener('pointerdown',event=>{
     if(animating||inspecting||event.button!==0)return;
     const captureDeferred=Boolean(event.target.closest('[data-orbit-card]'));
-    gesture={id:event.pointerId,x:event.clientX,y:event.clientY,startAngle:angle,axis:null,lastX:event.clientX,captureDeferred};
+    gesture={id:event.pointerId,x:event.clientX,y:event.clientY,startAngle:angle,axis:null,captureDeferred};
     stage.dataset.dragging='true';
     if(!captureDeferred)stage.setPointerCapture?.(event.pointerId);
   });
@@ -499,9 +745,8 @@ body{position:relative;isolation:isolate;overflow-x:clip}
       gesture.captureDeferred=false;
     }
     event.preventDefault();
-    gesture.lastX=event.clientX;
-    angle=gesture.startAngle+dx*.72;
-    updateStatus('Orbit under direct control · Evidence recomposing');
+    angle=gesture.startAngle+dx*.34;
+    updateStatus('Carousel under direct control · Evidence recomposing',nearestIndex(angle));
     applyOrbit();
   },{passive:false});
   const finishOrbitGesture=event=>{
@@ -513,17 +758,26 @@ body{position:relative;isolation:isolate;overflow-x:clip}
     if(current.axis==='horizontal'){
       suppressCardClick=Math.abs(dx)>10;
       setTimeout(()=>{suppressCardClick=false},0);
-      const target=Math.abs(dx)>=40?current.startAngle+(dx>0?360:-360):current.startAngle;
-      animateOrbit(target,Math.abs(dx)>=40?'Orbit released · Evidence settling':'Orbit restored');
+      let targetIndex=nearestIndex(angle);
+      if(Math.abs(dx)>=42&&targetIndex===selectedIndex)targetIndex=modulo(selectedIndex+(dx<0?1:-1),cards.length);
+      let target=-targetIndex*step;
+      while(target-angle>180)target-=360;
+      while(angle-target>180)target+=360;
+      animateTo(targetIndex,target,Math.abs(dx)>=42?'Carousel released · Evidence settling':'Carousel restored');
+    }else{
+      angle=-selectedIndex*step;
+      updateStatus();
+      applyOrbit();
     }
   };
   stage.addEventListener('pointerup',finishOrbitGesture);
   stage.addEventListener('pointercancel',event=>{
     if(!gesture||gesture.id!==event.pointerId)return;
-    const start=gesture.startAngle;
     gesture=null;
     delete stage.dataset.dragging;
-    animateOrbit(start,'Orbit restored');
+    angle=-selectedIndex*step;
+    updateStatus();
+    applyOrbit();
   });
 
   faces.forEach(face=>{
@@ -552,13 +806,15 @@ body{position:relative;isolation:isolate;overflow-x:clip}
   });
 
   document.addEventListener('keydown',event=>{
-    if(event.key==='Escape'&&inspecting){event.preventDefault();closeReader()}
+    if(event.key!=='Escape'||!inspecting)return;
+    event.preventDefault();
+    if(bridgeOpen)closeBridge();else closeReader();
   });
 
   reader.addEventListener('keydown',event=>{
     if(event.key!=='Tab')return;
-    const active=faces.find(face=>face.dataset.readerFace===selectedFace);
-    const focusable=[...active.querySelectorAll('button:not([disabled]),a[href],[tabindex]:not([tabindex="-1"])')].filter(element=>!element.hidden&&!element.closest('[hidden]'));
+    const scope=bridgeOpen?sharedBridge:faces.find(face=>face.dataset.readerFace===selectedFace);
+    const focusable=[...scope.querySelectorAll('button:not([disabled]),a[href],[tabindex]:not([tabindex="-1"])')].filter(element=>!element.hidden&&!element.closest('[hidden]'));
     if(!focusable.length)return;
     const first=focusable[0],last=focusable[focusable.length-1];
     if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}
@@ -567,10 +823,12 @@ body{position:relative;isolation:isolate;overflow-x:clip}
 
   reduceMotion.addEventListener?.('change',()=>applyOrbit());
   addEventListener('resize',applyOrbit,{passive:true});
+  applyObject(false);
   applyFace(false,false);
+  updateStatus();
   applyOrbit();
 })();
 </script>
-<noscript><p style="position:relative;z-index:3;width:min(calc(100% - 2rem),78rem);margin:1rem auto 3rem;color:#a8b7bd">The orbital proof requires JavaScript for state changes. Its public evidence and governance boundaries remain available through the linked evidence destinations.</p></noscript>
+<noscript><p style="position:relative;z-index:3;width:min(calc(100% - 2rem),78rem);margin:1rem auto 3rem;color:#a8b7bd">The research carousel requires JavaScript for state changes. Public evidence and governance boundaries remain available through the linked evidence destinations.</p></noscript>
 </body>
 </html>

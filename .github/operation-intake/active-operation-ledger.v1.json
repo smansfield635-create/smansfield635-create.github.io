@@ -292,77 +292,6 @@
       "scopeHash": "0b32492db52675bf274cc2bb6acdf9e3ab5a5078f2c49e19ac17f4b404a27e76",
       "state": "ADMITTED_LOCKED"
     },
-    "0b57ab93c3da93a9903114259beb1a2365308add5f114e1990e6e6ffe068e4a8": {
-      "governingHead": "048dd66ec76982f5c8647130124719f4a3fc2e1f",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "048dd66ec76982f5c8647130124719f4a3fc2e1f",
-          "lockGeneration": 1861,
-          "lockScope": "COMPASS:MAIN_CONSTELLATION:RELEASE_ORBIT_CONTINUITY:V2",
-          "operationId": "COMPASS_MAIN_CONSTELLATION_RELEASE_ORBIT_CONTINUITY_HOTFIX_20260830_003",
-          "procedureLocatorDigest": "1623c859de25a2c1da2852c16d5c5f0e2a8cb306d2ef9444fe865d72007e9f37",
-          "requestDigest": "ab4dade3f0d0ec7ab2b7401a0efbd3e207e85b4bd19b86a03a52ae58741cd6d0",
-          "scopeHash": "0b57ab93c3da93a9903114259beb1a2365308add5f114e1990e6e6ffe068e4a8"
-        },
-        "bindingDigest": "519dd4bc445378901ab411719cf460a44c1cdec29c771a1f41e380c0407fe2ed",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "94eeaefbe68201d86989119c15a882fb97c3f3aa",
-          "observedLockRefHead": "eaec93ba84a747e4710f6c65e49c5163e5f68f4f"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "e26592cf4412a287c5603d7ed3efcc17a42ff5fbaa61009151e2090b6721fb6c",
-          "commentId": 5466793890,
-          "issueNumber": 2347,
-          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transitionIdentity": {
-          "predecessor": {
-            "governingHead": "0faada9b1e153dc0af2352ede737edcc62f1aa23",
-            "lockGeneration": 1858,
-            "lockScope": "COMPASS:MAIN_CONSTELLATION:RELEASE_ORBIT_CONTINUITY:V2",
-            "operationId": "COMPASS_MAIN_CONSTELLATION_RELEASE_ORBIT_CONTINUITY_20260830_002"
-          },
-          "successor": {
-            "governingHead": "048dd66ec76982f5c8647130124719f4a3fc2e1f",
-            "lockGeneration": 1861,
-            "lockScope": "COMPASS:MAIN_CONSTELLATION:RELEASE_ORBIT_CONTINUITY:V2",
-            "operationId": "COMPASS_MAIN_CONSTELLATION_RELEASE_ORBIT_CONTINUITY_HOTFIX_20260830_003"
-          },
-          "transitionId": "COMPASS_RELEASE_ORBIT_CONTINUITY_1858_TO_HOTFIX_1861_20260830_001"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
-      },
-      "lockGeneration": 1861,
-      "lockScope": "COMPASS:MAIN_CONSTELLATION:RELEASE_ORBIT_CONTINUITY:V2",
-      "operationId": "COMPASS_MAIN_CONSTELLATION_RELEASE_ORBIT_CONTINUITY_HOTFIX_20260830_003",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "0faada9b1e153dc0af2352ede737edcc62f1aa23",
-        "lockGeneration": 1858,
-        "lockScope": "COMPASS:MAIN_CONSTELLATION:RELEASE_ORBIT_CONTINUITY:V2",
-        "operationId": "COMPASS_MAIN_CONSTELLATION_RELEASE_ORBIT_CONTINUITY_20260830_002",
-        "preservedEvidenceRefs": [
-          "GITHUB_ACTIONS_RUN_33292228494_JOB_99205752808",
-          "GITHUB_ACTIONS_ARTIFACT_9726358463_SHA256_D811748E4CBF84E61A5D38FF9ADC36D2461EE1098CC14650878C2AC7D0F9B3D5",
-          "CANDIDATE_BBE526754E553BF4AF0470BFD9ADE6483D07469F_FAIL",
-          "LOCAL_CORRECTIVE_COMMIT_DC4E357CC74ABEA34EFDCE4957CC9F42DCEC7EC9_NOT_SUCCESSOR_HEAD_EVIDENCE"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "COMPASS_RELEASE_ORBIT_CONTINUITY_1858_TO_HOTFIX_1861_20260830_001"
-      },
-      "procedureLocatorDigest": "1623c859de25a2c1da2852c16d5c5f0e2a8cb306d2ef9444fe865d72007e9f37",
-      "released": false,
-      "requestDigest": "ab4dade3f0d0ec7ab2b7401a0efbd3e207e85b4bd19b86a03a52ae58741cd6d0",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "0b57ab93c3da93a9903114259beb1a2365308add5f114e1990e6e6ffe068e4a8",
-      "state": "ADMITTED_LOCKED"
-    },
     "0bb1f31d413c5e1e6bbacb45d56184915b13e9a91bbc746f7b1f37b013585568": {
       "governingHead": "744961bd34be67a58037f685f2eda618dff58b10",
       "lockGeneration": 1581,
@@ -34451,6 +34380,115 @@
       "requestDigest": "ba34ce3f9c0424d83e3a75ad7ac76be729b70d0022fa2ad7914845c10f44cd0c",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "f08285d2ed202d5fe61e68aff664b7ef8f5ccc7a9ef66d2bbf42c8d2d79ef555",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "048dd66ec76982f5c8647130124719f4a3fc2e1f",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "048dd66ec76982f5c8647130124719f4a3fc2e1f",
+          "lockGeneration": 1861,
+          "lockScope": "COMPASS:MAIN_CONSTELLATION:RELEASE_ORBIT_CONTINUITY:V2",
+          "operationId": "COMPASS_MAIN_CONSTELLATION_RELEASE_ORBIT_CONTINUITY_HOTFIX_20260830_003",
+          "procedureLocatorDigest": "1623c859de25a2c1da2852c16d5c5f0e2a8cb306d2ef9444fe865d72007e9f37",
+          "requestDigest": "ab4dade3f0d0ec7ab2b7401a0efbd3e207e85b4bd19b86a03a52ae58741cd6d0",
+          "scopeHash": "0b57ab93c3da93a9903114259beb1a2365308add5f114e1990e6e6ffe068e4a8"
+        },
+        "bindingDigest": "519dd4bc445378901ab411719cf460a44c1cdec29c771a1f41e380c0407fe2ed",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "94eeaefbe68201d86989119c15a882fb97c3f3aa",
+          "observedLockRefHead": "eaec93ba84a747e4710f6c65e49c5163e5f68f4f"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "e26592cf4412a287c5603d7ed3efcc17a42ff5fbaa61009151e2090b6721fb6c",
+          "commentId": 5466793890,
+          "issueNumber": 2347,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transitionIdentity": {
+          "predecessor": {
+            "governingHead": "0faada9b1e153dc0af2352ede737edcc62f1aa23",
+            "lockGeneration": 1858,
+            "lockScope": "COMPASS:MAIN_CONSTELLATION:RELEASE_ORBIT_CONTINUITY:V2",
+            "operationId": "COMPASS_MAIN_CONSTELLATION_RELEASE_ORBIT_CONTINUITY_20260830_002"
+          },
+          "successor": {
+            "governingHead": "048dd66ec76982f5c8647130124719f4a3fc2e1f",
+            "lockGeneration": 1861,
+            "lockScope": "COMPASS:MAIN_CONSTELLATION:RELEASE_ORBIT_CONTINUITY:V2",
+            "operationId": "COMPASS_MAIN_CONSTELLATION_RELEASE_ORBIT_CONTINUITY_HOTFIX_20260830_003"
+          },
+          "transitionId": "COMPASS_RELEASE_ORBIT_CONTINUITY_1858_TO_HOTFIX_1861_20260830_001"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "048dd66ec76982f5c8647130124719f4a3fc2e1f",
+          "lockGeneration": 1861,
+          "lockScope": "COMPASS:MAIN_CONSTELLATION:RELEASE_ORBIT_CONTINUITY:V2",
+          "operationId": "COMPASS_MAIN_CONSTELLATION_RELEASE_ORBIT_CONTINUITY_HOTFIX_20260830_003",
+          "procedureLocatorDigest": "1623c859de25a2c1da2852c16d5c5f0e2a8cb306d2ef9444fe865d72007e9f37",
+          "requestDigest": "ab4dade3f0d0ec7ab2b7401a0efbd3e207e85b4bd19b86a03a52ae58741cd6d0",
+          "scopeHash": "0b57ab93c3da93a9903114259beb1a2365308add5f114e1990e6e6ffe068e4a8"
+        },
+        "bindingDigest": "c1b109783907d9313601d3805d19d518a181ad51efe43fd88cc25b19305859ea",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "6a95d532a79993e947566b6c1c45491a9884a483",
+          "observedLockRefHead": "0ae524bb8dc01d106cdbacdc290d4b13945ce797"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "0025916d0c81877ad7e4b47508ab936cf1687793002e61bb262f6b68cddce3a1",
+          "commentId": 5466991559,
+          "issueNumber": 2347,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "048dd66ec76982f5c8647130124719f4a3fc2e1f",
+          "lockGeneration": 1861,
+          "lockScope": "COMPASS:MAIN_CONSTELLATION:RELEASE_ORBIT_CONTINUITY:V2",
+          "operationId": "COMPASS_MAIN_CONSTELLATION_RELEASE_ORBIT_CONTINUITY_HOTFIX_20260830_003",
+          "released": true,
+          "scopeHash": "0b57ab93c3da93a9903114259beb1a2365308add5f114e1990e6e6ffe068e4a8",
+          "state": "TERMINAL",
+          "terminalDisposition": "PASS_CLOSED"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 1861,
+      "lockScope": "COMPASS:MAIN_CONSTELLATION:RELEASE_ORBIT_CONTINUITY:V2",
+      "operationId": "COMPASS_MAIN_CONSTELLATION_RELEASE_ORBIT_CONTINUITY_HOTFIX_20260830_003",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "0faada9b1e153dc0af2352ede737edcc62f1aa23",
+        "lockGeneration": 1858,
+        "lockScope": "COMPASS:MAIN_CONSTELLATION:RELEASE_ORBIT_CONTINUITY:V2",
+        "operationId": "COMPASS_MAIN_CONSTELLATION_RELEASE_ORBIT_CONTINUITY_20260830_002",
+        "preservedEvidenceRefs": [
+          "GITHUB_ACTIONS_RUN_33292228494_JOB_99205752808",
+          "GITHUB_ACTIONS_ARTIFACT_9726358463_SHA256_D811748E4CBF84E61A5D38FF9ADC36D2461EE1098CC14650878C2AC7D0F9B3D5",
+          "CANDIDATE_BBE526754E553BF4AF0470BFD9ADE6483D07469F_FAIL",
+          "LOCAL_CORRECTIVE_COMMIT_DC4E357CC74ABEA34EFDCE4957CC9F42DCEC7EC9_NOT_SUCCESSOR_HEAD_EVIDENCE"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_RELEASE_ORBIT_CONTINUITY_1858_TO_HOTFIX_1861_20260830_001"
+      },
+      "procedureLocatorDigest": "1623c859de25a2c1da2852c16d5c5f0e2a8cb306d2ef9444fe865d72007e9f37",
+      "released": true,
+      "requestDigest": "ab4dade3f0d0ec7ab2b7401a0efbd3e207e85b4bd19b86a03a52ae58741cd6d0",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "0b57ab93c3da93a9903114259beb1a2365308add5f114e1990e6e6ffe068e4a8",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

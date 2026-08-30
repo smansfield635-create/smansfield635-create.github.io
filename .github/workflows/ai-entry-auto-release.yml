@@ -146,16 +146,16 @@ jobs:
           cp "$audralia_renderer_src" "$audralia_runtime_dir/renderer.mjs"
           cp "$audralia_weather_src" "$audralia_weather_dst"
           python3 - "$audralia_app" <<'PY'
-from pathlib import Path
-import sys
-path=Path(sys.argv[1])
-text=path.read_text()
-old="../../h-earth/terrain-estate-construction-v1/renderer.mjs"
-new="../runtime-dependencies/renderer.mjs"
-if text.count(old) != 1:
-    raise SystemExit(f"AUDRALIA_RENDERER_IMPORT_REWRITE_CARDINALITY:{text.count(old)}")
-path.write_text(text.replace(old,new))
-PY
+          from pathlib import Path
+          import sys
+          path=Path(sys.argv[1])
+          text=path.read_text()
+          old="../../h-earth/terrain-estate-construction-v1/renderer.mjs"
+          new="../runtime-dependencies/renderer.mjs"
+          if text.count(old) != 1:
+              raise SystemExit(f"AUDRALIA_RENDERER_IMPORT_REWRITE_CARDINALITY:{text.count(old)}")
+          path.write_text(text.replace(old,new))
+          PY
           test "$(sha256sum "$audralia_renderer_src" | awk '{print $1}')" = "$(sha256sum "$audralia_runtime_dir/renderer.mjs" | awk '{print $1}')"
           test "$(sha256sum "$audralia_weather_src" | awk '{print $1}')" = "$(sha256sum "$audralia_weather_dst" | awk '{print $1}')"
           grep -Fq "../runtime-dependencies/renderer.mjs" "$audralia_app"

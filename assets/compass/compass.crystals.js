@@ -143,6 +143,9 @@
     CONSTELLATION_SETTLE:
       "constellation-settle",
 
+    CONSTELLATION_RELEASE_INERTIA:
+      "constellation-release-inertia",
+
     CLUSTER_DRAG:
       "cluster-drag",
 
@@ -183,6 +186,18 @@
 
     sampleWindowMs:
       140,
+
+    releaseInertiaMinimumVelocityPxPerMs:
+      0.12,
+
+    releaseInertiaMinimumMs:
+      600,
+
+    releaseInertiaMaximumMs:
+      780,
+
+    releaseInertiaDampingRate:
+      4.2,
 
     maximumSamples:
       18,
@@ -982,6 +997,9 @@
 
     constellationTargetQuaternion:
       [0, 0, 0, 1],
+
+    constellationReleaseInertia:
+      null,
 
     visualPrimaryWing:
       "north",
@@ -6744,7 +6762,9 @@
 
   function requestControllerOrbitPreview(
     quaternion,
-    primaryWing
+    primaryWing,
+    source =
+      "crystals-drag"
   ) {
     const api =
       globalThis
@@ -6757,15 +6777,16 @@
       api.requestOrbitPreview({
         quaternion,
         primaryWing,
-        source:
-          "crystals-drag"
+        source
       }) !== false
     );
   }
 
   function requestControllerOrbitCommit(
     quaternion,
-    primaryWing
+    primaryWing,
+    source =
+      "crystals-release-preserve"
   ) {
     const api =
       globalThis
@@ -6778,8 +6799,7 @@
       api.requestOrbitCommit({
         quaternion,
         primaryWing,
-        source:
-          "crystals-release-preserve"
+        source
       }) !== false
     );
   }
@@ -6799,6 +6819,546 @@
         reason
       ) !== false
     );
+  }
+
+  const CONSTELLATION_RELEASE_MOTION_OWNER =
+    "COMPASS_MAIN_CONSTELLATION_RELEASE_CONTINUITY_v3";
+
+  const CONSTELLATION_RELEASE_COMPLETE_EVENT =
+    "DGB_COMPASS_CONSTELLATION_RELEASE_CONTINUITY_COMPLETE_v1";
+
+  const CONSTELLATION_RELEASE_START_EVENT =
+    "DGB_COMPASS_CONSTELLATION_RELEASE_CONTINUITY_START_v1";
+
+  function constellationOrientationReceipt(
+    orientation,
+    quaternion,
+    primaryWing
+  ) {
+    return {
+      yaw:
+        finiteNumber(
+          orientation &&
+          orientation.yaw,
+          0
+        ),
+
+      pitch:
+        finiteNumber(
+          orientation &&
+          orientation.pitch,
+          0
+        ),
+
+      roll:
+        finiteNumber(
+          orientation &&
+          orientation.roll,
+          0
+        ),
+
+      quaternion:
+        quaternionNormalize(
+          quaternion ||
+          (
+            orientation &&
+            orientation.quaternion
+          )
+        ),
+
+      primaryId:
+        normalizeWing(
+          orientation &&
+          orientation.primaryId
+        ) ||
+        primaryWing
+    };
+  }
+
+  function constellationReleaseQuaternionAt(
+    inertia,
+    elapsedMs
+  ) {
+    const seconds =
+      Math.max(
+        0,
+        elapsedMs
+      ) * 0.001;
+
+    const integrated =
+      (
+        1 -
+        Math.exp(
+          -GESTURE
+            .releaseInertiaDampingRate *
+          seconds
+        )
+      ) /
+      GESTURE
+        .releaseInertiaDampingRate;
+
+    const yawQuaternion =
+      quaternionFromAxisAngle(
+        [0, 1, 0],
+        inertia.yawVelocity *
+          integrated
+      );
+
+    const pitchQuaternion =
+      quaternionFromAxisAngle(
+        [1, 0, 0],
+        inertia.pitchVelocity *
+          integrated
+      );
+
+    return quaternionMultiply(
+      pitchQuaternion,
+      quaternionMultiply(
+        yawQuaternion,
+        inertia.releaseQuaternion
+      )
+    );
+  }
+
+  function publishConstellationReleaseReceipt(
+    receipt
+  ) {
+    const frozenReceipt =
+      Object.freeze(
+        receipt
+      );
+
+    globalThis
+      .DGB_COMPASS_RELEASE_CONTINUITY_RECEIPT =
+        frozenReceipt;
+
+    globalThis.dispatchEvent(
+      new CustomEvent(
+        CONSTELLATION_RELEASE_COMPLETE_EVENT,
+        {
+          detail:
+            frozenReceipt
+        }
+      )
+    );
+  }
+
+  function completeConstellationReleaseInertia(
+    now,
+    interrupted = false
+  ) {
+    const inertia =
+      state.constellationReleaseInertia;
+
+    if (!inertia) {
+      return false;
+    }
+
+    const elapsedMs =
+      interrupted
+        ? Math.min(
+            inertia.durationMs,
+            Math.max(
+              0,
+              now -
+                inertia.startedAt
+            )
+          )
+        : inertia.durationMs;
+
+    const endpointQuaternion =
+      constellationReleaseQuaternionAt(
+        inertia,
+        elapsedMs
+      );
+
+    const endpointWing =
+      nearestPrimaryWing(
+        endpointQuaternion
+      );
+
+    const previewed =
+      requestControllerOrbitPreview(
+        endpointQuaternion,
+        endpointWing,
+        CONSTELLATION_RELEASE_MOTION_OWNER
+      );
+
+    if (!previewed) {
+      state.constellationReleaseInertia =
+        null;
+
+      state.root.dataset
+        .mainConstellationInertiaActive =
+          "false";
+
+      requestControllerOrbitCancel(
+        "constellation-release-inertia-preview-unavailable"
+      );
+
+      return false;
+    }
+
+    state.constellationQuaternion =
+      endpointQuaternion.slice();
+
+    state.constellationTargetQuaternion =
+      endpointQuaternion.slice();
+
+    state.visualPrimaryWing =
+      endpointWing;
+
+    state.settledPrimaryWing =
+      endpointWing;
+
+    state.root.dataset.renderedForegroundCardinal =
+      endpointWing;
+
+    completeConstellationSettlementGeometry();
+
+    const endpointFrame =
+      getControllerFrame();
+
+    const committed =
+      requestControllerOrbitCommit(
+        endpointQuaternion,
+        endpointWing,
+        interrupted
+          ? "crystals-release-inertia-interrupted-endpoint"
+          : "crystals-release-inertial-endpoint"
+      );
+
+    state.constellationReleaseInertia =
+      null;
+
+    state.root.dataset
+      .mainConstellationInertiaActive =
+        "false";
+
+    if (!committed) {
+      requestControllerOrbitCancel(
+        "constellation-release-inertia-commit-unavailable"
+      );
+
+      return false;
+    }
+
+    if (!interrupted) {
+      const committedFrame =
+        getControllerFrame();
+
+      publishConstellationReleaseReceipt({
+        schema:
+          "COMPASS_MAIN_CONSTELLATION_RELEASE_CONTINUITY_RECEIPT_v1",
+
+        source:
+          "pointer",
+
+        motionOwner:
+          CONSTELLATION_RELEASE_MOTION_OWNER,
+
+        targetWing:
+          endpointWing,
+
+        releaseVelocityPxPerMs:
+          inertia.releaseSpeed,
+
+        releaseVectorPxPerMs: {
+          x:
+            inertia.releaseVelocityX,
+
+          y:
+            inertia.releaseVelocityY
+        },
+
+        initialAngularVelocityRadPerSecond: {
+          yaw:
+            inertia.yawVelocity,
+
+          pitch:
+            inertia.pitchVelocity
+        },
+
+        releaseOrientation:
+          inertia.releaseOrientation,
+
+        inertialEndpointOrientation:
+          constellationOrientationReceipt(
+            endpointFrame &&
+            endpointFrame.orbitOrientation,
+            endpointQuaternion,
+            endpointWing
+          ),
+
+        finalCommittedOrientation:
+          constellationOrientationReceipt(
+            committedFrame &&
+            committedFrame
+              .committedOrbitOrientation,
+            endpointQuaternion,
+            endpointWing
+          ),
+
+        inertiaMs:
+          inertia.durationMs,
+
+        renderConvergenceMs:
+          0,
+
+        settlementMs:
+          0,
+
+        totalMotionMs:
+          inertia.durationMs,
+
+        commitLatencyMs:
+          Math.max(
+            0,
+            Math.round(
+              now -
+              (
+                inertia.startedAt +
+                inertia.durationMs
+              )
+            )
+          ),
+
+        endpointPolicy:
+          "COMMIT_INERTIAL_ENDPOINT_NO_SNAPBACK",
+
+        sameDirectionPolicy:
+          "CONTINUE_CRYSTAL_DRAG_AXES_FROM_RELEASE",
+
+        returnTarget:
+          null,
+
+        perceptibleMotionFloorMs:
+          GESTURE
+            .releaseInertiaMinimumMs,
+
+        boundedMotionCeilingMs:
+          820
+      });
+    }
+
+    return true;
+  }
+
+  function advanceConstellationReleaseInertia(
+    now
+  ) {
+    const inertia =
+      state.constellationReleaseInertia;
+
+    if (!inertia) {
+      return false;
+    }
+
+    if (state.reducedMotion) {
+      return completeConstellationReleaseInertia(
+        now,
+        true
+      );
+    }
+
+    const elapsedMs =
+      Math.min(
+        inertia.durationMs,
+        Math.max(
+          0,
+          now -
+            inertia.startedAt
+        )
+      );
+
+    if (
+      elapsedMs >=
+      inertia.durationMs
+    ) {
+      return completeConstellationReleaseInertia(
+        now
+      );
+    }
+
+    const quaternion =
+      constellationReleaseQuaternionAt(
+        inertia,
+        elapsedMs
+      );
+
+    const primaryWing =
+      nearestPrimaryWing(
+        quaternion
+      );
+
+    const previewed =
+      requestControllerOrbitPreview(
+        quaternion,
+        primaryWing,
+        CONSTELLATION_RELEASE_MOTION_OWNER
+      );
+
+    if (!previewed) {
+      state.constellationReleaseInertia =
+        null;
+
+      state.root.dataset
+        .mainConstellationInertiaActive =
+          "false";
+
+      requestControllerOrbitCancel(
+        "constellation-release-inertia-preview-unavailable"
+      );
+
+      return false;
+    }
+
+    state.constellationQuaternion =
+      quaternion.slice();
+
+    state.constellationTargetQuaternion =
+      quaternion.slice();
+
+    state.visualPrimaryWing =
+      primaryWing;
+
+    state.root.dataset.renderedForegroundCardinal =
+      primaryWing;
+
+    return true;
+  }
+
+  function startConstellationReleaseInertia(
+    releaseQuaternion,
+    primaryWing,
+    metrics
+  ) {
+    if (
+      state.reducedMotion ||
+      metrics.distance <= 0
+    ) {
+      return false;
+    }
+
+    const releaseSpeed =
+      Math.max(
+        metrics.releaseVelocity,
+        GESTURE
+          .releaseInertiaMinimumVelocityPxPerMs
+      );
+
+    const directionScale =
+      releaseSpeed /
+      metrics.distance;
+
+    const releaseVelocityX =
+      metrics.dx *
+      directionScale;
+
+    const releaseVelocityY =
+      metrics.dy *
+      directionScale;
+
+    const bounds =
+      state.scene
+        .getBoundingClientRect();
+
+    const yawVelocity =
+      Math.max(
+        -4.2,
+        Math.min(
+          4.2,
+          releaseVelocityX *
+          1000 /
+          Math.max(
+            1,
+            bounds.width
+          ) *
+          GESTURE
+            .radiansPerViewport
+        )
+      );
+
+    const pitchVelocity =
+      Math.max(
+        -3.4,
+        Math.min(
+          3.4,
+          releaseVelocityY *
+          1000 /
+          Math.max(
+            1,
+            bounds.height
+          ) *
+          GESTURE
+            .radiansPerViewport
+        )
+      );
+
+    const durationMs =
+      Math.round(
+        Math.max(
+          GESTURE
+            .releaseInertiaMinimumMs,
+          Math.min(
+            GESTURE
+              .releaseInertiaMaximumMs,
+            GESTURE
+              .releaseInertiaMinimumMs +
+            releaseSpeed *
+              100
+          )
+        )
+      );
+
+    const frame =
+      getControllerFrame();
+
+    globalThis
+      .DGB_COMPASS_RELEASE_CONTINUITY_RECEIPT =
+        null;
+
+    globalThis.dispatchEvent(
+      new CustomEvent(
+        CONSTELLATION_RELEASE_START_EVENT
+      )
+    );
+
+    state.constellationReleaseInertia = {
+      startedAt:
+        performance.now(),
+
+      durationMs,
+
+      releaseQuaternion:
+        releaseQuaternion.slice(),
+
+      releaseOrientation:
+        constellationOrientationReceipt(
+          frame &&
+          frame.orbitOrientation,
+          releaseQuaternion,
+          primaryWing
+        ),
+
+      releaseSpeed,
+      releaseVelocityX,
+      releaseVelocityY,
+      yawVelocity,
+      pitchVelocity
+    };
+
+    state.root.dataset
+      .mainConstellationInertiaActive =
+        "true";
+
+    state.root.dataset
+      .mainConstellationMotionOwner =
+        CONSTELLATION_RELEASE_MOTION_OWNER;
+
+    requestRender();
+
+    return true;
   }
 
   function requestControllerClusterBegin(
@@ -7160,6 +7720,18 @@
   function handlePointerDown(
     event
   ) {
+    if (
+      state.constellationReleaseInertia
+    ) {
+      completeConstellationReleaseInertia(
+        performance.now(),
+        true
+      );
+
+      state.frame =
+        getControllerFrame();
+    }
+
     if (state.pointer) {
       return;
     }
@@ -7572,13 +8144,25 @@
     state.constellationQuaternion =
       releaseQuaternion.slice();
 
-    completeConstellationSettlementGeometry();
-
-    const committed =
-      requestControllerOrbitCommit(
+    const inertiaStarted =
+      startConstellationReleaseInertia(
         releaseQuaternion,
-        primaryWing
+        primaryWing,
+        metrics
       );
+
+    let committed =
+      false;
+
+    if (!inertiaStarted) {
+      completeConstellationSettlementGeometry();
+
+      committed =
+        requestControllerOrbitCommit(
+          releaseQuaternion,
+          primaryWing
+        );
+    }
 
     state.suppressClickUntil =
       performance.now() +
@@ -7588,6 +8172,7 @@
 
     emitReceipt({
       status:
+        inertiaStarted ||
         committed
           ? "available"
           : "held",
@@ -7596,8 +8181,11 @@
         pointer.territory,
 
       lastGestureType:
-        GESTURE_TYPES
-          .CONSTELLATION_SETTLE,
+        inertiaStarted
+          ? GESTURE_TYPES
+              .CONSTELLATION_RELEASE_INERTIA
+          : GESTURE_TYPES
+              .CONSTELLATION_SETTLE,
 
       lastGestureDistance:
         metrics.distance,
@@ -7617,64 +8205,14 @@
       primaryWing,
 
       gestureActive:
-        false,
+        inertiaStarted,
 
       glError:
+        inertiaStarted ||
         committed
           ? "NO_ERROR"
           : "CONTROLLER_ORBIT_COMMIT_UNAVAILABLE"
     });
-
-    if (committed) {
-      const releaseSpeed =
-        Math.max(
-          metrics.releaseVelocity,
-          0.12
-        );
-
-      const directionScale =
-        metrics.distance > 0
-          ? releaseSpeed /
-            metrics.distance
-          : 0;
-
-      globalThis.dispatchEvent(
-        new CustomEvent(
-          "DGB_COMPASS_CONSTELLATION_RELEASE_v1",
-          {
-            detail:
-              Object.freeze({
-                releaseQuaternion:
-                  Object.freeze(
-                    releaseQuaternion.slice()
-                  ),
-
-                primaryWing,
-
-                releaseVelocityPxPerMs:
-                  releaseSpeed,
-
-                releaseVectorPxPerMs:
-                  Object.freeze({
-                    x:
-                      metrics.dx *
-                      directionScale,
-
-                    y:
-                      metrics.dy *
-                      directionScale
-                  }),
-
-                gestureDurationMs:
-                  metrics.durationMs,
-
-                source:
-                  "crystals-release-preserve"
-              })
-          }
-        )
-      );
-    }
   }
 
   function finishClusterDrag(
@@ -8990,6 +9528,7 @@
 
   function needsAnotherFrame() {
     if (state.pointer && state.pointer.dragging) return true;
+    if (state.constellationReleaseInertia) return true;
     if (state.frame && (state.frame.orbitGestureActive || (state.frame.cluster && state.frame.cluster.gestureActive))) return true;
     if (quaternionNeedsSettlement(state.constellationQuaternion, state.constellationTargetQuaternion)) return true;
     for (const wing of WINGS) {
@@ -9120,6 +9659,17 @@
       getControllerFrame();
 
     resolveReducedMotion();
+
+    if (
+      state.constellationReleaseInertia
+    ) {
+      advanceConstellationReleaseInertia(
+        now
+      );
+
+      state.frame =
+        getControllerFrame();
+    }
 
     updateRecessionProfile();
 
@@ -9429,6 +9979,15 @@
     state.running =
       false;
 
+    state.constellationReleaseInertia =
+      null;
+
+    if (state.root) {
+      state.root.dataset
+        .mainConstellationInertiaActive =
+          "false";
+    }
+
     if (state.raf) {
       cancelAnimationFrame(
         state.raf
@@ -9490,6 +10049,15 @@
 
     state.running =
       false;
+
+    state.constellationReleaseInertia =
+      null;
+
+    if (state.root) {
+      state.root.dataset
+        .mainConstellationInertiaActive =
+          "false";
+    }
 
     if (state.raf) {
       cancelAnimationFrame(
@@ -10086,6 +10654,14 @@
 
       state.root.dataset.sphericalOrbitEnabled =
         "true";
+
+      state.root.dataset
+        .mainConstellationInertiaActive =
+          "false";
+
+      state.root.dataset
+        .mainConstellationMotionOwner =
+          CONSTELLATION_RELEASE_MOTION_OWNER;
 
       state.root.dataset.sphericalClustersEnabled =
         "true";

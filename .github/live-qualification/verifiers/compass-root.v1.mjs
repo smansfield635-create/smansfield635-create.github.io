@@ -90,7 +90,9 @@ const snapshot=target=>target.evaluate(()=>{
   const center=innerWidth/2;
   const frame=globalThis.DGB_COMPASS_CONTROLLER?.getFrameState?.()||null;
   const completion=globalThis.DGB_COMPASS_READINESS_CONTEXT_V1?.completionRuntime||null;
-  const motion=completion?.lastMotion?JSON.parse(JSON.stringify(completion.lastMotion)):null;
+  const hasDirectMotionReceipt=Object.prototype.hasOwnProperty.call(globalThis,'DGB_COMPASS_RELEASE_CONTINUITY_RECEIPT');
+  const directMotionReceipt=globalThis.DGB_COMPASS_RELEASE_CONTINUITY_RECEIPT||null;
+  const motion=hasDirectMotionReceipt?(directMotionReceipt?JSON.parse(JSON.stringify(directMotionReceipt)):null):(completion?.lastMotion?JSON.parse(JSON.stringify(completion.lastMotion)):null);
   const cardinals=[...document.querySelectorAll('[data-compass-cardinal]')].map(element=>{
     const cardinalRect=rect(element);
     const spans=[...element.querySelectorAll(':scope>span')];

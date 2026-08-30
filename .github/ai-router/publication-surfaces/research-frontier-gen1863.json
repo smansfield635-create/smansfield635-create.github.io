@@ -1,31 +1,29 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "research-frontier-gen1863",
-  "description": "Gen1863 accepted Research Frontier seven-chapter publication contract with claim-boundary, click, and keyboard proof.",
+  "description": "Accepted Research Frontier one-card dual-face orbital publication contract with direct-document, Scientific, Agentic, return, claim-boundary, and error proof.",
   "checks": [
     {
       "path": "/evidence/agentic-frontier/",
       "includes": [
         "<title>Research Frontier — Diamond Gate Bridge</title>",
         "data-evidence-field",
-        "data-chapter-tab=\"challenge\"",
-        "data-chapter-tab=\"evidence\"",
-        "data-chapter-tab=\"limits\"",
-        "data-chapter-tab=\"agentic\"",
-        "data-chapter-tab=\"observability\"",
-        "data-chapter-tab=\"bridge\"",
-        "data-chapter-tab=\"reproduce\"",
-        "data-chapter=\"challenge\"",
-        "data-chapter=\"evidence\"",
-        "data-chapter=\"limits\"",
-        "data-chapter=\"agentic\"",
-        "data-chapter=\"observability\"",
-        "data-chapter=\"bridge\"",
-        "data-chapter=\"reproduce\"",
+        "data-orbit-stage",
+        "data-orbit-card",
+        "data-reader data-face=\"scientific\"",
+        "data-reader-face=\"scientific\"",
+        "data-reader-face=\"agentic\"",
+        "data-flip-face=\"agentic\"",
+        "data-flip-face=\"scientific\"",
+        "data-return-orbit",
         "A proposition should survive its strongest attack.",
-        "This page does not claim a universal law or settled cross-domain generality.",
-        "The missing evidence stays visible.",
-        "External validation remains distinct from internal evidence."
+        "Clarity tracks contextual relevance to the selected object. It does not imply stronger evidence, greater confidence, or truth.",
+        "Scientific Frontier · Equal face 01",
+        "Agentic Frontier · Equal face 02",
+        "Broad cross-domain generality, independent replication, and a universal law are not claimed.",
+        "Documented coordination and successful production do not yet prove an efficiency improvement or general causal superiority.",
+        "Missing evidence stays missing",
+        "External validation, a larger frozen comparative battery, clean-room reproduction, and stronger cross-domain testing."
       ],
       "excludes": []
     }
@@ -34,7 +32,7 @@
     "enabled": true,
     "path": "/evidence/agentic-frontier/",
     "timeoutMs": 30000,
-    "readySelector": "[data-evidence-field]",
+    "readySelector": "[data-orbit-card]",
     "binding": {
       "mode": "direct-document",
       "path": "/evidence/agentic-frontier/"
@@ -47,129 +45,55 @@
     ],
     "interactions": [
       {
-        "name": "evidence chapter opens by tab",
-        "action": {
-          "type": "click",
-          "selector": "[data-chapter-tab=\"evidence\"]"
-        },
+        "name": "orbit card opens Scientific reader",
+        "action": {"type": "click", "selector": "[data-orbit-card]"},
         "assertions": [
-          {
-            "type": "attributeEquals",
-            "selector": "[data-chapter-tab=\"evidence\"]",
-            "name": "aria-selected",
-            "value": "true"
-          },
-          {
-            "type": "attributeEquals",
-            "selector": "[data-chapter=\"evidence\"]",
-            "name": "data-active",
-            "value": "true"
-          },
-          {
-            "type": "attributeEquals",
-            "selector": "[data-evidence-field]",
-            "name": "data-active-evidence",
-            "value": "evidence"
-          },
-          {
-            "type": "textContains",
-            "selector": "[data-chapter=\"evidence\"]",
-            "value": "Start with what is actually observed."
-          }
+          {"type": "attributeEquals", "selector": "[data-reader]", "name": "data-face", "value": "scientific"},
+          {"type": "attributeEquals", "selector": "[data-reader-face=\"scientific\"]", "name": "aria-hidden", "value": "false"},
+          {"type": "attributeEquals", "selector": "[data-reader-face=\"agentic\"]", "name": "aria-hidden", "value": "true"},
+          {"type": "attributeEquals", "selector": "[data-orbit-stage]", "name": "aria-hidden", "value": "true"},
+          {"type": "attributeEquals", "selector": "[data-evidence-field]", "name": "data-inspecting", "value": "true"},
+          {"type": "textContains", "selector": "[data-reader-face=\"scientific\"]", "value": "Do viable futures reveal fragility?"}
         ]
       },
       {
-        "name": "end key opens reproduction chapter",
-        "action": {
-          "type": "key",
-          "selector": "[data-chapter-tab=\"evidence\"]",
-          "key": "End"
-        },
+        "name": "visible control turns to Agentic face",
+        "action": {"type": "click", "selector": "[data-reader-face=\"scientific\"] [data-flip-face=\"agentic\"]"},
         "assertions": [
-          {
-            "type": "attributeEquals",
-            "selector": "[data-chapter-tab=\"reproduce\"]",
-            "name": "aria-selected",
-            "value": "true"
-          },
-          {
-            "type": "attributeEquals",
-            "selector": "[data-chapter=\"reproduce\"]",
-            "name": "data-active",
-            "value": "true"
-          },
-          {
-            "type": "attributeEquals",
-            "selector": "[data-evidence-field]",
-            "name": "data-active-evidence",
-            "value": "reproduce"
-          },
-          {
-            "type": "textContains",
-            "selector": "[data-chapter=\"reproduce\"]",
-            "value": "Don’t trust the page. Inspect the boundary."
-          }
+          {"type": "attributeEquals", "selector": "[data-reader]", "name": "data-face", "value": "agentic"},
+          {"type": "attributeEquals", "selector": "[data-reader]", "name": "aria-labelledby", "value": "agentic-title"},
+          {"type": "attributeEquals", "selector": "[data-reader-face=\"scientific\"]", "name": "aria-hidden", "value": "true"},
+          {"type": "attributeEquals", "selector": "[data-reader-face=\"agentic\"]", "name": "aria-hidden", "value": "false"},
+          {"type": "textContains", "selector": "[data-reader-face=\"agentic\"]", "value": "Can agency scale without losing the trail?"}
         ]
       },
       {
-        "name": "home key restores challenge chapter",
-        "action": {
-          "type": "key",
-          "selector": "[data-chapter-tab=\"reproduce\"]",
-          "key": "Home"
-        },
+        "name": "Agentic observability lens opens",
+        "action": {"type": "click", "selector": "#agentic-tab-observability"},
         "assertions": [
-          {
-            "type": "attributeEquals",
-            "selector": "[data-chapter-tab=\"challenge\"]",
-            "name": "aria-selected",
-            "value": "true"
-          },
-          {
-            "type": "attributeEquals",
-            "selector": "[data-chapter=\"challenge\"]",
-            "name": "data-active",
-            "value": "true"
-          },
-          {
-            "type": "attributeEquals",
-            "selector": "[data-evidence-field]",
-            "name": "data-active-evidence",
-            "value": "challenge"
-          },
-          {
-            "type": "textContains",
-            "selector": "[data-chapter=\"challenge\"]",
-            "value": "Do viable futures reveal fragility?"
-          }
+          {"type": "attributeEquals", "selector": "#agentic-tab-observability", "name": "aria-selected", "value": "true"},
+          {"type": "attributeEquals", "selector": "#agentic-tab-coordination", "name": "aria-selected", "value": "false"},
+          {"type": "textContains", "selector": "#agentic-panel-observability", "value": "FAILURE CAN BE CLASSIFIED BEFORE RESPONSE"},
+          {"type": "textContains", "selector": "#agentic-panel-observability", "value": "LIVE VERIFY · Did the visitor receive the intended product?"}
         ]
       },
       {
-        "name": "arrow right advances to evidence chapter",
-        "action": {
-          "type": "key",
-          "selector": "[data-chapter-tab=\"challenge\"]",
-          "key": "ArrowRight"
-        },
+        "name": "Agentic return restores orbit",
+        "action": {"type": "click", "selector": "[data-reader-face=\"agentic\"] [data-return-orbit]"},
         "assertions": [
-          {
-            "type": "attributeEquals",
-            "selector": "[data-chapter-tab=\"evidence\"]",
-            "name": "aria-selected",
-            "value": "true"
-          },
-          {
-            "type": "attributeEquals",
-            "selector": "[data-chapter=\"evidence\"]",
-            "name": "data-active",
-            "value": "true"
-          },
-          {
-            "type": "attributeEquals",
-            "selector": "[data-evidence-field]",
-            "name": "data-active-evidence",
-            "value": "evidence"
-          }
+          {"type": "attributeEquals", "selector": "[data-evidence-field]", "name": "data-inspecting", "value": "false"},
+          {"type": "attributeContains", "selector": "[data-orbit-card]", "name": "aria-label", "value": "Agentic face"},
+          {"type": "textContains", "selector": "[data-face-preview]", "value": "Agentic retained"}
+        ]
+      },
+      {
+        "name": "keyboard reopens retained Agentic face",
+        "action": {"type": "key", "selector": "[data-orbit-stage]", "key": "Enter"},
+        "assertions": [
+          {"type": "attributeEquals", "selector": "[data-reader]", "name": "data-face", "value": "agentic"},
+          {"type": "attributeEquals", "selector": "[data-reader-face=\"agentic\"]", "name": "aria-hidden", "value": "false"},
+          {"type": "attributeEquals", "selector": "[data-orbit-stage]", "name": "aria-hidden", "value": "true"},
+          {"type": "attributeEquals", "selector": "[data-evidence-field]", "name": "data-inspecting", "value": "true"}
         ]
       }
     ]

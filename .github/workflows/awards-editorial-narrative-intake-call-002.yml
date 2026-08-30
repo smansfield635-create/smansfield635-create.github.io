@@ -13,8 +13,8 @@ jobs:
     uses: ./.github/workflows/public-private-canonical-execution-carrier-v1.yml
     with:
       private_issue: '370'
-      private_comment: '5471879618'
-      expected_request_id: 'REFERENCE_CLASS_AWARDS_EDITORIAL_NARRATIVE_EXTENSION_20260830_002_EXEC'
+      private_comment: '5471888953'
+      expected_request_id: 'REFERENCE_CLASS_AWARDS_EDITORIAL_NARRATIVE_EXTENSION_20260830_003_EXEC'
       exact_private_head: '88205af27dde5be579a196f799c77f35a759d70d'
       callback_issue: '2403'
     secrets: inherit

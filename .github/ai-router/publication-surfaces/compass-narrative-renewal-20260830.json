@@ -1,0 +1,159 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "compass-narrative-renewal-20260830",
+  "description": "Compass root owner-approved narrative renewal with five-message swipe, Chapter One progressive disclosure, Orientation copy, and direct four-way research/readiness/community cards.",
+  "checks": [
+    {
+      "path": "/",
+      "includes": [
+        "<title>Diamond Gate Bridge Compass</title>",
+        "data-compass-root",
+        "data-compass-static-introduction",
+        "Learn to live to love.",
+        "Learn to love to listen.",
+        "Learn to live to laugh.",
+        "Swipe the message above to reveal the next.",
+        "Continue the threshold",
+        "One independent studio. An entire connected body of work.",
+        "This website does not merely describe the studio. It is the studio in operation.",
+        "What we do today becomes what tomorrow inherits.",
+        "We cannot control every future outcome. We can take responsibility for the direction our actions begin.",
+        "Orientation requires navigation.",
+        "Welcome to your Compass. It is one of many you’ll encounter throughout the experience.",
+        "use a cardinal star as a lens to reveal the hidden door to explore Mirrorland.",
+        "data-readiness-title=\"Agentic Frontier\"",
+        "data-readiness-title=\"Scientific Frontier · LVTG\"",
+        "data-readiness-title=\"Cross-Domain Confirmation\"",
+        "data-readiness-title=\"Scientific Self-Correction · IMI\"",
+        "Software TRL 7",
+        "Level 4 · BENCHMARKED",
+        "Consider the Community",
+        "Three ways to engage.",
+        "Build Your Own Website",
+        "/assets/compass/compass.readiness-context-v1.js?v=compass-narrative-renewal-gen1869&cb=8cce3fcd955e938e",
+        "/assets/compass/compass.crystals.js?v=gen1858-release-orbit-continuity&cb=cd2cbad0494852cc",
+        "/assets/compass/compass.orbit-input.js?v=gen1846&cb=681410dac29d2dae"
+      ],
+      "excludes": [
+        "Choose a direction. Let the Compass show you what belongs there.",
+        "699 material software changes. One operator. One month. Governed agentic production."
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/",
+    "timeoutMs": 45000,
+    "readySelector": "[data-compass-root]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "interactions": [
+      {
+        "name": "Studio tab opens exact approved headline",
+        "action": {
+          "type": "click",
+          "selector": "button[aria-controls=\"chapter-studio\"]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "button[aria-controls=\"chapter-studio\"]",
+            "name": "aria-selected",
+            "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "#chapter-studio",
+            "value": "One independent studio. An entire connected body of work."
+          }
+        ]
+      },
+      {
+        "name": "Studio disclosure reveals exact closing",
+        "action": {
+          "type": "click",
+          "selector": "#chapter-studio .compass-chapter-disclosure > summary"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "#chapter-studio .compass-chapter-disclosure",
+            "name": "open",
+            "value": ""
+          },
+          {
+            "type": "textContains",
+            "selector": "#chapter-studio",
+            "value": "This website does not merely describe the studio. It is the studio in operation."
+          }
+        ]
+      },
+      {
+        "name": "Top message advances by keyboard",
+        "action": {
+          "type": "key",
+          "selector": "[data-compass-motivation]",
+          "key": "ArrowRight"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-compass-motivation] [data-motivation-statement]:first-of-type",
+            "name": "hidden",
+            "value": ""
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-compass-motivation]",
+            "value": "Learn to live to love."
+          }
+        ]
+      },
+      {
+        "name": "Research carousel reaches IMI self-correction",
+        "action": {
+          "type": "key",
+          "selector": "[data-readiness-family=\"research\"]",
+          "key": "End"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "#compass-readiness-research-slide-4",
+            "name": "data-active",
+            "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-readiness-family=\"research\"] .compass-readiness-head h3",
+            "value": "Scientific Self-Correction · IMI"
+          }
+        ]
+      },
+      {
+        "name": "TRL family opens directly into preserved cards",
+        "action": {
+          "type": "click",
+          "selector": ".compass-readiness-tabs > .compass-readiness-tab:nth-child(2)"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": ".compass-readiness-tabs > .compass-readiness-tab:nth-child(2)",
+            "name": "aria-selected",
+            "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-readiness-family=\"trl\"]",
+            "value": "Software TRL 7"
+          }
+        ]
+      }
+    ]
+  }
+}

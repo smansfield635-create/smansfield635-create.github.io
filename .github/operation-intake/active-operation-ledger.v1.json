@@ -4944,49 +4944,6 @@
       "scopeHash": "cdff2f07b40bfaf3f197d945cc27879d6deaec109d02d303c74987ebcc355a10",
       "state": "ADMITTED_LOCKED"
     },
-    "ce68b03a0eda687d97ab8df8ce3e8106399017c5931cf23c0954226b48f8d78d": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "8000e58af3cacc8d1503b9053ac20a70d5b8b287",
-          "lockGeneration": 1877,
-          "lockScope": "PUBLIC_PRODUCT:COMPASS:ROOT:RUNTIME_COPY_OWNER_AND_PREFLIGHT_REPAIR:V1",
-          "operationId": "COMPASS_RUNTIME_COPY_OWNER_AND_PREFLIGHT_REPAIR_20260830_008",
-          "procedureLocatorDigest": "261ad3786e0b04ce92130246f2a64a75f9efcf7a0c1221c6a63c646b57e4b632",
-          "requestDigest": "cc244de938ce98facef3c4317b9a27e3ab6496d41701ff9e7150b74fae91a5e3",
-          "scopeHash": "ce68b03a0eda687d97ab8df8ce3e8106399017c5931cf23c0954226b48f8d78d"
-        },
-        "bindingDigest": "d8084a65754b723ed3a933fb99bedc29d27654681ed6b22f14f6bf916ebb3d1b",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "049060120a600a2792738b52d97bd82b70b384357e8ab2be1c7ae2cc09da0c56",
-          "commentId": 5470944184,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2368,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 33332505846,
-          "workflowSha": "8000e58af3cacc8d1503b9053ac20a70d5b8b287"
-        },
-        "lineageAnchorCommitSha": "18485d2fc2ffb9dc857cef1f0d63731cf055fc6a",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "8000e58af3cacc8d1503b9053ac20a70d5b8b287",
-      "lockGeneration": 1877,
-      "lockScope": "PUBLIC_PRODUCT:COMPASS:ROOT:RUNTIME_COPY_OWNER_AND_PREFLIGHT_REPAIR:V1",
-      "operationId": "COMPASS_RUNTIME_COPY_OWNER_AND_PREFLIGHT_REPAIR_20260830_008",
-      "procedureLocatorDigest": "261ad3786e0b04ce92130246f2a64a75f9efcf7a0c1221c6a63c646b57e4b632",
-      "released": false,
-      "requestDigest": "cc244de938ce98facef3c4317b9a27e3ab6496d41701ff9e7150b74fae91a5e3",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "ce68b03a0eda687d97ab8df8ce3e8106399017c5931cf23c0954226b48f8d78d",
-      "state": "ADMITTED_LOCKED"
-    },
     "d0043d474bd80fb8adc7f12e53fb5ed81ca3c5c48a345aee9ddfce9bf5804190": {
       "governingHead": "0253326d80a89084142465f5210b4bca6361bb1a",
       "lockGeneration": 124,
@@ -35389,6 +35346,50 @@
       "scopeHash": "ce68b03a0eda687d97ab8df8ce3e8106399017c5931cf23c0954226b48f8d78d",
       "state": "TERMINAL",
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "8000e58af3cacc8d1503b9053ac20a70d5b8b287",
+          "lockGeneration": 1877,
+          "lockScope": "PUBLIC_PRODUCT:COMPASS:ROOT:RUNTIME_COPY_OWNER_AND_PREFLIGHT_REPAIR:V1",
+          "operationId": "COMPASS_RUNTIME_COPY_OWNER_AND_PREFLIGHT_REPAIR_20260830_008",
+          "procedureLocatorDigest": "261ad3786e0b04ce92130246f2a64a75f9efcf7a0c1221c6a63c646b57e4b632",
+          "requestDigest": "cc244de938ce98facef3c4317b9a27e3ab6496d41701ff9e7150b74fae91a5e3",
+          "scopeHash": "ce68b03a0eda687d97ab8df8ce3e8106399017c5931cf23c0954226b48f8d78d"
+        },
+        "bindingDigest": "d8084a65754b723ed3a933fb99bedc29d27654681ed6b22f14f6bf916ebb3d1b",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "049060120a600a2792738b52d97bd82b70b384357e8ab2be1c7ae2cc09da0c56",
+          "commentId": 5470944184,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2368,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33332505846,
+          "workflowSha": "8000e58af3cacc8d1503b9053ac20a70d5b8b287"
+        },
+        "lineageAnchorCommitSha": "18485d2fc2ffb9dc857cef1f0d63731cf055fc6a",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "8000e58af3cacc8d1503b9053ac20a70d5b8b287",
+      "lockGeneration": 1877,
+      "lockScope": "PUBLIC_PRODUCT:COMPASS:ROOT:RUNTIME_COPY_OWNER_AND_PREFLIGHT_REPAIR:V1",
+      "operationId": "COMPASS_RUNTIME_COPY_OWNER_AND_PREFLIGHT_REPAIR_20260830_008",
+      "procedureLocatorDigest": "261ad3786e0b04ce92130246f2a64a75f9efcf7a0c1221c6a63c646b57e4b632",
+      "released": true,
+      "requestDigest": "cc244de938ce98facef3c4317b9a27e3ab6496d41701ff9e7150b74fae91a5e3",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ce68b03a0eda687d97ab8df8ce3e8106399017c5931cf23c0954226b48f8d78d",
+      "state": "TERMINAL",
+      "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
     }
   ]
 }

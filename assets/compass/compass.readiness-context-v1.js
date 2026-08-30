@@ -14,12 +14,6 @@ const builtMore=built?.querySelector('.compass-built__more');
 if(!built||!builtMore)throw new Error('COMPASS_READINESS_LOWER_PAGE_OWNER_MISSING');
 built.insertBefore(stage,builtMore);
 stage.dataset.compassReadinessPlacement='built-different-lower-page';
-const orbitIntro=q('.compass-instrument > .compass-orbit-intro');
-const welcome=q('[data-compass-orientation-welcome]',orbitIntro||document);
-const instruction=q('[data-compass-orientation-instruction]',orbitIntro||document);
-if(orbitIntro){const kicker=q('.compass-estate__kicker',orbitIntro);const heading=q('h2',orbitIntro);if(kicker)kicker.textContent='THE COMPASS · FIND YOUR WAY';if(heading)heading.textContent='Orientation requires navigation.';}
-if(welcome)welcome.textContent='Welcome to your Compass. It is one of many you’ll encounter throughout the experience.';
-if(instruction)instruction.textContent='To begin, rotate the stars forward to reveal the way. Tap a star to enter its cluster, or use a cardinal star as a lens to reveal the hidden door to explore Mirrorland.';
 const style=document.createElement('style');
 style.id='compass-complete-human-intent-completion-v1';
 style.textContent=`
@@ -95,7 +89,7 @@ const carousel=Object.fromEntries(FAMILY_ORDER.map(type=>[type,wireCarousel(type
 function setFamily(type){if(!FAMILY_ORDER.includes(type))return;FAMILY_ORDER.forEach(name=>{const active=name===type;tabMap[name].setAttribute('aria-selected',active?'true':'false');tabMap[name].tabIndex=active?0:-1;families[name].hidden=!active;families[name].toggleAttribute('inert',!active);});stage.dataset.activeFamily=type;}
 FAMILY_ORDER.forEach(type=>tabMap[type].addEventListener('click',()=>setFamily(type)));
 q(':scope > .compass-readiness-tabs',stage).addEventListener('keydown',event=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;event.preventDefault();const current=Math.max(0,FAMILY_ORDER.indexOf(stage.dataset.activeFamily));let next=current;if(event.key==='Home')next=0;else if(event.key==='End')next=FAMILY_ORDER.length-1;else next=(current+(event.key==='ArrowRight'?1:-1)+FAMILY_ORDER.length)%FAMILY_ORDER.length;const type=FAMILY_ORDER[next];setFamily(type);tabMap[type].focus();});
-setFamily('research');stage.dataset.readinessOwner='context-v6-narrative-renewal-gen1869';
+setFamily('research');stage.dataset.readinessOwner='context-v7-runtime-copy-owner-repair-gen1876';
 function installSingleLabelOwner(){const root=q('[data-compass-root]');if(!root)return;const buttons=qa('[data-compass-cardinal][data-cardinal-id]',root);const sync=()=>{if(root.dataset.compassMode==='CONSTELLATION'){const id=String(root.dataset.renderedForegroundCardinal||root.dataset.orbitPreviewFocus||root.dataset.orbitFocus||'north').toLowerCase();const authority=buttons.find(x=>x.dataset.cardinalId===id)||buttons[0];buttons.forEach(node=>node.classList.toggle('is-readable-cardinal',node===authority));root.dataset.readableCardinal=authority?.dataset.cardinalId||'';root.dataset.cardinalLabelOwner='SINGLE_STATIC_CARDINAL_DECLARATION_v1';}requestAnimationFrame(sync);};root.dataset.cardinalLabelDeclaration='SINGLE_STATIC_LABEL_PER_CARDINAL';requestAnimationFrame(sync);}
 function installMainConstellationInertia(){
   const root=q('[data-compass-root]');
@@ -111,10 +105,9 @@ function installMainConstellationInertia(){
   root.dataset.mainConstellationInertiaActive='false';
   root.dataset.mainConstellationMotionOwner=MOTION_OWNER;
 }
-function contextualizeBuiltSection(){const heading=q('.compass-built > h2'),lead=q('.compass-built__lead');if(heading)heading.textContent='See what has been built — and how to judge what is ready.';if(lead)lead.textContent='After you find your way through the Compass, the next question is what the estate has actually built and how much confidence each kind of work deserves. The sections below separate experience, evidence, technology maturity, and adoption readiness so a visitor can go deeper without confusing one for another.';}
 function bindSoleShellOwnership(){const root=q('[data-compass-root]');if(!root)return;const bind=()=>{const owner=globalThis.DGB_COMPASS_PRESENTATION_OWNER_GEN1591;if(!owner?.mounted)return false;root.dataset.compassPublicHtmlAuthority='index.html';root.dataset.compassVisualShellOwner='DGB_COMPASS_PRESENTATION_OWNER_GEN1591';root.dataset.compassRuntimeOwnershipChain='INDEX_HTML>DGB_COMPASS_PRESENTATION_OWNER_GEN1591>DGB_COMPASS_CONTROLLER';root.dataset.compassReadinessOwnership='subordinate';root.dataset.compassCompositeOwnership='subordinate';globalThis.DGB_COMPASS_SHELL_OWNERSHIP_RECEIPT=Object.freeze({mounted:true,version:'gen1852-shell-exposure-reconciliation-v1',publicHtmlAuthority:'index.html',visualShellOwner:'DGB_COMPASS_PRESENTATION_OWNER_GEN1591',topLevelRuntimeOwnershipChain:Object.freeze(['index.html','DGB_COMPASS_PRESENTATION_OWNER_GEN1591','DGB_COMPASS_CONTROLLER']),readinessOwnership:'SUBORDINATE_TO_PRESENTATION_ROOT',compositeOwnership:'SUBORDINATE_TO_PRESENTATION_ROOT',capabilityOwnership:'SUBORDINATE_LOCAL_ENHANCEMENT',legacyPresentationOwnerExposed:false,controllerCrystalsProtected:true});return true;};let frames=0;const settle=()=>{if(bind())return;if(frames++<180)requestAnimationFrame(settle);};settle();window.addEventListener('load',()=>{bind();setTimeout(bind,900);setTimeout(bind,1800);},{once:true});}
-installChapterAuthority();installStatementShine();installSingleLabelOwner();installMainConstellationInertia();contextualizeBuiltSection();bindSoleShellOwnership();
+installChapterAuthority();installStatementShine();installSingleLabelOwner();installMainConstellationInertia();bindSoleShellOwnership();
 const slideCounts=Object.freeze(Object.fromEntries(FAMILY_ORDER.map(type=>[type,carousel[type].slides.length])));
 runtime.mounted=true;
-	globalThis.DGB_COMPASS_READINESS_CONTEXT_V1=globalThis[GLOBAL]=Object.freeze({mounted:true,version:'context-v6-narrative-renewal-gen1869',readinessPresentationOwner:'DGB_COMPASS_PRESENTATION_OWNER_GEN1591',readinessOwnership:'SUBORDINATE_TO_PRESENTATION_ROOT',placementOwner:'COMPASS_BUILT_DIFFERENT_LOWER_PAGE',familyOrder:FAMILY_ORDER,defaultFamily:'research',defaultResearchCard:'Agentic Frontier',slideCounts,stageReplacement:false,initialStateInMarkup:true,geometryChanged:true,compassStateChanged:true,protectedCompassRuntimeChanged:true,completionRuntime:runtime});
+	globalThis.DGB_COMPASS_READINESS_CONTEXT_V1=globalThis[GLOBAL]=Object.freeze({mounted:true,version:'context-v7-runtime-copy-owner-repair-gen1876',readinessPresentationOwner:'DGB_COMPASS_PRESENTATION_OWNER_GEN1591',readinessOwnership:'SUBORDINATE_TO_PRESENTATION_ROOT',placementOwner:'COMPASS_BUILT_DIFFERENT_LOWER_PAGE',familyOrder:FAMILY_ORDER,defaultFamily:'research',defaultResearchCard:'Agentic Frontier',slideCounts,stageReplacement:false,initialStateInMarkup:true,geometryChanged:true,compassStateChanged:true,protectedCompassRuntimeChanged:true,completionRuntime:runtime});
 })();

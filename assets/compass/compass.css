@@ -41,11 +41,3 @@
 [data-compass-root][data-compass-mode="ROOM_SELECTED"] .compass-scene__semantic button[data-compass-room-proxy]::after{content:none!important;display:none!important;visibility:hidden!important}
 [data-compass-root][data-compass-mode="CLUSTER_OPEN"] .compass-projected-room-label,
 [data-compass-root][data-compass-mode="ROOM_SELECTED"] .compass-projected-room-label{display:grid!important;visibility:visible!important}
-
-/* Cardinal label assembly: the child span owns the only visible pill. */
-[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-scene__semantic .compass-object--wing[data-compass-cardinal].is-readable-cardinal{
-  border-color:transparent!important;
-  background:transparent!important;
-  box-shadow:none!important;
-  backdrop-filter:none!important;
-}

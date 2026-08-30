@@ -78,8 +78,8 @@
         ]
       },
       {
-        "name": "Agentic return restores orbit",
-        "action": {"type": "click", "selector": "[data-reader-face=\"agentic\"] [data-return-orbit]"},
+        "name": "Agentic keyboard return restores orbit",
+        "action": {"type": "key", "selector": "[data-reader-face=\"agentic\"] [data-return-orbit]", "key": "Enter"},
         "assertions": [
           {"type": "attributeEquals", "selector": "[data-evidence-field]", "name": "data-inspecting", "value": "false"},
           {"type": "attributeContains", "selector": "[data-orbit-card]", "name": "aria-label", "value": "Agentic face"},

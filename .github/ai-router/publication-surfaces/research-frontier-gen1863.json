@@ -1,0 +1,173 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "research-frontier-gen1863",
+  "description": "Gen1863 accepted Research Frontier seven-chapter publication contract with claim-boundary, click, and keyboard proof.",
+  "checks": [
+    {
+      "path": "/evidence/agentic-frontier/",
+      "includes": [
+        "<title>Research Frontier — Diamond Gate Bridge</title>",
+        "data-evidence-field",
+        "data-chapter-tab=\"challenge\"",
+        "data-chapter-tab=\"evidence\"",
+        "data-chapter-tab=\"limits\"",
+        "data-chapter-tab=\"agentic\"",
+        "data-chapter-tab=\"observability\"",
+        "data-chapter-tab=\"bridge\"",
+        "data-chapter-tab=\"reproduce\"",
+        "data-chapter=\"challenge\"",
+        "data-chapter=\"evidence\"",
+        "data-chapter=\"limits\"",
+        "data-chapter=\"agentic\"",
+        "data-chapter=\"observability\"",
+        "data-chapter=\"bridge\"",
+        "data-chapter=\"reproduce\"",
+        "A proposition should survive its strongest attack.",
+        "This page does not claim a universal law or settled cross-domain generality.",
+        "The missing evidence stays visible.",
+        "External validation remains distinct from internal evidence."
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/evidence/agentic-frontier/",
+    "timeoutMs": 30000,
+    "readySelector": "[data-evidence-field]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/evidence/agentic-frontier/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "interactions": [
+      {
+        "name": "evidence chapter opens by tab",
+        "action": {
+          "type": "click",
+          "selector": "[data-chapter-tab=\"evidence\"]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-chapter-tab=\"evidence\"]",
+            "name": "aria-selected",
+            "value": "true"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-chapter=\"evidence\"]",
+            "name": "data-active",
+            "value": "true"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-evidence-field]",
+            "name": "data-active-evidence",
+            "value": "evidence"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-chapter=\"evidence\"]",
+            "value": "Start with what is actually observed."
+          }
+        ]
+      },
+      {
+        "name": "end key opens reproduction chapter",
+        "action": {
+          "type": "key",
+          "selector": "[data-chapter-tab=\"evidence\"]",
+          "key": "End"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-chapter-tab=\"reproduce\"]",
+            "name": "aria-selected",
+            "value": "true"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-chapter=\"reproduce\"]",
+            "name": "data-active",
+            "value": "true"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-evidence-field]",
+            "name": "data-active-evidence",
+            "value": "reproduce"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-chapter=\"reproduce\"]",
+            "value": "Don’t trust the page. Inspect the boundary."
+          }
+        ]
+      },
+      {
+        "name": "home key restores challenge chapter",
+        "action": {
+          "type": "key",
+          "selector": "[data-chapter-tab=\"reproduce\"]",
+          "key": "Home"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-chapter-tab=\"challenge\"]",
+            "name": "aria-selected",
+            "value": "true"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-chapter=\"challenge\"]",
+            "name": "data-active",
+            "value": "true"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-evidence-field]",
+            "name": "data-active-evidence",
+            "value": "challenge"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-chapter=\"challenge\"]",
+            "value": "Do viable futures reveal fragility?"
+          }
+        ]
+      },
+      {
+        "name": "arrow right advances to evidence chapter",
+        "action": {
+          "type": "key",
+          "selector": "[data-chapter-tab=\"challenge\"]",
+          "key": "ArrowRight"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-chapter-tab=\"evidence\"]",
+            "name": "aria-selected",
+            "value": "true"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-chapter=\"evidence\"]",
+            "name": "data-active",
+            "value": "true"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-evidence-field]",
+            "name": "data-active-evidence",
+            "value": "evidence"
+          }
+        ]
+      }
+    ]
+  }
+}

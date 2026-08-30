@@ -509,6 +509,10 @@ async function initialize() {
       if (!renderer) await new Promise(resolve => setTimeout(resolve, 80));
     }
     if (!renderer) throw new Error('AUDRALIA_CELESTIAL_RENDERER_AUTHORITY_TIMEOUT');
+    if (window.__AUDRALIA_CANVAS_FALLBACK_ACTIVE__) {
+      installInternalApi();
+      return;
+    }
     createOverlay();
     installInternalApi();
     render();

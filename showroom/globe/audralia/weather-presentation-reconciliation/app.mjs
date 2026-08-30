@@ -70,6 +70,39 @@ function wire(renderer,sky,exterior,canonical,fap1){
   return Object.freeze({renderAll});
 }
 
+async function initializeCanvasFallback(){
+  const fallbackModule=await import('./canvas-fallback.mjs');
+  const renderer=fallbackModule.createAudraliaCanvasFallback({canvas,focusButton});
+  const runtime=Object.freeze({
+    schema:RECONCILIATION_SCHEMA,
+    mode:'CANVAS_2D_FALLBACK',
+    fallbackActive:true,
+    spatial:Object.freeze({activeLocalCount:0,maxLocalCount:0}),
+    rayDiagnostics:Object.freeze([]),
+    invariants:Object.freeze({pass:true,failures:Object.freeze([]),mode:'CANVAS_2D_FALLBACK',fullWebGLRuntime:false})
+  });
+  const receipt=Object.freeze({
+    schema:RECONCILIATION_SCHEMA,
+    videoCameraRegression:VIDEO_CAMERA_REGRESSION,
+    functionalWorldAuthority:FUNCTIONAL_WORLD_AUTHORITY,
+    functionalVisualParent:FUNCTIONAL_VISUAL_PARENT,
+    canonicalWeatherProofHead:CANONICAL_WEATHER_PROOF_HEAD,
+    renderer,
+    fallbackActive:true,
+    renderingMode:'CANVAS_2D_FALLBACK',
+    invariants:runtime.invariants,
+    getRuntime:()=>runtime
+  });
+  window.__AUDRALIA_CANVAS_FALLBACK_ACTIVE__=true;
+  window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_RUNTIME__=runtime;
+  window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__=receipt;
+  window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW__=Object.freeze({operationId:RECONCILIATION_SCHEMA,renderer,fallbackActive:true});
+  setStatus('Audralia map · reduced graphics','AUDRALIA_CANVAS_FALLBACK_READY');
+  if(loaderStage)loaderStage.textContent='Audralia ready · reduced graphics';
+  if(loader){loader.classList.add('is-ready');setTimeout(()=>{loader.hidden=true;},420);}
+  return runtime;
+}
+
 async function initialize(){
   try{
     if(!(canvas instanceof HTMLCanvasElement))throw new Error('AUDRALIA_RECONCILIATION_CANVAS_MISSING');
@@ -96,6 +129,14 @@ async function initialize(){
     if(first?.invariants?.pass!==true)throw new Error(`RECONCILIATION_CANONICAL_INVARIANT_FAIL:${(first?.invariants?.failures||[]).join(',')}`);
     setStatus('FAP1 REVIEW','AUDRALIA_FAP1_CANDIDATE_A_USER_REVIEW_REQUIRED');if(loaderStage)loaderStage.textContent='Audralia FAP1 Candidate A ready';if(loader){loader.classList.add('is-ready');setTimeout(()=>{loader.hidden=true;},420);}
   }catch(error){
+    if(String(error?.message||error).includes('WEBGL2_')){
+      try{
+        await initializeCanvasFallback();
+        return;
+      }catch(fallbackError){
+        error=fallbackError;
+      }
+    }
     const message=error instanceof Error?error.message:String(error),stack=error instanceof Error?error.stack:null;
     window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__=Object.freeze({schema:RECONCILIATION_SCHEMA,message,stack});
     console.error('AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_FAILED',message,stack||'');

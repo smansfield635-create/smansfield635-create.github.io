@@ -89,11 +89,243 @@ FAMILY_ORDER.forEach(type=>tabMap[type].addEventListener('click',()=>setFamily(t
 q(':scope > .compass-readiness-tabs',stage).addEventListener('keydown',event=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;event.preventDefault();const current=Math.max(0,FAMILY_ORDER.indexOf(stage.dataset.activeFamily));let next=current;if(event.key==='Home')next=0;else if(event.key==='End')next=FAMILY_ORDER.length-1;else next=(current+(event.key==='ArrowRight'?1:-1)+FAMILY_ORDER.length)%FAMILY_ORDER.length;const type=FAMILY_ORDER[next];setFamily(type);tabMap[type].focus();});
 setFamily('research');stage.dataset.readinessOwner='context-v5-complete-human-intent';
 function installSingleLabelOwner(){const root=q('[data-compass-root]');if(!root)return;const buttons=qa('[data-compass-cardinal][data-cardinal-id]',root);const sync=()=>{if(root.dataset.compassMode==='CONSTELLATION'){const id=String(root.dataset.renderedForegroundCardinal||root.dataset.orbitPreviewFocus||root.dataset.orbitFocus||'north').toLowerCase();const authority=buttons.find(x=>x.dataset.cardinalId===id)||buttons[0];buttons.forEach(node=>node.classList.toggle('is-readable-cardinal',node===authority));root.dataset.readableCardinal=authority?.dataset.cardinalId||'';root.dataset.cardinalLabelOwner='SINGLE_STATIC_CARDINAL_DECLARATION_v1';}requestAnimationFrame(sync);};root.dataset.cardinalLabelDeclaration='SINGLE_STATIC_LABEL_PER_CARDINAL';requestAnimationFrame(sync);}
-function installMainConstellationInertia(){const root=q('[data-compass-root]'),scene=q('[data-compass-scene]');if(!root||!scene)return;const samples=[];let activePointer=null,start=null,dragged=false,raf=0;const reduced=()=>root.dataset.reducedMotion==='true'||matchMedia('(prefers-reduced-motion: reduce)').matches;const wrap=a=>{while(a>Math.PI)a-=Math.PI*2;while(a<-Math.PI)a+=Math.PI*2;return a;};const api=()=>globalThis.DGB_COMPASS_CONTROLLER;const cancel=()=>{if(raf)cancelAnimationFrame(raf);raf=0;};const pointerMode=()=>root.dataset.compassMode==='CONSTELLATION'&&api()?.getFrameState?.().state==='CONSTELLATION';scene.addEventListener('pointerdown',event=>{if(event.button>0||!pointerMode())return;cancel();activePointer=event.pointerId;start={x:event.clientX,y:event.clientY,t:performance.now()};dragged=false;samples.length=0;samples.push({...start});},true);scene.addEventListener('pointermove',event=>{if(event.pointerId!==activePointer||!start)return;const now=performance.now();samples.push({x:event.clientX,y:event.clientY,t:now});while(samples.length>12||samples[0]?.t<now-150)samples.shift();if(Math.hypot(event.clientX-start.x,event.clientY-start.y)>18)dragged=true;},true);scene.addEventListener('pointercancel',()=>{activePointer=null;start=null;samples.length=0;dragged=false;},true);scene.addEventListener('pointerup',event=>{if(event.pointerId!==activePointer||!start){activePointer=null;start=null;return;}const should=dragged&&pointerMode()&&!reduced();const recent=samples.slice();activePointer=null;start=null;samples.length=0;dragged=false;if(!should)return;const a=recent[0],b=recent[recent.length-1];if(!a||!b||b.t<=a.t)return;const dt=Math.max(1,b.t-a.t),vx=(b.x-a.x)/dt,vy=(b.y-a.y)/dt,speed=Math.hypot(vx,vy);if(speed<.08)return;requestAnimationFrame(()=>{const controller=api(),frame=controller?.getFrameState?.();if(!controller||!frame||frame.state!=='CONSTELLATION')return;const orientation=frame.orbitOrientation||frame.committedOrbitOrientation;if(!orientation)return;const settledYaw=Number(orientation.yaw)||0,settledPitch=Number(orientation.pitch)||0,settledRoll=Number(orientation.roll)||0,targetWing=String(root.dataset.renderedForegroundCardinal||frame.orbitPreviewFocus||frame.orbitFocus||'north').toLowerCase();let yaw=settledYaw,pitch=settledPitch,roll=settledRoll,omegaYaw=-vx*1.45,omegaPitch=vy*1.0;const inertiaStart=performance.now(),inertiaDuration=Math.round(Math.max(360,Math.min(520,360+speed*120))),settleDuration=Math.round(Math.max(240,Math.min(300,240+speed*50)));controller.beginOrbitGesture({yaw,pitch,roll,primaryId:targetWing,primaryWing:targetWing,source:'COMPASS_MAIN_CONSTELLATION_INERTIA_v2'});let last=inertiaStart;const inertiaStep=now=>{const seconds=Math.min(.034,(now-last)/1000);last=now;const damping=Math.exp(-3.1*seconds);omegaYaw*=damping;omegaPitch*=damping;yaw=wrap(yaw+omegaYaw*seconds);pitch=Math.max(-.72,Math.min(.72,pitch+omegaPitch*seconds));controller.requestOrbitPreview({yaw,pitch,roll,primaryId:targetWing,primaryWing:targetWing,source:'COMPASS_MAIN_CONSTELLATION_INERTIA_v2'});if(now-inertiaStart<inertiaDuration){raf=requestAnimationFrame(inertiaStep);return;}const settleStart=now,startYaw=yaw,startPitch=pitch,deltaYaw=wrap(settledYaw-yaw),deltaPitch=settledPitch-pitch;const settleStep=t=>{const p=Math.min(1,(t-settleStart)/settleDuration),e=1-Math.pow(1-p,3);const nextYaw=wrap(startYaw+deltaYaw*e),nextPitch=startPitch+deltaPitch*e;controller.requestOrbitPreview({yaw:nextYaw,pitch:nextPitch,roll:settledRoll,primaryId:targetWing,primaryWing:targetWing,source:'COMPASS_MAIN_NATURAL_SETTLEMENT_v2'});if(p<1){raf=requestAnimationFrame(settleStep);return;}controller.requestOrbitCommit({yaw:settledYaw,pitch:settledPitch,roll:settledRoll,primaryWing:targetWing,primaryId:targetWing,source:'COMPASS_MAIN_NATURAL_SETTLEMENT_v2'});runtime.lastMotion={source:'pointer',targetWing,releaseVelocityPxPerMs:speed,inertiaMs:Math.round(settleStart-inertiaStart),settlementMs:settleDuration,returnTarget:'NATIVE_RENDERER_SETTLED_ORIENTATION',perceptibleMotionFloorMs:600};raf=0;};raf=requestAnimationFrame(settleStep);};raf=requestAnimationFrame(inertiaStep);runtime.mainInertiaEnabled=true;});},true);root.dataset.mainConstellationMotionOwner='COMPASS_MAIN_CONSTELLATION_INERTIA_v2';}
+function installMainConstellationInertia(){
+  const root=q('[data-compass-root]');
+  const scene=q('[data-compass-scene]');
+  if(!root||!scene)return;
+
+  const MOTION_OWNER='COMPASS_MAIN_CONSTELLATION_RELEASE_CONTINUITY_v3';
+  const RELEASE_EVENT='DGB_COMPASS_CONSTELLATION_RELEASE_v1';
+  const DRAG_RADIANS_PER_VIEWPORT=Math.PI*1.12;
+  const CARDINALS=['north','east','south','west'];
+  let raf=0;
+  let timer=0;
+  let motion=null;
+
+  const reduced=()=>root.dataset.reducedMotion==='true'||matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
+  const api=()=>globalThis.DGB_COMPASS_CONTROLLER;
+  const pointerMode=()=>root.dataset.compassMode==='CONSTELLATION'&&api()?.getFrameState?.().state==='CONSTELLATION';
+  const normalizeQuaternion=value=>{
+    const source=Array.isArray(value)||ArrayBuffer.isView(value)?Array.from(value):[0,0,0,1];
+    const length=Math.hypot(source[0]||0,source[1]||0,source[2]||0,source[3]||0);
+    return length>.000001?source.map(component=>component/length):[0,0,0,1];
+  };
+  const multiplyQuaternion=(left,right)=>[
+    left[3]*right[0]+left[0]*right[3]+left[1]*right[2]-left[2]*right[1],
+    left[3]*right[1]-left[0]*right[2]+left[1]*right[3]+left[2]*right[0],
+    left[3]*right[2]+left[0]*right[1]-left[1]*right[0]+left[2]*right[3],
+    left[3]*right[3]-left[0]*right[0]-left[1]*right[1]-left[2]*right[2]
+  ];
+  const axisAngle=(axis,angle)=>{
+    const half=angle*.5;
+    const sine=Math.sin(half);
+    return[axis[0]*sine,axis[1]*sine,axis[2]*sine,Math.cos(half)];
+  };
+  const continueQuaternion=(quaternion,yawDelta,pitchDelta)=>normalizeQuaternion(
+    multiplyQuaternion(
+      axisAngle([1,0,0],pitchDelta),
+      multiplyQuaternion(axisAngle([0,1,0],yawDelta),quaternion)
+    )
+  );
+  const orientationReceipt=orientation=>orientation?{
+    yaw:Number(orientation.yaw)||0,
+    pitch:Number(orientation.pitch)||0,
+    roll:Number(orientation.roll)||0,
+    quaternion:normalizeQuaternion(orientation.quaternion),
+    primaryId:String(orientation.primaryId||'').toLowerCase()
+  }:null;
+  const currentWing=fallback=>{
+    const rendered=q('[data-compass-cardinal][data-primary="true"]',root);
+    const candidate=String(rendered?.dataset.cardinalId||rendered?.dataset.wing||root.dataset.renderedForegroundCardinal||fallback||'north').toLowerCase();
+    return CARDINALS.includes(candidate)?candidate:'north';
+  };
+  const cancel=commit=>{
+    if(raf)cancelAnimationFrame(raf);
+    if(timer)clearTimeout(timer);
+    raf=0;
+    timer=0;
+    root.dataset.mainConstellationInertiaActive='false';
+    const pending=motion;
+    motion=null;
+    if(!commit||!pending)return;
+    const controller=api();
+    if(!controller?.requestOrbitCommit)return;
+    const targetWing=currentWing(pending.targetWing);
+    controller.requestOrbitCommit({
+      quaternion:pending.quaternion,
+      primaryWing:targetWing,
+      primaryId:targetWing,
+      source:'COMPASS_MAIN_CONSTELLATION_INERTIA_INTERRUPTED_ENDPOINT_v3'
+    });
+  };
+
+  scene.addEventListener('pointerdown',event=>{
+    if(event.button>0||!pointerMode())return;
+    runtime.lastMotion=null;
+    cancel(true);
+  },true);
+
+  globalThis.addEventListener(RELEASE_EVENT,event=>{
+    if(!pointerMode()||reduced())return;
+    const detail=event.detail||{};
+    const rawQuaternion=detail.releaseQuaternion;
+    if((!Array.isArray(rawQuaternion)&&!ArrayBuffer.isView(rawQuaternion))||rawQuaternion.length!==4)return;
+    const releaseQuaternion=normalizeQuaternion(rawQuaternion);
+    const vx=Number(detail.releaseVectorPxPerMs?.x)||0;
+    const vy=Number(detail.releaseVectorPxPerMs?.y)||0;
+    const speed=Math.hypot(vx,vy);
+    if(speed<.08)return;
+    runtime.lastMotion=null;
+
+      const controller=api();
+      const frame=controller?.getFrameState?.();
+      if(!controller||!frame||frame.state!=='CONSTELLATION')return;
+      const frameReleaseOrientation=frame.orbitOrientation||frame.committedOrbitOrientation;
+      if(!frameReleaseOrientation?.quaternion)return;
+      const releaseOrientation={...frameReleaseOrientation,quaternion:releaseQuaternion};
+
+      const bounds=scene.getBoundingClientRect();
+      const yawVelocity=clamp(vx*1000/Math.max(1,bounds.width)*DRAG_RADIANS_PER_VIEWPORT,-4.2,4.2);
+      const pitchVelocity=clamp(vy*1000/Math.max(1,bounds.height)*DRAG_RADIANS_PER_VIEWPORT,-3.4,3.4);
+      const targetWing=currentWing(frame.orbitPreviewFocus||frame.orbitFocus);
+      const inertiaStart=performance.now();
+      const inertiaDuration=Math.round(clamp(600+speed*100,600,780));
+      const releaseReceipt=orientationReceipt(releaseOrientation);
+
+      motion={
+        quaternion:normalizeQuaternion(releaseOrientation.quaternion),
+        targetWing,
+        yawVelocity,
+        pitchVelocity
+      };
+      root.dataset.mainConstellationInertiaActive='true';
+
+      if(controller.beginOrbitGesture({
+        quaternion:motion.quaternion,
+        primaryId:targetWing,
+        primaryWing:targetWing,
+        source:MOTION_OWNER
+      })===false){
+        root.dataset.mainConstellationInertiaActive='false';
+        motion=null;
+        return;
+      }
+
+      const dampingRate=4.2;
+      const quaternionAt=elapsedMs=>{
+        const seconds=Math.max(0,elapsedMs)/1000;
+        const integrated=(1-Math.exp(-dampingRate*seconds))/dampingRate;
+        return continueQuaternion(
+          releaseOrientation.quaternion,
+          yawVelocity*integrated,
+          pitchVelocity*integrated
+        );
+      };
+      const finishInertia=completedAt=>{
+        const active=motion;
+        if(!active)return;
+        timer=0;
+        active.quaternion=quaternionAt(inertiaDuration);
+        active.targetWing=currentWing(active.targetWing);
+        const previewed=controller.requestOrbitPreview({
+          quaternion:active.quaternion,
+          primaryId:active.targetWing,
+          primaryWing:active.targetWing,
+          source:MOTION_OWNER
+        });
+        if(previewed===false){
+          cancel(false);
+          return;
+        }
+        const endpointFrame=controller.getFrameState?.();
+        const endpointReceipt=orientationReceipt(endpointFrame?.orbitOrientation)||{
+          yaw:0,
+          pitch:0,
+          roll:0,
+          quaternion:active.quaternion.slice(),
+          primaryId:active.targetWing
+        };
+        const motionMs=inertiaDuration;
+        const endpointQuaternion=active.quaternion.slice();
+        const committedWing=currentWing(active.targetWing);
+        root.dataset.renderedForegroundCardinal=committedWing;
+        const committed=controller.requestOrbitCommit({
+          quaternion:endpointQuaternion,
+          primaryWing:committedWing,
+          primaryId:committedWing,
+          source:'COMPASS_MAIN_CONSTELLATION_INERTIAL_ENDPOINT_v3'
+        });
+        if(committed===false){
+          cancel(false);
+          return;
+        }
+        const committedFrame=controller.getFrameState?.();
+        const committedReceipt=orientationReceipt(committedFrame?.committedOrbitOrientation);
+        const commitLatencyMs=Math.max(0,Math.round(completedAt-(inertiaStart+inertiaDuration)));
+        runtime.lastMotion={
+          schema:'COMPASS_MAIN_CONSTELLATION_RELEASE_CONTINUITY_RECEIPT_v1',
+          source:'pointer',
+          motionOwner:MOTION_OWNER,
+          targetWing:committedWing,
+          releaseVelocityPxPerMs:speed,
+          releaseVectorPxPerMs:{x:vx,y:vy},
+          initialAngularVelocityRadPerSecond:{yaw:yawVelocity,pitch:pitchVelocity},
+          releaseOrientation:releaseReceipt,
+          inertialEndpointOrientation:endpointReceipt,
+          finalCommittedOrientation:committedReceipt,
+          inertiaMs:motionMs,
+          renderConvergenceMs:0,
+          settlementMs:0,
+          totalMotionMs:motionMs,
+          commitLatencyMs,
+          endpointPolicy:'COMMIT_INERTIAL_ENDPOINT_NO_SNAPBACK',
+          sameDirectionPolicy:'CONTINUE_CRYSTAL_DRAG_AXES_FROM_RELEASE',
+          returnTarget:null,
+          perceptibleMotionFloorMs:600,
+          boundedMotionCeilingMs:820
+        };
+        motion=null;
+        raf=requestAnimationFrame(()=>{
+          root.dataset.mainConstellationInertiaActive='false';
+          raf=0;
+        });
+      };
+      const inertiaStep=()=>{
+        const active=motion;
+        if(!active)return;
+        const now=performance.now();
+        const elapsed=Math.min(inertiaDuration,Math.max(0,now-inertiaStart));
+        active.quaternion=quaternionAt(elapsed);
+        active.targetWing=currentWing(active.targetWing);
+        const previewed=controller.requestOrbitPreview({
+          quaternion:active.quaternion,
+          primaryId:active.targetWing,
+          primaryWing:active.targetWing,
+          source:MOTION_OWNER
+        });
+        if(previewed===false){
+          cancel(false);
+          return;
+        }
+        if(elapsed>=inertiaDuration){
+          finishInertia(now);
+          return;
+        }
+        timer=setTimeout(inertiaStep,16);
+      };
+
+      timer=setTimeout(inertiaStep,16);
+  },false);
+
+  runtime.mainInertiaEnabled=true;
+  root.dataset.mainConstellationInertiaActive='false';
+  root.dataset.mainConstellationMotionOwner=MOTION_OWNER;
+}
 function contextualizeBuiltSection(){const heading=q('.compass-built > h2'),lead=q('.compass-built__lead');if(heading)heading.textContent='See what has been built — and how to judge what is ready.';if(lead)lead.textContent='After you find your way through the Compass, the next question is what the estate has actually built and how much confidence each kind of work deserves. The sections below separate experience, evidence, technology maturity, and adoption readiness so a visitor can go deeper without confusing one for another.';}
 function bindSoleShellOwnership(){const root=q('[data-compass-root]');if(!root)return;const bind=()=>{const owner=globalThis.DGB_COMPASS_PRESENTATION_OWNER_GEN1591;if(!owner?.mounted)return false;root.dataset.compassPublicHtmlAuthority='index.html';root.dataset.compassVisualShellOwner='DGB_COMPASS_PRESENTATION_OWNER_GEN1591';root.dataset.compassRuntimeOwnershipChain='INDEX_HTML>DGB_COMPASS_PRESENTATION_OWNER_GEN1591>DGB_COMPASS_CONTROLLER';root.dataset.compassReadinessOwnership='subordinate';root.dataset.compassCompositeOwnership='subordinate';globalThis.DGB_COMPASS_SHELL_OWNERSHIP_RECEIPT=Object.freeze({mounted:true,version:'gen1852-shell-exposure-reconciliation-v1',publicHtmlAuthority:'index.html',visualShellOwner:'DGB_COMPASS_PRESENTATION_OWNER_GEN1591',topLevelRuntimeOwnershipChain:Object.freeze(['index.html','DGB_COMPASS_PRESENTATION_OWNER_GEN1591','DGB_COMPASS_CONTROLLER']),readinessOwnership:'SUBORDINATE_TO_PRESENTATION_ROOT',compositeOwnership:'SUBORDINATE_TO_PRESENTATION_ROOT',capabilityOwnership:'SUBORDINATE_LOCAL_ENHANCEMENT',legacyPresentationOwnerExposed:false,controllerCrystalsProtected:true});return true;};let frames=0;const settle=()=>{if(bind())return;if(frames++<180)requestAnimationFrame(settle);};settle();window.addEventListener('load',()=>{bind();setTimeout(bind,900);setTimeout(bind,1800);},{once:true});}
 installChapterAuthority();installStatementShine();installSingleLabelOwner();installMainConstellationInertia();contextualizeBuiltSection();bindSoleShellOwnership();
 const slideCounts=Object.freeze(Object.fromEntries(FAMILY_ORDER.map(type=>[type,carousel[type].slides.length])));
 runtime.mounted=true;
-	globalThis.DGB_COMPASS_READINESS_CONTEXT_V1=globalThis[GLOBAL]=Object.freeze({mounted:true,version:'context-v5-human-intent-closure-gen1855',readinessPresentationOwner:'DGB_COMPASS_PRESENTATION_OWNER_GEN1591',readinessOwnership:'SUBORDINATE_TO_PRESENTATION_ROOT',placementOwner:'COMPASS_BUILT_DIFFERENT_LOWER_PAGE',familyOrder:FAMILY_ORDER,defaultFamily:'research',defaultResearchCard:'Agentic Frontier',slideCounts,stageReplacement:false,initialStateInMarkup:true,geometryChanged:true,compassStateChanged:true,protectedCompassRuntimeChanged:false,completionRuntime:runtime});
+	globalThis.DGB_COMPASS_READINESS_CONTEXT_V1=globalThis[GLOBAL]=Object.freeze({mounted:true,version:'context-v5-release-orbit-continuity-gen1858',readinessPresentationOwner:'DGB_COMPASS_PRESENTATION_OWNER_GEN1591',readinessOwnership:'SUBORDINATE_TO_PRESENTATION_ROOT',placementOwner:'COMPASS_BUILT_DIFFERENT_LOWER_PAGE',familyOrder:FAMILY_ORDER,defaultFamily:'research',defaultResearchCard:'Agentic Frontier',slideCounts,stageReplacement:false,initialStateInMarkup:true,geometryChanged:true,compassStateChanged:true,protectedCompassRuntimeChanged:true,completionRuntime:runtime});
 })();

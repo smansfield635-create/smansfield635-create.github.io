@@ -4327,30 +4327,6 @@
     return bestRoom;
   }
 
-  function settledConstellationQuaternion(
-    wing,
-    currentQuaternion
-  ) {
-    const currentVector =
-      rotatedCardinalUnitVector(
-        wing,
-        currentQuaternion
-      );
-
-    const alignment =
-      quaternionFromUnitVectors(
-        currentVector,
-        constellationAnchorVector()
-      );
-
-    return quaternionNormalize(
-      quaternionMultiply(
-        alignment,
-        currentQuaternion
-      )
-    );
-  }
-
   function settledClusterQuaternion(
     roomId,
     wing,
@@ -4543,7 +4519,12 @@
       state.constellationTargetQuaternion =
         frameConstellationQuaternion;
 
-      if (state.reducedMotion) {
+      if (
+        state.reducedMotion ||
+        state.root.dataset
+          .mainConstellationInertiaActive ===
+          "true"
+      ) {
         state.constellationQuaternion =
           frameConstellationQuaternion.slice();
       } else {
@@ -6798,7 +6779,7 @@
         quaternion,
         primaryWing,
         source:
-          "crystals-release-snap"
+          "crystals-release-preserve"
       }) !== false
     );
   }
@@ -7573,11 +7554,8 @@
         currentQuaternion
       );
 
-    const settledQuaternion =
-      settledConstellationQuaternion(
-        primaryWing,
-        currentQuaternion
-      );
+    const releaseQuaternion =
+      currentQuaternion.slice();
 
     state.settledPrimaryWing =
       primaryWing;
@@ -7585,17 +7563,20 @@
     state.visualPrimaryWing =
       primaryWing;
 
+    state.root.dataset.renderedForegroundCardinal =
+      primaryWing;
+
     state.constellationTargetQuaternion =
-      settledQuaternion.slice();
+      releaseQuaternion.slice();
 
     state.constellationQuaternion =
-      settledQuaternion.slice();
+      releaseQuaternion.slice();
 
     completeConstellationSettlementGeometry();
 
     const committed =
       requestControllerOrbitCommit(
-        settledQuaternion,
+        releaseQuaternion,
         primaryWing
       );
 
@@ -7643,6 +7624,57 @@
           ? "NO_ERROR"
           : "CONTROLLER_ORBIT_COMMIT_UNAVAILABLE"
     });
+
+    if (committed) {
+      const releaseSpeed =
+        Math.max(
+          metrics.releaseVelocity,
+          0.12
+        );
+
+      const directionScale =
+        metrics.distance > 0
+          ? releaseSpeed /
+            metrics.distance
+          : 0;
+
+      globalThis.dispatchEvent(
+        new CustomEvent(
+          "DGB_COMPASS_CONSTELLATION_RELEASE_v1",
+          {
+            detail:
+              Object.freeze({
+                releaseQuaternion:
+                  Object.freeze(
+                    releaseQuaternion.slice()
+                  ),
+
+                primaryWing,
+
+                releaseVelocityPxPerMs:
+                  releaseSpeed,
+
+                releaseVectorPxPerMs:
+                  Object.freeze({
+                    x:
+                      metrics.dx *
+                      directionScale,
+
+                    y:
+                      metrics.dy *
+                      directionScale
+                  }),
+
+                gestureDurationMs:
+                  metrics.durationMs,
+
+                source:
+                  "crystals-release-preserve"
+              })
+          }
+        )
+      );
+    }
   }
 
   function finishClusterDrag(

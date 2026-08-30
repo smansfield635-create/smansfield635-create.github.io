@@ -424,12 +424,11 @@ body{position:relative;isolation:isolate;overflow-x:clip}
     if(target===selectedFace)return;
     selectedFace=target;
     applyFace(true,false);
-    if(focus){
-      requestAnimationFrame(()=>{
-        const active=faces.find(face=>face.dataset.readerFace===selectedFace);
-        active?.querySelector(`[data-flip-face]`)?.focus({preventScroll:true});
-      });
-    }
+    requestAnimationFrame(()=>{
+      const active=faces.find(face=>face.dataset.readerFace===selectedFace);
+      if(focus)active?.querySelector(`[data-flip-face]`)?.focus({preventScroll:true});
+      else active?.focus({preventScroll:true});
+    });
   }
 
   function openReader(lens){
@@ -484,9 +483,10 @@ body{position:relative;isolation:isolate;overflow-x:clip}
 
   stage.addEventListener('pointerdown',event=>{
     if(animating||inspecting||event.button!==0)return;
-    gesture={id:event.pointerId,x:event.clientX,y:event.clientY,startAngle:angle,axis:null,lastX:event.clientX};
+    const captureDeferred=Boolean(event.target.closest('[data-orbit-card]'));
+    gesture={id:event.pointerId,x:event.clientX,y:event.clientY,startAngle:angle,axis:null,lastX:event.clientX,captureDeferred};
     stage.dataset.dragging='true';
-    stage.setPointerCapture?.(event.pointerId);
+    if(!captureDeferred)stage.setPointerCapture?.(event.pointerId);
   });
   stage.addEventListener('pointermove',event=>{
     if(!gesture||gesture.id!==event.pointerId)return;
@@ -494,6 +494,10 @@ body{position:relative;isolation:isolate;overflow-x:clip}
     const dy=event.clientY-gesture.y;
     if(!gesture.axis&&Math.max(Math.abs(dx),Math.abs(dy))>12)gesture.axis=Math.abs(dx)>Math.abs(dy)*1.15?'horizontal':'vertical';
     if(gesture.axis!=='horizontal')return;
+    if(gesture.captureDeferred){
+      stage.setPointerCapture?.(event.pointerId);
+      gesture.captureDeferred=false;
+    }
     event.preventDefault();
     gesture.lastX=event.clientX;
     angle=gesture.startAngle+dx*.72;
@@ -547,8 +551,11 @@ body{position:relative;isolation:isolate;overflow-x:clip}
     face.addEventListener('pointercancel',()=>{swipe=null});
   });
 
+  document.addEventListener('keydown',event=>{
+    if(event.key==='Escape'&&inspecting){event.preventDefault();closeReader()}
+  });
+
   reader.addEventListener('keydown',event=>{
-    if(event.key==='Escape'){event.preventDefault();closeReader();return}
     if(event.key!=='Tab')return;
     const active=faces.find(face=>face.dataset.readerFace===selectedFace);
     const focusable=[...active.querySelectorAll('button:not([disabled]),a[href],[tabindex]:not([tabindex="-1"])')].filter(element=>!element.hidden&&!element.closest('[hidden]'));

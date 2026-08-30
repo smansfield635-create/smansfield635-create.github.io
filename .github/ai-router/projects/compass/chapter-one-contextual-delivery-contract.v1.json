@@ -1,0 +1,212 @@
+{
+  "schema": "COMPASS_CHAPTER_ONE_CONTEXTUAL_DELIVERY_CONTRACT_v1",
+  "status": "LOCKED_DIRECT_REFERENCE_REQUIRED",
+  "projectId": "COMPASS",
+  "ownerDecision": {
+    "source": "USER_EXPLICIT",
+    "issue": 2356,
+    "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2356",
+    "recordedAt": "2026-08-30",
+    "governingBaselineHead": "6e9b673f5f04742b4f18635d5d4a4b772cd9c542"
+  },
+  "purpose": "Bind the approved Compass whole-page narrative role, protected public surfaces, Chapter One progressive-disclosure hierarchy, exact approved Studio and About language, preserved Community and Meet Sean context, continuity-based visual expression, and no-drift boundaries before lower four-way carousel decisions proceed.",
+  "authorityBoundary": [
+    "THIS_CONTRACT_RECORDS_OWNER_INTENT_AND_IS_MANDATORY_CONSTRUCTION_CONTEXT",
+    "THIS_CONTRACT_DOES_NOT_BY_ITSELF_AUTHORIZE_PUBLIC_PAGE_MUTATION_MERGE_DEPLOYMENT_OR_RELEASE",
+    "THIS_CONTRACT_DOES_NOT_AUTHORIZE_LOWER_FOUR_WAY_CAROUSEL_CHANGES",
+    "THIS_CONTRACT_DOES_NOT_AUTHORIZE_CAROUSEL_REMOVAL_OR_ARCHITECTURAL_REPLACEMENT",
+    "THIS_CONTRACT_DOES_NOT_AUTHORIZE_ROUTE_CARDINAL_ROOM_CONTROLLER_CRYSTAL_OR_MOTION_CHANGES",
+    "UNRESOLVED_CONTEXT_MAY_NOT_BE_INFERRED",
+    "OWNER_EXPLICIT_SUPERSESSION_IS_REQUIRED_TO_CHANGE_A_LOCKED_LITERAL_OR_PROTECTED_BOUNDARY"
+  ],
+  "wholePageNarrativeArchitecture": {
+    "identity": "SELF_CONTAINED_NARRATIVE_TRAVERSAL_THAT_PROGRESSIVELY_BECOMES_A_WEBSITE_WIDE_TRAVERSAL",
+    "roles": [
+      "NARRATIVE_ENTRANCE",
+      "GLOBAL_ORIENTATION_HUB",
+      "WORKING_STUDIO_DEMONSTRATION",
+      "ESTATE_ROUTING_JUNCTION",
+      "COMPLETE_IN_PAGE_EXPERIENCE"
+    ],
+    "sequence": [
+      {"order": 1, "surface": "TOP_DIAMOND_GATE_BRIDGE", "contextWeight": "LIGHT", "role": "IDENTITY_AND_ENTRY"},
+      {"order": 2, "surface": "CHAPTER_ONE", "contextWeight": "HEAVIEST", "role": "PHILOSOPHICAL_AND_NARRATIVE_FOUNDATION"},
+      {"order": 3, "surface": "COMPASS", "contextWeight": "LIGHT", "role": "ORIENTATION_AND_TRAVERSAL"},
+      {"order": 4, "surface": "THREE_WAYS_TO_ENGAGE", "contextWeight": "LIGHT", "role": "INTERACTIVE_STUDIO_CAPABILITY_EXPRESSION"},
+      {"order": 5, "surface": "LOWER_FOUR_WAY_CAROUSEL", "contextWeight": "LIGHT_TO_MEDIUM", "role": "CURRENT_WORK_EVIDENCE_MATURITY_AND_COMMUNITY_HEADLINE_STATES"},
+      {"order": 6, "surface": "BUILD_YOUR_OWN_WEBSITE", "contextWeight": "VERY_LIGHT", "role": "COMMERCIAL_TRANSLATION_AND_CLOSING_INVITATION"}
+    ],
+    "contextDistributionLaw": "CHAPTER_ONE_CARRIES_THE_PRIMARY_EXPLANATORY_BURDEN; SUBSEQUENT_INTERFACES_AND_OBJECTS_INCREASINGLY_DEMONSTRATE_MEANING_INSTEAD_OF_REPEATING_IT"
+  },
+  "protectedPublicSurfaces": {
+    "topDiamondGateBridge": {
+      "protection": "CONTEXT_AND_EXPRESSION_LOCKED",
+      "protectedElements": [
+        "FIND_YOUR_WAY",
+        "DIAMOND_GATE_BRIDGE",
+        "INDEPENDENT_INTERACTIVE_EXPERIENCE_AND_RESEARCH_STUDIO",
+        "DISCOVERY_PROPOSITION",
+        "HUMAN_EPIGRAPH"
+      ],
+      "soleApprovedFutureChange": {
+        "target": "FIND_YOUR_WAY",
+        "change": "HORIZONTAL_CENTERING_ONLY",
+        "acceptance": "SHARES_THE_VISUAL_CENTERLINE_OF_DIAMOND_GATE_BRIDGE_ON_PHONE_TABLET_AND_DESKTOP",
+        "wordingChangeAllowed": false,
+        "typographyChangeAllowed": false,
+        "hierarchyChangeAllowed": false,
+        "surroundingContextChangeAllowed": false
+      }
+    },
+    "threeWaysToEngage": {
+      "protection": "COMPLETE_CONTEXT_AND_ARCHITECTURE_LOCKED",
+      "includes": [
+        "BRAIN_COHERISCOPE",
+        "TROPHY_AWARDS_AND_RECOGNITION",
+        "HOUSE_GUIDED_ENTRY",
+        "THREE_DIMENSIONAL_CAROUSEL",
+        "COPY_CAPTIONS_ACTIONS_CONTROLS_MOTION_DESTINATIONS_AND_RESPONSIVE_BEHAVIOR"
+      ],
+      "mutationAllowedByThisContract": false
+    },
+    "buildYourOwnWebsite": {
+      "protection": "COMPLETE_CONTEXT_AND_ARCHITECTURE_LOCKED",
+      "exactContext": {
+        "kicker": "Build something of your own",
+        "headline": "Build Your Own Website",
+        "body": "If the construction itself caught your attention, explore a site designed around your idea instead of a generic template.",
+        "action": "Explore custom construction →"
+      },
+      "mutationAllowedByThisContract": false
+    }
+  },
+  "chapterOne": {
+    "role": "HEAVIEST_CONTEXT_AND_FOUNDATIONAL_READING",
+    "deliveryLaw": "PERSISTENT_TAB_CHOICES_PLUS_BOUNDED_DEFAULT_CONTEXT_PLUS_EXPLICIT_EXPANSION_FOR_DEEPER_READING",
+    "scanLaw": "MOVEMENT_ACROSS_TABS_FIRST_REVEALS_DISTINCT_HEADLINE_CONTEXT_OR_COMPACT_CONTEXT_BOXES_RATHER_THAN_SIMULTANEOUS_PARAGRAPH_DUMPS",
+    "tabs": {
+      "introduction": {
+        "contextStatus": "VERBATIM_PROTECTED_v2",
+        "defaultVisible": [
+          "Introduction",
+          "For thousands of years, people have searched for better ways to understand themselves, each other, and the systems they inhabit.",
+          "Continue the threshold"
+        ],
+        "disclosureControl": {
+          "exactLabel": "Continue the threshold",
+          "initialState": "COLLAPSED",
+          "mustBeAccessible": true,
+          "action": "EXPAND_REMAINING_VERBATIM_INTRODUCTION_IN_PLACE"
+        },
+        "verbatimParagraphsInOrder": [
+          "For thousands of years, people have searched for better ways to understand themselves, each other, and the systems they inhabit.",
+          "Philosophers questioned first principles. Theologians wrestled with meaning and purpose. Scientists measured the physical world. Engineers built models. Physicians searched for patterns. Teachers, mentors, and storytellers carried those lessons forward.",
+          "Each discipline illuminated part of the landscape. None needed to diminish the others to contribute something essential.",
+          "Perhaps the next step is not abandoning what came before, but arranging distinct forms of knowledge so they can remain themselves while working together.",
+          "The Earth did not become round when we discovered it. The world remained what it had always been. Our understanding became deeper.",
+          "What if the same is true of the problems we face now? What if many of our greatest challenges are not waiting for one dominant explanation, but for a clearer relationship among the explanations we already possess?",
+          "What if the next frontier is not outside the box, but outside the cube?",
+          "Diamond Gate Bridge begins with that question. It does not ask philosophy, theology, science, engineering, medicine, or lived experience to surrender their identities. It asks how each may contribute to a larger landscape without being flattened into one another."
+        ],
+        "literalMutationAllowedByThisContract": false
+      },
+      "studio": {
+        "contextStatus": "EXACT_OWNER_APPROVED",
+        "defaultState": "HEADLINE_VISIBLE_BODY_COLLAPSED",
+        "identifier": "THE STUDIO",
+        "headline": "One independent studio. An entire connected body of work.",
+        "paragraphs": [
+          "Diamond Gate Bridge is an interactive experience and research studio built and operated by one independent creator and developer. Working primarily in native browser code, the studio brings original software, real-time 3D, research, diagnostic instruments, narrative worlds, film, governance, and evidence into one evolving digital estate.",
+          "That model has produced work across five award-facing facets: Experience, Native Craft, Governed Construction, Continuity & Recovery, and Integrated Platform. What makes the studio unusual is not simply that these capabilities exist, but that one operator has developed them together while preserving the distinct standards each kind of work requires."
+        ],
+        "closingStatement": "This website does not merely describe the studio. It is the studio in operation.",
+        "expansionLaw": "EXPLICIT_VISITOR_ACTION_REVEALS_THE_EXACT_APPROVED_PARAGRAPHS_AND_CLOSING_STATEMENT_IN_PLACE"
+      },
+      "estate": {
+        "contextStatus": "OWNER_APPROVAL_REQUIRED_BEFORE_CONTEXTUAL_REWRITE",
+        "role": "EXPLAIN_HOW_THE_ESTATE_IS_TRAVERSED_WITHOUT_BECOMING_A_DIRECTORY",
+        "delivery": "BOUNDED_CONTEXTUAL_PRESENTATION",
+        "exactFutureCopyResolved": false,
+        "agentInferenceAllowed": false,
+        "mutationAllowedByThisContract": false
+      },
+      "about": {
+        "contextStatus": "EXACT_OWNER_APPROVED",
+        "defaultState": "HEADLINE_VISIBLE_BODY_COLLAPSED",
+        "identifier": "ABOUT DIAMOND GATE BRIDGE",
+        "headline": "What we do today becomes what tomorrow inherits.",
+        "paragraphs": [
+          "Diamond Gate Bridge is built on a simple responsibility: our choices do not end with us. They shape the conditions, examples, and possibilities that other people encounter later. That is why this work makes room for reflection before action, growth without denying where we began, and community that turns understanding into care for others.",
+          "For us, building is not only about producing something new. It is about looking honestly at what we have carried forward, deciding what deserves to continue, and creating better paths for the people who come next."
+        ],
+        "closingStatement": "We cannot control every future outcome. We can take responsibility for the direction our actions begin.",
+        "expansionLaw": "EXPLICIT_VISITOR_ACTION_REVEALS_THE_EXACT_APPROVED_PARAGRAPHS_AND_CLOSING_STATEMENT_IN_PLACE"
+      },
+      "community": {
+        "contextStatus": "CURRENT_WORDING_PROTECTED",
+        "delivery": "COMPACT_CONTEXT_BOX_NO_NESTED_DISCLOSURE_REQUIRED",
+        "heading": "Community is practiced through the campaigns.",
+        "body": "Consider the Community with Consider the Energy is the public community gateway. It connects R.O.B. · Rise Over Bullying and W.A.V.E. · Women Against Violence Everywhere as active community campaigns rather than replacing them with biography or philosophy.",
+        "destinations": [
+          "/campaigns/consider-the-energy/",
+          "/campaigns/rob/",
+          "/campaigns/wave/"
+        ],
+        "contextualRewriteAllowedByThisContract": false
+      },
+      "meetSean": {
+        "contextStatus": "CURRENT_WORDING_AND_POSITION_PROTECTED",
+        "delivery": "COMPACT_CONTEXT_BOX_NO_NESTED_DISCLOSURE_REQUIRED",
+        "heading": "Meet the builder.",
+        "body": "Diamond Gate Bridge is an independent body of work. The builder context stays visible so visitors can understand the path, intent, and responsibility behind the estate, without using biography as a substitute for Community.",
+        "destination": "/meet-sean-mansfield/",
+        "contextualRewriteAllowedByThisContract": false,
+        "repositionAllowedByThisContract": false
+      }
+    }
+  },
+  "continuityBasedVisualExpression": {
+    "appliesTo": [
+      "INTRODUCTION",
+      "THE_STUDIO",
+      "HOW_THE_ESTATE_WORKS",
+      "ABOUT_DIAMOND_GATE_BRIDGE",
+      "COMMUNITY",
+      "MEET_SEAN"
+    ],
+    "roles": [
+      {"element": "IDENTIFIER", "expression": "COOL_NEUTRAL_UPPERCASE"},
+      {"element": "PRIMARY_HEADLINE", "expression": "CREAM_SERIF"},
+      {"element": "EXPLANATORY_BODY", "expression": "READABLE_NEUTRAL_TEXT"},
+      {"element": "THRESHOLD_OR_CLOSING_STATEMENT", "expression": "GOLD_EMPHASIS_OR_ITALIC"},
+      {"element": "RELATIONSHIP_OR_ORGANIZATION_CALLOUT", "expression": "BLUE_CYAN_STRUCTURAL_ACCENT"},
+      {"element": "COMPOSITION", "expression": "INTENTIONAL_SPACING_CONTEXTUAL_HIERARCHY_AND_BOUNDED_PANEL"}
+    ],
+    "applicationLaw": "VISUAL_EXPRESSION_CLARIFIES_SEMANTIC_ROLE_AND_MUST_NOT_APPLY_COLOR_DECORATIVELY_OR_FLATTEN_DISTINCT_TAB_PURPOSES",
+    "continuityLaw": "OTHER_CHAPTER_ONE_TABS_ADOPT_THE_INTRODUCTION_EDITORIAL_LANGUAGE_WITHOUT_INHERITING_THE_INTRODUCTION_TEXT_LENGTH_OR_DISCLOSURE_DEPTH"
+  },
+  "acceptanceInvariants": [
+    "TOP_THREE_PROTECTED_PUBLIC_SURFACES_RETAIN_EXACT_CONTEXT_EXCEPT_APPROVED_FIND_YOUR_WAY_CENTERING",
+    "INTRODUCTION_DEFAULT_STATE_SHOWS_ONLY_HEADING_FIRST_VERBATIM_PARAGRAPH_AND_CONTINUE_THE_THRESHOLD_CONTROL",
+    "INTRODUCTION_EXPANSION_REVEALS_ALL_REMAINING_VERBATIM_PARAGRAPHS_IN_ORDER_WITHOUT_REWRITE",
+    "STUDIO_DEFAULT_STATE_SHOWS_EXACT_APPROVED_HEADLINE_AND_EXPANSION_REVEALS_EXACT_APPROVED_BODY",
+    "ABOUT_DEFAULT_STATE_SHOWS_EXACT_APPROVED_HEADLINE_AND_EXPANSION_REVEALS_EXACT_APPROVED_BODY",
+    "COMMUNITY_CONTEXT_REMAINS_UNCHANGED",
+    "MEET_SEAN_CONTEXT_AND_POSITION_REMAIN_UNCHANGED",
+    "EVERY_CHAPTER_ONE_TAB_RECEIVES_CONTINUITY_BASED_VISUAL_EXPRESSION",
+    "ESTATE_CONTEXT_IS_NOT_INFERRED_BEFORE OWNER APPROVAL",
+    "LOWER_FOUR_WAY_CAROUSEL_CONTEXT_OR_DELIVERY_IS_NOT_INFERRED_BEFORE OWNER APPROVAL",
+    "NO_CAROUSEL_IS_REMOVED_OR_ARCHITECTURALLY_REPLACED"
+  ],
+  "supersessionLaw": {
+    "required": "EXPLICIT_OWNER_DIRECTION_PLUS_FRESH_EXACT_HEAD_CLASSIFICATION_AND_APPLICABLE_GOVERNED_AUTHORITY",
+    "conversationInferenceAllowed": false,
+    "silentParaphraseAllowed": false,
+    "scopeExpansionAllowed": false
+  },
+  "unresolvedNextDecision": {
+    "surface": "LOWER_FOUR_WAY_CAROUSEL",
+    "status": "AWAITING_OWNER_CONTEXT_AND_DELIVERY_DIRECTION",
+    "constructionAllowed": false
+  }
+}

@@ -376,6 +376,49 @@
       "scopeHash": "0ddccd237442ccfda3ea430909ec7ed68c90eeae7dc9afb9405e483697cd4456",
       "state": "ADMITTED_LOCKED"
     },
+    "0e57664adcae028c03f722fac5895597987bcb63f0d0bdd949c3926a5c89f9cb": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "4f9219b24300a81354307f2e1cf66f9ae5c8e56b",
+          "lockGeneration": 1874,
+          "lockScope": "PUBLIC_PRODUCT:COMPASS:ROOT:PRESENTATION_AND_PREFLIGHT_REPAIR:V1",
+          "operationId": "COMPASS_PRESENTATION_AND_PREFLIGHT_REPAIR_20260830_005",
+          "procedureLocatorDigest": "7791b5ddb37549304f7076c195d442a49b5c2a0648f822f6d452478c5948baeb",
+          "requestDigest": "492758f1e893a0aa89f30dd910d58da9101ff271e535697db7d4af03f0870d01",
+          "scopeHash": "0e57664adcae028c03f722fac5895597987bcb63f0d0bdd949c3926a5c89f9cb"
+        },
+        "bindingDigest": "4c68c2b68f373094aad639e974ce8b223af900ac3f8ba3e1d50e18ddf1a19cb7",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "41766b528a6645b9163e534c50c22bb5efd63abddf23feb1db69e3bd9ed9dedb",
+          "commentId": 5470769572,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2368,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33330852338,
+          "workflowSha": "4f9219b24300a81354307f2e1cf66f9ae5c8e56b"
+        },
+        "lineageAnchorCommitSha": "eb4496871460dad71b0cae01e5d6d3efa03783db",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "4f9219b24300a81354307f2e1cf66f9ae5c8e56b",
+      "lockGeneration": 1874,
+      "lockScope": "PUBLIC_PRODUCT:COMPASS:ROOT:PRESENTATION_AND_PREFLIGHT_REPAIR:V1",
+      "operationId": "COMPASS_PRESENTATION_AND_PREFLIGHT_REPAIR_20260830_005",
+      "procedureLocatorDigest": "7791b5ddb37549304f7076c195d442a49b5c2a0648f822f6d452478c5948baeb",
+      "released": false,
+      "requestDigest": "492758f1e893a0aa89f30dd910d58da9101ff271e535697db7d4af03f0870d01",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "0e57664adcae028c03f722fac5895597987bcb63f0d0bdd949c3926a5c89f9cb",
+      "state": "ADMITTED_LOCKED"
+    },
     "0f0c81e327dbfa84ac8cb6b9764692ed129686887d3d763164a6ab9bda7cae62": {
       "governingHead": "f9e63ce0e08e1c3bbf69c1afcffe8de6aed41c13",
       "lockGeneration": 1650,
@@ -6242,7 +6285,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1873,
+  "lockGeneration": 1874,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

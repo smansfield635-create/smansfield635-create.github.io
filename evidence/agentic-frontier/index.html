@@ -102,6 +102,18 @@ body{position:relative;isolation:isolate;overflow-x:clip}
 }
 @media(prefers-reduced-motion:reduce){.evidence-field .holo{transition:none}}
 </style>
+<style id="dual-face-orbital-successor">
+.orbital-frontier{position:relative;z-index:4;width:min(calc(100% - 2rem),var(--max));min-height:100svh;margin:0 auto 8rem;padding-top:1rem}.orbital-intro{display:grid;grid-template-columns:minmax(0,.92fr) minmax(18rem,.58fr);gap:clamp(1.5rem,5vw,4rem);align-items:end;margin-bottom:1.2rem}.orbital-intro h2{max-width:12ch;margin:0;font:700 clamp(2.6rem,6vw,5.6rem)/.96 Georgia,"Times New Roman",serif;letter-spacing:-.045em}.orbital-intro p{margin:.8rem 0 0;color:#a9babf}.orbit-law{padding:1rem;border:1px solid rgba(120,221,239,.2);border-radius:1rem;background:rgba(4,16,24,.6);color:#9eb2b8;font-size:.82rem}.orbit-law strong{display:block;margin-bottom:.35rem;color:var(--cyan);font-size:.69rem;letter-spacing:.13em;text-transform:uppercase}.orbit-shell{position:relative;min-height:min(72svh,47rem);border:1px solid var(--line);border-radius:1.7rem;background:radial-gradient(circle at 50% 50%,rgba(110,219,238,.095),transparent 21rem),linear-gradient(150deg,rgba(7,23,33,.68),rgba(2,8,13,.82));box-shadow:0 40px 120px rgba(0,0,0,.38),inset 0 1px rgba(255,255,255,.05);overflow:hidden;isolation:isolate}.orbit-shell::before{content:"";position:absolute;inset:9% 11%;border:1px solid rgba(138,218,232,.13);border-radius:50%;transform:rotateX(64deg);box-shadow:0 0 70px rgba(92,204,224,.08);pointer-events:none}.orbit-stage{position:relative;min-height:min(60svh,39rem);outline:none;touch-action:pan-y;user-select:none;cursor:grab;perspective:1100px}.orbit-stage[data-dragging="true"]{cursor:grabbing}.orbit-stage:focus-visible{box-shadow:inset 0 0 0 2px rgba(120,221,239,.72)}.orbit-ring{position:absolute;left:50%;top:49%;width:min(76vw,45rem);aspect-ratio:1;border:1px solid rgba(236,211,142,.13);border-radius:50%;transform:translate(-50%,-50%) rotateX(71deg);box-shadow:0 0 60px rgba(236,211,142,.05);transition:transform .18s linear}.orbit-ring::before,.orbit-ring::after{content:"";position:absolute;border-radius:50%;background:var(--gold);box-shadow:0 0 18px rgba(236,211,142,.75)}.orbit-ring::before{width:.45rem;height:.45rem;left:8%;top:22%}.orbit-ring::after{width:.32rem;height:.32rem;right:13%;bottom:17%;background:var(--cyan)}.orbit-card{position:absolute;left:50%;top:50%;width:min(78vw,24rem);min-height:20rem;padding:0;border:1px solid rgba(236,211,142,.38);border-radius:1.35rem;background:linear-gradient(155deg,rgba(13,36,47,.94),rgba(4,13,20,.96));color:var(--ink);text-align:left;box-shadow:0 34px 90px rgba(0,0,0,.52),0 0 46px rgba(112,218,238,.09),inset 0 1px rgba(255,255,255,.06);cursor:pointer;transform:translate(-50%,-50%);transform-style:preserve-3d;transition:border-color .22s ease,box-shadow .22s ease;will-change:transform,opacity}.orbit-card:hover,.orbit-card:focus-visible{border-color:rgba(120,221,239,.72);outline:none;box-shadow:0 34px 90px rgba(0,0,0,.55),0 0 58px rgba(112,218,238,.16),inset 0 1px rgba(255,255,255,.08)}.orbit-card[aria-disabled="true"]{cursor:grabbing}.orbit-card-inner{display:flex;min-height:20rem;flex-direction:column;padding:1.35rem}.orbit-index{color:var(--gold);font:900 .65rem/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.16em;text-transform:uppercase}.orbit-card h3{max-width:9ch;margin:auto 0 .8rem;font:700 clamp(2.2rem,4vw,3.5rem)/.94 Georgia,"Times New Roman",serif;letter-spacing:-.04em}.orbit-card p{margin:0;color:#a9babf;font-size:.88rem}.two-sided{display:flex;align-items:center;justify-content:space-between;gap:.8rem;margin-top:1rem;padding-top:.9rem;border-top:1px solid rgba(198,220,227,.13);color:#d5e5e5;font-size:.7rem;font-weight:850;letter-spacing:.08em;text-transform:uppercase}.two-sided span:last-child{color:var(--cyan)}.orbit-calibration{position:absolute;inset:0;pointer-events:none}.orbit-node{position:absolute;width:.45rem;height:.45rem;border-radius:50%;background:rgba(121,221,239,.55);box-shadow:0 0 14px rgba(121,221,239,.5)}.orbit-node:nth-child(1){left:17%;top:28%}.orbit-node:nth-child(2){right:18%;top:22%}.orbit-node:nth-child(3){left:22%;bottom:18%}.orbit-node:nth-child(4){right:15%;bottom:30%;background:rgba(236,211,142,.62)}.orbit-controls{position:relative;z-index:3;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:.7rem;align-items:center;padding:0 1rem 1rem}.orbit-control{min-width:48px;min-height:48px;border:1px solid rgba(198,220,227,.2);border-radius:999px;background:rgba(4,16,24,.78);color:#e8f2f1;font-weight:900;cursor:pointer}.orbit-control:hover,.orbit-control:focus-visible{border-color:rgba(120,221,239,.65);outline:none}.orbit-status{text-align:center;color:#8fa5ab;font-size:.73rem}.orbit-status strong{display:block;color:#f2e6bf;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase}.orbit-note{margin:.65rem 0 0;text-align:center;color:#6f858d;font-size:.7rem}.reader[hidden]{display:none}.reader{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:max(4.5rem,env(safe-area-inset-top)) max(.65rem,env(safe-area-inset-right)) max(.65rem,env(safe-area-inset-bottom)) max(.65rem,env(safe-area-inset-left));background:rgba(1,5,9,.78);perspective:1500px}.reader::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 18%,rgba(112,218,238,.09),transparent 34rem);backdrop-filter:blur(10px)}.reader-turn{position:relative;z-index:1;display:grid;width:min(100%,70rem);height:min(84svh,52rem);transform-style:preserve-3d;transition:transform .72s cubic-bezier(.2,.78,.2,1)}.reader[data-face="agentic"] .reader-turn{transform:rotateY(180deg)}.reader-face{grid-area:1/1;min-width:0;height:100%;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;border:1px solid rgba(198,220,227,.2);border-radius:1.4rem;background:linear-gradient(150deg,rgba(8,25,35,.98),rgba(2,8,13,.99));box-shadow:0 48px 140px rgba(0,0,0,.65),inset 0 1px rgba(255,255,255,.06);backface-visibility:hidden;-webkit-backface-visibility:hidden;scrollbar-color:rgba(120,221,239,.32) transparent}.reader-face.agentic-face{transform:rotateY(180deg);background:linear-gradient(150deg,rgba(18,14,38,.98),rgba(3,8,17,.99))}.reader-topbar{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;gap:.65rem;padding:.7rem;background:linear-gradient(180deg,rgba(3,10,16,.98),rgba(3,10,16,.86));border-bottom:1px solid rgba(198,220,227,.11)}.reader-topbar button{min-height:44px;padding:.65rem .8rem;border:1px solid rgba(198,220,227,.18);border-radius:999px;background:rgba(8,24,32,.76);color:#e8f1ef;font-size:.7rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}.reader-topbar button:hover,.reader-topbar button:focus-visible{border-color:rgba(120,221,239,.68);outline:none}.reader-content{width:min(100%,61rem);margin:auto;padding:clamp(1.1rem,4vw,3.4rem)}.reader-kicker{margin:0;color:var(--gold);font-size:.67rem;font-weight:900;letter-spacing:.17em;text-transform:uppercase}.agentic-face .reader-kicker{color:var(--violet)}.reader-content h2{max-width:12ch;margin:.7rem 0 1rem;font:700 clamp(2.7rem,7vw,6.2rem)/.92 Georgia,"Times New Roman",serif;letter-spacing:-.05em}.reader-deck{max-width:48rem;color:#c6d2d2;font-size:clamp(1rem,1.8vw,1.18rem)}.face-boundary{margin:1rem 0 1.3rem;padding:.85rem 1rem;border-left:2px solid var(--cyan);border-radius:0 .8rem .8rem 0;background:linear-gradient(90deg,rgba(120,221,239,.08),transparent);color:#a8b9bd;font-size:.84rem}.agentic-face .face-boundary{border-left-color:var(--violet);background:linear-gradient(90deg,rgba(192,173,255,.08),transparent)}.face-tabs{display:flex;gap:.45rem;margin:1.2rem 0;padding:.4rem;border:1px solid rgba(198,220,227,.13);border-radius:999px;background:rgba(1,7,11,.46);overflow-x:auto}.face-tabs button{flex:0 0 auto;min-height:42px;padding:.58rem .8rem;border:1px solid transparent;border-radius:999px;background:transparent;color:#849ba2;font-size:.69rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}.face-tabs button[aria-selected="true"]{border-color:rgba(236,211,142,.35);background:rgba(236,211,142,.09);color:#fff0bd}.agentic-face .face-tabs button[aria-selected="true"]{border-color:rgba(192,173,255,.35);background:rgba(192,173,255,.09);color:#e7ddff}.lens-panel[hidden]{display:none}.lens-panel{padding-bottom:8rem}.evidence-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}.evidence-block{padding:1rem;border:1px solid rgba(198,220,227,.14);border-radius:1rem;background:rgba(1,7,12,.44)}.evidence-block h3{margin:0 0 .45rem;font:700 clamp(1.3rem,2.3vw,1.8rem)/1.05 Georgia,serif}.evidence-block p{margin:.45rem 0;color:#9fb2b7;font-size:.88rem}.evidence-block.full{grid-column:1/-1}.metric-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.55rem;margin:1rem 0}.metric-row div{padding:.85rem;border:1px solid rgba(198,220,227,.12);border-radius:.85rem;background:rgba(1,7,12,.45)}.metric-row strong{display:block;font:700 clamp(1.45rem,3vw,2.3rem)/1 Georgia,serif}.metric-row span{display:block;margin-top:.3rem;color:#789097;font-size:.62rem;font-weight:900;letter-spacing:.07em;text-transform:uppercase}.reader-chain{display:grid;gap:.5rem}.reader-chain div{display:grid;grid-template-columns:2.1rem 1fr;gap:.7rem;align-items:center;padding:.7rem .8rem;border:1px solid rgba(198,220,227,.13);border-radius:.85rem;background:rgba(2,8,14,.42)}.reader-chain b{display:grid;place-items:center;width:2rem;height:2rem;border:1px solid rgba(192,173,255,.38);border-radius:50%;color:#d9ceff}.reader-chain span{color:#a8b7bc;font-size:.85rem}.reader-end{margin-top:1.2rem;padding-top:1rem;border-top:1px solid rgba(198,220,227,.12);color:#71878e;font-size:.75rem}.reader-swipe-cue{position:fixed;left:50%;bottom:max(1rem,env(safe-area-inset-bottom));z-index:92;transform:translateX(-50%);padding:.45rem .7rem;border:1px solid rgba(198,220,227,.13);border-radius:999px;background:rgba(2,8,13,.72);color:#82979d;font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;pointer-events:none}.rf-reader-open{overflow:hidden}.rf-reader-open .evidence-field .holo{opacity:.12!important;filter:blur(8px) saturate(.55)!important}.legacy-frontier[hidden]{display:none!important}
+@media(max-width:800px){.orbital-intro{grid-template-columns:1fr}.orbit-shell{min-height:42rem}.orbit-stage{min-height:34rem}.reader{padding-top:max(4.2rem,env(safe-area-inset-top))}.reader-turn{height:calc(100svh - max(5rem,env(safe-area-inset-top)) - max(.8rem,env(safe-area-inset-bottom)))}.evidence-grid{grid-template-columns:1fr}.evidence-block.full{grid-column:auto}.metric-row{grid-template-columns:repeat(2,minmax(0,1fr))}.reader-content{padding:1rem}.reader-content h2{font-size:clamp(2.6rem,13vw,5rem)}.reader-topbar button{max-width:48%;font-size:.63rem}.reader-swipe-cue{display:none}}
+@media(max-width:520px){.orbital-frontier{width:calc(100% - 1rem)}.orbit-shell{border-radius:1.2rem}.orbit-card{width:min(86vw,22rem)}.orbit-controls{grid-template-columns:48px 1fr 48px;padding-inline:.6rem}.orbit-status{font-size:.66rem}.reader-face{border-radius:1rem}.face-tabs{border-radius:1rem}.metric-row{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){.orbit-ring,.reader-turn,.orbit-card,.evidence-field .holo{transition:none!important}.orbit-stage{scroll-behavior:auto}}
+</style>
+<style id="dual-face-orbital-field-state">
+.rf-reader-open .evidence-field{opacity:.54;transition:opacity .35s ease}
+.rf-reader-open .evidence-field .holo{opacity:var(--rf-holo-opacity)!important;filter:var(--rf-holo-filter)!important}
+.orbit-card-title{display:block;max-width:9ch;margin:auto 0 .8rem;font:700 clamp(2.2rem,4vw,3.5rem)/.94 Georgia,"Times New Roman",serif;letter-spacing:-.04em}.orbit-card-copy{display:block;margin:0;color:#a9babf;font-size:.88rem}
+@media(prefers-reduced-motion:reduce){.rf-reader-open .evidence-field{transition:none}}
+</style>
 </head>
 <body>
 <a class="skip" href="#research-frontier">Skip to research</a>
@@ -116,11 +128,95 @@ body{position:relative;isolation:isolate;overflow-x:clip}
 <main id="research-frontier">
 <section class="hero" aria-labelledby="frontier-title">
 <div class="hero-inner">
-<div><p class="eyebrow">Diamond Gate Bridge · Research Frontier</p><h1 id="frontier-title">A proposition should survive its strongest attack.</h1><p class="proposition">We are testing whether the geometry of a system’s remaining viable futures contains predictive information about what happens next—and whether the machinery used to conduct that research can itself become more accountable, recoverable, and inspectable.</p><p class="challenge-line">Think we’re wrong? Try to break it.</p><div class="actions"><a class="action primary" href="#frontier-chapters" data-mode="explore">Explore the Frontier</a><a class="action" href="#challenge" data-mode="challenge">Challenge the Result</a></div></div>
+<div><p class="eyebrow">Diamond Gate Bridge · Research Frontier</p><h1 id="frontier-title">A proposition should survive its strongest attack.</h1><p class="proposition">We are testing whether the geometry of a system’s remaining viable futures contains predictive information about what happens next—and whether the machinery used to conduct that research can itself become more accountable, recoverable, and inspectable.</p><p class="challenge-line">Think we’re wrong? Try to break it.</p><div class="actions"><a class="action primary" href="#frontier-chapters">Explore the Frontier</a><a class="action" href="#frontier-chapters" data-open-reader data-open-lens="limits">Challenge the Result</a></div></div>
 <aside class="hero-proof" aria-label="Current research standing"><small>Current standing</small><div class="status"><div><b>Scientific strand</b><span>Prospective testing and replication are being extended. Broad cross-domain generality and independent replication remain open.</span></div><div><b>Agentic strand</b><span>Multi-strand experimentally grounded research program. Broader comparative replication remains in progress.</span></div><div class="bounded"><b>Claim ceiling</b><span>This page distinguishes demonstrated observations from hypotheses, synthesis, and evidence still missing.</span></div></div></aside>
 </div>
 </section>
-<section class="frontier" id="frontier-chapters" aria-label="Research Frontier chapters">
+<section class="orbital-frontier" id="frontier-chapters" aria-labelledby="orbit-title">
+<div class="orbital-intro">
+<div><p class="eyebrow">One object · Two governing perspectives</p><h2 id="orbit-title">Rotate the research. Inspect its depth.</h2><p>Horizontal motion chooses the object while it is in orbit. Opening suspends the orbit: vertical motion reads, and horizontal motion turns the same research object between its Scientific and Agentic faces.</p></div>
+<aside class="orbit-law"><strong>Interaction law</strong>Clarity tracks contextual relevance to the selected object. It does not imply stronger evidence, greater confidence, or truth.</aside>
+</div>
+<div class="orbit-shell" data-orbit-shell>
+<div class="orbit-stage" data-orbit-stage tabindex="0" role="group" aria-label="Research object orbit. Drag horizontally or use the previous and next controls. Press Enter to inspect the active object.">
+<div class="orbit-ring" data-orbit-ring aria-hidden="true"></div>
+<div class="orbit-calibration" aria-hidden="true"><i class="orbit-node"></i><i class="orbit-node"></i><i class="orbit-node"></i><i class="orbit-node"></i></div>
+<button class="orbit-card" type="button" data-orbit-card aria-haspopup="dialog" aria-controls="frontier-reader">
+<span class="orbit-card-inner"><span class="orbit-index">Proof object · 01</span><span><span class="orbit-card-title">The Strongest Attack</span><span class="orbit-card-copy">One research object containing two equal, separately bounded frontiers: what the proposition predicts, and how its evidence is governed.</span></span><span class="two-sided"><span>Two-sided object</span><span data-face-preview>Scientific ↔ Agentic</span></span></span>
+</button>
+</div>
+<div class="orbit-controls" aria-label="Orbit controls">
+<button class="orbit-control" type="button" data-orbit-previous aria-label="Rotate orbit backward">←</button>
+<div class="orbit-status" role="status" aria-live="polite" data-orbit-status><strong>The Strongest Attack</strong><span>Front position · Opens on Scientific</span></div>
+<button class="orbit-control" type="button" data-orbit-next aria-label="Rotate orbit forward">→</button>
+</div>
+</div>
+<p class="orbit-note">Drag or use the arrow controls to rotate · Open the card to inspect · A two-sided indicator appears on every research object</p>
+
+<div class="reader" id="frontier-reader" data-reader data-face="scientific" role="dialog" aria-modal="true" aria-labelledby="scientific-title" hidden>
+<div class="reader-turn" data-reader-turn>
+<section class="reader-face scientific-face" data-reader-face="scientific" tabindex="-1" aria-labelledby="scientific-title">
+<div class="reader-topbar"><button type="button" data-return-orbit>← Return to Orbit</button><button type="button" data-flip-face="agentic">View Agentic side →</button></div>
+<div class="reader-content">
+<p class="reader-kicker">Scientific Frontier · Equal face 01</p>
+<h2 id="scientific-title">Do viable futures reveal fragility?</h2>
+<p class="reader-deck">The falsifiable proposition is that information in the geometry of a system’s remaining viable transitions may add predictive information beyond a description of its present state alone.</p>
+<p class="face-boundary"><strong>Scientific evidence boundary:</strong> prospective testing and replication are being extended. Broad cross-domain generality, independent replication, and a universal law are not claimed.</p>
+<div class="face-tabs" role="tablist" aria-label="Scientific evidence views">
+<button type="button" role="tab" id="scientific-tab-proposition" aria-controls="scientific-panel-proposition" aria-selected="true" data-lens-tab="proposition">Proposition</button>
+<button type="button" role="tab" id="scientific-tab-evidence" aria-controls="scientific-panel-evidence" aria-selected="false" data-lens-tab="evidence" tabindex="-1">Evidence</button>
+<button type="button" role="tab" id="scientific-tab-limits" aria-controls="scientific-panel-limits" aria-selected="false" data-lens-tab="limits" tabindex="-1">Limits</button>
+</div>
+<div class="lens-panel" id="scientific-panel-proposition" role="tabpanel" aria-labelledby="scientific-tab-proposition" data-lens-panel="proposition">
+<div class="evidence-grid"><article class="evidence-block full"><h3>Try to falsify it</h3><p>Preserve the predeclared evaluation boundary and ask whether the apparent signal disappears under a stronger comparator, a clean implementation, or a genuinely untouched benchmark.</p></article><article class="evidence-block"><h3>Freeze first</h3><p>Define the exact claim, benchmark, comparator, and stopping conditions before outcomes can steer the procedure.</p></article><article class="evidence-block"><h3>Keep contradictions</h3><p>Negative, null, and contradictory results belong in the record beside successful findings.</p></article></div>
+<p class="reader-end">Scroll vertically to read this face. Use its tabs for evidence detail; use the visible perspective control or a horizontal swipe to turn the object over.</p>
+</div>
+<div class="lens-panel" id="scientific-panel-evidence" role="tabpanel" aria-labelledby="scientific-tab-evidence" data-lens-panel="evidence" hidden>
+<div class="metric-row"><div><strong>906</strong><span>Corrected PR population</span></div><div><strong>699</strong><span>Material retained</span></div><div><strong>17</strong><span>PARAMOUNT</span></div><div><strong>682</strong><span>STANDARD</span></div></div>
+<div class="evidence-grid"><article class="evidence-block full"><h3>AF-IR-01 · Controlled comparison</h3><p>Under one frozen common task, model, runtime, and verifier condition, the Diamond Gate lane passed while the stock OpenHands lane ended FAIL/INACTIVE.</p><p class="mono">RESULT SCOPE = ONE BOUNDED CONTROLLED COMPARISON</p></article><article class="evidence-block"><h3>Observed</h3><p>Activity, sequence, retained evidence, and the stated comparison outcome are inspectable within their public boundaries.</p></article><article class="evidence-block"><h3>Not established</h3><p>Repository throughput does not establish causal efficacy, general performance superiority, or cross-domain validity.</p></article></div>
+<p class="reader-end">A negative or constraining record may become perfectly clear because it is relevant—not because it supports the proposition.</p>
+</div>
+<div class="lens-panel" id="scientific-panel-limits" role="tabpanel" aria-labelledby="scientific-tab-limits" data-lens-panel="limits" hidden>
+<div class="evidence-grid"><article class="evidence-block full"><h3>Missing evidence stays missing</h3><p>The original v0 audit survives only as aggregate totals. Row-level agreement, Cohen’s kappa, and a disagreement ledger cannot legitimately be reconstructed from evidence that no longer exists at that resolution.</p></article><article class="evidence-block"><h3>What can raise the claim</h3><p>External validation, a larger frozen comparative battery, clean-room reproduction, and stronger cross-domain testing.</p></article><article class="evidence-block"><h3>What cannot</h3><p>More confident language, repeated internal inspection, or additional internally generated artifacts cannot substitute for independent evidence.</p></article><article class="evidence-block full"><h3>Current ceiling</h3><p>This is an active research proposition with bounded observations. Universal superiority, settled generality, and causal efficacy remain outside the demonstrated boundary.</p></article></div>
+<p class="reader-end">The strongest attack is part of the object, not an appendix to it.</p>
+</div>
+</div>
+</section>
+
+<section class="reader-face agentic-face" data-reader-face="agentic" tabindex="-1" aria-labelledby="agentic-title" aria-hidden="true" inert>
+<div class="reader-topbar"><button type="button" data-return-orbit>← Return to Orbit</button><button type="button" data-flip-face="scientific">← View Scientific side</button></div>
+<div class="reader-content">
+<p class="reader-kicker">Agentic Frontier · Equal face 02</p>
+<h2 id="agentic-title">Can agency scale without losing the trail?</h2>
+<p class="reader-deck">The Agentic program asks whether substantial software and research work can continue while authority, exact state, qualification, provenance, recovery, and publication remain inspectable.</p>
+<p class="face-boundary"><strong>Agentic evidence boundary:</strong> this is a multi-strand, experimentally grounded program. Documented coordination and successful production do not yet prove an efficiency improvement or general causal superiority.</p>
+<div class="face-tabs" role="tablist" aria-label="Agentic evidence views">
+<button type="button" role="tab" id="agentic-tab-coordination" aria-controls="agentic-panel-coordination" aria-selected="true" data-lens-tab="coordination">Coordination</button>
+<button type="button" role="tab" id="agentic-tab-observability" aria-controls="agentic-panel-observability" aria-selected="false" data-lens-tab="observability" tabindex="-1">Observability</button>
+<button type="button" role="tab" id="agentic-tab-bridge" aria-controls="agentic-panel-bridge" aria-selected="false" data-lens-tab="bridge" tabindex="-1">The Bridge</button>
+</div>
+<div class="lens-panel" id="agentic-panel-coordination" role="tabpanel" aria-labelledby="agentic-tab-coordination" data-lens-panel="coordination">
+<div class="reader-chain"><div><b>A</b><span>Route work to the owning project and authority boundary.</span></div><div><b>B</b><span>Bind construction to an exact governing head and bounded paths.</span></div><div><b>C</b><span>Qualify the exact candidate with an independent verifier role.</span></div><div><b>D</b><span>Separate candidate, qualification, merge, deployment, and live verification.</span></div></div>
+<div class="evidence-grid" style="margin-top:.75rem"><article class="evidence-block full"><h3>Recovery is part of the experiment</h3><p>The Gen1731 lineage was recovered from durable repository state; PR #2156 restored the provenance boundary, PR #2157 repaired successor transport, and a fresh successor was admitted at Gen1749.</p><p class="mono">CONTINUITY TEST = DURABLE STATE, NOT PRIVATE MEMORY</p></article></div>
+<p class="reader-end">The evidence shows inspectable coordination and recovery. Comparative efficiency remains a separate proposition.</p>
+</div>
+<div class="lens-panel" id="agentic-panel-observability" role="tabpanel" aria-labelledby="agentic-tab-observability" data-lens-panel="observability" hidden>
+<div class="reader-chain"><div><b>1</b><span>INTAKE · Was the operation admitted and complete?</span></div><div><b>2</b><span>EXECUTION · Did the intended carrier actually run?</span></div><div><b>3</b><span>QUALIFICATION · Did the candidate satisfy the governing checks?</span></div><div><b>4</b><span>CLOSURE · Was the operation terminally dispositioned?</span></div><div><b>5</b><span>DEPLOYMENT · Was the approved exact head published?</span></div><div><b>6</b><span>LIVE VERIFY · Did the visitor receive the intended product?</span></div></div>
+<div class="evidence-grid" style="margin-top:.75rem"><article class="evidence-block full"><h3>Primary proposition</h3><p class="mono">FAILURE CAN BE CLASSIFIED BEFORE RESPONSE</p><p>Operational classification capability can be shown where supported. Reduced reruns, localization time, false promotions, false holds, and recovery effort are not claimed here as measured effects.</p></article></div>
+<p class="reader-end">Classification is an inspectable capability. Its downstream impact remains to be measured.</p>
+</div>
+<div class="lens-panel" id="agentic-panel-bridge" role="tabpanel" aria-labelledby="agentic-tab-bridge" data-lens-panel="bridge" hidden>
+<div class="evidence-grid"><article class="evidence-block full"><h3>The same object, turned over</h3><p>The programs meet where research machinery changes how evidence is handled: leakage detection, prospective boundaries, negative-result preservation, implementation independence, succession after failure, and exact-state recovery.</p></article><article class="evidence-block"><h3>Leakage detection</h3><p>Compromised evaluation should be stopped rather than rationalized after a favorable outcome appears.</p></article><article class="evidence-block"><h3>Prospective boundaries</h3><p>Frozen protocols, untouched tests, and clean implementations strengthen the separation between hypothesis formation and evaluation.</p></article><article class="evidence-block"><h3>Evidence custody</h3><p>Negative results, exact identities, succession records, and claim ceilings remain available to constrain the next operation.</p></article><article class="evidence-block"><h3>Causal limit</h3><p>These cases motivate the bridge. They do not establish that the agentic architecture caused superior scientific outcomes across domains.</p></article></div>
+<p class="reader-end">Return to Orbit restores the larger context while preserving this selected perspective.</p>
+</div>
+</div>
+</section>
+</div>
+<span class="reader-swipe-cue" aria-hidden="true">Swipe horizontally to change perspective</span>
+</div>
+</section>
+
+<section class="frontier legacy-frontier" data-preserved-source hidden inert aria-hidden="true">
 <nav class="chapter-nav" role="tablist" aria-label="Research Frontier chapters">
 <button type="button" role="tab" aria-selected="true" data-chapter-tab="challenge">Challenge</button>
 <button type="button" role="tab" aria-selected="false" data-chapter-tab="evidence">Evidence</button>
@@ -171,8 +267,303 @@ body{position:relative;isolation:isolate;overflow-x:clip}
 </main>
 <footer class="footer"><p>Research Frontier is a public research entry point, not a declaration that every active proposition has been proven. Scientific and Agentic strands are presented with different evidentiary maturity, and the broader Frontier family remains structurally separate while cross-domain research continues.</p><nav><a href="/">Compass</a><a href="/evidence/">Evidence</a><a href="/governance/">Governance</a><a href="/laws/">Laws</a></nav></footer>
 <script>
-(()=>{'use strict';document.documentElement.classList.add('rf-js');const tabs=[...document.querySelectorAll('[data-chapter-tab]')],chapters=[...document.querySelectorAll('[data-chapter]')],field=document.querySelector('[data-evidence-field]');const order=tabs.map(x=>x.dataset.chapterTab);function activate(id,focus=false){if(!order.includes(id))return;tabs.forEach(t=>{const on=t.dataset.chapterTab===id;t.setAttribute('aria-selected',on?'true':'false');t.tabIndex=on?0:-1});chapters.forEach(c=>{const on=c.dataset.chapter===id;c.dataset.active=on?'true':'false';c.hidden=!on;c.setAttribute('aria-hidden',on?'false':'true')});document.body.dataset.frontierChapter=id;if(field)field.dataset.activeEvidence=id;if(focus)tabs[order.indexOf(id)]?.focus()}tabs.forEach((tab,i)=>{tab.addEventListener('click',()=>activate(tab.dataset.chapterTab));tab.addEventListener('keydown',e=>{let n=i;if(e.key==='ArrowRight')n=(i+1)%tabs.length;else if(e.key==='ArrowLeft')n=(i-1+tabs.length)%tabs.length;else if(e.key==='Home')n=0;else if(e.key==='End')n=tabs.length-1;else return;e.preventDefault();activate(order[n],true)})});document.querySelectorAll('[data-mode="challenge"]').forEach(a=>a.addEventListener('click',()=>activate('challenge')));document.querySelectorAll('[data-mode="explore"]').forEach(a=>a.addEventListener('click',()=>activate('evidence')));let sx=null;const host=document.querySelector('.chapters');host?.addEventListener('pointerdown',e=>{if(e.target.closest('a,button,summary'))return;sx=e.clientX},{passive:true});host?.addEventListener('pointerup',e=>{if(sx===null)return;const dx=e.clientX-sx;sx=null;if(Math.abs(dx)<70)return;const current=Math.max(0,order.indexOf(document.body.dataset.frontierChapter||'challenge'));activate(order[(current+(dx<0?1:-1)+order.length)%order.length])},{passive:true});activate('challenge');})();
+(()=>{
+  'use strict';
+  document.documentElement.classList.add('rf-js');
+
+  const field=document.querySelector('[data-evidence-field]');
+  const holograms=[...document.querySelectorAll('.evidence-field .holo')];
+  const stage=document.querySelector('[data-orbit-stage]');
+  const ring=document.querySelector('[data-orbit-ring]');
+  const card=document.querySelector('[data-orbit-card]');
+  const status=document.querySelector('[data-orbit-status]');
+  const facePreview=document.querySelector('[data-face-preview]');
+  const reader=document.querySelector('[data-reader]');
+  const faces=[...document.querySelectorAll('[data-reader-face]')];
+  const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)');
+  const clamp=(value,min,max)=>Math.min(max,Math.max(min,value));
+  const readState=(key,fallback)=>{try{return sessionStorage.getItem(key)||fallback}catch{return fallback}};
+  const writeState=(key,value)=>{try{sessionStorage.setItem(key,String(value))}catch{}}
+  let selectedFace=readState('research-frontier-face','scientific')==='agentic'?'agentic':'scientific';
+  let angle=Number.parseFloat(readState('research-frontier-orbit','0'))||0;
+  let animationFrame=0;
+  let animating=false;
+  let inspecting=false;
+  let gesture=null;
+  let suppressCardClick=false;
+  let lastFocus=null;
+
+  const faceName=()=>selectedFace[0].toUpperCase()+selectedFace.slice(1);
+  function updateStatus(message){
+    status.innerHTML=`<strong>The Strongest Attack</strong><span>${message||`Front position · Opens on ${faceName()}`}</span>`;
+    facePreview.textContent=`Scientific ↔ Agentic · ${faceName()} retained`;
+    card.setAttribute('aria-label',`Open The Strongest Attack on its ${faceName()} face`);
+  }
+
+  function applyEvidence(){
+    const weights=selectedFace==='scientific'?[1,.92,.42,.36]:[.4,.34,1,.92];
+    const phase=[0,83,191,277];
+    holograms.forEach((hologram,index)=>{
+      const orbitWave=Math.cos((angle+phase[index])*Math.PI/180);
+      const relevance=clamp(weights[index]+(inspecting?0:orbitWave*.08),.18,1);
+      const depth=Math.round(-22+relevance*64+orbitWave*9);
+      const driftX=Math.sin((angle+phase[index])*Math.PI/180)*18;
+      const driftY=Math.cos((angle*.7+phase[index])*Math.PI/180)*9;
+      const blur=(1-relevance)*4.6;
+      const scale=.92+relevance*.09;
+      hologram.style.transition=reduceMotion.matches?'none':'transform 420ms ease,filter 420ms ease,opacity 420ms ease';
+      hologram.style.transform=`translate3d(${driftX.toFixed(2)}px,${driftY.toFixed(2)}px,${depth}px) scale(${scale.toFixed(3)}) rotateY(${(orbitWave*5).toFixed(2)}deg)`;
+      hologram.style.filter=`blur(${blur.toFixed(2)}px) saturate(${(.68+relevance*.48).toFixed(2)}) brightness(${(.72+relevance*.32).toFixed(2)})`;
+      hologram.style.opacity=(.18+relevance*.72).toFixed(2);
+      hologram.style.setProperty('--rf-holo-filter',hologram.style.filter);
+      hologram.style.setProperty('--rf-holo-opacity',hologram.style.opacity);
+      hologram.style.zIndex=String(Math.round(relevance*4));
+    });
+    field.dataset.face=selectedFace;
+    field.dataset.inspecting=inspecting?'true':'false';
+  }
+
+  function applyOrbit(){
+    const radians=angle*Math.PI/180;
+    const width=stage.getBoundingClientRect().width||800;
+    const radiusX=Math.min(width*.29,260);
+    const x=Math.sin(radians)*radiusX;
+    const depth=Math.cos(radians);
+    const y=depth*34;
+    const scale=.68+(depth+1)*.16;
+    const opacity=.44+(depth+1)*.28;
+    card.style.transform=`translate(calc(-50% + ${x.toFixed(2)}px),calc(-50% + ${y.toFixed(2)}px)) scale(${scale.toFixed(3)}) rotateY(${(-Math.sin(radians)*15).toFixed(2)}deg)`;
+    card.style.opacity=String(clamp(opacity,.42,1));
+    card.style.zIndex=String(Math.round((depth+1)*5+2));
+    ring.style.transform=`translate(-50%,-50%) rotateZ(${angle.toFixed(2)}deg) rotateX(71deg)`;
+    applyEvidence();
+  }
+
+  function settleOrbit(target){
+    angle=((target%360)+360)%360;
+    if(Math.abs(angle-360)<.01||Math.abs(angle)<.01)angle=0;
+    writeState('research-frontier-orbit',angle.toFixed(2));
+    animating=false;
+    card.setAttribute('aria-disabled','false');
+    updateStatus();
+    applyOrbit();
+  }
+
+  function animateOrbit(target,label='Evidence recomposing'){
+    cancelAnimationFrame(animationFrame);
+    const start=angle;
+    const distance=target-start;
+    const duration=reduceMotion.matches?0:1050;
+    animating=true;
+    card.setAttribute('aria-disabled','true');
+    updateStatus(label);
+    if(!duration){settleOrbit(target);return}
+    const began=performance.now();
+    const frame=now=>{
+      const progress=clamp((now-began)/duration,0,1);
+      const eased=1-Math.pow(1-progress,3);
+      angle=start+distance*eased;
+      applyOrbit();
+      if(progress<1)animationFrame=requestAnimationFrame(frame);else settleOrbit(target);
+    };
+    animationFrame=requestAnimationFrame(frame);
+  }
+
+  function rotateOrbit(direction){
+    if(animating||inspecting)return;
+    const base=Math.round(angle/360)*360;
+    animateOrbit(base+direction*360,direction>0?'Orbit moving forward · Evidence recomposing':'Orbit moving backward · Evidence recomposing');
+  }
+
+  function activateLens(faceElement,id,focus=false){
+    const tabs=[...faceElement.querySelectorAll('[data-lens-tab]')];
+    const panels=[...faceElement.querySelectorAll('[data-lens-panel]')];
+    if(!tabs.some(tab=>tab.dataset.lensTab===id))return;
+    tabs.forEach(tab=>{
+      const active=tab.dataset.lensTab===id;
+      tab.setAttribute('aria-selected',active?'true':'false');
+      tab.tabIndex=active?0:-1;
+      if(active&&focus)tab.focus();
+    });
+    panels.forEach(panel=>{panel.hidden=panel.dataset.lensPanel!==id});
+  }
+
+  faces.forEach(face=>{
+    const tabs=[...face.querySelectorAll('[data-lens-tab]')];
+    tabs.forEach((tab,index)=>{
+      tab.addEventListener('click',()=>activateLens(face,tab.dataset.lensTab));
+      tab.addEventListener('keydown',event=>{
+        let next=index;
+        if(event.key==='ArrowRight')next=(index+1)%tabs.length;
+        else if(event.key==='ArrowLeft')next=(index-1+tabs.length)%tabs.length;
+        else if(event.key==='Home')next=0;
+        else if(event.key==='End')next=tabs.length-1;
+        else return;
+        event.preventDefault();
+        activateLens(face,tabs[next].dataset.lensTab,true);
+      });
+    });
+  });
+
+  function applyFace(reset=false,focus=false){
+    reader.dataset.face=selectedFace;
+    reader.setAttribute('aria-labelledby',`${selectedFace}-title`);
+    faces.forEach(face=>{
+      const active=face.dataset.readerFace===selectedFace;
+      face.setAttribute('aria-hidden',active?'false':'true');
+      face.inert=!active;
+      if(active&&reset)face.scrollTop=0;
+      if(active&&focus)requestAnimationFrame(()=>face.focus({preventScroll:true}));
+    });
+    writeState('research-frontier-face',selectedFace);
+    updateStatus();
+    applyEvidence();
+  }
+
+  function flipFace(target,focus=true){
+    if(target===selectedFace)return;
+    selectedFace=target;
+    applyFace(true,false);
+    if(focus){
+      requestAnimationFrame(()=>{
+        const active=faces.find(face=>face.dataset.readerFace===selectedFace);
+        active?.querySelector(`[data-flip-face]`)?.focus({preventScroll:true});
+      });
+    }
+  }
+
+  function openReader(lens){
+    if(animating||inspecting)return;
+    lastFocus=document.activeElement;
+    inspecting=true;
+    reader.hidden=false;
+    document.body.classList.add('rf-reader-open');
+    stage.inert=true;
+    stage.setAttribute('aria-hidden','true');
+    applyFace(false,true);
+    if(lens){
+      const scientific=faces.find(face=>face.dataset.readerFace==='scientific');
+      selectedFace='scientific';
+      activateLens(scientific,lens);
+      applyFace(false,true);
+    }
+  }
+
+  function closeReader(){
+    if(!inspecting)return;
+    inspecting=false;
+    reader.hidden=true;
+    document.body.classList.remove('rf-reader-open');
+    stage.inert=false;
+    stage.removeAttribute('aria-hidden');
+    applyEvidence();
+    card.scrollIntoView({block:'center',behavior:reduceMotion.matches?'auto':'smooth'});
+    requestAnimationFrame(()=>card.focus({preventScroll:true}));
+    lastFocus=null;
+  }
+
+  card.addEventListener('click',event=>{
+    if(suppressCardClick){event.preventDefault();suppressCardClick=false;return}
+    openReader();
+  });
+  document.querySelectorAll('[data-open-reader]').forEach(control=>control.addEventListener('click',event=>{
+    event.preventDefault();
+    openReader(control.dataset.openLens);
+  }));
+  document.querySelectorAll('[data-return-orbit]').forEach(control=>control.addEventListener('click',closeReader));
+  document.querySelectorAll('[data-flip-face]').forEach(control=>control.addEventListener('click',()=>flipFace(control.dataset.flipFace)));
+  document.querySelector('[data-orbit-previous]').addEventListener('click',()=>rotateOrbit(-1));
+  document.querySelector('[data-orbit-next]').addEventListener('click',()=>rotateOrbit(1));
+
+  stage.addEventListener('keydown',event=>{
+    if(event.target!==stage)return;
+    if(event.key==='ArrowLeft'){event.preventDefault();rotateOrbit(-1)}
+    else if(event.key==='ArrowRight'){event.preventDefault();rotateOrbit(1)}
+    else if(event.key==='Enter'||event.key===' '){event.preventDefault();openReader()}
+  });
+
+  stage.addEventListener('pointerdown',event=>{
+    if(animating||inspecting||event.button!==0)return;
+    gesture={id:event.pointerId,x:event.clientX,y:event.clientY,startAngle:angle,axis:null,lastX:event.clientX};
+    stage.dataset.dragging='true';
+    stage.setPointerCapture?.(event.pointerId);
+  });
+  stage.addEventListener('pointermove',event=>{
+    if(!gesture||gesture.id!==event.pointerId)return;
+    const dx=event.clientX-gesture.x;
+    const dy=event.clientY-gesture.y;
+    if(!gesture.axis&&Math.max(Math.abs(dx),Math.abs(dy))>12)gesture.axis=Math.abs(dx)>Math.abs(dy)*1.15?'horizontal':'vertical';
+    if(gesture.axis!=='horizontal')return;
+    event.preventDefault();
+    gesture.lastX=event.clientX;
+    angle=gesture.startAngle+dx*.72;
+    updateStatus('Orbit under direct control · Evidence recomposing');
+    applyOrbit();
+  },{passive:false});
+  const finishOrbitGesture=event=>{
+    if(!gesture||gesture.id!==event.pointerId)return;
+    const current=gesture;
+    gesture=null;
+    delete stage.dataset.dragging;
+    const dx=event.clientX-current.x;
+    if(current.axis==='horizontal'){
+      suppressCardClick=Math.abs(dx)>10;
+      setTimeout(()=>{suppressCardClick=false},0);
+      const target=Math.abs(dx)>=40?current.startAngle+(dx>0?360:-360):current.startAngle;
+      animateOrbit(target,Math.abs(dx)>=40?'Orbit released · Evidence settling':'Orbit restored');
+    }
+  };
+  stage.addEventListener('pointerup',finishOrbitGesture);
+  stage.addEventListener('pointercancel',event=>{
+    if(!gesture||gesture.id!==event.pointerId)return;
+    const start=gesture.startAngle;
+    gesture=null;
+    delete stage.dataset.dragging;
+    animateOrbit(start,'Orbit restored');
+  });
+
+  faces.forEach(face=>{
+    let swipe=null;
+    face.addEventListener('pointerdown',event=>{
+      if(face.dataset.readerFace!==selectedFace||event.button!==0||event.target.closest('button,a,input,select,textarea,summary,[role="tab"]'))return;
+      swipe={id:event.pointerId,x:event.clientX,y:event.clientY,axis:null};
+      face.setPointerCapture?.(event.pointerId);
+    });
+    face.addEventListener('pointermove',event=>{
+      if(!swipe||swipe.id!==event.pointerId)return;
+      const dx=event.clientX-swipe.x;
+      const dy=event.clientY-swipe.y;
+      if(!swipe.axis&&Math.max(Math.abs(dx),Math.abs(dy))>12)swipe.axis=Math.abs(dx)>Math.abs(dy)*1.2?'horizontal':'vertical';
+      if(swipe.axis==='horizontal')event.preventDefault();
+    },{passive:false});
+    const finishSwipe=event=>{
+      if(!swipe||swipe.id!==event.pointerId)return;
+      const dx=event.clientX-swipe.x;
+      const horizontal=swipe.axis==='horizontal'&&Math.abs(dx)>=60;
+      swipe=null;
+      if(horizontal)flipFace(selectedFace==='scientific'?'agentic':'scientific',false);
+    };
+    face.addEventListener('pointerup',finishSwipe);
+    face.addEventListener('pointercancel',()=>{swipe=null});
+  });
+
+  reader.addEventListener('keydown',event=>{
+    if(event.key==='Escape'){event.preventDefault();closeReader();return}
+    if(event.key!=='Tab')return;
+    const active=faces.find(face=>face.dataset.readerFace===selectedFace);
+    const focusable=[...active.querySelectorAll('button:not([disabled]),a[href],[tabindex]:not([tabindex="-1"])')].filter(element=>!element.hidden&&!element.closest('[hidden]'));
+    if(!focusable.length)return;
+    const first=focusable[0],last=focusable[focusable.length-1];
+    if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}
+    else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}
+  });
+
+  reduceMotion.addEventListener?.('change',()=>applyOrbit());
+  addEventListener('resize',applyOrbit,{passive:true});
+  applyFace(false,false);
+  applyOrbit();
+})();
 </script>
-<noscript><p style="position:relative;z-index:3;width:min(calc(100% - 2rem),78rem);margin:1rem auto 3rem;color:#a8b7bd">JavaScript enhances chapter switching. All research standing and claim boundaries remain represented in this document.</p></noscript>
+<noscript><p style="position:relative;z-index:3;width:min(calc(100% - 2rem),78rem);margin:1rem auto 3rem;color:#a8b7bd">The orbital proof requires JavaScript for state changes. Its public evidence and governance boundaries remain available through the linked evidence destinations.</p></noscript>
 </body>
 </html>

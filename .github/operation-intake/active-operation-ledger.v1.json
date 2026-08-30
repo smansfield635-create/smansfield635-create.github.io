@@ -4920,6 +4920,45 @@
       "scopeHash": "ca2a3443af8f938ae9a4b50b2ec2ab1c3be6e3abe7c942914f97f0add03f32fb",
       "state": "ADMITTED_LOCKED"
     },
+    "cc02f86a52bd8a2405aee3b46292e15bb30f6b55f0887bd22bc06e36b8012577": {
+      "governingHead": "9d1497a7938aadb76f33d517a21f3349bd8d65ee",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "9d1497a7938aadb76f33d517a21f3349bd8d65ee",
+          "lockGeneration": 1880,
+          "lockScope": "PUBLIC_LEGITIMACY:RESEARCH_FRONTIER:PUBLICATION_PREFLIGHT_RECONCILIATION:V1",
+          "operationId": "RESEARCH_FRONTIER_DUAL_FACE_PREFLIGHT_RETURN_RECONCILIATION_20260830_010",
+          "procedureLocatorDigest": "c288c5ba8e49db57ef0aa067c3d1fdf575eb8bce8a11a1ffbe6c346f7e926c2b",
+          "requestDigest": "ea3a04ff589cb97ddb18632e9a1915903356aec32f6e5fa01441ae90b7ff3b5a",
+          "scopeHash": "cc02f86a52bd8a2405aee3b46292e15bb30f6b55f0887bd22bc06e36b8012577"
+        },
+        "bindingDigest": "3f90f140152bb82e8aecd27cf3c4790c5a9a9b4839d2b3a19cd6ed864d4486c8",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "e96ad6f7cba9a6cc580d7df58719a4c462147a6b",
+          "observedLockRefHead": "79d0107c86a82ddf929d8789ade188bbf8fc0290"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "5da8a34d1dd5689272374413972f5132ad6519bdb70d85896de9f4b5df16d842",
+          "commentId": 5471082622,
+          "issueNumber": 2341,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "lockGeneration": 1880,
+      "lockScope": "PUBLIC_LEGITIMACY:RESEARCH_FRONTIER:PUBLICATION_PREFLIGHT_RECONCILIATION:V1",
+      "operationId": "RESEARCH_FRONTIER_DUAL_FACE_PREFLIGHT_RETURN_RECONCILIATION_20260830_010",
+      "procedureLocatorDigest": "c288c5ba8e49db57ef0aa067c3d1fdf575eb8bce8a11a1ffbe6c346f7e926c2b",
+      "released": false,
+      "requestDigest": "ea3a04ff589cb97ddb18632e9a1915903356aec32f6e5fa01441ae90b7ff3b5a",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "cc02f86a52bd8a2405aee3b46292e15bb30f6b55f0887bd22bc06e36b8012577",
+      "state": "ADMITTED_LOCKED"
+    },
     "cd48c853659becba53b2c3aa0013fbdcdac958862cc11d23d29296f91786dd27": {
       "governingHead": "6b2ff2e318ae434e05bb9f1b008a1ee756af0a78",
       "lockGeneration": 144,
@@ -6242,7 +6281,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1879,
+  "lockGeneration": 1880,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

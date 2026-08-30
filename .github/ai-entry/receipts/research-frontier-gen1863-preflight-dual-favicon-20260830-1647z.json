@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "research-frontier-gen1863-preflight-dual-favicon-20260830-1647z",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 2366,
+  "requestBranch": "ai-dispatch-request-research-frontier-gen1863-preflight-dual-favicon-20260830-1647z",
+  "requestCommit": "75781746dc8832e06030b9019e4dc5f4ee86fa8d",
+  "requestCommitParent": "063804914ee7b5643319a91b4cf733d048faacd3",
+  "currentMainSha": "063804914ee7b5643319a91b4cf733d048faacd3",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "063804914ee7b5643319a91b4cf733d048faacd3",
+    "surface_id": "research-frontier-gen1863"
+  },
+  "bridgeRunId": "33323400829",
+  "dispatchedRunId": 33323410463,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/33323410463",
+  "dispatchedRunHeadSha": "063804914ee7b5643319a91b4cf733d048faacd3",
+  "dispatchedAt": "2026-08-30T16:46:47.340Z",
+  "resolvedAt": "2026-08-30T16:46:51.462Z"
+}

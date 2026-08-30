@@ -68,8 +68,8 @@
         ]
       },
       {
-        "name": "Agentic observability lens opens",
-        "action": {"type": "click", "selector": "#agentic-tab-observability"},
+        "name": "Agentic keyboard opens observability lens",
+        "action": {"type": "key", "selector": "#agentic-tab-coordination", "key": "ArrowRight"},
         "assertions": [
           {"type": "attributeEquals", "selector": "#agentic-tab-observability", "name": "aria-selected", "value": "true"},
           {"type": "attributeEquals", "selector": "#agentic-tab-coordination", "name": "aria-selected", "value": "false"},

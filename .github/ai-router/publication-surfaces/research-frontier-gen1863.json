@@ -38,10 +38,7 @@
     "path": "/evidence/agentic-frontier/",
     "timeoutMs": 30000,
     "readySelector": "[data-orbit-card]",
-    "binding": {
-      "mode": "direct-document",
-      "path": "/evidence/agentic-frontier/"
-    },
+    "binding": {"mode": "direct-document", "path": "/evidence/agentic-frontier/"},
     "failOnConsoleErrors": true,
     "failOnPageErrors": true,
     "ignoreConsoleErrorIncludes": [
@@ -108,7 +105,7 @@
         "assertions": [
           {"type": "attributeEquals", "selector": "[data-evidence-field]", "name": "data-inspecting", "value": "false"},
           {"type": "attributeEquals", "selector": "[data-orbit-card][data-object=\"evidence\"]", "name": "data-active", "value": "true"},
-          {"type": "attributeContains", "selector": "[data-face-preview]", "name": "textContent", "value": "Agentic retained"}
+          {"type": "textContains", "selector": "[data-face-preview]", "value": "Agentic retained"}
         ]
       }
     ]

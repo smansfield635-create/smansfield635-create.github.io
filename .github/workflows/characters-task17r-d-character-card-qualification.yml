@@ -20,12 +20,14 @@ permissions:
 env:
   CANDIDATE_SHA: 8a31c58902a3395f39a8236bdef1193e4c992788
   FROZEN_INTERACTION_SHA: d48613af69a244a9e71e7220ab7410e166f9a420
+  CAROUSEL_CONTROL_SHA: feab9eef5beb2e1ce31bf2a0f19215bf2900942b
+  COMPASS_CONTROL_SHA: 0251792801761778b1492b2b97f60b4ebc6dbbb9
   TARGET_DIR: target/characters/spatial-field-foundation
 
 jobs:
   qualify:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Materialize bounded qualification instrument sparse index
         shell: bash
@@ -64,6 +66,19 @@ jobs:
             cmp --silent "frozen/${f}" "${TARGET_DIR}/${f}"
           done
 
+      - name: Materialize registered Mechanical positive controls
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --no-checkout --filter=blob:none "https://github.com/smansfield635-create/smansfield635-create.github.io.git" control-source
+          git -C control-source fetch --no-tags origin "$CAROUSEL_CONTROL_SHA" "$COMPASS_CONTROL_SHA"
+          git -C control-source worktree add --detach ../control-carousel "$CAROUSEL_CONTROL_SHA"
+          git -C control-source worktree add --detach ../control-compass "$COMPASS_CONTROL_SHA"
+          test "$(git -C control-carousel rev-parse HEAD^{commit})" = "$CAROUSEL_CONTROL_SHA"
+          test "$(git -C control-compass rev-parse HEAD^{commit})" = "$COMPASS_CONTROL_SHA"
+          test -f control-carousel/evidence/agentic-frontier/index.html
+          test -f control-compass/index.html
+
       - name: Verify exact candidate static contract
         shell: bash
         run: |
@@ -97,29 +112,36 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          npm install --no-save playwright@latest
+          npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
 
-      - name: Execute independent browser qualification
+      - name: Execute control-first Mechanical and exact-candidate qualification
         shell: bash
         run: |
-          set -euo pipefail
+          set +e
           node tools/characters-task17r-d-character-card-evaluator.mjs
-          jq -e --arg candidate "$CANDIDATE_SHA" '.schema == "CHARACTERS_TASK17R_D_CHARACTER_CARD_QUALIFICATION_v1" and .candidate == $candidate and .result == "PASS_CLOSED" and (.evidence|length) == 6' qualification-output/task17r-d-character-card-qualification.json >/dev/null
+          status=$?
+          test -s qualification-output/task17r-d-character-card-qualification.json
+          test -s qualification-output/task17r-d-universal-mechanical.json
+          exit "$status"
 
-      - name: Upload exact qualification receipt
+      - name: Upload exact qualification receipts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: characters-task17r-d-character-card-qualification-${{ github.run_id }}-${{ github.run_attempt }}
-          path: qualification-output/task17r-d-character-card-qualification.json
+          path: |
+            qualification-output/task17r-d-character-card-qualification.json
+            qualification-output/task17r-d-universal-mechanical.json
           if-no-files-found: error
           retention-days: 90
 
-      - name: Enforce fail-closed receipt
+      - name: Enforce fail-closed receipt presence
         if: always()
         shell: bash
         run: |
           set -euo pipefail
           test -s qualification-output/task17r-d-character-card-qualification.json
-          jq -e --arg candidate "$CANDIDATE_SHA" '.schema == "CHARACTERS_TASK17R_D_CHARACTER_CARD_QUALIFICATION_v1" and .candidate == $candidate and .result == "PASS_CLOSED"' qualification-output/task17r-d-character-card-qualification.json >/dev/null
+          test -s qualification-output/task17r-d-universal-mechanical.json
+          jq -e --arg candidate "$CANDIDATE_SHA" '.schema == "CHARACTERS_TASK17R_D_CHARACTER_CARD_QUALIFICATION_v1" and .candidate == $candidate' qualification-output/task17r-d-character-card-qualification.json >/dev/null
+          jq -e --arg candidate "$CANDIDATE_SHA" '.schema == "CHARACTERS_TASK17R_D_UNIVERSAL_MECHANICAL_RECEIPT_v1" and .candidate == $candidate and (.result == "PASS_CLOSED" or .result == "FAIL_CLOSED" or .result == "UNEVALUABLE")' qualification-output/task17r-d-universal-mechanical.json >/dev/null

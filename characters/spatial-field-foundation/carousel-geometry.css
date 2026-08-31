@@ -11,6 +11,15 @@
   filter: brightness(1.16);
 }
 
+.carousel-attachment-reference {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
 .anchor__control {
   position: absolute;
   inset: -1px;

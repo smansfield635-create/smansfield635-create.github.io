@@ -22,7 +22,15 @@ has('New here? Open the introduction.', 'collapsed Chapter One summary');
 has('What is Diamond Gate Bridge?', 'Diamond Gate disclosure');
 has('data-compass-scene', 'Compass scene');
 has('Built Different', 'Built Different evidence');
-has('data-compass-capability-switcher', 'Track A capability placeholder');
+has('data-capability-orbit="true"', 'static capability orbit');
+has('data-first-paint-authority="static"', 'static first-paint authority');
+has('data-capability="diagnostic"', 'static diagnostic capability');
+has('data-capability="awards"', 'static awards capability');
+has('data-capability="house"', 'static house capability');
+has('data-human-brain', 'static brain portal anchor');
+has('data-award-trophy', 'static trophy portal anchor');
+has('data-house-scene', 'static house portal anchor');
+absent('data-compass-capability-switcher', 'retired Track A capability placeholder');
 has('class="compass-build-cta"', 'final custom build CTA section');
 has('id="build-custom-title"', 'final custom build CTA title anchor');
 has('Build Your Own Website', 'final custom build CTA title');
@@ -40,7 +48,7 @@ has('/' + finalMaster.livePromotionTarget, 'owner-approved 65-second Chapter One
 
 const compassAt = indexOf('data-compass-scene');
 const builtAt = indexOf('Built Different');
-const capabilityAt = indexOf('data-compass-capability-switcher');
+const capabilityAt = indexOf('data-capability-orbit="true"');
 const ctaAt = indexOf('class="compass-build-cta"');
 if (!(compassAt < builtAt && builtAt < capabilityAt && capabilityAt < ctaAt)) {
   fail(`editorial order invalid: ${JSON.stringify({compassAt,builtAt,capabilityAt,ctaAt})}`);
@@ -50,6 +58,10 @@ absent('<summary>Why Diamond Gate exists</summary>', 'legacy Why Diamond Gate ex
 absent('compass.track-b.js', 'Track B runtime loader');
 absent('positionCapability(', 'post-load capability reparenting');
 absent('positionTrackBPlaceholder(', 'Track B placeholder reparenting');
+if (capability.includes('POST_LOAD_ENHANCEMENT_DELAY_MS')) fail('capability loader regained post-load enhancement delay');
+if (capabilityCore.includes('legacy.replaceWith(stage)')) fail('capability core regained visible legacy owner replacement');
+if (!capability.includes('[data-capability-orbit][data-first-paint-authority="static"]')) fail('capability loader does not require static first-paint shell');
+if (!capabilityCore.includes('[data-capability-orbit][data-first-paint-authority="static"]')) fail('capability core does not bind static first-paint shell');
 
 for (const required of ['mounted:false','retired:true','authoritative:false','capabilityPlacementAuthority:false','repeatedReparenting:false']) {
   if (!gen1537.includes(required)) fail(`Gen1537 contract missing ${required}`);
@@ -59,7 +71,7 @@ for (const forbidden of ['positionCapability(', 'requestAnimationFrame(positionC
 }
 if (!gen1537.includes("'/showroom/globe/h-earth/'")) fail('Gen1537 lost canonical H-Earth route');
 
-if (!(capability.includes('Swipe to rotate.') || capabilityCore.includes('Swipe to rotate.'))) fail('Track A capability guidance floor changed');
+if (!(html.includes('Swipe to rotate.') || capability.includes('Swipe to rotate.') || capabilityCore.includes('Swipe to rotate.'))) fail('Track A capability guidance floor changed');
 if (capability.includes('compass.track-b.js') || capabilityCore.includes('compass.track-b.js')) fail('Track A capability runtime dynamically loads Track B');
 
 if (!crystals.includes('COMPASS_CRYSTAL_CONTINUOUS_NORMAL_MOTION_v1')) fail('crystal liveness repair missing');
@@ -78,5 +90,5 @@ console.log(JSON.stringify({
   accessibilityFallback: 'collapsed-keyboard-accessible',
   crystalLiveness: 'continuous-normal-motion-settle-reduced-motion',
   gen1537: 'retired-route-only',
-  trackA: 'protected'
+  trackA: 'static-object-carousel-first-paint-authority'
 }, null, 2));

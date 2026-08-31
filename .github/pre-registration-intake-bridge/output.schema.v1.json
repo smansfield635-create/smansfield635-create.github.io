@@ -1,0 +1,41 @@
+{
+  "$id": "PRE_REGISTRATION_INTAKE_BRIDGE_OUTPUT_SCHEMA_v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "admissionResultRewritten": {
+      "const": false
+    },
+    "auditEvents": {
+      "type": "array"
+    },
+    "bridgeId": {
+      "const": "CANONICAL_REPOSITORY_OPERATION_INTAKE_PRE_REGISTRATION_EXECUTION_BRIDGE_v1"
+    },
+    "canonicalGateExecuted": {
+      "type": "boolean"
+    },
+    "contractId": {
+      "const": "REPOSITORY_OPERATION_INTAKE_PRE_REGISTRATION_EXECUTION_BRIDGE_CONTRACT_v1"
+    },
+    "result": {
+      "enum": [
+        "CANONICAL_RECEIPT_RETURNED",
+        "FAIL_CLOSED_NON_ADMISSION"
+      ]
+    },
+    "schema": {
+      "const": "PRE_REGISTRATION_INTAKE_BRIDGE_RECEIPT_v1"
+    }
+  },
+  "required": [
+    "schema",
+    "result",
+    "bridgeId",
+    "contractId",
+    "canonicalGateExecuted",
+    "admissionResultRewritten",
+    "auditEvents"
+  ],
+  "type": "object"
+}

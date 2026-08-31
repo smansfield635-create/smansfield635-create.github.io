@@ -1,0 +1,20 @@
+{
+  "activationAuthorityPresent": false,
+  "checkpointId": "CP8_BOOTSTRAP_CAPABILITY_ACTIVATION",
+  "mergeAuthorityPresent": false,
+  "required": [
+    "exactBridgeHead",
+    "implementationBlobMap",
+    "schemaBlobMap",
+    "contractDigest",
+    "authorityDigest",
+    "staticConformanceReceipt",
+    "remoteProofReceipt",
+    "independentReproductionReceipt",
+    "activationReceipt",
+    "rollbackProcedure",
+    "revocationProcedure"
+  ],
+  "schema": "PRE_REGISTRATION_INTAKE_BRIDGE_ACTIVATION_RECORD_v1",
+  "status": "TEMPLATE_NOT_AUTHORIZED"
+}

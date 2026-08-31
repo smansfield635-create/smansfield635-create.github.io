@@ -1,0 +1,29 @@
+{
+  "schema": "METHODS_MODELS_EXACT_GIT_OBJECT_TRANSPORT_DESCRIPTOR_v1",
+  "status": "CANDIDATE_FAIL_CLOSED",
+  "publicRepository": "smansfield635-create/smansfield635-create.github.io",
+  "candidateSha": "d374d9821b78a4744e22c1d30d101f281054f099",
+  "baseSha": "7917ecb7b07a32e8a653a6e1534397b232cccd6b",
+  "sourceShas": [
+    "7917ecb7b07a32e8a653a6e1534397b232cccd6b"
+  ],
+  "transportFormat": "GIT_BUNDLE",
+  "purpose": "MATERIALIZE_CANONICAL_GIT_OBJECTS_FOR_SEPARATE_PRIVATE_OR_LOCAL_QUALIFICATION",
+  "authority": {
+    "qualificationAuthority": false,
+    "productMutationAuthority": false,
+    "publicMainWriteAuthority": false,
+    "mergeAuthority": false,
+    "deploymentAuthority": false,
+    "awardsAuthority": false,
+    "ownerAcceptanceAuthority": false,
+    "userApprovalAuthority": false
+  },
+  "prohibitions": [
+    "NO_PRIVATE_QUALIFIER_COPIED_TO_PUBLIC",
+    "NO_PUBLIC_PRODUCT_MUTATION",
+    "NO_SURROGATE_AUDIT_SUBJECT",
+    "NO_MUTABLE_REF_AS_QUALIFICATION_IDENTITY",
+    "NO_TRANSPORT_RECEIPT_AS_QUALIFICATION_RECEIPT"
+  ]
+}

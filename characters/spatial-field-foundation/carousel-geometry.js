@@ -31,6 +31,7 @@ const attachmentReferences = anchors.map(anchor => {
 });
 
 let selectedIndex = 0;
+let inspectionActive = false;
 let pointerId = null;
 let startX = 0;
 let startY = 0;
@@ -60,9 +61,28 @@ function positionAttachment() {
   attachment.querySelector('.carousel-attachment__label').textContent = presentationLabel(anchor);
 }
 
-function select(index, { focus = false, announce = true } = {}) {
+function setInspection(active, { announce = true } = {}) {
+  inspectionActive = Boolean(active);
+  const state = inspectionActive ? 'active' : 'ambient';
+  root.dataset.characterInspection = state;
+  field.dataset.characterInspection = state;
+  attachment.dataset.characterInspection = state;
+  attachment.setAttribute('aria-expanded', String(inspectionActive));
+  if (announce) {
+    status.textContent = inspectionActive
+      ? `${presentationLabel(anchors[selectedIndex])} inspection opened.`
+      : `${presentationLabel(anchors[selectedIndex])} inspection closed. Continue traversing the character field.`;
+  }
+  root.dispatchEvent(new CustomEvent('characters:inspection-change', {
+    detail: { active: inspectionActive, index: selectedIndex, anchor: anchors[selectedIndex].dataset.anchor }
+  }));
+}
+
+function select(index, { focus = false, announce = true, preserveInspection = false } = {}) {
   const normalized = (index + anchors.length) % anchors.length;
   selectedIndex = normalized;
+
+  if (!preserveInspection && inspectionActive) setInspection(false, { announce: false });
 
   anchors.forEach((anchor, i) => {
     const control = anchor.querySelector('.anchor__control');
@@ -70,6 +90,7 @@ function select(index, { focus = false, announce = true } = {}) {
     anchor.dataset.selected = String(selected);
     control.tabIndex = selected ? 0 : -1;
     control.setAttribute('aria-current', selected ? 'true' : 'false');
+    control.setAttribute('aria-expanded', selected && inspectionActive ? 'true' : 'false');
   });
 
   root.dataset.carouselIndex = String(selectedIndex + 1).padStart(2, '0');
@@ -77,7 +98,15 @@ function select(index, { focus = false, announce = true } = {}) {
   positionAttachment();
 
   if (focus) anchors[selectedIndex].querySelector('.anchor__control').focus({ preventScroll: true });
-  if (announce) status.textContent = `${presentationLabel(anchors[selectedIndex])} selected.`;
+  if (announce) status.textContent = `${presentationLabel(anchors[selectedIndex])} selected. Activate to inspect.`;
+}
+
+function toggleInspection({ announce = true } = {}) {
+  setInspection(!inspectionActive, { announce });
+  anchors.forEach((anchor, i) => {
+    const control = anchor.querySelector('.anchor__control');
+    control?.setAttribute('aria-expanded', i === selectedIndex && inspectionActive ? 'true' : 'false');
+  });
 }
 
 function move(delta, options) {
@@ -90,7 +119,11 @@ anchors.forEach((anchor, index) => {
   control.type = 'button';
   control.className = 'anchor__control';
   control.setAttribute('aria-label', `Select reserved position ${anchor.dataset.anchor}`);
-  control.addEventListener('click', () => select(index, { focus: true }));
+  control.setAttribute('aria-expanded', 'false');
+  control.addEventListener('click', () => {
+    if (index !== selectedIndex) select(index, { focus: true, announce: false });
+    toggleInspection();
+  });
   control.addEventListener('keydown', event => {
     if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
       event.preventDefault();
@@ -104,6 +137,12 @@ anchors.forEach((anchor, index) => {
     } else if (event.key === 'End') {
       event.preventDefault();
       select(anchors.length - 1, { focus: true });
+    } else if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      toggleInspection();
+    } else if (event.key === 'Escape' && inspectionActive) {
+      event.preventDefault();
+      setInspection(false);
     }
   });
   anchor.append(control);
@@ -150,14 +189,16 @@ addEventListener('resize', () => {
   resizeFrame = requestAnimationFrame(positionAttachment);
 }, { passive: true });
 
-prefersReducedMotion.addEventListener?.('change', () => select(selectedIndex, { announce: false }));
+prefersReducedMotion.addEventListener?.('change', () => select(selectedIndex, { announce: false, preserveInspection: true }));
 
 root.dataset.carouselReady = 'true';
 root.dataset.carouselAnchors = '8';
 root.dataset.domAttachmentModel = 'canonical-anchor-reference';
-root.dataset.keyboardFocus = 'roving-tabindex-arrow-home-end';
+root.dataset.keyboardFocus = 'roving-tabindex-arrow-home-end-enter-space-inspect-escape-return';
 root.dataset.touchOwnership = 'horizontal-swipe-only-vertical-scroll-and-pinch-browser-owned';
 root.dataset.productionContent = 'card-layer-pending';
 root.dataset.worldNavigationOwnership = 'absent';
+root.dataset.characterInspectionModel = 'ambient-traversal-explicit-activation-return';
 
-select(0, { announce: false });
+setInspection(false, { announce: false });
+select(0, { announce: false, preserveInspection: true });

@@ -1,0 +1,92 @@
+name: H-Earth Gratitude Region Traversal Scene Suite CP1
+
+on:
+  pull_request:
+    branches:
+      - agent/h-earth-gratitude-region-traversal-scene-suite-cp0-baseline-001
+    paths:
+      - .github/workflows/h-earth-gratitude-region-traversal-scene-suite-cp1.yml
+      - h-earth-3d/control-plane/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1.v1.json
+      - h-earth-3d/validation/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1-harness.html
+      - h-earth-3d/validation/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1-browser.mjs
+      - h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp1.runner.mjs
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: h-earth-gratitude-region-traversal-scene-suite-cp1
+  cancel-in-progress: true
+
+jobs:
+  execute-permanent-suite-and-diagnosis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact CP1 branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: agent/h-earth-gratitude-region-traversal-scene-suite-cp1-diagnosis-001
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install bounded Chromium dependency
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Start exact branch server
+        run: |
+          python3 -m http.server 4176 > /tmp/h-earth-cp1-server.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            curl --fail --silent http://127.0.0.1:4176/h-earth-3d/validation/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1-harness.html > /dev/null && break
+            test "$attempt" -lt 60
+            sleep 1
+          done
+
+      - name: Execute CP1 permanent traversal suite and bounded diagnosis
+        id: execute
+        shell: bash
+        env:
+          CP1_EVIDENCE_DIR: h-earth-3d/validation/traversal-scene-suite/cp1-evidence
+          CP1_HARNESS_URL: http://127.0.0.1:4176/h-earth-3d/validation/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1-harness.html
+        run: |
+          set +e
+          node h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp1.runner.mjs | tee cp1-execution.log
+          code=${PIPESTATUS[0]}
+          set -e
+          echo "exit_code=${code}" >> "$GITHUB_OUTPUT"
+
+      - name: Preserve durable CP1 receipt
+        shell: bash
+        run: |
+          test -f h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp1.receipt.v1.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp1.receipt.v1.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Record traversal scene suite CP1 execution"
+            git push origin HEAD:agent/h-earth-gratitude-region-traversal-scene-suite-cp1-diagnosis-001
+          fi
+
+      - name: Upload CP1 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gratitude-region-traversal-scene-suite-cp1
+          path: |
+            cp1-execution.log
+            /tmp/h-earth-cp1-server.log
+            h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp1.receipt.v1.json
+            h-earth-3d/validation/traversal-scene-suite/cp1-evidence/*.png
+          if-no-files-found: error
+
+      - name: Enforce checkpoint result
+        if: always()
+        shell: bash
+        run: exit "${{ steps.execute.outputs.exit_code }}"

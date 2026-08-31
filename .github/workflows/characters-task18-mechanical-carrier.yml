@@ -103,7 +103,8 @@ jobs:
           await browser.close();
           if(failed) process.exit(1);
           NODE
-          node /tmp/task18-mechanical.mjs | tee /tmp/task18-mechanical-results.jsonl
+          cp /tmp/task18-mechanical.mjs ./task18-mechanical.mjs
+          node ./task18-mechanical.mjs | tee /tmp/task18-mechanical-results.jsonl
       - name: Publish Mechanical execution artifact
         if: always()
         uses: actions/upload-artifact@v4

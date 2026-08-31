@@ -1,6 +1,9 @@
 name: Characters Task17R Foundation Exact Candidate
 
 on:
+  push:
+    branches:
+      - 'instrumentation/characters-task17r-foundation-evaluator-001'
   pull_request:
     paths:
       - '.github/workflows/characters-task17r-foundation-exact-candidate.yml'

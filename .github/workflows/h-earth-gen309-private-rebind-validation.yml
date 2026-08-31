@@ -1,0 +1,49 @@
+name: H-Earth Gen309 Private Rebind Validation Carrier
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  validate-private-gen309-rebind:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Mint private read token
+        id: private-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+      - name: Checkout exact private Gen309 rebind candidate
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: 0c9d52b10cd3559e13891db8036daa75f27dbb30
+          token: ${{ steps.private-token.outputs.token }}
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Validate five-surface identity and installed self-tests
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const expected='f78f3f70c0da3e6ab6ce9e2b2dc6df64f1f29aca';
+          const paths=[
+            '.github/ai-router/canonical-execution-substrate/h-earth-connected-public-preflight-backend-binding.v1.json',
+            '.github/ai-router/canonical-execution-substrate/connected-public-h-earth-preflight-evidence-compiler.v1.json',
+            '.github/ai-router/canonical-execution-substrate/connected-public-h-earth-preflight.v1.json',
+            'tools/ai-room-transport/connected-public-h-earth-preflight-evidence-compiler.v1.mjs',
+            'tools/ai-room-transport/connected-public-h-earth-preflight.v1.mjs'
+          ];
+          for(const p of paths){const s=fs.readFileSync(p,'utf8');if(!s.includes(expected))throw new Error('GEN309_TOOLING_IDENTITY_MISSING:'+p);if(s.includes('9297d33a20ef3dfdf243cd59f74206f95404d8a7')&&!p.endsWith('.json'))throw new Error('STALE_RUNTIME_TOOLING_IDENTITY:'+p);}
+          const binding=JSON.parse(fs.readFileSync(paths[0],'utf8'));
+          const compiler=JSON.parse(fs.readFileSync(paths[1],'utf8'));
+          const executor=JSON.parse(fs.readFileSync(paths[2],'utf8'));
+          if(binding.fixedToolingHead!==expected||compiler.fixedBinding.toolingHead!==expected||executor.fixedBinding.toolingHead!==expected)throw new Error('GEN309_DESCRIPTOR_IDENTITY_MISMATCH');
+          if(binding.reconciliation?.candidateValidationRun!==32089750911)throw new Error('GEN309_QUALIFICATION_BINDING_MISSING');
+          console.log(JSON.stringify({result:'PASS',exactHead:'0c9d52b10cd3559e13891db8036daa75f27dbb30',toolingHead:expected,fiveSurfaceIdentity:true},null,2));
+          NODE
+          node tools/ai-room-transport/connected-public-h-earth-preflight-evidence-compiler-self-test.v1.mjs
+          node tools/ai-room-transport/connected-public-h-earth-preflight-self-test.v1.mjs

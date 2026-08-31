@@ -52,7 +52,7 @@ jobs:
           test -f "$snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs"
           test -f "$snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs"
           test -f "$snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs"
-          grep -Fq 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v6_EXACT_24057_ENVIRONMENT' "$audralia"
+          grep -Fq 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v7_EXACT_24057_LOADER_FIRST' "$audralia"
           grep -Fq 'IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993' "$audralia"
           grep -Fq '/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs?cb=EXACT_24057' "$audralia"
 
@@ -84,7 +84,7 @@ jobs:
             renderer="$(curl -fsSL --max-time 20 "$root/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs?cb=EXACT_24057" 2>/dev/null || true)"
             observed="$(printf '%s' "$marker" | jq -r '.commit // empty' 2>/dev/null || true)"
             if [ "$observed" = "$TARGET_SHA" ] \
-              && printf '%s' "$html" | grep -Fq 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v6_EXACT_24057_ENVIRONMENT' \
+              && printf '%s' "$html" | grep -Fq 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v7_EXACT_24057_LOADER_FIRST' \
               && printf '%s' "$html" | grep -Fq 'IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993' \
               && printf '%s' "$loader" | grep -Fq "setVerified(6,'Preparing Audralia',15)" \
               && printf '%s' "$app" | grep -Fq 'createMapWideEnvironmentRenderer' \

@@ -3,7 +3,6 @@
   "requestId": "PAGES_EXACT_HEAD_DEPLOY_20260831_GEN1903_MERGED",
   "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
   "inputs": {
-    "target_sha": "c02fb5cad2e40f16e89bac106aaa898b6010971a",
     "surface_id": "compass-gen1862"
   }
 }

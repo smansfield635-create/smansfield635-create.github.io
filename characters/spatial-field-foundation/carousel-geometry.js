@@ -30,11 +30,9 @@ let currentY = 0;
 let resizeFrame = 0;
 
 function anchorCenter(anchor) {
-  const fieldRect = field.getBoundingClientRect();
-  const rect = anchor.getBoundingClientRect();
   return {
-    x: rect.left + rect.width / 2 - fieldRect.left,
-    y: rect.top + rect.height / 2 - fieldRect.top
+    x: anchor.offsetLeft,
+    y: anchor.offsetTop
   };
 }
 
@@ -140,7 +138,7 @@ prefersReducedMotion.addEventListener?.('change', () => select(selectedIndex, { 
 
 root.dataset.carouselReady = 'true';
 root.dataset.carouselAnchors = '8';
-root.dataset.domAttachmentModel = 'anchor-center-pixel';
+root.dataset.domAttachmentModel = 'anchor-layout-offset';
 root.dataset.keyboardFocus = 'roving-tabindex-arrow-home-end';
 root.dataset.touchOwnership = 'horizontal-swipe-only-vertical-scroll-and-pinch-browser-owned';
 root.dataset.productionContent = 'absent';

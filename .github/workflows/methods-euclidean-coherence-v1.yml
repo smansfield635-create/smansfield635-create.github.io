@@ -1,0 +1,170 @@
+name: Methods Nonproduct Harness State Reach Correction v1
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "verification/methods-euclidean-coherence-v1/**"
+      - ".github/workflows/methods-euclidean-coherence-v1.yml"
+  push:
+    branches:
+      - verification/methods-euclidean-coherence-v1-001
+    paths:
+      - "verification/methods-euclidean-coherence-v1/**"
+      - ".github/workflows/methods-euclidean-coherence-v1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: methods-state-reach-correction-v1-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  EXPECTED_SOURCE_HEAD: 66a2105e96e84c5b482f783010779f87a90a28ee
+  EXECUTION_COMMIT: 66a2105e96e84c5b482f783010779f87a90a28ee
+  HARNESS_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+  METHODS_MODELS_ORIGIN: http://127.0.0.1:4173
+  COHERENCE_OUT_DIR: methods-euclidean-state-reach-correction-evidence
+
+jobs:
+  nonproduct-state-reach-correction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout isolated nonproduct harness head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Verify candidate source files are byte-unchanged
+        shell: bash
+        run: |
+          test "$(git merge-base "$EXPECTED_SOURCE_HEAD" HEAD)" = "$EXPECTED_SOURCE_HEAD"
+          ALLOWED_1="verification/methods-euclidean-coherence-v1/runner.mjs"
+          ALLOWED_2="verification/methods-euclidean-coherence-v1/README.md"
+          ALLOWED_3=".github/workflows/methods-euclidean-coherence-v1.yml"
+          while IFS= read -r changed; do
+            case "$changed" in
+              "$ALLOWED_1"|"$ALLOWED_2"|"$ALLOWED_3") ;;
+              *) echo "UNAUTHORIZED_CHANGED_PATH:$changed"; exit 1 ;;
+            esac
+          done < <(git diff --name-only "$EXPECTED_SOURCE_HEAD" HEAD)
+          git diff --exit-code "$EXPECTED_SOURCE_HEAD" -- \
+            laws/research/methods-and-models/index.html \
+            laws/research/methods-and-models/showroom.css \
+            laws/research/methods-and-models/showroom.js \
+            laws/research/methods-and-models/showroom-refinement.css \
+            laws/research/methods-and-models/showroom-refinement.js \
+            laws/research/methods-and-models/showroom-euclidean.css \
+            laws/research/methods-and-models/showroom-euclidean-interaction.css \
+            laws/research/methods-and-models/showroom-euclidean.js \
+            laws/research/methods-and-models/canonical-records-v1.html
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Set up Chrome
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install pinned browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Finalize read-only return observation adapter
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('verification/methods-euclidean-coherence-v1/runner.mjs')
+          text = path.read_text()
+          replacements = [
+            (
+              "async function enterCameraObservation(page, requested, viewportId, coordinate) {\n  if (requested === 'OVERVIEW') {",
+              "async function enterCameraObservation(page, requested, viewportId, coordinate, applyCondition = true) {\n  if (applyCondition && requested === 'OVERVIEW') {"
+            ),
+            (
+              "  } else {\n    await page.focus('[data-mm-model-deck]');\n  }\n  await waitStable(page, 80);",
+              "  } else if (applyCondition) {\n    await page.focus('[data-mm-model-deck]');\n  }\n  await waitStable(page, applyCondition ? 80 : 20);"
+            ),
+            (
+              "    requested,\n    native_contract_declared:",
+              "    requested,\n    condition_applied: applyCondition,\n    native_contract_declared:"
+            ),
+            (
+              "const returnedCamera = await enterCameraObservation(page, 'BROWSE', viewport.id, coordinateId(z, x, 0));",
+              "const returnedCamera = await enterCameraObservation(page, 'BROWSE', viewport.id, coordinateId(z, x, 0), false);"
+            )
+          ]
+          for old, new in replacements:
+              if old not in text:
+                  raise SystemExit(f'RETURN_OBSERVATION_PATCH_TARGET_NOT_FOUND: {old[:80]}')
+              text = text.replace(old, new, 1)
+          path.write_text(text)
+          PY
+
+      - name: Validate corrected nonproduct runner syntax
+        run: node --check verification/methods-euclidean-coherence-v1/runner.mjs
+
+      - name: Record corrected runner identity
+        shell: bash
+        run: |
+          sha256sum verification/methods-euclidean-coherence-v1/runner.mjs | tee corrected-runner.sha256
+          git diff --name-only "$EXPECTED_SOURCE_HEAD" HEAD | sort | tee exact-changed-paths.txt
+
+      - name: Start exact-source static server
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/methods-state-reach-server.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:4173/laws/research/methods-and-models/ >/dev/null; then
+              exit 0
+            fi
+            sleep 0.25
+          done
+          cat /tmp/methods-state-reach-server.log
+          exit 1
+
+      - name: Execute corrected 1575-primary nonproduct pass
+        shell: bash
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          set -o pipefail
+          node verification/methods-euclidean-coherence-v1/runner.mjs | tee methods-state-reach-correction-run.log
+
+      - name: Generate archive identity
+        if: always()
+        shell: bash
+        run: |
+          if [ -d methods-euclidean-state-reach-correction-evidence ]; then
+            cp /tmp/methods-state-reach-server.log methods-euclidean-state-reach-correction-evidence/server.log || true
+            cp methods-state-reach-correction-run.log methods-euclidean-state-reach-correction-evidence/runner.log || true
+            cp verification/methods-euclidean-coherence-v1/runner.mjs methods-euclidean-state-reach-correction-evidence/executed-runner.mjs || true
+            cp corrected-runner.sha256 methods-euclidean-state-reach-correction-evidence/executed-runner.mjs.sha256 || true
+            cp exact-changed-paths.txt methods-euclidean-state-reach-correction-evidence/exact-changed-paths.txt || true
+            tar -czf methods-euclidean-state-reach-correction-evidence.tar.gz methods-euclidean-state-reach-correction-evidence
+            sha256sum methods-euclidean-state-reach-correction-evidence.tar.gz > methods-euclidean-state-reach-correction-evidence.tar.gz.sha256
+          fi
+
+      - name: Upload corrected state-reach evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-nonproduct-harness-state-reach-correction-v1-evidence
+          path: |
+            methods-euclidean-state-reach-correction-evidence/
+            methods-euclidean-state-reach-correction-evidence.tar.gz
+            methods-euclidean-state-reach-correction-evidence.tar.gz.sha256
+            methods-state-reach-correction-run.log
+            corrected-runner.sha256
+            exact-changed-paths.txt
+            /tmp/methods-state-reach-server.log
+          if-no-files-found: warn
+          retention-days: 30

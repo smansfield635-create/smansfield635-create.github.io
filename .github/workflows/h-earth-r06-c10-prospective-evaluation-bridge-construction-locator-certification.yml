@@ -1,0 +1,186 @@
+name: H-Earth R06 C10 Prospective Evaluation Bridge Construction Locator Certification
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "h-earth-3d/control-plane/r06-c10/schemas/h-earth.r06-c10.prospective-evaluation-bridge-construction.locator.schema.v1.json"
+      - "h-earth-3d/control-plane/r06-c10/prospective-evaluation-bridge/h-earth.r06-c10.prospective-evaluation-bridge-construction.locator.v1.json"
+      - "h-earth-3d/validation/h-earth.r06-c10.prospective-evaluation-bridge-construction-locator.certification.v1.mjs"
+      - ".github/workflows/h-earth-r06-c10-prospective-evaluation-bridge-construction-locator-certification.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  EXACT_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+  EXPECTED_CONSTRUCTION_BRANCH: agent/h-earth-r06-c10-prospective-evaluation-bridge-construction-locator-v1-001
+  ARTIFACT_ROOT: /tmp/h-earth-r06-c10-prospective-evaluation-bridge-construction-locator-certification
+
+jobs:
+  locator-builder-certification:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXACT_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Fetch bounded prior identity refs
+        run: |
+          git fetch origin \
+            "+refs/heads/control/r06-c10-prospective-candidate-003-construction-and-admission:refs/remotes/origin/control/r06-c10-prospective-candidate-003-construction-and-admission" \
+            "+refs/heads/agent/h-earth-r06-c10-prospective-evaluation-bridge-v1-001:refs/remotes/origin/agent/h-earth-r06-c10-prospective-evaluation-bridge-v1-001" \
+            --no-tags
+      - name: Run exact locator certification
+        env:
+          EXPECTED_CONSTRUCTION_BRANCH: ${{ env.EXPECTED_CONSTRUCTION_BRANCH }}
+        run: |
+          node h-earth-3d/validation/h-earth.r06-c10.prospective-evaluation-bridge-construction-locator.certification.v1.mjs \
+            --locator h-earth-3d/control-plane/r06-c10/prospective-evaluation-bridge/h-earth.r06-c10.prospective-evaluation-bridge-construction.locator.v1.json \
+            --schema h-earth-3d/control-plane/r06-c10/schemas/h-earth.r06-c10.prospective-evaluation-bridge-construction.locator.schema.v1.json \
+            --repository-root . \
+            --output "$ARTIFACT_ROOT/builder/locator-certification.receipt.json" \
+            --fingerprint-output "$ARTIFACT_ROOT/builder/certification-fingerprint.txt" \
+            --blob-map-output "$ARTIFACT_ROOT/builder/locator-path-blob-map.json" \
+            --manifest-output "$ARTIFACT_ROOT/builder/certification-manifest.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-r06-c10-prospective-evaluation-bridge-construction-locator-builder-v1
+          path: ${{ env.ARTIFACT_ROOT }}/builder/
+          if-no-files-found: error
+
+  fresh-locator-verifier:
+    needs: locator-builder-certification
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXACT_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Fetch bounded prior identity refs
+        run: |
+          git fetch origin \
+            "+refs/heads/control/r06-c10-prospective-candidate-003-construction-and-admission:refs/remotes/origin/control/r06-c10-prospective-candidate-003-construction-and-admission" \
+            "+refs/heads/agent/h-earth-r06-c10-prospective-evaluation-bridge-v1-001:refs/remotes/origin/agent/h-earth-r06-c10-prospective-evaluation-bridge-v1-001" \
+            --no-tags
+      - uses: actions/download-artifact@v4
+        with:
+          name: h-earth-r06-c10-prospective-evaluation-bridge-construction-locator-builder-v1
+          path: ${{ env.ARTIFACT_ROOT }}/builder
+      - name: Independently reproduce locator certification
+        env:
+          EXPECTED_CONSTRUCTION_BRANCH: ${{ env.EXPECTED_CONSTRUCTION_BRANCH }}
+        run: |
+          node h-earth-3d/validation/h-earth.r06-c10.prospective-evaluation-bridge-construction-locator.certification.v1.mjs \
+            --locator h-earth-3d/control-plane/r06-c10/prospective-evaluation-bridge/h-earth.r06-c10.prospective-evaluation-bridge-construction.locator.v1.json \
+            --schema h-earth-3d/control-plane/r06-c10/schemas/h-earth.r06-c10.prospective-evaluation-bridge-construction.locator.schema.v1.json \
+            --repository-root . \
+            --output "$ARTIFACT_ROOT/verifier/locator-certification.receipt.json" \
+            --fingerprint-output "$ARTIFACT_ROOT/verifier/certification-fingerprint.txt" \
+            --blob-map-output "$ARTIFACT_ROOT/verifier/locator-path-blob-map.json" \
+            --manifest-output "$ARTIFACT_ROOT/verifier/certification-manifest.json"
+          for F in locator-certification.receipt.json certification-fingerprint.txt locator-path-blob-map.json certification-manifest.json; do
+            cmp "$ARTIFACT_ROOT/builder/$F" "$ARTIFACT_ROOT/verifier/$F"
+          done
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const root = process.env.ARTIFACT_ROOT;
+          const fingerprint = fs.readFileSync(path.join(root, 'verifier/certification-fingerprint.txt'), 'utf8').trim();
+          const receipt = {
+            schema: 'H_EARTH_R06_C10_PROSPECTIVE_EVALUATION_BRIDGE_CONSTRUCTION_LOCATOR_INDEPENDENT_VERIFICATION_RECEIPT_v1',
+            operationId: 'H_EARTH_R06_C10_PROSPECTIVE_EVALUATION_BRIDGE_CONSTRUCTION_LOCATOR_MATERIALIZATION_001',
+            result: 'PASS_BYTE_IDENTICAL_INDEPENDENT_REPRODUCTION',
+            exactHead: process.env.EXACT_HEAD,
+            certificationFingerprintSha256: fingerprint,
+            comparedMembers: [
+              'locator-certification.receipt.json',
+              'certification-fingerprint.txt',
+              'locator-path-blob-map.json',
+              'certification-manifest.json'
+            ],
+            builderVerifierByteIdentical: true,
+            productMutation: false,
+            hEarthTerrainMutation: false
+          };
+          fs.writeFileSync(
+            path.join(root, 'verifier/independent-verification.receipt.json'),
+            JSON.stringify(receipt, null, 2) + '\n'
+          );
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-r06-c10-prospective-evaluation-bridge-construction-locator-verifier-v1
+          path: ${{ env.ARTIFACT_ROOT }}/verifier/
+          if-no-files-found: error
+
+  package-locator-certification:
+    needs:
+      - locator-builder-certification
+      - fresh-locator-verifier
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXACT_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: h-earth-r06-c10-prospective-evaluation-bridge-construction-locator-builder-v1
+          path: ${{ env.ARTIFACT_ROOT }}/builder
+      - uses: actions/download-artifact@v4
+        with:
+          name: h-earth-r06-c10-prospective-evaluation-bridge-construction-locator-verifier-v1
+          path: ${{ env.ARTIFACT_ROOT }}/verifier
+      - name: Build canonical certification package
+        run: |
+          mkdir -p "$ARTIFACT_ROOT/final/independent"
+          cp "$ARTIFACT_ROOT/builder/locator-certification.receipt.json" "$ARTIFACT_ROOT/final/"
+          cp "$ARTIFACT_ROOT/builder/certification-fingerprint.txt" "$ARTIFACT_ROOT/final/"
+          cp "$ARTIFACT_ROOT/builder/locator-path-blob-map.json" "$ARTIFACT_ROOT/final/"
+          cp "$ARTIFACT_ROOT/builder/certification-manifest.json" "$ARTIFACT_ROOT/final/"
+          cp "$ARTIFACT_ROOT/verifier/independent-verification.receipt.json" "$ARTIFACT_ROOT/final/"
+          cp "$ARTIFACT_ROOT/verifier/locator-certification.receipt.json" "$ARTIFACT_ROOT/final/independent/"
+          cp "$ARTIFACT_ROOT/verifier/certification-fingerprint.txt" "$ARTIFACT_ROOT/final/independent/"
+          cp "$ARTIFACT_ROOT/verifier/locator-path-blob-map.json" "$ARTIFACT_ROOT/final/independent/"
+          cp "$ARTIFACT_ROOT/verifier/certification-manifest.json" "$ARTIFACT_ROOT/final/independent/"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import { createHash } from 'node:crypto';
+          const root = path.join(process.env.ARTIFACT_ROOT, 'final');
+          const walk = (directory, prefix = '') => fs.readdirSync(directory, { withFileTypes: true })
+            .flatMap((entry) => entry.isDirectory()
+              ? walk(path.join(directory, entry.name), `${prefix}${entry.name}/`)
+              : [`${prefix}${entry.name}`])
+            .sort();
+          const members = walk(root).map((name) => {
+            const bytes = fs.readFileSync(path.join(root, name));
+            return {
+              name,
+              byteCount: bytes.length,
+              sha256: createHash('sha256').update(bytes).digest('hex')
+            };
+          });
+          const manifest = {
+            schema: 'H_EARTH_R06_C10_PROSPECTIVE_EVALUATION_BRIDGE_CONSTRUCTION_LOCATOR_ARTIFACT_MANIFEST_v1',
+            operationId: 'H_EARTH_R06_C10_PROSPECTIVE_EVALUATION_BRIDGE_CONSTRUCTION_LOCATOR_MATERIALIZATION_001',
+            result: 'PASS_CLOSED_LOCATOR_MATERIALIZED_AND_INDEPENDENTLY_CERTIFIED',
+            exactHead: process.env.EXACT_HEAD,
+            memberCount: members.length,
+            members,
+            productMutation: false,
+            hEarthTerrainMutation: false
+          };
+          fs.writeFileSync(path.join(root, 'artifact-manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-r06-c10-prospective-evaluation-bridge-construction-locator-certification-v1
+          path: ${{ env.ARTIFACT_ROOT }}/final/
+          if-no-files-found: error

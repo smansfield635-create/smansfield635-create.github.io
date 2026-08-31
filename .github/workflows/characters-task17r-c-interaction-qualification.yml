@@ -1,6 +1,13 @@
 name: Characters Task17R-C Exact Candidate Interaction Qualification
 
 on:
+  push:
+    branches:
+      - 'instrumentation/characters-task17r-c-interaction-evaluator-001'
+  pull_request:
+    paths:
+      - '.github/workflows/characters-task17r-c-interaction-qualification.yml'
+      - 'tools/characters-task17r-c-interaction-evaluator.mjs'
   workflow_dispatch:
 
 permissions:

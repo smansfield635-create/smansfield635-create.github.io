@@ -19,7 +19,7 @@ function scheduleDeferredCapabilityEnhancement(){
   let scheduled=false;
   const run=()=>{if(scheduled)return;scheduled=true;setTimeout(()=>{
     load('/assets/compass/compass.hra-brain-scene.js?v=brain-gen1-hra-passive-v1&g=1607&cb=20260824-brain-gen1-hra-passive-v1','data-compass-hra-brain-scene',()=>{
-      load('/assets/compass/compass.capability-carousel.core.js?v=capability-continuity-v4-single-owner&cb=20260821-1577','data-compass-capability-carousel-core');
+      load('/assets/compass/compass.capability-carousel.core.js?v=capability-continuity-v4-single-owner&cb=6e221a99c774f4b4d2e4994d346c02c6a7654f04','data-compass-capability-carousel-core');
     });
   },POST_LOAD_ENHANCEMENT_DELAY_MS);};
   if(document.readyState==='complete')run();else window.addEventListener('load',run,{once:true});

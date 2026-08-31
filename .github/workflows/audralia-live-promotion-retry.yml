@@ -1,8 +1,7 @@
 name: Audralia Exact 24057 Live Recovery
 
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#071719">
+  <title>Characters — Spatial Field Foundation</title>
+  <link rel="stylesheet" href="./spatial-field.css">
+  <link rel="stylesheet" href="./carousel-geometry.css">
+</head>
+<body>
+  <main class="foundation" data-spatial-foundation data-runtime-class="spatial-information-composition">
+    <section class="field" aria-labelledby="foundation-title">
+      <canvas class="field__canvas" data-terrain-canvas aria-hidden="true"></canvas>
+      <div class="field__atmosphere" aria-hidden="true"></div>
+      <div class="field__horizon" aria-hidden="true"></div>
+      <div class="field__water" aria-hidden="true"></div>
+      <div class="field__shore field__shore--far" aria-hidden="true"></div>
+      <div class="field__shore field__shore--near" aria-hidden="true"></div>
+
+      <header class="field__header">
+        <p class="eyebrow">H-EARTH / CHARACTERS / TASK 17R-B</p>
+        <h1 id="foundation-title">Spatial Field Foundation</h1>
+        <p class="field__lede">A bounded environmental composition for future character information. This foundation contains geometry and spatial anchors only.</p>
+      </header>
+
+      <div class="terrain" aria-hidden="true">
+        <div class="terrain__mass terrain__mass--back"></div>
+        <div class="terrain__mass terrain__mass--mid"></div>
+        <div class="terrain__mass terrain__mass--front"></div>
+        <div class="terrain__ridge terrain__ridge--a"></div>
+        <div class="terrain__ridge terrain__ridge--b"></div>
+        <div class="terrain__ridge terrain__ridge--c"></div>
+      </div>
+
+      <ol class="anchors" aria-label="Reserved character positions">
+        <li class="anchor anchor--1" data-anchor="01"><span class="anchor__index">01</span><span class="anchor__label">Reserved position</span></li>
+        <li class="anchor anchor--2" data-anchor="02"><span class="anchor__index">02</span><span class="anchor__label">Reserved position</span></li>
+        <li class="anchor anchor--3" data-anchor="03"><span class="anchor__index">03</span><span class="anchor__label">Reserved position</span></li>
+        <li class="anchor anchor--4" data-anchor="04"><span class="anchor__index">04</span><span class="anchor__label">Reserved position</span></li>
+        <li class="anchor anchor--5" data-anchor="05"><span class="anchor__index">05</span><span class="anchor__label">Reserved position</span></li>
+        <li class="anchor anchor--6" data-anchor="06"><span class="anchor__index">06</span><span class="anchor__label">Reserved position</span></li>
+        <li class="anchor anchor--7" data-anchor="07"><span class="anchor__index">07</span><span class="anchor__label">Reserved position</span></li>
+        <li class="anchor anchor--8" data-anchor="08"><span class="anchor__index">08</span><span class="anchor__label">Reserved position</span></li>
+      </ol>
+
+      <aside class="foundation-note" aria-label="Foundation status">
+        <span>FIELD 01</span>
+        <strong>Geometry only</strong>
+        <small>No dossiers · no carousel content · no world navigation</small>
+      </aside>
+    </section>
+  </main>
+  <script type="module" src="./spatial-field.js"></script>
+  <script type="module" src="./carousel-geometry.js"></script>
+</body>
+</html>

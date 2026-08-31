@@ -3,9 +3,6 @@ name: Audralia Exact 24057 Live Recovery
 on:
   push:
     branches: [main]
-    paths:
-      - 'showroom/globe/audralia/index.html'
-      - '.github/workflows/audralia-live-promotion-retry.yml'
 
 permissions:
   contents: read

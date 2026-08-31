@@ -1,0 +1,14 @@
+{
+  "schema": "CP9_GENERATION_43_CANONICAL_CLOSURE_REQUEST_v1",
+  "requestId": "CP9R5_CLOSE_GENERATION_43_FAIL_CLOSED_20260804",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+  "operationId": "H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_REPAIR_TOOLSET_REGISTRATION_A_001",
+  "lockScope": "H_EARTH:REGISTRY_TWO_PATH_SUCCESSOR_REPAIR:TOOLSET_REGISTRATION:A:V1",
+  "lockGeneration": 43,
+  "terminalDisposition": "FAIL_CLOSED",
+  "expectedClosureReceiptSchema": "REPOSITORY_OPERATION_CLOSURE_RECEIPT_v1",
+  "expectedResult": "TERMINAL_CLOSURE_COMMITTED",
+  "authorityIssue": 580,
+  "singleUse": true
+}

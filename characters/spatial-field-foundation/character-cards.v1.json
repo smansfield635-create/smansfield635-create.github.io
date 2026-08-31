@@ -65,10 +65,10 @@
       "heldUnknownFields": ["biography_origin","formative_events","family_relationships","appearance","age_dates","private_motivations","decorative_mannerisms"],
       "sourceCommentId": 5470634971
     },
-    {"anchor":"05","state":"UNASSIGNED_SOURCE_HOLD","characterId":null,"displayName":"Unassigned source hold","reason":"NO_OWNER_ORIGINATING_CHARACTER_SOURCE_ASSIGNED_IN_TASK17R_D"},
-    {"anchor":"06","state":"UNASSIGNED_SOURCE_HOLD","characterId":null,"displayName":"Unassigned source hold","reason":"NO_OWNER_ORIGINATING_CHARACTER_SOURCE_ASSIGNED_IN_TASK17R_D"},
-    {"anchor":"07","state":"UNASSIGNED_SOURCE_HOLD","characterId":null,"displayName":"Unassigned source hold","reason":"NO_OWNER_ORIGINATING_CHARACTER_SOURCE_ASSIGNED_IN_TASK17R_D"},
-    {"anchor":"08","state":"UNASSIGNED_SOURCE_HOLD","characterId":null,"displayName":"Unassigned source hold","reason":"NO_OWNER_ORIGINATING_CHARACTER_SOURCE_ASSIGNED_IN_TASK17R_D"}
+    {"anchor":"05","state":"UNASSIGNED_SOURCE_HOLD","characterId":null,"displayName":"Open position","reason":"NO_OWNER_ORIGINATING_CHARACTER_SOURCE_ASSIGNED_IN_TASK17R_D"},
+    {"anchor":"06","state":"UNASSIGNED_SOURCE_HOLD","characterId":null,"displayName":"Open position","reason":"NO_OWNER_ORIGINATING_CHARACTER_SOURCE_ASSIGNED_IN_TASK17R_D"},
+    {"anchor":"07","state":"UNASSIGNED_SOURCE_HOLD","characterId":null,"displayName":"Open position","reason":"NO_OWNER_ORIGINATING_CHARACTER_SOURCE_ASSIGNED_IN_TASK17R_D"},
+    {"anchor":"08","state":"UNASSIGNED_SOURCE_HOLD","characterId":null,"displayName":"Open position","reason":"NO_OWNER_ORIGINATING_CHARACTER_SOURCE_ASSIGNED_IN_TASK17R_D"}
   ],
   "hardNegatives": {
     "chronology": false,

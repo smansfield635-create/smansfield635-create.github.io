@@ -8,8 +8,8 @@
       "includes": [
         "Audralia · Planetary World",
         "approvedModelAuthority: '1d45379f81ea4089e9c5f3d7d9688e702be9add3'",
-        "cloudCoverageUpgradeDeferred: false",
-        "directDenseCloudCoverage: true",
+        "cloudCoverageUpgradeDeferred: true",
+        "directDenseCloudCoverage: false",
         "APPROVED_PRESENTATION_PRE_RENDER_v1",
         "Orbital cloud field",
         "AUDRALIA_LOADING_CONTINUITY_v4"

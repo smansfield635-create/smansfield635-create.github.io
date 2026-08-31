@@ -34,7 +34,7 @@ function validCanonicalMessage(message) {
   return typeof message === 'string' && (
     /^Acquire operation lock \d+: .+/.test(message) ||
     /^Supersede operation \d+ with successor \d+: .+/.test(message) ||
-    /^Close operation lock \d+: .+ (PASS_CLOSED|FAIL_CLOSED|REJECTED_CLOSED|WITHDRAWN|SUPERSEDED|VOIDED|EXPIRED)$/.test(message)
+    /^Close operation lock \d+: .+ (PASS_CLOSED|FAIL_CLOSED|REJECTED_CLOSED|WITHDRAWN|SUPERSEDED|VOIDED|EXPIRED|MUTATION_CLOSED_EVIDENCE_CONTINUES)$/.test(message)
   );
 }
 
@@ -234,7 +234,7 @@ export function verifyCanonicalLedgerCommitV2({ commit, changedPaths, resultingL
     });
   }
 
-  const closure = message.match(/^Close operation lock (\d+): (.+) (PASS_CLOSED|FAIL_CLOSED|REJECTED_CLOSED|WITHDRAWN|SUPERSEDED|VOIDED|EXPIRED)$/);
+  const closure = message.match(/^Close operation lock (\d+): (.+) (PASS_CLOSED|FAIL_CLOSED|REJECTED_CLOSED|WITHDRAWN|SUPERSEDED|VOIDED|EXPIRED|MUTATION_CLOSED_EVIDENCE_CONTINUES)$/);
   if (closure) {
     const generation = Number(closure[1]);
     const operationId = closure[2];

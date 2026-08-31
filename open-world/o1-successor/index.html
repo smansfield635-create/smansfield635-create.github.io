@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#07131c">
+  <title>Audralia · Open World</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main id="world" aria-label="Audralia open-world environmental specimen">
+    <canvas id="scene" aria-label="Interactive three-dimensional view of Audralia"></canvas>
+    <section id="hud" aria-live="polite">
+      <strong>Audralia</strong>
+      <span id="scale-readout">planetary</span>
+    </section>
+    <div id="hint">drag to travel · pinch or wheel to change scale</div>
+    <div id="fallback" hidden>This device could not start the environmental renderer.</div>
+  </main>
+  <script>
+  (()=>{
+    const world=document.querySelector('#world'),fallback=document.querySelector('#fallback');
+    const set=(stage,error='')=>{world.dataset.bootStage=stage;if(error)world.dataset.bootError=String(error).slice(0,240);window.__O1_BOOT__={stage,error:error?String(error):null};};
+    set('HTML_BOOT');
+    const fail=reason=>{if(world.dataset.bootStage==='FIRST_FRAME')return;set('MODULE_OR_RUNTIME_ERROR',reason);fallback.hidden=false;fallback.textContent=`Startup stopped at MODULE_OR_RUNTIME_ERROR · ${String(reason).slice(0,160)}`;};
+    addEventListener('error',event=>fail(event.message||'RESOURCE_OR_SCRIPT_ERROR'));
+    addEventListener('unhandledrejection',event=>fail(event.reason?.message||event.reason||'UNHANDLED_REJECTION'));
+  })();
+  </script>
+  <script type="module" src="./app.mjs"></script>
+</body>
+</html>

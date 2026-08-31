@@ -64,11 +64,11 @@
         ]
       },
       {
-        "name": "Home restores first character perspective",
+        "name": "Arrow left restores first character perspective",
         "action": {
           "type": "key",
           "selector": "[data-character-carousel]",
-          "key": "Home"
+          "key": "ArrowLeft"
         },
         "assertions": [
           {

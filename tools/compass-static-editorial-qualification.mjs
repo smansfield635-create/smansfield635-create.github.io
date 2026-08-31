@@ -6,6 +6,7 @@ const gen1537 = fs.readFileSync('assets/compass/compass.gen1537.recovery.js', 'u
 const capability = fs.readFileSync('assets/compass/compass.capability-carousel.js', 'utf8');
 const capabilityCore = fs.readFileSync('assets/compass/compass.capability-carousel.core.js', 'utf8');
 const crystals = fs.readFileSync('assets/compass/compass.crystals.js', 'utf8');
+const trophyScene = fs.readFileSync('assets/compass/compass.trophy-scene.js', 'utf8');
 const mediaRegistry = JSON.parse(fs.readFileSync('tools/ai-room-transport/ai-media-source-registry.v1.json', 'utf8'));
 
 const fail = (message) => { throw new Error(message); };
@@ -78,6 +79,18 @@ if (!crystals.includes('COMPASS_CRYSTAL_CONTINUOUS_NORMAL_MOTION_v1')) fail('cry
 if (!crystals.includes('if (!state.reducedMotion) return true;')) fail('normal-motion continuous frame contract missing');
 if (!crystals.includes('state.reducedMotion')) fail('reduced-motion branch missing');
 
+for (const required of [
+  "trophyRenderer:'procedural-webgl-v5-mounted-lettering'",
+  "canvas.dataset.trophyFrames='1'",
+  'fallback:false',
+  'fallback:true',
+  "window.CompassTrophyScene=Object.freeze"
+]) {
+  if (!trophyScene.includes(required)) fail(`trophy runtime contract missing ${required}`);
+}
+if (!trophyScene.includes("field?.classList.remove('is-fallback'")) fail('approved trophy renderer does not retire fallback presentation ownership');
+if (!trophyScene.includes("fallback.setProperty('display','none','important')")) fail('approved trophy renderer does not suppress fallback surface');
+
 console.log(JSON.stringify({
   result: 'STATIC_EDITORIAL_SOURCE_PASS',
   order: {compassAt,builtAt,capabilityAt,ctaAt},
@@ -90,5 +103,6 @@ console.log(JSON.stringify({
   accessibilityFallback: 'collapsed-keyboard-accessible',
   crystalLiveness: 'continuous-normal-motion-settle-reduced-motion',
   gen1537: 'retired-route-only',
-  trackA: 'static-object-carousel-first-paint-authority'
+  trackA: 'static-object-carousel-first-paint-authority',
+  trophyRuntime: 'approved-webgl-renderer-required-fallback-not-success'
 }, null, 2));

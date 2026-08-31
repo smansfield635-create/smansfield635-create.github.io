@@ -99,6 +99,46 @@ export const runDeclaredInteractions=async(page,interactions)=>{
   return results;
 };
 
+export const verifyTrophyPredicate=async(page,spec)=>{
+  if(spec?.trophyPredicate?.enabled!==true)return null;
+  const predicate=spec.trophyPredicate;
+  return page.evaluate(predicate=>{
+    const field=document.querySelector(predicate.fieldSelector||'[data-award-trophy]');
+    const canvas=document.querySelector(predicate.canvasSelector||'[data-award-trophy] canvas');
+    const fallback=document.querySelector(predicate.fallbackSelector||'[data-award-trophy] .compass-trophy-fallback');
+    let inspect=null;
+    try{inspect=window.CompassTrophyScene?.inspect?.()||null;}catch{}
+    const renderer=canvas?.dataset?.trophyRenderer||null;
+    const frames=Number(canvas?.dataset?.trophyFrames||0);
+    const style=canvas?getComputedStyle(canvas):null;
+    const rect=canvas?.getBoundingClientRect?.()||null;
+    const visible=Boolean(canvas&&!canvas.hidden&&style?.display!=='none'&&style?.visibility!=='hidden'&&rect&&rect.width>0&&rect.height>0);
+    const fallbackFalse=Boolean(inspect&&inspect.fallback===false&&!field?.classList?.contains('is-fallback')&&(!fallback||fallback.hidden||getComputedStyle(fallback).display==='none'));
+    let nonblank=false;
+    let nonblankSampleCount=0;
+    try{
+      const gl=canvas?.getContext?.('webgl');
+      if(gl&&canvas.width>0&&canvas.height>0){
+        const pixels=new Uint8Array(canvas.width*canvas.height*4);
+        gl.readPixels(0,0,canvas.width,canvas.height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
+        for(let i=0;i<pixels.length;i+=4){
+          if(pixels[i]||pixels[i+1]||pixels[i+2]||pixels[i+3]){nonblankSampleCount++;if(nonblankSampleCount>=8){nonblank=true;break;}}
+        }
+      }
+    }catch{}
+    const checks={
+      fieldPresent:Boolean(field),
+      canvasPresent:Boolean(canvas),
+      rendererApproved:renderer===predicate.approvedRenderer,
+      frameCount:frames>=Number(predicate.minFrames||1),
+      visible:predicate.requireVisible===false?true:visible,
+      fallbackFalse:predicate.requireFallbackFalse===false?true:fallbackFalse,
+      nonblank:predicate.requireNonblank===false?true:nonblank
+    };
+    return {ok:Object.values(checks).every(Boolean),renderer,frames,visible,fallbackFalse,nonblank,nonblankSampleCount,inspect,checks};
+  },predicate);
+};
+
 export const main=async()=>{
   const mode=process.argv[2];
   const pageUrl=(process.argv[3]||'').replace(/\/$/,'');
@@ -152,6 +192,7 @@ export const main=async()=>{
     const consoleErrors=[];
     const evidenceInteractions=[];
     let declaredInteractions=[];
+    let trophyPredicate=null;
     page.on('pageerror',error=>pageErrors.push(String(error?.stack||error)));
     page.on('console',message=>{if(message.type()==='error')consoleErrors.push(message.text());});
     page.on('response',response=>{
@@ -237,6 +278,7 @@ export const main=async()=>{
 
     await verifyEvidenceCarousel('AFTER_CONDITION_TERMINAL');
     declaredInteractions=await runDeclaredInteractions(page,spec.interactions);
+    trophyPredicate=await verifyTrophyPredicate(page,spec);
 
     const binding=spec.binding||{mode:'direct-document'};
     const result=await page.evaluate(({spec,binding})=>{
@@ -276,9 +318,10 @@ export const main=async()=>{
     if(spec.failOnConsoleErrors!==false&&actionableConsoleErrors.length)failures.push('CONSOLE_ERROR');
     if(spec.requireEvidenceCarouselInteraction===true&&evidenceInteractions.some(x=>!x.ok))failures.push('EVIDENCE_CAROUSEL_INTERACTION_FAILED');
     if(declaredInteractions.some(x=>!x.ok))failures.push('DECLARED_INTERACTION_FAILED');
+    if(spec.trophyPredicate?.enabled===true&&trophyPredicate?.ok!==true)failures.push('TROPHY_RUNTIME_PREDICATE_FAILED');
     if(manifest.surfaceId==='evidence'&&result.currentPublicCondition==='CHECKING')failures.push('EVIDENCE_CONDITION_NOT_TERMINAL');
 
-    const receipt={schema:'PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1',surfaceId:manifest.surfaceId,url,result:failures.length?'FAIL':'PASS',runtime:result,diagnostics:{pageErrors,consoleErrors,ignoredConsoleErrors,actionableConsoleErrors,evidenceInteractions,declaredInteractions,failures}};
+    const receipt={schema:'PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1',surfaceId:manifest.surfaceId,url,result:failures.length?'FAIL':'PASS',runtime:{...result,trophyPredicate},diagnostics:{pageErrors,consoleErrors,ignoredConsoleErrors,actionableConsoleErrors,evidenceInteractions,declaredInteractions,failures}};
     console.log(JSON.stringify(receipt,null,2));
     if(failures.length)process.exitCode=1;
   }finally{

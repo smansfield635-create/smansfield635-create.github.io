@@ -1,0 +1,20 @@
+name: Chapter 02 Awards Public Private Intake Call
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  canonical-intake:
+    uses: ./.github/workflows/public-private-canonical-execution-carrier-v1.yml
+    with:
+      private_issue: '302'
+      private_comment: '5337982893'
+      expected_request_id: 'CHAPTER_02_AWARDS_CINEMATIC_CONSTRUCTION_INTAKE_20260819_002'
+      exact_private_head: '367f9f77c264c2eabe7398bfa1fdd0edcdbbb6ab'
+      callback_issue: '1392'
+    secrets: inherit

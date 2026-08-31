@@ -5,7 +5,7 @@ import path from 'node:path';
 import process from 'node:process';
 
 const root = path.resolve('target');
-const server = spawn(process.execPath, ['-e', `const http=require('http'),fs=require('fs'),path=require('path');const root=${JSON.stringify(root)};http.createServer((req,res)=>{let p=decodeURIComponent(req.url.split('?')[0]);if(p.endsWith('/'))p+='index.html';const f=path.join(root,p.replace(/^\\//,''));fs.readFile(f,(e,d)=>{if(e){res.statusCode=404;return res.end('not found')}res.end(d)})}).listen(4173,'127.0.0.1')`], {stdio:'inherit'});
+const server = spawn(process.execPath, ['-e', `const http=require('http'),fs=require('fs'),path=require('path');const root=${JSON.stringify(root)};http.createServer((req,res)=>{let p=decodeURIComponent(req.url.split('?')[0]);if(p==='/favicon.ico'){res.statusCode=204;return res.end()}if(p.endsWith('/'))p+='index.html';const f=path.join(root,p.replace(/^\\//,''));fs.readFile(f,(e,d)=>{if(e){res.statusCode=404;return res.end('not found')}res.end(d)})}).listen(4173,'127.0.0.1')`], {stdio:'inherit'});
 await new Promise(r=>setTimeout(r,800));
 
 const browser = await chromium.launch({headless:true});
@@ -22,7 +22,7 @@ try {
     const anchors=page.locator('.anchor');
     assert.equal(await anchors.count(),8,`${name}: 8 anchors`);
     for(let i=0;i<8;i++){const b=await anchors.nth(i).boundingBox();assert.ok(b,`${name}: anchor ${i+1} visible`);assert.ok(b.x>=-1&&b.y>=-1&&b.x+b.width<=width+1&&b.y+b.height<=Math.max(height,860)+1,`${name}: anchor ${i+1} contained`)}
-    assert.equal(pageErrors.length,0,`${name}: page errors`); assert.equal(consoleErrors.length,0,`${name}: console errors`);
+    assert.equal(pageErrors.length,0,`${name}: page errors ${JSON.stringify(pageErrors)}`); assert.equal(consoleErrors.length,0,`${name}: console errors ${JSON.stringify(consoleErrors)}`);
     assert.equal(await page.locator('[data-spatial-foundation]').getAttribute('data-world-runtime'),'absent');
     assert.equal(await page.locator('[data-spatial-foundation]').getAttribute('data-free-camera'),'absent');
     assert.equal(await page.locator('[data-spatial-foundation]').getAttribute('data-legacy-presentation'),'absent');

@@ -28,7 +28,7 @@ jobs:
           curl -fsSL "$base/index.html" -o target/characters/spatial-field-foundation/index.html
           curl -fsSL "$base/spatial-field.css" -o target/characters/spatial-field-foundation/spatial-field.css
           curl -fsSL "$base/spatial-field.js" -o target/characters/spatial-field-foundation/spatial-field.js
-          curl -fsSL 'https://raw.githubusercontent.com/smansfield635-create/smansfield635-create.github.io/instrumentation/characters-task17r-foundation-evaluator-001/tools/characters-task17r-foundation-evaluator.mjs' -o tools/characters-task17r-foundation-evaluator.mjs
+          curl -fsSL 'https://raw.githubusercontent.com/smansfield635-create/smansfield635-create.github.io/1ce67de161acda6007093c42c4ba4c59d605ef8c/tools/characters-task17r-foundation-evaluator.mjs' -o tools/characters-task17r-foundation-evaluator.mjs
       - name: Install Playwright
         run: |
           npm init -y >/dev/null 2>&1

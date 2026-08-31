@@ -5,7 +5,7 @@ import path from 'node:path';
 import process from 'node:process';
 
 const root = path.resolve('target');
-const server = spawn(process.execPath, ['-e', `const http=require('http'),fs=require('fs'),path=require('path');const root=${JSON.stringify(root)};http.createServer((req,res)=>{let p=decodeURIComponent(req.url.split('?')[0]);if(p==='/favicon.ico'){res.statusCode=204;return res.end()}if(p.endsWith('/'))p+='index.html';const f=path.join(root,p.replace(/^\\//,''));fs.readFile(f,(e,d)=>{if(e){res.statusCode=404;return res.end('not found')}res.end(d)})}).listen(4173,'127.0.0.1')`], {stdio:'inherit'});
+const server = spawn(process.execPath, ['-e', `const http=require('http'),fs=require('fs'),path=require('path');const root=${JSON.stringify(root)};http.createServer((req,res)=>{let p=decodeURIComponent(req.url.split('?')[0]);if(p==='/favicon.ico'){res.statusCode=204;return res.end()}if(p.endsWith('/'))p+='index.html';const f=path.join(root,p.replace(/^\\//,''));fs.readFile(f,(e,d)=>{if(e){res.statusCode=404;return res.end('not found')}const ext=path.extname(f);if(ext==='.js')res.setHeader('Content-Type','text/javascript; charset=utf-8');else if(ext==='.css')res.setHeader('Content-Type','text/css; charset=utf-8');else if(ext==='.html')res.setHeader('Content-Type','text/html; charset=utf-8');res.end(d)})}).listen(4173,'127.0.0.1')`], {stdio:'inherit'});
 await new Promise(r=>setTimeout(r,800));
 
 const browser = await chromium.launch({headless:true});

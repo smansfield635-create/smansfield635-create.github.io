@@ -1,0 +1,50 @@
+name: Temporary Characters H-Earth-Aware Pages Dispatch Carrier
+on:
+  pull_request:
+    branches: [ main ]
+permissions:
+  contents: read
+  actions: write
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify current main retains qualified Characters identities
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          main_json="$(curl --fail-with-body --silent --show-error -L \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/main")"
+          main_sha="$(printf '%s' "$main_json" | jq -r '.sha')"
+          test -n "$main_sha"
+          git init verify
+          cd verify
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c protocol.version=2 fetch --no-tags --depth=1 origin "$main_sha"
+          test "$(git rev-parse FETCH_HEAD:characters/index.html)" = "86d34ba852848ed43b26728068ca9cbdd3530953"
+          test "$(git rev-parse FETCH_HEAD:characters/spatial-narrative.runtime.js)" = "a11d5156ac1383d4b4b456afdad6e1c48f895d81"
+          test "$(git rev-parse FETCH_HEAD:characters/legacy-dossiers.html)" = "abafc0bc1f4b6538028833c47103596411ff3f3a"
+          test -n "$(git rev-parse FETCH_HEAD:.github/ai-router/publication-surfaces/characters.json)"
+          echo "TARGET_MAIN_SHA=$main_sha" >> "$GITHUB_ENV"
+          echo "QUALIFIED_CHARACTERS_IDENTITIES_PRESERVED=$main_sha"
+      - name: Dispatch H-Earth-aware exact-head Pages publication
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_MAIN_SHA: ${{ env.TARGET_MAIN_SHA }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          payload="$(jq -n --arg ref main --arg sha "$TARGET_MAIN_SHA" --arg surface characters '{ref:$ref,inputs:{target_sha:$sha,surface_id:$surface}}')"
+          curl --fail-with-body --silent --show-error -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/pages-direct-deploy.yml/dispatches" \
+            -d "$payload"
+          echo "CHARACTERS_DIRECT_PUBLICATION_DISPATCHED=$TARGET_MAIN_SHA"

@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "compass-gen1862",
-  "description": "Compass root publication contract after the qualified single-owner release-inertia repair and exact asset-identity refresh.",
+  "description": "Compass root publication contract after the qualified single-owner release-inertia repair, exact asset-identity refresh, and mandatory Trophy renderer live predicate.",
   "checks": [
     {
       "path": "/",
@@ -27,6 +27,17 @@
     "binding": {
       "mode": "direct-document",
       "path": "/"
+    },
+    "trophyPredicate": {
+      "enabled": true,
+      "fieldSelector": "[data-award-trophy]",
+      "canvasSelector": "[data-award-trophy] canvas",
+      "fallbackSelector": "[data-award-trophy] .compass-trophy-fallback",
+      "approvedRenderer": "procedural-webgl-v5-mounted-lettering",
+      "minFrames": 1,
+      "requireVisible": true,
+      "requireFallbackFalse": true,
+      "requireNonblank": true
     },
     "failOnConsoleErrors": true,
     "failOnPageErrors": true

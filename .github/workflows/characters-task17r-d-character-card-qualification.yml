@@ -85,6 +85,34 @@ jobs:
           test "$(git -C control-compass rev-parse HEAD^{commit})" = "$COMPASS_CONTROL_SHA"
           test -f control-compass/index.html
 
+      - name: Repair carousel control harness without mutating control bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, json
+          p=Path('tools/characters-task17r-d-character-card-evaluator.mjs')
+          before=p.read_text()
+          old="await page.locator('[data-orbit-card]').nth(1).click();await page.waitForTimeout(650);"
+          new="await page.locator('[data-orbit-stage]').focus();await page.keyboard.press('ArrowRight');await page.waitForTimeout(650);"
+          if before.count(old) != 1:
+              raise SystemExit('CAROUSEL_CONTROL_HARNESS_TARGET_NOT_EXACTLY_ONCE')
+          after=before.replace(old,new)
+          p.write_text(after)
+          receipt={
+            'schema':'CHARACTERS_TASK17R_D_CAROUSEL_CONTROL_HARNESS_REPAIR_v1',
+            'result':'APPLIED_EXACTLY_ONCE',
+            'reason':'KNOWN_GOOD_CONTROL_CARD_CLICK_WAS_INTERCEPTED_BY_ORBIT_PRESENTATION_LAYER',
+            'replacement':'FOCUS_ORBIT_STAGE_AND_USE_DOCUMENTED_ARROW_RIGHT_KEYBOARD_CONTROL',
+            'controlBytesMutated':False,
+            'candidateBytesMutated':False,
+            'preRepairSha256':hashlib.sha256(before.encode()).hexdigest(),
+            'executedHarnessSha256':hashlib.sha256(after.encode()).hexdigest()
+          }
+          Path('qualification-output/carousel-control-harness-repair.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          PY
+
       - name: Verify exact candidate static contract
         shell: bash
         run: |
@@ -138,6 +166,7 @@ jobs:
           path: |
             qualification-output/task17r-d-character-card-qualification.json
             qualification-output/task17r-d-universal-mechanical.json
+            qualification-output/carousel-control-harness-repair.json
           if-no-files-found: error
           retention-days: 90
 
@@ -148,5 +177,7 @@ jobs:
           set -euo pipefail
           test -s qualification-output/task17r-d-character-card-qualification.json
           test -s qualification-output/task17r-d-universal-mechanical.json
+          test -s qualification-output/carousel-control-harness-repair.json
           jq -e --arg candidate "$CANDIDATE_SHA" '.schema == "CHARACTERS_TASK17R_D_CHARACTER_CARD_QUALIFICATION_v1" and .candidate == $candidate' qualification-output/task17r-d-character-card-qualification.json >/dev/null
           jq -e --arg candidate "$CANDIDATE_SHA" '.schema == "CHARACTERS_TASK17R_D_UNIVERSAL_MECHANICAL_RECEIPT_v1" and .candidate == $candidate and (.result == "PASS_CLOSED" or .result == "FAIL_CLOSED" or .result == "UNEVALUABLE")' qualification-output/task17r-d-universal-mechanical.json >/dev/null
+          jq -e '.schema == "CHARACTERS_TASK17R_D_CAROUSEL_CONTROL_HARNESS_REPAIR_v1" and .result == "APPLIED_EXACTLY_ONCE" and .controlBytesMutated == false and .candidateBytesMutated == false' qualification-output/carousel-control-harness-repair.json >/dev/null

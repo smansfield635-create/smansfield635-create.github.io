@@ -60,14 +60,14 @@ function render() {
   detail.hidden = !inspectionActive;
 
   if (!inspectionActive) {
-    eyebrow.textContent = slot.state === 'UNASSIGNED_SOURCE_HOLD' ? 'Source hold · activate to inspect' : 'Character · activate to inspect';
+    eyebrow.textContent = slot.state === 'UNASSIGNED_SOURCE_HOLD' ? 'Open position · activate to inspect' : 'Character · activate to inspect';
     detail.replaceChildren();
     return;
   }
 
   if (slot.state === 'UNASSIGNED_SOURCE_HOLD') {
-    eyebrow.textContent = 'Source hold';
-    detail.innerHTML = '<p class="character-card__hold">No owner-originating character source is assigned to this anchor.</p>';
+    eyebrow.textContent = 'Open position';
+    detail.innerHTML = '<p class="character-card__hold">No character has been revealed for this position yet.</p>';
   } else {
     eyebrow.textContent = `${slot.seat} · ${slot.season}`;
     detail.replaceChildren();
@@ -82,7 +82,7 @@ function render() {
 
     const provenance = document.createElement('p');
     provenance.className = 'character-card__provenance';
-    provenance.textContent = `Source #2378 · comment ${slot.sourceCommentId}`;
+    provenance.textContent = 'Cardinal character record';
 
     detail.append(roles, fn, provenance);
   }

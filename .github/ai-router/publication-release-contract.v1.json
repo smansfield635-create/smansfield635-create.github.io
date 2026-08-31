@@ -48,6 +48,21 @@
     "bindingRule": "WORKFLOW_IDENTITY_MUST_MATCH_AI_ENTRYPOINT_AND_PAGES_EXACT_HEAD_DEPLOY_CAPABILITY",
     "preflightEnforcement": "PRODUCTION_WORKFLOW_MUST_COMPLETE_LOCAL_EXACT_PAYLOAD_PREFLIGHT_BEFORE_CONFIGURE_UPLOAD_OR_DEPLOY"
   },
+  "hostTransportBoundary": {
+    "classification": "HOST_PLATFORM_DEPLOYMENT_TRANSPORT_NOT_AGENT_EXECUTION",
+    "provider": "GITHUB_PAGES",
+    "exactArtifactDeploymentRequiresGithubActionsOidc": true,
+    "requiredOidcSource": "GITHUB_ACTIONS_JOB_CONTEXT",
+    "githubActionsUsePermittedOnlyFor": ["PAGES_EXACT_HEAD_DEPLOY_HOST_TRANSPORT"],
+    "githubActionsUseCreatesGeneralAgentExecutionAuthority": false,
+    "githubActionsUseCreatesQualificationAuthority": false,
+    "githubActionsUseCreatesProductMutationAuthority": false,
+    "qualificationMustRemainIndependentFromGithubActions": true,
+    "legacyPagesBuildRequestIsEquivalent": false,
+    "legacyPagesBuildRequestReason": "A legacy Pages build rebuilds the configured branch and does not preserve the exact staged payload, exclusions, injected release marker, or protected dependency assembly required by this contract.",
+    "routingLaw": "DO_NOT_SEARCH_FOR_A_NON_ACTIONS_AGENT_EXECUTION_BACKEND TO PERFORM PUBLICATION. USE THE REGISTERED PAGES_EXACT_HEAD_DEPLOY HOST TRANSPORT AFTER PREFLIGHT.",
+    "invokabilityLaw": "BACKEND ELIGIBILITY AND HOST TRANSPORT INVOKABILITY ARE DISTINCT; IF DIRECT CONNECTED WORKFLOW DISPATCH IS ABSENT, USE ONLY A REGISTERED FIXED DISPATCH TRANSPORT THAT CANNOT EXPAND COMMAND OR WORKFLOW AUTHORITY."
+  },
   "verification": {
     "required": true,
     "method": "FETCH_PUBLIC_RELEASE_MARKER_COMPARE_TARGET_SHA_AND_SURFACE_MANIFEST_THEN_RUN_DECLARED_STATIC_AND_OPTIONAL_RUNTIME_CHECKS",
@@ -85,6 +100,7 @@
     "PUBLIC_RELEASE_REQUIRES_SURFACE_SPECIFIC_BYTE_PROOF",
     "PUBLIC_RUNTIME_RELEASE_REQUIRES_DECLARED_RUNTIME_PROOF",
     "CANONICAL_PUBLICATION_WORKFLOW_IDENTITY_MUST_AGREE_ACROSS_ENTRYPOINT_CONTRACT_AND_CAPABILITY_REGISTRY",
+    "GITHUB_ACTIONS_HOST_TRANSPORT_DOES_NOT_CREATE_GITHUB_ACTIONS_AGENT_EXECUTION_AUTHORITY",
     "NO_PROJECT_ROOM_MAY_INVENT_A_PARALLEL_PUBLICATION_WORKFLOW"
   ]
 }

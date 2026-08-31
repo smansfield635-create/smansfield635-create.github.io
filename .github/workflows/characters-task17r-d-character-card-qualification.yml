@@ -79,8 +79,9 @@ jobs:
             "https://api.github.com/repos/smansfield635-create/smansfield635-create.github.io/actions/artifacts/${COMPASS_CONTROL_ARTIFACT_ID}/zip" \
             -o compass-control.zip
           unzip -j compass-control.zip compass-02517928.bundle -d .
-          git clone --no-checkout compass-02517928.bundle control-compass
-          git -C control-compass checkout --detach "$COMPASS_CONTROL_SHA"
+          git init control-compass
+          git -C control-compass bundle unbundle ../compass-02517928.bundle >/dev/null
+          git -C control-compass reset --hard "$COMPASS_CONTROL_SHA"
           test "$(git -C control-compass rev-parse HEAD^{commit})" = "$COMPASS_CONTROL_SHA"
           test -f control-compass/index.html
 

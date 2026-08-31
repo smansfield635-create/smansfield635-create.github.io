@@ -26,7 +26,7 @@ jobs:
       - name: Materialize exact Task17R-C candidate
         run: |
           mkdir -p target/characters/spatial-field-foundation
-          base='https://raw.githubusercontent.com/smansfield635-create/smansfield635-create.github.io/c00074897a60c7a51813e362426c85329fad7555/characters/spatial-field-foundation'
+          base='https://raw.githubusercontent.com/smansfield635-create/smansfield635-create.github.io/174def3f28e6358f68cfe807c68f81253eb8e1ca/characters/spatial-field-foundation'
           for file in README.md index.html spatial-field.css spatial-field.js carousel-geometry.css carousel-geometry.js; do
             curl -fsSL "$base/$file" -o "target/characters/spatial-field-foundation/$file"
           done

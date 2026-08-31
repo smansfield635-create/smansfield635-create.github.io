@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "compass-trophy-binding-preflight-2463-58d2faae",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 2466,
+  "requestBranch": "ai-dispatch-request-trophy-binding-preflight-2463",
+  "requestCommit": "dc73d4d5f883ee9fbb0f78889923fbb7ffc3431a",
+  "requestCommitParent": "58d2faaeb4f98754ba7ec42f69f12b7e698915a0",
+  "currentMainSha": "58d2faaeb4f98754ba7ec42f69f12b7e698915a0",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "58d2faaeb4f98754ba7ec42f69f12b7e698915a0",
+    "surface_id": "compass-narrative-renewal-20260830"
+  },
+  "bridgeRunId": "33360184943",
+  "dispatchedRunId": 33360195146,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/33360195146",
+  "dispatchedRunHeadSha": "58d2faaeb4f98754ba7ec42f69f12b7e698915a0",
+  "dispatchedAt": "2026-08-31T05:20:24.665Z",
+  "resolvedAt": "2026-08-31T05:20:28.435Z"
+}

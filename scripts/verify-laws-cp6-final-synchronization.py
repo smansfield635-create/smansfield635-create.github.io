@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Strict static gate for the Gen1841 Methods-derived Laws continuity pass."""
+"""Strict static gate for Gen1843 frozen-Methods dimensional Laws continuity."""
 
 from __future__ import annotations
 
@@ -10,13 +10,9 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-GOVERNING_HEAD = os.environ.get("EXECUTION_BASE", "b14781bc331713bd0869bc6c7fd5f145376788e9")
+GOVERNING_HEAD = os.environ.get("EXECUTION_BASE", "24c1bca8858499c86262a2534c5a84b54be537f2")
 MAP_PATH = ROOT / "laws/room-carousel/route-card-map.v2.json"
 ASSET_IDENTITY = "LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827"
-METHODS_EXCEPTIONS = {
-    "laws/research/methods-and-models/index.html",
-    "laws/research/methods-and-models/carousel-final-polish.css",
-}
 SHARED_ALLOWED = {
     "laws/room-carousel/preconstruction-contract.v1.json",
     "laws/room-carousel/room-carousel.v1.css",
@@ -26,14 +22,6 @@ SHARED_ALLOWED = {
     "laws/room-carousel/verify.v1.mjs",
     "scripts/laws_cp6_final_browser_verify.mjs",
     "scripts/verify-laws-cp6-final-synchronization.py",
-} | METHODS_EXCEPTIONS
-PROTECTED_METHODS = {
-    "laws/research/methods-and-models/carousel.css",
-    "laws/research/methods-and-models/carousel-coherence.css",
-    "laws/research/methods-and-models/carousel-progressive.css",
-    "laws/research/methods-and-models/carousel.js",
-    "laws/research/methods-and-models/carousel-progressive.js",
-    "laws/research/methods-and-models/carousel-data.js",
 }
 
 
@@ -65,10 +53,9 @@ def main() -> int:
     require(not outside, f"OUT_OF_SCOPE_PATHS:{outside}")
     require("laws/index.html" not in changed, "LAWS_ROOT_MUTATED")
     methods_changed = {path for path in changed if path.startswith("laws/research/methods-and-models/")}
-    require(methods_changed == METHODS_EXCEPTIONS, f"METHODS_EXCEPTION_SCOPE:{sorted(methods_changed)}")
+    require(not methods_changed, f"METHODS_MUST_BE_BYTE_FROZEN:{sorted(methods_changed)}")
     require(git("diff", "--quiet", GOVERNING_HEAD, "--", "laws/index.html").returncode == 0, "LAWS_ROOT_BYTES")
-    for protected in PROTECTED_METHODS:
-        require(git("diff", "--quiet", GOVERNING_HEAD, "--", protected).returncode == 0, f"PROTECTED_METHODS_BYTES:{protected}")
+    require(git("diff", "--quiet", GOVERNING_HEAD, "--", "laws/research/methods-and-models/").returncode == 0, "METHODS_TREE_BYTES")
     require(git("diff", "--quiet", GOVERNING_HEAD, "--", "laws/room-carousel/route-card-map.v2.json").returncode == 0, "GEN1833_ROUTE_CARD_MAP_BYTES")
     for route_file in route_files:
         require(git("diff", "--quiet", GOVERNING_HEAD, "--", route_file).returncode == 0, f"GEN1833_CONTEXT_BYTES:{route_file}")
@@ -102,7 +89,7 @@ def main() -> int:
             require(len({story["id"] for story in stories}) == len(stories), f"STORY_IDS:{route}:{card['id']}")
             require(len({story["label"] for story in stories}) == len(stories), f"STORY_LABELS:{route}:{card['id']}")
             for story in stories:
-                require(not re.search(r"\\bboundary \\d+\\b", story["label"], re.I), f"PLACEHOLDER_STORY:{route}:{card['id']}:{story['id']}")
+                require(not re.search(r"\bboundary \d+\b", story["label"], re.I), f"PLACEHOLDER_STORY:{route}:{card['id']}:{story['id']}")
                 for lens in ("practical", "engineering", "empirical"):
                     require(story.get("readings", {}).get(lens, "").strip(), f"EMPTY_CELL:{route}:{card['id']}:{story['id']}:{lens}")
 
@@ -143,17 +130,30 @@ def main() -> int:
     require("Identity / Meaning" not in runtime, "GENERIC_SCENE_INVENTORY_RETURNED")
     for marker in ("[data-lrc-inner-tabs]", "[data-lrc-story-rail]", "[data-lrc-story-tab]", "[data-lrc-grid-cell]", "[data-lrc-claim-boundary]", "data-lrc-family"):
         require(marker in stylesheet, f"STYLESHEET_MARKER:{marker}")
+    for marker in (
+        "LAWS_LAYERED_INFORMATION_GRID_GEN1843_METHODS_FROZEN_DIMENSIONAL_GRAMMAR",
+        "width:clamp(17rem,30vw,27rem)",
+        "height:clamp(24rem,52vh,34rem)",
+        "width:min(72vw,27rem)",
+        "height:31rem",
+        "@media (max-width: 760px)",
+        "width:min(82vw,21rem)",
+        "height:29rem",
+        "@media (max-width: 440px)",
+        "width:min(86vw,19.5rem)",
+    ):
+        require(marker in stylesheet, f"METHODS_GEOMETRY_MARKER:{marker}")
+    require("width:min(55vw,25rem)" not in stylesheet, "OBSOLETE_TABLET_CARD_WIDTH_RETURNED")
+    require("height:25rem !important" not in stylesheet, "OBSOLETE_TABLET_CARD_HEIGHT_RETURNED")
 
     methods_polish = (ROOT / "laws/research/methods-and-models/carousel-final-polish.css").read_text(encoding="utf-8")
     methods_index = (ROOT / "laws/research/methods-and-models/index.html").read_text(encoding="utf-8")
-    require("top: calc(39% + 3rem)" in methods_polish, "METHODS_HALF_INCH_SETTLEMENT")
-    require('class="mm-story-nav"' in methods_index, "METHODS_BOTTOM_CONTINUITY")
-    require('href="/laws/research/evidence-and-sources/"' in methods_index, "METHODS_PREVIOUS")
-    require('href="/laws/research/applied-investigations/"' in methods_index, "METHODS_NEXT")
+    require("top: calc(39% + 3rem)" in methods_polish, "METHODS_REFERENCE_SETTLEMENT_MISSING")
+    require('class="mm-story-nav"' in methods_index, "METHODS_BOTTOM_CONTINUITY_MISSING")
 
     subprocess.run(["node", "laws/room-carousel/verify-contextual-delivery.v2.mjs", "--static-only"], cwd=ROOT, check=True)
     result = {
-        "contract": "LAWS_METHODS_DERIVED_CONTINUITY_STATIC_MATRIX_v1",
+        "contract": "LAWS_METHODS_FROZEN_DIMENSIONAL_CONTINUITY_STATIC_MATRIX_v1",
         "status": "PASS",
         "governing_head": GOVERNING_HEAD,
         "routes": len(routes),
@@ -161,8 +161,9 @@ def main() -> int:
         "cells": sum(len(card["stories"]) * 3 for route in routes.values() for card in route["cards"]),
         "card_counts": [4, 5, 6],
         "gen1833_context_corpus_preserved": True,
-        "methods_protected_with_exact_two_exceptions": sorted(METHODS_EXCEPTIONS),
+        "methods_tree_byte_frozen": True,
         "laws_root_protected": True,
+        "methods_geometry_conformance_required": True,
         "internal_lens_state_independent": True,
         "reopen_state_restoration_required": True,
         "reality_existing_deep_routes": sorted(reality_actions),

@@ -1,0 +1,75 @@
+name: H-Earth Capacity Camera H2 Observation
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - ".github/workflows/h-earth-capacity-camera-correspondence-h2.yml"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-*.mjs"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-h2-contract.json"
+      - "showroom/globe/h-earth/capacity.js"
+      - "showroom/globe/h-earth/compositor.js"
+      - "showroom/globe/h-earth/renderer.js"
+      - "showroom/globe/h-earth/admitted-geometry-frame.js"
+      - "showroom/globe/h-earth/render/shoreline-preview.js"
+      - "showroom/globe/h-earth/render/geometry-kernel.js"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: h-earth-capacity-camera-h2-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  production-observation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact branch occurrence
+        uses: actions/checkout@v4
+
+      - name: Configure Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate checkpoint source syntax
+        run: |
+          node --check tools/h-earth-capacity-camera-renderer-correspondence-authority-lock.mjs
+          node --check tools/h-earth-capacity-camera-renderer-correspondence-measurement-contract.mjs
+          node --check tools/h-earth-capacity-camera-renderer-correspondence-h2-common.mjs
+          node --check tools/h-earth-capacity-camera-renderer-correspondence-h2-facts.mjs
+          node --check tools/h-earth-capacity-camera-renderer-correspondence-h2-observer.mjs
+          node --check tools/h-earth-capacity-camera-renderer-correspondence-h2-controls.mjs
+
+      - name: Execute exact read-only H2 production observation
+        run: |
+          mkdir -p artifacts/h-earth-capacity-camera-h2
+          node tools/h-earth-capacity-camera-renderer-correspondence-h2-controls.mjs \
+            > artifacts/h-earth-capacity-camera-h2/h2-control-receipt.json
+
+      - name: Verify H2 receipt terminal state
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const receipt = JSON.parse(
+            await readFile(
+              'artifacts/h-earth-capacity-camera-h2/h2-control-receipt.json',
+              'utf8'
+            )
+          );
+          if (receipt.status !== 'PASS') throw new Error('H2_CONTROL_RECEIPT_NOT_PASS');
+          if (receipt.controlCount !== 9 || receipt.passedControlCount !== 9) throw new Error('H2_CONTROL_COUNT_MISMATCH');
+          if (receipt.actualObservation?.terminalClassification !== 'PRODUCTION_CAPACITY_OBSERVED_SOURCE_CUSTODY_PASS') throw new Error('H2_PRODUCTION_OBSERVATION_TERMINAL_STATE_INVALID');
+          if (receipt.actualObservation?.sourceCustody?.length !== 6) throw new Error('H2_SOURCE_CUSTODY_COUNT_INVALID');
+          if (receipt.claims?.productionFilesChanged !== 0) throw new Error('H2_PRODUCTION_MUTATION_BOUNDARY_VIOLATED');
+          NODE
+
+      - name: Upload deterministic H2 receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-capacity-camera-h2-${{ github.sha }}
+          path: artifacts/h-earth-capacity-camera-h2/h2-control-receipt.json
+          if-no-files-found: error
+          retention-days: 30

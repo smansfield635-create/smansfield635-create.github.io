@@ -1,6 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "audralia-startup-first-visual-c00842b4",
+  "requestId": "PAGES_EXACT_HEAD_DEPLOY_20260831_TROPHY_MAIN_090CCAF",
   "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
-  "inputs": {"target_sha":"c00842b45f5e0efa38853229448b128b22521f01"}
+  "inputs": {
+    "target_sha": "090ccaf95021606987133e7bddaa515bd15218f2",
+    "surface_id": "compass-gen1862"
+  }
 }

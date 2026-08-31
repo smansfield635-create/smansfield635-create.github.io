@@ -1,6 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "audralia-startup-first-visual-c00842b4",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
-  "inputs": {"target_sha":"c00842b45f5e0efa38853229448b128b22521f01"}
+  "requestId": "PUBLICATION_FAST_PREFLIGHT_20260831_GEN1901",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "inputs": {
+    "target_sha": "5aa5d701c83a3f4ea90c26ee39045285f2759f40",
+    "surface_id": "compass-gen1862"
+  }
 }

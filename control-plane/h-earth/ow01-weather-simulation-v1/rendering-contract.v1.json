@@ -1,0 +1,50 @@
+{
+  "schema": "H_EARTH_AUDRALIA_WEATHER_RENDERING_CONTRACT_v1",
+  "status": "NONPRODUCT_FROZEN_RENDERING_ARCHITECTURE",
+  "governingLaw": "ONE_CANONICAL_CLOUD_DENSITY_TRUTH_MANY_OBSERVATION_REGIMES",
+  "canonicalDensity": {
+    "formula": "rho_cloud(lambda,phi,z,t)=SUPPORT*VERTICAL_PROFILE*CONDENSATE*STRUCTURE",
+    "supportAuthority": "SIMULATION_STATE",
+    "structureAuthority": "BOUNDED_WORLD_ANCHORED_SUBGRID_DETAIL",
+    "cameraMayAffectDensity": false
+  },
+  "optics": {
+    "opticalDepth": "tau=integral(sigma_ext*rho_cloud ds)",
+    "transmittance": "T=exp(-tau)",
+    "requiredCues": ["forwardScatteringApproximation", "sunwardEdgeBrightening", "darkerOpticalCores", "boundedSelfShadow", "ambientAtmosphereContribution", "liquidIcePhaseInfluence"],
+    "uniformGrayAlphaLayerProhibited": true
+  },
+  "orbitalContinental": {
+    "method": "COLUMN_INTEGRATED_OPTICAL_DEPTH",
+    "mayCacheReducedResolution": true,
+    "mustPreserve": ["canonicalSystemPosition", "coverage", "shape", "motion", "identity"],
+    "sphericalAlphaShellIsAuthority": false,
+    "cameraMovementMayRegenerateClouds": false
+  },
+  "regionalLocal": {
+    "method": "BOUNDED_LOCAL_VOLUMETRIC_INTEGRATION",
+    "domain": "ONLY_VIEW_RELEVANT_SUPPORTED_CLOUD_VOLUME",
+    "initialResolutionCandidates": ["QUARTER_LINEAR", "HALF_LINEAR"],
+    "viewRayStepCandidates": [16, 24, 32],
+    "lightStepCandidates": [4, 6, 8],
+    "requiredOptimizations": ["coarseOccupancyEmptySpaceSkipping", "adaptiveBoundedRaySteps", "boundedLightSampling", "reducedResolutionPass", "reconstructionIfIdentitySafe"],
+    "wholePlanetLocalRaymarchProhibited": true,
+    "independentLocalCloudGeneratorProhibited": true
+  },
+  "scaleTransition": {
+    "requiredPath": ["ORBITAL", "CONTINENT", "REGION", "CLOUD_APPROACH", "CLOUD_INTERIOR", "REGION", "ORBITAL"],
+    "sameCanonicalCloudObjectRequired": true,
+    "representationSwitchMayMoveWeather": false,
+    "perceptualGate": "DO_I_BELIEVE_THIS_IS_STILL_THE_SAME_CLOUD_SYSTEM"
+  },
+  "atmosphereIntegration": {
+    "acceptedAtmosphereHead": "8381f3323261b4facf70ec1f236c015b7d5df5a9",
+    "cloudsMustCompositeWithAcceptedAtmosphere": true,
+    "cloudRendererMayRewriteAtmosphereTruth": false
+  },
+  "performanceLaw": {
+    "renderFrameRateIndependentFromSimulationTick": true,
+    "qualityTierSelectedByGateH": true,
+    "gestureRegressionProhibited": true
+  }
+}

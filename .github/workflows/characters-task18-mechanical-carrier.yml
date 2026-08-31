@@ -1,0 +1,113 @@
+name: Characters Task 18 Mechanical Carrier
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  mechanical:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact Task 17 candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 899536d23b0dff295a71d768ccb953e6be49be64
+          fetch-depth: 1
+      - name: Verify immutable identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "899536d23b0dff295a71d768ccb953e6be49be64"
+          test "$(git rev-parse HEAD:characters/index.html)" = "86d34ba852848ed43b26728068ca9cbdd3530953"
+          test "$(git rev-parse HEAD:characters/spatial-narrative.runtime.js)" = "a11d5156ac1383d4b4b456afdad6e1c48f895d81"
+          test "$(git rev-parse HEAD:characters/legacy-dossiers.html)" = "abafc0bc1f4b6538028833c47103596411ff3f3a"
+      - name: Install browser harness
+        shell: bash
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --silent playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Execute four-profile Mechanical matrix
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/characters-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          sleep 2
+          cat > /tmp/task18-mechanical.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          const profiles = [
+            {name:'desktop-1440x1000',viewport:{width:1440,height:1000},hasTouch:false,reduced:'no-preference'},
+            {name:'tablet-820x1180-touch',viewport:{width:820,height:1180},hasTouch:true,reduced:'no-preference'},
+            {name:'phone-390x844-touch',viewport:{width:390,height:844},hasTouch:true,reduced:'no-preference'},
+            {name:'phone-390x844-reduced',viewport:{width:390,height:844},hasTouch:true,reduced:'reduce'}
+          ];
+          const expected=['auren','dextrion','alaric','tarian','elara','soren','jeeves','remote-team'];
+          const browser=await chromium.launch({headless:true});
+          let failed=false;
+          for(const p of profiles){
+            const context=await browser.newContext({viewport:p.viewport,hasTouch:p.hasTouch});
+            const page=await context.newPage();
+            await page.emulateMedia({reducedMotion:p.reduced});
+            const consoleErrors=[]; const pageErrors=[]; const requestFailures=[];
+            page.on('console',m=>{if(m.type()==='error') consoleErrors.push(m.text())});
+            page.on('pageerror',e=>pageErrors.push(String(e)));
+            page.on('requestfailed',r=>{const u=r.url(); if(!u.includes('favicon')) requestFailures.push(`${u} :: ${r.failure()?.errorText||''}`)});
+            const response=await page.goto('http://127.0.0.1:4173/characters/',{waitUntil:'domcontentloaded'});
+            await page.waitForTimeout(1500);
+            const result=await page.evaluate((expected)=>{
+              const cards=[...document.querySelectorAll('[data-character-card]')];
+              const ids=cards.map(c=>c.dataset.characterCard);
+              const visibleButtons=[...document.querySelectorAll('button')].filter(b=>{const s=getComputedStyle(b); const r=b.getBoundingClientRect(); return s.display!=='none'&&s.visibility!=='hidden'&&r.width>0&&r.height>0});
+              const overflow=document.documentElement.scrollWidth>document.documentElement.clientWidth+1;
+              const hrefs=cards.map(c=>c.getAttribute('href'));
+              const anchors=['relationships','chronology','p12'].every(id=>!!document.getElementById(id));
+              const env=document.querySelector('.spatial-environment');
+              const envFrame=env?.querySelector('iframe');
+              const envNonInteractive=!!env && env.getAttribute('aria-hidden')==='true' && envFrame?.tabIndex===-1 && getComputedStyle(envFrame).pointerEvents==='none';
+              const staticFlag=document.documentElement.dataset.staticPageUsableWithoutJs==='true';
+              return {count:cards.length,ids,visibleButtons:visibleButtons.length,overflow,hrefs,anchors,envNonInteractive,staticFlag,active:document.querySelector('[data-character-card][aria-current="true"]')?.dataset.characterCard||null,contextName:document.querySelector('[data-spatial-name]')?.textContent||null};
+            }, expected);
+            const assertions=[];
+            assertions.push(['http-200',response?.status()===200]);
+            assertions.push(['one-carousel',await page.locator('[data-character-carousel]').count()===1]);
+            assertions.push(['eight-ordered-cards',result.count===8&&JSON.stringify(result.ids)===JSON.stringify(expected)]);
+            assertions.push(['no-visible-arrow-buttons',result.visibleButtons===0]);
+            assertions.push(['no-global-overflow',!result.overflow]);
+            assertions.push(['dossier-destinations',result.hrefs.every((h,i)=>h===`/characters/legacy-dossiers.html#${expected[i]}`)]);
+            assertions.push(['relationship-chronology-p12',result.anchors]);
+            assertions.push(['environment-background-only',result.envNonInteractive]);
+            assertions.push(['initial-context-sync',result.active==='auren'&&result.contextName==='Auren Vale']);
+            assertions.push(['static-meaningful-flag',result.staticFlag]);
+            const third=page.locator('[data-character-card="alaric"]');
+            await third.focus(); await page.waitForTimeout(100);
+            assertions.push(['focus-context-sync',(await page.locator('#select').getAttribute('data-active-character'))==='alaric' && (await page.locator('[data-spatial-name]').textContent())==='Alaric']);
+            await third.press('ArrowRight'); await page.waitForTimeout(100);
+            assertions.push(['keyboard-horizontal-traversal',(await page.locator('#select').getAttribute('data-active-character'))==='tarian']);
+            if(p.reduced==='reduce'){
+              const reduced=await page.evaluate(()=>({transition:getComputedStyle(document.querySelector('[data-character-card]')).transitionDuration,envDisplay:getComputedStyle(document.querySelector('.spatial-environment iframe')).display}));
+              assertions.push(['reduced-motion-semantic-equivalence',reduced.envDisplay==='none']);
+            }
+            assertions.push(['console-errors-zero',consoleErrors.length===0]);
+            assertions.push(['page-errors-zero',pageErrors.length===0]);
+            const meaningfulFailures=requestFailures.filter(x=>!x.includes('/showroom/globe/h-earth/'));
+            assertions.push(['unexpected-request-failures-zero',meaningfulFailures.length===0]);
+            const bad=assertions.filter(([,ok])=>!ok);
+            console.log(JSON.stringify({profile:p.name,status:bad.length?'FAIL':'PASS',assertions:Object.fromEntries(assertions),consoleErrors,pageErrors,requestFailures},null,2));
+            if(bad.length) failed=true;
+            await context.close();
+          }
+          await browser.close();
+          if(failed) process.exit(1);
+          NODE
+          node /tmp/task18-mechanical.mjs | tee /tmp/task18-mechanical-results.jsonl
+      - name: Publish Mechanical execution artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: characters-task18-mechanical-results
+          path: /tmp/task18-mechanical-results.jsonl
+          if-no-files-found: warn

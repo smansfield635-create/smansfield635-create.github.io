@@ -688,6 +688,49 @@
       "scopeHash": "1f408280d494dff0e25394d79101acbd6542e52b901e0d481fb32bd69b853b08",
       "state": "ADMITTED_LOCKED"
     },
+    "1fedcd4f1d7c2b966d8406b4d97b2221bda1bc472a161edbd967cccf9037afa3": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "8592ee0f33c642d1e00f9af93603a99cdec076be",
+          "lockGeneration": 1903,
+          "lockScope": "CONTROL_PLANE:COMPASS:TROPHY_PREFLIGHT_ASSERTION_DISAMBIGUATION:V1",
+          "operationId": "COMPASS_TROPHY_PREFLIGHT_ASSERTION_SUCCESSOR_20260831_006",
+          "procedureLocatorDigest": "4d115ba2663d9bd289fac1c3cc3b9573025ae4a6c2fcedc677bf920694124ed5",
+          "requestDigest": "cf6145dd8b3aa5852f316577a8e9c2054e7d56179e741266c19a91d66b9670b2",
+          "scopeHash": "1fedcd4f1d7c2b966d8406b4d97b2221bda1bc472a161edbd967cccf9037afa3"
+        },
+        "bindingDigest": "158044d55b849157b9b0b6d29883965077bb44f377cd260d22ed27449f237eff",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "044e6b8a7ff322ed741577279a03a08cb66163e57d37cc62296c722db8c75369",
+          "commentId": 5485132169,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2503,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33443251000,
+          "workflowSha": "8592ee0f33c642d1e00f9af93603a99cdec076be"
+        },
+        "lineageAnchorCommitSha": "1b1a388ad310a967a35d7cfbdb78a9a2fb53a7f2",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "8592ee0f33c642d1e00f9af93603a99cdec076be",
+      "lockGeneration": 1903,
+      "lockScope": "CONTROL_PLANE:COMPASS:TROPHY_PREFLIGHT_ASSERTION_DISAMBIGUATION:V1",
+      "operationId": "COMPASS_TROPHY_PREFLIGHT_ASSERTION_SUCCESSOR_20260831_006",
+      "procedureLocatorDigest": "4d115ba2663d9bd289fac1c3cc3b9573025ae4a6c2fcedc677bf920694124ed5",
+      "released": false,
+      "requestDigest": "cf6145dd8b3aa5852f316577a8e9c2054e7d56179e741266c19a91d66b9670b2",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "1fedcd4f1d7c2b966d8406b4d97b2221bda1bc472a161edbd967cccf9037afa3",
+      "state": "ADMITTED_LOCKED"
+    },
     "205da80d5647b2323d970d0232c425ef47ebb653e5fc2f0a981aa8896681cdb3": {
       "governingHead": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
       "lockGeneration": 422,
@@ -6754,7 +6797,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1902,
+  "lockGeneration": 1903,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -164,3 +164,11 @@ jobs:
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
         run: node tools/audralia-weather-presentation-reconciliation-ci.mjs
+      - name: Preserve Audralia gesture-matrix termination receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audralia-gesture-matrix-runtime-termination-receipt
+          path: /tmp/audralia-gesture-matrix-runtime-receipt.json
+          if-no-files-found: error
+          retention-days: 7

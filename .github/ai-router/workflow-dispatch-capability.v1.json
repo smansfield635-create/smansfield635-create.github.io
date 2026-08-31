@@ -36,6 +36,12 @@
     "PAGES_EXACT_HEAD_DEPLOY": {
       "workflow": "pages-exact-head-deploy-v3.yml",
       "ref": "main",
+      "transportClassification": "HOST_PLATFORM_DEPLOYMENT_TRANSPORT_NOT_AGENT_EXECUTION",
+      "hostPlatform": "GITHUB_PAGES",
+      "hostPlatformOidcRequired": true,
+      "githubActionsAgentExecutionAuthorityCreated": false,
+      "qualificationAuthorityCreated": false,
+      "productMutationAuthorityCreated": false,
       "inputPolicy": {
         "target_sha": {"source": "CURRENT_MAIN_SHA", "userOverrideAllowed": false},
         "surface_id": {"source": "REQUEST", "required": true, "userOverrideAllowed": true}
@@ -105,6 +111,7 @@
     "NO_SHELL_OR_GENERIC_COMMAND_INPUT",
     "NO_ARBITRARY_WORKFLOW_PATH",
     "NO_AUTHORITY_EXPANSION_BY_REQUEST",
+    "PAGES_EXACT_HEAD_DEPLOY_ACTIONS_USE_IS_HOST_TRANSPORT_ONLY",
     "TRANSPORT_PULL_REQUEST_MUST_NOT_BE_MERGED",
     "DIRECT_NATIVE_CONNECTOR_DISPATCH_SUPERSEDES_FALLBACK_WHEN_AVAILABLE"
   ]

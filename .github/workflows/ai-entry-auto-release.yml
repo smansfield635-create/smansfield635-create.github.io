@@ -35,7 +35,7 @@ jobs:
             "h-earth-live-6d18e158/showroom/globe/h-earth"
             "inspection/audralia-24057-exact/snapshot/showroom/globe/audralia"
             "inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth"
-            "inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth-3d"
+            "inspection/audralia-24057-exact/snapshot/h-earth-3d"
           )
           for root in "${top_dirs[@]}"; do
             case "$root" in
@@ -64,6 +64,7 @@ jobs:
           test -f inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs
           test -f inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs
           test -f inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs
+          test -f inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js
           test -f preview/bt4/entitlement-v1/verify-entitlement-preview.v1.mjs
           test -f preview/bt4/operational-release-v1/index.html
           test -d h-earth-live-6d18e158/showroom/globe/h-earth
@@ -140,6 +141,7 @@ jobs:
           test -f "$audralia_snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs"
           test -f "$audralia_snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs"
           test -f "$audralia_snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs"
+          test -f "$audralia_snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js"
           echo "AUDRALIA_EXACT_24057_STAGED=PASS"
 
           # Audralia uses the exact-head renderer and FAP1 weather adapter, both of
@@ -282,6 +284,7 @@ jobs:
           audralia_loader_url="${PAGE_URL%/}/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs?cb=EXACT_24057_LOADER_FIRST"
           audralia_app_url="${PAGE_URL%/}/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs?cb=EXACT_24057"
           audralia_renderer_url="${PAGE_URL%/}/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs?cb=EXACT_24057"
+          audralia_transfer_url="${PAGE_URL%/}/inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js?cb=EXACT_24057"
           observed=""
           for attempt in $(seq 1 24); do
             marker="$(curl --fail --silent --show-error -L --max-time 20 "$marker_url" 2>/dev/null || true)"
@@ -296,6 +299,7 @@ jobs:
             audralia_loader="$(curl --fail --silent --show-error -L --max-time 20 "$audralia_loader_url" 2>/dev/null || true)"
             audralia_app="$(curl --fail --silent --show-error -L --max-time 20 "$audralia_app_url" 2>/dev/null || true)"
             audralia_renderer="$(curl --fail --silent --show-error -L --max-time 20 "$audralia_renderer_url" 2>/dev/null || true)"
+            audralia_transfer="$(curl --fail --silent --show-error -L --max-time 20 "$audralia_transfer_url" 2>/dev/null || true)"
             if [ "$observed" = "$TARGET_SHA" ] \
               && grep -Fq 'NONPRODUCTION · BT4 SERVED-STATE EXPERIMENT' <<<"$claim_html" \
               && grep -Fq 'entitlement-engine.v1.mjs' <<<"$claim_html" \
@@ -308,7 +312,8 @@ jobs:
               && grep -Fq 'IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993' <<<"$audralia_html" \
               && grep -Fq "setVerified(6,'Preparing Audralia',15)" <<<"$audralia_loader" \
               && grep -Fq 'createMapWideEnvironmentRenderer' <<<"$audralia_app" \
-              && grep -Fq 'createMapWideEnvironmentRenderer' <<<"$audralia_renderer"; then
+              && grep -Fq 'createMapWideEnvironmentRenderer' <<<"$audralia_renderer" \
+              && grep -Fq 'AUDRALIA_GRATITUDE_GEOGRAPHIC_TRANSFER_AUTHORITY_v1' <<<"$audralia_transfer"; then
               echo "LIVE_EXACT_HEAD_VERIFIED target=$TARGET_SHA"
               echo "BT4_PUBLIC_CLAIM_SURFACE=PASS url=$claim_url"
               echo "BT4_PUBLIC_OPERATIONAL_SURFACE=PASS url=$ops_url"

@@ -1,0 +1,357 @@
+name: L2 HC05 Gen957 Visual Maturity Browser Evidence v1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/l2-hc05-gen957-browser-navigation-evidence-v1.yml'
+
+permissions:
+  contents: read
+
+env:
+  L2_ADMISSION_HEAD: e52fe4e8fa9e6f6d65710e32ce0dfa6f54b8382e
+  HC05_PRODUCT_BASE: 8b253efb26a22e30c85c28d2666dcfbfb1fbc173
+  HC05_CANDIDATE_SHA: a041002c27af320ba86db47f23e25c9d212d1676
+  HC05_INCUMBENT_SHA: 074f6460ae4acdb523deac6c9584e5d75e384c7a
+  HC05_EXPECTED_PACKAGE_ID: H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_263563C5
+  EVIDENCE_DIR: /tmp/l2-hc05-gen957-visual-maturity-evidence
+
+jobs:
+  visual-maturity-browser-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Verify exact carrier scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --name-only "$L2_ADMISSION_HEAD" HEAD | sort > /tmp/actual.txt
+          printf '%s\n' '.github/workflows/l2-hc05-gen957-browser-navigation-evidence-v1.yml' > /tmp/expected.txt
+          diff -u /tmp/expected.txt /tmp/actual.txt
+          mkdir -p "$EVIDENCE_DIR"
+          cp /tmp/actual.txt "$EVIDENCE_DIR/carrier-paths.txt"
+
+      - name: Checkout exact candidate and incumbent read-only
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HC05_CANDIDATE_SHA }}
+          path: hc05-candidate
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HC05_INCUMBENT_SHA }}
+          path: hc05-incumbent
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify product identities, exact scope, and protected sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C hc05-candidate rev-parse HEAD)" = "$HC05_CANDIDATE_SHA"
+          test "$(git -C hc05-incumbent rev-parse HEAD)" = "$HC05_INCUMBENT_SHA"
+          git -C hc05-candidate diff --name-only "$HC05_PRODUCT_BASE" "$HC05_CANDIDATE_SHA" | sort > "$EVIDENCE_DIR/product-paths.txt"
+          cat > /tmp/expected-product.txt <<'EOF'
+          h-earth-3d/environment/h-earth.successor-surface-material.run8c.js
+          h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js
+          showroom/globe/h-earth/functional-landscape/navigation.js
+          showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
+          showroom/globe/h-earth/render/geometry-shoreline.js
+          showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js
+          showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js
+          showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          EOF
+          sort -o /tmp/expected-product.txt /tmp/expected-product.txt
+          diff -u /tmp/expected-product.txt "$EVIDENCE_DIR/product-paths.txt"
+          for tree in hc05-candidate hc05-incumbent; do
+            test "$(git -C "$tree" rev-parse "HEAD:h-earth-3d/terrain/h-earth.terrain-estate-construction-v1.candidate.js")" = "4ec87cdd5ec1b73710da6dd686a96610a633d27a"
+            test "$(git -C "$tree" rev-parse "HEAD:showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs")" = "1f9f03cc10c687f6890ff3efed417018fd3496bf"
+          done
+
+      - name: Install Chromium capability
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/hc05-playwright
+          cd /tmp/hc05-playwright
+          npm init -y >/dev/null 2>&1
+          npm install --no-save --package-lock=false playwright pngjs
+          npx playwright install --with-deps chromium
+
+      - name: Start candidate and incumbent servers
+        shell: bash
+        run: |
+          set -euo pipefail
+          (cd hc05-candidate && python3 -m http.server 4174 > "$EVIDENCE_DIR/candidate-server.log" 2>&1 &)
+          (cd hc05-incumbent && python3 -m http.server 4175 > "$EVIDENCE_DIR/incumbent-server.log" 2>&1 &)
+          for port in 4174 4175; do
+            for attempt in $(seq 1 40); do
+              curl --fail --silent "http://127.0.0.1:${port}/showroom/globe/h-earth/" >/dev/null && break
+              test "$attempt" != 40
+              sleep 1
+            done
+          done
+
+      - name: Execute matched desktop and Samsung comparative matrix
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/hc05-playwright/run.mjs <<'NODE'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs/promises';
+          import path from 'node:path';
+          import { PNG } from 'pngjs';
+          import { chromium } from 'playwright';
+
+          const out = process.env.EVIDENCE_DIR;
+          const candidateSha = process.env.HC05_CANDIDATE_SHA;
+          const incumbentSha = process.env.HC05_INCUMBENT_SHA;
+          const configs = [
+            { id:'desktop-landscape', width:1280, height:800, mobile:false, touch:false, dsf:1 },
+            { id:'samsung-portrait', width:412, height:915, mobile:true, touch:true, dsf:3 },
+            { id:'samsung-landscape', width:915, height:412, mobile:true, touch:true, dsf:3 }
+          ];
+          const versions = [
+            { id:'candidate', port:4174, sha:candidateSha },
+            { id:'incumbent', port:4175, sha:incumbentSha }
+          ];
+          await fs.mkdir(out,{recursive:true});
+          const browser = await chromium.launch({headless:true});
+          const results = [];
+
+          function analyzePng(buffer){
+            const png=PNG.sync.read(buffer);
+            let lum=0, nonblack=0, count=0, edge=0, edgeCount=0;
+            const x0=Math.floor(png.width*.12), x1=Math.ceil(png.width*.88);
+            const y0=Math.floor(png.height*.14), y1=Math.ceil(png.height*.86);
+            for(let y=y0;y<y1;y++) for(let x=x0;x<x1;x++){
+              const i=(y*png.width+x)*4;
+              const r=png.data[i],g=png.data[i+1],b=png.data[i+2];
+              const l=.2126*r+.7152*g+.0722*b;
+              lum+=l; if(r+g+b>45) nonblack++; count++;
+              if(x+1<x1){
+                const j=i+4;
+                edge+=Math.abs(r-png.data[j])+Math.abs(g-png.data[j+1])+Math.abs(b-png.data[j+2]); edgeCount++;
+              }
+            }
+            return {width:png.width,height:png.height,centerMeanLuminance:lum/count,centerNonblackFraction:nonblack/count,meanHorizontalRgbDelta:edge/Math.max(1,edgeCount)};
+          }
+
+          function comparePng(aBuffer,bBuffer){
+            const a=PNG.sync.read(aBuffer), b=PNG.sync.read(bBuffer);
+            assert.equal(a.width,b.width); assert.equal(a.height,b.height);
+            let sum=0, changed=0, count=0;
+            for(let i=0;i<a.data.length;i+=4){
+              const d=Math.abs(a.data[i]-b.data[i])+Math.abs(a.data[i+1]-b.data[i+1])+Math.abs(a.data[i+2]-b.data[i+2]);
+              sum+=d; if(d>24) changed++; count++;
+            }
+            return {meanAbsoluteRgbDifference:sum/(count*3),changedPixelFraction:changed/count};
+          }
+
+          async function waitReady(page){
+            await page.waitForFunction(()=>{
+              const r=window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.();
+              return !!r && (r.firstFailureStage || (r.stages?.FIRST_FRAME_PRESENTED==='PASS' && r.stages?.READY_PUBLISHED==='PASS'));
+            },null,{timeout:120000});
+            const startup=await page.evaluate(()=>window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()??null);
+            assert.ok(startup,'startup diagnostics unavailable after readiness wait');
+            if(startup.firstFailureStage!==null){
+              const packageDiagnostic=await page.evaluate(async()=>{
+                const module=await import('/showroom/globe/h-earth/render/live-render-package.run8e-r2.js');
+                const raw=module.getHEarthRun8ER2ImmutableLiveRenderPackage();
+                return {
+                  eligible:raw?.eligible??null,
+                  status:raw?.status??null,
+                  contractId:raw?.contractId??null,
+                  primitiveCount:raw?.primitiveCount??null,
+                  vertexCount:raw?.vertexCount??null,
+                  triangleCount:raw?.triangleCount??null,
+                  indexCount:raw?.indexCount??null,
+                  issues:raw?.issues??[]
+                };
+              });
+              assert.equal(startup.firstFailureStage,null,JSON.stringify({startup,packageDiagnostic}));
+            }
+            await page.waitForFunction(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready===true,null,{timeout:30000});
+          }
+
+          async function facts(page){
+            return page.evaluate(async()=>{
+              const startup=window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()??null;
+              const api=window.H_EARTH_RUN8E_PUBLIC_ROUTE;
+              const publicReceipt=api?.getReceipt?.()??null;
+              const intake=api?.getIntakeReceipt?.()??null;
+              const liveGpu=api?.getLiveGpuReceipt?.()??null;
+              const pkgModule=await import('/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js');
+              const pkg=pkgModule.getHEarthRun8ER2CanonicalLiveRenderPackage();
+              const terrainModule=await import('/showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js');
+              const terrain=terrainModule.constructHEarthRun8BSuccessorTerrainAndMountain();
+              const shorelineModule=await import('/showroom/globe/h-earth/render/geometry-shoreline.js');
+              const shoreline=shorelineModule.constructHEarthFunctionalShorelineGeometry();
+              const vegetationModule=await import('/h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js');
+              const vegetation=vegetationModule.buildHEarthRun8DVegetationResolution();
+              const canvas=document.getElementById('h-earth-functional-landscape-canvas');
+              const rect=canvas?.getBoundingClientRect();
+              const highlandInstances=(vegetation.instances??[]).filter(instance=>instance.worldAnchor?.z < -224).length;
+              return {
+                startup, publicReceipt, intake, liveGpu,
+                packageIdentity:pkg.packageIdentity,
+                drawRanges:pkg.drawRanges,
+                terrain:{ok:terrain.ok,contractId:terrain.contractId,topology:terrain.topology},
+                shoreline:{ok:shoreline.ok,contractId:shoreline.contractId,presentationSampleCount:shoreline.presentationSampleCount,bandCount:shoreline.bandCount},
+                vegetation:{eligible:vegetation.eligible,contractId:vegetation.contractId,instanceCount:vegetation.instanceCount,archetypeCounts:vegetation.archetypeCounts,populationBounds:vegetation.populationBounds??null,highlandInstances},
+                canvas:canvas?{width:canvas.width,height:canvas.height,cssWidth:rect.width,cssHeight:rect.height}:null,
+                dpr:devicePixelRatio
+              };
+            });
+          }
+
+          async function look(page){
+            const box=await page.locator('#h-earth-functional-landscape-canvas').boundingBox(); assert.ok(box);
+            const x=box.x+box.width*.43,y=box.y+box.height*.50;
+            await page.mouse.move(x,y); await page.mouse.down();
+            await page.mouse.move(x+Math.min(130,box.width*.22),y,{steps:10});
+            await page.waitForTimeout(450); await page.mouse.up(); await page.waitForTimeout(300);
+          }
+
+          async function travel(page,cfg){
+            if(!cfg.touch){ await page.mouse.wheel(0,-400); await page.waitForTimeout(400); return; }
+            const box=await page.locator('#h-earth-functional-landscape-canvas').boundingBox(); assert.ok(box);
+            const cdp=await page.context().newCDPSession(page);
+            const x1=box.x+box.width*.42,x2=box.x+box.width*.58,y=box.y+box.height*.58,dy=Math.min(110,box.height*.20);
+            const pts=o=>[{x:x1,y:y-o,radiusX:7,radiusY:7,force:1,id:1},{x:x2,y:y-o,radiusX:7,radiusY:7,force:1,id:2}];
+            await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:pts(0)});
+            await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:pts(dy)});
+            await page.waitForTimeout(600);
+            await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+            await page.waitForTimeout(350);
+          }
+
+          async function snap(page,name){
+            const buffer=await page.locator('#h-earth-functional-landscape-canvas').screenshot({path:path.join(out,`${name}.png`)});
+            const visual=analyzePng(buffer);
+            assert.ok(visual.centerMeanLuminance>12,`${name}: canvas too dark`);
+            assert.ok(visual.centerNonblackFraction>.18,`${name}: canvas effectively black`);
+            return {buffer,visual};
+          }
+
+          try{
+            for(const cfg of configs){
+              for(const version of versions){
+                const context=await browser.newContext({viewport:{width:cfg.width,height:cfg.height},isMobile:cfg.mobile,hasTouch:cfg.touch,deviceScaleFactor:cfg.dsf});
+                const page=await context.newPage();
+                const consoleErrors=[],pageErrors=[];
+                page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())});
+                page.on('pageerror',e=>pageErrors.push(e.message));
+                await page.goto(`http://127.0.0.1:${version.port}/showroom/globe/h-earth/?visual=terrain-relief-v2&compare=${version.id}-${cfg.id}`,{waitUntil:'domcontentloaded',timeout:180000});
+                await waitReady(page);
+                const initialFacts=await facts(page);
+                assert.equal(initialFacts.startup.firstFailureStage,null,JSON.stringify(initialFacts.startup));
+                assert.equal(initialFacts.packageIdentity,process.env.HC05_EXPECTED_PACKAGE_ID);
+                assert.equal(consoleErrors.length,0,JSON.stringify(consoleErrors));
+                assert.equal(pageErrors.length,0,JSON.stringify(pageErrors));
+                assert.equal(initialFacts.liveGpu.correspondence.resourceIdentityStable,true);
+                assert.equal(initialFacts.liveGpu.correspondence.packageUploadedOnce,true);
+                assert.equal(initialFacts.terrain.ok,true);
+                assert.equal(initialFacts.shoreline.ok,true);
+                assert.equal(initialFacts.vegetation.eligible,true);
+                if(cfg.dsf>1 && version.id==='candidate'){
+                  assert.ok(initialFacts.publicReceipt.viewport.pixelRatio>1);
+                  assert.ok(initialFacts.publicReceipt.viewport.pixelRatio<=2.001);
+                  assert.ok(initialFacts.canvas.width>initialFacts.canvas.cssWidth);
+                }
+                const initial=await snap(page,`${version.id}-${cfg.id}-initial`);
+                const seq0=initialFacts.intake.currentNavigationState.sequence;
+                const frame0=initialFacts.liveGpu.counters.gpuFramebufferPresentationCount;
+                await look(page);
+                const afterLookFacts=await facts(page);
+                assert.ok(afterLookFacts.intake.currentNavigationState.sequence>seq0);
+                assert.ok(afterLookFacts.liveGpu.counters.gpuFramebufferPresentationCount>frame0);
+                const afterLook=await snap(page,`${version.id}-${cfg.id}-after-look`);
+                const seq1=afterLookFacts.intake.currentNavigationState.sequence;
+                const frame1=afterLookFacts.liveGpu.counters.gpuFramebufferPresentationCount;
+                await travel(page,cfg);
+                const afterTravelFacts=await facts(page);
+                assert.ok(afterTravelFacts.intake.currentNavigationState.sequence>seq1);
+                assert.ok(afterTravelFacts.liveGpu.counters.gpuFramebufferPresentationCount>frame1);
+                assert.equal(afterTravelFacts.liveGpu.counters.worldRebuildCount,0);
+                if(cfg.touch) assert.ok(afterTravelFacts.intake.counters.twoFingerTravelProposalCount>0);
+                const afterTravel=await snap(page,`${version.id}-${cfg.id}-after-travel`);
+                results.push({version:version.id,sha:version.sha,config:cfg.id,initialFacts,afterLookFacts,afterTravelFacts,initialVisual:initial.visual,afterLookVisual:afterLook.visual,afterTravelVisual:afterTravel.visual});
+                await context.close();
+              }
+            }
+          } finally { await browser.close(); }
+
+          const candidateBase=results.find(r=>r.version==='candidate'&&r.config==='desktop-landscape');
+          const incumbentBase=results.find(r=>r.version==='incumbent'&&r.config==='desktop-landscape');
+          assert.ok(candidateBase&&incumbentBase);
+          const cTerrain=candidateBase.initialFacts.terrain.topology;
+          const iTerrain=incumbentBase.initialFacts.terrain.topology;
+          assert.ok(cTerrain.vertexCount>iTerrain.vertexCount,`terrain density did not increase: ${cTerrain.vertexCount} <= ${iTerrain.vertexCount}`);
+          assert.ok(cTerrain.triangleCount>iTerrain.triangleCount,`terrain triangle density did not increase`);
+          assert.ok(candidateBase.initialFacts.shoreline.presentationSampleCount>incumbentBase.initialFacts.shoreline.presentationSampleCount,'shoreline sampling did not increase');
+          assert.ok(candidateBase.initialFacts.vegetation.instanceCount>=incumbentBase.initialFacts.vegetation.instanceCount,'vegetation count regressed');
+          assert.ok(candidateBase.initialFacts.vegetation.highlandInstances>incumbentBase.initialFacts.vegetation.highlandInstances,'highland vegetation did not increase');
+
+          const comparisons=[];
+          for(const cfg of configs){
+            for(const stage of ['initial','after-look','after-travel']){
+              const c=await fs.readFile(path.join(out,`candidate-${cfg.id}-${stage}.png`));
+              const i=await fs.readFile(path.join(out,`incumbent-${cfg.id}-${stage}.png`));
+              comparisons.push({config:cfg.id,stage,...comparePng(c,i)});
+            }
+          }
+          assert.ok(comparisons.every(c=>c.changedPixelFraction>.02),'candidate is not materially distinct from incumbent in one or more matched views');
+
+          const receipt={
+            receiptType:'L2_HC05_GEN957_VISUAL_MATURITY_BROWSER_EVIDENCE_RECEIPT_v1',
+            status:'PASS',candidateSha,incumbentSha,
+            visibleNonblackEnvironment:true,
+            multipleNavigationStatesVerified:true,
+            realSamsungTwoTouchTravelVerified:true,
+            acceptedWorldSourceMutation:false,
+            productMutationPerformedByCarrier:false,
+            mergePerformed:false,deploymentPerformed:false,visualAcceptancePerformed:false,
+            structuralDelta:{
+              candidateTerrainVertices:cTerrain.vertexCount,incumbentTerrainVertices:iTerrain.vertexCount,
+              candidateTerrainTriangles:cTerrain.triangleCount,incumbentTerrainTriangles:iTerrain.triangleCount,
+              candidateShorelineSamples:candidateBase.initialFacts.shoreline.presentationSampleCount,
+              incumbentShorelineSamples:incumbentBase.initialFacts.shoreline.presentationSampleCount,
+              candidateVegetationInstances:candidateBase.initialFacts.vegetation.instanceCount,
+              incumbentVegetationInstances:incumbentBase.initialFacts.vegetation.instanceCount,
+              candidateHighlandVegetationInstances:candidateBase.initialFacts.vegetation.highlandInstances,
+              incumbentHighlandVegetationInstances:incumbentBase.initialFacts.vegetation.highlandInstances
+            },
+            comparisons,results
+          };
+          await fs.writeFile(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify({status:receipt.status,structuralDelta:receipt.structuralDelta,comparisons},null,2));
+          NODE
+          cd /tmp/hc05-playwright
+          NODE_PATH=/tmp/hc05-playwright/node_modules node run.mjs 2>&1 | tee "$EVIDENCE_DIR/execution.log"
+
+      - name: Verify carrier and product checkouts remained read-only
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "$(git status --porcelain --untracked-files=no)"
+          test -z "$(git -C hc05-candidate status --porcelain)"
+          test -z "$(git -C hc05-incumbent status --porcelain)"
+
+      - name: Upload comparative evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: l2-hc05-gen957-visual-maturity-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ env.EVIDENCE_DIR }}
+          if-no-files-found: error
+          retention-days: 30

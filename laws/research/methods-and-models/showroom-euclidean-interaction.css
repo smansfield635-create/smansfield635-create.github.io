@@ -1,27 +1,3 @@
-/*
- * Euclidean model-stage hit hierarchy.
- * The instrument and deck remain the X-axis geometry and gesture containers,
- * but their empty transformed planes must not intercept controls rendered on
- * the active model. Pointer events originating on explicit descendants still
- * bubble through both containers for the existing swipe controller.
- */
-html[data-methods-models-euclidean-showroom="active"] .mm-instrument,
-html[data-methods-models-euclidean-showroom="active"] .mm-model-deck {
-  pointer-events: none !important;
-}
-
-html[data-methods-models-euclidean-showroom="active"] .mm-model-card[data-mm-x-position="active"],
-html[data-methods-models-euclidean-showroom="active"] .mm-model-control {
-  pointer-events: auto !important;
-}
-
-/*
- * The active mobile card is projected forward on the Z plane. Its unprojected
- * width must therefore be narrower than the viewport so the projected object,
- * equation, and inspection control remain fully inside the phone stage.
- */
-@media (max-width: 720px) {
-  html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-model-card {
-    width: min(78vw, 30rem) !important;
-  }
-}
+@import url('/laws/research/methods-and-models/rotational-text.css?v=METHODS_MODELS_ROTATIONAL_TEXT_INSTRUMENT_V1');
+@import url('/laws/research/methods-and-models/rotational-text-responsive-repair.css?v=METHODS_MODELS_RESPONSIVE_REPAIR_V1');
+@import url('/laws/research/methods-and-models/rotational-text-overlay-repair.css?v=METHODS_MODELS_OVERLAY_REPAIR_V1');

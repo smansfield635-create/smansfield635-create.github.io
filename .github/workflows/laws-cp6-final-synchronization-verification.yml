@@ -60,18 +60,72 @@ jobs:
           git -c protocol.version=2 fetch --no-tags --filter=blob:none origin main
           git update-ref refs/remotes/origin/main FETCH_HEAD
 
+      - name: Classify CP6 applicability
+        id: scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            echo 'cp6_relevant=true' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git diff --name-only "${{ github.event.pull_request.base.sha }}...$EXECUTION_COMMIT" > /tmp/cp6-changed-paths.txt
+          methods_change=false
+          other_change=false
+          while IFS= read -r path; do
+            [ -z "$path" ] && continue
+            case "$path" in
+              laws/research/methods-and-models/*|.github/workflows/methods-models-showroom-exact-head.yml)
+                methods_change=true
+                ;;
+              .github/workflows/laws-cp6-final-synchronization-verification.yml)
+                ;;
+              *)
+                other_change=true
+                ;;
+            esac
+          done < /tmp/cp6-changed-paths.txt
+          if [ "$methods_change" = true ] && [ "$other_change" = false ]; then
+            echo 'cp6_relevant=false' >> "$GITHUB_OUTPUT"
+          else
+            echo 'cp6_relevant=true' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Emit scoped non-applicability receipt
+        if: steps.scope.outputs.cp6_relevant == 'false'
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt={
+            schema:'LAWS_CP6_FINAL_SYNCHRONIZATION_SCOPE_RECEIPT_v1',
+            result:'NOT_APPLICABLE',
+            candidateSha:process.env.EXECUTION_COMMIT,
+            reason:'METHODS_MODELS_PRODUCT_CHANGE_OUTSIDE_CP6_FINAL_SYNCHRONIZATION_CONTRACT',
+            cp6AuthorityExpanded:false,
+            productAcceptanceCreated:false,
+            mergeAuthorityCreated:false
+          };
+          fs.mkdirSync('artifacts/laws-cp6-final-synchronization',{recursive:true});
+          fs.writeFileSync('artifacts/laws-cp6-final-synchronization/scope-receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          NODE
+
       - name: Verify existing CP6 authority and custody contract
+        if: steps.scope.outputs.cp6_relevant == 'true'
         run: python3 scripts/laws_cp6_final_contract_verify.py
 
       - name: Verify final synchronization static contract
+        if: steps.scope.outputs.cp6_relevant == 'true'
         run: python3 scripts/verify-laws-cp6-final-synchronization.py
 
       - name: Install pinned browser verifier
+        if: steps.scope.outputs.cp6_relevant == 'true'
         run: |
           npm install --no-save --no-package-lock playwright@1.55.0
           npx playwright install --with-deps chromium
 
       - name: Start exact candidate server
+        if: steps.scope.outputs.cp6_relevant == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -87,6 +141,7 @@ jobs:
           exit 1
 
       - name: Execute 33-route final browser matrix
+        if: steps.scope.outputs.cp6_relevant == 'true'
         run: node scripts/laws_cp6_final_browser_verify_runner.mjs
 
       - name: Upload final synchronization evidence

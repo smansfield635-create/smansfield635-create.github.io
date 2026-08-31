@@ -80,6 +80,7 @@ try {
       assert.equal(await rootLocator.getAttribute('data-carousel-index'),'01');
       assert.equal(await controls.nth(0).getAttribute('tabindex'),'0');
       for(let i=1;i<8;i++) assert.equal(await controls.nth(i).getAttribute('tabindex'),'-1');
+      await settleAttachment(page,reducedMotion);
       await assertAnchorAttachment(page,`${name}/${reducedMotion}/initial`);
 
       await controls.nth(0).focus();

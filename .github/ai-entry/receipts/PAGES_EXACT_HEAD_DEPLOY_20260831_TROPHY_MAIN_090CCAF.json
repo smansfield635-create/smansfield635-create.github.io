@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "PAGES_EXACT_HEAD_DEPLOY_20260831_TROPHY_MAIN_090CCAF",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 2525,
+  "requestBranch": "ai-dispatch-request-compass-trophy-deploy-090ccaf-1840",
+  "requestCommit": "55af3d6ec2059158bf4fc24d5fa5769cf269219b",
+  "currentMainSha": "090ccaf95021606987133e7bddaa515bd15218f2",
+  "bridgeRunId": "33451706159",
+  "error": "Input may not be user supplied: target_sha",
+  "failedAt": "2026-08-31T23:41:07.460Z"
+}

@@ -1,13 +1,6 @@
 name: Characters Task17R-C Exact Candidate Interaction Qualification
 
 on:
-  push:
-    branches:
-      - 'instrumentation/characters-task17r-c-interaction-evaluator-001'
-  pull_request:
-    paths:
-      - '.github/workflows/characters-task17r-c-interaction-qualification.yml'
-      - 'tools/characters-task17r-c-interaction-evaluator.mjs'
   workflow_dispatch:
 
 permissions:
@@ -26,7 +19,7 @@ jobs:
       - name: Materialize exact Task17R-C candidate
         run: |
           mkdir -p target/characters/spatial-field-foundation
-          base='https://raw.githubusercontent.com/smansfield635-create/smansfield635-create.github.io/d1a9fbfe151910d0cb2783feb84a250ef598ae47/characters/spatial-field-foundation'
+          base='https://raw.githubusercontent.com/smansfield635-create/smansfield635-create.github.io/d48613af69a244a9e71e7220ab7410e166f9a420/characters/spatial-field-foundation'
           for file in README.md index.html spatial-field.css spatial-field.js carousel-geometry.css carousel-geometry.js; do
             curl -fsSL "$base/$file" -o "target/characters/spatial-field-foundation/$file"
           done
@@ -35,6 +28,7 @@ jobs:
           node --check target/characters/spatial-field-foundation/spatial-field.js
           node --check target/characters/spatial-field-foundation/carousel-geometry.js
           test "$(grep -c 'data-anchor=' target/characters/spatial-field-foundation/index.html)" -eq 8
+          grep -q 'canonical-anchor-reference' target/characters/spatial-field-foundation/carousel-geometry.js
           ! grep -Eqi 'Alaric|Elara|Sorin|Sevrin|Tarian|dossier iframe|spatial-narrative\.runtime|free.camera|first.person' target/characters/spatial-field-foundation/index.html target/characters/spatial-field-foundation/carousel-geometry.js target/characters/spatial-field-foundation/carousel-geometry.css
       - name: Install Playwright
         run: |

@@ -1748,6 +1748,49 @@
       "scopeHash": "4c8ebe4a58daa3f054ab0e21962928f569e1f83c5aa711fa9b9664a18c201294",
       "state": "ADMITTED_LOCKED"
     },
+    "4d10cbd4d82bf6eb73978132b4534d3a7f198b567e83b4c600e91b44c77d1515": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "149f62a11f4f70dba44fee4f849a35180c41f584",
+          "lockGeneration": 1901,
+          "lockScope": "PRODUCT_AND_CONTROL_PLANE:COMPASS:SINGLE_PRESENTATION_OWNER:STATIC_ORBIT_TROPHY_RUNTIME_LIVE_VERIFICATION:V2",
+          "operationId": "COMPASS_SINGLE_OWNER_PRODUCT_RUNTIME_SUCCESSOR_20260831_004",
+          "procedureLocatorDigest": "2862ab99465b0ee0ad3c2918d860b1ed008ddb5bcf27e59630bd19682ebe6dfc",
+          "requestDigest": "efcf760bc26e6306b39af55c2e4709b9b67d2bb8da5cbce42893d2aa2e4fc823",
+          "scopeHash": "4d10cbd4d82bf6eb73978132b4534d3a7f198b567e83b4c600e91b44c77d1515"
+        },
+        "bindingDigest": "081c38890acf6cd526515a4c78aa82469089d5ada44040523745a96cb94642f2",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "10876e62c6b545abce3342450bfbbea1f64540a17d90e590fc55366c75bc58f9",
+          "commentId": 5484676608,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2503,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33440221732,
+          "workflowSha": "149f62a11f4f70dba44fee4f849a35180c41f584"
+        },
+        "lineageAnchorCommitSha": "41bcd2c443c719d9e45c62056bb18732cb5cd3e6",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "149f62a11f4f70dba44fee4f849a35180c41f584",
+      "lockGeneration": 1901,
+      "lockScope": "PRODUCT_AND_CONTROL_PLANE:COMPASS:SINGLE_PRESENTATION_OWNER:STATIC_ORBIT_TROPHY_RUNTIME_LIVE_VERIFICATION:V2",
+      "operationId": "COMPASS_SINGLE_OWNER_PRODUCT_RUNTIME_SUCCESSOR_20260831_004",
+      "procedureLocatorDigest": "2862ab99465b0ee0ad3c2918d860b1ed008ddb5bcf27e59630bd19682ebe6dfc",
+      "released": false,
+      "requestDigest": "efcf760bc26e6306b39af55c2e4709b9b67d2bb8da5cbce42893d2aa2e4fc823",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "4d10cbd4d82bf6eb73978132b4534d3a7f198b567e83b4c600e91b44c77d1515",
+      "state": "ADMITTED_LOCKED"
+    },
     "4e4c43e0804b4ad70b6e69c4119748bfe56fbaa74b67ae8174fd77ac12691925": {
       "governingHead": "8c7821995458c0baf45e2e4a82bf4d3667fe0a3d",
       "lockGeneration": 617,
@@ -6668,7 +6711,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1900,
+  "lockGeneration": 1901,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

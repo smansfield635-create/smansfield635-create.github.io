@@ -1,97 +1,17 @@
 <!doctype html>
 <html lang="en" data-audralia-live-planetary="active">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="color-scheme" content="dark">
-  <meta name="theme-color" content="#082843">
-  <meta name="description" content="Explore Audralia continuously from planetary scale to Gratitude and back again.">
-  <title>Audralia · Planetary World</title>
-  <link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/audralia/">
-  <link rel="modulepreload" href="../h-earth/terrain-estate-construction-v1/renderer.mjs?cb=AUDRALIA_PUBLISHED_RUNTIME_v1">
-  <link rel="modulepreload" href="./canonical-weather-spatial-lod-proof/weather-model.mjs?cb=AUDRALIA_PUBLISHED_RUNTIME_v1">
-  <link rel="modulepreload" href="./canonical-weather-spatial-lod-proof/weather-renderer.mjs?cb=AUDRALIA_PUBLISHED_RUNTIME_v1">
-  <link rel="stylesheet" href="./index.css?v=AUDRALIA_LOADING_CONTINUITY_v4">
-  <link rel="stylesheet" href="./loading-continuity-v3.css?v=AUDRALIA_CHROMATIC_ARRIVAL_v4">
-  <link rel="stylesheet" href="./weather-presentation-reconciliation/reconciliation.css?v=AUDRALIA_PUBLISHED_RUNTIME_v1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="dark"><meta name="theme-color" content="#082843"><meta name="description" content="Explore Audralia continuously from planetary scale to Gratitude and back again."><title>Audralia · Planetary World</title><link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/audralia/"><link rel="stylesheet" href="./index.css?v=AUDRALIA_LOADING_CONTINUITY_v4"><link rel="stylesheet" href="./loading-continuity-v3.css?v=AUDRALIA_CHROMATIC_ARRIVAL_v4">
 </head>
 <body>
-  <div class="audralia-loading-screen" data-audralia-loader role="status" aria-live="polite" aria-label="Audralia is loading">
-    <div class="audralia-loading-panel" data-audralia-loader-panel>
-      <div class="audralia-loading-kicker">DIAMOND GATE · WORLD SYSTEM</div>
-      <div class="audralia-loading-version">LIVE BUILD · APPROVED MODEL · STARTUP TRACE v1</div>
-      <div class="audralia-loading-mark" aria-hidden="true"><span>A</span></div>
-      <div class="audralia-loading-title">Audralia</div>
-      <div class="audralia-loading-subtitle">Entering a continuous planetary world</div>
-      <div class="audralia-loading-stage" data-audralia-loader-stage>Preparing page shell…</div>
-      <div class="audralia-loading-systems" aria-label="World initialization systems">
-        <div class="audralia-loading-system" data-loader-system="surface"><span>Surface + atmosphere</span><b>waiting</b></div>
-        <div class="audralia-loading-system" data-loader-system="clouds"><span>Orbital cloud field</span><b>waiting</b></div>
-        <div class="audralia-loading-system" data-loader-system="regional"><span>Regional weather</span><b>waiting</b></div>
-        <div class="audralia-loading-system" data-loader-system="local"><span>Local continuity</span><b>waiting</b></div>
-      </div>
-      <div class="audralia-loading-track" data-audralia-loader-track role="progressbar" aria-label="Audralia initialization progress" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0"><span data-audralia-loader-fill></span></div>
-      <div class="audralia-loading-meta"><span data-audralia-loader-progress>0% · preparing</span><span data-audralia-loader-elapsed>0.0s</span></div>
-      <div class="audralia-loading-note">One world, progressively resolved: terrain → atmosphere → planetary clouds → regional weather → local continuity.</div>
-    </div>
-  </div>
-
-  <main class="audralia-live-shell" aria-label="Audralia planetary world">
-    <header class="audralia-live-toolbar" aria-label="Audralia world navigation">
-      <div class="audralia-live-brand" aria-label="Audralia">Audralia</div>
-      <nav class="audralia-live-nav" aria-label="World navigation">
-        <button class="audralia-live-action audralia-live-action-primary" type="button" data-fit-world>focus Gratitude</button>
-        <a class="audralia-live-action" href="../h-earth/">H-Earth · Play</a>
-        <a class="audralia-live-action" href="../../../index.html">Compass</a>
-        <a class="audralia-live-action" href="../../">Mirrorland</a>
-      </nav>
-      <span class="audralia-sr-only" data-h-earth-status aria-live="polite">booting Audralia</span>
-      <span class="audralia-sr-only" data-audralia-soundtrack-status aria-live="polite">Swan Lake loading soundtrack</span>
-    </header>
-
-    <section class="audralia-world-stage" aria-label="Interactive Audralia planetary view">
-      <canvas class="audralia-world-canvas" data-h-earth-map-wide-canvas aria-label="Interactive Audralia world. One finger looks, two fingers travel, pinch descends and spread ascends."></canvas>
-      <p class="audralia-sr-only" data-h-earth-diagnostic aria-live="polite"></p>
-    </section>
-
-    <footer class="audralia-live-help" aria-label="Interaction guide">
-      <span class="audralia-help-touch">1 finger · look &nbsp;·&nbsp; 2 fingers together · travel &nbsp;·&nbsp; pinch · descend &nbsp;·&nbsp; spread · ascend</span>
-      <span class="audralia-help-pointer">drag · look &nbsp;·&nbsp; wheel · descend / ascend &nbsp;·&nbsp; W/A/S/D or arrows · travel</span>
-      <span id="audralia-soundtrack-credit">Loading: Swan Lake · World: Gymnopédie No. 1 · Kevin MacLeod · CC BY 3.0</span>
-    </footer>
-  </main>
-
-  <script>
-    window.__AUDRALIA_LIVE_PLANETARY_INTEGRATION__ = Object.freeze({
-      schema: 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v8_FINAL_CLOUD_COMPOSITION',
-      legacyPlanetActive: false,
-      canonicalWeatherSpatialLod: true,
-      weatherPresentationReconciliation: true,
-      cameraSemanticsFrozen: true,
-      hook5PolarContinuity: true,
-      hook5EphemeralMoonGlow: true,
-      hook5ExistingWeatherRealization: true,
-      acf1CloudPresentation: true,
-      fap1XYZVolumetricDepth: true,
-      fap1OrganizedWeatherCandidate: true,
-      approvedModelAuthority: '1d45379f81ea4089e9c5f3d7d9688e702be9add3',
-      directDenseCloudCoverage: true,
-      cloudCoverageUpgradeDeferred: false,
-      cloudCoverageSuccessor: 'AUDRALIA_FAP1_ORBITAL_SUPPORT_DIRECT_DENSITY_v4',
-      finalCloudShaderComposition: 'AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION_v1',
-      hook5ContinuityPolicy: 'AUDRALIA_HOOK5_OWNER_VISIBLE_CONTINUITY_v1',
-      loadingContinuity: 'AUDRALIA_LOADING_CONTINUITY_v4',
-      startupArchitecture: 'APPROVED_PRESENTATION_PRE_RENDER_v1',
-      startupInstrumentation: 'AUDRALIA_STARTUP_DIAGNOSTIC_v1',
-      estateSoundtrack: 'AUDRALIA_ESTATE_SOUNDTRACK_RUNTIME_v1',
-      environmentBinding: 'IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993'
-    });
-  </script>
-  <script type="module" src="./audio/estate-soundtrack-v1.mjs?cb=AUDRALIA_ESTATE_SOUNDTRACK_RUNTIME_v1"></script>
-  <script type="module" src="./hook5-owner-visible-continuity-v1.mjs?cb=AUDRALIA_HOOK5_OWNER_VISIBLE_CONTINUITY_v1"></script>
-  <script type="module" src="./final-cloud-shader-composition-v1.mjs?cb=AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION_v1"></script>
-  <script type="module" src="./weather-presentation-reconciliation/loader-progress.mjs?cb=AUDRALIA_PUBLISHED_RUNTIME_v1"></script>
-  <script type="module" src="./weather-presentation-reconciliation/app.mjs?cb=AUDRALIA_PUBLISHED_RUNTIME_v1"></script>
-  <script type="module" src="./celestial-checkpoint-1.mjs?cb=AUDRALIA_PUBLISHED_RUNTIME_v1"></script>
-</body>
-</html>
+<div class="audralia-loading-screen" data-audralia-loader role="status" aria-live="polite" aria-label="Audralia is loading"><div class="audralia-loading-panel"><div class="audralia-loading-kicker">DIAMOND GATE · WORLD SYSTEM</div><div class="audralia-loading-mark" aria-hidden="true"><span>A</span></div><div class="audralia-loading-title">Audralia</div><div class="audralia-loading-subtitle">Entering a continuous planetary world</div><div class="audralia-loading-stage" data-audralia-loader-stage>Mounting native world…</div></div></div>
+<main class="audralia-live-shell" aria-label="Audralia planetary world"><header class="audralia-live-toolbar"><div class="audralia-live-brand">Audralia</div><nav class="audralia-live-nav" aria-label="World navigation"><button class="audralia-live-action audralia-live-action-primary" id="audraliaResetButton" data-audralia-action="reset" type="button">focus Gratitude</button><a class="audralia-live-action" href="../h-earth/">H-Earth · Play</a><a class="audralia-live-action" href="../../../index.html">Compass</a><a class="audralia-live-action" href="../../">Mirrorland</a></nav><span class="audralia-sr-only" data-h-earth-status aria-live="polite">mounting Audralia</span><span class="audralia-sr-only" data-audralia-soundtrack-status aria-live="polite">Swan Lake loading soundtrack</span></header>
+<section class="audralia-world-stage" id="audraliaGlobeStage" data-audralia-globe-stage aria-label="Interactive Audralia planetary view"><div id="audraliaGlobeMount" data-audralia-globe-mount style="position:absolute;inset:0;min-width:1px;min-height:1px"></div></section>
+<footer class="audralia-live-help"><span>drag · look &nbsp;·&nbsp; pinch · descend / ascend</span><span id="audralia-soundtrack-credit">Loading: Swan Lake · World: Gymnopédie No. 1 · Kevin MacLeod · CC BY 3.0</span></footer></main>
+<script src="../../../assets/audralia/audralia.planet.js"></script>
+<script src="./index.js?cb=AUDRALIA_NATIVE_WORLD_MOUNT_REBIND_20260831"></script>
+<script type="module" src="./audio/estate-soundtrack-v1.mjs?cb=AUDRALIA_ESTATE_SOUNDTRACK_RUNTIME_v1"></script>
+<script>
+(function(){const loader=document.querySelector('[data-audralia-loader]'),stage=document.querySelector('[data-audralia-loader-stage]'),status=document.querySelector('[data-h-earth-status]');let ticks=0;const timer=setInterval(function(){ticks++;const runtime=window.DGBAudraliaPlanetRuntime;const s=runtime&&typeof runtime.getStatus==='function'?runtime.getStatus():null;if(s&&s.mounted&&s.firstFrameDrawn){clearInterval(timer);if(stage)stage.textContent='Audralia ready';if(status)status.textContent='Audralia ready';if(loader){loader.classList.add('is-ready');setTimeout(()=>{loader.hidden=true;},420);}return;}if(ticks>240){clearInterval(timer);if(stage)stage.textContent='Audralia could not finish mounting';}},50);})();
+</script>
+</body></html>

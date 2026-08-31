@@ -21,6 +21,15 @@ attachment.setAttribute('aria-hidden', 'true');
 attachment.innerHTML = '<span class="carousel-attachment__eyebrow">Placeholder attachment</span><span class="carousel-attachment__label">Reserved position 01</span>';
 field.append(attachment);
 
+const attachmentReferences = anchors.map(anchor => {
+  const reference = document.createElement('span');
+  reference.className = 'carousel-attachment-reference';
+  reference.dataset.carouselAttachmentReference = anchor.dataset.anchor;
+  reference.setAttribute('aria-hidden', 'true');
+  anchor.append(reference);
+  return reference;
+});
+
 let selectedIndex = 0;
 let pointerId = null;
 let startX = 0;
@@ -29,18 +38,21 @@ let currentX = 0;
 let currentY = 0;
 let resizeFrame = 0;
 
-function anchorCenter(anchor) {
+function attachmentPoint(index) {
+  const fieldRect = field.getBoundingClientRect();
+  const referenceRect = attachmentReferences[index].getBoundingClientRect();
   return {
-    x: anchor.offsetLeft,
-    y: anchor.offsetTop
+    x: referenceRect.left - fieldRect.left,
+    y: referenceRect.top - fieldRect.top
   };
 }
 
 function positionAttachment() {
   const anchor = anchors[selectedIndex];
-  const center = anchorCenter(anchor);
-  attachment.style.setProperty('--anchor-x', `${center.x}px`);
-  attachment.style.setProperty('--anchor-y', `${center.y}px`);
+  const point = attachmentPoint(selectedIndex);
+  attachment.style.setProperty('--anchor-x', `${point.x}px`);
+  attachment.style.setProperty('--anchor-y', `${point.y}px`);
+  attachment.dataset.boundReference = anchor.dataset.anchor;
   attachment.querySelector('.carousel-attachment__label').textContent = `Reserved position ${anchor.dataset.anchor}`;
 }
 
@@ -138,7 +150,7 @@ prefersReducedMotion.addEventListener?.('change', () => select(selectedIndex, { 
 
 root.dataset.carouselReady = 'true';
 root.dataset.carouselAnchors = '8';
-root.dataset.domAttachmentModel = 'anchor-layout-offset';
+root.dataset.domAttachmentModel = 'canonical-anchor-reference';
 root.dataset.keyboardFocus = 'roving-tabindex-arrow-home-end';
 root.dataset.touchOwnership = 'horizontal-swipe-only-vertical-scroll-and-pinch-browser-owned';
 root.dataset.productionContent = 'absent';

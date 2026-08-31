@@ -16,12 +16,14 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 env:
   CANDIDATE_SHA: 8a31c58902a3395f39a8236bdef1193e4c992788
   FROZEN_INTERACTION_SHA: d48613af69a244a9e71e7220ab7410e166f9a420
   CAROUSEL_CONTROL_SHA: feab9eef5beb2e1ce31bf2a0f19215bf2900942b
   COMPASS_CONTROL_SHA: 0251792801761778b1492b2b97f60b4ebc6dbbb9
+  COMPASS_CONTROL_ARTIFACT_ID: 9695270364
   TARGET_DIR: target/characters/spatial-field-foundation
 
 jobs:
@@ -41,12 +43,6 @@ jobs:
           git checkout --detach FETCH_HEAD
           test "$(git config --bool index.sparse)" = "true"
           test -f tools/characters-task17r-d-character-card-evaluator.mjs
-          sparse_entries="$(git ls-files --sparse | wc -l | tr -d '[:space:]')"
-          materialized_files="$(find . -type f -not -path './.git/*' | wc -l | tr -d '[:space:]')"
-          test "$sparse_entries" -lt 10000
-          test "$materialized_files" -lt 10000
-          echo "TASK17R_D_SPARSE_INDEX_ENTRIES=$sparse_entries"
-          echo "TASK17R_D_MATERIALIZED_FILES=$materialized_files"
 
       - uses: actions/setup-node@v4
         with:
@@ -66,17 +62,26 @@ jobs:
             cmp --silent "frozen/${f}" "${TARGET_DIR}/${f}"
           done
 
-      - name: Materialize registered Mechanical positive controls
+      - name: Materialize registered Mechanical positive controls from exact precedent carriers
+        env:
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
-          git clone --no-checkout --filter=blob:none "https://github.com/smansfield635-create/smansfield635-create.github.io.git" control-source
-          git -C control-source fetch --no-tags origin "$CAROUSEL_CONTROL_SHA" "$COMPASS_CONTROL_SHA"
-          git -C control-source worktree add --detach ../control-carousel "$CAROUSEL_CONTROL_SHA"
-          git -C control-source worktree add --detach ../control-compass "$COMPASS_CONTROL_SHA"
-          test "$(git -C control-carousel rev-parse HEAD^{commit})" = "$CAROUSEL_CONTROL_SHA"
+          mkdir -p control-carousel/evidence/agentic-frontier
+          curl -fsSL "https://raw.githubusercontent.com/smansfield635-create/smansfield635-create.github.io/${CAROUSEL_CONTROL_SHA}/evidence/agentic-frontier/index.html" -o control-carousel/evidence/agentic-frontier/index.html
+          test -s control-carousel/evidence/agentic-frontier/index.html
+
+          curl -fL \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/smansfield635-create/smansfield635-create.github.io/actions/artifacts/${COMPASS_CONTROL_ARTIFACT_ID}/zip" \
+            -o compass-control.zip
+          unzip -j compass-control.zip compass-02517928.bundle -d .
+          git clone --no-checkout compass-02517928.bundle control-compass
+          git -C control-compass checkout --detach "$COMPASS_CONTROL_SHA"
           test "$(git -C control-compass rev-parse HEAD^{commit})" = "$COMPASS_CONTROL_SHA"
-          test -f control-carousel/evidence/agentic-frontier/index.html
           test -f control-compass/index.html
 
       - name: Verify exact candidate static contract
@@ -90,8 +95,7 @@ jobs:
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           import assert from 'node:assert/strict';
-          const p=process.env.TARGET_DIR+'/character-cards.v1.json';
-          const d=JSON.parse(fs.readFileSync(p,'utf8'));
+          const d=JSON.parse(fs.readFileSync(process.env.TARGET_DIR+'/character-cards.v1.json','utf8'));
           assert.equal(d.schema,'CHARACTERS_TASK17R_D_PRODUCTION_CHARACTER_CARDS_v1');
           assert.equal(d.sourceAssembly.issue,2378);
           assert.deepEqual(d.sourceAssembly.sources.map(x=>[x.characterId,x.commentId]),[

@@ -1,0 +1,95 @@
+{
+  "schema": "LAWS_CONTEXTUAL_READABLE_TAB_SPECIMEN_MANIFEST_v1",
+  "specimenId": "LAWS_CONTEXTUAL_READABLE_TABS_FOUR_MODEL_SPECIMEN_R1_FUNCTIONAL_V1",
+  "generation": 1140,
+  "operationId": "LAWS_CONTEXTUAL_3D_EUCLIDEAN_CAROUSEL_NONZERO_PHI_GEOMETRY_REPAIR_V1_EAA9BE55_20260811_002",
+  "governingHead": "eaa9be55df2a440457f4d3cfe5e13f414a52d386",
+  "inheritanceFirewall": {
+    "gen1070QualificationAuthorityInherited": false,
+    "gen1070Disposition": "FAIL_CLOSED_ARCHITECTURE_ADOPTION_MATRIX_INVALID",
+    "gen1065QualificationAuthorityInherited": false,
+    "gen1065Candidate": "7e538fa89b1b3e54c405a0a53e417c06cb710cba",
+    "gen1065CandidateDisposition": "IMPLEMENTATION_EVIDENCE_ONLY",
+    "gen1057QualificationAuthorityInherited": false
+  },
+  "constructionSources": {
+    "html": {"commitSha":"8d192a5bbddae1ef9712254d3ef5d23b7eb5c2b1","gitBlobSha":"4e7e963e144055297910296d9fc865f11a9d5b84","disposition":"ADOPT_EXACT_IMPLEMENTATION_SOURCE"},
+    "css": {"commitSha":"8d192a5bbddae1ef9712254d3ef5d23b7eb5c2b1","gitBlobSha":"9303a6ccd5faef48364cce66d03552efc4870a69","disposition":"ADOPT_EXACT_IMPLEMENTATION_SOURCE"},
+    "js": {"commitSha":"8d192a5bbddae1ef9712254d3ef5d23b7eb5c2b1","gitBlobSha":"030c7a4146942c64166dadbdefa7f9b463b927c1","disposition":"ADOPT_EXACT_IMPLEMENTATION_SOURCE"}
+  },
+  "carousel": {
+    "class": "EUCLIDEAN_ROTATIONAL_CAROUSEL",
+    "sharedAxis": "Y",
+    "sharedWheelVariable": "thetaWheel",
+    "formula": "theta_n = thetaWheel + phi_n",
+    "fixedAngularOffsetsDeg": [0, 90, 180, 270],
+    "wheelAngleDomain": "UNBOUNDED_CONTINUOUS_DEGREES",
+    "pairwiseInvariant": "theta_n(t)-theta_m(t)=phi_n-phi_m",
+    "objectCount": 4,
+    "proxyObjectCount": 0,
+    "independentOrbitCardRepositioning": false,
+    "orbitSpatialProjectionBleedAllowed": true,
+    "radiusTopologyRedesigned": false
+  },
+  "repairs": {
+    "R1": {
+      "id": "FUNCTIONAL_CONTENT_CONTROL_CONTAINMENT",
+      "scope": "FOCUSED_READER_FUNCTIONAL_ENVELOPE_QUALIFICATION_ONLY",
+      "supersedes": "TOTAL_FOCUSED_SURFACE_RECTANGLE_CONTAINMENT_AS_PASS_REQUIREMENT",
+      "requiredViewports": ["390x844", "820x1180", "1440x1000"],
+      "contentStates": ["Practical", "Engineering", "Evidence", "InformationFullyExpanded"],
+      "focusedCaseCount": 48,
+      "functionalHorizontalChecks": ["TITLE", "QUESTION", "EQUATION", "STATEMENT", "CATEGORY_CONTROLS", "ACTIVE_CONTENT", "RETURN_TO_ORBIT"],
+      "documentLevelHorizontalOverflowAllowed": false,
+      "internalVerticalScrollRequired": true,
+      "decorativeFocusedSurfaceBleedAllowed": true,
+      "nonfocusedOrbitProjectionBleedAllowed": true,
+      "fullDecorativeSurfaceRectangleContainmentRequired": false
+    },
+    "R2": {
+      "id": "CARD_ORIGIN_POINTER_ISOLATION",
+      "thresholdPx": 8,
+      "backgroundMovement": "ROTATE_SHARED_CAROUSEL",
+      "cardTapBelowThreshold": "FOCUS_EXACT_CARD",
+      "cardMovementAtOrAboveThreshold": "CANCEL_TAP_NO_THETA_MUTATION_NO_FOCUS",
+      "wheelScrollInOrbit": "ROTATE_SHARED_CAROUSEL"
+    }
+  },
+  "focus": {
+    "carouselOrientation": "FROZEN_EXACTLY_UNTIL_RETURN_TO_ORBIT",
+    "verticalGesture": "NATIVE_READER_SCROLL_ONLY",
+    "horizontalGesture": "NO_PAGE_ADVANCE_NO_CAROUSEL_ROTATION",
+    "innerControls": "SAME_PAGE_CONTENT_STATE_ONLY",
+    "exit": "RETURN_TO_ORBIT_CONTROL_ONLY",
+    "returnDisposition": "RESTORE_EXACT_FROZEN_CAROUSEL_ORIENTATION"
+  },
+  "requiredRuntimeConditions": [
+    "EXACTLY_FOUR_CONTEXTUAL_TAB_OBJECTS",
+    "SHARED_AXIS_EUCLIDEAN_CAROUSEL",
+    "FIXED_ANGULAR_OFFSETS_0_90_180_270",
+    "UNBOUNDED_CONTINUOUS_CAROUSEL",
+    "ORBIT_SPATIAL_PROJECTION_BLEED_ALLOWED",
+    "BACKGROUND_EMPTY_FIELD_DRAG_ROTATES_SHARED_CAROUSEL",
+    "CARD_MOVEMENT_AT_OR_ABOVE_8PX_DOES_NOT_MUTATE_THETA_WHEEL",
+    "CARD_MOVEMENT_AT_OR_ABOVE_8PX_DOES_NOT_FOCUS_ON_RELEASE",
+    "FOCUS_FREEZES_THETA_WHEEL",
+    "RETURN_TO_ORBIT_RESTORES_EXACT_FROZEN_THETA_WHEEL",
+    "FOCUSED_FUNCTIONAL_CONTENT_HORIZONTALLY_ACCESSIBLE",
+    "RETURN_TO_ORBIT_CONTROL_ACCESSIBLE",
+    "CATEGORY_CONTROLS_ACCESSIBLE",
+    "NO_DOCUMENT_LEVEL_HORIZONTAL_SCROLL",
+    "INTERNAL_VERTICAL_SCROLL_PRESERVED",
+    "DECORATIVE_FOCUSED_SURFACE_BLEED_ALLOWED_WHEN_FUNCTIONAL_ENVELOPE_PASSES",
+    "FOUR_BY_FOUR_BY_THREE_FUNCTIONAL_CONTAINMENT_MATRIX",
+    "INFORMATION_FULLY_EXPANDED_FUNCTIONALLY_ACCESSIBLE",
+    "REDUCED_MOTION_EQUIVALENCE"
+  ],
+  "verification": {
+    "static": "PENDING_EXECUTION",
+    "functionalContainment48": "PENDING_EXECUTION",
+    "inputIsolation": "PENDING_EXECUTION",
+    "fullRuntime": "PENDING_EXECUTION",
+    "visualMotionReferenceQuality": "PENDING_EXECUTION"
+  },
+  "authorityCeiling": "INSPECTION_ONLY_NO_MERGE_NO_PRODUCTION"
+}

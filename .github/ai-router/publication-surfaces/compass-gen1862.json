@@ -28,6 +28,36 @@
       "mode": "direct-document",
       "path": "/"
     },
+    "interactions": [
+      {
+        "name": "Activate Awards before Trophy verification",
+        "action": {
+          "type": "key",
+          "selector": "[data-capability-orbit][data-first-paint-authority=\"static\"]",
+          "key": "ArrowRight"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-capability=\"awards\"]",
+            "name": "data-active",
+            "value": "true"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-capability=\"awards\"]",
+            "name": "aria-current",
+            "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": ".compass-orbit-status",
+            "value": "Awards & Recognition"
+          }
+        ],
+        "timeoutMs": 5000
+      }
+    ],
     "trophyPredicate": {
       "enabled": true,
       "fieldSelector": "[data-award-trophy]",

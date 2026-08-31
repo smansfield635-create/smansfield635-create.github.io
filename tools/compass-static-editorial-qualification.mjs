@@ -89,7 +89,7 @@ for (const required of [
   if (!trophyScene.includes(required)) fail(`trophy runtime contract missing ${required}`);
 }
 if (!trophyScene.includes("field?.classList.remove('is-fallback'")) fail('approved trophy renderer does not retire fallback presentation ownership');
-if (!trophyScene.includes("fallback.setProperty('display','none','important')")) fail('approved trophy renderer does not suppress fallback surface');
+if (!trophyScene.includes("fallback.style.setProperty('display','none','important')")) fail('approved trophy renderer does not suppress fallback surface');
 
 console.log(JSON.stringify({
   result: 'STATIC_EDITORIAL_SOURCE_PASS',

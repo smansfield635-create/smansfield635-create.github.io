@@ -1,0 +1,59 @@
+{
+  "schema": "PUBLIC_ACCESSIBILITY_RUNTIME_EVIDENCE_EXECUTOR_CONTRACT_v1",
+  "status": "BOUNDED_EVIDENCE_EXECUTOR",
+  "version": "1.0.0",
+  "operationId": "PUBLIC_ACCESSIBILITY_RUNTIME_EVIDENCE_EXECUTOR_20260814_001",
+  "lockGeneration": 1472,
+  "governingHead": "7917ecb7b07a32e8a653a6e1534397b232cccd6b",
+  "purpose": "Produce deterministic real-browser accessibility runtime evidence for an immutable public candidate SHA without creating qualification, mutation, merge, deployment, promotion, or owner-acceptance authority.",
+  "input": {
+    "candidateShaPattern": "^[0-9a-f]{40}$",
+    "entryPathMustBeAbsolute": true,
+    "repository": "smansfield635-create/smansfield635-create.github.io",
+    "movingRefsAccepted": false
+  },
+  "execution": {
+    "browser": "PLAYWRIGHT_CHROMIUM",
+    "accessibilityEngine": "AXE_CORE_PLAYWRIGHT",
+    "accessibilityTree": "CHROMIUM_CDP_ACCESSIBILITY_GET_FULL_AX_TREE",
+    "deviceProfiles": ["DESKTOP", "TABLET", "PHONE"],
+    "keyboardFocusEvidence": true,
+    "fatalRuntimeEvidence": true,
+    "consoleErrorEvidence": true,
+    "exactCandidateCheckoutRequired": true
+  },
+  "failureClasses": [
+    "PRODUCT_FAILURE",
+    "INSTRUMENT_FAILURE",
+    "EVIDENCE_INCOMPLETE",
+    "GOVERNANCE_AUTHORITY_FAILURE"
+  ],
+  "classificationLaw": {
+    "governanceOrIdentityInvalid": "GOVERNANCE_AUTHORITY_FAILURE",
+    "executorCannotComplete": "INSTRUMENT_FAILURE",
+    "requiredEvidenceMissing": "EVIDENCE_INCOMPLETE",
+    "seriousOrCriticalAxeViolationOrKeyboardOrAxTreeFailure": "PRODUCT_FAILURE",
+    "allRequiredEvidencePasses": "PASS_CLOSED"
+  },
+  "authorityBoundary": {
+    "evidenceProducerOnly": true,
+    "privateQualificationAuthorityPreserved": true,
+    "productMutationAuthorized": false,
+    "repositoryMutationAuthorizedByReceipt": false,
+    "authorityCreationAuthorized": false,
+    "mergeAuthorized": false,
+    "deploymentAuthorized": false,
+    "promotionAuthorized": false,
+    "ownerAcceptanceCreated": false
+  },
+  "continuityLaw": {
+    "qualificationLayerMayMutateProduct": false,
+    "changedCandidateRequiresNewSha": true,
+    "priorExactShaEvidenceTransfersToChangedCandidate": false,
+    "productFailureRequiresAuthorizedReconstructionThenFullRequalification": true
+  },
+  "firstCalibration": {
+    "candidateSha": "69f7be45f45933676fe4024ca95c926f5ebc6bfc",
+    "entryPath": "/index.html"
+  }
+}

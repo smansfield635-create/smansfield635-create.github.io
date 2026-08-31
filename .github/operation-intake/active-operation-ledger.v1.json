@@ -1263,49 +1263,6 @@
       "scopeHash": "389aea3c4dd3ec52b20285a531b8d741e6685fb70a356a1284408148526a74d9",
       "state": "ADMITTED_LOCKED"
     },
-    "3952b9f1639bc002bc6a3815e0998eadb0e528695e26ac1e4f03e915f8119670": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "8592ee0f33c642d1e00f9af93603a99cdec076be",
-          "lockGeneration": 1904,
-          "lockScope": "CHARACTERS:TASK17R_F:FINAL_CHARACTERS_INTEGRATION:V1",
-          "operationId": "CHARACTERS_TASK17R_F_FINAL_CHARACTERS_INTEGRATION_20260831_002",
-          "procedureLocatorDigest": "9693d7713dfd3edb04120c4b2b857fdd6040170ac86ed9b92cc1a5eda4600aaa",
-          "requestDigest": "dec5845b59b541fc68f6c1efde2af2c3e6a9bc82b38d4fa5bba1e0d0afbacee6",
-          "scopeHash": "3952b9f1639bc002bc6a3815e0998eadb0e528695e26ac1e4f03e915f8119670"
-        },
-        "bindingDigest": "4415148cfa549bed3495775f710afc1b9d99b2ba487d274ca3db6a6e9887908a",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "325ac892f5d84a196f54634c92212cbe04824922dba091b910d371930b630aea",
-          "commentId": 5485199319,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2513,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 33443674895,
-          "workflowSha": "c02fb5cad2e40f16e89bac106aaa898b6010971a"
-        },
-        "lineageAnchorCommitSha": "e70a30172f0dae4dced59cf6d2efb08b4a681286",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "8592ee0f33c642d1e00f9af93603a99cdec076be",
-      "lockGeneration": 1904,
-      "lockScope": "CHARACTERS:TASK17R_F:FINAL_CHARACTERS_INTEGRATION:V1",
-      "operationId": "CHARACTERS_TASK17R_F_FINAL_CHARACTERS_INTEGRATION_20260831_002",
-      "procedureLocatorDigest": "9693d7713dfd3edb04120c4b2b857fdd6040170ac86ed9b92cc1a5eda4600aaa",
-      "released": false,
-      "requestDigest": "dec5845b59b541fc68f6c1efde2af2c3e6a9bc82b38d4fa5bba1e0d0afbacee6",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "3952b9f1639bc002bc6a3815e0998eadb0e528695e26ac1e4f03e915f8119670",
-      "state": "ADMITTED_LOCKED"
-    },
     "39d5500dfb4466816b038c15780fde4d09c8b96014e19e826f3f655a04211718": {
       "governingHead": "f8eefd20fc1cdcdc777e070f008bb2e2b8580da1",
       "lockGeneration": 1526,
@@ -3211,6 +3168,66 @@
       "requestDigest": "477852ab3f02c046c5184e1d33d225812aa31a688410e1f27cdc3e64e154ccb0",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "7a1801fda8f16f1009e5b8e24b281c3e8be742326f9493de05556257addf287f",
+      "state": "ADMITTED_LOCKED"
+    },
+    "7cc9621d2560a990789b13e8120ab860d126f45c0274b1f03507e1f52a5f4e3b": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "c02fb5cad2e40f16e89bac106aaa898b6010971a",
+          "lockGeneration": 1905,
+          "lockScope": "CHARACTERS:TASK17R_G:LINEAGE_MATERIALIZATION_REPAIR:V1",
+          "operationId": "CHARACTERS_TASK17R_G_LINEAGE_MATERIALIZATION_REPAIR_20260831_004",
+          "procedureLocatorDigest": "1f3ea676ef2ea2f8707397298b7320540feae4200bf132714edfbb9226f9fd3f",
+          "requestDigest": "c21f504aec02b60e2923e75b4f7294809ff527b8fd3a4b9756bffb1d493bfa70",
+          "scopeHash": "7cc9621d2560a990789b13e8120ab860d126f45c0274b1f03507e1f52a5f4e3b"
+        },
+        "bindingDigest": "7488a6042821e6a52c519745bb0d6f173d66e30febe92daa8844322972265154",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "d029bc420652cb9be5e8170c6c35a85d2982d6a52b68f946ca72776af5743613",
+          "commentId": 5485524396,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2513,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33445795234,
+          "workflowSha": "c02fb5cad2e40f16e89bac106aaa898b6010971a"
+        },
+        "lineageAnchorCommitSha": "fb1658ff20c0f92e758b0f3687c33245079d48db",
+        "origin": "CANONICAL_SUCCESSOR",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "c02fb5cad2e40f16e89bac106aaa898b6010971a",
+      "lockGeneration": 1905,
+      "lockScope": "CHARACTERS:TASK17R_G:LINEAGE_MATERIALIZATION_REPAIR:V1",
+      "operationId": "CHARACTERS_TASK17R_G_LINEAGE_MATERIALIZATION_REPAIR_20260831_004",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "8592ee0f33c642d1e00f9af93603a99cdec076be",
+        "lockGeneration": 1904,
+        "lockScope": "CHARACTERS:TASK17R_F:FINAL_CHARACTERS_INTEGRATION:V1",
+        "operationId": "CHARACTERS_TASK17R_F_FINAL_CHARACTERS_INTEGRATION_20260831_002",
+        "preservedEvidenceRefs": [
+          "FROZEN_TASK17R_E_8abae20ddc9bfe4e4ac5fd5c6130dc1bbe0484e5",
+          "MECHANICAL_RECEIPT_f2ece53fecb6327f849e7123b59a92aba0896d36f57475e28257e018a546573b",
+          "PAGE_EXCELLENCE_RECEIPT_740a927917c6d56e7d77d011428c854d7b4a152084bca5183deac5cd882a3608",
+          "TASK17R_F_FAIL_COMMENT_5485383213"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "CHARACTERS_TASK17R_F_TO_TASK17R_G_LINEAGE_MATERIALIZATION_20260831_004"
+      },
+      "procedureLocatorDigest": "1f3ea676ef2ea2f8707397298b7320540feae4200bf132714edfbb9226f9fd3f",
+      "released": false,
+      "requestDigest": "c21f504aec02b60e2923e75b4f7294809ff527b8fd3a4b9756bffb1d493bfa70",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "7cc9621d2560a990789b13e8120ab860d126f45c0274b1f03507e1f52a5f4e3b",
       "state": "ADMITTED_LOCKED"
     },
     "7ea206d40ec86e7fdf6df84f2b93093d476a4c0d25be93c481ab1f8f7feeb234": {
@@ -6840,7 +6857,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1904,
+  "lockGeneration": 1905,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -36874,6 +36891,67 @@
       "scopeHash": "d4e5cb23b19b5fe435b1ee6df222c9b3ea6af8f55f6bab8f9680e0dd45b3d0d1",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "8592ee0f33c642d1e00f9af93603a99cdec076be",
+          "lockGeneration": 1904,
+          "lockScope": "CHARACTERS:TASK17R_F:FINAL_CHARACTERS_INTEGRATION:V1",
+          "operationId": "CHARACTERS_TASK17R_F_FINAL_CHARACTERS_INTEGRATION_20260831_002",
+          "procedureLocatorDigest": "9693d7713dfd3edb04120c4b2b857fdd6040170ac86ed9b92cc1a5eda4600aaa",
+          "requestDigest": "dec5845b59b541fc68f6c1efde2af2c3e6a9bc82b38d4fa5bba1e0d0afbacee6",
+          "scopeHash": "3952b9f1639bc002bc6a3815e0998eadb0e528695e26ac1e4f03e915f8119670"
+        },
+        "bindingDigest": "4415148cfa549bed3495775f710afc1b9d99b2ba487d274ca3db6a6e9887908a",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "325ac892f5d84a196f54634c92212cbe04824922dba091b910d371930b630aea",
+          "commentId": 5485199319,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2513,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33443674895,
+          "workflowSha": "c02fb5cad2e40f16e89bac106aaa898b6010971a"
+        },
+        "lineageAnchorCommitSha": "e70a30172f0dae4dced59cf6d2efb08b4a681286",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "8592ee0f33c642d1e00f9af93603a99cdec076be",
+      "lockGeneration": 1904,
+      "lockScope": "CHARACTERS:TASK17R_F:FINAL_CHARACTERS_INTEGRATION:V1",
+      "operationId": "CHARACTERS_TASK17R_F_FINAL_CHARACTERS_INTEGRATION_20260831_002",
+      "procedureLocatorDigest": "9693d7713dfd3edb04120c4b2b857fdd6040170ac86ed9b92cc1a5eda4600aaa",
+      "released": true,
+      "requestDigest": "dec5845b59b541fc68f6c1efde2af2c3e6a9bc82b38d4fa5bba1e0d0afbacee6",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "3952b9f1639bc002bc6a3815e0998eadb0e528695e26ac1e4f03e915f8119670",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "FROZEN_TASK17R_E_8abae20ddc9bfe4e4ac5fd5c6130dc1bbe0484e5",
+          "MECHANICAL_RECEIPT_f2ece53fecb6327f849e7123b59a92aba0896d36f57475e28257e018a546573b",
+          "PAGE_EXCELLENCE_RECEIPT_740a927917c6d56e7d77d011428c854d7b4a152084bca5183deac5cd882a3608",
+          "TASK17R_F_FAIL_COMMENT_5485383213"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "c02fb5cad2e40f16e89bac106aaa898b6010971a",
+        "successorLockGeneration": 1905,
+        "successorLockScope": "CHARACTERS:TASK17R_G:LINEAGE_MATERIALIZATION_REPAIR:V1",
+        "successorOperationId": "CHARACTERS_TASK17R_G_LINEAGE_MATERIALIZATION_REPAIR_20260831_004",
+        "transitionId": "CHARACTERS_TASK17R_F_TO_TASK17R_G_LINEAGE_MATERIALIZATION_20260831_004"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

@@ -60,7 +60,15 @@
   box-shadow: 0 14px 36px rgba(0, 0, 0, .3);
   backdrop-filter: blur(10px);
   pointer-events: none;
-  transition: left 420ms cubic-bezier(.2,.72,.2,1), top 420ms cubic-bezier(.2,.72,.2,1), opacity 180ms ease;
+  transition: left 420ms cubic-bezier(.2,.72,.2,1), top 420ms cubic-bezier(.2,.72,.2,1), width 220ms ease, opacity 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+}
+
+.carousel-attachment[data-character-inspection="active"] {
+  z-index: 9;
+  width: clamp(220px, 26vw, 320px);
+  background: rgba(4, 15, 16, .96);
+  border-color: rgba(232, 220, 162, .42);
+  box-shadow: 0 20px 62px rgba(0, 0, 0, .52), 0 0 0 1px rgba(212, 189, 119, .08) inset;
 }
 
 .carousel-attachment::after {
@@ -92,6 +100,11 @@
   line-height: 1.35;
 }
 
+.carousel-attachment[data-character-inspection="active"] .carousel-attachment__label {
+  color: rgba(248, 246, 226, .96);
+  font-size: .82rem;
+}
+
 .carousel-status {
   position: absolute;
   width: 1px;
@@ -108,12 +121,25 @@
   opacity: .72;
 }
 
+.foundation[data-character-inspection="active"] .field__lede {
+  opacity: .16;
+  filter: blur(4px);
+}
+
+.field__lede {
+  transition: opacity 180ms ease, filter 180ms ease;
+}
+
 @media (max-width: 760px) {
   .carousel-attachment {
     width: 118px;
     min-height: 50px;
     transform: translate(-50%, calc(-100% - 18px));
     padding: 8px 9px;
+  }
+  .carousel-attachment[data-character-inspection="active"] {
+    width: min(220px, calc(100vw - 36px));
+    padding: 11px 12px;
   }
   .carousel-attachment__label {
     font-size: .62rem;
@@ -124,11 +150,15 @@
   .carousel-attachment {
     width: 104px;
   }
+  .carousel-attachment[data-character-inspection="active"] {
+    width: min(208px, calc(100vw - 28px));
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .anchor[data-carousel-anchor],
-  .carousel-attachment {
+  .carousel-attachment,
+  .field__lede {
     transition: none;
   }
 }

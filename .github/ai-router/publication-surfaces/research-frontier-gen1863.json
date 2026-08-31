@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "research-frontier-gen1863",
-  "description": "Accepted Research Frontier one-card dual-face orbital publication contract with direct-document, Scientific, Agentic, return, claim-boundary, and error proof.",
+  "description": "Accepted Research Frontier four-card achievement-amplified dual-face orbital publication contract with direct-document, Scientific, Agentic, shared-bridge, return, claim-boundary, and error proof.",
   "checks": [
     {
       "path": "/evidence/agentic-frontier/",
@@ -16,13 +16,13 @@
         "data-flip-face=\"agentic\"",
         "data-flip-face=\"scientific\"",
         "data-return-orbit",
-        "A proposition should survive its strongest attack.",
+        "906 pull requests. One audited month.",
         "Clarity tracks contextual relevance to the selected object. It does not imply stronger evidence, greater confidence, or truth.",
-        "Scientific Frontier · Equal face 01",
-        "Agentic Frontier · Equal face 02",
+        "Scientific Frontier · Object 01 · Equal face 01",
+        "Agentic Frontier · Object 01 · Equal face 02",
         "Broad cross-domain generality, independent replication, and a universal law are not claimed.",
-        "Documented coordination and successful production do not yet prove an efficiency improvement or general causal superiority.",
-        "Missing evidence stays missing",
+        "documented coordination and successful production do not yet prove an efficiency improvement or general causal superiority.",
+        "A documented integrity choice: preserve unavailable row-level evidence and contradictions as constraints instead of manufacturing a cleaner result.",
         "External validation, a larger frozen comparative battery, clean-room reproduction, and stronger cross-domain testing."
       ],
       "excludes": []

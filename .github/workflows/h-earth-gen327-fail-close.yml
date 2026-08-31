@@ -1,0 +1,61 @@
+name: H-Earth Gen327 Fail Close
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  close:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Mint private repository token
+        id: private-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: write
+      - name: Checkout private lock manager
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: 367f9f77c264c2eabe7398bfa1fdd0edcdbbb6ab
+          token: ${{ steps.private-token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Close generation 327 FAIL_CLOSED
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ steps.private-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          node private-control-plane/tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+            --action close \
+            --repository smansfield635-create/geodiametrics1 \
+            --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+            --operation-id H_EARTH_PLANETARY_SPATIAL_COHERENCE_SUCCESSOR_20260819_001 \
+            --lock-scope H_EARTH:GRATITUDE:PLANETARY_SPATIAL_COHERENCE:SUCCESSOR:V1 \
+            --lock-generation 327 \
+            --terminal-disposition FAIL_CLOSED \
+            --output "$RUNNER_TEMP/closure.json"
+      - name: Publish closure callback
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY' > "$RUNNER_TEMP/body.txt"
+          import json,os
+          r=json.load(open(os.path.join(os.environ['RUNNER_TEMP'],'closure.json')))
+          print('H_EARTH_GEN327_CLOSURE_RESULT_V1')
+          for k in ['result','operationId','lockGeneration','terminalDisposition','closureCommitSha','committedLedgerBlobSha']:
+            print(f'{k}: {r.get(k)}')
+          PY
+          jq -n --rawfile body "$RUNNER_TEMP/body.txt" '{body:$body}' > "$RUNNER_TEMP/comment.json"
+          curl --fail-with-body --silent --show-error -X POST -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' https://api.github.com/repos/$GITHUB_REPOSITORY/issues/1401/comments --data-binary "@$RUNNER_TEMP/comment.json" >/dev/null

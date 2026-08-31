@@ -45,55 +45,267 @@
     ],
     "interactions": [
       {
-        "name": "orbit card opens Scientific reader",
-        "action": {"type": "click", "selector": "[data-orbit-card]"},
+        "name": "keyboard rotates to The Evidence Held",
+        "action": {
+          "type": "key",
+          "selector": "[data-orbit-stage]",
+          "key": "ArrowRight"
+        },
         "assertions": [
-          {"type": "attributeEquals", "selector": "[data-reader]", "name": "data-face", "value": "scientific"},
-          {"type": "attributeEquals", "selector": "[data-reader-face=\"scientific\"]", "name": "aria-hidden", "value": "false"},
-          {"type": "attributeEquals", "selector": "[data-reader-face=\"agentic\"]", "name": "aria-hidden", "value": "true"},
-          {"type": "attributeEquals", "selector": "[data-orbit-stage]", "name": "aria-hidden", "value": "true"},
-          {"type": "attributeEquals", "selector": "[data-evidence-field]", "name": "data-inspecting", "value": "true"},
-          {"type": "textContains", "selector": "[data-reader-face=\"scientific\"]", "value": "Do viable futures reveal fragility?"}
+          {
+            "type": "attributeEquals",
+            "selector": "[data-orbit-card][data-object=\"evidence\"]",
+            "name": "data-active",
+            "value": "true"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-orbit-card][data-object=\"evidence\"]",
+            "name": "aria-current",
+            "value": "true"
+          },
+          {
+            "type": "attributeContains",
+            "selector": "[data-orbit-card][data-object=\"evidence\"]",
+            "name": "aria-label",
+            "value": "Open The Evidence Held"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-evidence-field]",
+            "name": "data-inspecting",
+            "value": "false"
+          }
         ]
       },
       {
-        "name": "visible control turns to Agentic face",
-        "action": {"type": "click", "selector": "[data-reader-face=\"scientific\"] [data-flip-face=\"agentic\"]"},
+        "name": "keyboard opens selected Scientific reader",
+        "action": {
+          "type": "key",
+          "selector": "[data-orbit-stage]",
+          "key": "Enter"
+        },
         "assertions": [
-          {"type": "attributeEquals", "selector": "[data-reader]", "name": "data-face", "value": "agentic"},
-          {"type": "attributeEquals", "selector": "[data-reader]", "name": "aria-labelledby", "value": "agentic-title"},
-          {"type": "attributeEquals", "selector": "[data-reader-face=\"scientific\"]", "name": "aria-hidden", "value": "true"},
-          {"type": "attributeEquals", "selector": "[data-reader-face=\"agentic\"]", "name": "aria-hidden", "value": "false"},
-          {"type": "textContains", "selector": "[data-reader-face=\"agentic\"]", "value": "Can agency scale without losing the trail?"}
+          {
+            "type": "attributeEquals",
+            "selector": "[data-reader]",
+            "name": "data-face",
+            "value": "scientific"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-reader]",
+            "name": "aria-labelledby",
+            "value": "scientific-evidence-title"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-evidence-field]",
+            "name": "data-active-evidence",
+            "value": "evidence"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-reader-face=\"scientific\"]",
+            "name": "aria-hidden",
+            "value": "false"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-reader-face=\"agentic\"]",
+            "name": "aria-hidden",
+            "value": "true"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-orbit-stage]",
+            "name": "aria-hidden",
+            "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-reader-face=\"scientific\"]",
+            "value": "906 pull requests"
+          }
         ]
       },
       {
-        "name": "Agentic keyboard opens observability lens",
-        "action": {"type": "key", "selector": "#agentic-tab-coordination", "key": "ArrowRight"},
+        "name": "visible control turns selected card to Agentic face",
+        "action": {
+          "type": "click",
+          "selector": "[data-reader-face=\"scientific\"] [data-flip-face=\"agentic\"]"
+        },
         "assertions": [
-          {"type": "attributeEquals", "selector": "#agentic-tab-observability", "name": "aria-selected", "value": "true"},
-          {"type": "attributeEquals", "selector": "#agentic-tab-coordination", "name": "aria-selected", "value": "false"},
-          {"type": "textContains", "selector": "#agentic-panel-observability", "value": "FAILURE CAN BE CLASSIFIED BEFORE RESPONSE"},
-          {"type": "textContains", "selector": "#agentic-panel-observability", "value": "LIVE VERIFY · Did the visitor receive the intended product?"}
+          {
+            "type": "attributeEquals",
+            "selector": "[data-reader]",
+            "name": "data-face",
+            "value": "agentic"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-reader]",
+            "name": "aria-labelledby",
+            "value": "agentic-evidence-title"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-reader-face=\"scientific\"]",
+            "name": "aria-hidden",
+            "value": "true"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-reader-face=\"agentic\"]",
+            "name": "aria-hidden",
+            "value": "false"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-reader-face=\"agentic\"]",
+            "value": "Classify the failure before responding."
+          }
         ]
       },
       {
-        "name": "Agentic keyboard return restores orbit",
-        "action": {"type": "key", "selector": "[data-reader-face=\"agentic\"] [data-return-orbit]", "key": "Enter"},
+        "name": "Agentic control opens shared bridge",
+        "action": {
+          "type": "click",
+          "selector": "[data-reader-face=\"agentic\"] [data-open-bridge]"
+        },
         "assertions": [
-          {"type": "attributeEquals", "selector": "[data-evidence-field]", "name": "data-inspecting", "value": "false"},
-          {"type": "attributeContains", "selector": "[data-orbit-card]", "name": "aria-label", "value": "Agentic face"},
-          {"type": "textContains", "selector": "[data-face-preview]", "value": "Agentic retained"}
+          {
+            "type": "attributeEquals",
+            "selector": "[data-reader]",
+            "name": "data-bridge-open",
+            "value": "true"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-reader]",
+            "name": "aria-modal",
+            "value": "true"
+          },
+          {
+            "type": "exists",
+            "selector": "[data-shared-bridge]"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-shared-bridge]",
+            "value": "What Diamond Gate Bridge already demonstrates."
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-shared-bridge] [data-close-bridge]",
+            "value": "Return to Selected Face"
+          }
         ]
       },
       {
-        "name": "keyboard reopens retained Agentic face",
-        "action": {"type": "key", "selector": "[data-orbit-stage]", "key": "Enter"},
+        "name": "shared bridge returns to selected Agentic face",
+        "action": {
+          "type": "click",
+          "selector": "[data-shared-bridge] [data-close-bridge]"
+        },
         "assertions": [
-          {"type": "attributeEquals", "selector": "[data-reader]", "name": "data-face", "value": "agentic"},
-          {"type": "attributeEquals", "selector": "[data-reader-face=\"agentic\"]", "name": "aria-hidden", "value": "false"},
-          {"type": "attributeEquals", "selector": "[data-orbit-stage]", "name": "aria-hidden", "value": "true"},
-          {"type": "attributeEquals", "selector": "[data-evidence-field]", "name": "data-inspecting", "value": "true"}
+          {
+            "type": "attributeEquals",
+            "selector": "[data-reader]",
+            "name": "data-face",
+            "value": "agentic"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-reader-face=\"agentic\"]",
+            "name": "aria-hidden",
+            "value": "false"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-evidence-field]",
+            "name": "data-active-evidence",
+            "value": "evidence"
+          }
+        ]
+      },
+      {
+        "name": "Agentic keyboard return restores selected orbit card",
+        "action": {
+          "type": "key",
+          "selector": "[data-reader-face=\"agentic\"] [data-return-orbit]",
+          "key": "Enter"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-evidence-field]",
+            "name": "data-inspecting",
+            "value": "false"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-orbit-card][data-object=\"evidence\"]",
+            "name": "data-active",
+            "value": "true"
+          },
+          {
+            "type": "attributeContains",
+            "selector": "[data-orbit-card][data-object=\"evidence\"]",
+            "name": "aria-label",
+            "value": "Agentic face"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-face-preview]",
+            "value": "Agentic retained"
+          }
+        ]
+      },
+      {
+        "name": "keyboard reopens retained Agentic Evidence face",
+        "action": {
+          "type": "key",
+          "selector": "[data-orbit-stage]",
+          "key": "Enter"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-reader]",
+            "name": "data-face",
+            "value": "agentic"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-reader]",
+            "name": "aria-labelledby",
+            "value": "agentic-evidence-title"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-evidence-field]",
+            "name": "data-active-evidence",
+            "value": "evidence"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-reader-face=\"agentic\"]",
+            "name": "aria-hidden",
+            "value": "false"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-orbit-stage]",
+            "name": "aria-hidden",
+            "value": "true"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-evidence-field]",
+            "name": "data-inspecting",
+            "value": "true"
+          }
         ]
       }
     ]

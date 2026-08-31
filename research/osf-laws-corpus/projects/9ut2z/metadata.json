@@ -1,0 +1,53 @@
+{
+  "id": "9ut2z",
+  "type": "nodes",
+  "title": "Alignment Diagnostics, an Integrity-Based Platform",
+  "description": "Alignment Diagnostics is an integrity-based platform designed to make alignment measurable, repeatable, and accessible across domains. Its primary instrument, the Alignment Diagnostic Assessment (ADA), provides structured diagnostics that detect misalignment early, reduce escalation, and restore coherence in individuals, teams, organizations, and systems—without reliance on motivation, persuasion, authority, or domain-specific interpretation.",
+  "category": "project",
+  "public": true,
+  "registration": false,
+  "preprint": false,
+  "date_created": "2026-02-09T00:09:34.948852",
+  "date_modified": "2026-08-01T06:05:13.740618",
+  "current_user_permissions": [
+    "read"
+  ],
+  "tags": [],
+  "subjects": [],
+  "node_license": null,
+  "parent_id": null,
+  "is_component": false,
+  "osf_url": "https://osf.io/9ut2z/",
+  "api_url": "https://api.osf.io/v2/nodes/9ut2z/",
+  "source_collection": "user_nodes",
+  "harvested_at": "2026-08-01T07:55:21.255840+00:00",
+  "file_inventory_count": 2,
+  "file_errors": [],
+  "relevance_discovery": {
+    "candidate_band": "CORE_LAWS_CANDIDATE",
+    "law_relevance_score": 35,
+    "law_term_hits": [
+      "law",
+      "coherence",
+      "constraint",
+      "invariant",
+      "falsification",
+      "scientific method",
+      "failure",
+      "diagnostic",
+      "alignment"
+    ],
+    "evidence_signal_score": 9,
+    "evidence_term_hits": [
+      "method",
+      "methods",
+      "falsif",
+      "table"
+    ],
+    "extractable_file_count": 2,
+    "has_data_file": false,
+    "has_code_file": false,
+    "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+  },
+  "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+}

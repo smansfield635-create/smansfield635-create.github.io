@@ -1,0 +1,47 @@
+{
+  "id": "bnhq3",
+  "type": "nodes",
+  "title": "Global Cross-Era Pilot v2: Coherence Constraint Violations (X–Y–Z)",
+  "description": "Overview\nThis project executes a global, cross-era pilot using the Coherence Constraint Instrument (X–Y–Z) to evaluate whether coherence violations systematically precede large-scale instability across civilizations, cultures, and historical periods.\nThe instrument evaluates coherence as a constraint satisfaction problem, defined strictly by consistency between:\nX — declared commitments,\nY — observable actions,\nZ — realized outcomes.\nOnly publicly documented evidence is used.\nNo intent inference, moral judgment, causal explanation, or outcome prediction is performed.\nWhat This Project Does\nApplies the same coherence rule across ancient, medieval, modern, and contemporary systems\nTests both collapsed and non-collapsed systems\nRecords whether, when, and how persistently coherence violations appear\nMeasures lead time between first violation and recognized instability\nWhat This Project Does Not Do\nDoes not infer intent or motivation\nDoes not assign moral judgment\nDoes not predict future outcomes\nDoes not explain causes\nIt detects constraint violations only.\nThe Coherence Rule (X–Y–Z)\nA system is coherent to the degree that its declared commitments (X), observable actions (Y), and realized outcomes (Z) remain mutually consistent over time.\nA coherence violation is recorded when any of the following fail:\nX ↔ Y\nY ↔ Z\nX ↔ Z\nSample Frame\nThis pilot evaluates 20 system-era windows, including:\nHistorically Unstable Systems\nLate Roman Republic\nWestern Roman Empire\nHan Dynasty\nAbbasid Caliphate\nByzantine Empire\nMing Dynasty\nQing Dynasty\nOttoman Empire\nSpanish Empire\nFrench Ancien Régime\nWeimar Republic\nUSSR\nYugoslavia\nRwanda\nLebanon\nStability Controls\nUnited Kingdom (post-1945)\nJapan (post-1950)\nSweden (post-1950)\nCanada (post-1950)\nSingapore (post-1970)\nPrimary Outputs\nFor each system:\nPresence or absence of coherence violations\nPersistence of violations\nTiming of first violation\nLead time to recognized instability (if applicable)\nFalsification Conditions\nThis pilot fails if:\nCollapsed systems show no prior coherence violations\nStable systems show persistent violations\nIndependent observers cannot replicate classifications\nViolations occur only after instability begins\nNo post-hoc rule changes are allowed.\nStatus\nThis project is an instrument execution, not a theory proposal.",
+  "category": "project",
+  "public": true,
+  "registration": false,
+  "preprint": false,
+  "date_created": "2026-01-12T02:17:05.693009",
+  "date_modified": "2026-08-01T06:10:09.091417",
+  "current_user_permissions": [
+    "read"
+  ],
+  "tags": [],
+  "subjects": [],
+  "node_license": null,
+  "parent_id": null,
+  "is_component": false,
+  "osf_url": "https://osf.io/bnhq3/",
+  "api_url": "https://api.osf.io/v2/nodes/bnhq3/",
+  "source_collection": "user_nodes",
+  "harvested_at": "2026-08-01T07:57:11.173614+00:00",
+  "file_inventory_count": 0,
+  "file_errors": [],
+  "relevance_discovery": {
+    "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+    "law_relevance_score": 14,
+    "law_term_hits": [
+      "coherence",
+      "constraint",
+      "falsification"
+    ],
+    "evidence_signal_score": 10,
+    "evidence_term_hits": [
+      "sample",
+      "falsif",
+      "table",
+      "pilot"
+    ],
+    "extractable_file_count": 0,
+    "has_data_file": false,
+    "has_code_file": false,
+    "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+  },
+  "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+}

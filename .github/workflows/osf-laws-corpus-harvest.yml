@@ -1,0 +1,110 @@
+name: OSF Laws Corpus Harvest
+
+on:
+  push:
+    branches:
+      - agent/osf-laws-corpus-harvest-001
+    paths:
+      - .github/workflows/osf-laws-corpus-harvest.yml
+      - tools/osf-laws-corpus/**
+      - research/osf-laws-corpus/harvest.request.json
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/osf-laws-corpus-harvest.yml
+      - tools/osf-laws-corpus/**
+      - research/osf-laws-corpus/harvest.request.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: osf-laws-corpus-harvest
+  cancel-in-progress: false
+
+jobs:
+  harvest-public-osf-corpus:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out corpus branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/osf-laws-corpus-harvest-001
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install extraction dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install requests beautifulsoup4 pypdf python-docx openpyxl python-pptx
+
+      - name: Harvest public OSF projects and registrations
+        run: |
+          python tools/osf-laws-corpus/harvest_osf_corpus_with_registrations.py \
+            --user g5294 \
+            --output research/osf-laws-corpus
+
+      - name: Validate corpus contract
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('research/osf-laws-corpus')
+          manifest = json.loads((root / 'manifest.json').read_text(encoding='utf-8'))
+          assert manifest['corpus_id'] == 'OSF_PUBLIC_LAWS_DISCOVERY_CORPUS_v1'
+          assert manifest['osf_user_id'] == 'g5294'
+          assert manifest['public_resource_count'] > 0
+          assert len(manifest['projects']) == manifest['public_resource_count']
+          for item in manifest['projects']:
+              project = root / 'projects' / item['id']
+              assert (project / 'metadata.json').is_file()
+              assert (project / 'files.json').is_file()
+              assert (project / 'extracted-text.md').is_file()
+          print(json.dumps({
+              'status': 'PASS',
+              'public_resource_count': manifest['public_resource_count'],
+              'root_project_count': manifest['root_project_count'],
+              'component_count': manifest['component_count'],
+              'registration_count': manifest['registration_count'],
+          }))
+          PY
+
+      - name: Mark request complete
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('research/osf-laws-corpus/harvest.request.json')
+          data = json.loads(p.read_text(encoding='utf-8'))
+          manifest = json.loads(Path('research/osf-laws-corpus/manifest.json').read_text(encoding='utf-8'))
+          data['status'] = 'HARVEST_COMPLETE'
+          data['generated_at'] = manifest['generated_at']
+          data['public_resource_count'] = manifest['public_resource_count']
+          data['discovery_error_count'] = len(manifest['discovery_errors'])
+          p.write_text(json.dumps(data, indent=2) + '\n', encoding='utf-8')
+          PY
+
+      - name: Commit harvested corpus
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/osf-laws-corpus
+          if git diff --cached --quiet; then
+            echo "No corpus changes detected."
+            exit 0
+          fi
+          git commit -m "Harvest public OSF Laws discovery corpus"
+          git push origin HEAD:agent/osf-laws-corpus-harvest-001

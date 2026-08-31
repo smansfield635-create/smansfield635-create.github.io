@@ -224,9 +224,17 @@
     "publicMutationAuthorityCreated": false,
     "forwardingPerformed": false,
     "privateSuccessorRepository": "smansfield635-create/geodiametrics1",
-    "privateSuccessorEvidenceHead": "840b885db8d3b0331e9ac3bd207df3d32baf8fb6",
+    "privateSuccessorRef": "refs/heads/main",
+    "privateSuccessorHeadResolution": {
+      "mode": "LIVE_CANONICAL_DEFAULT_BRANCH",
+      "resolveAtEntryTime": true,
+      "fixedHistoricalHeadAuthoritative": false,
+      "requiredRepository": "smansfield635-create/geodiametrics1",
+      "requiredRef": "refs/heads/main",
+      "failClosedIfLiveHeadCannotBeResolved": true
+    },
     "privateSuccessorAuthorityInheritedFromPublicMetadata": false,
-    "resolutionLaw": "WHEN_AN_OPERATION_CONTRACT_REQUIRES_PAGE_OR_INTERFACE_QUALITY_QUALIFICATION_RESOLVE_AN_AUTHORIZED_PRIVATE_SUCCESSOR_ROUTE_FAIL_CLOSED_OUTSIDE_THIS_PUBLIC_REPOSITORY"
+    "resolutionLaw": "WHEN_AN_OPERATION_CONTRACT_REQUIRES_PAGE_OR_INTERFACE_QUALITY_QUALIFICATION_RESOLVE_THE_LIVE_CANONICAL_DEFAULT_BRANCH_HEAD_OF_SMANSFIELD635_CREATE_GEODIAMETRICS1_AT_ENTRY_TIME_THEN_USE_THE_AUTHORIZED_PRIVATE_SUCCESSOR_ROUTE; PUBLIC_METADATA_GRANTS_NO_PRIVATE_AUTHORITY; FAIL_CLOSED_IF_LIVE_PRIVATE_MAIN_CANNOT_BE_RESOLVED"
   },
   "systemContinuityTrack": {
     "status": "ACTIVE_FAIL_CLOSED",

@@ -33,6 +33,7 @@ jobs:
             "preview/bt4/entitlement-v1"
             "preview/bt4/operational-release-v1"
             "h-earth-live-6d18e158/showroom/globe/h-earth"
+            "inspection/audralia-24057-exact"
           )
           for root in "${top_dirs[@]}"; do
             case "$root" in
@@ -58,12 +59,15 @@ jobs:
           materialized_files="$(find . -type f -not -path './.git/*' | wc -l | tr -d '[:space:]')"
           test "$sparse_entries" -lt 20000
           test "$materialized_files" -lt 20000
-          test ! -e inspection/audralia-24057-exact
+          test -f inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs
+          test -f inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs
+          test -f inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs
           test -f preview/bt4/entitlement-v1/verify-entitlement-preview.v1.mjs
           test -f preview/bt4/operational-release-v1/index.html
           test -d h-earth-live-6d18e158/showroom/globe/h-earth
           echo "AI_ENTRY_AUTO_RELEASE_SPARSE_INDEX_ENTRIES=$sparse_entries"
           echo "AI_ENTRY_AUTO_RELEASE_MATERIALIZED_FILES=$materialized_files"
+          echo "AUDRALIA_EXACT_24057_MATERIALIZED=PASS"
 
       - name: Verify BT4 entitlement engine before publication
         shell: bash
@@ -129,6 +133,12 @@ jobs:
           rm -rf "$PAGES_STAGE/showroom/globe/h-earth"
           mkdir -p "$PAGES_STAGE/showroom/globe/h-earth"
           rsync -a --delete h-earth-live-6d18e158/showroom/globe/h-earth/ "$PAGES_STAGE/showroom/globe/h-earth/"
+
+          audralia_snapshot="$PAGES_STAGE/inspection/audralia-24057-exact/snapshot"
+          test -f "$audralia_snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs"
+          test -f "$audralia_snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs"
+          test -f "$audralia_snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs"
+          echo "AUDRALIA_EXACT_24057_STAGED=PASS"
 
           # Audralia uses the exact-head renderer and FAP1 weather adapter, both of
           # which sit beneath the canonical H-Earth source tree that the frozen
@@ -253,7 +263,7 @@ jobs:
     needs: deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Require public exact-head marker and BT4 served surfaces
+      - name: Require public exact-head marker, BT4 surfaces, and Audralia exact environment
         env:
           TARGET_SHA: ${{ github.sha }}
           PAGE_URL: ${{ needs.deploy.outputs.page_url }}
@@ -266,6 +276,10 @@ jobs:
           ops_url="${PAGE_URL%/}/preview/bt4/operational-release-v1/"
           real_url="${PAGE_URL%/}/evidence/readiness/governance-gen3-entitlement/"
           real_identity_url="${real_url}evidence-identity.v1.json"
+          audralia_url="${PAGE_URL%/}/showroom/globe/audralia/"
+          audralia_loader_url="${PAGE_URL%/}/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs?cb=EXACT_24057_LOADER_FIRST"
+          audralia_app_url="${PAGE_URL%/}/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs?cb=EXACT_24057"
+          audralia_renderer_url="${PAGE_URL%/}/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs?cb=EXACT_24057"
           observed=""
           for attempt in $(seq 1 24); do
             marker="$(curl --fail --silent --show-error -L --max-time 20 "$marker_url" 2>/dev/null || true)"
@@ -276,6 +290,10 @@ jobs:
             real_html="$(curl --fail --silent --show-error -L --max-time 20 "$real_url" 2>/dev/null || true)"
             real_identity="$(curl --fail --silent --show-error -L --max-time 20 "$real_identity_url" 2>/dev/null || true)"
             real_release="$(printf '%s' "$real_identity" | jq -r '.releaseCommit // empty' 2>/dev/null || true)"
+            audralia_html="$(curl --fail --silent --show-error -L --max-time 20 "$audralia_url" 2>/dev/null || true)"
+            audralia_loader="$(curl --fail --silent --show-error -L --max-time 20 "$audralia_loader_url" 2>/dev/null || true)"
+            audralia_app="$(curl --fail --silent --show-error -L --max-time 20 "$audralia_app_url" 2>/dev/null || true)"
+            audralia_renderer="$(curl --fail --silent --show-error -L --max-time 20 "$audralia_renderer_url" 2>/dev/null || true)"
             if [ "$observed" = "$TARGET_SHA" ] \
               && grep -Fq 'NONPRODUCTION · BT4 SERVED-STATE EXPERIMENT' <<<"$claim_html" \
               && grep -Fq 'entitlement-engine.v1.mjs' <<<"$claim_html" \
@@ -283,16 +301,22 @@ jobs:
               && grep -Fq 'NONPRODUCTION · BT4 CROSS-OBJECT EXPERIMENT' <<<"$ops_html" \
               && grep -Fq '../entitlement-v1/entitlement-engine.v1.mjs' <<<"$ops_html" \
               && grep -Fq 'BT4 · bounded real-object integration' <<<"$real_html" \
-              && [ "$real_release" = "$TARGET_SHA" ]; then
+              && [ "$real_release" = "$TARGET_SHA" ] \
+              && grep -Fq 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v7_EXACT_24057_LOADER_FIRST' <<<"$audralia_html" \
+              && grep -Fq 'IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993' <<<"$audralia_html" \
+              && grep -Fq "setVerified(6,'Preparing Audralia',15)" <<<"$audralia_loader" \
+              && grep -Fq 'createMapWideEnvironmentRenderer' <<<"$audralia_app" \
+              && grep -Fq 'createMapWideEnvironmentRenderer' <<<"$audralia_renderer"; then
               echo "LIVE_EXACT_HEAD_VERIFIED target=$TARGET_SHA"
               echo "BT4_PUBLIC_CLAIM_SURFACE=PASS url=$claim_url"
               echo "BT4_PUBLIC_OPERATIONAL_SURFACE=PASS url=$ops_url"
               echo "BT4_REAL_OBJECT_SURFACE=PASS url=$real_url"
+              echo "AUDRALIA_EXACT_24057_PUBLIC_CLOSURE=PASS url=$audralia_url"
               exit 0
             fi
-            echo "Attempt $attempt: observed=${observed:-none}; waiting for target=$TARGET_SHA and BT4 surfaces"
+            echo "Attempt $attempt: observed=${observed:-none}; waiting for target=$TARGET_SHA, BT4 surfaces, and Audralia exact closure"
             sleep 10
           done
           echo "DEPLOYMENT_NOT_PROVEN expected=$TARGET_SHA observed=${observed:-none}" >&2
-          echo "BT4_PUBLIC_SURFACE_VERIFICATION=FAIL" >&2
+          echo "BT4_OR_AUDRALIA_PUBLIC_SURFACE_VERIFICATION=FAIL" >&2
           exit 1

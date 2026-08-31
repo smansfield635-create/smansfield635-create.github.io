@@ -59,6 +59,22 @@ export const EXACT_LOCK_REF_LINEAGE_RECOVERIES = [
     committerLogin: 'smansfield635-create',
     message: 'Supersede operation 1767 with successor 1768: AUDRALIA_WORK_EXECUTOR_PORTABLE_BOOTSTRAP_20260827_001_SUCCESSOR_001',
     ledgerBlobSha: '14be590a6c78969d1931306c331928f16e7b44dc'
+  }),
+  stable({
+    commitSha: '6d0dc06efbb9ac5fdbcfe81894842b6e45e1144a',
+    parentSha: '9539b9d69642c20fec816ec22fe18015363504a9',
+    authorLogin: 'smansfield635-create',
+    committerLogin: 'smansfield635-create',
+    message: 'Acquire operation lock 1886: RESEARCH_FRONTIER_ACHIEVEMENT_AMPLIFICATION_20260830_002',
+    ledgerBlobSha: 'cfa916837ed0ada14b8d1c7915d7a1fcd3777c3f'
+  }),
+  stable({
+    commitSha: '784da5fe9a3580419c7989b0b6b65cf8c92086de',
+    parentSha: '6d0dc06efbb9ac5fdbcfe81894842b6e45e1144a',
+    authorLogin: 'smansfield635-create',
+    committerLogin: 'smansfield635-create',
+    message: 'Close operation lock 1886: RESEARCH_FRONTIER_ACHIEVEMENT_AMPLIFICATION_20260830_002 MUTATION_CLOSED_EVIDENCE_CONTINUES',
+    ledgerBlobSha: '7e146606047bd7c1de2d8d67d9e3e7d444920fa8'
   })
 ];
 

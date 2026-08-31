@@ -1,0 +1,89 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "characters",
+  "description": "Qualified Characters spatial-narrative publication contract for the eight-principal editorial/narrative surface.",
+  "checks": [
+    {
+      "path": "/characters/",
+      "includes": [
+        "data-task17-candidate=\"true\"",
+        "Spatial Narrative Field · One Principal Carousel",
+        "data-character-carousel",
+        "data-character-card=\"auren\"",
+        "data-character-card=\"dextrion\"",
+        "data-character-card=\"remote-team\"",
+        "/characters/spatial-narrative.runtime.js",
+        "CHARACTERS_TASK17_SPATIAL_REFINEMENT"
+      ],
+      "excludes": [
+        "carousel-arrow",
+        "data-carousel-prev",
+        "data-carousel-next"
+      ]
+    },
+    {
+      "path": "/characters/spatial-narrative.runtime.js",
+      "includes": [
+        "data-character-card",
+        "data-spatial-name",
+        "aria-current"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/characters/",
+    "timeoutMs": 30000,
+    "readySelector": "[data-character-carousel]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/characters/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "interactions": [
+      {
+        "name": "Dextrion selection synchronizes active narrative context",
+        "action": {
+          "type": "click",
+          "selector": "[data-character-card=\"dextrion\"]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-character-card=\"dextrion\"]",
+            "name": "aria-current",
+            "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-spatial-name]",
+            "value": "Dextrion"
+          }
+        ]
+      },
+      {
+        "name": "Home restores first character perspective",
+        "action": {
+          "type": "key",
+          "selector": "[data-character-carousel]",
+          "key": "Home"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-character-card=\"auren\"]",
+            "name": "aria-current",
+            "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-spatial-name]",
+            "value": "Auren Vale"
+          }
+        ]
+      }
+    ]
+  }
+}

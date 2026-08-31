@@ -61,6 +61,13 @@ function positionAttachment() {
   attachment.querySelector('.carousel-attachment__label').textContent = presentationLabel(anchor);
 }
 
+function syncExpandedState() {
+  anchors.forEach((anchor, i) => {
+    const control = anchor.querySelector('.anchor__control');
+    control?.setAttribute('aria-expanded', i === selectedIndex && inspectionActive ? 'true' : 'false');
+  });
+}
+
 function setInspection(active, { announce = true } = {}) {
   inspectionActive = Boolean(active);
   const state = inspectionActive ? 'active' : 'ambient';
@@ -68,6 +75,7 @@ function setInspection(active, { announce = true } = {}) {
   field.dataset.characterInspection = state;
   attachment.dataset.characterInspection = state;
   attachment.setAttribute('aria-expanded', String(inspectionActive));
+  syncExpandedState();
   if (announce) {
     status.textContent = inspectionActive
       ? `${presentationLabel(anchors[selectedIndex])} inspection opened.`
@@ -90,8 +98,8 @@ function select(index, { focus = false, announce = true, preserveInspection = fa
     anchor.dataset.selected = String(selected);
     control.tabIndex = selected ? 0 : -1;
     control.setAttribute('aria-current', selected ? 'true' : 'false');
-    control.setAttribute('aria-expanded', selected && inspectionActive ? 'true' : 'false');
   });
+  syncExpandedState();
 
   root.dataset.carouselIndex = String(selectedIndex + 1).padStart(2, '0');
   root.dataset.carouselMotion = prefersReducedMotion.matches ? 'reduced-equivalent' : 'animated-anchor-transition';
@@ -103,10 +111,6 @@ function select(index, { focus = false, announce = true, preserveInspection = fa
 
 function toggleInspection({ announce = true } = {}) {
   setInspection(!inspectionActive, { announce });
-  anchors.forEach((anchor, i) => {
-    const control = anchor.querySelector('.anchor__control');
-    control?.setAttribute('aria-expanded', i === selectedIndex && inspectionActive ? 'true' : 'false');
-  });
 }
 
 function move(delta, options) {

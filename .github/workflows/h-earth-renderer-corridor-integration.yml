@@ -1,0 +1,106 @@
+name: H-Earth Renderer Corridor Integration Gate
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+    paths:
+      - ".github/workflows/h-earth-renderer-corridor-integration.yml"
+      - "tools/h-earth-renderer-corridor-*.mjs"
+      - "h-earth-3d/integration/**"
+      - "h-earth-3d/cells/**"
+      - "h-earth-3d/objects/**"
+      - "h-earth-3d/zones/**"
+      - "h-earth-3d/h-earth.matrix.js"
+      - "showroom/globe/h-earth/**"
+  merge_group:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: h-earth-renderer-corridor-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  renderer-corridor-gate:
+    name: H-Earth Renderer Corridor Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout exact pull-request occurrence
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install pinned Playwright Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Execute production renderer corridor
+        id: corridor
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/h-earth-renderer-corridor-integration-harness.mjs \
+            | tee h-earth-renderer-corridor.log
+
+      - name: Publish deterministic gate summary
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo "## H-Earth Renderer Corridor Integration Gate"
+            echo
+            echo '```text'
+            if [[ -f h-earth-renderer-corridor.log ]]; then
+              cat h-earth-renderer-corridor.log
+            else
+              echo "Harness log was not created."
+            fi
+            echo '```'
+            echo
+            if [[ -f artifacts/h-earth-renderer-corridor/aggregate.receipt.json ]]; then
+              node -e '
+                const fs = require("node:fs");
+                const r = JSON.parse(fs.readFileSync("artifacts/h-earth-renderer-corridor/aggregate.receipt.json", "utf8"));
+                console.log(`- Local integration pass: ${r.localIntegrationPassEstablished}`);
+                console.log(`- Passed profiles: ${r.passedProfileCount}/${r.profileCount}`);
+                console.log(`- Failed profiles: ${(r.failedProfileIds || []).join(", ") || "none"}`);
+                console.log(`- Receipt SHA-256: ${r.deterministicReceiptSha256}`);
+              '
+            else
+              echo "- Aggregate receipt: missing"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify renderer corridor receipt custody
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/h-earth-renderer-corridor-receipt-custody.mjs integration
+
+      - name: Upload renderer corridor receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-renderer-corridor-receipts-${{ github.sha }}
+          path: |
+            artifacts/h-earth-renderer-corridor/*.json
+            h-earth-renderer-corridor.log
+          if-no-files-found: error
+          retention-days: 30

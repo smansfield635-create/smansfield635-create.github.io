@@ -1,0 +1,84 @@
+name: Characters Task 19 Connected Excellence Evidence
+on:
+  pull_request:
+    branches: [ main ]
+permissions:
+  contents: read
+jobs:
+  evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout immutable Characters candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 899536d23b0dff295a71d768ccb953e6be49be64
+          fetch-depth: 1
+      - name: Verify exact identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "899536d23b0dff295a71d768ccb953e6be49be64"
+          test "$(git rev-parse HEAD^1)" = "a03501d1474724798b154c2df1383ec72923c58e"
+          test "$(git rev-parse HEAD:characters/index.html)" = "86d34ba852848ed43b26728068ca9cbdd3530953"
+          test "$(git rev-parse HEAD:characters/spatial-narrative.runtime.js)" = "a11d5156ac1383d4b4b456afdad6e1c48f895d81"
+          test "$(git rev-parse HEAD:characters/legacy-dossiers.html)" = "abafc0bc1f4b6538028833c47103596411ff3f3a"
+      - name: Install Chromium harness
+        shell: bash
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --silent playwright@1.55.0
+          npx playwright install --with-deps chromium >/dev/null
+      - name: Run connected Page Excellence evidence matrix
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/characters-pe-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          sleep 2
+          cat > task19-connected-excellence.mjs <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          import { chromium } from 'playwright';
+          const profiles=[['DESKTOP',1440,900],['TABLET',1024,768],['PHONE',390,844]];
+          const browser=await chromium.launch({headless:true});
+          const rows=[];
+          let failed=false;
+          for(const [id,width,height] of profiles){
+            const context=await browser.newContext({viewport:{width,height}});
+            const page=await context.newPage();
+            const consoleErrors=[],pageErrors=[];
+            page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())});
+            page.on('pageerror',e=>pageErrors.push(String(e.message||e)));
+            const started=Date.now();
+            const response=await page.goto('http://127.0.0.1:4173/characters/',{waitUntil:'networkidle',timeout:30000});
+            const loadMs=Date.now()-started;
+            const geometry=await page.evaluate(()=>({innerWidth,scrollWidth:document.documentElement.scrollWidth,scrollHeight:document.documentElement.scrollHeight,headings:document.querySelectorAll('h1,h2,h3,h4,h5,h6').length,landmarks:document.querySelectorAll('main,nav,header,footer,aside,[role="main"],[role="navigation"]').length,focusables:document.querySelectorAll('a[href],button,input,select,textarea,[tabindex]:not([tabindex="-1"])').length,carouselCount:document.querySelectorAll('[data-character-carousel]').length,cardCount:document.querySelectorAll('[data-character-card]').length,active:document.querySelector('[data-character-card][aria-current="true"]')?.dataset.characterCard||null,context:document.querySelector('[data-spatial-name]')?.textContent||null,envPointer:document.querySelector('.spatial-environment iframe')?getComputedStyle(document.querySelector('.spatial-environment iframe')).pointerEvents:null}));
+            const session=await context.newCDPSession(page); const ax=await session.send('Accessibility.getFullAXTree');
+            await page.keyboard.press('Tab');
+            const focused=await page.evaluate(()=>({tag:document.activeElement?.tagName||'',body:document.activeElement===document.body}));
+            await page.screenshot({path:`task19-${id.toLowerCase()}.png`,fullPage:true});
+            const pass=response?.status()===200&&geometry.scrollWidth<=geometry.innerWidth+2&&geometry.carouselCount===1&&geometry.cardCount===8&&geometry.active==='auren'&&geometry.context==='Auren Vale'&&geometry.envPointer==='none'&&ax.nodes.length>0&&(!focused.body||geometry.focusables===0)&&consoleErrors.length===0&&pageErrors.length===0;
+            if(!pass)failed=true;
+            rows.push({profile:id,viewport:{width,height},status:pass?'PASS':'FAIL',httpStatus:response?.status(),loadMs,geometry,accessibilityNodeCount:ax.nodes.length,focusedAfterTab:focused,consoleErrors,pageErrors,screenshot:`task19-${id.toLowerCase()}.png`});
+            await context.close();
+          }
+          await browser.close();
+          const payload={schema:'CHARACTERS_TASK19_CONNECTED_PAGE_EXCELLENCE_EVIDENCE_v1',candidate:'899536d23b0dff295a71d768ccb953e6be49be64',pageBlob:'86d34ba852848ed43b26728068ca9cbdd3530953',runtimeBlob:'a11d5156ac1383d4b4b456afdad6e1c48f895d81',legacyBlob:'abafc0bc1f4b6538028833c47103596411ff3f3a',profiles:rows,result:failed?'FAIL':'PASS',digest:crypto.createHash('sha256').update(JSON.stringify(rows)).digest('hex')};
+          fs.writeFileSync('task19-connected-excellence.json',JSON.stringify(payload,null,2));
+          console.log(JSON.stringify(payload,null,2));
+          if(failed)process.exit(1);
+          NODE
+          node task19-connected-excellence.mjs
+      - name: Upload exact evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: characters-task19-connected-excellence
+          path: |
+            task19-connected-excellence.json
+            task19-desktop.png
+            task19-tablet.png
+            task19-phone.png
+          if-no-files-found: error

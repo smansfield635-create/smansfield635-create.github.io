@@ -1,0 +1,79 @@
+{
+  "schema": "ARTIFACT_QUALIFICATION_PROTOCOL_v1",
+  "status": "RATIFIED_ACTIVE_MANDATORY",
+  "scope": {
+    "appliesTo": [
+      "consumer-facing interactive visual artifacts",
+      "page and showroom rebuilds",
+      "carousel, rotational, spatial, and comparable interaction instruments",
+      "similar artifact projects assigned to any room"
+    ],
+    "excludesAutomaticProductAcceptance": true
+  },
+  "authorityOrder": [
+    "assignment_and_scope",
+    "existing_construct_and_authority_discovery",
+    "architectural_adoption_and_preservation",
+    "artifact_construction",
+    "verifier_qualification",
+    "exact_head_browser_qualification",
+    "page_excellence_architecture",
+    "page_excellence_implementation",
+    "responsive_accessibility_reduced_motion",
+    "reference_class_awards",
+    "all_applicable_integrated_repository_gates",
+    "consumer_rendered_inspection_occurrence",
+    "owner_visual_product_acceptance",
+    "promotion_authority"
+  ],
+  "mandatoryLaws": {
+    "exactHeadEvidenceOnly": true,
+    "candidateMutationInvalidatesPriorPassEvidence": true,
+    "failureRequiresClassification": true,
+    "failureClasses": [
+      "verifier_defect",
+      "artifact_defect",
+      "infrastructure_defect"
+    ],
+    "repairMustTargetActualDefectClass": true,
+    "failureRequiresRepairOrRedevelopmentAndRequalification": true,
+    "syntheticInteractionCannotSubstituteForRequiredRealBrowserInteraction": true,
+    "sourcePrCommitScreenshotOrReceiptCannotSubstituteForConsumerRenderedInspection": true,
+    "technicalPassDoesNotEqualOwnerProductAcceptance": true,
+    "ownerAcceptanceRequiredBeforePromotion": true,
+    "failClosedOnAmbiguityOrContradictoryEvidence": true
+  },
+  "inspectionContract": {
+    "requiredSurface": "functioning consumer-rendered artifact",
+    "nonQualifyingSubstitutes": [
+      "pull_request_url",
+      "commit_url",
+      "source_file_url",
+      "raw_html",
+      "workflow_artifact_only",
+      "screenshot_only"
+    ],
+    "ownerDecision": [
+      "ACCEPT",
+      "REJECT_REDEVELOP"
+    ]
+  },
+  "referenceCase": {
+    "repository": "smansfield635-create/smansfield635-create.github.io",
+    "pullRequest": 998,
+    "qualifiedHead": "9568f1f5f2e4047e7d422f9a49cf133d6e6e31b1",
+    "qualificationStatus": "ALL_ATTACHED_WORKFLOWS_PASS",
+    "productAcceptanceStatus": "HELD_PENDING_CONSUMER_RENDERED_INSPECTION",
+    "evidence": {
+      "methodsModelsExactHeadWorkflowRun": 31755331984,
+      "lawsCp6FinalSynchronizationWorkflowRun": 31755332010,
+      "repositoryOperationIntakeBootstrapWorkflowRun": 31755332095,
+      "remoteOperationTerminalClosureWorkflowRun": 31755332039
+    }
+  },
+  "ratificationBoundary": {
+    "procedureRatified": true,
+    "referenceArtifactVisuallyRatified": false,
+    "reason": "consumer-rendered owner inspection has not yet occurred"
+  }
+}

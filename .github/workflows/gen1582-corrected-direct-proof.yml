@@ -1,0 +1,48 @@
+name: Gen1582 Corrected Direct Rendered Proof
+
+on:
+  push:
+    branches:
+      - gen1582-corrected-proof-20260822
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  rendered-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Prove product bytes equal corrected candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git cat-file -e a03d031b8c39d2e0b3f15833034b4c2314fe9a48^{commit}
+          git diff --exit-code a03d031b8c39d2e0b3f15833034b4c2314fe9a48 HEAD -- assets/compass/compass.css index.html assets/compass/compass.controller.js assets/compass/compass.crystals.js
+          echo GEN1582_CORRECTED_PRODUCT_BYTES_EXACT
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Serve corrected candidate child
+        shell: bash
+        run: |
+          python3 -m http.server 4173 >/tmp/gen1582-corrected-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/gen1582-corrected-http.log || true
+          exit 1
+      - name: Run corrected rendered proof
+        run: node tools/gen1582-corrected-direct-proof.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gen1582-corrected-direct-proof-${{ github.run_id }}
+          path: .qualification/gen1582-corrected
+          retention-days: 30

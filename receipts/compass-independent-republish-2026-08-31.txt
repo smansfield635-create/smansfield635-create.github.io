@@ -1,6 +1,0 @@
-COMPASS_INDEPENDENT_REPUBLISH_RECEIPT_V1
-source_head=d1610c83894a1d3c6b8254c0e34ee0e6f8fb9629
-intent=trigger branch-source publication without product-byte mutation
-expected_root_index_blob=8b218eb7e970800aee2a7aaf5aae023cfecd6518
-required_successor_marker=data-capability-orbit="true"
-forbidden_predecessor_marker=data-compass-capability-switcher

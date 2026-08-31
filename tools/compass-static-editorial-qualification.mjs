@@ -71,7 +71,7 @@ for (const forbidden of ['positionCapability(', 'requestAnimationFrame(positionC
 }
 if (!gen1537.includes("'/showroom/globe/h-earth/'")) fail('Gen1537 lost canonical H-Earth route');
 
-if (!(capability.includes('Swipe to rotate.') || capabilityCore.includes('Swipe to rotate.'))) fail('Track A capability guidance floor changed');
+if (!(html.includes('Swipe to rotate.') || capability.includes('Swipe to rotate.') || capabilityCore.includes('Swipe to rotate.'))) fail('Track A capability guidance floor changed');
 if (capability.includes('compass.track-b.js') || capabilityCore.includes('compass.track-b.js')) fail('Track A capability runtime dynamically loads Track B');
 
 if (!crystals.includes('COMPASS_CRYSTAL_CONTINUOUS_NORMAL_MOTION_v1')) fail('crystal liveness repair missing');

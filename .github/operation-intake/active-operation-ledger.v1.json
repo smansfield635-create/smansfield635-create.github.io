@@ -4182,6 +4182,45 @@
       "scopeHash": "a365baf8431c2bdb220a6c24b91422372536cedc20efd42126d572af814b259e",
       "state": "ADMITTED_LOCKED"
     },
+    "a4421f2a08f8b5bce98be8cac750800ce7a1c7b82eab54ad2b7de2d5ef9fbee5": {
+      "governingHead": "84706a60d90cfc1968135062b63c3b1e5375cb0f",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "84706a60d90cfc1968135062b63c3b1e5375cb0f",
+          "lockGeneration": 1889,
+          "lockScope": "PUBLIC_LEGITIMACY:RESEARCH_FRONTIER:ACHIEVEMENT_AMPLIFICATION:PUBLICATION_VERIFICATION:V1",
+          "operationId": "RESEARCH_FRONTIER_ACHIEVEMENT_AMPLIFICATION_PUBLICATION_VERIFICATION_20260831_003",
+          "procedureLocatorDigest": "dde03cd10f14046ec7becdbd6c80cc238825d512474eae1ca4e5dca726ca55e7",
+          "requestDigest": "59723a5c301a7d3378f956bd2b7b774e8aef15aa1dd9f151db33f1cccfaeaea3",
+          "scopeHash": "a4421f2a08f8b5bce98be8cac750800ce7a1c7b82eab54ad2b7de2d5ef9fbee5"
+        },
+        "bindingDigest": "5a739669c4f7013edfda8a3a4f6948cc5a6403584a86c806531a923ec69d2e48",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "2a117ea2d2fe19e9b993fe88c33e3a73268a5183",
+          "observedLockRefHead": "270c27436bf4b4272aadddb34f8e5fcd731556a0"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "20a75d4ddc9b45bbe3ceb5e6f6f374e59fb7b6a6a9e3f97c48b2507f06f4e082",
+          "commentId": 5473018364,
+          "issueNumber": 2341,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "lockGeneration": 1889,
+      "lockScope": "PUBLIC_LEGITIMACY:RESEARCH_FRONTIER:ACHIEVEMENT_AMPLIFICATION:PUBLICATION_VERIFICATION:V1",
+      "operationId": "RESEARCH_FRONTIER_ACHIEVEMENT_AMPLIFICATION_PUBLICATION_VERIFICATION_20260831_003",
+      "procedureLocatorDigest": "dde03cd10f14046ec7becdbd6c80cc238825d512474eae1ca4e5dca726ca55e7",
+      "released": false,
+      "requestDigest": "59723a5c301a7d3378f956bd2b7b774e8aef15aa1dd9f151db33f1cccfaeaea3",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a4421f2a08f8b5bce98be8cac750800ce7a1c7b82eab54ad2b7de2d5ef9fbee5",
+      "state": "ADMITTED_LOCKED"
+    },
     "a560a48139369f71a75bd11892350f5a65543bd2463caac1e1364c1e07b87245": {
       "governingHead": "8007d88820fa55d2b4e752d47b548e974fc73a68",
       "lockGeneration": 76,
@@ -6384,7 +6423,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1888,
+  "lockGeneration": 1889,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

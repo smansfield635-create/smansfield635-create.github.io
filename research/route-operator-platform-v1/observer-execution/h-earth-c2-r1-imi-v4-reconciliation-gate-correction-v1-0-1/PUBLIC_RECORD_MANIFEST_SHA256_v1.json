@@ -1,0 +1,32 @@
+{
+  "files": {
+    "CORRECTION_RESULT_v1.json": {
+      "sha256": "05fa1608ebeb3dde34ea6a965c26bfb0174e5302990c8008a05e199f6ce213be",
+      "size_bytes": 6915
+    },
+    "CURRENT_CASE_ROLE4_RECONCILIATION_RECEIPT_v1_0_1.json": {
+      "sha256": "ea96c3fab8f4c7605363ce5928a1894b5e975bcab7f2a18968c3156ecd41daf7",
+      "size_bytes": 3827
+    },
+    "CURRENT_CASE_ROLE5_INTAKE_GATE_v1_0_1.json": {
+      "sha256": "821410f565c43f29a7ea617fead7540bf0223ee53a79b6c3e686f429df9d4d59",
+      "size_bytes": 1246
+    },
+    "README.md": {
+      "sha256": "375648b24b92f6be3036d9ececd660330de0d7e6b3fa3073cc0714c3573ede70",
+      "size_bytes": 1759
+    },
+    "RELEASE_POINTER.json": {
+      "sha256": "c80d57ceff2197f60c3f1f80147a445a5e04f81ad1a15b6576598f1b0e394465",
+      "size_bytes": 2083
+    },
+    "SUCCESSOR_PACKAGE_CUSTODY_RECEIPT_v1.json": {
+      "sha256": "2ce229932a69b427426674117cd06c27c7696a7c73ada78cab839a69f7cf3bc9",
+      "size_bytes": 1543
+    }
+  },
+  "manifest_id": "H_EARTH_C2_R1_IMI_V4_RECONCILIATION_GATE_CORRECTION_PUBLIC_RECORD_MANIFEST_v1",
+  "manifest_sha256": "e56c4d79c7e314c921fe0440e8cf2e856791f9b462aad50a8898da3994e97d28",
+  "manifest_version": "1.0.0",
+  "operation_id": "H_EARTH_C2_R1_IMI_V4_RECONCILIATION_GATE_LOGIC_CORRECTION_001"
+}

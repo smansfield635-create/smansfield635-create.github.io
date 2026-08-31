@@ -1,0 +1,44 @@
+name: H-Earth C2-R1 IMI V4 Reconciliation Gate Correction v1.0.1 Conformance
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-c2-r1-imi-v4-reconciliation-gate-correction-v1-0-1-conformance.yml'
+      - 'research/route-operator-platform-v1/observer-execution/h-earth-c2-r1-imi-v4-reconciliation-gate-correction-v1-0-1/**'
+
+permissions:
+  contents: read
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify reconciliation-gate correction records
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/route-operator-platform-v1/observer-execution/h-earth-c2-r1-imi-v4-reconciliation-gate-correction-v1-0-1/verify_reconciliation_gate_correction_records_v1.py | tee reconciliation-gate-correction-conformance-receipt.json
+      - name: Validate JSON records
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, pathlib
+          root = pathlib.Path('research/route-operator-platform-v1/observer-execution/h-earth-c2-r1-imi-v4-reconciliation-gate-correction-v1-0-1')
+          for path in root.glob('*.json'):
+              json.loads(path.read_text(encoding='utf-8'))
+          json.loads(pathlib.Path('reconciliation-gate-correction-conformance-receipt.json').read_text(encoding='utf-8'))
+          PY
+      - name: Compile verifier
+        shell: bash
+        run: python -m py_compile research/route-operator-platform-v1/observer-execution/h-earth-c2-r1-imi-v4-reconciliation-gate-correction-v1-0-1/verify_reconciliation_gate_correction_records_v1.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-c2-r1-imi-v4-reconciliation-gate-correction-${{ github.sha }}
+          path: reconciliation-gate-correction-conformance-receipt.json
+          if-no-files-found: error
+          retention-days: 90

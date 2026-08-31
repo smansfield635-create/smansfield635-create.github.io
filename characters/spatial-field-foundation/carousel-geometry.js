@@ -33,16 +33,16 @@ function anchorCenter(anchor) {
   const fieldRect = field.getBoundingClientRect();
   const rect = anchor.getBoundingClientRect();
   return {
-    x: ((rect.left + rect.width / 2 - fieldRect.left) / fieldRect.width) * 100,
-    y: ((rect.top + rect.height / 2 - fieldRect.top) / fieldRect.height) * 100
+    x: rect.left + rect.width / 2 - fieldRect.left,
+    y: rect.top + rect.height / 2 - fieldRect.top
   };
 }
 
 function positionAttachment() {
   const anchor = anchors[selectedIndex];
   const center = anchorCenter(anchor);
-  attachment.style.setProperty('--anchor-x', `${center.x}%`);
-  attachment.style.setProperty('--anchor-y', `${center.y}%`);
+  attachment.style.setProperty('--anchor-x', `${center.x}px`);
+  attachment.style.setProperty('--anchor-y', `${center.y}px`);
   attachment.querySelector('.carousel-attachment__label').textContent = `Reserved position ${anchor.dataset.anchor}`;
 }
 
@@ -140,7 +140,7 @@ prefersReducedMotion.addEventListener?.('change', () => select(selectedIndex, { 
 
 root.dataset.carouselReady = 'true';
 root.dataset.carouselAnchors = '8';
-root.dataset.domAttachmentModel = 'anchor-center-percentage';
+root.dataset.domAttachmentModel = 'anchor-center-pixel';
 root.dataset.keyboardFocus = 'roving-tabindex-arrow-home-end';
 root.dataset.touchOwnership = 'horizontal-swipe-only-vertical-scroll-and-pinch-browser-owned';
 root.dataset.productionContent = 'absent';

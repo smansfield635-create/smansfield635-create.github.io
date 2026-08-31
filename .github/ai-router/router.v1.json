@@ -231,6 +231,14 @@
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/material-work-audit/entrypoint.v1.json",
       "priority": 100
+    },
+    {
+      "projectId": "CHARACTERS",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["characters/", "control-plane/whole-estate/characters-reconstruction-v1/"],
+      "ownedExactPaths": [],
+      "entrypoint": ".github/ai-router/projects/characters/entrypoint.v1.json",
+      "priority": 100
     }
   ],
   "unregisteredPathPolicy": {

@@ -4196,69 +4196,6 @@
       "scopeHash": "a0ac1d7567ae8e0d058871db030bc032026e8c95e27e48dd7354b964dce8aec4",
       "state": "ADMITTED_LOCKED"
     },
-    "a2e6e137890b1cb1079a6d7b309b4bef0fd28b1e1d58d1b1c67ea06fd1b779d7": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "ea42d025371990ab4410bfbc37042e2e6c7b30d4",
-          "lockGeneration": 1891,
-          "lockScope": "CHARACTERS:TASK17R_C:PLACEHOLDER_CAROUSEL_ANCHOR_GEOMETRY:V1",
-          "operationId": "CHARACTERS_TASK17R_C_PLACEHOLDER_CAROUSEL_ANCHOR_GEOMETRY_20260831_009",
-          "procedureLocatorDigest": "2eace661f9242ad50a56992142140acac5a0b8027524414cbb95062e21845170",
-          "requestDigest": "8b7d1b509d30e5abde8c9d64523ffd1afaba71b5cfeb5d0011fb80cabd7ada3d",
-          "scopeHash": "a2e6e137890b1cb1079a6d7b309b4bef0fd28b1e1d58d1b1c67ea06fd1b779d7"
-        },
-        "bindingDigest": "097db6976d9df4b7a7512817cf494f421248ed035359355402d0b98ae4f4b17e",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "6b746a9af891e21252ce661b0a47c805ba8963374a9b41a6fade5250f9c21a36",
-          "commentId": 5473284188,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2433,
-          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 33353590055,
-          "workflowSha": "ea42d025371990ab4410bfbc37042e2e6c7b30d4"
-        },
-        "lineageAnchorCommitSha": "4a04654243a288698847825a98fde62456d006c0",
-        "origin": "CANONICAL_SUCCESSOR",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "ea42d025371990ab4410bfbc37042e2e6c7b30d4",
-      "lockGeneration": 1891,
-      "lockScope": "CHARACTERS:TASK17R_C:PLACEHOLDER_CAROUSEL_ANCHOR_GEOMETRY:V1",
-      "operationId": "CHARACTERS_TASK17R_C_PLACEHOLDER_CAROUSEL_ANCHOR_GEOMETRY_20260831_009",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "248c9ba0acbd3e29da0fce8d137fb95b94226a5c",
-        "lockGeneration": 1888,
-        "lockScope": "CHARACTERS:TASK17R:SPATIAL_FIELD_FOUNDATION:V1",
-        "operationId": "CHARACTERS_TASK17R_SPATIAL_FIELD_FOUNDATION_20260831_002",
-        "preservedEvidenceRefs": [
-          "ISSUE_2421_TASK17R_A_CONTRACT",
-          "ISSUE_2430_TASK17R_B_PASS_CLOSED",
-          "RUN_33351166603_EXACT_CANDIDATE_BROWSER_PASS",
-          "FROZEN_FOUNDATION_feb19ebcb9dd08f5585db337cb15bba8e6202a89",
-          "ISSUE_2433_HUMAN_DISPOSITION_5473023277",
-          "PR_2438_GEN1889_TERMINAL_CLOSURE_LINEAGE_RECOVERY",
-          "ISSUE_2440_PR_2441_GEN1890_ACQUISITION_LINEAGE_RECOVERY"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "CHARACTERS_TASK17R_B_TO_TASK17R_C_20260831_009"
-      },
-      "procedureLocatorDigest": "2eace661f9242ad50a56992142140acac5a0b8027524414cbb95062e21845170",
-      "released": false,
-      "requestDigest": "8b7d1b509d30e5abde8c9d64523ffd1afaba71b5cfeb5d0011fb80cabd7ada3d",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "a2e6e137890b1cb1079a6d7b309b4bef0fd28b1e1d58d1b1c67ea06fd1b779d7",
-      "state": "ADMITTED_LOCKED"
-    },
     "a365baf8431c2bdb220a6c24b91422372536cedc20efd42126d572af814b259e": {
       "governingHead": "21ee87e945a62492b8f9447a5049f4ae0ab1ceb9",
       "lockGeneration": 1537,
@@ -5391,6 +5328,70 @@
       "scopeHash": "d4e382130aa1e21a827ed0cd0abc67f8446720775fda82a13e9f17954e3980f5",
       "state": "ADMITTED_LOCKED"
     },
+    "d4e5cb23b19b5fe435b1ee6df222c9b3ea6af8f55f6bab8f9680e0dd45b3d0d1": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "d18946812365639d1798b45be65784d12ec444ae",
+          "lockGeneration": 1895,
+          "lockScope": "CHARACTERS:TASK17R_D:PRODUCTION_CHARACTER_CARDS:V1",
+          "operationId": "CHARACTERS_TASK17R_D_PRODUCTION_CHARACTER_CARDS_20260831_006",
+          "procedureLocatorDigest": "92358064ec2868c6ed25b5307e27fc915dc5835140b410cf72e420bf8a28c83e",
+          "requestDigest": "454239f54266ac5193b5de1a20c2502c29c4bcf1c407dd13d8511761cb93dc68",
+          "scopeHash": "d4e5cb23b19b5fe435b1ee6df222c9b3ea6af8f55f6bab8f9680e0dd45b3d0d1"
+        },
+        "bindingDigest": "e8138711ffc76269937c91f72f0b4048c34fc1f4c01db4fcb04f7340dfe5a075",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "8fc25104061e283daf2f0ee5a05f49ab2d236893dce25e81bbb2ddbd85e9a190",
+          "commentId": 5480091934,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2461,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33405076308,
+          "workflowSha": "d18946812365639d1798b45be65784d12ec444ae"
+        },
+        "lineageAnchorCommitSha": "fb5f94964702d9442867cad240fdccd975caf79c",
+        "origin": "CANONICAL_SUCCESSOR",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "d18946812365639d1798b45be65784d12ec444ae",
+      "lockGeneration": 1895,
+      "lockScope": "CHARACTERS:TASK17R_D:PRODUCTION_CHARACTER_CARDS:V1",
+      "operationId": "CHARACTERS_TASK17R_D_PRODUCTION_CHARACTER_CARDS_20260831_006",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "ea42d025371990ab4410bfbc37042e2e6c7b30d4",
+        "lockGeneration": 1891,
+        "lockScope": "CHARACTERS:TASK17R_C:PLACEHOLDER_CAROUSEL_ANCHOR_GEOMETRY:V1",
+        "operationId": "CHARACTERS_TASK17R_C_PLACEHOLDER_CAROUSEL_ANCHOR_GEOMETRY_20260831_009",
+        "preservedEvidenceRefs": [
+          "ISSUE_2433_TASK17R_C_FREEZE",
+          "RUN_33358544176_PASS_CLOSED",
+          "FROZEN_TASK17R_C_d48613af69a244a9e71e7220ab7410e166f9a420",
+          "FROZEN_TASK17R_B_feb19ebcb9dd08f5585db337cb15bba8e6202a89",
+          "ISSUE_2378_OWNER_ORIGINATING_CHARACTER_SOURCE_ASSEMBLY",
+          "ISSUE_2461_HUMAN_DISPOSITION_5473917949",
+          "GEN1890_LINEAGE_REPAIR_MAIN_2063c04f95c97be8a0ca35a5256c971259f9de65",
+          "GEN1890_C7_LOCK_MANAGER_REPAIR_MAIN_d18946812365639d1798b45be65784d12ec444ae"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "CHARACTERS_TASK17R_C_TO_TASK17R_D_20260831_006"
+      },
+      "procedureLocatorDigest": "92358064ec2868c6ed25b5307e27fc915dc5835140b410cf72e420bf8a28c83e",
+      "released": false,
+      "requestDigest": "454239f54266ac5193b5de1a20c2502c29c4bcf1c407dd13d8511761cb93dc68",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "d4e5cb23b19b5fe435b1ee6df222c9b3ea6af8f55f6bab8f9680e0dd45b3d0d1",
+      "state": "ADMITTED_LOCKED"
+    },
     "d70fe6a0b02255b935d282c4fcd87176847b5c1fd9b7298a1d16490abe18bf20": {
       "governingHead": "2e1b39287a296185b83172715e844d0adcea0743",
       "lockGeneration": 645,
@@ -6516,7 +6517,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1894,
+  "lockGeneration": 1895,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -36400,6 +36401,91 @@
       "scopeHash": "f4e33564162ea3c8ec63fee2242c5301fcd4e0e66bba7e79330a53ecf51196e5",
       "state": "TERMINAL",
       "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "ea42d025371990ab4410bfbc37042e2e6c7b30d4",
+          "lockGeneration": 1891,
+          "lockScope": "CHARACTERS:TASK17R_C:PLACEHOLDER_CAROUSEL_ANCHOR_GEOMETRY:V1",
+          "operationId": "CHARACTERS_TASK17R_C_PLACEHOLDER_CAROUSEL_ANCHOR_GEOMETRY_20260831_009",
+          "procedureLocatorDigest": "2eace661f9242ad50a56992142140acac5a0b8027524414cbb95062e21845170",
+          "requestDigest": "8b7d1b509d30e5abde8c9d64523ffd1afaba71b5cfeb5d0011fb80cabd7ada3d",
+          "scopeHash": "a2e6e137890b1cb1079a6d7b309b4bef0fd28b1e1d58d1b1c67ea06fd1b779d7"
+        },
+        "bindingDigest": "097db6976d9df4b7a7512817cf494f421248ed035359355402d0b98ae4f4b17e",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "6b746a9af891e21252ce661b0a47c805ba8963374a9b41a6fade5250f9c21a36",
+          "commentId": 5473284188,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2433,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33353590055,
+          "workflowSha": "ea42d025371990ab4410bfbc37042e2e6c7b30d4"
+        },
+        "lineageAnchorCommitSha": "4a04654243a288698847825a98fde62456d006c0",
+        "origin": "CANONICAL_SUCCESSOR",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "ea42d025371990ab4410bfbc37042e2e6c7b30d4",
+      "lockGeneration": 1891,
+      "lockScope": "CHARACTERS:TASK17R_C:PLACEHOLDER_CAROUSEL_ANCHOR_GEOMETRY:V1",
+      "operationId": "CHARACTERS_TASK17R_C_PLACEHOLDER_CAROUSEL_ANCHOR_GEOMETRY_20260831_009",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "248c9ba0acbd3e29da0fce8d137fb95b94226a5c",
+        "lockGeneration": 1888,
+        "lockScope": "CHARACTERS:TASK17R:SPATIAL_FIELD_FOUNDATION:V1",
+        "operationId": "CHARACTERS_TASK17R_SPATIAL_FIELD_FOUNDATION_20260831_002",
+        "preservedEvidenceRefs": [
+          "ISSUE_2421_TASK17R_A_CONTRACT",
+          "ISSUE_2430_TASK17R_B_PASS_CLOSED",
+          "RUN_33351166603_EXACT_CANDIDATE_BROWSER_PASS",
+          "FROZEN_FOUNDATION_feb19ebcb9dd08f5585db337cb15bba8e6202a89",
+          "ISSUE_2433_HUMAN_DISPOSITION_5473023277",
+          "PR_2438_GEN1889_TERMINAL_CLOSURE_LINEAGE_RECOVERY",
+          "ISSUE_2440_PR_2441_GEN1890_ACQUISITION_LINEAGE_RECOVERY"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "CHARACTERS_TASK17R_B_TO_TASK17R_C_20260831_009"
+      },
+      "procedureLocatorDigest": "2eace661f9242ad50a56992142140acac5a0b8027524414cbb95062e21845170",
+      "released": true,
+      "requestDigest": "8b7d1b509d30e5abde8c9d64523ffd1afaba71b5cfeb5d0011fb80cabd7ada3d",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a2e6e137890b1cb1079a6d7b309b4bef0fd28b1e1d58d1b1c67ea06fd1b779d7",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "ISSUE_2433_TASK17R_C_FREEZE",
+          "RUN_33358544176_PASS_CLOSED",
+          "FROZEN_TASK17R_C_d48613af69a244a9e71e7220ab7410e166f9a420",
+          "FROZEN_TASK17R_B_feb19ebcb9dd08f5585db337cb15bba8e6202a89",
+          "ISSUE_2378_OWNER_ORIGINATING_CHARACTER_SOURCE_ASSEMBLY",
+          "ISSUE_2461_HUMAN_DISPOSITION_5473917949",
+          "GEN1890_LINEAGE_REPAIR_MAIN_2063c04f95c97be8a0ca35a5256c971259f9de65",
+          "GEN1890_C7_LOCK_MANAGER_REPAIR_MAIN_d18946812365639d1798b45be65784d12ec444ae"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "d18946812365639d1798b45be65784d12ec444ae",
+        "successorLockGeneration": 1895,
+        "successorLockScope": "CHARACTERS:TASK17R_D:PRODUCTION_CHARACTER_CARDS:V1",
+        "successorOperationId": "CHARACTERS_TASK17R_D_PRODUCTION_CHARACTER_CARDS_20260831_006",
+        "transitionId": "CHARACTERS_TASK17R_C_TO_TASK17R_D_20260831_006"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

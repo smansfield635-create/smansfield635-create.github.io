@@ -33,8 +33,6 @@ jobs:
         shell: bash
         env:
           STAGE: ${{ runner.temp }}/pages-site
-          LEGACY_SHA: 1d45379f81ea4089e9c5f3d7d9688e702be9add3
-          LEGACY_ROOT: ${{ runner.temp }}/pages-site/inspection/h-earth/24056
         run: |
           set -euo pipefail
           rm -rf "$STAGE"
@@ -44,10 +42,6 @@ jobs:
           rm -rf "$STAGE/showroom/globe/h-earth"
           mkdir -p "$STAGE/showroom/globe/h-earth"
           rsync -a --delete h-earth-live-6d18e158/showroom/globe/h-earth/ "$STAGE/showroom/globe/h-earth/"
-
-          git fetch --no-tags --depth=1 origin "$LEGACY_SHA"
-          mkdir -p "$LEGACY_ROOT"
-          git archive "$LEGACY_SHA" showroom/globe/audralia showroom/globe/h-earth h-earth-3d | tar -x -C "$LEGACY_ROOT"
 
           mkdir -p "$STAGE/.well-known"
           jq -n --arg schema 'DGB_PUBLIC_RELEASE_MARKER_v2' --arg commit '${{ github.sha }}' --arg surface 'audralia' --arg environment 'IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993' '{schema:$schema,commit:$commit,surface:$surface,environment:$environment}' > "$STAGE/.well-known/dgb-release.json"
@@ -85,12 +79,14 @@ jobs:
           for attempt in $(seq 1 30); do
             marker="$(curl -fsSL --max-time 20 "$root/.well-known/dgb-release.json" 2>/dev/null || true)"
             html="$(curl -fsSL --max-time 20 "$root/showroom/globe/audralia/" 2>/dev/null || true)"
+            loader="$(curl -fsSL --max-time 20 "$root/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs?cb=EXACT_24057_LOADER_FIRST" 2>/dev/null || true)"
             app="$(curl -fsSL --max-time 20 "$root/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs?cb=EXACT_24057" 2>/dev/null || true)"
             renderer="$(curl -fsSL --max-time 20 "$root/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs?cb=EXACT_24057" 2>/dev/null || true)"
             observed="$(printf '%s' "$marker" | jq -r '.commit // empty' 2>/dev/null || true)"
             if [ "$observed" = "$TARGET_SHA" ] \
               && printf '%s' "$html" | grep -Fq 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v6_EXACT_24057_ENVIRONMENT' \
               && printf '%s' "$html" | grep -Fq 'IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993' \
+              && printf '%s' "$loader" | grep -Fq "setVerified(6,'Preparing Audralia',15)" \
               && printf '%s' "$app" | grep -Fq 'createMapWideEnvironmentRenderer' \
               && printf '%s' "$renderer" | grep -Fq 'createMapWideEnvironmentRenderer'; then
               echo "AUDRALIA_EXACT_24057_LIVE_BYTES_VERIFIED target=$TARGET_SHA"

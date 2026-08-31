@@ -33,7 +33,9 @@ jobs:
             "preview/bt4/entitlement-v1"
             "preview/bt4/operational-release-v1"
             "h-earth-live-6d18e158/showroom/globe/h-earth"
-            "inspection/audralia-24057-exact"
+            "inspection/audralia-24057-exact/snapshot/showroom/globe/audralia"
+            "inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth"
+            "inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth-3d"
           )
           for root in "${top_dirs[@]}"; do
             case "$root" in

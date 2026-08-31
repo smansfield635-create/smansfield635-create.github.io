@@ -1,0 +1,30 @@
+{
+  "schema": "OPEN_WORLD_H1_BASELINE_COMPARISON_CONTRACT_v1",
+  "operationId": "OPEN_WORLD_ACCEPTED_PLANETARY_BASELINE_RECOVERY_20260813_001",
+  "oSideBaseline": "showroom/globe/audralia/@65aedb63832c4774f4a7326297fadbfb14552955",
+  "h1ComparisonBaseline": "showroom/globe/h-earth/@7f832b749617b0360ad6bbfafadc37508d328dc3",
+  "classificationVocabulary": [
+    "CANONICAL_TRUTH",
+    "REPRESENTATION_ADVANTAGE",
+    "VALID_LOD_DIFFERENCE",
+    "DEFECT"
+  ],
+  "classificationRules": {
+    "CANONICAL_TRUTH": "A world fact that must converge across both representations after canonical adjudication.",
+    "REPRESENTATION_ADVANTAGE": "A superior expression or interaction that may improve the other representation without transferring implementation authority.",
+    "VALID_LOD_DIFFERENCE": "A lawful difference caused by planetary versus embodied/local resolution.",
+    "DEFECT": "A contradiction, regression, broken continuity, or lower-maturity expression not justified by representation or LOD."
+  },
+  "developmentLaw": "DISCOVERY_IN_H_EARTH_OR_GLOBE_THEN_CANONICAL_ADJUDICATION_THEN_REPRESENTATION_SPECIFIC_EXPRESSION",
+  "examplesRequiringComparison": [
+    "COASTLINE_STRUCTURE",
+    "SANDBAR_PLACEMENT_AND_TOPOLOGY",
+    "LAND_WATER_BOUNDARY",
+    "TERRAIN_RELIEF",
+    "ATMOSPHERE_AND_HORIZON",
+    "WEATHER_SPATIAL_PRESENCE",
+    "LOCAL_REGION_CONTINENT_PLANETARY_CONTINUITY"
+  ],
+  "comparisonProducesProductAuthority": false,
+  "comparisonProducesCanonicalAuthority": false
+}

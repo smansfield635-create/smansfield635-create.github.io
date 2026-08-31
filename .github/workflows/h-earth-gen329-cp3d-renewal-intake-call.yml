@@ -1,0 +1,20 @@
+name: H-Earth Gen329 CP3D Renewal Public Private Intake Call
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  canonical-intake:
+    uses: ./.github/workflows/public-private-canonical-execution-carrier-v1.yml
+    with:
+      private_issue: '306'
+      private_comment: '5345924719'
+      expected_request_id: 'H_EARTH_GEN329_CP3D_QUALIFICATION_RENEWAL_INTAKE_20260819_002'
+      exact_private_head: '367f9f77c264c2eabe7398bfa1fdd0edcdbbb6ab'
+      callback_issue: '1438'
+    secrets: inherit

@@ -1,9 +1,10 @@
-name: Audralia Live Recovery Publish
+name: Audralia Exact 24057 Live Recovery
 
 on:
   push:
     branches: [main]
     paths:
+      - 'showroom/globe/audralia/index.html'
       - '.github/workflows/audralia-live-promotion-retry.yml'
 
 permissions:
@@ -16,7 +17,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  publish-current-main:
+  publish-exact-24057:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -44,38 +45,22 @@ jobs:
           mkdir -p "$STAGE/showroom/globe/h-earth"
           rsync -a --delete h-earth-live-6d18e158/showroom/globe/h-earth/ "$STAGE/showroom/globe/h-earth/"
 
-          audralia_renderer_src="showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs"
-          audralia_runtime_dir="$STAGE/showroom/globe/audralia/runtime-dependencies"
-          audralia_app="$STAGE/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs"
-          test -f "$audralia_renderer_src"
-          test -f "$audralia_app"
-          mkdir -p "$audralia_runtime_dir"
-          cp "$audralia_renderer_src" "$audralia_runtime_dir/renderer.mjs"
-          python3 - "$audralia_app" <<'PY'
-from pathlib import Path
-import sys
-path=Path(sys.argv[1])
-text=path.read_text()
-old="../../h-earth/terrain-estate-construction-v1/renderer.mjs"
-new="../runtime-dependencies/renderer.mjs"
-count=text.count(old)
-if count != 1:
-    raise SystemExit(f"AUDRALIA_RENDERER_IMPORT_REWRITE_CARDINALITY:{count}")
-path.write_text(text.replace(old,new))
-PY
-          test "$(sha256sum "$audralia_renderer_src" | awk '{print $1}')" = "$(sha256sum "$audralia_runtime_dir/renderer.mjs" | awk '{print $1}')"
-
           git fetch --no-tags --depth=1 origin "$LEGACY_SHA"
           mkdir -p "$LEGACY_ROOT"
           git archive "$LEGACY_SHA" showroom/globe/audralia showroom/globe/h-earth h-earth-3d | tar -x -C "$LEGACY_ROOT"
 
           mkdir -p "$STAGE/.well-known"
-          jq -n --arg schema 'DGB_PUBLIC_RELEASE_MARKER_v2' --arg commit '${{ github.sha }}' --arg surface 'audralia' '{schema:$schema,commit:$commit,surface:$surface}' > "$STAGE/.well-known/dgb-release.json"
+          jq -n --arg schema 'DGB_PUBLIC_RELEASE_MARKER_v2' --arg commit '${{ github.sha }}' --arg surface 'audralia' --arg environment 'IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993' '{schema:$schema,commit:$commit,surface:$surface,environment:$environment}' > "$STAGE/.well-known/dgb-release.json"
 
-          grep -Fq 'AUDRALIA_RECOVERY_RUNTIME_20260831_001' "$STAGE/showroom/globe/audralia/index.html"
-          grep -Fq 'APPROVED_PRESENTATION_PRE_RENDER_v1' "$STAGE/showroom/globe/audralia/index.html"
-          grep -Fq 'scheduleRenderAll' "$STAGE/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs"
-          grep -Fq '../runtime-dependencies/renderer.mjs' "$STAGE/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs"
+          audralia="$STAGE/showroom/globe/audralia/index.html"
+          snapshot="$STAGE/inspection/audralia-24057-exact/snapshot"
+          test -f "$audralia"
+          test -f "$snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs"
+          test -f "$snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs"
+          test -f "$snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs"
+          grep -Fq 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v6_EXACT_24057_ENVIRONMENT' "$audralia"
+          grep -Fq 'IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993' "$audralia"
+          grep -Fq '/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs?cb=EXACT_24057' "$audralia"
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
@@ -85,34 +70,35 @@ PY
         with:
           path: ${{ runner.temp }}/pages-site
 
-      - name: Deploy current main
+      - name: Deploy exact 24057 binding
         id: deployment
         uses: actions/deploy-pages@v4
 
-      - name: Verify restored Audralia live bytes
+      - name: Verify exact 24057 live bytes
         shell: bash
         env:
           PAGE_URL: ${{ steps.deployment.outputs.page_url }}
           TARGET_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
-          root="${PAGE_URL%/}/showroom/globe/audralia"
+          root="${PAGE_URL%/}"
           for attempt in $(seq 1 30); do
-            marker="$(curl -fsSL --max-time 20 "${PAGE_URL%/}/.well-known/dgb-release.json" 2>/dev/null || true)"
-            html="$(curl -fsSL --max-time 20 "$root/" 2>/dev/null || true)"
-            app="$(curl -fsSL --max-time 20 "$root/weather-presentation-reconciliation/app.mjs?cb=AUDRALIA_RECOVERY_RUNTIME_20260831_001" 2>/dev/null || true)"
+            marker="$(curl -fsSL --max-time 20 "$root/.well-known/dgb-release.json" 2>/dev/null || true)"
+            html="$(curl -fsSL --max-time 20 "$root/showroom/globe/audralia/" 2>/dev/null || true)"
+            app="$(curl -fsSL --max-time 20 "$root/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs?cb=EXACT_24057" 2>/dev/null || true)"
+            renderer="$(curl -fsSL --max-time 20 "$root/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs?cb=EXACT_24057" 2>/dev/null || true)"
             observed="$(printf '%s' "$marker" | jq -r '.commit // empty' 2>/dev/null || true)"
             if [ "$observed" = "$TARGET_SHA" ] \
-              && printf '%s' "$html" | grep -Fq 'AUDRALIA_RECOVERY_RUNTIME_20260831_001' \
-              && printf '%s' "$html" | grep -Fq 'APPROVED_PRESENTATION_PRE_RENDER_v1' \
-              && printf '%s' "$app" | grep -Fq 'scheduleRenderAll' \
-              && ! printf '%s' "$html" | grep -Fq '../../../assets/audralia/audralia.planet.js'; then
-              echo "AUDRALIA_RESTORED_LIVE_BYTES_VERIFIED target=$TARGET_SHA"
+              && printf '%s' "$html" | grep -Fq 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v6_EXACT_24057_ENVIRONMENT' \
+              && printf '%s' "$html" | grep -Fq 'IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993' \
+              && printf '%s' "$app" | grep -Fq 'createMapWideEnvironmentRenderer' \
+              && printf '%s' "$renderer" | grep -Fq 'createMapWideEnvironmentRenderer'; then
+              echo "AUDRALIA_EXACT_24057_LIVE_BYTES_VERIFIED target=$TARGET_SHA"
               exit 0
             fi
             sleep 10
           done
-          echo "AUDRALIA_LIVE_RECOVERY_NOT_PROVEN target=$TARGET_SHA" >&2
+          echo "AUDRALIA_EXACT_24057_LIVE_BYTES_NOT_PROVEN target=$TARGET_SHA" >&2
           exit 1
 
       - name: Set up Chrome
@@ -124,7 +110,7 @@ PY
         shell: bash
         run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
 
-      - name: Verify Audralia runtime readiness
+      - name: Verify Audralia runtime reaches ready state
         shell: bash
         env:
           PAGE_URL: ${{ steps.deployment.outputs.page_url }}

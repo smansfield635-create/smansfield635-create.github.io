@@ -13,6 +13,7 @@
   <link rel="modulepreload" href="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/canonical-weather-spatial-lod-proof/weather-renderer.mjs?cb=EXACT_24057">
   <link rel="stylesheet" href="./index.css?v=AUDRALIA_LOADING_CONTINUITY_v4">
   <link rel="stylesheet" href="./loading-continuity-v3.css?v=AUDRALIA_CHROMATIC_ARRIVAL_v4">
+  <link rel="stylesheet" href="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/reconciliation.css?v=EXACT_24057">
 </head>
 <body>
   <div class="audralia-loading-screen" data-audralia-loader role="status" aria-live="polite" aria-label="Audralia is loading">
@@ -21,17 +22,17 @@
       <div class="audralia-loading-version">LIVE BUILD · APPROVED MODEL · STARTUP TRACE v1</div>
       <div class="audralia-loading-mark" aria-hidden="true"><span>A</span></div>
       <div class="audralia-loading-title">Audralia</div>
-      <div class="audralia-loading-subtitle">Entering an interactive planetary world</div>
+      <div class="audralia-loading-subtitle">Entering a continuous planetary world</div>
       <div class="audralia-loading-stage" data-audralia-loader-stage>Preparing page shell…</div>
       <div class="audralia-loading-systems" aria-label="World initialization systems">
-        <div class="audralia-loading-system" data-loader-system="surface"><span>Planet geometry</span><b>waiting</b></div>
-        <div class="audralia-loading-system" data-loader-system="clouds"><span>Atmosphere + clouds</span><b>waiting</b></div>
-        <div class="audralia-loading-system" data-loader-system="regional"><span>Native WebGL renderer</span><b>waiting</b></div>
-        <div class="audralia-loading-system" data-loader-system="local"><span>First world frame</span><b>waiting</b></div>
+        <div class="audralia-loading-system" data-loader-system="surface"><span>Surface + atmosphere</span><b>waiting</b></div>
+        <div class="audralia-loading-system" data-loader-system="clouds"><span>Orbital cloud field</span><b>waiting</b></div>
+        <div class="audralia-loading-system" data-loader-system="regional"><span>Regional weather</span><b>waiting</b></div>
+        <div class="audralia-loading-system" data-loader-system="local"><span>Local continuity</span><b>waiting</b></div>
       </div>
       <div class="audralia-loading-track" data-audralia-loader-track role="progressbar" aria-label="Audralia initialization progress" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0"><span data-audralia-loader-fill></span></div>
       <div class="audralia-loading-meta"><span data-audralia-loader-progress>0% · preparing</span><span data-audralia-loader-elapsed>0.0s</span></div>
-      <div class="audralia-loading-note">One world, directly mounted: geometry → atmosphere → native WebGL → first visible frame.</div>
+      <div class="audralia-loading-note">One world, progressively resolved: terrain → atmosphere → planetary clouds → regional weather → local continuity.</div>
     </div>
   </div>
 
@@ -39,14 +40,12 @@
     <header class="audralia-live-toolbar" aria-label="Audralia world navigation">
       <div class="audralia-live-brand" aria-label="Audralia">Audralia</div>
       <nav class="audralia-live-nav" aria-label="World navigation">
-        <button class="audralia-live-action audralia-live-action-primary" type="button" data-audralia-action="reset">focus Gratitude</button>
-        <button class="audralia-live-action" type="button" data-audralia-soundtrack-toggle aria-pressed="false" aria-describedby="audralia-soundtrack-credit">soundtrack · on</button>
+        <button class="audralia-live-action audralia-live-action-primary" type="button" data-fit-world>focus Gratitude</button>
         <a class="audralia-live-action" href="../h-earth/">H-Earth · Play</a>
         <a class="audralia-live-action" href="../../../index.html">Compass</a>
         <a class="audralia-live-action" href="../../">Mirrorland</a>
       </nav>
       <span class="audralia-sr-only" data-h-earth-status aria-live="polite">booting Audralia</span>
-      <span class="audralia-sr-only" data-audralia-soundtrack-status aria-live="polite">Swan Lake loading soundtrack</span>
     </header>
 
     <section class="audralia-world-stage" aria-label="Interactive Audralia planetary view">
@@ -57,118 +56,33 @@
     <footer class="audralia-live-help" aria-label="Interaction guide">
       <span class="audralia-help-touch">1 finger · look &nbsp;·&nbsp; 2 fingers together · travel &nbsp;·&nbsp; pinch · descend &nbsp;·&nbsp; spread · ascend</span>
       <span class="audralia-help-pointer">drag · look &nbsp;·&nbsp; wheel · descend / ascend &nbsp;·&nbsp; W/A/S/D or arrows · travel</span>
-      <span id="audralia-soundtrack-credit">Exploration music: “Gymnopédie No. 1” · Kevin MacLeod · CC BY 3.0</span>
     </footer>
   </main>
 
   <script>
     window.__AUDRALIA_LIVE_PLANETARY_INTEGRATION__ = Object.freeze({
-      schema: 'AUDRALIA_LIVE_PLANETARY_G1_NATIVE_MOUNT_v1',
-      nativeWebGLPlanet: true,
-      canonicalWeatherSpatialLod: false,
-      weatherPresentationReconciliation: false,
-      approvedModelAuthority: 'AUDRALIA_G1_PUBLIC_3D_PLANET_RUNTIME_TNT_v1',
+      schema: 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v6_EXACT_24057_ENVIRONMENT',
+      legacyPlanetActive: false,
+      canonicalWeatherSpatialLod: true,
+      weatherPresentationReconciliation: true,
+      cameraSemanticsFrozen: true,
+      acf1CloudPresentation: true,
+      fap1XYZVolumetricDepth: true,
+      fap1OrganizedWeatherCandidate: true,
+      approvedModelAuthority: '1d45379f81ea4089e9c5f3d7d9688e702be9add3',
+      directDenseCloudCoverage: false,
+      cloudCoverageUpgradeDeferred: true,
       loadingContinuity: 'AUDRALIA_LOADING_CONTINUITY_v4',
-      startupArchitecture: 'NATIVE_WEBGL_FIRST_FRAME_GATE_v1',
-      startupInstrumentation: 'AUDRALIA_NATIVE_WORLD_MOUNT_STARTUP_v1',
-      estateSoundtrack: 'AUDRALIA_ESTATE_SOUNDTRACK_RUNTIME_v1',
-      environmentBinding: 'AUDRALIA_G1_EXISTING_RUNTIME_AND_GEOMETRY'
+      startupArchitecture: 'APPROVED_PRESENTATION_PRE_RENDER_v1',
+      startupInstrumentation: 'AUDRALIA_STARTUP_DIAGNOSTIC_v1',
+      environmentBinding: 'IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993'
     });
   </script>
-  <script type="module" src="./audio/estate-soundtrack-v1.mjs?cb=AUDRALIA_ESTATE_SOUNDTRACK_RUNTIME_v1"></script>
-  <!-- The page shell remains current; this is the exact working 24057 world environment. -->
   <script type="module" src="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/acf1-cloud-presentation-v1.mjs?cb=EXACT_24057"></script>
   <script type="module" src="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/fap1-xyz-volumetric-depth-v1.mjs?cb=EXACT_24057"></script>
   <script type="module" src="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/fap1-weather-presentation-v1.mjs?cb=EXACT_24057"></script>
   <script type="module" src="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs?cb=EXACT_24057"></script>
   <script type="module" src="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs?cb=EXACT_24057"></script>
   <script type="module" src="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/celestial-checkpoint-1.mjs?cb=EXACT_24057"></script>
-  <!--
-    (function installNativeWorldMountGate() {
-      const loader = document.querySelector('[data-audralia-loader]');
-      const stage = document.querySelector('[data-audralia-loader-stage]');
-      const track = document.querySelector('[data-audralia-loader-track]');
-      const fill = document.querySelector('[data-audralia-loader-fill]');
-      const progress = document.querySelector('[data-audralia-loader-progress]');
-      const status = document.querySelector('[data-h-earth-status]');
-      const started = performance.now();
-      let released = false;
-
-      function setRow(name, state) {
-        const row = document.querySelector('[data-loader-system="' + name + '"]');
-        if (!row) return;
-        row.dataset.state = state;
-        const value = row.querySelector('b');
-        if (value) value.textContent = state === 'ready' ? 'ready' : state;
-      }
-
-      function setProgress(stageCount, label) {
-        const bounded = Math.max(0, Math.min(5, stageCount));
-        if (stage) stage.textContent = label;
-        if (track) track.setAttribute('aria-valuenow', String(bounded));
-        if (fill) fill.style.width = String(bounded * 20) + '%';
-        if (progress) progress.textContent = String(bounded * 20) + '% · ' + bounded + ' of 5 stages';
-      }
-
-      function publish(phase, state, detail) {
-        window.__AUDRALIA_STARTUP_DIAGNOSTIC__ = Object.freeze({
-          schema: 'AUDRALIA_STARTUP_DIAGNOSTIC_v1',
-          phase: phase,
-          status: state,
-          elapsedMs: Math.round(performance.now() - started),
-          completedStage: state === 'READY' ? 5 : 0,
-          lastSuccessfulStage: state === 'READY' ? 5 : 0,
-          renderer: 'AUDRALIA_G1_PUBLIC_3D_PLANET_RUNTIME_TNT_v1',
-          detail: detail || null
-        });
-        window.dispatchEvent(new CustomEvent('AUDRALIA_STARTUP_PHASE', { detail: window.__AUDRALIA_STARTUP_DIAGNOSTIC__ }));
-      }
-
-      function release(receipt) {
-        if (released) return;
-        released = true;
-        setRow('surface', 'ready');
-        setRow('clouds', 'ready');
-        setRow('regional', 'ready');
-        setRow('local', 'ready');
-        setProgress(5, 'Audralia native world ready');
-        if (status) {
-          status.dataset.status = 'AUDRALIA_NATIVE_WORLD_READY';
-          status.textContent = 'Audralia native world ready';
-        }
-        publish('RUNTIME_INVARIANTS_READY', 'READY', receipt);
-        if (loader) loader.classList.add('is-ready');
-      }
-
-      function hold(receipt) {
-        if (!receipt || released) return;
-        const errors = Number(receipt.errorCount || 0);
-        if (errors > 0 && !receipt.firstFrameDrawn) {
-          const code = 'NATIVE_WEBGL_MOUNT_FAILED';
-          setProgress(0, 'Audralia native world stopped · ' + code);
-          if (loader) {
-            loader.classList.add('is-error');
-            loader.dataset.errorCode = code;
-          }
-          publish('NATIVE_WEBGL_MOUNT_ERROR', 'ERROR', receipt);
-          return;
-        }
-        setRow('surface', receipt.geometryReady ? 'ready' : 'waiting');
-        setRow('clouds', receipt.webGL ? 'ready' : 'waiting');
-        setRow('regional', receipt.mounted ? 'ready' : 'waiting');
-        setProgress(receipt.mounted ? 3 : 1, receipt.mounted ? 'Rendering Audralia native world' : 'Mounting Audralia planet geometry');
-        publish('NATIVE_WEBGL_BOOT', 'ACTIVE', receipt);
-      }
-
-      window.addEventListener('audralia-planet-runtime-state', function onRuntimeState(event) {
-        const receipt = event && event.detail;
-        if (receipt && receipt.ready && receipt.firstFrameDrawn && receipt.firstVisiblePixelObserved) release(receipt);
-        else hold(receipt);
-      });
-
-      setProgress(0, 'Preparing Audralia native world');
-      publish('PAGE_BOOT', 'ACTIVE', null);
-    }());
-  </script> -->
 </body>
 </html>

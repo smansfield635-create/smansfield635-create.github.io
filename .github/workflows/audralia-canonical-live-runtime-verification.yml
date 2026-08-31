@@ -1,0 +1,60 @@
+name: Audralia Canonical Live Runtime Verification
+
+on:
+  workflow_run:
+    workflows: ["AI Entry — Automatic Exact-Head Release"]
+    types: [completed]
+
+permissions:
+  contents: read
+
+jobs:
+  verify-live-runtime:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact canonical release head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 1
+
+      - name: Require live release marker matches canonical head
+        shell: bash
+        env:
+          TARGET_SHA: ${{ github.event.workflow_run.head_sha }}
+          PAGE_URL: https://diamondgatebridge.com
+        run: |
+          set -euo pipefail
+          observed=""
+          for attempt in $(seq 1 24); do
+            marker="$(curl --fail --silent --show-error -L --max-time 20 "${PAGE_URL%/}/.well-known/dgb-release.json" 2>/dev/null || true)"
+            observed="$(printf '%s' "$marker" | jq -r '.commit // empty' 2>/dev/null || true)"
+            if [ "$observed" = "$TARGET_SHA" ]; then
+              echo "AUDRALIA_CANONICAL_LIVE_HEAD_MATCH=PASS target=$TARGET_SHA"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "AUDRALIA_CANONICAL_LIVE_HEAD_MATCH=FAIL expected=$TARGET_SHA observed=${observed:-none}" >&2
+          exit 1
+
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install browser driver
+        shell: bash
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Verify published Audralia reaches ready state
+        shell: bash
+        env:
+          PAGE_URL: https://diamondgatebridge.com
+          MANIFEST_PATH: .github/ai-router/publication-surfaces/audralia.json
+        run: |
+          set -euo pipefail
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          test -x "$CHROME_PATH"
+          node tools/publication-live-verify.mjs runtime "$PAGE_URL" "$MANIFEST_PATH"

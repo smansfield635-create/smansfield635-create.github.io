@@ -13,11 +13,15 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout exact canonical release head
+      - name: Checkout bounded verifier inputs at exact canonical release head
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
           fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            tools/publication-live-verify.mjs
+            .github/ai-router/publication-surfaces/audralia.json
 
       - name: Require live release marker matches canonical head
         shell: bash

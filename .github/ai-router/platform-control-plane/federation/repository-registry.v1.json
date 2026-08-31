@@ -1,0 +1,47 @@
+{
+  "schema": "L2_FEDERATED_REPOSITORY_REGISTRY_v1",
+  "registryId": "L2_FEDERATED_REPOSITORY_REGISTRY_v1",
+  "version": "1.0.0",
+  "status": "ACTIVE_FAIL_CLOSED_WHEN_REFERENCED",
+  "defaultDecision": "DENY",
+  "repositories": [
+    {
+      "repositoryId": "repo:website-main",
+      "numericId": 1142978610,
+      "fullName": "smansfield635-create/smansfield635-create.github.io",
+      "owner": "smansfield635-create",
+      "defaultBranch": "main",
+      "federationMode": "LOCAL_CONTROL_PLANE_HOST",
+      "allowedOperations": ["READ_EVIDENCE", "VERIFY_RECEIPT", "CORRELATE_STATE"],
+      "externalWritesAllowed": false
+    },
+    {
+      "repositoryId": "repo:geodiametrics",
+      "numericId": 1142904555,
+      "fullName": "smansfield635-create/geodiametrics",
+      "owner": "smansfield635-create",
+      "defaultBranch": "main",
+      "federationMode": "READ_ONLY_FEDERATION_PEER",
+      "observedHeadAtConstruction": "d8d059ab262469ebdb9a3562f2679acc6690b14f",
+      "allowedOperations": ["READ_EVIDENCE", "VERIFY_RECEIPT", "CORRELATE_STATE"],
+      "externalWritesAllowed": false
+    }
+  ],
+  "federationLaws": [
+    "REPOSITORY_NUMERIC_ID_AND_FULL_NAME_MUST_BOTH_MATCH",
+    "UNKNOWN_REPOSITORY_FAILS_CLOSED",
+    "FEDERATED_EVIDENCE_REQUIRES_EXACT_SOURCE_HEAD_AND_SHA256_DIGEST",
+    "READ_ONLY_FEDERATION_DOES_NOT_CREATE_EXTERNAL_WRITE_AUTHORITY",
+    "EVIDENCE_TRANSFER_DOES_NOT_TRANSFER_AUTHORITY",
+    "NEW_REPOSITORY_REGISTRATION_REQUIRES_SEPARATE_ADOPTION"
+  ],
+  "authorityBoundary": {
+    "authorityCreated": false,
+    "externalRepositoryWriteAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "repositorySettingsAuthorityCreated": false,
+    "rulesetActivationAuthorityCreated": false,
+    "hEarthAuthorityCreated": false,
+    "lawsAuthorityCreated": false
+  }
+}

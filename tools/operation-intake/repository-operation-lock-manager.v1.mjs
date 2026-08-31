@@ -91,6 +91,14 @@ export const EXACT_LOCK_REF_LINEAGE_RECOVERIES = [
     committerLogin: 'smansfield635-create',
     message: 'Close operation lock 1889: RESEARCH_FRONTIER_ACHIEVEMENT_AMPLIFICATION_PUBLICATION_VERIFICATION_20260831_003 MUTATION_CLOSED_EVIDENCE_CONTINUES',
     ledgerBlobSha: 'a305e7bc9f52aa8660d292a029fde0c4cfbaca90'
+  }),
+  stable({
+    commitSha: '4a04654243a288698847825a98fde62456d006c0',
+    parentSha: 'f44775289199ba002ce445369704954a85147bee',
+    authorLogin: 'smansfield635-create',
+    committerLogin: 'smansfield635-create',
+    message: 'Acquire operation lock 1890: RESEARCH_FRONTIER_FOUR_CARD_RUNTIME_PUBLICATION_VERIFICATION_20260831_004',
+    ledgerBlobSha: '0c86e1c7532f2c92049666721b7c6be51927f852'
   })
 ];
 

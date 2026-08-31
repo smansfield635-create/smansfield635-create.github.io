@@ -51,7 +51,7 @@
           },
           {
             "type": "textContains",
-            "selector": ".compass-orbit-status",
+            "selector": "[data-capability-orbit][data-first-paint-authority=\"static\"] .compass-orbit-status",
             "value": "Awards & Recognition"
           }
         ],

@@ -33,7 +33,7 @@ for (const anchor of anchors) {
   anchor.dataset.characterState = slot.state;
   anchor.querySelector('.anchor__label').textContent = slot.displayName;
   const control = anchor.querySelector('.anchor__control');
-  if (control) control.setAttribute('aria-label', `Select ${slot.displayName}`);
+  if (control) control.setAttribute('aria-label', `Select ${slot.displayName}; activate to inspect`);
 }
 
 attachment.removeAttribute('aria-hidden');
@@ -42,6 +42,7 @@ attachment.setAttribute('aria-label', 'Selected character card');
 
 const detail = document.createElement('article');
 detail.className = 'character-card';
+detail.hidden = true;
 attachment.append(detail);
 
 const humanize = value => String(value).toLowerCase().replaceAll('_', ' ');
@@ -49,15 +50,24 @@ const humanize = value => String(value).toLowerCase().replaceAll('_', ' ');
 function render() {
   const index = Math.max(0, Math.min(7, Number.parseInt(root.dataset.carouselIndex || '01', 10) - 1));
   const slot = data.slots[index];
+  const inspectionActive = root.dataset.characterInspection === 'active';
   const eyebrow = attachment.querySelector('.carousel-attachment__eyebrow');
   const label = attachment.querySelector('.carousel-attachment__label');
 
   label.textContent = slot.displayName;
+  attachment.dataset.characterState = slot.state;
+  attachment.dataset.characterId = slot.characterId || '';
+  detail.hidden = !inspectionActive;
+
+  if (!inspectionActive) {
+    eyebrow.textContent = slot.state === 'UNASSIGNED_SOURCE_HOLD' ? 'Source hold · activate to inspect' : 'Character · activate to inspect';
+    detail.replaceChildren();
+    return;
+  }
+
   if (slot.state === 'UNASSIGNED_SOURCE_HOLD') {
     eyebrow.textContent = 'Source hold';
     detail.innerHTML = '<p class="character-card__hold">No owner-originating character source is assigned to this anchor.</p>';
-    attachment.dataset.characterId = '';
-    attachment.dataset.characterState = slot.state;
   } else {
     eyebrow.textContent = `${slot.seat} · ${slot.season}`;
     detail.replaceChildren();
@@ -75,19 +85,19 @@ function render() {
     provenance.textContent = `Source #2378 · comment ${slot.sourceCommentId}`;
 
     detail.append(roles, fn, provenance);
-    attachment.dataset.characterId = slot.characterId;
-    attachment.dataset.characterState = slot.state;
   }
-  if (status) status.textContent = `${slot.displayName} selected.`;
 }
 
 new MutationObserver(records => {
   if (records.some(record => record.attributeName === 'data-carousel-index')) render();
 }).observe(root, { attributes: true, attributeFilter: ['data-carousel-index'] });
 
+root.addEventListener('characters:inspection-change', render);
+
 root.dataset.productionContent = 'four-source-bound-cardinal-cards-four-unassigned-source-holds';
 root.dataset.characterCardsReady = 'true';
 root.dataset.characterSourceAuthority = 'issue-2378-owner-originating-only';
 root.dataset.characterInference = 'forbidden';
+root.dataset.characterInspectionContent = 'full-details-only-on-explicit-activation';
 
 render();

@@ -1,0 +1,34 @@
+name: Characters Task17R Foundation Exact Candidate
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/characters-task17r-foundation-exact-candidate.yml'
+      - 'tools/characters-task17r-foundation-evaluator.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout evaluator branch
+        uses: actions/checkout@v4
+      - name: Checkout exact candidate into target
+        uses: actions/checkout@v4
+        with:
+          ref: feb19ebcb9dd08f5585db337cb15bba8e6202a89
+          path: target
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright@latest --no-save
+          npx playwright install --with-deps chromium
+      - name: Run exact-candidate browser qualification
+        run: node tools/characters-task17r-foundation-evaluator.mjs

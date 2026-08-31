@@ -13,6 +13,10 @@ const browser = await chromium.launch({headless:true});
 const viewports=[['desktop',1440,1000],['tablet',768,1024],['phone',390,844]];
 const evidence=[];
 
+async function settleAttachment(page, reducedMotion) {
+  await page.waitForTimeout(reducedMotion === 'reduce' ? 24 : 480);
+}
+
 async function assertAnchorAttachment(page, name) {
   const selected=page.locator('.anchor[data-selected="true"]');
   assert.equal(await selected.count(),1,`${name}: exactly one selected anchor`);
@@ -90,6 +94,7 @@ try {
       assert.equal(await rootLocator.getAttribute('data-carousel-index'),'08',`${name}: wraparound previous`);
       await controls.nth(3).click();
       assert.equal(await rootLocator.getAttribute('data-carousel-index'),'04',`${name}: click selects anchor`);
+      await settleAttachment(page,reducedMotion);
       await assertAnchorAttachment(page,`${name}/${reducedMotion}/keyboard-click`);
 
       await pointerGesture(page,{x:250,y:500},{x:160,y:505});
@@ -97,10 +102,11 @@ try {
       const beforeVertical=await rootLocator.getAttribute('data-carousel-index');
       await pointerGesture(page,{x:200,y:480},{x:205,y:570});
       assert.equal(await rootLocator.getAttribute('data-carousel-index'),beforeVertical,`${name}: vertical gesture is not captured as carousel movement`);
+      await settleAttachment(page,reducedMotion);
       await assertAnchorAttachment(page,`${name}/${reducedMotion}/touch`);
 
       await page.setViewportSize({width:Math.max(320,width-24),height:Math.max(700,height-24)});
-      await page.waitForTimeout(reducedMotion==='reduce'?40:500);
+      await settleAttachment(page,reducedMotion);
       assert.equal(await anchors.count(),8,`${name}: anchors survive resize`);
       await assertAnchorAttachment(page,`${name}/${reducedMotion}/resize`);
       await page.reload({waitUntil:'networkidle'});

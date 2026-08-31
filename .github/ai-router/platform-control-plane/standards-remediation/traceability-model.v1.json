@@ -1,0 +1,82 @@
+{
+  "schema": "L2_STANDARDS_TRACEABILITY_MODEL_v1",
+  "requiredLinkChain": [
+    "requirement",
+    "testCondition",
+    "testCase",
+    "result",
+    "exitCriterion"
+  ],
+  "rules": {
+    "allRequirementsMustHaveConditions": true,
+    "allConditionsMustHaveCases": true,
+    "allCasesMustHaveResults": true,
+    "allResultsMustHaveEvidenceDigest": true,
+    "allRequirementsMustHaveExitCriteria": true,
+    "orphanNodesForbidden": true,
+    "duplicateIdsForbidden": true
+  },
+  "closureRequirements": [
+    {
+      "requirementId": "REQ_29119_TRACEABILITY",
+      "theme": "ISO_IEC_IEEE_29119_2_2021",
+      "testConditionId": "TC_TRACEABILITY_COMPLETE",
+      "testCaseIds": [
+        "CASE_TRACE_COMPLETE",
+        "CASE_TRACE_ORPHAN_REJECT",
+        "CASE_TRACE_MISSING_RESULT_REJECT"
+      ],
+      "exitCriterionId": "EXIT_TRACEABILITY"
+    },
+    {
+      "requirementId": "REQ_1012_VV_INTEGRITY",
+      "theme": "IEEE_1012_2024",
+      "testConditionId": "TC_VV_INTEGRITY",
+      "testCaseIds": [
+        "CASE_VV_DISTINCT_VERIFIER",
+        "CASE_VV_HIGH_INTEGRITY_REQUIRES_INDEPENDENCE",
+        "CASE_VV_SAME_HOLDER_REJECT"
+      ],
+      "exitCriterionId": "EXIT_VV"
+    },
+    {
+      "requirementId": "REQ_25023_QUALITY_MEASURES",
+      "theme": "ISO_IEC_25023_2016",
+      "testConditionId": "TC_QUALITY_MEASURES",
+      "testCaseIds": [
+        "CASE_MEASURE_VALID",
+        "CASE_MEASURE_ZERO_DENOM_REJECT",
+        "CASE_MEASURE_LONGITUDINAL_REQUIRED"
+      ],
+      "exitCriterionId": "EXIT_QUALITY_MEASURES"
+    },
+    {
+      "requirementId": "REQ_25010_COVERAGE",
+      "theme": "ISO_IEC_25010_2023",
+      "testConditionId": "TC_QUALITY_COVERAGE",
+      "testCaseIds": [
+        "CASE_NINE_CHARACTERISTICS_COVERED"
+      ],
+      "exitCriterionId": "EXIT_QUALITY_COVERAGE"
+    },
+    {
+      "requirementId": "REQ_SSDF_PROFILE",
+      "theme": "NIST_SP_800_218_V1_1",
+      "testConditionId": "TC_SSDF_EVIDENCE",
+      "testCaseIds": [
+        "CASE_SSDF_FOUR_GROUPS_EVIDENCED"
+      ],
+      "exitCriterionId": "EXIT_SSDF"
+    },
+    {
+      "requirementId": "REQ_ISO10012_PROFILE",
+      "theme": "ISO_10012_2026",
+      "testConditionId": "TC_MEASUREMENT_MANAGEMENT",
+      "testCaseIds": [
+        "CASE_MEASUREMENT_CONTROLS_PRESENT",
+        "CASE_EMPIRICAL_BOUNDARY_PRESERVED"
+      ],
+      "exitCriterionId": "EXIT_MEASUREMENT_MANAGEMENT"
+    }
+  ]
+}

@@ -4,6 +4,7 @@ set -euo pipefail
 : "${EXPECTED_COMMIT:?Set EXPECTED_COMMIT to the exact candidate commit SHA}"
 : "${OLLAMA_MODEL:=qwen2.5-coder:7b}"
 : "${OLLAMA_HOST_URL:=http://127.0.0.1:11434}"
+: "${OLLAMA_IMAGE:=ollama/ollama:0.32.14}"
 : "${OPENHANDS_VERSION:=1.14.0}"
 : "${PYTHON_BIN:=python3.12}"
 
@@ -22,13 +23,40 @@ if [[ -n "$(git status --porcelain)" ]]; then
   exit 21
 fi
 
-for cmd in "$PYTHON_BIN" node git curl sha256sum; do
+for cmd in "$PYTHON_BIN" node git curl sha256sum docker; do
   command -v "$cmd" >/dev/null 2>&1 || { echo "MISSING_COMMAND $cmd" >&2; exit 22; }
 done
 
 OUT_ROOT="${OPENHANDS_NATIVE_OUT_DIR:-$(mktemp -d -t openhands-native-admissibility-XXXXXX)}"
 mkdir -p "$OUT_ROOT"
 VENV="$OUT_ROOT/venv-openhands"
+
+cleanup() {
+  docker rm -f agentic-frontier-ollama >/dev/null 2>&1 || true
+}
+trap cleanup EXIT
+
+# Model runtime is provisioned by the project-declared command inside the reusable
+# disposable substrate. No bespoke Codespace or GitHub Actions agent transport is required.
+docker rm -f agentic-frontier-ollama >/dev/null 2>&1 || true
+docker pull "$OLLAMA_IMAGE"
+docker run -d --name agentic-frontier-ollama \
+  -e OLLAMA_CONTEXT_LENGTH=8192 \
+  -p 11434:11434 \
+  "$OLLAMA_IMAGE"
+
+for i in $(seq 1 60); do
+  if curl -fsS "${OLLAMA_HOST_URL%/}/api/tags" >/dev/null 2>&1; then
+    break
+  fi
+  if [[ "$i" == "60" ]]; then
+    echo "MODEL_RUNTIME_UNREADY ollama_start_timeout" >&2
+    exit 25
+  fi
+  sleep 2
+done
+
+docker exec agentic-frontier-ollama ollama pull "$OLLAMA_MODEL"
 
 "$PYTHON_BIN" -m venv "$VENV"
 "$VENV/bin/python" -m pip install --disable-pip-version-check "openhands==$OPENHANDS_VERSION"

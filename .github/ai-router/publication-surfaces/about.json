@@ -1,0 +1,64 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "about",
+  "description": "Qualified cinematic About estate with repository chronology, human/community layer, Skip convergence, and reduced-motion equivalent.",
+  "checks": [
+    {
+      "path": "/about/index.html",
+      "includes": [
+        "data-about-generation=\"documentary-estate-v1\"",
+        "data-skip-film",
+        "Eight historical states · repository anchors",
+        "The human layer",
+        "Sep 2026",
+        "The work is ultimately about people."
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/about/about-source-to-shot-binding.v1.json",
+      "includes": [
+        "ABOUT_SOURCE_TO_SHOT_BINDING_v1",
+        "ABOUT_HUMAN_CHRONOLOGY_REFINEMENT_20260901_001",
+        "\"filmToInterfacePhysicalContinuity\": true",
+        "\"skipPathBound\": true"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/about/",
+    "timeoutMs": 15000,
+    "readySelector": "[data-estate-core]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/about/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [],
+    "interactions": [
+      {
+        "name": "Skip film converges to the persistent About estate",
+        "action": {
+          "type": "click",
+          "selector": "[data-skip-film]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "html",
+            "name": "data-film-state",
+            "value": "settled"
+          },
+          {
+            "type": "exists",
+            "selector": "[data-estate-core]"
+          }
+        ],
+        "timeoutMs": 5000
+      }
+    ]
+  }
+}

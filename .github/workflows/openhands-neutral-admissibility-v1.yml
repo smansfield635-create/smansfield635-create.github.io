@@ -14,15 +14,16 @@ jobs:
       github.event.issue.number == 2089 &&
       contains(github.event.comment.body, 'OPENHANDS_NEUTRAL_ADMISSIBILITY_V1')
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     env:
       OLLAMA_MODEL: qwen2.5-coder:7b
       OLLAMA_HOST_URL: http://127.0.0.1:11434
       OLLAMA_IMAGE: ollama/ollama:0.32.14
       OPENHANDS_VERSION: '1.14.0'
+      OPENHANDS_LLM_TIMEOUT_S: '1500'
       PYTHON_BIN: python3.12
-      OPENHANDS_INACTIVITY_S: '600'
-      OPENHANDS_HARD_TIMEOUT_S: '1500'
+      OPENHANDS_INACTIVITY_S: '1500'
+      OPENHANDS_HARD_TIMEOUT_S: '1800'
       PAIR_HEARTBEAT_S: '15'
       PYTHONUNBUFFERED: '1'
     steps:
@@ -61,9 +62,12 @@ jobs:
           path: |
             ${{ runner.temp }}/openhands-neutral-admissibility/agentic-frontier-openhands-adversary-admissibility-v1.json
             ${{ runner.temp }}/openhands-neutral-admissibility/openhands-native-preflight-v1.json
+            ${{ runner.temp }}/openhands-neutral-admissibility/openhands-effective-llm-config-v1.json
+            ${{ runner.temp }}/openhands-neutral-admissibility/openhands-home/.openhands/agent_settings.json
             ${{ runner.temp }}/openhands-neutral-admissibility/openhands-version.txt
             ${{ runner.temp }}/openhands-neutral-admissibility/openhands-environment-freeze.txt
             ${{ runner.temp }}/openhands-neutral-admissibility/openhands-environment-freeze.sha256
+            ${{ runner.temp }}/openhands-neutral-admissibility/ollama-context-length.txt
           if-no-files-found: warn
       - name: Require admissibility pass
         shell: bash

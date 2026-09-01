@@ -76,13 +76,14 @@ def main():
         'LLM_API_KEY': 'local-placeholder',
         'LLM_MODEL': 'openai/' + MODEL,
         'LLM_BASE_URL': OLLAMA + '/v1',
+        'LLM_NATIVE_TOOL_CALLING': 'false',
         'WORKSPACE_DIR': str(ROOT),
         'OPENHANDS_SUPPRESS_BANNER': '1',
         'PYTHONUNBUFFERED': '1',
     })
     cmd = [
         'openhands', '--headless', '--json', '--always-approve', '--override-with-envs',
-        '--llm-native-tool-calling', 'false', '-t', TASK,
+        '-t', TASK,
     ]
 
     started = time.monotonic()

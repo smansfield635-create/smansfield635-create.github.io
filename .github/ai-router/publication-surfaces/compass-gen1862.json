@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "compass-gen1862",
-  "description": "Compass root publication contract after the qualified single-owner release-inertia repair, exact asset-identity refresh, and mandatory Trophy renderer live predicate.",
+  "description": "Compass root publication contract with mandatory visible Trophy successor identity and live renderer predicate.",
   "checks": [
     {
       "path": "/",
@@ -63,7 +63,7 @@
       "fieldSelector": "[data-award-trophy]",
       "canvasSelector": "[data-award-trophy] canvas",
       "fallbackSelector": "[data-award-trophy] .compass-trophy-fallback",
-      "approvedRenderer": "procedural-webgl-v5-mounted-lettering",
+      "approvedRenderer": "procedural-webgl-v6-legible-nameplate",
       "minFrames": 1,
       "requireVisible": true,
       "requireFallbackFalse": true,

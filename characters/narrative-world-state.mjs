@@ -1,4 +1,5 @@
 const DESTINATION_IDS=Object.freeze(['crossing','dextrion','alaric','tarian','manor','elara','soren','auren','jeeves','clock','remote']);
+const BASE_AVAILABLE=Object.freeze(['crossing','dextrion','alaric','tarian','elara','soren','clock','remote']);
 
 const EMPTY_DESTINATION=Object.freeze({
   physicalExpression:'latent',
@@ -53,8 +54,11 @@ function normalizeVisited(visited){
 
 export function deriveNarrativeWorldState(visitedInput,activeId=null){
   const visited=normalizeVisited(visitedInput);
-  const revealed=new Set(DESTINATION_IDS);
-  for(const id of visited){for(const target of PROOF_RULES[id]?.reveals||[])revealed.add(target);}
+  const revealed=new Set(BASE_AVAILABLE);
+  for(const id of visited){
+    revealed.add(id);
+    for(const target of PROOF_RULES[id]?.reveals||[])revealed.add(target);
+  }
 
   const destinations={};
   for(const id of DESTINATION_IDS){
@@ -81,6 +85,7 @@ export function deriveNarrativeWorldState(visitedInput,activeId=null){
     version:'NARRATIVE_WORLD_STATE_v1',
     visited:Object.freeze([...visited]),
     activeId,
+    revealed:Object.freeze([...revealed]),
     environment:Object.freeze({
       phase:clockResolved?'deep-night':'moonlit-night',
       lunarIntensity:clockResolved?0.82:0.68,

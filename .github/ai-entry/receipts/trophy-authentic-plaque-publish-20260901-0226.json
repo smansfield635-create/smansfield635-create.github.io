@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "trophy-authentic-plaque-publish-20260901-0226",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 2558,
+  "requestBranch": "ai-dispatch-request-trophy-authentic-plaque-publish-20260901",
+  "requestCommit": "7cdbc61b9074c3cfd43123161c422dd3708e8326",
+  "currentMainSha": "8832dee09efff286927f07f4e728023505645eb1",
+  "bridgeRunId": "33462555229",
+  "error": "Input may not be user supplied: target_sha",
+  "failedAt": "2026-09-01T02:26:51.057Z"
+}

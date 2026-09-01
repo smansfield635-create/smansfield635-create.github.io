@@ -1,3 +1,4 @@
+// Characters-owned night renderer; lunar surface language is adapted from the Laws moon without runtime coupling.
 export const GRATITUDE_COAST_NIGHT=Object.freeze({
   sky:Object.freeze({clear:[0.008,0.016,0.04,1],horizon:[0.07,0.105,0.17]}),
   moon:Object.freeze({direction:[-0.34,0.84,0.42],color:[0.78,0.84,0.98],discColor:[0.92,0.94,1.0]}),

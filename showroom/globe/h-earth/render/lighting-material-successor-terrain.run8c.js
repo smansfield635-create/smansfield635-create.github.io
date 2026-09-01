@@ -1,5 +1,5 @@
 /**
- * H_EARTH_SUCCESSOR_TERRAIN_NORMAL_LIGHT_MATERIAL_REALIZATION_RUN_8C_v1
+ * H_EARTH_SUCCESSOR_TERRAIN_NORMAL_LIGHT_MATERIAL_REALIZATION_RUN_8C_v2_PLAYER_SCALE_DEPTH
  * Immutable presentation projection only; no renderer, geometry, admission,
  * camera, route, or deployment authority is created.
  */
@@ -53,6 +53,18 @@ export const H_EARTH_RUN_8C_NORMAL_LIGHT_MATERIAL_CONTRACT_ID =
   'H_EARTH_SUCCESSOR_TERRAIN_NORMAL_LIGHT_MATERIAL_REALIZATION_RUN_8C_v1';
 export const H_EARTH_RUN_8C_NORMAL_LIGHT_MATERIAL_SOURCE_FILE =
   '/showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js';
+export const H_EARTH_PLAYER_SCALE_FORM_LIGHTING_PROFILE = freeze({
+  profileId: 'H_EARTH_PLAYER_SCALE_FORM_LIGHTING_v1',
+  ambientBase: 0.14,
+  ambientSunWeight: 0.30,
+  ambientUpWeight: 0.10,
+  diffuseWeight: 0.94,
+  slopeBase: 0.62,
+  slopeUpWeight: 0.38,
+  curvatureOcclusionWeight: 0.82,
+  minimumCurvatureOcclusion: 0.68,
+  authority: 'PRESENTATION_ONLY'
+});
 export const H_EARTH_RUN_8C_NORMAL_LIGHT_MATERIAL_PROFILE = freeze({
   contractId: H_EARTH_RUN_8C_NORMAL_LIGHT_MATERIAL_CONTRACT_ID,
   controllingInterfaceContractId: H_EARTH_RUN_8A_NORMAL_LIGHT_AND_MATERIAL_INTERFACE_CONTRACT.contractId,
@@ -60,7 +72,8 @@ export const H_EARTH_RUN_8C_NORMAL_LIGHT_MATERIAL_PROFILE = freeze({
   sourceSurfaceMaterialContractId: H_EARTH_RUN_8C_SUCCESSOR_SURFACE_MATERIAL_CONTRACT_ID,
   sourceAtmosphereStateContractId: H_EARTH_ATMOSPHERE_STATE_CONTRACT_ID,
   sourceAtmospherePresentationContractId: H_EARTH_ATMOSPHERE_PRESENTATION_CONTRACT_ID,
-  realizationModel: 'WORLD_NORMAL_DIFFUSE_AMBIENT_SLOPE_CURVATURE_WETNESS_ROUGHNESS_REFLECTANCE_AND_DISTANCE_HAZE',
+  formLightingProfileId: H_EARTH_PLAYER_SCALE_FORM_LIGHTING_PROFILE.profileId,
+  realizationModel: 'WORLD_NORMAL_DIFFUSE_AMBIENT_SLOPE_CURVATURE_WETNESS_ROUGHNESS_REFLECTANCE_PLAYER_SCALE_FORM_AND_DISTANCE_HAZE',
   owns: {
     normalDrivenLightProjection: true,
     materialResponseProjection: true,
@@ -86,13 +99,34 @@ export function projectHEarthRun8CVertexMaterialLighting({ world, normal, surfac
   }
   const normalDotSun = clamp(dot(normal, atmosphereState.sunDirection), -1, 1);
   const diffuseLightFactor = clamp01(Math.max(0, normalDotSun) * atmosphereState.sunIntensity);
-  const ambientLightFactor = clamp(0.15 + atmosphereState.sunIntensity * 0.33 + Math.max(0, normal.y) * 0.12, 0.14, 0.62);
-  const slopeShadeFactor = clamp(0.66 + Math.max(0, normal.y) * 0.34, 0.48, 1);
-  const curvatureOcclusionFactor = clamp(1 - Math.max(0, -surfaceMaterial.curvature) * 0.72, 0.72, 1);
+  const ambientLightFactor = clamp(
+    H_EARTH_PLAYER_SCALE_FORM_LIGHTING_PROFILE.ambientBase +
+      atmosphereState.sunIntensity * H_EARTH_PLAYER_SCALE_FORM_LIGHTING_PROFILE.ambientSunWeight +
+      Math.max(0, normal.y) * H_EARTH_PLAYER_SCALE_FORM_LIGHTING_PROFILE.ambientUpWeight,
+    0.13,
+    0.58
+  );
+  const slopeShadeFactor = clamp(
+    H_EARTH_PLAYER_SCALE_FORM_LIGHTING_PROFILE.slopeBase +
+      Math.max(0, normal.y) * H_EARTH_PLAYER_SCALE_FORM_LIGHTING_PROFILE.slopeUpWeight,
+    0.44,
+    1
+  );
+  const curvatureOcclusionFactor = clamp(
+    1 - Math.max(0, -surfaceMaterial.curvature) *
+      H_EARTH_PLAYER_SCALE_FORM_LIGHTING_PROFILE.curvatureOcclusionWeight,
+    H_EARTH_PLAYER_SCALE_FORM_LIGHTING_PROFILE.minimumCurvatureOcclusion,
+    1
+  );
   const wetnessResponse = clamp(1 - surfaceMaterial.wetness * 0.17, 0.79, 1);
   const roughnessResponse = clamp(1 - surfaceMaterial.roughness * 0.1, 0.88, 1);
   const reflectanceResponse = clamp01(surfaceMaterial.reflectance * (1 - surfaceMaterial.roughness) * diffuseLightFactor * (0.08 + surfaceMaterial.wetness * 0.22));
-  const lightFactor = clamp((ambientLightFactor + diffuseLightFactor * 0.86) * slopeShadeFactor * curvatureOcclusionFactor * wetnessResponse * roughnessResponse, 0, 1.35);
+  const lightFactor = clamp(
+    (ambientLightFactor + diffuseLightFactor * H_EARTH_PLAYER_SCALE_FORM_LIGHTING_PROFILE.diffuseWeight) *
+      slopeShadeFactor * curvatureOcclusionFactor * wetnessResponse * roughnessResponse,
+    0,
+    1.35
+  );
   const base = surfaceMaterial.baseColorProfile;
   const sunLinear = {
     r: srgb8ToLinear(atmosphereState.sunColor[0]),
@@ -129,6 +163,7 @@ export function projectHEarthRun8CVertexMaterialLighting({ world, normal, surfac
     wetnessResponse,
     roughnessResponse,
     reflectanceResponse,
+    formLightingProfileId: H_EARTH_PLAYER_SCALE_FORM_LIGHTING_PROFILE.profileId,
     distanceHazeFactor: atmospheric.fogFactor,
     distanceDesaturationFactor: atmospheric.desaturationFactor,
     cameraDistance,
@@ -215,6 +250,7 @@ export function buildHEarthRun8CTerrainMaterialLightingPresentation({
     sourceSurfaceMaterialContractId: H_EARTH_RUN_8C_SUCCESSOR_SURFACE_MATERIAL_CONTRACT_ID,
     sourceAtmosphereStateContractId: H_EARTH_ATMOSPHERE_STATE_CONTRACT_ID,
     sourceAtmospherePresentationContractId: H_EARTH_ATMOSPHERE_PRESENTATION_CONTRACT_ID,
+    formLightingProfileId: H_EARTH_PLAYER_SCALE_FORM_LIGHTING_PROFILE.profileId,
     cameraObservationInput: { ...cameraWorld },
     timeOfDayHours: atmosphereState.timeOfDay.hours,
     timeOfDayPhase: atmosphereState.timeOfDay.phase,
@@ -247,6 +283,7 @@ export function evaluateHEarthRun8CTerrainMaterialLightingPresentation(record) {
   if (record?.eligible !== true) issues.push('RUN_8C_PRESENTATION_NOT_ELIGIBLE');
   if (record?.contractId !== H_EARTH_RUN_8C_NORMAL_LIGHT_MATERIAL_CONTRACT_ID) issues.push('RUN_8C_PRESENTATION_CONTRACT_ID_MISMATCH');
   if (record?.sourceNeutralGeometryContractId !== H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_CONTRACT_ID) issues.push('RUN_8B_NEUTRAL_GEOMETRY_SOURCE_MISMATCH');
+  if (record?.formLightingProfileId !== H_EARTH_PLAYER_SCALE_FORM_LIGHTING_PROFILE.profileId) issues.push('PLAYER_SCALE_FORM_LIGHTING_PROFILE_MISSING');
   if (!Array.isArray(record?.vertexAttributes) || record.vertexAttributes.length !== record.vertexAttributeCount || record.vertexAttributeCount <= 0) issues.push('RUN_8C_VERTEX_ATTRIBUTES_INVALID');
   if (record?.summary?.surfaceClassCount < 5) issues.push('RUN_8C_MATERIAL_CLASS_VARIATION_INSUFFICIENT');
   if (!finite(record?.summary?.diffuseRange) || (record?.sunIntensity > 0.02 && record.summary.diffuseRange <= 0.05)) issues.push('RUN_8C_NORMAL_DRIVEN_LIGHT_VARIATION_INSUFFICIENT');

@@ -1,0 +1,315 @@
+name: Shimmer V10A Eliminate Old Baseline
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/shimmer-v10a-eliminate-old-baseline.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  eliminate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Eliminate old Shimmer baseline from active source candidates
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const path = require("node:path");
+
+          const ROOT = process.cwd();
+          const REPORT_DIR = path.join(ROOT, "authority-reports");
+          const REPORT_FILE = path.join(REPORT_DIR, "shimmer-v10a-eliminate-old-baseline-report.txt");
+
+          const oldFamily = ["SHIMMER", "LATTICE", "G1", "V10"].join("_");
+          const oldActive = `${oldFamily}=ACTIVE`;
+          const oldTitleDot = ["Shimmer", "G1 V10"].join(" · ");
+          const oldTitleHtml = ["Shimmer", "G1 V10"].join(" &middot; ");
+          const oldFooterDot = ["Shimmer/Lattice", "G1 V10"].join(" · ");
+          const oldFooterHtml = ["Shimmer/Lattice", "G1 V10"].join(" &middot; ");
+          const oldStatusPhrase = ["Shimmer contract", "restored to baseline"].join(" ");
+          const oldBaseline = ["BASELINE", "THE_WORLD_IS_FLAT"].join("=");
+          const oldMethod = ["METHOD", "RUSSIAN_DOLL_LABEL_EXPANSION"].join("=");
+          const oldLens = ["VISIBLE_LENS", "PLATFORM_OR_ENGINEERING_URL_ONLY"].join("=");
+
+          const newFamily = ["SHIMMER", "G1", "V10A", "UNIVERSAL", "NODE", "ACTIVE"].join("_");
+          const newActive = `${newFamily}=TRUE`;
+          const newTitle = ["Shimmer", "G1 V10A"].join(" · ");
+          const newTitleHtml = ["Shimmer", "G1 V10A"].join(" &middot; ");
+          const newFooter = ["Shimmer/Lattice", "G1 V10A"].join(" · ");
+          const newFooterHtml = ["Shimmer/Lattice", "G1 V10A"].join(" &middot; ");
+          const newProof = "PUBLIC_PROOF_MARKER=Universal Node · V10A active";
+          const newVisible = "VISIBLE_TITLE=Shimmer · G1 V10A";
+          const newBaseline = "BASELINE=UNIVERSAL_NODE_V10A";
+          const newMethod = "METHOD=UNIVERSAL_NODE_RUSSIAN_DOLL_EXPANSION";
+          const newLens = "VISIBLE_LENS=PLATFORM_OR_ENGINEERING_URL_AND_CONTROL";
+
+          const EXCLUDE_DIRS = new Set([
+            ".git",
+            "node_modules",
+            ".github",
+            "tools",
+            "authority-reports",
+            ".next",
+            ".cache",
+            ".turbo",
+            ".vercel",
+            ".netlify"
+          ]);
+
+          const TEXT_EXTENSIONS = new Set([
+            ".html", ".htm", ".js", ".mjs", ".cjs", ".jsx", ".ts", ".tsx",
+            ".json", ".md", ".txt", ".php", ".liquid", ".astro", ".vue", ".svelte"
+          ]);
+
+          const report = [];
+
+          function log(line = "") {
+            report.push(line);
+            console.log(line);
+          }
+
+          function ensureDir(dir) {
+            fs.mkdirSync(dir, { recursive: true });
+          }
+
+          function escapeRegex(value) {
+            return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+          }
+
+          function isExcluded(fullPath) {
+            const rel = path.relative(ROOT, fullPath);
+            const parts = rel.split(path.sep);
+            return parts.some((part) => EXCLUDE_DIRS.has(part));
+          }
+
+          function isTextCandidate(fullPath) {
+            const ext = path.extname(fullPath).toLowerCase();
+            const base = path.basename(fullPath).toLowerCase();
+
+            if (TEXT_EXTENSIONS.has(ext)) return true;
+            if (base.includes("frontier")) return true;
+            if (base.includes("shimmer")) return true;
+            if (base.includes("lane")) return true;
+            if (base.includes("registry")) return true;
+            if (base.includes("kernel")) return true;
+            if (base.includes("world")) return true;
+
+            return false;
+          }
+
+          function walk(dir, output = []) {
+            if (isExcluded(dir)) return output;
+
+            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+              const fullPath = path.join(dir, entry.name);
+
+              if (entry.isDirectory()) {
+                walk(fullPath, output);
+                continue;
+              }
+
+              if (entry.isFile() && isTextCandidate(fullPath)) {
+                output.push(fullPath);
+              }
+            }
+
+            return output;
+          }
+
+          function readUtf8(fullPath) {
+            const stat = fs.statSync(fullPath);
+            if (!stat.isFile()) return null;
+            if (stat.size > 8_000_000) return null;
+
+            const buffer = fs.readFileSync(fullPath);
+            if (buffer.includes(0)) return null;
+
+            return buffer.toString("utf8");
+          }
+
+          function findHits(text) {
+            const checks = [
+              ["old_active_contract", oldActive],
+              ["old_contract_family", oldFamily],
+              ["old_visible_title_dot", oldTitleDot],
+              ["old_visible_title_html", oldTitleHtml],
+              ["old_footer_dot", oldFooterDot],
+              ["old_footer_html", oldFooterHtml],
+              ["old_status_phrase", oldStatusPhrase],
+              ["old_baseline", oldBaseline],
+              ["old_method", oldMethod],
+              ["old_lens", oldLens],
+              ["shimmer_route", "/explore/frontier/shimmer/"],
+              ["signal_category", "Signal category"],
+              ["russian_doll_labels", "Russian-doll labels"],
+              ["open_only_domain_needed", "Open only the domain needed"]
+            ];
+
+            const hits = [];
+            for (const [name, marker] of checks) {
+              if (text.includes(marker)) hits.push(name);
+            }
+
+            return hits;
+          }
+
+          function isTarget(text) {
+            const hits = findHits(text);
+
+            if (text.includes(oldActive)) return true;
+            if (text.includes(oldFamily)) return true;
+            if (text.includes(oldTitleDot)) return true;
+            if (text.includes(oldTitleHtml)) return true;
+            if (text.includes(oldStatusPhrase)) return true;
+
+            const lower = text.toLowerCase();
+            const hasShimmer = lower.includes("shimmer");
+            const hasFrontier = lower.includes("frontier");
+            const hasLegacyShape =
+              text.includes(oldBaseline) ||
+              text.includes(oldMethod) ||
+              text.includes("Russian-doll labels") ||
+              text.includes("Open only the domain needed");
+
+            return hasShimmer && hasFrontier && hasLegacyShape && hits.length >= 3;
+          }
+
+          function replaceAll(text, from, to) {
+            return text.split(from).join(to);
+          }
+
+          function rewrite(text) {
+            let next = text;
+
+            next = replaceAll(next, oldActive, newActive);
+            next = replaceAll(next, oldFamily, newFamily);
+            next = replaceAll(next, oldTitleDot, newTitle);
+            next = replaceAll(next, oldTitleHtml, newTitleHtml);
+            next = replaceAll(next, oldFooterDot, newFooter);
+            next = replaceAll(next, oldFooterHtml, newFooterHtml);
+            next = replaceAll(next, `${oldStatusPhrase}.`, "Universal Node · V10A active.");
+            next = replaceAll(next, oldStatusPhrase, "Universal Node · V10A active");
+            next = replaceAll(next, oldBaseline, newBaseline);
+            next = replaceAll(next, oldMethod, newMethod);
+            next = replaceAll(next, oldLens, newLens);
+
+            next = next.replace(new RegExp(`${escapeRegex(newTitle)}(A)+`, "g"), newTitle);
+            next = next.replace(new RegExp(`${escapeRegex(newTitleHtml)}(A)+`, "g"), newTitleHtml);
+
+            if (!next.includes(newProof)) {
+              if (next.includes(newActive)) {
+                next = replaceAll(next, newActive, `${newActive} ${newProof}`);
+              } else if (next.includes(newFamily)) {
+                next = replaceAll(next, newFamily, `${newFamily} ${newProof}`);
+              } else {
+                next += `\n${newActive}\n${newProof}\n`;
+              }
+            }
+
+            if (!next.includes(newVisible)) {
+              if (next.includes(newProof)) {
+                next = replaceAll(next, newProof, `${newVisible} ${newProof}`);
+              } else {
+                next += `\n${newVisible}\n`;
+              }
+            }
+
+            if (!next.includes("REVISION=V10A")) {
+              if (next.includes("ROUTE=/explore/frontier/shimmer/")) {
+                next = replaceAll(
+                  next,
+                  "ROUTE=/explore/frontier/shimmer/",
+                  "ROUTE=/explore/frontier/shimmer/ REVISION=V10A"
+                );
+              }
+            }
+
+            return next;
+          }
+
+          ensureDir(REPORT_DIR);
+
+          log("SHIMMER V10A ELIMINATE OLD BASELINE REPORT");
+          log(`Generated: ${new Date().toISOString()}`);
+          log(`Repo root: ${ROOT}`);
+          log("");
+
+          const files = walk(ROOT);
+          const targets = [];
+
+          for (const file of files) {
+            const text = readUtf8(file);
+            if (!text) continue;
+
+            if (isTarget(text)) {
+              targets.push({
+                file,
+                text,
+                hits: findHits(text)
+              });
+            }
+          }
+
+          log("SELECTED TARGETS:");
+
+          if (!targets.length) {
+            log("NONE");
+            log("RESULT=NO_ACTIVE_LEGACY_SOURCE_FOUND_IN_THIS_REPO_BRANCH");
+            fs.writeFileSync(REPORT_FILE, report.join("\n"), "utf8");
+            process.exit(0);
+          }
+
+          for (const target of targets) {
+            const rel = path.relative(ROOT, target.file);
+            const next = rewrite(target.text);
+
+            log("");
+            log(`FILE=${rel}`);
+            log(`HITS=${target.hits.join(",")}`);
+
+            if (next === target.text) {
+              log("RESULT=NO_CHANGE");
+              continue;
+            }
+
+            fs.writeFileSync(target.file, next, "utf8");
+
+            log("RESULT=REWRITTEN");
+            log(`NEW_TITLE=${newTitle}`);
+            log(`NEW_CONTRACT=${newActive}`);
+            log("NEW_PROOF=Universal Node · V10A active");
+          }
+
+          log("");
+          log("PUBLIC SUCCESS MARKERS:");
+          log("Shimmer · G1 V10A");
+          log("SHIMMER_G1_V10A_UNIVERSAL_NODE_ACTIVE");
+          log("Universal Node · V10A active");
+          log("");
+          log("RESULT=COMPLETE");
+
+          fs.writeFileSync(REPORT_FILE, report.join("\n"), "utf8");
+          NODE
+
+      - name: Commit old-baseline elimination
+        shell: bash
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Eliminate old Shimmer baseline and mark G1 V10A"
+            git push
+          fi

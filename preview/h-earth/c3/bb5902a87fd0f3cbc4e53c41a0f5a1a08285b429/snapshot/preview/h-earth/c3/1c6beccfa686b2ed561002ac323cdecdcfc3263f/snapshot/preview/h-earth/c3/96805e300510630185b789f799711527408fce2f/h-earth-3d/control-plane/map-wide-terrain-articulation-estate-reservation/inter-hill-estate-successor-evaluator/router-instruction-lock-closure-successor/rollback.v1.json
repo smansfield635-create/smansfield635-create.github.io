@@ -1,0 +1,24 @@
+{
+  "schema": "H_EARTH_V2_ROUTER_INSTRUCTION_AND_LOCK_CLOSURE_SUCCESSOR_ROLLBACK_v1",
+  "baseHead": "25f6e9cd6caf1dba73552e81eaa8a23e1c393d5f",
+  "predecessors": {
+    ".github/ai-router/router.v1.json": "b6e1b23b6b0aac424b90e1414c6e047134c98f8a",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/AGENTS.md": "f5d8215e180fa84ad4f23ee3eea57aa41abbcef0"
+  },
+  "addedPaths": [
+    ".github/workflows/h-earth-v2-router-instruction-lock-closure-successor.yml",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/contract.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/changed-path-manifest.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/closure-request.lock-279.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/negative-fixtures.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/rollback.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/verify.v1.mjs"
+  ],
+  "rollbackMethod": "REVERT_THE_EXACT_TWO_CONSTRUCTION_COMMITS_OR_RESET_UNMERGED_BRANCH_TO_EXACT_BASE_HEAD",
+  "directLockLedgerRollback": false,
+  "lock279DispositionAfterRollback": "UNCHANGED_UNLESS_EXACT_LOCK_MANAGER_COMMAND_ALREADY_EXECUTED",
+  "constructionLockDispositionAfterRollback": "REQUIRES_SEPARATE_EXACT_LOCK_MANAGER_TERMINAL_COMMAND",
+  "productMutation": false,
+  "terrainMutation": false,
+  "v1Mutation": false
+}

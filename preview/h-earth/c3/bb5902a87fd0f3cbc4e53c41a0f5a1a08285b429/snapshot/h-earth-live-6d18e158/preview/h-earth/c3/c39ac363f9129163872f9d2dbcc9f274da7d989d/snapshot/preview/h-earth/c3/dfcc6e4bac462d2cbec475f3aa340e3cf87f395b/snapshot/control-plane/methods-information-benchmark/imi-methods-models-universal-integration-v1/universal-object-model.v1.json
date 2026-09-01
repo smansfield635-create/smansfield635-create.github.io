@@ -1,0 +1,77 @@
+{
+  "schema": "IMI_METHODS_MODELS_UNIVERSAL_OBJECT_MODEL_v1",
+  "status": "SUCCESSOR_NORMALIZATION_CANDIDATE",
+  "issue": 697,
+  "sourceBindings": {
+    "repositoryMainAtIntake": "3c1f3800b8120a8d673cd9c59f89ecbcb7c049ca",
+    "legacyMethodsCheckpointHead": "9f1edcb8ab0e5d7e28f8e4098642fc6ea153bcb3",
+    "legacyInteractionFingerprint": "7f19aab646a09187369d6c4da00135b0e3623d3bfae288050318a04fb12845ef",
+    "legacyInformationArchitectureFingerprint": "9428d8764026c6e8c75aa38d680be9db54e5d37aee3b3aa0480e41a0db247b3f",
+    "legacyDesignGrammarFingerprint": "13c93b713c936365564d9fd95e76a7cabbfce3d9ac9c3e658edbde0d70d98991",
+    "prospectivePortfolioPr": 694,
+    "prospectivePortfolioHead": "c24747ab132606c9427211bf607c32529345514d",
+    "sourceCutoff": "2026-08-06T20:34:00-05:00"
+  },
+  "objectClasses": [
+    {
+      "id": "INSTRUMENT",
+      "canonicalInstance": "IMI",
+      "definition": "Observer-grade instrument and measurement framework."
+    },
+    {
+      "id": "INVARIANT_CANDIDATE",
+      "canonicalInstance": "UCIC",
+      "definition": "Fixed invariant candidate exposed to severe falsification."
+    },
+    {
+      "id": "METHOD",
+      "canonicalInstance": "METHODS",
+      "definition": "Scientific procedure governing evidence, independence, custody, freezing, scoring, and adjudication."
+    },
+    {
+      "id": "MODEL",
+      "canonicalInstance": "MODEL_REGISTRY",
+      "definition": "A representation used to describe or predict system behavior."
+    },
+    {
+      "id": "TEST_INSTANCE",
+      "canonicalInstance": "UCIC_PROSPECTIVE_FINAL_REPORT_TARGET_PORTFOLIO_v1",
+      "definition": "Frozen five-domain prospective severe-test portfolio."
+    },
+    {
+      "id": "EVIDENCE_OBJECT",
+      "canonicalInstance": "EVIDENCE_REGISTRY",
+      "definition": "Source, submission, outcome, score, or adjudicated evidence object."
+    },
+    {
+      "id": "COMPARATOR",
+      "canonicalInstance": "COMPARATOR_REGISTRY",
+      "definition": "Competing representation receiving the same admissible evidence."
+    },
+    {
+      "id": "TERMINAL_DISPOSITION",
+      "canonicalInstance": "UCIC_TERMINAL_DISPOSITION",
+      "definition": "One exact severe-test terminal outcome."
+    },
+    {
+      "id": "INTERFACE_STATE",
+      "canonicalInstance": "HUMAN_AND_3D_STATE",
+      "definition": "Navigation and presentation state with no authority to alter scientific meaning."
+    }
+  ],
+  "independentAxes": [
+    "SCIENTIFIC_OBJECT_IDENTITY",
+    "EVIDENCE_STATUS",
+    "EXECUTION_STATUS",
+    "CUSTODY_STATUS",
+    "INTERFACE_STATE"
+  ],
+  "prohibitions": [
+    "ONE_LABEL_MAY_NOT_SILENTLY_SERVE_MULTIPLE_OBJECT_CLASSES",
+    "INTERFACE_STATE_MAY_NOT_MUTATE_SCIENTIFIC_STATE",
+    "PROTOCOL_READINESS_MAY_NOT_BE_REPORTED_AS_SCIENTIFIC_RESULT",
+    "RETROSPECTIVE_EVIDENCE_MAY_NOT_BE_REPORTED_AS_PROSPECTIVE_CONFIRMATION",
+    "MODEL_MAY_NOT_BE_REPORTED_AS_METHOD",
+    "COMPARATOR_MAY_NOT_BE_REPORTED_AS_INSTRUMENT"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "WORKFLOW_LIFECYCLE_RETIREMENT_CONTINUITY_RATIFICATION_RECORD_v2",
+  "instrumentId": "WORKFLOW_LIFECYCLE_RETIREMENT_CONTINUITY_v1",
+  "status": "RATIFIED_ACTIVE_FAIL_CLOSED_V2_EVIDENCE_BOUND",
+  "ratifiedAgainstHead": "28c64779b73c3bd224d95ad84859d8cf40b808d9",
+  "predecessorRatificationPr": 944,
+  "predecessorVerifierBlob": "6ad0761b93fdd9e3aef2c8c6162db8339224c72c",
+  "qualificationDefectClosed": "UNVERIFIED_ASSERTION_AND_NAKED_ZERO_CONSUMER_ASSERTION",
+  "evidenceBindingExtensionOperation": "WORKFLOW_LIFECYCLE_CONTINUITY_EVIDENCE_BINDING_QUALIFICATION_EXTENSION_v2",
+  "intakeLockGeneration": 1302,
+  "qualificationSelfTest": "PASS_CLOSED_10_OF_10",
+  "authority": {
+    "userDirectedAdoption": true,
+    "mergeAuthorizedForExactInstallation": true,
+    "gapClosureAuthorized": false,
+    "physicalRetirementAuthorized": false,
+    "workflowCarrierMutationAuthorized": false,
+    "productMutationAuthorized": false
+  }
+}

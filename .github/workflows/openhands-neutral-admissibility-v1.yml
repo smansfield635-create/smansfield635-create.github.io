@@ -1,0 +1,74 @@
+name: OpenHands Neutral Admissibility v1
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  neutral-openhands-admissibility:
+    if: >-
+      github.event.issue.number == 2089 &&
+      contains(github.event.comment.body, 'OPENHANDS_NEUTRAL_ADMISSIBILITY_V1')
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      OLLAMA_MODEL: qwen2.5-coder:7b
+      OLLAMA_HOST_URL: http://127.0.0.1:11434
+      OLLAMA_IMAGE: ollama/ollama:0.32.14
+      OPENHANDS_VERSION: '1.14.0'
+      OPENHANDS_LLM_TIMEOUT_S: '1500'
+      PYTHON_BIN: python3.12
+      OPENHANDS_INACTIVITY_S: '1500'
+      OPENHANDS_HARD_TIMEOUT_S: '1800'
+      PAIR_HEARTBEAT_S: '15'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - name: Checkout exact main containing neutral runner
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Use Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Record exact target
+        shell: bash
+        run: echo "EXPECTED_COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+      - name: Execute exactly one neutral stock OpenHands control
+        id: admissibility
+        shell: bash
+        run: |
+          set +e
+          OUT="$RUNNER_TEMP/openhands-neutral-admissibility"
+          mkdir -p "$OUT"
+          OPENHANDS_NATIVE_OUT_DIR="$OUT" bash tools/research/agentic-frontier/run-openhands-native-admissibility-v1.sh
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Upload neutral evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: openhands-neutral-admissibility-v1
+          path: |
+            ${{ runner.temp }}/openhands-neutral-admissibility/agentic-frontier-openhands-adversary-admissibility-v1.json
+            ${{ runner.temp }}/openhands-neutral-admissibility/openhands-native-preflight-v1.json
+            ${{ runner.temp }}/openhands-neutral-admissibility/openhands-effective-llm-config-v1.json
+            ${{ runner.temp }}/openhands-neutral-admissibility/openhands-home/.openhands/agent_settings.json
+            ${{ runner.temp }}/openhands-neutral-admissibility/openhands-version.txt
+            ${{ runner.temp }}/openhands-neutral-admissibility/openhands-environment-freeze.txt
+            ${{ runner.temp }}/openhands-neutral-admissibility/openhands-environment-freeze.sha256
+            ${{ runner.temp }}/openhands-neutral-admissibility/ollama-context-length.txt
+          if-no-files-found: warn
+      - name: Require admissibility pass
+        shell: bash
+        run: test "${{ steps.admissibility.outputs.exit_code }}" = "0"

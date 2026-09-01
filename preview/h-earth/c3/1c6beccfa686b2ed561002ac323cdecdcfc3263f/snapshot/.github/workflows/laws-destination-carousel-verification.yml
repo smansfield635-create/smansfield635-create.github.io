@@ -1,0 +1,32 @@
+name: Laws Destination Carousel Verification
+
+on:
+  pull_request:
+    paths:
+      - 'laws/index.destination-carousel.js'
+      - 'laws/index.destination-carousel.css'
+      - 'laws/index.mobile-background-tabs.js'
+      - 'laws/index.mobile-background-tabs.core.js'
+      - '.github/workflows/laws-destination-carousel-verification.yml'
+  workflow_dispatch:
+permissions: { contents: read }
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: '${{ github.event.pull_request.head.sha || github.sha }}', fetch-depth: 1 }
+      - name: Verify shared-ring geometry with direction-only gesture authority
+        run: |
+          node --check laws/index.destination-carousel.js
+          node --check laws/index.mobile-background-tabs.js
+          python3 - <<'PY'
+          from pathlib import Path
+          js=Path('laws/index.destination-carousel.js').read_text(); css=Path('laws/index.destination-carousel.css').read_text(); loader=Path('laws/index.mobile-background-tabs.js').read_text()
+          required=['LAWS_DESTINATION_CAROUSEL_RUNTIME_v11_DIRECTION_ONLY_ATOMIC','METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1','20260816E_DIRECTION_ONLY_CANONICAL','directionOnlyGesture: true','liveGestureGeometry: false','atomicRotation: true','oneGestureOneStep: true','canonicalFrameLockedDuringGesture: true','velocityProjection: false','momentumTraversal: false','angleForDetent','targetDetent','pointer-atomic-step','restoreOrbitState','Return to Orbit']
+          for t in required: assert t in js, f'missing v11 contract {t}'
+          for t in ['--laws-ring-rotation','--laws-ring-radius','--laws-card-angle','rotateY(var(--laws-ring-rotation))','translateZ(var(--laws-ring-radius))','touch-action:pan-y']: assert t in css, f'missing shared ring CSS {t}'
+          for t in ['pointerStartAngle','state.velocity','snapFromDrag','methodsReleaseProjection:true','momentumTraversal:true']: assert t not in js, f'revoked v10 behavior remains {t}'
+          assert 'LAWS_DESTINATION_CAROUSEL_RUNTIME_V11_DIRECTION_ONLY_ATOMIC_20260816E' in loader
+          print('LAWS_DIRECTION_ONLY_SHARED_RING_STATIC_PASS')
+          PY

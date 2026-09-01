@@ -1,0 +1,153 @@
+name: H-Earth Run 8E Mobile Navigation Correction
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8e-mobile-navigation-correction-001
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/h-earth-run8e-mobile-navigation-correction.yml'
+      - 'h-earth-3d/validation/h-earth.run8e-mobile-navigation-correction.*'
+      - 'showroom/globe/h-earth/index.html'
+      - 'showroom/globe/h-earth/functional-landscape/index.js'
+      - 'showroom/globe/h-earth/functional-landscape/environment-integration.js'
+      - 'showroom/globe/h-earth/functional-landscape/mobile-navigation-controls.js'
+      - 'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-mobile-navigation-correction-scope.js'
+      - 'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  validate-run8e-mobile-navigation-correction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      H_EARTH_MOBILE_CORRECTION_URL: http://127.0.0.1:4173/showroom/globe/h-earth/
+      H_EARTH_MOBILE_CORRECTION_OUTPUT: /tmp/h-earth-run8e-mobile-navigation-correction
+    steps:
+      - name: Check out mobile correction workspace
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Materialize bounded mobile navigation correction
+        run: |
+          set -euo pipefail
+          node h-earth-3d/validation/h-earth.run8e-mobile-navigation-correction.constructor.mjs \
+            2>&1 | tee /tmp/h-earth-run8e-mobile-navigation-constructor.log
+          node h-earth-3d/validation/h-earth.run8e-mobile-navigation-correction.reset-fix.mjs \
+            2>&1 | tee /tmp/h-earth-run8e-mobile-navigation-reset-fix.log
+
+      - name: Install bounded Chromium dependency
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Start bounded workspace server
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 > /tmp/h-earth-run8e-mobile-navigation-server.log 2>&1 &
+          echo $! > /tmp/h-earth-run8e-mobile-navigation-server.pid
+          for attempt in $(seq 1 50); do
+            if curl --fail --silent "$H_EARTH_MOBILE_CORRECTION_URL" > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/h-earth-run8e-mobile-navigation-server.log
+          exit 1
+
+      - name: Execute Samsung mobile navigation matrix
+        run: |
+          set -euo pipefail
+          node h-earth-3d/validation/h-earth.run8e-mobile-navigation-correction.harness.mjs \
+            2>&1 | tee /tmp/h-earth-run8e-mobile-navigation-correction.log
+
+      - name: Verify bounded correction scope
+        run: |
+          set -euo pipefail
+          git fetch origin main --quiet
+          {
+            git diff --name-only origin/main...HEAD
+            git diff --name-only
+            git ls-files --others --exclude-standard | grep -v '^node_modules/' || true
+          } | sed '/^$/d' | sort -u > /tmp/h-earth-run8e-mobile-navigation-paths.txt
+          cat /tmp/h-earth-run8e-mobile-navigation-paths.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          allowed = {
+            '.github/workflows/h-earth-run8e-mobile-navigation-correction.yml',
+            'h-earth-3d/validation/h-earth.run8e-mobile-navigation-correction.constructor.mjs',
+            'h-earth-3d/validation/h-earth.run8e-mobile-navigation-correction.reset-fix.mjs',
+            'h-earth-3d/validation/h-earth.run8e-mobile-navigation-correction.harness.mjs',
+            'h-earth-3d/validation/h-earth.run8e-mobile-navigation-correction.receipt.json',
+            'showroom/globe/h-earth/index.html',
+            'showroom/globe/h-earth/functional-landscape/index.js',
+            'showroom/globe/h-earth/functional-landscape/environment-integration.js',
+            'showroom/globe/h-earth/functional-landscape/mobile-navigation-controls.js',
+            'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-mobile-navigation-correction-scope.js',
+            'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
+          }
+          paths = {
+            line.strip()
+            for line in Path('/tmp/h-earth-run8e-mobile-navigation-paths.txt').read_text().splitlines()
+            if line.strip()
+          }
+          unexpected = sorted(paths - allowed)
+          required = allowed - {
+            'h-earth-3d/validation/h-earth.run8e-mobile-navigation-correction.receipt.json'
+          }
+          missing = sorted(required - paths)
+          if unexpected:
+            raise SystemExit(f'UNEXPECTED_MOBILE_CORRECTION_PATHS:{unexpected}')
+          if missing:
+            raise SystemExit(f'MISSING_MOBILE_CORRECTION_PATHS:{missing}')
+          if not 10 <= len(paths) <= 11:
+            raise SystemExit(f'INVALID_MOBILE_CORRECTION_PATH_COUNT:{len(paths)}')
+          PY
+
+      - name: Persist exact correction sources and receipt
+        if: github.event_name == 'push' && github.ref == 'refs/heads/agent/h-earth-run8e-mobile-navigation-correction-001'
+        run: |
+          set -euo pipefail
+          target='h-earth-3d/validation/h-earth.run8e-mobile-navigation-correction.receipt.json'
+          candidate='/tmp/h-earth-run8e-mobile-navigation-correction/h-earth.run8e-mobile-navigation-correction.receipt.json'
+          cp "$candidate" "$target"
+          git config user.name 'github-actions[bot]'
+          git config user.email '4189828+github-actions[bot]@users.noreply.github.com'
+          git add \
+            showroom/globe/h-earth/index.html \
+            showroom/globe/h-earth/functional-landscape/index.js \
+            showroom/globe/h-earth/functional-landscape/environment-integration.js \
+            showroom/globe/h-earth/functional-landscape/mobile-navigation-controls.js \
+            "$target"
+          if git diff --cached --quiet; then
+            echo 'Exact mobile navigation correction already persisted.'
+            exit 0
+          fi
+          git commit -m 'Apply Run 8E mobile navigation correction'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Upload mobile navigation correction evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-mobile-navigation-correction-evidence
+          path: |
+            /tmp/h-earth-run8e-mobile-navigation-constructor.log
+            /tmp/h-earth-run8e-mobile-navigation-reset-fix.log
+            /tmp/h-earth-run8e-mobile-navigation-server.log
+            /tmp/h-earth-run8e-mobile-navigation-correction.log
+            /tmp/h-earth-run8e-mobile-navigation-correction
+            /tmp/h-earth-run8e-mobile-navigation-paths.txt
+          if-no-files-found: error
+          retention-days: 90

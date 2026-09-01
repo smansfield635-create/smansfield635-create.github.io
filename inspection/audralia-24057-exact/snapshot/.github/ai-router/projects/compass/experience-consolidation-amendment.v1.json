@@ -1,0 +1,83 @@
+{
+  "schema": "COMPASS_INFORMATION_HIERARCHY_DIMENSIONAL_SCALE_AMENDMENT_v1",
+  "operationId": "COMPASS_INSTRUCTIONAL_HIERARCHY_AND_DIMENSIONAL_SCALE_SUCCESSOR_20260819_v2",
+  "lockGeneration": 1556,
+  "governingHead": "fe39febded099960ad7b43f631014c062ef8beff",
+  "governingIssue": 1011,
+  "ownerLiveReviewComment": 5344345994,
+  "law": "PRESERVE_CAPABILITY_RESTORE_INSTRUCTION_RESTORE_PURPOSE_HIERARCHY_REDUCE_DIMENSIONAL_STAGE",
+  "interactionLaw": "REDUCE_INTERFACE_NOT_INTERACTION_AND_REDUCE_INTERFACE_NOT_INSTRUCTION",
+  "acceptance": "ENGINEERING_PASS_AND_EXPERIENCE_PASS_AND_INFORMATION_HIERARCHY_PASS_AND_RENDERED_OWNER_REVIEW_READY",
+  "hardZero": [
+    "visualSystemCoherence",
+    "narrativeContinuity",
+    "interactionLegibility",
+    "responsiveRecomposition",
+    "evidenceHierarchy",
+    "categoryPreservation",
+    "visibleGeometryIntegrity",
+    "traversalContinuity",
+    "stateLayerExclusivity",
+    "purposeVisibleBeforePrimaryInteraction",
+    "compassObjectiveVisibleAtCompass",
+    "semanticDisclosureLabels",
+    "dimensionalStageProportionality"
+  ],
+  "productMutationEnvelope": [
+    "index.html",
+    "assets/compass/compass.css",
+    "assets/compass/compass.capability-carousel.css"
+  ],
+  "qualificationMutationEnvelope": [
+    ".github/ai-router/projects/compass/experience-consolidation-amendment.v1.json",
+    ".github/ai-router/projects/compass/verify-experience-consolidation.v1.mjs",
+    ".github/workflows/compass-display-continuity-validation.yml"
+  ],
+  "protectedRuntimePaths": [
+    "assets/compass/compass.controller.js",
+    "assets/compass/compass.mirrorland-window.js",
+    "assets/compass/compass.crystals.js",
+    "assets/compass/compass.cosmos.js",
+    "assets/compass/compass.laws-spacecraft.js",
+    "assets/compass/compass.identity-3d.js",
+    "assets/compass/compass.statement-carousel.js",
+    "assets/compass/compass.capability-carousel.js",
+    "assets/compass/compass.brain.js",
+    "assets/compass/compass.brain-scene.js"
+  ],
+  "informationHierarchyContract": {
+    "purposeBeforePrimaryInteraction": true,
+    "purposeFirstRead": "WHY_DIAMOND_GATE_EXISTS",
+    "purposeDepth": "PROGRESSIVE_DISCLOSURE_WITH_VISIBLE_FIRST_READ",
+    "compassObjective": "FIND_THE_DOOR_TO_MIRRORLAND",
+    "compassUsage": "ROTATE_BRING_STAR_FORWARD_FOLLOW_ROOMS",
+    "mechanicalDisclosureLabelsForbidden": ["Explore the fuller context","Open the fuller message","Open the fuller experience"],
+    "semanticDisclosureReplacement": "Read the full rationale"
+  },
+  "dimensionalScaleContract": {
+    "desktopOrbitMinHeightMaxPx": 496,
+    "desktopPlaqueHeightMaxPx": 350,
+    "tabletOrbitMinHeightMaxPx": 464,
+    "phoneOrbitMinHeightMaxPx": 432,
+    "objectIdentityPreserved": ["brain","trophy","house"],
+    "presentationLaw": "OBJECT_PRIMARY_CONTAINER_SUBORDINATE"
+  },
+  "requiredViewports": [
+    {"id":"desktop","width":1440,"height":1000},
+    {"id":"tablet","width":1024,"height":1366},
+    {"id":"phone","width":390,"height":844}
+  ],
+  "requiredStates": ["constellation","cluster-open","room-selected","return-orbit","mirrorland-revealing","mirrorland-focused","brain","trophy","house","trl","tra","conclusion"],
+  "failClosed": [
+    "ANY_HARD_ZERO_FALSE",
+    "PURPOSE_NOT_VISIBLE_BEFORE_COMPASS",
+    "MIRRORLAND_OBJECTIVE_NOT_VISIBLE_AT_COMPASS",
+    "MECHANICAL_DISCLOSURE_COPY_VISIBLE",
+    "CAPABILITY_STAGE_REMAINS_PAGE_DOMINATING",
+    "TRAVERSAL_REGRESSION",
+    "STATE_LAYER_EXCLUSIVITY_REGRESSION",
+    "ANY_CRITICAL_VISIBLE_ELEMENT_CLIPPED",
+    "RESPONSIVE_DESKTOP_COMPRESSION_INSTEAD_OF_RECOMPOSITION",
+    "UNRELATED_RUNTIME_MUTATION"
+  ]
+}

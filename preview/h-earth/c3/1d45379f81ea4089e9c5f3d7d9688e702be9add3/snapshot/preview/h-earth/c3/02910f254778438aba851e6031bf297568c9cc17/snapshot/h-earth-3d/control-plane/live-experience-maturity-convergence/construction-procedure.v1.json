@@ -1,0 +1,99 @@
+{
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "procedureId": "H_EARTH_LIVE_EXPERIENCE_MATURITY_CONVERGENCE_CONTROL_PACKAGE_PROCEDURE_v1",
+  "operationClass": "NONPRODUCT_H_EARTH_LIVE_EXPERIENCE_STRATEGY_CONTROL_PACKAGE_CONSTRUCTION",
+  "exactGoverningHead": "9eb636d33cff36b2344bb721726db7b4e8dcd2bc",
+  "exactAllowedRepositoryPaths": [
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/AGENTS.md",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/authority-and-lineage.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/changed-path-manifest.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/checkpoint-registry.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/construction-procedure.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/current-state.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/operation-request.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/page-excellence-binding.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/program.locator.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/protected-runtime-manifest.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/shell-runtime-classification.schema.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/strategy-contract.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/successor-room-recovery.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/verification-contract.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/verify.v1.mjs"
+  ],
+  "exactBranchAndCommitSequence": [
+    {"step":1,"action":"AFTER_ADMITTED_AND_LOCKED_RUN_ROOT_ROUTER_AND_H_EARTH_AUTOMATIC_PREFLIGHT_FOR_ALL_EXACT_15_PATHS_AND_STOP_ON_BLOCK_OR_STOP"},
+    {"step":2,"action":"CREATE_FRESH_BRANCH_FROM_EXACT_ADMITTED_MAIN_9EB636D3"},
+    {"step":3,"action":"MATERIALIZE_EXACT_15_CONTROL_PACKAGE_FILES_AS_FULL_CONTENTS_WITH_NO_PRODUCT_MUTATION"},
+    {"step":4,"action":"RUN_STATIC_CONTROL_PACKAGE_VERIFIER_AND_REQUIRE_PASS"},
+    {"step":5,"action":"VERIFY_PROTECTED_RUNTIME_IDENTITIES_AGAINST_EXACT_GOVERNING_HEAD"},
+    {"step":6,"action":"VERIFY_BRANCH_DELTA_IS_EXACTLY_15_ALLOWED_PATHS"},
+    {"step":7,"action":"FRESH_INDEPENDENT_VERIFIER_REPRODUCES_STRATEGY_CHECKPOINT_RECOVERY_AND_FINGERPRINT_RESULT_WITHOUT_REPAIR"},
+    {"step":8,"action":"OPEN_DRAFT_PR_FOR_REVIEW_WITHOUT_MERGE"},
+    {"step":9,"action":"STOP_FOR_SEPARATE_EXACT_HEAD_H_EARTH_REGISTRY_ACTIVATION_AND_OPTIONAL_AI_ROOM_DESCRIPTOR_REGISTRATION"}
+  ],
+  "evaluationToolingHeadBindingRule": "ALL_CONTROL_PACKAGE VERIFICATION BINDS TO THE EXACT CANDIDATE HEAD;9EB636D3 IS THE IMMUTABLE GOVERNING LIVE BASELINE FOR THIS OPERATION;CURRENT_MAIN_MUST_BE_RECHECKED_BEFORE ANY LATER PRODUCT OPERATION",
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "H_EARTH_LIVE_EXPERIENCE_MATURITY_CONVERGENCE_STRATEGY_CONTRACT_v1",
+    "H_EARTH_LIVE_EXPERIENCE_SHELL_RUNTIME_CLASSIFICATION_SCHEMA_v1",
+    "H_EARTH_LIVE_EXPERIENCE_CHECKPOINT_REGISTRY_v1",
+    "H_EARTH_LIVE_EXPERIENCE_CURRENT_STATE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "H_EARTH_LIVE_EXPERIENCE_MATURITY_CONVERGENCE_VERIFICATION_RECEIPT_v1",
+    "H_EARTH_LIVE_EXPERIENCE_SUCCESSOR_ROOM_RECOVERY_RECEIPT_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_MAIN_MISMATCH",
+    "PATH_BOUNDARY_MISMATCH",
+    "STRATEGY_INVARIANT_MISSING",
+    "CHECKPOINT_SEQUENCE_INVALID",
+    "PROTECTED_RUNTIME_IDENTITY_MISMATCH",
+    "PAGE_EXCELLENCE_BINDING_INVALID",
+    "CURRENT_STATE_POINTER_INVALID",
+    "RECOVERY_PROTOCOL_INVALID",
+    "PRODUCT_AUTHORITY_LEAK",
+    "FINGERPRINT_MISMATCH",
+    "UNEXPECTED_ERROR"
+  ],
+  "exactTestRunnerCommand": "node h-earth-3d/control-plane/live-experience-maturity-convergence/verify.v1.mjs --verify-static",
+  "independentVerifierDefinition": {
+    "freshCheckoutAtExactCandidateHead": true,
+    "repairProhibited": true,
+    "mustVerify": [
+      "EXACT_PATH_SET",
+      "STRATEGY_INVARIANTS",
+      "CHECKPOINT_DAG",
+      "CURRENT_STATE_POINTER",
+      "PROTECTED_RUNTIME_IDENTITIES",
+      "PAGE_EXCELLENCE_BINDING",
+      "SUCCESSOR_ROOM_RECOVERY_PRECEDENCE",
+      "NO_PRODUCT_AUTHORITY",
+      "PACKAGE_FINGERPRINT"
+    ]
+  },
+  "workflowAndArtifactPackagingPaths": {
+    "workflowPath": ".github/workflows/h-earth-repository-registry-preflight.yml",
+    "artifactPaths": ["h-earth-live-experience-maturity-convergence-control-package/**"],
+    "retentionDays": 90,
+    "workflowUse": "H_EARTH_AUTOMATIC_PREFLIGHT_ONLY_NO_NEW_WORKFLOW_CREATED_BY_THIS_OPERATION"
+  },
+  "bridgeOutputFingerprintDomain": {
+    "algorithm": "SHA-256",
+    "includes": "EXACT_15_CONTROL_PACKAGE_FILES",
+    "exactPathCount": 15,
+    "governingHead": "9eb636d33cff36b2344bb721726db7b4e8dcd2bc",
+    "excludes": ["TIMESTAMPS","WORKFLOW_RUN_IDS","ARTIFACT_IDS","GITHUB_EPHEMERAL_METADATA"]
+  },
+  "priorAttemptInspectionLimits": {
+    "mayInspectCurrentMain": true,
+    "mayInspectCurrentLiveHEarthReadOnly": true,
+    "mayInspectAudraliaCurrentImplementationReadOnly": true,
+    "mayInspectMandatoryPageExcellenceToolchainReadOnly": true,
+    "mayInspectHEarthRegistryReadOnly": true,
+    "mayInspectOpenWorldContinuityInstrumentReadOnly": true,
+    "mayUseRoomPrivateContextAsAuthority": false,
+    "mayMutateProductTerrainRuntimeShowroomRegistryRouterOrToolTransport": false,
+    "mayMergeDeployRelease": false
+  }
+}

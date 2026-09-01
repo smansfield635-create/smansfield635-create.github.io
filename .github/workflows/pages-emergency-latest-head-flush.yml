@@ -1,0 +1,48 @@
+name: Pages Emergency Latest-Head Flush
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/pages-emergency-latest-head-flush.yml'
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+  issues: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  flush-and-dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch authoritative latest-head deploy and record receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          api="https://api.github.com/repos/${GITHUB_REPOSITORY}"
+          headers=(
+            -H "Accept: application/vnd.github+json"
+            -H "Authorization: Bearer ${GH_TOKEN}"
+            -H "X-GitHub-Api-Version: 2022-11-28"
+          )
+          latest_head="$(curl --fail-with-body --silent --show-error -L "${headers[@]}" "${api}/branches/main" | jq -r '.commit.sha')"
+          test -n "$latest_head"
+
+          curl --fail-with-body --silent --show-error -L \
+            -X POST "${headers[@]}" \
+            "${api}/actions/workflows/pages-direct-deploy.yml/dispatches" \
+            -d '{"ref":"main"}'
+
+          body="PAGES_EMERGENCY_FLUSH_DISPATCHED\n\nEmergency run: \`${GITHUB_RUN_ID}\`\nLatest main at dispatch: \`${latest_head}\`\nDirect workflow: \`pages-direct-deploy.yml\`\nDispatch: \`accepted\`\nConcurrency: \`pages / cancel-in-progress=true\`"
+          curl --fail-with-body --silent --show-error -L \
+            -X POST "${headers[@]}" \
+            "${api}/issues/1503/comments" \
+            -d "$(jq -n --arg body "$body" '{body:$body}')" >/dev/null
+
+          echo "Dispatched Direct GitHub Pages Deploy against latest main after cancelling stale pages-group work."

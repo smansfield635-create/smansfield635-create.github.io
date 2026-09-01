@@ -1,0 +1,205 @@
+name: H-Earth Stage 1 Cost Qualification
+
+on:
+  workflow_dispatch:
+    inputs:
+      baseline_sha:
+        description: Protected 24056 baseline SHA
+        required: true
+        type: string
+      candidate_sha:
+        description: Stage 1 optimization candidate SHA
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout protected baseline runtime roots
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.baseline_sha }}
+          path: baseline
+          fetch-depth: 1
+          sparse-checkout: |
+            showroom/globe/audralia
+            showroom/globe/h-earth
+            h-earth-3d
+
+      - name: Checkout Stage 1 candidate runtime roots
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          path: candidate
+          fetch-depth: 1
+          sparse-checkout: |
+            showroom/globe/audralia
+            showroom/globe/h-earth
+            h-earth-3d
+
+      - name: Prove bounded Stage 1 mutation
+        shell: bash
+        env:
+          BASELINE_SHA: ${{ inputs.baseline_sha }}
+        run: |
+          set -euo pipefail
+          test "$BASELINE_SHA" = '1d45379f81ea4089e9c5f3d7d9688e702be9add3'
+          test -f candidate/showroom/globe/audralia/fap1-stage1-cost-decoupling-v1.mjs
+          grep -q 'sharedHorizontalOrganization:true' candidate/showroom/globe/audralia/fap1-stage1-cost-decoupling-v1.mjs
+          grep -q 'originalConvolutionWeightsPreserved:true' candidate/showroom/globe/audralia/fap1-stage1-cost-decoupling-v1.mjs
+          test "$(sha256sum baseline/showroom/globe/audralia/fap1-weather-presentation-v1.mjs | awk '{print $1}')" = "$(sha256sum candidate/showroom/globe/audralia/fap1-weather-presentation-v1.mjs | awk '{print $1}')"
+          test "$(sha256sum baseline/showroom/globe/audralia/fap1-xyz-volumetric-depth-v1.mjs | awk '{print $1}')" = "$(sha256sum candidate/showroom/globe/audralia/fap1-xyz-volumetric-depth-v1.mjs | awk '{print $1}')"
+          echo STAGE1_BOUNDED_MUTATION_PROVED
+
+      - name: Build isolated reconciliation qualification harnesses
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          from pathlib import Path
+          marker='<script type="module" src="./app.mjs?cb=2c64ff2e477f6dd2"></script>'
+          common='''<script type="module" src="../acf1-cloud-presentation-v1.mjs?cb=ACF1_v3"></script>\n  <script type="module" src="../fap1-xyz-volumetric-depth-v1.mjs?cb=FAP1_XYZ_DEPTH_v1"></script>\n  <script type="module" src="../fap1-weather-presentation-v1.mjs?cb=FAP1_CANDIDATE_A_VISUAL_v4"></script>\n  '''
+          for root,stage1 in [('baseline',False),('candidate',True)]:
+              p=Path(root)/'showroom/globe/audralia/weather-presentation-reconciliation/index.html'
+              text=p.read_text()
+              assert marker in text
+              prefix=('''<script type="module" src="../fap1-stage1-cost-decoupling-v1.mjs?cb=STAGE1_COST_DECOUPLING_v1"></script>\n  ''' if stage1 else '')+common
+              p.with_name('qualification-stage1.html').write_text(text.replace(marker,prefix+marker,1))
+          PY
+          ! grep -q 'fap1-stage1-cost-decoupling-v1.mjs' baseline/showroom/globe/audralia/weather-presentation-reconciliation/qualification-stage1.html
+          grep -q 'fap1-stage1-cost-decoupling-v1.mjs' candidate/showroom/globe/audralia/weather-presentation-reconciliation/qualification-stage1.html
+
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install browser driver
+        shell: bash
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Start isolated static servers
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --directory baseline >/tmp/stage1-baseline.log 2>&1 & echo $! >/tmp/stage1-baseline.pid
+          python3 -m http.server 4174 --directory candidate >/tmp/stage1-candidate.log 2>&1 & echo $! >/tmp/stage1-candidate.pid
+          for i in $(seq 1 30); do
+            curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/weather-presentation-reconciliation/qualification-stage1.html >/dev/null && \
+            curl -fsS http://127.0.0.1:4174/showroom/globe/audralia/weather-presentation-reconciliation/qualification-stage1.html >/dev/null && exit 0
+            sleep 1
+          done
+          exit 1
+
+      - name: Qualify visual equivalence and synchronized render cost
+        shell: bash
+        timeout-minutes: 7
+        run: |
+          set -euo pipefail
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          node <<'NODE'
+          const puppeteer=require('puppeteer-core');
+          const crypto=require('node:crypto');
+          const fixedNow=Date.parse('2026-08-21T21:00:00.000Z');
+          const timeout=(p,ms,label)=>Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(new Error(`TIMEOUT_${label}`)),ms))]);
+          const log=(label,data={})=>console.log(JSON.stringify({checkpoint:label,...data}));
+          const percentile=(a,p)=>{const s=[...a].sort((x,y)=>x-y);return s[Math.min(s.length-1,Math.floor((s.length-1)*p))];};
+          const summarize=a=>({samples:a,medianMs:percentile(a,.5),p90Ms:percentile(a,.9),minMs:Math.min(...a),maxMs:Math.max(...a)});
+
+          async function open(browser,label,url,stage1){
+            const page=await timeout(browser.newPage(),10000,`${label}_NEW_PAGE`);
+            await page.setViewport({width:320,height:568,deviceScaleFactor:1});
+            await page.evaluateOnNewDocument(now=>{Date.now=()=>now;},fixedNow);
+            const errors=[];
+            page.on('pageerror',e=>errors.push(String(e?.stack||e)));
+            await timeout(page.goto(url,{waitUntil:'domcontentloaded',timeout:30000}),35000,`${label}_GOTO`);
+            await timeout(page.waitForFunction(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime()?.invariants?.pass===true,{timeout:45000}),50000,`${label}_READY`);
+            await timeout(page.waitForFunction(()=>document.querySelector('[data-audralia-loader]')?.hidden===true,{timeout:15000}),20000,`${label}_LOADER`);
+            const state=await page.evaluate(()=>({
+              status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null,
+              pass:window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime()?.invariants?.pass===true,
+              stage1:window.__AUDRALIA_FAP1_STAGE1_COST_DECOUPLING__?.getRuntimeEvidence?.()||null,
+              error:window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__||null
+            }));
+            log(`${label}_READY`,state);
+            if(errors.length||!state.pass||state.error)throw new Error(`${label}_RUNTIME_FAIL ${JSON.stringify({state,errors})}`);
+            if(stage1&&!(state.stage1?.patchedCloudShaders>0))throw new Error(`STAGE1_PATCH_NOT_OBSERVED ${JSON.stringify(state)}`);
+            if(!stage1&&state.stage1)throw new Error('BASELINE_UNEXPECTED_STAGE1');
+            return {page,state};
+          }
+
+          async function setYaw(page,y){
+            await timeout(page.evaluate(v=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__.setCameraStateForTest({yaw:v}),y),15000,'SET_YAW');
+          }
+          async function shot(page,label){
+            const b=await timeout(page.screenshot({type:'png',captureBeyondViewport:false}),25000,`${label}_SHOT`);
+            log(`${label}_SHOT_DONE`,{bytes:b.length});
+            return b;
+          }
+          async function measuredRender(page,label,y){
+            return timeout(page.evaluate(v=>{
+              const api=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__;
+              const t0=performance.now();
+              api.setCameraStateForTest({yaw:v});
+              let synced=0;
+              for(const canvas of document.querySelectorAll('canvas')){
+                let gl=null;
+                try{gl=canvas.getContext('webgl2');}catch{}
+                if(gl){gl.finish();synced++;}
+              }
+              return {ms:performance.now()-t0,syncedContexts:synced};
+            },y),20000,`${label}_RENDER`);
+          }
+
+          (async()=>{
+            const browser=await timeout(puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']}),20000,'BROWSER');
+            try{
+              const path='/showroom/globe/audralia/weather-presentation-reconciliation/qualification-stage1.html';
+              const base=await open(browser,'BASELINE','http://127.0.0.1:4173'+path,false);
+              const cand=await open(browser,'CANDIDATE','http://127.0.0.1:4174'+path,true);
+
+              await setYaw(base.page,.63); await setYaw(cand.page,.63);
+              const bs=await shot(base.page,'BASELINE_VISUAL');
+              const cs=await shot(cand.page,'CANDIDATE_VISUAL');
+              const bh=crypto.createHash('sha256').update(bs).digest('hex');
+              const ch=crypto.createHash('sha256').update(cs).digest('hex');
+              log('VISUAL_HASHES',{baseline:bh,candidate:ch});
+              if(bh!==ch)throw new Error(`VISUAL_PIXEL_EQUIVALENCE_FAIL baseline=${bh} candidate=${ch}`);
+
+              const yaws=[-.85,-.32,.08,.47,.93,-.63,-.12,.28,.71,1.08];
+              for(const y of yaws.slice(0,4)){
+                await measuredRender(base.page,'BASELINE_WARM',y);
+                await measuredRender(cand.page,'CANDIDATE_WARM',y);
+              }
+
+              const bt=[],ct=[];
+              let syncedContexts=null;
+              for(let round=0;round<2;round++){
+                for(const y of yaws){
+                  const b=await measuredRender(base.page,'BASELINE',y);bt.push(b.ms);
+                  const c=await measuredRender(cand.page,'CANDIDATE',y);ct.push(c.ms);
+                  syncedContexts=syncedContexts??{baseline:b.syncedContexts,candidate:c.syncedContexts};
+                }
+              }
+              const b=summarize(bt),c=summarize(ct);
+              const medianRatio=c.medianMs/b.medianMs;
+              const p90Ratio=c.p90Ms/b.p90Ms;
+              const result={result:'H_EARTH_STAGE1_COST_QUALIFIED',visual:{pixelEquivalent:true,sha256:bh},baseline:b,candidate:{...c,state:cand.state},candidateToBaselineMedianRatio:medianRatio,candidateToBaselineP90Ratio:p90Ratio,improvementPercent:(1-medianRatio)*100,syncedContexts,benchmarkMethod:'alternating in-page render with WebGL2 gl.finish synchronization; screenshots excluded from timing'};
+              console.log(JSON.stringify(result,null,2));
+              if(c.medianMs>b.medianMs*1.10)throw new Error(`PERFORMANCE_MEDIAN_REGRESSION baseline=${b.medianMs} candidate=${c.medianMs}`);
+              if(c.p90Ms>b.p90Ms*1.15)throw new Error(`PERFORMANCE_P90_REGRESSION baseline=${b.p90Ms} candidate=${c.p90Ms}`);
+            } finally {await browser.close().catch(()=>{});}
+          })().catch(e=>{console.error('QUALIFICATION_FATAL',e?.stack||e);process.exit(1);});
+          NODE
+
+      - name: Stop isolated static servers
+        if: always()
+        shell: bash
+        run: |
+          kill "$(cat /tmp/stage1-baseline.pid 2>/dev/null)" 2>/dev/null || true
+          kill "$(cat /tmp/stage1-candidate.pid 2>/dev/null)" 2>/dev/null || true

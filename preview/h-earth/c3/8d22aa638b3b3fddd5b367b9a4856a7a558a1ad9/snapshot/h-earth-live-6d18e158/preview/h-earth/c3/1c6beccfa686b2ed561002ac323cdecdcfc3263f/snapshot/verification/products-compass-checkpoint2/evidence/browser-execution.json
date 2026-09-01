@@ -1,0 +1,824 @@
+{
+  "checkpoint": "PRODUCTS_COMPASS_CHECKPOINT_2_BROWSER_EXECUTION",
+  "pass": true,
+  "failures": [],
+  "viewport": {
+    "width": 430,
+    "height": 932,
+    "mobile": true,
+    "touch": true
+  },
+  "states": [
+    {
+      "label": "cluster-initial",
+      "state": "CLUSTER_OPEN",
+      "scene": {
+        "left": 18.265625,
+        "top": 374.5,
+        "width": 393.46875,
+        "height": 384,
+        "centerX": 215,
+        "centerY": 566.5
+      },
+      "compass": {
+        "left": 150.5,
+        "top": 502,
+        "width": 129,
+        "height": 129,
+        "centerX": 215,
+        "centerY": 566.5
+      },
+      "rear": {
+        "left": 19.265625,
+        "top": 375.5,
+        "width": 391.46875,
+        "height": 382,
+        "centerX": 215,
+        "centerY": 566.5
+      },
+      "front": {
+        "left": 19.265625,
+        "top": 375.5,
+        "width": 391.46875,
+        "height": 382,
+        "centerX": 215,
+        "centerY": 566.5
+      },
+      "rearCount": 3,
+      "frontCount": 3,
+      "compositor": {
+        "receiptId": "DGB_PRODUCTS_COMPOSITOR_RECEIPT_v2",
+        "moduleId": "DGB_PRODUCTS_COMPOSITOR",
+        "moduleVersion": "1.0.0-camera-depth-layer-orchestration",
+        "requiredControllerModuleId": "DGB_PRODUCTS_CONTROLLER",
+        "requiredControllerModuleVersion": "7.0.0-controller-interaction-semantic-priority",
+        "compatibleCrystalsModuleId": "DGB_PRODUCTS_CRYSTALS",
+        "compatibleCrystalsModuleVersion": "2.0.0-products-compositor-coordinated-renderer",
+        "initialized": true,
+        "status": "available",
+        "currentPresentation": "CLUSTER",
+        "cameraEye": [
+          0,
+          0.6200121399597778,
+          6.279980055780365
+        ],
+        "cameraTarget": [
+          0,
+          0.020000867139984127,
+          0.040001734279968254
+        ],
+        "fieldOfView": 0.6477510625958337,
+        "viewportWidth": 393,
+        "viewportHeight": 384,
+        "pixelRatio": 1,
+        "compassPlaneViewDepth": -6.268759285560878,
+        "rearLayerCreated": true,
+        "frontLayerCreated": true,
+        "rearVisibleNodeCount": 3,
+        "frontVisibleNodeCount": 3,
+        "depthHysteresis": 0.025,
+        "stackingValidated": true,
+        "lastError": "",
+        "visualPassClaimed": false,
+        "runtimePassClaimed": false,
+        "deploymentAuthorized": false,
+        "productionAuthorized": false
+      },
+      "crystals": {
+        "contractId": "PRODUCTS_CRYSTALS_COMPOSITOR_COORDINATED_RENDERER_v2",
+        "sourceContractId": "DGB_COMPASS_CRYSTALS_SPHERICAL_CONSTELLATION_AND_CLUSTER_REBUILD_v3",
+        "continuationAnchorId": "ARCHCOIN_CRYSTALS_COMPASS_RENDERER_ANCHOR_v1",
+        "status": "available",
+        "rendererInitialized": true,
+        "registryPrimaryCount": 1,
+        "registryProductCount": 6,
+        "sphericalPrimaryFieldEnabled": true,
+        "sphericalProductClusterEnabled": true,
+        "coordinateSystem": "RIGHT_HANDED_EUCLIDEAN_XYZ",
+        "orientationRepresentation": "UNIT_QUATERNION",
+        "primaryEntryId": "products",
+        "visualPrimaryProductId": "nutrition",
+        "selectedProductId": "",
+        "gestureActive": false,
+        "lastPointerTerritory": "RENDERED_PRIMARY",
+        "lastGestureType": "tap",
+        "lastGestureDistance": 0,
+        "lastGestureDurationMs": 0,
+        "lastAverageVelocityPxPerMs": 0,
+        "lastReleaseVelocityPxPerMs": 0,
+        "glError": "NO_ERROR",
+        "visualPassClaimed": false,
+        "rearVisibleNodeCount": 3,
+        "frontVisibleNodeCount": 3,
+        "drawCallsLastFrame": 6
+      },
+      "centerControl": {
+        "hidden": false,
+        "ariaLabel": "Select Main Compass return options",
+        "role": "MAIN_COMPASS_RETURN_DISCLOSURE"
+      },
+      "labels": [
+        {
+          "id": "archcoin",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "rear",
+          "primary": "false",
+          "rect": {
+            "left": 202.66554260253906,
+            "top": 521.50927734375,
+            "width": 26.668914794921875,
+            "height": 26.6689453125,
+            "centerX": 216,
+            "centerY": 534.84375
+          }
+        },
+        {
+          "id": "five-flags",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "rear",
+          "primary": "false",
+          "rect": {
+            "left": 297.8759765625,
+            "top": 528.5166015625,
+            "width": 28.466827392578125,
+            "height": 28.466796875,
+            "centerX": 312.10939025878906,
+            "centerY": 542.75
+          }
+        },
+        {
+          "id": "aai",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "front",
+          "primary": "false",
+          "rect": {
+            "left": 305.857421875,
+            "top": 611.357421875,
+            "width": 32.16015625,
+            "height": 32.16015625,
+            "centerX": 321.9375,
+            "centerY": 627.4375
+          }
+        },
+        {
+          "id": "education",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "front",
+          "primary": "false",
+          "rect": {
+            "left": 198.88438415527344,
+            "top": 598.1343994140625,
+            "width": 34.23121643066406,
+            "height": 34.231201171875,
+            "centerX": 215.99999237060547,
+            "centerY": 615.25
+          }
+        },
+        {
+          "id": "nutrition",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "front",
+          "primary": "true",
+          "rect": {
+            "left": 91.51428985595703,
+            "top": 512.0611572265625,
+            "width": 38.283912658691406,
+            "height": 38.283935546875,
+            "centerX": 110.65624618530273,
+            "centerY": 531.203125
+          }
+        },
+        {
+          "id": "book",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "rear",
+          "primary": "false",
+          "rect": {
+            "left": 102.55302429199219,
+            "top": 545.8342895507812,
+            "width": 28.393936157226562,
+            "height": 28.3939208984375,
+            "centerX": 116.74999237060547,
+            "centerY": 560.03125
+          }
+        }
+      ]
+    },
+    {
+      "label": "rotation-1",
+      "state": "CLUSTER_OPEN",
+      "scene": {
+        "left": 18.265625,
+        "top": 374.5,
+        "width": 393.46875,
+        "height": 384,
+        "centerX": 215,
+        "centerY": 566.5
+      },
+      "compass": {
+        "left": 150.5,
+        "top": 502,
+        "width": 129,
+        "height": 129,
+        "centerX": 215,
+        "centerY": 566.5
+      },
+      "rear": {
+        "left": 19.265625,
+        "top": 375.5,
+        "width": 391.46875,
+        "height": 382,
+        "centerX": 215,
+        "centerY": 566.5
+      },
+      "front": {
+        "left": 19.265625,
+        "top": 375.5,
+        "width": 391.46875,
+        "height": 382,
+        "centerX": 215,
+        "centerY": 566.5
+      },
+      "rearCount": 3,
+      "frontCount": 3,
+      "compositor": {
+        "receiptId": "DGB_PRODUCTS_COMPOSITOR_RECEIPT_v2",
+        "moduleId": "DGB_PRODUCTS_COMPOSITOR",
+        "moduleVersion": "1.0.0-camera-depth-layer-orchestration",
+        "requiredControllerModuleId": "DGB_PRODUCTS_CONTROLLER",
+        "requiredControllerModuleVersion": "7.0.0-controller-interaction-semantic-priority",
+        "compatibleCrystalsModuleId": "DGB_PRODUCTS_CRYSTALS",
+        "compatibleCrystalsModuleVersion": "2.0.0-products-compositor-coordinated-renderer",
+        "initialized": true,
+        "status": "available",
+        "currentPresentation": "CLUSTER",
+        "cameraEye": [
+          0,
+          0.6200000000197978,
+          6.279999999967475
+        ],
+        "cameraTarget": [
+          0,
+          0.02000000000141413,
+          0.04000000000282826
+        ],
+        "fieldOfView": 0.6477510625958337,
+        "viewportWidth": 393,
+        "viewportHeight": 384,
+        "pixelRatio": 1,
+        "compassPlaneViewDepth": -6.268779785538877,
+        "rearLayerCreated": true,
+        "frontLayerCreated": true,
+        "rearVisibleNodeCount": 3,
+        "frontVisibleNodeCount": 3,
+        "depthHysteresis": 0.025,
+        "stackingValidated": true,
+        "lastError": "",
+        "visualPassClaimed": false,
+        "runtimePassClaimed": false,
+        "deploymentAuthorized": false,
+        "productionAuthorized": false
+      },
+      "crystals": {
+        "contractId": "PRODUCTS_CRYSTALS_COMPOSITOR_COORDINATED_RENDERER_v2",
+        "sourceContractId": "DGB_COMPASS_CRYSTALS_SPHERICAL_CONSTELLATION_AND_CLUSTER_REBUILD_v3",
+        "continuationAnchorId": "ARCHCOIN_CRYSTALS_COMPASS_RENDERER_ANCHOR_v1",
+        "status": "available",
+        "rendererInitialized": true,
+        "registryPrimaryCount": 1,
+        "registryProductCount": 6,
+        "sphericalPrimaryFieldEnabled": true,
+        "sphericalProductClusterEnabled": true,
+        "coordinateSystem": "RIGHT_HANDED_EUCLIDEAN_XYZ",
+        "orientationRepresentation": "UNIT_QUATERNION",
+        "primaryEntryId": "products",
+        "visualPrimaryProductId": "nutrition",
+        "selectedProductId": "",
+        "gestureActive": false,
+        "lastPointerTerritory": "RENDERED_PRODUCT",
+        "lastGestureType": "cluster-settle",
+        "lastGestureDistance": 189.02109032442107,
+        "lastGestureDurationMs": 1519.699999999997,
+        "lastAverageVelocityPxPerMs": 0.12438052926526381,
+        "lastReleaseVelocityPxPerMs": 0,
+        "glError": "NO_ERROR",
+        "visualPassClaimed": false,
+        "rearVisibleNodeCount": 3,
+        "frontVisibleNodeCount": 3,
+        "drawCallsLastFrame": 6
+      },
+      "centerControl": {
+        "hidden": false,
+        "ariaLabel": "Select Main Compass return options",
+        "role": "MAIN_COMPASS_RETURN_DISCLOSURE"
+      },
+      "labels": [
+        {
+          "id": "archcoin",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "rear",
+          "primary": "false",
+          "rect": {
+            "left": 88.85918426513672,
+            "top": 559.3904418945312,
+            "width": 29.094139099121094,
+            "height": 29.0941162109375,
+            "centerX": 103.40625381469727,
+            "centerY": 573.9375
+          }
+        },
+        {
+          "id": "five-flags",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "rear",
+          "primary": "false",
+          "rect": {
+            "left": 174.2640838623047,
+            "top": 556.5453491210938,
+            "width": 26.534332275390625,
+            "height": 26.5343017578125,
+            "centerX": 187.53125,
+            "centerY": 569.8125
+          }
+        },
+        {
+          "id": "aai",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "rear",
+          "primary": "false",
+          "rect": {
+            "left": 290.41204833984375,
+            "top": 588.1932983398438,
+            "width": 28.300872802734375,
+            "height": 28.3009033203125,
+            "centerX": 304.56248474121094,
+            "centerY": 602.34375
+          }
+        },
+        {
+          "id": "education",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "front",
+          "primary": "false",
+          "rect": {
+            "left": 324.50701904296875,
+            "top": 545.3507690429688,
+            "width": 31.5172119140625,
+            "height": 31.5172119140625,
+            "centerX": 340.265625,
+            "centerY": 561.109375
+          }
+        },
+        {
+          "id": "nutrition",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "front",
+          "primary": "true",
+          "rect": {
+            "left": 199.96432495117188,
+            "top": 481.8236999511719,
+            "width": 39.35260009765625,
+            "height": 39.352569580078125,
+            "centerX": 219.640625,
+            "centerY": 501.49998474121094
+          }
+        },
+        {
+          "id": "book",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "front",
+          "primary": "false",
+          "rect": {
+            "left": 94.18253326416016,
+            "top": 561.8231201171875,
+            "width": 32.94743347167969,
+            "height": 32.94744873046875,
+            "centerX": 110.65625,
+            "centerY": 578.2968444824219
+          }
+        }
+      ]
+    },
+    {
+      "label": "rotation-2",
+      "state": "CLUSTER_OPEN",
+      "scene": {
+        "left": 18.265625,
+        "top": 374.5,
+        "width": 393.46875,
+        "height": 384,
+        "centerX": 215,
+        "centerY": 566.5
+      },
+      "compass": {
+        "left": 150.5,
+        "top": 502,
+        "width": 129,
+        "height": 129,
+        "centerX": 215,
+        "centerY": 566.5
+      },
+      "rear": {
+        "left": 19.265625,
+        "top": 375.5,
+        "width": 391.46875,
+        "height": 382,
+        "centerX": 215,
+        "centerY": 566.5
+      },
+      "front": {
+        "left": 19.265625,
+        "top": 375.5,
+        "width": 391.46875,
+        "height": 382,
+        "centerX": 215,
+        "centerY": 566.5
+      },
+      "rearCount": 4,
+      "frontCount": 2,
+      "compositor": {
+        "receiptId": "DGB_PRODUCTS_COMPOSITOR_RECEIPT_v2",
+        "moduleId": "DGB_PRODUCTS_COMPOSITOR",
+        "moduleVersion": "1.0.0-camera-depth-layer-orchestration",
+        "requiredControllerModuleId": "DGB_PRODUCTS_CONTROLLER",
+        "requiredControllerModuleVersion": "7.0.0-controller-interaction-semantic-priority",
+        "compatibleCrystalsModuleId": "DGB_PRODUCTS_CRYSTALS",
+        "compatibleCrystalsModuleVersion": "2.0.0-products-compositor-coordinated-renderer",
+        "initialized": true,
+        "status": "available",
+        "currentPresentation": "CLUSTER",
+        "cameraEye": [
+          0,
+          0.6200000000000001,
+          6.279999999999999
+        ],
+        "cameraTarget": [
+          0,
+          0.020000000000000004,
+          0.04000000000000001
+        ],
+        "fieldOfView": 0.6477510625958337,
+        "viewportWidth": 393,
+        "viewportHeight": 384,
+        "pixelRatio": 1,
+        "compassPlaneViewDepth": -6.268779785572308,
+        "rearLayerCreated": true,
+        "frontLayerCreated": true,
+        "rearVisibleNodeCount": 4,
+        "frontVisibleNodeCount": 2,
+        "depthHysteresis": 0.025,
+        "stackingValidated": true,
+        "lastError": "",
+        "visualPassClaimed": false,
+        "runtimePassClaimed": false,
+        "deploymentAuthorized": false,
+        "productionAuthorized": false
+      },
+      "crystals": {
+        "contractId": "PRODUCTS_CRYSTALS_COMPOSITOR_COORDINATED_RENDERER_v2",
+        "sourceContractId": "DGB_COMPASS_CRYSTALS_SPHERICAL_CONSTELLATION_AND_CLUSTER_REBUILD_v3",
+        "continuationAnchorId": "ARCHCOIN_CRYSTALS_COMPASS_RENDERER_ANCHOR_v1",
+        "status": "available",
+        "rendererInitialized": true,
+        "registryPrimaryCount": 1,
+        "registryProductCount": 6,
+        "sphericalPrimaryFieldEnabled": true,
+        "sphericalProductClusterEnabled": true,
+        "coordinateSystem": "RIGHT_HANDED_EUCLIDEAN_XYZ",
+        "orientationRepresentation": "UNIT_QUATERNION",
+        "primaryEntryId": "products",
+        "visualPrimaryProductId": "education",
+        "selectedProductId": "",
+        "gestureActive": false,
+        "lastPointerTerritory": "RENDERED_PRODUCT",
+        "lastGestureType": "cluster-settle",
+        "lastGestureDistance": 210.15099881842175,
+        "lastGestureDurationMs": 1595.3999999999942,
+        "lastAverageVelocityPxPerMs": 0.13172307811108344,
+        "lastReleaseVelocityPxPerMs": 0.10161057568022484,
+        "glError": "NO_ERROR",
+        "visualPassClaimed": false,
+        "rearVisibleNodeCount": 4,
+        "frontVisibleNodeCount": 2,
+        "drawCallsLastFrame": 6
+      },
+      "centerControl": {
+        "hidden": false,
+        "ariaLabel": "Select Main Compass return options",
+        "role": "MAIN_COMPASS_RETURN_DISCLOSURE"
+      },
+      "labels": [
+        {
+          "id": "archcoin",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "rear",
+          "primary": "false",
+          "rect": {
+            "left": 208.1278839111328,
+            "top": 608.1591186523438,
+            "width": 27.150466918945312,
+            "height": 27.15045166015625,
+            "centerX": 221.70311737060547,
+            "centerY": 621.7343444824219
+          }
+        },
+        {
+          "id": "five-flags",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "rear",
+          "primary": "false",
+          "rect": {
+            "left": 301.822509765625,
+            "top": 590.494384765625,
+            "width": 28.79248046875,
+            "height": 28.79248046875,
+            "centerX": 316.21875,
+            "centerY": 604.890625
+          }
+        },
+        {
+          "id": "aai",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "front",
+          "primary": "false",
+          "rect": {
+            "left": 299.7851867675781,
+            "top": 559.91015625,
+            "width": 33.117156982421875,
+            "height": 33.1171875,
+            "centerX": 316.34376525878906,
+            "centerY": 576.46875
+          }
+        },
+        {
+          "id": "education",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "front",
+          "primary": "true",
+          "rect": {
+            "left": 192.7556610107422,
+            "top": 480.44317626953125,
+            "width": 39.332427978515625,
+            "height": 39.3323974609375,
+            "centerX": 212.421875,
+            "centerY": 500.109375
+          }
+        },
+        {
+          "id": "nutrition",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "rear",
+          "primary": "false",
+          "rect": {
+            "left": 119.85675048828125,
+            "top": 488.20050048828125,
+            "width": 29.4427490234375,
+            "height": 29.4427490234375,
+            "centerX": 134.578125,
+            "centerY": 502.921875
+          }
+        },
+        {
+          "id": "book",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "rear",
+          "primary": "false",
+          "rect": {
+            "left": 106.44756317138672,
+            "top": 581.8069458007812,
+            "width": 28.44861602783203,
+            "height": 28.4486083984375,
+            "centerX": 120.67187118530273,
+            "centerY": 596.03125
+          }
+        }
+      ]
+    },
+    {
+      "label": "rotation-3",
+      "state": "CLUSTER_OPEN",
+      "scene": {
+        "left": 18.265625,
+        "top": 374.5,
+        "width": 393.46875,
+        "height": 384,
+        "centerX": 215,
+        "centerY": 566.5
+      },
+      "compass": {
+        "left": 150.5,
+        "top": 502,
+        "width": 129,
+        "height": 129,
+        "centerX": 215,
+        "centerY": 566.5
+      },
+      "rear": {
+        "left": 19.265625,
+        "top": 375.5,
+        "width": 391.46875,
+        "height": 382,
+        "centerX": 215,
+        "centerY": 566.5
+      },
+      "front": {
+        "left": 19.265625,
+        "top": 375.5,
+        "width": 391.46875,
+        "height": 382,
+        "centerX": 215,
+        "centerY": 566.5
+      },
+      "rearCount": 2,
+      "frontCount": 4,
+      "compositor": {
+        "receiptId": "DGB_PRODUCTS_COMPOSITOR_RECEIPT_v2",
+        "moduleId": "DGB_PRODUCTS_COMPOSITOR",
+        "moduleVersion": "1.0.0-camera-depth-layer-orchestration",
+        "requiredControllerModuleId": "DGB_PRODUCTS_CONTROLLER",
+        "requiredControllerModuleVersion": "7.0.0-controller-interaction-semantic-priority",
+        "compatibleCrystalsModuleId": "DGB_PRODUCTS_CRYSTALS",
+        "compatibleCrystalsModuleVersion": "2.0.0-products-compositor-coordinated-renderer",
+        "initialized": true,
+        "status": "available",
+        "currentPresentation": "CLUSTER",
+        "cameraEye": [
+          0,
+          0.6200000000000001,
+          6.279999999999999
+        ],
+        "cameraTarget": [
+          0,
+          0.020000000000000004,
+          0.04000000000000001
+        ],
+        "fieldOfView": 0.6477510625958337,
+        "viewportWidth": 393,
+        "viewportHeight": 384,
+        "pixelRatio": 1,
+        "compassPlaneViewDepth": -6.268779785572308,
+        "rearLayerCreated": true,
+        "frontLayerCreated": true,
+        "rearVisibleNodeCount": 2,
+        "frontVisibleNodeCount": 4,
+        "depthHysteresis": 0.025,
+        "stackingValidated": true,
+        "lastError": "",
+        "visualPassClaimed": false,
+        "runtimePassClaimed": false,
+        "deploymentAuthorized": false,
+        "productionAuthorized": false
+      },
+      "crystals": {
+        "contractId": "PRODUCTS_CRYSTALS_COMPOSITOR_COORDINATED_RENDERER_v2",
+        "sourceContractId": "DGB_COMPASS_CRYSTALS_SPHERICAL_CONSTELLATION_AND_CLUSTER_REBUILD_v3",
+        "continuationAnchorId": "ARCHCOIN_CRYSTALS_COMPASS_RENDERER_ANCHOR_v1",
+        "status": "available",
+        "rendererInitialized": true,
+        "registryPrimaryCount": 1,
+        "registryProductCount": 6,
+        "sphericalPrimaryFieldEnabled": true,
+        "sphericalProductClusterEnabled": true,
+        "coordinateSystem": "RIGHT_HANDED_EUCLIDEAN_XYZ",
+        "orientationRepresentation": "UNIT_QUATERNION",
+        "primaryEntryId": "products",
+        "visualPrimaryProductId": "education",
+        "selectedProductId": "",
+        "gestureActive": false,
+        "lastPointerTerritory": "RENDERED_PRODUCT",
+        "lastGestureType": "cluster-settle",
+        "lastGestureDistance": 214.35629902940852,
+        "lastGestureDurationMs": 1558.7000000000116,
+        "lastAverageVelocityPxPerMs": 0.13752248606493034,
+        "lastReleaseVelocityPxPerMs": 0.09603765289646891,
+        "glError": "NO_ERROR",
+        "visualPassClaimed": false,
+        "rearVisibleNodeCount": 2,
+        "frontVisibleNodeCount": 4,
+        "drawCallsLastFrame": 6
+      },
+      "centerControl": {
+        "hidden": false,
+        "ariaLabel": "Select Main Compass return options",
+        "role": "MAIN_COMPASS_RETURN_DISCLOSURE"
+      },
+      "labels": [
+        {
+          "id": "archcoin",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "rear",
+          "primary": "false",
+          "rect": {
+            "left": 177.2820281982422,
+            "top": 610.4695434570312,
+            "width": 27.467193603515625,
+            "height": 27.46722412109375,
+            "centerX": 191.015625,
+            "centerY": 624.2031555175781
+          }
+        },
+        {
+          "id": "five-flags",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "rear",
+          "primary": "false",
+          "rect": {
+            "left": 193.4019012451172,
+            "top": 527.3237915039062,
+            "width": 26.539932250976562,
+            "height": 26.5399169921875,
+            "centerX": 206.67186737060547,
+            "centerY": 540.59375
+          }
+        },
+        {
+          "id": "aai",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "front",
+          "primary": "false",
+          "rect": {
+            "left": 259.39459228515625,
+            "top": 470.76959228515625,
+            "width": 29.8670654296875,
+            "height": 29.8670654296875,
+            "centerX": 274.328125,
+            "centerY": 485.703125
+          }
+        },
+        {
+          "id": "education",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "front",
+          "primary": "true",
+          "rect": {
+            "left": 207.19239807128906,
+            "top": 489.9892578125,
+            "width": 39.396453857421875,
+            "height": 39.396484375,
+            "centerX": 226.890625,
+            "centerY": 509.6875
+          }
+        },
+        {
+          "id": "nutrition",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "front",
+          "primary": "false",
+          "rect": {
+            "left": 111.08171844482422,
+            "top": 599.6754760742188,
+            "width": 33.24280548095703,
+            "height": 33.2427978515625,
+            "centerX": 127.70312118530273,
+            "centerY": 616.296875
+          }
+        },
+        {
+          "id": "book",
+          "hidden": false,
+          "ariaHidden": "false",
+          "depthLayer": "front",
+          "primary": "false",
+          "rect": {
+            "left": 176.53500366210938,
+            "top": 662.5819091796875,
+            "width": 31.211227416992188,
+            "height": 31.211181640625,
+            "centerX": 192.14061737060547,
+            "centerY": 678.1875
+          }
+        }
+      ]
+    }
+  ],
+  "telemetry": {
+    "console": [],
+    "pageErrors": [],
+    "requestFailures": []
+  },
+  "visualPassClaimed": false,
+  "mergeAuthorized": false
+}

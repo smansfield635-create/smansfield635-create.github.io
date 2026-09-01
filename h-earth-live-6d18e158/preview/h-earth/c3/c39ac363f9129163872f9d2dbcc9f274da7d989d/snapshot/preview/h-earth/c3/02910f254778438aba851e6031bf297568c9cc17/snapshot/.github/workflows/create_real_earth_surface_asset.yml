@@ -1,0 +1,59 @@
+name: Create Real Earth Surface Asset
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/create_real_earth_surface_asset.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  create-real-earth-surface-asset:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Create Earth asset folder
+        run: |
+          mkdir -p assets/earth
+
+      - name: Install image tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y imagemagick file curl
+
+      - name: Download real NASA Blue Marble Earth surface with clouds
+        run: |
+          curl -L -f \
+            "https://neo.gsfc.nasa.gov/archive/bluemarble/land_ocean_ice_cloud_8192_preview.png" \
+            -o /tmp/earth_surface_real.png
+
+      - name: Convert real Earth surface to required JPG path
+        run: |
+          convert /tmp/earth_surface_real.png \
+            -resize 2048x1024\! \
+            -quality 94 \
+            assets/earth/earth_surface_2048.jpg
+
+      - name: Verify real Earth surface JPG
+        run: |
+          test -s assets/earth/earth_surface_2048.jpg
+          file assets/earth/earth_surface_2048.jpg
+
+      - name: Commit real Earth surface JPG
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add assets/earth/earth_surface_2048.jpg
+
+          if git diff --cached --quiet; then
+            echo "Real Earth surface asset already current."
+          else
+            git commit -m "Replace Earth surface with real Blue Marble asset"
+            git push
+          fi

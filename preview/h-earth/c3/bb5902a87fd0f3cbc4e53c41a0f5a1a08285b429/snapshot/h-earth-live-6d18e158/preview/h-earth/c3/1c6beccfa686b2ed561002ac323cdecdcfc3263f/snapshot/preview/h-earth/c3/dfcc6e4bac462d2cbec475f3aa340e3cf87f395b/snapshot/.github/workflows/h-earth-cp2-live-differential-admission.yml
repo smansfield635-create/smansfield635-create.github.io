@@ -1,0 +1,113 @@
+name: H-Earth CP2 Live Differential Admission
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/h-earth-cp2-live-differential-admission.yml
+      - h-earth-3d/validation/h-earth.cp2-live-differential-admission.runner.mjs
+      - showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js
+      - showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/h-earth-cp2-live-differential-admission.yml
+      - h-earth-3d/validation/h-earth.cp2-live-differential-admission.runner.mjs
+      - showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js
+      - showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: h-earth-cp2-live-differential-admission-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-live-differential-admission:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact admission candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install bounded Chromium dependency
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Start frozen accepted-baseline witness
+        run: |
+          git worktree add --detach /tmp/h-earth-cp2-accepted 3a6eafcb8c10c61849a452a0c068d34a12117cf5
+          (cd /tmp/h-earth-cp2-accepted && python3 -m http.server 4178 > /tmp/h-earth-cp2-accepted.log 2>&1 &)
+          for attempt in $(seq 1 60); do
+            curl --fail --silent http://127.0.0.1:4178/showroom/globe/h-earth/ > /dev/null && exit 0
+            sleep 1
+          done
+          echo 'ACCEPTED_BASELINE_WITNESS_NOT_AVAILABLE' >&2
+          exit 1
+
+      - name: Start branch admission candidate
+        if: github.event_name != 'push' || github.ref != 'refs/heads/main'
+        run: |
+          python3 -m http.server 4177 > /tmp/h-earth-cp2-admission.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            curl --fail --silent http://127.0.0.1:4177/showroom/globe/h-earth/ > /dev/null && exit 0
+            sleep 1
+          done
+          echo 'BRANCH_ADMISSION_CANDIDATE_NOT_AVAILABLE' >&2
+          exit 1
+
+      - name: Wait for exact live admission deployment
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          for attempt in $(seq 1 90); do
+            binding_ok=false
+            renderer_ok=false
+            if curl --fail --silent -H 'Cache-Control: no-cache' \
+              "https://diamondgatebridge.com/showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js?admission=${GITHUB_SHA}" \
+              | grep -q 'round1-1f520809'; then
+              binding_ok=true
+            fi
+            if curl --fail --silent -H 'Cache-Control: no-cache' \
+              "https://diamondgatebridge.com/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js?admission=${GITHUB_SHA}" \
+              | grep -q 'H_EARTH_GRATITUDE_REGION_CP2_ROUND_1_PRESENTATION_PROFILE_v1'; then
+              renderer_ok=true
+            fi
+            if test "$binding_ok" = true && test "$renderer_ok" = true; then
+              exit 0
+            fi
+            sleep 10
+          done
+          echo 'LIVE_CP2_DIFFERENTIAL_ADMISSION_NOT_AVAILABLE_WITHIN_WINDOW' >&2
+          exit 1
+
+      - name: Verify baseline preservation and candidate identity
+        env:
+          ACCEPTED_BASELINE_ORIGIN: http://127.0.0.1:4178
+          ADMISSION_TARGET_ORIGIN: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && 'https://diamondgatebridge.com' || 'http://127.0.0.1:4177' }}
+          ADMISSION_EVIDENCE_DIR: h-earth-3d/validation/cp2-live-differential-admission-evidence
+        run: node h-earth-3d/validation/h-earth.cp2-live-differential-admission.runner.mjs | tee cp2-live-differential-admission.log
+
+      - name: Upload live-admission evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-cp2-live-differential-admission-${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && 'live' || 'branch' }}
+          path: |
+            cp2-live-differential-admission.log
+            /tmp/h-earth-cp2-accepted.log
+            /tmp/h-earth-cp2-admission.log
+            h-earth-3d/validation/cp2-live-differential-admission-evidence/*
+          if-no-files-found: warn

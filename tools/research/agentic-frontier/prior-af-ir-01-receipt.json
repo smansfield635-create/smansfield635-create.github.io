@@ -1,0 +1,26 @@
+{
+  "schema": "AGENTIC_FRONTIER_PAIRED_SMOKE_AF_IR_01_STOCK_OPENHANDS_ADMISSIBILITY_v3",
+  "task_id": "AF-IR-01",
+  "stratum": "IMPLEMENTATION_REPAIR",
+  "model": "qwen2.5-coder:7b",
+  "openhands_version": "1.14.0",
+  "source_run_id": 32916289501,
+  "source_artifact_id": 9588436111,
+  "source_artifact_sha256": "a4776aa7b833f48eeaa90e99e7b4e067118d5f725f0b906b89a1d329a303bffb",
+  "diamond_gate": {
+    "terminal": "PASS",
+    "pass": true,
+    "attempts": 1,
+    "elapsed_s": 31.352,
+    "output_sha256": "cb2416faabab6db7db96fc0c656b3d1cab3453b8d3f224fff29b774284f2f603"
+  },
+  "openhands": {
+    "terminal": "FAIL_TIMEOUT",
+    "pass": false,
+    "elapsed_s": 190.076,
+    "inactivity_timeout": true,
+    "output_sha256": "11df7ff6e5b14960b16f178af6da7ac46de37fc0930e885b724d9e4cf2190df2"
+  },
+  "paired_result": "DG_ONLY",
+  "note": "Exact fields summarized from the preserved AF-IR-01 paired artifact; full raw artifact remains attached to source run 32916289501."
+}

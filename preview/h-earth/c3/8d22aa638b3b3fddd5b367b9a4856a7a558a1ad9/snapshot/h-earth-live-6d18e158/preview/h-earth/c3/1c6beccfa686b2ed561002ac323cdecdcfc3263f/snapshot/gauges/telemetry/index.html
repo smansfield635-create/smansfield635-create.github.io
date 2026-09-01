@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Telemetry · Geodiametrics</title>
+<link rel="stylesheet" href="/assets/ui.css">
+</head>
+<body>
+<main class="gPage">
+<header class="gHeader">
+<h1 class="gTitle">Telemetry</h1>
+<p class="gSub">Raw evidence · No interpretation.</p>
+</header>
+
+<section class="gPanel">
+<pre id="raw"></pre>
+<a class="gBtn" href="/gauges/">Back</a>
+<a class="gBtn" href="/home/">Home</a>
+</section>
+</main>
+
+<script>
+fetch('/gauges/live.json').then(r=>r.json()).then(j=>{
+ document.getElementById('raw').textContent=JSON.stringify(j,null,2);
+});
+</script>
+</body>
+</html>

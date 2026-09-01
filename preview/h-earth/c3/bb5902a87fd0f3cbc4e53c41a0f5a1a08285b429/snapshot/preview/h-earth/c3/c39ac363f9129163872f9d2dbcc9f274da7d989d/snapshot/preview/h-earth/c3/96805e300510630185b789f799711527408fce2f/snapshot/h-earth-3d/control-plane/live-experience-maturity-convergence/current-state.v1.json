@@ -1,0 +1,24 @@
+{
+  "schema": "H_EARTH_LIVE_EXPERIENCE_CURRENT_STATE_v1",
+  "programId": "H_EARTH_LIVE_EXPERIENCE_MATURITY_CONVERGENCE_v1",
+  "stateVersion": 1,
+  "authoritativeStateClass": "CANDIDATE_REPOSITORY_DURABLE_STATE_AFTER_RATIFICATION",
+  "roomPrivateStateAuthoritative": false,
+  "startingHead": "9eb636d33cff36b2344bb721726db7b4e8dcd2bc",
+  "currentCheckpoint": {
+    "id": "HC00",
+    "status": "CANDIDATE_CONSTRUCTION_NOT_RATIFIED"
+  },
+  "closedCheckpoints": [],
+  "productState": {
+    "liveRouteMutationStarted": false,
+    "runtimeMutationStarted": false,
+    "terrainMutationStarted": false,
+    "environmentalMaturityStarted": false,
+    "worldLoopIntegrationStarted": false,
+    "visualInspectionAuthorizedByHC00": false
+  },
+  "nextLawfulAction": "COMPLETE_HC00_STATIC_AND_FRESH_VERIFICATION_THEN_SEPARATELY_RATIFY_AND_REGISTER_THE_CONTROL_PACKAGE_BEFORE_ADMITTING_HC01",
+  "recoveryPointer": "successor-room-recovery.v1.json",
+  "checkpointRegistryPointer": "checkpoint-registry.v1.json"
+}

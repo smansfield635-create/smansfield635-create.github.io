@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#111916">
+  <title>H-Earth · Functional Environment Proof</title>
+  <link rel="stylesheet" href="./index.css?cb=ff03cb9944e498ff">
+</head>
+<body>
+  <main
+    id="h-earth-functional-landscape-route"
+    class="route-shell"
+    data-run6f-ready="false"
+    data-run7h-ready="false"
+    data-run7h-error="false"
+    aria-labelledby="route-title"
+  >
+    <header class="route-header">
+      <div>
+        <p class="eyebrow">H-Earth · Run 7H</p>
+        <h1 id="route-title">Coast-to-inland functional environment</h1>
+      </div>
+      <p id="route-status" class="route-status" role="status" aria-live="polite">
+        Constructing governed environment…
+      </p>
+    </header>
+
+    <section class="viewer-panel" aria-label="Navigable H-Earth functional environment">
+      <div
+        id="h-earth-functional-landscape-mount"
+        class="render-mount"
+        tabindex="0"
+        aria-label="Environment viewport. Use W A S D, touch gestures, or the controls below to navigate."
+      >
+        <canvas
+          id="h-earth-functional-landscape-canvas"
+          width="320"
+          height="180"
+          aria-hidden="true"
+        ></canvas>
+        <div class="reticle" aria-hidden="true"></div>
+        <div class="semantic-readout" aria-live="polite">
+          <span id="hud-waypoint">Coastal entry</span>
+          <span id="hud-address">Address pending</span>
+        </div>
+      </div>
+
+      <dl class="telemetry" aria-label="Navigation and environment telemetry">
+        <div><dt>Position</dt><dd id="hud-position">—</dd></div>
+        <div><dt>Terrain</dt><dd id="hud-terrain">—</dd></div>
+        <div><dt>Clearance</dt><dd id="hud-clearance">—</dd></div>
+        <div><dt>Chunk</dt><dd id="hud-chunk">—</dd></div>
+        <div><dt>Formation</dt><dd id="hud-formation">—</dd></div>
+        <div><dt>Frame</dt><dd id="hud-frame">—</dd></div>
+      </dl>
+    </section>
+
+    <section class="controls" aria-label="Landscape controls">
+      <div class="movement-grid" aria-label="Movement">
+        <button type="button" data-action="TURN_LEFT" aria-label="Turn left">↶</button>
+        <button type="button" data-action="MOVE_FORWARD" aria-label="Move forward">↑</button>
+        <button type="button" data-action="TURN_RIGHT" aria-label="Turn right">↷</button>
+        <button type="button" data-action="STRAFE_LEFT" aria-label="Strafe left">←</button>
+        <button type="button" data-action="MOVE_BACKWARD" aria-label="Move backward">↓</button>
+        <button type="button" data-action="STRAFE_RIGHT" aria-label="Strafe right">→</button>
+      </div>
+
+      <div class="view-controls" aria-label="View controls">
+        <button type="button" data-action="PITCH_UP">Look up</button>
+        <button type="button" data-action="PITCH_DOWN">Look down</button>
+        <button type="button" data-action="ZOOM_IN">Zoom in</button>
+        <button type="button" data-action="ZOOM_OUT">Zoom out</button>
+        <button type="button" data-action="RESET">Reset coast</button>
+      </div>
+    </section>
+
+    <nav class="waypoints" aria-label="Geographic proof waypoints">
+      <button type="button" data-waypoint="COAST">Coast</button>
+      <button type="button" data-waypoint="BERM">Berm</button>
+      <button type="button" data-waypoint="LOWLAND">Lowland</button>
+      <button type="button" data-waypoint="HILL">Hill</button>
+      <button type="button" data-waypoint="RIDGE">Ridge</button>
+    </nav>
+
+    <footer class="route-footer">
+      <p>
+        Run 7H integrates the governed terrain, surface, atmosphere, water,
+        biome, population, traversal, and spatial-lifecycle authorities without
+        replacing their native truth or the established camera, navigation,
+        geometry, compositor, and renderer authorities.
+      </p>
+    </footer>
+  </main>
+
+  <script type="module" src="./index.js?cb=32052951d5359941"></script>
+  <script type="module" src="./environment-integration.js?cb=7917938b478e4807"></script>
+</body>
+</html>

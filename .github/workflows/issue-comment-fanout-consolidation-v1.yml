@@ -1,0 +1,73 @@
+name: Issue Comment Fanout Consolidation v1
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/issue-comment-fanout-consolidation-v1.yml'
+permissions:
+  contents: write
+
+concurrency:
+  group: issue-comment-fanout-consolidation-v1
+  cancel-in-progress: true
+
+jobs:
+  consolidate:
+    if: >-
+      github.event_name == 'push' ||
+      (github.event_name == 'issue_comment' &&
+       github.event.issue.number == 2123 &&
+       startsWith(github.event.comment.body, 'ISSUE_COMMENT_FANOUT_CONSOLIDATE_V1') &&
+       (github.event.comment.author_association == 'OWNER' ||
+        github.event.comment.author_association == 'MEMBER' ||
+        github.event.comment.author_association == 'COLLABORATOR'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Consolidate legacy issue_comment listeners
+        run: node tools/issue-comment-fanout-consolidation-v1.mjs
+
+      - name: Verify consolidation receipt
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const p = 'evidence/control-plane/issue-comment-fanout-consolidation.receipt.json';
+          const r = JSON.parse(fs.readFileSync(p, 'utf8'));
+          const expected = [
+            'ai-room-execution-transport.yml',
+            'canonical-operation-intake-transport-v1.yml',
+            'public-private-successor-execution-v1.yml',
+            'public-private-terminal-closure-carrier-v1.yml',
+            'remote-operation-terminal-closure-v1.yml'
+          ].sort();
+          const retained = [...r.retainedIssueCommentListeners].sort();
+          if (r.retainedCount !== expected.length) throw new Error(`retainedCount=${r.retainedCount}`);
+          if (r.retiredCount < 20) throw new Error(`retiredCount=${r.retiredCount}`);
+          if (JSON.stringify(retained) !== JSON.stringify(expected)) {
+            throw new Error(`unexpected retained listeners: ${JSON.stringify(retained)}`);
+          }
+          console.log(`ISSUE_COMMENT_CONSOLIDATION retired=${r.retiredCount} retained=${r.retainedCount}`);
+          NODE
+
+      - name: Commit bounded consolidation to main
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/workflows evidence/control-plane/issue-comment-fanout-consolidation.receipt.json
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Control plane: collapse legacy issue-comment workflow fanout'
+          git push origin HEAD:main
+
+# recovery nonce: trigger bounded push execution after parser repair

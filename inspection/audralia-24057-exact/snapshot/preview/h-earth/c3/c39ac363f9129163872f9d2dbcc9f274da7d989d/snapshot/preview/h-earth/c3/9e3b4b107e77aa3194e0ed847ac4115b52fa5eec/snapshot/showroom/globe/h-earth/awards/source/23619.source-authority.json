@@ -1,0 +1,51 @@
+{
+  "schema": "DGB_AWARDS_COMPASS_SOURCE_AUTHORITY_v1",
+  "status": "CANONICAL_SOURCE_AUTHORITY",
+  "sourceFileName": "23619.mp4",
+  "sourceRole": "CHAPTER_01_COMPASS_STRUCTURAL_PICTURE_RE_EDIT_SOURCE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "governingMainAtRegistration": "755c7b0a1623052e24c07f41dc7259208f868269",
+  "storage": {
+    "provider": "GOOGLE_DRIVE",
+    "fileId": "1nQKAfKJ2ORMSpIhjyt5A_gy4neYFrh7A",
+    "fileName": "23619.mp4",
+    "mimeType": "video/mp4",
+    "purpose": "DURABLE_CROSS_ROOM_SOURCE_BYTE_CUSTODY"
+  },
+  "integrity": {
+    "byteLength": 91348244,
+    "sha256": "c5caa176633209bdc618f505f64cafef5535e400ce2bf1728cde79582169c9a3"
+  },
+  "media": {
+    "durationSeconds": 105.527584,
+    "videoCodec": "h264",
+    "width": 1080,
+    "height": 2340,
+    "nominalFrameRate": "240/1",
+    "audioCodec": "aac"
+  },
+  "authority": {
+    "supersedesAsPictureSource": [
+      "diamond-gate-compass-mirrorland-36s.mp4",
+      "diamond-gate-compass-story-v2-36s.mp4"
+    ],
+    "doesNotAuthorize": [
+      "CHAPTER_02_MUTATION",
+      "FINAL_TYPOGRAPHY",
+      "FINAL_REALITY_STYLING",
+      "FINAL_MUSIC_BED",
+      "MERGE_OF_A_STRUCTURAL_CUT_WITHOUT_REVIEW"
+    ],
+    "nextLawfulAction": "COMPASS_STRUCTURAL_PICTURE_RE_EDIT_55_TO_60_SECONDS"
+  },
+  "requiredStructuralContent": [
+    "COMPASS_ORIENTATION",
+    "REALITY_THREAD_NEAR_FRONT",
+    "HEART_TO_MIND_SUMMITS_AS_CONNECTIONS",
+    "FIVE_QUESTIONS_AND_STARS_WHERE_STRONGEST",
+    "GEM_CRYSTAL_LATTICE_WHERE_STRONGEST",
+    "LAWS_CHAMBER_AS_FEATURED_PROOF_POINT",
+    "SMOOTH_MOTION_ONLY",
+    "DELIBERATE_RETURN_HOME_TO_COMPASS"
+  ]
+}

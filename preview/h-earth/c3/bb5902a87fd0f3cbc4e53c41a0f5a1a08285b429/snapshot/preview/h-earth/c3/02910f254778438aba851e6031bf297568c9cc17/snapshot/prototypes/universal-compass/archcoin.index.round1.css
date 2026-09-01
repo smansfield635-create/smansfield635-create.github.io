@@ -1,0 +1,263 @@
+/* /prototypes/universal-compass/archcoin.index.round1.css
+   ARCHCOIN calibration lab · visual round 1.
+*/
+
+:root {
+  --archcoin-scene-height: clamp(620px, 74vh, 820px);
+  --archcoin-compass-size: clamp(132px, 16vw, 190px);
+}
+
+html::before {
+  content: "ARCHCOIN CALIBRATION LAB · ROUND 1";
+  position: fixed;
+  top: max(8px, env(safe-area-inset-top));
+  right: 8px;
+  z-index: 2147483647;
+  padding: 6px 9px;
+  border: 1px solid rgba(160, 214, 255, 0.78);
+  border-radius: 7px;
+  background: rgba(2, 10, 24, 0.9);
+  color: #e6f7ff;
+  font: 700 10px/1.15 system-ui, sans-serif;
+  letter-spacing: 0.08em;
+  box-shadow: 0 0 18px rgba(75, 180, 255, 0.28);
+  pointer-events: none;
+}
+
+.archcoin-scene__field {
+  min-height: var(--archcoin-scene-height);
+  cursor: grab;
+  touch-action: none;
+  background:
+    radial-gradient(circle at 50% 48%, rgba(80, 164, 180, 0.13), transparent 34%),
+    radial-gradient(circle at 50% 50%, rgba(234, 208, 131, 0.055), transparent 56%),
+    linear-gradient(180deg, rgba(3, 12, 19, 0.98), rgba(1, 7, 12, 0.99));
+  box-shadow:
+    inset 0 0 0 1px rgba(154, 217, 225, 0.12),
+    inset 0 0 80px rgba(0, 0, 0, 0.34),
+    0 18px 54px rgba(0, 0, 0, 0.28);
+}
+
+.archcoin-scene__field.is-calibration-dragging {
+  cursor: grabbing;
+}
+
+[data-archcoin-compositor-layer],
+[data-archcoin-crystals-canvas] {
+  filter:
+    saturate(1.5)
+    brightness(1.18)
+    contrast(1.08)
+    drop-shadow(0 0 10px rgba(114, 211, 231, 0.2));
+}
+
+.archcoin-field-chrome__rings {
+  opacity: 0.72;
+  filter: brightness(1.18);
+}
+
+.archcoin-field-chrome__direction {
+  width: 30px;
+  height: 30px;
+  border-color: rgba(154, 217, 225, 0.19);
+  color: rgba(229, 246, 250, 0.68);
+  background: rgba(4, 13, 20, 0.68);
+  box-shadow: 0 0 14px rgba(95, 190, 208, 0.08);
+}
+
+.archcoin-calibration-focus {
+  position: absolute;
+  left: 50%;
+  top: 58px;
+  z-index: calc(var(--archcoin-guidance-z) + 1);
+  display: block;
+  min-width: min(230px, calc(100% - 110px));
+  max-width: calc(100% - 96px);
+  padding: 8px 13px;
+  border: 1px solid rgba(234, 208, 131, 0.42);
+  border-radius: 999px;
+  color: #fff4cb;
+  background: rgba(5, 14, 22, 0.76);
+  box-shadow:
+    0 0 0 1px rgba(154, 217, 225, 0.06),
+    0 0 22px rgba(234, 208, 131, 0.12);
+  font: 750 0.67rem/1.2 var(--archcoin-sans);
+  letter-spacing: 0.075em;
+  text-align: center;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+  backdrop-filter: blur(10px);
+  pointer-events: none;
+}
+
+.archcoin-coin {
+  gap: 7px;
+  width: auto;
+  min-width: 108px;
+  max-width: 158px;
+  min-height: 38px;
+  padding: 5px 9px;
+  border: 1px solid color-mix(in srgb, var(--archcoin-cardinal-accent, #ead083) 38%, transparent);
+  border-radius: 10px;
+  color: var(--archcoin-cream);
+  background:
+    linear-gradient(180deg, rgba(12, 25, 34, 0.78), rgba(3, 11, 17, 0.72));
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.025);
+  backdrop-filter: blur(9px);
+  overflow: visible;
+}
+
+.archcoin-coin::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  z-index: -1;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  pointer-events: none;
+  transition:
+    border-color 150ms var(--archcoin-ease),
+    box-shadow 150ms var(--archcoin-ease),
+    opacity 150ms var(--archcoin-ease);
+}
+
+.archcoin-coin__coordinate {
+  width: 23px;
+  height: 23px;
+  border-color: color-mix(in srgb, var(--archcoin-cardinal-accent, #ead083) 34%, transparent);
+  background: rgba(2, 9, 14, 0.38);
+  font-size: 0.58rem;
+}
+
+.archcoin-coin__copy {
+  min-width: max-content;
+}
+
+.archcoin-coin__label {
+  overflow: visible;
+  color: #fff8e4;
+  font-size: 0.67rem;
+  letter-spacing: 0.065em;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+.archcoin-coin__function {
+  overflow: visible;
+  color: rgba(231, 241, 239, 0.62);
+  font-size: 0.54rem;
+  line-height: 1.2;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+.archcoin-coin[data-archcoin-depth-layer="rear"],
+.archcoin-coin[data-projection-depth-layer="rear"] {
+  opacity: 0.56;
+  filter: saturate(0.78) brightness(0.78);
+}
+
+.archcoin-coin[data-archcoin-depth-layer="front"],
+.archcoin-coin[data-projection-depth-layer="front"] {
+  opacity: 1;
+  filter: saturate(1.16) brightness(1.08);
+}
+
+.archcoin-coin[data-calibration-primary="true"] {
+  border-color: rgba(246, 220, 139, 0.9);
+  background:
+    linear-gradient(180deg, rgba(37, 45, 42, 0.92), rgba(9, 18, 23, 0.86));
+  box-shadow:
+    0 0 0 1px rgba(246, 220, 139, 0.2),
+    0 0 24px rgba(246, 220, 139, 0.22),
+    0 10px 28px rgba(0, 0, 0, 0.28);
+  filter: brightness(1.16) saturate(1.22);
+  scale: 1.06;
+}
+
+.archcoin-coin[data-calibration-primary="true"]::after {
+  border-color: rgba(154, 217, 225, 0.3);
+  box-shadow: 0 0 22px rgba(154, 217, 225, 0.12);
+}
+
+[data-archcoin-room][data-calibration-primary="true"] {
+  filter:
+    brightness(1.2)
+    saturate(1.2)
+    drop-shadow(0 0 12px rgba(234, 208, 131, 0.24));
+  scale: 1.08;
+}
+
+.archcoin-guidance {
+  max-width: min(620px, calc(100% - 34px));
+  padding: 8px 12px;
+  border: 1px solid rgba(154, 217, 225, 0.12);
+  border-radius: 12px;
+  background: rgba(3, 11, 17, 0.68);
+  backdrop-filter: blur(8px);
+}
+
+@media (max-width: 720px) {
+  :root {
+    --archcoin-scene-height: clamp(590px, 72vh, 690px);
+    --archcoin-compass-size: clamp(126px, 34vw, 160px);
+  }
+
+  .archcoin-scene__field {
+    min-height: var(--archcoin-scene-height);
+  }
+
+  .archcoin-calibration-focus {
+    top: 52px;
+    min-width: 190px;
+    max-width: calc(100% - 74px);
+    padding: 7px 10px;
+    font-size: 0.61rem;
+  }
+
+  .archcoin-coin {
+    min-width: 96px;
+    max-width: 126px;
+    min-height: 34px;
+    padding: 5px 7px;
+  }
+
+  .archcoin-coin__coordinate {
+    width: 21px;
+    height: 21px;
+  }
+
+  .archcoin-coin__label {
+    font-size: 0.61rem;
+    letter-spacing: 0.045em;
+  }
+
+  .archcoin-coin__function {
+    display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  :root {
+    --archcoin-scene-height: 600px;
+  }
+
+  .archcoin-coin {
+    min-width: 92px;
+    max-width: 118px;
+  }
+
+  .archcoin-coin__label {
+    font-size: 0.59rem;
+  }
+
+  .archcoin-field-chrome__direction--east {
+    right: 8px;
+  }
+
+  .archcoin-field-chrome__direction--west {
+    left: 8px;
+  }
+}

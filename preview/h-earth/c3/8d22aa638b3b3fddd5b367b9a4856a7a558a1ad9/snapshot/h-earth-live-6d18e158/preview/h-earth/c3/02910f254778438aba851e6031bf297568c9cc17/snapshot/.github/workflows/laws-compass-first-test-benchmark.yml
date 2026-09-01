@@ -1,0 +1,204 @@
+name: Laws Compass FIRST Test Benchmark
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: laws-first-test-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  EXECUTION_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+  EXECUTION_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+  LAWS_FIRST_ORIGIN: http://127.0.0.1:4173
+
+jobs:
+  laws-first-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout exact execution head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXECUTION_COMMIT }}
+
+      - name: Verify exact checkout identity
+        run: test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Set up Chrome
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install pinned browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Validate current accepted source contract
+        run: |
+          node --check laws/index.interactions.js
+          node --check laws/index.controller.js
+          grep -F 'data-laws-method-acronym="FIRST"' laws/index.html
+          grep -F 'data-laws-test-method="four-member-reversible-admissibility-cluster"' laws/index.html
+          grep -F 'data-laws-primary-star-count="4"' laws/index.html
+          grep -F 'data-laws-category-count="6"' laws/index.html
+          grep -F 'data-laws-child-route-count="24"' laws/index.html
+          grep -F 'data-laws-first-disclosure' laws/index.html
+          grep -F 'const D=Object.freeze(["flow","integrity","reality","structure","test","research"])' laws/index.interactions.js
+          grep -F 'singleActiveOuterAuthorityLabel:true' laws/index.interactions.js
+          grep -F 'primary-only-star-center-protected-tab' laws/index.interactions.js
+
+      - name: Start exact-head static server
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-first-server.log 2>&1 &
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/laws/ >/dev/null; then
+              exit 0
+            fi
+            sleep 0.25
+          done
+          cat /tmp/laws-first-server.log
+          exit 1
+
+      - name: Execute current F.I.R.S.T. and six-authority browser proof
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import puppeteer from 'puppeteer-core';
+
+          const visibleSource = `(element) => {
+            if (!element || element.hidden) return false;
+            const style = getComputedStyle(element);
+            const rect = element.getBoundingClientRect();
+            return style.display !== 'none' && style.visibility !== 'hidden' && Number(style.opacity || 1) > 0.01 && rect.width > 0 && rect.height > 0;
+          }`;
+
+          const browser = await puppeteer.launch({
+            executablePath: process.env.CHROME_PATH,
+            headless: 'new',
+            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+          });
+          const observations = [];
+          try {
+            for (const profile of [
+              { id: 'PHONE_430x932', width: 430, height: 932, mobile: true },
+              { id: 'DESKTOP_1280x900', width: 1280, height: 900, mobile: false }
+            ]) {
+              const page = await browser.newPage();
+              await page.setViewport({ width: profile.width, height: profile.height, isMobile: profile.mobile, hasTouch: profile.mobile });
+              const errors = [];
+              page.on('pageerror', error => errors.push(String(error?.message || error)));
+              page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
+              const response = await page.goto(`${process.env.LAWS_FIRST_ORIGIN}/laws/`, { waitUntil: 'networkidle0', timeout: 45000 });
+              await page.waitForFunction(() => Boolean(
+                document.querySelector('[data-laws-root]') &&
+                globalThis.DGB_LAWS_CONTROLLER &&
+                document.querySelectorAll('[data-laws-projected-category-label]').length === 6
+              ), { timeout: 45000 });
+
+              const snapshot = await page.evaluate(source => {
+                const isVisible = eval(source);
+                const labels = [...document.querySelectorAll('[data-laws-projected-category-label]')];
+                const children = [...document.querySelectorAll('button[data-direction][data-route]')]
+                  .filter(element => !element.hasAttribute('data-laws-category'));
+                return {
+                  acronym: document.documentElement.dataset.lawsMethodAcronym || '',
+                  testMethod: document.documentElement.dataset.lawsTestMethod || '',
+                  primaryStarCount: Number(document.documentElement.dataset.lawsPrimaryStarCount || 0),
+                  authorityCount: document.querySelectorAll('button[data-laws-category][data-direction]').length,
+                  lawCount: children.filter(element => element.hasAttribute('data-laws-law')).length,
+                  testCount: children.filter(element => element.dataset.direction === 'test').length,
+                  researchCount: children.filter(element => element.dataset.direction === 'research').length,
+                  childCount: children.length,
+                  labelCount: labels.length,
+                  visibleLabelCount: labels.filter(isVisible).length,
+                  primaryLabelCount: labels.filter(element => isVisible(element) && element.dataset.primary === 'true').length,
+                  letterCount: labels.filter(element => element.querySelector('[data-laws-projected-category-letter]')).length,
+                  wordCount: labels.filter(element => element.querySelector('[data-laws-projected-category-word]')).length,
+                  firstDisclosure: Boolean(document.querySelector('[data-laws-first-disclosure]')),
+                  overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+                  controllerState: document.querySelector('[data-laws-root]')?.dataset.lawsControllerState || ''
+                };
+              }, visibleSource);
+
+              const failures = [];
+              if (![200, 304].includes(response?.status())) failures.push('route');
+              if (snapshot.acronym !== 'FIRST') failures.push('acronym');
+              if (snapshot.testMethod !== 'four-member-reversible-admissibility-cluster') failures.push('test_method');
+              if (snapshot.primaryStarCount !== 4) failures.push('law_authorities');
+              if (snapshot.authorityCount !== 6) failures.push('six_authorities');
+              if (snapshot.lawCount !== 16 || snapshot.testCount !== 4 || snapshot.researchCount !== 4 || snapshot.childCount !== 24) failures.push('child_membership');
+              if (snapshot.labelCount !== 6 || snapshot.visibleLabelCount !== 1 || snapshot.primaryLabelCount !== 1) failures.push('single_active_label');
+              if (snapshot.letterCount !== 6 || snapshot.wordCount !== 6) failures.push('label_parts');
+              if (!snapshot.firstDisclosure) failures.push('first_disclosure');
+              if (snapshot.overflow > 2) failures.push('overflow');
+              if (!snapshot.controllerState) failures.push('controller');
+              if (errors.length) failures.push('browser_errors');
+              if (failures.length) throw new Error(`${profile.id}:${failures.join('|')}:${JSON.stringify({ snapshot, errors })}`);
+
+              await page.screenshot({ path: `laws-current-first-${profile.id.toLowerCase()}.png`, fullPage: true });
+              observations.push({ profile: profile.id, snapshot, errors });
+              await page.close();
+            }
+          } finally {
+            await browser.close();
+          }
+
+          const receipt = {
+            tool: 'LAWS_COMPASS_CURRENT_FIRST_TEST_BENCHMARK_v2',
+            supersedesForCurrentProduct: 'LAWS_COMPASS_FIRST_TEST_BENCHMARK_v1',
+            execution: {
+              repository: process.env.GITHUB_REPOSITORY,
+              branch: process.env.EXECUTION_BRANCH,
+              commit: process.env.EXECUTION_COMMIT,
+              workflowRunId: process.env.GITHUB_RUN_ID
+            },
+            currentContract: {
+              authorities: 6,
+              lawAuthorities: 4,
+              testGateway: true,
+              researchGateway: true,
+              children: 24,
+              outerLabelModel: 'single-active-primary-only',
+              testMethod: 'four-member-reversible-admissibility-cluster'
+            },
+            observations,
+            pass: true
+          };
+          fs.writeFileSync('laws-current-first-test-benchmark-v2.json', JSON.stringify(receipt, null, 2) + '\n');
+          console.log(JSON.stringify(receipt, null, 2));
+          NODE
+
+      - name: Validate current receipt
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const receipt = JSON.parse(fs.readFileSync('laws-current-first-test-benchmark-v2.json', 'utf8'));
+          if (receipt.pass !== true) throw new Error('CURRENT_FIRST_RECEIPT_FAILED');
+          if (receipt.execution.commit !== process.env.EXECUTION_COMMIT) throw new Error('CURRENT_FIRST_COMMIT_MISMATCH');
+          if (receipt.currentContract.authorities !== 6 || receipt.currentContract.children !== 24) throw new Error('CURRENT_FIRST_AUTHORITY_CONTRACT_INVALID');
+          if (receipt.currentContract.outerLabelModel !== 'single-active-primary-only') throw new Error('CURRENT_FIRST_LABEL_MODEL_INVALID');
+          if (receipt.observations.length !== 2) throw new Error('CURRENT_FIRST_EVIDENCE_COUNT_INVALID');
+          NODE
+
+      - name: Upload exact-head evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-compass-current-first-test-benchmark-v2-evidence
+          path: |
+            laws-current-first-test-benchmark-v2.json
+            laws-current-first-*.png
+            /tmp/laws-first-server.log
+          if-no-files-found: warn
+          retention-days: 30

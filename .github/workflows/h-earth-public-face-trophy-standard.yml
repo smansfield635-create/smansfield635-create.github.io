@@ -21,7 +21,7 @@ on:
   workflow_dispatch:
     inputs:
       public_verification:
-        description: Run B10 against the canonical public H-Earth origin
+        description: Run the promoted Trophy Standard regression against the canonical public H-Earth origin
         required: true
         default: false
         type: boolean
@@ -55,15 +55,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const targetUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
-            await github.rest.repos.createCommitStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha: context.sha,
-              state: 'pending',
-              context: 'h-earth/b10-public-candidate',
-              description: 'B10 public candidate verification is running',
-              target_url: targetUrl
-            });
+            await github.rest.repos.createCommitStatus({ owner: context.repo.owner, repo: context.repo.repo, sha: context.sha, state: 'pending', context: 'h-earth/b10-public-candidate', description: 'Promoted Trophy Standard verification is running', target_url: targetUrl });
 
       - name: Use Node 22
         uses: actions/setup-node@v4
@@ -78,17 +70,14 @@ jobs:
       - name: Execute B10 static and scope verification
         run: |
           set -o pipefail
-          node h-earth-3d/validation/instrument-platform/h-earth.public-face-trophy-standard.runner.mjs \
-            | tee /tmp/h-earth-public-face-trophy-standard-b10.static.log
+          node h-earth-3d/validation/instrument-platform/h-earth.public-face-trophy-standard.runner.mjs | tee /tmp/h-earth-public-face-trophy-standard-b10.static.log
 
       - name: Start exact candidate server
         if: ${{ env.PUBLIC_VERIFICATION != 'true' }}
         run: |
           python3 -m http.server 4187 --bind 127.0.0.1 > /tmp/h-earth-public-face-trophy-standard-server.log 2>&1 &
           for attempt in $(seq 1 90); do
-            curl -fsS http://127.0.0.1:4187/showroom/globe/h-earth/ >/dev/null \
-              && curl -fsS http://127.0.0.1:4187/showroom/globe/h-earth/awards/ >/dev/null \
-              && exit 0
+            curl -fsS http://127.0.0.1:4187/showroom/globe/h-earth/ >/dev/null && curl -fsS http://127.0.0.1:4187/showroom/globe/h-earth/awards/ >/dev/null && exit 0
             sleep 1
           done
           cat /tmp/h-earth-public-face-trophy-standard-server.log
@@ -99,53 +88,32 @@ jobs:
         run: |
           : > /tmp/h-earth-public-face-trophy-standard-server.log
           for attempt in $(seq 1 40); do
-            H_EARTH_SOURCE="$(curl -fsS "${H_EARTH_B10_ORIGIN}/showroom/globe/h-earth/?candidate=H_EARTH_PUBLIC_FACE_TROPHY_STANDARD_RECONCILIATION_001&attempt=${attempt}" || true)"
+            H_EARTH_SOURCE="$(curl -fsS "${H_EARTH_B10_ORIGIN}/showroom/globe/h-earth/?attempt=${attempt}" || true)"
             AWARDS_SOURCE="$(curl -fsS "${H_EARTH_B10_ORIGIN}/showroom/globe/h-earth/awards/?attempt=${attempt}" || true)"
-            if grep -q 'H_EARTH_PUBLIC_FACE_TROPHY_STANDARD_RECONCILIATION_001' <<<"${H_EARTH_SOURCE}" \
-              && grep -q 'DIAMOND_GATE_BRIDGE_AWARD_LANDSCAPE' <<<"${AWARDS_SOURCE}"; then
-              printf 'PUBLIC_B10_CANDIDATE_SOURCE_AVAILABLE_ATTEMPT=%s\n' "${attempt}" | tee /tmp/h-earth-public-face-trophy-standard-server.log
+            if grep -q 'data-h-earth-public-face-default="promoted"' <<<"${H_EARTH_SOURCE}" && grep -q 'DIAMOND_GATE_BRIDGE_AWARD_LANDSCAPE' <<<"${AWARDS_SOURCE}"; then
+              printf 'PUBLIC_PROMOTED_TROPHY_STANDARD_SOURCE_AVAILABLE_ATTEMPT=%s\n' "${attempt}" | tee /tmp/h-earth-public-face-trophy-standard-server.log
               exit 0
             fi
             sleep 15
           done
-          printf 'PUBLIC_B10_CANDIDATE_SOURCE_NOT_AVAILABLE\n' | tee /tmp/h-earth-public-face-trophy-standard-server.log
+          printf 'PUBLIC_PROMOTED_TROPHY_STANDARD_SOURCE_NOT_AVAILABLE\n' | tee /tmp/h-earth-public-face-trophy-standard-server.log
           exit 1
 
       - name: Execute B10 desktop mobile and awards browser verification
         run: |
           set -o pipefail
-          node h-earth-3d/validation/instrument-platform/h-earth.public-face-trophy-standard.browser.mjs \
-            | tee /tmp/h-earth-public-face-trophy-standard-b10.browser.log
+          node h-earth-3d/validation/instrument-platform/h-earth.public-face-trophy-standard.browser.mjs | tee /tmp/h-earth-public-face-trophy-standard-b10.browser.log
 
-      - name: Enforce B10 candidate boundary
+      - name: Enforce promoted Trophy Standard boundary
         run: |
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           const staticReceipt = JSON.parse(fs.readFileSync(process.env.H_EARTH_B10_STATIC_RECEIPT, 'utf8'));
           const browserReceipt = JSON.parse(fs.readFileSync(process.env.H_EARTH_B10_BROWSER_RECEIPT, 'utf8'));
           const expectPublic = process.env.PUBLIC_VERIFICATION === 'true';
-          const valid =
-            staticReceipt.status === 'PASS_CLOSED' &&
-            staticReceipt.failedAssertionCount === 0 &&
-            staticReceipt.unauthorizedChangedPaths.length === 0 &&
-            browserReceipt.status === 'PASS_CLOSED' &&
-            browserReceipt.failedAssertionCount === 0 &&
-            browserReceipt.pageErrors.length === 0 &&
-            browserReceipt.consoleErrors.length === 0 &&
-            browserReceipt.httpErrors.length === 0 &&
-            browserReceipt.publicVerificationPerformed === expectPublic &&
-            browserReceipt.baselinePublicDefaultUnchanged === true &&
-            browserReceipt.productAccepted === false &&
-            browserReceipt.defaultPromoted === false &&
-            browserReceipt.newUserDifferentialRequired === true;
-          if (!valid) {
-            console.error(JSON.stringify({ staticReceipt, browserReceipt, expectPublic }, null, 2));
-            process.exit(1);
-          }
-          const checkpoint = expectPublic
-            ? 'B10_PUBLIC_CANDIDATE_PASS_WAITING_FOR_USER_DIFFERENTIAL'
-            : 'B10_ENGINEERING_CANDIDATE_PASS';
-          console.log(`H_EARTH_PUBLIC_FACE_TROPHY_STANDARD_${checkpoint}:${process.env.CANDIDATE_HEAD}:${staticReceipt.receiptSha256}:${browserReceipt.receiptSha256}`);
+          const valid = staticReceipt.status === 'PASS_CLOSED' && staticReceipt.failedAssertionCount === 0 && staticReceipt.unauthorizedChangedPaths.length === 0 && browserReceipt.status === 'PASS_CLOSED' && browserReceipt.failedAssertionCount === 0 && browserReceipt.pageErrors.length === 0 && browserReceipt.consoleErrors.length === 0 && browserReceipt.httpErrors.length === 0 && browserReceipt.publicVerificationPerformed === expectPublic && browserReceipt.baselinePublicDefaultUnchanged === true && browserReceipt.productAccepted === true && browserReceipt.defaultPromoted === true && browserReceipt.newUserDifferentialRequired === false;
+          if (!valid) { console.error(JSON.stringify({ staticReceipt, browserReceipt, expectPublic }, null, 2)); process.exit(1); }
+          console.log(`H_EARTH_PUBLIC_FACE_TROPHY_STANDARD_PROMOTED_REGRESSION_PASS:${process.env.CANDIDATE_HEAD}:${staticReceipt.receiptSha256}:${browserReceipt.receiptSha256}`);
           NODE
 
       - name: Upload B10 evidence
@@ -169,14 +137,4 @@ jobs:
           script: |
             const targetUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
             const passed = '${{ job.status }}' === 'success';
-            await github.rest.repos.createCommitStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha: context.sha,
-              state: passed ? 'success' : 'failure',
-              context: 'h-earth/b10-public-candidate',
-              description: passed
-                ? 'B10 public candidate verified; user differential required'
-                : 'B10 public candidate verification failed',
-              target_url: targetUrl
-            });
+            await github.rest.repos.createCommitStatus({ owner: context.repo.owner, repo: context.repo.repo, sha: context.sha, state: passed ? 'success' : 'failure', context: 'h-earth/b10-public-candidate', description: passed ? 'Promoted Trophy Standard regression passed' : 'Promoted Trophy Standard regression failed', target_url: targetUrl });

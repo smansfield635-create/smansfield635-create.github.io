@@ -1,0 +1,69 @@
+name: Compass Gen1538 Browser Qualification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'assets/compass/**'
+      - '.github/ai-router/projects/compass/verify-display-continuity.v1.mjs'
+      - '.github/ai-router/projects/compass/verify-performance-successor.mjs'
+      - '.github/workflows/compass-carousel-successor-live-qualification.yml'
+      - '.github/workflows/compass-display-continuity-validation.yml'
+      - '.github/workflows/compass-performance-successor-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  COMPASS_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+  COMPASS_SCOPE_BASE_SHA: 21ee87e945a62492b8f9447a5049f4ae0ab1ceb9
+
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.COMPASS_CANDIDATE_HEAD }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Static exact-head preflight
+        run: |
+          test "$(git rev-parse HEAD^{commit})" = "$COMPASS_CANDIDATE_HEAD"
+          COMPASS_VERIFICATION_OUTPUT=/tmp/compass-gen1538-display.json node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
+          COMPASS_PERFORMANCE_OUTPUT=/tmp/compass-gen1538-performance.json node .github/ai-router/projects/compass/verify-performance-successor.mjs
+      - name: Install Chromium
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install chromium
+      - name: Host exact candidate
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/compass-gen1538-browser-http.log 2>&1 &
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          exit 1
+      - name: Run Gen1538 interaction matrix
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';import {chromium} from 'playwright';
+          const browser=await chromium.launch({headless:true}),checks=[];const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});
+          try{for(const profile of [{name:'desktop',w:1440,h:900},{name:'tablet',w:820,h:1180},{name:'phone',w:390,h:844},{name:'reduced',w:390,h:844,reducedMotion:'reduce'}]){const context=await browser.newContext({viewport:{width:profile.w,height:profile.h},reducedMotion:profile.reducedMotion}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(String(e)));await page.goto(`http://127.0.0.1:4173/?q=${profile.name}`,{waitUntil:'domcontentloaded',timeout:30000});await page.waitForFunction(()=>globalThis.CompassEditorialCarousel?.version==='gen1538-reference-recovery-v1');await page.waitForFunction(()=>Boolean(document.querySelector('[data-capability-orbit]')));await page.waitForTimeout(700);const base=await page.evaluate(()=>{const root=document.querySelector('[data-compass-root]'),door=document.querySelector('[data-compass-object="mirrorland"]'),proof=document.querySelector('[data-proof-orbit]'),cap=document.querySelector('[data-capability-orbit]');const rr=n=>{if(!n)return null;const r=n.getBoundingClientRect(),s=getComputedStyle(n);return{x:r.x,y:r.y,width:r.width,height:r.height,pointerEvents:s.pointerEvents,visibility:s.visibility,opacity:Number(s.opacity)}};return{root:{architecture:root?.dataset.gen1538Architecture,central:root?.dataset.gen1538CentralCompass},centralNodes:document.querySelectorAll('[data-gen1537-compass-instrument]').length,door:rr(door),doorAuthority:door?.dataset.gen1538HitAuthority||'',proofCount:proof?.querySelectorAll('[data-proof-card]').length||0,capCount:cap?.querySelectorAll('[data-capability]').length||0,overflow:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-innerWidth}});check(`${profile.name}_NO_CENTRAL_COMPASS`,base.centralNodes===0&&base.root.central==='absent',base);check(`${profile.name}_MIRRORLAND_HIT_SURFACE`,base.door?.width>=60&&base.door?.height>=100&&base.door.pointerEvents==='auto'&&base.doorAuthority==='protected-direct-controller-surface',base.door);check(`${profile.name}_TRL7_PRESERVED`,base.proofCount===3,base.proofCount);check(`${profile.name}_CAPABILITY_THREE`,base.capCount===3,base.capCount);check(`${profile.name}_NO_OVERFLOW`,base.overflow<=2,base.overflow);
+          const next=page.locator('[data-capability-orbit] [data-orbit-next]');await next.click();await page.waitForTimeout(profile.reducedMotion==='reduce'?50:380);let current=await page.locator('[data-capability-orbit] [data-capability][aria-current="true"]').getAttribute('data-capability');check(`${profile.name}_TROPHY_ROTATION`,current==='awards',current);await next.click();await page.waitForTimeout(profile.reducedMotion==='reduce'?50:380);current=await page.locator('[data-capability-orbit] [data-capability][aria-current="true"]').getAttribute('data-capability');const house=await page.evaluate(()=>({current:document.querySelector('[data-capability-orbit] [data-capability][aria-current="true"]')?.dataset.capability,guides:document.querySelectorAll('[data-capability="house"] [data-house-function]').length,renderer:document.querySelector('[data-gen1538-house-canvas]')?.dataset.houseRenderer||'',frames:Number(document.querySelector('[data-gen1538-house-canvas]')?.dataset.houseFrames||0)}));check(`${profile.name}_HOUSE_FOREGROUND`,current==='house'&&house.current==='house'&&house.guides===3&&house.renderer==='procedural-webgl-v1'&&house.frames>0,house);
+          const door=page.locator('[data-compass-object="mirrorland"]');await door.click({position:{x:Math.min(30,Math.max(1,(await door.boundingBox())?.width/2||1)),y:Math.min(30,Math.max(1,(await door.boundingBox())?.height/2||1))}});await page.waitForTimeout(350);const mirror=await page.evaluate(()=>({active:document.querySelector('[data-compass-root]')?.dataset.mirrorlandWindowActive,state:document.querySelector('[data-compass-root]')?.dataset.mirrorlandWindowState,routesHidden:document.querySelector('[data-compass-mirrorland-routes]')?.hidden}));check(`${profile.name}_MIRRORLAND_OPENS`,mirror.active==='true'||mirror.state==='REVEALED'||mirror.routesHidden===false,mirror);check(`${profile.name}_NO_ERRORS`,errors.length===0,errors);await page.screenshot({path:`/tmp/compass-gen1538-browser-${profile.name}.png`,fullPage:true});await context.close()}}finally{await browser.close()}
+          const failures=checks.filter(x=>!x.pass),receipt={schema:'COMPASS_GEN1538_BROWSER_QUALIFICATION_RECEIPT_v1',operationId:'COMPASS_GEN1538_REFERENCE_ARCHITECTURE_RECOVERY_AND_CAROUSEL_CONTINUITY_20260818_005',lockGeneration:1537,candidateHead:process.env.COMPASS_CANDIDATE_HEAD,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',checks,failures:failures.map(x=>x.id)};fs.writeFileSync('/tmp/compass-gen1538-browser.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));if(failures.length)process.exit(1);
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compass-gen1538-browser-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/compass-gen1538-browser.json
+            /tmp/compass-gen1538-browser-*.png
+            /tmp/compass-gen1538-display.json
+            /tmp/compass-gen1538-performance.json
+            /tmp/compass-gen1538-browser-http.log
+          retention-days: 90

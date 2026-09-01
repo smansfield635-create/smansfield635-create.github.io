@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>H-Earth CP8 Engineering Execution</title>
+  <style>
+    html,body{margin:0;background:#020405;color:#eef;font-family:monospace}
+    main{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px}
+    figure{margin:0;min-width:0}figcaption{padding:4px 0}
+    canvas{display:block;width:100%;height:auto;background:#000}
+    .mobile{position:absolute;left:-10000px;top:-10000px;width:412px;height:732px}
+    pre{margin:8px;white-space:pre-wrap;font-size:11px}
+  </style>
+</head>
+<body>
+  <main>
+    <figure><figcaption>Accepted CP2</figcaption><canvas id="cp2-canvas" width="960" height="540"></canvas></figure>
+    <figure><figcaption>CP8 candidate</figcaption><canvas id="candidate-canvas" width="960" height="540"></canvas></figure>
+  </main>
+  <canvas class="mobile" id="cp2-mobile-canvas" width="412" height="732"></canvas>
+  <canvas class="mobile" id="candidate-mobile-canvas" width="412" height="732"></canvas>
+  <pre id="status">initializing</pre>
+  <script type="module">
+    import { createCp8EngineeringSuite } from './h-earth.cp8-engineering-browser.mjs';
+    const status=document.getElementById('status');
+    try{
+      const response=await fetch('../../control-plane/post-cp2-round2/h-earth.cp8-engineering-execution-control.v1.json',{cache:'no-store'});
+      if(!response.ok)throw new Error(`CP8_CONTROL_FETCH_FAILED:${response.status}`);
+      const control=await response.json();
+      window.H_EARTH_CP8_ENGINEERING=await createCp8EngineeringSuite({
+        cp2Canvas:document.getElementById('cp2-canvas'),
+        candidateCanvas:document.getElementById('candidate-canvas'),
+        cp2MobileCanvas:document.getElementById('cp2-mobile-canvas'),
+        candidateMobileCanvas:document.getElementById('candidate-mobile-canvas'),
+        control
+      });
+      status.textContent=JSON.stringify(window.H_EARTH_CP8_ENGINEERING.getIdentity(),null,2);
+      document.documentElement.dataset.cp8Ready='true';
+    }catch(error){
+      document.documentElement.dataset.cp8Ready='false';
+      document.documentElement.dataset.cp8Error='true';
+      status.textContent=error?.stack??String(error);
+      throw error;
+    }
+  </script>
+</body>
+</html>

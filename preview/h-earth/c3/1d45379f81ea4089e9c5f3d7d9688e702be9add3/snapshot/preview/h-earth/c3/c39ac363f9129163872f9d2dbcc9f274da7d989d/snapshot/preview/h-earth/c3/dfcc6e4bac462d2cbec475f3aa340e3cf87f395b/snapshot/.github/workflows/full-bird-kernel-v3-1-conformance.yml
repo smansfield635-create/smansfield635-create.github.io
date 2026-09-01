@@ -1,0 +1,32 @@
+name: Full Bird Kernel v3.1 conformance
+
+on:
+  pull_request:
+    paths:
+      - 'laws/research/methods-and-models/full_bird_kernel_v3_1/**'
+      - '.github/workflows/full-bird-kernel-v3-1-conformance.yml'
+  push:
+    paths:
+      - 'laws/research/methods-and-models/full_bird_kernel_v3_1/**'
+      - '.github/workflows/full-bird-kernel-v3-1-conformance.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run canonical conformance suite
+        working-directory: laws/research/methods-and-models/full_bird_kernel_v3_1
+        run: python -m unittest -v test_fbk_v3_1.py
+      - name: Validate JSON artifacts
+        run: |
+          python -m json.tool laws/research/methods-and-models/full_bird_kernel_v3_1/requirements_registry.json >/dev/null
+          python -m json.tool laws/research/methods-and-models/full_bird_kernel_v3_1/claim_manifest.json >/dev/null
+          python -m json.tool laws/research/methods-and-models/full_bird_kernel_v3_1/schemas.json >/dev/null
+          python -m json.tool laws/research/methods-and-models/full_bird_kernel_v3_1/fixtures/conformance.json >/dev/null

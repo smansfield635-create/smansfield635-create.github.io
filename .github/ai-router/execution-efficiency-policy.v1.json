@@ -1,0 +1,131 @@
+{
+  "schema": "AI_PROCEDURAL_EXECUTION_EFFICIENCY_POLICY_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "purpose": "Prevent redundant execution loops, force evidence-bearing progress, require transport escalation when a probe does not materially advance the operation, and prevent repository-scale checkout for bounded work.",
+  "scope": [
+    "AI_ENTRY_POINT",
+    "CONNECTED_GITHUB_OPERATIONS",
+    "GITHUB_ACTIONS_INSPECTION",
+    "WORKFLOW_LOG_RETRIEVAL",
+    "PUBLICATION_VERIFICATION",
+    "CONTROL_PLANE_DIAGNOSTICS",
+    "WORKFLOW_CHECKOUT_LOCALITY"
+  ],
+  "evidenceProgressLaw": {
+    "materialProgressDefinition": "A probe materially progresses only when it yields a new immutable identity, new exact assertion, new log/artifact content, new state transition, or a newly eliminated hypothesis.",
+    "sameProbeWithoutNewEvidenceAllowed": false,
+    "maxEquivalentProbeAttempts": 2,
+    "secondAttemptRequirement": "The second attempt must change transport, query surface, identifier resolution, or evidence source; paraphrasing the same retrieval is not a changed strategy.",
+    "afterEquivalentFailure": "STOP_REPETITION_AND_REPORT_EVIDENCE_BOUNDARY",
+    "mutationBeforeFaultLocalizationAllowed": false
+  },
+  "retrievalEscalationOrder": [
+    "RESOLVE_EXACT_RUN_AND_JOB_IDENTITIES",
+    "FETCH_JOB_OR_RUN_LOG_ONCE",
+    "IF_INCOMPLETE_CHANGE_EVIDENCE_SURFACE_OR_TRANSPORT_ONCE",
+    "INSPECT_ARTIFACT_OR_RECEIPT_IF_DECLARED",
+    "STOP_AND_REPORT_EXACT_MISSING_EVIDENCE_IF_STILL_UNRESOLVED"
+  ],
+  "statusReporting": {
+    "futureTenseAfterCompletedProbeAllowed": false,
+    "requiredFields": [
+      "ACTION_COMPLETED",
+      "NEW_EVIDENCE_OR_NONE",
+      "CURRENT_BOUNDARY",
+      "NEXT_LAWFUL_ACTION_OR_BLOCKER"
+    ],
+    "noNewEvidenceDisposition": "NO_NEW_EVIDENCE_DO_NOT_REPEAT"
+  },
+  "workflowFailureLaw": {
+    "failedStepMustBeLocalizedBeforeRepair": true,
+    "exactAssertionPreferredOverStepLabel": true,
+    "downstreamSkippedStepsMustNotBeDiagnosedAsIndependentFailures": true,
+    "successfulDeployDoesNotEqualVerifiedPublication": true,
+    "failedVerificationDoesNotAuthorizeProductMutation": true
+  },
+  "checkoutLocality": {
+    "defaultMode": "BOUNDED_WORKING_SET_REQUIRED",
+    "unrestrictedCheckoutAllowedByDefault": false,
+    "wholeRepositoryCheckoutExceptionRequires": [
+      "EXPLICIT_MACHINE_READABLE_JUSTIFICATION",
+      "EXPLICIT_POLICY_ALLOWLIST",
+      "PROOF_BOUNDED_WORKING_SET_CANNOT_SATISFY_OPERATION"
+    ],
+    "materializeExcludedRootsThenDiscardAllowed": false,
+    "exactCommitObjectReadbackForExcludedProtectedClosuresAllowed": true,
+    "centralWorkflows": {
+      "aiEntryBridge": ".github/workflows/ai-entry-workflow-dispatch-bridge.yml",
+      "canonicalIntake": ".github/workflows/canonical-operation-intake-transport-v1.yml",
+      "successorGateway": ".github/workflows/remote-operation-successor-v1.yml",
+      "automaticRelease": ".github/workflows/ai-entry-auto-release.yml",
+      "publicationPreflight": ".github/workflows/publication-preflight-v1.yml",
+      "publicationDeploy": ".github/workflows/pages-exact-head-deploy-v3.yml"
+    },
+    "canonicalGatewayWorkingSets": {
+      "canonicalIntake": [
+        "/.github/operation-intake/locator.v1.json",
+        "/tools/operation-intake/"
+      ],
+      "successorGateway": [
+        "/AI_ENTRYPOINT.json",
+        "/.github/workflows/remote-operation-successor-v1.yml",
+        "/.github/ai-router/router.v1.json",
+        "/.github/ai-router/system-continuity/gap-registry.v1.json",
+        "/.github/ai-router/operation-lifecycle/",
+        "/tools/operation-intake/"
+      ]
+    },
+    "publicationBulkRootsExcludedFromWorktree": [
+      "preview",
+      "h-earth-live-6d18e158",
+      "inspection/audralia-24057-exact"
+    ],
+    "protectedClosureReadback": {
+      "surfaceId": "audralia",
+      "mode": "EXACT_COMMIT_OBJECT_ON_DEMAND",
+      "allowedPrefix": "inspection/audralia-24057-exact/snapshot/",
+      "wholeExcludedTreeMaterializationAllowed": false
+    },
+    "prospectiveEnforcement": "NEW_OR_MODIFIED_WORKFLOWS_MUST_DECLARE_BOUNDED_SPARSE_WORKING_SET_OR_EXPLICIT_APPROVED_EXCEPTION",
+    "legacyUnrestrictedWorkflows": "MIGRATION_DEBT_NOT_PRECEDENT",
+    "automaticReleaseWorkingSet": {
+      "ordinaryPublicRoots": "DYNAMIC_TOP_LEVEL_ROOTS_EXCLUDING_BULK_AND_CONTROL_PLANE_ROOTS",
+      "excludedTopLevelRoots": [
+        ".github",
+        "preview",
+        "node_modules",
+        "h-earth-live-6d18e158"
+      ],
+      "excludedProtectedClosure": "inspection/audralia-24057-exact",
+      "explicitIncludedSubtrees": [
+        "preview/bt4/entitlement-v1",
+        "preview/bt4/operational-release-v1",
+        "h-earth-live-6d18e158/showroom/globe/h-earth"
+      ],
+      "sparseIndexEntryLimitExclusive": 20000,
+      "materializedFileLimitExclusive": 20000
+    }
+  },
+  "publicationPathConsistency": {
+    "canonicalCapabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+    "capabilityRegistry": ".github/ai-router/workflow-dispatch-capability.v1.json",
+    "releaseContract": ".github/ai-router/publication-release-contract.v1.json",
+    "entrypoint": "AI_ENTRYPOINT.json",
+    "workflowIdentityMustAgreeAcrossAllBindings": true,
+    "workflowMustDeclareWorkflowDispatch": true
+  },
+  "forbiddenPatterns": [
+    "REPEATED_EQUIVALENT_LOG_FETCH_WITHOUT_NEW_EVIDENCE",
+    "RENAMING_THE_SAME_PROBE_AS_PROGRESS",
+    "BLIND_RERUN_BEFORE_FAILED_ASSERTION_LOCALIZATION",
+    "SPECULATIVE_PRODUCT_MUTATION_FROM_VERIFICATION_FAILURE",
+    "STATUS_ONLY_RESPONSE_WHEN_A_LAWFUL_EXECUTION_STEP_IS_AVAILABLE",
+    "CLAIMING_FETCH_OR_ANALYSIS_IS_IN_PROGRESS_AFTER_THE_ATTEMPT_HAS_ALREADY_ENDED",
+    "UNRESTRICTED_CHECKOUT_WITHOUT_EXPLICIT_WHOLE_REPOSITORY_EXCEPTION",
+    "MATERIALIZE_EXCLUDED_PUBLICATION_ROOTS_THEN_DISCARD"
+  ],
+  "selfTest": ".github/ai-router/execution-efficiency-self-test.v1.mjs",
+  "authorityCreated": false,
+  "mutationAuthorityCreated": false,
+  "deploymentAuthorityCreated": false
+}

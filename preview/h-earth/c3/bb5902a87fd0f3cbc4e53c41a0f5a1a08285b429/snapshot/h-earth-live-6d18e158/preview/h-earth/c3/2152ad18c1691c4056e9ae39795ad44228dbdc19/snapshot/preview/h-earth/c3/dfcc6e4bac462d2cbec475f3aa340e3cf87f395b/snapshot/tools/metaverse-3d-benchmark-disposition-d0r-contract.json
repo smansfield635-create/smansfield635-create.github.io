@@ -1,0 +1,110 @@
+{
+  "contractId": "METAVERSE_3D_BENCHMARK_TO_DISPOSITION_COMPILER_FOUR_COMPASS_AUTHORITY_RECONCILIATION_D0R_FINAL_v1",
+  "toolId": "METAVERSE_3D_BENCHMARK_TO_DISPOSITION_COMPILER_v1",
+  "checkpoint": "D0R",
+  "checkpointTitle": "FOUR_COMPASS_AUTHORITY_RECONCILIATION_AND_AUXILIARY_CONTROL_LOCK",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "baselineMainCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+  "reconciliationSourceBranch": "agent/metaverse-benchmark-four-compass-reconciliation-001",
+  "reconciliationAuthorityCommit": "a06f5ff8ab5c687d3c849d6944e4bdcc68490af8",
+  "compilerBranch": "agent/metaverse-3d-benchmark-disposition-compiler-d0r-003",
+  "supersededOccurrences": [
+    ["D0", "2cdaad8d6eebe905e916dd887031f375790c3a50", "PASS_HISTORICAL_AUTHORITY_SUPERSEDED"],
+    ["D0R_v1", "ae91a1b70b655344d0787e560c9513fb3f070084", "PARTIAL_UNEXECUTED_SUPERSEDED"],
+    ["D0R_v2", "12450132282c8f70194596858cad50a9bed7d465", "R6_ROOTED_UNEXECUTED_SUPERSEDED_BY_R7"]
+  ],
+  "sourceAnchors": [
+    ["R0", "verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r0/four-compass-reconciliation-authority-lock.json", "32fc7f07c5b8e4fdcdb80091c575f3ad57902a9d"],
+    ["R1", "verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r1/four-compass-role-registry.json", "bcd893cb9f1efd441bad6da0aef828fd106ce482"],
+    ["R2", "verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r2/cp0-through-cp7-authority-supersession-map.json", "49ae6af6cfa19b12a698098da79e4336497e4270"],
+    ["R3", "verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r3/four-compass-source-and-runtime-corpus.json", "32ab1590963c72d87cb754b96e23413cfc4a34a5"],
+    ["R4", "verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r4/website-home-receiver-control-ledger.json", "cf404f0e741c0bee1b9833288bb94502b70a718a"],
+    ["R5", "verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r5/four-compass-interaction-reprojection.json", "7e05c687115ee892b7d5464abffa5f67cb14f78f"],
+    ["R6", "verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r6/four-compass-visual-and-spatial-reprojection.json", "28bd0d4555e51625904d7c4e19c1fb3465a86d56"],
+    ["R7", "verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r7/reconciliation-integrity-audit.json", "6c2950d179b058e379ba108219dcd63d8a34a80c"]
+  ],
+  "authorizedCheckpointPaths": [
+    ".github/workflows/metaverse-3d-benchmark-disposition-d0r.yml",
+    "tools/metaverse-3d-benchmark-disposition-d0r-contract.json",
+    "tools/metaverse-3d-benchmark-disposition-d0r-authority-lock.mjs",
+    "tools/metaverse-3d-benchmark-disposition-d0r-controls.mjs"
+  ],
+  "governedCompasses": [
+    ["MAIN_COMPASS", "/", "POSITIVE_ARCHITECTURE_REFERENCE"],
+    ["ARCHCOIN_COMPASS", "/products/archcoin/", "POSITIVE_DIRECT_MANIPULATION_REFERENCE"],
+    ["SHOWROOM_COMPASS", "/showroom/", "POSITIVE_SPATIAL_REALIZATION_REFERENCE"],
+    ["LAWS_COMPASS", "/laws/", "NEGATIVE_INTERACTION_REGRESSION_REFERENCE"]
+  ],
+  "auxiliaryControls": [
+    {
+      "controlId": "WEBSITE_HOME_RECEIVER_CONTROL",
+      "legacyInvalidBenchmarkId": "HOMEPAGE_COMPASS",
+      "route": "/home/",
+      "classification": "AUXILIARY_NON_COMPASS_CONTROL",
+      "compassAuthority": false,
+      "includedInCompassCounts": false,
+      "includedInCompassDigests": false,
+      "includedInCompassFindings": false,
+      "includedInCompassAcceptance": false
+    }
+  ],
+  "legacyIdentityDisposition": {
+    "HOMEPAGE_COMPASS": ["RETIRED_INVALID_IDENTITY", "WEBSITE_HOME_RECEIVER_CONTROL"],
+    "SHOWROOM": ["RECLASSIFY_CANONICAL_ID", "SHOWROOM_COMPASS"],
+    "LAWS_CHAMBER_POST_PR128": ["RECLASSIFY_CANONICAL_ID", "LAWS_COMPASS"]
+  },
+  "counts": {
+    "observedRoutes": 5,
+    "canonicalCompasses": 4,
+    "positiveCompassReferences": 3,
+    "negativeCompassReferences": 1,
+    "auxiliaryControls": 1,
+    "sourceOccurrences": 60,
+    "interactionScenarios": 18,
+    "interactionFindings": 12,
+    "visualCaptures": 48,
+    "visualFindings": 8
+  },
+  "integrityAudit": {
+    "checkpoint": "R7",
+    "status": "PASS_RECONCILIATION_INTEGRITY_AUDIT_NO_RECAPTURE_REQUIRED",
+    "duplicateActiveEvidenceOccurrenceCount": 0,
+    "unassignedEvidenceOccurrenceCount": 0,
+    "allHistoricalEvidenceAssignedExactlyOnce": true,
+    "allRecordedDigestsReproduced": true,
+    "allScreenshotBodiesVerified": true,
+    "recaptureDecision": "PASS_NO_RECAPTURE_REQUIRED"
+  },
+  "governedDimensions": ["SOURCE_CUSTODY","AUTHORITY_BOUNDARIES","RUNTIME_LOAD","INTERACTION_EXECUTION","VISUAL_REALIZATION","SPATIAL_REALIZATION","RESPONSIVE_BEHAVIOR","PERFORMANCE","ACCESSIBILITY","DEPLOYED_IDENTITY","USER_ACCEPTANCE"],
+  "dimensionStates": ["PASS","FAIL","BLOCKED","UNRESOLVED","NOT_EXECUTED","NOT_APPLICABLE","SUPERSEDED","WITHHELD"],
+  "dispositions": ["RETAIN","RECLASSIFY","CORRECT","ISOLATE","SUPERSEDE","REVERT","DEFER_PENDING_EVIDENCE","ADMISSIBLE_FOR_ACCEPTANCE"],
+  "historicalPolicy": {
+    "cp0ThroughCp7ArtifactsPreserved": true,
+    "historicalFiveBenchmarkAggregatesRemainHistoricalFacts": true,
+    "historicalFiveBenchmarkAggregatesRemainControlling": false,
+    "historicalArtifactsDeleted": false,
+    "historicalCommitsRewritten": false
+  },
+  "authority": {
+    "compilerOwnsEvidenceInterpretation": true,
+    "compilerOwnsProductAuthority": false,
+    "compilerOwnsAcceptanceAuthority": false,
+    "productMutationAuthority": "NONE",
+    "mainWriteAuthority": "NONE",
+    "mergeAuthority": "NONE",
+    "userAcceptanceAuthority": "NONE"
+  },
+  "claims": {
+    "fourCompassAuthorityReconciled": true,
+    "homeAuxiliaryControlLocked": true,
+    "r7IntegrityAuditConsumed": true,
+    "priorD0ExecutionPreserved": true,
+    "priorD0AuthoritySuperseded": true,
+    "evidenceNormalizationPerformed": false,
+    "dimensionClassificationPerformed": false,
+    "dispositionCompilationPerformed": false,
+    "productFilesChanged": 0,
+    "mergePerformed": false
+  },
+  "nextCheckpoint": "D1_NATIVE_EVIDENCE_INTAKE_AND_IDENTITY_VALIDATION"
+}

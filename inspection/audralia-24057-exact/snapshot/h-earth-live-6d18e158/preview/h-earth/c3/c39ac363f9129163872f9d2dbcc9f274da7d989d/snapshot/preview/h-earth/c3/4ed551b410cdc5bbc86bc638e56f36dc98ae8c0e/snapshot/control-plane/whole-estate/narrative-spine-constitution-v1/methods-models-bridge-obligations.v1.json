@@ -1,0 +1,58 @@
+{
+  "schema": "METHODS_MODELS_BRIDGE_OBLIGATIONS_v1",
+  "status": "CHECKPOINT_2_CONSTRUCTION_CANDIDATE",
+  "narrativeRole": "EVIDENCE_GATE_RELATION_MAP_DISCOVERY_BRIDGE",
+  "estateRole": "FOUNDATIONAL_EVIDENCE_AND_TRANSLATION_SURFACE_WITHOUT_WHOLE_ESTATE_OWNERSHIP",
+  "globalOrientationAuthority": "COMPASS",
+  "siteWideClaimRule": {
+    "materialClaimShouldBeTraceable": true,
+    "traceabilityTarget": "METHODS_MODELS_AND_PROVENANCE",
+    "proofLanguageRequired": false,
+    "currentStandingRequired": true,
+    "adverseEvidenceRequiredWhenApplicable": true,
+    "claimCeilingRequired": true
+  },
+  "claimTraceShape": [
+    "CLAIM_ID",
+    "CANONICAL_OBJECT",
+    "CLAIM_CLASS",
+    "EVIDENCE_STATUS",
+    "CLAIM_CEILING",
+    "METHOD_OR_MODEL",
+    "TESTS",
+    "POSITIVE_EVIDENCE",
+    "ADVERSE_EVIDENCE",
+    "FALSIFIERS",
+    "KNOWN_LIMITATIONS",
+    "PROVENANCE",
+    "CURRENT_VERSION",
+    "LAST_DISPOSITION"
+  ],
+  "deliveryDepthCandidate": [
+    {"depth": "D0", "meaning": "ORIENTATION"},
+    {"depth": "D1", "meaning": "MEANING_AND_CANONICAL_RELATIONSHIP"},
+    {"depth": "D2", "meaning": "STRUCTURE_EQUATION_OR_PROCEDURE"},
+    {"depth": "D3", "meaning": "EVIDENCE_CLAIM_CEILING_AND_FALSIFIERS"},
+    {"depth": "D4", "meaning": "PROVENANCE_SOURCES_HASHES_AND_LINEAGE"}
+  ],
+  "depthInvariant": "DELTA_D_DOES_NOT_IMPLY_DELTA_I",
+  "identityState": [
+    "OBJECT_CLASS",
+    "AUTHORITY",
+    "EVIDENCE_STATUS",
+    "CLAIM_CEILING",
+    "CUSTODY_STATUS",
+    "EXECUTION_STATUS"
+  ],
+  "presentationIdentityIsScientificIdentity": false,
+  "requiredLaterConstructionRelation": "G=f(T(X(C,P)))",
+  "prohibitedConstructionRelation": "G=f(P)",
+  "requiredBeforeSpatialTopologyFreeze": [
+    "CANONICAL_IDENTITY_DELIVERY_CROSSWALK",
+    "TYPED_SEMANTIC_RELATION_GRAPH"
+  ],
+  "spatialTopologyFreezeAuthorized": false,
+  "pr541Disposition": "PRESERVE_AND_ADAPT",
+  "pr541MutationAuthorized": false,
+  "publicMutationAuthorized": false
+}

@@ -1,0 +1,13 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_G1_QUALIFICATION_v1",
+  "status": "READY_FOR_OWNER_LISTENING",
+  "characterId": "jeeves",
+  "comparison": "G0_VS_G1",
+  "frozenCorpusCount": 8,
+  "controlledVariable": "TIMING_AND_PAUSES_ONLY",
+  "heldConstant": ["text","phoneme inventory","F0","energy","excitation","formants","spectral generator","sample rate","WAV writer"],
+  "evaluationQuestion": "Did G1 timing control materially reduce robotic speech compared with G0?",
+  "possibleDispositions": ["G1_MATERIAL_IMPROVEMENT","G1_SMALL_IMPROVEMENT","G1_NO_MATERIAL_IMPROVEMENT","G1_REGRESSION"],
+  "nextIfImproved": "PRESERVE_G1_AND_ADMIT_G2_STRESS_F0_ENERGY",
+  "nextIfNotImproved": "RETAIN_G0_G1_EVIDENCE_AND_REASSESS_TIMING_LAW_BEFORE_G2"
+}

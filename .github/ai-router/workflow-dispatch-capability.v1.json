@@ -1,0 +1,118 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_CAPABILITY_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "purpose": "Provide a continuity-safe native GitHub workflow_dispatch path when the connected GitHub tool does not expose workflow dispatch directly.",
+  "preferredTransport": "DIRECT_CONNECTED_GITHUB_WORKFLOW_DISPATCH",
+  "fallbackTransport": "SAME_REPOSITORY_PR_NATIVE_WORKFLOW_DISPATCH_BRIDGE",
+  "requestBranchPrefix": "ai-dispatch-request-",
+  "requestPath": ".github/ai-entry/workflow-dispatch-request.json",
+  "receiptBranch": "ai-dispatch-receipts",
+  "receiptPathTemplate": ".github/ai-entry/receipts/<requestId>.json",
+  "bridgeWorkflow": ".github/workflows/ai-entry-workflow-dispatch-bridge.yml",
+  "bridgeRuntime": "tools/ai-entry-workflow-dispatch-bridge.mjs",
+  "executionEfficiencyPolicy": ".github/ai-router/execution-efficiency-policy.v1.json",
+  "transportPullRequest": {
+    "base": "main",
+    "headPrefix": "ai-dispatch-request-",
+    "titlePrefix": "AI Dispatch:",
+    "sameRepositoryRequired": true,
+    "autoCloseOnSuccess": true,
+    "autoDeleteHeadBranchOnSuccess": true,
+    "mergeAllowed": false
+  },
+  "capabilities": {
+    "PUBLICATION_FAST_PREFLIGHT": {
+      "workflow": "publication-preflight-v1.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "target_sha": {"source": "REQUEST", "required": true, "userOverrideAllowed": true},
+        "surface_id": {"source": "REQUEST", "required": true, "userOverrideAllowed": true}
+      },
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "successResult": "PREFLIGHT_PASS"
+    },
+    "PAGES_EXACT_HEAD_DEPLOY": {
+      "workflow": "pages-exact-head-deploy-v3.yml",
+      "ref": "main",
+      "transportClassification": "HOST_PLATFORM_DEPLOYMENT_TRANSPORT_NOT_AGENT_EXECUTION",
+      "hostPlatform": "GITHUB_PAGES",
+      "hostPlatformOidcRequired": true,
+      "githubActionsAgentExecutionAuthorityCreated": false,
+      "qualificationAuthorityCreated": false,
+      "productMutationAuthorityCreated": false,
+      "inputPolicy": {
+        "target_sha": {"source": "CURRENT_MAIN_SHA", "userOverrideAllowed": false},
+        "surface_id": {"source": "REQUEST", "required": true, "userOverrideAllowed": true}
+      },
+      "workflowDispatchRegistrationRequired": true,
+      "failureLocalizationRequiredBeforeReplacementCarrier": true,
+      "preflightRequiredBeforePagesMutation": true,
+      "preflightCapabilityId": "PUBLICATION_FAST_PREFLIGHT",
+      "productionWorkflowRechecksPreflightLocally": true
+    },
+    "H_EARTH_STAGE1_COST_QUALIFY": {
+      "workflow": "h-earth-stage1-cost-qualify.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "baseline_sha": {"source": "REQUEST", "required": true, "userOverrideAllowed": true},
+        "candidate_sha": {"source": "REQUEST", "required": true, "userOverrideAllowed": true}
+      }
+    },
+    "H_EARTH_STAGE1_INSPECTION_PUBLISH": {
+      "workflow": "h-earth-stage1-inspection-publish.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "target_sha": {"source": "CURRENT_MAIN_SHA", "userOverrideAllowed": false}
+      }
+    },
+    "H_EARTH_STAGE1_MOBILE_INTERACTION_QUALIFY": {
+      "workflow": "h-earth-stage1-mobile-interaction-qualify.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "candidate_sha": {"source": "REQUEST", "required": true, "userOverrideAllowed": true}
+      }
+    },
+    "ACTIONS_STALE_QUEUE_DRAIN": {
+      "workflow": "actions-stale-queue-drain-v1.yml",
+      "ref": "main",
+      "inputPolicy": {},
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false
+    }
+  },
+  "continuity": {
+    "freshRequestBranchFromCurrentMainRequired": true,
+    "requestCommitParentMustEqualCurrentMain": true,
+    "dispatchRunIdMustBeRecovered": true,
+    "receiptMustBindRequestCommitMainHeadWorkflowRefInputsAndRunId": true,
+    "receiptResult": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+    "directConnectorDispatchPreferredWhenAvailable": true,
+    "fallbackMayNotCreateGenericCommandAuthority": true,
+    "transportPullRequestIsExecutionCarrierOnly": true,
+    "transportPullRequestMayNeverBeMerged": true,
+    "successfulTransportLeavesNoRequestBranch": true,
+    "failedCarrierMustBeLocalizedBeforeReplacement": true,
+    "serialEquivalentCarrierRetriesAllowed": false
+  },
+  "rules": [
+    "FAIL_CLOSED_ON_UNKNOWN_CAPABILITY",
+    "FAIL_CLOSED_ON_STALE_REQUEST_BRANCH",
+    "FAIL_CLOSED_ON_NONLOCAL_TRANSPORT_PR",
+    "FAIL_CLOSED_ON_UNDECLARED_INPUT",
+    "FAIL_CLOSED_IF_NATIVE_DISPATCH_IS_NOT_ACCEPTED",
+    "FAIL_CLOSED_IF_DISPATCHED_RUN_ID_CANNOT_BE_RESOLVED",
+    "FAIL_CLOSED_IF_REGISTERED_WORKFLOW_LACKS_WORKFLOW_DISPATCH",
+    "LOCALIZE_FAILED_DISPATCH_ASSERTION_BEFORE_REPLACEMENT_CARRIER",
+    "NO_SERIAL_EQUIVALENT_CARRIERS_FOR_UNCHANGED_FAILURE",
+    "NO_SHELL_OR_GENERIC_COMMAND_INPUT",
+    "NO_ARBITRARY_WORKFLOW_PATH",
+    "NO_AUTHORITY_EXPANSION_BY_REQUEST",
+    "PAGES_EXACT_HEAD_DEPLOY_ACTIONS_USE_IS_HOST_TRANSPORT_ONLY",
+    "TRANSPORT_PULL_REQUEST_MUST_NOT_BE_MERGED",
+    "DIRECT_NATIVE_CONNECTOR_DISPATCH_SUPERSEDES_FALLBACK_WHEN_AVAILABLE"
+  ]
+}

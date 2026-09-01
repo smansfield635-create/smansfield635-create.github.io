@@ -1,0 +1,4071 @@
+/* /assets/compass/compass.mirrorland-window.js
+   Diamond Gate Bridge Compass
+   Self-contained Mirrorland Window renderer.
+
+   Full-file correction scope:
+   - Preserve the existing 21-pane stained-glass design.
+   - Preserve reveal and withdrawal lifecycle contracts.
+   - Keep the full-scene canvas.
+   - Render dormant Mirrorland as a smaller, quieter threshold.
+   - Strengthen frame, ribs, panes, and light progressively during reveal.
+   - Draw a true frame ring without erasing stained-glass content.
+   - Resolve reduced motion from current controller, root, and media state
+     without retaining stale true values.
+   - Validate transition identifiers before every completion path.
+   - Bind all lifecycle listeners through removable named handlers.
+   - Support complete disposal and partial-initialization rollback.
+   - Prevent duplicate event, resize, and media-query bindings.
+
+   Ownership:
+   - Mirrorland Window canvas creation.
+   - Stained-glass geometry.
+   - Internal window animation.
+   - Reveal and withdrawal lifecycle.
+   - Mirrorland renderer receipts.
+   - Reveal, withdrawal, and failure completion events.
+   - Renderer listener and resource lifecycle.
+
+   Non-ownership:
+   - Compass state authority.
+   - Cardinal or room rendering.
+   - Navigation.
+   - Compass gesture interpretation.
+   - External Mirrorland review objects.
+
+   No external Mirrorland object dependency is required.
+*/
+
+(() => {
+  "use strict";
+
+  const CONTRACT = Object.freeze({
+    id:
+      "DGB_COMPASS_MIRRORLAND_WINDOW_HARDENED_v2",
+
+    previousId:
+      "DGB_COMPASS_MIRRORLAND_WINDOW_FIVE_FILE_REBUILD_v1",
+
+    file:
+      "/assets/compass/compass.mirrorland-window.js",
+
+    releaseId:
+      "dgb-compass-mirrorland-hardened-v2",
+
+    rendererClass:
+      "SELF_CONTAINED_2D_CRYSTALLINE_STAINED_GLASS",
+
+    externalObjectDependencyRequired:
+      false,
+
+    visualPassClaimed:
+      false,
+
+    productionAuthorized:
+      false,
+
+    deploymentAuthorized:
+      false
+  });
+
+  const STATES = Object.freeze({
+    DORMANT:
+      "DORMANT",
+
+    REVEALING:
+      "MIRRORLAND_REVEALING",
+
+    FOCUSED:
+      "MIRRORLAND_FOCUSED",
+
+    WITHDRAWING:
+      "MIRRORLAND_WITHDRAWING",
+
+    HELD:
+      "HELD",
+
+    DISPOSED:
+      "DISPOSED"
+  });
+
+  const EVENTS = Object.freeze({
+    REVEAL_REQUEST:
+      "DGB_MIRRORLAND_WINDOW_REVEAL_REQUEST",
+
+    WITHDRAW_REQUEST:
+      "DGB_MIRRORLAND_WINDOW_WITHDRAW_REQUEST",
+
+    REVEAL_COMPLETE:
+      "MIRRORLAND_WINDOW_REVEAL_COMPLETE",
+
+    WITHDRAWAL_COMPLETE:
+      "MIRRORLAND_WINDOW_WITHDRAWAL_COMPLETE",
+
+    RENDER_FAILURE:
+      "MIRRORLAND_WINDOW_RENDER_FAILURE",
+
+    REDUCED_MOTION_CHANGE:
+      "DGB_COMPASS_REDUCED_MOTION_CHANGE"
+  });
+
+  const TIMING = Object.freeze({
+    revealMs:
+      1450,
+
+    withdrawalMs:
+      980,
+
+    reducedRevealMs:
+      120,
+
+    reducedWithdrawalMs:
+      100,
+
+    dormantPulseSeconds:
+      7.8,
+
+    focusedPulseSeconds:
+      4.2,
+
+    sparklePeriodSeconds:
+      2.9
+  });
+
+  const DIMENSIONS = Object.freeze({
+    designWidth:
+      480,
+
+    designHeight:
+      720,
+
+    leadWidthDormant:
+      4.5,
+
+    leadWidthFocused:
+      8,
+
+    innerLeadWidthDormant:
+      1.4,
+
+    innerLeadWidthFocused:
+      4,
+
+    ribWidthDormant:
+      7,
+
+    ribWidthFocused:
+      14,
+
+    ribHighlightWidthDormant:
+      1.2,
+
+    ribHighlightWidthFocused:
+      3,
+
+    dormantScale:
+      0.30,
+
+    focusedScale:
+      1,
+
+    dormantOpacity:
+      0.38,
+
+    focusedOpacity:
+      1,
+
+    maximumDevicePixelRatio:
+      2
+  });
+
+  const COLORS = Object.freeze({
+    frameNearBlack:
+      Object.freeze([
+        5,
+        8,
+        15
+      ]),
+
+    frameMid:
+      Object.freeze([
+        16,
+        22,
+        34
+      ]),
+
+    frameEdge:
+      Object.freeze([
+        37,
+        48,
+        68
+      ]),
+
+    leadDark:
+      Object.freeze([
+        17,
+        21,
+        29
+      ]),
+
+    leadLight:
+      Object.freeze([
+        69,
+        80,
+        101
+      ]),
+
+    cyan:
+      Object.freeze([
+        87,
+        210,
+        231
+      ]),
+
+    blue:
+      Object.freeze([
+        67,
+        112,
+        204
+      ]),
+
+    violet:
+      Object.freeze([
+        133,
+        83,
+        201
+      ]),
+
+    amber:
+      Object.freeze([
+        226,
+        164,
+        79
+      ]),
+
+    rose:
+      Object.freeze([
+        198,
+        85,
+        132
+      ]),
+
+    paleCyan:
+      Object.freeze([
+        161,
+        235,
+        244
+      ]),
+
+    paleBlue:
+      Object.freeze([
+        143,
+        181,
+        234
+      ]),
+
+    paleViolet:
+      Object.freeze([
+        184,
+        149,
+        232
+      ]),
+
+    paleAmber:
+      Object.freeze([
+        239,
+        202,
+        132
+      ]),
+
+    paleRose:
+      Object.freeze([
+        229,
+        151,
+        185
+      ])
+  });
+
+  const RECEIPT = {
+    contractId:
+      CONTRACT.id,
+
+    previousContractId:
+      CONTRACT.previousId,
+
+    status:
+      "pending",
+
+    rendererInitialized:
+      false,
+
+    rendererState:
+      STATES.DORMANT,
+
+    activeTransitionId:
+      "",
+
+    externalDependencyPresent:
+      false,
+
+    externalDependencyRequired:
+      false,
+
+    canvasPresent:
+      false,
+
+    paneCount:
+      0,
+
+    frameCount:
+      0,
+
+    reducedMotion:
+      false,
+
+    reducedMotionSource:
+      "startup",
+
+    listenersBound:
+      false,
+
+    resizeBinding:
+      "none",
+
+    lastAction:
+      "",
+
+    lastFailure:
+      null,
+
+    visualPassClaimed:
+      false
+  };
+
+  const state = {
+    root:
+      null,
+
+    scene:
+      null,
+
+    mount:
+      null,
+
+    receiptOutput:
+      null,
+
+    canvas:
+      null,
+
+    context:
+      null,
+
+    createdCanvas:
+      false,
+
+    width:
+      1,
+
+    height:
+      1,
+
+    pixelRatio:
+      1,
+
+    rendererState:
+      STATES.DORMANT,
+
+    activeTransitionId:
+      "",
+
+    transition: {
+      from:
+        0,
+
+      to:
+        0,
+
+      progress:
+        0,
+
+      startTime:
+        0,
+
+      duration:
+        0
+    },
+
+    revealAmount:
+      0,
+
+    targetRevealAmount:
+      0,
+
+    reducedMotion:
+      false,
+
+    reducedMotionMediaQuery:
+      null,
+
+    raf:
+      0,
+
+    running:
+      false,
+
+    lastTime:
+      0,
+
+    time:
+      0,
+
+    resizeObserver:
+      null,
+
+    resizeFallbackBound:
+      false,
+
+    eventsBound:
+      false,
+
+    reducedMotionBound:
+      false,
+
+    panes:
+      [],
+
+    frameSegments:
+      [],
+
+    geometryReady:
+      false,
+
+    initialized:
+      false,
+
+    failed:
+      false,
+
+    disposed:
+      false
+  };
+
+  function qs(
+    selector,
+    root = document
+  ) {
+    return root.querySelector(
+      selector
+    );
+  }
+
+  function clamp(
+    value,
+    minimum,
+    maximum
+  ) {
+    return Math.max(
+      minimum,
+      Math.min(
+        maximum,
+        value
+      )
+    );
+  }
+
+  function lerp(
+    a,
+    b,
+    amount
+  ) {
+    return (
+      a +
+      (
+        b -
+        a
+      ) *
+      amount
+    );
+  }
+
+  function easeOutCubic(
+    value
+  ) {
+    const inverse =
+      1 -
+      value;
+
+    return (
+      1 -
+      inverse *
+      inverse *
+      inverse
+    );
+  }
+
+  function easeInOutCubic(
+    value
+  ) {
+    return value < 0.5
+      ? 4 *
+        value *
+        value *
+        value
+      : 1 -
+        Math.pow(
+          -2 *
+          value +
+          2,
+          3
+        ) /
+        2;
+  }
+
+  function rgba(
+    color,
+    alpha
+  ) {
+    return `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha})`;
+  }
+
+  function revealWeight(
+    revealAmount,
+    dormantValue,
+    focusedValue
+  ) {
+    return lerp(
+      dormantValue,
+      focusedValue,
+      clamp(
+        revealAmount,
+        0,
+        1
+      )
+    );
+  }
+
+  function emitReceipt(
+    extra = {}
+  ) {
+    Object.assign(
+      RECEIPT,
+      {
+        status:
+          state.disposed
+            ? "disposed"
+            : state.failed
+              ? "held"
+              : state.initialized
+                ? "available"
+                : "pending",
+
+        rendererInitialized:
+          state.initialized,
+
+        rendererState:
+          state.rendererState,
+
+        activeTransitionId:
+          state.activeTransitionId,
+
+        externalDependencyPresent:
+          Boolean(
+            globalThis
+              .DGB_MIRRORLAND_SELF_CONTAINED_REVIEW_OBJECT_v1
+          ),
+
+        externalDependencyRequired:
+          false,
+
+        canvasPresent:
+          Boolean(
+            state.canvas
+          ),
+
+        paneCount:
+          state.panes.length,
+
+        frameCount:
+          state.frameSegments.length,
+
+        reducedMotion:
+          state.reducedMotion,
+
+        listenersBound:
+          state.eventsBound,
+
+        resizeBinding:
+          state.resizeObserver
+            ? "ResizeObserver"
+            : state.resizeFallbackBound
+              ? "window-resize"
+              : "none",
+
+        visualPassClaimed:
+          false
+      },
+
+      extra
+    );
+
+    const serialized =
+      JSON.stringify(
+        RECEIPT
+      );
+
+    if (state.root) {
+      state.root.dataset
+        .compassMirrorlandWindowReceipt =
+        serialized;
+
+      state.root.dataset
+        .compassMirrorlandWindowStatus =
+        RECEIPT.status;
+
+      state.root.dataset
+        .compassMirrorlandReducedMotion =
+        state.reducedMotion
+          ? "true"
+          : "false";
+
+      state.root.dataset
+        .visualPassClaimed =
+        "false";
+    }
+
+    if (state.canvas) {
+      state.canvas.dataset
+        .compassMirrorlandWindowReceipt =
+        serialized;
+
+      state.canvas.dataset
+        .visualPassClaimed =
+        "false";
+    }
+
+    if (state.receiptOutput) {
+      state.receiptOutput.value =
+        serialized;
+
+      state.receiptOutput.textContent =
+        serialized;
+
+      state.receiptOutput.dataset
+        .visualPassClaimed =
+        "false";
+    }
+
+    globalThis
+      .DGB_COMPASS_MIRRORLAND_WINDOW_RECEIPT =
+      Object.freeze({
+        ...RECEIPT
+      });
+  }
+
+  function dispatch(
+    type,
+    detail = {}
+  ) {
+    globalThis.dispatchEvent(
+      new CustomEvent(
+        type,
+        {
+          detail:
+            Object.freeze({
+              ...detail
+            })
+        }
+      )
+    );
+  }
+
+  function emitFailure(
+    reason
+  ) {
+    if (state.failed) {
+      return;
+    }
+
+    state.failed =
+      true;
+
+    state.rendererState =
+      STATES.HELD;
+
+    state.running =
+      false;
+
+    if (state.raf) {
+      cancelAnimationFrame(
+        state.raf
+      );
+
+      state.raf =
+        0;
+    }
+
+    emitReceipt({
+      status:
+        "held",
+
+      rendererInitialized:
+        false,
+
+      lastAction:
+        "mirrorland-render-failure",
+
+      lastFailure:
+        String(
+          reason ||
+          "UNKNOWN_MIRRORLAND_RENDER_FAILURE"
+        )
+    });
+
+    dispatch(
+      EVENTS.RENDER_FAILURE,
+      {
+        transitionId:
+          state.activeTransitionId,
+
+        reason:
+          String(
+            reason ||
+            "UNKNOWN_MIRRORLAND_RENDER_FAILURE"
+          )
+      }
+    );
+  }
+
+  function createCanvas() {
+    const existing =
+      qs(
+        "canvas[data-compass-mirrorland-window-canvas]",
+        state.mount
+      );
+
+    if (existing) {
+      state.createdCanvas =
+        false;
+
+      return existing;
+    }
+
+    const canvas =
+      document.createElement(
+        "canvas"
+      );
+
+    state.createdCanvas =
+      true;
+
+    canvas.dataset
+      .compassMirrorlandWindowCanvas =
+      "true";
+
+    canvas.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+    canvas.setAttribute(
+      "role",
+      "presentation"
+    );
+
+    canvas.style.position =
+      "absolute";
+
+    canvas.style.top =
+      "50%";
+
+    canvas.style.left =
+      "50%";
+
+    canvas.style.width =
+      "100%";
+
+    canvas.style.height =
+      "100%";
+
+    canvas.style.display =
+      "block";
+
+    canvas.style.pointerEvents =
+      "none";
+
+    canvas.style.transform =
+      "translate(-50%, -50%)";
+
+    canvas.style.transformOrigin =
+      "center";
+
+    state.mount.appendChild(
+      canvas
+    );
+
+    return canvas;
+  }
+
+  function createPane(
+    id,
+    color,
+    points,
+    options = {}
+  ) {
+    return Object.freeze({
+      id,
+      color,
+
+      points:
+        Object.freeze(
+          points.map(
+            point =>
+              Object.freeze([
+                point[0],
+                point[1]
+              ])
+          )
+        ),
+
+      alpha:
+        options.alpha ??
+        0.70,
+
+      glow:
+        options.glow ??
+        0.30,
+
+      depth:
+        options.depth ??
+        0.5,
+
+      phase:
+        options.phase ??
+        0,
+
+      grain:
+        options.grain ??
+        0.12,
+
+      highlight:
+        options.highlight ??
+        0.16
+    });
+  }
+
+  function buildPanes() {
+    return [
+      createPane(
+        "crown-left",
+        COLORS.paleCyan,
+        [
+          [240, 46],
+          [164, 106],
+          [204, 168],
+          [240, 134]
+        ],
+        {
+          alpha:
+            0.74,
+
+          glow:
+            0.45,
+
+          depth:
+            0.86,
+
+          phase:
+            0.20
+        }
+      ),
+
+      createPane(
+        "crown-right",
+        COLORS.paleViolet,
+        [
+          [240, 46],
+          [240, 134],
+          [278, 168],
+          [318, 106]
+        ],
+        {
+          alpha:
+            0.72,
+
+          glow:
+            0.42,
+
+          depth:
+            0.82,
+
+          phase:
+            0.62
+        }
+      ),
+
+      createPane(
+        "upper-left-edge",
+        COLORS.blue,
+        [
+          [164, 106],
+          [98, 210],
+          [154, 246],
+          [204, 168]
+        ],
+        {
+          alpha:
+            0.72,
+
+          glow:
+            0.28,
+
+          depth:
+            0.62,
+
+          phase:
+            0.92
+        }
+      ),
+
+      createPane(
+        "upper-right-edge",
+        COLORS.violet,
+        [
+          [318, 106],
+          [278, 168],
+          [326, 246],
+          [382, 210]
+        ],
+        {
+          alpha:
+            0.74,
+
+          glow:
+            0.30,
+
+          depth:
+            0.66,
+
+          phase:
+            1.22
+        }
+      ),
+
+      createPane(
+        "upper-center-left",
+        COLORS.cyan,
+        [
+          [204, 168],
+          [154, 246],
+          [216, 268],
+          [240, 208],
+          [240, 134]
+        ],
+        {
+          alpha:
+            0.66,
+
+          glow:
+            0.38,
+
+          depth:
+            0.78,
+
+          phase:
+            1.50
+        }
+      ),
+
+      createPane(
+        "upper-center-right",
+        COLORS.rose,
+        [
+          [240, 134],
+          [240, 208],
+          [264, 268],
+          [326, 246],
+          [278, 168]
+        ],
+        {
+          alpha:
+            0.68,
+
+          glow:
+            0.36,
+
+          depth:
+            0.76,
+
+          phase:
+            1.84
+        }
+      ),
+
+      createPane(
+        "mid-left-high",
+        COLORS.paleBlue,
+        [
+          [98, 210],
+          [66, 332],
+          [148, 338],
+          [154, 246]
+        ],
+        {
+          alpha:
+            0.68,
+
+          glow:
+            0.25,
+
+          depth:
+            0.56,
+
+          phase:
+            2.20
+        }
+      ),
+
+      createPane(
+        "mid-left-inner",
+        COLORS.violet,
+        [
+          [154, 246],
+          [148, 338],
+          [212, 334],
+          [216, 268]
+        ],
+        {
+          alpha:
+            0.74,
+
+          glow:
+            0.30,
+
+          depth:
+            0.72,
+
+          phase:
+            2.52
+        }
+      ),
+
+      createPane(
+        "mid-center",
+        COLORS.paleAmber,
+        [
+          [216, 268],
+          [212, 334],
+          [240, 382],
+          [268, 334],
+          [264, 268],
+          [240, 208]
+        ],
+        {
+          alpha:
+            0.70,
+
+          glow:
+            0.48,
+
+          depth:
+            0.90,
+
+          phase:
+            2.92
+        }
+      ),
+
+      createPane(
+        "mid-right-inner",
+        COLORS.cyan,
+        [
+          [264, 268],
+          [268, 334],
+          [332, 338],
+          [326, 246]
+        ],
+        {
+          alpha:
+            0.72,
+
+          glow:
+            0.31,
+
+          depth:
+            0.73,
+
+          phase:
+            3.20
+        }
+      ),
+
+      createPane(
+        "mid-right-high",
+        COLORS.blue,
+        [
+          [326, 246],
+          [332, 338],
+          [414, 332],
+          [382, 210]
+        ],
+        {
+          alpha:
+            0.68,
+
+          glow:
+            0.26,
+
+          depth:
+            0.57,
+
+          phase:
+            3.58
+        }
+      ),
+
+      createPane(
+        "lower-left-edge",
+        COLORS.rose,
+        [
+          [66, 332],
+          [82, 470],
+          [156, 446],
+          [148, 338]
+        ],
+        {
+          alpha:
+            0.72,
+
+          glow:
+            0.25,
+
+          depth:
+            0.58,
+
+          phase:
+            3.90
+        }
+      ),
+
+      createPane(
+        "lower-left-center",
+        COLORS.cyan,
+        [
+          [148, 338],
+          [156, 446],
+          [216, 430],
+          [240, 382],
+          [212, 334]
+        ],
+        {
+          alpha:
+            0.70,
+
+          glow:
+            0.34,
+
+          depth:
+            0.75,
+
+          phase:
+            4.20
+        }
+      ),
+
+      createPane(
+        "lower-right-center",
+        COLORS.violet,
+        [
+          [268, 334],
+          [240, 382],
+          [264, 430],
+          [324, 446],
+          [332, 338]
+        ],
+        {
+          alpha:
+            0.72,
+
+          glow:
+            0.34,
+
+          depth:
+            0.75,
+
+          phase:
+            4.56
+        }
+      ),
+
+      createPane(
+        "lower-right-edge",
+        COLORS.amber,
+        [
+          [332, 338],
+          [324, 446],
+          [398, 470],
+          [414, 332]
+        ],
+        {
+          alpha:
+            0.70,
+
+          glow:
+            0.28,
+
+          depth:
+            0.59,
+
+          phase:
+            4.92
+        }
+      ),
+
+      createPane(
+        "lower-left-deep",
+        COLORS.blue,
+        [
+          [82, 470],
+          [116, 594],
+          [192, 530],
+          [156, 446]
+        ],
+        {
+          alpha:
+            0.72,
+
+          glow:
+            0.24,
+
+          depth:
+            0.56,
+
+          phase:
+            5.22
+        }
+      ),
+
+      createPane(
+        "lower-center-left",
+        COLORS.paleViolet,
+        [
+          [156, 446],
+          [192, 530],
+          [240, 624],
+          [240, 500],
+          [216, 430]
+        ],
+        {
+          alpha:
+            0.72,
+
+          glow:
+            0.40,
+
+          depth:
+            0.82,
+
+          phase:
+            5.54
+        }
+      ),
+
+      createPane(
+        "lower-center-right",
+        COLORS.paleRose,
+        [
+          [264, 430],
+          [240, 500],
+          [240, 624],
+          [288, 530],
+          [324, 446]
+        ],
+        {
+          alpha:
+            0.72,
+
+          glow:
+            0.40,
+
+          depth:
+            0.82,
+
+          phase:
+            5.88
+        }
+      ),
+
+      createPane(
+        "lower-right-deep",
+        COLORS.cyan,
+        [
+          [324, 446],
+          [288, 530],
+          [364, 594],
+          [398, 470]
+        ],
+        {
+          alpha:
+            0.70,
+
+          glow:
+            0.25,
+
+          depth:
+            0.57,
+
+          phase:
+            6.20
+        }
+      ),
+
+      createPane(
+        "base-left",
+        COLORS.amber,
+        [
+          [116, 594],
+          [168, 660],
+          [240, 676],
+          [240, 624],
+          [192, 530]
+        ],
+        {
+          alpha:
+            0.68,
+
+          glow:
+            0.35,
+
+          depth:
+            0.72,
+
+          phase:
+            6.54
+        }
+      ),
+
+      createPane(
+        "base-right",
+        COLORS.blue,
+        [
+          [288, 530],
+          [240, 624],
+          [240, 676],
+          [312, 660],
+          [364, 594]
+        ],
+        {
+          alpha:
+            0.70,
+
+          glow:
+            0.34,
+
+          depth:
+            0.72,
+
+          phase:
+            6.86
+        }
+      )
+    ];
+  }
+
+  function buildFrameSegments() {
+    return Object.freeze([
+      Object.freeze([
+        [240, 34],
+        [165, 78],
+        [104, 144],
+        [66, 232],
+        [48, 350],
+        [58, 482],
+        [96, 590],
+        [158, 662],
+        [240, 694]
+      ]),
+
+      Object.freeze([
+        [240, 34],
+        [315, 78],
+        [376, 144],
+        [414, 232],
+        [432, 350],
+        [422, 482],
+        [384, 590],
+        [322, 662],
+        [240, 694]
+      ])
+    ]);
+  }
+
+  function tracePolygon(
+    context,
+    points
+  ) {
+    if (!points.length) {
+      return;
+    }
+
+    context.beginPath();
+
+    context.moveTo(
+      points[0][0],
+      points[0][1]
+    );
+
+    for (
+      let index = 1;
+      index < points.length;
+      index += 1
+    ) {
+      context.lineTo(
+        points[index][0],
+        points[index][1]
+      );
+    }
+
+    context.closePath();
+  }
+
+  function appendOuterWindow(
+    context
+  ) {
+    context.moveTo(
+      240,
+      24
+    );
+
+    context.bezierCurveTo(
+      154,
+      62,
+      82,
+      148,
+      52,
+      258
+    );
+
+    context.bezierCurveTo(
+      22,
+      382,
+      52,
+      538,
+      132,
+      640
+    );
+
+    context.bezierCurveTo(
+      166,
+      680,
+      202,
+      706,
+      240,
+      714
+    );
+
+    context.bezierCurveTo(
+      278,
+      706,
+      314,
+      680,
+      348,
+      640
+    );
+
+    context.bezierCurveTo(
+      428,
+      538,
+      458,
+      382,
+      428,
+      258
+    );
+
+    context.bezierCurveTo(
+      398,
+      148,
+      326,
+      62,
+      240,
+      24
+    );
+
+    context.closePath();
+  }
+
+  function appendInnerWindow(
+    context
+  ) {
+    context.moveTo(
+      240,
+      48
+    );
+
+    context.bezierCurveTo(
+      170,
+      82,
+      112,
+      158,
+      84,
+      262
+    );
+
+    context.bezierCurveTo(
+      58,
+      366,
+      82,
+      510,
+      148,
+      604
+    );
+
+    context.bezierCurveTo(
+      178,
+      646,
+      208,
+      670,
+      240,
+      682
+    );
+
+    context.bezierCurveTo(
+      272,
+      670,
+      302,
+      646,
+      332,
+      604
+    );
+
+    context.bezierCurveTo(
+      398,
+      510,
+      422,
+      366,
+      396,
+      262
+    );
+
+    context.bezierCurveTo(
+      368,
+      158,
+      310,
+      82,
+      240,
+      48
+    );
+
+    context.closePath();
+  }
+
+  function traceOuterWindow(
+    context
+  ) {
+    context.beginPath();
+
+    appendOuterWindow(
+      context
+    );
+  }
+
+  function traceInnerWindow(
+    context
+  ) {
+    context.beginPath();
+
+    appendInnerWindow(
+      context
+    );
+  }
+
+  function createPaneGradient(
+    context,
+    pane,
+    revealAmount,
+    shimmer
+  ) {
+    const bounds =
+      pane.points.reduce(
+        (
+          result,
+          point
+        ) => ({
+          minimumX:
+            Math.min(
+              result.minimumX,
+              point[0]
+            ),
+
+          maximumX:
+            Math.max(
+              result.maximumX,
+              point[0]
+            ),
+
+          minimumY:
+            Math.min(
+              result.minimumY,
+              point[1]
+            ),
+
+          maximumY:
+            Math.max(
+              result.maximumY,
+              point[1]
+            )
+        }),
+
+        {
+          minimumX:
+            Infinity,
+
+          maximumX:
+            -Infinity,
+
+          minimumY:
+            Infinity,
+
+          maximumY:
+            -Infinity
+        }
+      );
+
+    const gradient =
+      context.createLinearGradient(
+        bounds.minimumX,
+        bounds.minimumY,
+        bounds.maximumX,
+        bounds.maximumY
+      );
+
+    const panePresence =
+      revealWeight(
+        revealAmount,
+        0.24,
+        1
+      );
+
+    const alpha =
+      pane.alpha *
+      panePresence;
+
+    gradient.addColorStop(
+      0,
+
+      rgba(
+        pane.color,
+
+        clamp(
+          alpha *
+          (
+            0.62 +
+            shimmer *
+            0.07
+          ),
+          0,
+          1
+        )
+      )
+    );
+
+    gradient.addColorStop(
+      0.48,
+
+      rgba(
+        pane.color,
+
+        clamp(
+          alpha *
+          (
+            0.86 +
+            shimmer *
+            0.10
+          ),
+          0,
+          1
+        )
+      )
+    );
+
+    gradient.addColorStop(
+      1,
+
+      rgba(
+        pane.color,
+
+        clamp(
+          alpha *
+          0.50,
+          0,
+          1
+        )
+      )
+    );
+
+    return gradient;
+  }
+
+  function drawPane(
+    context,
+    pane,
+    revealAmount,
+    time
+  ) {
+    const shimmer =
+      state.reducedMotion
+        ? 0
+        : Math.sin(
+            time *
+            0.72 +
+            pane.phase
+          );
+
+    const depthShift =
+      pane.depth *
+      revealAmount *
+      2.2;
+
+    const paneGlowWeight =
+      revealWeight(
+        revealAmount,
+        0.10,
+        1
+      );
+
+    context.save();
+
+    context.translate(
+      shimmer *
+      pane.depth *
+      0.6,
+
+      -depthShift *
+      0.18
+    );
+
+    tracePolygon(
+      context,
+      pane.points
+    );
+
+    context.fillStyle =
+      createPaneGradient(
+        context,
+        pane,
+        revealAmount,
+        shimmer
+      );
+
+    context.shadowBlur =
+      revealWeight(
+        revealAmount,
+        2,
+        10 +
+        pane.glow *
+        26
+      );
+
+    context.shadowColor =
+      rgba(
+        pane.color,
+
+        pane.glow *
+        paneGlowWeight *
+        0.56
+      );
+
+    context.fill();
+
+    context.shadowBlur =
+      0;
+
+    const highlight =
+      context.createLinearGradient(
+        0,
+        0,
+        DIMENSIONS.designWidth,
+        DIMENSIONS.designHeight
+      );
+
+    const highlightWeight =
+      revealWeight(
+        revealAmount,
+        0.08,
+        1
+      );
+
+    highlight.addColorStop(
+      0,
+
+      `rgba(255, 255, 255, ${
+        pane.highlight *
+        0.68 *
+        highlightWeight
+      })`
+    );
+
+    highlight.addColorStop(
+      0.42,
+      "rgba(255, 255, 255, 0)"
+    );
+
+    highlight.addColorStop(
+      1,
+
+      `rgba(255, 255, 255, ${
+        pane.highlight *
+        0.15 *
+        highlightWeight
+      })`
+    );
+
+    context.fillStyle =
+      highlight;
+
+    context.fill();
+
+    context.strokeStyle =
+      `rgba(255, 255, 255, ${
+        revealWeight(
+          revealAmount,
+          0.015,
+          0.035 +
+          pane.highlight *
+          0.26
+        )
+      })`;
+
+    context.lineWidth =
+      revealWeight(
+        revealAmount,
+        0.7,
+        1.4
+      );
+
+    context.stroke();
+
+    if (
+      !state.reducedMotion &&
+      pane.grain > 0 &&
+      revealAmount >=
+        0.30
+    ) {
+      context.globalCompositeOperation =
+        "screen";
+
+      for (
+        let index = 0;
+        index < 4;
+        index += 1
+      ) {
+        const seed =
+          pane.phase *
+          10.7 +
+          index *
+          5.3;
+
+        const x =
+          pane.points[0][0] +
+          (
+            Math.sin(
+              seed *
+              4.9
+            ) *
+            0.5 +
+            0.5
+          ) *
+          90;
+
+        const y =
+          pane.points[0][1] +
+          (
+            Math.sin(
+              seed *
+              2.7 +
+              1.2
+            ) *
+            0.5 +
+            0.5
+          ) *
+          120;
+
+        context.fillStyle =
+          `rgba(255, 255, 255, ${
+            pane.grain *
+            0.10 *
+            revealAmount
+          })`;
+
+        context.fillRect(
+          x,
+          y,
+          1.2,
+          1.2
+        );
+      }
+    }
+
+    context.restore();
+  }
+
+  function drawLeadLines(
+    context,
+    revealAmount
+  ) {
+    const darkOpacity =
+      revealWeight(
+        revealAmount,
+        0.24,
+        0.94
+      );
+
+    const lightOpacity =
+      revealWeight(
+        revealAmount,
+        0.07,
+        0.38
+      );
+
+    const outerWidth =
+      revealWeight(
+        revealAmount,
+        DIMENSIONS
+          .leadWidthDormant,
+        DIMENSIONS
+          .leadWidthFocused
+      );
+
+    const innerWidth =
+      revealWeight(
+        revealAmount,
+        DIMENSIONS
+          .innerLeadWidthDormant,
+        DIMENSIONS
+          .innerLeadWidthFocused
+      );
+
+    context.save();
+
+    context.lineJoin =
+      "round";
+
+    context.lineCap =
+      "round";
+
+    context.strokeStyle =
+      rgba(
+        COLORS.leadDark,
+        darkOpacity
+      );
+
+    context.lineWidth =
+      outerWidth;
+
+    state.panes.forEach(
+      pane => {
+        tracePolygon(
+          context,
+          pane.points
+        );
+
+        context.stroke();
+      }
+    );
+
+    context.strokeStyle =
+      rgba(
+        COLORS.leadLight,
+        lightOpacity
+      );
+
+    context.lineWidth =
+      innerWidth;
+
+    state.panes.forEach(
+      pane => {
+        tracePolygon(
+          context,
+          pane.points
+        );
+
+        context.stroke();
+      }
+    );
+
+    context.restore();
+  }
+
+  function drawOuterFrame(
+    context,
+    revealAmount
+  ) {
+    const frameOpacity =
+      revealWeight(
+        revealAmount,
+        0.28,
+        1
+      );
+
+    const edgeOpacity =
+      revealWeight(
+        revealAmount,
+        0.14,
+        0.70
+      );
+
+    const innerEdgeOpacity =
+      revealWeight(
+        revealAmount,
+        0.07,
+        0.34
+      );
+
+    const shadowBlur =
+      revealWeight(
+        revealAmount,
+        5,
+        52
+      );
+
+    const shadowOpacity =
+      revealWeight(
+        revealAmount,
+        0.025,
+        0.24
+      );
+
+    context.save();
+
+    const frameGradient =
+      context.createLinearGradient(
+        0,
+        0,
+        DIMENSIONS.designWidth,
+        0
+      );
+
+    frameGradient.addColorStop(
+      0,
+      rgba(
+        COLORS.frameNearBlack,
+        frameOpacity
+      )
+    );
+
+    frameGradient.addColorStop(
+      0.22,
+      rgba(
+        COLORS.frameMid,
+        frameOpacity
+      )
+    );
+
+    frameGradient.addColorStop(
+      0.50,
+      rgba(
+        COLORS.frameNearBlack,
+        frameOpacity
+      )
+    );
+
+    frameGradient.addColorStop(
+      0.78,
+      rgba(
+        COLORS.frameMid,
+        frameOpacity
+      )
+    );
+
+    frameGradient.addColorStop(
+      1,
+      rgba(
+        COLORS.frameNearBlack,
+        frameOpacity
+      )
+    );
+
+    context.beginPath();
+
+    appendOuterWindow(
+      context
+    );
+
+    appendInnerWindow(
+      context
+    );
+
+    context.fillStyle =
+      frameGradient;
+
+    context.shadowBlur =
+      shadowBlur;
+
+    context.shadowColor =
+      `rgba(65, 132, 183, ${shadowOpacity})`;
+
+    context.fill(
+      "evenodd"
+    );
+
+    context.shadowBlur =
+      0;
+
+    traceOuterWindow(
+      context
+    );
+
+    context.strokeStyle =
+      rgba(
+        COLORS.frameEdge,
+        edgeOpacity
+      );
+
+    context.lineWidth =
+      revealWeight(
+        revealAmount,
+        3,
+        7
+      );
+
+    context.stroke();
+
+    traceInnerWindow(
+      context
+    );
+
+    context.strokeStyle =
+      rgba(
+        COLORS.leadLight,
+        innerEdgeOpacity
+      );
+
+    context.lineWidth =
+      revealWeight(
+        revealAmount,
+        1.2,
+        3
+      );
+
+    context.stroke();
+
+    context.restore();
+  }
+
+  function drawFrameRibs(
+    context,
+    revealAmount
+  ) {
+    const darkOpacity =
+      revealWeight(
+        revealAmount,
+        0.22,
+        0.98
+      );
+
+    const lightOpacity =
+      revealWeight(
+        revealAmount,
+        0.055,
+        0.36
+      );
+
+    const darkWidth =
+      revealWeight(
+        revealAmount,
+        DIMENSIONS
+          .ribWidthDormant,
+        DIMENSIONS
+          .ribWidthFocused
+      );
+
+    const lightWidth =
+      revealWeight(
+        revealAmount,
+        DIMENSIONS
+          .ribHighlightWidthDormant,
+        DIMENSIONS
+          .ribHighlightWidthFocused
+      );
+
+    context.save();
+
+    context.lineJoin =
+      "round";
+
+    context.lineCap =
+      "round";
+
+    state.frameSegments.forEach(
+      segment => {
+        context.beginPath();
+
+        context.moveTo(
+          segment[0][0],
+          segment[0][1]
+        );
+
+        for (
+          let index = 1;
+          index < segment.length;
+          index += 1
+        ) {
+          context.lineTo(
+            segment[index][0],
+            segment[index][1]
+          );
+        }
+
+        context.strokeStyle =
+          `rgba(9, 12, 18, ${darkOpacity})`;
+
+        context.lineWidth =
+          darkWidth;
+
+        context.stroke();
+
+        context.strokeStyle =
+          `rgba(79, 89, 110, ${lightOpacity})`;
+
+        context.lineWidth =
+          lightWidth;
+
+        context.stroke();
+      }
+    );
+
+    context.restore();
+  }
+
+  function drawInnerLight(
+    context,
+    revealAmount,
+    time
+  ) {
+    context.save();
+
+    traceInnerWindow(
+      context
+    );
+
+    context.clip();
+
+    const pulse =
+      state.reducedMotion
+        ? 0.5
+        : (
+            Math.sin(
+              time *
+              (
+                state.rendererState ===
+                  STATES.FOCUSED
+                  ? 1.45
+                  : 0.72
+              )
+            ) *
+            0.5 +
+            0.5
+          );
+
+    const dormantLight =
+      revealWeight(
+        revealAmount,
+        0.20,
+        1
+      );
+
+    const centerGlow =
+      context.createRadialGradient(
+        240,
+        356,
+        20,
+        240,
+        356,
+        310
+      );
+
+    centerGlow.addColorStop(
+      0,
+
+      `rgba(202, 240, 255, ${
+        (
+          0.08 +
+          revealAmount *
+          (
+            0.18 +
+            pulse *
+            0.08
+          )
+        ) *
+        dormantLight
+      })`
+    );
+
+    centerGlow.addColorStop(
+      0.30,
+
+      `rgba(95, 151, 221, ${
+        (
+          0.035 +
+          revealAmount *
+          0.12
+        ) *
+        dormantLight
+      })`
+    );
+
+    centerGlow.addColorStop(
+      0.62,
+
+      `rgba(118, 74, 169, ${
+        (
+          0.02 +
+          revealAmount *
+          0.09
+        ) *
+        dormantLight
+      })`
+    );
+
+    centerGlow.addColorStop(
+      1,
+      "rgba(0, 0, 0, 0)"
+    );
+
+    context.fillStyle =
+      centerGlow;
+
+    context.fillRect(
+      0,
+      0,
+      DIMENSIONS.designWidth,
+      DIMENSIONS.designHeight
+    );
+
+    if (
+      !state.reducedMotion &&
+      revealAmount >
+        0.18
+    ) {
+      const beam =
+        context.createLinearGradient(
+          70,
+          80,
+          410,
+          650
+        );
+
+      beam.addColorStop(
+        0,
+        "rgba(255, 255, 255, 0)"
+      );
+
+      beam.addColorStop(
+        0.48,
+
+        `rgba(255, 255, 255, ${
+          revealAmount *
+          (
+            0.024 +
+            pulse *
+            0.018
+          )
+        })`
+      );
+
+      beam.addColorStop(
+        0.58,
+        "rgba(255, 255, 255, 0)"
+      );
+
+      context.fillStyle =
+        beam;
+
+      context.fillRect(
+        0,
+        0,
+        DIMENSIONS.designWidth,
+        DIMENSIONS.designHeight
+      );
+    }
+
+    context.restore();
+  }
+
+  function drawDormantShadow(
+    context,
+    revealAmount
+  ) {
+    const dormantWeight =
+      1 -
+      revealAmount;
+
+    if (
+      dormantWeight <=
+      0
+    ) {
+      return;
+    }
+
+    context.save();
+
+    traceOuterWindow(
+      context
+    );
+
+    context.strokeStyle =
+      `rgba(193, 171, 118, ${
+        dormantWeight *
+        0.045
+      })`;
+
+    context.lineWidth =
+      1.2;
+
+    context.shadowBlur =
+      6;
+
+    context.shadowColor =
+      `rgba(94, 158, 202, ${
+        dormantWeight *
+        0.035
+      })`;
+
+    context.stroke();
+
+    context.restore();
+  }
+
+  function drawSparkles(
+    context,
+    revealAmount,
+    time
+  ) {
+    if (
+      state.reducedMotion ||
+      revealAmount <
+        0.42
+    ) {
+      return;
+    }
+
+    context.save();
+
+    traceInnerWindow(
+      context
+    );
+
+    context.clip();
+
+    const points = [
+      [186, 180, 0.0],
+      [292, 248, 1.4],
+      [234, 340, 2.7],
+      [148, 418, 4.1],
+      [320, 516, 5.3],
+      [248, 592, 6.4]
+    ];
+
+    points.forEach(
+      point => {
+        const pulse =
+          Math.sin(
+            time *
+            (
+              Math.PI *
+              2 /
+              TIMING
+                .sparklePeriodSeconds
+            ) +
+            point[2]
+          );
+
+        const alpha =
+          clamp(
+            (
+              pulse -
+              0.52
+            ) *
+            1.9,
+            0,
+            1
+          ) *
+          revealAmount *
+          0.52;
+
+        if (
+          alpha <=
+          0.01
+        ) {
+          return;
+        }
+
+        const radius =
+          1.2 +
+          alpha *
+          2.4;
+
+        const gradient =
+          context.createRadialGradient(
+            point[0],
+            point[1],
+            0,
+            point[0],
+            point[1],
+            radius *
+            5
+          );
+
+        gradient.addColorStop(
+          0,
+          `rgba(255, 250, 224, ${alpha})`
+        );
+
+        gradient.addColorStop(
+          0.28,
+
+          `rgba(187, 229, 255, ${
+            alpha *
+            0.48
+          })`
+        );
+
+        gradient.addColorStop(
+          1,
+          "rgba(255, 255, 255, 0)"
+        );
+
+        context.fillStyle =
+          gradient;
+
+        context.beginPath();
+
+        context.arc(
+          point[0],
+          point[1],
+          radius *
+          5,
+          0,
+          Math.PI *
+          2
+        );
+
+        context.fill();
+      }
+    );
+
+    context.restore();
+  }
+
+  function drawWindow() {
+    const context =
+      state.context;
+
+    if (!context) {
+      return;
+    }
+
+    context.clearRect(
+      0,
+      0,
+      state.width,
+      state.height
+    );
+
+    context.save();
+
+    context.scale(
+      state.pixelRatio,
+      state.pixelRatio
+    );
+
+    const cssWidth =
+      state.width /
+      state.pixelRatio;
+
+    const cssHeight =
+      state.height /
+      state.pixelRatio;
+
+    const designScale =
+      Math.min(
+        cssWidth /
+        DIMENSIONS.designWidth,
+
+        cssHeight /
+        DIMENSIONS.designHeight
+      );
+
+    const reveal =
+      clamp(
+        state.revealAmount,
+        0,
+        1
+      );
+
+    const scale =
+      lerp(
+        DIMENSIONS.dormantScale,
+        DIMENSIONS.focusedScale,
+        reveal
+      );
+
+    const opacity =
+      lerp(
+        DIMENSIONS.dormantOpacity,
+        DIMENSIONS.focusedOpacity,
+        reveal
+      );
+
+    const horizontalDrift =
+      state.reducedMotion
+        ? 0
+        : Math.sin(
+            state.time *
+            0.24
+          ) *
+          0.75 *
+          (
+            1 -
+            reveal *
+            0.72
+          );
+
+    const verticalDrift =
+      state.reducedMotion
+        ? 0
+        : Math.sin(
+            state.time *
+            0.31 +
+            1.2
+          ) *
+          0.92 *
+          (
+            1 -
+            reveal *
+            0.62
+          );
+
+    context.translate(
+      cssWidth /
+      2 +
+      horizontalDrift,
+
+      cssHeight /
+      2 +
+      verticalDrift
+    );
+
+    context.scale(
+      designScale *
+      scale,
+
+      designScale *
+      scale
+    );
+
+    context.translate(
+      -DIMENSIONS.designWidth /
+      2,
+
+      -DIMENSIONS.designHeight /
+      2
+    );
+
+    context.globalAlpha =
+      opacity;
+
+    drawDormantShadow(
+      context,
+      reveal
+    );
+
+    context.save();
+
+    traceInnerWindow(
+      context
+    );
+
+    context.clip();
+
+    drawInnerLight(
+      context,
+      reveal,
+      state.time
+    );
+
+    state.panes.forEach(
+      pane => {
+        drawPane(
+          context,
+          pane,
+          reveal,
+          state.time
+        );
+      }
+    );
+
+    context.restore();
+
+    drawLeadLines(
+      context,
+      reveal
+    );
+
+    drawFrameRibs(
+      context,
+      reveal
+    );
+
+    drawOuterFrame(
+      context,
+      reveal
+    );
+
+    drawSparkles(
+      context,
+      reveal,
+      state.time
+    );
+
+    context.restore();
+  }
+
+  function resize() {
+    if (
+      !state.canvas ||
+      !state.mount
+    ) {
+      return;
+    }
+
+    const rect =
+      state.mount
+        .getBoundingClientRect();
+
+    const ratio =
+      Math.min(
+        globalThis
+          .devicePixelRatio ||
+        1,
+
+        DIMENSIONS
+          .maximumDevicePixelRatio
+      );
+
+    const width =
+      Math.max(
+        1,
+
+        Math.floor(
+          rect.width *
+          ratio
+        )
+      );
+
+    const height =
+      Math.max(
+        1,
+
+        Math.floor(
+          rect.height *
+          ratio
+        )
+      );
+
+    if (
+      state.canvas.width !==
+        width ||
+      state.canvas.height !==
+        height
+    ) {
+      state.canvas.width =
+        width;
+
+      state.canvas.height =
+        height;
+    }
+
+    state.canvas.style.width =
+      `${Math.max(
+        1,
+        rect.width
+      )}px`;
+
+    state.canvas.style.height =
+      `${Math.max(
+        1,
+        rect.height
+      )}px`;
+
+    state.width =
+      width;
+
+    state.height =
+      height;
+
+    state.pixelRatio =
+      ratio;
+  }
+
+  function completeReveal() {
+    const transitionId =
+      state.activeTransitionId;
+
+    if (!transitionId) {
+      emitFailure(
+        "MIRRORLAND_TRANSITION_ID_MISSING_AT_REVEAL_COMPLETION"
+      );
+
+      return;
+    }
+
+    state.rendererState =
+      STATES.FOCUSED;
+
+    state.revealAmount =
+      1;
+
+    state.targetRevealAmount =
+      1;
+
+    state.transition.progress =
+      1;
+
+    emitReceipt({
+      lastAction:
+        "mirrorland-reveal-complete",
+
+      lastFailure:
+        null
+    });
+
+    dispatch(
+      EVENTS.REVEAL_COMPLETE,
+      {
+        transitionId
+      }
+    );
+  }
+
+  function completeWithdrawal() {
+    const transitionId =
+      state.activeTransitionId;
+
+    if (!transitionId) {
+      emitFailure(
+        "MIRRORLAND_TRANSITION_ID_MISSING_AT_WITHDRAWAL_COMPLETION"
+      );
+
+      return;
+    }
+
+    state.rendererState =
+      STATES.DORMANT;
+
+    state.revealAmount =
+      0;
+
+    state.targetRevealAmount =
+      0;
+
+    state.transition.progress =
+      1;
+
+    state.activeTransitionId =
+      "";
+
+    emitReceipt({
+      lastAction:
+        "mirrorland-withdrawal-complete",
+
+      lastFailure:
+        null
+    });
+
+    dispatch(
+      EVENTS.WITHDRAWAL_COMPLETE,
+      {
+        transitionId
+      }
+    );
+  }
+
+  function updateTransition(
+    now
+  ) {
+    if (
+      state.rendererState !==
+        STATES.REVEALING &&
+      state.rendererState !==
+        STATES.WITHDRAWING
+    ) {
+      return;
+    }
+
+    const duration =
+      Math.max(
+        1,
+        state.transition.duration
+      );
+
+    const elapsed =
+      now -
+      state.transition.startTime;
+
+    const rawProgress =
+      clamp(
+        elapsed /
+        duration,
+        0,
+        1
+      );
+
+    const eased =
+      state.rendererState ===
+        STATES.REVEALING
+        ? easeOutCubic(
+            rawProgress
+          )
+        : easeInOutCubic(
+            rawProgress
+          );
+
+    state.transition.progress =
+      rawProgress;
+
+    state.revealAmount =
+      lerp(
+        state.transition.from,
+        state.transition.to,
+        eased
+      );
+
+    if (
+      rawProgress <
+      1
+    ) {
+      return;
+    }
+
+    if (
+      state.rendererState ===
+        STATES.REVEALING
+    ) {
+      completeReveal();
+    } else {
+      completeWithdrawal();
+    }
+  }
+
+  function transitionNeedsFrames() {
+    return (
+      state.rendererState ===
+        STATES.REVEALING ||
+      state.rendererState ===
+        STATES.WITHDRAWING
+    );
+  }
+
+  function requestRender() {
+    if (
+      !state.running ||
+      state.failed ||
+      state.disposed ||
+      state.raf
+    ) {
+      return;
+    }
+
+    state.raf =
+      requestAnimationFrame(
+        render
+      );
+  }
+
+  function render(
+    now
+  ) {
+    state.raf =
+      0;
+
+    if (
+      !state.running ||
+      state.failed ||
+      state.disposed
+    ) {
+      return;
+    }
+
+    state.time =
+      now *
+      0.001;
+
+    state.lastTime =
+      now;
+
+    resize();
+
+    updateTransition(
+      now
+    );
+
+    drawWindow();
+
+    if (transitionNeedsFrames()) {
+      requestRender();
+    }
+  }
+
+  function transitionIdFromEvent(
+    event
+  ) {
+    return String(
+      event &&
+      event.detail &&
+      event.detail.transitionId
+        ? event.detail.transitionId
+        : ""
+    ).trim();
+  }
+
+  function controllerReducedMotion() {
+    const controller =
+      globalThis
+        .DGB_COMPASS_CONTROLLER;
+
+    if (
+      controller &&
+      typeof controller.getFrameState ===
+        "function"
+    ) {
+      try {
+        const frame =
+          controller.getFrameState();
+
+        return Boolean(
+          frame &&
+          frame.reducedMotion
+        );
+      } catch (_) {}
+    }
+
+    return false;
+  }
+
+  function rootReducedMotion() {
+    return Boolean(
+      state.root &&
+      state.root.dataset
+        .reducedMotion ===
+        "true"
+    );
+  }
+
+  function mediaReducedMotion() {
+    return Boolean(
+      state.reducedMotionMediaQuery &&
+      state.reducedMotionMediaQuery
+        .matches
+    );
+  }
+
+  function resolveReducedMotion(
+    requestedValue
+  ) {
+    const requestedReduced =
+      requestedValue ===
+      true;
+
+    state.reducedMotion =
+      requestedReduced ||
+      controllerReducedMotion() ||
+      rootReducedMotion() ||
+      mediaReducedMotion();
+
+    if (state.root) {
+      state.root.dataset
+        .compassMirrorlandReducedMotion =
+        state.reducedMotion
+          ? "true"
+          : "false";
+    }
+
+    return state.reducedMotion;
+  }
+
+  function validateTransitionId(
+    transitionId
+  ) {
+    if (transitionId) {
+      return true;
+    }
+
+    emitFailure(
+      "MIRRORLAND_TRANSITION_ID_MISSING"
+    );
+
+    return false;
+  }
+
+  function startTransition({
+    transitionId,
+    target,
+    duration,
+    rendererState,
+    action
+  }) {
+    if (
+      !validateTransitionId(
+        transitionId
+      )
+    ) {
+      return false;
+    }
+
+    state.activeTransitionId =
+      transitionId;
+
+    state.rendererState =
+      rendererState;
+
+    state.targetRevealAmount =
+      target;
+
+    state.transition = {
+      from:
+        state.revealAmount,
+
+      to:
+        target,
+
+      progress:
+        0,
+
+      startTime:
+        performance.now(),
+
+      duration:
+        Math.max(
+          1,
+          duration
+        )
+    };
+
+    emitReceipt({
+      lastAction:
+        action,
+
+      lastFailure:
+        null
+    });
+
+    requestRender();
+
+    return true;
+  }
+
+  function requestReveal(
+    event
+  ) {
+    if (
+      state.failed ||
+      state.disposed
+    ) {
+      return;
+    }
+
+    const detail =
+      event &&
+      event.detail
+        ? event.detail
+        : {};
+
+    const transitionId =
+      transitionIdFromEvent(
+        event
+      );
+
+    if (
+      !validateTransitionId(
+        transitionId
+      )
+    ) {
+      return;
+    }
+
+    resolveReducedMotion(
+      detail.reducedMotion
+    );
+
+    if (
+      state.rendererState ===
+        STATES.REVEALING &&
+      transitionId ===
+        state.activeTransitionId
+    ) {
+      return;
+    }
+
+    if (
+      state.rendererState ===
+        STATES.FOCUSED
+    ) {
+      state.activeTransitionId =
+        transitionId;
+
+      emitReceipt({
+        lastAction:
+          "mirrorland-already-focused",
+
+        lastFailure:
+          null
+      });
+
+      dispatch(
+        EVENTS.REVEAL_COMPLETE,
+        {
+          transitionId
+        }
+      );
+
+      return;
+    }
+
+    startTransition({
+      transitionId,
+
+      target:
+        1,
+
+      duration:
+        state.reducedMotion
+          ? TIMING
+              .reducedRevealMs
+          : TIMING
+              .revealMs,
+
+      rendererState:
+        STATES.REVEALING,
+
+      action:
+        "mirrorland-reveal-started"
+    });
+  }
+
+  function requestWithdrawal(
+    event
+  ) {
+    if (
+      state.failed ||
+      state.disposed
+    ) {
+      return;
+    }
+
+    const detail =
+      event &&
+      event.detail
+        ? event.detail
+        : {};
+
+    const transitionId =
+      transitionIdFromEvent(
+        event
+      );
+
+    if (
+      !validateTransitionId(
+        transitionId
+      )
+    ) {
+      return;
+    }
+
+    resolveReducedMotion(
+      detail.reducedMotion
+    );
+
+    if (
+      state.rendererState ===
+        STATES.WITHDRAWING &&
+      transitionId ===
+        state.activeTransitionId
+    ) {
+      return;
+    }
+
+    if (
+      state.rendererState ===
+        STATES.DORMANT
+    ) {
+      state.activeTransitionId =
+        transitionId;
+
+      emitReceipt({
+        lastAction:
+          "mirrorland-already-dormant",
+
+        lastFailure:
+          null
+      });
+
+      dispatch(
+        EVENTS.WITHDRAWAL_COMPLETE,
+        {
+          transitionId
+        }
+      );
+
+      state.activeTransitionId =
+        "";
+
+      return;
+    }
+
+    startTransition({
+      transitionId,
+
+      target:
+        0,
+
+      duration:
+        state.reducedMotion
+          ? TIMING
+              .reducedWithdrawalMs
+          : TIMING
+              .withdrawalMs,
+
+      rendererState:
+        STATES.WITHDRAWING,
+
+      action:
+        "mirrorland-withdrawal-started"
+    });
+  }
+
+  function handleReducedMotionMediaChange(
+    event
+  ) {
+    const previous =
+      state.reducedMotion;
+
+    resolveReducedMotion(
+      false
+    );
+
+    emitReceipt({
+      lastAction:
+        "reduced-motion-media-updated",
+
+      reducedMotionSource:
+        "media-query-change",
+
+      reducedMotionChanged:
+        previous !==
+        state.reducedMotion
+    });
+  }
+
+  function handleExternalReducedMotionChange(
+    event
+  ) {
+    const detail =
+      event &&
+      event.detail
+        ? event.detail
+        : {};
+
+    const previous =
+      state.reducedMotion;
+
+    resolveReducedMotion(
+      detail.reducedMotion
+    );
+
+    emitReceipt({
+      lastAction:
+        "reduced-motion-controller-updated",
+
+      reducedMotionSource:
+        detail.source ||
+        "controller-event",
+
+      reducedMotionChanged:
+        previous !==
+        state.reducedMotion
+    });
+  }
+
+  function handleWindowResize() {
+    resize();
+  }
+
+  function bindEvents() {
+    if (state.eventsBound) {
+      return;
+    }
+
+    state.eventsBound =
+      true;
+
+    globalThis.addEventListener(
+      EVENTS.REVEAL_REQUEST,
+      requestReveal
+    );
+
+    globalThis.addEventListener(
+      EVENTS.WITHDRAW_REQUEST,
+      requestWithdrawal
+    );
+
+    globalThis.addEventListener(
+      EVENTS.REDUCED_MOTION_CHANGE,
+      handleExternalReducedMotionChange
+    );
+  }
+
+  function unbindEvents() {
+    if (!state.eventsBound) {
+      return;
+    }
+
+    state.eventsBound =
+      false;
+
+    globalThis.removeEventListener(
+      EVENTS.REVEAL_REQUEST,
+      requestReveal
+    );
+
+    globalThis.removeEventListener(
+      EVENTS.WITHDRAW_REQUEST,
+      requestWithdrawal
+    );
+
+    globalThis.removeEventListener(
+      EVENTS.REDUCED_MOTION_CHANGE,
+      handleExternalReducedMotionChange
+    );
+  }
+
+  function bindReducedMotion() {
+    if (state.reducedMotionBound) {
+      return;
+    }
+
+    state.reducedMotionBound =
+      true;
+
+    if (
+      typeof globalThis.matchMedia ===
+      "function"
+    ) {
+      state.reducedMotionMediaQuery =
+        globalThis.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        );
+
+      if (
+        typeof state
+          .reducedMotionMediaQuery
+          .addEventListener ===
+        "function"
+      ) {
+        state
+          .reducedMotionMediaQuery
+          .addEventListener(
+            "change",
+            handleReducedMotionMediaChange
+          );
+      } else if (
+        typeof state
+          .reducedMotionMediaQuery
+          .addListener ===
+        "function"
+      ) {
+        state
+          .reducedMotionMediaQuery
+          .addListener(
+            handleReducedMotionMediaChange
+          );
+      }
+    }
+
+    resolveReducedMotion(
+      false
+    );
+  }
+
+  function unbindReducedMotion() {
+    if (!state.reducedMotionBound) {
+      return;
+    }
+
+    state.reducedMotionBound =
+      false;
+
+    const media =
+      state.reducedMotionMediaQuery;
+
+    if (media) {
+      if (
+        typeof media
+          .removeEventListener ===
+        "function"
+      ) {
+        media.removeEventListener(
+          "change",
+          handleReducedMotionMediaChange
+        );
+      } else if (
+        typeof media
+          .removeListener ===
+        "function"
+      ) {
+        media.removeListener(
+          handleReducedMotionMediaChange
+        );
+      }
+    }
+
+    state.reducedMotionMediaQuery =
+      null;
+  }
+
+  function bindResizeObserver() {
+    if (
+      state.resizeObserver ||
+      state.resizeFallbackBound
+    ) {
+      return;
+    }
+
+    if (
+      typeof ResizeObserver ===
+      "function"
+    ) {
+      state.resizeObserver =
+        new ResizeObserver(
+          () => {
+            resize();
+            requestRender();
+          }
+        );
+
+      state.resizeObserver.observe(
+        state.mount
+      );
+
+      return;
+    }
+
+    state.resizeFallbackBound =
+      true;
+
+    globalThis.addEventListener(
+      "resize",
+      handleWindowResize,
+      {
+        passive:
+          true
+      }
+    );
+  }
+
+  function unbindResizeObserver() {
+    if (state.resizeObserver) {
+      state.resizeObserver.disconnect();
+
+      state.resizeObserver =
+        null;
+    }
+
+    if (state.resizeFallbackBound) {
+      state.resizeFallbackBound =
+        false;
+
+      globalThis.removeEventListener(
+        "resize",
+        handleWindowResize
+      );
+    }
+  }
+
+  function removeGeneratedCanvas() {
+    if (
+      state.createdCanvas &&
+      state.canvas
+    ) {
+      state.canvas.remove();
+    }
+
+    state.canvas =
+      null;
+
+    state.context =
+      null;
+
+    state.createdCanvas =
+      false;
+  }
+
+  function clearGeometry() {
+    state.panes =
+      [];
+
+    state.frameSegments =
+      [];
+
+    state.geometryReady =
+      false;
+  }
+
+  function rollbackPartialInitialization(
+    reason
+  ) {
+    state.running =
+      false;
+
+    if (state.raf) {
+      cancelAnimationFrame(
+        state.raf
+      );
+
+      state.raf =
+        0;
+    }
+
+    unbindEvents();
+    unbindReducedMotion();
+    unbindResizeObserver();
+
+    removeGeneratedCanvas();
+    clearGeometry();
+
+    state.initialized =
+      false;
+
+    emitFailure(
+      reason
+    );
+  }
+
+  function dispose() {
+    if (state.disposed) {
+      return;
+    }
+
+    state.disposed =
+      true;
+
+    state.running =
+      false;
+
+    if (state.raf) {
+      cancelAnimationFrame(
+        state.raf
+      );
+
+      state.raf =
+        0;
+    }
+
+    unbindEvents();
+    unbindReducedMotion();
+    unbindResizeObserver();
+
+    removeGeneratedCanvas();
+    clearGeometry();
+
+    state.initialized =
+      false;
+
+    state.failed =
+      false;
+
+    state.rendererState =
+      STATES.DISPOSED;
+
+    state.activeTransitionId =
+      "";
+
+    state.transition = {
+      from:
+        state.revealAmount,
+
+      to:
+        state.revealAmount,
+
+      progress:
+        1,
+
+      startTime:
+        0,
+
+      duration:
+        0
+    };
+
+    emitReceipt({
+      status:
+        "disposed",
+
+      rendererInitialized:
+        false,
+
+      rendererState:
+        STATES.DISPOSED,
+
+      canvasPresent:
+        false,
+
+      paneCount:
+        0,
+
+      frameCount:
+        0,
+
+      lastAction:
+        "mirrorland-renderer-disposed",
+
+      lastFailure:
+        null
+    });
+  }
+
+  function exposeApi() {
+    globalThis
+      .DGB_COMPASS_MIRRORLAND_WINDOW =
+      Object.freeze({
+        contract:
+          CONTRACT,
+
+        receipt:
+          () =>
+            Object.freeze({
+              ...RECEIPT
+            }),
+
+        getState:
+          () =>
+            Object.freeze({
+              rendererState:
+                state.rendererState,
+
+              activeTransitionId:
+                state.activeTransitionId,
+
+              revealAmount:
+                state.revealAmount,
+
+              targetRevealAmount:
+                state.targetRevealAmount,
+
+              reducedMotion:
+                state.reducedMotion,
+
+              running:
+                state.running,
+
+              initialized:
+                state.initialized,
+
+              disposed:
+                state.disposed
+            }),
+
+        reveal:
+          (
+            transitionId =
+              `manual-reveal-${Date.now()}`
+          ) => {
+            requestReveal({
+              detail: {
+                transitionId,
+
+                reducedMotion:
+                  state.reducedMotion
+              }
+            });
+          },
+
+        withdraw:
+          (
+            transitionId =
+              `manual-withdraw-${Date.now()}`
+          ) => {
+            requestWithdrawal({
+              detail: {
+                transitionId,
+
+                reducedMotion:
+                  state.reducedMotion
+              }
+            });
+          },
+
+        stop:
+          () => {
+            if (
+              state.disposed ||
+              !state.running
+            ) {
+              return;
+            }
+
+            state.running =
+              false;
+
+            if (state.raf) {
+              cancelAnimationFrame(
+                state.raf
+              );
+
+              state.raf =
+                0;
+            }
+
+            emitReceipt({
+              status:
+                "stopped",
+
+              lastAction:
+                "mirrorland-renderer-stopped"
+            });
+          },
+
+        start:
+          () => {
+            if (
+              state.failed ||
+              state.disposed ||
+              state.running ||
+              !state.initialized ||
+              !state.context
+            ) {
+              return;
+            }
+
+            state.running =
+              true;
+
+            state.lastTime =
+              0;
+
+            state.raf =
+              requestAnimationFrame(
+                render
+              );
+
+            emitReceipt({
+              status:
+                "available",
+
+              lastAction:
+                "mirrorland-renderer-started"
+            });
+          },
+
+        dispose
+      });
+  }
+
+  function resolveDom() {
+    state.root =
+      qs(
+        "[data-compass-root]"
+      );
+
+    if (!state.root) {
+      throw new Error(
+        "COMPASS_ROOT_NOT_FOUND"
+      );
+    }
+
+    state.scene =
+      qs(
+        "[data-compass-scene]",
+        state.root
+      );
+
+    if (!state.scene) {
+      throw new Error(
+        "COMPASS_SCENE_NOT_FOUND"
+      );
+    }
+
+    state.mount =
+      qs(
+        "[data-compass-mirrorland-window-mount]",
+        state.root
+      );
+
+    if (!state.mount) {
+      throw new Error(
+        "MIRRORLAND_WINDOW_MOUNT_NOT_FOUND"
+      );
+    }
+
+    state.receiptOutput =
+      qs(
+        "[data-compass-mirrorland-window-receipt]",
+        state.root
+      );
+  }
+
+  function initGeometry() {
+    state.panes =
+      buildPanes();
+
+    state.frameSegments =
+      Array.from(
+        buildFrameSegments()
+      );
+
+    if (
+      state.panes.length !==
+      21
+    ) {
+      throw new Error(
+        `MIRRORLAND_PANE_COUNT_INVALID:${state.panes.length}`
+      );
+    }
+
+    if (
+      state.frameSegments.length !==
+      2
+    ) {
+      throw new Error(
+        `MIRRORLAND_FRAME_SEGMENT_COUNT_INVALID:${state.frameSegments.length}`
+      );
+    }
+
+    state.geometryReady =
+      true;
+  }
+
+  function init() {
+    try {
+      state.failed =
+        false;
+
+      state.disposed =
+        false;
+
+      resolveDom();
+      exposeApi();
+      bindReducedMotion();
+      initGeometry();
+
+      state.canvas =
+        createCanvas();
+
+      state.context =
+        state.canvas.getContext(
+          "2d",
+          {
+            alpha:
+              true,
+
+            desynchronized:
+              true
+          }
+        );
+
+      if (!state.context) {
+        throw new Error(
+          "MIRRORLAND_2D_CONTEXT_UNAVAILABLE"
+        );
+      }
+
+      bindEvents();
+      bindResizeObserver();
+
+      resize();
+
+      state.rendererState =
+        STATES.DORMANT;
+
+      state.revealAmount =
+        0;
+
+      state.targetRevealAmount =
+        0;
+
+      state.activeTransitionId =
+        "";
+
+      state.transition = {
+        from:
+          0,
+
+        to:
+          0,
+
+        progress:
+          1,
+
+        startTime:
+          0,
+
+        duration:
+          0
+      };
+
+      state.initialized =
+        true;
+
+      state.running =
+        true;
+
+      emitReceipt({
+        status:
+          "available",
+
+        rendererInitialized:
+          true,
+
+        rendererState:
+          STATES.DORMANT,
+
+        lastAction:
+          "mirrorland-renderer-initialized",
+
+        lastFailure:
+          null,
+
+        reducedMotionSource:
+          "startup"
+      });
+
+      state.raf =
+        requestAnimationFrame(
+          render
+        );
+    } catch (error) {
+      rollbackPartialInitialization(
+        `MIRRORLAND_INIT_FAILURE:${
+          error &&
+          error.message
+            ? error.message
+            : String(error)
+        }`
+      );
+    }
+  }
+
+  if (
+    document.readyState ===
+    "loading"
+  ) {
+    document.addEventListener(
+      "DOMContentLoaded",
+      init,
+      {
+        once:
+          true
+      }
+    );
+  } else {
+    init();
+  }
+})();

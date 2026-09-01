@@ -1,0 +1,108 @@
+name: H-Earth Run 8E R1 Material Ledger Preservation
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8e-r1-material-ledger-preservation-001
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/h-earth-run8e-r1-material-ledger.yml'
+      - 'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r1-material-ledger-scope.js'
+      - 'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r1-material-ledger-execution-scope.js'
+      - 'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
+      - 'h-earth-3d/validation/h-earth.run8e-r1.material-ledger.validation.mjs'
+      - 'h-earth-3d/validation/h-earth.run8e-r1.material-ledger-execution.validation.mjs'
+      - 'h-earth-3d/validation/run-8e-r1-material-ledger/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run8e-r1-material-ledger:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      H_EARTH_RUN8E_R1_MATERIAL_LEDGER_OUTPUT: /tmp/h-earth-run8e-r1-material-ledger
+    steps:
+      - name: Check out material ledger branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-run8e-r1-material-ledger-preservation-001
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify JSON and JavaScript syntax
+        run: |
+          node --check h-earth-3d/validation/h-earth.run8e-r1.material-ledger.validation.mjs
+          node --check h-earth-3d/validation/h-earth.run8e-r1.material-ledger-execution.validation.mjs
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r1-material-ledger-scope.js
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r1-material-ledger-execution-scope.js
+          node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+          node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.reference-device.architecture-probe-001.transcribed.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.reference-device.architecture-probe-002.transcribed.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.reference-device.physical-interaction.transcribed.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.reference-device.material-ledger.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.material-ledger.preservation.receipt.json','utf8'))"
+
+      - name: Execute material ledger validation
+        run: node h-earth-3d/validation/h-earth.run8e-r1.material-ledger.validation.mjs
+
+      - name: Execute material ledger execution validation
+        run: node h-earth-3d/validation/h-earth.run8e-r1.material-ledger-execution.validation.mjs
+
+      - name: Verify bounded evidence-only scope and R2 stopping boundary
+        run: |
+          set -euo pipefail
+          git diff --check
+          BASE_SHA=$(git merge-base origin/main HEAD)
+          git diff --name-only "$BASE_SHA"...HEAD | sort >/tmp/h-earth-run8e-r1-material-ledger-paths.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          paths = [line.strip() for line in Path('/tmp/h-earth-run8e-r1-material-ledger-paths.txt').read_text().splitlines() if line.strip()]
+          allowed = {
+              '.github/workflows/h-earth-run8e-r1-material-ledger.yml',
+              'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r1-material-ledger-scope.js',
+              'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r1-material-ledger-execution-scope.js',
+              'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
+              'h-earth-3d/validation/h-earth.run8e-r1.material-ledger.validation.mjs',
+              'h-earth-3d/validation/h-earth.run8e-r1.material-ledger-execution.validation.mjs',
+              'h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.reference-device.architecture-probe-001.transcribed.json',
+              'h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.reference-device.architecture-probe-002.transcribed.json',
+              'h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.reference-device.physical-interaction.transcribed.json',
+              'h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.reference-device.material-ledger.json',
+              'h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.material-ledger.preservation.receipt.json'
+          }
+          unexpected = sorted(set(paths) - allowed)
+          missing = sorted(allowed - set(paths))
+          if unexpected:
+              raise SystemExit(f'R1_MATERIAL_LEDGER_UNEXPECTED_PATHS:{unexpected}')
+          if missing:
+              raise SystemExit(f'R1_MATERIAL_LEDGER_REQUIRED_PATHS_MISSING:{missing}')
+          forbidden = [
+              path for path in paths
+              if path.startswith('showroom/globe/h-earth/')
+              or '/run-8e-r2' in path.lower()
+              or 'immutable-live-render-package' in path.lower()
+          ]
+          if forbidden:
+              raise SystemExit(f'R1_MATERIAL_LEDGER_PRODUCT_OR_R2_MUTATION:{forbidden}')
+          print({'pathCount': len(paths), 'paths': paths, 'run8ER2Started': False})
+          PY
+
+      - name: Upload material ledger validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r1-material-ledger-evidence
+          path: |
+            /tmp/h-earth-run8e-r1-material-ledger
+            /tmp/h-earth-run8e-r1-material-ledger-paths.txt
+          if-no-files-found: warn
+          retention-days: 90

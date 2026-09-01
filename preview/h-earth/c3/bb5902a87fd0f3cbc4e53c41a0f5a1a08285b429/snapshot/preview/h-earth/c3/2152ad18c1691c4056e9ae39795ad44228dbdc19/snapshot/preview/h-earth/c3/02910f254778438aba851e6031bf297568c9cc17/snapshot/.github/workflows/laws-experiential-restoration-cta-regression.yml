@@ -1,0 +1,129 @@
+name: Laws Experiential Restoration CTA Regression
+
+on:
+  push:
+    branches:
+      - agent/laws-experiential-architecture-restoration-001
+    paths:
+      - '.github/workflows/laws-experiential-restoration-cta-regression.yml'
+      - 'tools/laws-experiential-restoration-cta-regression.mjs'
+      - 'laws/index.html'
+      - 'laws/index.experience.css'
+      - 'laws/index.experience.polish.css'
+      - 'laws/index.experience.js'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/laws-experiential-restoration-cta-regression.yml'
+      - 'tools/laws-experiential-restoration-cta-regression.mjs'
+      - 'laws/index.html'
+      - 'laws/index.experience.css'
+      - 'laws/index.experience.polish.css'
+      - 'laws/index.experience.js'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: laws-experiential-restoration-cta-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  EXECUTION_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+  FORK_BASE: ef2ffdb1da7911238652f076a6b44326061493ef
+  FORMER_ROOT_REFERENCE: 9ad029eb1fbffe05525041c94eeeaee3378d2e58
+  BASE_URL: http://127.0.0.1:4173
+  EVIDENCE_DIR: artifacts/laws-experiential-restoration/cta-regression
+  BASELINE_DIR: artifacts/laws-experiential-restoration/root-baselines
+
+jobs:
+  reproduce-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out exact restoration head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXECUTION_COMMIT }}
+          fetch-depth: 0
+
+      - name: Verify exact checkout identity
+        run: test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
+
+      - name: Lock restoration base
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          test "$(git merge-base origin/main HEAD)" = "$FORK_BASE"
+          if git diff --name-only "$FORK_BASE" origin/main | grep -E '^laws/(index\.|index/|research/|test/|categories/|scientific-law/)'; then
+            echo 'Main advanced through overlapping Laws paths; rebase review required.' >&2
+            exit 1
+          fi
+          git cat-file -e "$FORMER_ROOT_REFERENCE^{commit}"
+
+      - name: Verify exact restoration output hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'e91c6020dbe56a133ba53fe3fbcff3f6d5fce3f54d74a34148814000af06dabe  laws/index.html' | sha256sum --check --strict
+          echo '4a48242720d7f42dcf582ff910766882091c1b00a0ad3fad72807d5a5090d196  laws/index.experience.css' | sha256sum --check --strict
+          echo '3abfe9c9a34a03105fc2ad80369589586a83b8cba2cc94da7cdf308d02c69e25  laws/index.experience.polish.css' | sha256sum --check --strict
+          echo '2722d0f4da22b07d40fb2ecd14eea0d07c9bb21181013352136800a4934a9062  laws/index.experience.js' | sha256sum --check --strict
+
+      - name: Capture current and former root source baselines
+        shell: bash
+        run: |
+          set -euo pipefail
+          current="$BASELINE_DIR/current-$EXECUTION_COMMIT"
+          former="$BASELINE_DIR/former-$FORMER_ROOT_REFERENCE"
+          mkdir -p "$current/laws" "$former/laws"
+          for path in \
+            laws/index.html \
+            laws/index.experience.css \
+            laws/index.experience.polish.css \
+            laws/index.experience.js
+          do
+            cp "$path" "$current/$path"
+            git show "$FORMER_ROOT_REFERENCE:$path" > "$former/$path"
+          done
+          (
+            cd "$BASELINE_DIR"
+            find . -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt
+          )
+
+      - name: Install pinned browser verifier
+        run: |
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start exact candidate server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-experiential-restoration-server.log 2>&1 &
+          echo $! > /tmp/laws-experiential-restoration-server.pid
+          for attempt in $(seq 1 50); do
+            if curl --fail --silent http://127.0.0.1:4173/laws/ > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/laws-experiential-restoration-server.log
+          exit 1
+
+      - name: Execute tablet CTA fixture
+        run: node tools/laws-experiential-restoration-cta-regression.mjs
+
+      - name: Upload CTA regression evidence and source baselines
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-experiential-restoration-cta-${{ env.EXECUTION_COMMIT }}
+          path: |
+            artifacts/laws-experiential-restoration/**
+            /tmp/laws-experiential-restoration-server.log
+          if-no-files-found: warn
+          retention-days: 30

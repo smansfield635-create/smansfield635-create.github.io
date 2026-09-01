@@ -1,0 +1,54 @@
+name: Repair Compass cache bust
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/repair-compass-cache-bust.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Restore exact homepage and bump Compass cosmos cache key
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=ea717cf1aadcc931c522efea148d2f8e4aeeed40
+          git show "$BASE:index.html" > index.html
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text()
+          old = 'compass.cosmos.js?v=dgb-main-compass-luminous-cosmos-labels-v1'
+          new = 'compass.cosmos.js?v=dgb-main-compass-build-door-v1'
+          assert s.count(old) == 1, f'expected one cache key, found {s.count(old)}'
+          s2 = s.replace(old, new)
+          assert s2.replace(new, old) == s
+          p.write_text(s2)
+          PY
+          python - <<'PY'
+          import subprocess
+          base = subprocess.check_output(['git','show','ea717cf1aadcc931c522efea148d2f8e4aeeed40:index.html'], text=True)
+          current = open('index.html').read()
+          old = 'compass.cosmos.js?v=dgb-main-compass-luminous-cosmos-labels-v1'
+          new = 'compass.cosmos.js?v=dgb-main-compass-build-door-v1'
+          assert current.replace(new, old) == base, 'homepage preservation check failed'
+          PY
+      - name: Commit exact cache bust
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- index.html; then exit 0; fi
+          git config user.name 'diamond-gate-automation'
+          git config user.email 'actions@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Restore Compass homepage and cache-bust build doorway runtime'
+          git push origin HEAD:main

@@ -24,6 +24,7 @@ concurrency:
 
 env:
   EXECUTION_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+  EXECUTION_BASE: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
   LAWS_CP6_FINAL_BASE_URL: http://127.0.0.1:4173
 
 jobs:
@@ -31,17 +32,33 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - name: Check out exact candidate head
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXECUTION_COMMIT }}
-          fetch-depth: 0
+      - name: Materialize exact candidate with cone sparse index
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c protocol.version=2 fetch --no-tags --filter=blob:none origin "$EXECUTION_BASE"
+          git update-ref refs/remotes/origin/cp6-base FETCH_HEAD
+          git -c protocol.version=2 fetch --no-tags --filter=blob:none origin "$EXECUTION_COMMIT"
+          git update-ref refs/remotes/origin/cp6-head FETCH_HEAD
+          git sparse-checkout init --cone --sparse-index
+          git sparse-checkout set laws scripts assets/laws-destination frontier/energy/battery-coherence-study
+          git checkout --detach refs/remotes/origin/cp6-head
+          test "$(git config --bool index.sparse)" = "true"
+          test "$(git rev-parse refs/remotes/origin/cp6-base^{commit})" = "$EXECUTION_BASE"
+          test "$(git rev-parse HEAD^{commit})" = "$EXECUTION_COMMIT"
+          git merge-base "$EXECUTION_BASE" "$EXECUTION_COMMIT" >/dev/null
 
       - name: Verify exact checkout identity
         run: test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
 
       - name: Fetch current main
-        run: git fetch origin main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git -c protocol.version=2 fetch --no-tags --filter=blob:none origin main
+          git update-ref refs/remotes/origin/main FETCH_HEAD
 
       - name: Verify existing CP6 authority and custody contract
         run: python3 scripts/laws_cp6_final_contract_verify.py

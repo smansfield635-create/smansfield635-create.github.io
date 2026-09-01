@@ -1,0 +1,55 @@
+name: Compass Brain V9 Isolated Qualification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'assets/compass/capability-object-brain-v9.js'
+      - 'inspection/compass/brain-v9/**'
+      - '.github/ai-router/publication-surfaces/compass-brain-v9.json'
+      - '.github/live-qualification/verifiers/compass-brain-v9.v1.mjs'
+      - '.github/workflows/compass-brain-v9-isolated-qualification.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  brain-v9-isolated:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+      - name: Install verifier dependency
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Serve exact candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 >/tmp/brain-v9-http.log 2>&1 &
+          for i in $(seq 1 30); do
+            curl -fsS http://127.0.0.1:4173/inspection/compass/brain-v9/ >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/brain-v9-http.log || true
+          exit 1
+      - name: Qualify isolated Brain V9 surface
+        env:
+          PUBLIC_BASE_URL: http://127.0.0.1:4173
+        shell: bash
+        run: |
+          set -euo pipefail
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          test -x "$CHROME_PATH"
+          node .github/live-qualification/verifiers/compass-brain-v9.v1.mjs | tee /tmp/compass-brain-v9-qualification.json
+      - name: Upload isolated qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-brain-v9-isolated-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/compass-brain-v9-qualification.json
+          if-no-files-found: warn
+          retention-days: 30

@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_SCHEMA_v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "routerId",
+    "repository",
+    "governingHead",
+    "task",
+    "mutationIntent",
+    "workingTreeClean",
+    "routes",
+    "disposition",
+    "reasonCodes",
+    "conversationMemoryRequired"
+  ],
+  "properties": {
+    "schema": {
+      "const": "REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v1"
+    },
+    "routerId": {
+      "type": "string"
+    },
+    "repository": {
+      "type": "string"
+    },
+    "governingHead": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "task": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "mutationIntent": {
+      "type": "boolean"
+    },
+    "workingTreeClean": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "routes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "routeClass",
+          "projectId",
+          "entrypoint",
+          "disposition"
+        ],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "routeClass": {
+            "type": "string"
+          },
+          "projectId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "entrypoint": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "disposition": {
+            "enum": [
+              "PASS",
+              "REVIEW_REQUIRED",
+              "BLOCK",
+              "STOP",
+              "NOT_APPLICABLE"
+            ]
+          },
+          "requiredInstructions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "registries": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "procedures": {
+            "type": "object"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "disposition": {
+      "enum": [
+        "PASS",
+        "REVIEW_REQUIRED",
+        "BLOCK",
+        "STOP",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "reasonCodes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "conversationMemoryRequired": {
+      "const": false
+    }
+  }
+}

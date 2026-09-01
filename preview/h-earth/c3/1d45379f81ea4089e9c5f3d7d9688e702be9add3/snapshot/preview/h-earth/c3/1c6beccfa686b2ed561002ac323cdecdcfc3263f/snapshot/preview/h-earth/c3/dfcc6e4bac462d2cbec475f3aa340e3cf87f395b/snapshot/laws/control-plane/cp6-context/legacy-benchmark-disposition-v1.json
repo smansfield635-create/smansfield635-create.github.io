@@ -1,0 +1,94 @@
+{
+  "record_id": "LAWS_CP6_LEGACY_BENCHMARK_DISPOSITION_v1",
+  "checkpoint": "CHECKPOINT_6_LAWS_CHAMBER_RENEWAL",
+  "candidate_head_first_examined": "53e65434aa8b2f4e864a589fe47ee0b2583f15a5",
+  "purpose": "Classify legacy Laws benchmark failures without changing product authority or dismissing material regressions.",
+  "current_compass_contract": {
+    "top_level_authorities": 6,
+    "law_authorities": 4,
+    "noncardinal_gateways": ["test", "research"],
+    "law_children": 16,
+    "test_children": 4,
+    "research_children": 4,
+    "total_child_routes": 24,
+    "outer_label_model": "single-active-primary-only",
+    "test_method_marker": "four-member-reversible-admissibility-cluster",
+    "first_public_surface": "Research comes F.I.R.S.T. progressive disclosure",
+    "navigation_authority": "existing Laws controller"
+  },
+  "four_compass_exact_head_regression": {
+    "workflow_run_id": 30729087785,
+    "result": "FAIL_LEGACY_CONFORMANCE_ASSERTIONS",
+    "material_runtime_execution": "COMPLETED",
+    "family_baseline_status": "PASS_BOUNDED_LANE_BASELINE",
+    "obsolete_findings": [
+      {
+        "id": "LAWS_FIRST_TEST_METHOD_INVALID",
+        "legacy_expectation": {
+          "test_method": "cross-cutting-no-fifth-star",
+          "required_surface": "data-laws-first-method"
+        },
+        "current_authorized_contract": {
+          "test_method": "four-member-reversible-admissibility-cluster",
+          "required_surface": "data-laws-first-disclosure"
+        },
+        "disposition": "SUPERSEDED_ASSERTION_NOT_PRODUCT_DRIFT"
+      },
+      {
+        "id": "LAWS_CATEGORY_LABEL_CONFORMANCE_FAILED",
+        "legacy_expectation": "four simultaneously visible cardinal labels",
+        "current_authorized_contract": "six installed authority labels with exactly one active outer label",
+        "disposition": "SUPERSEDED_ASSERTION_NOT_PRODUCT_DRIFT"
+      }
+    ],
+    "material_findings_after_classification": [],
+    "product_correction_required_from_this_run": false,
+    "successor_check": "Laws Four-Compass Exact-Head Regression with explicit superseded-finding classification and current-contract source assertions"
+  },
+  "six_authority_benchmark": {
+    "workflow_run_id": 30729087792,
+    "result": "FAIL_HISTORICAL_MUTATION_SCOPE",
+    "fixed_baseline": "3a6eafcb8c10c61849a452a0c068d34a12117cf5",
+    "historical_expected_product_change": ["laws/index.interactions.js"],
+    "current_pr_scope": "source-bound Checkpoint 6 contextual content renewal",
+    "protected_compass_runtime_changed_in_current_pr": false,
+    "failure_ids": ["PRODUCT_CHANGED_PATH_SET_INVALID", "PROTECTED_PATH_CHANGED"],
+    "disposition": "HISTORICAL_CONSTRUCTION_PROOF_NOT_APPLICABLE_TO_CONTENT_ONLY_SUCCESSOR",
+    "product_correction_required_from_this_run": false,
+    "successor_check": "Laws Compass Six-Authority Benchmark current-contract classification with historical construction proof conditional on protected runtime mutation"
+  },
+  "first_test_benchmark": {
+    "legacy_contract": "four visible cardinal labels plus cross-cutting-no-fifth-star marker and data-laws-first-method panel",
+    "current_contract": "six authorities plus single active outer label plus current F.I.R.S.T. progressive disclosure",
+    "disposition": "REPLACED_FOR_CURRENT_PRODUCT_BY_EXACT_HEAD_CURRENT_CONTRACT_BROWSER_PROOF",
+    "successor_check": "Laws Compass CURRENT FIRST Test Benchmark v2"
+  },
+  "current_controlling_verification": {
+    "workflow": "Laws CP6 contextual integrated verification",
+    "required_checks": [
+      "protected runtime diff",
+      "six-authority current contract",
+      "single-active outer-label browser behavior",
+      "eight canonical Research and Test destinations",
+      "48 migrated records",
+      "nine compatibility bindings",
+      "eleven Frontier compatibility surfaces",
+      "phone tablet desktop layout",
+      "keyboard and touch operation",
+      "reduced-motion presentation",
+      "JavaScript-disabled static presentation",
+      "current Frontier study return"
+    ],
+    "status_at_record_update": "QUEUED_NOT_YET_PASSED"
+  },
+  "authority_boundary": {
+    "frontier_files_mutated": 0,
+    "compass_runtime_files_mutated": 0,
+    "routes_deleted": 0,
+    "redirects_created": 0,
+    "evidence_status_upgrades": 0,
+    "future_frontier_deployment_claims": 0,
+    "checkpoint_closed": false,
+    "merge_authorized": false
+  }
+}

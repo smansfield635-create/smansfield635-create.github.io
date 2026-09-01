@@ -1,0 +1,97 @@
+{
+  "schema": "WHOLE_ESTATE_DISPLAY_CONTINUITY_CONSTITUTION_v1",
+  "status": "ACTIVE_MANDATORY_DEVELOPMENT_CONTEXT",
+  "authoritySeparation": {
+    "globalOrientationAndNarrativeAnchor": "COMPASS",
+    "publicInformationDesignReference": "GOVERNANCE",
+    "claimAndProofAnchor": "EVIDENCE",
+    "runtimeAndSemanticCeilingSource": "LAWS"
+  },
+  "estateThesis": "THE_ESTATE_SHOULD_FEEL_PERSISTENT",
+  "aestheticDirection": "TACTILE_CARTOGRAPHIC_REALISM_PLUS_DIGITAL_INSTRUMENTATION_PLUS_CINEMATIC_SPATIAL_CONTINUITY",
+  "laws": [
+    "ONE_ESTATE_MANY_ROOMS",
+    "COMPASS_OWNS_GLOBAL_ORIENTATION",
+    "LOCAL_DOMAIN_AUTHORITY_MAY_OUTRANK_COMPASS_ONLY_LOCALLY",
+    "PERSIST_SEMANTIC_OBJECT_IDENTITY_WHEN_CONTINUITY_ADDS_MEANING",
+    "PERSISTENCE_DOES_NOT_REQUIRE_ONE_RENDERER",
+    "TRANSITIONS_REPRESENT_MOVEMENT_NOT_DECORATION",
+    "MOTION_MUST_REVEAL_MEANING",
+    "DISPLAY_CEILING_IS_ROUTE_SPECIFIC",
+    "COMPLEXITY_IS_DISCLOSED_NOT_DUMPED",
+    "MOBILE_IS_A_DISTINCT_COMPOSITION",
+    "REDUCED_MOTION_PRESERVES_COMPLETE_SEMANTICS",
+    "PROOF_SURFACES_FAVOR_PRECISION_OVER_SPECTACLE",
+    "WORLD_SURFACES_MAY_FAVOR_IMMERSION_OVER_DOCUMENT_STRUCTURE",
+    "VISUAL_POLISH_NEVER_CREATES_CLAIM_AUTHORITY",
+    "EVERY_DEEP_MOVEMENT_PRESERVES_EXPLICIT_RETURN",
+    "DISCOVERY_REVEALS_DEPTH_NOT_ANOTHER_DIRECTION",
+    "VISUAL_CONTINUITY_MUST_PRESERVE_NARRATIVE_CONTINUITY",
+    "ADVANCED_RUNTIME_MUST_DEGRADE_GRACEFULLY"
+  ],
+  "runtimeCeilings": {
+    "L0": "STATIC_TYPOGRAPHIC",
+    "L1": "LIGHT_MOTION",
+    "L2": "INTERACTIVE_OBJECT",
+    "L3": "PERSISTENT_SPATIAL_SCENE",
+    "L4": "WORLD_GAME_RUNTIME",
+    "rule": "CEILING_NOT_REQUIREMENT"
+  },
+  "indicativeDefaults": {
+    "governanceEvidenceLaws": "L0-L1",
+    "buildProducts": "L1-L2",
+    "compassDoorHome": "L2-L3",
+    "showroomAwards": "L1-L3",
+    "mirrorlandGameWorlds": "L3-L4"
+  },
+  "routeDisplayContract": [
+    "LOCAL_IDENTITY",
+    "NARRATIVE_RELATION",
+    "ORIENTATION_RELATION",
+    "DISPLAY_ROLE",
+    "RUNTIME_CEILING",
+    "PERSISTENT_OBJECTS",
+    "TRANSITION_MEANING",
+    "PROGRESSIVE_DISCLOSURE",
+    "MOBILE_COMPOSITION",
+    "REDUCED_MOTION_EQUIVALENCE",
+    "RETURN_CONTRACT",
+    "CLAIM_BOUNDARY",
+    "LOCAL_VISUAL_IDENTITY",
+    "CONTINUITY_HOOK"
+  ],
+  "firstReferenceFamily": {
+    "sequence": ["COMPASS", "DOOR", "HOME"],
+    "compassRole": "PROVE_ORIENTATION",
+    "doorRole": "PROVE_THRESHOLD_CONTINUITY",
+    "homeRole": "PROVE_ARRIVAL_AND_RETURN",
+    "hiddenDoorRole": "PROVE_DISCOVERY_WITHOUT_MAP_CORRUPTION",
+    "doorTransformation": "ORIENTATION_TO_THRESHOLD_TO_ARRIVAL",
+    "homeAuthority": "ESTATE_HEART_AND_RETURN_CENTER",
+    "hiddenDoorLaw": "DISCOVERY_REVEALS_DEPTH_NOT_ANOTHER_DIRECTION"
+  },
+  "narrativeAuthorities": {
+    "narrativeSpine": "control-plane/whole-estate/narrative-spine-constitution-v1/narrative-spine.v1.json",
+    "narrativeContinuityMap": "control-plane/whole-estate/narrative-continuity-development-map-v1/map.v1.json"
+  },
+  "mandatoryFor": [
+    "NEW_PUBLIC_PAGE",
+    "MATERIAL_PUBLIC_PAGE_RENEWAL",
+    "FRONTIER_CONSTRUCTION",
+    "PRODUCT_CONSTRUCTION",
+    "ROOM_CONSTRUCTION",
+    "WORLD_CONSTRUCTION",
+    "CAMPAIGN_CONSTRUCTION",
+    "SHOWROOM_CONSTRUCTION",
+    "NAVIGATION_OR_TRANSITION_CHANGE",
+    "PERSISTENT_OBJECT_CHANGE",
+    "INTERACTION_OR_RESPONSIVE_COMPOSITION_CHANGE",
+    "SHARED_VISUAL_SYSTEM_CHANGE",
+    "ESTATE_WIDE_DISPLAY_COHERENCE_CLAIM"
+  ],
+  "authorityCreated": false,
+  "mutationAuthorityCreated": false,
+  "mergeAuthorityCreated": false,
+  "scientificAuthorityCreated": false,
+  "claimAuthorityCreated": false
+}

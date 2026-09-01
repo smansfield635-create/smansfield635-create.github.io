@@ -1,0 +1,98 @@
+{
+  "conditions": [
+    {
+      "id": "REAL_3D_GPU_SCENE",
+      "required": true,
+      "test": "ONE_PERSISTENT_WEBGL2_OR_EQUIVALENT_GPU_CONTEXT_WITH_CAMERA_RESPONSIVE_GEOMETRY"
+    },
+    {
+      "id": "PRIMARY_DIRECT_MANIPULATION",
+      "required": true,
+      "test": "PHONE_AND_POINTER_USERS_CAN_TRAVERSE_WITHOUT_VISIBLE_PREVIOUS_NEXT_OR_TRAVEL_CONTROLS"
+    },
+    {
+      "id": "GESTURE_GRAMMAR",
+      "required": true,
+      "test": "ONE_FINGER_ROTATE_LOOK_TWO_FINGER_TRAVEL_PINCH_DISTANCE_TAP_FOCUS_AND_BOUNDED_FLICK_SETTLEMENT"
+    },
+    {
+      "id": "STABLE_EUCLIDEAN_STAGE_GEOMETRY",
+      "required": true,
+      "test": "NEAR_MEANS_RELATED_STAGES_HAVE_STABLE_POSITIONS_AND_DISTANCE_DIRECTION_DEPTH_ARE_MEANINGFUL"
+    },
+    {
+      "id": "DISTANT_STAGE_VISIBILITY",
+      "required": true,
+      "test": "AT_LEAST_ONE_ADJACENT_OR_DISTANT_STAGE_REMAINS_VISIBLE_FROM_CURRENT_STAGE"
+    },
+    {
+      "id": "TRAVEL_THROUGH_SPACE",
+      "required": true,
+      "test": "INTER_STAGE_CHANGE_MOVES_CAMERA_AND_CONTEXT_THROUGH_SPACE_NOT_FILTER_REPLACEMENT"
+    },
+    {
+      "id": "MODEL_FOCUS_IN_REAL_DEPTH",
+      "required": true,
+      "test": "FOCUSED_MODEL_APPROACHES_OR_IS_APPROACHED_WHILE_STAGE_CONTEXT_REMAINS_VISIBLE"
+    },
+    {
+      "id": "LENS_AS_SAME_OBJECT_EXPRESSION",
+      "required": true,
+      "test": "PRACTICAL_ENGINEERING_EVIDENCE_CHANGE_THE_SELECTED_MODEL_EXPRESSION_NOT_PAGE_OR_MODAL"
+    },
+    {
+      "id": "RELATIONSHIP_TRUTH",
+      "required": true,
+      "test": "ONLY_DECLARED_DEPENDENCIES_CONNECT_EXPLICIT_NONEDGES_REMAIN_SEPARATE_AND_PROXIMITY_CREATES_NO_EDGE"
+    },
+    {
+      "id": "EVIDENCE_HOLD_VISIBILITY",
+      "required": true,
+      "test": "HOLDS_AND_UNRESOLVED_STATES_HAVE_DISTINCT_SPATIAL_EXPRESSION_WITHOUT_CLAIM_PROMOTION"
+    },
+    {
+      "id": "DETERMINISTIC_TRANSITION_CONTRACT",
+      "required": true,
+      "test": "CURRENT_VALIDATE_PRESERVE_ANIMATE_SETTLE_CONFIRM_FOR_EVERY_INTERACTION"
+    },
+    {
+      "id": "EXACT_RETURN",
+      "required": true,
+      "test": "ALL_13_FIELDS_AND_RETURN_TOKEN_RESTORE_EXACT_PREFOCUS_PRETRAVEL_STATE_OR_FAIL_CLOSED"
+    },
+    {
+      "id": "MOBILE_SITE_PARITY",
+      "required": true,
+      "test": "PHONE_VIEW_USES_THE_SAME_SPATIAL_LIFECYCLE_WITH_TOUCH_NOT_A_LONG_CARD_LIST_OR_SELECT_MENU"
+    },
+    {
+      "id": "REDUCED_MOTION_AND_KEYBOARD_EQUIVALENCE",
+      "required": true,
+      "test": "SEMANTIC_STATE_RESULTS_ARE_EQUIVALENT_WITH_REDUCED_MOTION_AND_KEYBOARD_ACCESS"
+    },
+    {
+      "id": "LINEAR_FALLBACK_SECONDARY",
+      "required": true,
+      "test": "DEEP_READING_SEARCH_AND_ACCESSIBILITY_DOCUMENT_EXISTS_BUT_IS_NOT_PRIMARY_VISUAL_PRODUCT"
+    },
+    {
+      "id": "MINIMUM_REFERENCE_PROOF",
+      "required": true,
+      "test": "TWO_STAGES_THREE_MODELS_EACH_ONE_FULL_MODEL_THREE_LENSES_AND_EXACT_RETURN"
+    },
+    {
+      "id": "REUSABILITY_PROOF",
+      "required": true,
+      "test": "SAME_KERNEL_ACCEPTS_METHODS_CORPUS_AND_ONE_SMALLER_SECOND_CORPUS_WITHOUT_INTERACTION_REBUILD"
+    },
+    {
+      "id": "EARLY_USER_PERCEPTUAL_GATE",
+      "required": true,
+      "test": "USER_SEES_MINIMUM_REAL_3D_PROOF_BEFORE_FULL_CORPUS_STAGE_OR_TOOLCHAIN_EXPANSION"
+    }
+  ],
+  "failClosedOnMissingCondition": true,
+  "pageImplementationAuthorizedByThisFile": false,
+  "schema": "METHODS_SPATIAL_ADOPTION_REQUIRED_RUNTIME_CONDITIONS_v1",
+  "status": "BINDING_FOR_NEXT_IMPLEMENTATION"
+}

@@ -1,0 +1,71 @@
+{
+  "contract": "LAWS_COMPLETE_RENEWAL_REPRESENTATIVE_BATTERY_HORIZON_COMPLETENESS_SUCCESSOR_v1",
+  "mode": "BOUNDED_REPRESENTATIVE_FACT_COMPLETENESS_SUCCESSOR",
+  "status": "ACTIVE_FOR_PR_493",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "pr": 493,
+  "predecessor": "LAWS_COMPLETE_RENEWAL_SIGNALS_BATTERY_HORIZON_CORRECTION_v1",
+  "governing_requirement": "Every one of the 27 public BATTERY_COHERENCE_HELDOUT_STUDY_v1 surfaces must visibly preserve the defined 20-cycle warning target without changing the study, claim ceiling, page role, or accepted visual system.",
+  "representative_audit": {
+    "signals": {
+      "path": "laws/categories/flow/signals/index.html",
+      "status": "CORRECTED_UNDER_PREDECESSOR",
+      "required_fact_visible": true
+    },
+    "measure": {
+      "path": "laws/categories/reality/measure.html",
+      "status": "FACT_ADDITION_AUTHORIZED",
+      "required_fact": "The defined near-term battery event was evaluated within the next 20 cycles.",
+      "target_layer": "PUBLIC_EMPIRICAL_READING"
+    },
+    "reverse_audit": {
+      "path": "laws/test/reverse-audit/index.html",
+      "status": "FACT_ADDITION_AUTHORIZED",
+      "required_fact": "The defined battery event was evaluated within the next 20 cycles before reverse challenge.",
+      "target_layer": "PUBLIC_CHALLENGE_READING"
+    },
+    "findings_and_boundaries": {
+      "path": "laws/research/findings-and-boundaries/index.html",
+      "status": "ALREADY_COMPLIANT",
+      "existing_fact": "fixed 80%-within-20-cycles event"
+    },
+    "industrial_posture": {
+      "path": "laws/industrial-posture/index.html",
+      "status": "NOT_A_BATTERY_STUDY_SURFACE_NO_CHANGE"
+    }
+  },
+  "authorized_mutation": {
+    "paths": [
+      "laws/categories/reality/measure.html",
+      "laws/test/reverse-audit/index.html"
+    ],
+    "class": "EXACT_FACT_COMPLETENESS_ONLY",
+    "maximum_public_sentence_additions_per_path": 1,
+    "visual_structure_change": false,
+    "tab_structure_change": false,
+    "route_or_canonical_change": false,
+    "metric_formula_or_result_change": false,
+    "evidence_status_upgrade": false,
+    "claim_ceiling_upgrade": false,
+    "canonical_owner_change": false,
+    "custody_payload_change": false
+  },
+  "final_representative_mutation_boundary": {
+    "authorized_paths": [
+      "laws/categories/flow/signals/index.html",
+      "laws/categories/reality/measure.html",
+      "laws/test/reverse-audit/index.html"
+    ],
+    "other_representative_html_mutations": 0,
+    "representative_visual_structure_mutations": 0
+  },
+  "verification": [
+    "ALL_FOUR_BATTERY_REPRESENTATIVES_EXPLICITLY_PRESERVE_20_CYCLE_TARGET",
+    "INDUSTRIAL_POSTURE_REMAINS_UNCHANGED",
+    "ALL_ACCEPTED_TAB_AND_VISUAL_STRUCTURES_REMAIN_UNCHANGED",
+    "PHONE_TABLET_DESKTOP_BROWSER_PASS",
+    "STATIC_NO_JAVASCRIPT_FACT_VISIBILITY",
+    "NO_EVIDENCE_OR_CLAIM_UPGRADE"
+  ],
+  "merge_authority": false
+}

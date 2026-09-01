@@ -1,0 +1,55 @@
+{
+  "route_id": "HOSPITAL_COMPARATIVE_NONWORSE_MEASURE_LEVEL_ROUTE_v1",
+  "classification": "EXPLORATORY_EMPIRICAL_TEST",
+  "operation": "HOSPITAL_MEASURE_LEVEL_IMI_ROBUSTNESS_EXTENSION_1B",
+  "source": {
+    "filename": "Complications_and_Deaths-Hospital.csv",
+    "expected_sha256": "0ba1b358e54e8812c9d1cf72c37f715b7bfeb3da12009bb6705158f0d15f91b5",
+    "observed_sha256": "0ba1b358e54e8812c9d1cf72c37f715b7bfeb3da12009bb6705158f0d15f91b5",
+    "bytes": 21641635
+  },
+  "factors": {
+    "MORTALITY": [
+      "MORT_30_AMI",
+      "MORT_30_CABG",
+      "MORT_30_COPD",
+      "MORT_30_HF",
+      "MORT_30_PN",
+      "MORT_30_STK"
+    ],
+    "SAFETY": [
+      "COMP_HIP_KNEE",
+      "PSI_03",
+      "PSI_06",
+      "PSI_08",
+      "PSI_09",
+      "PSI_10",
+      "PSI_11",
+      "PSI_12",
+      "PSI_13",
+      "PSI_14",
+      "PSI_15"
+    ]
+  },
+  "excluded_primary": {
+    "PSI_04": "Crosses mortality and complication semantics; tested under both assignments.",
+    "PSI_90": "Composite overlaps component patient-safety indicators; tested only as sensitivity."
+  },
+  "comparable_status_prefixes": [
+    "Better",
+    "No Different",
+    "Worse"
+  ],
+  "worse_status_prefix": "Worse",
+  "factor_availability": "nonworse_comparable / comparable",
+  "imi": "a_MORT * a_SAFETY",
+  "constraint_severity": "1 - IMI",
+  "hard_collapse": "a_MORT == 0 OR a_SAFETY == 0",
+  "thresholds": {
+    "ANY_COMPARABLE": 0.0,
+    "AT_LEAST_50_PERCENT": 0.5,
+    "AT_LEAST_75_PERCENT": 0.75,
+    "ALL_REQUIRED": 1.0
+  },
+  "ordinal_scale_assignment": "PROHIBITED_STATIC_FILE_LACKS_TEMPORAL_AND_TERMINAL_EVIDENCE"
+}

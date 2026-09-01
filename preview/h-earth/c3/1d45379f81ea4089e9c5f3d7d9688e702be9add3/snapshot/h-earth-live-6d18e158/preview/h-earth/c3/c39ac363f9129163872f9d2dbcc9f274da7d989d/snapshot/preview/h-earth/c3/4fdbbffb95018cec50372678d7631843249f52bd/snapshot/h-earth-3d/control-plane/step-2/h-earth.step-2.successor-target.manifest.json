@@ -1,0 +1,67 @@
+{
+  "manifestId": "H_EARTH_STEP_2_SUCCESSOR_TARGET_MANIFEST_v1",
+  "manifestVersion": 1,
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "checkpoint": "STEP_2_2_SUCCESSOR_IDENTITY_LOCK",
+  "selectedSuccessor": {
+    "successorId": "H_EARTH_REPOSITORY_REGISTRY_SUCCESSOR_CANDIDATE_v2",
+    "registryId": "H_EARTH_REPOSITORY_REGISTRY_CANDIDATE_v1",
+    "registryVersion": "1.0.0-candidate.2",
+    "schemaId": "H_EARTH_REPOSITORY_REGISTRY_SCHEMA_v1",
+    "schemaVersion": 1,
+    "sourcePath": "/h-earth-3d/registry/candidates/h-earth.repository-registry.successor.candidate.js",
+    "sourceGitBlobSha": "8cf7a1cce76c4381f9c5f017cc3a132d8ecea308",
+    "sourceInstanceContentDigest": "a168f5a814f23f508d1c019867b707b30ec2ea8f1e0ae3125be6594e701f07e8",
+    "identityPath": "/h-earth-3d/registry/candidates/h-earth.repository-registry.successor.identity.json",
+    "identityGitBlobSha": "a5d6ae2f64c7f8ac868aef70aa895bf9979be202",
+    "integratedAmendmentId": "H_EARTH_REPOSITORY_REGISTRY_COMPOSITOR_AND_ROUTE_ENTRY_AMENDMENT_CANDIDATE_v1"
+  },
+  "selectionDecision": {
+    "selectedForTransition": true,
+    "acceptedForTransitionDecision": true,
+    "active": false,
+    "canonical": false,
+    "competingEligibleSuccessorCount": 0,
+    "selectionBasis": [
+      "EXACT_SUCCESSOR_IDENTITY_PRESENT",
+      "DETERMINISTIC_INSTANCE_DIGEST_REPRODUCES",
+      "SUCCESSOR_V2_AUDIT_PASSED",
+      "POST_MERGE_STABILIZATION_AUDIT_PASSED",
+      "USER_AUTHORIZED_CONTINUOUS_STEP_2_CONSTRUCTION"
+    ]
+  },
+  "canonicalizationDecision": {
+    "mode": "PROMOTE_EXISTING_SUCCESSOR_BYTES_TO_STABLE_REGISTRY_PATH",
+    "sourceBytesMutated": false,
+    "sourceCandidatePreservedAtEvidencePath": true,
+    "stableTargetPath": "/h-earth-3d/registry/h-earth.repository-registry.candidate.js",
+    "stableTargetAfterGitBlobSha": "8cf7a1cce76c4381f9c5f017cc3a132d8ecea308",
+    "acceptanceAndCanonicalityRecordedByBootstrapAndDiscoveryBinding": true,
+    "candidateInstanceAcceptedFieldRewritten": false
+  },
+  "unresolvedFieldTreatment": {
+    "sourceUnresolvedFieldsPreserved": [
+      "ACCEPTED_REGISTRY_OCCURRENCE",
+      "ACCEPTED_REPOSITORY_REGISTRY_PATH",
+      "COMPLETE_EIGHTEEN_PATH_PACKAGE_REAUDIT",
+      "CONTENT_SHA256_AND_BYTE_COUNTS_FOR_REPOSITORY_OCCURRENCES",
+      "GATE_B_CARDINAL_CANONICALIZATION",
+      "H_EARTH_PUBLIC_ROUTE_ENTRY_HTML_FILE.BROWSER_EXECUTION_CORRESPONDENCE",
+      "H_EARTH_PUBLIC_ROUTE_ENTRY_HTML_FILE.BYTE_COUNT",
+      "H_EARTH_PUBLIC_ROUTE_ENTRY_HTML_FILE.CONTENT_SHA256",
+      "H_EARTH_SHOWROOM_COMPOSITOR_FILE.BYTE_COUNT",
+      "H_EARTH_SHOWROOM_COMPOSITOR_FILE.CONTENT_SHA256",
+      "TOOL_INSTRUCTION_VALIDATOR_INSTALLATION_AND_WORKFLOW_ENFORCEMENT"
+    ],
+    "sourceUnresolvedFieldsInventedOrErased": false,
+    "decisionCriticalUnresolvedFields": [],
+    "treatment": "PRESERVE_AS_REGISTRY_CONTENT_LIMITATIONS;DO_NOT_TREAT_AS_SWITCH_IDENTITY_AMBIGUITY"
+  },
+  "boundary": {
+    "successorSourceModified": false,
+    "bootstrapModified": false,
+    "successorActivated": false,
+    "canonicalizationExecuted": false
+  },
+  "manifestDigest": "2221b8b062379c671d765e14302e72e0d1e898c5e56d68f3475e134e1d95fe61"
+}

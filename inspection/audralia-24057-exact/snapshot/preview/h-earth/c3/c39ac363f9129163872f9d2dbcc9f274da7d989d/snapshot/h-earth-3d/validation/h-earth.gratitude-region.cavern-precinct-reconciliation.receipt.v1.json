@@ -1,0 +1,199 @@
+{
+  "schemaVersion": "H_EARTH_GRATITUDE_REGION_CAVERN_PRECINCT_RECONCILIATION_DURABLE_RECEIPT_v1",
+  "sectionId": "GR-CR-04_CAVERN_PRECINCT",
+  "checkpointId": "GR-CR-04H",
+  "status": "PASS_CLOSED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-gratitude-region-coordinate-reconciliation-001",
+  "pullRequest": 311,
+  "priorClosedState": {
+    "GR-CR-01_ANALYSIS_HARNESS": "PASS_CLOSED",
+    "GR-CR-02_ENTRY_ZONE": "PASS_CLOSED",
+    "GR-CR-03_MIRROR_MANOR": "PASS_CLOSED",
+    "priorDurableHead": "d95d2377654f83b0e19b9d2a019d9a628994307a",
+    "priorSectionReopeningRequired": false
+  },
+  "executionCustody": {
+    "finalExecutedHead": "04dd360706cf34cbdb059e3304d39c7e3deba382",
+    "reconciliationBlob": "2eb292b1a95abbb01f51a0492738cfccbf474b7d",
+    "runnerBlob": "59d4de5eac912524c0041aeb1f61b63eca7418cd",
+    "workflowBlob": "60039ee3a6d187085f735d9445be2db6213e9e0b",
+    "workflowRun": 30470057483,
+    "workflowJob": 90637646433,
+    "evidenceArtifact": 8731220629,
+    "artifactDigest": "sha256:772c25cc08878ddfd8efb2c7e3978b5346ae3caddcc3df7a2e51f7fabe83e6f2",
+    "firstExecutionDigest": "1114ad9e62aacc9d083a0b5641a4e5ff7b71110b61ff93c0455a4c8d5be7fa6d",
+    "secondExecutionDigest": "1114ad9e62aacc9d083a0b5641a4e5ff7b71110b61ff93c0455a4c8d5be7fa6d",
+    "deterministicRepeatExecution": true,
+    "candidateDigest": "b504d1349602e187570f6cd66470d3c46b93aded2f1a3f9da4c442cf1b926554",
+    "issues": []
+  },
+  "completedMicroCheckpoints": [
+    "GR-CR-04A",
+    "GR-CR-04B",
+    "GR-CR-04C",
+    "GR-CR-04D",
+    "GR-CR-04E",
+    "GR-CR-04F",
+    "GR-CR-04G",
+    "GR-CR-04H"
+  ],
+  "correctionHistory": [
+    {
+      "executedHead": "0b0b0f22e24473bf03fff94803b1473efe4ff7d8",
+      "workflowRun": 30469630039,
+      "workflowJob": 90636196517,
+      "firstExecutionDigest": "de681593eb01aa19176b65b4866a90a6775cab7913a062198449734562f060b0",
+      "secondExecutionDigest": "de681593eb01aa19176b65b4866a90a6775cab7913a062198449734562f060b0",
+      "disposition": "REVIEW_STOPPED_NOT_CLOSED",
+      "issue": "SELECTED_PRECINCT_ENVELOPE_TOUCHED_SUCCESSOR_WORLD_BOUNDARY_Z_MINUS_320"
+    },
+    {
+      "executedHead": "04dd360706cf34cbdb059e3304d39c7e3deba382",
+      "workflowRun": 30470057483,
+      "workflowJob": 90637646433,
+      "disposition": "PASS_CLOSED_EXECUTION",
+      "correction": "EXCLUDE_WORLD_BOUNDARY_PRECINCT_CENTERS_AND_BOUNDARY_CLIPPED_ENVELOPES"
+    }
+  ],
+  "cavernCandidate": {
+    "candidateId": "GRATITUDE_REGION_CAVERN_EXTERIOR_ENTRANCE_RELATION_CANDIDATE_01",
+    "precinctEnvelopeId": "GRATITUDE_REGION_CAVERN_PRECINCT_RESERVABLE_ENVELOPE_CANDIDATE_01",
+    "candidateClass": "MEASURED_OR_DERIVED_CANDIDATE_PENDING_LATER_MANIFEST_ACCEPTANCE",
+    "eligible": true,
+    "accepted": false,
+    "finalPlacement": false,
+    "finalCoordinatesAssigned": false,
+    "finalEntranceAnchor": false,
+    "exteriorFace": {
+      "x": 40,
+      "z": -284,
+      "elevation": 36.03318679332733,
+      "slope": 1.9803208000703045,
+      "mountainContribution": 24.048909605645424,
+      "formationId": "H_EARTH_CONTINUOUS_HIGHLAND_MOUNTAIN_001"
+    },
+    "outwardDirection": "EAST",
+    "exteriorApron": {
+      "x": 48,
+      "z": -284,
+      "elevation": 21.06985777616501,
+      "slope": 1.8223255088139156
+    },
+    "precinctCenter": {
+      "x": 56,
+      "z": -284,
+      "elevation": 12.077214360237122,
+      "slope": 0.528236951319541
+    },
+    "crossClearance": {
+      "widthWorldUnits": 8,
+      "elevationRange": 8.676040172576904,
+      "maximumSlope": 2.5589672672325583
+    },
+    "precinctEnvelope": {
+      "eligible": true,
+      "accepted": false,
+      "finalPlacement": false,
+      "finalCoordinatesAssigned": false,
+      "center": {
+        "x": 57.73913043478261,
+        "z": -285.39130434782606
+      },
+      "bounds": {
+        "xMinimum": 48,
+        "xMaximum": 68,
+        "zMinimum": -296,
+        "zMaximum": -276
+      },
+      "elevationRange": {
+        "minimum": 8.838005065917969,
+        "maximum": 20.754883646965027
+      },
+      "slopeRange": {
+        "minimum": 0.23916043644634905,
+        "maximum": 1.5279290253588278
+      },
+      "connectedSampleCount": 23,
+      "approximateSampleAreaWorldUnitsSquared": 368,
+      "mountainCoreConflictSampleCount": 0,
+      "worldBoundaryClearance": 24,
+      "boundaryClipped": false,
+      "envelopeDigest": "62637f857702d32664607155b565959fa290e60f04907961776f7a9776a0ba1f"
+    },
+    "lawfulApproachCandidate": {
+      "eligible": true,
+      "accepted": false,
+      "finalRoute": false,
+      "pathPointCount": 14,
+      "pathDistance": 113.94112549695429,
+      "routeCost": 118.45008023929073,
+      "maximumSlope": 0.7557515657091245,
+      "maximumNeighborElevationDelta": 4.23112815618515
+    },
+    "visibilityEvidence": {
+      "entryZone": "TERRAIN_CONCEALED_FROM_ENTRY_ZONE_NONFINAL",
+      "entryZoneMaximumObstruction": 56.24470931688945,
+      "mirrorManor": "TERRAIN_CONCEALED_FROM_MIRROR_MANOR_NONFINAL",
+      "mirrorManorMaximumObstruction": 2.264982439412009,
+      "narrativeMeaningAssigned": false
+    },
+    "distanceEvidence": {
+      "entryZoneStraightLineDistance": 180.48822676285562,
+      "mirrorManorStraightLineDistance": 118.92854997854805,
+      "mirrorManorApproachPathDistance": 113.94112549695429
+    },
+    "surfaceCorrespondence": {
+      "existingMountainExteriorAttachmentSatisfied": true,
+      "semanticProjectionStatus": "NO_TERRAIN_CHUNK",
+      "registeredOccurrenceResolved": false,
+      "entranceOpeningConstructed": false,
+      "accepted": false
+    },
+    "interiorTransitionRelation": {
+      "status": "SEPARATE_INTERIOR_TRANSITION_RELATION_DERIVED_NOT_ASSIGNED",
+      "separateBoundedInteriorOccurrenceRequired": true,
+      "inwardDirection": "WEST",
+      "candidateDepthRangeWorldUnits": {
+        "minimum": 8,
+        "maximum": 32
+      },
+      "interiorTransitionAnchorAssigned": false,
+      "interiorCoordinatesAssigned": false,
+      "cavernShapeAssigned": false,
+      "cavernSizeAssigned": false,
+      "cavernContentsAssigned": false,
+      "accepted": false
+    }
+  },
+  "authorityBoundaries": {
+    "candidateAccepted": false,
+    "finalCoordinatesAssigned": false,
+    "entranceConstruction": false,
+    "terrainExcavation": false,
+    "cavernGeometryGeneration": false,
+    "narrativeContentResolution": false,
+    "terrainMutation": false,
+    "geometryConstruction": false,
+    "runtimeMutation": false,
+    "gameplayMutation": false,
+    "publicRouteMutation": false,
+    "productionMutation": false,
+    "controllingManifestMutation": false,
+    "mergeAuthority": false,
+    "canonicalizationAuthority": false
+  },
+  "repositoryRegistryLane": {
+    "status": "UNRESOLVED_SEPARATE_LIFECYCLE_LANE",
+    "failureCodes": [
+      "OPERATION_SCOPE_UNRESOLVED",
+      "REQUESTED_PATH_UNRESOLVED"
+    ],
+    "spatialAnalysisInvalidated": false,
+    "mutationAuthority": false
+  },
+  "currentStopPoint": "GR-CR-04_PASS_CLOSED",
+  "nextSection": "FOLLOW_CONTROLLING_ROADMAP_WHEN_RETRIEVED",
+  "nextAuthorizedProgramTarget": "FRONTIER_PLAINS",
+  "GR-CR-05_PLUS_SECTION_IDENTITIES": "DO_NOT_INVENT"
+}

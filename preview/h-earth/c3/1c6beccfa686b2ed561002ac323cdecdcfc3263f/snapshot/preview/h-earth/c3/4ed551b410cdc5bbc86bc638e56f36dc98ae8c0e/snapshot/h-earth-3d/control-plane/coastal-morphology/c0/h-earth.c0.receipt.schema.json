@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "H_EARTH_C0_FINAL_RECEIPT_SCHEMA_v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "receiptType",
+    "operation",
+    "result",
+    "c0Overall",
+    "exactMainHead",
+    "activeBranch",
+    "repositoryRollbackBranch",
+    "reproducibilityVerified",
+    "rollbackVerified",
+    "productMutation",
+    "unauthorizedChangedPaths",
+    "exactChangedPathCount"
+  ],
+  "properties": {
+    "receiptType": {
+      "const": "H_EARTH_C0_FINAL_RECEIPT_v1"
+    },
+    "result": {
+      "const": "PASS_CLOSED"
+    },
+    "c0Overall": {
+      "const": "PASS_CLOSED"
+    },
+    "productMutation": {
+      "const": false
+    },
+    "unauthorizedChangedPaths": {
+      "const": 0
+    },
+    "exactChangedPathCount": {
+      "const": 26
+    }
+  }
+}

@@ -1,0 +1,232 @@
+name: Repository Live Qualification Engine
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        description: Exact current main SHA to publish and qualify
+        required: true
+        type: string
+      manifest_path:
+        description: Repository live-qualification manifest path
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      target_sha:
+        required: true
+        type: string
+      manifest_path:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-production
+  cancel-in-progress: false
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+    steps:
+      - name: Require exact current main
+        id: main
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REQUESTED_SHA: ${{ inputs.target_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          main_sha="$(curl --fail-with-body --silent --show-error -L \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/main" | jq -r '.sha')"
+          test "$REQUESTED_SHA" = "$main_sha"
+          echo "sha=$main_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout exact main
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_sha }}
+          fetch-depth: 1
+
+      - name: Validate engine and manifest
+        id: manifest
+        env:
+          MANIFEST_PATH: ${{ inputs.manifest_path }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node .github/ai-router/platform/repository-live-qualification-engine.v1.mjs self-test
+          test -f "$MANIFEST_PATH"
+          node .github/ai-router/platform/repository-live-qualification-engine.v1.mjs validate-manifest "$MANIFEST_PATH" /tmp/manifest-validation.json
+          echo "project_id=$(jq -r '.projectId' /tmp/manifest-validation.json)" >> "$GITHUB_OUTPUT"
+          echo "manifest_sha256=$(jq -r '.manifestSha256' /tmp/manifest-validation.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Stage exact site
+        env:
+          PAGES_STAGE: ${{ runner.temp }}/pages-site
+          MANIFEST_PATH: ${{ inputs.manifest_path }}
+          TARGET_SHA: ${{ inputs.target_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf "$PAGES_STAGE"
+          mkdir -p "$PAGES_STAGE"
+          mode="$(jq -r '.stage.mode' "$MANIFEST_PATH")"
+          adapter="$(jq -r '.stage.adapter // empty' "$MANIFEST_PATH")"
+          if [ "$mode" = "adapter" ]; then
+            test -n "$adapter"
+            test -f "$adapter"
+            bash "$adapter" "$PAGES_STAGE" "$TARGET_SHA" "$MANIFEST_PATH"
+          else
+            rsync -a --prune-empty-dirs \
+              --exclude='.git/' --exclude='.github/' --exclude='preview/' \
+              ./ "$PAGES_STAGE/"
+          fi
+          mkdir -p "$PAGES_STAGE/.well-known"
+          jq -n \
+            --arg commit "$TARGET_SHA" \
+            --arg project "${{ steps.manifest.outputs.project_id }}" \
+            --arg manifest "${{ inputs.manifest_path }}" \
+            '{schema:"DGB_PUBLIC_RELEASE_MARKER_v1",commit:$commit,qualificationProject:$project,qualificationManifest:$manifest}' \
+            > "$PAGES_STAGE/.well-known/dgb-release.json"
+          staged_bytes="$(du -sb "$PAGES_STAGE" | awk '{print $1}')"
+          echo "REPOSITORY_LIVE_QUALIFICATION_STAGE_BYTES=$staged_bytes"
+          test "$staged_bytes" -lt 1073741824
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/pages-site
+
+      - name: Deploy Pages artifact
+        id: deploy
+        uses: actions/deploy-pages@v4
+
+      - name: Verify public release marker
+        env:
+          PAGE_URL: ${{ steps.deploy.outputs.page_url }}
+          TARGET_SHA: ${{ inputs.target_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          marker_url="${PAGE_URL%/}/.well-known/dgb-release.json"
+          observed=""
+          for i in $(seq 1 24); do
+            observed="$(curl --fail --silent --show-error -L --max-time 20 "$marker_url" 2>/dev/null | jq -r '.commit // empty' || true)"
+            if [ "$observed" = "$TARGET_SHA" ]; then break; fi
+            sleep 10
+          done
+          test "$observed" = "$TARGET_SHA"
+          echo "$observed" > /tmp/public-marker-sha.txt
+
+      - name: Verify declared public bytes
+        env:
+          PAGE_URL: ${{ steps.deploy.outputs.page_url }}
+          MANIFEST_PATH: ${{ inputs.manifest_path }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          : > /tmp/public-byte-results.jsonl
+          count="$(jq '.publicByteAssertions | length' "$MANIFEST_PATH")"
+          if [ "$count" -eq 0 ]; then exit 0; fi
+          for i in $(seq 0 $((count - 1))); do
+            source_path="$(jq -r ".publicByteAssertions[$i].sourcePath" "$MANIFEST_PATH")"
+            public_path="$(jq -r ".publicByteAssertions[$i].publicPath" "$MANIFEST_PATH")"
+            test -f "$source_path"
+            expected="$(sha256sum "$source_path" | awk '{print $1}')"
+            tmp="$(mktemp)"
+            curl --fail --silent --show-error -L --max-time 30 "${PAGE_URL%/}${public_path}" -o "$tmp"
+            observed="$(sha256sum "$tmp" | awk '{print $1}')"
+            test "$expected" = "$observed"
+            jq -n --arg sourcePath "$source_path" --arg publicPath "$public_path" --arg expected "$expected" --arg observed "$observed" \
+              '{sourcePath:$sourcePath,publicPath:$publicPath,expectedSha256:$expected,observedSha256:$observed,status:"PASS"}' \
+              >> /tmp/public-byte-results.jsonl
+          done
+
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install browser driver when runtime verification is required
+        shell: bash
+        run: |
+          set -euo pipefail
+          required="$(jq -r '.runtime.required // false' '${{ inputs.manifest_path }}')"
+          if [ "$required" = "true" ]; then npm install --no-save --no-package-lock puppeteer-core@24.15.0; fi
+
+      - name: Verify declared live runtime
+        env:
+          PAGE_URL: ${{ steps.deploy.outputs.page_url }}
+          MANIFEST_PATH: ${{ inputs.manifest_path }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          required="$(jq -r '.runtime.required // false' "$MANIFEST_PATH")"
+          verifier="$(jq -r '.runtime.verifier // empty' "$MANIFEST_PATH")"
+          if [ "$required" != "true" ]; then
+            jq -n '{status:"NOT_REQUIRED"}' > /tmp/runtime-result.json
+            exit 0
+          fi
+          test -n "$verifier"
+          test -f "$verifier"
+          export PUBLIC_BASE_URL="${PAGE_URL%/}"
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          export RUNTIME_RESULT_PATH=/tmp/runtime-result.json
+          node "$verifier"
+          test "$(jq -r '.status' /tmp/runtime-result.json)" = "PASS"
+
+      - name: Assemble authoritative qualification receipt
+        if: always()
+        env:
+          TARGET_SHA: ${{ inputs.target_sha }}
+          MANIFEST_PATH: ${{ inputs.manifest_path }}
+          PROJECT_ID: ${{ steps.manifest.outputs.project_id }}
+          MANIFEST_SHA256: ${{ steps.manifest.outputs.manifest_sha256 }}
+          PAGE_URL: ${{ steps.deploy.outputs.page_url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          byte_results='[]'
+          if [ -s /tmp/public-byte-results.jsonl ]; then byte_results="$(jq -s '.' /tmp/public-byte-results.jsonl)"; fi
+          runtime='{"status":"INCOMPLETE"}'
+          if [ -f /tmp/runtime-result.json ]; then runtime="$(cat /tmp/runtime-result.json)"; fi
+          marker=''
+          if [ -f /tmp/public-marker-sha.txt ]; then marker="$(cat /tmp/public-marker-sha.txt)"; fi
+          jq -n \
+            --arg projectId "$PROJECT_ID" \
+            --arg manifestPath "$MANIFEST_PATH" \
+            --arg manifestSha256 "$MANIFEST_SHA256" \
+            --arg requestedSha "$TARGET_SHA" \
+            --arg observedMainSha "${{ steps.main.outputs.sha }}" \
+            --arg publicReleaseMarkerSha "$marker" \
+            --arg pageUrl "$PAGE_URL" \
+            --arg workflow "$GITHUB_WORKFLOW" \
+            --arg runId "$GITHUB_RUN_ID" \
+            --arg runAttempt "$GITHUB_RUN_ATTEMPT" \
+            --argjson byteResults "$byte_results" \
+            --argjson runtime "$runtime" \
+            '{projectId:$projectId,manifestPath:$manifestPath,manifestSha256:$manifestSha256,requestedSha:$requestedSha,observedMainSha:$observedMainSha,publicReleaseMarkerSha:$publicReleaseMarkerSha,pageUrl:$pageUrl,workflow:$workflow,runId:$runId,runAttempt:$runAttempt,publicByteResults:$byteResults,runtime:$runtime,states:{SOURCE_IDENTITY:{status:(if $requestedSha==$observedMainSha then "PASS" else "FAIL" end)},CANDIDATE_QUALIFICATION:{status:"NOT_REQUIRED"},ASSET_IDENTITY:{status:"NOT_REQUIRED"},MERGE_IDENTITY:{status:(if $requestedSha==$observedMainSha then "PASS" else "FAIL" end)},PUBLICATION:{status:(if $publicReleaseMarkerSha==$requestedSha then "PASS" else "FAIL" end)},PUBLIC_BYTES:{status:(if ($byteResults|all(.[]; .status=="PASS")) then "PASS" else "FAIL" end)},LIVE_RUNTIME:{status:$runtime.status}}}' \
+            > /tmp/qualification-receipt-input.json
+          node .github/ai-router/platform/repository-live-qualification-engine.v1.mjs finalize-receipt /tmp/qualification-receipt-input.json /tmp/repository-live-qualification-receipt.json
+
+      - name: Upload authoritative qualification receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-qualification-${{ steps.manifest.outputs.project_id }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/repository-live-qualification-receipt.json
+          if-no-files-found: error
+          retention-days: 90

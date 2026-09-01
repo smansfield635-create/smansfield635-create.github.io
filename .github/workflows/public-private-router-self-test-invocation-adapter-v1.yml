@@ -1,0 +1,201 @@
+name: Public → Private Router Self-Test Invocation Adapter v1
+
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  execute:
+    if: >-
+      github.event.issue.number == 578 &&
+      startsWith(github.event.comment.body, 'PUBLIC_PRIVATE_ROUTER_SELF_TEST_INVOCATION_REQUEST_V1') &&
+      github.event.comment.author_association == 'OWNER'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PRIVATE_REPOSITORY: smansfield635-create/geodiametrics1
+      PRIVATE_ISSUE: '217'
+      LOCK_REF: operation-locks/repository-operation-intake-v1
+      LOCK_LEDGER_PATH: .github/operation-intake/active-operation-ledger.v1.json
+      ROUTER_SCRIPT: tools/repository-ai-entry-router.mjs
+
+    steps:
+      - name: Parse closed invocation locator
+        id: locator
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          event=json.load(open(os.environ['GITHUB_EVENT_PATH'],encoding='utf-8'))
+          body=event['comment']['body']
+          marker='PUBLIC_PRIVATE_ROUTER_SELF_TEST_INVOCATION_REQUEST_V1'
+          req=json.loads(body[len(marker):].strip())
+          required={'schema','privateSuccessorCommentId','expectedOperationId','exactPrivateHead'}
+          if set(req)!=required or req.get('schema')!=marker:
+              raise SystemExit('REQUEST_NOT_CLOSED')
+          cid=req['privateSuccessorCommentId']
+          if not isinstance(cid,int) or cid<1: raise SystemExit('PRIVATE_COMMENT_INVALID')
+          op=req['expectedOperationId']
+          if not isinstance(op,str) or not op: raise SystemExit('OPERATION_INVALID')
+          head=req['exactPrivateHead']
+          if not isinstance(head,str) or len(head)!=40 or any(c not in '0123456789abcdef' for c in head):
+              raise SystemExit('PRIVATE_HEAD_INVALID')
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f:
+              f.write(f'private_comment={cid}\nexpected_operation={op}\nexact_head={head}\n')
+          PY
+
+      - name: Mint private read token
+        id: token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+          permission-issues: read
+
+      - name: Fetch and validate frozen successor authority
+        id: authority
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          PRIVATE_COMMENT: ${{ steps.locator.outputs.private_comment }}
+          EXPECTED_OPERATION: ${{ steps.locator.outputs.expected_operation }}
+          EXACT_HEAD: ${{ steps.locator.outputs.exact_head }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/router-self-test-adapter"
+          mkdir -p "$work"
+          curl --fail-with-body --silent --show-error \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$PRIVATE_REPOSITORY/issues/comments/$PRIVATE_COMMENT" > "$work/comment.json"
+          curl --fail-with-body --silent --show-error \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$PRIVATE_REPOSITORY/contents/$LOCK_LEDGER_PATH?ref=$LOCK_REF" > "$work/ledger-file.json"
+          python - <<'PY'
+          import base64, hashlib, json, os
+          def stable(v):
+              if isinstance(v,dict): return {k:stable(v[k]) for k in sorted(v)}
+              if isinstance(v,list): return [stable(x) for x in v]
+              return v
+          def digest(v):
+              raw=json.dumps(stable(v),separators=(',',':'),ensure_ascii=False).encode()
+              return hashlib.sha256(raw).hexdigest()
+          work=os.path.join(os.environ['RUNNER_TEMP'],'router-self-test-adapter')
+          comment=json.load(open(os.path.join(work,'comment.json'),encoding='utf-8'))
+          if not str(comment.get('issue_url','')).endswith('/issues/'+os.environ['PRIVATE_ISSUE']):
+              raise SystemExit('PRIVATE_COMMENT_ISSUE_MISMATCH')
+          body=comment.get('body') or ''
+          marker='REMOTE_OPERATION_SUCCESSOR_REQUEST_V1'
+          if not body.startswith(marker): raise SystemExit('SUCCESSOR_MARKER_MISSING')
+          env=json.loads(body[len(marker):].strip())
+          if env.get('schema')!='REMOTE_OPERATION_SUCCESSOR_INVOCATION_REQUEST_v1': raise SystemExit('SUCCESSOR_SCHEMA_MISMATCH')
+          if env.get('repository')!=os.environ['PRIVATE_REPOSITORY']: raise SystemExit('SUCCESSOR_REPOSITORY_MISMATCH')
+          op=env.get('operationRequest') or {}
+          proc=env.get('constructionProcedure') or {}
+          tr=env.get('transition') or {}
+          if op.get('operationId')!=os.environ['EXPECTED_OPERATION']: raise SystemExit('OPERATION_MISMATCH')
+          if op.get('exactGoverningHead')!=os.environ['EXACT_HEAD'] or proc.get('exactGoverningHead')!=os.environ['EXACT_HEAD']:
+              raise SystemExit('GOVERNING_HEAD_MISMATCH')
+          if (tr.get('successor') or {}).get('operationId')!=os.environ['EXPECTED_OPERATION'] or (tr.get('successor') or {}).get('governingHead')!=os.environ['EXACT_HEAD']:
+              raise SystemExit('SUCCESSOR_IDENTITY_MISMATCH')
+          if op.get('exactTestCommand')!='node tools/repository-ai-entry-router.mjs --self-test --output /tmp/router-self-test.json':
+              raise SystemExit('EXACT_TEST_COMMAND_MISMATCH')
+          lf=json.load(open(os.path.join(work,'ledger-file.json'),encoding='utf-8'))
+          ledger=json.loads(base64.b64decode(''.join((lf.get('content') or '').split())).decode())
+          matches=[x for x in (ledger.get('activeScopes') or {}).values() if x.get('operationId')==os.environ['EXPECTED_OPERATION']]
+          if len(matches)!=1: raise SystemExit('ACTIVE_OPERATION_NOT_UNIQUE')
+          lock=matches[0]
+          if lock.get('state')!='ADMITTED_LOCKED' or lock.get('released') is not False: raise SystemExit('ACTIVE_LOCK_NOT_EXECUTABLE')
+          if lock.get('governingHead')!=os.environ['EXACT_HEAD']: raise SystemExit('LOCK_HEAD_MISMATCH')
+          if lock.get('requestDigest')!=digest(op): raise SystemExit('REQUEST_DIGEST_MISMATCH')
+          if lock.get('procedureLocatorDigest')!=digest(proc): raise SystemExit('PROCEDURE_DIGEST_MISMATCH')
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f:
+              f.write('lock_generation='+str(lock.get('lockGeneration'))+'\n')
+          PY
+
+      - name: Verify live private main
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          EXACT_HEAD: ${{ steps.locator.outputs.exact_head }}
+        run: |
+          set -euo pipefail
+          observed="$(curl --fail-with-body --silent --show-error \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$PRIVATE_REPOSITORY/branches/main" | jq -r '.commit.sha')"
+          test "$observed" = "$EXACT_HEAD"
+
+      - name: Check out exact private head
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: ${{ steps.locator.outputs.exact_head }}
+          token: ${{ steps.token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Execute exact router self-test read-only
+        id: execute
+        shell: bash
+        env:
+          EXACT_HEAD: ${{ steps.locator.outputs.exact_head }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/router-self-test-adapter"
+          cd "$GITHUB_WORKSPACE/private-control-plane"
+          test "$(git rev-parse HEAD^{commit})" = "$EXACT_HEAD"
+          test -f "$ROUTER_SCRIPT"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          node "$ROUTER_SCRIPT" --self-test --output "$work/router-self-test.json"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          python - <<'PY'
+          import json, os
+          p=os.path.join(os.environ['RUNNER_TEMP'],'router-self-test-adapter','router-self-test.json')
+          r=json.load(open(p,encoding='utf-8'))
+          if r.get('schema')!='REPOSITORY_AI_ENTRY_ROUTER_SELF_TEST_RECEIPT_v1': raise SystemExit('NATIVE_SCHEMA_MISMATCH')
+          if r.get('result')!='PASS': raise SystemExit('NATIVE_RESULT_NOT_PASS')
+          if r.get('failedCount')!=0: raise SystemExit('NATIVE_FAILURES_PRESENT')
+          if r.get('scenarioCount')!=r.get('passedCount'): raise SystemExit('NATIVE_COUNTS_MISMATCH')
+          PY
+
+      - name: Publish redacted PASS receipt
+        if: success()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OPERATION: ${{ steps.locator.outputs.expected_operation }}
+          EXACT_HEAD: ${{ steps.locator.outputs.exact_head }}
+          LOCK_GENERATION: ${{ steps.authority.outputs.lock_generation }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/router-self-test-adapter"
+          RECEIPT_SHA="$(sha256sum "$work/router-self-test.json" | awk '{print $1}')"
+          body="PUBLIC_PRIVATE_ROUTER_SELF_TEST_INVOCATION_RESULT_V1\noperationId: $OPERATION\nexactPrivateHead: $EXACT_HEAD\nlockGeneration: $LOCK_GENERATION\nresult: PASS\nnativeReceiptSha256: $RECEIPT_SHA\nrunId: $GITHUB_RUN_ID\nrunAttempt: $GITHUB_RUN_ATTEMPT\nprivateMutationPerformed: false\ngenericCommandAuthority: false"
+          jq -n --arg body "$body" '{body:$body}' > "$work/result-comment.json"
+          curl --fail-with-body --silent --show-error --request POST \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/issues/578/comments" \
+            --data-binary "@$work/result-comment.json" >/dev/null
+
+      - name: Enforce fail-closed completion
+        if: always()
+        shell: bash
+        env:
+          EXECUTE_OUTCOME: ${{ steps.execute.outcome }}
+        run: |
+          set -euo pipefail
+          test "$EXECUTE_OUTCOME" = 'success'

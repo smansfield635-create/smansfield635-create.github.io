@@ -1,0 +1,38 @@
+{
+  "archived_result_mutation_performed": false,
+  "core_mutation_performed": false,
+  "execution_receipt_sha256": "b308450f189accd414736316c3f95f84fc17868131ec318dbc9e06b5e6062c66",
+  "execution_timestamp_utc": "2026-08-06T04:41:41+00:00",
+  "file_sha256": {
+    "SCIENTIFIC_EXECUTION_REPORT.md": "59ac353c3d6952fd33a71b5aeb8d636acba148e80ac18c93c1a5ec5294c3ccfa",
+    "execution-receipt.json": "7df3c19349a81d6c481442b546d9fc45a102c2ff407ed26118577c650d385cee",
+    "independent-reproduction.json": "5e382efb4855a14a90c5cb7a51ce7c92b172b25f00358ae6111155f5ad3197f5",
+    "package-verification.json": "a3eec65d7375d626e3bf3a7720d9349fc0319c0ccb2e66dab5605a4406e11c90"
+  },
+  "frozen_commit": "c8f57d5f2dda90a2f1efb8020857f13446df8132",
+  "governing_base": "5123ad418fcb1b88795470120e4632705ceaf288",
+  "independent_checks_passed": 27,
+  "independent_checks_total": 27,
+  "independent_reproduction_status": "PASS",
+  "manifest_files_verified": 11,
+  "manifest_integrity": "PASS",
+  "matched_output_discrimination_pass": true,
+  "operation_id": "IDENTITY_CONDITIONED_REACHABILITY_CONTROLLED_RELATION_DISRUPTION_GAUNTLET_v1",
+  "package_checks_passed": 49,
+  "package_verification_status": "PASS",
+  "post_result_repair_performed": false,
+  "predictions_passed": 9,
+  "predictions_total": 9,
+  "result_category": "ENGINEERED_LEVEL4_PREDICTIONS_SURVIVED",
+  "scientific_boundary": {
+    "controlled_causal_route_manipulation_tested": true,
+    "cross_domain_validation": false,
+    "hysteretic_reentry_tested": true,
+    "independent_relation_recovery_tested": false,
+    "matched_output_identity_discrimination_tested": true,
+    "natural_system_validation": false,
+    "relation_specific_route_reopening_tested": true
+  },
+  "theory_prediction_pass": true,
+  "version": "1.0.0"
+}

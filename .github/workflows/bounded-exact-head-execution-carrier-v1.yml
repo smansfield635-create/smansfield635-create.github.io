@@ -1,0 +1,76 @@
+name: Bounded Exact-Head Execution Carrier v1
+
+on:
+  pull_request:
+    paths:
+      - 'AI_ENTRYPOINT.json'
+      - '.github/ai-router/workflow-dispatch-capability.v1.json'
+      - '.github/workflows/bounded-exact-head-execution-carrier-v1.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'AI_ENTRYPOINT.json'
+      - '.github/ai-router/workflow-dispatch-capability.v1.json'
+      - '.github/workflows/bounded-exact-head-execution-carrier-v1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify-current-execution-surface:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact checked-out head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "${{ github.sha }}"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Verify legacy portable-carrier requirement is retired
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const aiText = fs.readFileSync('AI_ENTRYPOINT.json','utf8');
+          const ai = JSON.parse(aiText);
+          const dispatch = JSON.parse(fs.readFileSync('.github/ai-router/workflow-dispatch-capability.v1.json','utf8'));
+          const fail = (message) => { throw new Error(message); };
+          if (ai.status !== 'ACTIVE_FAIL_CLOSED') fail('AI entry point must remain ACTIVE_FAIL_CLOSED');
+          if (ai.agentExecutionSurface?.githubActionsAllowedForAgentExecution !== false) fail('GitHub Actions must remain prohibited for agent execution');
+          if (ai.agentExecutionSurface?.githubActionsAllowedAsExecutionTransport !== false) fail('GitHub Actions must remain prohibited as agent execution transport');
+          if (!ai.agentExecutionSurface?.requiredExecutionPreference?.includes('CONNECTED_GITHUB_API_OR_NATIVE_AGENT_TOOLS')) fail('native connected execution preference missing');
+          if (dispatch.status !== 'ACTIVE_FAIL_CLOSED') fail('workflow dispatch capability must remain ACTIVE_FAIL_CLOSED');
+          if (dispatch.preferredTransport !== 'DIRECT_CONNECTED_GITHUB_WORKFLOW_DISPATCH') fail('current direct connected GitHub transport binding missing');
+          if (/portable[ -]carrier/i.test(aiText)) fail('obsolete portable-carrier advertisement was reintroduced into AI entry point');
+          fs.writeFileSync(process.env.RUNNER_TEMP + '/bounded-carrier-retirement-receipt.json', JSON.stringify({
+            schema: 'BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_RETIREMENT_RECEIPT_v1',
+            result: 'PASS',
+            legacyPortableCarrierAdvertisementRequired: false,
+            legacyPortableCarrierAdvertisementPresent: false,
+            githubActionsAgentExecutionAllowed: false,
+            currentExecutionPreference: 'CONNECTED_GITHUB_API_OR_NATIVE_AGENT_TOOLS',
+            currentDispatchTransport: dispatch.preferredTransport,
+            passiveCiOnly: true
+          }, null, 2) + '\n');
+          NODE
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bounded-carrier-retirement-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/bounded-carrier-retirement-receipt.json
+          if-no-files-found: error
+          retention-days: 90

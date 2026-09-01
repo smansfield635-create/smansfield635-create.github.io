@@ -1,0 +1,50 @@
+name: Compass Audit-Derived Candidate Qualification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'assets/compass/**'
+
+permissions:
+  contents: read
+
+jobs:
+  audit-derived-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+      - name: Install verifier dependency
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Serve exact candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 >/tmp/compass-audit-candidate-http.log 2>&1 &
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/compass-audit-candidate-http.log || true
+          exit 1
+      - name: Require audit-derived perceptual contract
+        shell: bash
+        env:
+          PUBLIC_BASE_URL: http://127.0.0.1:4173
+          RUNTIME_RESULT_PATH: /tmp/compass-audit-candidate.json
+        run: |
+          set -euo pipefail
+          node .github/ai-router/platform/repository-live-qualification-engine.v1.mjs validate-manifest .github/live-qualification/manifests/compass-root.v1.json /tmp/manifest-validation.json
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          node .github/live-qualification/verifiers/compass-root.v1.mjs
+          test "$(jq -r '.status' "$RUNTIME_RESULT_PATH")" = "PASS"
+          echo 'COMPASS_AUDIT_DERIVED_CANDIDATE_PASS'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compass-audit-derived-candidate-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/compass-audit-candidate.json
+          if-no-files-found: error
+          retention-days: 30

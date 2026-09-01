@@ -1,0 +1,70 @@
+{
+  "schema": "WHOLE_ESTATE_CHRONOLOGY_RETROSPECTION_BOUNDARY_v1",
+  "status": "CHECKPOINT_4_CONSTRUCTION_CANDIDATE",
+  "temporalStates": [
+    "CONTEMPORANEOUS_SOURCE",
+    "PARTIAL_CONTEMPORANEOUS_SOURCE",
+    "LATER_FORMALIZATION",
+    "RETROSPECTIVE_INTERPRETATION",
+    "SCIENTIFIC_EVIDENCE_DELTA"
+  ],
+  "rules": [
+    "SOURCE_TIME_MUST_REMAIN_VISIBLE",
+    "LATER_FORMALIZATION_MAY_DESCRIBE_EARLIER_ARTIFACTS_BUT_MAY_NOT_BACKDATE_INTENT",
+    "RETROSPECTIVE_INTERPRETATION_MAY_NOT_BE_RELABELED_AS_CONTEMPORANEOUS",
+    "REPOSITORY_TIMESTAMP_MAY_ESTABLISH_EXISTENCE_BY_A_DATE_BUT_NOT_SCIENTIFIC_PREREGISTRATION",
+    "PREREGISTRATION_REQUIRES_THE_SEPARATE_SCIENTIFIC_PROTOCOL_CONDITIONS_APPLICABLE_TO_THAT STUDY",
+    "ADVERSE_RESULT_MUST_REMAIN_ADVERSE_AFTER_LATER_INTERPRETATION"
+  ],
+  "chronology": [
+    {
+      "order": 1,
+      "id": "EARLY_PUBLIC_ESTATE_ARTIFACTS",
+      "temporalState": "CONTEMPORANEOUS_SOURCE",
+      "examples": ["Compass plural identity", "Manor route truth", "Laws FIRST structure", "Research support role", "Methods/Models XYZ presentation"],
+      "meaning": "evidence of what those artifacts actually expressed when recorded"
+    },
+    {
+      "order": 2,
+      "id": "GATE_0_NORMALIZATION",
+      "temporalState": "LATER_FORMALIZATION",
+      "source": "PR708 merge fb2d34cb3c187fc5d6526c6108b383fca4ed0801",
+      "meaning": "formal object and state separation; not retroactive proof of earlier theory intent"
+    },
+    {
+      "order": 3,
+      "id": "CHECKPOINT_1_BASELINE",
+      "temporalState": "LATER_FORMALIZATION",
+      "source": "PR713 merge c73a4f8854b8b2bf8f7b12fa860f0bc85d666544",
+      "meaning": "estate narrative, authority, claim and provenance baseline including explicit retrospective classes"
+    },
+    {
+      "order": 4,
+      "id": "IMI_UCIC_SCIENTIFIC_DELTA",
+      "temporalState": "SCIENTIFIC_EVIDENCE_DELTA",
+      "source": "PR720@5664ba8e059a65f1b7ec39f2c7e944866c06278b",
+      "meaning": "mixed noncompensating scientific result; remains separate from construction provenance"
+    },
+    {
+      "order": 5,
+      "id": "CHECKPOINT_2_NARRATIVE_CONSTITUTION",
+      "temporalState": "LATER_FORMALIZATION",
+      "source": "PR723 merge 889197b2cbe73de171756b7545446f12a726cde7",
+      "meaning": "formal narrative/evidence traversal boundaries"
+    },
+    {
+      "order": 6,
+      "id": "CHECKPOINT_3_ROOM_RELATIONS",
+      "temporalState": "LATER_FORMALIZATION",
+      "source": "PR725 merge a0b0fb3d753637cfc66c06e73b0b5f0cd237056a",
+      "meaning": "formal room identity, authority, translation and representation boundaries"
+    },
+    {
+      "order": 7,
+      "id": "CHECKPOINT_4_DEVELOPMENTAL_INTERPRETATION",
+      "temporalState": "RETROSPECTIVE_INTERPRETATION",
+      "meaning": "bounded estate-scale synthesis of the recorded developmental lineage; no backdated preregistration or scientific confirmation"
+    }
+  ],
+  "publicMutationAuthorized": false
+}

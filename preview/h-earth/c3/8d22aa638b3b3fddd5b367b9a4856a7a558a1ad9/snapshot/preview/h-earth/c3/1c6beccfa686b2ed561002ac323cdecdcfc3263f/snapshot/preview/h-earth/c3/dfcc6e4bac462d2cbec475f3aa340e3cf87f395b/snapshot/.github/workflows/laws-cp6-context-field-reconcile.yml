@@ -1,0 +1,56 @@
+# LAWS_CP6_FINAL_BATTERY_RESULT_RECONCILIATION_TRIGGER_v1
+name: Laws CP6 final battery result reconcile
+
+on:
+  push:
+    branches:
+      - agent/laws-cp6-context-authority-records-001
+    paths:
+      - .github/workflows/laws-cp6-context-field-reconcile.yml
+      - scripts/laws_cp6_context_field_reconcile.py
+
+permissions:
+  contents: write
+
+concurrency:
+  group: laws-cp6-final-battery-result-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  reconcile:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/laws-cp6-context-authority-records-001
+          fetch-depth: 0
+
+      - name: Install explicit burden AUROC result wording
+        run: python3 scripts/laws_cp6_context_field_reconcile.py
+
+      - name: Verify exact bounded product scope
+        run: |
+          python3 - <<'PY'
+          import subprocess
+          expected = {'laws/research/applied-investigations/index.html'}
+          changed = set(subprocess.check_output(['git', 'diff', '--name-only'], text=True).splitlines())
+          if changed != expected:
+              raise SystemExit(f'Unexpected scope: {sorted(changed)}')
+          PY
+
+      - name: Verify source precision and claim restraint
+        run: |
+          grep -Fq 'Combined-axis AUROC 0.9394' laws/research/applied-investigations/index.html
+          grep -Fq 'Burden AUROC 0.9704' laws/research/applied-investigations/index.html
+          grep -Fq 'may largely encode conventional aging or accumulated use' laws/research/applied-investigations/index.html
+          ! git diff | grep -E '^\+.*(universal battery validation|future Frontier architecture is live|Frontier Compass is deployed)'
+
+      - name: Commit final bounded result correction
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add laws/research/applied-investigations/index.html
+          git commit -m 'Clarify burden AUROC result in Applied Investigations'
+          git push origin HEAD:agent/laws-cp6-context-authority-records-001

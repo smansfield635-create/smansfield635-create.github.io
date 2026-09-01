@@ -1,0 +1,19 @@
+name: Laws CP6 contextual integrated verification — manual archive
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  archive-notice:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report verification custody
+        run: |
+          echo 'The contextual integrated verifier is retained as a manual historical diagnostic.'
+          echo 'Its former mutation boundary prohibited every Frontier change and is superseded by the authorized 27-surface battery-study scope.'
+          echo 'The permanent Laws CP6 Final Synchronization Verification now covers the complete 33-route candidate, exact authorized Frontier record, zero-open contract, custody boundaries, and responsive behavior.'
+          echo 'Original workflow blob: 48f9d22596b0f171406b72c5cd02ae8571243306'
+          echo 'No evidence, claim, route, or presentation authority is changed by this trigger narrowing.'

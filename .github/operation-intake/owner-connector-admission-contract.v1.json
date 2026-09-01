@@ -1,0 +1,42 @@
+{
+  "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_CONTRACT_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "ownerLogin": "smansfield635-create",
+  "sourceMarker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+  "ledgerPath": ".github/operation-intake/active-operation-ledger.v1.json",
+  "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+  "semantics": {
+    "legacyLocalGate": "tools/operation-intake/repository-operation-intake-gate.v1.mjs#prepare",
+    "legacySingleFlight": "tools/operation-intake/repository-operation-lock-manager.v1.mjs#acquireLocal",
+    "planner": "tools/operation-intake/owner-connector-canonical-intake.v1.mjs"
+  },
+  "requiredAuthentication": [
+    "SOURCE_COMMENT_AUTHOR_IS_OWNER_LOGIN",
+    "SOURCE_COMMENT_AUTHOR_ASSOCIATION_IS_OWNER",
+    "SOURCE_COMMENT_MARKER_MATCHES",
+    "SOURCE_COMMENT_ENVELOPE_MATCHES_REQUEST_AND_PROCEDURE",
+    "REQUEST_AND_PROCEDURE_BIND_EXACT_CURRENT_MAIN",
+    "OBSERVED_LEDGER_BLOB_SHA_IS_CURRENT_AT_WRITE",
+    "OBSERVED_LOCK_REF_HEAD_IS_CURRENT_AT_WRITE"
+  ],
+  "writeLaw": {
+    "exactAllowedPaths": [
+      ".github/operation-intake/active-operation-ledger.v1.json"
+    ],
+    "compareAndSwap": "REQUIRED",
+    "canonicalCommitMessage": "Acquire operation lock <LOCK_GENERATION>: <OPERATION_ID>",
+    "secondLedger": false,
+    "forceRefUpdate": false,
+    "authorityWidening": false
+  },
+  "lineageLaw": {
+    "legacyVerifiedBotCommitsRemainCanonical": true,
+    "ownerConnectorCommitCanonicalOnlyWhenIndependentProvenanceMatchesResultingLock": true,
+    "unsignedOwnerCommitWithoutMatchingProvenance": "REJECT",
+    "nonLedgerMutationOnLockRef": "REJECT"
+  },
+  "successResult": "ADMITTED_AND_LOCKED",
+  "failureDisposition": "FAIL_CLOSED"
+}

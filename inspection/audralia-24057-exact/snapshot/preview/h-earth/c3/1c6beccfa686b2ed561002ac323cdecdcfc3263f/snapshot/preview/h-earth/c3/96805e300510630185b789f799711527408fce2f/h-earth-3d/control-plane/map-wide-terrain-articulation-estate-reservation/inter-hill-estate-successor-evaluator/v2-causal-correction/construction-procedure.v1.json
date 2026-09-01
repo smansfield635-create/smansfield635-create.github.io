@@ -1,0 +1,105 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "algorithm": "SHA-256",
+    "domain": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_002",
+    "orderedComponents": [
+      "exactGoverningHead",
+      "operationId",
+      "lockScope",
+      "allowedPaths",
+      "causalRulesDigest",
+      "fixtureResultsDigest",
+      "deterministicRerunDigest",
+      "v1PreservationDigest",
+      "candidateHead"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/input-schema.v2.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/output-schema.v1.json"
+  ],
+  "canonicalOutputSchemas": [
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/output-schema.v2.json",
+    "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_VERIFICATION_RECEIPT_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "INVALID_INPUT",
+    "UNEVALUABLE_MISSING_OR_UNKNOWN_EVIDENCE",
+    "EVALUATOR_OR_MEASUREMENT_INSUFFICIENCY",
+    "DECLARED_HARD_CONSTRAINT_REJECTION",
+    "EXPLICIT_INFEASIBILITY_PROOF",
+    "FEASIBLE_ARRANGEMENT_FOUND"
+  ],
+  "evaluationToolingHeadBindingRule": "EXECUTE_ONLY_AT_EXACT_CANDIDATE_HEAD_WITH_EXACT_GOVERNING_BASE_AND_ACTIVE_NEW_LOCK_IDENTITY",
+  "exactAllowedRepositoryPaths": [
+    ".github/workflows/h-earth-inter-hill-estate-successor-evaluator-v2-causal-correction.yml",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/AGENTS.md",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/operation-request.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/construction-procedure.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/changed-path-manifest.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/input-schema.v2.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/output-schema.v2.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/causal-rules.v2.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/fixtures.v2.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/rollback.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/verify.v2.mjs",
+    "tools/h-earth-map-wide-terrain/inter-hill-estate/causal-trace-evaluator.v2.mjs",
+    "h-earth-3d/validation/h-earth.inter-hill-estate-successor-evaluator-v2.mjs"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "branch": "agent/h-earth-inter-hill-estate-successor-evaluator-v2-causal-correction-002",
+      "commitClass": "ONE_BOUNDED_ADDITIVE_CONSTRUCTION_COMMIT",
+      "exactPathCount": 13,
+      "parent": "6ca63ec4ba34b9c84e783aaaf5aa73c4604f4fb6",
+      "sequence": 1
+    },
+    {
+      "action": "OPEN_DRAFT_PULL_REQUEST",
+      "base": "main",
+      "mergeProhibited": true,
+      "sequence": 2
+    },
+    {
+      "action": "RETURN_EXACT_CANDIDATE_TO_ROLE_3",
+      "freshIndependentVerificationRequired": true,
+      "sequence": 3
+    }
+  ],
+  "exactGoverningHead": "6ca63ec4ba34b9c84e783aaaf5aa73c4604f4fb6",
+  "exactTestRunnerCommand": "node h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/verify.v2.mjs",
+  "independentVerifierDefinition": {
+    "freshCheckout": true,
+    "mergeAuthority": false,
+    "repairAuthority": false,
+    "rerunExactCommand": true,
+    "role": "ROLE_3_FRESH_INDEPENDENT_VERIFICATION_AUTHORITY",
+    "verifyLockIdentity": true,
+    "verifyThirteenPathAdditiveBoundary": true
+  },
+  "operationClass": "ADDITIVE_NONPRODUCT_CAUSAL_EVALUATOR_CONSTRUCTION",
+  "priorAttemptInspectionLimits": {
+    "generation279": "TERMINAL_RELEASED_DO_NOT_REOPEN",
+    "generation280": "TERMINAL_RELEASED_DO_NOT_REOPEN",
+    "operation001": "TERMINAL_FAIL_CLOSED_READ_ONLY",
+    "prohibited": [
+      "REOPEN_PRIOR_OPERATION",
+      "REWRITE_V1",
+      "WEAKEN_HARD_CONSTRAINTS",
+      "INFER_INFEASIBILITY_FROM_ZERO_PASS"
+    ],
+    "v1": "FROZEN_VALID_ENGINEERING_BASELINE_READ_IMPORT_WRAP_ONLY"
+  },
+  "procedureId": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_002_CONSTRUCTION_PROCEDURE_v1",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "/tmp/h-earth-v2-causal-correction/verification-receipt.json",
+      "/tmp/h-earth-v2-causal-correction/fixture-results.json",
+      "/tmp/h-earth-v2-causal-correction/determinism-receipt.json",
+      "/tmp/h-earth-v2-causal-correction/path-boundary-receipt.json",
+      "/tmp/h-earth-v2-causal-correction/v1-preservation-receipt.json"
+    ],
+    "workflowPath": ".github/workflows/h-earth-inter-hill-estate-successor-evaluator-v2-causal-correction.yml"
+  }
+}

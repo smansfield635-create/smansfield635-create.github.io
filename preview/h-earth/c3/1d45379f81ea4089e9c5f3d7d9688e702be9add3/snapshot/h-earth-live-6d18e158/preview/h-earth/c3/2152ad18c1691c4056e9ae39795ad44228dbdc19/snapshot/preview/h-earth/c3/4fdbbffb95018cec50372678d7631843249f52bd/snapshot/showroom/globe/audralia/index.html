@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en" data-audralia-live-planetary="active">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0e1510">
+  <meta name="description" content="Explore Audralia continuously from planetary scale to Gratitude and back again.">
+  <title>Audralia · Planetary World</title>
+  <link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/audralia/">
+  <link rel="modulepreload" href="../h-earth/terrain-estate-construction-v1/renderer.mjs?cb=d10b53b337882862">
+  <link rel="modulepreload" href="./canonical-weather-spatial-lod-proof/weather-model.mjs?cb=6eec8338fa4973d7">
+  <link rel="modulepreload" href="./canonical-weather-spatial-lod-proof/weather-renderer.mjs?cb=b3352e63313b535c">
+  <link rel="stylesheet" href="./index.css?v=AUDRALIA_LIVE_STARTUP_LOADING_v1&cb=2db60f82c66745a8">
+  <link rel="stylesheet" href="./weather-presentation-reconciliation/reconciliation.css?v=AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_v2&cb=a103b235c77e1ba2">
+</head>
+<body>
+  <div class="audralia-loading-screen" data-audralia-loader role="status" aria-live="polite" aria-label="Audralia is loading">
+    <div class="audralia-loading-panel">
+      <div class="audralia-loading-orbit" aria-hidden="true"></div>
+      <div class="audralia-loading-title">Audralia</div>
+      <div class="audralia-loading-stage" data-audralia-loader-stage>Preparing world and camera…</div>
+      <div class="audralia-loading-track" data-audralia-loader-track role="progressbar" aria-label="Audralia initialization progress" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0"><span data-audralia-loader-fill></span></div>
+      <div class="audralia-loading-time" data-audralia-loader-progress>0 of 4 systems ready</div>
+      <div class="audralia-loading-note">Building the same world progressively: surface atmosphere, regional weather, and bounded local weather.</div>
+    </div>
+  </div>
+
+  <main class="audralia-live-shell" aria-label="Audralia planetary world">
+    <header class="audralia-live-toolbar" aria-label="Audralia world navigation">
+      <div class="audralia-live-brand" aria-label="Audralia">Audralia</div>
+      <nav class="audralia-live-nav" aria-label="World navigation">
+        <button class="audralia-live-action audralia-live-action-primary" type="button" data-fit-world>focus Gratitude</button>
+        <a class="audralia-live-action" href="../h-earth/">H-Earth · Play</a>
+        <a class="audralia-live-action" href="../../../index.html">Compass</a>
+        <a class="audralia-live-action" href="../../">Mirrorland</a>
+      </nav>
+      <span class="audralia-sr-only" data-h-earth-status aria-live="polite">booting Audralia</span>
+    </header>
+
+    <section class="audralia-world-stage" aria-label="Interactive Audralia planetary view">
+      <canvas
+        class="audralia-world-canvas"
+        data-h-earth-map-wide-canvas
+        aria-label="Interactive Audralia world. One finger looks, two fingers travel, pinch descends and spread ascends."
+      ></canvas>
+      <p class="audralia-sr-only" data-h-earth-diagnostic aria-live="polite"></p>
+    </section>
+
+    <footer class="audralia-live-help" aria-label="Interaction guide">
+      <span class="audralia-help-touch">1 finger · look &nbsp;·&nbsp; 2 fingers together · travel &nbsp;·&nbsp; pinch · descend &nbsp;·&nbsp; spread · ascend</span>
+      <span class="audralia-help-pointer">drag · look &nbsp;·&nbsp; wheel · descend / ascend &nbsp;·&nbsp; W/A/S/D or arrows · travel</span>
+    </footer>
+  </main>
+
+  <script>
+    window.__AUDRALIA_LIVE_PLANETARY_INTEGRATION__ = Object.freeze({
+      schema: 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v2',
+      legacyPlanetActive: false,
+      canonicalWeatherSpatialLod: true,
+      weatherPresentationReconciliation: true,
+      cameraSemanticsFrozen: true
+    });
+  </script>
+  <script type="module" src="./weather-presentation-reconciliation/loader-progress.mjs?cb=639ff47987ede160"></script>
+  <script type="module" src="./weather-presentation-reconciliation/app.mjs?cb=3278c1b0575e3da9"></script>
+  <script type="module" src="./celestial-checkpoint-1.mjs?cb=b595ce89e5eac520"></script>
+</body>
+</html>

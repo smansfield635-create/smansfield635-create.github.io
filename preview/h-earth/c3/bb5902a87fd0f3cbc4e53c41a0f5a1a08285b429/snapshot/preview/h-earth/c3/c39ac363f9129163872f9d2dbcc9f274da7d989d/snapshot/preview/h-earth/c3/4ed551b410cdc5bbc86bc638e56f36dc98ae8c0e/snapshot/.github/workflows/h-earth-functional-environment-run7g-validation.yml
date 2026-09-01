@@ -1,0 +1,88 @@
+name: H-Earth Functional Environment Run 7G Validation
+
+on:
+  push:
+    branches:
+      - agent/h-earth-functional-environment-run7g-001
+  pull_request:
+    branches:
+      - agent/h-earth-functional-environment-run7f-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run7g:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out Run 7G workspace
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Execute bounded Run 7G harness
+        env:
+          H_EARTH_RUN7G_EXECUTION_CANDIDATE: h-earth-run7g-execution-candidate.json
+        run: |
+          set -o pipefail
+          node --experimental-default-type=module \
+            h-earth-3d/validation/h-earth.functional-environment.run7g.harness.mjs \
+            2>&1 | tee h-earth-run7g.log
+
+      - name: Verify execution candidate exists
+        run: |
+          test -s h-earth-run7g-execution-candidate.json
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const receipt = JSON.parse(
+            readFileSync('h-earth-run7g-execution-candidate.json', 'utf8')
+          );
+          if (
+            receipt.eligible !== true ||
+            receipt.failCount !== 0 ||
+            receipt.deterministicRerunMatch !== true ||
+            receipt.observedLifecycleStateCount !== 4 ||
+            receipt.outwardTransitionCount !== 3 ||
+            receipt.inwardTransitionCount !== 3 ||
+            receipt.activeDetailPopulationInstanceCount <=
+              receipt.activeReducedPopulationInstanceCount ||
+            receipt.activeReducedPopulationInstanceCount <= 0 ||
+            receipt.sleepingPopulationInstanceCount !== 0 ||
+            receipt.unloadedPopulationInstanceCount !== 0 ||
+            receipt.forbiddenOutputsObserved !== 0 ||
+            receipt.workspaceExecution !== true ||
+            receipt.localConstruction !== false ||
+            receipt.populationPlannerMutation !== false ||
+            receipt.cameraMutation !== false ||
+            receipt.terrainMutation !== false ||
+            receipt.surfaceStateMutation !== false ||
+            receipt.waterStateMutation !== false ||
+            receipt.biomeMutation !== false ||
+            receipt.traversalMutation !== false ||
+            receipt.geometryMutation !== false ||
+            receipt.navigationMutation !== false ||
+            receipt.rendererMutation !== false ||
+            receipt.publicRouteMutation !== false ||
+            receipt.productPromotionClaim !== false ||
+            receipt.liveVerificationClaim !== false
+          ) {
+            console.error(JSON.stringify(receipt, null, 2));
+            process.exit(1);
+          }
+          NODE
+
+      - name: Upload Run 7G execution evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run7g-execution-evidence
+          path: |
+            h-earth-run7g.log
+            h-earth-run7g-execution-candidate.json
+          if-no-files-found: error
+          retention-days: 14

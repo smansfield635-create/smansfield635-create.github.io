@@ -1,0 +1,155 @@
+{
+  "schema": "REPOSITORY_AUTHORIZED_TOOLSET_AND_AI_ROOM_TRANSPORT_SCHEMA_REGISTRY_v1",
+  "status": "CLOSED_WORLD",
+  "common": {
+    "sha256Pattern": "^[0-9a-f]{64}$",
+    "commitPattern": "^[0-9a-f]{40}$",
+    "identifierPattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$",
+    "repositoryPathPattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"
+  },
+  "schemas": {
+    "AI_ROOM_EXECUTION_REQUEST_v1": {
+      "required": [
+        "schema",
+        "requestId",
+        "descriptorId",
+        "operationId",
+        "admissionReceiptIdentity",
+        "routerReceiptIdentity",
+        "inputs",
+        "availableCapabilities",
+        "requestNonce"
+      ],
+      "allowed": [
+        "schema",
+        "requestId",
+        "descriptorId",
+        "operationId",
+        "admissionReceiptIdentity",
+        "routerReceiptIdentity",
+        "inputs",
+        "availableCapabilities",
+        "requestNonce"
+      ],
+      "forbidden": [
+        "command",
+        "shellCommand",
+        "scriptBody",
+        "workflowOverride",
+        "repositoryPathOverride",
+        "environment",
+        "environmentOverride",
+        "extraArguments"
+      ],
+      "receiptIdentityRequired": ["sourceClass", "exactHead", "path", "sha256"],
+      "receiptIdentitySourceClasses": ["REPOSITORY_PATH_AT_EXACT_HEAD"],
+      "requestNoncePattern": "^[0-9a-f]{64}$"
+    },
+    "AUTHORIZED_TOOLSET_DESCRIPTOR_v1": {
+      "required": [
+        "schema",
+        "descriptorId",
+        "operationId",
+        "operationClass",
+        "projectId",
+        "authorityRouteIdentity",
+        "intakeAdmissionIdentity",
+        "toolId",
+        "exactToolingHead",
+        "commandSpecification",
+        "canonicalInputSchema",
+        "canonicalOutputSchema",
+        "allowedBackends",
+        "transportId",
+        "workflowPath",
+        "allowedMutationPaths",
+        "prohibitedPaths",
+        "prohibitedSideEffects",
+        "expectedReceiptSchema",
+        "receiptValidationCommand",
+        "successDisposition",
+        "failureDispositions",
+        "continuationRule",
+        "terminationRule"
+      ],
+      "commandSpecificationRequired": [
+        "executable",
+        "scriptPath",
+        "fixedArguments",
+        "inputArgumentBindings",
+        "outputArgumentBindings"
+      ],
+      "movingRefsAllowed": false
+    },
+    "AVAILABLE_CAPABILITY_RECEIPT_v1": {
+      "required": ["schema", "availableBackends", "availableWorkflowPaths", "availableToolingHeads"],
+      "allowedBackends": ["LOCAL_CLEAN_GIT", "GITHUB_ACTIONS_CLEAN_EXECUTION", "CONNECTED_GITHUB_METADATA_INSPECTION"]
+    },
+    "COMMAND_EXECUTION_RECEIPT_v1": {
+      "required": [
+        "schema",
+        "requestId",
+        "descriptorId",
+        "operationId",
+        "toolId",
+        "exactToolingHead",
+        "selectedBackend",
+        "commandDigest",
+        "inputDigest",
+        "outputDigests",
+        "changedPaths",
+        "exitStatus",
+        "executionDisposition",
+        "prohibitedSideEffectsObserved"
+      ],
+      "executionDispositions": [
+        "COMMAND_EXECUTED_AND_PASSED",
+        "COMMAND_EXECUTED_AND_FAILED",
+        "COMMAND_NOT_EXECUTED_FAIL_CLOSED"
+      ]
+    },
+    "RECEIPT_VALIDATION_RESULT_v1": {
+      "required": [
+        "schema",
+        "descriptorId",
+        "operationId",
+        "valid",
+        "validationDisposition",
+        "reasonCodes"
+      ],
+      "validationDispositions": ["VALIDATED_PASS", "VALIDATED_FAILURE", "INVALID_RECEIPT_STOP"]
+    },
+    "CONTINUATION_GATE_RESULT_v1": {
+      "required": ["schema", "descriptorId", "operationId", "result", "ruleApplied", "reasonCodes"],
+      "results": ["CONTINUE", "STOP", "APPLY_REGISTERED_FAILURE_DISPOSITION"]
+    },
+    "BOOTSTRAP_AUTHORITY_TERMINATION_RECEIPT_v1": {
+      "required": [
+        "schema",
+        "bootstrapId",
+        "builderCertificationDigest",
+        "verifierCertificationDigest",
+        "temporaryBuilderAuthorityActive",
+        "temporaryVerifierAuthorityActive",
+        "residualBootstrapAuthority",
+        "productMutationPerformed",
+        "roleActivationPerformed",
+        "methodsAuditExecuted",
+        "mergePerformed",
+        "permanentTransportActivated",
+        "result"
+      ],
+      "requiredFalse": [
+        "temporaryBuilderAuthorityActive",
+        "temporaryVerifierAuthorityActive",
+        "residualBootstrapAuthority",
+        "productMutationPerformed",
+        "roleActivationPerformed",
+        "methodsAuditExecuted",
+        "mergePerformed",
+        "permanentTransportActivated"
+      ],
+      "result": "PASS_CLOSED_BOOTSTRAP_AUTHORITY_TERMINATED"
+    }
+  }
+}

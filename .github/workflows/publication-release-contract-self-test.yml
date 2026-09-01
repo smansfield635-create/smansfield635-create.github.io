@@ -1,0 +1,35 @@
+name: Publication Release Contract Self-Test
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'AI_ENTRYPOINT.json'
+      - '.github/ai-router/publication-release-contract.v1.json'
+      - '.github/ai-router/projects/compass/entrypoint.v1.json'
+      - '.github/workflows/pages-direct-deploy.yml'
+      - 'tools/publication-release-contract-self-test.mjs'
+      - '.github/workflows/publication-release-contract-self-test.yml'
+  pull_request:
+    paths:
+      - 'AI_ENTRYPOINT.json'
+      - '.github/ai-router/publication-release-contract.v1.json'
+      - '.github/ai-router/projects/compass/entrypoint.v1.json'
+      - '.github/workflows/pages-direct-deploy.yml'
+      - 'tools/publication-release-contract-self-test.mjs'
+      - '.github/workflows/publication-release-contract-self-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-release-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify release contract, AI entry point, Compass route, and deployment workflow agree
+        run: node tools/publication-release-contract-self-test.mjs

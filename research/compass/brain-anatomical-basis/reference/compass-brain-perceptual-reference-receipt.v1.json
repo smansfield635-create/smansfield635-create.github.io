@@ -1,0 +1,40 @@
+{
+  "receipt_identity": "COMPASS_BRAIN_PERCEPTUAL_REFERENCE_RECEIPT_V1",
+  "reference_identity": "COMPASS_BRAIN_PERCEPTUAL_REFERENCE_V1",
+  "base_main_sha": "d9231585f893cf0d4ff1ef9c39997b4ae414708b",
+  "source_image": {
+    "width_px": 1536,
+    "height_px": 1024,
+    "sha256": "338b5811efd421d0945afbc36934ed0ab7f2e6f62163fb13c27367090409c18b"
+  },
+  "decisions": {
+    "image_space_deterministic_authority": "BOUND",
+    "hidden_3d_geometry_from_image": "PROHIBITED_AS_UNIQUE_AUTHORITY",
+    "primary_projection_fixture": "PRIMARY_LATERAL",
+    "secondary_projection_fixtures": ["SUPERIOR_TOP", "POSTERIOR_REAR", "OBLIQUE"],
+    "secondary_fixture_normalization": "INDEPENDENT",
+    "camera_projection_framing_lighting": "TEST_FIXTURE_NOT_CANDIDATE_VARIABLES",
+    "qualification_aggregation": "NONCOMPENSATING_CONJUNCTIVE",
+    "thresholds_from_first_candidate": "PROHIBITED",
+    "V9_V11_PROCEDURAL_LINE": "CLOSED_PRESERVED_AS_NEGATIVE_EVIDENCE",
+    "LIVE_INCUMBENT": "PROTECTED",
+    "new_procedural_geometry_authorized": false
+  },
+  "first_pass_measurements": {
+    "primary_lateral": {"width_height": 1.242, "centroid": [0.501, 0.387]},
+    "superior_top": {"width_height": 0.890, "centroid": [0.499, 0.499]},
+    "posterior_rear": {"width_height": 1.115, "centroid": [0.470, 0.461]},
+    "oblique": {"width_height": 1.458, "centroid": [0.518, 0.468]}
+  },
+  "reference_completion": {
+    "authority_model": "PASS",
+    "source_identity_binding": "PASS",
+    "first_pass_fixture_geometry": "PASS",
+    "noncompensation_law": "PASS",
+    "lineage_disposition": "PASS",
+    "component_landmark_extraction": "REQUIRED_NEXT",
+    "appearance_descriptor_extraction": "REQUIRED_NEXT",
+    "anatomical_3d_source_binding": "NOT_YET_STARTED"
+  },
+  "boundary_decision": "REFERENCE_V1_FROZEN_ADVANCE_TO_SOURCE_SELECTION_AND_BINDING"
+}

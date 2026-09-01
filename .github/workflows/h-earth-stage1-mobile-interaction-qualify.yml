@@ -1,0 +1,130 @@
+name: H-Earth Stage 1 Mobile Interaction Qualify
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        description: Exact Stage 1 mobile interaction repair candidate
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout candidate runtime roots
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          path: candidate
+          fetch-depth: 1
+          sparse-checkout: |
+            showroom/globe/audralia
+            showroom/globe/h-earth
+            h-earth-3d
+
+      - name: Build isolated Stage 1 mobile harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f candidate/showroom/globe/audralia/weather-presentation-reconciliation/mobile-interaction-safety-v1.mjs
+          python3 <<'PY'
+          from pathlib import Path
+          p=Path('candidate/showroom/globe/audralia/weather-presentation-reconciliation/index.html')
+          text=p.read_text()
+          marker='<script type="module" src="./app.mjs?cb=2c64ff2e477f6dd2"></script>'
+          prefix='''<script type="module" src="../fap1-stage1-cost-decoupling-v1.mjs?cb=STAGE1_COST_DECOUPLING_v1"></script>\n  <script type="module" src="../acf1-cloud-presentation-v1.mjs?cb=ACF1_v3"></script>\n  <script type="module" src="../fap1-xyz-volumetric-depth-v1.mjs?cb=FAP1_XYZ_DEPTH_v1"></script>\n  <script type="module" src="../fap1-weather-presentation-v1.mjs?cb=FAP1_CANDIDATE_A_VISUAL_v4"></script>\n  '''
+          assert marker in text
+          p.with_name('qualification-mobile.html').write_text(text.replace(marker,prefix+marker,1))
+          PY
+
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install browser driver
+        shell: bash
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Start isolated server
+        shell: bash
+        run: |
+          python3 -m http.server 4174 --directory candidate >/tmp/mobile-stage1.log 2>&1 & echo $! >/tmp/mobile-stage1.pid
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4174/showroom/globe/audralia/weather-presentation-reconciliation/qualification-mobile.html >/dev/null && exit 0; sleep 1; done
+          exit 1
+
+      - name: Qualify mobile startup and sustained pointer interaction
+        shell: bash
+        run: |
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          node <<'NODE'
+          const puppeteer=require('puppeteer-core');
+          const fail=(m,x)=>{throw new Error(m+' '+JSON.stringify(x||{}));};
+          const safetyActive=safety=>Boolean(
+            safety?.controllerOwnsInteractionStaging===true ||
+            safety?.pointerMoveRafCoalescing===true
+          );
+          (async()=>{
+            const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+            const page=await browser.newPage();
+            await page.setViewport({width:800,height:1280,deviceScaleFactor:1,isMobile:true,hasTouch:true});
+            const errors=[]; const consoleLog=[];
+            page.on('pageerror',e=>errors.push(String(e?.stack||e)));
+            page.on('console',m=>{const entry=`${m.type()}:${m.text()}`;consoleLog.push(entry);if(m.type()==='error')errors.push(m.text());});
+            const snapshot=()=>page.evaluate(()=>({
+              status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null,
+              loaderHidden:Boolean(document.querySelector('[data-audralia-loader]')?.hidden),
+              loaderStage:document.querySelector('[data-audralia-loader-stage]')?.textContent||null,
+              reconciliationError:window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__||null,
+              runtime:window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.()||null,
+              stage1:window.__AUDRALIA_FAP1_STAGE1_COST_DECOUPLING__?.getRuntimeEvidence?.()||null,
+              safety:window.__AUDRALIA_MOBILE_INTERACTION_SAFETY__?.getEvidence?.()||null,
+              canvases:[...document.querySelectorAll('canvas')].map(c=>({w:c.width,h:c.height,clientW:c.clientWidth,clientH:c.clientHeight,attrs:{...c.dataset}}))
+            }));
+            const url='http://127.0.0.1:4174/showroom/globe/audralia/weather-presentation-reconciliation/qualification-mobile.html';
+            await page.goto(url,{waitUntil:'domcontentloaded',timeout:45000});
+            let startupState=null;
+            for(let i=0;i<18;i++){
+              const s=await snapshot();
+              console.log(JSON.stringify({checkpoint:`startup-${i}`,state:s},null,2));
+              if(s.runtime?.invariants?.pass===true){startupState=s;break;}
+              if(s.reconciliationError)fail('MOBILE_STARTUP_RECONCILIATION_ERROR',{state:s,errors,consoleLog});
+              await new Promise(r=>setTimeout(r,5000));
+            }
+            if(!startupState)fail('MOBILE_STARTUP_NOT_READY',{state:await snapshot(),errors,consoleLog});
+            if(!(startupState.stage1?.patchedCloudShaders>0))fail('STAGE1_PATCH_MISSING_AT_STARTUP',startupState.stage1);
+            if(!safetyActive(startupState.safety))fail('MOBILE_SAFETY_MISSING_AT_STARTUP',startupState.safety);
+            if((startupState.safety?.contextLossCount||0)!==0)fail('WEBGL_CONTEXT_LOSS_AT_STARTUP',startupState.safety);
+            await page.evaluate(async()=>{
+              const c=document.querySelector('[data-h-earth-map-wide-canvas]');
+              const r=c.getBoundingClientRect(),x=r.left+r.width*.5,y=r.top+r.height*.5;
+              const fire=(type,id,px,py)=>c.dispatchEvent(new PointerEvent(type,{pointerId:id,pointerType:'touch',isPrimary:id===1,clientX:px,clientY:py,bubbles:true,buttons:type==='pointerup'?0:1}));
+              fire('pointerdown',1,x,y);
+              for(let i=0;i<240;i++){fire('pointermove',1,x+i*.45,y+Math.sin(i*.12)*18);if(i%8===0)await new Promise(requestAnimationFrame);}
+              fire('pointerup',1,x+108,y);
+              await new Promise(r=>setTimeout(r,300));
+              fire('pointerdown',1,x-40,y);fire('pointerdown',2,x+40,y);
+              for(let i=0;i<180;i++){const d=40+i*.18;fire('pointermove',1,x-d,y+i*.08);fire('pointermove',2,x+d,y+i*.08);if(i%8===0)await new Promise(requestAnimationFrame);}
+              fire('pointerup',1,x-72,y+14);fire('pointerup',2,x+72,y+14);
+              await new Promise(r=>setTimeout(r,500));
+            });
+            const state=await snapshot();
+            console.log(JSON.stringify({result:'H_EARTH_STAGE1_MOBILE_INTERACTION_QUALIFIED',state,errors,consoleLog},null,2));
+            if(errors.length)fail('PAGE_ERRORS',{errors,state});
+            if(state.runtime?.invariants?.pass!==true)fail('RUNTIME_LOST',state);
+            if((state.safety?.contextLossCount||0)!==0)fail('WEBGL_CONTEXT_LOSS',state.safety);
+            if(!(state.stage1?.patchedCloudShaders>0))fail('STAGE1_PATCH_MISSING',state.stage1);
+            if(!safetyActive(state.safety))fail('MOBILE_SAFETY_LOST',state.safety);
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1);});
+          NODE
+
+      - name: Stop server
+        if: always()
+        shell: bash
+        run: kill "$(cat /tmp/mobile-stage1.pid 2>/dev/null)" 2>/dev/null || true

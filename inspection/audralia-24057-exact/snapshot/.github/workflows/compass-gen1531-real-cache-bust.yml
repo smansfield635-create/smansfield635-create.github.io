@@ -1,0 +1,51 @@
+name: Compass Gen1531 Real Cache Bust
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/compass-gen1531-real-cache-bust.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cache-bust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Apply exact Gen1531 URL cache bust
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          pairs={
+            'compass.crystals.js?v=compass-contextual-quick-pass-v11':'compass.crystals.js?v=gen1531-cc7a9b11',
+            'compass.mirrorland-window.js?v=compass-contextual-quick-pass-v11':'compass.mirrorland-window.js?v=gen1531-cc7a9b11',
+          }
+          for old,new in pairs.items():
+              if s.count(old)!=1:
+                  raise SystemExit(f'expected exactly one occurrence of {old!r}, found {s.count(old)}')
+              s=s.replace(old,new)
+          p.write_text(s)
+          PY
+          git diff --check
+          test "$(git diff --numstat -- index.html | awk '{print $1+$2}')" -eq 2
+          grep -F 'compass.crystals.js?v=gen1531-cc7a9b11' index.html
+          grep -F 'compass.mirrorland-window.js?v=gen1531-cc7a9b11' index.html
+      - name: Commit exact cache-bust delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Cache-bust Gen1531 Compass runtime assets'
+          git push origin HEAD:main

@@ -1,0 +1,97 @@
+name: H-Earth Audralia Open-World Spatial Migration Continuity
+
+on:
+  push:
+    paths:
+      - '.github/workflows/h-earth-audralia-open-world-spatial-migration-continuity.yml'
+      - 'h-earth-3d/control-plane/audralia-open-world-spatial-migration/**'
+      - 'tools/h-earth-audralia-open-world-spatial-migration/continuity-verifier.v1.mjs'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/h-earth-audralia-open-world-spatial-migration-continuity.yml'
+      - 'h-earth-3d/control-plane/audralia-open-world-spatial-migration/**'
+      - 'tools/h-earth-audralia-open-world-spatial-migration/continuity-verifier.v1.mjs'
+
+permissions:
+  contents: read
+
+env:
+  EXACT_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  builder:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXACT_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build deterministic continuity receipt
+        run: |
+          mkdir -p /tmp/continuity/builder
+          node tools/h-earth-audralia-open-world-spatial-migration/continuity-verifier.v1.mjs --verify-static --output /tmp/continuity/builder/continuity.receipt.v1.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-audralia-open-world-continuity-builder-${{ github.sha }}
+          path: /tmp/continuity/builder/continuity.receipt.v1.json
+          if-no-files-found: error
+          retention-days: 90
+
+  fresh-verifier:
+    needs: builder
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXACT_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: h-earth-audralia-open-world-continuity-builder-${{ github.sha }}
+          path: /tmp/continuity/builder
+      - name: Reproduce independently and require byte equality
+        run: |
+          mkdir -p /tmp/continuity/fresh
+          node tools/h-earth-audralia-open-world-spatial-migration/continuity-verifier.v1.mjs --verify-static --output /tmp/continuity/fresh/continuity.receipt.v1.json
+          cmp /tmp/continuity/builder/continuity.receipt.v1.json /tmp/continuity/fresh/continuity.receipt.v1.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-audralia-open-world-continuity-fresh-${{ github.sha }}
+          path: /tmp/continuity/fresh/continuity.receipt.v1.json
+          if-no-files-found: error
+          retention-days: 90
+
+  equality:
+    needs: [builder, fresh-verifier]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: h-earth-audralia-open-world-continuity-builder-${{ github.sha }}
+          path: /tmp/continuity/builder
+      - uses: actions/download-artifact@v4
+        with:
+          name: h-earth-audralia-open-world-continuity-fresh-${{ github.sha }}
+          path: /tmp/continuity/fresh
+      - name: Certify equal receipts
+        run: |
+          set -euo pipefail
+          cmp /tmp/continuity/builder/continuity.receipt.v1.json /tmp/continuity/fresh/continuity.receipt.v1.json
+          mkdir -p /tmp/h-earth-audralia-open-world-spatial-migration-continuity
+          cp /tmp/continuity/builder/continuity.receipt.v1.json /tmp/h-earth-audralia-open-world-spatial-migration-continuity/builder.receipt.v1.json
+          cp /tmp/continuity/fresh/continuity.receipt.v1.json /tmp/h-earth-audralia-open-world-spatial-migration-continuity/fresh-verifier.receipt.v1.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-audralia-open-world-spatial-migration-continuity-${{ github.sha }}
+          path: /tmp/h-earth-audralia-open-world-spatial-migration-continuity/
+          if-no-files-found: error
+          retention-days: 90

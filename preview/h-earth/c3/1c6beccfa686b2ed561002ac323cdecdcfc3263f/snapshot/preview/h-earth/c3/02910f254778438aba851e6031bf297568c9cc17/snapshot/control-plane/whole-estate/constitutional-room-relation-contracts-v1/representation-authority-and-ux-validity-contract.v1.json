@@ -1,0 +1,52 @@
+{
+  "schema": "WHOLE_ESTATE_REPRESENTATION_AUTHORITY_AND_UX_VALIDITY_CONTRACT_v1",
+  "status": "CHECKPOINT_3_CONSTRUCTION_CANDIDATE",
+  "representationAuthorityEqualsPersuasionAuthority": false,
+  "visualAuthorityInflationProhibited": true,
+  "navigationalImportanceEqualsEvidentiaryStrength": false,
+  "laws": [
+    "VISUAL_EMPHASIS_MAY_EXPRESS_NAVIGATIONAL_IMPORTANCE_BUT_MAY_NOT_SILENTLY_EXPRESS_EVIDENTIARY_STRENGTH",
+    "CENTRAL_DOES_NOT_MEAN_BEST_VALIDATED",
+    "DEEP_DOES_NOT_MEAN_MORE_TRUE",
+    "LARGE_DOES_NOT_MEAN_MORE_SCIENTIFICALLY_IMPORTANT",
+    "PROXIMATE_DOES_NOT_MEAN_CAUSALLY_RELATED",
+    "ENCLOSED_DOES_NOT_MEAN_CANONICALLY_CONTAINED",
+    "POLISHED_DOES_NOT_MEAN_HIGHER_STANDING",
+    "ANIMATED_DOES_NOT_MEAN_MORE_CERTAIN",
+    "SEMANTIC_CORRECTNESS_IS_NECESSARY_BUT_NOT_SUFFICIENT"
+  ],
+  "spatialPrimitiveRule": {
+    "requiredChain": "INTENDED_SEMANTIC_TO_VISUAL_OR_SPATIAL_CUE_TO_USER_INTERPRETATION_TEST",
+    "topologyMayBeFrozenBeforePerceptualContract": false,
+    "geometryMayInventScientificMeaning": false
+  },
+  "userEffectiveness": {
+    "status": "NOT_EMPIRICALLY_ESTABLISHED",
+    "siteWideDeliveryStandardStatus": "NOT_ESTABLISHED",
+    "referenceImplementationStatus": "CANDIDATE",
+    "comparativeEvaluationRequiredBeforeGeneralization": true,
+    "futureComparatorDesign": "SAME_SCIENTIFIC_CORPUS_CONVENTIONAL_HIERARCHICAL_SITE_VS_SEMANTIC_SPATIAL_SYSTEM",
+    "requiredOutcomes": [
+      "CLAIM_IDENTIFICATION_ACCURACY",
+      "SUPPORTING_EVIDENCE_IDENTIFICATION",
+      "ADVERSE_EVIDENCE_IDENTIFICATION",
+      "UNRESOLVED_STATE_IDENTIFICATION",
+      "RELATION_TYPE_ACCURACY",
+      "PRESENTATIONAL_VS_SCIENTIFIC_RELATION_ACCURACY",
+      "PROVENANCE_FINDABILITY",
+      "LAWFUL_NEXT_STEP_SELECTION",
+      "CONFIDENCE_CALIBRATION",
+      "FALSE_CONFIDENCE",
+      "TIME",
+      "COGNITIVE_BURDEN",
+      "NAVIGATION_ERROR",
+      "RETENTION"
+    ]
+  },
+  "confidenceCalibration": {
+    "question": "DOES_USER_CONFIDENCE_TRACK_CORRECTNESS",
+    "falseConfidenceIsSevereFailureMode": true,
+    "highComprehensionWithPoorCalibrationIsSufficientForSuccess": false
+  },
+  "publicMutationAuthorized": false
+}

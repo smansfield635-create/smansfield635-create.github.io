@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Compass · Awards Provenance Successor</title>
+<style>html,body{margin:0;min-height:100%;background:#010308;color:#f7f2e7;font-family:system-ui,sans-serif}.boot{min-height:100vh;display:grid;place-items:center;text-align:center}.boot strong{display:block;font-family:Georgia,serif;font-size:clamp(2rem,5vw,4rem)}.boot span{display:block;margin-top:10px;opacity:.55;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase}</style>
+</head>
+<body><div class="boot"><div><strong>Reconstructing the Compass.</strong><span>Estate provenance · Gen346</span></div></div>
+<script>
+(async()=>{
+ const stamp='gen346-awards-provenance-successor-1';
+ const response=await fetch('/compass-isolated-clone/index.html?source='+Date.now(),{cache:'no-store'});
+ if(!response.ok)throw new Error('COMPASS_SOURCE_'+response.status);
+ let html=await response.text();
+ html=html
+  .replace(/<link rel="stylesheet" href="\.\/compass-isolated-clone\.css\?v=[^"]+">/,'<link rel="stylesheet" href="/compass-isolated-clone/compass-isolated-clone.css?v=gen345-cutting-edge-progressive-clone-1"><link rel="stylesheet" href="/compass-awards-provenance/awards-provenance.css?v='+stamp+'">')
+  .replace(/<style data-clone-critical-gen342>[\s\S]*?<\/style>/,'')
+  .replace(/<script src="\.\/compass-isolated-clone\.controller\.js\?v=[^"]+" defer><\/script>/,'<script src="/compass-awards-provenance/awards-provenance.js?v='+stamp+'" defer><\/script>')
+  .replace(/data-clone-build="[^"]+"/,'data-clone-build="'+stamp+'"')
+  .replace('<title>Diamond Gate Bridge — Compass Studio</title>','<title>Compass · Awards Provenance Successor · Diamond Gate Bridge</title>')
+  .replace('An isolated bilateral reconstruction of the Diamond Gate Bridge Compass.','A cutting-edge Compass successor built from the estate\'s demonstrated awards provenance, interaction grammar, governance and evidence standards.');
+ document.open();document.write(html);document.close();
+})().catch(error=>{document.body.innerHTML='<pre style="padding:24px;white-space:pre-wrap">GEN346 LOAD FAILURE\n'+String(error.stack||error)+'</pre>'});
+</script></body>
+</html>

@@ -1,0 +1,31 @@
+{
+  "schema": "REPOSITORY_AI_ENTRY_ROUTER_GITHUB_ACTIONS_VALIDATION_RECEIPT_v1",
+  "operationId": "REPOSITORY_WIDE_AI_ENTRY_ROUTER_GENERALIZATION_001",
+  "validatedHead": "0c8bee081bdee87e6cb0bbf2876ae2266fa1a581",
+  "pullRequest": 548,
+  "workflow": "Repository AI Entry Router Validation",
+  "workflowRunId": 30884473282,
+  "workflowRunNumber": 4,
+  "workflowConclusion": "success",
+  "jobId": 91912555601,
+  "jobConclusion": "success",
+  "validatedSteps": {
+    "checkoutExactWorkflowHead": "success",
+    "routerSelfTest": "success",
+    "hEarthRegisteredRoute": "success",
+    "unregisteredMutationGuard": "success",
+    "receiptArtifactUpload": "success"
+  },
+  "artifact": {
+    "artifactId": 8882523803,
+    "name": "repository-ai-entry-router-validation-receipts",
+    "sizeBytes": 2432,
+    "digest": "sha256:1e7d2e1a6244266c5537d668939863b3c1d6b6e340a118f8731dfa9305dbe80e",
+    "expired": false
+  },
+  "result": "PASS",
+  "productMutation": false,
+  "hEarthRuntimeMutation": false,
+  "candidateAdmissionNegativeWorkflowExecution": "NOT_YET_EXECUTED",
+  "positiveSuccessorCandidateExecution": "NOT_YET_AVAILABLE"
+}

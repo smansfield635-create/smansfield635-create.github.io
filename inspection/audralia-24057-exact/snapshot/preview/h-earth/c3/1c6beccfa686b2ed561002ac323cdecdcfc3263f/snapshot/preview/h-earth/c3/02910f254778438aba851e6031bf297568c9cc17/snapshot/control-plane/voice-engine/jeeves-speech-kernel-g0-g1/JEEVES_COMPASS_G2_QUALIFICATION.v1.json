@@ -1,0 +1,33 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_COMPASS_G2_QUALIFICATION_v1",
+  "status": "G2_RENDERED_MACHINE_QUALIFIED_NOT_USER_REVIEWABLE",
+  "generation": "G2",
+  "predecessorGeneration": "G1",
+  "corpusCount": 8,
+  "renderResult": {
+    "allEightLinesRendered": true,
+    "assembledRenderProduced": true,
+    "sampleRateHz": 24000,
+    "g1TimingPreservedExactly": true,
+    "durationEqualityAcrossAllEightLines": true,
+    "measuredRmsDeltaRange": [0.019675044593100485, 0.02870717649848227]
+  },
+  "qualificationDimensions": {
+    "stressNaturalness": "NOT_USER_QUALIFIED",
+    "phraseIntention": "NOT_USER_QUALIFIED",
+    "f0Naturalness": "CONTROL_PRESENT_NOT_FINAL",
+    "energyNaturalness": "CONTROL_PRESENT_NOT_FINAL",
+    "jeevesRestraint": "STRUCTURALLY_BOUNDED",
+    "nonTheatricalDelivery": "STRUCTURALLY_BOUNDED",
+    "syntheticCadenceReduction": "INSUFFICIENT_FOR_USER_REVIEW"
+  },
+  "machineFindings": [
+    "G1 line durations are preserved exactly for all eight lines.",
+    "F0 and energy controls produce non-zero waveform deltas on every line.",
+    "The acoustic source remains the same deterministic harmonic/formant generator; G2 therefore does not resolve the known acoustic-generator limitation.",
+    "No G3 micro-prosody, coarticulation, spectral dynamics, breath modeling, learned residual, external model weights, or public-site mutation entered this generation."
+  ],
+  "reviewArtifactPolicy": "WITHHELD: user requested only a materially natural Jeeves voice, not intermediate engineering audio.",
+  "disposition": "G2_CONTROL_BOUNDARY_COMPLETE_ADVANCE_TO_G3_EXPERIMENT",
+  "nextLawfulAction": "CONSTRUCT_G3_MICRO_PROSODY_WHILE_PRESERVING_G1_TIMING_AND_G2_STRESS_F0_ENERGY_CONTROLS"
+}

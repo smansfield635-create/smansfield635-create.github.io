@@ -5,7 +5,11 @@
  *
  * Durable geographic-formation identities aligned to existing lattice region
  * semantics. The records define membership and envelopes only; they create no
- * vertices, chunks, proxies, admission, or rendering.
+ * vertices, chunks, proxies, admission, or rendering. OW02 adds the articulated
+ * inland range, pass, basin and foothill identities without replacing the
+ * previously qualified coastal or local formation truths. OW03 adds explicit
+ * compound-coast identities for the Gratitude continent's peninsulas, bays,
+ * gulf and headlands without replacing the OW02 watershed system.
  */
 
 const deepFreeze = (value, seen = new WeakSet()) => {
@@ -45,6 +49,97 @@ const formation = ({
 });
 
 export const H_EARTH_TERRAIN_FORMATIONS = deepFreeze({
+  GRATITUDE_WESTERN_PENINSULA_001: formation({
+    formationId: 'H_EARTH_GRATITUDE_WESTERN_PENINSULA_001',
+    formationClass: 'CONTINENTAL_PENINSULA',
+    addressPartitions: [
+      { rows: [4, 8], columns: [1, 4] }
+    ],
+    worldBounds: { xMin: -250, xMax: -190, zMin: -145, zMax: -48 },
+    elevationEnvelope: { minimum: -1, maximum: 20 },
+    heightProfileReference: 'GRATITUDE_COMPOUND_COAST_PROFILE_v1',
+    fullRealizationEligibility: true,
+    proxyRealizationEligibility: true,
+    navigationClass: 'GROUND_OBSERVER_NAVIGABLE_COAST'
+  }),
+  GRATITUDE_WESTERN_GULF_001: formation({
+    formationId: 'H_EARTH_GRATITUDE_WESTERN_GULF_001',
+    formationClass: 'CONTINENTAL_GULF',
+    addressPartitions: [
+      { rows: [4, 9], columns: [3, 7] }
+    ],
+    worldBounds: { xMin: -200, xMax: -140, zMin: -164, zMax: -72 },
+    elevationEnvelope: { minimum: -3, maximum: 16 },
+    heightProfileReference: 'GRATITUDE_COMPOUND_COAST_PROFILE_v1',
+    fullRealizationEligibility: true,
+    proxyRealizationEligibility: true,
+    navigationClass: 'GROUND_OBSERVER_NAVIGABLE_COAST'
+  }),
+  GRATITUDE_CENTRAL_HEADLAND_001: formation({
+    formationId: 'H_EARTH_GRATITUDE_CENTRAL_HEADLAND_001',
+    formationClass: 'CONTINENTAL_HEADLAND',
+    addressPartitions: [
+      { rows: [4, 8], columns: [6, 9] }
+    ],
+    worldBounds: { xMin: -149, xMax: -101, zMin: -141, zMax: -57 },
+    elevationEnvelope: { minimum: -1, maximum: 24 },
+    heightProfileReference: 'GRATITUDE_COMPOUND_COAST_PROFILE_v1',
+    fullRealizationEligibility: true,
+    proxyRealizationEligibility: true,
+    navigationClass: 'GROUND_OBSERVER_NAVIGABLE_COAST'
+  }),
+  GRATITUDE_SANCTUARY_BAY_001: formation({
+    formationId: 'H_EARTH_GRATITUDE_SANCTUARY_BAY_001',
+    formationClass: 'CONTINENTAL_BAY',
+    addressPartitions: [
+      { rows: [4, 9], columns: [8, 11] }
+    ],
+    worldBounds: { xMin: -106, xMax: -58, zMin: -157, zMax: -72 },
+    elevationEnvelope: { minimum: -3, maximum: 18 },
+    heightProfileReference: 'GRATITUDE_COMPOUND_COAST_PROFILE_v1',
+    fullRealizationEligibility: true,
+    proxyRealizationEligibility: true,
+    navigationClass: 'GROUND_OBSERVER_NAVIGABLE_COAST'
+  }),
+  GRATITUDE_HARBOR_HEADLAND_001: formation({
+    formationId: 'H_EARTH_GRATITUDE_HARBOR_HEADLAND_001',
+    formationClass: 'CONTINENTAL_HEADLAND',
+    addressPartitions: [
+      { rows: [4, 8], columns: [10, 12] }
+    ],
+    worldBounds: { xMin: 36, xMax: 86, zMin: -139, zMax: -55 },
+    elevationEnvelope: { minimum: -1, maximum: 22 },
+    heightProfileReference: 'GRATITUDE_COMPOUND_COAST_PROFILE_v1',
+    fullRealizationEligibility: true,
+    proxyRealizationEligibility: true,
+    navigationClass: 'GROUND_OBSERVER_NAVIGABLE_COAST'
+  }),
+  GRATITUDE_BAY_001: formation({
+    formationId: 'H_EARTH_GRATITUDE_BAY_001',
+    formationClass: 'CONTINENTAL_BAY',
+    addressPartitions: [
+      { rows: [4, 10], columns: [11, 16] }
+    ],
+    worldBounds: { xMin: 36, xMax: 200, zMin: -181, zMax: -69 },
+    elevationEnvelope: { minimum: -3, maximum: 22 },
+    heightProfileReference: 'GRATITUDE_TRUE_CONTINENTAL_COASTAL_ENTRY_PROFILE_v1',
+    fullRealizationEligibility: true,
+    proxyRealizationEligibility: true,
+    navigationClass: 'GROUND_OBSERVER_NAVIGABLE_COAST'
+  }),
+  GRATITUDE_EASTERN_PENINSULA_001: formation({
+    formationId: 'H_EARTH_GRATITUDE_EASTERN_PENINSULA_001',
+    formationClass: 'CONTINENTAL_PENINSULA',
+    addressPartitions: [
+      { rows: [4, 8], columns: [14, 16] }
+    ],
+    worldBounds: { xMin: 208, xMax: 256, zMin: -139, zMax: -49 },
+    elevationEnvelope: { minimum: -1, maximum: 24 },
+    heightProfileReference: 'GRATITUDE_COMPOUND_COAST_PROFILE_v1',
+    fullRealizationEligibility: true,
+    proxyRealizationEligibility: true,
+    navigationClass: 'GROUND_OBSERVER_NAVIGABLE_COAST'
+  }),
   COASTAL_BERM_001: formation({
     formationId: 'H_EARTH_COASTAL_BERM_001',
     formationClass: 'COASTAL_BERM_OR_DUNE',
@@ -110,6 +205,71 @@ export const H_EARTH_TERRAIN_FORMATIONS = deepFreeze({
     proxyRealizationEligibility: false,
     navigationClass: 'GROUND_OBSERVER_NAVIGABLE'
   }),
+  GRATITUDE_INLAND_RANGE_001: formation({
+    formationId: 'H_EARTH_GRATITUDE_INLAND_RANGE_001',
+    formationClass: 'INLAND_MOUNTAIN_RANGE',
+    addressPartitions: [
+      { rows: [11, 16], columns: [2, 16] }
+    ],
+    worldBounds: { xMin: -126, xMax: 222, zMin: -254, zMax: -176 },
+    elevationEnvelope: { minimum: 8, maximum: 112 },
+    heightProfileReference: 'GRATITUDE_INLAND_MULTI_RIDGE_PROFILE_v1',
+    fullRealizationEligibility: true,
+    proxyRealizationEligibility: true,
+    navigationClass: 'GROUND_OBSERVER_MIXED_NAVIGABLE_AND_BOUNDED_SLOPE'
+  }),
+  GRATITUDE_PASS_EAST_001: formation({
+    formationId: 'H_EARTH_GRATITUDE_PASS_EAST_001',
+    formationClass: 'MOUNTAIN_PASS',
+    addressPartitions: [
+      { rows: [13, 16], columns: [11, 14] }
+    ],
+    worldBounds: { xMin: 94, xMax: 142, zMin: -252, zMax: -202 },
+    elevationEnvelope: { minimum: 12, maximum: 58 },
+    heightProfileReference: 'GRATITUDE_MOUNTAIN_PASS_PROFILE_v1',
+    fullRealizationEligibility: true,
+    proxyRealizationEligibility: false,
+    navigationClass: 'GROUND_OBSERVER_NAVIGABLE_PASS'
+  }),
+  GRATITUDE_PASS_CENTRAL_001: formation({
+    formationId: 'H_EARTH_GRATITUDE_PASS_CENTRAL_001',
+    formationClass: 'MOUNTAIN_PASS',
+    addressPartitions: [
+      { rows: [13, 16], columns: [8, 11] }
+    ],
+    worldBounds: { xMin: 28, xMax: 76, zMin: -255, zMax: -204 },
+    elevationEnvelope: { minimum: 10, maximum: 54 },
+    heightProfileReference: 'GRATITUDE_MOUNTAIN_PASS_PROFILE_v1',
+    fullRealizationEligibility: true,
+    proxyRealizationEligibility: false,
+    navigationClass: 'GROUND_OBSERVER_NAVIGABLE_PASS'
+  }),
+  GRATITUDE_RECEIVING_BASIN_001: formation({
+    formationId: 'H_EARTH_GRATITUDE_RECEIVING_BASIN_001',
+    formationClass: 'WATERSHED_RECEIVING_BASIN',
+    addressPartitions: [
+      { rows: [9, 13], columns: [5, 11] }
+    ],
+    worldBounds: { xMin: -58, xMax: 92, zMin: -228, zMax: -148 },
+    elevationEnvelope: { minimum: -8, maximum: 28 },
+    heightProfileReference: 'GRATITUDE_RECEIVING_BASIN_PROFILE_v1',
+    fullRealizationEligibility: true,
+    proxyRealizationEligibility: false,
+    navigationClass: 'GROUND_OBSERVER_NAVIGABLE'
+  }),
+  GRATITUDE_FOOTHILL_TRANSITION_001: formation({
+    formationId: 'H_EARTH_GRATITUDE_FOOTHILL_TRANSITION_001',
+    formationClass: 'FOOTHILL_TRANSITION',
+    addressPartitions: [
+      { rows: [8, 13], columns: [1, 12] }
+    ],
+    worldBounds: { xMin: -168, xMax: 116, zMin: -224, zMax: -132 },
+    elevationEnvelope: { minimum: 2, maximum: 42 },
+    heightProfileReference: 'GRATITUDE_FOOTHILL_TAPER_PROFILE_v1',
+    fullRealizationEligibility: true,
+    proxyRealizationEligibility: true,
+    navigationClass: 'GROUND_OBSERVER_NAVIGABLE'
+  }),
   DISTANT_HIGHLAND_001: formation({
     formationId: 'H_EARTH_DISTANT_HIGHLAND_001',
     formationClass: 'DISTANT_HIGHLAND_OR_MOUNTAIN',
@@ -156,10 +316,18 @@ export function evaluateHEarthTerrainFormations() {
   const values = Object.values(H_EARTH_TERRAIN_FORMATIONS);
   const classes = new Set(values.map((entry) => entry.formationClass));
   const required = [
+    'CONTINENTAL_PENINSULA',
+    'CONTINENTAL_BAY',
+    'CONTINENTAL_GULF',
+    'CONTINENTAL_HEADLAND',
     'HILL',
     'RIDGE_OR_BLUFF',
     'VALLEY_OR_DRAINAGE',
-    'DISTANT_HIGHLAND_OR_MOUNTAIN'
+    'DISTANT_HIGHLAND_OR_MOUNTAIN',
+    'INLAND_MOUNTAIN_RANGE',
+    'MOUNTAIN_PASS',
+    'WATERSHED_RECEIVING_BASIN',
+    'FOOTHILL_TRANSITION'
   ];
   const issues = required
     .filter((formationClass) => !classes.has(formationClass))

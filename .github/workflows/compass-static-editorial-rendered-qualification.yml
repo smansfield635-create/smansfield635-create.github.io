@@ -1,0 +1,158 @@
+name: Compass Static Editorial Rendered Qualification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'assets/compass/**'
+      - 'tools/compass-static-editorial-qualification.mjs'
+      - '.github/workflows/compass-static-editorial-rendered-qualification.yml'
+  push:
+    branches:
+      - 'recovery/compass-static-editorial-successor'
+    paths:
+      - 'index.html'
+      - 'assets/compass/**'
+      - 'tools/compass-static-editorial-qualification.mjs'
+      - '.github/workflows/compass-static-editorial-rendered-qualification.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  static-source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node tools/compass-static-editorial-qualification.mjs
+
+  rendered:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Prove governed Chapter One media target is outside this successor diff
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          target='showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4'
+          git diff --name-only HEAD^1 HEAD > /tmp/compass-pr-files.txt
+          if grep -Fxq "$target" /tmp/compass-pr-files.txt; then
+            echo "Governed Chapter One media bytes were mutated by this successor" >&2
+            exit 1
+          fi
+          test -f "$target"
+          echo "CHAPTER_ONE_MEDIA_TARGET_UNCHANGED_IN_SUCCESSOR"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Serve candidate
+        run: |
+          python3 -m http.server 4173 >/tmp/compass-static-editorial-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/compass-static-editorial-http.log || true
+          exit 1
+      - name: Inspect rendered successor
+        run: |
+          rm -rf .qualification/compass-static-editorial
+          mkdir -p .qualification/compass-static-editorial
+          cat > .qualification/compass-static-editorial/inspect.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+          const browser = await chromium.launch({headless:true});
+          const results = {};
+          const viewports = {desktop:{width:1440,height:1100},tablet:{width:900,height:1000},phone:{width:412,height:915}};
+          const governedMediaPath='/showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4';
+          for (const [name, viewport] of Object.entries(viewports)) {
+            const page = await browser.newPage({viewport});
+            const errors = [], failedRequests = [];
+            page.on('pageerror', e => errors.push(String(e)));
+            page.on('requestfailed', r => failedRequests.push(`${r.method()} ${r.url()} :: ${r.failure()?.errorText||'failed'}`));
+            await page.goto('http://127.0.0.1:4173/', {waitUntil:'networkidle'});
+            await page.waitForTimeout(1000);
+            const video = page.locator('.compass-editorial-film video').first();
+            if (await video.count() !== 1) throw new Error(`${name}: Chapter One video element missing`);
+            const media = await video.evaluate(el => ({currentSrc:el.currentSrc||el.querySelector('source')?.src||''}));
+
+            const state = await page.evaluate(() => {
+              const q = s => document.querySelector(s), qa = s => [...document.querySelectorAll(s)];
+              const intro = q('[data-compass-static-introduction]');
+              const about = q('.compass-editorial-about');
+              const scene = q('[data-compass-scene]');
+              const built = q('.compass-built');
+              const capability = q('[data-compass-capability-switcher],[data-capability-orbit]');
+              const cta = q('.compass-build-cta');
+              const fallback = q('.compass-accessibility-routes');
+              const directory = fallback?.querySelector('.compass-selective-routes');
+              const nodes = [...document.querySelectorAll('body *')];
+              const visible = el => { if(!el) return false; const cs=getComputedStyle(el),r=el.getBoundingClientRect(); return cs.display!=='none'&&cs.visibility!=='hidden'&&r.width>0&&r.height>0; };
+              const genReceipt = globalThis.DGB_COMPASS_GEN1537_LIVE_RECOVERY?.receipt?.() || null;
+              const gen1537Script = qa('script[src]').some(s=>(s.getAttribute('src')||'').includes('compass.gen1537.recovery.js'));
+              return {
+                brand:document.body.innerText.includes('DiamondGateBridge.com'),
+                introFound:Boolean(intro), introClosed:Boolean(intro && !intro.open),
+                aboutFound:Boolean(about),
+                filmFound:Boolean(q('video source[src*="diamond-gate-compass-mirrorland-36s.mp4"],video[src*="diamond-gate-compass-mirrorland-36s.mp4"]')),
+                sceneFound:Boolean(scene), sceneHeight:scene?.getBoundingClientRect().height||0,
+                builtFound:Boolean(built), capabilityFound:Boolean(capability), ctaFound:Boolean(cta),
+                staticOrder:[scene,built,capability,cta].map(node=>node?nodes.indexOf(node):-1),
+                fallbackFound:Boolean(fallback), fallbackOpen:Boolean(fallback?.open), directoryVisible:visible(directory),
+                legacyWhyVisible:document.body.innerText.includes('Why Diamond Gate exists'),
+                legacyDisclosureVisible:document.body.innerText.includes('The Compass exposes the same destinations to keyboard, touch, pointer, and reduced-motion users.'),
+                trackBScript:qa('script[src]').some(s=>(s.getAttribute('src')||'').includes('compass.track-b.js')),
+                gen1537Script,
+                genReceipt,
+                horizontalOverflow:document.documentElement.scrollWidth-document.documentElement.clientWidth
+              };
+            });
+            const fail = msg => { throw new Error(`${name}: ${msg} :: ${JSON.stringify({state,media})}`); };
+            if (!state.brand) fail('brand missing');
+            if (!state.introFound || !state.introClosed) fail('Chapter One intro not closed by default');
+            if (!state.aboutFound || !state.filmFound) fail('intro disclosure or film missing');
+            if (!media.currentSrc.includes(governedMediaPath)) fail('Chapter One currentSrc drifted from governed live target');
+            if (!state.sceneFound || state.sceneHeight < 430) fail(`Compass scene floor failed (${state.sceneHeight})`);
+            if (!state.builtFound || !state.capabilityFound || !state.ctaFound) fail('major section missing');
+            const [sceneAt,builtAt,capabilityAt,ctaAt] = state.staticOrder;
+            if (!(sceneAt>=0 && sceneAt<builtAt && builtAt<capabilityAt && capabilityAt<ctaAt)) fail('rendered section order invalid');
+            if (!state.fallbackFound || state.fallbackOpen) fail('fallback must exist and start collapsed');
+            if (state.directoryVisible) fail('collapsed fallback directory is visually rendered');
+            await page.locator('.compass-accessibility-routes > summary').click();
+            const openedDirectoryVisible = await page.locator('.compass-accessibility-routes .compass-selective-routes').isVisible();
+            if (!openedDirectoryVisible) fail('fallback cannot be opened for keyboard-accessible destination access');
+            await page.locator('.compass-accessibility-routes > summary').press('Enter');
+            if (await page.locator('.compass-accessibility-routes .compass-selective-routes').isVisible()) fail('fallback did not collapse through keyboard activation');
+            if (state.legacyWhyVisible || state.legacyDisclosureVisible || state.trackBScript) fail('legacy/Track B presentation leaked');
+            if (state.horizontalOverflow > 2) fail(`horizontal overflow ${state.horizontalOverflow}`);
+            if (state.gen1537Script) {
+              if (!state.genReceipt || state.genReceipt.mounted!==false || state.genReceipt.retired!==true || state.genReceipt.authoritative!==false || state.genReceipt.capabilityPlacementAuthority!==false || state.genReceipt.repeatedReparenting!==false) fail('loaded Gen1537 authority contract invalid');
+            } else if (state.genReceipt !== null) {
+              fail('retired Gen1537 receipt exists without its runtime');
+            }
+            if (errors.length) fail(`page errors: ${errors.join(' | ')}`);
+            const productFailures = failedRequests.filter(x => {
+              if (x.includes(governedMediaPath) && x.includes('ERR_ABORTED')) return false;
+              return x.includes('/assets/compass/') || x.includes('/media/');
+            });
+            if (productFailures.length) fail(`product request failures: ${productFailures.join(' | ')}`);
+            await page.screenshot({path:`.qualification/compass-static-editorial/${name}.png`,fullPage:true});
+            results[name]={...state,media,openedDirectoryVisible,errors,failedRequests};
+            await page.close();
+          }
+          await browser.close();
+          fs.writeFileSync('.qualification/compass-static-editorial/receipt.json', JSON.stringify({result:'PASS_CLOSED',mediaProof:'registry-bound-65s-owner-approved-target-unchanged-in-pr',results},null,2));
+          NODE
+          node .qualification/compass-static-editorial/inspect.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compass-static-editorial-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .qualification/compass-static-editorial
+          retention-days: 30

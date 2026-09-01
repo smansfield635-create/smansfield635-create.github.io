@@ -1,0 +1,62 @@
+name: H-Earth OW04 Mobile Texture Presentation Repair
+
+on:
+  push:
+    branches:
+      - control-plane-delivery/h-earth-ow04-subtropical-world-continuation-20260815
+
+permissions:
+  contents: write
+
+jobs:
+  repair-mobile-texture-presentation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact OW04 candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Normalize presentation shader source
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js')
+          text = path.read_text()
+          bad = "const PFS = `#version 300 es\\nprecision highp float;in vec2 vUv;uniform sampler2D uColor;out vec4 outColor;void main(){outColor=texture(uColor,vUv);}`;"
+          good = "const PFS = `#version 300 es" + chr(10) + "precision highp float;in vec2 vUv;uniform sampler2D uColor;out vec4 outColor;void main(){outColor=texture(uColor,vUv);}`;"
+          if bad in text:
+              text = text.replace(bad, good, 1)
+              path.write_text(text)
+          elif good not in text:
+              raise SystemExit('OW04_PRESENTATION_SHADER_SOURCE_NOT_FOUND')
+          PY
+
+      - name: Verify GLSL presentation source
+        run: |
+          set -euo pipefail
+          git diff --check
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path('showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js').read_text()
+          good = "const PFS = `#version 300 es" + chr(10) + "precision highp float;in vec2 vUv;uniform sampler2D uColor;out vec4 outColor;void main(){outColor=texture(uColor,vUv);}`;"
+          if good not in text:
+              raise SystemExit('OW04_VALID_PRESENTATION_SHADER_MISSING')
+          if '#version 300 es\\nprecision highp float;in vec2 vUv;uniform sampler2D uColor' in text:
+              raise SystemExit('OW04_LITERAL_BACKSLASH_N_REMAINS')
+          PY
+
+      - name: Commit normalized presentation shader
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo 'Presentation shader already normalized.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '4189828+github-actions[bot]@users.noreply.github.com'
+          git add showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js
+          git commit -m 'H-Earth OW04: fix fullscreen presentation shader source'
+          git push origin "HEAD:${GITHUB_REF_NAME}"

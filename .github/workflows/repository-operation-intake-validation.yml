@@ -1,348 +1,75 @@
-name: Repository Operation Intake Bootstrap Validation
-
+name: Repository Operation Intake Validation
 on:
   pull_request:
-    branches:
-      - main
-    paths-ignore:
-      - .github/operation-intake/evidence/repository-operation-intake.bootstrap-activation.receipt.v1.json
-      - .github/operation-intake/evidence/repository-operation-intake.bootstrap-closure.receipt.v1.json
+    branches: [main]
+    paths:
+      - 'AI_ENTRYPOINT.json'
+      - '.github/operation-intake/**'
+      - 'tools/operation-intake/**'
+      - '.github/ai-router/differential-continuity/**'
+      - '.github/ai-router/system-continuity/gap-registry.v1.json'
+      - '.github/workflows/repository-operation-intake-validation.yml'
+      - '.github/workflows/canonical-operation-intake-transport-v1.yml'
+      - '.github/workflows/differential-continuity-v1.yml'
+      - 'tools/repository-ai-entry-router.mjs'
+  push:
+    branches: [main]
+    paths:
+      - 'AI_ENTRYPOINT.json'
+      - '.github/operation-intake/**'
+      - 'tools/operation-intake/**'
+      - '.github/ai-router/differential-continuity/**'
+      - '.github/ai-router/system-continuity/gap-registry.v1.json'
+      - '.github/workflows/repository-operation-intake-validation.yml'
+      - '.github/workflows/canonical-operation-intake-transport-v1.yml'
+      - '.github/workflows/differential-continuity-v1.yml'
+      - 'tools/repository-ai-entry-router.mjs'
   workflow_dispatch:
-
 permissions:
   contents: read
-
+env:
+  EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
 jobs:
-  bootstrap-builder-self-test:
-    name: Bootstrap builder self-test
-    runs-on: ubuntu-latest
+  current-control-plane-conformance:
+    runs-on: ubuntu-24.04
     steps:
-      - name: Checkout exact bootstrap tooling head
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ env.EXPECTED_HEAD }}
           fetch-depth: 0
           persist-credentials: false
-
-      - name: Run canonical builder self-test
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify exact head and canonical spine
         shell: bash
         run: |
           set -euo pipefail
-          node tools/operation-intake/repository-operation-intake-self-test.v1.mjs --seed .github/operation-intake/bootstrap-seed.v1.json --output /tmp/repository-operation-intake/self-test.receipt.json
-          cp /tmp/repository-operation-intake/self-test.receipt.json /tmp/builder-self-test.receipt.json
-
-      - name: Upload builder receipt
-        uses: actions/upload-artifact@v4
-        with:
-          name: repository-operation-intake-builder-self-test-v1
-          path: /tmp/builder-self-test.receipt.json
-          if-no-files-found: error
-          retention-days: 30
-
-  fresh-bootstrap-verifier:
-    name: Fresh bootstrap verifier
-    needs: bootstrap-builder-self-test
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout exact tooling head without writable credentials
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 0
-          persist-credentials: false
-          clean: true
-
-      - name: Download builder evidence only
-        uses: actions/download-artifact@v4
-        with:
-          name: repository-operation-intake-builder-self-test-v1
-          path: /tmp/builder-evidence
-
-      - name: Independently run canonical verifier self-test
-        shell: bash
-        run: |
-          set -euo pipefail
-          test -z "$(git status --porcelain=v1 --untracked-files=all)"
-          node tools/operation-intake/repository-operation-intake-self-test.v1.mjs --seed .github/operation-intake/bootstrap-seed.v1.json --output /tmp/repository-operation-intake/self-test.receipt.json
-          cp /tmp/repository-operation-intake/self-test.receipt.json /tmp/verifier-self-test.receipt.json
-          cmp /tmp/builder-evidence/builder-self-test.receipt.json /tmp/verifier-self-test.receipt.json
-          test -z "$(git status --porcelain=v1 --untracked-files=all)"
-
-      - name: Upload verifier receipt
-        uses: actions/upload-artifact@v4
-        with:
-          name: repository-operation-intake-verifier-self-test-v1
-          path: /tmp/verifier-self-test.receipt.json
-          if-no-files-found: error
-          retention-days: 30
-
-  remote-ledger-cas-certification:
-    name: Remote ledger compare-and-swap certification
-    needs: fresh-bootstrap-verifier
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    env:
-      GITHUB_TOKEN: ${{ github.token }}
-      REPOSITORY: ${{ github.repository }}
-      LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
-      TOOLING_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-    steps:
-      - name: Checkout exact tooling head
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ env.TOOLING_HEAD }}
-          fetch-depth: 0
-          persist-credentials: true
-          clean: true
-
-      - name: Ensure dedicated runtime lock ref
-        shell: bash
-        run: |
-          set -euo pipefail
-          node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
-            --action ensure-ref \
-            --repository "$REPOSITORY" \
-            --lock-ref "$LOCK_REF" \
-            --base-head "$TOOLING_HEAD" \
-            --output /tmp/lock-ref.receipt.json
-
-      - name: Launch competing conditional acquisitions
-        shell: bash
-        run: |
-          set -euo pipefail
-          scope="BOOTSTRAP_CAS_CERTIFICATION:${GITHUB_RUN_ID}:${GITHUB_RUN_ATTEMPT}"
-          request_digest="$(printf '%s' "$scope:request" | sha256sum | awk '{print $1}')"
-          procedure_digest="$(printf '%s' "$scope:procedure" | sha256sum | awk '{print $1}')"
-          mkdir -p /tmp/remote-cas
-          set +e
-          node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
-            --action acquire --repository "$REPOSITORY" --lock-ref "$LOCK_REF" \
-            --operation-id "REMOTE_CAS_A_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" \
-            --lock-scope "$scope" --governing-head "$TOOLING_HEAD" \
-            --request-digest "$request_digest" --procedure-digest "$procedure_digest" \
-            --ready-file /tmp/remote-cas/ready-a.json --barrier-file /tmp/remote-cas/release-barrier \
-            --barrier-timeout-ms 30000 --output /tmp/remote-cas/acquire-a.json &
-          pid_a=$!
-          node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
-            --action acquire --repository "$REPOSITORY" --lock-ref "$LOCK_REF" \
-            --operation-id "REMOTE_CAS_B_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" \
-            --lock-scope "$scope" --governing-head "$TOOLING_HEAD" \
-            --request-digest "$request_digest" --procedure-digest "$procedure_digest" \
-            --ready-file /tmp/remote-cas/ready-b.json --barrier-file /tmp/remote-cas/release-barrier \
-            --barrier-timeout-ms 30000 --output /tmp/remote-cas/acquire-b.json &
-          pid_b=$!
-          for attempt in $(seq 1 300); do
-            test -f /tmp/remote-cas/ready-a.json && test -f /tmp/remote-cas/ready-b.json && break
-            sleep 0.1
-          done
-          test -f /tmp/remote-cas/ready-a.json
-          test -f /tmp/remote-cas/ready-b.json
-          node <<'NODE'
-          const fs = require('fs');
-          const a = JSON.parse(fs.readFileSync('/tmp/remote-cas/ready-a.json','utf8'));
-          const b = JSON.parse(fs.readFileSync('/tmp/remote-cas/ready-b.json','utf8'));
-          if (a.observedLedgerBlobSha !== b.observedLedgerBlobSha) throw new Error(`PRECONDITION_BLOB_DIVERGENCE:${JSON.stringify({a,b})}`);
-          if (a.lockGeneration !== b.lockGeneration) throw new Error(`PRECONDITION_GENERATION_DIVERGENCE:${JSON.stringify({a,b})}`);
+          test "$(git rev-parse HEAD^{commit})" = "$EXPECTED_HEAD"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const e=JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json'));
+          const l=JSON.parse(fs.readFileSync('.github/operation-intake/locator.v1.json'));
+          if(e.status!=='ACTIVE_FAIL_CLOSED'||l.status!=='ACTIVE_FAIL_CLOSED') throw Error('ACTIVE_STATUS_MISMATCH');
+          if(e.operationIntakeGate?.locator!=='.github/operation-intake/locator.v1.json') throw Error('NONCANONICAL_LOCATOR');
+          if(e.remoteCanonicalIntakeTransport?.canonicalLocator!==e.operationIntakeGate.locator||e.remoteCanonicalIntakeTransport?.admissionSemanticsDuplicated!==false) throw Error('PARALLEL_INTAKE_SEMANTICS');
+          if(e.operationIntakeGate?.successorLifecycle?.differentialPreflight?.gateCli!=='.github/ai-router/differential-continuity/differential-continuity-gate.v1.mjs') throw Error('DIFFERENTIAL_DISCOVERY_MISMATCH');
+          for(const p of [l.entrypoint,l.lockManager,l.requestSchema,l.constructionProcedureSchema,'.github/ai-router/differential-continuity/differential-continuity-gate.v1.mjs','.github/ai-router/differential-continuity/differential-continuity-self-test.v1.mjs','.github/workflows/differential-continuity-v1.yml']) if(!fs.existsSync(p)) throw Error('CANONICAL_PATH_MISSING:'+p);
+          if(fs.existsSync('.github/ai-router/fixed-fixture-intake')) throw Error('RETIRED_FIXED_FIXTURE_SURFACE_PRESENT');
           NODE
-          : > /tmp/remote-cas/release-barrier
-          wait "$pid_a"; status_a=$?
-          wait "$pid_b"; status_b=$?
-          set -e
-          printf 'STATUS_A=%s\nSTATUS_B=%s\nSCOPE=%s\n' "$status_a" "$status_b" "$scope" > /tmp/remote-cas/status.env
-
-      - name: Prove exactly one acquisition and close winner
-        shell: bash
-        run: |
-          set -euo pipefail
-          node <<'NODE'
-          const fs = require('fs');
-          const a = JSON.parse(fs.readFileSync('/tmp/remote-cas/acquire-a.json', 'utf8'));
-          const b = JSON.parse(fs.readFileSync('/tmp/remote-cas/acquire-b.json', 'utf8'));
-          const winners = [a,b].filter((entry) => entry.lockAcquired === true && entry.result === 'ADMITTED_AND_LOCKED');
-          const losers = [a,b].filter((entry) => entry.lockAcquired === false);
-          if (winners.length !== 1 || losers.length !== 1) throw new Error(`EXPECTED_EXACTLY_ONE_WINNER:${JSON.stringify({a,b})}`);
-          if (losers[0].errorCode !== 'LEDGER_COMPARE_AND_SWAP_CONFLICT') throw new Error(`EXPECTED_CAS_CONFLICT:${JSON.stringify(losers[0])}`);
-          fs.writeFileSync('/tmp/remote-cas/winner.json', JSON.stringify(winners[0], null, 2) + '\n');
-          fs.writeFileSync('/tmp/remote-cas/loser.json', JSON.stringify(losers[0], null, 2) + '\n');
-          fs.writeFileSync('/tmp/remote-cas/winner.env', `WINNER_OPERATION=${winners[0].operationId}\nWINNER_SCOPE=${winners[0].lockScope}\nWINNER_GENERATION=${winners[0].lockGeneration}\n`);
-          NODE
-          set -a
-          source /tmp/remote-cas/winner.env
-          set +a
-          node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
-            --action close --repository "$REPOSITORY" --lock-ref "$LOCK_REF" \
-            --operation-id "$WINNER_OPERATION" --lock-scope "$WINNER_SCOPE" \
-            --lock-generation "$WINNER_GENERATION" --terminal-disposition PASS_CLOSED \
-            --output /tmp/remote-cas/closure.json
-
-      - name: Certify lock branch path isolation
-        shell: bash
-        run: |
-          set -euo pipefail
-          git fetch origin operation-locks/repository-operation-intake-v1
-          git diff --name-only "$TOOLING_HEAD" origin/operation-locks/repository-operation-intake-v1 > /tmp/remote-cas/lock-branch-changed-paths.txt
-          test "$(cat /tmp/remote-cas/lock-branch-changed-paths.txt)" = ".github/operation-intake/active-operation-ledger.v1.json"
-
-      - name: Build remote CAS certification receipt
-        shell: bash
-        run: |
-          set -euo pipefail
-          node <<'NODE'
-          const fs = require('fs');
-          const stable = (value) => Array.isArray(value) ? value.map(stable) : value && typeof value === 'object' ? Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])])) : value;
-          const winner = JSON.parse(fs.readFileSync('/tmp/remote-cas/winner.json','utf8'));
-          const loser = JSON.parse(fs.readFileSync('/tmp/remote-cas/loser.json','utf8'));
-          const closure = JSON.parse(fs.readFileSync('/tmp/remote-cas/closure.json','utf8'));
-          const refReceipt = JSON.parse(fs.readFileSync('/tmp/lock-ref.receipt.json','utf8'));
-          const receipt = stable({
-            schema: 'REPOSITORY_OPERATION_INTAKE_REMOTE_CAS_CERTIFICATION_RECEIPT_v1',
-            result: 'PASS_EXACTLY_ONE_ACQUIRED',
-            bootstrapToolingHead: process.env.TOOLING_HEAD,
-            lockRef: process.env.LOCK_REF,
-            lockRefDisposition: refReceipt.result,
-            competingAcquisitionCount: 2,
-            acquiredCount: 1,
-            rejectedCount: 1,
-            winner,
-            loser,
-            loserRequiredErrorCode: 'LEDGER_COMPARE_AND_SWAP_CONFLICT',
-            closureResult: closure.result,
-            terminalHistoryPreserved: closure.terminalHistoryPreserved,
-            lockReleased: closure.lockReleased,
-            lockBranchChangedPaths: ['.github/operation-intake/active-operation-ledger.v1.json'],
-            productMutationPerformed: false,
-            mainMutationPerformed: false,
-            mergePerformed: false
-          });
-          fs.writeFileSync('/tmp/remote-cas-certification.receipt.json', JSON.stringify(receipt, null, 2) + '\n');
-          NODE
-
-      - name: Upload remote CAS receipt
-        uses: actions/upload-artifact@v4
+          node --check tools/operation-intake/repository-operation-intake-gate.v1.mjs
+          node --check tools/operation-intake/repository-operation-lock-manager.v1.mjs
+          node --check .github/ai-router/differential-continuity/differential-continuity-gate.v1.mjs
+          node tools/operation-intake/repository-operation-intake-gate.v1.operation-class.test.mjs
+          node .github/ai-router/differential-continuity/differential-continuity-self-test.v1.mjs
+          node tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs
+          node tools/operation-intake/canonical-operation-intake-transport.v1.mjs --self-test > /tmp/transport-self-test.json
+          node tools/repository-ai-entry-router.mjs --self-test --output /tmp/router-self-test.json
+      - uses: actions/upload-artifact@v4
         with:
-          name: repository-operation-intake-remote-cas-certification-v1
-          path: /tmp/remote-cas-certification.receipt.json
+          name: repository-operation-intake-current-conformance-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/transport-self-test.json
+            /tmp/router-self-test.json
           if-no-files-found: error
-          retention-days: 30
-
-  package-bootstrap-certification:
-    name: Package bootstrap certification
-    needs:
-      - bootstrap-builder-self-test
-      - fresh-bootstrap-verifier
-      - remote-ledger-cas-certification
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    env:
-      TOOLING_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-    steps:
-      - name: Checkout exact tooling head
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ env.TOOLING_HEAD }}
-          fetch-depth: 0
-          persist-credentials: false
-          clean: true
-
-      - name: Download builder receipt
-        uses: actions/download-artifact@v4
-        with:
-          name: repository-operation-intake-builder-self-test-v1
-          path: /tmp/certification/builder
-
-      - name: Download verifier receipt
-        uses: actions/download-artifact@v4
-        with:
-          name: repository-operation-intake-verifier-self-test-v1
-          path: /tmp/certification/verifier
-
-      - name: Download remote CAS receipt
-        uses: actions/download-artifact@v4
-        with:
-          name: repository-operation-intake-remote-cas-certification-v1
-          path: /tmp/certification/remote
-
-      - name: Build canonical certification package
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p /tmp/certification/final
-          cp /tmp/certification/builder/builder-self-test.receipt.json /tmp/certification/final/builder-self-test.receipt.json
-          cp /tmp/certification/verifier/verifier-self-test.receipt.json /tmp/certification/final/verifier-self-test.receipt.json
-          cp /tmp/certification/remote/remote-cas-certification.receipt.json /tmp/certification/final/remote-cas-certification.receipt.json
-          node <<'NODE'
-          const fs = require('fs');
-          const cp = require('child_process');
-          const crypto = require('crypto');
-          const stable = (value) => Array.isArray(value) ? value.map(stable) : value && typeof value === 'object' ? Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])])) : value;
-          const canonical = (value) => JSON.stringify(stable(value));
-          const sha = (text) => crypto.createHash('sha256').update(text, 'utf8').digest('hex');
-          const read = (p) => fs.readFileSync(p, 'utf8');
-          const seed = JSON.parse(read('.github/operation-intake/bootstrap-seed.v1.json'));
-          const blobMap = {};
-          for (const repositoryPath of [...seed.allowedPaths].sort()) {
-            try { blobMap[repositoryPath] = cp.execFileSync('git',['rev-parse',`${process.env.TOOLING_HEAD}:${repositoryPath}`],{encoding:'utf8'}).trim(); }
-            catch { blobMap[repositoryPath] = null; }
-          }
-          fs.writeFileSync('/tmp/certification/final/allowed-path-blob-map.json', JSON.stringify(stable({
-            schema: 'REPOSITORY_OPERATION_INTAKE_ALLOWED_PATH_BLOB_MAP_v1',
-            bootstrapToolingHead: process.env.TOOLING_HEAD,
-            allowedPathCount: seed.allowedPaths.length,
-            blobs: blobMap
-          }), null, 2) + '\n');
-          const paths = {
-            'builder-self-test.receipt.json':'/tmp/certification/final/builder-self-test.receipt.json',
-            'verifier-self-test.receipt.json':'/tmp/certification/final/verifier-self-test.receipt.json',
-            'remote-cas-certification.receipt.json':'/tmp/certification/final/remote-cas-certification.receipt.json',
-            'allowed-path-blob-map.json':'/tmp/certification/final/allowed-path-blob-map.json'
-          };
-          const memberDigests = Object.fromEntries(Object.entries(paths).map(([name,p]) => [name, sha(canonical(JSON.parse(read(p))))]));
-          const manifest = stable({
-            schema: 'REPOSITORY_OPERATION_INTAKE_BOOTSTRAP_CERTIFICATION_MANIFEST_v1',
-            seedId: seed.seedId,
-            exactGoverningHead: seed.exactGoverningHead,
-            bootstrapToolingHead: process.env.TOOLING_HEAD,
-            exactTestCommand: seed.exactTestCommand,
-            workflowPath: seed.workflow.path,
-            artifactName: seed.workflow.artifactName,
-            artifactMembers: seed.workflow.artifactMembers,
-            memberDigests,
-            builderVerifierReceiptsIdentical: read(paths['builder-self-test.receipt.json']) === read(paths['verifier-self-test.receipt.json']),
-            remoteCasResult: JSON.parse(read(paths['remote-cas-certification.receipt.json'])).result,
-            productMutationPerformed: false,
-            mainMutationPerformed: false,
-            mergePerformed: false
-          });
-          if (!manifest.builderVerifierReceiptsIdentical) throw new Error('BUILDER_VERIFIER_RECEIPT_DIVERGENCE');
-          if (manifest.remoteCasResult !== 'PASS_EXACTLY_ONE_ACQUIRED') throw new Error('REMOTE_CAS_NOT_CERTIFIED');
-          fs.writeFileSync('/tmp/certification/final/certification-manifest.json', JSON.stringify(manifest, null, 2) + '\n');
-          const workflowBlob = cp.execFileSync('git',['rev-parse',`${process.env.TOOLING_HEAD}:${seed.workflow.path}`],{encoding:'utf8'}).trim();
-          const fingerprintPayload = stable({
-            BOOTSTRAP_TOOLING_HEAD: process.env.TOOLING_HEAD,
-            ALLOWED_PATH_TO_GIT_BLOB_MAP: blobMap,
-            BOOTSTRAP_SEED_DIGEST: sha(canonical(seed)),
-            BUILDER_RECEIPT_DIGEST: memberDigests['builder-self-test.receipt.json'],
-            VERIFIER_RECEIPT_DIGEST: memberDigests['verifier-self-test.receipt.json'],
-            REMOTE_CAS_RECEIPT_DIGEST: memberDigests['remote-cas-certification.receipt.json'],
-            CERTIFICATION_MANIFEST_MEMBER_DIGESTS: memberDigests,
-            EXACT_TEST_COMMAND: seed.exactTestCommand,
-            WORKFLOW_BLOB: workflowBlob
-          });
-          const fingerprint = sha(canonical(fingerprintPayload));
-          fs.writeFileSync('/tmp/certification/final/certification-fingerprint.txt', `${fingerprint}\n`);
-          const actual = fs.readdirSync('/tmp/certification/final').sort();
-          const expected = [...seed.workflow.artifactMembers].sort();
-          if (canonical(actual) !== canonical(expected)) throw new Error(`ARTIFACT_MEMBER_SET_MISMATCH:${canonical({actual,expected})}`);
-          NODE
-
-      - name: Upload bootstrap certification artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: repository-operation-intake-bootstrap-certification-v1
-          path: /tmp/certification/final/
-          if-no-files-found: error
-          retention-days: 30
+          retention-days: 90

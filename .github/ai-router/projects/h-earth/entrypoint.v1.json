@@ -8,7 +8,11 @@
   ],
   "ownedExactPaths": [
     ".github/workflows/h-earth-repository-registry-preflight.yml",
-    ".github/workflows/h-earth-r06-c10-candidate-admission.yml"
+    ".github/workflows/h-earth-r06-c10-candidate-admission.yml",
+    "showroom/globe/audralia/diagnostic/index.html",
+    "showroom/globe/audralia/diagnostic/index.controls.js",
+    "showroom/globe/audralia/diagnostic/index.inspection.lane.js",
+    "showroom/globe/audralia/final-cloud-shader-composition-v1.mjs"
   ],
   "entrypoint": ".github/ai-router/projects/h-earth/entrypoint.v1.json",
   "authorityBoundary": [
@@ -20,6 +24,91 @@
     "h-earth-3d/AGENTS.md",
     "showroom/globe/h-earth/AGENTS.md"
   ],
+  "humanDispositionBindings": {
+    "AUDRALIA": {
+      "status": "ACTIVE_FAIL_CLOSED",
+      "scope": "showroom/globe/audralia/**",
+      "binding": ".github/ai-router/human-disposition/projects/audralia/binding.v1.json",
+      "manifest": ".github/ai-router/human-disposition/projects/audralia/manifest.v1.json",
+      "decisionLedger": ".github/ai-router/human-disposition/projects/audralia/decision-ledger.v1.json",
+      "mutableStateAuthority": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2171",
+      "humanDispositionSourceRecord": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2220",
+      "loadBefore": [
+        "AUDRALIA_RECOVERY_OR_SUCCESSION",
+        "AUDRALIA_MUTATION",
+        "AUDRALIA_QUALIFICATION",
+        "AUDRALIA_MERGE_OR_ADOPTION_DISPOSITION",
+        "AUDRALIA_PUBLICATION_OR_LIVE_REVIEW",
+        "AUDRALIA_TERMINAL_CLOSURE"
+      ],
+      "ownerCheckpointMayBeInferredFromAutomatedVerification": false,
+      "authorityCreatedByBinding": false
+    }
+  },
+  "mandatoryConstructionContext": {
+    "OW01": {
+      "status": "ACTIVE_LOCKED_DIRECT_REFERENCE_REQUIRED",
+      "plan": ".github/ai-router/projects/h-earth/ow01-construction-execution-plan.v1.json",
+      "reciprocalComparativeBaseline": ".github/ai-router/projects/h-earth/ow01-reciprocal-comparative-baseline.v1.json",
+      "narrativeWorldReciprocity": ".github/ai-router/projects/h-earth/ow01-narrative-world-reciprocity-binding.v1.json",
+      "environmentalAcousticContinuity": ".github/ai-router/projects/h-earth/ow01-environmental-acoustic-continuity.v1.json",
+      "preconstructionExcellence": ".github/ai-router/projects/h-earth/reciprocal-preconstruction-excellence-record.v1.json",
+      "contextLaw": "THE_OW01_PLAN RECIPROCAL_COMPARATIVE_BASELINE NARRATIVE_WORLD_RECIPROCITY_BINDING ENVIRONMENTAL_ACOUSTIC_CONTINUITY_CONTRACT AND RECIPROCAL_PRECONSTRUCTION_EXCELLENCE_RECORD MUST_BE_LOADED_AND_APPLIED_TOGETHER; NONE_MAY_BE_USED_TO_ERASE_OR_BYPASS_ANOTHER.",
+      "appliesWhen": [
+        "OW01_PRODUCT_CONSTRUCTION",
+        "OW01_GEOGRAPHIC_RECONCILIATION",
+        "GRATITUDE_COAST_BAY_HARBOR_CONSTRUCTION",
+        "GRATITUDE_CONTINENTAL_MORPHOLOGY_CONSTRUCTION",
+        "MOUNTAIN_WATERSHED_TO_COAST_RECONCILIATION",
+        "GLOBAL_REGIONAL_GEOGRAPHY_ALIGNMENT",
+        "OW01_ENVIRONMENTAL_AUDIO_CONSTRUCTION_OR_MIXING",
+        "OW01_CANDIDATE_QUALIFICATION_OR_VISUAL_REVIEW",
+        "H_EARTH_LONGITUDINAL_COMPARATIVE_BROWSER_AUDIT",
+        "GLOBE_H_EARTH_RECIPROCAL_COMPARATIVE_BROWSER_AUDIT",
+        "H_EARTH_MAP_NARRATIVE_RECIPROCAL_AUDIT",
+        "H_EARTH_SPATIAL_AUDIO_GEOGRAPHY_AUDIT",
+        "H_EARTH_GAME_NARRATIVE_DEVELOPMENT_AFFECTING_WORLD_OR_ROUTE_STATE",
+        "H_EARTH_BOUNDARY_DISSOLUTION_OR_VISIBLE_WORLD_CONTINUATION",
+        "H_EARTH_CLIMATE_BIOME_VEGETATION_MATERIAL_OR_HYDROLOGY_CONSTRUCTION",
+        "H_EARTH_TO_AUDRALIA_POSITIONAL_OR_MORPHOLOGY_RECONCILIATION",
+        "REFERENCE_CLASS_AWARDS_OR_EXCELLENCE_REVIEW_OF_H_EARTH"
+      ],
+      "loadBefore": [
+        "PRODUCT_BRANCH_CREATION",
+        "PRODUCT_SOURCE_MUTATION",
+        "RUNTIME_RENDERER_OR_AUDIO_MUTATION",
+        "NARRATIVE_OR_GAME_WORLD_PLACEMENT_MUTATION",
+        "QUALIFICATION_EXECUTION",
+        "PLAYWRIGHT_EXACT_CANDIDATE_EXECUTION",
+        "PAGE_EXCELLENCE_AWARDS_OR_OWNER_INSPECTION_HANDOFF",
+        "USER_VISUAL_OR_EXPERIENTIAL_REVIEW_PREPARATION",
+        "DEFICIENCY_DRIVEN_REPAIR_CONSTRUCTION",
+        "GLOBE_REGIONAL_RECONCILIATION_CONSTRUCTION"
+      ],
+      "comparisonRequirement": {
+        "candidateVsPriorSameSurface": true,
+        "candidateVsCurrentParallelEnvironment": true,
+        "candidateVsNarrativeWorldPlan": true,
+        "narrativeWorldPlanVsCandidate": true,
+        "candidateAudioVsCanonicalGeographyAndPlayerPosition": true,
+        "candidateVsPinnedDeficiencyRegister": true,
+        "candidateVsPinnedCollaborativeStrategy": true,
+        "candidateVsReferenceClassExcellence": true,
+        "geographicIdentityReciprocityRequired": true,
+        "environmentalIdentityReciprocityRequired": true,
+        "exactCandidateShaRequired": true,
+        "requiredBaselineRegressionAllowed": false,
+        "reciprocalGeographicDivergenceAllowed": false,
+        "reciprocalEnvironmentalDivergenceAllowed": false,
+        "orphanPinnedDeficiencyAllowed": false,
+        "narrativeWorldContradictionAllowed": false,
+        "acousticGeographicContradictionAllowed": false,
+        "silentNarrativeOrGeographicHoldResolutionAllowed": false
+      },
+      "failureMode": "STOP_IF_ANY_REQUIRED_OW01_CONTEXT_IS_MISSING_UNREADABLE_SUPERSEDED_NOT_BOUND_TO_THE_CURRENT_OW01_OPERATION_CONTEXT_OR_IF_REQUIRED_LONGITUDINAL_RECIPROCAL_NARRATIVE_WORLD_SPATIAL_AUDIO_PRECONSTRUCTION_DEFICIENCY_STRATEGY_OR_REFERENCE_CLASS_COMPARISON_IS_SKIPPED",
+      "authorityCreatedByBinding": false
+    }
+  },
   "registries": [
     "h-earth-3d/registry/h-earth.repository-registry.bootstrap.json",
     "h-earth-3d/registry/h-earth.repository-registry.tool-instruction.json",
@@ -56,6 +145,21 @@
     "MISSING_PROJECT_AUTHORITY",
     "MISSING_REQUIRED_RECEIPT",
     "PRIVATE_OR_DIRTY_EXECUTION_STATE",
-    "MANUAL_RECONSTRUCTION_SUBSTITUTED_FOR_DECLARED_EXECUTION"
+    "MANUAL_RECONSTRUCTION_SUBSTITUTED_FOR_DECLARED_EXECUTION",
+    "MISSING_OR_INVALID_MANDATORY_OW01_CONSTRUCTION_CONTEXT",
+    "MISSING_OR_INVALID_OW01_RECIPROCAL_COMPARATIVE_BASELINE",
+    "MISSING_OR_INVALID_OW01_NARRATIVE_WORLD_RECIPROCITY_BINDING",
+    "MISSING_OR_INVALID_OW01_ENVIRONMENTAL_ACOUSTIC_CONTINUITY",
+    "MISSING_OR_INVALID_H_EARTH_RECIPROCAL_PRECONSTRUCTION_EXCELLENCE_RECORD",
+    "UNMAPPED_ACCEPTED_DEFICIENCY_DETECTED",
+    "PINNED_DEFICIENCY_WITHOUT_STRATEGY_TREATMENT_DETECTED",
+    "REQUIRED_REFERENCE_CLASS_COMPARISON_SKIPPED",
+    "REQUIRED_LONGITUDINAL_REGRESSION_DETECTED",
+    "RECIPROCAL_GLOBE_H_EARTH_GEOGRAPHIC_DIVERGENCE_DETECTED",
+    "RECIPROCAL_GLOBE_H_EARTH_ENVIRONMENTAL_DIVERGENCE_DETECTED",
+    "NARRATIVE_WORLD_RECIPROCAL_CONTRADICTION_DETECTED",
+    "ACOUSTIC_GEOGRAPHIC_OR_DISTANCE_CONTRADICTION_DETECTED",
+    "SILENT_NARRATIVE_OR_GEOGRAPHIC_HOLD_RESOLUTION_DETECTED",
+    "MISSING_OR_INVALID_AUDRALIA_HUMAN_DISPOSITION_BINDING_WHEN_APPLICABLE"
   ]
 }

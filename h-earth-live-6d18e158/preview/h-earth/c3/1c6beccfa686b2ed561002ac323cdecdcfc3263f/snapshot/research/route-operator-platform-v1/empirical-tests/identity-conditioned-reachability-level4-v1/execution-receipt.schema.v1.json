@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/icr-level4/execution-receipt.schema.v1.json",
+  "type": "object",
+  "required": [
+    "operation_id",
+    "version",
+    "contract_id",
+    "result_category",
+    "theory_prediction_pass",
+    "matched_output_discrimination_pass",
+    "prediction_results",
+    "alternative_model_results",
+    "condition_receipts",
+    "execution_receipt_sha256",
+    "core_mutation_performed",
+    "archived_result_mutation_performed",
+    "post_result_repair_performed"
+  ],
+  "properties": {
+    "operation_id": {"const": "IDENTITY_CONDITIONED_REACHABILITY_CONTROLLED_RELATION_DISRUPTION_GAUNTLET_v1"},
+    "version": {"const": "1.0.0"},
+    "contract_id": {"const": "ICR_LEVEL4_FROZEN_CONTRACT_v1"},
+    "result_category": {"enum": ["ENGINEERED_LEVEL4_PREDICTIONS_SURVIVED", "ENGINEERED_LEVEL4_PREDICTION_FAILURE"]},
+    "theory_prediction_pass": {"type": "boolean"},
+    "matched_output_discrimination_pass": {"type": "boolean"},
+    "prediction_results": {"type": "array", "minItems": 9, "maxItems": 9},
+    "alternative_model_results": {"type": "array", "minItems": 4, "maxItems": 4},
+    "condition_receipts": {"type": "array", "minItems": 9, "maxItems": 9},
+    "execution_receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "core_mutation_performed": {"const": false},
+    "archived_result_mutation_performed": {"const": false},
+    "post_result_repair_performed": {"const": false}
+  },
+  "additionalProperties": true
+}

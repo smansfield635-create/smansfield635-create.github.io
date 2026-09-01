@@ -1,0 +1,87 @@
+/*
+ * Laws post-merge stellar continuity and compact scene framing.
+ * Presentation only. No Compass, route, controller, record, evidence, or claim authority.
+ */
+
+@import url("/laws/index.destination-carousel.css?v=LAWS_NATIVE_DESTINATION_CAROUSEL_V3_20260816A");
+
+html[data-cp6-experiential-presentation="candidate"] body::before {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  opacity: 0 !important;
+}
+
+html[data-cp6-experiential-presentation="candidate"] #laws-background-cosmos-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  isolation: isolate;
+  contain: strict;
+}
+
+html[data-cp6-experiential-presentation="candidate"] #laws-background-cosmos-layer canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.62;
+  mix-blend-mode: screen;
+}
+
+html[data-cp6-experiential-presentation="candidate"] :is(
+  .laws-shell,
+  .laws-footer
+) {
+  position: relative;
+  z-index: 2;
+}
+
+html[data-cp6-experiential-presentation="candidate"] [data-laws-scene-field] {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 780px) {
+  html[data-cp6-experiential-presentation="candidate"] :is(
+    .laws-orbit__field,
+    [data-laws-scene-field]
+  ) {
+    min-height: min(126vw, 40rem) !important;
+    border-color: rgba(188, 208, 255, 0.11) !important;
+    background:
+      radial-gradient(circle at 50% 48%, rgba(var(--laws-experience-glow), 0.075), transparent 58%),
+      rgba(3, 7, 20, 0.28) !important;
+    box-shadow:
+      inset 0 0 0 1px rgba(188, 208, 255, 0.045),
+      inset 0 0 88px rgba(0, 0, 0, 0.17) !important;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] :is(
+    .laws-orbit__field > canvas[data-laws-compositor-layer],
+    .laws-orbit__field > .laws-object-layer,
+    .laws-orbit__field > [data-laws-objects]
+  ) {
+    transform: none !important;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 700px) {
+  html[data-cp6-experiential-presentation="candidate"] :is(
+    .laws-orbit__field,
+    [data-laws-scene-field]
+  ) {
+    min-height: max(40rem, 105svh) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-cp6-experiential-presentation="candidate"] #laws-background-cosmos-layer canvas {
+    opacity: 0.54;
+  }
+}

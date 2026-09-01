@@ -1,0 +1,55 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "brain-gen1-hra",
+  "description": "Qualified NIH/HRA Gen1 anatomical brain owner-inspection surface using the native Diamond Gate WebGL2 renderer.",
+  "checks": [
+    {
+      "path": "/inspection/compass/brain-gen1-hra/",
+      "includes": [
+        "HRA anatomical brain",
+        "NIH 3D / Human Reference Atlas",
+        "656,268 triangles",
+        "Midbrain + pons + medulla",
+        "./inspector.js?v=1"
+      ],
+      "excludes": [
+        "three.js",
+        "react-three-fiber",
+        "FreeSurfer"
+      ]
+    },
+    {
+      "path": "/inspection/compass/brain-gen1-hra/inspector.js",
+      "includes": [
+        "Allen_M_Brain.glb",
+        "EXPECTED={meshes:283,triangles:656268}",
+        "canvas.dataset.meshes",
+        "canvas.dataset.brainstem",
+        "WebGL2"
+      ],
+      "excludes": [
+        "recon-all",
+        "segmentBS.sh"
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/inspection/compass/brain-gen1-hra/",
+    "timeoutMs": 45000,
+    "readyAttribute": {
+      "selector": "#brain",
+      "name": "data-meshes",
+      "contains": "283"
+    },
+    "binding": {
+      "mode": "direct-document",
+      "path": "/inspection/compass/brain-gen1-hra/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [
+      "CONTEXT_LOST_WEBGL"
+    ]
+  }
+}

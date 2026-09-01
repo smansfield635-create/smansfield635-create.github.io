@@ -1,0 +1,26 @@
+{
+  "core_mutation_performed": false,
+  "file_count": 11,
+  "files": {
+    "PREREGISTRATION.md": "af85b7d5e33f408a3ccc1728ceaa1cc0975edcf1c8375a3562c7efcb17acf1ba",
+    "README.md": "edaed004dea2d8873863ed78b0760b9ef818984380ae88a4a7b7a10eda2ff9ce",
+    "alternative-models.v1.json": "c5ff335cf6c19faa92069f3d91ba349625f3ecd0905e6628048dd743183b942e",
+    "execution-receipt.schema.v1.json": "bb716071676b048b55eeb5a0f184c6647f1f8fa10e5b9f9c0a5a16b3dbff491f",
+    "failure-ownership.v1.json": "6aa0bf64cac92e8ded454d5bed039b49083717e88a14ac0ef2b498ac23a798ab",
+    "frozen-contract.v1.json": "5f667b88cabc4638b4751755fb124636d28c33a6419b71a24e8ce8afcc8a5fef",
+    "independent_reproducer_v1.py": "26ab07c9b2c7c8e2509fc2aaedf4ab79ef377f82dbbf043fca19d3ef9a908a2f",
+    "level4_gauntlet_v1.py": "d0d8da5265beb29440477b3aca74700306dc9b2be214437f56c16d2543d3aad1",
+    "level4_target_system_v1.py": "8c36d7bc61de0f8bc06d3574db3a8b6c9233f2480198ff8bb313825571b89e82",
+    "prediction-matrix.v1.json": "befb5b3ac4cf9125091ca5a8836fb89458c476babe01bbe5710d1686ca678dcb",
+    "system-spec.v1.json": "0828116bbe5b81c8021c423b0de9002a63df98fdabc486d3a454fe15128cc771"
+  },
+  "manifest_id": "ICR_LEVEL4_FROZEN_MANIFEST_v1_0_1",
+  "prior_manifest_disposition": "RUN_001_INVALID_CUSTODY_HASH_MISMATCH",
+  "real_natural_system_adjudication_performed": false,
+  "refreeze_reason": "CORRECT_EXPECTED_SHA256_FOR_UNCHANGED_LEVEL4_TARGET_SYSTEM_FILE",
+  "scientific_payload_changed": false,
+  "status": "REFROZEN_BEFORE_RUN_002",
+  "verifier_path_required": "verify_level4_gauntlet_v1.py",
+  "verifier_self_hash_excluded": true,
+  "version": "1.0.1"
+}

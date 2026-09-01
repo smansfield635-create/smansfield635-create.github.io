@@ -1,0 +1,113 @@
+name: Brain Gen1 NIH HRA Surface Qualification
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/brain-gen1-nih-hra-surface-qualification.yml'
+      - 'docs/compass/gen1-nih-hra-surface-candidate.md'
+
+permissions:
+  contents: read
+
+jobs:
+  qualify-surface:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch exact NIH/HRA GLB candidate
+        run: |
+          set -euo pipefail
+          mkdir -p candidate
+          curl --fail --location --retry 3 \
+            'https://ccf-ontology.hubmapconsortium.org/objects/v1.2/Allen_M_Brain.glb' \
+            -o candidate/Allen_M_Brain.glb
+          sha256sum candidate/Allen_M_Brain.glb | tee candidate/sha256.txt
+          stat -c 'BYTES=%s' candidate/Allen_M_Brain.glb | tee candidate/size.txt
+      - name: Inspect full GLB namespace and resolve compositional brainstem map
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, struct, pathlib, re
+          p = pathlib.Path('candidate/Allen_M_Brain.glb')
+          b = p.read_bytes()
+          if b[:4] != b'glTF': raise SystemExit('NOT_GLB')
+          version, total = struct.unpack_from('<II', b, 4)
+          if version != 2 or total != len(b): raise SystemExit('GLB_HEADER_FAIL')
+          off = 12
+          chunks=[]
+          while off < len(b):
+              n,t=struct.unpack_from('<II',b,off); off+=8
+              chunks.append((t,b[off:off+n])); off+=n
+          js = next(data for typ,data in chunks if typ == 0x4E4F534A)
+          g = json.loads(js.decode('utf-8').rstrip(' \t\r\n\x00'))
+          mesh_names=[m.get('name','') for m in g.get('meshes',[]) if m.get('name')]
+          node_names=[n.get('name','') for n in g.get('nodes',[]) if n.get('name')]
+          names=[]
+          seen=set()
+          for x in mesh_names + node_names:
+              if x not in seen:
+                  seen.add(x); names.append(x)
+          pathlib.Path('candidate/all-structure-names.txt').write_text('\n'.join(names)+'\n')
+
+          patterns={
+            'pons': re.compile(r'pons|pontine|varolii', re.I),
+            'medulla': re.compile(r'medulla|oblongata|myelencephalon|pyramid', re.I),
+            'midbrain': re.compile(r'midbrain|mesencephalon|tectum|tegmentum|cerebral[_ ]pedunc|inferior[_ ]collic|superior[_ ]collic', re.I),
+            'transition': re.compile(r'spinal[_ ]cord|cervical[_ ]cord|medullary', re.I),
+          }
+          hits={k:[n for n in names if rx.search(n)] for k,rx in patterns.items()}
+          explicit={k:bool(v) for k,v in hits.items()}
+          primary_complete=explicit['pons'] and explicit['medulla'] and explicit['midbrain']
+          component_map={
+            'BRAINSTEM': {
+              'composition_rule':'semantic parent only; source vertices/faces unchanged',
+              'pons':hits['pons'],
+              'medulla':hits['medulla'],
+              'midbrain':hits['midbrain'],
+              'transition':hits['transition'],
+              'primary_complete':primary_complete,
+            }
+          }
+          pathlib.Path('candidate/brainstem-component-map.json').write_text(json.dumps(component_map,indent=2))
+
+          primitives=sum(len(m.get('primitives',[])) for m in g.get('meshes',[]))
+          tri=0
+          for m in g.get('meshes',[]):
+              for pr in m.get('primitives',[]):
+                  ai=pr.get('indices')
+                  if ai is not None and pr.get('mode',4)==4:
+                      tri += g['accessors'][ai].get('count',0)//3
+          low='\n'.join(names).lower()
+          report={
+            'glb_version':version,
+            'bytes':len(b),
+            'nodes':len(g.get('nodes',[])),
+            'meshes':len(g.get('meshes',[])),
+            'primitives':primitives,
+            'indexed_triangle_count_if_mode4':tri,
+            'unique_named_structures':len(names),
+            'name_hits':{
+              'cerebell': 'cerebell' in low,
+              'cortex_or_cerebr': ('cortex' in low or 'cerebr' in low),
+              'brainstem_primary_composition_complete': primary_complete,
+            },
+            'brainstem_hits':hits,
+          }
+          pathlib.Path('candidate/glb-report.json').write_text(json.dumps(report,indent=2))
+          print(json.dumps(report,indent=2))
+          if len(g.get('meshes',[])) < 3: raise SystemExit('INSUFFICIENT_COMPONENTIZATION')
+          if tri < 100000: raise SystemExit('INSUFFICIENT_TRIANGLE_RESOLUTION')
+          if 'cerebell' not in low: raise SystemExit('CEREBELLUM_IDENTITY_MISSING')
+          if not ('cortex' in low or 'cerebr' in low): raise SystemExit('CEREBRAL_IDENTITY_MISSING')
+          if not primary_complete: raise SystemExit('BRAINSTEM_COMPOSITION_INCOMPLETE')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: brain-gen1-nih-hra-surface-qualification-${{ github.run_id }}
+          path: |
+            candidate/sha256.txt
+            candidate/size.txt
+            candidate/glb-report.json
+            candidate/all-structure-names.txt
+            candidate/brainstem-component-map.json
+          if-no-files-found: error

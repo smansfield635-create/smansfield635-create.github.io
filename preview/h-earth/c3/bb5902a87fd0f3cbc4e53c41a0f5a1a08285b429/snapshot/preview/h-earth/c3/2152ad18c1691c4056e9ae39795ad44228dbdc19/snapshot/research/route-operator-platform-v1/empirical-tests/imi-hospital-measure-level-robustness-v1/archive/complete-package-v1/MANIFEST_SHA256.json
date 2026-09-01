@@ -1,0 +1,45 @@
+{
+  "algorithm": "SHA-256",
+  "files": {
+    "FILE_LIBRARY_ORIGINAL_ARTIFACT_CUSTODY_POINTERS_v1.json": {
+      "sha256": "270b747eb01abc48c6e0fc6c918ee0625b1ea7eb6477071c2ff22b7e3d76684b",
+      "bytes": 1048
+    },
+    "HOSPITAL_EXTENSION_1B_RESOLVED_CLARIFICATIONS_RECEIPT_v1.json": {
+      "sha256": "b0a14d8069042506bfc1aabd31aced854982e519e2f8112d03f6244254ba7464",
+      "bytes": 765
+    },
+    "HOSPITAL_MEASURE_LEVEL_IMI_ROBUSTNESS_EXTENSION_1B_COMPLETE_MANIFEST_v1.json": {
+      "sha256": "b156c51c0f67301ddc78423eb13992eaf7ee58863d1d97dabbf496a54e75c88a",
+      "bytes": 2503
+    },
+    "HOSPITAL_MEASURE_LEVEL_IMI_ROBUSTNESS_EXTENSION_1B_ROUTE_PROFILE_v1.json": {
+      "sha256": "7c45de011632f8bc4445cdda6c930717009c24bda525068f4e8593d9fa3b61e9",
+      "bytes": 3876
+    },
+    "IMI_Additive_Hidden_Collapse_Examples_RECOVERED_AGGREGATE.csv": {
+      "sha256": "d0126c1f7a787f21226e89d2f7a9342222f0d5603cd842144b4804f25821aed6",
+      "bytes": 602
+    },
+    "IMI_Hospital_Robustness_Summary.csv": {
+      "sha256": "dbdd976fe66b209c9991dff830d2d7aa5c555677237febffca41338f58296239",
+      "bytes": 910
+    },
+    "IMI_Hospital_Robustness_Test_Report.md": {
+      "sha256": "02758f679f5132bc8e723bda7752b310caf1d6c006ee1ead73a9f297aea61c6e",
+      "bytes": 4991
+    },
+    "IMI_Hospital_Sensitivity_Results_RECOVERED_CORE.csv": {
+      "sha256": "ec16461ea68edcb94c7f0965a7bb6b050ac33e95de78c5211de31e8b090bd272",
+      "bytes": 1890
+    },
+    "README.md": {
+      "sha256": "1b81fce54218a414a9fbdb846384994babfe14312376858da762e1dd7ba10f87",
+      "bytes": 1625
+    },
+    "run_hospital_measure_level_imi_extension_1b.py": {
+      "sha256": "d3c9488bac26fff54b9e3d07db91a3ed2b3fd2b90098746f4f9a75b4f450f0b4",
+      "bytes": 7806
+    }
+  }
+}

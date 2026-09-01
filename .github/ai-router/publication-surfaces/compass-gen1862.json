@@ -1,0 +1,75 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "compass-gen1862",
+  "description": "Compass root publication contract with mandatory visible Trophy successor identity and live renderer predicate.",
+  "checks": [
+    {
+      "path": "/",
+      "includes": [
+        "<link rel=\"icon\" href=\"data:,\">",
+        "data-compass-plan=\"COMPASS_INFORMATION_DELIVERY_20260814\"",
+        "data-compass-root-renewal=\"gen1844-continuity\"",
+        "data-compass-static-introduction",
+        "data-compass-scene",
+        "/assets/compass/compass.readiness-context-v1.js?v=compass-runtime-copy-owner-repair-gen1876&cb=d3fe9edfa21e0d0e",
+        "/assets/compass/compass.crystals.js?v=gen1858-release-orbit-continuity&cb=cd2cbad0494852cc",
+        "/assets/compass/compass.orbit-input.js?v=gen1846&cb=681410dac29d2dae",
+        "/evidence/agentic-frontier/"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/",
+    "timeoutMs": 45000,
+    "readySelector": "[data-compass-root]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/"
+    },
+    "interactions": [
+      {
+        "name": "Activate Awards before Trophy verification",
+        "action": {
+          "type": "key",
+          "selector": "[data-capability-orbit][data-first-paint-authority=\"static\"]",
+          "key": "ArrowRight"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-capability=\"awards\"]",
+            "name": "data-active",
+            "value": "true"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-capability=\"awards\"]",
+            "name": "aria-current",
+            "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-capability-orbit][data-first-paint-authority=\"static\"] .compass-orbit-status",
+            "value": "Awards & Recognition"
+          }
+        ],
+        "timeoutMs": 5000
+      }
+    ],
+    "trophyPredicate": {
+      "enabled": true,
+      "fieldSelector": "[data-award-trophy]",
+      "canvasSelector": "[data-award-trophy] canvas",
+      "fallbackSelector": "[data-award-trophy] .compass-trophy-fallback",
+      "approvedRenderer": "procedural-webgl-v7-front-facing-motion",
+      "minFrames": 2,
+      "requireVisible": true,
+      "requireFallbackFalse": true,
+      "requireNonblank": true
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true
+  }
+}

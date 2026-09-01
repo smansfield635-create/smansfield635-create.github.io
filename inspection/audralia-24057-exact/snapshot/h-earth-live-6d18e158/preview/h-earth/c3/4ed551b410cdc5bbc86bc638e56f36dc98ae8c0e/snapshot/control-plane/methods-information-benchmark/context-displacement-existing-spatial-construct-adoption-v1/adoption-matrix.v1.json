@@ -1,0 +1,141 @@
+{
+  "allowedDispositions": [
+    "ADOPT_EXACT_CAPABILITY",
+    "ADOPT_INPUT_GRAMMAR",
+    "ADOPT_AND_PARAMETERIZE",
+    "ADOPT_STATE_MACHINE",
+    "ADOPT_BOUNDED_NAVIGATION_KERNEL",
+    "ADOPT_LIMITS_AND_EVALUATORS",
+    "ADOPT_FRAME_CORRESPONDENCE",
+    "ADOPT_RUNTIME_CORRIDOR",
+    "ADOPT_CONTRACT_NOT_PRODUCT_RENDERER",
+    "BIND_SEMANTIC_SOURCE",
+    "BIND_RELATIONSHIP_SOURCE",
+    "BIND_ROUTING_AND_STATE_SOURCE",
+    "ADOPT_EXACT_STATE_CONTRACT",
+    "EXCLUDE_VISUAL_FOUNDATION"
+  ],
+  "governingHead": "3b21d30763ca0368110811351bb3d3c8a042af47",
+  "inspirationOnlyRowCount": 0,
+  "rows": [
+    {
+      "binding": "Map pointer contacts to Methods camera/stage intents; preserve pointer capture, gesture lock and release termination.",
+      "capabilityId": "DIRECT_POINTER_TOUCH_INTAKE",
+      "disposition": "ADOPT_EXACT_CAPABILITY",
+      "sourcePaths": [
+        "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js"
+      ]
+    },
+    {
+      "binding": "One finger rotates/looks through the current field, two fingers travel between stages, pinch changes inspection distance.",
+      "capabilityId": "ONE_FINGER_LOOK_TWO_FINGER_TRAVEL_PINCH",
+      "disposition": "ADOPT_INPUT_GRAMMAR",
+      "sourcePaths": [
+        "showroom/globe/h-earth/functional-landscape/direct-manipulation.js",
+        "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js"
+      ]
+    },
+    {
+      "binding": "Reuse sample window, drag/flick separation, directional efficiency and pause-before-release logic for model/stage manipulation.",
+      "capabilityId": "SPHERICAL_DRAG_FLICK_CLASSIFICATION",
+      "disposition": "ADOPT_AND_PARAMETERIZE",
+      "sourcePaths": [
+        "assets/compass/compass.crystals.js"
+      ]
+    },
+    {
+      "binding": "Map Methods states to IDLE/PREVIEW/SETTLING/COMMITTED/CANCELLED without importing Compass routes or wing identities.",
+      "capabilityId": "ORIENTATION_PREVIEW_SETTLE_COMMIT",
+      "disposition": "ADOPT_STATE_MACHINE",
+      "sourcePaths": [
+        "assets/compass/compass.controller.js"
+      ]
+    },
+    {
+      "binding": "Replace terrain-specific bounds with Methods stage bounds while preserving proposal validation, FOV/pitch limits and last-lawful recovery.",
+      "capabilityId": "LAWFUL_CAMERA_PROPOSAL_RECOVERY",
+      "disposition": "ADOPT_BOUNDED_NAVIGATION_KERNEL",
+      "sourcePaths": [
+        "showroom/globe/h-earth/functional-landscape/navigation.js"
+      ]
+    },
+    {
+      "binding": "Create Methods-specific capacity profile derived from existing camera, viewport, pixel-ratio, interaction, inertia and budget evaluators.",
+      "capabilityId": "CAMERA_VIEWPORT_INTERACTION_CAPACITY",
+      "disposition": "ADOPT_LIMITS_AND_EVALUATORS",
+      "sourcePaths": [
+        "showroom/globe/h-earth/capacity.js"
+      ]
+    },
+    {
+      "binding": "Preserve atomic state-to-frame sequencing and immutable renderer handoff; substitute Methods scene descriptors for H-Earth geometry.",
+      "capabilityId": "FRAME_SEQUENCE_AND_IMMUTABLE_HANDOFF",
+      "disposition": "ADOPT_FRAME_CORRESPONDENCE",
+      "sourcePaths": [
+        "showroom/globe/h-earth/compositor.js"
+      ]
+    },
+    {
+      "binding": "Use one persistent canvas/context, stable GPU resources and direct navigation-state-to-frame presentation.",
+      "capabilityId": "PERSISTENT_WEBGL2_SCENE",
+      "disposition": "ADOPT_RUNTIME_CORRIDOR",
+      "sourcePaths": [
+        "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+        "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js"
+      ]
+    },
+    {
+      "binding": "Reuse frame-derived projection, frustum clipping and mount/reproject/destroy lifecycle; do not import H-Earth DOM/CSS materialization or world visuals.",
+      "capabilityId": "PROJECTION_CLIPPING_AND_SCENE_LIFECYCLE",
+      "disposition": "ADOPT_CONTRACT_NOT_PRODUCT_RENDERER",
+      "sourcePaths": [
+        "showroom/globe/h-earth/renderer.js"
+      ]
+    },
+    {
+      "binding": "Bind four families as initial stable stage identities, 25 records as model identities and practical/engineering/evidence as expressions of one model.",
+      "capabilityId": "METHODS_STAGE_MODEL_LENS_IDENTITIES",
+      "disposition": "BIND_SEMANTIC_SOURCE",
+      "sourcePaths": [
+        "laws/research/methods-and-models/showroom.js",
+        "control-plane/methods-information-benchmark/page-implementation-candidate-v1/candidate/model-core.mjs"
+      ]
+    },
+    {
+      "binding": "Render declared edges as traversable relations and explicit nonedges as meaningful separation; proximity alone creates no relation.",
+      "capabilityId": "DEPENDENCY_AND_NONEDGE_GEOMETRY",
+      "disposition": "BIND_RELATIONSHIP_SOURCE",
+      "sourcePaths": [
+        "control-plane/methods-information-benchmark/page-implementation-candidate-v1/candidate/model-graph.mjs"
+      ]
+    },
+    {
+      "binding": "Intent routes may assemble lawful model sets; holds remain visible suspended evidence states and cannot be promoted by motion.",
+      "capabilityId": "QUESTION_INTENT_AND_EVIDENCE_HOLDS",
+      "disposition": "BIND_ROUTING_AND_STATE_SOURCE",
+      "sourcePaths": [
+        "control-plane/methods-information-benchmark/page-implementation-candidate-v1/candidate/model-routing.mjs"
+      ]
+    },
+    {
+      "binding": "Capture all 13 fields including camera state and reject stale or mutated snapshots instead of approximate reset.",
+      "capabilityId": "EXACT_SPATIAL_RETURN",
+      "disposition": "ADOPT_EXACT_STATE_CONTRACT",
+      "sourcePaths": [
+        "control-plane/methods-information-benchmark/page-implementation-candidate-v1/candidate/state.mjs"
+      ]
+    },
+    {
+      "binding": "HTML, CSS, card grid, modal, questionnaire, explicit previous/next and simulated depth are prohibited as the primary experience.",
+      "capabilityId": "REJECTED_2044_PRESENTATION",
+      "disposition": "EXCLUDE_VISUAL_FOUNDATION",
+      "sourcePaths": [
+        "control-plane/methods-information-benchmark/page-implementation-candidate-v1/candidate/index.html",
+        "control-plane/methods-information-benchmark/page-implementation-candidate-v1/candidate/app.mjs"
+      ]
+    }
+  ],
+  "schema": "METHODS_SPATIAL_ADOPTION_MATRIX_v1",
+  "status": "ALL_ROWS_EXACTLY_BOUND_NO_INSPIRATION_ONLY_DISPOSITIONS",
+  "wholesaleSourceCopyAuthorized": false
+}

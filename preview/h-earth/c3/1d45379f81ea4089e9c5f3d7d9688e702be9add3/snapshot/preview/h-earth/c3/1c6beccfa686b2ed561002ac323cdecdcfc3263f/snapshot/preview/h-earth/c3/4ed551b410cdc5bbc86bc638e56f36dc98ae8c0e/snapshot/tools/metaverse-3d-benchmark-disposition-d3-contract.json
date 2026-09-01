@@ -1,0 +1,106 @@
+{
+  "contractId": "METAVERSE_3D_BENCHMARK_TO_DISPOSITION_COMPILER_D3_CANONICAL_BENCHMARK_DIMENSION_CLASSIFICATION_v1",
+  "toolId": "METAVERSE_3D_BENCHMARK_TO_DISPOSITION_COMPILER_v1",
+  "checkpoint": "D3",
+  "checkpointTitle": "CANONICAL_BENCHMARK_DIMENSION_CLASSIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "compilerBranch": "agent/metaverse-3d-benchmark-disposition-compiler-d3-001",
+  "parentD2S": {
+    "branch": "agent/metaverse-3d-benchmark-disposition-compiler-d2s-t3-001",
+    "headCommit": "f2dbc0e3cf9c5053641425f662eaee036aa3d11d",
+    "draftPullRequest": 144,
+    "pullRequestState": "OPEN_DRAFT_UNMERGED",
+    "status": "PASS_CLOSED",
+    "artifactId": "8621351263",
+    "artifactSizeBytes": 35907,
+    "artifactSha256": "5c5c9bd026845918cc908de643368a8aeeb0cde1e48b9b285aaa0c3c575101c8",
+    "canonicalFactCount": 119,
+    "canonicalFactManifestSha256": "7ce22d2cb309bcec5590043d38ebea95c80c3aa8f49474b7b7321c7b56827b20",
+    "coexistenceRelationCount": 7,
+    "coexistenceIndexSha256": "d37d39e950ae9c67c5e2abd99af79d465379270a55481590e822912c5cbd8b52",
+    "supplementReceiptSha256": "940f4705c6bdddc89f67692b6e938410de280a8977f25062d77cccd5369ba7ed",
+    "aggregateReceiptSha256": "0c67caecbfe10c44cacd8fc39891a6fb63315fa30b0c3355893ca1071d9ed970"
+  },
+  "governedDimensions": [
+    "SOURCE_CUSTODY",
+    "AUTHORITY_BOUNDARIES",
+    "RUNTIME_LOAD",
+    "INTERACTION_EXECUTION",
+    "VISUAL_REALIZATION",
+    "SPATIAL_REALIZATION",
+    "RESPONSIVE_BEHAVIOR",
+    "PERFORMANCE",
+    "ACCESSIBILITY",
+    "DEPLOYED_IDENTITY",
+    "USER_ACCEPTANCE"
+  ],
+  "dimensionStates": [
+    "PASS",
+    "FAIL",
+    "BLOCKED",
+    "UNRESOLVED",
+    "NOT_EXECUTED",
+    "NOT_APPLICABLE",
+    "SUPERSEDED",
+    "WITHHELD"
+  ],
+  "evidenceLanes": [
+    "FOUR_COMPASS_PRODUCTION_BENCHMARK_CORPUS",
+    "UNIVERSAL_COMPASS_PROTOTYPE_CANDIDATE",
+    "PROJECT_AWARENESS_V1_HISTORICAL_BASELINE"
+  ],
+  "classificationModel": {
+    "everyCanonicalFactHasExactlyOnePrimaryDimension": true,
+    "secondaryDimensionProjectionAllowed": true,
+    "everyProjectionHasExactlyOneGovernedDimensionState": true,
+    "factContentRewritten": false,
+    "factWinnerSelected": false,
+    "relationWinnerSelected": false,
+    "dimensionVerdictCollapsed": false,
+    "evidenceWeightApplied": false,
+    "dispositionCompiled": false
+  },
+  "absenceClassificationPolicy": {
+    "fourCompassPerformanceWithoutDirectFact": "UNRESOLVED",
+    "fourCompassUserAcceptanceWithoutDirectFact": "WITHHELD",
+    "prototypeUserAcceptanceWithoutDirectFact": "WITHHELD",
+    "historicalAwarenessNonCustodyDimensions": "NOT_APPLICABLE"
+  },
+  "authorizedCheckpointPaths": [
+    ".github/workflows/metaverse-3d-benchmark-disposition-d3.yml",
+    "tools/metaverse-3d-benchmark-disposition-d3-contract.json",
+    "tools/metaverse-3d-benchmark-disposition-d3-core.mjs",
+    "tools/metaverse-3d-benchmark-disposition-d3-rules.mjs",
+    "tools/metaverse-3d-benchmark-disposition-d3-classify.mjs",
+    "tools/metaverse-3d-benchmark-disposition-d3-controls.mjs"
+  ],
+  "classificationBoundaries": {
+    "t5LifecycleEvidenceAdmitted": false,
+    "hEarthEvidenceAdmitted": false,
+    "findingDefectPromotionAllowed": false,
+    "toolLifecycleSupersessionPerformed": false,
+    "evidenceWeightingAllowed": false,
+    "winnerSelectionAllowed": false,
+    "dispositionCompilationAllowed": false,
+    "productMutationAllowed": false,
+    "mainWriteAllowed": false,
+    "mergeAllowed": false,
+    "userAcceptanceGrantAllowed": false
+  },
+  "claims": {
+    "canonicalFactDimensionClassificationPerformed": true,
+    "coexistenceRelationDimensionClassificationPerformed": true,
+    "parentD2SFactsPreservedByteExact": true,
+    "parentD2SRelationsPreservedByteExact": true,
+    "dimensionClassificationOnly": true,
+    "evidenceWeightingPerformed": false,
+    "winnerSelectionPerformed": false,
+    "dispositionCompilationPerformed": false,
+    "productFilesChanged": 0,
+    "hEarthFilesChanged": 0,
+    "mainChanged": false,
+    "mergePerformed": false,
+    "userAcceptanceGranted": false
+  },
+  "nextCheckpoint": "D4_CANONICAL_EVIDENCE_WEIGHTING"
+}

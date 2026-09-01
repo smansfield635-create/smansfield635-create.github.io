@@ -1,0 +1,54 @@
+name: H-Earth B3 Two Fixed Morphology Probes
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-b3-two-fixed-morphology-probes.yml'
+      - 'h-earth-3d/analysis/morphology/h-earth.b3-*'
+      - 'h-earth-3d/control-plane/post-cp2-round2/morphology/h-earth.b3-*'
+      - 'h-earth-3d/validation/morphology/h-earth.b3-*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-two-fixed-morphology-probes:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact B3 candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute B3 first independent build
+        env:
+          B3_OUTPUT_DIR: /tmp/b3-first-artifacts
+        run: node h-earth-3d/validation/morphology/h-earth.b3-two-fixed-morphology-probes.mjs > /tmp/b3-first.json
+      - name: Execute B3 second independent build
+        env:
+          B3_OUTPUT_DIR: /tmp/b3-second-artifacts
+        run: node h-earth-3d/validation/morphology/h-earth.b3-two-fixed-morphology-probes.mjs > /tmp/b3-second.json
+      - name: Require identical receipts and probe bytes
+        run: |
+          cmp /tmp/b3-first.json /tmp/b3-second.json
+          cmp /tmp/b3-first-artifacts/h-earth.b3-probe-a-4pct.f64le /tmp/b3-second-artifacts/h-earth.b3-probe-a-4pct.f64le
+          cmp /tmp/b3-first-artifacts/h-earth.b3-probe-b-8pct.f64le /tmp/b3-second-artifacts/h-earth.b3-probe-b-8pct.f64le
+      - name: Upload B3 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-b3-two-fixed-morphology-probes
+          path: /tmp/b3-first-artifacts
+      - name: Enforce B3 pass
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const receipt = JSON.parse(fs.readFileSync('/tmp/b3-first.json', 'utf8'));
+          if (receipt.pass !== true || receipt.result !== 'B3_TWO_FIXED_MORPHOLOGY_PROBES_PASS_CLOSED') process.exit(1);
+          if (receipt.summary.probes.length !== 2) process.exit(1);
+          console.log(`B3_PASS:${receipt.summary.guidanceDigest}:${receipt.summary.probes.map((probe) => probe.digest).join(':')}:${receipt.canonicalReceiptSha256}`);
+          NODE

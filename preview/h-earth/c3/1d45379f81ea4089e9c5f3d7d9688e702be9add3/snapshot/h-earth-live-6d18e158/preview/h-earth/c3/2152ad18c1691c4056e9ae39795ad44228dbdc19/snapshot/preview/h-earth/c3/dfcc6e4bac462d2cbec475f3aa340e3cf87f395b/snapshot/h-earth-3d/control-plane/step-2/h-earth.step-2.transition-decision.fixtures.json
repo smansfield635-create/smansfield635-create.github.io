@@ -1,0 +1,121 @@
+{
+  "suiteId": "H_EARTH_STEP_2_TRANSITION_DECISION_FIXTURE_SUITE_v1",
+  "suiteVersion": 1,
+  "checkpoint": "STEP_2_5_DECISION_VALIDATION",
+  "baseDecisionPath": "/h-earth-3d/control-plane/step-2/h-earth.step-2.transition-decision.json",
+  "fixtures": [
+    {
+      "fixtureId": "VALID_DECISION",
+      "class": "POSITIVE",
+      "mutations": [],
+      "expectedValid": true,
+      "expectedFailureCode": null
+    },
+    {
+      "fixtureId": "WRONG_PARENT_BASE",
+      "class": "NEGATIVE",
+      "mutations": [
+        {
+          "pointer": "/parentBinding/baseCommit",
+          "value": "0000000000000000000000000000000000000000"
+        }
+      ],
+      "expectedValid": false,
+      "expectedFailureCode": "WRONG_PARENT_BINDING"
+    },
+    {
+      "fixtureId": "ALTERED_SUCCESSOR",
+      "class": "NEGATIVE",
+      "mutations": [
+        {
+          "pointer": "/successorBinding/sourceGitBlobSha",
+          "value": "1111111111111111111111111111111111111111"
+        }
+      ],
+      "expectedValid": false,
+      "expectedFailureCode": "WRONG_SUCCESSOR"
+    },
+    {
+      "fixtureId": "ALTERED_CHANGESET",
+      "class": "NEGATIVE",
+      "mutations": [
+        {
+          "pointer": "/changesetBinding/authorizedChangesetDigest",
+          "value": "2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      ],
+      "expectedValid": false,
+      "expectedFailureCode": "WRONG_CHANGESET_DIGEST"
+    },
+    {
+      "fixtureId": "EXPIRED_DECISION",
+      "class": "NEGATIVE",
+      "mutations": [
+        {
+          "pointer": "/expiresAt",
+          "value": "2026-07-24T03:19:59Z"
+        }
+      ],
+      "expectedValid": false,
+      "expectedFailureCode": "EXPIRED_DECISION"
+    },
+    {
+      "fixtureId": "REVOKED_DECISION",
+      "class": "NEGATIVE",
+      "mutations": [
+        {
+          "pointer": "/revocation/revoked",
+          "value": true
+        }
+      ],
+      "expectedValid": false,
+      "expectedFailureCode": "REVOKED_DECISION"
+    },
+    {
+      "fixtureId": "REPLAYED_DECISION",
+      "class": "NEGATIVE",
+      "mutations": [
+        {
+          "pointer": "/replayProtection/consumed",
+          "value": true
+        },
+        {
+          "pointer": "/replayProtection/remainingUseCount",
+          "value": 0
+        }
+      ],
+      "expectedValid": false,
+      "expectedFailureCode": "ALREADY_CONSUMED_DECISION"
+    },
+    {
+      "fixtureId": "MISSING_EXECUTOR",
+      "class": "NEGATIVE",
+      "mutations": [
+        {
+          "pointer": "/actorBindings/authorizedExecutor/actorId",
+          "value": ""
+        }
+      ],
+      "expectedValid": false,
+      "expectedFailureCode": "MISSING_ACTOR_BINDING"
+    },
+    {
+      "fixtureId": "MALFORMED_NONCE",
+      "class": "NEGATIVE",
+      "mutations": [
+        {
+          "pointer": "/replayProtection/decisionNonce",
+          "value": null
+        }
+      ],
+      "expectedValid": false,
+      "expectedFailureCode": "MALFORMED_DECISION"
+    }
+  ],
+  "expectedCounts": {
+    "total": 9,
+    "valid": 1,
+    "invalid": 8
+  },
+  "suiteDigest": "f7b706cdaf933c5ae7037e5c9a70748a67d9e4e9c80b60b102e3db443930c8cc"
+}

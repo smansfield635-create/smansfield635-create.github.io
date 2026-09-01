@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Diamond Gate Bridge — Compass Successor</title>
+<meta name="description" content="A bounded visual successor for the Diamond Gate Bridge Compass.">
+<link rel="stylesheet" href="./index.css">
+</head>
+<body>
+<div class="sky" aria-hidden="true"><i></i><i></i><i></i></div>
+<main class="page" data-root data-cardinal="north">
+  <header class="hero" id="top">
+    <p class="kicker">Diamond Gate Bridge · Interactive Studio</p>
+    <h1>Compass</h1>
+    <div class="statements" data-statements tabindex="0" aria-label="Compass perspectives">
+      <p class="statement is-active">Discovery begins when the boundaries between what we know start to disappear.</p>
+      <p class="statement">When you learn to live a life without expectations, you experience a life without limitations.</p>
+    </div>
+    <div class="statement-controls" aria-label="Perspective controls">
+      <button type="button" data-statement-prev aria-label="Previous perspective">←</button>
+      <span data-statement-count>01 / 02</span>
+      <button type="button" data-statement-next aria-label="Next perspective">→</button>
+    </div>
+    <p class="micro">Swipe, drag, or use the arrows to change perspective.</p>
+    <div class="hero-actions"><a href="#new-here" class="pill gold">New here? Start here</a><a href="#compass" class="pill">Go to the Compass</a></div>
+  </header>
+
+  <section id="new-here" class="intro shell">
+    <div class="intro-copy">
+      <p class="kicker">New here</p>
+      <h2>You do not need to understand the estate before entering it.</h2>
+      <p>Diamond Gate Bridge connects research, software, worlds, evidence, governance, construction, and human questions. The Compass is the orientation layer between them.</p>
+      <details>
+        <summary>What is Diamond Gate Bridge?</summary>
+        <div class="detail-copy"><p>Each discipline illuminates part of the landscape. The estate gives those different kinds of work one place to meet without pretending they are the same thing.</p><p>The Compass helps you begin with the kind of question you actually have, move toward the right family of rooms, and change direction without losing the larger landscape.</p></div>
+      </details>
+    </div>
+    <div class="film" aria-label="Introduction film">
+      <video controls preload="metadata" playsinline poster="" aria-label="Diamond Gate Bridge introduction">
+        <source src="/showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4" type="video/mp4">
+      </video>
+      <div class="film-fallback"><span>Introduction film</span><small>36 seconds</small></div>
+    </div>
+  </section>
+
+  <section id="compass" class="compass-section shell" aria-labelledby="compass-title">
+    <header class="section-heading">
+      <p class="kicker">The Compass</p>
+      <h2 id="compass-title">Four directions. One hidden threshold.</h2>
+      <p>Rotate the constellation. Bring one star forward to learn what it contains. Mirrorland is behind the map, not a fifth direction.</p>
+    </header>
+
+    <div class="compass-layout">
+      <div class="scene" data-scene tabindex="0" aria-label="Four-direction Compass">
+        <div class="rings" aria-hidden="true"><b></b><b></b><b></b></div>
+        <button class="star star-n is-active" type="button" data-cardinal="north" aria-pressed="true"><span class="crystal">✦</span><span class="star-label"><strong>North</strong><small>Orientation</small></span></button>
+        <button class="star star-e" type="button" data-cardinal="east" aria-pressed="false"><span class="crystal">✦</span><span class="star-label"><strong>East</strong><small>Worlds</small></span></button>
+        <button class="star star-s" type="button" data-cardinal="south" aria-pressed="false"><span class="crystal">✦</span><span class="star-label"><strong>South</strong><small>Instruments</small></span></button>
+        <button class="star star-w" type="button" data-cardinal="west" aria-pressed="false"><span class="crystal">✦</span><span class="star-label"><strong>West</strong><small>Frontier</small></span></button>
+        <button type="button" class="mirrorland" data-mirrorland><span>Mirrorland</span><strong>Find the door behind the map</strong></button>
+        <p class="scene-cue">Swipe or use ← →. Select the foreground direction to open its rooms.</p>
+      </div>
+
+      <aside class="context" data-context aria-live="polite">
+        <p class="kicker" data-context-kicker>NORTH · ORIENTATION</p>
+        <h3 data-context-title>Understand the estate.</h3>
+        <p data-context-body>Products, purpose, context, and the routes that help you understand how the estate fits together.</p>
+        <p class="impact" data-context-impact>Use North when you need context before choosing a more specialized room.</p>
+        <div class="context-actions"><button class="pill gold" type="button" data-open-rooms>Open North</button><a class="pill" href="/" data-context-route>Go to Orientation</a></div>
+      </aside>
+    </div>
+
+    <section class="rooms" data-rooms hidden aria-live="polite">
+      <div class="rooms-head"><div><p class="kicker" data-room-kicker>NORTH · ROOMS</p><h3 data-room-heading>Orientation rooms</h3></div><button type="button" class="pill" data-close-rooms>Return to constellation</button></div>
+      <div class="room-grid" data-room-grid></div>
+    </section>
+  </section>
+
+  <section class="capabilities shell" aria-labelledby="cap-title">
+    <header class="section-heading compact"><p class="kicker">Three ways to engage</p><h2 id="cap-title">Start with what you need.</h2><p>One active choice at a time. No stacked carousel. No hidden collision layer.</p></header>
+    <div class="cap-grid">
+      <div class="cap-tabs" role="tablist" aria-label="Capabilities">
+        <button class="cap-tab is-active" role="tab" aria-selected="true" data-cap="understand"><span>01</span><strong>Understand</strong><small>Coherence Diagnostic</small></button>
+        <button class="cap-tab" role="tab" aria-selected="false" data-cap="explore"><span>02</span><strong>Explore</strong><small>Awards &amp; Recognition</small></button>
+        <button class="cap-tab" role="tab" aria-selected="false" data-cap="ask"><span>03</span><strong>Ask</strong><small>Talk to the House</small></button>
+      </div>
+      <article class="cap-detail" data-cap-detail>
+        <div class="cap-mark" aria-hidden="true">◎</div>
+        <p class="kicker" data-cap-kicker>Assessment</p>
+        <h3 data-cap-title>Coherence Diagnostic</h3>
+        <p data-cap-body>Compare what matters to you with how you are actually living and deciding. See areas of alignment, tension, and repeated mismatch.</p>
+        <a class="pill gold" data-cap-link href="/coherence-diagnostic/">Run the diagnostic</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="readiness shell slim">
+    <div><p class="kicker">Built different</p><h2>Built as one connected system.</h2></div>
+    <details><summary>Readiness and evidence</summary><div class="readiness-grid"><article><span>01</span><h3>Software TRL 7</h3><p>Demonstrated, bounded, and inspectable. TRL 8 is not claimed.</p><a href="/evidence/readiness/">Inspect readiness</a></article><article><span>02</span><h3>Bounded changes</h3><p>A candidate is not a qualified candidate; qualification is not merge; merge is not a verified live release.</p><a href="/governance/">Open governance</a></article><article><span>03</span><h3>Experience checked</h3><p>Phone, tablet, desktop, touch, pointer, keyboard, focus, reduced motion, and overflow remain separate acceptance surfaces.</p><a href="/evidence/">Open evidence</a></article></div></details>
+  </section>
+
+  <section class="destinations shell slim">
+    <div><p class="kicker">Continue</p><h2>More ways into the estate.</h2></div>
+    <div class="destination-links"><a href="/products/">Products</a><a href="/showroom/globe/">Worlds</a><a href="/gauges/">Instruments</a><a href="/explore/frontier/">Frontier</a></div>
+  </section>
+</main>
+
+<div class="modal" data-modal hidden>
+  <div class="modal-backdrop" data-modal-close></div>
+  <section class="threshold" role="dialog" aria-modal="true" aria-labelledby="threshold-title">
+    <button class="modal-close" type="button" data-modal-close aria-label="Close Mirrorland">×</button>
+    <p class="kicker">Mirrorland</p>
+    <h2 id="threshold-title">Choose an experience.</h2>
+    <p>Mirrorland sits behind the Compass. Choose a route or return without losing your orientation.</p>
+    <nav class="threshold-grid"><a href="/showroom/"><span>Narrative</span><strong>Enter the Narrative</strong></a><a href="/showroom/globe/h-earth/"><span>Demo</span><strong>Enter the Demo</strong></a><a href="/showroom/globe/audralia/"><span>World map</span><strong>See the World Map</strong></a></nav>
+    <button type="button" class="pill" data-modal-close>Return to Compass</button>
+  </section>
+</div>
+<script src="./index.js" defer></script>
+</body>
+</html>

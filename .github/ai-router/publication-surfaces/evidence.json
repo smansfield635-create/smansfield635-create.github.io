@@ -1,0 +1,78 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "evidence",
+  "description": "Diamond Gate public Evidence surface with independently responsive carousel and fail-closed current public condition inspection.",
+  "checks": [
+    {
+      "path": "/evidence/",
+      "includes": [
+        "Current Public Condition",
+        "What can the estate say right now?",
+        "data-current-public-condition",
+        "/evidence/current-public-condition.mjs?v=1&cb=prod6"
+      ],
+      "excludes": [
+        "Breakthrough 4",
+        "BT4 ·",
+        "MODULE_OR_RUNTIME_DEADLINE",
+        "bootstrapTerminal"
+      ]
+    },
+    {
+      "path": "/evidence/current-public-condition.mjs?v=1&cb=prod6",
+      "includes": [
+        "SITE_ENTITLEMENT_URL",
+        "site-entitlement.v1.mjs?cb=prod5",
+        "await import(SITE_ENTITLEMENT_URL)",
+        "data-condition-state",
+        "data-condition-objects",
+        "What restores it",
+        "the Evidence carousel remains independently available"
+      ],
+      "excludes": [
+        "import { evaluateSite }",
+        "document.write"
+      ]
+    },
+    {
+      "path": "/evidence/readiness/bt4-site-governance/site-entitlement.v1.mjs?cb=prod5",
+      "includes": [
+        "./entitlement-engine.v1.mjs?cb=prod1",
+        "FETCH_DEADLINE_MS=10000",
+        "ADAPTER_DEADLINE_MS=15000",
+        "Promise.allSettled",
+        "LIVE_RUNTIME_PROBE_DECOUPLED_FROM_EVIDENCE_PAGE",
+        "Scientific claim",
+        "Audralia world/runtime",
+        "Audralia diagnostic authority",
+        "Exact-head public release"
+      ],
+      "excludes": [
+        "waitForAudraliaReady",
+        "data-audralia-loader",
+        "/preview/bt4/entitlement-v1/entitlement-engine.v1.mjs"
+      ]
+    },
+    {
+      "path": "/evidence/readiness/bt4-site-governance/entitlement-engine.v1.mjs",
+      "includes": [
+        "serveRequestedState",
+        "computeEntitlement",
+        "QUALIFIED",
+        "HELD"
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/evidence/",
+    "readyAttribute": {
+      "selector": "[data-current-public-condition]",
+      "name": "data-ready",
+      "contains": "true"
+    },
+    "timeoutMs": 25000,
+    "failOnConsoleErrors": true,
+    "requireEvidenceCarouselInteraction": true
+  }
+}

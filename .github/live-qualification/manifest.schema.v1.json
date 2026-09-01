@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "DGB_LIVE_QUALIFICATION_MANIFEST_v1",
+  "title": "Diamond Gate Bridge live qualification manifest",
+  "type": "object",
+  "required": ["schema", "projectId", "publicRoute", "stage", "publicByteAssertions", "runtime"],
+  "properties": {
+    "schema": {"const": "DGB_LIVE_QUALIFICATION_MANIFEST_v1"},
+    "projectId": {"type": "string", "minLength": 1},
+    "publicRoute": {"type": "string", "pattern": "^/"},
+    "stage": {
+      "type": "object",
+      "required": ["mode"],
+      "properties": {
+        "mode": {"enum": ["default", "adapter"]},
+        "adapter": {"type": ["string", "null"]}
+      },
+      "additionalProperties": true
+    },
+    "publicByteAssertions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["sourcePath", "publicPath"],
+        "properties": {
+          "sourcePath": {"type": "string", "minLength": 1},
+          "publicPath": {"type": "string", "pattern": "^/"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "properties": {
+        "required": {"type": "boolean"},
+        "verifier": {"type": ["string", "null"]}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,247 @@
+{
+  "schema": "COMPASS_PAGE_RECONSTRUCTION_EXECUTION_PLAN_v2_DISPLAY_FIDELITY_AMENDMENT",
+  "status": "LOCKED_DIRECT_REFERENCE_REQUIRED",
+  "amends": ".github/ai-router/projects/compass/construction-execution-plan.v2.json",
+  "scope": "COMPASS_ONLY",
+  "purpose": "Bind the owner-observed Compass regressions and corrected opening architecture into mandatory construction context before any further public Compass repair.",
+  "precedenceLaw": "This amendment is additive and corrective. Where construction-execution-plan.v2.json can be read to permit the observed regression, this amendment controls. It does not erase preservation, authority, navigation, accessibility, Mirrorland, Fibonacci, or bounded-claim requirements in v2.",
+  "observedRegressionDisposition": {
+    "status": "CONFIRMED_MUST_REPAIR",
+    "findings": [
+      "VISITOR_FACING_LANGUAGE_BECAME_BUILDER_FACING_AND_OVERLY_ABSTRACT",
+      "EMPHASIS_WAS_INCORRECTLY_TRANSLATED_INTO_VIEWPORT_SCALE_EDITORIAL_BLOCKS",
+      "SECONDARY_ROOM_DESTINATION_LABELS_LOST_NAVIGATIONAL_LEGIBILITY",
+      "CLUSTER_ROTATION_DID_NOT_VISIBLY_SYNCHRONIZE_FOREGROUND_ROOM_IDENTITY_CONTEXT_AND_ACTION_STATE",
+      "INCREASED_EXPLANATORY_COPY_REDUCED_LEARNABILITY_AND_PROGRESSIVE_DISCLOSURE",
+      "OPENING_FRAMED_WHY_THE_COMPASS_EXISTS_BEFORE_WHY_DIAMOND_GATE_BRIDGE_EXISTS",
+      "COLLAPSED_INTRODUCTION_WITHHELD_TOO_MUCH_CONTEXT_INSTEAD_OF_PRESENTING_AN_INTRIGUING_TEASER"
+    ],
+    "classification": "TECHNICALLY_QUALIFIED_BUT_DISPLAY_FIDELITY_REGRESSED"
+  },
+  "visitorLanguageLaw": {
+    "required": "Explain what is here, what the visitor can do, why it matters, and where a destination leads in concrete public language.",
+    "prohibitedAsPrimaryCopy": [
+      "BUILDER_PERSPECTIVE_ARCHITECTURE_JARGON",
+      "CONTROL_PLANE_LANGUAGE_WITHOUT_VISITOR_MEANING",
+      "ABSTRACT_SYSTEM_TERMS_SUBSTITUTING_FOR_DESTINATION_PURPOSE"
+    ],
+    "law": "Technical language may appear only where it earns visitor understanding or bounded proof; it may not carry the primary orientation burden."
+  },
+  "openingCorrection": {
+    "primaryQuestion": "WHY_DIAMOND_GATE_BRIDGE_EXISTS",
+    "notPrimaryQuestion": "WHY_THE_COMPASS_EXISTS",
+    "relationship": "Diamond Gate Bridge is the estate being introduced; Compass is the instrument used to understand and navigate it.",
+    "collapsedState": "SUBSTANTIVE_TEASER_VISIBLE",
+    "teaserRequirements": [
+      "ESTABLISH_PURPOSE",
+      "CREATE_INTRIGUE",
+      "ESTABLISH_TONE",
+      "MAKE_EXPANSION_OPTIONAL_RATHER_THAN_REQUIRED_FOR_BASIC_COMPREHENSION"
+    ],
+    "expandedState": "PRESERVE_AND_REVEAL_COMPLETE_INTRODUCTION",
+    "law": "Collapsed may reduce depth but may not mean context absent. The visitor must understand the premise of Diamond Gate Bridge before choosing to expand."
+  },
+  "lawsArchitecturalReference": {
+    "status": "MANDATORY_REFERENCE_MATURITY_NOT_STYLE_TEMPLATE",
+    "reference": "LAWS_CHAMBER_AND_SIDE_BY_SIDE_REPRESENTATION",
+    "law": "REFERENCE_MATURITY_DOES_NOT_EQUAL_STYLE_CLONING",
+    "adopt": [
+      "PRIMARY_OBJECT_AND_CONTEXT_OPERATE_AS_ONE_COMPOSITION",
+      "SPATIAL_RELATIONSHIP_CARRIES_INFORMATION",
+      "ACTIVE_STATE_DRIVES_VISIBLE_CONTEXT",
+      "PEERS_RECEDE_WITHOUT_BECOMING_ANONYMOUS",
+      "HIERARCHY_IS_CREATED_BY_COMPOSITION_NOT_CONTAINER_ACREAGE"
+    ],
+    "prohibit": [
+      "VERTICAL_STACK_OF_GIANT_EXPLANATORY_RECTANGLES_AS_DEFAULT_ARCHITECTURE",
+      "COPYING_LAWS_VISUAL_STYLE_OR_AUTHORITY_SEMANTICS"
+    ]
+  },
+  "coupledSpatialExplanation": {
+    "wideViewport": "LIVE_COMPASS_CURRENT_VISUAL_STATE_SIDE_BY_SIDE_WITH_CURRENT_DESTINATION_MEANING_AND_ACTION_STATE",
+    "narrowViewport": "REFLOW_ALLOWED_BUT_VISUAL_INSTRUMENT_AND_CONTEXT_MUST_REMAIN_PERCEPTUALLY_AND_SEMANTICALLY_COUPLED",
+    "stateLaw": "Rotation changes the paired explanation. Foregrounding a room changes its visible identity, practical meaning, and action availability in the paired surface.",
+    "failure": "VISIBLE_SPATIAL_STATE_CHANGE_WITH_STALE_GENERIC_CONTEXT_IS_NONCOMPENSATORY"
+  },
+  "roomIdentityAndStateLaw": {
+    "secondaryLabels": "Every navigable secondary room must retain an accessible visible identity sufficient to understand the cluster without experimental selection.",
+    "clusterRotation": "As each room star becomes foregrounded, the contextual surface must immediately become that room's preview before selection.",
+    "roomPreview": "Show room name, concrete purpose, useful orientation, and no Enter action.",
+    "roomSelected": "Selection commits that same room identity and exposes the correct room-specific Enter action.",
+    "criticalSequence": [
+      "ROTATE",
+      "ROOM_COMES_FORWARD",
+      "ROOM_IDENTIFIED",
+      "CONTEXT_CHANGES",
+      "SELECT",
+      "ENTER_BECOMES_AVAILABLE"
+    ],
+    "noncompensatoryFailures": [
+      "NAVIGABLE_ROOM_WITHOUT_ACCESSIBLE_VISIBLE_IDENTITY",
+      "FOREGROUND_ROOM_CHANGES_WHILE_CONTEXT_REMAINS_GENERIC_OR_STALE",
+      "VALID_ROOM_SELECTED_WHILE_ENTER_REMAINS_INCORRECTLY_LOCKED",
+      "VISIBLE_STATE_CHANGES_WITHOUT_MEANINGFUL_INFORMATIONAL_CONSEQUENCE"
+    ]
+  },
+  "proportionalEmphasisLaw": {
+    "features": [
+      "COHERENCE_DIAGNOSTIC",
+      "TALK_TO_THE_HOUSE",
+      "BUILT_DIFFERENT",
+      "SOFTWARE_TRL_7_PROOF"
+    ],
+    "required": "Emphasis must be earned compositionally through typography, light, depth, motion, shimmer, controlled animation, responsive interaction, distinctive JavaScript behavior, or other authored treatment appropriate to the feature.",
+    "prohibited": "Do not translate importance primarily into oversized rectangular containers, excessive viewport consumption, or repeated large editorial cards.",
+    "law": "MONUMENTAL_MEANS_MEMORABLE_AND_DISTINCTIVE_NOT_MERELY_LARGE"
+  },
+  "progressiveDisclosureLaw": {
+    "law": "More explanatory text may not reduce immediate navigational comprehension. The page must become easier to learn by using it.",
+    "required": [
+      "PRIMARY_DESTINATIONS_IDENTIFIABLE_BEFORE_COMMITMENT",
+      "SECONDARY_DESTINATIONS_IDENTIFIABLE_DURING_CLUSTER_EXPLORATION",
+      "DETAIL_REVEALED_IN_RESPONSE_TO_VISITOR_INTENT",
+      "NO_REPEATED_LARGE_EDITORIAL_CONTAINER_ACCUMULATION"
+    ]
+  },
+  "boundedContextualRefinement20260814": {
+    "status": "PLANNED_CONTEXTUAL_REFINEMENT_NO_ARCHITECTURE_REPLACEMENT",
+    "source": "Owner live-device review plus repository-grounded excellence and narrative archive audit on 2026-08-14.",
+    "classification": "COPY_AFFORDANCE_AND_CONTEXT_CLARIFICATION_ONLY",
+    "preserve": [
+      "FOUR_CARDINAL_STRUCTURE",
+      "DIRECT_MANIPULATION_COMPASS",
+      "CURRENT_SPATIAL_GEOMETRY",
+      "CURRENT_ROOM_TOPOLOGY_AND_ROUTES",
+      "CURRENT_CLUSTER_MODEL",
+      "CURRENT_FOREGROUND_ROOM_CONTEXT_SYNCHRONIZATION",
+      "MIRRORLAND_SPECIAL_THRESHOLD_BEHAVIOR",
+      "PROGRESSIVE_DISCLOSURE",
+      "AQUARIUM_AUDIO_DIRECTION_AND_USER_ACTIVATION_MODEL"
+    ],
+    "plannedCorrections": [
+      {
+        "id": "MIRRORLAND_DISCOVERY_TO_AFFORDANCE",
+        "problem": "Once Mirrorland is visible, repeating 'hidden entrance' or 'you found the hidden entrance' describes designer knowledge instead of telling the visitor what the discovered door does.",
+        "requiredOutcome": "After discovery, Mirrorland copy must explain that the visitor can enter through the door to choose a world or experience. Mystery may precede discovery but may not replace post-discovery affordance.",
+        "exampleDirection": "Mirrorland — enter through the door to choose a world or experience."
+      },
+      {
+        "id": "PRIMARY_INTERACTION_VERBS",
+        "problem": "Navigation instructions remain more abstract than the now-simple interaction requires.",
+        "requiredOutcome": "Primary instructions should make ROTATE -> SELECT -> ENTER immediately understandable while preserving authored language around the Compass.",
+        "mirrorlandException": "Clarify that Mirrorland opens its door/route chooser before the visitor chooses the experience beyond it."
+      },
+      {
+        "id": "DEFAULT_CONTEXT_PANEL_PLAIN_LANGUAGE",
+        "problem": "Resting-state phrases such as 'Cardinal preview' and 'Preview does not navigate' read as interface documentation rather than estate orientation.",
+        "requiredOutcome": "Use visitor-facing language that asks where the visitor wants to go and explains that bringing a direction forward reveals what is there."
+      },
+      {
+        "id": "NORTH_INTENT_CLARITY",
+        "problem": "North currently enumerates products, guide, front door, builder context, and philosophy instead of expressing a visitor intent as clearly as East, South, and West.",
+        "requiredOutcome": "North should communicate understanding/orientation as the reason to enter; individual North rooms retain their specific identities and routes."
+      },
+      {
+        "id": "OPTIONAL_INTRODUCTION_DENSITY_TRIM",
+        "problem": "The expanded Diamond Gate explanation contains multiple adjacent metaphors and may carry more prose than needed.",
+        "requiredOutcome": "If edited, reduce wording only where meaning is duplicated. Preserve the estate-first premise, interdisciplinary purpose, outside-the-cube question, and optional disclosure structure."
+      }
+    ],
+    "explicitNonGoals": [
+      "NO_NEW_COMPASS_GEOMETRY",
+      "NO_NEW_NAVIGATION_ARCHITECTURE",
+      "NO_VISIBLE_PREVIOUS_NEXT_PRIMARY_CONTROLS",
+      "NO_CAROUSEL_SUBSTITUTION",
+      "NO_TUTORIAL_OVERLAY",
+      "NO_NEW_INFORMATION_PANEL",
+      "NO_ROOM_TOPOLOGY_CHANGE",
+      "NO_ROUTE_CHANGE",
+      "NO_SCIENTIFIC_CLAIM_CHANGE",
+      "NO_AWARDS_READINESS_CLAIM",
+      "NO_EXTREME_NEW_AUDIT_PROGRAM"
+    ],
+    "reviewPosture": "NARROW_PROCEDURAL_REVIEW_APPROPRIATE",
+    "minimumVerification": [
+      "ONLY_INTENDED_COMPASS_COPY_OR_EXISTING_AFFORDANCE_BINDINGS_CHANGED",
+      "ALL_19_ROOM_IDENTITIES_AND_ROUTES_PRESERVED",
+      "MIRRORLAND_BACK_AND_ROUTE_CHOOSER_PRESERVED",
+      "ENTER_AUTHORITY_AND_FOREGROUND_ROOM_SYNCHRONIZATION_PRESERVED",
+      "AQUARIUM_AUDIO_BEHAVIOR_PRESERVED",
+      "DESKTOP_TABLET_PHONE_CONTEXT_REMAINS_LEGIBLE",
+      "NO_REGRESSION_TO_BUILDER_FACING_OR_OVERLY_ABSTRACT_PRIMARY_COPY"
+    ],
+    "stopLaw": "If implementation requires new geometry, new destination topology, new navigation mechanics, scientific authority changes, or a substitute interaction architecture, stop and reclassify before construction."
+  },
+  "ownerObservedRefinement20260814B": {
+    "status": "RECORDED_MANDATORY_NEXT_CONSTRUCTION_ROUND",
+    "source": "Owner live mobile review after the contextual refinement merge on 2026-08-14.",
+    "classification": "DISPLAY_FIDELITY_AND_SPATIAL_CLUTTER_CORRECTION_NO_ARCHITECTURE_REPLACEMENT",
+    "singleVisibleLabelLaw": {
+      "problem": "Concurrent readable labels create clutter and overlap, particularly in room clusters on mobile.",
+      "requiredOutcome": "Exactly one spatial label is visually prominent at a time. It must belong to the currently foregrounded or selected cardinal/room. All peer labels visually recede or hide until they become active.",
+      "semanticPreservation": "Visual suppression may not remove keyboard, screen-reader, route, or programmatic destination identity.",
+      "failure": "MORE_THAN_ONE_SIMULTANEOUS_READABLE_SPATIAL_LABEL_OR_ACTIVE_LABEL_NOT_MATCHING_FOREGROUND_STATE"
+    },
+    "premiumSurfaceMaterialLaw": {
+      "problem": "The lower feature and proof cards read as flat cardboard-like panels and understate the technological value of the content.",
+      "requiredOutcome": "Cards and tabs must read as premium high-tech glass or polished technical material: luminous depth, restrained translucency, reflective/specular edge treatment, layered shadow, selective chromatic energy, and strong text legibility.",
+      "prohibit": [
+        "FLAT_MATTE_CARDBOARD_PRESENTATION",
+        "GENERIC_NEON_EVERYWHERE",
+        "LOW_CONTRAST_GLASSMORPHISM",
+        "DECORATION_THAT_COMPETES_WITH_INFORMATION"
+      ]
+    },
+    "lawsSideBySideContinuation": {
+      "reference": "CURRENT_LAWS_CHAMBER_SIDE_BY_SIDE_PRESENTATION",
+      "requiredOutcome": "Where width permits, use the current Laws Chamber side-by-side relational composition as the donor principle for related Compass features instead of serial vertical stacking.",
+      "initialTargets": [
+        "COHERENCE_DIAGNOSTIC_WITH_TALK_TO_THE_HOUSE",
+        "BUILT_DIFFERENT_WITH_RELEVANT_PROOF_OR_BUILD_CONTINUATION_WHERE_COMPOSITIONALLY_SOUND"
+      ],
+      "responsiveLaw": "Desktop and sufficiently wide tablet may present related features side by side; phone must collapse cleanly to one column without density or hierarchy regression.",
+      "sourceInspectionRequired": true,
+      "sourceInspectionLaw": "Inspect the current Laws Chamber implementation before construction and adopt its compositional relationship rather than inventing a generic fifty-fifty grid from memory."
+    },
+    "preserve": [
+      "CURRENT_COMPASS_GEOMETRY",
+      "FOUR_CARDINAL_AUTHORITY",
+      "ALL_19_ROOM_IDENTITIES_AND_ROUTES",
+      "FOREGROUND_CONTEXT_SYNCHRONIZATION",
+      "MIRRORLAND_THRESHOLD_AND_ROUTE_CHOOSER",
+      "EXPLICIT_ENTER_AUTHORITY",
+      "AQUARIUM_AUDIO_BEHAVIOR",
+      "KEYBOARD_TOUCH_REDUCED_MOTION_AND_SCREEN_READER_EQUIVALENCE"
+    ],
+    "minimumVerification": [
+      "EXACTLY_ONE_VISIBLE_ACTIVE_SPATIAL_LABEL_AT_A_TIME",
+      "ACTIVE_LABEL_MATCHES_FOREGROUND_OR_SELECTED_OBJECT_AND_CONTEXT_PANEL",
+      "NONACTIVE_LABELS_ARE_VISUALLY_SUPPRESSED_WITHOUT_SEMANTIC_LOSS",
+      "PREMIUM_GLASS_TECH_SURFACES_PRESERVE_TEXT_CONTRAST_FOCUS_AND_TOUCH_CLARITY",
+      "CURRENT_LAWS_CHAMBER_SIDE_BY_SIDE_DONOR_WAS_INSPECTED_BEFORE_IMPLEMENTATION",
+      "WIDE_VIEW_RELATED_FEATURES_USE_SIDE_BY_SIDE_RELATIONAL_COMPOSITION_WHERE_APPROPRIATE",
+      "PHONE_REFLOWS_TO_SINGLE_COLUMN_WITHOUT_OVERFLOW_OR_CLUTTER"
+    ],
+    "stopLaw": "If the correction requires new navigation topology, new Compass geometry, route changes, scientific authority changes, or removal of semantic destination access, stop and reclassify before construction."
+  },
+  "qualificationAmendment": {
+    "law": "Technical Playwright green is insufficient. Exact-candidate qualification must include display-fidelity regression assertions and downstream visual/perceptual adjudication when the universal stack provides them.",
+    "requiredAssertions": [
+      "VISITOR_FACING_LANGUAGE_IS_CONCRETE_AND_ORIENTING",
+      "DIAMOND_GATE_BRIDGE_PURPOSE_TEASER_VISIBLE_WHILE_FULL_INTRO_REMAINS_COLLAPSED",
+      "NAVIGABLE_SECONDARY_ROOMS_HAVE_ACCESSIBLE_VISIBLE_IDENTITIES",
+      "FOREGROUND_ROOM_IDENTITY_SYNCHRONIZES_CONTEXT",
+      "ROOM_SELECTION_SYNCHRONIZES_ACTION_AVAILABILITY",
+      "VISIBLE_STATE_CHANGE_HAS_MEANINGFUL_INFORMATIONAL_CONSEQUENCE",
+      "PROGRESSIVE_DISCLOSURE_PRESERVES_IMMEDIATE_COMPREHENSION",
+      "EMPHASIS_IS_PROPORTIONAL_AND_NOT_REPEATED_VIEWPORT_SCALE_CARD_ACREAGE",
+      "DESKTOP_AND_MOBILE_PRESERVE_SEMANTIC_EQUIVALENCE",
+      "LAWS_REFERENCE_MATURITY_IS_USED_ARCHITECTURALLY_WITHOUT_STYLE_CLONING",
+      "EXACTLY_ONE_ACTIVE_SPATIAL_LABEL_IS_VISUALLY_READABLE_AT_A_TIME",
+      "PREMIUM_GLASS_TECH_SURFACES_PRESERVE_LEGIBILITY_AND_ACCESSIBILITY",
+      "LAWS_SIDE_BY_SIDE_RELATIONAL_COMPOSITION_IS_USED_WHERE_WIDTH_AND_HIERARCHY_SUPPORT_IT"
+    ],
+    "ownerInspectionLaw": "Owner-observed regressions are evidence to correct and bind; screenshots are not a required pre-merge approval gate unless explicitly requested."
+  },
+  "constructionBoundary": "NO_PUBLIC_COMPASS_REPAIR_SHOULD_BEGIN_FROM_V2_ALONE_AFTER_THIS_AMENDMENT_IS_MERGED; LOAD_V2_AND_THIS_AMENDMENT_TOGETHER."
+}

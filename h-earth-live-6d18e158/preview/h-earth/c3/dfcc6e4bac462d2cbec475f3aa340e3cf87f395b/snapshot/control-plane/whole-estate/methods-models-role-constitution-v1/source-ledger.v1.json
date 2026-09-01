@@ -1,0 +1,84 @@
+{
+  "schema": "WHOLE_ESTATE_CHECKPOINT_5_SOURCE_LEDGER_v1",
+  "status": "CHECKPOINT_5_CONSTRUCTION_CANDIDATE",
+  "governingMain": "8983b36233e55700614435cd17cc7139cc920336",
+  "governingTree": "139086f69385f7f44c1210db6179acd52b73df45",
+  "sources": [
+    {
+      "id": "CP1_PROSPECTIVE_CHANGE_REGISTER",
+      "type": "MERGED_CHECKPOINT_REGISTRATION",
+      "path": "control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/prospective-change-register.v1.json",
+      "authority": "CHECKPOINT_5_SCOPE_AND_FALSIFIER_SOURCE"
+    },
+    {
+      "id": "CP2_METHODS_MODELS_BRIDGE_OBLIGATIONS",
+      "type": "MERGED_NARRATIVE_AND_EVIDENCE_CONTRACT",
+      "path": "control-plane/whole-estate/narrative-spine-constitution-v1/methods-models-bridge-obligations.v1.json",
+      "authority": "EVIDENCE_GATE_RELATION_MAP_DISCOVERY_BRIDGE_AND_CLAIM_TRACE_SOURCE"
+    },
+    {
+      "id": "CP2_EVIDENCE_STANDING_TRAVERSAL",
+      "type": "MERGED_NARRATIVE_AND_EVIDENCE_CONTRACT",
+      "path": "control-plane/whole-estate/narrative-spine-constitution-v1/evidence-standing-traversal-contract.v1.json",
+      "authority": "UNDERSTAND_VERIFY_EXPLORE_AND_GIVEN_THAT_STANDING_SOURCE"
+    },
+    {
+      "id": "CP3_ROOM_CONTRACTS",
+      "type": "MERGED_CONSTITUTIONAL_ROLE_CONTRACT",
+      "path": "control-plane/whole-estate/constitutional-room-relation-contracts-v1/constitutional-room-contracts.v1.json",
+      "authority": "METHODS_MODELS_ROLE_AUTHORITY_NON_SUBSTITUTION_AND_ADJACENCY_SOURCE"
+    },
+    {
+      "id": "CP3_TRANSLATION_FIDELITY",
+      "type": "MERGED_TRANSLATION_CONTRACT",
+      "path": "control-plane/whole-estate/constitutional-room-relation-contracts-v1/translation-fidelity-and-salience-contract.v1.json",
+      "authority": "VC_VE_VT_VU_AND_MATERIAL_QUALIFIER_SALIENCE_SOURCE"
+    },
+    {
+      "id": "CP3_UNCERTAINTY_AND_STANDING",
+      "type": "MERGED_STANDING_CONTRACT",
+      "path": "control-plane/whole-estate/constitutional-room-relation-contracts-v1/uncertainty-and-standing-relation-contract.v1.json",
+      "authority": "FIRST_CLASS_UNCERTAINTY_SOURCE_OWNERSHIP_AND_SELF_REFERENTIAL_LOOP_BOUNDARY"
+    },
+    {
+      "id": "CP4_DEVELOPMENTAL_PROVENANCE",
+      "type": "MERGED_PROVENANCE_CONTRACT",
+      "path": "control-plane/whole-estate/estate-scale-developmental-provenance-v1/README.md",
+      "authority": "CONSTRUCTION_SCIENCE_NON_SUBSTITUTION_AND_DEVELOPMENTAL_CLAIM_CEILING_SOURCE"
+    },
+    {
+      "id": "METHODS_MODELS_CANONICAL_MANIFEST",
+      "type": "READ_ONLY_CANONICAL_MANIFEST",
+      "path": "laws/research/methods-and-models/canonical-records-v1.html",
+      "authority": "PARTIAL_CANONICAL_RECORD_AND_CLOSURE_STATE_SOURCE",
+      "closureState": {
+        "assignedCanonicalRecords": 10,
+        "sourceInventory": "OPEN",
+        "semanticCrosswalk": "PARTIAL",
+        "presentationCoverage": "OPEN",
+        "reverseAudit": "NOT_STARTED"
+      }
+    },
+    {
+      "id": "PR541_PRESENTATION_PROTOTYPE",
+      "type": "UNMERGED_NONPRODUCT_PRESENTATION_PROTOTYPE",
+      "pr": 541,
+      "head": "2a874228f42c623c7747d566d87d451d029436f4",
+      "status": "OPEN_DRAFT_UNMERGED",
+      "authority": "PRESENTATION_PRESERVATION_PROTOTYPE_ONLY",
+      "disposition": "PRESERVE_AND_ADAPT"
+    },
+    {
+      "id": "CHECKPOINT_4_MERGE",
+      "type": "GOVERNING_MAIN_TRANSITION",
+      "pr": 730,
+      "mergeCommit": "8983b36233e55700614435cd17cc7139cc920336",
+      "tree": "139086f69385f7f44c1210db6179acd52b73df45",
+      "postMergeCertificationRun": 31152522999,
+      "certificationDisposition": "SUCCESS"
+    }
+  ],
+  "unmergedPresentationPrototypePromotedToGoverningAuthority": false,
+  "canonicalCrosswalkMaterialized": false,
+  "publicMutationAuthorized": false
+}

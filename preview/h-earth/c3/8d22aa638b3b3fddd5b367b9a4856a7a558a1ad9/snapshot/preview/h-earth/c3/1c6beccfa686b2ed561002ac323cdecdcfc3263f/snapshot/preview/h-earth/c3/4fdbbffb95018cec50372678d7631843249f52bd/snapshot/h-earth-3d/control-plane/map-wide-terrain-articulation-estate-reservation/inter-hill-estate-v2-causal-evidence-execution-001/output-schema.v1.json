@@ -1,0 +1,26 @@
+{
+  "$id": "H_EARTH_INTER_HILL_ESTATE_V2_CAUSAL_EVIDENCE_OUTPUT_SCHEMA_v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "canonicalScientificReceipt": {
+      "type": "object"
+    },
+    "operationId": {
+      "const": "H_EARTH_INTER_HILL_ESTATE_V2_CAUSAL_EVIDENCE_EXECUTION_001"
+    },
+    "operationalEnvelope": {
+      "type": "object"
+    },
+    "schema": {
+      "const": "H_EARTH_INTER_HILL_ESTATE_V2_FINAL_OUTPUT_v1"
+    }
+  },
+  "required": [
+    "schema",
+    "operationId",
+    "canonicalScientificReceipt",
+    "operationalEnvelope"
+  ],
+  "type": "object"
+}

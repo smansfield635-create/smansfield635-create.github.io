@@ -1,0 +1,19 @@
+{
+  "fixture_set_id": "FBK-V3.1-CONFORMANCE-001",
+  "kernel_version": "3.1.0",
+  "fixtures": [
+    {"id":"FIXTURE-001","name":"valid forward passage","expected_disposition":"PASS_FORWARD","expected_F":0.75},
+    {"id":"FIXTURE-002","name":"missing governance receipt","expected_disposition":"REJECT","expected_HFgov":true},
+    {"id":"FIXTURE-003","name":"missing semantic receipt","expected_disposition":"REJECT","expected_HFdisp":true},
+    {"id":"FIXTURE-004","name":"numeric pass with semantic rejection","expected_disposition":"REJECT","expected_Av3":0.75,"expected_F":0.0},
+    {"id":"FIXTURE-005","name":"local correction","route_class":"LOCAL_REPAIR","M":0.6,"expected_disposition":"CORRECT_AND_RETURN"},
+    {"id":"FIXTURE-006","name":"underbound hold","route_class":"UNDERBOUND","M":0.4,"expected_disposition":"HOLD_IN_MOTION"},
+    {"id":"FIXTURE-007","name":"wrong slot","route_class":"WRONG_SLOT","M":0.75,"expected_disposition":"RESLOT_AND_REDIRECT"},
+    {"id":"FIXTURE-008","name":"tampered receipt correspondence","expected_disposition":"REJECT","expected_HFgov":true},
+    {"id":"FIXTURE-009","name":"premature final closure receipt","expected_result":"LIFECYCLE_SKIP_REJECTED"},
+    {"id":"FIXTURE-010","name":"ordered lifecycle","expected_stage":"FINAL_CLOSED"},
+    {"id":"FIXTURE-011","name":"valid closure suffix","expected_stage":"GLOCK_QUALIFIED"},
+    {"id":"FIXTURE-012","name":"rejected history closure attempt","expected_admissible":false},
+    {"id":"FIXTURE-013","name":"stage-bound claim","expected_false_closure_blocked":true}
+  ]
+}

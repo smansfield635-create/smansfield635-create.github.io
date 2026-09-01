@@ -34,6 +34,10 @@ const now = () => globalThis.performance?.now?.() ?? Date.now();
 
 export const H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_SOURCE_FILE =
   '/showroom/globe/h-earth/render/live-render-package.run8e-r2.js';
+export const H_EARTH_RUN_8E_R2_HISTORICAL_OCCURRENCE_ID =
+  'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001';
+export const H_EARTH_OW01_LIVE_RENDER_PACKAGE_OCCURRENCE_ID =
+  'H_EARTH_OW01_GRATITUDE_COASTAL_ENTRY_LIVE_RENDER_PACKAGE_OCCURRENCE_001';
 
 export const H_EARTH_RUN_8E_R2_MATERIAL_MODEL = freezeRecord({
   PRIMITIVE_RGBA: 0,
@@ -116,15 +120,30 @@ function vegetationRgba(primitive) {
 }
 
 function functionalLandscapeMaterialDefaults(primitive) {
-  const intent = primitive?.materialHint?.materialIntent ??
+  const rawIntent = primitive?.materialHint?.materialIntent ??
     primitive?.materialHint?.materialReference ?? 'DEFAULT';
-  if (String(intent).includes('WATER')) {
-    return { rgba: [46, 118, 144, 210], transparencyClass: 'TRANSLUCENT' };
+  const intent = String(rawIntent);
+  const farOcean = primitive?.metadata?.representationClass === 'FAR' &&
+    primitive?.metadata?.farSurfaceClass === 'OCEAN';
+  if (farOcean || intent.includes('OPEN_OCEAN')) {
+    return { rgba: [15, 57, 96, 255], transparencyClass: 'OPAQUE' };
   }
-  if (String(intent).includes('FOAM')) {
+  if (intent.includes('SHALLOW_WATER')) {
+    return { rgba: [58, 168, 181, 218], transparencyClass: 'TRANSLUCENT' };
+  }
+  if (intent.includes('NEARSHORE_WATER')) {
+    return { rgba: [31, 116, 154, 224], transparencyClass: 'TRANSLUCENT' };
+  }
+  if (intent.includes('OPEN_WATER')) {
+    return { rgba: [15, 57, 96, 236], transparencyClass: 'TRANSLUCENT' };
+  }
+  if (intent.includes('WATER')) {
+    return { rgba: [31, 116, 154, 224], transparencyClass: 'TRANSLUCENT' };
+  }
+  if (intent.includes('FOAM')) {
     return { rgba: [232, 242, 235, 190], transparencyClass: 'TRANSLUCENT' };
   }
-  if (String(intent).includes('HIGHLAND') || String(intent).includes('DISTANT')) {
+  if (intent.includes('HIGHLAND') || intent.includes('DISTANT')) {
     return { rgba: [68, 83, 79, 255], transparencyClass: 'OPAQUE' };
   }
   return { rgba: [116, 103, 73, 255], transparencyClass: 'OPAQUE' };
@@ -251,7 +270,10 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
     issues.push('R2_PACKAGE_OCCURRENCE_ID_INVALID');
   }
 
-  const neutralPackage = buildHEarthRun8ENeutralPackage();
+  const historicalOccurrence = packageOccurrenceId.trim() === H_EARTH_RUN_8E_R2_HISTORICAL_OCCURRENCE_ID;
+  const neutralPackage = buildHEarthRun8ENeutralPackage({
+    compositionMode: historicalOccurrence ? 'HISTORICAL_R2_CLOSED' : 'CONTENT_ADDRESSED_CURRENT_TERRAIN'
+  });
   if (neutralPackage?.ok !== true) issues.push(...(neutralPackage?.issues ?? ['R2_NEUTRAL_PACKAGE_FAILED']));
   const westAdmission = issues.length === 0
     ? admitHEarthPrimitiveBatch(neutralPackage.primitives, {
@@ -532,9 +554,19 @@ export function evaluateHEarthRun8ER2ImmutableLiveRenderPackage(packageRecord) {
   const vertexCount = packageRecord?.vertexCount ?? 0;
   if (packageRecord?.eligible !== true) issues.push('R2_PACKAGE_NOT_ELIGIBLE');
   if (packageRecord?.contractId !== H_EARTH_RUN_8E_R2_CONTRACT_ID) issues.push('R2_PACKAGE_CONTRACT_MISMATCH');
-  if (packageRecord?.primitiveCount !== 35) issues.push(`R2_PRIMITIVE_COUNT_INVALID:${packageRecord?.primitiveCount}`);
-  if (packageRecord?.triangleCount !== 49040) issues.push(`R2_TRIANGLE_COUNT_INVALID:${packageRecord?.triangleCount}`);
-  if (packageRecord?.indexCount !== 147120) issues.push(`R2_INDEX_COUNT_INVALID:${packageRecord?.indexCount}`);
+  const historicalOccurrence = packageRecord?.packageOccurrenceId === H_EARTH_RUN_8E_R2_HISTORICAL_OCCURRENCE_ID;
+  if (historicalOccurrence) {
+    if (packageRecord?.primitiveCount !== 35) issues.push(`R2_PRIMITIVE_COUNT_INVALID:${packageRecord?.primitiveCount}`);
+    if (packageRecord?.triangleCount !== 49040) issues.push(`R2_TRIANGLE_COUNT_INVALID:${packageRecord?.triangleCount}`);
+    if (packageRecord?.indexCount !== 147120) issues.push(`R2_INDEX_COUNT_INVALID:${packageRecord?.indexCount}`);
+  } else {
+    if (!Number.isSafeInteger(packageRecord?.primitiveCount) || packageRecord.primitiveCount < 1) issues.push('LIVE_OCCURRENCE_PRIMITIVE_COUNT_INVALID');
+    if (!Number.isSafeInteger(packageRecord?.triangleCount) || packageRecord.triangleCount < 1) issues.push('LIVE_OCCURRENCE_TRIANGLE_COUNT_INVALID');
+    if (!Number.isSafeInteger(packageRecord?.indexCount) || packageRecord.indexCount !== packageRecord.triangleCount * 3) issues.push('LIVE_OCCURRENCE_INDEX_COUNT_INVALID');
+    if ((packageRecord?.roleCounts?.TERRAIN ?? 0) !== 1) issues.push('LIVE_OCCURRENCE_TERRAIN_COUNT_INVALID');
+    const roleTotal=(packageRecord?.roleCounts?.TERRAIN??0)+(packageRecord?.roleCounts?.SHORELINE??0)+(packageRecord?.roleCounts?.VEGETATION??0);
+    if (roleTotal !== packageRecord?.primitiveCount) issues.push('LIVE_OCCURRENCE_ROLE_COUNT_MISMATCH');
+  }
   if (!buffers || !Object.isFrozen(buffers)) issues.push('R2_BUFFERS_NOT_FROZEN');
   const expectedLengths = {
     positions: vertexCount * 3,
@@ -556,7 +588,8 @@ export function evaluateHEarthRun8ER2ImmutableLiveRenderPackage(packageRecord) {
     !Number.isSafeInteger(index) || index < 0 || index >= vertexCount)) {
     issues.push('R2_INDEX_OUT_OF_RANGE');
   }
-  if (!Object.isFrozen(packageRecord?.primitiveSpans) || packageRecord?.primitiveSpans?.length !== 35) {
+  const expectedPrimitiveSpanCount = historicalOccurrence ? 35 : packageRecord?.primitiveCount;
+  if (!Object.isFrozen(packageRecord?.primitiveSpans) || packageRecord?.primitiveSpans?.length !== expectedPrimitiveSpanCount) {
     issues.push('R2_PRIMITIVE_SPANS_INVALID');
   }
   const primitiveIndexCoverage = (packageRecord?.primitiveSpans ?? []).reduce((sum, span) => sum + span.indexCount, 0);
@@ -605,10 +638,16 @@ export function createHEarthRun8ER2GPUBufferViews(packageRecord = getHEarthRun8E
 }
 
 let cachedPackage = null;
+let cachedOW01Package = null;
 
 export function getHEarthRun8ER2ImmutableLiveRenderPackage() {
   if (!cachedPackage) cachedPackage = buildHEarthRun8ER2ImmutableLiveRenderPackage();
   return cachedPackage;
+}
+
+export function getHEarthOW01LiveRenderPackageOccurrence() {
+  if (!cachedOW01Package) cachedOW01Package = buildHEarthRun8ER2ImmutableLiveRenderPackage({ packageOccurrenceId: H_EARTH_OW01_LIVE_RENDER_PACKAGE_OCCURRENCE_ID });
+  return cachedOW01Package;
 }
 
 export default getHEarthRun8ER2ImmutableLiveRenderPackage;

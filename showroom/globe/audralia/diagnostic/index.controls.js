@@ -1,9 +1,10 @@
 // /showroom/globe/audralia/diagnostic/index.controls.js
-// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v11
+// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v11.2.2
 // Full-file replacement.
 // Controls own UI binding, target preparation, target lifecycle, and user-facing rendering.
 // Diagnostic index.js owns report/direct/cycle production.
-// Renews v10 with bounded active target-frame preparation before Nine-Cycle gate.
+// v11.2.2 keeps guided navigation on the presentation frame, defers evidence
+// collection until after paint, and prepares the embedded world only on demand.
 // No production mutation. No readiness claim. No visual-pass claim. No cycle-pass claim.
 
 (function installAudraliaDistributedDiagnosticControlsV11(global) {
@@ -15,12 +16,13 @@
 
   var CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v11";
   var PREVIOUS_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v10";
-  var VERSION = "11.0.0";
+  var VERSION = "11.2.2";
   var FILE = "/showroom/globe/audralia/diagnostic/index.controls.js";
+  var COMPACT_PRESENTATION_STYLESHEET = "/showroom/globe/audralia/diagnostic/index.compact.css?v=AUDRALIA_DIAGNOSTIC_COMPACT_INTERACTION_LAYOUT_20260825_1";
 
   var DIAGNOSTIC_ENGINE_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v5";
   var DGB_ENGINE_CONTRACT = "DGB_INTERACTIVE_RUNTIME_ENGINE_CORE_NEWS_FIBONACCI_SPEC_OPS_TNT_v1";
-  var INSPECTION_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_TNT_v2";
+  var INSPECTION_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_TNT_v3";
 
   var CONTROL_RECEIPT_SCHEMA = "AUDRALIA_DROP_WITH_READ_DISTRIBUTED_CONTROL_PANEL_RECEIPT_v11";
   var CONTROL_REQUIREMENTS_SCHEMA = "AUDRALIA_DIAGNOSTIC_CONTROLS_REQUIREMENTS_MANIFEST_v7";
@@ -77,6 +79,15 @@
     Object.freeze({ position: 7, fibonacci: "F34", role: "SOUTH_PROBE_HANDOFF", direction: "SOUTH" }),
     Object.freeze({ position: 8, fibonacci: "F55", role: "SOUTH_RESTITUTION_INTERPRETATION", direction: "SOUTH" }),
     Object.freeze({ position: 9, fibonacci: "F89", role: "RAIL_TERMINAL_SYNTHESIS", direction: "RAIL" })
+  ]);
+
+  var WORKSPACES = Object.freeze([
+    Object.freeze({ id: "work", label: "Work" }),
+    Object.freeze({ id: "report", label: "Report" }),
+    Object.freeze({ id: "observe", label: "Observe" }),
+    Object.freeze({ id: "instruments", label: "Instruments" }),
+    Object.freeze({ id: "system", label: "System" }),
+    Object.freeze({ id: "guide", label: "Guide" })
   ]);
 
   var NO_CLAIMS = Object.freeze({
@@ -156,6 +167,16 @@
 
   function frozenClone(value) { return deepFreeze(clone(value)); }
 
+  function shallowSnapshot(value) {
+    if (!value || typeof value !== "object") return value;
+    try {
+      if (Array.isArray(value)) return Object.freeze(value.slice());
+      return Object.freeze(Object.assign({}, value));
+    } catch (_e) {
+      return value;
+    }
+  }
+
   function safeJson(value) {
     try { return JSON.stringify(clone(value), null, 2); } catch (_e) { return String(value); }
   }
@@ -165,6 +186,17 @@
     if (text.length <= MAX_PRESENTATION_JSON_CHARS) return text;
     return text.slice(0, MAX_PRESENTATION_JSON_CHARS) +
       "\n\n/* AUDRALIA_BOUNDED_PRESENTATION_TRUNCATED: full receipt retained in runtime state; user-facing output bounded. */";
+  }
+
+  function summarizeReceipt(value) {
+    if (!value || typeof value !== "object") return null;
+    return Object.freeze({
+      schema: typeof value.schema === "string" ? value.schema : null,
+      contract: typeof value.contract === "string" ? value.contract : null,
+      status: typeof value.status === "string" ? value.status : null,
+      result: typeof value.result === "string" ? value.result : null,
+      receiptId: typeof value.receiptId === "string" ? value.receiptId : null
+    });
   }
 
   function escapeHtml(value) {
@@ -227,6 +259,19 @@
     node.disabled = Boolean(disabled);
     node.setAttribute("aria-disabled", disabled ? "true" : "false");
     return true;
+  }
+
+  function ensureCompactPresentation() {
+    var id = "audraliaDiagnosticCompactLayout";
+    var link = byId(id);
+    if (!link) {
+      link = doc.createElement("link");
+      link.id = id;
+      link.rel = "stylesheet";
+      link.href = COMPACT_PRESENTATION_STYLESHEET;
+      (doc.head || doc.documentElement).appendChild(link);
+    }
+    if (doc.documentElement) doc.documentElement.classList.add("diagnostic-compact-layout");
   }
 
   function normalizeRoutePath(value) {
@@ -312,6 +357,9 @@
     schema: CONTROL_REQUIREMENTS_SCHEMA,
     controlsContract: CONTRACT,
     previousControlsContract: PREVIOUS_CONTRACT,
+    presentationWorkspaces: WORKSPACES.map(function (entry) { return entry.id; }),
+    defaultWorkspace: "work",
+    workspaceSelectionExecutes: false,
     expectedDiagnosticEngineContract: DIAGNOSTIC_ENGINE_CONTRACT,
     expectedEngineContract: DGB_ENGINE_CONTRACT,
     expectedInspectionLaneContract: INSPECTION_CONTRACT,
@@ -345,6 +393,7 @@
       distributedDeclarations: []
     },
     ui: {
+      workspace: "work",
       targetVisible: false,
       targetExpanded: false,
       receiptFilter: "all",
@@ -370,6 +419,26 @@
     lastAction: null,
     lastError: null
   };
+
+  var deferredPresentationTasks = Object.create(null);
+
+  function scheduleAfterPaint(taskId, callback) {
+    var id = String(taskId || "presentation");
+    var tokenId = Number(deferredPresentationTasks[id] || 0) + 1;
+    var frame = isFn(root.requestAnimationFrame)
+      ? root.requestAnimationFrame.bind(root)
+      : function (fn) { return root.setTimeout(fn, 0); };
+
+    deferredPresentationTasks[id] = tokenId;
+    frame(function () {
+      frame(function () {
+        root.setTimeout(function () {
+          if (deferredPresentationTasks[id] !== tokenId) return;
+          callback();
+        }, 0);
+      });
+    });
+  }
 
   function compactTargetLifecycle(target) {
     var t = target || state.target || emptyTarget();
@@ -397,7 +466,11 @@
   }
 
   function publishReceipt() {
-    root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT = deepFreeze({
+    var declarations = state.controls.distributedDeclarations.map(function (entry) {
+      return shallowSnapshot(entry);
+    });
+
+    root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT = Object.freeze({
       schema: CONTROL_RECEIPT_SCHEMA,
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
@@ -406,17 +479,17 @@
       initialized: state.initialized,
       initializedAt: state.initializedAt,
       delegatedEventsActive: state.controls.delegatedEventsActive,
-      engine: frozenClone(state.engine),
-      dgbEvidence: frozenClone(state.dgbEvidence),
-      inspectionLane: frozenClone(state.inspectionLane),
-      targetLifecycle: compactTargetLifecycle(state.target),
-      targetLifecycleFull: frozenClone(state.target),
+      engine: shallowSnapshot(state.engine),
+      dgbEvidence: shallowSnapshot(state.dgbEvidence),
+      inspectionLane: shallowSnapshot(state.inspectionLane),
+      targetLifecycle: Object.freeze(compactTargetLifecycle(state.target)),
+      targetLifecycleFull: shallowSnapshot(state.target),
       controlManifestCount: CONTROL_IDS.length,
       discoveredControlCount: state.controls.discoveredCount,
       missingControlCount: state.controls.missingCount,
-      missingControls: state.controls.missing.slice(),
+      missingControls: Object.freeze(state.controls.missing.slice()),
       distributedDeclarationCount: state.controls.distributedDeclarationCount,
-      distributedDeclarations: frozenClone(state.controls.distributedDeclarations),
+      distributedDeclarations: Object.freeze(declarations),
       currentReportId: state.report.current ? state.report.current.reportId || null : null,
       currentReportSource: state.report.source,
       reportAvailable: Boolean(state.report.current),
@@ -436,9 +509,10 @@
       actionCount: state.actionCount,
       clickCount: state.clickCount,
       errorCount: state.errorCount,
-      lastAction: frozenClone(state.lastAction),
-      lastError: frozenClone(state.lastError),
+      lastAction: state.lastAction,
+      lastError: state.lastError,
       presentationStationMap: STATIONS,
+      activeWorkspace: state.ui.workspace,
       requirements: REQUIREMENTS,
       reportProducerOwner: "DIAGNOSTIC_OBSERVATORY_ENGINE_INDEX_JS",
       directCheckProducerOwner: "DIAGNOSTIC_OBSERVATORY_ENGINE_INDEX_JS",
@@ -522,7 +596,7 @@
       directInterfacePresent: Boolean(isFn(api.runDirect) || isFn(api.runDirectCheck) || isFn(api.directCheck)),
       cycleInterfacePresent: isFn(api.runNineCycle),
       receiptPresent: Boolean(receipt),
-      receipt: frozenClone(receipt)
+      receiptSummary: summarizeReceipt(receipt)
     };
 
     publishReceipt();
@@ -560,8 +634,8 @@
       runtimeReceiptPresent: Boolean(receipt),
       authorityReceiptPresent: Boolean(authorityReceipt),
       dgbRuntimeCompatible: contract === DGB_ENGINE_CONTRACT,
-      runtimeReceipt: frozenClone(receipt),
-      authorityReceipt: frozenClone(authorityReceipt)
+      runtimeReceiptSummary: summarizeReceipt(receipt),
+      authorityReceiptSummary: summarizeReceipt(authorityReceipt)
     };
 
     publishReceipt();
@@ -957,7 +1031,7 @@
     setText("controllerState", source === "CONTROL_FALLBACK" ? "ENGINE HELD" : "REPORT READY");
     setStatus("controllerState", source === "CONTROL_FALLBACK" ? "HELD" : "READY");
 
-    refreshReceiptInventory({ publish: false, render: true });
+    refreshReceiptInventory({ publish: false, render: true, returnSnapshot: false });
     publishReceipt();
     return frozenClone(state.report.current);
   }
@@ -977,16 +1051,6 @@
       diagnosticEnginePath: state.engine.path,
       diagnosticEngineContract: state.engine.contract
     });
-
-    if (engine && isFn(engine.setSelection)) {
-      try {
-        engine.setSelection({
-          category: settings.category,
-          audit: settings.audit,
-          participant: settings.participant
-        });
-      } catch (_e0) {}
-    }
 
     if (engine && isFn(engine.createReport)) {
       try {
@@ -1038,7 +1102,7 @@
       directReceipt: receipt
     }));
 
-    refreshReceiptInventory({ publish: false, render: true });
+    refreshReceiptInventory({ publish: false, render: true, returnSnapshot: false });
     publishReceipt();
     return frozenClone(state.direct.rawReceipt);
   }
@@ -1434,13 +1498,22 @@
   }
 
   function openReceiptChamber() {
+    activateWorkspace("instruments");
     activateInstrumentChamber("receipts");
-    refreshReceiptInventory({ publish: true, render: true });
+    setHtml("receiptList", '<article class="empty-state"><h4>Collecting receipts</h4><p>The chamber is yielding the interaction frame before assembling current evidence.</p></article>');
+    scheduleAfterPaint("receipt-inventory", function () {
+      refreshReceiptInventory({ publish: false, render: true, returnSnapshot: false });
+      recordAction("openReceiptChamber", { receiptCount: state.normalizedReceipts.length });
+    });
   }
 
   function openArchiveChamber() {
+    activateWorkspace("instruments");
     activateInstrumentChamber("archive");
-    createDeepArchive();
+    setText("archiveRawOutput", "Preparing the current-session archive after the interaction frame.");
+    scheduleAfterPaint("archive-inventory", function () {
+      createDeepArchive();
+    });
   }
 
   function applyCommandContext(node) {
@@ -1456,7 +1529,10 @@
     state.ui.lastReportCommand = cmd;
     applyCommandContext(target);
 
-    if (cmd === "create") { createReport({ source: state.ui.lastReportCommandSource, command: cmd }); return true; }
+    if (cmd === "create") {
+      createReport({ source: state.ui.lastReportCommandSource, command: cmd }).then(function () { activateWorkspace("report"); });
+      return true;
+    }
     if (cmd === "view") return viewCurrentReport();
     if (cmd === "copy-readable") { copyReadableReport(); return true; }
     if (cmd === "copy-packet") { copyPacketReport(); return true; }
@@ -1469,15 +1545,18 @@
   }
 
   function normalizeReceipt(record, source, path) {
-    return {
+    var filterText = safeJson(record).toLowerCase();
+    var normalized = {
       type: token(record && (record.type || record.status || record.reportStatus || "observation")).toLowerCase(),
       sourceAuthority: source || "UNKNOWN",
       label: record && (record.label || record.title || record.schema || record.contract) || source || "Receipt",
       record: frozenClone(record),
       receiptId: record && (record.receiptId || record.id || record.reportId || record.cycleId) || null,
       path: path || null,
-      groups: ["observation"].concat(record && /held|error|fail|missing/i.test(safeJson(record)) ? ["error"] : [])
+      groups: ["observation"].concat(record && /held|error|fail|missing/i.test(filterText) ? ["error"] : [])
     };
+    try { Object.defineProperty(normalized, "filterText", { value: filterText, enumerable: false }); } catch (_e) {}
+    return normalized;
   }
 
   function collectReceiptFamilies() {
@@ -1512,7 +1591,7 @@
 
   function receiptMatchesFilter(entry, filter) {
     var f = String(filter || "all").toLowerCase();
-    var text = safeJson(entry).toLowerCase();
+    var text = entry && entry.filterText ? entry.filterText : safeJson(entry).toLowerCase();
     if (f === "all") return true;
     if (f === "participant") return /participant|station|f1|f3|f5|f8|f13|f21|f34|f55|f89|north|east|west|south|rail/.test(text);
     if (f === "observation") return /observation|inspection|target|runtime|engine|dgb/.test(text);
@@ -1528,19 +1607,23 @@
       return receiptMatchesFilter(entry, state.ui.receiptFilter);
     });
 
-    if (settings.render !== false) {
-      setHtml("receiptList", state.visibleReceipts.length
-        ? state.visibleReceipts.map(function (entry, index) {
-            return '<article tabindex="0" role="button" data-receipt-index="' + index + '">' +
-              "<h4>" + escapeHtml(entry.label) + "</h4><p>" + escapeHtml(entry.sourceAuthority) + "</p>" +
-              (entry.receiptId ? "<small>" + escapeHtml(entry.receiptId) + "</small>" : "") +
-              "</article>";
-          }).join("")
-        : '<article class="empty-state"><h4>No receipts</h4><p>No receipts are currently available for this filter.</p></article>');
-    }
+    if (settings.render !== false) renderVisibleReceiptInventory();
 
     if (settings.publish !== false) publishReceipt();
-    return frozenClone(state.normalizedReceipts);
+    return settings.returnSnapshot === false
+      ? state.normalizedReceipts.length
+      : frozenClone(state.normalizedReceipts);
+  }
+
+  function renderVisibleReceiptInventory() {
+    setHtml("receiptList", state.visibleReceipts.length
+      ? state.visibleReceipts.map(function (entry, index) {
+          return '<article tabindex="0" role="button" data-receipt-index="' + index + '">' +
+            "<h4>" + escapeHtml(entry.label) + "</h4><p>" + escapeHtml(entry.sourceAuthority) + "</p>" +
+            (entry.receiptId ? "<small>" + escapeHtml(entry.receiptId) + "</small>" : "") +
+            "</article>";
+        }).join("")
+      : '<article class="empty-state"><h4>No receipts</h4><p>No receipts are currently available for this filter.</p></article>');
   }
 
   function applyReceiptFilter(filter) {
@@ -1550,7 +1633,10 @@
       node.setAttribute("aria-pressed", node.getAttribute("data-receipt-filter") === state.ui.receiptFilter ? "true" : "false");
     });
 
-    refreshReceiptInventory({ publish: true, render: true });
+    state.visibleReceipts = state.normalizedReceipts.filter(function (entry) {
+      return receiptMatchesFilter(entry, state.ui.receiptFilter);
+    });
+    renderVisibleReceiptInventory();
   }
 
   function selectReceipt(index) {
@@ -1559,7 +1645,6 @@
     setHtml("selectedReceiptDetail", entry
       ? "<h4>" + escapeHtml(entry.label) + "</h4><pre>" + escapeHtml(boundedJson(entry.record)) + "</pre>"
       : "<h4>Receipt unavailable</h4>");
-    publishReceipt();
   }
 
   function closeAllSelectors(except) {
@@ -1587,39 +1672,26 @@
     return true;
   }
 
-  function setEngineSelection() {
-    var engine = resolveDiagnosticEngine();
-    if (engine && isFn(engine.setSelection)) {
-      try {
-        engine.setSelection({
-          category: state.ui.selectedCategory,
-          audit: state.ui.selectedAudit,
-          participant: state.ui.selectedParticipant
-        });
-      } catch (_e) {}
-    }
-  }
-
   function selectCategory(categoryId, label) {
     state.ui.selectedCategory = categoryId || state.ui.selectedCategory;
-    setText("categorySelectorLabel", label || state.ui.selectedCategory);
+    var visibleLabel = label || state.ui.selectedCategory;
+    setText("categorySelectorLabel", visibleLabel);
+    setText("workspaceCategoryState", visibleLabel);
     Array.prototype.slice.call(doc.querySelectorAll("[data-category-id]")).forEach(function (node) {
       node.setAttribute("aria-selected", node.getAttribute("data-category-id") === state.ui.selectedCategory ? "true" : "false");
     });
-    setEngineSelection();
     closeAllSelectors();
-    publishReceipt();
   }
 
   function selectAudit(auditId, label) {
     state.ui.selectedAudit = auditId || state.ui.selectedAudit;
-    setText("auditSelectorLabel", label || state.ui.selectedAudit);
+    var visibleLabel = label || state.ui.selectedAudit;
+    setText("auditSelectorLabel", visibleLabel);
+    setText("workspaceAuditState", visibleLabel);
     Array.prototype.slice.call(doc.querySelectorAll("[data-audit-id]")).forEach(function (node) {
       node.setAttribute("aria-selected", node.getAttribute("data-audit-id") === state.ui.selectedAudit ? "true" : "false");
     });
-    setEngineSelection();
     closeAllSelectors();
-    publishReceipt();
   }
 
   function activatePanel(buttonSelector, panelAttribute, value, stateKey) {
@@ -1627,11 +1699,54 @@
     buttons.forEach(function (button) {
       var selected = button.getAttribute(panelAttribute) === value;
       button.setAttribute("aria-selected", selected ? "true" : "false");
+      if (button.getAttribute("role") === "tab") button.tabIndex = selected ? 0 : -1;
       var panel = byId(button.getAttribute("aria-controls"));
       if (panel) panel.hidden = !selected;
     });
     state.ui[stateKey] = value;
-    publishReceipt();
+  }
+
+  function activateWorkspace(workspace, options) {
+    var requested = String(workspace || "work").toLowerCase();
+    var known = WORKSPACES.some(function (entry) { return entry.id === requested; });
+    var active = known ? requested : "work";
+    var settings = options || {};
+
+    activatePanel("[data-diagnostic-workspace]", "data-diagnostic-workspace", active, "workspace");
+    setText("diagnosticWorkspaceState", WORKSPACES.filter(function (entry) { return entry.id === active; })[0].label);
+    closeAllSelectors();
+
+    if (settings.focusTab) {
+      var activeTab = doc.querySelector('[data-diagnostic-workspace="' + active + '"]');
+      if (activeTab && isFn(activeTab.focus)) activeTab.focus();
+    }
+
+    return active;
+  }
+
+  function focusWorkspaceOrbit() {
+    var activeTab = doc.querySelector('[data-diagnostic-workspace][aria-selected="true"]');
+    var orbit = byId("diagnosticWorkspaceTabs");
+    if (orbit && isFn(orbit.scrollIntoView)) orbit.scrollIntoView({ block: "start" });
+    if (activeTab && isFn(activeTab.focus)) activeTab.focus();
+  }
+
+  function handleWorkspaceKeydown(event) {
+    var target = event.target && isFn(event.target.closest) ? event.target.closest("[data-diagnostic-workspace]") : null;
+    if (!target) return;
+
+    var tabs = Array.prototype.slice.call(doc.querySelectorAll("[data-diagnostic-workspace]"));
+    var index = tabs.indexOf(target);
+    var next = null;
+
+    if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = (index - 1 + tabs.length) % tabs.length;
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") next = (index + 1) % tabs.length;
+    if (event.key === "Home") next = 0;
+    if (event.key === "End") next = tabs.length - 1;
+    if (next === null || !tabs[next]) return;
+
+    event.preventDefault();
+    tabs[next].focus();
   }
 
   function activateLeftOrbit(view) {
@@ -1640,7 +1755,13 @@
 
   function activateObservationLens(lens) {
     activatePanel("[data-observation-lens]", "data-observation-lens", lens || "target", "observationLens");
-    if (lens === "window") setTargetVisible(true);
+    if (lens === "window") {
+      setTargetVisible(true, { publish: false, inspect: false });
+      scheduleAfterPaint("target-window-load", function () {
+        if (state.ui.workspace !== "observe" || state.ui.observationLens !== "window") return;
+        activelyPrepareTargetFrame("OBSERVATION_WINDOW_EXPLICIT_OPEN");
+      });
+    }
   }
 
   function activateInstrumentChamber(chamber) {
@@ -1677,6 +1798,7 @@
     if (!node) return false;
 
     state.ui.selectedParticipant = node.getAttribute("data-participant-role") || "ALL";
+    setText("workspaceParticipantState", node.querySelector("strong") ? node.querySelector("strong").textContent : state.ui.selectedParticipant);
 
     Array.prototype.slice.call(doc.querySelectorAll("[data-participant-role]")).forEach(function (entry) {
       entry.setAttribute("aria-selected", entry === node ? "true" : "false");
@@ -1687,28 +1809,28 @@
       "<p>Selected for direct-execution context only. Selection does not certify availability or execute the participant.</p>"
     );
 
-    setEngineSelection();
-    publishReceipt();
     return true;
   }
 
-  function setTargetVisible(visible) {
+  function setTargetVisible(visible, options) {
+    var settings = options || {};
     state.ui.targetVisible = Boolean(visible);
     var button = byId("toggleObservationTarget");
     var targetWindow = byId("targetWindow");
     if (button) button.setAttribute("aria-expanded", state.ui.targetVisible ? "true" : "false");
     if (targetWindow) targetWindow.hidden = !state.ui.targetVisible;
-    publishReceipt();
-    if (state.ui.targetVisible) inspectTargetFrame();
+    if (settings.publish !== false) publishReceipt();
+    if (state.ui.targetVisible && settings.inspect !== false) inspectTargetFrame();
   }
 
-  function setTargetExpanded(expanded) {
+  function setTargetExpanded(expanded, options) {
+    var settings = options || {};
     state.ui.targetExpanded = Boolean(expanded);
     var button = byId("expandTargetWindow");
     var windowNode = byId("targetWindow");
     if (windowNode) windowNode.classList.toggle("is-expanded", state.ui.targetExpanded);
     if (button) button.setAttribute("aria-pressed", state.ui.targetExpanded ? "true" : "false");
-    publishReceipt();
+    if (settings.publish !== false) publishReceipt();
   }
 
   function reloadTargetFrame() {
@@ -1726,23 +1848,41 @@
   }
 
   function handleClick(event) {
-    var target = event.target && isFn(event.target.closest)
-      ? event.target.closest("button, a[href], summary, [role='button'], [role='tab'], [role='option'], [data-participant-role]")
+    var source = event.target;
+    var canResolve = source && isFn(source.closest);
+    var insideSelector = canResolve ? source.closest(".custom-selector") : null;
+    var target = canResolve
+      ? source.closest("button, a[href], summary, [role='button'], [role='tab'], [role='option'], [data-participant-role]")
       : null;
     var id;
     var cmd;
 
+    if (!insideSelector) closeAllSelectors();
     if (!target) return;
 
     state.clickCount += 1;
 
-    if (handleParticipantSelection(target)) {
+    id = target.id || "";
+    cmd = target.getAttribute("data-report-command");
+
+    if (target.getAttribute("data-diagnostic-workspace")) {
       event.preventDefault();
+      activateWorkspace(target.getAttribute("data-diagnostic-workspace"));
       return;
     }
 
-    id = target.id || "";
-    cmd = target.getAttribute("data-report-command");
+    if (target.getAttribute("data-open-diagnostic-workspace")) {
+      event.preventDefault();
+      activateWorkspace(target.getAttribute("data-open-diagnostic-workspace"), { focusTab: true });
+      focusWorkspaceOrbit();
+      return;
+    }
+
+    if (target.hasAttribute("data-return-diagnostic-workspaces")) {
+      event.preventDefault();
+      focusWorkspaceOrbit();
+      return;
+    }
 
     if (target.getAttribute("data-left-orbit-view")) {
       event.preventDefault();
@@ -1758,6 +1898,7 @@
 
     if (target.getAttribute("data-instrument-chamber")) {
       event.preventDefault();
+      activateWorkspace("instruments");
       activateInstrumentChamber(target.getAttribute("data-instrument-chamber"));
       if (cmd) executeDistributedReportCommand(target, cmd);
       return;
@@ -1796,9 +1937,26 @@
       return;
     }
 
-    if (id === "createReport") { event.preventDefault(); createReport({ source: "CANONICAL_CREATE_REPORT_BUTTON" }); return; }
-    if (id === "runDirectCheck") { event.preventDefault(); runDirectCheck(); return; }
-    if (id === "runNineCycle") { event.preventDefault(); runNineCycle(); return; }
+    if (id === "createReport") {
+      event.preventDefault();
+      createReport({ source: "CANONICAL_CREATE_REPORT_BUTTON" }).then(function () { activateWorkspace("report"); });
+      return;
+    }
+    if (id === "runDirectCheck") {
+      event.preventDefault();
+      runDirectCheck().then(function () {
+        activateWorkspace("report");
+        activateReportMode("raw");
+      });
+      return;
+    }
+    if (id === "runNineCycle") {
+      event.preventDefault();
+      activateWorkspace("instruments");
+      activateInstrumentChamber("cycle");
+      runNineCycle();
+      return;
+    }
     if (id === "copyReadableReport") { event.preventDefault(); copyReadableReport(); return; }
     if (id === "copyPacketReport") { event.preventDefault(); copyPacketReport(); return; }
     if (id === "copyRawReport") { event.preventDefault(); copyRawReport(); return; }
@@ -1806,21 +1964,30 @@
     if (id === "resetCurrentReport") { event.preventDefault(); resetCurrentReport(); return; }
     if (id === "resetWorkbench") { event.preventDefault(); resetWorkbench(); return; }
     if (id === "createDeepArchive") { event.preventDefault(); createDeepArchive(); return; }
-    if (id === "toggleObservationTarget") { event.preventDefault(); setTargetVisible(!state.ui.targetVisible); return; }
-    if (id === "expandTargetWindow") { event.preventDefault(); setTargetExpanded(!state.ui.targetExpanded); return; }
+    if (id === "toggleObservationTarget") {
+      event.preventDefault();
+      if (state.ui.targetVisible) setTargetVisible(false, { publish: false, inspect: false });
+      else {
+        activateWorkspace("observe");
+        activateObservationLens("window");
+      }
+      return;
+    }
+    if (id === "expandTargetWindow") { event.preventDefault(); setTargetExpanded(!state.ui.targetExpanded, { publish: false }); return; }
     if (id === "reloadTargetFrame") { event.preventDefault(); reloadTargetFrame(); return; }
     if (id === "reloadObservatory") { event.preventDefault(); root.location.reload(); return; }
-    if (target.hasAttribute("data-receipt-index")) { event.preventDefault(); selectReceipt(target.getAttribute("data-receipt-index")); }
-  }
+    if (target.hasAttribute("data-receipt-index")) { event.preventDefault(); selectReceipt(target.getAttribute("data-receipt-index")); return; }
 
-  function handleDocumentClick(event) {
-    var insideSelector = event.target && isFn(event.target.closest) ? event.target.closest(".custom-selector") : null;
-    if (!insideSelector) closeAllSelectors();
+    if (handleParticipantSelection(target)) {
+      event.preventDefault();
+      return;
+    }
   }
 
   function bindEvents() {
     doc.addEventListener("click", handleClick);
-    doc.addEventListener("click", handleDocumentClick);
+    var workspaceTabs = byId("diagnosticWorkspaceTabs");
+    if (workspaceTabs) workspaceTabs.addEventListener("keydown", handleWorkspaceKeydown);
     var frame = byId(TARGET_FRAME_ID);
     if (frame) frame.addEventListener("load", function () {
       state.target.navigationPending = false;
@@ -1897,6 +2064,7 @@
       resolveDgbEvidence: resolveDgbEvidence,
       resolveEngine: resolveDiagnosticEngine,
       closeAllSelectors: closeAllSelectors,
+      activateWorkspace: activateWorkspace,
       renderCycleChamber: renderCommittedCycleChamber,
       refreshCycleChamber: renderCommittedCycleChamber,
       getState: getPublicState,
@@ -1929,13 +2097,14 @@
   }
 
   function initializeUiState() {
+    activateWorkspace(state.ui.workspace);
     activateLeftOrbit(state.ui.leftOrbitView);
     activateObservationLens(state.ui.observationLens);
     activateInstrumentChamber(state.ui.instrumentChamber);
     activateReportMode(state.ui.reportMode);
     applyReceiptFilter(state.ui.receiptFilter);
-    setTargetVisible(false);
-    setTargetExpanded(false);
+    setTargetVisible(false, { publish: false, inspect: false });
+    setTargetExpanded(false, { publish: false });
   }
 
   function init() {
@@ -1944,6 +2113,7 @@
     state.initialized = true;
     state.initializedAt = nowIso();
 
+    ensureCompactPresentation();
     publishApi();
     bindEvents();
     inspectInspectionLane();
@@ -1953,7 +2123,7 @@
     resolveDgbEvidence();
     renderCommittedCycleChamber();
     initializeUiState();
-    refreshReceiptInventory({ publish: false, render: true });
+    renderVisibleReceiptInventory();
     publishReceipt();
 
     setText("controllerContract", CONTRACT);

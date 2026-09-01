@@ -1,0 +1,50 @@
+name: H-Earth CP7B Control-Field Contract
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-cp7b-control-field-contract.yml'
+      - 'h-earth-3d/control-plane/post-cp2-round2/cp7/h-earth.cp7b-control-field-contract.v1.mjs'
+      - 'h-earth-3d/validation/cp7/h-earth.cp7b-control-field-contract.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-control-field-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact CP7B candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute deterministic CP7B verifier first pass
+        run: node h-earth-3d/validation/cp7/h-earth.cp7b-control-field-contract.mjs h-earth-3d/validation/cp7/cp7b-evidence/receipt-first.json
+      - name: Execute deterministic CP7B verifier second pass
+        run: node h-earth-3d/validation/cp7/h-earth.cp7b-control-field-contract.mjs h-earth-3d/validation/cp7/cp7b-evidence/receipt-second.json
+      - name: Require identical receipts
+        run: cmp h-earth-3d/validation/cp7/cp7b-evidence/receipt-first.json h-earth-3d/validation/cp7/cp7b-evidence/receipt-second.json
+      - name: Upload CP7B evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-cp7b-control-field-contract
+          path: h-earth-3d/validation/cp7/cp7b-evidence/
+          if-no-files-found: error
+          retention-days: 90
+      - name: Enforce CP7B pass
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt = JSON.parse(fs.readFileSync('h-earth-3d/validation/cp7/cp7b-evidence/receipt-first.json', 'utf8'));
+          if (receipt.result !== 'CP7B_CONTROL_FIELD_CONTRACT_PASS_CLOSED' || receipt.pass !== true) {
+            console.error(JSON.stringify(receipt, null, 2));
+            process.exit(1);
+          }
+          console.log(`CP7B_PASS:${receipt.canonicalSha256}`);
+          NODE

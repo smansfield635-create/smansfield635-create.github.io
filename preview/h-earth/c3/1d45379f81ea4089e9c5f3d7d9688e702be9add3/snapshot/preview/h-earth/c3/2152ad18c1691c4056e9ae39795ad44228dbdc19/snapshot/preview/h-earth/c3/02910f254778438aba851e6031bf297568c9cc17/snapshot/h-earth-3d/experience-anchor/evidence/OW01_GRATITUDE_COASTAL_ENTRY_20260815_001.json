@@ -1,0 +1,133 @@
+{
+  "schema": "H_EARTH_OW01_ANCHOR_BROWSER_EVIDENCE_v1",
+  "evidenceId": "OW01_GRATITUDE_COASTAL_ENTRY_20260815_001",
+  "productHead": "2efe60106ccaf60e0090d361fa465115adb26d36",
+  "qualificationHead": "115e77e6273f7607b2d3f5c02f123958b57bbafe",
+  "baseHead": "aefb54971ae0f91a9abf9e8fc8e588f82f3a5744",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "route": "/showroom/globe/h-earth/",
+  "terrainFieldSha256": "cdd69d0775a05a5a073f58b0a7c0d81daac1d9c44fe126530a6245db8acd668b",
+  "base": {
+    "label": "base",
+    "status": 200,
+    "title": "H-Earth · Live Interactive World",
+    "url": "http://127.0.0.1:4174/showroom/globe/h-earth/?visual=terrain-relief-v2",
+    "canvasCount": 1,
+    "interactionExercised": true,
+    "beforeGesture": "false",
+    "afterGesture": "true",
+    "pageErrors": [],
+    "consoleErrors": [],
+    "requestFailures": [],
+    "captureError": null,
+    "r2PackageDiagnostic": null,
+    "vegetationDiagnostic": {
+      "ok": true,
+      "eligible": true,
+      "status": "RUN_8D_VEGETATION_RESOLUTION_COMPLETE",
+      "instanceCount": 24,
+      "archetypeCounts": {
+        "COASTAL_GRASS_TUFT": 21,
+        "LOWLAND_SHRUB": 3,
+        "HIGHLAND_CONIFER_SAPLING": 0
+      },
+      "populationInstanceCount": 24,
+      "speciesCounts": {
+        "COASTAL_FORB_CLUSTER_v1": 2,
+        "COASTAL_GRASS_CLUSTER_v1": 5,
+        "COASTAL_SHRUB_CLUSTER_v1": 1,
+        "LOW_COASTAL_SHRUB_v1": 2,
+        "LOWLAND_FORB_CLUSTER_v1": 3,
+        "LOWLAND_MEADOW_GRASS_CLUSTER_v1": 4,
+        "RIPARIAN_SEDGE_CLUSTER_v1": 4,
+        "SHALLOW_SEAGRASS_CLUSTER_v1": 2,
+        "UPLAND_GRASS_CLUSTER_v1": 1
+      },
+      "issues": []
+    },
+    "screenshotSha256": "35a4812016187cf29b467185c2bbfb5a1e8e4d35ad1b68dedec1dbe8785e9c9b",
+    "screenshotBytes": 326759
+  },
+  "candidate": {
+    "label": "candidate",
+    "status": 200,
+    "title": "H-Earth · Live Interactive World",
+    "url": "http://127.0.0.1:4173/showroom/globe/h-earth/?visual=terrain-relief-v2",
+    "canvasCount": 1,
+    "interactionExercised": true,
+    "beforeGesture": "false",
+    "afterGesture": "true",
+    "pageErrors": [],
+    "consoleErrors": [],
+    "requestFailures": [],
+    "captureError": null,
+    "r2PackageDiagnostic": {
+      "ok": true,
+      "historical": {
+        "eligible": false,
+        "status": "RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_REJECTED",
+        "issues": [
+          "RUN_8E_VEGETATION_COUNT_EXPECTED_27_ACTUAL_20",
+          "RUN_8E_NEUTRAL_COUNT_EXPECTED_35_ACTUAL_28",
+          "R2_WEST_ADMISSION_FAILED",
+          "R2_PACKET_002_TRANSFER_FAILED"
+        ],
+        "primitiveCount": null
+      },
+      "current": {
+        "eligible": true,
+        "status": "RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_COMPLETE",
+        "issues": [],
+        "primitiveCount": 28,
+        "packageOccurrenceId": "H_EARTH_OW01_GRATITUDE_COASTAL_ENTRY_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+        "packageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_BFAFBA4A",
+        "contentDigest": "fnv1a32:bfafba4a"
+      }
+    },
+    "vegetationDiagnostic": {
+      "ok": true,
+      "eligible": true,
+      "status": "RUN_8D_VEGETATION_RESOLUTION_COMPLETE",
+      "instanceCount": 19,
+      "archetypeCounts": {
+        "COASTAL_GRASS_TUFT": 18,
+        "LOWLAND_SHRUB": 1,
+        "HIGHLAND_CONIFER_SAPLING": 0
+      },
+      "populationInstanceCount": 19,
+      "speciesCounts": {
+        "COASTAL_FORB_CLUSTER_v1": 1,
+        "COASTAL_GRASS_CLUSTER_v1": 4,
+        "LOW_COASTAL_SHRUB_v1": 1,
+        "LOWLAND_FORB_CLUSTER_v1": 2,
+        "LOWLAND_MEADOW_GRASS_CLUSTER_v1": 3,
+        "RIPARIAN_SEDGE_CLUSTER_v1": 4,
+        "SHALLOW_SEAGRASS_CLUSTER_v1": 3,
+        "UPLAND_GRASS_CLUSTER_v1": 1
+      },
+      "issues": []
+    },
+    "screenshotSha256": "3a64c8af8de047edefdb416098300b6fcde0f0df9be160b66d04b1f4b875ab75",
+    "screenshotBytes": 326458
+  },
+  "anchor": {
+    "status": 200,
+    "captureError": null,
+    "screenshotSha256": "f49a4cf43be938f7c8f6d5a0fffa25dabf3d159a05b3c5a5d4538d87d8467cd1",
+    "screenshotBytes": 31401
+  },
+  "automatedFindings": {
+    "baseRouteLoaded": true,
+    "candidateRouteLoaded": true,
+    "baseCanvasPresent": true,
+    "candidateCanvasPresent": true,
+    "baseNoPageErrors": true,
+    "candidateNoPageErrors": true,
+    "candidateInteractionExercised": true,
+    "sameCanonicalRoute": true,
+    "visualStateChanged": true,
+    "anchorContactSheetCaptured": true
+  },
+  "disposition": "PENDING_INDEPENDENT_VISUAL_REVIEW"
+}

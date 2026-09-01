@@ -1,0 +1,59 @@
+name: Pages Authority State Receipt
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/pages-authority-state-receipt.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: read
+  issues: write
+
+concurrency:
+  group: pages-authority-state-receipt
+  cancel-in-progress: true
+
+jobs:
+  receipt:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Record current Pages publication authority
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          api="https://api.github.com/repos/${GITHUB_REPOSITORY}"
+          headers=(
+            -H "Accept: application/vnd.github+json"
+            -H "Authorization: Bearer ${GH_TOKEN}"
+            -H "X-GitHub-Api-Version: 2022-11-28"
+          )
+          pages="$(curl --fail-with-body --silent --show-error -L "${headers[@]}" "${api}/pages")"
+          latest="$(curl --fail-with-body --silent --show-error -L "${headers[@]}" "${api}/pages/builds/latest" || echo '{}')"
+          build_type="$(jq -r '.build_type // "unknown"' <<<"$pages")"
+          source_branch="$(jq -r '.source.branch // "unknown"' <<<"$pages")"
+          source_path="$(jq -r '.source.path // "unknown"' <<<"$pages")"
+          site_status="$(jq -r '.status // "unknown"' <<<"$pages")"
+          html_url="$(jq -r '.html_url // "unknown"' <<<"$pages")"
+          cname="$(jq -r '.cname // "unknown"' <<<"$pages")"
+          latest_commit="$(jq -r '.commit // "unknown"' <<<"$latest")"
+          latest_status="$(jq -r '.status // "unknown"' <<<"$latest")"
+          body="$(jq -nr \
+            --arg head "$GITHUB_SHA" \
+            --arg buildType "$build_type" \
+            --arg sourceBranch "$source_branch" \
+            --arg sourcePath "$source_path" \
+            --arg siteStatus "$site_status" \
+            --arg htmlUrl "$html_url" \
+            --arg cname "$cname" \
+            --arg latestCommit "$latest_commit" \
+            --arg latestStatus "$latest_status" \
+            '"PAGES_AUTHORITY_STATE_RECEIPT\n\nReceipt head: `"+$head+"`\nPages build_type: `"+$buildType+"`\nPages source: `"+$sourceBranch+$sourcePath+"`\nPages site status: `"+$siteStatus+"`\nPages html_url: `"+$htmlUrl+"`\nPages cname: `"+$cname+"`\nLatest Pages build commit: `"+$latestCommit+"`\nLatest Pages build status: `"+$latestStatus+"`"')"
+          curl --fail-with-body --silent --show-error -L \
+            -X POST "${headers[@]}" \
+            "${api}/issues/1503/comments" \
+            -d "$(jq -n --arg body "$body" '{body:$body}')" >/dev/null

@@ -1,0 +1,106 @@
+name: Showroom Four-Compass Exact-Head Regression
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "showroom/**"
+      - "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-benchmark.config.mjs"
+      - "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-browser-baseline.mjs"
+      - ".github/workflows/showroom-four-compass-exact-head-regression.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: showroom-four-compass-regression-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  EXECUTION_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+  EXECUTION_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+  FOUR_COMPASS_ORIGIN: http://127.0.0.1:4173
+
+jobs:
+  four-compass-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout exact execution head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXECUTION_COMMIT }}
+
+      - name: Verify exact checkout identity
+        run: test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Set up Chrome
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install pinned browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Validate family benchmark source
+        run: |
+          node --check verification/benchmark-tools/four-compass-benchmark-v1/four-compass-benchmark.config.mjs
+          node --check verification/benchmark-tools/four-compass-benchmark-v1/four-compass-browser-baseline.mjs
+
+      - name: Start exact-head static server
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/showroom-four-compass-server.log 2>&1 &
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/showroom/ >/dev/null; then
+              exit 0
+            fi
+            sleep 0.25
+          done
+          cat /tmp/showroom-four-compass-server.log
+          exit 1
+
+      - name: Execute exact-head Four-Compass regression
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: node verification/benchmark-tools/four-compass-benchmark-v1/four-compass-browser-baseline.mjs
+
+      - name: Validate family and Showroom execution
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const compass = JSON.parse(fs.readFileSync('four-compass-benchmark-tool-baseline.json', 'utf8'));
+          const auxiliary = JSON.parse(fs.readFileSync('website-home-receiver-control-baseline.json', 'utf8'));
+          const failures = [];
+          if (compass.status !== 'PASS_BOUNDED_LANE_BASELINE' || compass.summaries.length !== 4) failures.push('compass_lane');
+          if (auxiliary.status !== 'PASS_BOUNDED_LANE_BASELINE' || auxiliary.summaries.length !== 1) failures.push('auxiliary_lane');
+          if (compass.execution.commit !== process.env.EXECUTION_COMMIT) failures.push('commit');
+          const showroom = compass.summaries.find(item => item.authorityId === 'SHOWROOM_COMPASS');
+          if (!showroom || showroom.posture !== 'POSITIVE_REFERENCE' || showroom.executedProfileCount !== 2 || showroom.captureCount !== 12) failures.push('showroom_summary');
+          const records = compass.records.filter(item => item.authorityId === 'SHOWROOM_COMPASS');
+          if (records.length !== 2 || records.some(item => item.status !== 'EXECUTED' || item.captures.length !== 6)) failures.push('showroom_records');
+          const blockingIds = new Set(['HORIZONTAL_OVERFLOW', 'IMPORTANT_ELEMENT_ABSENT', 'IMPORTANT_ELEMENT_ZERO_OR_HIDDEN']);
+          const blocking = compass.findings.filter(item => item.authorityId === 'SHOWROOM_COMPASS' && blockingIds.has(item.id));
+          if (blocking.length) failures.push(`showroom_blocking:${blocking.map(item => item.id).join('|')}`);
+          if (failures.length) throw new Error(`SHOWROOM_FOUR_COMPASS_REGRESSION_FAILED:${failures.join(',')}`);
+          NODE
+
+      - name: Upload exact-head regression evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: showroom-four-compass-exact-head-regression-evidence
+          path: |
+            four-compass-benchmark-tool-baseline.json
+            website-home-receiver-control-baseline.json
+            four-compass-benchmark-tool-screenshots/**
+            website-home-receiver-control-screenshots/**
+            /tmp/showroom-four-compass-server.log
+          if-no-files-found: error
+          retention-days: 30

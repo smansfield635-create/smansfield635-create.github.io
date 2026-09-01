@@ -1,0 +1,63 @@
+{
+  "schema": "COMPASS_ROOM_SELECTED_CONTINUITY_QUALIFICATION_AMENDMENT_v1",
+  "status": "BOUND_TO_ADMITTED_GEN1538_SUCCESSOR",
+  "operationId": "COMPASS_ROOM_SELECTED_CONTINUITY_AND_QUALIFICATION_HARDENING_20260818_v2",
+  "lockGeneration": 1538,
+  "governingHead": "ad3357e817f50cb66b7074e0d620888f2bc5407f",
+  "failure": {
+    "state": "ROOM_SELECTED",
+    "observed": "Room selection left the cluster experientially static because selection immediately descended the viewport away from the still-manipulable spatial scene.",
+    "contractContradiction": "ROOM_SELECTED is declared as a cluster manipulation state and therefore may not transition the visitor into a presentation state that prevents continued direct manipulation."
+  },
+  "governingStandards": {
+    "laws": "GOVERNING_BEHAVIORAL_RUNTIME_STANDARD",
+    "trlCarousel": "GOVERNING_MOTION_DEPTH_TRANSITION_STANDARD",
+    "dimensionalVisualFloor": ["Brain", "Trophy", "House"]
+  },
+  "repairLaw": {
+    "roomSelection": "Selection commits room identity and action availability without forcing viewport departure from the Compass scene.",
+    "continuity": "ROOM_SELECTED retains direct cluster drag, preview, commit, settlement and repeated manipulation until explicit navigation or an explicit return action changes state.",
+    "presentation": "Selected-room information may update in the coupled context surface, but must not replace spatial manipulation with automatic document traversal."
+  },
+  "qualificationLaw": {
+    "id": "DECLARED_INTERACTIVE_CAPABILITY_EXECUTION_LAW_v1",
+    "rule": "Every state declared manipulable must execute representative input and prove controller-state change, renderer-state change, and visible geometry change.",
+    "criticalPath": [
+      "OPEN_CLUSTER",
+      "SELECT_ROOM",
+      "MANIPULATE_AGAIN",
+      "CONTROLLER_STATE_CHANGES",
+      "RENDERER_STATE_CHANGES",
+      "VISIBLE_GEOMETRY_CHANGES",
+      "MANIPULATE_AGAIN_SECOND_TIME"
+    ],
+    "nonSubstitutes": [
+      "STATE_REACHABILITY",
+      "NO_PAGE_ERROR",
+      "SELECTION_SUCCESS",
+      "ROUTE_PRESENCE",
+      "STATIC_SCREENSHOT"
+    ]
+  },
+  "spacecraftParity": {
+    "classification": "SEPARATE_P1_REQUIREMENT",
+    "reference": "laws/index.spacecraft.background.js",
+    "required": [
+      "world-space flight progresses visibly",
+      "bounded hit response remains available",
+      "recovery resumes flight",
+      "no Compass navigation, route, controller or pointer authority is acquired"
+    ]
+  },
+  "protected": [
+    "STARS_AND_CONSTELLATION_REMAIN_COMPASS_IDENTITY",
+    "NO_CENTER_DIAL",
+    "MIRRORLAND_AUTHORITY_UNCHANGED",
+    "CARDINAL_AND_ROOM_ROUTES_UNCHANGED",
+    "JEEVES_ELARA_AUREN_DIRECT_SELECTIONS_UNCHANGED",
+    "LAWS_SOURCE_UNCHANGED",
+    "TRL_CAROUSEL_SOURCE_UNCHANGED"
+  ],
+  "mergeAuthorityCreated": false,
+  "deploymentAuthorityCreated": false
+}

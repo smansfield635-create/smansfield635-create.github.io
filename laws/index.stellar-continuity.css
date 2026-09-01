@@ -3,6 +3,8 @@
  * Presentation only. No Compass, route, controller, record, evidence, or claim authority.
  */
 
+@import url("/laws/index.destination-carousel.css?v=LAWS_NATIVE_DESTINATION_CAROUSEL_V3_20260816A");
+
 html[data-cp6-experiential-presentation="candidate"] body::before {
   content: none !important;
   display: none !important;

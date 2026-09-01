@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "H_EARTH_R06_C10_EXACT_CANDIDATE_ADMISSION_RECEIPT_SCHEMA_v1",
+  "title": "H-Earth R06:C10 exact committed candidate admission receipt",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "gateInputCandidateHead",
+    "candidateHead",
+    "parentHead",
+    "assertionSetId",
+    "assertions",
+    "passCount",
+    "failCount",
+    "overallResult",
+    "workingTreeClean",
+    "privateStateUsed",
+    "executionCommand",
+    "changedPaths",
+    "candidateBlobs",
+    "rawMeasurements",
+    "evidencePackage",
+    "rollbackIdentity"
+  ],
+  "properties": {
+    "schema": {
+      "const": "H_EARTH_R06_C10_EXACT_CANDIDATE_ADMISSION_RECEIPT_v1"
+    },
+    "gateInputCandidateHead": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "candidateHead": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "parentHead": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "assertionSetId": {
+      "const": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_ASSERTIONS_28_v1"
+    },
+    "assertions": {
+      "type": "array",
+      "minItems": 28,
+      "maxItems": 28,
+      "items": {
+        "type": "object",
+        "required": ["id", "pass", "evidence"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "pass": { "type": "boolean" },
+          "evidence": { "type": "object" }
+        }
+      }
+    },
+    "passCount": { "type": "integer", "minimum": 0, "maximum": 28 },
+    "failCount": { "type": "integer", "minimum": 0, "maximum": 28 },
+    "overallResult": {
+      "type": "string",
+      "pattern": "^(PASS_28_OF_28|FAIL_[0-9]+_OF_28)$"
+    },
+    "workingTreeClean": { "const": true },
+    "privateStateUsed": { "const": false },
+    "executionCommand": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" }
+    },
+    "changedPaths": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "candidateBlobs": {
+      "type": "object",
+      "additionalProperties": {
+        "type": ["string", "null"],
+        "pattern": "^[0-9a-f]{40}$"
+      }
+    },
+    "rawMeasurements": { "type": "object" },
+    "evidencePackage": {
+      "type": "object",
+      "required": ["sha256"],
+      "properties": {
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "rollbackIdentity": { "type": "string", "minLength": 1 }
+  }
+}

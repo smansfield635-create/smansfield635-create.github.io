@@ -1,0 +1,329 @@
+name: AI Entry — Automatic Exact-Head Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-production
+  cancel-in-progress: true
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Materialize bounded automatic-release sparse index
+        env:
+          TARGET_SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$TARGET_SHA"
+          git sparse-checkout init --cone --sparse-index
+
+          mapfile -t top_dirs < <(git ls-tree -d --name-only FETCH_HEAD)
+          sparse_paths=(
+            "preview/bt4/entitlement-v1"
+            "preview/bt4/operational-release-v1"
+            "h-earth-live-6d18e158/showroom/globe/h-earth"
+            "inspection/audralia-24057-exact/snapshot/showroom/globe/audralia"
+            "inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth"
+            "inspection/audralia-24057-exact/snapshot/h-earth-3d"
+          )
+          for root in "${top_dirs[@]}"; do
+            case "$root" in
+              .github|preview|node_modules|h-earth-live-6d18e158)
+                ;;
+              inspection)
+                while IFS= read -r child; do
+                  test -n "$child" || continue
+                  test "$child" = "audralia-24057-exact" && continue
+                  sparse_paths+=("inspection/$child")
+                done < <(git ls-tree -d --name-only "FETCH_HEAD:inspection")
+                ;;
+              *)
+                sparse_paths+=("$root")
+                ;;
+            esac
+          done
+
+          git sparse-checkout set -- "${sparse_paths[@]}"
+          git checkout --detach FETCH_HEAD
+          test "$(git config --bool index.sparse)" = "true"
+          sparse_entries="$(git ls-files --sparse | wc -l | tr -d '[:space:]')"
+          materialized_files="$(find . -type f -not -path './.git/*' | wc -l | tr -d '[:space:]')"
+          test "$sparse_entries" -lt 20000
+          test "$materialized_files" -lt 20000
+          test -f inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs
+          test -f inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs
+          test -f inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs
+          test -f inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js
+          test -f preview/bt4/entitlement-v1/verify-entitlement-preview.v1.mjs
+          test -f preview/bt4/operational-release-v1/index.html
+          test -d h-earth-live-6d18e158/showroom/globe/h-earth
+          echo "AI_ENTRY_AUTO_RELEASE_SPARSE_INDEX_ENTRIES=$sparse_entries"
+          echo "AI_ENTRY_AUTO_RELEASE_MATERIALIZED_FILES=$materialized_files"
+          echo "AUDRALIA_EXACT_24057_MATERIALIZED=PASS"
+
+      - name: Verify BT4 entitlement engine before publication
+        shell: bash
+        run: |
+          set -euo pipefail
+          node preview/bt4/entitlement-v1/verify-entitlement-preview.v1.mjs
+
+      - name: Stage exact-head Pages payload
+        env:
+          TARGET_SHA: ${{ github.sha }}
+          PAGES_STAGE: ${{ runner.temp }}/pages-site
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .well-known
+          printf '{"schema":"DGB_PUBLIC_RELEASE_MARKER_v1","commit":"%s"}\n' "$TARGET_SHA" > .well-known/dgb-release.json
+          rm -rf "$PAGES_STAGE"
+          mkdir -p "$PAGES_STAGE"
+          rsync -a --prune-empty-dirs \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='preview/' \
+            --exclude='h-earth-live-6d18e158/' \
+            ./ "$PAGES_STAGE/"
+
+          # The global preview tree remains excluded. Only these two explicit
+          # BT4 nonproduction experiments are admitted to the public serving path.
+          claim_src='preview/bt4/entitlement-v1'
+          claim_dst="$PAGES_STAGE/preview/bt4/entitlement-v1"
+          ops_src='preview/bt4/operational-release-v1'
+          ops_dst="$PAGES_STAGE/preview/bt4/operational-release-v1"
+          test -f "$claim_src/index.html"
+          test -f "$claim_src/entitlement-engine.v1.mjs"
+          test -f "$claim_src/verify-entitlement-preview.v1.mjs"
+          test -f "$ops_src/index.html"
+          mkdir -p "$claim_dst" "$ops_dst"
+          rsync -a --delete "$claim_src/" "$claim_dst/"
+          rsync -a --delete "$ops_src/" "$ops_dst/"
+          test -f "$claim_dst/index.html"
+          test -f "$claim_dst/entitlement-engine.v1.mjs"
+          test -f "$ops_dst/index.html"
+          grep -Fq 'NONPRODUCTION · BT4 SERVED-STATE EXPERIMENT' "$claim_dst/index.html"
+          grep -Fq 'entitlement-engine.v1.mjs' "$claim_dst/index.html"
+          grep -Fq 'NONPRODUCTION · BT4 CROSS-OBJECT EXPERIMENT' "$ops_dst/index.html"
+          grep -Fq "../entitlement-v1/entitlement-engine.v1.mjs" "$ops_dst/index.html"
+          echo 'BT4_BOUNDED_PREVIEWS_STAGED=PASS'
+
+          # Emit a deployment-time identity receipt for the real Generation 3
+          # benchmark evidence consumed by the bounded BT4 real-object projection.
+          evidence_src='assets/credibility/governance-gen3-benchmark.v1.json'
+          evidence_dst="$PAGES_STAGE/evidence/readiness/governance-gen3-entitlement/evidence-identity.v1.json"
+          test -f "$evidence_src"
+          test -f "$PAGES_STAGE/evidence/readiness/governance-gen3-entitlement/index.html"
+          test -f "$PAGES_STAGE/evidence/readiness/governance-gen3-entitlement/binding.v1.json"
+          evidence_blob="$(git hash-object "$evidence_src")"
+          evidence_sha256="$(sha256sum "$evidence_src" | awk '{print $1}')"
+          evidence_bytes="$(wc -c < "$evidence_src" | tr -d ' ')"
+          printf '{"schema":"BT4_REAL_OBJECT_EVIDENCE_IDENTITY_v1","sourcePath":"%s","sourceBlobSha":"%s","sha256":"%s","bytes":%s,"releaseCommit":"%s"}\n' \
+            "$evidence_src" "$evidence_blob" "$evidence_sha256" "$evidence_bytes" "$TARGET_SHA" > "$evidence_dst"
+          test -s "$evidence_dst"
+          echo "BT4_REAL_OBJECT_EVIDENCE_IDENTITY=PASS blob=$evidence_blob sha256=$evidence_sha256"
+
+          rm -rf "$PAGES_STAGE/showroom/globe/h-earth"
+          mkdir -p "$PAGES_STAGE/showroom/globe/h-earth"
+          rsync -a --delete h-earth-live-6d18e158/showroom/globe/h-earth/ "$PAGES_STAGE/showroom/globe/h-earth/"
+
+          audralia_snapshot="$PAGES_STAGE/inspection/audralia-24057-exact/snapshot"
+          test -f "$audralia_snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs"
+          test -f "$audralia_snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs"
+          test -f "$audralia_snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs"
+          test -f "$audralia_snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js"
+          echo "AUDRALIA_EXACT_24057_STAGED=PASS"
+
+          # Audralia uses the exact-head renderer and FAP1 weather adapter, both of
+          # which sit beneath the canonical H-Earth source tree that the frozen
+          # public H-Earth replacement removes. Preserve only that declared
+          # Audralia dependency pair in the staged public artifact.
+          audralia_renderer_src="showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs"
+          audralia_weather_src="showroom/globe/h-earth/render/environment-atmosphere.fap1-candidate-a.js"
+          audralia_runtime_dir="$PAGES_STAGE/showroom/globe/audralia/runtime-dependencies"
+          audralia_app="$PAGES_STAGE/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs"
+          audralia_weather_dst="$PAGES_STAGE/showroom/globe/h-earth/render/environment-atmosphere.fap1-candidate-a.js"
+          test -f "$audralia_renderer_src"
+          test -f "$audralia_weather_src"
+          test -f "$audralia_app"
+          mkdir -p "$audralia_runtime_dir" "$(dirname "$audralia_weather_dst")"
+          cp "$audralia_renderer_src" "$audralia_runtime_dir/renderer.mjs"
+          cp "$audralia_weather_src" "$audralia_weather_dst"
+
+          # The geographic transfer’s static closure also uses these exact-head
+          # terrain support modules. They are public dependencies of Audralia
+          # only; the frozen H-Earth entry page remains otherwise untouched.
+          audralia_render_support=(
+            geometry-kernel.js
+            geometry-kernel.north.js
+            geometry-kernel.east.js
+            geometry-kernel.south.js
+            geometry-kernel.west.js
+            geometry-landscape.js
+            geometry-distant-context.js
+            geometry-shoreline.js
+            planetary-world-frame.js
+          )
+          for support_file in "${audralia_render_support[@]}"; do
+            support_src="showroom/globe/h-earth/render/$support_file"
+            support_dst="$PAGES_STAGE/showroom/globe/h-earth/render/$support_file"
+            test -f "$support_src"
+            mkdir -p "$(dirname "$support_dst")"
+            cp "$support_src" "$support_dst"
+            test "$(sha256sum "$support_src" | awk '{print $1}')" = "$(sha256sum "$support_dst" | awk '{print $1}')"
+          done
+          test "$(sha256sum "$audralia_renderer_src" | awk '{print $1}')" = "$(sha256sum "$audralia_runtime_dir/renderer.mjs" | awk '{print $1}')"
+          test "$(sha256sum "$audralia_weather_src" | awk '{print $1}')" = "$(sha256sum "$audralia_weather_dst" | awk '{print $1}')"
+          python3 - "$audralia_app" "$PAGES_STAGE" <<'PY'
+          from pathlib import Path
+          import re
+          import sys
+
+          entry=Path(sys.argv[1]).resolve()
+          root=Path(sys.argv[2]).resolve()
+          cache_key="AUDRALIA_PUBLIC_RUNTIME_GRAPH_v4"
+          old="../../h-earth/terrain-estate-construction-v1/renderer.mjs"
+          new="../runtime-dependencies/renderer.mjs?cb="+cache_key
+          entry_text=entry.read_text()
+          if entry_text.count(old) != 1:
+              raise SystemExit("AUDRALIA_RENDERER_IMPORT_REWRITE_CARDINALITY:"+str(entry_text.count(old)))
+          entry.write_text(entry_text.replace(old,new))
+
+          from_pattern=re.compile(r"\bfrom\s*(['\"])(\.[^'\"]+)\1")
+          dynamic_pattern=re.compile(r"\bimport\(\s*(['\"])(\.[^'\"]+)\1\s*\)")
+          visited=set()
+
+          def resolve(source,specifier):
+              local=specifier.split("?",1)[0].split("#",1)[0]
+              target=(source.parent/local).resolve()
+              if root not in target.parents or not target.is_file():
+                  raise SystemExit("AUDRALIA_RUNTIME_GRAPH_DEPENDENCY_MISSING:"+str(source.relative_to(root))+":"+specifier)
+              return target
+
+          def rewrite(path):
+              if path in visited:
+                  return
+              visited.add(path)
+              source=path.read_text()
+              dependencies=[]
+
+              def replace(match):
+                  specifier=match.group(2)
+                  dependencies.append(resolve(path,specifier))
+                  updated=specifier if "?" in specifier else specifier+"?cb="+cache_key
+                  return match.group(0).replace(specifier,updated,1)
+
+              source=from_pattern.sub(replace,source)
+              source=dynamic_pattern.sub(replace,source)
+              path.write_text(source)
+              for dependency in dependencies:
+                  rewrite(dependency)
+
+          rewrite(entry)
+          if len(visited)<20:
+              raise SystemExit("AUDRALIA_RUNTIME_GRAPH_TOO_SHALLOW:"+str(len(visited)))
+          print("AUDRALIA_RUNTIME_GRAPH_CACHE_VERSIONED=PASS files="+str(len(visited)))
+          PY
+          grep -Fq "../runtime-dependencies/renderer.mjs?cb=AUDRALIA_PUBLIC_RUNTIME_GRAPH_v4" "$audralia_app"
+          echo "AUDRALIA_PUBLIC_RUNTIME_DEPENDENCIES=PASS"
+          test -f "$PAGES_STAGE/.well-known/dgb-release.json"
+          test -f "$PAGES_STAGE/index.html"
+          staged_bytes="$(du -sb "$PAGES_STAGE" | awk '{print $1}')"
+          echo "AI_ENTRY_PAGES_STAGE_BYTES=$staged_bytes"
+          test "$staged_bytes" -lt 1073741824
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload exact-head Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/pages-site
+
+  deploy:
+    needs: prepare
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy exact-head artifact
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  verify-live-exact-head:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require public exact-head marker, BT4 surfaces, and Audralia exact environment
+        env:
+          TARGET_SHA: ${{ github.sha }}
+          PAGE_URL: ${{ needs.deploy.outputs.page_url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          marker_url="${PAGE_URL%/}/.well-known/dgb-release.json"
+          claim_url="${PAGE_URL%/}/preview/bt4/entitlement-v1/"
+          claim_engine_url="${PAGE_URL%/}/preview/bt4/entitlement-v1/entitlement-engine.v1.mjs"
+          ops_url="${PAGE_URL%/}/preview/bt4/operational-release-v1/"
+          real_url="${PAGE_URL%/}/evidence/readiness/governance-gen3-entitlement/"
+          real_identity_url="${real_url}evidence-identity.v1.json"
+          audralia_url="${PAGE_URL%/}/showroom/globe/audralia/"
+          audralia_loader_url="${PAGE_URL%/}/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs?cb=EXACT_24057_LOADER_FIRST"
+          audralia_app_url="${PAGE_URL%/}/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs?cb=EXACT_24057"
+          audralia_renderer_url="${PAGE_URL%/}/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs?cb=EXACT_24057"
+          audralia_transfer_url="${PAGE_URL%/}/inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js?cb=EXACT_24057"
+          observed=""
+          for attempt in $(seq 1 24); do
+            marker="$(curl --fail --silent --show-error -L --max-time 20 "$marker_url" 2>/dev/null || true)"
+            observed="$(printf '%s' "$marker" | jq -r '.commit // empty' 2>/dev/null || true)"
+            claim_html="$(curl --fail --silent --show-error -L --max-time 20 "$claim_url" 2>/dev/null || true)"
+            claim_engine="$(curl --fail --silent --show-error -L --max-time 20 "$claim_engine_url" 2>/dev/null || true)"
+            ops_html="$(curl --fail --silent --show-error -L --max-time 20 "$ops_url" 2>/dev/null || true)"
+            real_html="$(curl --fail --silent --show-error -L --max-time 20 "$real_url" 2>/dev/null || true)"
+            real_identity="$(curl --fail --silent --show-error -L --max-time 20 "$real_identity_url" 2>/dev/null || true)"
+            real_release="$(printf '%s' "$real_identity" | jq -r '.releaseCommit // empty' 2>/dev/null || true)"
+            audralia_html="$(curl --fail --silent --show-error -L --max-time 20 "$audralia_url" 2>/dev/null || true)"
+            audralia_loader="$(curl --fail --silent --show-error -L --max-time 20 "$audralia_loader_url" 2>/dev/null || true)"
+            audralia_app="$(curl --fail --silent --show-error -L --max-time 20 "$audralia_app_url" 2>/dev/null || true)"
+            audralia_renderer="$(curl --fail --silent --show-error -L --max-time 20 "$audralia_renderer_url" 2>/dev/null || true)"
+            audralia_transfer="$(curl --fail --silent --show-error -L --max-time 20 "$audralia_transfer_url" 2>/dev/null || true)"
+            if [ "$observed" = "$TARGET_SHA" ] \
+              && grep -Fq 'NONPRODUCTION · BT4 SERVED-STATE EXPERIMENT' <<<"$claim_html" \
+              && grep -Fq 'entitlement-engine.v1.mjs' <<<"$claim_html" \
+              && grep -Fq 'computeEntitlement' <<<"$claim_engine" \
+              && grep -Fq 'NONPRODUCTION · BT4 CROSS-OBJECT EXPERIMENT' <<<"$ops_html" \
+              && grep -Fq '../entitlement-v1/entitlement-engine.v1.mjs' <<<"$ops_html" \
+              && grep -Fq 'BT4 · bounded real-object integration' <<<"$real_html" \
+              && [ "$real_release" = "$TARGET_SHA" ] \
+              && grep -Fq 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v7_EXACT_24057_LOADER_FIRST' <<<"$audralia_html" \
+              && grep -Fq 'IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993' <<<"$audralia_html" \
+              && grep -Fq "setVerified(6,'Preparing Audralia',15)" <<<"$audralia_loader" \
+              && grep -Fq 'createMapWideEnvironmentRenderer' <<<"$audralia_app" \
+              && grep -Fq 'createMapWideEnvironmentRenderer' <<<"$audralia_renderer" \
+              && grep -Fq 'AUDRALIA_GRATITUDE_GEOGRAPHIC_TRANSFER_AUTHORITY_v1' <<<"$audralia_transfer"; then
+              echo "LIVE_EXACT_HEAD_VERIFIED target=$TARGET_SHA"
+              echo "BT4_PUBLIC_CLAIM_SURFACE=PASS url=$claim_url"
+              echo "BT4_PUBLIC_OPERATIONAL_SURFACE=PASS url=$ops_url"
+              echo "BT4_REAL_OBJECT_SURFACE=PASS url=$real_url"
+              echo "AUDRALIA_EXACT_24057_PUBLIC_CLOSURE=PASS url=$audralia_url"
+              exit 0
+            fi
+            echo "Attempt $attempt: observed=${observed:-none}; waiting for target=$TARGET_SHA, BT4 surfaces, and Audralia exact closure"
+            sleep 10
+          done
+          echo "DEPLOYMENT_NOT_PROVEN expected=$TARGET_SHA observed=${observed:-none}" >&2
+          echo "BT4_OR_AUDRALIA_PUBLIC_SURFACE_VERIFICATION=FAIL" >&2
+          exit 1

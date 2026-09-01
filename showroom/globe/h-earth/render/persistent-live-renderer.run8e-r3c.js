@@ -1,13 +1,12 @@
 /** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1 */
-import { getHEarthRun8ER2CanonicalLiveRenderPackage } from './live-render-package.run8e-r2.canonical.js';
+import { getHEarthOW01CanonicalLiveRenderPackageOccurrence } from './live-render-package.run8e-r2.canonical.js';
 import { createHEarthRun8ER2DCanonicalGPUUploadViews } from './gpu-upload-views.run8e-r2d.js';
 import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract.run8e-r3a.js';
 
 export const H_EARTH_RUN_8E_R3C_RENDERER_ID =
   'H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1';
 
-const LOGICAL_ID = 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_9BD0B898';
-const RUNTIME_ID = LOGICAL_ID;
+const RUNTIME_OCCURRENCE_ID = 'H_EARTH_OW01_GRATITUDE_COASTAL_ENTRY_LIVE_RENDER_PACKAGE_OCCURRENCE_001';
 const finite = (value) => typeof value === 'number' && Number.isFinite(value);
 const color3 = (value) => {
   const array = Array.isArray(value) ? value : [0, 0, 0];
@@ -73,6 +72,8 @@ const DVS = `#version 300 es
 precision highp float;const vec2 p[3]=vec2[3](vec2(-1.,-1.),vec2(3.,-1.),vec2(-1.,3.));out vec2 vUv;void main(){vec2 q=p[gl_VertexID];vUv=q*.5+.5;gl_Position=vec4(q,0.,1.);}`;
 const DFS = `#version 300 es
 precision highp float;in vec2 vUv;uniform sampler2D uDepth;out vec4 outColor;void main(){float d=texture(uDepth,vUv).r,v=clamp((1.-d)*28.,0.,1.);outColor=vec4(vec3(v),1.);}`;
+const PFS = `#version 300 es
+precision highp float;in vec2 vUv;uniform sampler2D uColor;out vec4 outColor;void main(){outColor=texture(uColor,vUv);}`;
 
 export function createHEarthRun8ER3CPersistentRenderer({
   canvas,
@@ -96,6 +97,7 @@ export function createHEarthRun8ER3CPersistentRenderer({
   if (!gl) throw new Error('R3C_WEBGL2_CONTEXT_UNAVAILABLE');
 
   let initialized = false;
+  let latestDrawRanges = Object.freeze([]);
   const counters = {
     contextCreationCount: 1,
     shaderCreateCount: 0,
@@ -193,11 +195,11 @@ export function createHEarthRun8ER3CPersistentRenderer({
     }
   };
 
-  const renderPackage = getHEarthRun8ER2CanonicalLiveRenderPackage();
+  const renderPackage = getHEarthOW01CanonicalLiveRenderPackageOccurrence();
   const uploadViews = createHEarthRun8ER2DCanonicalGPUUploadViews(renderPackage);
   const rendererInterface = getHEarthRun8ER3ALiveRendererInterface();
-  if (renderPackage.packageIdentity !== RUNTIME_ID) {
-    throw new Error(`R3C_RUNTIME_PACKAGE_IDENTITY_MISMATCH:${renderPackage.packageIdentity}`);
+  if (renderPackage.packageOccurrenceId !== RUNTIME_OCCURRENCE_ID) {
+    throw new Error(`R3C_RUNTIME_PACKAGE_OCCURRENCE_MISMATCH:${renderPackage.packageOccurrenceId}`);
   }
   if (uploadViews.deterministicTransportEncoding !== true) {
     throw new Error('R3C_CANONICAL_GPU_TRANSPORT_MISSING');
@@ -225,6 +227,12 @@ export function createHEarthRun8ER3CPersistentRenderer({
       resources.depthVertexShader,
       resources.depthFragmentShader,
       'DP'
+    );
+    resources.presentationFragmentShader = createShader(gl.FRAGMENT_SHADER, PFS, 'PF');
+    resources.presentationProgram = createProgram(
+      resources.depthVertexShader,
+      resources.presentationFragmentShader,
+      'PP'
     );
 
     markPostInitializationCreation();
@@ -322,7 +330,8 @@ export function createHEarthRun8ER3CPersistentRenderer({
         resources.geometryProgram,
         'uDistanceDesaturationStrength'
       ),
-      depth: uniform(resources.depthProgram, 'uDepth')
+      depth: uniform(resources.depthProgram, 'uDepth'),
+      presentationColor: uniform(resources.presentationProgram, 'uColor')
     };
 
     const environment = packet.environmentUniforms;
@@ -367,6 +376,8 @@ export function createHEarthRun8ER3CPersistentRenderer({
     ) {
       throw new Error('R3C_VIEW_PROJECTION_INVALID');
     }
+
+    latestDrawRanges = Object.freeze(packet.drawRanges.map((range) => Object.freeze({ ...range })));
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer);
     gl.viewport(0, 0, width, height);
@@ -419,26 +430,33 @@ export function createHEarthRun8ER3CPersistentRenderer({
 
   function presentColorFrame() {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
-    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer);
-    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
-    gl.blitFramebuffer(
-      0,
-      0,
-      width,
-      height,
-      0,
-      0,
-      width,
-      height,
-      gl.COLOR_BUFFER_BIT,
-      gl.NEAREST
-    );
+
+    // Physical-device presentation law: present the validated offscreen color texture
+    // through a normal fullscreen textured draw into the browser-visible framebuffer.
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, width, height);
+    gl.disable(gl.DEPTH_TEST);
+    gl.disable(gl.BLEND);
+    gl.depthMask(true);
+    gl.useProgram(resources.presentationProgram);
+    gl.bindVertexArray(null);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, resources.colorTexture);
+    gl.uniform1i(resources.uniforms.presentationColor, 0);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    gl.flush();
+
+    const error = gl.getError();
+    if (error !== gl.NO_ERROR) {
+      throw new Error(`R3C_TEXTURE_PRESENTATION_DRAW_ERROR:${error}`);
+    }
+
     counters.visiblePresentationCount += 1;
     return Object.freeze({
       frameNumber: counters.frameCount,
       width,
-      height
+      height,
+      presentationPath: 'OFFSCREEN_COLOR_TEXTURE_FULLSCREEN_DRAW'
     });
   }
 

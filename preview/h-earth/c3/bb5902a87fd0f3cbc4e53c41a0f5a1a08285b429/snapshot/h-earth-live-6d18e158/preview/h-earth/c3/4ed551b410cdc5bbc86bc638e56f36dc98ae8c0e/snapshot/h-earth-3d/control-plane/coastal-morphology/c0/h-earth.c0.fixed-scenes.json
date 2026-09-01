@@ -1,0 +1,1083 @@
+{
+  "contractId": "H_EARTH_C0_C_FIXED_COASTAL_SCENES_v1",
+  "exactMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+  "corridor": {
+    "corridorId": "H_EARTH_C0_C_ACCEPTED_COASTAL_CORRIDOR_001",
+    "worldSpaceBounds": {
+      "xMinimum": -160,
+      "xMaximum": 160,
+      "yMinimum": -4,
+      "yMaximum": 16,
+      "zMinimum": -165.49265495,
+      "zMaximum": 2.42720326
+    },
+    "corridorCenterline": [
+      {
+        "x": 0,
+        "z": -159.25507841
+      },
+      {
+        "x": 0,
+        "z": -79.25507841
+      },
+      {
+        "x": 0,
+        "z": -3.25507841
+      }
+    ],
+    "inlandEndpoint": {
+      "x": 0,
+      "z": -159.25507841
+    },
+    "openWaterEndpoint": {
+      "x": 0,
+      "z": -3.25507841
+    },
+    "crossSectionDirection": "POSITIVE_Z_WATERWARD",
+    "sourceMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+    "terrainAuthorityId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+    "shorelineAuthorityId": "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1",
+    "waterGeometryAuthorityId": "H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_RUN_6C_v1",
+    "representedConditions": [
+      "INLAND_DARK_TERRAIN",
+      "COASTAL_TRANSITION",
+      "EXISTING_SAND_OR_BEACH",
+      "CURRENT_SHORELINE",
+      "SHALLOW_SUBMERGED_TERRAIN",
+      "DEEPER_WATER",
+      "OPEN_WATER",
+      "GROUND_LEVEL_TRAVERSAL_ACCESS"
+    ]
+  },
+  "sceneCount": 6,
+  "scenes": [
+    {
+      "sceneId": "SHORELINE_APPROACH_VIEW",
+      "primaryCapture": {
+        "sceneId": "SHORELINE_APPROACH_VIEW",
+        "cameraPosition": {
+          "x": 0,
+          "y": 3.776628584078394,
+          "z": -96
+        },
+        "cameraOrientation": {
+          "yawDegrees": 0,
+          "pitchDegrees": -8,
+          "forward": {
+            "x": 0,
+            "y": -0.1391731,
+            "z": -1
+          }
+        },
+        "fieldOfView": 56,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "devicePixelRatio": 2,
+        "orientation": "PORTRAIT",
+        "routeAndQueryState": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0c=59df682501f63aec8a263cef8e1a5adacbc2a1a2&scene=SHORELINE_APPROACH_VIEW&run=1",
+        "startupSequence": {
+          "cleanPage": true,
+          "initialState": {
+            "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+            "stateId": "H_EARTH_NAVIGATION_STATE_0001",
+            "sequence": 1,
+            "action": "GOTO_WAYPOINT:COAST",
+            "accepted": true,
+            "recovered": false,
+            "rejectionReason": null,
+            "position": {
+              "x": 0,
+              "y": 3.776628584078394,
+              "z": -96
+            },
+            "yawDegrees": 0,
+            "pitchDegrees": -8,
+            "verticalFovDegrees": 56,
+            "terrainElevation": 1.526628584078394,
+            "minimumCameraY": 3.126628584078394,
+            "clearance": 2.25,
+            "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+            "physicalRole": "COASTAL_FOREGROUND_TERRAIN",
+            "formationIds": [],
+            "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R03:C08",
+            "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+            "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0001",
+            "canonicalCameraStateAuthority": false,
+            "collisionOrPhysicsClaim": false
+          }
+        },
+        "readyCondition": "RUN8E_READY_AND_VISIBLE_GPU_FRAME",
+        "cameraMotionState": "STATIONARY_CAPTURE",
+        "captureFrameCondition": {
+          "visibleGpuFrames": 1,
+          "navigationSequence": 1
+        },
+        "sourceMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+        "screenshotPath": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/shoreline-approach.png",
+        "screenshotSha256": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718",
+        "traversal": null
+      },
+      "repeatCapture": {
+        "sceneId": "SHORELINE_APPROACH_VIEW",
+        "cameraPosition": {
+          "x": 0,
+          "y": 3.776628584078394,
+          "z": -96
+        },
+        "cameraOrientation": {
+          "yawDegrees": 0,
+          "pitchDegrees": -8,
+          "forward": {
+            "x": 0,
+            "y": -0.1391731,
+            "z": -1
+          }
+        },
+        "fieldOfView": 56,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "devicePixelRatio": 2,
+        "orientation": "PORTRAIT",
+        "routeAndQueryState": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0c=59df682501f63aec8a263cef8e1a5adacbc2a1a2&scene=SHORELINE_APPROACH_VIEW&run=2",
+        "startupSequence": {
+          "cleanPage": true,
+          "initialState": {
+            "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+            "stateId": "H_EARTH_NAVIGATION_STATE_0001",
+            "sequence": 1,
+            "action": "GOTO_WAYPOINT:COAST",
+            "accepted": true,
+            "recovered": false,
+            "rejectionReason": null,
+            "position": {
+              "x": 0,
+              "y": 3.776628584078394,
+              "z": -96
+            },
+            "yawDegrees": 0,
+            "pitchDegrees": -8,
+            "verticalFovDegrees": 56,
+            "terrainElevation": 1.526628584078394,
+            "minimumCameraY": 3.126628584078394,
+            "clearance": 2.25,
+            "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+            "physicalRole": "COASTAL_FOREGROUND_TERRAIN",
+            "formationIds": [],
+            "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R03:C08",
+            "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+            "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0001",
+            "canonicalCameraStateAuthority": false,
+            "collisionOrPhysicsClaim": false
+          }
+        },
+        "readyCondition": "RUN8E_READY_AND_VISIBLE_GPU_FRAME",
+        "cameraMotionState": "STATIONARY_CAPTURE",
+        "captureFrameCondition": {
+          "visibleGpuFrames": 1,
+          "navigationSequence": 1
+        },
+        "sourceMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+        "screenshotPath": null,
+        "screenshotSha256": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718",
+        "traversal": null
+      },
+      "repeatability": {
+        "cameraStateMatch": true,
+        "viewportMatch": true,
+        "readyConditionMatch": true,
+        "screenshotPixelIdentity": true,
+        "expectedDynamicVariance": false,
+        "unresolvedVariance": false
+      }
+    },
+    {
+      "sceneId": "LATERAL_BEACH_VIEW",
+      "primaryCapture": {
+        "sceneId": "LATERAL_BEACH_VIEW",
+        "cameraPosition": {
+          "x": 0,
+          "y": 2.1676559232966333,
+          "z": -86
+        },
+        "cameraOrientation": {
+          "yawDegrees": 0,
+          "pitchDegrees": -8,
+          "forward": {
+            "x": 0,
+            "y": -0.1391731,
+            "z": -1
+          }
+        },
+        "fieldOfView": 56,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "devicePixelRatio": 2,
+        "orientation": "PORTRAIT",
+        "routeAndQueryState": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0c=59df682501f63aec8a263cef8e1a5adacbc2a1a2&scene=LATERAL_BEACH_VIEW&run=1",
+        "startupSequence": {
+          "cleanPage": true,
+          "initialState": {
+            "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+            "stateId": "H_EARTH_NAVIGATION_STATE_0001",
+            "sequence": 1,
+            "action": "GOTO_WAYPOINT:COAST",
+            "accepted": true,
+            "recovered": false,
+            "rejectionReason": null,
+            "position": {
+              "x": 0,
+              "y": 3.776628584078394,
+              "z": -96
+            },
+            "yawDegrees": 0,
+            "pitchDegrees": -8,
+            "verticalFovDegrees": 56,
+            "terrainElevation": 1.526628584078394,
+            "minimumCameraY": 3.126628584078394,
+            "clearance": 2.25,
+            "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+            "physicalRole": "COASTAL_FOREGROUND_TERRAIN",
+            "formationIds": [],
+            "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R03:C08",
+            "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+            "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0001",
+            "canonicalCameraStateAuthority": false,
+            "collisionOrPhysicsClaim": false
+          }
+        },
+        "readyCondition": "RUN8E_READY_AND_VISIBLE_GPU_FRAME",
+        "cameraMotionState": "STATIONARY_CAPTURE",
+        "captureFrameCondition": {
+          "visibleGpuFrames": 2,
+          "navigationSequence": 2
+        },
+        "sourceMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+        "screenshotPath": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/lateral-beach.png",
+        "screenshotSha256": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718",
+        "traversal": null
+      },
+      "repeatCapture": {
+        "sceneId": "LATERAL_BEACH_VIEW",
+        "cameraPosition": {
+          "x": 0,
+          "y": 2.1676559232966333,
+          "z": -86
+        },
+        "cameraOrientation": {
+          "yawDegrees": 0,
+          "pitchDegrees": -8,
+          "forward": {
+            "x": 0,
+            "y": -0.1391731,
+            "z": -1
+          }
+        },
+        "fieldOfView": 56,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "devicePixelRatio": 2,
+        "orientation": "PORTRAIT",
+        "routeAndQueryState": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0c=59df682501f63aec8a263cef8e1a5adacbc2a1a2&scene=LATERAL_BEACH_VIEW&run=2",
+        "startupSequence": {
+          "cleanPage": true,
+          "initialState": {
+            "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+            "stateId": "H_EARTH_NAVIGATION_STATE_0001",
+            "sequence": 1,
+            "action": "GOTO_WAYPOINT:COAST",
+            "accepted": true,
+            "recovered": false,
+            "rejectionReason": null,
+            "position": {
+              "x": 0,
+              "y": 3.776628584078394,
+              "z": -96
+            },
+            "yawDegrees": 0,
+            "pitchDegrees": -8,
+            "verticalFovDegrees": 56,
+            "terrainElevation": 1.526628584078394,
+            "minimumCameraY": 3.126628584078394,
+            "clearance": 2.25,
+            "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+            "physicalRole": "COASTAL_FOREGROUND_TERRAIN",
+            "formationIds": [],
+            "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R03:C08",
+            "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+            "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0001",
+            "canonicalCameraStateAuthority": false,
+            "collisionOrPhysicsClaim": false
+          }
+        },
+        "readyCondition": "RUN8E_READY_AND_VISIBLE_GPU_FRAME",
+        "cameraMotionState": "STATIONARY_CAPTURE",
+        "captureFrameCondition": {
+          "visibleGpuFrames": 2,
+          "navigationSequence": 2
+        },
+        "sourceMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+        "screenshotPath": null,
+        "screenshotSha256": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718",
+        "traversal": null
+      },
+      "repeatability": {
+        "cameraStateMatch": true,
+        "viewportMatch": true,
+        "readyConditionMatch": true,
+        "screenshotPixelIdentity": true,
+        "expectedDynamicVariance": false,
+        "unresolvedVariance": false
+      }
+    },
+    {
+      "sceneId": "INLAND_TO_OPEN_WATER_VIEW",
+      "primaryCapture": {
+        "sceneId": "INLAND_TO_OPEN_WATER_VIEW",
+        "cameraPosition": {
+          "x": 0,
+          "y": 6.678759970430365,
+          "z": -116
+        },
+        "cameraOrientation": {
+          "yawDegrees": 0,
+          "pitchDegrees": -8,
+          "forward": {
+            "x": 0,
+            "y": -0.1391731,
+            "z": -1
+          }
+        },
+        "fieldOfView": 56,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "devicePixelRatio": 2,
+        "orientation": "PORTRAIT",
+        "routeAndQueryState": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0c=59df682501f63aec8a263cef8e1a5adacbc2a1a2&scene=INLAND_TO_OPEN_WATER_VIEW&run=1",
+        "startupSequence": {
+          "cleanPage": true,
+          "initialState": {
+            "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+            "stateId": "H_EARTH_NAVIGATION_STATE_0001",
+            "sequence": 1,
+            "action": "GOTO_WAYPOINT:COAST",
+            "accepted": true,
+            "recovered": false,
+            "rejectionReason": null,
+            "position": {
+              "x": 0,
+              "y": 3.776628584078394,
+              "z": -96
+            },
+            "yawDegrees": 0,
+            "pitchDegrees": -8,
+            "verticalFovDegrees": 56,
+            "terrainElevation": 1.526628584078394,
+            "minimumCameraY": 3.126628584078394,
+            "clearance": 2.25,
+            "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+            "physicalRole": "COASTAL_FOREGROUND_TERRAIN",
+            "formationIds": [],
+            "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R03:C08",
+            "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+            "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0001",
+            "canonicalCameraStateAuthority": false,
+            "collisionOrPhysicsClaim": false
+          }
+        },
+        "readyCondition": "RUN8E_READY_AND_VISIBLE_GPU_FRAME",
+        "cameraMotionState": "STATIONARY_CAPTURE",
+        "captureFrameCondition": {
+          "visibleGpuFrames": 3,
+          "navigationSequence": 3
+        },
+        "sourceMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+        "screenshotPath": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/inland-to-open-water.png",
+        "screenshotSha256": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718",
+        "traversal": null
+      },
+      "repeatCapture": {
+        "sceneId": "INLAND_TO_OPEN_WATER_VIEW",
+        "cameraPosition": {
+          "x": 0,
+          "y": 6.678759970430365,
+          "z": -116
+        },
+        "cameraOrientation": {
+          "yawDegrees": 0,
+          "pitchDegrees": -8,
+          "forward": {
+            "x": 0,
+            "y": -0.1391731,
+            "z": -1
+          }
+        },
+        "fieldOfView": 56,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "devicePixelRatio": 2,
+        "orientation": "PORTRAIT",
+        "routeAndQueryState": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0c=59df682501f63aec8a263cef8e1a5adacbc2a1a2&scene=INLAND_TO_OPEN_WATER_VIEW&run=2",
+        "startupSequence": {
+          "cleanPage": true,
+          "initialState": {
+            "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+            "stateId": "H_EARTH_NAVIGATION_STATE_0001",
+            "sequence": 1,
+            "action": "GOTO_WAYPOINT:COAST",
+            "accepted": true,
+            "recovered": false,
+            "rejectionReason": null,
+            "position": {
+              "x": 0,
+              "y": 3.776628584078394,
+              "z": -96
+            },
+            "yawDegrees": 0,
+            "pitchDegrees": -8,
+            "verticalFovDegrees": 56,
+            "terrainElevation": 1.526628584078394,
+            "minimumCameraY": 3.126628584078394,
+            "clearance": 2.25,
+            "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+            "physicalRole": "COASTAL_FOREGROUND_TERRAIN",
+            "formationIds": [],
+            "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R03:C08",
+            "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+            "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0001",
+            "canonicalCameraStateAuthority": false,
+            "collisionOrPhysicsClaim": false
+          }
+        },
+        "readyCondition": "RUN8E_READY_AND_VISIBLE_GPU_FRAME",
+        "cameraMotionState": "STATIONARY_CAPTURE",
+        "captureFrameCondition": {
+          "visibleGpuFrames": 3,
+          "navigationSequence": 3
+        },
+        "sourceMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+        "screenshotPath": null,
+        "screenshotSha256": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718",
+        "traversal": null
+      },
+      "repeatability": {
+        "cameraStateMatch": true,
+        "viewportMatch": true,
+        "readyConditionMatch": true,
+        "screenshotPixelIdentity": true,
+        "expectedDynamicVariance": false,
+        "unresolvedVariance": false
+      }
+    },
+    {
+      "sceneId": "SHALLOW_WATER_VIEW",
+      "primaryCapture": {
+        "sceneId": "SHALLOW_WATER_VIEW",
+        "cameraPosition": {
+          "x": 0,
+          "y": 2.1676559232966333,
+          "z": -86
+        },
+        "cameraOrientation": {
+          "yawDegrees": 0,
+          "pitchDegrees": -8,
+          "forward": {
+            "x": 0,
+            "y": -0.1391731,
+            "z": -1
+          }
+        },
+        "fieldOfView": 56,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "devicePixelRatio": 2,
+        "orientation": "PORTRAIT",
+        "routeAndQueryState": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0c=59df682501f63aec8a263cef8e1a5adacbc2a1a2&scene=SHALLOW_WATER_VIEW&run=1",
+        "startupSequence": {
+          "cleanPage": true,
+          "initialState": {
+            "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+            "stateId": "H_EARTH_NAVIGATION_STATE_0001",
+            "sequence": 1,
+            "action": "GOTO_WAYPOINT:COAST",
+            "accepted": true,
+            "recovered": false,
+            "rejectionReason": null,
+            "position": {
+              "x": 0,
+              "y": 3.776628584078394,
+              "z": -96
+            },
+            "yawDegrees": 0,
+            "pitchDegrees": -8,
+            "verticalFovDegrees": 56,
+            "terrainElevation": 1.526628584078394,
+            "minimumCameraY": 3.126628584078394,
+            "clearance": 2.25,
+            "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+            "physicalRole": "COASTAL_FOREGROUND_TERRAIN",
+            "formationIds": [],
+            "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R03:C08",
+            "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+            "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0001",
+            "canonicalCameraStateAuthority": false,
+            "collisionOrPhysicsClaim": false
+          }
+        },
+        "readyCondition": "RUN8E_READY_AND_VISIBLE_GPU_FRAME",
+        "cameraMotionState": "STATIONARY_CAPTURE",
+        "captureFrameCondition": {
+          "visibleGpuFrames": 2,
+          "navigationSequence": 2
+        },
+        "sourceMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+        "screenshotPath": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/shallow-water.png",
+        "screenshotSha256": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718",
+        "traversal": null
+      },
+      "repeatCapture": {
+        "sceneId": "SHALLOW_WATER_VIEW",
+        "cameraPosition": {
+          "x": 0,
+          "y": 2.1676559232966333,
+          "z": -86
+        },
+        "cameraOrientation": {
+          "yawDegrees": 0,
+          "pitchDegrees": -8,
+          "forward": {
+            "x": 0,
+            "y": -0.1391731,
+            "z": -1
+          }
+        },
+        "fieldOfView": 56,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "devicePixelRatio": 2,
+        "orientation": "PORTRAIT",
+        "routeAndQueryState": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0c=59df682501f63aec8a263cef8e1a5adacbc2a1a2&scene=SHALLOW_WATER_VIEW&run=2",
+        "startupSequence": {
+          "cleanPage": true,
+          "initialState": {
+            "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+            "stateId": "H_EARTH_NAVIGATION_STATE_0001",
+            "sequence": 1,
+            "action": "GOTO_WAYPOINT:COAST",
+            "accepted": true,
+            "recovered": false,
+            "rejectionReason": null,
+            "position": {
+              "x": 0,
+              "y": 3.776628584078394,
+              "z": -96
+            },
+            "yawDegrees": 0,
+            "pitchDegrees": -8,
+            "verticalFovDegrees": 56,
+            "terrainElevation": 1.526628584078394,
+            "minimumCameraY": 3.126628584078394,
+            "clearance": 2.25,
+            "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+            "physicalRole": "COASTAL_FOREGROUND_TERRAIN",
+            "formationIds": [],
+            "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R03:C08",
+            "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+            "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0001",
+            "canonicalCameraStateAuthority": false,
+            "collisionOrPhysicsClaim": false
+          }
+        },
+        "readyCondition": "RUN8E_READY_AND_VISIBLE_GPU_FRAME",
+        "cameraMotionState": "STATIONARY_CAPTURE",
+        "captureFrameCondition": {
+          "visibleGpuFrames": 2,
+          "navigationSequence": 2
+        },
+        "sourceMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+        "screenshotPath": null,
+        "screenshotSha256": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718",
+        "traversal": null
+      },
+      "repeatability": {
+        "cameraStateMatch": true,
+        "viewportMatch": true,
+        "readyConditionMatch": true,
+        "screenshotPixelIdentity": true,
+        "expectedDynamicVariance": false,
+        "unresolvedVariance": false
+      }
+    },
+    {
+      "sceneId": "CURRENT_DARK_TERRAIN_TRANSITION_VIEW",
+      "primaryCapture": {
+        "sceneId": "CURRENT_DARK_TERRAIN_TRANSITION_VIEW",
+        "cameraPosition": {
+          "x": 0,
+          "y": 3.9616255734540466,
+          "z": -126
+        },
+        "cameraOrientation": {
+          "yawDegrees": 0,
+          "pitchDegrees": -8,
+          "forward": {
+            "x": 0,
+            "y": -0.1391731,
+            "z": -1
+          }
+        },
+        "fieldOfView": 56,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "devicePixelRatio": 2,
+        "orientation": "PORTRAIT",
+        "routeAndQueryState": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0c=59df682501f63aec8a263cef8e1a5adacbc2a1a2&scene=CURRENT_DARK_TERRAIN_TRANSITION_VIEW&run=1",
+        "startupSequence": {
+          "cleanPage": true,
+          "initialState": {
+            "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+            "stateId": "H_EARTH_NAVIGATION_STATE_0001",
+            "sequence": 1,
+            "action": "GOTO_WAYPOINT:COAST",
+            "accepted": true,
+            "recovered": false,
+            "rejectionReason": null,
+            "position": {
+              "x": 0,
+              "y": 3.776628584078394,
+              "z": -96
+            },
+            "yawDegrees": 0,
+            "pitchDegrees": -8,
+            "verticalFovDegrees": 56,
+            "terrainElevation": 1.526628584078394,
+            "minimumCameraY": 3.126628584078394,
+            "clearance": 2.25,
+            "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+            "physicalRole": "COASTAL_FOREGROUND_TERRAIN",
+            "formationIds": [],
+            "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R03:C08",
+            "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+            "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0001",
+            "canonicalCameraStateAuthority": false,
+            "collisionOrPhysicsClaim": false
+          }
+        },
+        "readyCondition": "RUN8E_READY_AND_VISIBLE_GPU_FRAME",
+        "cameraMotionState": "STATIONARY_CAPTURE",
+        "captureFrameCondition": {
+          "visibleGpuFrames": 4,
+          "navigationSequence": 4
+        },
+        "sourceMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+        "screenshotPath": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/dark-terrain-transition.png",
+        "screenshotSha256": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718",
+        "traversal": null
+      },
+      "repeatCapture": {
+        "sceneId": "CURRENT_DARK_TERRAIN_TRANSITION_VIEW",
+        "cameraPosition": {
+          "x": 0,
+          "y": 3.9616255734540466,
+          "z": -126
+        },
+        "cameraOrientation": {
+          "yawDegrees": 0,
+          "pitchDegrees": -8,
+          "forward": {
+            "x": 0,
+            "y": -0.1391731,
+            "z": -1
+          }
+        },
+        "fieldOfView": 56,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "devicePixelRatio": 2,
+        "orientation": "PORTRAIT",
+        "routeAndQueryState": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0c=59df682501f63aec8a263cef8e1a5adacbc2a1a2&scene=CURRENT_DARK_TERRAIN_TRANSITION_VIEW&run=2",
+        "startupSequence": {
+          "cleanPage": true,
+          "initialState": {
+            "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+            "stateId": "H_EARTH_NAVIGATION_STATE_0001",
+            "sequence": 1,
+            "action": "GOTO_WAYPOINT:COAST",
+            "accepted": true,
+            "recovered": false,
+            "rejectionReason": null,
+            "position": {
+              "x": 0,
+              "y": 3.776628584078394,
+              "z": -96
+            },
+            "yawDegrees": 0,
+            "pitchDegrees": -8,
+            "verticalFovDegrees": 56,
+            "terrainElevation": 1.526628584078394,
+            "minimumCameraY": 3.126628584078394,
+            "clearance": 2.25,
+            "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+            "physicalRole": "COASTAL_FOREGROUND_TERRAIN",
+            "formationIds": [],
+            "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R03:C08",
+            "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+            "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0001",
+            "canonicalCameraStateAuthority": false,
+            "collisionOrPhysicsClaim": false
+          }
+        },
+        "readyCondition": "RUN8E_READY_AND_VISIBLE_GPU_FRAME",
+        "cameraMotionState": "STATIONARY_CAPTURE",
+        "captureFrameCondition": {
+          "visibleGpuFrames": 4,
+          "navigationSequence": 4
+        },
+        "sourceMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+        "screenshotPath": null,
+        "screenshotSha256": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718",
+        "traversal": null
+      },
+      "repeatability": {
+        "cameraStateMatch": true,
+        "viewportMatch": true,
+        "readyConditionMatch": true,
+        "screenshotPixelIdentity": true,
+        "expectedDynamicVariance": false,
+        "unresolvedVariance": false
+      }
+    },
+    {
+      "sceneId": "TRAVERSAL_THROUGH_COAST_VIEW",
+      "primaryCapture": {
+        "sceneId": "TRAVERSAL_THROUGH_COAST_VIEW",
+        "cameraPosition": {
+          "x": 0,
+          "y": 2.1676559232966333,
+          "z": -86
+        },
+        "cameraOrientation": {
+          "yawDegrees": 0,
+          "pitchDegrees": -8,
+          "forward": {
+            "x": 0,
+            "y": -0.1391731,
+            "z": -1
+          }
+        },
+        "fieldOfView": 56,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "devicePixelRatio": 2,
+        "orientation": "PORTRAIT",
+        "routeAndQueryState": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0c=59df682501f63aec8a263cef8e1a5adacbc2a1a2&scene=TRAVERSAL_THROUGH_COAST_VIEW&run=1",
+        "startupSequence": {
+          "cleanPage": true,
+          "initialState": {
+            "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+            "stateId": "H_EARTH_NAVIGATION_STATE_0001",
+            "sequence": 1,
+            "action": "GOTO_WAYPOINT:COAST",
+            "accepted": true,
+            "recovered": false,
+            "rejectionReason": null,
+            "position": {
+              "x": 0,
+              "y": 3.776628584078394,
+              "z": -96
+            },
+            "yawDegrees": 0,
+            "pitchDegrees": -8,
+            "verticalFovDegrees": 56,
+            "terrainElevation": 1.526628584078394,
+            "minimumCameraY": 3.126628584078394,
+            "clearance": 2.25,
+            "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+            "physicalRole": "COASTAL_FOREGROUND_TERRAIN",
+            "formationIds": [],
+            "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R03:C08",
+            "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+            "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0001",
+            "canonicalCameraStateAuthority": false,
+            "collisionOrPhysicsClaim": false
+          }
+        },
+        "readyCondition": "RUN8E_READY_AND_VISIBLE_GPU_FRAME",
+        "cameraMotionState": "TRAVERSAL_SEQUENCE_COMPLETE",
+        "captureFrameCondition": {
+          "visibleGpuFrames": 8,
+          "navigationSequence": 8
+        },
+        "sourceMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+        "screenshotPath": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/traversal-through-coast.png",
+        "screenshotSha256": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718",
+        "traversal": {
+          "startState": {
+            "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+            "stateId": "H_EARTH_NAVIGATION_STATE_0004",
+            "sequence": 4,
+            "action": "MOVE_FORWARD",
+            "accepted": true,
+            "recovered": false,
+            "rejectionReason": null,
+            "position": {
+              "x": 0,
+              "y": 3.9616255734540466,
+              "z": -126
+            },
+            "yawDegrees": 0,
+            "pitchDegrees": -8,
+            "verticalFovDegrees": 56,
+            "terrainElevation": 1.7116255734540466,
+            "minimumCameraY": 3.3116255734540467,
+            "clearance": 2.25,
+            "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C05_C08",
+            "physicalRole": "COASTAL_TO_INLAND_TRANSITION_TERRAIN",
+            "formationIds": [
+              "H_EARTH_COASTAL_BERM_001",
+              "H_EARTH_DRAINAGE_VALLEY_001",
+              "H_EARTH_LOWLAND_001"
+            ],
+            "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R07:C08",
+            "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+            "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0004",
+            "canonicalCameraStateAuthority": false,
+            "collisionOrPhysicsClaim": false
+          },
+          "motionCommandSequence": [
+            {
+              "ordinal": 1,
+              "action": "MOVE_BACKWARD",
+              "magnitude": 10
+            },
+            {
+              "ordinal": 2,
+              "action": "MOVE_BACKWARD",
+              "magnitude": 10
+            },
+            {
+              "ordinal": 3,
+              "action": "MOVE_BACKWARD",
+              "magnitude": 10
+            },
+            {
+              "ordinal": 4,
+              "action": "MOVE_BACKWARD",
+              "magnitude": 10
+            }
+          ],
+          "durationMilliseconds": 779,
+          "finalState": {
+            "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+            "stateId": "H_EARTH_NAVIGATION_STATE_0008",
+            "sequence": 8,
+            "action": "MOVE_BACKWARD",
+            "accepted": true,
+            "recovered": false,
+            "rejectionReason": null,
+            "position": {
+              "x": 0,
+              "y": 2.1676559232966333,
+              "z": -86
+            },
+            "yawDegrees": 0,
+            "pitchDegrees": -8,
+            "verticalFovDegrees": 56,
+            "terrainElevation": -0.08234407670336674,
+            "minimumCameraY": 1.5176559232966333,
+            "clearance": 2.25,
+            "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+            "physicalRole": "COASTAL_FOREGROUND_TERRAIN",
+            "formationIds": [],
+            "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R04:C08",
+            "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+            "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0008",
+            "canonicalCameraStateAuthority": false,
+            "collisionOrPhysicsClaim": false
+          }
+        }
+      },
+      "repeatCapture": {
+        "sceneId": "TRAVERSAL_THROUGH_COAST_VIEW",
+        "cameraPosition": {
+          "x": 0,
+          "y": 2.1676559232966333,
+          "z": -86
+        },
+        "cameraOrientation": {
+          "yawDegrees": 0,
+          "pitchDegrees": -8,
+          "forward": {
+            "x": 0,
+            "y": -0.1391731,
+            "z": -1
+          }
+        },
+        "fieldOfView": 56,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "devicePixelRatio": 2,
+        "orientation": "PORTRAIT",
+        "routeAndQueryState": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0c=59df682501f63aec8a263cef8e1a5adacbc2a1a2&scene=TRAVERSAL_THROUGH_COAST_VIEW&run=2",
+        "startupSequence": {
+          "cleanPage": true,
+          "initialState": {
+            "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+            "stateId": "H_EARTH_NAVIGATION_STATE_0001",
+            "sequence": 1,
+            "action": "GOTO_WAYPOINT:COAST",
+            "accepted": true,
+            "recovered": false,
+            "rejectionReason": null,
+            "position": {
+              "x": 0,
+              "y": 3.776628584078394,
+              "z": -96
+            },
+            "yawDegrees": 0,
+            "pitchDegrees": -8,
+            "verticalFovDegrees": 56,
+            "terrainElevation": 1.526628584078394,
+            "minimumCameraY": 3.126628584078394,
+            "clearance": 2.25,
+            "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+            "physicalRole": "COASTAL_FOREGROUND_TERRAIN",
+            "formationIds": [],
+            "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R03:C08",
+            "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+            "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0001",
+            "canonicalCameraStateAuthority": false,
+            "collisionOrPhysicsClaim": false
+          }
+        },
+        "readyCondition": "RUN8E_READY_AND_VISIBLE_GPU_FRAME",
+        "cameraMotionState": "TRAVERSAL_SEQUENCE_COMPLETE",
+        "captureFrameCondition": {
+          "visibleGpuFrames": 8,
+          "navigationSequence": 8
+        },
+        "sourceMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+        "screenshotPath": null,
+        "screenshotSha256": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718",
+        "traversal": {
+          "startState": {
+            "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+            "stateId": "H_EARTH_NAVIGATION_STATE_0004",
+            "sequence": 4,
+            "action": "MOVE_FORWARD",
+            "accepted": true,
+            "recovered": false,
+            "rejectionReason": null,
+            "position": {
+              "x": 0,
+              "y": 3.9616255734540466,
+              "z": -126
+            },
+            "yawDegrees": 0,
+            "pitchDegrees": -8,
+            "verticalFovDegrees": 56,
+            "terrainElevation": 1.7116255734540466,
+            "minimumCameraY": 3.3116255734540467,
+            "clearance": 2.25,
+            "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C05_C08",
+            "physicalRole": "COASTAL_TO_INLAND_TRANSITION_TERRAIN",
+            "formationIds": [
+              "H_EARTH_COASTAL_BERM_001",
+              "H_EARTH_DRAINAGE_VALLEY_001",
+              "H_EARTH_LOWLAND_001"
+            ],
+            "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R07:C08",
+            "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+            "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0004",
+            "canonicalCameraStateAuthority": false,
+            "collisionOrPhysicsClaim": false
+          },
+          "motionCommandSequence": [
+            {
+              "ordinal": 1,
+              "action": "MOVE_BACKWARD",
+              "magnitude": 10
+            },
+            {
+              "ordinal": 2,
+              "action": "MOVE_BACKWARD",
+              "magnitude": 10
+            },
+            {
+              "ordinal": 3,
+              "action": "MOVE_BACKWARD",
+              "magnitude": 10
+            },
+            {
+              "ordinal": 4,
+              "action": "MOVE_BACKWARD",
+              "magnitude": 10
+            }
+          ],
+          "durationMilliseconds": 781,
+          "finalState": {
+            "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+            "stateId": "H_EARTH_NAVIGATION_STATE_0008",
+            "sequence": 8,
+            "action": "MOVE_BACKWARD",
+            "accepted": true,
+            "recovered": false,
+            "rejectionReason": null,
+            "position": {
+              "x": 0,
+              "y": 2.1676559232966333,
+              "z": -86
+            },
+            "yawDegrees": 0,
+            "pitchDegrees": -8,
+            "verticalFovDegrees": 56,
+            "terrainElevation": -0.08234407670336674,
+            "minimumCameraY": 1.5176559232966333,
+            "clearance": 2.25,
+            "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+            "physicalRole": "COASTAL_FOREGROUND_TERRAIN",
+            "formationIds": [],
+            "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R04:C08",
+            "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+            "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0008",
+            "canonicalCameraStateAuthority": false,
+            "collisionOrPhysicsClaim": false
+          }
+        }
+      },
+      "repeatability": {
+        "cameraStateMatch": true,
+        "viewportMatch": true,
+        "readyConditionMatch": true,
+        "screenshotPixelIdentity": true,
+        "expectedDynamicVariance": false,
+        "unresolvedVariance": false
+      }
+    }
+  ],
+  "startupLaw": "FRESH_TOP_LEVEL_PUBLIC_ROUTE_PER_CAPTURE",
+  "productMutation": false
+}

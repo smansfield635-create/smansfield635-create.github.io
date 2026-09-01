@@ -1,0 +1,107 @@
+name: Canonical Operation Intake Transport v1
+
+on:
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: canonical-operation-intake-transport-${{ github.event.issue.number || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  self-test:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node tools/operation-intake/canonical-operation-intake-transport.v1.mjs --self-test
+
+  admit:
+    if: >-
+      github.event_name == 'issue_comment' &&
+      github.event.issue.pull_request == null &&
+      (github.event.comment.author_association == 'OWNER' ||
+       github.event.comment.author_association == 'MEMBER' ||
+       github.event.comment.author_association == 'COLLABORATOR') &&
+      startsWith(github.event.comment.body, 'CANONICAL_OPERATION_INTAKE_REQUEST_V1')
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Parse authenticated transport envelope
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const marker='CANONICAL_OPERATION_INTAKE_REQUEST_V1';
+          const body=process.env.COMMENT_BODY ?? '';
+          if(!body.startsWith(marker)) throw new Error('TRANSPORT_MARKER_MISMATCH');
+          const raw=body.slice(marker.length).trim();
+          if(!raw || raw.length>262144) throw new Error('TRANSPORT_ENVELOPE_SIZE_INVALID');
+          const envelope=JSON.parse(raw);
+          if(envelope.schema!=='CANONICAL_OPERATION_INTAKE_TRANSPORT_REQUEST_v1') throw new Error('TRANSPORT_SCHEMA_INVALID');
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/canonical-intake-envelope.json',JSON.stringify(envelope,null,2)+'\n');
+          NODE
+      - name: Execute canonical intake without parallel governance
+        id: intake
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set +e
+          node tools/operation-intake/canonical-operation-intake-transport.v1.mjs \
+            --input "$RUNNER_TEMP/canonical-intake-envelope.json" \
+            --output "$RUNNER_TEMP/canonical-intake-transport-receipt.json"
+          echo "status=$?" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Preserve canonical result
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s "$RUNNER_TEMP/canonical-intake-transport-receipt.json"
+          jq -e '.schema == "CANONICAL_OPERATION_INTAKE_TRANSPORT_RECEIPT_v1" and .admissionSemanticsDuplicated == false and .authorityCreated == false and .mergeAuthorityCreated == false' "$RUNNER_TEMP/canonical-intake-transport-receipt.json" >/dev/null
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical-operation-intake-transport-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/canonical-intake-transport-receipt.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Return compact canonical receipt
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs=require('fs');
+            const p=process.env.RUNNER_TEMP+'/canonical-intake-transport-receipt.json';
+            let r={};try{r=JSON.parse(fs.readFileSync(p,'utf8'));}catch{}
+            const c=r.canonicalReceiptJson||{};
+            const body=['CANONICAL_OPERATION_INTAKE_RETURN_V1','',`transportResult = ${r.result||'UNKNOWN'}`,`canonicalResult = ${c.result||'UNKNOWN'}`,`operationId = ${c.operationId||'UNKNOWN'}`,`lockGeneration = ${c.lock?.lockGeneration ?? c.lockGeneration ?? 'UNKNOWN'}`,`workflowRun = ${context.runId}`].join('\n');
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:'```text\n'+body+'\n```'});
+      - name: Require canonical admission success
+        if: always()
+        shell: bash
+        run: |
+          test '${{ steps.intake.outputs.status }}' = '0'
+          jq -e '.result == "CANONICAL_RECEIPT_PRESERVED" and .canonicalReceiptJson.result == "ADMITTED_AND_LOCKED"' "$RUNNER_TEMP/canonical-intake-transport-receipt.json" >/dev/null

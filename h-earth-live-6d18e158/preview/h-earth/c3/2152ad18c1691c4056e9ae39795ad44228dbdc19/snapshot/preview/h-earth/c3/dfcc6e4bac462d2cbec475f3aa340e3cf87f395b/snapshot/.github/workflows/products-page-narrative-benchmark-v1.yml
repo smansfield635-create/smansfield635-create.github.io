@@ -1,0 +1,93 @@
+name: Products Page Narrative Benchmark v1
+
+on:
+  pull_request:
+    paths:
+      - "products/**"
+      - "campaigns/**"
+      - "verification/benchmark-tools/products-page-narrative-v1/**"
+      - ".github/workflows/products-page-narrative-benchmark-v1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  products-page-narrative:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Check out candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install benchmark dependency
+        run: npm install --no-save puppeteer-core@24.16.0
+
+      - name: Resolve Chrome
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME_PATH="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser)"
+          test -n "$CHROME_PATH"
+          echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
+
+      - name: Verify frozen Products authorities
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE_SHA="${{ github.event.pull_request.base.sha || github.event.before }}"
+          git diff --name-only "$BASE_SHA" "${{ github.sha }}" > /tmp/products-page-changed-paths.txt || true
+          cat /tmp/products-page-changed-paths.txt
+          if grep -E '^products/(index\.controller\.js|index\.crystals\.js|index\.compositor\.js|index\.planet\.js|index\.compass\.css|index\.cosmos\.js)$' /tmp/products-page-changed-paths.txt; then
+            echo "Frozen Products runtime authority changed" >&2
+            exit 1
+          fi
+
+      - name: Verify shared campaign architecture
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f campaigns/index.css
+          test -f campaigns/index.tabs.js
+          test "$(find campaigns -path '*/index.html' -type f | wc -l | tr -d ' ')" = "6"
+          test "$(find campaigns/assets -maxdepth 1 -type f | wc -l | tr -d ' ')" = "6"
+          ! find campaigns -path '*/index.css' -o -path '*/index.js' | grep -vE '^campaigns/index\.(css|tabs\.js)$'
+
+      - name: Start branch-local static server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/products-page-narrative-server.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:4173/products/ >/dev/null && curl -fsS http://127.0.0.1:4173/campaigns/consider-the-energy/ >/dev/null; then
+              exit 0
+            fi
+            sleep 0.25
+          done
+          cat /tmp/products-page-narrative-server.log
+          exit 1
+
+      - name: Execute page and campaign benchmark
+        env:
+          PRODUCTS_PAGE_ORIGIN: http://127.0.0.1:4173
+        run: node verification/benchmark-tools/products-page-narrative-v1/products-page-narrative-benchmark.mjs
+
+      - name: Upload executed evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: products-page-narrative-benchmark-v1-evidence
+          if-no-files-found: warn
+          path: |
+            products-page-narrative-benchmark-v1.json
+            products-page-narrative-*.png
+            campaign-*.png
+            /tmp/products-page-narrative-server.log

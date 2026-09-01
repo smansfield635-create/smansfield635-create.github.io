@@ -1,0 +1,58 @@
+{
+  "instrument": "R&D_PACKAGE_RECONCILE_APPLY_VERIFY_v1",
+  "mode": "PLAN_ONLY",
+  "pass": true,
+  "protocolId": "R&D_RECONCILIATION_APPLICATION_ACCEPTANCE_PROTOCOL_v1",
+  "checkpoint": "CHECKPOINT_5_PLAN_ONLY_PRECONDITION",
+  "applicationCheckpoint": "CHECKPOINT_5",
+  "exactHeadVerificationCheckpoint": "REPEATED_CHECKPOINT_3",
+  "physicalAcceptanceCheckpoint": "CHECKPOINT_6",
+  "projectId": "LAWS_COMPASS",
+  "targetPr": 383,
+  "repositoryHead": "3224c73dc65a5467ec9f5a5ba888b79d1e53a109",
+  "packageArtifactId": 8774780106,
+  "packageValidation": {
+    "pass": true,
+    "errors": [],
+    "checks": [
+      { "file": "laws/index.controller.js", "bytes": 116725, "sha256": "f11111a115e6f91c5b57683d2cd4e2195d9000879780150b61135c91a71506fa", "gitBlobSha": "26fd468f4d4f857cafb60c20657e11eb9a28c18c" },
+      { "file": "laws/index.crystals.js", "bytes": 110173, "sha256": "99fba1394d5ab030e38c2a2adcf4289c1c54b389e48c998a5530788a55504663", "gitBlobSha": "51730c953945e3e6833452990ed60c279c7ce98b" },
+      { "file": "laws/index.interactions.js", "bytes": 37819, "sha256": "c85ee4d94ad83b55c1f19e95ca01230fdae3263f1c5f9406773e5e7ffa18c06b", "gitBlobSha": "ffa47d116aecccab367d6cccdf65b2e18cea21bf" },
+      { "file": "laws/index.html", "bytes": 116401, "sha256": "b1017cb206614d90a4a02c35bc5e922a50f027d65c1966041814089dc0c66257", "gitBlobSha": "45f91c30716a9656ab6b9224f3726d9fdbc4ba98" },
+      { "file": "laws/index.css", "bytes": 78745, "sha256": "5e319a0fabd36c9c3fcf84440e27d889b19114c4ae2e479cd4718ae7f206ffdd", "gitBlobSha": "a37a75b45de976580a8a3968511cf836e1953c04" },
+      { "file": "verification/benchmark-tools/laws-compass-six-authority-benchmark-v1/laws-compass-six-authority-benchmark.mjs", "bytes": 37238, "sha256": "44dc4543fa462fce04cca62f3351b726fedc9ad2a2e6e5423654aed365cb03d4", "gitBlobSha": "5a4228ddb34816bab065a3d603241c403c293d4b" }
+    ],
+    "manifestId": "LAWS_COMPASS_CHECKPOINT_5_EXACT_TWO_OBJECT_MATERIALIZATION_v2",
+    "parentCommit": "98de0f9b2247de0100999777c766afa77d29d071"
+  },
+  "profileValidation": { "pass": true, "errors": [] },
+  "pathClassifications": [
+    { "path": "laws/index.controller.js", "parentBlob": "a309c61b599652620f4fe90545294a6cfea40f96", "currentBlob": "a309c61b599652620f4fe90545294a6cfea40f96", "candidateBlob": "26fd468f4d4f857cafb60c20657e11eb9a28c18c", "classification": "UNCHANGED_FROM_PACKAGE_PARENT" },
+    { "path": "laws/index.crystals.js", "parentBlob": "f4c1a84d552969fcb240874fde662d11ce3c7ca3", "currentBlob": "f4c1a84d552969fcb240874fde662d11ce3c7ca3", "candidateBlob": "51730c953945e3e6833452990ed60c279c7ce98b", "classification": "UNCHANGED_FROM_PACKAGE_PARENT" },
+    { "path": "laws/index.interactions.js", "parentBlob": "f7002b2d9762b1a511825d87dee0bafb4eac9c91", "currentBlob": "f7002b2d9762b1a511825d87dee0bafb4eac9c91", "candidateBlob": "ffa47d116aecccab367d6cccdf65b2e18cea21bf", "classification": "UNCHANGED_FROM_PACKAGE_PARENT" },
+    { "path": "laws/index.html", "parentBlob": "7e83822cd34977b0f2098a535eaa15e3c7a8d5e3", "currentBlob": "7e83822cd34977b0f2098a535eaa15e3c7a8d5e3", "candidateBlob": "45f91c30716a9656ab6b9224f3726d9fdbc4ba98", "classification": "UNCHANGED_FROM_PACKAGE_PARENT" },
+    { "path": "laws/index.css", "parentBlob": "c87a703d576dff72a3c24ee99913fe8a36f2ae8f", "currentBlob": "c87a703d576dff72a3c24ee99913fe8a36f2ae8f", "candidateBlob": "a37a75b45de976580a8a3968511cf836e1953c04", "classification": "UNCHANGED_FROM_PACKAGE_PARENT" }
+  ],
+  "plannedWriteSequence": [
+    { "sequence": 1, "path": "laws/index.controller.js", "classification": "UNCHANGED_FROM_PACKAGE_PARENT" },
+    { "sequence": 2, "path": "laws/index.crystals.js", "classification": "UNCHANGED_FROM_PACKAGE_PARENT" },
+    { "sequence": 3, "path": "laws/index.interactions.js", "classification": "UNCHANGED_FROM_PACKAGE_PARENT" },
+    { "sequence": 4, "path": "laws/index.html", "classification": "UNCHANGED_FROM_PACKAGE_PARENT" },
+    { "sequence": 5, "path": "laws/index.css", "classification": "UNCHANGED_FROM_PACKAGE_PARENT" }
+  ],
+  "unresolvedReconciliationPaths": [],
+  "benchmark": {
+    "identity": "LAWS_COMPASS_SIX_AUTHORITY_BENCHMARK_v1",
+    "path": "verification/benchmark-tools/laws-compass-six-authority-benchmark-v1/laws-compass-six-authority-benchmark.mjs",
+    "expectedBlob": "5a4228ddb34816bab065a3d603241c403c293d4b",
+    "fetchedBlob": "5a4228ddb34816bab065a3d603241c403c293d4b",
+    "pass": true
+  },
+  "protectedPathCollisions": [],
+  "productFilesApplied": false,
+  "repositoryHeadMutated": false,
+  "checkpoint5ExecutedVerification": false,
+  "merged": false,
+  "deployed": false,
+  "physicalAcceptance": "NOT_STARTED"
+}

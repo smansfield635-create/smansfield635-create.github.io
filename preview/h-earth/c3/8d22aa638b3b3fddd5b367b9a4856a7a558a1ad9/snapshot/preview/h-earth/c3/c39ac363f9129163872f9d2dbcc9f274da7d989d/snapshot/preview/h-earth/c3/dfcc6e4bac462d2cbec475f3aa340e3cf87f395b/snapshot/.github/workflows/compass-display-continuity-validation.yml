@@ -1,0 +1,254 @@
+name: Compass Display Continuity Validation
+
+on:
+  push:
+    branches:
+      - agent/compass-renewal-plan-v2-construction
+    paths:
+      - 'index.html'
+      - 'assets/compass/**'
+      - '.github/ai-router/projects/compass/**'
+      - '.github/workflows/compass-display-continuity-validation.yml'
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'assets/compass/**'
+      - '.github/ai-router/projects/compass/**'
+      - '.github/workflows/compass-display-continuity-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-static-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run fail-closed Compass verifier
+        env:
+          COMPASS_VERIFICATION_OUTPUT: /tmp/compass-display-continuity-verification-receipt.json
+        run: node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
+      - name: Upload static verification receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-display-continuity-verification-receipt
+          path: /tmp/compass-display-continuity-verification-receipt.json
+
+  qualify-runtime:
+    runs-on: ubuntu-latest
+    needs: verify-static-contract
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright outside repository contract
+        env:
+          npm_config_package_lock: 'false'
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install chromium
+      - name: Start local static host
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/compass-http.log 2>&1 &
+          echo $! >/tmp/compass-http.pid
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/compass-http.log
+          exit 1
+      - name: Playwright desktop tablet phone interaction filtering
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { chromium } from 'playwright';
+          const base='http://127.0.0.1:4173/';
+          const browser=await chromium.launch({headless:true});
+          const checks=[];
+          const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});
+          async function qualifyViewport(name,viewport){
+            const context=await browser.newContext({viewport});
+            const page=await context.newPage();
+            const errors=[];
+            page.on('pageerror',e=>errors.push(String(e)));
+            await page.goto(base,{waitUntil:'domcontentloaded',timeout:15000});
+            await page.waitForSelector('[data-compass-root]',{timeout:10000});
+            await page.waitForSelector('[data-compass-cardinal]',{state:'visible',timeout:10000});
+            await page.waitForTimeout(400);
+            const result=await page.evaluate(()=>({
+              cardinals:[...document.querySelectorAll('[data-compass-cardinal]')].map(el=>el.getAttribute('data-cardinal-id')),
+              roomDeclarations:document.querySelectorAll('[data-compass-room-declarations] [data-compass-room]').length,
+              horizontalOverflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
+              introOpen:document.querySelector('[data-compass-full-introduction]')?.open,
+              mathVisible:document.body.textContent.includes('Mathematical Foundation'),
+              monuments:document.querySelectorAll('.compass-monument').length,
+              built:Boolean(document.querySelector('.compass-built')),
+              buildCta:Boolean(document.querySelector('.compass-build-cta')),
+              mirrorRoutes:document.querySelectorAll('[data-compass-mirrorland-routes] a:not([data-compass-mirrorland-inline-back])').length,
+              mirrorBack:Boolean(document.querySelector('[data-compass-mirrorland-inline-back]')),
+              cosmos:Boolean(document.querySelector('[data-compass-cosmic-field]')),
+              headerTop:document.querySelector('.compass-estate__header')?.getBoundingClientRect().top,
+              instrumentTop:document.querySelector('.compass-instrument')?.getBoundingClientRect().top
+            }));
+            check(`${name}_FOUR_CARDINALS`,JSON.stringify(result.cardinals)===JSON.stringify(['north','east','south','west']),result.cardinals);
+            check(`${name}_ROOM_DECLARATIONS`,result.roomDeclarations===19,result.roomDeclarations);
+            check(`${name}_NO_OVERFLOW`,result.horizontalOverflow<=2,result.horizontalOverflow);
+            check(`${name}_INTRO_COLLAPSED`,result.introOpen===false,result.introOpen);
+            check(`${name}_MATH_REMOVED`,!result.mathVisible,result.mathVisible);
+            check(`${name}_MONUMENTS`,result.monuments===2,result.monuments);
+            check(`${name}_BUILT_AND_BUILD`,result.built&&result.buildCta,result);
+            check(`${name}_MIRRORLAND_THREE_ROUTES`,result.mirrorRoutes===3&&result.mirrorBack,result);
+            check(`${name}_COSMOS_HOST`,result.cosmos,result.cosmos);
+            check(`${name}_OPENING_COMPACT`,Number.isFinite(result.headerTop)&&result.headerTop<140,result);
+            check(`${name}_INSTRUMENT_FOLLOWS_OPENING`,Number.isFinite(result.instrumentTop)&&result.instrumentTop<900,result);
+            check(`${name}_NO_PAGE_ERRORS`,errors.length===0,errors);
+            await page.screenshot({path:`/tmp/compass-${name.toLowerCase()}.png`,fullPage:true});
+            await context.close();
+          }
+          await qualifyViewport('DESKTOP',{width:1440,height:900});
+          await qualifyViewport('TABLET',{width:1024,height:768});
+          await qualifyViewport('PHONE',{width:390,height:844});
+          {
+            const context=await browser.newContext({viewport:{width:1280,height:800}});
+            const page=await context.newPage();
+            await page.goto(base,{waitUntil:'domcontentloaded'});
+            const north=page.locator('[data-cardinal-id="north"]');
+            await north.focus();
+            check('KEYBOARD_FOCUS',await north.evaluate(el=>document.activeElement===el),true);
+            await north.press('Enter');
+            await page.waitForTimeout(500);
+            const state=await page.locator('[data-compass-root]').evaluate(el=>({mode:el.dataset.compassMode,selected:el.dataset.selectedCardinal,preview:el.dataset.clusterPreviewPrimaryRoom||'',guidance:document.querySelector('[data-compass-guidance]')?.textContent.trim(),previewState:document.querySelector('[data-compass-preview-state]')?.textContent.trim(),panelTitle:document.querySelector('[data-compass-panel-title]')?.textContent.trim(),enterDisabled:document.querySelector('[data-compass-enter]')?.disabled}));
+            check('CARDINAL_OPEN_STATE',state.mode==='CLUSTER_OPEN'&&state.selected==='north',state);
+            check('CLUSTER_GUIDANCE_STATE',state.guidance==='Drag to rotate the cluster. Tap a room star to select it. Swipe across open space to return to the constellation.',state.guidance);
+            check('FOREGROUND_ROOM_CONTEXT_AND_ENTRY_AVAILABLE',Boolean(state.preview)&&state.previewState?.includes('ROOM IN FRONT')&&Boolean(state.panelTitle)&&state.enterDisabled===false,state);
+            const returnButton=page.locator('[data-compass-return-to-orbit]');
+            check('RETURN_CONTROL_HIDDEN_WHILE_CLUSTER_OPEN',!(await returnButton.isVisible()),await returnButton.isVisible());
+            const clusterReturned=await page.evaluate(()=>globalThis.DGB_COMPASS_CONTROLLER?.requestReturnToConstellation({source:'playwright-qualification',scrollToScene:false})===true);
+            await page.waitForTimeout(200);
+            check('CLUSTER_RETURN_TO_CONSTELLATION',clusterReturned&&(await page.locator('[data-compass-root]').getAttribute('data-compass-mode'))==='CONSTELLATION',await page.locator('[data-compass-root]').getAttribute('data-compass-mode'));
+            await north.press('Enter');
+            await page.waitForTimeout(300);
+            const roomSelected=await page.evaluate(()=>globalThis.DGB_COMPASS_CONTROLLER?.requestRoomSelection('north-1')===true);
+            await page.waitForTimeout(300);
+            const roomState=await page.locator('[data-compass-root]').evaluate(el=>({mode:el.dataset.compassMode,room:el.dataset.selectedRoom,guidance:document.querySelector('[data-compass-guidance]')?.textContent.trim()}));
+            check('ROOM_SELECTION_STATE',roomSelected&&roomState.mode==='ROOM_SELECTED'&&roomState.room==='north-1',roomState);
+            check('ROOM_GUIDANCE_STATE',roomState.guidance==='Review the selected room. Use Enter Room to continue, Return To Orbit to reopen the cluster, or swipe across open space to return to the constellation.',roomState.guidance);
+            check('RETURN_CONTROL_EXPOSED_AFTER_ROOM_SELECTION',await returnButton.isVisible(),await returnButton.isVisible());
+            await returnButton.click();
+            await page.waitForTimeout(300);
+            check('EXPLICIT_RETURN_TO_ORBIT_WORKS',(await page.locator('[data-compass-root]').getAttribute('data-compass-mode'))==='CLUSTER_OPEN',await page.locator('[data-compass-root]').getAttribute('data-compass-mode'));
+            await context.close();
+          }
+          {
+            const context=await browser.newContext({viewport:{width:1280,height:800},reducedMotion:'reduce'});
+            const page=await context.newPage();
+            await page.goto(base,{waitUntil:'domcontentloaded'});
+            await page.waitForTimeout(300);
+            const reduced=await page.locator('[data-compass-root]').getAttribute('data-reduced-motion');
+            check('REDUCED_MOTION_STATE',reduced==='true',reduced);
+            check('REDUCED_MOTION_SEMANTIC_EQUIVALENCE',await page.locator('[data-compass-cardinal]').count()===4,await page.locator('[data-compass-cardinal]').count());
+            await context.close();
+          }
+          await browser.close();
+          const failures=checks.filter(item=>!item.pass);
+          const receipt={schema:'COMPASS_RUNTIME_QUALIFICATION_RECEIPT_v2',operationId:'COMPASS_RENEWAL_CONSTRUCTION_v2_20260814_001',lockGeneration:1471,candidateHead:process.env.GITHUB_SHA||null,result:failures.length?'FAIL_CLOSED':'PASS',checks,failures:failures.map(item=>item.id)};
+          fs.writeFileSync('/tmp/compass-runtime-qualification-receipt.json',`${JSON.stringify(receipt,null,2)}\n`);
+          console.log(JSON.stringify(receipt,null,2));
+          if(failures.length)process.exit(1);
+          NODE
+      - name: Assert 19 rendered foreground room labels
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { chromium } from 'playwright';
+          const browser=await chromium.launch({headless:true});
+          const page=await browser.newPage({viewport:{width:1280,height:800}});
+          const failures=[];
+          const observations=[];
+          const fail=(id,evidence)=>failures.push({id,evidence});
+          const normalize=v=>{const m=Math.hypot(...v)||1;return v.map(n=>n/m);};
+          const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+          const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+          const quaternionFromTo=(from,to)=>{
+            const a=normalize(from),b=normalize(to),d=Math.max(-1,Math.min(1,dot(a,b)));
+            if(d>0.999999) return [0,0,0,1];
+            if(d<-0.999999){
+              let axis=cross(a,[1,0,0]);
+              if(Math.hypot(...axis)<1e-6) axis=cross(a,[0,1,0]);
+              axis=normalize(axis);
+              return [axis[0],axis[1],axis[2],0];
+            }
+            const c=cross(a,b),s=Math.sqrt((1+d)*2),inv=1/s;
+            return normalize([c[0]*inv,c[1]*inv,c[2]*inv,s*0.5]);
+          };
+          const roomVector=(index,count)=>{
+            const safeCount=Math.max(1,count);
+            const longitude=(Math.PI*2*index)/safeCount-Math.PI/2;
+            const latitude=Math.sin((index+0.5)*1.73)*0.48;
+            const cosineLatitude=Math.cos(latitude);
+            return normalize([Math.cos(longitude)*cosineLatitude,Math.sin(latitude),Math.sin(longitude)*cosineLatitude]);
+          };
+          const primaryAnchor=normalize([0,0.70,0.714]);
+          await page.goto('http://127.0.0.1:4173/',{waitUntil:'domcontentloaded',timeout:20000});
+          await page.waitForSelector('[data-compass-root]',{timeout:10000});
+          await page.waitForSelector('[data-compass-projected-room-label]',{state:'attached',timeout:10000});
+          await page.waitForFunction(()=>Boolean(globalThis.DGB_COMPASS_CONTROLLER),{timeout:10000});
+          const declarations=await page.evaluate(()=>[...document.querySelectorAll('[data-compass-room-declarations] [data-compass-room]')].map(el=>({id:el.dataset.roomId,label:(el.dataset.label||'').trim(),wing:el.dataset.wing})));
+          if(declarations.length!==19) fail('DECLARATION_COUNT',declarations.length);
+          for(const wing of ['north','east','south','west']){
+            await page.evaluate(w=>document.querySelector(`[data-compass-cardinal][data-cardinal-id="${w}"]`)?.click(),wing);
+            await page.waitForFunction(w=>{const root=document.querySelector('[data-compass-root]');return root?.dataset.compassMode==='CLUSTER_OPEN'&&root?.dataset.selectedCardinal===w;},wing,{timeout:10000});
+            const rooms=declarations.filter(item=>item.wing===wing);
+            for(let index=0;index<rooms.length;index++){
+              const room=rooms[index];
+              const quaternion=quaternionFromTo(roomVector(index,rooms.length),primaryAnchor);
+              const committed=await page.evaluate(({wing,roomId,quaternion})=>globalThis.DGB_COMPASS_CONTROLLER?.requestClusterCommit(wing,{quaternion,primaryRoom:roomId,source:'foreground-label-render-gate'})===true,{wing,roomId:room.id,quaternion});
+              await page.waitForTimeout(220);
+              const state=await page.evaluate(()=>{
+                const root=document.querySelector('[data-compass-root]');
+                const label=document.querySelector('[data-compass-projected-room-label]');
+                const style=label?getComputedStyle(label):null;
+                const rect=label?.getBoundingClientRect();
+                return {mode:root?.dataset.compassMode||'',foreground:root?.dataset.clusterPreviewPrimaryRoom||root?.dataset.clusterPrimaryRoom||'',selectedRoom:root?.dataset.selectedRoom||'',renderedRoomId:label?.dataset.roomId||'',text:(label?.textContent||'').replace(/\s+/g,' ').trim(),visible:Boolean(label&&!label.hidden&&style&&style.display!=='none'&&style.visibility!=='hidden'&&Number(style.opacity||1)>0.01&&rect&&rect.width>0&&rect.height>0),background:style?.backgroundImage||style?.backgroundColor||''};
+              });
+              const correct=committed&&state.mode==='CLUSTER_OPEN'&&state.selectedRoom===''&&state.foreground===room.id&&state.renderedRoomId===room.id&&state.text===room.label&&state.visible&&!/^rgb\(0, 0, 0\)$/.test(state.background||'');
+              observations.push({wing,roomId:room.id,expectedLabel:room.label,committed,quaternion,state,correct});
+              if(!correct) fail(`${room.id}_FOREGROUND_LABEL_INVALID`,observations.at(-1));
+            }
+            await page.evaluate(()=>globalThis.DGB_COMPASS_CONTROLLER?.requestReturnToConstellation?.({source:'foreground-label-render-gate',scrollToScene:false}));
+            await page.waitForTimeout(120);
+          }
+          await page.screenshot({path:'/tmp/compass-foreground-room-label-final.png',fullPage:true});
+          await browser.close();
+          const proved=observations.filter(item=>item.correct).map(item=>item.roomId);
+          if(proved.length!==19) fail('NINETEEN_FOREGROUND_LABELS_NOT_PROVEN',{count:proved.length,ids:proved});
+          const receipt={schema:'COMPASS_RENDERED_FOREGROUND_ROOM_LABEL_RECEIPT_v3',candidateHead:process.env.GITHUB_SHA||null,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',provedForegroundLabels:proved,observations,failures};
+          fs.writeFileSync('/tmp/compass-foreground-room-label-receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt,null,2));
+          if(failures.length) process.exit(1);
+          NODE
+      - name: Upload runtime filtering evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-runtime-qualification-evidence
+          path: |
+            /tmp/compass-runtime-qualification-receipt.json
+            /tmp/compass-foreground-room-label-receipt.json
+            /tmp/compass-foreground-room-label-final.png
+            /tmp/compass-desktop.png
+            /tmp/compass-tablet.png
+            /tmp/compass-phone.png

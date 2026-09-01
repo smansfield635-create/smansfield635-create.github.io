@@ -72,10 +72,10 @@ const renewableFailureSetExact =
   );
 
 const currentBoundedOverlay =
-  './accepted-amendments/h-earth.repository-registry.compositor-camera-authority-scope-reconciliation.js';
+  './accepted-amendments/h-earth.repository-registry.awards-public-face-path-recognition.js';
 
 const priorBoundedOverlay =
-  './accepted-amendments/h-earth.repository-registry.public-route-interaction-scope-reconciliation.js';
+  './accepted-amendments/h-earth.repository-registry.in-world-live-gpu-binding-path-recognition.js';
 
 const loaderUsesCurrentBoundedChain =
   loaderText.includes(
@@ -109,11 +109,13 @@ const renewalEligible =
   receipt.preflight?.disposition ===
     'PASS' &&
   receipt.preflight?.failureCodes?.length ===
-    0;
+    0 &&
+  receipt.checks?.baseRegistryCandidateUnchanged === true &&
+  receipt.checks?.bootstrapUnchanged === true;
 
 if (renewalEligible) {
   receipt.receiptId =
-    'H_EARTH_PR79_POST_MERGE_SCOPE_DISPOSITION_RETAINED_STATE_AUDIT_RECEIPT_v6';
+    'H_EARTH_PR79_POST_MERGE_SCOPE_DISPOSITION_RETAINED_STATE_AUDIT_RECEIPT_v7';
 
   receipt.result =
     'PASS';
@@ -133,18 +135,18 @@ if (renewalEligible) {
     true;
 
   retainedLoaderResult.renewalClass =
-    'BOUNDED_ACCEPTED_AMENDMENT_CHAIN_EXTENSION';
+    'BOUNDED_ACCEPTED_AUDIT_ONLY_AMENDMENT_CHAIN_EXTENSION';
 
   retainedLoaderResult.authorizedActual =
     loaderBlob;
 
   receipt.loaderContinuityRenewal = {
     renewalId:
-      'H_EARTH_RETAINED_STATE_LOADER_CONTINUITY_RENEWAL_v4',
+      'H_EARTH_RETAINED_STATE_LOADER_CONTINUITY_RENEWAL_v5',
     priorExpectation:
       'LOADER_MUST_REMAIN_EXACT_STEP_1_BLOB',
     renewedExpectation:
-      'LOADER_MAY_ADVANCE_ONLY_THROUGH_A_BOUNDED_ACCEPTED_AMENDMENT_CHAIN_WHILE_BASE_REGISTRY_AND_BOOTSTRAP_REMAIN_UNCHANGED',
+      'LOADER_MAY_ADVANCE_ONLY_THROUGH_A_BOUNDED_ACCEPTED_AUDIT_ONLY_AMENDMENT_CHAIN_WHILE_BASE_REGISTRY_BOOTSTRAP_AND_READ_ONLY_PREFLIGHT_REMAIN_UNCHANGED',
     loaderBlob,
     priorBoundedOverlay:
       `/h-earth-3d/registry/${priorBoundedOverlay.replace('./', '')}`,
@@ -160,6 +162,8 @@ if (renewalEligible) {
       receipt.checks.bootstrapUnchanged === true,
     automaticPreflightPass:
       receipt.checks.retainedStatePreflightPass === true,
+    readOnlyPreflightPreserved:
+      receipt.checks.preflightRemainsReadOnly === true,
     authorityCreated:
       false
   };

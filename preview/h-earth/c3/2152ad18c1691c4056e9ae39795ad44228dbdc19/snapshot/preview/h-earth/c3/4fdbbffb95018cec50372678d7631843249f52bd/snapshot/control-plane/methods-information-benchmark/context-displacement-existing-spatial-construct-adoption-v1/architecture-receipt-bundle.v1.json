@@ -1,0 +1,47 @@
+{
+  "architecture": {
+    "adoptionMatrixRows": 14,
+    "componentDiscoveryComplete": true,
+    "contextualArchitectureConformance": "PASS",
+    "inspirationOnlyRows": 0,
+    "prohibitedSubstitutesBound": true,
+    "runtimeConditionsBound": true,
+    "sourceIdentitiesBound": true
+  },
+  "authorityBoundary": {
+    "awardReadinessClaim": false,
+    "compassMutation": false,
+    "hEarthMutation": false,
+    "mergeAuthorized": false,
+    "pageImplementationExecuted": false,
+    "publicOrVisualMutation": false
+  },
+  "governingHead": "3b21d30763ca0368110811351bb3d3c8a042af47",
+  "intake": {
+    "lockGeneration": 282,
+    "requestDigest": "de12af16b7e966a04f34c6eabe77f18e7e704c81a063480b39810036e01258df",
+    "result": "ADMITTED_AND_LOCKED",
+    "scopeHash": "7854a71707be19a6e82829fbab82ac29179eda09da9349e8890b505e00b8758a"
+  },
+  "activation": {
+    "ratificationOperationId": "METHODS_CONTEXT_DISPLACEMENT_EXISTING_SPATIAL_CONSTRUCT_ADOPTION_POST_MERGE_VALIDATION_AND_PERMANENT_RATIFICATION_v1",
+    "sourcePr": 633,
+    "sourceCandidateHead": "06886281a02364b1733b0724b01a490c5cf8171b",
+    "sourceMergeCommit": "452b1cf75ea801d5239ed8e01e014e0961491bfe",
+    "ratificationBaseHead": "452b1cf75ea801d5239ed8e01e014e0961491bfe",
+    "sourceFingerprint": "59da453bc620ff7992d71d6db4f075d28db9f35530c570961a6a0a14a2ef7252",
+    "sourcePackagePathCount": 13,
+    "sourceBlobIdentityPreserved": true,
+    "mainRepositoryIntakeValidation": {
+      "run": 31063336741,
+      "result": "SUCCESS"
+    },
+    "permanentRatificationEffectiveOnMerge": true,
+    "operationalClass": "NONPUBLIC_GOVERNING_CONSTRUCTION_CONTRACT",
+    "activationBoundary": "ARCHITECTURE_CONTRACT_ONLY_NO_PAGE_IMPLEMENTATION"
+  },
+  "nextAuthorizedTargetAfterPass": "METHODS_CONTEXT_DISPLACEMENT_EXISTING_SPATIAL_CONSTRUCT_MINIMUM_REAL_3D_PROOF_v1",
+  "operationId": "METHODS_CONTEXT_DISPLACEMENT_EXISTING_SPATIAL_CONSTRUCT_ADOPTION_v1",
+  "schema": "METHODS_SPATIAL_ADOPTION_ARCHITECTURE_RECEIPT_BUNDLE_v1",
+  "status": "RATIFIED_ACTIVE_FAIL_CLOSED"
+}

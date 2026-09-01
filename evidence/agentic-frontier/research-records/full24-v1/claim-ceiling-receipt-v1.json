@@ -1,0 +1,130 @@
+{
+  "schema": "AGENTIC_FRONTIER_FULL24_CLAIM_CEILING_RECEIPT_v1",
+  "receiptId": "AGENTIC_FRONTIER_FULL24_CLAIM_CEILING_20260901_001",
+  "disposition": "PASS_CONFIGURATION_BOUNDED_OBSERVATIONAL_RESULT",
+  "source": {
+    "repository": "smansfield635-create/smansfield635-create.github.io",
+    "runId": 33509152430,
+    "runHead": "c2dbceb0267b124f5c34ac2fdf5245fc2015bca3",
+    "aggregateArtifact": {
+      "id": 9808335875,
+      "name": "agentic-frontier-full24-aggregate-v1",
+      "createdAt": "2026-09-01T15:44:45Z",
+      "expiresAt": "2026-11-30T12:42:25Z"
+    },
+    "resultsSha256": "48db34097cd06b8e7eb87fa38a89a42c20a01a80de17c40294ca03bb70c7df65",
+    "summarySha256": "d15db1265702c20ec7c7b26667c60a7a448cdf0fcab137413567045a2d4b2e1c",
+    "taskManifestSha256": "231d7e19b932896c409297ca35192bdd76177b20f4f5d59df2b851fa8f584044",
+    "protocolSha256": "fa54c693686d55fd5a33a60bb953ed0ee296f44ce10f90fdad54046f09630784",
+    "reusedFrozenReceipt": {
+      "taskId": "AF-IR-01",
+      "sourceRunId": 32916289501,
+      "sourceArtifactId": 9588436111,
+      "sourceArtifactSha256": "a4776aa7b833f48eeaa90e99e7b4e067118d5f725f0b906b89a1d329a303bffb",
+      "reason": "Exact preserved paired receipt reused by the full24 aggregate; it was not rerun in the four shard jobs."
+    }
+  },
+  "auxiliaryShardArtifacts": [
+    {
+      "id": 9807252920,
+      "stratum": "COLLABORATIVE_HANDOFF",
+      "zipSha256": "26d12b3f94382d1d997b6fb9f08b622b14e338ca96295bc42ff57e2539e9bbb0"
+    },
+    {
+      "id": 9808186707,
+      "stratum": "FAILURE_RECOVERY",
+      "zipSha256": "06f4803f90e1af260cf43e31e6753897d76f1ff69d584b740921063678091039"
+    },
+    {
+      "id": 9803553383,
+      "stratum": "IMPLEMENTATION_REPAIR",
+      "zipSha256": "f188d3aca5394e7a2dff93734613f93135b1c00b22982a290c9b716fabc257c2"
+    },
+    {
+      "id": 9808052667,
+      "stratum": "LONG_HORIZON",
+      "zipSha256": "a29f47c7b30926a019ffc5e9fd2bc9a93ff1f3ed7f361620e870a525c099e57d"
+    }
+  ],
+  "testedConfigurations": {
+    "diamondGate": "FROZEN_RUN_CONFIGURATION_IN_AGGREGATE_RECEIPTS",
+    "openHandsVersion": "1.14.0",
+    "model": "qwen2.5-coder:7b"
+  },
+  "population": {
+    "frozenTaskCount": 24,
+    "receiptCount": 24,
+    "strata": {
+      "COLLABORATIVE_HANDOFF": 6,
+      "FAILURE_RECOVERY": 6,
+      "IMPLEMENTATION_REPAIR": 6,
+      "LONG_HORIZON": 6
+    }
+  },
+  "outcomes": {
+    "diamondGatePass": 10,
+    "openHandsPass": 0,
+    "paired": {
+      "BOTH_PASS": 0,
+      "DG_ONLY": 10,
+      "OH_ONLY": 0,
+      "NEITHER": 14
+    },
+    "byStratum": {
+      "COLLABORATIVE_HANDOFF": {
+        "diamondGatePass": 4,
+        "openHandsPass": 0
+      },
+      "FAILURE_RECOVERY": {
+        "diamondGatePass": 2,
+        "openHandsPass": 0
+      },
+      "IMPLEMENTATION_REPAIR": {
+        "diamondGatePass": 3,
+        "openHandsPass": 0
+      },
+      "LONG_HORIZON": {
+        "diamondGatePass": 1,
+        "openHandsPass": 0
+      }
+    }
+  },
+  "receiptTailObservations": {
+    "scope": "PRESERVED_AGENT_LOG_TAILS_NOT_COMPLETE_TRANSCRIPTS",
+    "normalExitCodeZero": 23,
+    "agentInitialized": 23,
+    "agentFinished": 23,
+    "assistantMessagePresent": 23,
+    "actionShapedToolNameSyntax": 21,
+    "actionSyntaxClassifier": "escaped-or-unescaped JSON name field equal to file_editor or terminal",
+    "exactRequestTimeoutMessage": 18,
+    "toolCallsNull": 23,
+    "actionEventPresent": 0,
+    "nonemptyPersistentChangedFileList": 0,
+    "explicitEmptyPersistentChangedFileList": 23,
+    "terminalTimeoutWithoutChangedFileList": 1
+  },
+  "authorizedClaims": [
+    "On the frozen 24-task Agentic Frontier population under the tested configurations, Diamond Gate completed 10 tasks and OpenHands completed none.",
+    "Diamond Gate produced 10 exclusive completions; there were no OpenHands-exclusive or joint completions.",
+    "The tested OpenHands configuration showed model engagement in 23 preserved receipt tails but no recorded persistent workspace changes.",
+    "The experiment observed a configuration-bounded difference in conversion from agentic intent to verified repository state change.",
+    "The movement from 7/24 in the earlier Diamond Gate execution to 10/24 here is descriptive and not causal."
+  ],
+  "forbiddenClaims": [
+    "UNIVERSAL_FRAMEWORK_SUPERIORITY",
+    "GENERAL_10_TO_0_OPENHANDS_RANK",
+    "ARCHITECTURE_ONLY_CAUSATION",
+    "PSALM_CAUSATION",
+    "FULLY_HEALTHY_OPENHANDS_TOOL_ENVIRONMENT",
+    "OPENHANDS_REASONING_INABILITY",
+    "CROSS_DOMAIN_SCIENTIFIC_EVIDENCE_TRANSFER"
+  ],
+  "authority": {
+    "evidenceRecordPublicationAuthorized": true,
+    "researchPageClaimPublicationAuthorized": false,
+    "experimentRerunAuthorized": false,
+    "scientificGeneralizationAuthorized": false,
+    "crossDomainEvidenceTransferAuthorized": false
+  }
+}

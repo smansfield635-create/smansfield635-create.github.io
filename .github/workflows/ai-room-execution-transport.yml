@@ -1,0 +1,177 @@
+name: AI Room Authorized Toolset Execution Transport
+
+on:
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      request_json:
+        description: Schema-valid AI_ROOM_EXECUTION_REQUEST_v1 JSON
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  execute-authorized-descriptor:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'issue_comment' &&
+       contains(github.event.comment.body, 'AI_ROOM_EXECUTION_REQUEST_V1') &&
+       (github.event.comment.author_association == 'OWNER' ||
+        github.event.comment.author_association == 'MEMBER' ||
+        github.event.comment.author_association == 'COLLABORATOR'))
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out active transport implementation
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+          filter: blob:none
+          sparse-checkout: |
+            tools/ai-room-transport
+            .github/ai-toolset-transport
+          sparse-checkout-cone-mode: true
+          persist-credentials: false
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Parse bounded transport request
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REQUEST_JSON: ${{ inputs.request_json }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "issue_comment" ]; then
+            jq -r '.comment.body' "$GITHUB_EVENT_PATH" > "$RUNNER_TEMP/ai-room-comment-body.md"
+            node tools/ai-room-transport/transport-request-parser.v1.mjs \
+              --body-file "$RUNNER_TEMP/ai-room-comment-body.md" \
+              --output "$RUNNER_TEMP/ai-room-execution-request.json"
+          else
+            printf '%s' "$REQUEST_JSON" > "$RUNNER_TEMP/ai-room-request-input.json"
+            node tools/ai-room-transport/transport-request-parser.v1.mjs \
+              --json-file "$RUNNER_TEMP/ai-room-request-input.json" \
+              --output "$RUNNER_TEMP/ai-room-execution-request.json"
+          fi
+
+      - name: Build active closed-world registry
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const basePath='.github/ai-toolset-transport/authorized-toolset-registry.v1.json';
+          const extensionPath='.github/ai-toolset-transport/authorized-toolset-registry.audralia-execution-succession.v1.json';
+          const base=JSON.parse(fs.readFileSync(basePath,'utf8'));
+          const extension=JSON.parse(fs.readFileSync(extensionPath,'utf8'));
+          for(const registry of [base,extension]){
+            if(registry.schema!=='REPOSITORY_AUTHORIZED_TOOLSET_REGISTRY_v1')throw new Error('REGISTRY_SCHEMA_MISMATCH');
+            if(registry.status!=='ACTIVE_CERTIFIED'||registry.closedWorld!==true||registry.arbitraryCommandAccepted!==false||registry.movingToolingRefsAccepted!==false)throw new Error('REGISTRY_NOT_FAIL_CLOSED');
+            if(!Array.isArray(registry.tools)||registry.tools.length===0)throw new Error('REGISTRY_EMPTY');
+          }
+          const tools=[...base.tools,...extension.tools];
+          const ids=tools.map(tool=>tool.descriptorId);
+          if(new Set(ids).size!==ids.length)throw new Error('AUTHORIZED_TOOLSET_AMBIGUOUS');
+          const active={...base,registryId:'SMANSFIELD_AUTHORIZED_TOOLSET_REGISTRY_WITH_AUDRALIA_EXECUTION_SUCCESSION_V1',tools};
+          fs.writeFileSync(`${process.env.RUNNER_TEMP}/active-authorized-toolset-registry.json`,JSON.stringify(active,null,2)+'\n');
+          NODE
+
+      - name: Execute only the registered fixed command
+        id: dispatch
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          node tools/ai-room-transport/fixed-command-dispatcher.v1.mjs \
+            --root . \
+            --request "$RUNNER_TEMP/ai-room-execution-request.json" \
+            --registry "$RUNNER_TEMP/active-authorized-toolset-registry.json" \
+            --output "$RUNNER_TEMP/command-execution-receipt.json"
+          status=$?
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Require a command or fail-closed receipt
+        if: always()
+        run: |
+          set -euo pipefail
+          test -s "$RUNNER_TEMP/command-execution-receipt.json"
+          node -e "const fs=require('fs');const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/command-execution-receipt.json'));if(r.schema!=='COMMAND_EXECUTION_RECEIPT_v1')process.exit(1)"
+
+      - name: Materialize command payload receipt
+        if: always()
+        run: |
+          set -euo pipefail
+          mapfile -t payloads < <(find /tmp -maxdepth 2 -type f -path '/tmp/ai-room-tool-*/command-payload-receipt.json' -print)
+          if [ "${#payloads[@]}" -eq 1 ]; then
+            cp "${payloads[0]}" "$RUNNER_TEMP/command-payload-receipt.json"
+          elif [ "${#payloads[@]}" -gt 1 ]; then
+            printf 'AMBIGUOUS_COMMAND_PAYLOAD_RECEIPTS=%s\n' "${#payloads[@]}" >&2
+            exit 1
+          fi
+
+      - name: Upload returned command receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-room-command-execution-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/command-execution-receipt.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload returned command payload receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-room-command-payload-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/command-payload-receipt.json
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Return bounded receipt metadata to issue or pull request
+        if: always() && github.event_name == 'issue_comment'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = `${process.env.RUNNER_TEMP}/command-execution-receipt.json`;
+            const payloadPath = `${process.env.RUNNER_TEMP}/command-payload-receipt.json`;
+            let receipt;
+            try { receipt = JSON.parse(fs.readFileSync(path, 'utf8')); }
+            catch { receipt = { executionDisposition: 'COMMAND_NOT_EXECUTED_FAIL_CLOSED', errorCode: 'MISSING_COMMAND_RECEIPT' }; }
+            const lines = [
+              'AI_ROOM_EXECUTION_TRANSPORT_RETURN_v1',
+              '',
+              `executionDisposition = ${receipt.executionDisposition ?? 'UNKNOWN'}`,
+              `operationId = ${receipt.operationId ?? 'UNKNOWN'}`,
+              `descriptorId = ${receipt.descriptorId ?? 'UNKNOWN'}`,
+              `toolId = ${receipt.toolId ?? 'UNKNOWN'}`,
+              `exactToolingHead = ${receipt.exactToolingHead ?? 'UNKNOWN'}`,
+              `selectedBackend = ${receipt.selectedBackend ?? 'UNKNOWN'}`,
+              `toolingMaterializationMode = ${receipt.toolingMaterializationMode ?? 'UNKNOWN'}`,
+              `outputStreamingMode = ${receipt.outputStreamingMode ?? 'UNKNOWN'}`,
+              `errorCode = ${receipt.errorCode ?? 'NONE'}`,
+              `workflowRun = ${context.runId}`,
+              `artifactName = ai-room-command-execution-receipt-${context.runId}-${process.env.GITHUB_RUN_ATTEMPT}`,
+              `payloadArtifactName = ${fs.existsSync(payloadPath) ? `ai-room-command-payload-receipt-${context.runId}-${process.env.GITHUB_RUN_ATTEMPT}` : 'NONE'}`
+            ];
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: '```text\n' + lines.join('\n') + '\n```'
+            });
+
+      - name: Enforce dispatcher disposition
+        if: always()
+        env:
+          DISPATCH_STATUS: ${{ steps.dispatch.outputs.status }}
+        run: |
+          test "$DISPATCH_STATUS" = "0"

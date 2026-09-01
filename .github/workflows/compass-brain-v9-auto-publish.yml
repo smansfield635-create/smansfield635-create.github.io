@@ -1,0 +1,65 @@
+name: Compass Brain V9 Auto Publish
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/compass-brain-v9-auto-publish.yml','assets/compass/capability-object-stage.js','assets/compass/capability-object-brain-v9.js','inspection/compass/brain-v9/**','.github/ai-router/publication-surfaces/compass-brain-v9.json','tools/publication-live-verify.mjs']
+permissions: {contents: read, pages: write, id-token: write}
+concurrency: {group: pages-production, cancel-in-progress: false}
+jobs:
+  publish-brain-v9:
+    runs-on: ubuntu-latest
+    environment: {name: github-pages, url: '${{ steps.deploy.outputs.page_url }}'}
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ github.sha }}', fetch-depth: 1}
+      - name: Validate Brain V9 geometry G1 contract
+        id: contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          manifest='.github/ai-router/publication-surfaces/compass-brain-v9.json'
+          jq -e '.schema=="PUBLICATION_SURFACE_VERIFICATION_v1" and .surfaceId=="compass-brain-v9"' "$manifest" >/dev/null
+          grep -q 'COMPASS_BRAIN_V9_GEOMETRY_G1_v1' assets/compass/capability-object-brain-v9.js
+          grep -q 'G1_GROSS_PROPORTION_AND_CLOSURE' assets/compass/capability-object-brain-v9.js
+          grep -q 'CAPABILITY_OBJECT_STAGE_v2' assets/compass/capability-object-stage.js
+          echo "manifest=$manifest" >> "$GITHUB_OUTPUT"
+          echo "runtime=true" >> "$GITHUB_OUTPUT"
+      - name: Build bounded Pages payload with existing live continuity
+        env: {TARGET_SHA: '${{ github.sha }}', MANIFEST: '${{ steps.contract.outputs.manifest }}', STAGE: '${{ runner.temp }}/pages-site', INSPECTION_SHA: '1d45379f81ea4089e9c5f3d7d9688e702be9add3', INSPECTION_ROOT: '${{ runner.temp }}/pages-site/inspection/h-earth/24056'}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf "$STAGE"; mkdir -p "$STAGE"
+          rsync -a --prune-empty-dirs --exclude='.git/' --exclude='.github/' --exclude='preview/' --exclude='h-earth-live-6d18e158/' ./ "$STAGE/"
+          rm -rf "$STAGE/showroom/globe/h-earth"; mkdir -p "$STAGE/showroom/globe/h-earth"
+          rsync -a --delete h-earth-live-6d18e158/showroom/globe/h-earth/ "$STAGE/showroom/globe/h-earth/"
+          audralia_renderer_src='showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs'; audralia_runtime_dir="$STAGE/showroom/globe/audralia/runtime-dependencies"; audralia_app="$STAGE/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs"
+          test -f "$audralia_renderer_src"; test -f "$audralia_app"; mkdir -p "$audralia_runtime_dir"; cp "$audralia_renderer_src" "$audralia_runtime_dir/renderer.mjs"
+          python3 - "$audralia_app" <<'PY'
+from pathlib import Path
+import sys
+p=Path(sys.argv[1]); t=p.read_text(); old='../../h-earth/terrain-estate-construction-v1/renderer.mjs'; new='../runtime-dependencies/renderer.mjs'
+if old in t:p.write_text(t.replace(old,new))
+PY
+          git fetch --no-tags --depth=1 origin "$INSPECTION_SHA"; rm -rf "$INSPECTION_ROOT"; mkdir -p "$INSPECTION_ROOT"; git archive "$INSPECTION_SHA" showroom/globe/audralia showroom/globe/h-earth h-earth-3d | tar -x -C "$INSPECTION_ROOT"
+          mkdir -p "$STAGE/.well-known"; jq -n --arg commit "$TARGET_SHA" '{schema:"DGB_OBJECT_INSPECTION_RELEASE_v1",commit:$commit,surface:"compass-brain-v9"}' > "$STAGE/.well-known/dgb-release.json"
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with: {path: '${{ runner.temp }}/pages-site'}
+      - name: Deploy exact geometry G1 artifact
+        id: deploy
+        uses: actions/deploy-pages@v4
+      - name: Verify public geometry G1 bytes
+        env: {PAGE_URL: '${{ steps.deploy.outputs.page_url }}', MANIFEST: '${{ steps.contract.outputs.manifest }}', TARGET_SHA: '${{ github.sha }}'}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 30); do marker="$(curl --fail --silent -L "${PAGE_URL%/}/.well-known/dgb-release.json" 2>/dev/null || true)"; observed="$(printf '%s' "$marker"|jq -r '.commit//empty' 2>/dev/null||true)"; if [ "$observed" = "$TARGET_SHA" ]; then node tools/publication-live-verify.mjs static "$PAGE_URL" "$MANIFEST"; exit 0; fi; sleep 10; done; exit 1
+      - uses: browser-actions/setup-chrome@v1
+        with: {chrome-version: stable}
+      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Verify live geometry G1 runtime
+        env: {PAGE_URL: '${{ steps.deploy.outputs.page_url }}', MANIFEST: '${{ steps.contract.outputs.manifest }}'}
+        shell: bash
+        run: |
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"; node tools/publication-live-verify.mjs runtime "$PAGE_URL" "$MANIFEST"

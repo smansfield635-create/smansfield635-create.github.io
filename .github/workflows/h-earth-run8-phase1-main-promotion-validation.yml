@@ -1,12 +1,15 @@
 name: H-Earth Run 8 Phase 1 Main Promotion Validation
 
+# Historical validator for PR #197 / the completed Run 8 Phase 1 reconciliation.
+# The durable promotion evidence is frozen to the ordered main graph that existed
+# when that reconciliation was executed. Later H-Earth work must not be judged
+# against that historical main tip or six-path reconciliation scope.
 on:
   pull_request:
     paths:
       - '.github/workflows/h-earth-run8-phase1-main-promotion-validation.yml'
       - 'h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js'
       - 'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8-phase1-main-promotion-scope.js'
-      - 'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
       - 'h-earth-3d/validation/h-earth.run8.phase1-main-promotion.harness.mjs'
       - 'h-earth-3d/validation/h-earth.run8.phase1-main-promotion.receipt.json'
   workflow_dispatch:
@@ -16,6 +19,12 @@ permissions:
 
 jobs:
   validate-run8-phase1-main-promotion:
+    # This proof belongs only to the original reconciliation branch. The shared
+    # repository-registry loader is intentionally not a trigger: later overlays
+    # may change that loader without reopening this completed historical proof.
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.head_ref == 'agent/h-earth-run8-phase1-main-promotion-reconciliation-001'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:

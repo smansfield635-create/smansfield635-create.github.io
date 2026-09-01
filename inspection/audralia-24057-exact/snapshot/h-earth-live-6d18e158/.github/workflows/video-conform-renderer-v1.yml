@@ -1,0 +1,138 @@
+name: Remote Video Conform Renderer v1
+
+on:
+  pull_request:
+    paths:
+      - '.github/ai-router/video-conform/**'
+      - 'tools/video-conform/video-conform-renderer.v1.mjs'
+      - '.github/workflows/video-conform-renderer-v1.yml'
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+  actions: read
+
+jobs:
+  validate-renderer:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install ffmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
+      - name: Validate protocol, registry and renderer syntax
+        run: |
+          set -euo pipefail
+          node --check tools/video-conform/video-conform-renderer.v1.mjs
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const p=JSON.parse(fs.readFileSync('.github/ai-router/video-conform/protocol.v1.json'));
+          const r=JSON.parse(fs.readFileSync('.github/ai-router/video-conform/source-registry.v1.json'));
+          if(p.schema!=='REMOTE_VIDEO_CONFORM_PROTOCOL_v1'||p.invocationMarker!=='VIDEO_CONFORM_REQUEST_V1') throw new Error('PROTOCOL_INVALID');
+          if(p.authority.repositoryWriteAuthority||p.authority.mergeAuthority||p.authority.deploymentAuthority) throw new Error('AUTHORITY_INFLATION');
+          if(r.schema!=='REMOTE_VIDEO_SOURCE_REGISTRY_v1'||!Array.isArray(r.sources)) throw new Error('REGISTRY_INVALID');
+          if(new Set(r.sources.map(x=>x.sourceId)).size!==r.sources.length) throw new Error('DUPLICATE_SOURCE_ID');
+          NODE
+      - name: Run binary renderer self-test
+        run: node tools/video-conform/video-conform-renderer.v1.mjs --self-test > "$RUNNER_TEMP/video-conform-self-test.json"
+      - name: Upload self-test receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: video-conform-renderer-self-test-${{ github.event.pull_request.head.sha }}
+          path: ${{ runner.temp }}/video-conform-self-test.json
+          if-no-files-found: error
+
+  render:
+    if: >-
+      github.event_name == 'issue_comment' &&
+      startsWith(github.event.comment.body, 'VIDEO_CONFORM_REQUEST_V1') &&
+      (github.event.comment.author_association == 'OWNER' ||
+       github.event.comment.author_association == 'MEMBER' ||
+       github.event.comment.author_association == 'COLLABORATOR')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install ffmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
+      - name: Parse closed video conform request
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const marker='VIDEO_CONFORM_REQUEST_V1', body=process.env.COMMENT_BODY??'';
+          if(!body.startsWith(marker)) throw new Error('REQUEST_MARKER_MISMATCH');
+          const tail=body.slice(marker.length), a=tail.indexOf('{'), z=tail.lastIndexOf('}');
+          if(a<0||z<a) throw new Error('REQUEST_JSON_NOT_FOUND');
+          const r=JSON.parse(tail.slice(a,z+1));
+          if(r.schema!=='VIDEO_CONFORM_REQUEST_v1') throw new Error('REQUEST_SCHEMA_INVALID');
+          if(!/^[0-9a-f]{40}$/.test(r.executionHead??'')) throw new Error('EXECUTION_HEAD_INVALID');
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/video-conform-request.json',JSON.stringify(r,null,2)+'\n');
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/expected-head.txt',r.executionHead+'\n');
+          NODE
+          test "$(git rev-parse HEAD^{commit})" = "$(cat "$RUNNER_TEMP/expected-head.txt")"
+      - name: Execute remote conform
+        id: render
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          mkdir -p "$RUNNER_TEMP/video-conform-output"
+          node tools/video-conform/video-conform-renderer.v1.mjs \
+            --request "$RUNNER_TEMP/video-conform-request.json" \
+            --registry .github/ai-router/video-conform/source-registry.v1.json \
+            --output-dir "$RUNNER_TEMP/video-conform-output" \
+            --receipt "$RUNNER_TEMP/video-conform-receipt.json"
+          echo "status=$?" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Upload render package
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: video-conform-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/video-conform-request.json
+            ${{ runner.temp }}/video-conform-receipt.json
+            ${{ runner.temp }}/video-conform-output/*.mp4
+            ${{ runner.temp }}/video-conform-output/*.jpg
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Post compact execution receipt
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          node --input-type=module <<'NODE' > "$RUNNER_TEMP/comment.md"
+          import fs from 'node:fs';
+          const p=process.env.RUNNER_TEMP+'/video-conform-receipt.json';
+          const r=fs.existsSync(p)?JSON.parse(fs.readFileSync(p,'utf8')):{schema:'VIDEO_CONFORM_RENDER_RECEIPT_v1',result:'FAIL_CLOSED',error:'RECEIPT_MISSING'};
+          console.log(`VIDEO_CONFORM_EXECUTION_RECEIPT_V1\n\nResult: **${r.result}**\nRequest: \`${r.requestId??'UNKNOWN'}\`\nRun: \`${process.env.RUN_ID}\`\nOutput: \`${r.output??'NONE'}\`\nSHA-256: \`${r.qualification?.sha256??'NONE'}\`\nError: \`${r.error??'NONE'}\`\n\nNo merge, deployment, product mutation, or owner acceptance authority is created by this receipt.`);
+          NODE
+          gh api "repos/${REPOSITORY}/issues/${ISSUE_NUMBER}/comments" -f body="$(cat "$RUNNER_TEMP/comment.md")"
+      - name: Preserve fail-closed disposition
+        if: always()
+        env:
+          STATUS: ${{ steps.render.outputs.status }}
+        run: test "$STATUS" = "0"

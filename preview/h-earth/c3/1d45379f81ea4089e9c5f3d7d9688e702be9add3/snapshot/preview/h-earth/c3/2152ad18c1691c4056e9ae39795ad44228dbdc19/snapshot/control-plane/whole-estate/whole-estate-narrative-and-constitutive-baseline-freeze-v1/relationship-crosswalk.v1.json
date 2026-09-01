@@ -1,0 +1,86 @@
+{
+  "schema": "WHOLE_ESTATE_RELATIONSHIP_CROSSWALK_v1",
+  "status": "CHECKPOINT_1_CONSTRUCTION_CANDIDATE",
+  "relationships": [
+    {
+      "object":"COMPASS",
+      "primaryRole":"ORIENTATION",
+      "owns":"estate orientation, plural entry, return context, route choice",
+      "receivesFrom":["ALL_ESTATE_CAPACITIES"],
+      "sendsTo":["REALITY","LAWS","UCIC","IMI","COHERENCE_DIAGNOSTIC","FRONTIER","PRODUCTS","WORLDS","CHARACTERS","PROVENANCE"],
+      "mustNot":"claim that one room contains the whole estate"
+    },
+    {
+      "object":"REALITY",
+      "primaryRole":"EPISTEMIC_LAW",
+      "owns":"answerability, evidence-versus-interpretation distinction, uncertainty and limits",
+      "mustNot":"declare UCIC established by framing or terminology"
+    },
+    {
+      "object":"LAWS",
+      "primaryRole":"EPISTEMIC_LAW",
+      "owns":"constraints, doctrine, admissibility, FIRST authority structure, tests and claim boundaries",
+      "mustNot":"absorb complete applied study ownership from Frontier or turn Research into a seventh FIRST authority"
+    },
+    {
+      "object":"UCIC",
+      "primaryRole":"FOUNDATION",
+      "scientificObject":"INVARIANT_CANDIDATE",
+      "owns":"fixed falsifiable candidate concerning constitutive relational coherence and identity continuity",
+      "inputs":["REALITY","LAWS","METHODS","EVIDENCE"],
+      "outputs":["TESTABLE_RELATIONAL_PROPOSITIONS","CONSTRAINTS_FOR_MEASUREMENT_AND_COMPARISON"],
+      "mustNot":"be described as a proven universal law or made true by definition of IMI"
+    },
+    {
+      "object":"IMI",
+      "primaryRole":"MEASUREMENT",
+      "scientificObject":"INSTRUMENT",
+      "owns":"observer-grade measurement under declared boundaries, factor/source rules and route profiles",
+      "inputs":["UCIC_CANDIDATE_STRUCTURE","METHODS","ADMISSIBLE_EVIDENCE"],
+      "outputs":["MEASUREMENT_STATE","DIAGNOSTIC_OBSERVATIONS"],
+      "mustNot":"be conflated with UCIC, a model, a comparator, or a universal multiplicative product"
+    },
+    {
+      "object":"METHODS_MODELS",
+      "primaryRole":"EPISTEMIC_LAW",
+      "adjacentRoles":["PROVENANCE"],
+      "owns":"executable comparison under controlled changes in relation, support, method, model and evidence",
+      "dependsOn":["UCIC","IMI","REALITY","LAWS"],
+      "sendsTo":["FRONTIER","RECEIPTS","RESEARCH_RECORDS"],
+      "mustNot":"become the homepage, the entire research record, the personal Diagnostic, the full Frontier study archive, or the sole explanation of coherence"
+    },
+    {
+      "object":"COHERENCE_DIAGNOSTIC",
+      "primaryRole":"DIAGNOSIS",
+      "owns":"private bounded structured reflection on organization, pressure response, alignment and fragmentation",
+      "mustNot":"be presented as medical diagnosis, legal determination, employment screening, IQ testing, or evidence that UCIC is universally true"
+    },
+    {
+      "object":"FRONTIER",
+      "primaryRole":"APPLICATION",
+      "owns":"complete applied investigations, experiments, prototypes, technical possibilities, unresolved problems and domain work",
+      "mustNot":"silently upgrade a bounded study to a universal scientific claim"
+    },
+    {
+      "object":"PRODUCTS",
+      "primaryRole":"IMPLEMENTATION",
+      "owns":"usable tools, systems and public value",
+      "mustNot":"treat product utility, sales, adoption or successful operation as scientific confirmation of UCIC"
+    },
+    {
+      "object":"WORLDS_CHARACTERS_CAMPAIGNS",
+      "primaryRole":"IMPLEMENTATION",
+      "owns":"experiential, narrative, place-based and public-action routes",
+      "mustNot":"be reduced to decorative wrappers around a scientific paper or be treated as scientific evidence merely because they embody project ideas"
+    },
+    {
+      "object":"RESEARCH_PROVENANCE",
+      "primaryRole":"PROVENANCE",
+      "owns":"sources, methods, versions, receipts, negative and mixed findings, execution records, hashes, claim ceilings and falsifiers",
+      "mustNot":"treat execution success, CI success or provenance completeness as scientific truth"
+    }
+  ],
+  "supportSubstitutionRule":"NO_SUCCESSFUL_ROOM_MAY_COMPENSATE_FOR_LOSS_OF_AN_IDENTITY_REQUIRED_CAPACITY_IN_ANOTHER_ROOM",
+  "directEntryAllowed":true,
+  "publicMutationAuthorized":false
+}

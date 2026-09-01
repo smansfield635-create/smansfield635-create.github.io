@@ -1,0 +1,721 @@
+<!-- /products/archcoin/contract/governance/index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+  <title>ARCHCOIN — Contract Governance</title>
+  <meta
+    name="description"
+    content="Contract Governance defines authority, approval, audit, and control boundaries for the agreement layer inside ARCHCOIN."
+  >
+  <style>
+    :root {
+      --page-bg-0: #030814;
+      --page-bg-1: #071322;
+      --page-bg-2: #0c1d31;
+
+      --line-soft: rgba(173, 206, 236, 0.10);
+      --line: rgba(173, 206, 236, 0.18);
+      --line-strong: rgba(173, 206, 236, 0.32);
+      --line-gold: rgba(242, 202, 141, 0.34);
+
+      --text: rgba(245, 248, 252, 0.97);
+      --text-soft: rgba(223, 232, 241, 0.84);
+      --text-muted: rgba(189, 203, 217, 0.66);
+
+      --contract: #cddcff;
+      --gold: #f2ca8d;
+      --focus: #f3d39b;
+
+      --shadow-xl: 0 34px 90px rgba(0, 0, 0, 0.42);
+      --shadow-lg: 0 18px 46px rgba(0, 0, 0, 0.30);
+      --shadow-md: 0 10px 24px rgba(0, 0, 0, 0.22);
+
+      --radius-xl: 32px;
+      --radius-md: 18px;
+
+      --max-width: 1220px;
+      --copy-width: 72ch;
+
+      --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background:
+        radial-gradient(
+          circle at 50% 0%,
+          rgba(36, 76, 123, 0.22),
+          transparent 36%
+        ),
+        linear-gradient(
+          180deg,
+          #020712 0%,
+          #04101d 36%,
+          #030814 100%
+        );
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100%;
+      margin: 0;
+      color: var(--text);
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      background:
+        radial-gradient(
+          circle at 16% 10%,
+          rgba(124, 174, 255, 0.10),
+          transparent 22%
+        ),
+        radial-gradient(
+          circle at 84% 16%,
+          rgba(242, 202, 141, 0.08),
+          transparent 24%
+        ),
+        radial-gradient(
+          circle at 50% 42%,
+          rgba(173, 206, 236, 0.05),
+          transparent 28%
+        );
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    a,
+    summary {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button:focus-visible,
+    a:focus-visible,
+    summary:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 4px;
+    }
+
+    .contract-room-page {
+      min-height: 100vh;
+      padding: clamp(18px, 3vw, 40px) clamp(12px, 2vw, 26px) clamp(42px, 5vw, 72px);
+    }
+
+    .contract-room-shell {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+      display: grid;
+      gap: 24px;
+    }
+
+    .contract-room-hero,
+    .contract-room-summary,
+    .contract-room-frames,
+    .contract-room-navigation,
+    .contract-room-close {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.025),
+          rgba(255, 255, 255, 0.008)
+        ),
+        linear-gradient(
+          135deg,
+          rgba(12, 27, 45, 0.96),
+          rgba(8, 19, 31, 0.94)
+        );
+      box-shadow:
+        var(--shadow-xl),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .contract-room-hero::before,
+    .contract-room-summary::before,
+    .contract-room-frames::before,
+    .contract-room-navigation::before,
+    .contract-room-close::before {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.045);
+      border-radius: calc(var(--radius-xl) - 12px);
+      pointer-events: none;
+    }
+
+    .contract-room-hero {
+      padding: clamp(26px, 4vw, 44px);
+      display: grid;
+      gap: 20px;
+    }
+
+    .contract-room-hero__kicker,
+    .contract-room-summary__kicker,
+    .contract-room-frames__kicker,
+    .contract-room-navigation__kicker,
+    .contract-room-close__kicker {
+      margin: 0;
+      color: var(--text-soft);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .contract-room-hero__heading {
+      display: grid;
+      gap: 12px;
+      max-width: 900px;
+    }
+
+    .contract-room-hero h1,
+    .contract-room-summary h2,
+    .contract-room-frames h2,
+    .contract-room-navigation h2,
+    .contract-room-close h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 700;
+      line-height: 0.96;
+      letter-spacing: -0.04em;
+      color: rgba(249, 251, 253, 0.98);
+      text-wrap: balance;
+    }
+
+    .contract-room-hero h1 {
+      max-width: 12ch;
+      font-size: clamp(3rem, 8vw, 6.1rem);
+    }
+
+    .contract-room-summary h2,
+    .contract-room-frames h2,
+    .contract-room-navigation h2,
+    .contract-room-close h2 {
+      font-size: clamp(1.8rem, 3.7vw, 3rem);
+    }
+
+    .contract-room-hero__lead,
+    .contract-room-summary p,
+    .contract-room-frame p,
+    .contract-room-navigation p,
+    .contract-room-close p {
+      margin: 0;
+      color: var(--text-soft);
+      line-height: 1.6;
+    }
+
+    .contract-room-hero__lead {
+      max-width: var(--copy-width);
+      font-size: clamp(1.08rem, 2.2vw, 1.42rem);
+    }
+
+    .contract-room-hero__accent {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      width: fit-content;
+      padding: 10px 16px;
+      border: 1px solid var(--line-gold);
+      border-radius: 999px;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(242, 202, 141, 0.10),
+          rgba(242, 202, 141, 0.04)
+        );
+      color: rgba(250, 243, 232, 0.94);
+      font-size: 0.94rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-md);
+    }
+
+    .contract-room-summary {
+      padding: clamp(22px, 3vw, 30px);
+      display: grid;
+      gap: 12px;
+    }
+
+    .contract-room-frames {
+      padding: clamp(22px, 3vw, 30px);
+      display: grid;
+      gap: 18px;
+    }
+
+    .contract-room-frames__grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .contract-room-frame {
+      position: relative;
+      min-height: 100%;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.006)
+        ),
+        rgba(9, 19, 31, 0.68);
+      box-shadow:
+        var(--shadow-md),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    .contract-room-frame__label {
+      margin: 0 0 10px 0;
+      color: rgba(247, 249, 252, 0.98);
+      font-size: 1.02rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .contract-room-navigation {
+      padding: clamp(22px, 3vw, 30px);
+      display: grid;
+      gap: 18px;
+    }
+
+    .contract-room-navigation__grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .contract-room-link {
+      position: relative;
+      display: grid;
+      gap: 8px;
+      min-height: 100%;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.006)
+        ),
+        rgba(9, 19, 31, 0.70);
+      box-shadow:
+        var(--shadow-md),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      transition:
+        transform 180ms var(--ease),
+        border-color 180ms var(--ease),
+        background 180ms var(--ease),
+        box-shadow 180ms var(--ease);
+    }
+
+    .contract-room-link:hover,
+    .contract-room-link:focus-visible {
+      transform: translateY(-2px);
+      border-color: var(--line-strong);
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.03),
+          rgba(255, 255, 255, 0.01)
+        ),
+        rgba(12, 24, 39, 0.84);
+      box-shadow:
+        0 18px 34px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .contract-room-link--active {
+      border-color: color-mix(in srgb, var(--contract) 48%, transparent);
+      background:
+        linear-gradient(
+          135deg,
+          rgba(205, 220, 255, 0.08),
+          rgba(205, 220, 255, 0.02)
+        ),
+        rgba(10, 23, 38, 0.86);
+    }
+
+    .contract-room-link__eyebrow {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .contract-room-link__title {
+      margin: 0;
+      color: rgba(248, 250, 253, 0.98);
+      font-size: 1.08rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .contract-room-link__body {
+      margin: 0;
+      color: var(--text-soft);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .contract-room-close {
+      padding: clamp(22px, 3vw, 28px);
+      display: grid;
+      gap: 16px;
+    }
+
+    .contract-room-close__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .contract-room-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 180px;
+      min-height: 56px;
+      padding: 12px 20px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      transition:
+        transform 180ms var(--ease),
+        border-color 180ms var(--ease),
+        background 180ms var(--ease),
+        box-shadow 180ms var(--ease);
+    }
+
+    .contract-room-button:hover,
+    .contract-room-button:focus-visible {
+      transform: translateY(-1px);
+      border-color: var(--line-strong);
+    }
+
+    .contract-room-button--primary {
+      border-color: rgba(242, 202, 141, 0.34);
+      background:
+        linear-gradient(
+          135deg,
+          rgba(242, 202, 141, 0.16),
+          rgba(242, 202, 141, 0.07)
+        ),
+        rgba(22, 21, 18, 0.14);
+      color: rgba(250, 243, 232, 0.97);
+      box-shadow:
+        var(--shadow-md),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .contract-room-button--secondary {
+      background:
+        linear-gradient(
+          135deg,
+          rgba(10, 20, 32, 0.94),
+          rgba(10, 20, 32, 0.88)
+        );
+      color: var(--text-soft);
+      box-shadow:
+        var(--shadow-md),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    @media (max-width: 900px) {
+      .contract-room-frames__grid,
+      .contract-room-navigation__grid {
+        grid-template-columns: 1fr;
+      }
+
+      .contract-room-hero h1 {
+        max-width: 12ch;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .contract-room-page {
+        padding: 14px 10px 30px;
+      }
+
+      .contract-room-shell {
+        gap: 18px;
+      }
+
+      .contract-room-hero,
+      .contract-room-summary,
+      .contract-room-frames,
+      .contract-room-navigation,
+      .contract-room-close {
+        border-radius: 24px;
+      }
+
+      .contract-room-hero,
+      .contract-room-summary,
+      .contract-room-frames,
+      .contract-room-navigation,
+      .contract-room-close {
+        padding: 18px;
+      }
+
+      .contract-room-hero::before,
+      .contract-room-summary::before,
+      .contract-room-frames::before,
+      .contract-room-navigation::before,
+      .contract-room-close::before {
+        inset: 10px;
+      }
+
+      .contract-room-hero h1 {
+        font-size: clamp(2.4rem, 11vw, 4.5rem);
+      }
+
+      .contract-room-hero__lead {
+        font-size: 1rem;
+      }
+
+      .contract-room-close__actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .contract-room-button {
+        width: 100%;
+        min-width: 0;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="contract-room-page">
+    <section class="contract-room-shell">
+      <header class="contract-room-hero">
+        <p class="contract-room-hero__kicker">
+          ARCHCOIN / Contract / Governance
+        </p>
+
+        <div class="contract-room-hero__heading">
+          <h1>
+            Contract governance determines who may move the agreement layer at all.
+          </h1>
+
+          <p class="contract-room-hero__lead">
+            A contract can be clear, encoded, and beautifully surfaced, yet still become unstable if authority is ambiguous. Contract Governance is the room for approval boundaries, interpretation rights, audit expectations, exception handling, and the control logic that decides who may change, override, or certify the agreement layer inside ARCHCOIN.
+          </p>
+        </div>
+
+        <div class="contract-room-hero__accent">
+          Governance is the difference between a valid change and a dangerous one.
+        </div>
+      </header>
+
+      <section class="contract-room-summary" aria-labelledby="contract-governance-summary-title">
+        <p class="contract-room-summary__kicker">
+          Room Summary
+        </p>
+
+        <h2 id="contract-governance-summary-title">
+          What this room is for
+        </h2>
+
+        <p>
+          This room exists to define authority over the agreement layer. It answers who may interpret contract meaning, who may authorize structural change, who must verify correctness, and how exceptions are handled without corrupting the underlying relationship. If Contract Platform asks how agreement appears on the surface, Contract Governance asks who has the right to shape that surface in the first place.
+        </p>
+      </section>
+
+      <section class="contract-room-frames" aria-labelledby="contract-governance-frames-title">
+        <p class="contract-room-frames__kicker">
+          Three governance duties
+        </p>
+
+        <h2 id="contract-governance-frames-title">
+          The agreement layer requires authority, audit, and bounded change
+        </h2>
+
+        <div class="contract-room-frames__grid">
+          <article class="contract-room-frame">
+            <h3 class="contract-room-frame__label">
+              Define who may decide
+            </h3>
+
+            <p>
+              Governance identifies which actor or body may approve, reject, interpret, or amend contract logic so that control is explicit rather than assumed.
+            </p>
+          </article>
+
+          <article class="contract-room-frame">
+            <h3 class="contract-room-frame__label">
+              Preserve verification and audit
+            </h3>
+
+            <p>
+              Every meaningful contract change needs a traceable path: what changed, who authorized it, who verified it, and what downstream surfaces were affected.
+            </p>
+          </article>
+
+          <article class="contract-room-frame">
+            <h3 class="contract-room-frame__label">
+              Bound exceptions without collapse
+            </h3>
+
+            <p>
+              Governance does not eliminate exceptions. It ensures they are handled through controlled pathways rather than informal drift that weakens the agreement layer.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="contract-room-navigation" aria-labelledby="contract-governance-navigation-title">
+        <p class="contract-room-navigation__kicker">
+          Contract cluster
+        </p>
+
+        <h2 id="contract-governance-navigation-title">
+          Continue through the contract rooms
+        </h2>
+
+        <p>
+          Governance closes the contract cluster by defining authority over meaning, implementation, and surface behavior. The adjacent rooms frame that same agreement layer from strategic, technical, and platform perspectives.
+        </p>
+
+        <div class="contract-room-navigation__grid">
+          <a
+            class="contract-room-link"
+            href="/products/archcoin/contract/overview/"
+          >
+            <p class="contract-room-link__eyebrow">
+              Adjacent room
+            </p>
+            <h3 class="contract-room-link__title">
+              Contract Overview
+            </h3>
+            <p class="contract-room-link__body">
+              Establish the agreement layer at the strategic level before examining who governs it.
+            </p>
+          </a>
+
+          <a
+            class="contract-room-link"
+            href="/products/archcoin/contract/engineering/"
+          >
+            <p class="contract-room-link__eyebrow">
+              Adjacent room
+            </p>
+            <h3 class="contract-room-link__title">
+              Contract Engineering
+            </h3>
+            <p class="contract-room-link__body">
+              Examine how agreement logic becomes enforceable structure, validation, and exact system behavior.
+            </p>
+          </a>
+
+          <a
+            class="contract-room-link"
+            href="/products/archcoin/contract/platform/"
+          >
+            <p class="contract-room-link__eyebrow">
+              Adjacent room
+            </p>
+            <h3 class="contract-room-link__title">
+              Contract Platform
+            </h3>
+            <p class="contract-room-link__body">
+              See how the agreement layer appears across the visible product surface and operational workflows.
+            </p>
+          </a>
+
+          <a
+            class="contract-room-link contract-room-link--active"
+            href="/products/archcoin/contract/governance/"
+            aria-current="page"
+          >
+            <p class="contract-room-link__eyebrow">
+              Current room
+            </p>
+            <h3 class="contract-room-link__title">
+              Contract Governance
+            </h3>
+            <p class="contract-room-link__body">
+              Define who may authorize, review, constrain, or audit movement in the agreement layer.
+            </p>
+          </a>
+        </div>
+      </section>
+
+      <section class="contract-room-close" aria-labelledby="contract-governance-close-title">
+        <p class="contract-room-close__kicker">
+          Handoff
+        </p>
+
+        <h2 id="contract-governance-close-title">
+          Move across the cluster or return upward
+        </h2>
+
+        <p>
+          Use this room when the contract question has become an authority question. Reopen the ARCHCOIN constellation, jump back to Compass Home, or move sideways through the contract cluster to inspect the adjacent layers again.
+        </p>
+
+        <div class="contract-room-close__actions">
+          <a
+            class="contract-room-button contract-room-button--primary"
+            href="/products/archcoin/"
+          >
+            Return to ARCHCOIN
+          </a>
+
+          <a
+            class="contract-room-button contract-room-button--secondary"
+            href="/"
+          >
+            Compass Home
+          </a>
+        </div>
+      </section>
+    </section>
+  </main>
+</body>
+</html>

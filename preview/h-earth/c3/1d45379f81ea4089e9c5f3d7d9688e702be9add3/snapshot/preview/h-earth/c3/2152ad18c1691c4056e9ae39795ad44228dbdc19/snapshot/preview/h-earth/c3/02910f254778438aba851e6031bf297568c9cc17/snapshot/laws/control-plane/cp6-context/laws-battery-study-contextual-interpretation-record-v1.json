@@ -1,0 +1,294 @@
+{
+  "contract": "LAWS_BATTERY_STUDY_CONTEXTUAL_INTERPRETATION_RECORD_v1",
+  "mode": "NON_PRODUCT_CONTENT_AUTHORITY",
+  "checkpoint": "CHECKPOINT_6_LAWS_CHAMBER_RENEWAL",
+  "status": "SOURCE_CONFIRMED_AND_CLAIM_BOUND",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "rollback_baseline_commit": "b1b92311ef0ef0ab1ab930407f7e26cbacbe6343",
+  "study_identity": {
+    "study_id": "BATTERY_COHERENCE_HELDOUT_STUDY_v1",
+    "public_name": "Battery held-out degradation study",
+    "practical_problem": "Determine whether cycle-level battery records contain warning information that distinguishes batteries approaching a retained-capacity event early enough to support future inspection or intervention research.",
+    "system_examined": "Research battery cells evaluated through cycle-level records.",
+    "current_frontier_route": "/explore/frontier/energy/",
+    "complete_frontier_record_link": "/frontier/energy/battery-coherence-study/",
+    "primary_future_frontier_domain": "FRONTIER_POWER_ENERGY",
+    "supporting_laboratories": [
+      "FRONTIER_MODELING_FORECASTING_RISK",
+      "FRONTIER_SENSORS_MONITORING_HUMAN_FACTORS"
+    ]
+  },
+  "source_custody": {
+    "public_controlling_source_status": "CONFIRMED_AT_FROZEN_MAIN_HEAD",
+    "origin_commit": "49a11c15780ebe3404947c8eccbdd537f056e37a",
+    "current_main_head": "b1b92311ef0ef0ab1ab930407f7e26cbacbe6343",
+    "sources": [
+      {
+        "role": "STRUCTURED_PUBLIC_EVIDENCE_AUTHORITY",
+        "path": "assets/evidence/battery-coherence-heldout-study-v1.js",
+        "blob_sha": "bdcfef012c1c0f23485030339555ca46c9d6b776"
+      },
+      {
+        "role": "COMPLETE_FRONTIER_STUDY_SURFACE",
+        "path": "frontier/energy/battery-coherence-study/index.html",
+        "blob_sha": "c757267b3380623f9931232223458c49e343ee05"
+      },
+      {
+        "role": "CURRENT_LAWS_SIGNIFICANCE_SURFACE",
+        "path": "laws/battery-heldout-study/index.html",
+        "blob_sha": "ae9a001ae6bdd9383e8f213e2caea977fc1d6d1e"
+      },
+      {
+        "role": "CURRENT_SCIENTIFIC_POSITION_SURFACE",
+        "path": "laws/scientific-law/battery-heldout-study/index.html",
+        "blob_sha": "2863c3931ff2b26b27f4691d0700b733a4683c35"
+      },
+      {
+        "role": "CURRENT_REALITY_EVIDENCE_SURFACE",
+        "path": "laws/categories/reality/battery-heldout-study/index.html",
+        "blob_sha": "fa89e5786cbfeca2740d2973bac3e5ea5e65cba8"
+      }
+    ],
+    "underlying_execution_artifact_statement": "Drive-backed cross-domain study controls and battery execution artifacts",
+    "underlying_raw_artifact_review_in_this_operation": "NOT_REOPENED",
+    "publication_rule": "Quantitative statements may be derived from the pinned structured public evidence authority. Dataset-level provenance or equations not present there may not be invented or implied."
+  },
+  "data_and_observation_units": {
+    "evaluation_design": "CELL_DISJOINT_HELD_OUT",
+    "held_out_cells": [
+      "CS2_34",
+      "CS2_36",
+      "CS2_38"
+    ],
+    "held_out_cell_count": 3,
+    "final_test_record_count": 1653,
+    "record_unit": "CYCLE_LEVEL_EVALUATION_RECORD",
+    "target_event": "CROSS_BELOW_80_PERCENT_RETAINED_CAPACITY",
+    "warning_horizon_cycles": 20,
+    "evidence_window": "1,653 cycle-level held-out records from three cells excluded from development; no calendar-date window is stated in the pinned public source."
+  },
+  "exclusions_and_missing_evidence": {
+    "explicit_exclusions": [
+      "Development data and final evaluation were separated by complete battery cell.",
+      "The final-test inference is limited to CS2_34, CS2_36, and CS2_38.",
+      "Other battery chemistries were not established as tested by the pinned public source.",
+      "Consumer-phone usage data were not the study data.",
+      "Critical-system deployment was not tested or validated."
+    ],
+    "missing_or_required_evidence": [
+      "Cycle-number control",
+      "Cumulative-throughput control",
+      "Current-capacity control",
+      "Recent-degradation-slope control",
+      "Burden ablation",
+      "Raw-plus-axes incremental comparison",
+      "Cell-family and chemistry transfer",
+      "External dataset replication",
+      "Threshold recalibration without test leakage",
+      "Preregistered replication",
+      "Operational false-positive and false-negative analysis",
+      "Chemistry, load, temperature, and duty-cycle validation for any deployment setting"
+    ]
+  },
+  "variables": {
+    "direct_or_raw_inputs": "Direct physical battery measurements are referenced, but their full field-level data dictionary is not reproduced in the pinned public source.",
+    "derived_representations": [
+      "B",
+      "P",
+      "E",
+      "I",
+      "V"
+    ],
+    "evaluated_components": [
+      "Combined axis logistic model",
+      "Burden",
+      "H*",
+      "Weakest-axis risk",
+      "Hard MQ conjunction",
+      "Raw physical baseline",
+      "Raw plus H*"
+    ]
+  },
+  "equations_or_procedures": {
+    "equation_status": "EXACT_B_P_E_I_V_EQUATIONS_NOT_PRESENT_IN_PINNED_PUBLIC_SOURCE",
+    "admitted_procedures": [
+      "Freeze the representation before final evaluation.",
+      "Separate development and evaluation by complete battery cell.",
+      "Evaluate the defined retained-capacity event within a 20-cycle horizon.",
+      "Compare the combined axis model with burden, the raw physical baseline, H*, weakest-axis risk, raw plus H*, and the hard MQ threshold.",
+      "Use AUROC for ranking performance and preserve component-level negative findings.",
+      "Stop claims at domain-specific held-out support unless conventional-aging controls, transfer studies, and independent replication justify more."
+    ],
+    "public_methods_rule": "Methods and Models may display only equations or variable definitions traced to an exact controlling source. Decorative or reconstructed equations are prohibited."
+  },
+  "baselines_and_comparators": [
+    {
+      "name": "Combined axis logistic model",
+      "auroc": 0.9394,
+      "role": "PRIMARY_COMBINED_MODEL"
+    },
+    {
+      "name": "Burden",
+      "auroc": 0.9704,
+      "role": "STRONGEST_INDIVIDUAL_COMPARATOR_AND_CONFOUND_CANDIDATE"
+    },
+    {
+      "name": "Raw physical baseline",
+      "auroc": 0.785,
+      "role": "CONVENTIONAL_RAW_BASELINE"
+    },
+    {
+      "name": "H*",
+      "auroc": 0.7712,
+      "role": "STANDALONE_COMPONENT"
+    },
+    {
+      "name": "Raw plus H*",
+      "auroc": 0.777,
+      "role": "INCREMENTAL_COMPARISON"
+    },
+    {
+      "name": "Weakest-axis risk",
+      "auroc": 0.6743,
+      "role": "PRELIMINARY_COMPONENT"
+    },
+    {
+      "name": "Hard MQ conjunction",
+      "true_positives": 0,
+      "sensitivity": 0,
+      "balanced_accuracy": 0.4994,
+      "role": "FAILED_HARD_THRESHOLD_TEST"
+    }
+  ],
+  "execution_status": {
+    "status": "DOMAIN_SPECIFIC_HELD_OUT_EMPIRICAL_SUPPORT",
+    "final_evaluation_complete": true,
+    "cell_disjoint_final_test": true,
+    "independent_replication_complete": false,
+    "critical_system_validation_complete": false,
+    "universal_law_validation_complete": false
+  },
+  "results": {
+    "supported_result": "The combined B/P/E/I/V representation contained strong transferable information about the defined near-term retained-capacity event in the three cells excluded from development. The combined model AUROC was 0.9394.",
+    "negative_results": [
+      "H* showed standalone discrimination but no incremental advantage over the raw physical model; the incremental delta was -0.0080.",
+      "The hard MQ conjunction produced zero true positives, zero sensitivity, and balanced accuracy of 0.4994 under the tested threshold.",
+      "Universal coherence-law validation was not established.",
+      "Critical-system deployment validation was not established."
+    ],
+    "mixed_result": "Weakest-axis risk reached AUROC 0.6743, which was above chance but remained preliminary and insufficient for a general weakest-axis law.",
+    "competing_explanation": "Burden reached AUROC 0.9704 and may substantially encode conventional battery aging through cycle number, accumulated throughput, current capacity, recent degradation trend, or related exposure.",
+    "unresolved_issue": "Whether the combined axes retain independent predictive value after conventional aging and degradation controls remains unresolved. Chemistry transfer, external replication, threshold calibration, and operational validation also remain unresolved."
+  },
+  "claim_boundary": {
+    "claim_ceiling": "Strong domain-specific cell-disjoint held-out empirical support for ranking the defined near-term retained-capacity event within the stated three-cell, 1,653-record evaluation.",
+    "supported_claims": [
+      "The study completed a cell-disjoint held-out final evaluation.",
+      "The combined model achieved AUROC 0.9394 for the defined event in the held-out evaluation.",
+      "The result transferred to the three named cells excluded from development within this dataset.",
+      "The study preserved negative, mixed, and competing-explanation findings."
+    ],
+    "prohibited_claims": [
+      "General battery validation",
+      "Universal battery chemistry support",
+      "Distinct coherence mechanism established",
+      "Weakest-axis law established",
+      "H* incremental superiority",
+      "Hard MQ threshold support",
+      "Clinical or medical validation",
+      "Infrastructure validation",
+      "Critical-system deployment approval",
+      "Fusion validation",
+      "Universal coherence-law validation",
+      "Independent replication beyond the stated study"
+    ]
+  },
+  "relevant_law_relationships": [
+    {
+      "law_child": "/laws/categories/flow/signals/",
+      "relationship": "The study treats cycle-level battery measurements and derived axes as warning signals for a defined near-term event.",
+      "claim_stop": "Signal association does not establish physical cause or operational alert readiness."
+    },
+    {
+      "law_child": "/laws/categories/flow/cycles/",
+      "relationship": "The observation unit is cycle-level and the target horizon is the next 20 cycles.",
+      "claim_stop": "The 20-cycle horizon is study-specific and not a universal warning interval."
+    },
+    {
+      "law_child": "/laws/categories/integrity/consistency/",
+      "relationship": "Cell-disjoint evaluation asks whether the model's ranking behavior remains informative when evaluation moves to different cells.",
+      "claim_stop": "The result covers three held-out cells, not all batteries or chemistries."
+    },
+    {
+      "law_child": "/laws/categories/integrity/continuity/",
+      "relationship": "The practical value concerns protecting continuity in battery-supported systems through earlier inspection or intervention research.",
+      "claim_stop": "No continuity benefit was validated in a deployed critical system."
+    },
+    {
+      "law_child": "/laws/categories/integrity/coherence/",
+      "relationship": "The combined B/P/E/I/V representation was tested as a joint description rather than assuming each component or threshold would succeed.",
+      "claim_stop": "A distinct coherence mechanism remains unresolved because burden and conventional aging may explain the result."
+    },
+    {
+      "law_child": "/laws/categories/reality/evidence/",
+      "relationship": "The admitted evidence consists of 1,653 held-out cycle-level records from three named cells excluded from development.",
+      "claim_stop": "Raw execution artifacts and external datasets were not reopened in this operation."
+    },
+    {
+      "law_child": "/laws/categories/reality/measure/",
+      "relationship": "AUROC and component-level classification outcomes distinguish the primary result, comparators, mixed result, and failed threshold.",
+      "claim_stop": "AUROC measures ranking and does not prove causation or deployment utility."
+    },
+    {
+      "law_child": "/laws/categories/reality/limits/",
+      "relationship": "The preserved record explicitly separates domain support from mechanism, transfer, replication, and deployment claims.",
+      "claim_stop": "The claim ceiling is the controlling public limit."
+    },
+    {
+      "law_child": "/laws/categories/structure/constraints/",
+      "relationship": "The study is constrained by cell-disjoint case selection, a fixed event, a fixed horizon, comparators, and required controls.",
+      "claim_stop": "Changing those constraints creates a different study and requires new evaluation."
+    },
+    {
+      "law_child": "/laws/categories/structure/boundaries/",
+      "relationship": "The record establishes the boundary between a strong held-out battery-domain result and unproven mechanism, chemistry transfer, critical-system use, or universal law.",
+      "claim_stop": "No relationship may be used to imply stronger evidence than the complete Frontier record supports."
+    }
+  ],
+  "laws_public_sequence": [
+    "REAL_WORLD_PROBLEM",
+    "FRONTIER_STUDY",
+    "EVIDENCE",
+    "METHOD",
+    "RESULT",
+    "LIMITATION",
+    "RELEVANT_LAW_RELATIONSHIPS",
+    "COMPLETE_FRONTIER_RECORD"
+  ],
+  "public_and_audit_separation": {
+    "public_layer": [
+      "WHAT_WAS_STUDIED",
+      "WHY_IT_MATTERS",
+      "WHAT_WAS_MEASURED",
+      "WHAT_HAPPENED",
+      "WHAT_REMAINS_UNKNOWN"
+    ],
+    "audit_layer": [
+      "SOURCE_BLOB_SHAS",
+      "ORIGIN_COMMIT",
+      "ROLLBACK_BASELINE_COMMIT",
+      "SOURCE_PATHS",
+      "CLAIM_BOUNDARY",
+      "VERSION_AND_CUSTODY_STATUS"
+    ]
+  },
+  "execution_disposition": {
+    "public_page_mutation": 0,
+    "route_mutation": 0,
+    "compass_runtime_mutation": 0,
+    "evidence_status_upgrade": 0,
+    "complete_study_duplication": 0,
+    "content_authority_ready_for_next_phase": true,
+    "next_phase": "RENEW_RESEARCH_FAMILY_AROUND_THIS_CONTEXTUAL_RECORD_WITHOUT_DUPLICATING_THE_COMPLETE_FRONTIER_STUDY"
+  }
+}

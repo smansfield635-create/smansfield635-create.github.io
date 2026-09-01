@@ -1,0 +1,133 @@
+name: Checkout Locality Control Plane Verify
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/ai-entry-workflow-dispatch-bridge.yml'
+      - '.github/workflows/canonical-operation-intake-transport-v1.yml'
+      - '.github/workflows/remote-operation-successor-v1.yml'
+      - '.github/workflows/ai-entry-auto-release.yml'
+      - '.github/workflows/publication-preflight-v1.yml'
+      - '.github/workflows/pages-exact-head-deploy-v3.yml'
+      - '.github/workflows/audralia-weather-presentation-reconciliation.yml'
+      - 'tools/publication-preflight.v1.mjs'
+      - '.github/ai-router/execution-efficiency-policy.v1.json'
+      - '.github/ai-router/execution-efficiency-self-test.v1.mjs'
+      - 'tools/checkout-locality-self-test.v1.mjs'
+      - '.github/workflows/checkout-locality-control-plane-verify.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Materialize locality verifier sparse index
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "+${GITHUB_REF}:refs/remotes/origin/verification"
+          git sparse-checkout init --cone --sparse-index
+          git sparse-checkout set .github/ai-router .github/workflows tools
+          git checkout --detach refs/remotes/origin/verification
+          test "$(git config --bool index.sparse)" = "true"
+          sparse_entries="$(git ls-files --sparse | wc -l | tr -d '[:space:]')"
+          materialized_files="$(find . -type f -not -path './.git/*' | wc -l | tr -d '[:space:]')"
+          test "$sparse_entries" -lt 10000
+          test "$materialized_files" -lt 10000
+          for required in \
+            AI_ENTRYPOINT.json \
+            .github/ai-router/execution-efficiency-policy.v1.json \
+            .github/ai-router/execution-efficiency-self-test.v1.mjs \
+            .github/ai-router/shared-procedures.v1.json \
+            .github/ai-router/workflow-dispatch-capability.v1.json \
+            .github/ai-router/publication-release-contract.v1.json \
+            .github/workflows/ai-entry-workflow-dispatch-bridge.yml \
+            .github/workflows/canonical-operation-intake-transport-v1.yml \
+            .github/workflows/remote-operation-successor-v1.yml \
+            .github/workflows/ai-entry-auto-release.yml \
+            .github/workflows/publication-preflight-v1.yml \
+            .github/workflows/pages-exact-head-deploy-v3.yml \
+            .github/workflows/audralia-weather-presentation-reconciliation.yml \
+            .github/workflows/checkout-locality-control-plane-verify.yml \
+            tools/publication-preflight.v1.mjs \
+            tools/checkout-locality-self-test.v1.mjs; do
+            test -f "$required"
+          done
+          echo "CHECKOUT_LOCALITY_VERIFY_SPARSE_INDEX_ENTRIES=$sparse_entries"
+          echo "CHECKOUT_LOCALITY_VERIFY_MATERIALIZED_FILES=$materialized_files"
+
+      - name: Exercise automatic-release sparse working set at exact candidate
+        env:
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          AUTO_RELEASE_WORKTREE: ${{ runner.temp }}/automatic-release-locality
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$AUTO_RELEASE_WORKTREE"
+          cd "$AUTO_RELEASE_WORKTREE"
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$TARGET_SHA"
+          git sparse-checkout init --cone --sparse-index
+
+          mapfile -t top_dirs < <(git ls-tree -d --name-only FETCH_HEAD)
+          sparse_paths=(
+            "preview/bt4/entitlement-v1"
+            "preview/bt4/operational-release-v1"
+            "h-earth-live-6d18e158/showroom/globe/h-earth"
+          )
+          for root in "${top_dirs[@]}"; do
+            case "$root" in
+              .github|preview|node_modules|h-earth-live-6d18e158)
+                ;;
+              inspection)
+                while IFS= read -r child; do
+                  test -n "$child" || continue
+                  test "$child" = "audralia-24057-exact" && continue
+                  sparse_paths+=("inspection/$child")
+                done < <(git ls-tree -d --name-only "FETCH_HEAD:inspection")
+                ;;
+              *)
+                sparse_paths+=("$root")
+                ;;
+            esac
+          done
+
+          git sparse-checkout set -- "${sparse_paths[@]}"
+          git checkout --detach FETCH_HEAD
+          test "$(git config --bool index.sparse)" = "true"
+          sparse_entries="$(git ls-files --sparse | wc -l | tr -d '[:space:]')"
+          materialized_files="$(find . -type f -not -path './.git/*' | wc -l | tr -d '[:space:]')"
+          test "$sparse_entries" -lt 20000
+          test "$materialized_files" -lt 20000
+          test ! -e inspection/audralia-24057-exact
+          test -f preview/bt4/entitlement-v1/verify-entitlement-preview.v1.mjs
+          test -f preview/bt4/operational-release-v1/index.html
+          test -d h-earth-live-6d18e158/showroom/globe/h-earth
+          test -f assets/credibility/governance-gen3-benchmark.v1.json
+          echo "AUTO_RELEASE_CANDIDATE_SPARSE_INDEX_ENTRIES=$sparse_entries"
+          echo "AUTO_RELEASE_CANDIDATE_MATERIALIZED_FILES=$materialized_files"
+          echo "AUTO_RELEASE_CANDIDATE_PROTECTED_SNAPSHOT_MATERIALIZED=false"
+
+      - name: Run admitted checkout locality verification
+        env:
+          CHECKOUT_LOCALITY_RECEIPT: ${{ runner.temp }}/checkout-locality-control-plane-receipt.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/checkout-locality-self-test.v1.mjs && \
+          node .github/ai-router/execution-efficiency-self-test.v1.mjs
+
+      - name: Upload checkout locality receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: checkout-locality-control-plane-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/checkout-locality-control-plane-receipt.json
+          if-no-files-found: error
+          retention-days: 90

@@ -1,0 +1,177 @@
+{
+  "identity": "COMPASS_BRAIN_PERCEPTUAL_REFERENCE_V1",
+  "status": "FROZEN_PROJECTION_SPACE_REFERENCE_BOUNDARY",
+  "successor_line": "ANATOMICAL_BASIS_GEN1",
+  "source": {
+    "description": "Owner-supplied COMPASS BRAIN COMPARISON image; right-hand successor depictions only",
+    "width_px": 1536,
+    "height_px": 1024,
+    "sha256": "338b5811efd421d0945afbc36934ed0ab7f2e6f62163fb13c27367090409c18b",
+    "anatomical_accuracy_claims_in_annotations_are_binding": false,
+    "hidden_3d_geometry_authority": false,
+    "projection_space_authority": true
+  },
+  "authority_classes": {
+    "A1": {
+      "name": "DIRECTLY_MEASURABLE_PROJECTION_GEOMETRY",
+      "binding": true,
+      "fields": [
+        "silhouette_mask",
+        "normalized_bounding_box",
+        "projected_width_height_ratio",
+        "normalized_centroid",
+        "occupied_area_fraction",
+        "extreme_points",
+        "hemisphere_envelope_limits",
+        "visible_cerebellum_envelope",
+        "visible_brainstem_envelope",
+        "fixed_crop_and_framing"
+      ]
+    },
+    "A2": {
+      "name": "BOUNDED_PERCEPTUAL_MORPHOLOGY_AND_APPEARANCE",
+      "binding": "TOLERANCE_BANDED",
+      "fields": [
+        "temporal_descent",
+        "cerebellar_nesting",
+        "fissure_prominence",
+        "frontal_curvature_profile",
+        "occipital_curvature_profile",
+        "projected_cortical_density",
+        "fold_frequency_bands",
+        "fold_orientation_distribution",
+        "apparent_sulcal_depth",
+        "cerebellar_foliation",
+        "highlight_width",
+        "shadow_field_distribution",
+        "local_surface_curvature_character",
+        "material_response"
+      ]
+    },
+    "A3": {
+      "name": "NONBINDING_GENERATED_IMAGE_DETAIL",
+      "binding": false,
+      "fields": [
+        "exact_individual_gyrus_trajectories",
+        "tiny_local_shadow_boundaries",
+        "ambiguous_anatomical_edges",
+        "unresolved_generation_artifacts",
+        "textual_anatomical_accuracy_claims"
+      ]
+    }
+  },
+  "fixtures": {
+    "primary_lateral": {
+      "role": "A1_PRIMARY_MORPHOLOGY",
+      "projected_width_height_ratio": 1.242,
+      "normalized_centroid": [0.501, 0.387],
+      "isolated_silhouette_px_approx": [421, 339],
+      "normalized_bounding_box_approx": {
+        "x": [0.075, 0.883],
+        "y": [0.066, 0.955]
+      },
+      "measurement_status": "FROZEN_FIRST_PASS_OWNER_APPROVED"
+    },
+    "superior_top": {
+      "role": "INDEPENDENTLY_NORMALIZED_CROSS_VIEW_CONSTRAINT",
+      "projected_width_height_ratio": 0.890,
+      "normalized_centroid": [0.499, 0.499],
+      "measurement_status": "FROZEN_FIRST_PASS_OWNER_APPROVED"
+    },
+    "posterior_rear": {
+      "role": "INDEPENDENTLY_NORMALIZED_CROSS_VIEW_CONSTRAINT",
+      "projected_width_height_ratio": 1.115,
+      "normalized_centroid": [0.470, 0.461],
+      "measurement_status": "FROZEN_FIRST_PASS_OWNER_APPROVED"
+    },
+    "oblique": {
+      "role": "INDEPENDENTLY_NORMALIZED_CROSS_VIEW_CONSTRAINT",
+      "projected_width_height_ratio": 1.458,
+      "normalized_centroid": [0.518, 0.468],
+      "measurement_status": "FROZEN_FIRST_PASS_OWNER_APPROVED"
+    }
+  },
+  "fixture_split": {
+    "MORPHOLOGY_FIXTURE": {
+      "contains": [
+        "masks",
+        "normalized_landmarks",
+        "contour_samples",
+        "projected_ratios",
+        "component_relationships",
+        "curvature_samples",
+        "fold_scale_descriptors"
+      ]
+    },
+    "APPEARANCE_FIXTURE": {
+      "contains": [
+        "camera_model",
+        "projection_class",
+        "crop",
+        "target_center",
+        "object_occupancy",
+        "background_luminance",
+        "dominant_key_light_direction",
+        "key_fill_relationship",
+        "environment_ambient_contribution",
+        "highlight_envelope",
+        "shadow_softness",
+        "exposure_tone_response",
+        "material_roughness_specular_bands"
+      ],
+      "may_deform_anatomy_to_fix_failure": false
+    }
+  },
+  "qualification": {
+    "mode": "NONCOMPENSATING_CONJUNCTIVE",
+    "critical_a1_failure_is_terminal": true,
+    "weighted_rescue_path": false,
+    "camera_projection_framing_lighting_are_test_fixture": true,
+    "candidate_may_reframe_to_improve_score": false,
+    "candidate_may_relight_to_improve_score": false,
+    "candidate_may_reexpose_to_improve_score": false,
+    "threshold_policy": "NO_DERIVED_THRESHOLD_FROM_FIRST_CANDIDATE",
+    "hierarchy": [
+      "G0_GROSS_ANATOMICAL_IDENTITY",
+      "G1_REGIONAL_ANATOMICAL_RELATIONSHIPS",
+      "G2_MAJOR_FISSURE_FOLD_ORGANIZATION",
+      "G3_SURFACE_CORRESPONDENCE",
+      "G4_NATIVE_RUNTIME_PACKAGE_INTEGRITY",
+      "G5_DIAMOND_GATE_EXPRESSION"
+    ],
+    "later_gate_may_compensate_for_earlier_gate": false
+  },
+  "required_next_extraction": {
+    "morphology": [
+      "cerebral_extrema",
+      "temporal_pole",
+      "cerebellar_bounding_box_and_centroid",
+      "cerebellar_cerebral_projected_overlap_and_offset",
+      "brainstem_centerline",
+      "brainstem_projected_width_profile",
+      "brainstem_insertion_relationship",
+      "interhemispheric_fissure_width_where_observable",
+      "frontal_curvature_samples",
+      "occipital_curvature_samples",
+      "normalized_contour_samples",
+      "regional_fold_frequency_descriptors"
+    ],
+    "appearance": [
+      "normalized_luminance_field_descriptors",
+      "dominant_light_direction_and_elevation",
+      "key_fill_relationship",
+      "highlight_width_distribution",
+      "shadow_softness_distribution",
+      "background_luminance",
+      "cortical_spatial_frequency_bands",
+      "material_response_tolerance_bands"
+    ],
+    "unknown_value_policy": "UNRESOLVED_NOT_PROCEDURALLY_ASSUMED"
+  },
+  "lineage_disposition": {
+    "V9_V11_PROCEDURAL_RECONSTRUCTION_LINE": "CLOSED_PRESERVED_AS_NEGATIVE_EVIDENCE",
+    "LIVE_INCUMBENT": "PROTECTED",
+    "prior_alcm_ccm_may_qualify_anatomical_basis_gen1": false
+  },
+  "next_lawful_boundary": "ANATOMICAL_BASIS_GEN1_SOURCE_SELECTION_AND_BINDING"
+}

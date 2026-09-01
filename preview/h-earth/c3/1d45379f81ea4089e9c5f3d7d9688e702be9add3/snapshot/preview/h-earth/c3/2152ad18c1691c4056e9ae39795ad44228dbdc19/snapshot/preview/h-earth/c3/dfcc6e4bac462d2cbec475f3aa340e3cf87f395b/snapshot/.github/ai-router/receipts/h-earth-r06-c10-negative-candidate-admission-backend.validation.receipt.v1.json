@@ -1,0 +1,30 @@
+{
+  "schema": "H_EARTH_R06_C10_NEGATIVE_CANDIDATE_ADMISSION_BACKEND_VALIDATION_RECEIPT_v1",
+  "operationId": "REPOSITORY_WIDE_AI_ENTRY_ROUTER_GENERALIZATION_001",
+  "validatedHead": "f0a5ba65228770444a6e0100072f55b7a41f541f",
+  "pullRequest": 549,
+  "testCandidateHead": "95504c9927922318225da1d61fa303cec70497f9",
+  "workflow": "Repository AI Entry Router Validation",
+  "workflowRunId": 30884745802,
+  "workflowRunNumber": 11,
+  "workflowConclusion": "success",
+  "jobId": 91913374596,
+  "jobConclusion": "success",
+  "negativeBackendStepConclusion": "success",
+  "expectedGateExitCode": 1,
+  "expectedGateReceiptSchema": "H_EARTH_R06_C10_EXACT_CANDIDATE_ADMISSION_GATE_FAILURE_v1",
+  "expectedGateResult": "FAIL_CLOSED_INSTRUMENT_OR_BINDING_ERROR",
+  "expectedErrorPrefix": "AUTHORITY_IDENTITY_MISMATCH:",
+  "artifact": {
+    "artifactId": 8882625114,
+    "name": "repository-ai-entry-router-validation-receipts",
+    "sizeBytes": 2981,
+    "digest": "sha256:4b34f704e517d3b8b37b7577b59a61056000b350557802de66a32b9a90be94fc",
+    "expired": false
+  },
+  "manualMetadataReconstructionUsed": false,
+  "commandEmittedReceiptRequired": true,
+  "result": "PASS_FAIL_CLOSED_NEGATIVE_BACKEND_PROVEN",
+  "productMutation": false,
+  "hEarthRuntimeMutation": false
+}

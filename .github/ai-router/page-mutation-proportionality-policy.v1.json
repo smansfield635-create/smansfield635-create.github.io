@@ -1,0 +1,30 @@
+{
+  "schema": "PAGE_MUTATION_PROPORTIONALITY_POLICY_v1",
+  "policyId": "PAGE_MUTATION_PROPORTIONALITY_AND_STATIC_EDITORIAL_BYPASS_v1",
+  "status": "ACTIVE_WHEN_ROUTER_WRAPPER_PRESENT",
+  "governingRule": "CANONICAL_ADMITTED_LOCKED_IS_REQUIRED_FOR_RUNTIME_BEHAVIOR_AUTHORITY_OR_AMBIGUOUS_PAGE_MUTATIONS_NOT_FOR_DETERMINISTICALLY_CLASSIFIED_STATIC_EDITORIAL_MICRO_MUTATIONS",
+  "instrument": "PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_v1",
+  "router": "tools/repository-ai-entry-router.mjs",
+  "legacyGovernedRouter": "tools/repository-ai-entry-router.v3-legacy.mjs",
+  "staticVerifier": "tools/static-editorial-micro-verifier.v1.mjs",
+  "classes": {
+    "STATIC_EDITORIAL_MICRO": {
+      "canonicalAdmissionRequired": false,
+      "pageExcellenceRequired": false,
+      "requiredProofs": ["EXACT_HEAD", "DECLARED_PATHS_ONLY", "NO_EXECUTABLE_RUNTIME_DELTA", "NO_UNRELATED_DIFF"],
+      "examples": ["TEXT_COPY", "INSTRUCTIONS", "TYPO", "LABEL", "HEADLINE", "BOUNDED_STATIC_ORDER", "SPACING", "TYPOGRAPHY", "COLOR"]
+    },
+    "RUNTIME_OR_AUTHORITY": {
+      "canonicalAdmissionRequired": true,
+      "pageExcellenceRequiredWhenPageOperation": true,
+      "includes": ["EXECUTABLE_FILE_CHANGE", "RUNTIME_BEHAVIOR", "EVENT_HANDLER", "NAVIGATION", "STATE_MACHINE", "ROUTING", "GESTURE", "DOM_AUTHORITY", "CONTROL_PLANE", "GOVERNANCE", "AMBIGUOUS_MUTATION"]
+    }
+  },
+  "ambiguityDisposition": "RUNTIME_OR_AUTHORITY",
+  "mixedPathDisposition": "RUNTIME_OR_AUTHORITY",
+  "runtimeAuthorityCannotBeCreatedByStaticClassification": true,
+  "staticClassificationCannotBypassProjectRegistration": true,
+  "staticClassificationCannotBypassExactDiffVerification": true,
+  "validationRule": "SELF_TEST_AND_STATIC_VERIFIER_EVIDENCE_VALIDATE_IMPLEMENTATION_BUT_DO_NOT_CREATE_THE_POLICY_AUTHORITY",
+  "authorityEffect": "PROPORTIONAL_ROUTING_ONLY"
+}

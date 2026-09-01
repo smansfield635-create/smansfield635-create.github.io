@@ -1,0 +1,240 @@
+{
+  "contract": "LAWS_FRONTIER_COMPATIBILITY_CROSSWALK_v1",
+  "mode": "NON_PRODUCT_CONTENT_AUTHORITY",
+  "checkpoint": "CHECKPOINT_6_LAWS_CHAMBER_RENEWAL",
+  "program": "LAWS_CHAMBER_CONTEXTUAL_AND_ORGANIZATIONAL_RENEWAL",
+  "status": "COMPLETE_FOR_CURRENT_ROUTE_COMPATIBILITY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "rollback_baseline": {
+    "branch": "main",
+    "commit": "b1b92311ef0ef0ab1ab930407f7e26cbacbe6343",
+    "laws_index_path": "laws/index.html",
+    "laws_index_blob_sha": "b257cd06de54e4e2817e8b6280a9443abba56976",
+    "frontier_gateway_path": "frontier/index.html",
+    "frontier_gateway_blob_sha": "61b5e131f88efc48cc745d66eaa66d70e0131477"
+  },
+  "authority_boundary": {
+    "future_frontier_architecture": "ORGANIZATIONAL_TARGET",
+    "future_frontier_deployment": "NOT_CLAIMED",
+    "current_frontier_routes": "ACTIVE_COMPATIBILITY_AND_SOURCE_SURFACES",
+    "frontier_route_restructure": false,
+    "frontier_compass_construction": false,
+    "route_deletion": 0,
+    "redirect_creation": 0,
+    "live_route_rename": 0,
+    "evidence_status_upgrade": 0,
+    "complete_study_duplication_into_laws": 0
+  },
+  "preserved_checkpoint_authority": {
+    "existing_laws_compass": "PRESERVED",
+    "six_authorities": "PRESERVED",
+    "eight_canonical_destinations": "PRESERVED",
+    "forty_eight_migrated_records": "PRESERVED",
+    "nine_compatibility_bindings": "PRESERVED",
+    "current_routes": "PRESERVED",
+    "current_frontier_link_targets": "PRESERVED",
+    "claim_and_evidence_boundaries": "PRESERVED",
+    "progressive_disclosure_model": "PRESERVED",
+    "complete_frontier_record_custody": "PRESERVED"
+  },
+  "future_authority_model": {
+    "real_world_domains": [
+      "FRONTIER_POWER_ENERGY",
+      "FRONTIER_WATER_CONTAMINATION_HEALTH",
+      "FRONTIER_MATERIALS_WASTE_RECOVERY",
+      "FRONTIER_INFRASTRUCTURE_TRANSPORT_RESILIENCE",
+      "FRONTIER_HOUSING_CITIES_COMMUNITIES"
+    ],
+    "enabling_laboratories": [
+      "FRONTIER_MODELING_FORECASTING_RISK",
+      "FRONTIER_SENSORS_MONITORING_HUMAN_FACTORS"
+    ],
+    "shared_operating_layer": "FRONTIER_RESEARCH_OPERATIONS"
+  },
+  "current_frontier_gateway_links": [
+    {
+      "link": "/frontier/",
+      "source_path": "frontier/index.html",
+      "declared_canonical_route": "/explore/frontier/",
+      "status": "ACTIVE_GATEWAY_COMPATIBILITY_SURFACE"
+    },
+    {
+      "link": "/explore/frontier/",
+      "source_path": "frontier/index.html",
+      "status": "ACTIVE_FRONTIER_GATEWAY"
+    },
+    {
+      "link": "/frontier/energy/battery-coherence-study/",
+      "source_path": "frontier/energy/battery-coherence-study/index.html",
+      "status": "ACTIVE_COMPLETE_BATTERY_STUDY_ROUTE"
+    }
+  ],
+  "mappings": [
+    {
+      "current_route": "/explore/frontier/energy/",
+      "current_route_name": "ENERGY",
+      "current_route_status": "ACTIVE_COMPATIBILITY_AND_SOURCE_SURFACE",
+      "future_authority_id": "FRONTIER_POWER_ENERGY",
+      "program_or_capability_id": "POWER_STORAGE_GENERATION_AND_DELIVERY",
+      "study_bindings": [
+        "BATTERY_COHERENCE_HELDOUT_STUDY_v1"
+      ],
+      "compatibility_link": "/explore/frontier/energy/",
+      "claim_status": "CURRENT_ROUTE_ACTIVE; FUTURE_AUTHORITY_ORGANIZATIONAL_TARGET_ONLY"
+    },
+    {
+      "current_route": "/explore/frontier/water/",
+      "current_route_name": "WATER",
+      "current_route_status": "ACTIVE_COMPATIBILITY_AND_SOURCE_SURFACE",
+      "future_authority_id": "FRONTIER_WATER_CONTAMINATION_HEALTH",
+      "program_or_capability_id": "WATER_QUALITY_TREATMENT_EXPOSURE_AND_CONTINUITY",
+      "study_bindings": [],
+      "study_binding_status": "PENDING_EXACT_STUDY_SOURCE_INVENTORY",
+      "compatibility_link": "/explore/frontier/water/",
+      "claim_status": "CURRENT_ROUTE_ACTIVE; FUTURE_AUTHORITY_ORGANIZATIONAL_TARGET_ONLY"
+    },
+    {
+      "current_route": "/explore/frontier/waste/",
+      "current_route_name": "WASTE",
+      "current_route_status": "ACTIVE_COMPATIBILITY_AND_SOURCE_SURFACE",
+      "future_authority_id": "FRONTIER_MATERIALS_WASTE_RECOVERY",
+      "program_or_capability_id": "MATERIAL_FLOW_POLLUTION_RECOVERY_AND_RESIDUE",
+      "study_bindings": [],
+      "study_binding_status": "PENDING_EXACT_STUDY_SOURCE_INVENTORY",
+      "compatibility_link": "/explore/frontier/waste/",
+      "claim_status": "CURRENT_ROUTE_ACTIVE; FUTURE_AUTHORITY_ORGANIZATIONAL_TARGET_ONLY"
+    },
+    {
+      "current_route": "/explore/frontier/infrastructure/",
+      "current_route_name": "INFRASTRUCTURE",
+      "current_route_status": "ACTIVE_COMPATIBILITY_AND_SOURCE_SURFACE",
+      "future_authority_id": "FRONTIER_INFRASTRUCTURE_TRANSPORT_RESILIENCE",
+      "program_or_capability_id": "CAPACITY_CONTINUITY_TRANSPORT_AND_FAILURE_PROPAGATION",
+      "study_bindings": [],
+      "study_binding_status": "PENDING_EXACT_STUDY_SOURCE_INVENTORY",
+      "compatibility_link": "/explore/frontier/infrastructure/",
+      "claim_status": "CURRENT_ROUTE_ACTIVE; FUTURE_AUTHORITY_ORGANIZATIONAL_TARGET_ONLY"
+    },
+    {
+      "current_route": "/explore/frontier/urban/",
+      "current_route_name": "URBAN",
+      "current_route_status": "ACTIVE_COMPATIBILITY_AND_SOURCE_SURFACE",
+      "future_authority_id": "FRONTIER_HOUSING_CITIES_COMMUNITIES",
+      "program_or_capability_id": "HOUSING_ACCESS_SERVICES_AND_COMMUNITY_RESILIENCE",
+      "study_bindings": [],
+      "study_binding_status": "PENDING_EXACT_STUDY_SOURCE_INVENTORY",
+      "compatibility_link": "/explore/frontier/urban/",
+      "claim_status": "CURRENT_ROUTE_ACTIVE; FUTURE_AUTHORITY_ORGANIZATIONAL_TARGET_ONLY"
+    },
+    {
+      "current_route": "/explore/frontier/closed-loop/",
+      "current_route_name": "CLOSED_LOOP",
+      "current_route_status": "ACTIVE_COMPATIBILITY_AND_SOURCE_SURFACE",
+      "future_authority_id": "FRONTIER_MODELING_FORECASTING_RISK",
+      "program_or_capability_id": "CLOSED_LOOP_AND_FLOW_ACCOUNTING",
+      "study_bindings": [],
+      "study_binding_status": "SUPPORTING_METHOD; STUDY_BINDING_REQUIRES_PRIMARY_REAL_WORLD_DOMAIN",
+      "compatibility_link": "/explore/frontier/closed-loop/",
+      "claim_status": "METHOD_PROGRAM; NOT_A_DEPLOYED_REAL_WORLD_DOMAIN"
+    },
+    {
+      "current_route": "/explore/frontier/lattice/",
+      "current_route_name": "LATTICE",
+      "current_route_status": "ACTIVE_COMPATIBILITY_AND_SOURCE_SURFACE",
+      "future_authority_id": "FRONTIER_MODELING_FORECASTING_RISK",
+      "program_or_capability_id": "STATE_SPACE_LATTICE_AND_M256_FORMALISMS",
+      "study_bindings": [],
+      "study_binding_status": "FORMALISM_UNDER_REVIEW; NO_EMPIRICAL_UPGRADE",
+      "compatibility_link": "/explore/frontier/lattice/",
+      "claim_status": "FORMALISM_PROGRAM; NOT_VERIFIED_PROOF"
+    },
+    {
+      "current_route": "/explore/frontier/trajectory/",
+      "current_route_name": "TRAJECTORY",
+      "current_route_status": "ACTIVE_COMPATIBILITY_AND_SOURCE_SURFACE",
+      "future_authority_id": "FRONTIER_MODELING_FORECASTING_RISK",
+      "program_or_capability_id": "DYNAMIC_TRAJECTORY_FORECASTING_AND_HAZARD",
+      "study_bindings": [],
+      "study_binding_status": "SUPPORTING_MODEL_PROGRAM; DOMAIN_EXECUTION_REMAINS_WITH_PRIMARY_REAL_WORLD_DOMAIN",
+      "compatibility_link": "/explore/frontier/trajectory/",
+      "claim_status": "MODEL_PROGRAM; NO_GENERAL_VALIDATION_CLAIM"
+    },
+    {
+      "current_route": "/explore/frontier/shimmer/",
+      "current_route_name": "SHIMMER",
+      "current_route_status": "ACTIVE_COMPATIBILITY_AND_SOURCE_SURFACE",
+      "future_authority_id": "FRONTIER_SENSORS_MONITORING_HUMAN_FACTORS",
+      "program_or_capability_id": "SIGNAL_PERCEPTION_AND_REPRESENTATION",
+      "study_bindings": [],
+      "study_binding_status": "SUPPORTING_CAPABILITY; STUDY_BINDING_REQUIRES_EXACT_OBSERVATION_SOURCE",
+      "compatibility_link": "/explore/frontier/shimmer/",
+      "claim_status": "ENABLING_LAB_PROGRAM; NOT_A_PHYSICAL_SECTOR"
+    },
+    {
+      "current_route": "/explore/frontier/vision/",
+      "current_route_name": "VISION",
+      "current_route_status": "ACTIVE_COMPATIBILITY_AND_SOURCE_SURFACE",
+      "future_authority_id": "FRONTIER_SENSORS_MONITORING_HUMAN_FACTORS",
+      "program_or_capability_id": "OBSERVATION_FORESIGHT_AND_REMOTE_MONITORING",
+      "capability_aliases": [
+        "VISION_REMOTE"
+      ],
+      "study_bindings": [],
+      "study_binding_status": "VISION_REMOTE_IS_A_CAPABILITY_WITHIN_THE_LAB; NOT_A_TWELFTH_ROUTE",
+      "compatibility_link": "/explore/frontier/vision/",
+      "claim_status": "ENABLING_LAB_PROGRAM; FUTURE_DEPLOYMENT_NOT_CLAIMED"
+    },
+    {
+      "current_route": "/explore/frontier/manual/",
+      "current_route_name": "MANUAL",
+      "current_route_status": "ACTIVE_COMPATIBILITY_AND_SOURCE_SURFACE",
+      "future_authority_id": "FRONTIER_RESEARCH_OPERATIONS",
+      "program_or_capability_id": "METHODS_PROTOCOLS_AND_REPRODUCIBILITY_ENTRANCE",
+      "study_bindings": [],
+      "study_binding_status": "SHARED_OPERATING_LAYER; NOT_A_RESEARCH_DOMAIN",
+      "compatibility_link": "/explore/frontier/manual/",
+      "claim_status": "OPERATING_LAYER; NO_SUBJECT_MATTER_AUTHORITY"
+    }
+  ],
+  "current_laws_route_inventory": {
+    "research": [
+      "/laws/research/",
+      "/laws/research/applied-investigations/",
+      "/laws/research/evidence-and-sources/",
+      "/laws/research/methods-and-models/",
+      "/laws/research/findings-and-boundaries/"
+    ],
+    "test": [
+      "/laws/test/",
+      "/laws/test/admission-and-baseline/",
+      "/laws/test/forward-construction/",
+      "/laws/test/reverse-audit/",
+      "/laws/test/result-and-record/"
+    ],
+    "sixteen_law_children": [
+      "/laws/categories/flow/signals/",
+      "/laws/categories/flow/feedback/",
+      "/laws/categories/flow/cycles/",
+      "/laws/categories/flow/handoffs/",
+      "/laws/categories/integrity/consistency/",
+      "/laws/categories/integrity/accountability/",
+      "/laws/categories/integrity/continuity/",
+      "/laws/categories/integrity/coherence/",
+      "/laws/categories/reality/theory/",
+      "/laws/categories/reality/evidence/",
+      "/laws/categories/reality/measure/",
+      "/laws/categories/reality/limits/",
+      "/laws/categories/structure/constraints/",
+      "/laws/categories/structure/interfaces/",
+      "/laws/categories/structure/boundaries/",
+      "/laws/categories/structure/governance/"
+    ]
+  },
+  "execution_disposition": {
+    "product_page_mutation": 0,
+    "route_mutation": 0,
+    "compass_runtime_mutation": 0,
+    "registry_construction": "NOT_PART_OF_THIS_RECORD",
+    "next_content_authority": "LAWS_BATTERY_STUDY_CONTEXTUAL_INTERPRETATION_RECORD_v1"
+  }
+}

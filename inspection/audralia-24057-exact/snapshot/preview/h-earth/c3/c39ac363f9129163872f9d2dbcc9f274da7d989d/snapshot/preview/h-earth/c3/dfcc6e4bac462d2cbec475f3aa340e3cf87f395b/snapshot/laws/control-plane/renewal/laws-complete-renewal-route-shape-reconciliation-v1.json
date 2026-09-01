@@ -1,0 +1,51 @@
+{
+  "contract": "LAWS_COMPLETE_RENEWAL_ROUTE_SHAPE_RECONCILIATION_v1",
+  "mode": "IMPLEMENTATION_ROUTE_ADAPTER_AUTHORITY",
+  "status": "BOUND_BEFORE_PRODUCT_MUTATION",
+  "governing_rule": "The frozen narrative route identifies the page's story role. The current public route and repository path remain authoritative during implementation unless a later explicit route operation authorizes a change.",
+  "route_mutation_authority": false,
+  "route_deletion_authority": false,
+  "redirect_creation_authority": false,
+  "canonical_family_pages_preserved": true,
+  "page_shapes": [
+    {"story_index":1,"narrative_route":"/laws/research/applied-investigations/","public_route":"/laws/research/applied-investigations/","source_path":"laws/research/applied-investigations/index.html","shape":"CANONICAL_DESTINATION","implementation":"RENEW_IN_PLACE"},
+    {"story_index":2,"narrative_route":"/laws/research/evidence-and-sources/","public_route":"/laws/research/evidence-and-sources/","source_path":"laws/research/evidence-and-sources/index.html","shape":"CANONICAL_DESTINATION","implementation":"RENEW_IN_PLACE"},
+    {"story_index":3,"narrative_route":"/laws/research/methods-and-models/","public_route":"/laws/research/methods-and-models/","source_path":"laws/research/methods-and-models/index.html","shape":"CANONICAL_DESTINATION","implementation":"RENEW_IN_PLACE"},
+    {"story_index":4,"narrative_route":"/laws/categories/flow/signals/","public_route":"/laws/categories/flow/signals/","source_path":"laws/categories/flow/signals/index.html","shape":"FAMILY_SECTION_ALIAS","current_owner":"/laws/categories/flow/#signals","implementation":"CONVERT_ALIAS_TO_STORY_PAGE_WITHOUT_DELETING_FAMILY_SECTION"},
+    {"story_index":5,"narrative_route":"/laws/categories/flow/feedback/","public_route":"/laws/categories/flow/feedback/","source_path":"laws/categories/flow/feedback/index.html","shape":"FAMILY_SECTION_ALIAS","current_owner":"/laws/categories/flow/#feedback","implementation":"CONVERT_ALIAS_TO_STORY_PAGE_WITHOUT_DELETING_FAMILY_SECTION"},
+    {"story_index":6,"narrative_route":"/laws/categories/flow/cycles/","public_route":"/laws/categories/flow/cycles/","source_path":"laws/categories/flow/cycles/index.html","shape":"STANDALONE_STORY_PAGE","implementation":"RENEW_IN_PLACE"},
+    {"story_index":7,"narrative_route":"/laws/categories/flow/handoffs/","public_route":"/laws/categories/flow/handoffs/","source_path":"laws/categories/flow/handoffs/index.html","shape":"FAMILY_SECTION_ALIAS","current_owner":"/laws/categories/flow/#handoffs","implementation":"CONVERT_ALIAS_TO_STORY_PAGE_WITHOUT_DELETING_FAMILY_SECTION"},
+    {"story_index":8,"narrative_route":"/laws/categories/integrity/consistency/","public_route":"/laws/categories/integrity/consistency/","source_path":"laws/categories/integrity/consistency/index.html","shape":"CHILD_DIRECTORY","implementation":"RENEW_IN_PLACE"},
+    {"story_index":9,"narrative_route":"/laws/categories/integrity/accountability/","public_route":"/laws/categories/integrity/accountability/","source_path":"laws/categories/integrity/accountability/index.html","shape":"CHILD_DIRECTORY","implementation":"RENEW_IN_PLACE"},
+    {"story_index":10,"narrative_route":"/laws/categories/integrity/continuity/","public_route":"/laws/categories/integrity/continuity/","source_path":"laws/categories/integrity/continuity/index.html","shape":"CHILD_DIRECTORY","implementation":"RENEW_IN_PLACE"},
+    {"story_index":11,"narrative_route":"/laws/categories/integrity/coherence/","public_route":"/laws/categories/integrity/coherence/","source_path":"laws/categories/integrity/coherence/index.html","shape":"CHILD_DIRECTORY","implementation":"RENEW_IN_PLACE"},
+    {"story_index":12,"narrative_route":"/laws/categories/reality/theory/","public_route":"/laws/categories/reality/theory.html","source_path":"laws/categories/reality/theory.html","shape":"LEGACY_HTML_CHILD","implementation":"RENEW_IN_PLACE_PRESERVE_HTML_ROUTE"},
+    {"story_index":13,"narrative_route":"/laws/categories/reality/evidence/","public_route":"/laws/categories/reality/evidence.html","source_path":"laws/categories/reality/evidence.html","shape":"LEGACY_HTML_CHILD","implementation":"RENEW_IN_PLACE_PRESERVE_HTML_ROUTE"},
+    {"story_index":14,"narrative_route":"/laws/categories/reality/measure/","public_route":"/laws/categories/reality/measure.html","source_path":"laws/categories/reality/measure.html","shape":"LEGACY_HTML_CHILD","implementation":"RENEW_IN_PLACE_PRESERVE_HTML_ROUTE"},
+    {"story_index":15,"narrative_route":"/laws/categories/reality/limits/","public_route":"/laws/categories/reality/limits.html","source_path":"laws/categories/reality/limits.html","shape":"LEGACY_HTML_CHILD","implementation":"RENEW_IN_PLACE_PRESERVE_HTML_ROUTE"},
+    {"story_index":16,"narrative_route":"/laws/categories/structure/constraints/","public_route":"/laws/categories/structure/constraints.html","source_path":"laws/categories/structure/constraints.html","shape":"LEGACY_HTML_CHILD","implementation":"RENEW_IN_PLACE_PRESERVE_HTML_ROUTE"},
+    {"story_index":17,"narrative_route":"/laws/categories/structure/interfaces/","public_route":"/laws/categories/structure/interfaces.html","source_path":"laws/categories/structure/interfaces.html","shape":"LEGACY_HTML_CHILD","implementation":"RENEW_IN_PLACE_PRESERVE_HTML_ROUTE"},
+    {"story_index":18,"narrative_route":"/laws/categories/structure/boundaries/","public_route":"/laws/categories/structure/boundaries.html","source_path":"laws/categories/structure/boundaries.html","shape":"LEGACY_HTML_CHILD","implementation":"RENEW_IN_PLACE_PRESERVE_HTML_ROUTE"},
+    {"story_index":19,"narrative_route":"/laws/categories/structure/governance/","public_route":"/laws/categories/structure/governance.html","source_path":"laws/categories/structure/governance.html","shape":"LEGACY_HTML_CHILD","implementation":"RENEW_IN_PLACE_PRESERVE_HTML_ROUTE"},
+    {"story_index":20,"narrative_route":"/laws/test/admission-and-baseline/","public_route":"/laws/test/admission-and-baseline/","source_path":"laws/test/admission-and-baseline/index.html","shape":"CANONICAL_DESTINATION","implementation":"RENEW_IN_PLACE"},
+    {"story_index":21,"narrative_route":"/laws/test/forward-construction/","public_route":"/laws/test/forward-construction/","source_path":"laws/test/forward-construction/index.html","shape":"CANONICAL_DESTINATION","implementation":"RENEW_IN_PLACE"},
+    {"story_index":22,"narrative_route":"/laws/test/reverse-audit/","public_route":"/laws/test/reverse-audit/","source_path":"laws/test/reverse-audit/index.html","shape":"CANONICAL_DESTINATION","implementation":"RENEW_IN_PLACE"},
+    {"story_index":23,"narrative_route":"/laws/test/result-and-record/","public_route":"/laws/test/result-and-record/","source_path":"laws/test/result-and-record/index.html","shape":"CANONICAL_DESTINATION","implementation":"RENEW_IN_PLACE"},
+    {"story_index":24,"narrative_route":"/laws/research/findings-and-boundaries/","public_route":"/laws/research/findings-and-boundaries/","source_path":"laws/research/findings-and-boundaries/index.html","shape":"CANONICAL_DESTINATION","implementation":"RENEW_IN_PLACE"}
+  ],
+  "representative_source_paths": [
+    "laws/categories/flow/signals/index.html",
+    "laws/categories/reality/measure.html",
+    "laws/test/reverse-audit/index.html",
+    "laws/research/findings-and-boundaries/index.html",
+    "laws/industrial-posture/index.html"
+  ],
+  "compatibility_requirements": [
+    "NO_EXISTING_PUBLIC_URL_IS_REMOVED",
+    "NO_FAMILY_SECTION_IS_DELETED_WHEN_AN_ALIAS_BECOMES_A_STORY_PAGE",
+    "HTML_CHILDREN_REMAIN_AVAILABLE_AT_THEIR_CURRENT_HTML_URLS",
+    "PREVIOUS_AND_NEXT_LINKS_USE_CURRENT_PUBLIC_ROUTES",
+    "NARRATIVE_ROUTE_IDS_REMAIN_AVAILABLE_TO_THE_STORY_AND_AUDIT_RECORD",
+    "FUTURE_ROUTE_NORMALIZATION_REQUIRES_A_SEPARATE_USER_AUTHORIZED_OPERATION"
+  ]
+}

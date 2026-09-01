@@ -1,0 +1,93 @@
+{
+  "contract": "LAWS_CHAMBER_CP6_LANE_1_STATIC_VERIFICATION_v1",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/laws-cp6-compass-first-progressive-disclosure-001",
+  "baseHead": "c009f2a03c19a6b54ebad62dfba658f808f0b4c1",
+  "inspectedHead": "587c7b2db9a994f2eefa4807951920bdaccd16f8",
+  "mergeBase": "c009f2a03c19a6b54ebad62dfba658f808f0b4c1",
+  "baseline": {
+    "acceptedMainPageBlockCount": 86,
+    "migratedRecordCustody": "48_OF_48",
+    "canonicalDestinationCount": 8,
+    "acceptedHorizontalOverflow": 0,
+    "acceptedActionableBrowserErrors": 0,
+    "acceptedResponsiveResults": {
+      "phone_portrait": "PASS",
+      "phone_landscape": "PASS",
+      "tablet": "PASS",
+      "desktop": "PASS"
+    }
+  },
+  "sourceDomOrder": [
+    {
+      "name": "LAWS_COMPASS",
+      "position": 71
+    },
+    {
+      "name": "PRACTICAL_OPENING",
+      "position": 38200
+    },
+    {
+      "name": "COMPACT_RESEARCH_COMES_FIRST",
+      "position": 38768
+    },
+    {
+      "name": "COLLAPSED_ORIENTATION_PANELS",
+      "position": 40084
+    }
+  ],
+  "sourceDomOrderPass": true,
+  "immediateCapabilityRouteDeckCount": 0,
+  "supportingPanelCount": 3,
+  "defaultSupportingPanelMarkupClosed": true,
+  "authorizedResearchStatementCount": 1,
+  "osfMainPageInsertion": "ONE_BOUNDED_STATEMENT_ONLY",
+  "routePresence": {
+    "/laws/test/admission-and-baseline/": true,
+    "/laws/test/forward-construction/": true,
+    "/laws/test/reverse-audit/": true,
+    "/laws/test/result-and-record/": true,
+    "/laws/research/evidence-and-sources/": true,
+    "/laws/research/methods-and-models/": true,
+    "/laws/research/applied-investigations/": true,
+    "/laws/research/findings-and-boundaries/": true
+  },
+  "destinationRoutesReachableInSource": true,
+  "migratedRecordCustody": "48_OF_48",
+  "protectedPaths": [
+    "laws/index.compositor.js",
+    "laws/index.controller.js",
+    "laws/index.cosmos.js",
+    "laws/index.crystals.js",
+    "laws/index.interactions.js",
+    "laws/index.planet.js",
+    "assets/audralia/audralia.planet.js"
+  ],
+  "protectedRuntimeDiff": [],
+  "protectedRuntimeDiffCount": 0,
+  "destinationPageDiff": [],
+  "destinationPageMutationCount": 0,
+  "changedPaths": [
+    ".github/workflows/laws-cp6-lane1-build-verify.yml",
+    ".github/workflows/laws-cp6-lane1-pr-browser.yml",
+    "laws/control-plane/cp6-lane1/browser-comparison.json",
+    "laws/control-plane/cp6-lane1/browser-comparison.md",
+    "laws/control-plane/cp6-lane1/browser-evidence/base-desktop.png",
+    "laws/control-plane/cp6-lane1/browser-evidence/base-phone.png",
+    "laws/control-plane/cp6-lane1/browser-evidence/base-tablet.png",
+    "laws/control-plane/cp6-lane1/browser-evidence/candidate-desktop.png",
+    "laws/control-plane/cp6-lane1/browser-evidence/candidate-phone.png",
+    "laws/control-plane/cp6-lane1/browser-evidence/candidate-tablet.png",
+    "laws/control-plane/cp6-lane1/content-disposition.json",
+    "laws/control-plane/cp6-lane1/static-verification.json",
+    "laws/index.css",
+    "laws/index.html",
+    "tools/laws-cp6-lane1-browser-correction.mjs",
+    "tools/laws-cp6-lane1-transform.mjs",
+    "tools/laws-cp6-lane1-verify.mjs"
+  ],
+  "changedPathViolations": [],
+  "lane2MutationCount": 0,
+  "cssSentinelPresent": true,
+  "pass": true
+}

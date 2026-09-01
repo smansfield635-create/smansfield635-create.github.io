@@ -1,0 +1,19 @@
+{
+  "schema": "AI_MEDIA_SOURCE_REGISTRY_v1",
+  "status": "GOVERNING_CLOSED_WORLD_SOURCE_REGISTRY",
+  "sources": {
+    "COMPASS_CH01_CANONICAL_SOURCE": {
+      "provider": "GOOGLE_DRIVE",
+      "fileName": "23619.mp4",
+      "fileId": "1nQKAfKJ2ORMSpIhjyt5A_gy4neYFrh7A",
+      "driveUrl": "https://drive.google.com/file/d/1nQKAfKJ2ORMSpIhjyt5A_gy4neYFrh7A/view",
+      "mimeType": "video/mp4",
+      "expectedBytes": 91348244,
+      "expectedSha256": "c5caa176633209bdc618f505f64cafef5535e400ce2bf1728cde79582169c9a3",
+      "materializationMode": "DRIVE_RAW_FETCH_STREAM_REFERENCE_TO_EXECUTION_WORKSPACE",
+      "inlineBase64Prohibited": true,
+      "unverifiedPublicDownloadProhibited": true,
+      "postMaterializationRequired": ["BYTE_SIZE_MATCH", "SHA256_MATCH", "FFPROBE_ACCEPTS"]
+    }
+  }
+}

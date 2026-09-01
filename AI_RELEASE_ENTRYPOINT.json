@@ -1,0 +1,10 @@
+{
+  "schema": "AI_RELEASE_ENTRYPOINT_v1",
+  "status": "ACTIVE",
+  "releaseWorkflow": ".github/workflows/ai-entry-auto-release.yml",
+  "trigger": "PUSH_TO_MAIN",
+  "releaseSequence": ["APPROVED_MERGE", "AUTOMATIC_EXACT_HEAD_DEPLOYMENT", "LIVE_EXACT_HEAD_VERIFICATION"],
+  "liveVerificationMarker": ".well-known/dgb-release.json",
+  "successResult": "LIVE_EXACT_HEAD_VERIFIED",
+  "ownerManualDeploymentRequired": false
+}

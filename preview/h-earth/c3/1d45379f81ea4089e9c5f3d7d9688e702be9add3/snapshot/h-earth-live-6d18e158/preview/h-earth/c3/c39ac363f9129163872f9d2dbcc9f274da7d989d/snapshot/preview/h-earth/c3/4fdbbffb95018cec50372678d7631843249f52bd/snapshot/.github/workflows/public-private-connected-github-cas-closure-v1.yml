@@ -1,0 +1,182 @@
+name: Public → Private Connected GitHub CAS Closure v1
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  close:
+    if: >-
+      github.event.issue.number == 578 &&
+      startsWith(github.event.comment.body, 'PUBLIC_PRIVATE_CONNECTED_GITHUB_CAS_CLOSURE_REQUEST_V1') &&
+      github.event.comment.author_association == 'OWNER'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PRIVATE_REPOSITORY: smansfield635-create/geodiametrics1
+      LOCK_BRANCH: operation-locks/repository-operation-intake-v1
+      LEDGER_PATH: .github/operation-intake/active-operation-ledger.v1.json
+      RUNTIME_PATH: tools/operation-intake/connected-github-terminal-closure-transport.v1.mjs
+      EXPECTED_RUNTIME_BLOB: 265496282e7e204bd0f3cbd6bb4beeeff28afec6
+
+    steps:
+      - name: Parse closed closure request
+        id: request
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, re
+          e=json.load(open(os.environ['GITHUB_EVENT_PATH']))
+          body=e['comment']['body']; marker='PUBLIC_PRIVATE_CONNECTED_GITHUB_CAS_CLOSURE_REQUEST_V1'
+          req=json.loads(body[len(marker):].strip())
+          required={'schema','repository','exactPrivateHead','operationId','lockScope','lockGeneration','terminalDisposition'}
+          if set(req)!=required or req.get('schema')!=marker: raise SystemExit('REQUEST_NOT_CLOSED')
+          if req['repository']!='smansfield635-create/geodiametrics1': raise SystemExit('REPOSITORY_SUBSTITUTION_PROHIBITED')
+          if not re.fullmatch(r'[0-9a-f]{40}',req['exactPrivateHead']): raise SystemExit('PRIVATE_HEAD_INVALID')
+          if not isinstance(req['lockGeneration'],int) or req['lockGeneration']<1: raise SystemExit('LOCK_GENERATION_INVALID')
+          if req['terminalDisposition'] not in {'PASS_CLOSED','FAIL_CLOSED','REJECTED_CLOSED','WITHDRAWN','SUPERSEDED','VOIDED','EXPIRED'}: raise SystemExit('TERMINAL_DISPOSITION_INVALID')
+          work=os.path.join(os.environ['RUNNER_TEMP'],'connected-github-cas-closure'); os.makedirs(work,exist_ok=True)
+          native={'schema':'REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_v1','repository':req['repository'],'operationId':req['operationId'],'lockScope':req['lockScope'],'lockGeneration':req['lockGeneration'],'terminalDisposition':req['terminalDisposition']}
+          json.dump(native,open(os.path.join(work,'request.json'),'w'),sort_keys=True,indent=2); open(os.path.join(work,'request.json'),'a').write('\n')
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+            f.write('head='+req['exactPrivateHead']+'\n')
+            f.write('operation='+req['operationId']+'\n')
+            f.write('disposition='+req['terminalDisposition']+'\n')
+          PY
+
+      - name: Mint private write token
+        id: token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: write
+
+      - name: Verify live private main and exact installed runtime
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          EXPECTED_HEAD: ${{ steps.request.outputs.head }}
+        run: |
+          set -euo pipefail
+          observed="$(curl --fail-with-body --silent --show-error -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' "https://api.github.com/repos/$PRIVATE_REPOSITORY/branches/main" | jq -r '.commit.sha')"
+          test "$observed" = "$EXPECTED_HEAD"
+
+      - name: Check out exact installed private source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: ${{ steps.request.outputs.head }}
+          token: ${{ steps.token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify runtime identity and clean source
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/private-control-plane"
+          test "$(git rev-parse HEAD:$RUNTIME_PATH)" = "$EXPECTED_RUNTIME_BLOB"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Read canonical ledger and prepare CAS transform
+        id: prepare
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/connected-github-cas-closure"
+          curl --fail-with-body --silent --show-error -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$PRIVATE_REPOSITORY/contents/$LEDGER_PATH?ref=$LOCK_BRANCH" > "$work/ledger-file.json"
+          jq -r '.content' "$work/ledger-file.json" | tr -d '\n' | base64 --decode > "$work/observed-ledger.json"
+          observed_blob="$(jq -r '.sha' "$work/ledger-file.json")"
+          node "$GITHUB_WORKSPACE/private-control-plane/$RUNTIME_PATH" \
+            --action prepare \
+            --request "$work/request.json" \
+            --observed-ledger "$work/observed-ledger.json" \
+            --observed-blob-sha "$observed_blob" \
+            --output "$work/prewrite.json" \
+            --next-ledger "$work/next-ledger.json"
+          jq -e '.result == "READY_FOR_CONNECTED_GITHUB_CAS_WRITE" and .compareAndSwapRequired == true and .canonicalCloseLocalOnly == true and .genericCommandAuthority == false' "$work/prewrite.json" >/dev/null
+          echo "observed_blob=$observed_blob" >> "$GITHUB_OUTPUT"
+
+      - name: Commit SHA-guarded ledger write
+        id: write
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          OBSERVED_BLOB: ${{ steps.prepare.outputs.observed_blob }}
+          OPERATION_ID: ${{ steps.request.outputs.operation }}
+          LOCK_BRANCH: operation-locks/repository-operation-intake-v1
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/connected-github-cas-closure"
+          python - <<'PY'
+          import base64, json, os
+          work=os.path.join(os.environ['RUNNER_TEMP'],'connected-github-cas-closure')
+          content=base64.b64encode(open(os.path.join(work,'next-ledger.json'),'rb').read()).decode('ascii')
+          payload={'message':'Canonical terminal closure: '+os.environ['OPERATION_ID'],'content':content,'sha':os.environ['OBSERVED_BLOB'],'branch':os.environ['LOCK_BRANCH']}
+          with open(os.path.join(work,'write.json'),'w',encoding='utf-8') as f: json.dump(payload,f,separators=(',',':'))
+          PY
+          curl --fail-with-body --silent --show-error --request PUT -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$PRIVATE_REPOSITORY/contents/$LEDGER_PATH" --data-binary "@$work/write.json" > "$work/write-result.json"
+          echo "commit_sha=$(jq -r '.commit.sha' "$work/write-result.json")" >> "$GITHUB_OUTPUT"
+          echo "blob_sha=$(jq -r '.content.sha' "$work/write-result.json")" >> "$GITHUB_OUTPUT"
+
+      - name: Read back exact committed ledger and verify
+        id: verify
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          COMMIT_SHA: ${{ steps.write.outputs.commit_sha }}
+          COMMITTED_BLOB: ${{ steps.write.outputs.blob_sha }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/connected-github-cas-closure"
+          curl --fail-with-body --silent --show-error -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$PRIVATE_REPOSITORY/contents/$LEDGER_PATH?ref=$LOCK_BRANCH" > "$work/committed-file.json"
+          test "$(jq -r '.sha' "$work/committed-file.json")" = "$COMMITTED_BLOB"
+          jq -r '.content' "$work/committed-file.json" | tr -d '\n' | base64 --decode > "$work/committed-ledger.json"
+          node "$GITHUB_WORKSPACE/private-control-plane/$RUNTIME_PATH" \
+            --action verify \
+            --prewrite "$work/prewrite.json" \
+            --intended-ledger "$work/next-ledger.json" \
+            --committed-ledger "$work/committed-ledger.json" \
+            --committed-blob-sha "$COMMITTED_BLOB" \
+            --closure-commit-sha "$COMMIT_SHA" \
+            --output "$work/final-receipt.json"
+          jq -e '.result == "TERMINAL_CLOSURE_COMMITTED" and .lockReleased == true and .connectedGitHubAuthenticatedWrite == true and .compareAndSwapProtected == true and .canonicalCloseLocalOnly == true and .genericCommandAuthority == false' "$work/final-receipt.json" >/dev/null
+          echo "receipt_sha=$(sha256sum "$work/final-receipt.json" | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+
+      - name: Publish redacted committed result
+        if: success()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RECEIPT_SHA: ${{ steps.verify.outputs.receipt_sha }}
+          COMMIT_SHA: ${{ steps.write.outputs.commit_sha }}
+          BLOB_SHA: ${{ steps.write.outputs.blob_sha }}
+        run: |
+          set -euo pipefail
+          body="PUBLIC_PRIVATE_CONNECTED_GITHUB_CAS_CLOSURE_RESULT_V1\noperationId: ${{ steps.request.outputs.operation }}\nterminalDisposition: ${{ steps.request.outputs.disposition }}\nresult: TERMINAL_CLOSURE_COMMITTED\nclosureCommitSha: $COMMIT_SHA\ncommittedLedgerBlobSha: $BLOB_SHA\nreceiptSha256: $RECEIPT_SHA\nrunId: $GITHUB_RUN_ID\nrunAttempt: $GITHUB_RUN_ATTEMPT\nconnectedGitHubAuthenticatedWrite: true\ncompareAndSwapProtected: true\ngenericCommandAuthority: false"
+          jq -n --arg body "$body" '{body:$body}' > "$RUNNER_TEMP/connected-github-cas-closure/result.json"
+          curl --fail-with-body --silent --show-error --request POST -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/issues/578/comments" --data-binary "@$RUNNER_TEMP/connected-github-cas-closure/result.json" >/dev/null
+
+      - name: Enforce completion
+        if: always()
+        shell: bash
+        env:
+          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
+        run: |
+          set -euo pipefail
+          test "$VERIFY_OUTCOME" = success

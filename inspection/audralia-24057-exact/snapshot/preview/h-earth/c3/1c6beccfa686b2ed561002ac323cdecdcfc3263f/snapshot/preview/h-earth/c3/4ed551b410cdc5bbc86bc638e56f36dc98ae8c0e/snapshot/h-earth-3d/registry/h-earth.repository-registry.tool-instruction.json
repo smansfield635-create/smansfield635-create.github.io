@@ -1,0 +1,129 @@
+{
+  "instructionId": "H_EARTH_REPOSITORY_REGISTRY_GITHUB_TOOL_INSTRUCTION_v1",
+  "instructionVersion": 1,
+  "targetNumber": 3,
+  "targetName": "GITHUB_TOOL_INSTRUCTION",
+  "project": "H_EARTH",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "status": "COMPLETE_CANDIDATE_NOT_ACCEPTED",
+  "accepted": false,
+  "canonical": false,
+  "enforcementInstalled": false,
+  "sourceRegistry": {
+    "bootstrapPath": "/h-earth-3d/registry/h-earth.repository-registry.bootstrap.json",
+    "candidatePath": "/h-earth-3d/registry/h-earth.repository-registry.candidate.js",
+    "facadePath": "/h-earth-3d/registry/h-earth.repository-registry.js",
+    "registryId": "H_EARTH_REPOSITORY_REGISTRY_CANDIDATE_v1",
+    "registryVersion": "1.0.0-candidate.1",
+    "schemaId": "H_EARTH_REPOSITORY_REGISTRY_SCHEMA_v1",
+    "schemaVersion": 1,
+    "candidateByteCount": 140320,
+    "candidateContentSha256": "5c71aba5ff60f7d8838fa4571ec18e72eafe04f01130ad146de4376279735dfe",
+    "candidateGitBlobSha": "10ab7b203e03fde419e526d0cce2c0af42860911"
+  },
+  "consumerClasses": [
+    "GITHUB_CONNECTED_AGENTS",
+    "REPOSITORY_SEARCH_TOOLS",
+    "CODE_REVIEW_TOOLS",
+    "PACKAGE_AWARE_VALIDATORS",
+    "WORKFLOW_ENFORCEMENT",
+    "AUDIT_AND_RECEIPT_GENERATORS"
+  ],
+  "precedence": [
+    "EXPLICIT_CURRENT_USER_INSTRUCTION",
+    "ACCEPTED_HIGHER_AUTHORITY_ARTIFACT",
+    "EXACT_REPOSITORY_SOURCE_OCCURRENCE",
+    "INSTALLED_REPOSITORY_REGISTRY_CANDIDATE",
+    "TOOL_INFERENCE"
+  ],
+  "preflightSteps": [
+    "LOCATE_BOOTSTRAP_AND_VERIFY_REGISTRY_IDENTITY",
+    "RESOLVE_OPERATION_PATHS_NODES_OCCURRENCES_AND_RELATIONS",
+    "IDENTIFY_ALL_AFFECTED_COMPOSITE_UNITS_AND_CARDINAL_PARTICIPATION",
+    "LOAD_AUTHORITY_EVIDENCE_LIFECYCLE_AND_CUSTODY_LAYERS",
+    "LOAD_ALLOWED_AND_PROHIBITED_MUTATION_SCOPE",
+    "LOAD_REQUIRED_VALIDATIONS_STOPPING_BOUNDARIES_AND_UNRESOLVED_FIELDS",
+    "EVALUATE_OPERATION_SCOPE_AND_STOP_IF_AUTHORITY_OR_CRITICAL_EVIDENCE_IS_UNRESOLVED"
+  ],
+  "operatingRules": [
+    "PRESERVE_FILE_COMPOSITE_PACKET_FACADE_AND_OCCURRENCE_IDENTITIES_SEPARATELY",
+    "PRESERVE_NORTH_EAST_SOUTH_AND_WEST_MEMBER_AUTHORITY_WITHOUT_COLLAPSE",
+    "TREAT_GATE_B_CARDINAL_ROLES_AS_OBSERVED_CANDIDATE_UNTIL_SEPARATELY_ACCEPTED",
+    "KEEP_GATE_B_WEST_ADAPTER_ORCHESTRATION_ONLY_AND_KEEP_PUBLIC_WEST_AS_ADMISSION_AUTHORITY",
+    "DO_NOT_INFER_ORDER_FROM_ARRAY_POSITION_DIRECTORY_POSITION_OR_FILENAME",
+    "DO_NOT_INFER_AUTHORITY_MUTATION_PERMISSION_MERGE_PERMISSION_OR_CANONICAL_STATUS",
+    "DISTINGUISH_ABSENT_UNRESOLVED_HISTORICAL_SUPERSEDED_RETIRED_CANDIDATE_AND_ACCEPTED_OCCURRENCES",
+    "STOP_ON_HIGHER_AUTHORITY_CONFLICT_IDENTITY_DRIFT_BROKEN_RELATION_OR_UNRESOLVED_CRITICAL_FIELD"
+  ],
+  "reportingDuties": [
+    "REPORT_REGISTRY_ID_VERSION_STATUS_AND_EXACT_OCCURRENCE_USED",
+    "REPORT_AFFECTED_PATHS_NODES_RELATIONS_AND_COMPOSITE_UNITS",
+    "REPORT_CARDINAL_ROLES_ROLE_STATUS_AUTHORITY_CLASS_AND_AUTHORITY_LIMITATIONS",
+    "REPORT_REQUIRED_VALIDATIONS_PROHIBITED_MUTATIONS_AND_STOPPING_BOUNDARIES",
+    "REPORT_UNRESOLVED_FIELDS_CONFLICTS_CONTINUITY_GAPS_AND_IDENTITY_DRIFT",
+    "REPORT_WHETHER_OPERATION_PROCEEDED_STOPPED_OR_REQUIRES_SEPARATE_AUTHORITY"
+  ],
+  "failureTaxonomy": [
+    "REGISTRY_BOOTSTRAP_NOT_FOUND",
+    "REGISTRY_IDENTITY_MISMATCH",
+    "REGISTRY_VERSION_MISMATCH",
+    "REGISTRY_OCCURRENCE_IDENTITY_DRIFT",
+    "OPERATION_SCOPE_UNRESOLVED",
+    "BROKEN_NODE_RELATION_OR_EVIDENCE_REFERENCE",
+    "CARDINAL_ROLE_UNSUPPORTED_OR_PROMOTED",
+    "AUTHORITY_COLLAPSE_OR_TRANSFER_INFERRED",
+    "ORCHESTRATION_AUTHORITY_OVERCLAIM",
+    "ORDER_INFERRED_WITHOUT_EXPLICIT_RELATION",
+    "MUTATION_OR_MERGE_AUTHORITY_NOT_ESTABLISHED",
+    "HIGHER_AUTHORITY_CONFLICT_OR_UNRESOLVED_CRITICAL_FIELD"
+  ],
+  "cardinalStructure": {
+    "explicitKernelSequence": [
+      "NORTH",
+      "EAST",
+      "SOUTH",
+      "WEST"
+    ],
+    "publicFacadeOwnsMemberAuthority": false,
+    "compositeOwnsMemberAuthority": false,
+    "gateBCardinalStatus": "OBSERVED_CANDIDATE_NONCANONICAL",
+    "gateBOperationalContinuity": [
+      "NORTH_ENVIRONMENT_FRAME",
+      "SOUTH_GEOMETRY_CONSTRUCTION",
+      "WEST_ADMISSION_ORCHESTRATION",
+      "EAST_PACKET_002_CONTINUATION"
+    ]
+  },
+  "operationDecision": {
+    "readOnlyDiscoveryAndAnalysisPermitted": true,
+    "mutationAuthorizedByInstruction": false,
+    "mergeAuthorizedByInstruction": false,
+    "canonicalizationAuthorizedByInstruction": false,
+    "productionAuthorizedByInstruction": false,
+    "stopOnUnresolvedCriticalField": true,
+    "stopOnHigherAuthorityConflict": true
+  },
+  "instructionSurfaces": {
+    "detailedInstructionPath": "/h-earth-3d/registry/H_EARTH_REPOSITORY_REGISTRY_GITHUB_TOOL_INSTRUCTION_v1.md",
+    "agentInstructionPaths": [
+      "/h-earth-3d/AGENTS.md",
+      "/showroom/globe/h-earth/AGENTS.md"
+    ],
+    "auditPath": "/tools/h-earth-repository-registry-target-3-audit.mjs",
+    "receiptPath": "/h-earth-3d/registry/h-earth.repository-registry.target-3-receipt.json",
+    "githubToolInstructionPath": "/h-earth-3d/registry/h-earth.repository-registry.github-instruction.md"
+  },
+  "boundaries": {
+    "registryAccepted": false,
+    "registryCanonicalized": false,
+    "sourceAuthorityCreated": false,
+    "mutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "validatorInstalled": false,
+    "workflowEnforcementInstalled": false,
+    "runtimeActivationCreated": false,
+    "rendererActivationCreated": false,
+    "productionClaimCreated": false,
+    "targetFourStillRequired": true
+  }
+}

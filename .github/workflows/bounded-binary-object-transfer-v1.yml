@@ -1,0 +1,62 @@
+name: Bounded Binary Object Transfer v1
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/bounded-binary-object-transfer-v1.yml'
+      - 'tools/ai-room-transport/bounded-binary-object-transfer.v1.mjs'
+      - 'tools/ai-room-transport/bounded-binary-object-transfer.v1.test.mjs'
+      - '.github/ai-toolset-transport/bounded-binary-object-transfer.v1.json'
+
+permissions:
+  contents: read
+
+jobs:
+  self-test:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - name: Verify exact candidate checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+      - name: Run bounded binary transfer adversarial tests
+        run: node --test tools/ai-room-transport/bounded-binary-object-transfer.v1.test.mjs
+
+  transfer:
+    if: >-
+      github.event_name == 'issue_comment' &&
+      github.event.issue.number == 1323 &&
+      github.event.comment.user.login == 'smansfield635-create' &&
+      startsWith(github.event.comment.body, 'BOUNDED_BINARY_OBJECT_TRANSFER_REQUEST_V1')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout installed carrier from immutable event repository default branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Execute bounded binary transfer
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >-
+          node tools/ai-room-transport/bounded-binary-object-transfer.v1.mjs
+          --event "$GITHUB_EVENT_PATH"
+          --repository "$GITHUB_REPOSITORY"
+          --receipt /tmp/bounded-binary-object-transfer-receipt.json
+      - name: Upload machine receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bounded-binary-object-transfer-${{ github.run_id }}
+          path: /tmp/bounded-binary-object-transfer-receipt.json
+          if-no-files-found: warn
+          retention-days: 14

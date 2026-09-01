@@ -1,0 +1,31 @@
+name: IMI Factorial Temporal Diagnostic Extension v1
+
+on:
+  pull_request:
+    paths:
+      - "research/route-operator-platform-v1/extensions/imi-factorial-temporal-diagnostic-extension-v1/**"
+      - ".github/workflows/imi-factorial-temporal-diagnostic-extension-v1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# The dedicated job verifies only the immutable extension payload at the exact PR head.
+jobs:
+  verify-factorial-temporal-extension:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify extension and portfolio eligibility audit
+        run: >-
+          python
+          research/route-operator-platform-v1/extensions/imi-factorial-temporal-diagnostic-extension-v1/verify_factorial_temporal_extension_v1.py

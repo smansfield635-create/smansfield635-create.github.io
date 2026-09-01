@@ -1,0 +1,34 @@
+{
+  "schema": "IMI_METHODS_MODELS_CANONICAL_HIERARCHY_v1",
+  "status": "SUCCESSOR_NORMALIZATION_CANDIDATE",
+  "nodes": [
+    {"id": "IMI", "class": "INSTRUMENT", "label": "Instrument"},
+    {"id": "UCIC", "class": "INVARIANT_CANDIDATE", "label": "Invariant candidate"},
+    {"id": "ROUTE_OPERATOR_PLATFORM", "class": "METHOD", "label": "Protocol and execution infrastructure"},
+    {"id": "PROSPECTIVE_FINAL_REPORT_PORTFOLIO", "class": "TEST_INSTANCE", "label": "Five-domain severe-test instance"},
+    {"id": "METHODS", "class": "METHOD", "label": "Scientific procedure"},
+    {"id": "MODELS", "class": "MODEL", "label": "Competing representations"},
+    {"id": "PRESSURE_AND_CAPACITY", "class": "MODEL", "label": "Bounded supporting model"},
+    {"id": "HUMAN_AND_3D_CONSTRUCT", "class": "INTERFACE_STATE", "label": "Synchronized explanation and navigation layer"}
+  ],
+  "edges": [
+    {"from": "IMI", "relation": "TESTS_CANDIDATE", "to": "UCIC"},
+    {"from": "ROUTE_OPERATOR_PLATFORM", "relation": "EXECUTES", "to": "PROSPECTIVE_FINAL_REPORT_PORTFOLIO"},
+    {"from": "METHODS", "relation": "GOVERNS_PROCEDURE_FOR", "to": "PROSPECTIVE_FINAL_REPORT_PORTFOLIO"},
+    {"from": "MODELS", "relation": "SUPPLIES_COMPETING_REPRESENTATIONS_TO", "to": "PROSPECTIVE_FINAL_REPORT_PORTFOLIO"},
+    {"from": "PRESSURE_AND_CAPACITY", "relation": "IS_BOUNDED_SUPPORTING_MEMBER_OF", "to": "MODELS"},
+    {"from": "HUMAN_AND_3D_CONSTRUCT", "relation": "PRESENTS_WITHOUT_REDEFINING", "to": "IMI"},
+    {"from": "HUMAN_AND_3D_CONSTRUCT", "relation": "PRESENTS_WITHOUT_REDEFINING", "to": "METHODS"},
+    {"from": "HUMAN_AND_3D_CONSTRUCT", "relation": "PRESENTS_WITHOUT_REDEFINING", "to": "MODELS"}
+  ],
+  "canonicalStatements": {
+    "IMI": "instrument",
+    "UCIC": "invariant candidate",
+    "ROUTE_OPERATOR_PLATFORM": "protocol and execution infrastructure",
+    "PROSPECTIVE_FINAL_REPORT_PORTFOLIO": "active severe-test instance",
+    "METHODS": "scientific procedure",
+    "MODELS": "competing system representations",
+    "PRESSURE_AND_CAPACITY": "bounded supporting model",
+    "HUMAN_AND_3D_CONSTRUCT": "synchronized navigation and explanation layer"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "schema": "HUMAN_CHECKPOINT_RECEIPT_v1",
+  "checkpointReceiptId": "AUDRALIA_HCR_HOOK5_LIVE_DIFFERENTIAL_20260828_001",
+  "projectId": "AUDRALIA",
+  "scopeIdentity": "AUDRALIA_PLANETARY_ENVIRONMENT_OWNER_INTENT_AND_FAILURE_MEMORY",
+  "candidateIdentity": "e2d68feb38b730eab429822d18691577c3b7cb90",
+  "checkpointType": "LIVE_DIFFERENTIAL",
+  "disposition": "FAIL_OWNER_DEVICE_LOADER_STUCK_ENVIRONMENT_NOT_RENDERED_AUTOMATED_LIVE_PASS_NOT_DISPOSITIVE",
+  "source": "USER_EXPLICIT",
+  "evidenceLocator": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2220",
+  "bindingClass": "CANDIDATE_BOUND",
+  "revalidateOn": ["OWNER_VISIBLE_LIVE_SUCCESS_ON_SUPERSEDING_CANDIDATE"],
+  "governingAuthorityLocator": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2171",
+  "authorityEffect": "NONE_BY_HUMAN_CHECKPOINT_RECEIPT"
+}

@@ -1,0 +1,102 @@
+{
+  "components": [
+    {
+      "componentId": "COMPASS_DIRECT_MANIPULATION_KERNEL",
+      "doesNotSupply": [
+        "METHODS_CONTENT_HIERARCHY",
+        "H_EARTH_TERRAIN_OR_WORLD_AUTHORITY",
+        "METHODS_RENDERER"
+      ],
+      "sourcePaths": [
+        "assets/compass/compass.crystals.js",
+        "assets/compass/compass.controller.js"
+      ],
+      "supplies": [
+        "SPHERICAL_DIRECT_MANIPULATION",
+        "GESTURE_SAMPLE_AND_FLICK_CLASSIFICATION",
+        "ROTATIONAL_ORIENTATION",
+        "PREVIEW_SETTLE_COMMIT_STATE",
+        "NEAREST_VALID_TARGET_SETTLEMENT",
+        "ORIENTATION_MEMORY"
+      ]
+    },
+    {
+      "componentId": "H_EARTH_CONTINUOUS_TOUCH_NAVIGATION_KERNEL",
+      "doesNotSupply": [
+        "METHODS_STAGE_GEOMETRY",
+        "METHODS_MODEL_SELECTION_LAW",
+        "METHODS_EVIDENCE_SEMANTICS"
+      ],
+      "sourcePaths": [
+        "showroom/globe/h-earth/functional-landscape/direct-manipulation.js",
+        "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js",
+        "showroom/globe/h-earth/functional-landscape/navigation.js"
+      ],
+      "supplies": [
+        "ONE_FINGER_LOOK",
+        "TWO_FINGER_TRAVEL",
+        "PINCH_ZOOM",
+        "CONTINUOUS_FRAME_BOUNDED_INTENT",
+        "LAWFUL_CAMERA_PROPOSALS",
+        "RECOVERY_TO_LAST_LAWFUL_STATE"
+      ]
+    },
+    {
+      "componentId": "H_EARTH_PERSISTENT_GPU_SCENE_CORRIDOR",
+      "doesNotSupply": [
+        "METHODS_CONTENT_GEOMETRY",
+        "METHODS_VISUAL_DESIGN",
+        "PERCEPTUAL_ACCEPTANCE"
+      ],
+      "sourcePaths": [
+        "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+        "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+        "showroom/globe/h-earth/capacity.js",
+        "showroom/globe/h-earth/compositor.js",
+        "showroom/globe/h-earth/controller.js",
+        "showroom/globe/h-earth/renderer.js"
+      ],
+      "supplies": [
+        "PERSISTENT_WEBGL2_SURFACE",
+        "CAMERA_AND_VIEWPORT_BOUNDS",
+        "FRAME_SEQUENCE",
+        "VIEW_PROJECTION_MATRICES",
+        "PROJECTION_AND_CLIPPING",
+        "SCENE_LIFECYCLE",
+        "RESOURCE_IDENTITY_STABILITY"
+      ]
+    },
+    {
+      "componentId": "METHODS_SEMANTIC_AND_RETURN_KERNEL",
+      "doesNotSupply": [
+        "ADMISSIBLE_VISUAL_ARCHITECTURE",
+        "3D_RENDERING",
+        "GESTURE_RUNTIME"
+      ],
+      "sourcePaths": [
+        "laws/research/methods-and-models/showroom.js",
+        "control-plane/methods-information-benchmark/page-implementation-candidate-v1/candidate/model-core.mjs",
+        "control-plane/methods-information-benchmark/page-implementation-candidate-v1/candidate/model-graph.mjs",
+        "control-plane/methods-information-benchmark/page-implementation-candidate-v1/candidate/model-routing.mjs",
+        "control-plane/methods-information-benchmark/page-implementation-candidate-v1/candidate/state.mjs"
+      ],
+      "supplies": [
+        "25_RECORD_IDENTITIES",
+        "4_FAMILY_IDENTITIES",
+        "3_LENS_IDENTITIES",
+        "15_DEPENDENCY_EDGES",
+        "4_EXPLICIT_NONEDGES",
+        "16_QUESTION_INTENT_ROUTES",
+        "6_HOLD_CLASSES",
+        "13_FIELD_EXACT_RETURN",
+        "SHA256_RETURN_TOKEN"
+      ]
+    }
+  ],
+  "composition": "COMPASS_GESTURE_AND_ORIENTATION + H_EARTH_LAWFUL_CAMERA_AND_PERSISTENT_GPU + METHODS_SEMANTIC_AND_RETURN_KERNEL -> METHODS_CONTEXT_DISPLACEMENT_RUNTIME_CONTRACT",
+  "criticalDistinction": "THE_EXISTING_CONSTRUCTS_ARE_IMPLEMENTATION_SOURCES;THE_REJECTED_2044_HTML_CSS_APP_SHELL_IS_NOT_A_VISUAL_SOURCE",
+  "governingHead": "3b21d30763ca0368110811351bb3d3c8a042af47",
+  "operationId": "METHODS_CONTEXT_DISPLACEMENT_EXISTING_SPATIAL_CONSTRUCT_ADOPTION_v1",
+  "schema": "METHODS_SPATIAL_ADOPTION_COMPONENT_DISCOVERY_v1",
+  "status": "DISCOVERY_COMPLETE"
+}

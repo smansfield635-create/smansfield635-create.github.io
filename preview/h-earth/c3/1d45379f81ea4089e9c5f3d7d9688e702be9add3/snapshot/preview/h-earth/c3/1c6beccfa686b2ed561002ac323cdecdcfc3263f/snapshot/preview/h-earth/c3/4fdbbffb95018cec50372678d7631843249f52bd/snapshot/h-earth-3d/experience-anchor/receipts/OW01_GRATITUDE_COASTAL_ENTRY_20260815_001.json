@@ -1,0 +1,67 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.base.png",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.candidate.png",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.anchor.png",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js",
+      "sha256": "89f01783d5d40b574a3eb63223c691222cead6f6aee02a3296be7ab48a5bebe9"
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.terrain-field.js",
+      "sha256": "cdd69d0775a05a5a073f58b0a7c0d81daac1d9c44fe126530a6245db8acd668b"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+      "sha256": "04a219a71a020ca402894bd1dcdc5c85ab3cedfbcf41b3fbbdb7a1083ade7ba2"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+      "sha256": "676ec6455e5cf09fb10d7042cc31350f3575bc69f564ad867a8935af489a694f"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+      "sha256": "16c99e7e31f5300349b372792889cd545a740f5d8c7e7237f933d44bb1d13aa2"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "49497b64cfdbe1881ebc5d0c5629f02bc4b62e1a4fc1f9e84a53771ac419f559"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js",
+      "sha256": "94122d38dbf558cecf28affc1b9124353fe01c4bb6fcc7bd4b0b4c39414776fa"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+      "sha256": "5237be2baaec45b8c94f23880d67eb81b0d5e1d623330cbb67161e810af06e3b"
+    }
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "instructions": "Independent review completed against the immutable H-Earth ground Experience Anchor after the OW01 live-package compatibility repair. Baseline and repaired candidate retain the same entered-world composition, terrain/mountain/horizon continuity, minimal world-overlaid interface, and direct travel interaction. The candidate renders successfully and changes only bounded coastal expression; the historical R2 package remains fail-closed while the new current-terrain package occurrence is eligible."
+}

@@ -1,0 +1,223 @@
+{
+  "contractId": "METAVERSE_3D_BENCHMARK_TO_DISPOSITION_COMPILER_D4A_EVIDENCE_WEIGHTING_AUTHORITY_AND_RULE_LOCK_v1",
+  "toolId": "METAVERSE_3D_BENCHMARK_TO_DISPOSITION_COMPILER_v1",
+  "checkpoint": "D4A",
+  "checkpointTitle": "EVIDENCE_WEIGHTING_AUTHORITY_AND_DETERMINISTIC_RULE_LOCK",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "compilerBranch": "agent/metaverse-3d-benchmark-disposition-compiler-d4-001",
+  "parentD3": {
+    "branch": "agent/metaverse-3d-benchmark-disposition-compiler-d3-001",
+    "headCommit": "f284180bdd6ca13387d61215b80b4bddb0fa035c",
+    "draftPullRequest": 146,
+    "pullRequestState": "OPEN_DRAFT_UNMERGED",
+    "status": "PASS_CLOSED",
+    "artifactId": "8621733159",
+    "artifactSizeBytes": 31584,
+    "artifactSha256": "11a6a3531f709bb5ac921c943c87a159356902f013d59badddf535667101b224",
+    "classifiedFactCount": 119,
+    "classifiedRelationCount": 7,
+    "governedDimensionCount": 11,
+    "combinedClassificationSha256": "1b4fe0343dc5b7c24d248855405269b23c8735467d974a693676d49c30a8d8c8",
+    "relationClassificationSha256": "886c1e15ece9bae61760ff1195aab1644f9f3c7252608bcde365f8da63373088",
+    "dimensionSummarySha256": "39394397b7ce8640e3555a00757d2db57bc9eb677ffc6aa21a6221548cc17474",
+    "aggregateReceiptSha256": "2747d3935ded466fa744e5f4302de552ccc7dfafcf699e1c034fcb183ab0c9f7"
+  },
+  "weightingPurpose": {
+    "objective": "MEASURE_EVIDENCE_STRENGTH_WITHOUT_CHANGING_FACT_CONTENT_OR_DIMENSION_STATE",
+    "weightingIsNotVerdict": true,
+    "weightingIsNotWinnerSelection": true,
+    "weightingIsNotDisposition": true,
+    "favorableAndUnfavorableEvidenceUseSameStrengthRules": true,
+    "negativeFindingAutomaticallyPenalized": false,
+    "findingAutomaticallyPromotedToDefect": false
+  },
+  "weightabilityByDimensionState": {
+    "WEIGHTABLE": [
+      "PASS",
+      "FAIL",
+      "BLOCKED",
+      "UNRESOLVED"
+    ],
+    "CONTEXT_ONLY": [
+      "SUPERSEDED"
+    ],
+    "NON_WEIGHTABLE": [
+      "NOT_EXECUTED",
+      "NOT_APPLICABLE",
+      "WITHHELD"
+    ]
+  },
+  "ordinalEvidenceStrengthBands": [
+    {
+      "band": "W4_DIRECT_EXECUTED_EXACT",
+      "requirements": [
+        "EXACT_VERIFIED_CUSTODY",
+        "DIRECT_NATIVE_EXECUTION",
+        "EXACT_SUBJECT_AND_DIMENSION_SCOPE",
+        "SOURCE_APPLICABILITY_CURRENT_OR_EXACTLY_BOUND"
+      ]
+    },
+    {
+      "band": "W3_DIRECT_EXACT",
+      "requirements": [
+        "EXACT_VERIFIED_CUSTODY",
+        "DIRECT_SOURCE_OR_EXACT_HISTORICAL_EXECUTION",
+        "EXACT_SUBJECT_OR_EXACT_LANE_SCOPE"
+      ]
+    },
+    {
+      "band": "W2_DETERMINISTIC_DERIVED",
+      "requirements": [
+        "DETERMINISTIC_RECEIPT_MANIFEST_OR_VALIDATION_DERIVATION",
+        "VERIFIED_PARENT_IDENTITIES",
+        "NO_LOSSY_TRANSFORMATION"
+      ]
+    },
+    {
+      "band": "W1_CONTEXTUAL_OR_LIMITED",
+      "requirements": [
+        "HISTORICAL_AWARENESS_OR_SCOPE_LIMITED_CONTEXT",
+        "OR_SOURCE_APPLICABILITY_UNRESOLVED",
+        "OR_DECLARATIVE_AUTHORITY_WITHOUT_DIRECT_EXECUTION"
+      ]
+    },
+    {
+      "band": "W0_NON_WEIGHTABLE",
+      "requirements": [
+        "DIMENSION_STATE_NOT_EXECUTED_NOT_APPLICABLE_OR_WITHHELD",
+        "OR_CUSTODY_UNVERIFIED",
+        "OR_OUT_OF_SCOPE_FOR_TARGET_DIMENSION"
+      ]
+    }
+  ],
+  "deterministicPrecedenceVector": {
+    "comparisonMode": "LEXICOGRAPHIC_NON_COMPENSATING",
+    "scalarScoreAllowed": false,
+    "componentsInOrder": [
+      {
+        "component": "WEIGHTABILITY",
+        "order": [
+          "WEIGHTABLE",
+          "CONTEXT_ONLY",
+          "NON_WEIGHTABLE"
+        ]
+      },
+      {
+        "component": "SOURCE_APPLICABILITY",
+        "order": [
+          "CURRENT_EXACT",
+          "HISTORICAL_EXACT",
+          "UNRESOLVED",
+          "NOT_APPLICABLE"
+        ]
+      },
+      {
+        "component": "EVIDENCE_DIRECTNESS",
+        "order": [
+          "DIRECT_NATIVE_EXECUTION",
+          "DIRECT_SOURCE_OCCURRENCE",
+          "DETERMINISTIC_DERIVATION",
+          "HISTORICAL_AWARENESS",
+          "SYNTHESIZED_ABSENCE"
+        ]
+      },
+      {
+        "component": "EXECUTION_POSTURE",
+        "order": [
+          "EXECUTED_EXACT_SOURCE",
+          "EXECUTED_EXACT_HISTORICAL_SOURCE",
+          "STATIC_EXACT_SOURCE",
+          "STATIC_HISTORICAL_SOURCE",
+          "NOT_EXECUTED"
+        ]
+      },
+      {
+        "component": "CUSTODY_STRENGTH",
+        "order": [
+          "VERIFIED_BYTES_AND_DIGEST",
+          "VERIFIED_REPOSITORY_IDENTITY",
+          "DECLARED_IDENTITY",
+          "UNVERIFIED"
+        ]
+      },
+      {
+        "component": "SCOPE_FIT",
+        "order": [
+          "EXACT_SUBJECT_AND_DIMENSION",
+          "EXACT_LANE_AND_DIMENSION",
+          "CROSS_SCOPE_CONTEXT_ONLY",
+          "OUT_OF_SCOPE"
+        ]
+      }
+    ],
+    "componentOmissionAllowed": false,
+    "lowerComponentMayCompensateForHigherComponent": false
+  },
+  "laneAndScopeRules": {
+    "fourCompassCorpusMayWeightFourCompassDimensions": true,
+    "homeAuxiliaryControlMayWeightCompassProductDisposition": false,
+    "homeAuxiliaryControlMayWeightAuxiliaryBoundaryValidation": true,
+    "universalPrototypeMayWeightProductionCompassDisposition": false,
+    "historicalAwarenessMayOverrideCurrentDirectEvidence": false,
+    "crossDimensionWeightTransferAllowed": false,
+    "crossLaneAggregateWeightAllowed": false
+  },
+  "relationWeightingRules": {
+    "relationReceivesIndependentWeightRecord": true,
+    "constituentFactWeightsPreserved": true,
+    "relationMayResolveContradiction": false,
+    "relationMaySelectWinner": false,
+    "differentScopeCoexistenceMustRemainCoexistence": true
+  },
+  "dimensionStrengthRules": {
+    "factWeightsMayBeSummed": false,
+    "factCountsMayDetermineStrengthAlone": false,
+    "strongestApplicableEvidenceBandRecorded": true,
+    "supportingAndContraryEvidencePreservedSeparately": true,
+    "unresolvedOrNonExecutedStateMayNotBePromotedByWeight": true,
+    "dimensionVerdictMayNotChangeAtD4": true
+  },
+  "authorizedD4Subcheckpoints": [
+    "D4A_EVIDENCE_WEIGHTING_AUTHORITY_AND_RULE_LOCK",
+    "D4B_CANONICAL_FACT_WEIGHT_ASSIGNMENT",
+    "D4C_RELATION_AND_DIMENSION_STRENGTH_COMPILATION",
+    "D4D_COMBINED_WEIGHTING_AUDIT_AND_CLOSURE"
+  ],
+  "authorizedCheckpointPaths": [
+    ".github/workflows/metaverse-3d-benchmark-disposition-d4.yml",
+    "tools/metaverse-3d-benchmark-disposition-d4-contract.json",
+    "tools/metaverse-3d-benchmark-disposition-d4-core.mjs",
+    "tools/metaverse-3d-benchmark-disposition-d4-rules.mjs",
+    "tools/metaverse-3d-benchmark-disposition-d4-weight.mjs",
+    "tools/metaverse-3d-benchmark-disposition-d4-controls.mjs"
+  ],
+  "classificationAndDispositionBoundaries": {
+    "parentD3FactsRewritten": false,
+    "parentD3ClassificationsRewritten": false,
+    "dimensionStatesChanged": false,
+    "winnerSelectionAllowed": false,
+    "contradictionResolutionAllowed": false,
+    "dispositionCompilationAllowed": false,
+    "productMutationAllowed": false,
+    "hEarthEvidenceAdmitted": false,
+    "t5LifecycleEvidenceAdmitted": false,
+    "mainWriteAllowed": false,
+    "mergeAllowed": false,
+    "userAcceptanceGrantAllowed": false
+  },
+  "claims": {
+    "weightingAuthorityLocked": true,
+    "deterministicWeightingRulesLocked": true,
+    "canonicalFactWeightingPerformed": false,
+    "relationWeightingPerformed": false,
+    "dimensionStrengthCompilationPerformed": false,
+    "winnerSelectionPerformed": false,
+    "dispositionCompilationPerformed": false,
+    "productFilesChanged": 0,
+    "hEarthFilesChanged": 0,
+    "mainChanged": false,
+    "mergePerformed": false,
+    "userAcceptanceGranted": false
+  },
+  "nextBoundedAction": "D4B_CANONICAL_FACT_WEIGHT_ASSIGNMENT"
+}

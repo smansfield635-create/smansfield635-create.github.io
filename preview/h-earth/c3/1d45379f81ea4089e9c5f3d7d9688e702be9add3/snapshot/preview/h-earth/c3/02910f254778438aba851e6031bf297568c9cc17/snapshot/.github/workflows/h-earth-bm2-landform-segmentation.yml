@@ -1,0 +1,52 @@
+name: H-Earth BM2 Landform Segmentation
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-bm2-landform-segmentation.yml'
+      - 'h-earth-3d/authoring/round2-baked-material/h-earth.bm2-landform-segmentation.v1.mjs'
+      - 'h-earth-3d/control-plane/post-cp2-round2/baked-material/h-earth.bm2-landform-segmentation-authority.v1.mjs'
+      - 'h-earth-3d/validation/baked-material/h-earth.bm2-landform-segmentation.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-landform-segmentation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact BM2 candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute BM2 verifier first pass
+        run: node h-earth-3d/validation/baked-material/h-earth.bm2-landform-segmentation.mjs > /tmp/bm2-first.json
+      - name: Execute BM2 verifier second pass
+        run: node h-earth-3d/validation/baked-material/h-earth.bm2-landform-segmentation.mjs > /tmp/bm2-second.json
+      - name: Require identical receipts
+        run: cmp /tmp/bm2-first.json /tmp/bm2-second.json
+      - name: Upload BM2 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-bm2-landform-segmentation
+          path: |
+            /tmp/bm2-first.json
+            /tmp/bm2-second.json
+          retention-days: 90
+      - name: Enforce BM2 pass
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt = JSON.parse(fs.readFileSync('/tmp/bm2-first.json', 'utf8'));
+          if (receipt.pass !== true || receipt.result !== 'BM2_LANDFORM_DESCRIPTOR_AND_SEGMENTATION_PASS_CLOSED') {
+            console.error(JSON.stringify(receipt, null, 2));
+            process.exit(1);
+          }
+          console.log(`BM2_PASS:${receipt.descriptorDigest}:${receipt.segmentationDigest}:${receipt.canonicalReceiptSha256}`);
+          NODE

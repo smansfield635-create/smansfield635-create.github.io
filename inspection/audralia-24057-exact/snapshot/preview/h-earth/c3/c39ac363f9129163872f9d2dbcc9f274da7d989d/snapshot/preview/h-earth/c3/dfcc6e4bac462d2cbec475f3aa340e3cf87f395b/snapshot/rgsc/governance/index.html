@@ -1,0 +1,492 @@
+<!-- FILE: rgsc/governance/index.html  (TNT REPLACEMENT) -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>RGSC · Governance · Scope Panel</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+
+<style>
+html,body{height:100%;margin:0}
+body{background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);color:#eaf2f6;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.page{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 12px}
+.h{text-align:center;margin-bottom:14px}
+.h h1{font-size:40px;font-weight:900;margin:0}
+.h p{opacity:.7;margin-top:8px}
+.card{width:min(900px,96vw);background:rgba(255,255,255,.06);border-radius:18px;box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;padding:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.field{flex:1;min-width:240px}
+.field label{display:block;font-weight:900;font-size:12px;letter-spacing:.8px;opacity:.8;margin:0 0 6px 2px}
+.field input{width:100%;box-sizing:border-box;padding:10px 12px;border-radius:14px;border:0;outline:none;background:rgba(255,255,255,.10);color:#eaf2f6;box-shadow:0 0 0 1px rgba(255,255,255,.10) inset}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.btn{flex:1;min-width:160px;padding:12px 14px;border-radius:16px;border:0;font-weight:900;letter-spacing:.6px;cursor:pointer;background:rgba(0,255,136,.22);color:#eaf2f6;box-shadow:0 0 0 1px rgba(0,255,136,.28) inset}
+.btn.secondary{background:rgba(255,255,255,.10);box-shadow:0 0 0 1px rgba(255,255,255,.12) inset}
+.btn.small{padding:10px 12px;border-radius:14px;min-width:140px}
+.badge{font-weight:900;letter-spacing:.8px;opacity:.85;font-size:12px;margin-top:8px}
+.panel{margin-top:10px;padding:12px;border-radius:16px;background:rgba(0,0,0,.18);box-shadow:0 0 0 1px rgba(255,255,255,.08) inset}
+.scopeRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.scopeLabel{min-width:90px;font-weight:900;letter-spacing:.8px;opacity:.85}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{
+  padding:10px 12px;border-radius:999px;border:0;cursor:pointer;
+  background:rgba(255,255,255,.10);color:#eaf2f6;font-weight:900;letter-spacing:.6px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;
+}
+.pill.active{
+  background:rgba(0,255,136,.22);
+  box-shadow:0 0 0 1px rgba(0,255,136,.28) inset;
+}
+.pill.neutral.active{
+  background:rgba(255,255,255,.14);
+  box-shadow:0 0 0 1px rgba(255,255,255,.18) inset;
+}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.actionBtn{
+  padding:10px 12px;border-radius:999px;border:0;cursor:pointer;
+  background:rgba(255,255,255,.10);color:#eaf2f6;font-weight:900;letter-spacing:.6px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;
+}
+.actionBtn.active{
+  background:rgba(0,255,136,.22);
+  box-shadow:0 0 0 1px rgba(0,255,136,.28) inset;
+}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;opacity:.9}
+.printbox{margin-top:10px;padding:10px 12px;border-radius:14px;background:rgba(0,0,0,.18);box-shadow:0 0 0 1px rgba(255,255,255,.08) inset}
+.items{margin-top:12px;max-height:300px;overflow:auto;border-radius:14px;background:rgba(0,0,0,.18);box-shadow:0 0 0 1px rgba(255,255,255,.08) inset;padding:8px}
+.item{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;line-height:1.35;opacity:.9;padding:8px;border-radius:12px;background:rgba(255,255,255,.04);box-shadow:0 0 0 1px rgba(255,255,255,.06) inset;margin-bottom:8px;white-space:pre-wrap;word-break:break-word}
+.nav{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap;justify-content:center}
+.nav a{padding:14px 22px;border-radius:18px;background:rgba(255,255,255,.10);text-decoration:none;color:#eaf2f6;font-weight:900}
+footer{text-align:center;opacity:.55;margin-top:12px;letter-spacing:3px;font-size:12px}
+.hr{height:1px;background:rgba(255,255,255,.10);margin:12px 0}
+</style>
+</head>
+
+<body>
+<div class="page">
+  <div class="h">
+    <h1>RGSC · Governance</h1>
+    <p>Tap-only scope panel · Hybrid compression · Per-subject chains · Replay-safe.</p>
+  </div>
+
+  <div class="card">
+
+    <!-- ISSUER (set once, then auto) -->
+    <div class="panel" id="issuerPanel">
+      <div class="row">
+        <div class="field">
+          <label>ISSUER (set once)</label>
+          <input id="issuerInput" placeholder="SM635">
+        </div>
+        <button class="btn small" onclick="saveIssuer()">SAVE ISSUER</button>
+        <button class="btn small secondary" onclick="clearIssuer()">CLEAR</button>
+      </div>
+      <div class="badge" id="issuerStatus">Issuer: (not set)</div>
+    </div>
+
+    <div class="hr"></div>
+
+    <!-- CASE -->
+    <div class="panel">
+      <div class="row">
+        <div class="field">
+          <label>CASE (auto)</label>
+          <input id="subjectInput" placeholder="(auto)" readonly>
+        </div>
+        <button class="btn small secondary" onclick="newCase()">NEW CASE</button>
+        <button class="btn small secondary" onclick="copyCaseLink()">COPY LINK</button>
+      </div>
+
+      <div class="printbox">
+        <div class="mono">Printable (fallback)</div>
+        <div class="mono" id="printId">(none)</div>
+        <div class="btnrow" style="margin-top:8px;">
+          <button class="btn small secondary" onclick="copyPrintable()">COPY PRINTABLE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="hr"></div>
+
+    <!-- ACTION (no typing) -->
+    <div class="panel">
+      <div class="badge">ACTION</div>
+      <div class="actions" id="actions">
+        <button class="actionBtn" onclick="setAction('DETECT')">DETECT</button>
+        <button class="actionBtn" onclick="setAction('ACK')">ACK</button>
+        <button class="actionBtn" onclick="setAction('ADJUST')">ADJUST</button>
+        <button class="actionBtn" onclick="setAction('RESOLVE')">RESOLVE</button>
+        <button class="actionBtn" onclick="setAction('CLOSE')">CLOSE</button>
+      </div>
+      <div class="badge" id="actionStatus">Selected: ACK</div>
+    </div>
+
+    <div class="hr"></div>
+
+    <!-- SCOPE (7 dispositions per lens) -->
+    <div class="panel">
+      <div class="badge">SCOPE (each lens: -3 -2 -1 0 +1 +2 +3)</div>
+
+      <div class="scopeRow">
+        <div class="scopeLabel">N</div>
+        <div class="pills" id="N_pills"></div>
+      </div>
+
+      <div class="scopeRow">
+        <div class="scopeLabel">S</div>
+        <div class="pills" id="S_pills"></div>
+      </div>
+
+      <div class="scopeRow">
+        <div class="scopeLabel">E</div>
+        <div class="pills" id="E_pills"></div>
+      </div>
+
+      <div class="scopeRow">
+        <div class="scopeLabel">W</div>
+        <div class="pills" id="W_pills"></div>
+      </div>
+
+      <div class="badge" id="stateStatus">state_id_256: 0</div>
+      <div class="mono" id="detailStatus">N_raw=0 S_raw=0 E_raw=0 W_raw=0 · N_lvl=0 S_lvl=0 E_lvl=0 W_lvl=0</div>
+
+      <div class="btnrow" style="margin-top:10px;">
+        <button class="btn" onclick="createReceipt()">CREATE RECEIPT</button>
+      </div>
+    </div>
+
+    <div class="items" id="recent"></div>
+
+  </div>
+
+  <div class="nav">
+    <a href="/rgsc/">RGSC Door</a>
+    <a href="/rgsc/log/">Log</a>
+    <a href="/home/">Home</a>
+  </div>
+
+  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+</div>
+
+<script>
+/* =========================
+   Constants
+========================= */
+const STORAGE_KEY = "rgsc_log";
+const SECRET_KEY  = "rgsc_device_secret";
+const ISSUER_KEY  = "rgsc_issuer_id";
+const SCHEMA_VERSION = "1.0";
+const SIG_ALG = "HMAC-SHA256-LOCAL";
+const DOMAIN = "governance";
+const CONSTRAINT_HASH = "GOV_RECEIPT_v1";
+
+/* =========================
+   Local log
+========================= */
+let log = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+function saveLog(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(log)); }
+function esc(s){ return s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
+
+/* =========================
+   Crypto helpers
+========================= */
+function canonicalPayload(obj){
+  const keys = Object.keys(obj).sort();
+  const out = {};
+  for(const k of keys){ out[k] = obj[k]; }
+  return JSON.stringify(out);
+}
+async function sha256Hex(str){
+  const buf = new TextEncoder().encode(str);
+  const digest = await crypto.subtle.digest("SHA-256", buf);
+  return [...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+function getOrCreateDeviceSecret(){
+  let secret = localStorage.getItem(SECRET_KEY);
+  if(!secret){
+    const arr = new Uint8Array(32);
+    crypto.getRandomValues(arr);
+    secret = btoa(String.fromCharCode(...arr));
+    localStorage.setItem(SECRET_KEY, secret);
+  }
+  return secret;
+}
+async function hmacHex(secretB64, message){
+  const raw = Uint8Array.from(atob(secretB64), c=>c.charCodeAt(0));
+  const key = await crypto.subtle.importKey("raw", raw, {name:"HMAC", hash:"SHA-256"}, false, ["sign","verify"]);
+  const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(message));
+  return [...new Uint8Array(sig)].map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+
+/* =========================
+   Issuer (set once)
+========================= */
+function loadIssuer(){
+  const issuer = localStorage.getItem(ISSUER_KEY) || "";
+  document.getElementById("issuerInput").value = issuer;
+  document.getElementById("issuerStatus").textContent = issuer ? `Issuer: ${issuer}` : "Issuer: (not set)";
+}
+function saveIssuer(){
+  const v = document.getElementById("issuerInput").value.trim();
+  if(!v){ alert("Enter an issuer id once, then save."); return; }
+  localStorage.setItem(ISSUER_KEY, v);
+  loadIssuer();
+  alert("Issuer saved.");
+}
+function clearIssuer(){
+  if(!confirm("Clear issuer on this device?")) return;
+  localStorage.removeItem(ISSUER_KEY);
+  loadIssuer();
+}
+
+/* =========================
+   Case ID (auto, random)
+========================= */
+function randomHex(bytes){
+  const arr = new Uint8Array(bytes);
+  crypto.getRandomValues(arr);
+  return [...arr].map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+function formatPrintable(subject){
+  const s = subject.replace(/^s_/, "");
+  const groups = s.match(/.{1,4}/g) || [s];
+  return "s_" + groups.join("-");
+}
+function setCase(subject){
+  document.getElementById("subjectInput").value = subject;
+  document.getElementById("printId").textContent = formatPrintable(subject);
+
+  // also maintain a deep-link for copy/share
+  const url = new URL(window.location.href);
+  url.searchParams.set("subject", subject);
+  window.history.replaceState({}, "", url.toString());
+}
+function newCase(){
+  const s = "s_" + randomHex(8);
+  setCase(s);
+}
+function initCaseFromURL(){
+  const url = new URL(window.location.href);
+  const s = url.searchParams.get("subject");
+  if(s){ setCase(s); }
+  else { newCase(); }
+}
+function copyPrintable(){
+  const subject = document.getElementById("subjectInput").value.trim();
+  navigator.clipboard.writeText(formatPrintable(subject)).then(()=>alert("Printable copied."));
+}
+function copyCaseLink(){
+  const subject = document.getElementById("subjectInput").value.trim();
+  const url = new URL(window.location.href);
+  url.searchParams.set("subject", subject);
+  navigator.clipboard.writeText(url.toString()).then(()=>alert("Case link copied."));
+}
+
+/* =========================
+   Action buttons (tap-only)
+========================= */
+let selectedAction = "ACK";
+function setAction(a){
+  selectedAction = a;
+  document.getElementById("actionStatus").textContent = `Selected: ${a}`;
+  // highlight
+  const btns = document.querySelectorAll(".actionBtn");
+  btns.forEach(b=>{
+    b.classList.toggle("active", b.textContent === a);
+  });
+  // optional: set a default E_raw based on action if user hasn't touched E yet
+  if(!userTouchedE){
+    const map = {DETECT:0, ACK:1, ADJUST:2, RESOLVE:3, CLOSE:3};
+    const target = map[a] ?? 0;
+    setLensRaw("E", target); // 0..3 as positive side default (still editable)
+  }
+  updateComputed();
+}
+
+/* =========================
+   Hybrid scope: raw (-3..+3) + compressed lvl (0..3)
+========================= */
+const lens = {
+  N: {raw:0},
+  S: {raw:0},
+  E: {raw:0},
+  W: {raw:0},
+};
+let userTouchedE = false;
+
+function signOf(x){
+  if(x===0) return "NEU";
+  return x>0 ? "POS" : "NEG";
+}
+function lvlOf(x){
+  const a = Math.abs(x);
+  return a>3 ? 3 : a; // 0..3
+}
+function encode256(Nlvl, Slvl, Elvl, Wlvl){
+  return (Nlvl*64) + (Slvl*16) + (Elvl*4) + (Wlvl);
+}
+
+function makePills(targetId, axis){
+  const holder = document.getElementById(targetId);
+  holder.innerHTML = "";
+  const values = [-3,-2,-1,0,1,2,3];
+  values.forEach(v=>{
+    const b = document.createElement("button");
+    b.className = "pill" + (v===0 ? " neutral" : "");
+    b.textContent = (v===0 ? "0" : (v>0 ? `+${v}` : `${v}`));
+    b.onclick = ()=> {
+      if(axis==="E") userTouchedE = true;
+      setLensRaw(axis, v);
+      updateComputed();
+    };
+    holder.appendChild(b);
+  });
+}
+function setLensRaw(axis, v){
+  lens[axis].raw = v;
+  // update active highlight
+  const holder = document.getElementById(axis+"_pills");
+  [...holder.children].forEach(btn=>{
+    const t = btn.textContent;
+    const parsed = (t==="0") ? 0 : parseInt(t.replace("+",""),10);
+    btn.classList.toggle("active", parsed === v);
+  });
+}
+
+function updateComputed(){
+  const N_raw = lens.N.raw, S_raw = lens.S.raw, E_raw = lens.E.raw, W_raw = lens.W.raw;
+  const N_lvl = lvlOf(N_raw), S_lvl = lvlOf(S_raw), E_lvl = lvlOf(E_raw), W_lvl = lvlOf(W_raw);
+  const state_id = encode256(N_lvl, S_lvl, E_lvl, W_lvl);
+
+  document.getElementById("stateStatus").textContent = `state_id_256: ${state_id}`;
+  document.getElementById("detailStatus").textContent =
+    `N_raw=${N_raw} S_raw=${S_raw} E_raw=${E_raw} W_raw=${W_raw} · `+
+    `N_lvl=${N_lvl} S_lvl=${S_lvl} E_lvl=${E_lvl} W_lvl=${W_lvl}`;
+}
+
+/* =========================
+   Per-subject chaining
+========================= */
+function lastPayloadHashForSubject(subject_id){
+  for(let i=log.length-1;i>=0;i--){
+    const r = log[i];
+    if(r && r.subject_id === subject_id && r.payload_hash){
+      return r.payload_hash;
+    }
+  }
+  return null;
+}
+
+/* =========================
+   Create receipt (tap-only)
+========================= */
+async function createReceipt(){
+  const issuer = (localStorage.getItem(ISSUER_KEY) || "").trim();
+  if(!issuer){
+    alert("Set ISSUER once, then try again.");
+    return;
+  }
+  const subject = document.getElementById("subjectInput").value.trim();
+  if(!subject){
+    alert("Case missing. Tap NEW CASE.");
+    return;
+  }
+
+  const N_raw = lens.N.raw, S_raw = lens.S.raw, E_raw = lens.E.raw, W_raw = lens.W.raw;
+  const N_lvl = lvlOf(N_raw), S_lvl = lvlOf(S_raw), E_lvl = lvlOf(E_raw), W_lvl = lvlOf(W_raw);
+  const N_sign = signOf(N_raw), S_sign = signOf(S_raw), E_sign = signOf(E_raw), W_sign = signOf(W_raw);
+
+  const state_id = encode256(N_lvl, S_lvl, E_lvl, W_lvl);
+
+  // IMPORTANT: keep A/B/C/D as lvl so Log verification stays consistent.
+  const A = N_lvl, B = S_lvl, C = E_lvl, D = W_lvl;
+
+  const prev_hash = lastPayloadHashForSubject(subject);
+
+  const base = {
+    schema_version: SCHEMA_VERSION,
+    sig_alg: SIG_ALG,
+    issuer_id: issuer,
+    subject_id: subject,
+    domain: DOMAIN,
+
+    // hybrid scope (signed)
+    N_raw, S_raw, E_raw, W_raw,
+    N_sign, S_sign, E_sign, W_sign,
+    N_lvl, S_lvl, E_lvl, W_lvl,
+
+    // compatibility for existing verifier
+    state_id: state_id,
+    A, B, C, D,
+
+    constraint_hash: CONSTRAINT_HASH,
+    outcome_code: selectedAction,
+    ts: new Date().toISOString(),
+    prev_hash: prev_hash
+  };
+
+  const payload = canonicalPayload(base);
+  const payload_hash = await sha256Hex(payload);
+
+  const secret = getOrCreateDeviceSecret();
+  const signature = await hmacHex(secret, payload_hash);
+
+  const receipt = {
+    receipt_id: "r_" + Date.now(),
+    ...base,
+    payload_hash,
+    signature,
+    verify_status: "VALID_LOCAL"
+  };
+
+  log.push(receipt);
+  saveLog();
+  renderRecentForSubject(subject);
+}
+
+/* =========================
+   Recent view (current subject only)
+========================= */
+function renderRecentForSubject(subject){
+  const el = document.getElementById("recent");
+  const items = [];
+  for(let i=log.length-1;i>=0 && items.length<12;i--){
+    const r = log[i];
+    if(r && r.subject_id === subject) items.push(r);
+  }
+  if(!items.length){
+    el.innerHTML = '<div class="item">No receipts for this case yet.</div>';
+    return;
+  }
+  el.innerHTML = items.map(r=>'<div class="item">'+esc(JSON.stringify(r, null, 2))+'</div>').join("");
+}
+
+/* =========================
+   Init
+========================= */
+function init(){
+  // Build scope pill rows
+  makePills("N_pills", "N");
+  makePills("S_pills", "S");
+  makePills("E_pills", "E");
+  makePills("W_pills", "W");
+
+  // Default action
+  setAction("ACK");
+
+  // Default all lenses to 0 (baseline)
+  setLensRaw("N",0); setLensRaw("S",0); setLensRaw("E",0); setLensRaw("W",0);
+
+  loadIssuer();
+  initCaseFromURL();
+  updateComputed();
+
+  const subject = document.getElementById("subjectInput").value.trim();
+  renderRecentForSubject(subject);
+}
+init();
+</script>
+</body>
+</html>

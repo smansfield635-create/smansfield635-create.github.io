@@ -1,0 +1,1227 @@
+<!-- TARGET FILE: /showroom/globe/hearth/jeeves/index.html -->
+<!-- TNT FULL-FILE REPLACEMENT -->
+<!-- DIAMOND_GATE_BRIDGE_JEEVES_TWO_STAGE_ESTATE_THRESHOLD_HOST_AND_ROUTING_SURFACE_HTML_TNT_v16_1 -->
+<!--
+  Purpose:
+  - Present “Talk to the House” as an approach to the estate entrance.
+  - Introduce Jeeves as the host receiving the visitor at the front door.
+  - Reduce threshold onboarding to two deliberate stages.
+  - Begin with a compact stained-glass threshold.
+  - Grow the threshold to full presentation size after the first continuation.
+  - Open the page and begin Jeeves’s welcome after the second continuation.
+  - Mount the shared Mirrorland stained-glass geometry.
+  - Make the hosted conversation the primary page experience.
+  - Preserve deliberate typing, reading, and single-message rush surfaces.
+  - Keep supporting information compact through native disclosure panels.
+  - Reveal one contextual room, route, or specialist handoff at a time.
+  - Preserve real anchor navigation, accessibility, and non-JavaScript access.
+
+  Two-stage threshold path:
+  1. Arrival
+     - compact threshold Window
+     - entrance context
+     - Continue
+  2. Welcome
+     - full threshold Window
+     - Jeeves introduction and conversation instruction
+     - Enter the estate
+
+  Accessibility corrections:
+  - The threshold begins hidden and inert until its runtime activates it.
+  - The threshold declares modal-dialog semantics when activated.
+  - The threshold uses a permanent accessible label rather than references
+    to headings that become hidden between stages.
+  - The visible threshold skip control remains the single introduction-skip
+    control owned by the threshold runtime.
+  - The main page begins open so the non-JavaScript fallback remains usable.
+  - The threshold runtime changes the page to guided access when onboarding
+    actually begins.
+
+  Owns:
+  - Jeeves public page structure
+  - two-stage estate-threshold onboarding structure
+  - stained-glass threshold mount
+  - threshold copy and controls
+  - explicit Talk to the House handoff
+  - primary conversation mounts
+  - current-message rush target
+  - contextual handoff mount
+  - compact supporting disclosure structure
+  - replay-welcome controls
+  - non-JavaScript public fallback
+
+  Does not own:
+  - Mirrorland geometry definitions
+  - threshold canvas drawing
+  - onboarding state transitions
+  - Jeeves dialogue language
+  - dialogue registers
+  - conversation sequencing
+  - conversation timing calculations
+  - route execution
+  - visual styling
+  - specialist interpretation
+  - destination-page content
+  - diagnostic authority
+  - product authority
+  - protected architecture
+-->
+
+<!doctype html>
+<html
+  lang="en"
+  data-route="/showroom/globe/hearth/jeeves/"
+  data-page="jeeves-estate-threshold"
+  data-contract="DIAMOND_GATE_BRIDGE_JEEVES_TWO_STAGE_ESTATE_THRESHOLD_HOST_AND_ROUTING_SURFACE_HTML_TNT_v16_1"
+  data-previous-contract="DIAMOND_GATE_BRIDGE_JEEVES_TWO_STAGE_ESTATE_THRESHOLD_HOST_AND_ROUTING_SURFACE_HTML_TNT_v16"
+  data-status="active"
+  data-agent="jeeves"
+  data-agent-name-lock="Jeeves"
+  data-agent-role="estate-threshold-host-and-routing-guide"
+  data-primary-quality="orientation"
+  data-guide-law="receive-orient-handoff"
+  data-arrival-metaphor="estate-front-door"
+  data-entry-source="talk-to-the-house"
+  data-threshold-onboarding="true"
+  data-threshold-phase-count="2"
+  data-threshold-growth-path="compact-to-full"
+  data-page-access="open"
+  data-character-homepage="true"
+  data-conversation-first="true"
+  data-conversation-primary-stage="true"
+  data-first-viewport-interaction="true"
+  data-contextual-route-limit="1"
+  data-specialist-interpretation="false"
+  data-specialist-ownership="false"
+  data-whole-house-ownership="false"
+  data-room-ownership="false"
+  data-automatic-opening-message-limit="2"
+  data-voice-authority="/assets/hearth/jeeves/jeeves.voice.js"
+  data-runtime-authority="/showroom/globe/hearth/jeeves/index.js"
+  data-threshold-authority="/showroom/globe/hearth/jeeves/jeeves.threshold.js"
+  data-geometry-authority="/assets/shared/mirrorland-window.geometry.js"
+  data-css-authority="/showroom/globe/hearth/jeeves/index.css"
+  data-no-inline-dialogue-engine="true"
+  data-no-inline-css="true"
+  data-index-js-retired="false"
+  data-api-js-retired="true"
+>
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,viewport-fit=cover"
+  >
+
+  <meta
+    name="color-scheme"
+    content="dark"
+  >
+
+  <title>
+    Talk to the House · Jeeves · Diamond Gate Bridge
+  </title>
+
+  <meta
+    name="description"
+    content="Approach the Diamond Gate Bridge estate and meet Jeeves at the front door. Tell him what brought you here and he will introduce the correct room, path, or specialist."
+  >
+
+  <link
+    rel="stylesheet"
+    href="/showroom/globe/hearth/jeeves/index.css?v=DIAMOND_GATE_BRIDGE_JEEVES_ESTATE_THRESHOLD_HOST_AND_ROUTING_SURFACE_CSS_TNT_v15"
+    data-jeeves-css-authority="true"
+  >
+</head>
+
+<body>
+  <!--
+    TWO-STAGE ESTATE-THRESHOLD INTRODUCTION
+
+    The threshold begins hidden so it cannot trap a visitor before the
+    geometry and threshold runtimes are ready.
+
+    The threshold runtime controls:
+    - activation
+    - active stage
+    - compact-to-full Window growth
+    - stained-glass reveal amount
+    - focus movement
+    - page scroll locking
+    - skip behavior
+    - completion and replay state
+
+    The HTML owns only the two public tutorial panels:
+    - arrival
+    - host
+
+    The runtime exposes the host panel publicly as the welcome stage.
+  -->
+
+  <section
+    class="jeeves-threshold"
+    data-jeeves-threshold
+    data-threshold-state="pending"
+    data-threshold-phase="arrival"
+    data-threshold-source-panel="arrival"
+    data-threshold-window-size="compact"
+    data-threshold-phase-index="1"
+    data-threshold-phase-total="2"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Diamond Gate Bridge estate entrance introduction"
+    aria-hidden="true"
+    inert
+    hidden
+  >
+    <div
+      class="jeeves-threshold-backdrop"
+      data-jeeves-threshold-backdrop
+      aria-hidden="true"
+    ></div>
+
+    <div class="jeeves-threshold-stage">
+      <header class="jeeves-threshold-toolbar">
+        <div
+          class="jeeves-threshold-progress"
+          aria-label="Introduction progress"
+        >
+          <span data-jeeves-threshold-progress-label>
+            Arrival · 1 of 2
+          </span>
+
+          <div
+            class="jeeves-threshold-progress-track"
+            aria-hidden="true"
+          >
+            <span
+              class="jeeves-threshold-progress-value"
+              data-jeeves-threshold-progress-value
+            ></span>
+          </div>
+        </div>
+
+        <button
+          id="jeeves-threshold-skip-control"
+          class="jeeves-threshold-skip"
+          type="button"
+          data-jeeves-threshold-skip
+        >
+          Skip introduction
+        </button>
+      </header>
+
+      <div class="jeeves-threshold-scene">
+        <div
+          class="jeeves-threshold-window-stage"
+          data-jeeves-threshold-window-stage
+        >
+          <div
+            class="jeeves-threshold-window"
+            data-jeeves-threshold-window-mount
+            aria-hidden="true"
+          ></div>
+
+          <div
+            class="jeeves-threshold-window-caption"
+            data-jeeves-threshold-window-caption
+            aria-hidden="true"
+          >
+            Mirrorland threshold
+          </div>
+        </div>
+
+        <div
+          class="jeeves-threshold-copy-stage"
+          data-jeeves-threshold-copy-stage
+        >
+          <div
+            class="jeeves-threshold-phase"
+            data-jeeves-threshold-panel="arrival"
+            data-threshold-panel-index="1"
+          >
+            <div class="jeeves-threshold-eyebrow">
+              You chose Talk to the House
+            </div>
+
+            <h1>
+              You have reached the entrance to the estate.
+            </h1>
+
+            <p>
+              This stained-glass threshold marks the approach to Mirrorland
+              and the public rooms of Diamond Gate Bridge.
+            </p>
+          </div>
+
+          <div
+            class="jeeves-threshold-phase"
+            data-jeeves-threshold-panel="host"
+            data-threshold-panel-index="2"
+            aria-hidden="true"
+            hidden
+          >
+            <div class="jeeves-threshold-eyebrow">
+              Your host at the front door
+            </div>
+
+            <h2>
+              Jeeves receives visitors here.
+            </h2>
+
+            <p>
+              Tell Jeeves what brought you to the estate. He will help you
+              understand where you are and introduce the correct room, path,
+              or specialist.
+            </p>
+
+            <p class="jeeves-threshold-instruction">
+              Jeeves responds one message at a time. While he is typing or
+              waiting, tap the conversation stage to advance only the current
+              message.
+            </p>
+          </div>
+
+          <div class="jeeves-threshold-actions">
+            <button
+              class="jeeves-threshold-advance"
+              type="button"
+              data-jeeves-threshold-advance
+              aria-describedby="jeeves-threshold-action-note"
+            >
+              Continue
+            </button>
+
+            <p
+              id="jeeves-threshold-action-note"
+              class="jeeves-threshold-action-note"
+              data-jeeves-threshold-action-note
+            >
+              Continue to meet the host at the estate entrance.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="jeeves-threshold-status"
+        data-jeeves-threshold-status
+        aria-live="polite"
+      >
+        The Mirrorland threshold is coming into view.
+      </div>
+    </div>
+  </section>
+
+  <main
+    id="jeeves-main"
+    class="jeeves-page"
+    data-jeeves-page="true"
+    data-agent-root-page="true"
+    data-jeeves-access="open"
+    aria-describedby="jeeves-arrival-summary"
+  >
+    <a
+      class="skip-link"
+      href="#jeeves-conversation"
+    >
+      Skip to the Jeeves conversation
+    </a>
+
+    <header
+      class="jeeves-header"
+      aria-label="Jeeves header"
+    >
+      <a
+        class="jeeves-brand"
+        href="/showroom/globe/hearth/jeeves/"
+        aria-label="Talk to the House with Jeeves"
+      >
+        <span
+          class="jeeves-brand-mark"
+          aria-hidden="true"
+        >
+          J
+        </span>
+
+        <span class="jeeves-brand-copy">
+          <span>
+            Diamond Gate Bridge · Estate Entrance
+          </span>
+
+          <strong>
+            Talk to the House with Jeeves
+          </strong>
+        </span>
+      </a>
+
+      <div class="jeeves-header-tools">
+        <button
+          class="jeeves-replay-welcome"
+          type="button"
+          data-jeeves-replay-welcome
+          hidden
+        >
+          Replay welcome
+        </button>
+
+        <a
+          class="jeeves-compass-link"
+          href="/"
+        >
+          Compass
+        </a>
+
+        <details class="jeeves-house-paths">
+          <summary>
+            Guide Paths
+          </summary>
+
+          <nav
+            class="jeeves-house-menu"
+            aria-label="Diamond Gate Bridge guide paths"
+          >
+            <a href="/elara/index.html">
+              Elara · Human Meaning
+            </a>
+
+            <a href="/products/auren/">
+              Auren · Practical Systems
+            </a>
+
+            <a href="/coherence-diagnostic/">
+              Soren · Diagnostic Orientation
+            </a>
+
+            <a href="/site-guide/">
+              Website Guide · Public Map
+            </a>
+          </nav>
+        </details>
+      </div>
+    </header>
+
+    <section
+      class="jeeves-arrival"
+      data-jeeves-arrival
+      aria-labelledby="jeeves-arrival-title"
+    >
+      <div class="jeeves-arrival-window">
+        <div
+          class="jeeves-arrival-window-seal"
+          data-jeeves-settled-window-mount
+          aria-hidden="true"
+        ></div>
+      </div>
+
+      <div class="jeeves-arrival-copy">
+        <div class="jeeves-kicker">
+          You chose Talk to the House
+        </div>
+
+        <h1 id="jeeves-arrival-title">
+          Welcome to the estate.
+        </h1>
+
+        <p
+          id="jeeves-arrival-summary"
+          class="jeeves-arrival-lead"
+        >
+          Jeeves is the host at the front door. He receives your question,
+          helps you understand the grounds, and introduces the correct room,
+          path, or specialist.
+        </p>
+
+        <div
+          class="jeeves-role-line"
+          aria-label="Jeeves responsibility"
+        >
+          <span>
+            Receive
+          </span>
+
+          <span aria-hidden="true">
+            ·
+          </span>
+
+          <span>
+            Orient
+          </span>
+
+          <span aria-hidden="true">
+            ·
+          </span>
+
+          <span>
+            Open the correct door
+          </span>
+        </div>
+
+        <a
+          class="jeeves-arrival-action"
+          href="#jeeves-conversation"
+        >
+          Approach Jeeves
+        </a>
+      </div>
+    </section>
+
+    <section
+      id="jeeves-conversation"
+      class="jeeves-console-section"
+      data-jeeves-primary-stage
+      aria-labelledby="jeeves-console-title"
+      tabindex="-1"
+    >
+      <div
+        class="jeeves-stage-label"
+        aria-hidden="true"
+      >
+        Live host session
+      </div>
+
+      <div
+        id="hearthJeevesMount"
+        class="jeeves-console-shell"
+        data-jeeves-app
+        data-jeeves-root
+        data-jeeves-mode="welcome"
+        data-jeeves-ready="false"
+        data-jeeves-speaking="false"
+        data-jeeves-delay-state="idle"
+        data-jeeves-rush-available="false"
+        data-jeeves-options-ready="false"
+        data-single-contextual-destination="true"
+        data-contextual-route-limit="1"
+        tabindex="0"
+      >
+        <header class="jeeves-console-head">
+          <div class="jeeves-console-heading">
+            <div class="jeeves-console-identity">
+              <div
+                class="jeeves-avatar"
+                aria-hidden="true"
+              >
+                J
+              </div>
+
+              <div class="jeeves-console-identity-copy">
+                <span data-jeeves-mode-label>
+                  Front Door Reception
+                </span>
+
+                <strong>
+                  Jeeves
+                </strong>
+
+                <small>
+                  Host and Welcome Guide
+                </small>
+              </div>
+            </div>
+
+            <div class="jeeves-session-indicator">
+              <span
+                class="jeeves-session-light"
+                aria-hidden="true"
+              ></span>
+
+              <span
+                class="jeeves-status"
+                data-jeeves-status
+                aria-live="polite"
+              >
+                Jeeves is preparing your welcome.
+              </span>
+            </div>
+          </div>
+
+          <div class="jeeves-console-copy">
+            <div class="jeeves-kicker">
+              Talk to the House
+            </div>
+
+            <h2
+              id="jeeves-console-title"
+              data-jeeves-mode-title
+            >
+              Tell me what brought you to the estate.
+            </h2>
+
+            <p>
+              Jeeves will provide the necessary orientation and open one
+              appropriate next door.
+            </p>
+          </div>
+        </header>
+
+        <section
+          class="jeeves-console"
+          aria-label="Hosted conversation with Jeeves"
+        >
+          <div
+            class="jeeves-thread-screen"
+            data-jeeves-rush-target
+            data-jeeves-thread-state="waiting"
+            aria-describedby="jeeves-rush-instruction"
+          >
+            <div class="jeeves-thread-telemetry">
+              <span data-jeeves-thread-stage>
+                Reception channel
+              </span>
+
+              <span data-jeeves-thread-signal>
+                Awaiting host
+              </span>
+            </div>
+
+            <div
+              class="jeeves-thread"
+              data-jeeves-thread
+              aria-live="polite"
+              aria-relevant="additions text"
+              aria-label="Jeeves conversation thread"
+            ></div>
+
+            <div
+              class="jeeves-typing"
+              data-jeeves-typing="false"
+              aria-label="Jeeves is typing"
+              aria-hidden="true"
+              hidden
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+
+            <button
+              class="jeeves-rush-control"
+              type="button"
+              data-jeeves-rush-control
+              aria-describedby="jeeves-rush-instruction"
+              hidden
+            >
+              Continue this message
+            </button>
+          </div>
+
+          <div
+            id="jeeves-rush-instruction"
+            class="jeeves-conversation-cue"
+            data-jeeves-conversation-cue
+            aria-live="polite"
+            hidden
+          >
+            Tap the conversation to advance only Jeeves’s current message.
+          </div>
+
+          <div
+            class="jeeves-context-route"
+            data-jeeves-context-route
+            data-route-card-limit="1"
+            aria-live="polite"
+          ></div>
+
+          <div class="jeeves-prompt-dock">
+            <div class="jeeves-prompt-head">
+              <div
+                class="jeeves-prompt-label"
+                data-jeeves-prompt-label
+              >
+                What brought you to Diamond Gate Bridge?
+              </div>
+
+              <div
+                class="jeeves-prompt-status"
+                data-jeeves-prompt-status
+                aria-live="polite"
+              >
+                Options appear after Jeeves finishes speaking.
+              </div>
+            </div>
+
+            <div
+              class="jeeves-options"
+              data-jeeves-options
+              data-single-prompt-dock="true"
+              aria-label="Jeeves conversation options"
+            ></div>
+          </div>
+        </section>
+
+        <div class="jeeves-runtime-fallback">
+          <p>
+            Jeeves’s conversation is unavailable, but the estate’s primary
+            public paths remain open.
+          </p>
+
+          <div class="jeeves-runtime-fallback-links">
+            <a href="/site-guide/">
+              Open the Website Guide
+            </a>
+
+            <a href="/elara/index.html">
+              Meet Elara
+            </a>
+
+            <a href="/coherence-diagnostic/">
+              Open the Diagnostic
+            </a>
+
+            <a href="/products/">
+              Explore Practical Systems
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="jeeves-section jeeves-guide-index"
+      data-jeeves-supporting-guide
+      aria-labelledby="jeeves-guide-index-title"
+    >
+      <div class="jeeves-guide-index-head">
+        <div class="jeeves-kicker">
+          Estate Guide
+        </div>
+
+        <h2 id="jeeves-guide-index-title">
+          Open only what you need.
+        </h2>
+
+        <p>
+          The conversation remains the primary entrance. These panels provide
+          supporting context without turning the page into one uninterrupted
+          document.
+        </p>
+      </div>
+
+      <div class="jeeves-guide-disclosures">
+        <details
+          class="jeeves-guide-disclosure jeeves-guide-disclosure-host"
+          data-jeeves-guide-disclosure="host"
+        >
+          <summary>
+            <span class="jeeves-guide-summary-index">
+              01
+            </span>
+
+            <span class="jeeves-guide-summary-copy">
+              <strong>
+                About your host
+              </strong>
+
+              <small>
+                Jeeves’s role, manner, and guide law
+              </small>
+            </span>
+
+            <span
+              class="jeeves-guide-summary-control"
+              aria-hidden="true"
+            >
+              Open
+            </span>
+          </summary>
+
+          <div class="jeeves-guide-disclosure-body">
+            <section
+              class="jeeves-proposition"
+              aria-labelledby="jeeves-proposition-title"
+            >
+              <div class="jeeves-proposition-copy">
+                <div class="jeeves-kicker">
+                  Character Proposition
+                </div>
+
+                <h3 id="jeeves-proposition-title">
+                  A good host does not keep every question.
+                </h3>
+
+                <p>
+                  Jeeves knows enough of Diamond Gate Bridge to recognize
+                  where a visitor belongs. He explains the public surface,
+                  protects the boundaries between specialist roles, and
+                  transfers the question when another guide should carry it
+                  further.
+                </p>
+
+                <p class="jeeves-proposition-line">
+                  “The first responsibility of a guide is not to answer
+                  everything. It is to open the correct door.”
+                </p>
+              </div>
+            </section>
+
+            <section
+              class="jeeves-dossier"
+              aria-labelledby="jeeves-dossier-title"
+            >
+              <div class="jeeves-dossier-head">
+                <div class="jeeves-kicker">
+                  Core Class
+                </div>
+
+                <h3 id="jeeves-dossier-title">
+                  Estate Host and Routing Guide
+                </h3>
+
+                <p>
+                  Jeeves manages the public threshold: receiving the visitor,
+                  clarifying intent, providing introductory orientation, and
+                  transferring responsibility to the correct owner.
+                </p>
+              </div>
+
+              <div class="jeeves-dossier-grid">
+                <article class="jeeves-dossier-card">
+                  <span>
+                    Surface
+                  </span>
+
+                  <strong>
+                    Composed hospitality
+                  </strong>
+
+                  <p>
+                    Calm, attentive, clear, and capable of making a large
+                    platform feel approachable.
+                  </p>
+                </article>
+
+                <article class="jeeves-dossier-card">
+                  <span>
+                    Core
+                  </span>
+
+                  <strong>
+                    Intent recognition
+                  </strong>
+
+                  <p>
+                    He listens for what the visitor actually needs before
+                    selecting a destination.
+                  </p>
+                </article>
+
+                <article class="jeeves-dossier-card">
+                  <span>
+                    Guide Law
+                  </span>
+
+                  <strong>
+                    Receive, orient, hand off
+                  </strong>
+
+                  <p>
+                    He gives enough context to make the next step meaningful,
+                    then lets the proper owner take over.
+                  </p>
+                </article>
+              </div>
+            </section>
+          </div>
+        </details>
+
+        <details
+          class="jeeves-guide-disclosure jeeves-guide-disclosure-ownership"
+          data-jeeves-guide-disclosure="ownership"
+        >
+          <summary>
+            <span class="jeeves-guide-summary-index">
+              02
+            </span>
+
+            <span class="jeeves-guide-summary-copy">
+              <strong>
+                Who owns what
+              </strong>
+
+              <small>
+                Jeeves’s boundary and specialist handoffs
+              </small>
+            </span>
+
+            <span
+              class="jeeves-guide-summary-control"
+              aria-hidden="true"
+            >
+              Open
+            </span>
+          </summary>
+
+          <div class="jeeves-guide-disclosure-body">
+            <section
+              class="jeeves-boundary"
+              aria-labelledby="jeeves-boundary-title"
+            >
+              <div class="jeeves-boundary-head">
+                <div class="jeeves-kicker">
+                  Responsibility Boundary
+                </div>
+
+                <h3 id="jeeves-boundary-title">
+                  Jeeves introduces the specialist. He does not replace them.
+                </h3>
+              </div>
+
+              <div class="jeeves-boundary-grid">
+                <article class="jeeves-boundary-card">
+                  <span>
+                    Jeeves Owns
+                  </span>
+
+                  <ul>
+                    <li>
+                      Front-door welcome
+                    </li>
+
+                    <li>
+                      Visitor-intent clarification
+                    </li>
+
+                    <li>
+                      Introductory public orientation
+                    </li>
+
+                    <li>
+                      Room and specialist handoff
+                    </li>
+
+                    <li>
+                      Public route recognition
+                    </li>
+                  </ul>
+                </article>
+
+                <article class="jeeves-boundary-card">
+                  <span>
+                    Jeeves Does Not Own
+                  </span>
+
+                  <ul>
+                    <li>
+                      Personal diagnostic interpretation
+                    </li>
+
+                    <li>
+                      Product implementation
+                    </li>
+
+                    <li>
+                      Full Mission narration
+                    </li>
+
+                    <li>
+                      Deep Mirrorland exposition
+                    </li>
+
+                    <li>
+                      Protected architecture
+                    </li>
+                  </ul>
+                </article>
+              </div>
+            </section>
+
+            <section
+              class="jeeves-panel jeeves-team-map"
+              aria-labelledby="jeeves-team-title"
+            >
+              <div class="jeeves-team-head">
+                <div class="jeeves-kicker">
+                  AI Team Ownership
+                </div>
+
+                <h3
+                  id="jeeves-team-title"
+                  class="jeeves-section-title"
+                >
+                  One welcome. Clear responsibility after it.
+                </h3>
+
+                <p class="jeeves-section-copy">
+                  Jeeves begins the conversation. Each specialist carries the
+                  visitor further only inside the domain they own.
+                </p>
+              </div>
+
+              <div class="jeeves-team-grid">
+                <article
+                  class="jeeves-team-card"
+                  aria-current="page"
+                >
+                  <span>
+                    Front Door and Routing
+                  </span>
+
+                  <strong>
+                    Jeeves
+                  </strong>
+
+                  <p>
+                    First contact, visitor orientation, route recognition, and
+                    specialist handoff.
+                  </p>
+                </article>
+
+                <a
+                  class="jeeves-team-card"
+                  href="/elara/index.html"
+                >
+                  <span>
+                    Human Meaning
+                  </span>
+
+                  <strong>
+                    Elara
+                  </strong>
+
+                  <p>
+                    Sean, the public Mission, origin, invitation, and
+                    Mirrorland’s emotional climate.
+                  </p>
+                </a>
+
+                <a
+                  class="jeeves-team-card"
+                  href="/products/auren/"
+                >
+                  <span>
+                    Practical Systems
+                  </span>
+
+                  <strong>
+                    Auren
+                  </strong>
+
+                  <p>
+                    Products, education, practical value, custody, exchange,
+                    and implementation.
+                  </p>
+                </a>
+
+                <a
+                  class="jeeves-team-card"
+                  href="/coherence-diagnostic/"
+                >
+                  <span>
+                    Diagnostic Orientation
+                  </span>
+
+                  <strong>
+                    Soren
+                  </strong>
+
+                  <p>
+                    Coherence assessment, evidence, interpretation boundaries,
+                    and structural orientation.
+                  </p>
+                </a>
+              </div>
+            </section>
+          </div>
+        </details>
+
+        <details
+          class="jeeves-guide-disclosure jeeves-guide-disclosure-paths"
+          data-jeeves-guide-disclosure="paths"
+        >
+          <summary>
+            <span class="jeeves-guide-summary-index">
+              03
+            </span>
+
+            <span class="jeeves-guide-summary-copy">
+              <strong>
+                Explore without asking
+              </strong>
+
+              <small>
+                Direct public paths through the estate
+              </small>
+            </span>
+
+            <span
+              class="jeeves-guide-summary-control"
+              aria-hidden="true"
+            >
+              Open
+            </span>
+          </summary>
+
+          <div class="jeeves-guide-disclosure-body">
+            <section
+              class="jeeves-public-paths"
+              aria-labelledby="jeeves-public-paths-title"
+            >
+              <div class="jeeves-public-paths-head">
+                <div class="jeeves-kicker">
+                  Direct Public Paths
+                </div>
+
+                <h3 id="jeeves-public-paths-title">
+                  You may also enter without asking.
+                </h3>
+
+                <p>
+                  The conversation is available for orientation, but Diamond
+                  Gate Bridge does not require a visitor to pass through
+                  Jeeves.
+                </p>
+              </div>
+
+              <div class="jeeves-public-paths-grid">
+                <a
+                  class="jeeves-public-path"
+                  href="/site-guide/"
+                >
+                  <span>
+                    Public Map
+                  </span>
+
+                  <strong>
+                    Website Guide
+                  </strong>
+
+                  <p>
+                    See the primary rooms, routes, and public entry points.
+                  </p>
+                </a>
+
+                <a
+                  class="jeeves-public-path"
+                  href="/showroom/"
+                >
+                  <span>
+                    Estate Entrance
+                  </span>
+
+                  <strong>
+                    Showroom
+                  </strong>
+
+                  <p>
+                    Enter the visible architecture and approach Mirrorland.
+                  </p>
+                </a>
+
+                <a
+                  class="jeeves-public-path"
+                  href="/meet-sean-mansfield/"
+                >
+                  <span>
+                    Human Story
+                  </span>
+
+                  <strong>
+                    Meet Sean
+                  </strong>
+
+                  <p>
+                    Meet the builder and public human voice behind the work.
+                  </p>
+                </a>
+
+                <a
+                  class="jeeves-public-path"
+                  href="/products/"
+                >
+                  <span>
+                    Practical Layer
+                  </span>
+
+                  <strong>
+                    Products
+                  </strong>
+
+                  <p>
+                    Explore tools, systems, education, and implementation.
+                  </p>
+                </a>
+              </div>
+            </section>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <footer class="jeeves-footer">
+      <span>
+        Jeeves · Host and Welcome Guide · Diamond Gate Bridge
+      </span>
+
+      <div class="jeeves-footer-actions">
+        <button
+          type="button"
+          data-jeeves-replay-welcome
+        >
+          Replay estate welcome
+        </button>
+
+        <a href="/">
+          Return to Compass
+        </a>
+      </div>
+    </footer>
+  </main>
+
+  <noscript>
+    <section class="jeeves-runtime-fallback">
+      <p>
+        Jeeves’s interactive guide requires JavaScript. The estate’s primary
+        public paths and page content remain available.
+      </p>
+
+      <div class="jeeves-runtime-fallback-links">
+        <a href="/site-guide/">
+          Open the Website Guide
+        </a>
+
+        <a href="/elara/index.html">
+          Meet Elara
+        </a>
+
+        <a href="/coherence-diagnostic/">
+          Open the Diagnostic
+        </a>
+
+        <a href="/products/">
+          Explore Products
+        </a>
+
+        <a href="/">
+          Return to Compass
+        </a>
+      </div>
+    </section>
+  </noscript>
+
+  <script
+    src="/assets/shared/mirrorland-window.geometry.js?v=DIAMOND_GATE_BRIDGE_SHARED_MIRRORLAND_WINDOW_GEOMETRY_TNT_v1"
+    defer
+    data-jeeves-child="mirrorland-geometry"
+  ></script>
+
+  <script
+    src="/showroom/globe/hearth/jeeves/jeeves.threshold.js?v=DIAMOND_GATE_BRIDGE_JEEVES_TWO_STAGE_ESTATE_THRESHOLD_RENDERER_TNT_v2"
+    defer
+    data-jeeves-child="threshold"
+  ></script>
+
+  <script
+    src="/assets/hearth/jeeves/jeeves.voice.js?v=DIAMOND_GATE_BRIDGE_JEEVES_WELCOME_ROUTING_VOICE_TNT_v1"
+    defer
+    data-jeeves-child="voice"
+  ></script>
+
+  <script
+    src="/showroom/globe/hearth/jeeves/index.js?v=DIAMOND_GATE_BRIDGE_JEEVES_ESTATE_HOST_CONVERSATION_RUNTIME_TNT_v2"
+    defer
+    data-jeeves-child="runtime"
+  ></script>
+</body>
+</html>

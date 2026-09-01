@@ -1,0 +1,237 @@
+name: Public → Private Canonical Execution Carrier v1
+
+on:
+  workflow_call:
+    inputs:
+      private_issue:
+        required: true
+        type: string
+      private_comment:
+        required: true
+        type: string
+      expected_request_id:
+        required: true
+        type: string
+      exact_private_head:
+        required: true
+        type: string
+      callback_issue:
+        required: true
+        type: string
+    secrets:
+      PRIVATE_EXECUTION_APP_PRIVATE_KEY:
+        required: true
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  carrier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PRIVATE_REPOSITORY: smansfield635-create/geodiametrics1
+      PRIVATE_EXECUTOR_PATH: tools/pre-registration-intake-bridge/canonical-intake-execution-bridge.v1.mjs
+
+    steps:
+      - name: Validate fixed locator inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          case '${{ inputs.private_issue }}' in (*[!0-9]*|'') exit 1;; esac
+          case '${{ inputs.private_comment }}' in (*[!0-9]*|'') exit 1;; esac
+          case '${{ inputs.callback_issue }}' in (*[!0-9]*|'') exit 1;; esac
+          printf '%s' '${{ inputs.exact_private_head }}' | grep -Eq '^[0-9a-f]{40}$'
+          printf '%s' '${{ inputs.expected_request_id }}' | grep -Eq '^[A-Z0-9][A-Z0-9_.:-]{2,127}$'
+
+      - name: Mint private-repository installation token
+        id: private-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: write
+          permission-issues: read
+
+      - name: Fetch and validate frozen private intake
+        id: request
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.private-token.outputs.token }}
+          PRIVATE_ISSUE: ${{ inputs.private_issue }}
+          PRIVATE_COMMENT: ${{ inputs.private_comment }}
+          EXPECTED_REQUEST_ID: ${{ inputs.expected_request_id }}
+          EXACT_PRIVATE_HEAD: ${{ inputs.exact_private_head }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/public-private-canonical-execution"
+          mkdir -p "$work"
+          curl --fail-with-body --silent --show-error \
+            --header 'Accept: application/vnd.github+json' \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$PRIVATE_REPOSITORY/issues/comments/$PRIVATE_COMMENT" \
+            > "$work/private-comment.json"
+          python - <<'PY'
+          import json, os
+          work = os.path.join(os.environ['RUNNER_TEMP'], 'public-private-canonical-execution')
+          comment = json.load(open(os.path.join(work, 'private-comment.json'), encoding='utf-8'))
+          expected_issue_suffix = '/issues/' + os.environ['PRIVATE_ISSUE']
+          if not str(comment.get('issue_url','')).endswith(expected_issue_suffix):
+              raise SystemExit('PRIVATE_COMMENT_ISSUE_MISMATCH')
+          body = comment.get('body') or ''
+          marker = 'PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_V1'
+          if not body.startswith(marker):
+              raise SystemExit('PRIVATE_INTAKE_MARKER_MISSING')
+          request = json.loads(body[len(marker):].strip())
+          required = {'schema','requestId','repository','exactGoverningHead','operationRequest','constructionProcedure','requestNonce','executionHolder'}
+          if set(request) != required:
+              raise SystemExit('PRIVATE_REQUEST_KEYS_NOT_CLOSED')
+          if request['schema'] != 'PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_v1':
+              raise SystemExit('PRIVATE_REQUEST_SCHEMA_MISMATCH')
+          if request['repository'] != 'smansfield635-create/geodiametrics1':
+              raise SystemExit('PRIVATE_REPOSITORY_SUBSTITUTION_PROHIBITED')
+          if request['requestId'] != os.environ['EXPECTED_REQUEST_ID']:
+              raise SystemExit('PRIVATE_REQUEST_ID_MISMATCH')
+          if request['exactGoverningHead'] != os.environ['EXACT_PRIVATE_HEAD']:
+              raise SystemExit('PRIVATE_REQUEST_HEAD_MISMATCH')
+          if request.get('operationRequest', {}).get('exactGoverningHead') != os.environ['EXACT_PRIVATE_HEAD']:
+              raise SystemExit('OPERATION_HEAD_MISMATCH')
+          if request.get('constructionProcedure', {}).get('exactGoverningHead') != os.environ['EXACT_PRIVATE_HEAD']:
+              raise SystemExit('PROCEDURE_HEAD_MISMATCH')
+          request_path = os.path.join(work, 'request.json')
+          with open(request_path, 'w', encoding='utf-8') as f:
+              json.dump(request, f, sort_keys=True, separators=(',', ':'))
+              f.write('\n')
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as f:
+              f.write('request_id=' + request['requestId'] + '\n')
+          PY
+
+      - name: Verify live private main matches request
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.private-token.outputs.token }}
+          EXPECTED_HEAD: ${{ inputs.exact_private_head }}
+        run: |
+          set -euo pipefail
+          observed="$(curl --fail-with-body --silent --show-error \
+            --header 'Accept: application/vnd.github+json' \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$PRIVATE_REPOSITORY/branches/main" | jq -r '.commit.sha')"
+          test "$observed" = "$EXPECTED_HEAD"
+
+      - name: Check out exact private canonical source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: ${{ inputs.exact_private_head }}
+          token: ${{ steps.private-token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Verify exact private checkout
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ inputs.exact_private_head }}
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/private-control-plane"
+          test "$(git rev-parse HEAD^{commit})" = "$EXPECTED_HEAD"
+          test -f "$PRIVATE_EXECUTOR_PATH"
+          git status --porcelain=v1 --untracked-files=all | grep -q . && exit 1 || true
+
+      - name: Execute private-owned canonical intake bridge
+        id: execute
+        continue-on-error: true
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ steps.private-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/public-private-canonical-execution"
+          node "$GITHUB_WORKSPACE/private-control-plane/$PRIVATE_EXECUTOR_PATH" \
+            --input "$work/request.json" \
+            --output "$work/private-bridge-receipt.json"
+
+      - name: Produce redacted public receipt
+        id: redact
+        if: always()
+        shell: bash
+        env:
+          REQUEST_ID: ${{ steps.request.outputs.request_id }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/public-private-canonical-execution"
+          test -s "$work/private-bridge-receipt.json"
+          python - <<'PY'
+          import hashlib, json, os
+          work = os.path.join(os.environ['RUNNER_TEMP'], 'public-private-canonical-execution')
+          receipt_path = os.path.join(work, 'private-bridge-receipt.json')
+          raw = open(receipt_path, 'rb').read()
+          receipt = json.loads(raw)
+          canonical = receipt.get('canonicalReceiptJson') or {}
+          redacted = {
+              'schema': 'PUBLIC_PRIVATE_CANONICAL_EXECUTION_REDACTED_RECEIPT_v1',
+              'requestId': os.environ.get('REQUEST_ID'),
+              'result': receipt.get('result'),
+              'canonicalResult': canonical.get('result'),
+              'canonicalReceiptSha256': hashlib.sha256(raw).hexdigest(),
+              'runId': os.environ['GITHUB_RUN_ID'],
+              'runAttempt': int(os.environ['GITHUB_RUN_ATTEMPT'])
+          }
+          out = os.path.join(work, 'redacted-receipt.json')
+          with open(out, 'w', encoding='utf-8') as f:
+              json.dump(redacted, f, sort_keys=True, indent=2)
+              f.write('\n')
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as f:
+              for key in ('result','canonicalResult','canonicalReceiptSha256'):
+                  value = redacted.get(key)
+                  f.write(f"{key}={'' if value is None else value}\n")
+          PY
+
+      - name: Publish redacted result
+        if: always() && steps.redact.outputs.canonicalReceiptSha256 != ''
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CALLBACK_ISSUE: ${{ inputs.callback_issue }}
+          REQUEST_ID: ${{ steps.request.outputs.request_id }}
+          CARRIER_RESULT: ${{ steps.redact.outputs.result }}
+          CANONICAL_RESULT: ${{ steps.redact.outputs.canonicalResult }}
+          RECEIPT_SHA: ${{ steps.redact.outputs.canonicalReceiptSha256 }}
+        run: |
+          set -euo pipefail
+          body="PUBLIC_PRIVATE_CANONICAL_EXECUTION_RESULT_V1\nrequestId: $REQUEST_ID\ncarrierResult: $CARRIER_RESULT\ncanonicalResult: $CANONICAL_RESULT\ncanonicalReceiptSha256: $RECEIPT_SHA\nrunId: $GITHUB_RUN_ID\nrunAttempt: $GITHUB_RUN_ATTEMPT"
+          jq -n --arg body "$body" '{body:$body}' > "$RUNNER_TEMP/result-comment.json"
+          curl --fail-with-body --silent --show-error \
+            --request POST \
+            --header 'Accept: application/vnd.github+json' \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/issues/$CALLBACK_ISSUE/comments" \
+            --data-binary "@$RUNNER_TEMP/result-comment.json" >/dev/null
+
+      - name: Upload redacted receipt only
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: public-private-canonical-execution-redacted-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/public-private-canonical-execution/redacted-receipt.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Enforce carrier result
+        if: always()
+        shell: bash
+        env:
+          EXECUTE_OUTCOME: ${{ steps.execute.outcome }}
+          CARRIER_RESULT: ${{ steps.redact.outputs.result }}
+        run: |
+          set -euo pipefail
+          test "$EXECUTE_OUTCOME" = "success"
+          test "$CARRIER_RESULT" = "CANONICAL_RECEIPT_RETURNED"

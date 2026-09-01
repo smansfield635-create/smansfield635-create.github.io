@@ -1,0 +1,343 @@
+name: H-Earth C2 Coastal Visual Successor
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'preview/h-earth/c2/coastal-visual-successor-001/**'
+      - '.github/workflows/h-earth-c2-coastal-visual-successor.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify-c2-candidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install browser harness
+        run: |
+          mkdir -p /tmp/h-earth-c2
+          npm --prefix /tmp/h-earth-c2 init -y
+          npm --prefix /tmp/h-earth-c2 install playwright
+          /tmp/h-earth-c2/node_modules/.bin/playwright install --with-deps chromium
+
+      - name: Serve candidate
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/h-earth-c2-server.log 2>&1 &
+          echo $! >/tmp/h-earth-c2-server.pid
+          for attempt in $(seq 1 30); do
+            curl -fsS http://127.0.0.1:4173/preview/h-earth/c2/coastal-visual-successor-001/ >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/h-earth-c2-server.log
+          exit 1
+
+      - name: Execute functional and visual verification
+        env:
+          C2_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          C2_WORKSPACE: ${{ github.workspace }}
+        run: |
+          cat >/tmp/h-earth-c2/verify.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const url = 'http://127.0.0.1:4173/preview/h-earth/c2/coastal-visual-successor-001/';
+          const outputPath = path.join(
+            process.env.C2_WORKSPACE,
+            'h-earth-3d/control-plane/coastal-morphology/c2/evidence/h-earth.c2.browser-verification.json'
+          );
+          fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+
+          const browser = await chromium.launch({
+            headless: true,
+            args: ['--use-angle=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist']
+          });
+          const context = await browser.newContext({
+            viewport: { width: 960, height: 700 },
+            hasTouch: true,
+            isMobile: false
+          });
+          const page = await context.newPage();
+          const pageErrors = [];
+          const consoleErrors = [];
+          const requestFailures = [];
+          page.on('pageerror', error => pageErrors.push(String(error)));
+          page.on('console', message => {
+            if (message.type() === 'error') consoleErrors.push(message.text());
+          });
+          page.on('requestfailed', request => {
+            requestFailures.push(`${request.url()} :: ${request.failure()?.errorText ?? 'unknown'}`);
+          });
+
+          const response = await page.goto(url, { waitUntil: 'networkidle', timeout: 120000 });
+          await page.waitForFunction(
+            () => window.H_EARTH_C2_CANDIDATE?.ready === true,
+            null,
+            { timeout: 120000 }
+          );
+          await page.waitForTimeout(1200);
+          const initialColor = await page.evaluate(
+            () => window.H_EARTH_C2_CANDIDATE.captureColorSummary()
+          );
+
+          await page.evaluate(() => {
+            const surface = document.getElementById('candidate-canvas');
+            const fire = (type, init) => surface.dispatchEvent(new PointerEvent(type, {
+              bubbles: true,
+              cancelable: true,
+              ...init
+            }));
+            fire('pointerdown', {
+              pointerId: 1,
+              pointerType: 'touch',
+              clientX: 420,
+              clientY: 310,
+              buttons: 1
+            });
+            fire('pointermove', {
+              pointerId: 1,
+              pointerType: 'touch',
+              clientX: 510,
+              clientY: 300,
+              buttons: 1
+            });
+          });
+          await page.waitForTimeout(420);
+          await page.evaluate(() => {
+            const surface = document.getElementById('candidate-canvas');
+            surface.dispatchEvent(new PointerEvent('pointerup', {
+              bubbles: true,
+              cancelable: true,
+              pointerId: 1,
+              pointerType: 'touch',
+              clientX: 510,
+              clientY: 300
+            }));
+            surface.dispatchEvent(new WheelEvent('wheel', {
+              bubbles: true,
+              cancelable: true,
+              deltaY: -420
+            }));
+          });
+          await page.waitForTimeout(900);
+
+          const finalReceipt = await page.evaluate(
+            () => window.H_EARTH_C2_CANDIDATE.getReceipt()
+          );
+          const finalColor = await page.evaluate(
+            () => window.H_EARTH_C2_CANDIDATE.captureColorSummary()
+          );
+          await page.screenshot({ path: '/tmp/h-earth-c2/c2-candidate.png', fullPage: true });
+          await browser.close();
+
+          const criticalConsoleErrors = consoleErrors.filter(message => !/favicon/i.test(message));
+          const checks = {
+            pageLoads: response?.status() === 200 && finalReceipt.ready === true,
+            webglRendererPresents: finalReceipt.functional.webglRendererPresents === true,
+            cameraMoves: finalReceipt.functional.cameraMoves === true,
+            traversalWorks: finalReceipt.functional.traversalWorks === true,
+            touchAndPointerInputWork:
+              finalReceipt.functional.touchAndPointerInputWork === true &&
+              finalReceipt.input.counters.touchPointerEventCount > 0,
+            noBlackOrFrozenCanvas:
+              finalReceipt.functional.noBlackOrFrozenCanvas === true &&
+              initialColor.nonClearRatio > 0.01 &&
+              finalColor.nonClearRatio > 0.01 &&
+              initialColor.byteHash !== finalColor.byteHash,
+            noPageErrors: pageErrors.length === 0,
+            noCriticalConsoleErrors: criticalConsoleErrors.length === 0,
+            noCriticalAssetFailures: requestFailures.length === 0,
+            noUnrelatedPlacementDisplacement:
+              finalReceipt.functional.noUnrelatedPlacementDisplacement === true,
+            performanceUsableForReview:
+              finalReceipt.functional.performanceUsableForReview === true,
+            rollbackAvailable: finalReceipt.functional.rollbackAvailable === true,
+            visibleBeachCreated:
+              finalReceipt.visual.visibleBeachCreated === true &&
+              finalReceipt.renderer.candidateViews.reshapedTerrainVertexCount > 0,
+            sandbarVisible: finalReceipt.visual.sandbarProfilePresent === true,
+            coastalMembershipsPresent:
+              finalReceipt.visual.coastalMembershipsPresent === true,
+            shallowWaterTurquoise:
+              finalReceipt.visual.shallowWaterTurquoise === true,
+            deepWaterDarkening:
+              finalReceipt.visual.deepWaterDarkening === true,
+            oceanMotionPresent:
+              finalReceipt.visual.oceanMotionPresent === true &&
+              initialColor.byteHash !== finalColor.byteHash,
+            swashOrFoamPresent:
+              finalReceipt.visual.swashOrFoamPresent === true,
+            macroTerrainDefinitionPresent:
+              finalReceipt.visual.macroTerrainDefinitionPresent === true
+          };
+          const visualNames = new Set([
+            'visibleBeachCreated',
+            'sandbarVisible',
+            'coastalMembershipsPresent',
+            'shallowWaterTurquoise',
+            'deepWaterDarkening',
+            'oceanMotionPresent',
+            'swashOrFoamPresent',
+            'macroTerrainDefinitionPresent'
+          ]);
+          const failedHardChecks = Object.entries(checks)
+            .filter(([name, value]) => !visualNames.has(name) && value !== true)
+            .map(([name]) => name);
+          const criticalErrorCount =
+            pageErrors.length +
+            criticalConsoleErrors.length +
+            requestFailures.length +
+            Number(finalReceipt.errors.criticalErrorCount ?? 0);
+          const result = failedHardChecks.length === 0 ? 'PASS_CLOSED' : 'HARD_BLOCKED';
+          const output = {
+            receiptType: 'H_EARTH_C2_BROWSER_VERIFICATION_v1',
+            operation: 'C2.6_FUNCTIONAL_VERIFICATION',
+            result,
+            candidateHead: process.env.C2_HEAD,
+            localCandidateUrl: url,
+            checks,
+            initialColor,
+            finalColor,
+            rendererCounters: finalReceipt.renderer.counters,
+            inputCounters: finalReceipt.input.counters,
+            candidateViewMetrics: finalReceipt.renderer.candidateViews,
+            pageErrors,
+            consoleErrors,
+            requestFailures,
+            criticalErrorCount,
+            performanceUsable: checks.performanceUsableForReview,
+            firstBlocker: failedHardChecks[0] ?? null
+          };
+          fs.writeFileSync(outputPath, JSON.stringify(output, null, 2) + '\n');
+          if (result !== 'PASS_CLOSED') {
+            console.error(JSON.stringify(output, null, 2));
+            process.exitCode = 1;
+          }
+          NODE
+          cd /tmp/h-earth-c2
+          node verify.mjs
+
+      - name: Update C2 receipts
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          verification_path = Path(
+              'h-earth-3d/control-plane/coastal-morphology/c2/evidence/'
+              'h-earth.c2.browser-verification.json'
+          )
+          verification = json.loads(verification_path.read_text())
+          current_head = os.environ.get('GITHUB_SHA')
+          executed = verification.get('result') in {'PASS_CLOSED', 'HARD_BLOCKED'}
+          passed = verification.get('result') == 'PASS_CLOSED'
+          checks = verification.get('checks', {}) if executed else {}
+          live_url = 'https://diamondgatebridge.com/preview/h-earth/c2/coastal-visual-successor-001/'
+
+          receipt_path = Path(
+              'h-earth-3d/control-plane/coastal-morphology/c2/evidence/'
+              'h-earth.c2.visual-successor-receipt.json'
+          )
+          receipt = json.loads(receipt_path.read_text())
+          receipt.update({
+              'result': (
+                  'PASS_CLOSED_USER_DIFFERENTIAL_READY' if passed
+                  else 'HARD_BLOCKED' if executed
+                  else 'HARNESS_INCOMPLETE_NONPRODUCT_BLOCKER'
+              ),
+              'candidateHead': verification.get('candidateHead'),
+              'visibleBeachCreated': checks.get('visibleBeachCreated', False),
+              'sandbarVisible': checks.get('sandbarVisible', False),
+              'coastalMembershipsPresent': checks.get('coastalMembershipsPresent', False),
+              'shallowWaterTurquoise': checks.get('shallowWaterTurquoise', False),
+              'deepWaterDarkening': checks.get('deepWaterDarkening', False),
+              'oceanMotionPresent': checks.get('oceanMotionPresent', False),
+              'swashOrFoamPresent': checks.get('swashOrFoamPresent', False),
+              'macroTerrainDefinitionPresent': checks.get('macroTerrainDefinitionPresent', False),
+              'cameraWorks': checks.get('cameraMoves', False),
+              'traversalWorks': checks.get('traversalWorks', False),
+              'inputWorks': checks.get('touchAndPointerInputWork', False),
+              'gpuPresentationWorks': checks.get('webglRendererPresents', False),
+              'criticalErrorCount': verification.get('criticalErrorCount'),
+              'performanceUsable': verification.get('performanceUsable', False),
+              'liveCandidateUrl': live_url if passed else None,
+              'productDefaultMutated': False,
+              'firstBlocker': verification.get('firstBlocker') if executed else None,
+              'userDifferentialReady': passed
+          })
+          receipt_path.write_text(json.dumps(receipt, indent=2) + '\n')
+
+          ledger_path = Path(
+              'h-earth-3d/control-plane/coastal-morphology/c2/'
+              'h-earth.c2.progress-ledger.json'
+          )
+          ledger = json.loads(ledger_path.read_text())
+          for name in ['C2.1', 'C2.2', 'C2.3', 'C2.4', 'C2.5']:
+              ledger['passes'][name] = {
+                  'status': 'PASS_CLOSED',
+                  'result': 'CANDIDATE_FEATURE_IMPLEMENTED'
+              }
+          ledger['passes']['C2.6'] = {
+              'status': 'PASS_CLOSED' if passed else 'HARD_BLOCKED' if executed else 'IN_PROGRESS',
+              'result': verification.get('result')
+          }
+          ledger['passes']['C2.7'] = {
+              'status': 'READY_FOR_PUBLICATION' if passed else 'NOT_AUTHORIZED'
+          }
+          ledger['hardBlockers'] = (
+              [] if passed or not executed else [verification.get('firstBlocker')]
+          )
+          ledger['candidateUrl'] = live_url if passed else None
+          ledger['userDifferentialReady'] = False
+          ledger_path.write_text(json.dumps(ledger, indent=2) + '\n')
+
+          manifest_path = Path(
+              'preview/h-earth/c2/coastal-visual-successor-001/preview-manifest.json'
+          )
+          manifest = json.loads(manifest_path.read_text())
+          manifest['candidateHead'] = verification.get('candidateHead')
+          manifest['status'] = (
+              'VERIFIED_READY_FOR_PUBLICATION' if passed
+              else 'HARD_BLOCKED' if executed
+              else 'VERIFICATION_INCOMPLETE'
+          )
+          manifest['functionalVerification'] = verification.get('result')
+          manifest_path.write_text(json.dumps(manifest, indent=2) + '\n')
+          PY
+
+      - name: Commit durable verification
+        if: always() && github.event_name == 'pull_request'
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add \
+            h-earth-3d/control-plane/coastal-morphology/c2/evidence/h-earth.c2.browser-verification.json \
+            h-earth-3d/control-plane/coastal-morphology/c2/evidence/h-earth.c2.visual-successor-receipt.json \
+            h-earth-3d/control-plane/coastal-morphology/c2/h-earth.c2.progress-ledger.json \
+            preview/h-earth/c2/coastal-visual-successor-001/preview-manifest.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'C2.6: record candidate verification [skip ci]'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
+
+      - name: Upload candidate screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-c2-candidate-verification
+          path: |
+            /tmp/h-earth-c2/c2-candidate.png
+            h-earth-3d/control-plane/coastal-morphology/c2/evidence/h-earth.c2.browser-verification.json

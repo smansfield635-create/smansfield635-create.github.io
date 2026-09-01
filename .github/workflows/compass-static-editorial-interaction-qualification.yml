@@ -1,0 +1,40 @@
+name: Compass Static Editorial Interaction Qualification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'assets/compass/**'
+      - 'tools/compass-static-editorial-interaction-qualification.mjs'
+      - '.github/workflows/compass-static-editorial-interaction-qualification.yml'
+  push:
+    branches:
+      - 'recovery/compass-static-editorial-successor'
+    paths:
+      - 'index.html'
+      - 'assets/compass/**'
+      - 'tools/compass-static-editorial-interaction-qualification.mjs'
+      - '.github/workflows/compass-static-editorial-interaction-qualification.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  protected-track-a-interactions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Serve candidate
+        run: |
+          python3 -m http.server 4173 >/tmp/compass-interaction-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/compass-interaction-http.log || true
+          exit 1
+      - name: Exercise protected Track A interactions
+        run: node tools/compass-static-editorial-interaction-qualification.mjs

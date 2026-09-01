@@ -1,0 +1,206 @@
+name: Workflow Lifecycle V2 Actions Inventory Evidence Producer
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/workflow-lifecycle-continuity-v2-actions-inventory.yml'
+permissions: {}
+
+env:
+  REQUEST_MARKER: WORKFLOW_LIFECYCLE_V2_ACTIONS_INVENTORY_REQUEST_V1
+  REGISTRATION_BASE: 8d516f2a06f44dd69d3148bee42812c69c6f8cf5
+
+jobs:
+  validate-candidate:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify exact one-path candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          HEAD="$(git rev-parse HEAD^{commit})"
+          test "$HEAD" = "${{ github.event.pull_request.head.sha }}"
+          test "$(git rev-parse "$HEAD^")" = "$REGISTRATION_BASE"
+          git diff --name-only "$REGISTRATION_BASE" "$HEAD" | sort > "$RUNNER_TEMP/actual.txt"
+          printf '%s\n' '.github/workflows/workflow-lifecycle-continuity-v2-actions-inventory.yml' > "$RUNNER_TEMP/expected.txt"
+          diff -u "$RUNNER_TEMP/expected.txt" "$RUNNER_TEMP/actual.txt"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          echo "CANDIDATE_HEAD=$HEAD" >> "$GITHUB_ENV"
+      - name: Verify read-only fixed-purpose contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          FILE='.github/workflows/workflow-lifecycle-continuity-v2-actions-inventory.yml'
+          grep -Fq 'WORKFLOW_LIFECYCLE_V2_ACTIONS_INVENTORY_REQUEST_V1' "$FILE"
+          grep -Fq 'actions: read' "$FILE"
+          grep -Fq 'contents: read' "$FILE"
+          ! grep -Eq 'contents: write|actions: write|pull-requests: write|issues: write|deployments: write|packages: write' "$FILE"
+          forbidden='workflow_'
+          forbidden="${forbidden}dispatch:"
+          ! grep -Fq "$forbidden" "$FILE"
+      - name: Validate deterministic inventory digest algorithm
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const crypto=require('crypto');
+          const ids=[9,2,9,4];
+          const unique=[...new Set(ids)].sort((a,b)=>a-b);
+          const digest=crypto.createHash('sha256').update(JSON.stringify(unique)).digest('hex');
+          const expected=crypto.createHash('sha256').update('[2,4,9]').digest('hex');
+          if(unique.length!==3||digest!==expected)process.exit(1);
+          NODE
+      - name: Emit candidate validation receipt
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const out={
+            schema:'WORKFLOW_LIFECYCLE_V2_ACTIONS_INVENTORY_CARRIER_VALIDATION_RECEIPT_v1',
+            result:'PASS_CLOSED',
+            candidateHead:process.env.CANDIDATE_HEAD,
+            registrationBase:process.env.REGISTRATION_BASE,
+            exactPath:'.github/workflows/workflow-lifecycle-continuity-v2-actions-inventory.yml',
+            repositoryWritePermission:false,
+            actionsReadPermission:true,
+            issueWritePermission:false,
+            realInventoryExecuted:false,
+            gapClosureAuthorized:false,
+            physicalRetirementAuthorized:false,
+            workflowRetirementAuthorized:false,
+            productMutationAuthorized:false,
+            mergeAuthorized:false
+          };
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/validation.json',JSON.stringify(out,null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: workflow-lifecycle-v2-actions-inventory-validation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/validation.json
+          if-no-files-found: error
+          retention-days: 90
+
+  execute-actions-inventory:
+    if: >-
+      github.event_name == 'issue_comment' &&
+      startsWith(github.event.comment.body, 'WORKFLOW_LIFECYCLE_V2_ACTIONS_INVENTORY_REQUEST_V1') &&
+      (github.event.comment.author_association == 'OWNER' ||
+       github.event.comment.author_association == 'MEMBER' ||
+       github.event.comment.author_association == 'COLLABORATOR')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify exact event head and parse request
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$GITHUB_SHA"
+          node - <<'NODE'
+          const fs=require('fs');
+          const body=String(process.env.COMMENT_BODY||'').trim();
+          const marker=process.env.REQUEST_MARKER;
+          if(!body.startsWith(marker))throw Error('REQUEST_MARKER_MISSING');
+          const tail=body.slice(marker.length).trim();
+          if(!tail.startsWith('{')||!tail.endsWith('}'))throw Error('REQUEST_JSON_NOT_EXACT');
+          const q=JSON.parse(tail);
+          const keys=Object.keys(q).sort();
+          const expected=['requestNonce','schema','subjectHead'].sort();
+          if(JSON.stringify(keys)!==JSON.stringify(expected))throw Error('REQUEST_KEYSET_INVALID');
+          if(q.schema!=='WORKFLOW_LIFECYCLE_V2_ACTIONS_INVENTORY_INVOCATION_REQUEST_v1')throw Error('REQUEST_SCHEMA_INVALID');
+          if(q.subjectHead!==process.env.GITHUB_SHA||!/^[0-9a-f]{40}$/.test(q.subjectHead))throw Error('SUBJECT_HEAD_NOT_EVENT_MAIN');
+          if(!/^[0-9a-f]{64}$/.test(q.requestNonce))throw Error('REQUEST_NONCE_INVALID');
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/request.json',JSON.stringify(q,null,2)+'\n');
+          NODE
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+      - name: Produce exact authenticated workflow identity inventory
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs=require('fs'),crypto=require('crypto');
+          const q=require(process.env.RUNNER_TEMP+'/request.json');
+          const headers={Accept:'application/vnd.github+json',Authorization:`Bearer ${process.env.GITHUB_TOKEN}`,'X-GitHub-Api-Version':'2022-11-28'};
+          async function api(url){const r=await fetch(url,{headers});if(!r.ok)throw Error(`GITHUB_API_${r.status}`);return r.json();}
+          (async()=>{
+            const base=`https://api.github.com/repos/${process.env.GITHUB_REPOSITORY}`;
+            let page=1,total=null,ids=[];
+            for(;;page++){
+              const x=await api(`${base}/actions/workflows?per_page=100&page=${page}`);
+              if(total===null)total=x.total_count;
+              const batch=(x.workflows||[]).map(w=>w.id);
+              ids.push(...batch);
+              if(batch.length===0||ids.length>=total)break;
+            }
+            ids=[...new Set(ids)].sort((a,b)=>a-b);
+            if(ids.length!==total)throw Error(`INVENTORY_CARDINALITY_MISMATCH:${ids.length}:${total}`);
+            const identitiesDigest=crypto.createHash('sha256').update(JSON.stringify(ids)).digest('hex');
+            const evidence={
+              type:'ACTIONS_WORKFLOW_INVENTORY',
+              predicate:'FULL_ACTIONS_SURFACE_INVENTORY',
+              expectedCount:ids.length,
+              workflowIds:ids,
+              identitiesDigest
+            };
+            const receipt={
+              schema:'WORKFLOW_LIFECYCLE_V2_ACTIONS_INVENTORY_EVIDENCE_PRODUCER_RECEIPT_v1',
+              result:'PASS_CLOSED',
+              governingHead:q.subjectHead,
+              workflowCount:ids.length,
+              identitiesDigest,
+              evidence,
+              repositoryWritePermission:false,
+              gapClosureAuthorized:false,
+              physicalRetirementAuthorized:false,
+              workflowRetirementAuthorized:false,
+              productMutationAuthorized:false
+            };
+            fs.mkdirSync('artifacts/workflow-lifecycle-continuity',{recursive:true});
+            fs.writeFileSync('artifacts/workflow-lifecycle-continuity/actions-workflow-inventory-evidence.v2.json',JSON.stringify(receipt,null,2)+'\n');
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+      - name: Verify evidence shape and repository cleanliness
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const r=require(process.cwd()+'/artifacts/workflow-lifecycle-continuity/actions-workflow-inventory-evidence.v2.json');
+          const e=r.evidence;
+          if(r.result!=='PASS_CLOSED'||e.type!=='ACTIONS_WORKFLOW_INVENTORY'||e.predicate!=='FULL_ACTIONS_SURFACE_INVENTORY')process.exit(1);
+          if(e.expectedCount!==e.workflowIds.length||e.expectedCount!==r.workflowCount||e.identitiesDigest!==r.identitiesDigest)process.exit(1);
+          NODE
+          git status --porcelain=v1 --untracked-files=all | grep -v '^?? artifacts/workflow-lifecycle-continuity/actions-workflow-inventory-evidence.v2.json$' > "$RUNNER_TEMP/unexpected.txt" || true
+          test ! -s "$RUNNER_TEMP/unexpected.txt"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: workflow-lifecycle-v2-actions-inventory-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/workflow-lifecycle-continuity/actions-workflow-inventory-evidence.v2.json
+          if-no-files-found: error
+          retention-days: 90

@@ -1,0 +1,11 @@
+{
+  "files": {
+    ".github/workflows/imi-h-earth-ground-inspection-v1-conformance.yml": "ffbcf2b3b79fea38d69613b2147acf6755199e6418b0180604cfd878586700fb",
+    "research/route-operator-platform-v1/deployments/imi-h-earth-ground-inspection-v1/IMI_BYTE_CUSTODY_RECEIPT_v1.json": "29b42f112dc488f588682ffa0b656a78b06e7a4f1d1308dbb07cc5a77a03966e",
+    "research/route-operator-platform-v1/deployments/imi-h-earth-ground-inspection-v1/IMI_EXECUTABLE_RELEASE_RECEIPT_v1.json": "a9a72bc8d9be721c71d6ecb711f5a6261b616b3288a1a0ea03aa51e533aec76a",
+    "research/route-operator-platform-v1/deployments/imi-h-earth-ground-inspection-v1/README.md": "d65919e6c7f53eaa4e1e32391d0915d365be52d4ed5df8909b88e13d06e93d13",
+    "research/route-operator-platform-v1/deployments/imi-h-earth-ground-inspection-v1/RELEASE_POINTER.json": "87a43c6b2fbd2a26c132a3a9cfaf58cbc0b28fcc3ead6a906d782626fd497009"
+  },
+  "manifest_version": "1.0.0",
+  "release_id": "IMI_H_EARTH_GROUND_INSPECTION_DEPLOYABLE_RELEASE_v1"
+}

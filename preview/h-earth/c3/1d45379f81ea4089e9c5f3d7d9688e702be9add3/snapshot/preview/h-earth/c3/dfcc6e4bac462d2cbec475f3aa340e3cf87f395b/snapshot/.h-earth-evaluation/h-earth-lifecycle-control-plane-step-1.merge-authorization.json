@@ -1,0 +1,52 @@
+{
+  "authorizationId": "H_EARTH_REPOSITORY_LIFECYCLE_CONTROL_PLANE_STEP_1_MERGE_AUTHORIZATION_v1",
+  "decisionStatus": "APPROVED",
+  "issuedOn": "2026-07-23",
+  "singleUse": true,
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "pullRequest": 79,
+  "headBranch": "agent/h-earth-lifecycle-control-plane-step-1-001",
+  "baseBranch": "main",
+  "expectedBaseCommit": "465596de77ef0a28a7f779e06851130f4768e445",
+  "authorizedParentHead": "72083aaf89276a3074977ca4ece804f85be88d3e",
+  "authorizedDeltaAfterParent": "THIS_MERGE_AUTHORIZATION_RECORD_ONLY",
+  "authorizedMergeMethod": "MERGE_COMMIT",
+  "userAuthorizationStatement": "Proceed with the repository scope reconciliation and separate merge authorization, and then we can move to the next developmental target.",
+  "authorizedScope": [
+    "ACCEPTED_STEP_1_LIFECYCLE_TRANSITION_CONTRACT_PACKAGE",
+    "STEP_1_REPOSITORY_SCOPE_RECONCILIATION_OVERLAY",
+    "VALIDATOR_LOADER_WIRING_TO_RECONCILED_READ_ONLY_FACADE",
+    "REPOSITORY_SCOPE_RECONCILIATION_RECEIPT",
+    "THIS_SINGLE_USE_MERGE_AUTHORIZATION_RECORD"
+  ],
+  "preconditions": {
+    "step1CandidateAccepted": true,
+    "step1Audit": "82_OF_82_PASS",
+    "step1Fixtures": "19_OF_19_PASS",
+    "repositoryScopeReconciliation": "PASS",
+    "repositoryAdmissionEstablishedForStep1Package": true,
+    "automaticPreflightRunId": 30059450961,
+    "automaticPreflightDisposition": "PASS",
+    "automaticPreflightArtifactId": 8583978756,
+    "automaticPreflightArtifactDigest": "sha256:1c0967ac5035c64eab2abec7f41759e283db4571fe04b0c48a60d1177bca1d18"
+  },
+  "authorization": {
+    "mergeAuthorityEstablished": true,
+    "mergePR79Only": true,
+    "expectedHeadMustBeBoundAfterThisRecordIsCommitted": true,
+    "replayPermitted": false,
+    "authorityExpansionPermitted": false
+  },
+  "explicitNonAuthorities": {
+    "successorRegistryAcceptance": false,
+    "successorActivation": false,
+    "lifecycleTransitionExecution": false,
+    "bootstrapReplacement": false,
+    "baseRegistryCandidateReplacement": false,
+    "canonicalization": false,
+    "deployment": false,
+    "production": false,
+    "step2Implementation": false
+  },
+  "consumptionCondition": "CONSUMED_ONLY_BY_SUCCESSFUL_MERGE_OF_PR_79_AT_THE_EXACT_POST_AUTHORIZATION_HEAD"
+}

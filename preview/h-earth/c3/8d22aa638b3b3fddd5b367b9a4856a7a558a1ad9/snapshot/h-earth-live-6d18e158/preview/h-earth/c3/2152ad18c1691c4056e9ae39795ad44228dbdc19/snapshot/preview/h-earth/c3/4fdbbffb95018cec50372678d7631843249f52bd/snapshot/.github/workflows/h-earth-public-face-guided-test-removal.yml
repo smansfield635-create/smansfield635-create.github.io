@@ -1,0 +1,174 @@
+name: H-Earth Public Face Guided Test Removal
+
+on:
+  push:
+    branches:
+      - main
+      - agent/h-earth-b10-guided-test-removal-default-promotion-001
+    paths:
+      - .github/workflows/h-earth-public-face-guided-test-removal.yml
+      - h-earth-3d/control-plane/instrument-platform/H_EARTH_PUBLIC_FACE_GUIDED_TEST_REMOVAL_AND_DEFAULT_PROMOTION_001.v1.mjs
+      - h-earth-3d/validation/instrument-platform/h-earth.public-face-guided-test-removal.runner.mjs
+      - h-earth-3d/validation/instrument-platform/h-earth.public-face-guided-test-removal.browser.mjs
+      - showroom/globe/h-earth/index.html
+      - showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/h-earth-public-face-guided-test-removal.yml
+      - h-earth-3d/control-plane/instrument-platform/H_EARTH_PUBLIC_FACE_GUIDED_TEST_REMOVAL_AND_DEFAULT_PROMOTION_001.v1.mjs
+      - h-earth-3d/validation/instrument-platform/h-earth.public-face-guided-test-removal.runner.mjs
+      - h-earth-3d/validation/instrument-platform/h-earth.public-face-guided-test-removal.browser.mjs
+      - showroom/globe/h-earth/index.html
+      - showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  statuses: write
+
+concurrency:
+  group: h-earth-public-face-guided-test-removal-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify-guided-test-removal:
+    if: github.event.head_commit.message != 'Apply B10R1 guided-test removal and default promotion'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      PUBLIC_VERIFICATION: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+      H_EARTH_B10R1_ORIGIN: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && 'https://diamondgatebridge.com' || 'http://127.0.0.1:4188' }}
+      H_EARTH_B10R1_STATIC_RECEIPT: /tmp/h-earth-b10r1-guided-test-removal.static.receipt.json
+      H_EARTH_B10R1_BROWSER_RECEIPT: /tmp/h-earth-b10r1-guided-test-removal.browser.receipt.json
+      CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Apply bounded default-promotion patch
+        if: github.event_name == 'push' && github.ref == 'refs/heads/agent/h-earth-b10-guided-test-removal-default-promotion-001'
+        run: |
+          node h-earth-3d/validation/instrument-platform/h-earth.public-face-guided-test-removal.runner.mjs --apply
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add showroom/globe/h-earth/index.html
+          git commit -m 'Apply B10R1 guided-test removal and default promotion'
+          git push origin HEAD:agent/h-earth-b10-guided-test-removal-default-promotion-001
+          echo "CANDIDATE_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Install bounded Chromium dependency
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Execute static scope and preservation verification
+        run: |
+          set -o pipefail
+          node h-earth-3d/validation/instrument-platform/h-earth.public-face-guided-test-removal.runner.mjs \
+            | tee /tmp/h-earth-b10r1-guided-test-removal.static.log
+
+      - name: Start exact candidate server
+        if: env.PUBLIC_VERIFICATION != 'true'
+        run: |
+          python3 -m http.server 4188 --bind 127.0.0.1 > /tmp/h-earth-b10r1-guided-test-removal.server.log 2>&1 &
+          for attempt in $(seq 1 90); do
+            curl -fsS http://127.0.0.1:4188/showroom/globe/h-earth/ >/dev/null \
+              && curl -fsS http://127.0.0.1:4188/showroom/globe/h-earth/awards/ >/dev/null \
+              && exit 0
+            sleep 1
+          done
+          cat /tmp/h-earth-b10r1-guided-test-removal.server.log
+          exit 1
+
+      - name: Wait for exact public promotion
+        if: env.PUBLIC_VERIFICATION == 'true'
+        run: |
+          for attempt in $(seq 1 40); do
+            page="$(curl -fsS --max-time 20 "${H_EARTH_B10R1_ORIGIN}/showroom/globe/h-earth/?b10r1=${CANDIDATE_HEAD}-${attempt}" || true)"
+            wrapper="$(curl -fsS --max-time 20 "${H_EARTH_B10R1_ORIGIN}/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js?b10r1=${CANDIDATE_HEAD}-${attempt}" || true)"
+            if grep -q 'data-h-earth-public-face-default="promoted"' <<<"$page" \
+              && grep -q 'Welcome to H-Earth' <<<"$page" \
+              && ! grep -q 'interaction-acceptance.run8e.js' <<<"$wrapper"; then
+              echo "PUBLIC_PROMOTION_AVAILABLE_ATTEMPT=${attempt}"
+              exit 0
+            fi
+            sleep 15
+          done
+          echo 'PUBLIC_B10R1_PROMOTION_NOT_AVAILABLE_WITHIN_BOUNDED_WINDOW'
+          exit 1
+
+      - name: Execute desktop mobile and public-hierarchy browser proof
+        run: |
+          set -o pipefail
+          node h-earth-3d/validation/instrument-platform/h-earth.public-face-guided-test-removal.browser.mjs \
+            | tee /tmp/h-earth-b10r1-guided-test-removal.browser.log
+
+      - name: Enforce B10R1 closure boundary
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const staticReceipt = JSON.parse(fs.readFileSync(process.env.H_EARTH_B10R1_STATIC_RECEIPT, 'utf8'));
+          const browserReceipt = JSON.parse(fs.readFileSync(process.env.H_EARTH_B10R1_BROWSER_RECEIPT, 'utf8'));
+          const expectPublic = process.env.PUBLIC_VERIFICATION === 'true';
+          const valid =
+            staticReceipt.status === 'PASS_CLOSED' &&
+            staticReceipt.failedAssertionCount === 0 &&
+            staticReceipt.unauthorizedChangedPaths.length === 0 &&
+            browserReceipt.status === 'PASS_CLOSED' &&
+            browserReceipt.failedAssertionCount === 0 &&
+            browserReceipt.pageErrors.length === 0 &&
+            browserReceipt.consoleErrors.length === 0 &&
+            browserReceipt.httpErrors.length === 0 &&
+            browserReceipt.guidedModuleRequests.length === 0 &&
+            browserReceipt.publicVerificationPerformed === expectPublic;
+          if (!valid) {
+            console.error(JSON.stringify({ staticReceipt, browserReceipt, expectPublic }, null, 2));
+            process.exit(1);
+          }
+          const phase = expectPublic ? 'PUBLIC_DEFAULT_PROMOTION_PASS_CLOSED' : 'ENGINEERING_AND_BROWSER_PASS_CLOSED';
+          console.log(`H_EARTH_B10R1_${phase}:${process.env.CANDIDATE_HEAD}:${staticReceipt.receiptSha256}:${browserReceipt.receiptSha256}`);
+          NODE
+
+      - name: Publish public verification status
+        if: always() && env.PUBLIC_VERIFICATION == 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const targetUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const passed = '${{ job.status }}' === 'success';
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: passed ? 'success' : 'failure',
+              context: 'h-earth/b10r1-public-default',
+              description: passed
+                ? 'H-Earth trophy page live; guided test absent'
+                : 'H-Earth B10R1 public verification failed',
+              target_url: targetUrl
+            });
+
+      - name: Upload B10R1 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-b10r1-guided-test-removal-${{ github.event_name }}
+          path: |
+            /tmp/h-earth-b10r1-guided-test-removal.static.receipt.json
+            /tmp/h-earth-b10r1-guided-test-removal.browser.receipt.json
+            /tmp/h-earth-b10r1-guided-test-removal.static.log
+            /tmp/h-earth-b10r1-guided-test-removal.browser.log
+            /tmp/h-earth-b10r1-guided-test-removal.server.log
+          retention-days: 90

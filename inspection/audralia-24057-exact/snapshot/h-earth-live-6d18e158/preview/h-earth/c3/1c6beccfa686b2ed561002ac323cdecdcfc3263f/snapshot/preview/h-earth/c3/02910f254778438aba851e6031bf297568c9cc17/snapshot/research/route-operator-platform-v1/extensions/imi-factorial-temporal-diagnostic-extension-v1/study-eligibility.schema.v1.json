@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "IMI Portfolio Temporal Eligibility Audit v1",
+  "type": "object",
+  "required": ["audit_id", "version", "governing_head", "studies", "summary"],
+  "properties": {
+    "audit_id": {"const": "IMI_FACTORIAL_TEMPORAL_PORTFOLIO_ELIGIBILITY_AUDIT_v1"},
+    "version": {"const": "1.0.0"},
+    "governing_head": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "studies": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "study_id",
+          "source_locator",
+          "repeated_comparable_observations",
+          "eligibility_class",
+          "lawful_next_use"
+        ],
+        "properties": {
+          "eligibility_class": {
+            "enum": [
+              "TEMPORAL_ARCHITECTURE_ALREADY_APPLIED",
+              "FULL_RETROSPECTIVE_TEMPORAL_REANALYSIS_ELIGIBLE",
+              "SNAPSHOT_ONLY_REQUIRES_NEW_OBSERVATION",
+              "WITHIN_SCHEDULE_NOT_LONGITUDINAL",
+              "SOURCE_IDENTITY_REQUIRES_BINDING"
+            ]
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

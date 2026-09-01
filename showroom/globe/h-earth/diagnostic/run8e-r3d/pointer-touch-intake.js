@@ -10,6 +10,17 @@ import {
 export const H_EARTH_RUN_8E_R3D2_POINTER_TOUCH_INTAKE_ID =
   'H_EARTH_RUN_8E_CP3B_LOCKED_CONTINUOUS_POINTER_TOUCH_INTAKE_v1';
 
+export const H_EARTH_REPRESENTATION_TRANSITION_ANCHOR_IDS = Object.freeze([
+  'H_EARTH_ANCHOR_COASTAL_ENTRY_v1'
+]);
+
+const H_EARTH_REPRESENTATION_TRANSITION_ANCHOR_BINDINGS = Object.freeze({
+  H_EARTH_ANCHOR_COASTAL_ENTRY_v1: Object.freeze({
+    waypointId: 'COAST',
+    returnContextId: 'H_EARTH_RETURN_CONTEXT_COASTAL_ENTRY_v1'
+  })
+});
+
 const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
 const distance = (left, right) => Math.hypot(right.x - left.x, right.y - left.y);
 const centroid = (left, right) => ({ x: (left.x + right.x) / 2, y: (left.y + right.y) / 2 });
@@ -25,6 +36,8 @@ export function installHEarthRun8ER3D2PointerTouchIntake({ surface, onProposal =
   let navigationState = initial.state;
   const pointers = new Map();
   const lattice = createGestureControlLattice();
+  const preparedRestores = new Map();
+  let preparedRestoreSequence = 0;
   let baseline = null;
   let activeIntent = 'NONE';
   let activeStrength = 0;
@@ -58,6 +71,8 @@ export function installHEarthRun8ER3D2PointerTouchIntake({ surface, onProposal =
     twoFingerTravelProposalCount: 0,
     pinchProposalCount: 0,
     wheelProposalCount: 0,
+    representationRestoreProposalCount: 0,
+    representationRestoreCommitCount: 0,
     maximumActivePointerCount: 0,
     animationFrameCount: 0,
     activeIntentFrameCount: 0,
@@ -112,6 +127,7 @@ export function installHEarthRun8ER3D2PointerTouchIntake({ surface, onProposal =
     if (inputClass === 'TWO_FINGER_TRAVEL') counters.twoFingerTravelProposalCount += 1;
     if (inputClass === 'PINCH_ZOOM') counters.pinchProposalCount += 1;
     if (inputClass === 'WHEEL_DIAGNOSTIC_EQUIVALENT') counters.wheelProposalCount += 1;
+    if (inputClass === 'REPRESENTATION_TRANSITION_RESTORE') counters.representationRestoreProposalCount += 1;
     const record = Object.freeze({
       sequence: counters.navigationProposalCount,
       inputClass,
@@ -135,6 +151,70 @@ export function installHEarthRun8ER3D2PointerTouchIntake({ surface, onProposal =
       });
     }
     return record;
+  };
+
+  const resolveTransitionAnchorBinding = (anchorId) =>
+    H_EARTH_REPRESENTATION_TRANSITION_ANCHOR_BINDINGS[anchorId] ?? null;
+
+  const transitionAnchorState = (anchorId) => {
+    const binding = resolveTransitionAnchorBinding(anchorId);
+    if (!binding) return null;
+    const resolved = createHEarthFunctionalLandscapeNavigationState({ waypointId: binding.waypointId });
+    return resolved?.ok === true ? resolved.state : null;
+  };
+
+  const isKnownTransitionAnchor = (anchorId) =>
+    resolveTransitionAnchorBinding(anchorId) !== null;
+
+  const isTransitionAnchorActive = (anchorId) => {
+    const anchorState = transitionAnchorState(anchorId);
+    if (!anchorState) return false;
+    return Math.abs(navigationState.position.x - anchorState.position.x) <= 1e-8 &&
+      Math.abs(navigationState.position.z - anchorState.position.z) <= 1e-8;
+  };
+
+  const getReturnContextId = (anchorId) =>
+    resolveTransitionAnchorBinding(anchorId)?.returnContextId ?? null;
+
+  const isKnownReturnContext = (anchorId, returnContextId) => {
+    const binding = resolveTransitionAnchorBinding(anchorId);
+    return Boolean(binding) && binding.returnContextId === returnContextId;
+  };
+
+  const prepareRestore = (anchorId, returnContextId) => {
+    if (!isKnownReturnContext(anchorId, returnContextId)) return null;
+    const binding = resolveTransitionAnchorBinding(anchorId);
+    const targetState = transitionAnchorState(anchorId);
+    if (!binding || !targetState) return null;
+    preparedRestoreSequence += 1;
+    const preparedRestoreId = `H_EARTH_PREPARED_RESTORE_${String(preparedRestoreSequence).padStart(4, '0')}`;
+    preparedRestores.set(preparedRestoreId, Object.freeze({
+      anchorId,
+      returnContextId
+    }));
+    if (preparedRestores.size > 16) {
+      const oldest = preparedRestores.keys().next().value;
+      preparedRestores.delete(oldest);
+    }
+    return Object.freeze({ preparedRestoreId });
+  };
+
+  const commitRestore = (prepared) => {
+    const preparedRestoreId = prepared?.preparedRestoreId;
+    if (typeof preparedRestoreId !== 'string') return false;
+    const record = preparedRestores.get(preparedRestoreId);
+    if (!record) return false;
+    const binding = resolveTransitionAnchorBinding(record.anchorId);
+    if (!binding || !isKnownReturnContext(record.anchorId, record.returnContextId)) return false;
+    const proposal = emitProposal(
+      { action: 'GOTO_WAYPOINT', waypointId: binding.waypointId },
+      'REPRESENTATION_TRANSITION_RESTORE',
+      { anchorId: record.anchorId, returnContextId: record.returnContextId }
+    );
+    if (proposal.accepted !== true) return false;
+    preparedRestores.delete(preparedRestoreId);
+    counters.representationRestoreCommitCount += 1;
+    return true;
   };
 
   const intentForFrame = (elapsedSeconds) => {
@@ -280,13 +360,18 @@ export function installHEarthRun8ER3D2PointerTouchIntake({ surface, onProposal =
       releaseTermination: true,
       forwardBackwardDirectionalSymmetry: true,
       existingNavigationProposalAuthorityConsumed: true,
-      cp2bObservationCompatible: true
+      cp2bObservationCompatible: true,
+      representationTransitionAnchorAuthorityOwnedByHEarth: true,
+      representationReturnContextOpaque: true
     },
     boundaries: {
       navigationAuthorityMutated: false,
       persistentRendererMutated: false,
       cameraCoordinateConventionMutated: false,
       worldGeometryMutated: false,
+      transitionPresentationMutated: false,
+      canonicalIdentityAuthorityCreated: false,
+      correspondenceAuthorityCreated: false,
       cp2bDiagnosticRemoved: false,
       physicalAcceptancePerformed: false,
       cp3CStarted: false
@@ -301,6 +386,7 @@ export function installHEarthRun8ER3D2PointerTouchIntake({ surface, onProposal =
     if (frameHandle !== null) cancelAnimationFrame(frameHandle);
     for (const [type, listener, options] of bindings) surface.removeEventListener(type, listener, options);
     pointers.clear();
+    preparedRestores.clear();
     releaseIntent();
   };
 
@@ -308,6 +394,13 @@ export function installHEarthRun8ER3D2PointerTouchIntake({ surface, onProposal =
     intakeId: H_EARTH_RUN_8E_R3D2_POINTER_TOUCH_INTAKE_ID,
     getNavigationState: () => navigationState,
     getReceipt,
+    listTransitionAnchorIds: () => [...H_EARTH_REPRESENTATION_TRANSITION_ANCHOR_IDS],
+    isKnownTransitionAnchor,
+    isTransitionAnchorActive,
+    getReturnContextId,
+    isKnownReturnContext,
+    prepareRestore,
+    commitRestore,
     destroy
   });
 }

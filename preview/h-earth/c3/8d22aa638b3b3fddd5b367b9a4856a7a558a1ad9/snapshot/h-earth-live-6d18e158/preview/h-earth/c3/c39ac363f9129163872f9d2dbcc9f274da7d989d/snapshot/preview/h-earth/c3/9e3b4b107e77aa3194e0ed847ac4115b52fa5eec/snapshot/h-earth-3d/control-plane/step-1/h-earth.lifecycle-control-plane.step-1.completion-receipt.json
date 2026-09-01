@@ -1,0 +1,194 @@
+{
+  "receiptId": "H_EARTH_REPOSITORY_LIFECYCLE_CONTROL_PLANE_STEP_1_COMPLETION_RECEIPT_v1",
+  "programId": "H_EARTH_REPOSITORY_LIFECYCLE_CONTROL_PLANE_v1",
+  "step": 1,
+  "result": "PASS",
+  "status": "COMPLETE_VERIFIED_CANDIDATE_NOT_ACCEPTED_NOT_ACTIVE_REPOSITORY_ADMISSION_WITHHELD",
+  "artifactId": "H_EARTH_REPOSITORY_LIFECYCLE_CONTROL_PLANE_SUCCESSOR_ACTIVATION_TRANSITION_CONTRACT_CANDIDATE_v1",
+  "branch": "agent/h-earth-lifecycle-control-plane-step-1-001",
+  "baseCommit": "ac989785076d1473d6be81b5766e4ce51c3e6827",
+  "candidateHeadBeforeCompletionReceipt": "5c89ea934d7f1f3164c369d13c3105e94751cb58",
+  "draftPullRequest": {
+    "number": 79,
+    "state": "OPEN_DRAFT",
+    "merged": false,
+    "base": "main",
+    "baseCommit": "465596de77ef0a28a7f779e06851130f4768e445"
+  },
+  "boundedCheckpoints": [
+    {
+      "checkpoint": "1A_IDENTITY_AND_BOUNDARY",
+      "commit": "4593a4cf40b7d0f33c1efab13c5d2d377201e218",
+      "result": "PASS"
+    },
+    {
+      "checkpoint": "1B_STATE_AND_TRANSITION_SCHEMAS",
+      "commits": [
+        "6c4318792f168fb176e946fcdd46fef27de4e6dd",
+        "6c5068b577c23b0bd27d6464c88b66aa6b43aae0",
+        "06da8d9517606df217f6194a6d770107b54e1152"
+      ],
+      "result": "PASS"
+    },
+    {
+      "checkpoint": "1C_SUCCESSOR_ACTIVATION_TRANSITION_CONTRACT",
+      "commit": "587766dc93145faac9d1cbc9fe9a656708034ef2",
+      "result": "PASS"
+    },
+    {
+      "checkpoint": "1D_READ_ONLY_STATE_MACHINE_EVALUATOR",
+      "commit": "e235a51165809f00ed99d8557c63a2cf0d8d75cc",
+      "result": "PASS"
+    },
+    {
+      "checkpoint": "1E_FIXTURE_SUITE",
+      "commit": "30c476378548fa8d195aeb45dbeaefdebd644899",
+      "result": "PASS"
+    },
+    {
+      "checkpoint": "1F_STATIC_AND_EXECUTED_AUDIT",
+      "commits": [
+        "8481b079880c397dbc9e9f5a537cff7ee9529074",
+        "452d9c38552db85610766969bd031fb68aca0afe",
+        "5c89ea934d7f1f3164c369d13c3105e94751cb58"
+      ],
+      "result": "PASS"
+    }
+  ],
+  "candidateArtifacts": {
+    "identityAndBoundary": {
+      "path": "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-control-plane.step-1.identity-and-boundary.json",
+      "gitBlobSha": "fb984ce1e7b34dc05dad89ec50fd142030b4573a"
+    },
+    "stateSchema": {
+      "path": "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-transition.state-schema.json",
+      "gitBlobSha": "2f8cb2b31538525e69b6d3e263cea457af9820f6"
+    },
+    "preconditionSchema": {
+      "path": "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-transition.precondition-schema.json",
+      "gitBlobSha": "754cfb7335f4515ec53a89aa91d39c141fe391d8"
+    },
+    "postconditionSchema": {
+      "path": "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-transition.postcondition-schema.json",
+      "gitBlobSha": "56d7be6cc7922162002b5a0e8e761b0e98d7e250"
+    },
+    "successorActivationContract": {
+      "path": "/h-earth-3d/control-plane/step-1/h-earth.successor-activation.transition-contract.json",
+      "gitBlobSha": "12e7e4359cb14ad8184d21609376bbc37ff6b9a6"
+    },
+    "stateMachineEvaluator": {
+      "path": "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-transition.state-machine.js",
+      "gitBlobSha": "f954ec84c9758122908d3e579c4bc3f5301a1560"
+    },
+    "fixtureSuite": {
+      "path": "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-transition.fixtures.json",
+      "gitBlobSha": "9e1018f58d75b4b4d026f3c68aa61bbe67ba7ff1"
+    },
+    "auditHarness": {
+      "path": "/tools/h-earth-lifecycle-control-plane-step-1-audit.mjs",
+      "gitBlobSha": "153b6d0401495bfee9e2aab0e239ae79032dcdba"
+    },
+    "auditWorkflow": {
+      "path": "/.github/workflows/h-earth-lifecycle-control-plane-step-1-audit.yml",
+      "gitBlobSha": "2f8933b25113da2dc3978e08f3057e79eaf24f55"
+    },
+    "executionTrigger": {
+      "path": "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-control-plane.step-1.execution-trigger.json",
+      "gitBlobSha": "5594f2bfb44fd037c1079db2201815b01ecce22e"
+    }
+  },
+  "executedAudit": {
+    "workflowName": "H-Earth Lifecycle Control Plane Step 1 Audit",
+    "runId": 30057983782,
+    "jobId": 89373598073,
+    "executedMergeCommit": "5877c5915d3b02fb5ca596028e527ea172090d14",
+    "result": "PASS",
+    "totalChecks": 82,
+    "passedChecks": 82,
+    "failedChecks": 0,
+    "fixtureCount": 19,
+    "passedFixtures": 19,
+    "failedFixtures": 0,
+    "artifactId": 8583472450,
+    "artifactDigest": "sha256:95163655f2ee6aa8b4fe88266409a968f257029d8f98a8cb9c4ae88cc58339a3"
+  },
+  "establishedDefinition": {
+    "lifecycleStates": [
+      "CANDIDATE",
+      "VALIDATED",
+      "ACCEPTED",
+      "ACTIVE",
+      "SUPERSEDED",
+      "RETIRED"
+    ],
+    "permittedTransitions": [
+      "CANDIDATE_TO_VALIDATED",
+      "VALIDATED_TO_ACCEPTED",
+      "ACCEPTED_TO_ACTIVE",
+      "ACTIVE_TO_SUPERSEDED",
+      "SUPERSEDED_TO_RETIRED"
+    ],
+    "firstControlledOperation": [
+      "VALIDATED_TO_ACCEPTED",
+      "ACCEPTED_TO_ACTIVE"
+    ],
+    "sequenceMayBeCollapsed": false,
+    "validatorIsExecutionAuthority": false,
+    "mergeImpliesActivation": false,
+    "activationImpliesCanonicalization": false
+  },
+  "repositoryGuardrailResult": {
+    "workflowName": "H-Earth Automatic Repository Registry Preflight",
+    "runId": 30057983803,
+    "jobId": 89373598078,
+    "artifactId": 8583472075,
+    "artifactDigest": "sha256:cc7d92b31d55e6a6fbbbb546d20ede5f584dc5de13cff0e297896e6be12e33c4",
+    "activationStatus": "ACTIVATED",
+    "finalDisposition": "STOP",
+    "unregisteredHEarthPathCount": 8,
+    "failureCodes": [
+      "OPERATION_SCOPE_UNRESOLVED",
+      "REQUESTED_PATH_UNRESOLVED"
+    ],
+    "mutationMayProceed": false,
+    "continuation": "RESOLVE_SCOPE_OR_IDENTITY_BEFORE_CONTINUING",
+    "interpretation": "THE_STEP_1_CANDIDATE_IS_INTERNALLY_COMPLETE_AND_VERIFIED_BUT_NOT_ADMITTED_BY_THE_CURRENT_ACTIVE_REGISTRY. THE_STOP_IS_PRESERVED AND MUST_NOT_BE_BYPASSED."
+  },
+  "completionClassification": {
+    "step1DefinitionComplete": true,
+    "step1CandidateVerified": true,
+    "step1UserAcceptanceEstablished": false,
+    "step1RepositoryAdmissionEstablished": false,
+    "step1ActiveOnMain": false,
+    "step2Authorized": false
+  },
+  "boundaries": {
+    "actualActorBindingsEstablished": false,
+    "approvalDecisionIssued": false,
+    "transitionExecutionAuthorityEstablished": false,
+    "successorAccepted": false,
+    "successorActivated": false,
+    "bootstrapChanged": false,
+    "activeRegistryChanged": false,
+    "mainChanged": false,
+    "canonicalizationAuthorityEstablished": false,
+    "mandatoryEnforcementEstablished": false,
+    "sourceAuthorityCreated": false,
+    "mutationAuthorityCreated": false,
+    "runtimeAuthorityCreated": false,
+    "rendererAuthorityCreated": false,
+    "deploymentAuthorityCreated": false,
+    "productionAuthorityCreated": false
+  },
+  "terminalFetchBack": {
+    "completionReceiptGitBlobSha": "VERIFY_AFTER_PUBLICATION",
+    "candidateHeadAfterCompletionReceipt": "VERIFY_AFTER_PUBLICATION"
+  },
+  "stoppingCondition": {
+    "step1Complete": true,
+    "advanceBeyondStep1": false,
+    "userAcceptanceRequired": true,
+    "repositoryScopeReconciliationRequiredBeforeMerge": true,
+    "nextAuthorizedBoundary": "USER_REVIEW_AND_ACCEPTANCE_OF_STEP_1_CANDIDATE_ONLY"
+  }
+}

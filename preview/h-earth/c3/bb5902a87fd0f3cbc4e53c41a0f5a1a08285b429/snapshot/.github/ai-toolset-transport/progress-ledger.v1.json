@@ -1,0 +1,109 @@
+{
+  "schema": "REPOSITORY_AUTHORIZED_TOOLSET_AND_AI_ROOM_TRANSPORT_PROGRESS_LEDGER_v1",
+  "bootstrapId": "REPOSITORY_AUTHORIZED_TOOLSET_ROUTING_AND_AI_ROOM_EXECUTION_TRANSPORT_BOOTSTRAP_v1",
+  "branch": "bootstrap/authorized-toolset-ai-room-transport-genesis-v1-001",
+  "baseHead": "56b6ab1f192aec994af0c537dd7c9dad1be14d7f",
+  "currentCheckpoint": "CP09_NEGATIVE_FIXTURES_AND_INDEPENDENT_CERTIFICATION",
+  "checkpoints": [
+    {
+      "id": "CP00_BOOTSTRAP_SEED_AND_SCOPE",
+      "status": "PASS_CLOSED",
+      "evidenceCommits": [
+        "2887b0c2d47f8407a56f5fb8f5c816fc8b330d05",
+        "b9e2d997256c9e9e8f0f89809539f49ea028802a",
+        "fc7e49aa2ca92e9fbe6c5bdda6e4ae2e94a372eb"
+      ]
+    },
+    {
+      "id": "CP01_SCHEMAS",
+      "status": "PASS_CLOSED",
+      "evidenceCommits": ["3fc3ce8ae2baa8132ae80c91799f8d40308ae7c4"]
+    },
+    {
+      "id": "CP02_AUTHORIZED_TOOLSET_REGISTRY",
+      "status": "PASS_CLOSED",
+      "evidenceCommits": ["f875300cafd77ff43d23127473aa8c0ef7386f60"]
+    },
+    {
+      "id": "CP03_TOOLSET_RESOLVER",
+      "status": "PASS_CLOSED",
+      "evidenceCommits": [
+        "614d5d3981b88750f544ebb2f4b69a85eac56ed3",
+        "2008efa0ba085bb87ceb8eebaf282711f7c1145f"
+      ]
+    },
+    {
+      "id": "CP04_EXECUTION_BACKEND_SELECTOR",
+      "status": "PASS_CLOSED",
+      "evidenceCommits": ["d1e90112f8c01a0420032203a96303025f9d30ca"]
+    },
+    {
+      "id": "CP05_FIXED_COMMAND_DISPATCHER",
+      "status": "PASS_CLOSED",
+      "evidenceCommits": ["02e58d217b793c0bcd2d587f83dabfaba8098686"]
+    },
+    {
+      "id": "CP06_AI_ROOM_ISSUE_COMMENT_TRANSPORT",
+      "status": "PASS_CLOSED",
+      "evidenceCommits": [
+        "e7bafa689bb79afba277dcc973fd05ae3ded454c",
+        "139a7321a919af6d0d66c38a2b1a4846b1786751"
+      ]
+    },
+    {
+      "id": "CP07_COMMAND_RECEIPT_RETURN",
+      "status": "PASS_CLOSED",
+      "evidenceCommits": [
+        "02e58d217b793c0bcd2d587f83dabfaba8098686",
+        "139a7321a919af6d0d66c38a2b1a4846b1786751"
+      ]
+    },
+    {
+      "id": "CP08_RECEIPT_VALIDATOR_AND_CONTINUATION_GATE",
+      "status": "PASS_CLOSED",
+      "evidenceCommits": [
+        "810a9ffa21917621570fea5cc2cea0a6ea553707",
+        "556fbf069025214e1acd5e4096f975811c40ae3a"
+      ]
+    },
+    {
+      "id": "CP09_NEGATIVE_FIXTURES_AND_INDEPENDENT_CERTIFICATION",
+      "status": "REPAIR_APPLIED_READY_FOR_INDEPENDENT_CERTIFICATION",
+      "evidenceCommits": [
+        "87603d602f1b0b4a1c09a49bb972a94b1296ade2",
+        "a823415d307956b50c5f1362ee841c8fac68157a",
+        "062bac7af5b51df921c62e26bf8d8ac49d24bd2e",
+        "f4ec32eab1786c7bcb20ebdd14b96586c399f5dd",
+        "7fb16250abbaf8045e3d062d546d20be49612215"
+      ]
+    },
+    {
+      "id": "CP10_BOOTSTRAP_AUTHORITY_TERMINATION",
+      "status": "IMPLEMENTED_READY_FOR_COMMAND_EMITTED_TERMINATION",
+      "evidenceCommits": [
+        "8996a156d30099f99212f8bec4d1dc4b5a4fd5cd",
+        "e893be34d163dace057dfb90f0b69e87419957b9",
+        "f4ec32eab1786c7bcb20ebdd14b96586c399f5dd"
+      ]
+    }
+  ],
+  "certificationAttempts": [
+    {
+      "attempt": 1,
+      "candidateHead": "c9084b958ba226f17b3cd7cb40a70212c337e0ce",
+      "workflowRun": 30952377431,
+      "builderJob": 92137333826,
+      "result": "FAIL_CLOSED_FIXTURE_EXPECTATION_MISMATCH",
+      "observedErrorCode": "RECEIPT_PROHIBITED_PATH_OBSERVED",
+      "expectedErrorCode": "RECEIPT_UNAUTHORIZED_PATH_OBSERVED",
+      "repair": "CHANGE_FIXTURE_INPUT_FROM_EXPLICITLY_PROHIBITED_PATH_TO_NONPROHIBITED_UNAUTHORIZED_PATH",
+      "validatorWeakened": false
+    }
+  ],
+  "productMutationPerformed": false,
+  "roleActivationPerformed": false,
+  "methodsAuditExecuted": false,
+  "mergePerformed": false,
+  "permanentTransportActivated": false,
+  "implementationLoopStatus": "REPAIRED_PENDING_INDEPENDENT_CERTIFICATION"
+}

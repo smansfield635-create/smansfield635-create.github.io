@@ -1,0 +1,62 @@
+{
+  "schema": "H_EARTH_MAP_WIDE_TERRAIN_INSTRUMENT_PROGRESS_LEDGER_v1",
+  "operationId": "H_EARTH_MAP_WIDE_TERRAIN_ARTICULATION_AND_ESTATE_RESERVATION_INSTRUMENTATION_EXTENSION_v1",
+  "ratificationOperationId": "H_EARTH_MAP_WIDE_INSTRUMENT_PERMANENT_RATIFICATION_AND_ACTIVATION_v3",
+  "issueSeed": 569,
+  "exactStartingHead": "3ac9279dc82e56f7b0d67972ce56048d07e5ecfa",
+  "immutableSourceHead": "7c0b8871928b21cd9b2806f058bce34eed11f2ba",
+  "immutableSourcePackageFingerprint": "3f1024c9dc2fed15d3a8a7a25387066a48f5a8ffddf2e3cfd00b96dd95e45f28",
+  "checkpoints": [
+    {"checkpoint": "CP00_USER_ORIGIN_GENESIS_SEED", "implementationStatus": "MATERIALIZED", "certificationStatus": "PASS_CLOSED_SOURCE_REPRODUCED"},
+    {"checkpoint": "CP01_WORLD_AND_ESTATE_IDENTITY_BINDING", "implementationStatus": "MATERIALIZED", "certificationStatus": "PASS_CLOSED_SOURCE_REPRODUCED"},
+    {"checkpoint": "CP02_SCHEMA_AND_OPERATOR_REGISTRY", "implementationStatus": "MATERIALIZED", "certificationStatus": "PASS_CLOSED_SOURCE_REPRODUCED"},
+    {"checkpoint": "CP03_MAP_WIDE_TERRAIN_CENSUS", "implementationStatus": "MATERIALIZED", "certificationStatus": "PASS_CLOSED_SOURCE_REPRODUCED"},
+    {"checkpoint": "CP04_ESTATE_RESERVATION_VALIDATOR", "implementationStatus": "MATERIALIZED", "certificationStatus": "PASS_CLOSED_SOURCE_REPRODUCED"},
+    {"checkpoint": "CP05_ZONE_ARTICULATION_PLAN_COMPILER", "implementationStatus": "MATERIALIZED", "certificationStatus": "PASS_CLOSED_SOURCE_REPRODUCED"},
+    {"checkpoint": "CP06_CONTINUOUS_ORCHESTRATION_COMPILER", "implementationStatus": "MATERIALIZED", "certificationStatus": "PASS_CLOSED_SOURCE_REPRODUCED"},
+    {"checkpoint": "CP07_CUMULATIVE_CONSTRAINT_EVALUATOR", "implementationStatus": "MATERIALIZED", "certificationStatus": "PASS_CLOSED_SOURCE_REPRODUCED"},
+    {"checkpoint": "CP08_VARIANCE_REPETITION_DETECTOR", "implementationStatus": "MATERIALIZED", "certificationStatus": "PASS_CLOSED_SOURCE_REPRODUCED"},
+    {"checkpoint": "CP09_PREVIEW_REVIEW_PACKAGE_PLANNER", "implementationStatus": "MATERIALIZED", "certificationStatus": "PASS_CLOSED_SOURCE_REPRODUCED"},
+    {"checkpoint": "CP10_NEGATIVE_FIXTURES_AND_FRESH_VERIFICATION", "implementationStatus": "MATERIALIZED", "certificationStatus": "PASS_CLOSED_SOURCE_REPRODUCED"},
+    {"checkpoint": "CP11_BOOTSTRAP_AUTHORITY_TERMINATION", "implementationStatus": "COMPLETE", "certificationStatus": "PASS_CLOSED_BOOTSTRAP_AUTHORITY_TERMINATED"},
+    {"checkpoint": "CP12_ROUTER_AND_INTERNAL_REGISTRY_PREREQUISITES", "implementationStatus": "ACTIVE_ON_MAIN", "certificationStatus": "PASS_CLOSED"},
+    {"checkpoint": "CP13_SEPARATE_PERMANENT_RATIFICATION", "implementationStatus": "MATERIALIZED_IN_RATIFICATION_SUCCESSOR", "certificationStatus": "PASS_CLOSED_ON_EXACT_MERGE_AND_POST_MERGE_VERIFICATION"}
+  ],
+  "prerequisiteIdentities": {
+    "routerOwnership": {
+      "operationId": "H_EARTH_MAP_WIDE_INSTRUMENT_ROUTER_OWNERSHIP_R_002",
+      "lockGeneration": 111,
+      "status": "ACTIVE_PENDING_FINAL_RATIFICATION_CLOSURE"
+    },
+    "internalRegistry": {
+      "mergeCommit": "a4ba663dbff1d780cf80e8e40ecaa396c2ee85c7",
+      "operationId": "H_EARTH_MAP_WIDE_INSTRUMENT_INTERNAL_REGISTRY_REGISTRATION_R_001",
+      "lockGeneration": 136,
+      "terminalDisposition": "PASS_CLOSED"
+    }
+  },
+  "treeMutationBoundary": {
+    "instrumentPathCount": 25,
+    "exactSourceBlobCount": 22,
+    "ratificationLifecycleSuccessorCount": 3,
+    "activeRegistryAmendmentPathCount": 1,
+    "productPathsModified": 0,
+    "terrainPathsModified": 0,
+    "runtimePathsModified": 0
+  },
+  "activation": {
+    "decision": "PERMANENT_INSTRUMENT_ACTIVE_BY_SEPARATE_RATIFICATION",
+    "activationCommit": "RESOLVED_BY_POST_ACTIVATION_RECEIPT",
+    "postActivationVerificationRequired": true,
+    "temporaryConstructionAuthorityTerminates": true,
+    "temporaryVerificationAuthorityTerminates": true,
+    "mergeAuthorityTerminates": true,
+    "futureOperationsRequireSeparateAdmission": true
+  },
+  "terminalState": "PERMANENT_INSTRUMENT_ACTIVE_BY_SEPARATE_RATIFICATION",
+  "actualTerrainMutationPerformed": false,
+  "manorConstructionPerformed": false,
+  "productMutationPerformed": false,
+  "deploymentPerformed": false,
+  "releasePerformed": false
+}

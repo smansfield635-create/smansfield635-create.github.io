@@ -1,0 +1,60 @@
+name: H-Earth Post-Merge 42-File Scope Disposition Audit
+
+on:
+  push:
+    branches:
+      - agent/h-earth-post-merge-scope-disposition-001
+    paths:
+      - h-earth-3d/control-plane/post-merge-disposition/**
+      - tools/h-earth-post-merge-scope-disposition-audit.mjs
+      - .github/workflows/h-earth-post-merge-scope-disposition-audit.yml
+      - h-earth-3d/control-plane/step-1/**
+      - h-earth-3d/registry/candidates/**
+      - h-earth-3d/registry/accepted-amendments/**
+      - h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+      - tools/h-earth-lifecycle-control-plane-step-1-audit.mjs
+      - tools/h-earth-registry-successor-build.mjs
+      - tools/h-earth-repository-registry-compositor-route-amendment-audit.mjs
+      - tools/h-earth-repository-registry-successor-v2-audit.mjs
+      - tools/h-earth-repository-registry-target-4f-audit.mjs
+  pull_request:
+    branches:
+      - main
+    paths:
+      - h-earth-3d/control-plane/post-merge-disposition/**
+      - tools/h-earth-post-merge-scope-disposition-audit.mjs
+      - .github/workflows/h-earth-post-merge-scope-disposition-audit.yml
+      - h-earth-3d/control-plane/step-1/**
+      - h-earth-3d/registry/candidates/**
+      - h-earth-3d/registry/accepted-amendments/**
+      - h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+      - tools/h-earth-lifecycle-control-plane-step-1-audit.mjs
+      - tools/h-earth-registry-successor-build.mjs
+      - tools/h-earth-repository-registry-compositor-route-amendment-audit.mjs
+      - tools/h-earth-repository-registry-successor-v2-audit.mjs
+      - tools/h-earth-repository-registry-target-4f-audit.mjs
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit-retained-state:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute retained-state audit
+        run: node --experimental-default-type=module tools/h-earth-post-merge-scope-disposition-audit.mjs
+      - name: Upload disposition audit receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-post-merge-scope-disposition-audit
+          path: artifacts/h-earth-post-merge-scope-disposition-audit-receipt.json
+          if-no-files-found: error
+          retention-days: 90

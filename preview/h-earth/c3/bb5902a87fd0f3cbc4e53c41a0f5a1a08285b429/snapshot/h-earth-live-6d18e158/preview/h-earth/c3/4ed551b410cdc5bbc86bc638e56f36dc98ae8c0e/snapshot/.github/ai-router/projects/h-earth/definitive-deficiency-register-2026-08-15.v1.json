@@ -1,0 +1,164 @@
+{
+  "schema": "H_EARTH_DEFINITIVE_DEFICIENCY_REGISTER_v1",
+  "status": "PINNED_DEFICIENCY_DEFINITION_PENDING_INSTALLATION",
+  "projectId": "H_EARTH",
+  "date": "2026-08-15",
+  "sourceAudit": ".github/ai-router/projects/h-earth/full-excellence-audit-2026-08-15.v1.json",
+  "auditedCandidate": "541360177526a14a59e8afad0944ca44fe39bc96",
+  "purpose": "Convert audit evidence into an unambiguous deficiency register without introducing repair strategy or construction design.",
+  "processLaw": {
+    "auditIsEvidenceOnly": true,
+    "deficiencyRegisterIsAdjudication": true,
+    "strategyIncluded": false,
+    "constructionAuthorized": false,
+    "law": "A DEFICIENCY EXISTS ONLY WHEN THE FAILURE CONDITION REQUIRED DISPOSITION PRESERVATION CONSTRAINTS AND DEPENDENCIES ARE DEFINED WITHOUT AMBIGUITY."
+  },
+  "deficiencies": [
+    {
+      "id": "D01",
+      "name": "VISIBLE_SECOND_BOX_BOUNDARY",
+      "evidence": ["A01", "A02"],
+      "authority": ["GRATITUDE_PROJECT_INTENT", "GLOBAL_REFERENCE_CLASS_IMMERSION_AND_EXECUTION"],
+      "failureCondition": "A viewer can perceive a perimeter, shelf, wall, rectangular termination, tonal break, elevation break, horizon break, or other visual cue that reveals a larger enclosure outside the authored region.",
+      "requiredDisposition": "The visible surrounding world must read as continuous beyond the accessible region with no perceptible box or second-box termination.",
+      "preservationConstraints": ["DO_NOT_INCREASE_ACCESSIBLE_REGION_EXTENT", "DO_NOT_ADD_NAVIGATION_ADDRESSES", "DO_NOT_ADD_COLLISION_AUTHORITY", "PRESERVE_CURRENT_USEFUL_ACCESSIBLE_REGION_SCALE"],
+      "dependencies": ["D02", "D03"],
+      "severity": "BLOCKING"
+    },
+    {
+      "id": "D02",
+      "name": "DISCONTINUOUS_WORLD_CONTINUATION_BLEND",
+      "evidence": ["A02"],
+      "authority": ["VISUAL_DESIGN", "ATMOSPHERIC_DEPTH", "IMMERSION"],
+      "failureCondition": "The transition from authored terrain/water to distant continuation changes too abruptly in slope, elevation, material frequency, contrast, haze, shoreline direction, or horizon structure.",
+      "requiredDisposition": "Near, middle, and distant representation must form one continuous perceptual depth system.",
+      "preservationConstraints": ["PRESERVE_LOCAL_TERRAIN_DEFINITION", "PRESERVE_OPEN_OCEAN_ON_OCEAN_FACING_SIDE", "EXTERIOR_REMAINS_NONINTERACTIVE"],
+      "dependencies": ["D01", "D07"],
+      "severity": "BLOCKING"
+    },
+    {
+      "id": "D03",
+      "name": "ARID_DESERT_READ_CONTRADICTS_SUBTROPICAL_IDENTITY",
+      "evidence": ["A03", "A11"],
+      "authority": ["GRATITUDE_ENVIRONMENTAL_IDENTITY", "H_EARTH_AUDRALIA_ENVIRONMENTAL_RECIPROCITY", "FIRST_GLANCE_PLACE_LEGIBILITY"],
+      "failureCondition": "The dominant first-glance environmental read remains arid/desert-like rather than warm subtropical coastal.",
+      "requiredDisposition": "The region must read as a believable warm subtropical coastal environment through terrain material, vegetation, moisture, atmospheric and ecological cues before explanatory text is required.",
+      "preservationConstraints": ["DO_NOT_UNIFORMLY_GREEN_THE_WORLD", "PRESERVE_GEOLOGIC_EXPOSURE_WHERE_CAUSALLY_JUSTIFIED", "PRESERVE_LOCAL_TERRAIN_RELIEF"],
+      "dependencies": ["D04", "D05", "D07"],
+      "severity": "BLOCKING"
+    },
+    {
+      "id": "D04",
+      "name": "WEAK_ENVIRONMENTAL_CAUSALITY",
+      "evidence": ["A04"],
+      "authority": ["LOCAL_TERRAIN_CAUSALITY", "NATURALISM", "RECIPROCAL_WORLD_DEVELOPMENT"],
+      "failureCondition": "Vegetation, moisture and materials appear decorative or uniformly distributed rather than visibly responding to drainage, freshwater proximity, shelter, slope, elevation, exposure and coastal influence.",
+      "requiredDisposition": "Environmental distribution must be explainable by reusable local causal fields rather than arbitrary decoration.",
+      "preservationConstraints": ["DO_NOT_BIND_PRIMARY_ENVIRONMENTAL_RULES_TO_CURRENT_OUTER_PERIMETER", "PRESERVE_REUSABILITY_IF_MACRO_SHAPE_CHANGES"],
+      "dependencies": ["D03", "D05", "D06"],
+      "severity": "MAJOR"
+    },
+    {
+      "id": "D05",
+      "name": "COAST_READS_AS_GEOMETRY_NOT_LIVING_ECOLOGICAL_GRADIENT",
+      "evidence": ["A05"],
+      "authority": ["SUBTROPICAL_COASTAL_IDENTITY", "LAND_WATER_COHERENCE", "ENVIRONMENTAL_CONTENT"],
+      "failureCondition": "The shoreline is legible geometrically but lacks sufficient wet/dry material transition, coastal vegetation, nearshore ecological response and atmospheric integration to read as a living warm coast.",
+      "requiredDisposition": "The coast must read as a continuous ecological and material gradient between inland environment, beach, nearshore water and atmosphere.",
+      "preservationConstraints": ["PRESERVE_OPEN_OCEAN_GEOGRAPHY", "PRESERVE_EXISTING_COAST_TO_INLAND_RELATIONSHIP_WHERE_LOCALLY_VALID"],
+      "dependencies": ["D03", "D04"],
+      "severity": "MAJOR"
+    },
+    {
+      "id": "D06",
+      "name": "GRATITUDE_MACRO_MORPHOLOGY_NOT_YET_BELIEVABLE_POSITIONAL_STANDARD",
+      "evidence": ["A06", "A09"],
+      "authority": ["GLOBAL_REGIONAL_POSITIONAL_RECIPROCITY", "AUDRALIA_CONTINENTAL_COMPOSITION", "GEOGRAPHIC_IDENTITY"],
+      "failureCondition": "Gratitude remains too round/blob-like or lacks enough directional asymmetry, headlands, bays, drainage orientation and relief logic to credibly constrain later Audralia continental shape.",
+      "requiredDisposition": "Gratitude must reach a believable regional morphology whose proven positional relationships can later calibrate the planetary continental representation.",
+      "preservationConstraints": ["CURRENT_MACRO_SILHOUETTE_REMAINS_PROVISIONAL", "DO_NOT_FORCE_REGION_TO_MATCH_CURRENT_GLOBE_BLOB", "DO_NOT_PROMOTE_CURRENT_REGIONAL_CANDIDATE_TO_PLANETARY_AUTHORITY_PREMATURELY"],
+      "dependencies": ["D04", "D07", "D08"],
+      "severity": "BLOCKING_FOR_GLOBAL_RECONCILIATION"
+    },
+    {
+      "id": "D07",
+      "name": "MORPHOLOGY_COUPLING_RISK",
+      "evidence": ["A07"],
+      "authority": ["ARCHITECTURAL_REUSABILITY", "FUTURE_GLOBAL_RECONCILIATION"],
+      "failureCondition": "Biome, hydrology, environmental or continuation logic depends materially on the current provisional outer silhouette such that later shape correction would require redesign rather than remapping.",
+      "requiredDisposition": "Local environmental systems must remain reusable when macro coastline or perimeter geometry changes.",
+      "preservationConstraints": ["PRIMARY_DRIVERS_MUST_BE_LOCAL_CAUSAL_FIELDS", "OUTER_BOUNDARY_DISTANCE_MUST_NOT_BE_PRIMARY_BIOME_DRIVER"],
+      "dependencies": ["D02", "D04", "D06"],
+      "severity": "ARCHITECTURAL_BLOCKER"
+    },
+    {
+      "id": "D08",
+      "name": "RECIPROCAL_ENVIRONMENTAL_IDENTITY_INCOMPLETE",
+      "evidence": ["A03", "A09"],
+      "authority": ["H_EARTH_AUDRALIA_RECIPROCAL_WORLD_COHERENCE"],
+      "failureCondition": "The regional and planetary representations cannot yet be shown to express the same canonical environmental identity across climate, biome family, hydrology, vegetation distribution, atmosphere and material palette at their respective scales.",
+      "requiredDisposition": "Geographic and environmental identity must both remain reciprocally reconcilable without requiring equal visual resolution.",
+      "preservationConstraints": ["PRESERVE_SCALE_TRANSLATION_LAW", "RECIPROCITY_MUST_REMAIN_BIDIRECTIONAL"],
+      "dependencies": ["D03", "D04", "D06"],
+      "severity": "PROGRAM_BLOCKER"
+    },
+    {
+      "id": "D09",
+      "name": "REFERENCE_CLASS_EXECUTION_NOT_YET_ACHIEVED",
+      "evidence": ["A08"],
+      "authority": ["GLOBAL_REFERENCE_CLASS_EXCELLENCE"],
+      "failureCondition": "Implementation mechanics remain visually exposed or repetitive enough that the technology does not disappear behind the experience and the world does not sustain reference-class immersion and craft.",
+      "requiredDisposition": "The spatial premise must be supported by sufficient visual, environmental and interaction craft that underlying implementation mechanics are no longer the dominant read.",
+      "preservationConstraints": ["DO_NOT_REDUCE_EXCELLENCE_TO_COSMETIC_POLISH", "PRESERVE_DIRECT_TRAVERSAL_AND_DISTINCTIVE_SPATIAL_PREMISE"],
+      "dependencies": ["D01", "D02", "D03", "D10"],
+      "severity": "BLOCKING_FOR_REFERENCE_CLASS_PASS"
+    },
+    {
+      "id": "D10",
+      "name": "CROSS_DEVICE_ACCESSIBILITY_AND_PERFORMANCE_QUALIFICATION_GAP",
+      "evidence": ["A10"],
+      "authority": ["FUNCTIONALITY", "ACCESSIBILITY", "CROSS_DEVICE_EXECUTION"],
+      "failureCondition": "There is insufficient exact-candidate evidence to declare phone, tablet and desktop first-glance readability, interaction continuity, accessibility and performance acceptable.",
+      "requiredDisposition": "Terminal qualification must establish these dimensions on the exact candidate rather than infer them from visual inspection or prior builds.",
+      "preservationConstraints": ["PRESERVE_INPUT_CONTINUITY", "PRESERVE_NAVIGATION_AND_RETURN_CONTINUITY"],
+      "dependencies": ["D09"],
+      "severity": "QUALIFICATION_BLOCKER"
+    },
+    {
+      "id": "D11",
+      "name": "PLACE_IDENTITY_CONTENT_MISMATCH",
+      "evidence": ["A11"],
+      "authority": ["CONTENT", "NARRATIVE", "FIRST_GLANCE_PLACE_LEGIBILITY"],
+      "failureCondition": "The environmental surface communicates a place identity that contradicts the intended Gratitude world identity before narrative or labels are introduced.",
+      "requiredDisposition": "Environmental art direction itself must communicate the intended place coherently at first glance.",
+      "preservationConstraints": ["DO_NOT_RELY_ON_EXPLANATORY_TEXT_TO_CORRECT_ENVIRONMENTAL_MISREAD"],
+      "dependencies": ["D03", "D05", "D09"],
+      "severity": "MAJOR"
+    },
+    {
+      "id": "D12",
+      "name": "SYSTEMIC_REUSE_NOT_YET_PROVEN",
+      "evidence": ["A12"],
+      "authority": ["INNOVATION", "ESTATE_STANDARDIZATION", "LONG_HORIZON_WORLD_DEVELOPMENT"],
+      "failureCondition": "World continuation, environmental causality and globe-region reciprocity remain one-off Gratitude repairs rather than reusable systems that can survive later regions and continental development.",
+      "requiredDisposition": "The eventual implementation must demonstrate reusable causal and reciprocal behavior suitable for later regional application.",
+      "preservationConstraints": ["DO_NOT_TREAT_REUSE_AS_PERMISSION_TO_GENERALIZE_BEFORE_GRATITUDE_IS_BELIEVABLE"],
+      "dependencies": ["D04", "D07", "D08"],
+      "severity": "PROGRAM_QUALITY_REQUIREMENT"
+    }
+  ],
+  "adjudicationSummary": {
+    "auditObservationsReviewed": 12,
+    "pinnedDeficiencies": 12,
+    "strategyEntries": 0,
+    "constructionActions": 0,
+    "ambiguousDeficienciesAllowed": false,
+    "unmappedAuditObservationAllowed": false
+  },
+  "nextBoundary": {
+    "requiredNextAction": "BUILD_COLLABORATIVE_STRATEGY_AGAINST_PINNED_D01_THROUGH_D12",
+    "strategyMayBegin": true,
+    "constructionAuthorized": false,
+    "law": "NO STRATEGY MAY REDEFINE OR SILENTLY DROP A PINNED DEFICIENCY. EACH STRATEGY TREATMENT MUST TRACE DIRECTLY TO ONE OR MORE D01-D12 IDENTITIES."
+  }
+}

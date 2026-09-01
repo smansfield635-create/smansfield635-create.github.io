@@ -1,0 +1,152 @@
+name: Publication Fast Preflight v1
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        description: Exact candidate commit SHA to preflight
+        required: true
+        type: string
+      surface_id:
+        description: Registered public surface verification id
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publication-preflight-${{ inputs.surface_id }}-${{ inputs.target_sha }}
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require exact dispatched head
+        id: resolve
+        env:
+          REQUESTED_SHA: ${{ inputs.target_sha }}
+          DISPATCHED_HEAD_SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          requested="$(printf '%s' "$REQUESTED_SHA" | tr -d '[:space:]')"
+          dispatched="$(printf '%s' "$DISPATCHED_HEAD_SHA" | tr -d '[:space:]')"
+          printf '%s' "$requested" | grep -Eq '^[0-9a-f]{40}$'
+          test "$requested" = "$dispatched"
+          echo "target_sha=$requested" >> "$GITHUB_OUTPUT"
+
+      - name: Materialize bounded publication sparse index
+        env:
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$TARGET_SHA"
+          git sparse-checkout init --cone --sparse-index
+
+          mapfile -t top_dirs < <(git ls-tree -d --name-only FETCH_HEAD)
+          sparse_paths=(".github/ai-router/publication-surfaces")
+          for root in "${top_dirs[@]}"; do
+            case "$root" in
+              .github|preview|node_modules|h-earth-live-6d18e158)
+                ;;
+              inspection)
+                while IFS= read -r child; do
+                  test -n "$child" || continue
+                  test "$child" = "audralia-24057-exact" && continue
+                  sparse_paths+=("inspection/$child")
+                done < <(git ls-tree -d --name-only "FETCH_HEAD:inspection")
+                ;;
+              *)
+                sparse_paths+=("$root")
+                ;;
+            esac
+          done
+
+          git sparse-checkout set -- "${sparse_paths[@]}"
+          git checkout --detach FETCH_HEAD
+          test "$(git config --bool index.sparse)" = "true"
+          sparse_entries="$(git ls-files --sparse | wc -l | tr -d '[:space:]')"
+          materialized_files="$(find . -type f -not -path './.git/*' | wc -l | tr -d '[:space:]')"
+          test "$sparse_entries" -lt 20000
+          test "$materialized_files" -lt 20000
+          test -f tools/publication-preflight.v1.mjs
+          test -d .github/ai-router/publication-surfaces
+          test ! -e preview
+          test ! -e h-earth-live-6d18e158
+          test ! -e inspection/audralia-24057-exact
+          echo "PUBLICATION_SPARSE_INDEX_ENTRIES=$sparse_entries"
+          echo "PUBLICATION_MATERIALIZED_FILES=$materialized_files"
+
+      - name: Validate registered surface
+        id: surface
+        env:
+          SURFACE_ID: ${{ inputs.surface_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s' "$SURFACE_ID" | grep -Eq '^[a-z0-9][a-z0-9._-]{0,79}$'
+          manifest=".github/ai-router/publication-surfaces/${SURFACE_ID}.json"
+          test -f "$manifest"
+          jq -e --arg id "$SURFACE_ID" '.schema=="PUBLICATION_SURFACE_VERIFICATION_v1" and .surfaceId==$id and (.checks|type=="array") and (.checks|length>0)' "$manifest" >/dev/null
+          echo "manifest=$manifest" >> "$GITHUB_OUTPUT"
+          echo "runtime=$(jq -r 'if .runtime?.enabled == true then "true" else "false" end' "$manifest")" >> "$GITHUB_OUTPUT"
+
+      - name: Build and size-check exact Pages payload
+        env:
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+          SURFACE_ID: ${{ inputs.surface_id }}
+          STAGE: ${{ runner.temp }}/pages-site
+          RECEIPT: ${{ runner.temp }}/publication-preflight-receipt.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/publication-preflight.v1.mjs build \
+            --target-sha "$TARGET_SHA" \
+            --surface-id "$SURFACE_ID" \
+            --stage "$STAGE" \
+            --receipt "$RECEIPT"
+          jq -e '.schema=="PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1" and .result=="PAYLOAD_BUILT" and .deploymentPerformed==false' "$RECEIPT" >/dev/null
+          echo "PAGES_PAYLOAD_BYTES=$(jq -r '.payloadBytes' "$RECEIPT")"
+
+      - name: Set up Chrome
+        if: ${{ steps.surface.outputs.runtime == 'true' }}
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install runtime verifier
+        if: ${{ steps.surface.outputs.runtime == 'true' }}
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Verify exact staged payload
+        env:
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+          SURFACE_ID: ${{ inputs.surface_id }}
+          STAGE: ${{ runner.temp }}/pages-site
+          RECEIPT: ${{ runner.temp }}/publication-preflight-receipt.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ steps.surface.outputs.runtime }}" = "true" ]; then
+            export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+            test -n "$CHROME_PATH"
+          fi
+          node tools/publication-preflight.v1.mjs verify \
+            --target-sha "$TARGET_SHA" \
+            --surface-id "$SURFACE_ID" \
+            --stage "$STAGE" \
+            --receipt "$RECEIPT"
+          jq -e '.schema=="PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1" and .result=="PREFLIGHT_PASS" and .deploymentPerformed==false' "$RECEIPT" >/dev/null
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: publication-fast-preflight-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/publication-preflight-receipt.json
+          if-no-files-found: error
+          retention-days: 90

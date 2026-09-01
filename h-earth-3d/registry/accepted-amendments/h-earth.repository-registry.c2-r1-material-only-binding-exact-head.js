@@ -1,18 +1,25 @@
 /**
- * H_EARTH_REPOSITORY_REGISTRY_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_v2
+ * H_EARTH_REPOSITORY_REGISTRY_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_v3
  *
  * Read-only control-plane amendment for PR #484. This amendment replaces the
  * current occurrence projection of the existing C2-R1 candidate node while
  * preserving its control prefix and six accepted coastal paths, and adds the
  * two runtime paths required by MC5. It creates no source, product, merge,
  * publication, materialization, or candidate-mutation authority.
+ *
+ * v3 makes the required predecessor lineage an explicit exported identity so
+ * the validator loader can prove that the exact-head amendment is composed on
+ * the canonical C2-R1 candidate-path disposition rather than an adjacent
+ * registry facade that cannot supply the bounded coastal candidate node.
  */
-import baseFacade from './h-earth.repository-registry.gratitude-region-final-spatial-placement-disposition.js';
+import baseFacade from './h-earth.repository-registry.c2-r1-candidate-path-disposition.js';
 
 const freeze=(value,seen=new WeakSet())=>{if(value===null||typeof value!=='object'||Object.isFrozen(value)||seen.has(value))return value;seen.add(value);Object.values(value).forEach(item=>freeze(item,seen));return Object.freeze(value)};
 const normalizePath=value=>{if(typeof value!=='string')return null;let result=value.trim().replaceAll('\\','/');if(result.startsWith('./'))result=result.slice(2);if(!result.startsWith('/'))result=`/${result}`;result=result.replace(/\/{2,}/g,'/');return result.length>1&&result.endsWith('/')?result.slice(0,-1):result};
 const REPOSITORY='smansfield635-create/smansfield635-create.github.io';
 const NODE_ID='H_EARTH_C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR_CANDIDATE_PACKAGE';
+const PREDECESSOR_MODULE='./h-earth.repository-registry.c2-r1-candidate-path-disposition.js';
+const PREDECESSOR_DISPOSITION_ID='H_EARTH_REPOSITORY_REGISTRY_C2_R1_CANDIDATE_PATH_DISPOSITION_v4';
 const PR_NUMBER=484;
 const BRANCH='agent/h-earth-c2-r1-material-only-binding-implementation-001';
 const HEAD='44019e27c3d52c59cc59bba7c833b6317d014273';
@@ -36,8 +43,23 @@ const RUNTIME_BLOBS=freeze({
   [RUNTIME_PATHS[1]]:'2b8103b182cfb5fcee84c94afaecd2a1cf329a7f'
 });
 const REGISTRY_PATHS=Object.freeze([CONTROL_PREFIX,...COASTAL_PATHS,...RUNTIME_PATHS]);
-const BASE_NODE=baseFacade.getHEarthRepositoryRegistryNode(NODE_ID);
-if(!BASE_NODE)throw new Error(`C2_R1_BASE_REGISTRY_NODE_NOT_FOUND:${NODE_ID}`);
+export const requireC2R1BaseRegistryNode=(facade=baseFacade,nodeId=NODE_ID)=>{
+  const node=facade?.getHEarthRepositoryRegistryNode?.(nodeId)??null;
+  if(!node)throw new Error(`C2_R1_BASE_REGISTRY_NODE_NOT_FOUND:${nodeId}`);
+  return node;
+};
+const BASE_NODE=requireC2R1BaseRegistryNode();
+export const H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_BASE_LINEAGE=freeze({
+  schema:'H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_BASE_LINEAGE_v1',
+  predecessorModule:PREDECESSOR_MODULE,
+  predecessorDispositionId:PREDECESSOR_DISPOSITION_ID,
+  requiredNodeId:NODE_ID,
+  observedNodeId:BASE_NODE.nodeId,
+  predecessorNodePresent:true,
+  readOnly:true,
+  mutationAuthorityCreated:false,
+  mergeAuthorityCreated:false
+});
 
 const occurrenceFor=path=>freeze({
   repository:REPOSITORY,
@@ -71,6 +93,7 @@ export const H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_EVIDENCE=freeze({
   candidateBranch:BRANCH,
   candidateHead:HEAD,
   packageIdentity:PACKAGE_IDENTITY,
+  predecessorLineage:H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_BASE_LINEAGE,
   preservedControlPrefix:CONTROL_PREFIX,
   preservedCoastalPaths:COASTAL_PATHS,
   runtimePaths:RUNTIME_PATHS,
@@ -93,18 +116,18 @@ export const H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_SCOPE_NODE=freeze({
   repositoryOccurrences:CURRENT_OCCURRENCES,
   evidenceReferences:Object.freeze([...new Set([...BASE_NODE.evidenceReferences,H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_EVIDENCE.evidenceId])]),
   authorityPosture:'C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_REGISTERED_FOR_MC5',
-  authorityScope:Object.freeze([...new Set([...BASE_NODE.authorityScope,'C2_R1_CONTROL_PREFIX_PRESERVED','SIX_C2_R1_COASTAL_PATHS_PRESERVED','TWO_CURRENT_RUNTIME_PATHS_REGISTERED','ALL_CURRENT_OCCURRENCES_BOUND_TO_PR_484_EXACT_HEAD','MC5_READ_ONLY_EXACT_HEAD_VERIFICATION'])]),
+  authorityScope:Object.freeze([...new Set([...BASE_NODE.authorityScope,'C2_R1_PREDECESSOR_LINEAGE_EXPLICITLY_BOUND','C2_R1_CONTROL_PREFIX_PRESERVED','SIX_C2_R1_COASTAL_PATHS_PRESERVED','TWO_CURRENT_RUNTIME_PATHS_REGISTERED','ALL_CURRENT_OCCURRENCES_BOUND_TO_PR_484_EXACT_HEAD','MC5_READ_ONLY_EXACT_HEAD_VERIFICATION'])]),
   authorityLimitations:Object.freeze([...new Set([...BASE_NODE.authorityLimitations,'NO_PRODUCT_MUTATION','NO_PR_484_MUTATION','NO_CANDIDATE_MUTATION','NO_MATERIALIZATION_RERUN','NO_MERGE_PROMOTION_PUBLICATION_OR_USER_REVIEW'])]),
-  orderingRules:Object.freeze([...new Set([...BASE_NODE.orderingRules,'CONTROL_PLANE_REGISTRATION_BEFORE_MC5_EXACT_HEAD_VERIFICATION','MC5_VERIFICATION_BEFORE_ROLE_3_HANDOFF'])]),
-  requiredValidations:Object.freeze([...new Set([...BASE_NODE.requiredValidations,'AUTOMATIC_REPOSITORY_PREFLIGHT_FINAL_DISPOSITION_PASS','ALL_NINE_PR_484_CHANGED_PATHS_CLASSIFIED','ALL_CURRENT_OCCURRENCES_BIND_EXACT_BRANCH_AND_HEAD','CACHE_V2_AND_PACKAGE_STATIC_VERIFICATION','DESKTOP_AND_TWO_MOBILE_BROWSER_EXECUTION'])]),
-  stoppingBoundaries:Object.freeze([...new Set([...BASE_NODE.stoppingBoundaries,'STOP_BEFORE_PRODUCT_OR_CANDIDATE_MUTATION','STOP_BEFORE_PR_484_MUTATION','STOP_BEFORE_MATERIALIZATION_RERUN_OR_MERGE'])]),
-  currentIdentityReferences:Object.freeze([...new Set([...BASE_NODE.currentIdentityReferences,`PR_484_BRANCH=${BRANCH}`,`PR_484_HEAD=${HEAD}`,`PR_484_PACKAGE=${PACKAGE_IDENTITY}`])]),
+  orderingRules:Object.freeze([...new Set([...BASE_NODE.orderingRules,'C2_R1_CANDIDATE_PATH_DISPOSITION_BEFORE_EXACT_HEAD_AMENDMENT','CONTROL_PLANE_REGISTRATION_BEFORE_MC5_EXACT_HEAD_VERIFICATION','MC5_VERIFICATION_BEFORE_ROLE_3_HANDOFF'])]),
+  requiredValidations:Object.freeze([...new Set([...BASE_NODE.requiredValidations,'C2_R1_PREDECESSOR_LINEAGE_VERIFIED','AUTOMATIC_REPOSITORY_PREFLIGHT_FINAL_DISPOSITION_PASS','ALL_NINE_PR_484_CHANGED_PATHS_CLASSIFIED','ALL_CURRENT_OCCURRENCES_BIND_EXACT_BRANCH_AND_HEAD','CACHE_V2_AND_PACKAGE_STATIC_VERIFICATION','DESKTOP_AND_TWO_MOBILE_BROWSER_EXECUTION'])]),
+  stoppingBoundaries:Object.freeze([...new Set([...BASE_NODE.stoppingBoundaries,'STOP_ON_C2_R1_PREDECESSOR_LINEAGE_MISMATCH','STOP_BEFORE_PRODUCT_OR_CANDIDATE_MUTATION','STOP_BEFORE_PR_484_MUTATION','STOP_BEFORE_MATERIALIZATION_RERUN_OR_MERGE'])]),
+  currentIdentityReferences:Object.freeze([...new Set([...BASE_NODE.currentIdentityReferences,`C2_R1_PREDECESSOR=${PREDECESSOR_DISPOSITION_ID}`,`PR_484_BRANCH=${BRANCH}`,`PR_484_HEAD=${HEAD}`,`PR_484_PACKAGE=${PACKAGE_IDENTITY}`])]),
   lifecycleStatus:'CONTROL_PLANE_EXACT_HEAD_REGISTERED'
 });
 
 const NODE=H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_SCOPE_NODE;
 const EVIDENCE=H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_EVIDENCE;
-const baseInstance=baseFacade.getHEarthRepositoryRegistryInstance();
+const baseInstance=freeze({...baseFacade.getHEarthRepositoryRegistryInstance()});
 const combinedInstance=freeze({
   ...baseInstance,
   evidenceRecords:[...baseInstance.evidenceRecords.filter(record=>record.evidenceId!==EVIDENCE.evidenceId),EVIDENCE],

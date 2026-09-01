@@ -1,0 +1,19 @@
+{
+  "name": "Three-tier agent runtime qualification",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+  "remoteUser": "node",
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.12"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "containerEnv": {
+    "THREE_TIER_EXECUTION_SUBSTRATE": "1",
+    "THREE_TIER_AGENT_RUNTIME": "1",
+    "THREE_TIER_NATIVE_CHATGPT_TERMINAL_REQUIRED": "0",
+    "THREE_TIER_PROJECT_PROFILE": ".github/ai-router/codespace-execution/project-profiles/agentic-frontier-openhands-adversary.v1.json"
+  },
+  "postCreateCommand": "bash .github/ai-router/codespace-execution/run-declared-profile-command.v1.sh \"$THREE_TIER_PROJECT_PROFILE\"",
+  "shutdownAction": "stopContainer"
+}

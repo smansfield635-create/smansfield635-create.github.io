@@ -1,0 +1,503 @@
+name: H-Earth C2-R1 MC5 Exact-Head Verification
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/h-earth-c2-r1-mc5-exact-head-verification.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: h-earth-c2-r1-mc5-exact-head-484
+  cancel-in-progress: false
+
+env:
+  TARGET_PR: '484'
+  TARGET_BRANCH: agent/h-earth-c2-r1-material-only-binding-implementation-001
+  TARGET_HEAD: 44019e27c3d52c59cc59bba7c833b6317d014273
+  STARTING_HEAD: 4f0491f00fae794ecdefbae36f4ee86c8a1bd21a
+  ROLLBACK_BRANCH: rollback/h-earth-c2-r1-material-only-binding-start-001
+  TARGET_PACKAGE: H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_773DAE4E
+  TARGET_PACKAGE_DIGEST: fnv1a32:773dae4e
+  TARGET_CACHE_SCHEMA: H_EARTH_C2_R1_COMPLETE_WORLD_EXACT_BINDING_CACHE_v2
+  TARGET_CACHE_JSON_SHA256: 2262fe92c43f8980113bc7482253bbbb785a96679b15156541165bc46713e7b5
+  TARGET_CACHE_GZIP_SHA256: 8a22a0edec87ef25c763722b8be55fa457b7cfcddd1cdc21ffba1abfbd35709b
+  TARGET_TERRAIN_COUNT: '10419'
+  TARGET_SHORELINE_COUNT: '154'
+  LIVE_REVIEW_URL: http://127.0.0.1:4188/showroom/globe/h-earth/index.html?cp2=round1-1f520809
+  PLAYWRIGHT_VERSION: 1.55.0
+
+jobs:
+  exact-custody-registry-and-static-verification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout installed control plane read-only
+        uses: actions/checkout@v4
+        with:
+          path: control-plane
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Checkout frozen PR 484 candidate read-only
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_HEAD }}
+          path: candidate
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Run automatic registry preflight for all nine PR 484 paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/mc5-static"
+          cd "$GITHUB_WORKSPACE/control-plane"
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-material-only-binding-exact-head.js
+          node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+          MC5_RECEIPT="$RUNNER_TEMP/mc5-static/registry-preflight-receipt.json" node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import load, {
+            H_EARTH_C2_R1_MC5_PR_484_CHANGED_PATHS,
+            runHEarthC2R1MC5AutomaticRegistryPreflight
+          } from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
+          const dependencies = load();
+          if (dependencies.identityVerified !== true) throw new Error('REGISTRY_IDENTITY_NOT_VERIFIED');
+          if (dependencies.exactHeadRegistrationVerified !== true) {
+            throw new Error(`EXACT_HEAD_REGISTRATION_FAILED:${JSON.stringify(dependencies.exactHeadChecks)}`);
+          }
+          if (H_EARTH_C2_R1_MC5_PR_484_CHANGED_PATHS.length !== 9) throw new Error('PR_484_CHANGED_PATH_COUNT_NOT_NINE');
+          const receipt = await runHEarthC2R1MC5AutomaticRegistryPreflight();
+          if (receipt.finalDisposition !== 'PASS') throw new Error(`REGISTRY_PREFLIGHT_NOT_PASS:${receipt.finalDisposition}`);
+          fs.writeFileSync(process.env.MC5_RECEIPT, `${JSON.stringify(receipt, null, 2)}\n`);
+          NODE
+
+      - name: Verify exact branch head rollback and nine-path custody
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/candidate"
+          test "$(git rev-parse HEAD)" = "$TARGET_HEAD"
+          git fetch --no-tags origin "$TARGET_BRANCH:refs/remotes/origin/$TARGET_BRANCH"
+          test "$(git rev-parse "refs/remotes/origin/$TARGET_BRANCH")" = "$TARGET_HEAD"
+          git fetch --no-tags origin "$ROLLBACK_BRANCH:refs/remotes/origin/$ROLLBACK_BRANCH"
+          test "$(git rev-parse "refs/remotes/origin/$ROLLBACK_BRANCH")" = "$STARTING_HEAD"
+          cat > /tmp/mc5-pr484-nine-paths <<'PATHS'
+          .github/workflows/h-earth-c2-r1-complete-world-integration.yml
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs
+          showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
+          showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js
+          PATHS
+          sort -u /tmp/mc5-pr484-nine-paths -o /tmp/mc5-pr484-nine-paths
+          git diff --name-only "$STARTING_HEAD...$TARGET_HEAD" | sort -u > /tmp/mc5-actual-paths
+          diff -u /tmp/mc5-pr484-nine-paths /tmp/mc5-actual-paths
+          test -z "$(git status --porcelain)"
+
+      - name: Verify cache v2 package identity and material-only invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/candidate"
+          MC5_STATIC_RECEIPT="$RUNNER_TEMP/mc5-static/static-receipt.json" node --input-type=module <<'NODE'
+          import crypto from 'node:crypto';
+          import fs from 'node:fs';
+          import zlib from 'node:zlib';
+          const readJson = path => JSON.parse(fs.readFileSync(path, 'utf8'));
+          const sha256 = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
+          const check = (condition, code, detail = null) => {
+            if (!condition) throw new Error(`${code}${detail == null ? '' : `:${JSON.stringify(detail)}`}`);
+          };
+          const identityPath = 'h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json';
+          const custodyPath = 'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json';
+          const ledgerPath = 'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json';
+          const role3Path = 'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json';
+          const runtimePath = 'showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js';
+          const packagePath = 'showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js';
+          const identity = readJson(identityPath);
+          const custody = readJson(custodyPath);
+          const ledger = readJson(ledgerPath);
+          const role3 = readJson(role3Path);
+          const runtimeText = fs.readFileSync(runtimePath, 'utf8');
+          const packageText = fs.readFileSync(packagePath, 'utf8');
+          const branch = process.env.TARGET_BRANCH;
+          const head = process.env.TARGET_HEAD;
+          const packageIdentity = process.env.TARGET_PACKAGE;
+          const packageDigest = process.env.TARGET_PACKAGE_DIGEST;
+          const schema = process.env.TARGET_CACHE_SCHEMA;
+          const terrainCount = Number(process.env.TARGET_TERRAIN_COUNT);
+          const shorelineCount = Number(process.env.TARGET_SHORELINE_COUNT);
+          check(identity.candidateBranch === branch, 'IDENTITY_BRANCH_MISMATCH');
+          check(identity.packageIdentity === packageIdentity, 'IDENTITY_PACKAGE_MISMATCH');
+          check(identity.packageContentDigest === packageDigest, 'IDENTITY_DIGEST_MISMATCH');
+          check(identity.cacheSchema === schema, 'IDENTITY_CACHE_SCHEMA_MISMATCH');
+          check(identity.boundTerrainVertexCount === terrainCount, 'IDENTITY_TERRAIN_COUNT_MISMATCH');
+          check(identity.boundShorelineVertexCount === shorelineCount, 'IDENTITY_SHORELINE_COUNT_MISMATCH');
+          check(identity.canonicalPositionsPreserved === true && identity.canonicalNormalsPreserved === true, 'IDENTITY_CANONICAL_GEOMETRY_NOT_PRESERVED');
+          check(identity.inlandWaterMembershipViolationCount === 0, 'IDENTITY_INLAND_WATER_VIOLATION');
+          check(custody.cacheSchema === schema, 'CUSTODY_CACHE_SCHEMA_MISMATCH');
+          check(custody.newPackageIdentity === packageIdentity && custody.newPackageDigest === packageDigest, 'CUSTODY_PACKAGE_MISMATCH');
+          check(custody.canonicalPositionsByteIdentical === true && custody.canonicalNormalsByteIdentical === true, 'CUSTODY_CANONICAL_GEOMETRY_NOT_IDENTICAL');
+          check(custody.terrainPositionMutationCount === 0 && custody.terrainNormalMutationCount === 0, 'CUSTODY_GEOMETRY_MUTATION');
+          check(custody.inlandWaterMembershipViolationCount === 0, 'CUSTODY_INLAND_WATER_VIOLATION');
+          check(ledger.resultingHeadBinding === 'EXACT_COMMIT_CONTAINING_THIS_RECORD', 'LEDGER_HEAD_BINDING_INVALID');
+          check(role3.resultingHeadBinding === 'EXACT_COMMIT_CONTAINING_THIS_RECORD', 'ROLE3_HEAD_BINDING_INVALID');
+          check(ledger.candidateBranch === branch && role3.candidateBranch === branch, 'EVIDENCE_BRANCH_MISMATCH');
+          check(ledger.completeWorldPackageIdentity === packageIdentity && role3.completeWorldPackageIdentity === packageIdentity, 'EVIDENCE_PACKAGE_MISMATCH');
+          check(ledger.completeWorldPackageContentDigest === packageDigest && role3.completeWorldPackageContentDigest === packageDigest, 'EVIDENCE_DIGEST_MISMATCH');
+          check(ledger.boundTerrainVertexCount === terrainCount && role3.boundTerrainVertexCount === terrainCount, 'EVIDENCE_TERRAIN_COUNT_MISMATCH');
+          check(ledger.boundShorelineVertexCount === shorelineCount && role3.boundShorelineVertexCount === shorelineCount, 'EVIDENCE_SHORELINE_COUNT_MISMATCH');
+          check(ledger.exactBindingCacheCarrier?.partIndex === 1 && role3.exactBindingCacheCarrier?.partIndex === 2, 'CACHE_CARRIER_ORDER_INVALID');
+          const gzipBytes = Buffer.from(ledger.exactBindingCacheCarrier.value + role3.exactBindingCacheCarrier.value, 'base64');
+          const cacheBytes = zlib.gunzipSync(gzipBytes);
+          const cache = JSON.parse(cacheBytes.toString('utf8'));
+          check(sha256(cacheBytes) === process.env.TARGET_CACHE_JSON_SHA256, 'CACHE_JSON_SHA256_MISMATCH');
+          check(sha256(gzipBytes) === process.env.TARGET_CACHE_GZIP_SHA256, 'CACHE_GZIP_SHA256_MISMATCH');
+          check(cache.cacheType === schema, 'CACHE_SCHEMA_MISMATCH');
+          check(cache.completeWorldPackageIdentity === packageIdentity, 'CACHE_PACKAGE_IDENTITY_MISMATCH');
+          check(cache.completeWorldPackageContentDigest === packageDigest, 'CACHE_PACKAGE_DIGEST_MISMATCH');
+          check(cache.completeWorldPackageIdentity !== cache.priorCompleteWorldPackageIdentity, 'OLD_PACKAGE_IDENTITY_REUSED');
+          check(cache.counters.boundTerrainVertexCount === terrainCount, 'CACHE_TERRAIN_COUNT_MISMATCH');
+          check(cache.counters.boundShorelineVertexCount === shorelineCount, 'CACHE_SHORELINE_COUNT_MISMATCH');
+          check(cache.counters.terrainPositionMutationCount === 0 && cache.counters.terrainNormalMutationCount === 0, 'CACHE_GEOMETRY_MUTATION');
+          check(cache.counters.inlandWaterMembershipViolationCount === 0, 'CACHE_INLAND_WATER_VIOLATION');
+          check(cache.membership.shorelineAdmissionLaw === 'SIGNED_INLAND_DISTANCE_LESS_THAN_OR_EQUAL_TO_ZERO_ONLY', 'CACHE_SHORELINE_LAW_MISMATCH');
+          check(cache.membership.positiveInlandDistanceWaterAdmissionProhibited === true, 'CACHE_INLAND_WATER_NOT_PROHIBITED');
+          check(cache.terrain.recordWidth === 8 && cache.shoreline.recordWidth === 8, 'CACHE_RECORD_WIDTH_MISMATCH');
+          check(JSON.stringify(cache.terrain.fields) === JSON.stringify(['worldX','worldZ','colorR','colorG','colorB','roughness','wetness','cavity']), 'CACHE_TERRAIN_FIELDS_MISMATCH');
+          check(JSON.stringify(cache.shoreline.fields) === JSON.stringify(['worldX','worldZ','colorR','colorG','colorB','alpha','wetness','foam']), 'CACHE_SHORELINE_FIELDS_MISMATCH');
+          check(runtimeText.includes(packageIdentity) && runtimeText.includes(packageDigest), 'RUNTIME_PACKAGE_BINDING_MISSING');
+          check(packageText.includes(packageIdentity) && packageText.includes(packageDigest), 'PACKAGE_OVERRIDE_BINDING_MISSING');
+          check(runtimeText.includes('boundShorelineVertexCount !== 154'), 'RUNTIME_SHORELINE_COUNT_GUARD_MISSING');
+          check(packageText.includes('boundShorelineVertexCount !== 154'), 'PACKAGE_SHORELINE_COUNT_GUARD_MISSING');
+          const receipt = {
+            receiptType: 'H_EARTH_C2_R1_MC5_EXACT_HEAD_STATIC_RECEIPT_v1',
+            targetPr: 484,
+            candidateBranch: branch,
+            candidateHead: head,
+            rollbackBranch: process.env.ROLLBACK_BRANCH,
+            rollbackHead: process.env.STARTING_HEAD,
+            exactChangedPathCount: 9,
+            cacheSchema: schema,
+            cacheJsonSha256: sha256(cacheBytes),
+            cacheGzipSha256: sha256(gzipBytes),
+            packageIdentity,
+            packageContentDigest: packageDigest,
+            boundTerrainVertexCount: terrainCount,
+            boundShorelineVertexCount: shorelineCount,
+            canonicalPositionsPreserved: true,
+            canonicalNormalsPreserved: true,
+            terrainPositionMutationCount: 0,
+            terrainNormalMutationCount: 0,
+            inlandWaterMembershipViolationCount: 0,
+            status: 'PASS'
+          };
+          fs.writeFileSync(process.env.MC5_STATIC_RECEIPT, `${JSON.stringify(receipt, null, 2)}\n`);
+          NODE
+          node --check h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js
+          node --check h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js
+          node --check showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
+          node --check showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js
+          test -z "$(git status --porcelain)"
+
+      - name: Create deterministic static artifact manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/mc5-static"
+          find . -maxdepth 1 -type f ! -name artifact-sha256.txt -print0 | sort -z | xargs -0 sha256sum > artifact-sha256.txt
+
+      - name: Upload exact custody registry and static receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-c2-r1-mc5-static-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/mc5-static
+          if-no-files-found: error
+          retention-days: 30
+
+  desktop-and-mobile-browser-execution:
+    needs: exact-custody-registry-and-static-verification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout frozen PR 484 candidate read-only
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_HEAD }}
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Provision exact-head browser host
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_HEAD"
+          test -z "$(git status --porcelain)"
+          mkdir -p "$RUNNER_TEMP/mc5-browser/runtime" "$RUNNER_TEMP/mc5-browser/artifacts"
+          cd "$RUNNER_TEMP/mc5-browser/runtime"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund --save-exact "playwright@$PLAYWRIGHT_VERSION"
+          npx playwright install --with-deps chromium
+          python3 -m http.server 4188 --bind 127.0.0.1 --directory "$GITHUB_WORKSPACE" >"$RUNNER_TEMP/mc5-browser/artifacts/server.log" 2>&1 &
+          for attempt in $(seq 1 60); do
+            if curl -fsS "$LIVE_REVIEW_URL" >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+
+      - name: Execute desktop 1440x900 and mobile 390x844 and 412x915
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/mc5-browser/runtime/verify.mjs" <<'SCRIPT'
+          import crypto from 'node:crypto';
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import process from 'node:process';
+          import { chromium } from 'playwright';
+
+          const out = path.join(process.env.RUNNER_TEMP, 'mc5-browser/artifacts');
+          const check = (condition, code, detail = null) => {
+            if (condition) return;
+            const error = new Error(code);
+            error.detail = detail;
+            throw error;
+          };
+          const wait = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
+          const sha256 = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
+
+          async function touchNavigation(page) {
+            await page.evaluate(async () => {
+              const canvas = document.getElementById('h-earth-functional-landscape-canvas');
+              if (!canvas) throw new Error('TOUCH_CANVAS_MISSING');
+              const emit = (type, points) => {
+                for (const point of points) {
+                  const released = type === 'pointerup';
+                  canvas.dispatchEvent(new PointerEvent(type, {
+                    bubbles: true,
+                    cancelable: true,
+                    pointerId: point.id,
+                    pointerType: 'touch',
+                    isPrimary: point.id === 1,
+                    clientX: point.x,
+                    clientY: point.y,
+                    buttons: released ? 0 : 1,
+                    pressure: released ? 0 : 0.5
+                  }));
+                }
+              };
+              emit('pointerdown', [{ id: 1, x: 105, y: 260 }]);
+              emit('pointermove', [{ id: 1, x: 245, y: 260 }]);
+              await new Promise(resolve => setTimeout(resolve, 1800));
+              emit('pointerup', [{ id: 1, x: 245, y: 260 }]);
+              await new Promise(resolve => setTimeout(resolve, 150));
+              emit('pointerdown', [{ id: 1, x: 110, y: 390 }, { id: 2, x: 250, y: 390 }]);
+              emit('pointermove', [{ id: 1, x: 110, y: 290 }, { id: 2, x: 250, y: 290 }]);
+              await new Promise(resolve => setTimeout(resolve, 650));
+              emit('pointerup', [{ id: 1, x: 110, y: 290 }, { id: 2, x: 250, y: 290 }]);
+            });
+          }
+
+          async function desktopNavigation(page) {
+            const canvas = page.locator('#h-earth-functional-landscape-canvas');
+            const box = await canvas.boundingBox();
+            check(box, 'DESKTOP_CANVAS_BOX_MISSING');
+            const x = box.x + box.width * 0.42;
+            const y = box.y + box.height * 0.45;
+            await page.mouse.move(x, y);
+            await page.mouse.down();
+            await page.mouse.move(x + Math.min(260, box.width * 0.34), y, { steps: 12 });
+            await wait(1800);
+            await page.mouse.up();
+            await page.mouse.wheel(0, -360);
+            await wait(650);
+          }
+
+          async function runScenario(browser, scenario) {
+            const context = await browser.newContext({
+              viewport: scenario.viewport,
+              deviceScaleFactor: scenario.dpr,
+              isMobile: scenario.mobile,
+              hasTouch: scenario.mobile
+            });
+            const page = await context.newPage();
+            const consoleErrors = [];
+            const pageErrors = [];
+            const requestFailures = [];
+            const httpFailures = [];
+            page.on('console', message => {
+              if (message.type() === 'error') consoleErrors.push({ type: message.type(), text: message.text() });
+            });
+            page.on('pageerror', error => pageErrors.push({ message: error.message }));
+            page.on('requestfailed', request => requestFailures.push({ url: request.url(), failure: request.failure() }));
+            page.on('response', response => {
+              if (response.status() >= 400 && !response.url().endsWith('/favicon.ico')) {
+                httpFailures.push({ url: response.url(), status: response.status() });
+              }
+            });
+            try {
+              await page.goto(process.env.LIVE_REVIEW_URL, { waitUntil: 'domcontentloaded', timeout: 120000 });
+              await page.waitForFunction(() => {
+                const api = window.H_EARTH_RUN8E_PUBLIC_ROUTE;
+                const root = document.getElementById('h-earth-functional-landscape-route');
+                return api?.ready === true || root?.dataset?.run8eError === 'true';
+              }, null, { timeout: 120000, polling: 250 });
+              const before = await page.evaluate(() => {
+                const api = window.H_EARTH_RUN8E_PUBLIC_ROUTE;
+                return {
+                  root: { ...document.getElementById('h-earth-functional-landscape-route').dataset },
+                  receipt: api?.getReceipt?.() ?? null
+                };
+              });
+              check(before.root.run8eError !== 'true', 'LIVE_ROUTE_REPORTED_RUNTIME_ERROR', before);
+              check(before.receipt?.eligible === true, 'LIVE_ROUTE_RECEIPT_NOT_ELIGIBLE', before);
+              const selection = before.receipt.runtimePackageSelection;
+              const binding = before.receipt.completeWorldBinding;
+              check(selection?.runtimePackageIdentity === process.env.TARGET_PACKAGE, 'RUNTIME_PACKAGE_IDENTITY_MISMATCH', selection);
+              check(selection?.runtimePackageContentDigest === process.env.TARGET_PACKAGE_DIGEST, 'RUNTIME_PACKAGE_DIGEST_MISMATCH', selection);
+              check(selection?.candidateSampleFailureCount === 0, 'CANDIDATE_SAMPLE_FAILURES', selection);
+              check(selection?.boundTerrainVertexCount === Number(process.env.TARGET_TERRAIN_COUNT), 'BOUND_TERRAIN_COUNT_MISMATCH', selection);
+              check(selection?.boundShorelineVertexCount === Number(process.env.TARGET_SHORELINE_COUNT), 'BOUND_SHORELINE_COUNT_MISMATCH', selection);
+              check(binding?.materialOnlyBinding === true, 'MATERIAL_ONLY_BINDING_NOT_ACTIVE', binding);
+              check(binding?.exactBindingCacheSchema === process.env.TARGET_CACHE_SCHEMA, 'CACHE_V2_NOT_ACTIVE', binding);
+              check(binding?.counters?.terrainPositionMutationCount === 0, 'RUNTIME_TERRAIN_POSITION_MUTATION', binding);
+              check(binding?.counters?.terrainNormalMutationCount === 0, 'RUNTIME_TERRAIN_NORMAL_MUTATION', binding);
+              check(binding?.counters?.inlandWaterMembershipViolationCount === 0, 'RUNTIME_INLAND_WATER_VIOLATION', binding);
+              check(before.receipt.liveGpu?.resources?.package?.runtimeIdentity === process.env.TARGET_PACKAGE, 'GPU_PACKAGE_IDENTITY_MISMATCH');
+              check(before.receipt.liveGpu?.resources?.package?.runtimeContentDigest === process.env.TARGET_PACKAGE_DIGEST, 'GPU_PACKAGE_DIGEST_MISMATCH');
+              check(before.receipt.liveGpu?.resources?.packageUploadedOnce === true, 'GPU_PACKAGE_NOT_UPLOADED_ONCE');
+              check(before.receipt.liveGpu?.resources?.noPostInitializationResourceCreation === true, 'GPU_RESOURCE_CREATED_AFTER_INITIALIZATION');
+              check(before.receipt.liveGpu?.resources?.noPostInitializationBufferUpload === true, 'GPU_BUFFER_UPLOADED_AFTER_INITIALIZATION');
+              const initialEvidence = before.receipt.liveGpu?.evidenceRecords?.[0]?.colorSummary;
+              check(initialEvidence?.nonClearPixelCount > initialEvidence.pixelCount * 0.01, 'INITIAL_VISIBLE_GEOMETRY_OCCUPANCY_INSUFFICIENT', initialEvidence);
+              check(initialEvidence?.uniqueColorBucketCount >= 16, 'INITIAL_COLOR_VARIANCE_INSUFFICIENT', initialEvidence);
+              check(initialEvidence?.luminanceStandardDeviation >= 2, 'INITIAL_LUMINANCE_DISTRIBUTION_INSUFFICIENT', initialEvidence);
+              check(before.receipt.liveGpu?.counters?.gpuFramebufferPresentationCount >= 1, 'INITIAL_VISIBLE_FRAME_MISSING');
+              const canvas = page.locator('#h-earth-functional-landscape-canvas');
+              const beforeBytes = await canvas.screenshot({ path: path.join(out, `${scenario.name}-initial.png`) });
+              if (scenario.mobile) await touchNavigation(page); else await desktopNavigation(page);
+              await wait(500);
+              const after = await page.evaluate(() => window.H_EARTH_RUN8E_PUBLIC_ROUTE.getReceipt());
+              const afterBytes = await canvas.screenshot({ path: path.join(out, `${scenario.name}-post-navigation.png`) });
+              check(after.liveGpu.counters.gpuFramebufferPresentationCount > before.receipt.liveGpu.counters.gpuFramebufferPresentationCount, 'FRAME_ADVANCEMENT_MISSING');
+              check(after.intake.counters.navigationProposalCount > before.receipt.intake.counters.navigationProposalCount, 'NAVIGATION_ADVANCEMENT_MISSING');
+              check(after.liveGpu.frameRecords.at(-1)?.cameraPosition, 'POST_NAVIGATION_CAMERA_RECORD_MISSING');
+              check(sha256(beforeBytes) !== sha256(afterBytes), 'POST_NAVIGATION_SCREENSHOT_UNCHANGED');
+              if (scenario.mobile) {
+                check(after.intake.counters.touchPointerEventCount > before.receipt.intake.counters.touchPointerEventCount, 'TOUCH_EVENTS_MISSING');
+                check(after.intake.counters.oneFingerLookProposalCount > before.receipt.intake.counters.oneFingerLookProposalCount, 'TOUCH_LOOK_MISSING');
+                check(after.intake.counters.twoFingerTravelProposalCount > before.receipt.intake.counters.twoFingerTravelProposalCount, 'TOUCH_TRAVEL_MISSING');
+                check(after.intake.counters.releaseTerminationCount > before.receipt.intake.counters.releaseTerminationCount, 'TOUCH_RELEASE_MISSING');
+              } else {
+                check(after.intake.counters.mousePointerEventCount > before.receipt.intake.counters.mousePointerEventCount, 'MOUSE_EVENTS_MISSING');
+                check(after.intake.counters.wheelEventCount > before.receipt.intake.counters.wheelEventCount, 'MOUSE_WHEEL_TRAVEL_MISSING');
+              }
+              check(consoleErrors.length === 0, 'CONSOLE_FAILURES', consoleErrors);
+              check(pageErrors.length === 0, 'PAGE_FAILURES', pageErrors);
+              check(requestFailures.length === 0, 'REQUEST_FAILURES', requestFailures);
+              check(httpFailures.length === 0, 'HTTP_FAILURES', httpFailures);
+              const receipt = {
+                receiptType: 'H_EARTH_C2_R1_MC5_BROWSER_SCENARIO_RECEIPT_v1',
+                candidateHead: process.env.TARGET_HEAD,
+                scenario: scenario.name,
+                viewport: scenario.viewport,
+                deviceScaleFactor: scenario.dpr,
+                mobile: scenario.mobile,
+                packageIdentity: selection.runtimePackageIdentity,
+                packageContentDigest: selection.runtimePackageContentDigest,
+                cacheSchema: binding.exactBindingCacheSchema,
+                boundTerrainVertexCount: selection.boundTerrainVertexCount,
+                boundShorelineVertexCount: selection.boundShorelineVertexCount,
+                initialScreenshotSha256: sha256(beforeBytes),
+                postNavigationScreenshotSha256: sha256(afterBytes),
+                consoleFailureCount: 0,
+                pageFailureCount: 0,
+                requestFailureCount: 0,
+                httpFailureCount: 0,
+                status: 'PASS'
+              };
+              fs.writeFileSync(path.join(out, `${scenario.name}-receipt.json`), `${JSON.stringify(receipt, null, 2)}\n`);
+              return receipt;
+            } catch (error) {
+              const diagnostic = await page.evaluate(() => ({
+                root: document.getElementById('h-earth-functional-landscape-route')?.dataset ?? null,
+                publicReceipt: window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt?.() ?? null,
+                startup: window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.() ?? null,
+                runtime: window.H_EARTH_RUNTIME_DIAGNOSTICS?.getSnapshot?.() ?? null
+              })).catch(() => null);
+              fs.writeFileSync(path.join(out, `${scenario.name}-failure.json`), `${JSON.stringify({
+                error: { name: error.name, message: error.message, detail: error.detail ?? null, stack: error.stack },
+                diagnostic,
+                consoleErrors,
+                pageErrors,
+                requestFailures,
+                httpFailures
+              }, null, 2)}\n`);
+              await page.screenshot({ path: path.join(out, `${scenario.name}-failure.png`), fullPage: true }).catch(() => {});
+              throw error;
+            } finally {
+              await context.close();
+            }
+          }
+
+          const browser = await chromium.launch({
+            headless: true,
+            args: ['--use-angle=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist', '--disable-dev-shm-usage']
+          });
+          try {
+            const scenarios = [
+              { name: 'desktop-1440x900', viewport: { width: 1440, height: 900 }, dpr: 1, mobile: false },
+              { name: 'mobile-390x844', viewport: { width: 390, height: 844 }, dpr: 3, mobile: true },
+              { name: 'mobile-412x915', viewport: { width: 412, height: 915 }, dpr: 2.625, mobile: true }
+            ];
+            const receipts = [];
+            for (const scenario of scenarios) receipts.push(await runScenario(browser, scenario));
+            const summary = {
+              receiptType: 'H_EARTH_C2_R1_MC5_BROWSER_MATRIX_RECEIPT_v1',
+              targetPr: 484,
+              candidateBranch: process.env.TARGET_BRANCH,
+              candidateHead: process.env.TARGET_HEAD,
+              packageIdentity: process.env.TARGET_PACKAGE,
+              packageContentDigest: process.env.TARGET_PACKAGE_DIGEST,
+              cacheSchema: process.env.TARGET_CACHE_SCHEMA,
+              scenarios: receipts,
+              consoleFailureCount: 0,
+              pageFailureCount: 0,
+              requestFailureCount: 0,
+              httpFailureCount: 0,
+              productCommitPerformed: false,
+              candidateMutationPerformed: false,
+              status: 'PASS'
+            };
+            fs.writeFileSync(path.join(out, 'mc5-browser-matrix-receipt.json'), `${JSON.stringify(summary, null, 2)}\n`);
+          } finally {
+            await browser.close();
+          }
+          SCRIPT
+          cd "$RUNNER_TEMP/mc5-browser/runtime"
+          node verify.mjs
+          cd "$GITHUB_WORKSPACE"
+          test -z "$(git status --porcelain)"
+
+      - name: Create deterministic browser artifact manifest
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/mc5-browser/artifacts"
+          find . -maxdepth 1 -type f ! -name artifact-sha256.txt -print0 | sort -z | xargs -0 sha256sum > artifact-sha256.txt
+
+      - name: Upload browser receipts screenshots and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-c2-r1-mc5-browser-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/mc5-browser/artifacts
+          if-no-files-found: error
+          retention-days: 30

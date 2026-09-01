@@ -1,0 +1,14 @@
+{
+  "controlled_path_count": 7,
+  "files": {
+    ".github/workflows/h-earth-c2-r1-role6-imi-v4-plus8-remedy-packet-v1-conformance.yml": "62c40309e3a0571525a980fb62bd8753667c4d2c38be9f710f0a57b2bf964297",
+    "research/route-operator-platform-v1/remedy-authority/h-earth-c2-r1-coast-entry-to-gratitude-v4-plus8/CORRECTION_MANIFEST_v1.json": "77803eb32333ce72fd32ddf27173f9c156118fa9334ac030410d20b316d4e809",
+    "research/route-operator-platform-v1/remedy-authority/h-earth-c2-r1-coast-entry-to-gratitude-v4-plus8/POST_IMPLEMENTATION_EVIDENCE_CONTRACT_v1.json": "430d8cef562591d019e41b6bb19ce74b8ea034db73597ea023cb349c85ce09fc",
+    "research/route-operator-platform-v1/remedy-authority/h-earth-c2-r1-coast-entry-to-gratitude-v4-plus8/README.md": "532f8b16659061529ff9b82d1c5240a9e6b94df7f19ca5b2e2a4bdfb97340403",
+    "research/route-operator-platform-v1/remedy-authority/h-earth-c2-r1-coast-entry-to-gratitude-v4-plus8/RELEASE_POINTER.json": "dc02dd8315abf039cddd3f66ebfab22ad98e8d494d43653c0888cf777beec9fd",
+    "research/route-operator-platform-v1/remedy-authority/h-earth-c2-r1-coast-entry-to-gratitude-v4-plus8/ROLE6_REMEDY_DETERMINATION_v1.json": "a14810b6bae40cbe6e6748323ac536420c03df3c63340f2d71301789b2e98f47",
+    "research/route-operator-platform-v1/remedy-authority/h-earth-c2-r1-coast-entry-to-gratitude-v4-plus8/verify_role6_records_v1.py": "f9f035cff12f4fc15961ae1900df8899ef7369d297699588e17b3ac5f29515b5"
+  },
+  "manifest_sha256": "467b2169b18dd782f445bcd97fa181501d8775e2e5b23f48e7c1e4c0ff7a19a8",
+  "packet_id": "H_EARTH_C2_R1_ROLE_6_IMI_V4_PLUS_8_REMEDY_AND_EVIDENCE_CONTRACT_PACKET_v1"
+}

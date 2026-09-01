@@ -1,0 +1,405 @@
+name: H-Earth Run 8E Pre-Update Baseline Comparison
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8e-public-integration-001
+  pull_request:
+    branches:
+      - agent/h-earth-run8d-grounded-vegetation-001
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  compare-run7i-and-run8e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      RUN7I_BASELINE_COMMIT: 26bab1eb804a6e8737f551e1d1aa9d9cbbe4ae5f
+      RUN7I_BASELINE_URL: http://127.0.0.1:4174/showroom/globe/h-earth/
+      RUN8E_CANDIDATE_URL: http://127.0.0.1:4175/showroom/globe/h-earth/
+      RUN8E_COMPARISON_OUTPUT: /tmp/run8e-baseline-comparison
+    steps:
+      - name: Check out candidate workspace
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Materialize preserved Run 7I baseline
+        run: |
+          set -euo pipefail
+          git cat-file -e "${RUN7I_BASELINE_COMMIT}^{commit}"
+          git worktree add --detach /tmp/run7i-baseline "$RUN7I_BASELINE_COMMIT"
+          test "$(git -C /tmp/run7i-baseline rev-parse HEAD)" = "$RUN7I_BASELINE_COMMIT"
+          grep -q 'H_EARTH_FUNCTIONAL_ENVIRONMENT_RUN7H' \
+            /tmp/run7i-baseline/showroom/globe/h-earth/functional-landscape/environment-integration.js
+          grep -q 'H_EARTH_RUN_8E_PUBLIC_ROUTE_SUCCESSOR_ENVIRONMENT_INTEGRATION_v1' \
+            showroom/globe/h-earth/functional-landscape/environment-integration.js
+
+      - name: Install bounded Chromium dependency
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Start baseline and candidate servers
+        run: |
+          python3 -m http.server 4174 --directory /tmp/run7i-baseline \
+            > /tmp/run7i-baseline-server.log 2>&1 &
+          python3 -m http.server 4175 > /tmp/run8e-candidate-server.log 2>&1 &
+          for url in "$RUN7I_BASELINE_URL" "$RUN8E_CANDIDATE_URL"; do
+            for attempt in $(seq 1 50); do
+              curl --fail --silent "$url" > /dev/null && break
+              test "$attempt" -lt 50
+              sleep 1
+            done
+          done
+
+      - name: Execute exact pre-update comparison matrix
+        run: |
+          cat > h-earth-run8e-baseline-comparison.mjs <<'NODE'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs/promises';
+          import path from 'node:path';
+          import { chromium } from 'playwright';
+
+          const output = process.env.RUN8E_COMPARISON_OUTPUT;
+          const urls = {
+            RUN_7I_BASELINE: process.env.RUN7I_BASELINE_URL,
+            RUN_8E_CANDIDATE: process.env.RUN8E_CANDIDATE_URL
+          };
+          const configurations = [
+            { id: 'desktop-landscape', width: 1280, height: 800, isMobile: false, hasTouch: false },
+            { id: 'samsung-mobile-portrait-emulation', width: 412, height: 915, isMobile: true, hasTouch: true }
+          ];
+          const waypoints = ['INITIAL', 'LOWLAND', 'RIDGE'];
+          await fs.mkdir(output, { recursive: true });
+
+          const projectReceipt = (mode, receipt) => mode === 'RUN_7I_BASELINE'
+            ? {
+                receiptType: receipt.receiptType,
+                eligible: receipt.eligible,
+                status: receipt.status,
+                semanticAddressId: receipt.semanticAddressId,
+                chunkId: receipt.chunkId,
+                surfaceClass: receipt.surfaceClass,
+                waterClass: receipt.waterClass,
+                biomeClass: receipt.biomeClass,
+                traversalClass: receipt.traversalClass,
+                lifecycleState: receipt.lifecycleState,
+                populationInstanceCount: receipt.populationInstanceCount,
+                populationMarkerCount: receipt.populationMarkerCount,
+                atmosphereVisible: receipt.atmosphereVisible,
+                waterPresentationApplied: receipt.waterPresentationApplied,
+                surfacePresentationApplied: receipt.surfacePresentationApplied,
+                skyAlphaClosed: receipt.skyAlphaClosed,
+                grayFallbackPixelCount: receipt.grayFallbackPixelCount,
+                authorityCollapse: receipt.authorityCollapse,
+                rendererAuthorityReplaced: receipt.rendererAuthorityReplaced,
+                cameraAuthorityReplaced: receipt.cameraAuthorityReplaced,
+                navigationAuthorityReplaced: receipt.navigationAuthorityReplaced,
+                issues: receipt.issues
+              }
+            : {
+                receiptType: receipt.receiptType,
+                eligible: receipt.eligible,
+                status: receipt.status,
+                cameraReconciledToSuccessorTerrain: receipt.cameraReconciledToSuccessorTerrain,
+                admittedPrimitiveCount: receipt.admittedPrimitiveCount,
+                terrainPrimitiveCount: receipt.terrainPrimitiveCount,
+                shorelinePrimitiveCount: receipt.shorelinePrimitiveCount,
+                vegetationPrimitiveCount: receipt.vegetationPrimitiveCount,
+                projectedTriangleCount: receipt.projectedTriangleCount,
+                rejectedFragmentCount: receipt.rejectedFragmentCount,
+                writtenPixelCount: receipt.writtenPixelCount,
+                skyPixelCount: receipt.skyPixelCount,
+                sunPixelCount: receipt.sunPixelCount,
+                terrainVisiblePixelCount: receipt.terrainVisiblePixelCount,
+                vegetationVisiblePixelCount: receipt.vegetationVisiblePixelCount,
+                vegetationTerrainDepthInteractionCount: receipt.vegetationTerrainDepthInteractionCount,
+                actualTerrainVegetationDepthInteractionExecuted: receipt.actualTerrainVegetationDepthInteractionExecuted,
+                sameWorldToCameraTransformForTerrainAndVegetation: receipt.sameWorldToCameraTransformForTerrainAndVegetation,
+                singlePhysicalDepthDomainExecuted: receipt.singlePhysicalDepthDomainExecuted,
+                singleSkyAuthorityMaterialized: receipt.singleSkyAuthorityMaterialized,
+                sunDiscIntegrationActive: receipt.sunDiscIntegrationActive,
+                sunDiscMaterialized: receipt.sunDiscMaterialized,
+                alphaClosed: receipt.alphaClosed,
+                publicRouteBranchExecution: receipt.publicRouteBranchExecution,
+                physicalSamsungExecution: receipt.physicalSamsungExecution,
+                deployment: receipt.deployment,
+                liveIdentityProof: receipt.liveIdentityProof,
+                run8EPassClosed: receipt.run8EPassClosed,
+                issues: receipt.issues
+              };
+
+          async function canvasSignature(page) {
+            return page.evaluate(async () => {
+              const canvas = document.getElementById('h-earth-functional-landscape-canvas');
+              const pixels = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data;
+              const digest = await crypto.subtle.digest('SHA-256', pixels);
+              let opaquePixelCount = 0;
+              let grayLikePixelCount = 0;
+              let luminanceTotal = 0;
+              const colors = new Set();
+              const pixelCount = pixels.length / 4;
+              const stride = Math.max(1, Math.floor(pixelCount / 20000));
+              for (let pixel = 0; pixel < pixelCount; pixel += 1) {
+                const offset = pixel * 4;
+                const r = pixels[offset];
+                const g = pixels[offset + 1];
+                const b = pixels[offset + 2];
+                if (pixels[offset + 3] === 255) opaquePixelCount += 1;
+                if (Math.abs(r - g) < 4 && Math.abs(g - b) < 4 && r > 65 && r < 195) {
+                  grayLikePixelCount += 1;
+                }
+                luminanceTotal += 0.2126 * r + 0.7152 * g + 0.0722 * b;
+                if (pixel % stride === 0) colors.add(`${r},${g},${b}`);
+              }
+              return {
+                width: canvas.width,
+                height: canvas.height,
+                pixelCount,
+                sha256: [...new Uint8Array(digest)]
+                  .map((value) => value.toString(16).padStart(2, '0')).join(''),
+                opaquePixelCount,
+                grayLikePixelCount,
+                meanLuminance: luminanceTotal / Math.max(1, pixelCount),
+                sampledColorCount: colors.size
+              };
+            });
+          }
+
+          async function capture(browser, mode, configuration, waypoint) {
+            const context = await browser.newContext({
+              viewport: { width: configuration.width, height: configuration.height },
+              isMobile: configuration.isMobile,
+              hasTouch: configuration.hasTouch,
+              deviceScaleFactor: 1
+            });
+            const page = await context.newPage();
+            const consoleErrors = [];
+            const pageErrors = [];
+            page.on('console', (message) => {
+              if (message.type() === 'error') consoleErrors.push(message.text());
+            });
+            page.on('pageerror', (error) => pageErrors.push(error.message));
+            await page.goto(`${urls[mode]}?comparison=${mode}-${configuration.id}-${waypoint}`, {
+              waitUntil: 'domcontentloaded',
+              timeout: 180000
+            });
+            await page.waitForFunction((requestedMode) => {
+              const root = document.getElementById('h-earth-functional-landscape-route');
+              return requestedMode === 'RUN_7I_BASELINE'
+                ? window.H_EARTH_FUNCTIONAL_LANDSCAPE_RUN6F?.ready === true &&
+                  window.H_EARTH_FUNCTIONAL_ENVIRONMENT_RUN7H?.ready === true &&
+                  root?.dataset.run7hReady === 'true'
+                : window.H_EARTH_FUNCTIONAL_LANDSCAPE_RUN6F?.ready === true &&
+                  window.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready === true &&
+                  root?.dataset.run8eReady === 'true';
+            }, mode, { timeout: 240000 });
+
+            if (waypoint !== 'INITIAL') {
+              const before = await page.evaluate((requestedMode) => requestedMode === 'RUN_7I_BASELINE'
+                ? window.H_EARTH_FUNCTIONAL_ENVIRONMENT_RUN7H.getSnapshot().receipt?.refreshSequence ?? 0
+                : window.H_EARTH_RUN8E_PUBLIC_ROUTE.getBrowserReceipt()?.renderSequence ?? 0, mode);
+              await page.evaluate((target) =>
+                window.H_EARTH_FUNCTIONAL_LANDSCAPE_RUN6F.gotoWaypoint(target), waypoint);
+              await page.waitForFunction(({ requestedMode, previous }) => requestedMode === 'RUN_7I_BASELINE'
+                ? (window.H_EARTH_FUNCTIONAL_ENVIRONMENT_RUN7H.getSnapshot().receipt?.refreshSequence ?? 0) > previous
+                : (window.H_EARTH_RUN8E_PUBLIC_ROUTE.getBrowserReceipt()?.renderSequence ?? 0) > previous,
+              { requestedMode: mode, previous: before }, { timeout: 240000 });
+            }
+
+            const rawReceipt = await page.evaluate((requestedMode) => requestedMode === 'RUN_7I_BASELINE'
+              ? window.H_EARTH_FUNCTIONAL_ENVIRONMENT_RUN7H.getSnapshot().receipt
+              : window.H_EARTH_RUN8E_PUBLIC_ROUTE.getBrowserReceipt(), mode);
+            const receipt = projectReceipt(mode, rawReceipt);
+            const signature = await canvasSignature(page);
+            const shell = await page.evaluate(() => ({
+              title: document.querySelector('h1')?.textContent?.trim() ?? '',
+              status: document.getElementById('route-status')?.textContent ?? '',
+              hudWaypoint: document.getElementById('hud-waypoint')?.textContent ?? '',
+              hudAddress: document.getElementById('hud-address')?.textContent ?? ''
+            }));
+            assert.equal(receipt.eligible, true);
+            assert.deepEqual(consoleErrors, []);
+            assert.deepEqual(pageErrors, []);
+            assert.equal(signature.opaquePixelCount, signature.pixelCount);
+            const screenshot = `${mode.toLowerCase()}-${configuration.id}-${waypoint.toLowerCase()}.png`;
+            await page.screenshot({ path: path.join(output, screenshot), fullPage: true });
+            await context.close();
+            return {
+              mode,
+              configurationId: configuration.id,
+              viewport: { width: configuration.width, height: configuration.height },
+              waypoint,
+              receipt,
+              signature,
+              shell,
+              screenshot,
+              consoleErrors,
+              pageErrors
+            };
+          }
+
+          const browser = await chromium.launch({ headless: true });
+          const captures = [];
+          try {
+            for (const configuration of configurations) {
+              for (const waypoint of waypoints) {
+                captures.push(await capture(browser, 'RUN_7I_BASELINE', configuration, waypoint));
+                captures.push(await capture(browser, 'RUN_8E_CANDIDATE', configuration, waypoint));
+              }
+            }
+          } finally {
+            await browser.close();
+          }
+
+          const comparisons = [];
+          for (const configuration of configurations) {
+            for (const waypoint of waypoints) {
+              const find = (mode) => captures.find((entry) =>
+                entry.mode === mode && entry.configurationId === configuration.id && entry.waypoint === waypoint);
+              const baseline = find('RUN_7I_BASELINE');
+              const candidate = find('RUN_8E_CANDIDATE');
+              const comparison = {
+                configurationId: configuration.id,
+                waypoint,
+                baselinePixelSha256: baseline.signature.sha256,
+                candidatePixelSha256: candidate.signature.sha256,
+                pixelIdentityChanged: baseline.signature.sha256 !== candidate.signature.sha256,
+                routeShellTitlePreserved: baseline.shell.title === candidate.shell.title,
+                baselineGrayLikePixelCount: baseline.signature.grayLikePixelCount,
+                candidateGrayLikePixelCount: candidate.signature.grayLikePixelCount,
+                baselineSampledColorCount: baseline.signature.sampledColorCount,
+                candidateSampledColorCount: candidate.signature.sampledColorCount,
+                baselineMeanLuminance: baseline.signature.meanLuminance,
+                candidateMeanLuminance: candidate.signature.meanLuminance,
+                baselineReceiptType: baseline.receipt.receiptType,
+                candidateReceiptType: candidate.receipt.receiptType,
+                successorTerrainIntegrated: candidate.receipt.terrainPrimitiveCount === 1,
+                groundedVegetationIntegrated: candidate.receipt.vegetationPrimitiveCount === 27,
+                sharedDepthExecuted: candidate.receipt.singlePhysicalDepthDomainExecuted === true,
+                skyIntegrated: candidate.receipt.singleSkyAuthorityMaterialized === true,
+                sunAuthorityIntegrated: candidate.receipt.sunDiscIntegrationActive === true
+              };
+              for (const key of [
+                'pixelIdentityChanged', 'routeShellTitlePreserved', 'successorTerrainIntegrated',
+                'groundedVegetationIntegrated', 'sharedDepthExecuted', 'skyIntegrated',
+                'sunAuthorityIntegrated'
+              ]) assert.equal(comparison[key], true, `${configuration.id}:${waypoint}:${key}`);
+              comparisons.push(comparison);
+            }
+          }
+
+          const receipt = {
+            receiptType: 'H_EARTH_RUN_8E_PRE_UPDATE_BASELINE_COMPARISON_RECEIPT',
+            eligible: true,
+            status: 'RUN_8E_PRE_UPDATE_BASELINE_COMPARISON_PASS',
+            baselineClassification: 'RUN_7I_PUBLIC_PRESENTATION_PRESERVED_AT_RUN_8D_PARENT',
+            baselineCommit: process.env.RUN7I_BASELINE_COMMIT,
+            candidateBranch: 'agent/h-earth-run8e-public-integration-001',
+            candidateHeadBinding: 'WORKFLOW_RUN_HEAD_METADATA',
+            configurationCount: configurations.length,
+            waypointCount: waypoints.length,
+            comparisonCount: comparisons.length,
+            exactPixelIdentityChangedInEveryComparison: comparisons.every((entry) => entry.pixelIdentityChanged),
+            routeShellTitlePreservedInEveryComparison: comparisons.every((entry) => entry.routeShellTitlePreserved),
+            successorTerrainIntegratedInEveryCandidateFrame: comparisons.every((entry) => entry.successorTerrainIntegrated),
+            groundedVegetationIntegratedInEveryCandidateFrame: comparisons.every((entry) => entry.groundedVegetationIntegrated),
+            sharedDepthExecutedInEveryCandidateFrame: comparisons.every((entry) => entry.sharedDepthExecuted),
+            skyIntegratedInEveryCandidateFrame: comparisons.every((entry) => entry.skyIntegrated),
+            sunAuthorityIntegratedInEveryCandidateFrame: comparisons.every((entry) => entry.sunAuthorityIntegrated),
+            comparisonConclusion: 'MATERIAL_PUBLIC_ROUTE_CHANGE_ESTABLISHED_WITH_ROUTE_SHELL_PRESERVED',
+            visualQualitySuperiorityClaim: false,
+            physicalSamsungExecution: false,
+            mainPromotion: false,
+            deployment: false,
+            liveIdentityProof: false,
+            run8EPassClosed: false,
+            comparisons,
+            captures,
+            issues: []
+          };
+          await fs.writeFile(
+            path.join(output, 'run8e-pre-update-baseline-comparison.receipt.json'),
+            `${JSON.stringify(receipt, null, 2)}\n`, 'utf8');
+          console.log(JSON.stringify(receipt, null, 2));
+          NODE
+
+          set -o pipefail
+          node h-earth-run8e-baseline-comparison.mjs \
+            2>&1 | tee /tmp/run8e-baseline-comparison.log
+
+      - name: Verify pre-update comparison receipt
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const candidatePath =
+            '/tmp/run8e-baseline-comparison/run8e-pre-update-baseline-comparison.receipt.json';
+          const receipt = JSON.parse(fs.readFileSync(candidatePath, 'utf8'));
+          const requiredTrue = [
+            'eligible',
+            'exactPixelIdentityChangedInEveryComparison',
+            'routeShellTitlePreservedInEveryComparison',
+            'successorTerrainIntegratedInEveryCandidateFrame',
+            'groundedVegetationIntegratedInEveryCandidateFrame',
+            'sharedDepthExecutedInEveryCandidateFrame',
+            'skyIntegratedInEveryCandidateFrame',
+            'sunAuthorityIntegratedInEveryCandidateFrame'
+          ];
+          if (
+            receipt.status !== 'RUN_8E_PRE_UPDATE_BASELINE_COMPARISON_PASS' ||
+            receipt.baselineCommit !== '26bab1eb804a6e8737f551e1d1aa9d9cbbe4ae5f' ||
+            receipt.configurationCount !== 2 || receipt.waypointCount !== 3 ||
+            receipt.comparisonCount !== 6 ||
+            !requiredTrue.every((key) => receipt[key] === true) ||
+            receipt.visualQualitySuperiorityClaim !== false ||
+            receipt.physicalSamsungExecution !== false || receipt.mainPromotion !== false ||
+            receipt.deployment !== false || receipt.liveIdentityProof !== false ||
+            receipt.run8EPassClosed !== false || receipt.issues.length !== 0
+          ) process.exit(1);
+          const durable =
+            'h-earth-3d/validation/h-earth.run8e.pre-update-baseline-comparison.receipt.json';
+          if (fs.existsSync(durable) &&
+              fs.readFileSync(durable, 'utf8') !== fs.readFileSync(candidatePath, 'utf8')) {
+            process.exit(1);
+          }
+          NODE
+
+      - name: Persist exact pre-update comparison receipt
+        if: github.event_name == 'push' && github.ref == 'refs/heads/agent/h-earth-run8e-public-integration-001'
+        run: |
+          set -euo pipefail
+          target='h-earth-3d/validation/h-earth.run8e.pre-update-baseline-comparison.receipt.json'
+          candidate='/tmp/run8e-baseline-comparison/run8e-pre-update-baseline-comparison.receipt.json'
+          if [ -f "$target" ]; then
+            cmp --silent "$candidate" "$target"
+            echo 'Exact durable pre-update comparison receipt already present.'
+            exit 0
+          fi
+          cp "$candidate" "$target"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$target"
+          git commit -m 'Commit Run 8E pre-update baseline receipt'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Upload pre-update comparison evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-pre-update-baseline-comparison-evidence
+          path: |
+            /tmp/run8e-baseline-comparison.log
+            /tmp/run7i-baseline-server.log
+            /tmp/run8e-candidate-server.log
+            /tmp/run8e-baseline-comparison
+          if-no-files-found: error
+          retention-days: 30

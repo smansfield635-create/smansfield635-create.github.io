@@ -1,0 +1,94 @@
+{
+  "archiveBoundary": {
+    "admissibleMemberBasenames": [
+      "train_FD001.txt",
+      "test_FD001.txt"
+    ],
+    "archiveMayBeAcquiredOnlyBy": "CMAPSS_FD001_SOURCE_BINDING_EXECUTOR_SEPARATE_ADMISSION_REQUIRED",
+    "archiveMustBeDeletedBeforeBlindHandoff": true,
+    "blindExecutorMayReceiveArchive": false,
+    "checksumBeforeMemberContentRead": true,
+    "forbiddenMembers": [
+      {
+        "basename": "RUL_FD001.txt",
+        "classification": "HELD_OUT_OUTCOME",
+        "contentRead": false,
+        "extract": false,
+        "handoff": false
+      }
+    ]
+  },
+  "executionState": {
+    "blindTrial": "NOT_STARTED_SEPARATE_ADMISSION_REQUIRED",
+    "heldOutOutcomeAccess": "PROHIBITED",
+    "scientificClaimAuthority": false,
+    "sourceBinding": "NOT_STARTED_SEPARATE_ADMISSION_REQUIRED",
+    "sourceDownload": "NOT_STARTED"
+  },
+  "failClosedOn": [
+    "NASA_ARCHIVE_MD5_MISMATCH",
+    "AMBIGUOUS_OR_MISSING_REQUIRED_ARCHIVE_MEMBER",
+    "OUTCOME_BYTES_READ_OR_EXTRACTED",
+    "SAFE_OBJECT_SCHEMA_OR_UNIT_COUNT_MISMATCH",
+    "ROLE_SEPARATION_FAILURE",
+    "SOURCE_AUTHORITY_DRIFT"
+  ],
+  "governingProductQualification": {
+    "foundationPr": 891,
+    "main": "4d8ba163f23e29a7c3cccb701ccf69e9ae04958e",
+    "repository": "smansfield635-create/smansfield635-create.github.io",
+    "tree": "7c04bf4e3631bdb91e873ebb89323afd1095a53e"
+  },
+  "historicalPreOutcomeEvidence": {
+    "historicalAcquisitionClassification": "THIRD_PARTY_MIRROR_ACQUISITION_NONAUTHORITATIVE_FOR_NEW_TRANSFERABILITY_TRIAL",
+    "historicalOutcomeOrResultArtifacts": "EXCLUDED_FROM_PHASE_A_EXECUTION_CONTEXT",
+    "merge": "6ca63ec4ba34b9c84e783aaaf5aa73c4604f4fb6",
+    "predictionContract": {
+      "blob": "2f1bdd32a2646087c4b5db697014bd64c6fa0ab9",
+      "path": "research/route-operator-platform-v1/extensions/imi-falsification-route-extension-v1/validations/cmapss-fd001-untouched-validation-v1/PREDICTION_CONTRACT_FROZEN_BEFORE_OUTCOME_ACCESS.md",
+      "use": "READ_ONLY_PRE_OUTCOME_SEMANTIC_PRECEDENT"
+    },
+    "safePreparationCodeBlob": "dc36268325766790d2b6511b776a498c0f220da8"
+  },
+  "independentPreservationEvidence": {
+    "creators": [
+      "National Aeronautics and Space Administration"
+    ],
+    "doi": "10.5281/zenodo.15346860",
+    "expectedArchiveMd5": "a83e8f128c59fc5614a4ca2e42a2e30c",
+    "law": "CURRENT_NASA_ARCHIVE_MUST_MATCH_FROZEN_MD5_BEFORE_ANY_ZIP_MEMBER_CONTENT_IS_OPENED",
+    "provider": "ZENODO",
+    "publisher": "NASA Diagnostics and Prognostics Group",
+    "role": "INDEPENDENT_PRESERVATION_CHECKSUM_EVIDENCE_NOT_SOURCE_AUTHORITY"
+  },
+  "officialSource": {
+    "authority": "NASA_AMES_PROGNOSTICS_CENTER_OF_EXCELLENCE",
+    "datasetFamily": "TURBOFAN_ENGINE_DEGRADATION_SIMULATION",
+    "distributionUrl": "https://phm-datasets.s3.amazonaws.com/NASA/6.+Turbofan+Engine+Degradation+Simulation+Data+Set.zip",
+    "landingPage": "https://www.nasa.gov/intelligent-systems-division/discovery-and-systems-health/pcoe/pcoe-data-set-repository/",
+    "openDataResourceId": "5224bcd1-ad61-490b-93b9-2817288accb8"
+  },
+  "phase": "SOURCE_BINDING_AND_BLIND_PACKET_CONSTRUCTION",
+  "programId": "CONTROL_PLANE_PRODUCT_QUALIFICATION_BATTERY_V1",
+  "roleSeparation": {
+    "blindExecutor": "UNASSIGNED_SEPARATE_ADMISSION_REQUIRED",
+    "pairwiseDistinctRequired": true,
+    "sourceBindingExecutor": "UNASSIGNED_SEPARATE_ADMISSION_REQUIRED",
+    "translationBuilder": "GALAXY_TAB_A9_RESEARCH_TRANSFERABILITY_TRANSLATION_BUILDER"
+  },
+  "safeObjectRequirements": {
+    "test_FD001.txt": {
+      "expectedColumnCount": 26,
+      "expectedUniqueUnitCount": 100,
+      "sha256": "TO_BE_BOUND_BY_SEPARATELY_ADMITTED_SOURCE_BINDING_EXECUTION"
+    },
+    "train_FD001.txt": {
+      "expectedColumnCount": 26,
+      "expectedUniqueUnitCount": 100,
+      "sha256": "TO_BE_BOUND_BY_SEPARATELY_ADMITTED_SOURCE_BINDING_EXECUTION"
+    }
+  },
+  "schema": "CONTROL_PLANE_CMAPSS_FD001_SOURCE_BINDING_v1",
+  "status": "FROZEN_PHASE_A_CONSTRUCTION_CANDIDATE_NOT_EXECUTED",
+  "trialId": "NASA_CMAPSS_FD001_FIRST_BLIND_TRANSFER_TRIAL_V1"
+}

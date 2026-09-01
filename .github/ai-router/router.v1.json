@@ -5,18 +5,62 @@
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "projectRegistrationSchema": ".github/ai-router/project-registration.schema.v1.json",
   "sharedProcedureRegistry": ".github/ai-router/shared-procedures.v1.json",
-  "executionBackendRegistry": ".github/ai-router/execution-backends.v1.json",
   "entryReceiptSchema": ".github/ai-router/schemas/repository-ai-entry-router.receipt.schema.v1.json",
+  "publicQualityInstrumentationHandoff": {
+    "schema": "PUBLIC_QUALITY_INSTRUMENTATION_RETIREMENT_HANDOFF_v1",
+    "result": "PUBLIC_PAGE_EXCELLENCE_IMPLEMENTATION_RETIRED",
+    "publicExecutionAuthorized": false,
+    "publicMutationAuthorityCreated": false,
+    "forwardingPerformed": false,
+    "privateSuccessorRepository": "smansfield635-create/geodiametrics1",
+    "privateSuccessorEvidenceHead": "840b885db8d3b0331e9ac3bd207df3d32baf8fb6",
+    "privateSuccessorAuthorityInheritedFromPublicMetadata": false,
+    "qualityQualificationResolution": "FAIL_CLOSED_TO_SEPARATELY_AUTHORIZED_PRIVATE_SUCCESSOR_WHEN_OPERATION_CONTRACT_REQUIRES_IT"
+  },
   "routerInfrastructure": {
     "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
     "ownedExactPaths": [
       "AGENTS.md",
       "AI_ENTRYPOINT.json",
       "tools/repository-ai-entry-router.mjs",
-      ".github/workflows/repository-ai-entry-router-validation.yml"
+      ".github/workflows/repository-ai-entry-router-validation.yml",
+      ".github/workflows/ai-room-authorized-toolset-bootstrap-validation.yml",
+      "tools/ai-room-transport/active-conformance.v1.mjs",
+      "tools/ai-room-transport/successor-compatibility-validator.v1.mjs",
+      "tools/ai-room-transport/toolset-resolver.v1.mjs",
+      "tools/ai-room-transport/fixed-command-dispatcher.v1.mjs",
+      "tools/ai-room-transport/successor-compatibility-self-test.v1.mjs",
+      ".github/workflows/repository-operation-intake-validation.yml",
+      ".github/workflows/progressive-system-continuity-v1.yml",
+      "_config.yml",
+      ".github/workflows/agentic-frontier-paired-execution-v1.yml",
+      ".github/workflows/bounded-exact-head-execution-carrier-v1.yml",
+      ".github/workflows/differential-continuity-v1.yml",
+      ".github/workflows/h-earth-h1-admission-remote-dispatch-bridge-v1.yml",
+      ".github/workflows/h-earth-v2-causal-evidence-lock-closure.yml",
+      ".github/workflows/h-earth-v2-registry-role4-exact-head-carrier-v2.yml",
+      ".github/workflows/h-earth-v2-registry-role4-exact-head-carrier.yml",
+      ".github/workflows/issue-comment-fanout-consolidation-v1.yml",
+      ".github/workflows/public-private-bounded-exact-head-execution-v1.yml",
+      ".github/workflows/public-private-canonical-execution-request-router-v1.yml",
+      ".github/workflows/public-private-connected-github-cas-closure-v1.yml",
+      ".github/workflows/public-private-gen288-closure-qualification-v1.yml",
+      ".github/workflows/public-private-operation-close-v1.yml",
+      ".github/workflows/public-private-router-self-test-invocation-adapter-v1.yml",
+      ".github/workflows/trusted-intake-fixture-carrier-v1.yml",
+      ".github/workflows/video-conform-renderer-v1.yml",
+      ".github/workflows/workflow-lifecycle-continuity-v2-actions-inventory.yml",
+      ".github/workflows/workflow-lifecycle-continuity-v2-authenticated-assessment.yml",
+      ".github/workflows/workflow-lifecycle-continuity-v2-consumer-discovery.yml",
+      "tools/issue-comment-fanout-consolidation-v1.mjs"
     ],
     "ownedPathPrefixes": [
-      ".github/ai-router/"
+      ".github/ai-router/",
+      ".github/workflows/remote-operation-successor-v1.yml",
+      ".github/workflows/bounded-binary-object-transfer-v1.yml",
+      "tools/ai-room-transport/bounded-binary-object-transfer.v1.mjs",
+      "tools/ai-room-transport/bounded-binary-object-transfer.v1.test.mjs",
+      ".github/ai-toolset-transport/bounded-binary-object-transfer.v1.json"
     ],
     "validationCommand": "node tools/repository-ai-entry-router.mjs --self-test --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/router-self-test-receipt.json"
   },
@@ -24,15 +68,178 @@
     {
       "projectId": "H_EARTH",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": [
-        "h-earth-3d/",
-        "showroom/globe/h-earth/"
-      ],
+      "ownedPathPrefixes": ["h-earth-3d/", "showroom/globe/h-earth/", "showroom/globe/audralia/audio/"],
       "ownedExactPaths": [
         ".github/workflows/h-earth-repository-registry-preflight.yml",
-        ".github/workflows/h-earth-r06-c10-candidate-admission.yml"
+        ".github/workflows/h-earth-r06-c10-candidate-admission.yml",
+        ".github/workflows/audralia-weather-presentation-reconciliation.yml",
+        "showroom/globe/audralia/diagnostic/index.html",
+        "showroom/globe/audralia/diagnostic/index.controls.js",
+        "showroom/globe/audralia/diagnostic/index.inspection.lane.js",
+        "showroom/globe/audralia/fap1-weather-presentation-v1.mjs",
+        "showroom/globe/audralia/final-cloud-shader-composition-v1.mjs",
+        "showroom/globe/audralia/index.html",
+        "showroom/globe/audralia/index.css",
+        "tools/audralia-weather-presentation-reconciliation-ci.mjs",
+        ".github/ai-toolset-transport/AGENTS.md",
+        ".github/ai-toolset-transport/authorized-toolset-registry.v1.json",
+        ".github/ai-toolset-transport/changed-path-manifest.v1.json",
+        ".github/ai-toolset-transport/negative-fixtures.v1.json",
+        ".github/ai-toolset-transport/progress-ledger.v1.json",
+        ".github/ai-toolset-transport/schemas.v1.json",
+        ".github/ai-toolset-transport/h-earth-registry-two-path-toolset-registration.v1.json",
+        "tools/h-earth-registry-two-path-toolset/lib.v1.mjs",
+        "tools/h-earth-registry-two-path-toolset/reproduction-harness.v1.mjs",
+        "tools/h-earth-registry-two-path-toolset/receipt-validator.v1.mjs",
+        "tools/h-earth-registry-two-path-toolset/fresh-verifier.v1.mjs",
+        "tools/h-earth-registry-two-path-toolset/termination.v1.mjs",
+        "tools/h-earth-registry-two-path-toolset/fixtures.v1.json",
+        "tools/h-earth-registry-two-path-toolset/self-test.v1.mjs",
+        ".github/workflows/h-earth-registry-two-path-toolset-registration-validation.yml",
+        "tools/h-earth-map-wide-terrain/bootstrap-authority-terminator.v1.mjs",
+        "tools/h-earth-map-wide-terrain/continuous-map-orchestration-compiler.v1.mjs",
+        "tools/h-earth-map-wide-terrain/cumulative-constraint-evaluator.v1.mjs",
+        "tools/h-earth-map-wide-terrain/estate-reservation-validator.v1.mjs",
+        "tools/h-earth-map-wide-terrain/fresh-verifier.v1.mjs",
+        "tools/h-earth-map-wide-terrain/lib.v1.mjs",
+        "tools/h-earth-map-wide-terrain/preview-package-planner.v1.mjs",
+        "tools/h-earth-map-wide-terrain/self-test.v1.mjs",
+        "tools/h-earth-map-wide-terrain/terrain-census.v1.mjs",
+        "tools/h-earth-map-wide-terrain/variance-repetition-detector.v1.mjs",
+        "tools/h-earth-map-wide-terrain/zone-articulation-plan-compiler.v1.mjs",
+        ".github/workflows/h-earth-map-wide-terrain-articulation-estate-reservation-bootstrap-validation.yml",
+        ".github/workflows/h-earth-v2-router-instruction-lock-closure-successor.yml",
+        ".github/workflows/h-earth-audralia-open-world-spatial-migration-continuity.yml",
+        "tools/h-earth-audralia-open-world-spatial-migration/continuity-verifier.v1.mjs",
+        ".github/ai-toolset-transport/h-earth-repository-preflight-execution-binding.v1.json",
+        ".github/workflows/h-earth-repository-preflight-execution-binding-validation.yml",
+        "tools/ai-room-transport/h-earth-repository-preflight-remote-execution.v1.mjs",
+        ".github/workflows/h-earth-repository-preflight-remote-execution.yml",
+        ".github/workflows/h-earth-premutation-preflight-installation-lock-closure.yml"
       ],
       "entrypoint": ".github/ai-router/projects/h-earth/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "METHODS_INFORMATION_BENCHMARK",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": [],
+      "ownedExactPaths": [
+        ".github/workflows/methods-context-displacement-existing-spatial-construct-adoption-v1.yml",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/source-identity-manifest.v1.json",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/component-discovery.v1.json",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/contextual-architecture-findings.v1.json",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/adoption-matrix.v1.json",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/prohibited-substitute-architectures.v1.json",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/required-runtime-conditions.v1.json",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/architecture-receipt-bundle.v1.json",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/verify.v1.mjs",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/receipts/builder.receipt.v1.json",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/receipts/fresh-verifier.receipt.v1.json",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/receipts/independent-equality.receipt.v1.json",
+        "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/receipts/operation-closure.receipt.v1.json"
+      ],
+      "entrypoint": ".github/ai-router/projects/methods-information-benchmark/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "LAWS",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["laws/"],
+      "ownedExactPaths": [
+        "scripts/laws_cp6_final_browser_verify.mjs",
+        "scripts/laws_cp6_final_browser_verify_runner.mjs",
+        "scripts/verify-laws-cp6-final-synchronization.py",
+        "assets/laws-destination/renewal.js"
+      ],
+      "entrypoint": ".github/ai-router/projects/laws/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "LINEAGE_RECEIPT_PROTOCOL",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["infrastructure/lineage-receipt-protocol-v1/"],
+      "ownedExactPaths": [".github/workflows/lrpv1-conformance.yml"],
+      "entrypoint": ".github/ai-router/projects/lineage-receipt-protocol/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "ESTATE_VALIDATION",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["validation/"],
+      "ownedExactPaths": [".github/workflows/estate-validation-v1.yml"],
+      "entrypoint": ".github/ai-router/projects/estate-validation/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "ESTATE_SOUNDTRACK",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["assets/audio/estate-soundtrack/"],
+      "ownedExactPaths": [],
+      "entrypoint": ".github/ai-router/projects/estate-soundtrack/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "STATE_BOUND_ADMISSIBILITY_KERNEL",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["infrastructure/state-bound-admissibility-kernel-v1/"],
+      "ownedExactPaths": [],
+      "entrypoint": ".github/ai-router/projects/state-bound-admissibility-kernel/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "CONTROL_PLANE_TRANSFERABILITY",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["control-plane/transferability-program/"],
+      "ownedExactPaths": [],
+      "entrypoint": ".github/ai-router/projects/control-plane-transferability/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "OPEN_WORLD",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["open-world/"],
+      "ownedExactPaths": [],
+      "entrypoint": ".github/ai-router/projects/open-world/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "COMPASS",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["assets/compass/"],
+      "ownedExactPaths": [
+        "index.html",
+        ".github/workflows/pages-direct-deploy.yml",
+        ".github/live-qualification/verifiers/compass-root.v1.mjs",
+        ".github/workflows/compass-audit-derived-candidate-qualification.yml"
+      ],
+      "entrypoint": ".github/ai-router/projects/compass/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "PUBLIC_LEGITIMACY",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["developer/", "evidence/", "governance/"],
+      "ownedExactPaths": [],
+      "entrypoint": ".github/ai-router/projects/public-legitimacy/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "MATERIAL_WORK_AUDIT",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["research/material-work-audit/"],
+      "ownedExactPaths": [],
+      "entrypoint": ".github/ai-router/projects/material-work-audit/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "CHARACTERS",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["characters/", "control-plane/whole-estate/characters-reconstruction-v1/"],
+      "ownedExactPaths": [
+        ".github/workflows/characters-night-world-state-proof.yml"
+      ],
+      "entrypoint": ".github/ai-router/projects/characters/entrypoint.v1.json",
       "priority": 100
     }
   ],

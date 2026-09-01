@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en" data-audralia-weather-reconciliation="active">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0e1510">
+  <meta name="description" content="Bounded Audralia weather-presentation reconciliation over the frozen functional world and camera.">
+  <title>Audralia · Weather Presentation Reconciliation</title>
+  <link rel="modulepreload" href="../../h-earth/terrain-estate-construction-v1/renderer.mjs?cb=0818ec6631424ed0">
+  <link rel="modulepreload" href="../canonical-weather-spatial-lod-proof/weather-model.mjs">
+  <link rel="modulepreload" href="../canonical-weather-spatial-lod-proof/weather-renderer.mjs">
+  <link rel="stylesheet" href="../index.css?v=AUDRALIA_LIVE_STARTUP_LOADING_v1">
+  <link rel="stylesheet" href="./reconciliation.css?v=AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_v2">
+</head>
+<body>
+  <div class="audralia-loading-screen" data-audralia-loader role="status" aria-live="polite" aria-label="Audralia is loading">
+    <div class="audralia-loading-panel">
+      <div class="audralia-loading-orbit" aria-hidden="true"></div>
+      <div class="audralia-loading-title">Audralia</div>
+      <div class="audralia-loading-stage" data-audralia-loader-stage>Preparing world and camera…</div>
+      <div class="audralia-loading-track" data-audralia-loader-track role="progressbar" aria-label="Audralia initialization progress" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0"><span data-audralia-loader-fill></span></div>
+      <div class="audralia-loading-time" data-audralia-loader-progress>0 of 4 systems ready</div>
+      <div class="audralia-loading-note">Building the same world progressively: surface atmosphere, regional weather, and bounded local weather.</div>
+    </div>
+  </div>
+
+  <main class="audralia-live-shell" aria-label="Audralia weather presentation reconciliation">
+    <header class="audralia-live-toolbar" aria-label="Audralia world navigation">
+      <div class="audralia-live-brand" aria-label="Audralia">Audralia</div>
+      <nav class="audralia-live-nav" aria-label="World navigation">
+        <button class="audralia-live-action audralia-live-action-primary" type="button" data-fit-world>focus Gratitude</button>
+        <a class="audralia-live-action" href="../">functional baseline</a>
+      </nav>
+      <span class="audralia-sr-only" data-h-earth-status aria-live="polite">booting Audralia</span>
+    </header>
+
+    <section class="audralia-world-stage" aria-label="Interactive Audralia planetary view">
+      <canvas class="audralia-world-canvas" data-h-earth-map-wide-canvas aria-label="Interactive Audralia world. One finger looks, two fingers travel, pinch descends, and spread ascends."></canvas>
+      <details class="reconciliation-diagnostics">
+        <summary>reconciliation diagnostics</summary>
+        <div class="reconciliation-diagnostics-body">
+          <p class="reconciliation-summary" data-reconciliation-summary>waiting for runtime…</p>
+          <table class="reconciliation-table">
+            <thead><tr><th>ID</th><th>Q</th><th>α p/r/l</th><th>camera</th><th>L(r)</th><th>τ</th></tr></thead>
+            <tbody data-reconciliation-rows></tbody>
+          </table>
+          <p class="reconciliation-note">Diagnostics establish ownership and ray causality only. Device visual acceptance remains separate.</p>
+        </div>
+      </details>
+    </section>
+
+    <footer class="audralia-live-help" aria-label="Interaction guide">
+      <span class="audralia-help-touch">1 finger · look &nbsp;·&nbsp; 2 fingers together · travel &nbsp;·&nbsp; pinch · descend &nbsp;·&nbsp; spread · ascend</span>
+      <span class="audralia-help-pointer">drag · look &nbsp;·&nbsp; wheel · descend / ascend &nbsp;·&nbsp; W/A/S/D or arrows · travel</span>
+    </footer>
+  </main>
+
+  <script type="module" src="./loader-progress.mjs"></script>
+  <script type="module" src="./app.mjs?cb=c7aa1038b54b29b2"></script>
+  <script type="module" src="../celestial-bootstrap-v2.mjs?cb=AUDRALIA_CELESTIAL_BOOTSTRAP_v2"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Compass Composite · Diamond Gate Bridge</title>
+<style>html,body{margin:0;min-height:100%;background:#010308;color:#f7f2e7;font-family:system-ui,sans-serif}.boot{min-height:100svh;display:grid;place-items:center;text-align:center}.boot strong{display:block;font:600 clamp(2.2rem,6vw,5rem)/.95 Georgia,serif}.boot span{display:block;margin-top:12px;opacity:.58;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase}</style>
+</head>
+<body><div class="boot"><div><strong>Assembling the Compass.</strong><span>Successful estate components · composite Gen1596</span></div></div>
+<script>
+(async()=>{
+  const stamp='gen1596-surgical-composite-5';
+  const response=await fetch('/index.html?composite_source='+Date.now(),{cache:'no-store'});
+  if(!response.ok) throw new Error('COMPASS_BASE_'+response.status);
+  let html=await response.text();
+  html=html.replace(/<base\b[^>]*>/gi,'');
+  html=html.replace('<head>','<head><base href="/">');
+  html=html.replace(/<title>[\s\S]*?<\/title>/i,'<title>Compass Composite · Diamond Gate Bridge</title>');
+  html=html.replace('</head>','<link rel="stylesheet" href="/compass-composite/composite.css?v='+stamp+'"></head>');
+  html=html.replace('</body>','<script src="/compass-composite/composite.js?v='+stamp+'" defer><\/script></body>');
+  document.open();document.write(html);document.close();
+})().catch(error=>{document.body.innerHTML='<pre style="padding:24px;white-space:pre-wrap">COMPOSITE LOAD FAILURE\n'+String(error.stack||error)+'</pre>'});
+</script></body>
+</html>

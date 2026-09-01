@@ -1,0 +1,117 @@
+name: Differential Continuity v1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/ai-router/differential-continuity/**'
+      - '.github/workflows/differential-continuity-v1.yml'
+      - 'tools/operation-intake/repository-operation-intake-gate.v1.mjs'
+      - 'tools/operation-intake/repository-operation-intake-gate.v1.operation-class.test.mjs'
+      - '.github/ai-router/system-continuity/gap-registry.v1.json'
+  workflow_dispatch:
+
+permissions: {}
+
+env:
+  REQUEST_MARKER: DIFFERENTIAL_CONTINUITY_ASSESSMENT_REQUEST_V1
+  GATE: .github/ai-router/differential-continuity/differential-continuity-gate.v1.mjs
+  SELF_TEST: .github/ai-router/differential-continuity/differential-continuity-self-test.v1.mjs
+
+jobs:
+  validate:
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run deterministic differential continuity tests
+        run: |
+          set -euo pipefail
+          node "$SELF_TEST"
+          node tools/operation-intake/repository-operation-intake-gate.v1.operation-class.test.mjs
+
+  remote-assessment:
+    if: >-
+      github.event_name == 'issue_comment' &&
+      github.event.issue.pull_request == null &&
+      (github.event.comment.author_association == 'OWNER' || github.event.comment.author_association == 'MEMBER' || github.event.comment.author_association == 'COLLABORATOR') &&
+      startsWith(github.event.comment.body, 'DIFFERENTIAL_CONTINUITY_ASSESSMENT_REQUEST_V1')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run deterministic self-test first
+        run: node "$SELF_TEST"
+      - name: Parse request and derive repository evidence
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const marker=process.env.REQUEST_MARKER;
+          const body=String(process.env.COMMENT_BODY||'');
+          if(!body.startsWith(marker)) throw Error('REQUEST_MARKER_MISSING');
+          const raw=JSON.parse(body.slice(marker.length).trim());
+          if(raw.schema!=='DIFFERENTIAL_CONTINUITY_REMOTE_REQUEST_v1') throw Error('REMOTE_REQUEST_SCHEMA_INVALID');
+          if(!/^[0-9a-f]{40}$/.test(raw.baseHead||'')||!/^[0-9a-f]{40}$/.test(raw.currentHead||'')) throw Error('HEAD_INVALID');
+          if(!Array.isArray(raw.dependencyPaths)||raw.dependencyPaths.length===0) throw Error('DEPENDENCY_PATHS_REQUIRED');
+          fs.writeFileSync(`${process.env.RUNNER_TEMP}/remote-request.json`,JSON.stringify(raw,null,2)+'\n');
+          NODE
+          BASE=$(jq -r .baseHead "$RUNNER_TEMP/remote-request.json")
+          CURRENT=$(jq -r .currentHead "$RUNNER_TEMP/remote-request.json")
+          git cat-file -e "$BASE^{commit}"
+          git cat-file -e "$CURRENT^{commit}"
+          if git merge-base --is-ancestor "$BASE" "$CURRENT"; then ANCESTOR=true; else ANCESTOR=false; fi
+          git diff --name-only "$BASE" "$CURRENT" | jq -R -s 'split("\n") | map(select(length>0))' > "$RUNNER_TEMP/changed-paths.json"
+          jq -n \
+            --arg base "$BASE" \
+            --arg current "$CURRENT" \
+            --argjson dependencies "$(jq .dependencyPaths "$RUNNER_TEMP/remote-request.json")" \
+            --argjson complete "$(jq .dependencySurfaceComplete "$RUNNER_TEMP/remote-request.json")" \
+            --argjson ancestor "$ANCESTOR" \
+            --argjson changed "$(cat "$RUNNER_TEMP/changed-paths.json")" \
+            '{schema:"DIFFERENTIAL_CONTINUITY_ASSESSMENT_REQUEST_v1",baseHead:$base,currentHead:$current,dependencySurfaceComplete:$complete,baseIsAncestor:$ancestor,dependencyPaths:$dependencies,changedPaths:$changed}' \
+            > "$RUNNER_TEMP/differential-input.json"
+      - name: Execute fixed differential gate
+        run: node "$GATE" --input "$RUNNER_TEMP/differential-input.json" --output "$RUNNER_TEMP/differential-receipt.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: differential-continuity-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/differential-receipt.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Return receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt=JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/differential-receipt.json`,'utf8'));
+          const response=await fetch(`https://api.github.com/repos/${process.env.GITHUB_REPOSITORY}/issues/${process.env.GITHUB_EVENT_PATH ? JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH,'utf8')).issue.number : ''}/comments`,{
+            method:'POST',
+            headers:{Accept:'application/vnd.github+json',Authorization:`Bearer ${process.env.GH_TOKEN}`,'X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'},
+            body:JSON.stringify({body:`DIFFERENTIAL_CONTINUITY_RECEIPT_V1\n\n\`\`\`json\n${JSON.stringify(receipt,null,2)}\n\`\`\``})
+          });
+          if(!response.ok) throw Error(`RECEIPT_RETURN_FAILED:${response.status}`);
+          NODE

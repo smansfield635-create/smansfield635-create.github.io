@@ -1,0 +1,34 @@
+name: Grid stressed scale-free maneuverability replication v2
+on:
+  pull_request:
+    paths:
+      - 'research/imi/grid_stressed_scalefree_replication_v2.py'
+      - 'research/imi/GRID_STRESSED_SCALEFREE_MANEUVERABILITY_REPLICATION_PROTOCOL_v2.md'
+  workflow_dispatch:
+jobs:
+  replicate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout: |
+            research/imi
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install scientific dependencies
+        run: pip install numpy pandas scipy scikit-learn lightgbm requests
+      - name: Execute frozen scale-free stressed-grid replication
+        run: python research/imi/grid_stressed_scalefree_replication_v2.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: grid-stressed-scalefree-replication-v2
+          path: |
+            grid_stressed_scalefree_findings_v2.json
+            grid_stressed_scalefree_rows_v2.csv
+            grid_stressed_scalefree_states_v2.csv
+            grid_stressed_scalefree_predictions_v2.csv
+            GRID_STRESSED_SCALEFREE_VERDICT_v2.txt

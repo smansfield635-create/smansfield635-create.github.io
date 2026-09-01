@@ -1,0 +1,79 @@
+name: Pages Emergency Live Verifier
+
+on:
+  workflow_run:
+    workflows: ["Promote GitHub Pages Actions Authority"]
+    types: [completed]
+
+permissions:
+  actions: read
+  contents: read
+  pages: read
+  issues: write
+
+concurrency:
+  group: pages-live-verifier
+  cancel-in-progress: true
+
+jobs:
+  verify-live:
+    if: github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Record exact Pages result and public HTML identity
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DIRECT_RUN_ID: ${{ github.event.workflow_run.id }}
+          DIRECT_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          DIRECT_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          api="https://api.github.com/repos/${GITHUB_REPOSITORY}"
+          headers=(
+            -H "Accept: application/vnd.github+json"
+            -H "Authorization: Bearer ${GH_TOKEN}"
+            -H "X-GitHub-Api-Version: 2022-11-28"
+          )
+          gh_get() { curl --fail-with-body --silent --show-error -L "${headers[@]}" "$1"; }
+
+          pages_site="$(gh_get "${api}/pages" || echo '{}')"
+          pages_latest="$(gh_get "${api}/pages/builds/latest" || echo '{}')"
+          pages_status="$(jq -r '.status // "unknown"' <<<"$pages_site")"
+          pages_build_type="$(jq -r '.build_type // "unknown"' <<<"$pages_site")"
+          pages_source_branch="$(jq -r '.source.branch // "unknown"' <<<"$pages_site")"
+          pages_source_path="$(jq -r '.source.path // "unknown"' <<<"$pages_site")"
+          pages_latest_commit="$(jq -r '.commit // "unknown"' <<<"$pages_latest")"
+          pages_latest_status="$(jq -r '.status // "unknown"' <<<"$pages_latest")"
+
+          public_html="$(curl --fail-with-body --silent --show-error -L --max-time 30 https://diamondgatebridge.com/)"
+          successor_live=false
+          if grep -q 'COMPASS_STATIC_EDITORIAL_SUCCESSOR_v1' <<<"$public_html"; then
+            successor_live=true
+          fi
+          legacy_visible=false
+          if grep -q 'Why Diamond Gate exists' <<<"$public_html" && grep -q 'The Compass exposes the same destinations' <<<"$public_html"; then
+            legacy_visible=true
+          fi
+
+          body="$(jq -nr \
+            --arg run "$DIRECT_RUN_ID" \
+            --arg head "$DIRECT_HEAD_SHA" \
+            --arg conclusion "$DIRECT_CONCLUSION" \
+            --arg pagesStatus "$pages_status" \
+            --arg buildType "$pages_build_type" \
+            --arg sourceBranch "$pages_source_branch" \
+            --arg sourcePath "$pages_source_path" \
+            --arg latestCommit "$pages_latest_commit" \
+            --arg latestStatus "$pages_latest_status" \
+            --arg successor "$successor_live" \
+            --arg legacy "$legacy_visible" \
+            '"PAGES_EMERGENCY_LIVE_VERIFICATION\n\nDirect run: `"+$run+"`\nDirect head: `"+$head+"`\nDirect conclusion: `"+$conclusion+"`\nPages site status: `"+$pagesStatus+"`\nPages build type: `"+$buildType+"`\nPages source: `"+$sourceBranch+$sourcePath+"`\nLatest Pages build commit: `"+$latestCommit+"`\nLatest Pages build status: `"+$latestStatus+"`\nPublic successor marker: `"+$successor+"`\nLegacy presentation still visible: `"+$legacy+"`"')"
+
+          curl --fail-with-body --silent --show-error -L \
+            -X POST "${headers[@]}" \
+            "${api}/issues/1503/comments" \
+            -d "$(jq -n --arg body "$body" '{body:$body}')" >/dev/null
+
+          test "$DIRECT_CONCLUSION" = "success"
+          test "$successor_live" = "true"

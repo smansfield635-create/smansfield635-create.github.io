@@ -1,0 +1,32 @@
+@import url('/assets/build/build.base.css?v=5');
+
+/* Diamond Gate Fibonacci stellar companion layer.
+   Build proper uses the canvas companion and explicitly suppresses this CSS fallback;
+   intake and any other Build-family surface inherit the same starry-night identity. */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  opacity:.92;
+  background-image:
+    radial-gradient(circle,rgba(255,255,255,.94) 0 1.05px,transparent 1.45px),
+    radial-gradient(circle,rgba(157,227,255,.78) 0 .9px,transparent 1.35px),
+    radial-gradient(circle,rgba(243,217,139,.72) 0 1px,transparent 1.45px),
+    radial-gradient(circle,rgba(185,168,255,.62) 0 .8px,transparent 1.25px),
+    radial-gradient(circle,rgba(255,255,255,.40) 0 .65px,transparent 1.05px);
+  background-size:
+    89px 144px,
+    144px 233px,
+    233px 377px,
+    377px 610px,
+    610px 987px;
+  background-position:
+    13px 29px,
+    71px 113px,
+    157px 41px,
+    251px 197px,
+    43px 389px;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,1),rgba(0,0,0,.72) 70%,rgba(0,0,0,.38));
+}

@@ -1,0 +1,29 @@
+{
+  "contract": "LAWS_CHAMBER_CP6_1_138_BLOCK_CONTENT_CUSTODY_LEDGER_v1",
+  "base_main": "68c9c2c2235f927bb4aaa7bff855063f20d3e498",
+  "branch": "agent/laws-cp6-1-authority-binding-placeholder-retirement-001",
+  "content_block_count": 138,
+  "counts": {
+    "final_test_assignment_count": 14,
+    "final_research_assignment_count": 34,
+    "final_main_retain_count": 63,
+    "final_shared_foundation_count": 23,
+    "final_archive_count": 2,
+    "final_delete_count": 2,
+    "final_unresolved_count": 0
+  },
+  "row_schema": [
+    "id","family","label","original_source","final_disposition","canonical_destination",
+    "semantic_overlap_group","canonical_source_of_truth","summary_remains_on_main",
+    "full_text_migrates","compatibility_anchor_required","evidence_sensitivity",
+    "provenance_dependency","deletion_or_archival_condition","first_relationships"
+  ],
+  "shards": [
+    {"path":"laws/control-plane/cp6-1/content-custody-ledger/shard-1.json","row_range":[1,30],"row_count":30},
+    {"path":"laws/control-plane/cp6-1/content-custody-ledger/shard-2.json","row_range":[31,60],"row_count":30},
+    {"path":"laws/control-plane/cp6-1/content-custody-ledger/shard-3.json","row_range":[61,90],"row_count":30},
+    {"path":"laws/control-plane/cp6-1/content-custody-ledger/shard-4.json","row_range":[91,120],"row_count":30},
+    {"path":"laws/control-plane/cp6-1/content-custody-ledger/shard-5.json","row_range":[121,138],"row_count":18}
+  ],
+  "integrity": {"shard_count":5,"sum_rows":138,"rows_without_disposition":0}
+}

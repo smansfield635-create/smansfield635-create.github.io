@@ -1,0 +1,114 @@
+{
+  "schema": "H_EARTH_R06_C10_ROLE_4_SCHEMA_ERRATUM_001_LOCATOR_v1",
+  "locatorId": "H_EARTH_R06_C10_ROLE_4_SCHEMA_ERRATUM_001_LOCATOR_v1",
+  "status": "ACTIVE_READY_FOR_ROLE_1_C2_RESUMPTION",
+  "project": "H_EARTH_C2_R1_COMPLETE_WORLD",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "locatorPath": "h-earth-3d/control-plane/r06-c10/custody/h-earth.r06-c10.role4.schema-erratum-001.locator.v1.json",
+  "operationId": "H_EARTH_R06_C10_ROLE_1_C2_SCHEMA_ERRATUM_001",
+  "blockedCheckpoint": {
+    "checkpoint": "R1_C2_CONTRACTS_AND_STATIC_FIXTURE_CONSTRUCTION",
+    "result": "R06_C10_ROLE_1_C2_BLOCKED_WITH_ONE_EXACT_CONTRADICTION",
+    "contradictionId": "CONFORMANCE_FIXTURE_UNDECLARED_CLASSIFICATION_PROPERTY",
+    "exactStartingMainHead": "a0363717c74141127e662e09a2ab5a258c5cabe7",
+    "productMutation": false,
+    "contractModuleCreated": false,
+    "officialGeometryArticulationRound": "NOT_STARTED"
+  },
+  "sourceAuthority": {
+    "packageId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_v1",
+    "packageVersion": "0.2.0_ROLE_6_REQUIREMENTS_COMPLETE",
+    "archiveDriveFileId": "1bp5gDl41Oje87AlwjKmyhgm_TBgli_wR",
+    "archiveSha256": "311429d6ce5206396847d68e9dc275425ed1ec6d918da92cf9b54001767149fb",
+    "sourceSchemaPath": "schemas/H_EARTH_R06_C10_ARTICULATION_REQUEST_SCHEMA_v1.json",
+    "sourceSchemaSha256": "3c393b81a40b8666a52adfa75241dde8f1afb6a9fcb5484bd122c5decc19c24c",
+    "conformanceRequestPath": "fixtures/H_EARTH_R06_C10_TOOL_CONFORMANCE_REQUEST_v1.json",
+    "conformanceRequestClassification": "TOOL_CONFORMANCE_ONLY_NOT_DESIGN_CANDIDATE",
+    "conformanceExpectedFieldPath": "fixtures/H_EARTH_R06_C10_TOOL_CONFORMANCE_EXPECTED_FIELD_v1.json",
+    "declaredExpectedFieldCanonicalSha256": "d4bb9d94f052d6b43a6408e72bff874afe8d386809a8b2073093c86f9805f662"
+  },
+  "correctionArchive": {
+    "fileName": "H_EARTH_R06_C10_ROLE_4_SCHEMA_ERRATUM_001_v1.zip",
+    "driveFileId": "1EVNc9TzO0NlXK2f3GAR3B-tO9zoIq1tW",
+    "driveFileUrl": "https://drive.google.com/file/d/1EVNc9TzO0NlXK2f3GAR3B-tO9zoIq1tW/view?usp=drivesdk",
+    "mimeType": "application/zip",
+    "archiveSha256": "9b2f06af3387823dd48b1a7a13ab8c83d6e936b2510a9b5fa4ed5247fb758b50",
+    "archiveByteCount": 3560,
+    "archiveMemberCount": 4,
+    "driveReadback": "PASS",
+    "driveReadbackSha256Match": true,
+    "members": [
+      {
+        "path": "H_EARTH_R06_C10_ROLE_4_SCHEMA_ERRATUM_001_v1/README.md",
+        "sha256": "a0d7a195b97948db0fc37a0d2dcea7588e74d020946751ca020c63d3dbeef7be"
+      },
+      {
+        "path": "H_EARTH_R06_C10_ROLE_4_SCHEMA_ERRATUM_001_v1/SCHEMA_ERRATUM_RECEIPT_v1.json",
+        "sha256": "11837d28c0328f034e7de165e5eaf944ef5500c92e2a3cbe441b8820cf6e05f4"
+      },
+      {
+        "path": "H_EARTH_R06_C10_ROLE_4_SCHEMA_ERRATUM_001_v1/SHA256SUMS.txt",
+        "sha256": "2285f5c6877dd617aa0461b717107f33640189ac858e2d1f27817af57aa0c602"
+      },
+      {
+        "path": "H_EARTH_R06_C10_ROLE_4_SCHEMA_ERRATUM_001_v1/schemas/H_EARTH_R06_C10_ARTICULATION_REQUEST_SCHEMA_v1.json",
+        "sha256": "8bc185349c6f0cf260a4288fb3dc0873eb424a1d16059c98d9907cb8951a3982"
+      }
+    ]
+  },
+  "authoritativeSchemaErratum": {
+    "supersededMemberPath": "schemas/H_EARTH_R06_C10_ARTICULATION_REQUEST_SCHEMA_v1.json",
+    "supersededMemberSha256": "3c393b81a40b8666a52adfa75241dde8f1afb6a9fcb5484bd122c5decc19c24c",
+    "replacementMemberPath": "schemas/H_EARTH_R06_C10_ARTICULATION_REQUEST_SCHEMA_v1.json",
+    "replacementMemberSha256": "8bc185349c6f0cf260a4288fb3dc0873eb424a1d16059c98d9907cb8951a3982",
+    "logicalSchemaIdPreserved": "H_EARTH_R06_C10_ARTICULATION_REQUEST_SCHEMA_v1",
+    "exactAddedProperty": {
+      "name": "classification",
+      "required": false,
+      "type": "string",
+      "const": "TOOL_CONFORMANCE_ONLY_NOT_DESIGN_CANDIDATE"
+    },
+    "topLevelAdditionalPropertiesRemainsFalse": true,
+    "allOtherSchemaMembersUnchanged": true
+  },
+  "preservation": {
+    "conformanceRequestBytesChanged": false,
+    "conformanceExpectedFieldBytesChanged": false,
+    "formulasChanged": false,
+    "boundsChanged": false,
+    "regionChanged": false,
+    "operatorSetChanged": false,
+    "harnessAssertionsChanged": false,
+    "role1ConstructionBoundaryChanged": false,
+    "productMutation": false,
+    "toolConstructionStarted": false,
+    "officialGeometryArticulationRound": "NOT_STARTED"
+  },
+  "validatedBehavior": {
+    "exactFrozenConformanceRequestValidates": true,
+    "requestWithoutClassificationRemainsAdmissible": true,
+    "wrongClassificationFailsClosed": true,
+    "arbitraryUndeclaredPropertyFailsClosed": true,
+    "normalizationDriftRequired": false
+  },
+  "role1Resumption": {
+    "authorizedCheckpoint": "R1_C2_CONTRACTS_AND_STATIC_FIXTURE_CONSTRUCTION_RESUMPTION_ONLY",
+    "reuseAllPreviouslyPassedC1AndC2AdmissionChecks": true,
+    "loadReplacementSchemaInsteadOfOriginalSchemaMember": true,
+    "constructOnlyThePreviouslyAuthorizedC2ContractModuleAndC2Receipt": true,
+    "r1C3Authorized": false,
+    "returnAfterC2Closure": true
+  },
+  "discovery": {
+    "activeHandoffLocator": "h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role6-to-role1.tool-construction-handoff.locator.v1.json",
+    "role6ToolBaseLocator": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.geometry-articulation-shared-tool-base.locator.v1.json",
+    "c1ReceiptPath": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.package-assumption-receipt.v1.json",
+    "searchAliases": [
+      "H-Earth R06 C10 schema erratum",
+      "classification conformance fixture contradiction",
+      "Role 1 C2 schema correction",
+      "H_EARTH_R06_C10_ARTICULATION_REQUEST_SCHEMA_v1 classification",
+      "TOOL_CONFORMANCE_ONLY_NOT_DESIGN_CANDIDATE"
+    ]
+  }
+}

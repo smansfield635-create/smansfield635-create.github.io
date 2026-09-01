@@ -1,0 +1,46 @@
+{
+  "artifactId": "PRODUCTS_COMPASS_RETURN_DISCLOSURE_CHECKPOINT_4_EXECUTION_RECEIPT_v1",
+  "status": "PASS",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/products-laws-return-disclosure-cp0-001",
+  "executedProductionHead": "7507e97f14d3c372a92a8169b2f8b858e8c7a6c3",
+  "workflow": {
+    "name": "Products Compass Return Disclosure v1",
+    "runId": 30409416366,
+    "jobId": 90442006207,
+    "result": "success"
+  },
+  "evidenceArtifact": {
+    "artifactId": 8707829568,
+    "name": "products-compass-return-disclosure-v1-evidence",
+    "sha256": "1f7e3610ba80833edb699e324cd65fad55d6af6adf65c05e9595b1b02c1dcee6",
+    "sizeBytes": 4170631
+  },
+  "sourceBlobs": {
+    "controllerBefore": "3bf31e29f6743a8660b12a30c5fb56d087ca3199",
+    "controllerAfter": "16450ed196eba001103346e7b978b1106934e24e",
+    "crystalsBefore": "db6889500dccab53365a564feb1aa96f34b4200d",
+    "crystalsAfter": "f71b5415d2c5505165ed4956159fc3c6d1d5c442",
+    "htmlPreserved": "84cc1707500003b824826ec320fcf44826904755",
+    "compassCssPreserved": "a11fd8fd874b008fbb0d0e578b1c90ed732d0050"
+  },
+  "profiles": [
+    { "id": "reference-mobile", "width": 430, "height": 932, "result": "PASS" },
+    { "id": "compact-mobile", "width": 360, "height": 800, "result": "PASS" }
+  ],
+  "confirmed": {
+    "globeTapPreservesCluster": true,
+    "globeTapDoesNotSelectProduct": true,
+    "globeTapOpensLocalDisclosure": true,
+    "returnMainCompassVisibleAfterGlobeTap": true,
+    "productSelectionClosesDisclosure": true,
+    "returnToOrbitVisibleForSelectedProduct": true,
+    "returnToOrbitAndReturnMainCompassCanCoexist": true,
+    "returnToOrbitRestoresCluster": true,
+    "returnToOrbitClosesDisclosure": true,
+    "noConsoleErrors": true,
+    "noPageErrors": true,
+    "noRequestFailures": true
+  },
+  "mergeAuthorized": false
+}

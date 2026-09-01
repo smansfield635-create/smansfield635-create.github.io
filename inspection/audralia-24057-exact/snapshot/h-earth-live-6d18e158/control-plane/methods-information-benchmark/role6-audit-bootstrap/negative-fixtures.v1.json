@@ -1,0 +1,81 @@
+{
+  "schema": "METHODS_ROLE_6_AUDIT_BOOTSTRAP_NEGATIVE_FIXTURES_v1",
+  "fixtures": [
+    {
+      "id": "NEG_01_WRONG_OPERATION",
+      "mutation": "operationId",
+      "expected": "OPERATION_ID_MISMATCH"
+    },
+    {
+      "id": "NEG_02_WRONG_ASSIGNMENT_HEAD",
+      "mutation": "assignmentHead",
+      "expected": "ASSIGNMENT_IDENTITY_MISMATCH"
+    },
+    {
+      "id": "NEG_03_WRONG_ASSIGNMENT_ID",
+      "mutation": "assignmentId",
+      "expected": "ASSIGNMENT_IDENTITY_MISMATCH"
+    },
+    {
+      "id": "NEG_04_MISSING_OUTPUT",
+      "mutation": "removeSubstantiveOutput",
+      "expected": "OUTPUT_COUNT_MISMATCH"
+    },
+    {
+      "id": "NEG_05_EXTRA_OUTPUT",
+      "mutation": "addSubstantiveOutput",
+      "expected": "OUTPUT_COUNT_MISMATCH"
+    },
+    {
+      "id": "NEG_06_WRONG_OUTPUT_ID",
+      "mutation": "substantiveOutputId",
+      "expected": "OUTPUT_ID_OR_PATH_MISMATCH"
+    },
+    {
+      "id": "NEG_07_WRONG_OUTPUT_PATH",
+      "mutation": "substantiveOutputPath",
+      "expected": "OUTPUT_ID_OR_PATH_MISMATCH"
+    },
+    {
+      "id": "NEG_08_DUPLICATE_PATH",
+      "mutation": "duplicateSubstantivePath",
+      "expected": "DUPLICATE_OUTPUT_ID_OR_PATH"
+    },
+    {
+      "id": "NEG_09_NONOBJECT_PAYLOAD",
+      "mutation": "payloadScalar",
+      "expected": "PAYLOAD_NOT_OBJECT"
+    },
+    {
+      "id": "NEG_10_MISSING_RETURN",
+      "mutation": "removeReturnPacket",
+      "expected": "INPUT_SCHEMA_INVALID"
+    },
+    {
+      "id": "NEG_11_WRONG_RETURN_PATH",
+      "mutation": "returnPath",
+      "expected": "OUTPUT_ID_OR_PATH_MISMATCH"
+    },
+    {
+      "id": "NEG_12_INVALID_HOLDER",
+      "mutation": "executionHolder",
+      "expected": "INPUT_SCHEMA_INVALID"
+    },
+    {
+      "id": "NEG_13_UNAUTHORIZED_PATH",
+      "mutation": "pathTraversal",
+      "expected": "UNAUTHORIZED_PATH"
+    },
+    {
+      "id": "NEG_14_DESCRIPTOR_EXTRA_ARGS",
+      "mutation": "extraArgumentsAllowed",
+      "expected": "DESCRIPTOR_NOT_FIXED"
+    },
+    {
+      "id": "NEG_15_DESCRIPTOR_MOVING_REF",
+      "mutation": "exactToolingHead",
+      "expected": "DESCRIPTOR_NOT_FIXED"
+    }
+  ],
+  "requiredPassCount": 15
+}

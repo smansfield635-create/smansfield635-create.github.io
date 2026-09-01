@@ -1,0 +1,95 @@
+name: H-Earth Run 8 Phase 1 Main Promotion Validation
+
+# Historical validator for PR #197 / the completed Run 8 Phase 1 reconciliation.
+# The durable promotion evidence is frozen to the ordered main graph that existed
+# when that reconciliation was executed. Later H-Earth work must not be judged
+# against that historical main tip or six-path reconciliation scope.
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-run8-phase1-main-promotion-validation.yml'
+      - 'h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js'
+      - 'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8-phase1-main-promotion-scope.js'
+      - 'h-earth-3d/validation/h-earth.run8.phase1-main-promotion.harness.mjs'
+      - 'h-earth-3d/validation/h-earth.run8.phase1-main-promotion.receipt.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run8-phase1-main-promotion:
+    # This proof belongs only to the original reconciliation branch. The shared
+    # repository-registry loader is intentionally not a trigger: later overlays
+    # may change that loader without reopening this completed historical proof.
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.head_ref == 'agent/h-earth-run8-phase1-main-promotion-reconciliation-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out reconciliation workspace
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify exact ordered main promotion graph
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "df1e1c7aad32a63fd35186cca0351b49b561579e"
+
+          for checkpoint_head in \
+            88e2a3f8b5ff5fb8587ba95d2e13d3ea8504dfbd \
+            f3375d629633bbdadcbebcd91f2dc19796e366e1 \
+            7272cd8609674d2e30a74a32d6a98cee1680f496 \
+            26bab1eb804a6e8737f551e1d1aa9d9cbbe4ae5f \
+            ac260fd8c3a36d71a04ab1ffe6d8b3012ce8bb2d
+          do
+            git merge-base --is-ancestor "$checkpoint_head" origin/main
+          done
+
+          actual_sequence="$(git rev-list --first-parent --max-count=5 origin/main)"
+          expected_sequence="$(cat <<'SEQUENCE'
+          df1e1c7aad32a63fd35186cca0351b49b561579e
+          716a4370cf5ef320b12d3731aff577dcd6bb778b
+          82b237284d6390005843174b0dfe23b6b7ac81c0
+          a10d6160378ac6ec83742f6530461cc433957298
+          2e1ce0d1e1c8911c14339eb41643081c9bda9cbc
+          SEQUENCE
+          )"
+          test "$actual_sequence" = "$expected_sequence"
+
+          test "$(git rev-list --count ac260fd8c3a36d71a04ab1ffe6d8b3012ce8bb2d..origin/main)" = "9"
+          test "$(git rev-list --count origin/main..ac260fd8c3a36d71a04ab1ffe6d8b3012ce8bb2d)" = "0"
+
+      - name: Execute Phase 1 promotion harness
+        run: node h-earth-3d/validation/h-earth.run8.phase1-main-promotion.harness.mjs
+
+      - name: Verify bounded reconciliation scope
+        run: |
+          set -euo pipefail
+          git diff --name-only origin/main...HEAD | sort > /tmp/actual-paths.txt
+          cat > /tmp/expected-paths.txt <<'PATHS'
+          .github/workflows/h-earth-run8-phase1-main-promotion-validation.yml
+          h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js
+          h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8-phase1-main-promotion-scope.js
+          h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+          h-earth-3d/validation/h-earth.run8.phase1-main-promotion.harness.mjs
+          h-earth-3d/validation/h-earth.run8.phase1-main-promotion.receipt.json
+          PATHS
+          sort -o /tmp/expected-paths.txt /tmp/expected-paths.txt
+          diff -u /tmp/expected-paths.txt /tmp/actual-paths.txt
+
+      - name: Upload Phase 1 promotion evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8-phase1-main-promotion-evidence
+          path: |
+            h-earth-3d/validation/h-earth.run8.phase1-main-promotion.receipt.json
+          if-no-files-found: error

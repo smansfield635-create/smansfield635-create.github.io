@@ -1,0 +1,89 @@
+name: Post-Merge Static Asset Cache Identity — Manual Only
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_sha:
+        description: Optional comparison base
+        required: false
+        type: string
+      head_sha:
+        description: Optional expected main head
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: post-merge-cache-identity
+  cancel-in-progress: true
+
+jobs:
+  synchronize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current main head
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Bind exact head and determine comparison base
+        id: identity
+        shell: bash
+        env:
+          INPUT_BASE: ${{ inputs.base_sha }}
+          INPUT_HEAD: ${{ inputs.head_sha }}
+        run: |
+          set -euo pipefail
+          head="$(git rev-parse HEAD^{commit})"
+          if [ -n "${INPUT_HEAD:-}" ]; then
+            test "$head" = "$INPUT_HEAD"
+          fi
+          base="${INPUT_BASE:-}"
+          if [ -z "$base" ]; then
+            base="$(git rev-parse HEAD^1)"
+          fi
+          git cat-file -e "${base}^{commit}"
+          echo "head=$head" >> "$GITHUB_OUTPUT"
+          echo "base=$base" >> "$GITHUB_OUTPUT"
+
+      - name: Validate cache identity controller
+        run: node .github/ai-router/platform/post-merge-cache-identity-sync.v1.mjs --self-test
+
+      - name: Synchronize content-derived asset identities
+        env:
+          CACHE_IDENTITY_BASE: ${{ steps.identity.outputs.base }}
+          CACHE_IDENTITY_HEAD: ${{ steps.identity.outputs.head }}
+          CACHE_IDENTITY_RECEIPT: /tmp/post-merge-cache-identity.json
+        run: node .github/ai-router/platform/post-merge-cache-identity-sync.v1.mjs
+
+      - name: Commit identity changes only when explicitly requested and required
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ steps.identity.outputs.head }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "No cache identity changes required."
+            exit 0
+          fi
+          git diff --check
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -- '*.html' '*.css' '*.js' '*.mjs'
+          test -n "$(git diff --cached --name-only)"
+          git fetch origin main
+          test "$(git rev-parse origin/main^{commit})" = "$EXPECTED_HEAD"
+          git commit -m "chore(delivery): synchronize static asset cache identities [cache-identity-sync]"
+          git push origin HEAD:main
+          echo "One explicit cache-identity commit was created. Native Pages branch publication remains the only publisher."
+
+      - name: Upload cache identity receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: post-merge-cache-identity-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/post-merge-cache-identity.json
+          if-no-files-found: error
+          retention-days: 90

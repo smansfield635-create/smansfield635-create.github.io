@@ -1,6 +1,7 @@
 /** H_EARTH_RUN_8E_R2_CANONICAL_LIVE_RENDER_PACKAGE_v1 */
 import {
   getHEarthRun8ER2ImmutableLiveRenderPackage as getRawPackage,
+  getHEarthOW01LiveRenderPackageOccurrence as getOW01RawPackage,
   evaluateHEarthRun8ER2ImmutableLiveRenderPackage
 } from './live-render-package.run8e-r2.js';
 
@@ -71,8 +72,7 @@ function createHashWriter() {
   };
 }
 
-function buildCanonicalPackage() {
-  const raw = getRawPackage();
+function buildCanonicalPackage(raw = getRawPackage()) {
   if (raw?.eligible !== true) return raw;
 
   const buffers = canonicalizeBuffers(raw.buffers);
@@ -112,10 +112,16 @@ function buildCanonicalPackage() {
 }
 
 let cachedPackage = null;
+let cachedOW01Package = null;
 
 export function getHEarthRun8ER2CanonicalLiveRenderPackage() {
   if (!cachedPackage) cachedPackage = buildCanonicalPackage();
   return cachedPackage;
+}
+
+export function getHEarthOW01CanonicalLiveRenderPackageOccurrence() {
+  if (!cachedOW01Package) cachedOW01Package = buildCanonicalPackage(getOW01RawPackage());
+  return cachedOW01Package;
 }
 
 export default getHEarthRun8ER2CanonicalLiveRenderPackage;

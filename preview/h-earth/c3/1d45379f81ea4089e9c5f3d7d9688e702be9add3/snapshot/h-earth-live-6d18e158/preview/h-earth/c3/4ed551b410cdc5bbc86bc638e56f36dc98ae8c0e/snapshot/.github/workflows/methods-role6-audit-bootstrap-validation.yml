@@ -1,0 +1,115 @@
+name: Methods Role 6 Audit Admission Tooling Bootstrap Validation
+
+on:
+  pull_request:
+    paths:
+      - 'control-plane/methods-information-benchmark/role6-audit-bootstrap/**'
+      - 'tools/methods-role6-audit/**'
+      - '.github/workflows/methods-role6-audit-bootstrap-validation.yml'
+      - '.github/workflows/methods-role6-audit-execution.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  builder:
+    runs-on: ubuntu-latest
+    outputs:
+      expected_head: ${{ steps.ids.outputs.expected_head }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - id: ids
+        shell: bash
+        run: echo "expected_head=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Builder certification
+        shell: bash
+        env:
+          BASE_HEAD: ce40519190a9048c1e0cef682108c34b0a7f8055
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+          HOLDER: GITHUB_ACTIONS_METHODS_ROLE6_AUDIT_BOOTSTRAP_BUILDER_${{ github.run_id }}_${{ github.run_attempt }}
+        run: |
+          node tools/methods-role6-audit/bootstrap-self-test.v1.mjs \
+            --base-head "$BASE_HEAD" \
+            --expected-head "$EXPECTED_HEAD" \
+            --holder "$HOLDER" \
+            --output "$RUNNER_TEMP/builder-receipt.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: methods-role6-audit-bootstrap-builder
+          path: ${{ runner.temp }}/builder-receipt.json
+          if-no-files-found: error
+
+  fresh-verifier:
+    needs: builder
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.builder.outputs.expected_head }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          name: methods-role6-audit-bootstrap-builder
+          path: ${{ runner.temp }}/builder
+      - name: Fresh independent reproduction
+        shell: bash
+        env:
+          BASE_HEAD: ce40519190a9048c1e0cef682108c34b0a7f8055
+          EXPECTED_HEAD: ${{ needs.builder.outputs.expected_head }}
+          HOLDER: GITHUB_ACTIONS_METHODS_ROLE6_AUDIT_BOOTSTRAP_VERIFIER_${{ github.run_id }}_${{ github.run_attempt }}
+        run: |
+          node tools/methods-role6-audit/fresh-verifier.v1.mjs \
+            --base-head "$BASE_HEAD" \
+            --expected-head "$EXPECTED_HEAD" \
+            --holder "$HOLDER" \
+            --builder-receipt "$RUNNER_TEMP/builder/builder-receipt.json" \
+            --output "$RUNNER_TEMP/verifier-receipt.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: methods-role6-audit-bootstrap-verifier
+          path: ${{ runner.temp }}/verifier-receipt.json
+          if-no-files-found: error
+
+  terminate-bootstrap-authority:
+    needs: [builder, fresh-verifier]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.builder.outputs.expected_head }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          name: methods-role6-audit-bootstrap-builder
+          path: ${{ runner.temp }}/builder
+      - uses: actions/download-artifact@v4
+        with:
+          name: methods-role6-audit-bootstrap-verifier
+          path: ${{ runner.temp }}/verifier
+      - name: Emit command-bound termination receipt
+        shell: bash
+        run: |
+          node tools/methods-role6-audit/bootstrap-authority-terminator.v1.mjs \
+            --builder-receipt "$RUNNER_TEMP/builder/builder-receipt.json" \
+            --verifier-receipt "$RUNNER_TEMP/verifier/verifier-receipt.json" \
+            --output "$RUNNER_TEMP/bootstrap-termination-receipt.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: methods-role6-audit-bootstrap-final-certification
+          path: |
+            ${{ runner.temp }}/builder/builder-receipt.json
+            ${{ runner.temp }}/verifier/verifier-receipt.json
+            ${{ runner.temp }}/bootstrap-termination-receipt.json
+          if-no-files-found: error

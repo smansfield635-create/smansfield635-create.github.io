@@ -1,0 +1,707 @@
+{
+  "contract": "LAWS_CP6_OSF_DERIVATIVE_METHODS_V1",
+  "status": "PASS",
+  "checked_at": "2026-08-02T01:17:44.049Z",
+  "profiles": {
+    "phone": {
+      "viewport": {
+        "name": "phone",
+        "width": 390,
+        "height": 844
+      },
+      "routes": {
+        "/laws/test/admission-and-baseline/": {
+          "overflow": false,
+          "viewportWidth": 390,
+          "documentWidth": 390,
+          "overflowDiagnostics": [
+            {
+              "overflowAmount": 999,
+              "elementSelector": "a.skip",
+              "textOrComponentId": "Skip to content",
+              "clientWidth": 170,
+              "scrollWidth": 170,
+              "boundingRect": {
+                "left": -999,
+                "right": -828.7,
+                "width": 170.3
+              },
+              "computedMinWidth": "0px",
+              "computedMaxWidth": "none",
+              "computedWidth": "170.297px",
+              "whiteSpace": "normal",
+              "overflowWrap": "normal",
+              "wordBreak": "normal",
+              "overflowX": "visible",
+              "display": "block",
+              "boxSizing": "border-box",
+              "gridOrFlexMinSize": {
+                "elementMinWidth": "0px",
+                "parentDisplay": "block",
+                "parentMinWidth": "320px",
+                "parentGridTemplateColumns": "none",
+                "parentFlex": "0 1 auto"
+              }
+            }
+          ],
+          "methodLayers": 1,
+          "title": "Admission and Baseline · Test · Laws · Diamond Gate Bridge"
+        },
+        "/laws/test/forward-construction/": {
+          "overflow": false,
+          "viewportWidth": 390,
+          "documentWidth": 390,
+          "overflowDiagnostics": [
+            {
+              "overflowAmount": 999,
+              "elementSelector": "a.skip",
+              "textOrComponentId": "Skip to content",
+              "clientWidth": 170,
+              "scrollWidth": 170,
+              "boundingRect": {
+                "left": -999,
+                "right": -828.7,
+                "width": 170.3
+              },
+              "computedMinWidth": "0px",
+              "computedMaxWidth": "none",
+              "computedWidth": "170.297px",
+              "whiteSpace": "normal",
+              "overflowWrap": "normal",
+              "wordBreak": "normal",
+              "overflowX": "visible",
+              "display": "block",
+              "boxSizing": "border-box",
+              "gridOrFlexMinSize": {
+                "elementMinWidth": "0px",
+                "parentDisplay": "block",
+                "parentMinWidth": "320px",
+                "parentGridTemplateColumns": "none",
+                "parentFlex": "0 1 auto"
+              }
+            }
+          ],
+          "methodLayers": 1,
+          "title": "Forward Construction · Test · Laws · Diamond Gate Bridge"
+        },
+        "/laws/test/reverse-audit/": {
+          "overflow": false,
+          "viewportWidth": 390,
+          "documentWidth": 390,
+          "overflowDiagnostics": [
+            {
+              "overflowAmount": 999,
+              "elementSelector": "a.skip",
+              "textOrComponentId": "Skip to content",
+              "clientWidth": 170,
+              "scrollWidth": 170,
+              "boundingRect": {
+                "left": -999,
+                "right": -828.7,
+                "width": 170.3
+              },
+              "computedMinWidth": "0px",
+              "computedMaxWidth": "none",
+              "computedWidth": "170.297px",
+              "whiteSpace": "normal",
+              "overflowWrap": "normal",
+              "wordBreak": "normal",
+              "overflowX": "visible",
+              "display": "block",
+              "boxSizing": "border-box",
+              "gridOrFlexMinSize": {
+                "elementMinWidth": "0px",
+                "parentDisplay": "block",
+                "parentMinWidth": "320px",
+                "parentGridTemplateColumns": "none",
+                "parentFlex": "0 1 auto"
+              }
+            }
+          ],
+          "methodLayers": 1,
+          "title": "Reverse Audit · Test · Laws · Diamond Gate Bridge"
+        },
+        "/laws/test/result-and-record/": {
+          "overflow": false,
+          "viewportWidth": 390,
+          "documentWidth": 390,
+          "overflowDiagnostics": [
+            {
+              "overflowAmount": 999,
+              "elementSelector": "a.skip",
+              "textOrComponentId": "Skip to content",
+              "clientWidth": 170,
+              "scrollWidth": 170,
+              "boundingRect": {
+                "left": -999,
+                "right": -828.7,
+                "width": 170.3
+              },
+              "computedMinWidth": "0px",
+              "computedMaxWidth": "none",
+              "computedWidth": "170.297px",
+              "whiteSpace": "normal",
+              "overflowWrap": "normal",
+              "wordBreak": "normal",
+              "overflowX": "visible",
+              "display": "block",
+              "boxSizing": "border-box",
+              "gridOrFlexMinSize": {
+                "elementMinWidth": "0px",
+                "parentDisplay": "block",
+                "parentMinWidth": "320px",
+                "parentGridTemplateColumns": "none",
+                "parentFlex": "0 1 auto"
+              }
+            }
+          ],
+          "methodLayers": 1,
+          "title": "Result and Record · Test · Laws · Diamond Gate Bridge"
+        },
+        "/laws/research/evidence-and-sources/": {
+          "overflow": false,
+          "viewportWidth": 390,
+          "documentWidth": 390,
+          "overflowDiagnostics": [
+            {
+              "overflowAmount": 999,
+              "elementSelector": "a.skip",
+              "textOrComponentId": "Skip to content",
+              "clientWidth": 170,
+              "scrollWidth": 170,
+              "boundingRect": {
+                "left": -999,
+                "right": -828.7,
+                "width": 170.3
+              },
+              "computedMinWidth": "0px",
+              "computedMaxWidth": "none",
+              "computedWidth": "170.297px",
+              "whiteSpace": "normal",
+              "overflowWrap": "normal",
+              "wordBreak": "normal",
+              "overflowX": "visible",
+              "display": "block",
+              "boxSizing": "border-box",
+              "gridOrFlexMinSize": {
+                "elementMinWidth": "0px",
+                "parentDisplay": "block",
+                "parentMinWidth": "320px",
+                "parentGridTemplateColumns": "none",
+                "parentFlex": "0 1 auto"
+              }
+            }
+          ],
+          "methodLayers": 1,
+          "title": "Evidence and Sources · Research · Laws · Diamond Gate Bridge"
+        },
+        "/laws/research/methods-and-models/": {
+          "overflow": false,
+          "viewportWidth": 390,
+          "documentWidth": 390,
+          "overflowDiagnostics": [
+            {
+              "overflowAmount": 999,
+              "elementSelector": "a.skip",
+              "textOrComponentId": "Skip to content",
+              "clientWidth": 170,
+              "scrollWidth": 170,
+              "boundingRect": {
+                "left": -999,
+                "right": -828.7,
+                "width": 170.3
+              },
+              "computedMinWidth": "0px",
+              "computedMaxWidth": "none",
+              "computedWidth": "170.297px",
+              "whiteSpace": "normal",
+              "overflowWrap": "normal",
+              "wordBreak": "normal",
+              "overflowX": "visible",
+              "display": "block",
+              "boxSizing": "border-box",
+              "gridOrFlexMinSize": {
+                "elementMinWidth": "0px",
+                "parentDisplay": "block",
+                "parentMinWidth": "320px",
+                "parentGridTemplateColumns": "none",
+                "parentFlex": "0 1 auto"
+              }
+            }
+          ],
+          "methodLayers": 1,
+          "title": "Methods and Models · Research · Laws · Diamond Gate Bridge"
+        }
+      },
+      "errors": []
+    },
+    "tablet": {
+      "viewport": {
+        "name": "tablet",
+        "width": 820,
+        "height": 1180
+      },
+      "routes": {
+        "/laws/test/admission-and-baseline/": {
+          "overflow": false,
+          "viewportWidth": 820,
+          "documentWidth": 820,
+          "overflowDiagnostics": [
+            {
+              "overflowAmount": 999,
+              "elementSelector": "a.skip",
+              "textOrComponentId": "Skip to content",
+              "clientWidth": 170,
+              "scrollWidth": 170,
+              "boundingRect": {
+                "left": -999,
+                "right": -828.7,
+                "width": 170.3
+              },
+              "computedMinWidth": "0px",
+              "computedMaxWidth": "none",
+              "computedWidth": "170.297px",
+              "whiteSpace": "normal",
+              "overflowWrap": "normal",
+              "wordBreak": "normal",
+              "overflowX": "visible",
+              "display": "block",
+              "boxSizing": "border-box",
+              "gridOrFlexMinSize": {
+                "elementMinWidth": "0px",
+                "parentDisplay": "block",
+                "parentMinWidth": "320px",
+                "parentGridTemplateColumns": "none",
+                "parentFlex": "0 1 auto"
+              }
+            }
+          ],
+          "methodLayers": 1,
+          "title": "Admission and Baseline · Test · Laws · Diamond Gate Bridge"
+        },
+        "/laws/test/forward-construction/": {
+          "overflow": false,
+          "viewportWidth": 820,
+          "documentWidth": 820,
+          "overflowDiagnostics": [
+            {
+              "overflowAmount": 999,
+              "elementSelector": "a.skip",
+              "textOrComponentId": "Skip to content",
+              "clientWidth": 170,
+              "scrollWidth": 170,
+              "boundingRect": {
+                "left": -999,
+                "right": -828.7,
+                "width": 170.3
+              },
+              "computedMinWidth": "0px",
+              "computedMaxWidth": "none",
+              "computedWidth": "170.297px",
+              "whiteSpace": "normal",
+              "overflowWrap": "normal",
+              "wordBreak": "normal",
+              "overflowX": "visible",
+              "display": "block",
+              "boxSizing": "border-box",
+              "gridOrFlexMinSize": {
+                "elementMinWidth": "0px",
+                "parentDisplay": "block",
+                "parentMinWidth": "320px",
+                "parentGridTemplateColumns": "none",
+                "parentFlex": "0 1 auto"
+              }
+            }
+          ],
+          "methodLayers": 1,
+          "title": "Forward Construction · Test · Laws · Diamond Gate Bridge"
+        },
+        "/laws/test/reverse-audit/": {
+          "overflow": false,
+          "viewportWidth": 820,
+          "documentWidth": 820,
+          "overflowDiagnostics": [
+            {
+              "overflowAmount": 999,
+              "elementSelector": "a.skip",
+              "textOrComponentId": "Skip to content",
+              "clientWidth": 170,
+              "scrollWidth": 170,
+              "boundingRect": {
+                "left": -999,
+                "right": -828.7,
+                "width": 170.3
+              },
+              "computedMinWidth": "0px",
+              "computedMaxWidth": "none",
+              "computedWidth": "170.297px",
+              "whiteSpace": "normal",
+              "overflowWrap": "normal",
+              "wordBreak": "normal",
+              "overflowX": "visible",
+              "display": "block",
+              "boxSizing": "border-box",
+              "gridOrFlexMinSize": {
+                "elementMinWidth": "0px",
+                "parentDisplay": "block",
+                "parentMinWidth": "320px",
+                "parentGridTemplateColumns": "none",
+                "parentFlex": "0 1 auto"
+              }
+            }
+          ],
+          "methodLayers": 1,
+          "title": "Reverse Audit · Test · Laws · Diamond Gate Bridge"
+        },
+        "/laws/test/result-and-record/": {
+          "overflow": false,
+          "viewportWidth": 820,
+          "documentWidth": 820,
+          "overflowDiagnostics": [
+            {
+              "overflowAmount": 999,
+              "elementSelector": "a.skip",
+              "textOrComponentId": "Skip to content",
+              "clientWidth": 170,
+              "scrollWidth": 170,
+              "boundingRect": {
+                "left": -999,
+                "right": -828.7,
+                "width": 170.3
+              },
+              "computedMinWidth": "0px",
+              "computedMaxWidth": "none",
+              "computedWidth": "170.297px",
+              "whiteSpace": "normal",
+              "overflowWrap": "normal",
+              "wordBreak": "normal",
+              "overflowX": "visible",
+              "display": "block",
+              "boxSizing": "border-box",
+              "gridOrFlexMinSize": {
+                "elementMinWidth": "0px",
+                "parentDisplay": "block",
+                "parentMinWidth": "320px",
+                "parentGridTemplateColumns": "none",
+                "parentFlex": "0 1 auto"
+              }
+            }
+          ],
+          "methodLayers": 1,
+          "title": "Result and Record · Test · Laws · Diamond Gate Bridge"
+        },
+        "/laws/research/evidence-and-sources/": {
+          "overflow": false,
+          "viewportWidth": 820,
+          "documentWidth": 820,
+          "overflowDiagnostics": [
+            {
+              "overflowAmount": 999,
+              "elementSelector": "a.skip",
+              "textOrComponentId": "Skip to content",
+              "clientWidth": 170,
+              "scrollWidth": 170,
+              "boundingRect": {
+                "left": -999,
+                "right": -828.7,
+                "width": 170.3
+              },
+              "computedMinWidth": "0px",
+              "computedMaxWidth": "none",
+              "computedWidth": "170.297px",
+              "whiteSpace": "normal",
+              "overflowWrap": "normal",
+              "wordBreak": "normal",
+              "overflowX": "visible",
+              "display": "block",
+              "boxSizing": "border-box",
+              "gridOrFlexMinSize": {
+                "elementMinWidth": "0px",
+                "parentDisplay": "block",
+                "parentMinWidth": "320px",
+                "parentGridTemplateColumns": "none",
+                "parentFlex": "0 1 auto"
+              }
+            }
+          ],
+          "methodLayers": 1,
+          "title": "Evidence and Sources · Research · Laws · Diamond Gate Bridge"
+        },
+        "/laws/research/methods-and-models/": {
+          "overflow": false,
+          "viewportWidth": 820,
+          "documentWidth": 820,
+          "overflowDiagnostics": [
+            {
+              "overflowAmount": 999,
+              "elementSelector": "a.skip",
+              "textOrComponentId": "Skip to content",
+              "clientWidth": 170,
+              "scrollWidth": 170,
+              "boundingRect": {
+                "left": -999,
+                "right": -828.7,
+                "width": 170.3
+              },
+              "computedMinWidth": "0px",
+              "computedMaxWidth": "none",
+              "computedWidth": "170.297px",
+              "whiteSpace": "normal",
+              "overflowWrap": "normal",
+              "wordBreak": "normal",
+              "overflowX": "visible",
+              "display": "block",
+              "boxSizing": "border-box",
+              "gridOrFlexMinSize": {
+                "elementMinWidth": "0px",
+                "parentDisplay": "block",
+                "parentMinWidth": "320px",
+                "parentGridTemplateColumns": "none",
+                "parentFlex": "0 1 auto"
+              }
+            }
+          ],
+          "methodLayers": 1,
+          "title": "Methods and Models · Research · Laws · Diamond Gate Bridge"
+        }
+      },
+      "errors": []
+    },
+    "desktop": {
+      "viewport": {
+        "name": "desktop",
+        "width": 1440,
+        "height": 1000
+      },
+      "routes": {
+        "/laws/test/admission-and-baseline/": {
+          "overflow": false,
+          "viewportWidth": 1440,
+          "documentWidth": 1440,
+          "overflowDiagnostics": [
+            {
+              "overflowAmount": 999,
+              "elementSelector": "a.skip",
+              "textOrComponentId": "Skip to content",
+              "clientWidth": 170,
+              "scrollWidth": 170,
+              "boundingRect": {
+                "left": -999,
+                "right": -828.7,
+                "width": 170.3
+              },
+              "computedMinWidth": "0px",
+              "computedMaxWidth": "none",
+              "computedWidth": "170.297px",
+              "whiteSpace": "normal",
+              "overflowWrap": "normal",
+              "wordBreak": "normal",
+              "overflowX": "visible",
+              "display": "block",
+              "boxSizing": "border-box",
+              "gridOrFlexMinSize": {
+                "elementMinWidth": "0px",
+                "parentDisplay": "block",
+                "parentMinWidth": "320px",
+                "parentGridTemplateColumns": "none",
+                "parentFlex": "0 1 auto"
+              }
+            }
+          ],
+          "methodLayers": 1,
+          "title": "Admission and Baseline · Test · Laws · Diamond Gate Bridge"
+        },
+        "/laws/test/forward-construction/": {
+          "overflow": false,
+          "viewportWidth": 1440,
+          "documentWidth": 1440,
+          "overflowDiagnostics": [
+            {
+              "overflowAmount": 999,
+              "elementSelector": "a.skip",
+              "textOrComponentId": "Skip to content",
+              "clientWidth": 170,
+              "scrollWidth": 170,
+              "boundingRect": {
+                "left": -999,
+                "right": -828.7,
+                "width": 170.3
+              },
+              "computedMinWidth": "0px",
+              "computedMaxWidth": "none",
+              "computedWidth": "170.297px",
+              "whiteSpace": "normal",
+              "overflowWrap": "normal",
+              "wordBreak": "normal",
+              "overflowX": "visible",
+              "display": "block",
+              "boxSizing": "border-box",
+              "gridOrFlexMinSize": {
+                "elementMinWidth": "0px",
+                "parentDisplay": "block",
+                "parentMinWidth": "320px",
+                "parentGridTemplateColumns": "none",
+                "parentFlex": "0 1 auto"
+              }
+            }
+          ],
+          "methodLayers": 1,
+          "title": "Forward Construction · Test · Laws · Diamond Gate Bridge"
+        },
+        "/laws/test/reverse-audit/": {
+          "overflow": false,
+          "viewportWidth": 1440,
+          "documentWidth": 1440,
+          "overflowDiagnostics": [
+            {
+              "overflowAmount": 999,
+              "elementSelector": "a.skip",
+              "textOrComponentId": "Skip to content",
+              "clientWidth": 170,
+              "scrollWidth": 170,
+              "boundingRect": {
+                "left": -999,
+                "right": -828.7,
+                "width": 170.3
+              },
+              "computedMinWidth": "0px",
+              "computedMaxWidth": "none",
+              "computedWidth": "170.297px",
+              "whiteSpace": "normal",
+              "overflowWrap": "normal",
+              "wordBreak": "normal",
+              "overflowX": "visible",
+              "display": "block",
+              "boxSizing": "border-box",
+              "gridOrFlexMinSize": {
+                "elementMinWidth": "0px",
+                "parentDisplay": "block",
+                "parentMinWidth": "320px",
+                "parentGridTemplateColumns": "none",
+                "parentFlex": "0 1 auto"
+              }
+            }
+          ],
+          "methodLayers": 1,
+          "title": "Reverse Audit · Test · Laws · Diamond Gate Bridge"
+        },
+        "/laws/test/result-and-record/": {
+          "overflow": false,
+          "viewportWidth": 1440,
+          "documentWidth": 1440,
+          "overflowDiagnostics": [
+            {
+              "overflowAmount": 999,
+              "elementSelector": "a.skip",
+              "textOrComponentId": "Skip to content",
+              "clientWidth": 170,
+              "scrollWidth": 170,
+              "boundingRect": {
+                "left": -999,
+                "right": -828.7,
+                "width": 170.3
+              },
+              "computedMinWidth": "0px",
+              "computedMaxWidth": "none",
+              "computedWidth": "170.297px",
+              "whiteSpace": "normal",
+              "overflowWrap": "normal",
+              "wordBreak": "normal",
+              "overflowX": "visible",
+              "display": "block",
+              "boxSizing": "border-box",
+              "gridOrFlexMinSize": {
+                "elementMinWidth": "0px",
+                "parentDisplay": "block",
+                "parentMinWidth": "320px",
+                "parentGridTemplateColumns": "none",
+                "parentFlex": "0 1 auto"
+              }
+            }
+          ],
+          "methodLayers": 1,
+          "title": "Result and Record · Test · Laws · Diamond Gate Bridge"
+        },
+        "/laws/research/evidence-and-sources/": {
+          "overflow": false,
+          "viewportWidth": 1440,
+          "documentWidth": 1440,
+          "overflowDiagnostics": [
+            {
+              "overflowAmount": 999,
+              "elementSelector": "a.skip",
+              "textOrComponentId": "Skip to content",
+              "clientWidth": 170,
+              "scrollWidth": 170,
+              "boundingRect": {
+                "left": -999,
+                "right": -828.7,
+                "width": 170.3
+              },
+              "computedMinWidth": "0px",
+              "computedMaxWidth": "none",
+              "computedWidth": "170.297px",
+              "whiteSpace": "normal",
+              "overflowWrap": "normal",
+              "wordBreak": "normal",
+              "overflowX": "visible",
+              "display": "block",
+              "boxSizing": "border-box",
+              "gridOrFlexMinSize": {
+                "elementMinWidth": "0px",
+                "parentDisplay": "block",
+                "parentMinWidth": "320px",
+                "parentGridTemplateColumns": "none",
+                "parentFlex": "0 1 auto"
+              }
+            }
+          ],
+          "methodLayers": 1,
+          "title": "Evidence and Sources · Research · Laws · Diamond Gate Bridge"
+        },
+        "/laws/research/methods-and-models/": {
+          "overflow": false,
+          "viewportWidth": 1440,
+          "documentWidth": 1440,
+          "overflowDiagnostics": [
+            {
+              "overflowAmount": 999,
+              "elementSelector": "a.skip",
+              "textOrComponentId": "Skip to content",
+              "clientWidth": 170,
+              "scrollWidth": 170,
+              "boundingRect": {
+                "left": -999,
+                "right": -828.7,
+                "width": 170.3
+              },
+              "computedMinWidth": "0px",
+              "computedMaxWidth": "none",
+              "computedWidth": "170.297px",
+              "whiteSpace": "normal",
+              "overflowWrap": "normal",
+              "wordBreak": "normal",
+              "overflowX": "visible",
+              "display": "block",
+              "boxSizing": "border-box",
+              "gridOrFlexMinSize": {
+                "elementMinWidth": "0px",
+                "parentDisplay": "block",
+                "parentMinWidth": "320px",
+                "parentGridTemplateColumns": "none",
+                "parentFlex": "0 1 auto"
+              }
+            }
+          ],
+          "methodLayers": 1,
+          "title": "Methods and Models · Research · Laws · Diamond Gate Bridge"
+        }
+      },
+      "errors": []
+    }
+  },
+  "javascript_disabled": {
+    "methodLayers": 1,
+    "overflow": false
+  }
+}

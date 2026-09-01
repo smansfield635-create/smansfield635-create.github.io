@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>BT4 Entitlement Preview · Nonproduction</title>
+<style>
+:root{color-scheme:dark;font-family:Inter,system-ui,sans-serif}*{box-sizing:border-box}body{margin:0;background:#07100f;color:#edf7f3;min-height:100vh}.wrap{max-width:900px;margin:auto;padding:32px 20px}.badge{display:inline-block;border:1px solid #d3b85a88;padding:6px 9px;border-radius:999px;color:#ffe7a0;font-size:12px;font-weight:800}.card{margin-top:20px;padding:20px;border:1px solid #29453f;border-radius:16px;background:#0c1715}.state{font-size:clamp(36px,8vw,76px);font-weight:900;margin:8px 0}.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}button{font:inherit;padding:10px 12px;border:1px solid #52726a;background:#10221e;color:#edf7f3;border-radius:10px;cursor:pointer}button:hover{background:#163029}code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.small{color:#b6cbc5;font-size:13px;line-height:1.5}.blocked{color:#ffb5aa}.ok{color:#aef2c8}.receipt{overflow-wrap:anywhere}</style>
+</head>
+<body><main class="wrap">
+<span class="badge">NONPRODUCTION · BT4 SERVED-STATE EXPERIMENT</span>
+<h1>Public claim entitlement preview</h1>
+<p class="small">This isolated route tests whether the displayed claim state is computed from evidence, qualification, provenance and authority rather than authored directly. It does not advance a Diamond Gate scientific or product claim.</p>
+<section class="card">
+<div class="small">Maximum permissible public state</div>
+<div id="state" class="state">—</div>
+<div id="reason" class="small"></div>
+<div class="row">
+<button data-act="corrupt">Corrupt provenance</button>
+<button data-act="reprofail">Fail reproduction</button>
+<button data-act="adverse">Introduce adverse evidence</button>
+<button data-act="repair">Repair conditions</button>
+<button data-act="fresh">Issue fresh qualification receipt</button>
+<button data-act="reset">Reset experiment</button>
+</div>
+</section>
+<section class="card"><h2>Presentation override test</h2><p class="small">The presentation requests <code>QUALIFIED</code> on every render. The engine either permits it or contracts it to the current entitlement.</p><div id="presentation"></div></section>
+<section class="card"><h2>Evidence state</h2><pre id="evidence"></pre><div class="small receipt" id="receipt"></div></section>
+</main>
+<script type="module">
+import {initialEntitlementState,serveRequestedState,applyIntervention} from './entitlement-engine.v1.mjs';
+let state=initialEntitlementState();
+const requested='QUALIFIED';
+function render(){
+  const result=serveRequestedState(requested,state);
+  document.querySelector('#state').textContent=result.served;
+  document.querySelector('#reason').textContent=result.reason;
+  document.querySelector('#presentation').innerHTML=result.blocked
+    ? '<span class="blocked">QUALIFIED presentation BLOCKED → served as '+result.served+'.</span>'
+    : '<span class="ok">QUALIFIED presentation admitted.</span>';
+  document.querySelector('#evidence').textContent=JSON.stringify(state,null,2);
+  document.querySelector('#receipt').textContent='qualification receipt epoch: '+state.receiptEpoch+' · required current epoch: '+state.epoch;
+  history.replaceState(null,'','#'+result.served.toLowerCase());
+}
+document.addEventListener('click',event=>{const action=event.target?.dataset?.act;if(!action)return;state=applyIntervention(state,action);render();});
+render();
+</script></body></html>

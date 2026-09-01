@@ -1,0 +1,20 @@
+{
+  "models": [
+    {
+      "model_id": "OUTPUT_ONLY",
+      "prediction": "MATCHED_GENERIC_OUTPUT_IMPLIES_MATCHED_STATE"
+    },
+    {
+      "model_id": "UNRESTRICTED_SUBSTITUTION",
+      "prediction": "FUNCTIONAL_SUBSTITUTE_FULLY_RESTORES_IDENTITY"
+    },
+    {
+      "model_id": "ADDITIVE_CAPACITY",
+      "prediction": "ENOUGH_UNRELATED_CAPACITY_RESTORES_MISSING_ROUTE"
+    },
+    {
+      "model_id": "MEMORYLESS_RESTORATION",
+      "prediction": "RESTORING_RELATION_IMMEDIATELY_RESTORES_ROUTE_AFTER_FRACTURE"
+    }
+  ]
+}

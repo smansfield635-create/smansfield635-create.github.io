@@ -1,362 +1,72 @@
-/*
- * Laws root Rolodex responsive presentation continuity.
- * Presentation only. Preserves the accepted Compass, routes, content custody,
- * tablet depth axis, and desktop flow while adding a single-group mobile browser.
- */
-
+/* Laws responsive continuity + runtime-owned shared-ring carousel + destination stage bootstrap. */
 (() => {
   "use strict";
-
-  const CONTRACT = "LAWS_ROOT_ROLODEX_RESPONSIVE_CONTINUITY_v4";
-  const TABLET_MEDIA = "(min-width: 781px) and (max-width: 1200px)";
-  const MOBILE_MEDIA = "(max-width: 780px)";
-
-  const ACTION_COPY = Object.freeze({
-    "laws-governing-relationships": Object.freeze({ preview: "Preview laws", route: "Enter laws and relationships" }),
-    "methods-models": Object.freeze({ preview: "Preview methods", route: "Enter methods and models" }),
-    "scientific-law": Object.freeze({ preview: "Preview scientific law", route: "Enter scientific law" }),
-    "evidence-sources": Object.freeze({ preview: "Preview evidence", route: "Enter evidence and sources" }),
-    "applied-investigations": Object.freeze({ preview: "Preview investigations", route: "Enter applied investigations" }),
-    "findings-boundaries": Object.freeze({ preview: "Preview findings", route: "Enter findings and boundaries" }),
-    "admission-baseline": Object.freeze({ preview: "Preview baseline", route: "Enter admission and baseline" }),
-    "forward-construction": Object.freeze({ preview: "Preview construction", route: "Enter forward construction" }),
-    "reverse-audit": Object.freeze({ preview: "Preview reverse audit", route: "Enter reverse audit" }),
-    "results-records": Object.freeze({ preview: "Preview results", route: "Enter results and records" })
-  });
-
-  let originSnapshot = null;
-  let tabletMedia = null;
-  let mobileMedia = null;
-  let groupStage = null;
-  let groupSwitcher = null;
-  let groupSummary = null;
-  let groupSummaryEyebrow = null;
-  let groupSummaryTitle = null;
-  let groupFields = [];
-  let groupButtons = [];
-  let activeGroupIndex = 0;
-
-  function viewportSnapshots() {
-    return Array.from(document.querySelectorAll(".laws-rolodex-viewport")).map(viewport => ({
-      viewport,
-      scrollLeft: viewport.scrollLeft
-    }));
-  }
-
-  function captureOrigin() {
-    originSnapshot = {
-      scrollX: globalThis.scrollX,
-      scrollY: globalThis.scrollY,
-      viewports: viewportSnapshots()
+  const installRolodexScrollCustody = () => {
+    const proto = globalThis.Element?.prototype;
+    if (!proto || typeof proto.scrollIntoView !== "function" || proto.__dgbLawsRolodexScrollCustody) return;
+    const nativeScrollIntoView = proto.scrollIntoView;
+    const horizontalOnlyScrollIntoView = function (...args) {
+      const card = this?.matches?.(".laws-rolodex-card") && this.closest?.("[data-laws-root-rolodex-section]") ? this : null;
+      if (!card) return nativeScrollIntoView.apply(this, args);
+      const viewport = card.closest(".laws-rolodex-viewport");
+      if (!viewport) return;
+      const viewportRect = viewport.getBoundingClientRect();
+      const cardRect = card.getBoundingClientRect();
+      const targetLeft = Math.max(0, viewport.scrollLeft + (cardRect.left + cardRect.width / 2) - (viewportRect.left + viewportRect.width / 2));
+      const options = args[0];
+      const behavior = options && typeof options === "object" && options.behavior === "smooth" ? "smooth" : "auto";
+      viewport.scrollTo({ left: targetLeft, behavior });
+      document.documentElement.dataset.lawsRolodexScrollCustody = "horizontal-only";
     };
-  }
+    Object.defineProperty(horizontalOnlyScrollIntoView, "name", { value: "scrollIntoView" });
+    Object.defineProperty(proto, "scrollIntoView", { configurable: true, writable: true, value: horizontalOnlyScrollIntoView });
+    Object.defineProperty(proto, "__dgbLawsRolodexScrollCustody", { configurable: true, value: Object.freeze({ nativeScrollIntoView, scope: "laws-root-rolodex-cards", verticalDocumentScroll: false }) });
+    document.documentElement.dataset.lawsRolodexScrollCustody = "horizontal-only";
+  };
+  installRolodexScrollCustody();
 
-  function restoreOrigin() {
-    if (!originSnapshot) return;
-    const snapshot = originSnapshot;
-    originSnapshot = null;
-    requestAnimationFrame(() => {
-      for (const entry of snapshot.viewports) entry.viewport.scrollLeft = entry.scrollLeft;
-      globalThis.scrollTo(snapshot.scrollX, snapshot.scrollY);
-    });
-  }
-
-  function installPresentationStyles() {
-    if (document.querySelector("link[data-laws-responsive-rolodex]")) return;
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = "/laws/index.rolodex-responsive.css?v=LAWS_ROOT_MOBILE_ROLODEX_20260803A";
-    link.dataset.lawsResponsiveRolodex = "true";
-    document.head.append(link);
-  }
-
-  function tabletActive() {
-    return Boolean(tabletMedia && tabletMedia.matches);
-  }
-
-  function mobileActive() {
-    return Boolean(mobileMedia && mobileMedia.matches);
-  }
-
-  function groupCopy(field, index) {
-    return {
-      eyebrow: field.querySelector(".laws-rolodex-field__heading > p")?.textContent?.trim()
-        || `Destination group ${index + 1}`,
-      title: field.querySelector(".laws-rolodex-field__heading h3")?.textContent?.trim()
-        || "Choose a destination."
-    };
-  }
-
-  function normalizeIndex(index) {
-    const count = groupFields.length;
-    return count ? ((index % count) + count) % count : 0;
-  }
-
-  function setFieldInteractive(field, interactive) {
-    if (interactive) {
-      field.removeAttribute("aria-hidden");
-      if ("inert" in field) field.inert = false;
-      else field.removeAttribute("inert");
+  const loadStyle = (href, marker) => new Promise((resolve, reject) => {
+    const existing = document.querySelector(`link[${marker}]`);
+    if (existing) {
+      if (existing.sheet) resolve();
+      else {
+        existing.addEventListener("load", resolve, { once: true });
+        existing.addEventListener("error", reject, { once: true });
+      }
       return;
     }
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = href;
+    link.setAttribute(marker, "true");
+    link.onload = resolve;
+    link.onerror = reject;
+    document.head.append(link);
+  });
 
-    field.setAttribute("aria-hidden", "true");
-    if ("inert" in field) field.inert = true;
-    else field.setAttribute("inert", "");
-  }
+  const load = (src, marker) => new Promise((resolve, reject) => {
+    if (document.querySelector(`script[${marker}]`)) { resolve(); return; }
+    const script = document.createElement("script");
+    script.src = src;
+    script.defer = true;
+    script.setAttribute(marker, "true");
+    script.onload = resolve;
+    script.onerror = reject;
+    document.head.append(script);
+  });
 
-  function updateSummary(active) {
-    if (!groupSummary || !groupSummaryEyebrow || !groupSummaryTitle) return;
-    groupSummary.setAttribute("aria-hidden", String(!active));
-    if (!active || !groupFields.length) return;
-    const copy = groupCopy(groupFields[activeGroupIndex], activeGroupIndex);
-    groupSummaryEyebrow.textContent = copy.eyebrow;
-    groupSummaryTitle.textContent = copy.title;
-  }
-
-  function publishState(source) {
-    const detail = Object.freeze({
-      contract: CONTRACT,
-      source,
-      tabletDepthActive: tabletActive(),
-      mobileRolodexActive: mobileActive(),
-      activeIndex: activeGroupIndex,
-      activeRolodexId: groupFields[activeGroupIndex]?.dataset.rolodexId || "",
-      groupCount: groupFields.length,
-      headingBandActive: Boolean((tabletActive() || mobileActive()) && groupSummary),
-      navigationAuthority: false,
-      contentAuthority: false
+  loadStyle("/laws/index.destination-carousel.css?v=LAWS_DESTINATION_CAROUSEL_PRODUCT_GEOMETRY_20260816G&visual=20260816H_PERSISTENT_VIEWER_FACING_RING", "data-laws-destination-carousel-css")
+    .then(() => load("/laws/index.mobile-background-tabs.core.js?v=LAWS_ROOT_ROLODEX_RESPONSIVE_CONTINUITY_V5_ORBIT_CUSTODY", "data-laws-responsive-core"))
+    .then(() => load("/laws/index.destination-carousel.js?v=LAWS_DESTINATION_CAROUSEL_RUNTIME_V11_DIRECTION_ONLY_ATOMIC_20260816E&ux=20260816G_RUNTIME_OWNED_RING_TRAVERSAL&visual=20260816H_PERSISTENT_VIEWER_FACING_RING", "data-laws-destination-carousel-runtime"))
+    .then(() => load("/laws/index.destination-stage.js?v=LAWS_DESTINATION_STAGE_V1_20260816A", "data-laws-destination-stage-runtime"))
+    .then(() => {
+      document.documentElement.dataset.lawsDestinationCarouselCss = "active";
+      document.documentElement.dataset.lawsDestinationCarouselVisual = "20260816H_PERSISTENT_VIEWER_FACING_RING";
+    })
+    .catch(error => {
+      document.documentElement.dataset.lawsDestinationCarouselRuntime = "load-failed";
+      document.documentElement.dataset.lawsDestinationCarouselCss = "load-failed";
+      document.documentElement.dataset.lawsDestinationStage = "load-failed";
+      console.error("Laws destination stage bootstrap failed", error);
     });
-
-    globalThis.dispatchEvent(new CustomEvent("LAWS_ROLODEX_GROUP_CHANGED", { detail }));
-    globalThis.dispatchEvent(new CustomEvent("LAWS_TABLET_ROLODEX_DEPTH_CHANGED", { detail }));
-  }
-
-  function applyGroupState(source = "selection", focusTab = false) {
-    const tablet = tabletActive();
-    const mobile = mobileActive();
-    const grouped = tablet || mobile;
-    const section = document.querySelector("[data-laws-root-rolodex-section]");
-    if (!section || !groupFields.length) return;
-
-    section.dataset.lawsTabletDepthAxis = tablet ? "active" : "inactive";
-    section.dataset.lawsMobileRolodex = mobile ? "active" : "inactive";
-    document.documentElement.dataset.lawsTabletRolodexDepthAxis = tablet ? "active" : "inactive";
-    document.documentElement.dataset.lawsMobileRolodex = mobile ? "active" : "inactive";
-
-    groupFields.forEach((field, index) => {
-      field.removeAttribute("data-laws-group-state");
-      field.removeAttribute("data-laws-mobile-state");
-
-      if (tablet) {
-        const relative = (index - activeGroupIndex + groupFields.length) % groupFields.length;
-        const state = relative === 0 ? "active" : relative === 1 ? "next" : "previous";
-        field.dataset.lawsGroupState = state;
-        setFieldInteractive(field, state === "active");
-      } else if (mobile) {
-        const active = index === activeGroupIndex;
-        field.dataset.lawsMobileState = active ? "active" : "inactive";
-        setFieldInteractive(field, active);
-      } else {
-        setFieldInteractive(field, true);
-      }
-    });
-
-    groupButtons.forEach((button, index) => {
-      const selected = grouped && index === activeGroupIndex;
-      button.setAttribute("aria-selected", String(selected));
-      button.tabIndex = selected || !grouped ? 0 : -1;
-    });
-
-    updateSummary(grouped);
-    if (focusTab && grouped) groupButtons[activeGroupIndex]?.focus({ preventScroll: true });
-    publishState(source);
-  }
-
-  function activateGroup(index, source = "control", focusTab = false) {
-    if (!groupFields.length) return;
-    activeGroupIndex = normalizeIndex(index);
-    applyGroupState(source, focusTab);
-  }
-
-  function buildSwitcher(section) {
-    if (groupSwitcher) return;
-
-    groupSwitcher = document.createElement("div");
-    groupSwitcher.className = "laws-rolodex-group-switcher";
-    groupSwitcher.setAttribute("role", "tablist");
-    groupSwitcher.setAttribute("aria-label", "Choose a Laws destination group");
-
-    groupButtons = groupFields.map((field, index) => {
-      field.id ||= `laws-rolodex-group-${field.dataset.rolodexId || index + 1}`;
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "laws-rolodex-group-tab";
-      button.id = `laws-rolodex-group-tab-${index + 1}`;
-      button.setAttribute("role", "tab");
-      button.setAttribute("aria-controls", field.id);
-      button.textContent = groupCopy(field, index).eyebrow;
-
-      button.addEventListener("click", () => activateGroup(index, "tab-click"));
-      button.addEventListener("keydown", event => {
-        if (event.key === "ArrowRight" || event.key === "ArrowDown") {
-          event.preventDefault();
-          activateGroup(activeGroupIndex + 1, "tab-arrow-next", true);
-        } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
-          event.preventDefault();
-          activateGroup(activeGroupIndex - 1, "tab-arrow-previous", true);
-        } else if (event.key === "Home") {
-          event.preventDefault();
-          activateGroup(0, "tab-home", true);
-        } else if (event.key === "End") {
-          event.preventDefault();
-          activateGroup(groupFields.length - 1, "tab-end", true);
-        }
-      });
-
-      groupSwitcher.append(button);
-      return button;
-    });
-
-    section.insertBefore(groupSwitcher, groupStage);
-  }
-
-  function buildSummary(section) {
-    if (groupSummary) return;
-
-    groupSummary = document.createElement("header");
-    groupSummary.className = "laws-rolodex-group-summary";
-    groupSummary.dataset.lawsRolodexGroupSummary = "true";
-    groupSummary.setAttribute("aria-live", "polite");
-    groupSummary.setAttribute("aria-atomic", "true");
-    groupSummary.setAttribute("aria-hidden", "true");
-
-    groupSummaryEyebrow = document.createElement("p");
-    groupSummaryEyebrow.className = "laws-rolodex-group-summary__eyebrow";
-    groupSummaryTitle = document.createElement("h3");
-    groupSummaryTitle.className = "laws-rolodex-group-summary__title";
-
-    groupSummary.append(groupSummaryEyebrow, groupSummaryTitle);
-    section.insertBefore(groupSummary, groupStage);
-  }
-
-  function mountGroupedRolodex() {
-    const section = document.querySelector("[data-laws-root-rolodex-section]");
-    if (!section) return false;
-
-    const existingStage = section.querySelector(":scope > .laws-rolodex-group-stage, :scope > .laws-rolodex-depth-stage");
-    if (existingStage) {
-      groupStage = existingStage;
-      groupStage.className = "laws-rolodex-group-stage";
-      groupFields = Array.from(groupStage.querySelectorAll(":scope > .laws-rolodex-field"));
-    } else {
-      const fields = Array.from(section.querySelectorAll(":scope > .laws-rolodex-field"));
-      if (fields.length !== 3) return false;
-      groupStage = document.createElement("div");
-      groupStage.className = "laws-rolodex-group-stage";
-      groupStage.dataset.lawsRolodexGroupStage = "true";
-      section.insertBefore(groupStage, fields[0]);
-      fields.forEach(field => groupStage.append(field));
-      groupFields = fields;
-    }
-
-    buildSwitcher(section);
-    buildSummary(section);
-
-    if (!tabletMedia && typeof matchMedia === "function") {
-      tabletMedia = matchMedia(TABLET_MEDIA);
-      const onTabletChange = () => applyGroupState("tablet-viewport-change");
-      if (typeof tabletMedia.addEventListener === "function") tabletMedia.addEventListener("change", onTabletChange);
-      else if (typeof tabletMedia.addListener === "function") tabletMedia.addListener(onTabletChange);
-    }
-
-    if (!mobileMedia && typeof matchMedia === "function") {
-      mobileMedia = matchMedia(MOBILE_MEDIA);
-      const onMobileChange = () => applyGroupState("mobile-viewport-change");
-      if (typeof mobileMedia.addEventListener === "function") mobileMedia.addEventListener("change", onMobileChange);
-      else if (typeof mobileMedia.addListener === "function") mobileMedia.addListener(onMobileChange);
-    }
-
-    applyGroupState("mount");
-    return true;
-  }
-
-  function applyActionCopy() {
-    document.querySelectorAll(".laws-rolodex-card[data-destination-id]").forEach(card => {
-      const id = card.dataset.destinationId;
-      const copy = ACTION_COPY[id];
-      const button = card.querySelector(".laws-rolodex-enter");
-      if (!copy || !button) return;
-      button.textContent = copy.preview;
-      button.setAttribute("aria-label", `${copy.preview}: ${card.querySelector("h4")?.textContent?.trim() || id}`);
-    });
-  }
-
-  function applyExhibitRouteCopy(destinationId) {
-    const copy = ACTION_COPY[destinationId];
-    if (!copy) return;
-    requestAnimationFrame(() => {
-      const route = document.querySelector(".laws-exhibit-route");
-      if (route) route.textContent = copy.route;
-    });
-  }
-
-  function placeRolodex() {
-    const section = document.querySelector("[data-laws-root-rolodex-section]");
-    if (!section) return false;
-
-    installPresentationStyles();
-
-    const useStage = document.querySelector(".laws-use-stage[data-laws-experience-stage='use']");
-    if (useStage) {
-      useStage.replaceWith(section);
-    } else {
-      const hero = document.querySelector("[data-laws-experience-stage='hero']");
-      if (hero?.parentElement && section.previousElementSibling !== hero) hero.after(section);
-    }
-
-    section.dataset.lawsExperienceVisible = "true";
-    document.querySelector(".laws-accessibility-note")?.remove();
-
-    const footerDescription = document.querySelector(".laws-footer > div > span");
-    if (footerDescription) footerDescription.textContent = "Choose a direction in the Compass or continue to a destination.";
-
-    mountGroupedRolodex();
-    applyActionCopy();
-
-    document.documentElement.dataset.lawsRolodexPlacement = "full-width-root-flow";
-    globalThis.dispatchEvent(new CustomEvent("LAWS_ROLODEX_PLACEMENT_READY", {
-      detail: Object.freeze({
-        contract: CONTRACT,
-        fullWidthRootFlow: true,
-        redundantUseStageVisible: false,
-        runtimeCustodyNoteVisible: false,
-        viewportContained: true,
-        tabletDepthAxisAvailable: Boolean(groupStage && groupFields.length === 3),
-        tabletDepthAxisActive: tabletActive(),
-        mobileGroupedRolodexAvailable: Boolean(groupStage && groupFields.length === 3),
-        mobileGroupedRolodexActive: mobileActive(),
-        headingBandAvailable: Boolean(groupSummary),
-        navigationAuthority: false,
-        contentAuthority: false
-      })
-    }));
-    return true;
-  }
-
-  function initialize() {
-    placeRolodex();
-    globalThis.addEventListener("LAWS_ROOT_ROLODEX_READY", placeRolodex);
-    globalThis.addEventListener("LAWS_ROLODEX_EXHIBIT_OPENED", event => {
-      captureOrigin();
-      applyExhibitRouteCopy(event.detail?.destinationId || "");
-    });
-    globalThis.addEventListener("LAWS_ROLODEX_EXHIBIT_CLOSED", restoreOrigin);
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initialize, { once: true });
-  } else {
-    initialize();
-  }
 })();

@@ -1,0 +1,173 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R1_REPOSITORY_PROFILING_PACKAGE_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R1_REPOSITORY_PROFILING_PACKAGE_PASS_PHYSICAL_SAMSUNG_PENDING",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "pr": 209,
+  "prBaseHead": "9c5e975eee14c38b667660dd328751d4e2a7e2c3",
+  "branch": "agent/h-earth-run8e-r1-physical-profiling-001",
+  "validatedExecutableHead": "ef929824ce3834a0588737d48389d925a7469fd9",
+  "verifiedOn": "2026-07-27",
+  "workflowEvidence": {
+    "runId": 30229783109,
+    "jobId": 89866323225,
+    "artifactId": 8639716218,
+    "artifactDigest": "sha256:7bcce55d8da2320bd1d5395bcab9b7cbb133b0e9b35729e4271796c71f4d7989",
+    "artifactName": "h-earth-run8e-r1-profiling-evidence",
+    "workflowConclusion": "success"
+  },
+  "profilingEnvironmentCorrection": {
+    "priorFailureRunId": 30228210984,
+    "priorFailureClass": "PLAYWRIGHT_CONTROL_ACTION_TIMEOUT_DURING_LONG_SYNCHRONOUS_PROBE_START",
+    "priorFailureWasWebGLRejection": false,
+    "probeStartCorrection": "SCHEDULE_BUTTON_ACTIVATION_AFTER_PLAYWRIGHT_EVALUATION_RETURNS",
+    "obsoleteChromiumArgumentsRemoved": [
+      "--use-gl=swiftshader"
+    ],
+    "currentChromiumArguments": [
+      "--use-gl=angle",
+      "--use-angle=swiftshader-webgl",
+      "--enable-unsafe-swiftshader",
+      "--enable-webgl",
+      "--ignore-gpu-blocklist"
+    ],
+    "ciWebGLUnavailableIsArchitectureRejection": false,
+    "completeFailureJsonPreserved": true,
+    "workflowRepositoryWritebackEnabled": false
+  },
+  "scope": {
+    "fixedCameraStateCount": 5,
+    "cameraStateIds": [
+      "COASTAL_ENTRY",
+      "INLAND_HILL",
+      "MOUNTAIN_FACING",
+      "OVERHEAD_OBLIQUE",
+      "SHORELINE_RETURN"
+    ],
+    "admittedPrimitiveCount": 35,
+    "candidateAResultCount": 5,
+    "candidateBResultCount": 5,
+    "candidateCResultCount": 5,
+    "rendererReplacementPerformed": false,
+    "publicRouteMutated": false,
+    "cameraAuthorityMutated": false,
+    "navigationAuthorityMutated": false,
+    "terrainOrEnvironmentAuthorityMutated": false
+  },
+  "staticPipelineProfileMilliseconds": {
+    "worldPackageConstruction": 2733.5,
+    "westAdmission": 2662.7,
+    "packet002Transfer": 0.8
+  },
+  "candidateA": {
+    "candidateId": "CANDIDATE_A_INSTRUMENTED_CURRENT_MAIN_THREAD_CPU_RENDERER",
+    "publicSuitabilityAlreadyFailedPhysicalEvidence": true,
+    "fullWorldFrameConstructionRangeMilliseconds": {
+      "minimum": 7380.7,
+      "maximum": 8272.6
+    },
+    "materialAndLightProjectionRangeMilliseconds": {
+      "minimum": 2817.8,
+      "maximum": 3401.4
+    },
+    "cameraTransformAndClippingRangeMilliseconds": {
+      "minimum": 77.4,
+      "maximum": 124.6
+    },
+    "baseRasterizationRangeMilliseconds": {
+      "minimum": 10,
+      "maximum": 18.4
+    },
+    "fullRun8ERasterRangeMilliseconds": {
+      "minimum": 29.7,
+      "maximum": 44.6
+    },
+    "secondDepthTraversalCompositeRangeMilliseconds": {
+      "minimum": 18,
+      "maximum": 26.2
+    },
+    "putImageDataRangeMilliseconds": {
+      "minimum": 0.1,
+      "maximum": 0.2
+    },
+    "projectedTriangleCountRange": {
+      "minimum": 4499,
+      "maximum": 12702
+    },
+    "disposition": "DETERMINISTIC_REFERENCE_ONLY"
+  },
+  "candidateB": {
+    "candidateId": "CANDIDATE_B_CACHED_WORLD_WORKER_CPU_PROBE",
+    "available": true,
+    "submittedTriangleCountPerState": 49040,
+    "durationRangeMilliseconds": {
+      "minimum": 11.7,
+      "maximum": 34.7
+    },
+    "offscreenCanvas2D": true,
+    "disposition": "RESPONSIVE_FALLBACK_REFERENCE_ACCELERATION_OR_DIAGNOSTIC_OPTION"
+  },
+  "candidateC": {
+    "candidateId": "CANDIDATE_C_CACHED_WORLD_WEBGL_2_GPU_PROBE",
+    "available": true,
+    "ciClassification": "PASS",
+    "indexCount": 147120,
+    "drawCallsPerState": 1,
+    "ciDurationRangeMilliseconds": {
+      "minimum": 0,
+      "maximum": 0.2
+    },
+    "ciCapability": {
+      "contextCreated": true,
+      "contextLost": false,
+      "contextLostEventObserved": false,
+      "unmaskedVendor": "Google Inc. (Google)",
+      "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+    },
+    "ciPerformanceAuthority": false,
+    "physicalSamsungExecutionRequired": true,
+    "disposition": "PRIMARY_LIVE_RENDERER_CANDIDATE_WEBGL_2"
+  },
+  "samsungEmulationSupportingEvidence": {
+    "physicalSamsungExecution": false,
+    "pointerMoveCount": 40,
+    "navigationIntentCount": 18,
+    "previewTransformMutationCount": 22,
+    "committedSuccessorRenderCount": 2,
+    "lastSuccessorRenderDurationMilliseconds": 7989.8,
+    "longTaskCount": 15,
+    "longestMainThreadTaskMilliseconds": 16131,
+    "maximumGestureBacklogDepth": 1,
+    "droppedOrSupersededInputCount": 0,
+    "previewStillActiveAtCapture": true,
+    "renderStillActiveAtCapture": true,
+    "finalNavigationSequence": 19,
+    "finalRenderedNavigationStateId": "H_EARTH_NAVIGATION_STATE_0012",
+    "finalLawfulNavigationStateId": "H_EARTH_NAVIGATION_STATE_0019",
+    "pointerToNavigationLatencySamplesCaptured": false,
+    "releaseToSettledFrameLatencySamplesCaptured": false,
+    "truthfulContinuousRealtimeInteractionEstablished": false
+  },
+  "architectureDisposition": {
+    "deterministicCpuReferenceRenderer": "PRESERVE_REFERENCE_ONLY",
+    "realtimeLiveRendererPrimaryCandidate": "WEBGL_2",
+    "workerCpuDisposition": "FALLBACK_REFERENCE_ACCELERATION_OR_DIAGNOSTIC_OPTION",
+    "sharedWorldAuthorityRequired": true,
+    "sharedCameraAndNavigationAuthorityRequired": true,
+    "sharedMaterialAndLightAuthorityRequired": true,
+    "geometricAndAuthorityCorrespondenceRequired": true,
+    "pixelIdentityRequired": false
+  },
+  "physicalEvidenceBoundary": {
+    "repositoryProfilingPackage": "PASS",
+    "ciWebGL2FunctionalProbe": "PASS_SOFTWARE_RENDERER_NON_PERFORMANCE_AUTHORITY",
+    "samsungEmulation": "SUPPORTING_ONLY",
+    "physicalSamsungProfilerRoute": "READY_FOR_DEPLOYMENT",
+    "physicalSamsungReceipt": "NOT_YET_CAPTURED",
+    "run8ER1PassClosed": false,
+    "run8EPassClosed": false
+  },
+  "issues": []
+}

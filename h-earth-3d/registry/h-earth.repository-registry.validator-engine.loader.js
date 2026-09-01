@@ -1,126 +1,171 @@
-/** Target 4B-2 · Contract, registry, and MC5 exact-head preflight loader. */
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import registryFacade, {
-  H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_SCOPE_NODE as EXACT_HEAD_NODE,
-  H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_EVIDENCE as EXACT_HEAD_EVIDENCE
-} from './accepted-amendments/h-earth.repository-registry.c2-r1-material-only-binding-exact-head.js';
-import { deepFreeze, H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY } from './h-earth.repository-registry.validator-engine.identity.js';
+/**
+ * H-Earth repository registry validator dependency loader v22 successor.
+ * Preserves inherited identity and adds exact Audralia final-cloud compositor
+ * path recognition after the existing diagnostic recognition overlay.
+ */
+import {
+  loadHEarthRepositoryRegistryValidatorDependencies as loadBaseDependencies,
+  runHEarthC2R1MC5AutomaticRegistryPreflight
+} from './h-earth.repository-registry.validator-engine.loader.pre-ow03-experience-anchor-evidence-path-recognition.js';
+import { verifyHEarthOW03ExperienceAnchorEvidencePathRecognition } from './accepted-amendments/h-earth.repository-registry.ow03-experience-anchor-evidence-path-recognition.js';
+import { verifyHEarthOW04ExactPathRecognition } from './accepted-amendments/h-earth.repository-registry.ow04-exact-path-recognition.js';
+import { verifyHEarthOW04ParentPromotionReceiptRecognition } from './accepted-amendments/h-earth.repository-registry.ow04-parent-promotion-receipt-recognition.js';
+import { verifyHEarthC3CoastalReconstructionAuthorityRecognition } from './accepted-amendments/h-earth.repository-registry.c3-coastal-reconstruction-authority-recognition.js';
+import { verifyHEarthC3D1CoastalPlacementRecognition } from './accepted-amendments/h-earth.repository-registry.c3d1-coastal-placement-recognition.js';
+import { verifyHEarthAudraliaPC1GeographyPathRecognition } from './accepted-amendments/h-earth.repository-registry.audralia-pc1-geography-path-recognition.js';
+import { verifyHEarthAudraliaDiagnosticPathRecognition } from './accepted-amendments/h-earth.repository-registry.audralia-diagnostic-path-recognition.js';
+import registryFacade, { verifyHEarthAudraliaFinalCloudCompositorPathRecognition } from './accepted-amendments/h-earth.repository-registry.audralia-final-cloud-compositor-path-recognition.js';
+import { deepFreeze } from './h-earth.repository-registry.validator-engine.identity.js';
 
-const directory=path.dirname(fileURLToPath(import.meta.url));
-const readJson=fileName=>JSON.parse(fs.readFileSync(path.join(directory,fileName),'utf8'));
-const FILES=Object.freeze({consolidated:'h-earth.repository-registry.validator-contract.json',input:'h-earth.repository-registry.validator-contract.input.json',receipt:'h-earth.repository-registry.validator-contract.receipt.json',dispositions:'h-earth.repository-registry.validator-contract.dispositions.json',failures:'h-earth.repository-registry.validator-contract.failures.json',criticality:'h-earth.repository-registry.validator-contract.criticality.json',algorithm:'h-earth.repository-registry.validator-contract.algorithm.json',instruction:'h-earth.repository-registry.tool-instruction.json'});
-const EXPECTED_NODE_ID='H_EARTH_C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR_CANDIDATE_PACKAGE';
-const EXPECTED_BRANCH='agent/h-earth-c2-r1-material-only-binding-implementation-001';
-const EXPECTED_HEAD='44019e27c3d52c59cc59bba7c833b6317d014273';
-const EXPECTED_PACKAGE='H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_773DAE4E';
-const EXPECTED_CONTROL_PREFIX='/h-earth-3d/control-plane/coastal-morphology/c2-r1/';
-const EXPECTED_COASTAL_PATHS=Object.freeze([
-  '/h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js',
-  '/h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js',
-  '/h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js',
-  '/h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js',
-  '/h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js',
-  '/h-earth-3d/environment/h-earth.coastal-swash-foam-wetness.c2-r1.js'
-]);
-const EXPECTED_RUNTIME_PATHS=Object.freeze([
-  '/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js',
-  '/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js'
-]);
-const EXPECTED_REGISTRY_PATHS=Object.freeze([EXPECTED_CONTROL_PREFIX,...EXPECTED_COASTAL_PATHS,...EXPECTED_RUNTIME_PATHS]);
-export const H_EARTH_C2_R1_MC5_PR_484_CHANGED_PATHS=Object.freeze([
-  '/.github/workflows/h-earth-c2-r1-complete-world-integration.yml',
-  '/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json',
-  '/h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json',
-  '/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js',
-  '/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js',
-  '/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json',
-  '/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs',
-  ...EXPECTED_RUNTIME_PATHS
-]);
-const EXPECTED_OUTSIDE_PATH='/.github/workflows/h-earth-c2-r1-complete-world-integration.yml';
-const normalize=value=>{if(typeof value!=='string')return null;let result=value.trim().replaceAll('\\','/');if(result.startsWith('./'))result=result.slice(2);if(!result.startsWith('/'))result=`/${result}`;result=result.replace(/\/{2,}/g,'/');return result.length>1&&result.endsWith('/')?result.slice(0,-1):result};
-const sortedUnique=values=>[...new Set(values.map(normalize).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
-const sameSet=(left,right)=>JSON.stringify(sortedUnique(left))===JSON.stringify(sortedUnique(right));
+export function loadHEarthRepositoryRegistryValidatorDependencies() {
+  const base = loadBaseDependencies();
+  const ow03Verification = verifyHEarthOW03ExperienceAnchorEvidencePathRecognition();
+  const ow04Verification = verifyHEarthOW04ExactPathRecognition();
+  const parentPromotionVerification = verifyHEarthOW04ParentPromotionReceiptRecognition();
+  const c3Verification = verifyHEarthC3CoastalReconstructionAuthorityRecognition();
+  const c3d1Verification = verifyHEarthC3D1CoastalPlacementRecognition();
+  const pc1Verification = verifyHEarthAudraliaPC1GeographyPathRecognition();
+  const diagnosticVerification = verifyHEarthAudraliaDiagnosticPathRecognition();
+  const finalCloudCompositorVerification = verifyHEarthAudraliaFinalCloudCompositorPathRecognition();
+  const registryInstance = registryFacade.getHEarthRepositoryRegistryInstance();
+  const discovery = registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
 
-export function loadHEarthRepositoryRegistryValidatorDependencies(){
-  const contracts={consolidated:readJson(FILES.consolidated),input:readJson(FILES.input),receipt:readJson(FILES.receipt),dispositions:readJson(FILES.dispositions),failures:readJson(FILES.failures),criticality:readJson(FILES.criticality),algorithm:readJson(FILES.algorithm),instruction:readJson(FILES.instruction)};
-  const registryInstance=registryFacade.getHEarthRepositoryRegistryInstance();
-  const discovery=registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
-  const expected=H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY;
-  const identityChecks={contractId:contracts.consolidated.contractId===expected.contract.contractId,contractVersion:contracts.consolidated.contractVersion===expected.contract.contractVersion,registryId:registryInstance.registryId===expected.registry.registryId,registryVersion:registryInstance.registryVersion===expected.registry.registryVersion,schemaId:registryInstance.schemaId===expected.registry.schemaId,schemaVersion:registryInstance.schemaVersion===expected.registry.schemaVersion,candidateGitBlobSha:discovery.candidateGitBlobSha===expected.registry.candidateGitBlobSha,instructionId:contracts.instruction.instructionId===expected.instruction.instructionId,instructionVersion:contracts.instruction.instructionVersion===expected.instruction.instructionVersion,candidateNotAccepted:registryInstance.accepted===false,candidateNotCanonical:discovery.canonical===false};
-  const currentOccurrences=EXACT_HEAD_NODE.repositoryOccurrences??[];
-  const runtimeOccurrences=currentOccurrences.filter(record=>EXPECTED_RUNTIME_PATHS.includes(record.path));
-  const hEarthChangedPaths=H_EARTH_C2_R1_MC5_PR_484_CHANGED_PATHS.filter(repositoryPath=>repositoryPath!==EXPECTED_OUTSIDE_PATH);
-  const changedPathResolutions=hEarthChangedPaths.map(repositoryPath=>({repositoryPath,resolution:registryFacade.resolveHEarthRepositoryRegistryPath(repositoryPath)}));
-  const exactHeadChecks={
-    nodeIdentity:EXACT_HEAD_NODE.nodeId===EXPECTED_NODE_ID,
-    lifecycle:EXACT_HEAD_NODE.lifecycleStatus==='CONTROL_PLANE_EXACT_HEAD_REGISTERED',
-    evidenceClass:EXACT_HEAD_EVIDENCE.evidenceClass==='CONTROL_PLANE_EXACT_BRANCH_HEAD_AND_COMPLETE_C2_R1_OCCURRENCE_ADMISSION',
-    prNumber:EXACT_HEAD_EVIDENCE.prNumber===484,
-    branch:EXACT_HEAD_EVIDENCE.candidateBranch===EXPECTED_BRANCH,
-    head:EXACT_HEAD_EVIDENCE.candidateHead===EXPECTED_HEAD,
-    packageIdentity:EXACT_HEAD_EVIDENCE.packageIdentity===EXPECTED_PACKAGE,
-    registryPathSet:sameSet(EXACT_HEAD_NODE.repositoryPaths,EXPECTED_REGISTRY_PATHS),
-    controlPrefixPreserved:EXACT_HEAD_NODE.repositoryPaths.includes(EXPECTED_CONTROL_PREFIX),
-    sixCoastalPathsPreserved:EXPECTED_COASTAL_PATHS.every(repositoryPath=>EXACT_HEAD_NODE.repositoryPaths.includes(repositoryPath)),
-    twoRuntimePathsRegistered:EXPECTED_RUNTIME_PATHS.every(repositoryPath=>EXACT_HEAD_NODE.repositoryPaths.includes(repositoryPath)),
-    allCurrentOccurrencesPresent:currentOccurrences.length===9,
-    allCurrentOccurrencesExact:currentOccurrences.every(record=>record.refName===EXPECTED_BRANCH&&record.commitSha===EXPECTED_HEAD),
-    runtimeBlobIdentities:runtimeOccurrences.length===2&&runtimeOccurrences.every(record=>typeof record.gitBlobSha==='string'&&/^[0-9a-f]{40}$/.test(record.gitBlobSha)),
-    allEightHEarthChangedPathsResolved:changedPathResolutions.every(({resolution})=>resolution.resolved===true),
-    allEightHEarthChangedPathsResolveToC2Node:changedPathResolutions.every(({resolution})=>(resolution.nodes??[]).some(node=>node.nodeId===EXPECTED_NODE_ID)),
-    allEightHEarthChangedPathOccurrencesExact:changedPathResolutions.every(({resolution})=>(resolution.occurrences??[]).some(record=>record.refName===EXPECTED_BRANCH&&record.commitSha===EXPECTED_HEAD)),
-    productMutationProhibited:EXACT_HEAD_NODE.authorityLimitations.includes('NO_PRODUCT_MUTATION'),
-    prMutationProhibited:EXACT_HEAD_NODE.authorityLimitations.includes('NO_PR_484_MUTATION'),
-    candidateMutationProhibited:EXACT_HEAD_NODE.authorityLimitations.includes('NO_CANDIDATE_MUTATION'),
-    materializationRerunProhibited:EXACT_HEAD_NODE.authorityLimitations.includes('NO_MATERIALIZATION_RERUN'),
-    mergeProhibited:EXACT_HEAD_NODE.authorityLimitations.includes('NO_MERGE_PROMOTION_PUBLICATION_OR_USER_REVIEW')
+  const successorChecks = {
+    predecessorIdentityStatePreserved: base.identityVerified === false,
+    inheritedAwardsPublicFaceStatePreserved: base.identityChecks?.awardsPublicFacePathRecognition === false,
+    ow03EvidencePathRecognitionEligible: ow03Verification.eligible === true,
+    ow03ExactFourPathsResolved: ow03Verification.checks.exactTargetPathCount === true && ow03Verification.checks.allTargetPathsResolve === true,
+    ow03AllFourAbsentAtGoverningMain: ow03Verification.checks.allOccurrencesAbsentAtGoverningMain === true,
+    ow03AuditOnlyNoAuthorityLeak: ow03Verification.checks.auditOnly === true && ow03Verification.checks.pathResolutionOnly === true && ow03Verification.checks.noProductAuthority === true && ow03Verification.checks.noEvidenceMutationAuthority === true && ow03Verification.checks.noAnchorWaiverAuthority === true && ow03Verification.checks.noCanonicalAuthority === true,
+    ow04ExactPathRecognitionEligible: ow04Verification.eligible === true,
+    ow04ExactFourPathsResolved: ow04Verification.checks.exactTargetPathCount === true && ow04Verification.checks.allTargetPathsResolve === true,
+    ow04CandidateOccurrencesPresent: ow04Verification.checks.allCandidateOccurrencesPresent === true,
+    ow04AuditOnlyNoAuthorityLeak: ow04Verification.checks.auditOnly === true && ow04Verification.checks.pathResolutionOnly === true && ow04Verification.checks.noProductAuthority === true && ow04Verification.checks.noRendererAuthority === true && ow04Verification.checks.noAnchorWaiverAuthority === true,
+    parentPromotionReceiptRecognitionEligible: parentPromotionVerification.eligible === true,
+    parentPromotionReceiptExactPathResolved: parentPromotionVerification.checks.exactTargetPathCount === true && parentPromotionVerification.checks.targetPathResolves === true,
+    parentPromotionAuditOnlyNoAuthorityLeak: parentPromotionVerification.checks.auditOnly === true && parentPromotionVerification.checks.pathResolutionOnly === true && parentPromotionVerification.checks.noProductAuthority === true && parentPromotionVerification.checks.noReceiptMutationAuthority === true && parentPromotionVerification.checks.noAnchorWaiverAuthority === true,
+    c3CoastalReconstructionAuthorityRecognitionEligible: c3Verification.eligible === true,
+    c3CoastalReconstructionAuthorityExactPathResolved: c3Verification.checks.exactTargetPathCount === true && c3Verification.checks.targetPathResolves === true,
+    c3CoastalReconstructionAuthorityAuditOnlyNoAuthorityLeak: c3Verification.checks.auditOnly === true && c3Verification.checks.pathResolutionOnly === true && c3Verification.checks.noProductAuthority === true && c3Verification.checks.noInlandAuthority === true && c3Verification.checks.noAnchorWaiverAuthority === true,
+    c3d1CoastalPlacementRecognitionEligible: c3d1Verification.eligible === true,
+    c3d1CoastalPlacementExactPathResolved: c3d1Verification.checks.exactTargetPathCount === true && c3d1Verification.checks.targetPathResolves === true,
+    c3d1CoastalPlacementAuditOnlyNoAuthorityLeak: c3d1Verification.checks.auditOnly === true && c3d1Verification.checks.pathResolutionOnly === true && c3d1Verification.checks.noProductAuthority === true && c3d1Verification.checks.noInlandAuthority === true && c3d1Verification.checks.noPublicationAuthority === true && c3d1Verification.checks.noAnchorWaiverAuthority === true,
+    audraliaPC1GeographyPathRecognitionEligible: pc1Verification.eligible === true,
+    audraliaPC1ExactTwoPathsResolved: pc1Verification.checks.exactTargetPathCount === true && pc1Verification.checks.allTargetPathsResolve === true,
+    audraliaPC1CandidateOccurrencesPresent: pc1Verification.checks.candidateOccurrencesPresent === true,
+    audraliaPC1AuditOnlyNoAuthorityLeak: pc1Verification.checks.auditOnly === true && pc1Verification.checks.pathResolutionOnly === true && pc1Verification.checks.noProductAuthority === true && pc1Verification.checks.noGeographyAuthority === true && pc1Verification.checks.noWeatherCloudAuthority === true && pc1Verification.checks.noPublicationAuthority === true && pc1Verification.checks.noAnchorWaiverAuthority === true,
+    audraliaDiagnosticPathRecognitionEligible: diagnosticVerification.eligible === true,
+    audraliaDiagnosticExactThreePathsResolved: diagnosticVerification.checks.exactTargetPathCount === true && diagnosticVerification.checks.allTargetPathsResolve === true,
+    audraliaDiagnosticGoverningOccurrencesPresent: diagnosticVerification.checks.governingOccurrencesPresent === true,
+    audraliaDiagnosticExactPathOnly: diagnosticVerification.checks.exactPathOnly === true && diagnosticVerification.checks.noPrefixRegistration === true,
+    audraliaDiagnosticAuditOnlyNoAuthorityLeak: diagnosticVerification.checks.auditOnly === true && diagnosticVerification.checks.pathResolutionOnly === true && diagnosticVerification.checks.noProductRuntimeAuthority === true && diagnosticVerification.checks.noRendererAuthority === true && diagnosticVerification.checks.noDiagnosticByteAuthority === true && diagnosticVerification.checks.noPrefixWideAuthority === true && diagnosticVerification.checks.noPublicationAuthority === true && diagnosticVerification.checks.noAnchorWaiverAuthority === true,
+    audraliaFinalCloudCompositorPathRecognitionEligible: finalCloudCompositorVerification.eligible === true,
+    audraliaFinalCloudCompositorExactPathResolved: finalCloudCompositorVerification.checks.exactTargetPathCount === true && finalCloudCompositorVerification.checks.targetPathResolves === true,
+    audraliaFinalCloudCompositorGoverningOccurrencePresent: finalCloudCompositorVerification.checks.governingOccurrencePresent === true,
+    audraliaFinalCloudCompositorExactPathOnly: finalCloudCompositorVerification.checks.exactPathOnly === true && finalCloudCompositorVerification.checks.noPrefixRegistration === true,
+    audraliaFinalCloudCompositorAuditOnlyNoAuthorityLeak:
+      finalCloudCompositorVerification.checks.auditOnly === true &&
+      finalCloudCompositorVerification.checks.pathResolutionOnly === true &&
+      finalCloudCompositorVerification.checks.noProductRuntimeAuthority === true &&
+      finalCloudCompositorVerification.checks.noCloudEnvelopeAuthority === true &&
+      finalCloudCompositorVerification.checks.noRendererAuthority === true &&
+      finalCloudCompositorVerification.checks.noPrefixWideAuthority === true &&
+      finalCloudCompositorVerification.checks.openGapPreserved === true &&
+      finalCloudCompositorVerification.checks.noAnchorWaiverAuthority === true &&
+      finalCloudCompositorVerification.checks.noPublicationAuthority === true,
+    registryIdPreserved: registryInstance.registryId === base.registryInstance.registryId,
+    registryVersionPreserved: registryInstance.registryVersion === base.registryInstance.registryVersion,
+    schemaIdPreserved: registryInstance.schemaId === base.registryInstance.schemaId,
+    schemaVersionPreserved: registryInstance.schemaVersion === base.registryInstance.schemaVersion,
+    candidateGitBlobIdentityPreserved: discovery.candidateGitBlobSha === base.discovery.candidateGitBlobSha,
+    candidateAcceptanceStatusPreserved: registryInstance.accepted === base.registryInstance.accepted,
+    candidateCanonicalStatusPreserved: discovery.canonical === base.discovery.canonical
   };
+
+  const successorIntegrityVerified = Object.values(successorChecks).every(Boolean);
+
   return deepFreeze({
-    loaderId:'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v3',
-    files:FILES,
-    contracts,
+    ...base,
+    loaderId: 'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v22_AUDRALIA_FINAL_CLOUD_COMPOSITOR_EXACT_PATH_RECOGNITION_SUCCESSOR',
     registryFacade,
     registryInstance,
     discovery,
-    identityChecks,
-    identityVerified:Object.values(identityChecks).every(Boolean),
-    exactHeadNode:EXACT_HEAD_NODE,
-    exactHeadEvidence:EXACT_HEAD_EVIDENCE,
-    exactHeadChecks,
-    exactHeadRegistrationVerified:Object.values(exactHeadChecks).every(Boolean),
-    mc5ChangedPaths:H_EARTH_C2_R1_MC5_PR_484_CHANGED_PATHS,
-    boundary:{readOnly:true,networkDependencyRequired:false,mutationAuthorityCreated:false,workflowEnforcementInstalled:true,productMutationAuthorityCreated:false,pr484MutationAuthorityCreated:false,candidateMutationAuthorityCreated:false,materializationAuthorityCreated:false,mergeAuthorityCreated:false},
-    stoppingCondition:{contractAndRegistryLoaderComplete:true,mc5ExactHeadRegistrationLoaded:true,automaticPreflightRequired:true,productMutationAuthorized:false,pr484MutationAuthorized:false,candidateMutationAuthorized:false,materializationRerunAuthorized:false,mergeAuthorized:false}
+    identityChecks: deepFreeze({
+      ...base.identityChecks,
+      ow03ExperienceAnchorEvidencePathRecognition: ow03Verification.eligible === true,
+      ow04ExactPathRecognition: ow04Verification.eligible === true,
+      ow04ParentPromotionReceiptRecognition: parentPromotionVerification.eligible === true,
+      c3CoastalReconstructionAuthorityRecognition: c3Verification.eligible === true,
+      c3d1CoastalPlacementRecognition: c3d1Verification.eligible === true,
+      audraliaPC1GeographyPathRecognition: pc1Verification.eligible === true,
+      audraliaDiagnosticPathRecognition: diagnosticVerification.eligible === true,
+      audraliaDiagnosticPathRecognitionSuccessorIntegrity: diagnosticVerification.eligible === true,
+      audraliaFinalCloudCompositorPathRecognition: finalCloudCompositorVerification.eligible === true,
+      audraliaFinalCloudCompositorPathRecognitionSuccessorIntegrity: successorIntegrityVerified
+    }),
+    identityVerified: base.identityVerified,
+    inheritedIdentityPreserved: base.identityVerified === false,
+    successorIntegrityVerified,
+    audraliaDiagnosticPathRecognitionSuccessorChecks: deepFreeze(successorChecks),
+    ow03ExperienceAnchorEvidencePathRecognitionVerification: ow03Verification,
+    ow04ExactPathRecognitionVerification: ow04Verification,
+    ow04ParentPromotionReceiptRecognitionVerification: parentPromotionVerification,
+    c3CoastalReconstructionAuthorityRecognitionVerification: c3Verification,
+    c3d1CoastalPlacementRecognitionVerification: c3d1Verification,
+    audraliaPC1GeographyPathRecognitionVerification: pc1Verification,
+    audraliaDiagnosticPathRecognitionVerification: diagnosticVerification,
+    audraliaFinalCloudCompositorPathRecognitionVerification: finalCloudCompositorVerification,
+    boundary: deepFreeze({
+      ...base.boundary,
+      c3CoastalReconstructionAuthorityRecognitionOnly: true,
+      c3d1CoastalPlacementRecognitionOnly: true,
+      audraliaPC1GeographyPathRecognitionOnly: true,
+      audraliaDiagnosticExactPathRecognitionOnly: true,
+      audraliaDiagnosticProductMutationAuthorityCreated: false,
+      audraliaDiagnosticRuntimeMutationAuthorityCreated: false,
+      audraliaDiagnosticRendererMutationAuthorityCreated: false,
+      audraliaDiagnosticPrefixWideRegistrationAuthorityCreated: false,
+      audraliaDiagnosticPreviewPublicationAuthorityCreated: false,
+      audraliaDiagnosticProductionPublicationAuthorityCreated: false,
+      audraliaDiagnosticExperienceAnchorWaiverAuthorityCreated: false,
+      audraliaFinalCloudCompositorExactPathRecognitionOnly: true,
+      audraliaFinalCloudCompositorProductMutationAuthorityCreated: false,
+      audraliaFinalCloudCompositorCloudEnvelopeMutationAuthorityCreated: false,
+      audraliaFinalCloudCompositorRendererMutationAuthorityCreated: false,
+      audraliaFinalCloudCompositorPrefixWideRegistrationAuthorityCreated: false,
+      audraliaFinalCloudCompositorExecutionBackendAuthorityCreated: false,
+      audraliaFinalCloudCompositorOpenGapClosureAuthorityCreated: false,
+      audraliaFinalCloudCompositorExperienceAnchorWaiverAuthorityCreated: false,
+      audraliaFinalCloudCompositorDeploymentPublicationAuthorityCreated: false
+    }),
+    stoppingCondition: deepFreeze({
+      ...base.stoppingCondition,
+      c3CoastalReconstructionAuthorityRecognitionLoaded: true,
+      c3d1CoastalPlacementRecognitionLoaded: true,
+      audraliaPC1GeographyPathRecognitionLoaded: true,
+      audraliaDiagnosticPathRecognitionLoaded: true,
+      audraliaDiagnosticPathRecognitionSuccessorIntegrityVerified: diagnosticVerification.eligible === true,
+      audraliaFinalCloudCompositorPathRecognitionLoaded: true,
+      audraliaFinalCloudCompositorPathRecognitionSuccessorIntegrityVerified: successorIntegrityVerified,
+      inheritedIdentityStatePreserved: true,
+      audraliaDiagnosticProductMutationAuthorized: false,
+      audraliaDiagnosticRuntimeMutationAuthorized: false,
+      audraliaDiagnosticRendererMutationAuthorized: false,
+      audraliaDiagnosticPrefixWideRegistrationAuthorized: false,
+      audraliaDiagnosticPreviewPublicationAuthorized: false,
+      audraliaDiagnosticProductionPublicationAuthorized: false,
+      audraliaDiagnosticExperienceAnchorWaiverAuthorized: false,
+      audraliaFinalCloudCompositorProductMutationAuthorized: false,
+      audraliaFinalCloudCompositorCloudEnvelopeMutationAuthorized: false,
+      audraliaFinalCloudCompositorRendererMutationAuthorized: false,
+      audraliaFinalCloudCompositorPrefixWideRegistrationAuthorized: false,
+      audraliaFinalCloudCompositorExecutionBackendAuthorized: false,
+      audraliaFinalCloudCompositorOpenGapClosureAuthorized: false,
+      audraliaFinalCloudCompositorExperienceAnchorWaiverAuthorized: false,
+      audraliaFinalCloudCompositorDeploymentPublicationAuthorized: false
+    })
   });
 }
 
-export async function runHEarthC2R1MC5AutomaticRegistryPreflight({paths=H_EARTH_C2_R1_MC5_PR_484_CHANGED_PATHS}={}){
-  const dependencies=loadHEarthRepositoryRegistryValidatorDependencies();
-  if(dependencies.identityVerified!==true)throw new Error('MC5_REGISTRY_IDENTITY_NOT_VERIFIED');
-  if(dependencies.exactHeadRegistrationVerified!==true)throw new Error(`MC5_EXACT_HEAD_REGISTRATION_FAILED:${JSON.stringify(dependencies.exactHeadChecks)}`);
-  if(!sameSet(paths,H_EARTH_C2_R1_MC5_PR_484_CHANGED_PATHS))throw new Error('MC5_PR_484_NINE_PATH_SET_MISMATCH');
-  const {runAutomaticHEarthPreflight}=await import('./activation/h-earth.repository-registry.auto-preflight.js');
-  const receipt=runAutomaticHEarthPreflight({
-    paths:[...H_EARTH_C2_R1_MC5_PR_484_CHANGED_PATHS],
-    taskText:'PR #484 MC5 exact-head read-only registry verification',
-    mutationIntent:false
-  });
-  const classification=receipt.pathClassification;
-  const checks={
-    requestedPathCount:classification.normalizedPaths.length===9,
-    exactRequestedPathSet:sameSet(classification.normalizedPaths,H_EARTH_C2_R1_MC5_PR_484_CHANGED_PATHS),
-    expectedOutsideWorkflow:classification.outsidePaths.length===1&&classification.outsidePaths[0]===EXPECTED_OUTSIDE_PATH,
-    hEarthPathCount:classification.hEarthPaths.length===8,
-    allHEarthPathsRegistered:classification.classifications.filter(entry=>entry.insideScopeRoot).every(entry=>entry.registered===true&&entry.classification==='REGISTERED_H_EARTH_PATH'),
-    dependenciesVerified:receipt.dependenciesVerified===true,
-    validatorDispositionPass:receipt.validatorReceipt?.finalDisposition==='PASS',
-    finalDispositionPass:receipt.finalDisposition==='PASS'
-  };
-  if(!Object.values(checks).every(Boolean))throw new Error(`MC5_AUTOMATIC_PREFLIGHT_FAILED:${JSON.stringify(checks)}:${JSON.stringify(receipt)}`);
-  return deepFreeze({...receipt,mc5Checks:checks,requiredFinalDisposition:'PASS'});
-}
-
+export { runHEarthC2R1MC5AutomaticRegistryPreflight };
 export default loadHEarthRepositoryRegistryValidatorDependencies;

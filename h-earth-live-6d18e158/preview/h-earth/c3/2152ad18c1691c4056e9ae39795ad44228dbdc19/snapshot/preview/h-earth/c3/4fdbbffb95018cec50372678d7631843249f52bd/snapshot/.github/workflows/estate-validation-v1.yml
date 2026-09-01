@@ -1,0 +1,88 @@
+name: Estate Validation v1
+
+on:
+  pull_request:
+    paths:
+      - 'validation/**'
+      - '.github/ai-router/router.v1.json'
+      - '.github/ai-router/projects/estate-validation/entrypoint.v1.json'
+      - '.github/workflows/estate-validation-v1.yml'
+  push:
+    paths:
+      - 'validation/**'
+      - '.github/ai-router/router.v1.json'
+      - '.github/ai-router/projects/estate-validation/entrypoint.v1.json'
+      - '.github/workflows/estate-validation-v1.yml'
+  workflow_dispatch:
+
+env:
+  EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+
+permissions:
+  contents: read
+
+jobs:
+  verify-estate-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact workflow head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+
+      - name: Verify exact workflow head identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Run repository router self-test
+        run: |
+          node tools/repository-ai-entry-router.mjs \
+            --self-test \
+            --output /tmp/estate-validation-router-self-test.json
+
+      - name: Require Estate Validation mutation route
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/repository-ai-entry-router.mjs \
+            --mutation-intent \
+            --path .github/workflows/estate-validation-v1.yml \
+            --path validation/integration/semantic-evidence-conformance-v1/README.md \
+            --path validation/integration/semantic-evidence-conformance-v1/contracts.v1.json \
+            --path validation/integration/semantic-evidence-conformance-v1/conformance-core.v1.mjs \
+            --path validation/integration/semantic-evidence-conformance-v1/semantic-receipt-profile.v1.schema.json \
+            --path validation/integration/semantic-evidence-conformance-v1/authority-transition-ledger.schema.v1.json \
+            --path validation/integration/semantic-evidence-conformance-v1/fixtures/valid-semantic-decision.v1.json \
+            --path validation/integration/semantic-evidence-conformance-v1/fixtures/invalid-unknown-edge.v1.json \
+            --path validation/integration/semantic-evidence-conformance-v1/fixtures/invalid-ai-claim-inflation.v1.json \
+            --path validation/integration/semantic-evidence-conformance-v1/fixtures/invalid-teardown-before-capture.v1.json \
+            --path validation/integration/semantic-evidence-conformance-v1/verify.v1.mjs \
+            --task "estate-semantic-evidence-conformance-route-check" \
+            --output /tmp/estate-validation-router-route.json
+          node -e "const r=require('/tmp/estate-validation-router-route.json');if(r.disposition!=='PASS'||r.routes.length!==11||!r.routes.every(x=>x.projectId==='ESTATE_VALIDATION'&&x.disposition==='PASS'))process.exit(1)"
+
+      - name: Verify estate validation sidecar
+        run: |
+          node validation/harness/verify-estate-validation.v1.mjs \
+            --output /tmp/estate-validation-receipt.json
+
+      - name: Verify semantic evidence conformance support
+        run: |
+          node validation/integration/semantic-evidence-conformance-v1/verify.v1.mjs \
+            --output /tmp/semantic-evidence-conformance-v1.json
+
+      - name: Upload validation receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: estate-validation-v1-receipts
+          path: |
+            /tmp/estate-validation-router-self-test.json
+            /tmp/estate-validation-router-route.json
+            /tmp/estate-validation-receipt.json
+            /tmp/semantic-evidence-conformance-v1.json
+          if-no-files-found: error
+          retention-days: 30

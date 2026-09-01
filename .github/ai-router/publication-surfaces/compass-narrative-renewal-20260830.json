@@ -1,0 +1,201 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "compass-narrative-renewal-20260830",
+  "description": "Compass root owner-approved narrative renewal with five-message swipe, Chapter One progressive disclosure, Orientation copy, and direct four-way research/readiness/community cards.",
+  "checks": [
+    {
+      "path": "/",
+      "includes": [
+        "<title>Diamond Gate Bridge Compass</title>",
+        "data-compass-root",
+        "data-compass-static-introduction",
+        "Learn to live to love.",
+        "Learn to love to listen.",
+        "Learn to live to laugh.",
+        "Swipe the message above to reveal the next.",
+        "<p class=\"compass-motivation__cue\">Swipe the message above to reveal the next.</p>",
+        "Continue the threshold",
+        "One independent studio. An entire connected body of work.",
+        "This website does not merely describe the studio. It is the studio in operation.",
+        "What we do today becomes what tomorrow inherits.",
+        "We cannot control every future outcome. We can take responsibility for the direction our actions begin.",
+        "ORIENTATION REQUIRES NAVIGATION · FIND YOUR WAY",
+        "Welcome to the Compass.",
+        "One of many you’ll encounter throughout the estate.",
+        "Move a star forward.",
+        "Tap a star to enter its cluster, or use a cardinal star to reveal the hidden door to Mirrorland.",
+        "See what has been built—and how to judge what is ready.",
+        "data-readiness-title=\"Agentic Frontier\"",
+        "data-readiness-title=\"Scientific Frontier · LVTG\"",
+        "data-readiness-title=\"Cross-Domain Confirmation\"",
+        "data-readiness-title=\"Scientific Self-Correction · IMI\"",
+        "One AI system finished the work. An established open-source agent went inactive.",
+        "Under the same conditions, Diamond Gate completed the task. Stock OpenHands did not.",
+        "A network may reveal how many safe moves it has left.",
+        "Information from one transition neighborhood improved prediction in another.",
+        "Four very different failures followed a recognizable path.",
+        "A causal-route structure transferred across four failure domains—with limitations.",
+        "The theory failed. The search became clearer.",
+        "The universal multiplicative theory failed. The multidimensional insight survived.",
+        "href=\"/evidence/agentic-frontier/#challenge\">Inspect LVTG →</a>",
+        "Software TRL 7",
+        "Level 4 · BENCHMARKED",
+        "Consider the Community",
+        "Three ways to engage.",
+        "Build Your Own Website",
+        "/assets/compass/compass.readiness-context-v1.js?v=compass-runtime-copy-owner-repair-gen1876&cb=d3fe9edfa21e0d0e",
+        "/assets/compass/compass.crystals.js?v=gen1858-release-orbit-continuity&cb=cd2cbad0494852cc",
+        "/assets/compass/compass.orbit-input.js?v=gen1846&cb=681410dac29d2dae"
+      ],
+      "excludes": [
+        "Choose a direction. Let the Compass show you what belongs there.",
+        "699 material software changes. One operator. One month. Governed agentic production.",
+        "Can we improve the machinery of discovery?",
+        "Controlled comparison, governed coordination, recovery, observability, and claim discipline form a multi-strand research program. Broader comparative replication remains in progress.",
+        "Do a system’s remaining viable futures reveal fragility before failure?",
+        "The LVTG program tests whether viable-future geometry carries predictive information across electrical and transport networks. Replication, generalization, and implementation-independence remain in progress.",
+        "Cross-domain evidence is credible only when support and limitation remain visible together.",
+        "The London transport extension was supported while NASA C-MAPSS remained NOT_DISTINGUISHED under its frozen test. Cross-domain generality remains unresolved.",
+        "A scientific instrument should be revised when its operator is not distinguished.",
+        "An agricultural temporal-block test supported the multidimensional increment but did not distinguish the multiplicative IMI operator. The result was preserved and the model redesigned instead of promoted.",
+        "href=\"/evidence/agentic-frontier/#inspect\">Inspect LVTG →</a>",
+        "THE COMPASS · FIND YOUR WAY",
+        "Orientation requires navigation.",
+        "Welcome to your Compass. It is one of many you’ll encounter throughout the experience.",
+        "To begin, rotate the stars forward to reveal the way. Tap a star to enter its cluster, or use a cardinal star as a lens to reveal the hidden door to explore Mirrorland.",
+        "After you find your way through the Compass, the next question is what the estate has actually built and how much confidence each kind of work deserves. The sections below separate experience, evidence, technology maturity, and adoption readiness so a visitor can go deeper without confusing one for another."
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/",
+    "timeoutMs": 45000,
+    "readySelector": "[data-compass-root]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "interactions": [
+      {
+        "name": "Open Chapter One before tab interaction",
+        "action": {
+          "type": "click",
+          "selector": "[data-compass-static-introduction] > summary"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-compass-static-introduction]",
+            "name": "open",
+            "value": ""
+          }
+        ]
+      },
+      {
+        "name": "Studio tab opens exact approved headline",
+        "action": {
+          "type": "click",
+          "selector": "button[aria-controls=\"chapter-studio\"]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "button[aria-controls=\"chapter-studio\"]",
+            "name": "aria-selected",
+            "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "#chapter-studio",
+            "value": "One independent studio. An entire connected body of work."
+          }
+        ]
+      },
+      {
+        "name": "Studio disclosure reveals exact closing",
+        "action": {
+          "type": "click",
+          "selector": "#chapter-studio .compass-chapter-disclosure > summary"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "#chapter-studio .compass-chapter-disclosure",
+            "name": "open",
+            "value": ""
+          },
+          {
+            "type": "textContains",
+            "selector": "#chapter-studio",
+            "value": "This website does not merely describe the studio. It is the studio in operation."
+          }
+        ]
+      },
+      {
+        "name": "Top message advances by keyboard",
+        "action": {
+          "type": "key",
+          "selector": "[data-compass-motivation]",
+          "key": "ArrowRight"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-compass-motivation] [data-motivation-statement]:first-of-type",
+            "name": "hidden",
+            "value": ""
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-compass-motivation]",
+            "value": "Learn to live to love."
+          }
+        ]
+      },
+      {
+        "name": "Research carousel reaches IMI self-correction",
+        "action": {
+          "type": "key",
+          "selector": "[data-readiness-family=\"research\"]",
+          "key": "End"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "#compass-readiness-research-slide-4",
+            "name": "data-active",
+            "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-readiness-family=\"research\"] .compass-readiness-head h3",
+            "value": "Scientific Self-Correction · IMI"
+          }
+        ]
+      },
+      {
+        "name": "TRL family opens directly into preserved cards",
+        "action": {
+          "type": "click",
+          "selector": "[data-compass-readiness-static=\"v3\"] > .compass-readiness-tabs > .compass-readiness-tab:nth-child(2)"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-compass-readiness-static=\"v3\"] > .compass-readiness-tabs > .compass-readiness-tab:nth-child(2)",
+            "name": "aria-selected",
+            "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-readiness-family=\"trl\"]",
+            "value": "Software TRL 7"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -159,7 +159,10 @@ export function buildHEarthAtmospherePresentation(
   {
     viewportWidth = 640,
     viewportHeight = 360,
-    cameraFarPlane = 512
+    // Keep the standalone presentation default aligned with OW04's
+    // camera-to-envelope visual reach. Callers may still pass an exact camera
+    // far plane; this does not create camera authority here.
+    cameraFarPlane = 3328
   } = {}
 ) {
   const issues = [];

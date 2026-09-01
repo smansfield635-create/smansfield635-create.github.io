@@ -1,0 +1,68 @@
+{
+  "contract": "LAWS_COMPLETE_NARRATIVE_MAP_FREEZE_RECORD_v1",
+  "mode": "USER_AUTHORIZED_NON_PRODUCT_DESIGN_FREEZE",
+  "status": "FROZEN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "pull_request": 489,
+  "branch": "agent/laws-complete-narrative-map-001",
+  "freeze_input_head": "d6f63c7f12495426f2d740baf9898bce0df5b7e0",
+  "user_authority": {
+    "instruction": "Freeze it.",
+    "explicit": true,
+    "freeze_recorded": true,
+    "implementation_authority_granted": false,
+    "merge_authority_granted": false
+  },
+  "frozen_authorities": [
+    {
+      "contract": "LAWS_COMPLETE_NARRATIVE_MAP_v1",
+      "path": "laws/control-plane/narrative/laws-complete-narrative-map-v1.json",
+      "blob_sha_at_freeze": "c372ec488b4704154a14e6b93daeced2173fda81",
+      "disposition": "FROZEN_AS_ACCEPTED_CORE_24_ROUTE_NARRATIVE"
+    },
+    {
+      "contract": "LAWS_COMPLETE_NARRATIVE_MAP_COMPLETENESS_AMENDMENT_v1",
+      "path": "laws/control-plane/narrative/laws-complete-narrative-map-completeness-amendment-v1.json",
+      "blob_sha_at_freeze": "8ddf9b966a94a98f2de292b2dbb8123cba09d813",
+      "disposition": "FROZEN_AS_CONTROLLING_COMPLETENESS_SUCCESSOR"
+    }
+  ],
+  "frozen_scope": {
+    "one_chamber_one_controlling_story": true,
+    "child_narrative_routes": 24,
+    "canonical_migrated_records": 48,
+    "complete_cp6_custody_population": 138,
+    "legacy_and_source_presentation_dispositions": "FROZEN",
+    "reference_hierarchy": "FROZEN",
+    "equation_expression_contract": "FROZEN",
+    "representative_set": [
+      "/laws/categories/flow/signals/",
+      "/laws/categories/reality/measure/",
+      "/laws/test/reverse-audit/",
+      "/laws/research/findings-and-boundaries/",
+      "/laws/industrial-posture/"
+    ]
+  },
+  "preserved_boundaries": {
+    "product_implementation": "HELD_PENDING_SEPARATE_EXPLICIT_AUTHORIZATION",
+    "representative_implementation": "HELD_PENDING_SEPARATE_EXPLICIT_AUTHORIZATION",
+    "batch_migration": "HELD_PENDING_REPRESENTATIVE_PROOF_AND_SEPARATE_AUTHORIZATION",
+    "route_mutation": "NOT_AUTHORIZED",
+    "compass_runtime_mutation": "NOT_AUTHORIZED",
+    "frontier_mutation": "NOT_AUTHORIZED",
+    "evidence_status_upgrade": "NOT_AUTHORIZED",
+    "equation_mutation": "NOT_AUTHORIZED",
+    "merge": "NOT_AUTHORIZED_BY_THIS_FREEZE"
+  },
+  "change_control": {
+    "supersession_requires": "LATER_EXPLICIT_USER_AUTHORITY_AND_A_NAMED_SUCCESSOR_RECORD",
+    "silent_drift": "PROHIBITED",
+    "implementation_may_interpret_but_not_rewrite_frozen_authority": true
+  },
+  "current_disposition": {
+    "complete_design_authority": "FROZEN",
+    "user_freeze_recorded": true,
+    "product_implementation": "HELD",
+    "pull_request_state_target": "OPEN_DRAFT_UNMERGED"
+  }
+}

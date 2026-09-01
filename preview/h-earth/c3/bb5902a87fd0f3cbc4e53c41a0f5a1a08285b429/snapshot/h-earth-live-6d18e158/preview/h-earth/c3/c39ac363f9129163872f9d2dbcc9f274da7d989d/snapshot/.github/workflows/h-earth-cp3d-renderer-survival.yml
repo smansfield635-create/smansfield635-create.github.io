@@ -1,0 +1,74 @@
+name: H-Earth CP3D Renderer Survival
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'showroom/globe/h-earth/**'
+      - 'h-earth-3d/validation/h-earth.c3c3.regional-boundary-closure.browser.harness.mjs'
+      - '.github/workflows/h-earth-cp3d-renderer-survival.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cp3d-renderer-survival:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Verify exact C3C3 head
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
+        run: |
+          mkdir -p "$CP3D_EVIDENCE_DIR"
+          actual="$(git rev-parse HEAD)"
+          printf '%s\n' "$actual" | tee "$CP3D_EVIDENCE_DIR/c3c3-executed-head.txt"
+          printf '%s\n' "$EXPECTED_HEAD" | tee "$CP3D_EVIDENCE_DIR/c3c3-expected-head.txt"
+          test "$actual" = "$EXPECTED_HEAD"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install browser runtime
+        run: |
+          npm install --no-save playwright@1.54.1
+          npx playwright install --with-deps chromium
+
+      - name: Start exact candidate server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/h-earth-c3c3-server.log 2>&1 &
+          echo $! > /tmp/h-earth-c3c3-server.pid
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/showroom/globe/h-earth/ > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/h-earth-c3c3-server.log
+          exit 1
+
+      - name: Execute C3C3 world closure qualification
+        env:
+          CP3D_ORIGIN: http://127.0.0.1:4173
+          CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
+        run: node h-earth-3d/validation/h-earth.c3c3.regional-boundary-closure.browser.harness.mjs
+
+      - name: Upload C3C3 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-c3c3-regional-boundary-closure
+          path: |
+            h-earth-3d/validation/evidence/cp3d/**
+            /tmp/h-earth-c3c3-server.log
+          if-no-files-found: error
+
+# C3C3R4 exact-head shared planetary world-frame qualification trigger: 2026-08-16

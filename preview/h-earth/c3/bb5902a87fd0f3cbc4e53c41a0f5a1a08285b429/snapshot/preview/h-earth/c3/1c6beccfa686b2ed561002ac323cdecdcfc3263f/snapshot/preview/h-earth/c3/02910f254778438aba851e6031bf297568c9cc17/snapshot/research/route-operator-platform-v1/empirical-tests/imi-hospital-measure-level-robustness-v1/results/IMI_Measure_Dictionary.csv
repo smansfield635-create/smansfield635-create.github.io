@@ -1,0 +1,20 @@
+Measure ID,Measure Name,Start Date,End Date,primary_factor,exclusion_reason
+COMP_HIP_KNEE,Rate of complications for hip/knee replacement patients,07/01/2020,03/31/2023,SAFETY,
+MORT_30_AMI,Death rate for heart attack patients,07/01/2020,06/30/2023,MORTALITY,
+MORT_30_CABG,Death rate for CABG surgery patients,07/01/2020,06/30/2023,MORTALITY,
+MORT_30_COPD,Death rate for COPD patients,07/01/2020,06/30/2023,MORTALITY,
+MORT_30_HF,Death rate for heart failure patients,07/01/2020,06/30/2023,MORTALITY,
+MORT_30_PN,Death rate for pneumonia patients,07/01/2020,06/30/2023,MORTALITY,
+MORT_30_STK,Death rate for stroke patients,07/01/2020,06/30/2023,MORTALITY,
+PSI_03,Pressure ulcer rate,07/01/2021,06/30/2023,SAFETY,
+PSI_04,Death rate among surgical inpatients with serious treatable complications,07/01/2021,06/30/2023,EXCLUDED_PRIMARY_SENSITIVITY_ONLY,Crosses mortality and complication semantics; tested under both assignments.
+PSI_06,Iatrogenic pneumothorax rate,07/01/2021,06/30/2023,SAFETY,
+PSI_08,In-hospital fall-associated fracture rate,07/01/2021,06/30/2023,SAFETY,
+PSI_09,Postoperative hemorrhage or hematoma rate,07/01/2021,06/30/2023,SAFETY,
+PSI_10,Postoperative acute kidney injury requiring dialysis rate,07/01/2021,06/30/2023,SAFETY,
+PSI_11,Postoperative respiratory failure rate,07/01/2021,06/30/2023,SAFETY,
+PSI_12,Perioperative pulmonary embolism or deep vein thrombosis rate,07/01/2021,06/30/2023,SAFETY,
+PSI_13,Postoperative sepsis rate,07/01/2021,06/30/2023,SAFETY,
+PSI_14,Postoperative wound dehiscence rate,07/01/2021,06/30/2023,SAFETY,
+PSI_15,Abdominopelvic accidental puncture or laceration rate,07/01/2021,06/30/2023,SAFETY,
+PSI_90,CMS Medicare PSI 90: Patient safety and adverse events composite,07/01/2021,06/30/2023,EXCLUDED_PRIMARY_SENSITIVITY_ONLY,Composite overlaps component patient-safety indicators; tested only as sensitivity.

@@ -1,0 +1,77 @@
+{
+  "contractId": "H_EARTH_REPOSITORY_REGISTRY_PACKAGE_AWARE_VALIDATOR_CONTRACT_v1",
+  "contractVersion": 1,
+  "targetNumber": 4,
+  "targetSubtarget": "4A",
+  "targetName": "PACKAGE_AWARE_VALIDATOR_CONTRACT",
+  "status": "COMPLETE_CANDIDATE_NOT_ACCEPTED",
+  "accepted": false,
+  "canonical": false,
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-repository-registry-installation-001",
+  "sourceRegistry": {
+    "registryId": "H_EARTH_REPOSITORY_REGISTRY_CANDIDATE_v1",
+    "registryVersion": "1.0.0-candidate.1",
+    "schemaId": "H_EARTH_REPOSITORY_REGISTRY_SCHEMA_v1",
+    "schemaVersion": 1,
+    "candidatePath": "/h-earth-3d/registry/h-earth.repository-registry.candidate.js",
+    "candidateByteCount": 140320,
+    "candidateContentSha256": "5c71aba5ff60f7d8838fa4571ec18e72eafe04f01130ad146de4376279735dfe",
+    "candidateGitBlobSha": "10ab7b203e03fde419e526d0cce2c0af42860911"
+  },
+  "sourceInstruction": {
+    "instructionId": "H_EARTH_REPOSITORY_REGISTRY_GITHUB_TOOL_INSTRUCTION_v1",
+    "instructionVersion": 1,
+    "path": "/h-earth-3d/registry/h-earth.repository-registry.tool-instruction.json",
+    "accepted": false,
+    "canonical": false,
+    "enforcementInstalled": false
+  },
+  "components": {
+    "identityAndBoundary": {"path":"/h-earth-3d/registry/h-earth.repository-registry.validator-contract.identity-boundary.json","gitBlobSha":"d91adf288d8d94edb43b2bbde18db7e1ee5c215a"},
+    "proposedOperationInput": {"path":"/h-earth-3d/registry/h-earth.repository-registry.validator-contract.input.json","gitBlobSha":"a52a1da0f1ab659626b2cf693a8204eed1aebade"},
+    "derivationReceipt": {"path":"/h-earth-3d/registry/h-earth.repository-registry.validator-contract.receipt.json","gitBlobSha":"b950527bbaffd50aee79e2e876479e0c796a0b44"},
+    "dispositionLaw": {"path":"/h-earth-3d/registry/h-earth.repository-registry.validator-contract.dispositions.json","gitBlobSha":"1f8e9615a9acc4c6a38d69ad973d30c06422ffaf"},
+    "failureTaxonomy": {"path":"/h-earth-3d/registry/h-earth.repository-registry.validator-contract.failures.json","gitBlobSha":"e76ae45ba041cbe5843bb2b51baba549c1f2979f"},
+    "criticalityMatrix": {"path":"/h-earth-3d/registry/h-earth.repository-registry.validator-contract.criticality.json","gitBlobSha":"5fb9a774de95b9b09b49d119e23ad4169f76dc4e"},
+    "decisionAlgorithm": {"path":"/h-earth-3d/registry/h-earth.repository-registry.validator-contract.algorithm.json","gitBlobSha":"2fda233d468edf3ef09578317289ff4e896cd75a"}
+  },
+  "contractCounts": {
+    "inputRequiredFields": 15,
+    "receiptRequiredFields": 21,
+    "dispositions": 4,
+    "failureClasses": 12,
+    "failureCodes": 24,
+    "decisionSteps": 14
+  },
+  "audit": {
+    "path": "/tools/h-earth-repository-registry-target-4a-contract-audit.mjs",
+    "gitBlobSha": "6579da1ce7396990d8fae7c7e7dc9c1cb5f1b192",
+    "receiptPath": "/h-earth-3d/registry/h-earth.repository-registry.target-4a-receipt.json",
+    "result": "PASS",
+    "passedChecks": 33,
+    "failedChecks": 0
+  },
+  "boundaries": {
+    "validatorContractComplete": true,
+    "validatorEngineInstalled": false,
+    "fixturesInstalled": false,
+    "portabilityReferencePackageInstalled": false,
+    "systemicComprehensionAuditExecuted": false,
+    "workflowEnforcementInstalled": false,
+    "sourceAuthorityCreated": false,
+    "mutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "canonicalizationAuthorityCreated": false,
+    "runtimeActivationCreated": false,
+    "rendererActivationCreated": false,
+    "deploymentAuthorityCreated": false,
+    "productionClaimCreated": false,
+    "mainChanged": false
+  },
+  "stoppingCondition": {
+    "target4AComplete": true,
+    "advanceBeyondTarget4A": false,
+    "nextAuthorizedSubtarget": "4B-1"
+  }
+}

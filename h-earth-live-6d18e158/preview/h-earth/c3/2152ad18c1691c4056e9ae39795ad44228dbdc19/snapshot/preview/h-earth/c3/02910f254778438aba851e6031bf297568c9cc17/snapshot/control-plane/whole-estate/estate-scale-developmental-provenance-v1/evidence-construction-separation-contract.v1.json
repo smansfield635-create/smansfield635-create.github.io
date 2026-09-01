@@ -1,0 +1,39 @@
+{
+  "schema": "WHOLE_ESTATE_EVIDENCE_CONSTRUCTION_SEPARATION_CONTRACT_v1",
+  "status": "CHECKPOINT_4_CONSTRUCTION_CANDIDATE",
+  "objects": {
+    "SCIENTIFIC_EVIDENCE": "results produced under declared scientific methods, protocols, comparisons and evidence rules",
+    "DEVELOPMENTAL_PROVENANCE": "records showing what estate artifacts, governance decisions and implementation constraints existed, changed or were later interpreted",
+    "NARRATIVE_TRANSLATION": "human-facing explanation or metaphor bounded by current scientific standing",
+    "IMPLEMENTATION_RESULT": "whether a product, interface or experience works as an implementation"
+  },
+  "nonSubstitutionRules": [
+    "DEVELOPMENTAL_PROVENANCE_CANNOT_SUBSTITUTE_FOR_SCIENTIFIC_EVIDENCE",
+    "SCIENTIFIC_EVIDENCE_CANNOT_RETROACTIVELY_PROVE_DEVELOPMENTAL_INTENT",
+    "NARRATIVE_TRANSLATION_CANNOT_SUBSTITUTE_FOR_EITHER_SCIENCE_OR_PROVENANCE",
+    "IMPLEMENTATION_SUCCESS_CANNOT_SUBSTITUTE_FOR_SCIENTIFIC_VALIDATION",
+    "CI_SUCCESS_CANNOT_SUBSTITUTE_FOR_SCIENTIFIC_RESULT"
+  ],
+  "currentScientificRecord": {
+    "source": "PR720@5664ba8e059a65f1b7ec39f2c7e944866c06278b",
+    "sourceStatus": "DRAFT_UNMERGED",
+    "overall": "MIXED_NONCOMPENSATING_RESULT",
+    "armA": "UCIC_CROSS_DOMAIN_TEMPORAL_ROUTE_TRANSFER_SUPPORTED_WITH_LIMITATIONS",
+    "systemicPilot": "EARLY_WARNING_AND_RELATIONAL_MITIGATION_CONTRAST_SUPPORTED",
+    "fdicGeneralization": "FDIC_LONGITUDINAL_EARLY_WARNING_NOT_SUPPORTED",
+    "fdicUcicFalsePositiveRate": 1.0,
+    "fdicUcicDiscriminationMargin": 0.0,
+    "additiveFalsePositiveRate": 0.273,
+    "additiveDiscriminationMargin": 0.364,
+    "constructionMayAlterTheseDispositions": false
+  },
+  "bidirectionalBoundary": {
+    "scienceMayConstrainPublicClaims": true,
+    "developmentalProvenanceMayExplainDesignLineage": true,
+    "scienceMayBeValidatedByEstateConcordance": false,
+    "earlierIntentMayBeProvenByLaterScientificResults": false,
+    "adverseEvidenceMayBeHiddenByCoherentPresentation": false
+  },
+  "publicMutationAuthorized": false,
+  "scientificClaimUpgradeAuthorized": false
+}

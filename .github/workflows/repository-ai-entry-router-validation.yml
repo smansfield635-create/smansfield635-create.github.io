@@ -1,92 +1,366 @@
 name: Repository AI Entry Router Validation
-
 on:
+  issue_comment:
+    types: [created]
   pull_request:
+    branches: [main]
     paths:
-      - 'AGENTS.md'
-      - 'AI_ENTRYPOINT.json'
-      - '.github/ai-router/**'
-      - 'tools/repository-ai-entry-router.mjs'
-      - '.github/workflows/repository-ai-entry-router-validation.yml'
+      - AGENTS.md
+      - AI_ENTRYPOINT.json
+      - .github/ai-router/**
+      - tools/repository-ai-entry-router.mjs
+      - .github/workflows/repository-ai-entry-router-validation.yml
+      - tools/operation-intake/canonical-operation-intake-transport.v1.mjs
+      - .github/workflows/canonical-operation-intake-transport-v1.yml
+      - tools/publication-preflight.v1.mjs
+      - tools/publication-preflight-self-test.v1.mjs
+      - .github/workflows/publication-preflight-v1.yml
+      - .github/workflows/pages-exact-head-deploy-v3.yml
   push:
+    branches: [main]
     paths:
-      - 'AGENTS.md'
-      - 'AI_ENTRYPOINT.json'
-      - '.github/ai-router/**'
-      - 'tools/repository-ai-entry-router.mjs'
-      - '.github/workflows/repository-ai-entry-router-validation.yml'
+      - AGENTS.md
+      - AI_ENTRYPOINT.json
+      - .github/ai-router/**
+      - tools/repository-ai-entry-router.mjs
+      - .github/workflows/repository-ai-entry-router-validation.yml
+      - tools/operation-intake/canonical-operation-intake-transport.v1.mjs
+      - .github/workflows/canonical-operation-intake-transport-v1.yml
+      - tools/publication-preflight.v1.mjs
+      - tools/publication-preflight-self-test.v1.mjs
+      - .github/workflows/publication-preflight-v1.yml
+      - .github/workflows/pages-exact-head-deploy-v3.yml
   workflow_dispatch:
-
 permissions:
   contents: read
-
+env:
+  EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+  REMOTE_ROUTER_MARKER: REPOSITORY_AI_ROUTER_REMOTE_REQUEST_V1
 jobs:
   validate-router:
+    if: github.event_name != 'issue_comment'
     runs-on: ubuntu-latest
     steps:
-      - name: Check out exact workflow head
-        uses: actions/checkout@v4
+      - name: Materialize exact router validation head with cone sparse index
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$EXPECTED_HEAD"
+          git sparse-checkout init --cone --sparse-index
+          git sparse-checkout set .github/ai-router .github/operation-intake .github/ai-toolset-transport .github/workflows tools control-plane infrastructure validation
+          git checkout --detach FETCH_HEAD
+          test "$(git config --bool index.sparse)" = "true"
+          test "$(git rev-parse HEAD^{commit})" = "$EXPECTED_HEAD"
+          sparse_entries="$(git ls-files --sparse | wc -l | tr -d '[:space:]')"
+          materialized_files="$(find . -type f -not -path './.git/*' | wc -l | tr -d '[:space:]')"
+          test "$sparse_entries" -lt 10000
+          test "$materialized_files" -lt 10000
+          for required in \
+            AGENTS.md \
+            AI_ENTRYPOINT.json \
+            .github/ai-router/router.v1.json \
+            .github/operation-intake/locator.v1.json \
+            .github/workflows/repository-ai-entry-router-validation.yml \
+            tools/repository-ai-entry-router.mjs \
+            tools/publication-preflight-self-test.v1.mjs; do
+            test -f "$required"
+          done
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import {spawnSync} from 'node:child_process';
+          const head=process.env.EXPECTED_HEAD;
+          const R=JSON.parse(fs.readFileSync('.github/ai-router/router.v1.json','utf8'));
+          const owners=[R.routerInfrastructure,...(R.projects||[]).filter(x=>x.status==='ACTIVE_REGISTERED_PROJECT')].filter(Boolean);
+          const exact=[...new Set(owners.flatMap(owner=>owner.ownedExactPaths||[]))].sort();
+          let recovered=0;
+          for(const p of exact){
+            if(fs.existsSync(p))continue;
+            const read=spawnSync('git',['show',`${head}:${p}`],{encoding:null,maxBuffer:64*1024*1024});
+            if(read.error||read.status!==0)throw new Error(`ROUTER_EXACT_PATH_OBJECT_READ_FAILED:${p}`);
+            fs.mkdirSync(path.dirname(p),{recursive:true});
+            fs.writeFileSync(p,read.stdout);
+            recovered+=1;
+          }
+          console.log(`ROUTER_VALIDATION_EXACT_OBJECT_FILES=${recovered}`);
+          NODE
+          echo "ROUTER_VALIDATION_SPARSE_INDEX_ENTRIES=$sparse_entries"
+          echo "ROUTER_VALIDATION_MATERIALIZED_FILES=$materialized_files"
+      - uses: actions/setup-node@v4
         with:
-          fetch-depth: 0
-
-      - name: Run repository AI router self-test
+          node-version: 22
+      - name: Verify exact head and canonical router
+        shell: bash
         run: |
-          node tools/repository-ai-entry-router.mjs \
-            --self-test \
-            --output /tmp/repository-ai-entry-router-self-test.json
-
-      - name: Exercise H-Earth registered route
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$EXPECTED_HEAD"
+          node tools/repository-ai-entry-router.mjs --self-test --output /tmp/router-self-test.json
+          node -e "const r=require('/tmp/router-self-test.json');if(r.result!=='PASS'||!Array.isArray(r.scenarios)||!r.scenarios.length||!r.scenarios.every(x=>x.pass===true)||r.legacyRouterSelfTest!=='PASS')process.exit(1)"
+      - name: Verify publication preflight control plane
+        shell: bash
         run: |
-          node tools/repository-ai-entry-router.mjs \
-            --path h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js \
-            --task "Workflow registered-route validation" \
-            --output /tmp/repository-ai-entry-router-h-earth-route.json
-
-      - name: Exercise unregistered mutation guard
+          set -euo pipefail
+          node tools/publication-preflight-self-test.v1.mjs > /tmp/publication-preflight-self-test.json
+          node -e "const r=require('/tmp/publication-preflight-self-test.json');if(r.result!=='PASS_CLOSED'||!Number.isInteger(r.checkCount)||r.checkCount<1||!Array.isArray(r.checks)||r.checks.length!==r.checkCount||!r.checks.every(x=>x.ok===true)||r.deploymentPerformed!==false)process.exit(1)"
+      - name: Verify installed bounded binary transfer paths exist and route correctly
+        shell: bash
+        run: |
+          set -euo pipefail
+          paths=(
+            '.github/workflows/bounded-binary-object-transfer-v1.yml'
+            'tools/ai-room-transport/bounded-binary-object-transfer.v1.mjs'
+            'tools/ai-room-transport/bounded-binary-object-transfer.v1.test.mjs'
+            '.github/ai-toolset-transport/bounded-binary-object-transfer.v1.json'
+          )
+          for p in "${paths[@]}"; do
+            test -e "$p"
+          done
+          node tools/repository-ai-entry-router.mjs --mutation-intent \
+            --path "${paths[0]}" --path "${paths[1]}" --path "${paths[2]}" --path "${paths[3]}" \
+            --output /tmp/binary-transfer-installed-path-router-receipt.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const r=JSON.parse(fs.readFileSync('/tmp/binary-transfer-installed-path-router-receipt.json','utf8'));
+          if(r.disposition!=='PASS'||r.routes?.length!==4) process.exit(1);
+          for(const x of r.routes){
+            if(x.disposition!=='PASS'||x.routeClass!=='ROUTER_INFRASTRUCTURE'||x.projectId!=='REPOSITORY_AI_ROUTER_INFRASTRUCTURE') process.exit(1);
+          }
+          NODE
+      - name: Verify all live exact-path registrations exist and route correctly
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {spawnSync} from 'node:child_process';
+          const R=JSON.parse(fs.readFileSync('.github/ai-router/router.v1.json'));
+          const owners=[R.routerInfrastructure,...(R.projects||[]).filter(x=>x.status==='ACTIVE_REGISTERED_PROJECT')].filter(Boolean);
+          const failures=[];
+          for(const owner of owners){
+            for(const q of new Set(owner.ownedExactPaths||[])){
+              if(!fs.existsSync(q)){ failures.push([owner.projectId,q,'MISSING_REGISTERED_PATH']); continue; }
+              const out='/tmp/route-'+Buffer.from(q).toString('hex').slice(0,32)+'.json';
+              const c=spawnSync(process.execPath,['tools/repository-ai-entry-router.mjs','--path',q,'--task','Exact-path conformance','--output',out],{encoding:'utf8'});
+              let r; try{ r=JSON.parse(fs.readFileSync(out)); } catch { failures.push([owner.projectId,q,'NO_RECEIPT']); continue; }
+              if(c.status!==0||!['PASS','REVIEW_REQUIRED'].includes(r.disposition)||r.routes?.[0]?.projectId!==owner.projectId) failures.push([owner.projectId,q,r.disposition]);
+            }
+          }
+          fs.writeFileSync('/tmp/exact-path-conformance.json',JSON.stringify({result:failures.length?'FAIL':'PASS',failureCount:failures.length,failures},null,2)+'\n');
+          if(failures.length){ console.error(JSON.stringify(failures,null,2)); process.exit(1); }
+          NODE
+      - name: Verify unregistered mutation remains blocked
         shell: bash
         run: |
           set +e
-          node tools/repository-ai-entry-router.mjs \
-            --mutation-intent \
-            --path future-project/example.txt \
-            --task "Workflow unregistered-mutation validation" \
-            --output /tmp/repository-ai-entry-router-unregistered-mutation.json
-          status=$?
+          node tools/repository-ai-entry-router.mjs --mutation-intent --path future-project/example.txt --output /tmp/unregistered.json
+          s=$?
           set -e
-          test "$status" -eq 1
-          grep -q '"disposition": "BLOCK"' /tmp/repository-ai-entry-router-unregistered-mutation.json
-
-      - name: Exercise H-Earth candidate admission negative backend
+          test "$s" = 1
+          jq -e '.disposition == "BLOCK"' /tmp/unregistered.json >/dev/null
+      - name: Verify fixed remote router receipt transport contract
         shell: bash
         run: |
-          set +e
-          node h-earth-3d/validation/h-earth.r06-c10.exact-candidate-admission-gate.v1.mjs \
-            --candidate 95504c9927922318225da1d61fa303cec70497f9 \
-            --output /tmp/h-earth-r06-c10-negative-admission.json
-          status=$?
-          set -e
-          test "$status" -eq 1
-          python - <<'PY'
-          import json
-          path = '/tmp/h-earth-r06-c10-negative-admission.json'
-          with open(path, 'r', encoding='utf-8') as handle:
-              receipt = json.load(handle)
-          assert receipt['schema'] == 'H_EARTH_R06_C10_EXACT_CANDIDATE_ADMISSION_GATE_FAILURE_v1'
-          assert receipt['gateResult'] == 'FAIL_CLOSED_INSTRUMENT_OR_BINDING_ERROR'
-          assert receipt['candidateArgument'] == '95504c9927922318225da1d61fa303cec70497f9'
-          assert receipt['error'].startswith('AUTHORITY_IDENTITY_MISMATCH:')
-          assert receipt['conversationMemoryRequired'] is False
-          PY
-
-      - name: Upload router validation receipts
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const workflow=fs.readFileSync('.github/workflows/repository-ai-entry-router-validation.yml','utf8');
+          const entry=JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json','utf8'));
+          const binding=entry.remoteRouterReceiptTransport;
+          const requiredTokens=[
+            'REPOSITORY_AI_ROUTER_REMOTE_REQUEST_V1',
+            'REPOSITORY_AI_ROUTER_REMOTE_INVOCATION_REQUEST_v1',
+            'REPOSITORY_AI_ROUTER_REMOTE_RETURN_v1',
+            'github.event.issue.pull_request == null',
+            "contains(fromJSON('[\"OWNER\",\"MEMBER\",\"COLLABORATOR\"]')",
+            'node tools/repository-ai-entry-router.mjs --mutation-intent',
+            'REMOTE_SUBJECT_HEAD_MISMATCH',
+            'REMOTE_PATH_INVALID',
+            'issues: write'
+          ];
+          if(!binding||binding.status!=='ACTIVE_FAIL_CLOSED'||binding.invocationMarker!=='REPOSITORY_AI_ROUTER_REMOTE_REQUEST_V1'||binding.executionWorkflow!=='.github/workflows/repository-ai-entry-router-validation.yml'||binding.authorityCreated!==false||binding.productMutationAuthorityCreated!==false||binding.mergeAuthorityCreated!==false||binding.deploymentAuthorityCreated!==false) throw new Error('REMOTE_ROUTER_BINDING_INVALID');
+          for(const token of requiredTokens) if(!workflow.includes(token)) throw new Error('REMOTE_ROUTER_TRANSPORT_TOKEN_MISSING:'+token);
+          if(/contents:\s*write/.test(workflow)) throw new Error('REMOTE_ROUTER_CONTENTS_WRITE_FORBIDDEN');
+          const validate=(q,head)=>{
+            const exact=['paths','requestNonce','schema','subjectHead','task'].sort();
+            if(!q||typeof q!=='object'||Array.isArray(q)||JSON.stringify(Object.keys(q).sort())!==JSON.stringify(exact)) throw new Error('REMOTE_REQUEST_KEYSET_INVALID');
+            if(q.schema!=='REPOSITORY_AI_ROUTER_REMOTE_INVOCATION_REQUEST_v1') throw new Error('REMOTE_REQUEST_SCHEMA_INVALID');
+            if(q.subjectHead!==head||!/^[0-9a-f]{40}$/.test(q.subjectHead)) throw new Error('REMOTE_SUBJECT_HEAD_MISMATCH');
+            if(typeof q.task!=='string'||!q.task.trim()||q.task.length>512||/[\r\n]/.test(q.task)) throw new Error('REMOTE_TASK_INVALID');
+            if(!Array.isArray(q.paths)||q.paths.length<1||q.paths.length>64) throw new Error('REMOTE_PATHS_INVALID');
+            const normalized=q.paths.map((value)=>{const p=String(value??'').trim().replaceAll('\\','/').replace(/^\.\/+/, '');if(!p||p.length>512||p.startsWith('/')||p==='..'||p.startsWith('../')||p.includes('/../')||p.includes('//')||p.includes('\0'))throw new Error('REMOTE_PATH_INVALID');return p;});
+            if(new Set(normalized).size!==normalized.length) throw new Error('REMOTE_PATH_DUPLICATE');
+            if(!/^[0-9a-f]{64}$/.test(q.requestNonce)) throw new Error('REMOTE_NONCE_INVALID');
+            return normalized;
+          };
+          const head=process.env.EXPECTED_HEAD;
+          const good={schema:'REPOSITORY_AI_ROUTER_REMOTE_INVOCATION_REQUEST_v1',subjectHead:head,task:'LRP candidate route verification',paths:['infrastructure/lineage-receipt-protocol-v1/MANIFEST.json'],requestNonce:'a'.repeat(64)};
+          if(validate(good,head)[0]!==good.paths[0]) throw new Error('REMOTE_POSITIVE_FIXTURE_FAILED');
+          let stale=false; try{validate({...good,subjectHead:'0'.repeat(40)},head)}catch(e){stale=e.message==='REMOTE_SUBJECT_HEAD_MISMATCH'} if(!stale) throw new Error('REMOTE_STALE_HEAD_NEGATIVE_FAILED');
+          let malformed=false; try{validate({...good,command:'echo nope'},head)}catch(e){malformed=e.message==='REMOTE_REQUEST_KEYSET_INVALID'} if(!malformed) throw new Error('REMOTE_MALFORMED_REQUEST_NEGATIVE_FAILED');
+          fs.writeFileSync('/tmp/remote-router-transport-contract.json',JSON.stringify({schema:'REPOSITORY_AI_ROUTER_REMOTE_TRANSPORT_VALIDATION_RECEIPT_v1',result:'PASS_CLOSED',candidateHead:head,marker:binding.invocationMarker,workflow:binding.executionWorkflow,positiveFixture:true,staleHeadRejected:true,malformedRequestRejected:true,contentsWritePermission:false,authorityCreated:false,productMutationAuthorityCreated:false,mergeAuthorityCreated:false,deploymentAuthorityCreated:false,genericCommandAuthority:false},null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
         if: always()
-        uses: actions/upload-artifact@v4
         with:
-          name: repository-ai-entry-router-validation-receipts
+          name: repository-ai-entry-router-validation-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            /tmp/repository-ai-entry-router-self-test.json
-            /tmp/repository-ai-entry-router-h-earth-route.json
-            /tmp/repository-ai-entry-router-unregistered-mutation.json
-            /tmp/h-earth-r06-c10-negative-admission.json
-          if-no-files-found: error
-          retention-days: 30
+            /tmp/router-self-test.json
+            /tmp/publication-preflight-self-test.json
+            /tmp/binary-transfer-installed-path-router-receipt.json
+            /tmp/exact-path-conformance.json
+            /tmp/unregistered.json
+            /tmp/remote-router-transport-contract.json
+          if-no-files-found: warn
+
+  remote-router-receipt:
+    if: >-
+      github.event_name == 'issue_comment' &&
+      github.event.issue.pull_request == null &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association) &&
+      startsWith(github.event.comment.body, 'REPOSITORY_AI_ROUTER_REMOTE_REQUEST_V1')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Materialize exact current main with cone sparse index
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$EXPECTED_HEAD"
+          git sparse-checkout init --cone --sparse-index
+          git sparse-checkout set .github/ai-router .github/operation-intake tools
+          git checkout --detach FETCH_HEAD
+          test "$(git config --bool index.sparse)" = "true"
+          test "$(git rev-parse HEAD^{commit})" = "$EXPECTED_HEAD"
+          sparse_entries="$(git ls-files --sparse | wc -l | tr -d '[:space:]')"
+          materialized_files="$(find . -type f -not -path './.git/*' | wc -l | tr -d '[:space:]')"
+          test "$sparse_entries" -lt 10000
+          test "$materialized_files" -lt 10000
+          test -f tools/repository-ai-entry-router.mjs
+          test -f .github/operation-intake/locator.v1.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import {spawnSync} from 'node:child_process';
+          const head=process.env.EXPECTED_HEAD;
+          const R=JSON.parse(fs.readFileSync('.github/ai-router/router.v1.json','utf8'));
+          const owners=[R.routerInfrastructure,...(R.projects||[]).filter(x=>x.status==='ACTIVE_REGISTERED_PROJECT')].filter(Boolean);
+          const exact=[...new Set(owners.flatMap(owner=>owner.ownedExactPaths||[]))].sort();
+          let recovered=0;
+          for(const p of exact){
+            if(fs.existsSync(p))continue;
+            const read=spawnSync('git',['show',`${head}:${p}`],{encoding:null,maxBuffer:64*1024*1024});
+            if(read.error||read.status!==0)throw new Error(`REMOTE_ROUTER_EXACT_PATH_OBJECT_READ_FAILED:${p}`);
+            fs.mkdirSync(path.dirname(p),{recursive:true});
+            fs.writeFileSync(p,read.stdout);
+            recovered+=1;
+          }
+          console.log(`REMOTE_ROUTER_EXACT_OBJECT_FILES=${recovered}`);
+          NODE
+          echo "REMOTE_ROUTER_SPARSE_INDEX_ENTRIES=$sparse_entries"
+          echo "REMOTE_ROUTER_MATERIALIZED_FILES=$materialized_files"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Parse closed exact-head router request
+        id: parse
+        shell: bash
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        run: |
+          set +e
+          CURRENT_HEAD="$(git rev-parse HEAD^{commit})"
+          export CURRENT_HEAD
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const out=process.env.RUNNER_TEMP+'/remote-router-request-validation.json';
+          const write=(value)=>fs.writeFileSync(out,JSON.stringify(value,null,2)+'\n');
+          try{
+            const marker=process.env.REMOTE_ROUTER_MARKER;
+            const body=String(process.env.COMMENT_BODY??'').replace(/\r\n/g,'\n').trim();
+            if(!body.startsWith(marker+'\n')) throw new Error('REMOTE_REQUEST_MARKER_INVALID');
+            const tail=body.slice(marker.length).trim();
+            if(!tail.startsWith('{')||!tail.endsWith('}')) throw new Error('REMOTE_REQUEST_JSON_INVALID');
+            const q=JSON.parse(tail);
+            const exact=['paths','requestNonce','schema','subjectHead','task'].sort();
+            if(!q||typeof q!=='object'||Array.isArray(q)||JSON.stringify(Object.keys(q).sort())!==JSON.stringify(exact)) throw new Error('REMOTE_REQUEST_KEYSET_INVALID');
+            if(q.schema!=='REPOSITORY_AI_ROUTER_REMOTE_INVOCATION_REQUEST_v1') throw new Error('REMOTE_REQUEST_SCHEMA_INVALID');
+            if(q.subjectHead!==process.env.CURRENT_HEAD||!/^[0-9a-f]{40}$/.test(q.subjectHead)) throw new Error('REMOTE_SUBJECT_HEAD_MISMATCH');
+            if(typeof q.task!=='string'||!q.task.trim()||q.task.length>512||/[\r\n]/.test(q.task)) throw new Error('REMOTE_TASK_INVALID');
+            if(!Array.isArray(q.paths)||q.paths.length<1||q.paths.length>64) throw new Error('REMOTE_PATHS_INVALID');
+            const normalized=q.paths.map((value)=>{const p=String(value??'').trim().replaceAll('\\','/').replace(/^\.\/+/, '');if(!p||p.length>512||p.startsWith('/')||p==='..'||p.startsWith('../')||p.includes('/../')||p.includes('//')||p.includes('\0'))throw new Error('REMOTE_PATH_INVALID');return p;});
+            if(new Set(normalized).size!==normalized.length) throw new Error('REMOTE_PATH_DUPLICATE');
+            if(!/^[0-9a-f]{64}$/.test(q.requestNonce)) throw new Error('REMOTE_NONCE_INVALID');
+            fs.writeFileSync(process.env.RUNNER_TEMP+'/remote-router-paths.txt',normalized.join('\n')+'\n');
+            fs.writeFileSync(process.env.RUNNER_TEMP+'/remote-router-task.txt',q.task);
+            fs.writeFileSync(process.env.RUNNER_TEMP+'/remote-router-request.json',JSON.stringify({...q,paths:normalized},null,2)+'\n');
+            write({schema:'REPOSITORY_AI_ROUTER_REMOTE_REQUEST_VALIDATION_v1',result:'PASS_CLOSED',subjectHead:q.subjectHead,requestNonce:q.requestNonce,pathCount:normalized.length});
+          }catch(error){
+            write({schema:'REPOSITORY_AI_ROUTER_REMOTE_REQUEST_VALIDATION_v1',result:'FAIL_CLOSED',subjectHead:process.env.CURRENT_HEAD,errorCode:error.message});
+            process.exitCode=1;
+          }
+          NODE
+          status=$?
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Execute existing repository AI router only
+        id: execute
+        if: steps.parse.outputs.status == '0'
+        shell: bash
+        run: |
+          set +e
+          mapfile -t ROUTER_PATHS < "$RUNNER_TEMP/remote-router-paths.txt"
+          ARGS=()
+          for p in "${ROUTER_PATHS[@]}"; do ARGS+=(--path "$p"); done
+          node tools/repository-ai-entry-router.mjs --mutation-intent --task "$(cat "$RUNNER_TEMP/remote-router-task.txt")" "${ARGS[@]}" --output "$RUNNER_TEMP/remote-router-receipt.json"
+          status=$?
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Build compact unrewritten return
+        if: always()
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const parse=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/remote-router-request-validation.json','utf8'));
+          let out;
+          if(parse.result==='PASS_CLOSED'&&fs.existsSync(process.env.RUNNER_TEMP+'/remote-router-receipt.json')){
+            const native=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/remote-router-receipt.json','utf8'));
+            out={schema:'REPOSITORY_AI_ROUTER_REMOTE_RETURN_v1',result:'ROUTER_RECEIPT_RETURNED',subjectHead:parse.subjectHead,requestNonce:parse.requestNonce,nativeSchema:native.schema,nativeDisposition:native.disposition,nativeGoverningHead:native.governingHead,routeCount:Array.isArray(native.routes)?native.routes.length:0,routes:(native.routes||[]).map(x=>({path:x.path,routeClass:x.routeClass,projectId:x.projectId,disposition:x.disposition})),reasonCodes:native.reasonCodes??[],workflowRunId:Number(process.env.GITHUB_RUN_ID),authorityCreated:false,productMutationAuthorityCreated:false,mergeAuthorityCreated:false,deploymentAuthorityCreated:false,genericCommandAuthority:false};
+          }else{
+            out={schema:'REPOSITORY_AI_ROUTER_REMOTE_RETURN_v1',result:'FAIL_CLOSED',subjectHead:parse.subjectHead??null,requestNonce:parse.requestNonce??null,errorCode:parse.errorCode??'REMOTE_ROUTER_RECEIPT_MISSING',nativeDisposition:null,workflowRunId:Number(process.env.GITHUB_RUN_ID),authorityCreated:false,productMutationAuthorityCreated:false,mergeAuthorityCreated:false,deploymentAuthorityCreated:false,genericCommandAuthority:false};
+          }
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/remote-router-return.json',JSON.stringify(out,null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: repository-ai-router-remote-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/remote-router-request-validation.json
+            ${{ runner.temp }}/remote-router-request.json
+            ${{ runner.temp }}/remote-router-receipt.json
+            ${{ runner.temp }}/remote-router-return.json
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Return compact router receipt to issue
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs=require('fs');
+            const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/remote-router-return.json','utf8'));
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:'REPOSITORY_AI_ROUTER_REMOTE_RETURN_V1\n```json\n'+JSON.stringify(r,null,2)+'\n```'});
+      - name: Enforce exact router pass
+        if: always()
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/remote-router-return.json','utf8'));
+          if(r.result!=='ROUTER_RECEIPT_RETURNED'||r.nativeDisposition!=='PASS'||r.nativeGoverningHead!==r.subjectHead||!r.routeCount||r.routes.some(x=>x.disposition!=='PASS')) process.exit(1);
+          NODE

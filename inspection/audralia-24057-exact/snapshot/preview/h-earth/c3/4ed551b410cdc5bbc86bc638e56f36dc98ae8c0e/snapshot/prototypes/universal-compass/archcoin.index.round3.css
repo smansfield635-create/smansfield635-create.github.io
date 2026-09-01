@@ -1,0 +1,172 @@
+/* /prototypes/universal-compass/archcoin.index.round3.css
+   ARCHCOIN calibration lab · Round 3.
+   Front presentation preserved; duplicate wording removed; room labels follow
+   the Main Compass shared-cluster projection standard.
+*/
+
+html::before {
+  content: "ARCHCOIN CALIBRATION LAB · ROUND 3";
+  position: fixed;
+  top: max(8px, env(safe-area-inset-top));
+  right: 8px;
+  z-index: 2147483647;
+  padding: 6px 9px;
+  border: 1px solid rgba(160, 214, 255, 0.72);
+  border-radius: 7px;
+  background: rgba(2, 10, 24, 0.88);
+  color: #dff4ff;
+  font: 700 10px/1.15 system-ui, sans-serif;
+  letter-spacing: 0.08em;
+  box-shadow: 0 0 18px rgba(75, 180, 255, 0.24);
+  pointer-events: none;
+}
+
+.archcoin-calibration-focus {
+  display: none !important;
+}
+
+.archcoin-coin,
+[data-archcoin-room] {
+  left: var(--archcoin-label-x, 50%) !important;
+  top: var(--archcoin-label-y, 50%) !important;
+  transform: translate(-50%, -50%) scale(var(--archcoin-round3-scale, 1)) !important;
+  transform-origin: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+  transition:
+    opacity 150ms var(--archcoin-ease),
+    filter 150ms var(--archcoin-ease),
+    transform 150ms var(--archcoin-ease) !important;
+}
+
+.archcoin-coin {
+  display: grid !important;
+  place-items: center !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  gap: 0 !important;
+}
+
+.archcoin-coin > *,
+[data-archcoin-room] > * {
+  display: none !important;
+}
+
+.archcoin-coin::after,
+[data-archcoin-room]::after {
+  content: attr(data-round3-label);
+  display: block;
+  width: max-content;
+  max-width: min(132px, 34vw);
+  color: rgba(241, 244, 244, 0.90);
+  font-family: var(--archcoin-sans);
+  font-size: clamp(0.57rem, 1.8vw, 0.72rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  white-space: normal;
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.96),
+    0 0 5px rgba(0, 0, 0, 0.94),
+    0 0 10px rgba(4, 12, 20, 0.90);
+  pointer-events: none;
+}
+
+[data-archcoin-room] {
+  display: grid !important;
+  place-items: center !important;
+  width: 56px !important;
+  height: 56px !important;
+  min-width: 56px !important;
+  min-height: 56px !important;
+  color: transparent !important;
+  font-size: 0 !important;
+}
+
+[data-archcoin-room]::after {
+  color: rgba(241, 244, 244, 0.84);
+  font-size: clamp(0.52rem, 1.65vw, 0.66rem);
+}
+
+.archcoin-coin[data-round3-active="false"],
+[data-archcoin-room][data-round3-active="false"] {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.archcoin-coin[data-archcoin-depth-layer="rear"][data-round3-active="true"],
+[data-archcoin-room][data-archcoin-depth-layer="rear"][data-round3-active="true"] {
+  --archcoin-round3-scale: 0.86;
+  opacity: 0.54 !important;
+  visibility: visible !important;
+  filter: saturate(0.76) brightness(0.72);
+}
+
+.archcoin-coin[data-archcoin-depth-layer="front"][data-round3-active="true"],
+[data-archcoin-room][data-archcoin-depth-layer="front"][data-round3-active="true"] {
+  --archcoin-round3-scale: 1;
+  opacity: 0.92 !important;
+  visibility: visible !important;
+  filter: saturate(1.02) brightness(1);
+}
+
+.archcoin-coin[data-round3-primary="true"],
+[data-archcoin-room][data-round3-primary="true"] {
+  --archcoin-round3-scale: 1.16;
+  opacity: 1 !important;
+  visibility: visible !important;
+  filter:
+    saturate(1.24)
+    brightness(1.18)
+    drop-shadow(0 0 7px rgba(234, 208, 131, 0.72))
+    drop-shadow(0 0 16px rgba(118, 213, 230, 0.32));
+}
+
+.archcoin-coin[data-round3-primary="true"]::after,
+[data-archcoin-room][data-round3-primary="true"]::after {
+  color: #fff4c8;
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.98),
+    0 0 6px rgba(0, 0, 0, 0.98),
+    0 0 11px rgba(234, 208, 131, 0.62),
+    0 0 20px rgba(154, 217, 225, 0.30);
+}
+
+[data-archcoin-scene-field] {
+  cursor: grab;
+}
+
+[data-archcoin-scene-field].is-calibration-dragging,
+[data-archcoin-scene-field].is-calibration-settling {
+  cursor: grabbing;
+}
+
+[data-archcoin-scene-field].is-calibration-dragging .archcoin-coin,
+[data-archcoin-scene-field].is-calibration-dragging [data-archcoin-room] {
+  transition: none !important;
+}
+
+@media (max-width: 720px) {
+  :root {
+    --archcoin-scene-height: clamp(590px, 70vh, 720px);
+    --archcoin-compass-size: clamp(116px, 31vw, 148px);
+  }
+
+  .archcoin-coin::after,
+  [data-archcoin-room]::after {
+    max-width: 104px;
+  }
+}

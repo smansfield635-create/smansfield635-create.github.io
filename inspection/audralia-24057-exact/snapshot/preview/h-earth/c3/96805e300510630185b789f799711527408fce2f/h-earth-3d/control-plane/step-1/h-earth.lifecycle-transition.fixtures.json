@@ -1,0 +1,269 @@
+{
+  "fixtureSuiteId": "H_EARTH_REPOSITORY_LIFECYCLE_CONTROL_PLANE_STEP_1_FIXTURE_SUITE_v1",
+  "status": "COMPLETE_CANDIDATE_NOT_EXECUTED",
+  "commonProposal": {
+    "expectedParentCommit": "465596de77ef0a28a7f779e06851130f4768e445",
+    "observedParentCommit": "465596de77ef0a28a7f779e06851130f4768e445",
+    "actorBindings": {
+      "requestingActor": "FIXTURE_REQUESTING_ACTOR",
+      "approvingAuthority": "FIXTURE_APPROVING_AUTHORITY",
+      "executingActor": "FIXTURE_EXECUTING_ACTOR",
+      "postconditionAuditor": "FIXTURE_POSTCONDITION_AUDITOR"
+    },
+    "authorizedPaths": [
+      "/h-earth-3d/registry/h-earth.repository-registry.bootstrap.json",
+      "/h-earth-3d/registry/candidates/h-earth.repository-registry.successor.identity.json"
+    ],
+    "requestedPaths": [
+      "/h-earth-3d/registry/h-earth.repository-registry.bootstrap.json"
+    ],
+    "authorizedPathSetDigestMatches": true,
+    "approvedChangesetDigestMatches": true,
+    "expectedInputBlobsMatch": true,
+    "recoveryCheckpointPresent": true,
+    "replay": {
+      "decisionId": "FIXTURE_DECISION_001",
+      "nonce": "FIXTURE_NONCE_001",
+      "expired": false,
+      "consumed": false
+    }
+  },
+  "fixtures": [
+    {
+      "fixtureId": "POSITIVE_CANDIDATE_TO_VALIDATED",
+      "transitionId": "CANDIDATE_TO_VALIDATED",
+      "evidenceMode": "ALL_REQUIRED",
+      "expectedDisposition": "CONTRACT_SATISFIED_PENDING_SEPARATE_AUTHORITY",
+      "expectedFailureCodes": []
+    },
+    {
+      "fixtureId": "POSITIVE_VALIDATED_TO_ACCEPTED",
+      "transitionId": "VALIDATED_TO_ACCEPTED",
+      "evidenceMode": "ALL_REQUIRED",
+      "expectedDisposition": "CONTRACT_SATISFIED_PENDING_SEPARATE_AUTHORITY",
+      "expectedFailureCodes": []
+    },
+    {
+      "fixtureId": "POSITIVE_ACCEPTED_TO_ACTIVE",
+      "transitionId": "ACCEPTED_TO_ACTIVE",
+      "evidenceMode": "ALL_REQUIRED",
+      "expectedDisposition": "CONTRACT_SATISFIED_PENDING_SEPARATE_AUTHORITY",
+      "expectedFailureCodes": []
+    },
+    {
+      "fixtureId": "POSITIVE_ACTIVE_TO_SUPERSEDED",
+      "transitionId": "ACTIVE_TO_SUPERSEDED",
+      "evidenceMode": "ALL_REQUIRED",
+      "expectedDisposition": "CONTRACT_SATISFIED_PENDING_SEPARATE_AUTHORITY",
+      "expectedFailureCodes": []
+    },
+    {
+      "fixtureId": "POSITIVE_SUPERSEDED_TO_RETIRED",
+      "transitionId": "SUPERSEDED_TO_RETIRED",
+      "evidenceMode": "ALL_REQUIRED",
+      "expectedDisposition": "CONTRACT_SATISFIED_PENDING_SEPARATE_AUTHORITY",
+      "expectedFailureCodes": []
+    },
+    {
+      "fixtureId": "NEGATIVE_UNKNOWN_TRANSITION",
+      "transitionId": "CANDIDATE_TO_ACTIVE",
+      "sourceState": "CANDIDATE",
+      "targetState": "ACTIVE",
+      "evidenceMode": "NONE",
+      "expectedDisposition": "STOP",
+      "expectedFailureCodes": [
+        "TRANSITION_ID_UNRESOLVED"
+      ]
+    },
+    {
+      "fixtureId": "NEGATIVE_SOURCE_STATE_MISMATCH",
+      "transitionId": "VALIDATED_TO_ACCEPTED",
+      "sourceState": "CANDIDATE",
+      "evidenceMode": "ALL_REQUIRED",
+      "expectedDisposition": "STOP",
+      "expectedFailureCodes": [
+        "SOURCE_STATE_MISMATCH"
+      ]
+    },
+    {
+      "fixtureId": "NEGATIVE_TARGET_STATE_MISMATCH",
+      "transitionId": "ACCEPTED_TO_ACTIVE",
+      "targetState": "RETIRED",
+      "evidenceMode": "ALL_REQUIRED",
+      "expectedDisposition": "STOP",
+      "expectedFailureCodes": [
+        "TARGET_STATE_MISMATCH"
+      ]
+    },
+    {
+      "fixtureId": "NEGATIVE_MISSING_APPROVING_AUTHORITY",
+      "transitionId": "VALIDATED_TO_ACCEPTED",
+      "evidenceMode": "ALL_REQUIRED",
+      "overrides": {
+        "actorBindings": {
+          "requestingActor": "FIXTURE_REQUESTING_ACTOR",
+          "approvingAuthority": "",
+          "executingActor": "FIXTURE_EXECUTING_ACTOR",
+          "postconditionAuditor": "FIXTURE_POSTCONDITION_AUDITOR"
+        }
+      },
+      "expectedDisposition": "STOP",
+      "expectedFailureCodes": [
+        "ACTOR_BINDING_INCOMPLETE"
+      ]
+    },
+    {
+      "fixtureId": "NEGATIVE_REQUIRED_EVIDENCE_INCOMPLETE",
+      "transitionId": "ACCEPTED_TO_ACTIVE",
+      "evidenceMode": "OMIT_LAST_REQUIRED",
+      "expectedDisposition": "STOP",
+      "expectedFailureCodes": [
+        "REQUIRED_EVIDENCE_INCOMPLETE"
+      ]
+    },
+    {
+      "fixtureId": "NEGATIVE_STALE_PARENT",
+      "transitionId": "ACCEPTED_TO_ACTIVE",
+      "evidenceMode": "ALL_REQUIRED",
+      "overrides": {
+        "observedParentCommit": "3890dfc7165ae3481cd119d1f9c935e93c336f17"
+      },
+      "expectedDisposition": "STOP",
+      "expectedFailureCodes": [
+        "PARENT_COMMIT_MISMATCH"
+      ]
+    },
+    {
+      "fixtureId": "NEGATIVE_UNAUTHORIZED_PATH_EXPANSION",
+      "transitionId": "ACCEPTED_TO_ACTIVE",
+      "evidenceMode": "ALL_REQUIRED",
+      "overrides": {
+        "requestedPaths": [
+          "/h-earth-3d/registry/h-earth.repository-registry.bootstrap.json",
+          "/showroom/globe/h-earth/index.html"
+        ]
+      },
+      "expectedDisposition": "STOP",
+      "expectedFailureCodes": [
+        "REQUESTED_PATH_OUTSIDE_AUTHORIZED_SET"
+      ]
+    },
+    {
+      "fixtureId": "NEGATIVE_PATH_SET_DIGEST_MISMATCH",
+      "transitionId": "ACCEPTED_TO_ACTIVE",
+      "evidenceMode": "ALL_REQUIRED",
+      "overrides": {
+        "authorizedPathSetDigestMatches": false
+      },
+      "expectedDisposition": "STOP",
+      "expectedFailureCodes": [
+        "AUTHORIZED_PATH_SET_DIGEST_MISMATCH"
+      ]
+    },
+    {
+      "fixtureId": "NEGATIVE_CHANGESET_DIGEST_MISMATCH",
+      "transitionId": "ACCEPTED_TO_ACTIVE",
+      "evidenceMode": "ALL_REQUIRED",
+      "overrides": {
+        "approvedChangesetDigestMatches": false
+      },
+      "expectedDisposition": "STOP",
+      "expectedFailureCodes": [
+        "APPROVED_CHANGESET_DIGEST_MISMATCH"
+      ]
+    },
+    {
+      "fixtureId": "NEGATIVE_INPUT_BLOB_MISMATCH",
+      "transitionId": "ACCEPTED_TO_ACTIVE",
+      "evidenceMode": "ALL_REQUIRED",
+      "overrides": {
+        "expectedInputBlobsMatch": false
+      },
+      "expectedDisposition": "STOP",
+      "expectedFailureCodes": [
+        "EXPECTED_INPUT_BLOB_MISMATCH"
+      ]
+    },
+    {
+      "fixtureId": "NEGATIVE_RECOVERY_CHECKPOINT_MISSING",
+      "transitionId": "ACCEPTED_TO_ACTIVE",
+      "evidenceMode": "ALL_REQUIRED",
+      "overrides": {
+        "recoveryCheckpointPresent": false
+      },
+      "expectedDisposition": "STOP",
+      "expectedFailureCodes": [
+        "RECOVERY_CHECKPOINT_MISSING"
+      ]
+    },
+    {
+      "fixtureId": "NEGATIVE_DECISION_EXPIRED",
+      "transitionId": "ACCEPTED_TO_ACTIVE",
+      "evidenceMode": "ALL_REQUIRED",
+      "overrides": {
+        "replay": {
+          "decisionId": "FIXTURE_DECISION_EXPIRED",
+          "nonce": "FIXTURE_NONCE_EXPIRED",
+          "expired": true,
+          "consumed": false
+        }
+      },
+      "expectedDisposition": "STOP",
+      "expectedFailureCodes": [
+        "DECISION_EXPIRED"
+      ]
+    },
+    {
+      "fixtureId": "NEGATIVE_REPLAYED_DECISION",
+      "transitionId": "ACCEPTED_TO_ACTIVE",
+      "evidenceMode": "ALL_REQUIRED",
+      "overrides": {
+        "replay": {
+          "decisionId": "FIXTURE_DECISION_CONSUMED",
+          "nonce": "FIXTURE_NONCE_CONSUMED",
+          "expired": false,
+          "consumed": true
+        }
+      },
+      "expectedDisposition": "STOP",
+      "expectedFailureCodes": [
+        "DECISION_ALREADY_CONSUMED"
+      ]
+    },
+    {
+      "fixtureId": "NEGATIVE_MISSING_REPLAY_NONCE",
+      "transitionId": "ACCEPTED_TO_ACTIVE",
+      "evidenceMode": "ALL_REQUIRED",
+      "overrides": {
+        "replay": {
+          "decisionId": "FIXTURE_DECISION_WITHOUT_NONCE",
+          "nonce": "",
+          "expired": false,
+          "consumed": false
+        }
+      },
+      "expectedDisposition": "STOP",
+      "expectedFailureCodes": [
+        "REPLAY_NONCE_MISSING"
+      ]
+    }
+  ],
+  "expectedCounts": {
+    "total": 19,
+    "positive": 5,
+    "negative": 14,
+    "expectedContractSatisfied": 5,
+    "expectedStop": 14
+  },
+  "boundaries": {
+    "fixturesCreateApproval": false,
+    "fixturesCreateExecutionAuthority": false,
+    "fixturesMutateRepository": false,
+    "fixturesActivateSuccessor": false
+  },
+  "stoppingCondition": {
+    "fixtureDefinitionComplete": true,
+    "nextCheckpoint": "1F_STATIC_AND_EXECUTED_AUDIT",
+    "advanceBeyondStep1": false
+  }
+}

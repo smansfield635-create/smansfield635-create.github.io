@@ -1,0 +1,52 @@
+name: Audralia reconciliation diagnostic
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  exact-reconciliation-diagnostic:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+      - name: Install diagnostic browser dependency
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Start exact-head local server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/audralia-reconciliation-server.log 2>&1 &
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/weather-presentation-reconciliation/ >/dev/null; then exit 0; fi
+            sleep 0.25
+          done
+          cat /tmp/audralia-reconciliation-server.log
+          exit 1
+      - name: Extract and publish reconciliation receipt
+        env:
+          CHROME_PATH: /opt/hostedtoolcache/setup-chrome/chromium/stable/x64/chrome
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          node scripts/audralia-reconciliation-diagnostic.mjs 2>&1 | tee /tmp/audralia-reconciliation-diagnostic.log
+          diagnostic_exit=${PIPESTATUS[0]}
+          {
+            echo 'Protected-main diagnostic commit: `${{ github.sha }}`'
+            echo
+            echo '```text'
+            cat /tmp/audralia-reconciliation-diagnostic.log
+            echo '```'
+          } > /tmp/audralia-reconciliation-receipt.md
+          gh issue comment 1757 --repo "$GITHUB_REPOSITORY" --body-file /tmp/audralia-reconciliation-receipt.md
+          exit "$diagnostic_exit"

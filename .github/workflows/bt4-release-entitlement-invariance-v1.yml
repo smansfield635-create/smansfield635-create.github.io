@@ -1,0 +1,33 @@
+name: BT4 Release Entitlement Invariance v1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'research/bt4/verify-release-entitlement-invariance.v1.mjs'
+      - 'research/bt4/BT4_FOUR_OBJECT_INVARIANCE_CLOSURE_v1.md'
+      - '.github/workflows/bt4-release-entitlement-invariance-v1.yml'
+      - 'AI_ENTRYPOINT.json'
+      - '.github/ai-router/publication-release-contract.v1.json'
+      - '.github/workflows/pages-exact-head-deploy-v3.yml'
+      - 'preview/bt4/entitlement-v1/entitlement-engine.v1.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  verify-release-entitlement-invariance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            AI_ENTRYPOINT.json
+            .github/ai-router/publication-release-contract.v1.json
+            .github/workflows/pages-exact-head-deploy-v3.yml
+            preview/bt4/entitlement-v1/entitlement-engine.v1.mjs
+            research/bt4/verify-release-entitlement-invariance.v1.mjs
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
+      - name: Execute BT4 release invariance verifier
+        run: node research/bt4/verify-release-entitlement-invariance.v1.mjs

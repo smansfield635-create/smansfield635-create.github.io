@@ -1,0 +1,6082 @@
+<!-- /nine-summits-of-love/index.html -->
+<!-- NINE_SUMMITS_OF_LOVE_TED_RUBY_HEART_MOBILE_CONTAINMENT_HTML_TNT_v7 -->
+<!-- Full-file replacement. -->
+<!--
+  Purpose:
+  - Preserve the accepted rounded double-convex ruby heart geometry.
+  - Preserve internal ruby illumination, additive halo, fixed-axis rotation,
+    and the single cast shadow beneath the heart.
+  - Preserve both original Nine Summits book-cover images.
+  - Preserve the connected Nine Summits path map.
+  - Replace drab architectural copy with a concise TED-style human narrative.
+  - Correct white-on-gold navigation text caused by selector specificity.
+  - Give gold navigation bubbles dark navy-black lettering.
+  - Give dark navigation bubbles saturated cyan lettering.
+  - Correct mobile horizontal overflow in the header, title, kicker, and controls.
+  - Preserve the House Control Pad entrance.
+  - Use native WebGL with no external 3D library.
+-->
+
+<!doctype html>
+<html
+  lang="en"
+  data-route="/nine-summits-of-love/"
+  data-page="nine-summits-of-love"
+  data-version="G1-V8"
+  data-contract="NINE_SUMMITS_OF_LOVE_TED_RUBY_HEART_MOBILE_CONTAINMENT_HTML_TNT_v7"
+  data-previous-contract="NINE_SUMMITS_OF_LOVE_RUBY_INTERNAL_GLOW_HEART_CONTRAST_BUTTONS_HTML_TNT_v6"
+  data-status="active"
+  data-parent="/nine-summits/"
+  data-role="book-and-seminar-lane"
+  data-narrative-mode="ted-style-human-path"
+  data-source-preserving-images="true"
+  data-front-cover="/assets/nine-summits-love-preface-cover.png"
+  data-back-cover="/assets/nine-summits-love-hero.png"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-streaming="false"
+  data-mobile-horizontal-overflow="forbidden"
+  data-navigation-bubble-contrast="renewed"
+  data-house-controller-form="rounded-double-convex-diamond-heart"
+  data-heart-geometry-renewed="false"
+  data-heart-geometry-preserved="true"
+  data-heart-primary-color-family="ruby-crimson-rose-garnet-burgundy"
+  data-heart-secondary-color-family="restrained-gold"
+  data-heart-reflective-accents="minor-violet-blue"
+  data-heart-internal-emission="strong"
+  data-heart-external-lighting="supporting"
+  data-heart-halo="geometry-following-additive"
+  data-heart-ground-shadow-only="true"
+  data-heart-internal-shadow="forbidden"
+  data-heart-blackout="forbidden"
+  data-heart-rotation="fixed-local-y-axis"
+  data-heart-orbit="forbidden"
+  data-heart-fibonacci-sync="13-21-34-55-89-144-233-377-610-987"
+>
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,maximum-scale=5,viewport-fit=cover"
+  >
+
+  <title>The Nine Summits of Love · Diamond Gate Bridge</title>
+
+  <meta
+    name="description"
+    content="What if the heart is not broken, but simply under pressure? The Nine Summits of Love presents a connected path from pressure to human potential."
+  >
+
+  <link
+    rel="stylesheet"
+    href="/assets/house-control-pad/house.control-pad.css"
+  >
+
+  <style>
+    :root{
+      color-scheme:dark;
+
+      --page-black:#01030a;
+      --page-deep:#040817;
+      --page-panel:rgba(9,15,31,.88);
+
+      --page-ink:#fff4d8;
+      --page-muted:rgba(229,237,255,.78);
+      --page-soft:rgba(229,237,255,.58);
+      --page-faint:rgba(229,237,255,.42);
+
+      --page-gold:#f3c86f;
+      --page-gold-light:#ffe8a3;
+      --page-cyan:#8de7ff;
+      --page-blue:#618fff;
+      --page-violet:#9c79ff;
+      --page-rose:#ff5f87;
+      --page-ruby:#c91442;
+      --page-crimson:#981032;
+      --page-garnet:#6d0b29;
+      --page-burgundy:#47071e;
+      --page-green:#8ff0c6;
+
+      --button-gold-text:#111827;
+      --button-dark-text:#8de7ff;
+
+      --page-line:rgba(184,205,255,.18);
+      --page-line-gold:rgba(243,200,111,.34);
+
+      --page-max:1180px;
+
+      --heart-stage:610px;
+      --heart-width:377;
+      --heart-height:368;
+      --heart-depth:89;
+      --heart-rim-depth:13;
+      --heart-dome-rise:31.5;
+      --heart-floor-gap:55;
+      --heart-shadow-width:233;
+      --heart-camera-distance:987;
+      --heart-rotation-duration:34s;
+    }
+
+    *{
+      box-sizing:border-box;
+    }
+
+    html{
+      width:100%;
+      min-width:0;
+      min-height:100%;
+
+      overflow-x:hidden;
+
+      background:var(--page-black);
+
+      scroll-behavior:smooth;
+    }
+
+    body{
+      width:100%;
+      min-width:0;
+      min-height:100vh;
+
+      margin:0;
+
+      overflow-x:hidden;
+
+      color:var(--page-ink);
+
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      line-height:1.5;
+
+      background:
+        radial-gradient(
+          circle at 50% -8%,
+          rgba(243,200,111,.2),
+          transparent 30rem
+        ),
+        radial-gradient(
+          circle at 8% 26%,
+          rgba(156,121,255,.17),
+          transparent 30rem
+        ),
+        radial-gradient(
+          circle at 92% 34%,
+          rgba(97,143,255,.13),
+          transparent 30rem
+        ),
+        linear-gradient(
+          180deg,
+          #080c19 0%,
+          #030713 52%,
+          #010208 100%
+        );
+
+      -webkit-font-smoothing:antialiased;
+      text-rendering:geometricPrecision;
+    }
+
+    body::before{
+      content:"";
+
+      position:fixed;
+      inset:0;
+      z-index:0;
+
+      pointer-events:none;
+
+      background-image:
+        radial-gradient(
+          circle,
+          rgba(255,255,255,.14) 0 1px,
+          transparent 1.5px
+        ),
+        linear-gradient(
+          rgba(141,216,255,.034) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(141,216,255,.034) 1px,
+          transparent 1px
+        );
+
+      background-size:
+        240px 280px,
+        55px 55px,
+        55px 55px;
+
+      opacity:.25;
+
+      mask-image:
+        linear-gradient(
+          180deg,
+          rgba(0,0,0,.94),
+          rgba(0,0,0,.5) 64%,
+          transparent
+        );
+    }
+
+    body::after{
+      content:"";
+
+      position:fixed;
+      inset:-24%;
+      z-index:0;
+
+      pointer-events:none;
+
+      background:
+        conic-gradient(
+          from 0deg at 50% 50%,
+          transparent,
+          rgba(156,121,255,.055),
+          transparent,
+          rgba(243,200,111,.045),
+          transparent,
+          rgba(141,231,255,.05),
+          transparent
+        );
+
+      filter:blur(54px);
+
+      animation:
+        page-aurora-rotation
+        34s
+        linear
+        infinite;
+    }
+
+    .page-shell,
+    .page-shell *,
+    .page-shell *::before,
+    .page-shell *::after{
+      box-sizing:border-box;
+    }
+
+    .page-shell a{
+      color:inherit;
+
+      text-decoration:none;
+    }
+
+    .page-shell button{
+      font:inherit;
+    }
+
+    .page-shell img{
+      max-width:100%;
+    }
+
+    .page-skip{
+      position:absolute;
+      left:-9999px;
+      top:.5rem;
+      z-index:10000;
+
+      padding:.75rem 1rem;
+
+      border-radius:999px;
+
+      color:#05070d;
+
+      background:var(--page-gold);
+
+      font-weight:950;
+    }
+
+    .page-skip:focus{
+      left:.5rem;
+    }
+
+    .page-shell{
+      position:relative;
+      z-index:2;
+
+      width:
+        min(
+          var(--page-max),
+          calc(100% - 28px)
+        );
+
+      max-width:100%;
+      min-width:0;
+
+      margin:0 auto;
+
+      overflow:hidden;
+
+      padding:
+        max(18px,env(safe-area-inset-top))
+        0
+        max(44px,env(safe-area-inset-bottom));
+    }
+
+    .page-shell main,
+    .page-shell section,
+    .page-shell header,
+    .page-shell footer,
+    .page-shell nav,
+    .page-shell div,
+    .page-shell figure{
+      min-width:0;
+    }
+
+    .page-topbar{
+      width:100%;
+      max-width:100%;
+      min-width:0;
+
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      align-items:center;
+
+      gap:1rem;
+
+      padding:.75rem 0 1.1rem;
+    }
+
+    .page-brand{
+      width:100%;
+      max-width:100%;
+      min-width:0;
+
+      display:grid;
+
+      gap:.18rem;
+    }
+
+    .page-brand small{
+      max-width:100%;
+
+      color:var(--page-gold);
+
+      font-size:.68rem;
+      font-weight:950;
+
+      letter-spacing:.16em;
+      line-height:1.35;
+      text-transform:uppercase;
+
+      overflow-wrap:anywhere;
+    }
+
+    .page-brand strong{
+      max-width:100%;
+      min-width:0;
+
+      color:var(--page-ink);
+
+      font-size:
+        clamp(
+          1.12rem,
+          3.2vw,
+          1.72rem
+        );
+
+      line-height:1.02;
+
+      letter-spacing:-.045em;
+
+      overflow-wrap:anywhere;
+    }
+
+    .page-return{
+      max-width:100%;
+      min-width:0;
+      min-height:2.45rem;
+
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+
+      padding:.58rem .88rem;
+
+      border:
+        1px solid
+        rgba(243,200,111,.58);
+
+      border-radius:999px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #fff3b2,
+          #f3c86f
+        );
+
+      font-size:.68rem;
+      font-weight:950;
+
+      letter-spacing:.07em;
+      line-height:1.2;
+      text-align:center;
+      text-transform:uppercase;
+
+      text-shadow:none;
+
+      overflow-wrap:anywhere;
+      white-space:normal;
+
+      transition:
+        transform .18s ease,
+        filter .18s ease;
+    }
+
+    .page-shell a.page-return{
+      color:var(--button-gold-text);
+    }
+
+    .page-return:hover,
+    .page-return:focus-visible{
+      transform:translateY(-2px);
+
+      filter:brightness(1.05);
+
+      outline:none;
+    }
+
+    .page-panel{
+      position:relative;
+
+      width:100%;
+      max-width:100%;
+      min-width:0;
+
+      overflow:hidden;
+
+      border:
+        1px solid
+        var(--page-line);
+
+      border-radius:
+        clamp(
+          1.35rem,
+          4vw,
+          2.3rem
+        );
+
+      background:
+        radial-gradient(
+          circle at 12% 0%,
+          rgba(141,231,255,.08),
+          transparent 26rem
+        ),
+        radial-gradient(
+          circle at 88% 8%,
+          rgba(156,121,255,.12),
+          transparent 30rem
+        ),
+        linear-gradient(
+          180deg,
+          rgba(255,255,255,.065),
+          rgba(255,255,255,.018)
+        ),
+        var(--page-panel);
+
+      box-shadow:
+        0 2rem 7rem rgba(0,0,0,.4),
+        inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .page-kicker{
+      width:fit-content;
+      max-width:100%;
+      min-width:0;
+
+      display:inline-flex;
+      align-items:center;
+      justify-content:flex-start;
+
+      gap:.6rem;
+
+      padding:.58rem .9rem;
+
+      border:
+        1px solid
+        rgba(255,255,255,.14);
+
+      border-radius:999px;
+
+      color:rgba(232,240,255,.84);
+
+      background:rgba(255,255,255,.035);
+
+      font-size:.68rem;
+      font-weight:950;
+
+      letter-spacing:.14em;
+      line-height:1.35;
+      text-align:left;
+      text-transform:uppercase;
+
+      overflow-wrap:anywhere;
+      white-space:normal;
+    }
+
+    .page-kicker::before{
+      content:"";
+
+      width:.68rem;
+      height:.68rem;
+
+      flex:0 0 auto;
+
+      border-radius:.16rem;
+
+      transform:rotate(45deg);
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--page-gold-light),
+          var(--page-gold)
+        );
+
+      box-shadow:
+        0 0 1rem
+        rgba(243,200,111,.48);
+    }
+
+    .page-shell h1,
+    .page-shell h2,
+    .page-shell h3,
+    .page-shell p{
+      max-width:100%;
+      min-width:0;
+
+      margin:0;
+
+      overflow-wrap:anywhere;
+    }
+
+    .page-shell h1{
+      max-width:970px;
+
+      font-size:
+        clamp(
+          2.85rem,
+          9.4vw,
+          6.8rem
+        );
+
+      line-height:.88;
+
+      letter-spacing:-.085em;
+
+      text-wrap:balance;
+    }
+
+    .page-shell h2{
+      color:var(--page-gold);
+
+      font-size:
+        clamp(
+          1.7rem,
+          5.4vw,
+          3.4rem
+        );
+
+      line-height:.98;
+
+      letter-spacing:-.06em;
+
+      text-wrap:balance;
+    }
+
+    .page-shell h3{
+      color:var(--page-ink);
+
+      font-size:
+        clamp(
+          1.1rem,
+          3.5vw,
+          1.6rem
+        );
+
+      line-height:1.05;
+
+      letter-spacing:-.04em;
+    }
+
+    .page-shell p{
+      color:var(--page-muted);
+
+      font-size:
+        clamp(
+          .98rem,
+          2.7vw,
+          1.15rem
+        );
+
+      line-height:1.58;
+    }
+
+    /* =====================================================
+       HERO
+       ===================================================== */
+
+    .hero{
+      display:grid;
+      justify-items:center;
+
+      gap:1.1rem;
+
+      padding:
+        clamp(
+          1.35rem,
+          4vw,
+          3rem
+        );
+
+      text-align:center;
+    }
+
+    .hero-copy{
+      position:relative;
+      z-index:5;
+
+      width:
+        min(
+          940px,
+          100%
+        );
+
+      max-width:100%;
+      min-width:0;
+
+      display:grid;
+      justify-items:center;
+
+      gap:.9rem;
+    }
+
+    .hero-copy p{
+      max-width:830px;
+    }
+
+    .hero-opening{
+      width:min(820px,100%);
+
+      display:grid;
+
+      gap:.75rem;
+    }
+
+    .hero-thesis{
+      width:min(760px,100%);
+
+      margin-top:.2rem;
+      padding:.9rem 1rem;
+
+      border:
+        1px solid
+        rgba(243,200,111,.27);
+
+      border-radius:1rem;
+
+      color:var(--page-ink);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(243,200,111,.1),
+          rgba(201,20,66,.055)
+        );
+
+      font-size:
+        clamp(
+          1rem,
+          2.8vw,
+          1.22rem
+        );
+
+      font-weight:850;
+      line-height:1.5;
+    }
+
+    /* =====================================================
+       RUBY INTERNALLY LUMINOUS ROUNDED HEART
+       ===================================================== */
+
+    .heart-stage{
+      position:relative;
+      z-index:4;
+
+      width:
+        min(
+          var(--heart-stage),
+          100%
+        );
+
+      max-width:100%;
+      min-width:0;
+
+      aspect-ratio:1 / 1;
+
+      display:grid;
+      place-items:center;
+
+      isolation:isolate;
+    }
+
+    .heart-stage::before{
+      content:"";
+
+      position:absolute;
+      left:50%;
+      top:48%;
+      z-index:0;
+
+      width:80%;
+      height:80%;
+
+      transform:
+        translate(-50%,-50%);
+
+      border-radius:50%;
+
+      pointer-events:none;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(255,224,198,.19) 0%,
+          rgba(255,94,126,.16) 21%,
+          rgba(201,20,66,.13) 39%,
+          rgba(109,11,41,.095) 55%,
+          rgba(156,121,255,.045) 68%,
+          transparent 79%
+        );
+
+      filter:blur(40px);
+    }
+
+    .heart-stage::after{
+      content:"";
+
+      position:absolute;
+      left:50%;
+      top:47%;
+      z-index:0;
+
+      width:58%;
+      height:58%;
+
+      transform:
+        translate(-50%,-50%);
+
+      border-radius:50%;
+
+      pointer-events:none;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(255,240,211,.16),
+          rgba(255,87,118,.11) 31%,
+          rgba(152,16,50,.06) 51%,
+          transparent 72%
+        );
+
+      filter:blur(25px);
+    }
+
+    .heart-canvas{
+      position:absolute;
+      inset:0;
+      z-index:1;
+
+      width:100%;
+      height:100%;
+
+      display:block;
+
+      pointer-events:none;
+
+      background:transparent;
+    }
+
+    .heart-fallback{
+      position:absolute;
+      left:50%;
+      top:48%;
+      z-index:1;
+
+      width:61.8%;
+
+      display:none;
+
+      transform:
+        translate(-50%,-50%);
+
+      pointer-events:none;
+
+      filter:
+        drop-shadow(
+          0 1.3rem 1.6rem
+          rgba(0,0,0,.54)
+        )
+        drop-shadow(
+          0 0 .7rem
+          rgba(255,115,137,.74)
+        )
+        drop-shadow(
+          0 0 1.8rem
+          rgba(201,20,66,.54)
+        )
+        drop-shadow(
+          0 0 3rem
+          rgba(109,11,41,.38)
+        );
+    }
+
+    .heart-stage[data-webgl-state="failed"]
+    .heart-canvas{
+      display:none;
+    }
+
+    .heart-stage[data-webgl-state="failed"]
+    .heart-fallback{
+      display:block;
+    }
+
+    .heart-door{
+      position:absolute;
+      inset:0;
+      z-index:5;
+
+      width:100%;
+      height:100%;
+
+      padding:0;
+
+      border:0;
+      border-radius:2rem;
+
+      color:inherit;
+
+      background:transparent;
+
+      cursor:pointer;
+
+      touch-action:manipulation;
+
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    .heart-door::before{
+      content:"";
+
+      position:absolute;
+      inset:6%;
+
+      border:
+        2px solid
+        transparent;
+
+      border-radius:2rem;
+
+      pointer-events:none;
+
+      opacity:0;
+
+      transition:
+        opacity .18s ease,
+        border-color .18s ease,
+        box-shadow .18s ease;
+    }
+
+    .heart-door:hover::before{
+      opacity:.36;
+
+      border-color:
+        rgba(255,95,135,.28);
+    }
+
+    .heart-door:focus-visible{
+      outline:none;
+    }
+
+    .heart-door:focus-visible::before{
+      opacity:1;
+
+      border-color:
+        rgba(141,231,255,.9);
+
+      box-shadow:
+        0 0 0 .28rem
+        rgba(141,231,255,.13),
+        0 0 1.8rem
+        rgba(141,231,255,.28);
+    }
+
+    .heart-status{
+      position:absolute;
+      left:50%;
+      top:3.5%;
+
+      max-width:92%;
+
+      transform:translateX(-50%);
+
+      color:
+        rgba(229,237,255,.57);
+
+      font-size:.58rem;
+      font-weight:950;
+
+      letter-spacing:.13em;
+      line-height:1.35;
+      text-align:center;
+      text-transform:uppercase;
+
+      overflow-wrap:anywhere;
+      white-space:normal;
+
+      pointer-events:none;
+    }
+
+    .heart-enter{
+      position:absolute;
+      left:50%;
+      bottom:5.5%;
+
+      max-width:90%;
+      min-width:0;
+      min-height:2.72rem;
+
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+
+      gap:.56rem;
+
+      padding:.68rem 1.08rem;
+
+      border:
+        1px solid
+        rgba(243,200,111,.72);
+
+      border-radius:999px;
+
+      transform:translateX(-50%);
+
+      background:
+        linear-gradient(
+          135deg,
+          #fff5bd,
+          #f3c86f
+        );
+
+      box-shadow:
+        0 .9rem 2rem
+        rgba(243,200,111,.18),
+        0 0 2rem
+        rgba(243,200,111,.13);
+
+      font-size:.74rem;
+      font-weight:950;
+
+      letter-spacing:.075em;
+      line-height:1.2;
+      text-align:center;
+      text-transform:uppercase;
+
+      text-shadow:none;
+
+      overflow-wrap:anywhere;
+      white-space:normal;
+
+      pointer-events:none;
+
+      transition:
+        transform .18s ease,
+        filter .18s ease;
+    }
+
+    .heart-door .heart-enter{
+      color:var(--button-gold-text);
+    }
+
+    .heart-enter::before{
+      content:"";
+
+      width:.62rem;
+      height:.62rem;
+
+      flex:0 0 auto;
+
+      border-radius:.15rem;
+
+      transform:rotate(45deg);
+
+      background:
+        linear-gradient(
+          135deg,
+          #fff9df,
+          var(--page-cyan)
+        );
+
+      box-shadow:
+        0 0 .9rem
+        rgba(141,231,255,.54);
+    }
+
+    .heart-door:hover .heart-enter,
+    .heart-door:focus-visible .heart-enter{
+      transform:
+        translateX(-50%)
+        translateY(-2px);
+
+      filter:brightness(1.06);
+    }
+
+    .heart-help{
+      position:absolute;
+      left:50%;
+      bottom:.9%;
+
+      max-width:90%;
+
+      transform:translateX(-50%);
+
+      color:
+        rgba(229,237,255,.57);
+
+      font-size:.61rem;
+      font-weight:900;
+
+      letter-spacing:.11em;
+      line-height:1.35;
+      text-align:center;
+      text-transform:uppercase;
+
+      overflow-wrap:anywhere;
+      white-space:normal;
+
+      pointer-events:none;
+    }
+
+    .hero-actions,
+    .final-actions{
+      width:min(860px,100%);
+
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+
+      gap:.65rem;
+    }
+
+    .page-button{
+      max-width:100%;
+      min-width:0;
+      min-height:2.7rem;
+
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+
+      padding:.68rem 1.05rem;
+
+      border:
+        1px solid
+        rgba(141,231,255,.34);
+
+      border-radius:999px;
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(20,29,48,.94),
+          rgba(10,16,30,.96)
+        );
+
+      font-size:.73rem;
+      font-weight:950;
+
+      letter-spacing:.065em;
+      line-height:1.25;
+      text-align:center;
+      text-transform:uppercase;
+
+      text-shadow:
+        0 0 .65rem
+        rgba(141,231,255,.28);
+
+      overflow-wrap:anywhere;
+      white-space:normal;
+
+      box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.07),
+        0 0 1.1rem
+        rgba(141,231,255,.04);
+
+      cursor:pointer;
+
+      transition:
+        transform .18s ease,
+        border-color .18s ease,
+        filter .18s ease,
+        box-shadow .18s ease;
+    }
+
+    .page-shell a.page-button:not(.page-button--gold),
+    .page-shell button.page-button:not(.page-button--gold){
+      color:var(--button-dark-text);
+    }
+
+    .page-button:hover,
+    .page-button:focus-visible{
+      transform:translateY(-2px);
+
+      border-color:
+        rgba(141,231,255,.72);
+
+      box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.09),
+        0 0 1.25rem
+        rgba(141,231,255,.17);
+
+      outline:none;
+    }
+
+    .page-button--gold{
+      border-color:
+        rgba(243,200,111,.84);
+
+      background:
+        linear-gradient(
+          135deg,
+          #fff4b4,
+          #f3c86f
+        );
+
+      text-shadow:none;
+
+      box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.32),
+        0 .75rem 1.75rem
+        rgba(243,200,111,.12);
+    }
+
+    .page-shell a.page-button--gold,
+    .page-shell button.page-button--gold{
+      color:var(--button-gold-text);
+    }
+
+    .page-button--gold:hover,
+    .page-button--gold:focus-visible{
+      border-color:
+        rgba(255,232,163,.96);
+
+      box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.42),
+        0 .85rem 1.9rem
+        rgba(243,200,111,.2);
+    }
+
+    /* =====================================================
+       PRESERVED BOOK COVERS
+       ===================================================== */
+
+    .book-section{
+      margin-top:1.15rem;
+
+      padding:
+        clamp(
+          1.15rem,
+          4vw,
+          2rem
+        );
+
+      display:grid;
+
+      gap:1rem;
+    }
+
+    .book-heading{
+      display:grid;
+
+      gap:.82rem;
+    }
+
+    .book-heading-copy{
+      max-width:900px;
+
+      display:grid;
+
+      gap:.72rem;
+    }
+
+    .book-pair{
+      display:grid;
+      grid-template-columns:
+        repeat(
+          2,
+          minmax(0,1fr)
+        );
+
+      gap:1rem;
+    }
+
+    .book-cover{
+      display:grid;
+
+      gap:.72rem;
+
+      margin:0;
+
+      padding:.82rem;
+
+      border:
+        1px solid
+        rgba(255,255,255,.11);
+
+      border-radius:1.4rem;
+
+      background:
+        radial-gradient(
+          circle at 50% 0%,
+          rgba(243,200,111,.1),
+          transparent 38%
+        ),
+        rgba(255,255,255,.025);
+    }
+
+    .book-cover-frame{
+      position:relative;
+
+      min-height:
+        clamp(
+          22rem,
+          46vw,
+          38rem
+        );
+
+      overflow:hidden;
+
+      border:
+        1px solid
+        rgba(243,200,111,.27);
+
+      border-radius:1rem;
+
+      background:#050710;
+
+      box-shadow:
+        0 1.4rem 3rem
+        rgba(0,0,0,.3);
+    }
+
+    .book-cover-frame img{
+      width:100%;
+      height:100%;
+      min-height:inherit;
+
+      display:block;
+
+      object-fit:contain;
+
+      background:
+        radial-gradient(
+          circle at 50% 30%,
+          rgba(243,200,111,.08),
+          transparent 42%
+        ),
+        #050710;
+    }
+
+    .book-cover figcaption{
+      display:grid;
+
+      gap:.18rem;
+
+      padding:.12rem .25rem .2rem;
+    }
+
+    .book-cover figcaption b{
+      color:var(--page-gold);
+
+      font-size:.63rem;
+      font-weight:950;
+
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .book-cover figcaption strong{
+      color:var(--page-ink);
+
+      font-size:
+        clamp(
+          1rem,
+          2.8vw,
+          1.25rem
+        );
+
+      letter-spacing:-.03em;
+    }
+
+    /* =====================================================
+       CONNECTED PATH MAP
+       ===================================================== */
+
+    .journey-section{
+      margin-top:1.15rem;
+
+      padding:
+        clamp(
+          1.15rem,
+          4vw,
+          2.1rem
+        );
+
+      display:grid;
+
+      gap:1rem;
+    }
+
+    .journey-heading{
+      display:grid;
+
+      gap:.82rem;
+    }
+
+    .journey-heading-copy{
+      max-width:900px;
+
+      display:grid;
+
+      gap:.72rem;
+    }
+
+    .path-map{
+      position:relative;
+
+      width:100%;
+      max-width:100%;
+      min-width:0;
+
+      overflow:hidden;
+
+      padding:
+        clamp(
+          1rem,
+          3vw,
+          1.5rem
+        );
+
+      border:
+        1px solid
+        rgba(243,200,111,.2);
+
+      border-radius:
+        clamp(
+          1.15rem,
+          4vw,
+          1.8rem
+        );
+
+      background:
+        radial-gradient(
+          circle at 50% 48%,
+          rgba(156,121,255,.13),
+          transparent 40%
+        ),
+        radial-gradient(
+          circle at 50% 100%,
+          rgba(243,200,111,.09),
+          transparent 36%
+        ),
+        linear-gradient(
+          180deg,
+          rgba(6,12,30,.94),
+          rgba(3,7,19,.98)
+        );
+
+      isolation:isolate;
+    }
+
+    .path-map::before{
+      content:"";
+
+      position:absolute;
+      left:50%;
+      top:5%;
+      bottom:5%;
+      z-index:0;
+
+      width:2px;
+
+      transform:translateX(-50%);
+
+      background:
+        linear-gradient(
+          180deg,
+          transparent,
+          rgba(141,231,255,.5) 10%,
+          rgba(243,200,111,.6) 48%,
+          rgba(156,121,255,.55) 90%,
+          transparent
+        );
+
+      box-shadow:
+        0 0 1rem
+        rgba(141,231,255,.3);
+    }
+
+    .path-network{
+      position:absolute;
+      inset:0;
+      z-index:0;
+
+      width:100%;
+      height:100%;
+
+      pointer-events:none;
+
+      opacity:.54;
+    }
+
+    .path-columns{
+      position:relative;
+      z-index:2;
+
+      display:grid;
+      grid-template-columns:
+        minmax(0,1fr)
+        3.5rem
+        minmax(0,1fr);
+
+      align-items:center;
+
+      gap:.55rem;
+
+      margin-bottom:.8rem;
+
+      color:
+        rgba(229,237,255,.52);
+
+      font-size:.58rem;
+      font-weight:950;
+
+      letter-spacing:.13em;
+      line-height:1.35;
+      text-align:center;
+      text-transform:uppercase;
+    }
+
+    .path-columns span{
+      min-width:0;
+
+      overflow-wrap:anywhere;
+    }
+
+    .path-list{
+      position:relative;
+      z-index:2;
+
+      display:grid;
+
+      gap:.65rem;
+    }
+
+    .path-step{
+      --step-color:
+        var(--page-gold);
+
+      position:relative;
+
+      min-width:0;
+      min-height:6.2rem;
+
+      display:grid;
+      grid-template-columns:
+        minmax(0,1fr)
+        3.5rem
+        minmax(0,1fr);
+
+      align-items:center;
+
+      gap:.55rem;
+
+      padding:.72rem;
+
+      border:
+        1px solid
+        rgba(255,255,255,.085);
+
+      border-radius:1rem;
+
+      background:
+        linear-gradient(
+          90deg,
+          rgba(255,255,255,.025),
+          rgba(255,255,255,.045),
+          rgba(255,255,255,.025)
+        );
+
+      box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.035);
+    }
+
+    .path-step:nth-child(1){
+      --step-color:#f3c86f;
+    }
+
+    .path-step:nth-child(2){
+      --step-color:#ff9dce;
+    }
+
+    .path-step:nth-child(3){
+      --step-color:#8ff0c6;
+    }
+
+    .path-step:nth-child(4){
+      --step-color:#ffe8a3;
+    }
+
+    .path-step:nth-child(5){
+      --step-color:#8de7ff;
+    }
+
+    .path-step:nth-child(6){
+      --step-color:#a88bff;
+    }
+
+    .path-step:nth-child(7){
+      --step-color:#72b7ff;
+    }
+
+    .path-step:nth-child(8){
+      --step-color:#d5b2ff;
+    }
+
+    .path-step:nth-child(9){
+      --step-color:#fff5d0;
+    }
+
+    .path-origin,
+    .path-summit{
+      min-width:0;
+
+      display:grid;
+
+      gap:.18rem;
+
+      padding:.72rem;
+
+      border:
+        1px solid
+        color-mix(
+          in srgb,
+          var(--step-color) 32%,
+          transparent
+        );
+
+      border-radius:.82rem;
+
+      background:
+        color-mix(
+          in srgb,
+          var(--step-color) 7%,
+          rgba(4,8,20,.88)
+        );
+    }
+
+    .path-origin{
+      text-align:right;
+    }
+
+    .path-summit{
+      text-align:left;
+    }
+
+    .path-origin small,
+    .path-summit small{
+      color:
+        rgba(229,237,255,.5);
+
+      font-size:.5rem;
+      font-weight:950;
+
+      letter-spacing:.11em;
+      line-height:1.35;
+      text-transform:uppercase;
+
+      overflow-wrap:anywhere;
+    }
+
+    .path-origin strong,
+    .path-summit strong{
+      color:var(--page-ink);
+
+      font-size:
+        clamp(
+          .82rem,
+          2.7vw,
+          1.05rem
+        );
+
+      line-height:1.08;
+
+      letter-spacing:-.025em;
+
+      overflow-wrap:anywhere;
+    }
+
+    .path-node{
+      position:relative;
+
+      width:2.25rem;
+      height:2.25rem;
+
+      display:grid;
+      place-items:center;
+
+      justify-self:center;
+
+      border:
+        2px solid
+        color-mix(
+          in srgb,
+          var(--step-color) 76%,
+          white
+        );
+
+      border-radius:.48rem;
+
+      transform:rotate(45deg);
+
+      color:#070912;
+
+      background:
+        linear-gradient(
+          135deg,
+          white,
+          var(--step-color)
+        );
+
+      box-shadow:
+        0 0 1rem
+        color-mix(
+          in srgb,
+          var(--step-color) 45%,
+          transparent
+        );
+    }
+
+    .path-node span{
+      transform:rotate(-45deg);
+
+      font-size:.66rem;
+      font-weight:950;
+    }
+
+    .path-thread{
+      grid-column:1 / -1;
+
+      min-width:0;
+
+      margin-top:.08rem;
+
+      color:
+        rgba(229,237,255,.66);
+
+      font-size:.72rem;
+      line-height:1.48;
+      text-align:center;
+
+      overflow-wrap:anywhere;
+    }
+
+    .path-law{
+      position:relative;
+      z-index:2;
+
+      margin-top:.9rem;
+
+      padding:1rem;
+
+      border:
+        1px solid
+        rgba(141,231,255,.16);
+
+      border-radius:1rem;
+
+      color:
+        rgba(229,237,255,.76);
+
+      background:
+        rgba(141,231,255,.045);
+
+      font-size:.8rem;
+      line-height:1.58;
+      text-align:center;
+    }
+
+    /* =====================================================
+       FINAL ACTIONS
+       ===================================================== */
+
+    .final-section{
+      margin-top:1.15rem;
+
+      padding:
+        clamp(
+          1.2rem,
+          4vw,
+          2rem
+        );
+
+      display:grid;
+      justify-items:center;
+
+      gap:.9rem;
+
+      text-align:center;
+
+      border-color:
+        rgba(243,200,111,.28);
+
+      background:
+        radial-gradient(
+          circle at 50% 0%,
+          rgba(243,200,111,.1),
+          transparent 28rem
+        ),
+        linear-gradient(
+          180deg,
+          rgba(255,255,255,.055),
+          rgba(255,255,255,.018)
+        ),
+        rgba(8,11,22,.92);
+    }
+
+    .final-copy{
+      width:min(820px,100%);
+
+      display:grid;
+
+      gap:.7rem;
+    }
+
+    .final-section p{
+      max-width:760px;
+
+      margin-inline:auto;
+    }
+
+    .page-footer{
+      display:grid;
+
+      gap:.65rem;
+
+      padding:1.4rem .5rem .5rem;
+
+      color:var(--page-faint);
+
+      text-align:center;
+
+      font-size:.7rem;
+    }
+
+    .footer-links{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+
+      gap:.45rem .8rem;
+    }
+
+    .footer-links a{
+      color:
+        rgba(229,237,255,.62);
+
+      font-weight:800;
+    }
+
+    .footer-links a:hover,
+    .footer-links a:focus-visible{
+      color:var(--page-gold);
+
+      outline:none;
+    }
+
+    @keyframes page-aurora-rotation{
+      from{
+        transform:rotate(0deg);
+      }
+
+      to{
+        transform:rotate(360deg);
+      }
+    }
+
+    @media (max-width:760px){
+      .page-shell{
+        width:
+          min(
+            calc(100% - 20px),
+            var(--page-max)
+          );
+      }
+
+      .page-topbar{
+        width:100%;
+
+        grid-template-columns:minmax(0,1fr);
+        align-items:start;
+
+        gap:.7rem;
+      }
+
+      .page-brand{
+        width:100%;
+      }
+
+      .page-return{
+        width:100%;
+
+        justify-self:stretch;
+      }
+
+      .book-pair{
+        grid-template-columns:1fr;
+      }
+
+      .heart-stage{
+        width:100%;
+      }
+
+      .hero-actions,
+      .final-actions{
+        width:100%;
+
+        display:grid;
+        grid-template-columns:minmax(0,1fr);
+      }
+
+      .page-button{
+        width:100%;
+      }
+    }
+
+    @media (max-width:520px){
+      .page-shell{
+        width:
+          min(
+            calc(100% - 16px),
+            var(--page-max)
+          );
+      }
+
+      .hero,
+      .book-section,
+      .journey-section,
+      .final-section{
+        padding:1rem;
+      }
+
+      .page-shell h1{
+        font-size:
+          clamp(
+            2.42rem,
+            13.2vw,
+            4rem
+          );
+
+        letter-spacing:-.072em;
+      }
+
+      .page-shell h2{
+        font-size:
+          clamp(
+            1.55rem,
+            8vw,
+            2.4rem
+          );
+      }
+
+      .page-kicker{
+        width:100%;
+
+        border-radius:1rem;
+      }
+
+      .heart-enter{
+        bottom:5%;
+
+        min-height:2.38rem;
+
+        padding:.58rem .82rem;
+
+        font-size:.62rem;
+      }
+
+      .heart-help{
+        display:none;
+      }
+
+      .heart-status{
+        top:2%;
+
+        font-size:.48rem;
+      }
+
+      .path-map{
+        padding:.7rem;
+      }
+
+      .path-columns,
+      .path-step{
+        grid-template-columns:
+          minmax(0,1fr)
+          2.55rem
+          minmax(0,1fr);
+
+        gap:.36rem;
+      }
+
+      .path-columns{
+        font-size:.47rem;
+
+        letter-spacing:.08em;
+      }
+
+      .path-step{
+        min-height:5.7rem;
+
+        padding:.48rem;
+      }
+
+      .path-origin,
+      .path-summit{
+        padding:.52rem .42rem;
+      }
+
+      .path-origin strong,
+      .path-summit strong{
+        font-size:
+          clamp(
+            .68rem,
+            3.3vw,
+            .88rem
+          );
+      }
+
+      .path-node{
+        width:1.86rem;
+        height:1.86rem;
+      }
+
+      .path-node span{
+        font-size:.56rem;
+      }
+
+      .path-thread{
+        font-size:.61rem;
+      }
+
+      .book-cover-frame{
+        min-height:24rem;
+      }
+    }
+
+    @media (max-width:370px){
+      .page-shell{
+        width:
+          min(
+            calc(100% - 12px),
+            var(--page-max)
+          );
+      }
+
+      .hero,
+      .book-section,
+      .journey-section,
+      .final-section{
+        padding:.78rem;
+      }
+
+      .page-shell h1{
+        font-size:
+          clamp(
+            2.1rem,
+            12.5vw,
+            3rem
+          );
+      }
+
+      .path-columns{
+        display:none;
+      }
+
+      .path-step{
+        grid-template-columns:
+          minmax(0,1fr)
+          2.2rem
+          minmax(0,1fr);
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *,
+      *::before,
+      *::after{
+        scroll-behavior:auto!important;
+
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+
+        transition-duration:.01ms!important;
+      }
+
+      body::after{
+        animation:none!important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a
+    class="page-skip"
+    href="#nine-summits-main"
+  >
+    Skip to The Nine Summits of Love
+  </a>
+
+  <div class="page-shell">
+    <header
+      class="page-topbar"
+      aria-label="The Nine Summits of Love header"
+    >
+      <a
+        class="page-brand"
+        href="/nine-summits-of-love/"
+      >
+        <small>Diamond Gate Bridge</small>
+
+        <strong>
+          The Nine Summits of Love
+        </strong>
+      </a>
+
+      <a
+        class="page-return"
+        href="/"
+      >
+        Return to Compass
+      </a>
+    </header>
+
+    <main id="nine-summits-main">
+      <section
+        class="page-panel hero"
+        aria-labelledby="page-title"
+      >
+        <div class="hero-copy">
+          <div class="page-kicker">
+            The Nine Summits of Love · 256 Carats of Human Potential
+          </div>
+
+          <h1 id="page-title">
+            What if the heart is not broken?
+          </h1>
+
+          <h2>
+            What if it is simply under pressure?
+          </h2>
+
+          <div class="hero-opening">
+            <p>
+              We often talk about love as though it is something we are supposed to find: the right person, the right moment, the right answer.
+            </p>
+
+            <p>
+              But what if love is not merely something we find? What if love is something we must become capable of carrying?
+            </p>
+
+            <p>
+              Pressure does not always destroy what is valuable. Sometimes pressure reveals it. A diamond does not emerge by avoiding pressure. Neither does character. Neither does trust. Neither does love.
+            </p>
+          </div>
+
+          <div class="hero-thesis">
+            The heart is not empty. Its value is still present—even when it is locked, guarded, exhausted, or afraid.
+          </div>
+        </div>
+
+        <div
+          class="heart-stage"
+          data-nine-summits-heart-stage
+          data-house-heart-shell
+          data-webgl-state="loading"
+          data-heart-width="377"
+          data-heart-height="368"
+          data-heart-depth="89"
+          data-heart-rim-depth="13"
+          data-heart-dome-rise="31.5"
+          data-heart-floor-gap="55"
+          data-heart-shadow-width="233"
+          data-heart-camera-distance="987"
+          data-heart-rotation-seconds="34"
+          data-heart-origin-x="0"
+          data-heart-origin-y="0"
+          data-heart-origin-z="0"
+          data-heart-axis="y"
+          data-heart-orbit="false"
+          data-heart-blackout="false"
+          data-heart-internal-emission="true"
+          data-heart-additive-halo="true"
+          data-heart-ground-shadow-only="true"
+          data-heart-primary-color="ruby"
+        >
+          <canvas
+            class="heart-canvas"
+            data-nine-summits-heart-canvas
+            aria-hidden="true"
+          ></canvas>
+
+          <svg
+            class="heart-fallback"
+            viewBox="0 0 1000 900"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <defs>
+              <radialGradient
+                id="fallbackRubyHeart"
+                cx="46%"
+                cy="40%"
+                r="74%"
+              >
+                <stop
+                  offset="0%"
+                  stop-color="#fff0d1"
+                />
+
+                <stop
+                  offset="12%"
+                  stop-color="#ffb0ad"
+                />
+
+                <stop
+                  offset="29%"
+                  stop-color="#ff5f78"
+                />
+
+                <stop
+                  offset="49%"
+                  stop-color="#d71d4d"
+                />
+
+                <stop
+                  offset="68%"
+                  stop-color="#9c1235"
+                />
+
+                <stop
+                  offset="85%"
+                  stop-color="#6d0b29"
+                />
+
+                <stop
+                  offset="100%"
+                  stop-color="#40071c"
+                />
+              </radialGradient>
+
+              <filter
+                id="fallbackRubyGlow"
+                x="-60%"
+                y="-60%"
+                width="220%"
+                height="230%"
+              >
+                <feGaussianBlur
+                  in="SourceGraphic"
+                  stdDeviation="31"
+                  result="outerBlur"
+                />
+
+                <feColorMatrix
+                  in="outerBlur"
+                  type="matrix"
+                  values="
+                    1.25 0    0    0 0
+                    0    .28  0    0 0
+                    0    0    .46  0 0
+                    0    0    0    .62 0
+                  "
+                  result="rubyGlow"
+                />
+
+                <feDropShadow
+                  dx="0"
+                  dy="24"
+                  stdDeviation="18"
+                  flood-color="#000000"
+                  flood-opacity=".58"
+                  result="groundDepth"
+                />
+
+                <feMerge>
+                  <feMergeNode in="rubyGlow"/>
+                  <feMergeNode in="groundDepth"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+
+            <path
+              d="
+                M 500 865
+                C 444 805 350 734 255 645
+                C 153 550 94 440 100 330
+                C 106 215 166 119 270 101
+                C 361 85 433 133 500 238
+                C 567 133 639 85 730 101
+                C 834 119 894 215 900 330
+                C 906 440 847 550 745 645
+                C 650 734 556 805 500 865
+                Z
+              "
+              fill="url(#fallbackRubyHeart)"
+              stroke="#ffb083"
+              stroke-width="9"
+              filter="url(#fallbackRubyGlow)"
+            />
+          </svg>
+
+          <button
+            class="heart-door"
+            type="button"
+            data-house-control-pad-open
+            data-house-context="nine-summits-of-love"
+            aria-label="Open the interactive House estate from the ruby internally luminous rotating Nine Summits diamond heart"
+          >
+            <span class="heart-status">
+              A living heart under pressure
+            </span>
+
+            <span class="heart-enter">
+              Enter the House
+            </span>
+
+            <span class="heart-help">
+              Select the heart to open the interactive estate
+            </span>
+          </button>
+        </div>
+
+        <div class="hero-actions">
+          <a
+            class="page-button page-button--gold"
+            href="/nine-summits/"
+          >
+            Open Nine Summits
+          </a>
+
+          <a
+            class="page-button"
+            href="/nine-summits/universe/"
+          >
+            Enter the Universe
+          </a>
+        </div>
+      </section>
+
+      <section
+        class="page-panel book-section"
+        aria-labelledby="book-covers-title"
+      >
+        <div class="book-heading">
+          <div class="page-kicker">
+            The story behind the climb
+          </div>
+
+          <div class="book-heading-copy">
+            <h2 id="book-covers-title">
+              Every journey needs a beginning—and a reason to keep climbing.
+            </h2>
+
+            <p>
+              The front and back of the book hold the complete movement of the Nine Summits: the locked heart, the chain, the key, the mountain, the climb, and the larger world waiting beyond it.
+            </p>
+
+            <p>
+              One image begins with pressure. The other asks what becomes possible when the heart is finally able to carry its own light.
+            </p>
+          </div>
+        </div>
+
+        <div class="book-pair">
+          <figure class="book-cover">
+            <div class="book-cover-frame">
+              <img
+                src="/assets/nine-summits-love-preface-cover.png"
+                alt="Front cover of The Nine Summits of Love showing the locked diamond heart, chain, key, and mountain ascent."
+                loading="eager"
+                decoding="sync"
+                fetchpriority="high"
+              >
+            </div>
+
+            <figcaption>
+              <b>Front Cover</b>
+
+              <strong>
+                The locked heart and the beginning of the climb
+              </strong>
+            </figcaption>
+          </figure>
+
+          <figure class="book-cover">
+            <div class="book-cover-frame">
+              <img
+                src="/assets/nine-summits-love-hero.png"
+                alt="Back cover of The Nine Summits of Love showing the radiant diamond heart and the wider summit world."
+                loading="lazy"
+                decoding="async"
+              >
+            </div>
+
+            <figcaption>
+              <b>Back Cover</b>
+
+              <strong>
+                The radiant heart and the world beyond the climb
+              </strong>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section
+        class="page-panel journey-section"
+        aria-labelledby="connected-paths-title"
+      >
+        <div class="journey-heading">
+          <div class="page-kicker">
+            Nine beginnings · nine paths · nine summits
+          </div>
+
+          <div class="journey-heading-copy">
+            <h2 id="connected-paths-title">
+              No one reaches love by taking only one path.
+            </h2>
+
+            <p>
+              We tend to separate human growth into isolated instructions: be grateful, be patient, be accountable, forgive, exercise self-control.
+            </p>
+
+            <p>
+              But these qualities do not develop independently. The paths cross because human formation is connected.
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="path-map"
+          aria-label="Connected paths from nine human beginnings to the Nine Summits of Love"
+        >
+          <svg
+            class="path-network"
+            viewBox="0 0 1000 1280"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <defs>
+              <linearGradient
+                id="pathSpineGradient"
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="1"
+              >
+                <stop
+                  offset="0%"
+                  stop-color="#8de7ff"
+                  stop-opacity=".7"
+                />
+
+                <stop
+                  offset="48%"
+                  stop-color="#f3c86f"
+                  stop-opacity=".8"
+                />
+
+                <stop
+                  offset="100%"
+                  stop-color="#9c79ff"
+                  stop-opacity=".72"
+                />
+              </linearGradient>
+
+              <filter
+                id="pathGlow"
+                x="-40%"
+                y="-20%"
+                width="180%"
+                height="140%"
+              >
+                <feGaussianBlur
+                  stdDeviation="7"
+                  result="blur"
+                />
+
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+
+            <path
+              d="
+                M 500 52
+                C 490 180 510 280 500 410
+                C 490 540 510 650 500 790
+                C 490 930 510 1060 500 1228
+              "
+              fill="none"
+              stroke="url(#pathSpineGradient)"
+              stroke-width="4"
+              stroke-linecap="round"
+              filter="url(#pathGlow)"
+            />
+
+            <g
+              fill="none"
+              stroke="#8de7ff"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              opacity=".54"
+            >
+              <path d="M 165 115 C 310 115 350 115 500 115 C 650 115 690 115 835 115"/>
+              <path d="M 165 250 C 320 250 365 250 500 250 C 635 250 680 250 835 250"/>
+              <path d="M 165 385 C 300 385 385 385 500 385 C 615 385 700 385 835 385"/>
+              <path d="M 165 520 C 315 520 365 520 500 520 C 635 520 685 520 835 520"/>
+              <path d="M 165 655 C 295 655 380 655 500 655 C 620 655 705 655 835 655"/>
+              <path d="M 165 790 C 315 790 365 790 500 790 C 635 790 685 790 835 790"/>
+              <path d="M 165 925 C 300 925 385 925 500 925 C 615 925 700 925 835 925"/>
+              <path d="M 165 1060 C 315 1060 365 1060 500 1060 C 635 1060 685 1060 835 1060"/>
+              <path d="M 165 1195 C 295 1195 380 1195 500 1195 C 620 1195 705 1195 835 1195"/>
+            </g>
+
+            <g
+              fill="none"
+              stroke="#f3c86f"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-dasharray="8 14"
+              opacity=".42"
+            >
+              <path d="M 170 115 C 330 170 360 200 500 250 C 640 300 680 330 830 385"/>
+              <path d="M 170 250 C 320 315 370 350 500 385 C 630 420 680 465 830 520"/>
+              <path d="M 170 385 C 330 440 360 485 500 520 C 640 555 680 610 830 655"/>
+              <path d="M 170 520 C 310 580 380 615 500 655 C 620 695 690 750 830 790"/>
+              <path d="M 170 655 C 320 710 370 760 500 790 C 630 820 680 880 830 925"/>
+              <path d="M 170 790 C 330 850 360 900 500 925 C 640 950 680 1010 830 1060"/>
+              <path d="M 170 925 C 310 985 380 1025 500 1060 C 620 1095 690 1150 830 1195"/>
+            </g>
+          </svg>
+
+          <div class="path-columns">
+            <span>Path begins with</span>
+            <span>Link</span>
+            <span>Summit formation</span>
+          </div>
+
+          <div class="path-list">
+            <article class="path-step">
+              <div class="path-origin">
+                <small>Beginning</small>
+                <strong>Gratitude</strong>
+              </div>
+
+              <div class="path-node">
+                <span>1</span>
+              </div>
+
+              <div class="path-summit">
+                <small>Summit</small>
+                <strong>Joy</strong>
+              </div>
+
+              <div class="path-thread">
+                Joy does not begin with having everything. It begins with recognizing what is already alive, valuable, and worth receiving.
+              </div>
+            </article>
+
+            <article class="path-step">
+              <div class="path-origin">
+                <small>Beginning</small>
+                <strong>Generosity</strong>
+              </div>
+
+              <div class="path-node">
+                <span>2</span>
+              </div>
+
+              <div class="path-summit">
+                <small>Summit</small>
+                <strong>Love</strong>
+              </div>
+
+              <div class="path-thread">
+                Love becomes visible when value moves outward without destroying the person giving it.
+              </div>
+            </article>
+
+            <article class="path-step">
+              <div class="path-origin">
+                <small>Beginning</small>
+                <strong>Dependability</strong>
+              </div>
+
+              <div class="path-node">
+                <span>3</span>
+              </div>
+
+              <div class="path-summit">
+                <small>Summit</small>
+                <strong>Stability</strong>
+              </div>
+
+              <div class="path-thread">
+                Stability is not a feeling. It is trustworthy action repeated long enough for others—and your future self—to stand on it.
+              </div>
+            </article>
+
+            <article class="path-step">
+              <div class="path-origin">
+                <small>Beginning</small>
+                <strong>Accountability</strong>
+              </div>
+
+              <div class="path-node">
+                <span>4</span>
+              </div>
+
+              <div class="path-summit">
+                <small>Summit</small>
+                <strong>Character</strong>
+              </div>
+
+              <div class="path-thread">
+                Character begins when we stop asking only what we intended and become willing to answer for what our choices produced.
+              </div>
+            </article>
+
+            <article class="path-step">
+              <div class="path-origin">
+                <small>Beginning</small>
+                <strong>Forgiveness</strong>
+              </div>
+
+              <div class="path-node">
+                <span>5</span>
+              </div>
+
+              <div class="path-summit">
+                <small>Summit</small>
+                <strong>Peace</strong>
+              </div>
+
+              <div class="path-thread">
+                Forgiveness does not erase truth. It ends the unnecessary war so truth, boundaries, and repair can occupy the same room.
+              </div>
+            </article>
+
+            <article class="path-step">
+              <div class="path-origin">
+                <small>Beginning</small>
+                <strong>Self-Control</strong>
+              </div>
+
+              <div class="path-node">
+                <span>6</span>
+              </div>
+
+              <div class="path-summit">
+                <small>Summit</small>
+                <strong>Balance</strong>
+              </div>
+
+              <div class="path-thread">
+                Balance is not the absence of emotion. It is the ability to feel deeply without surrendering authority over what happens next.
+              </div>
+            </article>
+
+            <article class="path-step">
+              <div class="path-origin">
+                <small>Beginning</small>
+                <strong>Patience</strong>
+              </div>
+
+              <div class="path-node">
+                <span>7</span>
+              </div>
+
+              <div class="path-summit">
+                <small>Summit</small>
+                <strong>Structure</strong>
+              </div>
+
+              <div class="path-thread">
+                Anything built too quickly can collapse under the weight it was meant to carry. Patience gives strong things time to form.
+              </div>
+            </article>
+
+            <article class="path-step">
+              <div class="path-origin">
+                <small>Beginning</small>
+                <strong>Humility</strong>
+              </div>
+
+              <div class="path-node">
+                <span>8</span>
+              </div>
+
+              <div class="path-summit">
+                <small>Summit</small>
+                <strong>Dignity</strong>
+              </div>
+
+              <div class="path-thread">
+                Humility is not becoming smaller. It is seeing yourself in honest proportion—without self-erasure or artificial superiority.
+              </div>
+            </article>
+
+            <article class="path-step">
+              <div class="path-origin">
+                <small>Beginning</small>
+                <strong>Purity</strong>
+              </div>
+
+              <div class="path-node">
+                <span>9</span>
+              </div>
+
+              <div class="path-summit">
+                <small>Summit</small>
+                <strong>Free Will</strong>
+              </div>
+
+              <div class="path-thread">
+                A choice is not fully free when fear, coercion, resentment, or appetite is making it for us. Purity clears the field.
+              </div>
+            </article>
+          </div>
+
+          <div class="path-law">
+            The Nine Summits are not nine separate achievements. They are one connected human formation. Each path strengthens the next. Each summit supports the others. Love is not waiting at the top as a prize. Love is what the climber becomes capable of carrying.
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="page-panel final-section"
+        aria-labelledby="final-title"
+      >
+        <div class="page-kicker">
+          The climb begins here
+        </div>
+
+        <div class="final-copy">
+          <h2 id="final-title">
+            The heart does not need to be discarded. It needs a path.
+          </h2>
+
+          <p>
+            The pressure may be real. The lock may be real. The fear may be real. But so is the value still living inside the heart.
+          </p>
+
+          <p>
+            Begin with one practice. Take one honest step. Follow the connected path. Then keep climbing.
+          </p>
+        </div>
+
+        <div class="final-actions">
+          <a
+            class="page-button page-button--gold"
+            href="/nine-summits/"
+          >
+            Open Nine Summits
+          </a>
+
+          <a
+            class="page-button"
+            href="/nine-summits/universe/"
+          >
+            Enter the Universe
+          </a>
+
+          <button
+            class="page-button"
+            type="button"
+            data-house-control-pad-open
+            data-house-context="nine-summits-of-love-final"
+          >
+            Enter the House
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="page-footer">
+      <nav
+        class="footer-links"
+        aria-label="Secondary navigation"
+      >
+        <a href="/about-this-underdog/">
+          About This Underdog
+        </a>
+
+        <a href="/meet-sean-mansfield/">
+          Meet Sean
+        </a>
+
+        <a href="/products/">
+          Products
+        </a>
+
+        <a href="/showroom/">
+          Showroom
+        </a>
+
+        <a href="/gauges/">
+          Gauges
+        </a>
+      </nav>
+
+      <span>
+        The Nine Summits of Love · A connected path from pressure to human potential.
+      </span>
+    </footer>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const stage =
+        document.querySelector(
+          "[data-nine-summits-heart-stage]"
+        );
+
+      const canvas =
+        document.querySelector(
+          "[data-nine-summits-heart-canvas]"
+        );
+
+      if (!stage || !canvas) {
+        return;
+      }
+
+      const reducedMotion =
+        window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        );
+
+      const CONFIG = Object.freeze({
+        stage:610,
+        width:377,
+        height:368,
+
+        depth:89,
+        rimDepth:13,
+        domeRise:31.5,
+
+        floorGap:55,
+        floorY:-239,
+
+        shadowWidth:233,
+        cameraDistance:987,
+
+        rotationDuration:34000,
+        perimeterSamples:89,
+        shadowLayers:13,
+
+        ringScales:[
+          1,
+          .944,
+          .786,
+          .618,
+          .486,
+          .382,
+          .300,
+          .236,
+          .146,
+          .090
+        ],
+
+        shrinkFocus:[
+          0,
+          18
+        ],
+
+        keyLight:[
+          -233,
+          233,
+          377
+        ],
+
+        fillLight:[
+          233,
+          89,
+          144
+        ],
+
+        rimLight:[
+          0,
+          144,
+          -233
+        ],
+
+        shadowLight:[
+          -144,
+          610,
+          233
+        ],
+
+        haloLayers:[
+          {
+            scale:1.034,
+            color:[1.0,.10,.24],
+            alpha:.18
+          },
+          {
+            scale:1.069,
+            color:[1.0,.28,.44],
+            alpha:.095
+          },
+          {
+            scale:1.108,
+            color:[1.0,.58,.26],
+            alpha:.045
+          }
+        ]
+      });
+
+      const gl =
+        canvas.getContext(
+          "webgl",
+          {
+            alpha:true,
+            antialias:true,
+            depth:true,
+            premultipliedAlpha:false,
+            preserveDrawingBuffer:false,
+            powerPreference:"high-performance"
+          }
+        );
+
+      if (!gl) {
+        stage.dataset.webglState =
+          "failed";
+
+        return;
+      }
+
+      const HEART_VERTEX_SOURCE = `
+        attribute vec3 aPosition;
+        attribute vec3 aNormal;
+        attribute vec4 aColor;
+        attribute float aSurface;
+
+        uniform mat4 uModel;
+        uniform mat4 uView;
+        uniform mat4 uProjection;
+
+        varying vec3 vLocalPosition;
+        varying vec3 vWorldPosition;
+        varying vec3 vNormal;
+        varying vec4 vColor;
+        varying float vSurface;
+
+        void main(void) {
+          vLocalPosition =
+            aPosition;
+
+          vec4 worldPosition =
+            uModel *
+            vec4(
+              aPosition,
+              1.0
+            );
+
+          vWorldPosition =
+            worldPosition.xyz;
+
+          vNormal =
+            normalize(
+              mat3(uModel) *
+              aNormal
+            );
+
+          vColor =
+            aColor;
+
+          vSurface =
+            aSurface;
+
+          gl_Position =
+            uProjection *
+            uView *
+            worldPosition;
+        }
+      `;
+
+      const HEART_FRAGMENT_SOURCE = `
+        precision highp float;
+
+        varying vec3 vLocalPosition;
+        varying vec3 vWorldPosition;
+        varying vec3 vNormal;
+        varying vec4 vColor;
+        varying float vSurface;
+
+        uniform vec3 uCameraPosition;
+        uniform vec3 uKeyLight;
+        uniform vec3 uFillLight;
+        uniform vec3 uRimLight;
+
+        vec3 directionalContribution(
+          vec3 normal,
+          vec3 worldPosition,
+          vec3 lightPosition,
+          vec3 lightColor,
+          float strength
+        ) {
+          vec3 lightDirection =
+            normalize(
+              lightPosition -
+              worldPosition
+            );
+
+          float amount =
+            max(
+              dot(
+                normal,
+                lightDirection
+              ),
+              0.0
+            );
+
+          return
+            lightColor *
+            amount *
+            strength;
+        }
+
+        float safeFacing(
+          vec3 normal,
+          vec3 viewDirection
+        ) {
+          return
+            clamp(
+              abs(
+                dot(
+                  normal,
+                  viewDirection
+                )
+              ),
+              0.0,
+              1.0
+            );
+        }
+
+        void main(void) {
+          vec3 normal =
+            normalize(vNormal);
+
+          vec3 viewDirection =
+            normalize(
+              uCameraPosition -
+              vWorldPosition
+            );
+
+          float facing =
+            safeFacing(
+              normal,
+              viewDirection
+            );
+
+          float fresnel =
+            pow(
+              1.0 -
+              facing,
+              2.15
+            );
+
+          vec2 normalizedBody =
+            vec2(
+              vLocalPosition.x /
+              188.5,
+
+              (
+                vLocalPosition.y -
+                18.0
+              ) /
+              184.0
+            );
+
+          float bodyDistance =
+            length(
+              normalizedBody
+            );
+
+          float centerField =
+            pow(
+              clamp(
+                1.0 -
+                bodyDistance *
+                .78,
+                0.0,
+                1.0
+              ),
+              1.42
+            );
+
+          float crownField =
+            clamp(
+              abs(
+                vLocalPosition.z
+              ) /
+              44.5,
+              0.0,
+              1.0
+            );
+
+          float rearMask =
+            smoothstep(
+              .45,
+              1.35,
+              vSurface
+            );
+
+          float sideMask =
+            smoothstep(
+              1.45,
+              2.15,
+              vSurface
+            );
+
+          vec3 baseColor =
+            max(
+              vColor.rgb,
+              vec3(
+                .20,
+                .025,
+                .07
+              )
+            );
+
+          vec3 rubyCore =
+            vec3(
+              1.0,
+              .055,
+              .17
+            );
+
+          vec3 crimsonCore =
+            vec3(
+              .87,
+              .035,
+              .14
+            );
+
+          vec3 roseCore =
+            vec3(
+              1.0,
+              .25,
+              .38
+            );
+
+          vec3 garnetCore =
+            vec3(
+              .52,
+              .025,
+              .12
+            );
+
+          vec3 hotCore =
+            vec3(
+              1.0,
+              .62,
+              .48
+            );
+
+          vec3 goldCore =
+            vec3(
+              1.0,
+              .58,
+              .18
+            );
+
+          vec3 violetAccent =
+            vec3(
+              .48,
+              .30,
+              .88
+            );
+
+          vec3 blueAccent =
+            vec3(
+              .24,
+              .49,
+              .86
+            );
+
+          vec3 internalColor =
+            mix(
+              baseColor,
+              rubyCore,
+              centerField *
+              .62
+            );
+
+          internalColor =
+            mix(
+              internalColor,
+              roseCore,
+              centerField *
+              crownField *
+              .24
+            );
+
+          internalColor =
+            mix(
+              internalColor,
+              crimsonCore,
+              rearMask *
+              .18
+            );
+
+          internalColor =
+            mix(
+              internalColor,
+              garnetCore,
+              sideMask *
+              .18
+            );
+
+          internalColor =
+            mix(
+              internalColor,
+              hotCore,
+              centerField *
+              crownField *
+              .11
+            );
+
+          float internalStrength =
+            .75 +
+            centerField *
+            .68 +
+            crownField *
+            .15 +
+            rearMask *
+            .10 +
+            sideMask *
+            .07;
+
+          vec3 internalEmission =
+            internalColor *
+            internalStrength;
+
+          float hemisphereAmount =
+            normal.y *
+            .5 +
+            .5;
+
+          vec3 hemisphere =
+            mix(
+              vec3(
+                .055,
+                .012,
+                .035
+              ),
+              vec3(
+                .12,
+                .045,
+                .085
+              ),
+              hemisphereAmount
+            ) *
+            .31;
+
+          vec3 cameraFill =
+            vec3(
+              1.0,
+              .34,
+              .30
+            ) *
+            (
+              .09 +
+              facing *
+              .15
+            );
+
+          vec3 key =
+            directionalContribution(
+              normal,
+              vWorldPosition,
+              uKeyLight,
+              vec3(
+                1.0,
+                .46,
+                .19
+              ),
+              .31
+            );
+
+          vec3 fill =
+            directionalContribution(
+              normal,
+              vWorldPosition,
+              uFillLight,
+              vec3(
+                .34,
+                .30,
+                .72
+              ),
+              .19
+            );
+
+          vec3 rim =
+            directionalContribution(
+              normal,
+              vWorldPosition,
+              uRimLight,
+              vec3(
+                .40,
+                .27,
+                .78
+              ),
+              .21
+            );
+
+          vec3 externalLighting =
+            hemisphere +
+            cameraFill +
+            key +
+            fill +
+            rim;
+
+          vec3 keyDirection =
+            normalize(
+              uKeyLight -
+              vWorldPosition
+            );
+
+          vec3 halfVector =
+            normalize(
+              keyDirection +
+              viewDirection
+            );
+
+          float specular =
+            pow(
+              max(
+                abs(
+                  dot(
+                    normal,
+                    halfVector
+                  )
+                ),
+                0.0
+              ),
+              42.0
+            );
+
+          float secondarySpecular =
+            pow(
+              max(
+                facing,
+                0.0
+              ),
+              8.0
+            ) *
+            centerField;
+
+          float horizontalField =
+            clamp(
+              normalizedBody.x *
+              .5 +
+              .5,
+              0.0,
+              1.0
+            );
+
+          vec3 minorCoolAccent =
+            mix(
+              violetAccent,
+              blueAccent,
+              horizontalField
+            );
+
+          vec3 edgeRadiance =
+            mix(
+              roseCore,
+              goldCore,
+              .34 +
+              crownField *
+              .18
+            ) *
+            fresnel *
+            (
+              .42 +
+              centerField *
+              .10
+            );
+
+          edgeRadiance +=
+            minorCoolAccent *
+            fresnel *
+            .07;
+
+          vec3 reflectedSurface =
+            baseColor *
+            externalLighting *
+            .43;
+
+          vec3 sparkle =
+            hotCore *
+            specular *
+            .58 +
+            goldCore *
+            secondarySpecular *
+            .11;
+
+          vec3 color =
+            internalEmission +
+            reflectedSurface +
+            edgeRadiance +
+            sparkle;
+
+          vec3 visibilityFloor =
+            mix(
+              baseColor *
+              .72,
+              internalColor *
+              .83,
+              centerField
+            );
+
+          visibilityFloor =
+            mix(
+              visibilityFloor,
+              internalColor *
+              .77,
+              rearMask
+            );
+
+          visibilityFloor =
+            mix(
+              visibilityFloor,
+              internalColor *
+              .72,
+              sideMask
+            );
+
+          color =
+            max(
+              color,
+              visibilityFloor
+            );
+
+          color +=
+            hotCore *
+            centerField *
+            crownField *
+            .055;
+
+          color =
+            color /
+            (
+              vec3(1.0) +
+              color *
+              .41
+            );
+
+          color =
+            pow(
+              max(
+                color,
+                vec3(0.0)
+              ),
+              vec3(
+                1.0 /
+                2.2
+              )
+            );
+
+          gl_FragColor =
+            vec4(
+              color,
+              vColor.a
+            );
+        }
+      `;
+
+      const HALO_VERTEX_SOURCE = `
+        attribute vec3 aPosition;
+
+        uniform mat4 uModel;
+        uniform mat4 uView;
+        uniform mat4 uProjection;
+
+        varying float vHeight;
+
+        void main(void) {
+          vHeight =
+            clamp(
+              (
+                aPosition.y +
+                184.0
+              ) /
+              368.0,
+              0.0,
+              1.0
+            );
+
+          gl_Position =
+            uProjection *
+            uView *
+            uModel *
+            vec4(
+              aPosition,
+              1.0
+            );
+        }
+      `;
+
+      const HALO_FRAGMENT_SOURCE = `
+        precision mediump float;
+
+        varying float vHeight;
+
+        uniform vec3 uHaloColor;
+        uniform float uHaloAlpha;
+
+        void main(void) {
+          vec3 verticalColor =
+            mix(
+              uHaloColor *
+              .68,
+              uHaloColor,
+              vHeight
+            );
+
+          gl_FragColor =
+            vec4(
+              verticalColor,
+              uHaloAlpha
+            );
+        }
+      `;
+
+      const SHADOW_VERTEX_SOURCE = `
+        attribute vec3 aPosition;
+        attribute float aAlpha;
+
+        uniform mat4 uView;
+        uniform mat4 uProjection;
+
+        varying float vAlpha;
+
+        void main(void) {
+          vAlpha =
+            aAlpha;
+
+          gl_Position =
+            uProjection *
+            uView *
+            vec4(
+              aPosition,
+              1.0
+            );
+        }
+      `;
+
+      const SHADOW_FRAGMENT_SOURCE = `
+        precision mediump float;
+
+        varying float vAlpha;
+
+        void main(void) {
+          gl_FragColor =
+            vec4(
+              .005,
+              .008,
+              .018,
+              vAlpha
+            );
+        }
+      `;
+
+      function compileShader(
+        type,
+        source
+      ) {
+        const shader =
+          gl.createShader(type);
+
+        if (!shader) {
+          throw new Error(
+            "Unable to create shader."
+          );
+        }
+
+        gl.shaderSource(
+          shader,
+          source
+        );
+
+        gl.compileShader(shader);
+
+        if (
+          !gl.getShaderParameter(
+            shader,
+            gl.COMPILE_STATUS
+          )
+        ) {
+          const message =
+            gl.getShaderInfoLog(shader) ||
+            "Shader compilation failed.";
+
+          gl.deleteShader(shader);
+
+          throw new Error(message);
+        }
+
+        return shader;
+      }
+
+      function createProgram(
+        vertexSource,
+        fragmentSource
+      ) {
+        const vertexShader =
+          compileShader(
+            gl.VERTEX_SHADER,
+            vertexSource
+          );
+
+        const fragmentShader =
+          compileShader(
+            gl.FRAGMENT_SHADER,
+            fragmentSource
+          );
+
+        const program =
+          gl.createProgram();
+
+        if (!program) {
+          throw new Error(
+            "Unable to create WebGL program."
+          );
+        }
+
+        gl.attachShader(
+          program,
+          vertexShader
+        );
+
+        gl.attachShader(
+          program,
+          fragmentShader
+        );
+
+        gl.linkProgram(program);
+
+        gl.deleteShader(vertexShader);
+        gl.deleteShader(fragmentShader);
+
+        if (
+          !gl.getProgramParameter(
+            program,
+            gl.LINK_STATUS
+          )
+        ) {
+          const message =
+            gl.getProgramInfoLog(program) ||
+            "Program linking failed.";
+
+          gl.deleteProgram(program);
+
+          throw new Error(message);
+        }
+
+        return program;
+      }
+
+      function createMat4() {
+        return new Float32Array(16);
+      }
+
+      function identity(out) {
+        out[0] = 1;
+        out[1] = 0;
+        out[2] = 0;
+        out[3] = 0;
+
+        out[4] = 0;
+        out[5] = 1;
+        out[6] = 0;
+        out[7] = 0;
+
+        out[8] = 0;
+        out[9] = 0;
+        out[10] = 1;
+        out[11] = 0;
+
+        out[12] = 0;
+        out[13] = 0;
+        out[14] = 0;
+        out[15] = 1;
+
+        return out;
+      }
+
+      function perspective(
+        out,
+        fieldOfView,
+        aspect,
+        near,
+        far
+      ) {
+        const f =
+          1 /
+          Math.tan(
+            fieldOfView /
+            2
+          );
+
+        const inverseRange =
+          1 /
+          (
+            near -
+            far
+          );
+
+        out[0] =
+          f /
+          aspect;
+
+        out[1] = 0;
+        out[2] = 0;
+        out[3] = 0;
+
+        out[4] = 0;
+        out[5] = f;
+        out[6] = 0;
+        out[7] = 0;
+
+        out[8] = 0;
+        out[9] = 0;
+
+        out[10] =
+          (
+            far +
+            near
+          ) *
+          inverseRange;
+
+        out[11] = -1;
+
+        out[12] = 0;
+        out[13] = 0;
+
+        out[14] =
+          2 *
+          far *
+          near *
+          inverseRange;
+
+        out[15] = 0;
+
+        return out;
+      }
+
+      function normalizeVector(
+        vector
+      ) {
+        const length =
+          Math.hypot(
+            vector[0],
+            vector[1],
+            vector[2]
+          ) ||
+          1;
+
+        return [
+          vector[0] / length,
+          vector[1] / length,
+          vector[2] / length
+        ];
+      }
+
+      function subtractVector(
+        a,
+        b
+      ) {
+        return [
+          a[0] - b[0],
+          a[1] - b[1],
+          a[2] - b[2]
+        ];
+      }
+
+      function crossVector(
+        a,
+        b
+      ) {
+        return [
+          a[1] * b[2] -
+          a[2] * b[1],
+
+          a[2] * b[0] -
+          a[0] * b[2],
+
+          a[0] * b[1] -
+          a[1] * b[0]
+        ];
+      }
+
+      function lookAt(
+        out,
+        eye,
+        target,
+        up
+      ) {
+        const z =
+          normalizeVector(
+            subtractVector(
+              eye,
+              target
+            )
+          );
+
+        const x =
+          normalizeVector(
+            crossVector(
+              up,
+              z
+            )
+          );
+
+        const y =
+          crossVector(
+            z,
+            x
+          );
+
+        out[0] = x[0];
+        out[1] = y[0];
+        out[2] = z[0];
+        out[3] = 0;
+
+        out[4] = x[1];
+        out[5] = y[1];
+        out[6] = z[1];
+        out[7] = 0;
+
+        out[8] = x[2];
+        out[9] = y[2];
+        out[10] = z[2];
+        out[11] = 0;
+
+        out[12] =
+          -(
+            x[0] * eye[0] +
+            x[1] * eye[1] +
+            x[2] * eye[2]
+          );
+
+        out[13] =
+          -(
+            y[0] * eye[0] +
+            y[1] * eye[1] +
+            y[2] * eye[2]
+          );
+
+        out[14] =
+          -(
+            z[0] * eye[0] +
+            z[1] * eye[1] +
+            z[2] * eye[2]
+          );
+
+        out[15] = 1;
+
+        return out;
+      }
+
+      function rotationYScale(
+        out,
+        radians,
+        scale
+      ) {
+        const cosine =
+          Math.cos(radians);
+
+        const sine =
+          Math.sin(radians);
+
+        identity(out);
+
+        out[0] =
+          cosine *
+          scale;
+
+        out[2] =
+          -sine *
+          scale;
+
+        out[5] =
+          scale;
+
+        out[8] =
+          sine *
+          scale;
+
+        out[10] =
+          cosine *
+          scale;
+
+        return out;
+      }
+
+      function cubicPoint(
+        p0,
+        p1,
+        p2,
+        p3,
+        t
+      ) {
+        const inverse =
+          1 -
+          t;
+
+        const inverse2 =
+          inverse *
+          inverse;
+
+        const inverse3 =
+          inverse2 *
+          inverse;
+
+        const t2 =
+          t *
+          t;
+
+        const t3 =
+          t2 *
+          t;
+
+        return [
+          inverse3 * p0[0] +
+          3 * inverse2 * t * p1[0] +
+          3 * inverse * t2 * p2[0] +
+          t3 * p3[0],
+
+          inverse3 * p0[1] +
+          3 * inverse2 * t * p1[1] +
+          3 * inverse * t2 * p2[1] +
+          t3 * p3[1]
+        ];
+      }
+
+      function createHeartPerimeter() {
+        const segments = [
+          [
+            [500,865],
+            [444,805],
+            [350,734],
+            [255,645]
+          ],
+          [
+            [255,645],
+            [153,550],
+            [94,440],
+            [100,330]
+          ],
+          [
+            [100,330],
+            [106,215],
+            [166,119],
+            [270,101]
+          ],
+          [
+            [270,101],
+            [361,85],
+            [433,133],
+            [500,238]
+          ],
+          [
+            [500,238],
+            [567,133],
+            [639,85],
+            [730,101]
+          ],
+          [
+            [730,101],
+            [834,119],
+            [894,215],
+            [900,330]
+          ],
+          [
+            [900,330],
+            [906,440],
+            [847,550],
+            [745,645]
+          ],
+          [
+            [745,645],
+            [650,734],
+            [556,805],
+            [500,865]
+          ]
+        ];
+
+        const points = [];
+
+        const scale =
+          CONFIG.width /
+          800;
+
+        const centerX = 500;
+        const centerY = 475;
+
+        for (
+          let index = 0;
+          index < CONFIG.perimeterSamples;
+          index += 1
+        ) {
+          const progress =
+            (
+              index /
+              CONFIG.perimeterSamples
+            ) *
+            segments.length;
+
+          const segmentIndex =
+            Math.min(
+              segments.length - 1,
+              Math.floor(progress)
+            );
+
+          const localT =
+            progress -
+            segmentIndex;
+
+          const segment =
+            segments[segmentIndex];
+
+          const point =
+            cubicPoint(
+              segment[0],
+              segment[1],
+              segment[2],
+              segment[3],
+              localT
+            );
+
+          points.push([
+            (
+              point[0] -
+              centerX
+            ) *
+            scale,
+
+            -(
+              point[1] -
+              centerY
+            ) *
+            scale
+          ]);
+        }
+
+        if (
+          signedArea(points) <
+          0
+        ) {
+          points.reverse();
+        }
+
+        return points;
+      }
+
+      function signedArea(
+        points
+      ) {
+        let area = 0;
+
+        for (
+          let index = 0;
+          index < points.length;
+          index += 1
+        ) {
+          const current =
+            points[index];
+
+          const next =
+            points[
+              (
+                index +
+                1
+              ) %
+              points.length
+            ];
+
+          area +=
+            current[0] *
+            next[1] -
+            next[0] *
+            current[1];
+        }
+
+        return area /
+        2;
+      }
+
+      function domeAmount(
+        scale
+      ) {
+        return Math.pow(
+          Math.max(
+            0,
+            1 -
+            scale *
+            scale
+          ),
+          .72
+        );
+      }
+
+      function hexColor(
+        hex
+      ) {
+        const normalized =
+          hex.replace(
+            "#",
+            ""
+          );
+
+        const value =
+          parseInt(
+            normalized,
+            16
+          );
+
+        return [
+          (
+            (
+              value >>
+              16
+            ) &
+            255
+          ) /
+          255,
+
+          (
+            (
+              value >>
+              8
+            ) &
+            255
+          ) /
+          255,
+
+          (
+            value &
+            255
+          ) /
+          255,
+
+          1
+        ];
+      }
+
+      const FRONT_PALETTE = [
+        "#ffd2bc",
+        "#ff9b9f",
+        "#ff6b7f",
+        "#f74768",
+        "#df2854",
+        "#c91442",
+        "#ab1038",
+        "#8f0d32",
+        "#76102f",
+        "#ff7a93",
+        "#ed4d70",
+        "#d32f5c",
+        "#b7224e",
+        "#991a43",
+        "#7c1538",
+        "#ffb36d",
+        "#ef844f",
+        "#a766b7",
+        "#7557a6",
+        "#526ca1",
+        "#6a1637"
+      ].map(hexColor);
+
+      const REAR_PALETTE = [
+        "#f77b82",
+        "#e84c65",
+        "#d52c53",
+        "#bd1746",
+        "#a4113c",
+        "#8c0e34",
+        "#74102f",
+        "#61102b",
+        "#cf3158",
+        "#a91c45",
+        "#8b214b",
+        "#6c244f",
+        "#b64b4f",
+        "#823338"
+      ].map(hexColor);
+
+      const SIDE_PALETTE = [
+        "#7a102f",
+        "#5f0d28",
+        "#94153b",
+        "#741844",
+        "#5a1a46",
+        "#8a2942",
+        "#623051",
+        "#49355c",
+        "#693050"
+      ].map(hexColor);
+
+      function brightenColor(
+        color,
+        minimum
+      ) {
+        return [
+          Math.max(
+            color[0],
+            minimum
+          ),
+
+          Math.max(
+            color[1],
+            minimum *
+            .19
+          ),
+
+          Math.max(
+            color[2],
+            minimum *
+            .34
+          ),
+
+          1
+        ];
+      }
+
+      function macroFacetIndex(
+        ringIndex,
+        segmentIndex
+      ) {
+        const angularBand =
+          Math.floor(
+            segmentIndex /
+            CONFIG.perimeterSamples *
+            5
+          );
+
+        const verticalBand =
+          Math.min(
+            4,
+            Math.floor(
+              ringIndex /
+              Math.max(
+                CONFIG.ringScales.length -
+                1,
+                1
+              ) *
+              5
+            )
+          );
+
+        if (
+          ringIndex ===
+          CONFIG.ringScales.length
+        ) {
+          return 20;
+        }
+
+        return (
+          verticalBand *
+          5 +
+          angularBand
+        ) %
+        20;
+      }
+
+      function buildHeartMesh() {
+        const perimeter =
+          createHeartPerimeter();
+
+        const positions = [];
+        const normals = [];
+        const colors = [];
+        const surfaces = [];
+        const indices = [];
+
+        function addVertex(
+          position,
+          color,
+          surface
+        ) {
+          const index =
+            positions.length /
+            3;
+
+          positions.push(
+            position[0],
+            position[1],
+            position[2]
+          );
+
+          normals.push(
+            0,
+            0,
+            0
+          );
+
+          colors.push(
+            color[0],
+            color[1],
+            color[2],
+            color[3]
+          );
+
+          surfaces.push(surface);
+
+          return index;
+        }
+
+        function pushTriangle(
+          a,
+          b,
+          c
+        ) {
+          indices.push(
+            a,
+            b,
+            c
+          );
+        }
+
+        const frontRings = [];
+        const rearRings = [];
+
+        for (
+          let ringIndex = 0;
+          ringIndex <
+          CONFIG.ringScales.length;
+          ringIndex += 1
+        ) {
+          const ringScale =
+            CONFIG.ringScales[
+              ringIndex
+            ];
+
+          const dome =
+            domeAmount(
+              ringScale
+            );
+
+          const frontZ =
+            CONFIG.rimDepth +
+            CONFIG.domeRise *
+            dome;
+
+          const rearZ =
+            -CONFIG.rimDepth -
+            CONFIG.domeRise *
+            dome;
+
+          const frontRing = [];
+          const rearRing = [];
+
+          for (
+            let segmentIndex = 0;
+            segmentIndex <
+            perimeter.length;
+            segmentIndex += 1
+          ) {
+            const point =
+              perimeter[
+                segmentIndex
+              ];
+
+            const x =
+              CONFIG.shrinkFocus[0] +
+              (
+                point[0] -
+                CONFIG.shrinkFocus[0]
+              ) *
+              ringScale;
+
+            const y =
+              CONFIG.shrinkFocus[1] +
+              (
+                point[1] -
+                CONFIG.shrinkFocus[1]
+              ) *
+              ringScale;
+
+            const facetIndex =
+              macroFacetIndex(
+                ringIndex,
+                segmentIndex
+              );
+
+            const frontColor =
+              brightenColor(
+                FRONT_PALETTE[
+                  facetIndex %
+                  FRONT_PALETTE.length
+                ],
+                .34
+              );
+
+            const rearColor =
+              brightenColor(
+                REAR_PALETTE[
+                  facetIndex %
+                  REAR_PALETTE.length
+                ],
+                .30
+              );
+
+            frontRing.push(
+              addVertex(
+                [
+                  x,
+                  y,
+                  frontZ
+                ],
+                frontColor,
+                0
+              )
+            );
+
+            rearRing.push(
+              addVertex(
+                [
+                  x,
+                  y,
+                  rearZ
+                ],
+                rearColor,
+                1
+              )
+            );
+          }
+
+          frontRings.push(frontRing);
+          rearRings.push(rearRing);
+        }
+
+        const frontCenter =
+          addVertex(
+            [
+              CONFIG.shrinkFocus[0],
+              CONFIG.shrinkFocus[1],
+              CONFIG.depth /
+              2
+            ],
+            hexColor("#ff8f87"),
+            0
+          );
+
+        const rearCenter =
+          addVertex(
+            [
+              CONFIG.shrinkFocus[0],
+              CONFIG.shrinkFocus[1],
+              -CONFIG.depth /
+              2
+            ],
+            hexColor("#d52c53"),
+            1
+          );
+
+        function connectRings(
+          outerRing,
+          innerRing,
+          reverse,
+          ringIndex
+        ) {
+          for (
+            let segmentIndex = 0;
+            segmentIndex <
+            perimeter.length;
+            segmentIndex += 1
+          ) {
+            const next =
+              (
+                segmentIndex +
+                1
+              ) %
+              perimeter.length;
+
+            const outerA =
+              outerRing[
+                segmentIndex
+              ];
+
+            const outerB =
+              outerRing[next];
+
+            const innerA =
+              innerRing[
+                segmentIndex
+              ];
+
+            const innerB =
+              innerRing[next];
+
+            const alternate =
+              (
+                ringIndex +
+                segmentIndex
+              ) %
+              2 ===
+              0;
+
+            if (!reverse) {
+              if (alternate) {
+                pushTriangle(
+                  outerA,
+                  outerB,
+                  innerB
+                );
+
+                pushTriangle(
+                  outerA,
+                  innerB,
+                  innerA
+                );
+              } else {
+                pushTriangle(
+                  outerA,
+                  outerB,
+                  innerA
+                );
+
+                pushTriangle(
+                  outerB,
+                  innerB,
+                  innerA
+                );
+              }
+            } else {
+              if (alternate) {
+                pushTriangle(
+                  outerA,
+                  innerB,
+                  outerB
+                );
+
+                pushTriangle(
+                  outerA,
+                  innerA,
+                  innerB
+                );
+              } else {
+                pushTriangle(
+                  outerA,
+                  innerA,
+                  outerB
+                );
+
+                pushTriangle(
+                  outerB,
+                  innerA,
+                  innerB
+                );
+              }
+            }
+          }
+        }
+
+        for (
+          let ringIndex = 0;
+          ringIndex <
+          frontRings.length - 1;
+          ringIndex += 1
+        ) {
+          connectRings(
+            frontRings[
+              ringIndex
+            ],
+            frontRings[
+              ringIndex + 1
+            ],
+            false,
+            ringIndex
+          );
+
+          connectRings(
+            rearRings[
+              ringIndex
+            ],
+            rearRings[
+              ringIndex + 1
+            ],
+            true,
+            ringIndex
+          );
+        }
+
+        const finalFrontRing =
+          frontRings[
+            frontRings.length -
+            1
+          ];
+
+        const finalRearRing =
+          rearRings[
+            rearRings.length -
+            1
+          ];
+
+        for (
+          let segmentIndex = 0;
+          segmentIndex <
+          perimeter.length;
+          segmentIndex += 1
+        ) {
+          const next =
+            (
+              segmentIndex +
+              1
+            ) %
+            perimeter.length;
+
+          pushTriangle(
+            finalFrontRing[
+              segmentIndex
+            ],
+            finalFrontRing[next],
+            frontCenter
+          );
+
+          pushTriangle(
+            finalRearRing[
+              segmentIndex
+            ],
+            rearCenter,
+            finalRearRing[next]
+          );
+        }
+
+        const smoothVertexCount =
+          positions.length /
+          3;
+
+        for (
+          let triangleIndex = 0;
+          triangleIndex <
+          indices.length;
+          triangleIndex += 3
+        ) {
+          const indexA =
+            indices[
+              triangleIndex
+            ];
+
+          const indexB =
+            indices[
+              triangleIndex + 1
+            ];
+
+          const indexC =
+            indices[
+              triangleIndex + 2
+            ];
+
+          const a = [
+            positions[
+              indexA * 3
+            ],
+            positions[
+              indexA * 3 + 1
+            ],
+            positions[
+              indexA * 3 + 2
+            ]
+          ];
+
+          const b = [
+            positions[
+              indexB * 3
+            ],
+            positions[
+              indexB * 3 + 1
+            ],
+            positions[
+              indexB * 3 + 2
+            ]
+          ];
+
+          const c = [
+            positions[
+              indexC * 3
+            ],
+            positions[
+              indexC * 3 + 1
+            ],
+            positions[
+              indexC * 3 + 2
+            ]
+          ];
+
+          const edge1 =
+            subtractVector(
+              b,
+              a
+            );
+
+          const edge2 =
+            subtractVector(
+              c,
+              a
+            );
+
+          const faceNormal =
+            crossVector(
+              edge1,
+              edge2
+            );
+
+          for (
+            const vertexIndex of [
+              indexA,
+              indexB,
+              indexC
+            ]
+          ) {
+            normals[
+              vertexIndex * 3
+            ] +=
+              faceNormal[0];
+
+            normals[
+              vertexIndex * 3 + 1
+            ] +=
+              faceNormal[1];
+
+            normals[
+              vertexIndex * 3 + 2
+            ] +=
+              faceNormal[2];
+          }
+        }
+
+        for (
+          let vertexIndex = 0;
+          vertexIndex <
+          smoothVertexCount;
+          vertexIndex += 1
+        ) {
+          const normal =
+            normalizeVector([
+              normals[
+                vertexIndex * 3
+              ],
+              normals[
+                vertexIndex * 3 + 1
+              ],
+              normals[
+                vertexIndex * 3 + 2
+              ]
+            ]);
+
+          normals[
+            vertexIndex * 3
+          ] =
+            normal[0];
+
+          normals[
+            vertexIndex * 3 + 1
+          ] =
+            normal[1];
+
+          normals[
+            vertexIndex * 3 + 2
+          ] =
+            normal[2];
+        }
+
+        const shadowSource = [];
+
+        for (
+          let segmentIndex = 0;
+          segmentIndex <
+          perimeter.length;
+          segmentIndex += 1
+        ) {
+          const next =
+            (
+              segmentIndex +
+              1
+            ) %
+            perimeter.length;
+
+          const point =
+            perimeter[
+              segmentIndex
+            ];
+
+          const nextPoint =
+            perimeter[next];
+
+          const tangentX =
+            nextPoint[0] -
+            point[0];
+
+          const tangentY =
+            nextPoint[1] -
+            point[1];
+
+          const outwardNormal =
+            normalizeVector([
+              tangentY,
+              -tangentX,
+              0
+            ]);
+
+          const sideColor =
+            brightenColor(
+              SIDE_PALETTE[
+                segmentIndex %
+                SIDE_PALETTE.length
+              ],
+              .27
+            );
+
+          const frontA =
+            addVertex(
+              [
+                point[0],
+                point[1],
+                CONFIG.rimDepth
+              ],
+              sideColor,
+              2
+            );
+
+          const rearA =
+            addVertex(
+              [
+                point[0],
+                point[1],
+                -CONFIG.rimDepth
+              ],
+              sideColor,
+              2
+            );
+
+          const rearB =
+            addVertex(
+              [
+                nextPoint[0],
+                nextPoint[1],
+                -CONFIG.rimDepth
+              ],
+              sideColor,
+              2
+            );
+
+          const frontB =
+            addVertex(
+              [
+                nextPoint[0],
+                nextPoint[1],
+                CONFIG.rimDepth
+              ],
+              sideColor,
+              2
+            );
+
+          for (
+            const vertexIndex of [
+              frontA,
+              rearA,
+              rearB,
+              frontB
+            ]
+          ) {
+            normals[
+              vertexIndex * 3
+            ] =
+              outwardNormal[0];
+
+            normals[
+              vertexIndex * 3 + 1
+            ] =
+              outwardNormal[1];
+
+            normals[
+              vertexIndex * 3 + 2
+            ] =
+              outwardNormal[2];
+          }
+
+          pushTriangle(
+            frontA,
+            rearA,
+            rearB
+          );
+
+          pushTriangle(
+            frontA,
+            rearB,
+            frontB
+          );
+
+          shadowSource.push(
+            [
+              point[0],
+              point[1],
+              CONFIG.rimDepth
+            ],
+            [
+              point[0],
+              point[1],
+              -CONFIG.rimDepth
+            ]
+          );
+        }
+
+        shadowSource.push(
+          [
+            CONFIG.shrinkFocus[0],
+            CONFIG.shrinkFocus[1],
+            CONFIG.depth /
+            2
+          ],
+          [
+            CONFIG.shrinkFocus[0],
+            CONFIG.shrinkFocus[1],
+            -CONFIG.depth /
+            2
+          ]
+        );
+
+        return {
+          positions:
+            new Float32Array(
+              positions
+            ),
+
+          normals:
+            new Float32Array(
+              normals
+            ),
+
+          colors:
+            new Float32Array(
+              colors
+            ),
+
+          surfaces:
+            new Float32Array(
+              surfaces
+            ),
+
+          indices:
+            new Uint16Array(
+              indices
+            ),
+
+          indexCount:
+            indices.length,
+
+          shadowSource
+        };
+      }
+
+      function createStaticBuffer(
+        target,
+        data
+      ) {
+        const buffer =
+          gl.createBuffer();
+
+        if (!buffer) {
+          throw new Error(
+            "Unable to create WebGL buffer."
+          );
+        }
+
+        gl.bindBuffer(
+          target,
+          buffer
+        );
+
+        gl.bufferData(
+          target,
+          data,
+          gl.STATIC_DRAW
+        );
+
+        return buffer;
+      }
+
+      function createDynamicBuffer() {
+        const buffer =
+          gl.createBuffer();
+
+        if (!buffer) {
+          throw new Error(
+            "Unable to create dynamic WebGL buffer."
+          );
+        }
+
+        return buffer;
+      }
+
+      function rotatePointY(
+        point,
+        angle
+      ) {
+        const cosine =
+          Math.cos(angle);
+
+        const sine =
+          Math.sin(angle);
+
+        return [
+          cosine *
+          point[0] +
+          sine *
+          point[2],
+
+          point[1],
+
+          -sine *
+          point[0] +
+          cosine *
+          point[2]
+        ];
+      }
+
+      function projectPointToFloor(
+        point,
+        light,
+        floorY
+      ) {
+        const denominator =
+          point[1] -
+          light[1];
+
+        if (
+          Math.abs(
+            denominator
+          ) <
+          .0001
+        ) {
+          return null;
+        }
+
+        const factor =
+          (
+            floorY -
+            light[1]
+          ) /
+          denominator;
+
+        return [
+          light[0] +
+          factor *
+          (
+            point[0] -
+            light[0]
+          ),
+
+          light[2] +
+          factor *
+          (
+            point[2] -
+            light[2]
+          )
+        ];
+      }
+
+      function convexHull(
+        points
+      ) {
+        if (
+          points.length <= 3
+        ) {
+          return points.slice();
+        }
+
+        const sorted =
+          points
+            .slice()
+            .sort(
+              (a,b) =>
+                a[0] ===
+                b[0]
+                  ? a[1] -
+                    b[1]
+                  : a[0] -
+                    b[0]
+            );
+
+        const cross =
+          (
+            origin,
+            a,
+            b
+          ) =>
+            (
+              a[0] -
+              origin[0]
+            ) *
+            (
+              b[1] -
+              origin[1]
+            ) -
+            (
+              a[1] -
+              origin[1]
+            ) *
+            (
+              b[0] -
+              origin[0]
+            );
+
+        const lower = [];
+
+        for (
+          const point of sorted
+        ) {
+          while (
+            lower.length >= 2 &&
+            cross(
+              lower[
+                lower.length -
+                2
+              ],
+              lower[
+                lower.length -
+                1
+              ],
+              point
+            ) <=
+            0
+          ) {
+            lower.pop();
+          }
+
+          lower.push(point);
+        }
+
+        const upper = [];
+
+        for (
+          let index =
+            sorted.length -
+            1;
+          index >= 0;
+          index -= 1
+        ) {
+          const point =
+            sorted[index];
+
+          while (
+            upper.length >= 2 &&
+            cross(
+              upper[
+                upper.length -
+                2
+              ],
+              upper[
+                upper.length -
+                1
+              ],
+              point
+            ) <=
+            0
+          ) {
+            upper.pop();
+          }
+
+          upper.push(point);
+        }
+
+        lower.pop();
+        upper.pop();
+
+        return lower.concat(upper);
+      }
+
+      function buildShadowGeometry(
+        mesh,
+        angle
+      ) {
+        const projected = [];
+
+        for (
+          const sourcePoint of
+          mesh.shadowSource
+        ) {
+          const rotated =
+            rotatePointY(
+              sourcePoint,
+              angle
+            );
+
+          const floorPoint =
+            projectPointToFloor(
+              rotated,
+              CONFIG.shadowLight,
+              CONFIG.floorY
+            );
+
+          if (floorPoint) {
+            projected.push(
+              floorPoint
+            );
+          }
+        }
+
+        const hull =
+          convexHull(
+            projected
+          );
+
+        if (
+          hull.length < 3
+        ) {
+          return {
+            positions:
+              new Float32Array(0),
+
+            alphas:
+              new Float32Array(0),
+
+            vertexCount:0
+          };
+        }
+
+        const center =
+          hull.reduce(
+            (
+              accumulator,
+              point
+            ) => {
+              accumulator[0] +=
+                point[0];
+
+              accumulator[1] +=
+                point[1];
+
+              return accumulator;
+            },
+            [0,0]
+          );
+
+        center[0] /=
+          hull.length;
+
+        center[1] /=
+          hull.length;
+
+        const positions = [];
+        const alphas = [];
+
+        for (
+          let layer = 0;
+          layer <
+          CONFIG.shadowLayers;
+          layer += 1
+        ) {
+          const normalizedLayer =
+            layer /
+            Math.max(
+              CONFIG.shadowLayers -
+              1,
+              1
+            );
+
+          const scale =
+            1.17 -
+            normalizedLayer *
+            .17;
+
+          const alpha =
+            .010 +
+            normalizedLayer *
+            .0085;
+
+          const y =
+            CONFIG.floorY +
+            .12 +
+            layer *
+            .015;
+
+          const layerPoints =
+            hull.map(
+              point => [
+                center[0] +
+                (
+                  point[0] -
+                  center[0]
+                ) *
+                scale,
+
+                center[1] +
+                (
+                  point[1] -
+                  center[1]
+                ) *
+                scale
+              ]
+            );
+
+          for (
+            let index = 0;
+            index <
+            layerPoints.length;
+            index += 1
+          ) {
+            const next =
+              (
+                index +
+                1
+              ) %
+              layerPoints.length;
+
+            const vertices = [
+              [
+                center[0],
+                y,
+                center[1]
+              ],
+              [
+                layerPoints[
+                  index
+                ][0],
+                y,
+                layerPoints[
+                  index
+                ][1]
+              ],
+              [
+                layerPoints[
+                  next
+                ][0],
+                y,
+                layerPoints[
+                  next
+                ][1]
+              ]
+            ];
+
+            for (
+              const vertex of
+              vertices
+            ) {
+              positions.push(
+                vertex[0],
+                vertex[1],
+                vertex[2]
+              );
+
+              alphas.push(alpha);
+            }
+          }
+        }
+
+        return {
+          positions:
+            new Float32Array(
+              positions
+            ),
+
+          alphas:
+            new Float32Array(
+              alphas
+            ),
+
+          vertexCount:
+            positions.length /
+            3
+        };
+      }
+
+      function bindAttribute(
+        buffer,
+        location,
+        size
+      ) {
+        gl.bindBuffer(
+          gl.ARRAY_BUFFER,
+          buffer
+        );
+
+        gl.enableVertexAttribArray(
+          location
+        );
+
+        gl.vertexAttribPointer(
+          location,
+          size,
+          gl.FLOAT,
+          false,
+          0,
+          0
+        );
+      }
+
+      function resizeCanvas() {
+        const rectangle =
+          canvas.getBoundingClientRect();
+
+        const ratio =
+          Math.min(
+            window.devicePixelRatio ||
+            1,
+            2
+          );
+
+        const width =
+          Math.max(
+            1,
+            Math.round(
+              rectangle.width *
+              ratio
+            )
+          );
+
+        const height =
+          Math.max(
+            1,
+            Math.round(
+              rectangle.height *
+              ratio
+            )
+          );
+
+        if (
+          canvas.width !==
+          width ||
+          canvas.height !==
+          height
+        ) {
+          canvas.width =
+            width;
+
+          canvas.height =
+            height;
+        }
+
+        gl.viewport(
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+
+        return {
+          width,
+          height,
+          aspect:
+            width /
+            Math.max(
+              height,
+              1
+            )
+        };
+      }
+
+      try {
+        const heartProgram =
+          createProgram(
+            HEART_VERTEX_SOURCE,
+            HEART_FRAGMENT_SOURCE
+          );
+
+        const haloProgram =
+          createProgram(
+            HALO_VERTEX_SOURCE,
+            HALO_FRAGMENT_SOURCE
+          );
+
+        const shadowProgram =
+          createProgram(
+            SHADOW_VERTEX_SOURCE,
+            SHADOW_FRAGMENT_SOURCE
+          );
+
+        const mesh =
+          buildHeartMesh();
+
+        const positionBuffer =
+          createStaticBuffer(
+            gl.ARRAY_BUFFER,
+            mesh.positions
+          );
+
+        const normalBuffer =
+          createStaticBuffer(
+            gl.ARRAY_BUFFER,
+            mesh.normals
+          );
+
+        const colorBuffer =
+          createStaticBuffer(
+            gl.ARRAY_BUFFER,
+            mesh.colors
+          );
+
+        const surfaceBuffer =
+          createStaticBuffer(
+            gl.ARRAY_BUFFER,
+            mesh.surfaces
+          );
+
+        const indexBuffer =
+          createStaticBuffer(
+            gl.ELEMENT_ARRAY_BUFFER,
+            mesh.indices
+          );
+
+        const shadowPositionBuffer =
+          createDynamicBuffer();
+
+        const shadowAlphaBuffer =
+          createDynamicBuffer();
+
+        const heartLocations = {
+          position:
+            gl.getAttribLocation(
+              heartProgram,
+              "aPosition"
+            ),
+
+          normal:
+            gl.getAttribLocation(
+              heartProgram,
+              "aNormal"
+            ),
+
+          color:
+            gl.getAttribLocation(
+              heartProgram,
+              "aColor"
+            ),
+
+          surface:
+            gl.getAttribLocation(
+              heartProgram,
+              "aSurface"
+            ),
+
+          model:
+            gl.getUniformLocation(
+              heartProgram,
+              "uModel"
+            ),
+
+          view:
+            gl.getUniformLocation(
+              heartProgram,
+              "uView"
+            ),
+
+          projection:
+            gl.getUniformLocation(
+              heartProgram,
+              "uProjection"
+            ),
+
+          camera:
+            gl.getUniformLocation(
+              heartProgram,
+              "uCameraPosition"
+            ),
+
+          key:
+            gl.getUniformLocation(
+              heartProgram,
+              "uKeyLight"
+            ),
+
+          fill:
+            gl.getUniformLocation(
+              heartProgram,
+              "uFillLight"
+            ),
+
+          rim:
+            gl.getUniformLocation(
+              heartProgram,
+              "uRimLight"
+            )
+        };
+
+        const haloLocations = {
+          position:
+            gl.getAttribLocation(
+              haloProgram,
+              "aPosition"
+            ),
+
+          model:
+            gl.getUniformLocation(
+              haloProgram,
+              "uModel"
+            ),
+
+          view:
+            gl.getUniformLocation(
+              haloProgram,
+              "uView"
+            ),
+
+          projection:
+            gl.getUniformLocation(
+              haloProgram,
+              "uProjection"
+            ),
+
+          color:
+            gl.getUniformLocation(
+              haloProgram,
+              "uHaloColor"
+            ),
+
+          alpha:
+            gl.getUniformLocation(
+              haloProgram,
+              "uHaloAlpha"
+            )
+        };
+
+        const shadowLocations = {
+          position:
+            gl.getAttribLocation(
+              shadowProgram,
+              "aPosition"
+            ),
+
+          alpha:
+            gl.getAttribLocation(
+              shadowProgram,
+              "aAlpha"
+            ),
+
+          view:
+            gl.getUniformLocation(
+              shadowProgram,
+              "uView"
+            ),
+
+          projection:
+            gl.getUniformLocation(
+              shadowProgram,
+              "uProjection"
+            )
+        };
+
+        const heartModelMatrix =
+          createMat4();
+
+        const haloModelMatrix =
+          createMat4();
+
+        const viewMatrix =
+          createMat4();
+
+        const projectionMatrix =
+          createMat4();
+
+        const cameraPosition = [
+          0,
+          28,
+          CONFIG.cameraDistance
+        ];
+
+        lookAt(
+          viewMatrix,
+          cameraPosition,
+          [0,-22,0],
+          [0,1,0]
+        );
+
+        gl.enable(
+          gl.DEPTH_TEST
+        );
+
+        gl.depthFunc(
+          gl.LEQUAL
+        );
+
+        gl.enable(
+          gl.BLEND
+        );
+
+        gl.blendFunc(
+          gl.SRC_ALPHA,
+          gl.ONE_MINUS_SRC_ALPHA
+        );
+
+        gl.clearColor(
+          0,
+          0,
+          0,
+          0
+        );
+
+        let startTime =
+          performance.now();
+
+        let storedAngle = 0;
+        let visible = true;
+
+        const intersectionObserver =
+          new IntersectionObserver(
+            entries => {
+              visible =
+                entries.some(
+                  entry =>
+                    entry.isIntersecting
+                );
+            },
+            {
+              rootMargin:
+                "120px 0px"
+            }
+          );
+
+        intersectionObserver.observe(
+          stage
+        );
+
+        function currentAngle(
+          time
+        ) {
+          if (
+            reducedMotion.matches
+          ) {
+            return 0;
+          }
+
+          return (
+            (
+              time -
+              startTime
+            ) %
+            CONFIG.rotationDuration
+          ) /
+          CONFIG.rotationDuration *
+          Math.PI *
+          2;
+        }
+
+        function drawGroundShadow(
+          angle
+        ) {
+          const shadow =
+            buildShadowGeometry(
+              mesh,
+              angle
+            );
+
+          if (
+            shadow.vertexCount ===
+            0
+          ) {
+            return;
+          }
+
+          gl.useProgram(
+            shadowProgram
+          );
+
+          gl.bindBuffer(
+            gl.ARRAY_BUFFER,
+            shadowPositionBuffer
+          );
+
+          gl.bufferData(
+            gl.ARRAY_BUFFER,
+            shadow.positions,
+            gl.DYNAMIC_DRAW
+          );
+
+          gl.enableVertexAttribArray(
+            shadowLocations.position
+          );
+
+          gl.vertexAttribPointer(
+            shadowLocations.position,
+            3,
+            gl.FLOAT,
+            false,
+            0,
+            0
+          );
+
+          gl.bindBuffer(
+            gl.ARRAY_BUFFER,
+            shadowAlphaBuffer
+          );
+
+          gl.bufferData(
+            gl.ARRAY_BUFFER,
+            shadow.alphas,
+            gl.DYNAMIC_DRAW
+          );
+
+          gl.enableVertexAttribArray(
+            shadowLocations.alpha
+          );
+
+          gl.vertexAttribPointer(
+            shadowLocations.alpha,
+            1,
+            gl.FLOAT,
+            false,
+            0,
+            0
+          );
+
+          gl.uniformMatrix4fv(
+            shadowLocations.view,
+            false,
+            viewMatrix
+          );
+
+          gl.uniformMatrix4fv(
+            shadowLocations.projection,
+            false,
+            projectionMatrix
+          );
+
+          gl.blendFunc(
+            gl.SRC_ALPHA,
+            gl.ONE_MINUS_SRC_ALPHA
+          );
+
+          gl.depthMask(false);
+
+          gl.drawArrays(
+            gl.TRIANGLES,
+            0,
+            shadow.vertexCount
+          );
+
+          gl.depthMask(true);
+        }
+
+        function drawHalo(
+          angle
+        ) {
+          gl.useProgram(
+            haloProgram
+          );
+
+          bindAttribute(
+            positionBuffer,
+            haloLocations.position,
+            3
+          );
+
+          gl.bindBuffer(
+            gl.ELEMENT_ARRAY_BUFFER,
+            indexBuffer
+          );
+
+          gl.uniformMatrix4fv(
+            haloLocations.view,
+            false,
+            viewMatrix
+          );
+
+          gl.uniformMatrix4fv(
+            haloLocations.projection,
+            false,
+            projectionMatrix
+          );
+
+          gl.disable(
+            gl.DEPTH_TEST
+          );
+
+          gl.depthMask(false);
+
+          gl.blendFunc(
+            gl.SRC_ALPHA,
+            gl.ONE
+          );
+
+          for (
+            const layer of
+            CONFIG.haloLayers
+          ) {
+            rotationYScale(
+              haloModelMatrix,
+              angle,
+              layer.scale
+            );
+
+            gl.uniformMatrix4fv(
+              haloLocations.model,
+              false,
+              haloModelMatrix
+            );
+
+            gl.uniform3fv(
+              haloLocations.color,
+              layer.color
+            );
+
+            gl.uniform1f(
+              haloLocations.alpha,
+              layer.alpha
+            );
+
+            gl.drawElements(
+              gl.TRIANGLES,
+              mesh.indexCount,
+              gl.UNSIGNED_SHORT,
+              0
+            );
+          }
+
+          gl.depthMask(true);
+
+          gl.enable(
+            gl.DEPTH_TEST
+          );
+
+          gl.blendFunc(
+            gl.SRC_ALPHA,
+            gl.ONE_MINUS_SRC_ALPHA
+          );
+        }
+
+        function drawHeart(
+          angle
+        ) {
+          rotationYScale(
+            heartModelMatrix,
+            angle,
+            1
+          );
+
+          gl.useProgram(
+            heartProgram
+          );
+
+          bindAttribute(
+            positionBuffer,
+            heartLocations.position,
+            3
+          );
+
+          bindAttribute(
+            normalBuffer,
+            heartLocations.normal,
+            3
+          );
+
+          bindAttribute(
+            colorBuffer,
+            heartLocations.color,
+            4
+          );
+
+          bindAttribute(
+            surfaceBuffer,
+            heartLocations.surface,
+            1
+          );
+
+          gl.bindBuffer(
+            gl.ELEMENT_ARRAY_BUFFER,
+            indexBuffer
+          );
+
+          gl.uniformMatrix4fv(
+            heartLocations.model,
+            false,
+            heartModelMatrix
+          );
+
+          gl.uniformMatrix4fv(
+            heartLocations.view,
+            false,
+            viewMatrix
+          );
+
+          gl.uniformMatrix4fv(
+            heartLocations.projection,
+            false,
+            projectionMatrix
+          );
+
+          gl.uniform3fv(
+            heartLocations.camera,
+            cameraPosition
+          );
+
+          gl.uniform3fv(
+            heartLocations.key,
+            CONFIG.keyLight
+          );
+
+          gl.uniform3fv(
+            heartLocations.fill,
+            CONFIG.fillLight
+          );
+
+          gl.uniform3fv(
+            heartLocations.rim,
+            CONFIG.rimLight
+          );
+
+          gl.blendFunc(
+            gl.SRC_ALPHA,
+            gl.ONE_MINUS_SRC_ALPHA
+          );
+
+          gl.drawElements(
+            gl.TRIANGLES,
+            mesh.indexCount,
+            gl.UNSIGNED_SHORT,
+            0
+          );
+        }
+
+        function render(
+          time
+        ) {
+          requestAnimationFrame(
+            render
+          );
+
+          if (!visible) {
+            return;
+          }
+
+          const viewport =
+            resizeCanvas();
+
+          perspective(
+            projectionMatrix,
+            33 *
+            Math.PI /
+            180,
+            viewport.aspect,
+            1,
+            2600
+          );
+
+          gl.clear(
+            gl.COLOR_BUFFER_BIT |
+            gl.DEPTH_BUFFER_BIT
+          );
+
+          const angle =
+            reducedMotion.matches
+              ? 0
+              : currentAngle(time);
+
+          storedAngle =
+            angle;
+
+          drawGroundShadow(angle);
+          drawHalo(angle);
+          drawHeart(angle);
+        }
+
+        reducedMotion.addEventListener?.(
+          "change",
+          event => {
+            if (!event.matches) {
+              startTime =
+                performance.now() -
+                storedAngle /
+                (
+                  Math.PI *
+                  2
+                ) *
+                CONFIG.rotationDuration;
+            }
+          }
+        );
+
+        canvas.addEventListener(
+          "webglcontextlost",
+          event => {
+            event.preventDefault();
+
+            stage.dataset.webglState =
+              "failed";
+          }
+        );
+
+        stage.dataset.webglState =
+          "ready";
+
+        document.documentElement
+          .dataset
+          .heavyRuntimeLoaded =
+            "true";
+
+        requestAnimationFrame(
+          render
+        );
+      } catch (error) {
+        console.error(
+          "[Nine Summits TED Ruby Heart] Initialization failed.",
+          error
+        );
+
+        stage.dataset.webglState =
+          "failed";
+      }
+    })();
+  </script>
+
+  <script
+    src="/assets/house-control-pad/house.control-pad.js"
+    defer
+  ></script>
+</body>
+</html>

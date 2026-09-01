@@ -1,0 +1,75 @@
+{
+  "receiptId": "H_EARTH_PR79_POST_MERGE_42_FILE_SCOPE_DISPOSITION_CLOSURE_RECEIPT_v1",
+  "operation": "POST_MERGE_42_FILE_SCOPE_DISPOSITION",
+  "checkpoint": "DISPOSITION_6_CLOSURE_PACKAGE",
+  "result": "PASS_CLOSED",
+  "issuedAtUtc": "2026-07-24T02:59:44Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "sourcePullRequest": 79,
+  "stabilizationPullRequest": 87,
+  "sourceMergeCommit": "ee7324734bb687e71ebb3ee93ff23e6353feb5fe",
+  "preMergeBaseCommit": "465596de77ef0a28a7f779e06851130f4768e445",
+  "stabilizationBranch": "agent/h-earth-post-merge-scope-disposition-001",
+  "auditedStabilizationHead": "5edfa97d6434cf97655f430994c103179fca8083",
+  "archiveBranch": "archive/h-earth-pr79-42-file-delta-20260723",
+  "archiveBranchCommit": "ee7324734bb687e71ebb3ee93ff23e6353feb5fe",
+  "dispositionTable": {
+    "path": "/h-earth-3d/control-plane/post-merge-disposition/h-earth.pr79-42-file-scope-disposition.table.json",
+    "gitBlobSha": "307d67d1ada449fc8bcfc641d4d4a67c8bd6cbba",
+    "rowCount": 42,
+    "allRowsResolved": true,
+    "closureStatus": "RESOLVED_AND_AUDITED"
+  },
+  "dispositionCounts": {
+    "RETAIN": 17,
+    "RECLASSIFY": 6,
+    "ISOLATE": 18,
+    "SUPERSEDE": 0,
+    "REVERT": 1
+  },
+  "retainedStateAudit": {
+    "runId": 30063043958,
+    "result": "SUCCESS",
+    "checks": "31_OF_31",
+    "fixtures": "19_OF_19",
+    "artifactId": 8585218014,
+    "artifactDigest": "sha256:2e60bceedf29f30683b2d9920ed751e081b530faf2ec0980c5a1d988225cb98f",
+    "closurePackageMayBeIssued": true
+  },
+  "automaticRepositoryPreflight": {
+    "runId": 30063043957,
+    "result": "SUCCESS",
+    "artifactId": 8585217562,
+    "artifactDigest": "sha256:80d3421ce8b37868a81f34d16278caa938c485b76fc8fa956b20776c853d3191",
+    "finalDisposition": "PASS",
+    "failureCodes": [],
+    "mutationMayProceed": false
+  },
+  "repositoryState": {
+    "repositoryScopeDiscrepancy": "CLOSED",
+    "repositoryStabilization": "COMPLETE",
+    "retainedStateIdentityExact": true,
+    "isolatedPathsAbsentFromStabilizationBranch": true,
+    "isolatedMergedOccurrencesPreservedOnArchiveBranch": true,
+    "legacyTarget4FAuditRestoredToPreMergeIdentity": true,
+    "successorEvidenceLaneReclassifiedNonactive": true,
+    "mainCommit": "ee7324734bb687e71ebb3ee93ff23e6353feb5fe",
+    "mainChangedByDisposition": false,
+    "stabilizedStateMergedToMain": false
+  },
+  "boundaries": {
+    "mergeAuthorizationForPullRequest87Established": false,
+    "successorAccepted": false,
+    "successorActivated": false,
+    "bootstrapChanged": false,
+    "baseRegistryCandidateChanged": false,
+    "canonicalizationAuthorityEstablished": false,
+    "actorBindingsEstablished": false,
+    "transitionExecutionAuthorityEstablished": false,
+    "step2ImplementationAuthorityEstablished": false,
+    "deploymentAuthorityEstablished": false,
+    "productionAuthorityEstablished": false
+  },
+  "nextBoundary": "SEPARATE_REVIEW_AND_MERGE_AUTHORIZATION_FOR_STABILIZATION_PULL_REQUEST_87",
+  "nextDevelopmentTargetAfterStabilizedStateAdmission": "H_EARTH_REPOSITORY_LIFECYCLE_CONTROL_PLANE_ACTOR_APPROVAL_AND_TRANSITION_DECISION_CONTRACT_CANDIDATE_v1"
+}

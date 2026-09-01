@@ -1,0 +1,103 @@
+{
+  "schema": "GEN1_VOLUME_CANDIDATE_EXACT_SUBJECT_AND_EXTRACTION_CONTRACT_BINDING_v1",
+  "status": "FROZEN_PRE_EXTRACTION",
+  "governingMain": "a2718019b9b0a4c9ed4e909d24f125dbaad92521",
+  "sourceClass": "S2_REAL_HUMAN_ANATOMICAL_VOLUME_DETERMINISTIC_EXTRACTION",
+  "dataset": {
+    "id": "OpenNeuro ds006072",
+    "snapshot": "1.1.0",
+    "license": "CC0",
+    "subject": "sub-P1",
+    "session": "ses-1",
+    "selectionRule": "FIRST_PRIMARY_NON_REPLICATION_SUBJECT_FIRST_STRUCTURAL_SESSION_FIRST_ACQUISITION_RUN; selected before any candidate surface exists",
+    "structuralResolutionMm": [0.9, 0.9, 0.9]
+  },
+  "sourceFiles": {
+    "T1w": {
+      "path": "sub-P1/ses-1/anat/sub-P1_ses-1_acq-t1mpr0p9mm_rec-NDNORM_run-1_T1w.nii.gz",
+      "annexSha256": "15472257ccf51b7a95c5239ccb7e1f457ba6e4d73a4233af3e4167fef504863f",
+      "annexSizeBytes": 8963163,
+      "metadataPath": "sub-P1/ses-1/anat/sub-P1_ses-1_acq-t1mpr0p9mm_rec-NDNORM_run-1_T1w.json",
+      "metadataGitBlobSha": "a6217ef0686838919ac68b9a2dbfffb501a1eb71"
+    },
+    "T2w": {
+      "path": "sub-P1/ses-1/anat/sub-P1_ses-1_acq-t2spc0p9mmiso_rec-NDNORM_run-1_T2w.nii.gz",
+      "annexSha256": "67dcc82e1c1c61c78484bae0e0a8e59356e8c615f265e9eb554c4134e3d33fca",
+      "annexSizeBytes": 8276862,
+      "metadataPath": "sub-P1/ses-1/anat/sub-P1_ses-1_acq-t2spc0p9mmiso_rec-NDNORM_run-1_T2w.json",
+      "metadataGitBlobSha": "e16bfb65c9674e0e09415281c201634a51046f03"
+    }
+  },
+  "coordinateEvidence": {
+    "patientPosition": "HFS",
+    "imageOrientationPatientDICOM": [-0.00263299, 0.999649, 0.0263514, -0.00025579, 0.0263508, -0.999653],
+    "normalizationRule": "preserve native NIfTI affine as source authority; convert once to RAS+ canonical working coordinates; record exact 4x4 source-to-RAS transform; no landmark-driven rotation or scale fitting",
+    "scaleRule": "millimetres from NIfTI header; no anisotropic anatomical scaling"
+  },
+  "extractionContract": {
+    "primarySegmentation": "FreeSurfer recon-all",
+    "softwareVersion": "FreeSurfer 7.4.1",
+    "inputs": ["T1w_run1", "T2w_run1"],
+    "commandPolicy": "recon-all -all -subjid GEN1_P1 -i <BOUND_T1W> -T2 <BOUND_T2W> -T2pial",
+    "environment": "container image must be bound by immutable digest before execution; FreeSurfer license file is execution credential only and is not source authority",
+    "manualEditsAllowed": false,
+    "rerunWithChangedParametersAfterViewingCandidate": false,
+    "outputComponentsRequired": [
+      "left_cerebral_pial_surface",
+      "right_cerebral_pial_surface",
+      "cerebellum_segmentation",
+      "brainstem_segmentation"
+    ],
+    "brainstemSegmentation": {
+      "method": "FreeSurfer segmentBS.sh",
+      "versionBinding": "same FreeSurfer 7.4.1 environment",
+      "requiredLabels": ["medulla", "pons", "midbrain", "superior_cerebellar_peduncle"]
+    },
+    "cerebellumSurfaceExtraction": {
+      "source": "frozen cerebellum segmentation labels",
+      "algorithm": "marching cubes iso-surface at binary label boundary 0.5",
+      "implementation": "VTK vtkFlyingEdges3D 9.3.0",
+      "smoothing": "NONE_PRE_QUALIFICATION",
+      "decimation": "NONE_PRE_QUALIFICATION",
+      "holeFilling": "NONE_PRE_QUALIFICATION"
+    },
+    "brainstemSurfaceExtraction": {
+      "source": "frozen segmentBS label union",
+      "algorithm": "marching cubes iso-surface at binary label boundary 0.5",
+      "implementation": "VTK vtkFlyingEdges3D 9.3.0",
+      "smoothing": "NONE_PRE_QUALIFICATION",
+      "decimation": "NONE_PRE_QUALIFICATION",
+      "holeFilling": "NONE_PRE_QUALIFICATION"
+    },
+    "cerebralSurfacePolicy": "use native FreeSurfer pial vertices/faces as extracted; no retopology, smoothing, decimation or reference-directed deformation before anatomical qualification",
+    "componentUnionPolicy": "components remain separately identified through qualification; visual union may not weld or deform anatomy",
+    "determinismReceipt": [
+      "input SHA-256",
+      "container image digest",
+      "software versions",
+      "exact commands",
+      "NIfTI affine and source-to-RAS transform",
+      "per-output SHA-256",
+      "vertex/face counts",
+      "label voxel counts",
+      "execution logs"
+    ]
+  },
+  "prohibitions": [
+    "NO_HAND_SCULPTING",
+    "NO_REFERENCE_DIRECTED_VERTEX_MOVEMENT",
+    "NO_THRESHOLD_TUNING_AFTER_RENDER",
+    "NO_SELECTIVE_SMOOTHING_TO_MATCH_REFERENCE",
+    "NO_PROCEDURAL_REPLACEMENT_OF_MISSING_ANATOMY",
+    "NO_LOD_OR_DECIMATION_BEFORE_FULL_RESOLUTION_QUALIFICATION",
+    "NO_APPEARANCE_EVALUATION_BEFORE_FROZEN_MORPHOLOGY_AND_APPEARANCE_DESCRIPTOR_EXTRACTION_IS_COMPLETE"
+  ],
+  "authorization": {
+    "sourceBindingFrozen": true,
+    "extractionContractFrozen": true,
+    "surfaceExecutionAuthorized": false,
+    "newGeometryAuthorized": false,
+    "reason": "contract adoption and exact execution-environment digest qualification must occur before extraction"
+  },
+  "nextBoundary": "GEN1_EXTRACTION_ENVIRONMENT_IDENTITY_AND_PREEXECUTION_QUALIFICATION"
+}

@@ -1,0 +1,74 @@
+name: H-Earth B4 Morphology Leverage Classification
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-b4-morphology-leverage-classification.yml'
+      - 'h-earth-3d/control-plane/post-cp2-round2/morphology/h-earth.b4-*'
+      - 'h-earth-3d/validation/morphology/h-earth.b4-*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  execute-fixed-morphology-classification:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout exact B4 execution head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install bounded Chromium dependency
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start exact B4 diagnostic server
+        run: |
+          python3 -m http.server 4180 --bind 127.0.0.1 > /tmp/h-earth-b4-server.log 2>&1 &
+          echo $! > /tmp/h-earth-b4-server.pid
+          for attempt in $(seq 1 60); do
+            curl -fsS http://127.0.0.1:4180/h-earth-3d/validation/morphology/h-earth.b4-morphology-leverage-harness.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/h-earth-b4-server.log
+          exit 1
+      - name: Execute B4 fixed classification suite
+        env:
+          B4_HARNESS_URL: http://127.0.0.1:4180/h-earth-3d/validation/morphology/h-earth.b4-morphology-leverage-harness.html
+        run: |
+          set -o pipefail
+          node h-earth-3d/validation/morphology/h-earth.b4-morphology-leverage.runner.mjs | tee h-earth.b4-morphology-leverage.log
+      - name: Upload B4 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-b4-morphology-leverage-classification
+          path: |
+            h-earth-3d/validation/morphology/h-earth.b4-morphology-leverage.receipt.v1.json
+            h-earth-3d/validation/morphology/b4-evidence/
+            h-earth.b4-morphology-leverage.log
+            /tmp/h-earth-b4-server.log
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Report B4 causal disposition
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt = JSON.parse(fs.readFileSync('h-earth-3d/validation/morphology/h-earth.b4-morphology-leverage.receipt.v1.json', 'utf8'));
+          const allowed = new Set([
+            'B4_MORPHOLOGY_LEVERAGE_ESTABLISHED_PASS_CLOSED',
+            'B4_MORPHOLOGY_LEVERAGE_NOT_ESTABLISHED_STOP_CLOSED',
+            'B4_WEAK_OR_INCONCLUSIVE_LEVERAGE_STOP_CLOSED'
+          ]);
+          if (receipt.passClosed !== true || !allowed.has(receipt.result)) {
+            console.error(JSON.stringify(receipt, null, 2));
+            process.exit(1);
+          }
+          console.log(`B4_DISPOSITION:${receipt.disposition}:B5_AUTHORIZED=${receipt.b5Authorized}:${receipt.canonicalReceiptSha256}`);
+          NODE

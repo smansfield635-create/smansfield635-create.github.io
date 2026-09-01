@@ -1,0 +1,97 @@
+name: Public → Private Canonical Operation Close v1
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  close:
+    if: >-
+      contains(github.event.comment.body, 'PUBLIC_PRIVATE_OPERATION_CLOSE_REQUEST_V1') &&
+      github.event.comment.author_association == 'OWNER'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PRIVATE_REPOSITORY: smansfield635-create/geodiametrics1
+    steps:
+      - name: Parse closed request
+        id: req
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          e=json.load(open(os.environ['GITHUB_EVENT_PATH'],encoding='utf-8'))
+          b=e['comment']['body']; m='PUBLIC_PRIVATE_OPERATION_CLOSE_REQUEST_V1'
+          r=json.loads(b[b.index(m)+len(m):].strip())
+          required={'schema','operationId','lockScope','lockGeneration','terminalDisposition','exactPrivateHead'}
+          if set(r)!=required or r['schema']!=m: raise SystemExit('REQUEST_NOT_CLOSED')
+          if r['terminalDisposition'] not in {'PASS_CLOSED','FAIL_CLOSED','REJECTED_CLOSED','WITHDRAWN','SUPERSEDED','VOIDED','EXPIRED'}: raise SystemExit('DISPOSITION_INVALID')
+          h=r['exactPrivateHead']
+          if not isinstance(h,str) or len(h)!=40 or any(c not in '0123456789abcdef' for c in h): raise SystemExit('HEAD_INVALID')
+          if not isinstance(r['lockGeneration'],int) or r['lockGeneration']<1: raise SystemExit('GENERATION_INVALID')
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f:
+            for k,v in [('operation',r['operationId']),('scope',r['lockScope']),('generation',r['lockGeneration']),('disposition',r['terminalDisposition']),('head',h),('callback',e['issue']['number'])]: f.write(f'{k}={v}\n')
+          PY
+      - name: Mint private token
+        id: token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: write
+      - name: Verify live private main
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          EXPECTED: ${{ steps.req.outputs.head }}
+        run: |
+          set -euo pipefail
+          observed="$(curl --fail-with-body --silent --show-error -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' "https://api.github.com/repos/$PRIVATE_REPOSITORY/branches/main" | jq -r '.commit.sha')"
+          test "$observed" = "$EXPECTED"
+      - name: Checkout exact private source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: ${{ steps.req.outputs.head }}
+          token: ${{ steps.token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Close canonical operation
+        id: close
+        continue-on-error: true
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ steps.token.outputs.token }}
+        run: |
+          set -euo pipefail
+          node "$GITHUB_WORKSPACE/private-control-plane/tools/operation-intake/repository-operation-lock-manager.v1.mjs" \
+            --action close \
+            --repository "$PRIVATE_REPOSITORY" \
+            --operation-id '${{ steps.req.outputs.operation }}' \
+            --lock-scope '${{ steps.req.outputs.scope }}' \
+            --lock-generation '${{ steps.req.outputs.generation }}' \
+            --terminal-disposition '${{ steps.req.outputs.disposition }}' \
+            --output "$RUNNER_TEMP/close-receipt.json"
+      - name: Publish redacted result
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test -s "$RUNNER_TEMP/close-receipt.json"
+          result="$(jq -r '.result // ""' "$RUNNER_TEMP/close-receipt.json")"
+          commit="$(jq -r '.closureCommitSha // ""' "$RUNNER_TEMP/close-receipt.json")"
+          body="PUBLIC_PRIVATE_OPERATION_CLOSE_RESULT_V1\noperationId: ${{ steps.req.outputs.operation }}\nresult: $result\nclosureCommitSha: $commit\nrunId: $GITHUB_RUN_ID"
+          jq -n --arg body "$body" '{body:$body}' > "$RUNNER_TEMP/result.json"
+          curl --fail-with-body --silent --show-error --request POST -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' "https://api.github.com/repos/$GITHUB_REPOSITORY/issues/${{ steps.req.outputs.callback }}/comments" --data-binary "@$RUNNER_TEMP/result.json" >/dev/null
+          test '${{ steps.close.outcome }}' = 'success'
+          test "$result" = 'TERMINAL_CLOSURE_COMMITTED'

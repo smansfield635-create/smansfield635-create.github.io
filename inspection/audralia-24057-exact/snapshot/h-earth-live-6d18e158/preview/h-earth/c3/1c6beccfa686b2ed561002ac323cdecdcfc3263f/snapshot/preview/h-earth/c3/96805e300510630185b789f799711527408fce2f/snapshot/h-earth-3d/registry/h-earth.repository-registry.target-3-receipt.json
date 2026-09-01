@@ -1,0 +1,91 @@
+{
+  "receiptId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_3_GITHUB_TOOL_INSTRUCTION_RECEIPT_v1",
+  "targetNumber": 3,
+  "targetName": "GITHUB_TOOL_INSTRUCTION",
+  "result": "PASS",
+  "branch": "agent/h-earth-repository-registry-installation-001",
+  "completionCommitIdentity": "THE_COMMIT_CONTAINING_THIS_RECEIPT",
+  "installationClass": "CANDIDATE_GITHUB_TOOL_INSTRUCTION_AND_SCOPED_AGENT_GUIDANCE",
+  "executionEnvironment": "LOCAL_EPHEMERAL_EXACT_FILESET_PREPUBLICATION_AUDIT_PLUS_GITHUB_FETCHBACK",
+  "audit": {
+    "auditId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_3_INSTRUCTION_AUDIT_v1",
+    "result": "PASS",
+    "checks": {
+      "targetIdentity": true,
+      "candidateStatusPreserved": true,
+      "exactRegistryIdentity": true,
+      "exactCandidateIdentity": true,
+      "consumerCoverage": true,
+      "precedencePresent": true,
+      "sevenPreflightSteps": true,
+      "eightOperatingRules": true,
+      "sixReportingDuties": true,
+      "failureTaxonomyPresent": true,
+      "kernelCardinalsExact": true,
+      "facadeDoesNotOwnAuthority": true,
+      "compositeDoesNotOwnAuthority": true,
+      "gateBRemainsCandidate": true,
+      "readOnlyOnly": true,
+      "targetFourPreserved": true,
+      "detailedInstructionComplete": true,
+      "githubInstructionSurfacePresent": true,
+      "githubInstructionBounded": true,
+      "scopedAgentEntrypoints": true,
+      "bootstrapRegistersTarget3": true,
+      "bootstrapRemainsCandidate": true,
+      "noAuthorityOverreach": true,
+      "deterministicSurfaces": true
+    },
+    "totalChecks": 24,
+    "passedChecks": 24,
+    "failedChecks": [],
+    "instructionIdentity": {
+      "instructionId": "H_EARTH_REPOSITORY_REGISTRY_GITHUB_TOOL_INSTRUCTION_v1",
+      "instructionVersion": 1,
+      "status": "COMPLETE_CANDIDATE_NOT_ACCEPTED",
+      "accepted": false,
+      "canonical": false
+    },
+    "contractCounts": {
+      "consumerClasses": 6,
+      "precedenceEntries": 5,
+      "preflightSteps": 7,
+      "operatingRules": 8,
+      "reportingDuties": 6,
+      "failureCodes": 12
+    },
+    "digests": {
+      "machineContractSha256": "c4ae70d703b0f8fbbdc0c894a78033fc7c82621ef4d6b9228fc537b2364f8149",
+      "detailedInstructionSha256": "dd6f9fe0a5fa4d519495174ed9058cfc1939d6ebc0dd81794cd8f9b5c255d1ea",
+      "githubInstructionSha256": "3e70b7008f45c1bc44157d2fb3e22514e9890ef9eb201d12597ed28b4841c5be",
+      "hEarthAgentsSha256": "12d48ca2a997fbfc89f4a690484d4fb2b407928518b8bd8003ea7b12de8c58c4",
+      "showroomAgentsSha256": "1b4c7fa4d20bc95d5d862863188ef4e6ce1de3d969f39508d35d70e718ad4bbd"
+    },
+    "boundaries": {
+      "registryAccepted": false,
+      "registryCanonicalized": false,
+      "sourceAuthorityCreated": false,
+      "mutationAuthorityCreated": false,
+      "mergeAuthorityCreated": false,
+      "validatorInstalled": false,
+      "workflowEnforcementInstalled": false,
+      "runtimeActivationCreated": false,
+      "rendererActivationCreated": false,
+      "productionClaimCreated": false,
+      "targetFourStillRequired": true
+    }
+  },
+  "boundaries": {
+    "registryAccepted": false,
+    "registryCanonicalized": false,
+    "sourceAuthorityCreated": false,
+    "mutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "validatorInstalled": false,
+    "workflowEnforcementInstalled": false,
+    "runtimeActivationCreated": false,
+    "productionClaimCreated": false,
+    "mainChanged": false,
+    "targetFourStillRequired": true
+  }
+}

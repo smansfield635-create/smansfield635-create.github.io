@@ -1,0 +1,26 @@
+{
+  "registry_id": "FBK-V3.1-REQ",
+  "kernel_version": "3.1.0",
+  "status": "CANONICAL_EXECUTABLE_REFERENCE_CANDIDATE",
+  "requirements": [
+    {"id":"FBK-REQ-CTX-001","level":"MUST","text":"Every evaluation context must contain nonempty scope, construct, kernel-version, parameter-set, governance-assignment, semantic-adjudication-assignment, and evidence-window identifiers.","test":"test_valid_forward_pass"},
+    {"id":"FBK-REQ-CTX-002","level":"MUST NOT","text":"An evaluation may not execute under a kernel version other than 3.1.0.","test":"implementation guard"},
+    {"id":"FBK-REQ-GOV-001","level":"MUST","text":"Every evaluated edge must resolve exactly one verified receipt for each of the fifteen governance predicates.","test":"test_missing_governance_receipt_rejects"},
+    {"id":"FBK-REQ-GOV-002","level":"MUST","text":"Governance receipts must correspond to the same object, scope, construct, kernel version, execution history, and edge.","test":"test_tampered_receipt_rejects"},
+    {"id":"FBK-REQ-GOV-003","level":"MUST","text":"Missing, duplicated, false, unverified, mismatched, or hash-invalid governance receipts must set HFgov true.","test":"test_missing_governance_receipt_rejects"},
+    {"id":"FBK-REQ-SEM-001","level":"MUST","text":"Every evaluated edge must resolve one verified semantic adjudication receipt containing object_real and exactly one route_class.","test":"test_missing_semantic_receipt_rejects"},
+    {"id":"FBK-REQ-SEM-002","level":"MUST NOT","text":"The engine must not infer a favorable semantic route class from a numeric score.","test":"test_numeric_pass_does_not_override_semantic_rejection"},
+    {"id":"FBK-REQ-DISP-001","level":"MUST","text":"Every completed edge evaluation must produce exactly one disposition.","test":"all disposition tests"},
+    {"id":"FBK-REQ-DISP-002","level":"MUST","text":"Disposition precedence must be reject, reslot, correct, hold, forward, then reject by default.","test":"all disposition tests"},
+    {"id":"FBK-REQ-FWD-001","level":"MUST","text":"F must equal Av3 only when disposition is PASS_FORWARD and must equal zero otherwise.","test":"test_valid_forward_pass and nonpass tests"},
+    {"id":"FBK-REQ-HASH-001","level":"MUST","text":"Canonical record hashes must use deterministic UTF-8 JSON and SHA-256.","test":"test_tampered_receipt_rejects"},
+    {"id":"FBK-REQ-HIST-001","level":"MUST","text":"Nonpass dispositions must remain in history and require disposition-specific resolution records.","test":"test_rejected_history_cannot_close"},
+    {"id":"FBK-REQ-HIST-002","level":"MUST NOT","text":"A rejected execution history must never become FINAL_CLOSED.","test":"test_rejected_history_cannot_close"},
+    {"id":"FBK-REQ-CLOSE-001","level":"MUST","text":"A closure suffix must contain only PASS_FORWARD edges with F at least two-thirds under one constant context.","test":"test_valid_closure_suffix_reaches_glock_only"},
+    {"id":"FBK-REQ-CLOSE-002","level":"MUST","text":"Terminal engine, integration, value, coherence, entropy, South, and West conditions must pass before GLOCK qualification.","test":"test_valid_closure_suffix_reaches_glock_only"},
+    {"id":"FBK-REQ-LIFE-001","level":"MUST","text":"Lifecycle transitions must occur in the order EXECUTING, GLOCK_QUALIFIED, PROVISIONALLY_SEALED, HOME_RETURN_VERIFIED, FINAL_CLOSED.","test":"test_lifecycle_reaches_final_only_in_order"},
+    {"id":"FBK-REQ-LIFE-002","level":"MUST NOT","text":"Lifecycle stages may not be skipped, reversed, or advanced by an invalid receipt.","test":"test_lifecycle_cannot_skip"},
+    {"id":"FBK-REQ-CLAIM-001","level":"MUST","text":"The only authorized claim at each lifecycle stage is the claim listed in the stage claim registry.","test":"test_stage_claim_authority"},
+    {"id":"FBK-REQ-BOUND-001","level":"MUST NOT","text":"Executable conformance must not be represented as empirical validation, domain validation, autonomous semantic inference, universal reachability, or external mathematical review.","test":"claim_manifest.json"}
+  ]
+}

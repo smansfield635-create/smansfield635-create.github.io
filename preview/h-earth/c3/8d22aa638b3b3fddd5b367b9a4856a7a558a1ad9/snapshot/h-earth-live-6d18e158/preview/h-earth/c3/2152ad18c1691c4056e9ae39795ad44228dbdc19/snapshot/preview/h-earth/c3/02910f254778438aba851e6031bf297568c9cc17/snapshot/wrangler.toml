@@ -1,0 +1,5 @@
+name = "geodiametrics"
+compatibility_date = "2026-02-02"
+
+# If you are using Cloudflare Pages, this file can remain inert.
+# If you are using Workers, you can wire routes later without affecting GitHub Pages.

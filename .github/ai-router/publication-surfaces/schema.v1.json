@@ -1,0 +1,324 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "title": "Public surface verification manifest",
+  "type": "object",
+  "required": [
+    "schema",
+    "surfaceId",
+    "checks"
+  ],
+  "properties": {
+    "schema": {
+      "const": "PUBLICATION_SURFACE_VERIFICATION_v1"
+    },
+    "surfaceId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,79}$"
+    },
+    "description": {
+      "type": "string"
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "includes",
+          "excludes"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "pattern": "^/"
+          },
+          "includes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "excludes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "path"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^/"
+        },
+        "timeoutMs": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 120000
+        },
+        "readySelector": {
+          "type": "string"
+        },
+        "readyAttribute": {
+          "type": "object",
+          "required": [
+            "selector",
+            "name",
+            "contains"
+          ],
+          "properties": {
+            "selector": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "contains": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "binding": {
+          "type": "object",
+          "required": [
+            "mode"
+          ],
+          "properties": {
+            "mode": {
+              "enum": [
+                "direct-document",
+                "iframe"
+              ]
+            },
+            "path": {
+              "type": "string",
+              "pattern": "^/"
+            },
+            "selector": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "failOnConsoleErrors": {
+          "type": "boolean"
+        },
+        "failOnPageErrors": {
+          "type": "boolean"
+        },
+        "ignoreConsoleErrorIncludes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "requireEvidenceCarouselInteraction": {
+          "type": "boolean"
+        },
+        "interactions": {
+          "type": "array",
+          "maxItems": 32,
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "action",
+              "assertions"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "action": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "type",
+                      "selector"
+                    ],
+                    "properties": {
+                      "type": {
+                        "const": "click"
+                      },
+                      "selector": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 240
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "type",
+                      "selector",
+                      "key"
+                    ],
+                    "properties": {
+                      "type": {
+                        "const": "key"
+                      },
+                      "selector": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 240
+                      },
+                      "key": {
+                        "enum": [
+                          "ArrowLeft",
+                          "ArrowRight",
+                          "Home",
+                          "End",
+                          "Enter",
+                          "Space"
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "assertions": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 8,
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "type",
+                        "selector"
+                      ],
+                      "properties": {
+                        "type": {
+                          "const": "exists"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 240
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "type",
+                        "selector",
+                        "name",
+                        "value"
+                      ],
+                      "properties": {
+                        "type": {
+                          "const": "attributeEquals"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 240
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 80
+                        },
+                        "value": {
+                          "type": "string",
+                          "maxLength": 240
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "type",
+                        "selector",
+                        "name",
+                        "value"
+                      ],
+                      "properties": {
+                        "type": {
+                          "const": "attributeContains"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 240
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 80
+                        },
+                        "value": {
+                          "type": "string",
+                          "maxLength": 240
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "type",
+                        "selector",
+                        "value"
+                      ],
+                      "properties": {
+                        "type": {
+                          "const": "textContains"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 240
+                        },
+                        "value": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 240
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "timeoutMs": {
+                "type": "integer",
+                "minimum": 250,
+                "maximum": 15000
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

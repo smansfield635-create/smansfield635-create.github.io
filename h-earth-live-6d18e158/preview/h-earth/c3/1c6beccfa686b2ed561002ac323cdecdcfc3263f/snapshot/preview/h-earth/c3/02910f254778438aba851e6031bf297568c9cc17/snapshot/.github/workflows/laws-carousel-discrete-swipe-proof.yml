@@ -1,0 +1,60 @@
+name: Laws Carousel Continuous Pointer Proof
+
+on:
+  pull_request:
+    paths:
+      - 'laws/index.destination-carousel.js'
+      - 'laws/index.destination-carousel.css'
+      - 'laws/index.mobile-background-tabs.js'
+      - '.github/workflows/laws-carousel-discrete-swipe-proof.yml'
+permissions: { contents: read }
+
+jobs:
+  continuous-pointer-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: '${{ github.event.pull_request.head.sha }}', fetch-depth: 1 }
+      - name: Install Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null
+      - name: Serve exact candidate
+        run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/laws-pointer-http.log 2>&1 &
+      - name: Prove frozen pointer contract Q1-Q7
+        run: |
+          node <<'NODE'
+          const fs=require('fs'); const {chromium}=require('playwright'); const A=(x,m)=>{if(!x)throw Error(m)};
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const context=await browser.newContext({viewport:{width:960,height:1536},hasTouch:true,isMobile:true,deviceScaleFactor:1});
+            const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(String(e)));
+            await page.goto('http://127.0.0.1:4173/laws/',{waitUntil:'networkidle'});await page.waitForSelector('html[data-laws-destination-carousel-runtime="active"]',{timeout:15000});
+            const runtime=await page.evaluate(()=>globalThis.DGB_LAWS_DESTINATION_CAROUSEL);A(runtime?.contract==='LAWS_DESTINATION_CAROUSEL_RUNTIME_v6','wrong runtime');
+            for(const[k,v]of Object.entries({continuousPointerGeometry:true,fractionalOrbitPosition:true,selectionDuringDrag:false,settleToNearestDetent:true,verticalGesturePassthrough:true,directionOnlyGesture:false,liveGestureGeometry:true,atomicRotation:false}))A(runtime[k]===v,`telemetry ${k}`);
+            const field=page.locator('[data-laws-root-rolodex-section] .laws-rolodex-field[data-destination-stage-state="active"]').first(),viewport=field.locator('.laws-rolodex-viewport');await viewport.scrollIntoViewIfNeeded();await page.waitForTimeout(100);
+            const box=await viewport.boundingBox();A(box&&box.width>400,'viewport unavailable');const S=box.width*.72,sx=box.x+box.width*.86,sy0=box.y+box.height*.52,cdp=await context.newCDPSession(page);let tid=1;
+            const touch=(type,x,y)=>cdp.send('Input.dispatchTouchEvent',{type,touchPoints:/End|Cancel/.test(type)?[]:[{x,y,id:tid,radiusX:2,radiusY:2,force:1}],modifiers:0});
+            const down=async()=>{tid++;await touch('touchStart',sx,sy0);await page.waitForTimeout(35)},move=async f=>{await touch('touchMove',sx-S*f,sy0);await page.waitForTimeout(45)},up=async()=>{await touch('touchEnd',sx,sy0);await page.waitForTimeout(650)};
+            const snap=()=>field.evaluate(el=>({index:+el.dataset.carouselIndex,orbit:+el.dataset.carouselOrbitPosition,state:el.dataset.carouselGestureState,label:el.querySelector('.laws-rolodex-position')?.textContent?.trim(),cards:[...el.querySelectorAll('.laws-rolodex-card')].map(c=>({active:c.dataset.active,relative:+c.dataset.carouselRelative,x:parseFloat(c.style.getPropertyValue('--laws-carousel-x')),z:parseFloat(c.style.getPropertyValue('--laws-carousel-z')),rotate:parseFloat(c.style.getPropertyValue('--laws-carousel-rotate')),scale:parseFloat(c.style.getPropertyValue('--laws-carousel-scale')),opacity:parseFloat(c.style.getPropertyValue('--laws-carousel-opacity')),blur:parseFloat(c.style.getPropertyValue('--laws-carousel-blur'))}))}));
+            const restore=async index=>{await page.evaluate(({id,index})=>globalThis.DGB_LAWS_DESTINATION_CAROUSEL.restoreOrbitState({rolodexId:id,index}),{id:await field.getAttribute('data-rolodex-id'),index});await page.waitForTimeout(80)},frame=n=>page.screenshot({path:n,fullPage:false}),vec=(s,i)=>[s.cards[i].x,s.cards[i].z,s.cards[i].rotate,s.cards[i].scale,s.cards[i].opacity,s.cards[i].blur];
+
+            await restore(0);const q10=await snap();await frame('q1-00.png');await down();await move(.25);const q125=await snap();await frame('q1-25.png');await move(.50);const q150=await snap();await frame('q1-50.png');await move(.75);const q175=await snap();await frame('q1-75.png');A([q125,q150,q175].every(s=>s.index===q10.index&&s.label===q10.label),'Q1 semantic selection changed');A(new Set([q10,q125,q150,q175].map(s=>JSON.stringify(vec(s,0)))).size===4,'Q1 geometry not continuous');A(q125.cards[0].x>q150.cards[0].x&&q150.cards[0].x>q175.cards[0].x,'Q1 active monotonic failure');A(q125.cards[1].x>q150.cards[1].x&&q150.cards[1].x>q175.cards[1].x,'Q1 neighbor monotonic failure');A([q125,q150,q175].every(s=>s.state==='dragging'),'Q1 custody failure');await up();const q1end=await snap();A(q1end.index===1&&Math.abs(q1end.orbit-1)<.001,'Q1 detent failure');
+            await restore(0);const q2base=await snap();await down();await move(.30);const q230=await snap();await frame('q2-30.png');A(Math.abs(q230.cards[0].x-q2base.cards[0].x)>10&&q230.index===0,'Q2 visible motion failure');await up();const q2end=await snap();await frame('q2-settled.png');A(q2end.index===0&&Math.abs(q2end.orbit-q2base.orbit)<.001,'Q2 return failure');
+            await restore(0);await down();await move(.70);const q370=await snap();await frame('q3-70.png');A(q370.index===0&&q370.orbit>.6&&q370.orbit<.8,'Q3 fractional failure');await up();const q3end=await snap();await frame('q3-settled.png');A(q3end.index===1&&Math.abs(q3end.orbit-1)<.001,'Q3 commit failure');
+            const count=(await snap()).cards.length;await restore(count-1);await down();await move(.25);const q425=await snap();await frame('q4-25.png');await move(.50);const q450=await snap();await frame('q4-50.png');await move(.70);const q470=await snap();await frame('q4-70.png');A([q425,q450,q470].every(s=>s.index===count-1),'Q4 semantic seam failure');A(q425.cards[0].x>q450.cards[0].x&&q450.cards[0].x>q470.cards[0].x,'Q4 geometric seam failure');await up();const q4end=await snap();await frame('q4-settled.png');A(q4end.index===0,'Q4 seam commit failure');
+            await restore(0);await viewport.scrollIntoViewIfNeeded();const q5before=await snap(),scrollBefore=await page.evaluate(()=>scrollY);await frame('q5-before.png');const b5=await viewport.boundingBox();tid++;const vx=b5.x+b5.width*.5,vy=b5.y+b5.height*.45;await touch('touchStart',vx,vy);await page.waitForTimeout(30);await touch('touchMove',vx+4,vy+220);await page.waitForTimeout(200);await touch('touchEnd',vx+4,vy+220);await page.waitForTimeout(150);const q5after=await snap(),scrollAfter=await page.evaluate(()=>scrollY);await frame('q5-after.png');A(q5after.index===q5before.index,'Q5 vertical rotated carousel');A(Math.abs(scrollAfter-scrollBefore)>20,`Q5 page traversal ${scrollBefore}->${scrollAfter}`);
+            await viewport.scrollIntoViewIfNeeded();await restore(0);const q6base=await snap();await viewport.evaluate(el=>el.addEventListener('pointerdown',e=>{globalThis.__lawsQ6PointerId=e.pointerId},{capture:true,once:true}));await down();await move(.42);const q6drag=await snap();await frame('q6-drag.png');A(q6drag.index===q6base.index&&Math.abs(q6drag.cards[0].x-q6base.cards[0].x)>10,'Q6 drag setup failure');const pid=await page.evaluate(()=>globalThis.__lawsQ6PointerId);A(Number.isInteger(pid),'Q6 pointer id missing');await viewport.evaluate((el,pid)=>el.dispatchEvent(new PointerEvent('pointercancel',{bubbles:true,pointerId:pid,pointerType:'touch',isPrimary:true})),pid);await page.waitForTimeout(650);await touch('touchCancel',sx,sy0).catch(()=>{});const q6end=await snap();await frame('q6-cancelled.png');A(q6end.index===q6base.index&&Math.abs(q6end.orbit-q6base.orbit)<.001,'Q6 cancellation did not restore originating unwrapped detent');
+            A(!errors.length,'page errors '+errors.join(' | '));fs.writeFileSync('laws-continuous-pointer-proof.json',JSON.stringify({contract:runtime.contract,Q1:{q10,q125,q150,q175,q1end},Q2:{q2base,q230,q2end},Q3:{q370,q3end},Q4:{q425,q450,q470,q4end},Q5:{scrollBefore,scrollAfter,q5after},Q6:{q6base,q6drag,q6end},result:'PASS'},null,2));console.log('LAWS_CONTINUOUS_POINTER_Q1_Q7_PASS');await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+      - name: Upload intermediate proof frames and receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-continuous-pointer-proof
+          path: |
+            q*.png
+            laws-continuous-pointer-proof.json
+          if-no-files-found: warn

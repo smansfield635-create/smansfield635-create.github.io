@@ -1,0 +1,114 @@
+name: Audralia Exact 24057 Live Recovery
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-production
+  cancel-in-progress: false
+
+jobs:
+  publish-exact-24057:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout current main exact head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Stage bounded current-main Pages payload
+        shell: bash
+        env:
+          STAGE: ${{ runner.temp }}/pages-site
+        run: |
+          set -euo pipefail
+          rm -rf "$STAGE"
+          mkdir -p "$STAGE"
+          rsync -a --prune-empty-dirs --exclude='.git/' --exclude='.github/' --exclude='preview/' --exclude='h-earth-live-6d18e158/' ./ "$STAGE/"
+
+          rm -rf "$STAGE/showroom/globe/h-earth"
+          mkdir -p "$STAGE/showroom/globe/h-earth"
+          rsync -a --delete h-earth-live-6d18e158/showroom/globe/h-earth/ "$STAGE/showroom/globe/h-earth/"
+
+          mkdir -p "$STAGE/.well-known"
+          jq -n --arg schema 'DGB_PUBLIC_RELEASE_MARKER_v2' --arg commit '${{ github.sha }}' --arg surface 'audralia' --arg environment 'IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993' '{schema:$schema,commit:$commit,surface:$surface,environment:$environment}' > "$STAGE/.well-known/dgb-release.json"
+
+          audralia="$STAGE/showroom/globe/audralia/index.html"
+          snapshot="$STAGE/inspection/audralia-24057-exact/snapshot"
+          test -f "$audralia"
+          test -f "$snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs"
+          test -f "$snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs"
+          test -f "$snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs"
+          grep -Fq 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v7_EXACT_24057_LOADER_FIRST' "$audralia"
+          grep -Fq 'IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993' "$audralia"
+          grep -Fq '/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs?cb=EXACT_24057' "$audralia"
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/pages-site
+
+      - name: Deploy exact 24057 binding
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Verify exact 24057 live bytes
+        shell: bash
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+          TARGET_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          root="${PAGE_URL%/}"
+          for attempt in $(seq 1 30); do
+            marker="$(curl -fsSL --max-time 20 "$root/.well-known/dgb-release.json" 2>/dev/null || true)"
+            html="$(curl -fsSL --max-time 20 "$root/showroom/globe/audralia/" 2>/dev/null || true)"
+            loader="$(curl -fsSL --max-time 20 "$root/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs?cb=EXACT_24057_LOADER_FIRST" 2>/dev/null || true)"
+            app="$(curl -fsSL --max-time 20 "$root/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs?cb=EXACT_24057" 2>/dev/null || true)"
+            renderer="$(curl -fsSL --max-time 20 "$root/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs?cb=EXACT_24057" 2>/dev/null || true)"
+            observed="$(printf '%s' "$marker" | jq -r '.commit // empty' 2>/dev/null || true)"
+            if [ "$observed" = "$TARGET_SHA" ] \
+              && printf '%s' "$html" | grep -Fq 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v7_EXACT_24057_LOADER_FIRST' \
+              && printf '%s' "$html" | grep -Fq 'IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993' \
+              && printf '%s' "$loader" | grep -Fq "setVerified(6,'Preparing Audralia',15)" \
+              && printf '%s' "$app" | grep -Fq 'createMapWideEnvironmentRenderer' \
+              && printf '%s' "$renderer" | grep -Fq 'createMapWideEnvironmentRenderer'; then
+              echo "AUDRALIA_EXACT_24057_LIVE_BYTES_VERIFIED target=$TARGET_SHA"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "AUDRALIA_EXACT_24057_LIVE_BYTES_NOT_PROVEN target=$TARGET_SHA" >&2
+          exit 1
+
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install browser driver
+        shell: bash
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Verify Audralia runtime reaches ready state
+        shell: bash
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+          MANIFEST_PATH: .github/ai-router/publication-surfaces/audralia.json
+        run: |
+          set -euo pipefail
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          test -x "$CHROME_PATH"
+          node tools/publication-live-verify.mjs runtime "$PAGE_URL" "$MANIFEST_PATH"

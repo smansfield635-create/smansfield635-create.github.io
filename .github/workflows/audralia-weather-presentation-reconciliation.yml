@@ -1,0 +1,166 @@
+name: Audralia Weather Presentation Reconciliation
+
+on:
+  pull_request:
+    paths:
+      - 'showroom/globe/audralia/index.html'
+      - 'showroom/globe/audralia/loading-continuity-v3.css'
+      - 'showroom/globe/audralia/weather-presentation-reconciliation/**'
+      - 'tools/audralia-weather-presentation-reconciliation-ci.mjs'
+      - '.github/workflows/audralia-weather-presentation-reconciliation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  structural-reconciliation:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Materialize structural reconciliation sparse index
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "+${GITHUB_REF}:refs/remotes/origin/qualification"
+          git sparse-checkout init --cone --sparse-index
+          git sparse-checkout set showroom/globe/audralia/weather-presentation-reconciliation
+          git checkout --detach refs/remotes/origin/qualification
+          test "$(git config --bool index.sparse)" = "true"
+          sparse_entries=$(git ls-files --sparse | wc -l)
+          test "$sparse_entries" -lt 2000
+          printf 'AUDRALIA_STRUCTURAL_SPARSE_INDEX_ENTRIES=%s\n' "$sparse_entries"
+          git show HEAD:tools/audralia-weather-presentation-reconciliation-ci.mjs > "${RUNNER_TEMP}/audralia-weather-presentation-reconciliation-ci.mjs"
+          mkdir -p tools
+          cp "${RUNNER_TEMP}/audralia-weather-presentation-reconciliation-ci.mjs" tools/audralia-weather-presentation-reconciliation-ci.mjs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate module syntax
+        run: |
+          node --check showroom/globe/audralia/weather-presentation-reconciliation/exterior-classification.mjs
+          node --check showroom/globe/audralia/weather-presentation-reconciliation/clear-atmosphere.mjs
+          node --check showroom/globe/audralia/weather-presentation-reconciliation/exterior-weather.mjs
+          node --check showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs
+          node --check showroom/globe/audralia/weather-presentation-reconciliation/app.mjs
+          node --check tools/audralia-weather-presentation-reconciliation-ci.mjs
+      - name: Verify reconciliation prohibitions
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import {EXTERIOR_COMPONENT_CLASSIFICATION,RECONCILIATION_INVARIANTS} from './showroom/globe/audralia/weather-presentation-reconciliation/exterior-classification.mjs';
+          assert.equal(RECONCILIATION_INVARIANTS.cameraSemanticsMutated,false);
+          assert.equal(RECONCILIATION_INVARIANTS.zoomSemanticsMutated,false);
+          assert.equal(RECONCILIATION_INVARIANTS.travelSemanticsMutated,false);
+          assert.equal(RECONCILIATION_INVARIANTS.oldNearFieldOcclusionMayBeInherited,false);
+          assert.equal(RECONCILIATION_INVARIANTS.terrainClearanceMayRender,false);
+          const exterior=EXTERIOR_COMPONENT_CLASSIFICATION.find(x=>x.id==='EVOLVING_GLOBAL_CLOUD_SUPPORT');
+          const bounded=EXTERIOR_COMPONENT_CLASSIFICATION.find(x=>x.id==='CANONICAL_BOUNDED_WEATHER_OBJECTS');
+          assert.equal(exterior.nearFieldOcclusionAuthority,false);
+          assert.equal(bounded.nearFieldOcclusionAuthority,true);
+          console.log(JSON.stringify({pass:true,classifications:EXTERIOR_COMPONENT_CLASSIFICATION},null,2));
+          NODE
+
+  exact-page-runtime-reconciliation:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Materialize exact Audralia runtime sparse index
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "+${GITHUB_REF}:refs/remotes/origin/qualification"
+          git sparse-checkout init --cone --sparse-index
+          git sparse-checkout set \
+            showroom/globe/audralia \
+            showroom/globe/h-earth/terrain-estate-construction-v1 \
+            showroom/globe/h-earth/render \
+            h-earth-3d/integration \
+            h-earth-3d/terrain \
+            h-earth-3d/control-plane/run-8 \
+            h-earth-3d/objects \
+            h-earth-3d/zones \
+            h-earth-3d/cells \
+            h-earth-3d/environment \
+            inspection/audralia-24057-exact/snapshot/showroom/globe/audralia \
+            inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1 \
+            inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/render \
+            inspection/audralia-24057-exact/snapshot/h-earth-3d/integration \
+            inspection/audralia-24057-exact/snapshot/h-earth-3d/terrain \
+            inspection/audralia-24057-exact/snapshot/h-earth-3d/control-plane/run-8 \
+            inspection/audralia-24057-exact/snapshot/h-earth-3d/objects \
+            inspection/audralia-24057-exact/snapshot/h-earth-3d/zones \
+            inspection/audralia-24057-exact/snapshot/h-earth-3d/cells \
+            inspection/audralia-24057-exact/snapshot/h-earth-3d/environment
+          git checkout --detach refs/remotes/origin/qualification
+          test "$(git config --bool index.sparse)" = "true"
+          sparse_entries=$(git ls-files --sparse | wc -l)
+          test "$sparse_entries" -lt 5000
+          printf 'AUDRALIA_RUNTIME_SPARSE_INDEX_ENTRIES=%s\n' "$sparse_entries"
+          git show HEAD:tools/audralia-weather-presentation-reconciliation-ci.mjs > "${RUNNER_TEMP}/audralia-weather-presentation-reconciliation-ci.mjs"
+          mkdir -p tools
+          cp "${RUNNER_TEMP}/audralia-weather-presentation-reconciliation-ci.mjs" tools/audralia-weather-presentation-reconciliation-ci.mjs
+      - name: Verify browser module dependency closure
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const queue=['showroom/globe/audralia/weather-presentation-reconciliation/index.html','showroom/globe/audralia/index.html'];
+          const seen=new Set();
+          const missing=[];
+          const resolve=(from,spec)=>{
+            const clean=String(spec).split(/[?#]/,1)[0];
+            if(!clean||/^(?:https?:|data:|blob:)/.test(clean))return null;
+            if(clean.startsWith('/'))return clean.slice(1);
+            if(clean.startsWith('.'))return path.normalize(path.join(path.dirname(from),clean));
+            return null;
+          };
+          while(queue.length){
+            const file=queue.shift();
+            if(seen.has(file))continue;
+            seen.add(file);
+            if(!fs.existsSync(file)){missing.push(file);continue;}
+            const source=fs.readFileSync(file,'utf8');
+            const specs=[];
+            if(file.endsWith('.html')){
+              for(const match of source.matchAll(/<(?:script|link)\b[^>]*(?:src|href)=["']([^"']+)["'][^>]*>/gi))specs.push(match[1]);
+            }else if(/\.(?:m?js)$/.test(file)){
+              for(const match of source.matchAll(/(?:\bfrom\s*|\bimport\s*\(\s*|\bimport\s*)["']([^"']+)["']/g))specs.push(match[1]);
+            }
+            for(const spec of specs){
+              const target=resolve(file,spec);
+              if(!target||!/[.](?:html|m?js)$/.test(target))continue;
+              if(!seen.has(target))queue.push(target);
+            }
+          }
+          if(missing.length){
+            console.error(JSON.stringify({pass:false,missing:[...new Set(missing)].sort(),visited:seen.size},null,2));
+            process.exit(1);
+          }
+          console.log(JSON.stringify({pass:true,visited:seen.size},null,2));
+          NODE
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+      - name: Install browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Start exact-head server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/audralia-reconciliation-server.log 2>&1 &
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/weather-presentation-reconciliation/ >/dev/null; then exit 0; fi
+            sleep 0.25
+          done
+          cat /tmp/audralia-reconciliation-server.log
+          exit 1
+      - name: Execute reconciliation and live Audralia pages
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: node tools/audralia-weather-presentation-reconciliation-ci.mjs

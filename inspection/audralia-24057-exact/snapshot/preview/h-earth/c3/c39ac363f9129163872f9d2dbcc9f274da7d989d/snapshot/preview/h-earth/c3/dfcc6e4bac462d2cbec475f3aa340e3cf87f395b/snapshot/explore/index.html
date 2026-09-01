@@ -1,0 +1,1805 @@
+<!doctype html> 
+<html
+  lang="en"
+  data-route="/explore/"
+  data-page="explore-frontier-curiosity-surface"
+  data-room="explore"
+  data-public-facing-name="Explore"
+  data-version="EXPLORE-FRONTIER-CURIOSITY-SURFACE-v5"
+  data-contract="EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v5"
+  data-role="frontier-curiosity-entry"
+  data-purpose="curiosity-led-frontier-surface-selection"
+  data-primary-destination="/explore/frontier/"
+  data-compass-behavior="retired"
+  data-manor-identity="retired"
+  data-estate-directory="false"
+  data-frontier-surface-labels="true"
+  data-objective-stance="true"
+  data-narrative-stance="false"
+  data-inline-css="true"
+  data-inline-js="true"
+  data-heavy-runtime-loaded="false"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-streaming="false"
+  data-canvas-runtime="false"
+  data-request-animation-frame="false"
+  data-visual-pass-claimed="false"
+>
+<head>
+  <meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,viewport-fit=cover"
+  >
+
+  <title>Explore · Frontier Surfaces · Diamond Gate Bridge</title>
+
+  <meta
+    name="description"
+    content="Explore helps visitors choose a practical frontier surface by curiosity. Each surface explains the question, then opens the Frontier Lanes hub."
+  >
+
+  <style>
+    :root {
+      color-scheme: dark;
+
+      --bg: #03050a;
+      --bg-2: #07101a;
+      --ink: #f5f7ff;
+      --soft: rgba(245, 247, 255, 0.76);
+      --muted: rgba(245, 247, 255, 0.54);
+      --faint: rgba(245, 247, 255, 0.34);
+
+      --gold: #f2c76f;
+      --gold-2: #ffe7a3;
+
+      --panel: rgba(255, 255, 255, 0.055);
+      --panel-2: rgba(255, 255, 255, 0.035);
+      --line: rgba(255, 255, 255, 0.13);
+      --line-strong: rgba(242, 199, 111, 0.42);
+      --shadow: rgba(0, 0, 0, 0.44);
+
+      --accent: #f2c76f;
+      --accent-soft: rgba(242, 199, 111, 0.16);
+      --accent-line: rgba(242, 199, 111, 0.48);
+
+      --radius-lg: 30px;
+      --radius-md: 22px;
+      --radius-sm: 16px;
+
+      --max: 1120px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at 50% -8%, rgba(242, 199, 111, 0.09), transparent 30rem),
+        radial-gradient(circle at 10% 18%, rgba(141, 216, 255, 0.10), transparent 28rem),
+        radial-gradient(circle at 92% 16%, rgba(141, 242, 194, 0.07), transparent 24rem),
+        radial-gradient(circle at 50% 82%, rgba(242, 199, 111, 0.052), transparent 34rem),
+        linear-gradient(180deg, var(--bg-2), var(--bg));
+      color: var(--ink);
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    body {
+      min-height: 100svh;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle, rgba(255, 255, 255, 0.15) 0 1px, transparent 1.5px),
+        linear-gradient(rgba(141, 216, 255, 0.032) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(141, 216, 255, 0.032) 1px, transparent 1px);
+      background-size: 230px 260px, 58px 58px, 58px 58px;
+      opacity: 0.19;
+      mask-image: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.92),
+        rgba(0, 0, 0, 0.55) 64%,
+        rgba(0, 0, 0, 0.16)
+      );
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    summary {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    summary {
+      cursor: pointer;
+      list-style: none;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    a:focus-visible,
+    button:focus-visible,
+    summary:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+    }
+
+    .skip {
+      position: absolute;
+      top: 8px;
+      left: -999px;
+      z-index: 50;
+      padding: 0.72rem 1rem;
+      border-radius: 999px;
+      color: #07101a;
+      background: linear-gradient(135deg, var(--gold-2), var(--gold));
+      font-weight: 950;
+    }
+
+    .skip:focus {
+      left: 8px;
+    }
+
+    .shell {
+      position: relative;
+      z-index: 2;
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+      padding:
+        max(24px, env(safe-area-inset-top))
+        0
+        max(52px, env(safe-area-inset-bottom));
+    }
+
+    .topbar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 38px;
+    }
+
+    .brand {
+      display: grid;
+      gap: 5px;
+      min-width: 220px;
+    }
+
+    .brand span {
+      color: var(--gold);
+      font-size: 0.82rem;
+      font-weight: 950;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .brand strong {
+      color: var(--soft);
+      font-size: 0.98rem;
+      font-weight: 800;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .nav a {
+      min-height: 2.55rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.62rem 0.92rem;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.052);
+      font-size: 0.88rem;
+      font-weight: 900;
+      line-height: 1;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      transition:
+        border-color 160ms ease,
+        background 160ms ease,
+        transform 160ms ease;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible {
+      border-color: rgba(242, 199, 111, 0.44);
+      background: rgba(242, 199, 111, 0.11);
+      transform: translateY(-1px);
+    }
+
+    .nav a[aria-current="page"] {
+      border-color: var(--line-strong);
+      background: rgba(242, 199, 111, 0.14);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: clamp(24px, 5vw, 54px);
+      background:
+        radial-gradient(circle at 14% 12%, rgba(242, 199, 111, 0.13), transparent 23rem),
+        radial-gradient(circle at 88% 70%, rgba(141, 216, 255, 0.12), transparent 25rem),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.062), rgba(255, 255, 255, 0.026)),
+        var(--panel);
+      box-shadow: 0 24px 70px var(--shadow);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border: 1px solid rgba(242, 199, 111, 0.09);
+      border-radius: calc(var(--radius-lg) - 10px);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr);
+      gap: clamp(18px, 4vw, 36px);
+      align-items: end;
+    }
+
+    .kicker {
+      margin: 0 0 12px;
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      color: var(--ink);
+    }
+
+    h1 {
+      max-width: 920px;
+      margin: 0 0 18px;
+      font-size: clamp(2.55rem, 9vw, 6rem);
+      line-height: 0.88;
+      letter-spacing: -0.075em;
+      text-wrap: balance;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: clamp(1.45rem, 4vw, 2.3rem);
+      line-height: 1.04;
+      letter-spacing: -0.04em;
+      text-wrap: balance;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: clamp(1.08rem, 3vw, 1.45rem);
+      line-height: 1.12;
+      letter-spacing: -0.025em;
+    }
+
+    p {
+      margin: 0;
+      max-width: 820px;
+      color: var(--soft);
+      font-size: clamp(0.98rem, 2.7vw, 1.12rem);
+      line-height: 1.58;
+    }
+
+    p + p {
+      margin-top: 0.9rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 1.15rem;
+    }
+
+    .button {
+      min-height: 2.72rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      padding: 0.68rem 1rem;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.055);
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.055em;
+      text-transform: uppercase;
+      transition:
+        border-color 160ms ease,
+        background 160ms ease,
+        transform 160ms ease;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      border-color: rgba(242, 199, 111, 0.54);
+      background: rgba(242, 199, 111, 0.11);
+      transform: translateY(-1px);
+    }
+
+    .button.primary {
+      border-color: var(--accent-line);
+      color: #07101a;
+      background: linear-gradient(135deg, #fff6c5, var(--accent));
+      box-shadow: 0 0.8rem 1.8rem rgba(242, 199, 111, 0.13);
+    }
+
+    .scope-card {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-md);
+      background:
+        linear-gradient(135deg, rgba(0, 0, 0, 0.24), rgba(255, 255, 255, 0.03)),
+        rgba(0, 0, 0, 0.16);
+      padding: 18px;
+    }
+
+    .scope-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .scope-list li {
+      display: grid;
+      grid-template-columns: 7.4rem minmax(0, 1fr);
+      gap: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.105);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .scope-list strong {
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .scope-list span {
+      color: var(--soft);
+      font-size: 0.92rem;
+      line-height: 1.42;
+    }
+
+    .section {
+      margin-top: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: clamp(20px, 4vw, 34px);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.046), rgba(255, 255, 255, 0.022)),
+        var(--panel-2);
+    }
+
+    .section-header {
+      display: grid;
+      gap: 4px;
+      margin-bottom: 18px;
+    }
+
+    .section-header p {
+      margin: 0;
+    }
+
+    .curiosity-board {
+      display: grid;
+      grid-template-columns: minmax(240px, 0.48fr) minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .surface-groups {
+      display: grid;
+      gap: 12px;
+      scroll-margin-top: 1rem;
+    }
+
+    .surface-group {
+      border: 1px solid rgba(255, 255, 255, 0.105);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.16);
+    }
+
+    .surface-group strong {
+      display: block;
+      margin-bottom: 9px;
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .surface-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .surface-tab {
+      min-height: 3.1rem;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 14% 0%, var(--tab-soft, rgba(255, 255, 255, 0.06)), transparent 90%),
+        rgba(255, 255, 255, 0.04);
+      padding: 0.72rem 0.78rem;
+      text-align: left;
+      font-weight: 950;
+      transition:
+        border-color 160ms ease,
+        background 160ms ease,
+        transform 160ms ease;
+    }
+
+    .surface-tab span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    .surface-tab:hover,
+    .surface-tab:focus-visible {
+      border-color: var(--tab-line, var(--accent-line));
+      transform: translateY(-1px);
+    }
+
+    .surface-tab[aria-selected="true"] {
+      border-color: var(--tab-line, var(--accent-line));
+      background:
+        radial-gradient(circle at 12% 0%, var(--tab-soft, var(--accent-soft)), transparent 90%),
+        rgba(255, 255, 255, 0.08);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 0 0 1px var(--tab-soft, rgba(242, 199, 111, 0.10));
+    }
+
+    .surface-tab[data-surface="energy"] {
+      --tab-soft: rgba(242, 199, 111, 0.17);
+      --tab-line: rgba(242, 199, 111, 0.58);
+    }
+
+    .surface-tab[data-surface="water"] {
+      --tab-soft: rgba(141, 216, 255, 0.17);
+      --tab-line: rgba(141, 216, 255, 0.58);
+    }
+
+    .surface-tab[data-surface="waste"] {
+      --tab-soft: rgba(146, 211, 146, 0.16);
+      --tab-line: rgba(146, 211, 146, 0.52);
+    }
+
+    .surface-tab[data-surface="closed-loop"] {
+      --tab-soft: rgba(85, 226, 199, 0.15);
+      --tab-line: rgba(85, 226, 199, 0.52);
+    }
+
+    .surface-tab[data-surface="infrastructure"] {
+      --tab-soft: rgba(170, 184, 204, 0.16);
+      --tab-line: rgba(170, 184, 204, 0.54);
+    }
+
+    .surface-tab[data-surface="urban"] {
+      --tab-soft: rgba(190, 151, 255, 0.16);
+      --tab-line: rgba(190, 151, 255, 0.55);
+    }
+
+    .surface-tab[data-surface="lattice"] {
+      --tab-soft: rgba(210, 131, 255, 0.16);
+      --tab-line: rgba(210, 131, 255, 0.56);
+    }
+
+    .surface-tab[data-surface="trajectory"] {
+      --tab-soft: rgba(255, 244, 190, 0.16);
+      --tab-line: rgba(255, 244, 190, 0.56);
+    }
+
+    .surface-tab[data-surface="manual"] {
+      --tab-soft: rgba(226, 196, 146, 0.16);
+      --tab-line: rgba(226, 196, 146, 0.54);
+    }
+
+    .surface-tab[data-surface="shimmer"] {
+      --tab-soft: rgba(180, 225, 255, 0.17);
+      --tab-line: rgba(180, 225, 255, 0.58);
+    }
+
+    .preview-panel {
+      --accent: #f2c76f;
+      --accent-soft: rgba(242, 199, 111, 0.16);
+      --accent-line: rgba(242, 199, 111, 0.48);
+
+      scroll-margin-top: 1rem;
+      border: 1px solid var(--accent-line);
+      border-radius: var(--radius-lg);
+      background:
+        radial-gradient(circle at 16% 0%, var(--accent-soft), transparent 18rem),
+        radial-gradient(circle at 90% 100%, rgba(255, 255, 255, 0.045), transparent 20rem),
+        rgba(0, 0, 0, 0.22);
+      padding: clamp(18px, 4vw, 28px);
+      box-shadow:
+        0 18px 46px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    .preview-panel[data-surface="energy"] {
+      --accent: #f2c76f;
+      --accent-soft: rgba(242, 199, 111, 0.18);
+      --accent-line: rgba(242, 199, 111, 0.56);
+    }
+
+    .preview-panel[data-surface="water"] {
+      --accent: #8dd8ff;
+      --accent-soft: rgba(141, 216, 255, 0.18);
+      --accent-line: rgba(141, 216, 255, 0.56);
+    }
+
+    .preview-panel[data-surface="waste"] {
+      --accent: #92d392;
+      --accent-soft: rgba(146, 211, 146, 0.17);
+      --accent-line: rgba(146, 211, 146, 0.52);
+    }
+
+    .preview-panel[data-surface="closed-loop"] {
+      --accent: #55e2c7;
+      --accent-soft: rgba(85, 226, 199, 0.16);
+      --accent-line: rgba(85, 226, 199, 0.52);
+    }
+
+    .preview-panel[data-surface="infrastructure"] {
+      --accent: #aab8cc;
+      --accent-soft: rgba(170, 184, 204, 0.17);
+      --accent-line: rgba(170, 184, 204, 0.54);
+    }
+
+    .preview-panel[data-surface="urban"] {
+      --accent: #be97ff;
+      --accent-soft: rgba(190, 151, 255, 0.17);
+      --accent-line: rgba(190, 151, 255, 0.55);
+    }
+
+    .preview-panel[data-surface="lattice"] {
+      --accent: #d283ff;
+      --accent-soft: rgba(210, 131, 255, 0.17);
+      --accent-line: rgba(210, 131, 255, 0.56);
+    }
+
+    .preview-panel[data-surface="trajectory"] {
+      --accent: #fff4be;
+      --accent-soft: rgba(255, 244, 190, 0.17);
+      --accent-line: rgba(255, 244, 190, 0.56);
+    }
+
+    .preview-panel[data-surface="manual"] {
+      --accent: #e2c492;
+      --accent-soft: rgba(226, 196, 146, 0.17);
+      --accent-line: rgba(226, 196, 146, 0.54);
+    }
+
+    .preview-panel[data-surface="shimmer"] {
+      --accent: #b4e1ff;
+      --accent-soft: rgba(180, 225, 255, 0.18);
+      --accent-line: rgba(180, 225, 255, 0.58);
+    }
+
+    .preview-kicker {
+      margin: 0 0 10px;
+      color: var(--accent);
+      font-size: 0.74rem;
+      font-weight: 950;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .preview-panel h3 {
+      margin-bottom: 10px;
+      font-size: clamp(1.55rem, 5vw, 3rem);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+    }
+
+    .curiosity-question {
+      margin-top: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.105);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.035);
+      padding: 14px;
+    }
+
+    .curiosity-question strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .curiosity-question p {
+      font-size: 0.98rem;
+    }
+
+    .scratch-details {
+      margin-top: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.036);
+      overflow: hidden;
+    }
+
+    .scratch-details[open] {
+      border-color: var(--accent-line);
+      background:
+        radial-gradient(circle at 12% 0%, var(--accent-soft), transparent 18rem),
+        rgba(255, 255, 255, 0.04);
+    }
+
+    .scratch-summary {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+    }
+
+    .scratch-summary strong {
+      color: var(--ink);
+      font-size: 1rem;
+    }
+
+    .scratch-summary span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .scratch-icon {
+      display: inline-grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border: 1px solid var(--accent-line);
+      border-radius: 999px;
+      color: var(--accent);
+      font-weight: 950;
+    }
+
+    .scratch-icon::before {
+      content: "+";
+    }
+
+    .scratch-details[open] .scratch-icon::before {
+      content: "–";
+    }
+
+    .scratch-body {
+      display: grid;
+      gap: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.10);
+      padding: 14px;
+    }
+
+    .scratch-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .scratch-box {
+      border: 1px solid rgba(255, 255, 255, 0.105);
+      border-radius: var(--radius-sm);
+      background: rgba(0, 0, 0, 0.15);
+      padding: 12px;
+    }
+
+    .scratch-box strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--accent);
+      font-size: 0.76rem;
+      font-weight: 950;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .scratch-box p {
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+
+    .preview-action {
+      display: grid;
+      grid-template-columns: auto auto;
+      align-items: center;
+      justify-content: start;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .preview-note {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
+      margin-top: 10px;
+    }
+
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .method-card {
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(141, 216, 255, 0.075), transparent 15rem),
+        rgba(0, 0, 0, 0.16);
+    }
+
+    .method-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--gold);
+      font-size: 0.76rem;
+      font-weight: 950;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .method-card p {
+      font-size: 0.95rem;
+    }
+
+    .boundary {
+      border: 1px solid rgba(242, 199, 111, 0.28);
+      border-radius: var(--radius-md);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(242, 199, 111, 0.08), transparent 18rem),
+        rgba(0, 0, 0, 0.20);
+      padding: 16px;
+    }
+
+    .boundary strong {
+      color: var(--gold);
+    }
+
+    .footer {
+      padding: 22px 0 0;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.82rem;
+    }
+
+    .route-receipt,
+    [data-route-receipt] {
+      display: none !important;
+      visibility: hidden !important;
+      overflow: hidden !important;
+      width: 0 !important;
+      height: 0 !important;
+      max-width: 0 !important;
+      max-height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      position: absolute !important;
+      clip-path: inset(50%) !important;
+      white-space: nowrap !important;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .curiosity-board,
+      .method-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        width: min(100% - 28px, var(--max));
+        padding-top: 22px;
+      }
+
+      .topbar {
+        display: grid;
+      }
+
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .nav a {
+        min-height: 2.45rem;
+        padding: 0.6rem 0.86rem;
+      }
+
+      .scope-list li,
+      .scratch-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-actions,
+      .preview-action {
+        grid-template-columns: 1fr;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .surface-tabs {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        letter-spacing: -0.058em;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+</head>
+
+<body
+  data-route="/explore/"
+  data-room="explore"
+  data-contract="EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v5"
+  data-primary-destination="/explore/frontier/"
+  data-objective-stance="true"
+  data-narrative-stance="false"
+  data-generated-image="false"
+  data-heavy-runtime-loaded="false"
+  data-visual-pass-claimed="false"
+>
+  <a
+    class="skip"
+    href="#main"
+  >
+    Skip to curiosity selector
+  </a>
+
+  <div class="shell">
+    <header
+      class="topbar"
+      aria-label="Explore header"
+    >
+      <a
+        class="brand"
+        href="/"
+        aria-label="Diamond Gate Bridge Compass"
+      >
+        <span>
+          Diamond Gate Bridge
+        </span>
+
+        <strong>
+          Explore · Frontier Surfaces
+        </strong>
+      </a>
+
+      <nav
+        class="nav"
+        aria-label="Primary route options"
+      >
+        <a href="/laws/">
+          Laws
+        </a>
+
+        <a
+          href="/explore/"
+          aria-current="page"
+        >
+          Explore
+        </a>
+
+        <a href="/showroom/">
+          Mirrorland
+        </a>
+
+        <a href="/">
+          Compass
+        </a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section
+        class="hero"
+        aria-labelledby="page-title"
+      >
+        <div class="hero-grid">
+          <div>
+            <p class="kicker">
+              Frontier Surface · Curiosity Entry
+            </p>
+
+            <h1 id="page-title">
+              What are you trying to understand?
+            </h1>
+
+            <p>
+              Start with the practical surface closest to the question. Energy, water, waste, infrastructure, and the other frontier labels are entry points for curiosity.
+            </p>
+
+            <p>
+              Choose a surface, read the short drop-down, then open Frontier Lanes. The deeper lane choice happens there.
+            </p>
+
+            <div
+              class="hero-actions"
+              aria-label="Primary Explore actions"
+            >
+              <a
+                class="button primary"
+                href="#lane-selection-top"
+              >
+                Choose a Surface
+              </a>
+
+              <a
+                class="button"
+                href="/explore/frontier/"
+              >
+                Open Frontier Lanes
+              </a>
+            </div>
+          </div>
+
+          <aside
+            class="scope-card"
+            aria-label="Explore page scope"
+          >
+            <p class="kicker">
+              Page Scope
+            </p>
+
+            <ul class="scope-list">
+              <li>
+                <strong>Route</strong>
+                <span>/explore/</span>
+              </li>
+
+              <li>
+                <strong>Use</strong>
+                <span>Name the surface of the question</span>
+              </li>
+
+              <li>
+                <strong>Next</strong>
+                <span>Open /explore/frontier/</span>
+              </li>
+
+              <li>
+                <strong>Limit</strong>
+                <span>No direct specialized lane routing from this page</span>
+              </li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <section
+        class="section"
+        id="curiosity-selector"
+        aria-labelledby="curiosity-title"
+      >
+        <header class="section-header">
+          <p class="kicker">
+            Curiosity Selector
+          </p>
+
+          <h2 id="curiosity-title">
+            Pick the surface closest to the problem.
+          </h2>
+
+          <p>
+            The selected surface changes the preview. Each surface leads to the same Frontier hub after the drop-down explanation.
+          </p>
+        </header>
+
+        <div
+          class="curiosity-board"
+          data-curiosity-board
+        >
+          <div
+            class="surface-groups"
+            id="lane-selection-top"
+            data-lane-selection-top
+            role="tablist"
+            aria-label="Frontier surface selector"
+          >
+            <section class="surface-group">
+              <strong>Power & Flow</strong>
+
+              <div class="surface-tabs">
+                <button
+                  class="surface-tab"
+                  type="button"
+                  role="tab"
+                  aria-selected="true"
+                  data-surface="energy"
+                >
+                  Energy
+                  <span>Power, load, storage</span>
+                </button>
+
+                <button
+                  class="surface-tab"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  data-surface="water"
+                >
+                  Water
+                  <span>Supply, flow, access</span>
+                </button>
+              </div>
+            </section>
+
+            <section class="surface-group">
+              <strong>Waste & Recovery</strong>
+
+              <div class="surface-tabs">
+                <button
+                  class="surface-tab"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  data-surface="waste"
+                >
+                  Waste
+                  <span>Discard, removal, reuse</span>
+                </button>
+
+                <button
+                  class="surface-tab"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  data-surface="closed-loop"
+                >
+                  Closed Loop
+                  <span>Recovery, recirculation</span>
+                </button>
+              </div>
+            </section>
+
+            <section class="surface-group">
+              <strong>Built Systems</strong>
+
+              <div class="surface-tabs">
+                <button
+                  class="surface-tab"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  data-surface="infrastructure"
+                >
+                  Infrastructure
+                  <span>Support, continuity</span>
+                </button>
+
+                <button
+                  class="surface-tab"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  data-surface="urban"
+                >
+                  Urban
+                  <span>City, density, access</span>
+                </button>
+              </div>
+            </section>
+
+            <section class="surface-group">
+              <strong>Patterns & Direction</strong>
+
+              <div class="surface-tabs">
+                <button
+                  class="surface-tab"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  data-surface="lattice"
+                >
+                  Lattice
+                  <span>Connections, structure</span>
+                </button>
+
+                <button
+                  class="surface-tab"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  data-surface="trajectory"
+                >
+                  Trajectory
+                  <span>Direction over time</span>
+                </button>
+              </div>
+            </section>
+
+            <section class="surface-group">
+              <strong>Use & Signal</strong>
+
+              <div class="surface-tabs">
+                <button
+                  class="surface-tab"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  data-surface="manual"
+                >
+                  Manual
+                  <span>Procedure, guidance</span>
+                </button>
+
+                <button
+                  class="surface-tab"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  data-surface="shimmer"
+                >
+                  Shimmer
+                  <span>Signals, early cues</span>
+                </button>
+              </div>
+            </section>
+          </div>
+
+          <article
+            class="preview-panel"
+            data-preview-panel
+            data-surface="energy"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            <p
+              class="preview-kicker"
+              data-preview-group
+            >
+              Power & Flow
+            </p>
+
+            <h3 data-preview-title>
+              Energy
+            </h3>
+
+            <p data-preview-summary>
+              Questions about power, storage, transfer, load, efficiency, or system stress belong near this surface.
+            </p>
+
+            <div class="curiosity-question">
+              <strong>
+                Curiosity Question
+              </strong>
+
+              <p data-preview-question>
+                Where does the system depend on usable power, stored capacity, or reliable transfer?
+              </p>
+            </div>
+
+            <details
+              class="scratch-details"
+              data-scratch-details
+            >
+              <summary class="scratch-summary">
+                <span>
+                  <strong data-dropdown-title>
+                    Scratch the energy surface
+                  </strong>
+
+                  <span>
+                    Open this before going to Frontier Lanes.
+                  </span>
+                </span>
+
+                <span
+                  class="scratch-icon"
+                  aria-hidden="true"
+                ></span>
+              </summary>
+
+              <div class="scratch-body">
+                <div class="scratch-grid">
+                  <div class="scratch-box">
+                    <strong>
+                      What it means
+                    </strong>
+
+                    <p data-preview-means>
+                      Energy concerns usable power: where it comes from, how it is stored, how it moves, and where it is lost.
+                    </p>
+                  </div>
+
+                  <div class="scratch-box">
+                    <strong>
+                      Common questions
+                    </strong>
+
+                    <p data-preview-questions>
+                      Can the system keep running? Where does demand spike? Where does storage fail? Where is energy wasted?
+                    </p>
+                  </div>
+
+                  <div class="scratch-box">
+                    <strong>
+                      Belongs here
+                    </strong>
+
+                    <p data-preview-belongs>
+                      Generation, storage, transfer, efficiency, load, backup capacity, and operating thresholds.
+                    </p>
+                  </div>
+
+                  <div class="scratch-box">
+                    <strong>
+                      Not settled here
+                    </strong>
+
+                    <p data-preview-limit>
+                      Feasibility, cost, safety, production readiness, and performance claims require deeper review.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <div class="preview-action">
+              <a
+                class="button primary"
+                href="/explore/frontier/"
+              >
+                Open Frontier Lanes
+              </a>
+
+              <a
+                class="button"
+                href="#lane-selection-top"
+                data-back-to-lanes
+              >
+                Back to the Lanes
+              </a>
+            </div>
+
+            <p class="preview-note">
+              The Frontier hub handles the deeper lane choice.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section
+        class="section"
+        aria-labelledby="method-title"
+      >
+        <header class="section-header">
+          <p class="kicker">
+            User Path
+          </p>
+
+          <h2 id="method-title">
+            Curiosity first. Lane choice second.
+          </h2>
+        </header>
+
+        <div class="method-grid">
+          <article class="method-card">
+            <strong>1 · Choose</strong>
+
+            <p>
+              Pick the surface closest to the question: power, flow, recovery, built systems, structure, direction, procedure, or early signal.
+            </p>
+          </article>
+
+          <article class="method-card">
+            <strong>2 · Scratch</strong>
+
+            <p>
+              Open the drop-down to see what the label means, what belongs near it, and what is not settled by the label.
+            </p>
+          </article>
+
+          <article class="method-card">
+            <strong>3 · Enter</strong>
+
+            <p>
+              Open Frontier Lanes when the surface fits. The deeper tab and applied review happen in the Frontier hub.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section
+        class="section"
+        aria-label="Explore boundary"
+      >
+        <div class="boundary">
+          <p>
+            <strong>Boundary:</strong>
+            Explore names the practical surface of the question. It does not validate frontier claims, does not replace the Compass, and does not send visitors directly into specialized sub-lane pages. The destination from this page is <strong>/explore/frontier/</strong>.
+          </p>
+        </div>
+      </section>
+
+      <template
+        class="route-receipt"
+        data-route-receipt
+      >
+EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v5
+route=/explore/
+page=explore_frontier_curiosity_surface
+role=frontier_curiosity_entry
+primary_destination=/explore/frontier/
+top_nav=laws,explore,mirrorland,compass
+governance_route_removed=true
+compass_behavior_retired=true
+manor_identity_retired=true
+estate_directory_retired=true
+orbital_diamonds_retired=true
+mega_menu_retired=true
+direct_lane_routing_retired=true
+objective_stance=true
+narrative_stance=false
+curiosity_led=true
+surface_groups=power_flow,waste_recovery,built_systems,patterns_direction,use_signal
+surface_tabs=energy,water,waste,closed_loop,infrastructure,urban,lattice,trajectory,manual,shimmer
+surface_destination=/explore/frontier/
+dropdown_before_frontier_action=true
+auto_scroll_preview_on_surface_select=true
+back_to_lanes_action=true
+back_to_lanes_target=lane_selection_top
+back_to_lanes_scroll_method=manual_window_scrollTo
+inline_css=true
+inline_js=true
+external_css=false
+external_js=false
+canvas_runtime=false
+request_animation_frame=false
+generated_image=false
+visual_pass_claimed=false
+boundary=explore_names_the_surface_frontier_handles_lane_selection
+      </template>
+    </main>
+
+    <footer class="footer">
+      Explore · Curiosity Surface Entry · Frontier Lanes open from one destination.
+    </footer>
+  </div>
+
+  <script>
+(() => {
+  "use strict";
+
+  const surfaces = {
+    energy: {
+      group: "Power & Flow",
+      title: "Energy",
+      summary:
+        "Questions about power, storage, transfer, load, efficiency, or system stress belong near this surface.",
+      question:
+        "Where does the system depend on usable power, stored capacity, or reliable transfer?",
+      dropdownTitle:
+        "Scratch the energy surface",
+      means:
+        "Energy concerns usable power: where it comes from, how it is stored, how it moves, and where it is lost.",
+      questions:
+        "Can the system keep running? Where does demand spike? Where does storage fail? Where is energy wasted?",
+      belongs:
+        "Generation, storage, transfer, efficiency, load, backup capacity, and operating thresholds.",
+      limit:
+        "Feasibility, cost, safety, production readiness, and performance claims require deeper review."
+    },
+
+    water: {
+      group: "Power & Flow",
+      title: "Water",
+      summary:
+        "Questions about supply, storage, treatment, movement, access, reuse, or continuity belong near this surface.",
+      question:
+        "Where does the system depend on water being available, clean, stored, moved, or reused?",
+      dropdownTitle:
+        "Scratch the water surface",
+      means:
+        "Water concerns supply, movement, treatment, access, storage, distribution, reuse, and continuity.",
+      questions:
+        "Where does the water come from? Can it be stored? Can it be cleaned? Where does pressure or access break?",
+      belongs:
+        "Sourcing, treatment, storage, pumping, pressure, distribution, conservation, reuse, and quality control.",
+      limit:
+        "Potability, compliance, engineering adequacy, and field performance require specific evidence."
+    },
+
+    waste: {
+      group: "Waste & Recovery",
+      title: "Waste",
+      summary:
+        "Questions about discard, leakage, removal, sanitation, byproducts, or unrecovered value belong near this surface.",
+      question:
+        "What leaves the system without useful purpose, and what must be removed, recovered, or handled safely?",
+      dropdownTitle:
+        "Scratch the waste surface",
+      means:
+        "Waste concerns what a system discards, leaks, fails to reuse, contaminates, or must safely remove.",
+      questions:
+        "What is being thrown away? What creates sanitation burden? What could be recovered? What causes unnecessary loss?",
+      belongs:
+        "Waste streams, byproducts, separation, disposal, treatment, reuse potential, sanitation, and circular pressure.",
+      limit:
+        "Environmental safety, sanitation adequacy, circularity, and compliance require material-specific review."
+    },
+
+    "closed-loop": {
+      group: "Waste & Recovery",
+      title: "Closed Loop",
+      summary:
+        "Questions about recirculation, reuse, recovery, input-output mapping, or reduced external dependency belong near this surface.",
+      question:
+        "Can an output become a useful input instead of becoming waste or uncontrolled loss?",
+      dropdownTitle:
+        "Scratch the closed-loop surface",
+      means:
+        "Closed-loop design tries to keep useful value inside the system by recovering and reusing outputs.",
+      questions:
+        "What can cycle back? What still leaks out? What must be added from outside? Where does the loop break?",
+      belongs:
+        "Input-output mapping, recovery pathways, reuse cycles, loss points, feedback loops, and boundary conditions.",
+      limit:
+        "A closed-loop label does not prove sustainability, efficiency, or zero waste. The loop must be measured."
+    },
+
+    infrastructure: {
+      group: "Built Systems",
+      title: "Infrastructure",
+      summary:
+        "Questions about support, utilities, networks, maintenance, repair, continuity, or hidden dependency belong near this surface.",
+      question:
+        "What support system must keep working for everything else to remain usable?",
+      dropdownTitle:
+        "Scratch the infrastructure surface",
+      means:
+        "Infrastructure is the support layer that keeps operation possible after attention moves elsewhere.",
+      questions:
+        "What must be maintained? What network is required? What breaks if support fails? What dependencies are hidden?",
+      belongs:
+        "Utilities, access, redundancy, maintenance cycles, service dependencies, repair load, and continuity planning.",
+      limit:
+        "Durability, code compliance, public safety, and deployment readiness require specific technical review."
+    },
+
+    urban: {
+      group: "Built Systems",
+      title: "Urban",
+      summary:
+        "Questions about density, habitation, municipal systems, transportation, access, or public space belong near this surface.",
+      question:
+        "Where does the problem depend on the built environment and the way people move through it?",
+      dropdownTitle:
+        "Scratch the urban surface",
+      means:
+        "Urban concerns the practical systems of built environments: density, access, movement, services, and public use.",
+      questions:
+        "How do people move? Where does access fail? What services are overloaded? What does density change?",
+      belongs:
+        "Housing, transportation, municipal systems, public space, density, access, service pressure, and civic design.",
+      limit:
+        "Urban labels do not prove policy fit, public acceptance, safety, cost, or implementation feasibility."
+    },
+
+    lattice: {
+      group: "Patterns & Direction",
+      title: "Lattice",
+      summary:
+        "Questions about connected parts, dependencies, propagation, constraints, or distributed behavior belong near this surface.",
+      question:
+        "Does the issue depend on relationships among parts rather than one isolated component?",
+      dropdownTitle:
+        "Scratch the lattice surface",
+      means:
+        "Lattice concerns connected relationships: nodes, dependencies, constraints, and the way effects move through a system.",
+      questions:
+        "What is connected? What depends on what? Where does pressure propagate? Which relationships shape the outcome?",
+      belongs:
+        "Nodes, edges, adjacency, dependencies, load paths, constraints, failure propagation, and relationship structure.",
+      limit:
+        "A lattice map does not prove causality, completeness, or prediction accuracy without supporting evidence."
+    },
+
+    trajectory: {
+      group: "Patterns & Direction",
+      title: "Trajectory",
+      summary:
+        "Questions about timing, trend, path dependence, thresholds, or future-state pressure belong near this surface.",
+      question:
+        "Where is the system heading if current conditions continue?",
+      dropdownTitle:
+        "Scratch the trajectory surface",
+      means:
+        "Trajectory concerns direction over time: where the system appears to be moving and what consequences accumulate.",
+      questions:
+        "What trend is forming? What happens later? What threshold is approaching? What timing matters?",
+      belongs:
+        "Time series, trend, lag, path dependence, thresholds, forecast scenarios, and intervention timing.",
+      limit:
+        "Trajectory language does not prove forecast accuracy. Assumptions, data, uncertainty, and outcomes must be reviewed."
+    },
+
+    manual: {
+      group: "Use & Signal",
+      title: "Manual",
+      summary:
+        "Questions about procedure, instructions, operating steps, repeatable review, or user guidance belong near this surface.",
+      question:
+        "What does a person need to do, follow, check, or repeat to use the system correctly?",
+      dropdownTitle:
+        "Scratch the manual surface",
+      means:
+        "Manual concerns practical guidance: instructions, steps, checks, operating rules, and repeatable procedures.",
+      questions:
+        "What should be done first? What should be checked? What order matters? What should a user avoid?",
+      belongs:
+        "Procedures, operating guidance, checklists, user instructions, review steps, and repeatable methods.",
+      limit:
+        "A manual label does not prove the procedure is complete, safe, compliant, or tested in real conditions."
+    },
+
+    shimmer: {
+      group: "Use & Signal",
+      title: "Shimmer",
+      summary:
+        "Questions about early signals, visible cues, weak indicators, surface changes, or perception-level evidence belong near this surface.",
+      question:
+        "What weak signal is visible before the deeper condition is fully understood?",
+      dropdownTitle:
+        "Scratch the shimmer surface",
+      means:
+        "Shimmer concerns early cues and surface signals: changes that may indicate something worth inspecting.",
+      questions:
+        "What is newly visible? What is only a weak signal? What changed at the surface? What deserves attention?",
+      belongs:
+        "Early indicators, visible changes, surface cues, signal emergence, perception-level flags, and inspection prompts.",
+      limit:
+        "A shimmer signal is not proof. It marks something to inspect before stronger claims are made."
+    }
+  };
+
+  function prefersReducedMotion() {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  function scrollToElement(element) {
+    if (!element) {
+      return;
+    }
+
+    element.scrollIntoView({
+      behavior: prefersReducedMotion() ? "auto" : "smooth",
+      block: "start"
+    });
+  }
+
+  function scrollToLanes() {
+    const target =
+      document.querySelector("[data-lane-selection-top]");
+
+    if (!target) {
+      return;
+    }
+
+    const y =
+      target.getBoundingClientRect().top +
+      window.pageYOffset -
+      14;
+
+    window.scrollTo({
+      top: y,
+      behavior: prefersReducedMotion() ? "auto" : "smooth"
+    });
+  }
+
+  function setText(root, selector, value) {
+    const element =
+      root.querySelector(selector);
+
+    if (element) {
+      element.textContent =
+        value;
+    }
+  }
+
+  function selectSurface(surfaceKey) {
+    const surface =
+      surfaces[surfaceKey];
+
+    if (!surface) {
+      return;
+    }
+
+    const board =
+      document.querySelector("[data-curiosity-board]");
+
+    const panel =
+      document.querySelector("[data-preview-panel]");
+
+    if (!board || !panel) {
+      return;
+    }
+
+    board
+      .querySelectorAll(".surface-tab[data-surface]")
+      .forEach(button => {
+        button.setAttribute(
+          "aria-selected",
+          button.dataset.surface === surfaceKey
+            ? "true"
+            : "false"
+        );
+      });
+
+    panel.dataset.surface =
+      surfaceKey;
+
+    setText(panel, "[data-preview-group]", surface.group);
+    setText(panel, "[data-preview-title]", surface.title);
+    setText(panel, "[data-preview-summary]", surface.summary);
+    setText(panel, "[data-preview-question]", surface.question);
+    setText(panel, "[data-dropdown-title]", surface.dropdownTitle);
+    setText(panel, "[data-preview-means]", surface.means);
+    setText(panel, "[data-preview-questions]", surface.questions);
+    setText(panel, "[data-preview-belongs]", surface.belongs);
+    setText(panel, "[data-preview-limit]", surface.limit);
+
+    const details =
+      panel.querySelector("[data-scratch-details]");
+
+    if (details) {
+      details.open =
+        false;
+    }
+
+    scrollToElement(panel);
+  }
+
+  function initializeExploreSurface() {
+    const buttons =
+      document.querySelectorAll("[data-curiosity-board] .surface-tab[data-surface]");
+
+    buttons.forEach(button => {
+      button.addEventListener(
+        "click",
+        event => {
+          event.stopPropagation();
+          selectSurface(button.dataset.surface);
+        }
+      );
+    });
+
+    const backToLanes =
+      document.querySelector("[data-back-to-lanes]");
+
+    if (backToLanes) {
+      backToLanes.addEventListener(
+        "click",
+        event => {
+          event.preventDefault();
+          event.stopPropagation();
+          scrollToLanes();
+        }
+      );
+    }
+
+    document.documentElement.dataset.exploreJs =
+      "active";
+
+    window.dispatchEvent(
+      new CustomEvent(
+        "DGB_EXPLORE_CURIOSITY_SURFACE_READY",
+        {
+          detail: Object.freeze({
+            route: "/explore/",
+            page: "explore-frontier-curiosity-surface",
+            contract: "EXPLORE_FRONTIER_CURIOSITY_SURFACE_ENTRY_TNT_v5",
+            primaryDestination: "/explore/frontier/",
+            interaction: "surface-tab-preview-dropdown-frontier-action-back-to-lanes",
+            backToLanesTarget: "lane-selection-top",
+            backToLanesScrollMethod: "manual-window-scrollTo",
+            stance: "objective-practical",
+            directLaneRouting: false
+          })
+        }
+      )
+    );
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      initializeExploreSurface,
+      {
+        once: true
+      }
+    );
+  } else {
+    initializeExploreSurface();
+  }
+})();
+  </script>
+</body>
+</html>

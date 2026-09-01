@@ -1,0 +1,116 @@
+{
+  "artifactId": "H_EARTH_CP4_TABLET_FLUIDITY_CORRECTION_AND_PREVIEW_v1",
+  "checkpoint": "CP4_0E_TABLET_FLUIDITY_CORRECTION",
+  "status": "PASS_CLOSED_PENDING_PHYSICAL_TABLET_RETEST",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-touch-motion-cp4-calibration-testing-001",
+  "correctionHead": "3f1147bb782134cb67b1f207e92b4c8e4f42c9f5",
+  "carrierHead": "eb6fd40b3c93a7ff7ee0ddae85d257613ec5d9e1",
+  "representedExecutableSourceCount": 53,
+  "outputFiles": {
+    "index.html": {
+      "byteLength": 12372,
+      "sha256": "968892798140a409197d4359672993dd59566616670618b8e91ee6743a5f65dc"
+    },
+    "preview.css": {
+      "byteLength": 69768,
+      "sha256": "dd9205d939e7c33137dcfcd251fbade3efc52f4f449c899c99d888e13c5cae28"
+    },
+    "preview.js": {
+      "byteLength": 1439254,
+      "sha256": "bb2a3b41b1dc18981ef007a7de792c3548184f5596c38cd08f5d727f296e74d9"
+    }
+  },
+  "staticAcceptance": {
+    "outputEsmImportCount": 0,
+    "outputDynamicImportCount": 0,
+    "outputRepositoryRelativeRequestCount": 0,
+    "outputExternalRequestCount": 0,
+    "outputServiceWorkerCount": 0,
+    "outputUndeclaredAssetCount": 0
+  },
+  "browserValidation": {
+    "status": "PASS",
+    "viewport": {
+      "width": 694,
+      "height": 747,
+      "deviceScaleFactor": 1.5
+    },
+    "fluidity": {
+      "before": {
+        "presentations": 1,
+        "readbacks": 1,
+        "pngEncodes": 1,
+        "presentationOnlyFrames": 0,
+        "rendererPresentations": 1,
+        "rendererReadbacks": 1,
+        "rendererPngEncodes": 1,
+        "maximumPresentationOnlyResponseMs": 119.59999999999127,
+        "maximumEvidenceCaptureResponseMs": 161.40000000000873,
+        "separated": false
+      },
+      "active": {
+        "presentations": 9,
+        "readbacks": 1,
+        "pngEncodes": 1,
+        "presentationOnlyFrames": 8,
+        "rendererPresentations": 9,
+        "rendererReadbacks": 1,
+        "rendererPngEncodes": 1,
+        "maximumPresentationOnlyResponseMs": 133.89999999999418,
+        "maximumEvidenceCaptureResponseMs": 161.40000000000873,
+        "separated": true
+      },
+      "releaseSettled": {
+        "presentations": 9,
+        "readbacks": 1,
+        "pngEncodes": 1,
+        "presentationOnlyFrames": 8,
+        "rendererPresentations": 9,
+        "rendererReadbacks": 1,
+        "rendererPngEncodes": 1,
+        "maximumPresentationOnlyResponseMs": 133.89999999999418,
+        "maximumEvidenceCaptureResponseMs": 161.40000000000873,
+        "separated": true
+      },
+      "afterRelease": {
+        "presentations": 9,
+        "readbacks": 1,
+        "pngEncodes": 1,
+        "presentationOnlyFrames": 8,
+        "rendererPresentations": 9,
+        "rendererReadbacks": 1,
+        "rendererPngEncodes": 1,
+        "maximumPresentationOnlyResponseMs": 133.89999999999418,
+        "maximumEvidenceCaptureResponseMs": 161.40000000000873,
+        "separated": true
+      },
+      "deltas": {
+        "activePresentations": 8,
+        "activeReadbacks": 0,
+        "activePngEncodes": 0,
+        "activePresentationOnlyFrames": 8,
+        "rendererPresentations": 8,
+        "rendererReadbacks": 0,
+        "rendererPngEncodes": 0,
+        "postReleasePresentations": 0
+      }
+    },
+    "consoleErrors": [],
+    "pageErrors": [],
+    "failedRequests": [],
+    "screenshotSha256": "e61603e4b7eed986665daa37e4fa9a44e682d36d9f14ca8c808052829041b2de"
+  },
+  "mutationBoundary": {
+    "touchGestureLatticeChanged": false,
+    "cameraLawChanged": false,
+    "navigationAuthorityChanged": false,
+    "rendererIdentityChanged": false,
+    "renderPackageChanged": false,
+    "persistentRendererPresentationPathChanged": true,
+    "liveGpuBindingCaptureFrequencyChanged": true,
+    "livePagesDeploymentChanged": false
+  },
+  "nextCheckpoint": "CP4_PHYSICAL_TABLET_FLUIDITY_RETEST",
+  "stoppingBoundary": "STOP_BEFORE_CP4_ACCEPTANCE_OR_MERGE"
+}

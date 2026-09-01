@@ -1,0 +1,27 @@
+{
+  "manifest_id": "FBK-V3.1-CLAIMS",
+  "kernel_version": "3.1.0",
+  "claims": {
+    "v2_numeric_core_preserved_by_successor_specification": "CLAIMED_BY_V3_NOT_RECOMPUTED_HERE",
+    "deterministic_edge_evaluation_reference": "CLAIMED_AND_EXECUTED",
+    "complete_governance_predicate_validation": "CLAIMED_AND_EXECUTED",
+    "semantic_receipt_validation": "CLAIMED_AND_EXECUTED",
+    "ordered_total_disposition_for_accepted_input_shape": "CLAIMED_AND_EXECUTED",
+    "forward_authority_separated_from_numeric_admissibility": "CLAIMED_AND_EXECUTED",
+    "canonical_hashing_and_tamper_detection": "CLAIMED_AND_EXECUTED",
+    "nonpass_history_controls": "PARTIALLY_EXECUTED",
+    "closure_suffix_admission": "EXECUTED_REFERENCE",
+    "non_skippable_lifecycle": "CLAIMED_AND_EXECUTED",
+    "final_closure_issuance_system": "REFERENCE_TRANSITION_ONLY",
+    "autonomous_semantic_derivation": "NOT_CLAIMED",
+    "empirical_validation": "NOT_CLAIMED",
+    "threshold_calibration": "OPEN",
+    "external_mathematical_review": "OPEN",
+    "independent_replication": "OPEN",
+    "issuer_identity_and_signature_trust": "OPEN",
+    "domain_validation": "NOT_CLAIMED",
+    "cross_domain_generalization": "NOT_CLAIMED",
+    "universal_reachability": "NOT_CLAIMED"
+  },
+  "authorized_short_read": "Full Bird Kernel v3.1 is an executable canonical reference candidate for the declared control-layer behavior. It is not an empirical or domain-validated system."
+}

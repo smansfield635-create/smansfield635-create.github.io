@@ -1,0 +1,102 @@
+name: LRPv1 Conformance
+
+on:
+  pull_request:
+    paths:
+      - 'infrastructure/lineage-receipt-protocol-v1/**'
+      - '.github/workflows/lrpv1-conformance.yml'
+  push:
+    paths:
+      - 'infrastructure/lineage-receipt-protocol-v1/**'
+      - '.github/workflows/lrpv1-conformance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  conformance:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact workflow head
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run Python reference conformance
+        run: python3 infrastructure/lineage-receipt-protocol-v1/tests/test_python_reference.py
+
+      - name: Run ECMAScript reference conformance
+        run: node infrastructure/lineage-receipt-protocol-v1/tests/test_javascript_reference.mjs
+
+      - name: Run Estate Diagnostic Receipt Profile conformance
+        run: node infrastructure/lineage-receipt-protocol-v1/integrations/estate-diagnostic/estate_diagnostic_profile.v1.mjs --self-test --output /tmp/estate-diagnostic-profile-self-test.json
+
+      - name: Run cross-language interoperability
+        run: python3 infrastructure/lineage-receipt-protocol-v1/tests/test_cross_language.py
+
+      - name: Validate JSON artifacts
+        run: |
+          python3 -m json.tool infrastructure/lineage-receipt-protocol-v1/MANIFEST.json >/dev/null
+          python3 -m json.tool infrastructure/lineage-receipt-protocol-v1/schema/lrpv1-receipt.schema.json >/dev/null
+          python3 -m json.tool infrastructure/lineage-receipt-protocol-v1/vectors/lrpv1_conformance_vectors.json >/dev/null
+          python3 -m json.tool infrastructure/lineage-receipt-protocol-v1/vectors/route_operator_canonical_v1_legacy_vectors.json >/dev/null
+          python3 -m json.tool infrastructure/lineage-receipt-protocol-v1/integrations/estate-diagnostic/estate_diagnostic_receipt_profile.schema.v1.json >/dev/null
+
+      - name: Verify product manifest
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          import json
+
+          root = Path('.')
+          manifest_path = root / 'infrastructure/lineage-receipt-protocol-v1/MANIFEST.json'
+          manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
+          failures = []
+          for relative, expected in manifest.get('files', {}).items():
+              path = root / relative
+              if not path.is_file():
+                  failures.append(f'MISSING:{relative}')
+                  continue
+              actual = hashlib.sha256(path.read_bytes()).hexdigest()
+              if actual != expected:
+                  failures.append(f'DIGEST_MISMATCH:{relative}:{expected}:{actual}')
+          if failures:
+              raise SystemExit('\n'.join(failures))
+          print(json.dumps({'status': 'PASS', 'verified_files': len(manifest.get('files', {}))}, sort_keys=True))
+          PY
+
+      - name: Run deterministic corruption smoke benchmark
+        run: python3 infrastructure/lineage-receipt-protocol-v1/benchmarks/benchmark_lrpv1.py --iterations 10000 > /tmp/lrpv1-benchmark.json
+
+      - name: Require zero accepted corruptions in smoke set
+        run: |
+          python3 - <<'PY'
+          import json
+          result = json.load(open('/tmp/lrpv1-benchmark.json', encoding='utf-8'))
+          assert result['valid_receipts'] == result['iterations']
+          assert result['corrupt_receipts_tested'] == result['iterations']
+          assert result['corrupt_receipts_accepted'] == 0
+          print(json.dumps(result, sort_keys=True))
+          PY
+
+      - name: Upload conformance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lrpv1-conformance-${{ github.sha }}
+          path: |
+            infrastructure/lineage-receipt-protocol-v1/MANIFEST.json
+            infrastructure/lineage-receipt-protocol-v1/vectors/lrpv1_conformance_vectors.json
+            infrastructure/lineage-receipt-protocol-v1/vectors/route_operator_canonical_v1_legacy_vectors.json
+            /tmp/lrpv1-benchmark.json
+            /tmp/estate-diagnostic-profile-self-test.json
+          retention-days: 30

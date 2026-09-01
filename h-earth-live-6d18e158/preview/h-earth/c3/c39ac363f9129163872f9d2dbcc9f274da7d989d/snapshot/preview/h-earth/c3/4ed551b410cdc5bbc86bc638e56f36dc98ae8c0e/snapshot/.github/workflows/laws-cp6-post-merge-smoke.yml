@@ -1,0 +1,78 @@
+name: Laws CP6 Post-Merge Smoke
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/laws-cp6-post-merge-smoke.yml'
+      - 'laws/control-plane/renewal/laws-cp6-final-synchronization-candidate-v1.json'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: laws-cp6-post-merge-smoke
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out exact merged main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact main identity
+        run: test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+
+      - name: Verify final static contract on merged main
+        run: |
+          git fetch origin main
+          python3 scripts/verify-laws-cp6-final-synchronization.py
+
+      - name: Start merged-main static server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-cp6-post-merge-server.log 2>&1 &
+          echo $! > /tmp/laws-cp6-post-merge-server.pid
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/laws/ > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/laws-cp6-post-merge-server.log
+          exit 1
+
+      - name: Verify bounded served routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          for route in \
+            /laws/ \
+            /laws/categories/flow/feedback/ \
+            /laws/categories/reality/measure.html \
+            /laws/research/methods-and-models/ \
+            /laws/test/reverse-audit/ \
+            /frontier/energy/battery-coherence-study/; do
+            curl --fail --silent --show-error "http://127.0.0.1:4173${route}" > /dev/null
+          done
+          grep -F 'lr-battery-landing' laws/index.html
+          grep -F 'laws-first-rail' laws/index.html
+          grep -F 'setupCollapsibleNavigation' assets/laws-destination/renewal.js
+          grep -F '<strong>INPUT_(t+1)</strong>' laws/categories/flow/feedback/index.html
+
+      - name: Upload post-merge smoke evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-cp6-post-merge-smoke-${{ github.sha }}
+          path: |
+            artifacts/laws-cp6-final-synchronization/static-result.json
+            /tmp/laws-cp6-post-merge-server.log
+          if-no-files-found: warn
+          retention-days: 30

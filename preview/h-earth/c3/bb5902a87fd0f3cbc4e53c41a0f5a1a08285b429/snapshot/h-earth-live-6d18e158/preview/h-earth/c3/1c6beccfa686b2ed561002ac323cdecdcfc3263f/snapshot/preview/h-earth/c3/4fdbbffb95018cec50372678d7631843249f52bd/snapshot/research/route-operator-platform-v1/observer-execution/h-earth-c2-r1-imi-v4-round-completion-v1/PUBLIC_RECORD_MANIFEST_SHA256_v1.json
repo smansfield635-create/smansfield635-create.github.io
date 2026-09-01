@@ -1,0 +1,13 @@
+{
+  "controlled_path_count": 6,
+  "files": {
+    ".github/workflows/h-earth-c2-r1-imi-v4-round-completion-instrumentation-v1-conformance.yml": "692790a4fe4104636572f2be0109dcc0c812d27c23067e14a8137318aa9106aa",
+    "research/route-operator-platform-v1/observer-execution/h-earth-c2-r1-imi-v4-round-completion-v1/INSTRUMENTATION_RESULT_v1.json": "656569710f9779f8c8b8cb446a8775989bdca7f5369d265a3d14178c6f541987",
+    "research/route-operator-platform-v1/observer-execution/h-earth-c2-r1-imi-v4-round-completion-v1/PARTIAL_OCCLUSION_ADJUDICATION_SURFACE_v1.json": "6fd53fe6ef3a5663a5e1fdfca7d5fab740382901fb7e367d77b8b3ac6dea2369",
+    "research/route-operator-platform-v1/observer-execution/h-earth-c2-r1-imi-v4-round-completion-v1/README.md": "3a503cc01fb4b5cb7111d80f9d131c03128ab3c8b61a223792123be1d5cbcc8e",
+    "research/route-operator-platform-v1/observer-execution/h-earth-c2-r1-imi-v4-round-completion-v1/RELEASE_POINTER.json": "21ac1b3cbfc61a537021eea13aa91e1ed6c43ebf213f7764ccb0f304df4675e2",
+    "research/route-operator-platform-v1/observer-execution/h-earth-c2-r1-imi-v4-round-completion-v1/verify_round_completion_records_v1.py": "453c197257855e1b24e0c1ed43a6a2df458c6fdd1c8f1a997359b88da93c8b86"
+  },
+  "manifest_sha256": "470c6f650cbec05da3add85b128c58dab04e4e475b65522b2f640af940bb39a9",
+  "package_id": "H_EARTH_C2_R1_IMI_V4_ROUND_COMPLETION_INSTRUMENTATION_MASTER_PACKET_v1"
+}

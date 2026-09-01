@@ -1,0 +1,853 @@
+{
+  "schema": "H_EARTH_R06_C10_ROLE_1_COMPLETE_MEMBER_MANIFEST_v1",
+  "manifestId": "H_EARTH_R06_C10_ROLE_1_COMPLETE_MEMBER_MANIFEST_v1",
+  "packageId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_v1",
+  "packageVersion": "0.3.2_ROLE_1_RECOVERY_ROOT_GENERALIZED",
+  "archiveName": "H_EARTH_R06_C10_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_COMPLETE_v1_0_3_2_RECOVERY_ROOT_GENERALIZED.zip",
+  "driveFileId": "1FNI8K_MBzFhKnVlq0HHVrDU1mDNYd_Gp",
+  "source": "RAW_DRIVE_READBACK_ARCHIVE",
+  "archiveSha256": "215749b55b6b933f4142aac585af699a99c797b9573b33bea4fdddf8ec941b07",
+  "archiveByteCount": 13364458,
+  "archiveMemberCount": 167,
+  "zipIntegrity": true,
+  "internalManifestCoverageCount": 166,
+  "completeManifestCoverageCount": 167,
+  "includesInternalSha256SumsMember": true,
+  "members": [
+    {
+      "byteCount": 1750,
+      "path": "PACKAGE_BUILD_RECEIPT.json",
+      "sha256": "5e759ee86dd64ac9aa8b50fb143d025e71a5d3550fda93bbe7e215fcdfaa90a8"
+    },
+    {
+      "byteCount": 1570,
+      "path": "README.md",
+      "sha256": "801871522ac87836c9894992fc2713198fac3fddc5e02ebe30abc7d81d43a94d"
+    },
+    {
+      "byteCount": 23113,
+      "path": "SHA256SUMS.txt",
+      "sha256": "a445f4f828f197bd0a195da54ae32e23a4f29e29f106eae697309cc0f278ec2e"
+    },
+    {
+      "byteCount": 8557,
+      "path": "archives/handoffs/H_EARTH_R06_C10_ROLE_6_TO_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_HANDOFF_v1.zip",
+      "sha256": "4b073253f2a196a4729c5545b48db52b0f17a54829bb4015be035cd4ce81d95e"
+    },
+    {
+      "byteCount": 5637,
+      "path": "archives/role4/H_EARTH_R06_C10_ROLE_4_CUSTODY_CORRECTION_v1.zip",
+      "sha256": "9903e8c5d78ead39f619efdfde4ed9ea93638a0cb4b7a7a951dc8bd19e1114a8"
+    },
+    {
+      "byteCount": 3560,
+      "path": "archives/role4/H_EARTH_R06_C10_ROLE_4_SCHEMA_ERRATUM_001_v1.zip",
+      "sha256": "9b2f06af3387823dd48b1a7a13ab8c83d6e936b2510a9b5fa4ed5247fb758b50"
+    },
+    {
+      "byteCount": 179997,
+      "path": "archives/role6/H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_v1_0_2_0_ROLE_6_REQUIREMENTS_COMPLETE.zip",
+      "sha256": "311429d6ce5206396847d68e9dc275425ed1ec6d918da92cf9b54001767149fb"
+    },
+    {
+      "byteCount": 1124,
+      "path": "custody/baseline-and-protected-blobs.json",
+      "sha256": "7d855f841567ab3c0f23487cb49b89773b0295301fbe3f7e3605b2540165a380"
+    },
+    {
+      "byteCount": 21228,
+      "path": "evidence/c4/all-28-assertion-implementation-and-execution-record.json",
+      "sha256": "7aad6ef13d06ba98efad23a218532e191a4dfb42c80cc565b1255b4a53311e52"
+    },
+    {
+      "byteCount": 2409,
+      "path": "evidence/c4/exact-candidate-admission-failures-19-20-23.json",
+      "sha256": "dc795c853028aaeac1798f355fd407ea0d9b2c5d046e38a9cf50b9d61ae4bd57"
+    },
+    {
+      "byteCount": 543,
+      "path": "evidence/c4/missing-authority/verification-receipt.json",
+      "sha256": "3b4d0a3441da56772ce1587f44896fe7ab7b332aa1e700b583567d1dfdb1d15f"
+    },
+    {
+      "byteCount": 729,
+      "path": "evidence/c4/role1-run-1/matched-camera-capture-manifest.json",
+      "sha256": "120beb60a441a00f0a4aeaac1a54a0a0e4b3bfb42576ae2a7ea6df455a2eff48"
+    },
+    {
+      "byteCount": 3961,
+      "path": "evidence/c4/role1-run-1/recovery/baseline-custody.json",
+      "sha256": "5c1319734490f9408d184e36a2cda94c204afeeda9c41de8b6481209338e52db"
+    },
+    {
+      "byteCount": 456,
+      "path": "evidence/c4/role1-run-1/recovery/candidate-member-list.json",
+      "sha256": "3e5e023e235d61a7a00c78a58da4ef455bed13b63fd0b49e6b863ff0edbdaba9"
+    },
+    {
+      "byteCount": 613,
+      "path": "evidence/c4/role1-run-1/recovery/candidate-sha256sums.txt",
+      "sha256": "aee15935bd91da638d07aeb4a0af4142d11bce1da9dec573ea84ed2ed5761681"
+    },
+    {
+      "byteCount": 1154,
+      "path": "evidence/c4/role1-run-1/recovery/candidate-to-baseline-diff-paths.json",
+      "sha256": "a1be9fd90e25997c4ec5bb51c2e274da13863f90a5e3ed07ff7c499961e260c2"
+    },
+    {
+      "byteCount": 408,
+      "path": "evidence/c4/role1-run-1/recovery/role-assumption-bootstrap.json",
+      "sha256": "b2ff7f9bce04db247230f00b06a33bf0615c5449234e044c433cf0bb6003e251"
+    },
+    {
+      "byteCount": 557,
+      "path": "evidence/c4/role1-run-1/recovery/rollback-steps.json",
+      "sha256": "2d5196fb098e726b517ca02fe6034da694557d3dd55e77e95b376893621a7ad7"
+    },
+    {
+      "byteCount": 25525,
+      "path": "evidence/c4/role1-run-1/verification-receipt.json",
+      "sha256": "144672178ab3e7968b321c0b9ff64bd7e8c754ce965523bc0802c03c1b78ad9e"
+    },
+    {
+      "byteCount": 729,
+      "path": "evidence/c4/role1-run-2/matched-camera-capture-manifest.json",
+      "sha256": "120beb60a441a00f0a4aeaac1a54a0a0e4b3bfb42576ae2a7ea6df455a2eff48"
+    },
+    {
+      "byteCount": 3961,
+      "path": "evidence/c4/role1-run-2/recovery/baseline-custody.json",
+      "sha256": "5c1319734490f9408d184e36a2cda94c204afeeda9c41de8b6481209338e52db"
+    },
+    {
+      "byteCount": 456,
+      "path": "evidence/c4/role1-run-2/recovery/candidate-member-list.json",
+      "sha256": "3e5e023e235d61a7a00c78a58da4ef455bed13b63fd0b49e6b863ff0edbdaba9"
+    },
+    {
+      "byteCount": 613,
+      "path": "evidence/c4/role1-run-2/recovery/candidate-sha256sums.txt",
+      "sha256": "aee15935bd91da638d07aeb4a0af4142d11bce1da9dec573ea84ed2ed5761681"
+    },
+    {
+      "byteCount": 1154,
+      "path": "evidence/c4/role1-run-2/recovery/candidate-to-baseline-diff-paths.json",
+      "sha256": "a1be9fd90e25997c4ec5bb51c2e274da13863f90a5e3ed07ff7c499961e260c2"
+    },
+    {
+      "byteCount": 408,
+      "path": "evidence/c4/role1-run-2/recovery/role-assumption-bootstrap.json",
+      "sha256": "b2ff7f9bce04db247230f00b06a33bf0615c5449234e044c433cf0bb6003e251"
+    },
+    {
+      "byteCount": 557,
+      "path": "evidence/c4/role1-run-2/recovery/rollback-steps.json",
+      "sha256": "2d5196fb098e726b517ca02fe6034da694557d3dd55e77e95b376893621a7ad7"
+    },
+    {
+      "byteCount": 25525,
+      "path": "evidence/c4/role1-run-2/verification-receipt.json",
+      "sha256": "144672178ab3e7968b321c0b9ff64bd7e8c754ce965523bc0802c03c1b78ad9e"
+    },
+    {
+      "byteCount": 729,
+      "path": "evidence/c4/role3-provisional-simulation/matched-camera-capture-manifest.json",
+      "sha256": "120beb60a441a00f0a4aeaac1a54a0a0e4b3bfb42576ae2a7ea6df455a2eff48"
+    },
+    {
+      "byteCount": 3961,
+      "path": "evidence/c4/role3-provisional-simulation/recovery/baseline-custody.json",
+      "sha256": "5c1319734490f9408d184e36a2cda94c204afeeda9c41de8b6481209338e52db"
+    },
+    {
+      "byteCount": 456,
+      "path": "evidence/c4/role3-provisional-simulation/recovery/candidate-member-list.json",
+      "sha256": "3e5e023e235d61a7a00c78a58da4ef455bed13b63fd0b49e6b863ff0edbdaba9"
+    },
+    {
+      "byteCount": 613,
+      "path": "evidence/c4/role3-provisional-simulation/recovery/candidate-sha256sums.txt",
+      "sha256": "aee15935bd91da638d07aeb4a0af4142d11bce1da9dec573ea84ed2ed5761681"
+    },
+    {
+      "byteCount": 1154,
+      "path": "evidence/c4/role3-provisional-simulation/recovery/candidate-to-baseline-diff-paths.json",
+      "sha256": "a1be9fd90e25997c4ec5bb51c2e274da13863f90a5e3ed07ff7c499961e260c2"
+    },
+    {
+      "byteCount": 408,
+      "path": "evidence/c4/role3-provisional-simulation/recovery/role-assumption-bootstrap.json",
+      "sha256": "b2ff7f9bce04db247230f00b06a33bf0615c5449234e044c433cf0bb6003e251"
+    },
+    {
+      "byteCount": 557,
+      "path": "evidence/c4/role3-provisional-simulation/recovery/rollback-steps.json",
+      "sha256": "2d5196fb098e726b517ca02fe6034da694557d3dd55e77e95b376893621a7ad7"
+    },
+    {
+      "byteCount": 25523,
+      "path": "evidence/c4/role3-provisional-simulation/verification-receipt.json",
+      "sha256": "f682358a878a591939a371815bc7bc291d18ae9b9f441e6b616381180ecebacd"
+    },
+    {
+      "byteCount": 729,
+      "path": "evidence/c4/role6-failover/matched-camera-capture-manifest.json",
+      "sha256": "120beb60a441a00f0a4aeaac1a54a0a0e4b3bfb42576ae2a7ea6df455a2eff48"
+    },
+    {
+      "byteCount": 3961,
+      "path": "evidence/c4/role6-failover/recovery/baseline-custody.json",
+      "sha256": "5c1319734490f9408d184e36a2cda94c204afeeda9c41de8b6481209338e52db"
+    },
+    {
+      "byteCount": 456,
+      "path": "evidence/c4/role6-failover/recovery/candidate-member-list.json",
+      "sha256": "3e5e023e235d61a7a00c78a58da4ef455bed13b63fd0b49e6b863ff0edbdaba9"
+    },
+    {
+      "byteCount": 613,
+      "path": "evidence/c4/role6-failover/recovery/candidate-sha256sums.txt",
+      "sha256": "aee15935bd91da638d07aeb4a0af4142d11bce1da9dec573ea84ed2ed5761681"
+    },
+    {
+      "byteCount": 1154,
+      "path": "evidence/c4/role6-failover/recovery/candidate-to-baseline-diff-paths.json",
+      "sha256": "a1be9fd90e25997c4ec5bb51c2e274da13863f90a5e3ed07ff7c499961e260c2"
+    },
+    {
+      "byteCount": 408,
+      "path": "evidence/c4/role6-failover/recovery/role-assumption-bootstrap.json",
+      "sha256": "b2ff7f9bce04db247230f00b06a33bf0615c5449234e044c433cf0bb6003e251"
+    },
+    {
+      "byteCount": 557,
+      "path": "evidence/c4/role6-failover/recovery/rollback-steps.json",
+      "sha256": "2d5196fb098e726b517ca02fe6034da694557d3dd55e77e95b376893621a7ad7"
+    },
+    {
+      "byteCount": 25517,
+      "path": "evidence/c4/role6-failover/verification-receipt.json",
+      "sha256": "81d1ba512ee4fe7685a5457170f60f67cecfcbd3111123e59e92c6e37aadca2c"
+    },
+    {
+      "byteCount": 1119,
+      "path": "evidence/role3/R06_C10_ROLE_3_INDEPENDENT_TOOLCHAIN_EXECUTION_BLOCKER_RECEIPT.json",
+      "sha256": "49028e2d46599f5f9e02eff62c044e51c06c8e92ce8abc2a646f84a8b6256d0f"
+    },
+    {
+      "byteCount": 935,
+      "path": "evidence/role5/R06_C10_ROLE_5_PACKAGE_AND_RECOVERY_EMITTER_BLOCKER_RECEIPT.json",
+      "sha256": "82cb2ad31c2167fc0b7148ddc0d51aec42b6feb00884bf89bbbad230ae23ce94"
+    },
+    {
+      "byteCount": 1784,
+      "path": "expanded/role4-custody-correction/CUSTODY_CORRECTION_RECEIPT_v1.json",
+      "sha256": "d2c726479900d07b7ade3e6c0f0f84362386d2f311c7903c6930f6abeea9227a"
+    },
+    {
+      "byteCount": 8412,
+      "path": "expanded/role4-custody-correction/DETACHED_COMPLETE_MEMBER_MANIFEST_v1.json",
+      "sha256": "129466ffc161a25e9c9b1e7d2d6594b92408fee6a9f36155c75111ece7f186db"
+    },
+    {
+      "byteCount": 1059,
+      "path": "expanded/role4-custody-correction/README.md",
+      "sha256": "d7e3401498061f5e488330255ab76efaa7a27389562e77b3ee676ad33e053c4c"
+    },
+    {
+      "byteCount": 285,
+      "path": "expanded/role4-custody-correction/SHA256SUMS.txt",
+      "sha256": "6923635ae821a274e2e16a7ae4f25579125a148afe30b971c3cef29ac0c13ea4"
+    },
+    {
+      "byteCount": 931,
+      "path": "expanded/role4-schema-erratum/README.md",
+      "sha256": "a0d7a195b97948db0fc37a0d2dcea7588e74d020946751ca020c63d3dbeef7be"
+    },
+    {
+      "byteCount": 2546,
+      "path": "expanded/role4-schema-erratum/SCHEMA_ERRATUM_RECEIPT_v1.json",
+      "sha256": "11837d28c0328f034e7de165e5eaf944ef5500c92e2a3cbe441b8820cf6e05f4"
+    },
+    {
+      "byteCount": 299,
+      "path": "expanded/role4-schema-erratum/SHA256SUMS.txt",
+      "sha256": "2285f5c6877dd617aa0461b717107f33640189ac858e2d1f27817af57aa0c602"
+    },
+    {
+      "byteCount": 2228,
+      "path": "expanded/role4-schema-erratum/schemas/H_EARTH_R06_C10_ARTICULATION_REQUEST_SCHEMA_v1.json",
+      "sha256": "8bc185349c6f0cf260a4288fb3dc0873eb424a1d16059c98d9907cb8951a3982"
+    },
+    {
+      "byteCount": 1034,
+      "path": "expanded/role6-package/27_ROLE_6_FAILOVER_OPERATING_GUIDE_v1.md",
+      "sha256": "05b9cb22a4cb80226999e9bca45f0cf83ad7f836f5ad7b28d0454bccbe9de664"
+    },
+    {
+      "byteCount": 1055,
+      "path": "expanded/role6-package/PACKAGE_INTEGRITY_RECEIPT.json",
+      "sha256": "f19c093f1e5ef8aa0cbd52b95be489789029cf506b9b5f65e60a21972fcb87a4"
+    },
+    {
+      "byteCount": 1318,
+      "path": "expanded/role6-package/README.md",
+      "sha256": "49b1efc388b701af91fd263ffde09db597ce761de7287264a00aacdb40e75019"
+    },
+    {
+      "byteCount": 4258,
+      "path": "expanded/role6-package/SHA256SUMS.txt",
+      "sha256": "c9ae2a5b7801ffd7655572e405ebba6314105b87b84c29768042c346ef222e95"
+    },
+    {
+      "byteCount": 391445,
+      "path": "expanded/role6-package/fixtures/H_EARTH_R06_C10_BASELINE_HALO_GRID_FIXTURE_v1.json",
+      "sha256": "8a77231933391f5bb1164e5ec59b9a69555bbdcb3165bb7b18eadcf9d6e32ecc"
+    },
+    {
+      "byteCount": 294136,
+      "path": "expanded/role6-package/fixtures/H_EARTH_R06_C10_TOOL_CONFORMANCE_EXPECTED_FIELD_v1.json",
+      "sha256": "93ff1874c08c8579bfc734b7cd1c37aafaf494121ef9c2e783a6bd6fd2e407ab"
+    },
+    {
+      "byteCount": 2983,
+      "path": "expanded/role6-package/fixtures/H_EARTH_R06_C10_TOOL_CONFORMANCE_REQUEST_v1.json",
+      "sha256": "8b1ea49a6ced90e308fa38f3fec0b214d485c638c8f1a85b42e5a31768185ba2"
+    },
+    {
+      "byteCount": 1026,
+      "path": "expanded/role6-package/records/01_R06_C10_PILOT_SCOPE_FREEZE_v1.json",
+      "sha256": "8533e7884a14551c7d79ca193a0a76f5af7f036f57352ad6c9e5a8d9da27c119"
+    },
+    {
+      "byteCount": 7203,
+      "path": "expanded/role6-package/records/02_EXACT_ACCEPTED_BASELINE_LEDGER_v1.json",
+      "sha256": "c5a7c5eb7fe261c8b7c385e8ba6605bd33fa1bd6b88f9c24f749d914b024bf3c"
+    },
+    {
+      "byteCount": 400,
+      "path": "expanded/role6-package/records/03_SHARED_TOOL_BASE_MANIFEST_SCHEMA_v1.json",
+      "sha256": "540a12e31c7fead72244b297e607da78d14c758d3024db11ed2e2fd0678ebb11"
+    },
+    {
+      "byteCount": 1424,
+      "path": "expanded/role6-package/records/04_CAPABILITY_AND_PERMISSION_REGISTRY_SCHEMA_v1.json",
+      "sha256": "945b90901f26bdb3ce76d1da6f4be1ef1c7c42f7b781b9199f756fcb5cbfe093"
+    },
+    {
+      "byteCount": 349,
+      "path": "expanded/role6-package/records/05_CUMULATIVE_HANDOFF_ENVELOPE_SCHEMA_v1.json",
+      "sha256": "b38203d06dd23942185917a6b96f78b59488e9fd47decf4542673c39c6d67f69"
+    },
+    {
+      "byteCount": 404,
+      "path": "expanded/role6-package/records/06_FAILOVER_AND_TEMPORARY_ROLE_ASSUMPTION_SCHEMA_v1.json",
+      "sha256": "be88db43bef97dd4aaa9b991e19c93b015a6669c7cb28f08f65b1fa4d93f4cce"
+    },
+    {
+      "byteCount": 629,
+      "path": "expanded/role6-package/records/07_PRE_ROUND_CURRENT_STATE_LEDGER_v1.json",
+      "sha256": "35233ca1e5de8cd1391a4014573d7781eaf7f3e461fb703c65715cbebad67991"
+    },
+    {
+      "byteCount": 696,
+      "path": "expanded/role6-package/records/08_SUCCESSOR_RECOVERY_BOOTSTRAP_SCHEMA_v1.json",
+      "sha256": "0742a711ee7b042791e61ee33a1d4f3910a14a25d31fc39b2d9054a8c075a208"
+    },
+    {
+      "byteCount": 2320,
+      "path": "expanded/role6-package/records/09_EXACT_R06_C10_REGION_RESOLUTION_v1.json",
+      "sha256": "fe5d80346b0c0dfac655764848bcebbe8a58fa4f8dd3842ef2429205805ea9d3"
+    },
+    {
+      "byteCount": 1673,
+      "path": "expanded/role6-package/records/10_CURRENT_TERRAIN_CAUSAL_MODEL_v1.json",
+      "sha256": "fa3d56ce87f2a887f1d6ca2aadedc5967a7c475255c5374044f04f9346ef7931"
+    },
+    {
+      "byteCount": 1154,
+      "path": "expanded/role6-package/records/11_CURRENT_SAMPLING_AND_REFINEMENT_MODEL_v1.json",
+      "sha256": "140921be2a97e718d14a38f7a067adf1a68d2e5e49c9d980791c3601299ad19d"
+    },
+    {
+      "byteCount": 6527,
+      "path": "expanded/role6-package/records/12_EXACT_SOURCE_FUNCTION_CONTROL_LEDGER_v1.json",
+      "sha256": "66bfa7676e7663a8449146af39dcb1672331afa7e67ae3c5d4ac60ba847537b2"
+    },
+    {
+      "byteCount": 976,
+      "path": "expanded/role6-package/records/13_BOUNDARY_CONTINUITY_AND_SHARED_EDGE_REQUIREMENTS_v1.json",
+      "sha256": "4c8b12413da1d410cef4d595edbf16664c790b0ea2e7dade6ddd247f79071c8a"
+    },
+    {
+      "byteCount": 4219,
+      "path": "expanded/role6-package/records/14_SAFE_ARTICULATION_PARAMETER_BOUNDS_v1.json",
+      "sha256": "d62166be7c51451672f5a56c3f128abd69e647cab7035d1ffc7bb54ed98690cd"
+    },
+    {
+      "byteCount": 878,
+      "path": "expanded/role6-package/records/15_SADDLE_VALLEY_BASIN_TARGET_MODEL_v1.json",
+      "sha256": "3bcb5b4a9e1c4115d97704edc9a269c712f9545301659020181f776a22b25e87"
+    },
+    {
+      "byteCount": 911,
+      "path": "expanded/role6-package/records/16_TRAVERSABLE_OPENING_REQUIREMENTS_v1.json",
+      "sha256": "b44a5149303ef5f9846ea573c2937af16826270bff2c564a5da0c12970bea050"
+    },
+    {
+      "byteCount": 728,
+      "path": "expanded/role6-package/records/17_CAVERN_COMPATIBILITY_REQUIREMENTS_v1.json",
+      "sha256": "4842f669ab0d1e4f4491a75df6ee9c926045838b7162833fab5882c15ca506af"
+    },
+    {
+      "byteCount": 977,
+      "path": "expanded/role6-package/records/18_FUTURE_WATERFALL_READINESS_GEOMETRY_REQUIREMENTS_v1.json",
+      "sha256": "5a390c603750a8d122d0d54c268dad4ee75f51fb1148184c8d3c3e65b85546f0"
+    },
+    {
+      "byteCount": 4732,
+      "path": "expanded/role6-package/records/19_BOUNDED_AUTHORING_TOOL_FUNCTIONAL_SPECIFICATION_v1.json",
+      "sha256": "1ea6e9a004c28268dd53be4831dc00faff78e868ccc61a070d913989bfcd1c3c"
+    },
+    {
+      "byteCount": 1311,
+      "path": "expanded/role6-package/records/20_DETERMINISTIC_SUCCESSOR_PACKAGE_SPECIFICATION_v1.json",
+      "sha256": "a25c224af0b749c4d83ef52f68d54feb14b21a903619ea69c8feaea39e1ca422"
+    },
+    {
+      "byteCount": 1328,
+      "path": "expanded/role6-package/records/21_REQUIRED_BASELINE_AND_CANDIDATE_FIXTURES_v1.json",
+      "sha256": "c98d8f21058e77fb1f6fd48751f770c5552d149250c862f8745c2cca3506b034"
+    },
+    {
+      "byteCount": 2332,
+      "path": "expanded/role6-package/records/22_REQUIRED_VERIFICATION_HARNESS_SPECIFICATION_v1.json",
+      "sha256": "0e2105fb576e90d9cb491245873a374ca30b8d0b48aa1ee6b8d440fb90de4c28"
+    },
+    {
+      "byteCount": 1040,
+      "path": "expanded/role6-package/records/23_REQUIRED_ROLLBACK_AND_RECOVERY_OUTPUTS_v1.json",
+      "sha256": "79ab9f1838ad2b789350d4331b3ec56197e8ed5ca2447b64b2f1569809db327d"
+    },
+    {
+      "byteCount": 1651,
+      "path": "expanded/role6-package/records/24_EXACT_ROLE_1_TOOL_CONSTRUCTION_BOUNDARY_v1.json",
+      "sha256": "ca5a32a2783c9c8546038a2c471a0456f33b20102bc533d24053d7dc9ee906f3"
+    },
+    {
+      "byteCount": 2421,
+      "path": "expanded/role6-package/records/25_ROLE_6_CAUSAL_MODEL_AND_TOOL_REQUIREMENTS_RETURN_v1.json",
+      "sha256": "19c055bd83729d0a12deeff7cf5ed8c6ddbf6fa7eba416517625f89d3872e31e"
+    },
+    {
+      "byteCount": 9161,
+      "path": "expanded/role6-package/records/26_TOOL_MANIFEST_v1.json",
+      "sha256": "90853d461f59ec47cf5071055185e052673bd74711092270860fca3466c78a61"
+    },
+    {
+      "byteCount": 3131,
+      "path": "expanded/role6-package/records/28_CUMULATIVE_HANDOFF_ENVELOPE_v1.json",
+      "sha256": "53290958cc5337863c5f8f25f0e7deca3ac8a291ea5c167cd42bfde3d3dcc237"
+    },
+    {
+      "byteCount": 980,
+      "path": "expanded/role6-package/records/30_CHECKPOINT_1_AUTHORITY_AND_REGION_FREEZE.json",
+      "sha256": "15dd1e95f36896f6f7901194f089b6554e616e1942a3ea4c72997e47bc486868"
+    },
+    {
+      "byteCount": 511,
+      "path": "expanded/role6-package/records/31_CHECKPOINT_2_CAUSAL_TOOL_AND_FAILOVER_CONTRACT_FREEZE.json",
+      "sha256": "58fb29a315c661d7a26a7ec49e04f4d121cfabb9664db0aea38575b2da76e89d"
+    },
+    {
+      "byteCount": 2192,
+      "path": "expanded/role6-package/records/32_BOUNDED_CHECKPOINT_LEDGER_v1.json",
+      "sha256": "149750a1b3d1d0db9fe62c009089c28ddeaab7bbeea81e5ef7db4eb2712edcea"
+    },
+    {
+      "byteCount": 404,
+      "path": "expanded/role6-package/schemas/FAILOVER_AND_TEMPORARY_ROLE_ASSUMPTION_SCHEMA_v1.json",
+      "sha256": "be88db43bef97dd4aaa9b991e19c93b015a6669c7cb28f08f65b1fa4d93f4cce"
+    },
+    {
+      "byteCount": 2113,
+      "path": "expanded/role6-package/schemas/H_EARTH_R06_C10_ARTICULATION_REQUEST_SCHEMA_v1.json",
+      "sha256": "3c393b81a40b8666a52adfa75241dde8f1afb6a9fcb5484bd122c5decc19c24c"
+    },
+    {
+      "byteCount": 1103,
+      "path": "expanded/role6-to-role1-handoff/00_HANDOFF_ENVELOPE_v1.json",
+      "sha256": "ebd61d482af51d342c30c8125d3fb766e91646b32325f8b181a6b689d3d41d2d"
+    },
+    {
+      "byteCount": 2350,
+      "path": "expanded/role6-to-role1-handoff/01_ROLE_1_MISSION_DUTIES_AND_BOUNDARIES_v1.json",
+      "sha256": "b20be656229f378579f79661b2c562b50737f46b6ae1289c2bc4b35f4f4f0cbc"
+    },
+    {
+      "byteCount": 1485,
+      "path": "expanded/role6-to-role1-handoff/02_ROLE_1_EXACT_INPUT_AUTHORITY_AND_LOAD_ORDER_v1.json",
+      "sha256": "cb167bbf0621f31a7d034529b4a95204492634493cd98fca82a6e9cfc3d24d54"
+    },
+    {
+      "byteCount": 1930,
+      "path": "expanded/role6-to-role1-handoff/03_ROLE_1_BOUNDED_CONSTRUCTION_CHECKPOINTS_v1.json",
+      "sha256": "b4f36c00beaf537bbf1051c9c68e28dcd097456d4e97de523c5c74baa28f113a"
+    },
+    {
+      "byteCount": 2713,
+      "path": "expanded/role6-to-role1-handoff/04_ROLE_1_BACKUP_DISCOVERY_AND_PROJECT_CORRELATION_v1.json",
+      "sha256": "abdad1bb1387c441870a3ffd22326e49433a96cb2eac56c967fd64c2eb0fe34b"
+    },
+    {
+      "byteCount": 1052,
+      "path": "expanded/role6-to-role1-handoff/05_ROLE_1_REQUIRED_RETURN_CONTRACT_v1.json",
+      "sha256": "04c454dc8a32bcc7ba29d57169ac422b1774fe7dd222dc7d1a663721dd3fbf80"
+    },
+    {
+      "byteCount": 1211,
+      "path": "expanded/role6-to-role1-handoff/README.md",
+      "sha256": "9d32b5c039b377a8312a383c59bbfa96c0aa492fdc10a5eb2c3b26e5da4fca4e"
+    },
+    {
+      "byteCount": 756,
+      "path": "expanded/role6-to-role1-handoff/SHA256SUMS.txt",
+      "sha256": "df96b5bdb029f8b7a53d10ce07a85bfd796b00209866ef299d91db28beb72c2f"
+    },
+    {
+      "byteCount": 5762,
+      "path": "manifests/completed-eight-tool-manifest.json",
+      "sha256": "69bc4260f19e4b7299d2707a8ba03962cb22958a507af399f5a79c637c767692"
+    },
+    {
+      "byteCount": 4678,
+      "path": "receipts/C1_ROLE_1_PACKAGE_ASSUMPTION_RECEIPT.json",
+      "sha256": "cb23ad85043082475a6332420d072d75777a0ee7fa869ab01d82ae42f0328eaa"
+    },
+    {
+      "byteCount": 5798,
+      "path": "receipts/C2_CONTRACTS_STATIC_FIXTURE_RECEIPT.json",
+      "sha256": "b0673a5b050198e878a9c594856b495f8d5f901ca542833ad31789d49bf758ee"
+    },
+    {
+      "byteCount": 7979,
+      "path": "receipts/C3_FIELD_GEOMETRY_CLEARANCE_RECEIPT.json",
+      "sha256": "56277e117a9a82e6d0521b64966746fa8f32b8b5a02514468de481413bc5ceb3"
+    },
+    {
+      "byteCount": 25347,
+      "path": "receipts/C4_PORTABLE_HARNESS_CONSTRUCTION_RECEIPT.json",
+      "sha256": "4c87c19bae6c5837213895c1e9224a1ab1386ee7d65fc2627096ddbcb61a9893"
+    },
+    {
+      "byteCount": 9048,
+      "path": "receipts/C5A_ENTRY_POINT_IDENTITY_CORRECTION_RECEIPT.json",
+      "sha256": "6154a7eb409c7885f9674bfc21fa3da4c609de1d6a0c3ffc6eac84ae2f39de10"
+    },
+    {
+      "byteCount": 2632,
+      "path": "receipts/C5B_RECOVERY_ROOT_GENERALIZATION_RECEIPT.json",
+      "sha256": "77f1a9746e1e0075de2c9464685b9525d9dda6084f13f6d8bdd008221a34e64c"
+    },
+    {
+      "byteCount": 3961,
+      "path": "recovery/baseline-custody.json",
+      "sha256": "5c1319734490f9408d184e36a2cda94c204afeeda9c41de8b6481209338e52db"
+    },
+    {
+      "byteCount": 456,
+      "path": "recovery/candidate-member-list.json",
+      "sha256": "3e5e023e235d61a7a00c78a58da4ef455bed13b63fd0b49e6b863ff0edbdaba9"
+    },
+    {
+      "byteCount": 613,
+      "path": "recovery/candidate-sha256sums.txt",
+      "sha256": "aee15935bd91da638d07aeb4a0af4142d11bce1da9dec573ea84ed2ed5761681"
+    },
+    {
+      "byteCount": 1154,
+      "path": "recovery/candidate-to-baseline-diff-paths.json",
+      "sha256": "a1be9fd90e25997c4ec5bb51c2e274da13863f90a5e3ed07ff7c499961e260c2"
+    },
+    {
+      "byteCount": 857,
+      "path": "recovery/current-state-ledger.json",
+      "sha256": "c0fe837b7601cb6886763d21a03bc7daa312bf9f65bc3c57f4764c86ee9774c3"
+    },
+    {
+      "byteCount": 23,
+      "path": "recovery/repository-substrate/.git/HEAD",
+      "sha256": "dcf116227bfbc36af4f3a3496d323c45973e641313f4b0a5fafe90e3011973b7"
+    },
+    {
+      "byteCount": 93,
+      "path": "recovery/repository-substrate/.git/config",
+      "sha256": "3d5381461c88422981a7accb107f8ead2687eb94551dae2822a84a7f7cf41452"
+    },
+    {
+      "byteCount": 1359044,
+      "path": "recovery/repository-substrate/.git/objects/pack/pack-1ee673bbb06201cbdc6116988b68006ba05afc42.idx",
+      "sha256": "098f21fb182c1e8a37d309094ec45130020651cb7a6ff89a22524d4976b4f525"
+    },
+    {
+      "byteCount": 12242768,
+      "path": "recovery/repository-substrate/.git/objects/pack/pack-1ee673bbb06201cbdc6116988b68006ba05afc42.pack",
+      "sha256": "34f79714843f8fd5cc15037bab7915471388e16281f4d0feced09910cc948f7c"
+    },
+    {
+      "byteCount": 194048,
+      "path": "recovery/repository-substrate/.git/objects/pack/pack-1ee673bbb06201cbdc6116988b68006ba05afc42.rev",
+      "sha256": "80858a07bba0ae0b3808b74958619cc401320d870ae9dfc9afdb865f837ddcb0"
+    },
+    {
+      "byteCount": 41,
+      "path": "recovery/repository-substrate/.git/refs/heads/replay",
+      "sha256": "31b1a5e4b6d713256386b4aae84487e2ac997e9547042c8f6b27bdd618c9caef"
+    },
+    {
+      "byteCount": 31945,
+      "path": "recovery/repository-substrate/h-earth-3d/cells/ground-cell-001.js",
+      "sha256": "e2175ef2ddb0399d5d325d2478a72c34e8e67feb9ae28f92b77ebdc1a4b615f2"
+    },
+    {
+      "byteCount": 5029,
+      "path": "recovery/repository-substrate/h-earth-3d/control-plane/r06-c10/custody/h-earth.r06-c10.role4.custody-correction.locator.v1.json",
+      "sha256": "9c260bb23a552a550dbcd16749bfe2d67eca5b18a7edc0f9f981895e93e66733"
+    },
+    {
+      "byteCount": 5753,
+      "path": "recovery/repository-substrate/h-earth-3d/control-plane/r06-c10/custody/h-earth.r06-c10.role4.schema-erratum-001.locator.v1.json",
+      "sha256": "c3dfba706f9bc59081b0f8c098896f585849a61e9cc22ab84f0c848cdc529515"
+    },
+    {
+      "byteCount": 5798,
+      "path": "recovery/repository-substrate/h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.c2.contracts-static-fixture.receipt.v1.json",
+      "sha256": "b0673a5b050198e878a9c594856b495f8d5f901ca542833ad31789d49bf758ee"
+    },
+    {
+      "byteCount": 7979,
+      "path": "recovery/repository-substrate/h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.c3.field-geometry-clearance.receipt.v1.json",
+      "sha256": "56277e117a9a82e6d0521b64966746fa8f32b8b5a02514468de481413bc5ceb3"
+    },
+    {
+      "byteCount": 4678,
+      "path": "recovery/repository-substrate/h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.package-assumption-receipt.v1.json",
+      "sha256": "cb23ad85043082475a6332420d072d75777a0ee7fa869ab01d82ae42f0328eaa"
+    },
+    {
+      "byteCount": 25303,
+      "path": "recovery/repository-substrate/h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+      "sha256": "cdb5bd7f54bb8071b5b8a411a761e46d050d956337fc0d4926b9bc1172b8d3e7"
+    },
+    {
+      "byteCount": 4168,
+      "path": "recovery/repository-substrate/h-earth-3d/control-plane/run-8/h-earth.run8b.successor-neutral-geometry.js",
+      "sha256": "9eaa6374ef2966c89feb7853bcbf145ec855d90549652018f87d867848924c9c"
+    },
+    {
+      "byteCount": 35389,
+      "path": "recovery/repository-substrate/h-earth-3d/h-earth.matrix.js",
+      "sha256": "1aa461d7502cb53401a7281b54da4728e05cd897527bf4efc262f4c905d7f9c5"
+    },
+    {
+      "byteCount": 13010,
+      "path": "recovery/repository-substrate/h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+      "sha256": "734a91b0953aa1d7f5a712dde2b6fbcd4989493a32608cbbac701770dbf6046a"
+    },
+    {
+      "byteCount": 43060,
+      "path": "recovery/repository-substrate/h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+      "sha256": "9dce05bd365cc2e4512289a0cf0cc387ed7ebca2aa42a198a2d145b47daed523"
+    },
+    {
+      "byteCount": 5784,
+      "path": "recovery/repository-substrate/h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js",
+      "sha256": "6e40a70216a823501590cf42ff4b17aedce5a9a06dbad036717889e67b52ec85"
+    },
+    {
+      "byteCount": 34235,
+      "path": "recovery/repository-substrate/h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+      "sha256": "0b7ce4277ed2611162c207ce4956b8e31e607483e78bdb4e97755329e825a544"
+    },
+    {
+      "byteCount": 104797,
+      "path": "recovery/repository-substrate/h-earth-3d/objects/ground-cell-001.objects.js",
+      "sha256": "c187a98b96249f3ff8e142e58916815b11040c0e42e5cd3b522e4dec76ca284b"
+    },
+    {
+      "byteCount": 8557,
+      "path": "recovery/repository-substrate/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+      "sha256": "dd85e0db1fa7bbe3b30ae4cb99e65d650dbf850d319427968b8c7470c945a795"
+    },
+    {
+      "byteCount": 7882,
+      "path": "recovery/repository-substrate/h-earth-3d/terrain/h-earth.terrain-field.js",
+      "sha256": "e2e2a8985d7a38cc6e67fe866599789366833fd46566e08a5e8902cf778ee6ad"
+    },
+    {
+      "byteCount": 6275,
+      "path": "recovery/repository-substrate/h-earth-3d/terrain/h-earth.terrain-formations.js",
+      "sha256": "1755606f285666f09cb4eaea872305be0a7000cd1c22aa75f3754f7ab4d2d53b"
+    },
+    {
+      "byteCount": 2670,
+      "path": "recovery/repository-substrate/h-earth-3d/tools/instrument-platform/permanent-scene-registry.mjs",
+      "sha256": "d30cc13917dbae0b64fd0bef764014d1a92d1c091e0d48ec45672c6dedafb288"
+    },
+    {
+      "byteCount": 13918,
+      "path": "recovery/repository-substrate/h-earth-3d/tools/r06-c10/h-earth.r06-c10.candidate-clearance-adapter.v1.mjs",
+      "sha256": "08ad06cf05eae5135626cb412a51643091e965d2f47cae3a8d9a84e635a98da8"
+    },
+    {
+      "byteCount": 17875,
+      "path": "recovery/repository-substrate/h-earth-3d/tools/r06-c10/h-earth.r06-c10.geometry-articulation-authoring-tool.v1.mjs",
+      "sha256": "a7e290d3d48167abf6526b54f1d880f7db7f49bf151cbec8047a70ae12a58fc8"
+    },
+    {
+      "byteCount": 17187,
+      "path": "recovery/repository-substrate/h-earth-3d/tools/r06-c10/h-earth.r06-c10.geometry-articulation-contracts.v1.mjs",
+      "sha256": "8f35deb6555d16b01abce9790c9292578d7d7e1e8305cf383fb8f0c27e0a9583"
+    },
+    {
+      "byteCount": 19660,
+      "path": "recovery/repository-substrate/h-earth-3d/tools/r06-c10/h-earth.r06-c10.package-and-recovery-emitter.v1.mjs",
+      "sha256": "0234cb20260254e428d697639d2770f1058716984b7432d99e69953ff4191243"
+    },
+    {
+      "byteCount": 75815,
+      "path": "recovery/repository-substrate/h-earth-3d/validation/h-earth.r06-c10.geometry-articulation-tool.harness.mjs",
+      "sha256": "6c07b19dc224790cb3f209b935e1d32bee9cb20df4d60e6e8f2ee5631ce6631a"
+    },
+    {
+      "byteCount": 25347,
+      "path": "recovery/repository-substrate/h-earth-3d/validation/h-earth.r06-c10.geometry-articulation-tool.receipt.json",
+      "sha256": "4c87c19bae6c5837213895c1e9224a1ab1386ee7d65fc2627096ddbcb61a9893"
+    },
+    {
+      "byteCount": 2674,
+      "path": "recovery/repository-substrate/h-earth-3d/validation/h-earth.run8b.successor-neutral-geometry.receipt.json",
+      "sha256": "5c2fa1dca85e9f70708877c62199865bf95d91740aef1d40c4beb61f338779cb"
+    },
+    {
+      "byteCount": 68680,
+      "path": "recovery/repository-substrate/h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+      "sha256": "766348f5499685719a126642a8b3bb93ac082afaf4ff7f7bc972e158c306d482"
+    },
+    {
+      "byteCount": 107753,
+      "path": "recovery/repository-substrate/h-earth-3d/zones/ground-cell-001.zones.js",
+      "sha256": "c270aaef1fdf7aac5d934457e9ce9dcc9ed1563847f6d06760ea1a83d4d0ddfe"
+    },
+    {
+      "byteCount": 5762,
+      "path": "recovery/repository-substrate/manifests/completed-eight-tool-manifest.json",
+      "sha256": "69bc4260f19e4b7299d2707a8ba03962cb22958a507af399f5a79c637c767692"
+    },
+    {
+      "byteCount": 11499,
+      "path": "recovery/repository-substrate/showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+      "sha256": "c529303940916bfc262bda16ca7d978920be9b633f032c51eed904d7cef0da89"
+    },
+    {
+      "byteCount": 19131,
+      "path": "recovery/repository-substrate/showroom/globe/h-earth/functional-landscape/navigation.js",
+      "sha256": "4be99d9b81c5e3984270014b705c552950fe32bc28293b3ecf58d0c87de1c1a0"
+    },
+    {
+      "byteCount": 32830,
+      "path": "recovery/repository-substrate/showroom/globe/h-earth/index.html",
+      "sha256": "d09f9fdf757969b3bd73da986d0f44030dbc2fd41a222db0dbbefbad51274134"
+    },
+    {
+      "byteCount": 4421,
+      "path": "recovery/repository-substrate/showroom/globe/h-earth/render/geometry-distant-context.js",
+      "sha256": "37ed73b064c72c8d41245720392f4a02a3833bcb47c71b13d0a6284767d129d2"
+    },
+    {
+      "byteCount": 128728,
+      "path": "recovery/repository-substrate/showroom/globe/h-earth/render/geometry-kernel.east.js",
+      "sha256": "4e586ab473123bd0fc4a77c10e07d7f742a48f10d9d8afbb6ae65282136fa6ba"
+    },
+    {
+      "byteCount": 40459,
+      "path": "recovery/repository-substrate/showroom/globe/h-earth/render/geometry-kernel.js",
+      "sha256": "dca2673d76c46358d4e66b8392f24457c6caf4f07128f653250ee26768824817"
+    },
+    {
+      "byteCount": 127118,
+      "path": "recovery/repository-substrate/showroom/globe/h-earth/render/geometry-kernel.north.js",
+      "sha256": "f19f7da12932e5b4a3772431d0e1ae4be912ce35542159af9e735454c31aeae0"
+    },
+    {
+      "byteCount": 145913,
+      "path": "recovery/repository-substrate/showroom/globe/h-earth/render/geometry-kernel.south.js",
+      "sha256": "6f3191df8cac81437217daf585c7a13b30e0e0625b64a822df16afe7e123e877"
+    },
+    {
+      "byteCount": 73706,
+      "path": "recovery/repository-substrate/showroom/globe/h-earth/render/geometry-kernel.west.js",
+      "sha256": "bd95314b232086d3a410ddc643557f54c161c24d3134be7ba356d47203b3d970"
+    },
+    {
+      "byteCount": 8875,
+      "path": "recovery/repository-substrate/showroom/globe/h-earth/render/geometry-landscape.js",
+      "sha256": "f2beb4059f9f458434cf43990196defaa4a55ec828a1d936d51a6aef5bf15a6f"
+    },
+    {
+      "byteCount": 15341,
+      "path": "recovery/repository-substrate/showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+      "sha256": "0e3947f2c94db8b2a779666497ca003bf5db48f7e2d9a333d3432eea9866aa06"
+    },
+    {
+      "byteCount": 38029,
+      "path": "recovery/repository-substrate/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "7881f5055ca87d7abeba79d8199b3a5a86bec137b930ffc2a4ae68a735774b76"
+    },
+    {
+      "byteCount": 1257,
+      "path": "recovery/role-assumption-bootstrap.json",
+      "sha256": "cdc80171bf7b4f46c43930aa81341218bda33e85da709c73f8b3de4e64b479c8"
+    },
+    {
+      "byteCount": 881,
+      "path": "recovery/role3-load-order-and-handoff.json",
+      "sha256": "1633f1a38a632ffa81acce7f1d96367d67a9cfc8d48a23a16777d4df0af9c229"
+    },
+    {
+      "byteCount": 557,
+      "path": "recovery/rollback-steps.json",
+      "sha256": "2d5196fb098e726b517ca02fe6034da694557d3dd55e77e95b376893621a7ad7"
+    },
+    {
+      "byteCount": 13918,
+      "path": "tools/h-earth.r06-c10.candidate-clearance-adapter.v1.mjs",
+      "sha256": "08ad06cf05eae5135626cb412a51643091e965d2f47cae3a8d9a84e635a98da8"
+    },
+    {
+      "byteCount": 17875,
+      "path": "tools/h-earth.r06-c10.geometry-articulation-authoring-tool.v1.mjs",
+      "sha256": "a7e290d3d48167abf6526b54f1d880f7db7f49bf151cbec8047a70ae12a58fc8"
+    },
+    {
+      "byteCount": 17187,
+      "path": "tools/h-earth.r06-c10.geometry-articulation-contracts.v1.mjs",
+      "sha256": "8f35deb6555d16b01abce9790c9292578d7d7e1e8305cf383fb8f0c27e0a9583"
+    },
+    {
+      "byteCount": 19660,
+      "path": "tools/h-earth.r06-c10.package-and-recovery-emitter.v1.mjs",
+      "sha256": "0234cb20260254e428d697639d2770f1058716984b7432d99e69953ff4191243"
+    },
+    {
+      "byteCount": 8455,
+      "path": "validation/h-earth-r06-c10-geometry-articulation-tool-validation.yml",
+      "sha256": "1cb1c8044d1e548651c37ab290abbc29a8d7b69bc18d2709bb9be5f9ae4c8b8b"
+    },
+    {
+      "byteCount": 75815,
+      "path": "validation/h-earth.r06-c10.geometry-articulation-tool.harness.mjs",
+      "sha256": "6c07b19dc224790cb3f209b935e1d32bee9cb20df4d60e6e8f2ee5631ce6631a"
+    }
+  ]
+}

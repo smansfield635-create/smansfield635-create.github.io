@@ -1,0 +1,50 @@
+name: H-Earth Inter-Hill Estate Successor Evaluator V2 Causal Correction
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, synchronize]
+    paths:
+      - '.github/workflows/h-earth-inter-hill-estate-successor-evaluator-v2-causal-correction.yml'
+      - 'h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/AGENTS.md'
+      - 'h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/operation-request.v1.json'
+      - 'h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/construction-procedure.v1.json'
+      - 'h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/changed-path-manifest.v1.json'
+      - 'h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/input-schema.v2.json'
+      - 'h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/output-schema.v2.json'
+      - 'h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/causal-rules.v2.json'
+      - 'h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/fixtures.v2.json'
+      - 'h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/rollback.v1.json'
+      - 'h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/verify.v2.mjs'
+      - 'tools/h-earth-map-wide-terrain/inter-hill-estate/causal-trace-evaluator.v2.mjs'
+      - 'h-earth-3d/validation/h-earth.inter-hill-estate-successor-evaluator-v2.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  role1-v2-causal-correction-verification:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute exact admitted verification command
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          node h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/verify.v2.mjs
+      - name: Upload exact verification receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-inter-hill-estate-successor-evaluator-v2-causal-correction-role1-evidence
+          path: /tmp/h-earth-v2-causal-correction
+          if-no-files-found: error
+          retention-days: 90

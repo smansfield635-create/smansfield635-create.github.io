@@ -1,0 +1,51 @@
+name: AI Media Transport Admission
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha256: {required: true, type: string}
+      source_bytes: {required: true, type: string}
+      part_count: {required: true, type: string}
+      manifest_sha256: {required: true, type: string}
+      execution_holder: {required: true, type: string}
+permissions:
+  contents: read
+  actions: read
+jobs:
+  admit-media-transport:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0, persist-credentials: false}
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: Verify immutable closed-world descriptor
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs=require('fs');const d=JSON.parse(fs.readFileSync('.github/ai-toolset-transport/descriptors/ai-media-transport-descriptor.v1.json'));
+          if(d.schema!=='AUTHORIZED_TOOLSET_DESCRIPTOR_v1'||d.descriptorId!=='AI_MEDIA_TRANSPORT_DESCRIPTOR_V1'||d.operationId!=='AI_MEDIA_TRANSPORT_ADMISSION_v1')process.exit(1);
+          if(d.exactToolingHead!=='64f4acc486369d670b6fa6b11a8008c71a19fe26'||d.commandSpecification.shell!==false||d.commandSpecification.extraArgumentsAllowed!==false||d.commandSpecification.environmentOverridesAllowed!==false)process.exit(1);
+          if((d.allowedMutationPaths||[]).length!==0)process.exit(1);
+          NODE
+          git cat-file -e 64f4acc486369d670b6fa6b11a8008c71a19fe26^{commit}
+      - name: Execute bounded admission
+        env:
+          SOURCE_SHA256: ${{ inputs.source_sha256 }}
+          SOURCE_BYTES: ${{ inputs.source_bytes }}
+          PART_COUNT: ${{ inputs.part_count }}
+          MANIFEST_SHA256: ${{ inputs.manifest_sha256 }}
+          EXECUTION_HOLDER: ${{ inputs.execution_holder }}
+        run: |
+          set -euo pipefail
+          git show 64f4acc486369d670b6fa6b11a8008c71a19fe26:tools/ai-room-transport/ai-media-admission.v1.mjs > "$RUNNER_TEMP/ai-media-admission.v1.mjs"
+          node "$RUNNER_TEMP/ai-media-admission.v1.mjs" --source-sha256 "$SOURCE_SHA256" --source-bytes "$SOURCE_BYTES" --part-count "$PART_COUNT" --manifest-sha256 "$MANIFEST_SHA256" --execution-holder "$EXECUTION_HOLDER" --output "$RUNNER_TEMP/ai-media-admission-receipt.json"
+          node - <<'NODE'
+          const fs=require('fs');const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/ai-media-admission-receipt.json'));
+          if(r.schema!=='AI_MEDIA_TRANSPORT_ADMISSION_RECEIPT_v1'||r.result!=='PASS'||r.destinationAuthorityGranted||r.productMutationPerformed||r.mergePerformed||r.deploymentPerformed||r.releasePerformed||r.genericCommandAuthority)process.exit(1);
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ai-media-transport-admission-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/ai-media-admission-receipt.json
+          if-no-files-found: error
+          retention-days: 30

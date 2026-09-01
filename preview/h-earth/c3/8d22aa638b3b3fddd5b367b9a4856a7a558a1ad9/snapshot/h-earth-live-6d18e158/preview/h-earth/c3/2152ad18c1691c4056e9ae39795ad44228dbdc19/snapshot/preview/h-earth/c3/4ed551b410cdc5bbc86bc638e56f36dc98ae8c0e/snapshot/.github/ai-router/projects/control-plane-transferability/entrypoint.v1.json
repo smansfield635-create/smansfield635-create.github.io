@@ -1,0 +1,65 @@
+{
+  "schema": "REPOSITORY_AI_PROJECT_ENTRYPOINT_v1",
+  "projectId": "CONTROL_PLANE_TRANSFERABILITY",
+  "status": "ACTIVE_REGISTERED_PROJECT",
+  "ownedPathPrefixes": [
+    "control-plane/transferability-program/"
+  ],
+  "ownedExactPaths": [],
+  "entrypoint": ".github/ai-router/projects/control-plane-transferability/entrypoint.v1.json",
+  "authorityBoundary": [
+    "ROUTING_REGISTRATION_DOES_NOT_CREATE_STUDY_ADMISSION_STUDY_EXECUTION_SCIENTIFIC_CLAIM_MERGE_DEPLOYMENT_OR_PRIVATE_SUCCESSOR_AUTHORITY",
+    "ALL_TRANSFERABILITY_MUTATIONS_REQUIRE_SEPARATE_CANONICAL_REPOSITORY_OPERATION_INTAKE_AND_EXACT_ROUTER_PASS",
+    "HISTORICAL_OUTCOME_MUST_NOT_ENTER_CONTROL_PLANE_EXECUTION_INPUT_AND_REMAINS_SEALED_COMPARISON_EVIDENCE_UNTIL_INDEPENDENT_EXECUTION_CLOSES",
+    "UNRESOLVED_HISTORICAL_SOURCE_IDENTITY_REMAINS_FAIL_CLOSED_AND_MAY_NOT_BE_INVENTED",
+    "PRIVATE_CONTROL_PLANE_CUSTODY_DOES_NOT_IMPLY_COMMISSIONED_PRIVATE_SUCCESSOR_AUTHORITY",
+    "ROUTING_REGISTRATION_ALONE_DOES_NOT ESTABLISH_CONTROL_PLANE_TRANSFERABILITY"
+  ],
+  "requiredInstructions": [
+    "AGENTS.md",
+    "AI_ENTRYPOINT.json"
+  ],
+  "registries": [
+    ".github/ai-router/router.v1.json",
+    ".github/ai-router/shared-procedures.v1.json",
+    ".github/ai-router/execution-backends.v1.json"
+  ],
+  "procedures": {
+    "operationAdmission": "CANONICAL_REPOSITORY_OPERATION_INTAKE_REQUIRED_BEFORE_MUTATION",
+    "routerCommand": "node tools/repository-ai-entry-router.mjs --path <PATH> --task <TASK> [--mutation-intent] --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/control-plane-transferability-router-receipt.json",
+    "implementationOrder": [
+      "CANONICAL_INTAKE_ADMITTED_AND_LOCKED",
+      "REPOSITORY_AI_ROUTER_PASS",
+      "IMMUTABLE_HISTORICAL_SOURCE_IDENTITY_BINDING",
+      "HISTORICAL_STUDY_ADMISSION_INVENTORY",
+      "SEALED_HISTORICAL_OUTCOME_BOUNDARY",
+      "BOUNDED_TRANSLATION_ADAPTERS",
+      "SEPARATELY_ADMITTED_HETEROGENEOUS_TRANSFER_EXECUTIONS",
+      "INDEPENDENT_POST_EXECUTION_COMPARISON",
+      "TRANSFERABILITY_EVIDENCE_SYNTHESIS",
+      "DRAFT_PR_REVIEW"
+    ]
+  },
+  "localExecution": {
+    "allowed": true,
+    "requirements": [
+      "FULL_REPOSITORY_CHECKOUT",
+      "EXACT_SUBJECT_HEAD",
+      "COMMAND_EMITTED_ADMISSION_RECEIPT",
+      "ROUTER_RECEIPT_FOR_EVERY_AFFECTED_PATH"
+    ]
+  },
+  "githubActionsExecution": {
+    "routerValidationWorkflow": ".github/workflows/repository-ai-entry-router-validation.yml",
+    "boundedExactHeadCarrier": ".github/workflows/bounded-exact-head-execution-carrier-v1.yml"
+  },
+  "stoppingRules": [
+    "STOP_IF_CANONICAL_INTAKE_IS_NOT_ADMITTED_AND_LOCKED",
+    "STOP_IF_ROUTER_DISPOSITION_IS_BLOCK_OR_STOP",
+    "STOP_IF_HISTORICAL_SOURCE_IDENTITY_IS_UNRESOLVED_OR_NONIMMUTABLE",
+    "STOP_IF_HISTORICAL_OUTCOME_IS_EXPOSED_TO_EXECUTION_INPUT",
+    "STOP_IF_STUDY_EXECUTION_OR_SCIENTIFIC_CLAIM_AUTHORITY_IS_INFERRED_FROM_ROUTING_REGISTRATION",
+    "STOP_IF_PRIVATE_CUSTODY_IS_TREATED_AS_COMMISSIONED_SUCCESSOR_AUTHORITY",
+    "STOP_IF_MERGE_DEPLOYMENT_OR_PRODUCTION_AUTHORITY_IS_ASSUMED"
+  ]
+}

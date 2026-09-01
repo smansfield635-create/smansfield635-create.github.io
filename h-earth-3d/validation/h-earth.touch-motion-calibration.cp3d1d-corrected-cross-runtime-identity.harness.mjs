@@ -1,17 +1,16 @@
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { chromium } from 'playwright';
-import { getHEarthRun8ER2CanonicalLiveRenderPackage } from '../../showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js';
+import { getHEarthOW01CanonicalLiveRenderPackageOccurrence } from '../../showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js';
 
 const origin = process.env.CP3D_ORIGIN ?? 'http://127.0.0.1:4173';
 const evidenceDirectory = process.env.CP3D_EVIDENCE_DIR ?? 'h-earth-3d/validation/evidence/cp3d';
 const moduleUrl = `${origin}/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js`;
+const expectedOccurrenceId = 'H_EARTH_OW01_GRATITUDE_COASTAL_ENTRY_LIVE_RENDER_PACKAGE_OCCURRENCE_001';
 const bufferOrder = Object.freeze([
   'positions', 'normals', 'baseColorsLinear', 'materialParameters',
   'materialModelCodes', 'surfaceClassCodes', 'primitiveIndices', 'roleCodes', 'indices'
 ]);
-
-const textEncoder = new TextEncoder();
 
 function encodeNumbers(values) {
   const bytes = new Uint8Array(values.length * 8 + 1);
@@ -27,18 +26,19 @@ async function sha256(bytes) {
 }
 
 async function snapshot(packageRecord, runtime) {
+  assert.equal(packageRecord?.eligible, true, `CP3D1D_${runtime}_OW01_PACKAGE_NOT_ELIGIBLE:${packageRecord?.issues?.join(',') ?? 'UNKNOWN'}`);
+  assert.equal(packageRecord?.packageOccurrenceId, expectedOccurrenceId, `CP3D1D_${runtime}_OW01_OCCURRENCE_MISMATCH`);
+  assert.ok(packageRecord?.buffers && Object.isFrozen(packageRecord.buffers), `CP3D1D_${runtime}_BUFFERS_UNAVAILABLE`);
   const bufferRecords = [];
   for (const kind of bufferOrder) {
     const values = packageRecord.buffers[kind];
-    bufferRecords.push({
-      kind,
-      length: values.length,
-      sha256: await sha256(encodeNumbers(values))
-    });
+    assert.ok(Array.isArray(values) && Object.isFrozen(values), `CP3D1D_${runtime}_${kind}_BUFFER_INVALID`);
+    bufferRecords.push({ kind, length: values.length, sha256: await sha256(encodeNumbers(values)) });
   }
   return {
     runtime,
     eligible: packageRecord.eligible,
+    packageOccurrenceId: packageRecord.packageOccurrenceId,
     packageIdentity: packageRecord.packageIdentity,
     contentDigest: packageRecord.contentDigest,
     primitiveIds: [...packageRecord.primitiveIds],
@@ -64,12 +64,14 @@ const browser = await chromium.launch({
 });
 
 try {
-  const nodeSnapshot = await snapshot(getHEarthRun8ER2CanonicalLiveRenderPackage(), 'NODE');
+  const nodeSnapshot = await snapshot(getHEarthOW01CanonicalLiveRenderPackageOccurrence(), 'NODE');
   const page = await browser.newPage();
   await page.goto(origin, { waitUntil: 'domcontentloaded', timeout: 60_000 });
-  const browserSnapshot = await page.evaluate(async ({ url }) => {
+  const browserSnapshot = await page.evaluate(async ({ url, expectedOccurrenceId }) => {
     const module = await import(`${url}?runtime=BROWSER&stamp=${Date.now()}`);
-    const packageRecord = module.getHEarthRun8ER2CanonicalLiveRenderPackage();
+    const packageRecord = module.getHEarthOW01CanonicalLiveRenderPackageOccurrence();
+    if (packageRecord?.eligible !== true) throw new Error(`CP3D1D_BROWSER_OW01_PACKAGE_NOT_ELIGIBLE:${packageRecord?.issues?.join(',') ?? 'UNKNOWN'}`);
+    if (packageRecord?.packageOccurrenceId !== expectedOccurrenceId) throw new Error('CP3D1D_BROWSER_OW01_OCCURRENCE_MISMATCH');
     const order = [
       'positions', 'normals', 'baseColorsLinear', 'materialParameters',
       'materialModelCodes', 'surfaceClassCodes', 'primitiveIndices', 'roleCodes', 'indices'
@@ -94,6 +96,7 @@ try {
     return {
       runtime: 'BROWSER',
       eligible: packageRecord.eligible,
+      packageOccurrenceId: packageRecord.packageOccurrenceId,
       packageIdentity: packageRecord.packageIdentity,
       contentDigest: packageRecord.contentDigest,
       primitiveIds: [...packageRecord.primitiveIds],
@@ -110,45 +113,38 @@ try {
       numericCanonicalizationLaw: packageRecord.sourceAuthorities.numericCanonicalizationLaw,
       canonicalizedFloatBuffers: [...packageRecord.sourceAuthorities.canonicalizedFloatBuffers]
     };
-  }, { url: moduleUrl });
+  }, { url: moduleUrl, expectedOccurrenceId });
 
   const comparableNode = { ...nodeSnapshot, runtime: undefined };
   const comparableBrowser = { ...browserSnapshot, runtime: undefined };
   const completeEquality = JSON.stringify(comparableNode) === JSON.stringify(comparableBrowser);
-  const positionsEqual = nodeSnapshot.bufferRecords[0].sha256 === browserSnapshot.bufferRecords[0].sha256;
-  const normalsEqual = nodeSnapshot.bufferRecords[1].sha256 === browserSnapshot.bufferRecords[1].sha256;
   const allNumericBuffersEqual = JSON.stringify(nodeSnapshot.bufferRecords) === JSON.stringify(browserSnapshot.bufferRecords);
-  const packageIdentityEqual = nodeSnapshot.packageIdentity === browserSnapshot.packageIdentity;
-  const contentDigestEqual = nodeSnapshot.contentDigest === browserSnapshot.contentDigest;
-
   const receipt = Object.freeze({
-    receiptType: 'H_EARTH_TOUCH_MOTION_CP3D1D_SHARED_PACKAGE_BOUNDARY_EQUALITY_v1',
-    checkpoint: 'CP3D_1D_D_SHARED_IDENTITY_BEARING_PACKAGE_BOUNDARY',
+    receiptType: 'H_EARTH_TOUCH_MOTION_CP3D1D_GEN329_OW01_SHARED_PACKAGE_BOUNDARY_EQUALITY_v2',
+    checkpoint: 'CP3D_1D_D_GEN329_OW01_SHARED_IDENTITY_BEARING_PACKAGE_BOUNDARY',
     eligible: completeEquality,
-    status: completeEquality ? 'SHARED_PACKAGE_BOUNDARY_EQUALITY_PASS' : 'SHARED_PACKAGE_BOUNDARY_EQUALITY_FAIL',
+    status: completeEquality ? 'GEN329_OW01_SHARED_PACKAGE_BOUNDARY_EQUALITY_PASS' : 'GEN329_OW01_SHARED_PACKAGE_BOUNDARY_EQUALITY_FAIL',
+    packageOccurrenceId: nodeSnapshot.packageOccurrenceId,
     nodePackageIdentity: nodeSnapshot.packageIdentity,
     browserPackageIdentity: browserSnapshot.packageIdentity,
-    positionsEqual,
-    normalsEqual,
     allNumericBuffersEqual,
-    contentDigestEqual,
-    packageIdentityEqual,
+    contentDigestEqual: nodeSnapshot.contentDigest === browserSnapshot.contentDigest,
+    packageIdentityEqual: nodeSnapshot.packageIdentity === browserSnapshot.packageIdentity,
     fullDeterminismReceiptEqual: completeEquality,
     nodeBufferRecords: nodeSnapshot.bufferRecords,
     browserBufferRecords: browserSnapshot.bufferRecords,
     numericIdentityBoundary: nodeSnapshot.numericIdentityBoundary,
-    rendererExpectationUpdated: false,
-    rendererGuardExecuted: false,
+    historicalR2CheckpointRewritten: false,
+    gen329ProductMutation: false,
     mergeAuthorized: false,
     cp4Authorized: false
   });
 
-  await writeFile(`${evidenceDirectory}/cp3d1d-shared-package-boundary-node.receipt.json`, `${JSON.stringify(nodeSnapshot, null, 2)}\n`);
-  await writeFile(`${evidenceDirectory}/cp3d1d-shared-package-boundary-browser.receipt.json`, `${JSON.stringify(browserSnapshot, null, 2)}\n`);
-  await writeFile(`${evidenceDirectory}/cp3d1d-shared-package-boundary-equality.receipt.json`, `${JSON.stringify(receipt, null, 2)}\n`);
+  await writeFile(`${evidenceDirectory}/cp3d1d-gen329-ow01-package-node.receipt.json`, `${JSON.stringify(nodeSnapshot, null, 2)}\n`);
+  await writeFile(`${evidenceDirectory}/cp3d1d-gen329-ow01-package-browser.receipt.json`, `${JSON.stringify(browserSnapshot, null, 2)}\n`);
+  await writeFile(`${evidenceDirectory}/cp3d1d-gen329-ow01-package-equality.receipt.json`, `${JSON.stringify(receipt, null, 2)}\n`);
   console.log(JSON.stringify(receipt, null, 2));
-
-  assert.equal(completeEquality, true, 'CP3D1D_SHARED_PACKAGE_BOUNDARY_EQUALITY_FAIL');
+  assert.equal(completeEquality, true, 'CP3D1D_GEN329_OW01_SHARED_PACKAGE_BOUNDARY_EQUALITY_FAIL');
 } finally {
   await browser.close();
 }

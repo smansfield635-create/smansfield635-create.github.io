@@ -59,13 +59,13 @@
       "id": "P5_EXPERIMENT_INTELLIGENCE",
       "time": [19, 24],
       "states": ["EXPERIMENT"],
-      "source": {"path": "evidence/agentic-frontier/index.html", "ref": "c2dbceb0267b124f5c34ac2fdf5245fc2015bca3", "provenance": "public Research Frontier evidence field"},
+      "source": {"path": "evidence/agentic-frontier/index.html", "blob": "06a82735deec6e577b71cf47b2d7246a9d853f0f", "commit": "c2dbceb0267b124f5c34ac2fdf5245fc2015bca3", "provenance": "public Research Frontier evidence field"},
       "acquisition": "SOURCE RECONSTRUCTION",
       "camera": "interface planes compress into an evidence stack",
       "compositeRule": "show intake, experiment and claim-ceiling structure without fabricating telemetry",
       "mobile": "evidence rows become single-column statements",
       "reducedMotion": "static evidence stack with controlled dissolve",
-      "acceptance": "EXPERIMENT state is explicit; no unsupported research claim is introduced"
+      "acceptance": "EXPERIMENT state is explicit; source blob is exact and no unsupported research claim is introduced"
     },
     {
       "id": "P6_ESTATE_REVEAL",

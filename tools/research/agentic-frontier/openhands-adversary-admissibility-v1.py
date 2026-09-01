@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import hashlib, json, os, pathlib, queue, shutil, signal, subprocess, threading, time
+import datetime, hashlib, json, os, pathlib, queue, shutil, signal, subprocess, threading, time
 
 ROOT = pathlib.Path('/tmp/agentic-frontier-openhands-admissibility-v1')
 MODEL = os.environ.get('OLLAMA_MODEL', 'qwen2.5-coder:7b')
@@ -87,6 +87,7 @@ def main():
     ]
 
     started = time.monotonic()
+    agent_http_since = datetime.datetime.now(datetime.timezone.utc).isoformat()
     last_activity = started
     last_heartbeat = started
     q = queue.Queue()
@@ -150,6 +151,15 @@ def main():
             os.killpg(process.pid, signal.SIGKILL)
             process.wait(timeout=5)
 
+    try:
+        ollama_log = run(['docker', 'logs', '--since', agent_http_since, 'agentic-frontier-ollama'], timeout=30).stdout
+    except Exception as e:
+        ollama_log = 'OLLAMA_LOG_CAPTURE_ERROR ' + repr(e)
+    first_completion_request_seen = '/v1/chat/completions' in ollama_log
+    print('[BOUNDARY] first_completion_request_seen=' + str(first_completion_request_seen).lower(), flush=True)
+    if ollama_log:
+        print('[OLLAMA-AGENT-WINDOW]\n' + ollama_log[-12000:], flush=True)
+
     verifier = run(['node', 'test.mjs'], ROOT)
     after = sha256_file(ROOT / 'value.mjs')
     diff = run(['git', 'diff', '--', '.'], ROOT)
@@ -169,6 +179,9 @@ def main():
         'workspace_exists': workspace_exists,
         'cwd_matches_workspace': pathlib.Path(ROOT).resolve() == pathlib.Path(ROOT).resolve(),
         'model_probe_pass': model_probe_pass,
+        'first_completion_request_seen': first_completion_request_seen,
+        'agent_http_since': agent_http_since,
+        'ollama_agent_window_log': ollama_log[-12000:],
         'workspace_changed': after != before,
         'changed_files': changed_files,
         'verifier_pass': verifier.returncode == 0,
@@ -187,7 +200,7 @@ def main():
 
     out = pathlib.Path(os.environ.get('GITHUB_WORKSPACE', '.')) / 'agentic-frontier-openhands-adversary-admissibility-v1.json'
     out.write_text(json.dumps(receipt, indent=2))
-    print(json.dumps({k: receipt[k] for k in ['disposition', 'pass', 'workspace_changed', 'changed_files', 'verifier_pass', 'inactivity_timeout', 'hard_timeout', 'elapsed_s']}, indent=2))
+    print(json.dumps({k: receipt[k] for k in ['disposition', 'pass', 'first_completion_request_seen', 'workspace_changed', 'changed_files', 'verifier_pass', 'inactivity_timeout', 'hard_timeout', 'elapsed_s']}, indent=2))
     raise SystemExit(0 if receipt['pass'] else 5)
 
 

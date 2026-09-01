@@ -75,7 +75,12 @@ const VS=`#version 300 es\nprecision highp float;layout(location=0) in vec3 aPos
 function makeProgram(vs,fs){const compile=(type,src)=>{const sh=gl.createShader(type);gl.shaderSource(sh,src);gl.compileShader(sh);if(!gl.getShaderParameter(sh,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(sh));return sh};const p=gl.createProgram();gl.attachShader(p,compile(gl.VERTEX_SHADER,vs));gl.attachShader(p,compile(gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(p));return p;}
 const program=makeProgram(VS,NIGHT_FRAGMENT_SHADER);
 const MOON_VS=`#version 300 es\nprecision highp float;uniform mat4 uVP;uniform vec3 uMoonPos;uniform float uSize;void main(){gl_Position=uVP*vec4(uMoonPos,1.0);gl_PointSize=uSize;}`;
-const MOON_FS=`#version 300 es\nprecision highp float;out vec4 outColor;void main(){vec2 p=gl_PointCoord*2.0-1.0;float r=dot(p,p);if(r>1.0)discard;float limb=smoothstep(1.0,.55,r);float crater=.035*sin(p.x*23.0)*sin(p.y*19.0);vec3 c=vec3(.88,.91,.96)*(0.78+0.22*limb+crater);outColor=vec4(c,1.0);}`;
+const MOON_FS=`#version 300 es
+precision highp float;
+out vec4 outColor;
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123);}
+float crater(vec2 p,vec2 c,float radius){float d=length(p-c)/radius;float bowl=1.0-smoothstep(.0,.82,d);float rim=smoothstep(.70,.86,d)*(1.0-smoothstep(.86,1.0,d));return -.12*bowl+.10*rim;}
+void main(){vec2 p=gl_PointCoord*2.0-1.0;float r2=dot(p,p);if(r2>1.0)discard;float z=sqrt(max(0.0,1.0-r2));vec3 n=normalize(vec3(p,z));vec3 lightDir=normalize(vec3(-.52,.38,.76));float diffuse=max(.0,dot(n,lightDir));float limb=pow(clamp(z,0.0,1.0),.42);float relief=0.0;relief+=crater(p,vec2(-.30,.18),.19);relief+=crater(p,vec2(.22,.28),.13);relief+=crater(p,vec2(.34,-.20),.10);relief+=crater(p,vec2(-.08,-.36),.08);relief+=crater(p,vec2(-.42,-.18),.06);float maria=0.0;maria-=.10*(1.0-smoothstep(.0,.32,length(p-vec2(-.15,.04))));maria-=.075*(1.0-smoothstep(.0,.24,length(p-vec2(.20,.12))));maria-=.055*(1.0-smoothstep(.0,.19,length(p-vec2(.05,-.26))));float grain=(hash(floor((p+1.0)*34.0))-.5)*.028;float luminance=.30+.62*diffuse;luminance*=.72+.28*limb;luminance+=relief+maria+grain;vec3 base=vec3(.79,.81,.84);vec3 cool=vec3(.90,.93,.98);vec3 c=mix(base,cool,clamp(diffuse*.62+.18,0.0,1.0))*clamp(luminance,.12,1.0);float edge=1.0-smoothstep(.94,1.0,sqrt(r2));outColor=vec4(c,edge);}`;
 const moonProgram=makeProgram(MOON_VS,MOON_FS);
 const moonVAO=gl.createVertexArray();
 const SKY_VS=`#version 300 es

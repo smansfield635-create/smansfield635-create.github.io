@@ -1,14 +1,22 @@
-name: Characters Gratitude Coast Night World-State Proof
+name: Characters Task 19 Cardinal Scene Proof
 
 on:
   pull_request:
     paths:
-      - 'characters/app.mjs'
-      - 'characters/index.html'
-      - 'characters/narrative-world-state.mjs'
-      - 'characters/night-renderer.mjs'
-      - 'characters/CHARACTERS_NARRATIVE_WORLD_CONSEQUENCE_BASELINE.md'
       - '.github/workflows/characters-night-world-state-proof.yml'
+      - 'characters/app.mjs'
+      - 'characters/cardinal-scene-geometry.mjs'
+      - 'characters/cardinal-scene-state.mjs'
+      - 'characters/cardinal-scenes.css'
+      - 'characters/cardinal-scenes.data.mjs'
+      - 'characters/cinematic-intro.mjs'
+      - 'characters/coast-map.mjs'
+      - 'characters/gratitude-geography.adapter.mjs'
+      - 'characters/index.html'
+      - 'characters/knowledge-card.mjs'
+      - 'characters/narrative-world-state.mjs'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/task19-cardinal-scene-construction-contract.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-task19-cardinal-scenes.v1.mjs'
   workflow_dispatch:
 
 permissions: { contents: read }
@@ -21,95 +29,166 @@ jobs:
         with:
           ref: '${{ github.event.pull_request.head.sha || github.sha }}'
           fetch-depth: 1
-      - name: Syntax and browser substrate
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/workflows/characters-night-world-state-proof.yml
+            /characters/
+            /control-plane/whole-estate/characters-reconstruction-v1/task19-cardinal-scene-construction-contract.v1.json
+            /control-plane/whole-estate/characters-reconstruction-v1/verify-task19-cardinal-scenes.v1.mjs
+            /elara/index.html
+            /products/auren/index.html
+            /showroom/globe/hearth/jeeves/index.html
+            /h-earth-3d/cells/
+            /h-earth-3d/control-plane/run-8/
+            /h-earth-3d/h-earth.matrix.js
+            /h-earth-3d/integration/
+            /h-earth-3d/objects/
+            /h-earth-3d/terrain/
+            /h-earth-3d/zones/
+            /showroom/globe/h-earth/render/
+      - name: Syntax, executable contracts, and browser substrate
+        env:
+          CANDIDATE_SHA: '${{ github.event.pull_request.head.sha || github.sha }}'
         run: |
-          node --check characters/app.mjs
-          node --check characters/narrative-world-state.mjs
-          node --check characters/night-renderer.mjs
-          npm init -y >/dev/null 2>&1
-          npm install playwright@1.55.0 >/dev/null 2>&1
-          npx playwright install --with-deps chromium >/dev/null
-      - run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/characters-night-http.log 2>&1 &
-      - name: Prove full eleven-node night world-state successor
+          for file in characters/*.mjs control-plane/whole-estate/characters-reconstruction-v1/verify-task19-cardinal-scenes.v1.mjs
+          do
+            node --check "$file"
+          done
+          node control-plane/whole-estate/characters-reconstruction-v1/verify-task19-cardinal-scenes.v1.mjs \
+            --base 9cf64161dfc647021ff3f3871d6655ac5400ae12 \
+            --candidate "$CANDIDATE_SHA"
+          npm install --prefix "$RUNNER_TEMP/task19-browser" playwright@1.55.0 >/dev/null 2>&1
+          "$RUNNER_TEMP/task19-browser/node_modules/.bin/playwright" install --with-deps chromium >/dev/null
+      - run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/characters-task19-http.log 2>&1 &
+      - name: Prove cardinal scenes and verified destinations
         run: |
-          mkdir -p .qualification/characters-night-world-state
+          mkdir -p .qualification/characters-task19-cardinal-scenes
           node <<'NODE'
-          const {chromium}=require('playwright');
-          const fs=require('fs');
-          const NODES=[
-            ['crossing','.crossing-scar'],['dextrion','.earth-transmission'],['alaric','.watchfire-overlook'],['tarian','.waterline-station'],['manor','.manor-mass'],['elara','.signal-lantern'],['soren','.restoration-boundary'],['auren','.shelter-path'],['jeeves','.threshold-light'],['clock','.clock-anomaly'],['remote','.distant-settlement']
+          const path = require('path');
+          const fs = require('fs');
+          const { chromium } = require(path.join(process.env.RUNNER_TEMP, 'task19-browser/node_modules/playwright'));
+          const ROOT = 'http://127.0.0.1:4173/characters/';
+          const DESTINATIONS = [
+            { name: 'Jeeves', href: '/showroom/globe/hearth/jeeves/' },
+            { name: 'Elara', href: '/elara/' },
+            { name: 'Auren', href: '/products/auren/' }
           ];
-          (async()=>{
-            const browser=await chromium.launch({headless:true});
-            const context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce',deviceScaleFactor:1});
-            const page=await context.newPage();
-            const errors=[];
-            page.on('pageerror',e=>errors.push(String(e)));
-            page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
-            await page.goto('http://127.0.0.1:4173/characters/',{waitUntil:'networkidle'});
-            await page.waitForSelector('.signal[data-id="crossing"]:not([hidden])',{timeout:15000});
-            await page.waitForTimeout(250);
-            await page.screenshot({path:'.qualification/characters-night-world-state/01-orbit-night.png',fullPage:true});
-            const initial=await page.evaluate(()=>({
-              manorUnseen:document.querySelector('.signal[data-id="manor"]')?.classList.contains('unseen'),
-              aurenUnseen:document.querySelector('.signal[data-id="auren"]')?.classList.contains('unseen'),
-              jeevesUnseen:document.querySelector('.signal[data-id="jeeves"]')?.classList.contains('unseen'),
-              crossingShape:getComputedStyle(document.querySelector('.signal[data-id="crossing"]'),'::before').clipPath,
-              clear:[...document.querySelector('#scene').getContext('webgl2').getParameter(WebGL2RenderingContext.COLOR_CLEAR_VALUE)]
-            }));
-            if(!initial.manorUnseen||!initial.aurenUnseen||!initial.jeevesUnseen)throw Error('initial revelation boundary invalid '+JSON.stringify(initial));
-            if(!initial.crossingShape||initial.crossingShape==='none')throw Error('discovery star geometry absent');
 
-            async function witness(id,expression,shot=null){
-              await page.evaluate(id=>document.querySelector(`.signal[data-id="${id}"]`)?.click(),id);
-              await page.waitForSelector(`${expression}.show`,{timeout:4000});
-              await page.waitForSelector('#inspect.show',{timeout:4000});
-              if(await page.locator('#story').evaluate(el=>el.classList.contains('show')))throw Error(`${id}: story opened before inspect`);
-              if(!(await page.locator('.world').evaluate(el=>el.classList.contains('intimate'))))throw Error(`${id}: intimate presentation state absent`);
-              if(shot){await page.waitForTimeout(150);await page.screenshot({path:`.qualification/characters-night-world-state/${shot}`,fullPage:true});}
-              await page.locator('#inspect').click();
-              await page.waitForFunction(()=>document.querySelector('#story')?.classList.contains('show'),null,{timeout:2000});
-              const storyTitle=await page.locator('#story-title').textContent();
-              if(!storyTitle?.trim())throw Error(`${id}: story title missing`);
-              const signalState=await page.locator(`.signal[data-id="${id}"]`).getAttribute('class');
-              if(!signalState.includes('active'))throw Error(`${id}: active signal state missing`);
-              await page.locator('#return').click();
-              await page.waitForFunction(()=>!document.querySelector('.world')?.classList.contains('intimate'),null,{timeout:3000});
-              return {id,storyTitle,expression};
+          async function enterBySkipping(page) {
+            await page.goto(ROOT, { waitUntil: 'load' });
+            await page.locator('#intro-skip').click();
+            await page.waitForFunction(() => document.querySelector('#intro-layer')?.hidden === true);
+            return page.evaluate(() => ({
+              status: document.querySelector('#world-status')?.textContent,
+              signalCount: document.querySelectorAll('.world-signal').length,
+              mapToggleVisible: !document.querySelector('#map-toggle')?.hidden
+            }));
+          }
+
+          async function enterByCompletion(page) {
+            await page.goto(ROOT, { waitUntil: 'load' });
+            for (let step = 0; step < 6; step += 1) await page.locator('#intro-continue').click();
+            await page.waitForFunction(() => document.querySelector('#intro-layer')?.hidden === true);
+            return page.evaluate(() => ({
+              status: document.querySelector('#world-status')?.textContent,
+              signalCount: document.querySelectorAll('.world-signal').length,
+              mapToggleVisible: !document.querySelector('#map-toggle')?.hidden
+            }));
+          }
+
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce' });
+            const page = await context.newPage();
+            const errors = [];
+            page.on('pageerror', error => errors.push(String(error)));
+            page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
+
+            await page.goto(ROOT, { waitUntil: 'load' });
+            await page.locator('#intro-layer').screenshot({ path: '.qualification/characters-task19-cardinal-scenes/01-cinematic-intro.png' });
+            const skippedState = await enterBySkipping(page);
+            const completedPage = await context.newPage();
+            const completedState = await enterByCompletion(completedPage);
+            if (JSON.stringify(skippedState) !== JSON.stringify(completedState)) {
+              throw new Error(`intro paths diverged: ${JSON.stringify({ skippedState, completedState })}`);
+            }
+            await completedPage.close();
+
+            await page.locator('#map-toggle').click();
+            await page.locator('#coast-map.is-open').waitFor();
+            const markers = page.locator('#map-markers .map-marker:not(.map-marker--context)');
+            if (await markers.count() !== 4) throw new Error('expected four cardinal map destinations');
+            await page.locator('#coast-map').screenshot({ path: '.qualification/characters-task19-cardinal-scenes/02-gratitude-coast-map.png' });
+            await markers.first().click();
+            await page.locator('#arrival-panel:not([hidden])').waitFor();
+            await page.locator('#begin-inspection').click();
+            const discoveries = page.locator('#discovery-list .discovery-button');
+            if (await discoveries.count() !== 5) throw new Error('Watchfire Overlook should expose five discoveries');
+            await discoveries.first().click();
+            await page.locator('#knowledge-layer.is-open').waitFor();
+
+            const routeLinks = page.locator('#card-footer a.card-footer-tab--cross-estate[href]:not([href="/"])');
+            if (await routeLinks.count() !== 3) throw new Error('expected exactly three verified character destinations');
+            for (const destination of DESTINATIONS) {
+              const link = page.locator(`#card-footer a[href="${destination.href}"]`);
+              if (await link.count() !== 1) throw new Error(`missing destination ${destination.name}`);
+              const label = (await link.textContent()) ?? '';
+              if (!label.includes(`Talk to ${destination.name}`) || !label.includes('Leaves this page') || !label.trim().startsWith('↗')) {
+                throw new Error(`destination lacks non-color route cues: ${destination.name}`);
+              }
             }
 
-            const results=[];
-            results.push(await witness('crossing','.crossing-scar','02-crossing-witness.png'));
-            await page.waitForFunction(()=>!document.querySelector('.signal[data-id="manor"]')?.classList.contains('unseen'),null,{timeout:3000});
-            const afterCrossing=await page.evaluate(()=>({manorUnseen:document.querySelector('.signal[data-id="manor"]').classList.contains('unseen'),constellationCount:document.querySelectorAll('.constellation-line').length}));
-            if(afterCrossing.manorUnseen||afterCrossing.constellationCount<1)throw Error('Crossing consequence failed '+JSON.stringify(afterCrossing));
+            const firstFace = await page.locator('#card-face-label').textContent();
+            await page.locator('#knowledge-card').click();
+            const secondFace = await page.locator('#card-face-label').textContent();
+            if (firstFace !== 'RECORD' || secondFace !== 'SIGNIFICANCE') throw new Error('knowledge-card click equivalence failed');
+            await page.locator('#knowledge-card').press('Enter');
+            if (await page.locator('#card-face-label').textContent() !== 'RECORD') throw new Error('knowledge-card keyboard equivalence failed');
+            await page.locator('#knowledge-layer').screenshot({ path: '.qualification/characters-task19-cardinal-scenes/03-knowledge-card-destinations.png' });
 
-            for(const [id,expression] of NODES.slice(1,4))results.push(await witness(id,expression));
-            results.push(await witness('manor','.manor-mass','03-manor-witness.png'));
-            await page.waitForFunction(()=>!document.querySelector('.signal[data-id="auren"]')?.classList.contains('unseen')&&!document.querySelector('.signal[data-id="jeeves"]')?.classList.contains('unseen'),null,{timeout:3000});
-            const afterManor=await page.evaluate(()=>({aurenUnseen:document.querySelector('.signal[data-id="auren"]').classList.contains('unseen'),jeevesUnseen:document.querySelector('.signal[data-id="jeeves"]').classList.contains('unseen')}));
-            if(afterManor.aurenUnseen||afterManor.jeevesUnseen)throw Error('Manor consequence failed '+JSON.stringify(afterManor));
+            const desktopOverflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+            if (desktopOverflow > 1) throw new Error(`desktop horizontal overflow: ${desktopOverflow}px`);
+            const phone = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+            await enterBySkipping(phone);
+            const phoneOverflow = await phone.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+            if (phoneOverflow > 1) throw new Error(`phone horizontal overflow: ${phoneOverflow}px`);
+            await phone.screenshot({ path: '.qualification/characters-task19-cardinal-scenes/04-phone-coast.png', fullPage: true });
 
-            for(const [id,expression] of NODES.slice(5,9))results.push(await witness(id,expression));
-            results.push(await witness('clock','.clock-anomaly','04-clock-deep-night-witness.png'));
-            const afterClock=await page.evaluate(()=>({clear:[...document.querySelector('#scene').getContext('webgl2').getParameter(WebGL2RenderingContext.COLOR_CLEAR_VALUE)]}));
-            if(afterClock.clear[0]>=initial.clear[0]||afterClock.clear[2]>=initial.clear[2])throw Error('Clock global night phase did not deepen '+JSON.stringify({initial:initial.clear,after:afterClock.clear}));
-            results.push(await witness('remote','.distant-settlement'));
+            const staticContext = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 1200, height: 900 } });
+            const staticPage = await staticContext.newPage();
+            await staticPage.goto(ROOT, { waitUntil: 'load' });
+            const staticCounts = {
+              sites: await staticPage.locator('.static-equivalent .static-site').count(),
+              discoveries: await staticPage.locator('.static-equivalent .static-discovery').count()
+            };
+            if (staticCounts.sites !== 4 || staticCounts.discoveries !== 23) throw new Error(`static equivalent incomplete: ${JSON.stringify(staticCounts)}`);
+            if (errors.length) throw new Error(`runtime errors: ${JSON.stringify(errors)}`);
 
-            if(results.length!==11)throw Error(`expected 11 visited nodes, got ${results.length}`);
-            const visited=await page.evaluate(()=>[...document.querySelectorAll('.signal.visited,.signal.active')].map(n=>n.dataset.id));
-            for(const [id] of NODES)if(!visited.includes(id))throw Error(`visited state missing for ${id}`);
-            if(errors.length)throw Error('runtime errors '+JSON.stringify(errors));
-            const proof={result:'PASS',initial,afterCrossing,afterManor,afterClock,results,visited};
-            fs.writeFileSync('.qualification/characters-night-world-state/proof.json',JSON.stringify(proof,null,2));
-            console.log(JSON.stringify(proof,null,2));
+            const proof = {
+              result: 'PASS_TASK19_CARDINAL_SCENES_AND_THREE_VERIFIED_DESTINATIONS',
+              skippedState,
+              completedState,
+              mapDestinationCount: 4,
+              knowledgeCardDestinationCount: 3,
+              destinations: DESTINATIONS,
+              staticCounts,
+              desktopOverflow,
+              phoneOverflow,
+              reducedMotion: true,
+              runtimeErrors: errors
+            };
+            fs.writeFileSync('.qualification/characters-task19-cardinal-scenes/proof.json', JSON.stringify(proof, null, 2));
+            console.log(JSON.stringify(proof, null, 2));
+            await staticContext.close();
+            await context.close();
             await browser.close();
-          })().catch(e=>{console.error(e);process.exit(1)});
+          })().catch(error => { console.error(error); process.exit(1); });
           NODE
       - name: Upload visual proof
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: characters-night-world-state-${{ github.event.pull_request.head.sha || github.sha }}
-          path: .qualification/characters-night-world-state
+          name: characters-task19-cardinal-scenes-${{ github.event.pull_request.head.sha || github.sha }}
+          path: .qualification/characters-task19-cardinal-scenes
           if-no-files-found: error

@@ -15,7 +15,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: agent/characters-night-world-state-proof
-          fetch-depth: 0
+          fetch-depth: 2
+          sparse-checkout: |
+            characters
+          sparse-checkout-cone-mode: true
       - name: Adapt Laws lunar primitive into Characters moon
         env:
           OLD_B64: Y29uc3QgTU9PTl9GUz1gI3ZlcnNpb24gMzAwIGVzXG5wcmVjaXNpb24gaGlnaHAgZmxvYXQ7b3V0IHZlYzQgb3V0Q29sb3I7dm9pZCBtYWluKCl7dmVjMiBwPWdsX1BvaW50Q29vcmQqMi4wLTEuMDtmbG9hdCByPWRvdChwLHApO2lmKHI+MS4wKWRpc2NhcmQ7ZmxvYXQgbGltYj1zbW9vdGhzdGVwKDEuMCwuNTUscik7ZmxvYXQgY3JhdGVyPS4wMzUqc2luKHAueCoyMy4wKSpzaW4ocC55KjE5LjApO3ZlYzMgYz12ZWMzKC44OCwuOTEsLjk2KSooMC43OCswLjIyKmxpbWIrY3JhdGVyKTtvdXRDb2xvcj12ZWM0KGMsMS4wKTt9YDs=

@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "trophy-cursive-inlay-publish-20260901-0304",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 2570,
+  "requestBranch": "ai-dispatch-request-trophy-cursive-inlay-publish-0304",
+  "requestCommit": "1d769c1b57d359d697d515578add5a1fa1e579d8",
+  "currentMainSha": "941f55fe110fa11bf1a124afdea56dc7440c5a0a",
+  "bridgeRunId": "33464891548",
+  "error": "Input may not be user supplied: target_sha",
+  "failedAt": "2026-09-01T03:04:53.855Z"
+}

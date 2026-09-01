@@ -1,22 +1,20 @@
 name: Characters Adapt Laws Moon
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - '.github/workflows/characters-adapt-laws-moon.yml'
+  push:
+    branches:
+      - agent/characters-night-world-state-proof
 
 permissions:
   contents: write
 
 jobs:
   apply:
-    if: github.event.pull_request.head.ref == 'agent/characters-night-world-state-proof'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: agent/characters-night-world-state-proof
           fetch-depth: 0
       - name: Adapt Laws lunar primitive into Characters moon
         run: |
@@ -47,7 +45,5 @@ void main(){vec2 p=gl_PointCoord*2.0-1.0;float r2=dot(p,p);if(r2>1.0)discard;flo
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add characters/app.mjs
           git commit -m 'Characters: adapt Laws lunar primitive'
-          git pull --rebase origin "${{ github.event.pull_request.head.ref }}"
-          git push origin HEAD:"${{ github.event.pull_request.head.ref }}"
-
-# post-registration successor synchronize event
+          git pull --rebase origin agent/characters-night-world-state-proof
+          git push origin HEAD:agent/characters-night-world-state-proof

@@ -1,5 +1,5 @@
 /* /campaigns/index.tabs.js
-   DGB_COMMUNITY_CAMPAIGN_SHARED_TABS_v3
+   DGB_COMMUNITY_CAMPAIGN_SHARED_TABS_v4
    Routes the five core community/profile surfaces into the shared Frontier-style orbit model;
    preserves accessible tabs on the remaining campaign pages.
 */
@@ -20,11 +20,23 @@
     script.defer = true;
     script.dataset.communityOrbitController = "true";
     document.head.append(script);
+    if (page === "jen-leney") {
+      const constellationStyle = document.createElement("link");
+      constellationStyle.rel = "stylesheet";
+      constellationStyle.href = "/campaigns/jen.constellation.css";
+      constellationStyle.dataset.jenConstellationStyle = "true";
+      document.head.append(constellationStyle);
+      const constellationScript = document.createElement("script");
+      constellationScript.src = "/campaigns/jen.constellation.js";
+      constellationScript.defer = true;
+      constellationScript.dataset.jenConstellationController = "true";
+      document.head.append(constellationScript);
+    }
     document.documentElement.dataset.campaignTabsStatus = "orbit-routed";
     return;
   }
 
-  const CONTRACT = "DGB_COMMUNITY_CAMPAIGN_SHARED_TABS_v3";
+  const CONTRACT = "DGB_COMMUNITY_CAMPAIGN_SHARED_TABS_v4";
   const roots = [...document.querySelectorAll("[data-campaign-tabs]")];
   const observations = [];
   const activate = (root, tab, focus = false) => {

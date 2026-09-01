@@ -56,7 +56,7 @@ def main():
     run(['git', 'commit', '-qm', 'neutral admissibility fixture'], ROOT)
 
     workspace_exists = ROOT.exists()
-    cwd_matches_workspace = pathlib.Path.cwd().resolve() != ROOT.resolve()  # parent runner location is intentionally separate
+    cwd_matches_workspace = pathlib.Path.cwd().resolve() != ROOT.resolve()
     before = sha256_file(ROOT / 'value.mjs')
 
     version = run(['openhands', '--version'], timeout=30)
@@ -80,7 +80,10 @@ def main():
         'OPENHANDS_SUPPRESS_BANNER': '1',
         'PYTHONUNBUFFERED': '1',
     })
-    cmd = ['openhands', '--headless', '--json', '--always-approve', '--override-with-envs', '-t', TASK]
+    cmd = [
+        'openhands', '--headless', '--json', '--always-approve', '--override-with-envs',
+        '--llm-native-tool-calling', 'false', '-t', TASK,
+    ]
 
     started = time.monotonic()
     last_activity = started
@@ -156,6 +159,7 @@ def main():
         'schema': 'AGENTIC_FRONTIER_OPENHANDS_ADVERSARY_ADMISSIBILITY_v1',
         'model': MODEL,
         'ollama_url': OLLAMA,
+        'native_tool_calling': False,
         'openhands_version_output': version.stdout.strip(),
         'environment_sha256': environment_sha256,
         'environment_freeze': environment_text,

@@ -9,13 +9,34 @@ const EMPTY_DESTINATION=Object.freeze({
   sensoryState:'quiet'
 });
 
-const PROOF_RULES=Object.freeze({
+const DESTINATION_RULES=Object.freeze({
   crossing:Object.freeze({
     physicalExpression:'crossing-scar',
     arrivalExpression:'shore-memory',
     worldEffects:Object.freeze(['route-geometry-revealed']),
     reveals:Object.freeze(['manor']),
     sensoryState:'shoreline-tension'
+  }),
+  dextrion:Object.freeze({
+    physicalExpression:'earth-transmission',
+    arrivalExpression:'signal-lock',
+    worldEffects:Object.freeze(['earthward-beacon-stabilizes']),
+    reveals:Object.freeze(['manor']),
+    sensoryState:'distant-transmission'
+  }),
+  alaric:Object.freeze({
+    physicalExpression:'watchfire-overlook',
+    arrivalExpression:'warning-holds',
+    worldEffects:Object.freeze(['route-warning-legible']),
+    reveals:Object.freeze([]),
+    sensoryState:'high-wind-watch'
+  }),
+  tarian:Object.freeze({
+    physicalExpression:'waterline-station',
+    arrivalExpression:'shoreline-measure',
+    worldEffects:Object.freeze(['waterline-change-legible']),
+    reveals:Object.freeze(['manor']),
+    sensoryState:'water-pressure'
   }),
   manor:Object.freeze({
     physicalExpression:'manor-mass',
@@ -24,12 +45,47 @@ const PROOF_RULES=Object.freeze({
     reveals:Object.freeze(['auren','jeeves']),
     sensoryState:'window-glow'
   }),
+  elara:Object.freeze({
+    physicalExpression:'signal-lantern',
+    arrivalExpression:'possibility-visible',
+    worldEffects:Object.freeze(['future-signal-strengthens']),
+    reveals:Object.freeze([]),
+    sensoryState:'luminous-air'
+  }),
+  soren:Object.freeze({
+    physicalExpression:'restoration-boundary',
+    arrivalExpression:'damage-revealed',
+    worldEffects:Object.freeze(['restoration-boundary-legible']),
+    reveals:Object.freeze([]),
+    sensoryState:'ground-resonance'
+  }),
+  auren:Object.freeze({
+    physicalExpression:'shelter-path',
+    arrivalExpression:'protective-route',
+    worldEffects:Object.freeze(['manor-protection-route-visible']),
+    reveals:Object.freeze(['jeeves']),
+    sensoryState:'sheltered-wind'
+  }),
+  jeeves:Object.freeze({
+    physicalExpression:'threshold-light',
+    arrivalExpression:'threshold-opens',
+    worldEffects:Object.freeze(['manor-threshold-responsive']),
+    reveals:Object.freeze(['auren']),
+    sensoryState:'interior-hush'
+  }),
   clock:Object.freeze({
     physicalExpression:'temporal-anomaly',
     arrivalExpression:'phase-shift',
     worldEffects:Object.freeze(['night-phase-deepens']),
     reveals:Object.freeze([]),
     sensoryState:'temporal-pulse'
+  }),
+  remote:Object.freeze({
+    physicalExpression:'distant-settlement',
+    arrivalExpression:'lights-propagate',
+    worldEffects:Object.freeze(['distributed-lights-visible']),
+    reveals:Object.freeze(['manor']),
+    sensoryState:'far-field-hum'
   })
 });
 
@@ -57,13 +113,13 @@ export function deriveNarrativeWorldState(visitedInput,activeId=null){
   const revealed=new Set(BASE_AVAILABLE);
   for(const id of visited){
     revealed.add(id);
-    for(const target of PROOF_RULES[id]?.reveals||[])revealed.add(target);
+    for(const target of DESTINATION_RULES[id]?.reveals||[])revealed.add(target);
   }
 
   const destinations={};
   for(const id of DESTINATION_IDS){
     const seen=visited.has(id);
-    const rule=seen&&PROOF_RULES[id]?PROOF_RULES[id]:EMPTY_DESTINATION;
+    const rule=seen&&DESTINATION_RULES[id]?DESTINATION_RULES[id]:EMPTY_DESTINATION;
     let signalState='AVAILABLE';
     if(!revealed.has(id))signalState='UNSEEN';
     else if(id===activeId)signalState='ACTIVE';

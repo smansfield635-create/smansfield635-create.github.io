@@ -26,10 +26,10 @@
       "includes": [
         "getContext('webgl2'",
         "prefers-reduced-motion: reduce",
-        "Return to Orbit",
-        "Coast map",
-        "travelTo",
-        "returnOrbit"
+        "function travelTo(",
+        "function returnOrbit(",
+        "mapButton.addEventListener",
+        "requestAnimationFrame(render)"
       ],
       "excludes": []
     }

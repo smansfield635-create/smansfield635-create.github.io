@@ -236,7 +236,9 @@
       "projectId": "CHARACTERS",
       "status": "ACTIVE_REGISTERED_PROJECT",
       "ownedPathPrefixes": ["characters/", "control-plane/whole-estate/characters-reconstruction-v1/"],
-      "ownedExactPaths": [],
+      "ownedExactPaths": [
+        ".github/workflows/characters-night-world-state-proof.yml"
+      ],
       "entrypoint": ".github/ai-router/projects/characters/entrypoint.v1.json",
       "priority": 100
     }

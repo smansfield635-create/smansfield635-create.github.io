@@ -6,7 +6,9 @@
     "characters/",
     "control-plane/whole-estate/characters-reconstruction-v1/"
   ],
-  "ownedExactPaths": [],
+  "ownedExactPaths": [
+    ".github/workflows/characters-night-world-state-proof.yml"
+  ],
   "entrypoint": ".github/ai-router/projects/characters/entrypoint.v1.json",
   "authorityBoundary": [
     "ROUTING_DOES_NOT_CREATE_CHARACTER_CANON",

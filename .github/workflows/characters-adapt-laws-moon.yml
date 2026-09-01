@@ -1,0 +1,51 @@
+name: Characters Adapt Laws Moon
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/characters-adapt-laws-moon.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.event.pull_request.head.ref == 'agent/characters-night-world-state-proof'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+      - name: Adapt Laws lunar primitive into Characters moon
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('characters/app.mjs')
+          s=p.read_text()
+          old="""const MOON_FS=`#version 300 es\\nprecision highp float;out vec4 outColor;void main(){vec2 p=gl_PointCoord*2.0-1.0;float r=dot(p,p);if(r>1.0)discard;float limb=smoothstep(1.0,.55,r);float crater=.035*sin(p.x*23.0)*sin(p.y*19.0);vec3 c=vec3(.88,.91,.96)*(0.78+0.22*limb+crater);outColor=vec4(c,1.0);}`;"""
+          new="""const MOON_FS=`#version 300 es
+precision highp float;
+out vec4 outColor;
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123);}
+float crater(vec2 p,vec2 c,float radius){float d=length(p-c)/radius;float bowl=1.0-smoothstep(.0,.82,d);float rim=smoothstep(.70,.86,d)*(1.0-smoothstep(.86,1.0,d));return -.12*bowl+.10*rim;}
+void main(){vec2 p=gl_PointCoord*2.0-1.0;float r2=dot(p,p);if(r2>1.0)discard;float z=sqrt(max(0.0,1.0-r2));vec3 n=normalize(vec3(p,z));vec3 lightDir=normalize(vec3(-.52,.38,.76));float diffuse=max(.0,dot(n,lightDir));float limb=pow(clamp(z,0.0,1.0),.42);float relief=0.0;relief+=crater(p,vec2(-.30,.18),.19);relief+=crater(p,vec2(.22,.28),.13);relief+=crater(p,vec2(.34,-.20),.10);relief+=crater(p,vec2(-.08,-.36),.08);relief+=crater(p,vec2(-.42,-.18),.06);float maria=0.0;maria-=.10*(1.0-smoothstep(.0,.32,length(p-vec2(-.15,.04))));maria-=.075*(1.0-smoothstep(.0,.24,length(p-vec2(.20,.12))));maria-=.055*(1.0-smoothstep(.0,.19,length(p-vec2(.05,-.26))));float grain=(hash(floor((p+1.0)*34.0))-.5)*.028;float luminance=.30+.62*diffuse;luminance*=.72+.28*limb;luminance+=relief+maria+grain;vec3 base=vec3(.79,.81,.84);vec3 cool=vec3(.90,.93,.98);vec3 c=mix(base,cool,clamp(diffuse*.62+.18,0.0,1.0))*clamp(luminance,.12,1.0);float edge=1.0-smoothstep(.94,1.0,sqrt(r2));outColor=vec4(c,edge);}`;"""
+          if old not in s:
+              if 'float crater(vec2 p,vec2 c,float radius)' in s: raise SystemExit(0)
+              raise SystemExit('moon shader anchor missing')
+          p.write_text(s.replace(old,new,1))
+          PY
+          node --check characters/app.mjs
+          grep -q "float crater(vec2 p,vec2 c,float radius)" characters/app.mjs
+          grep -q "maria" characters/app.mjs
+          git diff --check
+      - name: Commit moon adaptation
+        run: |
+          if git diff --quiet; then exit 0; fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add characters/app.mjs
+          git commit -m 'Characters: adapt Laws lunar primitive'
+          git pull --rebase origin "${{ github.event.pull_request.head.ref }}"
+          git push origin HEAD:"${{ github.event.pull_request.head.ref }}"

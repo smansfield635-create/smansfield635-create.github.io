@@ -1,0 +1,50 @@
+name: Characters Propagate World Expressions
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/characters-propagate-world-expressions.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.event.pull_request.head.ref == 'agent/characters-night-world-state-proof'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+      - name: Apply bounded expression propagation
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('characters/app.mjs')
+          s=p.read_text()
+          css_anchor='.clock-anomaly::before{content:"";position:absolute;inset:8px;border-radius:50%;border:1px dashed rgba(240,231,205,.55);animation:clockPhase 8s linear infinite}\n'
+          css_add='''.earth-transmission{width:46px;height:46px;border:1px solid rgba(120,205,255,.5);border-radius:50%;box-shadow:0 0 18px rgba(120,205,255,.32)}\n.watchfire-overlook{width:16px;height:28px;background:linear-gradient(to top,rgba(255,145,72,.08),rgba(255,190,105,.9));clip-path:polygon(50% 0,90% 65%,65% 100%,35% 100%,10% 65%);filter:drop-shadow(0 0 10px rgba(255,155,76,.75))}\n.waterline-station{width:58px;height:20px;border-top:2px solid rgba(138,207,255,.7);border-bottom:1px solid rgba(138,207,255,.28);transform:translate(-50%,-45%) rotate(-4deg)}\n.signal-lantern{width:22px;height:38px;border:1px solid rgba(231,212,255,.7);border-radius:12px 12px 5px 5px;box-shadow:0 0 18px rgba(196,164,255,.5),inset 0 0 12px rgba(225,205,255,.35)}\n.restoration-boundary{width:68px;height:18px;border-top:2px solid rgba(128,222,190,.55);border-radius:50%;filter:drop-shadow(0 0 8px rgba(128,222,190,.38));transform:translate(-50%,-35%) rotate(8deg)}\n.shelter-path{width:66px;height:14px;border-top:2px dashed rgba(243,223,170,.62);transform:translate(-50%,-30%) rotate(-18deg);filter:drop-shadow(0 0 6px rgba(243,223,170,.35))}\n.threshold-light{width:34px;height:48px;border:2px solid rgba(255,221,159,.5);border-bottom:0;border-radius:17px 17px 0 0;box-shadow:inset 0 0 14px rgba(255,221,159,.35),0 0 14px rgba(255,221,159,.3)}\n.distant-settlement{width:72px;height:18px;background:radial-gradient(circle at 10% 70%,rgba(255,218,142,.9) 0 2px,transparent 3px),radial-gradient(circle at 35% 45%,rgba(255,218,142,.75) 0 2px,transparent 3px),radial-gradient(circle at 62% 62%,rgba(255,218,142,.8) 0 2px,transparent 3px),radial-gradient(circle at 88% 35%,rgba(255,218,142,.72) 0 2px,transparent 3px);filter:drop-shadow(0 0 7px rgba(255,218,142,.42))}\n'''
+          if css_add not in s:
+              if css_anchor not in s: raise SystemExit('CSS anchor missing')
+              s=s.replace(css_anchor,css_anchor+css_add,1)
+          old="for(const [id,className] of [['crossing','crossing-scar'],['manor','manor-mass'],['clock','clock-anomaly']])"
+          new="for(const [id,className] of [['crossing','crossing-scar'],['dextrion','earth-transmission'],['alaric','watchfire-overlook'],['tarian','waterline-station'],['manor','manor-mass'],['elara','signal-lantern'],['soren','restoration-boundary'],['auren','shelter-path'],['jeeves','threshold-light'],['clock','clock-anomaly'],['remote','distant-settlement']])"
+          if old in s: s=s.replace(old,new,1)
+          elif new not in s: raise SystemExit('proof-expression anchor missing')
+          p.write_text(s)
+          PY
+          node --check characters/app.mjs
+          grep -q "earth-transmission" characters/app.mjs
+          grep -q "distant-settlement" characters/app.mjs
+          git diff --check
+      - name: Commit propagation
+        run: |
+          if git diff --quiet; then exit 0; fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add characters/app.mjs
+          git commit -m 'Characters: propagate world expressions across all destinations'
+          git pull --rebase origin "${{ github.event.pull_request.head.ref }}"
+          git push origin HEAD:"${{ github.event.pull_request.head.ref }}"

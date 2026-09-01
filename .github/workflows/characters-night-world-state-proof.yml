@@ -31,17 +31,20 @@ jobs:
       - run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/characters-night-http.log 2>&1 &
       - name: Prove night runtime and three-node consequence chain
         run: |
+          mkdir -p .qualification/characters-night-world-state
           node <<'NODE'
           const {chromium}=require('playwright');
           (async()=>{
             const browser=await chromium.launch({headless:true});
-            const context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce'});
+            const context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce',deviceScaleFactor:1});
             const page=await context.newPage();
             const errors=[];
             page.on('pageerror',e=>errors.push(String(e)));
             page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
             await page.goto('http://127.0.0.1:4173/characters/',{waitUntil:'networkidle'});
             await page.waitForSelector('.signal[data-id="crossing"]:not([hidden])',{timeout:15000});
+            await page.waitForTimeout(250);
+            await page.screenshot({path:'.qualification/characters-night-world-state/01-orbit-night.png',fullPage:true});
 
             const initial=await page.evaluate(()=>({
               manorUnseen:document.querySelector('.signal[data-id="manor"]')?.classList.contains('unseen'),
@@ -56,6 +59,8 @@ jobs:
             await page.locator('.signal[data-id="crossing"]').click({force:true});
             await page.waitForSelector('.crossing-scar.show',{timeout:3000});
             await page.waitForFunction(()=>!document.querySelector('.signal[data-id="manor"]')?.classList.contains('unseen'),null,{timeout:3000});
+            await page.waitForTimeout(150);
+            await page.screenshot({path:'.qualification/characters-night-world-state/02-crossing.png',fullPage:true});
             const afterCrossing=await page.evaluate(()=>({
               manorUnseen:document.querySelector('.signal[data-id="manor"]').classList.contains('unseen'),
               manorAriaHidden:document.querySelector('.signal[data-id="manor"]').getAttribute('aria-hidden'),
@@ -67,6 +72,8 @@ jobs:
             await page.evaluate(()=>document.querySelector('.signal[data-id="manor"]')?.click());
             await page.waitForSelector('.manor-mass.show',{timeout:3000});
             await page.waitForFunction(()=>!document.querySelector('.signal[data-id="auren"]')?.classList.contains('unseen')&&!document.querySelector('.signal[data-id="jeeves"]')?.classList.contains('unseen'),null,{timeout:3000});
+            await page.waitForTimeout(150);
+            await page.screenshot({path:'.qualification/characters-night-world-state/03-manor.png',fullPage:true});
             const afterManor=await page.evaluate(()=>({
               aurenUnseen:document.querySelector('.signal[data-id="auren"]').classList.contains('unseen'),
               jeevesUnseen:document.querySelector('.signal[data-id="jeeves"]').classList.contains('unseen'),
@@ -76,7 +83,8 @@ jobs:
 
             await page.evaluate(()=>document.querySelector('.signal[data-id="clock"]')?.click());
             await page.waitForSelector('.clock-anomaly.show',{timeout:3000});
-            await page.waitForTimeout(100);
+            await page.waitForTimeout(150);
+            await page.screenshot({path:'.qualification/characters-night-world-state/04-clock-deep-night.png',fullPage:true});
             const afterClock=await page.evaluate(()=>({
               clear:[...document.querySelector('#scene').getContext('webgl2').getParameter(WebGL2RenderingContext.COLOR_CLEAR_VALUE)],
               story:document.querySelector('#story-title')?.textContent,
@@ -87,7 +95,15 @@ jobs:
             if(afterClock.clear[0]>=initial.clear[0]||afterClock.clear[2]>=initial.clear[2])throw Error('Clock global night phase did not deepen '+JSON.stringify({initial:initial.clear,after:afterClock.clear}));
             if(errors.length)throw Error('runtime errors '+JSON.stringify(errors));
 
+            require('fs').writeFileSync('.qualification/characters-night-world-state/proof.json',JSON.stringify({result:'PASS',initial,afterCrossing,afterManor,afterClock},null,2));
             console.log(JSON.stringify({result:'PASS',initial,afterCrossing,afterManor,afterClock},null,2));
             await browser.close();
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
+      - name: Upload visual proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: characters-night-world-state-${{ github.event.pull_request.head.sha || github.sha }}
+          path: .qualification/characters-night-world-state
+          if-no-files-found: error

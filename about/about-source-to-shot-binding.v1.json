@@ -1,0 +1,146 @@
+{
+  "schema": "ABOUT_SOURCE_TO_SHOT_BINDING_v1",
+  "status": "PLANNING_COMPLETE_CONSTRUCTION_ENTERED",
+  "governingHead": "c2dbceb0267b124f5c34ac2fdf5245fc2015bca3",
+  "targetRuntimeSeconds": 28,
+  "acceptableRuntimeEnvelopeSeconds": [24, 30],
+  "acquisitionModesAllowed": ["LIVE RUNTIME", "SOURCE RECONSTRUCTION", "EXISTING FOOTAGE", "COMPOSITE"],
+  "manualFootageRequired": false,
+  "passages": [
+    {
+      "id": "P1_ORIGIN",
+      "time": [0, 4],
+      "states": ["FILE"],
+      "source": {"path": "about/index.html", "commit": "c2dbceb0267b124f5c34ac2fdf5245fc2015bca3", "blob": "bc40caa8c6c2294926cf7ef71f9ad9efec2013e4", "provenance": "prior exact-head About baseline"},
+      "acquisition": "SOURCE RECONSTRUCTION",
+      "camera": "document plane awakens from darkness and resolves front-on",
+      "compositeRule": "repository-file typography and geometry only; no invented footage",
+      "mobile": "single centered file plane; full text remains legible",
+      "reducedMotion": "static file composition dissolves directly to P2",
+      "acceptance": "FILE identity readable and source blob recoverable"
+    },
+    {
+      "id": "P2_SPACE_WORLD",
+      "time": [4, 9],
+      "states": ["SPACE", "WORLD"],
+      "source": {"path": "products/index.html", "commit": "c2dbceb0267b124f5c34ac2fdf5245fc2015bca3", "blob": "76f506b3eb56c2210e8f403fd58e6f9d8439fe35", "provenance": "Products cosmos/world surface"},
+      "acquisition": "SOURCE RECONSTRUCTION",
+      "camera": "file plane expands into orbital depth and a centered world",
+      "compositeRule": "cosmos/orbit/world geometry derived from the live Products visual language",
+      "mobile": "world remains centered; orbit crops rather than shrinking below legibility",
+      "reducedMotion": "static world composition with controlled dissolve",
+      "acceptance": "SPACE and WORLD both legible as distinct historical states"
+    },
+    {
+      "id": "P3_MIRRORLAND_STORY",
+      "time": [9, 14],
+      "states": ["STORY"],
+      "source": {"path": "showroom/story/welcome/index.html", "commit": "c2dbceb0267b124f5c34ac2fdf5245fc2015bca3", "blob": "9a7b0ca1afb7ab5d1dde622418a56251f64ec9f4", "provenance": "canonical Welcome to Mirrorland route"},
+      "acquisition": "SOURCE RECONSTRUCTION",
+      "camera": "world aperture resolves into the Mirrorland threshold",
+      "compositeRule": "use canonical Welcome to Mirrorland identity without establishing a permanent site-wide entry signature",
+      "mobile": "threshold fills portrait frame without hiding the welcome title",
+      "reducedMotion": "static threshold and title dissolve",
+      "acceptance": "STORY is explicit and Mirrorland identity is source-recoverable"
+    },
+    {
+      "id": "P4_AGENCY_CINEMA",
+      "time": [14, 19],
+      "states": ["AGENCY", "CINEMA"],
+      "source": {"path": "showroom/index.html", "commit": "c2dbceb0267b124f5c34ac2fdf5245fc2015bca3", "blob": "6393e9882ad61331056afb51aad090a31f75ce3b", "provenance": "Showroom runtime/camera/route grammar"},
+      "acquisition": "COMPOSITE",
+      "camera": "threshold opens into layered interface planes with depth and choice",
+      "compositeRule": "camera, navigation and continuity become one visual sentence",
+      "mobile": "three cards stack in one readable column",
+      "reducedMotion": "static layered cards; no depth translation required",
+      "acceptance": "AGENCY and CINEMA each remain independently identifiable"
+    },
+    {
+      "id": "P5_EXPERIMENT_INTELLIGENCE",
+      "time": [19, 24],
+      "states": ["EXPERIMENT"],
+      "source": {"path": "evidence/agentic-frontier/index.html", "commit": "c2dbceb0267b124f5c34ac2fdf5245fc2015bca3", "blob": "06a82735deec6e577b71cf47b2d7246a9d853f0f", "provenance": "public Research Frontier evidence field"},
+      "acquisition": "SOURCE RECONSTRUCTION",
+      "camera": "interface planes compress into an evidence stack",
+      "compositeRule": "show intake, experiment and claim-ceiling structure without fabricating telemetry",
+      "mobile": "evidence rows become single-column statements",
+      "reducedMotion": "static evidence stack with controlled dissolve",
+      "acceptance": "EXPERIMENT state is explicit; source blob is exact and no unsupported research claim is introduced"
+    },
+    {
+      "id": "P6_ESTATE_REVEAL",
+      "time": [24, 28],
+      "states": ["LIVING NARRATIVE"],
+      "source": {"selector": "[data-estate-core]", "identity": "LIVE_ABOUT_ESTATE_SAME_DOM_OBJECTS", "provenance": "candidate About live runtime"},
+      "acquisition": "LIVE RUNTIME",
+      "camera": "evidence field resolves into the final estate composition",
+      "compositeRule": "the already-mounted estate DOM becomes visible and interactive; no replacement composition",
+      "mobile": "same estate DOM and controls; responsive composition only",
+      "reducedMotion": "film is bypassed and the identical estate DOM is the immediate stable state",
+      "acceptance": "final cinematic composition and first interactive About state are physically continuous"
+    }
+  ],
+  "historicalStates": [
+    {"id": "FILE", "passage": "P1_ORIGIN", "identityRecoverable": true},
+    {"id": "SPACE", "passage": "P2_SPACE_WORLD", "identityRecoverable": true},
+    {"id": "WORLD", "passage": "P2_SPACE_WORLD", "identityRecoverable": true},
+    {"id": "STORY", "passage": "P3_MIRRORLAND_STORY", "identityRecoverable": true},
+    {"id": "AGENCY", "passage": "P4_AGENCY_CINEMA", "identityRecoverable": true},
+    {"id": "CINEMA", "passage": "P4_AGENCY_CINEMA", "identityRecoverable": true},
+    {"id": "EXPERIMENT", "passage": "P5_EXPERIMENT_INTELLIGENCE", "identityRecoverable": true},
+    {"id": "LIVING NARRATIVE", "passage": "P6_ESTATE_REVEAL", "identityRecoverable": true}
+  ],
+  "contentRefinement": {
+    "operationId": "ABOUT_HUMAN_CHRONOLOGY_REFINEMENT_20260901_001",
+    "priorQualifiedCandidate": "5eca7b31eea44cf84601549d3311d33f33d2a6ba",
+    "cinematicContractChanged": false,
+    "temporalAnchorPrecision": "MONTH_YEAR",
+    "temporalAnchors": [
+      {"state": "FILE", "label": "FEB 2026", "basis": "about/index.html repository creation history"},
+      {"state": "SPACE", "label": "APR 2026", "basis": "About repository evolution history; phase-level anchor only"},
+      {"state": "WORLD", "label": "JUL 2026", "basis": "Products world/cosmos repository history"},
+      {"state": "STORY", "label": "JUL 2026", "basis": "Welcome to Mirrorland repository history"},
+      {"state": "AGENCY", "label": "JUL 2026", "basis": "Showroom interaction/runtime repository history"},
+      {"state": "CINEMA", "label": "JUL 2026", "basis": "Showroom camera/runtime repository history"},
+      {"state": "EXPERIMENT", "label": "AUG 2026", "basis": "Research Frontier repository history"},
+      {"state": "LIVING NARRATIVE", "label": "SEP 2026", "basis": "exact cinematic About candidate construction and qualification history"}
+    ],
+    "humanPurposeBoundary": {
+      "communityEffortExplicit": true,
+      "cognitiveDissonanceFraming": "human tension affecting self-understanding, relationships and coordination; not a diagnosis",
+      "coherenceToolsFraming": "exploratory aids for reflection; not diagnoses, truth machines or substitutes for human judgment",
+      "systemicOutcomeLanguage": "hope and direction for inquiry/practice; no proven causal efficacy claimed"
+    }
+  },
+  "transformations": [
+    {"from": "P1_ORIGIN", "to": "P2_SPACE_WORLD", "cause": "the document plane expands into spatial axes/orbit and resolves a world"},
+    {"from": "P2_SPACE_WORLD", "to": "P3_MIRRORLAND_STORY", "cause": "the world aperture becomes the Mirrorland threshold"},
+    {"from": "P3_MIRRORLAND_STORY", "to": "P4_AGENCY_CINEMA", "cause": "the threshold opens into navigable choices, camera and continuity"},
+    {"from": "P4_AGENCY_CINEMA", "to": "P5_EXPERIMENT_INTELLIGENCE", "cause": "interface planes compress into governed evidence objects"},
+    {"from": "P5_EXPERIMENT_INTELLIGENCE", "to": "P6_ESTATE_REVEAL", "cause": "evidence objects align with and reveal the already-mounted estate composition"}
+  ],
+  "handoff": {
+    "filmToInterfacePhysicalContinuity": true,
+    "persistentSelector": "[data-estate-core]",
+    "replacementFrameAllowed": false,
+    "duplicateEstateAllowed": false,
+    "secondCameraCompositionAllowed": false
+  },
+  "alternatePaths": {
+    "skipFilm": "bound to [data-skip-film] and Escape; settles through the same estate core",
+    "reducedMotion": "bound to prefers-reduced-motion: reduce; bypasses large motion and exposes the same stable estate core"
+  },
+  "closure": {
+    "passagesSourceBound": "6/6",
+    "historicalStatesRepresented": "8/8",
+    "identitiesRecoverable": "8/8",
+    "unboundHeroSources": 0,
+    "unknownAcquisitionPaths": 0,
+    "interPassageTransformationsCausallyBound": "5/5",
+    "filmToInterfaceHandoffPhysicallyContinuous": "1/1",
+    "skipPathBound": true,
+    "reducedMotionEditBound": true,
+    "planningStatus": "ABOUT_PLANNING_COMPLETE",
+    "nextBoundary": "ABOUT_CINEMATIC_CONSTRUCTION"
+  }
+}

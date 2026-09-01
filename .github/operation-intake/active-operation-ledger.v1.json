@@ -5841,6 +5841,45 @@
       "scopeHash": "dde866deb3700ab6b9d918ca488f97d44312979b3f4ee00c50c1356841393d02",
       "state": "ADMITTED_LOCKED"
     },
+    "dea3851038e935e7d866b6a6e628dac7109d699f04dd8c914dc7b1d9d5e343bd": {
+      "governingHead": "c2dbceb0267b124f5c34ac2fdf5245fc2015bca3",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "c2dbceb0267b124f5c34ac2fdf5245fc2015bca3",
+          "lockGeneration": 1907,
+          "lockScope": "STATE_BOUND_ADMISSIBILITY_KERNEL:AHBK_V1:SPECIFICATION_AND_NONEXPERIMENTAL_CONFORMANCE_SCAFFOLD:EXACT_7_PATH_SCOPE",
+          "operationId": "AHBK_NORMATIVE_SPECIFICATION_ADMISSION_AND_CONFORMANCE_SCAFFOLD_20260901_001",
+          "procedureLocatorDigest": "ea9268ad7f0cc42f7cde37d94beffa94554be30a1dc3bf13cdfcb09f33abef61",
+          "requestDigest": "d925df80a29950f1e4b0d750e99b4e8fe04c823579b87e66371e260595e210c5",
+          "scopeHash": "dea3851038e935e7d866b6a6e628dac7109d699f04dd8c914dc7b1d9d5e343bd"
+        },
+        "bindingDigest": "b913ba0c9f60f6921da67b30df8066235187ecb97842a7bef9c5b7a1a790f014",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "b2f605e387d48e7d4e3db753bccdd864ce033f10",
+          "observedLockRefHead": "7653041cd79df52ed40bd0c9657d4e4411394969"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "a83720843179c36707092acc24d204dff961bb0f2b5e95a591aaca1d4f19f1ae",
+          "commentId": 5497591930,
+          "issueNumber": 2587,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "lockGeneration": 1907,
+      "lockScope": "STATE_BOUND_ADMISSIBILITY_KERNEL:AHBK_V1:SPECIFICATION_AND_NONEXPERIMENTAL_CONFORMANCE_SCAFFOLD:EXACT_7_PATH_SCOPE",
+      "operationId": "AHBK_NORMATIVE_SPECIFICATION_ADMISSION_AND_CONFORMANCE_SCAFFOLD_20260901_001",
+      "procedureLocatorDigest": "ea9268ad7f0cc42f7cde37d94beffa94554be30a1dc3bf13cdfcb09f33abef61",
+      "released": false,
+      "requestDigest": "d925df80a29950f1e4b0d750e99b4e8fe04c823579b87e66371e260595e210c5",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "dea3851038e935e7d866b6a6e628dac7109d699f04dd8c914dc7b1d9d5e343bd",
+      "state": "ADMITTED_LOCKED"
+    },
     "deeb7089d9e25420cb38cf013c7bb9b1f3d546523c68d30d7fb0f505f299766a": {
       "governingHead": "f9e63ce0e08e1c3bbf69c1afcffe8de6aed41c13",
       "lockGeneration": 1651,
@@ -6754,7 +6793,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1906,
+  "lockGeneration": 1907,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

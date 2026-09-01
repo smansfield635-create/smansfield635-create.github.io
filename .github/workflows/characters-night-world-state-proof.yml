@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'characters/app.mjs'
+      - 'characters/index.html'
       - 'characters/narrative-world-state.mjs'
       - 'characters/night-renderer.mjs'
       - 'characters/CHARACTERS_NARRATIVE_WORLD_CONSEQUENCE_BASELINE.md'
@@ -29,7 +30,7 @@ jobs:
           npm install playwright@1.55.0 >/dev/null 2>&1
           npx playwright install --with-deps chromium >/dev/null
       - run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/characters-night-http.log 2>&1 &
-      - name: Prove night runtime and three-node consequence chain
+      - name: Prove night runtime, witness beat, and three-node consequence chain
         run: |
           mkdir -p .qualification/characters-night-world-state
           node <<'NODE'
@@ -45,7 +46,6 @@ jobs:
             await page.waitForSelector('.signal[data-id="crossing"]:not([hidden])',{timeout:15000});
             await page.waitForTimeout(250);
             await page.screenshot({path:'.qualification/characters-night-world-state/01-orbit-night.png',fullPage:true});
-
             const initial=await page.evaluate(()=>({
               manorUnseen:document.querySelector('.signal[data-id="manor"]')?.classList.contains('unseen'),
               aurenUnseen:document.querySelector('.signal[data-id="auren"]')?.classList.contains('unseen'),
@@ -56,11 +56,20 @@ jobs:
             if(!initial.manorUnseen||!initial.aurenUnseen||!initial.jeevesUnseen)throw Error('initial revelation boundary invalid '+JSON.stringify(initial));
             if(!initial.crossingShape||initial.crossingShape==='none')throw Error('discovery star geometry absent');
 
-            await page.locator('.signal[data-id="crossing"]').click({force:true});
-            await page.waitForSelector('.crossing-scar.show',{timeout:3000});
+            async function witness(id,expression,file,title){
+              await page.evaluate(id=>document.querySelector(`.signal[data-id="${id}"]`)?.click(),id);
+              await page.waitForSelector(`${expression}.show`,{timeout:3000});
+              await page.waitForSelector('#inspect.show',{timeout:3000});
+              if(await page.locator('#story').evaluate(el=>el.classList.contains('show')))throw Error(`${title}: story opened before inspect`);
+              if(!(await page.locator('.world').evaluate(el=>el.classList.contains('intimate'))))throw Error(`${title}: intimate presentation state absent`);
+              await page.waitForTimeout(180);
+              await page.screenshot({path:`.qualification/characters-night-world-state/${file}`,fullPage:true});
+              await page.locator('#inspect').click();
+              await page.waitForFunction(t=>document.querySelector('#story-title')?.textContent===t,title,{timeout:2000});
+            }
+
+            await witness('crossing','.crossing-scar','02-crossing-witness.png','The Crossing');
             await page.waitForFunction(()=>!document.querySelector('.signal[data-id="manor"]')?.classList.contains('unseen'),null,{timeout:3000});
-            await page.waitForTimeout(150);
-            await page.screenshot({path:'.qualification/characters-night-world-state/02-crossing.png',fullPage:true});
             const afterCrossing=await page.evaluate(()=>({
               manorUnseen:document.querySelector('.signal[data-id="manor"]').classList.contains('unseen'),
               manorAriaHidden:document.querySelector('.signal[data-id="manor"]').getAttribute('aria-hidden'),
@@ -69,11 +78,8 @@ jobs:
             }));
             if(afterCrossing.manorUnseen||afterCrossing.manorAriaHidden==='true'||afterCrossing.constellationCount<1||afterCrossing.story!=='The Crossing')throw Error('Crossing consequence failed '+JSON.stringify(afterCrossing));
 
-            await page.evaluate(()=>document.querySelector('.signal[data-id="manor"]')?.click());
-            await page.waitForSelector('.manor-mass.show',{timeout:3000});
+            await witness('manor','.manor-mass','03-manor-witness.png','Mirror Manor');
             await page.waitForFunction(()=>!document.querySelector('.signal[data-id="auren"]')?.classList.contains('unseen')&&!document.querySelector('.signal[data-id="jeeves"]')?.classList.contains('unseen'),null,{timeout:3000});
-            await page.waitForTimeout(150);
-            await page.screenshot({path:'.qualification/characters-night-world-state/03-manor.png',fullPage:true});
             const afterManor=await page.evaluate(()=>({
               aurenUnseen:document.querySelector('.signal[data-id="auren"]').classList.contains('unseen'),
               jeevesUnseen:document.querySelector('.signal[data-id="jeeves"]').classList.contains('unseen'),
@@ -81,10 +87,8 @@ jobs:
             }));
             if(afterManor.aurenUnseen||afterManor.jeevesUnseen||afterManor.story!=='Mirror Manor')throw Error('Manor consequence failed '+JSON.stringify(afterManor));
 
-            await page.evaluate(()=>document.querySelector('.signal[data-id="clock"]')?.click());
-            await page.waitForSelector('.clock-anomaly.show',{timeout:3000});
-            await page.waitForTimeout(150);
-            await page.screenshot({path:'.qualification/characters-night-world-state/04-clock-deep-night.png',fullPage:true});
+            await witness('clock','.clock-anomaly','04-clock-deep-night-witness.png','The Clock');
+            await page.waitForTimeout(100);
             const afterClock=await page.evaluate(()=>({
               clear:[...document.querySelector('#scene').getContext('webgl2').getParameter(WebGL2RenderingContext.COLOR_CLEAR_VALUE)],
               story:document.querySelector('#story-title')?.textContent,
@@ -94,7 +98,6 @@ jobs:
             if(afterClock.story!=='The Clock'||!afterClock.clockActive)throw Error('Clock discovery failed '+JSON.stringify(afterClock));
             if(afterClock.clear[0]>=initial.clear[0]||afterClock.clear[2]>=initial.clear[2])throw Error('Clock global night phase did not deepen '+JSON.stringify({initial:initial.clear,after:afterClock.clear}));
             if(errors.length)throw Error('runtime errors '+JSON.stringify(errors));
-
             require('fs').writeFileSync('.qualification/characters-night-world-state/proof.json',JSON.stringify({result:'PASS',initial,afterCrossing,afterManor,afterClock},null,2));
             console.log(JSON.stringify({result:'PASS',initial,afterCrossing,afterManor,afterClock},null,2));
             await browser.close();

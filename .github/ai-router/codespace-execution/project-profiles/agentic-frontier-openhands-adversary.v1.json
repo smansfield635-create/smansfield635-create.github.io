@@ -3,6 +3,7 @@
   "projectId": "AGENTIC_FRONTIER_OPENHANDS_ADVERSARY",
   "status": "ACTIVE_CONTRACT_CANDIDATE",
   "substrateId": "THREE_TIER_CODESPACE_EXECUTION_SUBSTRATE_v1",
+  "canonicalExecutionRequirementProfileId": "QUALIFICATION_AGENT_RUNTIME_V1",
   "operationClasses": [
     "NEUTRAL_ADVERSARY_ADMISSIBILITY",
     "STOCK_OPENHANDS_NATIVE_EXECUTION",
@@ -19,6 +20,7 @@
     "curl": true,
     "sha256sum": true,
     "docker": true,
+    "packageNetwork": true,
     "stockOpenHands": "1.14.0",
     "modelRuntime": "ollama/ollama:0.32.14",
     "model": "qwen2.5-coder:7b",

@@ -145,6 +145,11 @@ let pointerStart = null;
 let suppressCardClick = false;
 let cachedMapState = null;
 let cachedMapModel = null;
+let nightProgram;
+let siteProgram;
+let terrainMesh;
+let waterMesh;
+let renderedSites;
 
 knowledgeLayer.inert = true;
 mapPanel.inert = true;
@@ -331,12 +336,6 @@ function buildRenderedSite(siteId, lod) {
     };
   });
 }
-
-let nightProgram;
-let siteProgram;
-let terrainMesh;
-let waterMesh;
-let renderedSites;
 
 function initializeWorld() {
   const vertexShader = `#version 300 es

@@ -12,6 +12,10 @@
   const ORIENTATION_PHASES=Object.freeze({IDLE:"IDLE",PREVIEW:"PREVIEW",SETTLING:"SETTLING",COMMITTED:"COMMITTED",CANCELLED:"CANCELLED"});
   const STATES=Object.freeze({CLUSTER_OPEN:"CLUSTER_OPEN",PRODUCT_SELECTED:"PRODUCT_SELECTED",HELD:"HELD"});
   const Q_ID=Object.freeze([0,0,0,1]);
+  /* Canonical Products cluster orientation that settles slot 01 onto the exact
+     Products primary anchor [0,.70,.714]. Derived from the Products spherical
+     vector field; not a new geometry. */
+  const INITIAL_Q=Object.freeze([0.8402387803679974,0,0,0.5422165544924836]);
   const CLUSTER=Object.freeze({horizontalRadius:1.34,verticalRadius:1.12,depthRadius:1.06,primaryAnchor:Object.freeze([0,.70,.714]),latitudeAmplitude:.50,latitudeFrequency:1.67});
   const SETTLE_MS=360;
 
@@ -62,7 +66,7 @@
   shell.dataset.clusterPhase=ORIENTATION_PHASES.COMMITTED;
   shell.dataset.clusterGestureActive='false';
   shell.dataset.clusterRevision='0';
-  shell.dataset.clusterQuaternion='[0,0,0,1]';
+  shell.dataset.clusterQuaternion=JSON.stringify(INITIAL_Q);
   shell.dataset.productsSelectedId='';
   shell.dataset.productsSelectedRoute='';
   shell.dataset.productsPanelDescended='false';
@@ -192,10 +196,11 @@
     phase:ORIENTATION_PHASES.COMMITTED,
     gestureActive:false,
     revision:0,
-    orientation:{quaternion:Q_ID.slice(),primaryId:SOURCE_SLOT_IDS[0]},
-    committed:{quaternion:Q_ID.slice(),primaryId:SOURCE_SLOT_IDS[0]},
+    orientation:{quaternion:INITIAL_Q.slice(),primaryId:SOURCE_SLOT_IDS[0]},
+    committed:{quaternion:INITIAL_Q.slice(),primaryId:SOURCE_SLOT_IDS[0]},
     primary:SOURCE_SLOT_IDS[0],
     previewPrimary:SOURCE_SLOT_IDS[0],
+    pendingFlick:null,
     settlingTimer:0,
     centerOpen:false,
     reducedMotion:Boolean(globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches)
@@ -228,7 +233,8 @@
     shell.dataset.clusterRevision=String(state.revision);
     shell.dataset.clusterQuaternion=JSON.stringify(state.orientation.quaternion);
     shell.dataset.jenSourceAction=action;
-    const record=recordBySlot.get(state.phase===ORIENTATION_PHASES.PREVIEW?state.previewPrimary:state.primary)||records[0];
+    const transitional=state.phase===ORIENTATION_PHASES.PREVIEW||state.phase===ORIENTATION_PHASES.SETTLING;
+    const record=recordBySlot.get(transitional?state.previewPrimary:state.primary)||records[0];
     identity.querySelector('strong').textContent=record.label;
     identity.querySelector('span').textContent=record.summary;
     for(const button of semantic.querySelectorAll('[data-products-product]')){
@@ -245,8 +251,9 @@
       planetDonor:'/products/index.planet.js',
       cosmosDonor:'/products/index.cosmos.js',
       transitionDonors:Object.freeze(['/laws/index.interactions.js','/laws/index.controller.js','/assets/compass/compass.controller.js']),
-      state:state.current,phase:state.phase,primarySource:state.primary,revision:state.revision,
-      geometryInvented:false,cameraInvented:false,planetInvented:false
+      state:state.current,phase:state.phase,primarySource:state.primary,previewSource:state.previewPrimary,revision:state.revision,
+      geometryInvented:false,cameraInvented:false,planetInvented:false,
+      globeOwnsReturn:true,sourceStarsOwnDirectNavigation:true
     });
   }
 
@@ -264,6 +271,7 @@
 
   function commitAfterSettle(quaternion,primaryId,action){
     clearTimeout(state.settlingTimer);
+    state.pendingFlick=null;
     state.phase=ORIENTATION_PHASES.SETTLING;
     state.gestureActive=false;
     state.orientation={quaternion:qn(quaternion),primaryId};
@@ -292,6 +300,7 @@
     requestOrbitCancel:()=>true,
     beginClusterGesture(payload={}){
       clearTimeout(state.settlingTimer);
+      state.pendingFlick=null;
       state.phase=ORIENTATION_PHASES.PREVIEW;state.gestureActive=true;
       const q=qn(payload.quaternion||state.committed.quaternion);
       state.orientation={quaternion:q,primaryId:state.primary};state.previewPrimary=state.primary;syncDom('gesture-begin');return true;
@@ -308,11 +317,29 @@
       const p=SOURCE_SLOT_IDS.includes(payload.primaryProductId)?payload.primaryProductId:primaryFrom(q);
       return commitAfterSettle(q,p,'gesture');
     },
-    requestClusterCancel(){
-      clearTimeout(state.settlingTimer);state.phase=ORIENTATION_PHASES.CANCELLED;state.gestureActive=false;state.orientation={quaternion:state.committed.quaternion.slice(),primaryId:state.primary};state.previewPrimary=state.primary;syncDom('gesture-cancelled');
+    requestClusterCancel(reason=''){
+      clearTimeout(state.settlingTimer);
+      if(reason==='cluster-flick-return'){
+        state.pendingFlick={quaternion:state.orientation.quaternion.slice(),primaryId:state.previewPrimary};
+        state.gestureActive=false;
+        syncDom('flick-captured');
+        return true;
+      }
+      state.pendingFlick=null;
+      state.phase=ORIENTATION_PHASES.CANCELLED;state.gestureActive=false;state.orientation={quaternion:state.committed.quaternion.slice(),primaryId:state.primary};state.previewPrimary=state.primary;syncDom('gesture-cancelled');
       requestAnimationFrame(()=>{state.phase=ORIENTATION_PHASES.COMMITTED;syncDom('gesture-restored');});return true;
     },
-    requestReturnToConstellation:()=>false,
+    requestReturnToConstellation(){
+      /* Products emits this after a quick cluster flick. Jen has no constellation
+         parent state; consume the event as a canonical settle so only the globe
+         owns Return to Orbit. */
+      const pending=state.pendingFlick;
+      if(!pending)return true;
+      const p=SOURCE_SLOT_IDS.includes(pending.primaryId)?pending.primaryId:primaryFrom(pending.quaternion);
+      const q=settledFor(p,pending.quaternion);
+      state.pendingFlick=null;
+      return commitAfterSettle(q,p,'flick');
+    },
     requestPrimaryProductsSelection:()=>false,
     requestProductSelection(slotId){
       if(!SOURCE_SLOT_IDS.includes(slotId))return false;

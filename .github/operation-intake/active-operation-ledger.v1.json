@@ -628,45 +628,6 @@
       "scopeHash": "1b0d9d545e283cde6a2f3a9999f9ecfcf6089b7e18d501db30f67d1138658752",
       "state": "ADMITTED_LOCKED"
     },
-    "1b836188f3fe13ccbd42df642678ab3890d32aa981493de38e777102d9aa68f9": {
-      "governingHead": "9cf64161dfc647021ff3f3871d6655ac5400ae12",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "9cf64161dfc647021ff3f3871d6655ac5400ae12",
-          "lockGeneration": 1918,
-          "lockScope": "CHARACTERS:TASK19:RUNTIME_INITIALIZATION_ORDER_REPAIR:V1",
-          "operationId": "CHARACTERS_TASK19_RUNTIME_INITIALIZATION_ORDER_REPAIR_20260901_001",
-          "procedureLocatorDigest": "53d37bab440bfc34ad70fb7fd49cb5f778f04284ab7061d16a8de9b5a9f2eaa6",
-          "requestDigest": "998a8a4510ea2453ce134935c34b2ac8ee4a4d2c797e59ac3407cbe39aed018e",
-          "scopeHash": "1b836188f3fe13ccbd42df642678ab3890d32aa981493de38e777102d9aa68f9"
-        },
-        "bindingDigest": "e737040cada2e3f8ad63fb43e28e26d9ad1471c1f4962ead2896bc93370fb6d4",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "cbe160adf6dbdce16d1f826338a58071e6d46d21",
-          "observedLockRefHead": "24d17391c9ab4b3d06f17882202c3e0f06382557"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "7a1eb028487f58ad5dbe0769b7018fb1ce44f02a8ccf45e6ed202b1a7bf2fe72",
-          "commentId": 5501205027,
-          "issueNumber": 2378,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 1918,
-      "lockScope": "CHARACTERS:TASK19:RUNTIME_INITIALIZATION_ORDER_REPAIR:V1",
-      "operationId": "CHARACTERS_TASK19_RUNTIME_INITIALIZATION_ORDER_REPAIR_20260901_001",
-      "procedureLocatorDigest": "53d37bab440bfc34ad70fb7fd49cb5f778f04284ab7061d16a8de9b5a9f2eaa6",
-      "released": false,
-      "requestDigest": "998a8a4510ea2453ce134935c34b2ac8ee4a4d2c797e59ac3407cbe39aed018e",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "1b836188f3fe13ccbd42df642678ab3890d32aa981493de38e777102d9aa68f9",
-      "state": "ADMITTED_LOCKED"
-    },
     "1bbc100f974e1cb61f1bc9a2b59a09a3e51e5233871d5acb3b5b3cf5c1b85dc8": {
       "governingHead": "8e75ef037f912333c088a984a35ae89baac460db",
       "lockGeneration": 1460,
@@ -37959,6 +37920,83 @@
       "requestDigest": "ced63df124757e06d4c4a27d2feded3d3a9f38856f5a9aa0bf40c26fe1961c23",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "c8c0639b6321606f1d8123e56bb54be5544e9653df5a127a48dad13835a4c339",
+      "state": "TERMINAL",
+      "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+    },
+    {
+      "governingHead": "9cf64161dfc647021ff3f3871d6655ac5400ae12",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "9cf64161dfc647021ff3f3871d6655ac5400ae12",
+          "lockGeneration": 1918,
+          "lockScope": "CHARACTERS:TASK19:RUNTIME_INITIALIZATION_ORDER_REPAIR:V1",
+          "operationId": "CHARACTERS_TASK19_RUNTIME_INITIALIZATION_ORDER_REPAIR_20260901_001",
+          "procedureLocatorDigest": "53d37bab440bfc34ad70fb7fd49cb5f778f04284ab7061d16a8de9b5a9f2eaa6",
+          "requestDigest": "998a8a4510ea2453ce134935c34b2ac8ee4a4d2c797e59ac3407cbe39aed018e",
+          "scopeHash": "1b836188f3fe13ccbd42df642678ab3890d32aa981493de38e777102d9aa68f9"
+        },
+        "bindingDigest": "e737040cada2e3f8ad63fb43e28e26d9ad1471c1f4962ead2896bc93370fb6d4",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "cbe160adf6dbdce16d1f826338a58071e6d46d21",
+          "observedLockRefHead": "24d17391c9ab4b3d06f17882202c3e0f06382557"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "7a1eb028487f58ad5dbe0769b7018fb1ce44f02a8ccf45e6ed202b1a7bf2fe72",
+          "commentId": 5501205027,
+          "issueNumber": 2378,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "9cf64161dfc647021ff3f3871d6655ac5400ae12",
+          "lockGeneration": 1918,
+          "lockScope": "CHARACTERS:TASK19:RUNTIME_INITIALIZATION_ORDER_REPAIR:V1",
+          "operationId": "CHARACTERS_TASK19_RUNTIME_INITIALIZATION_ORDER_REPAIR_20260901_001",
+          "procedureLocatorDigest": "53d37bab440bfc34ad70fb7fd49cb5f778f04284ab7061d16a8de9b5a9f2eaa6",
+          "requestDigest": "998a8a4510ea2453ce134935c34b2ac8ee4a4d2c797e59ac3407cbe39aed018e",
+          "scopeHash": "1b836188f3fe13ccbd42df642678ab3890d32aa981493de38e777102d9aa68f9"
+        },
+        "bindingDigest": "f6c666a0b9b2057badeb7e4f7bdd7055877eb359e9c31de2406b3efcb5c54bfd",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "063a9f8dc7e146462a84ff950a8ac33554fb01b4",
+          "observedLockRefHead": "89abd20047920a84e815d1a0229a1262fe5afcb5"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "6ee027ff182cf88e3d7892143d300a38b036395b39c3acaa2d66174467940a1e",
+          "commentId": 5501223826,
+          "issueNumber": 2378,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "9cf64161dfc647021ff3f3871d6655ac5400ae12",
+          "lockGeneration": 1918,
+          "lockScope": "CHARACTERS:TASK19:RUNTIME_INITIALIZATION_ORDER_REPAIR:V1",
+          "operationId": "CHARACTERS_TASK19_RUNTIME_INITIALIZATION_ORDER_REPAIR_20260901_001",
+          "released": true,
+          "scopeHash": "1b836188f3fe13ccbd42df642678ab3890d32aa981493de38e777102d9aa68f9",
+          "state": "TERMINAL",
+          "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 1918,
+      "lockScope": "CHARACTERS:TASK19:RUNTIME_INITIALIZATION_ORDER_REPAIR:V1",
+      "operationId": "CHARACTERS_TASK19_RUNTIME_INITIALIZATION_ORDER_REPAIR_20260901_001",
+      "procedureLocatorDigest": "53d37bab440bfc34ad70fb7fd49cb5f778f04284ab7061d16a8de9b5a9f2eaa6",
+      "released": true,
+      "requestDigest": "998a8a4510ea2453ce134935c34b2ac8ee4a4d2c797e59ac3407cbe39aed018e",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "1b836188f3fe13ccbd42df642678ab3890d32aa981493de38e777102d9aa68f9",
       "state": "TERMINAL",
       "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
     }

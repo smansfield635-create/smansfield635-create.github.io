@@ -11,27 +11,28 @@ function install(){
   Object.assign(plaque.style,{
     position:'absolute',
     left:'50%',
-    bottom:'10.5%',
+    bottom:'10.9%',
     transform:'translateX(-50%)',
     zIndex:'20',
-    width:'clamp(132px, 28%, 220px)',
-    minHeight:'42px',
+    width:'clamp(100px, 20%, 150px)',
+    minHeight:'30px',
     boxSizing:'border-box',
-    padding:'6px 12px 5px',
-    border:'2px solid rgba(255,220,120,.98)',
-    borderRadius:'3px',
-    background:'linear-gradient(180deg,rgba(216,158,42,.98),rgba(126,72,13,.98))',
-    boxShadow:'0 2px 0 rgba(54,28,4,.95), inset 0 1px 0 rgba(255,245,190,.72), 0 0 14px rgba(218,155,44,.28)',
-    color:'#211306',
+    padding:'4px 8px 3px',
+    border:'1px solid rgba(154,111,42,.92)',
+    borderRadius:'2px',
+    background:'linear-gradient(180deg,rgba(128,84,26,.96),rgba(72,42,12,.98))',
+    boxShadow:'0 1px 0 rgba(34,19,6,.92), inset 0 1px 0 rgba(218,169,70,.32)',
+    color:'#24170a',
     fontFamily:'Georgia, Times New Roman, serif',
-    fontWeight:'800',
+    fontWeight:'700',
     textAlign:'center',
-    letterSpacing:'.08em',
-    lineHeight:'1.05',
+    letterSpacing:'.09em',
+    lineHeight:'1',
+    textShadow:'0 1px 0 rgba(214,163,66,.22)',
     pointerEvents:'none',
     userSelect:'none'
   });
-  plaque.innerHTML='<span style="display:block;font-size:clamp(10px,1.05vw,14px)">DIAMOND GATE</span><span style="display:block;margin-top:3px;font-size:clamp(10px,1.05vw,14px)">BRIDGE ?</span>';
+  plaque.innerHTML='<span style="display:block;font-size:clamp(8px,.78vw,10px)">DIAMOND GATE</span><span style="display:block;margin-top:2px;font-size:clamp(8px,.78vw,10px)">BRIDGE ?</span>';
   field.append(plaque);
   canvas.dataset.trophyVisiblePlaque='DIAMOND GATE / BRIDGE ?';
 }

@@ -1,32 +1,35 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "characters",
-  "description": "Qualified Characters spatial-narrative publication contract for the eight-principal editorial/narrative surface.",
+  "description": "Environment-first Characters publication contract for the Gratitude Coast stage and traversal surface.",
   "checks": [
     {
       "path": "/characters/",
       "includes": [
-        "data-task17-candidate=\"true\"",
-        "Spatial Narrative Field · One Principal Carousel",
-        "data-character-carousel",
-        "data-character-card=\"auren\"",
-        "data-character-card=\"dextrion\"",
-        "data-character-card=\"remote-team\"",
-        "/characters/spatial-narrative.runtime.js",
-        "CHARACTERS_TASK17_SPATIAL_REFINEMENT"
+        "data-route=\"/characters/\"",
+        "data-page=\"characters-coastal-narrative-v1\"",
+        "Mirrorland · Gratitude Coast",
+        "id=\"scene\"",
+        "id=\"map-toggle\"",
+        "id=\"coast-map\"",
+        "Return to orbit",
+        "./app.mjs"
       ],
       "excludes": [
-        "carousel-arrow",
-        "data-carousel-prev",
-        "data-carousel-next"
+        "data-task17-candidate=\"true\"",
+        "Spatial Narrative Field · One Principal Carousel",
+        "/characters/spatial-narrative.runtime.js"
       ]
     },
     {
-      "path": "/characters/spatial-narrative.runtime.js",
+      "path": "/characters/app.mjs",
       "includes": [
-        "data-character-card",
-        "data-spatial-name",
-        "aria-current"
+        "getContext('webgl2'",
+        "prefers-reduced-motion: reduce",
+        "Return to Orbit",
+        "Coast map",
+        "travelTo",
+        "returnOrbit"
       ],
       "excludes": []
     }
@@ -35,55 +38,13 @@
     "enabled": true,
     "path": "/characters/",
     "timeoutMs": 30000,
-    "readySelector": "[data-character-carousel]",
+    "readySelector": "#scene",
     "binding": {
       "mode": "direct-document",
       "path": "/characters/"
     },
     "failOnConsoleErrors": true,
     "failOnPageErrors": true,
-    "interactions": [
-      {
-        "name": "Dextrion selection synchronizes active narrative context",
-        "action": {
-          "type": "click",
-          "selector": "[data-character-card=\"dextrion\"]"
-        },
-        "assertions": [
-          {
-            "type": "attributeEquals",
-            "selector": "[data-character-card=\"dextrion\"]",
-            "name": "aria-current",
-            "value": "true"
-          },
-          {
-            "type": "textContains",
-            "selector": "[data-spatial-name]",
-            "value": "Dextrion"
-          }
-        ]
-      },
-      {
-        "name": "Arrow left restores first character perspective",
-        "action": {
-          "type": "key",
-          "selector": "[data-character-carousel]",
-          "key": "ArrowLeft"
-        },
-        "assertions": [
-          {
-            "type": "attributeEquals",
-            "selector": "[data-character-card=\"auren\"]",
-            "name": "aria-current",
-            "value": "true"
-          },
-          {
-            "type": "textContains",
-            "selector": "[data-spatial-name]",
-            "value": "Auren Vale"
-          }
-        ]
-      }
-    ]
+    "interactions": []
   }
 }

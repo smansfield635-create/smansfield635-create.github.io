@@ -38,6 +38,14 @@ style.textContent=`
 .crossing-scar{width:72px;height:16px;border-top:2px solid rgba(190,220,255,.6);border-radius:50%;filter:drop-shadow(0 0 6px rgba(151,199,255,.62));transform:translate(-50%,-30%) rotate(-12deg)}
 .clock-anomaly{width:54px;height:54px;border-radius:50%;border:1px solid rgba(222,232,255,.7);box-shadow:0 0 18px rgba(169,199,255,.22),inset 0 0 16px rgba(169,199,255,.18);transform:translate(-50%,-50%)}
 .clock-anomaly::before{content:"";position:absolute;inset:8px;border-radius:50%;border:1px dashed rgba(240,231,205,.55);animation:clockPhase 8s linear infinite}
+.earth-transmission{width:46px;height:46px;border:1px solid rgba(120,205,255,.5);border-radius:50%;box-shadow:0 0 18px rgba(120,205,255,.32)}
+.watchfire-overlook{width:16px;height:28px;background:linear-gradient(to top,rgba(255,145,72,.08),rgba(255,190,105,.9));clip-path:polygon(50% 0,90% 65%,65% 100%,35% 100%,10% 65%);filter:drop-shadow(0 0 10px rgba(255,155,76,.75))}
+.waterline-station{width:58px;height:20px;border-top:2px solid rgba(138,207,255,.7);border-bottom:1px solid rgba(138,207,255,.28);transform:translate(-50%,-45%) rotate(-4deg)}
+.signal-lantern{width:22px;height:38px;border:1px solid rgba(231,212,255,.7);border-radius:12px 12px 5px 5px;box-shadow:0 0 18px rgba(196,164,255,.5),inset 0 0 12px rgba(225,205,255,.35)}
+.restoration-boundary{width:68px;height:18px;border-top:2px solid rgba(128,222,190,.55);border-radius:50%;filter:drop-shadow(0 0 8px rgba(128,222,190,.38));transform:translate(-50%,-35%) rotate(8deg)}
+.shelter-path{width:66px;height:14px;border-top:2px dashed rgba(243,223,170,.62);transform:translate(-50%,-30%) rotate(-18deg);filter:drop-shadow(0 0 6px rgba(243,223,170,.35))}
+.threshold-light{width:34px;height:48px;border:2px solid rgba(255,221,159,.5);border-bottom:0;border-radius:17px 17px 0 0;box-shadow:inset 0 0 14px rgba(255,221,159,.35),0 0 14px rgba(255,221,159,.3)}
+.distant-settlement{width:72px;height:18px;background:radial-gradient(circle at 10% 70%,rgba(255,218,142,.9) 0 2px,transparent 3px),radial-gradient(circle at 35% 45%,rgba(255,218,142,.75) 0 2px,transparent 3px),radial-gradient(circle at 62% 62%,rgba(255,218,142,.8) 0 2px,transparent 3px),radial-gradient(circle at 88% 35%,rgba(255,218,142,.72) 0 2px,transparent 3px);filter:drop-shadow(0 0 7px rgba(255,218,142,.42))}
 .map-node.visited::before{background:#a8e7d1}.map-node.active{border-color:#f3dfaa;background:rgba(243,223,170,.16)}
 @keyframes signalPulse{0%,100%{transform:scale(calc(var(--star-scale,1)*.88));opacity:calc(var(--star-opacity,.82)*.72)}50%{transform:scale(var(--star-scale,1));opacity:var(--star-opacity,.82)}}
 @keyframes clockPhase{to{transform:rotate(360deg)}}
@@ -104,7 +112,7 @@ let camera={eye:[...ORBIT.eye],look:[...ORBIT.look]},active=null,transition=null
 let worldState=deriveNarrativeWorldState(visited,null);
 
 const proofExpressions={};
-for(const [id,className] of [['crossing','crossing-scar'],['manor','manor-mass'],['clock','clock-anomaly']]){const el=document.createElement('div');el.className=`proof-expression ${className}`;el.setAttribute('aria-hidden','true');proofLayer.appendChild(el);proofExpressions[id]=el;}
+for(const [id,className] of [['crossing','crossing-scar'],['dextrion','earth-transmission'],['alaric','watchfire-overlook'],['tarian','waterline-station'],['manor','manor-mass'],['elara','signal-lantern'],['soren','restoration-boundary'],['auren','shelter-path'],['jeeves','threshold-light'],['clock','clock-anomaly'],['remote','distant-settlement']]){const el=document.createElement('div');el.className=`proof-expression ${className}`;el.setAttribute('aria-hidden','true');proofLayer.appendChild(el);proofExpressions[id]=el;}
 for(const d of DESTINATIONS){const b=document.createElement('button');b.type='button';b.className='signal';if(d.id==='clock')b.classList.add('clock-star');b.dataset.id=d.id;b.setAttribute('aria-label',d.signal);b.innerHTML=`<span>${d.signal}</span>`;b.addEventListener('click',()=>travelTo(d));signalLayer.appendChild(b);d.button=b;
  const m=document.createElement('button');m.type='button';m.className='map-node';m.dataset.id=d.id;m.setAttribute('aria-label',`Travel to ${d.title}`);const nx=clamp((d.pos[0]+1050)/2100,0,1),nz=clamp((d.pos[2]+1200)/1480,0,1);m.style.left=`${8+nx*84}%`;m.style.top=`${10+nz*78}%`;m.innerHTML=`<span>${d.title}</span>`;m.addEventListener('click',()=>{closeMap();travelTo(d,true);});mapGrid.appendChild(m);d.mapButton=m;}
 function recomputeWorldState(){worldState=deriveNarrativeWorldState(visited,active?.id||null);syncWorldState();}

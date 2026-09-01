@@ -428,6 +428,8 @@ export function evaluateCardinalSceneGeometry() {
   const familyNames = new Set();
   const silhouetteNames = new Set();
 
+  if (JSON.stringify(Object.keys(GRATITUDE_LOD_PROFILES)) !== JSON.stringify(CARDINAL_SCENE_LODS)) issues.push('GEOGRAPHY_ADAPTER_LOD_PROFILE_DRIFT');
+
   for (const siteId of CARDINAL_SITE_IDS) {
     const canonicalAnchor = resolveSiteAnchor(siteId);
     const authority = CARDINAL_SITE_GEOMETRY_AUTHORITY[siteId];
@@ -490,7 +492,7 @@ export function evaluateCardinalSceneGeometry() {
     boundaries: {
       structuralSceneGeometryConstructed: true,
       sameGeometryAcrossPresenceStates: true,
-      billboardMajorObjectsConstructed: false,
+      flatImageSubstituteConstructed: false,
       characterGeometryConstructed: false,
       finalContinentalAuthorityCreated: false,
       coastMapUiConstructed: false,

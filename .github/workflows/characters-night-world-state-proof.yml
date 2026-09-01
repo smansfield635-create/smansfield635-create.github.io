@@ -1,0 +1,115 @@
+name: Characters Gratitude Coast Night World-State Proof
+
+on:
+  pull_request:
+    paths:
+      - 'characters/app.mjs'
+      - 'characters/index.html'
+      - 'characters/narrative-world-state.mjs'
+      - 'characters/night-renderer.mjs'
+      - 'characters/CHARACTERS_NARRATIVE_WORLD_CONSEQUENCE_BASELINE.md'
+      - '.github/workflows/characters-night-world-state-proof.yml'
+  workflow_dispatch:
+
+permissions: { contents: read }
+
+jobs:
+  browser-proof:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: '${{ github.event.pull_request.head.sha || github.sha }}'
+          fetch-depth: 1
+      - name: Syntax and browser substrate
+        run: |
+          node --check characters/app.mjs
+          node --check characters/narrative-world-state.mjs
+          node --check characters/night-renderer.mjs
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null
+      - run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/characters-night-http.log 2>&1 &
+      - name: Prove full eleven-node night world-state successor
+        run: |
+          mkdir -p .qualification/characters-night-world-state
+          node <<'NODE'
+          const {chromium}=require('playwright');
+          const fs=require('fs');
+          const NODES=[
+            ['crossing','.crossing-scar'],['dextrion','.earth-transmission'],['alaric','.watchfire-overlook'],['tarian','.waterline-station'],['manor','.manor-mass'],['elara','.signal-lantern'],['soren','.restoration-boundary'],['auren','.shelter-path'],['jeeves','.threshold-light'],['clock','.clock-anomaly'],['remote','.distant-settlement']
+          ];
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce',deviceScaleFactor:1});
+            const page=await context.newPage();
+            const errors=[];
+            page.on('pageerror',e=>errors.push(String(e)));
+            page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+            await page.goto('http://127.0.0.1:4173/characters/',{waitUntil:'networkidle'});
+            await page.waitForSelector('.signal[data-id="crossing"]:not([hidden])',{timeout:15000});
+            await page.waitForTimeout(250);
+            await page.screenshot({path:'.qualification/characters-night-world-state/01-orbit-night.png',fullPage:true});
+            const initial=await page.evaluate(()=>({
+              manorUnseen:document.querySelector('.signal[data-id="manor"]')?.classList.contains('unseen'),
+              aurenUnseen:document.querySelector('.signal[data-id="auren"]')?.classList.contains('unseen'),
+              jeevesUnseen:document.querySelector('.signal[data-id="jeeves"]')?.classList.contains('unseen'),
+              crossingShape:getComputedStyle(document.querySelector('.signal[data-id="crossing"]'),'::before').clipPath,
+              clear:[...document.querySelector('#scene').getContext('webgl2').getParameter(WebGL2RenderingContext.COLOR_CLEAR_VALUE)]
+            }));
+            if(!initial.manorUnseen||!initial.aurenUnseen||!initial.jeevesUnseen)throw Error('initial revelation boundary invalid '+JSON.stringify(initial));
+            if(!initial.crossingShape||initial.crossingShape==='none')throw Error('discovery star geometry absent');
+
+            async function witness(id,expression,shot=null){
+              await page.evaluate(id=>document.querySelector(`.signal[data-id="${id}"]`)?.click(),id);
+              await page.waitForSelector(`${expression}.show`,{timeout:4000});
+              await page.waitForSelector('#inspect.show',{timeout:4000});
+              if(await page.locator('#story').evaluate(el=>el.classList.contains('show')))throw Error(`${id}: story opened before inspect`);
+              if(!(await page.locator('.world').evaluate(el=>el.classList.contains('intimate'))))throw Error(`${id}: intimate presentation state absent`);
+              if(shot){await page.waitForTimeout(150);await page.screenshot({path:`.qualification/characters-night-world-state/${shot}`,fullPage:true});}
+              await page.locator('#inspect').click();
+              await page.waitForFunction(()=>document.querySelector('#story')?.classList.contains('show'),null,{timeout:2000});
+              const storyTitle=await page.locator('#story-title').textContent();
+              if(!storyTitle?.trim())throw Error(`${id}: story title missing`);
+              const signalState=await page.locator(`.signal[data-id="${id}"]`).getAttribute('class');
+              if(!signalState.includes('active'))throw Error(`${id}: active signal state missing`);
+              await page.locator('#return').click();
+              await page.waitForFunction(()=>!document.querySelector('.world')?.classList.contains('intimate'),null,{timeout:3000});
+              return {id,storyTitle,expression};
+            }
+
+            const results=[];
+            results.push(await witness('crossing','.crossing-scar','02-crossing-witness.png'));
+            await page.waitForFunction(()=>!document.querySelector('.signal[data-id="manor"]')?.classList.contains('unseen'),null,{timeout:3000});
+            const afterCrossing=await page.evaluate(()=>({manorUnseen:document.querySelector('.signal[data-id="manor"]').classList.contains('unseen'),constellationCount:document.querySelectorAll('.constellation-line').length}));
+            if(afterCrossing.manorUnseen||afterCrossing.constellationCount<1)throw Error('Crossing consequence failed '+JSON.stringify(afterCrossing));
+
+            for(const [id,expression] of NODES.slice(1,4))results.push(await witness(id,expression));
+            results.push(await witness('manor','.manor-mass','03-manor-witness.png'));
+            await page.waitForFunction(()=>!document.querySelector('.signal[data-id="auren"]')?.classList.contains('unseen')&&!document.querySelector('.signal[data-id="jeeves"]')?.classList.contains('unseen'),null,{timeout:3000});
+            const afterManor=await page.evaluate(()=>({aurenUnseen:document.querySelector('.signal[data-id="auren"]').classList.contains('unseen'),jeevesUnseen:document.querySelector('.signal[data-id="jeeves"]').classList.contains('unseen')}));
+            if(afterManor.aurenUnseen||afterManor.jeevesUnseen)throw Error('Manor consequence failed '+JSON.stringify(afterManor));
+
+            for(const [id,expression] of NODES.slice(5,9))results.push(await witness(id,expression));
+            results.push(await witness('clock','.clock-anomaly','04-clock-deep-night-witness.png'));
+            const afterClock=await page.evaluate(()=>({clear:[...document.querySelector('#scene').getContext('webgl2').getParameter(WebGL2RenderingContext.COLOR_CLEAR_VALUE)]}));
+            if(afterClock.clear[0]>=initial.clear[0]||afterClock.clear[2]>=initial.clear[2])throw Error('Clock global night phase did not deepen '+JSON.stringify({initial:initial.clear,after:afterClock.clear}));
+            results.push(await witness('remote','.distant-settlement'));
+
+            if(results.length!==11)throw Error(`expected 11 visited nodes, got ${results.length}`);
+            const visited=await page.evaluate(()=>[...document.querySelectorAll('.signal.visited,.signal.active')].map(n=>n.dataset.id));
+            for(const [id] of NODES)if(!visited.includes(id))throw Error(`visited state missing for ${id}`);
+            if(errors.length)throw Error('runtime errors '+JSON.stringify(errors));
+            const proof={result:'PASS',initial,afterCrossing,afterManor,afterClock,results,visited};
+            fs.writeFileSync('.qualification/characters-night-world-state/proof.json',JSON.stringify(proof,null,2));
+            console.log(JSON.stringify(proof,null,2));
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+      - name: Upload visual proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: characters-night-world-state-${{ github.event.pull_request.head.sha || github.sha }}
+          path: .qualification/characters-night-world-state
+          if-no-files-found: error

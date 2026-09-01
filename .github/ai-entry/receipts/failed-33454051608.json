@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": null,
+  "capabilityId": null,
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 2530,
+  "requestBranch": "ai-dispatch-request-compass-trophy-v6-deploy-84ca901",
+  "requestCommit": "3f5f5fe790f09d9da9b05b4fa14eaeafa950aa0d",
+  "currentMainSha": "48801c6ad57f716f81b556feee85f7092b7fc6b1",
+  "bridgeRunId": "33454051608",
+  "error": "Stale dispatch request: parent 84ca901e6ea934442c1caf65cefd6ae896251560 != current main 48801c6ad57f716f81b556feee85f7092b7fc6b1",
+  "failedAt": "2026-09-01T00:16:31.710Z"
+}

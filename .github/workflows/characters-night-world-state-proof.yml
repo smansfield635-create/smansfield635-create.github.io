@@ -80,10 +80,10 @@ jobs:
             const afterClock=await page.evaluate(()=>({
               clear:[...document.querySelector('#scene').getContext('webgl2').getParameter(WebGL2RenderingContext.COLOR_CLEAR_VALUE)],
               story:document.querySelector('#story-title')?.textContent,
-              clockVisited:document.querySelector('.signal[data-id="clock"]').classList.contains('visited'),
+              clockActive:document.querySelector('.signal[data-id="clock"]').classList.contains('active'),
               constellationCount:document.querySelectorAll('.constellation-line').length
             }));
-            if(afterClock.story!=='The Clock'||!afterClock.clockVisited)throw Error('Clock discovery failed '+JSON.stringify(afterClock));
+            if(afterClock.story!=='The Clock'||!afterClock.clockActive)throw Error('Clock discovery failed '+JSON.stringify(afterClock));
             if(afterClock.clear[0]>=initial.clear[0]||afterClock.clear[2]>=initial.clear[2])throw Error('Clock global night phase did not deepen '+JSON.stringify({initial:initial.clear,after:afterClock.clear}));
             if(errors.length)throw Error('runtime errors '+JSON.stringify(errors));
 

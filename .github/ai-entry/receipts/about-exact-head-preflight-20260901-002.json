@@ -1,24 +1,14 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
-  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "result": "WORKFLOW_DISPATCH_FAILED",
   "requestId": "about-exact-head-preflight-20260901-002",
   "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "transportPullRequest": 2609,
   "requestBranch": "ai-dispatch-request-about-preflight-20260901-002",
   "requestCommit": "29e4e94061136b53e73a53a0a2c995272eae6e1d",
-  "requestCommitParent": "1a0a5d9eb81e7123a1e0dda715817d89022cd98b",
   "currentMainSha": "1a0a5d9eb81e7123a1e0dda715817d89022cd98b",
-  "workflow": "publication-preflight-v1.yml",
-  "ref": "main",
-  "inputs": {
-    "target_sha": "1a0a5d9eb81e7123a1e0dda715817d89022cd98b",
-    "surface_id": "about"
-  },
   "bridgeRunId": "33570485998",
-  "dispatchedRunId": 33570511819,
-  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/33570511819",
-  "dispatchedRunHeadSha": "1a0a5d9eb81e7123a1e0dda715817d89022cd98b",
-  "dispatchedAt": "2026-09-01T23:19:41.816Z",
-  "resolvedAt": "2026-09-01T23:19:45.440Z"
+  "error": "GitHub API 422 /repos/smansfield635-create/smansfield635-create.github.io/git/refs/heads/ai-dispatch-request-about-preflight-20260901-002: {\"message\":\"Reference does not exist\",\"documentation_url\":\"https://docs.github.com/rest/git/refs#delete-a-reference\",\"status\":\"422\"}",
+  "failedAt": "2026-09-01T23:19:47.066Z"
 }

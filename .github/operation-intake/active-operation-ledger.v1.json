@@ -6745,45 +6745,6 @@
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "ff7fed19d1b436352d85fa163e3abde7581be4299990e2f165479102ccf4ea74",
       "state": "ADMITTED_LOCKED"
-    },
-    "ffa0fb2fb9fe734c8f14043d9a445f893abf2f781a3bb781c11673fbfbc2342e": {
-      "governingHead": "c2dbceb0267b124f5c34ac2fdf5245fc2015bca3",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "c2dbceb0267b124f5c34ac2fdf5245fc2015bca3",
-          "lockGeneration": 1911,
-          "lockScope": "PUBLIC_LEGITIMACY:AGENTIC_FRONTIER:FULL24_EVIDENCE_RECORD:V1",
-          "operationId": "AGENTIC_FRONTIER_FULL24_PUBLIC_EVIDENCE_PRESERVATION_20260901_002",
-          "procedureLocatorDigest": "9dd14226bb27a079c956145347dfc26acf358255e5fb4e76bfc66329539dcbe1",
-          "requestDigest": "5e827083e1a89150a9b76c1f13f3e3a4f9e317c6e0172b93ef25fc6ebfb7acd3",
-          "scopeHash": "ffa0fb2fb9fe734c8f14043d9a445f893abf2f781a3bb781c11673fbfbc2342e"
-        },
-        "bindingDigest": "4627cf1c111f20e5c7255068e1659f8b8939df5b28f6c8e644935629941eb19b",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "2de9310ebf4b194ed0e80497a4a8db6b1ad86e23",
-          "observedLockRefHead": "10865af816362992612b2fbd249aa7eff402c563"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "bd742343200aa72c41024a9131c145ea00b9c9e657dc9061147eeaf3ea051980",
-          "commentId": 5499685469,
-          "issueNumber": 2591,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 1911,
-      "lockScope": "PUBLIC_LEGITIMACY:AGENTIC_FRONTIER:FULL24_EVIDENCE_RECORD:V1",
-      "operationId": "AGENTIC_FRONTIER_FULL24_PUBLIC_EVIDENCE_PRESERVATION_20260901_002",
-      "procedureLocatorDigest": "9dd14226bb27a079c956145347dfc26acf358255e5fb4e76bfc66329539dcbe1",
-      "released": false,
-      "requestDigest": "5e827083e1a89150a9b76c1f13f3e3a4f9e317c6e0172b93ef25fc6ebfb7acd3",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "ffa0fb2fb9fe734c8f14043d9a445f893abf2f781a3bb781c11673fbfbc2342e",
-      "state": "ADMITTED_LOCKED"
     }
   },
   "allowedChangedPaths": [
@@ -37456,6 +37417,83 @@
       "scopeHash": "9d99da4aeb1de4c28055a65b6f7adb244eb138bac196274a47aeb7c1d592837e",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "governingHead": "c2dbceb0267b124f5c34ac2fdf5245fc2015bca3",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "c2dbceb0267b124f5c34ac2fdf5245fc2015bca3",
+          "lockGeneration": 1911,
+          "lockScope": "PUBLIC_LEGITIMACY:AGENTIC_FRONTIER:FULL24_EVIDENCE_RECORD:V1",
+          "operationId": "AGENTIC_FRONTIER_FULL24_PUBLIC_EVIDENCE_PRESERVATION_20260901_002",
+          "procedureLocatorDigest": "9dd14226bb27a079c956145347dfc26acf358255e5fb4e76bfc66329539dcbe1",
+          "requestDigest": "5e827083e1a89150a9b76c1f13f3e3a4f9e317c6e0172b93ef25fc6ebfb7acd3",
+          "scopeHash": "ffa0fb2fb9fe734c8f14043d9a445f893abf2f781a3bb781c11673fbfbc2342e"
+        },
+        "bindingDigest": "4627cf1c111f20e5c7255068e1659f8b8939df5b28f6c8e644935629941eb19b",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "2de9310ebf4b194ed0e80497a4a8db6b1ad86e23",
+          "observedLockRefHead": "10865af816362992612b2fbd249aa7eff402c563"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "bd742343200aa72c41024a9131c145ea00b9c9e657dc9061147eeaf3ea051980",
+          "commentId": 5499685469,
+          "issueNumber": 2591,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "c2dbceb0267b124f5c34ac2fdf5245fc2015bca3",
+          "lockGeneration": 1911,
+          "lockScope": "PUBLIC_LEGITIMACY:AGENTIC_FRONTIER:FULL24_EVIDENCE_RECORD:V1",
+          "operationId": "AGENTIC_FRONTIER_FULL24_PUBLIC_EVIDENCE_PRESERVATION_20260901_002",
+          "procedureLocatorDigest": "9dd14226bb27a079c956145347dfc26acf358255e5fb4e76bfc66329539dcbe1",
+          "requestDigest": "5e827083e1a89150a9b76c1f13f3e3a4f9e317c6e0172b93ef25fc6ebfb7acd3",
+          "scopeHash": "ffa0fb2fb9fe734c8f14043d9a445f893abf2f781a3bb781c11673fbfbc2342e"
+        },
+        "bindingDigest": "aa1a6e291259bdfca32f92dea7cd2cd52567a54e296165a67474303dee3225fe",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "4660e557274f205d5e40f7129c754108c5980e42",
+          "observedLockRefHead": "1fa27cdabc012287243e4f9993e5a5d0022eb639"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "653a13ab034bfc12225350bc6af6433780fe8e056e166927ce27e3335765ec6b",
+          "commentId": 5499788987,
+          "issueNumber": 2591,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "c2dbceb0267b124f5c34ac2fdf5245fc2015bca3",
+          "lockGeneration": 1911,
+          "lockScope": "PUBLIC_LEGITIMACY:AGENTIC_FRONTIER:FULL24_EVIDENCE_RECORD:V1",
+          "operationId": "AGENTIC_FRONTIER_FULL24_PUBLIC_EVIDENCE_PRESERVATION_20260901_002",
+          "released": true,
+          "scopeHash": "ffa0fb2fb9fe734c8f14043d9a445f893abf2f781a3bb781c11673fbfbc2342e",
+          "state": "TERMINAL",
+          "terminalDisposition": "PASS_CLOSED"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 1911,
+      "lockScope": "PUBLIC_LEGITIMACY:AGENTIC_FRONTIER:FULL24_EVIDENCE_RECORD:V1",
+      "operationId": "AGENTIC_FRONTIER_FULL24_PUBLIC_EVIDENCE_PRESERVATION_20260901_002",
+      "procedureLocatorDigest": "9dd14226bb27a079c956145347dfc26acf358255e5fb4e76bfc66329539dcbe1",
+      "released": true,
+      "requestDigest": "5e827083e1a89150a9b76c1f13f3e3a4f9e317c6e0172b93ef25fc6ebfb7acd3",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ffa0fb2fb9fe734c8f14043d9a445f893abf2f781a3bb781c11673fbfbc2342e",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

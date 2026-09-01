@@ -1,0 +1,115 @@
+{
+  "schema": "AHBK_MACHINE_CONTRACT_v1",
+  "contractId": "AHBK_NORMATIVE_SPECIFICATION_CONFORMANCE_CONTRACT_v1",
+  "status": "ACTIVE_STRUCTURAL_CONFORMANCE_ONLY",
+  "specification": {
+    "id": "AHBK_NORMATIVE_SPECIFICATION_v1",
+    "version": "1.0",
+    "path": "infrastructure/state-bound-admissibility-kernel-v1/AHBK_NORMATIVE_SPECIFICATION_v1.md",
+    "byteLength": 28702,
+    "sha256": "1c61a7101763dd39815b76b3dc71e9b6767c3be42f511860f572af73b343f297",
+    "kernelTuple": [
+      "OMEGA",
+      "PRECEQ",
+      "A",
+      "PHI",
+      "S",
+      "H",
+      "GAMMA"
+    ]
+  },
+  "admissibilityStages": [
+    "ENTRY",
+    "OBSERVE",
+    "CLAIM"
+  ],
+  "operatorSeparation": {
+    "PHI": "DOMAIN_SPECIFIC_HISTORY_CONSTRUCTOR",
+    "H": "DOMAIN_SPECIFIC_OBSERVATION_MAPPING",
+    "S": "THREE_VALUED_SURVIVAL_CLASSIFIER",
+    "GAMMA": "CLAIM_ENTITLEMENT_OPERATOR",
+    "phiAndHMustRemainDistinct": true
+  },
+  "survivalValues": [
+    "SURVIVE",
+    "FAIL",
+    "UNINTERPRETABLE"
+  ],
+  "frontiers": {
+    "R_star": "MAXIMALS_OF_ENTERED_SURVIVE_SET_UNDER_PRECEQ",
+    "F_min": "MINIMALS_OF_ENTERED_FAIL_SET_UNDER_PRECEQ",
+    "setValued": true,
+    "uniquePointAssumptionProhibited": true
+  },
+  "firstClassBoundaryObjects": {
+    "I": "UNORDERED_INCOMPARABLE_ENTERED_CANDIDATE_PAIRS",
+    "N": "ORDERED_FAIL_BELOW_SURVIVE_NONMONOTONICITY_WITNESSES",
+    "U": "TYPED_UNINTERPRETABILITY_RECORDS"
+  },
+  "requiredUninterpretabilityReasons": [
+    "MEASUREMENT_INVALID",
+    "SEMANTIC_MAPPING_INVALID",
+    "EXECUTION_IDENTITY_INVALID",
+    "CUSTODY_INVALID",
+    "PROVENANCE_INVALID",
+    "OTHER_PREDECLARED_UNINTERPRETABLE"
+  ],
+  "requiredEdgeCases": [
+    "EMPTY_CANDIDATE_SPACE",
+    "NO_ENTRY_ADMISSIBLE_CANDIDATES",
+    "NO_SURVIVORS",
+    "NO_FAILURES",
+    "ALL_UNINTERPRETABLE",
+    "ALL_INCOMPARABLE",
+    "DISCONNECTED_POSET",
+    "NONMONOTONE_RESULT",
+    "NOMINAL_MAXIMUM_UNINTERPRETABLE",
+    "PARTIAL_OBSERVATION_COVERAGE",
+    "INVALID_OR_CYCLIC_ORDER",
+    "DUPLICATE_CANDIDATE_IDENTITY",
+    "UNRESOLVED_ADMISSIBILITY"
+  ],
+  "requiredOutputSections": [
+    "specification",
+    "binding",
+    "status",
+    "candidates",
+    "order",
+    "evaluations",
+    "boundaries",
+    "claims",
+    "provenance"
+  ],
+  "requiredBoundaryArrays": [
+    "R_star",
+    "F_min",
+    "I",
+    "N",
+    "U"
+  ],
+  "claimDiscipline": {
+    "claimCeilingSetValued": true,
+    "entitledClaimSetDownwardClosed": true,
+    "structuralConformanceIsNotExperimentalCompletion": true,
+    "crossDomainEvidenceTransferProhibited": true
+  },
+  "cmapssBinding": {
+    "path": "infrastructure/state-bound-admissibility-kernel-v1/cmapss-nonexecuting-binding.v1.json",
+    "structuralConformance": "PASS",
+    "executionAuthorization": "PROHIBITED",
+    "experimentalCompletion": "UNCOMPLETED",
+    "claimEntitlement": "NOT_ENTITLED",
+    "evaluationState": "NOT_EVALUATED"
+  },
+  "constructionBoundary": {
+    "networkAccess": false,
+    "datasetAccess": false,
+    "modelExecution": false,
+    "outcomeAccess": false,
+    "preregistrationMutation": false,
+    "marsTransfer": false,
+    "cosmologyTransfer": false,
+    "relativisticDynamicsTransfer": false,
+    "empiricalClaimUpgrade": false
+  }
+}

@@ -1,0 +1,651 @@
+{
+  "schema": "AHBK_SYNTHETIC_EDGE_CASE_SUITE_v1",
+  "suiteId": "AHBK_REQUIRED_EDGE_CASES_v1",
+  "classificationValues": [
+    "SURVIVE",
+    "FAIL",
+    "UNINTERPRETABLE"
+  ],
+  "scientificAuthority": "NONE_SYNTHETIC_CONFORMANCE_ONLY",
+  "fixtures": [
+    {
+      "id": "EMPTY_CANDIDATE_SPACE",
+      "candidates": [],
+      "relation": [],
+      "expected": {
+        "structuralConformance": "PASS",
+        "outcomeCode": "EMPTY_CANDIDATE_SPACE",
+        "evaluationCoverage": "UNCOMPLETED",
+        "R_star": [],
+        "F_min": [],
+        "I": [],
+        "N": [],
+        "U": [],
+        "missingObligations": [],
+        "disconnectedComponents": []
+      }
+    },
+    {
+      "id": "NO_ENTRY_ADMISSIBLE_CANDIDATES",
+      "candidates": [
+        {
+          "id": "A",
+          "entryStatus": "FAIL",
+          "classification": null
+        },
+        {
+          "id": "B",
+          "entryStatus": "FAIL",
+          "classification": null
+        }
+      ],
+      "relation": [
+        [
+          "A",
+          "A"
+        ],
+        [
+          "B",
+          "B"
+        ]
+      ],
+      "expected": {
+        "structuralConformance": "PASS",
+        "outcomeCode": "NO_ENTRY_ADMISSIBLE_CANDIDATES",
+        "evaluationCoverage": "UNCOMPLETED",
+        "R_star": [],
+        "F_min": [],
+        "I": [],
+        "N": [],
+        "U": [],
+        "missingObligations": [],
+        "disconnectedComponents": [
+          [
+            "A"
+          ],
+          [
+            "B"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "NO_SURVIVORS",
+      "candidates": [
+        {
+          "id": "A",
+          "entryStatus": "PASS",
+          "classification": "FAIL"
+        },
+        {
+          "id": "B",
+          "entryStatus": "PASS",
+          "classification": "FAIL"
+        }
+      ],
+      "relation": [
+        [
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "B"
+        ],
+        [
+          "B",
+          "B"
+        ]
+      ],
+      "expected": {
+        "structuralConformance": "PASS",
+        "outcomeCode": "NO_SURVIVORS",
+        "evaluationCoverage": "COMPLETE",
+        "R_star": [],
+        "F_min": [
+          "A"
+        ],
+        "I": [],
+        "N": [],
+        "U": [],
+        "missingObligations": [],
+        "disconnectedComponents": [
+          [
+            "A",
+            "B"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "NO_FAILURES",
+      "candidates": [
+        {
+          "id": "A",
+          "entryStatus": "PASS",
+          "classification": "SURVIVE"
+        },
+        {
+          "id": "B",
+          "entryStatus": "PASS",
+          "classification": "SURVIVE"
+        }
+      ],
+      "relation": [
+        [
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "B"
+        ],
+        [
+          "B",
+          "B"
+        ]
+      ],
+      "expected": {
+        "structuralConformance": "PASS",
+        "outcomeCode": "NO_FAILURES",
+        "evaluationCoverage": "COMPLETE",
+        "R_star": [
+          "B"
+        ],
+        "F_min": [],
+        "I": [],
+        "N": [],
+        "U": [],
+        "missingObligations": [],
+        "disconnectedComponents": [
+          [
+            "A",
+            "B"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "ALL_UNINTERPRETABLE",
+      "candidates": [
+        {
+          "id": "A",
+          "entryStatus": "PASS",
+          "classification": "UNINTERPRETABLE",
+          "uninterpretableReason": "MEASUREMENT_INVALID"
+        },
+        {
+          "id": "B",
+          "entryStatus": "PASS",
+          "classification": "UNINTERPRETABLE",
+          "uninterpretableReason": "PROVENANCE_INVALID"
+        }
+      ],
+      "relation": [
+        [
+          "A",
+          "A"
+        ],
+        [
+          "B",
+          "B"
+        ]
+      ],
+      "expected": {
+        "structuralConformance": "PASS",
+        "outcomeCode": "ALL_UNINTERPRETABLE",
+        "evaluationCoverage": "UNCOMPLETED",
+        "R_star": [],
+        "F_min": [],
+        "I": [
+          [
+            "A",
+            "B"
+          ]
+        ],
+        "N": [],
+        "U": [
+          {
+            "candidateId": "A",
+            "reason": "MEASUREMENT_INVALID"
+          },
+          {
+            "candidateId": "B",
+            "reason": "PROVENANCE_INVALID"
+          }
+        ],
+        "missingObligations": [],
+        "disconnectedComponents": [
+          [
+            "A"
+          ],
+          [
+            "B"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "ALL_INCOMPARABLE",
+      "candidates": [
+        {
+          "id": "A",
+          "entryStatus": "PASS",
+          "classification": "SURVIVE"
+        },
+        {
+          "id": "B",
+          "entryStatus": "PASS",
+          "classification": "SURVIVE"
+        },
+        {
+          "id": "C",
+          "entryStatus": "PASS",
+          "classification": "FAIL"
+        }
+      ],
+      "relation": [
+        [
+          "A",
+          "A"
+        ],
+        [
+          "B",
+          "B"
+        ],
+        [
+          "C",
+          "C"
+        ]
+      ],
+      "expected": {
+        "structuralConformance": "PASS",
+        "outcomeCode": "ALL_INCOMPARABLE",
+        "evaluationCoverage": "COMPLETE",
+        "R_star": [
+          "A",
+          "B"
+        ],
+        "F_min": [
+          "C"
+        ],
+        "I": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "A",
+            "C"
+          ],
+          [
+            "B",
+            "C"
+          ]
+        ],
+        "N": [],
+        "U": [],
+        "missingObligations": [],
+        "disconnectedComponents": [
+          [
+            "A"
+          ],
+          [
+            "B"
+          ],
+          [
+            "C"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "DISCONNECTED_POSET",
+      "candidates": [
+        {
+          "id": "A",
+          "entryStatus": "PASS",
+          "classification": "SURVIVE"
+        },
+        {
+          "id": "B",
+          "entryStatus": "PASS",
+          "classification": "SURVIVE"
+        },
+        {
+          "id": "C",
+          "entryStatus": "PASS",
+          "classification": "FAIL"
+        },
+        {
+          "id": "D",
+          "entryStatus": "PASS",
+          "classification": "FAIL"
+        }
+      ],
+      "relation": [
+        [
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "B"
+        ],
+        [
+          "B",
+          "B"
+        ],
+        [
+          "C",
+          "C"
+        ],
+        [
+          "C",
+          "D"
+        ],
+        [
+          "D",
+          "D"
+        ]
+      ],
+      "expected": {
+        "structuralConformance": "PASS",
+        "outcomeCode": "DISCONNECTED_POSET",
+        "evaluationCoverage": "COMPLETE",
+        "R_star": [
+          "B"
+        ],
+        "F_min": [
+          "C"
+        ],
+        "I": [
+          [
+            "A",
+            "C"
+          ],
+          [
+            "A",
+            "D"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "B",
+            "D"
+          ]
+        ],
+        "N": [],
+        "U": [],
+        "missingObligations": [],
+        "disconnectedComponents": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "C",
+            "D"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "NONMONOTONE_RESULT",
+      "candidates": [
+        {
+          "id": "A",
+          "entryStatus": "PASS",
+          "classification": "FAIL"
+        },
+        {
+          "id": "B",
+          "entryStatus": "PASS",
+          "classification": "SURVIVE"
+        }
+      ],
+      "relation": [
+        [
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "B"
+        ],
+        [
+          "B",
+          "B"
+        ]
+      ],
+      "expected": {
+        "structuralConformance": "PASS",
+        "outcomeCode": "NONMONOTONE_RESULT",
+        "evaluationCoverage": "COMPLETE",
+        "R_star": [
+          "B"
+        ],
+        "F_min": [
+          "A"
+        ],
+        "I": [],
+        "N": [
+          [
+            "A",
+            "B"
+          ]
+        ],
+        "U": [],
+        "missingObligations": [],
+        "disconnectedComponents": [
+          [
+            "A",
+            "B"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "NOMINAL_MAXIMUM_UNINTERPRETABLE",
+      "candidates": [
+        {
+          "id": "A",
+          "entryStatus": "PASS",
+          "classification": "SURVIVE"
+        },
+        {
+          "id": "B",
+          "entryStatus": "PASS",
+          "classification": "UNINTERPRETABLE",
+          "uninterpretableReason": "CUSTODY_INVALID"
+        }
+      ],
+      "relation": [
+        [
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "B"
+        ],
+        [
+          "B",
+          "B"
+        ]
+      ],
+      "expected": {
+        "structuralConformance": "PASS",
+        "outcomeCode": "NOMINAL_MAXIMUM_UNINTERPRETABLE",
+        "evaluationCoverage": "COMPLETE",
+        "R_star": [
+          "A"
+        ],
+        "F_min": [],
+        "I": [],
+        "N": [],
+        "U": [
+          {
+            "candidateId": "B",
+            "reason": "CUSTODY_INVALID"
+          }
+        ],
+        "missingObligations": [],
+        "disconnectedComponents": [
+          [
+            "A",
+            "B"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "PARTIAL_OBSERVATION_COVERAGE",
+      "candidates": [
+        {
+          "id": "A",
+          "entryStatus": "PASS",
+          "classification": "SURVIVE"
+        },
+        {
+          "id": "B",
+          "entryStatus": "PASS",
+          "classification": null
+        }
+      ],
+      "relation": [
+        [
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "B"
+        ],
+        [
+          "B",
+          "B"
+        ]
+      ],
+      "expected": {
+        "structuralConformance": "PASS",
+        "outcomeCode": "PARTIAL_OBSERVATION_COVERAGE",
+        "evaluationCoverage": "PARTIAL",
+        "R_star": [
+          "A"
+        ],
+        "F_min": [],
+        "I": [],
+        "N": [],
+        "U": [],
+        "missingObligations": [
+          "B"
+        ],
+        "disconnectedComponents": [
+          [
+            "A",
+            "B"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "INVALID_OR_CYCLIC_ORDER",
+      "candidates": [
+        {
+          "id": "A",
+          "entryStatus": "PASS",
+          "classification": "SURVIVE"
+        },
+        {
+          "id": "B",
+          "entryStatus": "PASS",
+          "classification": "FAIL"
+        }
+      ],
+      "relation": [
+        [
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "B"
+        ],
+        [
+          "B",
+          "A"
+        ],
+        [
+          "B",
+          "B"
+        ]
+      ],
+      "expectedFailure": {
+        "structuralConformance": "FAIL",
+        "errorCode": "INVALID_OR_CYCLIC_ORDER",
+        "frontierOutputAuthorized": false
+      }
+    },
+    {
+      "id": "DUPLICATE_CANDIDATE_IDENTITY",
+      "candidates": [
+        {
+          "id": "A",
+          "entryStatus": "PASS",
+          "classification": "SURVIVE"
+        },
+        {
+          "id": "A",
+          "entryStatus": "PASS",
+          "classification": "FAIL"
+        }
+      ],
+      "relation": [
+        [
+          "A",
+          "A"
+        ]
+      ],
+      "expectedFailure": {
+        "structuralConformance": "FAIL",
+        "errorCode": "DUPLICATE_CANDIDATE_IDENTITY",
+        "frontierOutputAuthorized": false
+      }
+    },
+    {
+      "id": "UNRESOLVED_ADMISSIBILITY",
+      "candidates": [
+        {
+          "id": "A",
+          "entryStatus": "UNRESOLVED",
+          "classification": null
+        }
+      ],
+      "relation": [
+        [
+          "A",
+          "A"
+        ]
+      ],
+      "expected": {
+        "structuralConformance": "PASS",
+        "outcomeCode": "NO_ENTRY_ADMISSIBLE_CANDIDATES",
+        "evaluationCoverage": "UNCOMPLETED",
+        "R_star": [],
+        "F_min": [],
+        "I": [],
+        "N": [],
+        "U": [],
+        "missingObligations": [],
+        "disconnectedComponents": [
+          [
+            "A"
+          ]
+        ]
+      }
+    }
+  ]
+}

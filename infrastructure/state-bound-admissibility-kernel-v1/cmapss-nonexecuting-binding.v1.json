@@ -1,0 +1,125 @@
+{
+  "schema": "AHBK_CMAPSS_NONEXECUTING_BINDING_v1",
+  "bindingId": "AHBK_CMAPSS_RESILIENCE_BINDING_v1",
+  "specificationId": "AHBK_NORMATIVE_SPECIFICATION_v1",
+  "domain": "NASA_CMAPSS_FD001_TO_FD004",
+  "objectUnderTest": "FD001_M3_ADDITIVE_FACTORIAL_INFERENCE_PROCEDURE_v1",
+  "sourceProtocol": "RESILIENCE_PREREGISTERED_STRONGEST_ATTACK_FD001_M3_v1",
+  "sourceStatus": "CONSTRUCTION_COMPLETE_NOT_FROZEN",
+  "sourceDisposition": "DO_NOT_EXECUTE_AS_PREREGISTERED_BRIDGE_TEST",
+  "status": {
+    "structuralConformance": "PASS",
+    "executionAuthorization": "PROHIBITED",
+    "experimentalCompletion": "UNCOMPLETED",
+    "claimEntitlement": "NOT_ENTITLED",
+    "evaluationState": "NOT_EVALUATED"
+  },
+  "candidates": {
+    "support": {
+      "id": "A0",
+      "dataset": "FD001",
+      "frontierEligible": false
+    },
+    "test": [
+      {
+        "id": "A1",
+        "dataset": "FD003",
+        "operatingConditions": 1,
+        "faultModes": 2
+      },
+      {
+        "id": "A2",
+        "dataset": "FD002",
+        "operatingConditions": 6,
+        "faultModes": 1
+      },
+      {
+        "id": "A3",
+        "dataset": "FD004",
+        "operatingConditions": 6,
+        "faultModes": 2
+      }
+    ]
+  },
+  "partialOrder": {
+    "interpretation": "COMPONENTWISE_OPERATING_CONDITIONS_AND_FAULT_MODES",
+    "strictPairs": [
+      [
+        "A1",
+        "A3"
+      ],
+      [
+        "A2",
+        "A3"
+      ]
+    ],
+    "incomparablePairs": [
+      [
+        "A1",
+        "A2"
+      ]
+    ],
+    "scalarizationIntroduced": false
+  },
+  "operatorBinding": {
+    "A_entry": "SOURCE_REQUIREMENTS_1_TO_5",
+    "A_observe": "SOURCE_REQUIREMENTS_6_TO_7",
+    "A_claim": "FULL_PREREGISTRATION_CUSTODY_BOUNDARY_AND_CLAIM_RECEIPT",
+    "PHI": "REAPPLY_FROZEN_M3_TRANSPORT_WITH_TRAINING_PREDICTORS_AND_FREEZE_PREDICTIONS",
+    "H": "AFTER_AUTHORIZED_OUTCOME_ACCESS_COMPUTE_RMSE_RI_BOOTSTRAP_AND_SECONDARY_METRICS",
+    "S": "FROZEN_MATERIALITY_AND_UNCERTAINTY_DECISION_WITH_TYPED_UNINTERPRETABILITY",
+    "GAMMA": "SOURCE_OUTCOME_TABLE_EXCLUSIONS_RESILIENCE_STANDING_AND_CLAIM_CEILING_RECEIPT"
+  },
+  "survivalRule": {
+    "SURVIVE": "INTERPRETABLE_AND_RI_AT_LEAST_0_02_AND_PAIRED_BOOTSTRAP_95_PERCENT_LOWER_BOUND_ABOVE_0",
+    "FAIL": "LAWFUL_INTERPRETABLE_OBJECT_FAILURE_OR_VALID_OBSERVATION_FAILING_FROZEN_SURVIVAL_REQUIREMENT",
+    "UNINTERPRETABLE": "TRUE_RUL_MEASUREMENT_SEMANTIC_ALIGNMENT_CUSTODY_EXECUTION_IDENTITY_OR_REQUIRED_PROVENANCE_INVALID_OR_UNAVAILABLE",
+    "bootstrapResamples": 10000,
+    "bootstrapSeed": 20260811
+  },
+  "presentBoundaries": {
+    "R_star": [],
+    "F_min": [],
+    "I": [
+      [
+        "A1",
+        "A2"
+      ]
+    ],
+    "N": [],
+    "U": [],
+    "emptyArrayMeaning": "NOT_EVALUATED_NOT_OBSERVED_EMPTY_EMPIRICAL_BOUNDARY"
+  },
+  "claimCeilingTemplate": "The frozen FD001 M3 additive factorial-temporal inference procedure retained materially positive remaining-useful-life predictive utility under the strongest admissible preregistered C-MAPSS heterogeneity attack.",
+  "claimCeilingTemplatePresentlyEntitled": false,
+  "forbiddenUpgrades": [
+    "MULTIPLICATIVE_IMI_OPERATOR_VALIDATION",
+    "UNIVERSAL_COHERENCE_LAW",
+    "CAUSAL_OR_CONSTITUTIVE_RELATION",
+    "ROUTE_RESTORATION_OR_STRUCTURAL_COLLAPSE",
+    "HOSPITAL_RANKING_OR_CLINICAL_USE",
+    "TRACK_B",
+    "256_192_3_451_ARCHITECTURE",
+    "ROBUSTNESS_OUTSIDE_FROZEN_ATTACK_FAMILY"
+  ],
+  "unmetCompletionRequirements": [
+    "EXACT_FD002_FD003_FD004_PREDICTOR_HASHES",
+    "REGISTERED_OUTCOME_CUSTODY_IDENTITIES_WITHOUT_VALUES",
+    "EXECUTION_ENVIRONMENT_LOCK",
+    "INDEPENDENTLY_VERIFIED_TRANSPORT_CODE_HASHES",
+    "PREREGISTRATION_FREEZE_RECEIPT_FOR_DOCUMENT_MANIFEST_VERIFIER_AND_INPUT_REGISTRIES",
+    "AUTHORIZED_NONBLOCKING_REPOSITORY_AI_ENTRY_DISPOSITION",
+    "FROZEN_BLIND_EXECUTION_AND_PRESERVED_RESULTS",
+    "FINAL_BOUNDARY_AND_CLAIM_CEILING_RECEIPT"
+  ],
+  "authorityEffects": {
+    "executionAuthorized": false,
+    "sourceAcquisitionAuthorized": false,
+    "outcomeAccessAuthorized": false,
+    "preregistrationMutationAuthorized": false,
+    "experimentalCompletionCreated": false,
+    "claimEntitlementCreated": false,
+    "resilienceBridgeClosed": false,
+    "crossDomainTransferCreated": false
+  }
+}

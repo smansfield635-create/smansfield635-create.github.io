@@ -63,8 +63,8 @@
       "fieldSelector": "[data-award-trophy]",
       "canvasSelector": "[data-award-trophy] canvas",
       "fallbackSelector": "[data-award-trophy] .compass-trophy-fallback",
-      "approvedRenderer": "procedural-webgl-v6-legible-nameplate",
-      "minFrames": 1,
+      "approvedRenderer": "procedural-webgl-v7-front-facing-motion",
+      "minFrames": 2,
       "requireVisible": true,
       "requireFallbackFalse": true,
       "requireNonblank": true

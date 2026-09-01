@@ -1,4 +1,202 @@
-/* DGB_JEN_SOURCE_CONSTELLATION_v1 — page-native closing ornament, not a boxed Compass instrument. */
-.jen-source-constellation{position:relative;min-height:clamp(28rem,58vw,38rem);margin-top:.75rem;overflow:hidden;border-radius:2rem;background:radial-gradient(circle at 50% 48%,rgba(83,181,231,.10),transparent 18rem),radial-gradient(circle at 18% 22%,rgba(255,255,255,.06) 0 1px,transparent 1.5px),radial-gradient(circle at 78% 36%,rgba(255,255,255,.08) 0 1px,transparent 1.5px);background-size:auto,4.8rem 4.8rem,6.4rem 6.4rem;perspective:1200px;touch-action:pan-y;outline:none;user-select:none}.jen-source-constellation::before,.jen-source-constellation::after{content:"";position:absolute;left:50%;top:51%;translate:-50% -50%;width:min(78%,38rem);aspect-ratio:2.25;border:1px solid rgba(111,202,245,.14);border-radius:50%;transform:rotateX(58deg);pointer-events:none}.jen-source-constellation::after{width:min(56%,27rem);opacity:.55}.jen-source-globe{position:absolute;left:50%;top:50%;translate:-50% -50%;z-index:40;display:grid;place-items:center;width:clamp(6rem,14vw,8.5rem);aspect-ratio:1;border:1px solid rgba(133,213,249,.42);border-radius:50%;background:radial-gradient(circle at 34% 28%,rgba(175,229,255,.75),rgba(48,125,165,.65) 22%,rgba(19,70,99,.88) 49%,rgba(3,17,30,.98) 72%);box-shadow:0 0 2.6rem rgba(71,180,231,.18),inset -.9rem -1.1rem 1.7rem rgba(0,0,0,.42);color:#f4fbff;text-decoration:none;text-align:center;transition:transform .25s ease,border-color .25s ease}.jen-source-globe::before{content:"";position:absolute;inset:15% 21% 47% 12%;border-radius:56% 42% 61% 35%;background:rgba(116,178,132,.48);transform:rotate(-18deg)}.jen-source-globe::after{content:"";position:absolute;inset:52% 13% 15% 46%;border-radius:43% 58% 37% 63%;background:rgba(116,178,132,.38);transform:rotate(22deg)}.jen-source-globe span{position:relative;z-index:2;max-width:7ch;font-size:.62rem;font-weight:950;letter-spacing:.09em;text-transform:uppercase;text-shadow:0 1px 8px #001}.jen-source-globe:hover,.jen-source-globe:focus-visible{transform:scale(1.06);border-color:rgba(197,238,255,.8);outline:none}.jen-source-star{position:absolute;left:50%;top:50%;z-index:10;width:clamp(7.2rem,16vw,10rem);min-height:6.2rem;padding:.8rem;border:1px solid rgba(255,255,255,.13);clip-path:polygon(50% 0,61% 31%,95% 20%,69% 48%,100% 63%,65% 65%,72% 100%,50% 76%,28% 100%,35% 65%,0 63%,31% 48%,5% 20%,39% 31%);background:linear-gradient(145deg,rgba(123,210,250,.34),rgba(35,84,122,.64) 48%,rgba(9,20,35,.96));color:#f4fbff;text-decoration:none;display:grid;place-items:center;text-align:center;transform-style:preserve-3d;transition:transform .4s cubic-bezier(.2,.72,.2,1),opacity .25s ease,filter .25s ease;will-change:transform}.jen-source-star strong{display:block;max-width:9ch;font-size:.72rem;line-height:1.08;text-shadow:0 1px 8px #001}.jen-source-star small{display:block;margin-top:.2rem;color:#9edfff;font-size:.48rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.jen-source-star[data-front="true"]{filter:brightness(1.22);z-index:30}.jen-source-star:focus-visible{outline:3px solid #9edfff;outline-offset:4px}.jen-source-constellation__cue{margin:.35rem 0 0;color:var(--campaign-muted);font-size:.82rem}.jen-source-constellation__status{position:absolute;left:50%;bottom:1rem;translate:-50% 0;z-index:60;padding:.45rem .75rem;border:1px solid rgba(255,255,255,.1);border-radius:999px;background:rgba(2,7,15,.68);color:var(--campaign-muted);font-size:.7rem;backdrop-filter:blur(8px)}
-@media(max-width:720px){.jen-source-constellation{min-height:30rem}.jen-source-star{width:7.4rem}.jen-source-globe{width:6.2rem}}
-@media(prefers-reduced-motion:reduce){.jen-source-star,.jen-source-globe{transition:none!important}}
+/* DGB_JEN_SOURCE_CONSTELLATION_DONOR_EXACT_v2
+   No local star/planet geometry. Physical objects are rendered by the unchanged
+   Products crystal/compositor/planet stack. This file owns only page-local stage,
+   source identity, and center-navigation presentation.
+*/
+.jen-source-cluster{
+  --products-compass-size:clamp(118px,16vw,172px);
+  position:relative;
+  width:100%;
+  margin-top:.85rem;
+  color:var(--campaign-ink,#f7f2e5);
+  isolation:isolate;
+}
+
+/* Products scene presentation, retained locally rather than importing the
+   Products page stylesheet and allowing its root/body rules to touch Jen. */
+.jen-source-cluster .products-scene{
+  min-height:clamp(30rem,56vw,39rem);
+  display:grid;
+  place-items:center;
+  position:relative;
+  overflow:hidden;
+  border:0;
+  border-radius:1.5rem;
+  background:
+    radial-gradient(circle at 50% 42%,rgba(141,216,255,.10),transparent 18rem),
+    radial-gradient(circle at 50% 66%,rgba(36,120,255,.10),transparent 26rem),
+    linear-gradient(180deg,rgba(1,5,16,.34),rgba(2,6,16,.66));
+  box-shadow:inset 0 0 5rem rgba(20,69,112,.055);
+  touch-action:none;
+  overscroll-behavior:contain;
+}
+.jen-source-cluster .products-scene::before,
+.jen-source-cluster .products-scene::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.jen-source-cluster .products-scene::before{
+  width:min(76%,36rem);
+  height:min(50%,19rem);
+  border:1px solid rgba(243,200,111,.11);
+  box-shadow:0 0 3.2rem rgba(36,120,255,.09),inset 0 0 30px rgba(141,216,255,.025);
+}
+.jen-source-cluster .products-scene::after{
+  width:min(58%,25rem);
+  height:min(34%,13rem);
+  border:1px solid rgba(141,216,255,.10);
+  box-shadow:0 0 2.4rem rgba(141,216,255,.06);
+}
+
+.jen-source-cluster .products-semantic{
+  position:absolute;
+  inset:0;
+  z-index:4;
+  pointer-events:none;
+}
+.jen-source-cluster .products-star{
+  position:absolute;
+  left:50%;
+  top:50%;
+  min-width:44px;
+  min-height:44px;
+  width:44px;
+  height:44px;
+  padding:0;
+  border:0;
+  border-radius:999px;
+  background:transparent;
+  color:transparent;
+  box-shadow:none;
+  transform:translate(-50%,-50%);
+  pointer-events:auto;
+  cursor:pointer;
+  overflow:visible;
+}
+.jen-source-cluster .products-star::before{
+  content:"";
+  position:absolute;
+  inset:50% auto auto 50%;
+  width:clamp(7rem,15vw,9.6rem);
+  height:clamp(5.2rem,11vw,7rem);
+  transform:translate(-50%,-50%);
+  border-radius:1.4rem;
+  background:transparent;
+  pointer-events:none;
+}
+.jen-source-cluster .products-star[hidden]{display:none!important}
+.jen-source-cluster .products-star__label,
+.jen-source-cluster .products-star__short{
+  position:absolute;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+  clip-path:inset(50%);
+  white-space:nowrap;
+}
+
+/* Foreground identity is deliberately compact. The renderer-projected Product
+   label remains the primary spatial label; this line carries source context. */
+.jen-source-identity{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  grid-template-areas:"kicker title" "kicker summary";
+  align-items:center;
+  gap:.12rem .8rem;
+  width:min(100%,48rem);
+  margin:.7rem auto 0;
+  padding:.68rem .9rem;
+  border-top:1px solid rgba(184,205,255,.12);
+  border-bottom:1px solid rgba(184,205,255,.08);
+  background:linear-gradient(90deg,transparent,rgba(7,15,27,.48) 15%,rgba(7,15,27,.48) 85%,transparent);
+}
+.jen-source-identity small{
+  grid-area:kicker;
+  color:rgba(158,223,255,.82);
+  font-size:.62rem;
+  font-weight:900;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+}
+.jen-source-identity strong{
+  grid-area:title;
+  font-size:.88rem;
+  line-height:1.15;
+  color:rgba(255,248,224,.98);
+}
+.jen-source-identity span{
+  grid-area:summary;
+  color:var(--campaign-muted,rgba(230,238,255,.72));
+  font-size:.76rem;
+  line-height:1.35;
+}
+
+/* The center world is the canonical Products/Audralia renderer. Only the local
+   disclosure beneath it is Jen-owned. */
+.jen-source-center-menu{
+  position:absolute;
+  left:50%;
+  top:55%;
+  z-index:70;
+  display:grid;
+  gap:.42rem;
+  width:min(17rem,calc(100% - 2rem));
+  padding:.65rem;
+  transform:translate(-50%,0);
+  border:1px solid rgba(243,217,139,.28);
+  border-radius:1rem;
+  background:rgba(3,8,17,.90);
+  box-shadow:0 1rem 2.6rem rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.06);
+  backdrop-filter:blur(10px);
+}
+.jen-source-center-menu[hidden]{display:none!important}
+.jen-source-center-menu button,
+.jen-source-center-menu a{
+  min-height:2.65rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:.62rem .8rem;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:999px;
+  color:rgba(246,241,228,.92);
+  background:rgba(255,255,255,.035);
+  font-size:.70rem;
+  font-weight:900;
+  letter-spacing:.055em;
+  text-align:center;
+  text-decoration:none;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+.jen-source-center-menu a{
+  border-color:rgba(243,217,139,.46);
+  color:#181207;
+  background:linear-gradient(135deg,#f6df97,#b98d3e);
+}
+.jen-source-center-menu button:focus-visible,
+.jen-source-center-menu a:focus-visible{
+  outline:2px solid rgba(158,223,255,.92);
+  outline-offset:2px;
+}
+
+/* Prevent a Products page shell from being introduced around the ornament. */
+.jen-source-cluster.products-page{display:block;gap:0}
+.jen-source-cluster .products-compass-layer{filter:drop-shadow(0 0 1.15rem rgba(91,196,255,.28))}
+.jen-source-cluster .products-compass-control{cursor:pointer}
+
+@media(max-width:720px){
+  .jen-source-cluster{--products-compass-size:clamp(110px,29vw,148px)}
+  .jen-source-cluster .products-scene{min-height:31rem;border-radius:1.1rem}
+  .jen-source-identity{grid-template-columns:1fr;grid-template-areas:"kicker" "title" "summary";gap:.16rem;padding:.65rem .35rem}
+  .jen-source-center-menu{top:57%}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .jen-source-center-menu *{transition:none!important}
+}

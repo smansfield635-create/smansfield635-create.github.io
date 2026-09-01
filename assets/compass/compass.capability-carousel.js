@@ -17,8 +17,8 @@ function bindStaticFirstPaintAuthority(){
 }
 function mountCapabilityEnhancement(){
   load('/assets/compass/compass.hra-brain-scene.js?v=brain-gen1-hra-passive-v1&g=1607&cb=20260824-brain-gen1-hra-passive-v1','data-compass-hra-brain-scene',()=>{
-    load('/assets/compass/compass.capability-carousel.core.js?v=capability-continuity-v5-static-owner&cb=gen1898','data-compass-capability-carousel-core',()=>{
-      load('/assets/compass/compass.trophy-visible-plaque.js?v=visible-plaque-v2-authentic&cb=d84b90df17c8120d','data-compass-trophy-visible-plaque');
+    load('/assets/compass/compass.trophy-scene.js?v=capability-continuity-v9-integrated-recess&cb=d281e18b06128671','data-compass-trophy-scene',()=>{
+      load('/assets/compass/compass.capability-carousel.core.js?v=capability-continuity-v5-static-owner&cb=gen1898','data-compass-capability-carousel-core');
     });
   });
   globalThis.DGB_COMPASS_OPTIONAL_ENHANCEMENT_BOUNDARY=Object.freeze({afterDocumentLoad:false,delayMs:0,firstPaintDependency:false,domOwnerReplacement:false});

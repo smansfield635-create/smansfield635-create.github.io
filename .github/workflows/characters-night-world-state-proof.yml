@@ -98,7 +98,10 @@ jobs:
           }
 
           (async () => {
-            const browser = await chromium.launch({ headless: true });
+            const browser = await chromium.launch({
+              headless: true,
+              args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader']
+            });
             const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce' });
             const page = await context.newPage();
             const errors = [];
@@ -106,7 +109,14 @@ jobs:
             page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
 
             await page.goto(ROOT, { waitUntil: 'load' });
-            await page.locator('#intro-layer').screenshot({ path: '.qualification/characters-task19-cardinal-scenes/01-cinematic-intro.png' });
+            await page.waitForFunction(() => document.documentElement.classList.contains('webgl-ready') || document.documentElement.classList.contains('static-mode'));
+            const runtimeState = await page.evaluate(() => ({
+              webglReady: document.documentElement.classList.contains('webgl-ready'),
+              staticMode: document.documentElement.classList.contains('static-mode'),
+              fallback: document.querySelector('#runtime-fallback')?.textContent?.trim() ?? ''
+            }));
+            await page.screenshot({ path: '.qualification/characters-task19-cardinal-scenes/01-cinematic-intro.png' });
+            if (!runtimeState.webglReady) throw new Error(`interactive WebGL runtime unavailable: ${JSON.stringify({ runtimeState, errors })}`);
             const skippedState = await enterBySkipping(page);
             const completedPage = await context.newPage();
             const completedState = await enterByCompletion(completedPage);
@@ -149,7 +159,8 @@ jobs:
 
             const desktopOverflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
             if (desktopOverflow > 1) throw new Error(`desktop horizontal overflow: ${desktopOverflow}px`);
-            const phone = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+            const phoneContext = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+            const phone = await phoneContext.newPage();
             await enterBySkipping(phone);
             const phoneOverflow = await phone.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
             if (phoneOverflow > 1) throw new Error(`phone horizontal overflow: ${phoneOverflow}px`);
@@ -180,6 +191,7 @@ jobs:
             };
             fs.writeFileSync('.qualification/characters-task19-cardinal-scenes/proof.json', JSON.stringify(proof, null, 2));
             console.log(JSON.stringify(proof, null, 2));
+            await phoneContext.close();
             await staticContext.close();
             await context.close();
             await browser.close();
@@ -192,3 +204,4 @@ jobs:
           name: characters-task19-cardinal-scenes-${{ github.event.pull_request.head.sha || github.sha }}
           path: .qualification/characters-task19-cardinal-scenes
           if-no-files-found: error
+          include-hidden-files: true

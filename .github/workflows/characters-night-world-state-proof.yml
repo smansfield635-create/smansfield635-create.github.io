@@ -44,37 +44,37 @@ jobs:
             await page.waitForSelector('.signal[data-id="crossing"]:not([hidden])',{timeout:15000});
 
             const initial=await page.evaluate(()=>({
-              manorHidden:document.querySelector('.signal[data-id="manor"]')?.hidden,
-              aurenHidden:document.querySelector('.signal[data-id="auren"]')?.hidden,
-              jeevesHidden:document.querySelector('.signal[data-id="jeeves"]')?.hidden,
+              manorUnseen:document.querySelector('.signal[data-id="manor"]')?.classList.contains('unseen'),
+              aurenUnseen:document.querySelector('.signal[data-id="auren"]')?.classList.contains('unseen'),
+              jeevesUnseen:document.querySelector('.signal[data-id="jeeves"]')?.classList.contains('unseen'),
               crossingShape:getComputedStyle(document.querySelector('.signal[data-id="crossing"]'),'::before').clipPath,
               clear:[...document.querySelector('#scene').getContext('webgl2').getParameter(WebGL2RenderingContext.COLOR_CLEAR_VALUE)]
             }));
-            if(initial.manorHidden!==true||initial.aurenHidden!==true||initial.jeevesHidden!==true)throw Error('initial revelation boundary invalid '+JSON.stringify(initial));
+            if(!initial.manorUnseen||!initial.aurenUnseen||!initial.jeevesUnseen)throw Error('initial revelation boundary invalid '+JSON.stringify(initial));
             if(!initial.crossingShape||initial.crossingShape==='none')throw Error('discovery star geometry absent');
 
             await page.locator('.signal[data-id="crossing"]').click({force:true});
             await page.waitForSelector('.crossing-scar.show',{timeout:3000});
-            await page.waitForSelector('.signal[data-id="manor"]:not([hidden])',{timeout:3000});
+            await page.waitForFunction(()=>!document.querySelector('.signal[data-id="manor"]')?.classList.contains('unseen'),null,{timeout:3000});
             const afterCrossing=await page.evaluate(()=>({
-              manorHidden:document.querySelector('.signal[data-id="manor"]').hidden,
+              manorUnseen:document.querySelector('.signal[data-id="manor"]').classList.contains('unseen'),
+              manorAriaHidden:document.querySelector('.signal[data-id="manor"]').getAttribute('aria-hidden'),
               constellationCount:document.querySelectorAll('.constellation-line').length,
               story:document.querySelector('#story-title')?.textContent
             }));
-            if(afterCrossing.manorHidden||afterCrossing.constellationCount<1||afterCrossing.story!=='The Crossing')throw Error('Crossing consequence failed '+JSON.stringify(afterCrossing));
+            if(afterCrossing.manorUnseen||afterCrossing.manorAriaHidden==='true'||afterCrossing.constellationCount<1||afterCrossing.story!=='The Crossing')throw Error('Crossing consequence failed '+JSON.stringify(afterCrossing));
 
-            await page.locator('.signal[data-id="manor"]').click({force:true});
+            await page.evaluate(()=>document.querySelector('.signal[data-id="manor"]')?.click());
             await page.waitForSelector('.manor-mass.show',{timeout:3000});
-            await page.waitForSelector('.signal[data-id="auren"]:not([hidden])',{timeout:3000});
-            await page.waitForSelector('.signal[data-id="jeeves"]:not([hidden])',{timeout:3000});
+            await page.waitForFunction(()=>!document.querySelector('.signal[data-id="auren"]')?.classList.contains('unseen')&&!document.querySelector('.signal[data-id="jeeves"]')?.classList.contains('unseen'),null,{timeout:3000});
             const afterManor=await page.evaluate(()=>({
-              aurenHidden:document.querySelector('.signal[data-id="auren"]').hidden,
-              jeevesHidden:document.querySelector('.signal[data-id="jeeves"]').hidden,
+              aurenUnseen:document.querySelector('.signal[data-id="auren"]').classList.contains('unseen'),
+              jeevesUnseen:document.querySelector('.signal[data-id="jeeves"]').classList.contains('unseen'),
               story:document.querySelector('#story-title')?.textContent
             }));
-            if(afterManor.aurenHidden||afterManor.jeevesHidden||afterManor.story!=='Mirror Manor')throw Error('Manor consequence failed '+JSON.stringify(afterManor));
+            if(afterManor.aurenUnseen||afterManor.jeevesUnseen||afterManor.story!=='Mirror Manor')throw Error('Manor consequence failed '+JSON.stringify(afterManor));
 
-            await page.locator('.signal[data-id="clock"]').click({force:true});
+            await page.evaluate(()=>document.querySelector('.signal[data-id="clock"]')?.click());
             await page.waitForSelector('.clock-anomaly.show',{timeout:3000});
             await page.waitForTimeout(100);
             const afterClock=await page.evaluate(()=>({

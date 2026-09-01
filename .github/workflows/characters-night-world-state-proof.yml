@@ -1,0 +1,93 @@
+name: Characters Gratitude Coast Night World-State Proof
+
+on:
+  pull_request:
+    paths:
+      - 'characters/app.mjs'
+      - 'characters/narrative-world-state.mjs'
+      - 'characters/night-renderer.mjs'
+      - 'characters/CHARACTERS_NARRATIVE_WORLD_CONSEQUENCE_BASELINE.md'
+      - '.github/workflows/characters-night-world-state-proof.yml'
+  workflow_dispatch:
+
+permissions: { contents: read }
+
+jobs:
+  browser-proof:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: '${{ github.event.pull_request.head.sha || github.sha }}'
+          fetch-depth: 1
+      - name: Syntax and browser substrate
+        run: |
+          node --check characters/app.mjs
+          node --check characters/narrative-world-state.mjs
+          node --check characters/night-renderer.mjs
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null
+      - run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/characters-night-http.log 2>&1 &
+      - name: Prove night runtime and three-node consequence chain
+        run: |
+          node <<'NODE'
+          const {chromium}=require('playwright');
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce'});
+            const page=await context.newPage();
+            const errors=[];
+            page.on('pageerror',e=>errors.push(String(e)));
+            page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+            await page.goto('http://127.0.0.1:4173/characters/',{waitUntil:'networkidle'});
+            await page.waitForSelector('.signal[data-id="crossing"]:not([hidden])',{timeout:15000});
+
+            const initial=await page.evaluate(()=>({
+              manorHidden:document.querySelector('.signal[data-id="manor"]')?.hidden,
+              aurenHidden:document.querySelector('.signal[data-id="auren"]')?.hidden,
+              jeevesHidden:document.querySelector('.signal[data-id="jeeves"]')?.hidden,
+              crossingShape:getComputedStyle(document.querySelector('.signal[data-id="crossing"]'),'::before').clipPath,
+              clear:[...document.querySelector('#scene').getContext('webgl2').getParameter(WebGL2RenderingContext.COLOR_CLEAR_VALUE)]
+            }));
+            if(initial.manorHidden!==true||initial.aurenHidden!==true||initial.jeevesHidden!==true)throw Error('initial revelation boundary invalid '+JSON.stringify(initial));
+            if(!initial.crossingShape||initial.crossingShape==='none')throw Error('discovery star geometry absent');
+
+            await page.locator('.signal[data-id="crossing"]').click({force:true});
+            await page.waitForSelector('.crossing-scar.show',{timeout:3000});
+            await page.waitForSelector('.signal[data-id="manor"]:not([hidden])',{timeout:3000});
+            const afterCrossing=await page.evaluate(()=>({
+              manorHidden:document.querySelector('.signal[data-id="manor"]').hidden,
+              constellationCount:document.querySelectorAll('.constellation-line').length,
+              story:document.querySelector('#story-title')?.textContent
+            }));
+            if(afterCrossing.manorHidden||afterCrossing.constellationCount<1||afterCrossing.story!=='The Crossing')throw Error('Crossing consequence failed '+JSON.stringify(afterCrossing));
+
+            await page.locator('.signal[data-id="manor"]').click({force:true});
+            await page.waitForSelector('.manor-mass.show',{timeout:3000});
+            await page.waitForSelector('.signal[data-id="auren"]:not([hidden])',{timeout:3000});
+            await page.waitForSelector('.signal[data-id="jeeves"]:not([hidden])',{timeout:3000});
+            const afterManor=await page.evaluate(()=>({
+              aurenHidden:document.querySelector('.signal[data-id="auren"]').hidden,
+              jeevesHidden:document.querySelector('.signal[data-id="jeeves"]').hidden,
+              story:document.querySelector('#story-title')?.textContent
+            }));
+            if(afterManor.aurenHidden||afterManor.jeevesHidden||afterManor.story!=='Mirror Manor')throw Error('Manor consequence failed '+JSON.stringify(afterManor));
+
+            await page.locator('.signal[data-id="clock"]').click({force:true});
+            await page.waitForSelector('.clock-anomaly.show',{timeout:3000});
+            await page.waitForTimeout(100);
+            const afterClock=await page.evaluate(()=>({
+              clear:[...document.querySelector('#scene').getContext('webgl2').getParameter(WebGL2RenderingContext.COLOR_CLEAR_VALUE)],
+              story:document.querySelector('#story-title')?.textContent,
+              clockVisited:document.querySelector('.signal[data-id="clock"]').classList.contains('visited'),
+              constellationCount:document.querySelectorAll('.constellation-line').length
+            }));
+            if(afterClock.story!=='The Clock'||!afterClock.clockVisited)throw Error('Clock discovery failed '+JSON.stringify(afterClock));
+            if(afterClock.clear[0]>=initial.clear[0]||afterClock.clear[2]>=initial.clear[2])throw Error('Clock global night phase did not deepen '+JSON.stringify({initial:initial.clear,after:afterClock.clear}));
+            if(errors.length)throw Error('runtime errors '+JSON.stringify(errors));
+
+            console.log(JSON.stringify({result:'PASS',initial,afterCrossing,afterManor,afterClock},null,2));
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE

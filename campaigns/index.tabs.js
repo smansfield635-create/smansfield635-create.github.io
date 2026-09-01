@@ -1,12 +1,12 @@
 /* /campaigns/index.tabs.js
-   DGB_COMMUNITY_CAMPAIGN_SHARED_TABS_v2
-   Routes the four core community surfaces into the shared Frontier-style orbit model;
-   preserves accessible tabs on the remaining campaign/profile pages.
+   DGB_COMMUNITY_CAMPAIGN_SHARED_TABS_v3
+   Routes the five core community/profile surfaces into the shared Frontier-style orbit model;
+   preserves accessible tabs on the remaining campaign pages.
 */
 (() => {
   "use strict";
   const page = document.documentElement.dataset.page || "";
-  const orbitPages = new Set(["consider-energy", "rob", "wave", "jen-leney"]);
+  const orbitPages = new Set(["consider-energy", "rob", "wave", "jen-leney", "mr-lee"]);
   if (orbitPages.has(page)) {
     if (!document.querySelector('link[data-community-orbit-style]')) {
       const link = document.createElement("link");
@@ -24,7 +24,7 @@
     return;
   }
 
-  const CONTRACT = "DGB_COMMUNITY_CAMPAIGN_SHARED_TABS_v2";
+  const CONTRACT = "DGB_COMMUNITY_CAMPAIGN_SHARED_TABS_v3";
   const roots = [...document.querySelectorAll("[data-campaign-tabs]")];
   const observations = [];
   const activate = (root, tab, focus = false) => {

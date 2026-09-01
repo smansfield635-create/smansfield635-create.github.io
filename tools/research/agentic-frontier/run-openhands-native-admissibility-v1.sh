@@ -7,6 +7,7 @@ set -euo pipefail
 : "${OLLAMA_IMAGE:=ollama/ollama:0.32.14}"
 : "${OLLAMA_CONTEXT_LENGTH:=32768}"
 : "${OPENHANDS_VERSION:=1.14.0}"
+: "${OPENHANDS_LLM_TIMEOUT_S:=1500}"
 : "${PYTHON_BIN:=python3.12}"
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
@@ -31,6 +32,8 @@ done
 OUT_ROOT="${OPENHANDS_NATIVE_OUT_DIR:-$(mktemp -d -t openhands-native-admissibility-XXXXXX)}"
 mkdir -p "$OUT_ROOT"
 VENV="$OUT_ROOT/venv-openhands"
+OPENHANDS_HOME="$OUT_ROOT/openhands-home"
+mkdir -p "$OPENHANDS_HOME/.openhands"
 
 cleanup() {
   docker rm -f agentic-frontier-ollama >/dev/null 2>&1 || true
@@ -64,19 +67,57 @@ docker exec agentic-frontier-ollama ollama pull "$OLLAMA_MODEL"
 sha256sum "$OUT_ROOT/openhands-environment-freeze.txt" | tee "$OUT_ROOT/openhands-environment-freeze.sha256"
 printf '%s\n' "$OLLAMA_CONTEXT_LENGTH" > "$OUT_ROOT/ollama-context-length.txt"
 
+AGENT_SETTINGS="$OPENHANDS_HOME/.openhands/agent_settings.json"
+"$VENV/bin/python" - "$AGENT_SETTINGS" "$OLLAMA_MODEL" "${OLLAMA_HOST_URL%/}/v1" "$OPENHANDS_LLM_TIMEOUT_S" <<'PY'
+import json, pathlib, sys
+path = pathlib.Path(sys.argv[1])
+settings = {
+    "llm": {
+        "model": "openai/" + sys.argv[2],
+        "api_key": "local-placeholder",
+        "base_url": sys.argv[3],
+        "timeout": int(sys.argv[4]),
+        "native_tool_calling": True,
+    }
+}
+path.write_text(json.dumps(settings, indent=2) + "\n")
+PY
+
+export HOME="$OPENHANDS_HOME"
 export PATH="$VENV/bin:$PATH"
-export OLLAMA_MODEL OLLAMA_HOST_URL OLLAMA_CONTEXT_LENGTH
+export OLLAMA_MODEL OLLAMA_HOST_URL OLLAMA_CONTEXT_LENGTH OPENHANDS_LLM_TIMEOUT_S
 export OPENHANDS_PREFLIGHT_RECEIPT="$OUT_ROOT/openhands-native-preflight-v1.json"
 
 python tools/research/agentic-frontier/openhands-native-preflight-v1.py
 
-export LLM_API_KEY='local-placeholder'
-export LLM_MODEL="openai/$OLLAMA_MODEL"
-export LLM_BASE_URL="${OLLAMA_HOST_URL%/}/v1"
+"$VENV/bin/python" - "$AGENT_SETTINGS" "$OPENHANDS_LLM_TIMEOUT_S" "$OUT_ROOT/openhands-effective-llm-config-v1.json" <<'PY'
+import json, pathlib, sys
+from openhands.sdk import LLM
+settings_path = pathlib.Path(sys.argv[1])
+expected = int(sys.argv[2])
+out = pathlib.Path(sys.argv[3])
+settings = json.loads(settings_path.read_text())
+llm = LLM(**settings["llm"])
+receipt = {
+    "schema": "OPENHANDS_EFFECTIVE_LLM_CONFIG_v1",
+    "settings_path": str(settings_path),
+    "model": llm.model,
+    "base_url": llm.base_url,
+    "timeout": llm.timeout,
+    "native_tool_calling": llm.native_tool_calling,
+    "expected_timeout": expected,
+    "pass": llm.timeout == expected and llm.native_tool_calling is True,
+}
+out.write_text(json.dumps(receipt, indent=2) + "\n")
+print(json.dumps(receipt, indent=2))
+if not receipt["pass"]:
+    raise SystemExit(26)
+PY
+
 export OPENHANDS_SUPPRESS_BANNER='1'
 export PYTHONUNBUFFERED='1'
-export OPENHANDS_INACTIVITY_S="${OPENHANDS_INACTIVITY_S:-180}"
-export OPENHANDS_HARD_TIMEOUT_S="${OPENHANDS_HARD_TIMEOUT_S:-600}"
+export OPENHANDS_INACTIVITY_S="${OPENHANDS_INACTIVITY_S:-1500}"
+export OPENHANDS_HARD_TIMEOUT_S="${OPENHANDS_HARD_TIMEOUT_S:-1800}"
 export PAIR_HEARTBEAT_S="${PAIR_HEARTBEAT_S:-15}"
 export GITHUB_WORKSPACE="$OUT_ROOT"
 

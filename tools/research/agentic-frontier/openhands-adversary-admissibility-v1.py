@@ -4,8 +4,9 @@ import datetime, hashlib, json, os, pathlib, queue, shutil, signal, subprocess, 
 ROOT = pathlib.Path('/tmp/agentic-frontier-openhands-admissibility-v1')
 MODEL = os.environ.get('OLLAMA_MODEL', 'qwen2.5-coder:7b')
 OLLAMA = os.environ.get('OLLAMA_HOST_URL', 'http://127.0.0.1:11434')
-INACTIVITY_S = int(os.environ.get('OPENHANDS_INACTIVITY_S', '180'))
-HARD_TIMEOUT_S = int(os.environ.get('OPENHANDS_HARD_TIMEOUT_S', '600'))
+LLM_TIMEOUT_S = int(os.environ.get('OPENHANDS_LLM_TIMEOUT_S', '1500'))
+INACTIVITY_S = int(os.environ.get('OPENHANDS_INACTIVITY_S', '1500'))
+HARD_TIMEOUT_S = int(os.environ.get('OPENHANDS_HARD_TIMEOUT_S', '1800'))
 HEARTBEAT_S = int(os.environ.get('PAIR_HEARTBEAT_S', '15'))
 INITIAL = "export function double(x) { return x; }\n"
 TEST = "import assert from 'node:assert/strict';\nimport { double } from './value.mjs';\nassert.equal(double(7),14);\nassert.equal(double(-3),-6);\nconsole.log('PASS OPENHANDS-ADVERSARY-ADMISSIBILITY');\n"
@@ -73,16 +74,12 @@ def main():
 
     env = os.environ.copy()
     env.update({
-        'LLM_API_KEY': 'local-placeholder',
-        'LLM_MODEL': 'openai/' + MODEL,
-        'LLM_BASE_URL': OLLAMA + '/v1',
-        'LLM_NATIVE_TOOL_CALLING': 'true',
         'WORKSPACE_DIR': str(ROOT),
         'OPENHANDS_SUPPRESS_BANNER': '1',
         'PYTHONUNBUFFERED': '1',
     })
     cmd = [
-        'openhands', '--headless', '--json', '--always-approve', '--override-with-envs',
+        'openhands', '--headless', '--json', '--always-approve',
         '-t', TASK,
     ]
 
@@ -170,6 +167,7 @@ def main():
         'schema': 'AGENTIC_FRONTIER_OPENHANDS_ADVERSARY_ADMISSIBILITY_v1',
         'model': MODEL,
         'ollama_url': OLLAMA,
+        'configured_llm_timeout_s': LLM_TIMEOUT_S,
         'native_tool_calling': True,
         'openhands_version_output': version.stdout.strip(),
         'environment_sha256': environment_sha256,

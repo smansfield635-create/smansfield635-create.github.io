@@ -1,0 +1,19 @@
+{
+  "schema": "MAPS_SOURCE_AUTHORITY_BINDING_v0.1",
+  "instrument_id": "MAPS_DIAGNOSTIC_v0.1",
+  "authorities": [
+    {
+      "id": "AHBK_NORMATIVE_SPECIFICATION_v1",
+      "sha256": "1c61a7101763dd39815b76b3dc71e9b6767c3be42f511860f572af73b343f297",
+      "role": "GOVERNING_ARCHITECTURE"
+    },
+    {
+      "id": "SIMBENCH_LVTG_KERNEL_INCREMENTAL_VALUE_PREREGISTRATION_v1",
+      "sha256": "a7e9efbebee04c351bd8808f81acf054ce550ccf85cb08ea85c5b1bee2be1a3b",
+      "role": "PARENT_PROTOCOL"
+    }
+  ],
+  "cross_domain_transfer": false,
+  "historical_recovery_claimed": false,
+  "construction_classification": "NEW_PROSPECTIVE_INSTRUMENT"
+}

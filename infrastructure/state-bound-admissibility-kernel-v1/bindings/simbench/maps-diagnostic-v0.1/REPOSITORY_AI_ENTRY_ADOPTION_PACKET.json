@@ -1,0 +1,27 @@
+{
+  "schema": "MAPS_REPOSITORY_AI_ENTRY_ADOPTION_PACKET_v0.1",
+  "instrument_id": "MAPS_DIAGNOSTIC_v0.1",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "observed_main_head": "c2dbceb0267b124f5c34ac2fdf5245fc2015bca3",
+  "canonical_entrypoint": "AI_ENTRYPOINT.json",
+  "canonical_entrypoint_schema": "REPOSITORY_AI_ENTRYPOINT_v3_CANONICAL_SPINE",
+  "intended_path_prefix": "infrastructure/state-bound-admissibility-kernel-v1/bindings/simbench/maps-diagnostic-v0.1/",
+  "resolved_project_id": "STATE_BOUND_ADMISSIBILITY_KERNEL",
+  "mutation_class": "RUNTIME_OR_AUTHORITY",
+  "requested_task": "Attach the verified MAPS Diagnostic v0.1 secondary SimBench source package without executing or freezing the parent experiment",
+  "intake_status": "NOT_SUBMITTED",
+  "reason_codes": [
+    "FULL_REPOSITORY_CHECKOUT_REQUIRED_BY_PROJECT_ENTRYPOINT",
+    "FULL_REPOSITORY_CHECKOUT_UNAVAILABLE_IN_CURRENT_WORKSPACE_AFTER_STORAGE_EXHAUSTION",
+    "CANONICAL_ADMISSION_RECEIPT_NOT_CREATED"
+  ],
+  "repository_write_performed": false,
+  "branch_created": false,
+  "workflow_dispatched": false,
+  "operation_authority_created": false,
+  "merge_authority_created": false,
+  "deployment_authority_created": false,
+  "scientific_authority_created": false,
+  "required_success_before_repository_adoption": "ADMITTED_AND_LOCKED",
+  "parent_execution_disposition": "DO_NOT_EXECUTE"
+}

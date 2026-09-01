@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MAPS_DIAGNOSTIC_OUTPUT_v0.1",
+  "title": "MAPS Diagnostic v0.1 output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "instrument_id",
+    "binding_id",
+    "measurement_state",
+    "typed_uninterpretability",
+    "time",
+    "diagnostics",
+    "support",
+    "provenance",
+    "claim_ceiling",
+    "parent_execution_disposition"
+  ],
+  "properties": {
+    "schema": {"const": "MAPS_DIAGNOSTIC_OUTPUT_v0.1"},
+    "instrument_id": {"const": "MAPS_DIAGNOSTIC_v0.1"},
+    "binding_id": {"const": "MAPS_SIMBENCH_BINDING_v0.1"},
+    "measurement_state": {"enum": ["VALID", "UNINTERPRETABLE"]},
+    "typed_uninterpretability": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["reason_code", "category", "detail"],
+          "properties": {
+            "reason_code": {"type": "string"},
+            "category": {"enum": ["MEASUREMENT_INVALID", "SEMANTIC_MAPPING_INVALID", "EXECUTION_IDENTITY_INVALID", "CUSTODY_INVALID", "PROVENANCE_INVALID"]},
+            "detail": {"type": "string"}
+          }
+        }
+      ]
+    },
+    "time": {
+      "type": "object",
+      "required": ["previous_time_index", "time_index", "step_minutes"],
+      "properties": {
+        "previous_time_index": {"type": ["integer", "null"]},
+        "time_index": {"type": ["integer", "null"]},
+        "step_minutes": {"const": 15}
+      }
+    },
+    "diagnostics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["E_sup", "C_coh", "H_ent", "phi_phase"],
+      "properties": {
+        "E_sup": {"$ref": "#/$defs/diagnostic"},
+        "C_coh": {"$ref": "#/$defs/diagnostic"},
+        "H_ent": {"$ref": "#/$defs/diagnostic"},
+        "phi_phase": {"$ref": "#/$defs/diagnostic"}
+      }
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["probe_count", "viable_count", "physical_failure_count", "viable_fraction"],
+      "properties": {
+        "probe_count": {"type": ["integer", "null"]},
+        "viable_count": {"type": ["integer", "null"]},
+        "physical_failure_count": {"type": ["integer", "null"]},
+        "viable_fraction": {"type": ["number", "null"], "minimum": 0, "maximum": 1}
+      }
+    },
+    "provenance": {"type": "object"},
+    "claim_ceiling": {"type": "string"},
+    "parent_execution_disposition": {"const": "DO_NOT_EXECUTE"}
+  },
+  "$defs": {
+    "diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "unit", "range", "formula_id"],
+      "properties": {
+        "value": {"type": ["number", "null"]},
+        "unit": {"enum": ["1", "rad"]},
+        "range": {"type": "array", "prefixItems": [{"type": "number"}, {"type": "number"}], "minItems": 2, "maxItems": 2},
+        "formula_id": {"type": "string"}
+      }
+    }
+  }
+}

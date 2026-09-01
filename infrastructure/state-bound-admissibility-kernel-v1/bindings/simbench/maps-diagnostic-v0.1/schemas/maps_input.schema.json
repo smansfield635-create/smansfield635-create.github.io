@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "MAPS_DIAGNOSTIC_INPUT_v0.1",
+  "title": "MAPS Diagnostic v0.1 input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "instrument_id",
+    "lane",
+    "network_code",
+    "time_index",
+    "previous_time_index",
+    "step_minutes",
+    "bus_ids",
+    "phase_reference_bus_id",
+    "expected_probe_ids",
+    "requested_demand_mw",
+    "base_previous",
+    "base_current",
+    "probes_current",
+    "provenance"
+  ],
+  "properties": {
+    "schema": {"const": "MAPS_DIAGNOSTIC_INPUT_v0.1"},
+    "instrument_id": {"const": "MAPS_DIAGNOSTIC_v0.1"},
+    "lane": {"const": "BASE_PROBE_ONLY"},
+    "network_code": {"const": "1-HV-urban--0-sw"},
+    "time_index": {"type": "integer"},
+    "previous_time_index": {"type": "integer"},
+    "step_minutes": {"const": 15},
+    "bus_ids": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "phase_reference_bus_id": {"type": "string", "minLength": 1},
+    "expected_probe_ids": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "requested_demand_mw": {"type": "number", "exclusiveMinimum": 0},
+    "base_previous": {"$ref": "#/$defs/base_state"},
+    "base_current": {"$ref": "#/$defs/base_state"},
+    "probes_current": {
+      "type": "array",
+      "minItems": 2,
+      "items": {"oneOf": [
+        {"$ref": "#/$defs/viable_probe"},
+        {"$ref": "#/$defs/failure_probe"},
+        {"$ref": "#/$defs/uninterpretable_probe"}
+      ]}
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_lanes", "source_receipt_digest"],
+      "properties": {
+        "source_lanes": {"const": ["BASE", "PROBE"]},
+        "source_receipt_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  },
+  "$defs": {
+    "real_vector": {"type": "array", "minItems": 2, "items": {"type": "number"}},
+    "base_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "voltage_pu", "angle_degree"],
+      "properties": {
+        "status": {"const": "VALID"},
+        "voltage_pu": {"$ref": "#/$defs/real_vector"},
+        "angle_degree": {"$ref": "#/$defs/real_vector"}
+      }
+    },
+    "viable_probe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["probe_id", "status", "served_demand_mw", "active_loss_mw", "voltage_pu", "angle_degree"],
+      "properties": {
+        "probe_id": {"type": "string", "minLength": 1},
+        "status": {"const": "VIABLE"},
+        "served_demand_mw": {"type": "number", "minimum": 0},
+        "active_loss_mw": {"type": "number", "minimum": 0},
+        "voltage_pu": {"$ref": "#/$defs/real_vector"},
+        "angle_degree": {"$ref": "#/$defs/real_vector"}
+      }
+    },
+    "failure_probe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["probe_id", "status", "reason_code"],
+      "properties": {
+        "probe_id": {"type": "string", "minLength": 1},
+        "status": {"const": "PHYSICAL_FAILURE"},
+        "reason_code": {"type": "string", "minLength": 1}
+      }
+    },
+    "uninterpretable_probe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["probe_id", "status", "reason_code"],
+      "properties": {
+        "probe_id": {"type": "string", "minLength": 1},
+        "status": {"const": "NONINTERPRETABLE_SIMULATION"},
+        "reason_code": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

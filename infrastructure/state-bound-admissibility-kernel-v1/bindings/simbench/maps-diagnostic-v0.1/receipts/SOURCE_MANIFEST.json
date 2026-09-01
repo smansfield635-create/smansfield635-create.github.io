@@ -1,0 +1,100 @@
+{
+  "configuration_sha256": "3db16ca5662dc7531f49714672c07912ae7fb8c00b7ca0ffa61fd71f9996fe7c",
+  "files": [
+    {
+      "path": "FREEZE_READINESS_REPORT.md",
+      "sha256": "fe9de6159963f917b794aaae28e3d7fbdc394cd74f9f03b5b3816eaf33569a48",
+      "size_bytes": 3016
+    },
+    {
+      "path": "MAPS_DIAGNOSTIC_NORMATIVE_SPECIFICATION_v0.1.md",
+      "sha256": "c58aa7bb2e5fafb0ded79e6a70fccc97b171915f74d560239f3bd50f88a3508f",
+      "size_bytes": 10997
+    },
+    {
+      "path": "README.md",
+      "sha256": "6bbd2288fc8db4d3c068ff798e1fc4b4b8a60351ebfaefb376595431904a60db",
+      "size_bytes": 2440
+    },
+    {
+      "path": "REPOSITORY_AI_ENTRY_ADOPTION_PACKET.json",
+      "sha256": "176872e33ea2b47b6629853cd5e8d2a353f2c934d9e64cf37f69ebf87f4bbfe2",
+      "size_bytes": 1389
+    },
+    {
+      "path": "SIMBENCH_INTEGRATION_CONTRACT_v0.1.md",
+      "sha256": "e65e2b2170c8b421ce5d07b47d16e23becf9feb01e80d1457f9a088f14489ab8",
+      "size_bytes": 4082
+    },
+    {
+      "path": "SOURCE_AUTHORITY_BINDING.json",
+      "sha256": "c9cbff43111da26badb82dcb6a868a363d6c6776d184c518d5c14849143a600b",
+      "size_bytes": 641
+    },
+    {
+      "path": "ai_entry.py",
+      "sha256": "aeb25a34ad38ba3c180403fdde887e45c7879e2156bd7c884765f2304b035104",
+      "size_bytes": 10031
+    },
+    {
+      "path": "fixtures/example_batch.json",
+      "sha256": "eef4b4659730349ef0095c3c69f752cd475ae65f496939dd9a18b10bf203b7d0",
+      "size_bytes": 1960
+    },
+    {
+      "path": "fixtures/forbidden_challenge_key.json",
+      "sha256": "75017096a86d0da13728d6e269656cab4f21de4e61162126c1928ad397a42a6a",
+      "size_bytes": 940
+    },
+    {
+      "path": "fixtures/uninterpretable_probe.json",
+      "sha256": "70aa13b8ce48cfac04d367d0c8097cc3e4630b01ae62e6c64b702936f103d63b",
+      "size_bytes": 1035
+    },
+    {
+      "path": "fixtures/valid_mixed.json",
+      "sha256": "4b76177fba5f6d32cd5f1f033a5cdde1ac7c8bc5ed4ed9c18f94fde49484e54a",
+      "size_bytes": 1544
+    },
+    {
+      "path": "maps_diagnostic.py",
+      "sha256": "beeb85ca5f74eed81874598e4b6a9a232f3e92934238a15ddc47e4d0af10f92d",
+      "size_bytes": 21422
+    },
+    {
+      "path": "schemas/maps_input.schema.json",
+      "sha256": "d522bf21b6bbda01e173a029f7d9452ebc3cac07db5a1a5a00ef99a99b250c25",
+      "size_bytes": 3663
+    },
+    {
+      "path": "schemas/maps_output.schema.json",
+      "sha256": "8acf05ea0a4f942d2fb240232378d706091e0d3f13ffcd8427fd95742f38dd25",
+      "size_bytes": 2972
+    },
+    {
+      "path": "simbench_maps_adapter.py",
+      "sha256": "c927225bce19530662d8c178966c70acaadce043738fd9aae3d9cd81f3f81e62",
+      "size_bytes": 5381
+    },
+    {
+      "path": "tests/test_ai_entry.py",
+      "sha256": "cae274ef3628fb12c065473799de9f17c8d36175b085511dfcca59d554fa1721",
+      "size_bytes": 1458
+    },
+    {
+      "path": "tests/test_maps_diagnostic.py",
+      "sha256": "3049adcf8dda3dcfa88322b21a3f4dfa7423e3fc5ea0f32c6a3eeb95088d64bf",
+      "size_bytes": 8173
+    },
+    {
+      "path": "tests/test_simbench_adapter.py",
+      "sha256": "55c56168b380cfd0279f552f42ceabcf21e41c2f68a47b9dca0adb3bb58053da",
+      "size_bytes": 3335
+    }
+  ],
+  "instrument_id": "MAPS_DIAGNOSTIC_v0.1",
+  "parent_execution_disposition": "DO_NOT_EXECUTE",
+  "receipt_sha256": "6fc086ac76f8598725611db5b74341913a9c5ff4452bf041108e60affcb8730e",
+  "schema": "MAPS_SOURCE_MANIFEST_v0.1",
+  "source_root_sha256": "69e081872badfdc3bd7f29fd4ae54cd2d5cdf8beceabc68df20b02355339dff4"
+}

@@ -1,0 +1,215 @@
+{
+  "schema": "TASK19_CARDINAL_SCENE_CONSTRUCTION_CONTRACT_v1",
+  "status": "BOUND_PRECONSTRUCTION_SCAFFOLD",
+  "operationId": "CHARACTERS_TASK19_FOUR_CARDINAL_SCENE_CONSTRUCTION_20260901_001",
+  "admission": {
+    "canonicalResult": "ADMITTED_AND_LOCKED",
+    "lockGeneration": 1906,
+    "governingBase": "c2dbceb0267b124f5c34ac2fdf5245fc2015bca3",
+    "lockScope": "CHARACTERS:TASK19:FOUR_CARDINAL_SCENE_CONSTRUCTION:V1",
+    "scopeHash": "140ae0b922679985ee2ed17747d6561971823c807f56f73125a23b4cc4fa8e07",
+    "routerResult": "PASS",
+    "routerReceiptSha256": "363ba692c5de01d80e1136e29ab89554c9cbc74d613387489d44f5b0ab9b43f3",
+    "issue": 2378,
+    "requestComment": 5497082204,
+    "canonicalReturnComment": 5497093544,
+    "admissionReceiptComment": 5497109181
+  },
+  "subject": {
+    "branch": "characters/task19-four-cardinal-scenes-20260901-001",
+    "route": "/characters/",
+    "worldRepositoryIdentity": "AUDRALIA",
+    "worldPublicIdentity": "AUDRELIA",
+    "continent": "GRATITUDE",
+    "region": "GRATITUDE_HARBOR_MIRROR_MANOR_REGION",
+    "geographyClass": "DEVELOPMENT_GEOGRAPHY_CONSUMER_NOT_FINAL_CONTINENTAL_AUTHORITY"
+  },
+  "frozenSources": {
+    "task18Architecture": "issue:2378#issuecomment-5496668247",
+    "task19Preparation": "issue:2378#issuecomment-5496765137",
+    "legacyDossierManifest": "control-plane/whole-estate/characters-reconstruction-v1/dossier-preservation-manifest.v1.json",
+    "legacySourceBlob": "abafc0bc1f4b6538028833c47103596411ff3f3a",
+    "legacyStateCount": 256,
+    "dependencies": [
+      {
+        "path": "h-earth-3d/terrain/h-earth.terrain-field.js",
+        "blobSha": "f4f65b05ab303a11fb1d9c4e25de211fde73722a",
+        "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1"
+      },
+      {
+        "path": "h-earth-3d/terrain/h-earth.terrain-formations.js",
+        "blobSha": "880d099ef617edb9108607d911b1750f64856486",
+        "contractId": "H_EARTH_TERRAIN_FORMATIONS_RUN_6B_v2_LATTICE_SEMANTIC_ALIGNMENT"
+      },
+      {
+        "path": "h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js",
+        "blobSha": "a67a4e95f7634eb97a375ff103d95bdc81c64f0b",
+        "contractId": "AUDRALIA_GRATITUDE_GEOGRAPHIC_TRANSFER_AUTHORITY_v1"
+      }
+    ]
+  },
+  "allowedPaths": [
+    "characters/index.html",
+    "characters/app.mjs",
+    "characters/narrative-world-state.mjs",
+    "characters/night-renderer.mjs",
+    "characters/NARRATIVE_WORLD_STATE_CONTRACT.md",
+    ".github/ai-router/publication-surfaces/characters.json",
+    "characters/gratitude-geography.adapter.mjs",
+    "characters/cardinal-scenes.data.mjs",
+    "characters/cardinal-scene-state.mjs",
+    "characters/cardinal-scene-geometry.mjs",
+    "characters/coast-map.mjs",
+    "characters/knowledge-card.mjs",
+    "characters/cinematic-intro.mjs",
+    "characters/cardinal-scenes.css",
+    "control-plane/whole-estate/characters-reconstruction-v1/task19-cardinal-scene-construction-contract.v1.json",
+    "control-plane/whole-estate/characters-reconstruction-v1/verify-task19-cardinal-scenes.v1.mjs"
+  ],
+  "presenceContract": {
+    "states": ["SITE_ONLY", "CHARACTER_TRACE", "CHARACTER_PRESENT"],
+    "resolutionRule": "PRESENCE_IS_DERIVED_FROM_EXPLICIT_STORY_AND_DISCOVERY_STATE_BEFORE_LOCAL_INSPECTION_AVAILABILITY",
+    "sitePersistenceRule": "THE_SAME_STRUCTURAL_SITE_GEOMETRY_PERSISTS_ACROSS_ALL_PRESENCE_STATES",
+    "forbiddenInference": "PERMANENT_SITE_OWNERSHIP_DOES_NOT_PROVE_CHARACTER_OCCUPANCY"
+  },
+  "cardinalSites": [
+    {
+      "characterId": "ALARIC_AXION",
+      "siteId": "WATCHFIRE_OVERLOOK",
+      "landmarkId": "WATCHFIRE_AND_ROUTE_TABLE",
+      "arrivalState": "WITNESS_THE_BOUNDARY",
+      "discoveryCount": 5,
+      "environmentalLaw": ["ORIENTATION", "BOUNDARY", "ROUTE_AUTHORITY", "FALSE_PATH_ELIMINATION", "LAWFUL_CLOSURE"]
+    },
+    {
+      "characterId": "TARIAN_MERROW",
+      "siteId": "WATERLINE_STATION",
+      "landmarkId": "LOAD_BRIDGE_AND_RECOVERY_BASIN",
+      "arrivalState": "WITNESS_WHAT_MUST_KEEP_MOVING",
+      "discoveryCount": 6,
+      "environmentalLaw": ["CONTINUITY", "CARRYING", "CONNECTION", "RESTORATION", "PERSISTENCE"]
+    },
+    {
+      "characterId": "ELARA_SYLENE",
+      "siteId": "SIGNAL_LANTERN_FIELD",
+      "landmarkId": "LANTERN_ARRAY_AND_LISTENING_PAVILION",
+      "arrivalState": "WITNESS_THE_SIGNAL_BEFORE_THE_CONCLUSION",
+      "discoveryCount": 6,
+      "environmentalLaw": ["SIGNAL_EMERGENCE", "INTERPRETATION", "CONTRADICTION_PRESERVATION", "MEANINGFUL_CONNECTION"]
+    },
+    {
+      "characterId": "SOREN_SEVRIN",
+      "siteId": "RESTORATION_BOUNDARY",
+      "landmarkId": "RESTORED_CAUSEWAY_AND_RETURN_LOCK",
+      "arrivalState": "WITNESS_WHAT_THE_SURFACE_DENIES",
+      "discoveryCount": 6,
+      "environmentalLaw": ["FRACTURE", "CONTRADICTION", "FALSE_CONTINUITY", "UNSTABLE_CERTAINTY", "LAWFUL_RETURN"]
+    }
+  ],
+  "discoveries": [
+    {"id":"ALARIC_ROUTE_TABLE","characterId":"ALARIC_AXION","siteId":"WATCHFIRE_OVERLOOK","anchor":"ROUTE_TABLE","domain":"CHARACTER","deepLineage":false},
+    {"id":"ALARIC_THRESHOLD_GATE","characterId":"ALARIC_AXION","siteId":"WATCHFIRE_OVERLOOK","anchor":"THRESHOLD_GATE","domain":"FUNCTION","deepLineage":false},
+    {"id":"ALARIC_HELD_MARKER","characterId":"ALARIC_AXION","siteId":"WATCHFIRE_OVERLOOK","anchor":"HELD_MARKER","domain":"PRESSURE","deepLineage":false},
+    {"id":"ALARIC_FOUR_WAY_SIGHTLINE","characterId":"ALARIC_AXION","siteId":"WATCHFIRE_OVERLOOK","anchor":"FOUR_WAY_SIGHTLINE","domain":"RELATIONSHIPS","deepLineage":false},
+    {"id":"ALARIC_UNDERFRAME_APERTURE","characterId":"ALARIC_AXION","siteId":"WATCHFIRE_OVERLOOK","anchor":"UNDERFRAME_APERTURE","domain":"HIDDEN_LINEAGE","deepLineage":true},
+    {"id":"TARIAN_TIDE_STAFF","characterId":"TARIAN_MERROW","siteId":"WATERLINE_STATION","anchor":"TIDE_STAFF","domain":"CHARACTER","deepLineage":false},
+    {"id":"TARIAN_LOAD_BRIDGE","characterId":"TARIAN_MERROW","siteId":"WATERLINE_STATION","anchor":"LOAD_BRIDGE","domain":"FUNCTION","deepLineage":false},
+    {"id":"TARIAN_COUNTERFEIT_BUOY","characterId":"TARIAN_MERROW","siteId":"WATERLINE_STATION","anchor":"COUNTERFEIT_BUOY","domain":"VULNERABILITY","deepLineage":false},
+    {"id":"TARIAN_RECOVERY_BASIN","characterId":"TARIAN_MERROW","siteId":"WATERLINE_STATION","anchor":"RECOVERY_BASIN","domain":"PRESSURE_PERSONHOOD","deepLineage":false},
+    {"id":"TARIAN_CONFLUENCE_JUNCTION","characterId":"TARIAN_MERROW","siteId":"WATERLINE_STATION","anchor":"CONFLUENCE_JUNCTION","domain":"RELATIONSHIPS","deepLineage":false},
+    {"id":"TARIAN_SUBMERGED_FOUNDATION","characterId":"TARIAN_MERROW","siteId":"WATERLINE_STATION","anchor":"SUBMERGED_FOUNDATION","domain":"HIDDEN_LINEAGE","deepLineage":true},
+    {"id":"ELARA_FAINT_LANTERN","characterId":"ELARA_SYLENE","siteId":"SIGNAL_LANTERN_FIELD","anchor":"FAINT_LANTERN","domain":"CHARACTER","deepLineage":false},
+    {"id":"ELARA_ARCHIVE_RESONATOR","characterId":"ELARA_SYLENE","siteId":"SIGNAL_LANTERN_FIELD","anchor":"ARCHIVE_RESONATOR","domain":"FORMATION","deepLineage":false},
+    {"id":"ELARA_DOUBLE_APERTURE","characterId":"ELARA_SYLENE","siteId":"SIGNAL_LANTERN_FIELD","anchor":"DOUBLE_APERTURE","domain":"IDENTITY","deepLineage":false},
+    {"id":"ELARA_CONTRADICTION_LENS","characterId":"ELARA_SYLENE","siteId":"SIGNAL_LANTERN_FIELD","anchor":"CONTRADICTION_LENS","domain":"PRESSURE","deepLineage":false},
+    {"id":"ELARA_RELATION_ARRAY","characterId":"ELARA_SYLENE","siteId":"SIGNAL_LANTERN_FIELD","anchor":"RELATION_ARRAY","domain":"RELATIONSHIPS","deepLineage":false},
+    {"id":"ELARA_ROOT_RECEIVER","characterId":"ELARA_SYLENE","siteId":"SIGNAL_LANTERN_FIELD","anchor":"ROOT_RECEIVER","domain":"HIDDEN_LINEAGE","deepLineage":true},
+    {"id":"SOREN_FINISHED_SURFACE","characterId":"SOREN_SEVRIN","siteId":"RESTORATION_BOUNDARY","anchor":"FINISHED_SURFACE","domain":"CHARACTER","deepLineage":false},
+    {"id":"SOREN_FAILED_JOINT","characterId":"SOREN_SEVRIN","siteId":"RESTORATION_BOUNDARY","anchor":"FAILED_JOINT","domain":"FUNCTION","deepLineage":false},
+    {"id":"SOREN_TEST_FRAME","characterId":"SOREN_SEVRIN","siteId":"RESTORATION_BOUNDARY","anchor":"TEST_FRAME","domain":"PRESSURE","deepLineage":false},
+    {"id":"SOREN_RETURN_LOCK","characterId":"SOREN_SEVRIN","siteId":"RESTORATION_BOUNDARY","anchor":"RETURN_LOCK","domain":"VULNERABILITY_RECOVERY","deepLineage":false},
+    {"id":"SOREN_FOUR_BEARING_JUNCTION","characterId":"SOREN_SEVRIN","siteId":"RESTORATION_BOUNDARY","anchor":"FOUR_BEARING_JUNCTION","domain":"RELATIONSHIPS","deepLineage":false},
+    {"id":"SOREN_FOUNDATION_WITNESS","characterId":"SOREN_SEVRIN","siteId":"RESTORATION_BOUNDARY","anchor":"FOUNDATION_WITNESS","domain":"HIDDEN_LINEAGE","deepLineage":true}
+  ],
+  "knowledgeCardContract": {
+    "count": 23,
+    "faceA": "SOURCE_GROUNDED_OBSERVABLE_RECORD",
+    "faceB": "SOURCE_GROUNDED_SIGNIFICANCE_CONSEQUENCE_CONTRADICTION_PRESSURE_OR_RELATIONAL_MEANING",
+    "requiredKnowledgeFields": ["AUDIENCE_KNOWLEDGE", "CHARACTER_KNOWLEDGE", "PROVENANCE", "CHRONOLOGY_STATE", "AVAILABILITY_PREDICATE"],
+    "deepLineageDiscoveryCount": 4,
+    "deepLineageRule": "AUDIENCE_CONFIRMATION_MAY_BE_EXPLICIT_BUT_CHARACTER_KNOWLEDGE_IS_NOT_UPGRADED",
+    "interaction": ["HORIZONTAL_SWIPE_COIN_ROTATION", "TAP_CLICK_KEYBOARD_EQUIVALENT", "REDUCED_MOTION_SEMANTIC_FACE_REPLACEMENT", "DISMISS_FROM_EITHER_FACE"]
+  },
+  "geographyAndMapContract": {
+    "adapterPath": "characters/gratitude-geography.adapter.mjs",
+    "singleAuthorityRule": "WORLD_MAP_CAMERA_LANDMARKS_AND_LOD_RESOLVE_THROUGH_ONE_READ_ONLY_ADAPTER",
+    "mapRequired": true,
+    "mapWorldCoordinateIdentityRequired": true,
+    "finalContinentalAuthorityCreated": false,
+    "forbidden": ["INDEPENDENT_CSS_COASTLINE", "HAND_ILLUSTRATED_SUBSTITUTE_GEOGRAPHY", "DUPLICATED_SITE_COORDINATE_TABLE", "RADIAL_COMPASS_SITE_LAYOUT"]
+  },
+  "movementAndSceneContract": {
+    "grammar": ["WORLD_OR_MAP", "DISTANT_SIGNAL", "CINEMATIC_SURVEY_APPROACH", "CARDINAL_SITE", "PRESENCE_RESOLUTION", "LOCAL_INSPECTION", "TWO_SIDED_KNOWLEDGE_CARD", "CONTINUE_RELATION_OR_RETURN"],
+    "standardMode": "DESTINATION_DRIVEN_AUTHORED_CINEMATIC_SURVEY_PATHS",
+    "standardSnapAllowed": false,
+    "freeLocomotionAllowed": false,
+    "visitorIsCarousel": true,
+    "visibleCarouselArrowControls": false,
+    "majorGeometry": "STRUCTURAL_3D_WITH_SILHOUETTE_DEPTH_OCCLUSION_APPROACH_ANGLES_AND_LIGHTING_RESPONSE",
+    "flatBillboardMajorObjectsAllowed": false
+  },
+  "introContract": {
+    "optional": true,
+    "skipRequiredWhenPresent": true,
+    "skipCompletionStateIdentityRequired": true,
+    "autoplayAudioAllowed": false,
+    "flatReplacementWorldAllowed": false
+  },
+  "legacyProtection": {
+    "stateCount": 256,
+    "characterIds": ["auren", "dextrion", "alaric", "tarian", "elara", "soren", "jeeves", "remote-team"],
+    "allDestinationsRequired": true,
+    "literalRule": "ALL_256_LEGACY_DOSSIER_STATES_REMAIN_BYTE_EXACT_RECOVERABLE",
+    "publicProcessLanguageForbidden": ["dossier", "qualification", "task 19", "verifier"]
+  },
+  "equivalenceContract": {
+    "profiles": ["DESKTOP_STANDARD_MOTION", "TABLET_STANDARD_MOTION", "PHONE_STANDARD_MOTION", "REDUCED_MOTION", "WEBGL_UNAVAILABLE_STATIC"],
+    "requirements": ["TOUCH", "KEYBOARD", "NO_HORIZONTAL_VIEWPORT_ESCAPE", "NO_MOBILE_ARROW_FALLBACK", "ALL_DISCOVERIES_AVAILABLE", "COMPLETE_STATIC_SOURCE_ORDER"]
+  },
+  "ownerDifferentials": [
+    "GEOGRAPHY_MAP_WORLD_CORRESPONDENCE",
+    "FOUR_SITE_EMBODIMENT_AND_PRESENCE",
+    "KNOWLEDGE_CARD_DEPTH_AND_LINEAGE",
+    "PHONE_REDUCED_KEYBOARD_STATIC_ACCESS",
+    "INTEGRATED_WORLD_TO_SCENE_TO_MAP_RETURN"
+  ],
+  "constructionOrder": [
+    "LAND_TASK19_CONTRACT_AND_VERIFIER_SCAFFOLD_BEFORE_PRODUCT_CONSTRUCTION",
+    "BUILD_READ_ONLY_GRATITUDE_GEOGRAPHY_ADAPTER_AND_PROVE_MAP_WORLD_COORDINATE_IDENTITY",
+    "EXTEND_DETERMINISTIC_WORLD_SITE_PRESENCE_DISCOVERY_CARD_AND_RETURN_STATE",
+    "CONSTRUCT_FOUR_DISTINCT_STRUCTURAL_3D_CARDINAL_SITES_AND_LOD_EXPRESSIONS",
+    "BIND_TWENTY_THREE_FROZEN_DISCOVERIES_AND_REVERSIBLE_KNOWLEDGE_CARDS",
+    "BUILD_WORLD_CORRESPONDENT_OPERATIONAL_COAST_MAP_AND_RELATIONAL_NAVIGATION",
+    "ADD_OPTIONAL_INTRO_STATE_EQUIVALENT_SKIP_AND_ALL_STANDARD_SURVEY_PATHS",
+    "COMPLETE_PHONE_TOUCH_KEYBOARD_REDUCED_MOTION_AND_STATIC_FALLBACKS",
+    "RUN_EXACT_CANDIDATE_MACHINE_VERIFICATION_AND_CAPTURE_FIVE_OWNER_DIFFERENTIALS",
+    "STOP_FOR_OWNER_INTEGRATED_ACCEPTANCE_BEFORE_MERGE_QUALIFICATION"
+  ],
+  "verification": {
+    "command": "node control-plane/whole-estate/characters-reconstruction-v1/verify-task19-cardinal-scenes.v1.mjs --base c2dbceb0267b124f5c34ac2fdf5245fc2015bca3 --candidate HEAD",
+    "scaffoldPassResult": "PASS_PROTECTED_TASK19_SCAFFOLD_PRODUCT_CONSTRUCTION_NOT_STARTED",
+    "candidatePassResult": "PASS_PROTECTED_TASK19_EXACT_CANDIDATE_AWAITING_OWNER_DIFFERENTIALS",
+    "candidateFailResult": "HELD_TASK19_EXACT_CANDIDATE",
+    "ownerAcceptanceRequired": true,
+    "implementationReceiptAloneSufficient": false
+  },
+  "authorityBoundary": [
+    "CONTRACT_DOES_NOT_CREATE_FINAL_CONTINENTAL_GEOGRAPHY_AUTHORITY",
+    "CONTRACT_DOES_NOT_CREATE_CHARACTER_CANON",
+    "CONTRACT_DOES_NOT_CREATE_MERGE_AUTHORITY",
+    "CONTRACT_DOES_NOT_CREATE_DEPLOYMENT_AUTHORITY",
+    "CONTRACT_DOES_NOT_CREATE_PUBLICATION_AUTHORITY",
+    "OWNER_INTEGRATED_ACCEPTANCE_REMAINS_REQUIRED_BEFORE_MERGE_QUALIFICATION"
+  ],
+  "productMutationPerformedAtThisLayer": false
+}

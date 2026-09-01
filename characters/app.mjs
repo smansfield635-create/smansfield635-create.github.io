@@ -1,147 +1,1037 @@
-import {deriveNarrativeWorldState} from './narrative-world-state.mjs';
-import {GRATITUDE_COAST_NIGHT,NIGHT_FRAGMENT_SHADER,nightUniforms,discoveryStarStyle} from './night-renderer.mjs';
+import {
+  GRATITUDE_DEVELOPMENT_FRAME,
+  GRATITUDE_GEOGRAPHY_ADAPTER_ID,
+  resolveSiteAnchor,
+  sampleGratitudeWorld
+} from './gratitude-geography.adapter.mjs';
+import {
+  CARDINAL_CHARACTER_BY_SITE,
+  CARDINAL_SITE_IDS,
+  applyCardinalSceneEvent,
+  synchronizeCardinalStoryState
+} from './cardinal-scene-state.mjs';
+import {
+  CARDINAL_DISCOVERIES,
+  CARDINAL_SITE_RECORDS,
+  getCardinalSiteDiscoveries
+} from './cardinal-scenes.data.mjs';
+import { buildCardinalSiteGeometry } from './cardinal-scene-geometry.mjs';
+import { applyGratitudeCoastMapAction, buildGratitudeCoastMap } from './coast-map.mjs';
+import {
+  dispatchKnowledgeCardInput,
+  deriveKnowledgeCardPresentation,
+  resolveKnowledgeCardFooterActions
+} from './knowledge-card.mjs';
+import {
+  CINEMATIC_INTRO_BEAT_IDS,
+  applyCinematicIntroEvent,
+  buildMirrorlandCinematicOpening,
+  createCinematicIntroState,
+  enterCanonicalCardinalWorld,
+  resolvePendingSurveyPath,
+  sampleSurveyPath
+} from './cinematic-intro.mjs';
+import {
+  GRATITUDE_COAST_NIGHT,
+  NIGHT_FRAGMENT_SHADER,
+  nightUniforms
+} from './night-renderer.mjs';
 
-const canvas=document.querySelector('#scene');
-const statusNode=document.querySelector('#status');
-const returnButton=document.querySelector('#return');
-const inspectButton=document.querySelector('#inspect');
-const mapButton=document.querySelector('#map-toggle');
-const mapPanel=document.querySelector('#coast-map');
-const mapGrid=document.querySelector('#map-grid');
-const mapClose=document.querySelector('#map-close');
-const story=document.querySelector('#story');
-const storyKind=document.querySelector('#story-kind');
-const storyTitle=document.querySelector('#story-title');
-const storyCopy=document.querySelector('#story-copy');
-const storyMore=document.querySelector('#story-more');
-const fatal=document.querySelector('#fatal');
-const world=document.querySelector('.world');
-const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const compact=matchMedia('(max-width: 720px)').matches;
-const gl=canvas.getContext('webgl2',{antialias:!compact,alpha:false,powerPreference:'high-performance'});
-if(!gl){fatal.classList.add('show');throw new Error('WEBGL2_UNAVAILABLE');}
+const $ = (selector) => document.querySelector(selector);
+const html = document.documentElement;
+const canvas = $('#scene');
+const worldStage = $('#world-stage');
+const worldHeading = $('#world-heading');
+const signalLayer = $('#signal-layer');
+const worldStatus = $('#world-status');
+const mapToggle = $('#map-toggle');
+const returnMap = $('#return-map');
+const introLayer = $('#intro-layer');
+const introEyebrow = $('#intro-eyebrow');
+const introStep = $('#intro-step');
+const introHeading = $('#intro-heading');
+const introCopy = $('#intro-copy');
+const introContinue = $('#intro-continue');
+const introSkip = $('#intro-skip');
+const arrivalPanel = $('#arrival-panel');
+const arrivalCharacter = $('#arrival-character');
+const arrivalTitle = $('#arrival-title');
+const arrivalLaw = $('#arrival-law');
+const arrivalPresence = $('#arrival-presence');
+const beginInspection = $('#begin-inspection');
+const inspectionPanel = $('#inspection-panel');
+const inspectionTitle = $('#inspection-title');
+const closeInspection = $('#close-inspection');
+const discoveryList = $('#discovery-list');
+const knowledgeLayer = $('#knowledge-layer');
+const knowledgeCard = $('#knowledge-card');
+const cardPlace = $('#card-place');
+const cardCount = $('#card-count');
+const cardFaceLabel = $('#card-face-label');
+const cardTitle = $('#card-title');
+const cardText = $('#card-text');
+const cardInstruction = $('#card-instruction');
+const cardFooter = $('#card-footer');
+const mapPanel = $('#coast-map');
+const mapClose = $('#map-close');
+const mapGeography = $('#map-geography');
+const mapMarkers = $('#map-markers');
+const runtimeFallback = $('#runtime-fallback');
 
-const style=document.createElement('style');
-style.textContent=`
-.signal-layer,.constellation-layer,.proof-layer{position:absolute;inset:0;pointer-events:none}
-.signal-layer{z-index:7}.constellation-layer{z-index:5;overflow:visible}.proof-layer{z-index:6}
-.signal{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;border:0;background:transparent;color:#fff;cursor:pointer;padding:24px}
-.signal::before{content:"";display:block;width:14px;height:14px;margin:auto;background:var(--star,#f4e6bb);clip-path:polygon(50% 0,61% 35%,98% 38%,69% 59%,79% 96%,50% 74%,21% 96%,31% 59%,2% 38%,39% 35%);filter:drop-shadow(0 0 6px var(--star,#f4e6bb)) drop-shadow(0 0 14px var(--star,#f4e6bb));transform:scale(var(--star-scale,1));opacity:var(--star-opacity,.82);animation:signalPulse 3.2s ease-in-out infinite}
-.signal::after{content:"";position:absolute;left:50%;top:50%;width:34px;height:34px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.16),rgba(255,255,255,0) 68%);opacity:var(--halo-opacity,.55)}
-.signal span{display:block;margin-top:7px;padding:.35rem .52rem;border:1px solid rgba(255,255,255,.17);border-radius:999px;background:rgba(4,10,22,.66);backdrop-filter:blur(8px);font-size:.64rem;font-weight:800;letter-spacing:.04em;white-space:nowrap;opacity:0;transform:translateY(3px);transition:.2s ease}
-.signal:hover span,.signal:focus-visible span{opacity:1;transform:none}.signal:focus-visible{outline:2px solid #f3dfaa;outline-offset:-16px}.signal[hidden]{display:none}.signal.unseen{pointer-events:none}.signal.unseen::before,.signal.unseen::after{opacity:0}.signal.related{--halo-opacity:.78}.signal.active{--star-scale:1.45;--star-opacity:1;--halo-opacity:1}.signal.visited{--star-opacity:.9}.signal.clock-star::before{animation-duration:5.6s}
-.constellation-line{stroke:rgba(211,229,255,.42);stroke-width:1.25;stroke-dasharray:2 8;filter:drop-shadow(0 0 4px rgba(211,229,255,.55));opacity:.8}
-.proof-expression{position:absolute;transform:translate(-50%,-100%);opacity:0;transition:opacity .7s ease,filter .7s ease}
-.proof-expression.show{opacity:1}
-.manor-mass{width:74px;height:56px;background:linear-gradient(to top,rgba(6,9,14,.98),rgba(18,23,31,.95));clip-path:polygon(7% 100%,7% 43%,24% 43%,24% 23%,40% 23%,50% 4%,60% 23%,76% 23%,76% 43%,93% 43%,93% 100%);filter:drop-shadow(0 0 11px rgba(210,226,255,.12))}
-.manor-mass::before,.manor-mass::after{content:"";position:absolute;bottom:13px;width:5px;height:8px;background:rgba(255,220,142,.88);box-shadow:0 0 9px rgba(255,220,142,.8)}.manor-mass::before{left:25px}.manor-mass::after{right:25px}
-.crossing-scar{width:72px;height:16px;border-top:2px solid rgba(190,220,255,.6);border-radius:50%;filter:drop-shadow(0 0 6px rgba(151,199,255,.62));transform:translate(-50%,-30%) rotate(-12deg)}
-.clock-anomaly{width:54px;height:54px;border-radius:50%;border:1px solid rgba(222,232,255,.7);box-shadow:0 0 18px rgba(169,199,255,.22),inset 0 0 16px rgba(169,199,255,.18);transform:translate(-50%,-50%)}
-.clock-anomaly::before{content:"";position:absolute;inset:8px;border-radius:50%;border:1px dashed rgba(240,231,205,.55);animation:clockPhase 8s linear infinite}
-.earth-transmission{width:46px;height:46px;border:1px solid rgba(120,205,255,.5);border-radius:50%;box-shadow:0 0 18px rgba(120,205,255,.32)}
-.watchfire-overlook{width:16px;height:28px;background:linear-gradient(to top,rgba(255,145,72,.08),rgba(255,190,105,.9));clip-path:polygon(50% 0,90% 65%,65% 100%,35% 100%,10% 65%);filter:drop-shadow(0 0 10px rgba(255,155,76,.75))}
-.waterline-station{width:58px;height:20px;border-top:2px solid rgba(138,207,255,.7);border-bottom:1px solid rgba(138,207,255,.28);transform:translate(-50%,-45%) rotate(-4deg)}
-.signal-lantern{width:22px;height:38px;border:1px solid rgba(231,212,255,.7);border-radius:12px 12px 5px 5px;box-shadow:0 0 18px rgba(196,164,255,.5),inset 0 0 12px rgba(225,205,255,.35)}
-.restoration-boundary{width:68px;height:18px;border-top:2px solid rgba(128,222,190,.55);border-radius:50%;filter:drop-shadow(0 0 8px rgba(128,222,190,.38));transform:translate(-50%,-35%) rotate(8deg)}
-.shelter-path{width:66px;height:14px;border-top:2px dashed rgba(243,223,170,.62);transform:translate(-50%,-30%) rotate(-18deg);filter:drop-shadow(0 0 6px rgba(243,223,170,.35))}
-.threshold-light{width:34px;height:48px;border:2px solid rgba(255,221,159,.5);border-bottom:0;border-radius:17px 17px 0 0;box-shadow:inset 0 0 14px rgba(255,221,159,.35),0 0 14px rgba(255,221,159,.3)}
-.distant-settlement{width:72px;height:18px;background:radial-gradient(circle at 10% 70%,rgba(255,218,142,.9) 0 2px,transparent 3px),radial-gradient(circle at 35% 45%,rgba(255,218,142,.75) 0 2px,transparent 3px),radial-gradient(circle at 62% 62%,rgba(255,218,142,.8) 0 2px,transparent 3px),radial-gradient(circle at 88% 35%,rgba(255,218,142,.72) 0 2px,transparent 3px);filter:drop-shadow(0 0 7px rgba(255,218,142,.42))}
-.map-node.visited::before{background:#a8e7d1}.map-node.active{border-color:#f3dfaa;background:rgba(243,223,170,.16)}
-@keyframes signalPulse{0%,100%{transform:scale(calc(var(--star-scale,1)*.88));opacity:calc(var(--star-opacity,.82)*.72)}50%{transform:scale(var(--star-scale,1));opacity:var(--star-opacity,.82)}}
-@keyframes clockPhase{to{transform:rotate(360deg)}}
-@media(max-width:720px){.signal{padding:28px}.signal::before{width:15px;height:15px}.signal span{display:none}.manor-mass{width:58px;height:44px}}
-@media(prefers-reduced-motion:reduce){.signal::before,.clock-anomaly::before{animation:none}.signal span,.proof-expression{transition:none}}
-`;
-document.head.appendChild(style);
-const signalLayer=document.createElement('div');signalLayer.className='signal-layer';world.appendChild(signalLayer);
-const constellationLayer=document.createElementNS('http://www.w3.org/2000/svg','svg');constellationLayer.classList.add('constellation-layer');world.appendChild(constellationLayer);
-const proofLayer=document.createElement('div');proofLayer.className='proof-layer';world.appendChild(proofLayer);
+const reducedMotionMedia = matchMedia('(prefers-reduced-motion: reduce)');
+const compactMedia = matchMedia('(max-width: 720px)');
+let reducedMotion = reducedMotionMedia.matches;
+let compact = compactMedia.matches;
 
-const COAST=[[-520,-40],[-760,-80],[-980,-180],[-1180,-340],[-1500,-520],[-1660,-720],[-1500,-900],[-1260,-850],[-1080,-700],[-1180,-1010],[-1380,-1260],[-1510,-1490],[-1370,-1710],[-1080,-1880],[-760,-1990],[-470,-1910],[-190,-2050],[120,-2010],[390,-2160],[650,-2050],[760,-1850],[1040,-1700],[1370,-1800],[1650,-1600],[1760,-1360],[1580,-1260],[1350,-1220],[1140,-1100],[900,-1040],[690,-900],[560,-700],[760,-430]];
-const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-const mix=(a,b,t)=>a+(b-a)*t;
-const smooth=t=>t*t*(3-2*t);
-const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
-const add=(a,b)=>a.map((v,i)=>v+b[i]);
-const sub=(a,b)=>a.map((v,i)=>v-b[i]);
-const scale=(a,s)=>a.map(v=>v*s);
-const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
-const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
-const norm=a=>{const l=Math.hypot(...a)||1;return scale(a,1/l)};
-const bezier=(a,b,c,d,t)=>{const q=1-t;return a.map((_,i)=>q*q*q*a[i]+3*q*q*t*b[i]+3*q*t*t*c[i]+t*t*t*d[i]);};
-function shorelineZ(x){const pts=COAST.filter(p=>p[0]>=-1180&&p[0]<=1180).sort((a,b)=>a[0]-b[0]);if(x<=pts[0][0])return pts[0][1];if(x>=pts.at(-1)[0])return pts.at(-1)[1];for(let i=0;i<pts.length-1;i++)if(x>=pts[i][0]&&x<=pts[i+1][0]){const t=(x-pts[i][0])/(pts[i+1][0]-pts[i][0]);return mix(pts[i][1],pts[i+1][1],smooth(t));}return-900;}
-function terrainHeight(x,z){const shore=shorelineZ(x)*.42+250,inland=shore-z,beach=clamp(inland/150,0,1),macro=24*Math.sin(x*.004)+15*Math.cos(z*.006)+9*Math.sin((x+z)*.011),rise=Math.max(0,inland)*.055,dune=beach*(6*Math.sin(x*.026)+4*Math.cos(z*.034));return inland<0?-5:2+rise+macro+dune;}
-const VS=`#version 300 es\nprecision highp float;layout(location=0) in vec3 aPos;layout(location=1) in vec3 aNormal;uniform mat4 uVP;out vec3 vPos;out vec3 vNormal;out float vH;void main(){vPos=aPos;vNormal=aNormal;vH=aPos.y;gl_Position=uVP*vec4(aPos,1.0);}`;
-function makeProgram(vs,fs){const compile=(type,src)=>{const sh=gl.createShader(type);gl.shaderSource(sh,src);gl.compileShader(sh);if(!gl.getShaderParameter(sh,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(sh));return sh};const p=gl.createProgram();gl.attachShader(p,compile(gl.VERTEX_SHADER,vs));gl.attachShader(p,compile(gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(p));return p;}
-const program=makeProgram(VS,NIGHT_FRAGMENT_SHADER);
-const MOON_VS=`#version 300 es\nprecision highp float;uniform mat4 uVP;uniform vec3 uMoonPos;uniform float uSize;void main(){gl_Position=uVP*vec4(uMoonPos,1.0);gl_PointSize=uSize;}`;
-const MOON_FS=`#version 300 es
+const SITE_NAMES = Object.freeze({
+  WATCHFIRE_OVERLOOK: 'Watchfire Overlook',
+  WATERLINE_STATION: 'Waterline Station',
+  SIGNAL_LANTERN_FIELD: 'Signal Lantern Field',
+  RESTORATION_BOUNDARY: 'Restoration Boundary'
+});
+
+const CHARACTER_NAMES = Object.freeze({
+  ALARIC_AXION: 'Alaric',
+  TARIAN_MERROW: 'Tarian',
+  ELARA_SYLENE: 'Elara',
+  SOREN_SEVRIN: 'Soren'
+});
+
+const RELATION_DISCOVERY_BY_SITE = Object.freeze({
+  WATCHFIRE_OVERLOOK: 'ALARIC_FOUR_WAY_SIGHTLINE',
+  WATERLINE_STATION: 'TARIAN_CONFLUENCE_JUNCTION',
+  SIGNAL_LANTERN_FIELD: 'ELARA_RELATION_ARRAY',
+  RESTORATION_BOUNDARY: 'SOREN_FOUR_BEARING_JUNCTION'
+});
+
+const PUBLIC_STORY_STATE = Object.freeze({
+  storyReceiptId: 'TASK19_FROZEN_CARDINAL_DISCOVERY_PUBLIC_COMPOSITION_v1',
+  chronologyState: 'TASK18_FROZEN_ARCHITECTURE_PUBLIC_COMPOSITION',
+  presenceBySite: Object.freeze(Object.fromEntries(CARDINAL_SITE_IDS.map((siteId) => [siteId, Object.freeze({ state: 'SITE_ONLY' })]))),
+  discoveryAvailabilityById: Object.freeze(Object.fromEntries(CARDINAL_DISCOVERIES.map((discovery) => [discovery.id, Object.freeze({
+    state: 'AVAILABLE',
+    predicateReceiptId: `TASK19_FROZEN_DISCOVERY_AVAILABLE:${discovery.id}`,
+    chronologyState: 'TASK18_FROZEN_ARCHITECTURE_PUBLIC_COMPOSITION'
+  })])))
+});
+
+const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
+const mix = (left, right, amount) => left + (right - left) * amount;
+const smooth = (amount) => amount * amount * (3 - 2 * amount);
+const vector = ({ x, y, z }) => [x, y, z];
+const mixVector = (left, right, amount) => left.map((value, index) => mix(value, right[index], amount));
+const subtract = (left, right) => left.map((value, index) => value - right[index]);
+const scale = (value, amount) => value.map((item) => item * amount);
+const dot = (left, right) => left[0] * right[0] + left[1] * right[1] + left[2] * right[2];
+const cross = (left, right) => [
+  left[1] * right[2] - left[2] * right[1],
+  left[2] * right[0] - left[0] * right[2],
+  left[0] * right[1] - left[1] * right[0]
+];
+const normalize = (value) => {
+  const length = Math.hypot(...value) || 1;
+  return scale(value, 1 / length);
+};
+
+const opening = buildMirrorlandCinematicOpening();
+const worldEntryFrame = opening.frames.at(-1);
+let introState = applyCinematicIntroEvent(createCinematicIntroState(), { type: 'START_INTRO' }).state;
+let sceneState = null;
+let camera = { eye: vector(opening.frames[0].position), look: vector(opening.frames[0].lookAt) };
+let cameraMotion = null;
+let lastSurveyStage = null;
+let priorFocus = null;
+let pointerStart = null;
+let suppressCardClick = false;
+let cachedMapState = null;
+let cachedMapModel = null;
+
+knowledgeLayer.inert = true;
+mapPanel.inert = true;
+
+function showStaticFallback() {
+  html.classList.remove('webgl-ready');
+  html.classList.add('static-mode');
+  runtimeFallback.hidden = false;
+  introLayer.hidden = true;
+  runtimeFallback.querySelector('a')?.focus();
+}
+
+const gl = canvas.getContext('webgl2', {
+  antialias: !compact,
+  alpha: false,
+  powerPreference: 'high-performance'
+});
+
+if (!gl) {
+  showStaticFallback();
+} else {
+  try {
+    initializeWorld(gl);
+    html.classList.add('webgl-ready');
+    syncIntroCopy();
+    introContinue.focus();
+    requestAnimationFrame(render);
+  } catch (error) {
+    console.error(error);
+    showStaticFallback();
+  }
+}
+
+function perspective(fov, aspect, near, far) {
+  const factor = 1 / Math.tan(fov / 2);
+  const depth = 1 / (near - far);
+  return new Float32Array([
+    factor / aspect, 0, 0, 0,
+    0, factor, 0, 0,
+    0, 0, (far + near) * depth, -1,
+    0, 0, 2 * far * near * depth, 0
+  ]);
+}
+
+function lookAt(eye, target, up = [0, 1, 0]) {
+  const z = normalize(subtract(eye, target));
+  const x = normalize(cross(up, z));
+  const y = cross(z, x);
+  return new Float32Array([
+    x[0], y[0], z[0], 0,
+    x[1], y[1], z[1], 0,
+    x[2], y[2], z[2], 0,
+    -dot(x, eye), -dot(y, eye), -dot(z, eye), 1
+  ]);
+}
+
+function multiply(left, right) {
+  const result = new Float32Array(16);
+  for (let column = 0; column < 4; column += 1) {
+    for (let row = 0; row < 4; row += 1) {
+      result[column * 4 + row] = left[row] * right[column * 4]
+        + left[4 + row] * right[column * 4 + 1]
+        + left[8 + row] * right[column * 4 + 2]
+        + left[12 + row] * right[column * 4 + 3];
+    }
+  }
+  return result;
+}
+
+function project(point, matrix, width, height) {
+  const [x, y, z] = point;
+  const clipX = matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12];
+  const clipY = matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13];
+  const clipZ = matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14];
+  const clipW = matrix[3] * x + matrix[7] * y + matrix[11] * z + matrix[15];
+  if (clipW <= 0) return null;
+  const normalizedX = clipX / clipW;
+  const normalizedY = clipY / clipW;
+  const normalizedZ = clipZ / clipW;
+  if (normalizedX < -1.15 || normalizedX > 1.15 || normalizedY < -1.15 || normalizedY > 1.15 || normalizedZ < -1.15 || normalizedZ > 1.15) return null;
+  return [(normalizedX * 0.5 + 0.5) * width, (1 - (normalizedY * 0.5 + 0.5)) * height, clipW];
+}
+
+function compileProgram(vertexSource, fragmentSource) {
+  const compile = (type, source) => {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(shader));
+    return shader;
+  };
+  const program = gl.createProgram();
+  gl.attachShader(program, compile(gl.VERTEX_SHADER, vertexSource));
+  gl.attachShader(program, compile(gl.FRAGMENT_SHADER, fragmentSource));
+  gl.linkProgram(program);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program));
+  return program;
+}
+
+function makeMesh(positions, normals, indices) {
+  const vao = gl.createVertexArray();
+  gl.bindVertexArray(vao);
+  const vertexBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+  const interleaved = new Float32Array((positions.length / 3) * 6);
+  for (let index = 0; index < positions.length / 3; index += 1) {
+    interleaved.set(positions.slice(index * 3, index * 3 + 3), index * 6);
+    interleaved.set(normals.slice(index * 3, index * 3 + 3), index * 6 + 3);
+  }
+  gl.bufferData(gl.ARRAY_BUFFER, interleaved, gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0);
+  gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 24, 0);
+  gl.enableVertexAttribArray(1);
+  gl.vertexAttribPointer(1, 3, gl.FLOAT, false, 24, 12);
+  const indexBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(indices), gl.STATIC_DRAW);
+  return { vao, count: indices.length };
+}
+
+function buildTerrainMesh() {
+  const envelope = GRATITUDE_DEVELOPMENT_FRAME.envelope;
+  const density = compact ? 72 : 108;
+  const positions = [];
+  const normals = [];
+  const indices = [];
+  const sampleHeight = (x, z) => sampleGratitudeWorld(
+    clamp(x, envelope.xMinimum, envelope.xMaximum),
+    clamp(z, envelope.zMinimum, envelope.zMaximum)
+  ).source.elevation;
+  for (let row = 0; row <= density; row += 1) {
+    const z = mix(envelope.zMinimum, envelope.zMaximum, row / density);
+    for (let column = 0; column <= density; column += 1) {
+      const x = mix(envelope.xMinimum, envelope.xMaximum, column / density);
+      const y = sampleHeight(x, z);
+      const epsilon = 4;
+      const dx = sampleHeight(x + epsilon, z) - sampleHeight(x - epsilon, z);
+      const dz = sampleHeight(x, z + epsilon) - sampleHeight(x, z - epsilon);
+      positions.push(x, y, z);
+      normals.push(...normalize([-dx, epsilon * 2, -dz]));
+    }
+  }
+  const stride = density + 1;
+  for (let row = 0; row < density; row += 1) {
+    for (let column = 0; column < density; column += 1) {
+      const a = row * stride + column;
+      const b = a + 1;
+      const c = a + stride;
+      const d = c + 1;
+      indices.push(a, c, b, b, c, d);
+    }
+  }
+  return makeMesh(positions, normals, indices);
+}
+
+function buildWaterMesh() {
+  const envelope = GRATITUDE_DEVELOPMENT_FRAME.envelope;
+  const y = envelope.seaLevelY - 1.5;
+  return makeMesh([
+    envelope.xMinimum, y, envelope.zMinimum,
+    envelope.xMaximum, y, envelope.zMinimum,
+    envelope.xMinimum, y, envelope.zMaximum,
+    envelope.xMaximum, y, envelope.zMaximum
+  ], [0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0], [0, 2, 1, 1, 2, 3]);
+}
+
+function buildRenderedSite(siteId, lod) {
+  const geometry = buildCardinalSiteGeometry(siteId, lod);
+  const anchor = geometry.geography.canonicalWorldReference;
+  return geometry.components.map((component) => {
+    const source = component.mesh;
+    const positions = [];
+    for (let index = 0; index < source.positions.length; index += 3) {
+      positions.push(
+        source.positions[index] + anchor.x,
+        source.positions[index + 1] + anchor.y,
+        source.positions[index + 2] + anchor.z
+      );
+    }
+    return {
+      componentId: component.componentId,
+      mesh: makeMesh(positions, source.normals, source.indices),
+      material: source.lightingResponse
+    };
+  });
+}
+
+let nightProgram;
+let siteProgram;
+let terrainMesh;
+let waterMesh;
+let renderedSites;
+
+function initializeWorld() {
+  const vertexShader = `#version 300 es
 precision highp float;
+layout(location=0) in vec3 aPos;
+layout(location=1) in vec3 aNormal;
+uniform mat4 uVP;
+out vec3 vPos;
+out vec3 vNormal;
+out float vH;
+void main(){vPos=aPos;vNormal=aNormal;vH=aPos.y;gl_Position=uVP*vec4(aPos,1.0);}`;
+  const siteFragment = `#version 300 es
+precision highp float;
+in vec3 vNormal;
+uniform vec3 uBaseColor;
+uniform float uEmissive;
 out vec4 outColor;
-float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123);}
-float crater(vec2 p,vec2 c,float radius){float d=length(p-c)/radius;float bowl=1.0-smoothstep(.0,.82,d);float rim=smoothstep(.70,.86,d)*(1.0-smoothstep(.86,1.0,d));return -.12*bowl+.10*rim;}
-void main(){vec2 p=gl_PointCoord*2.0-1.0;float r2=dot(p,p);if(r2>1.0)discard;float z=sqrt(max(0.0,1.0-r2));vec3 n=normalize(vec3(p,z));vec3 lightDir=normalize(vec3(-.52,.38,.76));float diffuse=max(.0,dot(n,lightDir));float limb=pow(clamp(z,0.0,1.0),.42);float relief=0.0;relief+=crater(p,vec2(-.30,.18),.19);relief+=crater(p,vec2(.22,.28),.13);relief+=crater(p,vec2(.34,-.20),.10);relief+=crater(p,vec2(-.08,-.36),.08);relief+=crater(p,vec2(-.42,-.18),.06);float maria=0.0;maria-=.10*(1.0-smoothstep(.0,.32,length(p-vec2(-.15,.04))));maria-=.075*(1.0-smoothstep(.0,.24,length(p-vec2(.20,.12))));maria-=.055*(1.0-smoothstep(.0,.19,length(p-vec2(.05,-.26))));float grain=(hash(floor((p+1.0)*34.0))-.5)*.028;float luminance=.30+.62*diffuse;luminance*=.72+.28*limb;luminance+=relief+maria+grain;vec3 base=vec3(.79,.81,.84);vec3 cool=vec3(.90,.93,.98);vec3 c=mix(base,cool,clamp(diffuse*.62+.18,0.0,1.0))*clamp(luminance,.12,1.0);float edge=1.0-smoothstep(.94,1.0,sqrt(r2));outColor=vec4(c,edge);}`;
-const moonProgram=makeProgram(MOON_VS,MOON_FS);
-const moonVAO=gl.createVertexArray();
-const SKY_VS=`#version 300 es
-precision highp float;out vec2 vUv;void main(){vec2 p=vec2((gl_VertexID<<1)&2,gl_VertexID&2);vUv=p*.5;gl_Position=vec4(p-1.0,0.0,1.0);}`;
-const SKY_FS=`#version 300 es
-precision highp float;in vec2 vUv;uniform float uDeep;out vec4 outColor;void main(){float y=clamp(vUv.y,0.0,1.0);vec3 zenith=mix(vec3(.006,.012,.032),vec3(.002,.005,.016),uDeep);vec3 horizon=mix(vec3(.055,.095,.17),vec3(.026,.045,.095),uDeep);float lift=exp(-pow((y-.33)/.19,2.0));vec3 c=mix(horizon,zenith,smoothstep(.18,.92,y));c+=mix(vec3(.025,.045,.08),vec3(.012,.022,.052),uDeep)*lift;outColor=vec4(c,1.0);}`;
-const skyProgram=makeProgram(SKY_VS,SKY_FS);
-const skyVAO=gl.createVertexArray();
-function perspective(fov,aspect,near,far){const f=1/Math.tan(fov/2),nf=1/(near-far);return new Float32Array([f/aspect,0,0,0,0,f,0,0,0,0,(far+near)*nf,-1,0,0,2*far*near*nf,0]);}
-function lookAt(eye,target,up=[0,1,0]){const z=norm(sub(eye,target)),x=norm(cross(up,z)),y=cross(z,x);return new Float32Array([x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,-dot(x,eye),-dot(y,eye),-dot(z,eye),1]);}
-function mul(a,b){const o=new Float32Array(16);for(let c=0;c<4;c++)for(let r=0;r<4;r++)o[c*4+r]=a[r]*b[c*4]+a[4+r]*b[c*4+1]+a[8+r]*b[c*4+2]+a[12+r]*b[c*4+3];return o;}
-function project(p,m,w,h){const [x,y,z]=p,cx=m[0]*x+m[4]*y+m[8]*z+m[12],cy=m[1]*x+m[5]*y+m[9]*z+m[13],cz=m[2]*x+m[6]*y+m[10]*z+m[14],cw=m[3]*x+m[7]*y+m[11]*z+m[15];if(cw<=0)return null;const nx=cx/cw,ny=cy/cw,nz=cz/cw;if(nx<-1.2||nx>1.2||ny<-1.2||ny>1.2||nz<-1.2||nz>1.2)return null;return[(nx*.5+.5)*w,(1-(ny*.5+.5))*h,cw];}
-function meshTerrain(){const N=compact?96:150,z0=-1200,z1=280,verts=[],idx=[];for(let j=0;j<=N;j++){const z=mix(z0,z1,j/N);for(let i=0;i<=N;i++){const x=mix(-1050,1050,i/N),y=terrainHeight(x,z),eps=3,dx=terrainHeight(x+eps,z)-terrainHeight(x-eps,z),dz=terrainHeight(x,z+eps)-terrainHeight(x,z-eps),n=norm([-dx,2*eps,-dz]);verts.push(x,y,z,...n);}}const row=N+1;for(let j=0;j<N;j++)for(let i=0;i<N;i++){const a=j*row+i,b=a+1,c=a+row,d=c+1;idx.push(a,c,b,b,c,d);}return{verts:new Float32Array(verts),idx:new Uint32Array(idx)};}
-function meshWater(){return{verts:new Float32Array([-1250,-2,-1550,0,1,0,1250,-2,-1550,0,1,0,-1250,-2,420,0,1,0,1250,-2,420,0,1,0]),idx:new Uint32Array([0,2,1,1,2,3])};}
-function makeVAO(mesh){const vao=gl.createVertexArray();gl.bindVertexArray(vao);const vb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,vb);gl.bufferData(gl.ARRAY_BUFFER,mesh.verts,gl.STATIC_DRAW);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,24,0);gl.enableVertexAttribArray(1);gl.vertexAttribPointer(1,3,gl.FLOAT,false,24,12);const ib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,mesh.idx,gl.STATIC_DRAW);return{vao,count:mesh.idx.length};}
-const terrain=makeVAO(meshTerrain()),water=makeVAO(meshWater());
-const D=(id,x,z,eye,look,data)=>({id,pos:[x,terrainHeight(x,z)+data.height,z],eye,look,...data});
-const DESTINATIONS=[
-D('crossing',-690,-300,[-500,160,-55],[-690,22,-315],{height:34,signal:'Something happened here',kind:'The shore remembers',title:'The Crossing',copy:'The first team crossed into Mirrorland. The return path never opened. What began as discovery became a responsibility no one could hand back.',more:['Dextrion found the anomaly from Earth. Others crossed because the possibility mattered enough to risk the unknown.','The failure of the return path changed every decision that followed. Mirrorland stopped being somewhere they could visit and became somewhere they had to prepare.'],connections:['dextrion','manor','clock']}),
-D('dextrion',-920,-500,[-720,175,-210],[-920,30,-515],{height:44,signal:'A transmission from Earth',kind:'A voice from the other side',title:'Dextrion',copy:'He opened the path and stayed behind. Every person sent through the one-way crossing remains part of the choice he made.',more:['His Earth-side lab becomes command center, workshop and countdown room. He cannot enter the world he is responsible for helping save.','His problem is no longer whether the anomaly is real. It is whether the door can become something more than a wound.'],connections:['crossing','manor','clock']}),
-D('alaric',-210,-575,[25,130,-300],[-210,35,-575],{height:42,signal:'Someone is watching the route',kind:'Trust the warning before the proof',title:'Alaric',copy:'He reads danger before proof arrives. Waiting until everyone agrees can mean waiting until the safe route is already gone.',more:['Alaric carries orientation as responsibility. He studies what changes first: routes, pressure, silence, the things people ignore because they have not become obvious yet.','His conflict is simple to state and difficult to live with: how do you ask people to trust a warning they cannot yet see?'],connections:['tarian','soren','crossing']}),
-D('tarian',115,-360,[300,125,-125],[115,30,-365],{height:38,signal:'The waterline is changing',kind:'Survival has a physical limit',title:'Tarian',copy:'He keeps the mission physically honest. A future is meaningless if the people trying to reach it cannot keep standing.',more:['Water, movement and endurance are not background systems to him. They are the difference between a plan that exists and people who can survive long enough to carry it.','When ambition outruns the body, Tarian is the one who notices the cost.'],connections:['alaric','manor','soren']}),
-D('manor',430,-820,[625,190,-520],[430,70,-820],{height:96,signal:'A light farther inland',kind:'The first standing anchor',title:'Mirror Manor',copy:'The Manor stands because the crossing became permanent. Shelter is not the end of the problem. It is where preparation begins.',more:['The people who crossed needed more than protection from weather. They needed a place capable of holding knowledge, people and decisions while the world around them was still becoming known.','The Manor can protect, but protection can become isolation. The question is whether a sanctuary can remain connected to the world it was built to help.'],connections:['tarian','elara','auren','jeeves','clock']}),
-D('elara',760,-650,[915,145,-395],[760,34,-650],{height:40,signal:'A signal beyond the dunes',kind:'A future has to become visible',title:'Elara',copy:'She makes a possible future visible before the world believes in it. Hope has to become something people can actually see.',more:['Visibility is not decoration. It changes what people believe is reachable. Elara carries that burden every time she makes possibility public.','But exposure has a cost. Showing people the future can also show danger where to look.'],connections:['manor','soren','clock']}),
-D('soren',690,-1010,[820,180,-720],[690,45,-1010],{height:52,signal:'The ground does not agree',kind:'Damage does not become progress by renaming it',title:'Soren',copy:'He refuses fake restoration. Saving a world by hiding what was damaged only prepares the next collapse.',more:['Soren looks for the hidden cost: contamination, displaced pressure, the consequence everyone wants to call acceptable because the alternative is inconvenient.','His severity exists for a reason. A repaired surface is not the same thing as a healed system.'],connections:['alaric','tarian','elara','clock']}),
-D('auren',250,-980,[420,165,-700],[250,55,-980],{height:58,signal:'A path toward shelter',kind:'Protection can become a cage',title:'Auren Vale',copy:'He keeps the Manor from becoming a beautiful cage. Every protected life makes the sanctuary more necessary—and harder to keep hidden.',more:['Auren turns land, rooms, misdirection and stewardship into protection. His gift is custody; his danger is overprotection.','The question surrounding him is whether safety can remain open enough to serve the people it was meant to protect.'],connections:['manor','jeeves','clock']}),
-D('jeeves',520,-930,[680,150,-650],[520,62,-930],{height:72,signal:'The house is listening',kind:'Not every truth belongs at the door',title:'Jeeves',copy:'He decides how much the Manor reveals at once. Too much truth can break people. Too little can send them into the wrong room.',more:['The Manor is more than architecture when knowledge itself can overwhelm. Jeeves turns complexity into thresholds people can survive.','His problem is not secrecy for its own sake. It is timing: what must someone know now, and what can wait until they are ready?'],connections:['manor','auren','clock']}),
-D('clock',930,-1080,[1065,220,-735],[930,52,-1080],{height:60,signal:'The horizon is still moving',kind:'Time is not waiting for agreement',title:'The Clock',copy:'The transition will happen. Preparation is the variable. What this world becomes is not separate from what eventually happens to Earth.',more:['Mirrorland is not an escape from consequence. It is a place where possible futures can become visible before they harden.','ZIONTS is consequence. H-Earth is survival. Audralia is possibility. The responsibility is deciding which direction people are willing to build toward.'],connections:['crossing','dextrion','manor','elara','soren']}),
-D('remote',-430,-940,[-250,165,-690],[-430,48,-940],{height:48,signal:'Lights beyond the estate',kind:'Survival has to travel',title:'Beyond the Manor',copy:'If what works here cannot leave the estate, the Manor is only a bunker. Survival has to become something communities can carry elsewhere.',more:['The remote teams turn isolated restoration into distributed response. They carry what is learned here into places without the Manor’s protection.','The story gets larger at this boundary: the future cannot be saved from one house.'],connections:['manor','tarian','clock']})];
-const byId=new Map(DESTINATIONS.map(d=>[d.id,d]));
-const visited=new Set();
-const ORBIT={eye:[0,365,590],look:[70,24,-660]};
-let camera={eye:[...ORBIT.eye],look:[...ORBIT.look]},active=null,transition=null;
-let worldState=deriveNarrativeWorldState(visited,null);
+void main(){
+  vec3 n=normalize(vNormal);
+  vec3 moon=normalize(vec3(-.34,.84,.42));
+  float light=.24+.76*max(dot(n,moon),0.0);
+  vec3 color=uBaseColor*light+uBaseColor*uEmissive*.38;
+  outColor=vec4(color,1.0);
+}`;
+  nightProgram = compileProgram(vertexShader, NIGHT_FRAGMENT_SHADER);
+  siteProgram = compileProgram(vertexShader, siteFragment);
+  terrainMesh = buildTerrainMesh();
+  waterMesh = buildWaterMesh();
+  renderedSites = Object.fromEntries(CARDINAL_SITE_IDS.map((siteId) => [siteId, {
+    REGIONAL: buildRenderedSite(siteId, 'REGIONAL'),
+    LOCAL: buildRenderedSite(siteId, 'LOCAL')
+  }]));
+  gl.enable(gl.DEPTH_TEST);
+  gl.disable(gl.CULL_FACE);
+  buildSignalControls();
+  bindInterfaceEvents();
+}
 
-const proofExpressions={};
-for(const [id,className] of [['crossing','crossing-scar'],['dextrion','earth-transmission'],['alaric','watchfire-overlook'],['tarian','waterline-station'],['manor','manor-mass'],['elara','signal-lantern'],['soren','restoration-boundary'],['auren','shelter-path'],['jeeves','threshold-light'],['clock','clock-anomaly'],['remote','distant-settlement']]){const el=document.createElement('div');el.className=`proof-expression ${className}`;el.setAttribute('aria-hidden','true');proofLayer.appendChild(el);proofExpressions[id]=el;}
-for(const d of DESTINATIONS){const b=document.createElement('button');b.type='button';b.className='signal';if(d.id==='clock')b.classList.add('clock-star');b.dataset.id=d.id;b.setAttribute('aria-label',d.signal);b.innerHTML=`<span>${d.signal}</span>`;b.addEventListener('click',()=>travelTo(d));signalLayer.appendChild(b);d.button=b;
- const m=document.createElement('button');m.type='button';m.className='map-node';m.dataset.id=d.id;m.setAttribute('aria-label',`Travel to ${d.title}`);const nx=clamp((d.pos[0]+1050)/2100,0,1),nz=clamp((d.pos[2]+1200)/1480,0,1);m.style.left=`${8+nx*84}%`;m.style.top=`${10+nz*78}%`;m.innerHTML=`<span>${d.title}</span>`;m.addEventListener('click',()=>{closeMap();travelTo(d,true);});mapGrid.appendChild(m);d.mapButton=m;}
-function recomputeWorldState(){worldState=deriveNarrativeWorldState(visited,active?.id||null);syncWorldState();}
-function syncWorldState(){for(const d of DESTINATIONS){const state=worldState.destinations[d.id],star=discoveryStarStyle(state.signalState);d.button.classList.toggle('visited',state.signalState==='VISITED');d.button.classList.toggle('active',state.signalState==='ACTIVE');d.button.classList.toggle('related',state.signalState==='REVEALED_RELATED');d.button.classList.toggle('unseen',state.signalState==='UNSEEN');d.button.style.setProperty('--star',star.color);d.button.style.setProperty('--star-scale',String(star.intensity));d.button.setAttribute('aria-hidden',state.signalState==='UNSEEN'?'true':'false');d.button.tabIndex=state.signalState==='UNSEEN'?-1:0;}syncMap();}
-function syncMap(){for(const d of DESTINATIONS){const state=worldState.destinations[d.id];d.mapButton.hidden=state.signalState==='UNSEEN';d.mapButton.classList.toggle('visited',visited.has(d.id));d.mapButton.classList.toggle('active',active===d);d.mapButton.querySelector('span').textContent=visited.has(d.id)||active===d?d.title:'Unexplored';}}
-function openMap(){if(transition)return;syncMap();mapPanel.classList.add('show');mapPanel.setAttribute('aria-hidden','false');mapClose.focus();}
-function closeMap(){mapPanel.classList.remove('show');mapPanel.setAttribute('aria-hidden','true');}
-mapButton.addEventListener('click',openMap);mapClose.addEventListener('click',closeMap);
-function setStory(d){storyMore.innerHTML='';if(!d){story.classList.remove('show');return;}storyKind.textContent=d.kind;storyTitle.textContent=d.title;storyCopy.textContent=d.copy;for(const p of d.more||[]){const el=document.createElement('p');el.textContent=p;storyMore.appendChild(el);}if(d.connections?.length){const wrap=document.createElement('div');wrap.className='connections';for(const id of d.connections){const target=byId.get(id);if(!target||worldState.destinations[id]?.signalState==='UNSEEN')continue;const b=document.createElement('button');b.type='button';b.textContent=target.title;b.addEventListener('click',()=>travelTo(target,true));wrap.appendChild(b);}storyMore.appendChild(wrap);}story.classList.add('show');}
-function discover(d){visited.add(d.id);recomputeWorldState();}
-function finishArrival(){discover(active);world.classList.add('intimate');statusNode.textContent=`You found ${active.title} · witness the place`;returnButton.classList.add('show');inspectButton.classList.add('show');setStory(null);}
-inspectButton.addEventListener('click',()=>{if(!active||transition)return;setStory(active);inspectButton.classList.remove('show');statusNode.textContent=`Inspecting ${active.title}`;});
-function travelTo(d,fromConnection=false){if(transition||worldState.destinations[d.id]?.signalState==='UNSEEN'||d===active&&!fromConnection)return;closeMap();setStory(null);inspectButton.classList.remove('show');returnButton.classList.remove('show');world.classList.remove('intimate');active=d;recomputeWorldState();statusNode.textContent=`Following ${d.signal.toLowerCase()}`;if(reducedMotion){camera={eye:[...d.eye],look:[...d.look]};finishArrival();return;}const start={eye:[...camera.eye],look:[...camera.look]},end={eye:d.eye,look:d.look},dir=norm(sub(end.eye,start.eye)),side=norm(cross(dir,[0,1,0])),distance=Math.hypot(...sub(end.eye,start.eye));transition={start:performance.now(),duration:clamp(1900+distance*.9,2200,3200),from:start,to:end,c1Eye:add(add(start.eye,scale(side,95)),[0,145,0]),c2Eye:add(add(end.eye,scale(side,-65)),[0,70,0]),returning:false};}
-function returnOrbit(){if(transition)return;closeMap();setStory(null);inspectButton.classList.remove('show');world.classList.remove('intimate');statusNode.textContent='Returning to the coast';returnButton.classList.remove('show');if(reducedMotion){camera={eye:[...ORBIT.eye],look:[...ORBIT.look]};active=null;recomputeWorldState();statusNode.textContent=visited.size?`Orbit · ${visited.size} discoveries found`:'Orbit · survey the coast';return;}const start={eye:[...camera.eye],look:[...camera.look]},end=ORBIT,dir=norm(sub(end.eye,start.eye)),side=norm(cross(dir,[0,1,0]));transition={start:performance.now(),duration:2450,from:start,to:end,c1Eye:add(add(start.eye,scale(side,-85)),[0,125,0]),c2Eye:add(add(end.eye,scale(side,60)),[0,72,0]),returning:true};}
-returnButton.addEventListener('click',returnOrbit);
-function updateTransition(now){if(!transition)return;const t=clamp((now-transition.start)/transition.duration,0,1),e=ease(t);camera.eye=bezier(transition.from.eye,transition.c1Eye,transition.c2Eye,transition.to.eye,e);camera.look=bezier(transition.from.look,add(transition.from.look,[0,60,0]),add(transition.to.look,[0,30,0]),transition.to.look,e);if(t>=1){const returning=transition.returning;transition=null;if(returning){active=null;recomputeWorldState();statusNode.textContent=visited.size?`Orbit · ${visited.size} discoveries found`:'Orbit · survey the coast';}else finishArrival();}}
-function resize(){const dpr=Math.min(compact?1.25:1.55,devicePixelRatio||1),w=Math.max(1,Math.round(innerWidth*dpr)),h=Math.max(1,Math.round(innerHeight*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}gl.viewport(0,0,w,h);constellationLayer.setAttribute('viewBox',`0 0 ${innerWidth} ${innerHeight}`);return{w,h};}
-function draw(mesh,waterFlag,vp,time){const u=nightUniforms(worldState);gl.useProgram(program);gl.uniformMatrix4fv(gl.getUniformLocation(program,'uVP'),false,vp);gl.uniform3fv(gl.getUniformLocation(program,'uEye'),camera.eye);gl.uniform1f(gl.getUniformLocation(program,'uTime'),time);gl.uniform1i(gl.getUniformLocation(program,'uWater'),waterFlag);gl.uniform1f(gl.getUniformLocation(program,'uLunarIntensity'),u.lunarIntensity);gl.uniform1f(gl.getUniformLocation(program,'uHorizonHaze'),u.horizonHaze);gl.uniform1f(gl.getUniformLocation(program,'uWaterMoonResponse'),u.waterMoonResponse);gl.uniform1f(gl.getUniformLocation(program,'uMoonPathX'),camera.look[0]+320);gl.bindVertexArray(mesh.vao);gl.drawElements(gl.TRIANGLES,mesh.count,gl.UNSIGNED_INT,0);}
-function drawSky(){gl.disable(gl.DEPTH_TEST);gl.useProgram(skyProgram);gl.uniform1f(gl.getUniformLocation(skyProgram,'uDeep'),worldState.environment.phase==='deep-night'?1:0);gl.bindVertexArray(skyVAO);gl.drawArrays(gl.TRIANGLES,0,3);}
-function drawMoon(vp){const forward=norm(sub(camera.look,camera.eye)),right=norm(cross(forward,[0,1,0])),up=norm(cross(right,forward));const moonPos=add(add(add(camera.eye,scale(forward,2700)),scale(right,720)),scale(up,760));gl.disable(gl.DEPTH_TEST);gl.useProgram(moonProgram);gl.uniformMatrix4fv(gl.getUniformLocation(moonProgram,'uVP'),false,vp);gl.uniform3fv(gl.getUniformLocation(moonProgram,'uMoonPos'),moonPos);gl.uniform1f(gl.getUniformLocation(moonProgram,'uSize'),compact?66:94);gl.bindVertexArray(moonVAO);gl.drawArrays(gl.POINTS,0,1);}
-function updateSignals(vp){const cssW=innerWidth,cssH=innerHeight;for(const d of DESTINATIONS){const state=worldState.destinations[d.id],p=project(d.pos,vp,cssW,cssH);if(state.signalState==='UNSEEN'||!p||transition||mapPanel.classList.contains('show')){d.button.hidden=true;continue;}d.button.hidden=false;d.button.style.left=`${p[0]}px`;d.button.style.top=`${p[1]}px`;d.button.style.opacity=active&&active!==d?'.28':'1';}}
-function updateConstellations(vp){constellationLayer.replaceChildren();if(transition||mapPanel.classList.contains('show'))return;for(const edge of worldState.constellationEdges){const a=byId.get(edge.source),b=byId.get(edge.target);if(!a||!b)continue;const pa=project(a.pos,vp,innerWidth,innerHeight),pb=project(b.pos,vp,innerWidth,innerHeight);if(!pa||!pb)continue;const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',pa[0]);line.setAttribute('y1',pa[1]);line.setAttribute('x2',pb[0]);line.setAttribute('y2',pb[1]);line.setAttribute('class','constellation-line');constellationLayer.appendChild(line);}}
-function updateProofExpressions(vp){for(const [id,el] of Object.entries(proofExpressions)){const d=byId.get(id),state=worldState.destinations[id];const shouldShow=visited.has(id);const p=project([d.pos[0],Math.max(d.pos[1]-d.height+12,8),d.pos[2]],vp,innerWidth,innerHeight);if(!shouldShow||!p||transition||mapPanel.classList.contains('show')){el.classList.remove('show');continue;}el.style.left=`${p[0]}px`;el.style.top=`${p[1]}px`;const depthScale=clamp(850/p[2],.55,1.35);el.style.scale=String(depthScale);el.classList.add('show');if(id==='clock'&&state.worldEffects.includes('night-phase-deepens'))el.style.filter='drop-shadow(0 0 18px rgba(169,199,255,.42))';}}
-function render(now){const {w,h}=resize();updateTransition(now);const vp=mul(perspective(52*Math.PI/180,w/h,1,5000),lookAt(camera.eye,camera.look));gl.disable(gl.BLEND);const clear=worldState.environment.phase==='deep-night'?[.004,.008,.022,1]:GRATITUDE_COAST_NIGHT.sky.clear;gl.clearColor(clear[0],clear[1],clear[2],clear[3]);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);drawSky();drawMoon(vp);gl.enable(gl.DEPTH_TEST);draw(water,1,vp,reducedMotion?0:now*.001);draw(terrain,0,vp,reducedMotion?0:now*.001);updateSignals(vp);updateConstellations(vp);updateProofExpressions(vp);requestAnimationFrame(render);}
-window.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(mapPanel.classList.contains('show'))closeMap();else if(active&&!transition)returnOrbit();});
-recomputeWorldState();
-requestAnimationFrame(render);
+function buildSignalControls() {
+  for (const siteId of CARDINAL_SITE_IDS) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'world-signal';
+    button.dataset.siteId = siteId;
+    button.dataset.state = 'UNSEEN';
+    button.hidden = true;
+    button.setAttribute('aria-label', 'Select distant signal');
+    const label = document.createElement('span');
+    label.textContent = 'Distant signal';
+    button.append(label);
+    button.addEventListener('click', () => selectSite(siteId));
+    signalLayer.append(button);
+  }
+}
+
+function bindInterfaceEvents() {
+  introContinue.addEventListener('click', advanceIntro);
+  introSkip.addEventListener('click', skipIntro);
+  mapToggle.addEventListener('click', openMap);
+  mapClose.addEventListener('click', closeMapPanel);
+  returnMap.addEventListener('click', () => returnToCoast({ openMapAfter: true }));
+  beginInspection.addEventListener('click', openInspection);
+  closeInspection.addEventListener('click', hideInspection);
+
+  knowledgeCard.addEventListener('click', () => {
+    if (suppressCardClick) { suppressCardClick = false; return; }
+    handleCardInput({ kind: 'CLICK_FACE', reducedMotion });
+  });
+  knowledgeCard.addEventListener('keydown', (event) => {
+    if (!['Enter', ' ', 'Spacebar'].includes(event.key)) return;
+    event.preventDefault();
+    handleCardInput({ kind: 'KEYBOARD', key: event.key, reducedMotion });
+  });
+  knowledgeCard.addEventListener('pointerdown', (event) => {
+    pointerStart = { pointerId: event.pointerId, x: event.clientX, y: event.clientY };
+  });
+  knowledgeCard.addEventListener('pointerup', (event) => {
+    if (!pointerStart || pointerStart.pointerId !== event.pointerId) return;
+    const interpretation = handleCardInput({
+      kind: 'POINTER_GESTURE',
+      startX: pointerStart.x,
+      startY: pointerStart.y,
+      endX: event.clientX,
+      endY: event.clientY,
+      reducedMotion
+    });
+    suppressCardClick = interpretation?.accepted === true;
+    pointerStart = null;
+  });
+  knowledgeCard.addEventListener('pointercancel', () => { pointerStart = null; });
+
+  window.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    if (knowledgeLayer.classList.contains('is-open')) dismissCard();
+    else if (mapPanel.classList.contains('is-open')) closeMapPanel();
+    else if (!inspectionPanel.hidden) hideInspection();
+    else if (sceneState && sceneState.phase !== 'WORLD_MAP') returnToCoast();
+  });
+  reducedMotionMedia.addEventListener('change', (event) => { reducedMotion = event.matches; });
+  compactMedia.addEventListener('change', (event) => { compact = event.matches; });
+}
+
+function syncIntroCopy() {
+  const index = CINEMATIC_INTRO_BEAT_IDS.indexOf(introState.phase);
+  if (index < 0) return;
+  const frame = opening.frames[index];
+  introEyebrow.textContent = frame.copy.eyebrow;
+  introStep.textContent = `${index + 1} of ${opening.frames.length}`;
+  introHeading.textContent = frame.copy.heading;
+  introCopy.textContent = frame.copy.body;
+  introContinue.textContent = frame.copy.continuationLabel;
+  worldStatus.textContent = frame.copy.heading;
+}
+
+function tweenCamera(toEye, toLook, duration, onComplete) {
+  if (reducedMotion || duration <= 0) {
+    camera = { eye: [...toEye], look: [...toLook] };
+    onComplete?.();
+    return;
+  }
+  cameraMotion = {
+    kind: 'TWEEN',
+    startedAt: performance.now(),
+    duration,
+    fromEye: [...camera.eye],
+    fromLook: [...camera.look],
+    toEye: [...toEye],
+    toLook: [...toLook],
+    onComplete
+  };
+}
+
+function advanceIntro() {
+  if (cameraMotion) return;
+  const result = applyCinematicIntroEvent(introState, { type: 'ADVANCE_INTRO' });
+  if (!result.receipt.accepted) return;
+  introState = result.state;
+  if (introState.phase === 'COMPLETE') {
+    enterWorld();
+    return;
+  }
+  const index = CINEMATIC_INTRO_BEAT_IDS.indexOf(introState.phase);
+  const frame = opening.frames[index];
+  introLayer.classList.add('is-transitioning');
+  syncIntroCopy();
+  tweenCamera(vector(frame.position), vector(frame.lookAt), frame.transitionFromPriorMs, () => {
+    introLayer.classList.remove('is-transitioning');
+    introContinue.focus();
+  });
+}
+
+function skipIntro() {
+  const result = applyCinematicIntroEvent(introState, { type: 'SKIP_INTRO' });
+  if (!result.receipt.accepted) return;
+  introState = result.state;
+  cameraMotion = null;
+  camera = { eye: vector(worldEntryFrame.position), look: vector(worldEntryFrame.lookAt) };
+  enterWorld();
+}
+
+function enterWorld() {
+  sceneState = enterCanonicalCardinalWorld(introState, { storyState: PUBLIC_STORY_STATE });
+  introLayer.hidden = true;
+  worldHeading.hidden = false;
+  worldStatus.textContent = 'Choose one of four distant signals.';
+  syncInterface();
+  mapToggle.focus();
+}
+
+function applySceneEvent(event) {
+  const result = applyCardinalSceneEvent(sceneState, event);
+  if (result.receipt.accepted) sceneState = result.state;
+  return result.receipt;
+}
+
+function currentMapModel() {
+  if (cachedMapState !== sceneState) {
+    cachedMapState = sceneState;
+    cachedMapModel = buildGratitudeCoastMap(sceneState);
+  }
+  return cachedMapModel;
+}
+
+function selectSite(siteId) {
+  if (!sceneState || cameraMotion || sceneState.phase !== 'WORLD_MAP') return;
+  const selected = applyGratitudeCoastMapAction(sceneState, { type: 'SELECT_SITE', siteId });
+  if (!selected.receipt.accepted) return;
+  sceneState = selected.state;
+  if (!applySceneEvent({ type: 'BEGIN_SURVEY_APPROACH' }).accepted) return;
+  const path = resolvePendingSurveyPath(sceneState);
+  closeMapPanel({ restoreFocus: false });
+  hideLocalPanels();
+  worldStage.classList.add('is-local');
+  returnMap.hidden = true;
+  lastSurveyStage = null;
+  const first = sampleSurveyPath(path, 0);
+  if (reducedMotion) {
+    const arrival = sampleSurveyPath(path, 1, { reducedMotion: true });
+    camera = { eye: vector(arrival.position), look: vector(arrival.lookAt) };
+    worldStatus.textContent = `Arrival · ${SITE_NAMES[siteId]}`;
+    completeArrival();
+    return;
+  }
+  cameraMotion = {
+    kind: 'SURVEY',
+    startedAt: performance.now(),
+    preludeMs: 620,
+    duration: path.totalDurationMs,
+    fromEye: [...camera.eye],
+    fromLook: [...camera.look],
+    firstEye: vector(first.position),
+    firstLook: vector(first.lookAt),
+    path
+  };
+  worldStatus.textContent = 'Following the distant signal.';
+  syncInterface();
+}
+
+function completeArrival() {
+  const receipt = applySceneEvent({ type: 'COMPLETE_SITE_ARRIVAL' });
+  if (!receipt.accepted) return;
+  renderArrival();
+  syncInterface();
+  beginInspection.focus();
+}
+
+function renderArrival() {
+  const siteId = sceneState.activeSiteId;
+  if (!siteId) { arrivalPanel.hidden = true; return; }
+  const site = CARDINAL_SITE_RECORDS[siteId];
+  const characterName = CHARACTER_NAMES[site.characterId];
+  const presence = sceneState.story.presenceBySite[siteId];
+  arrivalCharacter.textContent = `Permanent place · ${characterName}`;
+  arrivalTitle.textContent = SITE_NAMES[siteId];
+  arrivalLaw.textContent = `${site.arrivalState.replaceAll('_', ' ').toLowerCase()}. ${site.environmentalLaw.map((law) => law.replaceAll('_', ' ').toLowerCase()).join(' · ')}.`;
+  arrivalPresence.textContent = presence.state === 'SITE_ONLY'
+    ? `The place is present. ${characterName} is not inferred to be physically here.`
+    : presence.state === 'CHARACTER_TRACE'
+      ? `${characterName}'s source-authorized trace is present; the character is not shown.`
+      : `${characterName}'s presence is source-authorized for this story state.`;
+  beginInspection.textContent = sceneState.phase === 'LOCAL_INSPECTION' ? 'Resume inspection' : 'Inspect this place';
+  arrivalPanel.hidden = false;
+  returnMap.hidden = false;
+}
+
+function openInspection() {
+  if (!sceneState?.activeSiteId || cameraMotion) return;
+  if (sceneState.phase === 'SITE_ARRIVAL') {
+    const receipt = applySceneEvent({ type: 'BEGIN_LOCAL_INSPECTION' });
+    if (!receipt.accepted) return;
+  }
+  if (sceneState.phase !== 'LOCAL_INSPECTION') return;
+  arrivalPanel.hidden = true;
+  inspectionPanel.hidden = false;
+  renderInspection();
+  discoveryList.querySelector('button')?.focus();
+}
+
+function hideInspection() {
+  if (inspectionPanel.hidden) return;
+  inspectionPanel.hidden = true;
+  renderArrival();
+  beginInspection.focus();
+}
+
+function renderInspection() {
+  const siteId = sceneState.activeSiteId;
+  inspectionTitle.textContent = SITE_NAMES[siteId];
+  discoveryList.replaceChildren();
+  const discoveries = getCardinalSiteDiscoveries(siteId);
+  for (const discovery of discoveries) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'discovery-button';
+    if (sceneState.discoveredIds.includes(discovery.id)) button.classList.add('is-seen');
+    const ordinal = document.createElement('span');
+    ordinal.className = 'discovery-ordinal';
+    ordinal.textContent = String(discovery.ordinal).padStart(2, '0');
+    const title = document.createElement('b');
+    title.textContent = discovery.anchorId.replaceAll('_', ' ').toLowerCase();
+    const state = document.createElement('small');
+    state.textContent = sceneState.discoveredIds.includes(discovery.id) ? 'Seen' : discovery.domain.replaceAll('_', ' ').toLowerCase();
+    button.append(ordinal, title, state);
+    button.addEventListener('click', () => openDiscovery(discovery.id));
+    discoveryList.append(button);
+  }
+
+  const relations = Object.values(sceneState.story.relations).filter((relation) => relation.fromSiteId === siteId);
+  if (relations.length) {
+    const heading = document.createElement('p');
+    heading.className = 'kicker';
+    heading.textContent = 'Revealed routes';
+    discoveryList.append(heading);
+    for (const relation of relations) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'discovery-button relation-button';
+      button.textContent = `Follow the route to ${SITE_NAMES[relation.toSiteId]}`;
+      button.addEventListener('click', () => followRelation(relation.toSiteId));
+      discoveryList.append(button);
+    }
+  }
+}
+
+function revealRelationsFromDiscoveredCards() {
+  const revealedRelations = [];
+  for (const [fromSiteId, discoveryId] of Object.entries(RELATION_DISCOVERY_BY_SITE)) {
+    if (!sceneState.discoveredIds.includes(discoveryId)) continue;
+    for (const toSiteId of CARDINAL_SITE_IDS) {
+      if (toSiteId === fromSiteId) continue;
+      revealedRelations.push({
+        fromSiteId,
+        toSiteId,
+        sourceEventId: `DISCOVERY_REVEALED_RELATION:${discoveryId}`,
+        chronologyState: PUBLIC_STORY_STATE.chronologyState
+      });
+    }
+  }
+  sceneState = synchronizeCardinalStoryState(sceneState, {
+    ...PUBLIC_STORY_STATE,
+    revealedRelations
+  });
+}
+
+function openDiscovery(discoveryId) {
+  const receipt = applySceneEvent({ type: 'OPEN_DISCOVERY_CARD', discoveryId });
+  if (!receipt.accepted) return;
+  revealRelationsFromDiscoveredCards();
+  priorFocus = document.activeElement;
+  inspectionPanel.hidden = true;
+  knowledgeLayer.classList.add('is-open');
+  knowledgeLayer.setAttribute('aria-hidden', 'false');
+  knowledgeLayer.inert = false;
+  renderCard();
+  knowledgeCard.focus();
+}
+
+function renderCard() {
+  const presentation = deriveKnowledgeCardPresentation(sceneState, { reducedMotion });
+  const discoveries = getCardinalSiteDiscoveries(presentation.siteId);
+  const discovery = CARDINAL_DISCOVERIES.find((entry) => entry.id === presentation.discoveryId);
+  cardPlace.textContent = SITE_NAMES[presentation.siteId];
+  cardCount.textContent = `${discovery.ordinal} of ${discoveries.length}`;
+  cardFaceLabel.textContent = presentation.visibleFace.label;
+  cardTitle.textContent = discovery.anchorId.replaceAll('_', ' ').toLowerCase();
+  cardText.textContent = presentation.visibleFace.text;
+  cardInstruction.textContent = `${presentation.faceInstruction}. Tap, click, press Enter, or swipe sideways.`;
+  knowledgeCard.setAttribute('aria-label', presentation.accessibleName);
+  renderCardFooter();
+}
+
+function renderCardFooter() {
+  const footer = resolveKnowledgeCardFooterActions(sceneState);
+  cardFooter.replaceChildren();
+  for (const item of footer.actions) {
+    if (item.destination?.href) {
+      const link = document.createElement('a');
+      link.href = item.destination.href;
+      link.className = `card-footer-tab ${item.variant.styleToken}`;
+      link.textContent = item.label;
+      link.setAttribute('aria-label', item.description);
+      cardFooter.append(link);
+      continue;
+    }
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `card-footer-tab ${item.variant.styleToken}`;
+    button.textContent = item.label;
+    button.setAttribute('aria-label', item.description);
+    if (item.eventType === 'DISMISS_DISCOVERY_CARD') button.addEventListener('click', dismissCard);
+    if (item.eventType === 'RETURN_TO_MAP') button.addEventListener('click', () => returnToCoast({ openMapAfter: true }));
+    cardFooter.append(button);
+  }
+
+  const compass = document.createElement('a');
+  compass.href = '/';
+  compass.className = 'card-footer-tab card-footer-tab--cross-estate';
+  compass.setAttribute('aria-label', 'Return to Compass; leaves Mirrorland');
+  compass.textContent = '↗ Compass · Leaves Mirrorland';
+  cardFooter.append(compass);
+
+  if (!footer.actions.some((item) => item.id === 'TALK_TO_CHARACTER')) {
+    const held = document.createElement('p');
+    held.className = 'conversation-held';
+    held.textContent = footer.presenceState === 'CHARACTER_PRESENT'
+      ? 'Conversation doorway held until a verified destination exists.'
+      : 'Conversation doorway closed while the character is not present.';
+    cardFooter.append(held);
+  }
+}
+
+function handleCardInput(input) {
+  if (!knowledgeLayer.classList.contains('is-open')) return null;
+  const result = dispatchKnowledgeCardInput(sceneState, input);
+  if (!result.interpretation.accepted) return result.interpretation;
+  sceneState = result.state;
+  if (result.interpretation.sceneEvent.type === 'DISMISS_DISCOVERY_CARD') {
+    closeCardLayer();
+    return result.interpretation;
+  }
+  if (!reducedMotion) {
+    knowledgeCard.classList.remove('is-turning');
+    void knowledgeCard.offsetWidth;
+    knowledgeCard.classList.add('is-turning');
+  }
+  renderCard();
+  return result.interpretation;
+}
+
+function dismissCard() {
+  if (!knowledgeLayer.classList.contains('is-open')) return;
+  handleCardInput({ kind: 'DISMISS_CONTROL', reducedMotion });
+}
+
+function closeCardLayer() {
+  knowledgeLayer.classList.remove('is-open');
+  knowledgeLayer.setAttribute('aria-hidden', 'true');
+  knowledgeLayer.inert = true;
+  inspectionPanel.hidden = false;
+  renderInspection();
+  priorFocus?.focus?.();
+}
+
+function followRelation(toSiteId) {
+  const fromSiteId = sceneState.activeSiteId;
+  const result = applyGratitudeCoastMapAction(sceneState, { type: 'FOLLOW_RELATION', toSiteId });
+  if (!result.receipt.accepted) return;
+  sceneState = result.state;
+  const path = resolvePendingSurveyPath(sceneState);
+  hideLocalPanels();
+  const first = sampleSurveyPath(path, 0);
+  if (reducedMotion) {
+    const arrival = sampleSurveyPath(path, 1, { reducedMotion: true });
+    camera = { eye: vector(arrival.position), look: vector(arrival.lookAt) };
+    completeArrival();
+    return;
+  }
+  cameraMotion = {
+    kind: 'SURVEY',
+    startedAt: performance.now(),
+    preludeMs: 320,
+    duration: path.totalDurationMs,
+    fromEye: [...camera.eye],
+    fromLook: [...camera.look],
+    firstEye: vector(first.position),
+    firstLook: vector(first.lookAt),
+    path
+  };
+  worldStatus.textContent = `Following the revealed route from ${SITE_NAMES[fromSiteId]}.`;
+  syncInterface();
+}
+
+function returnToCoast({ openMapAfter = false } = {}) {
+  if (!sceneState || cameraMotion) return;
+  if (sceneState.phase !== 'WORLD_MAP') applySceneEvent({ type: 'RETURN_TO_MAP' });
+  closeCardLayerSilently();
+  hideLocalPanels();
+  worldStage.classList.remove('is-local');
+  returnMap.hidden = true;
+  const finish = () => {
+    worldStatus.textContent = sceneState.discoveredIds.length
+      ? `Gratitude Coast · ${sceneState.discoveredIds.length} discoveries witnessed`
+      : 'Choose one of four distant signals.';
+    syncInterface();
+    if (openMapAfter) openMap();
+    else mapToggle.focus();
+  };
+  tweenCamera(vector(worldEntryFrame.position), vector(worldEntryFrame.lookAt), 1200, finish);
+}
+
+function hideLocalPanels() {
+  arrivalPanel.hidden = true;
+  inspectionPanel.hidden = true;
+}
+
+function closeCardLayerSilently() {
+  knowledgeLayer.classList.remove('is-open');
+  knowledgeLayer.setAttribute('aria-hidden', 'true');
+  knowledgeLayer.inert = true;
+}
+
+function openMap() {
+  if (!sceneState || cameraMotion) return;
+  if (sceneState.phase !== 'WORLD_MAP') {
+    returnToCoast({ openMapAfter: true });
+    return;
+  }
+  priorFocus = document.activeElement;
+  renderMap();
+  mapPanel.classList.add('is-open');
+  mapPanel.setAttribute('aria-hidden', 'false');
+  mapPanel.inert = false;
+  const firstMarker = mapPanel.querySelector('.map-marker:not(.map-marker--context)');
+  (firstMarker ?? mapClose).focus();
+  syncSignals();
+}
+
+function closeMapPanel({ restoreFocus = true } = {}) {
+  mapPanel.classList.remove('is-open');
+  mapPanel.setAttribute('aria-hidden', 'true');
+  mapPanel.inert = true;
+  if (restoreFocus) priorFocus?.focus?.();
+  syncSignals();
+}
+
+function mapPoint(map) {
+  return { x: 42 + map.u * 916, y: 34 + map.v * 572 };
+}
+
+function renderMap() {
+  const model = currentMapModel();
+  mapGeography.replaceChildren();
+  mapMarkers.replaceChildren();
+  const namespace = 'http://www.w3.org/2000/svg';
+  const coast = document.createElementNS(namespace, 'polyline');
+  coast.classList.add('map-coastline');
+  coast.setAttribute('points', model.coastline.points.map((point) => {
+    const projected = mapPoint(point.map);
+    return `${projected.x},${projected.y}`;
+  }).join(' '));
+  mapGeography.append(coast);
+  for (const relation of model.relationPaths) {
+    const path = document.createElementNS(namespace, 'polyline');
+    path.classList.add('map-relation');
+    path.setAttribute('points', relation.points.map((point) => {
+      const projected = mapPoint(point.map);
+      return `${projected.x},${projected.y}`;
+    }).join(' '));
+    mapGeography.append(path);
+  }
+  for (const marker of model.siteMarkers) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'map-marker';
+    button.dataset.state = marker.qualitativeState;
+    button.style.left = `${marker.map.u * 100}%`;
+    button.style.top = `${marker.map.v * 100}%`;
+    button.setAttribute('aria-label', `Travel to ${marker.label.primary}`);
+    const label = document.createElement('span');
+    label.textContent = marker.label.primary;
+    button.append(label);
+    button.addEventListener('click', () => selectSite(marker.siteId));
+    mapMarkers.append(button);
+  }
+  for (const marker of model.contextMarkers) {
+    const context = document.createElement('div');
+    context.className = 'map-marker map-marker--context';
+    context.style.left = `${marker.map.u * 100}%`;
+    context.style.top = `${marker.map.v * 100}%`;
+    context.setAttribute('aria-label', `${marker.label}; harbor context`);
+    const label = document.createElement('span');
+    label.textContent = marker.label;
+    context.append(label);
+    mapMarkers.append(context);
+  }
+}
+
+function syncInterface() {
+  if (!sceneState) return;
+  returnMap.hidden = sceneState.phase === 'WORLD_MAP';
+  syncSignals();
+  if (mapPanel.classList.contains('is-open')) renderMap();
+}
+
+function syncSignals(viewProjection = null) {
+  const buttons = signalLayer.querySelectorAll('.world-signal');
+  if (!sceneState) {
+    for (const button of buttons) button.hidden = true;
+    return;
+  }
+  const model = currentMapModel();
+  for (const button of buttons) {
+    const marker = model.siteMarkers.find((entry) => entry.siteId === button.dataset.siteId);
+    button.dataset.state = marker.qualitativeState;
+    button.setAttribute('aria-label', `Select ${marker.label.primary}`);
+    button.querySelector('span').textContent = marker.label.primary;
+    const modalOpen = mapPanel.classList.contains('is-open') || knowledgeLayer.classList.contains('is-open') || !introLayer.hidden;
+    if (!viewProjection || modalOpen || cameraMotion || sceneState.phase !== 'WORLD_MAP') {
+      button.hidden = true;
+      continue;
+    }
+    const anchor = resolveSiteAnchor(marker.siteId).world;
+    const position = project([anchor.x, anchor.y + 28, anchor.z], viewProjection, innerWidth, innerHeight);
+    if (!position) { button.hidden = true; continue; }
+    button.hidden = false;
+    button.style.left = `${position[0]}px`;
+    button.style.top = `${position[1]}px`;
+  }
+}
+
+function updateCameraMotion(now) {
+  if (!cameraMotion) return;
+  if (cameraMotion.kind === 'TWEEN') {
+    const progress = clamp((now - cameraMotion.startedAt) / cameraMotion.duration, 0, 1);
+    const eased = smooth(progress);
+    camera.eye = mixVector(cameraMotion.fromEye, cameraMotion.toEye, eased);
+    camera.look = mixVector(cameraMotion.fromLook, cameraMotion.toLook, eased);
+    if (progress >= 1) {
+      const complete = cameraMotion.onComplete;
+      cameraMotion = null;
+      complete?.();
+    }
+    return;
+  }
+  if (cameraMotion.kind === 'SURVEY') {
+    const elapsed = now - cameraMotion.startedAt;
+    if (elapsed < cameraMotion.preludeMs) {
+      const progress = smooth(clamp(elapsed / cameraMotion.preludeMs, 0, 1));
+      camera.eye = mixVector(cameraMotion.fromEye, cameraMotion.firstEye, progress);
+      camera.look = mixVector(cameraMotion.fromLook, cameraMotion.firstLook, progress);
+      return;
+    }
+    const progress = clamp((elapsed - cameraMotion.preludeMs) / cameraMotion.duration, 0, 1);
+    const sample = sampleSurveyPath(cameraMotion.path, progress);
+    camera.eye = vector(sample.position);
+    camera.look = vector(sample.lookAt);
+    if (sample.stageId !== lastSurveyStage) {
+      lastSurveyStage = sample.stageId;
+      const labels = {
+        DISTANT_SIGNAL: 'The distant signal holds.',
+        RELATIONAL_FIELD: 'The place settles into the harbor.',
+        LOCAL_LANDMARK: 'The landmark becomes legible.',
+        ARRIVAL_WITNESS: 'Arrival comes before interpretation.'
+      };
+      worldStatus.textContent = labels[sample.stageId];
+    }
+    if (progress >= 1) {
+      cameraMotion = null;
+      completeArrival();
+    }
+  }
+}
+
+function resizeCanvas() {
+  const ratio = Math.min(compact ? 1.2 : 1.55, devicePixelRatio || 1);
+  const width = Math.max(1, Math.round(innerWidth * ratio));
+  const height = Math.max(1, Math.round(innerHeight * ratio));
+  if (canvas.width !== width || canvas.height !== height) {
+    canvas.width = width;
+    canvas.height = height;
+  }
+  gl.viewport(0, 0, width, height);
+  return { width, height };
+}
+
+function drawNightMesh(mesh, water, viewProjection, time) {
+  const uniforms = nightUniforms({ environment: {} });
+  gl.useProgram(nightProgram);
+  gl.uniformMatrix4fv(gl.getUniformLocation(nightProgram, 'uVP'), false, viewProjection);
+  gl.uniform3fv(gl.getUniformLocation(nightProgram, 'uEye'), camera.eye);
+  gl.uniform1f(gl.getUniformLocation(nightProgram, 'uTime'), reducedMotion ? 0 : time);
+  gl.uniform1i(gl.getUniformLocation(nightProgram, 'uWater'), water ? 1 : 0);
+  gl.uniform1f(gl.getUniformLocation(nightProgram, 'uLunarIntensity'), uniforms.lunarIntensity);
+  gl.uniform1f(gl.getUniformLocation(nightProgram, 'uHorizonHaze'), uniforms.horizonHaze);
+  gl.uniform1f(gl.getUniformLocation(nightProgram, 'uWaterMoonResponse'), uniforms.waterMoonResponse);
+  gl.uniform1f(gl.getUniformLocation(nightProgram, 'uMoonPathX'), camera.look[0] + 250);
+  gl.bindVertexArray(mesh.vao);
+  gl.drawElements(gl.TRIANGLES, mesh.count, gl.UNSIGNED_INT, 0);
+}
+
+function drawSites(viewProjection) {
+  gl.useProgram(siteProgram);
+  gl.uniformMatrix4fv(gl.getUniformLocation(siteProgram, 'uVP'), false, viewProjection);
+  const localSiteId = sceneState?.activeSiteId ?? sceneState?.selectedSiteId ?? null;
+  for (const siteId of CARDINAL_SITE_IDS) {
+    const lod = siteId === localSiteId ? 'LOCAL' : 'REGIONAL';
+    for (const component of renderedSites[siteId][lod]) {
+      gl.uniform3fv(gl.getUniformLocation(siteProgram, 'uBaseColor'), component.material.baseColor);
+      gl.uniform1f(gl.getUniformLocation(siteProgram, 'uEmissive'), component.material.emissiveStrength);
+      gl.bindVertexArray(component.mesh.vao);
+      gl.drawElements(gl.TRIANGLES, component.mesh.count, gl.UNSIGNED_INT, 0);
+    }
+  }
+}
+
+function render(now) {
+  if (!gl || html.classList.contains('static-mode')) return;
+  updateCameraMotion(now);
+  const { width, height } = resizeCanvas();
+  const viewProjection = multiply(perspective(52 * Math.PI / 180, width / height, 1, 6000), lookAt(camera.eye, camera.look));
+  gl.clearColor(...GRATITUDE_COAST_NIGHT.sky.clear);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  drawNightMesh(waterMesh, true, viewProjection, now * 0.001);
+  drawNightMesh(terrainMesh, false, viewProjection, now * 0.001);
+  drawSites(viewProjection);
+  syncSignals(viewProjection);
+  requestAnimationFrame(render);
+}
+
+export const TASK19_PAGE_RUNTIME = Object.freeze({
+  geographyAuthority: GRATITUDE_GEOGRAPHY_ADAPTER_ID,
+  introSequence: CINEMATIC_INTRO_BEAT_IDS,
+  standardSurveyInterpolation: 'CONTINUOUS_PROGRESS_SAMPLING_WITH_DURATION_AND_NO_SNAP',
+  inputProfiles: ['TOUCH', 'POINTER', 'KEYBOARD'],
+  reducedMotion: 'SEMANTIC_STATIC_ARRIVAL_AND_CARD_FACE_REPLACEMENT',
+  staticFallback: 'COMPLETE_SOURCE_ORDERED_FOUR_SITE_TWENTY_THREE_DISCOVERY_EQUIVALENT',
+  externalNavigationDistinction: 'DOUBLE_BORDER_ASYMMETRIC_TAB_ROUTE_GLYPH_AND_EXPLICIT_LEAVES_MIRRORLAND_TEXT'
+});

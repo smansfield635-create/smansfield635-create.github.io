@@ -72,15 +72,17 @@ jobs:
       matrix:
         stratum: [IMPLEMENTATION_REPAIR, LONG_HORIZON, COLLABORATIVE_HANDOFF, FAILURE_RECOVERY]
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 240
     env:
       AF_STRATUM: ${{ matrix.stratum }}
       OLLAMA_MODEL: qwen2.5-coder:7b
       OLLAMA_HOST_URL: http://127.0.0.1:11434
       MODEL_FIRST_TOKEN_TIMEOUT_S: '90'
       MODEL_HARD_TIMEOUT_S: '240'
-      OPENHANDS_INACTIVITY_S: '180'
-      OPENHANDS_HARD_TIMEOUT_S: '600'
+      LLM_TIMEOUT: '2100'
+      LLM_NATIVE_TOOL_CALLING: 'true'
+      OPENHANDS_INACTIVITY_S: '2100'
+      OPENHANDS_HARD_TIMEOUT_S: '2400'
       PAIR_HEARTBEAT_S: '15'
       PYTHONUNBUFFERED: '1'
     steps:
@@ -117,6 +119,20 @@ jobs:
           fi
           echo "$VENV/bin" >> "$GITHUB_PATH"
           "$VENV/bin/openhands" --version
+          "$VENV/bin/python" - <<'PY'
+          import os
+          from openhands.sdk import LLM
+          llm = LLM(
+              model='openai/' + os.environ['OLLAMA_MODEL'],
+              api_key='local-placeholder',
+              base_url=os.environ['OLLAMA_HOST_URL'].rstrip('/') + '/v1',
+              timeout=int(os.environ['LLM_TIMEOUT']),
+              native_tool_calling=os.environ['LLM_NATIVE_TOOL_CALLING'].lower() == 'true',
+          )
+          assert llm.timeout == 2100
+          assert llm.native_tool_calling is True
+          print(f'OPENHANDS_RUNTIME_PREFLIGHT_PASS timeout={llm.timeout} native_tool_calling={llm.native_tool_calling}')
+          PY
       - name: Restore common 7B model
         uses: actions/cache@v4
         with:
@@ -128,7 +144,7 @@ jobs:
           mkdir -p "$HOME/.ollama/models"
           docker pull ollama/ollama:0.32.14
           docker run -d --name agentic-frontier-ollama \
-            -e OLLAMA_CONTEXT_LENGTH=8192 \
+            -e OLLAMA_CONTEXT_LENGTH=32768 \
             -v "$HOME/.ollama:/root/.ollama" \
             -p 11434:11434 \
             ollama/ollama:0.32.14

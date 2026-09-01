@@ -5,6 +5,7 @@ set -euo pipefail
 : "${OLLAMA_MODEL:=qwen2.5-coder:7b}"
 : "${OLLAMA_HOST_URL:=http://127.0.0.1:11434}"
 : "${OLLAMA_IMAGE:=ollama/ollama:0.32.14}"
+: "${OLLAMA_CONTEXT_LENGTH:=32768}"
 : "${OPENHANDS_VERSION:=1.14.0}"
 : "${PYTHON_BIN:=python3.12}"
 
@@ -36,12 +37,10 @@ cleanup() {
 }
 trap cleanup EXIT
 
-# Model runtime is provisioned by the project-declared command inside the reusable
-# disposable substrate. No bespoke Codespace or GitHub Actions agent transport is required.
 docker rm -f agentic-frontier-ollama >/dev/null 2>&1 || true
 docker pull "$OLLAMA_IMAGE"
 docker run -d --name agentic-frontier-ollama \
-  -e OLLAMA_CONTEXT_LENGTH=8192 \
+  -e OLLAMA_CONTEXT_LENGTH="$OLLAMA_CONTEXT_LENGTH" \
   -p 11434:11434 \
   "$OLLAMA_IMAGE"
 
@@ -63,9 +62,10 @@ docker exec agentic-frontier-ollama ollama pull "$OLLAMA_MODEL"
 "$VENV/bin/openhands" --version | tee "$OUT_ROOT/openhands-version.txt"
 "$VENV/bin/python" -m pip freeze | LC_ALL=C sort > "$OUT_ROOT/openhands-environment-freeze.txt"
 sha256sum "$OUT_ROOT/openhands-environment-freeze.txt" | tee "$OUT_ROOT/openhands-environment-freeze.sha256"
+printf '%s\n' "$OLLAMA_CONTEXT_LENGTH" > "$OUT_ROOT/ollama-context-length.txt"
 
 export PATH="$VENV/bin:$PATH"
-export OLLAMA_MODEL OLLAMA_HOST_URL
+export OLLAMA_MODEL OLLAMA_HOST_URL OLLAMA_CONTEXT_LENGTH
 export OPENHANDS_PREFLIGHT_RECEIPT="$OUT_ROOT/openhands-native-preflight-v1.json"
 
 python tools/research/agentic-frontier/openhands-native-preflight-v1.py

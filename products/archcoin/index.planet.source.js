@@ -6,6 +6,32 @@
 (() => {
   "use strict";
 
+  function installAboutShotVisibilityScheduler() {
+    const root = document.documentElement;
+    if (root?.dataset.aboutGeneration !== "documentary-estate-v2-reconstructed") return;
+    if (document.querySelector("style[data-about-shot-visibility-scheduler]")) return;
+
+    const style = document.createElement("style");
+    style.dataset.aboutShotVisibilityScheduler = "v1";
+    style.textContent = `
+      @keyframes dgbAboutShotVisibility {
+        0% { opacity: 0; filter: blur(7px); transform: scale(1.025); }
+        12% { opacity: 1; filter: blur(0); transform: scale(1); }
+        82% { opacity: 1; filter: blur(0); transform: scale(1); }
+        100% { opacity: 0; filter: blur(7px); transform: scale(1.012); }
+      }
+      html[data-film-state="playing"] .shot.s1 { animation: dgbAboutShotVisibility 4s ease both; }
+      html[data-film-state="playing"] .shot.s2 { animation: dgbAboutShotVisibility 5s ease 4s both; }
+      html[data-film-state="playing"] .shot.s3 { animation: dgbAboutShotVisibility 5s ease 9s both; }
+      html[data-film-state="playing"] .shot.s4 { animation: dgbAboutShotVisibility 5s ease 14s both; }
+      html[data-film-state="playing"] .shot.s5 { animation: dgbAboutShotVisibility 5s ease 19s both; }
+      html[data-film-state="playing"] .shot.s6 { animation: dgbAboutShotVisibility 4s ease 24s both; }
+    `;
+    document.head.append(style);
+  }
+
+  installAboutShotVisibilityScheduler();
+
   const BUILD = "ARCHCOIN_PRODUCTION_CENTER_WORLD_v2";
   const GEOMETRY_URL = `/assets/audralia/audralia.planet.js?build=${encodeURIComponent(BUILD)}`;
   const PARTICIPANT_URL = `/laws/index.planet.js?build=${encodeURIComponent(BUILD)}`;

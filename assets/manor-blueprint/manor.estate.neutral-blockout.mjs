@@ -45,7 +45,7 @@ export const ANCHORS = freeze({
   A_COAST_OVERLOOK:V(8,1.2,8), A_MOUNTAIN_OVERLOOK:V(-6,1.2,-7)
 });
 export const CAMERA = freeze({
-  azimuthDeg:-32, elevationDeg:18, distance:94,
+  azimuthDeg:-32, elevationDeg:18, distance:94, fieldOfViewDegrees:40,
   occupancyTarget:0.65, occupancyBand:freeze([0.60,0.70]),
   sideMarginMinimum:0.10, headroomMinimum:0.14, arcMaximumDeg:12
 });

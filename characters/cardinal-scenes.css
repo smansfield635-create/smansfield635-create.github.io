@@ -50,13 +50,19 @@ a { color: inherit; }
 .button-return { border-color: rgba(120, 208, 175, 0.45); background: rgba(120, 208, 175, 0.1); }
 .icon-button { display: grid; width: 2.75rem; padding: 0; place-items: center; flex: 0 0 auto; border-radius: 50%; background: rgba(255, 255, 255, 0.08); font-size: 1.55rem; line-height: 1; }
 
-.intro-layer, .knowledge-layer, .coast-map { position: absolute; inset: 0; z-index: 20; display: grid; place-items: center; padding: clamp(1rem, 4vw, 3rem); background: rgba(1, 6, 12, 0.58); backdrop-filter: blur(0.9rem); }
+.intro-layer, .encounter-panel, .knowledge-layer, .coast-map { position: absolute; inset: 0; z-index: 20; display: grid; place-items: center; padding: clamp(1rem, 4vw, 3rem); background: rgba(1, 6, 12, 0.58); backdrop-filter: blur(0.9rem); }
 .intro-layer[hidden] { display: none; }
 .intro-panel { position: relative; width: min(39rem, 100%); padding: clamp(1.4rem, 4vw, 2.6rem); border: 1px solid rgba(240, 219, 160, 0.34); border-radius: 1.4rem 0.35rem 1.4rem 0.35rem; background: linear-gradient(145deg, rgba(9, 27, 35, 0.96), rgba(3, 10, 18, 0.98)); box-shadow: 0 2rem 7rem rgba(0, 0, 0, 0.52); }
 .intro-step { position: absolute; inset-block-start: 1.25rem; inset-inline-end: 1.4rem; margin: 0; color: var(--muted); font-size: 0.78rem; letter-spacing: 0.08em; }
 .intro-panel h2 { margin: 0.65rem 0 0.85rem; font: 720 clamp(2.1rem, 6vw, 4.4rem) / 0.96 Georgia, "Times New Roman", serif; letter-spacing: -0.045em; }
 .intro-panel > p:not(.kicker, .intro-step) { margin: 0; color: rgba(244, 246, 248, 0.82); font-size: 1.05rem; line-height: 1.62; }
 .intro-actions { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-block-start: 1.5rem; }
+.cinematic-progress { height: 0.18rem; margin-block-start: 1.25rem; overflow: hidden; border-radius: 99px; background: rgba(255, 255, 255, 0.12); }
+.cinematic-progress span { display: block; width: 0; height: 100%; background: var(--gold); box-shadow: 0 0 1rem var(--gold); }
+.intro-layer[data-cinematic-state="playing"] { place-items: end start; background: linear-gradient(180deg, transparent 48%, rgba(1, 6, 12, 0.74)); backdrop-filter: none; pointer-events: none; }
+.intro-layer[data-cinematic-state="playing"] .intro-panel { width: min(39rem, calc(100% - 1rem)); padding: 1.2rem 1.3rem; border-color: transparent; background: rgba(2, 9, 16, 0.52); box-shadow: none; pointer-events: auto; }
+.intro-layer[data-cinematic-state="playing"] .intro-actions { position: absolute; inset-block-end: 1rem; inset-inline-end: 1rem; margin: 0; }
+.intro-layer[data-cinematic-state="playing"] #intro-continue { display: none; }
 .intro-layer.is-transitioning .intro-panel { animation: intro-shift 520ms ease both; }
 @keyframes intro-shift { 0% { opacity: 0.2; transform: translateY(0.9rem); } 100% { opacity: 1; transform: none; } }
 
@@ -72,6 +78,13 @@ a { color: inherit; }
 .world-signal[data-site-id="SIGNAL_LANTERN_FIELD"] { color: var(--east); }
 .world-signal[data-site-id="RESTORATION_BOUNDARY"] { color: var(--west); }
 @keyframes signal-breathe { 50% { opacity: 0.68; scale: 0.86; } }
+
+.encounter-panel { opacity: 0; pointer-events: none; transition: opacity 220ms ease; }
+.encounter-panel.is-open { opacity: 1; pointer-events: auto; }
+.encounter-shell { width: min(34rem, 100%); padding: clamp(1.4rem, 4vw, 2.4rem); border: 1px solid rgba(240, 219, 160, 0.4); border-radius: 1.4rem 0.3rem 1.4rem 0.3rem; background: linear-gradient(145deg, rgba(9, 27, 35, 0.98), rgba(3, 10, 18, 0.99)); box-shadow: 0 2rem 7rem rgba(0, 0, 0, 0.58); }
+.encounter-shell h2 { margin: 0.5rem 0 0.9rem; font: 720 clamp(2rem, 6vw, 4rem) / 0.98 Georgia, "Times New Roman", serif; letter-spacing: -0.045em; }
+.encounter-shell > p:not(.kicker) { color: rgba(244, 246, 248, 0.82); line-height: 1.6; }
+.encounter-actions { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-block-start: 1.4rem; }
 
 .arrival-panel, .inspection-panel { position: absolute; z-index: 9; inset-inline-end: clamp(1rem, 4vw, 3rem); width: min(28rem, calc(100% - 2rem)); border: 1px solid var(--line); background: var(--glass); backdrop-filter: blur(1rem); box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.38); }
 .arrival-panel { inset-block-end: clamp(5.5rem, 12vh, 8rem); padding: 1.25rem; border-radius: 1.1rem 0.25rem 1.1rem 0.25rem; }
@@ -166,11 +179,12 @@ a { color: inherit; }
   .world-heading { inset-block-start: max(0.9rem, env(safe-area-inset-top)); }
   .world-heading h1 { max-width: 11ch; font-size: clamp(2rem, 11vw, 3.4rem); }
   .world-heading > p:last-child { max-width: 88%; font-size: 0.93rem; }
-  .intro-layer, .knowledge-layer, .coast-map { align-items: end; padding: 0.65rem; padding-block-end: max(0.65rem, env(safe-area-inset-bottom)); }
+  .intro-layer, .encounter-panel, .knowledge-layer, .coast-map { align-items: end; padding: 0.65rem; padding-block-end: max(0.65rem, env(safe-area-inset-bottom)); }
   .intro-panel { max-height: 88svh; overflow-y: auto; padding: 1.25rem; border-radius: 1rem 0.25rem 1rem 0.25rem; }
   .intro-panel h2 { font-size: clamp(2rem, 11vw, 3.4rem); }
   .intro-panel > p:not(.kicker, .intro-step) { font-size: 1rem; }
   .intro-actions .button { flex: 1 1 9rem; }
+  .encounter-actions .button { flex: 1 1 10rem; }
   .world-signal { min-width: 3.5rem; min-height: 3.5rem; }
   .world-signal span { display: none; }
   .arrival-panel { inset-block-end: 6.2rem; max-height: 53svh; overflow-y: auto; }
@@ -200,6 +214,6 @@ a { color: inherit; }
 }
 
 @media (forced-colors: active) {
-  .button, .icon-button, .route-tab, .card-footer-tab, .world-signal, .map-marker, .knowledge-card { forced-color-adjust: auto; }
+  .button, .icon-button, .route-tab, .card-footer-tab, .world-signal, .map-marker, .knowledge-card, .encounter-panel { forced-color-adjust: auto; }
   .route-tab--cross-estate { border-style: double; border-width: 0.25rem; }
 }

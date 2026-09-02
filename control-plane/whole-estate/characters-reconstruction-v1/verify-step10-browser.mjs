@@ -7,7 +7,7 @@ fs.mkdirSync(outDir,{recursive:true});
 
 const cases=[
   {id:'desktop',viewport:{width:1440,height:900},reducedMotion:'no-preference',isMobile:false},
-  {id:'mobile',viewport:{width:390,height:844},reducedMotion:'no-preference',isMobile:true,hasTouch:true},
+  {id:'mobile',viewport:{width:390,height:844},reducedMotion:'no-preference',isMobile:true},
   {id:'reduced-motion',viewport:{width:1440,height:900},reducedMotion:'reduce',isMobile:false}
 ];
 

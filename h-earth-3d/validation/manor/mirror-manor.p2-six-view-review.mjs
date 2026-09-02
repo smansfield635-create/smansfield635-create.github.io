@@ -1,18 +1,18 @@
-import { CAMERA, MASSES, ROOFS, SITE } from '../../../assets/manor-blueprint/manor.estate.neutral-blockout.mjs';
+import { CAMERA, MASSES, ROOFS, SITE, TOWER_CROWNS } from '../../../assets/manor-blueprint/manor.estate.neutral-blockout.mjs';
 
 const freeze=(v)=>Object.freeze(v);
 
 export const MIRROR_MANOR_P2_SIX_VIEW_REVIEW = freeze({
-  schemaVersion:'MIRROR_MANOR_P2_SIX_VIEW_REVIEW_v1',
-  candidateRevision:'P2_SITE_CAPACITY_AND_CAROUSEL_DISTANCE',
+  schemaVersion:'MIRROR_MANOR_P3_SIX_VIEW_REVIEW_v1',
+  candidateRevision:'P3_EXPLICIT_TOWER_CROWN_GEOMETRY',
   baseSha:'9ce59503ca9ed36e7e5248c22c47d38be95604dd',
   reviewClass:'PREDETAIL_NEUTRAL_ARCHITECTURE_REVIEW',
   sixViews:freeze(['CAROUSEL_HERO','CEREMONIAL_FRONT','WEST_FLANK','EAST_FLANK','MOUNTAINWARD_REAR','ELEVATED_WORLD']),
   carouselProjection:freeze({
     camera:CAMERA,
-    measuredViewportOccupancyWidth:0.490207,
-    measuredViewportOccupancyHeight:0.624458,
-    measuredMargins:freeze({left:0.327468,right:0.182325,bottom:0.114220,top:0.261323}),
+    measuredViewportOccupancyWidth:0.411768,
+    measuredViewportOccupancyHeight:0.661710,
+    measuredMargins:freeze({left:0.355076,right:0.233156,bottom:0.175949,top:0.162341}),
     occupancyBandPass:true,
     sideMarginPass:true,
     headroomPass:true,
@@ -26,14 +26,16 @@ export const MIRROR_MANOR_P2_SIX_VIEW_REVIEW = freeze({
   }),
   geometryInspection:freeze({
     declaredTowerTops:freeze(MASSES.filter((m)=>m.type==='tower').map((m)=>freeze({id:m.id,height:m.height,declaredTop:m.top}))),
-    meshConstructionFinding:'ALL_MASSES_ARE_SENT_THROUGH_BUILD_BOX; TOWER_TOP_FIELDS_DO_NOT_CREATE_CROWN_GEOMETRY',
-    consequence:'THE APPROVED CENTRAL/SECONDARY VERTICAL SILHOUETTE IS NOT ACTUALLY PRESENT IN THE NEUTRAL MESH',
+    crownVolumes:freeze(TOWER_CROWNS.map((c)=>freeze({id:c.id,towerId:c.towerId,baseHeight:c.baseHeight,apexHeight:c.apexHeight}))),
+    meshConstructionFinding:'THREE EXPLICIT PYRAMID CROWN VOLUMES ARE EMITTED ABOVE THE THREE TOWER BODY MASSES',
+    consequence:'DECLARED CENTRAL/SECONDARY VERTICAL SILHOUETTE IS NOW PRESENT AS NEUTRAL GEOMETRY',
     roofCount:ROOFS.length,
-    pass:false
+    crownCount:TOWER_CROWNS.length,
+    pass:TOWER_CROWNS.length===3
   }),
-  detailAdmission:false,
-  verdict:'FAIL_FOR_DETAIL_REQUIRES_P3_TOWER_CROWN_GEOMETRY',
-  nextLawfulOperation:'P3_NEUTRAL_MASSING_CORRECTION: construct explicit tower crown/roof volumes, preserve P2 27-unit site span and carousel framing, then rerun six-view review before admitting windows/trim/materials/ornament.'
+  detailAdmission:true,
+  verdict:'PASS_PREDETAIL_REVIEW_DETAIL_ADMISSIBLE',
+  nextLawfulOperation:'GOTHIC_ARCHITECTURAL_DETAIL_PHASE_1: establish wall bays, true openings, structural buttresses, portals, roof-edge architecture and material zones while preserving all P3 geometry-integrity prohibitions.'
 });
 
 console.log(JSON.stringify(MIRROR_MANOR_P2_SIX_VIEW_REVIEW,null,2));

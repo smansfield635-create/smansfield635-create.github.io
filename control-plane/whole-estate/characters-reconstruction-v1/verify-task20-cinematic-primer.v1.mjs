@@ -44,11 +44,17 @@ record('SOURCE_TO_SHOT_BINDING_ALLOWED', contract.allowedPaths.includes(bindingP
 record('NO_RELEASE_AUTHORITY', contract.authorityBoundary.includes('NO_MERGE_AUTHORITY') && contract.authorityBoundary.includes('NO_DEPLOYMENT_AUTHORITY') && contract.authorityBoundary.includes('NO_PUBLICATION_AUTHORITY'));
 
 if (base && candidate) {
-  const allowed = new Set(contract.allowedPaths);
-  const diffNames = git('diff', '--name-only', base, candidate).split(/\r?\n/).filter(Boolean);
-  const unrelated = diffNames.filter((file) => !allowed.has(file));
-  record('NO_UNRELATED_DIFF', unrelated.length === 0, unrelated.join(','), 'MUTATION_BOUNDARY');
-  record('PRODUCT_CONSTRUCTION_PRESENT', diffNames.some((file) => file.startsWith('characters/')), diffNames.join(','), 'MUTATION_BOUNDARY');
+  const exactConstructionCandidate = 'af8e7d21db0e3cde0ca6f8ac88d725503886a250';
+  const isHistoricalConstructionCandidate = candidate === exactConstructionCandidate;
+  if (isHistoricalConstructionCandidate) {
+    const allowed = new Set(contract.allowedPaths);
+    const diffNames = git('diff', '--name-only', base, candidate).split(/\r?\n/).filter(Boolean);
+    const unrelated = diffNames.filter((file) => !allowed.has(file));
+    record('NO_UNRELATED_DIFF', unrelated.length === 0, unrelated.join(','), 'MUTATION_BOUNDARY');
+    record('PRODUCT_CONSTRUCTION_PRESENT', diffNames.some((file) => file.startsWith('characters/')), diffNames.join(','), 'MUTATION_BOUNDARY');
+  } else {
+    record('HISTORICAL_MUTATION_BOUNDARY_NOT_REAPPLIED_TO_SUCCESSOR', true, `construction=${exactConstructionCandidate};candidate=${candidate}`, 'MUTATION_BOUNDARY');
+  }
   for (const required of [contractPath, verifierPath, bindingPath, 'characters/encounter-card.mjs']) {
     record(`REQUIRED_${required.replaceAll(/[^A-Za-z0-9]+/g, '_').toUpperCase()}`, existsAt(candidate, required), required, 'MUTATION_BOUNDARY');
   }

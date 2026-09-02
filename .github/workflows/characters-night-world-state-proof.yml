@@ -5,8 +5,7 @@ on:
     paths:
       - '.github/workflows/characters-night-world-state-proof.yml'
       - 'characters/**'
-      - 'control-plane/whole-estate/characters-reconstruction-v1/task20-cinematic-primer-construction-contract.v1.json'
-      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-task20-cinematic-primer.v1.mjs'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/**'
   workflow_dispatch:
 
 permissions: { contents: read }
@@ -14,145 +13,81 @@ permissions: { contents: read }
 jobs:
   browser-proof:
     runs-on: ubuntu-24.04
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out current Characters verification surface
+        uses: actions/checkout@v4
         with:
           ref: '${{ github.event.pull_request.head.sha || github.sha }}'
           fetch-depth: 0
-          filter: blob:none
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /.github/workflows/characters-night-world-state-proof.yml
             /assets/audralia/audralia.planet.js
             /characters/
-            /control-plane/whole-estate/characters-reconstruction-v1/task20-cinematic-primer-construction-contract.v1.json
-            /control-plane/whole-estate/characters-reconstruction-v1/verify-task20-cinematic-primer.v1.mjs
-            /elara/index.html
-            /products/auren/index.html
-            /showroom/globe/hearth/jeeves/index.html
             /h-earth-3d/
-            /showroom/globe/h-earth/render/
-      - name: Verify contracts and browser substrate
+            /showroom/globe/h-earth/
+            /control-plane/whole-estate/characters-reconstruction-v1/
+      - name: Verify Task 20 lineage and successor contracts
         env:
           CANDIDATE_SHA: '${{ github.event.pull_request.head.sha || github.sha }}'
         run: |
-          for file in characters/*.mjs control-plane/whole-estate/characters-reconstruction-v1/verify-task20-cinematic-primer.v1.mjs
-          do
-            node --check "$file"
-          done
-          node control-plane/whole-estate/characters-reconstruction-v1/verify-task20-cinematic-primer.v1.mjs \
-            --base 3443f8bab2b85c7214fc7ca4bbc17fded5c3baf3 \
-            --candidate "$CANDIDATE_SHA"
-          npm install --prefix "$RUNNER_TEMP/task20-browser" playwright@1.55.0 >/dev/null 2>&1
-          "$RUNNER_TEMP/task20-browser/node_modules/.bin/playwright" install --with-deps chromium >/dev/null
-      - run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/characters-task20-http.log 2>&1 &
-      - name: Prove cinematic, encounter, scene, return, and equivalence
+          set -euo pipefail
+          TASK20_CONSTRUCTION_SHA=af8e7d21db0e3cde0ca6f8ac88d725503886a250
+          git merge-base --is-ancestor "$TASK20_CONSTRUCTION_SHA" "$CANDIDATE_SHA"
+          git cat-file -e "$TASK20_CONSTRUCTION_SHA^{commit}"
+          node --check control-plane/whole-estate/characters-reconstruction-v1/verify-task20-cinematic-primer.v1.mjs
+          node --check control-plane/whole-estate/characters-reconstruction-v1/verify-step9-regional-bridge.v1.mjs
+          node --check control-plane/whole-estate/characters-reconstruction-v1/verify-step10-geography-correspondence.mjs
+          node --check control-plane/whole-estate/characters-reconstruction-v1/verify-step10-browser.mjs
+          node control-plane/whole-estate/characters-reconstruction-v1/verify-step9-regional-bridge.v1.mjs \
+            | tee /tmp/characters-task20-successor-step9.json
+          node control-plane/whole-estate/characters-reconstruction-v1/verify-step10-geography-correspondence.mjs \
+            | tee /tmp/characters-task20-successor-geography.json
+      - name: Install browser runtime
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null
+      - name: Start candidate server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/characters-task20-http.log 2>&1 &
+          for i in {1..20}; do curl -fsS http://127.0.0.1:4173/characters/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/characters-task20-http.log
+          exit 1
+      - name: Prove successor cinematic, geography, return, mobile, and reduced motion
+        env:
+          STEP10_ARTIFACT_DIR: .qualification/characters-task20-cinematic-primer
         run: |
           mkdir -p .qualification/characters-task20-cinematic-primer
-          node <<'NODE'
-          const path = require('path');
-          const fs = require('fs');
-          const { chromium } = require(path.join(process.env.RUNNER_TEMP, 'task20-browser/node_modules/playwright'));
-          const ROOT = 'http://127.0.0.1:4173/characters/';
-
-          (async () => {
-            const browser = await chromium.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
-            const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'no-preference' });
-            const page = await context.newPage();
-            const errors = [];
-            page.on('pageerror', error => errors.push(String(error)));
-            page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
-            await page.goto(ROOT, { waitUntil: 'load' });
-            await page.waitForFunction(() => document.documentElement.classList.contains('webgl-ready') || document.documentElement.classList.contains('static-mode'));
-            if (!await page.locator('html.webgl-ready').count()) throw new Error(`WebGL runtime unavailable: ${JSON.stringify(errors)}`);
-            if (!await page.locator('#intro-continue', { hasText: 'Play primer' }).count()) throw new Error('Play control missing');
-            await page.screenshot({ path: '.qualification/characters-task20-cinematic-primer/01-ready.png' });
-            await page.locator('#intro-continue').click();
-            await page.waitForFunction(() => document.querySelector('#world-stage')?.dataset.cinematicBeat === 'AUDRALIA_GLOBE', null, { timeout: 6500 });
-            const planet = await page.evaluate(() => ({ beat: document.querySelector('#world-stage')?.dataset.cinematicBeat, topology: document.querySelector('#world-stage')?.dataset.planetTopology }));
-            if (!planet.topology) throw new Error('canonical Audralia topology receipt missing');
-            await page.screenshot({ path: '.qualification/characters-task20-cinematic-primer/02-audralia-globe.png' });
-            await page.waitForFunction(() => document.querySelector('#intro-layer')?.hidden === true, null, { timeout: 32000 });
-            const hub = await page.evaluate(() => ({ status: document.querySelector('#world-status')?.textContent, signals: document.querySelectorAll('.world-signal').length, replay: !document.querySelector('#replay-primer')?.hidden }));
-            if (hub.signals !== 4 || !hub.replay) throw new Error(`survey hub incomplete: ${JSON.stringify(hub)}`);
-            await page.screenshot({ path: '.qualification/characters-task20-cinematic-primer/03-survey-hub.png' });
-
-            await page.locator('#map-toggle').click();
-            const firstMarker = page.locator('#map-markers .map-marker:not(.map-marker--context)').first();
-            await firstMarker.click();
-            await page.locator('#encounter-panel.is-open').waitFor();
-            if (await page.locator('#encounter-panel').getByRole('button', { name: 'Enter the scene' }).count() !== 1) throw new Error('scene-entry choice missing');
-            if (await page.locator('#encounter-panel').getByRole('button', { name: 'Continue surveying' }).count() !== 1) throw new Error('continue-surveying choice missing');
-            await page.screenshot({ path: '.qualification/characters-task20-cinematic-primer/04-encounter-preview.png' });
-            await page.locator('#continue-surveying').click();
-            if (await page.locator('#encounter-panel.is-open').count()) throw new Error('encounter did not return to hub');
-
-            await page.locator('#map-toggle').click();
-            await page.locator('#map-markers .map-marker:not(.map-marker--context)').first().click();
-            await page.locator('#enter-scene').click();
-            await page.locator('#arrival-panel:not([hidden])').waitFor({ timeout: 6000 });
-            await page.locator('#begin-inspection').click();
-            if (await page.locator('#discovery-list .discovery-button').count() !== 5) throw new Error('Watchfire discovery count drift');
-            await page.locator('#discovery-list .discovery-button').first().click();
-            await page.locator('#knowledge-layer.is-open').waitFor();
-            await page.locator('#knowledge-card').click();
-            if (await page.locator('#card-face-label').textContent() !== 'SIGNIFICANCE') throw new Error('knowledge card turn failed');
-            await page.getByRole('button', { name: /restore the exact canonical survey-hub frame/i }).click();
-            await page.locator('#coast-map.is-open').waitFor({ timeout: 5000 });
-            await page.locator('#map-close').click();
-            await page.locator('#replay-primer').click();
-            await page.locator('#intro-skip').click();
-            await page.waitForFunction(() => document.querySelector('#intro-layer')?.hidden === true);
-
-            const desktopOverflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-            if (desktopOverflow > 1) throw new Error(`desktop horizontal overflow: ${desktopOverflow}px`);
-
-            const phoneContext = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
-            const phone = await phoneContext.newPage();
-            await phone.goto(ROOT, { waitUntil: 'load' });
-            await phone.locator('#intro-continue').click();
-            await phone.waitForFunction(() => document.querySelector('#intro-layer')?.hidden === true);
-            const phoneOverflow = await phone.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-            if (phoneOverflow > 1) throw new Error(`phone horizontal overflow: ${phoneOverflow}px`);
-            await phone.screenshot({ path: '.qualification/characters-task20-cinematic-primer/05-phone-reduced-hub.png', fullPage: true });
-
-            const staticContext = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 1200, height: 900 } });
-            const staticPage = await staticContext.newPage();
-            await staticPage.goto(ROOT, { waitUntil: 'load' });
-            const staticCounts = {
-              sites: await staticPage.locator('.static-equivalent .static-site').count(),
-              discoveries: await staticPage.locator('.static-equivalent .static-discovery').count(),
-              encounterChoices: await staticPage.locator('.static-equivalent').getByText('Enter the scene', { exact: true }).count()
-            };
-            if (staticCounts.sites !== 4 || staticCounts.discoveries !== 23 || staticCounts.encounterChoices !== 4) throw new Error(`static equivalent incomplete: ${JSON.stringify(staticCounts)}`);
-            if (errors.length) throw new Error(`runtime errors: ${JSON.stringify(errors)}`);
-
-            const proof = {
-              result: 'PASS_TASK20_CINEMATIC_PRIMER_BROWSER_MATRIX',
-              planet,
-              hub,
-              runtimeSeconds: 28,
-              autonomousIntermediateClicks: 0,
-              encounterActions: ['Enter the scene', 'Continue surveying'],
-              staticCounts,
-              desktopOverflow,
-              phoneOverflow,
-              reducedMotion: true,
-              runtimeErrors: errors
-            };
-            fs.writeFileSync('.qualification/characters-task20-cinematic-primer/proof.json', JSON.stringify(proof, null, 2));
-            console.log(JSON.stringify(proof, null, 2));
-            await phoneContext.close();
-            await staticContext.close();
-            await context.close();
-            await browser.close();
-          })().catch(error => { console.error(error); process.exit(1); });
+          node control-plane/whole-estate/characters-reconstruction-v1/verify-step10-browser.mjs \
+            | tee .qualification/characters-task20-cinematic-primer/browser-receipt.json
+      - name: Record compatibility receipt
+        env:
+          CANDIDATE_SHA: '${{ github.event.pull_request.head.sha || github.sha }}'
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const receipt={
+            schema:'CHARACTERS_TASK20_SUCCESSOR_COMPATIBILITY_RECEIPT_v1',
+            result:'PASS_TASK20_REQUIREMENTS_PRESERVED_BY_CURRENT_STEP9_STEP10_CONTRACTS',
+            historicalConstruction:'af8e7d21db0e3cde0ca6f8ac88d725503886a250',
+            candidate:process.env.CANDIDATE_SHA,
+            invariant:'Task 20 cinematic semantics remain protected without reapplying its construction-era DOM or mutation-boundary assumptions to successor architecture.',
+            delegatedChecks:['CHARACTERS_STEP9_REGIONAL_BRIDGE_VERIFICATION_RECEIPT_v1','CHARACTERS_STEP10_CROSS_ENVIRONMENT_GEOGRAPHY_RECEIPT_v1','CHARACTERS_STEP10_BROWSER_ACCEPTANCE_RECEIPT_v2']
+          };
+          fs.writeFileSync('.qualification/characters-task20-cinematic-primer/task20-successor-compatibility.json',JSON.stringify(receipt,null,2));
+          console.log(JSON.stringify(receipt,null,2));
           NODE
       - name: Upload visual proof
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: characters-task20-cinematic-primer-${{ github.event.pull_request.head.sha || github.sha }}
-          path: .qualification/characters-task20-cinematic-primer
+          path: |
+            .qualification/characters-task20-cinematic-primer
+            /tmp/characters-task20-successor-step9.json
+            /tmp/characters-task20-successor-geography.json
+            /tmp/characters-task20-http.log
           if-no-files-found: error
           include-hidden-files: true

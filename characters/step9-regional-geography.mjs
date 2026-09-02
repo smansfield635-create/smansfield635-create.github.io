@@ -37,9 +37,9 @@ export const STEP9_SCALE_CONTRACT=freeze({
 
 const derived=(siteId,x,z,surveyOffset)=>freeze({siteId,x,z,surveyOffset,derivedLocalDestination:true,finalNarrativePlacement:false,traversalAuthorityGranted:false});
 const LOCAL_DERIVED_DESTINATIONS=freeze({
-  AUREN_LOCAL:derived('AUREN_LOCAL',250,-980,{x:170,y:120,z:280}),
-  JEEVES_LOCAL:derived('JEEVES_LOCAL',520,-930,{x:160,y:88,z:280}),
-  BEYOND_MANOR:derived('BEYOND_MANOR',-430,-940,{x:180,y:118,z:250})
+  AUREN_LOCAL:derived('AUREN_LOCAL',250,-980,{x:205,y:112,z:330}),
+  JEEVES_LOCAL:derived('JEEVES_LOCAL',520,-930,{x:205,y:96,z:330}),
+  BEYOND_MANOR:derived('BEYOND_MANOR',-430,-940,{x:230,y:126,z:320})
 });
 
 export const STEP9_DESTINATION_BINDINGS=freeze({
@@ -54,6 +54,17 @@ export const STEP9_DESTINATION_BINDINGS=freeze({
   jeeves:{siteId:'JEEVES_LOCAL',role:'LOCAL_DERIVED_DESTINATION'},
   clock:{siteId:'CLOCK',role:'INSTRUMENT_CONTEXT'},
   remote:{siteId:'BEYOND_MANOR',role:'LOCAL_DERIVED_DESTINATION'}
+});
+
+const PRESENTATION_CAMERA_TUNING=freeze({
+  CROSSING:{radius:1.20,height:1.08,lateral:-26},
+  DEXTRION_TRANSMISSION:{radius:1.30,height:1.02,lateral:34},
+  WATCHFIRE_OVERLOOK:{radius:1.24,height:1.12,lateral:-42},
+  WATERLINE_STATION:{radius:1.18,height:.96,lateral:44},
+  MIRROR_MANOR:{radius:1.28,height:1.10,lateral:-58},
+  SIGNAL_LANTERN_FIELD:{radius:1.24,height:1.00,lateral:52},
+  RESTORATION_BOUNDARY:{radius:1.22,height:1.04,lateral:-46},
+  CLOCK:{radius:1.30,height:1.13,lateral:38}
 });
 
 function resolveDerived(spec){
@@ -75,13 +86,26 @@ export function resolveStep9Site(siteId){
   return freeze({...site,traversalAuthorityGranted:false});
 }
 
+function tuneCanonicalCamera(siteId,camera){
+  const tuning=PRESENTATION_CAMERA_TUNING[siteId];
+  if(!tuning)return camera;
+  const look=camera.look||camera.worldReference;
+  const eye=camera.eye;
+  const dx=eye.x-look.x,dz=eye.z-look.z;
+  const len=Math.hypot(dx,dz)||1;
+  const nx=dx/len,nz=dz/len;
+  const tx=-nz,tz=nx;
+  const radius=len*tuning.radius;
+  return freeze({...camera,eye:{x:look.x+nx*radius+tx*tuning.lateral,y:look.y+(eye.y-look.y)*tuning.height,z:look.z+nz*radius+tz*tuning.lateral},pathClass:'DESTINATION_DRIVEN_AUTHORED_CINEMATIC_SURVEY_PATH'});
+}
+
 export function resolveStep9Camera(siteId){
   if(LOCAL_DERIVED_DESTINATIONS[siteId]){
     const spec=LOCAL_DERIVED_DESTINATIONS[siteId];
     const site=resolveDerived(spec);
     return freeze({siteId,worldReference:site.world,look:{...site.world},eye:{x:site.world.x+spec.surveyOffset.x,y:site.world.y+spec.surveyOffset.y,z:site.world.z+spec.surveyOffset.z},pathClass:'DESTINATION_DRIVEN_AUTHORED_CINEMATIC_SURVEY_PATH'});
   }
-  return resolveCameraSiteAnchor(siteId);
+  return tuneCanonicalCamera(siteId,resolveCameraSiteAnchor(siteId));
 }
 
 export function step9ShorelineZ(worldX){return resolveGratitudeShoreline(worldX).world.z;}

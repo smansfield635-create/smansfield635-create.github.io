@@ -1,0 +1,11 @@
+{
+  "contract": "MIRROR_MANOR_LIVE_IDENTITY_PUBLICATION_TRIGGER_v1",
+  "identity_commit": "eab936b2d8a3c1667d62d6d697d504c39b9bc609",
+  "house_hash": "f9653c74b273dbb4",
+  "core_hash": "c0c82c21ef5cf4af",
+  "loader_hash": "d053b92d499ac47f",
+  "house_cull_disabled": true,
+  "purpose": "Trigger the authoritative AI Entry exact-head release after the bot-authored cache-identity synchronization commit, which cannot recursively trigger GitHub Actions.",
+  "claim_ceiling": "Publication trigger only; no Manor geometry, carousel interaction, or world placement change.",
+  "status": "READY_FOR_EXACT_HEAD_RELEASE"
+}

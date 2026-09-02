@@ -1,0 +1,13 @@
+{
+  "schema": "AGRICULTURAL_FACTORIAL_TEMPORAL_POINTER_MANIFEST_SHA256_v1",
+  "files": {
+    "EXECUTION_PACKAGE_POINTER.json": "72e2648dc12e3291b1bf337ba2fa204fa3b83908612f2935f893b0957766809c",
+    "FROZEN_CONTRACT_POINTER.json": "922e519be626f9a0af63c7f0c651d30df4751d9d9dc7206068f3352a9436623b",
+    "README.md": "6210f1a6d7e64bff64d7aefa50f2deb536be6050356a5db3f7a5dc9efcf84704",
+    "RESULT_SUMMARY.json": "5b3a8794819efef3abf37690597ed3e5ee5cd17472f74c6ec930062cd21dcc4e",
+    "verify_execution_pointer_v1.py": "278b9e8cb2ae8e29366244995b2297209246482ca1eea49143b83b841a2439d5"
+  },
+  "file_count": 5,
+  "core_mutation_performed": false,
+  "archived_result_mutation_performed": false
+}

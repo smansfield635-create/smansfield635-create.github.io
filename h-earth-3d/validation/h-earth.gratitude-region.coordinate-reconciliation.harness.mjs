@@ -141,7 +141,7 @@ export function searchGRCRConnectedSurface({ centerX, centerZ, radius = 8, step 
     for (const [dx, dz] of offsets) {
       const neighbor = points.get(keyOf(current.world.x + dx, current.world.z + dz));
       if (!neighbor) continue;
-      const neighborKey = keyOf(neighbor.world.x + 0, neighbor.world.z + 0);
+      const neighborKey = keyOf(neighbor.world.x, neighbor.world.z);
       if (visited.has(neighborKey)) continue;
       if (Math.abs(neighbor.elevation - current.elevation) > maximumNeighborElevationDelta) continue;
       visited.set(neighborKey, neighbor);

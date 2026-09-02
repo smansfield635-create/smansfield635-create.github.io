@@ -18,64 +18,42 @@ jobs:
           fetch-depth: 1
           sparse-checkout: |
             about
-            assets/compass
-            assets/shared
           sparse-checkout-cone-mode: true
       - name: Verify exact candidate
         run: test "$(git rev-parse HEAD)" = "2f22289087b92e21b2251685aac3b6d17f71c805"
-      - name: Install Playwright API
-        run: |
-          npm init -y >/dev/null 2>&1
-          npm install --no-save playwright@1.55.0
-      - name: Serve exact candidate
-        run: |
-          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/about-http.log 2>&1 &
-          sleep 2
-      - name: Diagnose embedded Audralia payload
+      - name: Fetch valid predecessor
+        run: git fetch --depth=1 origin 394fe73d2aac33333c2d87454db1971e29833d6f
+      - name: Compare embedded payloads
         shell: bash
         run: |
-          cat > ./about-base64-diagnostic.mjs <<'NODE'
-          import { chromium } from 'playwright';
+          git show 394fe73d2aac33333c2d87454db1971e29833d6f:about/index.html > /tmp/about-parent.html
+          cat > /tmp/compare.mjs <<'NODE'
           import fs from 'node:fs';
           import crypto from 'node:crypto';
-          const expected='3ce2fddea06ce6fe3bd9db14ad01603e760de7fead0e8978856f757b213b2793';
-          const chromeCandidates=['/usr/bin/google-chrome','/usr/bin/google-chrome-stable','/usr/bin/chromium-browser','/usr/bin/chromium'];
-          const executablePath=chromeCandidates.find(p=>fs.existsSync(p));
-          if(!executablePath) throw new Error('No Chrome/Chromium available');
-          const browser=await chromium.launch({headless:true,executablePath});
-          const page=await browser.newPage({viewport:{width:1280,height:800}});
-          const pageErrors=[]; page.on('pageerror',e=>pageErrors.push(String(e)));
-          await page.goto('http://127.0.0.1:4173/about/',{waitUntil:'domcontentloaded'});
-          await page.waitForTimeout(300);
-          const payload=await page.locator('source[data-base64]').evaluate(s=>{
-            const v=s.dataset.base64||'';
-            const invalid=[];
-            for(let i=0;i<v.length;i++) if(!/[A-Za-z0-9+/=]/.test(v[i])) invalid.push({i,ch:v[i],code:v.charCodeAt(i)});
-            let nativeAtob='PASS',decodedLength=null;
-            try{decodedLength=atob(v).length}catch(e){nativeAtob=String(e)}
-            const sanitized=v.replace(/[^A-Za-z0-9+/=]/g,'');
-            let sanitizedAtob='PASS',sanitizedLength=null;
-            try{sanitizedLength=atob(sanitized).length}catch(e){sanitizedAtob=String(e)}
-            return {length:v.length,mod4:v.length%4,invalidCount:invalid.length,invalid:invalid.slice(0,40),head:v.slice(0,32),tail:v.slice(-32),nativeAtob,decodedLength,sanitizedLength,sanitizedMod4:sanitized.length%4,sanitizedAtob};
-          });
-          const html=fs.readFileSync('about/index.html','utf8');
-          const m=html.match(/data-base64="([^"]+)"/);
-          if(!m) throw new Error('No embedded payload in source file');
-          const text=m[1];
-          const rawInvalid=[];
-          for(let i=0;i<text.length;i++) if(!/[A-Za-z0-9+/=]/.test(text[i])) rawInvalid.push({i,ch:text[i],code:text.charCodeAt(i)});
-          const normalized=text.replace(/[^A-Za-z0-9+/=]/g,'');
-          const bytes=Buffer.from(normalized,'base64');
-          const sha=crypto.createHash('sha256').update(bytes).digest('hex');
-          const report={candidate:'2f22289087b92e21b2251685aac3b6d17f71c805',expectedSha256:expected,node:{length:text.length,mod4:text.length%4,invalidCount:rawInvalid.length,invalid:rawInvalid.slice(0,40),normalizedLength:normalized.length,normalizedMod4:normalized.length%4,decodedBytes:bytes.length,sha256:sha,shaMatches:sha===expected},browser:payload,pageErrors};
-          fs.writeFileSync('/tmp/about-base64-diagnostic.json',JSON.stringify(report,null,2));
+          const extract=(html)=>{
+            const m=html.match(/(?:data-base64|src="data:video\/mp4;base64,)(?:=")?([A-Za-z0-9+/=\[\]. ]+)/);
+            if(!m) throw new Error('payload not found');
+            return m[1];
+          };
+          const curHtml=fs.readFileSync('about/index.html','utf8');
+          const parHtml=fs.readFileSync('/tmp/about-parent.html','utf8');
+          const cur=(curHtml.match(/data-base64="([^"]+)"/)||[])[1];
+          const par=(parHtml.match(/src="data:video\/mp4;base64,([^"]+)"/)||[])[1];
+          if(!cur||!par) throw new Error('payload extraction failed');
+          let pre=0; while(pre<cur.length&&pre<par.length&&cur[pre]===par[pre]) pre++;
+          let suf=0; while(suf<cur.length-pre&&suf<par.length-pre&&cur[cur.length-1-suf]===par[par.length-1-suf]) suf++;
+          const curMid=cur.slice(pre,cur.length-suf);
+          const parMid=par.slice(pre,par.length-suf);
+          const pbytes=Buffer.from(par,'base64');
+          const psha=crypto.createHash('sha256').update(pbytes).digest('hex');
+          const report={currentLength:cur.length,parentLength:par.length,commonPrefix:pre,commonSuffix:suf,currentMiddleLength:curMid.length,parentMiddleLength:parMid.length,currentMiddle:curMid,parentMiddleHead:parMid.slice(0,64),parentMiddleTail:parMid.slice(-64),parentDecodedBytes:pbytes.length,parentSha256:psha,parentShaMatches:psha==='3ce2fddea06ce6fe3bd9db14ad01603e760de7fead0e8978856f757b213b2793'};
+          fs.writeFileSync('/tmp/about-base64-compare.json',JSON.stringify(report,null,2));
           console.log(JSON.stringify(report,null,2));
-          await browser.close();
           NODE
-          node ./about-base64-diagnostic.mjs
-      - name: Upload diagnostic evidence
+          node /tmp/compare.mjs
+      - name: Upload comparison evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: about-base64-diagnostic
-          path: /tmp/about-base64-diagnostic.json
+          name: about-base64-compare
+          path: /tmp/about-base64-compare.json

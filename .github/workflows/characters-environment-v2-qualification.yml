@@ -14,10 +14,17 @@ permissions:
 jobs:
   qualify:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/workflows/characters-environment-v2-qualification.yml
+            /characters/
+            /h-earth-3d/
+            /control-plane/whole-estate/characters-reconstruction-v1/verify-gratitude-environment-v2.v1.mjs
       - name: Fetch main comparison ref
         run: git fetch origin main --no-tags
       - name: Run environment-only qualification

@@ -54,7 +54,7 @@ for(const spec of cases){
     arrivalStatus=await page.locator('#status').textContent();
     await page.locator('#return').click({force:true});
     await page.waitForFunction(()=>!document.querySelector('#return')?.classList.contains('show'),null,{timeout:7000});
-    if(spec.reducedMotion==='reduce') await page.waitForTimeout(100); else await page.waitForTimeout(2700);
+    await page.waitForFunction(()=>/Orbit/.test(document.querySelector('#status')?.textContent||''),null,{timeout:7000});
     returnStatus=await page.locator('#status').textContent();
     returnPath=/Orbit/.test(returnStatus||'');
   }

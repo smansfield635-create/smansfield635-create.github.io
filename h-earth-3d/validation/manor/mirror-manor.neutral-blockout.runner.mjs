@@ -10,9 +10,10 @@ const checks = Object.freeze([
   ['MASSING_HIERARCHY_DECLARED', audit.hierarchy === true],
   ['VALID_DIMENSIONS', audit.validDimensions === true],
   ['SITE_CAPACITY_COMPATIBLE', audit.siteCapacityCompatible === true],
-  ['CAROUSEL_DISTANCE_RECONCILED', audit.carouselDistanceReconciled === true],
-  ['P2_CAROUSEL_PROJECTION', MIRROR_MANOR_P2_SIX_VIEW_REVIEW.carouselProjection.verdict === 'PASS'],
-  ['P2_TOWER_CROWN_GEOMETRY', MIRROR_MANOR_P2_SIX_VIEW_REVIEW.geometryInspection.pass === true],
+  ['CAROUSEL_DISTANCE_PRESERVED_94', audit.carouselDistanceReconciled === true],
+  ['P3_CROWN_GEOMETRY_COMPLETE', audit.crownGeometryComplete === true && audit.crownCount === 3],
+  ['P3_CAROUSEL_PROJECTION', MIRROR_MANOR_P2_SIX_VIEW_REVIEW.carouselProjection.verdict === 'PASS'],
+  ['P3_TOWER_CROWN_GEOMETRY', MIRROR_MANOR_P2_SIX_VIEW_REVIEW.geometryInspection.pass === true],
   ['DETAIL_ADMISSION', MIRROR_MANOR_P2_SIX_VIEW_REVIEW.detailAdmission === true]
 ]);
 const failures = checks.filter(([,pass]) => !pass).map(([id]) => id);
@@ -24,8 +25,8 @@ const receipt = Object.freeze({
   audit,
   sixViewReview:MIRROR_MANOR_P2_SIX_VIEW_REVIEW,
   claimCeiling: failures.length === 0
-    ? 'NEUTRAL_MASSING_ACCEPTED_FOR_GOTHIC_DETAILING'
-    : 'P2_SITE_AND_CAROUSEL_RECONCILED; TOWER_CROWN_GEOMETRY_REQUIRED_BEFORE_DETAIL'
+    ? 'P3_NEUTRAL_MASSING_ACCEPTED_FOR_GOTHIC_ARCHITECTURAL_DETAIL_PHASE_1'
+    : 'P3_NEUTRAL_MASSING_REQUIRES_CORRECTION_BEFORE_DETAIL'
 });
 console.log(JSON.stringify(receipt, null, 2));
 if (failures.length) process.exitCode = 1;

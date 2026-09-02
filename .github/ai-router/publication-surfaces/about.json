@@ -1,19 +1,22 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "about",
-  "description": "Qualified cinematic About estate with repository chronology, human/community layer, Skip convergence, and reduced-motion equivalent.",
+  "description": "Qualified cinematic About estate with Audralia-specific film context, one-month chronology calendar, human/community layer, Skip convergence, and reduced-motion equivalent.",
   "checks": [
     {
       "path": "/about/index.html",
       "includes": [
-        "data-about-generation=\"documentary-estate-v1\"",
+        "data-about-generation=\"documentary-estate-v1-motion3\"",
         "data-skip-film",
-        "Eight historical states · repository anchors",
+        "Chronology · repository anchors",
+        "data-calendar-prev",
+        "August 2026",
         "The human layer",
-        "Sep 2026",
         "The work is ultimately about people."
       ],
-      "excludes": []
+      "excludes": [
+        "Eight historical states · repository anchors"
+      ]
     },
     {
       "path": "/about/about-source-to-shot-binding.v1.json",

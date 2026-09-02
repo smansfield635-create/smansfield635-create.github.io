@@ -1,24 +1,24 @@
-name: H-Earth Gratitude Region Coordinate Reconciliation
+name: H-Earth Gratitude Region Mirror Manor Reconciliation Validation
 
 on:
   pull_request:
     branches:
-      - agent/h-earth-gratitude-region-coordinate-reconciliation-validation-base-001
+      - validation/mirror-manor-repaired-harness-base
   workflow_dispatch:
 
 concurrency:
-  group: h-earth-gratitude-region-coordinate-reconciliation-${{ github.workflow }}-${{ github.ref }}
+  group: h-earth-gratitude-region-mirror-manor-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
-  validate-coordinate-reconciliation:
+  validate-mirror-manor-reconciliation:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Check out coordinate-reconciliation dependency surface
+      - name: Check out H-Earth dependency surface
         uses: actions/checkout@v4
         with:
           sparse-checkout: |
@@ -31,22 +31,16 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Execute bounded analysis harness
-        env:
-          H_EARTH_GR_CR_RECEIPT: /tmp/h-earth-gr-cr-receipt.json
+      - name: Execute Mirror Manor reconciliation
         run: |
           set -o pipefail
-          node h-earth-3d/validation/h-earth.gratitude-region.coordinate-reconciliation.harness.mjs \
-            2>&1 | tee /tmp/h-earth-gr-cr.log
-
-      - name: Verify emitted checkpoint receipt when present
-        run: |
-          node --input-type=module <<'NODE'
+          node --input-type=module <<'NODE' 2>&1 | tee /tmp/h-earth-gr-cr-mirror-manor.log
           import fs from 'node:fs';
-          const receiptPath = '/tmp/h-earth-gr-cr-receipt.json';
-          if (!fs.existsSync(receiptPath)) process.exit(0);
-          const receipt = JSON.parse(fs.readFileSync(receiptPath, 'utf8'));
-          if (receipt.eligible !== true || !String(receipt.status).endsWith('_PASS')) process.exit(1);
+          import { executeGRCRMirrorManorSection } from './h-earth-3d/validation/h-earth.gratitude-region.mirror-manor-reconciliation.mjs';
+          const receipt = executeGRCRMirrorManorSection();
+          fs.writeFileSync('/tmp/h-earth-gr-cr-mirror-manor-receipt.json', `${JSON.stringify(receipt, null, 2)}\n`);
+          console.log(JSON.stringify(receipt));
+          if (receipt.eligible !== true || receipt.sectionStatus !== 'PASS_CLOSED') process.exit(1);
           if (receipt.terrainMutation !== false) process.exit(1);
           if (receipt.geometryConstruction !== false) process.exit(1);
           if (receipt.runtimeMutation !== false) process.exit(1);
@@ -56,13 +50,13 @@ jobs:
           if (receipt.controllingManifestMutation !== false) process.exit(1);
           NODE
 
-      - name: Upload bounded harness evidence
+      - name: Upload Mirror Manor evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-gratitude-region-coordinate-reconciliation-evidence
+          name: h-earth-gratitude-region-mirror-manor-reconciliation-evidence
           path: |
-            /tmp/h-earth-gr-cr.log
-            /tmp/h-earth-gr-cr-receipt.json
+            /tmp/h-earth-gr-cr-mirror-manor.log
+            /tmp/h-earth-gr-cr-mirror-manor-receipt.json
           if-no-files-found: warn
           retention-days: 30

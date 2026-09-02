@@ -22,7 +22,19 @@ for(const spec of cases){
   const consoleErrors=[];
   page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text());});
   await page.goto(BASE,{waitUntil:'networkidle'});
-  await page.waitForTimeout(800);
+  await page.waitForTimeout(900);
+  const intro=await page.evaluate(()=>({
+    play:document.querySelector('#intro-continue')?.textContent||'',
+    skip:document.querySelector('#intro-skip')?.textContent||'',
+    replay:document.querySelector('#replay-primer')?.textContent||'',
+    visible:!document.querySelector('#step9-primer')?.hidden,
+    heading:document.querySelector('#step9-primer-heading')?.textContent||''
+  }));
+  await page.screenshot({path:`${outDir}/${spec.id}-primer.png`,fullPage:true});
+  const introControls=intro.visible&&/Play primer/.test(intro.play)&&/Skip to survey/.test(intro.skip)&&/Replay primer/.test(intro.replay);
+  await page.locator('#intro-skip').click();
+  await page.waitForFunction(()=>document.querySelector('#step9-primer')?.hidden===true,null,{timeout:2500});
+  const replayAvailable=await page.locator('#replay-primer').evaluate(el=>!el.hidden);
   const initial=await page.evaluate(()=>({
     webgl2:!!document.querySelector('#scene')?.getContext('webgl2'),
     fatal:document.querySelector('#fatal')?.classList.contains('show')===true,
@@ -52,13 +64,13 @@ for(const spec of cases){
   await page.locator('#map-close').click();
   const noHorizontalEscape=initial.bodyWidth<=initial.viewportWidth;
   await page.screenshot({path:`${outDir}/${spec.id}.png`,fullPage:true});
-  const ok=initial.webgl2&&!initial.fatal&&initial.signalCount>0&&noHorizontalEscape&&returnPath&&mapOpen&&pageErrors.length===0;
+  const ok=introControls&&replayAvailable&&initial.webgl2&&!initial.fatal&&initial.signalCount>0&&noHorizontalEscape&&returnPath&&mapOpen&&pageErrors.length===0;
   if(!ok) failed=true;
-  receipts.push({id:spec.id,ok,initial,arrivalStatus,returnStatus,returnPath,mapOpen,noHorizontalEscape,pageErrors,consoleErrors});
+  receipts.push({id:spec.id,ok,intro,introControls,replayAvailable,initial,arrivalStatus,returnStatus,returnPath,mapOpen,noHorizontalEscape,pageErrors,consoleErrors});
   await context.close();
 }
 await browser.close();
-const receipt={schema:'CHARACTERS_STEP10_BROWSER_ACCEPTANCE_RECEIPT_v1',result:failed?'FAIL':'PASS',cases:receipts};
+const receipt={schema:'CHARACTERS_STEP10_BROWSER_ACCEPTANCE_RECEIPT_v2',result:failed?'FAIL':'PASS',cases:receipts};
 fs.writeFileSync(`${outDir}/receipt.json`,JSON.stringify(receipt,null,2));
 console.log(JSON.stringify(receipt,null,2));
 if(failed) process.exit(1);

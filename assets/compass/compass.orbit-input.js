@@ -1,6 +1,20 @@
 (()=>{
   'use strict';
 
+  function installAboutDoorway(){
+    const mount=()=>{
+      const panel=document.querySelector('#chapter-about');
+      if(!panel||panel.querySelector('a[href="/about/"]'))return;
+      const doorway=document.createElement('a');
+      doorway.href='/about/';
+      doorway.textContent='About Diamond Gate Bridge →';
+      doorway.dataset.compassAboutDoorway='true';
+      panel.appendChild(doorway);
+    };
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});
+    else mount();
+  }
+
   function retireLegacyPostDragAxisFallback(){
     const stage=document.querySelector('[data-compass-scene]');
     const root=document.querySelector('[data-compass-root]');
@@ -70,6 +84,7 @@
     return clear;
   }
 
+  installAboutDoorway();
   retireLegacyPostDragAxisFallback();
   window.CompassOrbitInput=Object.freeze({claimSwipe});
 })();

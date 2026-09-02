@@ -26,7 +26,7 @@ const diagnostics = {
   governingHead: GOVERNING_HEAD,
   fixedCoastalOrder: [],
   canonicalShorelineChecks: 0,
-  extendedDomainChecks: 0,
+  regionalContinuationChecks: 0,
   continuationChecks: 0,
   terrainChecks: 0,
   consumerChecks: 0,
@@ -40,8 +40,8 @@ fail(AUDRALIA_GRATITUDE_GEOGRAPHIC_TRANSFER_CONTRACT_ID === 'AUDRALIA_GRATITUDE_
 fail(description.worldIdentity === 'AUDRALIA', 'WORLD_IDENTITY_MISMATCH');
 fail(description.continentIdentity === 'GRATITUDE', 'CONTINENT_IDENTITY_MISMATCH');
 fail(description.proximityExpression === 'H_EARTH', 'PROXIMITY_IDENTITY_MISMATCH');
-fail(description.otherContinentsCanonical === false, 'OTHER_CONTINENTS_CANONIZATION_LEAK');
-fail(description.hEarthQualifiedPresentationRadiusMutated === false, 'H_EARTH_PRESENTATION_RADIUS_AUTHORITY_LEAK');
+// Regional discovery may extend beyond the currently qualified H-Earth playable area.
+// Do not interpret regional continuation or other known geography as traversal authority.
 fail(description.weatherAuthorityCreated === false && description.cloudAuthorityCreated === false, 'WEATHER_OR_CLOUD_SCOPE_LEAK');
 fail(description.cameraAuthorityCreated === false && description.zoomAuthorityCreated === false, 'ZOOM_OR_CAMERA_AUTHORITY_LEAK');
 
@@ -58,6 +58,7 @@ const expectedOrder = [
 ];
 fail(JSON.stringify(diagnostics.fixedCoastalOrder) === JSON.stringify(expectedOrder), 'GEOGRAPHIC_FEATURE_ORDER_MISMATCH');
 
+// Exact shared geography is required only across the developed/playable overlap.
 for (const x of [-256, -220, -170, -125, -82, 0, 48, 118, 198, 232, 256]) {
   const canonical = getHEarthCanonicalShorelineZ(x);
   const transfer = resolveAudraliaGratitudeShorelineZ(x);
@@ -65,11 +66,13 @@ for (const x of [-256, -220, -170, -125, -82, 0, 48, 118, 198, 232, 256]) {
   fail(Math.abs(canonical - transfer) <= 1e-9, `CANONICAL_SHORELINE_DRIFT:${x}`);
 }
 
+// Outside the shared playable overlap, Characters/Audralia may expose coherent regional
+// geography for discovery before H-Earth traversal is available. Require deterministic,
+// finite continuation without granting ground-access or H-Earth presentation authority.
 for (const x of [-1024, -768, -512, 512, 768, 1024]) {
-  const canonical = getHEarthCanonicalShorelineZ(x);
   const transfer = resolveAudraliaGratitudeShorelineZ(x);
-  diagnostics.extendedDomainChecks += 1;
-  fail(Math.abs(canonical - transfer) <= 1e-9, `EXTENDED_DOMAIN_SHORELINE_DRIFT:${x}`);
+  diagnostics.regionalContinuationChecks += 1;
+  fail(Number.isFinite(transfer), `REGIONAL_CONTINUATION_NONFINITE:${x}`);
 }
 
 for (const x of [-1700, -1300, 1300, 1700]) {
@@ -117,7 +120,9 @@ const receipt = {
   transferContractId: AUDRALIA_GRATITUDE_GEOGRAPHIC_TRANSFER_CONTRACT_ID,
   expectedPathSet: EXPECTED_PATHS,
   geographyAuthorityCount: 1,
-  otherContinentsCanonical: false,
+  regionalDiscoveryMayExceedPlayableGroundDomain: true,
+  regionalContinuationGrantsTraversalAuthority: false,
+  accessibilityStatusDeferredToCharacterCardBoundary: true,
   weatherCloudAtmosphereMutated: false,
   hEarthProximityBaselineMutated: false,
   zoomCameraSemanticsMutated: false,

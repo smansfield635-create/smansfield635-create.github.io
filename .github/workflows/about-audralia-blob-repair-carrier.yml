@@ -46,10 +46,9 @@ jobs:
           if anchor not in s:
               raise SystemExit('runtime anchor not found')
           s=s.replace(anchor,insert,1)
-          s=s.replace("function settle(){clearTimeout(timer);root.dataset.filmState='settled';if(film)film.hidden=true;footage?.pause()}","function settle(){clearTimeout(timer);root.dataset.filmState='settled';if(film)film.hidden=true;footage?.pause()}",1)
           p.write_text(s)
           PY
-          grep -q 'source data-base64' about/index.html || grep -q 'source type="video/mp4" data-base64' about/index.html
+          grep -q 'source type="video/mp4" data-base64' about/index.html
           grep -q 'URL.createObjectURL' about/index.html
           ! grep -q '<source type="video/mp4" src="data:video/mp4;base64,' about/index.html
 
@@ -66,3 +65,5 @@ jobs:
 
       - name: Report successor
         run: echo "About successor candidate $NEW_CANDIDATE"
+
+# trigger 2026-09-02

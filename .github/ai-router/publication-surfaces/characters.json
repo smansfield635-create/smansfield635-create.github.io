@@ -1,13 +1,13 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "characters",
-  "description": "Task 19 cardinal-place experience for Mirrorland’s Gratitude Harbor, including four structural sites, twenty-three reversible discoveries, cinematic entry, geography-identical coast map, and verified character routes.",
+  "description": "Task 20 cinematic spatial character primer for Mirrorland’s Gratitude Harbor: autonomous world-to-coast film, four signal encounters, voluntary separate scenes, twenty-three reversible discoveries, exact hub return, semantic fallback, and optional coast map.",
   "checks": [
     {
       "path": "/characters/",
       "includes": [
         "data-route=\"/characters/\"",
-        "data-page=\"characters-cardinal-scenes-v1\"",
+        "data-page=\"characters-cinematic-primer-v1\"",
         "Mirrorland · Gratitude Harbor",
         "id=\"intro-skip\"",
         "id=\"scene\"",

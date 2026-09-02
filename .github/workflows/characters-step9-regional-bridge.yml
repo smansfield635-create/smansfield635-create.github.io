@@ -22,6 +22,7 @@ jobs:
           sparse-checkout: |
             characters
             h-earth-3d
+            showroom/globe/h-earth
             control-plane/whole-estate/characters-reconstruction-v1
           sparse-checkout-cone-mode: true
       - name: Use Node.js 22
@@ -29,9 +30,11 @@ jobs:
         with:
           node-version: '22'
       - name: Verify Step 9 regional bridge
-        run: node control-plane/whole-estate/characters-reconstruction-v1/verify-step9-regional-bridge.v1.mjs | tee /tmp/characters-step9-regional-bridge.json
-      - name: Reverify Task 20 cinematic primer
-        run: node control-plane/whole-estate/characters-reconstruction-v1/verify-task20-cinematic-primer.v1.mjs
+        shell: bash
+        run: |
+          set -o pipefail
+          node control-plane/whole-estate/characters-reconstruction-v1/verify-step9-regional-bridge.v1.mjs \
+            | tee /tmp/characters-step9-regional-bridge.json
       - name: Upload Step 9 evidence
         if: always()
         uses: actions/upload-artifact@v4

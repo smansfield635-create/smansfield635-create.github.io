@@ -26,7 +26,23 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ env.DEPLOYED_HEAD }}
-          fetch-depth: 0
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            index.html
+            assets/compass/compass.identity-3d.js
+            assets/compass/compass.identity-3d.css
+            assets/compass/compass.brain-scene.js
+            assets/compass/compass.crystals.js
+            assets/compass/compass.mirrorland-window.js
+            assets/compass/compass.capability-carousel.js
+            assets/compass/compass.capability-carousel.core.js
+            assets/compass/compass.house-scene.js
+            assets/manor-blueprint/manor.estate.neutral-blockout.mjs
+            assets/manor-blueprint/manor.estate.gothic-detail-phase1.mjs
+            assets/manor-blueprint/manor.estate.gothic-detail-phase1b.mjs
+            assets/manor-blueprint/manor.estate.gothic-detail-phase2.mjs
+            assets/manor-blueprint/manor.estate.gothic-detail-phase3.mjs
 
       - name: Verify live bytes against exact observed source
         id: verify
@@ -104,7 +120,7 @@ jobs:
           await orbit.scrollIntoViewIfNeeded();
           await page.waitForTimeout(1000);
           const plaques=await page.locator('.compass-orbit-plaque').evaluateAll(ns=>ns.map(n=>({cap:n.getAttribute('data-capability'),active:n.getAttribute('data-active'),text:(n.textContent||'').trim().replace(/\s+/g,' ').slice(0,220)})));
-          let target=page.locator('.compass-orbit-plaque').filter({hasText:/House|Mirror Manor/i}).first();
+          const target=page.locator('.compass-orbit-plaque').filter({hasText:/House|Mirror Manor/i}).first();
           if(await target.count()){await target.click({force:true});await page.waitForTimeout(4000)}
           const state=await page.evaluate(()=>{
             const plaques=[...document.querySelectorAll('.compass-orbit-plaque')];
@@ -141,16 +157,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           RESULT: ${{ steps.verify.outputs.result }}
-          ATTEMPT: ${{ steps.verify.outputs.attempt }}
           RUNTIME_RESULT: ${{ steps.runtime.outputs.result }}
         run: |
           set -euo pipefail
-          body_file=/tmp/compass-live-comment.md
-          {
-            echo "### Live deployment and Manor runtime verification"
-            echo
-            echo "Observed main head: \`$DEPLOYED_HEAD\`"
-            echo "Live byte result: **${RESULT:-FAIL_CLOSED}**"
-            echo "Rendered Manor probe: **${RUNTIME_RESULT:-FAIL_CLOSED}**"
-          } > "$body_file"
-          gh api "repos/${GITHUB_REPOSITORY}/issues/1282/comments" --method POST -F "body=@${body_file}" >/dev/null
+          gh api "repos/${GITHUB_REPOSITORY}/issues/1282/comments" --method POST -f body="Live Manor verification: bytes ${RESULT:-FAIL_CLOSED}; runtime ${RUNTIME_RESULT:-FAIL_CLOSED}; head $DEPLOYED_HEAD" >/dev/null

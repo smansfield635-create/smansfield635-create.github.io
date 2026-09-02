@@ -1,4 +1,4 @@
-name: H-Earth Gratitude Region Mirror Manor Reconciliation Validation
+name: Audralia H-Earth Gratitude Geographic Convergence Validation
 
 on:
   pull_request:
@@ -7,23 +7,24 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: h-earth-gratitude-region-mirror-manor-${{ github.workflow }}-${{ github.ref }}
+  group: audralia-h-earth-gratitude-geographic-convergence-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
-  validate-mirror-manor-reconciliation:
+  validate-geographic-convergence:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Check out H-Earth dependency surface
+      - name: Check out geographic dependency surface
         uses: actions/checkout@v4
         with:
           sparse-checkout: |
             h-earth-3d
             showroom/globe/h-earth
+            showroom/globe/audralia
           sparse-checkout-cone-mode: true
 
       - name: Use Node.js 22
@@ -31,32 +32,17 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Execute Mirror Manor reconciliation
+      - name: Execute Audralia H-Earth geographic convergence verifier
         run: |
           set -o pipefail
-          node --input-type=module <<'NODE' 2>&1 | tee /tmp/h-earth-gr-cr-mirror-manor.log
-          import fs from 'node:fs';
-          import { executeGRCRMirrorManorSection } from './h-earth-3d/validation/h-earth.gratitude-region.mirror-manor-reconciliation.mjs';
-          const receipt = executeGRCRMirrorManorSection();
-          fs.writeFileSync('/tmp/h-earth-gr-cr-mirror-manor-receipt.json', `${JSON.stringify(receipt, null, 2)}\n`);
-          console.log(JSON.stringify(receipt));
-          if (receipt.eligible !== true || receipt.sectionStatus !== 'PASS_CLOSED') process.exit(1);
-          if (receipt.terrainMutation !== false) process.exit(1);
-          if (receipt.geometryConstruction !== false) process.exit(1);
-          if (receipt.runtimeMutation !== false) process.exit(1);
-          if (receipt.gameplayMutation !== false) process.exit(1);
-          if (receipt.publicRouteMutation !== false) process.exit(1);
-          if (receipt.productionMutation !== false) process.exit(1);
-          if (receipt.controllingManifestMutation !== false) process.exit(1);
-          NODE
+          node h-earth-3d/validation/audralia.gratitude-geographic-convergence.v1.mjs \
+            2>&1 | tee /tmp/audralia-h-earth-geographic-convergence.log
 
-      - name: Upload Mirror Manor evidence
+      - name: Upload convergence evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-gratitude-region-mirror-manor-reconciliation-evidence
-          path: |
-            /tmp/h-earth-gr-cr-mirror-manor.log
-            /tmp/h-earth-gr-cr-mirror-manor-receipt.json
-          if-no-files-found: warn
+          name: audralia-h-earth-gratitude-geographic-convergence-evidence
+          path: /tmp/audralia-h-earth-geographic-convergence.log
+          if-no-files-found: error
           retention-days: 30

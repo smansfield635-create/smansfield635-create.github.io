@@ -6,9 +6,9 @@ const outDir=process.env.STEP10_ARTIFACT_DIR || '/tmp/characters-step10';
 fs.mkdirSync(outDir,{recursive:true});
 
 const cases=[
-  {id:'desktop',viewport:{width:1440,height:900},reducedMotion:'no-preference',isMobile:false},
-  {id:'mobile',viewport:{width:390,height:844},reducedMotion:'no-preference',isMobile:true},
-  {id:'reduced-motion',viewport:{width:1440,height:900},reducedMotion:'reduce',isMobile:false}
+  {id:'desktop',viewport:{width:1440,height:900},reducedMotion:'no-preference',isMobile:false,proveFilmPlay:true},
+  {id:'mobile',viewport:{width:390,height:844},reducedMotion:'no-preference',isMobile:true,proveFilmPlay:false},
+  {id:'reduced-motion',viewport:{width:1440,height:900},reducedMotion:'reduce',isMobile:false,proveFilmPlay:false}
 ];
 
 const browser=await chromium.launch({headless:true,args:['--use-angle=swiftshader','--enable-webgl','--ignore-gpu-blocklist']});
@@ -28,13 +28,31 @@ for(const spec of cases){
     skip:document.querySelector('#intro-skip')?.textContent||'',
     replay:document.querySelector('#replay-primer')?.textContent||'',
     visible:!document.querySelector('#step9-primer')?.hidden,
-    heading:document.querySelector('#step9-primer-heading')?.textContent||''
+    heading:document.querySelector('#step9-primer-heading')?.textContent||'',
+    audio:!!document.querySelector('[data-mirrorland-film-audio]')
   }));
-  await page.screenshot({path:`${outDir}/${spec.id}-primer.png`,fullPage:true});
-  const introControls=intro.visible&&/Play primer/.test(intro.play)&&/Skip to survey/.test(intro.skip)&&/Replay primer/.test(intro.replay);
-  await page.locator('#intro-skip').click();
-  await page.waitForFunction(()=>document.querySelector('#step9-primer')?.hidden===true,null,{timeout:2500});
+  await page.screenshot({path:`${outDir}/${spec.id}-introduction.png`,fullPage:true});
+  const introControls=intro.visible&&/Play introduction/.test(intro.play)&&/Skip to the coast/.test(intro.skip)&&/Replay introduction/.test(intro.replay)&&intro.audio;
+  let filmPlayProof={required:spec.proveFilmPlay,playing:false,inFilmSkip:false,webglVisible:false};
+  if(spec.proveFilmPlay){
+    await page.locator('#intro-continue').click();
+    await page.waitForFunction(()=>document.querySelector('#step9-primer')?.classList.contains('playing')===true,null,{timeout:3000});
+    filmPlayProof=await page.evaluate(()=>({
+      required:true,
+      playing:document.querySelector('#step9-primer')?.classList.contains('playing')===true,
+      inFilmSkip:getComputedStyle(document.querySelector('[data-film-skip]')).display!=='none',
+      webglVisible:getComputedStyle(document.querySelector('#step9-primer')).backgroundColor==='rgba(0, 0, 0, 0)',
+      audioElement:!!document.querySelector('[data-mirrorland-film-audio]')
+    }));
+    await page.screenshot({path:`${outDir}/${spec.id}-film-playing.png`,fullPage:true});
+    await page.locator('[data-film-skip]').click();
+  }else{
+    await page.locator('#intro-skip').click();
+  }
+  await page.waitForFunction(()=>document.querySelector('#step9-primer')?.hidden===true,null,{timeout:3500});
   const replayAvailable=await page.locator('#replay-primer').evaluate(el=>!el.hidden);
+  const connectedRoutes=await page.evaluate(()=>Object.fromEntries([...document.querySelectorAll('[data-world-route]')].map(a=>[a.dataset.worldRoute,a.getAttribute('href')])));
+  const routeContract=connectedRoutes.showroom==='/showroom/'&&connectedRoutes['h-earth']==='/showroom/globe/h-earth/'&&connectedRoutes.audralia==='/showroom/globe/audralia/'&&connectedRoutes.compass==='/';
   const initial=await page.evaluate(()=>({
     webgl2:!!document.querySelector('#scene')?.getContext('webgl2'),
     fatal:document.querySelector('#fatal')?.classList.contains('show')===true,
@@ -64,9 +82,10 @@ for(const spec of cases){
   await page.locator('#map-close').click();
   const noHorizontalEscape=initial.bodyWidth<=initial.viewportWidth;
   await page.screenshot({path:`${outDir}/${spec.id}.png`,fullPage:true});
-  const ok=introControls&&replayAvailable&&initial.webgl2&&!initial.fatal&&initial.signalCount>0&&noHorizontalEscape&&returnPath&&mapOpen&&pageErrors.length===0;
+  const filmPlayOk=!spec.proveFilmPlay||(filmPlayProof.playing&&filmPlayProof.inFilmSkip&&filmPlayProof.webglVisible&&filmPlayProof.audioElement);
+  const ok=introControls&&filmPlayOk&&replayAvailable&&routeContract&&initial.webgl2&&!initial.fatal&&initial.signalCount>0&&noHorizontalEscape&&returnPath&&mapOpen&&pageErrors.length===0;
   if(!ok) failed=true;
-  receipts.push({id:spec.id,ok,intro,introControls,replayAvailable,initial,arrivalStatus,returnStatus,returnPath,mapOpen,noHorizontalEscape,pageErrors,consoleErrors});
+  receipts.push({id:spec.id,ok,intro,introControls,filmPlayProof,filmPlayOk,replayAvailable,connectedRoutes,routeContract,initial,arrivalStatus,returnStatus,returnPath,mapOpen,noHorizontalEscape,pageErrors,consoleErrors});
   await context.close();
 }
 await browser.close();

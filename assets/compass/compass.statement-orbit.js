@@ -4,6 +4,17 @@ const reduce=matchMedia('(prefers-reduced-motion: reduce)');
 const mod=(value,base)=>((value%base)+base)%base;
 const TAU=Math.PI*2;
 const STYLE_ID='compass-statement-orbit-restoration-style';
+function bindMirrorlandNarrativeEntry(){
+  const root=document.querySelector('[data-compass-root]');
+  if(!root)return;
+  const routes=document.querySelector('[data-compass-mirrorland-routes]');
+  const narrative=routes?.querySelector('a:not([data-compass-mirrorland-inline-back])');
+  if(narrative){narrative.href='/characters/';narrative.textContent='Enter the Narrative';narrative.dataset.mirrorlandRouteRole='NARRATIVE_ENTRY';}
+  const threshold=root.querySelector('[data-compass-object="mirrorland"]');
+  if(threshold){threshold.dataset.route='/characters/';threshold.setAttribute('data-panel-body','Enter through the door to begin Mirrorland at Gratitude Coast, or choose another connected world experience.');threshold.setAttribute('data-panel-why','The door opens Mirrorland. The narrative begins at Gratitude Coast; Demo and World remain complementary routes.');}
+  root.dataset.mirrorlandNarrativeAuthority='CHARACTERS_COAST';
+  globalThis.DGB_MIRRORLAND_ENTRY_REBIND=Object.freeze({mounted:true,contract:'MIRRORLAND_NARRATIVE_ENTRY_REBIND_v1',narrative:'/characters/',showroom:'/showroom/',hEarth:'/showroom/globe/h-earth/',audralia:'/showroom/globe/audralia/'});
+}
 function ensureStyle(){
   if(document.getElementById(STYLE_ID))return;
   const style=document.createElement('style');
@@ -57,6 +68,7 @@ function sparkle(sentence){
   sentence.append(field);setTimeout(()=>{field.remove();sentence.classList.remove('is-arriving')},680);
 }
 function mount(){
+  bindMirrorlandNarrativeEntry();
   ensureStyle();
   const header=document.querySelector('.compass-estate__header');
   if(!header||header.querySelector('[data-statement-orbit]'))return;

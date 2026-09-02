@@ -1,0 +1,69 @@
+{
+  "schema": "MIRRORLAND_NARRATIVE_ENTRY_REBIND_v1",
+  "status": "CANDIDATE",
+  "governingBase": "75b54e6b0ff6f18bdad3e95facb7cd2d6dce866e",
+  "primaryEntry": {
+    "label": "Enter the Narrative",
+    "route": "/characters/",
+    "role": "MIRRORLAND_NARRATIVE_ENTRY",
+    "experience": "GRATITUDE_COAST"
+  },
+  "complementaryCompassEntries": [
+    {
+      "label": "Enter the Demo",
+      "route": "/showroom/globe/h-earth/",
+      "role": "H_EARTH_DEMO"
+    },
+    {
+      "label": "See the World Map",
+      "route": "/showroom/globe/audralia/",
+      "role": "AUDRALIA_PLANETARY_EXPRESSION"
+    }
+  ],
+  "charactersConnectedRoutes": [
+    {
+      "label": "Showroom",
+      "route": "/showroom/",
+      "role": "SUBSIDIARY_MIRRORLAND_ANNEX"
+    },
+    {
+      "label": "Enter H-Earth",
+      "route": "/showroom/globe/h-earth/",
+      "role": "GROUND_TRAVERSAL"
+    },
+    {
+      "label": "View Audralia",
+      "route": "/showroom/globe/audralia/",
+      "role": "PLANETARY_VIEW"
+    },
+    {
+      "label": "Compass",
+      "route": "/",
+      "role": "ESTATE_ORIENTATION_RETURN"
+    }
+  ],
+  "preserve": [
+    "AUDRALIA_GRATITUDE_GEOGRAPHIC_TRANSFER_AUTHORITY_v1",
+    "CHARACTERS_GRATITUDE_ENVIRONMENT_RENDERER_V2",
+    "H_EARTH_GROUND_TRAVERSAL_AUTHORITY",
+    "COMPASS_FOUR_CARDINAL_AUTHORITY",
+    "SHOWROOM_CONTENT_AND_ASSETS"
+  ],
+  "prohibited": [
+    "NO_NEW_GEOGRAPHY_AUTHORITY",
+    "NO_SHOWROOM_DELETION",
+    "NO_H_EARTH_REDESIGN",
+    "NO_AUDRALIA_REDESIGN",
+    "NO_CHARACTER_SCENE_CONSTRUCTION_IN_THIS_REBIND"
+  ],
+  "openingPrecedent": {
+    "source": "/about/",
+    "runtimeMs": 28000,
+    "playRequiredForAudio": true,
+    "skipAvailableBeforeAndDuringFilm": true,
+    "escapeSkipsDuringFilm": true,
+    "replayAvailableAfterSettlement": true,
+    "reducedMotionSettlesSemantically": true,
+    "soundtrack": "Saint-Saens — The Carnival of the Animals: Aquarium"
+  }
+}

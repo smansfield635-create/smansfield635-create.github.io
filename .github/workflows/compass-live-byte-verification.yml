@@ -41,6 +41,14 @@ jobs:
             assets/compass/compass.brain-scene.js
             assets/compass/compass.crystals.js
             assets/compass/compass.mirrorland-window.js
+            assets/compass/compass.capability-carousel.js
+            assets/compass/compass.capability-carousel.core.js
+            assets/compass/compass.house-scene.js
+            assets/manor-blueprint/manor.estate.neutral-blockout.mjs
+            assets/manor-blueprint/manor.estate.gothic-detail-phase1.mjs
+            assets/manor-blueprint/manor.estate.gothic-detail-phase1b.mjs
+            assets/manor-blueprint/manor.estate.gothic-detail-phase2.mjs
+            assets/manor-blueprint/manor.estate.gothic-detail-phase3.mjs
           )
           rm -rf /tmp/compass-live-verify
           mkdir -p /tmp/compass-live-verify/live

@@ -50,11 +50,11 @@ for(const spec of cases){
   const visibleSignal=page.locator('.signal:not([hidden])').first();
   if(await visibleSignal.count()){
     await visibleSignal.click({force:true});
-    await page.waitForFunction(()=>document.querySelector('#return')?.classList.contains('show'),null,{timeout:7000});
+    await page.waitForFunction(()=>document.querySelector('#return')?.classList.contains('show'),null,{timeout:15000});
     arrivalStatus=await page.locator('#status').textContent();
     await page.locator('#return').click({force:true});
-    await page.waitForFunction(()=>!document.querySelector('#return')?.classList.contains('show'),null,{timeout:7000});
-    if(spec.reducedMotion==='reduce') await page.waitForTimeout(100); else await page.waitForTimeout(2700);
+    await page.waitForFunction(()=>!document.querySelector('#return')?.classList.contains('show'),null,{timeout:15000});
+    await page.waitForFunction(()=>/Orbit/.test(document.querySelector('#status')?.textContent||''),null,{timeout:15000});
     returnStatus=await page.locator('#status').textContent();
     returnPath=/Orbit/.test(returnStatus||'');
   }

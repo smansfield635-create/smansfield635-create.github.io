@@ -15,6 +15,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: 8eaded636ec11fb24105492b7d5342a96f387a1f
+          fetch-depth: 1
+          sparse-checkout: |
+            about
+            assets/compass
+            assets/shared
+          sparse-checkout-cone-mode: true
       - name: Install browser test runtime
         run: |
           npm init -y >/dev/null 2>&1
@@ -33,18 +39,16 @@ jobs:
           import fs from 'node:fs';
           const browser = await chromium.launch({headless:true});
           const results = [];
-          const fail = (name, detail) => results.push({name, pass:false, detail});
+          const fail = (name, detail='') => results.push({name, pass:false, detail});
           const pass = (name, detail='') => results.push({name, pass:true, detail});
           async function desktop(){
             const page = await browser.newPage({viewport:{width:1440,height:1000}});
             const errors=[]; page.on('pageerror',e=>errors.push(String(e))); page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
             await page.goto('http://127.0.0.1:4173/about/',{waitUntil:'networkidle'});
             await page.waitForTimeout(6500);
-            const video = page.locator('[data-audralia-footage]');
-            const videoState = await video.evaluate(v=>({ready:v.readyState, paused:v.paused, current:v.currentTime, w:v.videoWidth, h:v.videoHeight}));
+            const videoState = await page.locator('[data-audralia-footage]').evaluate(v=>({ready:v.readyState,paused:v.paused,current:v.currentTime,w:v.videoWidth,h:v.videoHeight}));
             if(videoState.ready>=2 && videoState.w>0 && videoState.h>0 && videoState.current>0) pass('Audralia footage renders and advances',JSON.stringify(videoState)); else fail('Audralia footage renders and advances',JSON.stringify(videoState));
-            const compass = page.locator('.compass-return');
-            const href = await compass.getAttribute('href');
+            const href = await page.locator('.compass-return').getAttribute('href');
             if(href==='/') pass('Compass return is present and routes to root'); else fail('Compass return is present and routes to root',String(href));
             const before = await page.locator('[data-title]').innerText();
             await page.click('[data-prev]');
@@ -53,8 +57,7 @@ jobs:
             const jan = await page.locator('[data-title]').innerText();
             const prevDisabled = await page.locator('[data-prev]').isDisabled();
             if(before==='August 2026' && july==='July 2026' && jan==='January 2026' && prevDisabled) pass('Calendar opens August and bounds at January'); else fail('Calendar opens August and bounds at January',JSON.stringify({before,july,jan,prevDisabled}));
-            await page.reload({waitUntil:'domcontentloaded'}); await page.waitForTimeout(500);
-            await page.click('[data-skip]');
+            await page.reload({waitUntil:'domcontentloaded'}); await page.waitForTimeout(500); await page.click('[data-skip]');
             const skipState = await page.evaluate(()=>document.documentElement.dataset.filmState);
             if(skipState==='settled') pass('Skip Film converges to settled estate'); else fail('Skip Film converges to settled estate',skipState);
             await page.reload({waitUntil:'domcontentloaded'}); await page.waitForTimeout(500); await page.keyboard.press('Escape');
@@ -65,8 +68,7 @@ jobs:
             const overflow = await page.evaluate(()=>document.documentElement.scrollWidth > document.documentElement.clientWidth + 2);
             if(!overflow) pass('Desktop containment'); else fail('Desktop containment','horizontal overflow');
             if(errors.length===0) pass('No uncaught browser errors'); else fail('No uncaught browser errors',errors.join(' | '));
-            await page.screenshot({path:'/tmp/about-desktop.png',fullPage:true});
-            await page.close();
+            await page.screenshot({path:'/tmp/about-desktop.png',fullPage:true}); await page.close();
           }
           async function mobile(){
             const page = await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
@@ -75,20 +77,16 @@ jobs:
             const compassVisible = await page.locator('.compass-return').isVisible();
             if(!overflow) pass('Mobile containment'); else fail('Mobile containment','horizontal overflow');
             if(compassVisible) pass('Compass return visible on mobile'); else fail('Compass return visible on mobile');
-            await page.screenshot({path:'/tmp/about-mobile.png',fullPage:true});
-            await page.close();
+            await page.screenshot({path:'/tmp/about-mobile.png',fullPage:true}); await page.close();
           }
           async function reduced(){
-            const context = await browser.newContext({viewport:{width:1280,height:800},reducedMotion:'reduce'});
-            const page = await context.newPage();
+            const context = await browser.newContext({viewport:{width:1280,height:800},reducedMotion:'reduce'}); const page = await context.newPage();
             await page.goto('http://127.0.0.1:4173/about/',{waitUntil:'domcontentloaded'}); await page.waitForTimeout(300);
-            const state = await page.evaluate(()=>document.documentElement.dataset.filmState);
-            const skipVisible = await page.locator('[data-skip]').isVisible();
+            const state = await page.evaluate(()=>document.documentElement.dataset.filmState); const skipVisible = await page.locator('[data-skip]').isVisible();
             if(state==='settled' && !skipVisible) pass('Reduced motion bypasses film'); else fail('Reduced motion bypasses film',JSON.stringify({state,skipVisible}));
             await context.close();
           }
-          await desktop(); await mobile(); await reduced();
-          await browser.close();
+          await desktop(); await mobile(); await reduced(); await browser.close();
           const failed = results.filter(r=>!r.pass);
           fs.writeFileSync('/tmp/about-browser-results.json',JSON.stringify({candidate:'8eaded636ec11fb24105492b7d5342a96f387a1f',results},null,2));
           console.log(JSON.stringify({candidate:'8eaded636ec11fb24105492b7d5342a96f387a1f',results},null,2));

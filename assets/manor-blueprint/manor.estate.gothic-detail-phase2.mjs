@@ -1,5 +1,5 @@
 import { MASSES, ROOFS, CAMERA, SITE } from './manor.estate.neutral-blockout.mjs';
-import { WALL_BAYS, PORTALS, BUTTRESSES, MATERIAL_ZONES } from './manor.estate.gothic-detail-phase1.mjs';
+import { WALL_BAYS, PORTALS, BUTTRESSES } from './manor.estate.gothic-detail-phase1.mjs';
 import { buildPhase1DDetailMesh, auditPhase1D } from './manor.estate.gothic-detail-phase1d.mjs';
 
 const freeze=(v)=>Object.freeze(v);
@@ -25,10 +25,9 @@ function boxMesh(id,c,w,h,d,material,role){const[cx,cy,cz]=c,x=w/2,y=h/2,z=d/2,p
 function triPrism(id,c,width,height,depth,material,role){const[cx,baseY,cz]=c,w=width/2,d=depth/2,p=[V(cx-w,baseY,cz-d),V(cx+w,baseY,cz-d),V(cx,baseY+height,cz-d),V(cx-w,baseY,cz+d),V(cx+w,baseY,cz+d),V(cx,baseY+height,cz+d)],idx=[[0,1,2],[3,5,4],[0,3,4],[0,4,1],[1,4,5],[1,5,2],[2,5,3],[2,3,0]];return freeze({id,role,material,triangles:freeze(idx.flatMap(f=>[p[f[0]],p[f[1]],p[f[2]]]))});}
 function pyramidMesh(id,c,w,d,h,material,role){const[cx,baseY,cz]=c,x=w/2,z=d/2,p=[V(cx-x,baseY,cz-z),V(cx+x,baseY,cz-z),V(cx+x,baseY,cz+z),V(cx-x,baseY,cz+z),V(cx,baseY+h,cz)],idx=[[0,1,4],[1,2,4],[2,3,4],[3,0,4],[0,3,2],[0,2,1]];return freeze({id,role,material,triangles:freeze(idx.flatMap(f=>[p[f[0]],p[f[1]],p[f[2]]]))});}
 
-// Glazing/tracery is inserted behind the already-legal wall openings. It never creates a new host opening.
+// Glazing/tracery is inserted behind already-legal wall openings. It never creates a new host opening.
 export const GLAZED_BAYS=freeze(WALL_BAYS.filter(b=>!b.id.startsWith('GATE-')));
-function glazingMeshes(b){const h=host(b.host);if(!h)throw new Error(`Unknown glazing host ${b.host}`);const dir=b.face==='+Z'?1:-1,zFace=h.center[2]+dir*h.depth/2,z=zFace-dir*(Math.max(.16,b.recess-.05)),x=h.center[0]+b.centerX,y=b.centerY;
- const frame=.10,paneW=Math.max(.12,(b.width-frame*3)/2),paneH=Math.max(.18,b.height-frame*2),out=[];
+function glazingMeshes(b){const h=host(b.host);if(!h)throw new Error(`Unknown glazing host ${b.host}`);const dir=b.face==='+Z'?1:-1,zFace=h.center[2]+dir*h.depth/2,z=zFace-dir*Math.max(.16,b.recess-.05),x=h.center[0]+b.centerX,y=b.centerY,frame=.10,paneW=Math.max(.12,(b.width-frame*3)/2),paneH=Math.max(.18,b.height-frame*2),out=[];
  out.push(boxMesh(`P2-${b.id}-GLASS-L`,V(x-b.width*.25,y,z),paneW,paneH,.045,'LEADED_GLASS','legal-opening-glazing'));
  out.push(boxMesh(`P2-${b.id}-GLASS-R`,V(x+b.width*.25,y,z),paneW,paneH,.045,'LEADED_GLASS','legal-opening-glazing'));
  out.push(boxMesh(`P2-${b.id}-MULLION`,V(x,y,z+dir*.025),frame,b.height-.12,.075,'TRACERY_STONE','owned-tracery-frame'));
@@ -36,7 +35,7 @@ function glazingMeshes(b){const h=host(b.host);if(!h)throw new Error(`Unknown gl
  return freeze(out);
 }
 
-// Two complete front-slope dormers are assigned to R-GH-B. Each owns face, cheeks, glazing and its own small gabled roof.
+// Two complete front-slope dormers are assigned to R-GH-B. Each owns a body, face glazing/mullion, cheeks by body depth, and its own gabled roof.
 export const DORMERS=freeze([
   freeze({id:'DORMER-GH-FRONT-W',roofId:'R-GH-B',x:-3.0,z:3.8,width:1.55,depth:1.35,wallHeight:1.30,roofRise:.72}),
   freeze({id:'DORMER-GH-FRONT-E',roofId:'R-GH-B',x:3.0,z:3.8,width:1.55,depth:1.35,wallHeight:1.30,roofRise:.72})
@@ -56,7 +55,7 @@ function portalSpringMeshes(){const out=[];for(const p of PORTALS){const h=host(
 
 // Restrained pinnacles: four only, each terminates a principal Great House buttress.
 export const PINNACLES=freeze(BUTTRESSES.filter(b=>b.id.startsWith('GH-BUTT')).map(b=>freeze({id:`PIN-${b.id}`,buttressId:b.id})).slice(0,4));
-function pinnacleMeshes(){const out=[];for(const p of PINNACLES){const b=BUTTRESSES.find(x=>x.id===p.buttressId),h=host(b.host),dir=b.face==='+Z'?1:-1,z=h.center[2]+dir*(h.depth/2+b.depth/2),x=h.center[0]+b.centerX;base:0;out.push(boxMesh(`P2-${p.id}-SHAFT`,V(x,b.height+.42,z),.24,.84,.24,'ACCENT_STONE','restrained-pinnacle-shaft'));out.push(pyramidMesh(`P2-${p.id}-TIP`,V(x,b.height+.84,z),.34,.34,.62,'ACCENT_STONE','restrained-pinnacle-tip'));}return freeze(out);}
+function pinnacleMeshes(){const out=[];for(const p of PINNACLES){const b=BUTTRESSES.find(x=>x.id===p.buttressId),h=host(b.host),dir=b.face==='+Z'?1:-1,z=h.center[2]+dir*(h.depth/2+b.depth/2),x=h.center[0]+b.centerX;out.push(boxMesh(`P2-${p.id}-SHAFT`,V(x,b.height+.42,z),.24,.84,.24,'ACCENT_STONE','restrained-pinnacle-shaft'));out.push(pyramidMesh(`P2-${p.id}-TIP`,V(x,b.height+.84,z),.34,.34,.62,'ACCENT_STONE','restrained-pinnacle-tip'));}return freeze(out);}
 
 export function buildPhase2DetailMesh(){const p1d=buildPhase1DDetailMesh(),enrichment=[];GLAZED_BAYS.forEach(b=>enrichment.push(...glazingMeshes(b)));DORMERS.forEach(d=>enrichment.push(...dormerMeshes(d)));enrichment.push(...buttressCapMeshes(),...portalSpringMeshes(),...pinnacleMeshes());return freeze({contract:CONTRACT,parent:PARENT_CONTRACT,meshes:freeze([...p1d.meshes,...enrichment]),enrichment:freeze(enrichment)});}
 export function auditPhase2(){const p1d=auditPhase1D(),m=buildPhase2DetailMesh(),glazing=m.enrichment.filter(x=>x.role==='legal-opening-glazing'),tracery=m.enrichment.filter(x=>x.role==='owned-tracery-frame'),dormerBodies=m.enrichment.filter(x=>x.role==='complete-dormer-body'),dormerRoofs=m.enrichment.filter(x=>x.role==='complete-dormer-roof'),dormerGlass=m.enrichment.filter(x=>x.role==='dormer-face-glazing'),caps=m.enrichment.filter(x=>x.role==='buttress-cap-stonework'),springBlocks=m.enrichment.filter(x=>x.role==='portal-spring-block'),pinnacleParts=m.enrichment.filter(x=>x.role.startsWith('restrained-pinnacle'));

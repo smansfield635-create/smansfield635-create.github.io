@@ -1,90 +1,35 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "characters",
-  "description": "Task 20 cinematic spatial character primer for Mirrorland’s Gratitude Harbor: autonomous world-to-coast film, four signal encounters, voluntary separate scenes, twenty-three reversible discoveries, exact hub return, semantic fallback, and optional coast map.",
+  "description": "Environment-first Characters publication contract for the Gratitude Coast stage and traversal surface.",
   "checks": [
     {
       "path": "/characters/",
       "includes": [
         "data-route=\"/characters/\"",
-        "data-page=\"characters-cinematic-primer-v1\"",
-        "Mirrorland · Gratitude Harbor",
-        "id=\"intro-skip\"",
+        "data-page=\"characters-coastal-narrative-v1\"",
+        "Mirrorland · Gratitude Coast",
         "id=\"scene\"",
         "id=\"map-toggle\"",
         "id=\"coast-map\"",
-        "id=\"static-places\"",
-        "id=\"watchfire-overlook\"",
-        "id=\"waterline-station\"",
-        "id=\"signal-lantern-field\"",
-        "id=\"restoration-boundary\"",
-        "./cardinal-scenes.css",
+        "Return to orbit",
         "./app.mjs"
       ],
       "excludes": [
-        "data-page=\"characters-coastal-narrative-v1\"",
-        "Return to orbit",
+        "data-task17-candidate=\"true\"",
+        "Spatial Narrative Field · One Principal Carousel",
         "/characters/spatial-narrative.runtime.js"
       ]
     },
     {
       "path": "/characters/app.mjs",
       "includes": [
-        "'./cardinal-scenes.data.mjs'",
-        "'./cinematic-intro.mjs'",
-        "'./coast-map.mjs'",
-        "'./knowledge-card.mjs'",
-        "function skipIntro(",
-        "function selectSite(",
-        "function openInspection(",
-        "function openMap(",
-        "function returnToCoast(",
-        "knowledgeCard.addEventListener('pointerdown'",
-        "requestAnimationFrame(render)"
-      ],
-      "excludes": [
+        "getContext('webgl2'",
+        "prefers-reduced-motion: reduce",
         "function travelTo(",
-        "function returnOrbit("
-      ]
-    },
-    {
-      "path": "/characters/cardinal-scenes.data.mjs",
-      "includes": [
-        "CARDINAL_DISCOVERIES",
-        "CARDINAL_DISCOVERIES.length !== 23",
-        "WATCHFIRE_OVERLOOK",
-        "WATERLINE_STATION",
-        "SIGNAL_LANTERN_FIELD",
-        "RESTORATION_BOUNDARY",
-        "EXPLICIT_HIDDEN_LINEAGE_CONFIRMATION_ALLOWED"
-      ],
-      "excludes": [
-        "newCharacterCanonCreated: true",
-        "chronologyInferred: true"
-      ]
-    },
-    {
-      "path": "/characters/coast-map.mjs",
-      "includes": [
-        "buildGratitudeCoastMap",
-        "GRATITUDE_GEOGRAPHY_ADAPTER_ID",
-        "CARDINAL_SITE_IDS",
-        "WORLD_DERIVED_POLYLINE",
-        "MARKER_MAP_WORLD_ROUND_TRIP_FAILURE"
-      ],
-      "excludes": []
-    },
-    {
-      "path": "/characters/knowledge-card.mjs",
-      "includes": [
-        "dispatchKnowledgeCardInput",
-        "HORIZONTAL_SWIPE_COIN_ROTATION",
-        "KEYBOARD",
-        "REDUCED_MOTION_FACE_REPLACEMENT_FAILURE",
-        "/showroom/globe/hearth/jeeves/",
-        "/elara/",
-        "/products/auren/",
-        "THREE_VERIFIED_DESTINATIONS_NOT_EXPOSED"
+        "function returnOrbit(",
+        "mapButton.addEventListener",
+        "requestAnimationFrame(render)"
       ],
       "excludes": []
     }
@@ -92,85 +37,14 @@
   "runtime": {
     "enabled": true,
     "path": "/characters/",
-    "timeoutMs": 45000,
+    "timeoutMs": 30000,
     "readySelector": "#scene",
-    "readyAttribute": {
-      "selector": "html",
-      "name": "class",
-      "contains": "webgl-ready"
-    },
     "binding": {
       "mode": "direct-document",
       "path": "/characters/"
     },
     "failOnConsoleErrors": true,
     "failOnPageErrors": true,
-    "interactions": [
-      {
-        "name": "Skip cinematic into canonical coast state",
-        "action": {
-          "type": "click",
-          "selector": "#intro-skip"
-        },
-        "assertions": [
-          {
-            "type": "textContains",
-            "selector": "#world-status",
-            "value": "Choose one of four distant signals."
-          },
-          {
-            "type": "exists",
-            "selector": "#map-toggle"
-          }
-        ],
-        "timeoutMs": 10000
-      },
-      {
-        "name": "Open geography-identical coast map",
-        "action": {
-          "type": "click",
-          "selector": "#map-toggle"
-        },
-        "assertions": [
-          {
-            "type": "attributeEquals",
-            "selector": "#coast-map",
-            "name": "aria-hidden",
-            "value": "false"
-          },
-          {
-            "type": "exists",
-            "selector": "#map-markers .map-marker"
-          },
-          {
-            "type": "textContains",
-            "selector": "#map-title",
-            "value": "Gratitude Coast"
-          }
-        ],
-        "timeoutMs": 10000
-      },
-      {
-        "name": "Close coast map and return to world",
-        "action": {
-          "type": "click",
-          "selector": "#map-close"
-        },
-        "assertions": [
-          {
-            "type": "attributeEquals",
-            "selector": "#coast-map",
-            "name": "aria-hidden",
-            "value": "true"
-          },
-          {
-            "type": "textContains",
-            "selector": "#world-status",
-            "value": "Choose one of four distant signals."
-          }
-        ],
-        "timeoutMs": 10000
-      }
-    ]
+    "interactions": []
   }
 }

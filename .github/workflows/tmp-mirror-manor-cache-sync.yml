@@ -1,0 +1,52 @@
+name: Temporary Mirror Manor cache identity sync
+
+on:
+  push:
+    branches:
+      - mirror-manor-live-cache-chain-fix
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tmp-mirror-manor-cache-sync
+  cancel-in-progress: true
+
+jobs:
+  synchronize:
+    if: ${{ !contains(github.event.head_commit.message, '[cache-identity-sync]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact branch head
+        uses: actions/checkout@v4
+        with:
+          ref: mirror-manor-live-cache-chain-fix
+          fetch-depth: 0
+      - name: Validate cache identity controller
+        run: node .github/ai-router/platform/post-merge-cache-identity-sync.v1.mjs --self-test
+      - name: Synchronize from the exact published Manor merge
+        env:
+          CACHE_IDENTITY_BASE: 75b54e6b0ff6f18bdad3e95facb7cd2d6dce866e
+          CACHE_IDENTITY_HEAD: ${{ github.sha }}
+          CACHE_IDENTITY_RECEIPT: /tmp/post-merge-cache-identity.json
+        run: node .github/ai-router/platform/post-merge-cache-identity-sync.v1.mjs
+      - name: Commit synchronized identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          if git diff --quiet; then
+            echo "No identity propagation required."
+            exit 0
+          fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -- '*.html' '*.css' '*.js' '*.mjs'
+          git commit -m "chore(delivery): synchronize Mirror Manor live asset identities [cache-identity-sync]"
+          git push origin HEAD:mirror-manor-live-cache-chain-fix
+      - name: Upload receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: mirror-manor-cache-sync-${{ github.run_id }}
+          path: /tmp/post-merge-cache-identity.json
+          if-no-files-found: error

@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "about-context-calendar-live-deploy-074760ac-v3",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 2624,
+  "requestBranch": "ai-dispatch-request-about-074760ac",
+  "requestCommit": "faa31b51aed254acaef301238ddfd0ec6edf6498",
+  "requestCommitParent": "074760acd919713247eb22dbf59eef0f497e7aff",
+  "currentMainSha": "074760acd919713247eb22dbf59eef0f497e7aff",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "074760acd919713247eb22dbf59eef0f497e7aff",
+    "surface_id": "about"
+  },
+  "bridgeRunId": "33588622846",
+  "dispatchedRunId": 33588633250,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/33588633250",
+  "dispatchedRunHeadSha": "074760acd919713247eb22dbf59eef0f497e7aff",
+  "dispatchedAt": "2026-09-02T03:51:45.291Z",
+  "resolvedAt": "2026-09-02T03:51:51.957Z"
+}

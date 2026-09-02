@@ -34,7 +34,7 @@ jobs:
       - name: Run exact rendered qualification
         shell: bash
         run: |
-          cat > /tmp/about-qualify.mjs <<'NODE'
+          cat > ./about-qualify.mjs <<'NODE'
           import { chromium } from 'playwright';
           import fs from 'node:fs';
           const candidate='2f22289087b92e21b2251685aac3b6d17f71c805';
@@ -73,7 +73,7 @@ jobs:
           }
           await desktop(); await mobile(); await reduced(); await browser.close(); const failed=results.filter(x=>!x.pass); const report={candidate,browser:executablePath,results}; fs.writeFileSync('/tmp/about-browser-results-v2.json',JSON.stringify(report,null,2)); console.log(JSON.stringify(report,null,2)); if(failed.length) process.exit(1);
           NODE
-          node /tmp/about-qualify.mjs
+          node ./about-qualify.mjs
       - name: Upload exact browser evidence
         if: always()
         uses: actions/upload-artifact@v4

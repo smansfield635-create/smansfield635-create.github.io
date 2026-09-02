@@ -62,6 +62,7 @@ const allowed=[
   'characters/app.mjs',
   'characters/night-renderer.mjs',
   'control-plane/whole-estate/characters-reconstruction-v1/verify-gratitude-environment-v2.v1.mjs',
+  'control-plane/whole-estate/characters-reconstruction-v1/verify-step10-browser.mjs',
   '.github/workflows/characters-environment-v2-qualification.yml'
 ].map(normalizePath);
 const outOfScope=changed.filter(path=>!allowed.some(expected=>path===expected||path.endsWith(`/${expected}`)));

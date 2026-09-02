@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - 'characters/**'
+      - 'h-earth-3d/**'
+      - 'showroom/globe/h-earth/**'
       - 'control-plane/whole-estate/characters-reconstruction-v1/**'
       - '.github/workflows/characters-step9-regional-bridge.yml'
   workflow_dispatch:
@@ -14,7 +16,7 @@ permissions:
 jobs:
   verify-step9-regional-bridge:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Check out Step 9 dependency surface
         uses: actions/checkout@v4
@@ -35,11 +37,41 @@ jobs:
           set -o pipefail
           node control-plane/whole-estate/characters-reconstruction-v1/verify-step9-regional-bridge.v1.mjs \
             | tee /tmp/characters-step9-regional-bridge.json
+      - name: Install Step 10 browser runtime
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start candidate server
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/characters-step10-server.log 2>&1 &
+          echo $! >/tmp/characters-step10-server.pid
+          for i in {1..20}; do curl -fsS http://127.0.0.1:4173/characters/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/characters-step10-server.log
+          exit 1
+      - name: Verify Step 10 browser acceptance
+        shell: bash
+        run: |
+          set -o pipefail
+          node control-plane/whole-estate/characters-reconstruction-v1/verify-step10-browser.mjs \
+            | tee /tmp/characters-step10-browser.json
       - name: Upload Step 9 evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: characters-step9-regional-bridge-evidence
           path: /tmp/characters-step9-regional-bridge.json
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Upload Step 10 browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: characters-step10-browser-evidence
+          path: |
+            /tmp/characters-step10/
+            /tmp/characters-step10-browser.json
+            /tmp/characters-step10-server.log
           if-no-files-found: warn
           retention-days: 30

@@ -25,7 +25,6 @@ jobs:
         run: |
           npm init -y >/dev/null 2>&1
           npm install --no-save playwright@1.55.0
-          npx playwright install --with-deps chromium
       - name: Serve exact candidate
         run: |
           python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/about-http.log 2>&1 &
@@ -37,7 +36,11 @@ jobs:
           cat > about-qualify.mjs <<'NODE'
           import { chromium } from 'playwright';
           import fs from 'node:fs';
-          const browser = await chromium.launch({headless:true});
+          const chromeCandidates=['/usr/bin/google-chrome','/usr/bin/google-chrome-stable','/usr/bin/chromium-browser','/usr/bin/chromium'];
+          const executablePath=chromeCandidates.find(p=>fs.existsSync(p));
+          if(!executablePath) throw new Error('No system Chrome/Chromium executable available');
+          console.log('BROWSER_EXECUTABLE='+executablePath);
+          const browser = await chromium.launch({headless:true,executablePath,args:['--autoplay-policy=no-user-gesture-required']});
           const results = [];
           const fail = (name, detail='') => results.push({name, pass:false, detail});
           const pass = (name, detail='') => results.push({name, pass:true, detail});
@@ -46,7 +49,7 @@ jobs:
             const errors=[]; page.on('pageerror',e=>errors.push(String(e))); page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
             await page.goto('http://127.0.0.1:4173/about/',{waitUntil:'networkidle'});
             await page.waitForTimeout(6500);
-            const videoState = await page.locator('[data-audralia-footage]').evaluate(v=>({ready:v.readyState,paused:v.paused,current:v.currentTime,w:v.videoWidth,h:v.videoHeight}));
+            const videoState = await page.locator('[data-audralia-footage]').evaluate(v=>({ready:v.readyState,paused:v.paused,current:v.currentTime,w:v.videoWidth,h:v.videoHeight,error:v.error?{code:v.error.code,message:v.error.message}:null,can:v.canPlayType('video/mp4; codecs="avc1.42E01E"')}));
             if(videoState.ready>=2 && videoState.w>0 && videoState.h>0 && videoState.current>0) pass('Audralia footage renders and advances',JSON.stringify(videoState)); else fail('Audralia footage renders and advances',JSON.stringify(videoState));
             const href = await page.locator('.compass-return').getAttribute('href');
             if(href==='/') pass('Compass return is present and routes to root'); else fail('Compass return is present and routes to root',String(href));
@@ -88,8 +91,8 @@ jobs:
           }
           await desktop(); await mobile(); await reduced(); await browser.close();
           const failed = results.filter(r=>!r.pass);
-          fs.writeFileSync('/tmp/about-browser-results.json',JSON.stringify({candidate:'8eaded636ec11fb24105492b7d5342a96f387a1f',results},null,2));
-          console.log(JSON.stringify({candidate:'8eaded636ec11fb24105492b7d5342a96f387a1f',results},null,2));
+          fs.writeFileSync('/tmp/about-browser-results.json',JSON.stringify({candidate:'8eaded636ec11fb24105492b7d5342a96f387a1f',browser:executablePath,results},null,2));
+          console.log(JSON.stringify({candidate:'8eaded636ec11fb24105492b7d5342a96f387a1f',browser:executablePath,results},null,2));
           if(failed.length) process.exit(1);
           NODE
           node about-qualify.mjs

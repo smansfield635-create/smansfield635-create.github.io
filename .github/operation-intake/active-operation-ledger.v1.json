@@ -6279,78 +6279,6 @@
       "scopeHash": "e870477c6a489aed44109ba0c79e4ce0fc536a04d51f247a08109cf3bd66b2ff",
       "state": "ADMITTED_LOCKED"
     },
-    "e8d212f0aba780c2a482ffbbd1706570999dc64d755f83253fe264adabc0d668": {
-      "governingHead": "074760acd919713247eb22dbf59eef0f497e7aff",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "074760acd919713247eb22dbf59eef0f497e7aff",
-          "lockGeneration": 1923,
-          "lockScope": "CHARACTERS:MOONLIT_COAST:PUBLICATION_CONTRACT:V1",
-          "operationId": "CHARACTERS_MOONLIT_COAST_PUBLICATION_CONTRACT_RESTORE_20260902_001_SUCCESSOR_001",
-          "procedureLocatorDigest": "c8f238b0506bd11569fe16fe599e4e9ac06309c7a298269fbaf2e42eb2ee833b",
-          "requestDigest": "18f7644d2693944a6d55086a267b79fde7ba39fea0d41ef4348229dcf72d56c9",
-          "scopeHash": "e8d212f0aba780c2a482ffbbd1706570999dc64d755f83253fe264adabc0d668"
-        },
-        "bindingDigest": "568e8eb5c652e2215bf0d89b3aa82db8d44a0840ff560b74a1b25333ff9e4c88",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "3ed3c0e53af2be44e30bf0d4a2cdffe7f2705859",
-          "observedLockRefHead": "9cb8cafbb9c2f90449bdb5ac46d76b7ded4a7377"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "c148dabb618f82935c1de70769fc597713ece298f7311fae194f6afdce6f6d06",
-          "commentId": 5504097930,
-          "issueNumber": 2378,
-          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transitionIdentity": {
-          "predecessor": {
-            "governingHead": "dee7f795b0e05b2d654ffa33a47d47dc3674d131",
-            "lockGeneration": 1922,
-            "lockScope": "CHARACTERS:MOONLIT_COAST:PUBLICATION_CONTRACT:V1",
-            "operationId": "CHARACTERS_MOONLIT_COAST_PUBLICATION_CONTRACT_RESTORE_20260902_001"
-          },
-          "successor": {
-            "governingHead": "074760acd919713247eb22dbf59eef0f497e7aff",
-            "lockGeneration": 1923,
-            "lockScope": "CHARACTERS:MOONLIT_COAST:PUBLICATION_CONTRACT:V1",
-            "operationId": "CHARACTERS_MOONLIT_COAST_PUBLICATION_CONTRACT_RESTORE_20260902_001_SUCCESSOR_001"
-          },
-          "transitionId": "CHARACTERS_MOONLIT_PUBLICATION_HEAD_ADVANCE_1922_TO_SUCCESSOR_20260902_001"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
-      },
-      "lockGeneration": 1923,
-      "lockScope": "CHARACTERS:MOONLIT_COAST:PUBLICATION_CONTRACT:V1",
-      "operationId": "CHARACTERS_MOONLIT_COAST_PUBLICATION_CONTRACT_RESTORE_20260902_001_SUCCESSOR_001",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "dee7f795b0e05b2d654ffa33a47d47dc3674d131",
-        "lockGeneration": 1922,
-        "lockScope": "CHARACTERS:MOONLIT_COAST:PUBLICATION_CONTRACT:V1",
-        "operationId": "CHARACTERS_MOONLIT_COAST_PUBLICATION_CONTRACT_RESTORE_20260902_001",
-        "preservedEvidenceRefs": [
-          "PR_2618_ROLLBACK_MERGE_DEE7F795",
-          "PR_2621_MANIFEST_MERGE_5DB6DD68",
-          "HOSTED_PREFLIGHT_RUN_33588243924_PASS",
-          "DEPLOY_RUN_33588428631_CANCELLED_BEFORE_PAGES_MUTATION",
-          "MAIN_074760AC_ABOUT_ONLY_ADVANCE"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "CHARACTERS_MOONLIT_PUBLICATION_HEAD_ADVANCE_1922_TO_SUCCESSOR_20260902_001"
-      },
-      "procedureLocatorDigest": "c8f238b0506bd11569fe16fe599e4e9ac06309c7a298269fbaf2e42eb2ee833b",
-      "released": false,
-      "requestDigest": "18f7644d2693944a6d55086a267b79fde7ba39fea0d41ef4348229dcf72d56c9",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "e8d212f0aba780c2a482ffbbd1706570999dc64d755f83253fe264adabc0d668",
-      "state": "ADMITTED_LOCKED"
-    },
     "e9611715ad661429fa34af32a596898c47a6ac30ef2c270a6c6ff48d7bd92a7f": {
       "governingHead": "a573b16783d7e34ef982dd413c889c71cbd859d6",
       "lockGeneration": 440,
@@ -38376,6 +38304,116 @@
         "transitionId": "CHARACTERS_MOONLIT_PUBLICATION_HEAD_ADVANCE_1922_TO_SUCCESSOR_20260902_001"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "074760acd919713247eb22dbf59eef0f497e7aff",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "074760acd919713247eb22dbf59eef0f497e7aff",
+          "lockGeneration": 1923,
+          "lockScope": "CHARACTERS:MOONLIT_COAST:PUBLICATION_CONTRACT:V1",
+          "operationId": "CHARACTERS_MOONLIT_COAST_PUBLICATION_CONTRACT_RESTORE_20260902_001_SUCCESSOR_001",
+          "procedureLocatorDigest": "c8f238b0506bd11569fe16fe599e4e9ac06309c7a298269fbaf2e42eb2ee833b",
+          "requestDigest": "18f7644d2693944a6d55086a267b79fde7ba39fea0d41ef4348229dcf72d56c9",
+          "scopeHash": "e8d212f0aba780c2a482ffbbd1706570999dc64d755f83253fe264adabc0d668"
+        },
+        "bindingDigest": "568e8eb5c652e2215bf0d89b3aa82db8d44a0840ff560b74a1b25333ff9e4c88",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "3ed3c0e53af2be44e30bf0d4a2cdffe7f2705859",
+          "observedLockRefHead": "9cb8cafbb9c2f90449bdb5ac46d76b7ded4a7377"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "c148dabb618f82935c1de70769fc597713ece298f7311fae194f6afdce6f6d06",
+          "commentId": 5504097930,
+          "issueNumber": 2378,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transitionIdentity": {
+          "predecessor": {
+            "governingHead": "dee7f795b0e05b2d654ffa33a47d47dc3674d131",
+            "lockGeneration": 1922,
+            "lockScope": "CHARACTERS:MOONLIT_COAST:PUBLICATION_CONTRACT:V1",
+            "operationId": "CHARACTERS_MOONLIT_COAST_PUBLICATION_CONTRACT_RESTORE_20260902_001"
+          },
+          "successor": {
+            "governingHead": "074760acd919713247eb22dbf59eef0f497e7aff",
+            "lockGeneration": 1923,
+            "lockScope": "CHARACTERS:MOONLIT_COAST:PUBLICATION_CONTRACT:V1",
+            "operationId": "CHARACTERS_MOONLIT_COAST_PUBLICATION_CONTRACT_RESTORE_20260902_001_SUCCESSOR_001"
+          },
+          "transitionId": "CHARACTERS_MOONLIT_PUBLICATION_HEAD_ADVANCE_1922_TO_SUCCESSOR_20260902_001"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "074760acd919713247eb22dbf59eef0f497e7aff",
+          "lockGeneration": 1923,
+          "lockScope": "CHARACTERS:MOONLIT_COAST:PUBLICATION_CONTRACT:V1",
+          "operationId": "CHARACTERS_MOONLIT_COAST_PUBLICATION_CONTRACT_RESTORE_20260902_001_SUCCESSOR_001",
+          "procedureLocatorDigest": "c8f238b0506bd11569fe16fe599e4e9ac06309c7a298269fbaf2e42eb2ee833b",
+          "requestDigest": "18f7644d2693944a6d55086a267b79fde7ba39fea0d41ef4348229dcf72d56c9",
+          "scopeHash": "e8d212f0aba780c2a482ffbbd1706570999dc64d755f83253fe264adabc0d668"
+        },
+        "bindingDigest": "cb6aadbdeb222e9633da42ed7c194736ce967347c8b8d1dde31eacd7c1978c03",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "574860fe326a0ff314c037cf20c2e0713092bb0b",
+          "observedLockRefHead": "2b9be53154d5d4d4ea16740d7ac8e15322c80402"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "d56fee02f9b1ed829f8ea59c3d82865054b16aed913d09cd271532451eefaf66",
+          "commentId": 5504181513,
+          "issueNumber": 2378,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "074760acd919713247eb22dbf59eef0f497e7aff",
+          "lockGeneration": 1923,
+          "lockScope": "CHARACTERS:MOONLIT_COAST:PUBLICATION_CONTRACT:V1",
+          "operationId": "CHARACTERS_MOONLIT_COAST_PUBLICATION_CONTRACT_RESTORE_20260902_001_SUCCESSOR_001",
+          "released": true,
+          "scopeHash": "e8d212f0aba780c2a482ffbbd1706570999dc64d755f83253fe264adabc0d668",
+          "state": "TERMINAL",
+          "terminalDisposition": "PASS_CLOSED"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 1923,
+      "lockScope": "CHARACTERS:MOONLIT_COAST:PUBLICATION_CONTRACT:V1",
+      "operationId": "CHARACTERS_MOONLIT_COAST_PUBLICATION_CONTRACT_RESTORE_20260902_001_SUCCESSOR_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "dee7f795b0e05b2d654ffa33a47d47dc3674d131",
+        "lockGeneration": 1922,
+        "lockScope": "CHARACTERS:MOONLIT_COAST:PUBLICATION_CONTRACT:V1",
+        "operationId": "CHARACTERS_MOONLIT_COAST_PUBLICATION_CONTRACT_RESTORE_20260902_001",
+        "preservedEvidenceRefs": [
+          "PR_2618_ROLLBACK_MERGE_DEE7F795",
+          "PR_2621_MANIFEST_MERGE_5DB6DD68",
+          "HOSTED_PREFLIGHT_RUN_33588243924_PASS",
+          "DEPLOY_RUN_33588428631_CANCELLED_BEFORE_PAGES_MUTATION",
+          "MAIN_074760AC_ABOUT_ONLY_ADVANCE"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "CHARACTERS_MOONLIT_PUBLICATION_HEAD_ADVANCE_1922_TO_SUCCESSOR_20260902_001"
+      },
+      "procedureLocatorDigest": "c8f238b0506bd11569fe16fe599e4e9ac06309c7a298269fbaf2e42eb2ee833b",
+      "released": true,
+      "requestDigest": "18f7644d2693944a6d55086a267b79fde7ba39fea0d41ef4348229dcf72d56c9",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "e8d212f0aba780c2a482ffbbd1706570999dc64d755f83253fe264adabc0d668",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

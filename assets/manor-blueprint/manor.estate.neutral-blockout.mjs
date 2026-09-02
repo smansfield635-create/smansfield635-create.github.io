@@ -57,20 +57,20 @@ export const SITE = freeze({
   worldPlacement:'PENDING_H_EARTH_SITE_ACCEPTANCE'
 });
 function pushTri(out,a,b,c){ out.push(a,b,c); }
-function buildBox(spec){
+function buildBox(spec,omitFaces=[]){
   const [cx,cy,cz]=spec.center,x=spec.width/2,y=spec.height/2,z=spec.depth/2;
   const p=[V(cx-x,cy-y,cz-z),V(cx+x,cy-y,cz-z),V(cx+x,cy+y,cz-z),V(cx-x,cy+y,cz-z),V(cx-x,cy-y,cz+z),V(cx+x,cy-y,cz+z),V(cx+x,cy+y,cz+z),V(cx-x,cy+y,cz+z)];
-  const t=[]; [[0,1,2],[0,2,3],[4,6,5],[4,7,6],[0,4,5],[0,5,1],[3,2,6],[3,6,7],[1,5,6],[1,6,2],[0,3,7],[0,7,4]].forEach(f=>pushTri(t,p[f[0]],p[f[1]],p[f[2]]));
-  return freeze({id:spec.id,role:spec.role,triangles:freeze(t)});
+  const faces={
+    '-Z':[[0,1,2],[0,2,3]], '+Z':[[4,6,5],[4,7,6]], '-Y':[[0,4,5],[0,5,1]], '+Y':[[3,2,6],[3,6,7]], '+X':[[1,5,6],[1,6,2]], '-X':[[0,3,7],[0,7,4]]
+  };
+  const t=[]; Object.entries(faces).forEach(([face,fs])=>{if(!omitFaces.includes(face))fs.forEach(f=>pushTri(t,p[f[0]],p[f[1]],p[f[2]]));});
+  return freeze({id:spec.id,role:spec.role,triangles:freeze(t),omittedFaces:freeze([...omitFaces])});
 }
 function buildGable(spec){
-  const [cx,,cz]=spec.center,w=spec.width/2,d=spec.depth/2,e=spec.eaveHeight,r=spec.ridgeHeight;
-  let p;
+  const [cx,,cz]=spec.center,w=spec.width/2,d=spec.depth/2,e=spec.eaveHeight,r=spec.ridgeHeight; let p;
   if(spec.axis==='x') p=[V(cx-w,e,cz-d),V(cx+w,e,cz-d),V(cx-w,e,cz+d),V(cx+w,e,cz+d),V(cx,e+(r-e),cz-d),V(cx,e+(r-e),cz+d)];
   else p=[V(cx-w,e,cz-d),V(cx+w,e,cz-d),V(cx-w,e,cz+d),V(cx+w,e,cz+d),V(cx-w,e,cz),V(cx+w,e,cz)];
-  const t=[];
-  if(spec.axis==='x') [[0,1,4],[2,5,3],[0,4,5],[0,5,2],[1,3,5],[1,5,4]].forEach(f=>pushTri(t,p[f[0]],p[f[1]],p[f[2]]));
-  else [[0,4,2],[1,3,5],[0,1,5],[0,5,4],[2,4,5],[2,5,3]].forEach(f=>pushTri(t,p[f[0]],p[f[1]],p[f[2]]));
+  const t=[]; if(spec.axis==='x') [[0,1,4],[2,5,3],[0,4,5],[0,5,2],[1,3,5],[1,5,4]].forEach(f=>pushTri(t,p[f[0]],p[f[1]],p[f[2]])); else [[0,4,2],[1,3,5],[0,1,5],[0,5,4],[2,4,5],[2,5,3]].forEach(f=>pushTri(t,p[f[0]],p[f[1]],p[f[2]]));
   return freeze({id:spec.id,role:spec.role,triangles:freeze(t)});
 }
 function buildHip(spec){
@@ -85,25 +85,18 @@ function buildPyramidCrown(spec){
   const t=[]; [[0,1,4],[1,2,4],[2,3,4],[3,0,4],[0,3,2],[0,2,1]].forEach(f=>pushTri(t,p[f[0]],p[f[1]],p[f[2]]));
   return freeze({id:spec.id,role:spec.role,towerId:spec.towerId,triangles:freeze(t),baseHeight:b,apexHeight:a});
 }
-export function buildNeutralMesh(){
-  const meshes=[];
-  for(const s of MASSES) meshes.push(buildBox(s));
+export function buildNeutralMesh(options={}){
+  const omitFaceMap=options.omitFaceMap||{}; const meshes=[];
+  for(const s of MASSES) meshes.push(buildBox(s,omitFaceMap[s.id]||[]));
   for(const s of ROOFS) meshes.push(s.type==='hipRoof'?buildHip(s):buildGable(s));
   for(const s of TOWER_CROWNS) meshes.push(buildPyramidCrown(s));
-  return freeze({contract:CONTRACT,revision:REVISION,material:MATERIAL,meshes:freeze(meshes),prohibitedDetailCount:0});
+  return freeze({contract:CONTRACT,revision:REVISION,material:MATERIAL,meshes:freeze(meshes),prohibitedDetailCount:0,consumerFacadeReplacement:freeze(Object.keys(omitFaceMap))});
 }
 export function auditBlockout(){
-  const ids=[...MASSES,...ROOFS,...TOWER_CROWNS].map(x=>x.id); const duplicateIds=ids.filter((id,i)=>ids.indexOf(id)!==i);
+  const ids=[...MASSES,...ROOFS,...TOWER_CROWNS].map(x=>x.id),duplicateIds=ids.filter((id,i)=>ids.indexOf(id)!==i);
   const prohibitedDetailCount=[RULES.windows,RULES.trim,RULES.tracery,RULES.textures,RULES.dormers,RULES.ornament].filter(Boolean).length;
-  const hierarchy=28>21&&21>18&&18>16.5&&12>9;
-  const validDimensions=MASSES.every(s=>s.width>0&&s.depth>0&&s.height>=0);
-  const siteCapacityCompatible=SITE.principalStructuralSpan<=28&&SITE.principalStructuralDepth<=20;
-  const carouselDistanceReconciled=CAMERA.distance===94;
-  const crownGeometryComplete=TOWER_CROWNS.length===3&&TOWER_CROWNS.every((c)=>{
-    const towerSpec=MASSES.find((m)=>m.id===c.towerId);
-    return towerSpec&&c.baseHeight===towerSpec.center[1]+towerSpec.height/2&&c.apexHeight===towerSpec.top&&c.apexHeight>c.baseHeight;
-  });
-  const mesh=buildNeutralMesh();
-  const triangleCount=mesh.meshes.reduce((n,m)=>n+m.triangles.length,0);
+  const hierarchy=28>21&&21>18&&18>16.5&&12>9,validDimensions=MASSES.every(s=>s.width>0&&s.depth>0&&s.height>=0),siteCapacityCompatible=SITE.principalStructuralSpan<=28&&SITE.principalStructuralDepth<=20,carouselDistanceReconciled=CAMERA.distance===94;
+  const crownGeometryComplete=TOWER_CROWNS.length===3&&TOWER_CROWNS.every((c)=>{const towerSpec=MASSES.find((m)=>m.id===c.towerId);return towerSpec&&c.baseHeight===towerSpec.center[1]+towerSpec.height/2&&c.apexHeight===towerSpec.top&&c.apexHeight>c.baseHeight;});
+  const mesh=buildNeutralMesh(),triangleCount=mesh.meshes.reduce((n,m)=>n+m.triangles.length,0);
   return freeze({contract:CONTRACT,revision:REVISION,baseSha:BASE_SHA,duplicateIds:freeze(duplicateIds),prohibitedDetailCount,hierarchy,validDimensions,siteCapacityCompatible,carouselDistanceReconciled,crownGeometryComplete,crownCount:TOWER_CROWNS.length,principalStructuralSpan:SITE.principalStructuralSpan,triangleCount,meshCount:mesh.meshes.length,siteAcceptancePending:true,carouselHumanReviewPending:true,passStatic:duplicateIds.length===0&&prohibitedDetailCount===0&&hierarchy&&validDimensions&&siteCapacityCompatible&&carouselDistanceReconciled&&crownGeometryComplete});
 }

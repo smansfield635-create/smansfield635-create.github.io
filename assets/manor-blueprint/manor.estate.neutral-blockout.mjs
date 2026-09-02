@@ -1,6 +1,6 @@
 const freeze = (v) => Object.freeze(v);
 export const CONTRACT = 'MIRROR_MANOR_NEUTRAL_SITE_MASSING_BLOCKOUT_v1';
-export const REVISION = 'P2_SITE_CAPACITY_AND_CAROUSEL_DISTANCE';
+export const REVISION = 'P3_EXPLICIT_TOWER_CROWN_GEOMETRY';
 export const BASE_SHA = '9ce59503ca9ed36e7e5248c22c47d38be95604dd';
 export const MATERIAL = freeze({ id: 'NEUTRAL_STONE_BLOCKOUT', color: freeze([0.58,0.59,0.61,1]) });
 export const RULES = freeze({
@@ -34,6 +34,11 @@ export const ROOFS = freeze([
   freeze({id:'R-EW',type:'hipRoof',role:'east-wing-roof',center:V(10,0,1),width:8,depth:7,eaveHeight:8,ridgeHeight:11.5,ridgeLength:3.5}),
   gable('R-GATE',[0,0,21],7.5,6.5,9,4.5,'x','gatehouse-roof')
 ]);
+export const TOWER_CROWNS = freeze(MASSES.filter((s)=>s.type==='tower').map((s)=>freeze({
+  id:`R-${s.id}-CROWN`, type:'pyramidCrown', role:`${s.role}-crown`,
+  center:V(s.center[0],0,s.center[2]), width:s.width, depth:s.depth,
+  baseHeight:s.center[1]+s.height/2, apexHeight:s.top, towerId:s.id
+})));
 export const ANCHORS = freeze({
   A_GATE:V(0,0,23.5), A_FORECOURT:V(0,0,12), A_MAIN_DOOR:V(0,0,5.7),
   A_INNER_COURT:V(-4,0,-8), A_WEST_WING:V(-9.5,0,-1), A_EAST_WING:V(10,0,1),
@@ -74,20 +79,31 @@ function buildHip(spec){
   const t=[]; [[0,1,5],[0,5,4],[2,4,5],[2,5,3],[0,4,2],[1,3,5]].forEach(f=>pushTri(t,p[f[0]],p[f[1]],p[f[2]]));
   return freeze({id:spec.id,role:spec.role,triangles:freeze(t)});
 }
+function buildPyramidCrown(spec){
+  const [cx,,cz]=spec.center,w=spec.width/2,d=spec.depth/2,b=spec.baseHeight,a=spec.apexHeight;
+  const p=[V(cx-w,b,cz-d),V(cx+w,b,cz-d),V(cx+w,b,cz+d),V(cx-w,b,cz+d),V(cx,a,cz)];
+  const t=[]; [[0,1,4],[1,2,4],[2,3,4],[3,0,4],[0,3,2],[0,2,1]].forEach(f=>pushTri(t,p[f[0]],p[f[1]],p[f[2]]));
+  return freeze({id:spec.id,role:spec.role,towerId:spec.towerId,triangles:freeze(t),baseHeight:b,apexHeight:a});
+}
 export function buildNeutralMesh(){
   const meshes=[];
   for(const s of MASSES) meshes.push(buildBox(s));
   for(const s of ROOFS) meshes.push(s.type==='hipRoof'?buildHip(s):buildGable(s));
+  for(const s of TOWER_CROWNS) meshes.push(buildPyramidCrown(s));
   return freeze({contract:CONTRACT,revision:REVISION,material:MATERIAL,meshes:freeze(meshes),prohibitedDetailCount:0});
 }
 export function auditBlockout(){
-  const ids=[...MASSES,...ROOFS].map(x=>x.id); const duplicateIds=ids.filter((id,i)=>ids.indexOf(id)!==i);
+  const ids=[...MASSES,...ROOFS,...TOWER_CROWNS].map(x=>x.id); const duplicateIds=ids.filter((id,i)=>ids.indexOf(id)!==i);
   const prohibitedDetailCount=[RULES.windows,RULES.trim,RULES.tracery,RULES.textures,RULES.dormers,RULES.ornament].filter(Boolean).length;
   const hierarchy=28>21&&21>18&&18>16.5&&12>9;
   const validDimensions=MASSES.every(s=>s.width>0&&s.depth>0&&s.height>=0);
   const siteCapacityCompatible=SITE.principalStructuralSpan<=28&&SITE.principalStructuralDepth<=20;
-  const carouselDistanceReconciled=CAMERA.distance>=90&&CAMERA.distance<=100;
+  const carouselDistanceReconciled=CAMERA.distance===94;
+  const crownGeometryComplete=TOWER_CROWNS.length===3&&TOWER_CROWNS.every((c)=>{
+    const towerSpec=MASSES.find((m)=>m.id===c.towerId);
+    return towerSpec&&c.baseHeight===towerSpec.center[1]+towerSpec.height/2&&c.apexHeight===towerSpec.top&&c.apexHeight>c.baseHeight;
+  });
   const mesh=buildNeutralMesh();
   const triangleCount=mesh.meshes.reduce((n,m)=>n+m.triangles.length,0);
-  return freeze({contract:CONTRACT,revision:REVISION,baseSha:BASE_SHA,duplicateIds:freeze(duplicateIds),prohibitedDetailCount,hierarchy,validDimensions,siteCapacityCompatible,carouselDistanceReconciled,principalStructuralSpan:SITE.principalStructuralSpan,triangleCount,meshCount:mesh.meshes.length,siteAcceptancePending:true,carouselHumanReviewPending:true,passStatic:duplicateIds.length===0&&prohibitedDetailCount===0&&hierarchy&&validDimensions&&siteCapacityCompatible&&carouselDistanceReconciled});
+  return freeze({contract:CONTRACT,revision:REVISION,baseSha:BASE_SHA,duplicateIds:freeze(duplicateIds),prohibitedDetailCount,hierarchy,validDimensions,siteCapacityCompatible,carouselDistanceReconciled,crownGeometryComplete,crownCount:TOWER_CROWNS.length,principalStructuralSpan:SITE.principalStructuralSpan,triangleCount,meshCount:mesh.meshes.length,siteAcceptancePending:true,carouselHumanReviewPending:true,passStatic:duplicateIds.length===0&&prohibitedDetailCount===0&&hierarchy&&validDimensions&&siteCapacityCompatible&&carouselDistanceReconciled&&crownGeometryComplete});
 }

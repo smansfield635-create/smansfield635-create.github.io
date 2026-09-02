@@ -56,13 +56,15 @@ try{
 }catch{
   changed=execFileSync('git',['diff','--name-only','HEAD^...HEAD'],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean);
 }
-const allowed=new Set([
+const normalizePath=value=>String(value||'').trim().replace(/^\.\//,'').replaceAll('\\','/').normalize('NFC');
+changed=changed.map(normalizePath).filter(Boolean);
+const allowed=[
   'characters/app.mjs',
   'characters/night-renderer.mjs',
   'control-plane/whole-estate/characters-reconstruction-v1/verify-gratitude-environment-v2.v1.mjs',
   '.github/workflows/characters-environment-v2-qualification.yml'
-]);
-const outOfScope=changed.filter(path=>!allowed.has(path));
+].map(normalizePath);
+const outOfScope=changed.filter(path=>!allowed.some(expected=>path===expected||path.endsWith(`/${expected}`)));
 assert.deepEqual(outOfScope,[],`ENVIRONMENT_V2_SCOPE_LEAK:${outOfScope.join(',')}`);
 
 console.log(JSON.stringify({

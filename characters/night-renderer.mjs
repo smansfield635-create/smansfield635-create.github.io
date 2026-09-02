@@ -7,6 +7,7 @@ export const GRATITUDE_COAST_NIGHT=Object.freeze({
   terrain:Object.freeze({ambient:[0.045,0.066,0.084],rockLow:[0.035,0.070,0.061],rockHigh:[0.18,0.205,0.19],sand:[0.34,0.31,0.235],marsh:[0.055,0.115,0.085],cliff:[0.12,0.135,0.14]}),
   water:Object.freeze({deep:[0.006,0.032,0.075],lift:[0.025,0.12,0.205],fresnel:[0.30,0.39,0.58],moon:[0.72,0.82,1.0]}),
   atmosphere:Object.freeze({basinMist:true,distanceDesaturation:true,horizonScattering:true}),
+  performance:Object.freeze({waterNormalSamples:3,fbmOctaves:4,mobileMeshUnchanged:true}),
   star:Object.freeze({available:'#f4e6bb',related:'#d9e8ff',visited:'#b9d7d0',active:'#fff4cf'})
 });
 
@@ -37,7 +38,7 @@ float noise2(vec2 p){
 float fbm(vec2 p){
   float s=0.0,a=.5;
   mat2 r=mat2(.82,-.57,.57,.82);
-  for(int i=0;i<5;i++){s+=a*noise2(p);p=r*p*2.03+7.17;a*=.5;}
+  for(int i=0;i<4;i++){s+=a*noise2(p);p=r*p*2.03+7.17;a*=.5;}
   return s;
 }
 float ridged(vec2 p){float n=fbm(p);return 1.0-abs(2.0*n-1.0);}
@@ -50,14 +51,15 @@ float waterField(vec2 p,float t){
   vec2 q=warp(p*.0105,t);
   float swell=fbm(q*.82+vec2(t*.018,-t*.011));
   float chop=ridged(q*2.55+vec2(-t*.034,t*.021));
-  float cap=ridged(q*5.6+vec2(t*.051,t*.017));
-  return swell*.58+chop*.29+cap*.13;
+  float cap=1.0-abs(2.0*noise2(q*5.6+vec2(t*.051,t*.017))-1.0);
+  return swell*.60+chop*.29+cap*.11;
 }
 vec3 waterNormal(vec2 xz,float t){
-  float e=2.6;
-  float hL=waterField(xz-vec2(e,0.0),t),hR=waterField(xz+vec2(e,0.0),t);
-  float hB=waterField(xz-vec2(0.0,e),t),hF=waterField(xz+vec2(0.0,e),t);
-  return normalize(vec3((hL-hR)*2.2,1.0,(hB-hF)*2.2));
+  float e=3.1;
+  float h=waterField(xz,t);
+  float hX=waterField(xz+vec2(e,0.0),t);
+  float hZ=waterField(xz+vec2(0.0,e),t);
+  return normalize(vec3((h-hX)*2.15,1.0,(h-hZ)*2.15));
 }
 
 void main(){
@@ -74,13 +76,13 @@ void main(){
     vec3 viewDir=normalize(uEye-vPos);
     float facing=max(dot(waterN,viewDir),0.0);
     float fres=pow(1.0-facing,4.2);
-    float moonSpec=pow(max(dot(reflect(-moonDir,waterN),viewDir),0.0),118.0);
+    float moonSpec=pow(max(dot(reflect(-moonDir,waterN),viewDir),0.0),112.0);
 
     float moonBand=exp(-pow((vPos.x-uMoonPathX)/285.0,2.0));
     vec2 brokenUv=warp(vPos.xz*.0075,t*.55);
     float broken=clamp((fbm(brokenUv*2.2+vec2(t*.024,0.0))-.39)*2.5,0.0,1.0);
-    float glitter=pow(clamp(ridged(brokenUv*6.8+vec2(-t*.042,t*.019)),0.0,1.0),5.0);
-    float shimmer=moonBand*(broken*.72+glitter*.44)*uWaterMoonResponse;
+    float glitter=pow(clamp(ridged(brokenUv*6.1+vec2(-t*.042,t*.019)),0.0,1.0),5.0);
+    float shimmer=moonBand*(broken*.72+glitter*.40)*uWaterMoonResponse;
 
     float macro=fbm(warp(vPos.xz*.0047,t*.34));
     float micro=waterField(vPos.xz,t);
@@ -88,7 +90,7 @@ void main(){
     vec3 lift=vec3(.022,.105,.185);
     vec3 water=mix(deep,lift,clamp(.05+macro*.18+micro*.08,0.0,.38));
     water+=vec3(.25,.34,.54)*fres*.58;
-    water+=moonColor*(shimmer*.92+moonSpec*1.34);
+    water+=moonColor*(shimmer*.92+moonSpec*1.30);
 
     float grazing=pow(1.0-facing,2.3);
     water+=vec3(.037,.064,.115)*grazing;

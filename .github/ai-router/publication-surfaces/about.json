@@ -1,15 +1,16 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "about",
-  "description": "Qualified cinematic About estate with Audralia-specific film context, one-month chronology calendar, human/community layer, Skip convergence, and reduced-motion equivalent.",
+  "description": "Qualified cinematic About estate with Audralia WORLD, authoritative Mirrorland STORY, Play/Skip threshold, user-gesture soundtrack start, one-month chronology calendar, human/community layer, Skip convergence, and reduced-motion equivalent.",
   "checks": [
     {
       "path": "/about/index.html",
       "includes": [
-        "data-about-generation=\"documentary-estate-v1-motion3\"",
-        "data-skip-film",
-        "Chronology · repository anchors",
-        "data-calendar-prev",
+        "data-about-generation=\"documentary-estate-v2-reconstructed\"",
+        "data-play-intro",
+        "data-skip-intro",
+        "Chronology · repository evidence",
+        "data-prev",
         "August 2026",
         "The human layer",
         "The work is ultimately about people."
@@ -33,7 +34,7 @@
     "enabled": true,
     "path": "/about/",
     "timeoutMs": 15000,
-    "readySelector": "[data-estate-core]",
+    "readySelector": "#about-main",
     "binding": {
       "mode": "direct-document",
       "path": "/about/"
@@ -45,10 +46,10 @@
     ],
     "interactions": [
       {
-        "name": "Skip film converges to the persistent About estate",
+        "name": "Skip intro converges to the persistent About estate",
         "action": {
           "type": "click",
-          "selector": "[data-skip-film]"
+          "selector": "[data-skip-intro]"
         },
         "assertions": [
           {
@@ -59,7 +60,7 @@
           },
           {
             "type": "exists",
-            "selector": "[data-estate-core]"
+            "selector": "#about-main"
           }
         ],
         "timeoutMs": 5000

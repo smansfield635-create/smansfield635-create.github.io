@@ -1,17 +1,15 @@
 name: About Audralia Blob Repair Carrier
 
 on:
-  push:
-    branches:
-      - qualification/about-exact-browser-20260902
-    paths:
-      - .github/workflows/about-audralia-blob-repair-carrier.yml
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: write
 
 jobs:
   repair:
+    if: github.head_ref == 'qualification/about-audralia-repair-20260902'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout About construction branch
@@ -65,5 +63,3 @@ jobs:
 
       - name: Report successor
         run: echo "About successor candidate $NEW_CANDIDATE"
-
-# trigger 2026-09-02

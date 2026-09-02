@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "characters-moonlit-deploy-5db6dd68",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 2623,
+  "requestBranch": "ai-dispatch-request-characters-moonlit-deploy-5db6dd68",
+  "requestCommit": "95779632ec33c3d304d91c7464c9ad0ee19e2916",
+  "requestCommitParent": "5db6dd6864c25272397646e467f4c3d7fd1350cd",
+  "currentMainSha": "5db6dd6864c25272397646e467f4c3d7fd1350cd",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "5db6dd6864c25272397646e467f4c3d7fd1350cd",
+    "surface_id": "characters"
+  },
+  "bridgeRunId": "33588418383",
+  "dispatchedRunId": 33588428631,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/33588428631",
+  "dispatchedRunHeadSha": "5db6dd6864c25272397646e467f4c3d7fd1350cd",
+  "dispatchedAt": "2026-09-02T03:48:24.648Z",
+  "resolvedAt": "2026-09-02T03:48:28.771Z"
+}

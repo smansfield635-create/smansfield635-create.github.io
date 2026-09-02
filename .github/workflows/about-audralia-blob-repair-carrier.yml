@@ -63,3 +63,5 @@ jobs:
 
       - name: Report successor
         run: echo "About successor candidate $NEW_CANDIDATE"
+
+# unique PR 2630 synchronization trigger

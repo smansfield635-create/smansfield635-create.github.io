@@ -21,16 +21,6 @@ const checks=Object.freeze([
   ['FREE_LINEWORK_PROHIBITED',RULES.freeLinework===false]
 ]);
 const failures=checks.filter(([,pass])=>!pass).map(([id])=>id);
-const receipt=Object.freeze({
-  contract:CONTRACT,
-  status:failures.length===0?'PASS_PHASE1_STATIC_INTEGRITY':'FAIL_PHASE1_STATIC_INTEGRITY',
-  checks:checks.map(([id,pass])=>Object.freeze({id,pass})),
-  failures,
-  parent:p3,
-  phase1:p1,
-  claimCeiling:failures.length===0
-    ?'GOTHIC_PHASE1_STRUCTURAL_DETAIL_CONSTRUCTED_AND_STATICALLY_VALID; MULTIVIEW_VISUAL_REVIEW_REQUIRED_BEFORE_PHASE2'
-    :'GOTHIC_PHASE1_NOT_ACCEPTED'
-});
+const receipt=Object.freeze({contract:CONTRACT,status:failures.length===0?'PASS_PHASE1_STATIC_INTEGRITY':'FAIL_PHASE1_STATIC_INTEGRITY',checks:checks.map(([id,pass])=>Object.freeze({id,pass})),failures,parent:p3,phase1:p1,claimCeiling:failures.length===0?'GOTHIC_PHASE1_STRUCTURAL_DETAIL_CONSTRUCTED_AND_STATICALLY_VALID; MULTIVIEW_VISUAL_REVIEW_REQUIRED_BEFORE_PHASE2':'GOTHIC_PHASE1_NOT_ACCEPTED'});
 console.log(JSON.stringify(receipt,null,2));
 if(failures.length) process.exitCode=1;

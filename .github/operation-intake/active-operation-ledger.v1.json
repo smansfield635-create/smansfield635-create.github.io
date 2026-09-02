@@ -6280,40 +6280,73 @@
       "state": "ADMITTED_LOCKED"
     },
     "e8d212f0aba780c2a482ffbbd1706570999dc64d755f83253fe264adabc0d668": {
-      "governingHead": "dee7f795b0e05b2d654ffa33a47d47dc3674d131",
+      "governingHead": "074760acd919713247eb22dbf59eef0f497e7aff",
       "independentAuthorityProvenance": {
         "authorityIdentity": {
-          "governingHead": "dee7f795b0e05b2d654ffa33a47d47dc3674d131",
-          "lockGeneration": 1922,
+          "governingHead": "074760acd919713247eb22dbf59eef0f497e7aff",
+          "lockGeneration": 1923,
           "lockScope": "CHARACTERS:MOONLIT_COAST:PUBLICATION_CONTRACT:V1",
-          "operationId": "CHARACTERS_MOONLIT_COAST_PUBLICATION_CONTRACT_RESTORE_20260902_001",
-          "procedureLocatorDigest": "cc77b162cb29cd2925ff57f674f7e146b70c1fca8f2804c0df721dd770de7d17",
-          "requestDigest": "4b5efb2d96f16da1ab319e519f533158a643b911c84df2586dc6d0a184486cdf",
+          "operationId": "CHARACTERS_MOONLIT_COAST_PUBLICATION_CONTRACT_RESTORE_20260902_001_SUCCESSOR_001",
+          "procedureLocatorDigest": "c8f238b0506bd11569fe16fe599e4e9ac06309c7a298269fbaf2e42eb2ee833b",
+          "requestDigest": "18f7644d2693944a6d55086a267b79fde7ba39fea0d41ef4348229dcf72d56c9",
           "scopeHash": "e8d212f0aba780c2a482ffbbd1706570999dc64d755f83253fe264adabc0d668"
         },
-        "bindingDigest": "2c7a77688d1eadcad065fe1888f18d0018ed0d74b3afaf37d2c931c4b5a48625",
+        "bindingDigest": "568e8eb5c652e2215bf0d89b3aa82db8d44a0840ff560b74a1b25333ff9e4c88",
         "compareAndSwap": {
-          "observedLedgerBlobSha": "da52c5520d45aa42808b469cfd89924f197cb1fa",
-          "observedLockRefHead": "42014ba7d6b13d8cad0836d91802288bcf627acb"
+          "observedLedgerBlobSha": "3ed3c0e53af2be44e30bf0d4a2cdffe7f2705859",
+          "observedLockRefHead": "9cb8cafbb9c2f90449bdb5ac46d76b7ded4a7377"
         },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
         "source": {
           "authorAssociation": "OWNER",
           "authorLogin": "smansfield635-create",
-          "commentBodySha256": "dde83d22b64d02192140449836c4ca6336119e87b3cdb2135bb56a6479e20dcf",
-          "commentId": 5503959954,
+          "commentBodySha256": "c148dabb618f82935c1de70769fc597713ece298f7311fae194f6afdce6f6d06",
+          "commentId": 5504097930,
           "issueNumber": 2378,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
           "repository": "smansfield635-create/smansfield635-create.github.io"
         },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+        "transitionIdentity": {
+          "predecessor": {
+            "governingHead": "dee7f795b0e05b2d654ffa33a47d47dc3674d131",
+            "lockGeneration": 1922,
+            "lockScope": "CHARACTERS:MOONLIT_COAST:PUBLICATION_CONTRACT:V1",
+            "operationId": "CHARACTERS_MOONLIT_COAST_PUBLICATION_CONTRACT_RESTORE_20260902_001"
+          },
+          "successor": {
+            "governingHead": "074760acd919713247eb22dbf59eef0f497e7aff",
+            "lockGeneration": 1923,
+            "lockScope": "CHARACTERS:MOONLIT_COAST:PUBLICATION_CONTRACT:V1",
+            "operationId": "CHARACTERS_MOONLIT_COAST_PUBLICATION_CONTRACT_RESTORE_20260902_001_SUCCESSOR_001"
+          },
+          "transitionId": "CHARACTERS_MOONLIT_PUBLICATION_HEAD_ADVANCE_1922_TO_SUCCESSOR_20260902_001"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
       },
-      "lockGeneration": 1922,
+      "lockGeneration": 1923,
       "lockScope": "CHARACTERS:MOONLIT_COAST:PUBLICATION_CONTRACT:V1",
-      "operationId": "CHARACTERS_MOONLIT_COAST_PUBLICATION_CONTRACT_RESTORE_20260902_001",
-      "procedureLocatorDigest": "cc77b162cb29cd2925ff57f674f7e146b70c1fca8f2804c0df721dd770de7d17",
+      "operationId": "CHARACTERS_MOONLIT_COAST_PUBLICATION_CONTRACT_RESTORE_20260902_001_SUCCESSOR_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "dee7f795b0e05b2d654ffa33a47d47dc3674d131",
+        "lockGeneration": 1922,
+        "lockScope": "CHARACTERS:MOONLIT_COAST:PUBLICATION_CONTRACT:V1",
+        "operationId": "CHARACTERS_MOONLIT_COAST_PUBLICATION_CONTRACT_RESTORE_20260902_001",
+        "preservedEvidenceRefs": [
+          "PR_2618_ROLLBACK_MERGE_DEE7F795",
+          "PR_2621_MANIFEST_MERGE_5DB6DD68",
+          "HOSTED_PREFLIGHT_RUN_33588243924_PASS",
+          "DEPLOY_RUN_33588428631_CANCELLED_BEFORE_PAGES_MUTATION",
+          "MAIN_074760AC_ABOUT_ONLY_ADVANCE"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "CHARACTERS_MOONLIT_PUBLICATION_HEAD_ADVANCE_1922_TO_SUCCESSOR_20260902_001"
+      },
+      "procedureLocatorDigest": "c8f238b0506bd11569fe16fe599e4e9ac06309c7a298269fbaf2e42eb2ee833b",
       "released": false,
-      "requestDigest": "4b5efb2d96f16da1ab319e519f533158a643b911c84df2586dc6d0a184486cdf",
+      "requestDigest": "18f7644d2693944a6d55086a267b79fde7ba39fea0d41ef4348229dcf72d56c9",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "e8d212f0aba780c2a482ffbbd1706570999dc64d755f83253fe264adabc0d668",
       "state": "ADMITTED_LOCKED"
@@ -6832,7 +6865,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1922,
+  "lockGeneration": 1923,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -38285,6 +38318,64 @@
       "scopeHash": "f709dfa59d2e4f089774a3078a8f5850e09f63fa6b396329ba1a38fe87c6ba6a",
       "state": "TERMINAL",
       "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+    },
+    {
+      "governingHead": "dee7f795b0e05b2d654ffa33a47d47dc3674d131",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "dee7f795b0e05b2d654ffa33a47d47dc3674d131",
+          "lockGeneration": 1922,
+          "lockScope": "CHARACTERS:MOONLIT_COAST:PUBLICATION_CONTRACT:V1",
+          "operationId": "CHARACTERS_MOONLIT_COAST_PUBLICATION_CONTRACT_RESTORE_20260902_001",
+          "procedureLocatorDigest": "cc77b162cb29cd2925ff57f674f7e146b70c1fca8f2804c0df721dd770de7d17",
+          "requestDigest": "4b5efb2d96f16da1ab319e519f533158a643b911c84df2586dc6d0a184486cdf",
+          "scopeHash": "e8d212f0aba780c2a482ffbbd1706570999dc64d755f83253fe264adabc0d668"
+        },
+        "bindingDigest": "2c7a77688d1eadcad065fe1888f18d0018ed0d74b3afaf37d2c931c4b5a48625",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "da52c5520d45aa42808b469cfd89924f197cb1fa",
+          "observedLockRefHead": "42014ba7d6b13d8cad0836d91802288bcf627acb"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "dde83d22b64d02192140449836c4ca6336119e87b3cdb2135bb56a6479e20dcf",
+          "commentId": 5503959954,
+          "issueNumber": 2378,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "lockGeneration": 1922,
+      "lockScope": "CHARACTERS:MOONLIT_COAST:PUBLICATION_CONTRACT:V1",
+      "operationId": "CHARACTERS_MOONLIT_COAST_PUBLICATION_CONTRACT_RESTORE_20260902_001",
+      "procedureLocatorDigest": "cc77b162cb29cd2925ff57f674f7e146b70c1fca8f2804c0df721dd770de7d17",
+      "released": true,
+      "requestDigest": "4b5efb2d96f16da1ab319e519f533158a643b911c84df2586dc6d0a184486cdf",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "e8d212f0aba780c2a482ffbbd1706570999dc64d755f83253fe264adabc0d668",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "PR_2618_ROLLBACK_MERGE_DEE7F795",
+          "PR_2621_MANIFEST_MERGE_5DB6DD68",
+          "HOSTED_PREFLIGHT_RUN_33588243924_PASS",
+          "DEPLOY_RUN_33588428631_CANCELLED_BEFORE_PAGES_MUTATION",
+          "MAIN_074760AC_ABOUT_ONLY_ADVANCE"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "074760acd919713247eb22dbf59eef0f497e7aff",
+        "successorLockGeneration": 1923,
+        "successorLockScope": "CHARACTERS:MOONLIT_COAST:PUBLICATION_CONTRACT:V1",
+        "successorOperationId": "CHARACTERS_MOONLIT_COAST_PUBLICATION_CONTRACT_RESTORE_20260902_001_SUCCESSOR_001",
+        "transitionId": "CHARACTERS_MOONLIT_PUBLICATION_HEAD_ADVANCE_1922_TO_SUCCESSOR_20260902_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

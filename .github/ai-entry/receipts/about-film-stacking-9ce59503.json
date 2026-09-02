@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "about-film-stacking-9ce59503",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 2654,
+  "requestBranch": "ai-dispatch-request-about-9ce59503",
+  "requestCommit": "ede253e893e6b912bc21070d30ef18708c1e82bd",
+  "requestCommitParent": "9ce59503ca9ed36e7e5248c22c47d38be95604dd",
+  "currentMainSha": "9ce59503ca9ed36e7e5248c22c47d38be95604dd",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "9ce59503ca9ed36e7e5248c22c47d38be95604dd",
+    "surface_id": "about"
+  },
+  "bridgeRunId": "33674235492",
+  "dispatchedRunId": 33674272690,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/33674272690",
+  "dispatchedRunHeadSha": "9ce59503ca9ed36e7e5248c22c47d38be95604dd",
+  "dispatchedAt": "2026-09-02T19:35:59.560Z",
+  "resolvedAt": "2026-09-02T19:36:03.630Z"
+}

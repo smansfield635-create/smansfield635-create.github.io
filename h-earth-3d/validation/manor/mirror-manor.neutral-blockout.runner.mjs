@@ -11,6 +11,7 @@ const checks = Object.freeze([
   ['VALID_DIMENSIONS', audit.validDimensions === true],
   ['SITE_CAPACITY_COMPATIBLE', audit.siteCapacityCompatible === true],
   ['CAROUSEL_DISTANCE_PRESERVED_94', audit.carouselDistanceReconciled === true],
+  ['AXIS_Z_GABLE_RIDGE_USES_DECLARED_HEIGHT', audit.axisZGableRidgesCorrect === true],
   ['P3_CROWN_GEOMETRY_COMPLETE', audit.crownGeometryComplete === true && audit.crownCount === 3],
   ['P3_CAROUSEL_PROJECTION', MIRROR_MANOR_P2_SIX_VIEW_REVIEW.carouselProjection.verdict === 'PASS'],
   ['P3_TOWER_CROWN_GEOMETRY', MIRROR_MANOR_P2_SIX_VIEW_REVIEW.geometryInspection.pass === true],

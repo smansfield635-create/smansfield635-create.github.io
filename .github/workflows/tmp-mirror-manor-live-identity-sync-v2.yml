@@ -1,0 +1,97 @@
+name: Temporary Mirror Manor live identity sync v2
+
+on:
+  push:
+    branches:
+      - mirror-manor-live-identity-fix-v2
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tmp-mirror-manor-live-identity-sync-v2
+  cancel-in-progress: true
+
+jobs:
+  synchronize:
+    if: ${{ !contains(github.event.head_commit.message, '[manor-live-identity-synced]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout bounded live chain
+        uses: actions/checkout@v4
+        with:
+          ref: mirror-manor-live-identity-fix-v2
+          fetch-depth: 0
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            index.html
+            assets/compass/compass.house-scene.js
+            assets/compass/compass.capability-carousel.core.js
+            assets/compass/compass.capability-carousel.js
+            .github/workflows/tmp-mirror-manor-live-identity-sync-v2.yml
+
+      - name: Synchronize exact content identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs=require('fs');
+          const crypto=require('crypto');
+          const hash=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex').slice(0,16);
+          const replaceIdentity=(text,asset,h)=>{
+            const esc=asset.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+            const re=new RegExp(`(${esc}\\?[^'\"\\s]*?\\bcb=)[^&'\"\\s]+`);
+            if(!re.test(text)) throw new Error(`IDENTITY_REFERENCE_NOT_FOUND:${asset}`);
+            return text.replace(re,`$1${h}`);
+          };
+          const house='assets/compass/compass.house-scene.js';
+          const core='assets/compass/compass.capability-carousel.core.js';
+          const loader='assets/compass/compass.capability-carousel.js';
+          const root='index.html';
+          const houseHash=hash(house);
+          let coreText=fs.readFileSync(core,'utf8');
+          coreText=replaceIdentity(coreText,'/assets/compass/compass.house-scene.js',houseHash);
+          fs.writeFileSync(core,coreText);
+          const coreHash=hash(core);
+          let loaderText=fs.readFileSync(loader,'utf8');
+          loaderText=replaceIdentity(loaderText,'/assets/compass/compass.capability-carousel.core.js',coreHash);
+          fs.writeFileSync(loader,loaderText);
+          const loaderHash=hash(loader);
+          let rootText=fs.readFileSync(root,'utf8');
+          rootText=replaceIdentity(rootText,'/assets/compass/compass.capability-carousel.js',loaderHash);
+          fs.writeFileSync(root,rootText);
+          const receipt={contract:'MIRROR_MANOR_LIVE_IDENTITY_CHAIN_v2',houseHash,coreHash,loaderHash,houseCullDisabled:/gl\.disable\(gl\.CULL_FACE\)/.test(fs.readFileSync(house,'utf8')),result:'PASS_CLOSED'};
+          fs.writeFileSync('/tmp/manor-live-identity-receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt,null,2));
+          NODE
+
+      - name: Validate synchronized chain
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check assets/compass/compass.house-scene.js
+          node --check assets/compass/compass.capability-carousel.core.js
+          node --check assets/compass/compass.capability-carousel.js
+          grep -q 'gl.disable(gl.CULL_FACE)' assets/compass/compass.house-scene.js
+          git diff --check
+
+      - name: Commit synchronized live identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add index.html assets/compass/compass.capability-carousel.js assets/compass/compass.capability-carousel.core.js
+          if git diff --cached --quiet; then
+            echo 'Identity chain already synchronized.'
+            exit 0
+          fi
+          git commit -m 'fix(compass): synchronize Mirror Manor live identity chain [manor-live-identity-synced]'
+          git push origin HEAD:mirror-manor-live-identity-fix-v2
+
+      - name: Upload receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: mirror-manor-live-identity-v2-${{ github.run_id }}
+          path: /tmp/manor-live-identity-receipt.json
+          if-no-files-found: error

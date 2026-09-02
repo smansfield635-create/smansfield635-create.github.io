@@ -37,6 +37,12 @@ jobs:
           set -o pipefail
           node control-plane/whole-estate/characters-reconstruction-v1/verify-step9-regional-bridge.v1.mjs \
             | tee /tmp/characters-step9-regional-bridge.json
+      - name: Verify Step 10 cross-environment geography
+        shell: bash
+        run: |
+          set -o pipefail
+          node control-plane/whole-estate/characters-reconstruction-v1/verify-step10-geography-correspondence.mjs \
+            | tee /tmp/characters-step10-geography.json
       - name: Install Step 10 browser runtime
         run: |
           npm init -y >/dev/null 2>&1
@@ -64,14 +70,15 @@ jobs:
           path: /tmp/characters-step9-regional-bridge.json
           if-no-files-found: warn
           retention-days: 30
-      - name: Upload Step 10 browser evidence
+      - name: Upload Step 10 evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: characters-step10-browser-evidence
+          name: characters-step10-acceptance-evidence
           path: |
             /tmp/characters-step10/
             /tmp/characters-step10-browser.json
+            /tmp/characters-step10-geography.json
             /tmp/characters-step10-server.log
           if-no-files-found: warn
           retention-days: 30

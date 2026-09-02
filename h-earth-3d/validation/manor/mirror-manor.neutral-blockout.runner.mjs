@@ -7,7 +7,7 @@ const checks = Object.freeze([
   ['STATIC_AUDIT', audit.passStatic === true],
   ['NO_DUPLICATE_IDS', audit.duplicateIds.length === 0],
   ['NO_PROHIBITED_DETAIL', audit.prohibitedDetailCount === 0],
-  ['MASSING_HIERARCHY', audit.hierarchy === true],
+  ['MASSING_HIERARCHY_DECLARED', audit.hierarchy === true],
   ['VALID_DIMENSIONS', audit.validDimensions === true],
   ['SITE_CAPACITY_COMPATIBLE', audit.siteCapacityCompatible === true],
   ['CAROUSEL_DISTANCE_RECONCILED', audit.carouselDistanceReconciled === true],

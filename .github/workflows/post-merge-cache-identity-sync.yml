@@ -11,11 +11,6 @@ on:
         description: Optional expected main head
         required: false
         type: string
-  push:
-    branches:
-      - main
-    paths:
-      - .github/workflows/post-merge-cache-identity-sync.yml
 
 permissions:
   contents: write
@@ -28,81 +23,67 @@ jobs:
   synchronize:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout exact main head
+      - name: Checkout current main head
         uses: actions/checkout@v4
         with:
           ref: main
-          fetch-depth: 2
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            index.html
-            assets/compass/compass.house-scene.js
-            assets/compass/compass.capability-carousel.core.js
-            assets/compass/compass.capability-carousel.js
-            .github/workflows/post-merge-cache-identity-sync.yml
+          fetch-depth: 0
 
-      - name: Synchronize Mirror Manor live identity chain
-        if: ${{ github.event_name == 'push' }}
-        id: manor
+      - name: Bind exact head and determine comparison base
+        id: identity
         shell: bash
+        env:
+          INPUT_BASE: ${{ inputs.base_sha }}
+          INPUT_HEAD: ${{ inputs.head_sha }}
         run: |
           set -euo pipefail
-          expected="$(git rev-parse HEAD^{commit})"
-          node <<'NODE'
-          const fs=require('fs');
-          const crypto=require('crypto');
-          const hash=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex').slice(0,16);
-          const replaceIdentity=(text,asset,h)=>{
-            const esc=asset.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-            const re=new RegExp(`(${esc}\\?[^'\"\\s]*?\\bcb=)[^&'\"\\s]+`);
-            if(!re.test(text)) throw new Error(`IDENTITY_REFERENCE_NOT_FOUND:${asset}`);
-            return text.replace(re,`$1${h}`);
-          };
-          const house='assets/compass/compass.house-scene.js';
-          const core='assets/compass/compass.capability-carousel.core.js';
-          const loader='assets/compass/compass.capability-carousel.js';
-          const root='index.html';
-          const houseHash=hash(house);
-          let coreText=replaceIdentity(fs.readFileSync(core,'utf8'),'/assets/compass/compass.house-scene.js',houseHash);
-          fs.writeFileSync(core,coreText);
-          const coreHash=hash(core);
-          let loaderText=replaceIdentity(fs.readFileSync(loader,'utf8'),'/assets/compass/compass.capability-carousel.core.js',coreHash);
-          fs.writeFileSync(loader,loaderText);
-          const loaderHash=hash(loader);
-          let rootText=replaceIdentity(fs.readFileSync(root,'utf8'),'/assets/compass/compass.capability-carousel.js',loaderHash);
-          fs.writeFileSync(root,rootText);
-          const receipt={contract:'MIRROR_MANOR_LIVE_IDENTITY_CHAIN_v2',houseHash,coreHash,loaderHash,houseCullDisabled:/gl\.disable\(gl\.CULL_FACE\)/.test(fs.readFileSync(house,'utf8')),result:'PASS_CLOSED'};
-          if(!receipt.houseCullDisabled) throw new Error('HOUSE_CULLING_FIX_NOT_PRESENT');
-          fs.writeFileSync('/tmp/post-merge-cache-identity.json',JSON.stringify(receipt,null,2)+'\n');
-          console.log(JSON.stringify(receipt,null,2));
-          NODE
-          node --check assets/compass/compass.house-scene.js
-          node --check assets/compass/compass.capability-carousel.core.js
-          node --check assets/compass/compass.capability-carousel.js
+          head="$(git rev-parse HEAD^{commit})"
+          if [ -n "${INPUT_HEAD:-}" ]; then
+            test "$head" = "$INPUT_HEAD"
+          fi
+          base="${INPUT_BASE:-}"
+          if [ -z "$base" ]; then
+            base="$(git rev-parse HEAD^1)"
+          fi
+          git cat-file -e "${base}^{commit}"
+          echo "head=$head" >> "$GITHUB_OUTPUT"
+          echo "base=$base" >> "$GITHUB_OUTPUT"
+
+      - name: Validate cache identity controller
+        run: node .github/ai-router/platform/post-merge-cache-identity-sync.v1.mjs --self-test
+
+      - name: Synchronize content-derived asset identities
+        env:
+          CACHE_IDENTITY_BASE: ${{ steps.identity.outputs.base }}
+          CACHE_IDENTITY_HEAD: ${{ steps.identity.outputs.head }}
+          CACHE_IDENTITY_RECEIPT: /tmp/post-merge-cache-identity.json
+        run: node .github/ai-router/platform/post-merge-cache-identity-sync.v1.mjs
+
+      - name: Commit identity changes only when explicitly requested and required
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ steps.identity.outputs.head }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "No cache identity changes required."
+            exit 0
+          fi
           git diff --check
-          git show HEAD^:.github/workflows/post-merge-cache-identity-sync.yml > .github/workflows/post-merge-cache-identity-sync.yml
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add index.html assets/compass/compass.capability-carousel.js assets/compass/compass.capability-carousel.core.js .github/workflows/post-merge-cache-identity-sync.yml
+          git add -- '*.html' '*.css' '*.js' '*.mjs'
           test -n "$(git diff --cached --name-only)"
           git fetch origin main
-          test "$(git rev-parse origin/main^{commit})" = "$expected"
-          git commit -m "fix(compass): publish Mirror Manor through synchronized live identities [cache-identity-sync]"
+          test "$(git rev-parse origin/main^{commit})" = "$EXPECTED_HEAD"
+          git commit -m "chore(delivery): synchronize static asset cache identities [cache-identity-sync]"
           git push origin HEAD:main
-
-      - name: Manual controller path
-        if: ${{ github.event_name == 'workflow_dispatch' }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          node .github/ai-router/platform/post-merge-cache-identity-sync.v1.mjs --self-test
-          echo 'Manual production invocation remains governed by the restored canonical workflow after this one-time repair.'
+          echo "One explicit cache-identity commit was created. Native Pages branch publication remains the only publisher."
 
       - name: Upload cache identity receipt
-        if: ${{ github.event_name == 'push' }}
         uses: actions/upload-artifact@v4
         with:
-          name: mirror-manor-live-identity-${{ github.run_id }}-${{ github.run_attempt }}
+          name: post-merge-cache-identity-${{ github.run_id }}-${{ github.run_attempt }}
           path: /tmp/post-merge-cache-identity.json
           if-no-files-found: error
           retention-days: 90

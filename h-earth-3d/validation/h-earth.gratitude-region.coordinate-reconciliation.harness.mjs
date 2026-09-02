@@ -77,7 +77,11 @@ function importIssues() {
 export function extractGRCRTerrainMetrics(worldX, worldZ) {
   const sample = sampleHEarthRun8BSuccessorTerrainField(worldX, worldZ);
   if (sample?.valid !== true) return freeze({ valid: false, worldX, worldZ });
-  return freeze({ valid: true, contractId: sample.contractId, world: sample.world, elevation: sample.elevation, gradient: freeze({ x: sample.gradient.x, z: sample.gradient.z }), slope: sample.slope, curvature: sample.curvature, normal: sample.normal });
+  const normalY = sample?.normal?.y;
+  const gradient = Number.isFinite(normalY) && Math.abs(normalY) > 1e-12
+    ? freeze({ x: -sample.normal.x / normalY, z: -sample.normal.z / normalY })
+    : freeze({ x: Number.NaN, z: Number.NaN });
+  return freeze({ valid: true, contractId: sample.contractId, world: sample.world, elevation: sample.elevation, gradient, slope: sample.slope, curvature: sample.curvature, normal: sample.normal });
 }
 
 const contains = (bounds, x, z) => x >= bounds.xMin && x <= bounds.xMax && z >= bounds.zMin && z <= bounds.zMax;

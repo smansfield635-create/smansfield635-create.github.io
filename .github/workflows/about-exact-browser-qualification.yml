@@ -34,7 +34,7 @@ jobs:
       - name: Run exact rendered qualification
         shell: bash
         run: |
-          cat > /tmp/about-qualify.mjs <<'NODE'
+          cat > about-qualify.mjs <<'NODE'
           import { chromium } from 'playwright';
           import fs from 'node:fs';
           const browser = await chromium.launch({headless:true});
@@ -92,7 +92,7 @@ jobs:
           console.log(JSON.stringify({candidate:'8eaded636ec11fb24105492b7d5342a96f387a1f',results},null,2));
           if(failed.length) process.exit(1);
           NODE
-          node /tmp/about-qualify.mjs
+          node about-qualify.mjs
       - name: Upload browser evidence
         if: always()
         uses: actions/upload-artifact@v4

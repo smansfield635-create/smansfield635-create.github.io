@@ -120,20 +120,26 @@ jobs:
           await orbit.scrollIntoViewIfNeeded();
           await page.waitForTimeout(1000);
           const plaques=await page.locator('.compass-orbit-plaque').evaluateAll(ns=>ns.map(n=>({cap:n.getAttribute('data-capability'),active:n.getAttribute('data-active'),text:(n.textContent||'').trim().replace(/\s+/g,' ').slice(0,220)})));
-          const target=page.locator('.compass-orbit-plaque').filter({hasText:/House|Mirror Manor/i}).first();
-          if(await target.count()){await target.click({force:true});await page.waitForTimeout(4000)}
+          await orbit.focus();
+          for(let i=0;i<3;i++){
+            const active=await page.locator('.compass-orbit-plaque[data-active="true"]').getAttribute('data-capability');
+            if(active==='house')break;
+            await page.keyboard.press('ArrowRight');
+            await page.waitForTimeout(500);
+          }
+          await page.waitForTimeout(4000);
           const state=await page.evaluate(()=>{
             const plaques=[...document.querySelectorAll('.compass-orbit-plaque')];
-            const house=plaques.find(n=>/House|Mirror Manor/i.test(n.textContent||''));
-            const canvases=[...document.querySelectorAll('canvas')].map(c=>{const r=c.getBoundingClientRect();return {class:String(c.className),width:c.width,height:c.height,rect:{x:r.x,y:r.y,width:r.width,height:r.height},dataset:{...c.dataset}}});
-            return {house:house?{cap:house.getAttribute('data-capability'),active:house.getAttribute('data-active'),text:(house.textContent||'').trim().replace(/\s+/g,' ').slice(0,500),html:house.innerHTML.slice(0,1600)}:null,canvases};
+            const house=plaques.find(n=>n.getAttribute('data-capability')==='house');
+            const canvases=[...document.querySelectorAll('canvas')].map(c=>{const r=c.getBoundingClientRect();let nonzeroPixels=null;try{const gl=c.getContext('webgl2')||c.getContext('webgl');if(gl){const px=new Uint8Array(4);gl.readPixels(Math.floor(c.width/2),Math.floor(c.height/2),1,1,gl.RGBA,gl.UNSIGNED_BYTE,px);nonzeroPixels=[...px]}}catch{}return {class:String(c.className),width:c.width,height:c.height,rect:{x:r.x,y:r.y,width:r.width,height:r.height},dataset:{...c.dataset},centerPixel:nonzeroPixels}});
+            return {active:document.querySelector('.compass-orbit-plaque[data-active="true"]')?.getAttribute('data-capability')||null,house:house?{cap:house.getAttribute('data-capability'),active:house.getAttribute('data-active'),text:(house.textContent||'').trim().replace(/\s+/g,' ').slice(0,500),html:house.innerHTML.slice(0,1600)}:null,canvases};
           });
           await page.screenshot({path:'/tmp/manor-probe/manor-live.png',fullPage:true});
           const receipt={url:page.url(),plaques,state,consoleEvents,pageErrors,failed,manorRequests};
           fs.writeFileSync('/tmp/manor-probe/manor-live.json',JSON.stringify(receipt,null,2));
           console.log(JSON.stringify(receipt,null,2));
           await browser.close();
-          if(!state.house)process.exit(2);
+          if(!state.house||state.active!=='house')process.exit(2);
           EOF
           cd /tmp/manor-probe
           node probe.mjs

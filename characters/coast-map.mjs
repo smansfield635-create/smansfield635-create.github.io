@@ -36,7 +36,7 @@ const deepFreeze = (value, seen = new WeakSet()) => {
 const near = (left, right, tolerance = 1e-9) => Math.abs(left - right) <= tolerance;
 const hasText = (value) => typeof value === 'string' && value.trim().length > 0;
 
-export const COAST_MAP_CONTRACT_ID = 'CHARACTERS_TASK19_WORLD_CORRESPONDENT_COAST_MAP_v1';
+export const COAST_MAP_CONTRACT_ID = 'CHARACTERS_TASK20_OPTIONAL_SURVEY_HUB_MAP_v1';
 export const COAST_MAP_QUALITATIVE_STATES = deepFreeze(['UNSEEN', 'HELD', 'RELATED', 'VISITED', 'ACTIVE']);
 export const COAST_MAP_CONTEXT_IDS = deepFreeze(['MIRROR_MANOR', 'CROSSING', 'CLOCK', 'DEXTRION_TRANSMISSION']);
 
@@ -104,7 +104,7 @@ const buildSiteMarker = (sceneState, siteId) => {
     world: anchor.world,
     map: anchor.map,
     coordinateAuthority: GRATITUDE_GEOGRAPHY_ADAPTER_ID,
-    selectable: sceneState.phase === 'WORLD_MAP',
+    selectable: sceneState.phase === 'SURVEY_HUB',
     characterPresenceInferred: false,
     completionValue: null
   });
@@ -159,7 +159,7 @@ const buildRelationPath = (sceneState, relation, sampleCount = 17) => {
   points[0] = deepFreeze({ ordinal: 0, map: from.map, world: from.world });
   points[points.length - 1] = deepFreeze({ ordinal: points.length - 1, map: to.map, world: to.world });
   const canFollowNow = sceneState.activeSiteId === relation.fromSiteId
-    && ['SITE_ARRIVAL', 'LOCAL_INSPECTION', 'KNOWLEDGE_CARD'].includes(sceneState.phase);
+    && ['CHARACTER_SCENE', 'LOCAL_INSPECTION', 'KNOWLEDGE_CARD'].includes(sceneState.phase);
   return deepFreeze({
     pathId: `COAST_MAP_RELATION:${relation.key}`,
     relationKey: relation.key,
@@ -224,7 +224,7 @@ export function applyGratitudeCoastMapAction(sceneState, action = {}) {
   let sceneEvent = null;
   if (actionType === 'SELECT_SITE') sceneEvent = { type: 'SELECT_SITE_SIGNAL', siteId: action.siteId };
   else if (actionType === 'FOLLOW_RELATION') sceneEvent = { type: 'FOLLOW_REVEALED_RELATION', toSiteId: action.toSiteId };
-  else if (actionType === 'RETURN_TO_MAP') sceneEvent = { type: 'RETURN_TO_MAP' };
+  else if (actionType === 'RETURN_TO_MAP' || actionType === 'RETURN_TO_HUB') sceneEvent = { type: 'RETURN_TO_HUB' };
   else return rejectedMapAction(sceneState, hasText(actionType) ? actionType : 'UNKNOWN', 'UNRECOGNIZED_MAP_ACTION');
 
   const result = applyCardinalSceneEvent(sceneState, sceneEvent);
@@ -303,12 +303,12 @@ export function evaluateGratitudeCoastMap() {
   }
 
   const selected = applyGratitudeCoastMapAction(fixture, { type: 'SELECT_SITE', siteId: 'WATCHFIRE_OVERLOOK' });
-  if (!selected.receipt.accepted || selected.state.phase !== 'DISTANT_SIGNAL') issues.push('MAP_SITE_SELECTION_FAILURE');
+  if (!selected.receipt.accepted || selected.state.phase !== 'ENCOUNTER_PREVIEW') issues.push('MAP_SITE_SELECTION_FAILURE');
   const selectedMap = buildGratitudeCoastMap(selected.state);
   const selectedMarker = selectedMap.siteMarkers.find(({ siteId }) => siteId === 'WATCHFIRE_OVERLOOK');
   if (selectedMarker?.siteNameDisclosed !== false || selectedMarker?.label.primary !== 'Selected signal') issues.push('DISTANT_SIGNAL_PREMATURELY_DISCLOSED_SITE_NAME');
-  const arrived = advance(selected.state, [{ type: 'BEGIN_SURVEY_APPROACH' }, { type: 'COMPLETE_SITE_ARRIVAL' }]);
-  if (arrived.receipts.some(({ accepted }) => !accepted)) issues.push('MAP_TO_SITE_ARRIVAL_SEQUENCE_FAILURE');
+  const arrived = advance(selected.state, [{ type: 'ENTER_CHARACTER_SCENE' }, { type: 'COMPLETE_SCENE_ENTRY' }]);
+  if (arrived.receipts.some(({ accepted }) => !accepted)) issues.push('MAP_TO_CHARACTER_SCENE_SEQUENCE_FAILURE');
   const activeMap = buildGratitudeCoastMap(arrived.state);
   const stateBySite = Object.fromEntries(activeMap.siteMarkers.map(({ siteId, qualitativeState }) => [siteId, qualitativeState]));
   if (stateBySite.WATCHFIRE_OVERLOOK !== 'ACTIVE' || stateBySite.WATERLINE_STATION !== 'RELATED' || stateBySite.SIGNAL_LANTERN_FIELD !== 'RELATED' || stateBySite.RESTORATION_BOUNDARY !== 'HELD') issues.push('QUALITATIVE_MAP_STATE_RESOLUTION_FAILURE');
@@ -326,7 +326,7 @@ export function evaluateGratitudeCoastMap() {
   }
 
   const followed = applyGratitudeCoastMapAction(arrived.state, { type: 'FOLLOW_RELATION', toSiteId: 'WATERLINE_STATION' });
-  if (!followed.receipt.accepted || followed.state.phase !== 'SURVEY_APPROACH' || followed.state.pendingTravel?.kind !== 'REVEALED_RELATION') issues.push('REVEALED_RELATION_TRAVEL_FAILURE');
+  if (!followed.receipt.accepted || followed.state.phase !== 'SCENE_TRANSITION' || followed.state.pendingTravel?.kind !== 'REVEALED_RELATION') issues.push('REVEALED_RELATION_TRAVEL_FAILURE');
   const heldRelation = applyGratitudeCoastMapAction(arrived.state, { type: 'FOLLOW_RELATION', toSiteId: 'RESTORATION_BOUNDARY' });
   if (heldRelation.receipt.accepted || heldRelation.state !== arrived.state) issues.push('UNREVEALED_RELATION_DID_NOT_FAIL_CLOSED');
 
@@ -335,14 +335,14 @@ export function evaluateGratitudeCoastMap() {
     { type: 'OPEN_DISCOVERY_CARD', discoveryId: 'ALARIC_ROUTE_TABLE' },
     { type: 'FLIP_DISCOVERY_CARD' }
   ]);
-  const returned = applyGratitudeCoastMapAction(cardSequence.state, { type: 'RETURN_TO_MAP' });
-  if (!returned.receipt.accepted || returned.state.phase !== 'WORLD_MAP' || returned.state.cardFacesByDiscoveryId.ALARIC_ROUTE_TABLE !== 'FACE_B_SIGNIFICANCE' || !returned.state.discoveredIds.includes('ALARIC_ROUTE_TABLE')) issues.push('RETURN_TO_MAP_DROPPED_SESSION_DISCOVERY_STATE');
+  const returned = applyGratitudeCoastMapAction(cardSequence.state, { type: 'RETURN_TO_HUB' });
+  if (!returned.receipt.accepted || returned.state.phase !== 'SURVEY_HUB' || returned.state.selectedSiteId !== 'WATCHFIRE_OVERLOOK' || returned.state.cardFacesByDiscoveryId.ALARIC_ROUTE_TABLE !== 'FACE_B_SIGNIFICANCE' || !returned.state.discoveredIds.includes('ALARIC_ROUTE_TABLE')) issues.push('RETURN_TO_HUB_DROPPED_SESSION_STATE');
   const returnedMap = buildGratitudeCoastMap(returned.state);
-  if (returnedMap.siteMarkers.find(({ siteId }) => siteId === 'WATCHFIRE_OVERLOOK')?.qualitativeState !== 'VISITED') issues.push('RETURNED_MAP_VISITED_STATE_FAILURE');
+  if (returnedMap.siteMarkers.find(({ siteId }) => siteId === 'WATCHFIRE_OVERLOOK')?.qualitativeState !== 'ACTIVE') issues.push('RETURNED_HUB_SELECTED_SIGNAL_STATE_FAILURE');
 
   return deepFreeze({
-    schema: 'TASK19_GRATITUDE_COAST_MAP_RECEIPT_v1',
-    result: issues.length === 0 ? 'PASS_PROTECTED_WORLD_CORRESPONDENT_OPERATIONAL_COAST_MAP_AND_RELATIONAL_NAVIGATION' : 'HELD_TASK19_GRATITUDE_COAST_MAP',
+    schema: 'TASK20_GRATITUDE_COAST_MAP_RECEIPT_v1',
+    result: issues.length === 0 ? 'PASS_TASK20_OPTIONAL_HUB_MAP_AND_RELATIONAL_NAVIGATION' : 'HELD_TASK20_GRATITUDE_COAST_MAP',
     eligible: issues.length === 0,
     contractId: COAST_MAP_CONTRACT_ID,
     adapterId: GRATITUDE_GEOGRAPHY_ADAPTER_ID,

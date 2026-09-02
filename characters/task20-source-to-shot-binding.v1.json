@@ -1,0 +1,89 @@
+{
+  "schema": "CHARACTERS_TASK20_SOURCE_TO_SHOT_BINDING_v1",
+  "status": "CONSTRUCTED_CANDIDATE_AWAITING_INDEPENDENT_QUALIFICATION",
+  "governingHead": "3443f8bab2b85c7214fc7ca4bbc17fded5c3baf3",
+  "targetRuntimeSeconds": 28,
+  "acceptableRuntimeEnvelopeSeconds": [25, 28],
+  "routeIdentity": "Mirrorland · Audralia · Gratitude Harbor cinematic primer",
+  "passages": [
+    {
+      "id": "ONE_WAY_CROSSING",
+      "timeSeconds": [0, 4],
+      "source": {"path": "characters/gratitude-geography.adapter.mjs", "commit": "3443f8bab2b85c7214fc7ca4bbc17fded5c3baf3", "blob": "8e094b2beed8117f6322ca18d9b592949998aac4", "anchor": "CROSSING"},
+      "visual": "Moonlit one-way threshold over the shared Gratitude terrain",
+      "semanticClaim": "A cinematic threshold introduces Mirrorland without creating a universal estate entry signature",
+      "reducedMotion": "Static threshold summary followed by the identical hub"
+    },
+    {
+      "id": "AUDRALIA_GLOBE",
+      "timeSeconds": [4, 9],
+      "source": {"path": "assets/audralia/audralia.planet.js", "commit": "3443f8bab2b85c7214fc7ca4bbc17fded5c3baf3", "blob": "4aa2abc623acef47ad8f504e72c8c0907375a7e7", "worldSeed": "AUDRALIA_G1_WORLD_SEED"},
+      "visual": "Live WebGL mesh generated from the canonical seamless geodesic planet authority",
+      "semanticClaim": "Audralia is one world; no Earth or Australia geography is inherited",
+      "reducedMotion": "Semantic world summary followed by the identical hub"
+    },
+    {
+      "id": "DESCENT_TO_GRATITUDE_COAST",
+      "timeSeconds": [9, 14],
+      "source": {"path": "h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js", "commit": "3443f8bab2b85c7214fc7ca4bbc17fded5c3baf3", "blob": "a67a4e95f7634eb97a375ff103d95bdc81c64f0b"},
+      "visual": "Camera descends through the read-only Gratitude geography adapter",
+      "semanticClaim": "Scale changes while geographic identity remains continuous",
+      "reducedMotion": "Static Gratitude Coast summary followed by the identical hub"
+    },
+    {
+      "id": "MIRROR_MANOR_AND_CLOCK",
+      "timeSeconds": [14, 19],
+      "source": {"path": "characters/gratitude-geography.adapter.mjs", "commit": "3443f8bab2b85c7214fc7ca4bbc17fded5c3baf3", "blob": "8e094b2beed8117f6322ca18d9b592949998aac4", "anchors": ["MIRROR_MANOR", "CLOCK"]},
+      "visual": "Mirror Manor and Clock bearings in the same regional frame",
+      "semanticClaim": "They orient the harbor and do not become additional cardinal destinations",
+      "reducedMotion": "Static bearings summary followed by the identical hub"
+    },
+    {
+      "id": "FOUR_CHARACTER_ENVIRONMENT_FLASHES",
+      "timeSeconds": [19, 24],
+      "source": {"path": "characters/cardinal-scenes.data.mjs", "commit": "3443f8bab2b85c7214fc7ca4bbc17fded5c3baf3", "blob": "cef3edc7beb5fc39037e00d5ead360ef9db9cdd5", "geometryBlob": "698dc392edd0b74547d76fb09a05bb3bb2437c15"},
+      "visual": "Four source-frozen environmental identities flash within the shared harbor",
+      "semanticClaim": "Alaric, Tarian, Elara and Soren retain distinct place laws without new character canon",
+      "reducedMotion": "Four environment summaries remain available in source order"
+    },
+    {
+      "id": "SETTLE_TO_SURVEY_HUB",
+      "timeSeconds": [24, 28],
+      "source": {"selector": "#world-stage", "identity": "LIVE_CHARACTERS_SURVEY_HUB_SAME_WEBGL_AND_DOM_OBJECTS"},
+      "visual": "The final film camera settles into the already-mounted interactive hub",
+      "semanticClaim": "Four distant signals lead to encounter previews and optional scene entry",
+      "reducedMotion": "The same hub is immediate and all primer semantics remain readable"
+    }
+  ],
+  "handoff": {
+    "filmToInterfacePhysicalContinuity": true,
+    "persistentSelector": "#world-stage",
+    "replacementFrameAllowed": false,
+    "duplicateHubAllowed": false,
+    "finalCameraEqualsHubCamera": true
+  },
+  "interaction": {
+    "grammar": ["SURVEY_HUB", "ENCOUNTER_PREVIEW", "SCENE_TRANSITION", "CHARACTER_SCENE", "LOCAL_INSPECTION", "KNOWLEDGE_CARD", "EXACT_SURVEY_HUB_RETURN"],
+    "encounterActions": ["ENTER_CHARACTER_SCENE", "CONTINUE_SURVEYING"],
+    "map": "OPTIONAL_HUB_AID_NOT_PRIMARY_ARCHITECTURE",
+    "exactReturnPreserves": ["CAMERA", "SELECTED_SIGNAL", "DISCOVERED_IDS", "CARD_FACES", "PRESENCE_STATE", "INTRO_RESOLUTION"]
+  },
+  "fallback": {
+    "webglUnavailable": "COMPLETE_SOURCE_ORDERED_PRIMER_SIGNAL_ENCOUNTER_SCENE_DISCOVERY_AND_RETURN_EQUIVALENT",
+    "reducedMotion": "IMMEDIATE_IDENTICAL_HUB_WITH_COMPLETE_SEMANTIC_SUMMARY",
+    "discoveryCount": 23,
+    "siteCount": 4
+  },
+  "closure": {
+    "passagesSourceBound": "6/6",
+    "runtimeSeconds": 28,
+    "characterEnvironmentsPreserved": "4/4",
+    "discoveriesPreserved": "23/23",
+    "newCharacterCanonCreated": false,
+    "finalContinentalAuthorityCreated": false,
+    "claimCeiling": "L3",
+    "mergeAuthorityCreated": false,
+    "deploymentAuthorityCreated": false,
+    "publicationAuthorityCreated": false
+  }
+}

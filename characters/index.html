@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en" class="no-js" data-route="/characters/" data-page="characters-cardinal-scenes-v1">
+<html lang="en" class="no-js" data-route="/characters/" data-page="characters-cinematic-primer-v1">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="color-scheme" content="dark">
-  <meta name="description" content="Enter Mirrorland through Gratitude Harbor and visit four permanent cardinal places.">
+  <meta name="description" content="A cinematic primer for Mirrorland, Audralia, Gratitude Harbor, and four character environments.">
   <link rel="canonical" href="https://diamondgatebridge.com/characters/">
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="./cardinal-scenes.css">
@@ -19,20 +19,21 @@
       <div class="world-veil" aria-hidden="true"></div>
       <div class="signal-layer" id="signal-layer" aria-label="Distant signals"></div>
       <header class="world-heading" id="world-heading"><p class="kicker">Mirrorland · Gratitude Harbor</p><h1>Four places keep watch along the coast.</h1><p>Choose a distant signal. Arrive before you interpret what the place reveals.</p></header>
-      <section class="intro-layer" id="intro-layer" role="dialog" aria-modal="true" aria-labelledby="intro-heading">
-        <div class="intro-panel"><p class="kicker" id="intro-eyebrow">Mirrorland</p><p class="intro-step" id="intro-step">1 of 6</p><h2 id="intro-heading">Welcome to Mirrorland.</h2><p id="intro-copy">This is Audrelia. The Gratitude continent turns below, and its harbor is your point of entry.</p><div class="intro-actions"><button class="button button-primary" id="intro-continue" type="button">Find Gratitude</button><button class="button button-quiet" id="intro-skip" type="button">Skip intro</button></div></div>
+      <section class="intro-layer" id="intro-layer" role="dialog" aria-modal="true" aria-labelledby="intro-heading" data-cinematic-state="ready">
+        <div class="intro-panel"><p class="kicker" id="intro-eyebrow">Mirrorland · cinematic primer</p><p class="intro-step" id="intro-step">28 seconds · silent</p><h2 id="intro-heading">Cross into Audralia.</h2><p id="intro-copy">One autonomous film introduces the world, Gratitude Harbor, Mirror Manor, the Clock, and four character environments. No intermediate clicks are required.</p><div class="intro-actions"><button class="button button-primary" id="intro-continue" type="button">Play primer</button><button class="button button-quiet" id="intro-skip" type="button">Skip to survey</button></div><div class="cinematic-progress" aria-hidden="true"><span id="cinematic-progress-bar"></span></div></div>
       </section>
+      <section class="encounter-panel" id="encounter-panel" role="dialog" aria-modal="true" aria-labelledby="encounter-title" aria-hidden="true"><div class="encounter-shell"><p class="kicker" id="encounter-kicker">Distant signal</p><h2 id="encounter-title"></h2><p id="encounter-copy"></p><p class="presence-line" id="encounter-presence"></p><div class="encounter-actions"><button class="button button-primary" id="enter-scene" type="button">Enter the scene</button><button class="button button-quiet" id="continue-surveying" type="button">Continue surveying</button></div></div></section>
       <section class="arrival-panel" id="arrival-panel" aria-live="polite" aria-labelledby="arrival-title" hidden><p class="kicker" id="arrival-character">Permanent place</p><h2 id="arrival-title"></h2><p id="arrival-law"></p><p class="presence-line" id="arrival-presence"></p><button class="button button-primary" id="begin-inspection" type="button">Inspect this place</button></section>
       <section class="inspection-panel" id="inspection-panel" aria-labelledby="inspection-title" hidden><div class="panel-heading"><div><p class="kicker">Local inspection</p><h2 id="inspection-title"></h2></div><button class="icon-button" id="close-inspection" type="button" aria-label="Close local inspection">×</button></div><p class="inspection-instruction">Choose a discovery. Each card can be turned to reveal its significance.</p><div class="discovery-list" id="discovery-list"></div></section>
       <section class="knowledge-layer" id="knowledge-layer" role="dialog" aria-modal="true" aria-labelledby="card-title" aria-hidden="true"><div class="knowledge-shell"><div class="card-meta"><span id="card-place"></span><span id="card-count"></span></div><button class="knowledge-card" id="knowledge-card" type="button" aria-describedby="card-instruction"><span class="card-face-label" id="card-face-label">Record</span><strong id="card-title"></strong><span class="card-text" id="card-text"></span><span class="card-instruction" id="card-instruction">Tap, click, press Enter, or swipe sideways to turn this card.</span></button><div class="card-footer" id="card-footer"></div></div></section>
       <section class="coast-map" id="coast-map" role="dialog" aria-modal="true" aria-labelledby="map-title" aria-hidden="true"><div class="map-shell"><header class="panel-heading map-heading"><div><p class="kicker">Mirrorland · Gratitude</p><h2 id="map-title">Gratitude Coast</h2><p>Unvisited places remain distant signals until you arrive.</p></div><button class="icon-button" id="map-close" type="button" aria-label="Close coast map">×</button></header><div class="map-field" id="map-field" aria-label="Select one of four cardinal sites"><svg class="map-geography" id="map-geography" viewBox="0 0 1000 640" preserveAspectRatio="none" aria-hidden="true"></svg><div class="map-markers" id="map-markers"></div></div></div></section>
-      <div class="world-controls" aria-label="World controls"><p id="world-status" aria-live="polite">Welcome to Mirrorland.</p><button class="button button-map" id="map-toggle" type="button">Coast map</button><button class="button button-return" id="return-map" type="button" hidden>Return to coast</button><a class="route-tab route-tab--cross-estate" href="/" aria-label="Return to Compass; leaves Mirrorland"><span aria-hidden="true">↗</span> Compass <small>Leaves Mirrorland</small></a></div>
+      <div class="world-controls" aria-label="World controls"><p id="world-status" aria-live="polite">Cinematic primer ready.</p><button class="button button-map" id="map-toggle" type="button">Coast map</button><button class="button" id="replay-primer" type="button" hidden>Replay primer</button><button class="button button-return" id="return-map" type="button" hidden>Return to survey hub</button><a class="route-tab route-tab--cross-estate" href="/" aria-label="Return to Compass; leaves Mirrorland"><span aria-hidden="true">↗</span> Compass <small>Leaves Mirrorland</small></a></div>
       <div class="runtime-fallback" id="runtime-fallback" role="status" hidden><h2>The coast remains readable.</h2><p>This device cannot draw the moving world. Every place and discovery continues below in the same order.</p><a class="button button-primary" href="#static-places">Read the four places</a></div>
     </section>
     <section class="static-equivalent" id="static-places" aria-labelledby="static-title">
-      <header class="static-introduction"><p class="kicker">Mirrorland · Gratitude Harbor</p><h1 id="static-title">Welcome to Mirrorland.</h1><p>Four permanent places stand along the coast. Presence may resolve as SITE_ONLY, CHARACTER_TRACE, or CHARACTER_PRESENT; this source-ordered view does not infer that a character is physically present.</p><nav class="static-index" aria-label="Four cardinal places"><a href="#watchfire-overlook">Watchfire Overlook</a><a href="#waterline-station">Waterline Station</a><a href="#signal-lantern-field">Signal Lantern Field</a><a href="#restoration-boundary">Restoration Boundary</a></nav></header>
+      <header class="static-introduction"><p class="kicker">Mirrorland · Audralia · Gratitude Harbor</p><h1 id="static-title">A readable cinematic primer.</h1><p>The one-way crossing opens onto the seamless world of Audralia, descends to Gratitude Coast, passes Mirror Manor and the Clock, then settles into this survey hub. Four distant signals lead first to an encounter preview and then, by choice, to a separate character environment. Presence may resolve as SITE_ONLY, CHARACTER_TRACE, or CHARACTER_PRESENT; this source-ordered view does not infer physical presence.</p><nav class="static-index" aria-label="Four distant signals"><a href="#watchfire-overlook">Signal: Alaric</a><a href="#waterline-station">Signal: Tarian</a><a href="#signal-lantern-field">Signal: Elara</a><a href="#restoration-boundary">Signal: Soren</a></nav></header>
       <article class="static-site" id="watchfire-overlook" data-site-id="WATCHFIRE_OVERLOOK">
-        <p class="kicker">Permanent place · Alaric</p><h2>Watchfire Overlook</h2>
+        <p class="kicker">Encounter preview · Alaric</p><h2>Watchfire Overlook</h2><p><a href="#ALARIC_ROUTE_TABLE">Enter the scene</a> · <a href="#static-title">Continue surveying</a></p>
         <p><strong>Arrival:</strong> witness the boundary.</p>
         <p><strong>Environmental law:</strong> orientation · boundary · route authority · false path elimination · lawful closure.</p>
         <p><strong>Presence:</strong> SITE_ONLY. The place remains; physical character presence is not inferred.</p>
@@ -47,7 +48,7 @@
       </article>
 
       <article class="static-site" id="waterline-station" data-site-id="WATERLINE_STATION">
-        <p class="kicker">Permanent place · Tarian</p><h2>Waterline Station</h2>
+        <p class="kicker">Encounter preview · Tarian</p><h2>Waterline Station</h2><p><a href="#TARIAN_TIDE_STAFF">Enter the scene</a> · <a href="#static-title">Continue surveying</a></p>
         <p><strong>Arrival:</strong> witness what must keep moving.</p>
         <p><strong>Environmental law:</strong> continuity · carrying · connection · restoration · persistence.</p>
         <p><strong>Presence:</strong> SITE_ONLY. The place remains; physical character presence is not inferred.</p>
@@ -63,7 +64,7 @@
       </article>
 
       <article class="static-site" id="signal-lantern-field" data-site-id="SIGNAL_LANTERN_FIELD">
-        <p class="kicker">Permanent place · Elara</p><h2>Signal Lantern Field</h2>
+        <p class="kicker">Encounter preview · Elara</p><h2>Signal Lantern Field</h2><p><a href="#ELARA_FAINT_LANTERN">Enter the scene</a> · <a href="#static-title">Continue surveying</a></p>
         <p><strong>Arrival:</strong> witness the signal before the conclusion.</p>
         <p><strong>Environmental law:</strong> signal emergence · interpretation · contradiction preservation · meaningful connection.</p>
         <p><strong>Presence:</strong> SITE_ONLY. The place remains; physical character presence is not inferred.</p>
@@ -79,7 +80,7 @@
       </article>
 
       <article class="static-site" id="restoration-boundary" data-site-id="RESTORATION_BOUNDARY">
-        <p class="kicker">Permanent place · Soren</p><h2>Restoration Boundary</h2>
+        <p class="kicker">Encounter preview · Soren</p><h2>Restoration Boundary</h2><p><a href="#SOREN_FINISHED_SURFACE">Enter the scene</a> · <a href="#static-title">Continue surveying</a></p>
         <p><strong>Arrival:</strong> witness what the surface denies.</p>
         <p><strong>Environmental law:</strong> fracture · contradiction · false continuity · unstable certainty · lawful return.</p>
         <p><strong>Presence:</strong> SITE_ONLY. The place remains; physical character presence is not inferred.</p>
@@ -96,6 +97,7 @@
       <footer class="static-return"><a class="route-tab route-tab--cross-estate" href="/" aria-label="Return to Compass; leaves Mirrorland"><span aria-hidden="true">↗</span> Return to Compass <small>Leaves Mirrorland</small></a></footer>
     </section>
   </main>
+  <script src="../assets/audralia/audralia.planet.js"></script>
   <script type="module" src="./app.mjs"></script>
 </body>
 </html>

@@ -17,12 +17,14 @@ import {
 } from './cardinal-scenes.data.mjs';
 import { buildCardinalSiteGeometry } from './cardinal-scene-geometry.mjs';
 import { applyGratitudeCoastMapAction, buildGratitudeCoastMap } from './coast-map.mjs';
+import { deriveEncounterCard } from './encounter-card.mjs';
 import {
   dispatchKnowledgeCardInput,
   deriveKnowledgeCardPresentation,
   resolveKnowledgeCardFooterActions
 } from './knowledge-card.mjs';
 import {
+  CINEMATIC_RUNTIME_MS,
   CINEMATIC_INTRO_BEAT_IDS,
   applyCinematicIntroEvent,
   buildMirrorlandCinematicOpening,
@@ -53,6 +55,15 @@ const introHeading = $('#intro-heading');
 const introCopy = $('#intro-copy');
 const introContinue = $('#intro-continue');
 const introSkip = $('#intro-skip');
+const cinematicProgressBar = $('#cinematic-progress-bar');
+const replayPrimer = $('#replay-primer');
+const encounterPanel = $('#encounter-panel');
+const encounterKicker = $('#encounter-kicker');
+const encounterTitle = $('#encounter-title');
+const encounterCopy = $('#encounter-copy');
+const encounterPresence = $('#encounter-presence');
+const enterScene = $('#enter-scene');
+const continueSurveying = $('#continue-surveying');
 const arrivalPanel = $('#arrival-panel');
 const arrivalCharacter = $('#arrival-character');
 const arrivalTitle = $('#arrival-title');
@@ -105,12 +116,12 @@ const RELATION_DISCOVERY_BY_SITE = Object.freeze({
 });
 
 const PUBLIC_STORY_STATE = Object.freeze({
-  storyReceiptId: 'TASK19_FROZEN_CARDINAL_DISCOVERY_PUBLIC_COMPOSITION_v1',
+  storyReceiptId: 'TASK20_CINEMATIC_PRIMER_PUBLIC_COMPOSITION_v1',
   chronologyState: 'TASK18_FROZEN_ARCHITECTURE_PUBLIC_COMPOSITION',
   presenceBySite: Object.freeze(Object.fromEntries(CARDINAL_SITE_IDS.map((siteId) => [siteId, Object.freeze({ state: 'SITE_ONLY' })]))),
   discoveryAvailabilityById: Object.freeze(Object.fromEntries(CARDINAL_DISCOVERIES.map((discovery) => [discovery.id, Object.freeze({
     state: 'AVAILABLE',
-    predicateReceiptId: `TASK19_FROZEN_DISCOVERY_AVAILABLE:${discovery.id}`,
+    predicateReceiptId: `TASK20_PRESERVED_DISCOVERY_AVAILABLE:${discovery.id}`,
     chronologyState: 'TASK18_FROZEN_ARCHITECTURE_PUBLIC_COMPOSITION'
   })])))
 });
@@ -135,7 +146,9 @@ const normalize = (value) => {
 
 const opening = buildMirrorlandCinematicOpening();
 const worldEntryFrame = opening.frames.at(-1);
-let introState = applyCinematicIntroEvent(createCinematicIntroState(), { type: 'START_INTRO' }).state;
+let introState = createCinematicIntroState();
+let introStartedAt = null;
+let introRenderedBeat = null;
 let sceneState = null;
 let camera = { eye: vector(opening.frames[0].position), look: vector(opening.frames[0].lookAt) };
 let cameraMotion = null;
@@ -150,9 +163,12 @@ let siteProgram;
 let terrainMesh;
 let waterMesh;
 let renderedSites;
+let planetTerrainMesh;
+let planetOceanMesh;
 
 knowledgeLayer.inert = true;
 mapPanel.inert = true;
+encounterPanel.inert = true;
 
 function showStaticFallback() {
   html.classList.remove('webgl-ready');
@@ -174,7 +190,7 @@ if (!gl) {
   try {
     initializeWorld(gl);
     html.classList.add('webgl-ready');
-    syncIntroCopy();
+    worldStage.dataset.cinematicBeat = 'READY';
     introContinue.focus();
     requestAnimationFrame(render);
   } catch (error) {
@@ -316,6 +332,37 @@ function buildWaterMesh() {
   ], [0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0], [0, 2, 1, 1, 2, 3]);
 }
 
+function buildAudraliaPlanetMeshes() {
+  const authority = window.DGBAudraliaPlanetGeometry;
+  if (!authority?.createGeometry || authority.worldSeed !== 'AUDRALIA_G1_WORLD_SEED' || authority.seamlessGeodesicTopology !== true) {
+    throw new Error('AUDRALIA_GEODESIC_PLANET_AUTHORITY_UNAVAILABLE');
+  }
+  const packet = authority.createGeometry({ terrainLevel: compact ? 3 : 4, oceanLevel: compact ? 3 : 4, cloudLevel: 1, atmosphereLevel: 2, includeHydrology: false });
+  const center = worldEntryFrame.lookAt;
+  const radius = compact ? 205 : 255;
+  const transform = (source, scaleFactor = 1) => {
+    const positions = new Float32Array(source.positions.length);
+    for (let index = 0; index < source.positions.length; index += 3) {
+      positions[index] = center.x + source.positions[index] * radius * scaleFactor;
+      positions[index + 1] = center.y + source.positions[index + 1] * radius * scaleFactor;
+      positions[index + 2] = center.z + source.positions[index + 2] * radius * scaleFactor;
+    }
+    return positions;
+  };
+  const landIndices = [];
+  for (let index = 0; index < packet.terrain.indices.length; index += 3) {
+    const a = packet.terrain.indices[index];
+    const b = packet.terrain.indices[index + 1];
+    const c = packet.terrain.indices[index + 2];
+    if (packet.terrain.landMasks[a] || packet.terrain.landMasks[b] || packet.terrain.landMasks[c]) landIndices.push(a, b, c);
+  }
+  return {
+    terrain: makeMesh(transform(packet.terrain, 1.012), packet.terrain.normals, landIndices),
+    ocean: makeMesh(transform(packet.ocean), packet.ocean.normals, packet.ocean.indices),
+    receipt: { worldSeed: packet.worldSeed, topologyHash: packet.topology.hash, geometryHash: packet.geometryHash }
+  };
+}
+
 function buildRenderedSite(siteId, lod) {
   const geometry = buildCardinalSiteGeometry(siteId, lod);
   const anchor = geometry.geography.canonicalWorldReference;
@@ -364,6 +411,10 @@ void main(){
   siteProgram = compileProgram(vertexShader, siteFragment);
   terrainMesh = buildTerrainMesh();
   waterMesh = buildWaterMesh();
+  const audralia = buildAudraliaPlanetMeshes();
+  planetTerrainMesh = audralia.terrain;
+  planetOceanMesh = audralia.ocean;
+  worldStage.dataset.planetTopology = audralia.receipt.topologyHash;
   renderedSites = Object.fromEntries(CARDINAL_SITE_IDS.map((siteId) => [siteId, {
     REGIONAL: buildRenderedSite(siteId, 'REGIONAL'),
     LOCAL: buildRenderedSite(siteId, 'LOCAL')
@@ -392,8 +443,11 @@ function buildSignalControls() {
 }
 
 function bindInterfaceEvents() {
-  introContinue.addEventListener('click', advanceIntro);
+  introContinue.addEventListener('click', playIntro);
   introSkip.addEventListener('click', skipIntro);
+  replayPrimer.addEventListener('click', replayIntro);
+  enterScene.addEventListener('click', beginSceneEntry);
+  continueSurveying.addEventListener('click', closeEncounterAndContinue);
   mapToggle.addEventListener('click', openMap);
   mapClose.addEventListener('click', closeMapPanel);
   returnMap.addEventListener('click', () => returnToCoast({ openMapAfter: true }));
@@ -431,10 +485,15 @@ function bindInterfaceEvents() {
     if (event.key !== 'Escape') return;
     if (knowledgeLayer.classList.contains('is-open')) dismissCard();
     else if (mapPanel.classList.contains('is-open')) closeMapPanel();
+    else if (encounterPanel.classList.contains('is-open')) closeEncounterAndContinue();
     else if (!inspectionPanel.hidden) hideInspection();
-    else if (sceneState && sceneState.phase !== 'WORLD_MAP') returnToCoast();
+    else if (sceneState && sceneState.phase !== 'SURVEY_HUB') returnToCoast();
+    else if (!introLayer.hidden) skipIntro();
   });
-  reducedMotionMedia.addEventListener('change', (event) => { reducedMotion = event.matches; });
+  reducedMotionMedia.addEventListener('change', (event) => {
+    reducedMotion = event.matches;
+    if (reducedMotion && CINEMATIC_INTRO_BEAT_IDS.includes(introState.phase)) skipIntro('REDUCED_MOTION');
+  });
   compactMedia.addEventListener('change', (event) => { compact = event.matches; });
 }
 
@@ -446,8 +505,11 @@ function syncIntroCopy() {
   introStep.textContent = `${index + 1} of ${opening.frames.length}`;
   introHeading.textContent = frame.copy.heading;
   introCopy.textContent = frame.copy.body;
-  introContinue.textContent = frame.copy.continuationLabel;
+  introStep.textContent = `${Math.round(frame.startMs / 1000)}–${Math.round(frame.endMs / 1000)} seconds`;
   worldStatus.textContent = frame.copy.heading;
+  worldStage.dataset.cinematicBeat = frame.beatId;
+  introLayer.dataset.cinematicState = 'playing';
+  introRenderedBeat = frame.beatId;
 }
 
 function tweenCamera(toEye, toLook, duration, onComplete) {
@@ -468,39 +530,83 @@ function tweenCamera(toEye, toLook, duration, onComplete) {
   };
 }
 
-function advanceIntro() {
-  if (cameraMotion) return;
-  const result = applyCinematicIntroEvent(introState, { type: 'ADVANCE_INTRO' });
-  if (!result.receipt.accepted) return;
-  introState = result.state;
-  if (introState.phase === 'COMPLETE') {
-    enterWorld();
+function playIntro() {
+  if (introState.phase !== 'READY') return;
+  if (reducedMotion) {
+    skipIntro('REDUCED_MOTION');
     return;
   }
-  const index = CINEMATIC_INTRO_BEAT_IDS.indexOf(introState.phase);
-  const frame = opening.frames[index];
-  introLayer.classList.add('is-transitioning');
+  const result = applyCinematicIntroEvent(introState, { type: 'PLAY_INTRO' });
+  if (!result.receipt.accepted) return;
+  introState = result.state;
+  introStartedAt = performance.now();
+  cameraMotion = null;
+  camera = { eye: vector(opening.frames[0].position), look: vector(opening.frames[0].lookAt) };
   syncIntroCopy();
-  tweenCamera(vector(frame.position), vector(frame.lookAt), frame.transitionFromPriorMs, () => {
-    introLayer.classList.remove('is-transitioning');
-    introContinue.focus();
-  });
 }
 
-function skipIntro() {
+function skipIntro(reason = 'VISITOR_SKIP') {
+  if (['COMPLETE', 'SKIPPED'].includes(introState.phase)) return;
   const result = applyCinematicIntroEvent(introState, { type: 'SKIP_INTRO' });
   if (!result.receipt.accepted) return;
   introState = result.state;
+  introLayer.dataset.resolution = reason;
   cameraMotion = null;
   camera = { eye: vector(worldEntryFrame.position), look: vector(worldEntryFrame.lookAt) };
   enterWorld();
 }
 
+function replayIntro() {
+  const reset = applyCinematicIntroEvent(introState, { type: 'REPLAY_INTRO' });
+  introState = reset.state;
+  introStartedAt = null;
+  introRenderedBeat = null;
+  cameraMotion = null;
+  introLayer.hidden = false;
+  introLayer.dataset.cinematicState = 'ready';
+  introEyebrow.textContent = 'Mirrorland · cinematic primer';
+  introStep.textContent = '28 seconds · silent';
+  introHeading.textContent = 'Cross into Audralia.';
+  introCopy.textContent = 'One autonomous film introduces the world, Gratitude Harbor, Mirror Manor, the Clock, and four character environments. No intermediate clicks are required.';
+  cinematicProgressBar.style.width = '0%';
+  replayPrimer.hidden = true;
+  if (sceneState?.phase && sceneState.phase !== 'SURVEY_HUB') applySceneEvent({ type: 'RETURN_TO_HUB' });
+  hideLocalPanels();
+  closeEncounterPanel();
+  closeMapPanel({ restoreFocus: false });
+  introContinue.focus();
+}
+
+function updateIntroTimeline(now) {
+  if (introStartedAt === null || !CINEMATIC_INTRO_BEAT_IDS.includes(introState.phase)) return;
+  const elapsedMs = Math.min(CINEMATIC_RUNTIME_MS, now - introStartedAt);
+  const locatedIndex = opening.frames.findIndex((frame) => elapsedMs < frame.endMs);
+  const frameIndex = locatedIndex < 0 ? opening.frames.length - 1 : locatedIndex;
+  const frame = opening.frames[frameIndex];
+  if (introRenderedBeat !== frame.beatId) {
+    introState = applyCinematicIntroEvent(introState, { type: 'TICK_INTRO', elapsedMs: frame.startMs }).state;
+    syncIntroCopy();
+  }
+  const next = opening.frames[Math.min(opening.frames.length - 1, frameIndex + 1)];
+  const progress = smooth(clamp((elapsedMs - frame.startMs) / frame.durationMs, 0, 1));
+  camera.eye = mixVector(vector(frame.position), vector(next.position), progress);
+  camera.look = mixVector(vector(frame.lookAt), vector(next.lookAt), progress);
+  cinematicProgressBar.style.width = `${(elapsedMs / CINEMATIC_RUNTIME_MS) * 100}%`;
+  if (elapsedMs >= CINEMATIC_RUNTIME_MS) {
+    introState = applyCinematicIntroEvent(introState, { type: 'TICK_INTRO', elapsedMs: CINEMATIC_RUNTIME_MS }).state;
+    introStartedAt = null;
+    camera = { eye: vector(worldEntryFrame.position), look: vector(worldEntryFrame.lookAt) };
+    enterWorld();
+  }
+}
+
 function enterWorld() {
-  sceneState = enterCanonicalCardinalWorld(introState, { storyState: PUBLIC_STORY_STATE });
+  if (!sceneState) sceneState = enterCanonicalCardinalWorld(introState, { storyState: PUBLIC_STORY_STATE });
   introLayer.hidden = true;
+  introLayer.dataset.cinematicState = 'complete';
   worldHeading.hidden = false;
   worldStatus.textContent = 'Choose one of four distant signals.';
+  replayPrimer.hidden = false;
   syncInterface();
   mapToggle.focus();
 }
@@ -520,13 +626,50 @@ function currentMapModel() {
 }
 
 function selectSite(siteId) {
-  if (!sceneState || cameraMotion || sceneState.phase !== 'WORLD_MAP') return;
+  if (!sceneState || cameraMotion || sceneState.phase !== 'SURVEY_HUB') return;
   const selected = applyGratitudeCoastMapAction(sceneState, { type: 'SELECT_SITE', siteId });
   if (!selected.receipt.accepted) return;
   sceneState = selected.state;
-  if (!applySceneEvent({ type: 'BEGIN_SURVEY_APPROACH' }).accepted) return;
-  const path = resolvePendingSurveyPath(sceneState);
   closeMapPanel({ restoreFocus: false });
+  renderEncounter();
+  syncInterface();
+}
+
+function renderEncounter() {
+  const card = deriveEncounterCard(sceneState);
+  encounterKicker.textContent = card.kicker;
+  encounterTitle.textContent = card.placeName;
+  encounterCopy.textContent = card.introduction;
+  encounterPresence.textContent = card.presenceStatement;
+  priorFocus = document.activeElement;
+  encounterPanel.classList.add('is-open');
+  encounterPanel.setAttribute('aria-hidden', 'false');
+  encounterPanel.inert = false;
+  enterScene.focus();
+}
+
+function closeEncounterPanel({ restoreFocus = false } = {}) {
+  encounterPanel.classList.remove('is-open');
+  encounterPanel.setAttribute('aria-hidden', 'true');
+  encounterPanel.inert = true;
+  if (restoreFocus) priorFocus?.focus?.();
+}
+
+function closeEncounterAndContinue() {
+  if (sceneState?.phase !== 'ENCOUNTER_PREVIEW') return;
+  const receipt = applySceneEvent({ type: 'CONTINUE_SURVEYING' });
+  if (!receipt.accepted) return;
+  closeEncounterPanel();
+  worldStatus.textContent = `Survey hub · ${SITE_NAMES[sceneState.selectedSiteId]} remains selected`;
+  syncInterface();
+  mapToggle.focus();
+}
+
+function beginSceneEntry() {
+  if (sceneState?.phase !== 'ENCOUNTER_PREVIEW' || cameraMotion) return;
+  if (!applySceneEvent({ type: 'ENTER_CHARACTER_SCENE' }).accepted) return;
+  const path = resolvePendingSurveyPath(sceneState);
+  closeEncounterPanel();
   hideLocalPanels();
   worldStage.classList.add('is-local');
   returnMap.hidden = true;
@@ -535,12 +678,12 @@ function selectSite(siteId) {
   if (reducedMotion) {
     const arrival = sampleSurveyPath(path, 1, { reducedMotion: true });
     camera = { eye: vector(arrival.position), look: vector(arrival.lookAt) };
-    worldStatus.textContent = `Arrival · ${SITE_NAMES[siteId]}`;
+    worldStatus.textContent = `Character scene · ${SITE_NAMES[sceneState.selectedSiteId]}`;
     completeArrival();
     return;
   }
   cameraMotion = {
-    kind: 'SURVEY',
+    kind: 'SCENE_ENTRY',
     startedAt: performance.now(),
     preludeMs: 620,
     duration: path.totalDurationMs,
@@ -550,12 +693,12 @@ function selectSite(siteId) {
     firstLook: vector(first.lookAt),
     path
   };
-  worldStatus.textContent = 'Following the distant signal.';
+  worldStatus.textContent = `Entering ${SITE_NAMES[sceneState.selectedSiteId]}.`;
   syncInterface();
 }
 
 function completeArrival() {
-  const receipt = applySceneEvent({ type: 'COMPLETE_SITE_ARRIVAL' });
+  const receipt = applySceneEvent({ type: 'COMPLETE_SCENE_ENTRY' });
   if (!receipt.accepted) return;
   renderArrival();
   syncInterface();
@@ -583,7 +726,7 @@ function renderArrival() {
 
 function openInspection() {
   if (!sceneState?.activeSiteId || cameraMotion) return;
-  if (sceneState.phase === 'SITE_ARRIVAL') {
+  if (sceneState.phase === 'CHARACTER_SCENE') {
     const receipt = applySceneEvent({ type: 'BEGIN_LOCAL_INSPECTION' });
     if (!receipt.accepted) return;
   }
@@ -706,7 +849,7 @@ function renderCardFooter() {
     button.textContent = item.label;
     button.setAttribute('aria-label', item.description);
     if (item.eventType === 'DISMISS_DISCOVERY_CARD') button.addEventListener('click', dismissCard);
-    if (item.eventType === 'RETURN_TO_MAP') button.addEventListener('click', () => returnToCoast({ openMapAfter: true }));
+    if (item.eventType === 'RETURN_TO_MAP' || item.eventType === 'RETURN_TO_HUB') button.addEventListener('click', () => returnToCoast({ openMapAfter: true }));
     cardFooter.append(button);
   }
 
@@ -774,7 +917,7 @@ function followRelation(toSiteId) {
     return;
   }
   cameraMotion = {
-    kind: 'SURVEY',
+    kind: 'SCENE_ENTRY',
     startedAt: performance.now(),
     preludeMs: 320,
     duration: path.totalDurationMs,
@@ -790,7 +933,8 @@ function followRelation(toSiteId) {
 
 function returnToCoast({ openMapAfter = false } = {}) {
   if (!sceneState || cameraMotion) return;
-  if (sceneState.phase !== 'WORLD_MAP') applySceneEvent({ type: 'RETURN_TO_MAP' });
+  if (sceneState.phase !== 'SURVEY_HUB') applySceneEvent({ type: 'RETURN_TO_HUB' });
+  closeEncounterPanel();
   closeCardLayerSilently();
   hideLocalPanels();
   worldStage.classList.remove('is-local');
@@ -819,7 +963,7 @@ function closeCardLayerSilently() {
 
 function openMap() {
   if (!sceneState || cameraMotion) return;
-  if (sceneState.phase !== 'WORLD_MAP') {
+  if (sceneState.phase !== 'SURVEY_HUB') {
     returnToCoast({ openMapAfter: true });
     return;
   }
@@ -895,7 +1039,7 @@ function renderMap() {
 
 function syncInterface() {
   if (!sceneState) return;
-  returnMap.hidden = sceneState.phase === 'WORLD_MAP';
+  returnMap.hidden = sceneState.phase === 'SURVEY_HUB' || sceneState.phase === 'ENCOUNTER_PREVIEW';
   syncSignals();
   if (mapPanel.classList.contains('is-open')) renderMap();
 }
@@ -912,8 +1056,8 @@ function syncSignals(viewProjection = null) {
     button.dataset.state = marker.qualitativeState;
     button.setAttribute('aria-label', `Select ${marker.label.primary}`);
     button.querySelector('span').textContent = marker.label.primary;
-    const modalOpen = mapPanel.classList.contains('is-open') || knowledgeLayer.classList.contains('is-open') || !introLayer.hidden;
-    if (!viewProjection || modalOpen || cameraMotion || sceneState.phase !== 'WORLD_MAP') {
+    const modalOpen = mapPanel.classList.contains('is-open') || encounterPanel.classList.contains('is-open') || knowledgeLayer.classList.contains('is-open') || !introLayer.hidden;
+    if (!viewProjection || modalOpen || cameraMotion || sceneState.phase !== 'SURVEY_HUB') {
       button.hidden = true;
       continue;
     }
@@ -940,7 +1084,7 @@ function updateCameraMotion(now) {
     }
     return;
   }
-  if (cameraMotion.kind === 'SURVEY') {
+  if (cameraMotion.kind === 'SCENE_ENTRY') {
     const elapsed = now - cameraMotion.startedAt;
     if (elapsed < cameraMotion.preludeMs) {
       const progress = smooth(clamp(elapsed / cameraMotion.preludeMs, 0, 1));
@@ -955,9 +1099,8 @@ function updateCameraMotion(now) {
     if (sample.stageId !== lastSurveyStage) {
       lastSurveyStage = sample.stageId;
       const labels = {
-        DISTANT_SIGNAL: 'The distant signal holds.',
-        RELATIONAL_FIELD: 'The place settles into the harbor.',
-        LOCAL_LANDMARK: 'The landmark becomes legible.',
+        SCENE_CUT: 'The survey hub gives way to a separate scene.',
+        ENVIRONMENT_REVEAL: 'The environment becomes legible.',
         ARRIVAL_WITNESS: 'Arrival comes before interpretation.'
       };
       worldStatus.textContent = labels[sample.stageId];
@@ -1011,26 +1154,47 @@ function drawSites(viewProjection) {
   }
 }
 
+function drawSolidMesh(mesh, viewProjection, color, emissive = 0) {
+  gl.useProgram(siteProgram);
+  gl.uniformMatrix4fv(gl.getUniformLocation(siteProgram, 'uVP'), false, viewProjection);
+  gl.uniform3fv(gl.getUniformLocation(siteProgram, 'uBaseColor'), color);
+  gl.uniform1f(gl.getUniformLocation(siteProgram, 'uEmissive'), emissive);
+  gl.bindVertexArray(mesh.vao);
+  gl.drawElements(gl.TRIANGLES, mesh.count, gl.UNSIGNED_INT, 0);
+}
+
+function drawAudraliaPlanet(viewProjection) {
+  drawSolidMesh(planetOceanMesh, viewProjection, [0.055, 0.19, 0.28], 0.08);
+  drawSolidMesh(planetTerrainMesh, viewProjection, [0.34, 0.42, 0.24], 0.16);
+}
+
 function render(now) {
   if (!gl || html.classList.contains('static-mode')) return;
+  updateIntroTimeline(now);
   updateCameraMotion(now);
   const { width, height } = resizeCanvas();
   const viewProjection = multiply(perspective(52 * Math.PI / 180, width / height, 1, 6000), lookAt(camera.eye, camera.look));
   gl.clearColor(...GRATITUDE_COAST_NIGHT.sky.clear);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-  drawNightMesh(waterMesh, true, viewProjection, now * 0.001);
-  drawNightMesh(terrainMesh, false, viewProjection, now * 0.001);
-  drawSites(viewProjection);
+  if (introState.phase === 'AUDRALIA_GLOBE') {
+    drawAudraliaPlanet(viewProjection);
+  } else {
+    drawNightMesh(waterMesh, true, viewProjection, now * 0.001);
+    drawNightMesh(terrainMesh, false, viewProjection, now * 0.001);
+    drawSites(viewProjection);
+  }
   syncSignals(viewProjection);
   requestAnimationFrame(render);
 }
 
-export const TASK19_PAGE_RUNTIME = Object.freeze({
+export const TASK20_PAGE_RUNTIME = Object.freeze({
   geographyAuthority: GRATITUDE_GEOGRAPHY_ADAPTER_ID,
   introSequence: CINEMATIC_INTRO_BEAT_IDS,
-  standardSurveyInterpolation: 'CONTINUOUS_PROGRESS_SAMPLING_WITH_DURATION_AND_NO_SNAP',
+  primerRuntimeMs: CINEMATIC_RUNTIME_MS,
+  interactionArchitecture: 'SURVEY_HUB_TO_ENCOUNTER_PREVIEW_TO_SEPARATE_CHARACTER_SCENE_TO_EXACT_HUB_RETURN',
+  standardSceneEntry: 'CINEMATIC_CUT_OR_SEMANTIC_ZOOM_NO_CONTINUOUS_PHYSICAL_TRAVEL_REQUIRED',
   inputProfiles: ['TOUCH', 'POINTER', 'KEYBOARD'],
   reducedMotion: 'SEMANTIC_STATIC_ARRIVAL_AND_CARD_FACE_REPLACEMENT',
-  staticFallback: 'COMPLETE_SOURCE_ORDERED_FOUR_SITE_TWENTY_THREE_DISCOVERY_EQUIVALENT',
+  staticFallback: 'COMPLETE_PRIMER_SIGNAL_ENCOUNTER_SCENE_RETURN_AND_TWENTY_THREE_DISCOVERY_EQUIVALENT',
   externalNavigationDistinction: 'DOUBLE_BORDER_ASYMMETRIC_TAB_ROUTE_GLYPH_AND_EXPLICIT_LEAVES_MIRRORLAND_TEXT'
 });

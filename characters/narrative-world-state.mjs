@@ -108,7 +108,7 @@ export function evaluateNarrativeWorldCardinalComposition() {
   if (Object.keys(baseline.destinations).length !== 11) issues.push('LEGACY_DESTINATION_COUNT_DRIFT');
   if (baseline.environment.phase !== 'moonlit-night') issues.push('LEGACY_ENVIRONMENT_DEFAULT_DRIFT');
   if (legacyVisit.destinations.alaric.signalState !== 'ACTIVE' || !legacyVisit.visited.includes('alaric')) issues.push('LEGACY_VISITED_ACTIVE_STATE_DRIFT');
-  if (baseline.cardinalScenes.version !== CARDINAL_SCENE_STATE_VERSION || baseline.cardinalScenes.phase !== 'WORLD_MAP') issues.push('CARDINAL_STATE_NOT_COMPOSED');
+  if (baseline.cardinalScenes.version !== CARDINAL_SCENE_STATE_VERSION || baseline.cardinalScenes.phase !== 'SURVEY_HUB') issues.push('CARDINAL_STATE_NOT_COMPOSED');
   if (legacyVisit.cardinalScenes.story.presenceBySite.WATCHFIRE_OVERLOOK.state !== 'SITE_ONLY') issues.push('LEGACY_VISIT_IMPROPERLY_INFERRED_CHARACTER_PRESENCE');
   if (legacyVisit.cardinalScenes.discoveredIds.length !== 0) issues.push('LEGACY_VISIT_IMPROPERLY_INFERRED_CARDINAL_DISCOVERY');
   const supplied = createCardinalSceneState();

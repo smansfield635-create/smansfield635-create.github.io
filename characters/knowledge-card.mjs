@@ -233,7 +233,7 @@ export function resolveKnowledgeCardFooterActions(sceneState, { verifiedDestinat
   const presence = sceneState.story.presenceBySite[sceneState.activeSiteId];
   const actions = [
     action({ id: 'DISMISS_CARD', label: 'Continue inspecting', eventType: 'DISMISS_DISCOVERY_CARD', variant: 'LOCAL_CARD', description: 'Close this card and remain at the current site.' }),
-    action({ id: 'RETURN_TO_MAP', label: 'Return to coast map', eventType: 'RETURN_TO_MAP', variant: 'LOCAL_WORLD', description: 'Leave the card and restore the canonical coast-map state.' })
+    action({ id: 'RETURN_TO_HUB', label: 'Return to survey hub', eventType: 'RETURN_TO_HUB', variant: 'LOCAL_WORLD', description: 'Leave the card and restore the exact canonical survey-hub frame.' })
   ];
 
   const destinations = verifiedDestinations.map(validateDestination).filter(Boolean);
@@ -295,8 +295,8 @@ const openFixtureCard = ({ faceB = false, presenceState = 'CHARACTER_PRESENT' } 
   });
   for (const event of [
     { type: 'SELECT_SITE_SIGNAL', siteId: 'WATCHFIRE_OVERLOOK' },
-    { type: 'BEGIN_SURVEY_APPROACH' },
-    { type: 'COMPLETE_SITE_ARRIVAL' },
+    { type: 'ENTER_CHARACTER_SCENE' },
+    { type: 'COMPLETE_SCENE_ENTRY' },
     { type: 'BEGIN_LOCAL_INSPECTION' },
     { type: 'OPEN_DISCOVERY_CARD', discoveryId: 'ALARIC_ROUTE_TABLE' }
   ]) state = applyCardinalSceneEvent(state, event).state;

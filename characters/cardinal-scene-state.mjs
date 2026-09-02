@@ -1,5 +1,5 @@
 /**
- * Task 19 deterministic cardinal-scene state.
+ * Task 20 deterministic cinematic-primer and cardinal-scene state.
  *
  * Pure state only: no DOM, renderer, geometry, prose, timers, persistence,
  * network access or final geographic authority. Every non-default presence,
@@ -17,7 +17,7 @@ const cloneRecord = (value) => Object.fromEntries(Object.entries(value || {}));
 const unique = (values) => [...new Set(values)];
 const hasText = (value) => typeof value === 'string' && value.trim().length > 0;
 
-export const CARDINAL_SCENE_STATE_VERSION = 'CARDINAL_SCENE_STATE_TASK19_v1';
+export const CARDINAL_SCENE_STATE_VERSION = 'CARDINAL_SCENE_STATE_TASK20_v1';
 
 export const CARDINAL_SITE_IDS = deepFreeze([
   'WATCHFIRE_OVERLOOK',
@@ -40,10 +40,10 @@ export const CARDINAL_PRESENCE_STATES = deepFreeze([
 ]);
 
 export const CARDINAL_SCENE_PHASES = deepFreeze([
-  'WORLD_MAP',
-  'DISTANT_SIGNAL',
-  'SURVEY_APPROACH',
-  'SITE_ARRIVAL',
+  'SURVEY_HUB',
+  'ENCOUNTER_PREVIEW',
+  'SCENE_TRANSITION',
+  'CHARACTER_SCENE',
   'LOCAL_INSPECTION',
   'KNOWLEDGE_CARD'
 ]);
@@ -180,14 +180,14 @@ const composeState = (fields) => deepFreeze({
   story: fields.story,
   transitionCount: fields.transitionCount,
   lastTransition: fields.lastTransition,
-  returnTarget: 'WORLD_MAP',
+  returnTarget: 'SURVEY_HUB',
   completionMetric: null,
   sessionPersistence: 'IN_MEMORY_ONLY_NO_CROSS_SESSION_HIDDEN_KNOWLEDGE_LEAK'
 });
 
 export function createCardinalSceneState({ storyState = {} } = {}) {
   return composeState({
-    phase: 'WORLD_MAP',
+    phase: 'SURVEY_HUB',
     selectedSiteId: null,
     activeSiteId: null,
     pendingTravel: null,
@@ -269,20 +269,21 @@ export function deriveCardinalSceneView(state) {
   const sites = Object.fromEntries(CARDINAL_SITE_IDS.map((siteId) => [siteId, deriveCardinalSiteState(state, siteId)]));
   const activeSite = state.activeSiteId ? sites[state.activeSiteId] : null;
   return deepFreeze({
-    version: 'CARDINAL_SCENE_VIEW_TASK19_v1',
+    version: 'CARDINAL_SCENE_VIEW_TASK20_v1',
     phase: state.phase,
     sites: deepFreeze(sites),
     activeSite,
     activeDiscoveryId: state.activeDiscoveryId,
     activeCardFace: state.activeCardFace,
     actions: deepFreeze({
-      maySelectSignal: state.phase === 'WORLD_MAP',
-      mayBeginApproach: state.phase === 'DISTANT_SIGNAL' && Boolean(state.selectedSiteId),
-      mayCompleteArrival: state.phase === 'SURVEY_APPROACH' && Boolean(state.selectedSiteId),
-      mayInspect: state.phase === 'SITE_ARRIVAL' && Boolean(activeSite?.inspectionAvailable),
+      maySelectSignal: state.phase === 'SURVEY_HUB',
+      mayContinueSurveying: state.phase === 'ENCOUNTER_PREVIEW' && Boolean(state.selectedSiteId),
+      mayEnterScene: state.phase === 'ENCOUNTER_PREVIEW' && Boolean(state.selectedSiteId),
+      mayCompleteSceneEntry: state.phase === 'SCENE_TRANSITION' && Boolean(state.selectedSiteId),
+      mayInspect: state.phase === 'CHARACTER_SCENE' && Boolean(activeSite?.inspectionAvailable),
       mayOpenDiscovery: state.phase === 'LOCAL_INSPECTION',
       mayFlipOrDismissCard: state.phase === 'KNOWLEDGE_CARD' && Boolean(state.activeDiscoveryId),
-      mayReturnToMap: state.phase !== 'WORLD_MAP'
+      mayReturnToHub: state.phase !== 'SURVEY_HUB'
     }),
     completionMetric: null
   });
@@ -294,10 +295,10 @@ export function applyCardinalSceneEvent(state, event = {}) {
   if (!hasText(type)) return rejected(state, 'UNKNOWN', 'EVENT_TYPE_REQUIRED');
 
   if (type === 'SELECT_SITE_SIGNAL') {
-    if (state.phase !== 'WORLD_MAP') return rejected(state, type, 'SIGNAL_SELECTION_REQUIRES_WORLD_MAP');
+    if (state.phase !== 'SURVEY_HUB') return rejected(state, type, 'SIGNAL_SELECTION_REQUIRES_SURVEY_HUB');
     if (!CARDINAL_SITE_IDS.includes(event.siteId)) return rejected(state, type, 'UNKNOWN_CARDINAL_SITE');
-    return accepted(state, type, 'DISTANT_SIGNAL_SELECTED_NOT_INSPECTED', (fields) => {
-      fields.phase = 'DISTANT_SIGNAL';
+    return accepted(state, type, 'ENCOUNTER_PREVIEW_SELECTED_NOT_ENTERED', (fields) => {
+      fields.phase = 'ENCOUNTER_PREVIEW';
       fields.selectedSiteId = event.siteId;
       fields.activeSiteId = null;
       fields.pendingTravel = null;
@@ -305,18 +306,28 @@ export function applyCardinalSceneEvent(state, event = {}) {
     });
   }
 
-  if (type === 'BEGIN_SURVEY_APPROACH') {
-    if (state.phase !== 'DISTANT_SIGNAL' || !state.selectedSiteId) return rejected(state, type, 'APPROACH_REQUIRES_SELECTED_DISTANT_SIGNAL');
-    return accepted(state, type, 'AUTHORED_SURVEY_APPROACH_BEGUN', (fields) => {
-      fields.phase = 'SURVEY_APPROACH';
-      fields.pendingTravel = deepFreeze({ kind: 'SIGNAL_APPROACH', toSiteId: state.selectedSiteId });
+  if (type === 'CONTINUE_SURVEYING') {
+    if (state.phase !== 'ENCOUNTER_PREVIEW' || !state.selectedSiteId) return rejected(state, type, 'CONTINUE_REQUIRES_ENCOUNTER_PREVIEW');
+    return accepted(state, type, 'EXACT_SURVEY_HUB_RESTORED_SELECTED_SIGNAL_PRESERVED', (fields) => {
+      fields.phase = 'SURVEY_HUB';
+      fields.activeSiteId = null;
+      fields.pendingTravel = null;
+      fields.activeDiscoveryId = null;
     });
   }
 
-  if (type === 'COMPLETE_SITE_ARRIVAL') {
-    if (state.phase !== 'SURVEY_APPROACH' || !state.selectedSiteId) return rejected(state, type, 'ARRIVAL_REQUIRES_ACTIVE_SURVEY_APPROACH');
-    return accepted(state, type, 'PRESENCE_RESOLVED_BEFORE_INSPECTION', (fields) => {
-      fields.phase = 'SITE_ARRIVAL';
+  if (type === 'ENTER_CHARACTER_SCENE' || type === 'BEGIN_SURVEY_APPROACH') {
+    if (state.phase !== 'ENCOUNTER_PREVIEW' || !state.selectedSiteId) return rejected(state, type, 'SCENE_ENTRY_REQUIRES_ENCOUNTER_PREVIEW');
+    return accepted(state, type, 'SEPARATE_CHARACTER_SCENE_TRANSITION_BEGUN', (fields) => {
+      fields.phase = 'SCENE_TRANSITION';
+      fields.pendingTravel = deepFreeze({ kind: 'SCENE_ENTRY', toSiteId: state.selectedSiteId });
+    });
+  }
+
+  if (type === 'COMPLETE_SCENE_ENTRY' || type === 'COMPLETE_SITE_ARRIVAL') {
+    if (state.phase !== 'SCENE_TRANSITION' || !state.selectedSiteId) return rejected(state, type, 'SCENE_ENTRY_COMPLETION_REQUIRES_ACTIVE_TRANSITION');
+    return accepted(state, type, 'CHARACTER_SCENE_ENTERED_PRESENCE_RESOLVED_BEFORE_INSPECTION', (fields) => {
+      fields.phase = 'CHARACTER_SCENE';
       fields.activeSiteId = state.selectedSiteId;
       fields.pendingTravel = null;
       fields.activeDiscoveryId = null;
@@ -324,7 +335,7 @@ export function applyCardinalSceneEvent(state, event = {}) {
   }
 
   if (type === 'BEGIN_LOCAL_INSPECTION') {
-    if (state.phase !== 'SITE_ARRIVAL' || !state.activeSiteId) return rejected(state, type, 'INSPECTION_REQUIRES_SITE_ARRIVAL');
+    if (state.phase !== 'CHARACTER_SCENE' || !state.activeSiteId) return rejected(state, type, 'INSPECTION_REQUIRES_CHARACTER_SCENE');
     if (siteAvailableDiscoveries(state, state.activeSiteId).length === 0) return rejected(state, type, 'NO_SOURCE_AUTHORIZED_DISCOVERY_AVAILABLE');
     return accepted(state, type, 'LOCAL_INSPECTION_BEGUN_AFTER_PRESENCE_RESOLUTION', (fields) => {
       fields.phase = 'LOCAL_INSPECTION';
@@ -360,7 +371,7 @@ export function applyCardinalSceneEvent(state, event = {}) {
   }
 
   if (type === 'CONTINUE_SITE_INSPECTION') {
-    if (!['SITE_ARRIVAL', 'LOCAL_INSPECTION'].includes(state.phase) || !state.activeSiteId) return rejected(state, type, 'CONTINUE_REQUIRES_ACTIVE_SITE');
+    if (!['CHARACTER_SCENE', 'LOCAL_INSPECTION'].includes(state.phase) || !state.activeSiteId) return rejected(state, type, 'CONTINUE_REQUIRES_ACTIVE_SITE');
     if (siteAvailableDiscoveries(state, state.activeSiteId).length === 0) return rejected(state, type, 'NO_SOURCE_AUTHORIZED_DISCOVERY_AVAILABLE');
     return accepted(state, type, 'SITE_INSPECTION_CONTINUES_WITHOUT_COMPLETION_PRESSURE', (fields) => {
       fields.phase = 'LOCAL_INSPECTION';
@@ -369,12 +380,12 @@ export function applyCardinalSceneEvent(state, event = {}) {
   }
 
   if (type === 'FOLLOW_REVEALED_RELATION') {
-    if (!state.activeSiteId || !['SITE_ARRIVAL', 'LOCAL_INSPECTION', 'KNOWLEDGE_CARD'].includes(state.phase)) return rejected(state, type, 'RELATION_TRAVEL_REQUIRES_ACTIVE_SITE');
+    if (!state.activeSiteId || !['CHARACTER_SCENE', 'LOCAL_INSPECTION', 'KNOWLEDGE_CARD'].includes(state.phase)) return rejected(state, type, 'RELATION_TRAVEL_REQUIRES_ACTIVE_SITE');
     if (!CARDINAL_SITE_IDS.includes(event.toSiteId)) return rejected(state, type, 'UNKNOWN_RELATION_TARGET');
     const relation = state.story.relations[relationKey(state.activeSiteId, event.toSiteId)];
     if (!relation) return rejected(state, type, 'RELATION_NOT_EXPLICITLY_REVEALED');
     return accepted(state, type, 'REVEALED_RELATION_SURVEY_BEGUN', (fields) => {
-      fields.phase = 'SURVEY_APPROACH';
+      fields.phase = 'SCENE_TRANSITION';
       fields.selectedSiteId = event.toSiteId;
       fields.activeSiteId = null;
       fields.pendingTravel = deepFreeze({ kind: 'REVEALED_RELATION', fromSiteId: relation.fromSiteId, toSiteId: relation.toSiteId, sourceEventId: relation.sourceEventId });
@@ -382,11 +393,10 @@ export function applyCardinalSceneEvent(state, event = {}) {
     });
   }
 
-  if (type === 'RETURN_TO_MAP') {
-    if (state.phase === 'WORLD_MAP') return rejected(state, type, 'ALREADY_AT_WORLD_MAP');
-    return accepted(state, type, 'CANONICAL_MAP_STATE_RESTORED_SESSION_DISCOVERY_PRESERVED', (fields) => {
-      fields.phase = 'WORLD_MAP';
-      fields.selectedSiteId = null;
+  if (type === 'RETURN_TO_HUB' || type === 'RETURN_TO_MAP') {
+    if (state.phase === 'SURVEY_HUB') return rejected(state, type, 'ALREADY_AT_SURVEY_HUB');
+    return accepted(state, type, 'EXACT_SURVEY_HUB_RESTORED_SESSION_STATE_PRESERVED', (fields) => {
+      fields.phase = 'SURVEY_HUB';
       fields.activeSiteId = null;
       fields.pendingTravel = null;
       fields.activeDiscoveryId = null;
@@ -404,7 +414,7 @@ export function synchronizeCardinalStoryState(state, storyState) {
   const activeDiscoveryStillAvailable = !fields.activeDiscoveryId || story.discoveryAvailabilityById[fields.activeDiscoveryId].state === 'AVAILABLE';
   if (!activeDiscoveryStillAvailable) {
     fields.activeDiscoveryId = null;
-    fields.phase = fields.activeSiteId ? 'SITE_ARRIVAL' : 'WORLD_MAP';
+    fields.phase = fields.activeSiteId ? 'CHARACTER_SCENE' : 'SURVEY_HUB';
   }
   fields.transitionCount = state.transitionCount + 1;
   fields.lastTransition = deepFreeze({ eventType: 'SYNCHRONIZE_STORY_STATE', accepted: true, reason: 'EXPLICIT_STORY_RECEIPT_REPLACED' });
@@ -452,13 +462,16 @@ export function evaluateCardinalSceneStateContract() {
   assert(introComplete.story.presenceBySite.SIGNAL_LANTERN_FIELD.visibleCharacterGeometryAuthorized === false, 'PRESENCE_IMPROPERLY_AUTHORIZED_CHARACTER_GEOMETRY');
 
   const selected = applyCardinalSceneEvent(introComplete, { type: 'SELECT_SITE_SIGNAL', siteId: 'WATCHFIRE_OVERLOOK' });
-  assert(selected.receipt.accepted && selected.state.phase === 'DISTANT_SIGNAL' && selected.state.activeSiteId === null, 'SELECT_EQUALS_INSPECT_FAILURE');
+  assert(selected.receipt.accepted && selected.state.phase === 'ENCOUNTER_PREVIEW' && selected.state.activeSiteId === null, 'SELECT_EQUALS_SCENE_ENTRY_FAILURE');
   const prematureInspect = applyCardinalSceneEvent(selected.state, { type: 'BEGIN_LOCAL_INSPECTION' });
   assert(!prematureInspect.receipt.accepted && prematureInspect.state === selected.state, 'PREMATURE_INSPECTION_NOT_FAIL_CLOSED');
 
+  const continued = applyCardinalSceneEvent(selected.state, { type: 'CONTINUE_SURVEYING' });
+  assert(continued.receipt.accepted && continued.state.phase === 'SURVEY_HUB' && continued.state.selectedSiteId === 'WATCHFIRE_OVERLOOK', 'CONTINUE_SURVEYING_DROPPED_EXACT_HUB_SELECTION');
+
   const sequence = transitionSequence(selected.state, [
-    { type: 'BEGIN_SURVEY_APPROACH' },
-    { type: 'COMPLETE_SITE_ARRIVAL' },
+    { type: 'ENTER_CHARACTER_SCENE' },
+    { type: 'COMPLETE_SCENE_ENTRY' },
     { type: 'BEGIN_LOCAL_INSPECTION' },
     { type: 'OPEN_DISCOVERY_CARD', discoveryId: 'ALARIC_ROUTE_TABLE' },
     { type: 'FLIP_DISCOVERY_CARD' },
@@ -472,20 +485,20 @@ export function evaluateCardinalSceneStateContract() {
 
   const heldDiscovery = transitionSequence(introComplete, [
     { type: 'SELECT_SITE_SIGNAL', siteId: 'RESTORATION_BOUNDARY' },
-    { type: 'BEGIN_SURVEY_APPROACH' },
-    { type: 'COMPLETE_SITE_ARRIVAL' },
+    { type: 'ENTER_CHARACTER_SCENE' },
+    { type: 'COMPLETE_SCENE_ENTRY' },
     { type: 'BEGIN_LOCAL_INSPECTION' }
   ]);
-  assert(heldDiscovery.receipts.at(-1).accepted === false && heldDiscovery.state.phase === 'SITE_ARRIVAL', 'HELD_DISCOVERY_DID_NOT_FAIL_CLOSED');
+  assert(heldDiscovery.receipts.at(-1).accepted === false && heldDiscovery.state.phase === 'CHARACTER_SCENE', 'HELD_DISCOVERY_DID_NOT_FAIL_CLOSED');
 
   const relationTravel = applyCardinalSceneEvent(sequence.state, { type: 'FOLLOW_REVEALED_RELATION', toSiteId: 'WATERLINE_STATION' });
-  assert(relationTravel.receipt.accepted && relationTravel.state.phase === 'SURVEY_APPROACH' && relationTravel.state.pendingTravel.kind === 'REVEALED_RELATION', 'EXPLICIT_RELATION_TRAVEL_FAILURE');
+  assert(relationTravel.receipt.accepted && relationTravel.state.phase === 'SCENE_TRANSITION' && relationTravel.state.pendingTravel.kind === 'REVEALED_RELATION', 'EXPLICIT_RELATION_TRAVEL_FAILURE');
   const unrevealedRelation = applyCardinalSceneEvent(sequence.state, { type: 'FOLLOW_REVEALED_RELATION', toSiteId: 'SIGNAL_LANTERN_FIELD' });
   assert(!unrevealedRelation.receipt.accepted && unrevealedRelation.state === sequence.state, 'UNREVEALED_RELATION_DID_NOT_FAIL_CLOSED');
 
-  const returned = applyCardinalSceneEvent(sequence.state, { type: 'RETURN_TO_MAP' });
-  assert(returned.receipt.accepted && returned.state.phase === 'WORLD_MAP' && returned.state.activeSiteId === null && returned.state.activeDiscoveryId === null, 'RETURN_TO_MAP_STATE_FAILURE');
-  assert(returned.state.discoveredIds.includes('ALARIC_ROUTE_TABLE') && returned.state.cardFacesByDiscoveryId.ALARIC_ROUTE_TABLE === 'FACE_B_SIGNIFICANCE', 'RETURN_TO_MAP_DROPPED_SESSION_STATE');
+  const returned = applyCardinalSceneEvent(sequence.state, { type: 'RETURN_TO_HUB' });
+  assert(returned.receipt.accepted && returned.state.phase === 'SURVEY_HUB' && returned.state.selectedSiteId === 'WATCHFIRE_OVERLOOK' && returned.state.activeSiteId === null && returned.state.activeDiscoveryId === null, 'RETURN_TO_HUB_STATE_FAILURE');
+  assert(returned.state.discoveredIds.includes('ALARIC_ROUTE_TABLE') && returned.state.cardFacesByDiscoveryId.ALARIC_ROUTE_TABLE === 'FACE_B_SIGNIFICANCE', 'RETURN_TO_HUB_DROPPED_SESSION_STATE');
 
   let unsourcedPresenceRejected = false;
   try { createCardinalSceneState({ storyState: { presenceBySite: { WATCHFIRE_OVERLOOK: { state: 'CHARACTER_PRESENT' } } } }); } catch { unsourcedPresenceRejected = true; }
@@ -496,13 +509,13 @@ export function evaluateCardinalSceneStateContract() {
 
   const deterministicA = transitionSequence(createCardinalSceneState({ storyState: fixtureStory }), [
     { type: 'SELECT_SITE_SIGNAL', siteId: 'WATCHFIRE_OVERLOOK' },
-    { type: 'BEGIN_SURVEY_APPROACH' },
-    { type: 'COMPLETE_SITE_ARRIVAL' }
+    { type: 'ENTER_CHARACTER_SCENE' },
+    { type: 'COMPLETE_SCENE_ENTRY' }
   ]);
   const deterministicB = transitionSequence(createCardinalSceneState({ storyState: fixtureStory }), [
     { type: 'SELECT_SITE_SIGNAL', siteId: 'WATCHFIRE_OVERLOOK' },
-    { type: 'BEGIN_SURVEY_APPROACH' },
-    { type: 'COMPLETE_SITE_ARRIVAL' }
+    { type: 'ENTER_CHARACTER_SCENE' },
+    { type: 'COMPLETE_SCENE_ENTRY' }
   ]);
   assert(JSON.stringify(deterministicA) === JSON.stringify(deterministicB), 'DETERMINISTIC_REPLAY_DIVERGENCE');
 
@@ -510,8 +523,8 @@ export function evaluateCardinalSceneStateContract() {
   assert(JSON.stringify(Object.values(counts)) === JSON.stringify([5, 6, 6, 6]), 'DISCOVERY_SLOT_DISTRIBUTION_DRIFT');
 
   return deepFreeze({
-    schema: 'TASK19_CARDINAL_SCENE_STATE_VERIFICATION_RECEIPT_v1',
-    result: issues.length === 0 ? 'PASS_PROTECTED_CARDINAL_SCENE_STATE' : 'HELD_CARDINAL_SCENE_STATE',
+    schema: 'TASK20_CARDINAL_SCENE_STATE_VERIFICATION_RECEIPT_v1',
+    result: issues.length === 0 ? 'PASS_TASK20_ENCOUNTER_SCENE_HUB_STATE' : 'HELD_TASK20_CARDINAL_SCENE_STATE',
     eligible: issues.length === 0,
     siteCount: CARDINAL_SITE_IDS.length,
     discoverySlotCount: CARDINAL_DISCOVERY_SLOTS.length,

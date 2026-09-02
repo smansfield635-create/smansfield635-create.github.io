@@ -61,6 +61,9 @@ changed=changed.map(normalizePath).filter(Boolean);
 const allowed=[
   'characters/app.mjs',
   'characters/night-renderer.mjs',
+  'characters/step9-cinematic-primer-ui.mjs',
+  'assets/compass/compass.statement-orbit.js',
+  'control-plane/whole-estate/characters-reconstruction-v1/mirrorland-entry-rebind.v1.json',
   'control-plane/whole-estate/characters-reconstruction-v1/verify-gratitude-environment-v2.v1.mjs',
   'control-plane/whole-estate/characters-reconstruction-v1/verify-step10-browser.mjs',
   '.github/workflows/characters-environment-v2-qualification.yml'
@@ -77,6 +80,7 @@ console.log(JSON.stringify({
   shorelineAuthorityCreated:false,
   waterMeshDerivedFromCanonicalShoreline:true,
   manorOrDestinationObjectConstruction:false,
+  mirrorlandOpeningSuccessorPermitted:true,
   shaderFeatures:{domainWarpedWater:true,brokenMoonPath:true,multiscaleTerrain:true,basinMist:true,distanceDesaturation:true},
   changedFiles:changed
 },null,2));

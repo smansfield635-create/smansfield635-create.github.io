@@ -1,0 +1,32 @@
+{
+  "exclusions": [
+    "SYSTEM_AUTHORED_OR_MATERIALLY_TUNED_BY_THEORY_TEAM",
+    "TRUTH_REVEALED_BEFORE_PREDICTION_FREEZE",
+    "OUTCOME_LEAKAGE_IN_CASE_NAMES_METADATA_OR_FILE_PATHS",
+    "POSTDATA_FEATURE_OR_THRESHOLD_REPAIR",
+    "NONREPRODUCIBLE_INTERVENTION",
+    "MISSING_CUSTODY_CHAIN"
+  ],
+  "insufficient_portfolio_disposition": "UNEVALUABLE_CUSTODY_OR_POWER_FAILURE",
+  "primary_result_minimums": {
+    "admissible_systems": 4,
+    "domains": 2,
+    "independent_observer_teams": 2,
+    "independent_system_author_teams": 2,
+    "separate_custodian_required": true,
+    "systems_with_matched_output_different_provenance": 2,
+    "systems_with_relation_specific_restoration": 2,
+    "systems_with_sparse_or_noisy_observations": 2,
+    "systems_with_support_withdrawal": 2
+  },
+  "system_requirements": [
+    "DECLARED_BOUNDARY_TRUTH_SEALED_BEFORE_OBSERVER_ACCESS",
+    "DECLARED_CONSTITUTIVE_AND_DECOY_RELATIONS_SEALED_BEFORE_OBSERVER_ACCESS",
+    "AT_LEAST_ONE_WITHHELD_SELECTIVE_RELATION_DISRUPTION",
+    "AT_LEAST_ONE_HELDOUT_ROUTE_OR_TARGET_OUTCOME",
+    "COMPLETE_INTERVENTION_AND_OUTCOME_CUSTODY",
+    "COMMON_OBSERVATION_PACKAGE_FOR_THEORY_AND_BASELINES",
+    "NO_THEORY_TEAM_AUTHORSHIP_FOR_PRIMARY_SYSTEMS"
+  ],
+  "version": "1.0.0"
+}

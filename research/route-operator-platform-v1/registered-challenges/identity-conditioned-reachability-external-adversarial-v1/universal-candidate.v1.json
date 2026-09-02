@@ -1,0 +1,9 @@
+{
+  "candidate_id": "U1_IDENTITY_CONDITIONED_REACHABILITY",
+  "central_discrimination": "OUTPUT_CONTINUITY_IS_NOT_SUFFICIENT_FOR_IDENTITY_CONTINUITY",
+  "claim": "For a bounded system with independently recoverable constitutive relations, selective disruption of a constitutive relation removes a predictable family of identity-preserving routes; external support or functional substitution may preserve visible output without restoring endogenous reachability; unrelated capacity does not necessarily reopen the route; relation-specific restoration or a predeclared lawful substitute selectively reopens it, potentially subject to hysteresis.",
+  "frozen": true,
+  "operation_id": "IDENTITY_CONDITIONED_REACHABILITY_EXTERNAL_ADVERSARIAL_REGISTERED_FALSIFICATION_CHALLENGE_v1",
+  "scope": "CROSS_DOMAIN_CANDIDATE_NOT_ESTABLISHED_UNIVERSAL_LAW",
+  "version": "1.0.0"
+}

@@ -1,0 +1,40 @@
+{
+  "component_scores": {
+    "boundary_macro_f1": 0.1,
+    "calibrated_outcome_score": 0.15,
+    "constitutive_relation_macro_f1": 0.2,
+    "heldout_route_loss_reopening_balanced_accuracy": 0.25,
+    "matched_output_provenance_macro_f1": 0.15,
+    "route_family_macro_f1": 0.15
+  },
+  "severe_test_score_range": [
+    0.0,
+    1.0
+  ],
+  "survival_thresholds": {
+    "boundary_macro_f1_min": 0.7,
+    "constitutive_relation_macro_f1_min": 0.75,
+    "critical_prediction_failures_max": 0,
+    "heldout_route_loss_reopening_balanced_accuracy_min": 0.8,
+    "increment_bootstrap_95_ci_lower_bound_gt": 0.0,
+    "increment_over_strongest_baseline_min": 0.05,
+    "matched_output_provenance_macro_f1_min": 0.75,
+    "severe_test_score_min": 0.78
+  },
+  "theory_false_triggers": [
+    "SELECTIVE_CONSTITUTIVE_DISRUPTION_DOES_NOT_REDUCE_PREDICTED_ROUTE_AVAILABILITY_IN_MAJORITY_OF_ADMISSIBLE_TESTS",
+    "UNRELATED_CAPACITY_RELIABLY_REOPENS_PREDICTED_LOST_ROUTE",
+    "SUPPORT_WITHDRAWAL_DOES_NOT_EXPOSE_PREDICTED_UNRESTORED_FAILURE_IN_MAJORITY_OF_ADMISSIBLE_TESTS",
+    "RELATION_SPECIFIC_RESTORATION_DOES_NOT_OUTPERFORM_UNRELATED_REPAIR_FOR_ROUTE_REOPENING"
+  ],
+  "uncertainty": {
+    "confidence_level": 0.95,
+    "iterations": 10000,
+    "primary_method": "SYSTEM_CLUSTERED_BOOTSTRAP"
+  },
+  "underdefinition_thresholds": {
+    "median_pairwise_observer_boundary_jaccard_below": 0.55,
+    "median_pairwise_observer_relation_jaccard_below": 0.55
+  },
+  "version": "1.0.0"
+}

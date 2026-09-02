@@ -1,13 +1,8 @@
 name: H-Earth Gratitude Region Coordinate Reconciliation
 
-# GR-CR-01L isolated validation trigger after retargeting the draft PR.
 on:
-  push:
-    branches:
-      - agent/h-earth-gratitude-region-coordinate-reconciliation-001
   pull_request:
     branches:
-      - main
       - agent/h-earth-gratitude-region-coordinate-reconciliation-validation-base-001
   workflow_dispatch:
 
@@ -20,11 +15,16 @@ permissions:
 
 jobs:
   validate-coordinate-reconciliation:
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Check out coordinate-reconciliation branch
+      - name: Check out coordinate-reconciliation dependency surface
         uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            h-earth-3d
+            showroom/globe/h-earth
+          sparse-checkout-cone-mode: true
 
       - name: Use Node.js 22
         uses: actions/setup-node@v4

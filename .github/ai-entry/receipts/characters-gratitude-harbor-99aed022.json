@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "characters-gratitude-harbor-99aed022",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 2658,
+  "requestBranch": "ai-dispatch-request-characters-99aed022",
+  "requestCommit": "48b6955f8ebfbc8ddf87b2ddd800865cd5cb1088",
+  "requestCommitParent": "99aed022f7dbb2a70b19c0fc482e8a6e0b0c41ad",
+  "currentMainSha": "99aed022f7dbb2a70b19c0fc482e8a6e0b0c41ad",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "99aed022f7dbb2a70b19c0fc482e8a6e0b0c41ad",
+    "surface_id": "characters"
+  },
+  "bridgeRunId": "33682160414",
+  "dispatchedRunId": 33682179538,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/33682179538",
+  "dispatchedRunHeadSha": "99aed022f7dbb2a70b19c0fc482e8a6e0b0c41ad",
+  "dispatchedAt": "2026-09-02T20:55:37.710Z",
+  "resolvedAt": "2026-09-02T20:55:41.620Z"
+}

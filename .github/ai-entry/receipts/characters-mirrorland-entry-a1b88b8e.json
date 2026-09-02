@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "characters-mirrorland-entry-a1b88b8e",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 2663,
+  "requestBranch": "ai-dispatch-request-characters-mirrorland-entry-a1b88b8e",
+  "requestCommit": "35a9bb11f900c45d08a6973f04bd723600508ad3",
+  "requestCommitParent": "a1b88b8e84cacc9e82fc78a2167d68945edd53e6",
+  "currentMainSha": "a1b88b8e84cacc9e82fc78a2167d68945edd53e6",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "a1b88b8e84cacc9e82fc78a2167d68945edd53e6",
+    "surface_id": "characters"
+  },
+  "bridgeRunId": "33694847782",
+  "dispatchedRunId": 33694859439,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/33694859439",
+  "dispatchedRunHeadSha": "a1b88b8e84cacc9e82fc78a2167d68945edd53e6",
+  "dispatchedAt": "2026-09-02T23:23:24.916Z",
+  "resolvedAt": "2026-09-02T23:23:28.695Z"
+}

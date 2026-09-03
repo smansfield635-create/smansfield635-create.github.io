@@ -22,7 +22,7 @@ function ensureCloudLayer(root=document.body){
   layer=document.createElement('div');
   layer.dataset.mirrorlandCloudTraversal='';
   layer.setAttribute('aria-hidden','true');
-  Object.assign(layer.style,{position:'fixed',inset:'0',zIndex:'11',pointerEvents:'none',opacity:'0',transition:'opacity 520ms ease',background:'radial-gradient(ellipse at 28% 44%,rgba(212,225,236,.52),transparent 36%),radial-gradient(ellipse at 72% 58%,rgba(173,194,211,.5),transparent 38%),linear-gradient(180deg,rgba(80,105,126,.18),rgba(215,225,233,.58),rgba(71,91,109,.2))',backdropFilter:'blur(1.5px)'});
+  Object.assign(layer.style,{position:'fixed',inset:'0',zIndex:'11',pointerEvents:'none',opacity:'0',transition:'opacity 420ms ease',background:'radial-gradient(ellipse at 28% 44%,rgba(212,225,236,.28),transparent 36%),radial-gradient(ellipse at 72% 58%,rgba(173,194,211,.26),transparent 38%),linear-gradient(180deg,rgba(80,105,126,.08),rgba(215,225,233,.24),rgba(71,91,109,.08))',backdropFilter:'blur(.8px)'});
   root.appendChild(layer);
   return layer;
 }
@@ -31,21 +31,57 @@ export function createCloudTraversalController({root=document.body,reducedMotion
   const layer=ensureCloudLayer(root);
   let state='ORBIT';
   let timers=[];
-  const setState=next=>{state=next;layer.dataset.state=next;onState(next);};
-  const clear=()=>{for(const id of timers)clearTimeout(id);timers=[];layer.style.opacity='0';setState('ORBIT');};
-  const schedule=(ms,fn)=>timers.push(setTimeout(fn,ms));
+  let disposed=false;
+  let transitionEpoch=0;
+  const setState=next=>{
+    state=next;
+    layer.dataset.state=next;
+    document.documentElement.dataset.cloudTravel=next;
+    onState(next);
+  };
+  const cancelTimers=()=>{for(const id of timers)clearTimeout(id);timers=[];};
+  const clear=()=>{
+    transitionEpoch+=1;
+    cancelTimers();
+    layer.style.opacity='0';
+    setState('ORBIT');
+  };
+  const schedule=(epoch,ms,fn)=>timers.push(setTimeout(()=>{if(!disposed&&epoch===transitionEpoch)fn();},ms));
   const begin=({destinationId,worldAnchor=null}={})=>{
-    clear();
+    transitionEpoch+=1;
+    const epoch=transitionEpoch;
+    cancelTimers();
+    layer.style.opacity='0';
+    setState('ORBIT');
     layer.dataset.destinationId=destinationId||'';
     layer.dataset.cloudIdentity=CLOUD_IDENTITY_FRAME;
     if(worldAnchor)layer.dataset.worldAnchor=`${worldAnchor.x},${worldAnchor.z}`;
-    if(reducedMotion){setState('CLOUD_TRANSIT');layer.style.transition='opacity 120ms linear';layer.style.opacity='.58';schedule(170,()=>{layer.style.opacity='0';setState('ARRIVAL');});return;}
-    layer.style.transition='opacity 520ms ease';
+    else delete layer.dataset.worldAnchor;
+    if(reducedMotion){
+      setState('CLOUD_TRANSIT');
+      layer.style.transition='opacity 100ms linear';
+      layer.style.opacity='.18';
+      schedule(epoch,650,()=>{layer.style.opacity='0';setState('ARRIVAL');});
+      return;
+    }
+    layer.style.transition='opacity 420ms ease';
     setState('ASCENT');
-    schedule(420,()=>{setState('CLOUD_ENTRY');layer.style.opacity='.48';});
-    schedule(900,()=>{setState('CLOUD_TRANSIT');layer.style.opacity='.9';});
-    schedule(1780,()=>{setState('DESCENT');layer.style.opacity='.36';});
-    schedule(2460,()=>{layer.style.opacity='0';setState('ARRIVAL');});
+    schedule(epoch,420,()=>{setState('CLOUD_ENTRY');layer.style.opacity='.12';});
+    schedule(epoch,900,()=>{setState('CLOUD_TRANSIT');layer.style.opacity='.22';});
+    schedule(epoch,1780,()=>{setState('DESCENT');layer.style.opacity='.10';});
+    schedule(epoch,2460,()=>{layer.style.opacity='0';setState('ARRIVAL');});
   };
-  return Object.freeze({begin,clear,getState:()=>state,identityFrame:CLOUD_IDENTITY_FRAME});
+  const onSignalClick=event=>{
+    const signal=event.target?.closest?.('.signal[data-id],.signal[data-destination-id]');
+    if(!signal||disposed)return;
+    if(event.__mirrorlandCloudTraversalHandled)return;
+    event.__mirrorlandCloudTraversalHandled=true;
+    begin({destinationId:signal.dataset.destinationId||signal.dataset.id||''});
+  };
+  document.addEventListener('click',onSignalClick,true);
+  const dispose=()=>{disposed=true;document.removeEventListener('click',onSignalClick,true);clear();};
+  setState('ORBIT');
+  const api=Object.freeze({begin,clear,dispose,getState:()=>state,identityFrame:CLOUD_IDENTITY_FRAME});
+  globalThis.__MIRRORLAND_CLOUD_TRAVERSAL__=api;
+  return api;
 }

@@ -8,6 +8,8 @@ const HASH_PARAM='cb';
 const STATIC_EXT=/\.(?:css|js|mjs)$/i;
 const TEXT_EXT=/\.(?:html|css|js|mjs)$/i;
 const EXCLUDED_PREFIXES=['preview/','proof-media/','node_modules/','.git/'];
+const SCOPE=(process.env.CACHE_IDENTITY_SCOPE||'').split(',').map(x=>x.trim()).filter(Boolean);
+const inScope=p=>!SCOPE.length||SCOPE.includes(p);
 const GIT_MAX_BUFFER=64*1024*1024;
 const git=(args,{allowFailure=false}={})=>{const r=spawnSync('git',args,{encoding:'utf8',maxBuffer:GIT_MAX_BUFFER});if(r.error&&!allowFailure)throw new Error(`git ${args.join(' ')} execution failed: ${r.error.message}`);if(!allowFailure&&r.status!==0)throw new Error(`git ${args.join(' ')} failed: ${r.stderr||`status=${r.status}`}`);return (r.stdout||'').trim()};
 const sha=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex').slice(0,16);
@@ -35,7 +37,7 @@ function rewriteFile(file,targets){
 }
 function changedStatic(base,head){
   if(!base)return [];
-  return git(['diff','--name-only',`${base}...${head}`]).split(/\r?\n/).filter(Boolean).filter(p=>STATIC_EXT.test(p)&&!excluded(p)&&fs.existsSync(p));
+  return git(['diff','--name-only',`${base}...${head}`]).split(/\r?\n/).filter(Boolean).filter(p=>STATIC_EXT.test(p)&&!excluded(p)&&inScope(p)&&fs.existsSync(p));
 }
 function lastSuccessfulSync(head){
   return git(['log','-1','--format=%H','--fixed-strings','--grep=[cache-identity-sync]',head],{allowFailure:true});
@@ -56,7 +58,7 @@ const recoveryBase=lastSuccessfulSync(head);
 const immediate=changedStatic(base,head);
 const recovery=recoveryBase&&recoveryBase!==head?changedStatic(recoveryBase,head):[];
 const initial=[...new Set([...immediate,...recovery])].sort();
-const tracked=git(['ls-files']).split(/\r?\n/).filter(Boolean).filter(p=>TEXT_EXT.test(p)&&!excluded(p)&&fs.existsSync(p));
+const tracked=git(['ls-files']).split(/\r?\n/).filter(Boolean).filter(p=>TEXT_EXT.test(p)&&!excluded(p)&&inScope(p)&&fs.existsSync(p));
 const targets=new Map(initial.map(p=>[p,sha(p)]));
 const rewritten=new Set();
 const passDiagnostics=[];
@@ -73,6 +75,6 @@ for(let pass=0;pass<8;pass++){
   if(!changedThisPass.length)break;
   if(pass===7)throw new Error(`CACHE_IDENTITY_PROPAGATION_DID_NOT_SETTLE ${JSON.stringify(passDiagnostics.slice(-3))}`);
 }
-const receipt={schema:'POST_MERGE_CACHE_IDENTITY_SYNC_RECEIPT_v1',base,head,recoveryBase:recoveryBase||null,immediateChangedAssets:immediate,recoveryChangedAssets:recovery,initialChangedAssets:initial,rewrittenFiles:[...rewritten].sort(),passDiagnostics,assetIdentities:Object.fromEntries([...targets].sort()),result:'PASS_CLOSED'};
+const receipt={schema:'POST_MERGE_CACHE_IDENTITY_SYNC_RECEIPT_v1',base,head,recoveryBase:recoveryBase||null,scope:SCOPE.length?SCOPE:null,immediateChangedAssets:immediate,recoveryChangedAssets:recovery,initialChangedAssets:initial,rewrittenFiles:[...rewritten].sort(),passDiagnostics,assetIdentities:Object.fromEntries([...targets].sort()),result:'PASS_CLOSED'};
 fs.writeFileSync(process.env.CACHE_IDENTITY_RECEIPT||'/tmp/post-merge-cache-identity.json',JSON.stringify(receipt,null,2)+'\n');
 console.log(JSON.stringify(receipt,null,2));

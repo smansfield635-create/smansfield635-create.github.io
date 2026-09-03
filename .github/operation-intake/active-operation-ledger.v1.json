@@ -6500,20 +6500,20 @@
     "ed161f009641122c8b9503f216874b3fcb64f20b220b0c9793d956eec3daeea6": {
       "authorityProvenance": {
         "authorityIdentity": {
-          "governingHead": "add7e4c9e13c848dece86e68c685881f04428534",
-          "lockGeneration": 1928,
+          "governingHead": "0970708876005e86260b7ed427225113c98920eb",
+          "lockGeneration": 1929,
           "lockScope": "CHARACTERS:MIRRORLAND:WORLD_TO_MAP_TRUTH:SEQUENCE_1",
-          "operationId": "MIRRORLAND_WORLD_TO_MAP_TRUTH_20260903_005",
-          "procedureLocatorDigest": "135b8b3961656f3c82e21e8e360108ea98fc7cea1e397159b8743f290f702d15",
-          "requestDigest": "2ae9595b727e0cb93d9514d97818ec6335f87f1a3aa6f72f6db84aa46a1a4c55",
+          "operationId": "MIRRORLAND_WORLD_TO_MAP_TRUTH_20260903_006",
+          "procedureLocatorDigest": "44adf5b2703684ee09db39ec1cfbb262f6ae6532429518c89a90ee4b6934c3ea",
+          "requestDigest": "f4ba72d8390ae37011c62d8f2f40e49684c2d074fad8d6fec0d46074f27165b2",
           "scopeHash": "ed161f009641122c8b9503f216874b3fcb64f20b220b0c9793d956eec3daeea6"
         },
-        "bindingDigest": "bbdcac0d98fdf5a0356ff1266026f148ebccb59d9fd89b86463c26f0becf0837",
+        "bindingDigest": "90e1968f0d3f4161f5209c66e676c529bf1bc69334480b24c2c2239fe9670954",
         "invocation": {
           "commentAuthorAssociation": "OWNER",
           "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "ee3451a84457e941c81bc8050ded33dde23537e62a6f671fc94befd6b62b9144",
-          "commentId": 5519041838,
+          "commentBodySha256": "7a61aabad8be11fe8366cc29da0b64979d97fc4fabd7eff5fd2e2b54d9172725",
+          "commentId": 5519055992,
           "eventAction": "created",
           "eventName": "issue_comment",
           "issueNumber": 2670,
@@ -6522,36 +6522,37 @@
           "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
           "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
           "workflowRunAttempt": 1,
-          "workflowRunId": 33704855993,
-          "workflowSha": "add7e4c9e13c848dece86e68c685881f04428534"
+          "workflowRunId": 33704974761,
+          "workflowSha": "0970708876005e86260b7ed427225113c98920eb"
         },
-        "lineageAnchorCommitSha": "403106d249387a92f59b616d0bcd15d949cab81b",
+        "lineageAnchorCommitSha": "0be869669cb17866785262a7ce406a788557d544",
         "origin": "CANONICAL_SUCCESSOR",
         "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
       },
-      "governingHead": "add7e4c9e13c848dece86e68c685881f04428534",
-      "lockGeneration": 1928,
+      "governingHead": "0970708876005e86260b7ed427225113c98920eb",
+      "lockGeneration": 1929,
       "lockScope": "CHARACTERS:MIRRORLAND:WORLD_TO_MAP_TRUTH:SEQUENCE_1",
-      "operationId": "MIRRORLAND_WORLD_TO_MAP_TRUTH_20260903_005",
+      "operationId": "MIRRORLAND_WORLD_TO_MAP_TRUTH_20260903_006",
       "predecessor": {
         "authorityInherited": false,
         "exactHeadRevalidationRequired": true,
-        "governingHead": "e43ac146db7f10b31513c5f3350807da508ec292",
-        "lockGeneration": 1927,
+        "governingHead": "add7e4c9e13c848dece86e68c685881f04428534",
+        "lockGeneration": 1928,
         "lockScope": "CHARACTERS:MIRRORLAND:WORLD_TO_MAP_TRUTH:SEQUENCE_1",
-        "operationId": "MIRRORLAND_WORLD_TO_MAP_TRUTH_20260903_001",
+        "operationId": "MIRRORLAND_WORLD_TO_MAP_TRUTH_20260903_005",
         "preservedEvidenceRefs": [
           "issue:2670#issuecomment-5518817361",
-          "issue:2670#issuecomment-5518834583",
-          "workflow:33703021872"
+          "issue:2670#issuecomment-5519013617",
+          "issue:2670#issuecomment-5519041838",
+          "workflow:33704855993"
         ],
         "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
         "terminalDisposition": "SUPERSEDED",
-        "transitionId": "MIRRORLAND_WORLD_TO_MAP_TRUTH_20260903_001_TO_005"
+        "transitionId": "MIRRORLAND_WORLD_TO_MAP_TRUTH_20260903_005_TO_006"
       },
-      "procedureLocatorDigest": "135b8b3961656f3c82e21e8e360108ea98fc7cea1e397159b8743f290f702d15",
+      "procedureLocatorDigest": "44adf5b2703684ee09db39ec1cfbb262f6ae6532429518c89a90ee4b6934c3ea",
       "released": false,
-      "requestDigest": "2ae9595b727e0cb93d9514d97818ec6335f87f1a3aa6f72f6db84aa46a1a4c55",
+      "requestDigest": "f4ba72d8390ae37011c62d8f2f40e49684c2d074fad8d6fec0d46074f27165b2",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "ed161f009641122c8b9503f216874b3fcb64f20b220b0c9793d956eec3daeea6",
       "state": "ADMITTED_LOCKED"
@@ -6938,7 +6939,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1928,
+  "lockGeneration": 1929,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -38694,6 +38695,83 @@
         "successorLockScope": "CHARACTERS:MIRRORLAND:WORLD_TO_MAP_TRUTH:SEQUENCE_1",
         "successorOperationId": "MIRRORLAND_WORLD_TO_MAP_TRUTH_20260903_005",
         "transitionId": "MIRRORLAND_WORLD_TO_MAP_TRUTH_20260903_001_TO_005"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "add7e4c9e13c848dece86e68c685881f04428534",
+          "lockGeneration": 1928,
+          "lockScope": "CHARACTERS:MIRRORLAND:WORLD_TO_MAP_TRUTH:SEQUENCE_1",
+          "operationId": "MIRRORLAND_WORLD_TO_MAP_TRUTH_20260903_005",
+          "procedureLocatorDigest": "135b8b3961656f3c82e21e8e360108ea98fc7cea1e397159b8743f290f702d15",
+          "requestDigest": "2ae9595b727e0cb93d9514d97818ec6335f87f1a3aa6f72f6db84aa46a1a4c55",
+          "scopeHash": "ed161f009641122c8b9503f216874b3fcb64f20b220b0c9793d956eec3daeea6"
+        },
+        "bindingDigest": "bbdcac0d98fdf5a0356ff1266026f148ebccb59d9fd89b86463c26f0becf0837",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "ee3451a84457e941c81bc8050ded33dde23537e62a6f671fc94befd6b62b9144",
+          "commentId": 5519041838,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2670,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33704855993,
+          "workflowSha": "add7e4c9e13c848dece86e68c685881f04428534"
+        },
+        "lineageAnchorCommitSha": "403106d249387a92f59b616d0bcd15d949cab81b",
+        "origin": "CANONICAL_SUCCESSOR",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "add7e4c9e13c848dece86e68c685881f04428534",
+      "lockGeneration": 1928,
+      "lockScope": "CHARACTERS:MIRRORLAND:WORLD_TO_MAP_TRUTH:SEQUENCE_1",
+      "operationId": "MIRRORLAND_WORLD_TO_MAP_TRUTH_20260903_005",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "e43ac146db7f10b31513c5f3350807da508ec292",
+        "lockGeneration": 1927,
+        "lockScope": "CHARACTERS:MIRRORLAND:WORLD_TO_MAP_TRUTH:SEQUENCE_1",
+        "operationId": "MIRRORLAND_WORLD_TO_MAP_TRUTH_20260903_001",
+        "preservedEvidenceRefs": [
+          "issue:2670#issuecomment-5518817361",
+          "issue:2670#issuecomment-5518834583",
+          "workflow:33703021872"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "MIRRORLAND_WORLD_TO_MAP_TRUTH_20260903_001_TO_005"
+      },
+      "procedureLocatorDigest": "135b8b3961656f3c82e21e8e360108ea98fc7cea1e397159b8743f290f702d15",
+      "released": true,
+      "requestDigest": "2ae9595b727e0cb93d9514d97818ec6335f87f1a3aa6f72f6db84aa46a1a4c55",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ed161f009641122c8b9503f216874b3fcb64f20b220b0c9793d956eec3daeea6",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:2670#issuecomment-5518817361",
+          "issue:2670#issuecomment-5519013617",
+          "issue:2670#issuecomment-5519041838",
+          "workflow:33704855993"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "0970708876005e86260b7ed427225113c98920eb",
+        "successorLockGeneration": 1929,
+        "successorLockScope": "CHARACTERS:MIRRORLAND:WORLD_TO_MAP_TRUTH:SEQUENCE_1",
+        "successorOperationId": "MIRRORLAND_WORLD_TO_MAP_TRUTH_20260903_006",
+        "transitionId": "MIRRORLAND_WORLD_TO_MAP_TRUTH_20260903_005_TO_006"
       },
       "terminalDisposition": "SUPERSEDED"
     }

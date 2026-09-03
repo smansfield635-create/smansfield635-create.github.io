@@ -81,7 +81,8 @@ if (!crystals.includes('state.reducedMotion')) fail('reduced-motion branch missi
 
 for (const required of [
   "trophyRenderer:'procedural-webgl-v8-integrated-recessed-plaque'",
-  "canvas.dataset.trophyFrames='1'",
+  "trophyTriangleCount:String(m.triangles)",
+  "trophyMotion:'static-front-plaque'",
   'fallback:false',
   'fallback:true',
   "window.CompassTrophyScene=Object.freeze"
@@ -104,5 +105,5 @@ console.log(JSON.stringify({
   crystalLiveness: 'continuous-normal-motion-settle-reduced-motion',
   gen1537: 'retired-route-only',
   trackA: 'static-object-carousel-first-paint-authority',
-  trophyRuntime: 'approved-webgl-renderer-required-fallback-not-success'
+  trophyRuntime: 'approved-v8-integrated-recessed-plaque-fallback-not-success'
 }, null, 2));

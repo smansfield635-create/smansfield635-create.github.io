@@ -57,10 +57,7 @@ function coastlinePath(points){return points.map((point,i)=>{const [x,y]=p(point
 function renderTerrain(svg,model){
   const {columns,rows,cells,min,max}=model.terrain,cw=W/columns,ch=H/rows;
   const group=el('g',{'data-map-layer':'WORLD_DERIVED_TERRAIN'});
-  for(const c of cells){
-    if(!c.land)continue;
-    group.appendChild(el('rect',{x:c.x*cw-.5,y:c.y*ch-.5,width:cw+1,height:ch+1,fill:terrainTone(c.elevation,min,max)}));
-  }
+  for(const c of cells){if(c.land)group.appendChild(el('rect',{x:c.x*cw-.5,y:c.y*ch-.5,width:cw+1,height:ch+1,fill:terrainTone(c.elevation,min,max)}));}
   svg.appendChild(group);
 }
 
@@ -81,22 +78,18 @@ function renderRelief(svg,model){
 
 function renderForests(svg,model){
   const group=el('g',{'data-map-layer':'QUALIFIED_FOREST_REGIONS'});
-  for(const [index,r] of model.forestRegions.entries()){
-    group.appendChild(el('ellipse',{cx:r.u*W,cy:r.v*H,rx:r.rx*W,ry:r.rz*H,fill:'rgba(20,59,42,.42)',stroke:'rgba(139,180,126,.32)','stroke-width':'1.4','data-forest-region':index}));
-  }
+  for(const [index,r] of model.forestRegions.entries())group.appendChild(el('ellipse',{cx:r.u*W,cy:r.v*H,rx:r.rx*W,ry:r.rz*H,fill:'rgba(20,59,42,.42)',stroke:'rgba(139,180,126,.32)','stroke-width':'1.4','data-forest-region':index}));
   svg.appendChild(group);
 }
 
 function renderCoast(svg,model){
   const d=coastlinePath(model.coastline.points);
-  const water=el('path',{d:`${d} L ${W} ${H} L 0 ${H} Z`,fill:'rgba(31,82,95,.88)','data-map-layer':'WORLD_DERIVED_WATER'});
-  const coast=el('path',{d,fill:'none',stroke:'rgba(236,219,174,.92)','stroke-width':'4','stroke-linecap':'round','stroke-linejoin':'round','data-map-layer':'CANONICAL_COASTLINE'});
-  svg.append(water,coast);
+  svg.append(el('path',{d:`${d} L ${W} ${H} L 0 ${H} Z`,fill:'rgba(31,82,95,.88)','data-map-layer':'WORLD_DERIVED_WATER'}),el('path',{d,fill:'none',stroke:'rgba(236,219,174,.92)','stroke-width':'4','stroke-linecap':'round','stroke-linejoin':'round','data-map-layer':'CANONICAL_COASTLINE'}));
 }
 
-export function mountCoastMapRenderer(root=document.querySelector('#map-grid')){
+export function mountCoastMapRenderer(root=typeof document!=='undefined'?document.querySelector('#map-grid'):null){
   if(!root||root.querySelector('[data-coast-map-surface]'))return null;
-  const compact=matchMedia('(max-width: 720px)').matches;
+  const compact=typeof matchMedia==='function'&&matchMedia('(max-width: 720px)').matches;
   const model=buildCoastMapSurfaceModel({compact});
   const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,preserveAspectRatio:'none','aria-hidden':'true','data-coast-map-surface':COAST_MAP_RENDERER_ID});
   svg.classList.add('coast-map-surface');
@@ -107,5 +100,7 @@ export function mountCoastMapRenderer(root=document.querySelector('#map-grid')){
   return Object.freeze({model,svg});
 }
 
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>mountCoastMapRenderer(),{once:true});
-else mountCoastMapRenderer();
+if(typeof document!=='undefined'){
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>mountCoastMapRenderer(),{once:true});
+  else mountCoastMapRenderer();
+}

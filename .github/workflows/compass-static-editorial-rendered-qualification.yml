@@ -78,6 +78,17 @@ jobs:
             page.on('requestfailed', r => failedRequests.push(`${r.method()} ${r.url()} :: ${r.failure()?.errorText||'failed'}`));
             await page.goto('http://127.0.0.1:4173/', {waitUntil:'networkidle'});
             await page.waitForTimeout(1000);
+            const cinematic = page.locator('[data-main-orientation-film]').first();
+            if (await cinematic.count() === 1 && await cinematic.isVisible()) {
+              const skip = cinematic.locator('[data-main-orientation-skip], button:has-text("Skip")').first();
+              if (await skip.count() !== 1) throw new Error(`${name}: cinematic Skip control missing`);
+              await skip.click();
+              await page.waitForFunction(() => {
+                const el=document.querySelector('[data-main-orientation-film]');
+                return !el || getComputedStyle(el).display==='none' || getComputedStyle(el).visibility==='hidden' || Number(getComputedStyle(el).opacity)<=0.01;
+              }, {timeout:7000});
+              await page.waitForTimeout(150);
+            }
             const video = page.locator('.compass-editorial-film video').first();
             if (await video.count() !== 1) throw new Error(`${name}: Chapter One video element missing`);
             const media = await video.evaluate(el => ({currentSrc:el.currentSrc||el.querySelector('source')?.src||''}));

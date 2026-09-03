@@ -1,39 +1,44 @@
-name: Mirror Manor Preview Live Check
+name: Mirror Manor Cache Identity Repair
 on:
   push:
     branches: [main]
 permissions:
-  contents: read
+  contents: write
+concurrency:
+  group: mirror-manor-cache-identity-repair
+  cancel-in-progress: true
 jobs:
-  verify:
+  synchronize:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
-      - name: Install Chromium
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+      - name: Synchronize recursive content identities
+        shell: bash
         run: |
-          mkdir -p /tmp/manor-preview-check && cd /tmp/manor-preview-check
-          npm init -y >/dev/null 2>&1
-          npm install playwright@1.55.0 >/dev/null 2>&1
-          npx playwright install --with-deps chromium >/dev/null 2>&1
-      - name: Verify direct live viewer renders Manor pixels
-        run: |
-          cat >/tmp/manor-preview-check/check.mjs <<'EOF'
-          import { chromium } from 'playwright';
-          const browser=await chromium.launch({headless:true});
-          const page=await browser.newPage({viewport:{width:1440,height:1000}});
-          await page.goto('https://diamondgatebridge.com/mirror-manor-preview/?verify='+Date.now(),{waitUntil:'networkidle',timeout:120000});
-          await page.waitForFunction(()=>document.querySelector('#manor')?.dataset.houseAssetReady==='true',{timeout:30000});
-          const state=await page.evaluate(()=>{const c=document.querySelector('#manor'),gl=c.getContext('webgl');let nonzero=0;const px=new Uint8Array(c.width*c.height*4);gl.readPixels(0,0,c.width,c.height,gl.RGBA,gl.UNSIGNED_BYTE,px);for(let i=3;i<px.length;i+=4)if(px[i])nonzero++;return {renderer:c.dataset.houseRenderer,ready:c.dataset.houseAssetReady,error:c.dataset.houseError||null,frames:Number(c.dataset.houseFrames||0),vertices:Number(c.dataset.houseVertexCount||0),width:c.width,height:c.height,nonzeroPixels:nonzero,status:document.querySelector('#status')?.textContent||''};});
-          console.log(JSON.stringify(state,null,2));
-          await page.screenshot({path:'/tmp/manor-preview-check/live.png',fullPage:true});
-          await browser.close();
-          if(state.ready!=='true'||state.error||state.frames<1||state.vertices<1||state.nonzeroPixels<1000)process.exit(1);
-          EOF
-          cd /tmp/manor-preview-check && node check.mjs
-      - name: Upload screenshot
+          set -euo pipefail
+          head="$(git rev-parse HEAD^{commit})"
+          base="$(git rev-parse HEAD^1)"
+          node .github/ai-router/platform/post-merge-cache-identity-sync.v1.mjs --self-test
+          CACHE_IDENTITY_BASE="$base" CACHE_IDENTITY_HEAD="$head" CACHE_IDENTITY_RECEIPT=/tmp/manor-cache-identity.json node .github/ai-router/platform/post-merge-cache-identity-sync.v1.mjs
+          if git diff --quiet; then
+            echo "No cache identity changes required."
+            exit 0
+          fi
+          git diff --check
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -- '*.html' '*.css' '*.js' '*.mjs'
+          git commit -m "chore(delivery): synchronize Mirror Manor carousel cache identities"
+          git push origin HEAD:main
+      - name: Upload repair receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: mirror-manor-preview-live
-          path: /tmp/manor-preview-check/live.png
+          name: mirror-manor-cache-identity-repair
+          path: /tmp/manor-cache-identity.json
           if-no-files-found: warn

@@ -40,7 +40,7 @@ export function createCloudTraversalController({root=document.body,reducedMotion
     layer.dataset.destinationId=destinationId||'';
     layer.dataset.cloudIdentity=CLOUD_IDENTITY_FRAME;
     if(worldAnchor)layer.dataset.worldAnchor=`${worldAnchor.x},${worldAnchor.z}`;
-    if(reducedMotion){setState('CLOUD_TRANSIT');layer.style.transition='opacity 100ms linear';layer.style.opacity='.18';schedule(190,()=>{layer.style.opacity='0';setState('ARRIVAL');});return;}
+    if(reducedMotion){setState('CLOUD_TRANSIT');layer.style.transition='opacity 100ms linear';layer.style.opacity='.18';schedule(650,()=>{layer.style.opacity='0';setState('ARRIVAL');});return;}
     layer.style.transition='opacity 420ms ease';
     setState('ASCENT');
     schedule(420,()=>{setState('CLOUD_ENTRY');layer.style.opacity='.12';});

@@ -24,8 +24,8 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /characters/
-            /h-earth-3d/terrain/
-            /h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js
+            /h-earth-3d/
+            /showroom/globe/h-earth/
             /control-plane/whole-estate/characters-reconstruction-v1/coast-map-true-to-world-contract.v1.json
             /control-plane/whole-estate/characters-reconstruction-v1/verify-coast-map-true-to-world.v1.mjs
             /.github/workflows/characters-coast-map-true-to-world-v1.yml

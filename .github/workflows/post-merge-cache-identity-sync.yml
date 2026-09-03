@@ -68,6 +68,8 @@ jobs:
         run: node .github/ai-router/platform/post-merge-cache-identity-sync.v1.mjs --self-test
 
       - name: Synchronize content-derived asset identities
+        # This scope is deliberately the complete Mirror Manor delivery chain only.
+        # Unrelated homepage assets are not cache-propagation dependencies for this operation.
         env:
           CACHE_IDENTITY_BASE: ${{ steps.identity.outputs.base }}
           CACHE_IDENTITY_HEAD: ${{ steps.identity.outputs.head }}

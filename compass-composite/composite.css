@@ -3,9 +3,6 @@ html,body{max-width:100%;overflow-x:clip!important}
 body{background:#010308!important}
 .compass-estate,[data-compass-root],.compass-instrument,.compass-built,.compass-monuments{max-width:100%!important;box-sizing:border-box!important}
 
-/* FIRST_PAINT_MOTIVATION_SINGLE_OWNER_v1 — hide non-primary motivation copy before runtime ownership settles. */
-.compass-motivation:not([data-motivation-ready="true"]) .compass-motivation__statement:nth-of-type(n+2){display:none!important}
-
 /* Laws precedent: all four star owners remain present; exactly one native readable cardinal label owns text/focus. */
 [data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing{display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
 [data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing>span{opacity:0!important;visibility:hidden!important;pointer-events:none!important}

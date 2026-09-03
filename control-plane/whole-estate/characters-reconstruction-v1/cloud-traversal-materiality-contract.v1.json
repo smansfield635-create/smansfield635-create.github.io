@@ -1,0 +1,49 @@
+{
+  "schema": "MIRRORLAND_CLOUD_TRAVERSAL_MATERIALITY_CONTRACT_v1",
+  "operationId": "MIRRORLAND_CLOUD_TRAVERSAL_20260903_004",
+  "governingHead": "23dbe7daea3458254dd85651113213261abf7ca2",
+  "boundary": "CLOUD_TRAVERSAL_MATERIALLY_VISIBLE",
+  "stateAuthority": "characters/cloud-traversal.mjs",
+  "statePublication": "document.documentElement.dataset.cloudTravel",
+  "states": ["ORBIT", "ASCENT", "CLOUD_ENTRY", "CLOUD_TRANSIT", "DESCENT", "ARRIVAL"],
+  "presentation": {
+    "renderer": "characters/cloud-system.mjs",
+    "overlayIsSupplementOnly": true,
+    "normalWorldCloudsRequired": true,
+    "minimumDesktopBanks": 7,
+    "minimumMobileBanks": 5,
+    "minimumDesktopPuffs": 42,
+    "minimumMobilePuffs": 26,
+    "stateProfiles": {
+      "ORBIT": {"opacity": 0.28, "opticalDepth": 0.16, "veil": 0.00, "drift": 1.00},
+      "ASCENT": {"opacity": 0.38, "opticalDepth": 0.28, "veil": 0.08, "drift": 1.05},
+      "CLOUD_ENTRY": {"opacity": 0.58, "opticalDepth": 0.52, "veil": 0.30, "drift": 1.08},
+      "CLOUD_TRANSIT": {"opacity": 0.78, "opticalDepth": 0.82, "veil": 0.68, "drift": 1.10},
+      "DESCENT": {"opacity": 0.48, "opticalDepth": 0.38, "veil": 0.18, "drift": 0.85},
+      "ARRIVAL": {"opacity": 0.24, "opticalDepth": 0.14, "veil": 0.00, "drift": 0.55}
+    }
+  },
+  "reducedMotion": {
+    "motionMultiplier": 0,
+    "transitStillRequiresOcclusion": true,
+    "arrivalMustClearTransitOcclusion": true
+  },
+  "acceptance": {
+    "normalViewCloudBanksVisible": true,
+    "cloudEntryIntersectsView": true,
+    "cloudTransitReducesLongRangeVisibility": true,
+    "descentRestoresGeographicLegibility": true,
+    "arrivalClearsTransitVeil": true,
+    "desktopWebGL2": true,
+    "mobileWebGL2": true,
+    "browserEvidenceRequired": true,
+    "overlayOnlyCandidateMustFail": true
+  },
+  "protectedPaths": [
+    "characters/gratitude-geography.adapter.mjs",
+    "characters/step9-regional-geography.mjs",
+    "characters/coast-map.mjs",
+    "characters/forest-system.mjs"
+  ],
+  "sequence4PlusMutationAllowed": false
+}

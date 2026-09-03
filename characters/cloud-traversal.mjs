@@ -32,29 +32,55 @@ export function createCloudTraversalController({root=document.body,reducedMotion
   let state='ORBIT';
   let timers=[];
   let disposed=false;
-  const setState=next=>{state=next;layer.dataset.state=next;onState(next);};
-  const clear=()=>{for(const id of timers)clearTimeout(id);timers=[];layer.style.opacity='0';setState('ORBIT');};
-  const schedule=(ms,fn)=>timers.push(setTimeout(fn,ms));
+  let transitionEpoch=0;
+  const setState=next=>{
+    state=next;
+    layer.dataset.state=next;
+    document.documentElement.dataset.cloudTravel=next;
+    onState(next);
+  };
+  const cancelTimers=()=>{for(const id of timers)clearTimeout(id);timers=[];};
+  const clear=()=>{
+    transitionEpoch+=1;
+    cancelTimers();
+    layer.style.opacity='0';
+    setState('ORBIT');
+  };
+  const schedule=(epoch,ms,fn)=>timers.push(setTimeout(()=>{if(!disposed&&epoch===transitionEpoch)fn();},ms));
   const begin=({destinationId,worldAnchor=null}={})=>{
-    clear();
+    transitionEpoch+=1;
+    const epoch=transitionEpoch;
+    cancelTimers();
+    layer.style.opacity='0';
+    setState('ORBIT');
     layer.dataset.destinationId=destinationId||'';
     layer.dataset.cloudIdentity=CLOUD_IDENTITY_FRAME;
     if(worldAnchor)layer.dataset.worldAnchor=`${worldAnchor.x},${worldAnchor.z}`;
-    if(reducedMotion){setState('CLOUD_TRANSIT');layer.style.transition='opacity 100ms linear';layer.style.opacity='.18';schedule(650,()=>{layer.style.opacity='0';setState('ARRIVAL');});return;}
+    else delete layer.dataset.worldAnchor;
+    if(reducedMotion){
+      setState('CLOUD_TRANSIT');
+      layer.style.transition='opacity 100ms linear';
+      layer.style.opacity='.18';
+      schedule(epoch,650,()=>{layer.style.opacity='0';setState('ARRIVAL');});
+      return;
+    }
     layer.style.transition='opacity 420ms ease';
     setState('ASCENT');
-    schedule(420,()=>{setState('CLOUD_ENTRY');layer.style.opacity='.12';});
-    schedule(900,()=>{setState('CLOUD_TRANSIT');layer.style.opacity='.22';});
-    schedule(1780,()=>{setState('DESCENT');layer.style.opacity='.10';});
-    schedule(2460,()=>{layer.style.opacity='0';setState('ARRIVAL');});
+    schedule(epoch,420,()=>{setState('CLOUD_ENTRY');layer.style.opacity='.12';});
+    schedule(epoch,900,()=>{setState('CLOUD_TRANSIT');layer.style.opacity='.22';});
+    schedule(epoch,1780,()=>{setState('DESCENT');layer.style.opacity='.10';});
+    schedule(epoch,2460,()=>{layer.style.opacity='0';setState('ARRIVAL');});
   };
   const onSignalClick=event=>{
     const signal=event.target?.closest?.('.signal[data-id],.signal[data-destination-id]');
     if(!signal||disposed)return;
+    if(event.__mirrorlandCloudTraversalHandled)return;
+    event.__mirrorlandCloudTraversalHandled=true;
     begin({destinationId:signal.dataset.destinationId||signal.dataset.id||''});
   };
   document.addEventListener('click',onSignalClick,true);
   const dispose=()=>{disposed=true;document.removeEventListener('click',onSignalClick,true);clear();};
+  setState('ORBIT');
   const api=Object.freeze({begin,clear,dispose,getState:()=>state,identityFrame:CLOUD_IDENTITY_FRAME});
   globalThis.__MIRRORLAND_CLOUD_TRAVERSAL__=api;
   return api;

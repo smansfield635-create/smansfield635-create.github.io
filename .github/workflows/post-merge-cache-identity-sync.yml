@@ -1,4 +1,4 @@
-name: Post-Merge Static Asset Cache Identity — Manual Only
+name: Post-Merge Static Asset Cache Identity — Temporary Compass Admission
 
 on:
   workflow_dispatch:
@@ -11,6 +11,10 @@ on:
         description: Optional expected main head
         required: false
         type: string
+  push:
+    branches: [main]
+    paths:
+      - 'assets/compass/compass.capability-carousel.js'
 
 permissions:
   contents: write

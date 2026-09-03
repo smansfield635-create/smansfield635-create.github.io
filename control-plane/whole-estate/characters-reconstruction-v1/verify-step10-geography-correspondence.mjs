@@ -15,7 +15,7 @@ import {
   resolveStep9Site,
   step9MapPosition,
   step9ShorelineZ
-} from '../../../characters/step9-regional-geography.mjs';
+} from '../../../characters/step9-regional-geography.mjs?v=e8f5ec7b';
 
 const near=(a,b,t=1e-9)=>Math.abs(a-b)<=t;
 const issues=[];

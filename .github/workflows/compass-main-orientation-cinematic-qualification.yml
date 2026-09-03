@@ -1,0 +1,52 @@
+name: Compass Main Orientation Cinematic Qualification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'assets/compass/compass.orientation-cinematic.js'
+      - 'assets/compass/compass.orientation-cinematic.css'
+      - 'assets/compass/compass.orientation-cinematic.render.js'
+      - 'tools/compass-main-orientation-cinematic-qualification.mjs'
+      - '.github/workflows/compass-main-orientation-cinematic-qualification.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  cinematic-exact-product:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove exact cinematic product blobs are unchanged from candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD:assets/compass/compass.orientation-cinematic.js)" = 'c144d2d8fe512fadba3a007e17a877a1a5251bbe'
+          test "$(git rev-parse HEAD:assets/compass/compass.orientation-cinematic.css)" = '8fcd669368d7d38a57ec660c90780b50c237bc58'
+          test "$(git rev-parse HEAD:assets/compass/compass.orientation-cinematic.render.js)" = '3f63008f39684f7b03018fecb799d7f146b94218'
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Serve exact qualification carrier
+        run: |
+          python3 -m http.server 4173 >/tmp/compass-cinematic-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/compass-cinematic-http.log || true
+          exit 1
+      - name: Execute About-precedent cinematic browser qualification
+        run: node tools/compass-main-orientation-cinematic-qualification.mjs
+      - name: Upload immutable cinematic qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-main-orientation-cinematic-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .qualification/compass-main-orientation
+          if-no-files-found: warn
+          retention-days: 90

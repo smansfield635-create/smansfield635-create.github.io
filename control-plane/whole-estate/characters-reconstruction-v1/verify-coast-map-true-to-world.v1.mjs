@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import {execFileSync} from 'node:child_process';
-import {buildCoastMapSurfaceModel,COAST_MAP_RENDERER_ID} from '../../../..//characters/coast-map-renderer.mjs';
-import {buildForestPopulation} from '../../../..//characters/forest-system.mjs';
-import {resolveCoastlinePolyline} from '../../../..//characters/gratitude-geography.adapter.mjs';
+import {buildCoastMapSurfaceModel,COAST_MAP_RENDERER_ID} from '../../../characters/coast-map-renderer.mjs';
+import {buildForestPopulation} from '../../../characters/forest-system.mjs';
+import {resolveCoastlinePolyline} from '../../../characters/gratitude-geography.adapter.mjs';
 
 const BASE='928567148818c8618032394abc4ee3690dea1e9c';
 const allowed=new Set([
@@ -17,7 +17,6 @@ const protectedPaths=[
   'characters/forest-system.mjs','characters/cloud-traversal.mjs','characters/cloud-system.mjs'
 ];
 const run=(...args)=>execFileSync('git',args,{encoding:'utf8'}).trim();
-const canon=v=>JSON.stringify(v,Object.keys(v||{}).sort());
 const near=(a,b,t=1e-12)=>Math.abs(a-b)<=t;
 const checks=[];
 const check=(id,pass,detail=null)=>checks.push({id,pass:Boolean(pass),detail});

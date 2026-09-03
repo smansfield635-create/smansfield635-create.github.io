@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mirrorland World-to-Map Truth Diagnostic</title>
+<style>
+:root{color-scheme:dark;font-family:ui-sans-serif,system-ui,sans-serif;background:#071018;color:#e8f1f4}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 20%,#152531 0,#071018 58%);padding:24px}.shell{max-width:1100px;margin:0 auto}.head{display:flex;gap:20px;justify-content:space-between;align-items:end;margin-bottom:18px}.head h1{margin:0;font-size:clamp(24px,4vw,42px)}.head p{margin:4px 0 0;color:#9fb3be}.badge{padding:7px 10px;border:1px solid #5d7480;border-radius:999px;font-size:12px;white-space:nowrap}.map{position:relative;aspect-ratio:16/10;border:1px solid #48606b;border-radius:18px;overflow:hidden;background:linear-gradient(#13252d,#0d1a21)}svg{position:absolute;inset:0;width:100%;height:100%}.shore{fill:none;stroke:currentColor;stroke-width:2;vector-effect:non-scaling-stroke}.marker{position:absolute;transform:translate(-50%,-50%);display:grid;place-items:center;gap:4px}.dot{width:10px;height:10px;border:2px solid currentColor;border-radius:50%;background:#071018}.marker span{font-size:10px;background:rgba(7,16,24,.82);border:1px solid #3b515b;border-radius:6px;padding:2px 5px;white-space:nowrap}.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:14px}.card{border:1px solid #324952;border-radius:12px;padding:10px 12px;background:rgba(9,20,27,.72)}.card strong{display:block;font-size:12px}.card code{font-size:11px;color:#a9c1cb}body[data-result="PASS"] .badge::before{content:"PASS · "}body[data-result="FAIL"] .badge::before{content:"FAIL · "}@media(max-width:700px){body{padding:12px}.head{align-items:start;flex-direction:column}.marker span{font-size:8px}}
+</style>
+</head>
+<body>
+<main class="shell">
+  <div class="head"><div><h1>World → Map Truth</h1><p>One canonical transform. Same markers. Same shoreline. No hand placement.</p></div><div class="badge" id="status">loading canonical data</div></div>
+  <section class="map" id="map" aria-label="Canonical Gratitude Harbor world-to-map projection diagnostic">
+    <svg viewBox="0 0 1000 625" preserveAspectRatio="none" aria-hidden="true"><polyline id="shore" class="shore" points=""></polyline></svg>
+  </section>
+  <section class="legend" id="legend"></section>
+</main>
+<script type="module">
+import {buildWorldToMapTruthDiagnosticData} from './world-to-map-truth-diagnostic.mjs';
+const data=buildWorldToMapTruthDiagnosticData();
+const map=document.querySelector('#map');const legend=document.querySelector('#legend');const shore=document.querySelector('#shore');const status=document.querySelector('#status');
+shore.setAttribute('points',data.shoreline.map(p=>`${p.map.u*1000},${(1-p.map.v)*625}`).join(' '));
+for(const marker of data.markers){const el=document.createElement('div');el.className='marker';el.style.left=`${marker.map.u*100}%`;el.style.top=`${(1-marker.map.v)*100}%`;el.innerHTML=`<i class="dot"></i><span>${marker.siteId.replaceAll('_',' ')}</span>`;map.append(el);const card=document.createElement('div');card.className='card';card.innerHTML=`<strong>${marker.siteId.replaceAll('_',' ')}</strong><code>world (${marker.world.x.toFixed(2)}, ${marker.world.z.toFixed(2)}) → map (${marker.map.u.toFixed(5)}, ${marker.map.v.toFixed(5)})</code>`;legend.append(card);}
+const valid=data.markerCount===8&&data.shorelineSampleCount===65&&!data.handPositionedMarkerCoordinates&&!data.independentShorelineIllustration;
+document.body.dataset.result=valid?'PASS':'FAIL';status.textContent=`${data.adapterId} · ${data.frameId}`;
+</script>
+</body>
+</html>

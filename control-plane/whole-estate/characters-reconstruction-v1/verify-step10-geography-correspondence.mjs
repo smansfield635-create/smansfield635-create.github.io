@@ -24,17 +24,18 @@ for(const [destinationId,binding] of Object.entries(STEP9_DESTINATION_BINDINGS))
   const characters=resolveStep9Site(binding.siteId);
   const derived=binding.role==='LOCAL_DERIVED_DESTINATION';
   const shared=derived?null:resolveSiteAnchor(binding.siteId);
-  const referenceWorld=shared?.world||characters.world;
+  const canonicalWorld=characters.canonicalWorld||characters.world;
+  const referenceWorld=shared?.world||canonicalWorld;
   const map=step9MapPosition(binding.siteId);
   const sharedMap=worldToMap(referenceWorld,{clampToFrame:true});
   const terrain=sampleAudraliaGratitudeTerrain(referenceWorld.x,referenceWorld.z);
   const worldExact=derived
-    ? near(characters.world.x,terrain.world.x)&&near(characters.world.y,terrain.world.y)&&near(characters.world.z,terrain.world.z)
-    : near(characters.world.x,shared.world.x)&&near(characters.world.y,shared.world.y)&&near(characters.world.z,shared.world.z);
+    ? near(canonicalWorld.x,terrain.world.x)&&near(canonicalWorld.y,terrain.world.y)&&near(canonicalWorld.z,terrain.world.z)
+    : near(canonicalWorld.x,shared.world.x)&&near(canonicalWorld.y,shared.world.y)&&near(canonicalWorld.z,shared.world.z);
   const mapExact=near(map.u,sharedMap.u)&&near(map.v,sharedMap.v);
   const exact=worldExact&&mapExact&&terrain.valid===true&&terrain.geographyAuthority===AUDRALIA_GRATITUDE_GEOGRAPHIC_TRANSFER_CONTRACT_ID&&characters.traversalAuthorityGranted===false;
   if(!exact)issues.push(`LANDMARK_DIVERGENCE:${destinationId}:${binding.siteId}`);
-  landmarks.push({destinationId,siteId:binding.siteId,role:binding.role,derivedLocalDestination:derived,charactersWorld:characters.world,hEarthCanonicalWorld:shared?.world||null,audraliaTransferWorld:terrain.world,map:{characters:{u:map.u,v:map.v},shared:{u:sharedMap.u,v:sharedMap.v}},traversalAuthorityGranted:characters.traversalAuthorityGranted,exact});
+  landmarks.push({destinationId,siteId:binding.siteId,role:binding.role,derivedLocalDestination:derived,charactersCanonicalWorld:canonicalWorld,charactersPresentationWorld:characters.world,hEarthCanonicalWorld:shared?.world||null,audraliaTransferWorld:terrain.world,map:{characters:{u:map.u,v:map.v},shared:{u:sharedMap.u,v:sharedMap.v}},traversalAuthorityGranted:characters.traversalAuthorityGranted,exact});
 }
 const shorelineXs=[-1050,-768,-512,-256,0,256,512,768,1050];
 const shoreline=shorelineXs.map(x=>{const characters=step9ShorelineZ(x),shared=resolveAudraliaGratitudeShorelineZ(x),exact=near(characters,shared);if(!exact)issues.push(`SHORELINE_DIVERGENCE:${x}`);return{x,characters,hEarthAudralia:shared,exact};});

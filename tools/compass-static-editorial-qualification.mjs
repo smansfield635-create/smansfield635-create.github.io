@@ -80,7 +80,7 @@ if (!crystals.includes('if (!state.reducedMotion) return true;')) fail('normal-m
 if (!crystals.includes('state.reducedMotion')) fail('reduced-motion branch missing');
 
 for (const required of [
-  "trophyRenderer:'procedural-webgl-v5-mounted-lettering'",
+  "trophyRenderer:'procedural-webgl-v8-integrated-recessed-plaque'",
   "canvas.dataset.trophyFrames='1'",
   'fallback:false',
   'fallback:true',

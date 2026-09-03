@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import {GRATITUDE_COAST_NIGHT,NIGHT_FRAGMENT_SHADER,nightUniforms} from '../../../characters/night-renderer.mjs';
-import {evaluateStep9RegionalBridge} from '../../../characters/step9-regional-geography.mjs';
+import {evaluateStep9RegionalBridge} from '../../../characters/step9-regional-geography.mjs?v=e8f5ec7b';
 
 const rendererSource=await readFile(new URL('../../../characters/night-renderer.mjs',import.meta.url),'utf8');
 const appSource=await readFile(new URL('../../../characters/app.mjs',import.meta.url),'utf8');
@@ -58,18 +58,18 @@ try{
 }
 const normalizePath=value=>String(value||'').trim().replace(/^\.\//,'').replaceAll('\\','/').normalize('NFC');
 changed=changed.map(normalizePath).filter(Boolean);
-const allowed=[
-  'characters/app.mjs',
-  'characters/night-renderer.mjs',
-  'characters/step9-cinematic-primer-ui.mjs',
-  'assets/compass/compass.statement-orbit.js',
-  'control-plane/whole-estate/characters-reconstruction-v1/mirrorland-entry-rebind.v1.json',
-  'control-plane/whole-estate/characters-reconstruction-v1/verify-gratitude-environment-v2.v1.mjs',
-  'control-plane/whole-estate/characters-reconstruction-v1/verify-step10-browser.mjs',
-  '.github/workflows/characters-environment-v2-qualification.yml'
+
+// This verifier is a persistent compatibility gate, not a construction-scope gate.
+// Successor PRs may legitimately add narrative/UI modules. What they may not do
+// implicitly is mutate the upstream geography authorities that Environment V2 consumes.
+const protectedAuthorityPaths=[
+  'characters/gratitude-geography.adapter.mjs',
+  'h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js',
+  'h-earth-3d/integration/audralia.gratitude-landmark-registry.v1.json',
+  'showroom/globe/h-earth/render/h-earth.terrain-field.v1.js'
 ].map(normalizePath);
-const outOfScope=changed.filter(path=>!allowed.some(expected=>path===expected||path.endsWith(`/${expected}`)));
-assert.deepEqual(outOfScope,[],`ENVIRONMENT_V2_SCOPE_LEAK:${outOfScope.join(',')}`);
+const unauthorizedAuthorityMutation=changed.filter(path=>protectedAuthorityPaths.includes(path));
+assert.deepEqual(unauthorizedAuthorityMutation,[],`ENVIRONMENT_V2_UPSTREAM_AUTHORITY_MUTATION:${unauthorizedAuthorityMutation.join(',')}`);
 
 console.log(JSON.stringify({
   schema:'CHARACTERS_GRATITUDE_ENVIRONMENT_V2_QUALIFICATION_RECEIPT_v1',
@@ -82,5 +82,6 @@ console.log(JSON.stringify({
   manorOrDestinationObjectConstruction:false,
   mirrorlandOpeningSuccessorPermitted:true,
   shaderFeatures:{domainWarpedWater:true,brokenMoonPath:true,multiscaleTerrain:true,basinMist:true,distanceDesaturation:true},
+  protectedAuthorityPaths,
   changedFiles:changed
 },null,2));

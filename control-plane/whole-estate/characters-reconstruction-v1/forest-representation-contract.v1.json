@@ -1,0 +1,75 @@
+{
+  "schema": "MIRRORLAND_FOREST_REPRESENTATION_CONTRACT_v1",
+  "boundary": "FOREST_REPRESENTATION_GRAMMAR_FROZEN",
+  "operationId": "MIRRORLAND_FOREST_REPRESENTATION_2A_20260903_004",
+  "governingHead": "a198ac146882d54d23a2f1e9916d5eaf515805bb",
+  "worldPlantingAllowed": false,
+  "geographyMutationAllowed": false,
+  "treeConstructionLaw": {
+    "trunk": "TAPERED_SEGMENTED_WITH_CONTROLLED_LEAN",
+    "branches": "HIERARCHICAL_DECLINING_RADIUS_NON_COLLINEAR",
+    "canopy": "MULTIPLE_OVERLAPPING_CROWN_MASSES_WITH_VOIDS",
+    "foliage": "BATCHED_OR_INSTANCED_CLUSTERS_INSIDE_CROWN",
+    "stackedConeAllowed": false,
+    "singleMeshForestAllowed": false
+  },
+  "variationParameters": [
+    "height",
+    "trunkRadius",
+    "trunkLean",
+    "firstBranchHeight",
+    "branchAngleFamily",
+    "crownWidth",
+    "crownHeight",
+    "crownAsymmetry",
+    "foliageDensity",
+    "rotation"
+  ],
+  "archetypes": [
+    {"id":"BROAD_DECIDUOUS","silhouette":"SPREADING_IRREGULAR","branching":"PRIMARY_BIFURCATION","crown":"BROAD_MULTI_LOBE","foliage":"DENSE_WITH_VOIDS"},
+    {"id":"COLUMNAR_EVERGREEN","silhouette":"NARROW_LAYERED","branching":"WHORLED_NON_CONICAL","crown":"TAPERED_BROKEN_LAYERS","foliage":"LAYERED_CLUSTERS"},
+    {"id":"COASTAL_WIND_SHAPED","silhouette":"ASYMMETRIC_FLAGGED","branching":"LEEWARD_BIASED","crown":"OFFSET_WIND_PRUNED","foliage":"EXPOSURE_REDUCED"},
+    {"id":"ANCIENT_SPREADING","silhouette":"LOW_WIDE_HEAVY","branching":"THICK_LOW_PRIMARY_LIMBS","crown":"BROAD_OPEN_INTERIOR","foliage":"MATURE_PATCHWORK"},
+    {"id":"YOUNG_UNDERSTORY","silhouette":"SMALL_MULTI_STEM","branching":"FINE_EARLY_FORKS","crown":"LIGHT_EDGE_MASS","foliage":"YOUNG_DENSE_TIPS"},
+    {"id":"DEAD_OR_SPARSE","silhouette":"BROKEN_SKELETAL","branching":"EXPOSED_IRREGULAR","crown":"PARTIAL_OR_ABSENT","foliage":"SPARSE_OR_NONE"}
+  ],
+  "placementGrammar": {
+    "deterministic": true,
+    "source": "CANONICAL_TERRAIN_DERIVED_IN_SEQUENCE_2_NOT_EXECUTED_IN_2A",
+    "distribution": ["CLUSTER_CORES","TRANSITION_EDGES","GLADES","SPARSE_OUTLIERS"],
+    "uniformRandomScatterAllowed": false,
+    "landmarkSightlineProtectionRequired": true
+  },
+  "lod": {
+    "desktop": {
+      "NEAR":"TRUNK_PRIMARY_SECONDARY_BRANCHES_FULL_CROWN",
+      "MID":"TRUNK_PRIMARY_BRANCHES_REDUCED_CROWN_CLUSTERS",
+      "FAR":"ARCHETYPE_PRESERVING_SIMPLIFIED_CROWN_OR_IMPOSTOR",
+      "DISTANT":"CANOPY_MASS_OR_INDIVIDUAL_CULL"
+    },
+    "mobile": {
+      "NEAR":"TRUNK_PRIMARY_BRANCHES_REDUCED_FULL_CROWN",
+      "MID":"TRUNK_PRIMARY_BRANCHES_CLUSTER_LOD",
+      "FAR":"ARCHETYPE_PRESERVING_IMPOSTOR_OR_CROWN_MASS",
+      "DISTANT":"CANOPY_MASS_OR_CULL"
+    },
+    "antiPop": "HYSTERESIS_OR_CROSSFADE_WHERE_FEASIBLE",
+    "rootPositionChangesAcrossLod": false
+  },
+  "wind": {
+    "execution": "BATCHED_OR_SHADER_SPACE",
+    "trunk":"LOW_FREQUENCY",
+    "branch":"MID_FREQUENCY",
+    "foliage":"HIGH_FREQUENCY",
+    "perLeafCpuAnimationAllowed": false,
+    "reducedMotion":"SUPPRESS_OR_COMPRESS_MOTION_PRESERVE_FOREST"
+  },
+  "diagnosticAcceptance": {
+    "minimumArchetypes": 6,
+    "minimumVariantsPerArchetype": 3,
+    "requiredBands": ["NEAR","MID","FAR"],
+    "monochromeSilhouetteInspection": true,
+    "mobileLodRepresentation": true,
+    "worldPlantingRequired": false
+  }
+}

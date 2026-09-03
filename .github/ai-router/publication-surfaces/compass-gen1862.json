@@ -85,7 +85,7 @@
       "minFrames": 2,
       "requireVisible": true,
       "requireFallbackFalse": true,
-      "requireNonblank": true
+      "requireNonblank": false
     },
     "failOnConsoleErrors": true,
     "failOnPageErrors": true

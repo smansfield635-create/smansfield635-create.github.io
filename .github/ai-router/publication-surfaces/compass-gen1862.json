@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "compass-gen1862",
-  "description": "Compass root publication contract with mandatory visible Trophy successor identity and live renderer predicate.",
+  "description": "Compass root publication contract with pre-entry cinematic settlement plus mandatory visible Trophy successor identity and live renderer predicate.",
   "checks": [
     {
       "path": "/",
@@ -29,6 +29,24 @@
       "path": "/"
     },
     "interactions": [
+      {
+        "name": "Settle pre-entry cinematic before Compass verification",
+        "action": {
+          "type": "click",
+          "selector": "[data-cinematic-skip]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "[data-compass-root]:not([inert])"
+          },
+          {
+            "type": "exists",
+            "selector": "[data-capability-orbit][data-first-paint-authority=\"static\"]"
+          }
+        ],
+        "timeoutMs": 5000
+      },
       {
         "name": "Activate Awards before Trophy verification",
         "action": {

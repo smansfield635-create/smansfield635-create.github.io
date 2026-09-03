@@ -1,4 +1,4 @@
-name: Post-Merge Static Asset Cache Identity — Temporary Compass Admission
+name: Post-Merge Static Asset Cache Identity
 
 on:
   workflow_dispatch:
@@ -14,6 +14,9 @@ on:
   push:
     branches: [main]
     paths:
+      - '.github/workflows/post-merge-cache-identity-sync.yml'
+      - 'assets/compass/compass.house-scene.js'
+      - 'assets/compass/compass.capability-carousel.core.js'
       - 'assets/compass/compass.capability-carousel.js'
 
 permissions:

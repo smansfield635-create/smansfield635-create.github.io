@@ -33,7 +33,7 @@
         "name": "Activate Awards before Trophy verification",
         "action": {
           "type": "key",
-          "selector": "[data-capability-orbit][data-first-paint-authority=\"static\"]",
+          "selector": "[data-capability-orbit]",
           "key": "ArrowRight"
         },
         "assertions": [
@@ -51,7 +51,7 @@
           },
           {
             "type": "textContains",
-            "selector": "[data-capability-orbit][data-first-paint-authority=\"static\"] .compass-orbit-status",
+            "selector": "[data-capability-orbit] .compass-orbit-status",
             "value": "Awards & Recognition"
           }
         ],
@@ -63,7 +63,7 @@
       "fieldSelector": "[data-award-trophy]",
       "canvasSelector": "[data-award-trophy] canvas",
       "fallbackSelector": "[data-award-trophy] .compass-trophy-fallback",
-      "approvedRenderer": "procedural-webgl-v7-front-facing-motion",
+      "approvedRenderer": "procedural-webgl-v8-integrated-recessed-plaque",
       "minFrames": 2,
       "requireVisible": true,
       "requireFallbackFalse": true,

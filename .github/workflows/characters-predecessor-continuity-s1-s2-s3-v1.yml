@@ -1,0 +1,33 @@
+name: Characters predecessor continuity S1 S2 S3 v1
+on:
+  pull_request:
+    paths:
+      - 'characters/app.mjs'
+      - 'characters/forest-system.mjs'
+      - 'characters/cloud-system.mjs'
+      - 'characters/cloud-traversal.mjs'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/predecessor-continuity-s1-s2-s3-contract.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-predecessor-continuity-s1-s2-s3.v1.mjs'
+      - '.github/workflows/characters-predecessor-continuity-s1-s2-s3-v1.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify exact predecessor continuity candidate
+        run: node control-plane/whole-estate/characters-reconstruction-v1/verify-predecessor-continuity-s1-s2-s3.v1.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: predecessor-continuity-s1-s2-s3-${{ github.event.pull_request.head.sha || github.sha }}
+          path: predecessor-continuity-s1-s2-s3-receipt.json
+          if-no-files-found: warn
+          retention-days: 90

@@ -66,38 +66,57 @@ void main(){
   vec3 cool=vec3(.66,.73,.84);
   vec3 silver=vec3(.88,.91,.95);
   vec3 c=mix(cool,silver,body)*mix(.68,1.0,underside);
-  float alpha=uOpacity*(.62+.24*(1.0-vEdge))*(.72+.28*uOpticalDepth);
+  float alpha=uOpacity*(.52+.34*(1.0-vEdge))*(.72+.28*uOpticalDepth);
   outColor=vec4(c,alpha);
+}`;
+const VEIL_VS=`#version 300 es
+precision highp float;
+out vec2 vUv;
+void main(){vec2 p=vec2((gl_VertexID<<1)&2,gl_VertexID&2);vUv=p*.5;gl_Position=vec4(p-1.0,0.0,1.0);}`;
+const VEIL_FS=`#version 300 es
+precision highp float;
+in vec2 vUv;
+uniform float uVeil;
+uniform float uTime;
+out vec4 outColor;
+float h(vec2 p){return fract(sin(dot(p,vec2(41.3,289.7)))*43758.5453);}
+void main(){
+  vec2 q=vUv*vec2(6.0,4.0)+vec2(uTime*.012,-uTime*.006);
+  float n=mix(h(floor(q)),h(floor(q)+vec2(1.0,1.0)),.5);
+  float band=.78+.22*sin(vUv.y*9.0+vUv.x*3.0);
+  vec3 c=mix(vec3(.48,.56,.66),vec3(.76,.80,.84),band);
+  float a=uVeil*(.76+.16*n);
+  outColor=vec4(c,a);
 }`;
 
 function compile(gl,type,src){const shader=gl.createShader(type);gl.shaderSource(shader,src);gl.compileShader(shader);if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS))throw new Error(`CLOUD_SHADER_COMPILE:${gl.getShaderInfoLog(shader)}`);return shader;}
-function program(gl){const p=gl.createProgram();gl.attachShader(p,compile(gl,gl.VERTEX_SHADER,VS));gl.attachShader(p,compile(gl,gl.FRAGMENT_SHADER,FS));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(`CLOUD_PROGRAM_LINK:${gl.getProgramInfoLog(p)}`);return p;}
+function link(gl,vs,fs){const p=gl.createProgram();gl.attachShader(p,compile(gl,gl.VERTEX_SHADER,vs));gl.attachShader(p,compile(gl,gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(`CLOUD_PROGRAM_LINK:${gl.getProgramInfoLog(p)}`);return p;}
 
-function octaPuff(cx,cy,cz,r,flatten){
-  const ry=r*flatten;
-  const points=[[cx,cy+ry,cz],[cx+r,cy,cz],[cx,cy,cz+r],[cx-r,cy,cz],[cx,cy,cz-r],[cx,cy-ry,cz]];
-  const faces=[[0,1,2],[0,2,3],[0,3,4],[0,4,1],[5,2,1],[5,3,2],[5,4,3],[5,1,4]];
-  const vertices=[];
-  for(const face of faces){
-    for(const index of face){const p=points[index];const nx=(p[0]-cx)/r,ny=(p[1]-cy)/ry,nz=(p[2]-cz)/r;const l=Math.hypot(nx,ny,nz)||1;vertices.push(p[0],p[1],p[2],nx/l,ny/l,nz/l);}
+function ellipsoidPuff(cx,cy,cz,r,flatten){
+  const verts=[],latBands=5,lonBands=10,ry=r*flatten;
+  const point=(lat,lon)=>{const phi=-Math.PI/2+(lat/latBands)*Math.PI,theta=(lon/lonBands)*Math.PI*2,cp=Math.cos(phi);return [cx+r*cp*Math.cos(theta),cy+ry*Math.sin(phi),cz+r*cp*Math.sin(theta),cp*Math.cos(theta),Math.sin(phi),cp*Math.sin(theta)];};
+  for(let lat=0;lat<latBands;lat++)for(let lon=0;lon<lonBands;lon++){
+    const a=point(lat,lon),b=point(lat+1,lon),c=point(lat+1,lon+1),d=point(lat,lon+1);
+    verts.push(...a,...b,...c,...a,...c,...d);
   }
-  return vertices;
+  return verts;
 }
-function geometry(layout){const verts=[];for(const bank of layout)for(const puff of bank.puffs)verts.push(...octaPuff(puff.x,puff.y,puff.z,puff.radius,puff.flatten));return new Float32Array(verts);}
+function geometry(layout){const verts=[];for(const bank of layout)for(const puff of bank.puffs)verts.push(...ellipsoidPuff(puff.x,puff.y,puff.z,puff.radius,puff.flatten));return new Float32Array(verts);}
 
 export function createCloudSystem({gl,compact=false,reducedMotion=false}={}){
   if(!gl)throw new Error('CLOUD_SYSTEM_WEBGL2_REQUIRED');
   const layout=buildCloudBankLayout({compact});
   const verts=geometry(layout);
-  const cloudProgram=program(gl);
+  const cloudProgram=link(gl,VS,FS),veilProgram=link(gl,VEIL_VS,VEIL_FS);
   const vao=gl.createVertexArray();gl.bindVertexArray(vao);
   const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,verts,gl.STATIC_DRAW);
   gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,24,0);
   gl.enableVertexAttribArray(1);gl.vertexAttribPointer(1,3,gl.FLOAT,false,24,12);
-  gl.bindVertexArray(null);
+  const veilVao=gl.createVertexArray();gl.bindVertexArray(null);
   const locations={
     vp:gl.getUniformLocation(cloudProgram,'uVP'),opacity:gl.getUniformLocation(cloudProgram,'uOpacity'),
-    opticalDepth:gl.getUniformLocation(cloudProgram,'uOpticalDepth'),drift:gl.getUniformLocation(cloudProgram,'uDrift'),time:gl.getUniformLocation(cloudProgram,'uTime')
+    opticalDepth:gl.getUniformLocation(cloudProgram,'uOpticalDepth'),drift:gl.getUniformLocation(cloudProgram,'uDrift'),time:gl.getUniformLocation(cloudProgram,'uTime'),
+    veil:gl.getUniformLocation(veilProgram,'uVeil'),veilTime:gl.getUniformLocation(veilProgram,'uTime')
   };
   let last={state:'ORBIT',...resolveCloudPresentation('ORBIT',{reducedMotion,compact})};
   const puffCount=layout.reduce((n,b)=>n+b.puffs.length,0);
@@ -107,11 +126,11 @@ export function createCloudSystem({gl,compact=false,reducedMotion=false}={}){
     last={state:liveState,...profile};
     gl.enable(gl.DEPTH_TEST);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);
     gl.useProgram(cloudProgram);gl.uniformMatrix4fv(locations.vp,false,vp);gl.uniform1f(locations.opacity,profile.opacity);gl.uniform1f(locations.opticalDepth,profile.opticalDepth);gl.uniform1f(locations.drift,profile.drift);gl.uniform1f(locations.time,reducedMotion?0:time);
-    gl.bindVertexArray(vao);gl.drawArrays(gl.TRIANGLES,0,verts.length/6);gl.bindVertexArray(null);
+    gl.bindVertexArray(vao);gl.drawArrays(gl.TRIANGLES,0,verts.length/6);
     if(profile.veil>0){
-      gl.disable(gl.DEPTH_TEST);gl.uniform1f(locations.opacity,Math.min(.92,profile.veil));gl.uniform1f(locations.opticalDepth,1);gl.drawArrays(gl.TRIANGLES,0,Math.min(verts.length/6,72));
+      gl.disable(gl.DEPTH_TEST);gl.useProgram(veilProgram);gl.uniform1f(locations.veil,profile.veil);gl.uniform1f(locations.veilTime,reducedMotion?0:time);gl.bindVertexArray(veilVao);gl.drawArrays(gl.TRIANGLES,0,3);
     }
-    gl.depthMask(true);gl.disable(gl.BLEND);gl.enable(gl.DEPTH_TEST);
+    gl.bindVertexArray(null);gl.depthMask(true);gl.disable(gl.BLEND);gl.enable(gl.DEPTH_TEST);
   }
   function snapshot(){return {schema:'MIRRORLAND_CLOUD_SYSTEM_RUNTIME_v1',state:last.state,bankCount:layout.length,puffCount,opacity:last.opacity,opticalDepth:last.opticalDepth,veil:last.veil,drift:last.drift,reducedMotion,compact};}
   const api={draw,snapshot,layout};

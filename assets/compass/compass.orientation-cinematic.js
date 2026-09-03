@@ -3,6 +3,7 @@
 const STATE={ARMED:'ARMED',PLAYING:'PLAYING',SETTLED:'SETTLED'};
 const MASTER_DURATION=28000;
 const BOUNDARIES=[0,3250,6500,9250,10350,11950,13550,14500,18750,22250,25500,28000];
+const READINESS_ORDER=['research','trl','tra','community'];
 const BEATS=[
   {key:'identity',label:'Diamond Gate Bridge',selector:'.compass-estate__header',at:0},
   {key:'compass',label:'The Compass',selector:'[data-compass-scene]',at:3250},
@@ -12,14 +13,14 @@ const BEATS=[
   {key:'tra',label:'TRA',selector:'[data-readiness-family="tra"]',at:11950,prepare:'tra'},
   {key:'community',label:'Community',selector:'[data-readiness-family="community"]',at:13550,prepare:'community'},
   {key:'engage',label:'Three ways to engage',selector:'[data-capability-orbit]',at:14500},
-  {key:'mirrorland',label:'Mirrorland',selector:'[data-compass-scene]',at:18750,findText:'Mirrorland'},
+  {key:'mirrorland',label:'Mirrorland',selector:'[data-compass-scene]',at:18750,prepare:'mirrorland'},
   {key:'estate',label:'The wider estate',selector:'.compass-accessibility-routes',at:22250,prepare:'routes'},
-  {key:'return',label:'Return to Compass',selector:'[data-compass-scene]',at:25500},
+  {key:'return',label:'Return to Compass',selector:'[data-compass-scene]',at:25500,prepare:'return'},
 ];
 const $=(s,r=document)=>r.querySelector(s);
 const all=(s,r=document)=>[...r.querySelectorAll(s)];
 const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
-const state={phase:null,overlay:null,frame:null,raf:0,start:0,beat:-1,settled:false,priorFocus:null,root:null,rootInert:false,rootAriaHidden:null,url:'',historyLength:0,frameReady:false,abortTimer:0};
+const state={phase:null,overlay:null,frame:null,raf:0,start:0,beat:-1,settled:false,priorFocus:null,root:null,rootInert:false,rootAriaHidden:null,url:'',historyLength:0,frameReady:false,abortTimer:0,errorCode:null,handoffAligned:false};
 const setPhase=phase=>{state.phase=phase;if(state.overlay)state.overlay.dataset.state=phase;document.documentElement.dataset.compassOrientationCinematic=phase;};
 function restoreRoot(){
   if(!state.root)return;
@@ -32,27 +33,49 @@ function clearRuntime(){
   window.removeEventListener('keydown',onKey,true);
   state.frame?.removeEventListener('load',onFrameLoad);
 }
+function alignLiveCompass(){
+  const live=$('[data-compass-scene]');
+  if(!live)return false;
+  let desiredTop=Math.max(0,window.scrollY+live.getBoundingClientRect().top-Math.max(0,(window.innerHeight-live.getBoundingClientRect().height)/2));
+  const frameTarget=state.frameReady?$('[data-compass-scene]',state.frame?.contentDocument):null;
+  if(frameTarget){
+    const liveRect=live.getBoundingClientRect();
+    const frameRect=frameTarget.getBoundingClientRect();
+    desiredTop=Math.max(0,window.scrollY+liveRect.top-frameRect.top);
+  }
+  window.scrollTo({left:window.scrollX,top:desiredTop,behavior:'auto'});
+  if(frameTarget)return Math.abs(live.getBoundingClientRect().top-frameTarget.getBoundingClientRect().top)<=1;
+  return true;
+}
 function settle(reason='complete'){
   if(state.settled)return;
+  const wasPlaying=state.phase===STATE.PLAYING;
   state.settled=true;
   clearRuntime();
   setPhase(STATE.SETTLED);
+  if(wasPlaying&&reason!=='fail-open')state.handoffAligned=alignLiveCompass();
   if(state.overlay){state.overlay.dataset.settleReason=reason;state.overlay.remove();}
   restoreRoot();
   document.documentElement.classList.remove('compass-orientation-cinematic-active');
-  if(location.href!==state.url){try{history.replaceState(history.state,'',state.url);}catch{}}
+  delete document.documentElement.dataset.compassOrientationCinematic;
+  const urlUnchanged=location.href===state.url;
+  const historyUnchanged=history.length===state.historyLength;
   requestAnimationFrame(()=>{
     const target=state.priorFocus&&state.priorFocus.isConnected?state.priorFocus:null;
     if(target&&typeof target.focus==='function')target.focus({preventScroll:true});
-    document.dispatchEvent(new CustomEvent('dgb:compass-orientation-cinematic-settled',{detail:{reason,durationMs:MASTER_DURATION,navigationIntentEvents:0}}));
+    document.dispatchEvent(new CustomEvent('dgb:compass-orientation-cinematic-settled',{detail:{reason,durationMs:MASTER_DURATION,boundariesMs:[...BOUNDARIES],navigationIntentEvents:0,urlUnchanged,historyUnchanged,handoffAligned:state.handoffAligned,errorCode:state.errorCode}}));
   });
 }
 function failOpen(code){
-  try{document.documentElement.dataset.compassOrientationCinematicError=code;}catch{}
+  state.errorCode=code;
   settle('fail-open');
 }
 function onKey(e){
-  if(e.key==='Escape'){e.preventDefault();settle('skip-keyboard');return;}
+  if(e.key==='Escape'){
+    e.preventDefault();
+    settle(state.phase===STATE.ARMED?'skip-armed':'skip-playing');
+    return;
+  }
   if(e.key==='Tab'&&state.overlay){
     const focusable=all('button:not([disabled]),[href],input,select,textarea,[tabindex]:not([tabindex="-1"])',state.overlay).filter(n=>!n.hidden);
     if(!focusable.length){e.preventDefault();return;}
@@ -93,6 +116,15 @@ function createShell(){
     </div>`;
   return overlay;
 }
+function activateRealReadiness(type,doc){
+  const stage=$('[data-compass-readiness-static="v3"]',doc);
+  const index=READINESS_ORDER.indexOf(type);
+  const tabs=stage?all(':scope > .compass-readiness-tabs > .compass-readiness-tab',stage):[];
+  const tab=index>=0?tabs[index]:null;
+  if(!tab)return false;
+  if(tab.getAttribute('aria-selected')!=='true')tab.click();
+  return tab.getAttribute('aria-selected')==='true';
+}
 function prepareFrameBeat(beat){
   const win=state.frame?.contentWindow,doc=state.frame?.contentDocument;
   if(!win||!doc)return null;
@@ -104,26 +136,30 @@ function prepareFrameBeat(beat){
   if(beat.prepare==='chapter'){
     const details=$(beat.selector,doc);if(details)details.open=true;
   }
-  if(['research','trl','tra','community'].includes(beat.prepare)){
-    const tab=$(`.compass-readiness-tab[data-readiness-tab="${beat.prepare}"]`,doc)||$(`[data-readiness-family="${beat.prepare}"]`,doc)?.closest('[data-compass-readiness-stage]')?.querySelector(`button[aria-controls*="${beat.prepare}"]`);
-    if(tab&&tab.getAttribute('aria-selected')!=='true')tab.click();
-    all('.compass-readiness-family',doc).forEach(node=>{const active=node.dataset.readinessFamily===beat.prepare;node.hidden=!active;node.inert=!active;});
+  if(READINESS_ORDER.includes(beat.prepare)&&!activateRealReadiness(beat.prepare,doc))throw new Error(`READINESS_CONTROL_UNAVAILABLE:${beat.prepare}`);
+  if(beat.prepare==='mirrorland'){
+    const api=win.DGB_COMPASS_CONTROLLER;
+    if(!api||typeof api.requestMirrorlandReveal!=='function'||api.requestMirrorlandReveal()!==true)throw new Error('MIRRORLAND_REAL_STATE_UNAVAILABLE');
   }
   if(beat.prepare==='routes'){
+    const api=win.DGB_COMPASS_CONTROLLER;
+    const frameState=api?.getFrameState?.();
+    if(frameState&&['MIRRORLAND_REVEALING','MIRRORLAND_FOCUSED'].includes(frameState.state)&&typeof api.requestMirrorlandBack==='function')api.requestMirrorlandBack();
     const details=$(beat.selector,doc);if(details)details.open=true;
   }
-  let target=$(beat.selector,doc);
-  if(beat.findText&&target){
-    const text=all('*',target).find(node=>node.children.length===0&&node.textContent?.trim().toLowerCase().includes(beat.findText.toLowerCase()));
-    if(text)target=text;
+  if(beat.prepare==='return'){
+    const api=win.DGB_COMPASS_CONTROLLER;
+    const frameState=api?.getFrameState?.();
+    if(frameState&&['MIRRORLAND_REVEALING','MIRRORLAND_FOCUSED'].includes(frameState.state)&&typeof api.requestMirrorlandBack==='function')api.requestMirrorlandBack();
   }
-  return target;
+  return $(beat.selector,doc);
 }
 function showBeat(index){
   if(index===state.beat)return;
   const beat=BEATS[index];if(!beat)return;
   state.beat=index;
-  const target=prepareFrameBeat(beat);
+  let target=null;
+  try{target=prepareFrameBeat(beat);}catch(error){return failOpen(error?.message||'REAL_STATE_SEQUENCING_FAILURE');}
   const doc=state.frame?.contentDocument;
   if(target&&doc){
     const scroller=doc.scrollingElement||doc.documentElement;
@@ -141,6 +177,7 @@ function tick(now){
   const elapsed=Math.min(MASTER_DURATION,Math.max(0,now-state.start));
   let index=0;for(let i=0;i<BEATS.length;i++)if(elapsed>=BEATS[i].at)index=i;
   showBeat(index);
+  if(state.settled)return;
   const progress=$('[data-cinematic-progress]',state.overlay);if(progress)progress.style.transform=`scaleX(${elapsed/MASTER_DURATION})`;
   if(elapsed>=MASTER_DURATION){requestAnimationFrame(()=>settle('complete'));return;}
   state.raf=requestAnimationFrame(tick);
@@ -151,7 +188,7 @@ function startPlayback(){
     $('[data-cinematic-armed]',state.overlay).hidden=true;
     $('[data-cinematic-reduced]',state.overlay).hidden=false;
     setPhase(STATE.PLAYING);
-    $('[data-cinematic-skip]',state.overlay)?.focus();
+    $('[data-cinematic-reduced] [data-cinematic-skip]',state.overlay)?.focus();
     return;
   }
   $('[data-cinematic-armed]',state.overlay).hidden=true;
@@ -175,12 +212,14 @@ function onFrameLoad(){
   clearTimeout(state.abortTimer);state.abortTimer=0;
   try{
     const doc=state.frame.contentDocument;
-    if(!doc||!$('[data-compass-root]',doc))return failOpen('FRAME_SOURCE_BINDING_FAILURE');
+    const required=['[data-compass-root]','[data-compass-scene]','[data-compass-static-introduction]','[data-readiness-family="research"]','[data-readiness-family="trl"]','[data-readiness-family="tra"]','[data-readiness-family="community"]','[data-capability-orbit]','.compass-accessibility-routes'];
+    if(!doc||required.some(selector=>!$(selector,doc)))return failOpen('FRAME_SOURCE_BINDING_FAILURE');
+    if(!state.frame.contentWindow.DGB_COMPASS_CONTROLLER)return failOpen('FRAME_CONTROLLER_BINDING_FAILURE');
     state.frameReady=true;
     state.start=performance.now();
     state.beat=-1;
     showBeat(0);
-    state.raf=requestAnimationFrame(tick);
+    if(!state.settled)state.raf=requestAnimationFrame(tick);
   }catch{return failOpen('FRAME_ACCESS_FAILURE');}
 }
 function mount(){

@@ -15,7 +15,8 @@ const checks=[];
 const check=(id,condition,detail={})=>{checks.push({id,result:condition?'PASS':'FAIL',...detail});if(!condition)throw new Error(`${id}:${JSON.stringify(detail)}`);};
 
 check('EXISTING_STATE_AUTHORITY_PRESERVED',JSON.stringify(CLOUD_TRAVEL_STATES)===JSON.stringify(contract.states),{states:CLOUD_TRAVEL_STATES});
-check('STATE_PUBLICATION_CONTRACT_PRESENT',travel.includes("CLOUD_TRAVEL_STATES")&&contract.statePublication==='document.documentElement.dataset.cloudTravel');
+check('STATE_PUBLICATION_CONTRACT_PRESENT',travel.includes('CLOUD_TRAVEL_STATES')&&contract.statePublication==='document.documentElement.dataset.cloudTravel');
+check('DIRECT_SIGNAL_STATE_BINDING_PRESENT',travel.includes(".signal[data-id]")&&travel.includes('begin({destinationId:'),{});
 
 const desktop=buildCloudBankLayout({compact:false});
 const mobile=buildCloudBankLayout({compact:true});
@@ -42,24 +43,12 @@ check('REDUCED_MOTION_SEMANTIC_EQUIVALENT',rmTransit.drift===0&&rmTransit.optica
 
 check('APP_RUNTIME_INTEGRATION',app.includes("from './cloud-system.mjs'")&&app.includes('createCloudSystem')&&app.includes('cloudSystem.draw'),{});
 check('STATE_RESPONSIVE_RENDERER',system.includes('dataset.cloudTravel')||app.includes('dataset.cloudTravel'),{});
-check('OVERLAY_NOT_SOLE_CLOUD_PROOF',contract.presentation.overlayIsSupplementOnly===true&&system.includes('gl.drawElements'),{});
+check('WEBGL_GEOMETRY_AND_VEIL_PRESENT',system.includes('gl.drawArrays')&&system.includes('VEIL_VS')&&system.includes('VEIL_FS'),{});
+check('OVERLAY_NOT_SOLE_CLOUD_PROOF',contract.presentation.overlayIsSupplementOnly===true&&system.includes('gl.drawArrays'),{});
 check('NO_FOREST_MUTATION_DECLARED',contract.protectedPaths.includes('characters/forest-system.mjs'),{});
 check('NO_SEQUENCE_4_PLUS_MUTATION',contract.sequence4PlusMutationAllowed===false,{});
 
 const digest=crypto.createHash('sha256').update(fs.readFileSync(SYSTEM_PATH)).update(fs.readFileSync(CONTRACT_PATH)).digest('hex');
-const receipt={
-  schema:'MIRRORLAND_CLOUD_TRAVERSAL_MATERIALITY_RECEIPT_v1',
-  result:'PASS_CLOSED',
-  operationId:contract.operationId,
-  governingHead:contract.governingHead,
-  desktopBanks:desktop.length,
-  mobileBanks:mobile.length,
-  desktopPuffs:countPuffs(desktop),
-  mobilePuffs:countPuffs(mobile),
-  transitOpticalDepth:transit.opticalDepth,
-  arrivalOpticalDepth:arrival.opticalDepth,
-  cloudSystemDigest:digest,
-  checks
-};
+const receipt={schema:'MIRRORLAND_CLOUD_TRAVERSAL_MATERIALITY_RECEIPT_v1',result:'PASS_CLOSED',operationId:contract.operationId,governingHead:contract.governingHead,desktopBanks:desktop.length,mobileBanks:mobile.length,desktopPuffs:countPuffs(desktop),mobilePuffs:countPuffs(mobile),transitOpticalDepth:transit.opticalDepth,arrivalOpticalDepth:arrival.opticalDepth,cloudSystemDigest:digest,checks};
 fs.writeFileSync('cloud-traversal-materiality-receipt.json',JSON.stringify(receipt,null,2)+'\n');
 console.log(JSON.stringify(receipt,null,2));

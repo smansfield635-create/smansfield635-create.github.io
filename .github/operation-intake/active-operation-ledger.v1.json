@@ -5710,6 +5710,49 @@
       "scopeHash": "cdff2f07b40bfaf3f197d945cc27879d6deaec109d02d303c74987ebcc355a10",
       "state": "ADMITTED_LOCKED"
     },
+    "cecfe6fa0b4f19c9c704c020ba0c1aad00fe0f9daf7750ed1bfd8cf44aa7187c": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "ab5d137a614e500008c3eaa501b96eedccc06500",
+          "lockGeneration": 1935,
+          "lockScope": "CHARACTERS:MIRRORLAND:PREDECESSOR_CONTINUITY:S1_S2_S3",
+          "operationId": "MIRRORLAND_PREDECESSOR_CONTINUITY_S1_S2_S3_20260903_009",
+          "procedureLocatorDigest": "1ea3b8496d07ee16f11225df053c1ec6ddad2549e129df9156f361cdc95e94ef",
+          "requestDigest": "12c2ba9e24f38e43623b00687b4596d6dcbb3fed59b3f8c82f55bde49e66c0a4",
+          "scopeHash": "cecfe6fa0b4f19c9c704c020ba0c1aad00fe0f9daf7750ed1bfd8cf44aa7187c"
+        },
+        "bindingDigest": "5adc46e8d824329a4fb5f38f55c52c981ac177738e97202870a1bd1c5b3148de",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "113e980caabde46acaf0a92cda25e6d15866e2db87e2dc8c0e3009315712ba88",
+          "commentId": 5520662956,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2670,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33716839133,
+          "workflowSha": "ab5d137a614e500008c3eaa501b96eedccc06500"
+        },
+        "lineageAnchorCommitSha": "424cdeeb14d1ceecc04ee3128c20d23d1cfa0a5f",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "ab5d137a614e500008c3eaa501b96eedccc06500",
+      "lockGeneration": 1935,
+      "lockScope": "CHARACTERS:MIRRORLAND:PREDECESSOR_CONTINUITY:S1_S2_S3",
+      "operationId": "MIRRORLAND_PREDECESSOR_CONTINUITY_S1_S2_S3_20260903_009",
+      "procedureLocatorDigest": "1ea3b8496d07ee16f11225df053c1ec6ddad2549e129df9156f361cdc95e94ef",
+      "released": false,
+      "requestDigest": "12c2ba9e24f38e43623b00687b4596d6dcbb3fed59b3f8c82f55bde49e66c0a4",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "cecfe6fa0b4f19c9c704c020ba0c1aad00fe0f9daf7750ed1bfd8cf44aa7187c",
+      "state": "ADMITTED_LOCKED"
+    },
     "d0043d474bd80fb8adc7f12e53fb5ed81ca3c5c48a345aee9ddfce9bf5804190": {
       "governingHead": "0253326d80a89084142465f5210b4bca6361bb1a",
       "lockGeneration": 124,
@@ -7154,7 +7197,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1934,
+  "lockGeneration": 1935,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

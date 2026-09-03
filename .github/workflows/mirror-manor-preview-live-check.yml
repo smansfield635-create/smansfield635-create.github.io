@@ -1,44 +1,51 @@
-name: Mirror Manor Cache Identity Repair
+name: Mirror Manor Root Cache Identity Repair
 on:
   push:
     branches: [main]
 permissions:
   contents: write
 concurrency:
-  group: mirror-manor-cache-identity-repair
+  group: mirror-manor-root-cache-identity-repair
   cancel-in-progress: true
 jobs:
   synchronize:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 5
     steps:
-      - name: Checkout current main
+      - name: Sparse checkout root and Compass loader
         uses: actions/checkout@v4
         with:
           ref: main
-          fetch-depth: 2
-      - name: Synchronize recursive content identities
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            index.html
+            assets/compass/compass.capability-carousel.js
+      - name: Rotate root loader identity
         shell: bash
         run: |
           set -euo pipefail
-          head="$(git rev-parse HEAD^{commit})"
-          base="$(git rev-parse HEAD^1)"
-          node .github/ai-router/platform/post-merge-cache-identity-sync.v1.mjs --self-test
-          CACHE_IDENTITY_BASE="$base" CACHE_IDENTITY_HEAD="$head" CACHE_IDENTITY_RECEIPT=/tmp/manor-cache-identity.json node .github/ai-router/platform/post-merge-cache-identity-sync.v1.mjs
-          if git diff --quiet; then
-            echo "No cache identity changes required."
+          token="$(sha256sum assets/compass/compass.capability-carousel.js | awk '{print substr($1,1,16)}')"
+          python - "$token" <<'PY'
+          import re,sys,pathlib
+          token=sys.argv[1]
+          p=pathlib.Path('index.html')
+          s=p.read_text()
+          pattern=r'(assets/compass/compass\.capability-carousel\.js[^\"\']*?[?&]cb=)[0-9a-fA-F]+'
+          out,n=re.subn(pattern,lambda m:m.group(1)+token,s,count=1)
+          if n != 1:
+              raise SystemExit(f'expected exactly one capability loader identity, found {n}')
+          p.write_text(out)
+          print('root_loader_token='+token)
+          PY
+          if git diff --quiet -- index.html; then
+            echo 'Root loader identity already current.'
             exit 0
           fi
-          git diff --check
+          git diff --check -- index.html
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add -- '*.html' '*.css' '*.js' '*.mjs'
-          git commit -m "chore(delivery): synchronize Mirror Manor carousel cache identities"
+          git add index.html
+          git commit -m 'chore(delivery): rotate Mirror Manor root carousel identity'
           git push origin HEAD:main
-      - name: Upload repair receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: mirror-manor-cache-identity-repair
-          path: /tmp/manor-cache-identity.json
-          if-no-files-found: warn

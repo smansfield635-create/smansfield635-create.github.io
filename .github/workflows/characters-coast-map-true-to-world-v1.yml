@@ -21,6 +21,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /characters/
+            /h-earth-3d/terrain/
+            /h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js
+            /control-plane/whole-estate/characters-reconstruction-v1/coast-map-true-to-world-contract.v1.json
+            /control-plane/whole-estate/characters-reconstruction-v1/verify-coast-map-true-to-world.v1.mjs
+            /.github/workflows/characters-coast-map-true-to-world-v1.yml
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -57,8 +65,7 @@ jobs:
               fatal:document.querySelector('#fatal')?.classList.contains('show')||false,
               mapTogglePresent:Boolean(document.querySelector('#map-toggle')),
               surfacePresent:Boolean(document.querySelector('[data-coast-map-surface]')),
-              source:document.querySelector('#map-grid')?.dataset.geographySource||null,
-              pageErrors:[]
+              source:document.querySelector('#map-grid')?.dataset.geographySource||null
             }));
             fs.writeFileSync(`coast-map-true-to-world-evidence/${spec.id}-preopen.json`,JSON.stringify({...preOpen,pageErrors:errors},null,2)+'\n');
             if(!preOpen.mapTogglePresent||!preOpen.surfacePresent||preOpen.source!=='WORLD_DERIVED')throw new Error(`MAP_PREOPEN_FAILURE:${spec.id}:${JSON.stringify({...preOpen,pageErrors:errors})}`);

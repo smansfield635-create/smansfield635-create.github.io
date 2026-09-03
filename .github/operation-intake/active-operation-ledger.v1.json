@@ -419,6 +419,49 @@
       "scopeHash": "0ddccd237442ccfda3ea430909ec7ed68c90eeae7dc9afb9405e483697cd4456",
       "state": "ADMITTED_LOCKED"
     },
+    "0e5d2b816f8ed06ac5cb1c44a7a91ec32ad00757fb7f82bf1600ab63327042f2": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "be6234fd0768095f10227a4adf0fbb36e5f7800f",
+          "lockGeneration": 1938,
+          "lockScope": "DG_ASG_E1_DISPOSABLE_LIVE_AGENT_CINEMATIC_TRIAL",
+          "operationId": "DG-ASG_E1_LIVE_AGENT_CINEMATIC_TRIAL",
+          "procedureLocatorDigest": "c6ab9d2faa59e95cdb2c423fa86454c4b028052b96a66bd9f427180f67197090",
+          "requestDigest": "38ea566afb89870f7f029318fa027bb71da9b1b56bf7233212e245bdc6533b88",
+          "scopeHash": "0e5d2b816f8ed06ac5cb1c44a7a91ec32ad00757fb7f82bf1600ab63327042f2"
+        },
+        "bindingDigest": "eddc955637ddfb8951be0510a0362c22d520471ea735ab5c8974c6cbfc51e713",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "4acb22ac7d65853854cae247c8e9d537797650f887def30c39991610e5cbde92",
+          "commentId": 5531575582,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2690,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33801311523,
+          "workflowSha": "be6234fd0768095f10227a4adf0fbb36e5f7800f"
+        },
+        "lineageAnchorCommitSha": "7e6c3eb343eb6d08b042769c2d85021b4966009a",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "be6234fd0768095f10227a4adf0fbb36e5f7800f",
+      "lockGeneration": 1938,
+      "lockScope": "DG_ASG_E1_DISPOSABLE_LIVE_AGENT_CINEMATIC_TRIAL",
+      "operationId": "DG-ASG_E1_LIVE_AGENT_CINEMATIC_TRIAL",
+      "procedureLocatorDigest": "c6ab9d2faa59e95cdb2c423fa86454c4b028052b96a66bd9f427180f67197090",
+      "released": false,
+      "requestDigest": "38ea566afb89870f7f029318fa027bb71da9b1b56bf7233212e245bdc6533b88",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "0e5d2b816f8ed06ac5cb1c44a7a91ec32ad00757fb7f82bf1600ab63327042f2",
+      "state": "ADMITTED_LOCKED"
+    },
     "0f0c81e327dbfa84ac8cb6b9764692ed129686887d3d763164a6ab9bda7cae62": {
       "governingHead": "f9e63ce0e08e1c3bbf69c1afcffe8de6aed41c13",
       "lockGeneration": 1650,
@@ -7214,7 +7257,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1937,
+  "lockGeneration": 1938,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -1,12 +1,12 @@
 (()=>{
 'use strict';
 const CONTINUITY='COMPASS_OBJECT_RENDERER_CONTINUITY_v1';
-const VERSION='mirror-manor-gothic-phase3-carousel-v3-principal-estate';
+const VERSION='mirror-manor-gothic-phase3-carousel-v3-principal-estate-r2';
 const scenes=new WeakMap();let primary=null;
 const LEGACY_CONTINUITY='projected-architectural-geometry-v8-coherent-manor DGB_COMPASS_MANOR_EXHIBIT_DEPTH_v8 coherent-two-story-window-grid no-pavilion-windows no-side-stacked-windows roof-occlusion-pass paint(roofFaces)';
 const CAROUSEL_DISTANCE=68;
 const CAROUSEL_TARGET=Object.freeze([0,7,1]);
-const omittedFromCarousel=id=>id==='FG'||/(^|-)GATE($|-)/.test(id||'');
+const omittedFromCarousel=id=>id==='FG'||id==='GHSE'||/(^|-)GATE($|-)/.test(id||'');
 function mount(canvas,{foreground=()=>true}={}){
  if(!canvas||scenes.has(canvas))return scenes.get(canvas);
  let disposed=false,ready=false,drawQueued=false,gl=null,drawImpl=()=>{};

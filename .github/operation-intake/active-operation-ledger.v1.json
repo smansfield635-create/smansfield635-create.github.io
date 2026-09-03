@@ -316,6 +316,49 @@
       "scopeHash": "0cbb894a22e576db5e8f30790ca5b753f50d8e73f0394804166ce80d919effd0",
       "state": "ADMITTED_LOCKED"
     },
+    "0dcc8c6fe47e54a4ffbfcbe02d932fab8cc9bdf2c332e3230270c857d80e29e9": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "23dbe7daea3458254dd85651113213261abf7ca2",
+          "lockGeneration": 1931,
+          "lockScope": "CHARACTERS:MIRRORLAND:FOREST_POPULATION:SEQUENCE_2",
+          "operationId": "MIRRORLAND_FOREST_POPULATION_20260903_001",
+          "procedureLocatorDigest": "6e4f749a29fa56e526f982c5b9f629dff7be34e5528f267088002aed468b6f15",
+          "requestDigest": "95a79f4b63a3b8c473478662aa431a2b9bd864f349abac142b0ef43f972d64f5",
+          "scopeHash": "0dcc8c6fe47e54a4ffbfcbe02d932fab8cc9bdf2c332e3230270c857d80e29e9"
+        },
+        "bindingDigest": "4cc3d8788cfbfd87ebd277d99f2277c1a6adc3d00a85f9c0d90764d550d0bf44",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "68f366525e9113e523a96360ab9518588600d83c4045d9b1c3d15dc389f5bc77",
+          "commentId": 5519363567,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2670,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33707431248,
+          "workflowSha": "23dbe7daea3458254dd85651113213261abf7ca2"
+        },
+        "lineageAnchorCommitSha": "54114a6288e1e4e3d74737aedb00336195537e02",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "23dbe7daea3458254dd85651113213261abf7ca2",
+      "lockGeneration": 1931,
+      "lockScope": "CHARACTERS:MIRRORLAND:FOREST_POPULATION:SEQUENCE_2",
+      "operationId": "MIRRORLAND_FOREST_POPULATION_20260903_001",
+      "procedureLocatorDigest": "6e4f749a29fa56e526f982c5b9f629dff7be34e5528f267088002aed468b6f15",
+      "released": false,
+      "requestDigest": "95a79f4b63a3b8c473478662aa431a2b9bd864f349abac142b0ef43f972d64f5",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "0dcc8c6fe47e54a4ffbfcbe02d932fab8cc9bdf2c332e3230270c857d80e29e9",
+      "state": "ADMITTED_LOCKED"
+    },
     "0ddccd237442ccfda3ea430909ec7ed68c90eeae7dc9afb9405e483697cd4456": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -6982,7 +7025,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1930,
+  "lockGeneration": 1931,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

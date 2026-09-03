@@ -47,10 +47,24 @@ jobs:
           ]){
             const context=await browser.newContext({viewport:spec.viewport,isMobile:spec.isMobile||false,hasTouch:spec.hasTouch||false,reducedMotion:'reduce'});
             const page=await context.newPage();
-            const errors=[];page.on('pageerror',e=>errors.push(String(e)));
-            await page.goto('http://127.0.0.1:4173/characters/',{waitUntil:'networkidle'});
+            const errors=[];
+            page.on('pageerror',e=>errors.push(String(e)));
+            await page.goto('http://127.0.0.1:4173/characters/',{waitUntil:'domcontentloaded'});
+            await page.locator('#map-grid').waitFor({state:'attached'});
+            await page.locator('[data-coast-map-surface]').waitFor({state:'attached'});
+            const preOpen=await page.evaluate(()=>({
+              readyState:document.readyState,
+              fatal:document.querySelector('#fatal')?.classList.contains('show')||false,
+              mapTogglePresent:Boolean(document.querySelector('#map-toggle')),
+              surfacePresent:Boolean(document.querySelector('[data-coast-map-surface]')),
+              source:document.querySelector('#map-grid')?.dataset.geographySource||null,
+              pageErrors:[]
+            }));
+            fs.writeFileSync(`coast-map-true-to-world-evidence/${spec.id}-preopen.json`,JSON.stringify({...preOpen,pageErrors:errors},null,2)+'\n');
+            if(!preOpen.mapTogglePresent||!preOpen.surfacePresent||preOpen.source!=='WORLD_DERIVED')throw new Error(`MAP_PREOPEN_FAILURE:${spec.id}:${JSON.stringify({...preOpen,pageErrors:errors})}`);
             await page.screenshot({path:`coast-map-true-to-world-evidence/${spec.id}-world.png`,fullPage:true});
-            await page.locator('#map-toggle').click();
+            await page.evaluate(()=>document.querySelector('#map-toggle')?.click());
+            await page.locator('#coast-map.show').waitFor({state:'visible'});
             await page.locator('[data-coast-map-surface]').waitFor({state:'visible'});
             const material=await page.evaluate(()=>({
               source:document.querySelector('#map-grid')?.dataset.geographySource,
@@ -58,9 +72,11 @@ jobs:
               coastline:document.querySelectorAll('[data-map-layer="CANONICAL_COASTLINE"]').length,
               terrain:document.querySelectorAll('[data-map-layer="WORLD_DERIVED_TERRAIN"] rect').length,
               forests:document.querySelectorAll('[data-forest-region]').length,
-              visibleNodes:[...document.querySelectorAll('.map-node')].filter(x=>!x.hidden).length
+              visibleNodes:[...document.querySelectorAll('.map-node')].filter(x=>!x.hidden).length,
+              mapOpen:document.querySelector('#coast-map')?.classList.contains('show')||false
             }));
-            if(material.source!=='WORLD_DERIVED'||material.coastline!==1||material.terrain<40||material.forests!==7)throw new Error(`MAP_MATERIALITY_FAILURE:${spec.id}:${JSON.stringify(material)}`);
+            fs.writeFileSync(`coast-map-true-to-world-evidence/${spec.id}-material.json`,JSON.stringify({...material,pageErrors:errors},null,2)+'\n');
+            if(!material.mapOpen||material.source!=='WORLD_DERIVED'||material.coastline!==1||material.terrain<40||material.forests!==7)throw new Error(`MAP_MATERIALITY_FAILURE:${spec.id}:${JSON.stringify({...material,pageErrors:errors})}`);
             await page.screenshot({path:`coast-map-true-to-world-evidence/${spec.id}-map.png`,fullPage:true});
             evidence.push({id:spec.id,viewport:spec.viewport,material,pageErrors:errors});
             await context.close();

@@ -19,7 +19,7 @@ function mountCapabilityEnhancement(){
   load('/assets/compass/compass.hra-brain-scene.js?v=brain-gen1-hra-passive-v1&g=1607&cb=20260824-brain-gen1-hra-passive-v1','data-compass-hra-brain-scene',()=>{
     load('/assets/compass/compass.trophy-scene.js?v=capability-continuity-v9-integrated-recess&cb=d281e18b06128671','data-compass-trophy-scene',()=>{
       load('/assets/compass/compass.trophy-cursive-inlay.js?v=cursive-inlay-v1&cb=6e1b9f51fa8388f2','data-compass-trophy-cursive-inlay',()=>{
-        load('/assets/compass/compass.capability-carousel.core.js?v=capability-continuity-v5-static-owner&cb=c0c82c21ef5cf4af','data-compass-capability-carousel-core');
+        load('/assets/compass/compass.capability-carousel.core.js?v=capability-continuity-v5-static-owner&cb=81c0b5484610cfb9','data-compass-capability-carousel-core');
       });
     });
   });

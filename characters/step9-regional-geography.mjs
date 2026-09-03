@@ -30,7 +30,7 @@ export const STEP9_SCALE_CONTRACT=freeze({
   game:'FUTURE_GAME_RUNTIME',
   regionalDiscoveryMayExceedPlayableGroundDomain:true,
   regionalContinuationGrantsTraversalAuthority:false,
-  accessibilityStatusDeferredToCharacterCardBoundary:false,
+  accessibilityStatusDeferredToCharacterCardBoundary:true,
   scenesConstructed:false,
   gameplayConstructed:false,
   directivesConstructed:false,

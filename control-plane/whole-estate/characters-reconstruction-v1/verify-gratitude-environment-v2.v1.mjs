@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import {GRATITUDE_COAST_NIGHT,NIGHT_FRAGMENT_SHADER,nightUniforms} from '../../../characters/night-renderer.mjs';
-import {evaluateStep9RegionalBridge} from '../../../characters/step9-regional-geography.mjs';
+import {evaluateStep9RegionalBridge} from '../../../characters/step9-regional-geography.mjs?v=e8f5ec7b';
 
 const rendererSource=await readFile(new URL('../../../characters/night-renderer.mjs',import.meta.url),'utf8');
 const appSource=await readFile(new URL('../../../characters/app.mjs',import.meta.url),'utf8');

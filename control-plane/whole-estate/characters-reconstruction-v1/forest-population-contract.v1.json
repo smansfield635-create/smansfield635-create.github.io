@@ -1,0 +1,68 @@
+{
+  "schema": "MIRRORLAND_FOREST_POPULATION_CONTRACT_v1",
+  "status": "FROZEN_SEQUENCE_2",
+  "governingOperation": "MIRRORLAND_FOREST_POPULATION_20260903_001",
+  "governingHead": "23dbe7daea3458254dd85651113213261abf7ca2",
+  "representationSource": {
+    "pr": 2675,
+    "exactHead": "35e8e2fb3e4a093fb3bc8ecc4239e8564bd7938a",
+    "boundary": "FOREST_REPRESENTATION_GRAMMAR_FROZEN"
+  },
+  "geographyBinding": {
+    "source": "characters/step9-regional-geography.mjs",
+    "frame": "step9Frame().envelope",
+    "terrain": "step9TerrainHeight(x,z)",
+    "shoreline": "step9ShorelineZ(x)",
+    "landRule": "z <= step9ShorelineZ(x) - coastalSetback",
+    "upstreamReadOnly": true
+  },
+  "archetypes": [
+    "BROAD_DECIDUOUS",
+    "COLUMNAR",
+    "WIND_SHAPED_COASTAL",
+    "ANCIENT_SPREADING",
+    "YOUNG_UNDERSTORY",
+    "DEAD_SPARSE"
+  ],
+  "placement": {
+    "grammar": "DETERMINISTIC_CLUSTERED_REGIONS_WITH_DENSE_CORES_TRANSITION_EDGES_AND_GAPS",
+    "uniformScatterAllowed": false,
+    "coastalSetback": 48,
+    "frameInsetFraction": 0.045,
+    "regionCount": 7,
+    "landmarkSightlineRadius": {
+      "default": 74,
+      "manor": 155,
+      "crossing": 120,
+      "clock": 105
+    },
+    "worldEdgeConcealmentDependencyAllowed": false
+  },
+  "budgets": {
+    "desktop": {"targetTrees": 420, "maximumTrees": 520, "nearGeometryShare": 0.24, "midGeometryShare": 0.46, "farGeometryShare": 0.30},
+    "mobile": {"targetTrees": 190, "maximumTrees": 240, "nearGeometryShare": 0.16, "midGeometryShare": 0.39, "farGeometryShare": 0.45}
+  },
+  "lod": {
+    "near": "BRANCHED_TRUNK_PLUS_MULTIPLE_IRREGULAR_CANOPY_MASSES",
+    "mid": "REDUCED_BRANCHING_PLUS_TWO_CANOPY_MASSES",
+    "far": "TRUNK_PLUS_SINGLE_ASYMMETRIC_CANOPY_MASS",
+    "mobileReduction": true,
+    "stackedConesAllowed": false
+  },
+  "wind": {
+    "mode": "BATCHED_SHADER_SPACE_CANOPY_SWAY",
+    "perLeafCpuAnimation": false,
+    "reducedMotionFreezesTime": true
+  },
+  "acceptance": [
+    "CANONICAL_TERRAIN_BINDING",
+    "CANONICAL_SHORELINE_SETBACK",
+    "SIX_ARCHETYPE_RUNTIME_CONSUMPTION",
+    "CLUSTERED_NOT_UNIFORM_PLACEMENT",
+    "DENSE_CORE_AND_TRANSITIONAL_EDGE",
+    "LANDMARK_SIGHTLINE_EXCLUSIONS",
+    "DESKTOP_MOBILE_BUDGETS",
+    "NO_WORLD_EDGE_CONCEALMENT_DEPENDENCY",
+    "MATERIALLY_VISIBLE_FOREST_GEOMETRY"
+  ]
+}

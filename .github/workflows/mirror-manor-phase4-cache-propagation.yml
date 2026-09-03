@@ -1,0 +1,65 @@
+name: Mirror Manor Phase 4 Branch Cache Propagation
+
+on:
+  push:
+    branches:
+      - agent/mirror-manor-phase4-lived-in-detail
+    paths:
+      - '.github/workflows/mirror-manor-phase4-cache-propagation.yml'
+      - 'assets/compass/compass.house-scene.js'
+      - 'assets/compass/compass.capability-carousel.core.js'
+      - 'assets/compass/compass.capability-carousel.js'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mirror-manor-phase4-branch-cache-propagation
+  cancel-in-progress: true
+
+jobs:
+  synchronize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sparse checkout Phase 4 cache surface
+        uses: actions/checkout@v4
+        with:
+          ref: agent/mirror-manor-phase4-lived-in-detail
+          fetch-depth: 0
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/ai-router/platform/post-merge-cache-identity-sync.v1.mjs
+            /index.html
+            /assets/compass/compass.house-scene.js
+            /assets/compass/compass.capability-carousel.core.js
+            /assets/compass/compass.capability-carousel.js
+      - name: Synchronize branch cache identities
+        env:
+          CACHE_IDENTITY_BASE: ${{ github.event.before }}
+          CACHE_IDENTITY_HEAD: ${{ github.sha }}
+          CACHE_IDENTITY_RECEIPT: /tmp/mirror-manor-phase4-cache-identity.json
+          CACHE_IDENTITY_SCOPE: index.html,assets/compass/compass.house-scene.js,assets/compass/compass.capability-carousel.core.js,assets/compass/compass.capability-carousel.js
+        run: |
+          node .github/ai-router/platform/post-merge-cache-identity-sync.v1.mjs --self-test
+          node .github/ai-router/platform/post-merge-cache-identity-sync.v1.mjs
+      - name: Commit synchronized identities to PR branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "No cache identity changes required."
+            exit 0
+          fi
+          git diff --check
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -- index.html assets/compass/compass.house-scene.js assets/compass/compass.capability-carousel.core.js assets/compass/compass.capability-carousel.js
+          git commit -m "chore(delivery): propagate Mirror Manor Phase 4 cache identities"
+          git push origin HEAD:agent/mirror-manor-phase4-lived-in-detail
+      - name: Upload receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: mirror-manor-phase4-cache-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/mirror-manor-phase4-cache-identity.json
+          if-no-files-found: error
+          retention-days: 30

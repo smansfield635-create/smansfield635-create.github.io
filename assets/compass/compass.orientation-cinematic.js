@@ -22,77 +22,13 @@ const all=(s,r=document)=>[...r.querySelectorAll(s)];
 const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 const state={phase:null,overlay:null,frame:null,raf:0,start:0,beat:-1,settled:false,priorFocus:null,root:null,rootInert:false,rootAriaHidden:null,url:'',historyLength:0,frameReady:false,abortTimer:0,errorCode:null,handoffAligned:false};
 const setPhase=phase=>{state.phase=phase;if(state.overlay)state.overlay.dataset.state=phase;document.documentElement.dataset.compassOrientationCinematic=phase;};
-function restoreRoot(){
-  if(!state.root)return;
-  state.root.inert=state.rootInert;
-  if(state.rootAriaHidden===null)state.root.removeAttribute('aria-hidden');else state.root.setAttribute('aria-hidden',state.rootAriaHidden);
-}
-function clearRuntime(){
-  cancelAnimationFrame(state.raf);state.raf=0;
-  clearTimeout(state.abortTimer);state.abortTimer=0;
-  window.removeEventListener('keydown',onKey,true);
-  state.frame?.removeEventListener('load',onFrameLoad);
-}
-function alignLiveCompass(){
-  const live=$('[data-compass-scene]');
-  if(!live)return false;
-  let desiredTop=Math.max(0,window.scrollY+live.getBoundingClientRect().top-Math.max(0,(window.innerHeight-live.getBoundingClientRect().height)/2));
-  const frameTarget=state.frameReady?$('[data-compass-scene]',state.frame?.contentDocument):null;
-  if(frameTarget){
-    const liveRect=live.getBoundingClientRect();
-    const frameRect=frameTarget.getBoundingClientRect();
-    desiredTop=Math.max(0,window.scrollY+liveRect.top-frameRect.top);
-  }
-  window.scrollTo({left:window.scrollX,top:desiredTop,behavior:'auto'});
-  if(frameTarget)return Math.abs(live.getBoundingClientRect().top-frameTarget.getBoundingClientRect().top)<=1;
-  return true;
-}
-function settle(reason='complete'){
-  if(state.settled)return;
-  const wasPlaying=state.phase===STATE.PLAYING;
-  state.settled=true;
-  clearRuntime();
-  setPhase(STATE.SETTLED);
-  if(wasPlaying&&reason!=='fail-open')state.handoffAligned=alignLiveCompass();
-  if(state.overlay){state.overlay.dataset.settleReason=reason;state.overlay.remove();}
-  restoreRoot();
-  document.documentElement.classList.remove('compass-orientation-cinematic-active');
-  delete document.documentElement.dataset.compassOrientationCinematic;
-  const urlUnchanged=location.href===state.url;
-  const historyUnchanged=history.length===state.historyLength;
-  requestAnimationFrame(()=>{
-    const target=state.priorFocus&&state.priorFocus.isConnected?state.priorFocus:null;
-    if(target&&typeof target.focus==='function')target.focus({preventScroll:true});
-    document.dispatchEvent(new CustomEvent('dgb:compass-orientation-cinematic-settled',{detail:{reason,durationMs:MASTER_DURATION,boundariesMs:[...BOUNDARIES],navigationIntentEvents:0,urlUnchanged,historyUnchanged,handoffAligned:state.handoffAligned,errorCode:state.errorCode}}));
-  });
-}
-function failOpen(code){
-  state.errorCode=code;
-  settle('fail-open');
-}
-function onKey(e){
-  if(e.key==='Escape'){
-    e.preventDefault();
-    settle(state.phase===STATE.ARMED?'skip-armed':'skip-playing');
-    return;
-  }
-  if(e.key==='Tab'&&state.overlay){
-    const focusable=all('button:not([disabled]),[href],input,select,textarea,[tabindex]:not([tabindex="-1"])',state.overlay).filter(n=>!n.hidden);
-    if(!focusable.length){e.preventDefault();return;}
-    const first=focusable[0],last=focusable[focusable.length-1];
-    if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
-    else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
-  }
-}
-function createShell(){
-  const overlay=document.createElement('section');
-  overlay.id='compass-orientation-cinematic';
-  overlay.className='compass-orientation-cinematic';
-  overlay.dataset.state=STATE.ARMED;
-  overlay.setAttribute('role','dialog');
-  overlay.setAttribute('aria-modal','true');
-  overlay.setAttribute('aria-labelledby','compass-orientation-cinematic-title');
-  overlay.innerHTML=`<div class="compass-orientation-cinematic__backdrop" aria-hidden="true"></div>
+function restoreRoot(){if(!state.root)return;state.root.inert=state.rootInert;if(state.rootAriaHidden===null)state.root.removeAttribute('aria-hidden');else state.root.setAttribute('aria-hidden',state.rootAriaHidden);}
+function clearRuntime(){cancelAnimationFrame(state.raf);state.raf=0;clearTimeout(state.abortTimer);state.abortTimer=0;window.removeEventListener('keydown',onKey,true);state.frame?.removeEventListener('load',onFrameLoad);}
+function alignLiveCompass(){const live=$('[data-compass-scene]');if(!live)return false;let desiredTop=Math.max(0,window.scrollY+live.getBoundingClientRect().top-Math.max(0,(window.innerHeight-live.getBoundingClientRect().height)/2));const frameTarget=state.frameReady?$('[data-compass-scene]',state.frame?.contentDocument):null;if(frameTarget){const liveRect=live.getBoundingClientRect();const frameRect=frameTarget.getBoundingClientRect();desiredTop=Math.max(0,window.scrollY+liveRect.top-frameRect.top);}window.scrollTo({left:window.scrollX,top:desiredTop,behavior:'auto'});if(frameTarget)return Math.abs(live.getBoundingClientRect().top-frameTarget.getBoundingClientRect().top)<=1;return true;}
+function settle(reason='complete'){if(state.settled)return;const wasPlaying=state.phase===STATE.PLAYING;state.settled=true;clearRuntime();setPhase(STATE.SETTLED);if(wasPlaying&&reason!=='fail-open')state.handoffAligned=alignLiveCompass();if(state.overlay){state.overlay.dataset.settleReason=reason;state.overlay.remove();}restoreRoot();document.documentElement.classList.remove('compass-orientation-cinematic-active');delete document.documentElement.dataset.compassOrientationCinematic;const urlUnchanged=location.href===state.url;const historyUnchanged=history.length===state.historyLength;requestAnimationFrame(()=>{const target=state.priorFocus&&state.priorFocus.isConnected?state.priorFocus:null;if(target&&typeof target.focus==='function')target.focus({preventScroll:true});document.dispatchEvent(new CustomEvent('dgb:compass-orientation-cinematic-settled',{detail:{reason,durationMs:MASTER_DURATION,boundariesMs:[...BOUNDARIES],navigationIntentEvents:0,urlUnchanged,historyUnchanged,handoffAligned:state.handoffAligned,errorCode:state.errorCode}}));});}
+function failOpen(code){state.errorCode=code;settle('fail-open');}
+function onKey(e){if(e.key==='Escape'){e.preventDefault();settle(state.phase===STATE.ARMED?'skip-armed':'skip-playing');return;}if(e.key==='Tab'&&state.overlay){const focusable=all('button:not([disabled]),[href],input,select,textarea,[tabindex]:not([tabindex="-1"])',state.overlay).filter(n=>!n.hidden);if(!focusable.length){e.preventDefault();return;}const first=focusable[0],last=focusable[focusable.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}}
+function createShell(){const overlay=document.createElement('section');overlay.id='compass-orientation-cinematic';overlay.className='compass-orientation-cinematic';overlay.dataset.state=STATE.ARMED;overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-labelledby','compass-orientation-cinematic-title');overlay.innerHTML=`<div class="compass-orientation-cinematic__backdrop" aria-hidden="true"></div>
     <div class="compass-orientation-cinematic__stage" data-cinematic-stage>
       <div class="compass-orientation-cinematic__armed" data-cinematic-armed>
         <p class="compass-orientation-cinematic__eyebrow">Diamond Gate Bridge</p>
@@ -113,137 +49,13 @@ function createShell(){
         <ol>${BEATS.map(b=>`<li>${b.label}</li>`).join('')}</ol>
         <button type="button" data-cinematic-skip>Continue to Compass</button>
       </div>
-    </div>`;
-  return overlay;
-}
-function activateRealReadiness(type,doc){
-  const stage=$('[data-compass-readiness-static="v3"]',doc);
-  const index=READINESS_ORDER.indexOf(type);
-  const tabs=stage?all(':scope > .compass-readiness-tabs > .compass-readiness-tab',stage):[];
-  const tab=index>=0?tabs[index]:null;
-  if(!tab)return false;
-  if(tab.getAttribute('aria-selected')!=='true')tab.click();
-  return tab.getAttribute('aria-selected')==='true';
-}
-function prepareFrameBeat(beat){
-  const win=state.frame?.contentWindow,doc=state.frame?.contentDocument;
-  if(!win||!doc)return null;
-  if(!doc.documentElement.dataset.cinematicNavigationGuard){
-    doc.documentElement.dataset.cinematicNavigationGuard='true';
-    doc.addEventListener('click',e=>{if(e.target.closest('a,form')){e.preventDefault();e.stopImmediatePropagation();}},true);
-    doc.addEventListener('submit',e=>{e.preventDefault();e.stopImmediatePropagation();},true);
-  }
-  if(beat.prepare==='chapter'){
-    const details=$(beat.selector,doc);if(details)details.open=true;
-  }
-  if(READINESS_ORDER.includes(beat.prepare)&&!activateRealReadiness(beat.prepare,doc))throw new Error(`READINESS_CONTROL_UNAVAILABLE:${beat.prepare}`);
-  if(beat.prepare==='mirrorland'){
-    const api=win.DGB_COMPASS_CONTROLLER;
-    if(!api||typeof api.requestMirrorlandReveal!=='function'||api.requestMirrorlandReveal()!==true)throw new Error('MIRRORLAND_REAL_STATE_UNAVAILABLE');
-  }
-  if(beat.prepare==='routes'){
-    const api=win.DGB_COMPASS_CONTROLLER;
-    const frameState=api?.getFrameState?.();
-    if(frameState&&['MIRRORLAND_REVEALING','MIRRORLAND_FOCUSED'].includes(frameState.state)&&typeof api.requestMirrorlandBack==='function')api.requestMirrorlandBack();
-    const details=$(beat.selector,doc);if(details)details.open=true;
-  }
-  if(beat.prepare==='return'){
-    const api=win.DGB_COMPASS_CONTROLLER;
-    const frameState=api?.getFrameState?.();
-    if(frameState&&['MIRRORLAND_REVEALING','MIRRORLAND_FOCUSED'].includes(frameState.state)&&typeof api.requestMirrorlandBack==='function')api.requestMirrorlandBack();
-  }
-  return $(beat.selector,doc);
-}
-function showBeat(index){
-  if(index===state.beat)return;
-  const beat=BEATS[index];if(!beat)return;
-  state.beat=index;
-  let target=null;
-  try{target=prepareFrameBeat(beat);}catch(error){return failOpen(error?.message||'REAL_STATE_SEQUENCING_FAILURE');}
-  const doc=state.frame?.contentDocument;
-  if(target&&doc){
-    const scroller=doc.scrollingElement||doc.documentElement;
-    const rect=target.getBoundingClientRect();
-    const top=Math.max(0,rect.top+scroller.scrollTop-(state.frame.clientHeight-rect.height)/2);
-    scroller.scrollTo({top,behavior:'auto'});
-  }
-  const label=$('[data-cinematic-label]',state.overlay),ordinal=$('[data-cinematic-ordinal]',state.overlay);
-  if(label)label.textContent=beat.label;
-  if(ordinal)ordinal.textContent=String(index+1).padStart(2,'0')+' / '+String(BEATS.length).padStart(2,'0');
-  state.overlay.dataset.beat=beat.key;
-}
-function tick(now){
-  if(state.phase!==STATE.PLAYING||state.settled)return;
-  const elapsed=Math.min(MASTER_DURATION,Math.max(0,now-state.start));
-  let index=0;for(let i=0;i<BEATS.length;i++)if(elapsed>=BEATS[i].at)index=i;
-  showBeat(index);
-  if(state.settled)return;
-  const progress=$('[data-cinematic-progress]',state.overlay);if(progress)progress.style.transform=`scaleX(${elapsed/MASTER_DURATION})`;
-  if(elapsed>=MASTER_DURATION){requestAnimationFrame(()=>settle('complete'));return;}
-  state.raf=requestAnimationFrame(tick);
-}
-function startPlayback(){
-  if(state.phase!==STATE.ARMED||state.settled)return;
-  if(reduced()){
-    $('[data-cinematic-armed]',state.overlay).hidden=true;
-    $('[data-cinematic-reduced]',state.overlay).hidden=false;
-    setPhase(STATE.PLAYING);
-    $('[data-cinematic-reduced] [data-cinematic-skip]',state.overlay)?.focus();
-    return;
-  }
-  $('[data-cinematic-armed]',state.overlay).hidden=true;
-  $('[data-cinematic-player]',state.overlay).hidden=false;
-  setPhase(STATE.PLAYING);
-  const wrap=$('[data-cinematic-frame-wrap]',state.overlay);
-  const frame=document.createElement('iframe');
-  frame.className='compass-orientation-cinematic__frame';
-  frame.title='Live Diamond Gate Bridge orientation view';
-  frame.setAttribute('sandbox','allow-scripts allow-same-origin');
-  frame.setAttribute('aria-hidden','true');
-  frame.tabIndex=-1;
-  state.frame=frame;
-  frame.addEventListener('load',onFrameLoad,{once:true});
-  wrap.appendChild(frame);
-  const url=new URL(location.href);url.searchParams.set('orientation-cinematic-frame','1');url.hash='';
-  frame.src=url.href;
-  state.abortTimer=setTimeout(()=>{if(!state.frameReady)failOpen('FRAME_LOAD_TIMEOUT');},8000);
-}
-function onFrameLoad(){
-  clearTimeout(state.abortTimer);state.abortTimer=0;
-  try{
-    const doc=state.frame.contentDocument;
-    const required=['[data-compass-root]','[data-compass-scene]','[data-compass-static-introduction]','[data-readiness-family="research"]','[data-readiness-family="trl"]','[data-readiness-family="tra"]','[data-readiness-family="community"]','[data-capability-orbit]','.compass-accessibility-routes'];
-    if(!doc||required.some(selector=>!$(selector,doc)))return failOpen('FRAME_SOURCE_BINDING_FAILURE');
-    if(!state.frame.contentWindow.DGB_COMPASS_CONTROLLER)return failOpen('FRAME_CONTROLLER_BINDING_FAILURE');
-    state.frameReady=true;
-    state.start=performance.now();
-    state.beat=-1;
-    showBeat(0);
-    if(!state.settled)state.raf=requestAnimationFrame(tick);
-  }catch{return failOpen('FRAME_ACCESS_FAILURE');}
-}
-function mount(){
-  if(window.self!==window.top)return;
-  if(new URLSearchParams(location.search).has('orientation-cinematic-frame'))return;
-  state.root=$('[data-compass-root]');
-  if(!state.root||!$('[data-compass-scene]')||!$('[data-compass-static-introduction]')||!$('[data-readiness-family="research"]')||!$('[data-capability-orbit]'))return;
-  state.priorFocus=document.activeElement;
-  state.rootInert=state.root.inert;
-  state.rootAriaHidden=state.root.getAttribute('aria-hidden');
-  state.url=location.href;
-  state.historyLength=history.length;
-  state.overlay=createShell();
-  document.body.appendChild(state.overlay);
-  state.root.inert=true;
-  state.root.setAttribute('aria-hidden','true');
-  document.documentElement.classList.add('compass-orientation-cinematic-active');
-  setPhase(STATE.ARMED);
-  state.overlay.addEventListener('click',e=>{
-    if(e.target.closest('[data-cinematic-play]'))startPlayback();
-    else if(e.target.closest('[data-cinematic-skip]'))settle(state.phase===STATE.ARMED?'skip-armed':'skip-playing');
-  });
-  window.addEventListener('keydown',onKey,true);
-  $('[data-cinematic-play]',state.overlay)?.focus({preventScroll:true});
-}
+    </div>`;return overlay;}
+function activateRealReadiness(type,doc){const stage=$('[data-compass-readiness-static="v3"]',doc);const index=READINESS_ORDER.indexOf(type);const tabs=stage?all(':scope > .compass-readiness-tabs > .compass-readiness-tab',stage):[];const tab=index>=0?tabs[index]:null;if(!tab)return false;if(tab.getAttribute('aria-selected')!=='true')tab.click();return tab.getAttribute('aria-selected')==='true';}
+function prepareFrameBeat(beat){const win=state.frame?.contentWindow,doc=state.frame?.contentDocument;if(!win||!doc)return null;if(!doc.documentElement.dataset.cinematicNavigationGuard){doc.documentElement.dataset.cinematicNavigationGuard='true';doc.addEventListener('click',e=>{if(e.target.closest('a,form')){e.preventDefault();e.stopImmediatePropagation();}},true);doc.addEventListener('submit',e=>{e.preventDefault();e.stopImmediatePropagation();},true);}if(beat.prepare==='chapter'){const details=$(beat.selector,doc);if(details)details.open=true;}if(READINESS_ORDER.includes(beat.prepare)&&!activateRealReadiness(beat.prepare,doc))throw new Error(`READINESS_CONTROL_UNAVAILABLE:${beat.prepare}`);if(beat.prepare==='mirrorland'){const api=win.DGB_COMPASS_CONTROLLER;if(!api||typeof api.requestMirrorlandReveal!=='function'||api.requestMirrorlandReveal()!==true)throw new Error('MIRRORLAND_REAL_STATE_UNAVAILABLE');}if(beat.prepare==='routes'){const api=win.DGB_COMPASS_CONTROLLER;const frameState=api?.getFrameState?.();if(frameState&&['MIRRORLAND_REVEALING','MIRRORLAND_FOCUSED'].includes(frameState.state)&&typeof api.requestMirrorlandBack==='function')api.requestMirrorlandBack();const details=$(beat.selector,doc);if(details)details.open=true;}if(beat.prepare==='return'){const api=win.DGB_COMPASS_CONTROLLER;const frameState=api?.getFrameState?.();if(frameState&&['MIRRORLAND_REVEALING','MIRRORLAND_FOCUSED'].includes(frameState.state)&&typeof api.requestMirrorlandBack==='function')api.requestMirrorlandBack();}return $(beat.selector,doc);}
+function showBeat(index){if(index===state.beat)return;const beat=BEATS[index];if(!beat)return;state.beat=index;let target=null;try{target=prepareFrameBeat(beat);}catch(error){return failOpen(error?.message||'REAL_STATE_SEQUENCING_FAILURE');}const doc=state.frame?.contentDocument;if(target&&doc){const scroller=doc.scrollingElement||doc.documentElement;const rect=target.getBoundingClientRect();const top=Math.max(0,rect.top+scroller.scrollTop-(state.frame.clientHeight-rect.height)/2);scroller.scrollTo({top,behavior:'auto'});}const label=$('[data-cinematic-label]',state.overlay),ordinal=$('[data-cinematic-ordinal]',state.overlay);if(label)label.textContent=beat.label;if(ordinal)ordinal.textContent=String(index+1).padStart(2,'0')+' / '+String(BEATS.length).padStart(2,'0');state.overlay.dataset.beat=beat.key;}
+function tick(now){if(state.phase!==STATE.PLAYING||state.settled)return;const elapsed=Math.min(MASTER_DURATION,Math.max(0,now-state.start));let index=0;for(let i=0;i<BEATS.length;i++)if(elapsed>=BEATS[i].at)index=i;showBeat(index);if(state.settled)return;const progress=$('[data-cinematic-progress]',state.overlay);if(progress)progress.style.transform=`scaleX(${elapsed/MASTER_DURATION})`;if(elapsed>=MASTER_DURATION){requestAnimationFrame(()=>settle('complete'));return;}state.raf=requestAnimationFrame(tick);}
+function startPlayback(){if(state.phase!==STATE.ARMED||state.settled)return;if(reduced()){ $('[data-cinematic-armed]',state.overlay).hidden=true;$('[data-cinematic-reduced]',state.overlay).hidden=false;setPhase(STATE.PLAYING);$('[data-cinematic-reduced] [data-cinematic-skip]',state.overlay)?.focus();return;} $('[data-cinematic-armed]',state.overlay).hidden=true;$('[data-cinematic-player]',state.overlay).hidden=false;setPhase(STATE.PLAYING);const wrap=$('[data-cinematic-frame-wrap]',state.overlay);const frame=document.createElement('iframe');frame.className='compass-orientation-cinematic__frame';frame.title='Live Diamond Gate Bridge orientation view';frame.setAttribute('sandbox','allow-scripts allow-same-origin');frame.setAttribute('aria-hidden','true');frame.tabIndex=-1;state.frame=frame;frame.addEventListener('load',onFrameLoad,{once:true});const url=new URL(location.href);url.searchParams.set('orientation-cinematic-frame','1');url.hash='';frame.src=url.href;wrap.appendChild(frame);state.abortTimer=setTimeout(()=>{if(!state.frameReady)failOpen('FRAME_LOAD_TIMEOUT');},8000);}
+function onFrameLoad(){clearTimeout(state.abortTimer);state.abortTimer=0;try{const doc=state.frame.contentDocument;const required=['[data-compass-root]','[data-compass-scene]','[data-compass-static-introduction]','[data-readiness-family="research"]','[data-readiness-family="trl"]','[data-readiness-family="tra"]','[data-readiness-family="community"]','[data-capability-orbit]','.compass-accessibility-routes'];if(!doc||required.some(selector=>!$(selector,doc)))return failOpen('FRAME_SOURCE_BINDING_FAILURE');if(!state.frame.contentWindow.DGB_COMPASS_CONTROLLER)return failOpen('FRAME_CONTROLLER_BINDING_FAILURE');state.frameReady=true;state.start=performance.now();state.beat=-1;showBeat(0);if(!state.settled)state.raf=requestAnimationFrame(tick);}catch{return failOpen('FRAME_ACCESS_FAILURE');}}
+function mount(){if(window.self!==window.top)return;if(new URLSearchParams(location.search).has('orientation-cinematic-frame'))return;state.root=$('[data-compass-root]');if(!state.root||!$('[data-compass-scene]')||!$('[data-compass-static-introduction]')||!$('[data-readiness-family="research"]')||!$('[data-capability-orbit]'))return;state.priorFocus=document.activeElement;state.rootInert=state.root.inert;state.rootAriaHidden=state.root.getAttribute('aria-hidden');state.url=location.href;state.historyLength=history.length;state.overlay=createShell();document.body.appendChild(state.overlay);state.root.inert=true;state.root.setAttribute('aria-hidden','true');document.documentElement.classList.add('compass-orientation-cinematic-active');setPhase(STATE.ARMED);state.overlay.addEventListener('click',e=>{if(e.target.closest('[data-cinematic-play]'))startPlayback();else if(e.target.closest('[data-cinematic-skip]'))settle(state.phase===STATE.ARMED?'skip-armed':'skip-playing');});window.addEventListener('keydown',onKey,true);$('[data-cinematic-play]',state.overlay)?.focus({preventScroll:true});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
 })();

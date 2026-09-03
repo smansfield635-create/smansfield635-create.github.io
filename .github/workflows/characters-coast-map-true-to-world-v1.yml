@@ -33,7 +33,22 @@ jobs:
         with:
           node-version: '22'
       - name: Verify exact-head geography and protected identities
-        run: node control-plane/whole-estate/characters-reconstruction-v1/verify-coast-map-true-to-world.v1.mjs
+        run: |
+          set +e
+          node control-plane/whole-estate/characters-reconstruction-v1/verify-coast-map-true-to-world.v1.mjs > sequence4-machine-verifier.log 2>&1
+          status=$?
+          cat sequence4-machine-verifier.log
+          exit $status
+      - name: Preserve machine verifier diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: characters-coast-map-machine-diagnostics-${{ github.sha }}
+          path: |
+            sequence4-machine-verifier.log
+            coast-map-true-to-world-receipt.json
+          if-no-files-found: ignore
+          retention-days: 90
       - name: Install browser qualification runtime
         run: |
           npm install --no-save playwright@1.55.0
@@ -91,6 +106,14 @@ jobs:
           await browser.close();
           fs.writeFileSync('coast-map-true-to-world-evidence/browser-receipt.json',JSON.stringify({schema:'MIRRORLAND_COAST_MAP_BROWSER_EVIDENCE_v1',result:'PASS_CLOSED',candidateHead:process.env.GITHUB_SHA,evidence},null,2)+'\n');
           NODE
+      - name: Preserve browser diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: characters-coast-map-browser-diagnostics-${{ github.sha }}
+          path: coast-map-true-to-world-evidence/
+          if-no-files-found: ignore
+          retention-days: 90
       - name: Finalize qualification receipt
         run: |
           node --input-type=module <<'NODE'

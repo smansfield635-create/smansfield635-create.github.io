@@ -1,51 +1,39 @@
-name: Mirror Manor Root Cache Identity Repair
+name: Mirror Manor Preview Live Check
 on:
   push:
     branches: [main]
 permissions:
-  contents: write
-concurrency:
-  group: mirror-manor-root-cache-identity-repair
-  cancel-in-progress: true
+  contents: read
 jobs:
-  synchronize:
-    if: github.actor != 'github-actions[bot]'
+  verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
-      - name: Sparse checkout root and Compass loader
-        uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 1
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            index.html
-            assets/compass/compass.capability-carousel.js
-      - name: Rotate root loader identity
-        shell: bash
+      - name: Install Chromium
         run: |
-          set -euo pipefail
-          token="$(sha256sum assets/compass/compass.capability-carousel.js | awk '{print substr($1,1,16)}')"
-          python - "$token" <<'PY'
-          import re,sys,pathlib
-          token=sys.argv[1]
-          p=pathlib.Path('index.html')
-          s=p.read_text()
-          pattern=r'(assets/compass/compass\.capability-carousel\.js[^\"\']*?[?&]cb=)[0-9a-fA-F]+'
-          out,n=re.subn(pattern,lambda m:m.group(1)+token,s,count=1)
-          if n != 1:
-              raise SystemExit(f'expected exactly one capability loader identity, found {n}')
-          p.write_text(out)
-          print('root_loader_token='+token)
-          PY
-          if git diff --quiet -- index.html; then
-            echo 'Root loader identity already current.'
-            exit 0
-          fi
-          git diff --check -- index.html
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add index.html
-          git commit -m 'chore(delivery): rotate Mirror Manor root carousel identity'
-          git push origin HEAD:main
+          mkdir -p /tmp/manor-preview-check && cd /tmp/manor-preview-check
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null 2>&1
+      - name: Verify direct live viewer initializes canonical Manor renderer
+        run: |
+          cat >/tmp/manor-preview-check/check.mjs <<'EOF'
+          import { chromium } from 'playwright';
+          const browser=await chromium.launch({headless:true});
+          const page=await browser.newPage({viewport:{width:1440,height:1000}});
+          await page.goto('https://diamondgatebridge.com/mirror-manor-preview/?verify='+Date.now(),{waitUntil:'networkidle',timeout:120000});
+          await page.waitForFunction(()=>document.querySelector('#manor')?.dataset.houseAssetReady==='true',{timeout:30000});
+          const state=await page.evaluate(()=>{const c=document.querySelector('#manor');return {renderer:c.dataset.houseRenderer,ready:c.dataset.houseAssetReady,error:c.dataset.houseError||null,frames:Number(c.dataset.houseFrames||0),vertices:Number(c.dataset.houseVertexCount||0),width:c.width,height:c.height,status:document.querySelector('#status')?.textContent||''};});
+          console.log(JSON.stringify(state,null,2));
+          await page.screenshot({path:'/tmp/manor-preview-check/live.png',fullPage:true});
+          await browser.close();
+          if(state.ready!=='true'||state.error||state.frames<1||state.vertices<1)process.exit(1);
+          EOF
+          cd /tmp/manor-preview-check && node check.mjs
+      - name: Upload screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mirror-manor-preview-live
+          path: /tmp/manor-preview-check/live.png
+          if-no-files-found: warn

@@ -85,43 +85,67 @@ jobs:
           import fs from 'node:fs';
           const browser=await chromium.launch({headless:true});
           const receipt={schema:'MIRRORLAND_CLOUD_TRAVERSAL_BROWSER_RECEIPT_v1',result:'PASS',cases:[]};
-          const runCase=async({id,viewport,reducedMotion='no-preference',captureStates=true})=>{
+          const requiredNormal=['ASCENT','CLOUD_ENTRY','CLOUD_TRANSIT','DESCENT','ARRIVAL'];
+          const requiredReduced=['CLOUD_TRANSIT','ARRIVAL'];
+          const ordered=(observed,required)=>{
+            let cursor=-1;
+            for(const state of required){cursor=observed.indexOf(state,cursor+1);if(cursor<0)return false;}
+            return true;
+          };
+          const runCase=async({id,viewport,reducedMotion='no-preference'})=>{
             const page=await browser.newPage({viewport,reducedMotion});
             const pageErrors=[],consoleErrors=[];
             page.on('pageerror',e=>pageErrors.push(String(e)));
             page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())});
-            await page.goto('http://127.0.0.1:4173/characters/',{waitUntil:'domcontentloaded'});
-            const skip=page.getByRole('button',{name:/skip to the coast/i});if(await skip.count())await skip.first().click();
-            await page.waitForTimeout(900);
-            const webgl2=await page.evaluate(()=>!!document.querySelector('#scene')?.getContext('webgl2'));
-            const fatal=await page.locator('#fatal.show').count()>0;
-            const orbit=await page.evaluate(()=>globalThis.__MIRRORLAND_CLOUD_SYSTEM__?.snapshot?.());
-            if(!orbit)throw new Error('CLOUD_RUNTIME_EVIDENCE_MISSING');
-            await page.screenshot({path:`cloud-traversal-materiality-evidence/${id}-orbit.png`,fullPage:true});
-            const signal=page.locator('.signal:not([hidden])').first();
-            if(await signal.count()===0)throw new Error('VISIBLE_DESTINATION_SIGNAL_MISSING');
-            await signal.click();
-            const states={};
-            if(reducedMotion==='reduce'){
-              await page.waitForFunction(()=>document.documentElement.dataset.cloudTravel==='CLOUD_TRANSIT',{timeout:1500});
-              states.CLOUD_TRANSIT=await page.evaluate(()=>globalThis.__MIRRORLAND_CLOUD_SYSTEM__?.snapshot?.());
-              await page.screenshot({path:`cloud-traversal-materiality-evidence/${id}-transit.png`,fullPage:true});
-              await page.waitForFunction(()=>document.documentElement.dataset.cloudTravel==='ARRIVAL',{timeout:2500});
-              states.ARRIVAL=await page.evaluate(()=>globalThis.__MIRRORLAND_CLOUD_SYSTEM__?.snapshot?.());
-            }else{
-              for(const state of ['CLOUD_ENTRY','CLOUD_TRANSIT','DESCENT','ARRIVAL']){
-                await page.waitForFunction(s=>document.documentElement.dataset.cloudTravel===s,state,{timeout:5000});
-                states[state]=await page.evaluate(()=>globalThis.__MIRRORLAND_CLOUD_SYSTEM__?.snapshot?.());
-                if(state==='CLOUD_TRANSIT'||state==='DESCENT'||state==='ARRIVAL')await page.screenshot({path:`cloud-traversal-materiality-evidence/${id}-${state.toLowerCase()}.png`,fullPage:true});
-              }
+            const caseReceipt={id,ok:false,webgl2:false,fatal:false,bodyWidth:null,viewportWidth:viewport.width,orbit:null,states:{},observed:[],pageErrors,consoleErrors,error:null};
+            try{
+              await page.goto('http://127.0.0.1:4173/characters/',{waitUntil:'domcontentloaded'});
+              const skip=page.getByRole('button',{name:/skip to the coast/i});
+              if(await skip.count())await skip.first().click();
+              await page.waitForTimeout(reducedMotion==='reduce'?120:900);
+              caseReceipt.webgl2=await page.evaluate(()=>!!document.querySelector('#scene')?.getContext('webgl2'));
+              caseReceipt.fatal=await page.locator('#fatal.show').count()>0;
+              caseReceipt.orbit=await page.evaluate(()=>globalThis.__MIRRORLAND_CLOUD_SYSTEM__?.snapshot?.());
+              if(!caseReceipt.orbit)throw new Error('CLOUD_RUNTIME_EVIDENCE_MISSING');
+              await page.screenshot({path:`cloud-traversal-materiality-evidence/${id}-orbit.png`,fullPage:true});
+              const signal=page.locator('.signal:not([hidden])').first();
+              if(await signal.count()===0)throw new Error('VISIBLE_DESTINATION_SIGNAL_MISSING');
+              await page.evaluate(()=>{
+                const root=document.documentElement;
+                const records=[];
+                globalThis.__MIRRORLAND_CLOUD_OBSERVED__=records;
+                const record=state=>requestAnimationFrame(()=>records.push({state,snapshot:globalThis.__MIRRORLAND_CLOUD_SYSTEM__?.snapshot?.()||null,time:performance.now()}));
+                record(root.dataset.cloudTravel||'ORBIT');
+                const observer=new MutationObserver(mutations=>{
+                  if(mutations.some(m=>m.attributeName==='data-cloud-travel'))record(root.dataset.cloudTravel||'ORBIT');
+                });
+                observer.observe(root,{attributes:true,attributeFilter:['data-cloud-travel']});
+                globalThis.__MIRRORLAND_CLOUD_OBSERVER__=observer;
+              });
+              await signal.click();
+              await page.waitForFunction(()=>document.documentElement.dataset.cloudTravel==='ARRIVAL',null,{timeout:6000});
+              await page.waitForTimeout(120);
+              const records=await page.evaluate(()=>globalThis.__MIRRORLAND_CLOUD_OBSERVED__||[]);
+              caseReceipt.observed=records.map(r=>r.state);
+              for(const record of records){if(record.snapshot)caseReceipt.states[record.state]=record.snapshot;}
+              const required=reducedMotion==='reduce'?requiredReduced:requiredNormal;
+              if(!ordered(caseReceipt.observed,required))throw new Error(`CLOUD_STATE_SEQUENCE_MISSING:${required.join('>')}:${caseReceipt.observed.join('>')}`);
+              const transit=caseReceipt.states.CLOUD_TRANSIT;
+              const arrival=caseReceipt.states.ARRIVAL;
+              if(!transit||!arrival)throw new Error('CLOUD_RUNTIME_STATE_SNAPSHOT_MISSING');
+              await page.screenshot({path:`cloud-traversal-materiality-evidence/${id}-arrival.png`,fullPage:true});
+              caseReceipt.bodyWidth=await page.evaluate(()=>document.body.scrollWidth);
+              const stateOk=caseReceipt.orbit.state==='ORBIT'&&caseReceipt.orbit.bankCount>0&&caseReceipt.orbit.opacity>0&&transit.state==='CLOUD_TRANSIT'&&transit.veil>=.6&&transit.opticalDepth>=.75&&arrival.state==='ARRIVAL'&&arrival.veil===0&&arrival.opticalDepth<transit.opticalDepth;
+              caseReceipt.ok=caseReceipt.webgl2&&!caseReceipt.fatal&&!pageErrors.length&&!consoleErrors.length&&caseReceipt.bodyWidth<=viewport.width+1&&stateOk;
+              if(!caseReceipt.ok)receipt.result='FAIL';
+            }catch(error){
+              caseReceipt.error=String(error?.stack||error);
+              receipt.result='FAIL';
+              try{await page.screenshot({path:`cloud-traversal-materiality-evidence/${id}-failure.png`,fullPage:true});}catch(_){ }
+            }finally{
+              receipt.cases.push(caseReceipt);
+              await page.close();
             }
-            const bodyWidth=await page.evaluate(()=>document.body.scrollWidth);
-            const transit=states.CLOUD_TRANSIT,arrival=states.ARRIVAL;
-            const stateOk=orbit.state==='ORBIT'&&orbit.bankCount>0&&orbit.opacity>0&&transit?.state==='CLOUD_TRANSIT'&&transit?.veil>=.6&&transit?.opticalDepth>=.75&&arrival?.state==='ARRIVAL'&&arrival?.veil===0&&arrival?.opticalDepth<transit.opticalDepth;
-            const ok=webgl2&&!fatal&&!pageErrors.length&&!consoleErrors.length&&bodyWidth<=viewport.width+1&&stateOk;
-            receipt.cases.push({id,ok,webgl2,fatal,bodyWidth,viewportWidth:viewport.width,orbit,states,pageErrors,consoleErrors});
-            if(!ok)receipt.result='FAIL';
-            await page.close();
           };
           await runCase({id:'desktop',viewport:{width:1440,height:900}});
           await runCase({id:'mobile',viewport:{width:390,height:844}});
@@ -132,10 +156,12 @@ jobs:
           if(receipt.result!=='PASS')process.exit(1);
           NODE
       - name: Upload cloud traversal receipt
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: cloud-traversal-materiality-receipt-${{ github.event.pull_request.head.sha }}
           path: cloud-traversal-materiality-receipt.json
+          if-no-files-found: warn
           retention-days: 90
       - name: Upload cloud traversal material evidence
         if: always()

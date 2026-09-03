@@ -1944,49 +1944,6 @@
       "scopeHash": "4f452f63f9e07948dd86396c9e2acad4e55744c872aaa064e49abd2bf21693dd",
       "state": "ADMITTED_LOCKED"
     },
-    "4fdae858c4e26126c9cd1d826e36cd1f65f6a637ab23b71385077c64b4c330b6": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "b62318d9309c570fac151b0b159c5c31dc74f36d",
-          "lockGeneration": 1933,
-          "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:RUNTIME_CONSTRUCTION",
-          "operationId": "COMPASS_MAIN_ORIENTATION_CINEMATIC_RUNTIME_CONSTRUCTION_20260902_001",
-          "procedureLocatorDigest": "233e77d5abfb6bddae147dcc0c31ce1473146c13181ed639b7101e50dfd5a5ee",
-          "requestDigest": "92d2a7f99ce58b9899f0be70f16e72207f005bd70fff03741af92176bfac2a94",
-          "scopeHash": "4fdae858c4e26126c9cd1d826e36cd1f65f6a637ab23b71385077c64b4c330b6"
-        },
-        "bindingDigest": "582e706f4c2bfbb7d72a439c0b4aac9e8ee8557c5807e4a4b260fd2f81e543c5",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "a4a6a5cb62cdcc1f4b8f3ba708d6e523546eb6034aab6b3d70cdfeb2b5ad8d7e",
-          "commentId": 5520173992,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2681,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 33713752543,
-          "workflowSha": "b62318d9309c570fac151b0b159c5c31dc74f36d"
-        },
-        "lineageAnchorCommitSha": "bc5ccf0d4ba8408ad9853310fc5fc56c0a394b65",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "b62318d9309c570fac151b0b159c5c31dc74f36d",
-      "lockGeneration": 1933,
-      "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:RUNTIME_CONSTRUCTION",
-      "operationId": "COMPASS_MAIN_ORIENTATION_CINEMATIC_RUNTIME_CONSTRUCTION_20260902_001",
-      "procedureLocatorDigest": "233e77d5abfb6bddae147dcc0c31ce1473146c13181ed639b7101e50dfd5a5ee",
-      "released": false,
-      "requestDigest": "92d2a7f99ce58b9899f0be70f16e72207f005bd70fff03741af92176bfac2a94",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "4fdae858c4e26126c9cd1d826e36cd1f65f6a637ab23b71385077c64b4c330b6",
-      "state": "ADMITTED_LOCKED"
-    },
     "511f47c7711cd7343ef18816c34b6efe9b865a992ae0c9d9a659999d39b1aabb": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -39109,6 +39066,50 @@
         "successorOperationId": "MIRRORLAND_COAST_MAP_TRUE_TO_WORLD_20260903_014",
         "transitionId": "MIRRORLAND_COAST_MAP_TRUE_TO_WORLD_20260903_004_TO_014"
       },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "b62318d9309c570fac151b0b159c5c31dc74f36d",
+          "lockGeneration": 1933,
+          "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:RUNTIME_CONSTRUCTION",
+          "operationId": "COMPASS_MAIN_ORIENTATION_CINEMATIC_RUNTIME_CONSTRUCTION_20260902_001",
+          "procedureLocatorDigest": "233e77d5abfb6bddae147dcc0c31ce1473146c13181ed639b7101e50dfd5a5ee",
+          "requestDigest": "92d2a7f99ce58b9899f0be70f16e72207f005bd70fff03741af92176bfac2a94",
+          "scopeHash": "4fdae858c4e26126c9cd1d826e36cd1f65f6a637ab23b71385077c64b4c330b6"
+        },
+        "bindingDigest": "582e706f4c2bfbb7d72a439c0b4aac9e8ee8557c5807e4a4b260fd2f81e543c5",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "a4a6a5cb62cdcc1f4b8f3ba708d6e523546eb6034aab6b3d70cdfeb2b5ad8d7e",
+          "commentId": 5520173992,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2681,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33713752543,
+          "workflowSha": "b62318d9309c570fac151b0b159c5c31dc74f36d"
+        },
+        "lineageAnchorCommitSha": "bc5ccf0d4ba8408ad9853310fc5fc56c0a394b65",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "b62318d9309c570fac151b0b159c5c31dc74f36d",
+      "lockGeneration": 1933,
+      "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:RUNTIME_CONSTRUCTION",
+      "operationId": "COMPASS_MAIN_ORIENTATION_CINEMATIC_RUNTIME_CONSTRUCTION_20260902_001",
+      "procedureLocatorDigest": "233e77d5abfb6bddae147dcc0c31ce1473146c13181ed639b7101e50dfd5a5ee",
+      "released": true,
+      "requestDigest": "92d2a7f99ce58b9899f0be70f16e72207f005bd70fff03741af92176bfac2a94",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "4fdae858c4e26126c9cd1d826e36cd1f65f6a637ab23b71385077c64b4c330b6",
+      "state": "TERMINAL",
       "terminalDisposition": "SUPERSEDED"
     }
   ]

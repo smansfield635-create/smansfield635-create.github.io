@@ -1,0 +1,14 @@
+(()=>{
+'use strict';
+const NS='http://www.w3.org/2000/svg';
+const SCENES=['ARRIVAL','ORIENTATION','CHAPTER_ONE','CHOICE_READINESS','THRESHOLD','ELSEWHERE','RETURN_HANDOFF'];
+const make=(tag,attrs={})=>{const n=document.createElement(tag);for(const [k,v] of Object.entries(attrs)){if(k==='text')n.textContent=v;else n.setAttribute(k,String(v));}return n;};
+const svg=(tag,attrs={})=>{const n=document.createElementNS(NS,tag);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,String(v));return n;};
+function createCompassGlyph(){const root=svg('svg',{viewBox:'0 0 400 400','aria-hidden':'true',focusable:'false',class:'compass-cinematic-renderer__compass'});root.append(svg('circle',{cx:200,cy:200,r:150,fill:'none',stroke:'currentColor','stroke-width':1.5,opacity:.38}));root.append(svg('circle',{cx:200,cy:200,r:104,fill:'none',stroke:'currentColor','stroke-width':1,opacity:.22}));for(let i=0;i<8;i++){const a=i*Math.PI/4,x1=200+118*Math.cos(a),y1=200+118*Math.sin(a),x2=200+145*Math.cos(a),y2=200+145*Math.sin(a);root.append(svg('line',{x1,y1,x2,y2,stroke:'currentColor','stroke-width':i%2?1:2,opacity:i%2?.28:.55}));}root.append(svg('path',{d:'M200 50 L225 200 L200 350 L175 200 Z',fill:'currentColor',opacity:.78}));root.append(svg('circle',{cx:200,cy:200,r:9,fill:'#02050a',stroke:'currentColor','stroke-width':2}));return root;}
+function mount(stage){if(!(stage instanceof Element))throw new Error('CINEMATIC_RENDER_STAGE_REQUIRED');if(stage.querySelector('[data-cinematic-renderer]'))return api;const root=make('div',{'data-cinematic-renderer':'v1',class:'compass-cinematic-renderer','aria-hidden':'true'});const field=make('div',{class:'compass-cinematic-renderer__field'});const geometry=make('div',{class:'compass-cinematic-renderer__geometry'});geometry.append(createCompassGlyph());const veil=make('div',{class:'compass-cinematic-renderer__veil'});root.append(field,geometry,veil);stage.prepend(root);return api;}
+function render(scene,{progress=0}={}){if(!SCENES.includes(scene))throw new Error(`CINEMATIC_RENDER_SCENE_INVALID:${scene}`);const root=document.querySelector('[data-cinematic-renderer="v1"]');if(!root)throw new Error('CINEMATIC_RENDERER_NOT_MOUNTED');root.dataset.scene=scene;root.style.setProperty('--cinematic-scene-progress',String(Math.max(0,Math.min(1,Number(progress)||0))));return true;}
+function reset(){const root=document.querySelector('[data-cinematic-renderer="v1"]');if(!root)return false;delete root.dataset.scene;root.style.removeProperty('--cinematic-scene-progress');return true;}
+function destroy(){document.querySelector('[data-cinematic-renderer="v1"]')?.remove();}
+const api=Object.freeze({version:'1.0.0',scenes:Object.freeze([...SCENES]),mount,render,reset,destroy});
+Object.defineProperty(window,'DGB_COMPASS_CINEMATIC_RENDERER',{value:api,configurable:true});
+})();

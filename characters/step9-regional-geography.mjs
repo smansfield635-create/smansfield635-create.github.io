@@ -130,7 +130,7 @@ export function resolveStep9Camera(siteId){
 
 export function step9ShorelineZ(worldX){return resolveGratitudeShoreline(worldX).world.z;}
 export function step9TerrainHeight(worldX,worldZ){return sampleGratitudeWorld(worldX,worldZ).source.presentationElevation;}
-export function step9MapPosition(siteId){const site=resolveStep9Site(siteId);return worldToMap(site.world,{clampToFrame:true});}
+export function step9MapPosition(siteId){const site=resolveStep9Site(siteId);return worldToMap(site.canonicalWorld,{clampToFrame:true});}
 export function step9Frame(){return GRATITUDE_DEVELOPMENT_FRAME;}
 
 export function evaluateStep9RegionalBridge(){
@@ -142,6 +142,7 @@ export function evaluateStep9RegionalBridge(){
     try{
       const site=resolveStep9Site(binding.siteId),camera=resolveStep9Camera(binding.siteId),map=step9MapPosition(binding.siteId);
       if(!finite(site.world.x)||!finite(site.world.y)||!finite(site.world.z))issues.push(`NONFINITE_SITE:${destinationId}`);
+      if(!finite(site.canonicalWorld.x)||!finite(site.canonicalWorld.y)||!finite(site.canonicalWorld.z))issues.push(`NONFINITE_CANONICAL_SITE:${destinationId}`);
       if(!finite(camera.eye.x)||!finite(camera.eye.y)||!finite(camera.eye.z))issues.push(`NONFINITE_CAMERA:${destinationId}`);
       if(map.insideFrame!==true)issues.push(`MAP_OUTSIDE_REGIONAL_FRAME:${destinationId}`);
       if(site.traversalAuthorityGranted!==false)issues.push(`TRAVERSAL_AUTHORITY_LEAK:${destinationId}`);

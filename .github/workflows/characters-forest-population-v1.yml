@@ -1,0 +1,39 @@
+name: Characters Forest Population v1
+on:
+  pull_request:
+    paths:
+      - 'characters/app.mjs'
+      - 'characters/forest-system.mjs'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/forest-population-contract.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-forest-population.v1.mjs'
+      - '.github/workflows/characters-forest-population-v1.yml'
+permissions:
+  contents: read
+jobs:
+  verify-forest-population:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify admitted path scope
+        run: |
+          set -euo pipefail
+          git diff --name-only "${{ github.event.pull_request.base.sha }}...${{ github.event.pull_request.head.sha }}" > /tmp/changed.txt
+          while IFS= read -r p; do
+            case "$p" in
+              characters/app.mjs|characters/forest-system.mjs|control-plane/whole-estate/characters-reconstruction-v1/forest-population-contract.v1.json|control-plane/whole-estate/characters-reconstruction-v1/verify-forest-population.v1.mjs|.github/workflows/characters-forest-population-v1.yml) ;;
+              *) echo "PATH_SCOPE_VIOLATION:$p" >&2; exit 1 ;;
+            esac
+          done < /tmp/changed.txt
+      - name: Verify forest population
+        run: node control-plane/whole-estate/characters-reconstruction-v1/verify-forest-population.v1.mjs
+      - name: Upload forest receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: forest-population-receipt-${{ github.event.pull_request.head.sha }}
+          path: forest-population-receipt.json
+          retention-days: 90

@@ -15,6 +15,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/post-merge-cache-identity-sync.yml'
+      - '.github/ai-router/platform/post-merge-cache-identity-sync.v1.mjs'
       - 'assets/compass/compass.house-scene.js'
       - 'assets/compass/compass.capability-carousel.core.js'
       - 'assets/compass/compass.capability-carousel.js'
@@ -71,6 +72,7 @@ jobs:
           CACHE_IDENTITY_BASE: ${{ steps.identity.outputs.base }}
           CACHE_IDENTITY_HEAD: ${{ steps.identity.outputs.head }}
           CACHE_IDENTITY_RECEIPT: /tmp/post-merge-cache-identity.json
+          CACHE_IDENTITY_SCOPE: index.html,assets/compass/compass.house-scene.js,assets/compass/compass.capability-carousel.core.js,assets/compass/compass.capability-carousel.js
         run: node .github/ai-router/platform/post-merge-cache-identity-sync.v1.mjs
 
       - name: Commit identity changes only when explicitly requested and required

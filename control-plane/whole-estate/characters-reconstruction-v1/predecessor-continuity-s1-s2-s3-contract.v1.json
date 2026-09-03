@@ -1,0 +1,27 @@
+{
+  "schema": "MIRRORLAND_PREDECESSOR_CONTINUITY_CONTRACT_v1",
+  "operationId": "MIRRORLAND_PREDECESSOR_CONTINUITY_S1_S2_S3_20260903_009",
+  "governingBase": "ab5d137a614e500008c3eaa501b96eedccc06500",
+  "sourceHeads": {
+    "s1": "ce2c7a6e2ad82f96a55b348e289afb859e9e37cc",
+    "s2": "18c9353a8345d4a501a0f2893948be7680c0db5c",
+    "s3": "f65dda6610d5043d0a7621a70b33aba3fdfc72ac"
+  },
+  "qualifiedSubsystems": {
+    "characters/forest-system.mjs": {"source": "s2", "blob": "21f61b1829eca1e97a2fb6c8f85816c8b25bd59e"},
+    "characters/cloud-system.mjs": {"source": "s3", "blob": "493fb47fd14896a0228a6d5acbd11585e81772b5"},
+    "characters/cloud-traversal.mjs": {"source": "s3", "blob": "fc99f9b13b1b703d5df6dfed7164c033e20f860b"}
+  },
+  "protectedS1Paths": [
+    "characters/gratitude-geography.adapter.mjs",
+    "characters/step9-regional-geography.mjs",
+    "characters/coast-map.mjs"
+  ],
+  "appComposition": {
+    "basis": "S2_QUALIFIED_APP",
+    "allowedSeams": ["IMPORT", "SUBSYSTEM_INITIALIZATION", "POST_TERRAIN_DRAW"],
+    "drawOrder": ["FOREST", "CLOUDS"],
+    "sequence4Excluded": true
+  },
+  "requiredResult": "S1_S2_S3_PREDECESSOR_CONTINUITY_PROVEN"
+}

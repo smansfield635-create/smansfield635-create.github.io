@@ -1,16 +1,16 @@
-# Compass Emergency Recovery Guardrail
+# Compass Construction Instructions
 
-The public Compass is in active incident recovery.
+The August 20, 2026 Compass Emergency Recovery Guardrail is retired.
 
-Until the incident is explicitly closed, agents working under `assets/compass/` must follow these rules:
+Compass is no longer in emergency recovery mode. This file now serves only as a local Compass construction boundary.
 
-1. Do not redesign, restructure, reparent, reorder, or dynamically reconcile Compass DOM.
-2. Do not reintroduce Track B, `positionCapability()`, subtree-wide `MutationObserver` logic, or any presentation runtime that moves existing Compass nodes after load.
-3. Do not modify multiple Compass product files speculatively. Diagnose first; make the smallest evidence-backed correction.
-4. Preserve the known-good Track A runtime boundary and preserve the H-Earth canonical direct route `/showroom/globe/h-earth/`.
-5. Treat publication/deployment synchronization separately from product repair. A stale live page is not evidence that current `main` should be redesigned again.
-6. Do not merge a competing Compass recovery while another recovery is active. Re-read current `main` immediately before any write and abort if the target has moved materially.
-7. Public recovery is not complete until the live page visibly renders the Compass and both interactive carousel/runtime layers operate in a browser.
-8. The requested post-recovery presentation change—moving the capability section lower on the page—must be implemented only after the known-good Compass is live and verified, preferably as static HTML/CSS placement rather than runtime DOM movement.
+1. Treat current `main` as the governing Compass baseline unless a newer exact-head operation explicitly supersedes it.
+2. Preserve single-owner runtime authority: do not introduce duplicate controller, navigation, Mirrorland, carousel, or route ownership.
+3. Prefer bounded, evidence-backed changes over broad reconstruction. Reuse existing Compass constructs and proven presentation/runtime patterns before creating substitutes.
+4. Preserve canonical H-Earth direct routing at `/showroom/globe/h-earth/` and existing Compass return/navigation contracts unless a separately authorized operation changes them.
+5. Separate product/runtime changes from publication synchronization, cache identity, and deployment verification.
+6. For cinematic or presentation successors, preserve operational Compass behavior while allowing purpose-built visualizations that express function without exposing ordinary page manipulation.
+7. Browser, responsive, reduced-motion, restoration, and owner visual acceptance remain required for user-facing Compass changes.
+8. This file does not itself create merge, deployment, publication, or cinematic implementation authority.
 
-Current priority: restore a visibly functional public Compass first. No feature work until then.
+Historical provenance: this file supersedes the emergency recovery-only instruction introduced during the August 20, 2026 Compass incident. The owner retirement disposition is recorded on PR #1538, issue comment `5528813114`. The historical recovery record remains preserved in Git history and the PR lineage.

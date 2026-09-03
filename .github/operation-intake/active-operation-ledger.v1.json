@@ -4821,6 +4821,49 @@
       "scopeHash": "b14929352e9f36b3c0bca200c19a1d5e6a7765960f8f451b1e7c00ad83aef6a9",
       "state": "ADMITTED_LOCKED"
     },
+    "b15e164d53f8c4b06169de1a8fec61ba016c22a3adabc35fe7f833a5b332eaea": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "3e8c4ac930a819c64afae111bf6679ccd9fa1523",
+          "lockGeneration": 1934,
+          "lockScope": "CHARACTERS:MIRRORLAND:COAST_MAP_TRUE_TO_WORLD:SEQUENCE_4",
+          "operationId": "MIRRORLAND_COAST_MAP_TRUE_TO_WORLD_20260903_004",
+          "procedureLocatorDigest": "fc9b282d35b50d80e3b702801b39378a85f6e50c40fc630400a9486f1f140576",
+          "requestDigest": "9abbe8a0cd5b4ec0a90027074cd7d9478803e08f2a39ff3538431a3a26a030d3",
+          "scopeHash": "b15e164d53f8c4b06169de1a8fec61ba016c22a3adabc35fe7f833a5b332eaea"
+        },
+        "bindingDigest": "0bdc292478e06472cac29d5d987fa562f37fb2cddb6f5a96db3d8c0e46a33721",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "ab8aebbeeea2f471ee9afd776e89835777bfeaf9e87b417d1a7956feeddf4f86",
+          "commentId": 5520239028,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2670,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33714271144,
+          "workflowSha": "3e8c4ac930a819c64afae111bf6679ccd9fa1523"
+        },
+        "lineageAnchorCommitSha": "fcbd4504435ca0439a7e3ac9a7ce26013fd181ac",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "3e8c4ac930a819c64afae111bf6679ccd9fa1523",
+      "lockGeneration": 1934,
+      "lockScope": "CHARACTERS:MIRRORLAND:COAST_MAP_TRUE_TO_WORLD:SEQUENCE_4",
+      "operationId": "MIRRORLAND_COAST_MAP_TRUE_TO_WORLD_20260903_004",
+      "procedureLocatorDigest": "fc9b282d35b50d80e3b702801b39378a85f6e50c40fc630400a9486f1f140576",
+      "released": false,
+      "requestDigest": "9abbe8a0cd5b4ec0a90027074cd7d9478803e08f2a39ff3538431a3a26a030d3",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "b15e164d53f8c4b06169de1a8fec61ba016c22a3adabc35fe7f833a5b332eaea",
+      "state": "ADMITTED_LOCKED"
+    },
     "b16b01dbce8913581fea53229740987196bbc7ea6acd1e3b539ee48a9ba9a348": {
       "governingHead": "973410a55eebe895b49b2b551823655ad76a0c1c",
       "lockGeneration": 1572,
@@ -7111,7 +7154,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1933,
+  "lockGeneration": 1934,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

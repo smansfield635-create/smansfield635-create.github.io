@@ -21,8 +21,8 @@
 import {buildWorldToMapTruthDiagnosticData} from './world-to-map-truth-diagnostic.mjs';
 const data=buildWorldToMapTruthDiagnosticData();
 const map=document.querySelector('#map');const legend=document.querySelector('#legend');const shore=document.querySelector('#shore');const status=document.querySelector('#status');
-shore.setAttribute('points',data.shoreline.map(p=>`${p.map.u*1000},${(1-p.map.v)*625}`).join(' '));
-for(const marker of data.markers){const el=document.createElement('div');el.className='marker';el.style.left=`${marker.map.u*100}%`;el.style.top=`${(1-marker.map.v)*100}%`;el.innerHTML=`<i class="dot"></i><span>${marker.siteId.replaceAll('_',' ')}</span>`;map.append(el);const card=document.createElement('div');card.className='card';card.innerHTML=`<strong>${marker.siteId.replaceAll('_',' ')}</strong><code>world (${marker.world.x.toFixed(2)}, ${marker.world.z.toFixed(2)}) → map (${marker.map.u.toFixed(5)}, ${marker.map.v.toFixed(5)})</code>`;legend.append(card);}
+shore.setAttribute('points',data.shoreline.map(p=>`${p.map.u*1000},${p.map.v*625}`).join(' '));
+for(const marker of data.markers){const el=document.createElement('div');el.className='marker';el.style.left=`${marker.map.u*100}%`;el.style.top=`${marker.map.v*100}%`;el.innerHTML=`<i class="dot"></i><span>${marker.siteId.replaceAll('_',' ')}</span>`;map.append(el);const card=document.createElement('div');card.className='card';card.innerHTML=`<strong>${marker.siteId.replaceAll('_',' ')}</strong><code>world (${marker.world.x.toFixed(2)}, ${marker.world.z.toFixed(2)}) → map (${marker.map.u.toFixed(5)}, ${marker.map.v.toFixed(5)})</code>`;legend.append(card);}
 const valid=data.markerCount===8&&data.shorelineSampleCount===65&&!data.handPositionedMarkerCoordinates&&!data.independentShorelineIllustration;
 document.body.dataset.result=valid?'PASS':'FAIL';status.textContent=`${data.adapterId} · ${data.frameId}`;
 </script>

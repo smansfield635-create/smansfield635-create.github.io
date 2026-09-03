@@ -1,0 +1,18 @@
+{
+  "schema": "DG_ASG_E1_EXECUTOR_ATTACHMENT_RECEIPT_v1",
+  "operationId": "DG-ASG_E1_LIVE_AGENT_CINEMATIC_TRIAL",
+  "arm": "ORDINARY_AGENT",
+  "branch": "experiment/dg-asg-e1-ordinary-arm-20260903",
+  "exactStartingHead": "be6234fd0768095f10227a4adf0fbb36e5f7800f",
+  "agentHolder": "CURRENT_CHATGPT_WORK_ROOM",
+  "agentClass": "LIVE_REPOSITORY_AGENT_VIA_GITHUB_CONNECTOR",
+  "gatewayMediation": false,
+  "repositorySnapshotDisposable": true,
+  "productionAuthority": false,
+  "mergeAuthority": false,
+  "deploymentAuthority": false,
+  "publicationAuthority": false,
+  "productionLockAuthority": false,
+  "allowedExperimentMutationRoot": "experiments/dg-asg-e1/**",
+  "status": "EXECUTOR_ATTACHED_READY_FOR_MATCHED_TRIAL"
+}

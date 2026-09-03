@@ -6497,6 +6497,49 @@
       "scopeHash": "ecba633d5d154578464f9e907e1f167162323aadf6f4812bea0f892a7003d8ce",
       "state": "ADMITTED_LOCKED"
     },
+    "ed161f009641122c8b9503f216874b3fcb64f20b220b0c9793d956eec3daeea6": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "e43ac146db7f10b31513c5f3350807da508ec292",
+          "lockGeneration": 1927,
+          "lockScope": "CHARACTERS:MIRRORLAND:WORLD_TO_MAP_TRUTH:SEQUENCE_1",
+          "operationId": "MIRRORLAND_WORLD_TO_MAP_TRUTH_20260903_001",
+          "procedureLocatorDigest": "70ce4dcf2ca2c46dc903a51f8d35e8833863800c806a63d8dec5b43a46943a75",
+          "requestDigest": "09828d0da4123f3666e15c3227c1b5889b58dbf8795cda09b2271871c87fa46d",
+          "scopeHash": "ed161f009641122c8b9503f216874b3fcb64f20b220b0c9793d956eec3daeea6"
+        },
+        "bindingDigest": "8d73d27322c7b74a25298ef5dd11da3f6a9fde689dbcb4f408f711363a94cc74",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "dc01f60347ca8152181d587c0c406b723b2e1793da9b53862002a5e4b5ca9861",
+          "commentId": 5518831030,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2670,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33703021872,
+          "workflowSha": "e43ac146db7f10b31513c5f3350807da508ec292"
+        },
+        "lineageAnchorCommitSha": "db15166b1944616edac084f90a78e0e3b5205858",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "e43ac146db7f10b31513c5f3350807da508ec292",
+      "lockGeneration": 1927,
+      "lockScope": "CHARACTERS:MIRRORLAND:WORLD_TO_MAP_TRUTH:SEQUENCE_1",
+      "operationId": "MIRRORLAND_WORLD_TO_MAP_TRUTH_20260903_001",
+      "procedureLocatorDigest": "70ce4dcf2ca2c46dc903a51f8d35e8833863800c806a63d8dec5b43a46943a75",
+      "released": false,
+      "requestDigest": "09828d0da4123f3666e15c3227c1b5889b58dbf8795cda09b2271871c87fa46d",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ed161f009641122c8b9503f216874b3fcb64f20b220b0c9793d956eec3daeea6",
+      "state": "ADMITTED_LOCKED"
+    },
     "eda01b18bf0bdaf287a61a576788a1b1bb87646c283eb5c476630a723b50d6fa": {
       "governingHead": "275a639d647f5bf156fd4fe39c1be386594e6888",
       "lockGeneration": 746,
@@ -6879,7 +6922,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1926,
+  "lockGeneration": 1927,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

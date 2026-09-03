@@ -41,44 +41,51 @@ jobs:
         run: |
           npm install --no-save --package-lock=false playwright@1.55.0 sharp@0.34.3 >/dev/null 2>&1
           npx playwright install --with-deps chromium >/dev/null 2>&1
-      - name: Prepare controlled baseline and candidate trees
+      - name: Host exact candidate workspace
         run: |
-          mkdir -p /tmp/manor-candidate /tmp/manor-baseline
-          git archive HEAD | tar -x -C /tmp/manor-candidate
-          git archive HEAD | tar -x -C /tmp/manor-baseline
-          git show "$BASELINE_SHA:assets/compass/compass.house-scene.js" > /tmp/manor-baseline/assets/compass/compass.house-scene.js
-          (cd /tmp/manor-candidate && python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/manor-candidate-http.log 2>&1 &)
-          (cd /tmp/manor-baseline && python3 -m http.server 4174 --bind 127.0.0.1 >/tmp/manor-baseline-http.log 2>&1 &)
-          for p in 4173 4174; do for i in $(seq 1 30); do curl -fsS "http://127.0.0.1:$p/" >/dev/null && break; sleep 1; done; done
-      - name: Capture desktop/mobile controlled House evidence
+          cp assets/compass/compass.house-scene.js /tmp/manor-candidate-house-scene.js
+          git show "$BASELINE_SHA:assets/compass/compass.house-scene.js" > /tmp/manor-baseline-house-scene.js
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/manor-http.log 2>&1 &
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          exit 1
+      - name: Capture controlled baseline and candidate House evidence
         run: |
+          mkdir -p /tmp/manor-window-evidence
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           import { chromium } from 'playwright';
           import sharp from 'sharp';
-          const out='/tmp/manor-window-evidence';fs.mkdirSync(out,{recursive:true});
+          const housePath='assets/compass/compass.house-scene.js';
+          const out='/tmp/manor-window-evidence';
           const browser=await chromium.launch({headless:true});
           const profiles=[{name:'desktop',width:1440,height:1100},{name:'mobile',width:390,height:844}];
-          const targets=[{name:'baseline',port:4174},{name:'candidate',port:4173}];
-          const receipt={schema:'MIRROR_MANOR_BOUNDED_WINDOW_MATERIAL_CYCLE_BROWSER_RECEIPT_v1',baselineSha:process.env.BASELINE_SHA,profiles:{}};
-          for(const profile of profiles){receipt.profiles[profile.name]={};for(const target of targets){
-            const context=await browser.newContext({viewport:{width:profile.width,height:profile.height},deviceScaleFactor:1,reducedMotion:'reduce'});
-            const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(String(e)));
-            await page.goto(`http://127.0.0.1:${target.port}/?manor_cycle=${profile.name}_${target.name}`,{waitUntil:'domcontentloaded',timeout:60000});
-            const orbit=page.locator('[data-capability-orbit]');await orbit.scrollIntoViewIfNeeded();await page.waitForTimeout(500);
-            const next=orbit.locator('[data-orbit-next]');await next.click();await page.waitForTimeout(80);await next.click();await page.waitForTimeout(250);
-            const house=orbit.locator('[data-capability="house"]');
-            const canvas=house.locator('canvas').first();
-            await page.waitForFunction(()=>{const c=document.querySelector('[data-capability-orbit] [data-capability="house"] canvas');return c?.dataset.houseAssetReady==='true'&&Number(c?.dataset.houseFrames||0)>0;},null,{timeout:30000});
-            const state=await canvas.evaluate(c=>({renderer:c.dataset.houseRenderer,contract:c.dataset.houseContract,ready:c.dataset.houseAssetReady,frames:Number(c.dataset.houseFrames||0),vertexCount:Number(c.dataset.houseVertexCount||0),windowGlassCount:Number(c.dataset.houseWindowGlassCount||0),interiorLightCount:Number(c.dataset.houseInteriorLightCount||0),error:c.dataset.houseError||null}));
-            const path=`${out}/${profile.name}-${target.name}.png`;await house.screenshot({path});
-            const stats=await sharp(path).greyscale().stats();
-            const luminance=stats.channels[0].mean,contrast=stats.channels[0].stdev,entropy=stats.entropy,sharpness=stats.sharpness;
-            receipt.profiles[profile.name][target.name]={state,errors,luminance,contrast,entropy,sharpness,path};
-            await context.close();
-          }}
-          await browser.close();
-          for(const [name,p] of Object.entries(receipt.profiles)){
+          const receipt={schema:'MIRROR_MANOR_BOUNDED_WINDOW_MATERIAL_CYCLE_BROWSER_RECEIPT_v2',baselineSha:process.env.BASELINE_SHA,profiles:{}};
+          async function capture(kind,sourcePath){
+            fs.copyFileSync(sourcePath,housePath);
+            for(const profile of profiles){
+              receipt.profiles[profile.name]??={};
+              const context=await browser.newContext({viewport:{width:profile.width,height:profile.height},deviceScaleFactor:1,reducedMotion:'reduce'});
+              const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(String(e)));
+              await page.goto(`http://127.0.0.1:4173/?manor_cycle=${profile.name}_${kind}_${Date.now()}`,{waitUntil:'domcontentloaded',timeout:60000});
+              const orbit=page.locator('[data-capability-orbit]');await orbit.scrollIntoViewIfNeeded();await page.waitForTimeout(500);
+              const next=orbit.locator('[data-orbit-next]');await next.click();await page.waitForTimeout(80);await next.click();await page.waitForTimeout(300);
+              const house=orbit.locator('[data-capability="house"]');const canvas=house.locator('canvas').first();
+              await page.waitForFunction(()=>{const c=document.querySelector('[data-capability-orbit] [data-capability="house"] canvas');return c?.dataset.houseAssetReady==='true'&&Number(c?.dataset.houseFrames||0)>0;},null,{timeout:30000});
+              const state=await canvas.evaluate(c=>({renderer:c.dataset.houseRenderer,contract:c.dataset.houseContract,ready:c.dataset.houseAssetReady,frames:Number(c.dataset.houseFrames||0),vertexCount:Number(c.dataset.houseVertexCount||0),windowGlassCount:Number(c.dataset.houseWindowGlassCount||0),interiorLightCount:Number(c.dataset.houseInteriorLightCount||0),error:c.dataset.houseError||null}));
+              const path=`${out}/${profile.name}-${kind}.png`;await house.screenshot({path});
+              const stats=await sharp(path).greyscale().stats();
+              receipt.profiles[profile.name][kind]={state,errors,luminance:stats.channels[0].mean,contrast:stats.channels[0].stdev,entropy:stats.entropy,sharpness:stats.sharpness,path};
+              await context.close();
+            }
+          }
+          try{
+            await capture('baseline','/tmp/manor-baseline-house-scene.js');
+            await capture('candidate','/tmp/manor-candidate-house-scene.js');
+          }finally{
+            fs.copyFileSync('/tmp/manor-candidate-house-scene.js',housePath);
+            await browser.close();
+          }
+          for(const p of Object.values(receipt.profiles)){
             const b=p.baseline,c=p.candidate;
             p.gates={candidateReady:c.state.ready==='true'&&c.state.frames>0,noErrors:c.errors.length===0,baselineMaterialReadabilityPreserved:c.luminance>=b.luminance*.97,candidateContrastNotCollapsed:c.contrast>=b.contrast*.95,windowSubsystemBound:c.state.windowGlassCount===14&&c.state.interiorLightCount===3,phase3CandidateContract:c.state.contract==='MIRROR_MANOR_PHASE3_STAINED_GLASS_WINDOW_REFINEMENT_v1'};
             p.result=Object.values(p.gates).every(Boolean)?'PASS':'FAIL';
@@ -94,12 +101,12 @@ jobs:
           path: |
             /tmp/manor-window-static.json
             /tmp/manor-window-evidence/*
-            /tmp/manor-candidate-http.log
-            /tmp/manor-baseline-http.log
+            /tmp/manor-http.log
           retention-days: 30
       - name: Publish branch evidence for independent visual adjudication
         if: success() && github.ref == 'refs/heads/ai/manor-bounded-window-material-cycle-20260902'
         run: |
+          test "$(git status --porcelain -- assets/compass/compass.house-scene.js)" = ""
           evidence_dir="evidence/manor-window-material-cycle/${GITHUB_SHA}"
           mkdir -p "$evidence_dir"
           cp /tmp/manor-window-evidence/*.png /tmp/manor-window-evidence/receipt.json "$evidence_dir/"

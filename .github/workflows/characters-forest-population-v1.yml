@@ -27,7 +27,7 @@ jobs:
           git -c protocol.version=2 fetch --no-tags --filter=blob:none origin "$FOREST_HEAD"
           git update-ref refs/remotes/origin/forest-head FETCH_HEAD
           git sparse-checkout init --cone --sparse-index
-          git sparse-checkout set characters control-plane/whole-estate/characters-reconstruction-v1 .github/workflows
+          git sparse-checkout set characters h-earth-3d showroom/globe/h-earth control-plane/whole-estate/characters-reconstruction-v1 .github/workflows
           git checkout --detach refs/remotes/origin/forest-head
           test "$(git config --bool index.sparse)" = "true"
           test "$(git rev-parse refs/remotes/origin/forest-base^{commit})" = "$FOREST_BASE"

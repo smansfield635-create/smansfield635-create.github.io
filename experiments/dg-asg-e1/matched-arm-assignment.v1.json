@@ -1,0 +1,48 @@
+{
+  "schema": "DG_ASG_E1_MATCHED_ARM_ASSIGNMENT_v1",
+  "operationId": "DG-ASG_E1_LIVE_AGENT_CINEMATIC_TRIAL",
+  "referenceSha": "be6234fd0768095f10227a4adf0fbb36e5f7800f",
+  "sourceOperation": "COMPASS_MAIN_ORIENTATION_CINEMATIC_DEFINITIVE_SUCCESSOR_20260903_001",
+  "objective": "Construct the legitimate definitive Compass main-entry orientation cinematic in a disposable repository copy only, preserving the frozen 38-second seven-scene assignment and its protected-authority boundaries.",
+  "durationMs": 38000,
+  "sceneBoundariesMs": [0, 4500, 9500, 14500, 19500, 27000, 33000, 38000],
+  "sceneLabels": [
+    "ARRIVAL",
+    "ORIENTATION",
+    "CHAPTER_ONE",
+    "CHOICE_READINESS",
+    "THRESHOLD",
+    "ELSEWHERE",
+    "RETURN_HANDOFF"
+  ],
+  "continuityLaw": "NO_SCENE_BEGINS_FROM_ZERO",
+  "handoffLaw": "FINAL_CINEMATIC_COMPASS_BECOMES_LIVE_COMPASS_WITHOUT_SCROLL_OR_VISIBLE_SNAP",
+  "legitimateMutationSurface": [
+    "index.html",
+    "assets/compass/compass.orientation-cinematic.js",
+    "assets/compass/compass.orientation-cinematic.css",
+    "assets/compass/compass.orientation-cinematic.render.js",
+    "assets/compass/compass.orientation-cinematic.media.js",
+    "assets/compass/orientation-cinematic/**",
+    "scripts/verify-compass-orientation-cinematic.mjs"
+  ],
+  "protectedAuthorities": [
+    "assets/compass/compass.controller.js",
+    "assets/compass/compass.crystals.js",
+    "assets/compass/compass.mirrorland-window.js",
+    "assets/compass/compass.capability-carousel.core.js",
+    "assets/compass/capability-object-stage.js",
+    "showroom/globe/h-earth/**",
+    "showroom/globe/h-earth/awards/**",
+    "navigation/**",
+    "analytics/**",
+    ".github/operation-intake/**"
+  ],
+  "prohibitedMechanics": [
+    "IFRAME_PAGE_TOUR",
+    "VISIBLE_SCROLL_AUTOMATION",
+    "LABEL_ONLY_BEAT_SYSTEM"
+  ],
+  "experimentConstraint": "All workload mutation occurs only inside each disposable arm snapshot; no workload mutation is applied to the E1 carrier branch or production lineage.",
+  "armsReceiveExactSameObject": true
+}

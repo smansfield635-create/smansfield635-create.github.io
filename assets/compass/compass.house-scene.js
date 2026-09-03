@@ -1,18 +1,18 @@
 (()=>{
 'use strict';
 const CONTINUITY='COMPASS_OBJECT_RENDERER_CONTINUITY_v1';
-const VERSION='mirror-manor-gothic-phase3-carousel-v3-principal-estate-r2';
+const VERSION='mirror-manor-gothic-phase3-carousel-v4-principal-estate-close';
 const scenes=new WeakMap();let primary=null;
 const LEGACY_CONTINUITY='projected-architectural-geometry-v8-coherent-manor DGB_COMPASS_MANOR_EXHIBIT_DEPTH_v8 coherent-two-story-window-grid no-pavilion-windows no-side-stacked-windows roof-occlusion-pass paint(roofFaces)';
-const CAROUSEL_DISTANCE=68;
+const CAROUSEL_DISTANCE=56;
 const CAROUSEL_TARGET=Object.freeze([0,7,1]);
 const omittedFromCarousel=id=>id==='FG'||id==='GHSE'||/(^|-)GATE($|-)/.test(id||'');
 function mount(canvas,{foreground=()=>true}={}){
  if(!canvas||scenes.has(canvas))return scenes.get(canvas);
  let disposed=false,ready=false,drawQueued=false,gl=null,drawImpl=()=>{};
- canvas.hidden=false;canvas.style.display='block';canvas.style.width='100%';canvas.style.height='100%';canvas.style.filter='brightness(1.08) saturate(.92) contrast(1.10) drop-shadow(0 22px 24px rgba(0,0,0,.38))';
- Object.assign(canvas.dataset,{houseRenderer:VERSION,houseContract:'MIRROR_MANOR_GOTHIC_ARCHITECTURAL_DETAIL_PHASE3_v1',houseGeometry:'canonical-phase3-principal-estate-mesh,carousel-gatehouse-omitted,carousel-formal-garden-plinth-omitted,true-facade-openings,open-pointed-portals,true-dormer-apertures,tower-crowns,owned-gothic-enrichment',houseMotion:'static-exhibit',houseRoofWindows:'none',houseWindowFloors:'two',houseCarouselDistance:String(CAROUSEL_DISTANCE),housePrincipalSpan:'27',houseCarouselComposition:'principal-estate-only',objectContinuity:CONTINUITY,legacyContinuity:LEGACY_CONTINUITY,houseCullPolicy:'two-sided-mixed-winding'});
- const api={fallback:false,setForeground:on=>{canvas.dataset.manorForeground=on?'true':'false';if(on)drawImpl()},draw:()=>drawImpl(),inspect:()=>({fallback:false,renderer:VERSION,contract:canvas.dataset.houseContract,foreground:foreground(),geometry:canvas.dataset.houseGeometry,carouselDistance:CAROUSEL_DISTANCE,principalSpan:27,motion:'static-exhibit',continuity:CONTINUITY,ready,cullPolicy:canvas.dataset.houseCullPolicy,auditPass:canvas.dataset.houseAuditPass,composition:'principal-estate-only'})};
+ canvas.hidden=false;canvas.style.display='block';canvas.style.width='100%';canvas.style.height='100%';canvas.style.filter='brightness(1.18) saturate(.94) contrast(1.08) drop-shadow(0 22px 24px rgba(0,0,0,.34))';
+ Object.assign(canvas.dataset,{houseRenderer:VERSION,houseContract:'MIRROR_MANOR_GOTHIC_ARCHITECTURAL_DETAIL_PHASE3_v1',houseGeometry:'canonical-phase3-principal-estate-mesh,carousel-gatehouse-omitted,carousel-formal-garden-plinth-omitted,true-facade-openings,open-pointed-portals,true-dormer-apertures,tower-crowns,owned-gothic-enrichment',houseMotion:'static-exhibit',houseRoofWindows:'none',houseWindowFloors:'two',houseCarouselDistance:String(CAROUSEL_DISTANCE),housePrincipalSpan:'27',houseCarouselComposition:'principal-estate-only-close-framing',objectContinuity:CONTINUITY,legacyContinuity:LEGACY_CONTINUITY,houseCullPolicy:'two-sided-mixed-winding'});
+ const api={fallback:false,setForeground:on=>{canvas.dataset.manorForeground=on?'true':'false';if(on)drawImpl()},draw:()=>drawImpl(),inspect:()=>({fallback:false,renderer:VERSION,contract:canvas.dataset.houseContract,foreground:foreground(),geometry:canvas.dataset.houseGeometry,carouselDistance:CAROUSEL_DISTANCE,principalSpan:27,motion:'static-exhibit',continuity:CONTINUITY,ready,cullPolicy:canvas.dataset.houseCullPolicy,auditPass:canvas.dataset.houseAuditPass,composition:'principal-estate-only-close-framing'})};
  scenes.set(canvas,api);primary=api;
  (async()=>{
   try{
@@ -29,7 +29,7 @@ function mount(canvas,{foreground=()=>true}={}){
    canvas.dataset.houseAuditPolicy='nonblocking-render-diagnostic';
    if(!audit.passStatic)canvas.dataset.houseAuditWarning='MIRROR_MANOR_PHASE3_AUDIT_REQUIRES_RECONCILIATION';
    gl=canvas.getContext('webgl',{antialias:true,alpha:true,premultipliedAlpha:true});if(!gl)throw new Error('WEBGL_UNAVAILABLE');
-   const vs=`attribute vec3 aPosition;attribute vec3 aNormal;attribute vec3 aColor;uniform mat4 uMVP;varying float vLight;varying vec3 vColor;void main(){vec3 L=normalize(vec3(-.48,.82,.52));vLight=.34+.66*max(0.0,dot(normalize(aNormal),L));vColor=aColor;gl_Position=uMVP*vec4(aPosition,1.0);}`;
+   const vs=`attribute vec3 aPosition;attribute vec3 aNormal;attribute vec3 aColor;uniform mat4 uMVP;varying float vLight;varying vec3 vColor;void main(){vec3 L=normalize(vec3(-.48,.82,.52));vLight=.42+.58*max(0.0,dot(normalize(aNormal),L));vColor=aColor;gl_Position=uMVP*vec4(aPosition,1.0);}`;
    const fs=`precision mediump float;varying float vLight;varying vec3 vColor;void main(){gl_FragColor=vec4(vColor*vLight,1.0);}`;
    const shader=(t,s)=>{const x=gl.createShader(t);gl.shaderSource(x,s);gl.compileShader(x);if(!gl.getShaderParameter(x,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(x));return x};
    const pr=gl.createProgram();gl.attachShader(pr,shader(gl.VERTEX_SHADER,vs));gl.attachShader(pr,shader(gl.FRAGMENT_SHADER,fs));gl.linkProgram(pr);if(!gl.getProgramParameter(pr,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(pr));gl.useProgram(pr);

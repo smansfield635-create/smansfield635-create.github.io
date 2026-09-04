@@ -35,40 +35,33 @@ jobs:
           const fs=require('node:fs');
           const path='assets/compass/compass.orientation-cinematic.render.js';
           let s=fs.readFileSync(path,'utf8');
-          const old=`  async function prepareAudralia(scene){
-            const canvas=scene.querySelector('.cinematic-audralia__canvas');
-            const module=await import(AUDRALIA_RENDERER_URL);
-            if(typeof module.createMapWideEnvironmentRenderer!=='function')throw new Error('AUDRALIA_CANONICAL_RENDERER_EXPORT_MISSING');
-            const renderer=module.createMapWideEnvironmentRenderer(canvas);
-            renderer.planetaryVantage();
-            audralia={renderer,module};
-          }`;
-          const replacement=`  async function prepareAudralia(scene){
-            const canvas=scene.querySelector('.cinematic-audralia__canvas');
+          function replaceOnce(token,replacement){
+            const first=s.indexOf(token);
+            if(first<0)throw new Error(`PROFILE_TOKEN_MISSING:${token}`);
+            if(s.indexOf(token,first+token.length)>=0)throw new Error(`PROFILE_TOKEN_AMBIGUOUS:${token}`);
+            s=s.slice(0,first)+replacement+s.slice(first+token.length);
+          }
+          replaceOnce("const canvas=scene.querySelector('.cinematic-audralia__canvas');",`const canvas=scene.querySelector('.cinematic-audralia__canvas');
             const profile=globalThis.__DGB_AUDRALIA_PREP_PROFILE||(globalThis.__DGB_AUDRALIA_PREP_PROFILE={events:[]});
             const started=performance.now();
             const mark=(label)=>profile.events.push({label,t:performance.now()});
             mark('prepare_start');
-            const importStarted=performance.now();
-            const module=await import(AUDRALIA_RENDERER_URL);
+            const importStarted=performance.now();`);
+          replaceOnce('const module=await import(AUDRALIA_RENDERER_URL);',`const module=await import(AUDRALIA_RENDERER_URL);
             profile.importMs=performance.now()-importStarted;
             mark('import_complete');
-            if(typeof module.createMapWideEnvironmentRenderer!=='function')throw new Error('AUDRALIA_CANONICAL_RENDERER_EXPORT_MISSING');
-            const constructStarted=performance.now();
-            const renderer=module.createMapWideEnvironmentRenderer(canvas);
+            const constructStarted=performance.now();`);
+          replaceOnce('const renderer=module.createMapWideEnvironmentRenderer(canvas);',`const renderer=module.createMapWideEnvironmentRenderer(canvas);
             profile.constructMs=performance.now()-constructStarted;
             mark('construct_complete');
-            const planetaryStarted=performance.now();
-            renderer.planetaryVantage();
+            const planetaryStarted=performance.now();`);
+          replaceOnce('renderer.planetaryVantage();',`renderer.planetaryVantage();
             profile.planetaryMs=performance.now()-planetaryStarted;
             mark('planetary_complete');
-            profile.totalMs=performance.now()-started;
-            audralia={renderer,module};
-          }`;
-          if(!s.includes(old))throw new Error('AUDRALIA_PREP_FUNCTION_SHAPE_CHANGED');
-          s=s.replace(old,replacement);
+            profile.totalMs=performance.now()-started;`);
           fs.writeFileSync(path,s);
           NODE
+          git diff --check
           git diff -- assets/compass/compass.orientation-cinematic.render.js
 
       - name: Set up Chrome

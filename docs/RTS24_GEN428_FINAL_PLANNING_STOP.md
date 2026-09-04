@@ -1,0 +1,1 @@
+Planning stop reached. Any successor must now recover source bindings; otherwise stop with unresolved binding.

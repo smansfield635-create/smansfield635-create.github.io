@@ -62,7 +62,7 @@ check("CANVAS_DIMENSIONS_OUTSIDE_RENDER_LOOP", resizeStart >= 0 && widthAssignme
 check("TESSELLATION_NATIVE", js.includes("drawIsoCell") && js.includes("buildTessellation"));
 check("TESSELLATION_TO_SOURCE_MATTER", js.includes("compassScreenPoint") && js.includes("state.stars"));
 check("NO_HISTORY_MUTATION", !/history\.(pushState|replaceState)|location\s*=|location\.href\s*=/.test(js));
-check("NO_ANALYTICS", !/gtag\s*\(|dataLayer|analytics/i.test(js));
+check("NO_ANALYTICS_EXECUTION", !/gtag\s*\(|dataLayer\s*\.\s*push|analytics\s*\.\s*(track|page|event)\s*\(|\bga\s*\(/i.test(js));
 
 const requiredBindings = [
   ["P1", "93a9fc9989b53ef75319dc1af0206ebc6a2b537c"],

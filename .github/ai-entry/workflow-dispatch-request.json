@@ -1,6 +1,8 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "jen-constellation-direct-bind-82d73333",
+  "requestId": "compass-holographic-deploy-841d968e-20260904",
   "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
-  "inputs": {"target_sha":"82d73333f2f15f25e1b044f2b777712406d7f5e1"}
+  "inputs": {
+    "surface_id": "compass-holographic-orientation-20260904"
+  }
 }

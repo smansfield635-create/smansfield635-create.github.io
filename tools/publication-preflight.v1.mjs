@@ -23,6 +23,11 @@ const AUTHORIZED_EXCLUDED_RUNTIME_DEPENDENCIES=Object.freeze({
     mode:'EXACT_REFERENCED_CLOSURE_ONLY',
     entryPath:'showroom/globe/audralia/index.html',
     allowedPrefix:'inspection/audralia-24057-exact/snapshot/'
+  }),
+  'compass-holographic-orientation-20260904':Object.freeze({
+    mode:'EXACT_REFERENCED_CLOSURE_ONLY',
+    entryPath:'preview/compass/holographic-orientation-v1/full/index.html',
+    allowedPrefix:'preview/compass/holographic-orientation-v1/full/'
   })
 });
 const PROTECTED_SURFACE_IDS=Object.freeze(Object.keys(AUTHORIZED_EXCLUDED_RUNTIME_DEPENDENCIES));
@@ -137,8 +142,15 @@ function loadSurfaceManifest(repoRoot,surfaceId){
 }
 function promoteProtectedSurface({repoRoot,stage,targetSha,protectedSurfaceId,policy}){
   const entryFile=path.join(stage,...policy.entryPath.split('/'));
-  if(!fs.existsSync(entryFile))throw new Error(`AUTHORIZED_RUNTIME_ENTRYPOINT_MISSING:${policy.entryPath}`);
-  const entryReferences=extractResourceSpecifiers(policy.entryPath,fs.readFileSync(entryFile,'utf8'))
+  let entryBytes;
+  if(excluded(policy.entryPath)){
+    if(!policy.entryPath.startsWith(policy.allowedPrefix))throw new Error(`AUTHORIZED_RUNTIME_ENTRYPOINT_CROSSES_EXCLUDED_ROOT:${policy.entryPath}`);
+    entryBytes=readExactRepositoryFile({repoRoot,targetSha,rel:policy.entryPath}).bytes;
+  }else{
+    if(!fs.existsSync(entryFile)||!fs.statSync(entryFile).isFile())throw new Error(`AUTHORIZED_RUNTIME_ENTRYPOINT_MISSING:${policy.entryPath}`);
+    entryBytes=fs.readFileSync(entryFile);
+  }
+  const entryReferences=extractResourceSpecifiers(policy.entryPath,entryBytes.toString('utf8'))
     .map(specifier=>resolveResourcePath(policy.entryPath,specifier))
     .filter(Boolean);
   const queue=[policy.entryPath],seen=new Set(),files=[];

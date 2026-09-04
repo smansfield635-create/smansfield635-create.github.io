@@ -1,0 +1,296 @@
+name: Compass Homepage Cinematic Exact-Head Qualification R2
+
+on:
+  push:
+    branches:
+      - qualification/compass-homepage-cinematic-exact-head-b72cc332-r2-20260904
+
+permissions:
+  contents: read
+
+jobs:
+  qualify-exact-cinematic-head:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - name: Check out exact cinematic candidate
+        uses: actions/checkout@v4
+        with:
+          ref: b72cc332bcaa156126eb99ae28be6eba1e9981c2
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Assert exact candidate identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "b72cc332bcaa156126eb99ae28be6eba1e9981c2"
+          test -f assets/compass/compass.orientation-cinematic.js
+          test -f assets/compass/compass.orientation-cinematic.final.js
+          grep -Fq "const MASTER_DURATION_MS=38000" assets/compass/compass.orientation-cinematic.js
+          grep -Fq "const PREVIEW_PARAM='compassCinematicConstruction'" assets/compass/compass.orientation-cinematic.js
+
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install browser verifier dependency
+        run: |
+          npm install --no-save --no-package-lock puppeteer-core@24.15.0
+          node -e "require.resolve('puppeteer-core')"
+
+      - name: Serve exact candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 >/tmp/compass-homepage-cinematic-http.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/compass-homepage-cinematic-http.log || true
+          exit 1
+
+      - name: Exercise S01-S08 natural, skip, and reduced-motion paths
+        shell: bash
+        env:
+          TARGET_SHA: b72cc332bcaa156126eb99ae28be6eba1e9981c2
+          RESULT_PATH: /tmp/compass-homepage-cinematic-exact-head.json
+        run: |
+          set -euo pipefail
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          mkdir -p .qualification
+          cat >.qualification/verify-compass-homepage-cinematic.cjs <<'NODE'
+          const fs=require('node:fs');
+          const puppeteer=require('puppeteer-core');
+
+          const targetSha=process.env.TARGET_SHA;
+          const resultPath=process.env.RESULT_PATH;
+          const baseUrl='http://127.0.0.1:4173/?compassCinematicConstruction=1';
+          const failures=[];
+          const scenarios=[];
+          const assert=(condition,message)=>{if(!condition)throw new Error(message);};
+          const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+
+          async function main(){
+            const browser=await puppeteer.launch({
+              executablePath:process.env.CHROME_PATH,
+              headless:'new',
+              args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage']
+            });
+
+            async function preparePage(viewport,reduced=false){
+              const page=await browser.newPage();
+              await page.setViewport(viewport);
+              if(reduced){
+                await page.emulateMediaFeatures([{name:'prefers-reduced-motion',value:'reduce'}]);
+              }
+              const pageErrors=[];
+              const consoleErrors=[];
+              page.on('pageerror',error=>pageErrors.push(String(error?.message||error)));
+              page.on('console',msg=>{if(msg.type()==='error')consoleErrors.push(msg.text());});
+              await page.evaluateOnNewDocument(()=>{
+                globalThis.__DGB_CINEMATIC_SETTLED=[];
+                document.addEventListener('dgb:compass-orientation-cinematic-settled',event=>{
+                  try{globalThis.__DGB_CINEMATIC_SETTLED.push(JSON.parse(JSON.stringify(event.detail)));}
+                  catch{globalThis.__DGB_CINEMATIC_SETTLED.push({serializationFailure:true});}
+                });
+              });
+              return {page,pageErrors,consoleErrors};
+            }
+
+            async function snapshot(page){
+              return page.evaluate(()=>{
+                const api=globalThis.DGB_MAIN_ORIENTATION_CINEMATIC;
+                const inspect=api?.inspect?.()||null;
+                const root=document.querySelector('[data-compass-root]');
+                const overlay=document.querySelector('#compass-orientation-cinematic');
+                return {
+                  api:{
+                    version:api?.version||null,
+                    durationMs:api?.durationMs||null,
+                    mutationClass:api?.mutationClass||null,
+                    constructionPreviewParameter:api?.constructionPreviewParameter||null
+                  },
+                  inspect,
+                  root:{
+                    inert:Boolean(root?.inert),
+                    ariaHidden:root?.getAttribute('aria-hidden')??null,
+                    mode:root?.getAttribute('data-compass-mode')??null,
+                    selectedCardinal:root?.getAttribute('data-selected-cardinal')??null,
+                    selectedRoom:root?.getAttribute('data-selected-room')??null
+                  },
+                  overlay:overlay?{
+                    state:overlay.dataset.state||null,
+                    shotId:overlay.dataset.shotId||null,
+                    reducedMotion:overlay.dataset.reducedMotion||null,
+                    naturalHandoff:overlay.dataset.naturalHandoff||null,
+                    naturalFadeComplete:overlay.dataset.naturalFadeComplete||null,
+                    restoreReason:overlay.dataset.restoreReason||null
+                  }:null,
+                  settled:[...(globalThis.__DGB_CINEMATIC_SETTLED||[])],
+                  href:location.href,
+                  historyLength:history.length,
+                  overflow:Math.max(0,document.documentElement.scrollWidth-innerWidth)
+                };
+              });
+            }
+
+            async function waitForApi(page){
+              await page.waitForFunction(()=>Boolean(globalThis.DGB_MAIN_ORIENTATION_CINEMATIC?.inspect),{timeout:15000});
+            }
+
+            async function runNatural(){
+              const {page,pageErrors,consoleErrors}=await preparePage({width:1440,height:1000,deviceScaleFactor:1},false);
+              const seen=[];
+              try{
+                await page.goto(baseUrl,{waitUntil:'domcontentloaded',timeout:30000});
+                await waitForApi(page);
+                await page.waitForFunction(()=>globalThis.DGB_MAIN_ORIENTATION_CINEMATIC.inspect().phase==='PLAYING',{timeout:15000});
+                const deadline=Date.now()+52000;
+                let last=null;
+                while(Date.now()<deadline){
+                  const state=await snapshot(page);
+                  const shot=state.overlay?.shotId||state.inspect?.lastShotId||null;
+                  if(shot&&shot!==last){seen.push(shot);last=shot;}
+                  if(state.inspect?.phase==='SETTLED')break;
+                  await sleep(120);
+                }
+                const finalState=await snapshot(page);
+                const expected=['S01','S02','S03','S04','S05','S06','S07','S08'];
+                let cursor=-1;
+                for(const shot of expected){
+                  const next=seen.indexOf(shot,cursor+1);
+                  assert(next!==-1,`NATURAL_MISSING_${shot}: seen=${seen.join(',')}`);
+                  cursor=next;
+                }
+                assert(finalState.inspect?.phase==='SETTLED',`NATURAL_NOT_SETTLED:${JSON.stringify(finalState.inspect)}`);
+                assert(finalState.inspect?.errorCode===null,`NATURAL_ERROR_CODE_${finalState.inspect?.errorCode}`);
+                assert(finalState.overlay===null,'NATURAL_OVERLAY_NOT_REMOVED');
+                assert(finalState.root.inert===false,'NATURAL_ROOT_STILL_INERT');
+                assert(finalState.root.ariaHidden===null,'NATURAL_ROOT_ARIA_HIDDEN_NOT_RESTORED');
+                assert(finalState.settled.length===1,`NATURAL_SETTLED_EVENT_COUNT_${finalState.settled.length}`);
+                const receipt=finalState.settled[0];
+                assert(receipt.reason==='complete',`NATURAL_REASON_${receipt.reason}`);
+                assert(receipt.finalShotId==='S08',`NATURAL_FINAL_SHOT_${receipt.finalShotId}`);
+                assert(receipt.handoffVerified===true,'NATURAL_HANDOFF_NOT_VERIFIED');
+                assert(receipt.urlUnchanged===true,'NATURAL_URL_CHANGED');
+                assert(receipt.historyUnchanged===true,'NATURAL_HISTORY_CHANGED');
+                assert(receipt.navigationIntentEvents===0,'NATURAL_NAVIGATION_INTENT_NONZERO');
+                assert(finalState.overflow===0,`NATURAL_OVERFLOW_${finalState.overflow}`);
+                assert(pageErrors.length===0,`NATURAL_PAGE_ERRORS:${pageErrors.join(' | ')}`);
+                scenarios.push({id:'NATURAL_S01_S08',status:'PASS',seen,receipt,pageErrors,consoleErrors});
+              }catch(error){
+                const state=await snapshot(page).catch(()=>null);
+                failures.push({id:'NATURAL_S01_S08',error:String(error?.message||error),seen,pageErrors,consoleErrors,state});
+              }finally{await page.close();}
+            }
+
+            async function runSkip(){
+              const {page,pageErrors,consoleErrors}=await preparePage({width:390,height:844,deviceScaleFactor:1},false);
+              try{
+                await page.goto(baseUrl,{waitUntil:'domcontentloaded',timeout:30000});
+                await waitForApi(page);
+                await page.waitForFunction(()=>globalThis.DGB_MAIN_ORIENTATION_CINEMATIC.inspect().phase==='PLAYING',{timeout:15000});
+                await page.waitForFunction(()=>document.querySelector('#compass-orientation-cinematic')?.dataset.shotId==='S02',{timeout:15000});
+                await page.click('[data-main-orientation-skip]');
+                await page.waitForFunction(()=>globalThis.DGB_MAIN_ORIENTATION_CINEMATIC.inspect().phase==='SETTLED',{timeout:10000});
+                const finalState=await snapshot(page);
+                assert(finalState.inspect?.errorCode===null,`SKIP_ERROR_CODE_${finalState.inspect?.errorCode}`);
+                assert(finalState.overlay===null,'SKIP_OVERLAY_NOT_REMOVED');
+                assert(finalState.root.inert===false,'SKIP_ROOT_STILL_INERT');
+                assert(finalState.root.ariaHidden===null,'SKIP_ROOT_ARIA_HIDDEN_NOT_RESTORED');
+                assert(finalState.settled.length===1,`SKIP_SETTLED_EVENT_COUNT_${finalState.settled.length}`);
+                const receipt=finalState.settled[0];
+                assert(receipt.reason==='skip-playing',`SKIP_REASON_${receipt.reason}`);
+                assert(receipt.urlUnchanged===true,'SKIP_URL_CHANGED');
+                assert(receipt.historyUnchanged===true,'SKIP_HISTORY_CHANGED');
+                assert(receipt.navigationIntentEvents===0,'SKIP_NAVIGATION_INTENT_NONZERO');
+                assert(finalState.overflow===0,`SKIP_OVERFLOW_${finalState.overflow}`);
+                assert(pageErrors.length===0,`SKIP_PAGE_ERRORS:${pageErrors.join(' | ')}`);
+                scenarios.push({id:'SKIP_PLAYING_PHONE',status:'PASS',receipt,pageErrors,consoleErrors});
+              }catch(error){
+                const state=await snapshot(page).catch(()=>null);
+                failures.push({id:'SKIP_PLAYING_PHONE',error:String(error?.message||error),pageErrors,consoleErrors,state});
+              }finally{await page.close();}
+            }
+
+            async function runReduced(){
+              const {page,pageErrors,consoleErrors}=await preparePage({width:900,height:1000,deviceScaleFactor:1},true);
+              try{
+                await page.goto(baseUrl,{waitUntil:'domcontentloaded',timeout:30000});
+                await waitForApi(page);
+                await page.waitForFunction(()=>document.querySelector('#compass-orientation-cinematic')?.dataset.reducedMotion==='true',{timeout:15000});
+                const armed=await snapshot(page);
+                assert(armed.inspect?.phase==='ARMED',`REDUCED_NOT_ARMED_${armed.inspect?.phase}`);
+                assert(armed.inspect?.errorCode===null,`REDUCED_ARMED_ERROR_CODE_${armed.inspect?.errorCode}`);
+                await page.click('[data-main-orientation-skip]');
+                await page.waitForFunction(()=>globalThis.DGB_MAIN_ORIENTATION_CINEMATIC.inspect().phase==='SETTLED',{timeout:10000});
+                const finalState=await snapshot(page);
+                assert(finalState.inspect?.errorCode===null,`REDUCED_ERROR_CODE_${finalState.inspect?.errorCode}`);
+                assert(finalState.overlay===null,'REDUCED_OVERLAY_NOT_REMOVED');
+                assert(finalState.root.inert===false,'REDUCED_ROOT_STILL_INERT');
+                assert(finalState.root.ariaHidden===null,'REDUCED_ROOT_ARIA_HIDDEN_NOT_RESTORED');
+                assert(finalState.settled.length===1,`REDUCED_SETTLED_EVENT_COUNT_${finalState.settled.length}`);
+                const receipt=finalState.settled[0];
+                assert(receipt.reason==='reduced-motion-complete',`REDUCED_REASON_${receipt.reason}`);
+                assert(receipt.urlUnchanged===true,'REDUCED_URL_CHANGED');
+                assert(receipt.historyUnchanged===true,'REDUCED_HISTORY_CHANGED');
+                assert(receipt.navigationIntentEvents===0,'REDUCED_NAVIGATION_INTENT_NONZERO');
+                assert(finalState.overflow===0,`REDUCED_OVERFLOW_${finalState.overflow}`);
+                assert(pageErrors.length===0,`REDUCED_PAGE_ERRORS:${pageErrors.join(' | ')}`);
+                scenarios.push({id:'REDUCED_MOTION_TABLET',status:'PASS',receipt,pageErrors,consoleErrors});
+              }catch(error){
+                const state=await snapshot(page).catch(()=>null);
+                failures.push({id:'REDUCED_MOTION_TABLET',error:String(error?.message||error),pageErrors,consoleErrors,state});
+              }finally{await page.close();}
+            }
+
+            try{
+              await runNatural();
+              await runSkip();
+              await runReduced();
+            }finally{
+              await browser.close();
+            }
+          }
+
+          main().then(()=>{
+            const receipt={
+              schema:'COMPASS_HOMEPAGE_CINEMATIC_EXACT_HEAD_BROWSER_QUALIFICATION_v1',
+              targetSha,
+              previewParameter:'compassCinematicConstruction=1',
+              status:failures.length===0?'PASS':'FAIL',
+              scenarios,
+              failures
+            };
+            fs.writeFileSync(resultPath,JSON.stringify(receipt,null,2));
+            console.log(JSON.stringify(receipt,null,2));
+            if(failures.length)process.exit(1);
+          }).catch(error=>{
+            const receipt={
+              schema:'COMPASS_HOMEPAGE_CINEMATIC_EXACT_HEAD_BROWSER_QUALIFICATION_v1',
+              targetSha,
+              previewParameter:'compassCinematicConstruction=1',
+              status:'TRANSPORT_FAIL',
+              scenarios,
+              failures:[...failures,{id:'VERIFIER_TRANSPORT',error:String(error?.stack||error)}]
+            };
+            try{fs.writeFileSync(resultPath,JSON.stringify(receipt,null,2));}catch{}
+            console.error(JSON.stringify(receipt,null,2));
+            process.exit(2);
+          });
+          NODE
+          node .qualification/verify-compass-homepage-cinematic.cjs
+          test "$(jq -r '.status' "$RESULT_PATH")" = "PASS"
+          echo COMPASS_HOMEPAGE_CINEMATIC_EXACT_HEAD_BROWSER_PASS
+
+      - name: Upload exact-head cinematic evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-homepage-cinematic-exact-head-r2-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/compass-homepage-cinematic-exact-head.json
+          if-no-files-found: error
+          retention-days: 90

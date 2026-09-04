@@ -30,7 +30,7 @@ const AUTHORIZED_EXCLUDED_RUNTIME_DEPENDENCIES=Object.freeze({
     allowedPrefix:'preview/compass/holographic-orientation-v1/full/'
   })
 });
-const PROTECTED_SURFACE_IDS=Object.freeze(Object.keys(AUTHORIZED_EXCLUDED_RUNTIME_DEPENDENCIES));
+const PROTECTED_SURFACE_IDS=Object.freeze(['audralia']);
 
 export function sha256(value){return crypto.createHash('sha256').update(value).digest('hex');}
 export function validateSurfaceId(id){return typeof id==='string'&&/^[a-z0-9][a-z0-9._-]{0,79}$/.test(id);}
@@ -204,8 +204,10 @@ function promoteProtectedSurface({repoRoot,stage,targetSha,protectedSurfaceId,po
   });
 }
 export function promoteAuthorizedExcludedRuntimeDependencies({repoRoot=REPO_ROOT,stage,targetSha,surfaceId}){
-  const promoted=Object.entries(AUTHORIZED_EXCLUDED_RUNTIME_DEPENDENCIES)
-    .map(([protectedSurfaceId,policy])=>promoteProtectedSurface({repoRoot,stage,targetSha,protectedSurfaceId,policy}));
+  const promotedIds=[...PROTECTED_SURFACE_IDS];
+  if(AUTHORIZED_EXCLUDED_RUNTIME_DEPENDENCIES[surfaceId]&&!promotedIds.includes(surfaceId))promotedIds.push(surfaceId);
+  const promoted=promotedIds
+    .map(protectedSurfaceId=>promoteProtectedSurface({repoRoot,stage,targetSha,protectedSurfaceId,policy:AUTHORIZED_EXCLUDED_RUNTIME_DEPENDENCIES[protectedSurfaceId]}));
   if(!promoted.length)return Object.freeze({status:'NOT_REQUIRED',mode:'NOT_REQUIRED',requestedSurfaceId:surfaceId,fileCount:0,bytes:0,digest:null,files:[]});
   if(promoted.length===1)return Object.freeze({...promoted[0],requestedSurfaceId:surfaceId,protectedSurfaceCount:1});
   const files=promoted.flatMap(item=>item.files).sort((a,b)=>a.path.localeCompare(b.path));

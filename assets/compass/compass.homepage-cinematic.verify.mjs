@@ -82,15 +82,23 @@ check('S06_MEDIA_STATUS',media.includes("id:'S06'")&&media.includes('CONSTRUCTED
 check('S07_S08_REMAIN_PENDING',media.includes("id:'S07'")&&media.includes("id:'S08'")&&media.match(/SOURCE_BOUND_MEDIA_NOT_YET_ACQUIRED/g)?.length===2);
 check('REJECTED_GENERIC_RENDERER_REMOVED',!render.includes('Follow curiosity')&&!render.includes('cinematic-audralia-fallback')&&!render.includes('<svg'));
 
-const args=process.argv.slice(2),baseIndex=args.indexOf('--base'),headIndex=args.indexOf('--head');
+const args=process.argv.slice(2),baseIndex=args.indexOf('--base'),headIndex=args.indexOf('--head'),changedPathsIndex=args.indexOf('--changed-paths');
+let subjectHead=null;
 if(baseIndex!==-1&&headIndex!==-1){
-  const base=args[baseIndex+1],head=args[headIndex+1];
+  const base=args[baseIndex+1],head=args[headIndex+1];subjectHead=head;
   check('VERIFIER_BASE_MATCH',base===EXPECTED_BASE,base);
-  const diff=spawnSync('git',['diff','--name-only',`${base}...${head}`],{cwd:root,encoding:'utf8'});
-  if(diff.status===0){const changed=diff.stdout.split(/\r?\n/).filter(Boolean).sort();check('DECLARED_PATHS_ONLY',JSON.stringify(changed)===JSON.stringify(EXPECTED_PATHS),JSON.stringify(changed));}
-  else check('DECLARED_PATHS_ONLY',false,diff.stderr||'git diff failed');
+  let changed=null;
+  if(changedPathsIndex!==-1){
+    changed=String(args[changedPathsIndex+1]||'').split(',').filter(Boolean).sort();
+    check('EXTERNAL_COMPARE_PATHS_SUPPLIED',changed.length>0,JSON.stringify(changed));
+  }else{
+    const diff=spawnSync('git',['diff','--name-only',`${base}...${head}`],{cwd:root,encoding:'utf8'});
+    if(diff.status===0)changed=diff.stdout.split(/\r?\n/).filter(Boolean).sort();
+    else check('GIT_DIFF_AVAILABLE',false,diff.stderr||'git diff failed');
+  }
+  if(changed)check('DECLARED_PATHS_ONLY',JSON.stringify(changed)===JSON.stringify(EXPECTED_PATHS),JSON.stringify(changed));
 }
 
 const result=checks.every(item=>item.pass)?'PASS':'FAIL';
-process.stdout.write(`${JSON.stringify({schema:'COMPASS_MAIN_HOMEPAGE_CINEMATIC_CONSTRUCTION_VERIFIER_v3',result,checkpoint:'CHECKPOINT_3B_S04_S06',expectedBase:EXPECTED_BASE,expectedSpecificationCommit:EXPECTED_SPEC,classifierRouterBlob:CLASSIFIER_ROUTER_BLOB,mutationTask:MUTATION_TASK,checks},null,2)}\n`);
+process.stdout.write(`${JSON.stringify({schema:'COMPASS_MAIN_HOMEPAGE_CINEMATIC_CONSTRUCTION_VERIFIER_v3',result,checkpoint:'CHECKPOINT_3B_S04_S06',expectedBase:EXPECTED_BASE,subjectHead,expectedSpecificationCommit:EXPECTED_SPEC,classifierRouterBlob:CLASSIFIER_ROUTER_BLOB,mutationTask:MUTATION_TASK,checks},null,2)}\n`);
 process.exit(result==='PASS'?0:1);

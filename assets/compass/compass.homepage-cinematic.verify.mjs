@@ -6,6 +6,7 @@ import {spawnSync} from 'node:child_process';
 const EXPECTED_BASE='46c56e0519fc875eac877b4bc921e3151b019a2f';
 const EXPECTED_SPEC='88473442959299d6f6af82396917f0578074cab2';
 const EXPECTED_PATHS=[
+  'index.html',
   'assets/compass/compass.orientation-cinematic.js',
   'assets/compass/compass.orientation-cinematic.css',
   'assets/compass/compass.orientation-cinematic.render.js',
@@ -24,7 +25,7 @@ const SOURCE_BLOBS=Object.freeze({
   controller:'568a6b2cd608a4cbcd62cf70ed59b241c39c90d2',
   audraliaIndex:'96bf20a3189182683bc94c08e2ad7c0dba740f07',
   audraliaRenderer:'872d20b17bb0cd89d9613ca0262b25350890a617',
-  audraliaAwardsFloor:'db0563a1a45811dadc36c48f0cb2356d748e9a07',
+  audraliaAwardsFloor:'db0563a1a45811dadc36f48f0cb2356d748e9a07',
   capabilityCss:'81db61b55a8f216c315633209c552ba340b05cf8',
   capabilityJs:'d39c8870f3bcd3331522ebe985ace1030d149926',
   capabilityCore:'86858e704cb739308e314a6299d5cf166aab7e27',
@@ -39,11 +40,15 @@ const CLASSIFIER_ROUTER_BLOB='a42f34c6ae0bcff0553ed33cb5e34220447a1ab1';
 const MUTATION_TASK='bounded non-interactive cinematic presentation playback';
 const AUTHORITY_PREFIXES=['.github/','tools/','control-plane/','governance/','evidence/'];
 const AUTHORITY_PATH_TOKENS=['controller.','/navigation/','navigation.','/router/','router.','/analytics/','analytics.','readiness-context','capability-carousel','mirrorland-window','compass.crystals'];
+const CINEMATIC_EXECUTABLE_EXTENSIONS=new Set(['.js','.mjs','.cjs','.ts','.tsx','.jsx']);
+const FRESH_CSS_REF='/assets/compass/compass.orientation-cinematic.css?v=compass-homepage-cinematic-qualification-v1&cb=88473442959299d6-css';
+const FRESH_HOST_REF='/assets/compass/compass.orientation-cinematic.js?v=compass-homepage-cinematic-qualification-v1&cb=88473442959299d6-js';
 const root=process.cwd();
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const checks=[];
 const check=(id,pass,detail='')=>checks.push({id,pass:Boolean(pass),detail});
 
+const index=read('index.html');
 const host=read('assets/compass/compass.orientation-cinematic.js');
 const css=read('assets/compass/compass.orientation-cinematic.css');
 const render=read('assets/compass/compass.orientation-cinematic.render.js');
@@ -51,10 +56,15 @@ const media=read('assets/compass/compass.orientation-cinematic.media.js');
 const final=read('assets/compass/compass.orientation-cinematic.final.js');
 const custody=JSON.parse(read('assets/compass/cinematic-media/manifest.v1.json'));
 const combined=[host,css,render,media,final].join('\n');
+const executablePaths=EXPECTED_PATHS.filter(p=>CINEMATIC_EXECUTABLE_EXTENSIONS.has(path.extname(p).toLowerCase()));
 
 check('BOUNDED_CLASSIFIER_TASK',/(CINEMATIC|FILM|VIDEO|PLAYBACK)/u.test(MUTATION_TASK.toUpperCase())&&/(NON-INTERACTIVE|NONINTERACTIVE|PRESENTATION-ONLY|PRESENTATION ONLY)/u.test(MUTATION_TASK.toUpperCase()),MUTATION_TASK);
-check('BOUNDED_CLASSIFIER_PATH_SCOPE',EXPECTED_PATHS.every(p=>p.toLowerCase().includes('cinematic')),JSON.stringify(EXPECTED_PATHS));
+check('BOUNDED_CLASSIFIER_EXECUTABLE_PATH_SCOPE',executablePaths.every(p=>p.toLowerCase().includes('cinematic')),JSON.stringify(executablePaths));
+check('BOUNDED_STATIC_LOADER_PATH_ALLOWED',EXPECTED_PATHS.includes('index.html')&&path.extname('index.html')==='.html','index.html request-identity-only consumer');
 check('NO_AUTHORITY_CLASSIFIER_PATH',EXPECTED_PATHS.every(p=>!AUTHORITY_PREFIXES.some(prefix=>p.startsWith(prefix)))&&EXPECTED_PATHS.every(p=>!AUTHORITY_PATH_TOKENS.some(token=>p.toLowerCase().includes(token))),CLASSIFIER_ROUTER_BLOB);
+check('FRESH_CSS_REQUEST_IDENTITY',index.includes(FRESH_CSS_REF),FRESH_CSS_REF);
+check('FRESH_HOST_REQUEST_IDENTITY',index.includes(FRESH_HOST_REF),FRESH_HOST_REF);
+check('LEGACY_CINEMATIC_REQUEST_IDENTITIES_REMOVED',!index.includes('/assets/compass/compass.orientation-cinematic.css?v=gen1933-orientation-cinematic-v1&cb=b4cdc0ef93b3e53d')&&!index.includes('/assets/compass/compass.orientation-cinematic.js?v=gen1933-orientation-cinematic-v1&cb=b4cdc0ef93b3e53d'));
 check('EXACT_HEAD_BINDING',host.includes(EXPECTED_BASE)&&custody.sourceMain===EXPECTED_BASE);
 check('SPEC_BINDING',host.includes(EXPECTED_SPEC)&&custody.specificationCommit===EXPECTED_SPEC);
 check('MASTER_DURATION_38000',host.includes('const MASTER_DURATION_MS=38000')&&custody.masterDurationMs===38000);
@@ -120,5 +130,5 @@ if(baseIndex!==-1&&headIndex!==-1){
 }
 
 const result=checks.every(item=>item.pass)?'PASS':'FAIL';
-process.stdout.write(`${JSON.stringify({schema:'COMPASS_MAIN_HOMEPAGE_CINEMATIC_CONSTRUCTION_VERIFIER_v4',result,checkpoint:'CHECKPOINT_4A_S07_S08_CONSTRUCTION',expectedBase:EXPECTED_BASE,subjectHead,expectedSpecificationCommit:EXPECTED_SPEC,classifierRouterBlob:CLASSIFIER_ROUTER_BLOB,mutationTask:MUTATION_TASK,checks},null,2)}\n`);
+process.stdout.write(`${JSON.stringify({schema:'COMPASS_MAIN_HOMEPAGE_CINEMATIC_CONSTRUCTION_VERIFIER_v5',result,checkpoint:'WHOLE_FILM_QUALIFICATION_PREFLIGHT',expectedBase:EXPECTED_BASE,subjectHead,expectedSpecificationCommit:EXPECTED_SPEC,classifierRouterBlob:CLASSIFIER_ROUTER_BLOB,mutationTask:MUTATION_TASK,checks},null,2)}\n`);
 process.exit(result==='PASS'?0:1);

@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "compass-holographic-preflight-c97754a0-20260904",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 2699,
+  "requestBranch": "ai-dispatch-request-compass-holographic-preflight-c97754a0-20260904",
+  "requestCommit": "65b52c9cda3f92ed27e6812901385d9149473e29",
+  "requestCommitParent": "c97754a0272534b5ec9690f29155521864ed02cf",
+  "currentMainSha": "c97754a0272534b5ec9690f29155521864ed02cf",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "c97754a0272534b5ec9690f29155521864ed02cf",
+    "surface_id": "compass-holographic-orientation-20260904"
+  },
+  "bridgeRunId": "33835862824",
+  "dispatchedRunId": 33835873820,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/33835873820",
+  "dispatchedRunHeadSha": "c97754a0272534b5ec9690f29155521864ed02cf",
+  "dispatchedAt": "2026-09-04T04:11:15.713Z",
+  "resolvedAt": "2026-09-04T04:11:19.971Z"
+}

@@ -92,7 +92,7 @@
   function drawBuildScopeLabel(text,x,y,width){
     ctx.textAlign="left";ctx.textBaseline="alphabetic";ctx.font="700 9px system-ui";
     if(ctx.measureText(text).width<=width-18){ctx.fillText(text,x+9,y+20);return}
-    const parts=String(text).split(" · "),fontSize=fittedFontSize(parts.reduce((a,b)=>a.length>b.length?a:b,""),width-18,700,8.5,6.5,"system-ui");
+    const parts=String(text).split(" · "),fontSize=fittedFontSize(parts.reduce((a,b)=>a.length>b.length?a:b,""),width-18,700,8.5,5.5,"system-ui");
     ctx.font=`700 ${fontSize}px system-ui`;
     const lineHeight=fontSize*1.32,startY=y+18;
     parts.slice(0,3).forEach((part,index)=>ctx.fillText(part,x+9,startY+index*lineHeight));
@@ -102,7 +102,7 @@
     const width=(plaque[1]-plaque[0])*s,height=(plaque[3]-plaque[2])*s,centerY=-((plaque[2]+plaque[3])*.5)*s;
     const lines=["DIAMOND GATE BRIDGE","AWARDS TARGET"],preferred=Math.min(8,Math.max(5.5,height*.50));
     let size=preferred;
-    for(const line of lines)size=Math.min(size,fittedFontSize(line,width-8,900,size,5,"ui-monospace,monospace"));
+    for(const line of lines)size=Math.min(size,fittedFontSize(line,width-8,900,size,4.25,"ui-monospace,monospace"));
     ctx.font=`900 ${size}px ui-monospace,monospace`;ctx.textAlign="center";ctx.textBaseline="middle";
     const gap=size*.95;ctx.fillText(lines[0],0,centerY-gap*.5);ctx.fillText(lines[1],0,centerY+gap*.5);
   }
@@ -263,7 +263,7 @@
     ctx.fillStyle="rgba(247,242,224,.92)";const headline=wrappedText(D.build.headline,innerWidth,600,state.width<560?20:24,15,"Georgia,serif",2);ctx.font=`600 ${headline.size}px Georgia,serif`;headline.lines.forEach((line,index)=>ctx.fillText(line,cx-w/2+pad,top+44+index*headline.lineHeight));
     const cardsY=top+50+headline.height+18,cardHeight=Math.min(h*.31,122),gap=10,cw=(w-pad*2-gap*2)/3;
     for(let i=0;i<3;i++){const x=cx-w/2+pad+i*(cw+gap);ctx.fillStyle="rgba(120,220,232,.08)";ctx.fillRect(x,cardsY,cw,cardHeight);ctx.strokeStyle="rgba(120,220,232,.28)";ctx.strokeRect(x,cardsY,cw,cardHeight);ctx.fillStyle="rgba(188,211,212,.72)";drawBuildScopeLabel(D.build.scope[i],x,cardsY,cw)}
-    const railY=Math.max(cardsY+cardHeight+18,cy+h*.27);ctx.strokeStyle="rgba(173,140,255,.42)";ctx.beginPath();ctx.moveTo(cx-w*.34,railY);ctx.lineTo(cx+w*.34,railY);ctx.stroke();D.build.rail.forEach((label,i)=>{ctx.fillStyle="rgba(194,162,255,.78)";ctx.font="800 9px ui-monospace,monospace";ctx.textAlign="left";ctx.fillText(label,cx-w*.31+i*w*.31,railY+18)});ctx.restore();
+    const naturalRailY=Math.max(cardsY+cardHeight+18,cy+h*.27),railY=Math.min(naturalRailY,cy+h/2-20);ctx.strokeStyle="rgba(173,140,255,.42)";ctx.beginPath();ctx.moveTo(cx-w*.34,railY);ctx.lineTo(cx+w*.34,railY);ctx.stroke();D.build.rail.forEach((label,i)=>{ctx.fillStyle="rgba(194,162,255,.78)";ctx.font="800 9px ui-monospace,monospace";ctx.textAlign="left";ctx.fillText(label,cx-w*.31+i*w*.31,railY+18)});ctx.restore();
   }
 
   function scaledAudraliaPoint(point){const a=D.audralia.continentScaleAnchor,k=D.audralia.continentLinearScale;return[a[0]+(point[0]-a[0])*k,a[1]+(point[1]-a[1])*k]}

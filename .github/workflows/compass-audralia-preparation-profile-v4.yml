@@ -1,0 +1,102 @@
+name: Compass Audralia Preparation Exact-Head Profile V4
+
+on:
+  push:
+    branches:
+      - qualification/compass-audralia-preparation-profile-2f1ad0c4-20260904
+
+permissions:
+  contents: read
+
+jobs:
+  profile:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact candidate surface
+        uses: actions/checkout@v4
+        with:
+          ref: 2f1ad0c4c29cb0132dbeed4f4dad91fb548b3abe
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            assets/compass
+            inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1
+            inspection/audralia-24057-exact/snapshot/h-earth-3d
+          sparse-checkout-cone-mode: true
+
+      - name: Instrument exact Audralia preparation
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "2f1ad0c4c29cb0132dbeed4f4dad91fb548b3abe"
+          node <<'NODE'
+          const fs=require('node:fs');
+          const path='assets/compass/compass.orientation-cinematic.render.js';
+          let s=fs.readFileSync(path,'utf8');
+          function once(token,replacement){const i=s.indexOf(token);if(i<0||s.indexOf(token,i+token.length)>=0)throw new Error('PROFILE_TOKEN_INVALID:'+token);s=s.slice(0,i)+replacement+s.slice(i+token.length)}
+          once("const canvas=scene.querySelector('.cinematic-audralia__canvas');",`const canvas=scene.querySelector('.cinematic-audralia__canvas');
+            const profile=globalThis.__DGB_AUDRALIA_PREP_PROFILE||(globalThis.__DGB_AUDRALIA_PREP_PROFILE={events:[]});
+            const started=performance.now(); const mark=label=>profile.events.push({label,t:performance.now()});
+            mark('prepare_start'); const importStarted=performance.now();`);
+          once('const module=await import(AUDRALIA_RENDERER_URL);',`const module=await import(AUDRALIA_RENDERER_URL);
+            profile.importMs=performance.now()-importStarted; mark('import_complete'); const constructStarted=performance.now();`);
+          once('const renderer=module.createMapWideEnvironmentRenderer(canvas);',`const renderer=module.createMapWideEnvironmentRenderer(canvas);
+            profile.constructMs=performance.now()-constructStarted; mark('construct_complete'); const planetaryStarted=performance.now();`);
+          once('renderer.planetaryVantage();',`renderer.planetaryVantage();
+            profile.planetaryMs=performance.now()-planetaryStarted; mark('planetary_complete'); profile.totalMs=performance.now()-started;`);
+          fs.writeFileSync(path,s);
+          NODE
+          git diff --check
+          cat >profile.html <<'HTML'
+          <!doctype html><html><head><meta charset="utf-8"><style>html,body,#stage{margin:0;width:100%;height:100%;overflow:hidden}</style></head><body><div id="stage"></div><script type="module">
+          import {createCinematicRenderer} from '/assets/compass/compass.orientation-cinematic.render.js';
+          globalThis.__DGB_PROFILE_HARNESS={startedAt:performance.now()};
+          const renderer=createCinematicRenderer({stage:document.getElementById('stage'),media:{schema:'COMPASS_MAIN_HOMEPAGE_CINEMATIC_MEDIA_MANIFEST_v1'}});
+          globalThis.__DGB_PROFILE_RENDERER=renderer; renderer.mount(); globalThis.__DGB_PROFILE_HARNESS.mountedAt=performance.now();
+          </script></body></html>
+          HTML
+
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install profiler dependency
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Serve harness
+        shell: bash
+        run: |
+          python3 -m http.server 4173 >/tmp/audralia-profile-http.log 2>&1 &
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/profile.html >/dev/null && exit 0; sleep 1; done
+          cat /tmp/audralia-profile-http.log; exit 1
+
+      - name: Measure exact preparation stages
+        shell: bash
+        env:
+          RESULT_PATH: /tmp/compass-audralia-preparation-profile-v4.json
+        run: |
+          set -euo pipefail
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          cat >profile.cjs <<'NODE'
+          const fs=require('node:fs'); const puppeteer=require('puppeteer-core');
+          (async()=>{const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage']});
+          const page=await browser.newPage(); await page.setViewport({width:1440,height:1000,deviceScaleFactor:1}); const pageErrors=[],consoleErrors=[];
+          page.on('pageerror',e=>pageErrors.push(String(e?.message||e))); page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())});
+          await page.evaluateOnNewDocument(()=>{globalThis.__DGB_HEARTBEATS=[];let last=performance.now();setInterval(()=>{const now=performance.now();globalThis.__DGB_HEARTBEATS.push({t:now,gap:now-last});last=now},50)});
+          const wallStart=Date.now(); await page.goto('http://127.0.0.1:4173/profile.html',{waitUntil:'domcontentloaded',timeout:30000});
+          await page.waitForFunction(()=>Boolean(globalThis.__DGB_AUDRALIA_PREP_PROFILE?.events?.some(e=>e.label==='planetary_complete')),{timeout:60000});
+          const state=await page.evaluate(()=>{const hb=globalThis.__DGB_HEARTBEATS||[];return{profile:globalThis.__DGB_AUDRALIA_PREP_PROFILE||null,harness:globalThis.__DGB_PROFILE_HARNESS||null,renderer:globalThis.__DGB_PROFILE_RENDERER?.inspect?.()||null,maxHeartbeatGapMs:hb.reduce((m,x)=>Math.max(m,Number(x.gap)||0),0),topHeartbeatGaps:[...hb].sort((a,b)=>b.gap-a.gap).slice(0,8),heartbeatCount:hb.length}});
+          const receipt={schema:'COMPASS_AUDRALIA_PREPARATION_PROFILE_v1',targetSha:'2f1ad0c4c29cb0132dbeed4f4dad91fb548b3abe',wallMs:Date.now()-wallStart,...state,pageErrors,consoleErrors}; fs.writeFileSync(process.env.RESULT_PATH,JSON.stringify(receipt,null,2)); console.log(JSON.stringify(receipt,null,2)); await browser.close(); if(pageErrors.length)process.exit(1)})().catch(e=>{console.error(e);process.exit(2)});
+          NODE
+          node profile.cjs
+
+      - name: Upload profile evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-audralia-preparation-profile-v4-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/compass-audralia-preparation-profile-v4.json
+          if-no-files-found: error
+          retention-days: 90

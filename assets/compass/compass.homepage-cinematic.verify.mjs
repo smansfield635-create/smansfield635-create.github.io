@@ -10,6 +10,7 @@ const EXPECTED_PATHS=[
   'assets/compass/compass.orientation-cinematic.css',
   'assets/compass/compass.orientation-cinematic.render.js',
   'assets/compass/compass.orientation-cinematic.media.js',
+  'assets/compass/compass.orientation-cinematic.final.js',
   'assets/compass/cinematic-media/manifest.v1.json',
   'assets/compass/compass.homepage-cinematic.verify.mjs'
 ].sort();
@@ -23,7 +24,16 @@ const SOURCE_BLOBS=Object.freeze({
   controller:'568a6b2cd608a4cbcd62cf70ed59b241c39c90d2',
   audraliaIndex:'96bf20a3189182683bc94c08e2ad7c0dba740f07',
   audraliaRenderer:'872d20b17bb0cd89d9613ca0262b25350890a617',
-  audraliaAwardsFloor:'db0563a1a45811dadc36c48f0cb2356d748e9a07'
+  audraliaAwardsFloor:'db0563a1a45811dadc36c48f0cb2356d748e9a07',
+  capabilityCss:'81db61b55a8f216c315633209c552ba340b05cf8',
+  capabilityJs:'d39c8870f3bcd3331522ebe985ace1030d149926',
+  capabilityCore:'86858e704cb739308e314a6299d5cf166aab7e27',
+  brain:'c26603744e55c8ede2c82944bd0fd117d04dcbdb',
+  trophy:'d281e18b06128671ffe2a19e8fdb272cc5544e31',
+  house:'a82e3c963a10808b9f8f1922faab45155ea4a62b',
+  incumbentHost:'366c3c305df0d659fae56439804e9507aa79ceac',
+  incumbentCss:'c59ccfb282762e4cf1dcffeab74b705aa6c215ea',
+  compassCss:'742966fff6a20455195510711e786f112f4e72c0'
 });
 const CLASSIFIER_ROUTER_BLOB='a42f34c6ae0bcff0553ed33cb5e34220447a1ab1';
 const MUTATION_TASK='bounded non-interactive cinematic presentation playback';
@@ -38,8 +48,9 @@ const host=read('assets/compass/compass.orientation-cinematic.js');
 const css=read('assets/compass/compass.orientation-cinematic.css');
 const render=read('assets/compass/compass.orientation-cinematic.render.js');
 const media=read('assets/compass/compass.orientation-cinematic.media.js');
+const final=read('assets/compass/compass.orientation-cinematic.final.js');
 const custody=JSON.parse(read('assets/compass/cinematic-media/manifest.v1.json'));
-const combined=[host,css,render,media].join('\n');
+const combined=[host,css,render,media,final].join('\n');
 
 check('BOUNDED_CLASSIFIER_TASK',/(CINEMATIC|FILM|VIDEO|PLAYBACK)/u.test(MUTATION_TASK.toUpperCase())&&/(NON-INTERACTIVE|NONINTERACTIVE|PRESENTATION-ONLY|PRESENTATION ONLY)/u.test(MUTATION_TASK.toUpperCase()),MUTATION_TASK);
 check('BOUNDED_CLASSIFIER_PATH_SCOPE',EXPECTED_PATHS.every(p=>p.toLowerCase().includes('cinematic')),JSON.stringify(EXPECTED_PATHS));
@@ -57,10 +68,10 @@ check('REDUCED_COMPLETION_ROUTE',host.includes("restore('reduced-motion-complete
 check('PREVIEW_FAIL_OPEN_DEFAULT',host.includes("if(!previewEnabled())return;"));
 check('FRAME_RENDER_FAIL_OPEN',host.includes("failOpen(error?.message||'CINEMATIC_RENDER_FRAME_FAILURE')"));
 check('NO_GENERIC_BINARY_MEDIA',Array.isArray(custody.binaryMedia)&&custody.binaryMedia.length===0&&custody.rule==='REPOSITORY_NATIVE_SOURCE_OBJECTS_ONLY_NO_GENERIC_SUBSTITUTE_IMAGERY');
-check('SOURCE_RECONSTRUCTION_COUNT',Array.isArray(custody.sourceReconstructions)&&custody.sourceReconstructions.length===6);
-check('CUSTODY_STATUS_S01_S06',custody.status==='PARTIAL_CONSTRUCTION_S01_S06_SOURCE_BOUND');
+check('SOURCE_RECONSTRUCTION_COUNT',Array.isArray(custody.sourceReconstructions)&&custody.sourceReconstructions.length===8);
+check('CUSTODY_STATUS_S01_S08',custody.status==='CONSTRUCTION_S01_S08_SOURCE_BOUND_PENDING_WHOLE_FILM_QUALIFICATION');
 check('CONTROLLER_REFERENCE_ONLY',custody.controllerReferenceOnly===true&&Array.isArray(custody.protectedRuntimeImports)&&custody.protectedRuntimeImports.length===0);
-for(const [key,blob] of Object.entries(SOURCE_BLOBS))check(`SOURCE_${key.toUpperCase()}_BOUND`,render.includes(blob)||media.includes(blob)||JSON.stringify(custody).includes(blob),blob);
+for(const [key,blob] of Object.entries(SOURCE_BLOBS))check(`SOURCE_${key.toUpperCase()}_BOUND`,render.includes(blob)||media.includes(blob)||final.includes(blob)||JSON.stringify(custody).includes(blob),blob);
 
 check('S01_NATIVE_FIBONACCI_RECONSTRUCTION',render.includes('const GOLDEN_ANGLE=Math.PI*(3-Math.sqrt(5))')&&render.includes('const FIELD_SEED=0x44474243')&&render.includes("['255,248,224','154,217,225','234,208,131','170,155,224']"));
 check('S01_EXACT_IDENTITY_COPY',render.includes('DIAMOND GATE BRIDGE')&&render.includes('Independent Interactive Experience & Research Studio')&&render.includes('Find Your Way'));
@@ -77,9 +88,18 @@ check('S06_CANONICAL_RENDERER_IMPORT',render.includes("const AUDRALIA_RENDERER_U
 check('S06_RENDERER_SCOPE_COMPATIBILITY',media.includes("Object.defineProperty(globalThis,'audraliaError'")&&media.includes("audraliaScopeCompatibility:'CINEMATIC_MODULE_GLOBAL_BINDING_V1'")&&render.includes('function renderAudralia(scene,p,audralia)'));
 check('S06_ERROR_FAILS_OPEN_THROUGH_HOST',render.includes('AUDRALIA_CANONICAL_RENDERER_NOT_READY')&&host.includes('CINEMATIC_RENDER_FRAME_FAILURE'));
 check('S06_SCOPE_COMPATIBILITY_BOUNDARY',custody.s06RendererScopeCompatibility==='CINEMATIC_MODULE_GLOBAL_BINDING_V1'&&custody.s06RendererScopeCompatibilityBoundary==='PRESENTATION_ONLY_NO_PRODUCT_STATE_AUTHORITY');
-check('S01_S05_MEDIA_STATUS',['S01','S02','S03','S04','S05'].every(id=>media.includes(`id:'${id}'`))&&media.match(/CONSTRUCTED_SOURCE_RECONSTRUCTION/g)?.length>=5);
-check('S06_MEDIA_STATUS',media.includes("id:'S06'")&&media.includes('CONSTRUCTED_IMMUTABLE_SNAPSHOT_RENDERER'));
-check('S07_S08_REMAIN_PENDING',media.includes("id:'S07'")&&media.includes("id:'S08'")&&media.match(/SOURCE_BOUND_MEDIA_NOT_YET_ACQUIRED/g)?.length===2);
+check('S07_EXACT_OBJECT_SOURCES',final.includes('/assets/compass/compass.hra-brain-scene.js')&&final.includes('/assets/compass/compass.trophy-scene.js')&&final.includes('/assets/compass/compass.house-scene.js'));
+check('S07_OBJECT_ISOLATION',final.includes('mountIsolatedRenderer')&&final.includes('srcdoc=')&&custody.s07ObjectRendererIsolation==='SAME_ORIGIN_EPHEMERAL_DOCUMENT_PER_OBJECT_NO_LIVE_CAROUSEL_OWNER_MUTATION');
+check('S07_NO_GENERIC_FALLBACK',custody.s07GenericObjectFallbackAllowed===false&&final.includes('RENDERER_FALLBACK_PROHIBITED'));
+check('S07_EXACT_COPY',final.includes('Three ways to engage.')&&final.includes('Coheriscope')&&final.includes('Awards & Recognition')&&final.includes('The House')&&final.includes('Built Different · how this estate is built')&&final.includes('See what has been built—and how to judge what is ready.'));
+check('S07_TIMING',final.includes('t<31150')&&final.includes('t<31850')&&final.includes('t<32450')&&final.includes('t<33050')&&final.includes('t<33550')&&final.includes('smooth(33550,33840,t)'));
+check('S08_LIVE_IDENTITY_CAPTURE',host.includes("orbitQuaternion:root.getAttribute('data-orbit-quaternion')")&&host.includes("crystalsReceipt:root.getAttribute('data-compass-crystals-receipt')"));
+check('S08_SOURCE_RECONSTRUCTION',final.includes('function buildDiamondStarMesh()')&&final.includes('function drawConstellation(canvas,identity,progress,elapsedMs)')&&final.includes('targetQuaternion(identity)'));
+check('S08_CORRESPONDENCE_FAIL_OPEN',host.includes("CINEMATIC_HANDOFF_CORRESPONDENCE_UNPROVEN")&&final.includes('function verifyHandoff()'));
+check('S08_EXACT_FADE_WINDOW',host.includes('const NATURAL_HANDOFF_FADE_START_MS=37540')&&host.includes('const NATURAL_HANDOFF_FADE_MS=460')&&custody.s08NaturalFadeWindowMs?.[0]===37540&&custody.s08NaturalFadeWindowMs?.[1]===38000);
+check('S08_NO_IFRAME_FINAL_COMPASS',custody.s08FinalCompassIframeUsed===false&&final.includes("function buildS08(){const scene=make('section'")&&final.includes("const canvas=make('canvas','cinematic-handoff__canvas')"));
+check('S08_FINAL_COPY',final.includes("'Find Your Way'"));
+check('S01_S08_MEDIA_STATUS',media.includes('CONSTRUCTED_ISOLATED_EXACT_OBJECT_RENDERERS')&&media.includes('CONSTRUCTED_LIVE_IDENTITY_BOUND_HANDOFF')&&!media.includes('SOURCE_BOUND_MEDIA_NOT_YET_ACQUIRED'));
 check('REJECTED_GENERIC_RENDERER_REMOVED',!render.includes('Follow curiosity')&&!render.includes('cinematic-audralia-fallback')&&!render.includes('<svg'));
 
 const args=process.argv.slice(2),baseIndex=args.indexOf('--base'),headIndex=args.indexOf('--head'),changedPathsIndex=args.indexOf('--changed-paths');
@@ -100,5 +120,5 @@ if(baseIndex!==-1&&headIndex!==-1){
 }
 
 const result=checks.every(item=>item.pass)?'PASS':'FAIL';
-process.stdout.write(`${JSON.stringify({schema:'COMPASS_MAIN_HOMEPAGE_CINEMATIC_CONSTRUCTION_VERIFIER_v3',result,checkpoint:'CHECKPOINT_3B_S04_S06',expectedBase:EXPECTED_BASE,subjectHead,expectedSpecificationCommit:EXPECTED_SPEC,classifierRouterBlob:CLASSIFIER_ROUTER_BLOB,mutationTask:MUTATION_TASK,checks},null,2)}\n`);
+process.stdout.write(`${JSON.stringify({schema:'COMPASS_MAIN_HOMEPAGE_CINEMATIC_CONSTRUCTION_VERIFIER_v4',result,checkpoint:'CHECKPOINT_4A_S07_S08_CONSTRUCTION',expectedBase:EXPECTED_BASE,subjectHead,expectedSpecificationCommit:EXPECTED_SPEC,classifierRouterBlob:CLASSIFIER_ROUTER_BLOB,mutationTask:MUTATION_TASK,checks},null,2)}\n`);
 process.exit(result==='PASS'?0:1);

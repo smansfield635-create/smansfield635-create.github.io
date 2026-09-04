@@ -32,7 +32,8 @@ for(const id of ['S01','S02','S03','S04','S05','S06','S07','S08'])check(`SHOT_${
 check('NO_NAVIGATION_WRITE',!/(location\.(assign|replace)|history\.(pushState|replaceState)|window\.open\s*\()/u.test(combined));
 check('NO_PROTECTED_RUNTIME_IMPORT',!/(compass\.controller|compass\.crystals|mirrorland-window|readiness-context|capability-carousel)/u.test(combined));
 check('NO_ANALYTICS_DELTA',!/analytics\s*\(/iu.test(combined));
-check('IDEMPOTENT_RESTORATION',host.includes('if(session.settled||session.restoring)return;')&&host.includes('restoreProductSurface()'));
+check('IDEMPOTENT_RESTORATION',host.includes('if(session.settled||session.restoring)return;')&&host.includes('restoreProductSurface()')&&host.includes("window.removeEventListener('keydown',onKey,true)"));
+check('REDUCED_COMPLETION_ROUTE',host.includes("restore('reduced-motion-complete')"));
 check('PREVIEW_FAIL_OPEN_DEFAULT',host.includes("if(!previewEnabled())return;"));
 check('NO_GENERIC_MEDIA',Array.isArray(custody.media)&&custody.media.length===0&&custody.rule==='REPOSITORY_NATIVE_SOURCE_OBJECTS_ONLY_NO_GENERIC_SUBSTITUTE_IMAGERY');
 

@@ -37,6 +37,7 @@ function captureLiveIdentity(root){
 }
 function setPhase(phase){session.phase=phase;if(session.overlay)session.overlay.dataset.state=phase;document.documentElement.dataset.compassOrientationCinematic=phase;}
 function clearClock(){if(session.raf)cancelAnimationFrame(session.raf);session.raf=0;}
+function clearPresentationListeners(){window.removeEventListener('keydown',onKey,true);session.overlay?.removeEventListener('click',onOverlayClick);}
 function restoreProductSurface(){
   if(!session.root)return;
   session.root.inert=session.rootInert;
@@ -79,6 +80,7 @@ function restore(reason='complete'){
   if(session.settled||session.restoring)return;
   session.restoring=true;
   clearClock();
+  clearPresentationListeners();
   setPhase(STATE.RESTORE);
   const overlay=session.overlay;
   if(overlay){overlay.dataset.restoreReason=reason;overlay.classList.add('is-restoring');}
@@ -87,7 +89,7 @@ function restore(reason='complete'){
 }
 function failOpen(code){session.errorCode=String(code||'CINEMATIC_SHELL_FAILURE');restore('fail-open');}
 function onKey(event){if(event.key==='Escape'){event.preventDefault();restore(session.phase===STATE.ARMED?'skip-armed':'skip-playing');}}
-function onOverlayClick(event){if(event.target.closest('[data-main-orientation-skip]'))restore(session.phase===STATE.ARMED?'skip-armed':'skip-playing');}
+function onOverlayClick(event){if(!event.target.closest('[data-main-orientation-skip]'))return;if(session.overlay?.dataset.reducedMotion==='true')restore('reduced-motion-complete');else restore(session.phase===STATE.ARMED?'skip-armed':'skip-playing');}
 function animatedShell(){
   const overlay=document.createElement('section');
   overlay.id='compass-orientation-cinematic';
@@ -108,6 +110,7 @@ function reducedShell(){
   overlay.dataset.state=STATE.ARMED;
   overlay.dataset.mainOrientationFilm=`${BUILD.version}-reduced`;
   overlay.dataset.sourceMain=BUILD.sourceMain;
+  overlay.dataset.reducedMotion='true';
   overlay.setAttribute('role','dialog');
   overlay.setAttribute('aria-modal','true');
   overlay.setAttribute('aria-labelledby','compass-orientation-reduced-title');

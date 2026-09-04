@@ -14,29 +14,92 @@ main{position:relative;z-index:2}.hero{min-height:100svh;display:grid;align-item
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.beam,.holo{animation:none!important}.chapter[data-active="true"]{animation:none}.action{transition:none}.evidence-field{perspective:none}.h1{transform:rotate(-2deg)}.h2{transform:rotate(2deg)}.h3{transform:rotate(1deg)}.h4{transform:rotate(-1deg)}}
 </style>
 <style id="contextual-evidence-field-repair">
+/* The chapter runtime already publishes data-active-evidence. These variables make
+   that state a visible, bounded composition of the same four public evidence panes. */
 .evidence-field{
   --h1-left:-7%;--h1-top:18%;--h1-opacity:.30;--h1-sat:.72;--h1-light:.76;--h1-layer:1;
   --h2-right:1%;--h2-top:10%;--h2-opacity:.92;--h2-sat:1.14;--h2-light:1.08;--h2-layer:3;
   --h3-left:4%;--h3-bottom:3%;--h3-opacity:.34;--h3-sat:.76;--h3-light:.80;--h3-layer:1;
   --h4-right:8%;--h4-bottom:5%;--h4-opacity:.27;--h4-sat:.68;--h4-light:.72;--h4-layer:1;
 }
-.evidence-field .holo{-webkit-backdrop-filter:none;backdrop-filter:none;animation:none;transition:none}
+.evidence-field .holo{
+  /* The fixed evidence field is already behind main. Sampling a backdrop from
+     these moving panes creates an unstable compositor surface that can erase
+     foreground glyph tiles, so retain the glass treatment without sampling. */
+  -webkit-backdrop-filter:none;
+  backdrop-filter:none;
+  animation:none;
+  transition:none;
+}
 .chapter[data-active="true"]{animation:none}
 .evidence-field .beam{animation:none}
 body{position:relative;isolation:isolate;overflow-x:clip}
-.evidence-field{position:sticky;inset:auto;top:0;width:100%;height:100svh;margin-bottom:-100svh;z-index:0;isolation:isolate;contain:strict}
+.evidence-field{
+  /* A fixed filtered scene is promoted against every scrolling foreground
+     layer and can intermittently erase glyph tiles. A sticky in-flow scene
+     remains persistent while isolating its paint from the foreground. */
+  position:sticky;
+  inset:auto;
+  top:0;
+  width:100%;
+  height:100svh;
+  margin-bottom:-100svh;
+  z-index:0;
+  isolation:isolate;
+  contain:strict;
+}
 .evidence-field .h1{left:var(--h1-left);top:var(--h1-top);opacity:var(--h1-opacity);filter:saturate(var(--h1-sat)) brightness(var(--h1-light));z-index:var(--h1-layer)}
 .evidence-field .h2{right:var(--h2-right);top:var(--h2-top);opacity:var(--h2-opacity);filter:saturate(var(--h2-sat)) brightness(var(--h2-light));z-index:var(--h2-layer)}
 .evidence-field .h3{left:var(--h3-left);bottom:var(--h3-bottom);opacity:var(--h3-opacity);filter:saturate(var(--h3-sat)) brightness(var(--h3-light));z-index:var(--h3-layer)}
 .evidence-field .h4{right:var(--h4-right);bottom:var(--h4-bottom);opacity:var(--h4-opacity);filter:saturate(var(--h4-sat)) brightness(var(--h4-light));z-index:var(--h4-layer)}
-.evidence-field[data-active-evidence="challenge"]{--h1-left:-7%;--h1-top:18%;--h1-opacity:.30;--h1-sat:.72;--h1-light:.76;--h1-layer:1;--h2-right:1%;--h2-top:10%;--h2-opacity:.92;--h2-sat:1.14;--h2-light:1.08;--h2-layer:3;--h3-left:4%;--h3-bottom:3%;--h3-opacity:.34;--h3-sat:.76;--h3-light:.80;--h3-layer:1;--h4-right:8%;--h4-bottom:5%;--h4-opacity:.27;--h4-sat:.68;--h4-light:.72;--h4-layer:1}
-.evidence-field[data-active-evidence="evidence"]{--h1-left:1%;--h1-top:13%;--h1-opacity:.84;--h1-sat:1.10;--h1-light:1.05;--h1-layer:3;--h2-right:0%;--h2-top:18%;--h2-opacity:.88;--h2-sat:1.08;--h2-light:1.03;--h2-layer:3;--h3-left:10%;--h3-bottom:2%;--h3-opacity:.30;--h3-sat:.70;--h3-light:.76;--h3-layer:1;--h4-right:3%;--h4-bottom:5%;--h4-opacity:.25;--h4-sat:.66;--h4-light:.72;--h4-layer:1}
-.evidence-field[data-active-evidence="limits"]{--h1-left:-1%;--h1-top:21%;--h1-opacity:.80;--h1-sat:.92;--h1-light:1.02;--h1-layer:3;--h2-right:2%;--h2-top:9%;--h2-opacity:.84;--h2-sat:.94;--h2-light:1.02;--h2-layer:3;--h3-left:12%;--h3-bottom:2%;--h3-opacity:.22;--h3-sat:.56;--h3-light:.66;--h3-layer:1;--h4-right:4%;--h4-bottom:3%;--h4-opacity:.22;--h4-sat:.56;--h4-light:.66;--h4-layer:1}
-.evidence-field[data-active-evidence="agentic"]{--h1-left:-7%;--h1-top:11%;--h1-opacity:.25;--h1-sat:.62;--h1-light:.70;--h1-layer:1;--h2-right:-7%;--h2-top:18%;--h2-opacity:.30;--h2-sat:.68;--h2-light:.74;--h2-layer:1;--h3-left:15%;--h3-bottom:12%;--h3-opacity:.92;--h3-sat:1.14;--h3-light:1.08;--h3-layer:3;--h4-right:1%;--h4-bottom:3%;--h4-opacity:.52;--h4-sat:.88;--h4-light:.90;--h4-layer:2}
-.evidence-field[data-active-evidence="observability"]{--h1-left:-8%;--h1-top:9%;--h1-opacity:.20;--h1-sat:.54;--h1-light:.64;--h1-layer:1;--h2-right:-7%;--h2-top:12%;--h2-opacity:.23;--h2-sat:.58;--h2-light:.67;--h2-layer:1;--h3-left:2%;--h3-bottom:3%;--h3-opacity:.44;--h3-sat:.80;--h3-light:.84;--h3-layer:2;--h4-right:12%;--h4-bottom:16%;--h4-opacity:.94;--h4-sat:1.16;--h4-light:1.10;--h4-layer:3}
-.evidence-field[data-active-evidence="bridge"]{--h1-left:-8%;--h1-top:13%;--h1-opacity:.24;--h1-sat:.58;--h1-light:.67;--h1-layer:1;--h2-right:-8%;--h2-top:12%;--h2-opacity:.28;--h2-sat:.64;--h2-light:.71;--h2-layer:1;--h3-left:2%;--h3-bottom:14%;--h3-opacity:.82;--h3-sat:1.04;--h3-light:1.02;--h3-layer:3;--h4-right:3%;--h4-bottom:11%;--h4-opacity:.86;--h4-sat:1.06;--h4-light:1.04;--h4-layer:3}
-.evidence-field[data-active-evidence="reproduce"]{--h1-left:-2%;--h1-top:12%;--h1-opacity:.54;--h1-sat:.86;--h1-light:.89;--h1-layer:2;--h2-right:4%;--h2-top:16%;--h2-opacity:.82;--h2-sat:1.06;--h2-light:1.03;--h2-layer:3;--h3-left:4%;--h3-bottom:8%;--h3-opacity:.75;--h3-sat:1.00;--h3-light:.98;--h3-layer:3;--h4-right:-1%;--h4-bottom:3%;--h4-opacity:.40;--h4-sat:.76;--h4-light:.82;--h4-layer:1}
-@media(max-width:600px){.evidence-field .h1{left:calc(var(--h1-left) - 16%);top:calc(var(--h1-top) - 3%)}.evidence-field .h2{right:calc(var(--h2-right) - 25%);top:calc(var(--h2-top) + 18%)}.evidence-field .h3{left:calc(var(--h3-left) - 27%);bottom:calc(var(--h3-bottom) + 4%)}.evidence-field .h4{right:calc(var(--h4-right) - 28%);bottom:calc(var(--h4-bottom) - 1%)}}
+.evidence-field[data-active-evidence="challenge"]{
+  --h1-left:-7%;--h1-top:18%;--h1-opacity:.30;--h1-sat:.72;--h1-light:.76;--h1-layer:1;
+  --h2-right:1%;--h2-top:10%;--h2-opacity:.92;--h2-sat:1.14;--h2-light:1.08;--h2-layer:3;
+  --h3-left:4%;--h3-bottom:3%;--h3-opacity:.34;--h3-sat:.76;--h3-light:.80;--h3-layer:1;
+  --h4-right:8%;--h4-bottom:5%;--h4-opacity:.27;--h4-sat:.68;--h4-light:.72;--h4-layer:1;
+}
+.evidence-field[data-active-evidence="evidence"]{
+  --h1-left:1%;--h1-top:13%;--h1-opacity:.84;--h1-sat:1.10;--h1-light:1.05;--h1-layer:3;
+  --h2-right:0%;--h2-top:18%;--h2-opacity:.88;--h2-sat:1.08;--h2-light:1.03;--h2-layer:3;
+  --h3-left:10%;--h3-bottom:2%;--h3-opacity:.30;--h3-sat:.70;--h3-light:.76;--h3-layer:1;
+  --h4-right:3%;--h4-bottom:5%;--h4-opacity:.25;--h4-sat:.66;--h4-light:.72;--h4-layer:1;
+}
+.evidence-field[data-active-evidence="limits"]{
+  --h1-left:-1%;--h1-top:21%;--h1-opacity:.80;--h1-sat:.92;--h1-light:1.02;--h1-layer:3;
+  --h2-right:2%;--h2-top:9%;--h2-opacity:.84;--h2-sat:.94;--h2-light:1.02;--h2-layer:3;
+  --h3-left:12%;--h3-bottom:2%;--h3-opacity:.22;--h3-sat:.56;--h3-light:.66;--h3-layer:1;
+  --h4-right:4%;--h4-bottom:3%;--h4-opacity:.22;--h4-sat:.56;--h4-light:.66;--h4-layer:1;
+}
+.evidence-field[data-active-evidence="agentic"]{
+  --h1-left:-7%;--h1-top:11%;--h1-opacity:.25;--h1-sat:.62;--h1-light:.70;--h1-layer:1;
+  --h2-right:-7%;--h2-top:18%;--h2-opacity:.30;--h2-sat:.68;--h2-light:.74;--h2-layer:1;
+  --h3-left:15%;--h3-bottom:12%;--h3-opacity:.92;--h3-sat:1.14;--h3-light:1.08;--h3-layer:3;
+  --h4-right:1%;--h4-bottom:3%;--h4-opacity:.52;--h4-sat:.88;--h4-light:.90;--h4-layer:2;
+}
+.evidence-field[data-active-evidence="observability"]{
+  --h1-left:-8%;--h1-top:9%;--h1-opacity:.20;--h1-sat:.54;--h1-light:.64;--h1-layer:1;
+  --h2-right:-7%;--h2-top:12%;--h2-opacity:.23;--h2-sat:.58;--h2-light:.67;--h2-layer:1;
+  --h3-left:2%;--h3-bottom:3%;--h3-opacity:.44;--h3-sat:.80;--h3-light:.84;--h3-layer:2;
+  --h4-right:12%;--h4-bottom:16%;--h4-opacity:.94;--h4-sat:1.16;--h4-light:1.10;--h4-layer:3;
+}
+.evidence-field[data-active-evidence="bridge"]{
+  --h1-left:-8%;--h1-top:13%;--h1-opacity:.24;--h1-sat:.58;--h1-light:.67;--h1-layer:1;
+  --h2-right:-8%;--h2-top:12%;--h2-opacity:.28;--h2-sat:.64;--h2-light:.71;--h2-layer:1;
+  --h3-left:2%;--h3-bottom:14%;--h3-opacity:.82;--h3-sat:1.04;--h3-light:1.02;--h3-layer:3;
+  --h4-right:3%;--h4-bottom:11%;--h4-opacity:.86;--h4-sat:1.06;--h4-light:1.04;--h4-layer:3;
+}
+.evidence-field[data-active-evidence="reproduce"]{
+  --h1-left:-2%;--h1-top:12%;--h1-opacity:.54;--h1-sat:.86;--h1-light:.89;--h1-layer:2;
+  --h2-right:4%;--h2-top:16%;--h2-opacity:.82;--h2-sat:1.06;--h2-light:1.03;--h2-layer:3;
+  --h3-left:4%;--h3-bottom:8%;--h3-opacity:.75;--h3-sat:1.00;--h3-light:.98;--h3-layer:3;
+  --h4-right:-1%;--h4-bottom:3%;--h4-opacity:.40;--h4-sat:.76;--h4-light:.82;--h4-layer:1;
+}
+@media(max-width:600px){
+  .evidence-field .h1{left:calc(var(--h1-left) - 16%);top:calc(var(--h1-top) - 3%)}
+  .evidence-field .h2{right:calc(var(--h2-right) - 25%);top:calc(var(--h2-top) + 18%)}
+  .evidence-field .h3{left:calc(var(--h3-left) - 27%);bottom:calc(var(--h3-bottom) + 4%)}
+  .evidence-field .h4{right:calc(var(--h4-right) - 28%);bottom:calc(var(--h4-bottom) - 1%)}
+}
 @media(prefers-reduced-motion:reduce){.evidence-field .holo{transition:none}}
 </style>
 <style id="dual-face-orbital-successor">
@@ -137,55 +200,631 @@ body{position:relative;isolation:isolate;overflow-x:clip}
 <div class="orbit-stage" data-orbit-stage tabindex="0" role="group" aria-label="Six-object research carousel. Drag or swipe horizontally to rotate. Keyboard users may use Left and Right, then press Enter to inspect the active object.">
 <div class="orbit-ring" data-orbit-ring aria-hidden="true"></div>
 <div class="orbit-calibration" aria-hidden="true"><i class="orbit-node"></i><i class="orbit-node"></i><i class="orbit-node"></i><i class="orbit-node"></i><i class="orbit-node" style="left:11%;top:52%;background:rgba(236,211,142,.52)"></i><i class="orbit-node" style="right:10%;top:54%"></i></div>
-<button class="orbit-card" type="button" data-orbit-card data-object="attack" aria-haspopup="dialog" aria-controls="frontier-reader"><span class="orbit-card-inner"><span class="orbit-index">Research object · 01</span><span><span class="orbit-card-title">The Strongest Attack</span><span class="orbit-card-copy">Diamond Gate’s falsifiable viable-futures proposition, paired with an operating chain that binds construction, qualification, release, and live verification to inspectable state.</span></span><span class="two-sided"><span>Two-sided object</span><span data-face-preview>Scientific ↔ Agentic</span></span></span></button>
-<button class="orbit-card" type="button" data-orbit-card data-object="evidence" aria-haspopup="dialog" aria-controls="frontier-reader"><span class="orbit-card-inner"><span class="orbit-index">Research object · 02</span><span><span class="orbit-card-title">The Evidence Held</span><span class="orbit-card-copy">906 pull requests within one audited month—699 retained as material—paired with a six-state observatory that locates where an operation stands or fails.</span></span><span class="two-sided"><span>Two-sided object</span><span data-face-preview>Scientific ↔ Agentic</span></span></span></button>
-<button class="orbit-card" type="button" data-orbit-card data-object="negative" aria-haspopup="dialog" aria-controls="frontier-reader"><span class="orbit-card-inner"><span class="orbit-index">Research object · 03</span><span><span class="orbit-card-title">The Negative Result</span><span class="orbit-card-copy">A failed or non-identifiable test remains evidence.</span></span><span class="two-sided"><span>Two-sided object</span><span data-face-preview>Scientific ↔ Agentic</span></span></span></button>
-<button class="orbit-card" type="button" data-orbit-card data-object="missing" aria-haspopup="dialog" aria-controls="frontier-reader"><span class="orbit-card-inner"><span class="orbit-index">Research object · 04</span><span><span class="orbit-card-title">The Missing Evidence</span><span class="orbit-card-copy">A documented integrity choice: preserve unavailable row-level evidence and contradictions as constraints instead of manufacturing a cleaner result.</span></span><span class="two-sided"><span>Two-sided object</span><span data-face-preview>Scientific ↔ Agentic</span></span></span></button>
-<button class="orbit-card" type="button" data-orbit-card data-object="reproduce" aria-haspopup="dialog" aria-controls="frontier-reader"><span class="orbit-card-inner"><span class="orbit-index">Research object · 05</span><span><span class="orbit-card-title">The Reproduction Boundary</span><span class="orbit-card-copy">A concrete independent challenge path, paired with a documented recovery in which durable state—not private memory—carried unfinished work forward.</span></span><span class="two-sided"><span>Two-sided object</span><span data-face-preview>Scientific ↔ Agentic</span></span></span></button>
-<button class="orbit-card" type="button" data-orbit-card data-object="next" aria-haspopup="dialog" aria-controls="frontier-reader"><span class="orbit-card-inner"><span class="orbit-index">Research object · 06</span><span><span class="orbit-card-title">The Next Boundary</span><span class="orbit-card-copy">The next test is visible before its outcome exists.</span></span><span class="two-sided"><span>Two-sided object</span><span data-face-preview>Scientific ↔ Agentic</span></span></span></button>
+<button class="orbit-card" type="button" data-orbit-card data-object="attack" aria-haspopup="dialog" aria-controls="frontier-reader">
+<span class="orbit-card-inner"><span class="orbit-index">Research object · 01</span><span><span class="orbit-card-title">The Strongest Attack</span><span class="orbit-card-copy">Diamond Gate’s falsifiable viable-futures proposition, paired with an operating chain that binds construction, qualification, release, and live verification to inspectable state.</span></span><span class="two-sided"><span>Two-sided object</span><span data-face-preview>Scientific ↔ Agentic</span></span></span>
+</button>
+<button class="orbit-card" type="button" data-orbit-card data-object="evidence" aria-haspopup="dialog" aria-controls="frontier-reader">
+<span class="orbit-card-inner"><span class="orbit-index">Research object · 02</span><span><span class="orbit-card-title">The Evidence Held</span><span class="orbit-card-copy">906 pull requests within one audited month—699 retained as material—paired with a six-state observatory that locates where an operation stands or fails.</span></span><span class="two-sided"><span>Two-sided object</span><span data-face-preview>Scientific ↔ Agentic</span></span></span>
+</button>
+<button class="orbit-card" type="button" data-orbit-card data-object="negative" aria-haspopup="dialog" aria-controls="frontier-reader">
+<span class="orbit-card-inner"><span class="orbit-index">Research object · 03</span><span><span class="orbit-card-title">The Negative Result</span><span class="orbit-card-copy">A failed or non-identifiable test remains evidence.</span></span><span class="two-sided"><span>Two-sided object</span><span data-face-preview>Scientific ↔ Agentic</span></span></span>
+</button>
+<button class="orbit-card" type="button" data-orbit-card data-object="missing" aria-haspopup="dialog" aria-controls="frontier-reader">
+<span class="orbit-card-inner"><span class="orbit-index">Research object · 04</span><span><span class="orbit-card-title">The Missing Evidence</span><span class="orbit-card-copy">A documented integrity choice: preserve unavailable row-level evidence and contradictions as constraints instead of manufacturing a cleaner result.</span></span><span class="two-sided"><span>Two-sided object</span><span data-face-preview>Scientific ↔ Agentic</span></span></span>
+</button>
+<button class="orbit-card" type="button" data-orbit-card data-object="reproduce" aria-haspopup="dialog" aria-controls="frontier-reader">
+<span class="orbit-card-inner"><span class="orbit-index">Research object · 05</span><span><span class="orbit-card-title">The Reproduction Boundary</span><span class="orbit-card-copy">A concrete independent challenge path, paired with a documented recovery in which durable state—not private memory—carried unfinished work forward.</span></span><span class="two-sided"><span>Two-sided object</span><span data-face-preview>Scientific ↔ Agentic</span></span></span>
+</button>
+<button class="orbit-card" type="button" data-orbit-card data-object="next" aria-haspopup="dialog" aria-controls="frontier-reader">
+<span class="orbit-card-inner"><span class="orbit-index">Research object · 06</span><span><span class="orbit-card-title">The Next Boundary</span><span class="orbit-card-copy">The next test is visible before its outcome exists.</span></span><span class="two-sided"><span>Two-sided object</span><span data-face-preview>Scientific ↔ Agentic</span></span></span>
+</button>
 </div>
-<div class="orbit-controls"><div class="orbit-status" role="status" aria-live="polite" data-orbit-status><strong><span class="orbit-position">01 / 06</span>The Strongest Attack</strong><span>Front position · Opens on Scientific</span></div></div>
+<div class="orbit-controls">
+<div class="orbit-status" role="status" aria-live="polite" data-orbit-status><strong><span class="orbit-position">01 / 06</span>The Strongest Attack</strong><span>Front position · Opens on Scientific</span></div>
+</div>
 </div>
 <p class="orbit-note">Drag, swipe, or use Left and Right on a keyboard to rotate · Open the front card to inspect · Every research object has Scientific and Agentic faces</p>
+
 <div class="reader" id="frontier-reader" data-reader data-face="scientific" role="dialog" aria-modal="true" aria-labelledby="scientific-attack-title" hidden>
 <div class="reader-turn" data-reader-turn>
 <section class="reader-face scientific-face" data-reader-face="scientific" tabindex="-1" aria-labelledby="scientific-attack-title">
 <div class="reader-topbar"><button type="button" data-return-orbit>Return to Orbit</button><button type="button" data-open-bridge>Inspect Shared Bridge</button><button type="button" data-flip-face="agentic">View Agentic Side</button></div>
-<article class="object-reader" data-object-reader="attack" data-crosswalk-bindings="CW-SCI-ATTACK-01" data-epistemic-status="METHODOLOGICAL SUCCESSOR REQUIREMENT"><p class="reader-kicker">Scientific Frontier · Object 01 · METHODOLOGICAL SUCCESSOR REQUIREMENT</p><h2 id="scientific-attack-title">Future-option information after state control</h2><p class="reader-deck">The remaining scientific attack is not whether a future-structure quantity can correlate with an outcome. It is whether future-option structure adds information after the present state has been matched closely enough that the strongest state comparator cannot already determine the answer. A successor must establish nontrivial <span class="mono">same present state / different future-option structure</span> cases before consuming a confirmatory holdout.</p><p class="face-boundary"><strong>Claim ceiling:</strong> prior nulls do not prove LVTG would succeed under different geometry.</p><div class="evidence-grid"><article class="evidence-block full"><h3>Binding</h3><p class="mono">CW-SCI-ATTACK-01</p></article></div><p class="reader-end">Status: METHODOLOGICAL SUCCESSOR REQUIREMENT.</p></article>
-<article class="object-reader" data-object-reader="evidence" hidden data-crosswalk-bindings="CW-SCI-EVIDENCE-01 CW-SCI-EVIDENCE-02" data-epistemic-status="BOUNDED EMPIRICAL + FORMAL"><p class="reader-kicker">Scientific Frontier · Object 02 · BOUNDED EMPIRICAL + FORMAL</p><h2 id="scientific-evidence-title">What held</h2><div class="evidence-grid"><article class="evidence-block full"><h3>IEEE RTS24 · BOUNDED EMPIRICAL</h3><p>On 659 fresh states, RMSE improved from <span class="mono">0.0568661</span> to <span class="mono">0.0418991</span>; ΔRMSE <span class="mono">0.0149670</span>, 95% cluster-bootstrap CI <span class="mono">[0.0083250, 0.0235078]</span>. MAE <span class="mono">0.0418498→0.0320433</span>; Spearman <span class="mono">0.7023→0.8258</span>.</p><p class="mono">Binding: CW-SCI-EVIDENCE-01</p></article><article class="evidence-block full"><h3>COHERENCE → MINIMAL CONSTRAINT · FORMAL</h3><p>For independently specified coherence predicate <span class="mono">C</span> and preconstraint relation <span class="mono">R</span>, the unique inclusion-minimal effective exclusion stack is the set of <span class="mono">R</span> transitions leaving <span class="mono">C</span>; reverse inference back to <span class="mono">C</span> is not unique in general. Frozen exhaustive verification: 3,072 models, 18,432 observer cases.</p><p class="mono">Binding: CW-SCI-EVIDENCE-02</p></article></div><p class="face-boundary"><strong>Claim ceiling:</strong> the empirical and formal blocks remain distinct. Neither creates universal-law or physical-law authority.</p><p class="reader-end">Bounded empirical evidence and a formal theorem are different evidence classes.</p></article>
-<article class="object-reader" data-object-reader="negative" hidden data-crosswalk-bindings="CW-SCI-NEG-01 CW-SCI-NEG-02 CW-SCI-NEG-03 CW-SCI-NEG-04" data-epistemic-status="NOT_IDENTIFIABLE + METHODOLOGICAL + FORMAL COUNTEREXAMPLE"><p class="reader-kicker">Scientific Frontier · Object 03 · DISTINCT NEGATIVE STATES</p><h2 id="scientific-negative-title">What did not resolve</h2><div class="evidence-grid"><article class="evidence-block full"><h3>MATCHED-STATE RTS24 · NOT_IDENTIFIABLE</h3><p>Gen429 produced 28 LVTG-discordant pairs versus the frozen minimum of 30. The pair-count gate bound the result; future outcome Y was never opened. This did not test or refute the substantive future-outcome hypothesis.</p><p class="mono">Binding: CW-SCI-NEG-01</p></article><article class="evidence-block"><h3>STATE / COMPARATOR SATURATION</h3><p>Repeated nulls are consistent with a shared distinguishability bottleneck; Net6 endpoint disagreement was exactly <span class="mono">0/510</span>.</p><p class="mono">Binding: CW-SCI-NEG-02</p></article><article class="evidence-block"><h3>FORMAL COUNTEREXAMPLE</h3><p>The universal C-before-STACK-B order was rejected in the frozen model class.</p><p class="mono">Binding: CW-SCI-NEG-03</p></article><article class="evidence-block full"><h3>GEN430 · NOT_IDENTIFIABLE</h3><p>The frozen symmetry/verification boundary failed; descriptive directional margins remain non-entitling.</p><p class="mono">Binding: CW-SCI-NEG-04</p></article></div><p class="face-boundary"><strong>Classification rule:</strong> negative, counterexample, methodological, and non-identifiable outcomes are not collapsed into generic failure.</p><p class="reader-end">The future outcome remained unopened where the preregistered identifiability gate failed.</p></article>
-<article class="object-reader" data-object-reader="missing" hidden data-crosswalk-bindings="CW-SCI-MISSING-01 CW-HIST-01" data-epistemic-status="UNKNOWN · NOT ZERO"><p class="reader-kicker">Scientific Frontier · Object 04 · UNKNOWN · NOT ZERO</p><h2 id="scientific-limits-title">What the retained record cannot answer</h2><p class="reader-deck">Some earlier aggregate records lack the row-level resolution required to reconstruct exact disagreement ledgers, Cohen’s kappa, or candidate/comparator dependence measures. Those quantities remain unknown; they are not backfilled from insufficient aggregates.</p><div class="evidence-grid"><article class="evidence-block full"><h3>Missing resolution</h3><p class="mono">Binding: CW-SCI-MISSING-01</p></article><article class="evidence-block full"><h3>Legacy context</h3><p>The 100-installation rainwater work remains part of the historical record but does not control the present evidence hierarchy.</p><p class="mono">Binding: CW-HIST-01</p></article></div><p class="face-boundary"><strong>Status:</strong> UNKNOWN · NOT ZERO.</p><p class="reader-end">Absence of retained resolution is not evidence that the missing quantity was zero.</p></article>
-<article class="object-reader" data-object-reader="reproduce" hidden data-crosswalk-bindings="CW-SCI-REPRO-01" data-epistemic-status="REPRODUCTION STANDARD"><p class="reader-kicker">Scientific Frontier · Object 05 · REPRODUCTION STANDARD</p><h2 id="scientific-reproduce-title">What reproduction must preserve</h2><p class="reader-deck">Name the exact claim; freeze benchmark, comparator, task, runtime, and verifier before outcomes; use a clean implementation when independence matters; preserve negative, null, and deviation records; and state the exact reproduction or falsification boundary.</p><div class="evidence-grid"><article class="evidence-block full"><h3>Binding</h3><p class="mono">CW-SCI-REPRO-01</p></article></div><p class="face-boundary"><strong>Claim ceiling:</strong> a protocol invitation does not mean external replication has already occurred.</p><p class="reader-end">Status: REPRODUCTION STANDARD.</p></article>
-<article class="object-reader" data-object-reader="next" hidden data-crosswalk-bindings="CW-SCI-NEXT-01 CW-SCI-NEXT-02" data-epistemic-status="NEXT DISCRIMINATING GEOMETRY + PREREGISTERED NOT EXECUTED"><p class="reader-kicker">Scientific Frontier · Object 06 · NEXT BOUNDARY</p><h2 id="scientific-next-title">The next discriminating geometry</h2><p class="reader-deck">Before another confirmatory population, establish small present-state distance while deliberately varying future-option structure: actuator authority, delay, saturation, storage reserve, alternate routing, or restoration constraints. The primary estimand is incremental future-outcome information conditional on present state.</p><div class="evidence-grid"><article class="evidence-block"><h3>Next scientific boundary</h3><p class="mono">Binding: CW-SCI-NEXT-01</p></article><article class="evidence-block"><h3>SPARC · PREREGISTERED, NOT EXECUTED</h3><p>The dark-matter/source-to-core line has a corrected preregistration candidate requiring fresh review before empirical execution. No empirical SPARC fit or held-out galaxy result is authorized.</p><p class="mono">Binding: CW-SCI-NEXT-02</p></article></div><p class="face-boundary"><strong>Claim ceiling:</strong> neither block is a completed result.</p><p class="reader-end">Pending and preregistered work remains visibly distinct from evidence held.</p></article>
+
+<article class="object-reader" data-object-reader="attack" data-crosswalk-bindings="CW-SCI-ATTACK-01" data-epistemic-status="METHODOLOGICAL SUCCESSOR REQUIREMENT">
+<p class="reader-kicker">Scientific Frontier · Object 01 · METHODOLOGICAL SUCCESSOR REQUIREMENT</p>
+<h2 id="scientific-attack-title">Future-option information after state control</h2>
+<p class="reader-deck">The remaining scientific attack is not whether a future-structure quantity can correlate with an outcome. It is whether future-option structure adds information after the present state has been matched closely enough that the strongest state comparator cannot already determine the answer. A successor must establish nontrivial <span class="mono">same present state / different future-option structure</span> cases before consuming a confirmatory holdout.</p>
+<p class="face-boundary"><strong>Claim ceiling:</strong> prior nulls do not prove LVTG would succeed under different geometry.</p>
+<div class="evidence-grid"><article class="evidence-block full"><h3>Binding</h3><p class="mono">CW-SCI-ATTACK-01</p></article></div>
+<p class="reader-end">Status: METHODOLOGICAL SUCCESSOR REQUIREMENT.</p>
+</article>
+
+<article class="object-reader" data-object-reader="evidence" hidden data-crosswalk-bindings="CW-SCI-EVIDENCE-01 CW-SCI-EVIDENCE-02" data-epistemic-status="BOUNDED EMPIRICAL + FORMAL">
+<p class="reader-kicker">Scientific Frontier · Object 02 · BOUNDED EMPIRICAL + FORMAL</p>
+<h2 id="scientific-evidence-title">What held</h2>
+<div class="evidence-grid">
+<article class="evidence-block full"><h3>IEEE RTS24 · BOUNDED EMPIRICAL</h3><p>On 659 fresh states, RMSE improved from <span class="mono">0.0568661</span> to <span class="mono">0.0418991</span>; ΔRMSE <span class="mono">0.0149670</span>, 95% cluster-bootstrap CI <span class="mono">[0.0083250, 0.0235078]</span>. MAE <span class="mono">0.0418498→0.0320433</span>; Spearman <span class="mono">0.7023→0.8258</span>.</p><p class="mono">Binding: CW-SCI-EVIDENCE-01</p></article>
+<article class="evidence-block full"><h3>COHERENCE → MINIMAL CONSTRAINT · FORMAL</h3><p>For independently specified coherence predicate <span class="mono">C</span> and preconstraint relation <span class="mono">R</span>, the unique inclusion-minimal effective exclusion stack is the set of <span class="mono">R</span> transitions leaving <span class="mono">C</span>; reverse inference back to <span class="mono">C</span> is not unique in general. Frozen exhaustive verification: 3,072 models, 18,432 observer cases.</p><p class="mono">Binding: CW-SCI-EVIDENCE-02</p></article>
+</div>
+<p class="face-boundary"><strong>Claim ceiling:</strong> the empirical and formal blocks remain distinct. Neither creates universal-law or physical-law authority.</p>
+<p class="reader-end">Bounded empirical evidence and a formal theorem are different evidence classes.</p>
+</article>
+
+<article class="object-reader" data-object-reader="negative" hidden data-crosswalk-bindings="CW-SCI-NEG-01 CW-SCI-NEG-02 CW-SCI-NEG-03 CW-SCI-NEG-04" data-epistemic-status="NOT_IDENTIFIABLE + METHODOLOGICAL + FORMAL COUNTEREXAMPLE">
+<p class="reader-kicker">Scientific Frontier · Object 03 · DISTINCT NEGATIVE STATES</p>
+<h2 id="scientific-negative-title">What did not resolve</h2>
+<div class="evidence-grid">
+<article class="evidence-block full"><h3>MATCHED-STATE RTS24 · NOT_IDENTIFIABLE</h3><p>Gen429 produced 28 LVTG-discordant pairs versus the frozen minimum of 30. The pair-count gate bound the result; future outcome Y was never opened. This did not test or refute the substantive future-outcome hypothesis.</p><p class="mono">Binding: CW-SCI-NEG-01</p></article>
+<article class="evidence-block"><h3>STATE / COMPARATOR SATURATION</h3><p>Repeated nulls are consistent with a shared distinguishability bottleneck; Net6 endpoint disagreement was exactly <span class="mono">0/510</span>.</p><p class="mono">Binding: CW-SCI-NEG-02</p></article>
+<article class="evidence-block"><h3>FORMAL COUNTEREXAMPLE</h3><p>The universal C-before-STACK-B order was rejected in the frozen model class.</p><p class="mono">Binding: CW-SCI-NEG-03</p></article>
+<article class="evidence-block full"><h3>GEN430 · NOT_IDENTIFIABLE</h3><p>The frozen symmetry/verification boundary failed; descriptive directional margins remain non-entitling.</p><p class="mono">Binding: CW-SCI-NEG-04</p></article>
+</div>
+<p class="face-boundary"><strong>Classification rule:</strong> negative, counterexample, methodological, and non-identifiable outcomes are not collapsed into generic failure.</p>
+<p class="reader-end">The future outcome remained unopened where the preregistered identifiability gate failed.</p>
+</article>
+
+<article class="object-reader" data-object-reader="missing" hidden data-crosswalk-bindings="CW-SCI-MISSING-01 CW-HIST-01" data-epistemic-status="UNKNOWN · NOT ZERO">
+<p class="reader-kicker">Scientific Frontier · Object 04 · UNKNOWN · NOT ZERO</p>
+<h2 id="scientific-limits-title">What the retained record cannot answer</h2>
+<p class="reader-deck">Some earlier aggregate records lack the row-level resolution required to reconstruct exact disagreement ledgers, Cohen’s kappa, or candidate/comparator dependence measures. Those quantities remain unknown; they are not backfilled from insufficient aggregates.</p>
+<div class="evidence-grid"><article class="evidence-block full"><h3>Missing resolution</h3><p class="mono">Binding: CW-SCI-MISSING-01</p></article><article class="evidence-block full"><h3>Legacy context</h3><p>The 100-installation rainwater work remains part of the historical record but does not control the present evidence hierarchy.</p><p class="mono">Binding: CW-HIST-01</p></article></div>
+<p class="face-boundary"><strong>Status:</strong> UNKNOWN · NOT ZERO.</p>
+<p class="reader-end">Absence of retained resolution is not evidence that the missing quantity was zero.</p>
+</article>
+
+<article class="object-reader" data-object-reader="reproduce" hidden data-crosswalk-bindings="CW-SCI-REPRO-01" data-epistemic-status="REPRODUCTION STANDARD">
+<p class="reader-kicker">Scientific Frontier · Object 05 · REPRODUCTION STANDARD</p>
+<h2 id="scientific-reproduce-title">What reproduction must preserve</h2>
+<p class="reader-deck">Name the exact claim; freeze benchmark, comparator, task, runtime, and verifier before outcomes; use a clean implementation when independence matters; preserve negative, null, and deviation records; and state the exact reproduction or falsification boundary.</p>
+<div class="evidence-grid"><article class="evidence-block full"><h3>Binding</h3><p class="mono">CW-SCI-REPRO-01</p></article></div>
+<p class="face-boundary"><strong>Claim ceiling:</strong> a protocol invitation does not mean external replication has already occurred.</p>
+<p class="reader-end">Status: REPRODUCTION STANDARD.</p>
+</article>
+
+<article class="object-reader" data-object-reader="next" hidden data-crosswalk-bindings="CW-SCI-NEXT-01 CW-SCI-NEXT-02" data-epistemic-status="NEXT DISCRIMINATING GEOMETRY + PREREGISTERED NOT EXECUTED">
+<p class="reader-kicker">Scientific Frontier · Object 06 · NEXT BOUNDARY</p>
+<h2 id="scientific-next-title">The next discriminating geometry</h2>
+<p class="reader-deck">Before another confirmatory population, establish small present-state distance while deliberately varying future-option structure: actuator authority, delay, saturation, storage reserve, alternate routing, or restoration constraints. The primary estimand is incremental future-outcome information conditional on present state.</p>
+<div class="evidence-grid"><article class="evidence-block"><h3>Next scientific boundary</h3><p class="mono">Binding: CW-SCI-NEXT-01</p></article><article class="evidence-block"><h3>SPARC · PREREGISTERED, NOT EXECUTED</h3><p>The dark-matter/source-to-core line has a corrected preregistration candidate requiring fresh review before empirical execution. No empirical SPARC fit or held-out galaxy result is authorized.</p><p class="mono">Binding: CW-SCI-NEXT-02</p></article></div>
+<p class="face-boundary"><strong>Claim ceiling:</strong> neither block is a completed result.</p>
+<p class="reader-end">Pending and preregistered work remains visibly distinct from evidence held.</p>
+</article>
 </section>
+
 <section class="reader-face agentic-face" data-reader-face="agentic" tabindex="-1" aria-labelledby="agentic-attack-title" aria-hidden="true" inert>
 <div class="reader-topbar"><button type="button" data-return-orbit>Return to Orbit</button><button type="button" data-open-bridge>Inspect Shared Bridge</button><button type="button" data-flip-face="scientific">View Scientific Side</button></div>
-<article class="object-reader" data-object-reader="attack" data-crosswalk-bindings="CW-AG-ATTACK-01" data-epistemic-status="FROZEN · ZERO OUTCOMES"><p class="reader-kicker">Agentic Frontier · Object 01 · FROZEN · ZERO OUTCOMES</p><h2 id="agentic-attack-title">Common model · healthy tool loop</h2><p class="reader-deck">The decisive Agentic attack is Study 2: the same frozen 24 tasks and acceptance tests, stock OpenHands v1.14.0, the same frozen strong model on both arms, no fallback, and a demonstrated healthy comparator tool loop. Diamond Gate must exceed OpenHands without the advantage being confined to one preregistered stratum.</p><div class="evidence-grid"><article class="evidence-block full"><h3>Binding</h3><p class="mono">CW-AG-ATTACK-01</p></article></div><p class="face-boundary"><strong>Claim ceiling:</strong> transport failure is not a scientific OpenHands failure, and Study 2 has not already replicated Study 1.</p><p class="reader-end">Status: FROZEN · ZERO OUTCOMES.</p></article>
-<article class="object-reader" data-object-reader="evidence" hidden data-crosswalk-bindings="CW-AG-EVIDENCE-01 CW-AG-EVIDENCE-02" data-epistemic-status="CONFIGURATION BOUNDED + CONTEXT"><p class="reader-kicker">Agentic Frontier · Object 02 · CONFIGURATION BOUNDED</p><h2 id="agentic-evidence-title">What held</h2><div class="evidence-grid"><article class="evidence-block full"><h3>FULL24 · CONFIGURATION BOUNDED</h3><p>Frozen 24-task population: Diamond Gate 10 verified completions, tested OpenHands configuration 0. Paired: <span class="mono">DG_ONLY=10</span>, <span class="mono">OH_ONLY=0</span>, <span class="mono">BOTH_PASS=0</span>, <span class="mono">NEITHER=14</span>; DG-only completions occurred in all four preregistered strata.</p><p class="mono">Binding: CW-AG-EVIDENCE-01</p></article><article class="evidence-block full"><h3>AUDITED MATERIAL WORK · CONTEXT</h3><p>One audited month retained 699 material PRs from 906 total: 17 PARAMOUNT + 682 STANDARD.</p><p class="mono">Binding: CW-AG-EVIDENCE-02</p></article></div><p class="face-boundary"><strong>Claim ceiling:</strong> production scale is context only. Study 1 does not establish universal architecture superiority, PSALM causation, or governance-caused throughput or scientific quality; the tested comparator’s end-to-end tool-loop health remained unresolved.</p><p class="reader-end">Configuration-bounded evidence remains configuration bounded.</p></article>
-<article class="object-reader" data-object-reader="negative" hidden data-crosswalk-bindings="CW-AG-NEG-01" data-epistemic-status="PRE-EXPERIMENTAL FAILURES PRESERVED"><p class="reader-kicker">Agentic Frontier · Object 03 · PRE-EXPERIMENTAL FAILURES PRESERVED</p><h2 id="agentic-negative-title">Operational failure is not scientific failure</h2><p class="reader-deck">Execution records must distinguish scientific outcomes from admission, transport, qualification, credential, and verifier failures. Study 2 transport attempts opened zero scientific outcomes. A failed execution substrate is an operational result, not evidence that either architecture won or lost.</p><div class="evidence-grid"><article class="evidence-block full"><h3>Binding</h3><p class="mono">CW-AG-NEG-01</p></article></div><p class="face-boundary"><strong>Claim ceiling:</strong> operational discipline itself does not prove scientific superiority.</p><p class="reader-end">Status: PRE-EXPERIMENTAL FAILURES PRESERVED.</p></article>
-<article class="object-reader" data-object-reader="missing" hidden data-crosswalk-bindings="CW-AG-MISSING-01" data-epistemic-status="CAUSAL ATTRIBUTION UNRESOLVED"><p class="reader-kicker">Agentic Frontier · Object 04 · CAUSAL ATTRIBUTION UNRESOLVED</p><h2 id="agentic-limits-title">What Study 1 still cannot identify</h2><p class="reader-deck">Study 1 observed a 10/24 versus 0/24 configuration-bounded difference, but the tested OpenHands side did not demonstrate a healthy end-to-end tool-execution loop or persistent workspace mutation. The result does not identify architecture-only causation, PSALM causation, or a universal performance rank.</p><div class="evidence-grid"><article class="evidence-block full"><h3>Binding</h3><p class="mono">CW-AG-MISSING-01</p></article></div><p class="face-boundary"><strong>Status:</strong> CAUSAL ATTRIBUTION UNRESOLVED.</p><p class="reader-end">Observed configuration difference and causal attribution remain separate claims.</p></article>
-<article class="object-reader" data-object-reader="reproduce" hidden data-crosswalk-bindings="CW-AG-REPRO-01 CW-AG-METHOD-01" data-epistemic-status="METHOD / CUSTODY · NOT CAUSATION"><p class="reader-kicker">Agentic Frontier · Object 05 · METHOD / CUSTODY · NOT CAUSATION</p><h2 id="agentic-reproduce-title">Exact-state succession</h2><p class="reader-deck">An independent operator can recover the exact starting state, distinguish failed from unfinished work, preserve frozen tasks and acceptance conditions, and run a fresh paired comparison without inheriting a prior outcome as authority. Custody and verification mechanisms make the record inspectable; they do not establish that those mechanisms caused better science.</p><div class="evidence-grid"><article class="evidence-block full"><h3>Bindings</h3><p class="mono">CW-AG-REPRO-01 · CW-AG-METHOD-01</p></article></div><p class="face-boundary"><strong>Status:</strong> METHOD / CUSTODY · NOT CAUSATION.</p><p class="reader-end">Succession preserves evidence boundaries; qualification is never inherited automatically.</p></article>
-<article class="object-reader" data-object-reader="next" hidden data-crosswalk-bindings="CW-AG-NEXT-01" data-epistemic-status="FROZEN · ZERO OUTCOMES"><p class="reader-kicker">Agentic Frontier · Object 06 · FROZEN · ZERO OUTCOMES</p><h2 id="agentic-next-title">Study 2 remains clean and unopened</h2><p class="reader-deck">The same 24 tasks and acceptance tests, stock OpenHands v1.14.0, the same frozen strong model on both arms, no fallback, and zero opened outcomes remain frozen. The study is parked until a lawful naturally available non-Actions substrate can satisfy exact-head materialization and secure model preflight. No new user hardware or infrastructure program is implied.</p><div class="evidence-grid"><article class="evidence-block full"><h3>Binding</h3><p class="mono">CW-AG-NEXT-01</p></article></div><p class="face-boundary"><strong>Status:</strong> FROZEN · ZERO OUTCOMES.</p><p class="reader-end">Pending work remains pending; no outcome has been opened.</p></article>
+
+<article class="object-reader" data-object-reader="attack" data-crosswalk-bindings="CW-AG-ATTACK-01" data-epistemic-status="FROZEN · ZERO OUTCOMES">
+<p class="reader-kicker">Agentic Frontier · Object 01 · FROZEN · ZERO OUTCOMES</p>
+<h2 id="agentic-attack-title">Common model · healthy tool loop</h2>
+<p class="reader-deck">The decisive Agentic attack is Study 2: the same frozen 24 tasks and acceptance tests, stock OpenHands v1.14.0, the same frozen strong model on both arms, no fallback, and a demonstrated healthy comparator tool loop. Diamond Gate must exceed OpenHands without the advantage being confined to one preregistered stratum.</p>
+<div class="evidence-grid"><article class="evidence-block full"><h3>Binding</h3><p class="mono">CW-AG-ATTACK-01</p></article></div>
+<p class="face-boundary"><strong>Claim ceiling:</strong> transport failure is not a scientific OpenHands failure, and Study 2 has not already replicated Study 1.</p>
+<p class="reader-end">Status: FROZEN · ZERO OUTCOMES.</p>
+</article>
+
+<article class="object-reader" data-object-reader="evidence" hidden data-crosswalk-bindings="CW-AG-EVIDENCE-01 CW-AG-EVIDENCE-02" data-epistemic-status="CONFIGURATION BOUNDED + CONTEXT">
+<p class="reader-kicker">Agentic Frontier · Object 02 · CONFIGURATION BOUNDED</p>
+<h2 id="agentic-evidence-title">What held</h2>
+<div class="evidence-grid"><article class="evidence-block full"><h3>FULL24 · CONFIGURATION BOUNDED</h3><p>Frozen 24-task population: Diamond Gate 10 verified completions, tested OpenHands configuration 0. Paired: <span class="mono">DG_ONLY=10</span>, <span class="mono">OH_ONLY=0</span>, <span class="mono">BOTH_PASS=0</span>, <span class="mono">NEITHER=14</span>; DG-only completions occurred in all four preregistered strata.</p><p class="mono">Binding: CW-AG-EVIDENCE-01</p></article><article class="evidence-block full"><h3>AUDITED MATERIAL WORK · CONTEXT</h3><p>One audited month retained 699 material PRs from 906 total: 17 PARAMOUNT + 682 STANDARD.</p><p class="mono">Binding: CW-AG-EVIDENCE-02</p></article></div>
+<p class="face-boundary"><strong>Claim ceiling:</strong> production scale is context only. Study 1 does not establish universal architecture superiority, PSALM causation, or governance-caused throughput or scientific quality; the tested comparator’s end-to-end tool-loop health remained unresolved.</p>
+<p class="reader-end">Configuration-bounded evidence remains configuration bounded.</p>
+</article>
+
+<article class="object-reader" data-object-reader="negative" hidden data-crosswalk-bindings="CW-AG-NEG-01" data-epistemic-status="PRE-EXPERIMENTAL FAILURES PRESERVED">
+<p class="reader-kicker">Agentic Frontier · Object 03 · PRE-EXPERIMENTAL FAILURES PRESERVED</p>
+<h2 id="agentic-negative-title">Operational failure is not scientific failure</h2>
+<p class="reader-deck">Execution records must distinguish scientific outcomes from admission, transport, qualification, credential, and verifier failures. Study 2 transport attempts opened zero scientific outcomes. A failed execution substrate is an operational result, not evidence that either architecture won or lost.</p>
+<div class="evidence-grid"><article class="evidence-block full"><h3>Binding</h3><p class="mono">CW-AG-NEG-01</p></article></div>
+<p class="face-boundary"><strong>Claim ceiling:</strong> operational discipline itself does not prove scientific superiority.</p>
+<p class="reader-end">Status: PRE-EXPERIMENTAL FAILURES PRESERVED.</p>
+</article>
+
+<article class="object-reader" data-object-reader="missing" hidden data-crosswalk-bindings="CW-AG-MISSING-01" data-epistemic-status="CAUSAL ATTRIBUTION UNRESOLVED">
+<p class="reader-kicker">Agentic Frontier · Object 04 · CAUSAL ATTRIBUTION UNRESOLVED</p>
+<h2 id="agentic-limits-title">What Study 1 still cannot identify</h2>
+<p class="reader-deck">Study 1 observed a 10/24 versus 0/24 configuration-bounded difference, but the tested OpenHands side did not demonstrate a healthy end-to-end tool-execution loop or persistent workspace mutation. The result does not identify architecture-only causation, PSALM causation, or a universal performance rank.</p>
+<div class="evidence-grid"><article class="evidence-block full"><h3>Binding</h3><p class="mono">CW-AG-MISSING-01</p></article></div>
+<p class="face-boundary"><strong>Status:</strong> CAUSAL ATTRIBUTION UNRESOLVED.</p>
+<p class="reader-end">Observed configuration difference and causal attribution remain separate claims.</p>
+</article>
+
+<article class="object-reader" data-object-reader="reproduce" hidden data-crosswalk-bindings="CW-AG-REPRO-01 CW-AG-METHOD-01" data-epistemic-status="METHOD / CUSTODY · NOT CAUSATION">
+<p class="reader-kicker">Agentic Frontier · Object 05 · METHOD / CUSTODY · NOT CAUSATION</p>
+<h2 id="agentic-reproduce-title">Exact-state succession</h2>
+<p class="reader-deck">An independent operator can recover the exact starting state, distinguish failed from unfinished work, preserve frozen tasks and acceptance conditions, and run a fresh paired comparison without inheriting a prior outcome as authority. Custody and verification mechanisms make the record inspectable; they do not establish that those mechanisms caused better science.</p>
+<div class="evidence-grid"><article class="evidence-block full"><h3>Bindings</h3><p class="mono">CW-AG-REPRO-01 · CW-AG-METHOD-01</p></article></div>
+<p class="face-boundary"><strong>Status:</strong> METHOD / CUSTODY · NOT CAUSATION.</p>
+<p class="reader-end">Succession preserves evidence boundaries; qualification is never inherited automatically.</p>
+</article>
+
+<article class="object-reader" data-object-reader="next" hidden data-crosswalk-bindings="CW-AG-NEXT-01" data-epistemic-status="FROZEN · ZERO OUTCOMES">
+<p class="reader-kicker">Agentic Frontier · Object 06 · FROZEN · ZERO OUTCOMES</p>
+<h2 id="agentic-next-title">Study 2 remains clean and unopened</h2>
+<p class="reader-deck">The same 24 tasks and acceptance tests, stock OpenHands v1.14.0, the same frozen strong model on both arms, no fallback, and zero opened outcomes remain frozen. The study is parked until a lawful naturally available non-Actions substrate can satisfy exact-head materialization and secure model preflight. No new user hardware or infrastructure program is implied.</p>
+<div class="evidence-grid"><article class="evidence-block full"><h3>Binding</h3><p class="mono">CW-AG-NEXT-01</p></article></div>
+<p class="face-boundary"><strong>Status:</strong> FROZEN · ZERO OUTCOMES.</p>
+<p class="reader-end">Pending work remains pending; no outcome has been opened.</p>
+</article>
 </section>
 </div>
-<aside class="shared-bridge" data-shared-bridge role="region" aria-labelledby="shared-bridge-title" hidden><div class="shared-bridge-top"><button type="button" data-close-bridge>Return to Selected Face</button></div><div class="shared-bridge-content"><p class="reader-kicker">One shared bridge · Scientific ↔ Agentic</p><h2 id="shared-bridge-title">What Diamond Gate Bridge already demonstrates.</h2><p class="reader-deck">Diamond Gate Bridge joins the strands in observable conduct: claims are frozen before outcomes, comparisons are bounded, missing evidence stays missing, contradictions remain in custody, and broken work can resume from durable exact state.</p><p class="face-boundary"><strong>Bridge evidence boundary:</strong> these cases motivate a research question. They do not establish that the agentic architecture caused superior scientific outcomes across domains.</p><div class="evidence-grid"><article class="evidence-block"><h3>Leakage detection</h3><p>Compromised evaluation is stopped rather than rationalized after a favorable outcome appears.</p></article><article class="evidence-block"><h3>Prospective boundaries</h3><p>Frozen protocols, untouched tests, and clean implementations separate hypothesis formation from evaluation.</p></article><article class="evidence-block"><h3>Evidence custody</h3><p>Negative results, missing resolution, exact identities, and claim ceilings survive into the next operation.</p></article><article class="evidence-block"><h3>Recoverable independence</h3><p>Clean-room reproduction and exact-state succession test whether the work survives decisions outside its original execution.</p></article><article class="evidence-block full"><h3>Demonstrated intersection · causal limit</h3><p>The public record shows scientific restraint enforced as operational behavior: freeze the test, preserve contrary evidence, expose the exact state, classify the failure, and requalify any successor. That is the bridge already built. The record does not yet establish that this machinery caused superior scientific outcomes across domains.</p></article></div><p class="reader-end">Close the shared bridge to return to the selected object and retained perspective.</p></div></aside>
+
+<aside class="shared-bridge" data-shared-bridge role="region" aria-labelledby="shared-bridge-title" hidden>
+<div class="shared-bridge-top"><button type="button" data-close-bridge>Return to Selected Face</button></div>
+<div class="shared-bridge-content">
+<p class="reader-kicker">One shared bridge · Scientific ↔ Agentic</p>
+<h2 id="shared-bridge-title">What Diamond Gate Bridge already demonstrates.</h2>
+<p class="reader-deck">Diamond Gate Bridge joins the strands in observable conduct: claims are frozen before outcomes, comparisons are bounded, missing evidence stays missing, contradictions remain in custody, and broken work can resume from durable exact state.</p>
+<p class="face-boundary"><strong>Bridge evidence boundary:</strong> these cases motivate a research question. They do not establish that the agentic architecture caused superior scientific outcomes across domains.</p>
+<div class="evidence-grid"><article class="evidence-block"><h3>Leakage detection</h3><p>Compromised evaluation is stopped rather than rationalized after a favorable outcome appears.</p></article><article class="evidence-block"><h3>Prospective boundaries</h3><p>Frozen protocols, untouched tests, and clean implementations separate hypothesis formation from evaluation.</p></article><article class="evidence-block"><h3>Evidence custody</h3><p>Negative results, missing resolution, exact identities, and claim ceilings survive into the next operation.</p></article><article class="evidence-block"><h3>Recoverable independence</h3><p>Clean-room reproduction and exact-state succession test whether the work survives decisions outside its original execution.</p></article><article class="evidence-block full"><h3>Demonstrated intersection · causal limit</h3><p>The public record shows scientific restraint enforced as operational behavior: freeze the test, preserve contrary evidence, expose the exact state, classify the failure, and requalify any successor. That is the bridge already built. The record does not yet establish that this machinery caused superior scientific outcomes across domains.</p></article></div>
+<p class="reader-end">Close the shared bridge to return to the selected object and retained perspective.</p>
+</div>
+</aside>
 <span class="reader-swipe-cue" aria-hidden="true">Swipe horizontally to change perspective</span>
 </div>
 </section>
+
 <section class="frontier legacy-frontier" data-preserved-source hidden inert aria-hidden="true">
-<nav class="chapter-nav" role="tablist" aria-label="Research Frontier chapters"><button type="button" role="tab" aria-selected="true" data-chapter-tab="challenge">Challenge</button><button type="button" role="tab" aria-selected="false" data-chapter-tab="evidence">Evidence</button><button type="button" role="tab" aria-selected="false" data-chapter-tab="limits">Limits</button><button type="button" role="tab" aria-selected="false" data-chapter-tab="agentic">Agentic</button><button type="button" role="tab" aria-selected="false" data-chapter-tab="observability">Observability</button><button type="button" role="tab" aria-selected="false" data-chapter-tab="bridge">The Bridge</button><button type="button" role="tab" aria-selected="false" data-chapter-tab="reproduce">Reproduce</button></nav>
-<div class="chapters"><article class="chapter" id="challenge" data-chapter="challenge" data-active="true" role="tabpanel"><div><p class="eyebrow">01 · Scientific challenge</p><h2>Do viable futures reveal fragility?</h2><p class="lede">The working proposition is intentionally falsifiable: information in the structure of a system’s remaining viable transitions may add predictive information beyond a description of the present state alone.</p><p class="claim-limit">This is a research proposition under active testing. This page does not claim a universal law or settled cross-domain generality.</p></div><div class="objects"><div class="challenge-box"><h3>Try to falsify it.</h3><p>A useful attack should preserve the predeclared evaluation boundary and ask whether the apparent signal disappears under a stronger comparator, a clean implementation, or a genuinely untouched benchmark.</p><ol><li>Reproduce the stated protocol without outcome leakage.</li><li>Compare against conventional state and topology baselines.</li><li>Test a clean implementation and untouched benchmark.</li><li>Report negative, null, or contradictory results—not only successes.</li></ol></div><div class="object good"><h3>What would count as progress?</h3><p>Independent reproduction, stronger matched controls, clean-room implementation agreement, or a clear falsification that explains the existing observations.</p></div></div><div class="chapter-footer"><span>Mode: challenge first</span><span>Confidence stops where evidence stops.</span></div></article>
-<article class="chapter" data-chapter="evidence" role="tabpanel"><div><p class="eyebrow">02 · Evidence</p><h2>Start with what is actually observed.</h2><p class="lede">Within one audited month, the corrected public record contained 906 pull requests; 699 were retained as material work and classified as 17 PARAMOUNT plus 682 STANDARD. One bounded controlled comparison adds a matched outcome without turning either observation into a causal claim.</p><p class="claim-limit">Repository history can establish activity, sequence, retained evidence, and the stated comparison outcome. It does not by itself prove that governance caused higher throughput or superior general performance.</p></div><div class="objects"><div class="metrics"><div class="metric"><strong>906</strong><span>PRs · one audited month</span></div><div class="metric"><strong>699</strong><span>Retained as material work</span></div><div class="metric"><strong>17</strong><span>PARAMOUNT material PRs</span></div><div class="metric"><strong>682</strong><span>STANDARD material PRs</span></div></div><div class="object"><h3>AF-IR-01 · Matched condition</h3><p>Under the same frozen task, model, runtime, and verifier condition, the Diamond Gate lane passed while the stock OpenHands lane ended FAIL/INACTIVE. Diamond Gate completed the stated task where the comparator did not under the one condition actually tested.</p><p class="mono">RESULT SCOPE = ONE BOUNDED CONTROLLED COMPARISON</p></div></div><div class="chapter-footer"><span>Observation before interpretation.</span><span>Broader comparative battery remains ahead.</span></div></article>
-<article class="chapter" data-chapter="limits" role="tabpanel"><div><p class="eyebrow">03 · Negative results + claim limits</p><h2>The missing evidence stays visible.</h2><p class="lede">A research frontier is not a highlight reel. Failed tests, superseded methods, contaminated attempts, and unavailable evidence constrain what can be claimed next.</p><p class="claim-limit">The original v0 audit survives only as aggregate totals. Row-level agreement, Cohen’s kappa, and a disagreement ledger cannot legitimately be reconstructed from evidence that no longer exists at that resolution.</p></div><div class="objects"><div class="object danger"><h3>Integrity achievement: refuse the reconstruction.</h3><p>The v0 aggregate totals survive, but row-level agreement, Cohen’s kappa, and a disagreement ledger do not. Diamond Gate keeps that resolution unknown instead of manufacturing a cleaner record.</p></div><div class="object"><h3>What can raise the claim?</h3><p>External validation, a larger frozen comparative battery, clean-room reproduction, and stronger cross-domain testing can materially change the current classification.</p></div><div class="object"><h3>What cannot?</h3><p>More confident wording, repeated internal inspection, or a larger number of internally generated artifacts cannot substitute for independent evidence.</p></div></div><div class="chapter-footer"><span>Negative evidence is retained.</span><span>No universal superiority claim.</span></div></article>
-<article class="chapter" data-chapter="agentic" role="tabpanel"><div><p class="eyebrow">04 · Agentic Frontier</p><h2>Can agency scale without losing the trail?</h2><p class="lede">The achievement is not volume alone. Across the audited month, Diamond Gate operated substantial software and research work while authority, exact state, qualification, provenance, recovery, and publication remained inspectable.</p><p class="claim-limit">Documented coordination and successful production are not the same as proven efficiency improvement. The causal comparative proposition remains separately testable.</p></div><div class="objects"><div class="chain"><div><b>A</b><span>Route work to the owning project and authority boundary.</span></div><div><b>B</b><span>Lock construction to an exact governing head and bounded paths.</span></div><div><b>C</b><span>Freeze and independently qualify one exact candidate.</span></div><div><b>D</b><span>Separate merge, deployment, and live verification as distinct evidence states.</span></div></div><div class="object"><h3>A broken lineage was recovered without inventing continuity.</h3><p>When Gen1731 broke, the next operator recovered from durable repository state instead of recollection: PR #2156 restored the provenance boundary, PR #2157 repaired successor transport, and a fresh successor was admitted at Gen1749. The work continued without treating memory as evidence.</p><p class="mono">CONTINUITY TEST = DURABLE STATE, NOT PRIVATE MEMORY</p></div></div><div class="chapter-footer"><span>Multi-strand experimentally grounded program.</span><span>Comparative replication in progress.</span></div></article>
-<article class="chapter" data-chapter="observability" role="tabpanel"><div><p class="eyebrow">05 · Observability & failure classification</p><h2>Classify the failure before responding.</h2><p class="lede">Instead of collapsing every red signal into “the product failed,” the read-only observatory separates intake, execution, qualification, closure, deployment, and live-product state. A failed intake is not misread as a failed deployment; a passed qualification is not mistaken for a live release.</p><p class="claim-limit">Operational classification capability can be shown where supported. Reduced reruns, localization time, false promotions, false holds, or recovery effort are not claimed here as measured effects.</p></div><div class="objects"><div class="chain"><div><b>1</b><span>INTAKE · Was the operation admitted and complete?</span></div><div><b>2</b><span>EXECUTION · Did the intended carrier actually run?</span></div><div><b>3</b><span>QUALIFICATION · Did the candidate satisfy the governing checks?</span></div><div><b>4</b><span>CLOSURE · Was the operation terminally dispositioned?</span></div><div><b>5</b><span>DEPLOYMENT · Was the approved exact head published?</span></div><div><b>6</b><span>LIVE VERIFY · Did the visitor receive the intended product?</span></div></div><div class="object good"><h3>Primary proposition</h3><p class="mono">FAILURE CAN BE CLASSIFIED BEFORE RESPONSE</p></div></div><div class="chapter-footer"><span>Read-only interpretation layer.</span><span>Impact metrics remain to be quantified.</span></div></article>
-<article class="chapter" data-chapter="bridge" role="tabpanel"><div><p class="eyebrow">06 · Scientific ↔ Agentic bridge</p><h2>What Diamond Gate Bridge already demonstrates.</h2><p class="lede">Scientific restraint is expressed as operational behavior: freeze the test before outcomes, preserve contrary and missing evidence, expose exact state, classify the failure, and recover unfinished work from durable records.</p><p class="claim-limit">This demonstrated intersection does not yet establish that the agentic architecture caused superior scientific outcomes across domains.</p></div><div class="objects"><div class="object"><h3>Leakage detection</h3><p>Contaminated or methodologically compromised evaluation is stopped rather than rationalized after a favorable outcome.</p></div><div class="object"><h3>Prospective boundaries</h3><p>Frozen protocols, untouched tests, and implementation-independence constraints separate hypothesis formation from evaluation.</p></div><div class="object"><h3>Evidence custody and recovery</h3><p>Negative results, missing resolution, exact identities, succession records, and claim ceilings survive to constrain the next operation. That is the bridge already built.</p></div></div><div class="chapter-footer"><span>Concrete case evidence.</span><span>Causal bridge remains under study.</span></div></article>
-<article class="chapter" data-chapter="reproduce" role="tabpanel"><div><p class="eyebrow">07 · Reproduction / falsification</p><h2>Don’t trust the page. Inspect the boundary.</h2><p class="lede">The challenge path is concrete: state the exact claim, freeze task and comparison conditions before outcomes, use a clean implementation when independence matters, preserve failures and deviations, and return the exact reproduction record for inspection.</p><p class="claim-limit">Only public, authorized evidence belongs on this surface. Private artifacts and inaccessible evidence are not implied by their absence.</p></div><div class="objects"><div class="challenge-box"><h3>Independent challenge path</h3><p>Use the public evidence and protocol materials available through the estate, reproduce the boundary independently, and retain contradictions rather than optimizing them away.</p><ol><li>Define the exact claim you are testing.</li><li>Freeze the benchmark and comparator before outcomes.</li><li>Use a clean implementation when independence matters.</li><li>Publish failures and nulls alongside positive results.</li><li>Send the reproduction record or falsification to Diamond Gate for inspection.</li></ol></div><div class="object"><h3>Public evidence destinations</h3><p><a href="/evidence/">Evidence room →</a></p><p><a href="/governance/">Governance →</a></p><p><a href="/laws/">Laws and methods boundaries →</a></p></div></div><div class="chapter-footer"><span>Reproduction is invited.</span><span>External validation remains distinct from internal evidence.</span></div></article></div>
+<nav class="chapter-nav" role="tablist" aria-label="Research Frontier chapters">
+<button type="button" role="tab" aria-selected="true" data-chapter-tab="challenge">Challenge</button>
+<button type="button" role="tab" aria-selected="false" data-chapter-tab="evidence">Evidence</button>
+<button type="button" role="tab" aria-selected="false" data-chapter-tab="limits">Limits</button>
+<button type="button" role="tab" aria-selected="false" data-chapter-tab="agentic">Agentic</button>
+<button type="button" role="tab" aria-selected="false" data-chapter-tab="observability">Observability</button>
+<button type="button" role="tab" aria-selected="false" data-chapter-tab="bridge">The Bridge</button>
+<button type="button" role="tab" aria-selected="false" data-chapter-tab="reproduce">Reproduce</button>
+</nav>
+<div class="chapters">
+<article class="chapter" id="challenge" data-chapter="challenge" data-active="true" role="tabpanel">
+<div><p class="eyebrow">01 · Scientific challenge</p><h2>Do viable futures reveal fragility?</h2><p class="lede">The working proposition is intentionally falsifiable: information in the structure of a system’s remaining viable transitions may add predictive information beyond a description of the present state alone.</p><p class="claim-limit">This is a research proposition under active testing. This page does not claim a universal law or settled cross-domain generality.</p></div>
+<div class="objects"><div class="challenge-box"><h3>Try to falsify it.</h3><p>A useful attack should preserve the predeclared evaluation boundary and ask whether the apparent signal disappears under a stronger comparator, a clean implementation, or a genuinely untouched benchmark.</p><ol><li>Reproduce the stated protocol without outcome leakage.</li><li>Compare against conventional state and topology baselines.</li><li>Test a clean implementation and untouched benchmark.</li><li>Report negative, null, or contradictory results—not only successes.</li></ol></div><div class="object good"><h3>What would count as progress?</h3><p>Independent reproduction, stronger matched controls, clean-room implementation agreement, or a clear falsification that explains the existing observations.</p></div></div>
+<div class="chapter-footer"><span>Mode: challenge first</span><span>Confidence stops where evidence stops.</span></div>
+</article>
+<article class="chapter" data-chapter="evidence" role="tabpanel">
+<div><p class="eyebrow">02 · Evidence</p><h2>Start with what is actually observed.</h2><p class="lede">Within one audited month, the corrected public record contained 906 pull requests; 699 were retained as material work and classified as 17 PARAMOUNT plus 682 STANDARD. One bounded controlled comparison adds a matched outcome without turning either observation into a causal claim.</p><p class="claim-limit">Repository history can establish activity, sequence, retained evidence, and the stated comparison outcome. It does not by itself prove that governance caused higher throughput or superior general performance.</p></div>
+<div class="objects"><div class="metrics"><div class="metric"><strong>906</strong><span>PRs · one audited month</span></div><div class="metric"><strong>699</strong><span>Retained as material work</span></div><div class="metric"><strong>17</strong><span>PARAMOUNT material PRs</span></div><div class="metric"><strong>682</strong><span>STANDARD material PRs</span></div></div><div class="object"><h3>AF-IR-01 · Matched condition</h3><p>Under the same frozen task, model, runtime, and verifier condition, the Diamond Gate lane passed while the stock OpenHands lane ended FAIL/INACTIVE. Diamond Gate completed the stated task where the comparator did not under the one condition actually tested.</p><p class="mono">RESULT SCOPE = ONE BOUNDED CONTROLLED COMPARISON</p></div></div>
+<div class="chapter-footer"><span>Observation before interpretation.</span><span>Broader comparative battery remains ahead.</span></div>
+</article>
+<article class="chapter" data-chapter="limits" role="tabpanel">
+<div><p class="eyebrow">03 · Negative results + claim limits</p><h2>The missing evidence stays visible.</h2><p class="lede">A research frontier is not a highlight reel. Failed tests, superseded methods, contaminated attempts, and unavailable evidence constrain what can be claimed next.</p><p class="claim-limit">The original v0 audit survives only as aggregate totals. Row-level agreement, Cohen’s kappa, and a disagreement ledger cannot legitimately be reconstructed from evidence that no longer exists at that resolution.</p></div>
+<div class="objects"><div class="object danger"><h3>Integrity achievement: refuse the reconstruction.</h3><p>The v0 aggregate totals survive, but row-level agreement, Cohen’s kappa, and a disagreement ledger do not. Diamond Gate keeps that resolution unknown instead of manufacturing a cleaner record.</p></div><div class="object"><h3>What can raise the claim?</h3><p>External validation, a larger frozen comparative battery, clean-room reproduction, and stronger cross-domain testing can materially change the current classification.</p></div><div class="object"><h3>What cannot?</h3><p>More confident wording, repeated internal inspection, or a larger number of internally generated artifacts cannot substitute for independent evidence.</p></div></div>
+<div class="chapter-footer"><span>Negative evidence is retained.</span><span>No universal superiority claim.</span></div>
+</article>
+<article class="chapter" data-chapter="agentic" role="tabpanel">
+<div><p class="eyebrow">04 · Agentic Frontier</p><h2>Can agency scale without losing the trail?</h2><p class="lede">The achievement is not volume alone. Across the audited month, Diamond Gate operated substantial software and research work while authority, exact state, qualification, provenance, recovery, and publication remained inspectable.</p><p class="claim-limit">Documented coordination and successful production are not the same as proven efficiency improvement. The causal comparative proposition remains separately testable.</p></div>
+<div class="objects"><div class="chain"><div><b>A</b><span>Route work to the owning project and authority boundary.</span></div><div><b>B</b><span>Lock construction to an exact governing head and bounded paths.</span></div><div><b>C</b><span>Freeze and independently qualify one exact candidate.</span></div><div><b>D</b><span>Separate merge, deployment, and live verification as distinct evidence states.</span></div></div><div class="object"><h3>A broken lineage was recovered without inventing continuity.</h3><p>When Gen1731 broke, the next operator recovered from durable repository state instead of recollection: PR #2156 restored the provenance boundary, PR #2157 repaired successor transport, and a fresh successor was admitted at Gen1749. The work continued without treating memory as evidence.</p><p class="mono">CONTINUITY TEST = DURABLE STATE, NOT PRIVATE MEMORY</p></div></div>
+<div class="chapter-footer"><span>Multi-strand experimentally grounded program.</span><span>Comparative replication in progress.</span></div>
+</article>
+<article class="chapter" data-chapter="observability" role="tabpanel">
+<div><p class="eyebrow">05 · Observability & failure classification</p><h2>Classify the failure before responding.</h2><p class="lede">Instead of collapsing every red signal into “the product failed,” the read-only observatory separates intake, execution, qualification, closure, deployment, and live-product state. A failed intake is not misread as a failed deployment; a passed qualification is not mistaken for a live release.</p><p class="claim-limit">Operational classification capability can be shown where supported. Reduced reruns, localization time, false promotions, false holds, or recovery effort are not claimed here as measured effects.</p></div>
+<div class="objects"><div class="chain"><div><b>1</b><span>INTAKE · Was the operation admitted and complete?</span></div><div><b>2</b><span>EXECUTION · Did the intended carrier actually run?</span></div><div><b>3</b><span>QUALIFICATION · Did the candidate satisfy the governing checks?</span></div><div><b>4</b><span>CLOSURE · Was the operation terminally dispositioned?</span></div><div><b>5</b><span>DEPLOYMENT · Was the approved exact head published?</span></div><div><b>6</b><span>LIVE VERIFY · Did the visitor receive the intended product?</span></div></div><div class="object good"><h3>Primary proposition</h3><p class="mono">FAILURE CAN_BE_CLASSIFIED_BEFORE_RESPONSE</p></div></div>
+<div class="chapter-footer"><span>Read-only interpretation layer.</span><span>Impact metrics remain to be quantified.</span></div>
+</article>
+<article class="chapter" data-chapter="bridge" role="tabpanel">
+<div><p class="eyebrow">06 · Scientific ↔ Agentic bridge</p><h2>What Diamond Gate Bridge already demonstrates.</h2><p class="lede">Scientific restraint is expressed as operational behavior: freeze the test before outcomes, preserve contrary and missing evidence, expose exact state, classify the failure, and recover unfinished work from durable records.</p><p class="claim-limit">This demonstrated intersection does not yet establish that the agentic architecture caused superior scientific outcomes across domains.</p></div>
+<div class="objects"><div class="object"><h3>Leakage detection</h3><p>Contaminated or methodologically compromised evaluation is stopped rather than rationalized after a favorable outcome.</p></div><div class="object"><h3>Prospective boundaries</h3><p>Frozen protocols, untouched tests, and implementation-independence constraints separate hypothesis formation from evaluation.</p></div><div class="object"><h3>Evidence custody and recovery</h3><p>Negative results, missing resolution, exact identities, succession records, and claim ceilings survive to constrain the next operation. That is the bridge already built.</p></div></div>
+<div class="chapter-footer"><span>Concrete case evidence.</span><span>Causal bridge remains under study.</span></div>
+</article>
+<article class="chapter" data-chapter="reproduce" role="tabpanel">
+<div><p class="eyebrow">07 · Reproduction / falsification</p><h2>Don’t trust the page. Inspect the boundary.</h2><p class="lede">The challenge path is concrete: state the exact claim, freeze task and comparison conditions before outcomes, use a clean implementation when independence matters, preserve failures and deviations, and return the exact reproduction record for inspection.</p><p class="claim-limit">Only public, authorized evidence belongs on this surface. Private artifacts and inaccessible evidence are not implied by their absence.</p></div>
+<div class="objects"><div class="challenge-box"><h3>Independent challenge path</h3><p>Use the public evidence and protocol materials available through the estate, reproduce the boundary independently, and retain contradictions rather than optimizing them away.</p><ol><li>Define the exact claim you are testing.</li><li>Freeze the benchmark and comparator before outcomes.</li><li>Use a clean implementation when independence matters.</li><li>Publish failures and nulls alongside positive results.</li><li>Send the reproduction record or falsification to Diamond Gate for inspection.</li></ol></div><div class="object"><h3>Public evidence destinations</h3><p><a href="/evidence/">Evidence room →</a></p><p><a href="/governance/">Governance →</a></p><p><a href="/laws/">Laws and methods boundaries →</a></p></div></div>
+<div class="chapter-footer"><span>Reproduction is invited.</span><span>External validation remains distinct from internal evidence.</span></div>
+</article>
+</div>
 </section>
 </main>
 <footer class="footer"><p>Research Frontier is a public research entry point, not a declaration that every active proposition has been proven. Scientific and Agentic strands are presented with different evidentiary maturity, and the broader Frontier family remains structurally separate while cross-domain research continues.</p><nav><a href="/">Compass</a><a href="/evidence/">Evidence</a><a href="/governance/">Governance</a><a href="/laws/">Laws</a></nav></footer>
 <script id="multi-card-orbital-runtime">
-(()=>{'use strict';document.documentElement.classList.add('rf-js');const field=document.querySelector('[data-evidence-field]');const holograms=[...document.querySelectorAll('.evidence-field .holo')];const stage=document.querySelector('[data-orbit-stage]');const ring=document.querySelector('[data-orbit-ring]');const cards=[...document.querySelectorAll('[data-orbit-card]')];const status=document.querySelector('[data-orbit-status]');const reader=document.querySelector('[data-reader]');const readerTurn=document.querySelector('[data-reader-turn]');const faces=[...document.querySelectorAll('[data-reader-face]')];const sharedBridge=document.querySelector('[data-shared-bridge]');const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)');const objectIds=cards.map(card=>card.dataset.object);const step=360/cards.length;const clamp=(value,min,max)=>Math.min(max,Math.max(min,value));const modulo=(value,base)=>((value%base)+base)%base;const readState=(key,fallback)=>{try{return sessionStorage.getItem(key)??fallback}catch{return fallback}};const writeState=(key,value)=>{try{sessionStorage.setItem(key,String(value))}catch{}};const storedIndex=Number.parseInt(readState('research-frontier-object','0'),10);let selectedIndex=Number.isFinite(storedIndex)?clamp(storedIndex,0,cards.length-1):0;let selectedFace=readState('research-frontier-face','scientific')==='agentic'?'agentic':'scientific';let angle=-selectedIndex*step;let animationFrame=0;let animating=false;let inspecting=false;let bridgeOpen=false;let gesture=null;let suppressCardClick=false;let lastFocus=null;const faceName=()=>selectedFace[0].toUpperCase()+selectedFace.slice(1);const selectedObject=()=>objectIds[selectedIndex];const cardTitle=index=>cards[index].querySelector('.orbit-card-title')?.textContent.trim()||`Research object ${index+1}`;const nearestIndex=value=>modulo(Math.round(-value/step),cards.length);const evidenceState={attack:'challenge',evidence:'evidence',negative:'limits',missing:'limits',reproduce:'reproduce',next:'challenge'};const weights={attack:{scientific:[.34,1,.42,.28],agentic:[.34,.48,1,.66]},evidence:{scientific:[1,.94,.38,.32],agentic:[.58,.5,.76,1]},negative:{scientific:[.9,.76,.32,.3],agentic:[.62,.4,.92,.84]},missing:{scientific:[.9,.76,.32,.3],agentic:[.62,.4,.92,.84]},reproduce:{scientific:[.56,.84,.8,.42],agentic:[.34,.42,1,.76]},next:{scientific:[.34,1,.42,.28],agentic:[.34,.48,1,.66]}};function updateStatus(message,index=selectedIndex){const position=String(index+1).padStart(2,'0');status.innerHTML=`<strong><span class="orbit-position">${position} / ${String(cards.length).padStart(2,'0')}</span>${cardTitle(index)}</strong><span>${message||`Front position · Opens on ${faceName()}`}</span>`;cards.forEach((card,cardIndex)=>{const active=cardIndex===index;card.dataset.active=active?'true':'false';card.tabIndex=active?0:-1;card.setAttribute('aria-current',active?'true':'false');card.setAttribute('aria-label',active?`Open ${cardTitle(cardIndex)} on its ${faceName()} face`:`Rotate ${cardTitle(cardIndex)} into the front position`);const preview=card.querySelector('[data-face-preview]');if(preview)preview.textContent=`Scientific ↔ Agentic · ${faceName()} retained`})}function applyEvidence(index=selectedIndex){const objectId=objectIds[index];const relevanceWeights=weights[objectId][selectedFace];const phase=[0,83,191,277];holograms.forEach((hologram,hologramIndex)=>{const orbitWave=Math.cos((angle+phase[hologramIndex])*Math.PI/180);const relevance=clamp(relevanceWeights[hologramIndex]+(inspecting?0:orbitWave*.07),.16,1);const depth=Math.round(-22+relevance*64+orbitWave*8);const driftX=Math.sin((angle+phase[hologramIndex])*Math.PI/180)*18;const driftY=Math.cos((angle*.7+phase[hologramIndex])*Math.PI/180)*9;const blur=(1-relevance)*4.6;const scale=.92+relevance*.09;hologram.style.transition=reduceMotion.matches?'none':'transform 420ms ease,filter 420ms ease,opacity 420ms ease';hologram.style.transform=`translate3d(${driftX.toFixed(2)}px,${driftY.toFixed(2)}px,${depth}px) scale(${scale.toFixed(3)}) rotateY(${(orbitWave*5).toFixed(2)}deg)`;hologram.style.filter=`blur(${blur.toFixed(2)}px) saturate(${(.68+relevance*.48).toFixed(2)}) brightness(${(.72+relevance*.32).toFixed(2)})`;hologram.style.opacity=(.18+relevance*.72).toFixed(2);hologram.style.setProperty('--rf-holo-filter',hologram.style.filter);hologram.style.setProperty('--rf-holo-opacity',hologram.style.opacity);hologram.style.zIndex=String(Math.round(relevance*4))});field.dataset.face=selectedFace;field.dataset.activeEvidence=evidenceState[objectId];field.dataset.inspecting=inspecting?'true':'false'}function applyOrbit(){const width=stage.getBoundingClientRect().width||800;const radiusX=Math.min(width*.34,310);const radiusY=Math.min(width*.055,44);const frontIndex=gesture?.axis==='horizontal'?nearestIndex(angle):selectedIndex;cards.forEach((card,index)=>{const radians=(angle+index*step)*Math.PI/180;const x=Math.sin(radians)*radiusX;const depth=Math.cos(radians);const y=depth*radiusY;const scale=.54+(depth+1)*.22;const opacity=.13+(depth+1)*.435;card.style.transform=`translate(calc(-50% + ${x.toFixed(2)}px),calc(-50% + ${y.toFixed(2)}px)) scale(${scale.toFixed(3)}) rotateY(${(-Math.sin(radians)*22).toFixed(2)}deg)`;card.style.opacity=String(clamp(opacity,.13,1));card.style.zIndex=String(Math.round((depth+1)*10+2));card.style.pointerEvents=depth>.05?'auto':'none'});ring.style.transform=`translate(-50%,-50%) rotateZ(${angle.toFixed(2)}deg) rotateX(71deg)`;applyEvidence(frontIndex)}function finishAnimation(index){selectedIndex=modulo(index,cards.length);angle=-selectedIndex*step;writeState('research-frontier-object',selectedIndex);animating=false;cards.forEach(card=>card.setAttribute('aria-disabled','false'));updateStatus();applyOrbit()}function animateTo(index,target,label='Evidence recomposing'){cancelAnimationFrame(animationFrame);const nextIndex=modulo(index,cards.length);const start=angle;const distance=target-start;const duration=reduceMotion.matches?0:760;animating=true;cards.forEach(card=>card.setAttribute('aria-disabled','true'));updateStatus(label,selectedIndex);if(!duration){finishAnimation(nextIndex);return}const began=performance.now();const frame=now=>{const progress=clamp((now-began)/duration,0,1);const eased=1-Math.pow(1-progress,3);angle=start+distance*eased;applyOrbit();if(progress<1)animationFrame=requestAnimationFrame(frame);else finishAnimation(nextIndex)};animationFrame=requestAnimationFrame(frame)}function rotateOrbit(direction){if(animating||inspecting)return;const nextIndex=modulo(selectedIndex+direction,cards.length);animateTo(nextIndex,angle-direction*step,direction>0?'Next research object · Evidence recomposing':'Previous research object · Evidence recomposing')}function rotateCardToFront(index){if(animating||inspecting||index===selectedIndex)return;let target=-index*step;while(target-angle>180)target-=360;while(angle-target>180)target+=360;animateTo(index,target,'Selected object moving to front · Evidence recomposing')}function activateLens(scope,id,focus=false){const tabs=[...scope.querySelectorAll('[data-lens-tab]')];const panels=[...scope.querySelectorAll('[data-lens-panel]')];if(!tabs.some(tab=>tab.dataset.lensTab===id))return;tabs.forEach(tab=>{const active=tab.dataset.lensTab===id;tab.setAttribute('aria-selected',active?'true':'false');tab.tabIndex=active?0:-1;if(active&&focus)tab.focus()});panels.forEach(panel=>{panel.hidden=panel.dataset.lensPanel!==id})}document.querySelectorAll('[data-object-reader]').forEach(objectReader=>{const tabs=[...objectReader.querySelectorAll('[data-lens-tab]')];tabs.forEach((tab,index)=>{tab.addEventListener('click',()=>activateLens(objectReader,tab.dataset.lensTab));tab.addEventListener('keydown',event=>{let next=index;if(event.key==='ArrowRight')next=(index+1)%tabs.length;else if(event.key==='ArrowLeft')next=(index-1+tabs.length)%tabs.length;else if(event.key==='Home')next=0;else if(event.key==='End')next=tabs.length-1;else return;event.preventDefault();activateLens(objectReader,tabs[next].dataset.lensTab,true)})})});function applyObject(reset=false){const objectId=selectedObject();faces.forEach(face=>{const readers=[...face.querySelectorAll('[data-object-reader]')];readers.forEach(objectReader=>{const active=objectReader.dataset.objectReader===objectId;objectReader.hidden=!active;if(active&&reset){const firstTab=objectReader.querySelector('[data-lens-tab]');if(firstTab)activateLens(objectReader,firstTab.dataset.lensTab)}});const activeReader=readers.find(objectReader=>objectReader.dataset.objectReader===objectId);const title=activeReader?.querySelector('h2[id]');if(title)face.setAttribute('aria-labelledby',title.id);if(reset)face.scrollTop=0});const activeFace=faces.find(face=>face.dataset.readerFace===selectedFace);const activeTitle=activeFace?.querySelector(`[data-object-reader="${objectId}"] h2[id]`);if(activeTitle)reader.setAttribute('aria-labelledby',activeTitle.id)}function applyFace(reset=false,focus=false){reader.dataset.face=selectedFace;faces.forEach(face=>{const active=face.dataset.readerFace===selectedFace;face.setAttribute('aria-hidden',active?'false':'true');face.inert=!active;if(active&&reset)face.scrollTop=0;if(active&&focus)requestAnimationFrame(()=>face.focus({preventScroll:true}))});applyObject(reset);writeState('research-frontier-face',selectedFace);updateStatus();applyEvidence()}function flipFace(target,focus=true){if(target===selectedFace||bridgeOpen)return;selectedFace=target;applyFace(true,false);requestAnimationFrame(()=>{const active=faces.find(face=>face.dataset.readerFace===selectedFace);if(focus)active?.querySelector('[data-flip-face]')?.focus({preventScroll:true});else active?.focus({preventScroll:true})})}function openBridge(){if(!inspecting||bridgeOpen)return;bridgeOpen=true;sharedBridge.hidden=false;reader.dataset.bridgeOpen='true';readerTurn.inert=true;requestAnimationFrame(()=>sharedBridge.querySelector('[data-close-bridge]')?.focus({preventScroll:true}))}function closeBridge(){if(!bridgeOpen)return;bridgeOpen=false;sharedBridge.hidden=true;delete reader.dataset.bridgeOpen;readerTurn.inert=false;const active=faces.find(face=>face.dataset.readerFace===selectedFace);requestAnimationFrame(()=>active?.querySelector('[data-open-bridge]')?.focus({preventScroll:true}))}function openReader(objectId,lens){if(animating||inspecting)return;const requestedIndex=objectIds.indexOf(objectId);if(requestedIndex>=0){selectedIndex=requestedIndex;angle=-selectedIndex*step;writeState('research-frontier-object',selectedIndex);updateStatus();applyOrbit()}lastFocus=document.activeElement;inspecting=true;reader.hidden=false;document.body.classList.add('rf-reader-open');stage.inert=true;stage.setAttribute('aria-hidden','true');applyFace(true,true);if(lens){const activeFace=faces.find(face=>face.dataset.readerFace===selectedFace);const activeObject=activeFace?.querySelector(`[data-object-reader="${selectedObject()}"]`);if(activeObject)activateLens(activeObject,lens)}}function closeReader(){if(!inspecting)return;if(bridgeOpen)closeBridge();inspecting=false;reader.hidden=true;document.body.classList.remove('rf-reader-open');stage.inert=false;stage.removeAttribute('aria-hidden');applyEvidence();const activeCard=cards[selectedIndex];activeCard.scrollIntoView({block:'center',behavior:reduceMotion.matches?'auto':'smooth'});requestAnimationFrame(()=>activeCard.focus({preventScroll:true}));lastFocus=null}cards.forEach((card,index)=>card.addEventListener('click',event=>{if(suppressCardClick){event.preventDefault();suppressCardClick=false;return}if(index===selectedIndex)openReader(card.dataset.object);else rotateCardToFront(index)}));document.querySelectorAll('[data-open-reader]').forEach(control=>control.addEventListener('click',event=>{event.preventDefault();const objectId=control.dataset.openObject||(control.dataset.openLens==='missing'?'missing':selectedObject());openReader(objectId,control.dataset.openLens)}));document.querySelectorAll('[data-return-orbit]').forEach(control=>control.addEventListener('click',closeReader));document.querySelectorAll('[data-flip-face]').forEach(control=>control.addEventListener('click',()=>flipFace(control.dataset.flipFace)));document.querySelectorAll('[data-open-bridge]').forEach(control=>control.addEventListener('click',openBridge));document.querySelector('[data-close-bridge]').addEventListener('click',closeBridge);stage.addEventListener('keydown',event=>{if(event.key==='ArrowLeft'){event.preventDefault();rotateOrbit(-1)}else if(event.key==='ArrowRight'){event.preventDefault();rotateOrbit(1)}else if((event.key==='Enter'||event.key===' ')&&event.target===stage){event.preventDefault();openReader(selectedObject())}});stage.addEventListener('pointerdown',event=>{if(animating||inspecting||event.button!==0)return;const captureDeferred=Boolean(event.target.closest('[data-orbit-card]'));gesture={id:event.pointerId,x:event.clientX,y:event.clientY,startAngle:angle,axis:null,captureDeferred};stage.dataset.dragging='true';if(!captureDeferred)stage.setPointerCapture?.(event.pointerId)});stage.addEventListener('pointermove',event=>{if(!gesture||gesture.id!==event.pointerId)return;const dx=event.clientX-gesture.x;const dy=event.clientY-gesture.y;if(!gesture.axis&&Math.max(Math.abs(dx),Math.abs(dy))>12)gesture.axis=Math.abs(dx)>Math.abs(dy)*1.15?'horizontal':'vertical';if(gesture.axis!=='horizontal')return;if(gesture.captureDeferred){stage.setPointerCapture?.(event.pointerId);gesture.captureDeferred=false}event.preventDefault();angle=gesture.startAngle+dx*.34;updateStatus('Carousel under direct control · Evidence recomposing',nearestIndex(angle));applyOrbit()},{passive:false});const finishOrbitGesture=event=>{if(!gesture||gesture.id!==event.pointerId)return;const current=gesture;gesture=null;delete stage.dataset.dragging;const dx=event.clientX-current.x;if(current.axis==='horizontal'){suppressCardClick=Math.abs(dx)>10;setTimeout(()=>{suppressCardClick=false},0);let targetIndex=nearestIndex(angle);if(Math.abs(dx)>=42&&targetIndex===selectedIndex)targetIndex=modulo(selectedIndex+(dx<0?1:-1),cards.length);let target=-targetIndex*step;while(target-angle>180)target-=360;while(angle-target>180)target+=360;animateTo(targetIndex,target,Math.abs(dx)>=42?'Carousel released · Evidence settling':'Carousel restored')}else{angle=-selectedIndex*step;updateStatus();applyOrbit()}};stage.addEventListener('pointerup',finishOrbitGesture);stage.addEventListener('pointercancel',event=>{if(!gesture||gesture.id!==event.pointerId)return;gesture=null;delete stage.dataset.dragging;angle=-selectedIndex*step;updateStatus();applyOrbit()});faces.forEach(face=>{let swipe=null;face.addEventListener('pointerdown',event=>{if(face.dataset.readerFace!==selectedFace||event.button!==0||event.target.closest('button,a,input,select,textarea,summary,[role="tab"]'))return;swipe={id:event.pointerId,x:event.clientX,y:event.clientY,axis:null};face.setPointerCapture?.(event.pointerId)});face.addEventListener('pointermove',event=>{if(!swipe||swipe.id!==event.pointerId)return;const dx=event.clientX-swipe.x;const dy=event.clientY-swipe.y;if(!swipe.axis&&Math.max(Math.abs(dx),Math.abs(dy))>12)swipe.axis=Math.abs(dx)>Math.abs(dy)*1.2?'horizontal':'vertical';if(swipe.axis==='horizontal')event.preventDefault()},{passive:false});const finishSwipe=event=>{if(!swipe||swipe.id!==event.pointerId)return;const dx=event.clientX-swipe.x;const horizontal=swipe.axis==='horizontal'&&Math.abs(dx)>=60;swipe=null;if(horizontal)flipFace(selectedFace==='scientific'?'agentic':'scientific',false)};face.addEventListener('pointerup',finishSwipe);face.addEventListener('pointercancel',()=>{swipe=null})});document.addEventListener('keydown',event=>{if(event.key!=='Escape'||!inspecting)return;event.preventDefault();if(bridgeOpen)closeBridge();else closeReader()});reader.addEventListener('keydown',event=>{if(event.key!=='Tab')return;const scope=bridgeOpen?sharedBridge:faces.find(face=>face.dataset.readerFace===selectedFace);const focusable=[...scope.querySelectorAll('button:not([disabled]),a[href],[tabindex]:not([tabindex="-1"])')].filter(element=>!element.hidden&&!element.closest('[hidden]'));if(!focusable.length)return;const first=focusable[0],last=focusable[focusable.length-1];if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}});reduceMotion.addEventListener?.('change',()=>applyOrbit());addEventListener('resize',applyOrbit,{passive:true});applyObject(false);applyFace(false,false);updateStatus();applyOrbit()})();
+(()=>{
+  'use strict';
+  document.documentElement.classList.add('rf-js');
+
+  const field=document.querySelector('[data-evidence-field]');
+  const holograms=[...document.querySelectorAll('.evidence-field .holo')];
+  const stage=document.querySelector('[data-orbit-stage]');
+  const ring=document.querySelector('[data-orbit-ring]');
+  const cards=[...document.querySelectorAll('[data-orbit-card]')];
+  const status=document.querySelector('[data-orbit-status]');
+  const reader=document.querySelector('[data-reader]');
+  const readerTurn=document.querySelector('[data-reader-turn]');
+  const faces=[...document.querySelectorAll('[data-reader-face]')];
+  const sharedBridge=document.querySelector('[data-shared-bridge]');
+  const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)');
+  const objectIds=cards.map(card=>card.dataset.object);
+  const step=360/cards.length;
+  const clamp=(value,min,max)=>Math.min(max,Math.max(min,value));
+  const modulo=(value,base)=>((value%base)+base)%base;
+  const readState=(key,fallback)=>{try{return sessionStorage.getItem(key)??fallback}catch{return fallback}};
+  const writeState=(key,value)=>{try{sessionStorage.setItem(key,String(value))}catch{}};
+  const storedIndex=Number.parseInt(readState('research-frontier-object','0'),10);
+  let selectedIndex=Number.isFinite(storedIndex)?clamp(storedIndex,0,cards.length-1):0;
+  let selectedFace=readState('research-frontier-face','scientific')==='agentic'?'agentic':'scientific';
+  let angle=-selectedIndex*step;
+  let animationFrame=0;
+  let animating=false;
+  let inspecting=false;
+  let bridgeOpen=false;
+  let gesture=null;
+  let suppressCardClick=false;
+  let lastFocus=null;
+
+  const faceName=()=>selectedFace[0].toUpperCase()+selectedFace.slice(1);
+  const selectedObject=()=>objectIds[selectedIndex];
+  const cardTitle=index=>cards[index].querySelector('.orbit-card-title')?.textContent.trim()||`Research object ${index+1}`;
+  const nearestIndex=value=>modulo(Math.round(-value/step),cards.length);
+  const evidenceState={attack:'challenge',evidence:'evidence',negative:'limits',missing:'limits',reproduce:'reproduce',next:'challenge'};
+  const weights={
+    attack:{scientific:[.34,1,.42,.28],agentic:[.34,.48,1,.66]},
+    evidence:{scientific:[1,.94,.38,.32],agentic:[.58,.5,.76,1]},
+    negative:{scientific:[.9,.76,.32,.3],agentic:[.62,.4,.92,.84]},
+    missing:{scientific:[.9,.76,.32,.3],agentic:[.62,.4,.92,.84]},
+    reproduce:{scientific:[.56,.84,.8,.42],agentic:[.34,.42,1,.76]},
+    next:{scientific:[.34,1,.42,.28],agentic:[.34,.48,1,.66]}
+  };
+
+  function updateStatus(message,index=selectedIndex){
+    const position=String(index+1).padStart(2,'0');
+    status.innerHTML=`<strong><span class="orbit-position">${position} / ${String(cards.length).padStart(2,'0')}</span>${cardTitle(index)}</strong><span>${message||`Front position · Opens on ${faceName()}`}</span>`;
+    cards.forEach((card,cardIndex)=>{
+      const active=cardIndex===index;
+      card.dataset.active=active?'true':'false';
+      card.tabIndex=active?0:-1;
+      card.setAttribute('aria-current',active?'true':'false');
+      card.setAttribute('aria-label',active?`Open ${cardTitle(cardIndex)} on its ${faceName()} face`:`Rotate ${cardTitle(cardIndex)} into the front position`);
+      const preview=card.querySelector('[data-face-preview]');
+      if(preview)preview.textContent=`Scientific ↔ Agentic · ${faceName()} retained`;
+    });
+  }
+
+  function applyEvidence(index=selectedIndex){
+    const objectId=objectIds[index];
+    const relevanceWeights=weights[objectId][selectedFace];
+    const phase=[0,83,191,277];
+    holograms.forEach((hologram,hologramIndex)=>{
+      const orbitWave=Math.cos((angle+phase[hologramIndex])*Math.PI/180);
+      const relevance=clamp(relevanceWeights[hologramIndex]+(inspecting?0:orbitWave*.07),.16,1);
+      const depth=Math.round(-22+relevance*64+orbitWave*8);
+      const driftX=Math.sin((angle+phase[hologramIndex])*Math.PI/180)*18;
+      const driftY=Math.cos((angle*.7+phase[hologramIndex])*Math.PI/180)*9;
+      const blur=(1-relevance)*4.6;
+      const scale=.92+relevance*.09;
+      hologram.style.transition=reduceMotion.matches?'none':'transform 420ms ease,filter 420ms ease,opacity 420ms ease';
+      hologram.style.transform=`translate3d(${driftX.toFixed(2)}px,${driftY.toFixed(2)}px,${depth}px) scale(${scale.toFixed(3)}) rotateY(${(orbitWave*5).toFixed(2)}deg)`;
+      hologram.style.filter=`blur(${blur.toFixed(2)}px) saturate(${(.68+relevance*.48).toFixed(2)}) brightness(${(.72+relevance*.32).toFixed(2)})`;
+      hologram.style.opacity=(.18+relevance*.72).toFixed(2);
+      hologram.style.setProperty('--rf-holo-filter',hologram.style.filter);
+      hologram.style.setProperty('--rf-holo-opacity',hologram.style.opacity);
+      hologram.style.zIndex=String(Math.round(relevance*4));
+    });
+    field.dataset.face=selectedFace;
+    field.dataset.activeEvidence=evidenceState[objectId];
+    field.dataset.inspecting=inspecting?'true':'false';
+  }
+
+  function applyOrbit(){
+    const width=stage.getBoundingClientRect().width||800;
+    const radiusX=Math.min(width*.34,310);
+    const radiusY=Math.min(width*.055,44);
+    const frontIndex=gesture?.axis==='horizontal'?nearestIndex(angle):selectedIndex;
+    cards.forEach((card,index)=>{
+      const radians=(angle+index*step)*Math.PI/180;
+      const x=Math.sin(radians)*radiusX;
+      const depth=Math.cos(radians);
+      const y=depth*radiusY;
+      const scale=.54+(depth+1)*.22;
+      const opacity=.13+(depth+1)*.435;
+      card.style.transform=`translate(calc(-50% + ${x.toFixed(2)}px),calc(-50% + ${y.toFixed(2)}px)) scale(${scale.toFixed(3)}) rotateY(${(-Math.sin(radians)*22).toFixed(2)}deg)`;
+      card.style.opacity=String(clamp(opacity,.13,1));
+      card.style.zIndex=String(Math.round((depth+1)*10+2));
+      card.style.pointerEvents=depth>.05?'auto':'none';
+    });
+    ring.style.transform=`translate(-50%,-50%) rotateZ(${angle.toFixed(2)}deg) rotateX(71deg)`;
+    applyEvidence(frontIndex);
+  }
+
+  function finishAnimation(index){
+    selectedIndex=modulo(index,cards.length);
+    angle=-selectedIndex*step;
+    writeState('research-frontier-object',selectedIndex);
+    animating=false;
+    cards.forEach(card=>card.setAttribute('aria-disabled','false'));
+    updateStatus();
+    applyOrbit();
+  }
+
+  function animateTo(index,target,label='Evidence recomposing'){
+    cancelAnimationFrame(animationFrame);
+    const nextIndex=modulo(index,cards.length);
+    const start=angle;
+    const distance=target-start;
+    const duration=reduceMotion.matches?0:760;
+    animating=true;
+    cards.forEach(card=>card.setAttribute('aria-disabled','true'));
+    updateStatus(label,selectedIndex);
+    if(!duration){finishAnimation(nextIndex);return}
+    const began=performance.now();
+    const frame=now=>{
+      const progress=clamp((now-began)/duration,0,1);
+      const eased=1-Math.pow(1-progress,3);
+      angle=start+distance*eased;
+      applyOrbit();
+      if(progress<1)animationFrame=requestAnimationFrame(frame);else finishAnimation(nextIndex);
+    };
+    animationFrame=requestAnimationFrame(frame);
+  }
+
+  function rotateOrbit(direction){
+    if(animating||inspecting)return;
+    const nextIndex=modulo(selectedIndex+direction,cards.length);
+    animateTo(nextIndex,angle-direction*step,direction>0?'Next research object · Evidence recomposing':'Previous research object · Evidence recomposing');
+  }
+
+  function rotateCardToFront(index){
+    if(animating||inspecting||index===selectedIndex)return;
+    let target=-index*step;
+    while(target-angle>180)target-=360;
+    while(angle-target>180)target+=360;
+    animateTo(index,target,'Selected object moving to front · Evidence recomposing');
+  }
+
+  function activateLens(scope,id,focus=false){
+    const tabs=[...scope.querySelectorAll('[data-lens-tab]')];
+    const panels=[...scope.querySelectorAll('[data-lens-panel]')];
+    if(!tabs.some(tab=>tab.dataset.lensTab===id))return;
+    tabs.forEach(tab=>{
+      const active=tab.dataset.lensTab===id;
+      tab.setAttribute('aria-selected',active?'true':'false');
+      tab.tabIndex=active?0:-1;
+      if(active&&focus)tab.focus();
+    });
+    panels.forEach(panel=>{panel.hidden=panel.dataset.lensPanel!==id});
+  }
+
+  document.querySelectorAll('[data-object-reader]').forEach(objectReader=>{
+    const tabs=[...objectReader.querySelectorAll('[data-lens-tab]')];
+    tabs.forEach((tab,index)=>{
+      tab.addEventListener('click',()=>activateLens(objectReader,tab.dataset.lensTab));
+      tab.addEventListener('keydown',event=>{
+        let next=index;
+        if(event.key==='ArrowRight')next=(index+1)%tabs.length;
+        else if(event.key==='ArrowLeft')next=(index-1+tabs.length)%tabs.length;
+        else if(event.key==='Home')next=0;
+        else if(event.key==='End')next=tabs.length-1;
+        else return;
+        event.preventDefault();
+        activateLens(objectReader,tabs[next].dataset.lensTab,true);
+      });
+    });
+  });
+
+  function applyObject(reset=false){
+    const objectId=selectedObject();
+    faces.forEach(face=>{
+      const readers=[...face.querySelectorAll('[data-object-reader]')];
+      readers.forEach(objectReader=>{
+        const active=objectReader.dataset.objectReader===objectId;
+        objectReader.hidden=!active;
+        if(active&&reset){
+          const firstTab=objectReader.querySelector('[data-lens-tab]');
+          if(firstTab)activateLens(objectReader,firstTab.dataset.lensTab);
+        }
+      });
+      const activeReader=readers.find(objectReader=>objectReader.dataset.objectReader===objectId);
+      const title=activeReader?.querySelector('h2[id]');
+      if(title)face.setAttribute('aria-labelledby',title.id);
+      if(reset)face.scrollTop=0;
+    });
+    const activeFace=faces.find(face=>face.dataset.readerFace===selectedFace);
+    const activeTitle=activeFace?.querySelector(`[data-object-reader="${objectId}"] h2[id]`);
+    if(activeTitle)reader.setAttribute('aria-labelledby',activeTitle.id);
+  }
+
+  function applyFace(reset=false,focus=false){
+    reader.dataset.face=selectedFace;
+    faces.forEach(face=>{
+      const active=face.dataset.readerFace===selectedFace;
+      face.setAttribute('aria-hidden',active?'false':'true');
+      face.inert=!active;
+      if(active&&reset)face.scrollTop=0;
+      if(active&&focus)requestAnimationFrame(()=>face.focus({preventScroll:true}));
+    });
+    applyObject(reset);
+    writeState('research-frontier-face',selectedFace);
+    updateStatus();
+    applyEvidence();
+  }
+
+  function flipFace(target,focus=true){
+    if(target===selectedFace||bridgeOpen)return;
+    selectedFace=target;
+    applyFace(true,false);
+    requestAnimationFrame(()=>{
+      const active=faces.find(face=>face.dataset.readerFace===selectedFace);
+      if(focus)active?.querySelector('[data-flip-face]')?.focus({preventScroll:true});
+      else active?.focus({preventScroll:true});
+    });
+  }
+
+  function openBridge(){
+    if(!inspecting||bridgeOpen)return;
+    bridgeOpen=true;
+    sharedBridge.hidden=false;
+    reader.dataset.bridgeOpen='true';
+    readerTurn.inert=true;
+    requestAnimationFrame(()=>sharedBridge.querySelector('[data-close-bridge]')?.focus({preventScroll:true}));
+  }
+
+  function closeBridge(){
+    if(!bridgeOpen)return;
+    bridgeOpen=false;
+    sharedBridge.hidden=true;
+    delete reader.dataset.bridgeOpen;
+    readerTurn.inert=false;
+    const active=faces.find(face=>face.dataset.readerFace===selectedFace);
+    requestAnimationFrame(()=>active?.querySelector('[data-open-bridge]')?.focus({preventScroll:true}));
+  }
+
+  function openReader(objectId,lens){
+    if(animating||inspecting)return;
+    const requestedIndex=objectIds.indexOf(objectId);
+    if(requestedIndex>=0){
+      selectedIndex=requestedIndex;
+      angle=-selectedIndex*step;
+      writeState('research-frontier-object',selectedIndex);
+      updateStatus();
+      applyOrbit();
+    }
+    lastFocus=document.activeElement;
+    inspecting=true;
+    reader.hidden=false;
+    document.body.classList.add('rf-reader-open');
+    stage.inert=true;
+    stage.setAttribute('aria-hidden','true');
+    applyFace(true,true);
+    if(lens){
+      const activeFace=faces.find(face=>face.dataset.readerFace===selectedFace);
+      const activeObject=activeFace?.querySelector(`[data-object-reader="${selectedObject()}"]`);
+      if(activeObject)activateLens(activeObject,lens);
+    }
+  }
+
+  function closeReader(){
+    if(!inspecting)return;
+    if(bridgeOpen)closeBridge();
+    inspecting=false;
+    reader.hidden=true;
+    document.body.classList.remove('rf-reader-open');
+    stage.inert=false;
+    stage.removeAttribute('aria-hidden');
+    applyEvidence();
+    const activeCard=cards[selectedIndex];
+    activeCard.scrollIntoView({block:'center',behavior:reduceMotion.matches?'auto':'smooth'});
+    requestAnimationFrame(()=>activeCard.focus({preventScroll:true}));
+    lastFocus=null;
+  }
+
+  cards.forEach((card,index)=>card.addEventListener('click',event=>{
+    if(suppressCardClick){event.preventDefault();suppressCardClick=false;return}
+    if(index===selectedIndex)openReader(card.dataset.object);
+    else rotateCardToFront(index);
+  }));
+  document.querySelectorAll('[data-open-reader]').forEach(control=>control.addEventListener('click',event=>{
+    event.preventDefault();
+    const objectId=control.dataset.openObject||(control.dataset.openLens==='missing'?'missing':selectedObject());
+    openReader(objectId,control.dataset.openLens);
+  }));
+  document.querySelectorAll('[data-return-orbit]').forEach(control=>control.addEventListener('click',closeReader));
+  document.querySelectorAll('[data-flip-face]').forEach(control=>control.addEventListener('click',()=>flipFace(control.dataset.flipFace)));
+  document.querySelectorAll('[data-open-bridge]').forEach(control=>control.addEventListener('click',openBridge));
+  document.querySelector('[data-close-bridge]').addEventListener('click',closeBridge);
+
+  stage.addEventListener('keydown',event=>{
+    if(event.key==='ArrowLeft'){event.preventDefault();rotateOrbit(-1)}
+    else if(event.key==='ArrowRight'){event.preventDefault();rotateOrbit(1)}
+    else if((event.key==='Enter'||event.key===' ')&&event.target===stage){event.preventDefault();openReader(selectedObject())}
+  });
+
+  stage.addEventListener('pointerdown',event=>{
+    if(animating||inspecting||event.button!==0)return;
+    const captureDeferred=Boolean(event.target.closest('[data-orbit-card]'));
+    gesture={id:event.pointerId,x:event.clientX,y:event.clientY,startAngle:angle,axis:null,captureDeferred};
+    stage.dataset.dragging='true';
+    if(!captureDeferred)stage.setPointerCapture?.(event.pointerId);
+  });
+  stage.addEventListener('pointermove',event=>{
+    if(!gesture||gesture.id!==event.pointerId)return;
+    const dx=event.clientX-gesture.x;
+    const dy=event.clientY-gesture.y;
+    if(!gesture.axis&&Math.max(Math.abs(dx),Math.abs(dy))>12)gesture.axis=Math.abs(dx)>Math.abs(dy)*1.15?'horizontal':'vertical';
+    if(gesture.axis!=='horizontal')return;
+    if(gesture.captureDeferred){
+      stage.setPointerCapture?.(event.pointerId);
+      gesture.captureDeferred=false;
+    }
+    event.preventDefault();
+    angle=gesture.startAngle+dx*.34;
+    updateStatus('Carousel under direct control · Evidence recomposing',nearestIndex(angle));
+    applyOrbit();
+  },{passive:false});
+  const finishOrbitGesture=event=>{
+    if(!gesture||gesture.id!==event.pointerId)return;
+    const current=gesture;
+    gesture=null;
+    delete stage.dataset.dragging;
+    const dx=event.clientX-current.x;
+    if(current.axis==='horizontal'){
+      suppressCardClick=Math.abs(dx)>10;
+      setTimeout(()=>{suppressCardClick=false},0);
+      let targetIndex=nearestIndex(angle);
+      if(Math.abs(dx)>=42&&targetIndex===selectedIndex)targetIndex=modulo(selectedIndex+(dx<0?1:-1),cards.length);
+      let target=-targetIndex*step;
+      while(target-angle>180)target-=360;
+      while(angle-target>180)target+=360;
+      animateTo(targetIndex,target,Math.abs(dx)>=42?'Carousel released · Evidence settling':'Carousel restored');
+    }else{
+      angle=-selectedIndex*step;
+      updateStatus();
+      applyOrbit();
+    }
+  };
+  stage.addEventListener('pointerup',finishOrbitGesture);
+  stage.addEventListener('pointercancel',event=>{
+    if(!gesture||gesture.id!==event.pointerId)return;
+    gesture=null;
+    delete stage.dataset.dragging;
+    angle=-selectedIndex*step;
+    updateStatus();
+    applyOrbit();
+  });
+
+  faces.forEach(face=>{
+    let swipe=null;
+    face.addEventListener('pointerdown',event=>{
+      if(face.dataset.readerFace!==selectedFace||event.button!==0||event.target.closest('button,a,input,select,textarea,summary,[role="tab"]'))return;
+      swipe={id:event.pointerId,x:event.clientX,y:event.clientY,axis:null};
+      face.setPointerCapture?.(event.pointerId);
+    });
+    face.addEventListener('pointermove',event=>{
+      if(!swipe||swipe.id!==event.pointerId)return;
+      const dx=event.clientX-swipe.x;
+      const dy=event.clientY-swipe.y;
+      if(!swipe.axis&&Math.max(Math.abs(dx),Math.abs(dy))>12)swipe.axis=Math.abs(dx)>Math.abs(dy)*1.2?'horizontal':'vertical';
+      if(swipe.axis==='horizontal')event.preventDefault();
+    },{passive:false});
+    const finishSwipe=event=>{
+      if(!swipe||swipe.id!==event.pointerId)return;
+      const dx=event.clientX-swipe.x;
+      const horizontal=swipe.axis==='horizontal'&&Math.abs(dx)>=60;
+      swipe=null;
+      if(horizontal)flipFace(selectedFace==='scientific'?'agentic':'scientific',false);
+    };
+    face.addEventListener('pointerup',finishSwipe);
+    face.addEventListener('pointercancel',()=>{swipe=null});
+  });
+
+  document.addEventListener('keydown',event=>{
+    if(event.key!=='Escape'||!inspecting)return;
+    event.preventDefault();
+    if(bridgeOpen)closeBridge();else closeReader();
+  });
+
+  reader.addEventListener('keydown',event=>{
+    if(event.key!=='Tab')return;
+    const scope=bridgeOpen?sharedBridge:faces.find(face=>face.dataset.readerFace===selectedFace);
+    const focusable=[...scope.querySelectorAll('button:not([disabled]),a[href],[tabindex]:not([tabindex="-1"])')].filter(element=>!element.hidden&&!element.closest('[hidden]'));
+    if(!focusable.length)return;
+    const first=focusable[0],last=focusable[focusable.length-1];
+    if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}
+    else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}
+  });
+
+  reduceMotion.addEventListener?.('change',()=>applyOrbit());
+  addEventListener('resize',applyOrbit,{passive:true});
+  applyObject(false);
+  applyFace(false,false);
+  updateStatus();
+  applyOrbit();
+})();
 </script>
 <noscript><p style="position:relative;z-index:3;width:min(calc(100% - 2rem),78rem);margin:1rem auto 3rem;color:#a8b7bd">The research carousel requires JavaScript for state changes. Public evidence and governance boundaries remain available through the linked evidence destinations.</p></noscript>
 </body>

@@ -1,50 +1,77 @@
-const RENDERER_SCHEMA = 'COMPASS_MAIN_HOMEPAGE_CINEMATIC_RENDERER_v1';
+const RENDERER_SCHEMA='COMPASS_MAIN_HOMEPAGE_CINEMATIC_RENDERER_v2';
+const SOURCE=Object.freeze({
+  cosmos:Object.freeze({path:'assets/compass/compass.cosmos.js',blob:'4fe781df1a8876218c6f081b6ec88d5d2d6044c7'}),
+  crystals:Object.freeze({path:'assets/compass/compass.crystals.js',blob:'cd2cbad0494852cc80c51959a6827407d037b8fb'}),
+  homepage:Object.freeze({path:'index.html',blob:'aa476ee5f6e74f56f2415bd8d36edfe1fa7a85ec'}),
+  chapterContract:Object.freeze({path:'.github/ai-router/projects/compass/chapter-one-contextual-delivery-contract.v1.json',blob:'9813c60f8ca9b5f27fccbf44cade7bb08c2f0f2e'})
+});
+const GOLDEN_ANGLE=Math.PI*(3-Math.sqrt(5));
+const FIELD_SEED=0x44474243;
+const NIGHT_COLORS=['255,248,224','154,217,225','234,208,131','170,155,224'];
+const WINGS=['north','east','south','west'];
+const LABELS=Object.freeze({north:'Orientation',east:'Worlds',south:'Instruments',west:'Frontier'});
+const PALETTE=Object.freeze({north:[.72,.88,1],east:[.56,.92,1],south:[1,.82,.48],west:[.96,.68,.46]});
+const SPHERE=Object.freeze({horizontalRadius:1.50,verticalRadius:1.34,depthRadius:1.16,primaryAnchor:[0,.625,.78],vectors:Object.freeze({north:[0,1,0],east:[1,0,0],south:[0,-1,0],west:[-1,0,0]})});
+const MATERIAL=Object.freeze({idle:Object.freeze({specular:1.18,rim:1.02,emissive:.17,alpha:.90,sparkle:.26,halo:.82,contrast:1.16}),focused:Object.freeze({specular:1.50,rim:1.30,emissive:.24,alpha:.96,sparkle:.36,halo:1.18,contrast:1.24})});
 
-export function createCinematicRenderer({ stage, media }) {
-  if (!(stage instanceof HTMLElement)) throw new Error('CINEMATIC_STAGE_MISSING');
-  if (media?.schema !== 'COMPASS_MAIN_HOMEPAGE_CINEMATIC_MEDIA_MANIFEST_v1') throw new Error('CINEMATIC_MEDIA_INVALID');
+const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+const mix=(a,b,t)=>a+(b-a)*t;
+const smooth=(a,b,v)=>{const t=clamp((v-a)/(b-a));return t*t*(3-2*t);};
+const make=(tag,className,text='')=>{const n=document.createElement(tag);if(className)n.className=className;if(text)n.textContent=text;return n;};
+function randomFactory(seed){let value=seed>>>0;return()=>{value+=0x6d2b79f5;let r=value;r=Math.imul(r^(r>>>15),r|1);r^=r+Math.imul(r^(r>>>7),r|61);return((r^(r>>>14))>>>0)/4294967296;};}
+function normalize(v){const l=Math.hypot(...v)||1;return v.map(x=>x/l);}
+function dot(a,b){return a[0]*b[0]+a[1]*b[1]+a[2]*b[2];}
+function cross(a,b){return[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];}
+function subtract(a,b){return[a[0]-b[0],a[1]-b[1],a[2]-b[2]];}
+function qNormalize(q){const l=Math.hypot(...q)||1;return q.map(x=>x/l);}
+function qConjugate(q){return[-q[0],-q[1],-q[2],q[3]];}
+function qMultiplyRaw(a,b){return[a[3]*b[0]+a[0]*b[3]+a[1]*b[2]-a[2]*b[1],a[3]*b[1]-a[0]*b[2]+a[1]*b[3]+a[2]*b[0],a[3]*b[2]+a[0]*b[1]-a[1]*b[0]+a[2]*b[3],a[3]*b[3]-a[0]*b[0]-a[1]*b[1]-a[2]*b[2]];}
+function qRotate(q,v){const pure=[v[0],v[1],v[2],0],r=qMultiplyRaw(qMultiplyRaw(qNormalize(q),pure),qConjugate(qNormalize(q)));return[r[0],r[1],r[2]];}
+function qFromUnitVectors(fromValue,toValue){const from=normalize(fromValue),to=normalize(toValue),cosine=clamp(dot(from,to),-1,1);if(cosine>.999999)return[0,0,0,1];if(cosine<-.999999){let axis=cross([1,0,0],from);if(Math.hypot(...axis)<1e-6)axis=cross([0,1,0],from);axis=normalize(axis);return[axis[0],axis[1],axis[2],0];}const axis=cross(from,to);return qNormalize([axis[0],axis[1],axis[2],1+cosine]);}
+function qSlerp(aValue,bValue,t){const a=qNormalize(aValue);let b=qNormalize(bValue);let cosine=a.reduce((s,x,i)=>s+x*b[i],0);if(cosine<0){b=b.map(x=>-x);cosine=-cosine;}if(cosine>.9995)return qNormalize(a.map((x,i)=>mix(x,b[i],t)));const theta=Math.acos(clamp(cosine,-1,1)),sinTheta=Math.sin(theta);const wa=Math.sin((1-t)*theta)/sinTheta,wb=Math.sin(t*theta)/sinTheta;return qNormalize(a.map((x,i)=>x*wa+b[i]*wb));}
+function rotatePoint(p,rx,ry,rz){let[x,y,z]=p;let c=Math.cos(rx),s=Math.sin(rx);[y,z]=[y*c-z*s,y*s+z*c];c=Math.cos(ry);s=Math.sin(ry);[x,z]=[x*c+z*s,-x*s+z*c];c=Math.cos(rz);s=Math.sin(rz);[x,y]=[x*c-y*s,x*s+y*c];return[x,y,z];}
 
-  let root = null;
-  let disposed = false;
-  let lastShot = null;
+function buildDiamondStarMesh(){
+  const points=8,radius=.72,inner=.30,depth=.42,crown=.20,vertices=[],faces=[];
+  const add=p=>(vertices.push(p),vertices.length-1),face=(a,b,c)=>faces.push([a,b,c]);
+  const frontApex=add([0,0,depth]),rearApex=add([0,0,-depth]),frontCrown=add([0,0,depth+crown]),rearCrown=add([0,0,-depth-crown*.72]);
+  const outer=[],innerRing=[],frontBevel=[],rearBevel=[];
+  for(let i=0;i<points*2;i++){const isPoint=i%2===0,angle=Math.PI*2*i/(points*2)-Math.PI/2,activeRadius=isPoint?radius:inner,yScale=.78,ridge=isPoint?.05:-.02;outer.push(add([Math.cos(angle)*activeRadius,Math.sin(angle)*activeRadius*yScale,ridge]));innerRing.push(add([Math.cos(angle)*activeRadius*.38,Math.sin(angle)*activeRadius*yScale*.38,depth*.14]));frontBevel.push(add([Math.cos(angle)*activeRadius*.72,Math.sin(angle)*activeRadius*yScale*.72,depth*.52]));rearBevel.push(add([Math.cos(angle)*activeRadius*.68,Math.sin(angle)*activeRadius*yScale*.68,-depth*.48]));}
+  for(let i=0;i<outer.length;i++){const next=(i+1)%outer.length;face(frontApex,innerRing[i],innerRing[next]);face(frontCrown,frontBevel[next],frontBevel[i]);face(frontBevel[i],outer[i],outer[next]);face(frontBevel[i],outer[next],frontBevel[next]);face(innerRing[i],frontBevel[i],frontBevel[next]);face(innerRing[i],frontBevel[next],innerRing[next]);face(rearApex,rearBevel[next],rearBevel[i]);face(rearCrown,rearBevel[i],rearBevel[next]);face(rearBevel[i],outer[next],outer[i]);face(rearBevel[i],rearBevel[next],outer[next]);}
+  return Object.freeze({vertices:Object.freeze(vertices.map(Object.freeze)),faces:Object.freeze(faces.map(Object.freeze))});
+}
+const DIAMOND_MESH=buildDiamondStarMesh();
 
-  function mount() {
-    if (disposed) throw new Error('CINEMATIC_RENDERER_DISPOSED');
-    if (root) return root;
-    root = document.createElement('div');
-    root.className = 'compass-orientation-cinematic__render-root';
-    root.dataset.rendererSchema = RENDERER_SCHEMA;
-    root.setAttribute('aria-hidden', 'true');
-    root.innerHTML = '<div class="compass-orientation-cinematic__page-night"></div><div class="compass-orientation-cinematic__shot-plane" data-cinematic-shot-plane></div>';
-    stage.prepend(root);
-    return root;
-  }
+function colorCss(rgb,alpha=1){return`rgba(${Math.round(rgb[0]*255)},${Math.round(rgb[1]*255)},${Math.round(rgb[2]*255)},${alpha})`;}
+function drawCrystal(ctx,cx,cy,scale,color,rotation,material,depthScore,primary){
+  const haloRadius=scale*(1.15+material.halo*.3),halo=ctx.createRadialGradient(cx,cy,0,cx,cy,haloRadius);halo.addColorStop(0,colorCss(color,.10*material.halo*(.6+primary*.4)));halo.addColorStop(.48,colorCss(color,.045*material.halo));halo.addColorStop(1,colorCss(color,0));ctx.fillStyle=halo;ctx.beginPath();ctx.arc(cx,cy,haloRadius,0,Math.PI*2);ctx.fill();
+  const points=DIAMOND_MESH.vertices.map(p=>{const r=rotatePoint(p,rotation*.53,rotation,rotation*.19),perspective=1/(1-r[2]*.20);return{x:cx+r[0]*scale*perspective,y:cy+r[1]*scale*perspective,z:r[2],raw:r};});
+  const key=normalize([-.45,.72,.53]);
+  const rendered=DIAMOND_MESH.faces.map((f,faceIndex)=>{const a=points[f[0]],b=points[f[1]],c=points[f[2]],normal=normalize(cross(subtract(b.raw,a.raw),subtract(c.raw,a.raw))),front=Math.max(0,dot(normal,key)),camera=Math.max(0,normal[2]),lift=.84+(faceIndex%7)*.034+(faceIndex%5===0?.13:0),light=.34+front*.56+camera*.18+material.emissive*.22,spark=(faceIndex%11===0?material.sparkle*.12:0);return{f,faceIndex,z:(a.z+b.z+c.z)/3,fill:color.map(v=>clamp(v*lift*light+spark,0,1)),alpha:material.alpha*(.68+depthScore*.26)};}).sort((a,b)=>a.z-b.z);
+  for(const item of rendered){const [a,b,c]=item.f.map(i=>points[i]);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.lineTo(c.x,c.y);ctx.closePath();ctx.fillStyle=colorCss(item.fill,item.alpha);ctx.fill();ctx.strokeStyle=colorCss(color,.08+primary*.08);ctx.lineWidth=Math.max(.5,scale*.004);ctx.stroke();}
+  ctx.save();ctx.globalCompositeOperation='screen';const gleam=ctx.createLinearGradient(cx-scale*.45,cy-scale*.4,cx+scale*.45,cy+scale*.4);gleam.addColorStop(0,'rgba(255,255,255,0)');gleam.addColorStop(.46,`rgba(255,250,226,${.06+material.specular*.035})`);gleam.addColorStop(.53,`rgba(255,255,255,${.12+primary*.08})`);gleam.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=gleam;ctx.beginPath();ctx.ellipse(cx,cy,scale*.42,scale*.64,-.72,0,Math.PI*2);ctx.fill();ctx.restore();
+}
 
-  function renderFrame(frame) {
-    if (disposed) return;
-    const host = mount();
-    const shot = frame?.shot;
-    if (!shot) return;
-    host.dataset.shotId = shot.id;
-    host.style.setProperty('--cinematic-elapsed', String(frame.elapsedMs ?? 0));
-    host.style.setProperty('--cinematic-shot-progress', String(frame.shotProgress ?? 0));
-    if (lastShot !== shot.id) {
-      lastShot = shot.id;
-      const plane = host.querySelector('[data-cinematic-shot-plane]');
-      if (plane) plane.dataset.shotId = shot.id;
-    }
-  }
+function buildArrival(){const s=make('section','compass-cinematic-shot compass-cinematic-shot--arrival');s.dataset.scene='S01';const identity=make('div','cinematic-arrival__identity');identity.append(make('p','cinematic-arrival__kicker','Diamond Gate Bridge'),make('h2','cinematic-arrival__title','DIAMOND GATE BRIDGE'),make('p','cinematic-arrival__studio','Independent Interactive Experience & Research Studio'),make('p','cinematic-arrival__cue','Find Your Way'));s.append(identity);return s;}
+function buildOrientation(){const s=make('section','compass-cinematic-shot compass-cinematic-shot--orientation');s.dataset.scene='S02';const canvas=make('canvas','cinematic-constellation__canvas');canvas.setAttribute('aria-hidden','true');const welcome=make('p','cinematic-constellation__welcome','Welcome to the Compass.');const labels=make('div','cinematic-constellation__labels');for(const wing of WINGS){const n=make('span','cinematic-constellation__label',LABELS[wing]);n.dataset.wing=wing;labels.append(n);}s.append(canvas,welcome,labels);return s;}
+function buildChapter(){const s=make('section','compass-cinematic-shot compass-cinematic-shot--chapter');s.dataset.scene='S03';const plane=make('article','cinematic-chapter');plane.innerHTML=`<div class="cinematic-chapter__film-plane" aria-hidden="true"><span>CHAPTER ONE</span><i></i><b>INTRODUCTION</b></div><div class="cinematic-chapter__tabs" aria-hidden="true"><span class="is-active">INTRODUCTION</span><span>THE STUDIO</span><span>HOW THE ESTATE WORKS</span><span>ABOUT</span><span>COMMUNITY</span><span>MEET SEAN</span></div><div class="cinematic-chapter__panel"><p class="cinematic-chapter__eyebrow">CHAPTER ONE</p><h2>Introduction</h2><p>For thousands of years, people have searched for better ways to understand themselves, each other, and the systems they inhabit.</p><span class="cinematic-chapter__threshold">Continue the threshold</span></div>`;s.append(plane);return s;}
 
-  function dispose() {
-    if (disposed) return;
-    disposed = true;
-    root?.remove();
-    root = null;
-  }
+function createNight(root){const canvas=make('canvas','compass-orientation-cinematic__page-night');canvas.setAttribute('aria-hidden','true');root.append(canvas);return{canvas,ctx:canvas.getContext('2d',{alpha:true}),stars:[],width:0,height:0,dpr:1};}
+function resizeNight(night){const width=Math.max(320,innerWidth||320),height=Math.max(480,innerHeight||480),dpr=Math.min(devicePixelRatio||1,width<=820?1:1.25);if(night.width===width&&night.height===height&&night.dpr===dpr)return;night.width=width;night.height=height;night.dpr=dpr;night.canvas.width=Math.round(width*dpr);night.canvas.height=Math.round(height*dpr);night.canvas.style.width=`${width}px`;night.canvas.style.height=`${height}px`;night.ctx.setTransform(dpr,0,0,dpr,0,0);const count=clamp(Math.round(width*height/7200),96,210),random=randomFactory(FIELD_SEED^width^(height<<7));night.stars=[];for(let i=0;i<count;i++){const radius=Math.sqrt((i+.5)/count),angle=i*GOLDEN_ANGLE+(random()-.5)*.12,x=clamp(.5+Math.cos(angle)*radius*.71+(random()-.5)*.026,.012,.988),y=clamp(.46+Math.sin(angle)*radius*.60+(random()-.5)*.026,.012,.988);night.stars.push({x,y,radius:.45+random()*1.35,alpha:.23+random()*.56,color:NIGHT_COLORS[Math.floor(random()*NIGHT_COLORS.length)],phase:random()*Math.PI*2});}}
+function renderNight(night,elapsedMs,shotId,shotProgress){resizeNight(night);const ctx=night.ctx,w=night.width,h=night.height,arrival=shotId==='S01',zoom=arrival?1+.075*smooth(0,1,shotProgress):1.075;ctx.clearRect(0,0,w,h);for(const star of night.stars){const x=(star.x-.5)*w*zoom+w*.5,y=(star.y-.46)*h*zoom+h*.46,pulse=1+Math.sin(elapsedMs*.0012+star.phase)*.07,alpha=star.alpha*(arrival?mix(.52,1,smooth(0,.4,shotProgress)):1);ctx.beginPath();ctx.arc(x,y,star.radius*pulse,0,Math.PI*2);ctx.fillStyle=`rgba(${star.color},${alpha})`;ctx.shadowColor=`rgba(${star.color},${alpha*.65})`;ctx.shadowBlur=star.radius*4;ctx.fill();ctx.shadowBlur=0;}}
 
-  function inspect() {
-    return Object.freeze({ schema: RENDERER_SCHEMA, mounted: Boolean(root), disposed, shotId: lastShot });
-  }
+function renderArrival(scene,p){const identity=scene.querySelector('.cinematic-arrival__identity'),title=scene.querySelector('.cinematic-arrival__title'),kicker=scene.querySelector('.cinematic-arrival__kicker'),studio=scene.querySelector('.cinematic-arrival__studio'),cue=scene.querySelector('.cinematic-arrival__cue');const enter=smooth(.06,.22,p),titleHold=1-smooth(.83,1,p),studioIn=smooth(.48,.66,p),cueIn=smooth(.80,.94,p);scene.style.opacity=String(Math.min(enter,titleHold+.15));identity.style.transform=`translate3d(0,${mix(18,-7,enter)}px,0) scale(${mix(.965,1.025,p)})`;title.style.opacity=String(enter*titleHold);kicker.style.opacity=String(smooth(.02,.16,p)*titleHold);studio.style.opacity=String(studioIn*(1-smooth(.88,1,p)));cue.style.opacity=String(cueIn);}
+function constellationFrame(p){const anchor=normalize(SPHERE.primaryAnchor),qNorth=qFromUnitVectors(SPHERE.vectors.north,anchor),qEast=qFromUnitVectors(SPHERE.vectors.east,anchor),turn=smooth(.24,.66,p),q=qSlerp(qNorth,qEast,turn);return{q,foreground:turn<.52?'north':'east'};}
+function renderOrientation(scene,p,elapsedMs){const canvas=scene.querySelector('canvas'),rect=scene.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,1.5);if(canvas.width!==Math.round(rect.width*dpr)||canvas.height!==Math.round(rect.height*dpr)){canvas.width=Math.max(1,Math.round(rect.width*dpr));canvas.height=Math.max(1,Math.round(rect.height*dpr));}const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,rect.width,rect.height);const {q,foreground}=constellationFrame(p),positions=[];for(const wing of WINGS){const unit=qRotate(q,SPHERE.vectors[wing]),x=unit[0]*SPHERE.horizontalRadius,y=unit[1]*SPHERE.verticalRadius,z=unit[2]*SPHERE.depthRadius,depth=(unit[2]+1)/2,primary=clamp((dot(unit,normalize(SPHERE.primaryAnchor))+1)/2),perspective=.78+depth*.38,cx=rect.width*.5+x*rect.width*.155*perspective,cy=rect.height*.50-y*rect.height*.18*perspective,focused=wing===foreground,scale=Math.min(rect.width,rect.height)*.13*perspective*(focused?1.24:.88),material=focused?MATERIAL.focused:MATERIAL.idle;positions.push({wing,cx,cy,z,depth,primary,scale,material});}positions.sort((a,b)=>a.z-b.z);for(const item of positions)drawCrystal(ctx,item.cx,item.cy,item.scale,PALETTE[item.wing],elapsedMs*.00016+(WINGS.indexOf(item.wing)*1.37+.22),item.material,item.depth,item.primary);const labels=[...scene.querySelectorAll('.cinematic-constellation__label')];for(const label of labels){const pos=positions.find(x=>x.wing===label.dataset.wing);label.style.left=`${pos.cx}px`;label.style.top=`${pos.cy+pos.scale*.78}px`;label.dataset.foreground=String(label.dataset.wing===foreground);label.style.opacity=label.dataset.wing===foreground?String(smooth(.08,.22,p)):'0.08';}const welcome=scene.querySelector('.cinematic-constellation__welcome');welcome.style.opacity=String(smooth(.02,.18,p)*(1-smooth(.82,1,p)));scene.style.opacity=String(smooth(.01,.12,p)*(1-smooth(.88,1,p)));}
+function renderChapter(scene,p){const plane=scene.querySelector('.cinematic-chapter'),film=scene.querySelector('.cinematic-chapter__film-plane'),tabs=scene.querySelector('.cinematic-chapter__tabs'),panel=scene.querySelector('.cinematic-chapter__panel');const enter=smooth(.02,.18,p),legible=smooth(.32,.52,p),exit=smooth(.86,1,p);scene.style.opacity=String(enter*(1-exit*.9));plane.style.transform=`perspective(1200px) rotateY(${mix(-7,0,enter)}deg) rotateX(${mix(2.4,0,enter)}deg) translate3d(${mix(34,-18*exit,enter)}px,${mix(16,-3,enter)}px,0) scale(${mix(.94,1,enter)})`;film.style.opacity=String(enter);tabs.style.opacity=String(smooth(.15,.34,p));panel.style.opacity=String(legible);panel.style.transform=`translate3d(0,${mix(18,0,legible)}px,0)`;}
 
-  return Object.freeze({ schema: RENDERER_SCHEMA, mount, renderFrame, dispose, inspect });
+export function createCinematicRenderer({stage,media}){
+  if(!(stage instanceof HTMLElement))throw new Error('CINEMATIC_STAGE_MISSING');
+  if(media?.schema!=='COMPASS_MAIN_HOMEPAGE_CINEMATIC_MEDIA_MANIFEST_v1')throw new Error('CINEMATIC_MEDIA_INVALID');
+  let root=null,night=null,disposed=false,lastShot=null;
+  function mount(){if(disposed)throw new Error('CINEMATIC_RENDERER_DISPOSED');if(root)return root;root=make('div','compass-orientation-cinematic__render-root');root.dataset.rendererSchema=RENDERER_SCHEMA;root.dataset.sourceCosmosBlob=SOURCE.cosmos.blob;root.dataset.sourceCrystalsBlob=SOURCE.crystals.blob;root.dataset.sourceHomepageBlob=SOURCE.homepage.blob;root.setAttribute('aria-hidden','true');night=createNight(root);root.append(buildArrival(),buildOrientation(),buildChapter());stage.prepend(root);return root;}
+  function renderFrame(frame){if(disposed)return;const host=mount(),shot=frame?.shot;if(!shot)return;lastShot=shot.id;host.dataset.shotId=shot.id;renderNight(night,frame.elapsedMs,shot.id,frame.shotProgress);for(const el of host.querySelectorAll('.compass-cinematic-shot'))el.style.pointerEvents='none';if(shot.id==='S01')renderArrival(host.querySelector('[data-scene="S01"]'),frame.shotProgress);else if(shot.id==='S02')renderOrientation(host.querySelector('[data-scene="S02"]'),frame.shotProgress,frame.elapsedMs);else if(shot.id==='S03')renderChapter(host.querySelector('[data-scene="S03"]'),frame.shotProgress);for(const scene of host.querySelectorAll('.compass-cinematic-shot'))if(scene.dataset.scene!==shot.id&&['S01','S02','S03'].includes(scene.dataset.scene))scene.style.opacity='0';}
+  function dispose(){if(disposed)return;disposed=true;root?.remove();root=null;night=null;}
+  function inspect(){return Object.freeze({schema:RENDERER_SCHEMA,mounted:Boolean(root),disposed,shotId:lastShot,sourceBindings:SOURCE});}
+  return Object.freeze({schema:RENDERER_SCHEMA,mount,renderFrame,dispose,inspect});
 }

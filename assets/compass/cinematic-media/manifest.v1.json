@@ -1,11 +1,36 @@
 {
   "schema": "COMPASS_MAIN_HOMEPAGE_CINEMATIC_MEDIA_CUSTODY_v1",
-  "status": "SHELL_ONLY_NO_MEDIA_ACQUIRED",
+  "status": "PARTIAL_CONSTRUCTION_S01_S03_SOURCE_BOUND",
   "sourceMain": "46c56e0519fc875eac877b4bc921e3151b019a2f",
   "specificationCommit": "88473442959299d6f6af82396917f0578074cab2",
   "film": "Welcome to Diamond Gate Bridge",
   "masterDurationMs": 38000,
   "shotCount": 8,
-  "media": [],
+  "binaryMedia": [],
+  "sourceReconstructions": [
+    {
+      "shot": "S01",
+      "sources": [
+        {"path": "assets/compass/compass.cosmos.js", "blob": "4fe781df1a8876218c6f081b6ec88d5d2d6044c7"},
+        {"path": "index.html", "blob": "aa476ee5f6e74f56f2415bd8d36edfe1fa7a85ec"}
+      ],
+      "method": "RECONSTRUCT_NATIVE_FIBONACCI_PAGE_NIGHT_AND_EXACT_HOMEPAGE_IDENTITY"
+    },
+    {
+      "shot": "S02",
+      "sources": [
+        {"path": "assets/compass/compass.crystals.js", "blob": "cd2cbad0494852cc80c51959a6827407d037b8fb"}
+      ],
+      "method": "ISOLATED_READ_ONLY_RECONSTRUCTION_OF_CARDINAL_DIAMOND_GEOMETRY_MATERIAL_PALETTE_SPHERE_AND_FOREGROUND_RULE"
+    },
+    {
+      "shot": "S03",
+      "sources": [
+        {"path": "index.html", "blob": "aa476ee5f6e74f56f2415bd8d36edfe1fa7a85ec"},
+        {"path": ".github/ai-router/projects/compass/chapter-one-contextual-delivery-contract.v1.json", "blob": "9813c60f8ca9b5f27fccbf44cade7bb08c2f0f2e"}
+      ],
+      "method": "RECONSTRUCT_ACTUAL_CHAPTER_ONE_TAB_FAMILY_INTRODUCTION_PANEL_AND_EXACT_APPROVED_COPY"
+    }
+  ],
   "rule": "REPOSITORY_NATIVE_SOURCE_OBJECTS_ONLY_NO_GENERIC_SUBSTITUTE_IMAGERY"
 }

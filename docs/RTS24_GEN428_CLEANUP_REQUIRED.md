@@ -1,0 +1,1 @@
+Temporary planning-marker files added during takeover should not remain in the final PR. Retain only the controlling handoff, anti-churn protocol, source-binding receipt/status/search log, room recovery rule, progress marker, execution boundary, and no-result claim boundary.

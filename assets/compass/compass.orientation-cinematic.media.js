@@ -1,14 +1,27 @@
-(()=>{
-'use strict';
-const cues=Object.freeze([
-Object.freeze({key:'arrival',renderer:'ARRIVAL',start:0,end:4500,authority:'CINEMATIC_NATIVE'}),
-Object.freeze({key:'orientation',renderer:'ORIENTATION',start:4500,end:9500,authority:'COMPASS'}),
-Object.freeze({key:'chapter-one',renderer:'CHAPTER_ONE',start:9500,end:14500,authority:'CHAPTER_ONE'}),
-Object.freeze({key:'choice-readiness',renderer:'CHOICE_READINESS',start:14500,end:19500,authority:'READINESS_CAPABILITY'}),
-Object.freeze({key:'threshold',renderer:'THRESHOLD',start:19500,end:27000,authority:'MIRRORLAND_21_PANE'}),
-Object.freeze({key:'elsewhere',renderer:'ELSEWHERE',start:27000,end:33000,authority:'AUDRALIA_ESTABLISHED_WORLD_SOURCE'}),
-Object.freeze({key:'return-handoff',renderer:'RETURN_HANDOFF',start:33000,end:38000,authority:'LIVE_COMPASS_HANDOFF'})]);
-const sources=Object.freeze({mirrorlandGeometry:'/assets/shared/mirrorland-window.geometry.js?v=canonical',audraliaWorld:'/products/archcoin/index.planet.source.js?v=about-precedent',renderer:'/assets/compass/compass.orientation-cinematic.render.js?v=about-differential-repair-3'});
-function matchesScenes(scenes){return Array.isArray(scenes)&&scenes.length===cues.length&&cues.every((c,i)=>{const s=scenes[i];return s&&s.key===c.key&&s.renderer===c.renderer&&s.start===c.start&&s.end===c.end;});}
-Object.defineProperty(window,'DGB_COMPASS_CINEMATIC_MEDIA',{value:Object.freeze({version:'1.0.0-definitive-successor',ready:true,durationMs:38000,cues,sources,derivedMediaRequired:false,matchesScenes}),configurable:true});
-})();
+export const CINEMATIC_MEDIA_MANIFEST = Object.freeze({
+  schema: 'COMPASS_MAIN_HOMEPAGE_CINEMATIC_MEDIA_MANIFEST_v1',
+  version: 'shell-20260904-001',
+  sourceMain: '46c56e0519fc875eac877b4bc921e3151b019a2f',
+  specificationCommit: '88473442959299d6f6af82396917f0578074cab2',
+  status: 'SHELL_ONLY_NO_MEDIA_ACQUIRED',
+  persistentField: 'REPOSITORY_NATIVE_PAGE_NIGHT_PENDING_BINDING',
+  shots: Object.freeze([
+    Object.freeze({ id: 'S01', beat: 'Arrival', startMs: 0, endMs: 4500, status: 'SOURCE_BOUND_MEDIA_NOT_YET_ACQUIRED' }),
+    Object.freeze({ id: 'S02', beat: 'Orientation', startMs: 4500, endMs: 9500, status: 'SOURCE_BOUND_MEDIA_NOT_YET_ACQUIRED' }),
+    Object.freeze({ id: 'S03', beat: 'Chapter One', startMs: 9500, endMs: 14500, status: 'SOURCE_BOUND_MEDIA_NOT_YET_ACQUIRED' }),
+    Object.freeze({ id: 'S04', beat: 'Choice / Readiness', startMs: 14500, endMs: 19500, status: 'SOURCE_BOUND_MEDIA_NOT_YET_ACQUIRED' }),
+    Object.freeze({ id: 'S05', beat: 'Threshold', startMs: 19500, endMs: 25500, status: 'SOURCE_BOUND_MEDIA_NOT_YET_ACQUIRED' }),
+    Object.freeze({ id: 'S06', beat: 'Elsewhere', startMs: 25500, endMs: 30500, status: 'SOURCE_BOUND_MEDIA_NOT_YET_ACQUIRED' }),
+    Object.freeze({ id: 'S07', beat: 'Breadth / Engagement', startMs: 30500, endMs: 34000, status: 'SOURCE_BOUND_MEDIA_NOT_YET_ACQUIRED' }),
+    Object.freeze({ id: 'S08', beat: 'Return / Handoff', startMs: 34000, endMs: 38000, status: 'SOURCE_BOUND_MEDIA_NOT_YET_ACQUIRED' })
+  ])
+});
+
+export function assertCinematicMediaManifest(manifest = CINEMATIC_MEDIA_MANIFEST) {
+  if (manifest?.schema !== 'COMPASS_MAIN_HOMEPAGE_CINEMATIC_MEDIA_MANIFEST_v1') throw new Error('CINEMATIC_MEDIA_SCHEMA_MISMATCH');
+  if (manifest?.sourceMain !== '46c56e0519fc875eac877b4bc921e3151b019a2f') throw new Error('CINEMATIC_MEDIA_BASE_MISMATCH');
+  if (manifest?.specificationCommit !== '88473442959299d6f6af82396917f0578074cab2') throw new Error('CINEMATIC_MEDIA_SPEC_MISMATCH');
+  if (!Array.isArray(manifest?.shots) || manifest.shots.length !== 8) throw new Error('CINEMATIC_MEDIA_SHOT_COUNT_MISMATCH');
+  if (manifest.shots[0]?.startMs !== 0 || manifest.shots.at(-1)?.endMs !== 38000) throw new Error('CINEMATIC_MEDIA_TIMELINE_MISMATCH');
+  return true;
+}

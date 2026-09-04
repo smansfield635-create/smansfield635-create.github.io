@@ -1,0 +1,11 @@
+{
+  "schema": "COMPASS_MAIN_HOMEPAGE_CINEMATIC_MEDIA_CUSTODY_v1",
+  "status": "SHELL_ONLY_NO_MEDIA_ACQUIRED",
+  "sourceMain": "46c56e0519fc875eac877b4bc921e3151b019a2f",
+  "specificationCommit": "88473442959299d6f6af82396917f0578074cab2",
+  "film": "Welcome to Diamond Gate Bridge",
+  "masterDurationMs": 38000,
+  "shotCount": 8,
+  "media": [],
+  "rule": "REPOSITORY_NATIVE_SOURCE_OBJECTS_ONLY_NO_GENERIC_SUBSTITUTE_IMAGERY"
+}

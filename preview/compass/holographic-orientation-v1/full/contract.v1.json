@@ -112,7 +112,8 @@
     "focusedVisualSmokeReview": {
       "status": "PASS_FOCUSED",
       "scope": "NONINTERACTIVE_CINEMATIC_VISUAL_AND_CONTROL_SMOKE",
-      "candidateHeadBeforeReceiptCommit": "bf54eba497a7681ae34cd8fe2e978ee25380beaf",
+      "rendererCandidateHead": "9018c16e8472f92509736090f2d7c1e3e5e409d1",
+      "verifierCandidateHead": "bf54eba497a7681ae34cd8fe2e978ee25380beaf",
       "viewports": [[320,480],[390,844],[1024,768],[1440,900]],
       "buildResponsiveFit": "PASS",
       "trophyNameplateFit": "PASS",

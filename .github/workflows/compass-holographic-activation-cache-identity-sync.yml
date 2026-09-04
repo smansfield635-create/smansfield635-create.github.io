@@ -1,0 +1,64 @@
+name: Compass Holographic Activation Cache Identity Sync
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+    paths:
+      - 'assets/compass/compass.orientation-cinematic.js'
+      - 'assets/compass/compass.orientation-cinematic.css'
+      - 'index.html'
+      - '.github/workflows/compass-holographic-activation-cache-identity-sync.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: compass-holographic-activation-cache-identity-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'production/compass-holographic-orientation-activation-20260904'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact activation branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run canonical bounded cache identity sync
+        shell: bash
+        env:
+          CACHE_IDENTITY_BASE: ${{ github.event.pull_request.base.sha }}
+          CACHE_IDENTITY_SCOPE: assets/compass/compass.orientation-cinematic.js,assets/compass/compass.orientation-cinematic.css,index.html
+        run: |
+          set -euo pipefail
+          export CACHE_IDENTITY_HEAD="$(git rev-parse HEAD)"
+          node .github/ai-router/platform/post-merge-cache-identity-sync.v1.mjs
+          changed="$(git diff --name-only)"
+          if [ -n "$changed" ] && [ "$changed" != "index.html" ]; then
+            echo "Unexpected cache-identity mutation: $changed" >&2
+            exit 1
+          fi
+          grep -Eq 'compass\.orientation-cinematic\.css[^"'"']*[?&]cb=[0-9a-f]{16}' index.html
+          grep -Eq 'compass\.orientation-cinematic\.js[^"'"']*[?&]cb=[0-9a-f]{16}' index.html
+      - name: Commit generated identity binding when needed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- index.html; then
+            echo 'CACHE_IDENTITY_ALREADY_CURRENT'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m '[cache-identity-sync] Bind holographic cinematic asset identities'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}

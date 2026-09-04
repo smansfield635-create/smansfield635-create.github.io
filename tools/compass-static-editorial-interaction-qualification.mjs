@@ -8,7 +8,15 @@ const browser=await chromium.launch({headless:true});
 const context=await browser.newContext({viewport:{width:900,height:1000},hasTouch:true});
 const page=await context.newPage();
 const errors=[];page.on('pageerror',e=>errors.push(String(e)));
-await page.goto(base,{waitUntil:'networkidle'});await page.waitForTimeout(1400);
+await page.goto(base,{waitUntil:'networkidle'});await page.waitForTimeout(500);
+const cinematic=page.locator('[data-main-orientation-film]').first();
+if(await cinematic.count()===1&&await cinematic.isVisible()){
+  const skip=cinematic.locator('[data-main-orientation-skip],button:has-text("Skip")').first();
+  if(await skip.count()!==1)throw new Error('cinematic Skip control missing');
+  await skip.click();
+  await page.waitForFunction(()=>{const el=document.querySelector('[data-main-orientation-film]');return !el||getComputedStyle(el).display==='none'||getComputedStyle(el).visibility==='hidden'||Number(getComputedStyle(el).opacity)<=0.01;},{timeout:7000});
+}
+await page.waitForTimeout(900);
 
 const snapshot=async()=>page.evaluate(()=>{
   const box=e=>{const r=e.getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height,cx:r.x+r.width/2}};
@@ -77,6 +85,7 @@ if(errors.length)throw new Error(`browser errors ${errors.join(' | ')}`);
 
 console.log(JSON.stringify({
   result:'COMPASS_VISIBLE_DELTA_PREMERGE_PASS',
+  cinematicSettlement:'SKIP_BEFORE_TRACK_A_INTERACTION',
   tablet:{policy:initial.tabletContextPolicy||'LEGACY_CENTERED',requiredSceneCenterError:requiredTabletSceneCenterError,tolerance:TABLET_SCENE_CENTER_TOLERANCE,afterSceneCenterError:initial.sceneCenterError,sceneCenterDrift,headerCenterError:initial.headerCenterError},
   constellation:{outgoing:released.before.focus,settled:settled.focus,incomingVisible:settled.visible[0],soleReadableCount:settled.visible.length,primary:settled.primary[0],phase:settled.phase,labelBinding:settled.labelBinding}
 },null,2));

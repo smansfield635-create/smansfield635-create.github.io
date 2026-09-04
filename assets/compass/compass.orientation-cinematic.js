@@ -2,7 +2,7 @@
 'use strict';
 
 const BUILD=Object.freeze({
-  version:'homepage-cinematic-shell-20260904-003',
+  version:'homepage-cinematic-shell-20260904-004',
   sourceMain:'46c56e0519fc875eac877b4bc921e3151b019a2f',
   specificationCommit:'88473442959299d6f6af82396917f0578074cab2',
   mutationClass:'BOUNDED_PAGE_RELEASE'
@@ -12,6 +12,7 @@ const MASTER_DURATION_MS=38000;
 const NATURAL_HANDOFF_FADE_START_MS=37540;
 const NATURAL_HANDOFF_FADE_MS=460;
 const PREVIEW_PARAM='compassCinematicConstruction';
+const LIVE_HOUSE_SOURCE_PATH='/assets/compass/compass.house-scene.js';
 const SHOTS=Object.freeze([
   Object.freeze({id:'S01',beat:'Arrival',purpose:'Enter Diamond Gate Bridge',startMs:0,endMs:4500}),
   Object.freeze({id:'S02',beat:'Orientation',purpose:'Establish how the estate is navigated',startMs:4500,endMs:9500}),
@@ -26,6 +27,60 @@ const $=(selector,root=document)=>root.querySelector(selector);
 const reduced=()=>window.matchMedia?.('(prefers-reduced-motion: reduce)').matches===true;
 const previewEnabled=()=>new URLSearchParams(location.search).get(PREVIEW_PARAM)==='1';
 const session={phase:null,overlay:null,stage:null,renderer:null,raf:0,startAt:0,settled:false,restoring:false,priorFocus:null,root:null,rootInert:false,rootAriaHidden:null,url:'',historyLength:0,liveIdentity:null,errorCode:null,lastShotId:null,naturalHandoffStarted:false,handoffVerified:false};
+const liveHouseDeferral={wrapper:null,previousAppend:null,pending:[],released:false,listenersBound:false,interceptCount:0};
+
+function isLiveHouseScript(node){
+  if(!(node instanceof HTMLScriptElement))return false;
+  try{return new URL(node.src||'',location.href).pathname===LIVE_HOUSE_SOURCE_PATH;}catch{return false;}
+}
+function onLiveHouseCapabilityChange(event){
+  if(session.phase!==STATE.SETTLED)return;
+  if(String(event?.detail?.capability||'').toLowerCase()==='house')releaseLiveHouseDeferral('capability-house-intent');
+}
+function onLiveHouseDirectIntent(event){
+  if(session.phase!==STATE.SETTLED)return;
+  if(event.target?.closest?.('[data-capability="house"]'))releaseLiveHouseDeferral('direct-house-intent');
+}
+function bindLiveHouseIntentListeners(){
+  if(liveHouseDeferral.listenersBound)return;
+  liveHouseDeferral.listenersBound=true;
+  document.addEventListener('compass:capability-change',onLiveHouseCapabilityChange,true);
+  document.addEventListener('pointerdown',onLiveHouseDirectIntent,true);
+  document.addEventListener('focusin',onLiveHouseDirectIntent,true);
+}
+function installLiveHouseDeferral(){
+  if(!previewEnabled()||liveHouseDeferral.released||!document.head)return;
+  bindLiveHouseIntentListeners();
+  const head=document.head;
+  if(liveHouseDeferral.wrapper&&head.append===liveHouseDeferral.wrapper)return;
+  const previous=head.append;
+  const wrapper=function(...nodes){
+    const immediate=[];
+    for(const node of nodes){
+      if(isLiveHouseScript(node)){
+        if(!liveHouseDeferral.pending.includes(node))liveHouseDeferral.pending.push(node);
+        liveHouseDeferral.interceptCount+=1;
+      }else immediate.push(node);
+    }
+    if(immediate.length)previous.apply(this,immediate);
+  };
+  liveHouseDeferral.previousAppend=previous;
+  liveHouseDeferral.wrapper=wrapper;
+  head.append=wrapper;
+}
+function releaseLiveHouseDeferral(reason='released'){
+  if(liveHouseDeferral.released)return;
+  liveHouseDeferral.released=true;
+  const head=document.head;
+  const append=liveHouseDeferral.previousAppend||head?.append;
+  if(head&&liveHouseDeferral.wrapper&&head.append===liveHouseDeferral.wrapper&&append)head.append=append;
+  document.removeEventListener('compass:capability-change',onLiveHouseCapabilityChange,true);
+  document.removeEventListener('pointerdown',onLiveHouseDirectIntent,true);
+  document.removeEventListener('focusin',onLiveHouseDirectIntent,true);
+  const pending=liveHouseDeferral.pending.splice(0);
+  document.documentElement.dataset.compassCinematicLiveHouseRelease=reason;
+  if(head&&append&&pending.length)queueMicrotask(()=>append.apply(head,pending));
+}
 
 function captureLiveIdentity(root){
   return Object.freeze({
@@ -136,11 +191,8 @@ async function loadRenderer(){
   return Object.freeze({
     async mount(){primary.mount();final.mount();await final.prepare();return true;},
     renderFrame(frame){
-      if(frame?.shot?.id==='S07'){
-        primary.renderFrame({...frame,shot:{...frame.shot,id:'S06',beat:'Elsewhere'},shotProgress:.96});
-      }else{
-        primary.renderFrame(frame);
-      }
+      if(frame?.shot?.id==='S07')primary.renderFrame({...frame,shot:{...frame.shot,id:'S06',beat:'Elsewhere'},shotProgress:.96});
+      else primary.renderFrame(frame);
       final.renderFrame(frame);
     },
     verifyHandoff(){return final.verifyHandoff();},
@@ -169,10 +221,7 @@ function tick(now){
       session.handoffVerified=session.renderer?.verifyHandoff?.()===true;
       if(!session.handoffVerified){failOpen('CINEMATIC_HANDOFF_CORRESPONDENCE_UNPROVEN');return;}
     }
-  }catch(error){
-    failOpen(error?.message||'CINEMATIC_RENDER_FRAME_FAILURE');
-    return;
-  }
+  }catch(error){failOpen(error?.message||'CINEMATIC_RENDER_FRAME_FAILURE');return;}
   applyNaturalHandoffFade(elapsedMs);
   const debug=$('[data-cinematic-debug]',session.overlay);
   if(debug&&!debug.hidden)debug.value=`${shot.id} · ${shot.beat} · ${(elapsedMs/1000).toFixed(2)}s`;
@@ -189,11 +238,7 @@ function bindOverlay(overlay){
   window.addEventListener('keydown',onKey,true);
   setPhase(STATE.ARMED);
 }
-function startReduced(){
-  const overlay=reducedShell();
-  bindOverlay(overlay);
-  $('[data-main-orientation-skip]',overlay)?.focus({preventScroll:true});
-}
+function startReduced(){const overlay=reducedShell();bindOverlay(overlay);$('[data-main-orientation-skip]',overlay)?.focus({preventScroll:true});}
 async function startAnimated(){
   const overlay=animatedShell();
   bindOverlay(overlay);
@@ -206,16 +251,17 @@ async function startAnimated(){
   $('[data-main-orientation-skip]',overlay)?.focus({preventScroll:true});
 }
 async function mount(){
-  if(window.self!==window.top)return;
+  installLiveHouseDeferral();
+  if(window.self!==window.top){releaseLiveHouseDeferral('non-top-frame');return;}
   session.root=$('[data-compass-root]');
-  if(!session.root||!$('[data-compass-scene]'))return;
+  if(!session.root||!$('[data-compass-scene]')){releaseLiveHouseDeferral('cinematic-root-missing');return;}
   session.priorFocus=document.activeElement;
   session.rootInert=session.root.inert;
   session.rootAriaHidden=session.root.getAttribute('aria-hidden');
   session.url=location.href;
   session.historyLength=history.length;
   session.liveIdentity=captureLiveIdentity(session.root);
-  if(!previewEnabled())return;
+  if(!previewEnabled()){releaseLiveHouseDeferral('preview-disabled');return;}
   try{if(reduced())startReduced();else await startAnimated();}
   catch(error){failOpen(error?.message||'CINEMATIC_SHELL_INIT_FAILURE');}
 }
@@ -229,7 +275,8 @@ window.DGB_MAIN_ORIENTATION_CINEMATIC=Object.freeze({
   constructionPreviewParameter:`${PREVIEW_PARAM}=1`,
   shots:SHOTS,
   restore,
-  inspect:()=>Object.freeze({phase:session.phase,settled:session.settled,restoring:session.restoring,errorCode:session.errorCode,lastShotId:session.lastShotId,liveIdentity:session.liveIdentity,previewEnabled:previewEnabled(),handoffVerified:session.handoffVerified,naturalHandoffStarted:session.naturalHandoffStarted,renderer:session.renderer?.inspect?.()||null})
+  inspect:()=>Object.freeze({phase:session.phase,settled:session.settled,restoring:session.restoring,errorCode:session.errorCode,lastShotId:session.lastShotId,liveIdentity:session.liveIdentity,previewEnabled:previewEnabled(),handoffVerified:session.handoffVerified,naturalHandoffStarted:session.naturalHandoffStarted,liveHouseDeferral:Object.freeze({interceptCount:liveHouseDeferral.interceptCount,pendingCount:liveHouseDeferral.pending.length,released:liveHouseDeferral.released}),renderer:session.renderer?.inspect?.()||null})
 });
+if(previewEnabled())installLiveHouseDeferral();
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
 })();

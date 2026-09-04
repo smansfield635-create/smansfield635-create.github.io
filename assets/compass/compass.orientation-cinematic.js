@@ -132,7 +132,12 @@ function tick(now){
   const shot=currentShot(elapsedMs);
   session.lastShotId=shot.id;
   session.overlay.dataset.shotId=shot.id;
-  session.renderer?.renderFrame?.({elapsedMs,shot,shotProgress:shotProgress(shot,elapsedMs),masterDurationMs:MASTER_DURATION_MS,liveIdentity:session.liveIdentity});
+  try{
+    session.renderer?.renderFrame?.({elapsedMs,shot,shotProgress:shotProgress(shot,elapsedMs),masterDurationMs:MASTER_DURATION_MS,liveIdentity:session.liveIdentity});
+  }catch(error){
+    failOpen(error?.message||'CINEMATIC_RENDER_FRAME_FAILURE');
+    return;
+  }
   const debug=$('[data-cinematic-debug]',session.overlay);
   if(debug&&!debug.hidden)debug.value=`${shot.id} · ${shot.beat} · ${(elapsedMs/1000).toFixed(2)}s`;
   if(elapsedMs>=MASTER_DURATION_MS){restore('complete');return;}

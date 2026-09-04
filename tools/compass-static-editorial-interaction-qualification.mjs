@@ -10,6 +10,16 @@ const page=await context.newPage();
 const errors=[];page.on('pageerror',e=>errors.push(String(e)));
 await page.goto(base,{waitUntil:'networkidle'});await page.waitForTimeout(1400);
 
+// Qualification-carrier compatibility: if a pre-entry cinematic is present,
+// settle it through its public Skip control before exercising the protected
+// underlying Compass interactions. Product bytes remain unchanged.
+const cinematicSkip=page.locator('[data-cinematic-skip]').first();
+if(await cinematicSkip.count()){
+  await cinematicSkip.click();
+  await page.waitForFunction(()=>!document.querySelector('#compass-orientation-cinematic'),null,{timeout:5000});
+  await page.waitForTimeout(150);
+}
+
 const snapshot=async()=>page.evaluate(()=>{
   const box=e=>{const r=e.getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height,cx:r.x+r.width/2}};
   const root=document.querySelector('[data-compass-root]');
@@ -77,6 +87,7 @@ if(errors.length)throw new Error(`browser errors ${errors.join(' | ')}`);
 
 console.log(JSON.stringify({
   result:'COMPASS_VISIBLE_DELTA_PREMERGE_PASS',
+  cinematicSettlement:'SKIP_IF_PRESENT',
   tablet:{policy:initial.tabletContextPolicy||'LEGACY_CENTERED',requiredSceneCenterError:requiredTabletSceneCenterError,tolerance:TABLET_SCENE_CENTER_TOLERANCE,afterSceneCenterError:initial.sceneCenterError,sceneCenterDrift,headerCenterError:initial.headerCenterError},
   constellation:{outgoing:released.before.focus,settled:settled.focus,incomingVisible:settled.visible[0],soleReadableCount:settled.visible.length,primary:settled.primary[0],phase:settled.phase,labelBinding:settled.labelBinding}
 },null,2));

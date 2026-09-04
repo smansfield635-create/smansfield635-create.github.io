@@ -1,0 +1,68 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "compass-holographic-orientation-20260904",
+  "description": "Compass root with the adopted holographic Main Orientation cinematic activated ahead of the preserved live Compass.",
+  "checks": [
+    {
+      "path": "/",
+      "includes": [
+        "<title>Diamond Gate Bridge Compass</title>",
+        "data-compass-root",
+        "data-compass-static-introduction",
+        "/assets/compass/compass.orientation-cinematic.css?v=gen1933-orientation-cinematic-v1&cb=b4cdc0ef93b3e53d",
+        "/assets/compass/compass.orientation-cinematic.js?v=gen1933-orientation-cinematic-v1&cb=b4cdc0ef93b3e53d",
+        "Welcome to the Compass.",
+        "Three ways to engage."
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/",
+    "timeoutMs": 45000,
+    "readySelector": "[data-compass-root]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/"
+    },
+    "interactions": [
+      {
+        "name": "Settle holographic orientation before Compass verification",
+        "action": {
+          "type": "click",
+          "selector": "[data-main-orientation-skip]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "[data-compass-root]:not([inert])"
+          },
+          {
+            "type": "exists",
+            "selector": "[data-capability-orbit][data-first-paint-authority=\"static\"]"
+          }
+        ],
+        "timeoutMs": 7000
+      },
+      {
+        "name": "Open Chapter One after cinematic handoff",
+        "action": {
+          "type": "click",
+          "selector": "[data-compass-static-introduction] > summary"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-compass-static-introduction]",
+            "name": "open",
+            "value": ""
+          }
+        ],
+        "timeoutMs": 5000
+      }
+    ],
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true
+  }
+}

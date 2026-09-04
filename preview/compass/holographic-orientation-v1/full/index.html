@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en" data-preview="compass-holographic-full-successor-v1">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Diamond Gate Bridge — Holographic Orientation Successor Preview</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="./index.css">
+</head>
+<body>
+<main class="holo-root" data-holo-root>
+  <canvas class="holo-canvas" data-holo-canvas aria-hidden="true"></canvas>
+  <div class="instrument-field" aria-hidden="true"></div>
+
+  <section class="entry-gate" data-entry-gate aria-labelledby="entry-title">
+    <div class="entry-card" data-entry-card>
+      <p class="kicker">Diamond Gate Bridge</p>
+      <h1 id="entry-title">Find your way.</h1>
+      <p class="lede">A short orientation before you enter.</p>
+      <div class="actions">
+        <button class="gate-button primary" type="button" data-begin-orientation>Begin orientation</button>
+        <button class="gate-button" type="button" data-skip-orientation>Skip intro</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="copy-stage" data-copy-stage hidden aria-live="polite">
+    <div class="copy-block">
+      <p class="copy-label" data-copy-label></p>
+      <p class="copy-line" data-copy-line></p>
+    </div>
+  </section>
+
+  <div class="progress" aria-hidden="true"><span data-progress></span></div>
+  <div class="status" data-status>removable successor · code-native</div>
+
+  <div class="preview-controls">
+    <button type="button" data-replay>Replay</button>
+  </div>
+
+  <div class="endpoint" data-endpoint aria-hidden="true">
+    <p>Compass handoff boundary</p>
+  </div>
+</main>
+
+<script src="/assets/compass/upstream-compass.geometry.js"></script>
+<script src="/assets/shared/mirrorland-window.geometry.js"></script>
+<script src="./descriptors.v1.js"></script>
+<script src="./index.js"></script>
+</body>
+</html>

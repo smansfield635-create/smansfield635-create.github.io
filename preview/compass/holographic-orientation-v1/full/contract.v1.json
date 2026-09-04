@@ -1,0 +1,132 @@
+{
+  "schema": "COMPASS_HOLOGRAPHIC_FULL_SUCCESSOR_CONTRACT_v1",
+  "status": "CONSTRUCTION_CANDIDATE",
+  "operation": {
+    "id": "COMPASS_MAIN_ORIENTATION_HOLOGRAPHIC_SUCCESSOR_P3_P11_CONSTRUCTION_20260904_001",
+    "controlPlaneHead": "f0dbfdf17df6560fc475df5f0556029b7edf1718",
+    "publicBaseHead": "8ca9f9fcae3e975993f8c50a4c2524cee0de0f1c",
+    "candidateInputHead": "8906782c7b9c2593b9d1937edf5c3a6cc1d473a7",
+    "draftPr": 2697,
+    "intakeResult": "ADMITTED_AND_LOCKED",
+    "lockGeneration": 416,
+    "scopeHash": "ba3dea3e0c965c574725018c6dead8452e99f5596ded8e134caec86966f50f41",
+    "requestDigest": "364ba80832aeff95d0d0ce0177418cd57f4f2f4bb09dc5716470bdf9c3fc6568",
+    "procedureLocatorDigest": "a1b6943312669264dd90ccf848603c37efcf1f8ec93c6667001073812c10e4b8"
+  },
+  "surface": {
+    "class": "REMOVABLE_SUCCESSOR_LAYER_ONLY",
+    "productionMutation": false,
+    "mergeAuthorized": false,
+    "deploymentAuthorized": false
+  },
+  "acquisition": {
+    "model": "CODE_NATIVE_HOLOGRAPHIC_RECONSTRUCTION",
+    "physicalVideoClipsRequired": 0,
+    "imageMediaRequired": 0,
+    "genericProxyRequirement": 0,
+    "destinationRuntimeInitialization": 0
+  },
+  "entryGate": {
+    "class": "PRE_ROLL_NOT_COUNTED_IN_MASTER_DURATION",
+    "beginDurationMs": 4350,
+    "skipDurationMs": 2450,
+    "continuityLaw": "SELECTED_CONTROL_CELLS_BECOME_SUCCESSOR_STAR_AND_COMPASS_MATTER",
+    "blankFrameAllowance": 0
+  },
+  "master": {
+    "durationMs": 40600,
+    "durationEnvelopeMs": [38000,42000],
+    "requestAnimationFrameAuthorities": 1,
+    "wallClock": "performance.now",
+    "transitionOverlapMaxMs": 720
+  },
+  "timeline": [
+    {"passage":"P1","startMs":0,"endMs":3000,"copy":"Before you enter.","label":"ARRIVAL"},
+    {"passage":"P2","startMs":3000,"endMs":6800,"copy":"Everything begins with a direction.","label":"ORIENTATION"},
+    {"passage":"P3","startMs":6800,"endMs":10000,"copy":"Start with the story.","label":"CHAPTER ONE"},
+    {"passage":"P4","startMs":10000,"endMs":13400,"copy":"Test the ideas.","label":"RESEARCH FRONTIER"},
+    {"passage":"P5","startMs":13400,"endMs":16900,"copy":"How coherent are your decisions under pressure?","label":"COHERISCOPE · ASSESSMENT"},
+    {"passage":"P6","startMs":16900,"endMs":20300,"copy":"See the instrument behind the assessment.","label":"COHERISCOPE · INSTRUMENT"},
+    {"passage":"P7","startMs":20300,"endMs":24400,"copy":"Talk to the House.","label":"HOUSE"},
+    {"passage":"P8","startMs":24400,"endMs":28000,"copy":"Build something of your own.","label":"BUILD"},
+    {"passage":"P9","startMs":28000,"endMs":31800,"copy":"Enter another world.","label":"AUDRALIA"},
+    {"passage":"P10","startMs":31800,"endMs":35100,"copy":"Built to be judged.","label":"AWARDS"},
+    {"passage":"P11","startMs":35100,"endMs":40600,"copy":"Now choose a direction.","label":"RETURN"}
+  ],
+  "transitionCauses": [
+    {"from":"P1","to":"P2","cause":"STAR_VECTORS_ORGANIZE_AROUND_COMPASS_AXIS"},
+    {"from":"P2","to":"P3","cause":"COMPASS_CENTER_OPENS_INTO_RUBY_HEART"},
+    {"from":"P3","to":"P4","cause":"HEART_FACETS_FLATTEN_INTO_EVIDENCE_PLANES"},
+    {"from":"P4","to":"P5","cause":"EVIDENCE_AXES_RESOLVE_INTO_THREE_STAGE_ASSESSMENT_RAIL"},
+    {"from":"P5","to":"P6","cause":"ASSESSMENT_LINES_BECOME_ANATOMICAL_SCAN_CONTOURS"},
+    {"from":"P6","to":"P7","cause":"ANATOMICAL_FOLDS_STRAIGHTEN_INTO_GOTHIC_ARCHITECTURE"},
+    {"from":"P7","to":"P8","cause":"WINDOW_PANES_RECTIFY_INTO_INTERFACE_PANELS"},
+    {"from":"P8","to":"P9","cause":"INTERFACE_GRID_CURVES_INTO_PLANETARY_SURFACE"},
+    {"from":"P9","to":"P10","cause":"PLANETARY_ORBITS_TIGHTEN_INTO_TROPHY_HANDLE_ARCS"},
+    {"from":"P10","to":"P11","cause":"TROPHY_AXES_COLLAPSE_INTO_COMPASS_GEOMETRY"}
+  ],
+  "runtimeInvariants": {
+    "destinationOwnedGpuContexts": 0,
+    "destinationOwnedAnimationSchedulers": 0,
+    "cinematicOwnedContextCount": 1,
+    "cinematicOwnedContextClass": "CANVAS_2D",
+    "fullscreenAnimatedFilter": false,
+    "backdropFilterDuringPlaying": false,
+    "stableStateFilter": "none",
+    "canvasDimensionAssignmentInRenderLoop": false,
+    "continuouslyRetargetedCssTransitions": false,
+    "inactivePassagePolicy": "DESCRIPTOR_ONLY_NO_DESTINATION_RESOURCE",
+    "navigationMutation": false,
+    "historyMutation": false,
+    "analyticsMutation": false,
+    "durableApplicationStateMutation": false,
+    "onlyFinalHandoffMayOverlapLiveHomepageCompass": true
+  },
+  "sourceBindings": [
+    {"passage":"P1","identity":"ARRIVAL_STARFIELD","path":"assets/build/fibonacci-cosmos-core-v7.js","blob":"93a9fc9989b53ef75319dc1af0206ebc6a2b537c","mode":"ALGORITHM_DERIVATION"},
+    {"passage":"P2","identity":"COMPASS","path":"assets/compass/upstream-compass.geometry.js","blob":"fe35d8d844859a6af810684ace53d2c65258522f","mode":"PURE_GEOMETRY_AUTHORITY"},
+    {"passage":"P3","identity":"CHAPTER_ONE_HEART","path":"nine-summits-of-love/index.html","blob":"ac955931681b46e39706d298f4f83d4cf50a50c5","mode":"SOURCE_CONSTANT_AND_GEOMETRY_DERIVATION"},
+    {"passage":"P4","identity":"RESEARCH_FRONTIER","path":"evidence/agentic-frontier/index.html","blob":"06a82735deec6e577b71cf47b2d7246a9d853f0f","mode":"SEMANTIC_AND_LAYOUT_DESCRIPTOR"},
+    {"passage":"P5","identity":"COHERENCE_DIAGNOSTIC","path":"coherence-diagnostic/index.html","blob":"bef36f101c15fe949b89dd6ecea6117cd471680e","mode":"SEMANTIC_AND_LAYOUT_DESCRIPTOR"},
+    {"passage":"P6","identity":"COHERISCOPE","path":"assets/compass/compass.brain-scene.js","blob":"325b9486d0ab2136d425aed9468c22c28c67a57b","mode":"PROCEDURAL_GEOMETRY_DERIVATION"},
+    {"passage":"P7A","identity":"HOUSE","path":"assets/compass/compass.house-scene.js","blob":"a82e3c963a10808b9f8f1922faab45155ea4a62b","mode":"ARCHITECTURAL_IDENTITY_DERIVATION"},
+    {"passage":"P7B","identity":"MIRRORLAND_WINDOW","path":"assets/shared/mirrorland-window.geometry.js","blob":"fb3ee8ab92fa4b08e7708b83780de75d1a6f8595","mode":"PURE_GEOMETRY_AUTHORITY"},
+    {"passage":"P7C","identity":"JEEVES_TALK_TO_HOUSE","path":"showroom/globe/hearth/jeeves/index.html","blob":"fe909379190431baaf825df1b776ec1d66c305f2","mode":"SEMANTIC_IDENTITY_DESCRIPTOR"},
+    {"passage":"P8","identity":"BUILD_YOUR_OWN_WEBSITE","path":"build/index.html","blob":"7875a6a220fa44da24fe2ad805bb1e146440b5d6","mode":"SEMANTIC_AND_LAYOUT_DESCRIPTOR"},
+    {"passage":"P9","identity":"AUDRALIA_WORLD","path":"inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs","blob":"872d20b17bb0cd89d9613ca0262b25350890a617","mode":"CANONICAL_GEOMETRY_DERIVATION"},
+    {"passage":"P10","identity":"TROPHY_AWARDS","path":"assets/compass/compass.trophy-scene.js","blob":"d281e18b06128671ffe2a19e8fdb272cc5544e31","mode":"PROCEDURAL_GEOMETRY_DERIVATION"},
+    {"passage":"P11","identity":"RETURN_COMPASS_HANDOFF","path":"assets/compass/upstream-compass.geometry.js","blob":"fe35d8d844859a6af810684ace53d2c65258522f","mode":"PURE_GEOMETRY_AUTHORITY"}
+  ],
+  "reducedMotion": {
+    "entry": "DIRECT_GEOMETRIC_DISSOLVE",
+    "passages": "STATIC_RESOLVED_OBJECTS_WITH_DISCRETE_MASTER_CROSSFADE",
+    "flyingFragments": false,
+    "stateSemanticsEquivalent": true
+  },
+  "qualification": {
+    "intermediateBrowserInspectionBlocking": false,
+    "staticVerifier": "node preview/compass/holographic-orientation-v1/full/verify.v1.mjs",
+    "runtimeQualificationRequiredBeforeProductionAdoption": true,
+    "runtimeQualificationSatisfiedByFocusedVisualSmoke": true,
+    "fullInteractiveDeviceMatrixRequired": false,
+    "focusedVisualSmokeReview": {
+      "status": "PASS_FOCUSED",
+      "scope": "NONINTERACTIVE_CINEMATIC_VISUAL_AND_CONTROL_SMOKE",
+      "rendererCandidateHead": "9018c16e8472f92509736090f2d7c1e3e5e409d1",
+      "verifierCandidateHead": "bf54eba497a7681ae34cd8fe2e978ee25380beaf",
+      "viewports": [[320,480],[390,844],[1024,768],[1440,900]],
+      "buildResponsiveFit": "PASS",
+      "trophyNameplateFit": "PASS",
+      "unchangedPreviouslyPassedScenes": ["P1","P2","P3","P4","P5","P6","P7","P9","P11"],
+      "controlPaths": ["BEGIN","SKIP","REPLAY","NATURAL_COMPLETION"],
+      "reducedMotionSample": "PASS",
+      "fullDeviceMatrixRequired": false
+    },
+    "targetDeviceThreeRunSevereDropRequirement": [0,0,0],
+    "severeDropFormula": "L_t < 0.55*((L_t-1+L_t+1)/2) WITH NEIGHBOR_DIFFERENCE_RATIO < 0.12",
+    "unexpectedDestinationGpuContexts": 0,
+    "rendererOverlapViolations": 0,
+    "unexpectedStageDisconnects": 0,
+    "uncaughtErrors": 0
+  }
+}

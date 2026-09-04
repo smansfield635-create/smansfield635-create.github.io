@@ -106,8 +106,30 @@ const resizeBody=functionBody(js,'resizeCanvas'),frameBody=functionBody(js,'fram
 check(/canvas\.width\s*=/.test(resizeBody)&&/canvas\.height\s*=/.test(resizeBody)&&!/canvas\.(?:width|height)\s*=/.test(frameBody),'JS_CANVAS_DIMENSIONS_RESIZE_ONLY');
 check(js.includes('(prefers-reduced-motion: reduce)')&&js.includes('destinationGpuContexts:0')&&js.includes('destinationOwnedSchedulers:0'),'JS_REDUCED_MOTION_AND_RESOURCE_RECEIPT');
 
+// Source-identity parity gates. These make a PASS assert actual cinematic extraction,
+// not merely the presence of a correct source pathname/blob in the manifest.
+check(D?.diagnostic?.productIdentity==='COHERISCOPE','PARITY_COHERISCOPE_PRODUCT_IDENTITY');
+check(D?.diagnostic?.continuity==='P5_ASSESSMENT_TO_P6_INSTRUMENT','PARITY_COHERISCOPE_TWO_BEAT_CONTINUITY');
+check(D?.timeline?.[4]?.label==='COHERISCOPE · ASSESSMENT'&&D?.timeline?.[5]?.label==='COHERISCOPE · INSTRUMENT','PARITY_COHERISCOPE_TIMELINE_GRAMMAR');
+check(D?.brain?.projection==='CANONICAL_PARAMETRIC_MESH_FRONT_PROJECTION'&&D?.brain?.rows===34&&D?.brain?.cols===54,'PARITY_BRAIN_CANONICAL_MESH_RESOLUTION');
+check(Array.isArray(D?.brain?.components)&&D.brain.components.join(',')==='LEFT_HEMISPHERE,RIGHT_HEMISPHERE,LONGITUDINAL_FISSURE,CEREBELLUM,PONS,BRAINSTEM','PARITY_BRAIN_COMPONENT_COVERAGE');
+check(D?.windowFallback?.paneCount===21&&Array.isArray(D?.windowFallback?.panes)&&D.windowFallback.panes.length===21,'PARITY_WINDOW_21_PANE_DESCRIPTOR');
+const drawWindowBody=functionBody(js,'drawWindow'),drawBrainBody=functionBody(js,'drawBrain'),drawHouseBody=functionBody(js,'drawHouse'),drawAudraliaBody=functionBody(js,'drawAudralia'),drawTrophyBody=functionBody(js,'drawTrophy');
+check(/getPanes/.test(drawWindowBody)&&/createPanes/.test(drawWindowBody)&&/source\.length!==21/.test(drawWindowBody),'PARITY_WINDOW_CANONICAL_API_AND_COUNT_GUARD');
+check(/traceOuterWindow/.test(drawWindowBody),'PARITY_WINDOW_CANONICAL_FRAME_PATH');
+check(js.includes('function canonicalBrainPoint')&&/D\.brain\.rows/.test(drawBrainBody)&&/D\.brain\.cols/.test(drawBrainBody),'PARITY_BRAIN_PARAMETRIC_PROJECTION_USED');
+check(D?.house?.projection==='CANONICAL_IDENTITY_FRONT_ELEVATION'&&D?.house?.identity?.length===7,'PARITY_HOUSE_IDENTITY_DESCRIPTOR');
+check(js.includes('function pointedArch')&&/towerCenters/.test(drawHouseBody)&&/dormerCenters/.test(drawHouseBody)&&/courtRadius/.test(drawHouseBody),'PARITY_HOUSE_FEATURE_PROJECTION');
+check(Math.abs(D?.audralia?.continentLinearScale-Math.sqrt(.70))<1e-12,'PARITY_AUDRALIA_CANONICAL_SCALE');
+check(D?.audralia?.greatLakeAnchors?.length===19&&D?.audralia?.inletIslandAnchors?.length===2&&D?.audralia?.offshoreIslandAnchors?.length===3,'PARITY_AUDRALIA_MAJOR_GEOGRAPHY');
+check(js.includes('function scaledAudraliaPoint')&&/greatLakeAnchors/.test(drawAudraliaBody)&&/inletIslandAnchors/.test(drawAudraliaBody)&&/offshoreIslandAnchors/.test(drawAudraliaBody),'PARITY_AUDRALIA_RESOLVED_GEOGRAPHY_RENDER');
+check(Array.isArray(D?.trophy?.neckCollar)&&Array.isArray(D?.trophy?.footUpper)&&Array.isArray(D?.trophy?.footLower)&&D?.trophy?.plinth?.nameplate==='DIAMOND GATE BRIDGE · AWARDS TARGET','PARITY_TROPHY_COMPONENT_DESCRIPTOR');
+check(/shoulder/.test(drawTrophyBody)&&/rim/.test(drawTrophyBody)&&/neckCollar/.test(drawTrophyBody)&&/footUpper/.test(drawTrophyBody)&&/footLower/.test(drawTrophyBody)&&/plinth/.test(drawTrophyBody),'PARITY_TROPHY_FULL_PROFILE_RENDER');
+check(js.includes('sourceIdentityParity:Object.freeze')&&js.includes('mirrorlandCanonicalPaneCount:21'),'PARITY_RUNTIME_RECEIPT');
+check(/progress>\.68/.test(functionBody(js,'drawDiagnostic'))&&/drawBrain/.test(functionBody(js,'drawDiagnostic')),'PARITY_COHERISCOPE_ASSESSMENT_TO_BRAIN_VISUAL_HANDOFF');
+
 const passCount=results.filter(x=>x.pass).length,failCount=results.length-passCount;
-const receipt={schema:'COMPASS_HOLOGRAPHIC_FULL_SUCCESSOR_STATIC_VERIFICATION_RECEIPT_v1',result:failCount===0?'PASS_CLOSED':'FAIL_CLOSED',testCount:results.length,passCount,failCount,operationId:contract.operation.id,publicBaseHead:contract.operation.publicBaseHead,lockGeneration:contract.operation.lockGeneration,results};
-if(results.length!==83){receipt.result='FAIL_CLOSED';receipt.countError=`EXPECTED_83_ASSERTIONS_GOT_${results.length}`;process.stderr.write(`${receipt.countError}\n`)}
+const receipt={schema:'COMPASS_HOLOGRAPHIC_FULL_SUCCESSOR_STATIC_VERIFICATION_RECEIPT_v1',result:failCount===0?'PASS_CLOSED':'FAIL_CLOSED',sourceIdentityParity:failCount===0,testCount:results.length,passCount,failCount,operationId:contract.operation.id,publicBaseHead:contract.operation.publicBaseHead,lockGeneration:contract.operation.lockGeneration,results};
+if(results.length!==101){receipt.result='FAIL_CLOSED';receipt.sourceIdentityParity=false;receipt.countError=`EXPECTED_101_ASSERTIONS_GOT_${results.length}`;process.stderr.write(`${receipt.countError}\n`)}
 process.stdout.write(`${JSON.stringify(receipt,null,2)}\n`);
 if(receipt.result!=='PASS_CLOSED')process.exitCode=1;

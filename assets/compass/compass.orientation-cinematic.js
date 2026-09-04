@@ -2,14 +2,15 @@
 'use strict';
 
 const BUILD=Object.freeze({
-  version:'homepage-cinematic-shell-20260904-001',
+  version:'homepage-cinematic-shell-20260904-002',
   sourceMain:'46c56e0519fc875eac877b4bc921e3151b019a2f',
   specificationCommit:'88473442959299d6f6af82396917f0578074cab2',
   mutationClass:'BOUNDED_PAGE_RELEASE'
 });
 const STATE=Object.freeze({ARMED:'ARMED',PLAYING:'PLAYING',RESTORE:'RESTORE',SETTLED:'SETTLED'});
 const MASTER_DURATION_MS=38000;
-const RESTORE_FADE_MS=460;
+const NATURAL_HANDOFF_FADE_START_MS=37540;
+const NATURAL_HANDOFF_FADE_MS=460;
 const PREVIEW_PARAM='compassCinematicConstruction';
 const SHOTS=Object.freeze([
   Object.freeze({id:'S01',beat:'Arrival',purpose:'Enter Diamond Gate Bridge',startMs:0,endMs:4500}),
@@ -24,7 +25,7 @@ const SHOTS=Object.freeze([
 const $=(selector,root=document)=>root.querySelector(selector);
 const reduced=()=>window.matchMedia?.('(prefers-reduced-motion: reduce)').matches===true;
 const previewEnabled=()=>new URLSearchParams(location.search).get(PREVIEW_PARAM)==='1';
-const session={phase:null,overlay:null,stage:null,renderer:null,raf:0,startAt:0,settled:false,restoring:false,priorFocus:null,root:null,rootInert:false,rootAriaHidden:null,url:'',historyLength:0,liveIdentity:null,errorCode:null,lastShotId:null};
+const session={phase:null,overlay:null,stage:null,renderer:null,raf:0,startAt:0,settled:false,restoring:false,priorFocus:null,root:null,rootInert:false,rootAriaHidden:null,url:'',historyLength:0,liveIdentity:null,errorCode:null,lastShotId:null,naturalHandoffStarted:false,handoffVerified:false};
 
 function captureLiveIdentity(root){
   return Object.freeze({
@@ -32,7 +33,11 @@ function captureLiveIdentity(root){
     renderedForegroundCardinal:root.getAttribute('data-rendered-foreground-cardinal'),
     readableCardinal:root.getAttribute('data-readable-cardinal'),
     selectedCardinal:root.getAttribute('data-selected-cardinal'),
-    selectedRoom:root.getAttribute('data-selected-room')
+    selectedRoom:root.getAttribute('data-selected-room'),
+    activeClusterWing:root.getAttribute('data-active-cluster-wing'),
+    orbitQuaternion:root.getAttribute('data-orbit-quaternion'),
+    clusterQuaternion:root.getAttribute('data-cluster-quaternion'),
+    crystalsReceipt:root.getAttribute('data-compass-crystals-receipt')
   });
 }
 function setPhase(phase){session.phase=phase;if(session.overlay)session.overlay.dataset.state=phase;document.documentElement.dataset.compassOrientationCinematic=phase;}
@@ -56,6 +61,7 @@ function emitSettled(reason){
     navigationIntentEvents:0,
     urlUnchanged:location.href===session.url,
     historyUnchanged:history.length===session.historyLength,
+    handoffVerified:session.handoffVerified,
     errorCode:session.errorCode,
     finalShotId:session.lastShotId
   }}));
@@ -83,8 +89,8 @@ function restore(reason='complete'){
   clearPresentationListeners();
   setPhase(STATE.RESTORE);
   const overlay=session.overlay;
-  if(overlay){overlay.dataset.restoreReason=reason;overlay.classList.add('is-restoring');}
-  const delay=!reduced()&&reason==='complete'?RESTORE_FADE_MS:0;
+  if(overlay){overlay.dataset.restoreReason=reason;if(reason!=='complete'||overlay.dataset.naturalFadeComplete!=='true')overlay.classList.add('is-restoring');}
+  const delay=!reduced()&&reason==='complete'&&overlay?.dataset.naturalFadeComplete!=='true'?NATURAL_HANDOFF_FADE_MS:0;
   window.setTimeout(()=>finalizeRestore(reason,overlay),delay);
 }
 function failOpen(code){session.errorCode=String(code||'CINEMATIC_SHELL_FAILURE');restore('fail-open');}
@@ -119,12 +125,30 @@ function reducedShell(){
   return overlay;
 }
 async function loadRenderer(){
-  const [renderModule,mediaModule]=await Promise.all([
+  const [renderModule,mediaModule,finalModule]=await Promise.all([
     import('/assets/compass/compass.orientation-cinematic.render.js'),
-    import('/assets/compass/compass.orientation-cinematic.media.js')
+    import('/assets/compass/compass.orientation-cinematic.media.js'),
+    import('/assets/compass/compass.orientation-cinematic.final.js')
   ]);
   mediaModule.assertCinematicMediaManifest(mediaModule.CINEMATIC_MEDIA_MANIFEST);
-  return renderModule.createCinematicRenderer({stage:session.stage,media:mediaModule.CINEMATIC_MEDIA_MANIFEST});
+  const primary=renderModule.createCinematicRenderer({stage:session.stage,media:mediaModule.CINEMATIC_MEDIA_MANIFEST});
+  const final=finalModule.createFinalCinematicRenderer({stage:session.stage,media:mediaModule.CINEMATIC_MEDIA_MANIFEST});
+  return Object.freeze({
+    async mount(){primary.mount();final.mount();await final.prepare();return true;},
+    renderFrame(frame){primary.renderFrame(frame);final.renderFrame(frame);},
+    verifyHandoff(){return final.verifyHandoff();},
+    inspect(){return Object.freeze({primary:primary.inspect?.(),final:final.inspect?.()});},
+    dispose(){final.dispose?.();primary.dispose?.();}
+  });
+}
+function applyNaturalHandoffFade(elapsedMs){
+  if(!session.overlay||elapsedMs<NATURAL_HANDOFF_FADE_START_MS)return;
+  session.naturalHandoffStarted=true;
+  session.overlay.dataset.naturalHandoff='true';
+  const amount=Math.max(0,Math.min(1,(elapsedMs-NATURAL_HANDOFF_FADE_START_MS)/NATURAL_HANDOFF_FADE_MS));
+  session.overlay.style.opacity=String(1-amount);
+  session.overlay.style.pointerEvents='none';
+  if(amount>=1)session.overlay.dataset.naturalFadeComplete='true';
 }
 function tick(now){
   if(session.settled||session.restoring)return;
@@ -134,10 +158,15 @@ function tick(now){
   session.overlay.dataset.shotId=shot.id;
   try{
     session.renderer?.renderFrame?.({elapsedMs,shot,shotProgress:shotProgress(shot,elapsedMs),masterDurationMs:MASTER_DURATION_MS,liveIdentity:session.liveIdentity});
+    if(shot.id==='S08'&&elapsedMs>=36800&&!session.handoffVerified){
+      session.handoffVerified=session.renderer?.verifyHandoff?.()===true;
+      if(!session.handoffVerified){failOpen('CINEMATIC_HANDOFF_CORRESPONDENCE_UNPROVEN');return;}
+    }
   }catch(error){
     failOpen(error?.message||'CINEMATIC_RENDER_FRAME_FAILURE');
     return;
   }
+  applyNaturalHandoffFade(elapsedMs);
   const debug=$('[data-cinematic-debug]',session.overlay);
   if(debug&&!debug.hidden)debug.value=`${shot.id} · ${shot.beat} · ${(elapsedMs/1000).toFixed(2)}s`;
   if(elapsedMs>=MASTER_DURATION_MS){restore('complete');return;}
@@ -163,7 +192,7 @@ async function startAnimated(){
   bindOverlay(overlay);
   session.stage=$('[data-cinematic-stage]',overlay);
   session.renderer=await loadRenderer();
-  session.renderer.mount();
+  await session.renderer.mount();
   setPhase(STATE.PLAYING);
   session.startAt=performance.now();
   session.raf=requestAnimationFrame(tick);
@@ -193,7 +222,7 @@ window.DGB_MAIN_ORIENTATION_CINEMATIC=Object.freeze({
   constructionPreviewParameter:`${PREVIEW_PARAM}=1`,
   shots:SHOTS,
   restore,
-  inspect:()=>Object.freeze({phase:session.phase,settled:session.settled,restoring:session.restoring,errorCode:session.errorCode,lastShotId:session.lastShotId,liveIdentity:session.liveIdentity,previewEnabled:previewEnabled()})
+  inspect:()=>Object.freeze({phase:session.phase,settled:session.settled,restoring:session.restoring,errorCode:session.errorCode,lastShotId:session.lastShotId,liveIdentity:session.liveIdentity,previewEnabled:previewEnabled(),handoffVerified:session.handoffVerified,naturalHandoffStarted:session.naturalHandoffStarted,renderer:session.renderer?.inspect?.()||null})
 });
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
 })();

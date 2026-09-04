@@ -23,9 +23,14 @@ const AUTHORIZED_EXCLUDED_RUNTIME_DEPENDENCIES=Object.freeze({
     mode:'EXACT_REFERENCED_CLOSURE_ONLY',
     entryPath:'showroom/globe/audralia/index.html',
     allowedPrefix:'inspection/audralia-24057-exact/snapshot/'
+  }),
+  'compass-holographic-orientation-20260904':Object.freeze({
+    mode:'EXACT_REFERENCED_CLOSURE_ONLY',
+    entryPath:'preview/compass/holographic-orientation-v1/full/index.html',
+    allowedPrefix:'preview/compass/holographic-orientation-v1/full/'
   })
 });
-const PROTECTED_SURFACE_IDS=Object.freeze(Object.keys(AUTHORIZED_EXCLUDED_RUNTIME_DEPENDENCIES));
+const PROTECTED_SURFACE_IDS=Object.freeze(['audralia']);
 
 export function sha256(value){return crypto.createHash('sha256').update(value).digest('hex');}
 export function validateSurfaceId(id){return typeof id==='string'&&/^[a-z0-9][a-z0-9._-]{0,79}$/.test(id);}
@@ -137,8 +142,15 @@ function loadSurfaceManifest(repoRoot,surfaceId){
 }
 function promoteProtectedSurface({repoRoot,stage,targetSha,protectedSurfaceId,policy}){
   const entryFile=path.join(stage,...policy.entryPath.split('/'));
-  if(!fs.existsSync(entryFile))throw new Error(`AUTHORIZED_RUNTIME_ENTRYPOINT_MISSING:${policy.entryPath}`);
-  const entryReferences=extractResourceSpecifiers(policy.entryPath,fs.readFileSync(entryFile,'utf8'))
+  let entryBytes;
+  if(excluded(policy.entryPath)){
+    if(!policy.entryPath.startsWith(policy.allowedPrefix))throw new Error(`AUTHORIZED_RUNTIME_ENTRYPOINT_CROSSES_EXCLUDED_ROOT:${policy.entryPath}`);
+    entryBytes=readExactRepositoryFile({repoRoot,targetSha,rel:policy.entryPath}).bytes;
+  }else{
+    if(!fs.existsSync(entryFile)||!fs.statSync(entryFile).isFile())throw new Error(`AUTHORIZED_RUNTIME_ENTRYPOINT_MISSING:${policy.entryPath}`);
+    entryBytes=fs.readFileSync(entryFile);
+  }
+  const entryReferences=extractResourceSpecifiers(policy.entryPath,entryBytes.toString('utf8'))
     .map(specifier=>resolveResourcePath(policy.entryPath,specifier))
     .filter(Boolean);
   const queue=[policy.entryPath],seen=new Set(),files=[];
@@ -192,8 +204,10 @@ function promoteProtectedSurface({repoRoot,stage,targetSha,protectedSurfaceId,po
   });
 }
 export function promoteAuthorizedExcludedRuntimeDependencies({repoRoot=REPO_ROOT,stage,targetSha,surfaceId}){
-  const promoted=Object.entries(AUTHORIZED_EXCLUDED_RUNTIME_DEPENDENCIES)
-    .map(([protectedSurfaceId,policy])=>promoteProtectedSurface({repoRoot,stage,targetSha,protectedSurfaceId,policy}));
+  const promotedIds=[...PROTECTED_SURFACE_IDS];
+  if(AUTHORIZED_EXCLUDED_RUNTIME_DEPENDENCIES[surfaceId]&&!promotedIds.includes(surfaceId))promotedIds.push(surfaceId);
+  const promoted=promotedIds
+    .map(protectedSurfaceId=>promoteProtectedSurface({repoRoot,stage,targetSha,protectedSurfaceId,policy:AUTHORIZED_EXCLUDED_RUNTIME_DEPENDENCIES[protectedSurfaceId]}));
   if(!promoted.length)return Object.freeze({status:'NOT_REQUIRED',mode:'NOT_REQUIRED',requestedSurfaceId:surfaceId,fileCount:0,bytes:0,digest:null,files:[]});
   if(promoted.length===1)return Object.freeze({...promoted[0],requestedSurfaceId:surfaceId,protectedSurfaceCount:1});
   const files=promoted.flatMap(item=>item.files).sort((a,b)=>a.path.localeCompare(b.path));

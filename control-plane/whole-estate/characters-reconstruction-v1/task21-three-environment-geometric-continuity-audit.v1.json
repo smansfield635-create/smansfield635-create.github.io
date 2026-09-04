@@ -1,0 +1,555 @@
+{
+  "schema": "CHARACTERS_TASK21_THREE_ENVIRONMENT_GEOMETRIC_CONTINUITY_AUDIT_v1",
+  "status": "STEPS_01_THROUGH_08_COMPLETE_CONSTRUCTION_HELD",
+  "operationId": "CHARACTERS_TASK21_THREE_ENVIRONMENT_GEOMETRIC_CONTINUITY_AUDIT_20260902_001",
+  "completedAt": "2026-09-02T16:19:09Z",
+  "admission": {
+    "canonicalResult": "ADMITTED_AND_LOCKED",
+    "lockGeneration": 1924,
+    "governingBase": "8f8b8224601d990f058dc91438a60a5b245a6539",
+    "lockRefHead": "fe8b97d079f0a42d5f21b71571c7d8c8343259c8",
+    "lockScope": "CHARACTERS:TASK21:THREE_ENVIRONMENT_GEOMETRIC_CONTINUITY_AUDIT:V1",
+    "scopeHash": "82e73337c042a9caf536d20a50c1e588085e234ac6c5d6fca0354aabdae576a7",
+    "requestDigest": "a4653e8ef0cc7e1d18fc64395a29ec71175a4ef51d648ccd7922b088417ee450",
+    "procedureDigest": "95b27dceb884a8760adde2e74fe31b5646277ec2e5d19ee86ee1ba2a5510513e",
+    "issue": 2378,
+    "ownerSourceCommentId": 5512510812,
+    "admissionReceiptCommentId": 5512588770,
+    "allowedPaths": [
+      "control-plane/whole-estate/characters-reconstruction-v1/task21-three-environment-geometric-continuity-audit.v1.json",
+      "control-plane/whole-estate/characters-reconstruction-v1/verify-task21-three-environment-geometric-continuity.v1.mjs"
+    ]
+  },
+  "authorityBoundary": {
+    "operationClass": "DOCUMENTATION_AND_FROZEN_CONSTRUCTION_SPECIFICATION_ONLY",
+    "productMutation": false,
+    "runtimeMutation": false,
+    "rendererMutation": false,
+    "terrainMutation": false,
+    "geographyCanonicalization": false,
+    "mergeAuthority": false,
+    "deploymentAuthority": false,
+    "publicationAuthority": false,
+    "ownerIntegratedAcceptanceRequired": true
+  },
+  "terminology": {
+    "canonicalRepositoryWorldName": "AUDRALIA",
+    "userFacingAliasObserved": "AUDRELIA",
+    "continent": "GRATITUDE",
+    "localRegion": "GRATITUDE_HARBOR_MIRROR_MANOR_REGION",
+    "worldLaw": "ONE_WORLD_ONE_GEOGRAPHY_MULTIPLE_SCALES_OF_ACCESS",
+    "separationLaw": "AUDRALIA_IS_WORLD_AUTHORITY; H_EARTH_IS_A_GROUND_VIEW_OCCURRENCE_OF_AUDRALIA; CHARACTERS_IS_A_NARRATIVE_ROOM_IN_THE_SAME_GRATITUDE_GEOGRAPHY; REAL_EARTH_REMAINS_SEPARATE"
+  },
+  "steps": [
+    {
+      "number": 1,
+      "name": "ENTRY_AND_CUSTODY",
+      "status": "COMPLETE",
+      "evidence": [
+        "AI_ENTRYPOINT.json and project router read before task action",
+        "Generation 1924 admitted against exact base 8f8b8224601d990f058dc91438a60a5b245a6539",
+        "Exact two-path documentation scope locked",
+        "Owner-authenticated issue #2378 source and admission receipts recorded"
+      ]
+    },
+    {
+      "number": 2,
+      "name": "PROTECTED_BASELINE",
+      "status": "COMPLETE",
+      "evidence": [
+        "Characters moonlit-coast donor and current blobs are byte-identical",
+        "H-Earth experience-anchor source identity recorded",
+        "No protected product path changed"
+      ]
+    },
+    {
+      "number": 3,
+      "name": "SOURCE_INVENTORY",
+      "status": "COMPLETE",
+      "evidence": [
+        "Live route import chains resolved for Audralia, H-Earth, and Characters",
+        "Every controlling source occurrence pinned by git blob identity",
+        "Public browser observations separated from source authority"
+      ]
+    },
+    {
+      "number": 4,
+      "name": "LANDMARK_REGISTRY",
+      "status": "COMPLETE",
+      "evidence": [
+        "Eight shared development anchors registered with exact x/z witnesses",
+        "Three Characters-only destinations explicitly marked unresolved",
+        "Hydrology and coastal feature families registered without granting new authority"
+      ]
+    },
+    {
+      "number": 5,
+      "name": "CONCORDANCE_MATRIX",
+      "status": "COMPLETE",
+      "evidence": [
+        "Identity, orientation, coastline, relief, hydrology, landmarks, LOD, camera, and ambiance compared across all three environments"
+      ]
+    },
+    {
+      "number": 6,
+      "name": "DISCREPANCY_LEDGER",
+      "status": "COMPLETE",
+      "evidence": [
+        "Eight discrepancies classified with severity, proof, construction consequence, and disposition"
+      ]
+    },
+    {
+      "number": 7,
+      "name": "DECISION_LOG",
+      "status": "COMPLETE",
+      "evidence": [
+        "World authority, baseline protection, source-selection hold, adapter law, validation boundary, and publication boundary frozen"
+      ]
+    },
+    {
+      "number": 8,
+      "name": "FROZEN_CONSTRUCTION_SPECIFICATION",
+      "status": "COMPLETE",
+      "evidence": [
+        "Step 9 preconditions, permitted construction shape, invariants, quantitative thresholds, qualification matrix, rollback anchors, and stop conditions frozen"
+      ]
+    }
+  ],
+  "protectedBaseline": {
+    "characters": {
+      "route": "/characters/",
+      "donorCommit": "9cf64161dfc647021ff3f3871d6655ac5400ae12",
+      "currentBase": "8f8b8224601d990f058dc91438a60a5b245a6539",
+      "blobs": {
+        "characters/index.html": "e122d09cb9d41410492f16c5f33dc598d1710504",
+        "characters/app.mjs": "6f6d126cf4dbfc198ed950c917bfc1c3c44d345e",
+        "characters/narrative-world-state.mjs": "946a10969803693c8163abb85d1fdf65ed8bcca2",
+        "characters/night-renderer.mjs": "cb0eaa23a9699985f7c69f5c17e916847a66ef0e"
+      },
+      "preserveExactlyUntilSeparatelyAdmitted": [
+        "moonlit-night visual language",
+        "moon and water response",
+        "ORBIT to travel to inspect to exact return interaction grammar",
+        "story and discovery state",
+        "named signals and narrative copy",
+        "reduced-motion semantic path"
+      ],
+      "priorQualification": {
+        "result": "PASS",
+        "journey": "ORBIT_TO_CROSSING_TO_INSPECT_TO_RETURN",
+        "signalCount": 11,
+        "terminalReceiptIssueCommentId": 5504199725,
+        "note": "Historical qualification is baseline evidence, not evidence for any future geometric replacement."
+      }
+    },
+    "hEarthExperienceAnchor": {
+      "path": "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json",
+      "originalFilename": "22713.mp4",
+      "sha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+      "acceptanceCriterion": "HARD_ACCEPTANCE_CRITERION",
+      "preservationLaw": "The original-video SHA-256 remains the controlling source identity; a construction may improve continuity but may not claim visual equivalence without owner review against this anchor."
+    }
+  },
+  "sourceInventory": [
+    {
+      "environment": "AUDRALIA_WORLD_MAP",
+      "route": "/showroom/globe/audralia/",
+      "path": "showroom/globe/audralia/index.html",
+      "blob": "96bf20a3189182683bc94c08e2ad7c0dba740f07",
+      "role": "PUBLIC_ROUTE_SHELL",
+      "imports": "inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs"
+    },
+    {
+      "environment": "AUDRALIA_WORLD_MAP",
+      "path": "inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs",
+      "blob": "64b962fcdb098ffa1f3149a434ad1bfcdc4e21d3",
+      "role": "ACTUAL_PUBLIC_WORLD_MAP_APP",
+      "imports": "inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js"
+    },
+    {
+      "environment": "AUDRALIA_WORLD_MAP",
+      "path": "inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js",
+      "blob": "50991dd777ccd015fd8a6d8eae7b4d02b4a8450c",
+      "role": "ACTUAL_PUBLIC_WORLD_MAP_GEOGRAPHIC_TRANSFER_SNAPSHOT"
+    },
+    {
+      "environment": "AUDRALIA_WORLD_MAP",
+      "path": "inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs",
+      "blob": "872d20b17bb0cd89d9613ca0262b25350890a617",
+      "role": "ACTUAL_PUBLIC_WORLD_MAP_RENDERER"
+    },
+    {
+      "environment": "CURRENT_SHARED_GEOGRAPHY",
+      "path": "h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js",
+      "blob": "a67a4e95f7634eb97a375ff103d95bdc81c64f0b",
+      "role": "CURRENT_TRANSFER_CONSUMED_BY_CHARACTERS_ADAPTER_NOT_BY_CHARACTERS_RUNTIME"
+    },
+    {
+      "environment": "H_EARTH",
+      "route": "/showroom/globe/h-earth/",
+      "path": "showroom/globe/h-earth/index.html",
+      "blob": "40573b1f3ae4221585685e30f170dd721d25797e",
+      "role": "PUBLIC_REDIRECT_TO_H_EARTH_LIVE_SNAPSHOT"
+    },
+    {
+      "environment": "H_EARTH",
+      "path": "h-earth-live-6d18e158/showroom/globe/h-earth/index.html",
+      "blob": "f4fa5df980c639184352d978909532dc8f1bcbd8",
+      "role": "INTENDED_LIVE_SNAPSHOT_SHELL",
+      "publicObservation": "404_NOT_FOUND_AFTER_REDIRECT_AT_2026-09-02T16:16:52Z"
+    },
+    {
+      "environment": "H_EARTH",
+      "path": "h-earth-live-6d18e158/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+      "blob": "cc794cc66c2ea5fb65a610612e8d9a51f82a2f23",
+      "role": "INTENDED_LIVE_MODULE_ENTRY"
+    },
+    {
+      "environment": "H_EARTH",
+      "path": "h-earth-live-6d18e158/h-earth-3d/terrain/h-earth.terrain-field.js",
+      "blob": "f4f65b05ab303a11fb1d9c4e25de211fde73722a",
+      "role": "ACTUAL_INTENDED_LIVE_TERRAIN_FIELD_BYTE_IDENTICAL_TO_CURRENT"
+    },
+    {
+      "environment": "H_EARTH",
+      "path": "h-earth-live-6d18e158/h-earth-3d/terrain/h-earth.world-manifold-domain.js",
+      "blob": "09ceab4505c52c8bede19afb77343fc1f7ed2d7f",
+      "role": "ACTUAL_INTENDED_LIVE_WORLD_MANIFOLD_BYTE_IDENTICAL_TO_CURRENT"
+    },
+    {
+      "environment": "CHARACTERS",
+      "route": "/characters/",
+      "path": "characters/app.mjs",
+      "blob": "6f6d126cf4dbfc198ed950c917bfc1c3c44d345e",
+      "role": "ACTUAL_PUBLIC_RUNTIME_WITH_LOCAL_COAST_AND_TERRAIN_EQUATIONS",
+      "imports": [
+        "characters/narrative-world-state.mjs",
+        "characters/night-renderer.mjs"
+      ]
+    },
+    {
+      "environment": "CHARACTERS",
+      "path": "characters/gratitude-geography.adapter.mjs",
+      "blob": "8e094b2beed8117f6322ca18d9b592949998aac4",
+      "role": "PASSING_SHARED_GEOGRAPHY_ADAPTER_NOT_IMPORTED_BY_ACTUAL_PUBLIC_RUNTIME"
+    },
+    {
+      "environment": "CHARACTERS",
+      "path": "characters/coast-map.mjs",
+      "blob": "2ee094b87e14e770c476957fb5c30cadadb92023",
+      "role": "WORLD_CORRESPONDENT_MAP_MODEL_NOT_IMPORTED_BY_ACTUAL_PUBLIC_RUNTIME"
+    },
+    {
+      "environment": "CHARACTERS",
+      "path": "characters/cardinal-scene-geometry.mjs",
+      "blob": "698dc392edd0b74547d76fb09a05bb3bb2437c15",
+      "role": "WORLD_CORRESPONDENT_GEOMETRY_MODEL_NOT_IMPORTED_BY_ACTUAL_PUBLIC_RUNTIME"
+    }
+  ],
+  "canonicalGeometryFacts": {
+    "terrainField": {
+      "path": "h-earth-3d/terrain/h-earth.terrain-field.js",
+      "blob": "f4f65b05ab303a11fb1d9c4e25de211fde73722a",
+      "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+      "worldDomain": {
+        "xMinimum": -1024,
+        "xMaximum": 1024,
+        "zMinimum": -1024,
+        "zMaximum": 768
+      }
+    },
+    "worldManifold": {
+      "path": "h-earth-3d/terrain/h-earth.world-manifold-domain.js",
+      "blob": "09ceab4505c52c8bede19afb77343fc1f7ed2d7f",
+      "contractId": "H_EARTH_WORLD_MANIFOLD_DOMAIN_v1",
+      "topologySourceId": "H_EARTH_CANONICAL_WORLD_TOPOLOGY_G_WORLD_v1",
+      "landmass": "GRATITUDE_CONTINENT",
+      "ocean": "GRATITUDE_OPEN_OCEAN",
+      "localWaterwardDirection": "POSITIVE_Z",
+      "evaluation": "PASS"
+    },
+    "charactersDevelopmentFrame": {
+      "frameId": "CHARACTERS_GRATITUDE_HARBOR_DEVELOPMENT_FRAME_v1",
+      "worldNorth": "NEGATIVE_Z",
+      "worldEast": "POSITIVE_X",
+      "envelope": {
+        "xMinimum": -1050,
+        "xMaximum": 1050,
+        "zMinimum": -1200,
+        "zMaximum": 280,
+        "seaLevelY": 0
+      },
+      "authorityClass": "DEVELOPMENT_GEOGRAPHY_CONSUMER_NOT_FINAL_CONTINENTAL_AUTHORITY"
+    }
+  },
+  "landmarkRegistry": [
+    {"id": "WATCHFIRE_OVERLOOK", "charactersId": "alaric", "kind": "CARDINAL_SITE", "x": -210, "z": -575, "adapterElevation": 19.721418961901257, "runtimeBinding": "COORDINATE_DUPLICATED_LOCAL_TERRAIN"},
+    {"id": "WATERLINE_STATION", "charactersId": "tarian", "kind": "CARDINAL_SITE", "x": 115, "z": -360, "adapterElevation": 17.37719949603329, "runtimeBinding": "COORDINATE_DUPLICATED_LOCAL_TERRAIN"},
+    {"id": "SIGNAL_LANTERN_FIELD", "charactersId": "elara", "kind": "CARDINAL_SITE", "x": 760, "z": -650, "adapterElevation": 24.18917356023727, "runtimeBinding": "COORDINATE_DUPLICATED_LOCAL_TERRAIN"},
+    {"id": "RESTORATION_BOUNDARY", "charactersId": "soren", "kind": "CARDINAL_SITE", "x": 690, "z": -1010, "adapterElevation": 15.529847765825876, "runtimeBinding": "COORDINATE_DUPLICATED_LOCAL_TERRAIN"},
+    {"id": "MIRROR_MANOR", "charactersId": "manor", "kind": "MAJOR_PLACE_CONTEXT", "x": 430, "z": -820, "adapterElevation": 3.9879748276693725, "runtimeBinding": "COORDINATE_DUPLICATED_LOCAL_TERRAIN"},
+    {"id": "CROSSING", "charactersId": "crossing", "kind": "MAJOR_PLACE_CONTEXT", "x": -690, "z": -300, "adapterElevation": 9.91566428253415, "runtimeBinding": "COORDINATE_DUPLICATED_LOCAL_TERRAIN"},
+    {"id": "CLOCK", "charactersId": "clock", "kind": "INSTRUMENT_CONTEXT", "x": 930, "z": -1080, "adapterElevation": 12.769587598948217, "runtimeBinding": "COORDINATE_DUPLICATED_LOCAL_TERRAIN"},
+    {"id": "DEXTRION_TRANSMISSION", "charactersId": "dextrion", "kind": "DISTRIBUTED_SIGNAL_CONTEXT", "x": -920, "z": -500, "adapterElevation": 28.89599662757822, "runtimeBinding": "COORDINATE_DUPLICATED_LOCAL_TERRAIN"},
+    {"id": "AUREN_SHELTER_PATH", "charactersId": "auren", "kind": "CHARACTERS_ONLY_LOCAL_WITNESS", "x": 250, "z": -980, "runtimeBinding": "UNRESOLVED_TO_SHARED_ADAPTER"},
+    {"id": "JEEVES_THRESHOLD", "charactersId": "jeeves", "kind": "CHARACTERS_ONLY_LOCAL_WITNESS", "x": 520, "z": -930, "runtimeBinding": "UNRESOLVED_TO_SHARED_ADAPTER"},
+    {"id": "BEYOND_THE_MANOR", "charactersId": "remote", "kind": "CHARACTERS_ONLY_LOCAL_WITNESS", "x": -430, "z": -940, "runtimeBinding": "UNRESOLVED_TO_SHARED_ADAPTER"}
+  ],
+  "hydrologyRegistry": {
+    "currentTransfer": {
+      "derivationLaw": "TERRAIN_CAUSES_HYDROLOGY",
+      "rivers": ["GRATITUDE_RIVER_WEST", "GRATITUDE_RIVER_CENTRAL", "GRATITUDE_RIVER_EAST"],
+      "lakes": ["GRATITUDE_LAKE_RECEIVING", "GRATITUDE_LAKE_WESTERN", "GRATITUDE_LAKE_EASTERN"]
+    },
+    "audraliaMapSnapshot": {
+      "derivationLaw": "CHRONOLOGY_TO_RELIEF_TO_DENDRITIC_DRAINAGE",
+      "rivers": ["GRATITUDE_MAJOR_THROUGH_RIVER", "WEST_FORK", "WEST_TRIBUTARY_A", "WEST_TRIBUTARY_B", "WEST_TRIBUTARY_C", "CENTRAL_HEADWATERS", "CENTRAL_TRIBUTARY_A", "CENTRAL_TRIBUTARY_B", "LAKE_OVERFLOW", "EASTERN_RIVER", "EAST_TRIBUTARY_A", "EAST_TRIBUTARY_B", "DELTA_BRANCH_WEST", "DELTA_BRANCH_CENTRAL", "DELTA_BRANCH_EAST"],
+      "lakes": ["GREAT_INTERIOR_LAKE", "SHIELD_LAKE", "EASTERN_CIRQUE_LAKE"]
+    },
+    "charactersRuntime": "NO_SHARED_HYDROLOGY_MODEL"
+  },
+  "concordanceMatrix": [
+    {"dimension": "WORLD_IDENTITY", "audraliaMap": "AUDRALIA/GRATITUDE", "hEarth": "AUDRALIA/GRATITUDE ground view", "characters": "Mirrorland/Gratitude Coast with AUDRELIA adapter alias", "result": "PASS_WITH_NAMING_CAVEAT"},
+    {"dimension": "ORIENTATION", "audraliaMap": "transfer x/z frame", "hEarth": "G_WORLD; waterward +Z", "characters": "adapter north -Z/east +X but runtime does not import adapter", "result": "PARTIAL"},
+    {"dimension": "COASTLINE_TOPOLOGY", "audraliaMap": "snapshot transfer blob 50991d...", "hEarth": "terrain field blob f4f65b...", "characters": "local COAST polyline and shorelineZ equation", "result": "FAIL"},
+    {"dimension": "TERRAIN_RELIEF", "audraliaMap": "snapshot transfer terrain", "hEarth": "current canonical terrain/manifold", "characters": "local terrainHeight equation", "result": "FAIL"},
+    {"dimension": "HYDROLOGY", "audraliaMap": "15 rivers/3 lakes; chronology law", "hEarth": "current 3 rivers/3 lakes transfer context", "characters": "none", "result": "FAIL"},
+    {"dimension": "LANDMARK_COORDINATES", "audraliaMap": "no eight-site registry consumption proven", "hEarth": "shared world supports coordinates but no public site materialization proven", "characters": "eight x/z seeds match adapter; three local-only witnesses unresolved", "result": "PARTIAL"},
+    {"dimension": "LOD_GEOGRAPHY", "audraliaMap": "planetary renderer claims same mesh but consumes old snapshot transfer", "hEarth": "one manifold across scale", "characters": "adapter law passes; public runtime bypasses adapter", "result": "FAIL"},
+    {"dimension": "CAMERA_AND_TRAVEL", "audraliaMap": "planetary focus and descent", "hEarth": "ground navigation", "characters": "orbit/travel/inspect/return", "result": "REPRESENTATION_SPECIFIC_ACCEPTABLE_PENDING_SHARED_TARGETS"},
+    {"dimension": "AMBIANCE", "audraliaMap": "daylight/weather world presentation", "hEarth": "warm subtropical coastal", "characters": "moonlit night coast", "result": "UNPROVEN_NOT_REQUIRED_TO_BE_IDENTICAL; PLACE_GEOMETRY_MUST_MATCH"},
+    {"dimension": "PUBLIC_RENDER_OBSERVATION", "audraliaMap": "held at 18 percent in cloud browser because WebGL2 unavailable", "hEarth": "redirect target returned 404", "characters": "fatal fallback in cloud browser because WebGL2 unavailable", "result": "BLOCKED_NO_VISUAL_PARITY_CLAIM"}
+  ],
+  "measurements": {
+    "audraliaSnapshotVersusCurrentTransfer": {
+      "sampleDomain": {"xMinimum": -1500, "xMaximum": 1480, "step": 10, "sampleCount": 299},
+      "shoreline": {
+        "exactSampleCount": 58,
+        "meanAbsoluteDelta": 50.11247674594594,
+        "maximumAbsoluteDelta": 163.82261767423512,
+        "maximumWitness": {"x": 840, "currentZ": -167.1084366994807, "mapSnapshotZ": -3.2858190252455772},
+        "protectedCore": {"xMinimum": -256, "xMaximum": 256, "sampleCount": 51, "exactSampleCount": 51, "meanAbsoluteDelta": 0},
+        "outsideProtectedCore": {"sampleCount": 248, "exactSampleCount": 7, "meanAbsoluteDelta": 60.41786510902353}
+      },
+      "exactWitnesses": [
+        {"x": -1500, "currentZ": -76.14532943680895, "mapSnapshotZ": -84.54466117053431, "absoluteDelta": 8.399331733725361},
+        {"x": -1024, "currentZ": -138.1037671802847, "mapSnapshotZ": -45.36650120414386, "absoluteDelta": 92.73726597614085},
+        {"x": -768, "currentZ": -31.09091791980219, "mapSnapshotZ": -20.24484378976605, "absoluteDelta": 10.84607413003614},
+        {"x": -512, "currentZ": -102.50707533414636, "mapSnapshotZ": -175.45175410557596, "absoluteDelta": 72.9446787714296},
+        {"x": -256, "currentZ": -73.12389337695745, "mapSnapshotZ": -73.12389337695745, "absoluteDelta": 0},
+        {"x": 0, "currentZ": -79.25507841075921, "mapSnapshotZ": -79.25507841075921, "absoluteDelta": 0},
+        {"x": 256, "currentZ": -87.76507078577843, "mapSnapshotZ": -87.76507078577843, "absoluteDelta": 0},
+        {"x": 512, "currentZ": -264.6358172121972, "mapSnapshotZ": -141.78163553717448, "absoluteDelta": 122.85418167502272},
+        {"x": 768, "currentZ": -129.12767037916763, "mapSnapshotZ": 6.92639481541825, "absoluteDelta": 136.0540651945859},
+        {"x": 1024, "currentZ": -59.84299916835282, "mapSnapshotZ": -152.9092028113559, "absoluteDelta": 93.06620364300308},
+        {"x": 1480, "currentZ": -73.7635310090521, "mapSnapshotZ": -88.07836157022746, "absoluteDelta": 14.314830561175356}
+      ]
+    },
+    "charactersRuntimeVersusCurrentAdapter": {
+      "sampleDomain": {"xMinimum": -1050, "xMaximum": 1050, "step": 10, "sampleCount": 211},
+      "shoreline": {"meanAbsoluteDelta": 348.8636285082756, "maximumAbsoluteDelta": 558.9979749613757, "maximumAtX": -220},
+      "siteWitnesses": [
+        {"id": "WATCHFIRE_OVERLOOK", "charactersShoreZ": -610.1428571428571, "adapterShoreZ": -57.847412848511155, "shoreDelta": -552.295444294346, "charactersElevation": -5, "adapterElevation": 19.721418961901257},
+        {"id": "WATERLINE_STATION", "charactersShoreZ": -594.2129703601759, "adapterShoreZ": -124.41562583210515, "shoreDelta": -469.7973445280707, "charactersElevation": -5, "adapterElevation": 17.37719949603329},
+        {"id": "SIGNAL_LANTERN_FIELD", "charactersShoreZ": -527, "adapterShoreZ": -126.30281618986623, "shoreDelta": -400.69718381013377, "charactersElevation": 9.355702669589238, "adapterElevation": 24.18917356023727},
+        {"id": "RESTORATION_BOUNDARY", "charactersShoreZ": -128, "adapterShoreZ": -119.14191804772128, "shoreDelta": -8.858081952278724, "charactersElevation": 68.75937615091675, "adapterElevation": 15.529847765825876},
+        {"id": "MIRROR_MANOR", "charactersShoreZ": -571.3295338896804, "adapterShoreZ": -259.3929208818463, "shoreDelta": -311.9366130078341, "charactersElevation": 41.119820904500095, "adapterElevation": 3.9879748276693725},
+        {"id": "CROSSING", "charactersShoreZ": -417.4263020833332, "adapterShoreZ": -54.35777990913396, "shoreDelta": -363.06852217419925, "charactersElevation": -5, "adapterElevation": 9.91566428253415},
+        {"id": "CLOCK", "charactersShoreZ": -219.53061224489795, "adapterShoreZ": -161.74794552620912, "shoreDelta": -57.78266671868883, "charactersElevation": 39.284860273168206, "adapterElevation": 12.769587598948217},
+        {"id": "DEXTRION_TRANSMISSION", "charactersShoreZ": 182.0679188580015, "adapterShoreZ": -141.99318915813916, "shoreDelta": 324.0611080161407, "charactersElevation": 40.69849038655908, "adapterElevation": 28.89599662757822}
+      ]
+    }
+  },
+  "validationEvidence": {
+    "charactersAdapter": {"result": "PASS_PROTECTED_GRATITUDE_GEOGRAPHY_ADAPTER_CORRESPONDENCE", "eligible": true, "siteWitnessCount": 8, "coastlineWitnessCount": 65, "lodProfileCount": 4},
+    "hEarthWorldManifold": {"result": "WORLD_MANIFOLD_DOMAIN_PASS", "eligible": true},
+    "audraliaCurrentConvergence": {
+      "result": "FAIL",
+      "issues": ["OTHER_CONTINENTS_CANONIZATION_LEAK", "H_EARTH_PRESENTATION_RADIUS_AUTHORITY_LEAK", "EXTENDED_DOMAIN_SHORELINE_DRIFT:-1024", "EXTENDED_DOMAIN_SHORELINE_DRIFT:-768", "EXTENDED_DOMAIN_SHORELINE_DRIFT:-512", "EXTENDED_DOMAIN_SHORELINE_DRIFT:512", "EXTENDED_DOMAIN_SHORELINE_DRIFT:768", "EXTENDED_DOMAIN_SHORELINE_DRIFT:1024"]
+    },
+    "coordinateReconciliationHarness": {"result": "CRASH", "error": "sample.gradient is undefined at extractGRCRTerrainMetrics"},
+    "mirrorManorReconciliation": {"result": "CRASH", "error": "inherits sample.gradient undefined failure from coordinate reconciliation harness"},
+    "hEarthRegistryPreflight": {
+      "receiptId": "H_EARTH_AUTOMATIC_PREFLIGHT_EF85BE549EC03DC6CA6D_v1",
+      "operationClass": "READ_ONLY_INSPECTION",
+      "dependenciesVerified": false,
+      "finalDisposition": "STOP",
+      "mutationMayProceed": false,
+      "failureCode": "REQUESTED_PATH_UNRESOLVED",
+      "unregisteredScopedPath": "/h-earth-3d/terrain/h-earth.world-manifold-domain.js",
+      "snapshotPathsClassification": "OUTSIDE_H_EARTH_SCOPE"
+    },
+    "publicBrowserObservation": {
+      "observedAt": "2026-09-02T16:17:10Z",
+      "browserClass": "CLOUD_CHROME_WITHOUT_WEBGL2",
+      "characters": "FATAL_FALLBACK_WEBGL2_UNAVAILABLE",
+      "audraliaMap": "STARTUP_HELD_AT_18_PERCENT_WEBGL2_CONTEXT_UNAVAILABLE",
+      "hEarth": "REDIRECT_TARGET_404_NOT_FOUND",
+      "visualParityConclusion": "INCONCLUSIVE",
+      "defectInferenceBoundary": "The WebGL2 failures are browser-capability observations, not proof of a general public regression. The H-Earth 404 is a direct route-availability observation."
+    }
+  },
+  "discrepancyLedger": [
+    {
+      "id": "GEO-001",
+      "severity": "CRITICAL",
+      "title": "Audralia public map is pinned to an older geographic transfer",
+      "proof": "Public app resolves snapshot blob 50991dd777ccd015fd8a6d8eae7b4d02b4a8450c while the current shared transfer is a67a4e95f7634eb97a375ff103d95bdc81c64f0b; only the protected core shoreline is exact.",
+      "consequence": "Planetary and local consumers can depict different continental coastlines and hydrology.",
+      "disposition": "UNRESOLVED_STEP9_BLOCKER"
+    },
+    {
+      "id": "GEO-002",
+      "severity": "CRITICAL",
+      "title": "Characters public runtime bypasses its shared geography adapter",
+      "proof": "characters/app.mjs imports only narrative-world-state.mjs and night-renderer.mjs, defines local COAST, shorelineZ, terrainHeight, and duplicates site coordinates.",
+      "consequence": "A passing adapter receipt does not describe the geometry visitors see.",
+      "disposition": "UNRESOLVED_STEP9_BLOCKER"
+    },
+    {
+      "id": "GEO-003",
+      "severity": "CRITICAL",
+      "title": "Current geographic convergence validator fails",
+      "proof": "Six extended shoreline witnesses drift and two authority-boundary assertions fail.",
+      "consequence": "The current transfer cannot be declared canonical by this Characters audit.",
+      "disposition": "REQUIRES_SEPARATE_AUDRALIA_H_EARTH_AUTHORITY_DECISION"
+    },
+    {
+      "id": "GEO-004",
+      "severity": "CRITICAL",
+      "title": "Coordinate and Mirror Manor reconciliation harnesses crash",
+      "proof": "The successor sample shape no longer supplies sample.gradient expected by extractGRCRTerrainMetrics.",
+      "consequence": "Existing regional placement evidence is not executable at current head.",
+      "disposition": "REPAIR_AND_REQUALIFY_BEFORE_CONSTRUCTION"
+    },
+    {
+      "id": "GEO-005",
+      "severity": "CRITICAL",
+      "title": "H-Earth automatic registry preflight stops",
+      "proof": "Receipt H_EARTH_AUTOMATIC_PREFLIGHT_EF85BE549EC03DC6CA6D_v1 reports REQUESTED_PATH_UNRESOLVED and mutationMayProceed false.",
+      "consequence": "No H-Earth terrain, manifold, renderer, or public-route mutation is lawful from this operation.",
+      "disposition": "MUST_BE_RESOLVED_BY_SEPARATE_AUTHORITY"
+    },
+    {
+      "id": "GEO-006",
+      "severity": "CRITICAL",
+      "title": "H-Earth public redirect target is unavailable",
+      "proof": "/showroom/globe/h-earth/ redirected to /h-earth-live-6d18e158/showroom/globe/h-earth/index.html, which returned 404 in direct public observation.",
+      "consequence": "The intended ground-view occurrence cannot currently be visually compared through the public route.",
+      "disposition": "ROUTE_REPAIR_REQUIRED_UNDER_SEPARATE_ADMISSION"
+    },
+    {
+      "id": "GEO-007",
+      "severity": "HIGH",
+      "title": "Three Characters destinations lack shared adapter records",
+      "proof": "Auren, Jeeves, and Beyond the Manor exist only in characters/app.mjs.",
+      "consequence": "Their map, terrain, camera, and LOD identity cannot be proven across environments.",
+      "disposition": "RESOLVE_AS_DERIVED_LOCAL_WITNESSES_WITHOUT_CREATING_FINAL_CONTINENTAL_AUTHORITY"
+    },
+    {
+      "id": "GEO-008",
+      "severity": "MEDIUM",
+      "title": "Visual comparison is presently blocked in the available browser",
+      "proof": "The cloud browser lacks WebGL2 for Characters and Audralia; H-Earth is additionally 404.",
+      "consequence": "No visual-ambiance PASS may be claimed from this audit.",
+      "disposition": "REQUIRE_WEBGL2_DESKTOP_AND_MOBILE_BROWSER_MATRIX_IN_STEP9"
+    }
+  ],
+  "decisionLog": [
+    {"id": "DEC-001", "decision": "Protect the restored moonlit-coast Characters blobs as the rollback baseline.", "reason": "The user explicitly identified drift and requested return toward the original experience."},
+    {"id": "DEC-002", "decision": "Keep Audralia as world authority, H-Earth as its ground-view occurrence, and Characters as a narrative room in the same Gratitude geography.", "reason": "This preserves estate identity without flattening distinct presentation modes."},
+    {"id": "DEC-003", "decision": "Do not choose snapshot transfer 50991d... or current transfer a67a4e... as final canonical geography in this audit.", "reason": "They diverge materially, the current convergence validator fails, and H-Earth registry preflight stops."},
+    {"id": "DEC-004", "decision": "Require all three product runtimes to consume one separately admitted, exact-blob canonical geography source through environment-specific adapters.", "reason": "Same-place continuity requires one position/topology truth but does not require one renderer."},
+    {"id": "DEC-005", "decision": "Preserve Characters lighting, water, moon, narrative state, and travel grammar while changing only its lawful geometry source in Step 9.", "reason": "Ambiance and interaction are accepted baseline qualities; independent terrain equations are not."},
+    {"id": "DEC-006", "decision": "Treat the three Characters-only destinations as derived local witnesses pending shared-adapter resolution.", "reason": "They may enrich the local room but may not create continental authority."},
+    {"id": "DEC-007", "decision": "Separate source, executable contract, public availability, browser capability, Page Excellence, and owner visual acceptance evidence.", "reason": "No one evidence class can stand in for the others."},
+    {"id": "DEC-008", "decision": "Stop before product construction, merge, deployment, or publication.", "reason": "This operation authorizes Steps 1-8 documentation only and critical authority blockers remain."}
+  ],
+  "frozenConstructionSpecification": {
+    "specificationId": "CHARACTERS_TASK21_STEP9_THREE_ENVIRONMENT_GEOMETRIC_CONTINUITY_CONSTRUCTION_SPEC_v1",
+    "status": "FROZEN_NOT_AUTHORIZED_TO_EXECUTE",
+    "objective": "Make Audralia planetary view, H-Earth ground view, and Characters moonlit Gratitude Coast resolve the same canonical place while preserving each room's renderer, ambiance, interaction grammar, and authority boundary.",
+    "entryPreconditions": [
+      "A new governed construction operation is admitted against then-current public head with exact product paths.",
+      "Audralia/H-Earth authority selects one exact canonical geography source blob or an admitted successor; this audit does not select it.",
+      "H-Earth automatic registry preflight returns PASS for every proposed H-Earth path and mutationMayProceed is true under separate authority.",
+      "Audralia geographic convergence, coordinate reconciliation, and Mirror Manor reconciliation execute without crash and return PASS.",
+      "The H-Earth public route is reachable or a separately admitted route repair is included and independently qualified.",
+      "Protected Characters baseline blobs and H-Earth source-video anchor remain fetchable before construction."
+    ],
+    "constructionShape": [
+      "Create one immutable geography-source binding that pins the selected canonical blob and exposes shoreline, terrain, hydrology, formation, landmark, map, camera-target, and LOD queries.",
+      "Bind the Audralia public map to that source without changing accepted camera, weather, cloud, loading, soundtrack, or interaction semantics unless separately authorized.",
+      "Bind H-Earth ground view to the same geography source while preserving its world-manifold and representation-transition laws.",
+      "Replace Characters runtime-local COAST, shorelineZ, terrainHeight, and duplicated shared-site coordinates with adapter queries or generated immutable buffers from the selected source.",
+      "Add Auren, Jeeves, and Beyond the Manor as derived local landmark records referenced to the same frame; keep finalContinentalAuthorityCreated false.",
+      "Preserve Characters moonlit shader/material language, story content, discovery rules, camera journey, exact return, and reduced-motion path.",
+      "Keep map, H-Earth, and Characters renderer implementations distinct; only geographic state and semantic landmark identity are shared."
+    ],
+    "hardInvariants": [
+      "ONE_WORLD_ONE_GEOGRAPHY_MULTIPLE_SCALES_OF_ACCESS",
+      "GEOGRAPHIC_POSITION_CANONICAL_RENDERING_RADIUS_REPRESENTATIONAL",
+      "LOD_CHANGES_SAMPLING_DENSITY_NOT_GEOGRAPHIC_STATE",
+      "WORLD_NORTH_NEGATIVE_Z_WORLD_EAST_POSITIVE_X_LOCAL_WATERWARD_POSITIVE_Z",
+      "NO_RUNTIME_LOCAL_SECOND_COASTLINE_OR_TERRAIN_EQUATION",
+      "NO_NEW_CONTINENT_OR_WORLD_AUTHORITY_FROM_CHARACTERS",
+      "NO_REAL_EARTH_AND_AUDRALIA_IDENTITY_COLLAPSE",
+      "NO_ACCEPTED_CHARACTERS_AMBIANCE_OR_INTERACTION_REGRESSION",
+      "EXPLICIT_RETURN_AND_REDUCED_MOTION_SEMANTIC_COMPLETENESS"
+    ],
+    "quantitativeAcceptance": {
+      "sourceBlobIdentityAcrossThreeConsumers": "EXACT",
+      "shorelineWitnessToleranceWorldUnits": 1e-9,
+      "terrainElevationWitnessToleranceWorldUnits": 1e-9,
+      "mapWorldRoundTripToleranceWorldUnits": 1e-9,
+      "sharedLandmarkXZToleranceWorldUnits": 1e-9,
+      "sharedLandmarkTerrainPlacementToleranceWorldUnits": 1e-9,
+      "hydrologyIdSetAndDerivationLaw": "EXACT",
+      "lodGeographicStateChanged": false,
+      "charactersSharedCoordinateDuplicatesOutsideAdapter": 0,
+      "unresolvedCriticalDiscrepanciesAllowedAtCandidateQualification": 0,
+      "browserConsoleErrorsAllowed": 0,
+      "route404Allowed": 0
+    },
+    "qualificationMatrix": [
+      "Static exact-path and exact-blob verifier",
+      "Executable geography, manifold, coordinate, Mirror Manor, map, scene, and reduced-motion contracts",
+      "Desktop WebGL2 public-route journey for all three environments",
+      "Phone-size WebGL2 public-route journey for all three environments",
+      "Reduced-motion semantic journey for Characters and all cross-room transitions",
+      "Side-by-side planetary, ground, and moonlit landmark witness captures at the eight shared sites",
+      "Page Excellence Architecture PASS for every mutated route",
+      "Independent public fetchback after immutable candidate publication",
+      "Owner visual acceptance against the protected Characters baseline and H-Earth experience-anchor video"
+    ],
+    "rollbackAnchors": {
+      "charactersDonorCommit": "9cf64161dfc647021ff3f3871d6655ac5400ae12",
+      "charactersIndexBlob": "e122d09cb9d41410492f16c5f33dc598d1710504",
+      "charactersAppBlob": "6f6d126cf4dbfc198ed950c917bfc1c3c44d345e",
+      "charactersNarrativeBlob": "946a10969803693c8163abb85d1fdf65ed8bcca2",
+      "charactersNightBlob": "cb0eaa23a9699985f7c69f5c17e916847a66ef0e",
+      "hEarthExperienceAnchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+      "governingBase": "8f8b8224601d990f058dc91438a60a5b245a6539"
+    },
+    "stopConditions": [
+      "Any proposed source is not selected by the appropriate Audralia/H-Earth authority.",
+      "Any H-Earth registry result is STOP or mutationMayProceed is false.",
+      "Any protected baseline blob or video identity changes unexpectedly.",
+      "Any consumer retains or creates a second coastline, terrain, hydrology, or shared landmark coordinate authority.",
+      "Any executable reconciliation crashes or fails.",
+      "Any public route is unavailable, any required WebGL2 journey fails, or visual comparison cannot be completed.",
+      "Any Page Excellence or owner visual acceptance result is not PASS.",
+      "Public head moves without an admitted atomic successor transition."
+    ]
+  },
+  "completion": {
+    "stepsCompleted": [1, 2, 3, 4, 5, 6, 7, 8],
+    "nextLawfulStep": "Resolve the Audralia/H-Earth source authority and registry blockers, then admit a separate Step 9 construction operation against current public head.",
+    "constructionStarted": false,
+    "productPathsChanged": [],
+    "mergePerformed": false,
+    "deploymentPerformed": false,
+    "publicationPerformed": false,
+    "visualParityClaimed": false
+  }
+}

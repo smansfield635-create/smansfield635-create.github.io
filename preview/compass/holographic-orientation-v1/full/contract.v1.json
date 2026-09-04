@@ -35,10 +35,7 @@
   },
   "master": {
     "durationMs": 40600,
-    "durationEnvelopeMs": [
-      38000,
-      42000
-    ],
+    "durationEnvelopeMs": [38000,42000],
     "requestAnimationFrameAuthorities": 1,
     "wallClock": "performance.now",
     "transitionOverlapMaxMs": 720

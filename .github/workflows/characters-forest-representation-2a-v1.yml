@@ -1,0 +1,52 @@
+name: Characters Forest Representation 2A v1
+
+on:
+  pull_request:
+    paths:
+      - 'characters/forest-representation-diagnostic.html'
+      - 'characters/forest-representation-diagnostic.mjs'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/forest-representation-contract.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-forest-representation-2a.v1.mjs'
+      - '.github/workflows/characters-forest-representation-2a-v1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify-forest-representation-2a:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify admitted path scope
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          git diff --name-only "$BASE_SHA"...HEAD > /tmp/changed.txt
+          cat /tmp/changed.txt
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const allowed=new Set([
+            'characters/forest-representation-diagnostic.html',
+            'characters/forest-representation-diagnostic.mjs',
+            'control-plane/whole-estate/characters-reconstruction-v1/forest-representation-contract.v1.json',
+            'control-plane/whole-estate/characters-reconstruction-v1/verify-forest-representation-2a.v1.mjs',
+            '.github/workflows/characters-forest-representation-2a-v1.yml'
+          ]);
+          const changed=fs.readFileSync('/tmp/changed.txt','utf8').trim().split('\n').filter(Boolean);
+          const bad=changed.filter(path=>!allowed.has(path));
+          if(bad.length) throw new Error(`PATH_SCOPE_VIOLATION:${bad.join(',')}`);
+          NODE
+      - name: Verify forest representation grammar
+        run: node control-plane/whole-estate/characters-reconstruction-v1/verify-forest-representation-2a.v1.mjs
+      - name: Upload 2A receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: forest-representation-2a-receipt-${{ github.sha }}
+          path: forest-representation-2a-receipt.json
+          if-no-files-found: error

@@ -1,1 +1,0 @@
-Source-binding recovery begins from this point. No further planning artifacts are authorized as substitutes for locating the frozen executable objects.

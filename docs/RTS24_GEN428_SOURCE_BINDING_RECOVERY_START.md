@@ -1,1 +1,0 @@
-Source binding recovery starts here. Planning is complete.

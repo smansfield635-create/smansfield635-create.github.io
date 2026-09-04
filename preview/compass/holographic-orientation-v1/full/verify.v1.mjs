@@ -114,7 +114,7 @@ check(D?.timeline?.[4]?.label==='COHERISCOPE · ASSESSMENT'&&D?.timeline?.[5]?.l
 check(D?.brain?.projection==='CANONICAL_PARAMETRIC_MESH_FRONT_PROJECTION'&&D?.brain?.rows===34&&D?.brain?.cols===54,'PARITY_BRAIN_CANONICAL_MESH_RESOLUTION');
 check(Array.isArray(D?.brain?.components)&&D.brain.components.join(',')==='LEFT_HEMISPHERE,RIGHT_HEMISPHERE,LONGITUDINAL_FISSURE,CEREBELLUM,PONS,BRAINSTEM','PARITY_BRAIN_COMPONENT_COVERAGE');
 check(D?.windowFallback?.paneCount===21&&Array.isArray(D?.windowFallback?.panes)&&D.windowFallback.panes.length===21,'PARITY_WINDOW_21_PANE_DESCRIPTOR');
-const drawWindowBody=functionBody(js,'drawWindow'),drawBrainBody=functionBody(js,'drawBrain'),drawHouseBody=functionBody(js,'drawHouse'),drawAudraliaBody=functionBody(js,'drawAudralia'),drawTrophyBody=functionBody(js,'drawTrophy');
+const drawWindowBody=functionBody(js,'drawWindow'),drawBrainBody=functionBody(js,'drawBrain'),drawHouseBody=functionBody(js,'drawHouse'),drawBuildBody=functionBody(js,'drawBuild'),drawAudraliaBody=functionBody(js,'drawAudralia'),drawTrophyBody=functionBody(js,'drawTrophy');
 check(/getPanes/.test(drawWindowBody)&&/createPanes/.test(drawWindowBody)&&/source\.length!==21/.test(drawWindowBody),'PARITY_WINDOW_CANONICAL_API_AND_COUNT_GUARD');
 check(/traceOuterWindow/.test(drawWindowBody),'PARITY_WINDOW_CANONICAL_FRAME_PATH');
 check(js.includes('function canonicalBrainPoint')&&/D\.brain\.rows/.test(drawBrainBody)&&/D\.brain\.cols/.test(drawBrainBody),'PARITY_BRAIN_PARAMETRIC_PROJECTION_USED');
@@ -128,8 +128,13 @@ check(/shoulder/.test(drawTrophyBody)&&/rim/.test(drawTrophyBody)&&/neckCollar/.
 check(js.includes('sourceIdentityParity:Object.freeze')&&js.includes('mirrorlandCanonicalPaneCount:21'),'PARITY_RUNTIME_RECEIPT');
 check(/progress>\.68/.test(functionBody(js,'drawDiagnostic'))&&/drawBrain/.test(functionBody(js,'drawDiagnostic')),'PARITY_COHERISCOPE_ASSESSMENT_TO_BRAIN_VISUAL_HANDOFF');
 
+// Responsive cinematic text-fit gates added after the focused visual/runtime review.
+check(js.includes('function wrappedText')&&/wrappedText\(D\.build\.headline/.test(drawBuildBody)&&/drawBuildScopeLabel/.test(drawBuildBody),'VISUAL_BUILD_RESPONSIVE_TEXT_FIT');
+check(/naturalRailY/.test(drawBuildBody)&&/cy\+h\/2-20/.test(drawBuildBody),'VISUAL_BUILD_RAIL_BOUNDED');
+check(js.includes('function drawTrophyNameplate')&&/drawTrophyNameplate\(p\.nameplate,plaque,s\)/.test(drawTrophyBody),'VISUAL_TROPHY_NAMEPLATE_FIT');
+
 const passCount=results.filter(x=>x.pass).length,failCount=results.length-passCount;
-const receipt={schema:'COMPASS_HOLOGRAPHIC_FULL_SUCCESSOR_STATIC_VERIFICATION_RECEIPT_v1',result:failCount===0?'PASS_CLOSED':'FAIL_CLOSED',sourceIdentityParity:failCount===0,testCount:results.length,passCount,failCount,operationId:contract.operation.id,publicBaseHead:contract.operation.publicBaseHead,lockGeneration:contract.operation.lockGeneration,results};
-if(results.length!==101){receipt.result='FAIL_CLOSED';receipt.sourceIdentityParity=false;receipt.countError=`EXPECTED_101_ASSERTIONS_GOT_${results.length}`;process.stderr.write(`${receipt.countError}\n`)}
+const receipt={schema:'COMPASS_HOLOGRAPHIC_FULL_SUCCESSOR_STATIC_VERIFICATION_RECEIPT_v1',result:failCount===0?'PASS_CLOSED':'FAIL_CLOSED',sourceIdentityParity:failCount===0,responsiveVisualFit:failCount===0,testCount:results.length,passCount,failCount,operationId:contract.operation.id,publicBaseHead:contract.operation.publicBaseHead,lockGeneration:contract.operation.lockGeneration,results};
+if(results.length!==104){receipt.result='FAIL_CLOSED';receipt.sourceIdentityParity=false;receipt.responsiveVisualFit=false;receipt.countError=`EXPECTED_104_ASSERTIONS_GOT_${results.length}`;process.stderr.write(`${receipt.countError}\n`)}
 process.stdout.write(`${JSON.stringify(receipt,null,2)}\n`);
 if(receipt.result!=='PASS_CLOSED')process.exitCode=1;

@@ -107,6 +107,18 @@
     "intermediateBrowserInspectionBlocking": false,
     "staticVerifier": "node preview/compass/holographic-orientation-v1/full/verify.v1.mjs",
     "runtimeQualificationRequiredBeforeProductionAdoption": true,
+    "focusedVisualSmokeReview": {
+      "status": "PASS_FOCUSED",
+      "scope": "NONINTERACTIVE_CINEMATIC_VISUAL_AND_CONTROL_SMOKE",
+      "candidateHeadBeforeReceiptCommit": "bf54eba497a7681ae34cd8fe2e978ee25380beaf",
+      "viewports": [[320,480],[390,844],[1024,768],[1440,900]],
+      "buildResponsiveFit": "PASS",
+      "trophyNameplateFit": "PASS",
+      "unchangedPreviouslyPassedScenes": ["P1","P2","P3","P4","P5","P6","P7","P9","P11"],
+      "controlPaths": ["BEGIN","SKIP","REPLAY","NATURAL_COMPLETION"],
+      "reducedMotionSample": "PASS",
+      "fullDeviceMatrixRequired": false
+    },
     "targetDeviceThreeRunSevereDropRequirement": [0,0,0],
     "severeDropFormula": "L_t < 0.55*((L_t-1+L_t+1)/2) WITH NEIGHBOR_DIFFERENCE_RATIO < 0.12",
     "unexpectedDestinationGpuContexts": 0,

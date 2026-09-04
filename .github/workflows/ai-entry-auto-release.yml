@@ -32,6 +32,7 @@ jobs:
           sparse_paths=(
             "preview/bt4/entitlement-v1"
             "preview/bt4/operational-release-v1"
+            "preview/compass/holographic-orientation-v1/full"
             "h-earth-live-6d18e158/showroom/globe/h-earth"
             "inspection/audralia-24057-exact/snapshot/showroom/globe/audralia"
             "inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth"
@@ -67,10 +68,15 @@ jobs:
           test -f inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js
           test -f preview/bt4/entitlement-v1/verify-entitlement-preview.v1.mjs
           test -f preview/bt4/operational-release-v1/index.html
+          test -f preview/compass/holographic-orientation-v1/full/index.html
+          test -f preview/compass/holographic-orientation-v1/full/index.css
+          test -f preview/compass/holographic-orientation-v1/full/index.js
+          test -f preview/compass/holographic-orientation-v1/full/descriptors.v1.js
           test -d h-earth-live-6d18e158/showroom/globe/h-earth
           echo "AI_ENTRY_AUTO_RELEASE_SPARSE_INDEX_ENTRIES=$sparse_entries"
           echo "AI_ENTRY_AUTO_RELEASE_MATERIALIZED_FILES=$materialized_files"
           echo "AUDRALIA_EXACT_24057_MATERIALIZED=PASS"
+          echo "COMPASS_HOLOGRAPHIC_RUNTIME_MATERIALIZED=PASS"
 
       - name: Verify BT4 entitlement engine before publication
         shell: bash
@@ -96,8 +102,8 @@ jobs:
             --exclude='h-earth-live-6d18e158/' \
             ./ "$PAGES_STAGE/"
 
-          # The global preview tree remains excluded. Only these two explicit
-          # BT4 nonproduction experiments are admitted to the public serving path.
+          # The global preview tree remains excluded. Only explicitly admitted
+          # bounded serving paths below are published.
           claim_src='preview/bt4/entitlement-v1'
           claim_dst="$PAGES_STAGE/preview/bt4/entitlement-v1"
           ops_src='preview/bt4/operational-release-v1'
@@ -117,6 +123,22 @@ jobs:
           grep -Fq 'NONPRODUCTION · BT4 CROSS-OBJECT EXPERIMENT' "$ops_dst/index.html"
           grep -Fq "../entitlement-v1/entitlement-engine.v1.mjs" "$ops_dst/index.html"
           echo 'BT4_BOUNDED_PREVIEWS_STAGED=PASS'
+
+          # Compass production owns this exact adopted holographic runtime closure.
+          # Keep preview excluded globally; admit only the four files the live host uses.
+          compass_orientation_src='preview/compass/holographic-orientation-v1/full'
+          compass_orientation_dst="$PAGES_STAGE/preview/compass/holographic-orientation-v1/full"
+          test -f "$compass_orientation_src/index.html"
+          test -f "$compass_orientation_src/index.css"
+          test -f "$compass_orientation_src/index.js"
+          test -f "$compass_orientation_src/descriptors.v1.js"
+          mkdir -p "$compass_orientation_dst"
+          rsync -a --delete "$compass_orientation_src/" "$compass_orientation_dst/"
+          test -f "$compass_orientation_dst/index.html"
+          test -f "$compass_orientation_dst/index.css"
+          test -f "$compass_orientation_dst/index.js"
+          test -f "$compass_orientation_dst/descriptors.v1.js"
+          echo 'COMPASS_HOLOGRAPHIC_ORIENTATION_RUNTIME_STAGED=PASS'
 
           # Emit a deployment-time identity receipt for the real Generation 3
           # benchmark evidence consumed by the bounded BT4 real-object projection.

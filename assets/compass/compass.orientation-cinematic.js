@@ -2,7 +2,7 @@
 'use strict';
 
 const BUILD=Object.freeze({
-  version:'homepage-cinematic-shell-20260904-002',
+  version:'homepage-cinematic-shell-20260904-003',
   sourceMain:'46c56e0519fc875eac877b4bc921e3151b019a2f',
   specificationCommit:'88473442959299d6f6af82396917f0578074cab2',
   mutationClass:'BOUNDED_PAGE_RELEASE'
@@ -135,7 +135,14 @@ async function loadRenderer(){
   const final=finalModule.createFinalCinematicRenderer({stage:session.stage,media:mediaModule.CINEMATIC_MEDIA_MANIFEST});
   return Object.freeze({
     async mount(){primary.mount();final.mount();await final.prepare();return true;},
-    renderFrame(frame){primary.renderFrame(frame);final.renderFrame(frame);},
+    renderFrame(frame){
+      if(frame?.shot?.id==='S07'){
+        primary.renderFrame({...frame,shot:{...frame.shot,id:'S06',beat:'Elsewhere'},shotProgress:.96});
+      }else{
+        primary.renderFrame(frame);
+      }
+      final.renderFrame(frame);
+    },
     verifyHandoff(){return final.verifyHandoff();},
     inspect(){return Object.freeze({primary:primary.inspect?.(),final:final.inspect?.()});},
     dispose(){final.dispose?.();primary.dispose?.();}

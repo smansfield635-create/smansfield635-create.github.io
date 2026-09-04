@@ -1,0 +1,45 @@
+import { chromium } from 'playwright';
+import fs from 'node:fs';
+import crypto from 'node:crypto';
+
+const BASE=process.env.COMPASS_TEST_URL||'http://127.0.0.1:4173/';
+const SOURCE='/preview/compass/holographic-orientation-v1/full/';
+const EXPECTED_SOURCE_MAIN='2d214fe237aa748c16a07fd2ceafd6ec88ce95d7';
+const out='.qualification/compass-holographic-activation';
+fs.mkdirSync(out,{recursive:true});
+const sha256=b=>crypto.createHash('sha256').update(b).digest('hex');
+const evidence={schema:'COMPASS_HOLOGRAPHIC_ORIENTATION_PRODUCTION_ACTIVATION_QUALIFICATION_v1',result:'FAIL_CLOSED',sourceMain:EXPECTED_SOURCE_MAIN,tests:{},screenshots:[]};
+const fail=(m,d={})=>{throw new Error(`${m} :: ${JSON.stringify(d)}`)};
+const browser=await chromium.launch({headless:true});
+async function shot(page,name){const b=await page.screenshot({type:'png',fullPage:true});fs.writeFileSync(`${out}/${name}.png`,b);evidence.screenshots.push({name,sha256:sha256(b),bytes:b.length});}
+async function pageFor(viewport,reducedMotion='no-preference'){const context=await browser.newContext({viewport,reducedMotion});const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(String(e)));return{context,page,errors};}
+async function gotoReady(page){await page.goto(BASE,{waitUntil:'domcontentloaded'});await page.waitForSelector('[data-main-orientation-film]',{state:'visible',timeout:10000});await page.waitForFunction(()=>document.querySelector('[data-main-orientation-film]')?.dataset.sourceReady==='true',{timeout:10000});}
+async function waitGone(page,timeout=8000){await page.waitForFunction(()=>!document.querySelector('[data-main-orientation-film]'),{timeout});}
+async function hostState(page){return page.evaluate(()=>{const root=document.querySelector('[data-compass-root]'),film=document.querySelector('[data-main-orientation-film]'),frame=document.querySelector('[data-cinematic-holographic-frame]');return{rootInert:root?.inert,rootAriaHidden:root?.getAttribute('aria-hidden'),phase:document.documentElement.dataset.compassOrientationCinematic||'',sourceReady:film?.dataset.sourceReady||'',frameSrc:frame?.getAttribute('src')||'',overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,api:globalThis.DGB_MAIN_ORIENTATION_CINEMATIC?{version:globalThis.DGB_MAIN_ORIENTATION_CINEMATIC.version,durationMs:globalThis.DGB_MAIN_ORIENTATION_CINEMATIC.durationMs,sourceMain:globalThis.DGB_MAIN_ORIENTATION_CINEMATIC.sourceMain}:null};});}
+async function childState(page){const frame=page.frames().find(f=>f.url().includes(SOURCE));if(!frame)fail('ADOPTED_CHILD_FRAME_MISSING',{urls:page.frames().map(f=>f.url())});return frame.evaluate(()=>{const d=globalThis.DGB_HOLOGRAPHIC_FULL_DESCRIPTORS,r=globalThis.__DGB_HOLOGRAPHIC_FULL_RECEIPT__,visible=s=>{const el=document.querySelector(s);if(!el)return false;const cs=getComputedStyle(el),b=el.getBoundingClientRect();return cs.display!=='none'&&cs.visibility!=='hidden'&&b.width>0&&b.height>0};return{descriptorSchema:d?.schema||'',durationMs:d?.masterDurationMs||0,timeline:d?.timeline?.map(x=>x.label)||[],receiptSchema:r?.schema||'',receipt:r?.inspect?.()||null,previewStatusVisible:visible('[data-status]'),previewReplayVisible:visible('[data-replay]'),childSkipVisible:visible('[data-skip-orientation]'),windowPaneCount:d?.windowFallback?.paneCount||0,brainRows:d?.brain?.rows||0,brainCols:d?.brain?.cols||0};});}
+
+try{
+  // Exact adopted child is mounted through the production host at representative viewports.
+  for(const [name,viewport] of Object.entries({desktop:{width:1440,height:900},tablet:{width:1024,height:768},phone:{width:390,height:844},minimum:{width:320,height:480}})){
+    const x=await pageFor(viewport);try{await gotoReady(x.page);const host=await hostState(x.page),child=await childState(x.page);if(!host.rootInert||host.rootAriaHidden!=='true')fail('ACTIVE_HOST_DID_NOT_ISOLATE_COMPASS',{name,host});if(host.phase!=='ARMED'||host.sourceReady!=='true')fail('HOST_NOT_ARMED_READY',{name,host});if(!host.frameSrc.includes(SOURCE)||host.api?.sourceMain!==EXPECTED_SOURCE_MAIN||host.api?.durationMs!==40600)fail('HOST_SOURCE_BINDING_INVALID',{name,host});if(child.descriptorSchema!=='COMPASS_HOLOGRAPHIC_DESCRIPTOR_MANIFEST_v1'||child.receiptSchema!=='COMPASS_HOLOGRAPHIC_FULL_SUCCESSOR_RUNTIME_RECEIPT_v1'||child.durationMs!==40600)fail('CHILD_AUTHORITY_INVALID',{name,child});if(child.windowPaneCount!==21||child.brainRows!==34||child.brainCols!==54)fail('CHILD_SOURCE_IDENTITY_DRIFT',{name,child});if(child.previewStatusVisible||child.previewReplayVisible||child.childSkipVisible)fail('PREVIEW_ONLY_CHROME_VISIBLE_IN_PRODUCTION',{name,child});if(host.overflow>2)fail('HOST_HORIZONTAL_OVERFLOW',{name,host});await shot(x.page,`${name}-armed`);await x.page.locator('[data-main-orientation-skip]').click();await waitGone(x.page);const settled=await hostState(x.page);if(settled.rootInert||settled.rootAriaHidden==='true'||x.errors.length)fail('HOST_SKIP_SETTLEMENT_FAILED',{name,settled,errors:x.errors});evidence.tests[name]={result:'PASS',host,child,settled};}finally{await x.context.close();}
+  }
+
+  // The child can own terminality: its own Skip path reaches completed=true and the parent detects that receipt without navigation.
+  {const x=await pageFor({width:1440,height:900});try{await x.page.addInitScript(()=>{window.__activationEvents=[];document.addEventListener('dgb:compass-orientation-cinematic-settled',e=>window.__activationEvents.push(e.detail));});await gotoReady(x.page);const frame=x.page.frames().find(f=>f.url().includes(SOURCE));await frame.locator('[data-skip-orientation]').evaluate(el=>el.click());await waitGone(x.page,7000);const s=await x.page.evaluate(()=>({rootInert:document.querySelector('[data-compass-root]')?.inert,url:location.href,history:history.length,events:window.__activationEvents}));if(s.rootInert||s.events.length!==1||s.events[0]?.reason!=='skip'||s.events[0]?.urlUnchanged!==true||s.events[0]?.historyUnchanged!==true)fail('CHILD_RECEIPT_SETTLEMENT_FAILED',s);evidence.tests.childOwnedSettlement={result:'PASS',event:s.events[0]};}finally{await x.context.close();}}
+
+  // Begin enters the adopted cinematic and the parent follows the child PLAYING state; parent Skip remains authoritative fail-safe.
+  {const x=await pageFor({width:390,height:844});try{await gotoReady(x.page);const frame=x.page.frames().find(f=>f.url().includes(SOURCE));await frame.locator('[data-begin-orientation]').click();await x.page.waitForFunction(()=>document.documentElement.dataset.compassOrientationCinematic==='PLAYING',{timeout:8000});await shot(x.page,'phone-playing');await x.page.locator('[data-main-orientation-skip]').click();await waitGone(x.page);if(x.errors.length)fail('BEGIN_PLAY_SKIP_ERRORS',{errors:x.errors});evidence.tests.beginPlaySkip={result:'PASS'};}finally{await x.context.close();}}
+
+  // Reduced motion never initializes the timed child; it exposes the equivalent static summary and returns to Compass.
+  {const x=await pageFor({width:390,height:844},'reduce');try{await x.page.goto(BASE,{waitUntil:'domcontentloaded'});await x.page.waitForSelector('[data-main-orientation-film]',{state:'visible',timeout:10000});const s=await x.page.evaluate(()=>({frame:!!document.querySelector('[data-cinematic-holographic-frame]'),reduced:!!document.querySelector('.compass-orientation-cinematic__reduced'),rootInert:document.querySelector('[data-compass-root]')?.inert}));if(s.frame||!s.reduced||!s.rootInert)fail('REDUCED_MOTION_HOST_INVALID',s);await shot(x.page,'phone-reduced');await x.page.locator('[data-main-orientation-skip]').click();await waitGone(x.page);if(await x.page.locator('[data-compass-root]').evaluate(el=>el.inert))fail('REDUCED_MOTION_DID_NOT_RESTORE_COMPASS');evidence.tests.reducedMotion={result:'PASS',...s};}finally{await x.context.close();}}
+
+  // Source-route failure must fail open rather than strand the visitor behind the production overlay.
+  {const x=await pageFor({width:1440,height:900});try{await x.page.route('**/preview/compass/holographic-orientation-v1/full/**',route=>route.abort());await x.page.goto(BASE,{waitUntil:'domcontentloaded'});await x.page.waitForSelector('[data-main-orientation-film]',{state:'visible',timeout:10000});await waitGone(x.page,11000);const s=await x.page.evaluate(()=>({rootInert:document.querySelector('[data-compass-root]')?.inert,overlay:!!document.querySelector('[data-main-orientation-film]')}));if(s.rootInert||s.overlay)fail('SOURCE_FAILURE_DID_NOT_FAIL_OPEN',s);evidence.tests.failOpen={result:'PASS',...s};}finally{await x.context.close();}}
+
+  evidence.result='PASS_CLOSED';
+} finally {
+  await browser.close();
+  fs.writeFileSync(`${out}/receipt.json`,JSON.stringify(evidence,null,2)+'\n');
+}
+if(evidence.result!=='PASS_CLOSED')process.exit(2);
+console.log(JSON.stringify({result:evidence.result,sourceMain:evidence.sourceMain,tests:Object.fromEntries(Object.entries(evidence.tests).map(([k,v])=>[k,v.result])),screenshots:evidence.screenshots.map(x=>({name:x.name,sha256:x.sha256}))},null,2));

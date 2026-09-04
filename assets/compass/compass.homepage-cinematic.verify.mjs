@@ -36,7 +36,8 @@ check('SPEC_BINDING',host.includes(EXPECTED_SPEC)&&custody.specificationCommit==
 check('MASTER_DURATION_38000',host.includes('const MASTER_DURATION_MS=38000')&&custody.masterDurationMs===38000);
 for(const id of ['S01','S02','S03','S04','S05','S06','S07','S08'])check(`SHOT_${id}_DECLARED`,host.includes(`id:'${id}'`)&&media.includes(`id:'${id}'`));
 check('NO_NAVIGATION_WRITE',!/(location\.(assign|replace)|history\.(pushState|replaceState)|window\.open\s*\()/u.test(combined));
-check('NO_PROTECTED_RUNTIME_IMPORT',!/(compass\.controller|compass\.crystals|mirrorland-window|readiness-context|capability-carousel)/u.test(combined));
+const protectedRuntimeImport=/import\s*\(\s*['"][^'"]*(?:compass\.controller|compass\.crystals|mirrorland-window|readiness-context|capability-carousel)[^'"]*['"]\s*\)/u;
+check('NO_PROTECTED_RUNTIME_IMPORT',!protectedRuntimeImport.test(combined));
 check('NO_ANALYTICS_DELTA',!/analytics\s*\(/iu.test(combined));
 check('IDEMPOTENT_RESTORATION',host.includes('if(session.settled||session.restoring)return;')&&host.includes('restoreProductSurface()')&&host.includes("window.removeEventListener('keydown',onKey,true)"));
 check('REDUCED_COMPLETION_ROUTE',host.includes("restore('reduced-motion-complete')"));

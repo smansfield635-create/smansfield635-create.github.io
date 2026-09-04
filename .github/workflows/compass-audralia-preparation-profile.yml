@@ -11,14 +11,19 @@ permissions:
 jobs:
   profile-audralia-preparation:
     runs-on: ubuntu-24.04
-    timeout-minutes: 12
+    timeout-minutes: 10
     steps:
-      - name: Check out exact candidate
+      - name: Check out exact candidate profile surface
         uses: actions/checkout@v4
         with:
           ref: 2f1ad0c4c29cb0132dbeed4f4dad91fb548b3abe
           fetch-depth: 1
           persist-credentials: false
+          sparse-checkout: |
+            assets/compass
+            inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1
+            inspection/audralia-24057-exact/snapshot/h-earth-3d
+          sparse-checkout-cone-mode: true
 
       - name: Assert exact candidate identity
         shell: bash
@@ -26,6 +31,8 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "2f1ad0c4c29cb0132dbeed4f4dad91fb548b3abe"
           grep -Fq "audraliaPromise=prepareAudralia" assets/compass/compass.orientation-cinematic.render.js
+          test -f inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs
+          test -f inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js
 
       - name: Instrument Audralia preparation in runner workspace only
         shell: bash
@@ -62,7 +69,20 @@ jobs:
           fs.writeFileSync(path,s);
           NODE
           git diff --check
-          git diff -- assets/compass/compass.orientation-cinematic.render.js
+
+      - name: Build isolated browser harness
+        shell: bash
+        run: |
+          cat >profile.html <<'HTML'
+          <!doctype html><html><head><meta charset="utf-8"><style>html,body,#stage{margin:0;width:100%;height:100%;overflow:hidden;background:#050b12}</style></head><body><div id="stage"></div><script type="module">
+          import {createCinematicRenderer} from '/assets/compass/compass.orientation-cinematic.render.js';
+          globalThis.__DGB_PROFILE_HARNESS={startedAt:performance.now()};
+          const renderer=createCinematicRenderer({stage:document.getElementById('stage'),media:{schema:'COMPASS_MAIN_HOMEPAGE_CINEMATIC_MEDIA_MANIFEST_v1'}});
+          globalThis.__DGB_PROFILE_RENDERER=renderer;
+          renderer.mount();
+          globalThis.__DGB_PROFILE_HARNESS.mountedAt=performance.now();
+          </script></body></html>
+          HTML
 
       - name: Set up Chrome
         uses: browser-actions/setup-chrome@v1
@@ -74,13 +94,13 @@ jobs:
           npm install --no-save --no-package-lock puppeteer-core@24.15.0
           node -e "require.resolve('puppeteer-core')"
 
-      - name: Serve instrumented exact candidate
+      - name: Serve isolated profile harness
         shell: bash
         run: |
           set -euo pipefail
           python3 -m http.server 4173 >/tmp/compass-audralia-profile-http.log 2>&1 &
           for i in $(seq 1 30); do
-            curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0
+            curl -fsS http://127.0.0.1:4173/profile.html >/dev/null && exit 0
             sleep 1
           done
           cat /tmp/compass-audralia-profile-http.log || true
@@ -97,7 +117,6 @@ jobs:
           const fs=require('node:fs');
           const puppeteer=require('puppeteer-core');
           const resultPath=process.env.RESULT_PATH;
-          const url='http://127.0.0.1:4173/?compassCinematicConstruction=1';
           (async()=>{
             const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage']});
             const page=await browser.newPage();
@@ -116,15 +135,19 @@ jobs:
               },50);
             });
             const wallStart=Date.now();
-            await page.goto(url,{waitUntil:'domcontentloaded',timeout:30000});
+            await page.goto('http://127.0.0.1:4173/profile.html',{waitUntil:'domcontentloaded',timeout:30000});
             await page.waitForFunction(()=>Boolean(globalThis.__DGB_AUDRALIA_PREP_PROFILE?.events?.some(e=>e.label==='planetary_complete')),{timeout:60000});
             const state=await page.evaluate(()=>{
-              const p=globalThis.__DGB_AUDRALIA_PREP_PROFILE||null;
+              const profile=globalThis.__DGB_AUDRALIA_PREP_PROFILE||null;
               const hb=globalThis.__DGB_HEARTBEATS||[];
-              const maxGap=hb.reduce((m,x)=>Math.max(m,Number(x.gap)||0),0);
-              const topGaps=[...hb].sort((a,b)=>b.gap-a.gap).slice(0,8);
-              const api=globalThis.DGB_MAIN_ORIENTATION_CINEMATIC;
-              return {profile:p,maxHeartbeatGapMs:maxGap,topHeartbeatGaps:topGaps,cinematic:api?.inspect?.()||null,heartbeatCount:hb.length};
+              return {
+                profile,
+                harness:globalThis.__DGB_PROFILE_HARNESS||null,
+                renderer:globalThis.__DGB_PROFILE_RENDERER?.inspect?.()||null,
+                maxHeartbeatGapMs:hb.reduce((m,x)=>Math.max(m,Number(x.gap)||0),0),
+                topHeartbeatGaps:[...hb].sort((a,b)=>b.gap-a.gap).slice(0,8),
+                heartbeatCount:hb.length
+              };
             });
             const receipt={schema:'COMPASS_AUDRALIA_PREPARATION_PROFILE_v1',targetSha:'2f1ad0c4c29cb0132dbeed4f4dad91fb548b3abe',wallMs:Date.now()-wallStart,...state,pageErrors,consoleErrors};
             fs.writeFileSync(resultPath,JSON.stringify(receipt,null,2));

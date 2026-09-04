@@ -144,6 +144,35 @@ body{position:relative;isolation:isolate;overflow-x:clip}
 @media(max-width:520px){.orbit-card{width:min(76vw,20rem)}.orbit-card-inner{padding:1.1rem}.orbit-card-title{font-size:clamp(1.85rem,9.5vw,2.8rem)}.orbit-card-copy{font-size:.76rem}.orbit-controls{padding-inline:.65rem}.shared-bridge{border-radius:1rem}.shared-bridge-content{padding:1rem}}
 @media(prefers-reduced-motion:reduce){.orbit-card{filter:none}.reader[data-bridge-open="true"] .reader-turn{display:none}}
 </style>
+<style id="top-level-progressive-disclosure-construction">
+.hero{position:relative;isolation:isolate}
+.hero::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,rgba(2,5,10,.46),rgba(2,5,10,.72) 54%,rgba(2,5,10,.58)),radial-gradient(circle at 34% 42%,rgba(2,5,10,.46),rgba(2,5,10,.18) 44%,transparent 70%)}
+.hero-inner{position:relative;z-index:1}
+.hero h1{font-size:clamp(3.65rem,9.2vw,8rem);max-width:9ch;overflow-wrap:normal;word-break:normal;hyphens:none}
+.hero-disclosure{max-width:52rem;margin:.9rem 0 0;padding-top:.7rem;border-top:1px solid rgba(198,220,227,.13)}
+.hero-disclosure summary,.standing-signal summary{cursor:pointer}
+.hero-disclosure summary{color:#9fc3c9;font-size:.74rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.hero-disclosure summary::marker,.standing-signal summary::marker{color:var(--cyan)}
+.hero-disclosure[open] summary{color:#fff0bd}
+.hero-context{margin:.72rem 0 0;color:#aebdc0;font-size:.92rem}
+.status{gap:.65rem}
+.status .standing-signal{padding:0;border:1px solid rgba(198,220,227,.13);border-radius:.9rem;background:rgba(2,8,13,.38);overflow:hidden}
+.standing-signal summary{padding:.82rem .85rem;list-style-position:inside}
+.standing-label{display:block;margin:0 0 .24rem!important;color:var(--cyan)!important;font:900 .6rem/1.25 ui-monospace,SFMono-Regular,Menlo,monospace!important;letter-spacing:.14em;text-transform:uppercase}
+.standing-subject{display:block;margin:0!important;color:#f7edcb!important;font-size:.87rem!important;font-weight:850}
+.standing-metric{display:block;margin:.24rem 0 0!important;color:#9fb3b9!important;font:780 .71rem/1.4 ui-monospace,SFMono-Regular,Menlo,monospace!important}
+.standing-signal[data-standing="configuration"] .standing-label{color:var(--violet)!important}
+.standing-signal[data-standing="formal"] .standing-label{color:var(--gold)!important}
+.standing-depth{padding:.74rem .85rem .82rem;border-top:1px solid rgba(198,220,227,.10);background:rgba(1,7,12,.28)}
+.status .standing-depth p{margin:0;color:#93a8ae;font-size:.76rem}
+.status .standing-depth p+p{margin-top:.55rem}
+.standing-context{color:#b9ab7d!important}
+.standing-ceiling{margin:.82rem 0 0;padding:.78rem .86rem;border-left:2px solid var(--violet);border-radius:0 .76rem .76rem 0;background:linear-gradient(90deg,rgba(192,173,255,.08),transparent);color:#aab9bd;font-size:.78rem}
+@media(max-width:900px){.hero h1{max-width:9ch}.hero-proof{max-width:42rem}}
+@media(max-width:600px){.hero::before{background:linear-gradient(180deg,rgba(2,5,10,.72),rgba(2,5,10,.84) 58%,rgba(2,5,10,.68)),radial-gradient(circle at 45% 35%,rgba(2,5,10,.58),transparent 72%)}.hero h1{font-size:clamp(3.1rem,14.5vw,4.9rem);max-width:100%;line-height:.92;letter-spacing:-.05em}.hero .proposition{font-size:1.05rem}.hero-proof{max-width:none}.hero-context{font-size:.86rem}}
+@media(max-width:380px){.hero h1{font-size:clamp(2.85rem,14vw,3.6rem)}}
+@media(prefers-reduced-motion:reduce){.hero-disclosure,.standing-signal{scroll-behavior:auto}}
+</style>
 </head>
 <body>
 <a class="skip" href="#research-frontier">Skip to research</a>
@@ -158,8 +187,8 @@ body{position:relative;isolation:isolate;overflow-x:clip}
 <main id="research-frontier">
 <section class="hero" aria-labelledby="frontier-title">
 <div class="hero-inner">
-<div><p class="eyebrow">Diamond Gate Bridge · Research Frontier</p><h1 id="frontier-title">The results are no longer theoretical.</h1><p class="proposition">Diamond Gate Bridge is testing a deeper question: <strong>can coherence be measured—and does it tell us something real about what happens next?</strong> Across prospectively tested scientific studies, cross-domain experiments, controlled agentic comparisons, negative results, recovery events, and governed production at unusual scale, the Research Frontier documents what has held, what has failed, and what remains unproven.</p><p class="challenge-line">906 pull requests in one audited month is one result. The coherence experiments are another. Together, they form the evidence—not the conclusion.</p><div class="actions"><a class="action primary" href="#frontier-chapters">Explore the Frontier</a><a class="action" href="#frontier-chapters" data-open-reader data-open-object="missing" data-open-lens="missing">Challenge the Result</a></div></div>
-<aside class="hero-proof" aria-label="Current research standing"><small>Current standing</small><div class="status"><div><b>Scientific strand</b><span>Diamond Gate’s viable-futures proposition is prospectively testable and open to falsification. Broad cross-domain generality and independent replication remain open.</span></div><div><b>Agentic strand</b><span>Within one audited month: 906 pull requests, 699 retained as material, one bounded matched comparison, and documented recovery from durable state.</span></div><div class="bounded"><b>Claim ceiling</b><span>The record demonstrates scale, custody, comparison, and recovery—not universal superiority, causal efficacy, or a measured efficiency gain.</span></div></div></aside>
+<div><p class="eyebrow">Diamond Gate Bridge · Research Frontier</p><h1 id="frontier-title">The results are no longer theoretical.</h1><p class="proposition">Diamond Gate Bridge is testing a deeper question: <strong>can coherence be measured—and does it tell us something real about what happens next?</strong></p><details class="hero-disclosure"><summary>Open the full context</summary><p class="hero-context">Across prospectively tested scientific studies, cross-domain experiments, controlled agentic comparisons, negative results, recovery events, and governed production at unusual scale, the Research Frontier documents what has held, what has failed, and what remains unproven.</p></details><div class="actions"><a class="action primary" href="#frontier-chapters">Explore the Frontier</a><a class="action" href="#frontier-chapters" data-open-reader data-open-object="missing" data-open-lens="missing">Challenge the Result</a></div></div>
+<aside class="hero-proof" aria-label="Current research standing"><small>Current standing</small><div class="status"><details class="standing-signal" data-standing="empirical" data-crosswalk-binding="CW-SCI-EVIDENCE-01"><summary><span class="standing-label">BOUNDED EMPIRICAL</span><span class="standing-subject">LVTG · 659 fresh RTS24 states</span><span class="standing-metric">RMSE 0.05687 -&gt; 0.04190</span></summary><div class="standing-depth"><p>The frozen prospective result is a bounded predictive improvement, not mechanism identification or a universal law. Later non-identifiable matched-state tests do not erase this earlier result.</p></div></details><details class="standing-signal" data-standing="configuration" data-crosswalk-binding="CW-AG-EVIDENCE-01"><summary><span class="standing-label">CONFIGURATION BOUNDED</span><span class="standing-subject">Agentic Frontier · 24 frozen tasks</span><span class="standing-metric">Diamond Gate 10 · tested OpenHands 0</span></summary><div class="standing-depth"><p>The result is limited to the tested configuration. Comparator end-to-end tool-loop health remained unresolved; universal architecture superiority, PSALM causation, and architecture-only causation are not claimed. Study 2 remains unopened with zero outcomes.</p><p class="standing-context">Supporting context: one audited month retained 699 material PRs from 906 total—17 PARAMOUNT + 682 STANDARD. Production scale is context, not a primary scientific accomplishment.</p></div></details><details class="standing-signal" data-standing="formal" data-crosswalk-binding="CW-SCI-EVIDENCE-02"><summary><span class="standing-label">FORMAL</span><span class="standing-subject">Coherence Geometry · 3,072 models</span><span class="standing-metric">18,432 observer checks</span></summary><div class="standing-depth"><p>This is a conditional formal theorem under the stated definitions. Formal verification is distinct from empirical physical validation and does not establish a physical law, cosmology, or universal empirical interpretation.</p></div></details></div><p class="standing-ceiling">Bounded empirical, configuration-bounded, and formal results are distinct. Generality, causation, and independent replication remain open.</p></aside>
 </div>
 </section>
 <section class="orbital-frontier" id="frontier-chapters" aria-labelledby="orbit-title">

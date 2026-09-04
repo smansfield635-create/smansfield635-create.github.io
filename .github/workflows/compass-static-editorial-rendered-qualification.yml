@@ -77,7 +77,18 @@ jobs:
             page.on('pageerror', e => errors.push(String(e)));
             page.on('requestfailed', r => failedRequests.push(`${r.method()} ${r.url()} :: ${r.failure()?.errorText||'failed'}`));
             await page.goto('http://127.0.0.1:4173/', {waitUntil:'networkidle'});
-            await page.waitForTimeout(1000);
+            await page.waitForTimeout(500);
+            const cinematic = page.locator('[data-main-orientation-film]').first();
+            if (await cinematic.count() === 1 && await cinematic.isVisible()) {
+              const skip = cinematic.locator('[data-main-orientation-skip], button:has-text("Skip")').first();
+              if (await skip.count() !== 1) throw new Error(`${name}: cinematic Skip control missing`);
+              await skip.click();
+              await page.waitForFunction(() => {
+                const el=document.querySelector('[data-main-orientation-film]');
+                return !el || getComputedStyle(el).display==='none' || getComputedStyle(el).visibility==='hidden' || Number(getComputedStyle(el).opacity)<=0.01;
+              }, {timeout:7000});
+              await page.waitForTimeout(150);
+            }
             const video = page.locator('.compass-editorial-film video').first();
             if (await video.count() !== 1) throw new Error(`${name}: Chapter One video element missing`);
             const media = await video.evaluate(el => ({currentSrc:el.currentSrc||el.querySelector('source')?.src||''}));
@@ -147,7 +158,7 @@ jobs:
             await page.close();
           }
           await browser.close();
-          fs.writeFileSync('.qualification/compass-static-editorial/receipt.json', JSON.stringify({result:'PASS_CLOSED',mediaProof:'registry-bound-65s-owner-approved-target-unchanged-in-pr',results},null,2));
+          fs.writeFileSync('.qualification/compass-static-editorial/receipt.json', JSON.stringify({result:'PASS_CLOSED',mediaProof:'registry-bound-65s-owner-approved-target-unchanged-in-pr',cinematicSettlement:'SKIP_BEFORE_EDITORIAL_INSPECTION',results},null,2));
           NODE
           node .qualification/compass-static-editorial/inspect.mjs
       - uses: actions/upload-artifact@v4

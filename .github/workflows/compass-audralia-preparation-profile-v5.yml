@@ -1,0 +1,85 @@
+name: Compass Audralia Preparation Stage Isolation V5
+
+on:
+  push:
+    branches:
+      - qualification/compass-audralia-preparation-profile-2f1ad0c4-20260904
+
+permissions:
+  contents: read
+
+jobs:
+  isolate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Check out exact candidate surface
+        uses: actions/checkout@v4
+        with:
+          ref: 2f1ad0c4c29cb0132dbeed4f4dad91fb548b3abe
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            assets/compass
+            inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1
+            inspection/audralia-24057-exact/snapshot/h-earth-3d
+          sparse-checkout-cone-mode: true
+
+      - name: Instrument stage boundaries in runner only
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "2f1ad0c4c29cb0132dbeed4f4dad91fb548b3abe"
+          node <<'NODE'
+          const fs=require('node:fs'),path='assets/compass/compass.orientation-cinematic.render.js';let s=fs.readFileSync(path,'utf8');
+          const once=(token,repl)=>{const i=s.indexOf(token);if(i<0||s.indexOf(token,i+token.length)>=0)throw new Error('TOKEN:'+token);s=s.slice(0,i)+repl+s.slice(i+token.length)};
+          once("const canvas=scene.querySelector('.cinematic-audralia__canvas');",`const canvas=scene.querySelector('.cinematic-audralia__canvas');
+            const p=globalThis.__DGB_AUDRALIA_PREP_PROFILE||(globalThis.__DGB_AUDRALIA_PREP_PROFILE={events:[]}); const mode=new URLSearchParams(location.search).get('stage')||'planetary'; const start=performance.now(); p.events.push({label:'prepare_start',t:start}); const i0=performance.now();`);
+          once('const module=await import(AUDRALIA_RENDERER_URL);',`const module=await import(AUDRALIA_RENDERER_URL); p.importMs=performance.now()-i0; p.events.push({label:'import_complete',t:performance.now()}); if(mode==='import')throw new Error('PROFILE_STOP_AFTER_IMPORT'); const c0=performance.now();`);
+          once('const renderer=module.createMapWideEnvironmentRenderer(canvas);',`const renderer=module.createMapWideEnvironmentRenderer(canvas); p.constructMs=performance.now()-c0; p.events.push({label:'construct_complete',t:performance.now()}); if(mode==='construct')throw new Error('PROFILE_STOP_AFTER_CONSTRUCT'); const v0=performance.now();`);
+          once('renderer.planetaryVantage();',`renderer.planetaryVantage(); p.planetaryMs=performance.now()-v0; p.events.push({label:'planetary_complete',t:performance.now()}); p.totalMs=performance.now()-start;`);
+          fs.writeFileSync(path,s);
+          NODE
+          git diff --check
+          cat >profile.html <<'HTML'
+          <!doctype html><html><body style="margin:0"><div id="stage" style="width:1440px;height:1000px"></div><script type="module">import {createCinematicRenderer} from '/assets/compass/compass.orientation-cinematic.render.js';const r=createCinematicRenderer({stage:document.getElementById('stage'),media:{schema:'COMPASS_MAIN_HOMEPAGE_CINEMATIC_MEDIA_MANIFEST_v1'}});globalThis.__DGB_PROFILE_RENDERER=r;r.mount();</script></body></html>
+          HTML
+
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install dependency
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Serve harness
+        shell: bash
+        run: |
+          python3 -m http.server 4173 >/tmp/profile-http.log 2>&1 &
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/profile.html >/dev/null && exit 0; sleep 1; done
+          cat /tmp/profile-http.log; exit 1
+
+      - name: Measure import construction and planetary stages
+        shell: bash
+        env:
+          RESULT_PATH: /tmp/compass-audralia-stage-isolation-v5.json
+        run: |
+          set -euo pipefail
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          cat >profile-v5.cjs <<'NODE'
+          const fs=require('node:fs'),puppeteer=require('puppeteer-core');
+          (async()=>{const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage']});const results=[];
+          for(const mode of ['import','construct','planetary']){const page=await browser.newPage();await page.setViewport({width:1440,height:1000,deviceScaleFactor:1});const errors=[],consoleErrors=[];page.on('pageerror',e=>errors.push(String(e?.message||e)));page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())});await page.evaluateOnNewDocument(()=>{globalThis.__HB=[];let last=performance.now();setInterval(()=>{const now=performance.now();globalThis.__HB.push(now-last);last=now},50)});const wall=Date.now();let timeout=false;await page.goto(`http://127.0.0.1:4173/profile.html?stage=${mode}`,{waitUntil:'domcontentloaded',timeout:30000});try{await page.waitForFunction((m)=>{const p=globalThis.__DGB_AUDRALIA_PREP_PROFILE,r=globalThis.__DGB_PROFILE_RENDERER?.inspect?.();if(m==='import')return p?.events?.some(e=>e.label==='import_complete')&&r?.audraliaError; if(m==='construct')return p?.events?.some(e=>e.label==='construct_complete')&&r?.audraliaError; return p?.events?.some(e=>e.label==='planetary_complete')||r?.audraliaError},{timeout:90000},mode)}catch{timeout=true}let state=null;try{state=await Promise.race([page.evaluate(()=>{const hb=globalThis.__HB||[];return{profile:globalThis.__DGB_AUDRALIA_PREP_PROFILE||null,renderer:globalThis.__DGB_PROFILE_RENDERER?.inspect?.()||null,maxHeartbeatGapMs:hb.reduce((m,x)=>Math.max(m,x||0),0),heartbeatCount:hb.length}}),new Promise((_,rej)=>setTimeout(()=>rej(new Error('snapshot-timeout')),5000))])}catch(e){state={snapshotError:String(e?.message||e)}}results.push({mode,wallMs:Date.now()-wall,timeout,state,errors,consoleErrors});await page.close()}
+          await browser.close();const receipt={schema:'COMPASS_AUDRALIA_PREPARATION_STAGE_ISOLATION_v1',targetSha:'2f1ad0c4c29cb0132dbeed4f4dad91fb548b3abe',results};fs.writeFileSync(process.env.RESULT_PATH,JSON.stringify(receipt,null,2));console.log(JSON.stringify(receipt,null,2));})().catch(e=>{fs.writeFileSync(process.env.RESULT_PATH,JSON.stringify({schema:'COMPASS_AUDRALIA_PREPARATION_STAGE_ISOLATION_v1',transportError:String(e?.stack||e)},null,2));console.error(e);process.exit(2)});
+          NODE
+          node profile-v5.cjs
+
+      - name: Upload stage evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-audralia-stage-isolation-v5-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/compass-audralia-stage-isolation-v5.json
+          if-no-files-found: error
+          retention-days: 90

@@ -24,7 +24,7 @@ button{font:inherit}
 .copy-label{margin:0 0 8px;color:var(--gold);font-size:.63rem;font-weight:950;letter-spacing:.19em;text-transform:uppercase}
 .copy-line{margin:0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.55rem,4.2vw,2.65rem);line-height:1.07;letter-spacing:-.035em}
 .progress{position:absolute;left:50%;bottom:14px;width:min(340px,58vw);height:1px;transform:translateX(-50%);background:rgba(255,255,255,.10)}
-.progress>span{display:block;height:1px;width:0;background:linear-gradient(90deg,var(--cyan),var(--gold))}
+.progress>span{display:block;height:1px;width:100%;transform:scaleX(0);transform-origin:left center;background:linear-gradient(90deg,var(--cyan),var(--gold))}
 .preview-controls{position:absolute;z-index:7;right:max(14px,env(safe-area-inset-right));top:max(14px,env(safe-area-inset-top));display:flex;gap:8px}
 .preview-controls button{min-height:42px;padding:0 13px;border:1px solid rgba(199,223,225,.18);border-radius:999px;background:rgba(2,9,14,.78);color:#dce6e2;font-size:.7rem;font-weight:900;letter-spacing:.07em;text-transform:uppercase;cursor:pointer}
 .preview-controls button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}

@@ -1,7 +1,7 @@
 # Compass Main Homepage Cinematic — Shot Construction Specification
 
 Film: **Welcome to Diamond Gate Bridge**  
-Status: **CHECKPOINT C — S01–S06 SOURCE-BOUND / NOT YET CLOSED**  
+Status: **CHECKPOINT D — ALL SHOTS SOURCE-BOUND / CLOSURE AUDIT PENDING**  
 Date: 2026-09-04  
 Governing starting `main`: `90413dd4020072fb7b6fa391868ba19e4287eab4`  
 Candidate branch: `ai/compass-homepage-cinematic-spec-20260904`
@@ -15,7 +15,7 @@ This is the durable construction specification required by:
 
 The CURRENT handoff controls any execution-boundary conflict. This file is specification only. It does **not** authorize product/runtime construction, mutation, publication, deployment, controller changes, route changes, navigation changes, carousel changes, or Mirrorland/world changes.
 
-The originating recordings are evidentiary references, not construction dependencies. Repository-resident film masters may establish visual/non-regression floors without becoming required footage.
+Originating recordings are evidentiary references, not construction dependencies. Repository-resident film masters may establish visual/non-regression floors without becoming required footage.
 
 > Durable forward progress outranks maximum single-turn completeness.
 
@@ -33,7 +33,7 @@ Therefore:
 
 - dimensional Compass authority cannot become generic compass line art;
 - a rendered world cannot become a flat map or orbital doodle;
-- carousel/capability families cannot become unrelated icon scenes;
+- capability/carousel families cannot become unrelated icon scenes;
 - holographic/luminous/spatial representations cannot become weaker wireframes;
 - Chapter One must be the actual Chapter One destination, never the rejected heart shorthand;
 - House, Coheriscope/Coherence Diagnostic, and Awards remain a Three Ways to Engage family;
@@ -42,7 +42,7 @@ Therefore:
 - About is the directing/composition floor;
 - successful awards films are the motion/finish/depth/holographic/compositing floor.
 
-Motion must reveal meaning. Mobile is a distinct composition. Reduced motion preserves complete semantics. Every deep movement preserves an explicit return.
+Motion must reveal meaning. Mobile is a distinct composition. Reduced motion preserves complete semantics. Every deep movement preserves explicit return.
 
 ## 4. Frozen narrative architecture and timing
 
@@ -59,7 +59,7 @@ Motion must reveal meaning. Mobile is a distinct composition. Reduced motion pre
 
 Total successor runtime: **38.000 s**.
 
-The first three windows were already frozen before this specification. The S04–S08 allocation is the specification-level timing reconciliation required to preserve both the established 38-second successor envelope and the repository handoff's explicit Breadth/Engagement beat. It uses the CURRENT handoff's permission to move individual shot timing by seconds without reopening narrative architecture. It is not a claim that the incumbent 40.6-second production host is timing authority.
+The first three windows were already frozen before this specification. The S04–S08 allocation is the specification-level timing reconciliation required to preserve both the established 38-second successor envelope and the repository handoff's explicit Breadth/Engagement beat. It uses the CURRENT handoff's permission to move individual shot timing by seconds without reopening narrative architecture. The incumbent host's `MASTER_DURATION=40600` is historical runtime authority only and is not successor timing authority.
 
 Narrative traversal: **Arrival → orientation → invitation → choice/readiness → threshold → elsewhere/world → breadth/engagement → return with agency.**
 
@@ -73,137 +73,148 @@ A shot is construction-ready only when those fields make a generic substitute im
 
 ### S01 — Arrival — READY
 
-1. **Source authority:** `index.html` blob `aa476ee5f6e74f56f2415bd8d36edfe1fa7a85ec`; exact hero selectors `.compass-estate__header`, `.compass-editorial-brand`, `.compass-estate__kicker`, `#compass-title`, `.compass-studio-identity`, `.compass-motivation`. Fibonacci page-night authority: `assets/compass/compass.cosmos.js` blob `4fe781df1a8876218c6f081b6ec88d5d2d6044c7`. Hero/page-night styling floor: `assets/compass/compass.css` blob `742966fff6a20455195510711e786f112f4e72c0`.
-2. **Visible objects/state:** full-frame repository-native star field; dominant `DIAMOND GATE BRIDGE`; secondary `Independent Interactive Experience & Research Studio`; `Find Your Way` permitted only as the transition cue. No screenshot, chrome, panel, icon montage, or unrelated object.
-3. **Opening composition:** near-black to sparse Fibonacci stars; title resolves at viewport scale and becomes fully readable; secondary identity remains architectural rather than a tiny caption.
-4. **Motion:** restrained continuous push through the star field; title layers resolve at different depth rates; no generic particle burst/light streak; final 0.7 s recedes into persistent stars.
+1. **Source authority:** `index.html` blob `aa476ee5f6e74f56f2415bd8d36edfe1fa7a85ec`; exact hero selectors `.compass-estate__header`, `.compass-editorial-brand`, `.compass-estate__kicker`, `#compass-title`, `.compass-studio-identity`, `.compass-motivation`. Fibonacci page-night authority: `assets/compass/compass.cosmos.js` blob `4fe781df1a8876218c6f081b6ec88d5d2d6044c7`. Styling floor: `assets/compass/compass.css` blob `742966fff6a20455195510711e786f112f4e72c0`.
+2. **Visible objects/state:** full-frame repository-native star field; dominant `DIAMOND GATE BRIDGE`; secondary `Independent Interactive Experience & Research Studio`; `Find Your Way` only as transition cue. No screenshot, chrome, panel, icon montage, or unrelated object.
+3. **Opening composition:** near-black to sparse Fibonacci stars; title resolves at viewport scale; secondary identity remains architectural rather than a tiny caption.
+4. **Motion:** restrained continuous push through star field; title layers resolve at different depth rates; no generic particle burst/light streak; final 0.7 s recedes into persistent stars.
 5. **Exact copy:** `DIAMOND GATE BRIDGE`; `Independent Interactive Experience & Research Studio`; optional final `Find Your Way`.
-6. **Timing:** 0.000–0.600 atmosphere; 0.600–2.650 title; 2.650–3.800 studio identity; 3.800–4.500 recede/transition cue.
-7. **Transition:** preserve atmosphere into S02; the real cardinal constellation resolves inside the same field. Do not pretend random stars literally morph into cardinal objects.
-8. **Acquisition:** SOURCE RECONSTRUCTION / COMPOSITE from current literals/hierarchy and deterministic `compass.cosmos.js` field logic; never the user screen recording.
+6. **Timing:** 0.000–0.600 atmosphere; 0.600–2.650 title; 2.650–3.800 studio identity; 3.800–4.500 recede/cue.
+7. **Transition:** preserve atmosphere into S02; real cardinal constellation resolves inside the same field. Random stars do not falsely morph into cardinal objects.
+8. **Acquisition:** SOURCE RECONSTRUCTION / COMPOSITE from current literals/hierarchy and deterministic `compass.cosmos.js`; never the user recording.
 9. **Protected authority:** live Compass controller/navigation/routes/carousels/Mirrorland/focus/history/analytics untouched.
-10. **Non-regression:** current homepage hero + `about/about-source-to-shot-binding.v1.json` blob `16a58d6f8f1b502f534d645b298da937aecbd3c8` for viewport-scale composition, causal transitions, and mobile crop-not-shrink.
-11. **Mobile/reduced:** portrait composition crops atmosphere before shrinking identity; reduced motion uses static field + direct opacity/depth states.
-12. **Handoff:** nonterminal; no live application state; visual continuity only.
+10. **Non-regression:** current homepage hero + `about/about-source-to-shot-binding.v1.json` blob `16a58d6f8f1b502f534d645b298da937aecbd3c8`.
+11. **Mobile/reduced:** portrait crops atmosphere before shrinking identity; reduced uses static field + direct opacity/depth states.
+12. **Handoff:** nonterminal; no live application state.
 
 ### S02 — Orientation — READY
 
-1. **Source authority:** `index.html` blob `aa476...` exact Compass surface `[data-compass-scene]`, `[data-compass-crystals-mount]`, `[data-compass-objects]`; `assets/compass/compass.crystals.js` blob `cd2cbad0494852cc80c51959a6827407d037b8fb`; `assets/compass/compass.css` blob `742966...`. **Negative binding:** `assets/compass/upstream-compass.geometry.js` blob `fe35d8d844859a6af810684ace53d2c65258522f` is the fixed-center Home Compass and must not replace the homepage constellation.
-2. **Visible objects/state:** four real dimensional cardinal crystal stars on the right-handed spherical constellation; one readable foreground cardinal at a time; identities remain `Orientation`, `Worlds`, `Instruments`, `Frontier`.
-3. **Opening composition:** S01 atmosphere persists; constellation occupies the dominant frame with canonical North/Orientation forward; ordinary panel/tutorial chrome omitted.
-4. **Motion:** use real spherical/quaternion grammar; one controlled rotation reveals depth and one clean foreground-identity change before settlement; geometry/label/semantic state stay coherent; restrained camera push/arc supports, not replaces, object motion.
-5. **Exact copy:** `Welcome to the Compass.`; cardinal labels only when their corresponding star is truly foreground.
-6. **Timing:** 4.500–5.300 resolve; 5.300–7.700 controlled rotation/arc; 7.700–8.850 settle; 8.850–9.500 recede for Chapter One.
-7. **Transition:** constellation recedes while actual Chapter One editorial plane enters; never imply Chapter One is a North/cardinal route.
-8. **Acquisition:** SOURCE RECONSTRUCTION using actual crystal geometry/material/foreground rules in isolated/read-only cinematic rendering; no generic SVG/line art and no live controller drive for acquisition.
-9. **Protected authority:** controller, crystal runtime, cardinal/room declarations, routes, room topology, Mirrorland, navigation, focus, durable state.
-10. **Non-regression:** current live Compass + repository `diamond-gate-compass-mirrorland-36s.mp4` blob `cf3779d196f8479d3b71be77c06a0a2aeddfab08` as motion/finish/holographic floor + About directing floor.
-11. **Mobile/reduced:** keep Compass large; crop atmosphere instead of shrinking into dead space; reduced motion may use canonical North-forward static state plus direct settled-state change.
+1. **Source authority:** `index.html` blob `aa476...` exact `[data-compass-scene]`, `[data-compass-crystals-mount]`, `[data-compass-objects]`; `assets/compass/compass.crystals.js` blob `cd2cbad0494852cc80c51959a6827407d037b8fb`; `assets/compass/compass.css` blob `742966...`. **Negative binding:** `assets/compass/upstream-compass.geometry.js` blob `fe35d8d844859a6af810684ace53d2c65258522f` is the fixed-center Home Compass and must not replace the homepage constellation.
+2. **Visible objects/state:** four real dimensional cardinal crystal stars on the right-handed spherical constellation; one readable foreground cardinal at a time; `Orientation`, `Worlds`, `Instruments`, `Frontier`.
+3. **Opening composition:** S01 atmosphere persists; constellation dominates; canonical North/Orientation forward; normal panel/tutorial chrome omitted.
+4. **Motion:** real spherical/quaternion grammar; one controlled rotation reveals depth and one foreground-identity change; geometry/label/semantic state stay coherent; restrained camera support only.
+5. **Exact copy:** `Welcome to the Compass.`; cardinal labels only when corresponding star is truly foreground.
+6. **Timing:** 4.500–5.300 resolve; 5.300–7.700 rotation/arc; 7.700–8.850 settle; 8.850–9.500 recede.
+7. **Transition:** Chapter One editorial plane enters independently; never imply Chapter One is a North/cardinal route.
+8. **Acquisition:** SOURCE RECONSTRUCTION from actual crystal geometry/material/foreground rules in isolated/read-only cinematic rendering.
+9. **Protected authority:** controller, crystals runtime, declarations, routes, room topology, Mirrorland, navigation, focus, durable state.
+10. **Non-regression:** live Compass + `diamond-gate-compass-mirrorland-36s.mp4` blob `cf3779d196f8479d3b71be77c06a0a2aeddfab08` + About direction floor.
+11. **Mobile/reduced:** keep Compass large; reduced may use canonical North-forward static state plus direct settled-state change.
 12. **Handoff:** nonterminal; no live orientation committed.
 
 ### S03 — Chapter One — READY
 
-1. **Source authority:** `index.html` blob `aa476...`, exact `details.compass-editorial-intro`, `.compass-editorial-film`, `.compass-chapter-tabs`, `#chapter-introduction`; Chapter One contextual-delivery contract blob `9813c60f8ca9b5f27fccbf44cade7bb08c2f0f2e`; repository film `diamond-gate-compass-mirrorland-36s.mp4` blob `cf3779...` as quality floor; `assets/compass/compass.css` blob `742966...` plus current inline Chapter One rules.
-2. **Visible objects/state:** actual Chapter One editorial destination; one dominant film/editorial plane, real tab family, Introduction active. No heart/broken-heart/story icon shorthand.
-3. **Opening composition:** Chapter One plane arrives from foreground while Compass falls into atmospheric depth; active Introduction state dominates, peer tabs remain recognizable/recessed.
-4. **Motion:** shallow skim/push then front-on legibility; active Introduction lifts while peer tabs recede; no fake browser click/cursor; final composition compresses laterally toward S04.
-5. **Exact copy:** `CHAPTER ONE`; `Introduction`; `For thousands of years, people have searched for better ways to understand themselves, each other, and the systems they inhabit.` Optional `Continue the threshold` only if fully readable.
-6. **Timing:** 9.500–10.300 enter; 10.300–11.500 identity/tabs; 11.500–13.800 readable Introduction; 13.800–14.500 compress toward choice rhythm.
-7. **Transition:** preserve lateral persistent-choice rhythm but replace Chapter One plane with S04's actual readiness source; do not claim the two are the same component.
-8. **Acquisition:** SOURCE RECONSTRUCTION / COMPOSITE from exact markup/literals/styles. Existing Chapter One film remains evidence/floor, not footage dependency.
-9. **Protected authority:** actual `<details>`, tabs, disclosure state, film master, exact Studio/About copy, Community/Meet Sean context, Three Ways architecture, unresolved lower-four-way context.
-10. **Non-regression:** live Chapter One identity/hierarchy + repository film finish floor + About editorial direction.
-11. **Mobile/reduced:** one active plane dominates portrait; peer tabs remain identifiable; exact body copy legible. Reduced: direct dissolve → static Introduction → direct handoff.
-12. **Handoff:** nonterminal; live Chapter One state remains unchanged.
+1. **Source authority:** `index.html` blob `aa476...`, exact `details.compass-editorial-intro`, `.compass-editorial-film`, `.compass-chapter-tabs`, `#chapter-introduction`; Chapter One contextual-delivery contract blob `9813c60f8ca9b5f27fccbf44cade7bb08c2f0f2e`; `diamond-gate-compass-mirrorland-36s.mp4` blob `cf3779...` as quality floor; current Chapter One CSS/presentation.
+2. **Visible objects/state:** actual Chapter One editorial destination; one dominant film/editorial plane, real tab family, Introduction active. No heart shorthand.
+3. **Opening composition:** foreground editorial plane; Compass soft in depth; active Introduction dominates, peer tabs recognizable/recessed.
+4. **Motion:** shallow skim/push then front-on legibility; active surface lifts; peer tabs recede; no fake browser interaction; final lateral compression toward S04.
+5. **Exact copy:** `CHAPTER ONE`; `Introduction`; `For thousands of years, people have searched for better ways to understand themselves, each other, and the systems they inhabit.` Optional `Continue the threshold` only if readable.
+6. **Timing:** 9.500–10.300 enter; 10.300–11.500 identity/tabs; 11.500–13.800 readable Introduction; 13.800–14.500 compress.
+7. **Transition:** preserve choice rhythm but replace Chapter One plane with S04 readiness source; never claim same runtime component.
+8. **Acquisition:** SOURCE RECONSTRUCTION / COMPOSITE; existing film is evidence/floor, not footage dependency.
+9. **Protected authority:** actual details/tabs/disclosure state, film master, exact approved copy, Community/Meet Sean context, Three Ways architecture, unresolved lower-four-way context.
+10. **Non-regression:** live Chapter One + repository film finish + About editorial direction.
+11. **Mobile/reduced:** active plane dominates; exact body copy legible; reduced direct dissolve/static Introduction/direct handoff.
+12. **Handoff:** nonterminal; live Chapter One state unchanged.
 
 ### S04 — Choice / Readiness — READY
 
-1. **Source authority:** current `index.html` blob `aa476...` exact `[data-compass-readiness-stage]`, `.compass-readiness-tabs`, `.compass-readiness-family`, `.compass-readiness-viewport`, `.compass-readiness-slide`; `assets/compass/compass.readiness-context-v1.js` blob `dd6220df67cc73d57150f8fa498d0cf477298ded` for family order, placement, active/prev/next spatial geometry, responsive behavior and reduced-motion rules; current `index.html` inline readiness CSS for exact first-paint presentation.
-2. **Visible objects/state:** one coherent readiness system with family rail `RESEARCH / TRL / TRA / COMMUNITY`, one active hero panel, and only subdued previous/next depth cues. Open on Research: `Current Research Frontier` / `Agentic Frontier`. A single controlled substitution may reveal TRL: `Technology Readiness Level` / `Software TRL 7`. Never show all families as tiny simultaneously readable cards.
-3. **Opening composition:** inherit S03's lateral tab rhythm, then resolve into a viewport-scale readiness stage. Active panel occupies the visual center and roughly two-thirds of useful width; family tabs remain legible as one system, not detached labels.
-4. **Motion:** reproduce the source's active/prev/next perspective logic rather than inventing icon fly-ins. Use one measured active-state substitution (Research → TRL) with neighboring planes moving in opposition and settling before text changes. The system demonstrates choice by replacement, not information accumulation.
-5. **Exact copy:** family rail `RESEARCH`, `TRL`, `TRA`, `COMMUNITY`; opening state `Current Research Frontier`, `Agentic Frontier`; opening provocation `One AI system finished the work. An established open-source agent went inactive.`; optional second state `Technology Readiness Level`, `Software TRL 7`. If TRL body is shown, use the current literal that explicitly says Diamond Gate self-assesses Software TRL 7 and that TRL 8/9 remain unclaimed. No stronger claim language.
-6. **Timing:** 14.500–15.300 S03 rhythm resolves to readiness stage; 15.300–16.850 Research active state; 16.850–18.400 controlled Research→TRL substitution and settle; 18.400–19.500 system recedes while retaining the four-family relationship.
-7. **Transition:** the readiness planes withdraw as a shared spatial field returns and the real Compass constellation re-enters. Do not morph a readiness card into Mirrorland or imply a readiness family causes the threshold. S05 causality begins only after Compass is visibly re-established.
-8. **Acquisition:** SOURCE RECONSTRUCTION / COMPOSITE from exact markup, current inline CSS geometry, and read-only interpretation of `compass.readiness-context-v1.js`; do not mount/run the live page owner merely for film acquisition.
-9. **Protected authority:** readiness/carousel ownership, routes, claim ceilings, live family/slide state, Built Different placement, unresolved lower-four-way context, scientific/TRL/TRA/community standing remain unchanged.
-10. **Non-regression:** current large readiness editorial composition and one-active-state hierarchy; About direction floor; no miniature-card treatment.
-11. **Mobile/reduced:** portrait uses one front-on active panel with side/depth cues cropped or simplified rather than shrunken; family rail may wrap only as current source permits. Reduced motion uses direct active-state substitution with no perspective travel.
-12. **Handoff:** nonterminal; cinematic state is reconstructed only; live readiness family/slide selection remains exactly pre-film.
+1. **Source authority:** `index.html` blob `aa476...` exact `[data-compass-readiness-stage]` and readiness family/slide markup; `assets/compass/compass.readiness-context-v1.js` blob `dd6220df67cc73d57150f8fa498d0cf477298ded`; current inline readiness CSS.
+2. **Visible objects/state:** coherent family rail `RESEARCH / TRL / TRA / COMMUNITY`, one active hero panel, subdued previous/next cues. Open Research `Current Research Frontier` / `Agentic Frontier`; one controlled substitution may reveal `Technology Readiness Level` / `Software TRL 7`.
+3. **Opening composition:** inherit S03 lateral rhythm into a viewport-scale readiness stage; active plane occupies roughly two-thirds of useful width.
+4. **Motion:** exact active/prev/next perspective grammar; one measured Research→TRL substitution; choice by replacement, not information accumulation.
+5. **Exact copy:** rail labels above; `Current Research Frontier`, `Agentic Frontier`; provocation `One AI system finished the work. An established open-source agent went inactive.`; optional `Technology Readiness Level`, `Software TRL 7`, with current literal claim ceiling if body shown.
+6. **Timing:** 14.500–15.300 resolve; 15.300–16.850 Research; 16.850–18.400 substitution/settle; 18.400–19.500 recede.
+7. **Transition:** readiness withdraws; shared field returns; real Compass re-enters. No readiness-card→Mirrorland semantic morph.
+8. **Acquisition:** SOURCE RECONSTRUCTION / COMPOSITE; do not run/mutate live readiness owner for capture.
+9. **Protected authority:** readiness ownership/routes/claims/live state/Built Different placement/lower-four-way context.
+10. **Non-regression:** current large readiness composition and one-active-state hierarchy + About direction.
+11. **Mobile/reduced:** one front-on active panel, cropped/simplified side cues; reduced direct state replacement.
+12. **Handoff:** nonterminal; no live readiness selection persists.
 
 ### S05 — Threshold — READY
 
-1. **Source authority:** `assets/compass/compass.mirrorland-window.js` blob `f99d3ffedf7b7654d067d21d9363eb287877f852`; `assets/compass/compass.controller.js` blob `568a6b2cd608a4cbcd62cf70ed59b241c39c90d2`; `index.html` blob `aa476...` exact Mirrorland destination and route chooser. Mirrorland renderer owns the 21-pane stained-glass window and reveal lifecycle; controller owns state authority and the prominence relationship.
-2. **Visible objects/state:** real Compass plus actual 21-pane stained-glass Mirrorland Window moving from `DORMANT` → `MIRRORLAND_REVEALING` → `MIRRORLAND_FOCUSED`. Dormant window begins small/quiet at scale 0.30 and opacity 0.38; focused window reaches full scale/opacity. Compass visibly recedes as window becomes primary. Mirrorland is depth behind the map, never another cardinal.
-3. **Opening composition:** re-establish Compass at hero scale after S04, with the dormant stained-glass threshold already present behind/in depth, quiet enough not to compete until discovery begins.
-4. **Motion:** use the real progressive strengthening of frame, ribs, panes and light. Native reveal authority is 1450 ms; reflect that cadence inside the shot. Compass prominence decreases consistently with controller truth (`1/.36` at constellation versus `.62/1` revealing and `.36/1` focused). Only after FOCUSED may the camera commit to a forward threshold move.
-5. **Exact copy:** optional discovery line `Find the door to Mirrorland.`; threshold identity `Mirrorland`. If route-choice language appears, use `Choose an experience.` No fabricated destination or fifth-direction copy.
-6. **Timing:** 19.500–20.600 Compass reacquired + dormant threshold legible; 20.600–22.100 native-scale reveal; 22.100–23.500 focused window / Mirrorland identity; 23.500–25.500 camera crosses through the actual window aperture.
-7. **Transition:** stained-glass panes/frame fill the viewport and their luminous depth resolves into S06 atmosphere/planetary light. No generic white flash, portal ring, or unrelated effect. The transition must read as crossing through the established threshold.
-8. **Acquisition:** SOURCE RECONSTRUCTION / COMPOSITE using exact window geometry/state progression and isolated Compass reconstruction. Never mutate or automate the live controller for capture.
-9. **Protected authority:** Compass state/selection/navigation, cardinal/room topology, Mirrorland controller lifecycle, route chooser, routes, return behavior, renderer event authority and live state all remain read-only.
-10. **Non-regression:** strongest live stained-glass Mirrorland reveal + repository `diamond-gate-compass-mirrorland-36s.mp4` blob `cf3779...` + continuity law `discovery reveals depth, not another direction`.
-11. **Mobile/reduced:** portrait lets the vertical stained-glass window fill usable frame without clipping identity; reduced motion uses the renderer's semantic equivalent: rapid dormant→focused state change (native reduced reveal authority 120 ms) and a direct threshold dissolve/cross, preserving discovery and destination meaning.
-12. **Handoff:** nonterminal; no live Mirrorland state is entered or persisted.
+1. **Source authority:** `assets/compass/compass.mirrorland-window.js` blob `f99d3ffedf7b7654d067d21d9363eb287877f852`; `assets/compass/compass.controller.js` blob `568a6b2cd608a4cbcd62cf70ed59b241c39c90d2`; `index.html` blob `aa476...` exact Mirrorland destination/chooser.
+2. **Visible objects/state:** real Compass plus 21-pane stained-glass Window `DORMANT` → `MIRRORLAND_REVEALING` → `MIRRORLAND_FOCUSED`; dormant scale .30/opacity .38; focused full scale/opacity; Compass recedes as Window becomes primary.
+3. **Opening composition:** Compass hero scale with quiet dormant threshold behind/in depth.
+4. **Motion:** real progressive frame/rib/pane/light strengthening; native reveal cadence 1450 ms; controller prominence truth preserved; camera crosses only after FOCUSED.
+5. **Exact copy:** optional `Find the door to Mirrorland.`; `Mirrorland`; optional `Choose an experience.`
+6. **Timing:** 19.500–20.600 reacquire/dormant; 20.600–22.100 reveal; 22.100–23.500 focused; 23.500–25.500 threshold cross.
+7. **Transition:** stained glass fills frame and resolves into S06 atmosphere/planetary light; no generic flash/portal ring.
+8. **Acquisition:** SOURCE RECONSTRUCTION / COMPOSITE; never drive live controller for capture.
+9. **Protected authority:** selection/navigation, topology, Mirrorland lifecycle/routes/return/events/live state.
+10. **Non-regression:** strongest live Mirrorland reveal + `diamond-gate-compass-mirrorland-36s.mp4` + depth-not-fifth-direction law.
+11. **Mobile/reduced:** portrait lets vertical window fill useful frame; reduced uses semantic 120 ms dormant→focused change + direct threshold cross.
+12. **Handoff:** nonterminal; no live Mirrorland state entered.
 
 ### S06 — Elsewhere — READY
 
-1. **Source authority:** `showroom/globe/audralia/index.html` blob `96bf20a3189182683bc94c08e2ad7c0dba740f07`; canonical renderer used by live Audralia: `inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs` blob `872d20b17bb0cd89d9613ca0262b25350890a617`; repository awards-film floor `showroom/globe/h-earth/awards/media/diamond-gate-h-earth-audralia-30s-vivaldi.mp4` blob `db0563a1a45811dadc36c48f0cb2356d748e9a07`.
-2. **Visible objects/state:** actual rendered Audralia planetary world, atmosphere and canonical geography at world scale. Begin from a true planetary vantage and travel continuously toward a regional/Gratitude read while preserving one world/one geography. No flat island silhouette, orbit doodle, map card, or fake planet.
-3. **Opening composition:** S05 stained-glass luminosity resolves into a full-frame planetary view. UI toolbar, loading panel and interaction guide are not shown; the world itself owns the frame. `Audralia` may sit as restrained world identity.
-4. **Motion:** derive camera behavior from the canonical renderer's continuous scale semantics. Start near `planetaryVantage()` (distance authority 5000) and descend/orbit continuously toward a closer regional state without swapping geography or meshes. Do not force the full `focusGratitude()` endpoint if doing so would turn the move into a rush; continuity is more important than covering every scale.
-5. **Exact copy:** `Audralia`; optional secondary `Entering a continuous planetary world`. No invented lore, scientific claim, or diagnostic claim.
-6. **Timing:** 25.500–26.200 threshold light resolves to planet; 26.200–28.800 continuous planetary-to-regional descent/orbit; 28.800–30.500 settle with Audralia identity and prepare estate-breadth handoff.
-7. **Transition:** the world remains a full-value depth layer while the camera eases outward enough for S07 foreground capability/engagement objects to enter. The world may recede in depth but must never collapse into a simplistic icon. S07 source objects replace foreground attention, not Audralia's identity.
-8. **Acquisition:** SOURCE RECONSTRUCTION from the exact immutable Audralia snapshot/canonical renderer. The 30-second Audralia awards master is reference/quality floor only, not required footage. Never screen-record live controls.
-9. **Protected authority:** live Audralia runtime, exact snapshot binding, geography, weather/cloud presentation, camera controls, world routes, soundtrack/audio, navigation and interactive state remain read-only.
-10. **Non-regression:** live Audralia planetary render + `diamond-gate-h-earth-audralia-30s-vivaldi.mp4` blob `db0563...` + About spatial/directing floor.
-11. **Mobile/reduced:** portrait keeps the planet large and crops atmospheric margins; do not shrink to a centered marble. Reduced motion uses static planetary composition followed by a controlled direct dissolve to a closer regional composition while preserving the same geography/source identity.
-12. **Handoff:** nonterminal; no live world/camera/navigation state persists beyond cinematic reconstruction.
+1. **Source authority:** `showroom/globe/audralia/index.html` blob `96bf20a3189182683bc94c08e2ad7c0dba740f07`; canonical renderer `inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs` blob `872d20b17bb0cd89d9613ca0262b25350890a617`; `diamond-gate-h-earth-audralia-30s-vivaldi.mp4` blob `db0563a1a45811dadc36c48f0cb2356d748e9a07` as awards floor.
+2. **Visible objects/state:** actual rendered Audralia planetary world, atmosphere, canonical geography; true planetary vantage toward regional/Gratitude read; no flat silhouette/orbit/map card/fake planet.
+3. **Opening composition:** stained-glass luminosity resolves into full-frame planet; no toolbar/loading/interactions; world owns frame.
+4. **Motion:** derive from canonical continuous-scale camera; start near `planetaryVantage()` distance 5000 and descend/orbit toward regional state without geography/mesh substitution; continuity outranks forcing full local endpoint.
+5. **Exact copy:** `Audralia`; optional `Entering a continuous planetary world`.
+6. **Timing:** 25.500–26.200 threshold→planet; 26.200–28.800 continuous descent/orbit; 28.800–30.500 settle/prepare breadth.
+7. **Transition:** world remains a full-value depth layer while S07 foreground objects enter; it never collapses into an icon.
+8. **Acquisition:** SOURCE RECONSTRUCTION from immutable Audralia snapshot/canonical renderer; awards master is quality floor only.
+9. **Protected authority:** runtime, snapshot binding, geography, weather/clouds, camera, routes, audio, navigation, state.
+10. **Non-regression:** live Audralia + 30 s awards master + About spatial direction.
+11. **Mobile/reduced:** planet remains large; reduced uses static planetary→regional dissolve with same geography.
+12. **Handoff:** nonterminal; no live world/camera state.
 
-### S07 — Breadth / Engagement — PENDING CHECKPOINT D
+### S07 — Breadth / Engagement — READY
 
-1. **Source authority:** PENDING exact Three Ways + Built Different binding.
-2. **Visible objects/state:** Three Ways remains one family: Coheriscope/Coherence Diagnostic brain, House, Awards; Built Different remains systemic/editorial.
-3. **Opening composition:** PENDING.
-4. **Motion:** PENDING.
-5. **Exact copy:** PENDING; no claim inflation or lower-carousel inference.
-6. **Timing:** 30.500–34.000; internal beats PENDING.
-7. **Transition:** PENDING; must resolve toward return/agency, not inventory montage.
-8. **Acquisition:** PENDING.
-9. **Protected authority:** Three Ways architecture/context, House function/route, Awards claim boundary, Coherence identity, Built Different boundaries, lower-four-way unresolved context and live carousel state remain protected.
-10. **Non-regression:** strongest Three Ways objects, anatomically recognizable brain, Awards identity, premium material language and Built Different composition.
-11. **Mobile/reduced:** PENDING.
-12. **Handoff:** prepares clean Compass return without durable feature state.
+1. **Source authority:** `index.html` blob `aa476ee5f6e74f56f2415bd8d36edfe1fa7a85ec` exact `Three ways to engage.` capability orbit and Built Different proof markup; `assets/compass/compass.capability-carousel.css` blob `81db61b55a8f216c315633209c552ba340b05cf8`; `assets/compass/compass.capability-carousel.js` blob `d39c8870f3bcd3331522ebe985ace1030d149926`; `assets/compass/compass.capability-carousel.core.js` blob `86858e704cb739308e314a6299d5cf166aab7e27`; object renderers: HRA brain `compass.hra-brain-scene.js` blob `c26603744e55c8ede2c82944bd0fd117d04dcbdb`, trophy `compass.trophy-scene.js` blob `d281e18b06128671ffe2a19e8fdb272cc5544e31`, House `compass.house-scene.js` blob `a82e3c963a10808b9f8f1922faab45155ea4a62b`.
+2. **Visible objects/state:** actual three-object local-action carousel, one active rendered object at a time: `Coheriscope` anatomical HRA brain; `Awards & Recognition` procedural integrated-plaque trophy; `The House` canonical gothic principal-estate model. Then actual Built Different proof system, one front proof plane with two rear depth planes. The three capability objects remain one family; Built Different remains a separate proof system, not a fourth capability.
+3. **Opening composition:** S06 Audralia remains deep atmospheric/world context while the capability ring resolves at foreground hero scale. `Three ways to engage.` establishes the system. Active Coheriscope owns center frame; other positions exist as spatial relation without exposing competing readable pixels. Built Different enters after the third capability by replacing foreground attention with its own front proof plane.
+4. **Motion:** respect 120° carousel steps and one-active-object law. Use three controlled settles rather than a spinning inventory: Coheriscope active → Awards active → House active. Brain may preserve its slow passive yaw while active; trophy and House use their source-authored static presentation. Then capability orbit recedes and Built Different proof planes resolve using source front/rear perspective hierarchy. No floating-icons montage.
+5. **Exact copy:** `Three ways to engage.`; `Coheriscope`; `Compare how you live and decide with what matters to you.`; `Awards & Recognition`; `One body of work. Five reasons to look closer.`; `The House`; `Choose who to speak with.`; `Built Different · how this estate is built`; `See what has been built—and how to judge what is ready.` The proof-title emphasis may use `One estate, many kinds of work.`. Do not invent claims or imply the House is Chapter One.
+6. **Timing:** 30.500–31.150 Coheriscope active; 31.150–31.850 rotate/settle Awards; 31.850–32.450 Awards active; 32.450–33.050 rotate/settle House; 33.050–33.550 House active; 33.550–34.000 capability system recedes as Built Different identity/front-proof plane resolves and immediately prepares S08.
+7. **Transition:** capability/proof geometry recedes into the same night field; Built Different typography and proof planes lose prominence while the real Compass constellation returns from depth. Do not morph brain/House/trophy into Compass stars. The causal sentence is breadth experienced → orientation regained.
+8. **Acquisition:** SOURCE RECONSTRUCTION / COMPOSITE from the exact static shell, carousel geometry and exact object renderers. The anatomical brain source is HRA/Allen geometry with its frozen identity checks; do not substitute a generic brain. Use object renderers read-only/offline, not the live carousel owner.
+9. **Protected authority:** capability order/actions/routes, Coheriscope/assessment identity, Awards standing and route, House actor routes/function, object renderer source identities, Built Different proof content/claim boundaries, live capability/proof carousel state, lower-four-way unresolved context.
+10. **Non-regression:** current Three Ways 3D objects are the object floor; HRA anatomical geometry is mandatory for brain recognizability; procedural trophy and canonical gothic House are mandatory identities; current Built Different one-front/two-rear composition is the proof-system floor; About remains the directing floor.
+11. **Mobile/reduced:** portrait shows one active object at large scale, using the source's 86–90vw plaque logic rather than shrinking all three; captions remain legible. Built Different uses one front proof plane with rear planes reduced/cropped. Reduced motion uses direct settled-object substitutions (Coheriscope → Awards → House) and a direct Built Different front-plane state with no ring spin/depth translation.
+12. **Handoff:** nonterminal. No live capability/proof selection or action state is changed. S07 leaves only cinematic atmospheric continuity for the S08 Compass return.
 
-### S08 — Return / Handoff — PENDING CHECKPOINT D
+### S08 — Return / Handoff — READY
 
-1. **Source authority:** PENDING exact cinematic host + live Compass restoration binding.
-2. **Visible objects/state:** live Compass identity restored as earned orientation/agency.
-3. **Opening composition:** PENDING.
-4. **Motion:** PENDING; no weak final snap.
-5. **Exact copy:** PENDING.
-6. **Timing:** 34.000–38.000; internal beats PENDING.
-7. **Transition after shot:** deterministic cinematic-to-live-Compass restoration.
-8. **Acquisition:** PENDING.
-9. **Protected authority:** controller, crystals, cardinal/room state, Mirrorland, navigation, focus, history, analytics and durable state must not be corrupted.
-10. **Non-regression:** strongest live Compass + successful cinematic return precedent.
-11. **Mobile/reduced:** PENDING.
-12. **Restoration:** REQUIRED TERMINAL CONTRACT — exact pre-film capture, idempotent cleanup, focus return, interaction re-enable, geometry/state correspondence and skip/natural/fail-open equivalence must be explicit.
+1. **Source authority:** incumbent host `assets/compass/compass.orientation-cinematic.js` blob `366c3c305df0d659fae56439804e9507aa79ceac` and `assets/compass/compass.orientation-cinematic.css` blob `c59ccfb282762e4cf1dcffeab74b705aa6c215ea` for state-machine, inert/ARIA, focus, skip/fail-open and fade precedent; live Compass visual authority remains S02's `index.html` + `compass.crystals.js` + `compass.css`. Incumbent `SOURCE_ROUTE` and 40.6 s child preview are historical implementation, not successor film source/timing authority.
+2. **Visible objects/state:** the actual Compass constellation returns as earned agency. The final cinematic Compass must be seeded from a **read-only snapshot of the underlying live root's current visual identity** at film start: at minimum `data-compass-mode`, `data-rendered-foreground-cardinal`, `data-readable-cardinal`, current cardinal/room selection identifiers when present, and any available read-only renderer/controller receipt needed to reproduce orientation. The underlying live root itself remains unchanged behind the overlay. Final cinematic geometry must correspond to that captured live state before reveal.
+3. **Opening composition:** S07 proof/capability planes recede into page-night atmosphere; Compass emerges at hero scale in the captured live orientation. The frame becomes progressively simpler until only Compass, atmosphere and a concise handoff cue remain.
+4. **Motion:** one controlled return movement settles the reconstructed Compass into exact live-state correspondence. From 37.540–38.000, use the incumbent host's 460 ms natural-completion fade precedent: cinematic overlay opacity goes to zero while the unchanged live Compass is already rendered beneath it. This is a physical reveal of the live product, not a cut to a replacement frame. Skip/fail-open do not wait for the natural fade.
+5. **Exact copy:** final cue `Find Your Way`. `Welcome to the Compass.` may not be repeated unless needed for accessibility; no new closing slogan is invented.
+6. **Timing:** 34.000–34.900 atmosphere clears and Compass returns; 34.900–36.800 Compass aligns/settles to captured live identity; 36.800–37.540 hold enough for agency cue and correspondence check; 37.540–38.000 overlay-to-live fade; live Compass owns the frame at 38.000.
+7. **Transition after shot:** terminal `RESTORE → SETTLED`. Natural completion, Skip button, Escape, reduced-motion completion, initialization failure, child/renderer failure and any mid-film binding loss all converge on the same idempotent restoration function. Natural completion may use the 460 ms fade; skip/fail-open/reduced paths restore immediately unless accessibility-safe presentation requires a direct nonanimated dissolve.
+8. **Acquisition/construction method:** final cinematic Compass uses SOURCE RECONSTRUCTION for the overlay but the last frame is **LIVE RUNTIME REVEAL**. Construction must keep the live root mounted behind the overlay. Do not navigate, reload, replace the Compass DOM, or adopt an iframe as the successor's authoritative visual object merely because the incumbent host uses one.
+9. **Protected authority:** live controller/crystals/cardinal/room state, Mirrorland state, navigation, URL/history, analytics, focus ownership, route state, carousels and application DOM remain untouched. The film may make the root inert and `aria-hidden` while modal cinematic ownership is active, but must restore the exact prior inert/ARIA values.
+10. **Non-regression:** strongest current live Compass is the final-frame floor. Incumbent host provides restoration precedent: state machine `ARMED → PLAYING → RESTORE → SETTLED`, double-restore guard, URL/history proof, root inert/ARIA restoration, prior-focus return and natural 460 ms fade. The successor must improve visual correspondence rather than inherit the incumbent preview's 40.6 s content.
+11. **Mobile/reduced:** mobile final Compass remains large and matches the live responsive composition beneath it. Reduced-motion film must represent the same eight semantic shots as static/direct states; **do not inherit the incumbent reduced shell's superseded eleven-item content list**. Reduced completion reveals the identical live Compass without large motion. Skip remains available and Escape works where keyboard exists.
+12. **Deterministic restoration/handoff contract:** before overlay ownership, capture `priorFocus`, root prior `inert`, root prior `aria-hidden`, `location.href`, `history.length`, and read-only live Compass visual identity. During film, suppress product interaction and navigation without mutating product state. Cleanup must clear timers/listeners/renderer resources, restore root inert/ARIA exactly, remove cinematic active classes/data, remove overlay, restore `priorFocus` with `preventScroll` when still connected, and make restoration idempotent. Acceptance requires URL unchanged, history length unchanged, navigation-intent events zero, product analytics zero, live carousel/Compass/Mirrorland state unchanged, and final live geometry corresponding to the captured state without a snap. If correspondence cannot be proven at natural completion, fail open by removing the cinematic overlay and exposing the unchanged live Compass rather than forcing an incorrect visual state.
 
-## 7. Checkpoint state
+## 7. Whole-film construction constraints
+
+- Use one persistent cinematic page-night field; do not create a second unrelated star subsystem.
+- Use repository-native objects and source reconstruction/compositing, not browser-screen footage.
+- No product route/navigation state is used as a film-edit mechanism.
+- No source object is weakened merely to simplify animation.
+- No transition may imply a false product relation: Chapter One is not a cardinal room; readiness is not Mirrorland; Mirrorland is not a fifth cardinal; Built Different is not a fourth capability.
+- Mobile compositions may crop/reframe but may not become scaled-down desktop boards with dead space.
+- Reduced motion is a semantic edit of the same eight-shot film, not a different story.
+- The live Compass remains mounted and authoritative beneath the cinematic; the successor ends by revealing it.
+
+## 8. Checkpoint state
 
 - Checkpoint A — COMPLETE: skeleton and schema.
 - Checkpoint B — COMPLETE: S01–S03.
-- Checkpoint C — COMPLETE BY THIS COMMIT: S04–S06.
-- Checkpoint D — NEXT: S07–S08, including exact final restoration.
-- Checkpoint E — closure audit and `CLOSED / CONSTRUCTION-READY` only if every field is explicit and the 38-second whole-film contract is coherent.
+- Checkpoint C — COMPLETE: S04–S06.
+- Checkpoint D — COMPLETE BY THIS COMMIT: S07–S08 and deterministic terminal handoff.
+- Checkpoint E — NEXT: closure audit across every field, source identity, transition, responsive/reduced treatment, restoration law and 38-second timing envelope.
 
-## 8. Retrieval discipline
+## 9. Retrieval discipline
 
-Inspect only the active shot group's exact source families. Record resolved authority once. Do not rematerialize videos absent a specific unresolved visual ambiguity. Do not infer protected copy, routes, scientific standing, awards standing or unresolved carousel context. Do not cross into product/runtime construction while this file is not CLOSED. After a collapse, resume at the first `PENDING` field in the last committed checkpoint.
+Inspect only active shot-group source families. Record resolved authority once. Do not rematerialize videos absent a specific unresolved visual ambiguity. Do not infer protected copy, routes, scientific standing, awards standing or unresolved carousel context. Do not cross into product/runtime construction while this file is not CLOSED. After a collapse, resume at the first incomplete field in the last committed checkpoint.
 
-## 9. Checkpoint C result
+## 10. Checkpoint D result
 
 `CHECKPOINT_A = DURABLE_SKELETON_COMPLETE`
 
@@ -211,7 +222,9 @@ Inspect only the active shot group's exact source families. Record resolved auth
 
 `CHECKPOINT_C = S04_S05_S06_SOURCE_BOUND_COMPLETE`
 
-`S01_TO_S06_CONSTRUCTION_SPEC_READY = true`
+`CHECKPOINT_D = S07_S08_SOURCE_BOUND_AND_TERMINAL_HANDOFF_COMPLETE`
+
+`S01_TO_S08_CONSTRUCTION_SPEC_READY = true`
 
 `SPECIFICATION_CLOSED = false`
 

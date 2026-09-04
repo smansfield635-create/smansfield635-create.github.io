@@ -1,0 +1,1 @@
+Controlling takeover: issue #2709 and `docs/RTS24_GEN428_FINAL_ADJUDICATION_HANDOFF_CURRENT.md`. No further planning documents are required.

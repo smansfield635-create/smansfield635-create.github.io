@@ -1,49 +1,115 @@
 {
-  "schema": "MIRRORLAND_ENVIRONMENT_SOURCE_RECONCILIATION_CONTRACT_v1",
-  "operationId": "MIRRORLAND_ENVIRONMENT_SOURCE_RECONCILIATION_20260905_002",
-  "governingHead": "9e824463723ddf9e67994590e5328643d0f3326c",
+  "schema": "MIRRORLAND_ENVIRONMENT_MATURITY_PARITY_CONTRACT_v1",
+  "operationId": "MIRRORLAND_AUDRALIA_CLOUD_GEOMETRY_ADOPTION_20260905_001",
+  "lockGeneration": 1955,
+  "governingHead": "6d786a9a6bb0c91f7bae3c46b286ddb7bd0e033b",
+  "program": {
+    "boundary": "ENVIRONMENT_MATURITY_PARITY",
+    "stageOrder": [
+      "AUDRALIA_CLOUD_GEOMETRY_ADOPTION",
+      "VEGETATION_MATURITY_PARITY"
+    ],
+    "governanceReopenBetweenStages": false,
+    "stage1Status": "PASS_CLOSED",
+    "stage2Status": "AUTHORIZED_ACTIVE"
+  },
   "authority": {
-    "audraliaWeatherPresentation": {
+    "audraliaCloudGeometry": {
       "pr": 780,
       "acceptedExactHead": "65aedb63832c4774f4a7326297fadbfb14552955",
       "sourcePath": "showroom/globe/audralia/weather-presentation-reconciliation/exterior-weather.mjs",
-      "spatialLodPrecedent": 779,
-      "role": "READ_ONLY_MORPHOLOGY_SCALE_AND_OPTICAL_SOURCE"
-    },
-    "charactersNightMaterial": {
-      "path": "characters/night-renderer.mjs",
-      "identity": "CHARACTERS_GRATITUDE_ENVIRONMENT_RENDERER_V2",
-      "role": "READ_ONLY_FOREST_MATERIAL_SOURCE"
+      "sourceObject": "AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_v1",
+      "role": "READ_ONLY_VOLUMETRIC_DENSITY_MORPHOLOGY_AND_OPTICAL_SOURCE"
     },
     "cloudTraversal": {
       "path": "characters/cloud-traversal.mjs",
-      "role": "PRESERVED_STATE_AUTHORITY"
+      "blob": "fc99f9b13b1b703d5df6dfed7164c033e20f860b",
+      "role": "PRESERVED_STATE_AND_TRAVERSAL_AUTHORITY"
+    },
+    "forestPopulation": {
+      "path": "characters/forest-system.mjs",
+      "governingHeadBlob": "919b5e46a7d28ef4b6e1847b24f603c1cfaf4102",
+      "role": "ROOT_REGION_ARCHETYPE_BUDGET_AND_SCALE_AUTHORITY_PRESERVED_DURING_STAGE2"
+    },
+    "charactersNightMaterial": {
+      "path": "characters/night-renderer.mjs",
+      "blob": "066973f039a6439cf24264984243271942126b4d",
+      "identity": "CHARACTERS_GRATITUDE_ENVIRONMENT_RENDERER_V2",
+      "role": "READ_ONLY_PRESENTATION_REFERENCE"
     }
   },
-  "forest": {
-    "preserve": ["REGION_SPECS", "buildForestPopulation coordinate generation", "step9TerrainHeight roots", "step9ShorelineZ setback", "FOREST_PRESENTATION_SCALE=.58", "sightline exclusions"],
-    "repair": ["independent fixed-green palette", "lunar mismatch", "lack of terrain palette convergence", "lack of distance desaturation", "lack of basin/horizon integration"],
-    "materialBinding": ["GRATITUDE_COAST_NIGHT.moon", "GRATITUDE_COAST_NIGHT.terrain", "GRATITUDE_COAST_NIGHT.sky.horizon"],
-    "acceptanceLaw": "From coastal/orbit distance vegetation must read as terrain-grown forest mass rather than a separately shaded green object layer."
+  "stage1": {
+    "target": "AUDRALIA_CLOUD_GEOMETRY_ADOPTION",
+    "status": "PASS_CLOSED",
+    "qualifiedCandidate": "077fbdb09c4990f41abd37ce99a17b6187c74992",
+    "qualifiedCloudBlob": "49fb5a185935aaa59894137659b27272ebc100b5",
+    "governingVerifierWorkflow": "Characters Environment Source Reconciliation",
+    "geometryModel": "PR780_DENSITY_SAMPLED_VOLUME_CELLS",
+    "evidence": {
+      "environmentSourceReconciliation": "PASS",
+      "environmentV2": "PASS",
+      "staticAssetIdentity": "PASS",
+      "staleInheritedS2S3Verifier": {
+        "result": "NON_AUTHORITATIVE_STALE_EXPECTATION",
+        "failedAssertion": "CLOUD_CONTINUITY_REQUIRED_TOKENS_MISSING:function weatherCarrier(",
+        "reason": "The inherited verifier requires the exact legacy ellipsoid carrier the admitted successor intentionally removes.",
+        "verifierMutationAuthorized": false
+      }
+    },
+    "acceptance": [
+      "density-derived PR780 cloud geometry present",
+      "legacy weatherCarrier surface geometry absent",
+      "cloud traversal authority byte-identical to governing head",
+      "forest bytes remained governing-head exact during Stage 1"
+    ]
   },
-  "clouds": {
-    "preserve": ["DESKTOP_BANKS", "MOBILE_BANKS", "PUFF_PATTERN as bank-density/layout inputs", "CLOUD_PRESENTATION_BY_STATE semantics", "cloud-traversal.mjs bytes"],
-    "replace": ["bespoke visible smooth bank-shell look", "Characters-only morphology grammar", "near-field inspectable cloud carrier"],
-    "sourceBinding": ["PR780 noise/fbm morphology family", "genus-specific breakup", "bounded carrier presentation", "near-field exclusion before geometry inspection", "traversal veil retains local extinction authority"],
-    "acceptanceLaw": "Clouds must read as the Audralia atmospheric family and must not expose a separate Characters puff/ellipsoid style."
+  "stage2": {
+    "target": "VEGETATION_MATURITY_PARITY",
+    "status": "AUTHORIZED_ACTIVE",
+    "governanceReopenRequired": false,
+    "mutationBeforeStage1PassAllowed": false,
+    "preserve": [
+      "REGION_SPECS",
+      "FOREST_BUDGETS",
+      "FOREST_ARCHETYPES",
+      "FOREST_LOD_POLICY",
+      "FOREST_SIGHTLINE_EXCLUSIONS",
+      "buildForestPopulation deterministic root positions",
+      "FOREST_PRESENTATION_SCALE",
+      "Stage 1 cloud-system.mjs exact bytes",
+      "cloud-traversal.mjs exact bytes"
+    ],
+    "reconcile": [
+      "vegetation palette to GRATITUDE_COAST_NIGHT terrain language",
+      "lunar response to NIGHT_FRAGMENT_SHADER lighting grammar",
+      "basin mist and horizon scattering",
+      "distance desaturation",
+      "terrain-bound understory massing without changing roots or forest regions"
+    ],
+    "acceptance": [
+      "population authority unchanged",
+      "root and region identity unchanged",
+      "presentation scale unchanged",
+      "forest shader consumes mature night palette and lunar response",
+      "forest atmosphere includes basin mist horizon scattering and distance desaturation",
+      "Stage 1 cloud identity preserved exactly"
+    ]
   },
   "protected": {
     "sequence1Geography": true,
     "sequence4CoastMap": true,
     "sequence5Plus": true,
+    "cloudTraversalMutation": false,
     "nightRendererMutation": false,
     "showroomMutation": false,
+    "hEarthMutation": false,
     "appMutation": false,
     "indexMutation": false
   },
-  "acceptance": {
-    "structuralSourceBinding": "REQUIRED",
-    "ownerVisualAcceptance": "FINAL_PERCEPTUAL_BOUNDARY",
+  "acceptanceBoundary": {
+    "stage1MechanicalQualification": "PASS_CLOSED",
+    "stage2MechanicalQualification": "REQUIRED",
+    "ownerVisualAcceptance": "REQUIRED_FOR_MATERIAL_ENVIRONMENT_ACCEPTANCE",
     "mergeDeploymentPublication": false
   }
 }

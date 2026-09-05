@@ -5773,42 +5773,61 @@
     "cfc4541b736e5786bcddee5f424768ca70e699063b01d66ad65dc9981b5519ed": {
       "authorityProvenance": {
         "authorityIdentity": {
-          "governingHead": "9e824463723ddf9e67994590e5328643d0f3326c",
-          "lockGeneration": 1954,
+          "governingHead": "6d786a9a6bb0c91f7bae3c46b286ddb7bd0e033b",
+          "lockGeneration": 1955,
           "lockScope": "CHARACTERS:MIRRORLAND:S2_S3_ENVIRONMENT_SOURCE_RECONCILIATION",
-          "operationId": "MIRRORLAND_ENVIRONMENT_SOURCE_RECONCILIATION_20260905_002",
-          "procedureLocatorDigest": "3b85c813453551279e81b7238c9f9336873df3bfcc27e709c2c603977cd07868",
-          "requestDigest": "2b196e55626b9c2c6c35603cdd9623a806ac8e368a6a7f0f7075e6d172dd1f4d",
+          "operationId": "MIRRORLAND_AUDRALIA_CLOUD_GEOMETRY_ADOPTION_20260905_001",
+          "procedureLocatorDigest": "be7ef5256d80ed9da2d104e0614125677806d077ca439619837e9ee9d1416a02",
+          "requestDigest": "dc0bca10347f696b38fc1c1b97887fa92a062f38d491aa82dd78bda8a4273252",
           "scopeHash": "cfc4541b736e5786bcddee5f424768ca70e699063b01d66ad65dc9981b5519ed"
         },
-        "bindingDigest": "bb19225075767aacaa365573f97e4eca854b78db2a21b0efaaef4f8f15f589dc",
+        "bindingDigest": "889420fd2804525b67544f6e20de579c2f67e388c19e76183a330a106d730f89",
         "invocation": {
           "commentAuthorAssociation": "OWNER",
           "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "e4f2df729959e8d45208234f0f242cbd5d8a69b640d37a172aeb9f57663f13f4",
-          "commentId": 5554330662,
+          "commentBodySha256": "cecefb3313f10888db5beafade2198efec82a40185f3e4065da99600fc4046cb",
+          "commentId": 5554965606,
           "eventAction": "created",
           "eventName": "issue_comment",
           "issueNumber": 2670,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
           "repository": "smansfield635-create/smansfield635-create.github.io",
           "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
           "workflowRunAttempt": 1,
-          "workflowRunId": 33988008072,
-          "workflowSha": "9e824463723ddf9e67994590e5328643d0f3326c"
+          "workflowRunId": 33993708745,
+          "workflowSha": "6d786a9a6bb0c91f7bae3c46b286ddb7bd0e033b"
         },
-        "lineageAnchorCommitSha": "f8fdd1866280f12bd5a29623beb1863066f260c6",
-        "origin": "CANONICAL_INTAKE",
+        "lineageAnchorCommitSha": "daa3026517f720e7cd87eb9a34c4714824310314",
+        "origin": "CANONICAL_SUCCESSOR",
         "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
       },
-      "governingHead": "9e824463723ddf9e67994590e5328643d0f3326c",
-      "lockGeneration": 1954,
+      "governingHead": "6d786a9a6bb0c91f7bae3c46b286ddb7bd0e033b",
+      "lockGeneration": 1955,
       "lockScope": "CHARACTERS:MIRRORLAND:S2_S3_ENVIRONMENT_SOURCE_RECONCILIATION",
-      "operationId": "MIRRORLAND_ENVIRONMENT_SOURCE_RECONCILIATION_20260905_002",
-      "procedureLocatorDigest": "3b85c813453551279e81b7238c9f9336873df3bfcc27e709c2c603977cd07868",
+      "operationId": "MIRRORLAND_AUDRALIA_CLOUD_GEOMETRY_ADOPTION_20260905_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "9e824463723ddf9e67994590e5328643d0f3326c",
+        "lockGeneration": 1954,
+        "lockScope": "CHARACTERS:MIRRORLAND:S2_S3_ENVIRONMENT_SOURCE_RECONCILIATION",
+        "operationId": "MIRRORLAND_ENVIRONMENT_SOURCE_RECONCILIATION_20260905_002",
+        "preservedEvidenceRefs": [
+          "issue:2670#issuecomment-5554332371",
+          "workflow:33988008072",
+          "issue:2670#issuecomment-5554881780",
+          "pr:780",
+          "pr:779",
+          "pr:2757"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "MIRRORLAND_ENVIRONMENT_SOURCE_RECONCILIATION_002_TO_ENVIRONMENT_MATURITY_PARITY_001"
+      },
+      "procedureLocatorDigest": "be7ef5256d80ed9da2d104e0614125677806d077ca439619837e9ee9d1416a02",
       "released": false,
-      "requestDigest": "2b196e55626b9c2c6c35603cdd9623a806ac8e368a6a7f0f7075e6d172dd1f4d",
+      "requestDigest": "dc0bca10347f696b38fc1c1b97887fa92a062f38d491aa82dd78bda8a4273252",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "cfc4541b736e5786bcddee5f424768ca70e699063b01d66ad65dc9981b5519ed",
       "state": "ADMITTED_LOCKED"
@@ -7257,7 +7276,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1954,
+  "lockGeneration": 1955,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -39901,6 +39920,69 @@
       "scopeHash": "c71d68ecd9531eac4499be3b98447f845484a2785c782c82b77dfe38f0227c0b",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "9e824463723ddf9e67994590e5328643d0f3326c",
+          "lockGeneration": 1954,
+          "lockScope": "CHARACTERS:MIRRORLAND:S2_S3_ENVIRONMENT_SOURCE_RECONCILIATION",
+          "operationId": "MIRRORLAND_ENVIRONMENT_SOURCE_RECONCILIATION_20260905_002",
+          "procedureLocatorDigest": "3b85c813453551279e81b7238c9f9336873df3bfcc27e709c2c603977cd07868",
+          "requestDigest": "2b196e55626b9c2c6c35603cdd9623a806ac8e368a6a7f0f7075e6d172dd1f4d",
+          "scopeHash": "cfc4541b736e5786bcddee5f424768ca70e699063b01d66ad65dc9981b5519ed"
+        },
+        "bindingDigest": "bb19225075767aacaa365573f97e4eca854b78db2a21b0efaaef4f8f15f589dc",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "e4f2df729959e8d45208234f0f242cbd5d8a69b640d37a172aeb9f57663f13f4",
+          "commentId": 5554330662,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2670,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33988008072,
+          "workflowSha": "9e824463723ddf9e67994590e5328643d0f3326c"
+        },
+        "lineageAnchorCommitSha": "f8fdd1866280f12bd5a29623beb1863066f260c6",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "9e824463723ddf9e67994590e5328643d0f3326c",
+      "lockGeneration": 1954,
+      "lockScope": "CHARACTERS:MIRRORLAND:S2_S3_ENVIRONMENT_SOURCE_RECONCILIATION",
+      "operationId": "MIRRORLAND_ENVIRONMENT_SOURCE_RECONCILIATION_20260905_002",
+      "procedureLocatorDigest": "3b85c813453551279e81b7238c9f9336873df3bfcc27e709c2c603977cd07868",
+      "released": true,
+      "requestDigest": "2b196e55626b9c2c6c35603cdd9623a806ac8e368a6a7f0f7075e6d172dd1f4d",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "cfc4541b736e5786bcddee5f424768ca70e699063b01d66ad65dc9981b5519ed",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:2670#issuecomment-5554332371",
+          "workflow:33988008072",
+          "issue:2670#issuecomment-5554881780",
+          "pr:780",
+          "pr:779",
+          "pr:2757"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "6d786a9a6bb0c91f7bae3c46b286ddb7bd0e033b",
+        "successorLockGeneration": 1955,
+        "successorLockScope": "CHARACTERS:MIRRORLAND:S2_S3_ENVIRONMENT_SOURCE_RECONCILIATION",
+        "successorOperationId": "MIRRORLAND_AUDRALIA_CLOUD_GEOMETRY_ADOPTION_20260905_001",
+        "transitionId": "MIRRORLAND_ENVIRONMENT_SOURCE_RECONCILIATION_002_TO_ENVIRONMENT_MATURITY_PARITY_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

@@ -4583,6 +4583,69 @@
       "scopeHash": "a0ac1d7567ae8e0d058871db030bc032026e8c95e27e48dd7354b964dce8aec4",
       "state": "ADMITTED_LOCKED"
     },
+    "a2be7bc874ba35ad847ffd8f5b91896556b6abce3c0f053b0b8f7e0701616b8c": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "fa87b2594a9ac43390ed5b657064ffbfd94a06ea",
+          "lockGeneration": 1956,
+          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:VEGETATION",
+          "operationId": "MIRRORLAND_CANONICAL_ECOLOGY_CAMERA_TRUE_VEGETATION_20260905_003",
+          "procedureLocatorDigest": "37e9885fbd8ebbfbfe6a7713c41b1151b5130b55751fd935b84ffdb556a28975",
+          "requestDigest": "a9a1e50abeaac95bc125e728ffc0c9f395e123e971fd64010115b16f2cbff214",
+          "scopeHash": "a2be7bc874ba35ad847ffd8f5b91896556b6abce3c0f053b0b8f7e0701616b8c"
+        },
+        "bindingDigest": "5679f7eff868849d0e5c249e1c9a7b60850f166ba8609c9e68ed65ee9d4edfb7",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "830836be8fb22df66df4a43eab3dff81db48a453d6ba86b7592528efbc972b2e",
+          "commentId": 5555385397,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2670,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33997641313,
+          "workflowSha": "fa87b2594a9ac43390ed5b657064ffbfd94a06ea"
+        },
+        "lineageAnchorCommitSha": "7ad05ab57dd44a9d7b787a0530630011f59cc7c3",
+        "origin": "CANONICAL_SUCCESSOR",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "fa87b2594a9ac43390ed5b657064ffbfd94a06ea",
+      "lockGeneration": 1956,
+      "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:VEGETATION",
+      "operationId": "MIRRORLAND_CANONICAL_ECOLOGY_CAMERA_TRUE_VEGETATION_20260905_003",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "6d786a9a6bb0c91f7bae3c46b286ddb7bd0e033b",
+        "lockGeneration": 1955,
+        "lockScope": "CHARACTERS:MIRRORLAND:S2_S3_ENVIRONMENT_SOURCE_RECONCILIATION",
+        "operationId": "MIRRORLAND_AUDRALIA_CLOUD_GEOMETRY_ADOPTION_20260905_001",
+        "preservedEvidenceRefs": [
+          "issue:2670#issuecomment-5554967364",
+          "issue:2670#issuecomment-5555105389",
+          "pr:2768",
+          "issue:2670#issuecomment-5555280586",
+          "issue:2670#issuecomment-5555364630",
+          "issue:2670#issuecomment-5555373353",
+          "issue:2670#issuecomment-5555368949"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "MIRRORLAND_ENVIRONMENT_MATURITY_PARITY_001_TO_CANONICAL_ECOLOGY_CAMERA_TRUE_VEGETATION_003"
+      },
+      "procedureLocatorDigest": "37e9885fbd8ebbfbfe6a7713c41b1151b5130b55751fd935b84ffdb556a28975",
+      "released": false,
+      "requestDigest": "a9a1e50abeaac95bc125e728ffc0c9f395e123e971fd64010115b16f2cbff214",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a2be7bc874ba35ad847ffd8f5b91896556b6abce3c0f053b0b8f7e0701616b8c",
+      "state": "ADMITTED_LOCKED"
+    },
     "a365baf8431c2bdb220a6c24b91422372536cedc20efd42126d572af814b259e": {
       "governingHead": "21ee87e945a62492b8f9447a5049f4ae0ab1ceb9",
       "lockGeneration": 1537,
@@ -5768,68 +5831,6 @@
       "requestDigest": "12c2ba9e24f38e43623b00687b4596d6dcbb3fed59b3f8c82f55bde49e66c0a4",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "cecfe6fa0b4f19c9c704c020ba0c1aad00fe0f9daf7750ed1bfd8cf44aa7187c",
-      "state": "ADMITTED_LOCKED"
-    },
-    "cfc4541b736e5786bcddee5f424768ca70e699063b01d66ad65dc9981b5519ed": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "6d786a9a6bb0c91f7bae3c46b286ddb7bd0e033b",
-          "lockGeneration": 1955,
-          "lockScope": "CHARACTERS:MIRRORLAND:S2_S3_ENVIRONMENT_SOURCE_RECONCILIATION",
-          "operationId": "MIRRORLAND_AUDRALIA_CLOUD_GEOMETRY_ADOPTION_20260905_001",
-          "procedureLocatorDigest": "be7ef5256d80ed9da2d104e0614125677806d077ca439619837e9ee9d1416a02",
-          "requestDigest": "dc0bca10347f696b38fc1c1b97887fa92a062f38d491aa82dd78bda8a4273252",
-          "scopeHash": "cfc4541b736e5786bcddee5f424768ca70e699063b01d66ad65dc9981b5519ed"
-        },
-        "bindingDigest": "889420fd2804525b67544f6e20de579c2f67e388c19e76183a330a106d730f89",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "cecefb3313f10888db5beafade2198efec82a40185f3e4065da99600fc4046cb",
-          "commentId": 5554965606,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2670,
-          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 33993708745,
-          "workflowSha": "6d786a9a6bb0c91f7bae3c46b286ddb7bd0e033b"
-        },
-        "lineageAnchorCommitSha": "daa3026517f720e7cd87eb9a34c4714824310314",
-        "origin": "CANONICAL_SUCCESSOR",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "6d786a9a6bb0c91f7bae3c46b286ddb7bd0e033b",
-      "lockGeneration": 1955,
-      "lockScope": "CHARACTERS:MIRRORLAND:S2_S3_ENVIRONMENT_SOURCE_RECONCILIATION",
-      "operationId": "MIRRORLAND_AUDRALIA_CLOUD_GEOMETRY_ADOPTION_20260905_001",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "9e824463723ddf9e67994590e5328643d0f3326c",
-        "lockGeneration": 1954,
-        "lockScope": "CHARACTERS:MIRRORLAND:S2_S3_ENVIRONMENT_SOURCE_RECONCILIATION",
-        "operationId": "MIRRORLAND_ENVIRONMENT_SOURCE_RECONCILIATION_20260905_002",
-        "preservedEvidenceRefs": [
-          "issue:2670#issuecomment-5554332371",
-          "workflow:33988008072",
-          "issue:2670#issuecomment-5554881780",
-          "pr:780",
-          "pr:779",
-          "pr:2757"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "MIRRORLAND_ENVIRONMENT_SOURCE_RECONCILIATION_002_TO_ENVIRONMENT_MATURITY_PARITY_001"
-      },
-      "procedureLocatorDigest": "be7ef5256d80ed9da2d104e0614125677806d077ca439619837e9ee9d1416a02",
-      "released": false,
-      "requestDigest": "dc0bca10347f696b38fc1c1b97887fa92a062f38d491aa82dd78bda8a4273252",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "cfc4541b736e5786bcddee5f424768ca70e699063b01d66ad65dc9981b5519ed",
       "state": "ADMITTED_LOCKED"
     },
     "d0043d474bd80fb8adc7f12e53fb5ed81ca3c5c48a345aee9ddfce9bf5804190": {
@@ -7276,7 +7277,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1955,
+  "lockGeneration": 1956,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -39981,6 +39982,89 @@
         "successorLockScope": "CHARACTERS:MIRRORLAND:S2_S3_ENVIRONMENT_SOURCE_RECONCILIATION",
         "successorOperationId": "MIRRORLAND_AUDRALIA_CLOUD_GEOMETRY_ADOPTION_20260905_001",
         "transitionId": "MIRRORLAND_ENVIRONMENT_SOURCE_RECONCILIATION_002_TO_ENVIRONMENT_MATURITY_PARITY_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "6d786a9a6bb0c91f7bae3c46b286ddb7bd0e033b",
+          "lockGeneration": 1955,
+          "lockScope": "CHARACTERS:MIRRORLAND:S2_S3_ENVIRONMENT_SOURCE_RECONCILIATION",
+          "operationId": "MIRRORLAND_AUDRALIA_CLOUD_GEOMETRY_ADOPTION_20260905_001",
+          "procedureLocatorDigest": "be7ef5256d80ed9da2d104e0614125677806d077ca439619837e9ee9d1416a02",
+          "requestDigest": "dc0bca10347f696b38fc1c1b97887fa92a062f38d491aa82dd78bda8a4273252",
+          "scopeHash": "cfc4541b736e5786bcddee5f424768ca70e699063b01d66ad65dc9981b5519ed"
+        },
+        "bindingDigest": "889420fd2804525b67544f6e20de579c2f67e388c19e76183a330a106d730f89",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "cecefb3313f10888db5beafade2198efec82a40185f3e4065da99600fc4046cb",
+          "commentId": 5554965606,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2670,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33993708745,
+          "workflowSha": "6d786a9a6bb0c91f7bae3c46b286ddb7bd0e033b"
+        },
+        "lineageAnchorCommitSha": "daa3026517f720e7cd87eb9a34c4714824310314",
+        "origin": "CANONICAL_SUCCESSOR",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "6d786a9a6bb0c91f7bae3c46b286ddb7bd0e033b",
+      "lockGeneration": 1955,
+      "lockScope": "CHARACTERS:MIRRORLAND:S2_S3_ENVIRONMENT_SOURCE_RECONCILIATION",
+      "operationId": "MIRRORLAND_AUDRALIA_CLOUD_GEOMETRY_ADOPTION_20260905_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "9e824463723ddf9e67994590e5328643d0f3326c",
+        "lockGeneration": 1954,
+        "lockScope": "CHARACTERS:MIRRORLAND:S2_S3_ENVIRONMENT_SOURCE_RECONCILIATION",
+        "operationId": "MIRRORLAND_ENVIRONMENT_SOURCE_RECONCILIATION_20260905_002",
+        "preservedEvidenceRefs": [
+          "issue:2670#issuecomment-5554332371",
+          "workflow:33988008072",
+          "issue:2670#issuecomment-5554881780",
+          "pr:780",
+          "pr:779",
+          "pr:2757"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "MIRRORLAND_ENVIRONMENT_SOURCE_RECONCILIATION_002_TO_ENVIRONMENT_MATURITY_PARITY_001"
+      },
+      "procedureLocatorDigest": "be7ef5256d80ed9da2d104e0614125677806d077ca439619837e9ee9d1416a02",
+      "released": true,
+      "requestDigest": "dc0bca10347f696b38fc1c1b97887fa92a062f38d491aa82dd78bda8a4273252",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "cfc4541b736e5786bcddee5f424768ca70e699063b01d66ad65dc9981b5519ed",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:2670#issuecomment-5554967364",
+          "issue:2670#issuecomment-5555105389",
+          "pr:2768",
+          "issue:2670#issuecomment-5555280586",
+          "issue:2670#issuecomment-5555364630",
+          "issue:2670#issuecomment-5555373353",
+          "issue:2670#issuecomment-5555368949"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "fa87b2594a9ac43390ed5b657064ffbfd94a06ea",
+        "successorLockGeneration": 1956,
+        "successorLockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:VEGETATION",
+        "successorOperationId": "MIRRORLAND_CANONICAL_ECOLOGY_CAMERA_TRUE_VEGETATION_20260905_003",
+        "transitionId": "MIRRORLAND_ENVIRONMENT_MATURITY_PARITY_001_TO_CANONICAL_ECOLOGY_CAMERA_TRUE_VEGETATION_003"
       },
       "terminalDisposition": "SUPERSEDED"
     }

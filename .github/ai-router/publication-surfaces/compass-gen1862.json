@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "compass-gen1862",
-  "description": "Compass root publication contract with pre-entry cinematic settlement plus mandatory visible Trophy successor identity and live renderer predicate.",
+  "description": "Compass root publication contract rebound to the bounded 38-second homepage cinematic inspection route, with Skip settlement plus mandatory visible Trophy successor identity and live renderer predicate.",
   "checks": [
     {
       "path": "/",
@@ -11,6 +11,8 @@
         "data-compass-root-renewal=\"gen1844-continuity\"",
         "data-compass-static-introduction",
         "data-compass-scene",
+        "/assets/compass/compass.orientation-cinematic.css?v=gen1933-orientation-cinematic-v1&cb=88473442959299d6",
+        "/assets/compass/compass.orientation-cinematic.js?v=gen1933-orientation-cinematic-v1&cb=88473442959299d6",
         "/assets/compass/compass.readiness-context-v1.js?v=compass-runtime-copy-owner-repair-gen1876&cb=d3fe9edfa21e0d0e",
         "/assets/compass/compass.crystals.js?v=gen1858-release-orbit-continuity&cb=cd2cbad0494852cc",
         "/assets/compass/compass.orbit-input.js?v=gen1846&cb=681410dac29d2dae",
@@ -21,19 +23,19 @@
   ],
   "runtime": {
     "enabled": true,
-    "path": "/",
+    "path": "/?compassCinematicConstruction=1",
     "timeoutMs": 45000,
-    "readySelector": "[data-compass-root]",
+    "readySelector": "[data-main-orientation-film]",
     "binding": {
       "mode": "direct-document",
-      "path": "/"
+      "path": "/?compassCinematicConstruction=1"
     },
     "interactions": [
       {
-        "name": "Settle pre-entry cinematic before Compass verification",
+        "name": "Settle bounded homepage cinematic before Compass verification",
         "action": {
           "type": "click",
-          "selector": "[data-cinematic-skip]"
+          "selector": "[data-main-orientation-skip]"
         },
         "assertions": [
           {

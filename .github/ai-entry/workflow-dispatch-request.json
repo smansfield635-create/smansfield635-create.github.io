@@ -1,6 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "jen-constellation-direct-bind-82d73333",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
-  "inputs": {"target_sha":"82d73333f2f15f25e1b044f2b777712406d7f5e1"}
+  "requestId": "compass-bounded-cinematic-preflight-33ccd65f",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "inputs": {
+    "target_sha": "33ccd65f6818cf9ff3b5c3425eb1bf0b8f366203",
+    "surface_id": "compass-gen1862"
+  }
 }

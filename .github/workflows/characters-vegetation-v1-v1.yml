@@ -1,0 +1,41 @@
+name: Characters Vegetation V1 Canonical Ecology Qualification v1
+
+on:
+  push:
+    branches:
+      - 'characters/canonical-ecology-camera-true-vegetation-20260905-003'
+    paths:
+      - 'characters/vegetation-ecology.mjs'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/vegetation-v0-known-verifier-false-negative.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v1.v1.mjs'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/vegetation-v0-v3-contract.v1.json'
+      - '.github/workflows/characters-vegetation-v1-v1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify V1 canonical ecology exposure
+        run: node control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v1.v1.mjs --output "$RUNNER_TEMP/vegetation-v1-receipt.json"
+      - name: Require V1 pass-closed receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          jq -e '.result == "V1_ECOLOGY_AUTHORITY_PASS_CLOSED" and .stageResults.V1 == "V1_ECOLOGY_AUTHORITY_PASS_CLOSED" and .stageResults.V0 == "KNOWN_VERIFIER_FALSE_NEGATIVE_OWNER_DISPOSITION" and .v0FormalReceiptResult == "FAIL_CLOSED" and .v0FormalReconciliationRequired == true and .downstreamStageAuthorized == "V2_DEVICE_INVARIANT_CANONICAL_POPULATION" and .v4PlusAuthorized == false and .mergeDeploymentPublicationAuthorized == false' "$RUNNER_TEMP/vegetation-v1-receipt.json" >/dev/null
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vegetation-v1-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/vegetation-v1-receipt.json
+          if-no-files-found: error
+          retention-days: 90

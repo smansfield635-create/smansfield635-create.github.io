@@ -5551,6 +5551,49 @@
       "scopeHash": "c71c085369f79f8f2af850ec50e01b4f099e49f28d4c8a869dec2a847169736b",
       "state": "ADMITTED_LOCKED"
     },
+    "c71d68ecd9531eac4499be3b98447f845484a2785c782c82b77dfe38f0227c0b": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "2f158b755644f4fb54309ed21c465aa4e863a361",
+          "lockGeneration": 1953,
+          "lockScope": "CHARACTERS:MIRRORLAND:S2_S3_PERCEPTUAL_RECONCILIATION",
+          "operationId": "MIRRORLAND_S2_S3_PERCEPTUAL_RECONCILIATION_20260905_001",
+          "procedureLocatorDigest": "31954d108bb974d6dbe0078873ce657c6d4a5f024593ec150c1ad0286c5386b5",
+          "requestDigest": "ce6c8cec5af6ac1485cae7838a0a4ce3bc5411e8fcf725aab89dd6e3b62a6e76",
+          "scopeHash": "c71d68ecd9531eac4499be3b98447f845484a2785c782c82b77dfe38f0227c0b"
+        },
+        "bindingDigest": "e919af864426d65ce7c0690f969d336f33b9c07092c406ab1e0d5f3df383aac1",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "72763c5afd7747b14a2798640170cc851c711a7c3b93955dc837473374add223",
+          "commentId": 5553919361,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2670,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 33984382555,
+          "workflowSha": "2f158b755644f4fb54309ed21c465aa4e863a361"
+        },
+        "lineageAnchorCommitSha": "31e948f57a2fe4bb79b2589d153cb808efe2facf",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "2f158b755644f4fb54309ed21c465aa4e863a361",
+      "lockGeneration": 1953,
+      "lockScope": "CHARACTERS:MIRRORLAND:S2_S3_PERCEPTUAL_RECONCILIATION",
+      "operationId": "MIRRORLAND_S2_S3_PERCEPTUAL_RECONCILIATION_20260905_001",
+      "procedureLocatorDigest": "31954d108bb974d6dbe0078873ce657c6d4a5f024593ec150c1ad0286c5386b5",
+      "released": false,
+      "requestDigest": "ce6c8cec5af6ac1485cae7838a0a4ce3bc5411e8fcf725aab89dd6e3b62a6e76",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c71d68ecd9531eac4499be3b98447f845484a2785c782c82b77dfe38f0227c0b",
+      "state": "ADMITTED_LOCKED"
+    },
     "c741f04e2c0d6d80298d66debdf940cecdb250a77af64fc3747b25c94355ab34": {
       "governingHead": "2108d00e80d908b3c14d4fbf3e6ffea758013b6b",
       "lockGeneration": 1619,
@@ -7214,7 +7257,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1952,
+  "lockGeneration": 1953,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

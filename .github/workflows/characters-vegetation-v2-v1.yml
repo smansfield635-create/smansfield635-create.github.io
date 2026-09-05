@@ -1,0 +1,41 @@
+name: Characters Vegetation V2 Canonical Population Qualification v1
+
+on:
+  push:
+    branches:
+      - 'characters/canonical-ecology-camera-true-vegetation-20260905-003'
+    paths:
+      - 'characters/vegetation-population.mjs'
+      - 'characters/vegetation-ecology.mjs'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v2.v1.mjs'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/vegetation-v0-v3-contract.v1.json'
+      - '.github/workflows/characters-vegetation-v2-v1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify V2 device- and camera-invariant canonical population
+        run: node control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v2.v1.mjs --output "$RUNNER_TEMP/vegetation-v2-receipt.json"
+      - name: Require V2 pass-closed receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          jq -e '.result == "V2_CANONICAL_POPULATION_PASS_CLOSED" and .stageResults.V2 == "V2_CANONICAL_POPULATION_PASS_CLOSED" and .stageResults.V1 == "V1_ECOLOGY_AUTHORITY_PASS_CLOSED" and .stageResults.V0 == "KNOWN_VERIFIER_FALSE_NEGATIVE_OWNER_DISPOSITION" and .v0FormalReceiptResult == "FAIL_CLOSED" and .v0FormalReconciliationRequired == true and .populationCount > 0 and .invariantContextCount == 60 and .downstreamStageAuthorized == "V3_CAMERA_TRUE_INSTANCED_LOD" and .v4PlusAuthorized == false and .mergeDeploymentPublicationAuthorized == false' "$RUNNER_TEMP/vegetation-v2-receipt.json" >/dev/null
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vegetation-v2-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/vegetation-v2-receipt.json
+          if-no-files-found: error
+          retention-days: 90

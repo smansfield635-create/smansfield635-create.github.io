@@ -1,8 +1,8 @@
 {
   "schema": "COMPASS_MAIN_HOMEPAGE_CINEMATIC_MEDIA_CUSTODY_v1",
-  "status": "FULL_FILM_STORYBOARD_V2_INTEGRATION_CODE_AUDIT_PASS",
-  "sourceMain": "8d7c6a34ced8b01b6627f704c5c38492e3e67f34",
-  "integrationBase": "c4bd4fc49f0215085d0efa055464ede797c53fcf",
+  "status": "HARD_BOUNDARY_6_PREVIEW_IDENTITY_CODE_AUDIT_PASS_CLOSED",
+  "sourceMain": "501a1b2f9c9ab103dd3f96a535ba663818b87034",
+  "integrationBase": "af650d8bb67f228891cf142d5d66e300eec971bf",
   "specificationCommit": "88473442959299d6f6af82396917f0578074cab2",
   "storyboardIssue": 2756,
   "film": "Welcome to Diamond Gate Bridge",
@@ -16,6 +16,12 @@
   "audioOwnerCount": 1,
   "visualReviewMethod": "SOURCE_AND_CODE_AUDIT_BY_PRECEDENT",
   "userVisualReviewRequired": false,
+  "preview": {
+    "parameter": "compassCinematicConstruction=1",
+    "ordinaryVisitMountsCinematic": false,
+    "liveHookAllowed": false,
+    "activationAuthority": "EXISTING_CONSTRUCTION_PREVIEW_ROUTE_ONLY"
+  },
   "singleGeographyAuthority": {
     "contract": "AUDRALIA_GRATITUDE_GEOGRAPHIC_TRANSFER_AUTHORITY_v1",
     "path": "h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js",
@@ -35,7 +41,7 @@
   "integratedSurfaces": {
     "primaryRenderer": {
       "path": "assets/compass/compass.orientation-cinematic.render.js",
-      "blob": "d664e91251f63918ecc5ec7a4634fe42047e501e",
+      "blob": "0d432c6dd232979e7b63783fffa7a60918c9d94b",
       "schema": "COMPASS_MAIN_HOMEPAGE_CINEMATIC_RENDERER_v6_S05_MATURE_S06_CANONICAL_WORLD",
       "role": "S01_TO_S06_SOURCE_TRUE_PRIMARY_RENDERER"
     },
@@ -43,32 +49,48 @@
       "path": "assets/compass/compass.orientation-cinematic.final.js",
       "blob": "1af6d8dc0e1cfc8ae7f6e46b962db2629881fbff",
       "schema": "COMPASS_MAIN_HOMEPAGE_CINEMATIC_FINAL_RENDERER_v2_STORYBOARD_SOURCE_TRUTH",
-      "role": "S07_PHASE3_SOURCE_TRUTH_AND_S08_HANDOFF"
+      "role": "S07_PHASE3_SOURCE_TRUTH_AND_S08_HANDOFF",
+      "alreadyPresentOnCurrentMain": true
     },
     "contextSpine": {
       "path": "assets/compass/compass.orientation-cinematic.css",
       "blob": "d1b93312e7a6ad0161400ffc1160717818b6af62",
-      "role": "PERSISTENT_STORYBOARD_V2_TOUR_CONTEXT"
+      "role": "PERSISTENT_STORYBOARD_V2_TOUR_CONTEXT",
+      "alreadyPresentOnCurrentMain": true
     },
     "mediaManifest": {
       "path": "assets/compass/compass.orientation-cinematic.media.js",
-      "blob": "51e622a0ad12b5c277368b270846e28c07fa6089",
-      "role": "45_SECOND_SOURCE_BINDING_AND_TIMELINE_CONTRACT"
+      "blob": "41fc716be44fe56f99dd366f52f3f85d07559be7",
+      "role": "45_SECOND_SOURCE_BINDING_TIMELINE_AND_CURRENT_MAIN_ENVIRONMENT_CONTRACT"
     },
     "host": {
       "path": "assets/compass/compass.orientation-cinematic.js",
-      "blob": "308a5d7fa1ba829a1bcde145957e06bc7a6fa467",
+      "blob": "53cb1d574a4029f5dec847309bfa8bcbd43512ff",
       "role": "MASTER_CLOCK_PREVIEW_ONLY_HOST_WITH_NO_LATE_SOURCE_START_GATE"
+    },
+    "verifier": {
+      "path": "assets/compass/compass.homepage-cinematic.verify.mjs",
+      "blob": "18108f3b614f14bcc68bcdf56d3968204d01943b",
+      "schema": "COMPASS_MAIN_HOMEPAGE_CINEMATIC_PREVIEW_IDENTITY_VERIFIER_v1",
+      "executionClaim": "NOT_EXECUTED_IN_NATIVE_CHECKOUT"
+    },
+    "indexBinding": {
+      "path": "index.html",
+      "currentMainBlob": "e22ea3c34662e4b003685f3c326514edd2ebdbd2",
+      "candidateBlob": "474a7d285c536d009f9552e02a99659abb4effdb",
+      "changeLaw": "ONLY_CINEMATIC_CSS_AND_HOST_REQUEST_IDENTITIES_DIFFER_AFTER_NORMALIZATION"
     }
   },
   "sourceAuthority": {
     "S05": {
       "meaning": "Cross into Mirrorland. Enter the narrative world.",
-      "codeAuditStatus": "PASS_SOURCE_FIDELITY",
+      "codeAuditStatus": "PASS_SOURCE_FIDELITY_CURRENT_MAIN_ENVIRONMENT_RECONCILED",
       "thresholdGeometry": "assets/shared/mirrorland-window.geometry.js@fb3ee8ab92fa4b08e7708b83780de75d1a6f8595",
       "night": "characters/night-renderer.mjs@066973f039a6439cf24264984243271942126b4d",
-      "forest": "characters/forest-system.mjs@919b5e46a7d28ef4b6e1847b24f603c1cfaf4102",
-      "clouds": "characters/cloud-system.mjs@9974994570438a318a5858a15866d7d46acbeb5e",
+      "forest": "characters/forest-system.mjs@98d0995143400149cb19c48751a38a5402ca019b",
+      "clouds": "characters/cloud-system.mjs@47482fd1c37267a2c5e76a3b833210984fe9b505",
+      "forestEntry": "createForestSystem",
+      "cloudEntry": "createCloudSystem",
       "destinationRuntimeImported": false,
       "destinationIframeUsed": false,
       "audioOwnerCreated": false
@@ -91,7 +113,7 @@
       "house": "assets/compass/compass.house-scene.js@a82e3c963a10808b9f8f1922faab45155ea4a62b",
       "housePhase3": "assets/manor-blueprint/manor.estate.gothic-detail-phase3.mjs@38bc8fa60a251681cb5484926409290f66460ad0",
       "phase3Required": true,
-      "latePreparation": "STARTS_ONLY_AFTER_MASTER_CLOCK_HAS_STARTED",
+      "latePreparation": "STARTS_ONLY_AFTER_INITIAL_S01_FRAME",
       "failureDisposition": "LOCAL_TO_S07",
       "primaryS06DrawBehindS07": false
     },
@@ -122,21 +144,25 @@
     "masterStartRequiresLateSourceReadiness": false
   },
   "codeAuditProofs": [
-    "INTEGRATION_DIFF_IS_EXACTLY_SIX_DECLARED_CINEMATIC_FILES",
+    "CURRENT_MAIN_BASE_EXACT_501A1B2F",
+    "CANDIDATE_BRANCH_ZERO_BEHIND_CURRENT_MAIN",
+    "BASE_TO_CANDIDATE_DIFF_IS_EXACTLY_SIX_DECLARED_PATHS",
+    "PRIMARY_S05_CURRENT_MAIN_FOREST_AND_CLOUD_APIS_COMPATIBLE",
     "PRIMARY_S05_SOURCE_FIDELITY_RETAINED",
     "PRIMARY_S06_CANONICAL_DETACHED_RENDERER_RETAINED",
-    "FINAL_RENDERER_IS_STORYBOARD_V2_SOURCE_TRUTH_WITH_PHASE3_HOUSE",
+    "FINAL_RENDERER_IS_CURRENT_MAIN_ACCEPTED_STORYBOARD_V2_SOURCE_TRUTH",
     "S07_EXACT_BRAIN_TROPHY_HOUSE_SEMANTICS_RETAINED",
-    "PERSISTENT_CONTEXT_SPINE_CONSUMES_HOST_LAST_SUCCESSFUL_SHOT_WITH_NO_SECOND_STATE_MACHINE",
-    "WAIT_FOR_LATE_FILM_SOURCES_REMOVED",
+    "PERSISTENT_CONTEXT_SPINE_IS_CURRENT_MAIN_ACCEPTED_BLOB",
+    "WAIT_FOR_LATE_FILM_SOURCES_ABSENT",
     "MASTER_START_REQUIRES_ONLY_MODULE_AND_HOST_MOUNT",
     "S07_SOURCE_PREPARATION_BEGINS_AFTER_INITIAL_S01_FRAME",
     "S07_SOURCE_FAILURE_IS_LOCAL_TO_S07",
     "AUDRALIA_IS_NOT_RENDERED_BEHIND_S07",
-    "S07_EXISTING_CINEMATOGRAPHY_IS_STRETCHED_WITHOUT_MASTER_TIMING_CHANGE",
     "ONE_EXISTING_SOUNDTRACK_OWNER_ONLY",
     "PREVIEW_ONLY_ACTIVATION_RETAINED",
-    "NO_INDEX_OR_LIVE_HOOK_MUTATION",
+    "LIVE_HOOK_ABSENT",
+    "INDEX_ONLY_CINEMATIC_CACHE_IDENTITIES_CHANGED",
+    "INDEX_REMAINDER_BYTE_EQUIVALENT_AFTER_CINEMATIC_URL_NORMALIZATION",
     "NO_CONTROLLER_CRYSTALS_NAVIGATION_ANALYTICS_OR_HISTORY_MUTATION"
   ],
   "forbiddenConstructionPatterns": [
@@ -168,5 +194,17 @@
     "liveHookAllowed": false,
     "passClaimed": true
   },
-  "nextBoundary": "WIRE_INTEGRATED_BYTES_TO_EXISTING_CONSTRUCTION_PREVIEW_CACHE_IDENTITIES_WITH_LIVE_HOOK_STILL_OFF"
+  "hardBoundary6": {
+    "scope": "CURRENT_MAIN_PREVIEW_IDENTITY_RECONCILIATION",
+    "branch": "repair/compass-storyboard-v2-preview-integration-20260905-001",
+    "codeCandidateHeadBeforeCustodyWrite": "19a7d9f462b6c65e155f9cfecce2d2824bc1e228",
+    "construction": "COMPLETE",
+    "codeAudit": "PASS_SOURCE_OBJECT_SCOPE_STARTUP_AND_PREVIEW_ACTIVATION",
+    "nativeVerifierExecution": "NOT_PERFORMED",
+    "nativeVerifierPassClaimed": false,
+    "animationRetimingPerformed": false,
+    "liveHookAllowed": false,
+    "passClaimed": true
+  },
+  "nextBoundary": "EXERCISE_OR_RENDER_THE_EXISTING_CONSTRUCTION_PREVIEW_WITH_LIVE_HOOK_OFF_BEFORE_ANY_ANIMATION_RETUNING"
 }

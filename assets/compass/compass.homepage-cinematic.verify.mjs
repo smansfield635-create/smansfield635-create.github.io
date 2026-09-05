@@ -6,7 +6,7 @@ import {spawnSync} from 'node:child_process';
 const REPAIR_BASE='c8114c86ae7fb848e78b0c946c260ec0663631ec';
 const SOURCE_BASE='46c56e0519fc875eac877b4bc921e3151b019a2f';
 const EXPECTED_SPEC='88473442959299d6f6af82396917f0578074cab2';
-const EXPECTED_HOST_ID='19b5f7b8b4ce0f64';
+const EXPECTED_HOST_ID='d3bc6b19b90e0d9a';
 const EXPECTED_RENDER_ID='aad42a46881bb01c';
 const EXPECTED_PATHS=[
   'index.html',

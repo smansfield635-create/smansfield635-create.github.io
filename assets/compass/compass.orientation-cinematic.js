@@ -2,9 +2,9 @@
 'use strict';
 
 const BUILD=Object.freeze({
-  version:'homepage-cinematic-storyboard-v2-clean-integration-20260905-001',
-  sourceMain:'8d7c6a34ced8b01b6627f704c5c38492e3e67f34',
-  repairBase:'c4bd4fc49f0215085d0efa055464ede797c53fcf',
+  version:'homepage-cinematic-storyboard-v2-preview-current-main-20260905-001',
+  sourceMain:'501a1b2f9c9ab103dd3f96a535ba663818b87034',
+  repairBase:'af650d8bb67f228891cf142d5d66e300eec971bf',
   specificationCommit:'88473442959299d6f6af82396917f0578074cab2',
   mutationClass:'BOUNDED_PAGE_RELEASE'
 });
@@ -97,8 +97,8 @@ function animatedShell(){const overlay=document.createElement('section');overlay
 function reducedShell(){const overlay=document.createElement('section');overlay.id='compass-orientation-cinematic';overlay.className='compass-orientation-cinematic';overlay.dataset.state=STATE.ARMED;overlay.dataset.mainOrientationFilm=`${BUILD.version}-reduced`;overlay.dataset.sourceMain=BUILD.sourceMain;overlay.dataset.reducedMotion='true';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-labelledby','compass-orientation-reduced-title');const items=SHOTS.map((shot)=>`<li><strong>${shot.beat}.</strong> ${shot.purpose}.</li>`).join('');overlay.innerHTML=`<div class="compass-orientation-cinematic__stage"><div class="compass-orientation-cinematic__reduced"><p class="compass-orientation-cinematic__eyebrow">Diamond Gate Bridge · Reduced motion</p><h2 id="compass-orientation-reduced-title">Welcome to Diamond Gate Bridge</h2><ol class="compass-orientation-cinematic__reduced-map">${items}</ol><button type="button" data-main-orientation-skip>Continue to Compass</button></div></div>`;return overlay;}
 async function loadRenderer(){
   const [renderModule,mediaModule,finalModule]=await Promise.all([
-    import('/assets/compass/compass.orientation-cinematic.render.js?cb=d664e91251f63918'),
-    import('/assets/compass/compass.orientation-cinematic.media.js?cb=51e622a0ad12b5c2'),
+    import('/assets/compass/compass.orientation-cinematic.render.js?cb=0d432c6dd232979e'),
+    import('/assets/compass/compass.orientation-cinematic.media.js?cb=41fc716be44fe56f'),
     import('/assets/compass/compass.orientation-cinematic.final.js?cb=1af6d8dc0e1cfc8a')
   ]);
   mediaModule.assertCinematicMediaManifest(mediaModule.CINEMATIC_MEDIA_MANIFEST);

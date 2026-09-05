@@ -1,13 +1,13 @@
 {
   "schema": "COMPASS_MAIN_HOMEPAGE_CINEMATIC_MEDIA_CUSTODY_v1",
-  "status": "SOURCE_AUTHORITY_FROZEN_BOUNDARY_2",
+  "status": "S05_SOURCE_RECONSTRUCTED_PENDING_RENDER_EXECUTION",
   "sourceMain": "8d7c6a34ced8b01b6627f704c5c38492e3e67f34",
   "specificationCommit": "88473442959299d6f6af82396917f0578074cab2",
   "storyboardIssue": 2756,
   "film": "Welcome to Diamond Gate Bridge",
   "masterDurationMs": 45000,
   "shotCount": 8,
-  "constructionStarted": false,
+  "constructionStarted": true,
   "animationRetimingAuthorized": false,
   "introActivationState": "INTRO_PRESENT_BUT_UNHOOKED",
   "runtimeEmbeddingAllowed": false,
@@ -74,6 +74,24 @@
       "dataFieldLaw": {
         "forestWeight": "sampleAudraliaGratitudeTerrain(...).biome.forestWeight",
         "materialProfileIsCategoricalString": true
+      },
+      "construction": {
+        "rendererPath": "assets/compass/compass.orientation-cinematic.render.js",
+        "rendererBlob": "af3f43c72d24e13d21c119a8c389dda2dfebe6d8",
+        "rendererSchema": "COMPASS_MAIN_HOMEPAGE_CINEMATIC_RENDERER_v4_S05_SOURCE_RECONSTRUCTION",
+        "sceneSchema": "COMPASS_S05_MIRRORLAND_SHARED_GEOMETRY_MATURE_COAST_RECONSTRUCTION_v1",
+        "worldCarrier": "CINEMATIC_OWNED_2D_CANVAS",
+        "thresholdCarrier": "CINEMATIC_OWNED_2D_CANVAS_USING_SHARED_GEOMETRY_API",
+        "sourcePreparation": "ASYNC_PREFETCH_AFTER_MOUNT_NOT_AWAITED_BY_MASTER_START",
+        "sourceFailureDisposition": "LOCALIZE_FAILURE_TO_S05_FAIL_OPEN_NOT_S01_START",
+        "forestEntryUsed": "buildForestPopulation",
+        "cloudEntriesUsed": ["buildCloudBankLayout", "resolveCloudPresentation"],
+        "destinationRuntimeImported": false,
+        "destinationIframeUsed": false,
+        "audioOwnerCreated": false,
+        "localWindowCoordinateCopyPresent": false,
+        "timingChanged": false,
+        "renderExecutionStatus": "NOT_YET_EXECUTED"
       }
     },
     "S06": {
@@ -100,7 +118,8 @@
         "path": "showroom/globe/audralia/weather-presentation-reconciliation/app.mjs",
         "blob": "6f54a41817c6a439da3c57f4e9d81b19e4a95cbe",
         "role": "REFERENCE_ONLY_NOT_RUNTIME_DEPENDENCY"
-      }
+      },
+      "constructionStatus": "NOT_STARTED_BOUNDARY_4"
     }
   },
   "forbiddenActiveSources": [
@@ -145,5 +164,12 @@
     "timingFrozen": true,
     "liveHookAllowed": false
   },
-  "nextBoundary": "RECONSTRUCT_S05_ALONE_FROM_FROZEN_AUTHORITIES"
+  "hardBoundary3": {
+    "construction": "COMPLETE_AT_SOURCE_LEVEL",
+    "staticVerifier": "RECONCILED_NOT_EXECUTED",
+    "renderExecution": "PENDING",
+    "perceptualReview": "PENDING",
+    "passClaimed": false
+  },
+  "nextBoundary": "EXECUTE_AND_REVIEW_S05_IN_ISOLATION_BEFORE_ANY_S06_CONSTRUCTION"
 }

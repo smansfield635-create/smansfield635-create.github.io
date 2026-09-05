@@ -3,96 +3,73 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 
-const BASE='9e824463723ddf9e67994590e5328643d0f3326c';
+const CLEAN_BASE='8d7c6a34ced8b01b6627f704c5c38492e3e67f34';
+const INTEGRATION_BASE='c4bd4fc49f0215085d0efa055464ede797c53fcf';
 const SPEC='88473442959299d6f6af82396917f0578074cab2';
-const BASE_INDEX_BLOB='e22ea3c34662e4b003685f3c326514edd2ebdbd2';
-const TASK='bounded non-interactive Compass cinematic storyboard v2 live owner-inspection release; source-world readiness must close before master playback; reversible live hook only; no navigation controller shared-state analytics or protected-runtime authority';
+const PRIMARY_BLOB='d664e91251f63918ecc5ec7a4634fe42047e501e';
+const FINAL_BLOB='1af6d8dc0e1cfc8ae7f6e46b962db2629881fbff';
+const CSS_BLOB='d1b93312e7a6ad0161400ffc1160717818b6af62';
+const MEDIA_BLOB='51e622a0ad12b5c277368b270846e28c07fa6089';
+const HOST_BLOB='308a5d7fa1ba829a1bcde145957e06bc7a6fa467';
 const EXPECTED_PATHS=[
-  'index.html',
   'assets/compass/cinematic-media/manifest.v1.json',
   'assets/compass/compass.homepage-cinematic.verify.mjs',
   'assets/compass/compass.orientation-cinematic.css',
   'assets/compass/compass.orientation-cinematic.final.js',
   'assets/compass/compass.orientation-cinematic.js',
-  'assets/compass/compass.orientation-cinematic.media.js',
-  'assets/compass/compass.orientation-cinematic.render.js'
+  'assets/compass/compass.orientation-cinematic.media.js'
 ].sort();
-const TOKENS=Object.freeze({
-  css:'d1b93312e7a6ad01',
-  host:'a0ae16b51e16b3ae',
-  render:'d210fb17a2bf5000',
-  media:'82fc41bad96fee7f',
-  final:'1af6d8dc0e1cfc8a'
-});
-const root=process.cwd();
-const read=p=>fs.readFileSync(path.join(root,p),'utf8');
-const checks=[];
-const check=(id,pass,detail='')=>checks.push({id,pass:Boolean(pass),detail});
-const index=read('index.html');
+const TASK='integrate source-true S05 and S06 into the frozen 45-second Storyboard v2 film, carry Phase3 S07 and persistent context spine, remove all late-shot readiness gates before S01, preserve one audio owner, keep preview-only activation, and perform source/code audit before any live hook';
+const root=process.cwd(),read=p=>fs.readFileSync(path.join(root,p),'utf8'),checks=[],check=(id,pass,detail='')=>checks.push({id,pass:Boolean(pass),detail});
 const host=read('assets/compass/compass.orientation-cinematic.js');
-const css=read('assets/compass/compass.orientation-cinematic.css');
 const render=read('assets/compass/compass.orientation-cinematic.render.js');
-const media=read('assets/compass/compass.orientation-cinematic.media.js');
 const final=read('assets/compass/compass.orientation-cinematic.final.js');
+const media=read('assets/compass/compass.orientation-cinematic.media.js');
+const css=read('assets/compass/compass.orientation-cinematic.css');
 const custody=JSON.parse(read('assets/compass/cinematic-media/manifest.v1.json'));
-const combined=[host,css,render,media,final].join('\n');
+const combined=[host,render,final,media,css].join('\n');
 
-check('BOUNDED_PRESENTATION_INTENT',/(CINEMATIC|OWNER-INSPECTION)/u.test(TASK.toUpperCase())&&/(NON-INTERACTIVE|REVERSIBLE)/u.test(TASK.toUpperCase()),TASK);
-check('SOURCE_BASE_CURRENT',host.includes(`sourceMain:'${BASE}'`)&&media.includes(`sourceMain:'${BASE}'`)&&custody.sourceMain===BASE,BASE);
+check('CLEAN_BASE_BOUND',host.includes(`sourceMain:'${CLEAN_BASE}'`)&&media.includes(`sourceMain:'${CLEAN_BASE}'`)&&custody.sourceMain===CLEAN_BASE,CLEAN_BASE);
+check('INTEGRATION_BASE_BOUND',host.includes(`repairBase:'${INTEGRATION_BASE}'`)&&media.includes(`integrationBase:'${INTEGRATION_BASE}'`)&&custody.integrationBase===INTEGRATION_BASE,INTEGRATION_BASE);
 check('SPECIFICATION_PRESERVED',host.includes(SPEC)&&media.includes(SPEC)&&custody.specificationCommit===SPEC,SPEC);
 check('MASTER_DURATION_45000',host.includes('const MASTER_DURATION_MS=45000')&&media.includes('masterDurationMs:45000')&&custody.masterDurationMs===45000);
-const shotStrings=[
-  "id:'S01',beat:'Arrival',purpose:'Enter Diamond Gate Bridge',startMs:0,endMs:4500",
-  "id:'S02',beat:'Orientation',purpose:'Establish how the estate is navigated',startMs:4500,endMs:9500",
-  "id:'S03',beat:'Chapter One',purpose:'Show where a visitor can begin',startMs:9500,endMs:14500",
-  "id:'S04',beat:'Choice / Readiness',purpose:'Reveal structured paths through the estate',startMs:14500,endMs:19500",
-  "id:'S05',beat:'Threshold',purpose:'Cross from orientation into deeper experience',startMs:19500,endMs:25500",
-  "id:'S06',beat:'Elsewhere',purpose:'Reveal story and world possibility',startMs:25500,endMs:30500",
-  "id:'S07',beat:'Breadth / Engagement',purpose:'Reveal ways to engage and estate breadth',startMs:30500,endMs:41000",
-  "id:'S08',beat:'Return / Handoff',purpose:'Restore visitor agency',startMs:41000,endMs:45000"
-];
-check('SHOT_BOUNDARIES_UNCHANGED',shotStrings.every(value=>host.includes(value)));
-check('S07_INTERNAL_CINEMATOGRAPHY_REMAP_UNCHANGED',host.includes('const legacyElapsedMs=30500+frame.shotProgress*3500'));
-check('FINAL_HANDOFF_TIMING_UNCHANGED',host.includes('const NATURAL_HANDOFF_FADE_START_MS=44540')&&host.includes('const NATURAL_HANDOFF_FADE_MS=460')&&host.includes("shot.id==='S08'&&elapsedMs>=43800"));
+const timings=[["S01",0,4500],["S02",4500,9500],["S03",9500,14500],["S04",14500,19500],["S05",19500,25500],["S06",25500,30500],["S07",30500,41000],["S08",41000,45000]];
+for(const [id,start,end] of timings)check(`${id}_TIMING_FROZEN`,host.includes(`id:'${id}'`)&&host.includes(`startMs:${start},endMs:${end}`)&&media.includes(`id:'${id}'`)&&media.includes(`startMs:${start},endMs:${end}`));
 
-check('SOURCE_CUSTODY_BASE_INDEX_CORRECT',render.includes(`homepage:Object.freeze({path:'index.html',blob:'${BASE_INDEX_BLOB}'})`)&&final.includes(`homepage:Object.freeze({path:'index.html',blob:'${BASE_INDEX_BLOB}'})`),BASE_INDEX_BLOB);
-check('MIRRORLAND_SOURCE_TRUE_WORLD',render.includes("world.src='/characters/'")&&render.includes("mirrorlandRepresentation='CURRENT_MATURE_COAST_WORLD_PLUS_CANONICAL_21_PANE_THRESHOLD'"));
-check('MIRRORLAND_RUNTIME_READINESS',render.includes('function waitForMirrorlandRuntime')&&render.includes("querySelector('.signal-layer')")&&render.includes("querySelector('.proof-layer')")&&render.includes("MIRRORLAND_SOURCE_RUNTIME_READY_TIMEOUT"));
-check('AUDRALIA_SOURCE_TRUE_WORLD',render.includes("world.src='/showroom/globe/audralia/'")&&render.includes('__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__'));
-check('MASTER_WAIT_REQUIRES_SOURCE_WORLDS',host.includes('primary.mirrorlandWorldReady===true&&primary.audraliaWorldReady===true&&final.brainReady===true&&final.trophyReady===true&&final.houseReady===true'));
-check('SOURCE_WORLD_ERRORS_FAIL_OPEN',host.includes('CINEMATIC_MIRRORLAND_SOURCE_PREPARATION_FAILED')&&host.includes('CINEMATIC_AUDRALIA_SOURCE_PREPARATION_FAILED'));
-check('OLD_AUDRALIA_2D_RECONSTRUCTION_REMOVED',!render.includes('COMPASS_AUDRALIA_SOURCE_RECONSTRUCTION_v1')&&!render.includes('drawAudraliaSourceReconstruction'));
+check('PRIMARY_RENDERER_IDENTITY',render.includes('COMPASS_MAIN_HOMEPAGE_CINEMATIC_RENDERER_v6_S05_MATURE_S06_CANONICAL_WORLD')&&host.includes(`cb=${PRIMARY_BLOB.slice(0,16)}`)&&custody.integratedSurfaces?.primaryRenderer?.blob===PRIMARY_BLOB);
+check('S05_SOURCE_FIDELITY_RETAINED',render.includes('COMPASS_S05_MIRRORLAND_SHARED_GEOMETRY_MATURE_DETACHED_WEBGL_v2')&&render.includes('sources.night.NIGHT_FRAGMENT_SHADER')&&render.includes('sources.forest.createForestSystem(gl,{compact})')&&render.includes('sources.clouds.createCloudSystem({gl,compact,reducedMotion:false})'));
+check('S06_CANONICAL_RENDERER_RETAINED',render.includes("const AUDRALIA_RENDERER_URL='/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs'")&&render.includes('createMapWideEnvironmentRenderer(canvas)')&&!render.includes('function drawAudraliaSourceReconstruction')&&!render.includes('function projectAudraliaSource'));
+check('NO_S05_S06_DESTINATION_EMBEDDING',!render.includes("world.src='/characters/'")&&!render.includes('characters/app.mjs')&&!render.includes("make('iframe'")&&!render.includes('/showroom/globe/audralia/index.html'));
 
-check('HOUSE_PHASE3_BOUND',final.includes("renderer:'canonical-house-phase3-cinematic-reconstruction-v2'")&&final.includes("contract:'MIRROR_MANOR_GOTHIC_ARCHITECTURAL_DETAIL_PHASE3_v1'")&&final.includes("import('/assets/manor-blueprint/manor.estate.gothic-detail-phase3.mjs')"));
-check('S07_SEMANTICS',final.includes("objectCard('brain','Discover your Coherence Index.','Take a free coherence assessment.')")&&final.includes("objectCard('trophy','Enter the Awards Chamber.','See the work recognized — and why.')")&&final.includes("objectCard('house','Meet the characters.','Choose who you want to speak with.')"));
-check('S07_TRANSPARENT_PRESENTATION',final.includes('.cinematic-breadth__renderer{')&&final.includes('background:transparent'));
-check('CONTEXT_SPINE_PRESENT',css.includes('data-compass-cinematic-last-successful-shot')&&css.includes('Discover your Coherence Index.')&&css.includes('Enter the Awards Chamber.')&&css.includes('Meet the characters.')&&css.includes('Now choose your path.'));
+check('FINAL_RENDERER_V2_SOURCE_TRUTH',final.includes('COMPASS_MAIN_HOMEPAGE_CINEMATIC_FINAL_RENDERER_v2_STORYBOARD_SOURCE_TRUTH')&&custody.integratedSurfaces?.finalRenderer?.blob===FINAL_BLOB);
+check('S07_PHASE3_HOUSE',final.includes("MIRROR_MANOR_GOTHIC_ARCHITECTURAL_DETAIL_PHASE3_v1")&&final.includes("houseGothicPhase3:Object.freeze")&&final.includes("canonical-house-phase3-cinematic-reconstruction-v2"));
+check('S07_EXACT_SEMANTICS',final.includes("objectCard('brain','Discover your Coherence Index.','Take a free coherence assessment.')")&&final.includes("objectCard('trophy','Enter the Awards Chamber.','See the work recognized — and why.')")&&final.includes("objectCard('house','Meet the characters.','Choose who you want to speak with.')"));
+check('S08_HANDOFF_PRESERVED',final.includes("function buildS08()")&&final.includes("'Find Your Way'")&&final.includes('verifyHandoff'));
 
-check('LIVE_HOOK_LOCALIZED',host.includes('const liveHookEnabled=()=>true;')&&host.includes('const introEnabled=()=>liveHookEnabled()||previewEnabled();')&&host.includes("if(!introEnabled()){releaseLiveHouseDeferral('intro-disabled');return;}")&&host.includes('if(introEnabled())installLiveHouseDeferral();'));
-check('LIVE_HOOK_EXPOSED_FOR_INSPECTION',host.includes('liveHookEnabled:liveHookEnabled(),introEnabled:introEnabled()'));
-check('CUSTODY_LIVE_OWNER_REVIEW',custody.introActivationState==='INTRO_HOOKED_LIVE_OWNER_REVIEW'&&custody.rollbackPrecedent==='PR_2753_LOCALIZED_UNHOOK'&&custody.sourceWorldsRequiredBeforeMasterClock===true);
+check('CONTEXT_SPINE_IDENTITY',custody.integratedSurfaces?.contextSpine?.blob===CSS_BLOB&&css.includes('Storyboard v2 persistent tour-context spine'));
+for(const phrase of ['Diamond Gate Bridge','Find your way.','Start here.',"See what we're testing.","See what's ready.",'Cross into Mirrorland.','Enter Audralia.','Discover your Coherence Index.','Enter the Awards Chamber.','Meet the characters.','Now choose your path.'])check(`CONTEXT_${phrase.replace(/[^A-Z0-9]+/gi,'_').toUpperCase()}`,css.includes(phrase),phrase);
+check('CONTEXT_NO_SECOND_STATE_MACHINE',css.includes('data-compass-cinematic-last-successful-shot')&&host.includes('dataset.compassCinematicLastSuccessfulShot=shot.id')&&custody.persistentContext?.secondaryStateMachineCreated===false);
 
-check('FRESH_INTERNAL_RENDER_IDENTITY',host.includes(`/assets/compass/compass.orientation-cinematic.render.js?cb=${TOKENS.render}`));
-check('FRESH_INTERNAL_MEDIA_IDENTITY',host.includes(`/assets/compass/compass.orientation-cinematic.media.js?cb=${TOKENS.media}`));
-check('FRESH_INTERNAL_FINAL_IDENTITY',host.includes(`/assets/compass/compass.orientation-cinematic.final.js?cb=${TOKENS.final}`));
-check('FRESH_PAGE_CSS_IDENTITY',index.includes(`/assets/compass/compass.orientation-cinematic.css?v=storyboard-v2-live-review-20260905-001&cb=${TOKENS.css}`));
-check('FRESH_PAGE_HOST_IDENTITY',index.includes(`/assets/compass/compass.orientation-cinematic.js?v=storyboard-v2-live-review-20260905-001&cb=${TOKENS.host}`));
+check('MEDIA_MANIFEST_INTEGRATED',custody.integratedSurfaces?.mediaManifest?.blob===MEDIA_BLOB&&media.includes("version:'storyboard-v2-clean-recovery-integrated-20260905-001'")&&media.includes('runtimeEmbeddingAllowed:false')&&media.includes('lateShotSourcesMayBlockMasterStart:false'));
+check('HOST_IDENTITY_INTEGRATED',custody.integratedSurfaces?.host?.blob===HOST_BLOB&&host.includes("version:'homepage-cinematic-storyboard-v2-clean-integration-20260905-001'"));
+check('NO_WAIT_FOR_LATE_FILM_SOURCES',!host.includes('waitForLateFilmSources')&&!host.includes('brain-trophy-house-ready-before-master'));
+check('MASTER_START_MOUNT_ONLY',host.includes("masterStartDependency='PRIMARY_AND_FINAL_HOSTS_MOUNTED_ONLY'")&&host.includes('async mount(){primary.mount();final.mount();return true;}')&&!host.includes('await final.prepare()'));
+const initialFrameIndex=host.indexOf("session.renderer.renderFrame({elapsedMs:0");
+const latePrepIndex=host.indexOf('void session.renderer.prepareLateSources?.()');
+check('LATE_S07_PREP_AFTER_INITIAL_S01_FRAME',initialFrameIndex>=0&&latePrepIndex>initialFrameIndex,`${initialFrameIndex}:${latePrepIndex}`);
+check('LATE_S07_FAILURE_LOCALIZED',host.includes("lateShotSources='FAILED_LOCAL_TO_S07'")&&host.includes('CINEMATIC_S07_LATE_SOURCE_PREPARATION_FAILED')&&final.includes("if(frame?.shot?.id==='S07')"));
+check('S07_NO_AUDRALIA_BACKGROUND_DRAW',host.includes("id:'S08',beat:'Return / Handoff'")&&!host.includes("shot:{...frame.shot,id:'S06',beat:'Elsewhere'}"));
+check('S07_STRETCH_LAW_PRESERVED',host.includes('const legacyElapsedMs=30500+frame.shotProgress*3500')&&host.includes('final.renderFrame({...frame,elapsedMs:legacyElapsedMs})'));
 
+check('PREVIEW_ONLY_ACTIVATION',host.includes("const previewEnabled=()=>new URLSearchParams(location.search).get(PREVIEW_PARAM)==='1'")&&host.includes("if(!previewEnabled()){releaseLiveHouseDeferral('preview-disabled');return;}")&&!host.includes('liveHookEnabled'));
+check('ONE_AUDIO_OWNER',custody.audioOwnerCount===1&&(combined.match(/\.play\(\)/g)||[]).length===1&&!/(new Audio\s*\(|createElement\(['"]audio['"]\))/u.test(combined));
 check('NO_NAVIGATION_WRITE',!/(location\.(assign|replace)|history\.(pushState|replaceState)|window\.open\s*\()/u.test(combined));
 check('NO_ANALYTICS_DELTA',!/analytics\s*\(/iu.test(combined));
-check('NO_PROTECTED_RUNTIME_IMPORT',!/import\s*\(\s*['"][^'"]*(?:compass\.controller|compass\.crystals|mirrorland-window|readiness-context|capability-carousel)[^'"]*['"]\s*\)/u.test(combined));
-check('RESTORATION_PRESERVED',host.includes('restoreProductSurface()')&&host.includes("releaseLiveHouseDeferral(reason==='complete'?'cinematic-complete':'cinematic-settled')"));
-check('PREVIEW_ROUTE_PRESERVED',host.includes("new URLSearchParams(location.search).get(PREVIEW_PARAM)==='1'")&&host.includes("constructionPreviewParameter:`${PREVIEW_PARAM}=1`"));
+check('NO_PROTECTED_COMPASS_RUNTIME_IMPORT',!/import\s*\(\s*['"][^'"]*(?:compass\.controller|compass\.crystals|readiness-context|capability-carousel)[^'"]*['"]\s*\)/u.test([host,render,final].join('\n')));
+check('LIVE_HOOK_OFF',custody.introActivationState==='INTRO_PRESENT_BUT_UNHOOKED'&&custody.hardBoundary5?.liveHookAllowed===false);
 
-const args=process.argv.slice(2),baseIndex=args.indexOf('--base'),headIndex=args.indexOf('--head'),changedPathsIndex=args.indexOf('--changed-paths');
-let subjectHead=null;
-if(baseIndex!==-1&&headIndex!==-1){
-  const base=args[baseIndex+1],head=args[headIndex+1];subjectHead=head;check('VERIFIER_BASE_MATCH',base===BASE,base);
-  let changed=null;
-  if(changedPathsIndex!==-1){changed=String(args[changedPathsIndex+1]||'').split(',').filter(Boolean).sort();check('EXTERNAL_COMPARE_PATHS_SUPPLIED',changed.length>0,JSON.stringify(changed));}
-  else{const diff=spawnSync('git',['diff','--name-only',`${base}...${head}`],{cwd:root,encoding:'utf8'});if(diff.status===0)changed=diff.stdout.split(/\r?\n/).filter(Boolean).sort();else check('GIT_DIFF_AVAILABLE',false,diff.stderr||'git diff failed');}
-  if(changed)check('DECLARED_PATHS_ONLY',JSON.stringify(changed)===JSON.stringify(EXPECTED_PATHS),JSON.stringify(changed));
-}
+const args=process.argv.slice(2),baseIndex=args.indexOf('--base'),headIndex=args.indexOf('--head'),changedPathsIndex=args.indexOf('--changed-paths');let subjectHead=null;
+if(baseIndex!==-1&&headIndex!==-1){const base=args[baseIndex+1],head=args[headIndex+1];subjectHead=head;check('VERIFIER_INTEGRATION_BASE_MATCH',base===INTEGRATION_BASE,base);let changed=null;if(changedPathsIndex!==-1){changed=String(args[changedPathsIndex+1]||'').split(',').filter(Boolean).sort();check('EXTERNAL_COMPARE_PATHS_SUPPLIED',changed.length>0,JSON.stringify(changed));}else{const diff=spawnSync('git',['diff','--name-only',`${base}...${head}`],{cwd:root,encoding:'utf8'});if(diff.status===0)changed=diff.stdout.split(/\r?\n/).filter(Boolean).sort();else check('GIT_DIFF_AVAILABLE',false,diff.stderr||'git diff failed');}if(changed)check('DECLARED_PATHS_ONLY',JSON.stringify(changed)===JSON.stringify(EXPECTED_PATHS),JSON.stringify(changed));}
 const result=checks.every(item=>item.pass)?'PASS':'FAIL';
-process.stdout.write(`${JSON.stringify({schema:'COMPASS_MAIN_HOMEPAGE_CINEMATIC_STORYBOARD_V2_LIVE_REVIEW_VERIFIER_v1',result,checkpoint:'PRE_LIVE_OWNER_INSPECTION_STATIC_PREFLIGHT',base:BASE,subjectHead,mutationTask:TASK,proofBoundary:'STATIC_SOURCE_SCOPE_AND_INVARIANTS_ONLY; LIVE OWNER PHONE/TABLET CAPTURE REMAINS REQUIRED',checks},null,2)}\n`);
+process.stdout.write(`${JSON.stringify({schema:'COMPASS_MAIN_HOMEPAGE_CINEMATIC_FULL_FILM_INTEGRATION_VERIFIER_v1',result,checkpoint:'FULL_FILM_STORYBOARD_V2_SOURCE_AND_CODE_AUDIT',cleanBase:CLEAN_BASE,integrationBase:INTEGRATION_BASE,subjectHead,mutationTask:TASK,proofBoundary:'STATIC SOURCE, SCOPE, STARTUP-ARCHITECTURE, SEMANTIC, AND VISUAL-FIDELITY CODE AUDIT; USER VISUAL REVIEW NOT REQUIRED; LIVE HOOK REMAINS OFF',checks},null,2)}\n`);
 process.exit(result==='PASS'?0:1);

@@ -10,8 +10,8 @@
       "VEGETATION_MATURITY_PARITY"
     ],
     "governanceReopenBetweenStages": false,
-    "stage1Status": "AUTHORIZED_ACTIVE",
-    "stage2Status": "BLOCKED_UNTIL_STAGE1_PASS"
+    "stage1Status": "PASS_CLOSED",
+    "stage2Status": "AUTHORIZED_ACTIVE"
   },
   "authority": {
     "audraliaCloudGeometry": {
@@ -28,8 +28,8 @@
     },
     "forestPopulation": {
       "path": "characters/forest-system.mjs",
-      "blob": "919b5e46a7d28ef4b6e1847b24f603c1cfaf4102",
-      "role": "PRESERVED_UNTIL_STAGE2"
+      "governingHeadBlob": "919b5e46a7d28ef4b6e1847b24f603c1cfaf4102",
+      "role": "ROOT_REGION_ARCHETYPE_BUDGET_AND_SCALE_AUTHORITY_PRESERVED_DURING_STAGE2"
     },
     "charactersNightMaterial": {
       "path": "characters/night-renderer.mjs",
@@ -40,39 +40,60 @@
   },
   "stage1": {
     "target": "AUDRALIA_CLOUD_GEOMETRY_ADOPTION",
-    "replace": [
-      "warped ellipsoid bank carrier",
-      "visible puff or oval silhouette grammar",
-      "surface-shell cloud geometry"
-    ],
-    "adopt": [
-      "PR780 density-field morphology",
-      "PR780 genus-specific breakup",
-      "density-derived volumetric cell geometry",
-      "PR780 near-field exclusion law",
-      "existing Characters traversal veil as local extinction authority"
-    ],
+    "status": "PASS_CLOSED",
+    "qualifiedCandidate": "077fbdb09c4990f41abd37ce99a17b6187c74992",
+    "qualifiedCloudBlob": "49fb5a185935aaa59894137659b27272ebc100b5",
+    "governingVerifierWorkflow": "Characters Environment Source Reconciliation",
     "geometryModel": "PR780_DENSITY_SAMPLED_VOLUME_CELLS",
-    "preserve": [
-      "DESKTOP_BANKS world anchoring",
-      "MOBILE_BANKS world anchoring",
-      "CLOUD_PRESENTATION_BY_STATE semantics",
-      "cloud-traversal.mjs bytes",
-      "forest-system.mjs bytes"
-    ],
+    "evidence": {
+      "environmentSourceReconciliation": "PASS",
+      "environmentV2": "PASS",
+      "staticAssetIdentity": "PASS",
+      "staleInheritedS2S3Verifier": {
+        "result": "NON_AUTHORITATIVE_STALE_EXPECTATION",
+        "failedAssertion": "CLOUD_CONTINUITY_REQUIRED_TOKENS_MISSING:function weatherCarrier(",
+        "reason": "The inherited verifier requires the exact legacy ellipsoid carrier the admitted successor intentionally removes.",
+        "verifierMutationAuthorized": false
+      }
+    },
     "acceptance": [
-      "cloud geometry contains no weatherCarrier or smooth ellipsoid surface carrier",
-      "geometry is generated from sampled PR780-style density morphology",
-      "runtime draws volumetric cloud cells rather than bank-shell triangles",
-      "cloud traversal authority is byte-identical to governing head",
-      "vegetation remains untouched until this stage passes"
+      "density-derived PR780 cloud geometry present",
+      "legacy weatherCarrier surface geometry absent",
+      "cloud traversal authority byte-identical to governing head",
+      "forest bytes remained governing-head exact during Stage 1"
     ]
   },
   "stage2": {
     "target": "VEGETATION_MATURITY_PARITY",
-    "status": "BLOCKED_UNTIL_STAGE1_PASS",
+    "status": "AUTHORIZED_ACTIVE",
     "governanceReopenRequired": false,
-    "mutationBeforeStage1PassAllowed": false
+    "mutationBeforeStage1PassAllowed": false,
+    "preserve": [
+      "REGION_SPECS",
+      "FOREST_BUDGETS",
+      "FOREST_ARCHETYPES",
+      "FOREST_LOD_POLICY",
+      "FOREST_SIGHTLINE_EXCLUSIONS",
+      "buildForestPopulation deterministic root positions",
+      "FOREST_PRESENTATION_SCALE",
+      "Stage 1 cloud-system.mjs exact bytes",
+      "cloud-traversal.mjs exact bytes"
+    ],
+    "reconcile": [
+      "vegetation palette to GRATITUDE_COAST_NIGHT terrain language",
+      "lunar response to NIGHT_FRAGMENT_SHADER lighting grammar",
+      "basin mist and horizon scattering",
+      "distance desaturation",
+      "terrain-bound understory massing without changing roots or forest regions"
+    ],
+    "acceptance": [
+      "population authority unchanged",
+      "root and region identity unchanged",
+      "presentation scale unchanged",
+      "forest shader consumes mature night palette and lunar response",
+      "forest atmosphere includes basin mist horizon scattering and distance desaturation",
+      "Stage 1 cloud identity preserved exactly"
+    ]
   },
   "protected": {
     "sequence1Geography": true,
@@ -86,7 +107,8 @@
     "indexMutation": false
   },
   "acceptanceBoundary": {
-    "stage1MechanicalQualification": "REQUIRED_BEFORE_VEGETATION",
+    "stage1MechanicalQualification": "PASS_CLOSED",
+    "stage2MechanicalQualification": "REQUIRED",
     "ownerVisualAcceptance": "REQUIRED_FOR_MATERIAL_ENVIRONMENT_ACCEPTANCE",
     "mergeDeploymentPublication": false
   }

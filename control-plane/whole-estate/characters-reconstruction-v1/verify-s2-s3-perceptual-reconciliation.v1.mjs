@@ -23,16 +23,24 @@ if(forestAuthority(forest)!==forestAuthority(forestBase)) fail('FOREST_ROOT_OR_R
 if(!forest.includes('function groundCluster(')) fail('FOREST_GROUND_INTEGRATION_MISSING');
 if(!forest.includes('const sides=12,rings=5')) fail('FOREST_CROWN_REFINEMENT_MISSING');
 if(!forest.includes('groundCluster(verts,t)')) fail('FOREST_UNDERSTORY_CONTINUITY_MISSING');
+if(!forest.includes('FOREST_PRESENTATION_SCALE=.58')) fail('FOREST_COASTAL_SCALE_RECONCILIATION_MISSING');
+if(!forest.includes('t.scale*FOREST_PRESENTATION_SCALE')) fail('FOREST_PRESENTATION_SCALE_NOT_APPLIED');
 
 const cloud=read('characters/cloud-system.mjs');
 const cloudBase=atBase('characters/cloud-system.mjs');
 const cloudAuthority=s=>s.split('const VS=')[0];
 if(cloudAuthority(cloud)!==cloudAuthority(cloudBase)) fail('CLOUD_BANK_IDENTITY_DIVERGENCE');
 if(read('characters/cloud-traversal.mjs')!==atBase('characters/cloud-traversal.mjs')) fail('CLOUD_TRAVEL_AUTHORITY_DIVERGENCE');
-if(!cloud.includes('latBands=9,lonBands=18')) fail('CLOUD_TESSELLATION_RECONCILIATION_MISSING');
-if(!cloud.includes('vDepth')) fail('CLOUD_NEAR_FIELD_DEPTH_SIGNAL_MISSING');
-if(!cloud.includes('nearFade')) fail('CLOUD_NEAR_FIELD_GEOMETRY_SUPPRESSION_MISSING');
-if(!cloud.includes('irregularity')) fail('CLOUD_IRREGULAR_VOLUME_REPRESENTATION_MISSING');
+if(!cloud.includes('function bankEnvelope(')) fail('CLOUD_BANK_LEVEL_ENVELOPE_MISSING');
+if(!cloud.includes('function irregularBankVolume(')) fail('CLOUD_IRREGULAR_BANK_VOLUME_MISSING');
+if(!cloud.includes('latBands=12,lonBands=30')) fail('CLOUD_SURFACE_REFINEMENT_MISSING');
+if(!cloud.includes('nearFade=smoothstep(95.0,260.0,vDepth)')) fail('CLOUD_NEAR_FIELD_SUPPRESSION_MISSING');
+if(/for\(const bank of layout\)for\(const puff of bank\.puffs\)/.test(cloud)) fail('CLOUD_VISIBLE_PUFF_CHAIN_GRAMMAR_REMAINS');
+
+const contract=JSON.parse(read('control-plane/whole-estate/characters-reconstruction-v1/s2-s3-perceptual-reconciliation-contract.v1.json'));
+if(contract.forest?.presentationScaleCeiling>0.6) fail('FOREST_SCALE_CEILING_TOO_LARGE');
+if(!contract.forest?.distanceLaw?.includes('forest mass')) fail('FOREST_DISTANCE_LAW_MISSING');
+if(!contract.clouds?.distanceLaw?.includes('never as individually recognizable puff primitives')) fail('CLOUD_DISTANCE_LAW_MISSING');
 
 const receipt={
   schema:'MIRRORLAND_S2_S3_PERCEPTUAL_RECONCILIATION_RECEIPT_v1',
@@ -45,7 +53,10 @@ const receipt={
   cloudTravelAuthorityPreserved:true,
   forestGroundIntegration:true,
   forestCrownRefinement:true,
-  cloudIrregularShell:true,
+  forestCoastalPresentationScale:.58,
+  forestDistantSpecimenDominanceRejected:true,
+  cloudBankLevelEnvelope:true,
+  cloudVisiblePuffChainRejected:true,
   cloudNearFieldSuppression:true
 };
 fs.writeFileSync('s2-s3-perceptual-reconciliation-receipt.json',JSON.stringify(receipt,null,2)+'\n');

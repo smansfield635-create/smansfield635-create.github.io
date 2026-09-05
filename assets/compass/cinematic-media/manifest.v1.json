@@ -1,7 +1,7 @@
 {
   "schema": "COMPASS_MAIN_HOMEPAGE_CINEMATIC_MEDIA_CUSTODY_v1",
-  "status": "STORYBOARD_V2_SOURCE_TRUTH_LIVE_OWNER_REVIEW",
-  "sourceMain": "9e824463723ddf9e67994590e5328643d0f3326c",
+  "status": "STORYBOARD_V2_DETACHED_SOURCE_RECONSTRUCTION_UNHOOKED",
+  "sourceMain": "6d786a9a6bb0c91f7bae3c46b286ddb7bd0e033b",
   "specificationCommit": "88473442959299d6f6af82396917f0578074cab2",
   "storyboardIssue": 2756,
   "film": "Welcome to Diamond Gate Bridge",
@@ -33,20 +33,18 @@
       "shot": "S05",
       "sources": [
         {"path": "assets/shared/mirrorland-window.geometry.js", "blob": "fb3ee8ab92fa4b08e7708b83780de75d1a6f8595"},
-        {"path": "characters/index.html", "blob": "043ba9a4b8a03d182f41d665128a20b8ce1d8e4d"},
-        {"path": "characters/app.mjs", "blob": "045ffe6dc85b50eda1a81db95bdd2fa4e8779380"},
-        {"path": "characters/cloud-system.mjs", "blob": "b91174dcf4c59590c928ca860c2138604856f0a3"}
+        {"path": "characters/step9-regional-geography.mjs", "contract": "CHARACTERS_STEP9_GRATITUDE_HARBOR_REGIONAL_BRIDGE_v1"},
+        {"path": "characters/night-renderer.mjs", "contract": "CHARACTERS_GRATITUDE_ENVIRONMENT_RENDERER_V2"}
       ],
-      "method": "CANONICAL_21_PANE_THRESHOLD_COMPOSITED_WITH_CURRENT_MATURE_MIRRORLAND_COAST_WORLD"
+      "method": "CANONICAL_21_PANE_THRESHOLD_PLUS_DETACHED_READ_ONLY_MIRRORLAND_COAST_GEOMETRY_RECONSTRUCTION"
     },
     {
       "shot": "S06",
       "sources": [
-        {"path": "showroom/globe/audralia/index.html", "blob": "96bf20a3189182683bc94c08e2ad7c0dba740f07"},
-        {"path": "inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs", "blob": "872d20b17bb0cd89d9613ca0262b25350890a617"},
-        {"path": "inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs", "blob": "64b962fcdb098ffa1f3149a434ad1bfcdc4e21d3"}
+        {"path": "inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js", "contract": "AUDRALIA_GRATITUDE_GEOGRAPHIC_TRANSFER_AUTHORITY_v1"},
+        {"path": "inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs", "blob": "872d20b17bb0cd89d9613ca0262b25350890a617"}
       ],
-      "method": "CURRENT_AUDRALIA_PLANETARY_WORLD_RUNTIME_PRESENTED_DIRECTLY_IN_CINEMATIC_AND_CAMERA_DRIVEN_READ_ONLY"
+      "method": "DETACHED_AUDRALIA_CONTINENTAL_TERRAIN_COAST_HYDROLOGY_RECONSTRUCTION_WITHOUT_DESTINATION_RUNTIME"
     },
     {
       "shot": "S07",
@@ -56,7 +54,7 @@
         {"path": "assets/compass/compass.house-scene.js", "blob": "a82e3c963a10808b9f8f1922faab45155ea4a62b"},
         {"path": "assets/manor-blueprint/manor.estate.gothic-detail-phase3.mjs", "blob": "38bc8fa60a251681cb5484926409290f66460ad0"}
       ],
-      "method": "PRESERVE_BRAIN_AND_TROPHY_GEOMETRY_REMOVE_VISIBLE_LIGHT_CARD_READ_AND_BIND_HOUSE_TO_MATURE_PHASE3_SOURCE"
+      "method": "PRESERVE_BRAIN_AND_TROPHY_GEOMETRY_AND_BIND_HOUSE_TO_MATURE_PHASE3_SOURCE"
     },
     {
       "shot": "S08",
@@ -66,9 +64,11 @@
   ],
   "protectedRuntimeImports": [],
   "controllerReferenceOnly": true,
-  "rule": "SOURCE_TRUE_REPOSITORY_NATIVE_PRESENTATIONS_ONLY_NO_GENERIC_SUBSTITUTE_IMAGERY",
-  "s05Representation": "CANONICAL_THRESHOLD_PLUS_MATURE_MIRRORLAND_WORLD",
-  "s06Representation": "CURRENT_AUDRALIA_PLANETARY_WORLD_RUNTIME",
+  "runtimeEmbeddingAllowed": false,
+  "sourceWorldsRequiredBeforeMasterClock": false,
+  "rule": "SOURCE_TRUE_GEOMETRY_AND_DATA_RECONSTRUCTION_ONLY_NO_DESTINATION_PAGE_RUNTIME_EMBEDDING",
+  "s05Representation": "CANONICAL_THRESHOLD_PLUS_DETACHED_MIRRORLAND_GEOMETRY_RECONSTRUCTION",
+  "s06Representation": "DETACHED_AUDRALIA_GEOGRAPHY_RECONSTRUCTION",
   "s07Presentation": "TRANSPARENT_CINEMATIC_OBJECT_PRESENTATION",
   "s07HouseAuthority": "MIRROR_MANOR_GOTHIC_ARCHITECTURAL_DETAIL_PHASE3_v1",
   "s07GenericObjectFallbackAllowed": false,
@@ -78,7 +78,7 @@
   "s08HandoffFailureDisposition": "FAIL_OPEN_TO_UNCHANGED_LIVE_ROOT",
   "animationRetimingAuthorized": false,
   "shotBoundariesFrozen": true,
-  "sourceWorldsRequiredBeforeMasterClock": true,
-  "introActivationState": "INTRO_HOOKED_LIVE_OWNER_REVIEW",
-  "rollbackPrecedent": "PR_2753_LOCALIZED_UNHOOK"
+  "introActivationState": "INTRO_PRESENT_BUT_UNHOOKED",
+  "failedLiveExperiment": "PR_2762_RUNTIME_EMBEDDING_REJECTED",
+  "rollback": "PR_2763_EXACT_PREPUBLICATION_ACTIVATION_BYTES_RESTORED"
 }

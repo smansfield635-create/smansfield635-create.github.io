@@ -1,0 +1,31 @@
+{
+  "schema": "MIRRORLAND_S2_S3_PERCEPTUAL_RECONCILIATION_CONTRACT_v1",
+  "operationId": "MIRRORLAND_S2_S3_PERCEPTUAL_RECONCILIATION_20260905_001",
+  "governingHead": "2f158b755644f4fb54309ed21c465aa4e863a361",
+  "ownerEvidence": "2026-09-05 tablet screenshots: implanted tree appearance and exposed faceted cloud-puff construction",
+  "protected": {
+    "forestPopulationAuthority": "MIRRORLAND_FOREST_POPULATION_v1",
+    "forestSourceBlob": "21f61b1829eca1e97a2fb6c8f85816c8b25bd59e",
+    "cloudTravelAuthorityBlob": "fc99f9b13b1b703d5df6dfed7164c033e20f860b",
+    "cloudBankLayout": "DESKTOP_BANKS + MOBILE_BANKS + PUFF_PATTERN identities preserved",
+    "sequence1Geography": true,
+    "sequence4CoastMap": true,
+    "sequence5Plus": true
+  },
+  "forest": {
+    "mustPreserve": ["REGION_SPECS", "buildForestPopulation coordinate generation", "step9TerrainHeight root binding", "step9ShorelineZ setback", "sightline exclusions"],
+    "mustRepair": ["terrain contact", "vertical stratification", "understory continuity", "crown overlap", "repeated isolated canopy-blob impression"],
+    "prohibited": ["new placement authority", "root movement", "uniform scatter", "global terrain mutation"]
+  },
+  "clouds": {
+    "mustPreserve": ["cloud bank centers", "puff identities", "travel state semantics", "reduced motion semantics"],
+    "researchPrecedent": ["PR #754 canonical evolving-cloud state", "PR #779 bounded canonical-weather spatial LOD"],
+    "mustRepair": ["low-tessellation ellipsoid exposure", "recognizable puff-chain silhouette", "near-camera giant faceted solids", "hard geometric atmospheric edges"],
+    "requiredRepresentation": ["irregular higher-order shell", "soft optical edge", "near-field geometry suppression", "traversal extinction remains state-driven"]
+  },
+  "acceptance": {
+    "structuralVerification": "required",
+    "ownerVisualEvidence": "acceptance evidence, not permission for unbounded engineering loops",
+    "mergeDeploymentPublication": false
+  }
+}

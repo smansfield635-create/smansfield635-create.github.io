@@ -9,6 +9,10 @@ Primary operating protocol:
 
 `docs/DETACHED_CINEMATIC_VIDEO_REVIEW_AND_PROGRESSION_PROTOCOL.md`
 
+Video-room ingress boundary:
+
+`docs/COMPASS_CINEMATIC_VIDEO_ROOM_INGRESS_BOUNDARY.md`
+
 Historical creative record:
 
 `docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_SUCCESSOR_HANDOFF_20260904.md`
@@ -17,7 +21,7 @@ Historical creative record:
 
 ## 1. Current product state
 
-Product baseline before this documentation update:
+Product baseline before the review-protocol documentation update:
 
 `fe01438904cb9572ac6d949b2f8d2144532c178b`
 
@@ -37,22 +41,42 @@ The completed current film remains the 45-second S01–S08 Compass orientation c
 
 ---
 
-## 2. Latest owner disposition
+## 2. Video availability and room boundary
 
-The owner reviewed the hooked production film, captured the video, and determined:
+The owner has a captured review video, but **that video is not stored in the repository, is not attached to this room by default, and does not travel automatically across rooms.**
+
+Do not describe the video as “supplied” unless it is actually attached in the room doing the visual review.
+
+The intended sequence is:
+
+1. keep the planning/control room video-free;
+2. open a fresh room dedicated to review;
+3. have that room read this handoff, the detached review protocol, and the video-ingress boundary;
+4. then the owner uploads the video into that fresh review room;
+5. that room performs the visual assessment and only then binds the top findings to source.
+
+This protects context budget. A room containing a large video should not also become a broad engineering or whole-estate audit room.
+
+---
+
+## 3. Latest owner disposition
+
+The owner reviewed the hooked production film, captured a video externally, and determined:
 
 - the work is substantially successful;
 - the film is not yet finished;
 - substantial refinement remains;
 - it should be unhooked while that refinement continues.
 
-Therefore the next room is **not** being asked to publish, re-hook, reconstruct, respecify, or build new qualification infrastructure.
+Therefore the next review room is **not** being asked to publish, re-hook, reconstruct, respecify, or build new qualification infrastructure.
 
-The next room is being asked to **assess the supplied video and make deterministic, bounded improvements to the existing film while it remains detached from ordinary production entry.**
+Once the owner uploads the video into that fresh review room, the room is being asked to **assess that attached video and make deterministic, bounded improvements to the existing film while it remains detached from ordinary production entry.**
+
+Until the video is actually attached in that review room, do not start a broad code audit as a substitute for visual evidence.
 
 ---
 
-## 3. Controlling precedent
+## 4. Controlling precedent
 
 Do not rediscover this history unless a specific conflict requires it.
 
@@ -66,9 +90,17 @@ These are not exceptions to work around. They are the operating precedent.
 
 ---
 
-## 4. Immediate workflow for the next room
+## 5. Immediate workflow for the next review room
 
-When the owner uploads the captured cinematic video:
+Before the video is attached:
+
+1. Read this file.
+2. Read `docs/DETACHED_CINEMATIC_VIDEO_REVIEW_AND_PROGRESSION_PROTOCOL.md`.
+3. Read `docs/COMPASS_CINEMATIC_VIDEO_ROOM_INGRESS_BOUNDARY.md`.
+4. Confirm current `main` and that activation remains `INTRO_PRESENT_BUT_UNHOOKED`.
+5. Stop and wait for the owner to attach the review video in that room.
+
+After the owner attaches the video in that same room:
 
 1. **Watch the video end to end before broad repository retrieval.**
 2. Produce a timecoded list of visible strengths and defects.
@@ -86,10 +118,13 @@ The loop is:
 
 ---
 
-## 5. What not to do
+## 6. What not to do
 
 Do not:
 
+- assume a video from another room is available;
+- ask for the large review video in a planning/control room when a fresh review room is the intended destination;
+- search the repository for a substitute video;
 - restart the shot-construction specification;
 - recreate the film from scratch;
 - build another generic animatic;
@@ -106,7 +141,7 @@ If a proposed change actually touches navigation, controller authority, shared a
 
 ---
 
-## 6. Production standard
+## 7. Production standard
 
 The next review baseline should advance when it is:
 
@@ -124,7 +159,7 @@ The standard is:
 
 ---
 
-## 7. Durable checkpoint requirement
+## 8. Durable checkpoint requirement
 
 After each material group of changes, persist:
 
@@ -133,7 +168,7 @@ CINEMATIC_REVIEW_CHECKPOINT
 
 Repository head:
 Activation state: INTRO_REVIEW_PATCH_IN_PROGRESS | INTRO_PRESENT_BUT_UNHOOKED
-Video evidence:
+Video evidence: <only if actually attached/reviewed in that room>
 Review result: CONTINUE_REFINEMENT | READY_TO_HOOK | KEEP_UNHOOKED
 
 Accepted strengths:
@@ -162,30 +197,31 @@ A room must write a checkpoint before it begins a second broad investigation pat
 
 ---
 
-## 8. Recovery rule
+## 9. Recovery rule
 
 If a room collapses, the successor room should:
 
 1. read this file;
 2. read the detached cinematic review protocol;
-3. resolve current `main`;
-4. find the most recent cinematic review checkpoint/PR;
-5. resume from the first unresolved video finding;
-6. avoid repeating accepted source discovery or closed findings;
-7. request the video only when visual assessment is the next task and the recording is not available in the room.
+3. read the video-room ingress boundary;
+4. resolve current `main`;
+5. find the most recent cinematic review checkpoint/PR;
+6. resume from the first unresolved video finding if durable findings exist;
+7. avoid repeating accepted source discovery or closed findings;
+8. if visual assessment is the next task and no video is attached in the successor room, wait for the owner to upload it **to that room**.
 
-Do not reconstruct lost private reasoning. Continue from durable video findings, source bindings, and commits.
+Do not reconstruct lost private reasoning. Continue from durable findings, source bindings, and commits.
 
 Operating law:
 
-> **Durable forward progress outranks maximum procedural completeness.**
+> **Durable repository context travels across rooms. Large video evidence does not.**
 
 ---
 
-## 9. Immediate instruction
+## 10. Immediate instruction
 
 The next material task is:
 
-**Review the owner's captured 45-second Compass cinematic, identify the highest-value visual/creative corrections with timecodes, bind those findings to the existing cinematic source, and implement the first bounded refinement group while the intro remains unhooked.**
+**Open a fresh cinematic-review room, let that room ingest the repository handoff/protocol first, then have the owner attach the captured Compass video there. Only after the video is present should the room identify the highest-value corrections with timecodes and implement the first bounded refinement group while the intro remains unhooked.**
 
-Do not spend the next room rebuilding approval infrastructure.
+Do not upload the large review video into the current planning/control room merely to satisfy this handoff. Do not spend the next review room rebuilding approval infrastructure.

@@ -277,7 +277,7 @@ Named `NEWS` chronology may not be presented by v2 as universal mandatory runtim
 - **id:** `CW2-G11`
 - **humanObject:** `Seeing fragility before failure`
 - **gridPosition:** `DISCOVERY × WHAT_IT_MEANS_NOW`
-- **meaningSide:** A system can look healthy while quietly losing its ability to recover. This work asks whether we can measure how much viable room it still has to maneuver before failure becomes obvious. On one frozen power-system benchmark, that added information improved prediction. We have not shown that the effect is universal or identified its mechanism.
+- **meaningSide:** A system can still look healthy even as its room to recover is shrinking. This research asks whether that hidden loss of options can be measured early enough to improve what we can predict about failure. On one frozen power-system benchmark, it did improve prediction. What remains unresolved is whether the same signal works beyond that setting, and why.
 - **evidenceSide:** `Latent Viable Maneuverability / IEEE RTS24`. On 659 fresh states: RMSE `0.0568661 → 0.0418991`; ΔRMSE `0.0149670`; 95% cluster-bootstrap CI `[0.0083250, 0.0235078]`; MAE `0.0418498 → 0.0320433`; Spearman `0.7023 → 0.8258`. Matched-state Gen429 later closed `NOT_IDENTIFIABLE`: 28 qualifying LVTG-discordant pairs versus frozen minimum 30; future outcome `Y` remained unopened.
 - **domainTags:** `SCIENTIFIC`
 - **evidenceStatus:** `BOUNDED_EMPIRICAL + NOT_IDENTIFIABLE`
@@ -294,7 +294,7 @@ Named `NEWS` chronology may not be presented by v2 as universal mandatory runtim
 - **id:** `CW2-G12`
 - **humanObject:** `Making coherence precise`
 - **gridPosition:** `DISCOVERY × WHAT_IS_UNUSUAL`
-- **meaningSide:** Ideas such as “holding together,” “fracturing,” and “remaining coherent” are easy to say and hard to test. This work turns some of those intuitions into explicit mathematical objects that can be proved, contradicted, and exhaustively checked. The mathematics is real; whether these objects are new in the literature or useful descriptions of physical systems remains open.
+- **meaningSide:** Words like “coherent,” “fractured,” or “holding together” are intuitive, but science cannot test an intuition until it becomes precise. This work turns parts of that language into mathematical objects that can be proved, challenged, and exhaustively checked. The formal results hold inside their stated models. Whether the objects are genuinely new in the literature—or useful descriptions of the physical world—still has to be established.
 - **evidenceSide:** `Coherence Geometry + Diamond Operator`. The coherence-to-minimal-constraint result was exhaustively verified over 3,072 models and 18,432 observer cases under its stated definitions. Diamond Operator v1 closes one four-role, two-branch operator and checks 20,736 role/state combinations, 497,664 bijective relabelings, and 20,736 branch swaps. Separate formal work produced a constructive counterexample to universal C-before-STACK-B order. Gen430 remains `NOT_IDENTIFIABLE` and creates no orientation-selection result.
 - **domainTags:** `FORMAL`
 - **evidenceStatus:** `FORMAL_PROOF + FORMAL_COUNTEREXAMPLE + NOT_IDENTIFIABLE`
@@ -311,7 +311,7 @@ Named `NEWS` chronology may not be presented by v2 as universal mandatory runtim
 - **id:** `CW2-G13`
 - **humanObject:** `Testing the machinery doing the research`
 - **gridPosition:** `DISCOVERY × WHERE_IT_COULD_LEAD`
-- **meaningSide:** Diamond Gate does not only use AI-assisted research machinery; it is beginning to test that machinery. In one bounded comparison, the Diamond Gate configuration completed verified tasks that the tested comparison configuration did not. A cleaner follow-up remains unopened. If that stronger test holds, the research process itself becomes something we can improve with evidence rather than assumption.
+- **meaningSide:** Diamond Gate is not only using AI-assisted research tools; it is beginning to test whether its own way of working makes a measurable difference. In one bounded comparison, its configuration completed verified tasks that the tested comparison configuration did not. A cleaner replication is still unopened. If that stronger comparison holds, parts of the research process itself can start being improved by evidence rather than preference.
 - **evidenceSide:** `Agentic Frontier Study 1 / Full24`. Frozen 24-task population: Diamond Gate 10 verified completions; tested OpenHands configuration 0. Paired: `DG_ONLY=10`, `OH_ONLY=0`, `BOTH_PASS=0`, `NEITHER=14`; DG-only completions occurred in all four preregistered strata. Comparator end-to-end tool-loop health remained unresolved. Study 2 remains frozen with stock OpenHands v1.14.0, the same frozen strong model on both arms, no fallback, and zero opened outcomes.
 - **domainTags:** `AGENTIC`
 - **evidenceStatus:** `CONFIGURATION_BOUNDED + PREREGISTERED_NOT_EXECUTED`
@@ -328,7 +328,7 @@ Named `NEWS` chronology may not be presented by v2 as universal mandatory runtim
 - **id:** `CW2-G21`
 - **humanObject:** `Good reasoning is not permission to act`
 - **gridPosition:** `RESEARCH_METHOD × WHAT_IT_MEANS_NOW`
-- **meaningSide:** A convincing answer is not automatically allowed to change the system. Diamond Gate separates deciding what seems correct from deciding whether anything is authorized to happen. That distinction is designed to keep stale state, incomplete review, or a persuasive mistake from quietly becoming accepted reality.
+- **meaningSide:** A system can reach a convincing conclusion and still be wrong, stale, incomplete, or unauthorized. Diamond Gate therefore separates “this appears correct” from “this is allowed to change the record.” The practical aim is simple: a persuasive answer should not quietly become reality until the relevant state, scope, and authority have been checked.
 - **evidenceSide:** `Canonical AI Entry / operation intake`. Governed mutations bind an exact governing head, bounded path set, construction procedure, verifier definition, stop conditions, and canonical admission/lock. In the Compass operation, `PSALM_COMPLETE + ACK_PACK_COMPLETE + INTAKE_READY_ON_FRESH_MAIN` explicitly created no construction authority; branch creation and mutation still required a later authentic `ADMITTED_AND_LOCKED` receipt.
 - **domainTags:** `ENGINEERING · OPERATING_CONTEXT`
 - **evidenceStatus:** `OPERATING_METHOD`
@@ -345,7 +345,7 @@ Named `NEWS` chronology may not be presented by v2 as universal mandatory runtim
 - **id:** `CW2-G22`
 - **humanObject:** `Construction cannot grade itself`
 - **gridPosition:** `RESEARCH_METHOD × WHAT_IS_UNUSUAL`
-- **meaningSide:** The part of a system that builds something should not be the only part deciding whether it passed. Diamond Gate separates boundary review, construction, continuity checks, adversarial fracture testing, execution, and return. The point is not ceremonial complexity; it is to make disagreement and failure visible before action is treated as complete.
+- **meaningSide:** The same process that builds something should not be the only process deciding whether it worked. Diamond Gate separates making, checking continuity, looking for fracture, authorizing execution, and recording the result. The purpose is not ceremony. It is to create places where disagreement, missing evidence, and false confidence can surface before completion is declared.
 - **evidenceSide:** `PSALM / ACK_PACK / role-separated assurance + epistemic sequencing`. The advisory package defines PSALM/ACK_PACK as active advisory instrumentation, not universal fail-closed runtime law. The Compass intake record demonstrates a bounded ordered traversal with North admissibility/boundary, East formation/construction, South stability/continuity, West fracture/false-pass, North return, Lab execution boundary, and Jeeves/ACK return, followed by separate canonical admission. Named `NEWS` may describe epistemic chronology only at the level separately source-bound; v2 does not claim universal mandatory NEWS enforcement.
 - **domainTags:** `ENGINEERING · OPERATING_CONTEXT`
 - **evidenceStatus:** `OPERATING_METHOD`
@@ -362,7 +362,7 @@ Named `NEWS` chronology may not be presented by v2 as universal mandatory runtim
 - **id:** `CW2-G23`
 - **humanObject:** `Can the research process itself earn evidence?`
 - **gridPosition:** `RESEARCH_METHOD × WHERE_IT_COULD_LEAD`
-- **meaningSide:** The larger question is whether the extra discipline actually helps. Diamond Gate can compare simpler and fuller versions of its own research process instead of assuming more governance is better. If the full system measurably reduces mistakes or evidence loss without unacceptable cost, the method itself could become a research result.
+- **meaningSide:** More safeguards are not automatically better. The next question is whether this added research discipline produces measurable benefits that justify its cost. Diamond Gate can test simpler and fuller versions of its own process against the same work. If the fuller system actually reduces false passes, evidence loss, or rework without unacceptable overhead, the research method itself could become something supported by experiment.
 - **evidenceSide:** `Constitutional Scientific Runtime ablation candidate`. Proposed stack: `A = ordinary agent workflow`; `B = A + control-plane/exact-state custody`; `C = B + ACK_PACK role traversal`; `D = C + epistemic chronology`; `E = D + PSALM constitutional constraints`. Candidate outcomes include unauthorized mutation, false pass, missed contradiction, post-outcome change, stale-state execution, recovery failure, evidence loss, claim-ceiling violation, rework, and verified task completion. No full ablation protocol has been frozen and no ablation outcome exists.
 - **domainTags:** `AGENTIC · ENGINEERING`
 - **evidenceStatus:** `OPERATING_METHOD`
@@ -379,7 +379,7 @@ Named `NEWS` chronology may not be presented by v2 as universal mandatory runtim
 - **id:** `CW2-G31`
 - **humanObject:** `Built as one independent program`
 - **gridPosition:** `INDEPENDENT_PROGRAM × WHAT_IT_MEANS_NOW`
-- **meaningSide:** The software, experiments, research protocols, interactive systems, and public evidence architecture have been developed inside one independent program rather than a conventional lab or software organization. That does not make the research correct. It does explain why the same evidence rules and tools recur across very different kinds of work.
+- **meaningSide:** This research, software, experimental infrastructure, interactive work, and public evidence system have been developed inside one independent program rather than a conventional lab or software organization. That is context, not proof. It matters because the same methods for preserving evidence, uncertainty, and exact state have been exercised across many different kinds of work under one operating model.
 - **evidenceSide:** Owner provenance disposition records principal single-engineer operation. The public material-work audit records 906 pull requests in one audited month, with 699 retained as material work: 17 PARAMOUNT and 682 STANDARD. These figures establish exercised scale/context only.
 - **domainTags:** `OPERATING_CONTEXT`
 - **evidenceStatus:** `HISTORICAL_CONTEXT`
@@ -396,7 +396,7 @@ Named `NEWS` chronology may not be presented by v2 as universal mandatory runtim
 - **id:** `CW2-G32`
 - **humanObject:** `One architecture across different kinds of work`
 - **gridPosition:** `INDEPENDENT_PROGRAM × WHAT_IS_UNUSUAL`
-- **meaningSide:** Diamond Gate uses a shared research architecture while working on empirical experiments, formal mathematics, agentic systems, software construction, negative results, and public evidence. The unusual fact is the shared operating system, not a claim that one scientific theory has already been proven across all of those domains.
+- **meaningSide:** The same research architecture is being used across empirical studies, formal mathematics, agent evaluation, software construction, negative results, and public evidence. That breadth is unusual as an operating pattern, but it does not mean one scientific theory has been validated across all of those domains. What is shared is the research machinery; each result still has to earn its own evidence.
 - **evidenceSide:** Architectural breadth is source-bound across LVTG/RTS24, Coherence Geometry, Structural Admissibility diagnostics, Agentic Full24, weak-field B0–B4, battery investigations, governed public mutation, evidence custody, and publication binding. Each program retains its own evidence class; no scientific result inherits support from mere coexistence in the estate.
 - **domainTags:** `SCIENTIFIC · AGENTIC · FORMAL · ENGINEERING · OPERATING_CONTEXT`
 - **evidenceStatus:** `OPERATING_METHOD`
@@ -413,7 +413,7 @@ Named `NEWS` chronology may not be presented by v2 as universal mandatory runtim
 - **id:** `CW2-G33`
 - **humanObject:** `Can it survive another operator?`
 - **gridPosition:** `INDEPENDENT_PROGRAM × WHERE_IT_COULD_LEAD`
-- **meaningSide:** A research system matters more if someone else can recover its exact state, understand what failed, reproduce the test, and continue without relying on private memory. Diamond Gate has built mechanisms for that kind of succession. The open question is whether an external operator or organization can use them successfully.
+- **meaningSide:** A research system is more useful if another person can recover what was known, what failed, what remained uncertain, and exactly where to continue—without relying on private memory. Diamond Gate has built internal mechanisms for that kind of succession. The unresolved test is external: can another operator or organization recover the state, reproduce bounded work, and continue without losing the evidence boundaries?
 - **evidenceSide:** `Exact-state succession / reproduction boundary`. Current methods preserve exact governing state, frozen tasks/acceptance conditions, negative and unfinished work, independent qualification, and successor identity. Existing recovery records show bounded continuity from durable repository state. External transferability, independent organizational adoption, and measured benefit remain unproven.
 - **domainTags:** `ENGINEERING · OPERATING_CONTEXT`
 - **evidenceStatus:** `OPERATING_METHOD`

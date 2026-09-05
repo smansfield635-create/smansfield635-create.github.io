@@ -6,6 +6,8 @@ import {spawnSync} from 'node:child_process';
 const REPAIR_BASE='c8114c86ae7fb848e78b0c946c260ec0663631ec';
 const SOURCE_BASE='46c56e0519fc875eac877b4bc921e3151b019a2f';
 const EXPECTED_SPEC='88473442959299d6f6af82396917f0578074cab2';
+const EXPECTED_HOST_ID='19b5f7b8b4ce0f64';
+const EXPECTED_RENDER_ID='aad42a46881bb01c';
 const EXPECTED_PATHS=[
   'index.html',
   'assets/compass/compass.orientation-cinematic.js',
@@ -23,7 +25,8 @@ check('BOUNDED_EXECUTABLE_SCOPE',EXPECTED_PATHS.filter(p=>/\.(?:js|mjs)$/i.test(
 check('SOURCE_BASE_PRESERVED',host.includes(`sourceMain:'${SOURCE_BASE}'`)&&custody.sourceMain===SOURCE_BASE,SOURCE_BASE);
 check('REPAIR_BASE_BOUND',host.includes(`repairBase:'${REPAIR_BASE}'`),REPAIR_BASE);
 check('SPECIFICATION_PRESERVED',host.includes(EXPECTED_SPEC)&&custody.specificationCommit===EXPECTED_SPEC,EXPECTED_SPEC);
-check('SAME_PRODUCTION_HOST_PATH',index.includes('/assets/compass/compass.orientation-cinematic.js?v=gen1933-orientation-cinematic-v1&cb=362a9586c4eb7cc9')&&!index.includes('compass.orientation-cinematic.playpath.js'));
+check('SAME_PRODUCTION_HOST_PATH',index.includes(`/assets/compass/compass.orientation-cinematic.js?v=gen1933-orientation-cinematic-v1&cb=${EXPECTED_HOST_ID}`)&&!index.includes('compass.orientation-cinematic.playpath.js'));
+check('FRESH_RENDERER_REQUEST_IDENTITY',host.includes(`/assets/compass/compass.orientation-cinematic.render.js?cb=${EXPECTED_RENDER_ID}`)&&!host.includes("import('/assets/compass/compass.orientation-cinematic.render.js')"));
 check('MASTER_DURATION_45000',host.includes('const MASTER_DURATION_MS=45000'));
 check('S01_S06_TIMING_PRESERVED',host.includes("id:'S01',beat:'Arrival',purpose:'Enter Diamond Gate Bridge',startMs:0,endMs:4500")&&host.includes("id:'S06',beat:'Elsewhere',purpose:'Reveal story and world possibility',startMs:25500,endMs:30500"));
 check('S07_RUNTIME_STRETCHED',host.includes("id:'S07',beat:'Breadth / Engagement',purpose:'Reveal ways to engage and estate breadth',startMs:30500,endMs:41000")&&host.includes('const legacyElapsedMs=30500+frame.shotProgress*3500'));

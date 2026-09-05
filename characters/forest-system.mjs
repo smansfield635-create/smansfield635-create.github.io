@@ -1,6 +1,8 @@
 import {step9Frame,step9ShorelineZ,step9TerrainHeight,resolveStep9Site,STEP9_DESTINATION_BINDINGS} from './step9-regional-geography.mjs';
+import {GRATITUDE_COAST_NIGHT} from './night-renderer.mjs';
 
 export const FOREST_REPRESENTATION_SOURCE_SHA='35e8e2fb3e4a093fb3bc8ecc4239e8564bd7938a';
+export const FOREST_NIGHT_MATERIAL_SOURCE='CHARACTERS_GRATITUDE_ENVIRONMENT_RENDERER_V2';
 export const FOREST_ARCHETYPES=Object.freeze([
   'BROAD_DECIDUOUS','COLUMNAR','WIND_SHAPED_COASTAL','ANCIENT_SPREADING','YOUNG_UNDERSTORY','DEAD_SPARSE'
 ]);
@@ -135,12 +137,43 @@ function treeGeometry(verts,t){
 function compile(gl,type,source){const sh=gl.createShader(type);gl.shaderSource(sh,source);gl.compileShader(sh);if(!gl.getShaderParameter(sh,gl.COMPILE_STATUS))throw new Error(`FOREST_SHADER:${gl.getShaderInfoLog(sh)}`);return sh;}
 function program(gl,vs,fs){const p=gl.createProgram();gl.attachShader(p,compile(gl,gl.VERTEX_SHADER,vs));gl.attachShader(p,compile(gl,gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(`FOREST_PROGRAM:${gl.getProgramInfoLog(p)}`);return p;}
 const VS=`#version 300 es
-precision highp float;layout(location=0)in vec3 aPos;layout(location=1)in vec3 aNormal;layout(location=2)in float aMaterial;uniform mat4 uVP;uniform float uTime;out vec3 vN;out float vM;out float vH;void main(){vec3 p=aPos;if(aMaterial>.5){float phase=aPos.x*.017+aPos.z*.013;float sway=sin(uTime*.58+phase)*(.20+clamp((aPos.y-4.0)/65.0,0.0,1.0)*.78);p.x+=sway;p.z+=sway*.22;}vN=aNormal;vM=aMaterial;vH=aPos.y;gl_Position=uVP*vec4(p,1.0);}`;
+precision highp float;
+layout(location=0)in vec3 aPos;layout(location=1)in vec3 aNormal;layout(location=2)in float aMaterial;
+uniform mat4 uVP;uniform float uTime;
+out vec3 vN;out float vM;out float vH;out vec3 vWorld;
+void main(){vec3 p=aPos;if(aMaterial>.5){float phase=aPos.x*.017+aPos.z*.013;float sway=sin(uTime*.58+phase)*(.20+clamp((aPos.y-4.0)/65.0,0.0,1.0)*.78);p.x+=sway;p.z+=sway*.22;}vN=aNormal;vM=aMaterial;vH=aPos.y;vWorld=p;gl_Position=uVP*vec4(p,1.0);}`;
 const FS=`#version 300 es
-precision highp float;in vec3 vN;in float vM;in float vH;out vec4 outColor;void main(){vec3 n=normalize(vN);float moon=.30+.48*max(0.0,dot(n,normalize(vec3(-.35,.72,.42))));float heightLift=clamp(vH/140.0,0.0,1.0);vec3 bark=mix(vec3(.050,.043,.036),vec3(.13,.105,.078),moon);vec3 leaf=mix(vec3(.012,.060,.041),vec3(.078,.175,.105),moon+.10*heightLift);vec3 c=mix(bark,leaf,step(.5,vM));c+=vec3(.018,.028,.040)*pow(max(0.0,n.y),2.0);c*=mix(.72,1.0,smoothstep(0.0,18.0,vH));outColor=vec4(c,1.0);}`;
+precision highp float;
+in vec3 vN;in float vM;in float vH;in vec3 vWorld;
+uniform vec3 uMoonDir;uniform vec3 uMoonColor;uniform vec3 uAmbient;uniform vec3 uRockLow;uniform vec3 uMarsh;uniform vec3 uHorizon;
+out vec4 outColor;
+float hash21(vec2 p){p=fract(p*vec2(123.34,345.45));p+=dot(p,p+34.345);return fract(p.x*p.y);}
+float noise2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix(hash21(i),hash21(i+vec2(1,0)),f.x),mix(hash21(i+vec2(0,1)),hash21(i+vec2(1,1)),f.x),f.y);}
+void main(){
+  vec3 n=normalize(vN);
+  float lunar=max(0.0,dot(n,normalize(uMoonDir)));
+  float broad=noise2(vWorld.xz*.012),fine=noise2(vWorld.xz*.041+7.3);
+  vec3 terrainVegetation=mix(uRockLow,uMarsh,.38+.36*broad);
+  terrainVegetation=mix(terrainVegetation,uAmbient,.18+.16*fine);
+  vec3 barkBase=mix(uRockLow,uAmbient,.48);
+  vec3 bark=barkBase*(.68+.30*lunar)+uMoonColor*lunar*.035;
+  vec3 leaf=terrainVegetation*(.72+.28*lunar)+uMoonColor*lunar*.045;
+  vec3 c=mix(bark,leaf,step(.5,vM));
+  float basin=1.0-smoothstep(24.0,92.0,vH);
+  c=mix(c,uHorizon,.06*basin);
+  float radial=length(vWorld.xz);
+  float haze=smoothstep(620.0,1500.0,radial);
+  float lum=dot(c,vec3(.2126,.7152,.0722));
+  vec3 desat=mix(c,vec3(lum),.46);
+  c=mix(c,desat,haze*.52);
+  c=mix(c,uHorizon,haze*.12);
+  c*=mix(.78,1.0,smoothstep(0.0,16.0,vH));
+  outColor=vec4(c,1.0);
+}`;
 
 export function createForestSystem(gl,{compact=false}={}){
   const population=buildForestPopulation({compact}),verts=[];for(const t of population.instances)treeGeometry(verts,t);
-  const data=new Float32Array(verts),vao=gl.createVertexArray();gl.bindVertexArray(vao);const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);const stride=7*4;gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,stride,0);gl.enableVertexAttribArray(1);gl.vertexAttribPointer(1,3,gl.FLOAT,false,stride,12);gl.enableVertexAttribArray(2);gl.vertexAttribPointer(2,1,gl.FLOAT,false,stride,24);const shader=program(gl,VS,FS),uVP=gl.getUniformLocation(shader,'uVP'),uTime=gl.getUniformLocation(shader,'uTime');gl.bindVertexArray(null);
-  return Object.freeze({population,triangleCount:data.length/7/3,draw(vp,time){gl.useProgram(shader);gl.uniformMatrix4fv(uVP,false,vp);gl.uniform1f(uTime,time);gl.bindVertexArray(vao);gl.drawArrays(gl.TRIANGLES,0,data.length/7);}});
+  const data=new Float32Array(verts),vao=gl.createVertexArray();gl.bindVertexArray(vao);const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);const stride=7*4;gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,stride,0);gl.enableVertexAttribArray(1);gl.vertexAttribPointer(1,3,gl.FLOAT,false,stride,12);gl.enableVertexAttribArray(2);gl.vertexAttribPointer(2,1,gl.FLOAT,false,stride,24);const shader=program(gl,VS,FS),uVP=gl.getUniformLocation(shader,'uVP'),uTime=gl.getUniformLocation(shader,'uTime'),uMoonDir=gl.getUniformLocation(shader,'uMoonDir'),uMoonColor=gl.getUniformLocation(shader,'uMoonColor'),uAmbient=gl.getUniformLocation(shader,'uAmbient'),uRockLow=gl.getUniformLocation(shader,'uRockLow'),uMarsh=gl.getUniformLocation(shader,'uMarsh'),uHorizon=gl.getUniformLocation(shader,'uHorizon');gl.bindVertexArray(null);
+  const material=GRATITUDE_COAST_NIGHT;
+  return Object.freeze({population,triangleCount:data.length/7/3,materialSource:FOREST_NIGHT_MATERIAL_SOURCE,draw(vp,time){gl.useProgram(shader);gl.uniformMatrix4fv(uVP,false,vp);gl.uniform1f(uTime,time);gl.uniform3fv(uMoonDir,material.moon.direction);gl.uniform3fv(uMoonColor,material.moon.color);gl.uniform3fv(uAmbient,material.terrain.ambient);gl.uniform3fv(uRockLow,material.terrain.rockLow);gl.uniform3fv(uMarsh,material.terrain.marsh);gl.uniform3fv(uHorizon,material.sky.horizon);gl.bindVertexArray(vao);gl.drawArrays(gl.TRIANGLES,0,data.length/7);}});
 }

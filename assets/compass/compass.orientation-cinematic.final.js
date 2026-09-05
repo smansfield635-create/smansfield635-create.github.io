@@ -1,6 +1,6 @@
 const FINAL_SCHEMA='COMPASS_MAIN_HOMEPAGE_CINEMATIC_FINAL_RENDERER_v2_STORYBOARD_SOURCE_TRUTH';
 const SOURCE=Object.freeze({
-  homepage:Object.freeze({path:'index.html',blob:'aa476ee5f6e74f56f2415bd8d36edfe1fa7a85ec'}),
+  homepage:Object.freeze({path:'index.html',blob:'e22ea3c34662e4b003685f3c326514edd2ebdbd2'}),
   brain:Object.freeze({path:'assets/compass/compass.hra-brain-scene.js',blob:'c26603744e55c8ede2c82944bd0fd117d04dcbdb'}),
   trophy:Object.freeze({path:'assets/compass/compass.trophy-scene.js',blob:'d281e18b06128671ffe2a19e8fdb272cc5544e31'}),
   house:Object.freeze({path:'assets/compass/compass.house-scene.js',blob:'a82e3c963a10808b9f8f1922faab45155ea4a62b'}),

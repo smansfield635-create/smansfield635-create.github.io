@@ -5,15 +5,19 @@ Date: 2026-09-05
 
 ## Purpose
 
-This protocol gives any new room a deterministic path from an uploaded cinematic/video review to a bounded repository change without turning visual refinement into an unnecessary infrastructure project.
+This protocol gives any new room a deterministic path from a user-supplied cinematic recording to a bounded repository change without turning visual refinement into an unnecessary infrastructure project.
 
-It applies to Compass and to future page-intro films that are implemented as removable presentation layers in front of an otherwise authoritative page.
+It applies to Compass and to future page-intro films implemented as removable presentation layers in front of an otherwise authoritative page.
 
 The governing principle is:
 
 > **Use the video to decide what is wrong, use the repository only to bind the smallest correction, and use verification proportional to the actual production risk.**
 
-This protocol does not create runtime authority, deployment authority, or a new governance class. Existing repository routing remains authoritative. Its purpose is to prevent rooms from escalating ordinary cinematic refinement into unrelated engineering work.
+This protocol does not create runtime authority, deployment authority, or a new governance class. Existing repository routing remains authoritative. Its purpose is to prevent ordinary cinematic refinement from escalating into unrelated engineering work.
+
+Companion ingress rule:
+
+`docs/COMPASS_CINEMATIC_VIDEO_ROOM_INGRESS_BOUNDARY.md`
 
 ---
 
@@ -75,9 +79,36 @@ Do not hook a film live merely because a code change is complete. Hooking is a s
 
 ---
 
-## 3. Video-first review law
+## 3. Video ingress and room-budget law
 
-When the user supplies a recording of the current cinematic, **review the video before broad repository inspection**.
+The review video is **not** a repository asset and is **not** assumed to travel across rooms.
+
+Use this room sequence:
+
+1. Keep the planning/control room video-free when preserving context budget is useful.
+2. Open a fresh room dedicated to cinematic review.
+3. Have that room read the current cinematic handoff, this protocol, and the video-ingress boundary.
+4. Only then does the owner attach the large review video in that fresh review room.
+5. The room reviews the video first and persists a checkpoint before broad repository work.
+
+No room may say a video is “supplied,” “uploaded,” or “available” unless the file is actually attached in that room.
+
+If visual review is the next task and no video is attached in the room, say that the video has not yet been supplied **to that room** and wait for the owner to attach it there.
+
+Do not:
+
+- infer availability from a prior room;
+- ask for the large video in a different planning room;
+- search the repository for a substitute recording;
+- begin a broad code audit in place of the missing visual evidence.
+
+A room containing a large video should not also become a whole-estate engineering room. After video upload, narrow the work to visible findings, exact source bindings, bounded patches, and early checkpoints.
+
+---
+
+## 4. Video-first review law
+
+When the user supplies a recording in the review room, **review the video before broad repository inspection**.
 
 The video is primary evidence for:
 
@@ -106,11 +137,9 @@ A visual review should first produce a bounded defect list with timecodes. Examp
 
 Do not inspect source until the visible problem is named.
 
-If the task is specifically a visual review and no video is available in the room, ask for the video. Do not substitute a repository audit for the missing visual evidence.
-
 ---
 
-## 4. Minimal source-binding law
+## 5. Minimal source-binding law
 
 For each accepted video finding, bind only the source needed to change that finding.
 
@@ -131,7 +160,7 @@ Do not reopen settled creative/source discovery unless the video reveals a new a
 
 ---
 
-## 5. Production acceptance standard
+## 6. Production acceptance standard
 
 A cinematic revision is eligible to advance when all of the following are true:
 
@@ -151,7 +180,7 @@ If yes, advance it.
 
 ---
 
-## 6. Proportional verification ladder
+## 7. Proportional verification ladder
 
 Use the lowest verification level that actually answers the uncertainty introduced by the patch.
 
@@ -189,9 +218,9 @@ If an existing instrument is unavailable, record that limitation. Do not turn th
 
 ---
 
-## 7. Deterministic change loop
+## 8. Deterministic change loop
 
-A new room should repeat this loop until the owner says the film is ready:
+A review room should repeat this loop until the owner says the film is ready:
 
 `WATCH → RECORD FINDINGS → PRIORITIZE → BIND SOURCE → PATCH → NARROW VERIFY → PERSIST CHECKPOINT → REVIEW AGAIN`
 
@@ -202,10 +231,11 @@ Rules:
 - Keep the cinematic unhooked while active refinement is underway.
 - Preserve accepted scenes unless a later change genuinely depends on them.
 - A successful visual improvement becomes the new review baseline; do not repeatedly re-litigate already accepted decisions.
+- If the video-bearing room becomes context-heavy, checkpoint and move to a fresh successor room rather than broadening investigation in place.
 
 ---
 
-## 8. Durable review checkpoint schema
+## 9. Durable review checkpoint schema
 
 Every room that performs material review or construction should leave a durable checkpoint before expanding scope.
 
@@ -216,7 +246,7 @@ CINEMATIC_REVIEW_CHECKPOINT
 
 Repository head:
 Activation state:
-Video evidence: <filename / duration / capture date if known>
+Video evidence: <only if actually attached and reviewed in this room; filename / duration / capture date if known>
 Review result: <CONTINUE_REFINEMENT | READY_TO_HOOK | KEEP_UNHOOKED>
 
 Accepted strengths:
@@ -247,7 +277,7 @@ The checkpoint must distinguish what was visually observed, what was changed, wh
 
 ---
 
-## 9. Room-collapse prevention
+## 10. Room-collapse prevention
 
 A room must persist progress before it starts a second broad line of investigation.
 
@@ -258,7 +288,8 @@ Warning signs that the room is drifting:
 - the room starts proving facts already established by the current handoff;
 - multiple equivalent source searches occur after authority is already known;
 - a missing optional test becomes a proposal to build a new system;
-- no durable checkpoint exists after several substantive conclusions.
+- no durable checkpoint exists after several substantive conclusions;
+- the room contains a large video and is also accumulating broad repository/control-plane context.
 
 When any warning sign occurs, stop retrieval and write the current checkpoint.
 
@@ -268,36 +299,42 @@ Operating law:
 
 ---
 
-## 10. Hook / unhook release pattern
+## 11. Hook / unhook release pattern
 
 The recommended lifecycle for future page intros is:
 
 1. Build the intro as a detachable presentation layer.
 2. Keep it unhooked during development.
-3. Review captured video directly.
-4. Apply targeted bounded corrections.
-5. When owner review says it is ready, hook it live with the smallest activation change possible.
-6. Capture/review the live result.
-7. If rejected or still immature, unhook it without deleting the film or mutating the underlying page.
+3. Open a fresh review room and have the owner attach the review video there.
+4. Review that captured video directly.
+5. Apply targeted bounded corrections.
+6. When owner review says it is ready, hook it live with the smallest activation change possible.
+7. Capture/review the live result.
+8. If rejected or still immature, unhook it without deleting the film or mutating the underlying page.
 
 This pattern makes live inspection reversible and turns the underlying page into a stable fallback rather than a co-development dependency.
 
 ---
 
-## 11. Default instruction for a new room
+## 12. Default instruction for a new room
 
-When handed a cinematic video and this repository:
+Before the video exists in the room:
 
 1. Read the current cinematic handoff.
 2. Read this protocol.
-3. Confirm current `main` and activation state.
-4. Watch the supplied video end to end.
-5. Produce a timecoded, prioritized assessment before source retrieval.
-6. Bind only the sources required for the top 1–3 findings.
-7. Route the actual mutation according to the repository classifier; do not assume cinematic JavaScript means runtime authority.
-8. Make the smallest coherent patch.
-9. Use source audit and focused smoke proportional to the patch.
-10. Persist a checkpoint.
-11. Leave the intro unhooked unless the user explicitly asks to hook/publish it.
+3. Read the video-room ingress boundary.
+4. Confirm current `main` and activation state.
+5. Wait for the owner to attach the review video **in that room**.
+
+After the video is attached:
+
+1. Watch it end to end.
+2. Produce a timecoded, prioritized assessment before source retrieval.
+3. Bind only the sources required for the top 1–3 findings.
+4. Route the actual mutation according to the repository classifier; do not assume cinematic JavaScript means runtime authority.
+5. Make the smallest coherent patch.
+6. Use source audit and focused smoke proportional to the patch.
+7. Persist a checkpoint.
+8. Leave the intro unhooked unless the user explicitly asks to hook/publish it.
 
 Do not create new engineering infrastructure unless a proposed product change genuinely requires that infrastructure.

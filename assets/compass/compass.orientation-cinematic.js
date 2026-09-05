@@ -2,16 +2,18 @@
 'use strict';
 
 const BUILD=Object.freeze({
-  version:'homepage-cinematic-shell-20260904-004',
+  version:'homepage-cinematic-shell-20260904-005-live',
   sourceMain:'46c56e0519fc875eac877b4bc921e3151b019a2f',
+  promotionBase:'2fea2cdf65bb7121b8d88b1a10b853898aa09ca6',
   specificationCommit:'88473442959299d6f6af82396917f0578074cab2',
-  mutationClass:'BOUNDED_PAGE_RELEASE'
+  mutationClass:'BOUNDED_PAGE_RELEASE',
+  liveDefault:true
 });
 const STATE=Object.freeze({ARMED:'ARMED',PLAYING:'PLAYING',RESTORE:'RESTORE',SETTLED:'SETTLED'});
 const MASTER_DURATION_MS=38000;
 const NATURAL_HANDOFF_FADE_START_MS=37540;
 const NATURAL_HANDOFF_FADE_MS=460;
-const PREVIEW_PARAM='compassCinematicConstruction';
+const CONSTRUCTION_PARAM='compassCinematicConstruction';
 const LIVE_HOUSE_SOURCE_PATH='/assets/compass/compass.house-scene.js';
 const SHOTS=Object.freeze([
   Object.freeze({id:'S01',beat:'Arrival',purpose:'Enter Diamond Gate Bridge',startMs:0,endMs:4500}),
@@ -25,7 +27,7 @@ const SHOTS=Object.freeze([
 ]);
 const $=(selector,root=document)=>root.querySelector(selector);
 const reduced=()=>window.matchMedia?.('(prefers-reduced-motion: reduce)').matches===true;
-const previewEnabled=()=>new URLSearchParams(location.search).get(PREVIEW_PARAM)==='1';
+const constructionPreview=()=>new URLSearchParams(location.search).get(CONSTRUCTION_PARAM)==='1';
 const session={phase:null,overlay:null,stage:null,renderer:null,raf:0,startAt:0,settled:false,restoring:false,priorFocus:null,root:null,rootInert:false,rootAriaHidden:null,url:'',historyLength:0,liveIdentity:null,errorCode:null,lastShotId:null,naturalHandoffStarted:false,handoffVerified:false};
 const liveHouseDeferral={wrapper:null,previousAppend:null,pending:[],released:false,listenersBound:false,interceptCount:0};
 
@@ -49,7 +51,7 @@ function bindLiveHouseIntentListeners(){
   document.addEventListener('focusin',onLiveHouseDirectIntent,true);
 }
 function installLiveHouseDeferral(){
-  if(!previewEnabled()||liveHouseDeferral.released||!document.head)return;
+  if(liveHouseDeferral.released||!document.head)return;
   bindLiveHouseIntentListeners();
   const head=document.head;
   if(liveHouseDeferral.wrapper&&head.append===liveHouseDeferral.wrapper)return;
@@ -111,8 +113,10 @@ function emitSettled(reason){
     reason,
     durationMs:MASTER_DURATION_MS,
     sourceMain:BUILD.sourceMain,
+    promotionBase:BUILD.promotionBase,
     specificationCommit:BUILD.specificationCommit,
     mutationClass:BUILD.mutationClass,
+    liveDefault:BUILD.liveDefault,
     navigationIntentEvents:0,
     urlUnchanged:location.href===session.url,
     historyUnchanged:history.length===session.historyLength,
@@ -158,6 +162,7 @@ function animatedShell(){
   overlay.dataset.state=STATE.ARMED;
   overlay.dataset.mainOrientationFilm=BUILD.version;
   overlay.dataset.sourceMain=BUILD.sourceMain;
+  overlay.dataset.promotionBase=BUILD.promotionBase;
   overlay.setAttribute('role','dialog');
   overlay.setAttribute('aria-modal','true');
   overlay.setAttribute('aria-label','Welcome to Diamond Gate Bridge');
@@ -171,6 +176,7 @@ function reducedShell(){
   overlay.dataset.state=STATE.ARMED;
   overlay.dataset.mainOrientationFilm=`${BUILD.version}-reduced`;
   overlay.dataset.sourceMain=BUILD.sourceMain;
+  overlay.dataset.promotionBase=BUILD.promotionBase;
   overlay.dataset.reducedMotion='true';
   overlay.setAttribute('role','dialog');
   overlay.setAttribute('aria-modal','true');
@@ -261,7 +267,6 @@ async function mount(){
   session.url=location.href;
   session.historyLength=history.length;
   session.liveIdentity=captureLiveIdentity(session.root);
-  if(!previewEnabled()){releaseLiveHouseDeferral('preview-disabled');return;}
   try{if(reduced())startReduced();else await startAnimated();}
   catch(error){failOpen(error?.message||'CINEMATIC_SHELL_INIT_FAILURE');}
 }
@@ -270,13 +275,15 @@ window.DGB_MAIN_ORIENTATION_CINEMATIC=Object.freeze({
   version:BUILD.version,
   durationMs:MASTER_DURATION_MS,
   sourceMain:BUILD.sourceMain,
+  promotionBase:BUILD.promotionBase,
   specificationCommit:BUILD.specificationCommit,
   mutationClass:BUILD.mutationClass,
-  constructionPreviewParameter:`${PREVIEW_PARAM}=1`,
+  liveDefault:BUILD.liveDefault,
+  constructionPreviewParameter:`${CONSTRUCTION_PARAM}=1`,
   shots:SHOTS,
   restore,
-  inspect:()=>Object.freeze({phase:session.phase,settled:session.settled,restoring:session.restoring,errorCode:session.errorCode,lastShotId:session.lastShotId,liveIdentity:session.liveIdentity,previewEnabled:previewEnabled(),handoffVerified:session.handoffVerified,naturalHandoffStarted:session.naturalHandoffStarted,liveHouseDeferral:Object.freeze({interceptCount:liveHouseDeferral.interceptCount,pendingCount:liveHouseDeferral.pending.length,released:liveHouseDeferral.released}),renderer:session.renderer?.inspect?.()||null})
+  inspect:()=>Object.freeze({phase:session.phase,settled:session.settled,restoring:session.restoring,errorCode:session.errorCode,lastShotId:session.lastShotId,liveIdentity:session.liveIdentity,constructionPreview:constructionPreview(),liveDefault:BUILD.liveDefault,handoffVerified:session.handoffVerified,naturalHandoffStarted:session.naturalHandoffStarted,liveHouseDeferral:Object.freeze({interceptCount:liveHouseDeferral.interceptCount,pendingCount:liveHouseDeferral.pending.length,released:liveHouseDeferral.released}),renderer:session.renderer?.inspect?.()||null})
 });
-if(previewEnabled())installLiveHouseDeferral();
+installLiveHouseDeferral();
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
 })();

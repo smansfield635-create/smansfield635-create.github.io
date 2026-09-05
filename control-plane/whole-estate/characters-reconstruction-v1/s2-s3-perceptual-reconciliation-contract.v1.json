@@ -2,30 +2,34 @@
   "schema": "MIRRORLAND_S2_S3_PERCEPTUAL_RECONCILIATION_CONTRACT_v1",
   "operationId": "MIRRORLAND_S2_S3_PERCEPTUAL_RECONCILIATION_20260905_001",
   "governingHead": "2f158b755644f4fb54309ed21c465aa4e863a361",
-  "ownerEvidence": "2026-09-05 tablet screenshots: implanted tree appearance and exposed faceted cloud-puff construction",
+  "ownerEvidence": "2026-09-05 tablet screenshots: implanted/overscaled tree appearance and exposed Mario-Kart-like cloud primitive construction",
   "protected": {
     "forestPopulationAuthority": "MIRRORLAND_FOREST_POPULATION_v1",
     "forestSourceBlob": "21f61b1829eca1e97a2fb6c8f85816c8b25bd59e",
     "cloudTravelAuthorityBlob": "fc99f9b13b1b703d5df6dfed7164c033e20f860b",
-    "cloudBankLayout": "DESKTOP_BANKS + MOBILE_BANKS + PUFF_PATTERN identities preserved",
+    "cloudBankLayout": "DESKTOP_BANKS + MOBILE_BANKS + PUFF_PATTERN identities preserved as bank-density authority, not visible shell primitives",
     "sequence1Geography": true,
     "sequence4CoastMap": true,
     "sequence5Plus": true
   },
   "forest": {
     "mustPreserve": ["REGION_SPECS", "buildForestPopulation coordinate generation", "step9TerrainHeight root binding", "step9ShorelineZ setback", "sightline exclusions"],
-    "mustRepair": ["terrain contact", "vertical stratification", "understory continuity", "crown overlap", "repeated isolated canopy-blob impression"],
-    "prohibited": ["new placement authority", "root movement", "uniform scatter", "global terrain mutation"]
+    "mustRepair": ["terrain contact", "vertical stratification", "understory continuity", "crown overlap", "repeated isolated canopy-blob impression", "overscaled individual-tree readability from coastal/orbit view"],
+    "distanceLaw": "From coastal/orbit presentation distance, ordinary trees must read primarily as forest mass/canopy rhythm, not inspectable individual specimens; closer travel may progressively reveal trunks, branching, and crown detail.",
+    "presentationScaleCeiling": 0.6,
+    "prohibited": ["new placement authority", "root movement", "uniform scatter", "global terrain mutation", "tree scale that falsely implies close inspection distance"]
   },
   "clouds": {
-    "mustPreserve": ["cloud bank centers", "puff identities", "travel state semantics", "reduced motion semantics"],
+    "mustPreserve": ["cloud bank centers", "puff identities as density/layout inputs", "travel state semantics", "reduced motion semantics"],
     "researchPrecedent": ["PR #754 canonical evolving-cloud state", "PR #779 bounded canonical-weather spatial LOD"],
-    "mustRepair": ["low-tessellation ellipsoid exposure", "recognizable puff-chain silhouette", "near-camera giant faceted solids", "hard geometric atmospheric edges"],
-    "requiredRepresentation": ["irregular higher-order shell", "soft optical edge", "near-field geometry suppression", "traversal extinction remains state-driven"]
+    "mustRepair": ["low-tessellation ellipsoid exposure", "recognizable puff-chain silhouette", "near-camera giant faceted solids", "hard geometric atmospheric edges", "cartoon cloud-bank segmentation at distance"],
+    "distanceLaw": "At every ordinary viewing distance a bank must read as one irregular atmospheric mass, never as individually recognizable puff primitives; near-field traversal must suppress shell geometry before primitive construction becomes inspectable.",
+    "requiredRepresentation": ["bank-level irregular higher-order shell", "soft optical edge", "near-field geometry suppression", "traversal extinction remains state-driven", "puff primitives do not map one-to-one to visible shell objects"]
   },
   "acceptance": {
     "structuralVerification": "required",
     "ownerVisualEvidence": "acceptance evidence, not permission for unbounded engineering loops",
+    "falsification": ["coastal/orbit tree scale still implies scene-level inspection", "any normal-distance cloud bank exposes puff/ellipsoid construction"],
     "mergeDeploymentPublication": false
   }
 }

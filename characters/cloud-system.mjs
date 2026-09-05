@@ -69,15 +69,16 @@ float h(vec3 p){return fract(sin(dot(p,vec3(12.9898,78.233,37.719)))*43758.5453)
 void main(){
   vec3 n=normalize(vNormal);
   float moon=max(0.0,dot(n,normalize(vec3(-.42,.72,.56))));
-  float body=.54+.32*moon;
+  float body=.52+.30*moon;
   float underside=smoothstep(-.72,.25,n.y);
-  float irregularity=.88+.12*h(floor(vWorld*.035));
-  vec3 cool=vec3(.58,.66,.77);
-  vec3 silver=vec3(.84,.88,.93);
-  vec3 c=mix(cool,silver,body)*mix(.64,1.0,underside);
-  float nearFade=smoothstep(38.0,125.0,vDepth);
-  float softEdge=.62+.38*smoothstep(.08,.86,vEdge);
-  float alpha=uOpacity*(.45+.30*(1.0-vEdge))*(.68+.32*uOpticalDepth)*irregularity*softEdge*nearFade;
+  float grain=h(floor(vWorld*.028));
+  float irregularity=.80+.20*grain;
+  vec3 cool=vec3(.56,.64,.74);
+  vec3 silver=vec3(.82,.87,.92);
+  vec3 c=mix(cool,silver,body)*mix(.62,1.0,underside);
+  float nearFade=smoothstep(95.0,260.0,vDepth);
+  float softEdge=.30+.70*smoothstep(.02,.74,vEdge);
+  float alpha=uOpacity*(.38+.26*(1.0-vEdge))*(.66+.34*uOpticalDepth)*irregularity*softEdge*nearFade;
   outColor=vec4(c,alpha);
 }`;
 const VEIL_VS=`#version 300 es
@@ -103,13 +104,14 @@ void main(){
 function compile(gl,type,src){const shader=gl.createShader(type);gl.shaderSource(shader,src);gl.compileShader(shader);if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS))throw new Error(`CLOUD_SHADER_COMPILE:${gl.getShaderInfoLog(shader)}`);return shader;}
 function link(gl,vs,fs){const p=gl.createProgram();gl.attachShader(p,compile(gl,gl.VERTEX_SHADER,vs));gl.attachShader(p,compile(gl,gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(`CLOUD_PROGRAM_LINK:${gl.getProgramInfoLog(p)}`);return p;}
 
-function ellipsoidPuff(cx,cy,cz,r,flatten,seed){
-  const verts=[],latBands=9,lonBands=18,ry=r*flatten;
+function irregularBankVolume(cx,cy,cz,rx,ry,rz,seed){
+  const verts=[],latBands=12,lonBands=30;
   const point=(lat,lon)=>{
     const phi=-Math.PI/2+(lat/latBands)*Math.PI,theta=(lon/lonBands)*Math.PI*2,cp=Math.cos(phi);
-    const irregularity=1.0+.075*Math.sin(theta*3.0+seed*.71)*Math.cos(phi*2.0+seed*.13)+.045*Math.sin(theta*5.0-phi*3.0+seed*.29);
-    const x=cp*Math.cos(theta),y=Math.sin(phi),z=cp*Math.sin(theta);
-    return [cx+r*x*irregularity,cy+ry*y*(.96+.05*Math.sin(theta*2.0+seed)),cz+r*z*(.94+.08*Math.cos(theta*2.0-phi+seed*.17)),x,y,z];
+    const broad=.91+.08*Math.sin(theta*2.0+seed*.41)*Math.cos(phi*1.7+seed*.09);
+    const fine=.96+.045*Math.sin(theta*5.0-phi*3.0+seed*.23)+.025*Math.cos(theta*7.0+phi*4.0+seed*.37);
+    const x=cp*Math.cos(theta),y=Math.sin(phi),z=cp*Math.sin(theta),warp=broad*fine;
+    return [cx+rx*x*warp,cy+ry*y*(.94+.06*Math.sin(theta*3.0+seed)),cz+rz*z*(.95+.06*Math.cos(theta*4.0-phi+seed*.17)),x,y,z];
   };
   for(let lat=0;lat<latBands;lat++)for(let lon=0;lon<lonBands;lon++){
     const a=point(lat,lon),b=point(lat+1,lon),c=point(lat+1,lon+1),d=point(lat,lon+1);
@@ -117,14 +119,20 @@ function ellipsoidPuff(cx,cy,cz,r,flatten,seed){
   }
   return verts;
 }
+function bankEnvelope(bank){
+  let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity,minZ=Infinity,maxZ=-Infinity;
+  for(const puff of bank.puffs){
+    minX=Math.min(minX,puff.x-puff.radius);maxX=Math.max(maxX,puff.x+puff.radius);
+    const vr=puff.radius*puff.flatten;minY=Math.min(minY,puff.y-vr);maxY=Math.max(maxY,puff.y+vr);
+    minZ=Math.min(minZ,puff.z-puff.radius*.78);maxZ=Math.max(maxZ,puff.z+puff.radius*.78);
+  }
+  return {cx:(minX+maxX)/2,cy:(minY+maxY)/2,cz:(minZ+maxZ)/2,rx:(maxX-minX)*.54,ry:(maxY-minY)*.58,rz:(maxZ-minZ)*.62};
+}
 function geometry(layout){
   const verts=[];
-  for(const bank of layout)for(const puff of bank.puffs){
-    const seed=bank.bankIndex*31+puff.puffIndex*17+3;
-    verts.push(...ellipsoidPuff(puff.x,puff.y,puff.z,puff.radius,puff.flatten,seed));
-    const satelliteRadius=puff.radius*.42;
-    verts.push(...ellipsoidPuff(puff.x-puff.radius*.34,puff.y-puff.radius*.06,puff.z+puff.radius*.21,satelliteRadius,puff.flatten*.88,seed+101));
-    verts.push(...ellipsoidPuff(puff.x+puff.radius*.27,puff.y+puff.radius*.09,puff.z-puff.radius*.24,satelliteRadius*.82,puff.flatten*.94,seed+211));
+  for(const bank of layout){
+    const e=bankEnvelope(bank),seed=bank.bankIndex*53+17;
+    verts.push(...irregularBankVolume(e.cx,e.cy,e.cz,e.rx,e.ry,e.rz,seed));
   }
   return new Float32Array(verts);
 }

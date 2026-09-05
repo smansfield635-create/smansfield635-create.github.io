@@ -85,15 +85,14 @@ function prism(verts,a,b,radius,sides,material){
   const ring=(p,i)=>{const q=TAU*i/sides,c=Math.cos(q)*radius,s=Math.sin(q)*radius;return[p[0]+u[0]*c+v[0]*s,p[1]+u[1]*c+v[1]*s,p[2]+u[2]*c+v[2]*s];};
   for(let i=0;i<sides;i++){const j=(i+1)%sides,A=ring(a,i),B=ring(a,j),C=ring(b,i),D=ring(b,j);pushTri(verts,A,C,B,material);pushTri(verts,B,C,D,material);}
 }
+export const FOREST_PRESENTATION_SCALE=.58;
 function canopyBlob(verts,cx,cy,cz,rx,ry,rz,seed,material=1){
   const sides=12,rings=5,pts=[];
   pts.push([[cx,cy-ry*.82,cz]]);
   for(let r=1;r<=rings;r++){
     const t=r/(rings+1),phi=-Math.PI/2+Math.PI*t,ring=[];
     for(let i=0;i<sides;i++){
-      const a=TAU*i/sides;
-      const irregularity=.78+.30*rand(seed,r*29+i)+.08*Math.sin(a*3+rand(seed,150+r)*TAU);
-      const lift=.90+.16*rand(seed,210+r*7+i);
+      const a=TAU*i/sides,irregularity=.78+.30*rand(seed,r*29+i)+.08*Math.sin(a*3+rand(seed,150+r)*TAU),lift=.90+.16*rand(seed,210+r*7+i);
       ring.push([cx+Math.cos(a)*Math.cos(phi)*rx*irregularity,cy+Math.sin(phi)*ry*lift,cz+Math.sin(a)*Math.cos(phi)*rz*(.86+.22*rand(seed,310+r*11+i))]);
     }
     pts.push(ring);
@@ -101,50 +100,37 @@ function canopyBlob(verts,cx,cy,cz,rx,ry,rz,seed,material=1){
   pts.push([[cx,cy+ry*.90,cz]]);
   const bottom=pts[0][0],top=pts.at(-1)[0];
   for(let i=0;i<sides;i++){
-    const j=(i+1)%sides;
-    pushTri(verts,bottom,pts[1][j],pts[1][i],material);
-    for(let r=1;r<rings;r++){
-      pushTri(verts,pts[r][i],pts[r][j],pts[r+1][i],material);
-      pushTri(verts,pts[r][j],pts[r+1][j],pts[r+1][i],material);
-    }
+    const j=(i+1)%sides;pushTri(verts,bottom,pts[1][j],pts[1][i],material);
+    for(let r=1;r<rings;r++){pushTri(verts,pts[r][i],pts[r][j],pts[r+1][i],material);pushTri(verts,pts[r][j],pts[r+1][j],pts[r+1][i],material);}
     pushTri(verts,pts[rings][i],pts[rings][j],top,material);
   }
 }
 function rotateXZ(x,z,yaw){return[x*Math.cos(yaw)-z*Math.sin(yaw),x*Math.sin(yaw)+z*Math.cos(yaw)];}
 function groundCluster(verts,t){
-  const p=t.profile,s=t.scale;
-  prism(verts,[t.x,t.y-.85,t.z],[t.x,t.y+2.1,t.z],p.trunk*s*1.72,t.lod==='far'?6:8,0);
+  const p=t.profile,s=t.scale*FOREST_PRESENTATION_SCALE;
+  prism(verts,[t.x,t.y-.50,t.z],[t.x,t.y+1.25,t.z],p.trunk*s*1.72,t.lod==='far'?6:8,0);
   if(!t.core||t.lod==='far'||p.dead)return;
   const count=t.lod==='near'?4:2;
   for(let i=0;i<count;i++){
-    const a=TAU*(i/count)+rand(t.seed,401+i)*1.2;
-    const d=p.spread*s*(.20+.16*rand(t.seed,420+i));
-    const [ox,oz]=rotateXZ(d,0,a);
-    const r=p.spread*s*(.14+.08*rand(t.seed,440+i));
-    canopyBlob(verts,t.x+ox,t.y+1.5+r*.20,t.z+oz,r,r*.38,r*(.72+.25*rand(t.seed,470+i)),t.seed+700+i,1);
+    const a=TAU*(i/count)+rand(t.seed,401+i)*1.2,d=p.spread*s*(.20+.16*rand(t.seed,420+i)),[ox,oz]=rotateXZ(d,0,a),r=p.spread*s*(.14+.08*rand(t.seed,440+i));
+    canopyBlob(verts,t.x+ox,t.y+.9+r*.20,t.z+oz,r,r*.38,r*(.72+.25*rand(t.seed,470+i)),t.seed+700+i,1);
   }
 }
 function treeGeometry(verts,t){
-  const p=t.profile,s=t.scale,base=[t.x,t.y-.45,t.z],h=p.height*s,leanX=Math.cos(t.yaw)*p.lean*h,leanZ=Math.sin(t.yaw)*p.lean*h,top=[t.x+leanX,t.y+h*.58,t.z+leanZ];
-  groundCluster(verts,t);
-  prism(verts,base,top,p.trunk*s,t.lod==='far'?6:8,0);
+  const p=t.profile,s=t.scale*FOREST_PRESENTATION_SCALE,base=[t.x,t.y-.30,t.z],h=p.height*s,leanX=Math.cos(t.yaw)*p.lean*h,leanZ=Math.sin(t.yaw)*p.lean*h,top=[t.x+leanX,t.y+h*.58,t.z+leanZ];
+  groundCluster(verts,t);prism(verts,base,top,p.trunk*s,t.lod==='far'?6:8,0);
   const branchCount=t.lod==='far'?1:t.lod==='mid'?Math.min(3,p.branches):p.branches;
   for(let i=0;i<branchCount;i++){
-    const q=TAU*(i/Math.max(1,branchCount))+.7*rand(t.seed,30+i),length=p.spread*s*(.50+.34*rand(t.seed,40+i)),[dx,dz]=rotateXZ(length,0,q);
-    const start=[mix(base[0],top[0],.48+.08*i),t.y+h*(.30+.055*i),mix(base[2],top[2],.48+.08*i)],end=[start[0]+dx,start[1]+h*(.07+.07*rand(t.seed,50+i)),start[2]+dz];
+    const q=TAU*(i/Math.max(1,branchCount))+.7*rand(t.seed,30+i),length=p.spread*s*(.50+.34*rand(t.seed,40+i)),[dx,dz]=rotateXZ(length,0,q),start=[mix(base[0],top[0],.48+.08*i),t.y+h*(.30+.055*i),mix(base[2],top[2],.48+.08*i)],end=[start[0]+dx,start[1]+h*(.07+.07*rand(t.seed,50+i)),start[2]+dz];
     prism(verts,start,end,p.trunk*s*(.40-.035*Math.min(i,5)),5,0);
   }
   if(p.dead)return;
   const canopyCount=t.lod==='far'?2:t.lod==='mid'?Math.max(3,Math.min(4,p.canopy)):Math.max(4,p.canopy);
   for(let i=0;i<canopyCount;i++){
-    const a=TAU*(i/Math.max(1,canopyCount))+rand(t.seed,60+i),offset=p.spread*s*(i?(.18+.17*rand(t.seed,70+i)):.05),wind=(p.windBias||0)*p.spread*s*.20,[ox,oz]=rotateXZ(offset+wind,0,a);
-    const cy=t.y+h*(.52+.10*(i%3)),baseRadius=p.spread*s*(t.archetype==='COLUMNAR'?.34:t.archetype==='ANCIENT_SPREADING'?.52:.42),rx=baseRadius*(.86+.22*rand(t.seed,90+i)),ry=h*(t.archetype==='COLUMNAR'?.23:.16),rz=rx*(.76+.30*rand(t.seed,100+i));
+    const a=TAU*(i/Math.max(1,canopyCount))+rand(t.seed,60+i),offset=p.spread*s*(i?(.18+.17*rand(t.seed,70+i)):.05),wind=(p.windBias||0)*p.spread*s*.20,[ox,oz]=rotateXZ(offset+wind,0,a),cy=t.y+h*(.52+.10*(i%3)),baseRadius=p.spread*s*(t.archetype==='COLUMNAR'?.34:t.archetype==='ANCIENT_SPREADING'?.52:.42),rx=baseRadius*(.86+.22*rand(t.seed,90+i)),ry=h*(t.archetype==='COLUMNAR'?.23:.16),rz=rx*(.76+.30*rand(t.seed,100+i));
     canopyBlob(verts,top[0]+ox,cy,top[2]+oz,rx,ry,rz,t.seed+i*113,1);
   }
-  if(t.core&&t.lod!=='far'&&t.archetype!=='COLUMNAR'){
-    const bridge=p.spread*s*(t.archetype==='ANCIENT_SPREADING'?.58:.46);
-    canopyBlob(verts,t.x,t.y+h*.43,t.z,bridge,h*.12,bridge*.92,t.seed+911,1);
-  }
+  if(t.core&&t.lod!=='far'&&t.archetype!=='COLUMNAR'){const bridge=p.spread*s*(t.archetype==='ANCIENT_SPREADING'?.58:.46);canopyBlob(verts,t.x,t.y+h*.43,t.z,bridge,h*.12,bridge*.92,t.seed+911,1);}
 }
 function compile(gl,type,source){const sh=gl.createShader(type);gl.shaderSource(sh,source);gl.compileShader(sh);if(!gl.getShaderParameter(sh,gl.COMPILE_STATUS))throw new Error(`FOREST_SHADER:${gl.getShaderInfoLog(sh)}`);return sh;}
 function program(gl,vs,fs){const p=gl.createProgram();gl.attachShader(p,compile(gl,gl.VERTEX_SHADER,vs));gl.attachShader(p,compile(gl,gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(`FOREST_PROGRAM:${gl.getProgramInfoLog(p)}`);return p;}

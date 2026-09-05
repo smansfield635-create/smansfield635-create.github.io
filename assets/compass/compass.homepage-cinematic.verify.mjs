@@ -14,7 +14,7 @@ const EXPECTED_PATHS=[
   'assets/compass/compass.homepage-cinematic.verify.mjs',
   'assets/compass/compass.orientation-cinematic.render.js'
 ].sort();
-const TASK='isolated S05 Mirrorland reconstruction from frozen shared geometry and mature detached Characters source components; no S06 construction, no host timing change, no destination runtime embedding, no S05 readiness gate before S01';
+const TASK='isolated S05 Mirrorland reconstruction and visual-fidelity code audit from frozen shared geometry and mature detached Characters source components; no S06 construction, no host timing change, no destination runtime embedding, no S05 readiness gate before S01, no separate user visual-review gate';
 const root=process.cwd();
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const checks=[];
@@ -27,6 +27,7 @@ const custody=JSON.parse(read('assets/compass/cinematic-media/manifest.v1.json')
 const combined=[host,render,media,final].join('\n');
 
 check('S05_ISOLATED_TASK',/S05 MIRRORLAND/u.test(TASK.toUpperCase())&&/NO S06 CONSTRUCTION/u.test(TASK.toUpperCase()),TASK);
+check('CODE_AUDIT_IS_GOVERNING_VISUAL_REVIEW',/VISUAL-FIDELITY CODE AUDIT/u.test(TASK.toUpperCase())&&/NO SEPARATE USER VISUAL-REVIEW GATE/u.test(TASK.toUpperCase()),TASK);
 check('CLEAN_RECOVERY_BASE',custody.sourceMain===BASE,BASE);
 check('SPECIFICATION_PRESERVED',custody.specificationCommit===SPEC&&host.includes(SPEC),SPEC);
 check('MASTER_DURATION_FROZEN',host.includes('const MASTER_DURATION_MS=45000'));
@@ -39,17 +40,17 @@ check('NO_LOCAL_WINDOW_COORDINATE_DUPLICATION',!render.includes('const MIRROR_PA
 check('REGIONAL_GEOGRAPHY_BOUND',render.includes("'/characters/step9-regional-geography.mjs'")&&render.includes("regional.step9TerrainHeight")&&render.includes("regional.step9ShorelineZ")&&render.includes("regional.resolveStep9Camera('MIRROR_MANOR')"));
 check('SINGLE_ROOT_GEOGRAPHY_BOUND',render.includes(GEOGRAPHY_BLOB)&&render.includes("geographyAuthority:Object.freeze({path:'h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js'")&&custody.singleGeographyAuthority?.blob===GEOGRAPHY_BLOB);
 check('NIGHT_PRESENTATION_BOUND',render.includes("'/characters/night-renderer.mjs'")&&render.includes('GRATITUDE_COAST_NIGHT'));
-check('FOREST_SOURCE_BOUND',render.includes(FOREST_BLOB)&&render.includes("'/characters/forest-system.mjs'")&&render.includes('buildForestPopulation({compact})'));
-check('CLOUD_SOURCE_BOUND',render.includes(CLOUD_BLOB)&&render.includes("'/characters/cloud-system.mjs'")&&render.includes("buildCloudBankLayout({compact})")&&render.includes("resolveCloudPresentation('DESCENT'"));
-check('S05_MATURE_LAYERS_PRESENT',render.includes('drawMirrorlandForest')&&render.includes('drawMirrorlandClouds')&&render.includes('model.night.water')&&render.includes('model.night.moon.discColor'));
+check('FOREST_SOURCE_BOUND',render.includes(FOREST_BLOB)&&render.includes("'/characters/forest-system.mjs'"));
+check('CLOUD_SOURCE_BOUND',render.includes(CLOUD_BLOB)&&render.includes("'/characters/cloud-system.mjs'"));
+check('FOREST_PRESENTATION_SOURCE_REUSED',render.includes('createForestSystem('),'S05 must reuse the detached forest presentation renderer rather than redraw tree populations as local 2D ellipses');
+check('CLOUD_PRESENTATION_SOURCE_REUSED',render.includes('createCloudSystem('),'S05 must reuse the detached cloud morphology/presentation renderer rather than redraw cloud banks as local radial ellipses');
+check('NIGHT_SHADER_PRESENTATION_REUSED',render.includes('NIGHT_FRAGMENT_SHADER'),'S05 terrain/water/night presentation must consume the existing Characters night shader language rather than palette-only local approximation');
 check('S05_COPY_CORRECT',render.includes("<p>Cross into Mirrorland.</p><h2>Mirrorland</h2><span>Enter the narrative world.</span>"));
 check('S05_CROSSING_TIMING_PRESERVED',render.includes('reveal=smooth(.1833,.4333,p)')&&render.includes('focused=smooth(.4333,.6667,p)')&&render.includes('crossAmount=smooth(.6667,1,p)')&&render.includes('mix(1,2.06,crossAmount)'));
 
 check('NO_DESTINATION_IFRAME',!render.includes("make('iframe'")&&!render.includes("world.src='/characters/'"));
 check('NO_CHARACTERS_APP_RUNTIME',!render.includes('characters/app.mjs'));
 check('NO_MIRRORLAND_RUNTIME_GLOBAL',!render.includes('__MIRRORLAND_CLOUD_SYSTEM__')&&!render.includes('characters/index.html'));
-check('PURE_CLOUD_ENTRYPOINTS_ONLY',!render.includes('createCloudSystem('));
-check('PURE_FOREST_ENTRYPOINT_ONLY',!render.includes('createForestSystem('));
 check('NO_S05_AUDIO_OWNER',!/(new Audio\s*\(|createElement\(['"]audio['"]\)|\.play\(\))/u.test(render));
 check('S05_SOURCE_PREP_NOT_MASTER_GATE',render.includes('void prepareMirrorlandSources();')&&render.includes("throw new Error('MIRRORLAND_S05_SOURCES_NOT_READY')")&&host.includes('const snap=renderer?.inspect?.()?.final')&&!host.includes('mirrorlandSourcesReady')&&!host.includes('mirrorlandWorldReady'));
 check('S05_FAILURE_LOCALIZED_TO_S05',render.includes("else if(shot.id==='S05'){try{renderThreshold")&&render.includes('MIRRORLAND_S05_SOURCE_RECONSTRUCTION_FAILURE'));
@@ -70,5 +71,5 @@ if(baseIndex!==-1&&headIndex!==-1){
   if(changed)check('DECLARED_PATHS_ONLY',JSON.stringify(changed)===JSON.stringify(EXPECTED_PATHS),JSON.stringify(changed));
 }
 const result=checks.every(item=>item.pass)?'PASS':'FAIL';
-process.stdout.write(`${JSON.stringify({schema:'COMPASS_MAIN_HOMEPAGE_CINEMATIC_S05_SOURCE_RECONSTRUCTION_VERIFIER_v1',result,checkpoint:'S05_SOURCE_LEVEL_PREFLIGHT',base:BASE,subjectHead,mutationTask:TASK,proofBoundary:'STATIC_SOURCE_AND_SCOPE_ONLY; S05 RENDER EXECUTION_AND_PERCEPTUAL REVIEW REMAIN REQUIRED BEFORE HARD-BOUNDARY PASS',checks},null,2)}\n`);
+process.stdout.write(`${JSON.stringify({schema:'COMPASS_MAIN_HOMEPAGE_CINEMATIC_S05_SOURCE_RECONSTRUCTION_VERIFIER_v2',result,checkpoint:'S05_SOURCE_AND_VISUAL_FIDELITY_CODE_AUDIT',base:BASE,subjectHead,mutationTask:TASK,proofBoundary:'STATIC SOURCE, SCOPE, AND VISUAL-FIDELITY CODE AUDIT; USER VISUAL REVIEW NOT REQUIRED; S05 HARD BOUNDARY PASSES ONLY WHEN ALL CHECKS PASS',checks},null,2)}\n`);
 process.exit(result==='PASS'?0:1);

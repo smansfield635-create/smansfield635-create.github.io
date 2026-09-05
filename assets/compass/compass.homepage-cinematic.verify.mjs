@@ -7,6 +7,7 @@ const REPAIR_BASE='65f7ab40bacf5853384b684463daff0dba097868';
 const SOURCE_BASE='46c56e0519fc875eac877b4bc921e3151b019a2f';
 const EXPECTED_SPEC='88473442959299d6f6af82396917f0578074cab2';
 const EXPECTED_PATHS=[
+  'index.html',
   'assets/compass/compass.orientation-cinematic.js',
   'assets/compass/compass.homepage-cinematic.verify.mjs'
 ].sort();
@@ -18,6 +19,7 @@ const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const checks=[];
 const check=(id,pass,detail='')=>checks.push({id,pass:Boolean(pass),detail});
 
+const index=read('index.html');
 const host=read('assets/compass/compass.orientation-cinematic.js');
 const css=read('assets/compass/compass.orientation-cinematic.css');
 const render=read('assets/compass/compass.orientation-cinematic.render.js');
@@ -30,6 +32,7 @@ check('BOUNDED_CLASSIFIER_TASK',/(CINEMATIC|FILM|VIDEO|PLAYBACK)/u.test(MUTATION
 check('BOUNDED_EXECUTABLE_SCOPE',EXPECTED_PATHS.filter(p=>/\.(?:js|mjs|cjs|ts|tsx|jsx)$/i.test(p)).every(p=>p.toLowerCase().includes('cinematic')),JSON.stringify(EXPECTED_PATHS));
 check('SOURCE_BASE_PRESERVED',host.includes(`sourceMain:'${SOURCE_BASE}'`)&&custody.sourceMain===SOURCE_BASE,SOURCE_BASE);
 check('REPAIR_BASE_BOUND',host.includes(`repairBase:'${REPAIR_BASE}'`),REPAIR_BASE);
+check('FRESH_HOST_REQUEST_IDENTITY',index.includes('/assets/compass/compass.orientation-cinematic.js?v=gen1933-orientation-cinematic-v1&cb=5e04ede8e679a83d'));
 check('SPECIFICATION_PRESERVED',host.includes(EXPECTED_SPEC)&&custody.specificationCommit===EXPECTED_SPEC,EXPECTED_SPEC);
 check('MASTER_DURATION_REMAINS_38000',host.includes('const MASTER_DURATION_MS=38000')&&custody.masterDurationMs===38000);
 for(const id of ['S01','S02','S03','S04','S05','S06','S07','S08'])check(`SHOT_${id}_PRESERVED`,host.includes(`id:'${id}'`)&&media.includes(`id:'${id}'`));
@@ -40,9 +43,9 @@ check('ENTRY_CONTINUITY_LAW_RESTORED',host.includes(ENTRY_LAW),ENTRY_LAW);
 check('ENTRY_TESSELLATION_IMPLEMENTED',host.includes('function buildEntryTessellation(button)')&&host.includes('function drawEntryTransition(now)')&&host.includes('drawEntryCell(')&&host.includes('ENTRY_TESSELLATE_START_MS=140')&&host.includes('ENTRY_TESSELLATE_END_MS=820'));
 check('ENTRY_ZERO_BLANK_HANDOFF',host.includes('session.renderer.renderFrame({elapsedMs:0,shot,shotProgress:0')&&host.indexOf('session.renderer.renderFrame({elapsedMs:0,shot,shotProgress:0')<host.indexOf('if(entry)entry.hidden=true'));
 
-check('AQUARIUM_EXACT_SOURCE',host.includes(AQUARIUM_URL),AQUARIUM_URL);
-check('AQUARIUM_USER_GESTURE_START',host.includes('async function beginIntro(button)')&&host.includes('startSoundtrack();')&&host.indexOf('startSoundtrack();',host.indexOf('async function beginIntro(button)'))<host.indexOf('void prepareRendererForPlayback();',host.indexOf('async function beginIntro(button)')));
-check('AQUARIUM_STOPS_ON_SETTLEMENT',host.includes('function stopSoundtrack()')&&host.includes("function restore(reason='complete')")&&host.includes('stopSoundtrack();'));
+check('AQUARIUM_EXACT_SOURCE',index.includes(AQUARIUM_URL)&&index.includes('data-compass-ambient-audio'),AQUARIUM_URL);
+check('AQUARIUM_USER_GESTURE_START',host.includes("session.soundtrack=$('[data-compass-ambient-audio]')")&&host.includes('async function beginIntro(button)')&&host.includes('startSoundtrack();')&&host.indexOf('startSoundtrack();',host.indexOf('async function beginIntro(button)'))<host.indexOf('void prepareRendererForPlayback();',host.indexOf('async function beginIntro(button)')));
+check('AQUARIUM_AMBIENT_AUTHORITY_PRESERVED',index.includes('ambient.volume=.24')&&!host.includes('data-cinematic-aquarium'));
 
 check('LATE_FILM_SOURCES_READY_BEFORE_MASTER',host.includes('function waitForLateFilmSources(renderer,timeoutMs=18000)')&&host.includes('snap?.brainReady===true&&snap?.trophyReady===true&&snap?.houseReady===true')&&host.indexOf('await waitForLateFilmSources(session.renderer);')<host.indexOf('session.rendererReady=true'));
 check('MASTER_WAITS_FOR_ENTRY_AND_RENDERER',host.includes('!session.entryTransitionComplete||!session.rendererReady')&&host.includes('function maybeStartMasterPlayback()'));

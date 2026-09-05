@@ -1,0 +1,58 @@
+name: Characters Vegetation V0-V3 Qualification v1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'characters/forest-system.mjs'
+      - 'characters/vegetation-ecology.mjs'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/vegetation-v0-v3-contract.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v0-v3.v1.mjs'
+      - '.github/workflows/characters-vegetation-v0-v3-v1.yml'
+  push:
+    branches:
+      - 'characters/canonical-ecology-camera-true-vegetation-20260905-003'
+    paths:
+      - 'characters/forest-system.mjs'
+      - 'characters/vegetation-ecology.mjs'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/vegetation-v0-v3-contract.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v0-v3.v1.mjs'
+      - '.github/workflows/characters-vegetation-v0-v3-v1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify V0 baseline — run A
+        run: node control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v0-v3.v1.mjs --output "$RUNNER_TEMP/vegetation-v0-run-a.json"
+      - name: Verify V0 baseline — run B
+        run: node control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v0-v3.v1.mjs --output "$RUNNER_TEMP/vegetation-v0-run-b.json"
+      - name: Require deterministic V0 reproduction
+        shell: bash
+        run: |
+          set -euo pipefail
+          jq -e '.result == "V0_BASELINE_PASS_CLOSED" and .stageResults.V0 == "V0_BASELINE_PASS_CLOSED" and .downstreamStageAuthorized == "V1_CANONICAL_ECOLOGY_EXPOSURE" and .v4PlusAuthorized == false and .mergeDeploymentPublicationAuthorized == false' "$RUNNER_TEMP/vegetation-v0-run-a.json" >/dev/null
+          jq -e '.result == "V0_BASELINE_PASS_CLOSED" and .stageResults.V0 == "V0_BASELINE_PASS_CLOSED"' "$RUNNER_TEMP/vegetation-v0-run-b.json" >/dev/null
+          test "$(jq -r '.baselineDigest' "$RUNNER_TEMP/vegetation-v0-run-a.json")" = "$(jq -r '.baselineDigest' "$RUNNER_TEMP/vegetation-v0-run-b.json")"
+          test "$(jq -r '.reproducibilityKey' "$RUNNER_TEMP/vegetation-v0-run-a.json")" = "$(jq -r '.reproducibilityKey' "$RUNNER_TEMP/vegetation-v0-run-b.json")"
+          cp "$RUNNER_TEMP/vegetation-v0-run-a.json" "$RUNNER_TEMP/vegetation-v0-v3-receipt.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vegetation-v0-v3-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/vegetation-v0-v3-receipt.json
+            ${{ runner.temp }}/vegetation-v0-run-a.json
+            ${{ runner.temp }}/vegetation-v0-run-b.json
+          if-no-files-found: error
+          retention-days: 90

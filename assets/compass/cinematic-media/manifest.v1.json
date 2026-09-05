@@ -1,6 +1,6 @@
 {
   "schema": "COMPASS_MAIN_HOMEPAGE_CINEMATIC_MEDIA_CUSTODY_v1",
-  "status": "S05_SOURCE_RECONSTRUCTED_PENDING_RENDER_EXECUTION",
+  "status": "S05_CODE_AUDIT_FAILED_VISUAL_FIDELITY",
   "sourceMain": "8d7c6a34ced8b01b6627f704c5c38492e3e67f34",
   "specificationCommit": "88473442959299d6f6af82396917f0578074cab2",
   "storyboardIssue": 2756,
@@ -12,6 +12,8 @@
   "introActivationState": "INTRO_PRESENT_BUT_UNHOOKED",
   "runtimeEmbeddingAllowed": false,
   "sourceWorldsRequiredBeforeMasterClock": false,
+  "visualReviewMethod": "SOURCE_AND_CODE_AUDIT_BY_PRECEDENT",
+  "userVisualReviewRequired": false,
   "singleGeographyAuthority": {
     "contract": "AUDRALIA_GRATITUDE_GEOGRAPHIC_TRANSFER_AUTHORITY_v1",
     "path": "h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js",
@@ -56,19 +58,20 @@
         "path": "characters/night-renderer.mjs",
         "blob": "066973f039a6439cf24264984243271942126b4d",
         "contract": "CHARACTERS_GRATITUDE_ENVIRONMENT_RENDERER_V2",
-        "role": "PRESENTATION_LANGUAGE_ONLY_NO_GEOGRAPHY_AUTHORITY"
+        "role": "DETACHED_PRESENTATION_LANGUAGE_AND_SHADER_SOURCE_NO_GEOGRAPHY_AUTHORITY",
+        "allowedEntries": ["GRATITUDE_COAST_NIGHT", "NIGHT_FRAGMENT_SHADER"]
       },
       "forest": {
         "path": "characters/forest-system.mjs",
         "blob": "919b5e46a7d28ef4b6e1847b24f603c1cfaf4102",
         "role": "DETACHED_POPULATION_AND_PRESENTATION_SOURCE",
-        "allowedEntry": "buildForestPopulation"
+        "allowedEntries": ["buildForestPopulation", "createForestSystem"]
       },
       "clouds": {
         "path": "characters/cloud-system.mjs",
         "blob": "9974994570438a318a5858a15866d7d46acbeb5e",
         "role": "DETACHED_LAYOUT_AND_PRESENTATION_SOURCE",
-        "allowedEntries": ["buildCloudBankLayout", "resolveCloudPresentation"],
+        "allowedEntries": ["buildCloudBankLayout", "resolveCloudPresentation", "createCloudSystem"],
         "runtimeCoupling": false
       },
       "dataFieldLaw": {
@@ -80,7 +83,7 @@
         "rendererBlob": "af3f43c72d24e13d21c119a8c389dda2dfebe6d8",
         "rendererSchema": "COMPASS_MAIN_HOMEPAGE_CINEMATIC_RENDERER_v4_S05_SOURCE_RECONSTRUCTION",
         "sceneSchema": "COMPASS_S05_MIRRORLAND_SHARED_GEOMETRY_MATURE_COAST_RECONSTRUCTION_v1",
-        "worldCarrier": "CINEMATIC_OWNED_2D_CANVAS",
+        "worldCarrier": "CINEMATIC_OWNED_2D_CANVAS_CURRENTLY_INSUFFICIENT_FOR_MATURE_PRESENTATION",
         "thresholdCarrier": "CINEMATIC_OWNED_2D_CANVAS_USING_SHARED_GEOMETRY_API",
         "sourcePreparation": "ASYNC_PREFETCH_AFTER_MOUNT_NOT_AWAITED_BY_MASTER_START",
         "sourceFailureDisposition": "LOCALIZE_FAILURE_TO_S05_FAIL_OPEN_NOT_S01_START",
@@ -91,7 +94,14 @@
         "audioOwnerCreated": false,
         "localWindowCoordinateCopyPresent": false,
         "timingChanged": false,
-        "renderExecutionStatus": "NOT_YET_EXECUTED"
+        "codeAuditStatus": "FAIL_VISUAL_FIDELITY",
+        "codeAuditFindings": [
+          "FOREST_SOURCE_PRESENTATION_REDUCED_TO_LOCAL_2D_LINE_AND_ELLIPSE_APPROXIMATION",
+          "CLOUD_SOURCE_PRESENTATION_REDUCED_TO_LOCAL_RADIAL_ELLIPSE_APPROXIMATION",
+          "NIGHT_TERRAIN_WATER_PRESENTATION_USES_PALETTE_ONLY_LOCAL_APPROXIMATION_INSTEAD_OF_EXISTING_SHADER_LANGUAGE"
+        ],
+        "renderExecutionStatus": "NOT_REQUIRED_AS_VISUAL_REVIEW_GATE_BY_OWNER_DISPOSITION",
+        "userVisualReviewRequired": false
       }
     },
     "S06": {
@@ -153,7 +163,8 @@
     "DESTINATION_RUNTIME_GLOBAL_READINESS",
     "S05_OR_S06_READINESS_GATE_BEFORE_S01",
     "SECOND_GEOGRAPHY_AUTHORITY",
-    "SECOND_AUDIO_OWNER"
+    "SECOND_AUDIO_OWNER",
+    "SOURCE_AUTHORITY_CITATION_WITH_LOCAL_SCHEMATIC_VISUAL_SUBSTITUTION"
   ],
   "carryForward": {
     "storyboardV2Semantics": true,
@@ -165,11 +176,11 @@
     "liveHookAllowed": false
   },
   "hardBoundary3": {
-    "construction": "COMPLETE_AT_SOURCE_LEVEL",
-    "staticVerifier": "RECONCILED_NOT_EXECUTED",
-    "renderExecution": "PENDING",
-    "perceptualReview": "PENDING",
+    "construction": "ARCHITECTURE_COMPLETE_VISUAL_FIDELITY_REPAIR_REQUIRED",
+    "staticVerifier": "RECONCILED_V2_NOT_EXECUTED",
+    "codeAudit": "FAIL_VISUAL_FIDELITY",
+    "userVisualReviewRequired": false,
     "passClaimed": false
   },
-  "nextBoundary": "EXECUTE_AND_REVIEW_S05_IN_ISOLATION_BEFORE_ANY_S06_CONSTRUCTION"
+  "nextBoundary": "REPAIR_S05_PRESENTATION_FIDELITY_FROM_EXISTING_DETACHED_FOREST_CLOUD_NIGHT_RENDERERS_BEFORE_S06"
 }

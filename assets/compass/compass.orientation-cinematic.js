@@ -1,32 +1,282 @@
 (()=>{
 'use strict';
+
+const BUILD=Object.freeze({
+  version:'homepage-cinematic-shell-20260904-004',
+  sourceMain:'46c56e0519fc875eac877b4bc921e3151b019a2f',
+  specificationCommit:'88473442959299d6f6af82396917f0578074cab2',
+  mutationClass:'BOUNDED_PAGE_RELEASE'
+});
 const STATE=Object.freeze({ARMED:'ARMED',PLAYING:'PLAYING',RESTORE:'RESTORE',SETTLED:'SETTLED'});
-const MASTER_DURATION=40600,RESTORE_FADE_MS=460,READY_TIMEOUT_MS=8000,POLL_MS=80;
-const SOURCE_ROUTE='/preview/compass/holographic-orientation-v1/full/?production=1&adopted=2d214fe237aa748c16a07fd2ceafd6ec88ce95d7';
-const SOURCE_SCHEMA='COMPASS_HOLOGRAPHIC_FULL_SUCCESSOR_RUNTIME_RECEIPT_v1';
-const DESCRIPTOR_SCHEMA='COMPASS_HOLOGRAPHIC_DESCRIPTOR_MANIFEST_v1';
-const reduced=()=>window.matchMedia?.('(prefers-reduced-motion: reduce)').matches===true,$=(s,r=document)=>r.querySelector(s);
-const session={phase:null,overlay:null,frame:null,poll:0,readyTimer:0,settleTimer:0,settled:false,restoring:false,ready:false,priorFocus:null,root:null,rootInert:false,rootAriaHidden:null,url:'',historyLength:0,errorCode:null,childChoice:null,childMode:null};
-function setPhase(p){session.phase=p;if(session.overlay)session.overlay.dataset.state=p;document.documentElement.dataset.compassOrientationCinematic=p;}
-function restoreRoot(){if(!session.root)return;session.root.inert=session.rootInert;if(session.rootAriaHidden===null)session.root.removeAttribute('aria-hidden');else session.root.setAttribute('aria-hidden',session.rootAriaHidden);}
-function clearRuntime(){clearInterval(session.poll);clearTimeout(session.readyTimer);clearTimeout(session.settleTimer);session.poll=0;session.readyTimer=0;session.settleTimer=0;window.removeEventListener('keydown',onKey,true);}
-function childWindow(){try{return session.frame?.contentWindow||null}catch{return null}}
-function childReceipt(){try{const w=childWindow(),r=w?.__DGB_HOLOGRAPHIC_FULL_RECEIPT__;return r?.schema===SOURCE_SCHEMA?r:null}catch{return null}}
-function childDescriptor(){try{const d=childWindow()?.DGB_HOLOGRAPHIC_FULL_DESCRIPTORS;return d?.schema===DESCRIPTOR_SCHEMA?d:null}catch{return null}}
-function emitSettled(reason){document.dispatchEvent(new CustomEvent('dgb:compass-orientation-cinematic-settled',{detail:{reason,durationMs:MASTER_DURATION,source:'ADOPTED_HOLOGRAPHIC_PREVIEW',sourceRoute:SOURCE_ROUTE,navigationIntentEvents:0,urlUnchanged:location.href===session.url,historyUnchanged:history.length===session.historyLength,errorCode:session.errorCode,childChoice:session.childChoice,childMode:session.childMode}}));}
-function finalizeRestore(reason,overlay){overlay?.remove();restoreRoot();document.documentElement.classList.remove('compass-orientation-cinematic-active');delete document.documentElement.dataset.compassOrientationCinematic;const t=session.priorFocus&&session.priorFocus.isConnected?session.priorFocus:null;if(t&&typeof t.focus==='function')t.focus({preventScroll:true});session.settled=true;session.restoring=false;session.overlay=null;session.frame=null;session.phase=STATE.SETTLED;document.dispatchEvent(new CustomEvent('dgb:compass-orientation-cinematic-handoff-proof',{detail:{mode:'ADOPTED_PREVIEW_FADE_TO_LIVE_COMPASS',sourceReady:session.ready,urlUnchanged:location.href===session.url,historyUnchanged:history.length===session.historyLength}}));emitSettled(reason);}
-function restore(reason='complete'){if(session.settled||session.restoring)return;session.restoring=true;clearRuntime();setPhase(STATE.RESTORE);const o=session.overlay;if(o){o.dataset.restoreReason=reason;o.classList.add('is-restoring');}const delay=!reduced()&&reason==='complete'?RESTORE_FADE_MS:0;session.settleTimer=setTimeout(()=>finalizeRestore(reason,o),delay);}
-function failOpen(code){session.errorCode=String(code||'HOLOGRAPHIC_HOST_FAILURE');restore('fail-open');}
-function onKey(e){if(e.key==='Escape'){e.preventDefault();restore(session.phase===STATE.ARMED?'skip-armed':'skip-playing');}}
-function productionChildStyle(doc){if(!doc?.head||doc.getElementById('dgb-production-holographic-host-style'))return;const style=doc.createElement('style');style.id='dgb-production-holographic-host-style';style.textContent='[data-status],.preview-controls,[data-endpoint],[data-skip-orientation]{display:none!important}html,body{background:#02070b!important}';doc.head.appendChild(style);}
-function inspectChild(){const receipt=childReceipt(),descriptor=childDescriptor();if(!receipt||!descriptor)return null;if(descriptor.masterDurationMs!==MASTER_DURATION)throw new Error('HOLOGRAPHIC_MASTER_DURATION_MISMATCH');const snap=receipt.inspect?.();if(!snap)throw new Error('HOLOGRAPHIC_RECEIPT_INSPECT_MISSING');return{receipt,descriptor,snap};}
-function monitorChild(){if(session.settled||session.restoring)return;try{const state=inspectChild();if(!state)return;if(!session.ready){session.ready=true;clearTimeout(session.readyTimer);session.readyTimer=0;session.overlay.dataset.sourceReady='true';session.overlay.classList.add('is-ready');setPhase(STATE.ARMED);const begin=session.frame.contentDocument?.querySelector('[data-begin-orientation]');begin?.focus?.({preventScroll:true});}
-const snap=state.snap;session.childChoice=snap.choice||null;session.childMode=snap.mode||null;if(snap.severeRuntimeError)return failOpen(`CHILD_RUNTIME:${snap.severeRuntimeError}`);if(snap.mode==='PLAYING'&&session.phase!==STATE.PLAYING)setPhase(STATE.PLAYING);if(snap.completed===true){const reason=snap.choice==='SKIP'?'skip':'complete';return restore(reason);}}catch(error){failOpen(error?.message||'HOLOGRAPHIC_CHILD_INSPECTION_FAILURE');}}
-function shell(){const o=document.createElement('section');o.id='compass-orientation-cinematic';o.className='compass-orientation-cinematic';o.dataset.state=STATE.ARMED;o.dataset.mainOrientationFilm='holographic-adopted-v1';o.dataset.sourceReady='false';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.setAttribute('aria-label','Diamond Gate Bridge orientation');o.innerHTML=`<div class="compass-orientation-cinematic__backdrop" aria-hidden="true"></div><div class="compass-orientation-cinematic__stage"><div class="compass-orientation-cinematic__frame-wrap"><iframe class="compass-orientation-cinematic__frame" data-cinematic-holographic-frame title="Diamond Gate Bridge holographic orientation"></iframe><div class="compass-orientation-cinematic__loading" data-cinematic-loading aria-live="polite">Preparing orientation…</div></div><button class="compass-orientation-cinematic__skip" type="button" data-main-orientation-skip>Skip intro</button></div>`;return o;}
-function reducedShell(){const o=document.createElement('section');o.id='compass-orientation-cinematic';o.className='compass-orientation-cinematic';o.dataset.state=STATE.ARMED;o.dataset.mainOrientationFilm='holographic-adopted-v1-reduced';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.setAttribute('aria-labelledby','compass-orientation-reduced-title');o.innerHTML=`<div class="compass-orientation-cinematic__backdrop" aria-hidden="true"></div><div class="compass-orientation-cinematic__stage"><div class="compass-orientation-cinematic__reduced"><p class="compass-orientation-cinematic__eyebrow">Diamond Gate Bridge · Reduced motion</p><h2 id="compass-orientation-reduced-title">Find your way.</h2><p>The same orientation, without timed motion.</p><ol class="compass-orientation-cinematic__reduced-map"><li><strong>Arrival.</strong> Enter through a field organized around direction.</li><li><strong>Compass.</strong> Orientation comes before navigation.</li><li><strong>Chapter One.</strong> Start with the story.</li><li><strong>Research Frontier.</strong> Test the ideas.</li><li><strong>Coheriscope · Assessment.</strong> Examine decisions under pressure.</li><li><strong>Coheriscope · Instrument.</strong> See the instrument behind the assessment.</li><li><strong>House.</strong> Talk to the House.</li><li><strong>Build.</strong> Build something of your own.</li><li><strong>Audralia.</strong> Enter another world.</li><li><strong>Awards.</strong> Built to be judged.</li><li><strong>Return.</strong> Choose a direction.</li></ol><button type="button" data-main-orientation-skip>Continue to Compass</button></div></div>`;return o;}
-function mountReduced(){try{session.overlay=reducedShell();document.body.appendChild(session.overlay);session.root.inert=true;session.root.setAttribute('aria-hidden','true');document.documentElement.classList.add('compass-orientation-cinematic-active');setPhase(STATE.ARMED);session.overlay.addEventListener('click',e=>{if(e.target.closest('[data-main-orientation-skip]'))restore('reduced-motion-complete');});window.addEventListener('keydown',onKey,true);$('[data-main-orientation-skip]',session.overlay)?.focus({preventScroll:true});}catch(error){failOpen(error?.message||'HOLOGRAPHIC_REDUCED_INIT_FAILURE');}}
-function mountAnimated(){try{session.overlay=shell();document.body.appendChild(session.overlay);session.root.inert=true;session.root.setAttribute('aria-hidden','true');document.documentElement.classList.add('compass-orientation-cinematic-active');setPhase(STATE.ARMED);session.overlay.addEventListener('click',e=>{if(e.target.closest('[data-main-orientation-skip]'))restore(session.phase===STATE.ARMED?'skip-armed':'skip-playing');});window.addEventListener('keydown',onKey,true);session.frame=$('[data-cinematic-holographic-frame]',session.overlay);session.frame.addEventListener('load',()=>{try{productionChildStyle(session.frame.contentDocument);monitorChild();}catch(error){failOpen(error?.message||'HOLOGRAPHIC_FRAME_LOAD_FAILURE');}},{once:true});session.frame.addEventListener('error',()=>failOpen('HOLOGRAPHIC_FRAME_NETWORK_FAILURE'),{once:true});session.readyTimer=setTimeout(()=>{if(!session.ready)failOpen('HOLOGRAPHIC_FRAME_READY_TIMEOUT');},READY_TIMEOUT_MS);session.poll=setInterval(monitorChild,POLL_MS);session.frame.src=SOURCE_ROUTE;}catch(error){failOpen(error?.message||'HOLOGRAPHIC_HOST_INIT_FAILURE');}}
-function mount(){if(window.self!==window.top)return;session.root=$('[data-compass-root]');if(!session.root||!$('[data-compass-scene]'))return;session.priorFocus=document.activeElement;session.rootInert=session.root.inert;session.rootAriaHidden=session.root.getAttribute('aria-hidden');session.url=location.href;session.historyLength=history.length;if(reduced())mountReduced();else mountAnimated();}
-window.DGB_MAIN_ORIENTATION_CINEMATIC=Object.freeze({version:'holographic-adopted-v1',durationMs:MASTER_DURATION,sourceRoute:SOURCE_ROUTE,sourceMain:'2d214fe237aa748c16a07fd2ceafd6ec88ce95d7',restore,inspect:()=>Object.freeze({phase:session.phase,ready:session.ready,childChoice:session.childChoice,childMode:session.childMode,errorCode:session.errorCode,settled:session.settled})});
+const MASTER_DURATION_MS=38000;
+const NATURAL_HANDOFF_FADE_START_MS=37540;
+const NATURAL_HANDOFF_FADE_MS=460;
+const PREVIEW_PARAM='compassCinematicConstruction';
+const LIVE_HOUSE_SOURCE_PATH='/assets/compass/compass.house-scene.js';
+const SHOTS=Object.freeze([
+  Object.freeze({id:'S01',beat:'Arrival',purpose:'Enter Diamond Gate Bridge',startMs:0,endMs:4500}),
+  Object.freeze({id:'S02',beat:'Orientation',purpose:'Establish how the estate is navigated',startMs:4500,endMs:9500}),
+  Object.freeze({id:'S03',beat:'Chapter One',purpose:'Show where a visitor can begin',startMs:9500,endMs:14500}),
+  Object.freeze({id:'S04',beat:'Choice / Readiness',purpose:'Reveal structured paths through the estate',startMs:14500,endMs:19500}),
+  Object.freeze({id:'S05',beat:'Threshold',purpose:'Cross from orientation into deeper experience',startMs:19500,endMs:25500}),
+  Object.freeze({id:'S06',beat:'Elsewhere',purpose:'Reveal story and world possibility',startMs:25500,endMs:30500}),
+  Object.freeze({id:'S07',beat:'Breadth / Engagement',purpose:'Reveal ways to engage and estate breadth',startMs:30500,endMs:34000}),
+  Object.freeze({id:'S08',beat:'Return / Handoff',purpose:'Restore visitor agency',startMs:34000,endMs:38000})
+]);
+const $=(selector,root=document)=>root.querySelector(selector);
+const reduced=()=>window.matchMedia?.('(prefers-reduced-motion: reduce)').matches===true;
+const previewEnabled=()=>new URLSearchParams(location.search).get(PREVIEW_PARAM)==='1';
+const session={phase:null,overlay:null,stage:null,renderer:null,raf:0,startAt:0,settled:false,restoring:false,priorFocus:null,root:null,rootInert:false,rootAriaHidden:null,url:'',historyLength:0,liveIdentity:null,errorCode:null,lastShotId:null,naturalHandoffStarted:false,handoffVerified:false};
+const liveHouseDeferral={wrapper:null,previousAppend:null,pending:[],released:false,listenersBound:false,interceptCount:0};
+
+function isLiveHouseScript(node){
+  if(!(node instanceof HTMLScriptElement))return false;
+  try{return new URL(node.src||'',location.href).pathname===LIVE_HOUSE_SOURCE_PATH;}catch{return false;}
+}
+function onLiveHouseCapabilityChange(event){
+  if(session.phase!==STATE.SETTLED)return;
+  if(String(event?.detail?.capability||'').toLowerCase()==='house')releaseLiveHouseDeferral('capability-house-intent');
+}
+function onLiveHouseDirectIntent(event){
+  if(session.phase!==STATE.SETTLED)return;
+  if(event.target?.closest?.('[data-capability="house"]'))releaseLiveHouseDeferral('direct-house-intent');
+}
+function bindLiveHouseIntentListeners(){
+  if(liveHouseDeferral.listenersBound)return;
+  liveHouseDeferral.listenersBound=true;
+  document.addEventListener('compass:capability-change',onLiveHouseCapabilityChange,true);
+  document.addEventListener('pointerdown',onLiveHouseDirectIntent,true);
+  document.addEventListener('focusin',onLiveHouseDirectIntent,true);
+}
+function installLiveHouseDeferral(){
+  if(!previewEnabled()||liveHouseDeferral.released||!document.head)return;
+  bindLiveHouseIntentListeners();
+  const head=document.head;
+  if(liveHouseDeferral.wrapper&&head.append===liveHouseDeferral.wrapper)return;
+  const previous=head.append;
+  const wrapper=function(...nodes){
+    const immediate=[];
+    for(const node of nodes){
+      if(isLiveHouseScript(node)){
+        if(!liveHouseDeferral.pending.includes(node))liveHouseDeferral.pending.push(node);
+        liveHouseDeferral.interceptCount+=1;
+      }else immediate.push(node);
+    }
+    if(immediate.length)previous.apply(this,immediate);
+  };
+  liveHouseDeferral.previousAppend=previous;
+  liveHouseDeferral.wrapper=wrapper;
+  head.append=wrapper;
+}
+function releaseLiveHouseDeferral(reason='released'){
+  if(liveHouseDeferral.released)return;
+  liveHouseDeferral.released=true;
+  const head=document.head;
+  const append=liveHouseDeferral.previousAppend||head?.append;
+  if(head&&liveHouseDeferral.wrapper&&head.append===liveHouseDeferral.wrapper&&append)head.append=append;
+  document.removeEventListener('compass:capability-change',onLiveHouseCapabilityChange,true);
+  document.removeEventListener('pointerdown',onLiveHouseDirectIntent,true);
+  document.removeEventListener('focusin',onLiveHouseDirectIntent,true);
+  const pending=liveHouseDeferral.pending.splice(0);
+  document.documentElement.dataset.compassCinematicLiveHouseRelease=reason;
+  if(head&&append&&pending.length)queueMicrotask(()=>append.apply(head,pending));
+}
+
+function captureLiveIdentity(root){
+  return Object.freeze({
+    mode:root.getAttribute('data-compass-mode'),
+    renderedForegroundCardinal:root.getAttribute('data-rendered-foreground-cardinal'),
+    readableCardinal:root.getAttribute('data-readable-cardinal'),
+    selectedCardinal:root.getAttribute('data-selected-cardinal'),
+    selectedRoom:root.getAttribute('data-selected-room'),
+    activeClusterWing:root.getAttribute('data-active-cluster-wing'),
+    orbitQuaternion:root.getAttribute('data-orbit-quaternion'),
+    clusterQuaternion:root.getAttribute('data-cluster-quaternion'),
+    crystalsReceipt:root.getAttribute('data-compass-crystals-receipt')
+  });
+}
+function setPhase(phase){session.phase=phase;if(session.overlay)session.overlay.dataset.state=phase;document.documentElement.dataset.compassOrientationCinematic=phase;}
+function clearClock(){if(session.raf)cancelAnimationFrame(session.raf);session.raf=0;}
+function clearPresentationListeners(){window.removeEventListener('keydown',onKey,true);session.overlay?.removeEventListener('click',onOverlayClick);}
+function restoreProductSurface(){
+  if(!session.root)return;
+  session.root.inert=session.rootInert;
+  if(session.rootAriaHidden===null)session.root.removeAttribute('aria-hidden');
+  else session.root.setAttribute('aria-hidden',session.rootAriaHidden);
+}
+function currentShot(elapsedMs){return SHOTS.find((shot)=>elapsedMs>=shot.startMs&&elapsedMs<shot.endMs)||SHOTS[SHOTS.length-1];}
+function shotProgress(shot,elapsedMs){return Math.max(0,Math.min(1,(elapsedMs-shot.startMs)/(shot.endMs-shot.startMs)));}
+function emitSettled(reason){
+  document.dispatchEvent(new CustomEvent('dgb:compass-orientation-cinematic-settled',{detail:{
+    reason,
+    durationMs:MASTER_DURATION_MS,
+    sourceMain:BUILD.sourceMain,
+    specificationCommit:BUILD.specificationCommit,
+    mutationClass:BUILD.mutationClass,
+    navigationIntentEvents:0,
+    urlUnchanged:location.href===session.url,
+    historyUnchanged:history.length===session.historyLength,
+    handoffVerified:session.handoffVerified,
+    errorCode:session.errorCode,
+    finalShotId:session.lastShotId
+  }}));
+}
+function finalizeRestore(reason,overlay){
+  session.renderer?.dispose?.();
+  session.renderer=null;
+  overlay?.remove();
+  restoreProductSurface();
+  document.documentElement.classList.remove('compass-orientation-cinematic-active');
+  delete document.documentElement.dataset.compassOrientationCinematic;
+  const target=session.priorFocus&&session.priorFocus.isConnected?session.priorFocus:null;
+  if(target&&typeof target.focus==='function')target.focus({preventScroll:true});
+  session.settled=true;
+  session.restoring=false;
+  session.overlay=null;
+  session.stage=null;
+  session.phase=STATE.SETTLED;
+  emitSettled(reason);
+}
+function restore(reason='complete'){
+  if(session.settled||session.restoring)return;
+  session.restoring=true;
+  clearClock();
+  clearPresentationListeners();
+  setPhase(STATE.RESTORE);
+  const overlay=session.overlay;
+  if(overlay){overlay.dataset.restoreReason=reason;if(reason!=='complete'||overlay.dataset.naturalFadeComplete!=='true')overlay.classList.add('is-restoring');}
+  const delay=!reduced()&&reason==='complete'&&overlay?.dataset.naturalFadeComplete!=='true'?NATURAL_HANDOFF_FADE_MS:0;
+  window.setTimeout(()=>finalizeRestore(reason,overlay),delay);
+}
+function failOpen(code){session.errorCode=String(code||'CINEMATIC_SHELL_FAILURE');restore('fail-open');}
+function onKey(event){if(event.key==='Escape'){event.preventDefault();restore(session.phase===STATE.ARMED?'skip-armed':'skip-playing');}}
+function onOverlayClick(event){if(!event.target.closest('[data-main-orientation-skip]'))return;if(session.overlay?.dataset.reducedMotion==='true')restore('reduced-motion-complete');else restore(session.phase===STATE.ARMED?'skip-armed':'skip-playing');}
+function animatedShell(){
+  const overlay=document.createElement('section');
+  overlay.id='compass-orientation-cinematic';
+  overlay.className='compass-orientation-cinematic';
+  overlay.dataset.state=STATE.ARMED;
+  overlay.dataset.mainOrientationFilm=BUILD.version;
+  overlay.dataset.sourceMain=BUILD.sourceMain;
+  overlay.setAttribute('role','dialog');
+  overlay.setAttribute('aria-modal','true');
+  overlay.setAttribute('aria-label','Welcome to Diamond Gate Bridge');
+  overlay.innerHTML='<div class="compass-orientation-cinematic__stage" data-cinematic-stage></div><button class="compass-orientation-cinematic__skip" type="button" data-main-orientation-skip>Skip intro</button><output class="compass-orientation-cinematic__debug" data-cinematic-debug hidden></output>';
+  return overlay;
+}
+function reducedShell(){
+  const overlay=document.createElement('section');
+  overlay.id='compass-orientation-cinematic';
+  overlay.className='compass-orientation-cinematic';
+  overlay.dataset.state=STATE.ARMED;
+  overlay.dataset.mainOrientationFilm=`${BUILD.version}-reduced`;
+  overlay.dataset.sourceMain=BUILD.sourceMain;
+  overlay.dataset.reducedMotion='true';
+  overlay.setAttribute('role','dialog');
+  overlay.setAttribute('aria-modal','true');
+  overlay.setAttribute('aria-labelledby','compass-orientation-reduced-title');
+  const items=SHOTS.map((shot)=>`<li><strong>${shot.beat}.</strong> ${shot.purpose}.</li>`).join('');
+  overlay.innerHTML=`<div class="compass-orientation-cinematic__stage"><div class="compass-orientation-cinematic__reduced"><p class="compass-orientation-cinematic__eyebrow">Diamond Gate Bridge · Reduced motion</p><h2 id="compass-orientation-reduced-title">Welcome to Diamond Gate Bridge</h2><ol class="compass-orientation-cinematic__reduced-map">${items}</ol><button type="button" data-main-orientation-skip>Continue to Compass</button></div></div>`;
+  return overlay;
+}
+async function loadRenderer(){
+  const [renderModule,mediaModule,finalModule]=await Promise.all([
+    import('/assets/compass/compass.orientation-cinematic.render.js'),
+    import('/assets/compass/compass.orientation-cinematic.media.js'),
+    import('/assets/compass/compass.orientation-cinematic.final.js')
+  ]);
+  mediaModule.assertCinematicMediaManifest(mediaModule.CINEMATIC_MEDIA_MANIFEST);
+  const primary=renderModule.createCinematicRenderer({stage:session.stage,media:mediaModule.CINEMATIC_MEDIA_MANIFEST});
+  const final=finalModule.createFinalCinematicRenderer({stage:session.stage,media:mediaModule.CINEMATIC_MEDIA_MANIFEST});
+  return Object.freeze({
+    async mount(){primary.mount();final.mount();await final.prepare();return true;},
+    renderFrame(frame){
+      if(frame?.shot?.id==='S07')primary.renderFrame({...frame,shot:{...frame.shot,id:'S06',beat:'Elsewhere'},shotProgress:.96});
+      else primary.renderFrame(frame);
+      final.renderFrame(frame);
+    },
+    verifyHandoff(){return final.verifyHandoff();},
+    inspect(){return Object.freeze({primary:primary.inspect?.(),final:final.inspect?.()});},
+    dispose(){final.dispose?.();primary.dispose?.();}
+  });
+}
+function applyNaturalHandoffFade(elapsedMs){
+  if(!session.overlay||elapsedMs<NATURAL_HANDOFF_FADE_START_MS)return;
+  session.naturalHandoffStarted=true;
+  session.overlay.dataset.naturalHandoff='true';
+  const amount=Math.max(0,Math.min(1,(elapsedMs-NATURAL_HANDOFF_FADE_START_MS)/NATURAL_HANDOFF_FADE_MS));
+  session.overlay.style.opacity=String(1-amount);
+  session.overlay.style.pointerEvents='none';
+  if(amount>=1)session.overlay.dataset.naturalFadeComplete='true';
+}
+function tick(now){
+  if(session.settled||session.restoring)return;
+  const elapsedMs=Math.min(MASTER_DURATION_MS,Math.max(0,now-session.startAt));
+  const shot=currentShot(elapsedMs);
+  session.lastShotId=shot.id;
+  session.overlay.dataset.shotId=shot.id;
+  try{
+    session.renderer?.renderFrame?.({elapsedMs,shot,shotProgress:shotProgress(shot,elapsedMs),masterDurationMs:MASTER_DURATION_MS,liveIdentity:session.liveIdentity});
+    if(shot.id==='S08'&&elapsedMs>=36800&&!session.handoffVerified){
+      session.handoffVerified=session.renderer?.verifyHandoff?.()===true;
+      if(!session.handoffVerified){failOpen('CINEMATIC_HANDOFF_CORRESPONDENCE_UNPROVEN');return;}
+    }
+  }catch(error){failOpen(error?.message||'CINEMATIC_RENDER_FRAME_FAILURE');return;}
+  applyNaturalHandoffFade(elapsedMs);
+  const debug=$('[data-cinematic-debug]',session.overlay);
+  if(debug&&!debug.hidden)debug.value=`${shot.id} · ${shot.beat} · ${(elapsedMs/1000).toFixed(2)}s`;
+  if(elapsedMs>=MASTER_DURATION_MS){restore('complete');return;}
+  session.raf=requestAnimationFrame(tick);
+}
+function bindOverlay(overlay){
+  session.overlay=overlay;
+  document.body.appendChild(overlay);
+  session.root.inert=true;
+  session.root.setAttribute('aria-hidden','true');
+  document.documentElement.classList.add('compass-orientation-cinematic-active');
+  overlay.addEventListener('click',onOverlayClick);
+  window.addEventListener('keydown',onKey,true);
+  setPhase(STATE.ARMED);
+}
+function startReduced(){const overlay=reducedShell();bindOverlay(overlay);$('[data-main-orientation-skip]',overlay)?.focus({preventScroll:true});}
+async function startAnimated(){
+  const overlay=animatedShell();
+  bindOverlay(overlay);
+  session.stage=$('[data-cinematic-stage]',overlay);
+  session.renderer=await loadRenderer();
+  await session.renderer.mount();
+  setPhase(STATE.PLAYING);
+  session.startAt=performance.now();
+  session.raf=requestAnimationFrame(tick);
+  $('[data-main-orientation-skip]',overlay)?.focus({preventScroll:true});
+}
+async function mount(){
+  installLiveHouseDeferral();
+  if(window.self!==window.top){releaseLiveHouseDeferral('non-top-frame');return;}
+  session.root=$('[data-compass-root]');
+  if(!session.root||!$('[data-compass-scene]')){releaseLiveHouseDeferral('cinematic-root-missing');return;}
+  session.priorFocus=document.activeElement;
+  session.rootInert=session.root.inert;
+  session.rootAriaHidden=session.root.getAttribute('aria-hidden');
+  session.url=location.href;
+  session.historyLength=history.length;
+  session.liveIdentity=captureLiveIdentity(session.root);
+  if(!previewEnabled()){releaseLiveHouseDeferral('preview-disabled');return;}
+  try{if(reduced())startReduced();else await startAnimated();}
+  catch(error){failOpen(error?.message||'CINEMATIC_SHELL_INIT_FAILURE');}
+}
+
+window.DGB_MAIN_ORIENTATION_CINEMATIC=Object.freeze({
+  version:BUILD.version,
+  durationMs:MASTER_DURATION_MS,
+  sourceMain:BUILD.sourceMain,
+  specificationCommit:BUILD.specificationCommit,
+  mutationClass:BUILD.mutationClass,
+  constructionPreviewParameter:`${PREVIEW_PARAM}=1`,
+  shots:SHOTS,
+  restore,
+  inspect:()=>Object.freeze({phase:session.phase,settled:session.settled,restoring:session.restoring,errorCode:session.errorCode,lastShotId:session.lastShotId,liveIdentity:session.liveIdentity,previewEnabled:previewEnabled(),handoffVerified:session.handoffVerified,naturalHandoffStarted:session.naturalHandoffStarted,liveHouseDeferral:Object.freeze({interceptCount:liveHouseDeferral.interceptCount,pendingCount:liveHouseDeferral.pending.length,released:liveHouseDeferral.released}),renderer:session.renderer?.inspect?.()||null})
+});
+if(previewEnabled())installLiveHouseDeferral();
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
 })();

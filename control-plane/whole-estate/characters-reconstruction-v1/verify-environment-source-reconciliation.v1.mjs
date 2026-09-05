@@ -30,7 +30,7 @@ const cloudBase=atBase('characters/cloud-system.mjs');
 const bankAuthority=s=>s.slice(s.indexOf('const DESKTOP_BANKS='),s.indexOf('export function resolveCloudPresentation'));
 const normalizeBank=s=>s.replace(/const AUDRALIA_GENUS_SEQUENCE=.*?;\n/s,'').replace(/,genus:AUDRALIA_GENUS_SEQUENCE\[bankIndex%AUDRALIA_GENUS_SEQUENCE.length\]/g,'');
 if(normalizeBank(bankAuthority(cloud))!==normalizeBank(bankAuthority(cloudBase)))fail('CLOUD_BANK_LAYOUT_IDENTITY_DIVERGENCE');
-for(const token of ['AUDRALIA_WEATHER_PRESENTATION_SOURCE','65aedb63832c4774f4a7326297fadbfb14552955','function morphology(','float fbm(','nearExclusion=smoothstep(150.0,420.0,vDepth)','genus:AUDRALIA_GENUS_SEQUENCE'])if(!cloud.includes(token))fail(`AUDRALIA_SOURCE_BINDING_MISSING:${token}`);
+for(const token of ['AUDRALIA_WEATHER_PRESENTATION_SOURCE','65aedb63832c4774f4a7326297fadbfb14552955','float morphology(','float fbm(','nearExclusion=smoothstep(150.0,420.0,vDepth)','genus:AUDRALIA_GENUS_SEQUENCE'])if(!cloud.includes(token))fail(`AUDRALIA_SOURCE_BINDING_MISSING:${token}`);
 if(cloud.includes('function irregularBankVolume('))fail('OLD_BESPOKE_CLOUD_MORPHOLOGY_REMAINS');
 
 for(const p of ['characters/night-renderer.mjs','characters/gratitude-geography.adapter.mjs','characters/step9-regional-geography.mjs','characters/coast-map.mjs','characters/app.mjs','characters/index.html'])if(read(p)!==atBase(p))fail(`PROTECTED_AUTHORITY_MUTATION:${p}`);

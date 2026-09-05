@@ -28,7 +28,7 @@
     "readySelector": "[data-main-orientation-film]",
     "binding": {
       "mode": "direct-document",
-      "path": "/?compassCinematicConstruction=1"
+      "path": "/"
     },
     "interactions": [
       {

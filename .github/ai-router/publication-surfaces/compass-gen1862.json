@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "compass-gen1862",
-  "description": "Compass root publication contract rebound to the bounded 38-second homepage cinematic inspection route, with Skip settlement plus mandatory visible Trophy successor identity and live renderer predicate.",
+  "description": "Compass root publication contract rebound to the preview-gated 45-second Storyboard v2 homepage cinematic, with Skip settlement plus mandatory visible Trophy successor identity and live renderer predicate.",
   "checks": [
     {
       "path": "/",
@@ -11,8 +11,8 @@
         "data-compass-root-renewal=\"gen1844-continuity\"",
         "data-compass-static-introduction",
         "data-compass-scene",
-        "/assets/compass/compass.orientation-cinematic.css?v=gen1933-orientation-cinematic-v1&cb=88473442959299d6",
-        "/assets/compass/compass.orientation-cinematic.js?v=gen1933-orientation-cinematic-v1&cb=5e04ede8e679a83d",
+        "/assets/compass/compass.orientation-cinematic.css?v=storyboard-v2-preview-current-main&cb=d1b93312e7a6ad01",
+        "/assets/compass/compass.orientation-cinematic.js?v=storyboard-v2-preview-current-main&cb=53cb1d574a4029f5",
         "/assets/compass/compass.readiness-context-v1.js?v=compass-runtime-copy-owner-repair-gen1876&cb=d3fe9edfa21e0d0e",
         "/assets/compass/compass.crystals.js?v=gen1858-release-orbit-continuity&cb=cd2cbad0494852cc",
         "/assets/compass/compass.orbit-input.js?v=gen1846&cb=681410dac29d2dae",

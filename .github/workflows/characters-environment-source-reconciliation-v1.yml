@@ -1,0 +1,31 @@
+name: Characters Environment Source Reconciliation v1
+
+on:
+  pull_request:
+    paths:
+      - 'characters/forest-system.mjs'
+      - 'characters/cloud-system.mjs'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/environment-source-reconciliation-contract.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-environment-source-reconciliation.v1.mjs'
+      - '.github/workflows/characters-environment-source-reconciliation-v1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact-head environment source reconciliation
+        run: node control-plane/whole-estate/characters-reconstruction-v1/verify-environment-source-reconciliation.v1.mjs
+      - name: Upload deterministic receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: environment-source-reconciliation-receipt
+          path: environment-source-reconciliation-receipt.json

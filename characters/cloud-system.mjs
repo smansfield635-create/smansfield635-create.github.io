@@ -1,10 +1,24 @@
+// Characters cloud presentation adapter.
+// Source-bound to accepted Audralia weather presentation lineage (PR #780 exact head
+// 65aedb63832c4774f4a7326297fadbfb14552955) and bounded spatial-LOD principles (PR #779).
+// Characters retains its own bank/traversal identity; Audralia supplies morphology, breakup,
+// optical language and near-field presentation law. No showroom runtime coupling is created.
+
+export const AUDRALIA_WEATHER_PRESENTATION_SOURCE=Object.freeze({
+  pr:780,
+  exactHead:'65aedb63832c4774f4a7326297fadbfb14552955',
+  sourcePath:'showroom/globe/audralia/weather-presentation-reconciliation/exterior-weather.mjs',
+  spatialLodPrecedent:779,
+  inheritanceLaw:'OLD_EXTERIOR_APPEARANCE_MAY_BE_INHERITED_NOT_OLD_OCCLUSION_BEHAVIOR'
+});
+
 export const CLOUD_PRESENTATION_BY_STATE=Object.freeze({
-  ORBIT:Object.freeze({opacity:.28,opticalDepth:.16,veil:0,drift:1}),
-  ASCENT:Object.freeze({opacity:.38,opticalDepth:.28,veil:.08,drift:1.05}),
-  CLOUD_ENTRY:Object.freeze({opacity:.58,opticalDepth:.52,veil:.30,drift:1.08}),
-  CLOUD_TRANSIT:Object.freeze({opacity:.78,opticalDepth:.82,veil:.68,drift:1.10}),
-  DESCENT:Object.freeze({opacity:.48,opticalDepth:.38,veil:.18,drift:.85}),
-  ARRIVAL:Object.freeze({opacity:.24,opticalDepth:.14,veil:0,drift:.55})
+  ORBIT:Object.freeze({opacity:.21,opticalDepth:.15,veil:0,drift:1}),
+  ASCENT:Object.freeze({opacity:.29,opticalDepth:.27,veil:.06,drift:1.05}),
+  CLOUD_ENTRY:Object.freeze({opacity:.44,opticalDepth:.50,veil:.24,drift:1.08}),
+  CLOUD_TRANSIT:Object.freeze({opacity:.58,opticalDepth:.80,veil:.62,drift:1.10}),
+  DESCENT:Object.freeze({opacity:.36,opticalDepth:.36,veil:.14,drift:.85}),
+  ARRIVAL:Object.freeze({opacity:.18,opticalDepth:.12,veil:0,drift:.55})
 });
 
 const DESKTOP_BANKS=[
@@ -13,11 +27,12 @@ const DESKTOP_BANKS=[
 ];
 const MOBILE_BANKS=[DESKTOP_BANKS[0],DESKTOP_BANKS[2],DESKTOP_BANKS[3],DESKTOP_BANKS[5],DESKTOP_BANKS[7]];
 const PUFF_PATTERN=[[-54,-8,-6,.82],[-28,5,7,1.04],[0,10,0,1.20],[31,4,-5,1.00],[56,-5,9,.76],[-10,-9,19,.86],[18,-7,-18,.72]];
+const AUDRALIA_GENUS_SEQUENCE=['Sc','Cu','Ac','Ns','As','Cs','Ci','St'];
 
 export function buildCloudBankLayout({compact=false}={}){
   const seeds=compact?MOBILE_BANKS:DESKTOP_BANKS;
   return seeds.map(([x,y,z,scale,phase],bankIndex)=>({
-    bankIndex,x,y,z,scale,phase,
+    bankIndex,x,y,z,scale,phase,genus:AUDRALIA_GENUS_SEQUENCE[bankIndex%AUDRALIA_GENUS_SEQUENCE.length],
     puffs:PUFF_PATTERN.map(([dx,dy,dz,s],puffIndex)=>({
       puffIndex,
       x:x+dx*scale,
@@ -38,49 +53,75 @@ const VS=`#version 300 es
 precision highp float;
 layout(location=0) in vec3 aPos;
 layout(location=1) in vec3 aNormal;
+layout(location=2) in float aGenus;
+layout(location=3) in float aSeed;
 uniform mat4 uVP;
 uniform float uDrift;
 uniform float uTime;
 out vec3 vNormal;
 out vec3 vWorld;
-out float vEdge;
 out float vDepth;
+out float vGenus;
+out float vSeed;
 void main(){
   vec3 p=aPos;
-  p.x += sin((aPos.z*.007)+(uTime*.07))*uDrift*2.2;
-  p.z += cos((aPos.x*.006)+(uTime*.052))*uDrift*1.7;
+  p.x += sin((aPos.z*.0038)+(uTime*.035)+aSeed)*uDrift*1.25;
+  p.z += cos((aPos.x*.0034)+(uTime*.027)+aSeed*.7)*uDrift*.95;
   vec4 clip=uVP*vec4(p,1.0);
   vNormal=aNormal;
   vWorld=p;
-  vEdge=abs(aNormal.y);
   vDepth=abs(clip.w);
+  vGenus=aGenus;
+  vSeed=aSeed;
   gl_Position=clip;
 }`;
+
+// Morphology/noise grammar is adapted from PR #780 exterior-weather.mjs. The bank shell is
+// only a bounded carrier; visible density is carved by the Audralia-derived field rather than
+// exposing a smooth ellipsoid/puff silhouette.
 const FS=`#version 300 es
 precision highp float;
 in vec3 vNormal;
 in vec3 vWorld;
-in float vEdge;
 in float vDepth;
+in float vGenus;
+in float vSeed;
 uniform float uOpacity;
 uniform float uOpticalDepth;
+uniform float uTime;
 out vec4 outColor;
-float h(vec3 p){return fract(sin(dot(p,vec3(12.9898,78.233,37.719)))*43758.5453);}
+float hash31(vec3 p){p=fract(p*.1031);p+=dot(p,p.yzx+33.33);return fract((p.x+p.y)*p.z);}
+float noise3(vec3 p){vec3 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);float a=hash31(i),b=hash31(i+vec3(1,0,0)),c=hash31(i+vec3(0,1,0)),d=hash31(i+vec3(1,1,0)),e=hash31(i+vec3(0,0,1)),g=hash31(i+vec3(1,0,1)),h=hash31(i+vec3(0,1,1)),j=hash31(i+vec3(1,1,1));return mix(mix(mix(a,b,f.x),mix(c,d,f.x),f.y),mix(mix(e,g,f.x),mix(h,j,f.x),f.y),f.z);}
+float fbm(vec3 p){float v=0.0,a=.62;v+=noise3(p)*a;p=p*2.07+vec3(5.3,1.7,9.2);a*=.48;v+=noise3(p)*a;return v;}
+float morphology(float g,vec3 p,float seed,float time){
+  vec3 q=p*.018+vec3(seed*7.3,time*.012,-time*.008);
+  float n=fbm(q),d=fbm(q*2.35+vec3(11.0,3.0,19.0));
+  if(g<.5){float f=.5+.5*sin(q.x*5.4+q.z*1.8+n*4.0);return smoothstep(.52,.72,n+.18*f+.10*d);}
+  if(g<1.5){float c=.5+.5*sin(q.x*4.2+seed*9.0)*cos(q.z*3.8-time*.018);return smoothstep(.48,.68,n+.22*c+.08*d);}
+  if(g<2.5){float veil=.5+.5*sin(q.x*1.7+q.z*.8+seed*7.0);return smoothstep(.40,.64,n+.10*veil+.08*d);}
+  if(g<3.5){float c=.5+.5*sin(q.x*3.7+n*3.0)*cos(q.z*3.9-time*.014);return smoothstep(.46,.67,n+.22*c+.08*d);}
+  if(g<4.5){float b=.5+.5*sin(q.x*1.25+q.z*.52+seed*6.0);return smoothstep(.39,.62,n+.11*b+.07*d);}
+  if(g<5.5){float b=.5+.5*sin(q.x*1.5-q.z*.7+seed*8.0);return smoothstep(.37,.60,n+.12*b+.07*d);}
+  if(g<6.5){float b=.5+.5*sin(q.x*3.0+n*3.0)*cos(q.z*3.25+seed*8.0);return smoothstep(.46,.67,n+.20*b+.08*d);}
+  float s=.5+.5*sin(q.x*1.45+q.z*.55+seed*5.0);return smoothstep(.42,.64,n+.09*s+.07*d);
+}
 void main(){
   vec3 n=normalize(vNormal);
-  float moon=max(0.0,dot(n,normalize(vec3(-.42,.72,.56))));
-  float body=.52+.30*moon;
-  float underside=smoothstep(-.72,.25,n.y);
-  float grain=h(floor(vWorld*.028));
-  float irregularity=.80+.20*grain;
-  vec3 cool=vec3(.56,.64,.74);
-  vec3 silver=vec3(.82,.87,.92);
-  vec3 c=mix(cool,silver,body)*mix(.62,1.0,underside);
-  float nearFade=smoothstep(95.0,260.0,vDepth);
-  float softEdge=.30+.70*smoothstep(.02,.74,vEdge);
-  float alpha=uOpacity*(.38+.26*(1.0-vEdge))*(.66+.34*uOpticalDepth)*irregularity*softEdge*nearFade;
+  float density=morphology(vGenus,vWorld,vSeed,uTime);
+  float underside=.55+.45*smoothstep(-.65,.32,n.y);
+  float lunar=max(0.0,dot(n,normalize(vec3(-.34,.84,.42))));
+  float silver=.30+.70*lunar;
+  vec3 cool=vec3(.31,.39,.50),lit=vec3(.70,.77,.86);
+  vec3 c=mix(cool,lit,silver)*underside;
+  // PR #780 local exclusion translated to Characters scale: geometry is extinguished before
+  // it becomes inspectable. Traversal veil remains the local extinction authority.
+  float nearExclusion=smoothstep(150.0,420.0,vDepth);
+  float edgeBreak=.55+.45*fbm(vWorld*.028+vec3(vSeed*13.0));
+  float alpha=uOpacity*density*edgeBreak*(.68+.32*uOpticalDepth)*nearExclusion;
+  if(alpha<.018)discard;
   outColor=vec4(c,alpha);
 }`;
+
 const VEIL_VS=`#version 300 es
 precision highp float;
 out vec2 vUv;
@@ -92,33 +133,19 @@ uniform float uVeil;
 uniform float uTime;
 out vec4 outColor;
 float h(vec2 p){return fract(sin(dot(p,vec2(41.3,289.7)))*43758.5453);}
+float n2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
 void main(){
-  vec2 q=vUv*vec2(6.0,4.0)+vec2(uTime*.012,-uTime*.006);
-  float n=mix(h(floor(q)),h(floor(q)+vec2(1.0,1.0)),.5);
-  float band=.78+.22*sin(vUv.y*9.0+vUv.x*3.0);
-  vec3 c=mix(vec3(.48,.56,.66),vec3(.76,.80,.84),band);
-  float a=uVeil*(.76+.16*n);
+  vec2 q=vUv*vec2(5.0,3.3)+vec2(uTime*.008,-uTime*.004);
+  float broad=n2(q)+.45*n2(q*2.11+4.7);
+  float band=.70+.30*smoothstep(.25,1.15,broad);
+  vec3 c=mix(vec3(.34,.42,.52),vec3(.66,.71,.78),band);
+  float a=uVeil*(.66+.22*band);
   outColor=vec4(c,a);
 }`;
 
 function compile(gl,type,src){const shader=gl.createShader(type);gl.shaderSource(shader,src);gl.compileShader(shader);if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS))throw new Error(`CLOUD_SHADER_COMPILE:${gl.getShaderInfoLog(shader)}`);return shader;}
 function link(gl,vs,fs){const p=gl.createProgram();gl.attachShader(p,compile(gl,gl.VERTEX_SHADER,vs));gl.attachShader(p,compile(gl,gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(`CLOUD_PROGRAM_LINK:${gl.getProgramInfoLog(p)}`);return p;}
 
-function irregularBankVolume(cx,cy,cz,rx,ry,rz,seed){
-  const verts=[],latBands=12,lonBands=30;
-  const point=(lat,lon)=>{
-    const phi=-Math.PI/2+(lat/latBands)*Math.PI,theta=(lon/lonBands)*Math.PI*2,cp=Math.cos(phi);
-    const broad=.91+.08*Math.sin(theta*2.0+seed*.41)*Math.cos(phi*1.7+seed*.09);
-    const fine=.96+.045*Math.sin(theta*5.0-phi*3.0+seed*.23)+.025*Math.cos(theta*7.0+phi*4.0+seed*.37);
-    const x=cp*Math.cos(theta),y=Math.sin(phi),z=cp*Math.sin(theta),warp=broad*fine;
-    return [cx+rx*x*warp,cy+ry*y*(.94+.06*Math.sin(theta*3.0+seed)),cz+rz*z*(.95+.06*Math.cos(theta*4.0-phi+seed*.17)),x,y,z];
-  };
-  for(let lat=0;lat<latBands;lat++)for(let lon=0;lon<lonBands;lon++){
-    const a=point(lat,lon),b=point(lat+1,lon),c=point(lat+1,lon+1),d=point(lat,lon+1);
-    verts.push(...a,...b,...c,...a,...c,...d);
-  }
-  return verts;
-}
 function bankEnvelope(bank){
   let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity,minZ=Infinity,maxZ=-Infinity;
   for(const puff of bank.puffs){
@@ -126,13 +153,29 @@ function bankEnvelope(bank){
     const vr=puff.radius*puff.flatten;minY=Math.min(minY,puff.y-vr);maxY=Math.max(maxY,puff.y+vr);
     minZ=Math.min(minZ,puff.z-puff.radius*.78);maxZ=Math.max(maxZ,puff.z+puff.radius*.78);
   }
-  return {cx:(minX+maxX)/2,cy:(minY+maxY)/2,cz:(minZ+maxZ)/2,rx:(maxX-minX)*.54,ry:(maxY-minY)*.58,rz:(maxZ-minZ)*.62};
+  return {cx:(minX+maxX)/2,cy:(minY+maxY)/2,cz:(minZ+maxZ)/2,rx:(maxX-minX)*.62,ry:(maxY-minY)*.62,rz:(maxZ-minZ)*.70};
+}
+function genusCode(genus){return ({Sc:0,Cu:1,Ac:2,Ns:3,As:4,Cs:5,Ci:6,St:7})[genus]??0;}
+function weatherCarrier(cx,cy,cz,rx,ry,rz,seed,genus){
+  const out=[],latBands=14,lonBands=36,g=genusCode(genus);
+  const point=(lat,lon)=>{
+    const phi=-Math.PI/2+(lat/latBands)*Math.PI,theta=(lon/lonBands)*Math.PI*2,cp=Math.cos(phi);
+    const low=.91+.09*Math.sin(theta*2.0+seed*.41)*Math.cos(phi*1.7+seed*.09);
+    const mid=.94+.06*Math.sin(theta*5.0-phi*3.0+seed*.23)+.035*Math.cos(theta*7.0+phi*4.0+seed*.37);
+    const x=cp*Math.cos(theta),y=Math.sin(phi),z=cp*Math.sin(theta),warp=low*mid;
+    return [cx+rx*x*warp,cy+ry*y*(.92+.08*Math.sin(theta*3.0+seed)),cz+rz*z*(.94+.07*Math.cos(theta*4.0-phi+seed*.17)),x,y,z,g,seed*.017];
+  };
+  for(let lat=0;lat<latBands;lat++)for(let lon=0;lon<lonBands;lon++){
+    const a=point(lat,lon),b=point(lat+1,lon),c=point(lat+1,lon+1),d=point(lat,lon+1);
+    out.push(...a,...b,...c,...a,...c,...d);
+  }
+  return out;
 }
 function geometry(layout){
   const verts=[];
   for(const bank of layout){
     const e=bankEnvelope(bank),seed=bank.bankIndex*53+17;
-    verts.push(...irregularBankVolume(e.cx,e.cy,e.cz,e.rx,e.ry,e.rz,seed));
+    verts.push(...weatherCarrier(e.cx,e.cy,e.cz,e.rx,e.ry,e.rz,seed,bank.genus));
   }
   return new Float32Array(verts);
 }
@@ -144,8 +187,11 @@ export function createCloudSystem({gl,compact=false,reducedMotion=false}={}){
   const cloudProgram=link(gl,VS,FS),veilProgram=link(gl,VEIL_VS,VEIL_FS);
   const vao=gl.createVertexArray();gl.bindVertexArray(vao);
   const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,verts,gl.STATIC_DRAW);
-  gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,24,0);
-  gl.enableVertexAttribArray(1);gl.vertexAttribPointer(1,3,gl.FLOAT,false,24,12);
+  const stride=8*4;
+  gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,stride,0);
+  gl.enableVertexAttribArray(1);gl.vertexAttribPointer(1,3,gl.FLOAT,false,stride,12);
+  gl.enableVertexAttribArray(2);gl.vertexAttribPointer(2,1,gl.FLOAT,false,stride,24);
+  gl.enableVertexAttribArray(3);gl.vertexAttribPointer(3,1,gl.FLOAT,false,stride,28);
   const veilVao=gl.createVertexArray();gl.bindVertexArray(null);
   const locations={
     vp:gl.getUniformLocation(cloudProgram,'uVP'),opacity:gl.getUniformLocation(cloudProgram,'uOpacity'),
@@ -160,13 +206,13 @@ export function createCloudSystem({gl,compact=false,reducedMotion=false}={}){
     last={state:liveState,...profile};
     gl.enable(gl.DEPTH_TEST);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);
     gl.useProgram(cloudProgram);gl.uniformMatrix4fv(locations.vp,false,vp);gl.uniform1f(locations.opacity,profile.opacity);gl.uniform1f(locations.opticalDepth,profile.opticalDepth);gl.uniform1f(locations.drift,profile.drift);gl.uniform1f(locations.time,reducedMotion?0:time);
-    gl.bindVertexArray(vao);gl.drawArrays(gl.TRIANGLES,0,verts.length/6);
+    gl.bindVertexArray(vao);gl.drawArrays(gl.TRIANGLES,0,verts.length/8);
     if(profile.veil>0){
       gl.disable(gl.DEPTH_TEST);gl.useProgram(veilProgram);gl.uniform1f(locations.veil,profile.veil);gl.uniform1f(locations.veilTime,reducedMotion?0:time);gl.bindVertexArray(veilVao);gl.drawArrays(gl.TRIANGLES,0,3);
     }
     gl.bindVertexArray(null);gl.depthMask(true);gl.disable(gl.BLEND);gl.enable(gl.DEPTH_TEST);
   }
-  function snapshot(){return {schema:'MIRRORLAND_CLOUD_SYSTEM_RUNTIME_v1',state:last.state,bankCount:layout.length,puffCount,opacity:last.opacity,opticalDepth:last.opticalDepth,veil:last.veil,drift:last.drift,reducedMotion,compact};}
+  function snapshot(){return {schema:'MIRRORLAND_CLOUD_SYSTEM_RUNTIME_v1',state:last.state,bankCount:layout.length,puffCount,opacity:last.opacity,opticalDepth:last.opticalDepth,veil:last.veil,drift:last.drift,reducedMotion,compact,audraliaWeatherSource:AUDRALIA_WEATHER_PRESENTATION_SOURCE};}
   const api={draw,snapshot,layout};
   if(typeof globalThis!=='undefined')globalThis.__MIRRORLAND_CLOUD_SYSTEM__=api;
   return api;

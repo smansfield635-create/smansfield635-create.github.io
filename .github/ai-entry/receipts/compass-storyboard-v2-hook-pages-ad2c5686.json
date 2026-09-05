@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "compass-storyboard-v2-hook-pages-ad2c5686",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 2777,
+  "requestBranch": "ai-dispatch-request-compass-storyboard-v2-hook-pages-ad2c5686",
+  "requestCommit": "cfa307cacf2b3b698c318cee122cf9d71976babf",
+  "requestCommitParent": "ad2c56865fa087457841e26458a24f63043e0d0b",
+  "currentMainSha": "ad2c56865fa087457841e26458a24f63043e0d0b",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "ad2c56865fa087457841e26458a24f63043e0d0b",
+    "surface_id": "compass-gen1862"
+  },
+  "bridgeRunId": "33998721456",
+  "dispatchedRunId": 33998728523,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/33998728523",
+  "dispatchedRunHeadSha": "ad2c56865fa087457841e26458a24f63043e0d0b",
+  "dispatchedAt": "2026-09-05T23:27:39.645Z",
+  "resolvedAt": "2026-09-05T23:27:46.161Z"
+}

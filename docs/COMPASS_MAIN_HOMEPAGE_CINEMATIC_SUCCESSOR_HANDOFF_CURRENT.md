@@ -3,11 +3,14 @@
 Status: **CURRENT / CONTROLLING**  
 Date: 2026-09-06
 
-The controlling direct strategy is now:
+There are now two controlling companion documents:
 
-`docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_NEXT_HOOK_DIRECT_STRATEGY_20260906.md`
+1. **Creative / repair authority — WHAT V2 must be**  
+   `docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_NEXT_HOOK_DIRECT_STRATEGY_20260906.md`
+2. **Execution authority — HOW any room resumes the proven V2 path**  
+   `docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_V2_EXECUTION_SPINE_CURRENT.md`
 
-Read that file first. It supersedes the prior immediate instruction to keep the cinematic unhooked during refinement.
+Read both before successor mutation.
 
 Historical review protocol remains available at:
 
@@ -15,7 +18,7 @@ Historical review protocol remains available at:
 - `docs/COMPASS_CINEMATIC_VIDEO_ROOM_INGRESS_BOUNDARY.md`
 - `docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_SUCCESSOR_HANDOFF_20260904.md`
 
-Those records remain useful history and review precedent, but they do not override the current owner disposition below.
+Those records remain useful history and review precedent, but they do not override the current owner disposition or the two controlling V2 companions above.
 
 ---
 
@@ -58,6 +61,34 @@ The current live artifact remains hooked intentionally while the successor is co
 
 ---
 
+## Critical semantic correction — do not drift here
+
+The current film is a **pre-rendered MP4**.
+
+It does not contain live website asset bindings that can be switched after encoding.
+
+When the strategy says to "bind" current Audralia or "replace" the retired Audralia source, it means:
+
+> **select/freeze the correct source while constructing the V2 capture source, then render/capture a new immutable V2 MP4.**
+
+It does **not** mean:
+
+- rebind the current V1 MP4;
+- patch the V1 MP4 in place;
+- point the V1 binary at a different runtime asset.
+
+Keep these surfaces separate:
+
+`V2 CAPTURE SOURCE → NEW IMMUTABLE V2 MP4`
+
+and independently:
+
+`THIN-PLAYER 4.35 s ENTRY PREROLL → FIRST V2 FRAME READY → VIDEO PLAYBACK`
+
+The entry preroll is runtime behavior outside the MP4.
+
+---
+
 ## Owner disposition
 
 Do **not** unhook the current cinematic merely to begin or continue successor refinement.
@@ -92,12 +123,12 @@ The direct-strategy file contains the complete defect and implementation contrac
 2. `AUDRALIA_WRONG_MODEL_REGRESSION — CONFIRMED`
    - keep cinematic beat and camera treatment;
    - reject retired river-model state;
-   - bind to current live-authoritative Audralia.
+   - construct V2 from a frozen current live-authoritative Audralia source set.
 
 3. `MIRRORLAND_PRESENTATION_SOURCE_AUTHORITY_DEFECT — CONFIRMED`
    - keep window/dissolve concept;
    - remove fabricated grid/interior environment;
-   - reveal the same current live Audralia authority through Mirrorland;
+   - reveal the same frozen current Audralia world through Mirrorland;
    - expand directly into the subsequent Audralia shot.
 
 4. `ENTRY_TRANSITION_HISTORICAL_REGRESSION — CONFIRMED`
@@ -113,22 +144,70 @@ The direct-strategy file contains the complete defect and implementation contrac
 
 ---
 
+## Proven-path precedent — do not rediscover
+
+The V2 execution spine records exact precedent and identities. Key anchors are:
+
+- historical deterministic capture donor: `96c89ec797490a5dc0e3dd343f4d34a396adaa02`;
+- historical entry implementation: PR #2743 candidate `589b50d8178539b3241ad42315e4a38120040522`;
+- earlier independent entry grammar: PR #2697;
+- anti-reinvention / proportional cinematic protocol: PR #2754;
+- deterministic encode precedent: PR #2796 / run `34049018018`;
+- installed binary ingress adapter: `tools/ai-room-transport/bounded-binary-file-ingress.v1.mjs`;
+- installed binary reconstruction/carrier: `tools/ai-room-transport/bounded-binary-object-transfer.v1.mjs`;
+- binary-transfer precedent: PR #1334, issue #1323, PR #1340, PR #2798, PR #2799;
+- V1 publication: PR #2801.
+
+Important: the historical T6 capture donor contains the now-rejected Audralia/Mirrorland construction choices. It is a donor for **architecture/capture semantics**, not permission to restore its visual sources wholesale.
+
+Likewise, historical Actions workflows establish proven semantics/evidence. The current `AI_ENTRYPOINT.json` prohibits GitHub Actions as agent execution/transport; do not manually dispatch or create workflows merely to reproduce historical execution. Use the current authorized execution substrate while preserving the proven deterministic procedure.
+
+---
+
 ## Immediate instruction for the next room
 
-1. Read `docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_NEXT_HOOK_DIRECT_STRATEGY_20260906.md` in full.
-2. Resolve current `main` and confirm whether it still descends from the documentation freeze head.
-3. Revalidate the current cinematic identities; do not assume unrelated `main` movement changed the cinematic.
-4. Confirm the current cinematic remains hooked unless a later explicit owner disposition changed that fact.
-5. Do **not** create an unhook operation as routine preparation.
-6. Begin successor work from the first unresolved material boundary in the direct strategy.
-7. Preserve the pre-rendered MP4 + thin-player architecture unless a concrete defect proves that architecture insufficient.
-8. Keep source-authority corrections, editorial timing corrections, and the interactive entry preroll as distinct implementation concerns even when reviewed together.
-9. When the successor is materially ready, review it detached from ordinary production entry.
-10. Only after explicit owner acceptance should the next hook directly replace the current live film.
+1. Read current `AI_ENTRYPOINT.json`.
+2. Read this handoff.
+3. Read the direct strategy in full.
+4. Read the V2 execution spine in full.
+5. Resolve current `main` and confirm the current cinematic still has the frozen V1 identities.
+6. Confirm no later explicit owner disposition supersedes `LEAVE_CURRENT_CINEMATIC_HOOKED_WHILE_SUCCESSOR_IS_CORRECTED`.
+7. Locate durable evidence for the execution spine states `R0` through `R10`.
+8. Resume **only the first state without exact evidence**.
+9. Do not create an unhook operation as routine preparation.
+10. Preserve the pre-rendered MP4 + thin-player architecture unless a concrete defect proves that architecture insufficient.
+11. Keep capture-source corrections, immutable MP4 production, interactive entry preroll, and production hook/publication as distinct surfaces.
+12. Persist an execution-spine checkpoint before advancing to the next material state.
+13. When the complete successor is ready, review it detached from ordinary production entry.
+14. Only after explicit owner acceptance should the next hook directly replace the current live film.
 
 Operating shorthand:
 
-`KEEP CURRENT HOOK → CORRECT SOURCES + CADENCE → EVOLVE ENTRY PREROLL → REVIEW DETACHED SUCCESSOR → DIRECT NEXT HOOK`
+`KEEP V1 LIVE → FREEZE V2 SOURCES → CLOSE EDITORIAL MAP → BUILD/CAPTURE V2 → NEW IMMUTABLE MASTER → GIT CUSTODY → EVOLVE THIN-PLAYER PREROLL → OWNER REVIEW → DIRECT V1→V2 HOOK`
+
+---
+
+## First-unpassed-state law
+
+The controlling execution ladder is defined in:
+
+`docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_V2_EXECUTION_SPINE_CURRENT.md`
+
+States:
+
+`R0 CURRENT STATE`
+→ `R1 SOURCE AUTHORITY`
+→ `R2 EDITORIAL MAP`
+→ `R3 CAPTURE SOURCE`
+→ `R4 REPRESENTATIVE VISUALS`
+→ `R5 FULL CAPTURE`
+→ `R6 V2 MASTER`
+→ `R7 GIT BINARY CUSTODY`
+→ `R8 THIN PLAYER / PREROLL`
+→ `R9 QUALIFICATION + OWNER REVIEW`
+→ `R10 DIRECT PUBLICATION`
+
+**Resume only the first state missing exact durable evidence. Never repeat a passed state merely because a new room lacks chat context.**
 
 ---
 
@@ -136,8 +215,8 @@ Operating shorthand:
 
 If a room loses context, do not reconstruct the design from conversation memory.
 
-Read this handoff and the direct-strategy file, resolve current `main`, then continue from the first unresolved durable defect or successor checkpoint.
+Read this handoff, the direct strategy, the V2 execution spine, and current `AI_ENTRYPOINT.json`; resolve current `main`; then continue from the first unresolved execution state.
 
-If repository state has advanced, revalidate source identities before construction. Do not silently assume the September 6 exact heads remain current authority.
+If repository state has advanced, revalidate identities before construction. Do not silently assume September 6 exact heads remain current authority.
 
-The direct-strategy document is the controlling creative/repair handoff. Repository current state still governs exact implementation identity.
+Owner recordings are perceptual evidence, not permanent construction dependencies. Do not block successor work merely because an earlier uploaded video is unavailable after its findings have been durably documented.

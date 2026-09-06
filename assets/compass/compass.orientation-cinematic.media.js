@@ -4,6 +4,30 @@ if(!Object.prototype.hasOwnProperty.call(globalThis,'audraliaError')){
   Object.defineProperty(globalThis,'audraliaError',{value:null,writable:true,configurable:true});
 }
 
+const TOUR_CONTEXT_RESTART_STYLE_ID='compass-cinematic-tour-context-restart-guard';
+const TOUR_CONTEXT_SHOTS=Object.freeze(['S01','S02','S03','S04','S05','S06','S07','S08']);
+const TOUR_CONTEXT_CURRENT_FRAMES='0%,68%{opacity:1;transform:translate3d(0,0,0)}78%,100%{opacity:0;transform:translate3d(0,-8px,0)}';
+const TOUR_CONTEXT_NEXT_FRAMES='0%,82%{opacity:0;transform:translate3d(0,9px,0)}96%,100%{opacity:1;transform:translate3d(0,0,0)}';
+export function installCinematicTourContextRestartGuard(){
+  if(typeof document==='undefined'||document.getElementById(TOUR_CONTEXT_RESTART_STYLE_ID))return;
+  const rules=[];
+  for(const id of TOUR_CONTEXT_SHOTS){
+    const slug=id.toLowerCase();
+    rules.push(`@keyframes tour-current-${slug}{${TOUR_CONTEXT_CURRENT_FRAMES}}`);
+    rules.push(`.compass-orientation-cinematic[data-shot-id="${id}"] .compass-orientation-cinematic__stage::before,.compass-orientation-cinematic[data-shot-id="${id}"] .compass-orientation-cinematic__stage::after{animation-name:tour-current-${slug}}`);
+    if(id!=='S08'){
+      rules.push(`@keyframes tour-next-${slug}{${TOUR_CONTEXT_NEXT_FRAMES}}`);
+      rules.push(`.compass-orientation-cinematic[data-shot-id="${id}"]::before,.compass-orientation-cinematic[data-shot-id="${id}"]::after{animation-name:tour-next-${slug}}`);
+    }
+  }
+  const style=document.createElement('style');
+  style.id=TOUR_CONTEXT_RESTART_STYLE_ID;
+  style.dataset.cinematicTourContextRestart='S01_S08_UNIQUE_ANIMATION_NAMES';
+  style.textContent=rules.join('\n');
+  (document.head||document.documentElement).append(style);
+}
+installCinematicTourContextRestartGuard();
+
 export const CINEMATIC_MEDIA_MANIFEST=Object.freeze({
   schema:'COMPASS_MAIN_HOMEPAGE_CINEMATIC_MEDIA_MANIFEST_v1',
   version:'source-reconstruction-20260904-004',

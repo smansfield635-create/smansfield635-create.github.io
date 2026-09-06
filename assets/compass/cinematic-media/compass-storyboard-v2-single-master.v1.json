@@ -1,0 +1,60 @@
+{
+  "schema": "COMPASS_STORYBOARD_V2_SINGLE_MASTER_CANDIDATE_v1",
+  "status": "MASTER_RENDERED_AWAITING_BINARY_REPOSITORY_INGRESS",
+  "deliveryWorkflow": "ABOUT_PRECEDENT_DIRECT_BOUNDED_BRANCH",
+  "codespaces": "PROHIBITED",
+  "governingBranch": "cinematic/compass-single-master-final-attempt-20260905",
+  "governingBase": "9580ae74b6ffd73a1be967899785f66aa7887ba3",
+  "master": {
+    "path": "assets/compass/cinematic-media/compass-storyboard-v2-master-45s.mp4",
+    "durationSeconds": 45.0,
+    "width": 1280,
+    "height": 720,
+    "fps": 24,
+    "codec": "H.264",
+    "pixelFormat": "yuv420p",
+    "fastStart": true,
+    "audio": "NONE_FIRST_REVIEW_CANDIDATE",
+    "sha256": "1c22857a9b647764888138de4cbe28ea62bc49ef168d7ae69d65fa443893c30e",
+    "bytes": 2539551
+  },
+  "reviewDerivative": {
+    "path": "assets/compass/cinematic-media/compass-storyboard-v2-master-45s-review.mp4",
+    "width": 854,
+    "height": 480,
+    "fps": 24,
+    "sha256": "8e5fb60ea7985f6a55bebc5aac61ea6c20797a709124b4f0dd608a52bf258685"
+  },
+  "timeline": {
+    "S01": [0.0, 4.5],
+    "S02": [4.5, 9.5],
+    "S03": [9.5, 14.5],
+    "S04": [14.5, 19.5],
+    "S05": [19.5, 25.5],
+    "S06": [25.5, 30.5],
+    "S07": [30.5, 41.0],
+    "S08": [41.0, 45.0]
+  },
+  "semanticContract": {
+    "S01": ["Diamond Gate Bridge", "Interactive experience & research studio"],
+    "S02": ["Find your way.", "The Compass orients the experience."],
+    "S03": ["Start here.", "Chapter One is the guided introduction."],
+    "S04": ["See what we're testing.", "See what's ready."],
+    "S05": ["Cross into Mirrorland.", "Enter the narrative world."],
+    "S06": ["Enter Audralia.", "Explore a continuous planetary world."],
+    "S07_A": ["Discover your Coherence Index.", "Take a free coherence assessment."],
+    "S07_B": ["Enter the Awards Chamber.", "See the work recognized — and why."],
+    "S07_C": ["Meet the characters.", "Choose who you want to speak with."],
+    "S08": ["Now choose your path.", "Use the Compass to choose where to go."]
+  },
+  "runtimeLaw": {
+    "destinationRuntimeImports": false,
+    "lateSourceReadinessGates": false,
+    "historicalRuntimeReproduction": false,
+    "liveHook": false,
+    "oneMasterMediaAsset": true,
+    "oneAudioOwner": true,
+    "underlyingCompassRemainsAuthoritative": true
+  },
+  "nextBoundary": "BINARY_MASTER_INGRESS_THEN_THIN_PLAYER_PREVIEW"
+}

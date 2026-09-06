@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en" data-compass-master-capture="BOOTING">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Compass Single Master Capture</title>
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#02070b}body{font-family:Inter,ui-sans-serif,system-ui,sans-serif}#capture-stage{position:fixed;inset:0;width:100vw;height:100dvh;overflow:hidden;background:#02070b}.capture-error{position:fixed;inset:0;display:grid;place-items:center;padding:2rem;background:#02070b;color:#f2d6d6;font:700 14px/1.5 ui-monospace,monospace;white-space:pre-wrap}.capture-error[hidden]{display:none}
+</style>
+</head>
+<body>
+<div id="capture-stage" aria-hidden="true"></div>
+<pre class="capture-error" data-capture-error hidden></pre>
+<script type="module">
+import {
+  createCompassSingleMasterSource,
+  COMPASS_SINGLE_MASTER_DURATION_MS,
+  COMPASS_SINGLE_MASTER_SHOTS,
+  COMPASS_SINGLE_MASTER_SOUNDTRACK
+} from '/assets/compass/cinematic-master/master-source.mjs';
+
+const stage=document.getElementById('capture-stage');
+const errorNode=document.querySelector('[data-capture-error]');
+const params=new URLSearchParams(location.search);
+const initialTime=Math.max(0,Math.min(COMPASS_SINGLE_MASTER_DURATION_MS-.001,Number(params.get('t')||0)));
+
+try{
+  const source=await createCompassSingleMasterSource({stage});
+  await source.prepare();
+  source.renderAt(initialTime);
+  globalThis.__COMPASS_SINGLE_MASTER__=Object.freeze({
+    source,
+    durationMs:COMPASS_SINGLE_MASTER_DURATION_MS,
+    shots:COMPASS_SINGLE_MASTER_SHOTS,
+    soundtrack:COMPASS_SINGLE_MASTER_SOUNDTRACK,
+    renderAt:(timeMs)=>source.renderAt(timeMs),
+    inspect:()=>source.inspect()
+  });
+  document.documentElement.dataset.compassMasterCapture='READY';
+  document.documentElement.dataset.captureTimeMs=String(Math.round(initialTime));
+  document.dispatchEvent(new CustomEvent('dgb:compass-single-master-capture-ready',{detail:{durationMs:COMPASS_SINGLE_MASTER_DURATION_MS,shotCount:COMPASS_SINGLE_MASTER_SHOTS.length,timeMs:initialTime}}));
+}catch(error){
+  document.documentElement.dataset.compassMasterCapture='FAILED';
+  errorNode.hidden=false;
+  errorNode.textContent=String(error?.stack||error?.message||error);
+  console.error('COMPASS_SINGLE_MASTER_CAPTURE_BOOT_FAILED',error);
+}
+</script>
+</body>
+</html>

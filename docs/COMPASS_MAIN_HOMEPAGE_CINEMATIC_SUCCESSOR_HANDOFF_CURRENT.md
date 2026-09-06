@@ -3,197 +3,104 @@
 Status: **CURRENT / CONTROLLING**  
 Date: 2026-09-06
 
-There are now two controlling companion documents:
+Read current `AI_ENTRYPOINT.json` first.
 
-1. **Creative / repair authority — WHAT V2 must be**  
+Then read these three controlling V2 documents:
+
+1. **WHAT V2 must be**  
    `docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_NEXT_HOOK_DIRECT_STRATEGY_20260906.md`
-2. **Execution authority — HOW any room resumes the proven V2 path**  
+2. **HOW V2 is produced and resumed**  
    `docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_V2_EXECUTION_SPINE_CURRENT.md`
+3. **HOW execution transport is resolved without defaulting to an environment**  
+   `docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_EXECUTION_ROUTE_CLARIFICATION.md`
 
-Read both before successor mutation.
+For execution-route questions, the clarification supersedes any example environment/substrate wording in older V2 documentation.
 
-Historical review protocol remains available at:
+## Current product state
 
-- `docs/DETACHED_CINEMATIC_VIDEO_REVIEW_AND_PROGRESSION_PROTOCOL.md`
-- `docs/COMPASS_CINEMATIC_VIDEO_ROOM_INGRESS_BOUNDARY.md`
-- `docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_SUCCESSOR_HANDOFF_20260904.md`
-
-Those records remain useful history and review precedent, but they do not override the current owner disposition or the two controlling V2 companions above.
-
----
-
-## Current production state
-
-Repository `main` at documentation freeze:
-
-`c3b6d28fae21e3c6e1814e1ea4551ff46f72cddf`
-
-Current cinematic live baseline:
+Current cinematic live baseline remains PR #2801:
 
 `99025b828629548be1ea066cd2e01dd16d855a03`
 
-That cinematic baseline is the merge of PR #2801, **Publish pre-rendered Compass homepage cinematic**. The later `main` advancement at documentation freeze is unrelated Research Frontier preconstruction work and does not change the cinematic state.
-
-Current production state:
+Current state:
 
 `INTRO_HOOKED_LIVE — PRERENDERED_THIN_PLAYER`
-
-The ordinary-entry player is:
-
-`assets/compass/compass.orientation-cinematic.js`
-
-Player contract:
-
-`COMPASS_PRERENDERED_THIN_PLAYER_T12_v1`
 
 Current master:
 
 `assets/compass/cinematic-media/compass-main-orientation-final-v1.mp4`
 
-Current master identity:
+Identity:
 
 - bytes: `3,828,177`
 - SHA-256: `6ada38eadeb6243b3809167f45dd8a74808c88ac677273683338772e7899b4e7`
 - Git blob: `ca95d7c17ef54044a11bc456a949c33fa9820bc0`
 - runtime: `38.0 s`
 
-The current live artifact remains hooked intentionally while the successor is corrected.
+The current cinematic stays hooked while V2 is built and reviewed detached.
 
----
+Target release choreography:
 
-## Critical semantic correction — do not drift here
+`CURRENT_HOOK_V1 → CORRECTED_HOOK_V2`
 
-The current film is a **pre-rendered MP4**.
+No routine interim unhook.
 
-It does not contain live website asset bindings that can be switched after encoding.
+## Critical semantic separation
 
-When the strategy says to "bind" current Audralia or "replace" the retired Audralia source, it means:
-
-> **select/freeze the correct source while constructing the V2 capture source, then render/capture a new immutable V2 MP4.**
-
-It does **not** mean:
-
-- rebind the current V1 MP4;
-- patch the V1 MP4 in place;
-- point the V1 binary at a different runtime asset.
-
-Keep these surfaces separate:
+Do not collapse these surfaces:
 
 `V2 CAPTURE SOURCE → NEW IMMUTABLE V2 MP4`
 
-and independently:
-
 `THIN-PLAYER 4.35 s ENTRY PREROLL → FIRST V2 FRAME READY → VIDEO PLAYBACK`
 
-The entry preroll is runtime behavior outside the MP4.
+`PRODUCTION HOOK / PUBLICATION → ORDINARY HOMEPAGE ENTRY`
 
----
+“Source binding” means construction-time source selection for the V2 capture source. The existing V1 MP4 has no live website asset binding to switch.
 
-## Owner disposition
+## Confirmed V2 corrections
 
-Do **not** unhook the current cinematic merely to begin or continue successor refinement.
+- restore the repeating text-led/image-lagged cadence: `TEXT_IN < IMAGE_IN < TEXT_OUT < IMAGE_OUT`;
+- remove the early text-only desert and late image pileup;
+- protect Brain/Trophy/House breathing room;
+- reject the retired Audralia river-model state;
+- freeze one current live-authoritative Audralia world state and use it both through the Mirrorland reveal and in the succeeding full Audralia shot;
+- remove the fabricated Mirrorland grid/interior environment while preserving the window/dissolve threshold concept;
+- recover/evolve the historical 4.35-second entry transition from PR #2697/#2743;
+- preserve `SELECTED_CONTROL_CELLS_BECOME_SUCCESSOR_STAR_AND_COMPASS_MATTER` as the historical law while evolving the visual causality so actual source cells disappear as matching fragments become mobile;
+- require the first V2 MP4 frame to be decoded/presentable before final entry material clears;
+- keep zero blank frame.
 
-The controlling release strategy is:
+## D0 — documentation adoption comes before R0
 
-`CURRENT HOOK REMAINS LIVE → BUILD CORRECTED SUCCESSOR DETACHED → VERIFY / REVIEW → DIRECT REPLACEMENT AT NEXT HOOK`
+The V2 strategy/spine/clarification are not production authority until their documentation candidate is adopted to `main`.
 
-Do not insert:
+For the current documentation candidate, D0 requires the exact repository static-editorial verifier to PASS against the exact base/head and declared documentation paths.
 
-`CURRENT HOOK → NO HOOK → SUCCESSOR HOOK`
+Required result:
 
-unless a concrete production failure separately requires emergency rollback.
+`D0_STATIC_EDITORIAL_VERIFIER_PASS`
 
----
+A passive CI success is not a substitute for this result.
 
-## Confirmed defect ledger
+### Capability-first execution law
 
-The direct-strategy file contains the complete defect and implementation contract. The durable top-level ledger is:
+D0 does **not** prescribe an execution environment.
 
-1. `EDITORIAL_STAGGERED_CADENCE_NOT_IMPLEMENTED_CONSISTENTLY — CONFIRMED`
-   - restore repeated text-led / image-lagged cadence;
-   - text enters first;
-   - image follows;
-   - text exits first;
-   - image carries;
-   - next text may enter before prior image fully clears;
-   - no early text-only desert;
-   - no late image pileup;
-   - no Brain / Trophy / House compression caused by omitted upstream imagery.
+The lawful sequence is:
 
-2. `AUDRALIA_WRONG_MODEL_REGRESSION — CONFIRMED`
-   - keep cinematic beat and camera treatment;
-   - reject retired river-model state;
-   - construct V2 from a frozen current live-authoritative Audralia source set.
+`REQUIRED VERIFIER EVIDENCE → CURRENT AI_ENTRYPOINT → CURRENT ROOM'S ALREADY-AUTHORIZED CAPABILITIES → EXECUTE IF DIRECTLY AVAILABLE → OTHERWISE RECORD EXACT BOUNDARY AND STOP`
 
-3. `MIRRORLAND_PRESENTATION_SOURCE_AUTHORITY_DEFECT — CONFIRMED`
-   - keep window/dissolve concept;
-   - remove fabricated grid/interior environment;
-   - reveal the same frozen current Audralia world through Mirrorland;
-   - expand directly into the subsequent Audralia shot.
+Do not translate an acquisition failure such as `Could not resolve host: github.com` into “use a particular hosted workspace,” “open a builder,” “create a workflow,” or any other default transport.
 
-4. `ENTRY_TRANSITION_HISTORICAL_REGRESSION — CONFIRMED`
-   - historical law recovered from PR #2697 / PR #2743:
-     `SELECTED_CONTROL_CELLS_BECOME_SUCCESSOR_STAR_AND_COMPASS_MATTER`;
-   - recovered preroll duration: `4.35 s`, outside the MP4 runtime;
-   - successor refinement: Play initiates true entry-surface tessellation so disappearing source cells correspond to mobile fragments;
-   - first MP4 frame must be decoded/presentable before the entry surface clears;
-   - zero blank frame.
+A named environment is not the next action.
 
-5. `CURRENT_HOOK_STATE_DURING_SUCCESSOR_WORK — OWNER_DISPOSITION`
-   - leave current PR #2801 hook live until the accepted successor is ready for direct replacement.
+The next action is always the unresolved evidence requirement itself. A later room resumes D0 and resolves whatever authorized execution capability is actually available there.
 
----
+If no current capability can run the required verifier against the exact repository state, leave D0 unresolved and keep the documentation candidate draft. Do not bypass or relabel the proof.
 
-## Proven-path precedent — do not rediscover
+## R0→R10 production ladder
 
-The V2 execution spine records exact precedent and identities. Key anchors are:
-
-- historical deterministic capture donor: `96c89ec797490a5dc0e3dd343f4d34a396adaa02`;
-- historical entry implementation: PR #2743 candidate `589b50d8178539b3241ad42315e4a38120040522`;
-- earlier independent entry grammar: PR #2697;
-- anti-reinvention / proportional cinematic protocol: PR #2754;
-- deterministic encode precedent: PR #2796 / run `34049018018`;
-- installed binary ingress adapter: `tools/ai-room-transport/bounded-binary-file-ingress.v1.mjs`;
-- installed binary reconstruction/carrier: `tools/ai-room-transport/bounded-binary-object-transfer.v1.mjs`;
-- binary-transfer precedent: PR #1334, issue #1323, PR #1340, PR #2798, PR #2799;
-- V1 publication: PR #2801.
-
-Important: the historical T6 capture donor contains the now-rejected Audralia/Mirrorland construction choices. It is a donor for **architecture/capture semantics**, not permission to restore its visual sources wholesale.
-
-Likewise, historical Actions workflows establish proven semantics/evidence. The current `AI_ENTRYPOINT.json` prohibits GitHub Actions as agent execution/transport; do not manually dispatch or create workflows merely to reproduce historical execution. Use the current authorized execution substrate while preserving the proven deterministic procedure.
-
----
-
-## Immediate instruction for the next room
-
-1. Read current `AI_ENTRYPOINT.json`.
-2. Read this handoff.
-3. Read the direct strategy in full.
-4. Read the V2 execution spine in full.
-5. Resolve current `main` and confirm the current cinematic still has the frozen V1 identities.
-6. Confirm no later explicit owner disposition supersedes `LEAVE_CURRENT_CINEMATIC_HOOKED_WHILE_SUCCESSOR_IS_CORRECTED`.
-7. Locate durable evidence for the execution spine states `R0` through `R10`.
-8. Resume **only the first state without exact evidence**.
-9. Do not create an unhook operation as routine preparation.
-10. Preserve the pre-rendered MP4 + thin-player architecture unless a concrete defect proves that architecture insufficient.
-11. Keep capture-source corrections, immutable MP4 production, interactive entry preroll, and production hook/publication as distinct surfaces.
-12. Persist an execution-spine checkpoint before advancing to the next material state.
-13. When the complete successor is ready, review it detached from ordinary production entry.
-14. Only after explicit owner acceptance should the next hook directly replace the current live film.
-
-Operating shorthand:
-
-`KEEP V1 LIVE → FREEZE V2 SOURCES → CLOSE EDITORIAL MAP → BUILD/CAPTURE V2 → NEW IMMUTABLE MASTER → GIT CUSTODY → EVOLVE THIN-PLAYER PREROLL → OWNER REVIEW → DIRECT V1→V2 HOOK`
-
----
-
-## First-unpassed-state law
-
-The controlling execution ladder is defined in:
-
-`docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_V2_EXECUTION_SPINE_CURRENT.md`
-
-States:
+Only after D0 adoption closes does V2 begin:
 
 `R0 CURRENT STATE`
 → `R1 SOURCE AUTHORITY`
@@ -201,22 +108,44 @@ States:
 → `R3 CAPTURE SOURCE`
 → `R4 REPRESENTATIVE VISUALS`
 → `R5 FULL CAPTURE`
-→ `R6 V2 MASTER`
+→ `R6 IMMUTABLE V2 MASTER`
 → `R7 GIT BINARY CUSTODY`
 → `R8 THIN PLAYER / PREROLL`
-→ `R9 QUALIFICATION + OWNER REVIEW`
-→ `R10 DIRECT PUBLICATION`
+→ `R9 FOCUSED QUALIFICATION + OWNER REVIEW`
+→ `R10 DIRECT V1→V2 PUBLICATION`
 
-**Resume only the first state missing exact durable evidence. Never repeat a passed state merely because a new room lacks chat context.**
+Resume only the first state lacking exact durable evidence.
 
----
+The execution spine defines the required evidence and proven deterministic semantics for each state. The execution-route clarification governs how a room chooses transport: **capability-first, never environment-first**.
 
-## Recovery rule
+## Historical precedent — use semantics, not default transports
 
-If a room loses context, do not reconstruct the design from conversation memory.
+Reusable authorities include:
 
-Read this handoff, the direct strategy, the V2 execution spine, and current `AI_ENTRYPOINT.json`; resolve current `main`; then continue from the first unresolved execution state.
+- deterministic capture donor: `96c89ec797490a5dc0e3dd343f4d34a396adaa02`;
+- entry interaction: PR #2697 / PR #2743 candidate `589b50d8178539b3241ad42315e4a38120040522`;
+- anti-reinvention protocol: PR #2754;
+- deterministic encode semantics: PR #2796 / run `34049018018`;
+- installed bounded binary ingress and reconstruction mechanisms;
+- binary-custody precedent: #1334, #1323, #1340, #2798, #2799;
+- V1 publication boundary: PR #2801.
 
-If repository state has advanced, revalidate identities before construction. Do not silently assume September 6 exact heads remain current authority.
+Historical workflows/carriers prove semantics and evidence. They are not standing instructions to recreate their transport under the current AI entrypoint.
 
-Owner recordings are perceptual evidence, not permanent construction dependencies. Do not block successor work merely because an earlier uploaded video is unavailable after its findings have been durably documented.
+## Immediate instruction for any new room
+
+1. Read current `AI_ENTRYPOINT.json`.
+2. Read this handoff.
+3. Read the direct strategy.
+4. Read the V2 execution spine.
+5. Read the execution-route clarification.
+6. Determine whether D0 documentation adoption is already closed on `main`.
+7. If D0 is unresolved, resume D0 only; do not begin R0/R1.
+8. Resolve the current room's already-authorized capabilities without naming or creating a default environment.
+9. If D0 is closed, locate R0→R10 evidence and execute only the first unresolved state.
+10. Persist the exact checkpoint before advancing.
+11. Keep V1 live until an owner-accepted V2 is ready for direct replacement.
+
+Operating law:
+
+`NO DEFAULT SUBSTRATE → NO INFRASTRUCTURE INVENTION → CLOSE THE REQUIRED EVIDENCE WITH WHATEVER CURRENT AUTHORIZED CAPABILITY ACTUALLY EXISTS → OTHERWISE STOP AT THAT EXACT STATE`

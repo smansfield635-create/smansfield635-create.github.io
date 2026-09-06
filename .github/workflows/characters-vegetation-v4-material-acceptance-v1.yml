@@ -1,0 +1,199 @@
+name: Characters Vegetation V4.5 Material Acceptance
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/characters-vegetation-v4-material-acceptance-v1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact V4.4 evidence candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 278155b1e38c663ffab8ee1ab30b09a294a88010
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Verify exact candidate identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "278155b1e38c663ffab8ee1ab30b09a294a88010"
+          test -f characters/index.html
+          test -f characters/app.mjs
+          test -f characters/vegetation-understory.mjs
+          test -f control-plane/whole-estate/characters-reconstruction-v1/vegetation-v4-ground-understory-contract.v1.json
+          test -z "$(git status --porcelain)"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install passive Chromium evidence tooling outside repository
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/v45-pw"
+          cd "$RUNNER_TEMP/v45-pw"
+          npm init -y >/dev/null 2>&1
+          npm install --no-audit --no-fund playwright@1.55.0
+          "$RUNNER_TEMP/v45-pw/node_modules/.bin/playwright" install --with-deps chromium
+
+      - name: Capture exact-candidate material evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="$RUNNER_TEMP/v4-5-evidence"
+          mkdir -p "$OUT"
+          python3 -m http.server 4173 --bind 127.0.0.1 >"$RUNNER_TEMP/v4-5-http.log" 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID >/dev/null 2>&1 || true' EXIT
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/characters/ >/dev/null; then break; fi
+            sleep .25
+          done
+          curl -fsS http://127.0.0.1:4173/characters/ >/dev/null
+
+          cat > "$RUNNER_TEMP/v4-5-capture.cjs" <<'NODE'
+          const fs=require('fs');
+          const crypto=require('crypto');
+          const path=require('path');
+          const {chromium}=require(process.env.RUNNER_TEMP+'/v45-pw/node_modules/playwright');
+
+          const CANDIDATE='278155b1e38c663ffab8ee1ab30b09a294a88010';
+          const URL='http://127.0.0.1:4173/characters/';
+          const OUT=process.env.RUNNER_TEMP+'/v4-5-evidence';
+          const captures=[];
+          const runtime=[];
+          const allErrors=[];
+          const sha256=file=>crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+
+          async function openPage(browser,profile){
+            const context=await browser.newContext({viewport:{width:profile.width,height:profile.height},deviceScaleFactor:profile.dpr});
+            const page=await context.newPage();
+            const errors=[];
+            page.on('pageerror',e=>errors.push({kind:'pageerror',message:String(e.message||e)}));
+            page.on('console',m=>{if(m.type()==='error') errors.push({kind:'console',message:m.text()});});
+            const response=await page.goto(URL,{waitUntil:'networkidle',timeout:30000});
+            if(!response || response.status()!==200) throw new Error(`HTTP_STATUS_${profile.id}_${response?.status()}`);
+            await page.waitForSelector('.signal-layer .signal',{timeout:10000});
+            await page.waitForTimeout(1200);
+            const health=await page.evaluate(()=>({
+              fatal:document.querySelector('#fatal')?.classList.contains('show')||false,
+              canvasWidth:document.querySelector('#scene')?.width||0,
+              canvasHeight:document.querySelector('#scene')?.height||0,
+              webgl2:!!document.querySelector('#scene')?.getContext('webgl2'),
+              signalCount:document.querySelectorAll('.signal-layer .signal').length,
+              status:document.querySelector('#status')?.textContent||''
+            }));
+            if(health.fatal||!health.webgl2||health.canvasWidth<1||health.canvasHeight<1) throw new Error(`WEBGL2_STARTUP_FAILURE_${profile.id}`);
+            runtime.push({profile:profile.id,httpStatus:200,...health});
+            return {context,page,errors};
+          }
+
+          async function shot(page,file,state,profile){
+            const target=path.join(OUT,file);
+            await page.screenshot({path:target,fullPage:false});
+            const stat=fs.statSync(target);
+            if(stat.size<10000) throw new Error(`SCREENSHOT_TOO_SMALL_${file}_${stat.size}`);
+            captures.push({file,state,viewport:{width:profile.width,height:profile.height,dpr:profile.dpr},bytes:stat.size,sha256:sha256(target)});
+          }
+
+          async function gotoDestination(page,id){
+            await page.locator('#map-toggle').click();
+            await page.locator('#coast-map.show').waitFor({state:'visible',timeout:3000});
+            const node=page.locator(`.map-node[data-id="${id}"]`);
+            await node.waitFor({state:'visible',timeout:3000});
+            await node.click();
+            await page.locator('#return.show').waitFor({state:'visible',timeout:8000});
+            await page.waitForTimeout(650);
+          }
+
+          const browser=await chromium.launch({headless:true});
+          try{
+            const desktop={id:'DESKTOP',width:1440,height:900,dpr:1};
+            const d=await openPage(browser,desktop);
+            await shot(d.page,'v4-5-desktop-orbit.png','ORBIT',desktop);
+            await gotoDestination(d.page,'crossing');
+            await shot(d.page,'v4-5-clearing.png','CROSSING_CLEARING',desktop);
+            await gotoDestination(d.page,'manor');
+            await shot(d.page,'v4-5-manor.png','MIRROR_MANOR',desktop);
+            await gotoDestination(d.page,'tarian');
+            await shot(d.page,'v4-5-waterline.png','WATERLINE_STATION',desktop);
+            allErrors.push(...d.errors.map(e=>({profile:'DESKTOP',...e})));
+            await d.context.close();
+
+            const tablet={id:'TABLET',width:1024,height:1366,dpr:2};
+            const t=await openPage(browser,tablet);
+            await shot(t.page,'v4-5-tablet-orbit.png','ORBIT',tablet);
+            allErrors.push(...t.errors.map(e=>({profile:'TABLET',...e})));
+            await t.context.close();
+
+            const mobile={id:'MOBILE',width:390,height:844,dpr:3};
+            const m=await openPage(browser,mobile);
+            await shot(m.page,'v4-5-mobile-orbit.png','ORBIT',mobile);
+            allErrors.push(...m.errors.map(e=>({profile:'MOBILE',...e})));
+            await m.context.close();
+          } finally {
+            await browser.close();
+          }
+
+          if(allErrors.length) throw new Error('PAGE_OR_CONSOLE_ERRORS:'+JSON.stringify(allErrors));
+          const expected=['v4-5-desktop-orbit.png','v4-5-tablet-orbit.png','v4-5-mobile-orbit.png','v4-5-manor.png','v4-5-waterline.png','v4-5-clearing.png'];
+          for(const f of expected) if(!fs.existsSync(path.join(OUT,f))) throw new Error('REQUIRED_CAPTURE_MISSING:'+f);
+          const manifest={
+            schema:'MIRRORLAND_V4_5_MATERIAL_EVIDENCE_RECEIPT_v1',
+            result:'EVIDENCE_CAPTURE_PASS',
+            candidateSha:CANDIDATE,
+            route:'/characters/',
+            operationId:'MIRRORLAND_GROUND_UNDERSTORY_MATERIAL_ACCEPTANCE_20260906_003',
+            lockGeneration:1961,
+            mechanicalPredecessor:{run:34011758683,artifactId:9982709883,result:'V4_MECHANICAL_PASS_CLOSED',checks:'77_OF_77_PASS'},
+            captureSemantics:'PASSIVE_EXACT_CANDIDATE_BROWSER_EVIDENCE_NO_PRODUCT_MUTATION',
+            visualDispositionAuthority:'NOT_ASSIGNED_BY_CAPTURE_JOB',
+            runtime,
+            errors:allErrors,
+            captures
+          };
+          fs.writeFileSync(path.join(OUT,'v4-5-material-evidence.json'),JSON.stringify(manifest,null,2)+'\n');
+          console.log(JSON.stringify(manifest,null,2));
+          NODE
+
+          node "$RUNNER_TEMP/v4-5-capture.cjs"
+          test -z "$(git status --porcelain)"
+
+      - name: Verify evidence manifest and clean product tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="$RUNNER_TEMP/v4-5-evidence"
+          jq -e '.schema == "MIRRORLAND_V4_5_MATERIAL_EVIDENCE_RECEIPT_v1" and .result == "EVIDENCE_CAPTURE_PASS" and .candidateSha == "278155b1e38c663ffab8ee1ab30b09a294a88010" and (.errors|length)==0 and (.captures|length)==6' "$OUT/v4-5-material-evidence.json" >/dev/null
+          for f in v4-5-desktop-orbit.png v4-5-tablet-orbit.png v4-5-mobile-orbit.png v4-5-manor.png v4-5-waterline.png v4-5-clearing.png; do
+            test -s "$OUT/$f"
+            DIGEST="$(sha256sum "$OUT/$f" | awk '{print $1}')"
+            jq -e --arg f "$f" --arg d "$DIGEST" '.captures[] | select(.file==$f and .sha256==$d)' "$OUT/v4-5-material-evidence.json" >/dev/null
+          done
+          test -z "$(git status --porcelain)"
+
+      - name: Upload bounded V4.5 material evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: characters-v4-5-material-evidence-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/v4-5-evidence/v4-5-material-evidence.json
+            ${{ runner.temp }}/v4-5-evidence/v4-5-desktop-orbit.png
+            ${{ runner.temp }}/v4-5-evidence/v4-5-tablet-orbit.png
+            ${{ runner.temp }}/v4-5-evidence/v4-5-mobile-orbit.png
+            ${{ runner.temp }}/v4-5-evidence/v4-5-manor.png
+            ${{ runner.temp }}/v4-5-evidence/v4-5-waterline.png
+            ${{ runner.temp }}/v4-5-evidence/v4-5-clearing.png
+          if-no-files-found: error
+          retention-days: 30

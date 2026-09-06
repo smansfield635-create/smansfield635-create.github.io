@@ -1,0 +1,59 @@
+name: About Base64 Diagnostic
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/about-base64-diagnostic.yml'
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact About candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 2f22289087b92e21b2251685aac3b6d17f71c805
+          fetch-depth: 1
+          sparse-checkout: |
+            about
+          sparse-checkout-cone-mode: true
+      - name: Verify exact candidate
+        run: test "$(git rev-parse HEAD)" = "2f22289087b92e21b2251685aac3b6d17f71c805"
+      - name: Fetch valid predecessor
+        run: git fetch --depth=1 origin 394fe73d2aac33333c2d87454db1971e29833d6f
+      - name: Compare embedded payloads
+        shell: bash
+        run: |
+          git show 394fe73d2aac33333c2d87454db1971e29833d6f:about/index.html > /tmp/about-parent.html
+          cat > /tmp/compare.mjs <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const extract=(html)=>{
+            const m=html.match(/(?:data-base64|src="data:video\/mp4;base64,)(?:=")?([A-Za-z0-9+/=\[\]. ]+)/);
+            if(!m) throw new Error('payload not found');
+            return m[1];
+          };
+          const curHtml=fs.readFileSync('about/index.html','utf8');
+          const parHtml=fs.readFileSync('/tmp/about-parent.html','utf8');
+          const cur=(curHtml.match(/data-base64="([^"]+)"/)||[])[1];
+          const par=(parHtml.match(/src="data:video\/mp4;base64,([^"]+)"/)||[])[1];
+          if(!cur||!par) throw new Error('payload extraction failed');
+          let pre=0; while(pre<cur.length&&pre<par.length&&cur[pre]===par[pre]) pre++;
+          let suf=0; while(suf<cur.length-pre&&suf<par.length-pre&&cur[cur.length-1-suf]===par[par.length-1-suf]) suf++;
+          const curMid=cur.slice(pre,cur.length-suf);
+          const parMid=par.slice(pre,par.length-suf);
+          const pbytes=Buffer.from(par,'base64');
+          const psha=crypto.createHash('sha256').update(pbytes).digest('hex');
+          const report={currentLength:cur.length,parentLength:par.length,commonPrefix:pre,commonSuffix:suf,currentMiddleLength:curMid.length,parentMiddleLength:parMid.length,currentMiddle:curMid,parentMiddleHead:parMid.slice(0,64),parentMiddleTail:parMid.slice(-64),parentDecodedBytes:pbytes.length,parentSha256:psha,parentShaMatches:psha==='3ce2fddea06ce6fe3bd9db14ad01603e760de7fead0e8978856f757b213b2793'};
+          fs.writeFileSync('/tmp/about-base64-compare.json',JSON.stringify(report,null,2));
+          console.log(JSON.stringify(report,null,2));
+          NODE
+          node /tmp/compare.mjs
+      - name: Upload comparison evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: about-base64-compare
+          path: /tmp/about-base64-compare.json

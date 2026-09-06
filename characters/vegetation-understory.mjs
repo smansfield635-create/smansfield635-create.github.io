@@ -3,7 +3,7 @@ import {getCanonicalVegetationPopulation} from './vegetation-population.mjs';
 import {FOREST_SIGHTLINE_EXCLUSIONS} from './forest-system.mjs';
 
 const freeze=(value,seen=new WeakSet())=>{
-  if(value===null||typeof value!=='object'||Object.isFrozen(value)||seen.has(value))return value;
+  if(value===null||typeof value!=='object'||ArrayBuffer.isView(value)||Object.isFrozen(value)||seen.has(value))return value;
   seen.add(value);
   for(const nested of Object.values(value))freeze(nested,seen);
   return Object.freeze(value);

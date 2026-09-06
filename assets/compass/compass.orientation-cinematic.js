@@ -1,116 +1,326 @@
 (()=>{
 'use strict';
 
-const BUILD=Object.freeze({
-  version:'homepage-cinematic-shell-20260904-005-completion-repair',
-  sourceMain:'46c56e0519fc875eac877b4bc921e3151b019a2f',
-  repairBase:'65f7ab40bacf5853384b684463daff0dba097868',
-  specificationCommit:'88473442959299d6f6af82396917f0578074cab2',
-  mutationClass:'BOUNDED_PAGE_RELEASE'
+const CONTRACT=Object.freeze({
+  version:'COMPASS_PRERENDERED_THIN_PLAYER_T12_v1',
+  mutationClass:'BOUNDED_PAGE_RELEASE',
+  mediaPath:'/assets/compass/cinematic-media/compass-main-orientation-final-v1.mp4',
+  mediaBytes:3828177,
+  mediaSha256:'6ada38eadeb6243b3809167f45dd8a74808c88ac677273683338772e7899b4e7',
+  mediaGitBlob:'ca95d7c17ef54044a11bc456a949c33fa9820bc0',
+  sourceHead:'96c89ec797490a5dc0e3dd343f4d34a396adaa02',
+  masterDurationMs:38000,
+  naturalFadeMs:460
 });
-const STATE=Object.freeze({ARMED:'ARMED',PLAYING:'PLAYING',RESTORE:'RESTORE',SETTLED:'SETTLED'});
-const MASTER_DURATION_MS=38000;
-const NATURAL_HANDOFF_FADE_START_MS=37540;
-const NATURAL_HANDOFF_FADE_MS=460;
-const ENTRY_PREROLL_DURATION_MS=4350;
-const ENTRY_TESSELLATE_START_MS=140;
-const ENTRY_TESSELLATE_END_MS=820;
-const ENTRY_CELL_TRAVEL_END_MS=2300;
-const ENTRY_COMPASS_START_MS=1700;
-const ENTRY_COMPASS_END_MS=3550;
-const ENTRY_LAW='SELECTED_CONTROL_CELLS_BECOME_SUCCESSOR_STAR_AND_COMPASS_MATTER';
-const AQUARIUM_URL='https://upload.wikimedia.org/wikipedia/commons/c/c2/Saint-Saens_-_The_Carnival_of_the_Animals_-_07_Aquarium.ogg';
-const PREVIEW_PARAM='compassCinematicConstruction';
-const LIVE_HOUSE_SOURCE_PATH='/assets/compass/compass.house-scene.js';
-const ENTRY_GOLDEN_ANGLE=Math.PI*(3-Math.sqrt(5));
-const ENTRY_SEED=0x0b17e17;
-const ENTRY_COLORS=['255,248,224','154,217,225','234,208,131','170,155,224'];
-
-const ENTRY_STYLE=`
-.compass-orientation-cinematic__entry{position:absolute;inset:0;z-index:7;display:grid;place-items:center;padding:max(20px,env(safe-area-inset-top)) 20px max(20px,env(safe-area-inset-bottom));overflow:hidden;background:radial-gradient(circle at 50% 24%,rgba(33,86,91,.14),transparent 42%),linear-gradient(180deg,#061014,#02070b 58%,#010407)}
-.compass-orientation-cinematic__entry[hidden]{display:none!important}
-.compass-orientation-cinematic__entry-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0}
-.compass-orientation-cinematic__entry-card{position:relative;z-index:1;width:min(680px,100%);padding:clamp(30px,6vw,54px);border:1px solid rgba(232,203,120,.24);border-radius:32px;background:rgba(2,10,16,.86);box-shadow:0 34px 110px rgba(0,0,0,.45),inset 0 1px rgba(255,255,255,.045);text-align:center;will-change:opacity,transform}
-.compass-orientation-cinematic__entry-card::before,.compass-orientation-cinematic__entry-card::after{content:"";position:absolute;left:50%;pointer-events:none}
-.compass-orientation-cinematic__entry-card::before{top:-68px;width:1px;height:48px;background:linear-gradient(180deg,transparent,rgba(120,220,232,.52))}
-.compass-orientation-cinematic__entry-card::after{bottom:-52px;width:104px;height:1px;transform:translateX(-50%);background:linear-gradient(90deg,transparent,rgba(232,203,120,.6),transparent)}
-.compass-orientation-cinematic__entry-card .compass-orientation-cinematic__eyebrow{margin:0 0 14px;color:#e8cb78;font-size:.72rem;font-weight:900;letter-spacing:.2em;text-transform:uppercase}
-.compass-orientation-cinematic__entry-card h2{margin:0;color:#f6f0df;font-family:Georgia,"Times New Roman",serif;font-size:clamp(3.15rem,9vw,5.8rem);line-height:.94;letter-spacing:-.055em;font-weight:500}
-.compass-orientation-cinematic__entry-card>p:not(.compass-orientation-cinematic__eyebrow){margin:18px auto 0;max-width:34rem;color:#c2ccca;font-size:clamp(1rem,2.4vw,1.22rem);line-height:1.55}
-.compass-orientation-cinematic__entry-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:28px}
-.compass-orientation-cinematic__entry-button{position:relative;min-height:54px;padding:0 26px;border:1px solid rgba(232,203,120,.34);border-radius:999px;background:rgba(232,203,120,.08);color:#fff2c7;font:900 .78rem/1 Inter,ui-sans-serif,system-ui,sans-serif;letter-spacing:.02em;cursor:pointer;box-shadow:inset 0 1px rgba(255,255,255,.06)}
-.compass-orientation-cinematic__entry-button.is-primary{border-color:rgba(232,203,120,.68);background:linear-gradient(135deg,rgba(232,203,120,.22),rgba(120,220,232,.08));box-shadow:0 0 0 5px rgba(120,220,232,.08),inset 0 1px rgba(255,255,255,.08)}
-.compass-orientation-cinematic__entry-button:focus-visible{outline:2px solid #78dce8;outline-offset:4px}
-.compass-orientation-cinematic__skip[hidden]{display:none!important}
-@media(max-width:600px){.compass-orientation-cinematic__entry{padding-inline:14px}.compass-orientation-cinematic__entry-card{padding:30px 20px;border-radius:26px}.compass-orientation-cinematic__entry-actions{display:grid;grid-template-columns:1fr 1fr}.compass-orientation-cinematic__entry-button{padding-inline:12px;min-width:0}}
-@media(prefers-reduced-motion:reduce){.compass-orientation-cinematic__entry,.compass-orientation-cinematic__entry *{animation:none!important;transition:none!important}}
-`;
-const SHOTS=Object.freeze([
-  Object.freeze({id:'S01',beat:'Arrival',purpose:'Enter Diamond Gate Bridge',startMs:0,endMs:4500}),
-  Object.freeze({id:'S02',beat:'Orientation',purpose:'Establish how the estate is navigated',startMs:4500,endMs:9500}),
-  Object.freeze({id:'S03',beat:'Chapter One',purpose:'Show where a visitor can begin',startMs:9500,endMs:14500}),
-  Object.freeze({id:'S04',beat:'Choice / Readiness',purpose:'Reveal structured paths through the estate',startMs:14500,endMs:19500}),
-  Object.freeze({id:'S05',beat:'Threshold',purpose:'Cross from orientation into deeper experience',startMs:19500,endMs:25500}),
-  Object.freeze({id:'S06',beat:'Elsewhere',purpose:'Reveal story and world possibility',startMs:25500,endMs:30500}),
-  Object.freeze({id:'S07',beat:'Breadth / Engagement',purpose:'Reveal ways to engage and estate breadth',startMs:30500,endMs:34000}),
-  Object.freeze({id:'S08',beat:'Return / Handoff',purpose:'Restore visitor agency',startMs:34000,endMs:38000})
-]);
-const $=(selector,root=document)=>root.querySelector(selector);
-const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
-const mix=(a,b,t)=>a+(b-a)*t;
-const easeOut=t=>1-Math.pow(1-clamp(t),3);
+const STATE=Object.freeze({ARMED:'ARMED',PLAYING:'PLAYING',SETTLED:'SETTLED'});
+const q=(s,r=document)=>r.querySelector(s);
 const reduced=()=>window.matchMedia?.('(prefers-reduced-motion: reduce)').matches===true;
-const previewEnabled=()=>new URLSearchParams(location.search).get(PREVIEW_PARAM)==='1';
-const session={phase:null,overlay:null,stage:null,renderer:null,raf:0,entryRaf:0,startAt:0,settled:false,restoring:false,priorFocus:null,root:null,rootInert:false,rootAriaHidden:null,url:'',historyLength:0,liveIdentity:null,errorCode:null,lastShotId:null,naturalHandoffStarted:false,handoffVerified:false,playRequested:false,rendererReady:false,filmStarted:false,entryStartedAt:0,entryTransitionComplete:false,entryCells:[],entryStars:[],entryCanvas:null,entryCtx:null,entryWidth:0,entryHeight:0,entryDpr:1,soundtrack:null,audioBlocked:false};
-const liveHouseDeferral={wrapper:null,previousAppend:null,pending:[],released:false,listenersBound:false,interceptCount:0};
+const session={
+  state:null,
+  overlay:null,
+  video:null,
+  gate:null,
+  play:null,
+  skip:null,
+  replay:null,
+  root:null,
+  rootInert:false,
+  rootAriaHidden:null,
+  priorFocus:null,
+  ambient:null,
+  ambientSnapshot:null,
+  url:null,
+  historyLength:0,
+  fadeStarted:false,
+  settlementCount:0
+};
 
-function isLiveHouseScript(node){if(!(node instanceof HTMLScriptElement))return false;try{return new URL(node.src||'',location.href).pathname===LIVE_HOUSE_SOURCE_PATH;}catch{return false;}}
-function onLiveHouseCapabilityChange(event){if(session.phase!==STATE.SETTLED)return;if(String(event?.detail?.capability||'').toLowerCase()==='house')releaseLiveHouseDeferral('capability-house-intent');}
-function onLiveHouseDirectIntent(event){if(session.phase!==STATE.SETTLED)return;if(event.target?.closest?.('[data-capability="house"]'))releaseLiveHouseDeferral('direct-house-intent');}
-function bindLiveHouseIntentListeners(){if(liveHouseDeferral.listenersBound)return;liveHouseDeferral.listenersBound=true;document.addEventListener('compass:capability-change',onLiveHouseCapabilityChange,true);document.addEventListener('pointerdown',onLiveHouseDirectIntent,true);document.addEventListener('focusin',onLiveHouseDirectIntent,true);}
-function installLiveHouseDeferral(){if(!previewEnabled()||liveHouseDeferral.released||!document.head)return;bindLiveHouseIntentListeners();const head=document.head;if(liveHouseDeferral.wrapper&&head.append===liveHouseDeferral.wrapper)return;const previous=head.append;const wrapper=function(...nodes){const immediate=[];for(const node of nodes){if(isLiveHouseScript(node)){if(!liveHouseDeferral.pending.includes(node))liveHouseDeferral.pending.push(node);liveHouseDeferral.interceptCount+=1;}else immediate.push(node);}if(immediate.length)previous.apply(this,immediate);};liveHouseDeferral.previousAppend=previous;liveHouseDeferral.wrapper=wrapper;head.append=wrapper;}
-function releaseLiveHouseDeferral(reason='released'){if(liveHouseDeferral.released)return;liveHouseDeferral.released=true;const head=document.head;const append=liveHouseDeferral.previousAppend||head?.append;if(head&&liveHouseDeferral.wrapper&&head.append===liveHouseDeferral.wrapper&&append)head.append=append;document.removeEventListener('compass:capability-change',onLiveHouseCapabilityChange,true);document.removeEventListener('pointerdown',onLiveHouseDirectIntent,true);document.removeEventListener('focusin',onLiveHouseDirectIntent,true);const pending=liveHouseDeferral.pending.splice(0);document.documentElement.dataset.compassCinematicLiveHouseRelease=reason;if(head&&append&&pending.length)queueMicrotask(()=>append.apply(head,pending));}
+function markState(state){
+  session.state=state;
+  if(session.overlay)session.overlay.dataset.state=state;
+  document.documentElement.dataset.compassOrientationCinematic=state;
+}
 
-function captureLiveIdentity(root){return Object.freeze({mode:root.getAttribute('data-compass-mode'),renderedForegroundCardinal:root.getAttribute('data-rendered-foreground-cardinal'),readableCardinal:root.getAttribute('data-readable-cardinal'),selectedCardinal:root.getAttribute('data-selected-cardinal'),selectedRoom:root.getAttribute('data-selected-room'),activeClusterWing:root.getAttribute('data-active-cluster-wing'),orbitQuaternion:root.getAttribute('data-orbit-quaternion'),clusterQuaternion:root.getAttribute('data-cluster-quaternion'),crystalsReceipt:root.getAttribute('data-compass-crystals-receipt')});}
-function setPhase(phase){session.phase=phase;if(session.overlay)session.overlay.dataset.state=phase;document.documentElement.dataset.compassOrientationCinematic=phase;}
-function clearClock(){if(session.raf)cancelAnimationFrame(session.raf);if(session.entryRaf)cancelAnimationFrame(session.entryRaf);session.raf=0;session.entryRaf=0;}
-function clearPresentationListeners(){window.removeEventListener('keydown',onKey,true);window.removeEventListener('resize',resizeEntryCanvas);session.overlay?.removeEventListener('click',onOverlayClick);}
-function restoreProductSurface(){if(!session.root)return;session.root.inert=session.rootInert;if(session.rootAriaHidden===null)session.root.removeAttribute('aria-hidden');else session.root.setAttribute('aria-hidden',session.rootAriaHidden);}
-function currentShot(elapsedMs){return SHOTS.find((shot)=>elapsedMs>=shot.startMs&&elapsedMs<shot.endMs)||SHOTS[SHOTS.length-1];}
-function shotProgress(shot,elapsedMs){return Math.max(0,Math.min(1,(elapsedMs-shot.startMs)/(shot.endMs-shot.startMs)));}
-function startSoundtrack(){const audio=session.soundtrack;if(!audio)return;const declared=audio.currentSrc||audio.querySelector?.('source')?.src||'';try{if(declared&&new URL(declared,location.href).href!==AQUARIUM_URL)session.overlay.dataset.audioSourceMismatch='true';audio.currentTime=0;}catch{}const attempt=audio.play();if(attempt&&typeof attempt.catch==='function'){attempt.catch(()=>{session.audioBlocked=true;if(session.overlay)session.overlay.dataset.audioBlocked='true';});}}
-function emitSettled(reason){document.dispatchEvent(new CustomEvent('dgb:compass-orientation-cinematic-settled',{detail:{reason,durationMs:MASTER_DURATION_MS,entryPreRollMs:ENTRY_PREROLL_DURATION_MS,entryPreRollCountedInMaster:false,entryContinuityLaw:ENTRY_LAW,soundtrack:'Saint-Saens - The Carnival of the Animals - 07 Aquarium',sourceMain:BUILD.sourceMain,repairBase:BUILD.repairBase,specificationCommit:BUILD.specificationCommit,mutationClass:BUILD.mutationClass,navigationIntentEvents:0,urlUnchanged:location.href===session.url,historyUnchanged:history.length===session.historyLength,handoffVerified:session.handoffVerified,errorCode:session.errorCode,finalShotId:session.lastShotId,audioBlocked:session.audioBlocked}}));}
-function finalizeRestore(reason,overlay){session.renderer?.dispose?.();session.renderer=null;overlay?.remove();restoreProductSurface();document.documentElement.classList.remove('compass-orientation-cinematic-active');delete document.documentElement.dataset.compassOrientationCinematic;const target=session.priorFocus&&session.priorFocus.isConnected?session.priorFocus:null;if(target&&typeof target.focus==='function')target.focus({preventScroll:true});session.settled=true;session.restoring=false;session.overlay=null;session.stage=null;session.phase=STATE.SETTLED;emitSettled(reason);}
-function restore(reason='complete'){if(session.settled||session.restoring)return;session.restoring=true;clearClock();clearPresentationListeners();setPhase(STATE.RESTORE);const overlay=session.overlay;if(overlay){overlay.dataset.restoreReason=reason;if(reason!=='complete'||overlay.dataset.naturalFadeComplete!=='true')overlay.classList.add('is-restoring');}const delay=!reduced()&&reason==='complete'&&overlay?.dataset.naturalFadeComplete!=='true'?NATURAL_HANDOFF_FADE_MS:0;window.setTimeout(()=>finalizeRestore(reason,overlay),delay);}
-function failOpen(code){session.errorCode=String(code||'CINEMATIC_SHELL_FAILURE');restore('fail-open');}
-function onKey(event){if(event.key==='Escape'){event.preventDefault();restore(session.phase===STATE.ARMED?'skip-armed':'skip-playing');}}
-function onOverlayClick(event){const play=event.target.closest('[data-cinematic-play]');if(play){void beginIntro(play);return;}if(!event.target.closest('[data-main-orientation-skip]'))return;if(session.overlay?.dataset.reducedMotion==='true')restore('reduced-motion-complete');else restore(session.phase===STATE.ARMED?'skip-armed':'skip-playing');}
+function snapshotAmbient(){
+  const audio=q('[data-compass-ambient-audio]');
+  session.ambient=audio||null;
+  if(!audio){session.ambientSnapshot=null;return;}
+  session.ambientSnapshot=Object.freeze({
+    muted:Boolean(audio.muted),
+    volume:Number.isFinite(audio.volume)?audio.volume:.24,
+    paused:Boolean(audio.paused)
+  });
+  try{audio.pause();}catch{}
+  audio.muted=true;
+}
 
-function randomFactory(seed){let value=seed>>>0;return()=>{value+=0x6d2b79f5;let result=value;result=Math.imul(result^(result>>>15),result|1);result^=result+Math.imul(result^(result>>>7),result|61);return((result^(result>>>14))>>>0)/4294967296;};}
-function resizeEntryCanvas(){const canvas=session.entryCanvas;if(!canvas)return;const width=Math.max(320,innerWidth||document.documentElement.clientWidth||320);const height=Math.max(480,innerHeight||document.documentElement.clientHeight||480);const dpr=Math.min(devicePixelRatio||1,width<=820?1.25:1.5);session.entryWidth=width;session.entryHeight=height;session.entryDpr=dpr;canvas.width=Math.max(1,Math.round(width*dpr));canvas.height=Math.max(1,Math.round(height*dpr));canvas.style.width=`${width}px`;canvas.style.height=`${height}px`;const ctx=canvas.getContext('2d',{alpha:true,desynchronized:true});session.entryCtx=ctx;ctx.setTransform(dpr,0,0,dpr,0,0);const random=randomFactory(ENTRY_SEED^width^(height<<7));const count=Math.round(clamp(Math.round(width*height/7200),96,210));session.entryStars=Array.from({length:count},(_,index)=>{const radius=Math.sqrt((index+.5)/count);const angle=index*ENTRY_GOLDEN_ANGLE+mix(-.08,.08,random());return Object.freeze({x:clamp(.5+Math.cos(angle)*radius*.69+mix(-.018,.018,random()),.012,.988)*width,y:clamp(.5+Math.sin(angle)*radius*.63+mix(-.018,.018,random()),.012,.988)*height,radius:mix(.5,1.7,random()),alpha:mix(.30,.88,random()),color:ENTRY_COLORS[Math.floor(random()*ENTRY_COLORS.length)],phase:random()*Math.PI*2});});if(session.playRequested){const play=$('[data-cinematic-play]',session.overlay);if(play&&session.entryCells.length===0)buildEntryTessellation(play);}}
-function entryCompassTargets(){const width=session.entryWidth,height=session.entryHeight,radius=Math.min(width,height)*(width<560?.34:.29),cx=width*.5,cy=height*.49;const targets=[];for(let ring=0;ring<3;ring++){const r=radius*(.34+ring*.25);const count=ring===2?32:20;for(let i=0;i<count;i++){const a=i/count*Math.PI*2-Math.PI/2;targets.push({x:cx+Math.cos(a)*r,y:cy+Math.sin(a)*r});}}for(let i=0;i<16;i++){const a=i/16*Math.PI*2-Math.PI/2;const r=i%2===0?radius*.93:radius*.50;targets.push({x:cx+Math.cos(a)*r,y:cy+Math.sin(a)*r*.78});}return targets;}
-function buildEntryTessellation(button){const rect=button.getBoundingClientRect();const baseSize=clamp(rect.height*.34,14,22);const sx=baseSize*.90,sy=baseSize*.72;const cols=Math.ceil(rect.width/sx)+2,rows=Math.ceil(rect.height/sy)+2;const random=randomFactory(ENTRY_SEED^Math.round(rect.width*17)^Math.round(rect.height*31));const compass=entryCompassTargets(),stars=session.entryStars,cells=[];for(let row=-1;row<rows;row++){for(let col=-1;col<cols;col++){const x=rect.left+col*sx+(row%2?sx*.5:0);const y=rect.top+row*sy;if(x<rect.left-baseSize||x>rect.right+baseSize||y<rect.top-baseSize||y>rect.bottom+baseSize)continue;const target=random()<.62?compass[Math.floor(random()*compass.length)]:stars[Math.floor(random()*stars.length)]||{x:session.entryWidth*.5,y:session.entryHeight*.5};cells.push({x,y,targetX:target.x,targetY:target.y,size:baseSize*mix(.72,1.08,random()),delay:random()*.32,rotation:mix(-.24,.24,random()),spin:mix(-1.4,1.4,random()),tone:random()<.33?'gold':'cool'});}}session.entryCells=cells;}
-function drawEntryCell(cell,x,y,size,alpha,rotation){const ctx=session.entryCtx,half=size*.5,rise=size*.28;ctx.save();ctx.translate(x,y);ctx.rotate(rotation);ctx.globalAlpha=alpha;ctx.beginPath();ctx.moveTo(0,-rise);ctx.lineTo(half,0);ctx.lineTo(0,rise);ctx.lineTo(-half,0);ctx.closePath();ctx.fillStyle=cell.tone==='gold'?'rgba(255,234,165,.92)':'rgba(215,239,239,.88)';ctx.fill();ctx.restore();}
-function drawEntryStars(alpha,now){const ctx=session.entryCtx;for(let i=0;i<session.entryStars.length;i++){const star=session.entryStars[i],pulse=.86+.14*Math.sin(now*.00125+star.phase+i*.07);ctx.beginPath();ctx.arc(star.x,star.y,star.radius,0,Math.PI*2);ctx.fillStyle=`rgba(${star.color},${star.alpha*alpha*pulse})`;ctx.fill();}}
-function drawEntryCompass(alpha){if(alpha<=0)return;const ctx=session.entryCtx,w=session.entryWidth,h=session.entryHeight,cx=w*.5,cy=h*.49,r=Math.min(w,h)*(w<560?.34:.29);ctx.save();ctx.globalAlpha=alpha;ctx.lineWidth=1;for(const scale of [.34,.59,.84]){ctx.strokeStyle='rgba(120,220,232,.25)';ctx.beginPath();ctx.arc(cx,cy,r*scale,0,Math.PI*2);ctx.stroke();}ctx.strokeStyle='rgba(244,214,128,.48)';ctx.beginPath();ctx.moveTo(cx,cy-r*.96);ctx.lineTo(cx,cy+r*.96);ctx.moveTo(cx-r*.96,cy);ctx.lineTo(cx+r*.96,cy);ctx.stroke();ctx.beginPath();for(let i=0;i<16;i++){const a=i/16*Math.PI*2-Math.PI/2,rr=i%2===0?r*.93:r*.50;const x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr*.78;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}ctx.closePath();ctx.strokeStyle='rgba(244,214,128,.62)';ctx.stroke();ctx.restore();}
-function drawEntryIdle(now=performance.now()){const ctx=session.entryCtx;if(!ctx)return;ctx.setTransform(session.entryDpr,0,0,session.entryDpr,0,0);ctx.clearRect(0,0,session.entryWidth,session.entryHeight);drawEntryStars(.10,now);drawEntryCompass(.10);}
-function drawEntryTransition(now){if(session.settled||session.restoring||session.filmStarted)return;const ctx=session.entryCtx,elapsed=Math.max(0,now-session.entryStartedAt);if(!ctx)return failOpen('CINEMATIC_ENTRY_CANVAS_MISSING');ctx.setTransform(session.entryDpr,0,0,session.entryDpr,0,0);ctx.clearRect(0,0,session.entryWidth,session.entryHeight);const starProgress=easeOut(clamp((elapsed-900)/(ENTRY_CELL_TRAVEL_END_MS-900)));const compassProgress=easeOut(clamp((elapsed-ENTRY_COMPASS_START_MS)/(ENTRY_COMPASS_END_MS-ENTRY_COMPASS_START_MS)));drawEntryStars(mix(.12,.84,starProgress),now);drawEntryCompass(compassProgress);const tileProgress=clamp((elapsed-ENTRY_TESSELLATE_START_MS)/(ENTRY_TESSELLATE_END_MS-ENTRY_TESSELLATE_START_MS));const moveProgress=clamp((elapsed-ENTRY_TESSELLATE_END_MS)/(ENTRY_CELL_TRAVEL_END_MS-ENTRY_TESSELLATE_END_MS));for(const cell of session.entryCells){const local=clamp((moveProgress-cell.delay)/Math.max(.001,1-cell.delay));const travel=easeOut(local);const x=mix(cell.x,cell.targetX,travel);const y=mix(cell.y,cell.targetY,travel)-Math.sin(local*Math.PI)*18;const size=cell.size*mix(.92+tileProgress*.08,.10,travel);const alpha=clamp(tileProgress*1.3)*(1-Math.pow(local,2.2));drawEntryCell(cell,x,y,size,alpha,cell.rotation+cell.spin*travel);}const card=$('[data-cinematic-entry-card]',session.overlay);if(card){const fade=clamp((elapsed-ENTRY_TESSELLATE_START_MS*.72)/(ENTRY_TESSELLATE_END_MS+420-ENTRY_TESSELLATE_START_MS*.72));card.style.opacity=String(1-fade);card.style.transform=`scale(${mix(1,.988,fade)})`;card.style.pointerEvents=fade>.06?'none':'auto';}if(elapsed>=ENTRY_PREROLL_DURATION_MS)session.entryTransitionComplete=true;maybeStartMasterPlayback();if(!session.filmStarted)session.entryRaf=requestAnimationFrame(drawEntryTransition);}
-function waitForLateFilmSources(renderer,timeoutMs=18000){return new Promise((resolve,reject)=>{const start=performance.now();function poll(){if(session.settled||session.restoring)return reject(new Error('CINEMATIC_SOURCE_PREPARATION_ABORTED'));const snap=renderer?.inspect?.()?.final;if(snap?.houseError)return reject(new Error(`CINEMATIC_HOUSE_SOURCE_PREPARATION_FAILED:${snap.houseError}`));if(snap?.brainReady===true&&snap?.trophyReady===true&&snap?.houseReady===true)return resolve(true);if(performance.now()-start>=timeoutMs)return reject(new Error('CINEMATIC_LATE_FILM_SOURCE_READY_TIMEOUT'));setTimeout(poll,80);}poll();});}
-async function prepareRendererForPlayback(){try{session.renderer=await loadRenderer();await session.renderer.mount();await waitForLateFilmSources(session.renderer);if(session.settled||session.restoring)return;session.rendererReady=true;if(session.overlay)session.overlay.dataset.lateFilmSources='brain-trophy-house-ready-before-master';maybeStartMasterPlayback();}catch(error){failOpen(error?.message||'CINEMATIC_RENDERER_INIT_FAILURE');}}
-function maybeStartMasterPlayback(){if(session.filmStarted||session.settled||session.restoring||!session.entryTransitionComplete||!session.rendererReady)return;const shot=SHOTS[0];session.filmStarted=true;session.lastShotId=shot.id;session.overlay.dataset.shotId=shot.id;session.overlay.dataset.entryState='COMPLETE';try{session.renderer.renderFrame({elapsedMs:0,shot,shotProgress:0,masterDurationMs:MASTER_DURATION_MS,liveIdentity:session.liveIdentity});}catch(error){failOpen(error?.message||'CINEMATIC_INITIAL_FRAME_FAILURE');return;}const entry=$('[data-cinematic-entry]',session.overlay);const skip=$('[data-main-orientation-skip][data-playing-skip]',session.overlay);if(entry)entry.hidden=true;if(skip)skip.hidden=false;setPhase(STATE.PLAYING);session.startAt=performance.now();if(session.entryRaf)cancelAnimationFrame(session.entryRaf);session.entryRaf=0;session.raf=requestAnimationFrame(tick);}
-async function beginIntro(button){if(session.phase!==STATE.ARMED||session.settled||session.restoring||session.playRequested)return;session.playRequested=true;session.overlay.dataset.entryState='TRANSITION';startSoundtrack();resizeEntryCanvas();buildEntryTessellation(button);session.entryStartedAt=performance.now();session.entryRaf=requestAnimationFrame(drawEntryTransition);void prepareRendererForPlayback();}
+function suppressAmbient(){
+  const audio=session.ambient;
+  if(!audio)return;
+  audio.muted=true;
+}
 
-function animatedShell(){const overlay=document.createElement('section');overlay.id='compass-orientation-cinematic';overlay.className='compass-orientation-cinematic';overlay.dataset.state=STATE.ARMED;overlay.dataset.entryState='IDLE';overlay.dataset.mainOrientationFilm=BUILD.version;overlay.dataset.sourceMain=BUILD.sourceMain;overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-labelledby','compass-orientation-cinematic-title');overlay.innerHTML=`<div class="compass-orientation-cinematic__stage" data-cinematic-stage></div><section class="compass-orientation-cinematic__entry" data-cinematic-entry><canvas class="compass-orientation-cinematic__entry-canvas" data-cinematic-entry-canvas aria-hidden="true"></canvas><div class="compass-orientation-cinematic__entry-card" data-cinematic-entry-card><p class="compass-orientation-cinematic__eyebrow">Diamond Gate Bridge</p><h2 id="compass-orientation-cinematic-title">Find your way.</h2><p>A short orientation before you enter.</p><div class="compass-orientation-cinematic__entry-actions"><button class="compass-orientation-cinematic__entry-button is-primary" type="button" data-cinematic-play>Play intro</button><button class="compass-orientation-cinematic__entry-button" type="button" data-main-orientation-skip>Skip intro</button></div></div></section><button class="compass-orientation-cinematic__skip" type="button" data-main-orientation-skip data-playing-skip hidden>Skip intro</button><output class="compass-orientation-cinematic__debug" data-cinematic-debug hidden></output>`;const entryStyle=document.createElement('style');entryStyle.dataset.cinematicEntryStyle='source-recovered-2697';entryStyle.textContent=ENTRY_STYLE;overlay.prepend(entryStyle);return overlay;}
-function reducedShell(){const overlay=document.createElement('section');overlay.id='compass-orientation-cinematic';overlay.className='compass-orientation-cinematic';overlay.dataset.state=STATE.ARMED;overlay.dataset.mainOrientationFilm=`${BUILD.version}-reduced`;overlay.dataset.sourceMain=BUILD.sourceMain;overlay.dataset.reducedMotion='true';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-labelledby','compass-orientation-reduced-title');const items=SHOTS.map((shot)=>`<li><strong>${shot.beat}.</strong> ${shot.purpose}.</li>`).join('');overlay.innerHTML=`<div class="compass-orientation-cinematic__stage"><div class="compass-orientation-cinematic__reduced"><p class="compass-orientation-cinematic__eyebrow">Diamond Gate Bridge · Reduced motion</p><h2 id="compass-orientation-reduced-title">Welcome to Diamond Gate Bridge</h2><ol class="compass-orientation-cinematic__reduced-map">${items}</ol><button type="button" data-main-orientation-skip>Continue to Compass</button></div></div>`;return overlay;}
-async function loadRenderer(){const [renderModule,mediaModule,finalModule]=await Promise.all([import('/assets/compass/compass.orientation-cinematic.render.js'),import('/assets/compass/compass.orientation-cinematic.media.js'),import('/assets/compass/compass.orientation-cinematic.final.js')]);mediaModule.assertCinematicMediaManifest(mediaModule.CINEMATIC_MEDIA_MANIFEST);const primary=renderModule.createCinematicRenderer({stage:session.stage,media:mediaModule.CINEMATIC_MEDIA_MANIFEST});const final=finalModule.createFinalCinematicRenderer({stage:session.stage,media:mediaModule.CINEMATIC_MEDIA_MANIFEST});return Object.freeze({async mount(){primary.mount();final.mount();await final.prepare();return true;},renderFrame(frame){if(frame?.shot?.id==='S07')primary.renderFrame({...frame,shot:{...frame.shot,id:'S06',beat:'Elsewhere'},shotProgress:.96});else primary.renderFrame(frame);final.renderFrame(frame);},verifyHandoff(){return final.verifyHandoff();},inspect(){return Object.freeze({primary:primary.inspect?.(),final:final.inspect?.()});},dispose(){final.dispose?.();primary.dispose?.();}});}
-function applyNaturalHandoffFade(elapsedMs){if(!session.overlay||elapsedMs<NATURAL_HANDOFF_FADE_START_MS)return;session.naturalHandoffStarted=true;session.overlay.dataset.naturalHandoff='true';const amount=Math.max(0,Math.min(1,(elapsedMs-NATURAL_HANDOFF_FADE_START_MS)/NATURAL_HANDOFF_FADE_MS));session.overlay.style.opacity=String(1-amount);session.overlay.style.pointerEvents='none';if(amount>=1)session.overlay.dataset.naturalFadeComplete='true';}
-function tick(now){if(session.settled||session.restoring)return;const elapsedMs=Math.min(MASTER_DURATION_MS,Math.max(0,now-session.startAt));const shot=currentShot(elapsedMs);session.lastShotId=shot.id;session.overlay.dataset.shotId=shot.id;try{session.renderer?.renderFrame?.({elapsedMs,shot,shotProgress:shotProgress(shot,elapsedMs),masterDurationMs:MASTER_DURATION_MS,liveIdentity:session.liveIdentity});if(shot.id==='S08'&&elapsedMs>=36800&&!session.handoffVerified){session.handoffVerified=session.renderer?.verifyHandoff?.()===true;if(!session.handoffVerified){failOpen('CINEMATIC_HANDOFF_CORRESPONDENCE_UNPROVEN');return;}}}catch(error){failOpen(error?.message||'CINEMATIC_RENDER_FRAME_FAILURE');return;}applyNaturalHandoffFade(elapsedMs);const debug=$('[data-cinematic-debug]',session.overlay);if(debug&&!debug.hidden)debug.value=`${shot.id} · ${shot.beat} · ${(elapsedMs/1000).toFixed(2)}s`;if(elapsedMs>=MASTER_DURATION_MS){restore('complete');return;}session.raf=requestAnimationFrame(tick);}
-function bindOverlay(overlay){session.overlay=overlay;document.body.appendChild(overlay);session.root.inert=true;session.root.setAttribute('aria-hidden','true');document.documentElement.classList.add('compass-orientation-cinematic-active');overlay.addEventListener('click',onOverlayClick);window.addEventListener('keydown',onKey,true);setPhase(STATE.ARMED);}
-function startReduced(){const overlay=reducedShell();bindOverlay(overlay);$('[data-main-orientation-skip]',overlay)?.focus({preventScroll:true});}
-function startAnimated(){const overlay=animatedShell();bindOverlay(overlay);session.stage=$('[data-cinematic-stage]',overlay);session.entryCanvas=$('[data-cinematic-entry-canvas]',overlay);session.soundtrack=$('[data-compass-ambient-audio]');resizeEntryCanvas();drawEntryIdle();window.addEventListener('resize',resizeEntryCanvas,{passive:true});$('[data-cinematic-play]',overlay)?.focus({preventScroll:true});}
-function mount(){installLiveHouseDeferral();if(window.self!==window.top){releaseLiveHouseDeferral('non-top-frame');return;}session.root=$('[data-compass-root]');if(!session.root||!$('[data-compass-scene]')){releaseLiveHouseDeferral('cinematic-root-missing');return;}session.priorFocus=document.activeElement;session.rootInert=session.root.inert;session.rootAriaHidden=session.root.getAttribute('aria-hidden');session.url=location.href;session.historyLength=history.length;session.liveIdentity=captureLiveIdentity(session.root);if(!previewEnabled()){releaseLiveHouseDeferral('preview-disabled');return;}try{if(reduced())startReduced();else startAnimated();}catch(error){failOpen(error?.message||'CINEMATIC_SHELL_INIT_FAILURE');}}
+function restoreAmbient(){
+  const audio=session.ambient;
+  const snap=session.ambientSnapshot;
+  if(!audio||!snap)return;
+  try{audio.pause();}catch{}
+  audio.muted=snap.muted;
+  audio.volume=snap.volume;
+  if(!snap.paused){
+    const p=audio.play();
+    if(p&&typeof p.catch==='function')p.catch(()=>{});
+  }
+  session.ambient=null;
+  session.ambientSnapshot=null;
+}
 
-window.DGB_MAIN_ORIENTATION_CINEMATIC=Object.freeze({version:BUILD.version,durationMs:MASTER_DURATION_MS,entryPreRollMs:ENTRY_PREROLL_DURATION_MS,entryPreRollCountedInMaster:false,entryContinuityLaw:ENTRY_LAW,soundtrackUrl:AQUARIUM_URL,sourceMain:BUILD.sourceMain,repairBase:BUILD.repairBase,specificationCommit:BUILD.specificationCommit,mutationClass:BUILD.mutationClass,constructionPreviewParameter:`${PREVIEW_PARAM}=1`,shots:SHOTS,restore,inspect:()=>Object.freeze({phase:session.phase,settled:session.settled,restoring:session.restoring,errorCode:session.errorCode,lastShotId:session.lastShotId,liveIdentity:session.liveIdentity,previewEnabled:previewEnabled(),handoffVerified:session.handoffVerified,naturalHandoffStarted:session.naturalHandoffStarted,playRequested:session.playRequested,entryTransitionComplete:session.entryTransitionComplete,rendererReady:session.rendererReady,filmStarted:session.filmStarted,audioBlocked:session.audioBlocked,liveHouseDeferral:Object.freeze({interceptCount:liveHouseDeferral.interceptCount,pendingCount:liveHouseDeferral.pending.length,released:liveHouseDeferral.released}),renderer:session.renderer?.inspect?.()||null})});
-if(previewEnabled())installLiveHouseDeferral();
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
+function captureProduct(){
+  const root=q('[data-compass-root]');
+  if(!root)throw new Error('COMPASS_ROOT_MISSING');
+  session.root=root;
+  session.rootInert=Boolean(root.inert);
+  session.rootAriaHidden=root.getAttribute('aria-hidden');
+  session.priorFocus=document.activeElement instanceof HTMLElement?document.activeElement:null;
+  root.inert=true;
+  root.setAttribute('aria-hidden','true');
+}
+
+function restoreProduct(){
+  const root=session.root;
+  if(!root)return;
+  root.inert=session.rootInert;
+  if(session.rootAriaHidden===null)root.removeAttribute('aria-hidden');
+  else root.setAttribute('aria-hidden',session.rootAriaHidden);
+}
+
+function makeButton(label,attr,kind='secondary'){
+  const b=document.createElement('button');
+  b.type='button';
+  b.className=`compass-prerendered-player__button is-${kind}`;
+  b.textContent=label;
+  b.setAttribute(attr,'');
+  return b;
+}
+
+function buildOverlay(){
+  const overlay=document.createElement('section');
+  overlay.className='compass-prerendered-player';
+  overlay.setAttribute('data-main-orientation-film','');
+  overlay.setAttribute('data-player-contract',CONTRACT.version);
+  overlay.setAttribute('data-media-git-blob',CONTRACT.mediaGitBlob);
+  overlay.setAttribute('data-media-sha256',CONTRACT.mediaSha256);
+  overlay.setAttribute('role','dialog');
+  overlay.setAttribute('aria-modal','true');
+  overlay.setAttribute('aria-label','Diamond Gate Bridge orientation film');
+
+  const video=document.createElement('video');
+  video.className='compass-prerendered-player__video';
+  video.playsInline=true;
+  video.preload='metadata';
+  video.controls=false;
+  video.disablePictureInPicture=true;
+  video.setAttribute('aria-label','Diamond Gate Bridge orientation film');
+  video.setAttribute('data-main-orientation-video','');
+  video.src=CONTRACT.mediaPath;
+
+  const gate=document.createElement('div');
+  gate.className='compass-prerendered-player__gate';
+  gate.setAttribute('data-main-orientation-gate','');
+  gate.innerHTML='<div class="compass-prerendered-player__gate-card"><p class="compass-prerendered-player__eyebrow">Diamond Gate Bridge</p><h2>Find your way.</h2><p>A short orientation before you enter.</p><div class="compass-prerendered-player__actions"></div></div>';
+  const actions=q('.compass-prerendered-player__actions',gate);
+  const play=makeButton(reduced()?'Enter Compass':'Play intro','data-main-orientation-play','primary');
+  const skip=makeButton('Skip intro','data-main-orientation-skip');
+  actions.append(play,skip);
+
+  const playingSkip=makeButton('Skip','data-main-orientation-skip','quiet');
+  playingSkip.classList.add('compass-prerendered-player__skip');
+
+  overlay.append(video,gate,playingSkip);
+  session.overlay=overlay;
+  session.video=video;
+  session.gate=gate;
+  session.play=play;
+  session.skip=skip;
+  document.body.append(overlay);
+  return overlay;
+}
+
+function ensureReplay(){
+  let button=q('[data-main-orientation-replay]');
+  if(button){session.replay=button;return button;}
+  button=makeButton('Replay intro','data-main-orientation-replay','replay');
+  button.classList.add('compass-prerendered-player__replay');
+  button.setAttribute('aria-label','Replay Diamond Gate Bridge orientation');
+  button.addEventListener('click',()=>mount('replay'));
+  document.body.append(button);
+  session.replay=button;
+  return button;
+}
+
+function removeReplay(){
+  session.replay?.remove();
+  session.replay=null;
+}
+
+function emitSettlement(reason){
+  session.settlementCount+=1;
+  document.dispatchEvent(new CustomEvent('dgb:compass-orientation-cinematic-settled',{detail:{
+    reason,
+    playerContract:CONTRACT.version,
+    mediaPath:CONTRACT.mediaPath,
+    mediaBytes:CONTRACT.mediaBytes,
+    mediaSha256:CONTRACT.mediaSha256,
+    mediaGitBlob:CONTRACT.mediaGitBlob,
+    sourceHead:CONTRACT.sourceHead,
+    masterDurationMs:CONTRACT.masterDurationMs,
+    urlUnchanged:location.href===session.url,
+    historyUnchanged:history.length===session.historyLength,
+    navigationIntentEvents:0,
+    settlementCount:session.settlementCount
+  }}));
+}
+
+function cleanupOverlay(){
+  window.removeEventListener('keydown',onKey,true);
+  const video=session.video;
+  if(video){
+    try{video.pause();}catch{}
+    video.removeAttribute('src');
+    try{video.load();}catch{}
+  }
+  session.overlay?.remove();
+  session.overlay=null;
+  session.video=null;
+  session.gate=null;
+  session.play=null;
+  session.skip=null;
+  session.fadeStarted=false;
+}
+
+function settle(reason='complete'){
+  if(session.state===STATE.SETTLED)return;
+  cleanupOverlay();
+  restoreProduct();
+  restoreAmbient();
+  document.documentElement.classList.remove('compass-orientation-cinematic-active');
+  delete document.documentElement.dataset.compassOrientationCinematic;
+  session.state=STATE.SETTLED;
+  const replay=ensureReplay();
+  if(reason==='skip-armed'&&session.priorFocus?.isConnected)session.priorFocus.focus({preventScroll:true});
+  else replay.focus({preventScroll:true});
+  emitSettlement(reason);
+}
+
+function maybeNaturalFade(){
+  const video=session.video;
+  const overlay=session.overlay;
+  if(!video||!overlay||session.fadeStarted||!Number.isFinite(video.duration))return;
+  if(video.duration-video.currentTime<=CONTRACT.naturalFadeMs/1000){
+    session.fadeStarted=true;
+    overlay.classList.add('is-natural-handoff');
+  }
+}
+
+async function play(){
+  if(session.state!==STATE.ARMED)return;
+  if(reduced()){settle('reduced-motion-complete');return;}
+  markState(STATE.PLAYING);
+  session.gate?.setAttribute('hidden','');
+  suppressAmbient();
+  try{
+    session.video.currentTime=0;
+    const p=session.video.play();
+    if(p&&typeof p.then==='function')await p;
+  }catch(error){
+    session.overlay?.setAttribute('data-player-error',String(error?.name||'PLAY_FAILED'));
+    settle('fail-open');
+  }
+}
+
+function onOverlayClick(event){
+  if(event.target.closest('[data-main-orientation-play]')){
+    event.preventDefault();
+    event.stopPropagation();
+    void play();
+    return;
+  }
+  if(event.target.closest('[data-main-orientation-skip]')){
+    event.preventDefault();
+    event.stopPropagation();
+    settle(session.state===STATE.PLAYING?'skip-playing':'skip-armed');
+  }
+}
+
+function onKey(event){
+  if(session.state===STATE.SETTLED)return;
+  if(event.key==='Escape'){
+    event.preventDefault();
+    event.stopPropagation();
+    settle(session.state===STATE.PLAYING?'skip-playing':'skip-armed');
+  }
+}
+
+function onAmbientTrigger(){
+  if(session.state===STATE.PLAYING)queueMicrotask(suppressAmbient);
+}
+
+function bindOverlay(){
+  const overlay=session.overlay;
+  const video=session.video;
+  overlay.addEventListener('click',onOverlayClick);
+  video.addEventListener('ended',()=>settle('complete'),{once:true});
+  video.addEventListener('error',()=>settle('fail-open'),{once:true});
+  video.addEventListener('timeupdate',maybeNaturalFade);
+  window.addEventListener('keydown',onKey,true);
+}
+
+function mount(source='initial'){
+  if(session.overlay)return;
+  removeReplay();
+  session.url=location.href;
+  session.historyLength=history.length;
+  session.fadeStarted=false;
+  try{
+    captureProduct();
+    snapshotAmbient();
+    document.documentElement.classList.add('compass-orientation-cinematic-active');
+    const overlay=buildOverlay();
+    overlay.dataset.mountSource=source;
+    overlay.dataset.reducedMotion=String(reduced());
+    markState(STATE.ARMED);
+    bindOverlay();
+    session.play?.focus({preventScroll:true});
+  }catch(error){
+    cleanupOverlay();
+    restoreProduct();
+    restoreAmbient();
+    document.documentElement.classList.remove('compass-orientation-cinematic-active');
+    delete document.documentElement.dataset.compassOrientationCinematic;
+    session.state=STATE.SETTLED;
+    console.error('COMPASS_PRERENDERED_PLAYER_FAIL_OPEN',error);
+  }
+}
+
+['pointerdown','pointerup','touchstart','touchend','click','keydown','wheel'].forEach(type=>document.addEventListener(type,onAmbientTrigger,true));
+
+globalThis.__DGB_COMPASS_PRERENDERED_PLAYER__=Object.freeze({
+  contract:CONTRACT,
+  replay:()=>mount('inspection-api'),
+  skip:()=>settle(session.state===STATE.PLAYING?'skip-playing':'skip-armed'),
+  inspect:()=>Object.freeze({
+    state:session.state,
+    overlayMounted:Boolean(session.overlay),
+    mediaPath:CONTRACT.mediaPath,
+    mediaGitBlob:CONTRACT.mediaGitBlob,
+    reducedMotion:reduced(),
+    rootInert:Boolean(session.root?.inert),
+    ambientMuted:Boolean(session.ambient?.muted),
+    currentTime:Number(session.video?.currentTime||0),
+    duration:Number(session.video?.duration||0)
+  })
+});
+
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>mount('ordinary-entry'),{once:true});
+else mount('ordinary-entry');
 })();

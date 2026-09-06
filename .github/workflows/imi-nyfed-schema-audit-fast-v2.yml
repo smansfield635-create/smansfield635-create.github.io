@@ -1,0 +1,22 @@
+name: IMI NYFed schema audit fast v2
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/imi-nyfed-schema-audit-fast-v2.yml'
+  workflow_dispatch:
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pandas requests openpyxl
+      - run: curl -fsSL https://raw.githubusercontent.com/smansfield635-create/smansfield635-create.github.io/e75d77bf8e786069f21f468b4a3af182a0b6f0fe/research/imi/nyfed_call_report_schema_audit_v2.py -o audit.py
+      - run: python audit.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: imi-nyfed-schema-audit-v2
+          path: nyfed_schema_audit_v2.json

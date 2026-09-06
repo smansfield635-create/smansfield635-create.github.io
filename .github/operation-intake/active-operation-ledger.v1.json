@@ -4586,20 +4586,20 @@
     "a2be7bc874ba35ad847ffd8f5b91896556b6abce3c0f053b0b8f7e0701616b8c": {
       "authorityProvenance": {
         "authorityIdentity": {
-          "governingHead": "d1bc40251e508871e8a3b70b9e402fa69576a140",
-          "lockGeneration": 1957,
+          "governingHead": "a771681786d0ba2cc751949d761876d917992d8c",
+          "lockGeneration": 1958,
           "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:VEGETATION",
-          "operationId": "MIRRORLAND_GROUND_UNDERSTORY_CONTINUITY_20260905_008",
-          "procedureLocatorDigest": "6a33190b493479a415febb1c4428a1f6c76811bdf2f85c578512d829b9c5be07",
-          "requestDigest": "7bcd6f472e4750143668e3395fdd8cc39e865709a05803876f1e0af57170908d",
+          "operationId": "MIRRORLAND_GROUND_UNDERSTORY_CONTINUITY_20260905_009",
+          "procedureLocatorDigest": "26f81ba3bb916bfb0f5da7ebf0f34aa119f3195d6d5a875801c43197f4b15d7b",
+          "requestDigest": "4861091a8f343932fdb2f034c3e5506fb0efce725f0ba9235b78b085d1595344",
           "scopeHash": "a2be7bc874ba35ad847ffd8f5b91896556b6abce3c0f053b0b8f7e0701616b8c"
         },
-        "bindingDigest": "429361c9a1a2f2e2c6394fa621afbc7649785a51d85d6735938d12317d4c3400",
+        "bindingDigest": "f604fbaa243cdc5d301e8aa2530dd6dacdb17ea382399a00e4e54b0b9b9ee17c",
         "invocation": {
           "commentAuthorAssociation": "OWNER",
           "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "8d594f252e20f056260b1f9ea5a2c6d44de5989bb92380623afcf903de5f2efe",
-          "commentId": 5556158111,
+          "commentBodySha256": "ca4afca85b579ad25eb43ba2f62d46afa5bf4a7a2b8c80cfd111ae04e3f4e5be",
+          "commentId": 5556176313,
           "eventAction": "created",
           "eventName": "issue_comment",
           "issueNumber": 2670,
@@ -4608,41 +4608,38 @@
           "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
           "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
           "workflowRunAttempt": 1,
-          "workflowRunId": 34004747125,
-          "workflowSha": "d1bc40251e508871e8a3b70b9e402fa69576a140"
+          "workflowRunId": 34004894599,
+          "workflowSha": "a771681786d0ba2cc751949d761876d917992d8c"
         },
-        "lineageAnchorCommitSha": "88f7147c4d561aa2469536e718f8b3f1150a3eb3",
+        "lineageAnchorCommitSha": "b9f1a7d911c43bfbbf47d4bed290eef98a9bb11a",
         "origin": "CANONICAL_SUCCESSOR",
         "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
       },
-      "governingHead": "d1bc40251e508871e8a3b70b9e402fa69576a140",
-      "lockGeneration": 1957,
+      "governingHead": "a771681786d0ba2cc751949d761876d917992d8c",
+      "lockGeneration": 1958,
       "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:VEGETATION",
-      "operationId": "MIRRORLAND_GROUND_UNDERSTORY_CONTINUITY_20260905_008",
+      "operationId": "MIRRORLAND_GROUND_UNDERSTORY_CONTINUITY_20260905_009",
       "predecessor": {
         "authorityInherited": false,
         "exactHeadRevalidationRequired": true,
-        "governingHead": "fa87b2594a9ac43390ed5b657064ffbfd94a06ea",
-        "lockGeneration": 1956,
+        "governingHead": "d1bc40251e508871e8a3b70b9e402fa69576a140",
+        "lockGeneration": 1957,
         "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:VEGETATION",
-        "operationId": "MIRRORLAND_CANONICAL_ECOLOGY_CAMERA_TRUE_VEGETATION_20260905_003",
+        "operationId": "MIRRORLAND_GROUND_UNDERSTORY_CONTINUITY_20260905_008",
         "preservedEvidenceRefs": [
-          "issue:2670#issuecomment-5555387429",
           "issue:2670#issuecomment-5556106170",
+          "issue:2670#issuecomment-5556159896",
+          "issue:2670#issuecomment-5556173169",
           "workflow:33999774516",
-          "commit:7e45a44a0abd6348892ff54a2109fc0c4248485d",
-          "issue:2670#issuecomment-5556126915",
-          "issue:2670#issuecomment-5556136567",
-          "issue:2670#issuecomment-5556143630",
-          "issue:2670#issuecomment-5556149306"
+          "commit:7e45a44a0abd6348892ff54a2109fc0c4248485d"
         ],
         "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
         "terminalDisposition": "SUPERSEDED",
-        "transitionId": "MIRRORLAND_VEGETATION_003_TO_V4_008"
+        "transitionId": "MIRRORLAND_V4_008_TO_SCOPE_COMPLETE_V4_009"
       },
-      "procedureLocatorDigest": "6a33190b493479a415febb1c4428a1f6c76811bdf2f85c578512d829b9c5be07",
+      "procedureLocatorDigest": "26f81ba3bb916bfb0f5da7ebf0f34aa119f3195d6d5a875801c43197f4b15d7b",
       "released": false,
-      "requestDigest": "7bcd6f472e4750143668e3395fdd8cc39e865709a05803876f1e0af57170908d",
+      "requestDigest": "4861091a8f343932fdb2f034c3e5506fb0efce725f0ba9235b78b085d1595344",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "a2be7bc874ba35ad847ffd8f5b91896556b6abce3c0f053b0b8f7e0701616b8c",
       "state": "ADMITTED_LOCKED"
@@ -7278,7 +7275,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1957,
+  "lockGeneration": 1958,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -40151,6 +40148,89 @@
         "successorLockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:VEGETATION",
         "successorOperationId": "MIRRORLAND_GROUND_UNDERSTORY_CONTINUITY_20260905_008",
         "transitionId": "MIRRORLAND_VEGETATION_003_TO_V4_008"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "d1bc40251e508871e8a3b70b9e402fa69576a140",
+          "lockGeneration": 1957,
+          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:VEGETATION",
+          "operationId": "MIRRORLAND_GROUND_UNDERSTORY_CONTINUITY_20260905_008",
+          "procedureLocatorDigest": "6a33190b493479a415febb1c4428a1f6c76811bdf2f85c578512d829b9c5be07",
+          "requestDigest": "7bcd6f472e4750143668e3395fdd8cc39e865709a05803876f1e0af57170908d",
+          "scopeHash": "a2be7bc874ba35ad847ffd8f5b91896556b6abce3c0f053b0b8f7e0701616b8c"
+        },
+        "bindingDigest": "429361c9a1a2f2e2c6394fa621afbc7649785a51d85d6735938d12317d4c3400",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "8d594f252e20f056260b1f9ea5a2c6d44de5989bb92380623afcf903de5f2efe",
+          "commentId": 5556158111,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2670,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34004747125,
+          "workflowSha": "d1bc40251e508871e8a3b70b9e402fa69576a140"
+        },
+        "lineageAnchorCommitSha": "88f7147c4d561aa2469536e718f8b3f1150a3eb3",
+        "origin": "CANONICAL_SUCCESSOR",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "d1bc40251e508871e8a3b70b9e402fa69576a140",
+      "lockGeneration": 1957,
+      "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:VEGETATION",
+      "operationId": "MIRRORLAND_GROUND_UNDERSTORY_CONTINUITY_20260905_008",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "fa87b2594a9ac43390ed5b657064ffbfd94a06ea",
+        "lockGeneration": 1956,
+        "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:VEGETATION",
+        "operationId": "MIRRORLAND_CANONICAL_ECOLOGY_CAMERA_TRUE_VEGETATION_20260905_003",
+        "preservedEvidenceRefs": [
+          "issue:2670#issuecomment-5555387429",
+          "issue:2670#issuecomment-5556106170",
+          "workflow:33999774516",
+          "commit:7e45a44a0abd6348892ff54a2109fc0c4248485d",
+          "issue:2670#issuecomment-5556126915",
+          "issue:2670#issuecomment-5556136567",
+          "issue:2670#issuecomment-5556143630",
+          "issue:2670#issuecomment-5556149306"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "MIRRORLAND_VEGETATION_003_TO_V4_008"
+      },
+      "procedureLocatorDigest": "6a33190b493479a415febb1c4428a1f6c76811bdf2f85c578512d829b9c5be07",
+      "released": true,
+      "requestDigest": "7bcd6f472e4750143668e3395fdd8cc39e865709a05803876f1e0af57170908d",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a2be7bc874ba35ad847ffd8f5b91896556b6abce3c0f053b0b8f7e0701616b8c",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:2670#issuecomment-5556106170",
+          "issue:2670#issuecomment-5556159896",
+          "issue:2670#issuecomment-5556173169",
+          "workflow:33999774516",
+          "commit:7e45a44a0abd6348892ff54a2109fc0c4248485d"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "a771681786d0ba2cc751949d761876d917992d8c",
+        "successorLockGeneration": 1958,
+        "successorLockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:VEGETATION",
+        "successorOperationId": "MIRRORLAND_GROUND_UNDERSTORY_CONTINUITY_20260905_009",
+        "transitionId": "MIRRORLAND_V4_008_TO_SCOPE_COMPLETE_V4_009"
       },
       "terminalDisposition": "SUPERSEDED"
     }

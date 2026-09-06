@@ -4,7 +4,7 @@ import {execFileSync,spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 
-const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../../../..');
+const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../../..');
 process.chdir(ROOT);
 const contract=JSON.parse(fs.readFileSync('control-plane/whole-estate/characters-reconstruction-v1/vegetation-stand-edge-composition-contract.v1.json','utf8'));
 const outputArg=process.argv.indexOf('--output');
@@ -54,13 +54,13 @@ const representationBlob=git('hash-object',representationPath);
 check('V5_REPRESENTATION_BLOB_BYTE_IDENTICAL',representationBlob===contract.v5Substrate.requiredGitBlobSha,{expected:contract.v5Substrate.requiredGitBlobSha,actual:representationBlob});
 
 const [standMod,compositionMod,edgeMod,populationMod,understoryMod,representationMod,step9Mod]=await Promise.all([
-  import('../../../../characters/vegetation-stand-topology.mjs'),
-  import('../../../../characters/vegetation-composition.mjs'),
-  import('../../../../characters/vegetation-edge-ecology.mjs'),
-  import('../../../../characters/vegetation-population.mjs'),
-  import('../../../../characters/vegetation-understory.mjs'),
-  import('../../../../characters/vegetation-representation.mjs'),
-  import('../../../../characters/step9-regional-geography.mjs')
+  import('../../../characters/vegetation-stand-topology.mjs'),
+  import('../../../characters/vegetation-composition.mjs'),
+  import('../../../characters/vegetation-edge-ecology.mjs'),
+  import('../../../characters/vegetation-population.mjs'),
+  import('../../../characters/vegetation-understory.mjs'),
+  import('../../../characters/vegetation-representation.mjs'),
+  import('../../../characters/step9-regional-geography.mjs')
 ]);
 
 const seedsA=standMod.getStandTopologySeeds();

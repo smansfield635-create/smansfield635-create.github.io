@@ -1,0 +1,82 @@
+name: TEMP Compass T11 Installed Carrier Invocation
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/compass-t11-carrier-invocation-temporary.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  invoke-installed-carrier:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current installed carrier from exact main
+        uses: actions/checkout@v4
+        with:
+          ref: b1d5c972c732455d7e0ac41b8dadb4cdc5ee9400
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Verify installed carrier identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = 'b1d5c972c732455d7e0ac41b8dadb4cdc5ee9400'
+          test "$(git hash-object tools/ai-room-transport/bounded-binary-object-transfer.v1.mjs)" = 'da3ec08f5fc9af71c72bba660a7871c3a7dd3f1f'
+
+      - name: Materialize exact #1323 request event
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          manifest={"schema":"BOUNDED_BINARY_OBJECT_TRANSFER_MANIFEST_v1","repository":"smansfield635-create/smansfield635-create.github.io","targetBranch":"transfer/compass-main-orientation-final-v1-20260906-001","expectedTargetHead":"12bdb173d6d9314e2418ad94668a2af98f1677c4","destinationPath":"assets/compass/cinematic-media/compass-main-orientation-final-v1.mp4","totalBytes":3828177,"sha256":"6ada38eadeb6243b3809167f45dd8a74808c88ac677273683338772e7899b4e7","chunks":[{"index":0,"blobSha":"1f0d19632dc39c8e1ba900407f8c6dc888391403","bytes":524288,"sha256":"eab30bff2ea78559b5cda9e60792abb2185d8891f0ff50ceb52ad803b8aa54f2"},{"index":1,"blobSha":"3437c6f2e8a426d3700fa06c95259d59cffafb4f","bytes":524288,"sha256":"b4a5bfcde5ddbfdfdfafcebc7430badd2a29cf68dd2623b2837ac4d86988b5e3"},{"index":2,"blobSha":"cc1d9f326d567536af5ed24a11e17708c30a20f6","bytes":524288,"sha256":"7734728608971d9c019e4d62bc5f820e587270cf8f97b51c3328555f9f3c70a0"},{"index":3,"blobSha":"d6e3cdcf9f66a5e5589452465180c8bda6dc3362","bytes":524288,"sha256":"054d0ae4d70a37bb4a7c76ab30775bbc17bc8a06b02686545d3f1b1e278d7731"},{"index":4,"blobSha":"173f520127680962c45837ecf2d4ad951a57420e","bytes":524288,"sha256":"c8f0ca66c3d76fd24521c771d951b083f63612a3714529fab0bb56d23a0cf4a5"},{"index":5,"blobSha":"1b7e54b3d6f117aadabaec0d7256e843ec312db5","bytes":524288,"sha256":"288ce162878bb5c522d0b065cf149ada212b80dc12338908648010f7c73b4b9b"},{"index":6,"blobSha":"5aa3b134b7cab1e841560b8e28eb92d868306639","bytes":524288,"sha256":"47184aab20885c86361542285801063a6eca264befeeeaa962d14a83018759ee"},{"index":7,"blobSha":"64720e9e9795af7484925faf88e88e8a0222e474","bytes":158161,"sha256":"ce33f4b981c2ef705b114aaf712ca4c461ebd754118616aef0629f62fe5ed762"}]}
+          body='BOUNDED_BINARY_OBJECT_TRANSFER_REQUEST_V1\n'+json.dumps(manifest,separators=(',',':'))
+          event={"issue":{"number":1323},"comment":{"user":{"login":"smansfield635-create"},"body":body},"repository":{"full_name":"smansfield635-create/smansfield635-create.github.io"}}
+          path=os.path.join(os.environ['RUNNER_TEMP'],'bounded-binary-event.json')
+          with open(path,'w') as f: json.dump(event,f,separators=(',',':'))
+          PY
+
+      - name: Execute unchanged installed #1323 carrier
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: smansfield635-create/smansfield635-create.github.io
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/ai-room-transport/bounded-binary-object-transfer.v1.mjs \
+            --event "$RUNNER_TEMP/bounded-binary-event.json" \
+            --repository "$GITHUB_REPOSITORY" \
+            --receipt "$RUNNER_TEMP/bounded-binary-object-transfer-receipt.json"
+
+      - name: Require frozen T11 receipt identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs=require('fs');
+          const p=process.env.RUNNER_TEMP+'/bounded-binary-object-transfer-receipt.json';
+          const r=JSON.parse(fs.readFileSync(p,'utf8'));
+          const req=(ok,msg)=>{if(!ok)throw new Error(msg)};
+          req(r.schema==='BOUNDED_BINARY_OBJECT_TRANSFER_RECEIPT_v1','schema');
+          req(r.disposition==='PASS','disposition');
+          req(r.targetBranch==='transfer/compass-main-orientation-final-v1-20260906-001','branch');
+          req(r.targetHeadBefore==='12bdb173d6d9314e2418ad94668a2af98f1677c4','head-before');
+          req(r.destinationPath==='assets/compass/cinematic-media/compass-main-orientation-final-v1.mp4','destination');
+          req(r.totalBytes===3828177,'bytes');
+          req(r.sha256==='6ada38eadeb6243b3809167f45dd8a74808c88ac677273683338772e7899b4e7','sha256');
+          req(r.finalBlobSha==='ca95d7c17ef54044a11bc456a949c33fa9820bc0','final-blob');
+          req(r.chunkCount===8,'chunks');
+          req(r.finalBlobReadbackVerified===true && r.destinationReadbackVerified===true,'readback');
+          console.log(JSON.stringify(r));
+          NODE
+
+      - name: Upload exact carrier receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-t11-installed-carrier-receipt-${{ github.run_id }}
+          path: ${{ runner.temp }}/bounded-binary-object-transfer-receipt.json
+          if-no-files-found: error
+          retention-days: 7

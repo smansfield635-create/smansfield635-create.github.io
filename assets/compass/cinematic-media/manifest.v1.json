@@ -1,6 +1,6 @@
 {
   "schema": "COMPASS_MAIN_HOMEPAGE_CINEMATIC_MEDIA_CUSTODY_v1",
-  "status": "APPROVED_38S_FILM_CLONE_DELTA_APPLIED_PENDING_RENDERED_QUALIFICATION",
+  "status": "APPROVED_38S_FILM_CLONE_DELTA_CODE_AUDIT_PASS_PENDING_RENDERED_QUALIFICATION",
   "film": "Welcome to Diamond Gate Bridge",
   "currentMainIntegrationBase": "35c6efd41d2213f77769668ffbe5b362bfb84914",
   "archivedCinematographicAncestor": "73d10c2ee4a1800e9327eca4d5ef8902e6484dcc",
@@ -68,6 +68,14 @@
       "canonicalWorldRendererUsed":true
     }
   },
+  "exactDiffPaths": [
+    "assets/compass/cinematic-media/manifest.v1.json",
+    "assets/compass/compass.homepage-cinematic.verify.mjs",
+    "assets/compass/compass.orientation-cinematic.css",
+    "assets/compass/compass.orientation-cinematic.js",
+    "assets/compass/compass.orientation-cinematic.media.js",
+    "assets/compass/compass.orientation-cinematic.render.js"
+  ],
   "protectedUnchanged": [
     "assets/compass/compass.controller.js",
     "assets/compass/compass.crystals.js",
@@ -90,8 +98,8 @@
     "ANALYTICS_DELTA"
   ],
   "qualification": {
-    "sourceAudit":"PENDING_VERIFIER_RECONCILIATION",
-    "nativeVerifierExecution":"NOT_PERFORMED",
+    "sourceAudit":"PASS_SOURCE_AND_SCOPE_CODE_AUDIT",
+    "nativeVerifierExecution":"NOT_PERFORMED_NO_NATIVE_CHECKOUT_IN_CURRENT_EXECUTION_SURFACE",
     "renderedDesktop":"PENDING",
     "renderedTablet":"PENDING",
     "renderedPhone":"PENDING",

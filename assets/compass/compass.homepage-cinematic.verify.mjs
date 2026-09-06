@@ -29,7 +29,7 @@ check('CONTEXT_CURRENT_TEXT_EXITS_FIRST',css.includes('@keyframes tour-current')
 check('CONTEXT_NEXT_TEXT_ENTERS_BEFORE_BOUNDARY',css.includes('@keyframes tour-next')&&css.includes('96%,100%{opacity:1'));
 check('CONTEXT_DOMINANT_LOCAL_CONTRAST',css.includes('background:linear-gradient(90deg,rgba(1,6,10,.86)')&&css.includes('text-shadow:0 3px 22px rgba(0,0,0,.96)'));
 check('NO_CHARACTER_COPY_IN_VISIBLE_CONTEXT',!css.includes('Meet the characters')&&!css.includes('Choose who you want to speak with'));
-check('DONOR_INTERNAL_S07_COPY_HIDDEN',css.includes('.cinematic-breadth__heading,.compass-orientation-cinematic[data-shot-id="S07"] .cinematic-breadth__caption{display:none!important}'));
+check('DONOR_INTERNAL_S07_COPY_HIDDEN',css.includes('.compass-orientation-cinematic[data-shot-id="S07"] .cinematic-breadth__heading')&&css.includes('.compass-orientation-cinematic[data-shot-id="S07"] .cinematic-breadth__caption{display:none!important}'));
 
 check('S05_ARCHIVED_MIRRORLAND_PRESERVED',render.includes('const MIRROR_PANES=Object.freeze([')&&render.includes('Find the door to Mirrorland.'));
 check('S05_NO_CHARACTERS_RUNTIME_IMPORT',!render.includes('/characters/')&&!render.includes("'characters/"));

@@ -138,7 +138,7 @@ const expectedBlobs={
   'characters/vegetation-representation.mjs':'9fe0a70d86250d004ae1b04b72e1cd6818caaada',
   'characters/forest-system.mjs':'98d0995143400149cb19c48751a38a5402ca019b',
   [CONTRACT]:'ac732ac39162a04bae06513d12f7311ea201db03',
-  [UNDERSTORY]:'12c6bead59afce1659b3fa59d9c4e3680e262adf',
+  [UNDERSTORY]:'523ce96878b60ae249d1738bdffb180f161371aa',
   [APP]:'0187f323d4c5eb0d535fa42c47d4d5b5547b457d'
 };
 for(const [path,expected] of Object.entries(expectedBlobs)){

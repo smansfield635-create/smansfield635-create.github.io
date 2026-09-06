@@ -1,0 +1,34 @@
+{
+  "schema": "MIRRORLAND_V0_VERIFIER_FALSE_NEGATIVE_DISPOSITION_v1",
+  "operationId": "MIRRORLAND_CANONICAL_ECOLOGY_CAMERA_TRUE_VEGETATION_20260905_003",
+  "lockGeneration": 1956,
+  "v0CandidateHead": "059be03947ded3ce216f721d1f582c26d8bba829",
+  "workflowRunId": 33997817851,
+  "artifactId": 9978618077,
+  "formalReceiptResult": "FAIL_CLOSED",
+  "observed": {
+    "checkCount": 47,
+    "passCount": 46,
+    "failCount": 1,
+    "failures": ["BASELINE_DEVICE_DEPENDENT_GENERATION"]
+  },
+  "classification": "KNOWN_VERIFIER_FALSE_NEGATIVE",
+  "basis": {
+    "verifierRequiredSourceSpelling": "FOREST_BUDGETS[compact?'mobile':'desktop'].target",
+    "canonicalEquivalentSourceSpelling": "compact ? FOREST_BUDGETS.mobile.target : FOREST_BUDGETS.desktop.target",
+    "deviceDependentBaselineFacts": {
+      "desktopPopulationTarget": 420,
+      "mobilePopulationTarget": 190,
+      "populationDeviceDependent": true
+    },
+    "sourceIdentityPreserved": true
+  },
+  "ownerDisposition": {
+    "canonicalIssue": 2670,
+    "commentId": 5555454025,
+    "forwardConstructionAuthorized": "V1_CANONICAL_ECOLOGY_EXPOSURE",
+    "v0PassClaimAuthorized": false,
+    "aggregateClosureRequiresV0FormalReconciliation": true,
+    "acceptanceCriteriaRelaxed": false
+  }
+}

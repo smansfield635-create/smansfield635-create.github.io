@@ -1,0 +1,45 @@
+name: Characters Vegetation V0-V3 Aggregate Reconciliation v1
+
+on:
+  push:
+    branches:
+      - 'characters/canonical-ecology-camera-true-vegetation-20260905-003'
+    paths:
+      - 'control-plane/whole-estate/characters-reconstruction-v1/vegetation-v0-v3-reconciliation.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v0-v3-reconciliation.v1.mjs'
+      - '.github/workflows/characters-vegetation-v0-v3-reconciliation-v1.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'control-plane/whole-estate/characters-reconstruction-v1/vegetation-v0-v3-reconciliation.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v0-v3-reconciliation.v1.mjs'
+      - '.github/workflows/characters-vegetation-v0-v3-reconciliation-v1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Reconcile V0-V3 exact-head evidence
+        run: node control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v0-v3-reconciliation.v1.mjs --output "$RUNNER_TEMP/vegetation-v0-v3-reconciliation-receipt.json"
+      - name: Require aggregate pass-closed receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          jq -e '.result == "V0_V3_PASS_CLOSED" and .aggregateBoundaryClosed == true and .reconciledStageResults.V0 == "V0_BASELINE_PASS_CLOSED" and .reconciledStageResults.V1 == "V1_ECOLOGY_AUTHORITY_PASS_CLOSED" and .reconciledStageResults.V2 == "V2_CANONICAL_POPULATION_PASS_CLOSED" and .reconciledStageResults.V3 == "V3_CAMERA_TRUE_REPRESENTATION_PASS_CLOSED" and .historicalFormalReceipts.V0 == "FAIL_CLOSED" and .historicalFormalReceipts.V2 == "FAIL_CLOSED" and .historicalReceiptsPreserved == true and .acceptanceCriteriaRelaxed == false and .v4PlusAuthorized == true and .mergeDeploymentPublicationAuthorized == false and .failCount == 0' "$RUNNER_TEMP/vegetation-v0-v3-reconciliation-receipt.json" >/dev/null
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vegetation-v0-v3-reconciliation-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/vegetation-v0-v3-reconciliation-receipt.json
+          if-no-files-found: error
+          retention-days: 90

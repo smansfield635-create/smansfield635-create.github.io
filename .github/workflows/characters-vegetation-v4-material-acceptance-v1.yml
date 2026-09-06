@@ -117,54 +117,56 @@ jobs:
             await page.waitForTimeout(650);
           }
 
-          const browser=await chromium.launch({headless:true});
-          try{
-            const desktop={id:'DESKTOP',width:1440,height:900,dpr:1};
-            const d=await openPage(browser,desktop);
-            await shot(d.page,'v4-5-desktop-orbit.png','ORBIT',desktop);
-            await gotoDestination(d.page,'crossing');
-            await shot(d.page,'v4-5-clearing.png','CROSSING_CLEARING',desktop);
-            await gotoDestination(d.page,'manor');
-            await shot(d.page,'v4-5-manor.png','MIRROR_MANOR',desktop);
-            await gotoDestination(d.page,'tarian');
-            await shot(d.page,'v4-5-waterline.png','WATERLINE_STATION',desktop);
-            allErrors.push(...d.errors.map(e=>({profile:'DESKTOP',...e})));
-            await d.context.close();
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            try{
+              const desktop={id:'DESKTOP',width:1440,height:900,dpr:1};
+              const d=await openPage(browser,desktop);
+              await shot(d.page,'v4-5-desktop-orbit.png','ORBIT',desktop);
+              await gotoDestination(d.page,'crossing');
+              await shot(d.page,'v4-5-clearing.png','CROSSING_CLEARING',desktop);
+              await gotoDestination(d.page,'manor');
+              await shot(d.page,'v4-5-manor.png','MIRROR_MANOR',desktop);
+              await gotoDestination(d.page,'tarian');
+              await shot(d.page,'v4-5-waterline.png','WATERLINE_STATION',desktop);
+              allErrors.push(...d.errors.map(e=>({profile:'DESKTOP',...e})));
+              await d.context.close();
 
-            const tablet={id:'TABLET',width:1024,height:1366,dpr:2};
-            const t=await openPage(browser,tablet);
-            await shot(t.page,'v4-5-tablet-orbit.png','ORBIT',tablet);
-            allErrors.push(...t.errors.map(e=>({profile:'TABLET',...e})));
-            await t.context.close();
+              const tablet={id:'TABLET',width:1024,height:1366,dpr:2};
+              const t=await openPage(browser,tablet);
+              await shot(t.page,'v4-5-tablet-orbit.png','ORBIT',tablet);
+              allErrors.push(...t.errors.map(e=>({profile:'TABLET',...e})));
+              await t.context.close();
 
-            const mobile={id:'MOBILE',width:390,height:844,dpr:3};
-            const m=await openPage(browser,mobile);
-            await shot(m.page,'v4-5-mobile-orbit.png','ORBIT',mobile);
-            allErrors.push(...m.errors.map(e=>({profile:'MOBILE',...e})));
-            await m.context.close();
-          } finally {
-            await browser.close();
-          }
+              const mobile={id:'MOBILE',width:390,height:844,dpr:3};
+              const m=await openPage(browser,mobile);
+              await shot(m.page,'v4-5-mobile-orbit.png','ORBIT',mobile);
+              allErrors.push(...m.errors.map(e=>({profile:'MOBILE',...e})));
+              await m.context.close();
+            } finally {
+              await browser.close();
+            }
 
-          if(allErrors.length) throw new Error('PAGE_OR_CONSOLE_ERRORS:'+JSON.stringify(allErrors));
-          const expected=['v4-5-desktop-orbit.png','v4-5-tablet-orbit.png','v4-5-mobile-orbit.png','v4-5-manor.png','v4-5-waterline.png','v4-5-clearing.png'];
-          for(const f of expected) if(!fs.existsSync(path.join(OUT,f))) throw new Error('REQUIRED_CAPTURE_MISSING:'+f);
-          const manifest={
-            schema:'MIRRORLAND_V4_5_MATERIAL_EVIDENCE_RECEIPT_v1',
-            result:'EVIDENCE_CAPTURE_PASS',
-            candidateSha:CANDIDATE,
-            route:'/characters/',
-            operationId:'MIRRORLAND_GROUND_UNDERSTORY_MATERIAL_ACCEPTANCE_20260906_003',
-            lockGeneration:1961,
-            mechanicalPredecessor:{run:34011758683,artifactId:9982709883,result:'V4_MECHANICAL_PASS_CLOSED',checks:'77_OF_77_PASS'},
-            captureSemantics:'PASSIVE_EXACT_CANDIDATE_BROWSER_EVIDENCE_NO_PRODUCT_MUTATION',
-            visualDispositionAuthority:'NOT_ASSIGNED_BY_CAPTURE_JOB',
-            runtime,
-            errors:allErrors,
-            captures
-          };
-          fs.writeFileSync(path.join(OUT,'v4-5-material-evidence.json'),JSON.stringify(manifest,null,2)+'\n');
-          console.log(JSON.stringify(manifest,null,2));
+            if(allErrors.length) throw new Error('PAGE_OR_CONSOLE_ERRORS:'+JSON.stringify(allErrors));
+            const expected=['v4-5-desktop-orbit.png','v4-5-tablet-orbit.png','v4-5-mobile-orbit.png','v4-5-manor.png','v4-5-waterline.png','v4-5-clearing.png'];
+            for(const f of expected) if(!fs.existsSync(path.join(OUT,f))) throw new Error('REQUIRED_CAPTURE_MISSING:'+f);
+            const manifest={
+              schema:'MIRRORLAND_V4_5_MATERIAL_EVIDENCE_RECEIPT_v1',
+              result:'EVIDENCE_CAPTURE_PASS',
+              candidateSha:CANDIDATE,
+              route:'/characters/',
+              operationId:'MIRRORLAND_GROUND_UNDERSTORY_MATERIAL_ACCEPTANCE_20260906_003',
+              lockGeneration:1961,
+              mechanicalPredecessor:{run:34011758683,artifactId:9982709883,result:'V4_MECHANICAL_PASS_CLOSED',checks:'77_OF_77_PASS'},
+              captureSemantics:'PASSIVE_EXACT_CANDIDATE_BROWSER_EVIDENCE_NO_PRODUCT_MUTATION',
+              visualDispositionAuthority:'NOT_ASSIGNED_BY_CAPTURE_JOB',
+              runtime,
+              errors:allErrors,
+              captures
+            };
+            fs.writeFileSync(path.join(OUT,'v4-5-material-evidence.json'),JSON.stringify(manifest,null,2)+'\n');
+            console.log(JSON.stringify(manifest,null,2));
+          })().catch(error=>{console.error(error);process.exit(1);});
           NODE
 
           node "$RUNNER_TEMP/v4-5-capture.cjs"

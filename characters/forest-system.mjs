@@ -1,5 +1,7 @@
 import {step9Frame,step9ShorelineZ,step9TerrainHeight,resolveStep9Site,STEP9_DESTINATION_BINDINGS} from './step9-regional-geography.mjs';
 import {GRATITUDE_COAST_NIGHT} from './night-renderer.mjs';
+import {getCanonicalVegetationPopulation} from './vegetation-population.mjs';
+import {sampleCanonicalVegetationEcology} from './vegetation-ecology.mjs';
 
 export const FOREST_REPRESENTATION_SOURCE_SHA='35e8e2fb3e4a093fb3bc8ecc4239e8564bd7938a';
 export const FOREST_NIGHT_MATERIAL_SOURCE='CHARACTERS_GRATITUDE_ENVIRONMENT_RENDERER_V2';
@@ -40,6 +42,78 @@ function landmarkExclusions(){
   return Object.freeze(out);
 }
 export const FOREST_SIGHTLINE_EXCLUSIONS=landmarkExclusions();
+
+export const GROUND_UNDERSTORY_POLICY=Object.freeze({
+  schema:'MIRRORLAND_GROUND_UNDERSTORY_POLICY_v1',
+  operationId:'MIRRORLAND_GROUND_UNDERSTORY_CONTINUITY_20260905_009',
+  stage:'V4_GROUND_AND_UNDERSTORY_CONTINUITY',
+  ecologyAuthority:'sampleCanonicalVegetationEcology',
+  canonicalTreeAuthority:'getCanonicalVegetationPopulation',
+  decorativeIndependentNoiseAuthority:false,
+  deviceInvariantPopulation:true,
+  cameraInvariantPopulation:true,
+  compactMayReduceRepresentationOnly:true,
+  wetMarginMinimumWeight:.08,
+  forestFloorMinimumWeight:.50,
+  categories:Object.freeze(['GRASS_SEDGE','LOW_SHRUB','SAPLING','REED','DEAD_STEM','FOREST_FLOOR']),
+  grid:Object.freeze({columns:64,rows:48,insetFraction:.025,jitterFraction:.28}),
+  v5PlusAuthorized:false
+});
+
+let cachedGroundUnderstoryPopulation=null;
+function groundCategory(ecology,seed){
+  const wetness=Math.max(Number(ecology.hydrology?.riverWeight)||0,Number(ecology.hydrology?.lakeWeight)||0,Number(ecology.coastline?.wetSandWeight)||0);
+  const forestWeight=Number(ecology.biome?.forestWeight)||0;
+  if(wetness>=GROUND_UNDERSTORY_POLICY.wetMarginMinimumWeight)return 'REED';
+  if(ecology.materialProfile==='STONE_AND_SPARSE_SOIL')return 'DEAD_STEM';
+  if(forestWeight>=.62)return rand(seed,4)<.62?'FOREST_FLOOR':'SAPLING';
+  if(forestWeight>=.28)return rand(seed,4)<.56?'LOW_SHRUB':'SAPLING';
+  return 'GRASS_SEDGE';
+}
+function groundOccupancy(category,forestWeight,wetness){
+  if(category==='REED')return clamp(.38+wetness*.55,.38,.88);
+  if(category==='FOREST_FLOOR')return clamp(.38+forestWeight*.55,.38,.90);
+  if(category==='SAPLING')return clamp(.18+forestWeight*.38,.18,.55);
+  if(category==='LOW_SHRUB')return clamp(.24+forestWeight*.44,.24,.66);
+  if(category==='DEAD_STEM')return .28;
+  return .34;
+}
+export function buildGroundUnderstoryPopulation(){
+  if(cachedGroundUnderstoryPopulation)return cachedGroundUnderstoryPopulation;
+  const frame=step9Frame().envelope,width=frame.xMaximum-frame.xMinimum,depth=frame.zMaximum-frame.zMinimum;
+  const {columns,rows,insetFraction,jitterFraction}=GROUND_UNDERSTORY_POLICY.grid;
+  const insetX=width*insetFraction,insetZ=depth*insetFraction,usableWidth=width-insetX*2,usableDepth=depth-insetZ*2,instances=[];
+  for(let row=0;row<rows;row++)for(let column=0;column<columns;column++){
+    const seed=hash32(Math.imul(row+1,83492791)^Math.imul(column+1,2654435761)^0x41c6ce57);
+    const u=clamp((column+.5+(rand(seed,1)-.5)*2*jitterFraction)/columns,0,1),v=clamp((row+.5+(rand(seed,2)-.5)*2*jitterFraction)/rows,0,1);
+    const x=frame.xMinimum+insetX+u*usableWidth,z=frame.zMinimum+insetZ+v*usableDepth;
+    if(insideSightline(x,z))continue;
+    const ecology=sampleCanonicalVegetationEcology(x,z);
+    if(ecology?.valid!==true||ecology.hydrology?.drainageClass!=='LAND'||ecology.shorelineDistance<=5)continue;
+    const forestWeight=Number(ecology.biome?.forestWeight)||0,wetness=Math.max(Number(ecology.hydrology?.riverWeight)||0,Number(ecology.hydrology?.lakeWeight)||0,Number(ecology.coastline?.wetSandWeight)||0);
+    const category=groundCategory(ecology,seed);
+    if(rand(seed,5)>groundOccupancy(category,forestWeight,wetness))continue;
+    const scale=category==='REED'?.72+rand(seed,6)*.58:category==='SAPLING'?.82+rand(seed,6)*.54:category==='LOW_SHRUB'?.68+rand(seed,6)*.50:category==='FOREST_FLOOR'?.72+rand(seed,6)*.52:category==='DEAD_STEM'?.68+rand(seed,6)*.72:.58+rand(seed,6)*.62;
+    instances.push(Object.freeze({
+      id:`ground-r${row}-c${column}`,seed,category,
+      world:Object.freeze({x:ecology.world.x,y:ecology.world.y,z:ecology.world.z}),
+      yaw:TAU*rand(seed,7),scale,
+      forestWeight:Number(forestWeight.toFixed(12)),wetness:Number(wetness.toFixed(12)),
+      drainageClass:ecology.hydrology.drainageClass,materialProfile:ecology.materialProfile,
+      shorelineDistance:Number(ecology.shorelineDistance.toFixed(6)),biomeClass:ecology.biome.class,
+      geographyAuthority:ecology.geographyAuthority,sourceContractId:ecology.sourceContractId
+    }));
+  }
+  const canonicalTrees=getCanonicalVegetationPopulation();
+  cachedGroundUnderstoryPopulation=Object.freeze({
+    schema:'MIRRORLAND_CANONICAL_GROUND_UNDERSTORY_POPULATION_v1',
+    operationId:GROUND_UNDERSTORY_POLICY.operationId,stage:GROUND_UNDERSTORY_POLICY.stage,
+    deviceInvariant:true,cameraInvariant:true,representationAssigned:false,
+    canonicalTreePopulationCount:canonicalTrees.instanceCount,
+    instanceCount:instances.length,instances:Object.freeze(instances),exclusions:FOREST_SIGHTLINE_EXCLUSIONS,frame
+  });
+  return cachedGroundUnderstoryPopulation;
+}
 
 function archetypeProfile(type,seed){
   const r=i=>rand(seed,i);
@@ -120,6 +194,31 @@ function groundCluster(verts,t){
     canopyBlob(verts,t.x+ox,t.y+.72+r*.17,t.z+oz,r,r*.34,r*(.76+.22*rand(t.seed,470+i)),t.seed+700+i,2);
   }
 }
+function blade(verts,x,y,z,height,width,yaw,material=3){
+  for(const angle of [yaw,yaw+Math.PI/2]){
+    const [dx,dz]=rotateXZ(width,0,angle),a=[x-dx,y,z-dz],b=[x+dx,y,z+dz],c=[x,y+height,z];
+    pushTri(verts,a,b,c,material);pushTri(verts,b,a,c,material);
+  }
+}
+function groundUnderstoryGeometry(verts,g){
+  const {x,y,z}=g.world,s=g.scale;
+  if(g.category==='REED'){
+    const count=3;for(let i=0;i<count;i++){const a=g.yaw+i*2.09,d=.45*s*(i?1:.35);blade(verts,x+Math.cos(a)*d,y,z+Math.sin(a)*d,4.5*s,.22*s,a,3);}
+    return;
+  }
+  if(g.category==='DEAD_STEM'){prism(verts,[x,y-.05,z],[x,y+3.4*s,z],.10*s,5,3);return;}
+  if(g.category==='SAPLING'){
+    prism(verts,[x,y-.05,z],[x,y+4.2*s,z],.12*s,5,3);
+    blade(verts,x,y+1.4*s,z,3.5*s,1.25*s,g.yaw,3);return;
+  }
+  if(g.category==='LOW_SHRUB'){
+    for(let i=0;i<3;i++){const a=g.yaw+i*2.094,d=.55*s;blade(verts,x+Math.cos(a)*d,y,z+Math.sin(a)*d,2.1*s,1.15*s,a,3);}return;
+  }
+  if(g.category==='FOREST_FLOOR'){
+    for(let i=0;i<4;i++){const a=g.yaw+i*1.571,d=.72*s;blade(verts,x+Math.cos(a)*d,y+.03,z+Math.sin(a)*d,1.25*s,1.35*s,a,3);}return;
+  }
+  blade(verts,x,y,z,1.8*s,.42*s,g.yaw,3);blade(verts,x,y,z,1.45*s,.36*s,g.yaw+1.05,3);
+}
 function treeGeometry(verts,t){
   const p=t.profile,s=t.scale*FOREST_PRESENTATION_SCALE,base=[t.x,t.y-.30,t.z],h=p.height*s,leanX=Math.cos(t.yaw)*p.lean*h,leanZ=Math.sin(t.yaw)*p.lean*h,top=[t.x+leanX,t.y+h*.58,t.z+leanZ];
   groundCluster(verts,t);prism(verts,base,top,p.trunk*s,t.lod==='far'?6:8,0);
@@ -143,7 +242,7 @@ precision highp float;
 layout(location=0)in vec3 aPos;layout(location=1)in vec3 aNormal;layout(location=2)in float aMaterial;
 uniform mat4 uVP;uniform float uTime;
 out vec3 vN;out float vM;out float vH;out vec3 vWorld;
-void main(){vec3 p=aPos;if(aMaterial>.5){float phase=aPos.x*.017+aPos.z*.013;float sway=sin(uTime*.58+phase)*(.20+clamp((aPos.y-4.0)/65.0,0.0,1.0)*.78);p.x+=sway;p.z+=sway*.22;}vN=aNormal;vM=aMaterial;vH=aPos.y;vWorld=p;gl_Position=uVP*vec4(p,1.0);}`;
+void main(){vec3 p=aPos;if(aMaterial>.5&&aMaterial<2.5){float phase=aPos.x*.017+aPos.z*.013;float sway=sin(uTime*.58+phase)*(.20+clamp((aPos.y-4.0)/65.0,0.0,1.0)*.78);p.x+=sway;p.z+=sway*.22;}vN=aNormal;vM=aMaterial;vH=aPos.y;vWorld=p;gl_Position=uVP*vec4(p,1.0);}`;
 const FS=`#version 300 es
 precision highp float;
 in vec3 vN;in float vM;in float vH;in vec3 vWorld;
@@ -188,8 +287,10 @@ void main(){
 }`;
 
 export function createForestSystem(gl,{compact=false}={}){
-  const population=buildForestPopulation({compact}),verts=[];for(const t of population.instances)treeGeometry(verts,t);
+  const population=buildForestPopulation({compact}),groundPopulation=buildGroundUnderstoryPopulation(),verts=[];
+  for(const t of population.instances)treeGeometry(verts,t);
+  for(const g of groundPopulation.instances){if(!compact||rand(g.seed,31)<.58)groundUnderstoryGeometry(verts,g);}
   const data=new Float32Array(verts),vao=gl.createVertexArray();gl.bindVertexArray(vao);const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);const stride=7*4;gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,stride,0);gl.enableVertexAttribArray(1);gl.vertexAttribPointer(1,3,gl.FLOAT,false,stride,12);gl.enableVertexAttribArray(2);gl.vertexAttribPointer(2,1,gl.FLOAT,false,stride,24);const shader=program(gl,VS,FS),uVP=gl.getUniformLocation(shader,'uVP'),uTime=gl.getUniformLocation(shader,'uTime'),uMoonDir=gl.getUniformLocation(shader,'uMoonDir'),uMoonColor=gl.getUniformLocation(shader,'uMoonColor'),uAmbient=gl.getUniformLocation(shader,'uAmbient'),uRockLow=gl.getUniformLocation(shader,'uRockLow'),uRockHigh=gl.getUniformLocation(shader,'uRockHigh'),uMarsh=gl.getUniformLocation(shader,'uMarsh'),uHorizon=gl.getUniformLocation(shader,'uHorizon');gl.bindVertexArray(null);
   const material=GRATITUDE_COAST_NIGHT;
-  return Object.freeze({population,triangleCount:data.length/7/3,materialSource:FOREST_NIGHT_MATERIAL_SOURCE,materialModel:FOREST_MATERIAL_MODEL,atmosphereModel:FOREST_ATMOSPHERE_MODEL,draw(vp,time){gl.useProgram(shader);gl.uniformMatrix4fv(uVP,false,vp);gl.uniform1f(uTime,time);gl.uniform3fv(uMoonDir,material.moon.direction);gl.uniform3fv(uMoonColor,material.moon.color);gl.uniform3fv(uAmbient,material.terrain.ambient);gl.uniform3fv(uRockLow,material.terrain.rockLow);gl.uniform3fv(uRockHigh,material.terrain.rockHigh);gl.uniform3fv(uMarsh,material.terrain.marsh);gl.uniform3fv(uHorizon,material.sky.horizon);gl.bindVertexArray(vao);gl.drawArrays(gl.TRIANGLES,0,data.length/7);}});
+  return Object.freeze({population,groundPopulation,triangleCount:data.length/7/3,materialSource:FOREST_NIGHT_MATERIAL_SOURCE,materialModel:FOREST_MATERIAL_MODEL,atmosphereModel:FOREST_ATMOSPHERE_MODEL,draw(vp,time){gl.useProgram(shader);gl.uniformMatrix4fv(uVP,false,vp);gl.uniform1f(uTime,time);gl.uniform3fv(uMoonDir,material.moon.direction);gl.uniform3fv(uMoonColor,material.moon.color);gl.uniform3fv(uAmbient,material.terrain.ambient);gl.uniform3fv(uRockLow,material.terrain.rockLow);gl.uniform3fv(uRockHigh,material.terrain.rockHigh);gl.uniform3fv(uMarsh,material.terrain.marsh);gl.uniform3fv(uHorizon,material.sky.horizon);gl.bindVertexArray(vao);gl.drawArrays(gl.TRIANGLES,0,data.length/7);}});
 }

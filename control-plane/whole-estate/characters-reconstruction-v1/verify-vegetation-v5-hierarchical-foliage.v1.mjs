@@ -5,7 +5,7 @@ import crypto from 'node:crypto';
 import {execFileSync,spawnSync} from 'node:child_process';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 
-const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../../../..');
+const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../../..');
 const CONTRACT_PATH='control-plane/whole-estate/characters-reconstruction-v1/vegetation-v5-hierarchical-foliage-contract.v1.json';
 const REPRESENTATION_PATH='characters/vegetation-representation.mjs';
 const POPULATION_PATH='characters/vegetation-population.mjs';
@@ -85,6 +85,8 @@ try{
   record('CAMERA_DISTANCE_LOD_AUTHORITY_PRESERVED',cameraContract?.lodAuthority==='CAMERA_DISTANCE',cameraContract?.lodAuthority??null);
   record('LOD_HYSTERESIS_PRESERVED',cameraContract?.hysteresisRequired===true&&cameraContract?.hysteresis?.nearMid&&cameraContract?.hysteresis?.midFar,cameraContract?.hysteresis??null);
   record('V5_REPRESENTATION_CONTRACT_PRESENT',v5?.schema==='MIRRORLAND_HIERARCHICAL_FOLIAGE_V5_REPRESENTATION_CONTRACT_v1',v5?.schema??null);
+  record('V5_SHARED_WIND_DECLARED_FALSE',v5?.sharedWind===false,v5?.sharedWind??null);
+  record('V5_FOLIAGE_NIGHT_LIGHTING_DECLARED_FALSE',v5?.foliageNightLighting===false,v5?.foliageNightLighting??null);
   record('NEAR_LEAF_BUDGET_80_TO_180',v5?.budgets?.nearLeaf?.minimum===80&&v5?.budgets?.nearLeaf?.maximum===180,v5?.budgets?.nearLeaf??null);
   record('MID_CLUSTER_BUDGET_20_TO_50',v5?.budgets?.midCluster?.minimum===20&&v5?.budgets?.midCluster?.maximum===50,v5?.budgets?.midCluster??null);
   record('FAR_INDIVIDUAL_LEAF_BUDGET_ZERO',v5?.budgets?.farLeaf===0,v5?.budgets?.farLeaf??null);
@@ -126,8 +128,11 @@ try{
     'buildMidSprayPayload'
   ];
   for(const token of requiredTokens)record(`REPRESENTATION_TOKEN:${token}`,repSource.includes(token),token);
-  record('V6_SHARED_WIND_ABSENT',!/(SHARED_WIND|uWind|sharedWind)/.test(repSource),null);
-  record('V7_FOLIAGE_NIGHT_LIGHTING_ABSENT',!/(FOLIAGE_NIGHT_LIGHTING|foliageNightLighting)/.test(repSource),null);
+  const repSourceForV6V7Scan=repSource
+    .replace(/\bsharedWind\s*:\s*false\b/g,'')
+    .replace(/\bfoliageNightLighting\s*:\s*false\b/g,'');
+  record('V6_SHARED_WIND_ABSENT',!/(SHARED_WIND|uWind|sharedWind)/.test(repSourceForV6V7Scan),null);
+  record('V7_FOLIAGE_NIGHT_LIGHTING_ABSENT',!/(FOLIAGE_NIGHT_LIGHTING|foliageNightLighting)/.test(repSourceForV6V7Scan),null);
 
   const appSource=fileText(APP_PATH);
   record('APP_IMPORTS_CAMERA_TRUE_VEGETATION_RENDERER',appSource.includes("from './vegetation-representation.mjs'")&&appSource.includes('createCameraTrueVegetationRenderer'),null);

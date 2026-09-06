@@ -6,6 +6,7 @@
   "archivedCinematographicAncestor": "73d10c2ee4a1800e9327eca4d5ef8902e6484dcc",
   "cloneFloorCommit": "99591457722b9d2f9e23bd4e074d3868a4bc0c19",
   "deltaCodeHeadBeforeCustodyWrite": "e0e84305d2b774de8d511926a6918225d589f78f",
+  "cacheIdentityRepairHeadBeforeFinalCustodyWrite": "e3fa71eb19f1bcfc6125c67ef881cb51f5cd9995",
   "branch": "repair/compass-approved-film-clone-delta-20260905-001",
   "specificationCommit": "88473442959299d6f6af82396917f0578074cab2",
   "storyboardIssue": 2756,
@@ -30,7 +31,8 @@
     "css": {"path":"assets/compass/compass.orientation-cinematic.css","blob":"a4706ab61783a278fcd0c3d8b002a862426b13e4","role":"APPROVED_FILM_LAYOUT_PLUS_NUMBERED_DOMINANT_CONTEXT"},
     "primaryRenderer": {"path":"assets/compass/compass.orientation-cinematic.render.js","blob":"fe05813cf1d43817e789ce790435c84a5970b2d7","role":"ARCHIVED_S01_TO_S05_PLUS_CANONICAL_S06_WORLD"},
     "media": {"path":"assets/compass/compass.orientation-cinematic.media.js","blob":"307661e37e84c22930b5a3f8b8f618d474e13b9a","role":"ARCHIVED_38S_MEDIA_AND_SHOT_CONTRACT"},
-    "finalRenderer": {"path":"assets/compass/compass.orientation-cinematic.final.js","blob":"1af6d8dc0e1cfc8ae7f6e46b962db2629881fbff","role":"TRANSPARENT_BRAIN_TROPHY_PHASE3_HOUSE_AND_S08_HANDOFF"}
+    "finalRenderer": {"path":"assets/compass/compass.orientation-cinematic.final.js","blob":"1af6d8dc0e1cfc8ae7f6e46b962db2629881fbff","role":"TRANSPARENT_BRAIN_TROPHY_PHASE3_HOUSE_AND_S08_HANDOFF"},
+    "indexBinding": {"path":"index.html","blob":"9c1c1e815d3847421ff837601dabea12020200e4","role":"REQUEST_IDENTITY_ONLY_FOR_CHANGED_CINEMATIC_CSS_AND_HOST"}
   },
   "delta": {
     "storyboardContext": {
@@ -66,6 +68,11 @@
       "constructor":"createMapWideEnvironmentRenderer",
       "custom2DProjectionPresent":false,
       "canonicalWorldRendererUsed":true
+    },
+    "cacheIdentity": {
+      "css":"/assets/compass/compass.orientation-cinematic.css?v=approved-film-delta-38s&cb=a4706ab61783a278",
+      "host":"/assets/compass/compass.orientation-cinematic.js?v=approved-film-delta-38s&cb=5e04ede8e679a83d",
+      "pageRemainderMutationAuthorized":false
     }
   },
   "exactDiffPaths": [
@@ -74,7 +81,8 @@
     "assets/compass/compass.orientation-cinematic.css",
     "assets/compass/compass.orientation-cinematic.js",
     "assets/compass/compass.orientation-cinematic.media.js",
-    "assets/compass/compass.orientation-cinematic.render.js"
+    "assets/compass/compass.orientation-cinematic.render.js",
+    "index.html"
   ],
   "protectedUnchanged": [
     "assets/compass/compass.controller.js",
@@ -99,6 +107,7 @@
   ],
   "qualification": {
     "sourceAudit":"PASS_SOURCE_AND_SCOPE_CODE_AUDIT",
+    "cacheIdentityRepair":"APPLIED_FROM_EXACT_CI_ASSERTION",
     "nativeVerifierExecution":"NOT_PERFORMED_NO_NATIVE_CHECKOUT_IN_CURRENT_EXECUTION_SURFACE",
     "renderedDesktop":"PENDING",
     "renderedTablet":"PENDING",

@@ -2,6 +2,7 @@ import puppeteer from 'puppeteer-core';
 
 const chromePath=process.env.CHROME_PATH;
 const baseUrl=process.env.AUDRALIA_DIAGNOSTIC_BASE_URL||'http://127.0.0.1:4173';
+const route=process.env.AUDRALIA_DIAGNOSTIC_ROUTE||'/showroom/globe/audralia/';
 if(!chromePath)throw new Error('CHROME_PATH_REQUIRED');
 
 const browser=await puppeteer.launch({
@@ -30,7 +31,7 @@ try{
     }
   });
 
-  await page.goto(`${baseUrl}/showroom/globe/audralia/weather-presentation-reconciliation/`,{waitUntil:'domcontentloaded',timeout:60000});
+  await page.goto(`${baseUrl}${route}`,{waitUntil:'domcontentloaded',timeout:60000});
 
   let waitObservedPass=false;
   let waitError=null;
@@ -51,15 +52,19 @@ try{
     let proofRuntime=null;
     try{proofRuntime=proof?.getRuntime?.()||null;}catch{}
     const runtime=proofRuntime||window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_RUNTIME__||null;
+    const loader=document.querySelector('[data-audralia-loader]');
     return {
       location:location.href,
       statusText:document.querySelector('[data-h-earth-status]')?.textContent?.trim()||null,
       status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null,
       loaderStage:document.querySelector('[data-audralia-loader-stage]')?.textContent?.trim()||null,
-      loaderProgress:document.querySelector('[data-audralia-loader]')?.dataset?.progress||null,
+      loaderProgress:loader?.dataset?.progress||null,
+      loaderDelayed:loader?.dataset?.delayed||null,
+      loaderErrored:loader?.classList.contains('is-error')||false,
       reconciliationPresent:Boolean(proof),
       runtimePresent:Boolean(runtime),
       reconciliationError:window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__||null,
+      progressiveEnrichmentState:window.__AUDRALIA_PROGRESSIVE_ENRICHMENT_STATE__||null,
       runtimeInvariants:runtime?.invariants||null,
       spatial:runtime?.spatial?{activeLocalCount:runtime.spatial.activeLocalCount,maxLocalCount:runtime.spatial.maxLocalCount}:null,
       rayDiagnostics:runtime?.rayDiagnostics||null,

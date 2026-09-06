@@ -1,0 +1,99 @@
+name: TEMP Compass T11 Binary Transfer Stager
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/compass-t11-binary-transfer-stager-temporary.yml'
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  stage-verified-master:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact transfer head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Verify exact transfer head and installed adapter
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+          test -f tools/ai-room-transport/bounded-binary-file-ingress.v1.mjs
+
+      - name: Retrieve exact T10 artifact and extract only frozen master
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          ARTIFACT_ID: '9994017177'
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/${REPOSITORY}/actions/artifacts/${ARTIFACT_ID}/zip" \
+            -o /tmp/compass-t10.zip
+          test "$(unzip -Z1 /tmp/compass-t10.zip | grep -Fxc 'output/compass-main-orientation-final-v1.mp4')" = '1'
+          unzip -p /tmp/compass-t10.zip output/compass-main-orientation-final-v1.mp4 > /tmp/compass-main-orientation-final-v1.mp4
+
+      - name: Verify frozen media identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(stat -c%s /tmp/compass-main-orientation-final-v1.mp4)" = '3828177'
+          test "$(sha256sum /tmp/compass-main-orientation-final-v1.mp4 | awk '{print $1}')" = '6ada38eadeb6243b3809167f45dd8a74808c88ac677273683338772e7899b4e7'
+          python - <<'PY'
+          import hashlib
+          p='/tmp/compass-main-orientation-final-v1.mp4'
+          b=open(p,'rb').read()
+          got=hashlib.sha1(f'blob {len(b)}\0'.encode()+b).hexdigest()
+          expected='ca95d7c17ef54044a11bc456a949c33fa9820bc0'
+          assert got == expected, (got, expected)
+          print('EXPECTED_FINAL_GIT_BLOB='+got)
+          PY
+
+      - name: Create eight bounded unreferenced Git blob chunks and closed manifest
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
+          EXPECTED_TARGET_HEAD: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/ai-room-transport/bounded-binary-file-ingress.v1.mjs \
+            --source /tmp/compass-main-orientation-final-v1.mp4 \
+            --repository "${REPOSITORY}" \
+            --target-branch "${TARGET_BRANCH}" \
+            --expected-target-head "${EXPECTED_TARGET_HEAD}" \
+            --destination assets/compass/cinematic-media/compass-main-orientation-final-v1.mp4 \
+            --chunk-size 524288 \
+            --output /tmp/compass-t11-transfer-manifest.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const m=JSON.parse(fs.readFileSync('/tmp/compass-t11-transfer-manifest.json','utf8'));
+          if(m.schema!=='BOUNDED_BINARY_OBJECT_TRANSFER_MANIFEST_v1') throw new Error('manifest schema mismatch');
+          if(m.totalBytes!==3828177) throw new Error('byte count mismatch');
+          if(m.sha256!=='6ada38eadeb6243b3809167f45dd8a74808c88ac677273683338772e7899b4e7') throw new Error('sha256 mismatch');
+          if(m.chunks.length!==8) throw new Error(`expected 8 chunks, got ${m.chunks.length}`);
+          if(m.chunks.reduce((n,c)=>n+c.bytes,0)!==3828177) throw new Error('chunk byte sum mismatch');
+          console.log('MANIFEST_BEGIN');
+          console.log(JSON.stringify(m));
+          console.log('MANIFEST_END');
+          NODE
+
+      - name: Upload closed transfer manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-t11-bounded-transfer-manifest-${{ github.run_id }}
+          path: /tmp/compass-t11-transfer-manifest.json
+          if-no-files-found: error
+          retention-days: 7

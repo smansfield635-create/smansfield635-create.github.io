@@ -28,6 +28,10 @@ for(const marker of ['01 / ARRIVAL','02 / ORIENTATION','03 / GUIDED INTRODUCTION
 check('CONTEXT_CURRENT_TEXT_EXITS_FIRST',css.includes('@keyframes tour-current')&&css.includes('78%,100%{opacity:0'));
 check('CONTEXT_NEXT_TEXT_ENTERS_BEFORE_BOUNDARY',css.includes('@keyframes tour-next')&&css.includes('96%,100%{opacity:1'));
 check('CONTEXT_DOMINANT_LOCAL_CONTRAST',css.includes('background:linear-gradient(90deg,rgba(1,6,10,.86)')&&css.includes('text-shadow:0 3px 22px rgba(0,0,0,.96)'));
+check('TOUR_CONTEXT_RESTART_GUARD_INSTALLED',media.includes("installCinematicTourContextRestartGuard();")&&media.includes("TOUR_CONTEXT_RESTART_STYLE_ID='compass-cinematic-tour-context-restart-guard'"));
+check('TOUR_CONTEXT_S03_UNIQUE_RESTART_NAMES',media.includes('@keyframes tour-current-s03')&&media.includes('@keyframes tour-next-s03')&&media.includes('animation-name:tour-current-s03')&&media.includes('animation-name:tour-next-s03'));
+check('TOUR_CONTEXT_S04_UNIQUE_RESTART_NAMES',media.includes('@keyframes tour-current-s04')&&media.includes('@keyframes tour-next-s04')&&media.includes('animation-name:tour-current-s04')&&media.includes('animation-name:tour-next-s04'));
+check('TOUR_CONTEXT_RESTART_GUARD_NO_MASTER_CLOCK',!media.includes('requestAnimationFrame(')&&!media.includes('performance.now(')&&!media.includes('setInterval('));
 check('NO_CHARACTER_COPY_IN_VISIBLE_CONTEXT',!css.includes('Meet the characters')&&!css.includes('Choose who you want to speak with'));
 check('DONOR_INTERNAL_S07_COPY_HIDDEN',css.includes('.compass-orientation-cinematic[data-shot-id="S07"] .cinematic-breadth__heading')&&css.includes('.compass-orientation-cinematic[data-shot-id="S07"] .cinematic-breadth__caption{display:none!important}'));
 
@@ -52,6 +56,7 @@ check('NO_ANALYTICS_DELTA',!/analytics\s*\(/iu.test(combined));
 check('NO_CONTROLLER_MUTATION_PATH_IN_CUSTODY',Array.isArray(custody.protectedUnchanged)&&custody.protectedUnchanged.includes('assets/compass/compass.controller.js'));
 check('NO_CHARACTER_SCENE',custody.delta?.house?.characterScenePresent===false);
 check('NO_RETIMING',custody.animationRetimingPerformed===false);
+check('PREHOOK_REPAIR_SCOPE_BOUNDED',Array.isArray(custody.preHookAuditRepair?.exactPaths)&&custody.preHookAuditRepair.exactPaths.length===3&&custody.preHookAuditRepair.exactPaths.includes('assets/compass/compass.orientation-cinematic.media.js')&&custody.preHookAuditRepair.exactPaths.includes('assets/compass/compass.homepage-cinematic.verify.mjs')&&custody.preHookAuditRepair.exactPaths.includes('assets/compass/cinematic-media/manifest.v1.json'));
 check('HOOK_STILL_BLOCKED',custody.qualification?.ordinaryEntryHook==='BLOCKED_UNTIL_RENDERED_QUALIFICATION');
 
 const failed=checks.filter(c=>!c.pass);

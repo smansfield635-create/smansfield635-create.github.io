@@ -49,6 +49,8 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$WORK_DIR" "$T9_DIR" "$OUTPUT_DIR" "$EVIDENCE_DIR"
+          git fetch --no-tags --depth=1 origin "$CARRIER_BASE_SHA"
+          git cat-file -e "$CARRIER_BASE_SHA^{commit}"
           git diff --name-only "$CARRIER_BASE_SHA" HEAD | sort > /tmp/t10-carrier-paths.txt
           printf '%s\n' '.github/workflows/compass-single-master-t10-deterministic-encode-v1.yml' > /tmp/t10-expected-paths.txt
           diff -u /tmp/t10-expected-paths.txt /tmp/t10-carrier-paths.txt

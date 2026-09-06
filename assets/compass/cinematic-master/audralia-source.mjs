@@ -1,4 +1,4 @@
-import { createMapWideEnvironmentRenderer } from '../../showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs';
+import { createMapWideEnvironmentRenderer } from '../../../showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs';
 
 export const COMPASS_MASTER_AUDRALIA_SOURCE_ID = 'COMPASS_SINGLE_MASTER_AUDRALIA_SOURCE_v1';
 export const COMPASS_MASTER_AUDRALIA_BINDING = Object.freeze({

@@ -11,18 +11,18 @@ Then read these three controlling V2 documents:
    `docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_NEXT_HOOK_DIRECT_STRATEGY_20260906.md`
 2. **HOW V2 is produced and resumed**  
    `docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_V2_EXECUTION_SPINE_CURRENT.md`
-3. **HOW execution transport is resolved without defaulting to an environment**  
+3. **HOW execution capability is resolved without defaulting to an environment**  
    `docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_EXECUTION_ROUTE_CLARIFICATION.md`
 
-For execution-route questions, the clarification supersedes any example environment/substrate wording in older V2 documentation.
+For execution-route questions, the clarification supersedes any historical/example substrate wording.
 
-## Current product state
+## Current production state
 
 Current cinematic live baseline remains PR #2801:
 
 `99025b828629548be1ea066cd2e01dd16d855a03`
 
-Current state:
+State:
 
 `INTRO_HOOKED_LIVE — PRERENDERED_THIN_PLAYER`
 
@@ -37,7 +37,7 @@ Identity:
 - Git blob: `ca95d7c17ef54044a11bc456a949c33fa9820bc0`
 - runtime: `38.0 s`
 
-The current cinematic stays hooked while V2 is built and reviewed detached.
+V1 stays hooked while V2 is built and reviewed detached.
 
 Target release choreography:
 
@@ -45,9 +45,9 @@ Target release choreography:
 
 No routine interim unhook.
 
-## Critical semantic separation
+## Surface separation
 
-Do not collapse these surfaces:
+Do not collapse:
 
 `V2 CAPTURE SOURCE → NEW IMMUTABLE V2 MP4`
 
@@ -55,52 +55,59 @@ Do not collapse these surfaces:
 
 `PRODUCTION HOOK / PUBLICATION → ORDINARY HOMEPAGE ENTRY`
 
-“Source binding” means construction-time source selection for the V2 capture source. The existing V1 MP4 has no live website asset binding to switch.
+“Source binding” means construction-time source selection for V2. V1 cannot be runtime-rebound.
 
 ## Confirmed V2 corrections
 
-- restore the repeating text-led/image-lagged cadence: `TEXT_IN < IMAGE_IN < TEXT_OUT < IMAGE_OUT`;
-- remove the early text-only desert and late image pileup;
-- protect Brain/Trophy/House breathing room;
-- reject the retired Audralia river-model state;
-- freeze one current live-authoritative Audralia world state and use it both through the Mirrorland reveal and in the succeeding full Audralia shot;
-- remove the fabricated Mirrorland grid/interior environment while preserving the window/dissolve threshold concept;
-- recover/evolve the historical 4.35-second entry transition from PR #2697/#2743;
-- preserve `SELECTED_CONTROL_CELLS_BECOME_SUCCESSOR_STAR_AND_COMPASS_MATTER` as the historical law while evolving the visual causality so actual source cells disappear as matching fragments become mobile;
-- require the first V2 MP4 frame to be decoded/presentable before final entry material clears;
-- keep zero blank frame.
+- restore `TEXT_IN < IMAGE_IN < TEXT_OUT < IMAGE_OUT` throughout;
+- remove early text-only desert and late image pileup;
+- preserve Brain/Trophy/House breathing room;
+- reject retired Audralia river-model state;
+- freeze one current live-authoritative Audralia world state for both Mirrorland reveal and succeeding Audralia shot;
+- remove fabricated Mirrorland grid/interior while keeping window/dissolve threshold concept;
+- recover/evolve PR #2697/#2743 4.35-second entry interaction;
+- historical law remains `SELECTED_CONTROL_CELLS_BECOME_SUCCESSOR_STAR_AND_COMPASS_MATTER`;
+- successor causality: `SOURCE_CELL_DISAPPEARS ↔ MATCHING_FRAGMENT_BECOMES_MOBILE`;
+- first V2 frame decoded/presentable before entry material clears;
+- zero blank frame.
 
-## D0 — documentation adoption comes before R0
+## D0 — documentation adoption before R0
 
-The V2 strategy/spine/clarification are not production authority until their documentation candidate is adopted to `main`.
+V2 production must not begin until the controlling documentation candidate is adopted to `main`.
 
-For the current documentation candidate, D0 requires the exact repository static-editorial verifier to PASS against the exact base/head and declared documentation paths.
+For `STATIC_EDITORIAL_MICRO`, D0 requires exact PASS from the repository-required static-editorial verifier against exact base/head and declared documentation paths.
 
 Required result:
 
 `D0_STATIC_EDITORIAL_VERIFIER_PASS`
 
-A passive CI success is not a substitute for this result.
+Passive CI is not a substitute unless current repository authority explicitly says otherwise.
 
-### Capability-first execution law
+### Capability-first law
 
 D0 does **not** prescribe an execution environment.
 
-The lawful sequence is:
+Lawful route:
 
 `REQUIRED VERIFIER EVIDENCE → CURRENT AI_ENTRYPOINT → CURRENT ROOM'S ALREADY-AUTHORIZED CAPABILITIES → EXECUTE IF DIRECTLY AVAILABLE → OTHERWISE RECORD EXACT BOUNDARY AND STOP`
 
-Do not translate an acquisition failure such as `Could not resolve host: github.com` into “use a particular hosted workspace,” “open a builder,” “create a workflow,” or any other default transport.
+An acquisition failure such as:
+
+`Could not resolve host: github.com`
+
+is only evidence that that attempt could not acquire the exact repository state.
+
+It is **not** an instruction to use any named workspace, builder, clone, workflow, CI path, or bridge.
 
 A named environment is not the next action.
 
-The next action is always the unresolved evidence requirement itself. A later room resumes D0 and resolves whatever authorized execution capability is actually available there.
+The unresolved evidence requirement is the next action. A later room resumes D0 and resolves whatever authorized capability actually exists there.
 
-If no current capability can run the required verifier against the exact repository state, leave D0 unresolved and keep the documentation candidate draft. Do not bypass or relabel the proof.
+If no capability in the current room can execute the verifier against the exact repository state, keep D0 unresolved and the candidate draft. Do not bypass, relabel, or invent infrastructure.
 
 ## R0→R10 production ladder
 
-Only after D0 adoption closes does V2 begin:
+Only after D0 closes:
 
 `R0 CURRENT STATE`
 → `R1 SOURCE AUTHORITY`
@@ -116,36 +123,37 @@ Only after D0 adoption closes does V2 begin:
 
 Resume only the first state lacking exact durable evidence.
 
-The execution spine defines the required evidence and proven deterministic semantics for each state. The execution-route clarification governs how a room chooses transport: **capability-first, never environment-first**.
+The spine defines evidence and deterministic semantics. The execution-route clarification governs transport selection: **capability-first, never environment-first**.
 
-## Historical precedent — use semantics, not default transports
+## Historical precedent
 
-Reusable authorities include:
+Reusable authority includes:
 
-- deterministic capture donor: `96c89ec797490a5dc0e3dd343f4d34a396adaa02`;
-- entry interaction: PR #2697 / PR #2743 candidate `589b50d8178539b3241ad42315e4a38120040522`;
-- anti-reinvention protocol: PR #2754;
-- deterministic encode semantics: PR #2796 / run `34049018018`;
-- installed bounded binary ingress and reconstruction mechanisms;
-- binary-custody precedent: #1334, #1323, #1340, #2798, #2799;
-- V1 publication boundary: PR #2801.
+- capture donor `96c89ec797490a5dc0e3dd343f4d34a396adaa02`;
+- entry interaction PR #2697 / PR #2743 candidate `589b50d8178539b3241ad42315e4a38120040522`;
+- anti-reinvention PR #2754;
+- deterministic encode semantics PR #2796 / run `34049018018`;
+- installed bounded binary ingress/reconstruction mechanisms;
+- binary custody precedent #1334, #1323, #1340, #2798, #2799;
+- publication boundary PR #2801.
 
-Historical workflows/carriers prove semantics and evidence. They are not standing instructions to recreate their transport under the current AI entrypoint.
+Historical transports prove semantics. They are not standing instructions to recreate their execution environment.
 
 ## Immediate instruction for any new room
 
 1. Read current `AI_ENTRYPOINT.json`.
 2. Read this handoff.
-3. Read the direct strategy.
-4. Read the V2 execution spine.
-5. Read the execution-route clarification.
-6. Determine whether D0 documentation adoption is already closed on `main`.
-7. If D0 is unresolved, resume D0 only; do not begin R0/R1.
-8. Resolve the current room's already-authorized capabilities without naming or creating a default environment.
-9. If D0 is closed, locate R0→R10 evidence and execute only the first unresolved state.
-10. Persist the exact checkpoint before advancing.
-11. Keep V1 live until an owner-accepted V2 is ready for direct replacement.
+3. Read direct strategy.
+4. Read V2 execution spine.
+5. Read execution-route clarification.
+6. Determine whether D0 is closed on `main`.
+7. If D0 is unresolved, resume D0 only; do not start R0/R1.
+8. Resolve only already-authorized capabilities actually available in the current room.
+9. Do not name, create, or recommend a default execution environment because one capability is absent.
+10. If D0 is closed, locate R0→R10 evidence and execute only the first unresolved state.
+11. Persist the exact checkpoint before advancing.
+12. Keep V1 live until owner-accepted V2 is ready for direct replacement.
 
 Operating law:
 
-`NO DEFAULT SUBSTRATE → NO INFRASTRUCTURE INVENTION → CLOSE THE REQUIRED EVIDENCE WITH WHATEVER CURRENT AUTHORIZED CAPABILITY ACTUALLY EXISTS → OTHERWISE STOP AT THAT EXACT STATE`
+`NO DEFAULT SUBSTRATE → NO INFRASTRUCTURE INVENTION → CLOSE THE REQUIRED EVIDENCE WITH A CURRENTLY AUTHORIZED AVAILABLE CAPABILITY → OTHERWISE STOP AT THAT EXACT STATE`

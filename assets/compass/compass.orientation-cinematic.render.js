@@ -1,4 +1,4 @@
-const RENDERER_SCHEMA='COMPASS_MAIN_HOMEPAGE_CINEMATIC_RENDERER_v3';
+const RENDERER_SCHEMA='COMPASS_MAIN_HOMEPAGE_CINEMATIC_RENDERER_v3_APPROVED_FILM_S06_CANONICAL_WORLD';
 const SOURCE=Object.freeze({
   cosmos:Object.freeze({path:'assets/compass/compass.cosmos.js',blob:'4fe781df1a8876218c6f081b6ec88d5d2d6044c7'}),
   crystals:Object.freeze({path:'assets/compass/compass.crystals.js',blob:'cd2cbad0494852cc80c51959a6827407d037b8fb'}),
@@ -8,10 +8,11 @@ const SOURCE=Object.freeze({
   mirrorland:Object.freeze({path:'assets/compass/compass.mirrorland-window.js',blob:'f99d3ffedf7b7654d067d21d9363eb287877f852'}),
   controller:Object.freeze({path:'assets/compass/compass.controller.js',blob:'568a6b2cd608a4cbcd62cf70ed59b241c39c90d2'}),
   audraliaIndex:Object.freeze({path:'showroom/globe/audralia/index.html',blob:'96bf20a3189182683bc94c08e2ad7c0dba740f07'}),
-  audraliaRenderer:Object.freeze({path:'inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs',blob:'872d20b17bb0cd89d9613ca0262b25350890a617'}),
+  audraliaRenderer:Object.freeze({path:'showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs',blob:'872d20b17bb0cd89d9613ca0262b25350890a617'}),
   audraliaAwardsFloor:Object.freeze({path:'showroom/globe/h-earth/awards/media/diamond-gate-h-earth-audralia-30s-vivaldi.mp4',blob:'db0563a1a45811dadc36c48f0cb2356d748e9a07'})
 });
-const AUDRALIA_RENDERER_URL='/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs';
+const AUDRALIA_RENDERER_URL='/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs';
+const AUDRALIA_RENDERER_MODE='CANONICAL_MAP_WIDE_ENVIRONMENT_RENDERER';
 const GOLDEN_ANGLE=Math.PI*(3-Math.sqrt(5));
 const FIELD_SEED=0x44474243;
 const NIGHT_COLORS=['255,248,224','154,217,225','234,208,131','170,155,224'];
@@ -192,71 +193,6 @@ function renderThreshold(scene,p,elapsedMs){
   const copy=scene.querySelector('.cinematic-threshold__copy');copy.style.opacity=String(smooth(.36,.49,p)*(1-smooth(.67,.82,p)));copy.style.transform=`translate3d(0,${mix(12,0,smooth(.36,.49,p))}px,0)`;scene.style.opacity=String(smooth(.01,.10,p));
 }
 
-const AUDRALIA_RECONSTRUCTION_SCHEMA='COMPASS_AUDRALIA_SOURCE_RECONSTRUCTION_v1';
-const AUDRALIA_GEOGRAPHY=Object.freeze({
-  sourceRendererBlob:SOURCE.audraliaRenderer.blob,
-  geographyAuthority:'AUDRALIA_GRATITUDE_GEOGRAPHIC_TRANSFER_AUTHORITY_v1',
-  coast:Object.freeze([
-    [-520,-40],[-760,-80],[-980,-180],[-1180,-340],[-1500,-520],[-1660,-720],[-1500,-900],[-1260,-850],
-    [-1080,-700],[-1180,-1010],[-1380,-1260],[-1510,-1490],[-1370,-1710],[-1080,-1880],[-760,-1990],[-470,-1910],
-    [-190,-2050],[120,-2010],[390,-2160],[650,-2050],[760,-1850],[1040,-1700],[1370,-1800],[1650,-1600],
-    [1760,-1360],[1580,-1260],[1350,-1220],[1140,-1100],[900,-1040],[690,-900],[560,-700],[760,-430],[-420,90]
-  ].map(point=>Object.freeze(point))),
-  rivers:Object.freeze([
-    [[-420,-760],[-330,-880],[-250,-1010],[-150,-1140],[-20,-1270],[120,-1395],[250,-1510],[365,-1625],[430,-1770]],
-    [[-1050,-720],[-930,-790],[-810,-850],[-690,-880],[-560,-850],[-420,-760]],
-    [[-80,-500],[-120,-610],[-210,-700],[-320,-760],[-420,-760]],
-    [[1080,-720],[970,-820],[850,-930],[730,-1040],[600,-1140],[500,-1270],[480,-1420]],
-    [[430,-1770],[330,-1840],[220,-1910]],[[430,-1770],[440,-1870],[470,-1980]],[[430,-1770],[560,-1840],[690,-1910]]
-  ].map(line=>Object.freeze(line.map(point=>Object.freeze(point))))),
-  lakes:Object.freeze([[260,-1010,150,90],[-760,-930,78,52],[850,-930,62,40]].map(lake=>Object.freeze(lake))),
-  provinces:Object.freeze([
-    [-1080,-1100,'rgba(107,113,74,.34)'],[40,-520,'rgba(137,118,84,.30)'],[-1420,-820,'rgba(72,93,78,.28)'],
-    [-80,-1240,'rgba(74,108,88,.26)'],[930,-850,'rgba(151,139,112,.26)'],[320,-1760,'rgba(77,116,94,.30)'],
-    [760,-1260,'rgba(151,126,82,.20)'],[-120,-720,'rgba(54,105,79,.32)']
-  ].map(province=>Object.freeze(province)))
-});
-function projectAudraliaSource(point,state,cx,cy,radius){
-  const lon=point[0]/2150*.78+(state.yaw+.62)*.82;
-  const lat=-(point[1]+1035)/2250*.72+(1.02-state.pitch)*.28;
-  const cosLat=Math.cos(lat),x=cosLat*Math.sin(lon),y=Math.sin(lat),z=cosLat*Math.cos(lon);
-  return{x:cx+x*radius,y:cy-y*radius,z};
-}
-function traceAudraliaPath(ctx,points,state,cx,cy,radius,close=false){
-  let started=false;ctx.beginPath();
-  for(const point of points){const projected=projectAudraliaSource(point,state,cx,cy,radius);if(projected.z<-.12)continue;if(!started){ctx.moveTo(projected.x,projected.y);started=true;}else ctx.lineTo(projected.x,projected.y);}
-  if(close&&started)ctx.closePath();return started;
-}
-function drawAudraliaSourceReconstruction(canvas,state){
-  const rect=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,1.25),width=Math.max(1,rect.width),height=Math.max(1,rect.height),pixelWidth=Math.max(1,Math.round(width*dpr)),pixelHeight=Math.max(1,Math.round(height*dpr));
-  if(canvas.width!==pixelWidth||canvas.height!==pixelHeight){canvas.width=pixelWidth;canvas.height=pixelHeight;}
-  const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);
-  const zoom=clamp((5000-state.distance)/(5000-1750)),radius=Math.min(width,height)*mix(.31,.74,zoom),cx=width*mix(.56,.50,zoom),cy=height*.50;
-  const back=ctx.createRadialGradient(cx-radius*.35,cy-radius*.34,radius*.05,cx,cy,radius*1.65);back.addColorStop(0,'rgba(38,86,101,.20)');back.addColorStop(.52,'rgba(7,26,38,.12)');back.addColorStop(1,'rgba(4,9,15,0)');ctx.fillStyle=back;ctx.fillRect(0,0,width,height);
-  const atmosphere=ctx.createRadialGradient(cx,cy,radius*.82,cx,cy,radius*1.16);atmosphere.addColorStop(0,'rgba(104,202,218,0)');atmosphere.addColorStop(.82,'rgba(104,202,218,.06)');atmosphere.addColorStop(.94,'rgba(127,220,234,.26)');atmosphere.addColorStop(1,'rgba(127,220,234,0)');ctx.fillStyle=atmosphere;ctx.beginPath();ctx.arc(cx,cy,radius*1.16,0,Math.PI*2);ctx.fill();
-  ctx.save();ctx.beginPath();ctx.arc(cx,cy,radius,0,Math.PI*2);ctx.clip();
-  const ocean=ctx.createRadialGradient(cx-radius*.38,cy-radius*.42,radius*.06,cx+radius*.12,cy+radius*.08,radius*1.24);ocean.addColorStop(0,'#194b5b');ocean.addColorStop(.38,'#103747');ocean.addColorStop(.76,'#092430');ocean.addColorStop(1,'#06131b');ctx.fillStyle=ocean;ctx.fillRect(cx-radius,cy-radius,radius*2,radius*2);
-  if(traceAudraliaPath(ctx,AUDRALIA_GEOGRAPHY.coast,state,cx,cy,radius,true)){
-    const land=ctx.createLinearGradient(cx-radius*.72,cy-radius*.7,cx+radius*.65,cy+radius*.78);land.addColorStop(0,'#75825d');land.addColorStop(.35,'#4d705a');land.addColorStop(.68,'#766f4d');land.addColorStop(1,'#455b4b');ctx.fillStyle=land;ctx.fill();
-    ctx.save();ctx.clip();
-    for(const [u,v,color] of AUDRALIA_GEOGRAPHY.provinces){const q=projectAudraliaSource([u,v],state,cx,cy,radius);if(q.z<-.12)continue;const g=ctx.createRadialGradient(q.x,q.y,0,q.x,q.y,radius*.28);g.addColorStop(0,color);g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(q.x-radius*.3,q.y-radius*.3,radius*.6,radius*.6);}
-    for(const river of AUDRALIA_GEOGRAPHY.rivers){if(!traceAudraliaPath(ctx,river,state,cx,cy,radius,false))continue;ctx.strokeStyle='rgba(126,193,207,.68)';ctx.lineWidth=Math.max(.75,radius*.0024);ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();}
-    for(const [u,v] of AUDRALIA_GEOGRAPHY.lakes){const q=projectAudraliaSource([u,v],state,cx,cy,radius);if(q.z<-.12)continue;ctx.fillStyle='rgba(97,171,188,.72)';ctx.beginPath();ctx.ellipse(q.x,q.y,Math.max(2,radius*.019),Math.max(1.5,radius*.011),-.22,0,Math.PI*2);ctx.fill();}
-    ctx.restore();
-    traceAudraliaPath(ctx,AUDRALIA_GEOGRAPHY.coast,state,cx,cy,radius,true);ctx.strokeStyle='rgba(212,219,182,.48)';ctx.lineWidth=Math.max(.75,radius*.0027);ctx.stroke();
-  }
-  const terminator=ctx.createLinearGradient(cx-radius*.8,cy-radius*.55,cx+radius*.95,cy+radius*.35);terminator.addColorStop(0,'rgba(255,255,255,.10)');terminator.addColorStop(.46,'rgba(255,255,255,0)');terminator.addColorStop(1,'rgba(0,3,8,.56)');ctx.fillStyle=terminator;ctx.fillRect(cx-radius,cy-radius,radius*2,radius*2);
-  const gleam=ctx.createRadialGradient(cx-radius*.38,cy-radius*.42,0,cx-radius*.38,cy-radius*.42,radius*.66);gleam.addColorStop(0,'rgba(222,247,244,.18)');gleam.addColorStop(.56,'rgba(150,220,221,.035)');gleam.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=gleam;ctx.fillRect(cx-radius,cy-radius,radius*2,radius*2);ctx.restore();
-  ctx.beginPath();ctx.arc(cx,cy,radius,0,Math.PI*2);ctx.strokeStyle='rgba(157,222,230,.26)';ctx.lineWidth=Math.max(1,radius*.004);ctx.stroke();state.renderedFrames++;
-}
-function createAudraliaSourceRenderer(canvas){
-  const state={yaw:-.62,pitch:1.02,distance:5000,targetU:0,targetV:-4,renderedFrames:0};
-  function planetaryVantage(){Object.assign(state,{yaw:-.62,pitch:1.02,distance:5000,targetU:0,targetV:-4});}
-  function render(){drawAudraliaSourceReconstruction(canvas,state);}
-  function getViewScale(){if(state.distance<900)return'LOCAL';if(state.distance<2200)return'REGION';if(state.distance<4200)return'CONTINENT';return'PLANETARY';}
-  function getSnapshot(){return Object.freeze({...state,viewScale:getViewScale(),sourceReconstructionSchema:AUDRALIA_RECONSTRUCTION_SCHEMA,sourceRendererBlob:AUDRALIA_GEOGRAPHY.sourceRendererBlob,geographyAuthority:AUDRALIA_GEOGRAPHY.geographyAuthority,fullWorldConstructorUsed:false,liveMutationAbsent:true});}
-  return Object.freeze({state,planetaryVantage,render,getViewScale,getSnapshot});
-}
 function renderAudralia(scene,p,audralia){
   if(audraliaError)throw new Error(`AUDRALIA_CANONICAL_RENDERER_FAILURE:${audraliaError?.message||'UNKNOWN'}`);
   if(!audralia?.renderer)throw new Error('AUDRALIA_CANONICAL_RENDERER_NOT_READY');
@@ -273,21 +209,25 @@ export function createCinematicRenderer({stage,media}){
   let root=null,night=null,disposed=false,lastShot=null,audralia=null,audraliaError=null,audraliaPromise=null,audraliaSourceConfirmed=false;
   function prepareAudralia(scene){
     const canvas=scene.querySelector('.cinematic-audralia__canvas');
-    const renderer=createAudraliaSourceRenderer(canvas);
-    renderer.planetaryVantage();
-    audralia={renderer,sourceReconstructionSchema:AUDRALIA_RECONSTRUCTION_SCHEMA};
+    audralia={canvas,renderer:null};
+    void confirmAudraliaSource();
   }
   function confirmAudraliaSource(){
     if(audraliaPromise||audraliaSourceConfirmed||audraliaError)return audraliaPromise;
     audraliaPromise=import(AUDRALIA_RENDERER_URL).then(module=>{
       if(typeof module.createMapWideEnvironmentRenderer!=='function')throw new Error('AUDRALIA_CANONICAL_RENDERER_EXPORT_MISSING');
-      audraliaSourceConfirmed=true;return module;
+      if(!audralia?.canvas)throw new Error('AUDRALIA_CANONICAL_CANVAS_MISSING');
+      const renderer=module.createMapWideEnvironmentRenderer(audralia.canvas);
+      renderer.planetaryVantage();
+      audralia.renderer=renderer;
+      audraliaSourceConfirmed=true;
+      return renderer;
     }).catch(error=>{audraliaError=error;return null;});
     return audraliaPromise;
   }
   function mount(){
     if(disposed)throw new Error('CINEMATIC_RENDERER_DISPOSED');if(root)return root;
-    root=make('div','compass-orientation-cinematic__render-root');root.dataset.rendererSchema=RENDERER_SCHEMA;root.dataset.sourceCosmosBlob=SOURCE.cosmos.blob;root.dataset.sourceCrystalsBlob=SOURCE.crystals.blob;root.dataset.sourceHomepageBlob=SOURCE.homepage.blob;root.dataset.sourceReadinessBlob=SOURCE.readiness.blob;root.dataset.sourceMirrorlandBlob=SOURCE.mirrorland.blob;root.dataset.sourceAudraliaBlob=SOURCE.audraliaRenderer.blob;root.dataset.audraliaReconstruction=AUDRALIA_RECONSTRUCTION_SCHEMA;root.dataset.audraliaFullWorldConstructor='false';root.setAttribute('aria-hidden','true');
+    root=make('div','compass-orientation-cinematic__render-root');root.dataset.rendererSchema=RENDERER_SCHEMA;root.dataset.sourceCosmosBlob=SOURCE.cosmos.blob;root.dataset.sourceCrystalsBlob=SOURCE.crystals.blob;root.dataset.sourceHomepageBlob=SOURCE.homepage.blob;root.dataset.sourceReadinessBlob=SOURCE.readiness.blob;root.dataset.sourceMirrorlandBlob=SOURCE.mirrorland.blob;root.dataset.sourceAudraliaBlob=SOURCE.audraliaRenderer.blob;root.dataset.audraliaRendererMode=AUDRALIA_RENDERER_MODE;root.dataset.audraliaFullWorldConstructor='true';root.setAttribute('aria-hidden','true');
     const style=make('style','');style.textContent=CINEMATIC_SCENE_CSS;root.append(style);night=createNight(root);root.append(buildArrival(),buildOrientation(),buildChapter(),buildReadiness(),buildThreshold(),buildAudralia());stage.prepend(root);
     prepareAudralia(root.querySelector('[data-scene="S06"]'));return root;
   }
@@ -298,10 +238,10 @@ export function createCinematicRenderer({stage,media}){
     else if(shot.id==='S03')renderChapter(host.querySelector('[data-scene="S03"]'),frame.shotProgress);
     else if(shot.id==='S04')renderReadiness(host.querySelector('[data-scene="S04"]'),frame.shotProgress);
     else if(shot.id==='S05')renderThreshold(host.querySelector('[data-scene="S05"]'),frame.shotProgress,frame.elapsedMs);
-    else if(shot.id==='S06'){confirmAudraliaSource();renderAudralia(host.querySelector('[data-scene="S06"]'),frame.shotProgress,audralia);}
+    else if(shot.id==='S06'){void confirmAudraliaSource();renderAudralia(host.querySelector('[data-scene="S06"]'),frame.shotProgress,audralia);}
     for(const scene of host.querySelectorAll('.compass-cinematic-shot'))if(scene.dataset.scene!==shot.id)scene.style.opacity='0';
   }
   function dispose(){if(disposed)return;disposed=true;root?.remove();root=null;night=null;audralia=null;}
-  function inspect(){return Object.freeze({schema:RENDERER_SCHEMA,mounted:Boolean(root),disposed,shotId:lastShot,sourceBindings:SOURCE,audraliaCanonicalRendererReady:audraliaSourceConfirmed,audraliaCanonicalRendererPending:Boolean(audraliaPromise&&!audraliaSourceConfirmed&&!audraliaError),audraliaSourceReconstructionReady:Boolean(audralia?.renderer),audraliaSourceReconstructionSchema:AUDRALIA_RECONSTRUCTION_SCHEMA,audraliaSourceRendererBlob:SOURCE.audraliaRenderer.blob,audraliaFullWorldConstructorUsed:false,audraliaError:audraliaError?.message||null});}
+  function inspect(){return Object.freeze({schema:RENDERER_SCHEMA,mounted:Boolean(root),disposed,shotId:lastShot,sourceBindings:SOURCE,audraliaCanonicalRendererReady:audraliaSourceConfirmed,audraliaCanonicalRendererPending:Boolean(audraliaPromise&&!audraliaSourceConfirmed&&!audraliaError),audraliaRendererMode:AUDRALIA_RENDERER_MODE,audraliaSourceRendererBlob:SOURCE.audraliaRenderer.blob,audraliaFullWorldConstructorUsed:true,audraliaError:audraliaError?.message||null});}
   return Object.freeze({schema:RENDERER_SCHEMA,mount,renderFrame,dispose,inspect});
 }

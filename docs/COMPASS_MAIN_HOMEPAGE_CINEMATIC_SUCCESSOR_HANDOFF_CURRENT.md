@@ -1,227 +1,151 @@
 # Compass Main Homepage Cinematic — Current Successor Handoff
 
 Status: **CURRENT / CONTROLLING**  
-Date: 2026-09-05
+Date: 2026-09-06
 
-This document supersedes the immediate execution instructions in the September 4 successor handoff. The earlier files remain historical/creative records and should not be used to restart completed specification or construction work.
+Read current `AI_ENTRYPOINT.json` first.
 
-Primary operating protocol:
+Then read these three controlling V2 documents:
 
-`docs/DETACHED_CINEMATIC_VIDEO_REVIEW_AND_PROGRESSION_PROTOCOL.md`
+1. **WHAT V2 must be**  
+   `docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_NEXT_HOOK_DIRECT_STRATEGY_20260906.md`
+2. **HOW V2 is produced and resumed**  
+   `docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_V2_EXECUTION_SPINE_CURRENT.md`
+3. **HOW execution transport is resolved without defaulting to an environment**  
+   `docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_EXECUTION_ROUTE_CLARIFICATION.md`
 
-Video-room ingress boundary:
+For execution-route questions, the clarification supersedes any example environment/substrate wording in older V2 documentation.
 
-`docs/COMPASS_CINEMATIC_VIDEO_ROOM_INGRESS_BOUNDARY.md`
+## Current product state
 
-Historical creative record:
+Current cinematic live baseline remains PR #2801:
 
-`docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_SUCCESSOR_HANDOFF_20260904.md`
+`99025b828629548be1ea066cd2e01dd16d855a03`
 
----
+Current state:
 
-## 1. Current product state
+`INTRO_HOOKED_LIVE — PRERENDERED_THIN_PLAYER`
 
-Product baseline before the review-protocol documentation update:
+Current master:
 
-`fe01438904cb9572ac6d949b2f8d2144532c178b`
+`assets/compass/cinematic-media/compass-main-orientation-final-v1.mp4`
 
-That commit is PR #2753, which intentionally returned the homepage to:
+Identity:
 
-`INTRO_PRESENT_BUT_UNHOOKED`
+- bytes: `3,828,177`
+- SHA-256: `6ada38eadeb6243b3809167f45dd8a74808c88ac677273683338772e7899b4e7`
+- Git blob: `ca95d7c17ef54044a11bc456a949c33fa9820bc0`
+- runtime: `38.0 s`
 
-The cinematic remains in the repository and is still reviewable through:
+The current cinematic stays hooked while V2 is built and reviewed detached.
 
-`?compassCinematicConstruction=1`
+Target release choreography:
 
-Ordinary homepage visitors enter the website directly.
+`CURRENT_HOOK_V1 → CORRECTED_HOOK_V2`
 
-The film itself was not deleted, reverted, or replaced when it was unhooked.
+No routine interim unhook.
 
-The completed current film remains the 45-second S01–S08 Compass orientation cinematic constructed through PR #2751, including the repaired S05 Mirrorland path, camera-facing S02 stars, direct Play-control tessellation into S01, the stretched Brain → Trophy → House passage, Skip behavior, fail-open restoration, and final handoff.
+## Critical semantic separation
 
----
+Do not collapse these surfaces:
 
-## 2. Video availability and room boundary
+`V2 CAPTURE SOURCE → NEW IMMUTABLE V2 MP4`
 
-The owner has a captured review video, but **that video is not stored in the repository, is not attached to this room by default, and does not travel automatically across rooms.**
+`THIN-PLAYER 4.35 s ENTRY PREROLL → FIRST V2 FRAME READY → VIDEO PLAYBACK`
 
-Do not describe the video as “supplied” unless it is actually attached in the room doing the visual review.
+`PRODUCTION HOOK / PUBLICATION → ORDINARY HOMEPAGE ENTRY`
 
-The intended sequence is:
+“Source binding” means construction-time source selection for the V2 capture source. The existing V1 MP4 has no live website asset binding to switch.
 
-1. keep the planning/control room video-free;
-2. open a fresh room dedicated to review;
-3. have that room read this handoff, the detached review protocol, and the video-ingress boundary;
-4. then the owner uploads the video into that fresh review room;
-5. that room performs the visual assessment and only then binds the top findings to source.
+## Confirmed V2 corrections
 
-This protects context budget. A room containing a large video should not also become a broad engineering or whole-estate audit room.
+- restore the repeating text-led/image-lagged cadence: `TEXT_IN < IMAGE_IN < TEXT_OUT < IMAGE_OUT`;
+- remove the early text-only desert and late image pileup;
+- protect Brain/Trophy/House breathing room;
+- reject the retired Audralia river-model state;
+- freeze one current live-authoritative Audralia world state and use it both through the Mirrorland reveal and in the succeeding full Audralia shot;
+- remove the fabricated Mirrorland grid/interior environment while preserving the window/dissolve threshold concept;
+- recover/evolve the historical 4.35-second entry transition from PR #2697/#2743;
+- preserve `SELECTED_CONTROL_CELLS_BECOME_SUCCESSOR_STAR_AND_COMPASS_MATTER` as the historical law while evolving the visual causality so actual source cells disappear as matching fragments become mobile;
+- require the first V2 MP4 frame to be decoded/presentable before final entry material clears;
+- keep zero blank frame.
 
----
+## D0 — documentation adoption comes before R0
 
-## 3. Latest owner disposition
+The V2 strategy/spine/clarification are not production authority until their documentation candidate is adopted to `main`.
 
-The owner reviewed the hooked production film, captured a video externally, and determined:
+For the current documentation candidate, D0 requires the exact repository static-editorial verifier to PASS against the exact base/head and declared documentation paths.
 
-- the work is substantially successful;
-- the film is not yet finished;
-- substantial refinement remains;
-- it should be unhooked while that refinement continues.
+Required result:
 
-Therefore the next review room is **not** being asked to publish, re-hook, reconstruct, respecify, or build new qualification infrastructure.
+`D0_STATIC_EDITORIAL_VERIFIER_PASS`
 
-Once the owner uploads the video into that fresh review room, the room is being asked to **assess that attached video and make deterministic, bounded improvements to the existing film while it remains detached from ordinary production entry.**
+A passive CI success is not a substitute for this result.
 
-Until the video is actually attached in that review room, do not start a broad code audit as a substitute for visual evidence.
+### Capability-first execution law
 
----
+D0 does **not** prescribe an execution environment.
 
-## 4. Controlling precedent
+The lawful sequence is:
 
-Do not rediscover this history unless a specific conflict requires it.
+`REQUIRED VERIFIER EVIDENCE → CURRENT AI_ENTRYPOINT → CURRENT ROOM'S ALREADY-AUTHORIZED CAPABILITIES → EXECUTE IF DIRECTLY AVAILABLE → OTHERWISE RECORD EXACT BOUNDARY AND STOP`
 
-- **PR #2684** established that a bounded cinematic may be published for live owner inspection with an explicitly disclosed browser-matrix waiver and rollback if rejected. Missing nonessential qualification was not converted into an infrastructure project.
-- **PR #2697** established that a noninteractive cinematic does not require a full interactive application matrix. Begin, Skip, Replay, natural completion, reduced motion, focused smoke, and static verification were the relevant controls/evidence.
-- **PR #2713** repaired the repository classifier so cinematic-scoped, noninteractive presentation playback can be `BOUNDED_PAGE_RELEASE`; navigation/controller/shared-state/analytics/authority changes remain the heavier class.
-- **PR #2751** established the proportional release standard for this exact successor: compare a materially improved candidate against the known-wrong live baseline, use exact source audit and focused verification, and do not construct a separate browser environment merely to eliminate every residual uncertainty.
-- **PR #2752 / #2753** proved that cinematic activation is independently hookable and reversible. The film may be reviewed live, then unhooked without rebuilding the page.
+Do not translate an acquisition failure such as `Could not resolve host: github.com` into “use a particular hosted workspace,” “open a builder,” “create a workflow,” or any other default transport.
 
-These are not exceptions to work around. They are the operating precedent.
+A named environment is not the next action.
 
----
+The next action is always the unresolved evidence requirement itself. A later room resumes D0 and resolves whatever authorized execution capability is actually available there.
 
-## 5. Immediate workflow for the next review room
+If no current capability can run the required verifier against the exact repository state, leave D0 unresolved and keep the documentation candidate draft. Do not bypass or relabel the proof.
 
-Before the video is attached:
+## R0→R10 production ladder
 
-1. Read this file.
-2. Read `docs/DETACHED_CINEMATIC_VIDEO_REVIEW_AND_PROGRESSION_PROTOCOL.md`.
-3. Read `docs/COMPASS_CINEMATIC_VIDEO_ROOM_INGRESS_BOUNDARY.md`.
-4. Confirm current `main` and that activation remains `INTRO_PRESENT_BUT_UNHOOKED`.
-5. Stop and wait for the owner to attach the review video in that room.
+Only after D0 adoption closes does V2 begin:
 
-After the owner attaches the video in that same room:
-
-1. **Watch the video end to end before broad repository retrieval.**
-2. Produce a timecoded list of visible strengths and defects.
-3. Prioritize the top 1–3 material defects.
-4. For each defect, bind only the exact cinematic source that governs it.
-5. Preserve accepted scenes and protected Compass/page authorities.
-6. Make the smallest coherent changes that address those defects.
-7. Verify proportionally using source audit and focused visual evidence appropriate to the change.
-8. Persist a `CINEMATIC_REVIEW_CHECKPOINT` before expanding to another defect group.
-9. Keep the intro unhooked unless the owner explicitly requests another live hook.
-
-The loop is:
-
-`WATCH → FINDINGS → PRIORITIZE → SOURCE BIND → PATCH → NARROW VERIFY → CHECKPOINT → WATCH AGAIN`
-
----
-
-## 6. What not to do
-
-Do not:
-
-- assume a video from another room is available;
-- ask for the large review video in a planning/control room when a fresh review room is the intended destination;
-- search the repository for a substitute video;
-- restart the shot-construction specification;
-- recreate the film from scratch;
-- build another generic animatic;
-- create a new Playwright/browser execution substrate merely to approve a film change;
-- create a new CI workflow merely to approve a film change;
-- create a new control-plane bridge merely to approve a film change;
-- audit the entire repository when a visible defect already points to a known shot;
-- treat every JavaScript cinematic change as website runtime authority;
-- require theoretical perfection before advancing a material improvement;
-- re-hook the film automatically after a patch;
-- delete the cinematic because it is not live.
-
-If a proposed change actually touches navigation, controller authority, shared application state, analytics, shared DOM ownership, routing, or other protected runtime behavior, stop and route that **specific change** through the heavier repository path. Do not preemptively escalate the entire cinematic.
-
----
-
-## 7. Production standard
-
-The next review baseline should advance when it is:
-
-- materially better than the captured/current baseline;
-- bounded to the cinematic presentation surface;
-- free of known catastrophic regression;
-- restorable to the underlying page;
-- still detachable from normal production entry.
-
-The standard is not “prove the film is perfect.”
-
-The standard is:
-
-> **Make the next version materially better without breaking the page, then let the owner review the actual result.**
-
----
-
-## 8. Durable checkpoint requirement
-
-After each material group of changes, persist:
-
-```text
-CINEMATIC_REVIEW_CHECKPOINT
-
-Repository head:
-Activation state: INTRO_REVIEW_PATCH_IN_PROGRESS | INTRO_PRESENT_BUT_UNHOOKED
-Video evidence: <only if actually attached/reviewed in that room>
-Review result: CONTINUE_REFINEMENT | READY_TO_HOOK | KEEP_UNHOOKED
-
-Accepted strengths:
-- ...
-
-Findings:
-- V01 | timecode | severity | observation | desired correction
-
-Source bindings:
-- V01 -> exact path / function / constant
-
-Patch scope:
-- exact changed paths
-
-Verification actually performed:
-- ...
-
-Verification not performed / not required:
-- ...
-
-Next material move:
-- ...
-```
-
-A room must write a checkpoint before it begins a second broad investigation path.
-
----
-
-## 9. Recovery rule
-
-If a room collapses, the successor room should:
-
-1. read this file;
-2. read the detached cinematic review protocol;
-3. read the video-room ingress boundary;
-4. resolve current `main`;
-5. find the most recent cinematic review checkpoint/PR;
-6. resume from the first unresolved video finding if durable findings exist;
-7. avoid repeating accepted source discovery or closed findings;
-8. if visual assessment is the next task and no video is attached in the successor room, wait for the owner to upload it **to that room**.
-
-Do not reconstruct lost private reasoning. Continue from durable findings, source bindings, and commits.
+`R0 CURRENT STATE`
+→ `R1 SOURCE AUTHORITY`
+→ `R2 EDITORIAL MAP`
+→ `R3 CAPTURE SOURCE`
+→ `R4 REPRESENTATIVE VISUALS`
+→ `R5 FULL CAPTURE`
+→ `R6 IMMUTABLE V2 MASTER`
+→ `R7 GIT BINARY CUSTODY`
+→ `R8 THIN PLAYER / PREROLL`
+→ `R9 FOCUSED QUALIFICATION + OWNER REVIEW`
+→ `R10 DIRECT V1→V2 PUBLICATION`
+
+Resume only the first state lacking exact durable evidence.
+
+The execution spine defines the required evidence and proven deterministic semantics for each state. The execution-route clarification governs how a room chooses transport: **capability-first, never environment-first**.
+
+## Historical precedent — use semantics, not default transports
+
+Reusable authorities include:
+
+- deterministic capture donor: `96c89ec797490a5dc0e3dd343f4d34a396adaa02`;
+- entry interaction: PR #2697 / PR #2743 candidate `589b50d8178539b3241ad42315e4a38120040522`;
+- anti-reinvention protocol: PR #2754;
+- deterministic encode semantics: PR #2796 / run `34049018018`;
+- installed bounded binary ingress and reconstruction mechanisms;
+- binary-custody precedent: #1334, #1323, #1340, #2798, #2799;
+- V1 publication boundary: PR #2801.
+
+Historical workflows/carriers prove semantics and evidence. They are not standing instructions to recreate their transport under the current AI entrypoint.
+
+## Immediate instruction for any new room
+
+1. Read current `AI_ENTRYPOINT.json`.
+2. Read this handoff.
+3. Read the direct strategy.
+4. Read the V2 execution spine.
+5. Read the execution-route clarification.
+6. Determine whether D0 documentation adoption is already closed on `main`.
+7. If D0 is unresolved, resume D0 only; do not begin R0/R1.
+8. Resolve the current room's already-authorized capabilities without naming or creating a default environment.
+9. If D0 is closed, locate R0→R10 evidence and execute only the first unresolved state.
+10. Persist the exact checkpoint before advancing.
+11. Keep V1 live until an owner-accepted V2 is ready for direct replacement.
 
 Operating law:
 
-> **Durable repository context travels across rooms. Large video evidence does not.**
-
----
-
-## 10. Immediate instruction
-
-The next material task is:
-
-**Open a fresh cinematic-review room, let that room ingest the repository handoff/protocol first, then have the owner attach the captured Compass video there. Only after the video is present should the room identify the highest-value corrections with timecodes and implement the first bounded refinement group while the intro remains unhooked.**
-
-Do not upload the large review video into the current planning/control room merely to satisfy this handoff. Do not spend the next review room rebuilding approval infrastructure.
+`NO DEFAULT SUBSTRATE → NO INFRASTRUCTURE INVENTION → CLOSE THE REQUIRED EVIDENCE WITH WHATEVER CURRENT AUTHORIZED CAPABILITY ACTUALLY EXISTS → OTHERWISE STOP AT THAT EXACT STATE`

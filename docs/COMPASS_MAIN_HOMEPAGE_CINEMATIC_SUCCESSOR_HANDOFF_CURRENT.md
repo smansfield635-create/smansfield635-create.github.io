@@ -1,227 +1,143 @@
 # Compass Main Homepage Cinematic — Current Successor Handoff
 
 Status: **CURRENT / CONTROLLING**  
-Date: 2026-09-05
+Date: 2026-09-06
 
-This document supersedes the immediate execution instructions in the September 4 successor handoff. The earlier files remain historical/creative records and should not be used to restart completed specification or construction work.
+The controlling direct strategy is now:
 
-Primary operating protocol:
+`docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_NEXT_HOOK_DIRECT_STRATEGY_20260906.md`
 
-`docs/DETACHED_CINEMATIC_VIDEO_REVIEW_AND_PROGRESSION_PROTOCOL.md`
+Read that file first. It supersedes the prior immediate instruction to keep the cinematic unhooked during refinement.
 
-Video-room ingress boundary:
+Historical review protocol remains available at:
 
-`docs/COMPASS_CINEMATIC_VIDEO_ROOM_INGRESS_BOUNDARY.md`
+- `docs/DETACHED_CINEMATIC_VIDEO_REVIEW_AND_PROGRESSION_PROTOCOL.md`
+- `docs/COMPASS_CINEMATIC_VIDEO_ROOM_INGRESS_BOUNDARY.md`
+- `docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_SUCCESSOR_HANDOFF_20260904.md`
 
-Historical creative record:
-
-`docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_SUCCESSOR_HANDOFF_20260904.md`
-
----
-
-## 1. Current product state
-
-Product baseline before the review-protocol documentation update:
-
-`fe01438904cb9572ac6d949b2f8d2144532c178b`
-
-That commit is PR #2753, which intentionally returned the homepage to:
-
-`INTRO_PRESENT_BUT_UNHOOKED`
-
-The cinematic remains in the repository and is still reviewable through:
-
-`?compassCinematicConstruction=1`
-
-Ordinary homepage visitors enter the website directly.
-
-The film itself was not deleted, reverted, or replaced when it was unhooked.
-
-The completed current film remains the 45-second S01–S08 Compass orientation cinematic constructed through PR #2751, including the repaired S05 Mirrorland path, camera-facing S02 stars, direct Play-control tessellation into S01, the stretched Brain → Trophy → House passage, Skip behavior, fail-open restoration, and final handoff.
+Those records remain useful history and review precedent, but they do not override the current owner disposition below.
 
 ---
 
-## 2. Video availability and room boundary
+## Current production state
 
-The owner has a captured review video, but **that video is not stored in the repository, is not attached to this room by default, and does not travel automatically across rooms.**
+Repository `main` at documentation freeze:
 
-Do not describe the video as “supplied” unless it is actually attached in the room doing the visual review.
+`c3b6d28fae21e3c6e1814e1ea4551ff46f72cddf`
 
-The intended sequence is:
+Current cinematic live baseline:
 
-1. keep the planning/control room video-free;
-2. open a fresh room dedicated to review;
-3. have that room read this handoff, the detached review protocol, and the video-ingress boundary;
-4. then the owner uploads the video into that fresh review room;
-5. that room performs the visual assessment and only then binds the top findings to source.
+`99025b828629548be1ea066cd2e01dd16d855a03`
 
-This protects context budget. A room containing a large video should not also become a broad engineering or whole-estate audit room.
+That cinematic baseline is the merge of PR #2801, **Publish pre-rendered Compass homepage cinematic**. The later `main` advancement at documentation freeze is unrelated Research Frontier preconstruction work and does not change the cinematic state.
 
----
+Current production state:
 
-## 3. Latest owner disposition
+`INTRO_HOOKED_LIVE — PRERENDERED_THIN_PLAYER`
 
-The owner reviewed the hooked production film, captured a video externally, and determined:
+The ordinary-entry player is:
 
-- the work is substantially successful;
-- the film is not yet finished;
-- substantial refinement remains;
-- it should be unhooked while that refinement continues.
+`assets/compass/compass.orientation-cinematic.js`
 
-Therefore the next review room is **not** being asked to publish, re-hook, reconstruct, respecify, or build new qualification infrastructure.
+Player contract:
 
-Once the owner uploads the video into that fresh review room, the room is being asked to **assess that attached video and make deterministic, bounded improvements to the existing film while it remains detached from ordinary production entry.**
+`COMPASS_PRERENDERED_THIN_PLAYER_T12_v1`
 
-Until the video is actually attached in that review room, do not start a broad code audit as a substitute for visual evidence.
+Current master:
 
----
+`assets/compass/cinematic-media/compass-main-orientation-final-v1.mp4`
 
-## 4. Controlling precedent
+Current master identity:
 
-Do not rediscover this history unless a specific conflict requires it.
+- bytes: `3,828,177`
+- SHA-256: `6ada38eadeb6243b3809167f45dd8a74808c88ac677273683338772e7899b4e7`
+- Git blob: `ca95d7c17ef54044a11bc456a949c33fa9820bc0`
+- runtime: `38.0 s`
 
-- **PR #2684** established that a bounded cinematic may be published for live owner inspection with an explicitly disclosed browser-matrix waiver and rollback if rejected. Missing nonessential qualification was not converted into an infrastructure project.
-- **PR #2697** established that a noninteractive cinematic does not require a full interactive application matrix. Begin, Skip, Replay, natural completion, reduced motion, focused smoke, and static verification were the relevant controls/evidence.
-- **PR #2713** repaired the repository classifier so cinematic-scoped, noninteractive presentation playback can be `BOUNDED_PAGE_RELEASE`; navigation/controller/shared-state/analytics/authority changes remain the heavier class.
-- **PR #2751** established the proportional release standard for this exact successor: compare a materially improved candidate against the known-wrong live baseline, use exact source audit and focused verification, and do not construct a separate browser environment merely to eliminate every residual uncertainty.
-- **PR #2752 / #2753** proved that cinematic activation is independently hookable and reversible. The film may be reviewed live, then unhooked without rebuilding the page.
-
-These are not exceptions to work around. They are the operating precedent.
+The current live artifact remains hooked intentionally while the successor is corrected.
 
 ---
 
-## 5. Immediate workflow for the next review room
+## Owner disposition
 
-Before the video is attached:
+Do **not** unhook the current cinematic merely to begin or continue successor refinement.
 
-1. Read this file.
-2. Read `docs/DETACHED_CINEMATIC_VIDEO_REVIEW_AND_PROGRESSION_PROTOCOL.md`.
-3. Read `docs/COMPASS_CINEMATIC_VIDEO_ROOM_INGRESS_BOUNDARY.md`.
-4. Confirm current `main` and that activation remains `INTRO_PRESENT_BUT_UNHOOKED`.
-5. Stop and wait for the owner to attach the review video in that room.
+The controlling release strategy is:
 
-After the owner attaches the video in that same room:
+`CURRENT HOOK REMAINS LIVE → BUILD CORRECTED SUCCESSOR DETACHED → VERIFY / REVIEW → DIRECT REPLACEMENT AT NEXT HOOK`
 
-1. **Watch the video end to end before broad repository retrieval.**
-2. Produce a timecoded list of visible strengths and defects.
-3. Prioritize the top 1–3 material defects.
-4. For each defect, bind only the exact cinematic source that governs it.
-5. Preserve accepted scenes and protected Compass/page authorities.
-6. Make the smallest coherent changes that address those defects.
-7. Verify proportionally using source audit and focused visual evidence appropriate to the change.
-8. Persist a `CINEMATIC_REVIEW_CHECKPOINT` before expanding to another defect group.
-9. Keep the intro unhooked unless the owner explicitly requests another live hook.
+Do not insert:
 
-The loop is:
+`CURRENT HOOK → NO HOOK → SUCCESSOR HOOK`
 
-`WATCH → FINDINGS → PRIORITIZE → SOURCE BIND → PATCH → NARROW VERIFY → CHECKPOINT → WATCH AGAIN`
+unless a concrete production failure separately requires emergency rollback.
 
 ---
 
-## 6. What not to do
+## Confirmed defect ledger
 
-Do not:
+The direct-strategy file contains the complete defect and implementation contract. The durable top-level ledger is:
 
-- assume a video from another room is available;
-- ask for the large review video in a planning/control room when a fresh review room is the intended destination;
-- search the repository for a substitute video;
-- restart the shot-construction specification;
-- recreate the film from scratch;
-- build another generic animatic;
-- create a new Playwright/browser execution substrate merely to approve a film change;
-- create a new CI workflow merely to approve a film change;
-- create a new control-plane bridge merely to approve a film change;
-- audit the entire repository when a visible defect already points to a known shot;
-- treat every JavaScript cinematic change as website runtime authority;
-- require theoretical perfection before advancing a material improvement;
-- re-hook the film automatically after a patch;
-- delete the cinematic because it is not live.
+1. `EDITORIAL_STAGGERED_CADENCE_NOT_IMPLEMENTED_CONSISTENTLY — CONFIRMED`
+   - restore repeated text-led / image-lagged cadence;
+   - text enters first;
+   - image follows;
+   - text exits first;
+   - image carries;
+   - next text may enter before prior image fully clears;
+   - no early text-only desert;
+   - no late image pileup;
+   - no Brain / Trophy / House compression caused by omitted upstream imagery.
 
-If a proposed change actually touches navigation, controller authority, shared application state, analytics, shared DOM ownership, routing, or other protected runtime behavior, stop and route that **specific change** through the heavier repository path. Do not preemptively escalate the entire cinematic.
+2. `AUDRALIA_WRONG_MODEL_REGRESSION — CONFIRMED`
+   - keep cinematic beat and camera treatment;
+   - reject retired river-model state;
+   - bind to current live-authoritative Audralia.
 
----
+3. `MIRRORLAND_PRESENTATION_SOURCE_AUTHORITY_DEFECT — CONFIRMED`
+   - keep window/dissolve concept;
+   - remove fabricated grid/interior environment;
+   - reveal the same current live Audralia authority through Mirrorland;
+   - expand directly into the subsequent Audralia shot.
 
-## 7. Production standard
+4. `ENTRY_TRANSITION_HISTORICAL_REGRESSION — CONFIRMED`
+   - historical law recovered from PR #2697 / PR #2743:
+     `SELECTED_CONTROL_CELLS_BECOME_SUCCESSOR_STAR_AND_COMPASS_MATTER`;
+   - recovered preroll duration: `4.35 s`, outside the MP4 runtime;
+   - successor refinement: Play initiates true entry-surface tessellation so disappearing source cells correspond to mobile fragments;
+   - first MP4 frame must be decoded/presentable before the entry surface clears;
+   - zero blank frame.
 
-The next review baseline should advance when it is:
-
-- materially better than the captured/current baseline;
-- bounded to the cinematic presentation surface;
-- free of known catastrophic regression;
-- restorable to the underlying page;
-- still detachable from normal production entry.
-
-The standard is not “prove the film is perfect.”
-
-The standard is:
-
-> **Make the next version materially better without breaking the page, then let the owner review the actual result.**
+5. `CURRENT_HOOK_STATE_DURING_SUCCESSOR_WORK — OWNER_DISPOSITION`
+   - leave current PR #2801 hook live until the accepted successor is ready for direct replacement.
 
 ---
 
-## 8. Durable checkpoint requirement
+## Immediate instruction for the next room
 
-After each material group of changes, persist:
+1. Read `docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_NEXT_HOOK_DIRECT_STRATEGY_20260906.md` in full.
+2. Resolve current `main` and confirm whether it still descends from the documentation freeze head.
+3. Revalidate the current cinematic identities; do not assume unrelated `main` movement changed the cinematic.
+4. Confirm the current cinematic remains hooked unless a later explicit owner disposition changed that fact.
+5. Do **not** create an unhook operation as routine preparation.
+6. Begin successor work from the first unresolved material boundary in the direct strategy.
+7. Preserve the pre-rendered MP4 + thin-player architecture unless a concrete defect proves that architecture insufficient.
+8. Keep source-authority corrections, editorial timing corrections, and the interactive entry preroll as distinct implementation concerns even when reviewed together.
+9. When the successor is materially ready, review it detached from ordinary production entry.
+10. Only after explicit owner acceptance should the next hook directly replace the current live film.
 
-```text
-CINEMATIC_REVIEW_CHECKPOINT
+Operating shorthand:
 
-Repository head:
-Activation state: INTRO_REVIEW_PATCH_IN_PROGRESS | INTRO_PRESENT_BUT_UNHOOKED
-Video evidence: <only if actually attached/reviewed in that room>
-Review result: CONTINUE_REFINEMENT | READY_TO_HOOK | KEEP_UNHOOKED
-
-Accepted strengths:
-- ...
-
-Findings:
-- V01 | timecode | severity | observation | desired correction
-
-Source bindings:
-- V01 -> exact path / function / constant
-
-Patch scope:
-- exact changed paths
-
-Verification actually performed:
-- ...
-
-Verification not performed / not required:
-- ...
-
-Next material move:
-- ...
-```
-
-A room must write a checkpoint before it begins a second broad investigation path.
+`KEEP CURRENT HOOK → CORRECT SOURCES + CADENCE → EVOLVE ENTRY PREROLL → REVIEW DETACHED SUCCESSOR → DIRECT NEXT HOOK`
 
 ---
 
-## 9. Recovery rule
+## Recovery rule
 
-If a room collapses, the successor room should:
+If a room loses context, do not reconstruct the design from conversation memory.
 
-1. read this file;
-2. read the detached cinematic review protocol;
-3. read the video-room ingress boundary;
-4. resolve current `main`;
-5. find the most recent cinematic review checkpoint/PR;
-6. resume from the first unresolved video finding if durable findings exist;
-7. avoid repeating accepted source discovery or closed findings;
-8. if visual assessment is the next task and no video is attached in the successor room, wait for the owner to upload it **to that room**.
+Read this handoff and the direct-strategy file, resolve current `main`, then continue from the first unresolved durable defect or successor checkpoint.
 
-Do not reconstruct lost private reasoning. Continue from durable findings, source bindings, and commits.
+If repository state has advanced, revalidate source identities before construction. Do not silently assume the September 6 exact heads remain current authority.
 
-Operating law:
-
-> **Durable repository context travels across rooms. Large video evidence does not.**
-
----
-
-## 10. Immediate instruction
-
-The next material task is:
-
-**Open a fresh cinematic-review room, let that room ingest the repository handoff/protocol first, then have the owner attach the captured Compass video there. Only after the video is present should the room identify the highest-value corrections with timecodes and implement the first bounded refinement group while the intro remains unhooked.**
-
-Do not upload the large review video into the current planning/control room merely to satisfy this handoff. Do not spend the next review room rebuilding approval infrastructure.
+The direct-strategy document is the controlling creative/repair handoff. Repository current state still governs exact implementation identity.

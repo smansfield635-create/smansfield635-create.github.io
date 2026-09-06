@@ -5,21 +5,25 @@ if(!Object.prototype.hasOwnProperty.call(globalThis,'audraliaError')){
 }
 
 const TOUR_CONTEXT_RESTART_STYLE_ID='compass-cinematic-tour-context-restart-guard';
+const TOUR_CONTEXT_SHOTS=Object.freeze(['S01','S02','S03','S04','S05','S06','S07','S08']);
+const TOUR_CONTEXT_CURRENT_FRAMES='0%,68%{opacity:1;transform:translate3d(0,0,0)}78%,100%{opacity:0;transform:translate3d(0,-8px,0)}';
+const TOUR_CONTEXT_NEXT_FRAMES='0%,82%{opacity:0;transform:translate3d(0,9px,0)}96%,100%{opacity:1;transform:translate3d(0,0,0)}';
 export function installCinematicTourContextRestartGuard(){
   if(typeof document==='undefined'||document.getElementById(TOUR_CONTEXT_RESTART_STYLE_ID))return;
+  const rules=[];
+  for(const id of TOUR_CONTEXT_SHOTS){
+    const slug=id.toLowerCase();
+    rules.push(`@keyframes tour-current-${slug}{${TOUR_CONTEXT_CURRENT_FRAMES}}`);
+    rules.push(`.compass-orientation-cinematic[data-shot-id="${id}"] .compass-orientation-cinematic__stage::before,.compass-orientation-cinematic[data-shot-id="${id}"] .compass-orientation-cinematic__stage::after{animation-name:tour-current-${slug}}`);
+    if(id!=='S08'){
+      rules.push(`@keyframes tour-next-${slug}{${TOUR_CONTEXT_NEXT_FRAMES}}`);
+      rules.push(`.compass-orientation-cinematic[data-shot-id="${id}"]::before,.compass-orientation-cinematic[data-shot-id="${id}"]::after{animation-name:tour-next-${slug}}`);
+    }
+  }
   const style=document.createElement('style');
   style.id=TOUR_CONTEXT_RESTART_STYLE_ID;
-  style.dataset.cinematicTourContextRestart='S03_S04_UNIQUE_ANIMATION_NAMES';
-  style.textContent=`
-@keyframes tour-current-s03{0%,68%{opacity:1;transform:translate3d(0,0,0)}78%,100%{opacity:0;transform:translate3d(0,-8px,0)}}
-@keyframes tour-next-s03{0%,82%{opacity:0;transform:translate3d(0,9px,0)}96%,100%{opacity:1;transform:translate3d(0,0,0)}}
-@keyframes tour-current-s04{0%,68%{opacity:1;transform:translate3d(0,0,0)}78%,100%{opacity:0;transform:translate3d(0,-8px,0)}}
-@keyframes tour-next-s04{0%,82%{opacity:0;transform:translate3d(0,9px,0)}96%,100%{opacity:1;transform:translate3d(0,0,0)}}
-.compass-orientation-cinematic[data-shot-id="S03"] .compass-orientation-cinematic__stage::before,.compass-orientation-cinematic[data-shot-id="S03"] .compass-orientation-cinematic__stage::after{animation-name:tour-current-s03}
-.compass-orientation-cinematic[data-shot-id="S03"]::before,.compass-orientation-cinematic[data-shot-id="S03"]::after{animation-name:tour-next-s03}
-.compass-orientation-cinematic[data-shot-id="S04"] .compass-orientation-cinematic__stage::before,.compass-orientation-cinematic[data-shot-id="S04"] .compass-orientation-cinematic__stage::after{animation-name:tour-current-s04}
-.compass-orientation-cinematic[data-shot-id="S04"]::before,.compass-orientation-cinematic[data-shot-id="S04"]::after{animation-name:tour-next-s04}
-`;
+  style.dataset.cinematicTourContextRestart='S01_S08_UNIQUE_ANIMATION_NAMES';
+  style.textContent=rules.join('\n');
   (document.head||document.documentElement).append(style);
 }
 installCinematicTourContextRestartGuard();

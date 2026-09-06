@@ -171,7 +171,7 @@ const receipt={
   zoneCandidateCounts:zoneCandidate,
   zoneSelectedCounts:zoneSelected,
   standDensityCoefficientOfVariation:standCv,
-  interiorTransitionDensityRatio,
+  interiorTransitionDensityRatio: interiorTransitionRatio,
   understoryCount:understory.instanceCount,
   representationBlob,
   representationCount:frame.representationCount,

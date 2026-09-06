@@ -486,6 +486,49 @@
       "scopeHash": "0faf1fc693e77d00999271a450734a320f5e93551f408a7834bdcf7cf172a882",
       "state": "ADMITTED_LOCKED"
     },
+    "101c96ef5f183239f7eeb15a76e46b303dd8358743a31f759a38f495ec5da4d1": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "99025b828629548be1ea066cd2e01dd16d855a03",
+          "lockGeneration": 1965,
+          "lockScope": "PUBLIC_LEGITIMACY:AGENTIC_FRONTIER:CAROUSEL_CARDINALITY_THREE_PLANE:V1",
+          "operationId": "RESEARCH_FRONTIER_CAROUSEL_CARDINALITY_THREE_PLANE_FRESH_DESIGN_AMENDMENT_V1_20260906_002",
+          "procedureLocatorDigest": "ad4ec6d5a7387f72878b95f4ad69df51c14f6226508727130b3bca96027583d7",
+          "requestDigest": "04917a527d768e7750dce1ca6383dbcb05631bfe5fea270d4fa36da9658cd0f7",
+          "scopeHash": "101c96ef5f183239f7eeb15a76e46b303dd8358743a31f759a38f495ec5da4d1"
+        },
+        "bindingDigest": "c400102f73687a437987ac2731465534e62c407b66c97eca7655d2a433d8e049",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "ca2f56bc1a1ba7e683f0f8f1299f33a49c8850fb2291597b54225db3f7b4d41c",
+          "commentId": 5562075370,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2803,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34059134601,
+          "workflowSha": "99025b828629548be1ea066cd2e01dd16d855a03"
+        },
+        "lineageAnchorCommitSha": "183af05c8ffc132cc681e302a1081224afc7902c",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "99025b828629548be1ea066cd2e01dd16d855a03",
+      "lockGeneration": 1965,
+      "lockScope": "PUBLIC_LEGITIMACY:AGENTIC_FRONTIER:CAROUSEL_CARDINALITY_THREE_PLANE:V1",
+      "operationId": "RESEARCH_FRONTIER_CAROUSEL_CARDINALITY_THREE_PLANE_FRESH_DESIGN_AMENDMENT_V1_20260906_002",
+      "procedureLocatorDigest": "ad4ec6d5a7387f72878b95f4ad69df51c14f6226508727130b3bca96027583d7",
+      "released": false,
+      "requestDigest": "04917a527d768e7750dce1ca6383dbcb05631bfe5fea270d4fa36da9658cd0f7",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "101c96ef5f183239f7eeb15a76e46b303dd8358743a31f759a38f495ec5da4d1",
+      "state": "ADMITTED_LOCKED"
+    },
     "10395de588f9010c490895fafe8e8f3fde74654f7feeb978f458a2a56e9867af": {
       "governingHead": "7e7ffbff3a8cc36e5889ac4d612d7ca6e905c50f",
       "lockGeneration": 204,
@@ -7257,7 +7300,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1964,
+  "lockGeneration": 1965,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

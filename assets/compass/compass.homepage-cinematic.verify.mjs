@@ -29,8 +29,9 @@ check('CONTEXT_CURRENT_TEXT_EXITS_FIRST',css.includes('@keyframes tour-current')
 check('CONTEXT_NEXT_TEXT_ENTERS_BEFORE_BOUNDARY',css.includes('@keyframes tour-next')&&css.includes('96%,100%{opacity:1'));
 check('CONTEXT_DOMINANT_LOCAL_CONTRAST',css.includes('background:linear-gradient(90deg,rgba(1,6,10,.86)')&&css.includes('text-shadow:0 3px 22px rgba(0,0,0,.96)'));
 check('TOUR_CONTEXT_RESTART_GUARD_INSTALLED',media.includes("installCinematicTourContextRestartGuard();")&&media.includes("TOUR_CONTEXT_RESTART_STYLE_ID='compass-cinematic-tour-context-restart-guard'"));
-check('TOUR_CONTEXT_S03_UNIQUE_RESTART_NAMES',media.includes('@keyframes tour-current-s03')&&media.includes('@keyframes tour-next-s03')&&media.includes('animation-name:tour-current-s03')&&media.includes('animation-name:tour-next-s03'));
-check('TOUR_CONTEXT_S04_UNIQUE_RESTART_NAMES',media.includes('@keyframes tour-current-s04')&&media.includes('@keyframes tour-next-s04')&&media.includes('animation-name:tour-current-s04')&&media.includes('animation-name:tour-next-s04'));
+check('TOUR_CONTEXT_RESTART_GUARD_COVERS_S01_S08',media.includes("const TOUR_CONTEXT_SHOTS=Object.freeze(['S01','S02','S03','S04','S05','S06','S07','S08']);")&&media.includes("style.dataset.cinematicTourContextRestart='S01_S08_UNIQUE_ANIMATION_NAMES'"));
+check('TOUR_CONTEXT_CURRENT_NAME_UNIQUE_PER_SHOT',media.includes('`@keyframes tour-current-${slug}{${TOUR_CONTEXT_CURRENT_FRAMES}}`')&&media.includes('animation-name:tour-current-${slug}'));
+check('TOUR_CONTEXT_NEXT_NAME_UNIQUE_PER_SUCCESSOR_SHOT',media.includes("if(id!=='S08')")&&media.includes('`@keyframes tour-next-${slug}{${TOUR_CONTEXT_NEXT_FRAMES}}`')&&media.includes('animation-name:tour-next-${slug}'));
 check('TOUR_CONTEXT_RESTART_GUARD_NO_MASTER_CLOCK',!media.includes('requestAnimationFrame(')&&!media.includes('performance.now(')&&!media.includes('setInterval('));
 check('NO_CHARACTER_COPY_IN_VISIBLE_CONTEXT',!css.includes('Meet the characters')&&!css.includes('Choose who you want to speak with'));
 check('DONOR_INTERNAL_S07_COPY_HIDDEN',css.includes('.compass-orientation-cinematic[data-shot-id="S07"] .cinematic-breadth__heading')&&css.includes('.compass-orientation-cinematic[data-shot-id="S07"] .cinematic-breadth__caption{display:none!important}'));

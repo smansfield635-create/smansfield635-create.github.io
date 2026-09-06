@@ -1,0 +1,218 @@
+name: Compass Single Master Full Frame Capture v1
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/compass-single-master-full-frame-capture-v1.yml'
+
+permissions:
+  contents: read
+
+env:
+  CARRIER_BASE_SHA: db6589484f25d7af324ea97cff1fda63cbfd8865
+  SUBJECT_SHA: 96c89ec797490a5dc0e3dd343f4d34a396adaa02
+  T8_ARTIFACT_ID: '9992691963'
+  T8_ARTIFACT_DIGEST: sha256:910f46c38c3bc9bce08a8851c69c1b5a084a9db216495e22b20299a5bc721924
+  FRAME_DIR: /tmp/compass-single-master-full-capture/frames
+  EVIDENCE_DIR: /tmp/compass-single-master-full-capture/evidence
+  FPS: '30'
+  FRAME_COUNT: '1140'
+  WIDTH: '1280'
+  HEIGHT: '720'
+
+jobs:
+  passive-full-frame-capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout exact carrier head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 2
+
+      - name: Verify one-file carrier scope and T8 binding
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --name-only "$CARRIER_BASE_SHA" HEAD | sort > /tmp/carrier-paths.txt
+          printf '%s\n' '.github/workflows/compass-single-master-full-frame-capture-v1.yml' > /tmp/expected-carrier-paths.txt
+          diff -u /tmp/expected-carrier-paths.txt /tmp/carrier-paths.txt
+          mkdir -p "$FRAME_DIR" "$EVIDENCE_DIR"
+          cp /tmp/carrier-paths.txt "$EVIDENCE_DIR/carrier-paths.txt"
+          {
+            echo "t8_artifact_id=$T8_ARTIFACT_ID"
+            echo "t8_artifact_digest=$T8_ARTIFACT_DIGEST"
+            echo "subject_sha=$SUBJECT_SHA"
+            echo "fps=$FPS"
+            echo "frame_count=$FRAME_COUNT"
+            echo "width=$WIDTH"
+            echo "height=$HEIGHT"
+          } > "$EVIDENCE_DIR/t9-entry-binding.txt"
+
+      - name: Checkout frozen cinematic subject read-only
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SUBJECT_SHA }}
+          path: subject
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Verify frozen subject identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C subject rev-parse HEAD)" = "$SUBJECT_SHA"
+          test -f subject/preview/compass/single-master-traversal/index.html
+          test -f subject/assets/compass/cinematic-master/master-source.mjs
+          {
+            echo "subject_sha=$SUBJECT_SHA"
+            echo "capture_html_blob=$(git -C subject rev-parse HEAD:preview/compass/single-master-traversal/index.html)"
+            echo "master_source_blob=$(git -C subject rev-parse HEAD:assets/compass/cinematic-master/master-source.mjs)"
+          } > "$EVIDENCE_DIR/subject-identity.txt"
+
+      - name: Install isolated Playwright Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/compass-playwright
+          cd /tmp/compass-playwright
+          npm init -y >/dev/null 2>&1
+          npm install --silent --no-save --package-lock=false playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start exact frozen subject server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 -d subject > "$EVIDENCE_DIR/subject-server.log" 2>&1 &
+          echo $! > /tmp/compass-subject-server.pid
+          for attempt in $(seq 1 40); do
+            if curl --fail --silent 'http://127.0.0.1:4173/preview/compass/single-master-traversal/' >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+
+      - name: T9 capture 1140 deterministic frames
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/compass-playwright/capture-full.mjs <<'NODE'
+          import fs from 'node:fs/promises';
+          import path from 'node:path';
+          import crypto from 'node:crypto';
+          import { chromium } from 'playwright';
+
+          const subjectSha = process.env.SUBJECT_SHA;
+          const frameDir = process.env.FRAME_DIR;
+          const evidenceDir = process.env.EVIDENCE_DIR;
+          const fps = Number(process.env.FPS);
+          const frameCount = Number(process.env.FRAME_COUNT);
+          const width = Number(process.env.WIDTH);
+          const height = Number(process.env.HEIGHT);
+          if (fps !== 30 || frameCount !== 1140 || width !== 1280 || height !== 720) throw new Error('T9_CAPTURE_SPEC_MISMATCH');
+          await fs.mkdir(frameDir, { recursive: true });
+          await fs.mkdir(evidenceDir, { recursive: true });
+
+          const browser = await chromium.launch({
+            headless: true,
+            args: ['--no-sandbox','--disable-dev-shm-usage','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']
+          });
+          const context = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: 1 });
+          const page = await context.newPage();
+          const consoleErrors = [];
+          const pageErrors = [];
+          page.on('console', message => { if (message.type() === 'error') consoleErrors.push(message.text()); });
+          page.on('pageerror', error => pageErrors.push(String(error?.message || error)));
+
+          const url = 'http://127.0.0.1:4173/preview/compass/single-master-traversal/?t=0';
+          const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 120000 });
+          if (!response || response.status() !== 200) throw new Error(`SUBJECT_HTTP_FAILURE:${response?.status()}`);
+          await page.waitForFunction(() => ['READY','FAILED'].includes(document.documentElement.dataset.compassMasterCapture || ''), null, { timeout: 180000 });
+          const boot = await page.evaluate(() => ({
+            state: document.documentElement.dataset.compassMasterCapture,
+            error: document.querySelector('[data-capture-error]')?.textContent || '',
+            hasApi: Boolean(globalThis.__COMPASS_SINGLE_MASTER__)
+          }));
+          if (boot.state !== 'READY' || !boot.hasApi) throw new Error(`SUBJECT_CAPTURE_BOOT_FAILED:${JSON.stringify(boot)}`);
+
+          const manifest = [];
+          let previousShot = null;
+          for (let index = 0; index < frameCount; index += 1) {
+            const timeMs = index * 1000 / fps;
+            const state = await page.evaluate((time) => {
+              const frame = globalThis.__COMPASS_SINGLE_MASTER__.renderAt(time);
+              return {
+                elapsedMs: frame.elapsedMs,
+                shotId: frame.shot.id,
+                shotProgress: frame.shotProgress,
+                rootShotId: document.querySelector('[data-compass-single-master]')?.dataset?.shotId || null,
+                rootElapsedMs: document.querySelector('[data-compass-single-master]')?.dataset?.elapsedMs || null
+              };
+            }, timeMs);
+            if (state.rootShotId !== state.shotId) throw new Error(`ROOT_SHOT_IDENTITY_MISMATCH:${index}:${JSON.stringify(state)}`);
+            await page.evaluate(() => new Promise(resolve => requestAnimationFrame(resolve)));
+            const file = `frame-${String(index).padStart(6,'0')}.png`;
+            const bytes = await page.screenshot({ path: path.join(frameDir, file), fullPage: false });
+            const digest = crypto.createHash('sha256').update(bytes).digest('hex');
+            manifest.push({ index, timeMs, shotId: state.shotId, shotProgress: state.shotProgress, file, sha256: digest, byteLength: bytes.length });
+            if (state.shotId !== previousShot) {
+              console.log(JSON.stringify({ boundaryFrame: index, timeMs, shotId: state.shotId, digest }));
+              previousShot = state.shotId;
+            }
+            if ((index + 1) % 120 === 0) console.log(`CAPTURE_PROGRESS ${index + 1}/${frameCount}`);
+          }
+
+          if (consoleErrors.length) throw new Error(`CONSOLE_ERRORS:${JSON.stringify(consoleErrors)}`);
+          if (pageErrors.length) throw new Error(`PAGE_ERRORS:${JSON.stringify(pageErrors)}`);
+          if (manifest.length !== frameCount) throw new Error(`FRAME_COUNT_MISMATCH:${manifest.length}`);
+          const expectedLastTime = (frameCount - 1) * 1000 / fps;
+          if (Math.abs(manifest.at(-1).timeMs - expectedLastTime) > 1e-9) throw new Error('LAST_FRAME_TIME_MISMATCH');
+          const manifestJson = JSON.stringify(manifest);
+          const manifestSha256 = crypto.createHash('sha256').update(manifestJson).digest('hex');
+          await fs.writeFile(path.join(evidenceDir, 'frame-manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
+          const receipt = {
+            schema: 'COMPASS_SINGLE_MASTER_T9_FULL_FRAME_CAPTURE_v1',
+            subjectSha,
+            browserEngine: 'PLAYWRIGHT_CHROMIUM_1_55_0',
+            launchMode: 'HEADLESS_SWIFTSHADER',
+            width, height, fps, durationMs: 38000, frameCount,
+            firstFrameTimeMs: manifest[0].timeMs,
+            lastFrameTimeMs: manifest.at(-1).timeMs,
+            firstFrameSha256: manifest[0].sha256,
+            lastFrameSha256: manifest.at(-1).sha256,
+            frameManifestSha256: manifestSha256,
+            consoleErrors,
+            pageErrors,
+            productMutationPerformed: false,
+            deploymentPerformed: false,
+            mergePerformed: false,
+            status: 'PASS_CLOSED'
+          };
+          await fs.writeFile(path.join(evidenceDir, 't9-receipt.json'), JSON.stringify(receipt, null, 2) + '\n');
+          console.log(JSON.stringify(receipt, null, 2));
+          await context.close();
+          await browser.close();
+          NODE
+          cd /tmp/compass-playwright
+          NODE_PATH=/tmp/compass-playwright/node_modules node capture-full.mjs | tee "$EVIDENCE_DIR/t9-capture.log"
+          test "$(find "$FRAME_DIR" -maxdepth 1 -name 'frame-*.png' | wc -l)" -eq 1140
+
+      - name: Verify subject and carrier remained non-mutating
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "$(git status --porcelain --untracked-files=no)"
+          test -z "$(git -C subject status --porcelain)"
+
+      - name: Upload exact T9 frame artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-single-master-t9-frames-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ env.FRAME_DIR }}
+            ${{ env.EVIDENCE_DIR }}
+          if-no-files-found: error
+          retention-days: 30

@@ -149,9 +149,58 @@ const edgeYoungRate=edgeTotal?edgeYoung/edgeTotal:0;
 const interiorYoungRate=interiorTotal?interiorYoung/interiorTotal:0;
 check('EDGE_FAVORS_YOUNG_GROWTH_RELATIVE_TO_INTERIOR',edgeTotal===0||edgeYoungRate>interiorYoungRate,{edgeYoungRate,interiorYoungRate,edgeYoung,interiorYoung,edgeTotal,interiorTotal});
 
-const frame=representationMod.buildVegetationRepresentationFrame({camera:{eye:{x:0,y:260,z:620},look:{x:0,y:0,z:0}}});
+const lodTarget=[...population.instances].sort((a,b)=>a.id.localeCompare(b.id))[0];
+const {nearMid,midFar}=representationMod.CAMERA_TRUE_VEGETATION_REPRESENTATION_CONTRACT.hysteresis;
+const sweepSpec=[
+  {label:'NEAR_START',distance:nearMid.enterNear-40,expected:'NEAR_FIELD'},
+  {label:'NEAR_HOLD_FORWARD',distance:nearMid.enterFar-1,expected:'NEAR_FIELD'},
+  {label:'MID_ENTER_FORWARD',distance:nearMid.enterFar+1,expected:'MID_FIELD'},
+  {label:'MID_HOLD_FORWARD',distance:midFar.enterFar-1,expected:'MID_FIELD'},
+  {label:'FAR_ENTER_FORWARD',distance:midFar.enterFar+1,expected:'FAR_FIELD'},
+  {label:'FAR_HOLD_REVERSE',distance:midFar.enterNear+1,expected:'FAR_FIELD'},
+  {label:'MID_ENTER_REVERSE',distance:midFar.enterNear-1,expected:'MID_FIELD'},
+  {label:'MID_HOLD_REVERSE',distance:nearMid.enterNear+1,expected:'MID_FIELD'},
+  {label:'NEAR_ENTER_REVERSE',distance:nearMid.enterNear-1,expected:'NEAR_FIELD'}
+];
+const cameraAtDistance=distance=>({
+  eye:{x:lodTarget.world.x,y:lodTarget.world.y,z:lodTarget.world.z+distance},
+  look:{...lodTarget.world}
+});
+const sweepFrames=[];
+let previousFrame=null;
+for(const spec of sweepSpec){
+  const current=representationMod.buildVegetationRepresentationFrame({camera:cameraAtDistance(spec.distance),previousFrame});
+  sweepFrames.push(current);
+  previousFrame=current;
+}
+const sweepDiagnostics=sweepFrames.map((current,index)=>{
+  const spec=sweepSpec[index];
+  const target=current.representations.find(item=>item.id===lodTarget.id);
+  return {
+    label:spec.label,
+    distance:spec.distance,
+    expected:spec.expected,
+    actual:target?.lod??null,
+    targetPresent:Boolean(target),
+    canonicalPopulationCount:current.canonicalPopulationCount,
+    representationCount:current.representationCount,
+    lodAuthority:current.lodAuthority,
+    hysteresisApplied:current.hysteresisApplied
+  };
+});
+const frame=sweepFrames[0];
 check('V5_REPRESENTATION_COUNT_EQUALS_CANONICAL_POPULATION',frame.canonicalPopulationCount===contract.population.exactBudget&&frame.representationCount===contract.population.exactBudget,{canonicalPopulationCount:frame.canonicalPopulationCount,representationCount:frame.representationCount});
-check('CAMERA_TRUE_LOD_PRESERVED',frame.lodAuthority==='CAMERA_DISTANCE'&&frame.hysteresisApplied===true&&new Set(frame.representations.map(x=>x.lod)).size>=2,{lodAuthority:frame.lodAuthority,hysteresisApplied:frame.hysteresisApplied,lods:[...new Set(frame.representations.map(x=>x.lod))]});
+const permittedSweepLods=new Set(['NEAR_FIELD','MID_FIELD','FAR_FIELD']);
+const sweepPass=sweepDiagnostics.every(step=>
+  step.targetPresent&&
+  step.actual===step.expected&&
+  permittedSweepLods.has(step.actual)&&
+  step.canonicalPopulationCount===contract.population.exactBudget&&
+  step.representationCount===contract.population.exactBudget&&
+  step.lodAuthority==='CAMERA_DISTANCE'&&
+  step.hysteresisApplied===true
+);
+check('CAMERA_TRUE_LOD_PRESERVED',sweepPass,{targetId:lodTarget.id,hysteresis:{nearMid,midFar},sweep:sweepDiagnostics});
 check('V5_CONTRACT_REMAINS_V5_ONLY',representationMod.HIERARCHICAL_FOLIAGE_V5_REPRESENTATION_CONTRACT.sharedWind===false&&representationMod.HIERARCHICAL_FOLIAGE_V5_REPRESENTATION_CONTRACT.foliageNightLighting===false,{});
 
 const result=failures.length?'FAIL_CLOSED':'PASS_CLOSED';

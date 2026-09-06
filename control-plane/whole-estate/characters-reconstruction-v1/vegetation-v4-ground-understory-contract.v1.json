@@ -1,0 +1,68 @@
+{
+  "schema": "MIRRORLAND_VEGETATION_V4_GROUND_UNDERSTORY_CONTRACT_v1",
+  "operationId": "MIRRORLAND_GROUND_UNDERSTORY_CONTINUITY_20260905_009",
+  "lockGeneration": 1958,
+  "governingHead": "a771681786d0ba2cc751949d761876d917992d8c",
+  "foundation": {
+    "qualifiedHead": "7e45a44a0abd6348892ff54a2109fc0c4248485d",
+    "integrationCommit": "2fc27c1465948cd109ebd3780ed352370691db14",
+    "aggregateRun": 33999774516,
+    "aggregateResult": "V0_V3_PASS_CLOSED",
+    "checks": "24645/24645",
+    "canonicalPopulationCount": 818,
+    "cameraMatrixCount": 10,
+    "exactBlobIdentityRequired": true,
+    "files": {
+      ".github/workflows/characters-vegetation-v0-v3-reconciliation-v1.yml": "2594472c13a04527f4f59bfae6f325d3fb5dfa43",
+      ".github/workflows/characters-vegetation-v0-v3-v1.yml": "fe6ed16c847ccc7726482c229b6f4e8eed9b58e2",
+      ".github/workflows/characters-vegetation-v1-v1.yml": "b30b215d035019ee46546b60517a7769afa0b350",
+      ".github/workflows/characters-vegetation-v2-v1.yml": "ef2eaeb8cc52373d4564e2cdad7298cf78e21c96",
+      ".github/workflows/characters-vegetation-v3-v1.yml": "6f60c82492a8d2eeb3e9bb99b215a174f58a0fe5",
+      "characters/vegetation-ecology.mjs": "b2b4ebafeee1e24f5eabd7a43c86afc1734ad43c",
+      "characters/vegetation-population.mjs": "2fcbe1ef5ba62a0e23a10fac3c9b2bc211e93149",
+      "characters/vegetation-representation.mjs": "9fe0a70d86250d004ae1b04b72e1cd6818caaada",
+      "control-plane/whole-estate/characters-reconstruction-v1/vegetation-v0-known-verifier-false-negative.v1.json": "00cf3b548399405b437e1fabdccf2908e09f725b",
+      "control-plane/whole-estate/characters-reconstruction-v1/vegetation-v0-v3-contract.v1.json": "b13793ba0f0b4d71b819b4c9e9a2ed2c3b01e4c5",
+      "control-plane/whole-estate/characters-reconstruction-v1/vegetation-v0-v3-reconciliation.v1.json": "254bd873d5c1cc060cae0923bb3a430f3bcf9c5f",
+      "control-plane/whole-estate/characters-reconstruction-v1/vegetation-v2-known-instrumental-failure.v1.json": "7ee332b4635e7d0930414982b84be19464c7825b",
+      "control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v0-v3-reconciliation.v1.mjs": "6ace46a66f2b062b4470a8d9450ccd174ff1534e",
+      "control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v0-v3.v1.mjs": "f70d9f6e655cf0fb8e264fe3b27e5429ea05ebdc",
+      "control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v1.v1.mjs": "9e5d7e797819e37ee139aa6f749b7d60ae645a18",
+      "control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v2.v1.mjs": "ea84ac5067e040503bbbf6be98e50ec8d79a4a0e",
+      "control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v3.v1.mjs": "4ffea7b69f7b84ba7b0933c2bb9418a89a3e7dc9"
+    }
+  },
+  "ecologyAuthority": "characters/vegetation-ecology.mjs#sampleCanonicalVegetationEcology",
+  "populationAuthority": "characters/vegetation-population.mjs#getCanonicalVegetationPopulation",
+  "productIntegrationSurface": "characters/forest-system.mjs",
+  "publicRuntimeApiMustRemain": "createForestSystem(gl,{compact}).draw(vp,time)",
+  "groundPopulation": {
+    "identityDeviceInvariant": true,
+    "identityCameraInvariant": true,
+    "decorativeIndependentNoiseAuthority": false,
+    "categories": ["GRASS_SEDGE", "LOW_SHRUB", "SAPLING", "REED", "DEAD_STEM", "FOREST_FLOOR"],
+    "wetMarginMinimumWeight": 0.08,
+    "forestFloorMinimumWeight": 0.50,
+    "landmarkExclusionRequired": true,
+    "waterInteriorExcluded": true,
+    "representationMayReduceOnCompact": true,
+    "representationReductionMayNotChangePopulationIdentity": true
+  },
+  "stageBoundary": {
+    "mechanicalResult": "V4_MECHANICAL_PASS_MATERIAL_PENDING",
+    "terminalResult": "GROUND_AND_UNDERSTORY_CONTINUITY_PASS",
+    "materialWideShotEvidenceRequired": true,
+    "codePresenceAloneMayClose": false
+  },
+  "prohibited": [
+    "V0_V3_FOUNDATION_MUTATION",
+    "CANONICAL_TREE_IDENTITY_MUTATION",
+    "DECORATIVE_RANDOM_ECOLOGY_AUTHORITY",
+    "UNIFORM_CLEARING_CARPET",
+    "V5_HIERARCHICAL_FOLIAGE",
+    "V6_SHARED_WIND_AUTHORITY",
+    "V7_FOLIAGE_NIGHT_LIGHTING_AUTHORITY",
+    "PROTECTED_CHARACTERS_AUTHORITY_MUTATION",
+    "MERGE_DEPLOYMENT_PUBLICATION"
+  ]
+}

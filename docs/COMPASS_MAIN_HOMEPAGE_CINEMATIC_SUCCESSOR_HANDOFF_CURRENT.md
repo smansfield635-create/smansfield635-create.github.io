@@ -5,16 +5,16 @@ Date: 2026-09-06
 
 Read current `AI_ENTRYPOINT.json` first.
 
-Then read these three controlling V2 documents:
+Then read these controlling documents:
 
 1. **WHAT V2 must be**  
    `docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_NEXT_HOOK_DIRECT_STRATEGY_20260906.md`
 2. **HOW V2 is produced and resumed**  
    `docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_V2_EXECUTION_SPINE_CURRENT.md`
-3. **HOW execution capability is resolved without defaulting to an environment**  
+3. **HOW execution capability is resolved/composed**  
    `docs/COMPASS_MAIN_HOMEPAGE_CINEMATIC_EXECUTION_ROUTE_CLARIFICATION.md`
-
-For execution-route questions, the clarification supersedes any historical/example substrate wording.
+4. **Reusable repeated-video review / capability-composition practice**  
+   `docs/DETACHED_CINEMATIC_VIDEO_REVIEW_AND_PROGRESSION_PROTOCOL.md`
 
 ## Current production state
 
@@ -71,43 +71,53 @@ Do not collapse:
 - first V2 frame decoded/presentable before entry material clears;
 - zero blank frame.
 
-## D0 — documentation adoption before R0
+## D0 is CLOSED
 
-V2 production must not begin until the controlling documentation candidate is adopted to `main`.
+The capability-first V2 documentation was adopted to `main` at:
 
-For `STATIC_EDITORIAL_MICRO`, D0 requires exact PASS from the repository-required static-editorial verifier against exact base/head and declared documentation paths.
+`34fb82ae090bb7e2f40d6cd4c79eaf35d26e26ea`
 
-Required result:
+The required static-editorial verifier produced an actual command-emitted PASS for exact base `8af6708cf872ec90b9ed39f9aa477f64f557a695` and candidate `7ca358c1739528401b122b6036bd736d00fbaf7d` before adoption.
 
-`D0_STATIC_EDITORIAL_VERIFIER_PASS`
+Therefore:
 
-Passive CI is not a substitute unless current repository authority explicitly says otherwise.
+`D0_STATIC_EDITORIAL_VERIFIER_PASS = CLOSED`
 
-### Capability-first law
+A room must not stop on the earlier D0-unresolved comment in PR #2809. That record is superseded by the later exact PASS and adoption merge.
 
-D0 does **not** prescribe an execution environment.
+Governing state law:
 
-Lawful route:
+`LATEST_EXACT_SUPERSEDING_EVIDENCE > EARLIER_BLOCKER_OR_STOP_RECORD`
 
-`REQUIRED VERIFIER EVIDENCE → CURRENT AI_ENTRYPOINT → CURRENT ROOM'S ALREADY-AUTHORIZED CAPABILITIES → EXECUTE IF DIRECTLY AVAILABLE → OTHERWISE RECORD EXACT BOUNDARY AND STOP`
+## Capability-composition law
 
-An acquisition failure such as:
+Do not require one tool to perform the entire evidence chain.
 
-`Could not resolve host: github.com`
+For every R-state evidence gate:
 
-is only evidence that that attempt could not acquire the exact repository state.
+`REQUIRED_EVIDENCE`
+→ `CURRENT_AI_ENTRYPOINT`
+→ `INVENTORY_AUTHORIZED_AVAILABLE_CAPABILITIES_BY_FUNCTION`
+→ `COMPOSE_CAPABILITIES_WHEN_EXACT_IDENTITY_AND_CANONICAL_SEMANTICS_ARE_PRESERVED`
+→ `RUN_CANONICAL_INSTRUMENT UNCHANGED`
+→ `ACCEPT_ACTUAL RESULT`
+→ `STOP ONLY IF NO LAWFUL COMPOSITION CAN CLOSE THE EVIDENCE`
 
-It is **not** an instruction to use any named workspace, builder, clone, workflow, CI path, or bridge.
+The proven D0 example was:
 
-A named environment is not the next action.
+`CONNECTED GITHUB EXACT OBJECT RETRIEVAL`
+→ `LOCAL EXACT GIT OBJECT MATERIALIZATION`
+→ `OBJECT HASH VERIFICATION`
+→ `RUN REPOSITORY VERIFIER UNCHANGED`
+→ `PASS`
 
-The unresolved evidence requirement is the next action. A later room resumes D0 and resolves whatever authorized capability actually exists there.
+This is reusable composition precedent, not a prescribed environment.
 
-If no capability in the current room can execute the verifier against the exact repository state, keep D0 unresolved and the candidate draft. Do not bypass, relabel, or invent infrastructure.
+A failed acquisition path such as `Could not resolve host: github.com` is not by itself a global blocker.
 
 ## R0→R10 production ladder
 
-Only after D0 closes:
+D0 is closed. Resolve current durable evidence and begin at the first genuinely unresolved production state:
 
 `R0 CURRENT STATE`
 → `R1 SOURCE AUTHORITY`
@@ -123,7 +133,7 @@ Only after D0 closes:
 
 Resume only the first state lacking exact durable evidence.
 
-The spine defines evidence and deterministic semantics. The execution-route clarification governs transport selection: **capability-first, never environment-first**.
+Before calling any state blocked, inspect later receipts/checkpoints for exact superseding evidence and consider lawful composition of the capabilities already available in the room.
 
 ## Historical precedent
 
@@ -135,25 +145,33 @@ Reusable authority includes:
 - deterministic encode semantics PR #2796 / run `34049018018`;
 - installed bounded binary ingress/reconstruction mechanisms;
 - binary custody precedent #1334, #1323, #1340, #2798, #2799;
-- publication boundary PR #2801.
+- publication boundary PR #2801;
+- D0 capability-composition/adoption precedent PR #2809 / merge `34fb82ae090bb7e2f40d6cd4c79eaf35d26e26ea`.
 
 Historical transports prove semantics. They are not standing instructions to recreate their execution environment.
+
+## Repeated-video rule
+
+For every later owner recording:
+
+`WATCH → TIME-CODE FINDINGS → PERSIST FINDINGS → BIND SOURCE → PATCH → CLOSE EXACT EVIDENCE → PERSIST SUPERSEDING CHECKPOINT → REVIEW AGAIN`
+
+Once a recording's material findings have been made durable, later rooms do not need that same video file unless a new unresolved perceptual question genuinely requires it.
 
 ## Immediate instruction for any new room
 
 1. Read current `AI_ENTRYPOINT.json`.
-2. Read this handoff.
-3. Read direct strategy.
-4. Read V2 execution spine.
-5. Read execution-route clarification.
-6. Determine whether D0 is closed on `main`.
-7. If D0 is unresolved, resume D0 only; do not start R0/R1.
-8. Resolve only already-authorized capabilities actually available in the current room.
-9. Do not name, create, or recommend a default execution environment because one capability is absent.
-10. If D0 is closed, locate R0→R10 evidence and execute only the first unresolved state.
-11. Persist the exact checkpoint before advancing.
-12. Keep V1 live until owner-accepted V2 is ready for direct replacement.
+2. Read this handoff, direct strategy, V2 spine, execution-route clarification, and reusable video-review protocol.
+3. Resolve current `main` and current V1 cinematic identities.
+4. Treat D0 as closed unless a later exact repository transition explicitly supersedes the adopted documentation lineage.
+5. Locate durable R0→R10 evidence chronologically and by exact identity.
+6. Honor later exact PASS/adoption/rollback/publication evidence over earlier blockers.
+7. Execute only the first genuinely unresolved state.
+8. For that state, inventory already-authorized capabilities by function and compose them lawfully when necessary.
+9. Do not infer PASS, emulate canonical instruments, or create infrastructure merely because one transport fails.
+10. Persist an explicit checkpoint that states what prior evidence it supersedes.
+11. Keep V1 live until owner-accepted V2 is ready for direct replacement.
 
 Operating law:
 
-`NO DEFAULT SUBSTRATE → NO INFRASTRUCTURE INVENTION → CLOSE THE REQUIRED EVIDENCE WITH A CURRENTLY AUTHORIZED AVAILABLE CAPABILITY → OTHERWISE STOP AT THAT EXACT STATE`
+`LATEST EXACT STATE → FIRST GENUINELY UNRESOLVED R-STATE → LAWFUL CAPABILITY COMPOSITION → CANONICAL EVIDENCE → SUPERSEDING CHECKPOINT → NEXT STATE`

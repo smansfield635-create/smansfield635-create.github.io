@@ -1,0 +1,39 @@
+{
+  "schema": "MIRRORLAND_V2_INSTRUMENTAL_VERIFIER_FAILURE_DISPOSITION_v1",
+  "operationId": "MIRRORLAND_CANONICAL_ECOLOGY_CAMERA_TRUE_VEGETATION_20260905_003",
+  "lockGeneration": 1956,
+  "v2CandidateHead": "62d27addc54863e3166ac854d4220ee14d014036",
+  "workflowRunId": 33998608949,
+  "artifactId": 9978819830,
+  "artifactDigest": "sha256:f60e18cb4218414db223386aa7a89dda42a4773b1e68407390720999a668b67a",
+  "receiptPayloadSha256": "eaecce262789b2f32a69663f69d243bf959f34dddedcf2662ff7f82bab91e5e1",
+  "formalReceiptResult": "FAIL_CLOSED",
+  "observed": {
+    "populationCount": 818,
+    "populationIdentityDigest": "493031369c93231a9f8d870176b47e7ecd33b221910115e5549a5f3576d1b4f9",
+    "invariantContextCount": 60,
+    "checkCount": 8336,
+    "passCount": 8334,
+    "failCount": 2,
+    "failures": [
+      "V0_FALSE_NEGATIVE_OWNER_DISPOSITION",
+      "V0_AGGREGATE_RECONCILIATION_REQUIRED"
+    ]
+  },
+  "classification": "KNOWN_INSTRUMENTAL_VERIFIER_FAILURE",
+  "basis": {
+    "populationLawPassed": true,
+    "canonicalPopulationIdentityPassed": true,
+    "deviceAndCameraInvariantMatrixPassed": true,
+    "failureSurface": "STALE_V0_DISPOSITION_FIELD_PATHS",
+    "acceptanceCriteriaRelaxed": false
+  },
+  "ownerDisposition": {
+    "canonicalIssue": 2670,
+    "commentId": 5555545497,
+    "forwardConstructionAuthorized": "V3_CAMERA_TRUE_INSTANCED_LOD",
+    "v2PassClaimAuthorized": false,
+    "aggregateClosureRequiresV2FormalReconciliation": true,
+    "acceptanceCriteriaRelaxed": false
+  }
+}

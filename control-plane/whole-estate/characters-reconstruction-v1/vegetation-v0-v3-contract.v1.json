@@ -1,0 +1,111 @@
+{
+  "schema": "MIRRORLAND_VEGETATION_V0_V3_CONTRACT_v1",
+  "operationId": "MIRRORLAND_CANONICAL_ECOLOGY_CAMERA_TRUE_VEGETATION_20260905_003",
+  "lockGeneration": 1956,
+  "exactGoverningHead": "fa87b2594a9ac43390ed5b657064ffbfd94a06ea",
+  "targetBoundary": "V0_V3_PASS_CLOSED",
+  "laws": [
+    "GEOGRAPHY_DETERMINES_EXISTENCE",
+    "RENDERER_DETERMINES_REPRESENTATION",
+    "DEVICE_CLASS_MUST_NOT_CHANGE_CANONICAL_POPULATION",
+    "CAMERA_MUST_NOT_CHANGE_CANONICAL_POPULATION",
+    "LOD_CHANGES_SAMPLING_DENSITY_NOT_GEOGRAPHIC_STATE",
+    "CLOUD_SYSTEM_OUT_OF_SCOPE"
+  ],
+  "stageOrder": [
+    "V0_BASELINE_AND_CONTRACT_FREEZE",
+    "V1_CANONICAL_ECOLOGY_EXPOSURE",
+    "V2_DEVICE_INVARIANT_CANONICAL_POPULATION",
+    "V3_CAMERA_TRUE_INSTANCED_LOD"
+  ],
+  "v0": {
+    "resultRequired": "V0_BASELINE_PASS_CLOSED",
+    "sourceIdentity": {
+      "characters/forest-system.mjs": "98d0995143400149cb19c48751a38a5402ca019b",
+      "characters/cloud-system.mjs": "47482fd1c37267a2c5e76a3b833210984fe9b505",
+      "characters/night-renderer.mjs": "066973f039a6439cf24264984243271942126b4d",
+      "characters/gratitude-geography.adapter.mjs": "8e094b2beed8117f6322ca18d9b592949998aac4",
+      "characters/step9-regional-geography.mjs": "e3c4f837b7a4c30ce118a88ec8475b6fab542a57",
+      "characters/app.mjs": "045ffe6dc85b50eda1a81db95bdd2fa4e8779380"
+    },
+    "publishedPredecessorFacts": {
+      "desktopPopulationTarget": 420,
+      "mobilePopulationTarget": 190,
+      "populationDeviceDependent": true,
+      "generationTimeLodPresent": true,
+      "canopyBlobNearMidIdentityPresent": true,
+      "defectsAreBaselineEvidenceNotSuccessorAcceptance": true
+    },
+    "referenceCameraMatrix": {
+      "states": [
+        "ORBIT",
+        "CROSSING",
+        "WATCHFIRE_OVERLOOK",
+        "WATERLINE_STATION",
+        "MIRROR_MANOR",
+        "SIGNAL_LANTERN_FIELD",
+        "RESTORATION_BOUNDARY",
+        "AUREN_LOCAL",
+        "JEEVES_LOCAL",
+        "BEYOND_MANOR"
+      ],
+      "viewportClasses": [
+        {"id":"DESKTOP","width":1440,"height":900,"dpr":1},
+        {"id":"TABLET","width":1024,"height":1366,"dpr":2},
+        {"id":"MOBILE","width":390,"height":844,"dpr":3}
+      ],
+      "reducedMotion": [false,true],
+      "nightState": "GRATITUDE_COAST_NIGHT",
+      "cameraAuthority": "characters/step9-regional-geography.mjs#resolveStep9Camera",
+      "worldStateAuthority": "characters/app.mjs"
+    },
+    "performanceBudget": {
+      "policy": "BASELINE_RELATIVE_NO_REGRESSION",
+      "freezeRule": "V0 captures deterministic baseline frame/CPU/GPU measurements on the fixed reference matrix before V1 begins; later stages may not relax those captured ceilings.",
+      "numericCeilingsMayBeSetAfterV0": false
+    },
+    "reproducibility": {
+      "requiredRuns": 2,
+      "sameHead": true,
+      "sameSourceIdentities": true,
+      "sameReferenceMatrix": true,
+      "sameBaselinePopulationFacts": true
+    }
+  },
+  "v1": {
+    "resultRequired": "V1_ECOLOGY_AUTHORITY_PASS_CLOSED",
+    "authority": "h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js#sampleAudraliaGratitudeTerrain",
+    "readOnly": true,
+    "duplicateEcologyEquationsProhibited": true
+  },
+  "v2": {
+    "resultRequired": "V2_CANONICAL_POPULATION_PASS_CLOSED",
+    "populationIdentityDeviceInvariant": true,
+    "populationIdentityCameraInvariant": true
+  },
+  "v3": {
+    "resultRequired": "V3_CAMERA_TRUE_REPRESENTATION_PASS_CLOSED",
+    "lodAuthority": "CAMERA_DISTANCE_OR_PROJECTED_SCREEN_SIZE",
+    "hysteresisRequired": true,
+    "canopyBlobAllowedOnly": ["FAR_FIELD","INTERNAL_CROWN_OCCLUSION"]
+  },
+  "protected": [
+    "characters/cloud-system.mjs",
+    "characters/cloud-traversal.mjs",
+    "characters/night-renderer.mjs",
+    "characters/gratitude-geography.adapter.mjs",
+    "characters/step9-regional-geography.mjs",
+    "characters/coast-map.mjs",
+    "characters/coast-map-renderer.mjs",
+    "characters/app.mjs",
+    "characters/index.html",
+    "h-earth-3d/",
+    "showroom/"
+  ],
+  "failureSemantics": {
+    "stageFailureBlocksAdvance": true,
+    "repairSameStageOnly": true,
+    "acceptanceCriteriaMayNotBeRelaxed": true,
+    "v4PlusBlockedUntilAggregatePass": true
+  }
+}

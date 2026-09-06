@@ -1,0 +1,295 @@
+name: Characters Vegetation V5 Hierarchical Foliage v1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'characters/vegetation-ecology.mjs'
+      - 'characters/vegetation-population.mjs'
+      - 'characters/vegetation-representation.mjs'
+      - 'characters/vegetation-understory.mjs'
+      - 'characters/app.mjs'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/vegetation-v0-v3-contract.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/vegetation-v0-v3-reconciliation.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/vegetation-v0-known-verifier-false-negative.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/vegetation-v2-known-instrumental-failure.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v0-v3-reconciliation.v1.mjs'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/vegetation-v4-ground-understory-contract.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v4-ground-understory.v1.mjs'
+      - '.github/workflows/characters-vegetation-v4-ground-understory-v1.yml'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/vegetation-v5-hierarchical-foliage-contract.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v5-hierarchical-foliage.v1.mjs'
+      - '.github/workflows/characters-vegetation-v5-hierarchical-foliage-v1.yml'
+
+permissions:
+  contents: read
+
+env:
+  OPERATION_ID: MIRRORLAND_HIERARCHICAL_FOLIAGE_20260906_002
+  LOCK_GENERATION: '1962'
+  GOVERNING_MAIN: db6589484f25d7af324ea97cff1fda63cbfd8865
+  V4_CANDIDATE: 278155b1e38c663ffab8ee1ab30b09a294a88010
+  V4_RECONSTITUTION: add856dcdc8dbdb5387a976691acf34d2ab53027
+
+jobs:
+  exact-head-mechanical-and-material-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact V5 candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact candidate and admitted lineage
+        shell: bash
+        run: |
+          set -euo pipefail
+          EXACT_HEAD="$(git rev-parse HEAD^{commit})"
+          test "$EXACT_HEAD" = "${{ github.event.pull_request.head.sha }}"
+          test "$(git rev-parse "$V4_RECONSTITUTION^1")" = "$GOVERNING_MAIN"
+          git merge-base --is-ancestor "$V4_RECONSTITUTION" HEAD
+          test -z "$(git status --porcelain)"
+          echo "EXACT_HEAD=$EXACT_HEAD" >> "$GITHUB_ENV"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run exact V5 independent mechanical verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          node control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v5-hierarchical-foliage.v1.mjs --output vegetation-v5-hierarchical-foliage-receipt.json
+          mkdir -p "$RUNNER_TEMP/v5-evidence"
+          cp vegetation-v5-hierarchical-foliage-receipt.json "$RUNNER_TEMP/v5-evidence/vegetation-v5-hierarchical-foliage-receipt.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const r=JSON.parse(fs.readFileSync('vegetation-v5-hierarchical-foliage-receipt.json','utf8'));
+          if(r.schema!=='MIRRORLAND_V5_HIERARCHICAL_FOLIAGE_QUALIFICATION_RECEIPT_v1')throw Error('V5_RECEIPT_SCHEMA_INVALID');
+          if(r.result!=='PASS_CLOSED'||r.boundary!=='V5_MECHANICAL_PASS_CLOSED')throw Error('V5_MECHANICAL_NOT_PASS_CLOSED');
+          if(r.exactHead!==process.env.EXACT_HEAD)throw Error('V5_RECEIPT_HEAD_MISMATCH');
+          NODE
+          rm vegetation-v5-hierarchical-foliage-receipt.json
+          test -z "$(git status --porcelain)"
+
+      - name: Install passive Chromium tooling outside repository
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/v5-pw"
+          cd "$RUNNER_TEMP/v5-pw"
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null
+
+      - name: Start exact candidate server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 >"$RUNNER_TEMP/v5-http.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/v5-http.pid"
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/characters/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat "$RUNNER_TEMP/v5-http.log"
+          exit 1
+
+      - name: Capture bounded exact-head V5 material evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/v5-capture.cjs" <<'NODE'
+          const fs=require('fs');
+          const path=require('path');
+          const crypto=require('crypto');
+          const {chromium}=require(path.join(process.env.RUNNER_TEMP,'v5-pw','node_modules','playwright'));
+          const OUT=path.join(process.env.RUNNER_TEMP,'v5-evidence');
+          const URL='http://127.0.0.1:4173/characters/';
+          const CANDIDATE=process.env.EXACT_HEAD;
+          fs.mkdirSync(OUT,{recursive:true});
+          const errors=[];
+          const captures=[];
+          const sha256=file=>crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+          const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+
+          async function dismissPrimer(page){
+            const skip=page.locator('#intro-skip');
+            if(await skip.count()&&await skip.isVisible())await skip.click();
+            const primer=page.locator('#step9-primer');
+            if(await primer.count())await primer.waitFor({state:'hidden',timeout:10000});
+          }
+          async function health(page,response,label){
+            if(!response||response.status()!==200)throw Error(`${label}:HTTP_${response?.status()??'NO_RESPONSE'}`);
+            await page.locator('.signal-layer .signal').first().waitFor({state:'attached',timeout:15000});
+            await sleep(900);
+            const state=await page.evaluate(()=>{
+              const canvas=document.querySelector('#scene');
+              const gl=canvas?.getContext('webgl2');
+              return {
+                webgl2:!!gl,
+                signalCount:document.querySelectorAll('.signal-layer .signal').length,
+                fatal:document.querySelector('#fatal')?.classList.contains('show')||false,
+                width:canvas?.width||0,
+                height:canvas?.height||0
+              };
+            });
+            if(!state.webgl2||state.fatal||state.signalCount<1||state.width<1||state.height<1)throw Error(`${label}:RUNTIME_HEALTH_INVALID:${JSON.stringify(state)}`);
+            return state;
+          }
+          async function cameraForDestination(page,id){
+            return page.evaluate(async id=>{
+              const geo=await import('./step9-regional-geography.mjs');
+              const binding=geo.STEP9_DESTINATION_BINDINGS[id];
+              if(!binding)throw Error(`BINDING_MISSING:${id}`);
+              const c=geo.resolveStep9Camera(binding.siteId);
+              return {eye:{x:c.eye.x,y:c.eye.y,z:c.eye.z},look:{x:c.look.x,y:c.look.y,z:c.look.z}};
+            },id);
+          }
+          async function probeLod(page,camera){
+            return page.evaluate(async camera=>{
+              const mod=await import('./vegetation-representation.mjs');
+              const frame=mod.buildVegetationRepresentationFrame({camera});
+              const counts={NEAR_FIELD:0,MID_FIELD:0,FAR_FIELD:0};
+              for(const r of frame.representations)counts[r.lod]++;
+              return {counts,total:frame.representationCount,population:frame.canonicalPopulationCount,lodAuthority:frame.lodAuthority};
+            },camera);
+          }
+          async function returnOrbit(page){
+            const button=page.locator('#return');
+            if(await button.count()&&await button.isVisible()){
+              await button.click();
+              await button.waitFor({state:'hidden',timeout:10000});
+              await sleep(450);
+            }
+          }
+          async function gotoDestination(page,id){
+            await returnOrbit(page);
+            await page.locator('#map-toggle').click();
+            await page.locator('#coast-map').waitFor({state:'visible',timeout:10000});
+            const node=page.locator(`.map-node[data-id="${id}"]`);
+            if(!await node.isVisible())throw Error(`MAP_NODE_NOT_VISIBLE:${id}`);
+            await node.click();
+            await page.locator('#return').waitFor({state:'visible',timeout:10000});
+            await sleep(850);
+          }
+          async function shot(page,filename,profile,state,camera,requiredLod){
+            const file=path.join(OUT,filename);
+            const lod=await probeLod(page,camera);
+            if(lod.total!==818||lod.population!==818)throw Error(`${filename}:POPULATION_NOT_818:${JSON.stringify(lod)}`);
+            if((lod.counts[requiredLod]||0)<1)throw Error(`${filename}:REQUIRED_LOD_ABSENT:${requiredLod}:${JSON.stringify(lod)}`);
+            await page.screenshot({path:file,fullPage:false});
+            const stat=fs.statSync(file);
+            if(stat.size<10000)throw Error(`${filename}:PNG_TOO_SMALL:${stat.size}`);
+            captures.push({filename,profile,state,camera,requiredLod,lod,bytes:stat.size,sha256:sha256(file)});
+          }
+          async function openProfile(browser,profile,viewport,deviceScaleFactor){
+            const context=await browser.newContext({viewport,deviceScaleFactor});
+            const page=await context.newPage();
+            page.on('pageerror',error=>errors.push({profile,type:'pageerror',message:String(error?.message||error)}));
+            page.on('console',message=>{if(message.type()==='error')errors.push({profile,type:'console',message:message.text()});});
+            const response=await page.goto(URL,{waitUntil:'networkidle',timeout:30000});
+            const runtime=await health(page,response,profile);
+            await dismissPrimer(page);
+            await sleep(450);
+            return {context,page,runtime,httpStatus:response.status()};
+          }
+
+          (async()=>{
+            const browser=await chromium.launch({headless:true,args:['--use-gl=swiftshader','--enable-webgl','--ignore-gpu-blocklist']});
+            try{
+              const runtime=[];
+              const desktop=await openProfile(browser,'DESKTOP',{width:1440,height:900},1);
+              runtime.push({profile:'DESKTOP',httpStatus:desktop.httpStatus,...desktop.runtime});
+              const orbit={eye:{x:0,y:365,z:590},look:{x:70,y:24,z:-660}};
+              await shot(desktop.page,'v5-desktop-far.png','DESKTOP','ORBIT',orbit,'FAR_FIELD');
+              await gotoDestination(desktop.page,'manor');
+              const manorCamera=await cameraForDestination(desktop.page,'manor');
+              await shot(desktop.page,'v5-desktop-near.png','DESKTOP','MANOR_APPROACH',manorCamera,'NEAR_FIELD');
+              await gotoDestination(desktop.page,'tarian');
+              const tarianCamera=await cameraForDestination(desktop.page,'tarian');
+              await shot(desktop.page,'v5-desktop-mid.png','DESKTOP','WATERLINE_APPROACH',tarianCamera,'MID_FIELD');
+              await desktop.context.close();
+
+              const tablet=await openProfile(browser,'TABLET',{width:1024,height:1366},1);
+              runtime.push({profile:'TABLET',httpStatus:tablet.httpStatus,...tablet.runtime});
+              await gotoDestination(tablet.page,'manor');
+              const tabletManor=await cameraForDestination(tablet.page,'manor');
+              await shot(tablet.page,'v5-tablet-near.png','TABLET','MANOR_APPROACH',tabletManor,'NEAR_FIELD');
+              await tablet.context.close();
+
+              const mobile=await openProfile(browser,'MOBILE',{width:390,height:844},1);
+              runtime.push({profile:'MOBILE',httpStatus:mobile.httpStatus,...mobile.runtime});
+              await gotoDestination(mobile.page,'manor');
+              const mobileManor=await cameraForDestination(mobile.page,'manor');
+              await shot(mobile.page,'v5-mobile-near.png','MOBILE','MANOR_APPROACH',mobileManor,'NEAR_FIELD');
+              await mobile.context.close();
+
+              if(errors.length)throw Error(`BROWSER_ERRORS:${JSON.stringify(errors)}`);
+              const expected=['v5-desktop-near.png','v5-desktop-mid.png','v5-desktop-far.png','v5-tablet-near.png','v5-mobile-near.png'].sort();
+              const observed=captures.map(c=>c.filename).sort();
+              if(JSON.stringify(expected)!==JSON.stringify(observed))throw Error(`CAPTURE_SET_MISMATCH:${JSON.stringify(observed)}`);
+              const manifest={
+                schema:'MIRRORLAND_V5_MATERIAL_EVIDENCE_RECEIPT_v1',
+                result:'EVIDENCE_CAPTURE_PASS',
+                operationId:process.env.OPERATION_ID,
+                lockGeneration:Number(process.env.LOCK_GENERATION),
+                candidateSha:CANDIDATE,
+                governingMain:process.env.GOVERNING_MAIN,
+                v4Candidate:process.env.V4_CANDIDATE,
+                v4ReconstitutionCommit:process.env.V4_RECONSTITUTION,
+                route:'/characters/',
+                captureSemantics:'PASSIVE_EXACT_HEAD_BROWSER_EVIDENCE_NO_PRODUCT_MUTATION',
+                visualDispositionAuthority:'NOT_ASSIGNED_BY_CAPTURE_JOB',
+                runtime,
+                errors,
+                captures
+              };
+              fs.writeFileSync(path.join(OUT,'v5-material-evidence.json'),JSON.stringify(manifest,null,2)+'\n');
+            }finally{
+              await browser.close();
+            }
+          })().catch(error=>{console.error(error);process.exitCode=1;});
+          NODE
+          node "$RUNNER_TEMP/v5-capture.cjs"
+
+      - name: Verify exact evidence manifest and clean tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import crypto from 'node:crypto';
+          const dir=path.join(process.env.RUNNER_TEMP,'v5-evidence');
+          const manifest=JSON.parse(fs.readFileSync(path.join(dir,'v5-material-evidence.json'),'utf8'));
+          if(manifest.schema!=='MIRRORLAND_V5_MATERIAL_EVIDENCE_RECEIPT_v1'||manifest.result!=='EVIDENCE_CAPTURE_PASS')throw Error('V5_MANIFEST_RESULT_INVALID');
+          if(manifest.candidateSha!==process.env.EXACT_HEAD)throw Error('V5_MANIFEST_HEAD_MISMATCH');
+          if(manifest.operationId!==process.env.OPERATION_ID||manifest.lockGeneration!==Number(process.env.LOCK_GENERATION))throw Error('V5_MANIFEST_OPERATION_MISMATCH');
+          if(manifest.errors.length!==0||manifest.captures.length!==5)throw Error('V5_MANIFEST_CAPTURE_OR_ERROR_COUNT_INVALID');
+          for(const capture of manifest.captures){
+            const file=path.join(dir,capture.filename);
+            const digest=crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+            if(digest!==capture.sha256)throw Error(`V5_PNG_DIGEST_MISMATCH:${capture.filename}`);
+          }
+          NODE
+          test -z "$(git status --porcelain)"
+
+      - name: Upload bounded V5 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: characters-v5-hierarchical-foliage-evidence-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/v5-evidence/vegetation-v5-hierarchical-foliage-receipt.json
+            ${{ runner.temp }}/v5-evidence/v5-desktop-near.png
+            ${{ runner.temp }}/v5-evidence/v5-desktop-mid.png
+            ${{ runner.temp }}/v5-evidence/v5-desktop-far.png
+            ${{ runner.temp }}/v5-evidence/v5-tablet-near.png
+            ${{ runner.temp }}/v5-evidence/v5-mobile-near.png
+            ${{ runner.temp }}/v5-evidence/v5-material-evidence.json
+          if-no-files-found: error
+          retention-days: 90

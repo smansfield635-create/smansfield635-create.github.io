@@ -1,0 +1,53 @@
+name: Characters Vegetation V4 Ground Understory v1
+
+on:
+  push:
+    branches:
+      - 'characters/canonical-ecology-camera-true-vegetation-20260905-003'
+    paths:
+      - 'control-plane/whole-estate/characters-reconstruction-v1/vegetation-v4-ground-understory-contract.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v4-ground-understory.v1.mjs'
+      - 'characters/vegetation-understory.mjs'
+      - 'characters/app.mjs'
+      - '.github/workflows/characters-vegetation-v4-ground-understory-v1.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'control-plane/whole-estate/characters-reconstruction-v1/vegetation-v4-ground-understory-contract.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v4-ground-understory.v1.mjs'
+      - 'characters/vegetation-understory.mjs'
+      - 'characters/app.mjs'
+      - '.github/workflows/characters-vegetation-v4-ground-understory-v1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  qualify-v4:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Execute single V4 mechanical verifier
+        id: verifier
+        continue-on-error: true
+        run: node control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v4-ground-understory.v1.mjs --output "$RUNNER_TEMP/vegetation-v4-ground-understory-receipt.json"
+      - name: Require V4 mechanical pass-closed receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s "$RUNNER_TEMP/vegetation-v4-ground-understory-receipt.json"
+          cat "$RUNNER_TEMP/vegetation-v4-ground-understory-receipt.json"
+          jq -e '.result == "V4_MECHANICAL_PASS_CLOSED" and .mechanicalBoundaryClosed == true and .materialBoundaryClosed == false and .finalV4ClaimAuthorized == false and .v5Authorized == false and .mergeDeploymentPublicationAuthorized == false and .failCount == 0' "$RUNNER_TEMP/vegetation-v4-ground-understory-receipt.json" >/dev/null
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vegetation-v4-ground-understory-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/vegetation-v4-ground-understory-receipt.json
+          if-no-files-found: error
+          retention-days: 90

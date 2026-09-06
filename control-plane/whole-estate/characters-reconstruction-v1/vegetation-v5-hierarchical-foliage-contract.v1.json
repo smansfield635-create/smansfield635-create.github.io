@@ -1,0 +1,130 @@
+{
+  "schema": "MIRRORLAND_V5_HIERARCHICAL_FOLIAGE_CONTRACT_v1",
+  "operationId": "MIRRORLAND_HIERARCHICAL_FOLIAGE_20260906_002",
+  "lockGeneration": 1962,
+  "stage": "V5_HIERARCHICAL_FOLIAGE",
+  "targetBoundary": "HIERARCHICAL_FOLIAGE_AND_LEAF_SILHOUETTE_PASS",
+  "governingMain": "db6589484f25d7af324ea97cff1fda63cbfd8865",
+  "qualifiedV4Candidate": "278155b1e38c663ffab8ee1ab30b09a294a88010",
+  "qualifiedV4Tree": "8fe59716527e34185d18dd6a3a2940cbb52398cf",
+  "v4ReconstitutionCommit": "add856dcdc8dbdb5387a976691acf34d2ab53027",
+  "preconstructionPsalmAckCommentId": 5560975142,
+  "predecessorClosureReceiptCommentId": 5560944831,
+  "predecessorTerminalDisposition": "PASS_CLOSED",
+  "predecessorLockReleased": true,
+  "populationAuthority": "characters/vegetation-population.mjs",
+  "representationAuthority": "characters/vegetation-representation.mjs",
+  "runtimeBinding": "characters/app.mjs",
+  "legacyForestEvidence": "characters/forest-system.mjs",
+  "canonicalPopulationCount": 818,
+  "lodAuthority": "CAMERA_DISTANCE_WITH_HYSTERESIS",
+  "hierarchy": {
+    "NEAR_FIELD": {
+      "macro": ["TRUNK_INSTANCED", "MAJOR_BOUGH_INSTANCED"],
+      "meso": ["IRREGULAR_TERMINAL_FOLIAGE_CLUSTER_INSTANCED"],
+      "micro": ["ACTUAL_REUSABLE_LEAF_MESH_INSTANCED"],
+      "externalCanopyBlobAllowed": false,
+      "internalOcclusionMassAllowed": true,
+      "leafBudgetPerTree": {"minimum": 80, "maximum": 180}
+    },
+    "MID_FIELD": {
+      "macro": ["TRUNK_INSTANCED", "REDUCED_BOUGH_INSTANCED"],
+      "meso": ["SIMPLIFIED_CROSSED_FOLIAGE_SPRAY_INSTANCED"],
+      "micro": [],
+      "externalCanopyBlobAllowed": false,
+      "internalOcclusionMassAllowed": true,
+      "clusterBudgetPerTree": {"minimum": 20, "maximum": 50}
+    },
+    "FAR_FIELD": {
+      "macro": ["TRUNK_INSTANCED"],
+      "meso": ["CANOPY_BLOB_INSTANCED"],
+      "micro": [],
+      "individualLeavesAllowed": false,
+      "externalCanopyBlobAllowed": true
+    }
+  },
+  "representationRules": {
+    "nearMidWholeTreeLeafPlaneSubstitutionProhibited": true,
+    "nearMidContinuousConvexCrownExteriorProhibited": true,
+    "farIndividualLeavesProhibited": true,
+    "internalOcclusionMassMayNotDefineNearExteriorSilhouette": true,
+    "deterministicInstancePlacementRequired": true,
+    "webgl2InstancingRequired": true,
+    "compactMayReduceRepresentationDensityOnly": true,
+    "compactMayNotChangeCanonicalTreeIdentity": true
+  },
+  "protectedHeadIdentity": [
+    "characters/vegetation-ecology.mjs",
+    "characters/vegetation-population.mjs",
+    "characters/vegetation-understory.mjs",
+    "characters/forest-system.mjs",
+    "control-plane/whole-estate/characters-reconstruction-v1/vegetation-v0-v3-contract.v1.json",
+    "control-plane/whole-estate/characters-reconstruction-v1/vegetation-v0-v3-reconciliation.v1.json",
+    "control-plane/whole-estate/characters-reconstruction-v1/vegetation-v0-known-verifier-false-negative.v1.json",
+    "control-plane/whole-estate/characters-reconstruction-v1/vegetation-v2-known-instrumental-failure.v1.json",
+    "control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v0-v3-reconciliation.v1.mjs",
+    "control-plane/whole-estate/characters-reconstruction-v1/vegetation-v4-ground-understory-contract.v1.json",
+    "control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v4-ground-understory.v1.mjs",
+    ".github/workflows/characters-vegetation-v4-ground-understory-v1.yml"
+  ],
+  "mutableV5ProductPaths": [
+    "characters/vegetation-representation.mjs",
+    "characters/app.mjs"
+  ],
+  "v5AuthorityPaths": [
+    "control-plane/whole-estate/characters-reconstruction-v1/vegetation-v5-hierarchical-foliage-contract.v1.json",
+    "control-plane/whole-estate/characters-reconstruction-v1/verify-vegetation-v5-hierarchical-foliage.v1.mjs",
+    ".github/workflows/characters-vegetation-v5-hierarchical-foliage-v1.yml"
+  ],
+  "prohibitedAuthorities": [
+    "GEOGRAPHY",
+    "HYDROLOGY",
+    "CANONICAL_POPULATION",
+    "V4_UNDERSTORY",
+    "LEGACY_REGION_SPECS_AS_RUNTIME_AUTHORITY",
+    "LEGACY_LOD_ROLL_AS_RUNTIME_AUTHORITY",
+    "V6_SHARED_WIND",
+    "V7_FOLIAGE_NIGHT_LIGHTING",
+    "V8_FINAL_MATERIAL_ACCEPTANCE",
+    "MERGE",
+    "DEPLOYMENT",
+    "PUBLICATION"
+  ],
+  "mechanicalAcceptance": [
+    "V4_RECONSTITUTION_COMMIT_DESCENDS_FROM_GOVERNING_MAIN",
+    "V4_QUALIFIED_TREE_RECONSTITUTED_EXACTLY",
+    "PROTECTED_PREDECESSOR_PATHS_BYTE_IDENTICAL",
+    "CANONICAL_POPULATION_818_IDENTITY_PRESERVED",
+    "CAMERA_TRUE_LOD_WITH_HYSTERESIS_PRESERVED",
+    "APP_BINDS_CAMERA_TRUE_VEGETATION_RENDERER",
+    "LEGACY_FOREST_SYSTEM_NOT_APP_RUNTIME_TREE_AUTHORITY",
+    "NEAR_MACRO_MESO_MICRO_HIERARCHY_PRESENT",
+    "NEAR_ACTUAL_LEAF_MESH_INSTANCING_PRESENT",
+    "MID_SIMPLIFIED_FOLIAGE_SPRAY_INSTANCING_PRESENT",
+    "FAR_INDIVIDUAL_LEAVES_ABSENT",
+    "NEAR_MID_EXTERNAL_CANOPY_BLOB_ABSENT",
+    "COMPACT_CANONICAL_IDENTITY_PRESERVED",
+    "WEBGL2_INSTANCING_PRESENT",
+    "NO_V6_PLUS_SEMANTICS"
+  ],
+  "materialAcceptance": {
+    "requiredViews": [
+      "DESKTOP_NEAR",
+      "DESKTOP_MID",
+      "DESKTOP_FAR",
+      "TABLET_NEAR",
+      "MOBILE_NEAR"
+    ],
+    "passCriteria": [
+      "NEAR_TREE_SILHOUETTE_SHOWS_VISIBLE_FORKS_HOLES_OFFSET_OR_HANGING_MASSES_AND_EDGE_BREAKUP",
+      "NEAR_ORDINARY_APPROACH_VISIBLY_RESOLVES_INDIVIDUAL_FOLIAGE_GEOMETRY",
+      "MID_TREE_READS_AS_BRANCH_TERMINAL_FOLIAGE_NOT_WHOLE_TREE_LEAF_PLANES",
+      "FAR_TREE_RETains_LOW_COST_CROWN_MASS_WITHOUT_INDIVIDUAL_LEAF_COST",
+      "DESKTOP_TABLET_MOBILE_PRESERVE_ONE_ECOLOGICAL_WORLD",
+      "LANDMARK_CLEARINGS_AND_V4_GROUND_UNDERSTORY_REMAIN_INTACT",
+      "NO_NEW_NORMAL_CAMERA_WORLD_EDGE_OR_RUNTIME_STABILITY_REGRESSION"
+    ]
+  },
+  "v6PlusExcluded": true,
+  "mergeDeploymentPublicationAuthorized": false
+}

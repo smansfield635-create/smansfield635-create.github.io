@@ -22,7 +22,7 @@ Only these visual/semantic corrections are admitted for the master:
 3. Brain / Coheriscope — preserve approved anatomical geometry; correct compositing, context, and responsive presentation only.
 4. Trophy / Awards — preserve approved trophy geometry; correct compositing, context, and responsive presentation only.
 5. House / characters — use the mature Phase-3 House authority or a faithful derivative; preserve contextual/in-estate presentation and the visitor meaning `Meet the characters. Choose who you want to speak with.`
-6. Persistent tour-context spine — one restrained two-line semantic system across S01–S08; no second application state machine or destination authority.
+6. Persistent tour-context spine — preserve one restrained two-line semantic/typographic grammar across S01–S08, but choreograph its spatial placement shot-by-shot rather than fixing it to one lower-third position; no second application state machine or destination authority.
 
 ## Frozen source authorities
 
@@ -73,6 +73,65 @@ Only these visual/semantic corrections are admitted for the master:
 - S07-C — Meet the characters / choose who you want to speak with.
 - S08 — Return agency to the visitor through the Compass.
 
+## Context choreography freeze
+
+The word **persistent** in issue #2756 means persistent semantic and typographic continuity. It does **not** mean a permanently visible caption or a fixed lower-third anchored to the bottom of every shot.
+
+The incumbent `assets/compass/compass.orientation-cinematic.css` lower-left / bottom-anchored tour-context implementation belongs to the existing construction floor only. Its fixed placement is explicitly **not** final-master placement authority.
+
+For the pre-rendered master, contextual expression must be composed to the cinematography and the awards-quality visual hierarchy of each shot.
+
+### Spatial law
+
+Context placement is selected shot-by-shot and, where a shot contains materially distinct sub-beats, sub-beat-by-sub-beat. Placement must respond to:
+
+- available negative space;
+- the primary subject silhouette and focal plane;
+- camera direction and anticipated object/camera movement;
+- viewer eye-trace into and out of the shot;
+- title-safe and action-safe margins;
+- local contrast and legibility;
+- transition direction and the next shot's visual entry.
+
+The context may therefore appear left, right, upper, lower, centered, or withdraw completely for a visual peak or transition. Repetition of one bottom position across the film is prohibited unless independently justified by the composition of each affected shot.
+
+### Hierarchy law
+
+Continuity comes from a common typographic and motion grammar, not a common screen coordinate.
+
+- Primary outcome/action remains the dominant line.
+- Secondary explanation remains subordinate.
+- Copy remains concise enough to be read without delaying the cinematic.
+- Context must remain subordinate to the visual subject and may never read as a subtitle strip, UI card stack, documentation panel, or persistent page chrome.
+- Context should enter after the subject has been visually established when that improves comprehension, and should clear before a visual climax or transition when continued presence would weaken the shot.
+- Typography, spacing, weight, and transition behavior should feel authored as part of the same awards-oriented film even when anchor position changes.
+
+### Shot-specific composition law
+
+No shot inherits another shot's context position merely for implementation convenience.
+
+S07-A Brain, S07-B Trophy, and S07-C House are separately composed engagement beats. Each receives an independently selected context position around its active object and camera framing. Their semantic distinction must be reinforced by composition rather than flattened into one repeated caption location.
+
+The same rule applies to S05 Mirrorland and S06 Audralia: the context must support the threshold/world reveal without occupying the visual path through which the viewer is meant to travel.
+
+### Responsive law
+
+Phone and tablet context are independent cinematic compositions, not scaled desktop placements.
+
+For each target viewport, placement may move to a different safe region if necessary to preserve the subject, eye-trace, and reading order. The semantic hierarchy and typographic family remain continuous even when the spatial solution differs.
+
+### Acceptance test
+
+A context treatment fails the master-quality bar if it looks like text placed on top of a finished film after the fact.
+
+The intended result is:
+
+`ONE SEMANTIC GRAMMAR + SHOT-AWARE SPATIAL CHOREOGRAPHY + CINEMATIC TIMING`
+
+not:
+
+`ONE PERMANENT LOWER THIRD ACROSS S01–S08`.
+
 ## Protected surfaces
 
 Read-only unless separately authorized:
@@ -95,5 +154,6 @@ No precedent rediscovery, canonical intake, Codespaces, GitHub Actions agent exe
 ## Current boundary
 
 `INPUT_SET = FROZEN`  
-`SOURCE_MATERIALIZATION = NEXT`  
+`SOURCE_MATERIALIZATION = COMPLETE`  
+`CONTEXT_CHOREOGRAPHY = FROZEN`  
 `MASTER_CONSTRUCTION = NOT_STARTED`

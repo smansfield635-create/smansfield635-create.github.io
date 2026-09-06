@@ -14,6 +14,10 @@
         "data-rf-inspector",
         "data-rf-flip",
         "data-rf-open-bridge",
+        "View the Other Side",
+        "Inspect Shared Bridge",
+        "Return to Orbit",
+        "Return to Selected Side",
         "The constraint is shared. The evidence is not.",
         "/assets/evidence/research-frontier.v3.css",
         "/assets/evidence/research-frontier.v3.js"
@@ -34,9 +38,6 @@
         "RFV3-06",
         "RFV3-07",
         "View the Other Side",
-        "Inspect Shared Bridge",
-        "Return to Orbit",
-        "Return to Selected Side",
         "MECHANISM_REPLICATED",
         "NOT_IDENTIFIABLE",
         "PREREGISTERED_NOT_EXECUTED"

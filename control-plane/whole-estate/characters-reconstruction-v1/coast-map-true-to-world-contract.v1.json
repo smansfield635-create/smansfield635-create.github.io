@@ -1,0 +1,41 @@
+{
+  "schema": "MIRRORLAND_COAST_MAP_TRUE_TO_WORLD_CONTRACT_v1",
+  "status": "FROZEN",
+  "operationId": "MIRRORLAND_COAST_MAP_TRUE_TO_WORLD_20260903_014",
+  "governingHead": "928567148818c8618032394abc4ee3690dea1e9c",
+  "targetBoundary": "COAST_MAP_TRUE_TO_WORLD",
+  "laws": [
+    "ONE_WORLD_ONE_GEOGRAPHY_MULTIPLE_SCALES_OF_ACCESS",
+    "MAP_SURFACE_DERIVES_FROM_EXISTING_WORLD_AUTHORITIES_ONLY",
+    "SEQUENCE_1_MARKER_PROJECTION_REMAINS_AUTHORITATIVE",
+    "SEQUENCE_2_FOREST_REGIONS_REMAIN_AUTHORITATIVE",
+    "SEQUENCE_3_CLOUD_AUTHORITY_REMAINS_UNCHANGED",
+    "DISCOVERY_STATE_CHANGES_LABELS_NOT_GEOGRAPHY",
+    "FIXED_CSS_SCHEMATIC_IS_NOT_GEOGRAPHIC_AUTHORITY"
+  ],
+  "sources": {
+    "geographyAdapter": "characters/gratitude-geography.adapter.mjs",
+    "coastMapModel": "characters/coast-map.mjs",
+    "terrainConsumer": "characters/step9-regional-geography.mjs",
+    "forestAuthority": "characters/forest-system.mjs",
+    "cloudAuthority": "characters/cloud-system.mjs"
+  },
+  "protectedBlobIdentities": {
+    "forestSystem": "21f61b1829eca1e97a2fb6c8f85816c8b25bd59e",
+    "cloudSystem": "493fb47fd14896a0228a6d5acbd11585e81772b5"
+  },
+  "derivedLayers": {
+    "waterAndCoastline": "resolveCoastlinePolyline + mapToWorld",
+    "terrainRelief": "sampleGratitudeWorld over deterministic map lattice",
+    "forestRegions": "buildForestPopulation().regions",
+    "destinationMarkers": "existing step9MapPosition consumer; no replacement coordinate table"
+  },
+  "acceptance": {
+    "fixedHorizontalCoastlineAllowed": false,
+    "handPlacedMarkersAllowed": false,
+    "genericDecorativeTerrainAllowedAsProof": false,
+    "browserMaterialEvidenceRequired": true,
+    "desktopAndMobileRequired": true,
+    "sequence5PlusMutationAllowed": false
+  }
+}

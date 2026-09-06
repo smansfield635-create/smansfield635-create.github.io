@@ -115,18 +115,29 @@ function nearestTreeWithin(x,z,trees,minimum){
 }
 
 function selectClass(seed,ecology,trees){
-  let selected=null;
-  let selectedDensity=0;
-  let selectedScore=-1;
+  const eligible=[];
   for(const type of UNDERSTORY_CLASSES){
     const density=classDensity(type,ecology);
     if(density<=0)continue;
     if(type==='SAPLING_YOUNG_GROWTH'&&nearestTreeWithin(ecology.world.x,ecology.world.z,trees,5))continue;
-    const salt=CLASS_SALT[type];
-    const score=density*(.84+.16*rand(seed,salt));
-    if(score>selectedScore){selected=type;selectedDensity=density;selectedScore=score;}
+    eligible.push({type,density});
   }
-  if(!selected)return null;
+  if(!eligible.length)return null;
+  const preferredIndex=hash32(seed^0x6f17c2a9)%eligible.length;
+  const preferredType=eligible[preferredIndex].type;
+  let selected=null;
+  let selectedDensity=0;
+  let selectedScore=-1;
+  for(const candidate of eligible){
+    const salt=CLASS_SALT[candidate.type];
+    const densityScore=candidate.density*(.84+.16*rand(seed,salt));
+    const score=densityScore+(candidate.type===preferredType?1:0);
+    if(score>selectedScore){
+      selected=candidate.type;
+      selectedDensity=candidate.density;
+      selectedScore=score;
+    }
+  }
   if(rand(seed,CLASS_SALT[selected]+101)>selectedDensity)return null;
   return {type:selected,density:selectedDensity};
 }

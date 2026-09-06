@@ -4583,6 +4583,49 @@
       "scopeHash": "a0ac1d7567ae8e0d058871db030bc032026e8c95e27e48dd7354b964dce8aec4",
       "state": "ADMITTED_LOCKED"
     },
+    "a2be7bc874ba35ad847ffd8f5b91896556b6abce3c0f053b0b8f7e0701616b8c": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "db6589484f25d7af324ea97cff1fda63cbfd8865",
+          "lockGeneration": 1960,
+          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:VEGETATION",
+          "operationId": "MIRRORLAND_GROUND_UNDERSTORY_CONTINUITY_REPAIR_20260905_013",
+          "procedureLocatorDigest": "fa758423b7af2d860dcd48a39eaf18e72e94b1e13bab04250aadba532d2fdff3",
+          "requestDigest": "8ba98a97ae49c93193f8513d44ebba2df7f0b07ffa5a10564e2aa167e53d30ed",
+          "scopeHash": "a2be7bc874ba35ad847ffd8f5b91896556b6abce3c0f053b0b8f7e0701616b8c"
+        },
+        "bindingDigest": "59c2eb4039964d75ef0f89f5466211cf98b584475e0097bf5d8599b365287db6",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "23c1f3a0dc30eea52903393b3559fd1bfc48b5192ad9054df27981b8ef7dd028",
+          "commentId": 5556772018,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2670,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34010452281,
+          "workflowSha": "db6589484f25d7af324ea97cff1fda63cbfd8865"
+        },
+        "lineageAnchorCommitSha": "f0af87e1a05c6e00c6ce4658944a7d0c2c50d719",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "db6589484f25d7af324ea97cff1fda63cbfd8865",
+      "lockGeneration": 1960,
+      "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:VEGETATION",
+      "operationId": "MIRRORLAND_GROUND_UNDERSTORY_CONTINUITY_REPAIR_20260905_013",
+      "procedureLocatorDigest": "fa758423b7af2d860dcd48a39eaf18e72e94b1e13bab04250aadba532d2fdff3",
+      "released": false,
+      "requestDigest": "8ba98a97ae49c93193f8513d44ebba2df7f0b07ffa5a10564e2aa167e53d30ed",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a2be7bc874ba35ad847ffd8f5b91896556b6abce3c0f053b0b8f7e0701616b8c",
+      "state": "ADMITTED_LOCKED"
+    },
     "a365baf8431c2bdb220a6c24b91422372536cedc20efd42126d572af814b259e": {
       "governingHead": "21ee87e945a62492b8f9447a5049f4ae0ab1ceb9",
       "lockGeneration": 1537,
@@ -7214,7 +7257,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1959,
+  "lockGeneration": 1960,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

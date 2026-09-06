@@ -47,10 +47,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD^{commit})" = "${{ github.event.pull_request.head.sha }}"
+          EXACT_HEAD="$(git rev-parse HEAD^{commit})"
+          test "$EXACT_HEAD" = "${{ github.event.pull_request.head.sha }}"
           test "$(git rev-parse "$V4_RECONSTITUTION^1")" = "$GOVERNING_MAIN"
           git merge-base --is-ancestor "$V4_RECONSTITUTION" HEAD
           test -z "$(git status --porcelain)"
+          echo "EXACT_HEAD=$EXACT_HEAD" >> "$GITHUB_ENV"
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -69,7 +71,7 @@ jobs:
           const r=JSON.parse(fs.readFileSync('vegetation-v5-hierarchical-foliage-receipt.json','utf8'));
           if(r.schema!=='MIRRORLAND_V5_HIERARCHICAL_FOLIAGE_QUALIFICATION_RECEIPT_v1')throw Error('V5_RECEIPT_SCHEMA_INVALID');
           if(r.result!=='PASS_CLOSED'||r.boundary!=='V5_MECHANICAL_PASS_CLOSED')throw Error('V5_MECHANICAL_NOT_PASS_CLOSED');
-          if(r.exactHead!==process.env.GITHUB_SHA)throw Error('V5_RECEIPT_HEAD_MISMATCH');
+          if(r.exactHead!==process.env.EXACT_HEAD)throw Error('V5_RECEIPT_HEAD_MISMATCH');
           NODE
           rm vegetation-v5-hierarchical-foliage-receipt.json
           test -z "$(git status --porcelain)"
@@ -108,7 +110,7 @@ jobs:
           const {chromium}=require(path.join(process.env.RUNNER_TEMP,'v5-pw','node_modules','playwright'));
           const OUT=path.join(process.env.RUNNER_TEMP,'v5-evidence');
           const URL='http://127.0.0.1:4173/characters/';
-          const CANDIDATE=process.env.GITHUB_SHA;
+          const CANDIDATE=process.env.EXACT_HEAD;
           fs.mkdirSync(OUT,{recursive:true});
           const errors=[];
           const captures=[];
@@ -266,7 +268,7 @@ jobs:
           const dir=path.join(process.env.RUNNER_TEMP,'v5-evidence');
           const manifest=JSON.parse(fs.readFileSync(path.join(dir,'v5-material-evidence.json'),'utf8'));
           if(manifest.schema!=='MIRRORLAND_V5_MATERIAL_EVIDENCE_RECEIPT_v1'||manifest.result!=='EVIDENCE_CAPTURE_PASS')throw Error('V5_MANIFEST_RESULT_INVALID');
-          if(manifest.candidateSha!==process.env.GITHUB_SHA)throw Error('V5_MANIFEST_HEAD_MISMATCH');
+          if(manifest.candidateSha!==process.env.EXACT_HEAD)throw Error('V5_MANIFEST_HEAD_MISMATCH');
           if(manifest.operationId!==process.env.OPERATION_ID||manifest.lockGeneration!==Number(process.env.LOCK_GENERATION))throw Error('V5_MANIFEST_OPERATION_MISMATCH');
           if(manifest.errors.length!==0||manifest.captures.length!==5)throw Error('V5_MANIFEST_CAPTURE_OR_ERROR_COUNT_INVALID');
           for(const capture of manifest.captures){

@@ -30,9 +30,9 @@
     "host": {"path":"assets/compass/compass.orientation-cinematic.js","blob":"5e04ede8e679a83db493cd9142a1fde2a58a400e","role":"ARCHIVED_APPROVED_MASTER_CLOCK_AND_ENTRY"},
     "css": {"path":"assets/compass/compass.orientation-cinematic.css","blob":"a4706ab61783a278fcd0c3d8b002a862426b13e4","role":"APPROVED_FILM_LAYOUT_PLUS_NUMBERED_DOMINANT_CONTEXT"},
     "primaryRenderer": {"path":"assets/compass/compass.orientation-cinematic.render.js","blob":"fe05813cf1d43817e789ce790435c84a5970b2d7","role":"ARCHIVED_S01_TO_S05_PLUS_CANONICAL_S06_WORLD"},
-    "media": {"path":"assets/compass/compass.orientation-cinematic.media.js","blob":"bf6c0a9c67fa02a0f3b017412e0ad4d0a1a4d7cd","role":"ARCHIVED_38S_MEDIA_AND_SHOT_CONTRACT_PLUS_PREHOOK_TOUR_RESTART_GUARD"},
+    "media": {"path":"assets/compass/compass.orientation-cinematic.media.js","blob":"5c718357ca122f51b1b9cc238ef2e54eadf9ec6a","role":"ARCHIVED_38S_MEDIA_AND_SHOT_CONTRACT_PLUS_PREHOOK_TOUR_RESTART_GUARD"},
     "finalRenderer": {"path":"assets/compass/compass.orientation-cinematic.final.js","blob":"1af6d8dc0e1cfc8ae7f6e46b962db2629881fbff","role":"TRANSPARENT_BRAIN_TROPHY_PHASE3_HOUSE_AND_S08_HANDOFF"},
-    "verifier": {"path":"assets/compass/compass.homepage-cinematic.verify.mjs","blob":"82516ef5ddf9cd643bcbaa63437d856a536016b3","role":"PREHOOK_AUDIT_REPAIR_STATIC_VERIFIER"},
+    "verifier": {"path":"assets/compass/compass.homepage-cinematic.verify.mjs","blob":"2cbec28cec659d8e266e27021adfde25c70b9ecf","role":"PREHOOK_AUDIT_REPAIR_STATIC_VERIFIER"},
     "indexBinding": {"path":"index.html","blob":"9c1c1e815d3847421ff837601dabea12020200e4","role":"UNCHANGED_ADOPTED_REQUEST_IDENTITY"}
   },
   "delta": {
@@ -79,8 +79,9 @@
     }
   },
   "preHookAuditRepair": {
-    "defect":"CONSECUTIVE_EQUAL_DURATION_TOUR_CONTEXT_ANIMATION_NAMES_NOT_GUARANTEED_TO_RESTART_ON_DATA_SHOT_ID_CHANGE",
-    "repair":"UNIQUE_S03_AND_S04_ANIMATION_NAMES_INSTALLED_BY_EXISTING_MEDIA_MODULE_BEFORE_MASTER_PLAYBACK",
+    "defect":"TOUR_CONTEXT_ANIMATION_IDENTITY_WAS_REUSED_ACROSS_SHOT_BOUNDARIES_AND_DURATION_CHANGES_DO_NOT_GUARANTEE_RESTART",
+    "repair":"UNIQUE_S01_TO_S08_CURRENT_ANIMATION_NAMES_AND_S01_TO_S07_NEXT_ANIMATION_NAMES_INSTALLED_BY_EXISTING_MEDIA_MODULE_BEFORE_MASTER_PLAYBACK",
+    "coverage":"EVERY_S01_TO_S08_SHOT_TRANSITION",
     "secondaryClockAdded":false,
     "secondaryStateMachineAdded":false,
     "hostChanged":false,

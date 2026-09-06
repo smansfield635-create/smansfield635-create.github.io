@@ -1,0 +1,258 @@
+name: Compass Single Master T10 Deterministic Encode v1
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/compass-single-master-t10-deterministic-encode-v1.yml'
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  CARRIER_BASE_SHA: db6589484f25d7af324ea97cff1fda63cbfd8865
+  SUBJECT_SHA: 96c89ec797490a5dc0e3dd343f4d34a396adaa02
+  T9_ARTIFACT_ID: '9993661796'
+  T9_ARTIFACT_DIGEST: sha256:e960ab86a9482937171c1e0892732a9a49520e303f5e583e61a973e466f735d7
+  T9_MANIFEST_SHA256: 2bd678afba5920a0956ba329f43f894cde8d741fcf203f058d887c396f538b6e
+  SOUNDTRACK_URL: https://upload.wikimedia.org/wikipedia/commons/c/c2/Saint-Saens_-_The_Carnival_of_the_Animals_-_07_Aquarium.ogg
+  SOUNDTRACK_SHA1: 17f8b735b8754fac17967b9122cd050f47322805
+  SOUNDTRACK_BYTES: '1969578'
+  WORK_DIR: /tmp/compass-single-master-t10
+  T9_ZIP: /tmp/compass-single-master-t10/t9.zip
+  T9_DIR: /tmp/compass-single-master-t10/t9
+  FRAME_DIR: /tmp/compass-single-master-t10/t9/frames
+  SOUNDTRACK_FILE: /tmp/compass-single-master-t10/aquarium.ogg
+  OUTPUT_DIR: /tmp/compass-single-master-t10/output
+  EVIDENCE_DIR: /tmp/compass-single-master-t10/evidence
+  MASTER_NAME: compass-main-orientation-final-v1.mp4
+  FPS: '30'
+  FRAME_COUNT: '1140'
+  WIDTH: '1280'
+  HEIGHT: '720'
+  DURATION_SECONDS: '38'
+
+jobs:
+  passive-deterministic-encode:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact carrier head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 2
+
+      - name: Verify one-file carrier scope and frozen T10 binding
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$WORK_DIR" "$T9_DIR" "$OUTPUT_DIR" "$EVIDENCE_DIR"
+          git diff --name-only "$CARRIER_BASE_SHA" HEAD | sort > /tmp/t10-carrier-paths.txt
+          printf '%s\n' '.github/workflows/compass-single-master-t10-deterministic-encode-v1.yml' > /tmp/t10-expected-paths.txt
+          diff -u /tmp/t10-expected-paths.txt /tmp/t10-carrier-paths.txt
+          cp /tmp/t10-carrier-paths.txt "$EVIDENCE_DIR/carrier-paths.txt"
+          {
+            echo "subject_sha=$SUBJECT_SHA"
+            echo "t9_artifact_id=$T9_ARTIFACT_ID"
+            echo "t9_artifact_digest=$T9_ARTIFACT_DIGEST"
+            echo "t9_manifest_sha256=$T9_MANIFEST_SHA256"
+            echo "soundtrack_url=$SOUNDTRACK_URL"
+            echo "soundtrack_sha1=$SOUNDTRACK_SHA1"
+            echo "soundtrack_bytes=$SOUNDTRACK_BYTES"
+            echo "master_name=$MASTER_NAME"
+            echo "fps=$FPS"
+            echo "frame_count=$FRAME_COUNT"
+            echo "width=$WIDTH"
+            echo "height=$HEIGHT"
+            echo "duration_seconds=$DURATION_SECONDS"
+          } > "$EVIDENCE_DIR/t10-entry-binding.txt"
+
+      - name: Download exact T9 artifact and verify archive digest
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 --silent --show-error \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${T9_ARTIFACT_ID}/zip" \
+            --output "$T9_ZIP"
+          actual="sha256:$(sha256sum "$T9_ZIP" | awk '{print $1}')"
+          test "$actual" = "$T9_ARTIFACT_DIGEST"
+          echo "$actual" > "$EVIDENCE_DIR/t9-artifact-digest.txt"
+          unzip -q "$T9_ZIP" -d "$T9_DIR"
+
+      - name: Revalidate all 1140 T9 frames against manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f "$T9_DIR/evidence/t9-receipt.json"
+          test -f "$T9_DIR/evidence/frame-manifest.json"
+          test "$(find "$FRAME_DIR" -maxdepth 1 -name 'frame-*.png' | wc -l)" -eq "$FRAME_COUNT"
+          cat > "$WORK_DIR/verify-t9.mjs" <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import crypto from 'node:crypto';
+          const root=process.env.T9_DIR;
+          const frameDir=process.env.FRAME_DIR;
+          const expectedSubject=process.env.SUBJECT_SHA;
+          const expectedManifest=process.env.T9_MANIFEST_SHA256;
+          const expectedCount=Number(process.env.FRAME_COUNT);
+          const receipt=JSON.parse(fs.readFileSync(path.join(root,'evidence','t9-receipt.json'),'utf8'));
+          if(receipt.status!=='PASS_CLOSED') throw new Error(`T9_STATUS:${receipt.status}`);
+          if(receipt.subjectSha!==expectedSubject) throw new Error('T9_SUBJECT_SHA_MISMATCH');
+          if(receipt.frameCount!==expectedCount||receipt.width!==1280||receipt.height!==720||receipt.fps!==30||receipt.durationMs!==38000) throw new Error('T9_CAPTURE_SPEC_MISMATCH');
+          if(receipt.consoleErrors?.length||receipt.pageErrors?.length) throw new Error('T9_EXECUTION_ERRORS_PRESENT');
+          if(receipt.productMutationPerformed||receipt.deploymentPerformed||receipt.mergePerformed) throw new Error('T9_MUTATION_BOUNDARY_VIOLATION');
+          const manifest=JSON.parse(fs.readFileSync(path.join(root,'evidence','frame-manifest.json'),'utf8'));
+          if(manifest.length!==expectedCount) throw new Error(`T9_MANIFEST_COUNT:${manifest.length}`);
+          const manifestDigest=crypto.createHash('sha256').update(JSON.stringify(manifest)).digest('hex');
+          if(manifestDigest!==expectedManifest||receipt.frameManifestSha256!==expectedManifest) throw new Error('T9_MANIFEST_DIGEST_MISMATCH');
+          for(let i=0;i<manifest.length;i+=1){
+            const row=manifest[i];
+            if(row.index!==i) throw new Error(`T9_INDEX_MISMATCH:${i}`);
+            const expectedTime=i*1000/30;
+            if(Math.abs(row.timeMs-expectedTime)>1e-9) throw new Error(`T9_TIME_MISMATCH:${i}`);
+            const file=path.join(frameDir,row.file);
+            const bytes=fs.readFileSync(file);
+            if(bytes.length!==row.byteLength) throw new Error(`T9_BYTE_LENGTH_MISMATCH:${i}`);
+            const digest=crypto.createHash('sha256').update(bytes).digest('hex');
+            if(digest!==row.sha256) throw new Error(`T9_FRAME_DIGEST_MISMATCH:${i}`);
+          }
+          fs.writeFileSync(path.join(process.env.EVIDENCE_DIR,'t9-revalidation.json'),JSON.stringify({schema:'COMPASS_T10_T9_REVALIDATION_v1',subjectSha:expectedSubject,frameCount:manifest.length,frameManifestSha256:manifestDigest,status:'PASS_CLOSED'},null,2)+'\n');
+          console.log(`T9_REVALIDATED ${manifest.length}/${expectedCount}`);
+          NODE
+          node "$WORK_DIR/verify-t9.mjs"
+
+      - name: Acquire and pin Aquarium soundtrack authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 --silent --show-error "$SOUNDTRACK_URL" --output "$SOUNDTRACK_FILE"
+          test "$(stat -c '%s' "$SOUNDTRACK_FILE")" = "$SOUNDTRACK_BYTES"
+          test "$(sha1sum "$SOUNDTRACK_FILE" | awk '{print $1}')" = "$SOUNDTRACK_SHA1"
+          sha256sum "$SOUNDTRACK_FILE" | awk '{print $1}' > "$EVIDENCE_DIR/soundtrack-sha256.txt"
+          {
+            echo "url=$SOUNDTRACK_URL"
+            echo "sha1=$SOUNDTRACK_SHA1"
+            echo "sha256=$(cat "$EVIDENCE_DIR/soundtrack-sha256.txt")"
+            echo "bytes=$SOUNDTRACK_BYTES"
+          } > "$EVIDENCE_DIR/soundtrack-identity.txt"
+
+      - name: Record exact encoder environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          command -v ffmpeg
+          command -v ffprobe
+          ffmpeg -version > "$EVIDENCE_DIR/ffmpeg-version.txt"
+          ffprobe -version > "$EVIDENCE_DIR/ffprobe-version.txt"
+
+      - name: Encode twice and require bit-identical master output
+        shell: bash
+        run: |
+          set -euo pipefail
+          encode_one() {
+            local out="$1"
+            ffmpeg -hide_banner -nostdin -loglevel error -y \
+              -fflags +bitexact \
+              -framerate "$FPS" -start_number 0 -i "$FRAME_DIR/frame-%06d.png" \
+              -i "$SOUNDTRACK_FILE" \
+              -t "$DURATION_SECONDS" \
+              -map 0:v:0 -map 1:a:0 \
+              -vf "scale=${WIDTH}:${HEIGHT}:in_range=pc:out_range=tv:out_color_matrix=bt709,format=yuv420p" \
+              -c:v libx264 -profile:v high -level:v 4.0 -preset medium -crf 18 \
+              -pix_fmt yuv420p -r "$FPS" -fps_mode cfr \
+              -threads:v 1 -x264-params 'threads=1:lookahead_threads=1:sliced_threads=0:sync-lookahead=0' \
+              -flags:v +bitexact \
+              -color_range tv -colorspace bt709 -color_primaries bt709 -color_trc bt709 \
+              -c:a aac -b:a 192k -ar 48000 -ac 2 -threads:a 1 -flags:a +bitexact \
+              -map_metadata -1 -map_chapters -1 \
+              -metadata creation_time='1970-01-01T00:00:00Z' \
+              -movflags +faststart \
+              "$out"
+          }
+          encode_one "$OUTPUT_DIR/encode-a.mp4"
+          encode_one "$OUTPUT_DIR/encode-b.mp4"
+          sha_a="$(sha256sum "$OUTPUT_DIR/encode-a.mp4" | awk '{print $1}')"
+          sha_b="$(sha256sum "$OUTPUT_DIR/encode-b.mp4" | awk '{print $1}')"
+          test "$sha_a" = "$sha_b"
+          cmp -s "$OUTPUT_DIR/encode-a.mp4" "$OUTPUT_DIR/encode-b.mp4"
+          mv "$OUTPUT_DIR/encode-a.mp4" "$OUTPUT_DIR/$MASTER_NAME"
+          rm "$OUTPUT_DIR/encode-b.mp4"
+          printf '%s\n' "$sha_a" > "$EVIDENCE_DIR/master-sha256.txt"
+          echo 'BIT_IDENTICAL_DOUBLE_ENCODE=PASS_CLOSED' > "$EVIDENCE_DIR/deterministic-encode-check.txt"
+
+      - name: Verify encoded master media contract and full decode
+        shell: bash
+        run: |
+          set -euo pipefail
+          master="$OUTPUT_DIR/$MASTER_NAME"
+          ffprobe -v error -select_streams v:0 -count_frames -show_entries stream=codec_name,profile,width,height,pix_fmt,r_frame_rate,avg_frame_rate,color_range,color_space,color_transfer,color_primaries,nb_read_frames -of json "$master" > "$EVIDENCE_DIR/video-probe.json"
+          ffprobe -v error -select_streams a:0 -show_entries stream=codec_name,profile,sample_rate,channels,channel_layout -of json "$master" > "$EVIDENCE_DIR/audio-probe.json"
+          ffprobe -v error -show_entries format=format_name,duration,size -of json "$master" > "$EVIDENCE_DIR/format-probe.json"
+          ffmpeg -hide_banner -nostdin -v error -i "$master" -f null - 2> "$EVIDENCE_DIR/full-decode-errors.txt"
+          test ! -s "$EVIDENCE_DIR/full-decode-errors.txt"
+          cat > "$WORK_DIR/verify-master.mjs" <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import crypto from 'node:crypto';
+          const e=process.env.EVIDENCE_DIR;
+          const master=path.join(process.env.OUTPUT_DIR,process.env.MASTER_NAME);
+          const video=JSON.parse(fs.readFileSync(path.join(e,'video-probe.json'),'utf8')).streams?.[0];
+          const audio=JSON.parse(fs.readFileSync(path.join(e,'audio-probe.json'),'utf8')).streams?.[0];
+          const format=JSON.parse(fs.readFileSync(path.join(e,'format-probe.json'),'utf8')).format;
+          if(!video||video.codec_name!=='h264'||video.profile!=='High') throw new Error('MASTER_VIDEO_CODEC_PROFILE');
+          if(video.width!==1280||video.height!==720||video.pix_fmt!=='yuv420p') throw new Error('MASTER_VIDEO_GEOMETRY');
+          if(video.r_frame_rate!=='30/1'||video.avg_frame_rate!=='30/1'||Number(video.nb_read_frames)!==1140) throw new Error('MASTER_CFR_FRAME_COUNT');
+          if(video.color_range!=='tv'||video.color_space!=='bt709'||video.color_transfer!=='bt709'||video.color_primaries!=='bt709') throw new Error('MASTER_COLOR_CONTRACT');
+          if(!audio||audio.codec_name!=='aac'||audio.profile!=='LC'||Number(audio.sample_rate)!==48000||audio.channels!==2) throw new Error('MASTER_AUDIO_CONTRACT');
+          if(Math.abs(Number(format.duration)-38)>0.001) throw new Error(`MASTER_DURATION:${format.duration}`);
+          const bytes=fs.readFileSync(master);
+          const moov=bytes.indexOf(Buffer.from('moov'));
+          const mdat=bytes.indexOf(Buffer.from('mdat'));
+          if(moov<0||mdat<0||moov>mdat) throw new Error(`MASTER_FASTSTART:${moov}:${mdat}`);
+          const masterSha256=crypto.createHash('sha256').update(bytes).digest('hex');
+          const expected=fs.readFileSync(path.join(e,'master-sha256.txt'),'utf8').trim();
+          if(masterSha256!==expected) throw new Error('MASTER_DIGEST_CHANGED_AFTER_ENCODE');
+          const soundtrackSha256=fs.readFileSync(path.join(e,'soundtrack-sha256.txt'),'utf8').trim();
+          const receipt={
+            schema:'COMPASS_SINGLE_MASTER_T10_DETERMINISTIC_ENCODE_v1',
+            carrierBaseSha:process.env.CARRIER_BASE_SHA,
+            subjectSha:process.env.SUBJECT_SHA,
+            t9ArtifactId:Number(process.env.T9_ARTIFACT_ID),
+            t9ArtifactDigest:process.env.T9_ARTIFACT_DIGEST,
+            t9ManifestSha256:process.env.T9_MANIFEST_SHA256,
+            soundtrack:{url:process.env.SOUNDTRACK_URL,sha1:process.env.SOUNDTRACK_SHA1,sha256:soundtrackSha256,bytes:Number(process.env.SOUNDTRACK_BYTES)},
+            output:{name:process.env.MASTER_NAME,sha256:masterSha256,bytes:bytes.length,durationSeconds:Number(format.duration),video:{codec:video.codec_name,profile:video.profile,width:video.width,height:video.height,fps:video.r_frame_rate,pixFmt:video.pix_fmt,colorRange:video.color_range,colorSpace:video.color_space,colorTransfer:video.color_transfer,colorPrimaries:video.color_primaries,frameCount:Number(video.nb_read_frames)},audio:{codec:audio.codec_name,profile:audio.profile,sampleRate:Number(audio.sample_rate),channels:audio.channels},fastStart:true,fullDecodeErrors:0},
+            doubleEncodeBitIdentical:true,
+            productMutationPerformed:false,
+            deploymentPerformed:false,
+            mergePerformed:false,
+            status:'PASS_CLOSED'
+          };
+          fs.writeFileSync(path.join(e,'t10-receipt.json'),JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt,null,2));
+          NODE
+          node "$WORK_DIR/verify-master.mjs"
+
+      - name: Verify carrier remained non-mutating
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "$(git status --porcelain --untracked-files=no)"
+
+      - name: Upload exact T10 master candidate and evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-single-master-t10-encode-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ env.OUTPUT_DIR }}
+            ${{ env.EVIDENCE_DIR }}
+          if-no-files-found: error
+          retention-days: 30

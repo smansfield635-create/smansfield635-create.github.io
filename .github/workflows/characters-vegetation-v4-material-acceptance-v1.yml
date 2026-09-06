@@ -84,17 +84,23 @@ jobs:
             page.on('console',m=>{if(m.type()==='error') errors.push({kind:'console',message:m.text()});});
             const response=await page.goto(URL,{waitUntil:'networkidle',timeout:30000});
             if(!response || response.status()!==200) throw new Error(`HTTP_STATUS_${profile.id}_${response?.status()}`);
+            const primerSkip=page.locator('#intro-skip');
+            if(await primerSkip.isVisible()){
+              await primerSkip.click();
+              await page.locator('#step9-primer').waitFor({state:'hidden',timeout:5000});
+            }
             await page.waitForSelector('.signal-layer .signal',{timeout:10000});
             await page.waitForTimeout(1200);
             const health=await page.evaluate(()=>({
               fatal:document.querySelector('#fatal')?.classList.contains('show')||false,
+              primerHidden:document.querySelector('#step9-primer')?.hidden||false,
               canvasWidth:document.querySelector('#scene')?.width||0,
               canvasHeight:document.querySelector('#scene')?.height||0,
               webgl2:!!document.querySelector('#scene')?.getContext('webgl2'),
               signalCount:document.querySelectorAll('.signal-layer .signal').length,
               status:document.querySelector('#status')?.textContent||''
             }));
-            if(health.fatal||!health.webgl2||health.canvasWidth<1||health.canvasHeight<1) throw new Error(`WEBGL2_STARTUP_FAILURE_${profile.id}`);
+            if(health.fatal||!health.primerHidden||!health.webgl2||health.canvasWidth<1||health.canvasHeight<1) throw new Error(`WEBGL2_STARTUP_FAILURE_${profile.id}`);
             runtime.push({profile:profile.id,httpStatus:200,...health});
             return {context,page,errors};
           }

@@ -171,6 +171,15 @@ function selectClass(seed,ecology,environment,trees){
     eligible.push({type,density});
   }
   if(!eligible.length)return null;
+  const reed=eligible.find(candidate=>candidate.type==='REED_WET_MARGIN');
+  if(reed){
+    const wet=Math.max(Number(ecology.hydrology?.riverWeight)||0,Number(ecology.hydrology?.lakeWeight)||0);
+    const wetAffinity=clamp((wet-.08)/.37,0,1);
+    const reedOpportunity=clamp(reed.density*(.82+.18*wetAffinity),0,.98);
+    if(rand(seed,CLASS_SALT.REED_WET_MARGIN+211)<=reedOpportunity){
+      return {type:'REED_WET_MARGIN',density:reed.density};
+    }
+  }
   const preferredIndex=hash32(seed^0x6f17c2a9)%eligible.length;
   const preferredType=eligible[preferredIndex].type;
   let selected=null;

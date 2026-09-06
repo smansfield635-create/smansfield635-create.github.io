@@ -1,0 +1,248 @@
+name: Compass Single Master Browser Evidence v1
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/compass-single-master-browser-evidence-v1.yml'
+
+permissions:
+  contents: read
+
+env:
+  CARRIER_BASE_SHA: db6589484f25d7af324ea97cff1fda63cbfd8865
+  SUBJECT_SHA: 96c89ec797490a5dc0e3dd343f4d34a396adaa02
+  EVIDENCE_DIR: /tmp/compass-single-master-browser-evidence
+
+jobs:
+  passive-exact-head-browser-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact carrier head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Verify one-file passive carrier scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse "$CARRIER_BASE_SHA")" = "$CARRIER_BASE_SHA"
+          git diff --name-only "$CARRIER_BASE_SHA" HEAD | sort > /tmp/carrier-paths.txt
+          printf '%s\n' '.github/workflows/compass-single-master-browser-evidence-v1.yml' > /tmp/expected-carrier-paths.txt
+          diff -u /tmp/expected-carrier-paths.txt /tmp/carrier-paths.txt
+          mkdir -p "$EVIDENCE_DIR"
+          cp /tmp/carrier-paths.txt "$EVIDENCE_DIR/carrier-paths.txt"
+          printf '%s\n' "$(git rev-parse HEAD)" > "$EVIDENCE_DIR/carrier-head.txt"
+
+      - name: Checkout frozen cinematic subject read-only
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SUBJECT_SHA }}
+          path: subject
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Verify frozen subject identity and capture surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C subject rev-parse HEAD)" = "$SUBJECT_SHA"
+          test -f subject/preview/compass/single-master-traversal/index.html
+          test -f subject/assets/compass/cinematic-master/master-source.mjs
+          {
+            echo "subject_sha=$SUBJECT_SHA"
+            echo "capture_html_blob=$(git -C subject rev-parse HEAD:preview/compass/single-master-traversal/index.html)"
+            echo "master_source_blob=$(git -C subject rev-parse HEAD:assets/compass/cinematic-master/master-source.mjs)"
+          } > "$EVIDENCE_DIR/subject-identity.txt"
+
+      - name: Install isolated Playwright Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/compass-playwright
+          cd /tmp/compass-playwright
+          npm init -y >/dev/null 2>&1
+          npm install --silent --no-save --package-lock=false playwright@1.55.0 pngjs
+          npx playwright install --with-deps chromium
+
+      - name: T7B prove browser and WebGL with trivial PNG
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/compass-playwright/t7-smoke.mjs <<'NODE'
+          import fs from 'node:fs/promises';
+          import path from 'node:path';
+          import crypto from 'node:crypto';
+          import { chromium } from 'playwright';
+          import { PNG } from 'pngjs';
+
+          const out = process.env.EVIDENCE_DIR;
+          await fs.mkdir(out, { recursive: true });
+          const browser = await chromium.launch({
+            headless: true,
+            args: ['--no-sandbox','--disable-dev-shm-usage','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']
+          });
+          const context = await browser.newContext({ viewport: { width: 640, height: 360 }, deviceScaleFactor: 1 });
+          const page = await context.newPage();
+          await page.setContent(`<!doctype html><html><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#07131a;color:white;font:700 22px system-ui}canvas{position:fixed;inset:0;width:100%;height:100%}div{position:fixed;left:24px;bottom:24px}</style><canvas id="c" width="640" height="360"></canvas><div>T7 browser evidence</div><script>const c=document.getElementById('c');const gl=c.getContext('webgl2',{preserveDrawingBuffer:true})||c.getContext('webgl',{preserveDrawingBuffer:true});if(!gl)throw new Error('WEBGL_CONTEXT_UNAVAILABLE');gl.clearColor(.04,.18,.24,1);gl.clear(gl.COLOR_BUFFER_BIT);document.documentElement.dataset.webgl=gl instanceof WebGL2RenderingContext?'webgl2':'webgl1';document.documentElement.dataset.webglLost=String(gl.isContextLost());</script></html>`, { waitUntil: 'load' });
+          const state = await page.evaluate(() => ({ webgl: document.documentElement.dataset.webgl, lost: document.documentElement.dataset.webglLost }));
+          if (!state.webgl || state.lost !== 'false') throw new Error(`WEBGL_SMOKE_FAILED:${JSON.stringify(state)}`);
+          const pngPath = path.join(out, 't7b-trivial-640x360.png');
+          const bytes = await page.screenshot({ path: pngPath, fullPage: false });
+          const png = PNG.sync.read(bytes);
+          if (png.width !== 640 || png.height !== 360) throw new Error(`TRIVIAL_PNG_DIMENSION_MISMATCH:${png.width}x${png.height}`);
+          const digest = crypto.createHash('sha256').update(bytes).digest('hex');
+          await fs.writeFile(path.join(out, 't7b-browser-smoke.json'), JSON.stringify({
+            schema: 'COMPASS_T7B_BROWSER_SMOKE_v1',
+            browserEngine: 'PLAYWRIGHT_CHROMIUM_1_55_0',
+            launchMode: 'HEADLESS_SWIFTSHADER',
+            viewport: { width: 640, height: 360 },
+            webgl: state.webgl,
+            contextLost: state.lost === 'true',
+            png: 't7b-trivial-640x360.png',
+            pngSha256: digest,
+            status: 'PASS_CLOSED'
+          }, null, 2) + '\n');
+          console.log(JSON.stringify({ state, digest }));
+          await context.close();
+          await browser.close();
+          NODE
+          cd /tmp/compass-playwright
+          NODE_PATH=/tmp/compass-playwright/node_modules node t7-smoke.mjs | tee "$EVIDENCE_DIR/t7b-browser-smoke.log"
+
+      - name: Start exact frozen subject server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 -d subject > "$EVIDENCE_DIR/subject-server.log" 2>&1 &
+          echo $! > /tmp/compass-subject-server.pid
+          for attempt in $(seq 1 40); do
+            if curl --fail --silent 'http://127.0.0.1:4173/preview/compass/single-master-traversal/' >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+
+      - name: T7C and T8 capture exact subject representative PNG evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/compass-playwright/capture-subject.mjs <<'NODE'
+          import fs from 'node:fs/promises';
+          import path from 'node:path';
+          import crypto from 'node:crypto';
+          import { chromium } from 'playwright';
+          import { PNG } from 'pngjs';
+
+          const out = process.env.EVIDENCE_DIR;
+          const subjectSha = process.env.SUBJECT_SHA;
+          const points = [
+            { id: 't7c-first-frame', timeMs: 0, expectedShot: 'S01' },
+            { id: 's01-mid', timeMs: 2250, expectedShot: 'S01' },
+            { id: 's05-mirrorland', timeMs: 22500, expectedShot: 'S05' },
+            { id: 's06-audralia', timeMs: 28000, expectedShot: 'S06' },
+            { id: 's07-brain', timeMs: 30850, expectedShot: 'S07' },
+            { id: 's07-trophy', timeMs: 32150, expectedShot: 'S07' },
+            { id: 's07-house', timeMs: 33300, expectedShot: 'S07' },
+            { id: 's08-handoff', timeMs: 36500, expectedShot: 'S08' }
+          ];
+          const browser = await chromium.launch({
+            headless: true,
+            args: ['--no-sandbox','--disable-dev-shm-usage','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']
+          });
+          const context = await browser.newContext({ viewport: { width: 1280, height: 720 }, deviceScaleFactor: 1 });
+          const page = await context.newPage();
+          const consoleErrors = [];
+          const pageErrors = [];
+          page.on('console', message => { if (message.type() === 'error') consoleErrors.push(message.text()); });
+          page.on('pageerror', error => pageErrors.push(String(error?.message || error)));
+
+          const url = 'http://127.0.0.1:4173/preview/compass/single-master-traversal/?t=0';
+          const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 120000 });
+          if (!response || response.status() !== 200) throw new Error(`SUBJECT_HTTP_FAILURE:${response?.status()}`);
+          await page.waitForFunction(() => ['READY','FAILED'].includes(document.documentElement.dataset.compassMasterCapture || ''), null, { timeout: 180000 });
+          const boot = await page.evaluate(() => ({
+            state: document.documentElement.dataset.compassMasterCapture,
+            error: document.querySelector('[data-capture-error]')?.textContent || '',
+            hasApi: Boolean(globalThis.__COMPASS_SINGLE_MASTER__)
+          }));
+          if (boot.state !== 'READY' || !boot.hasApi) throw new Error(`SUBJECT_CAPTURE_BOOT_FAILED:${JSON.stringify(boot)}`);
+
+          async function compositorBarrier() {
+            await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+          }
+          async function renderAt(timeMs) {
+            return await page.evaluate((time) => {
+              const api = globalThis.__COMPASS_SINGLE_MASTER__;
+              const frame = api.renderAt(time);
+              document.documentElement.dataset.captureTimeMs = String(Math.round(time));
+              return {
+                frame: { elapsedMs: frame.elapsedMs, shotId: frame.shot.id, shotProgress: frame.shotProgress },
+                inspect: api.inspect(),
+                captureState: document.documentElement.dataset.compassMasterCapture,
+                rootShotId: document.querySelector('[data-compass-single-master]')?.dataset?.shotId || null,
+                rootElapsedMs: document.querySelector('[data-compass-single-master]')?.dataset?.elapsedMs || null
+              };
+            }, timeMs);
+          }
+
+          const captures = [];
+          for (const point of points) {
+            const state = await renderAt(point.timeMs);
+            if (state.frame.shotId !== point.expectedShot || state.rootShotId !== point.expectedShot) {
+              throw new Error(`SHOT_IDENTITY_MISMATCH:${point.id}:${JSON.stringify(state.frame)}:${state.rootShotId}`);
+            }
+            await compositorBarrier();
+            const file = `${point.id}-${String(point.timeMs).padStart(5,'0')}.png`;
+            const bytes = await page.screenshot({ path: path.join(out, file), fullPage: false });
+            const png = PNG.sync.read(bytes);
+            if (png.width !== 1280 || png.height !== 720) throw new Error(`PNG_DIMENSION_MISMATCH:${point.id}:${png.width}x${png.height}`);
+            const digest = crypto.createHash('sha256').update(bytes).digest('hex');
+            captures.push({ ...point, file, pngSha256: digest, width: png.width, height: png.height, state });
+          }
+
+          const finalConsoleErrors = [...consoleErrors];
+          const finalPageErrors = [...pageErrors];
+          if (finalPageErrors.length) throw new Error(`PAGE_ERRORS:${JSON.stringify(finalPageErrors)}`);
+          if (finalConsoleErrors.length) throw new Error(`CONSOLE_ERRORS:${JSON.stringify(finalConsoleErrors)}`);
+          const receipt = {
+            schema: 'COMPASS_SINGLE_MASTER_T7C_T8_BROWSER_EVIDENCE_v1',
+            subjectSha,
+            captureUrl: url,
+            browserEngine: 'PLAYWRIGHT_CHROMIUM_1_55_0',
+            launchMode: 'HEADLESS_SWIFTSHADER',
+            viewport: { width: 1280, height: 720, deviceScaleFactor: 1 },
+            t7c: { status: 'PASS_CLOSED', firstFrame: captures[0] },
+            t8: { status: 'PASS_CLOSED', representativeFrames: captures.slice(1) },
+            consoleErrors: finalConsoleErrors,
+            pageErrors: finalPageErrors,
+            productMutationPerformed: false,
+            deploymentPerformed: false,
+            mergePerformed: false,
+            status: 'PASS_CLOSED'
+          };
+          await fs.writeFile(path.join(out, 't7c-t8-receipt.json'), JSON.stringify(receipt, null, 2) + '\n');
+          console.log(JSON.stringify(receipt, null, 2));
+          await context.close();
+          await browser.close();
+          NODE
+          cd /tmp/compass-playwright
+          NODE_PATH=/tmp/compass-playwright/node_modules node capture-subject.mjs | tee "$EVIDENCE_DIR/t7c-t8-browser.log"
+
+      - name: Verify carrier and subject remained non-mutating
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "$(git status --porcelain --untracked-files=no)"
+          test -z "$(git -C subject status --porcelain)"
+
+      - name: Upload T7-T8 exact browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-single-master-t7-t8-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ env.EVIDENCE_DIR }}
+          if-no-files-found: error
+          retention-days: 30

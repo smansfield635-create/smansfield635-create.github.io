@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en" data-monochrome="false">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mirrorland Forest Representation 2A</title>
+<style>
+:root{color-scheme:dark;font-family:ui-sans-serif,system-ui,sans-serif;background:#07100d;color:#e9f2ec}*{box-sizing:border-box}body{margin:0;padding:18px;background:linear-gradient(#0b1814,#050a08);min-height:100vh}.shell{max-width:1280px;margin:auto}.head{display:flex;justify-content:space-between;gap:16px;align-items:end}.head h1{margin:0;font-size:clamp(24px,4vw,44px)}.head p{max-width:760px;color:#a9bbb1}.tools{display:flex;gap:8px;flex-wrap:wrap}button{font:inherit;color:inherit;background:#10231b;border:1px solid #385346;border-radius:999px;padding:8px 12px}.lod-strip{display:grid;grid-template-columns:2fr 1.35fr .85fr;gap:10px;margin:18px 0}.lod-strip div{border:1px solid #30493d;border-radius:10px;padding:8px 10px;color:#a9bbb1}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.tree-card{border:1px solid #2f493c;border-radius:16px;background:#0a1511;padding:12px;min-height:300px}.tree-card h2{font-size:15px;margin:0 0 3px}.tree-card p{font-size:11px;color:#93a79c;margin:0 0 8px}.stage{display:grid;grid-template-columns:2fr 1.35fr .85fr;gap:5px;align-items:end;height:230px;border-radius:10px;overflow:hidden;background:linear-gradient(#10221c 0 64%,#142117 64%)}.band{position:relative;height:100%;border-right:1px dashed rgba(255,255,255,.08)}.band:last-child{border:0}.band svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}.trunk,.branch{stroke:#9b8262;stroke-linecap:round;fill:none}.trunk{stroke-width:4}.branch{stroke-width:2}.crown{fill:#426a50;stroke:#5e8069;stroke-width:1}.sparse .crown{opacity:.28}.label{font-size:9px;position:absolute;top:4px;left:5px;color:#879b90}.variants{font-size:10px;color:#93a79c;margin-top:7px}.mono .stage{filter:grayscale(1) contrast(1.15)}.mono .crown{fill:#c7c7c7;stroke:#fff}.mono .trunk,.mono .branch{stroke:#eee}@media(max-width:900px){.grid{grid-template-columns:1fr 1fr}.tree-card{min-height:270px}.stage{height:205px}}@media(max-width:600px){body{padding:10px}.head{align-items:start;flex-direction:column}.grid{grid-template-columns:1fr}.tree-card{min-height:250px}.lod-strip{font-size:10px}}
+</style>
+</head>
+<body>
+<main class="shell">
+<header class="head"><div><h1>Forest Representation 2A</h1><p>Six procedural tree languages, three deterministic variants each, inspected at near/mid/far distance before any world planting.</p></div><div class="tools"><button id="mono">Monochrome silhouette</button></div></header>
+<div class="lod-strip"><div data-lod="NEAR"><strong>NEAR</strong> · trunk + primary/secondary branches + full crown breakup</div><div data-lod="MID"><strong>MID</strong> · primary structure + reduced clusters</div><div data-lod="FAR"><strong>FAR</strong> · archetype silhouette preserved</div></div>
+<section class="grid" id="grid">
+<article class="tree-card" data-archetype="BROAD_DECIDUOUS"></article>
+<article class="tree-card" data-archetype="COLUMNAR_EVERGREEN"></article>
+<article class="tree-card" data-archetype="COASTAL_WIND_SHAPED"></article>
+<article class="tree-card" data-archetype="ANCIENT_SPREADING"></article>
+<article class="tree-card" data-archetype="YOUNG_UNDERSTORY"></article>
+<article class="tree-card" data-archetype="DEAD_OR_SPARSE"></article>
+</section>
+</main>
+<script type="module">
+import {buildForestRepresentationDiagnosticData} from './forest-representation-diagnostic.mjs';
+const data=buildForestRepresentationDiagnosticData();
+const ns='http://www.w3.org/2000/svg';
+const el=(name,attrs={})=>{const n=document.createElementNS(ns,name);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,v);return n};
+function renderTree(svg,v,lod){const W=120,H=210,baseY=198;const scale=lod==='NEAR'?1:lod==='MID'?.72:.48;const height=Math.min(172,v.height*5.1)*scale;const x=60+(v.crownAsymmetry*24*scale);const top=baseY-height;const lean=v.trunkLean*height;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);const trunk=el('path',{class:'trunk',d:`M 60 ${baseY} Q ${60+lean*.35} ${baseY-height*.55} ${60+lean} ${top+height*.13}`});svg.append(trunk);if(lod!=='FAR'){const count=lod==='NEAR'?Math.min(v.branchCount,8):Math.min(v.branchCount,5);for(let i=0;i<count;i++){const t=.28+(i/(Math.max(1,count-1)))*.5;const by=baseY-height*t;const side=i%2?-1:1;const spread=(18+((i*13)%17))*v.crownWidth*scale;const bx=60+lean*t;const endX=bx+side*spread+(v.crownAsymmetry*20);const endY=by-(10+((i*7)%16))*scale;svg.append(el('path',{class:'branch',d:`M ${bx} ${by} Q ${bx+side*spread*.45} ${by-3*scale} ${endX} ${endY}`}));}}
+const lobes=lod==='NEAR'?Math.min(v.crownLobeCount,10):lod==='MID'?Math.min(v.crownLobeCount,6):3;const cw=34*v.crownWidth*scale,ch=54*v.crownHeight*scale;for(let i=0;i<lobes;i++){if(v.archetypeId==='DEAD_OR_SPARSE'&&i>Math.max(0,Math.floor(v.foliageDensity*6)))continue;const angle=(i/lobes)*Math.PI*2+v.rotation;const ox=Math.cos(angle)*cw*.43+v.crownAsymmetry*cw;const oy=Math.sin(angle)*ch*.31;const ry=Math.max(6,ch*(.34+.08*((i*11)%3)));const rx=Math.max(5,cw*(.31+.07*((i*7)%4)));svg.append(el('ellipse',{class:'crown',cx:x+ox,cy:top+height*.31+oy,rx,ry}));}}
+for(const card of document.querySelectorAll('.tree-card')){const a=data.archetypes.find(x=>x.id===card.dataset.archetype);card.classList.toggle('sparse',a.id==='DEAD_OR_SPARSE');card.innerHTML=`<h2>${a.label}</h2><p>${a.silhouette.replaceAll('_',' ').toLowerCase()}</p><div class="stage"><div class="band"><span class="label">near</span><svg></svg></div><div class="band"><span class="label">mid</span><svg></svg></div><div class="band"><span class="label">far</span><svg></svg></div></div><div class="variants">variants: ${a.variants.map(v=>v.id).join(' · ')}</div>`;const svgs=card.querySelectorAll('svg');renderTree(svgs[0],a.variants[0],'NEAR');renderTree(svgs[1],a.variants[1],'MID');renderTree(svgs[2],a.variants[2],'FAR');}
+document.querySelector('#mono').addEventListener('click',()=>{document.body.classList.toggle('mono');document.documentElement.dataset.monochrome=String(document.body.classList.contains('mono'))});
+</script>
+</body></html>

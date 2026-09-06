@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Compass Storyboard v2 · Single-master review</title>
+<style>
+:root{color-scheme:dark;--bg:#02070b;--fg:#fff8e6;--muted:#b9c8ca;--gold:#f4d680;--line:rgba(244,214,128,.28)}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--fg);font-family:Inter,system-ui,sans-serif}body{display:grid;min-height:100dvh;place-items:center;overflow:hidden}.stage{position:fixed;inset:0;background:#02070b}.stage video{width:100%;height:100%;object-fit:contain;background:#02070b}.gate{position:absolute;inset:0;display:grid;place-items:center;padding:1.25rem;background:radial-gradient(circle at 50% 42%,rgba(79,120,132,.13),transparent 36%),#02070b}.gate[hidden]{display:none}.card{width:min(92vw,42rem);padding:clamp(1.25rem,4vw,2rem);border:1px solid var(--line);border-radius:1.4rem;background:rgba(5,14,21,.9);box-shadow:0 28px 90px rgba(0,0,0,.5);text-align:center}.eyebrow{margin:0 0 .7rem;color:var(--gold);font-size:.72rem;font-weight:850;letter-spacing:.16em;text-transform:uppercase}.card h1{margin:.1rem 0 .8rem;font:500 clamp(2.4rem,9vw,5.3rem)/.9 Georgia,serif;letter-spacing:-.04em}.card p{margin:.35rem auto;max-width:42ch;color:var(--muted);line-height:1.5}.actions{display:flex;justify-content:center;gap:.65rem;flex-wrap:wrap;margin-top:1.35rem}button{min-height:44px;padding:.75rem 1rem;border:1px solid var(--line);border-radius:999px;color:var(--fg);background:rgba(27,35,40,.86);font:800 .78rem/1 Inter,sans-serif;letter-spacing:.04em;cursor:pointer}button.primary{border-color:rgba(244,214,128,.64);background:linear-gradient(145deg,rgba(92,72,32,.82),rgba(10,30,40,.88))}button:focus-visible{outline:2px solid #6dd6ea;outline-offset:3px}.skip{position:absolute;z-index:5;top:max(.8rem,env(safe-area-inset-top));right:max(.8rem,env(safe-area-inset-right))}.status{position:absolute;left:max(.8rem,env(safe-area-inset-left));bottom:max(.8rem,env(safe-area-inset-bottom));z-index:5;padding:.45rem .6rem;border:1px solid rgba(255,255,255,.08);border-radius:.55rem;color:rgba(223,234,235,.65);background:rgba(0,0,0,.45);font:700 .65rem/1.2 ui-monospace,monospace}.reduced{display:none}@media(prefers-reduced-motion:reduce){.motion{display:none}.reduced{display:block}.card h1{font-size:clamp(2rem,8vw,4rem)}}
+</style>
+</head>
+<body>
+<main class="stage" aria-label="Compass Storyboard v2 single-master review">
+  <video id="master" playsinline preload="metadata" poster="" aria-label="45-second Compass Storyboard v2 cinematic">
+    <source src="/assets/compass/cinematic-media/compass-storyboard-v2-master-45s.mp4" type="video/mp4">
+  </video>
+  <button class="skip" id="skip" type="button" hidden>Skip intro</button>
+  <output class="status" id="status">MASTER NOT STARTED</output>
+  <section class="gate" id="gate">
+    <div class="card motion">
+      <p class="eyebrow">Diamond Gate Bridge · Storyboard v2</p>
+      <h1>Find your way.</h1>
+      <p>One 45-second pre-rendered cinematic master. No destination runtimes. No late-source readiness gates. No Codespaces.</p>
+      <div class="actions"><button class="primary" id="play" type="button">Play intro</button><button id="skipGate" type="button">Skip intro</button></div>
+    </div>
+    <div class="card reduced">
+      <p class="eyebrow">Reduced motion</p>
+      <h1>Welcome to Diamond Gate Bridge</h1>
+      <p>Arrival → Compass → Chapter One → Research → Mirrorland → Audralia → Coheriscope / Awards / House → Compass.</p>
+      <div class="actions"><button class="primary" id="enterReduced" type="button">Enter Compass</button><button id="playReduced" type="button">Play film anyway</button></div>
+    </div>
+  </section>
+</main>
+<script>
+(()=>{'use strict';const video=document.querySelector('#master'),gate=document.querySelector('#gate'),skip=document.querySelector('#skip'),status=document.querySelector('#status');let settled=false;const settle=reason=>{if(settled)return;settled=true;try{video.pause()}catch{};video.removeAttribute('src');video.querySelector('source')?.remove();gate.hidden=false;skip.hidden=true;status.value=`SETTLED · ${reason}`;document.documentElement.dataset.singleMasterSettled=reason};const play=async()=>{gate.hidden=true;skip.hidden=false;status.value='PLAYING · SINGLE MASTER';try{video.currentTime=0;await video.play()}catch(e){gate.hidden=false;skip.hidden=true;status.value='MEDIA UNAVAILABLE · MASTER BINARY NOT PRESENT'}};document.querySelector('#play').addEventListener('click',play);document.querySelector('#playReduced').addEventListener('click',play);document.querySelector('#skipGate').addEventListener('click',()=>settle('SKIP_GATE'));document.querySelector('#enterReduced').addEventListener('click',()=>settle('REDUCED_MOTION'));skip.addEventListener('click',()=>settle('SKIP_PLAYING'));video.addEventListener('ended',()=>settle('NATURAL_COMPLETE'));video.addEventListener('error',()=>{gate.hidden=false;skip.hidden=true;status.value='MEDIA UNAVAILABLE · MASTER BINARY NOT PRESENT'});window.addEventListener('keydown',e=>{if(e.key==='Escape')settle('ESCAPE')});window.DGB_COMPASS_SINGLE_MASTER_PREVIEW=Object.freeze({durationSeconds:45,masterPath:'/assets/compass/cinematic-media/compass-storyboard-v2-master-45s.mp4',codespaces:'PROHIBITED',destinationRuntimeImports:false,lateSourceReadinessGates:false,liveHook:false,settle,play});})();
+</script>
+</body>
+</html>

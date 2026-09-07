@@ -1,0 +1,272 @@
+name: Gen1987 R7 One-Off Binary Ingress Replay
+
+on:
+  push:
+    branches:
+      - transfer/compass-main-orientation-final-v2-20260907-001
+    paths:
+      - .github/workflows/gen1987-r7-binary-ingress-one-off-replay.yml
+
+permissions:
+  actions: read
+  contents: write
+  issues: write
+
+concurrency:
+  group: gen1987-r7-binary-ingress-one-off-replay
+  cancel-in-progress: false
+
+jobs:
+  replay:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    container: debian:13
+    env:
+      GOVERNING_MAIN: 24eba044e3c4943756ee2412cb81f35a440f9608
+      TRANSFER_BRANCH: transfer/compass-main-orientation-final-v2-20260907-001
+      DESTINATION_PATH: assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4
+      R5_ARTIFACT_ID: '10025501948'
+      T10_ARTIFACT_ID: '9994017177'
+      R5_SHA256: b06c28a18eb849bdace1c5687108284ad15b50f597024a483530cead24982215
+      R5_GIT_BLOB: 4a00d224855b6c7b07539876f09ef41c12fb9e78
+      T10_SHA256: 6ada38eadeb6243b3809167f45dd8a74808c88ac677273683338772e7899b4e7
+      R6_BYTES: '2723640'
+      R6_SHA256: 0326240cf1d3d8cf7753b91ea1cd0206378b8db7e37590b8bb39c37f6b50f444
+      R6_GIT_BLOB: b48bc48e531c3eb29bd1a94a91725badd30186f5
+      INGRESS_BLOB: 54df8ad719066e468cf98843bbf1943b3153e4b3
+      CARRIER_BLOB: da3ec08f5fc9af71c72bba660a7871c3a7dd3f1f
+      OUT: /tmp/gen1987-r7
+    steps:
+      - name: Install exact replay tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ca-certificates curl unzip python3 nodejs git ffmpeg jq
+          mkdir -p "$OUT"
+          ffmpeg -version | head -1 | tee "$OUT/ffmpeg-version.txt"
+          test "$(ffmpeg -version | head -1 | awk '{print $3}')" = '7.1.5-0+deb13u1'
+
+      - name: Prove one-off carrier lineage and scope
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          test "${{ github.ref_name }}" = "$TRANSFER_BRANCH"
+          curl --fail --silent --show-error --location \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/${REPOSITORY}/compare/${GOVERNING_MAIN}...${{ github.sha }}" \
+            -o "$OUT/carrier-compare.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const c=JSON.parse(fs.readFileSync(process.env.OUT+'/carrier-compare.json','utf8'));
+          if(c.merge_base_commit?.sha!==process.env.GOVERNING_MAIN) throw new Error(`CARRIER_BASE_MISMATCH:${c.merge_base_commit?.sha}`);
+          if(!Array.isArray(c.files)||c.files.length!==1||c.files[0].filename!=='.github/workflows/gen1987-r7-binary-ingress-one-off-replay.yml') throw new Error('CARRIER_SCOPE_DRIFT');
+          NODE
+
+      - name: Retrieve exact durable R5 and T10 artifacts
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          for spec in "${R5_ARTIFACT_ID}:$OUT/r5.zip" "${T10_ARTIFACT_ID}:$OUT/t10.zip"; do
+            id="${spec%%:*}"; out="${spec#*:}"
+            curl --fail --location --retry 3 \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H 'Accept: application/vnd.github+json' \
+              -H 'X-GitHub-Api-Version: 2022-11-28' \
+              "https://api.github.com/repos/${REPOSITORY}/actions/artifacts/${id}/zip" \
+              -o "$out"
+          done
+          test "$(unzip -Z1 "$OUT/r5.zip" | grep -Fxc 'r5-capture.mp4')" = '1'
+          unzip -p "$OUT/r5.zip" r5-capture.mp4 > "$OUT/r5-capture.mp4"
+          test "$(unzip -Z1 "$OUT/t10.zip" | grep -Fxc 'output/compass-main-orientation-final-v1.mp4')" = '1'
+          unzip -p "$OUT/t10.zip" output/compass-main-orientation-final-v1.mp4 > "$OUT/t10-master.mp4"
+          test "$(sha256sum "$OUT/r5-capture.mp4" | awk '{print $1}')" = "$R5_SHA256"
+          test "$(sha256sum "$OUT/t10-master.mp4" | awk '{print $1}')" = "$T10_SHA256"
+          python3 - <<'PY'
+          import hashlib, os
+          for path,expected in [(os.environ['OUT']+'/r5-capture.mp4',os.environ['R5_GIT_BLOB'])]:
+              b=open(path,'rb').read()
+              got=hashlib.sha1(f'blob {len(b)}\0'.encode()+b).hexdigest()
+              assert got==expected,(got,expected)
+          PY
+
+      - name: Materialize exact frozen R6 bytes without re-encoding
+        shell: bash
+        run: |
+          set -euo pipefail
+          for n in a b; do
+            ffmpeg -y -v error \
+              -i "$OUT/r5-capture.mp4" \
+              -i "$OUT/t10-master.mp4" \
+              -map 0:v:0 -map 1:a:0 -c copy -t 38 \
+              -metadata:s:v:0 encoder= \
+              -movflags +faststart \
+              "$OUT/encode-${n}.mp4"
+            ffmpeg -y -v error \
+              -i "$OUT/encode-${n}.mp4" \
+              -map 0 -c copy \
+              -metadata:s:v:0 encoder= \
+              -color_range tv -colorspace bt709 -color_trc bt709 -color_primaries bt709 \
+              -movflags +faststart \
+              "$OUT/r6-${n}.mp4"
+          done
+          cmp "$OUT/r6-a.mp4" "$OUT/r6-b.mp4"
+          cp "$OUT/r6-a.mp4" "$OUT/compass-main-orientation-final-v2.mp4"
+          test "$(stat -c%s "$OUT/compass-main-orientation-final-v2.mp4")" = "$R6_BYTES"
+          test "$(sha256sum "$OUT/compass-main-orientation-final-v2.mp4" | awk '{print $1}')" = "$R6_SHA256"
+          python3 - <<'PY'
+          import hashlib, os
+          p=os.environ['OUT']+'/compass-main-orientation-final-v2.mp4'
+          b=open(p,'rb').read()
+          got=hashlib.sha1(f'blob {len(b)}\0'.encode()+b).hexdigest()
+          assert got==os.environ['R6_GIT_BLOB'],(got,os.environ['R6_GIT_BLOB'])
+          print('R6_EXACT_BYTES_REPRODUCED='+got)
+          PY
+          ffprobe -v error -count_frames -show_entries stream=index,codec_name,profile,width,height,pix_fmt,color_range,color_space,color_transfer,color_primaries,r_frame_rate,sample_rate,channels,nb_read_frames:format=duration -of json "$OUT/compass-main-orientation-final-v2.mp4" > "$OUT/ffprobe.json"
+          ffmpeg -v error -i "$OUT/compass-main-orientation-final-v2.mp4" -f null - 2> "$OUT/decode-errors.txt"
+          test ! -s "$OUT/decode-errors.txt"
+
+      - name: Fetch and verify unchanged installed binary transport implementations
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${GOVERNING_MAIN}/tools/ai-room-transport"
+          curl --fail --silent --show-error --location "$base/bounded-binary-file-ingress.v1.mjs" -o "$OUT/bounded-binary-file-ingress.v1.mjs"
+          curl --fail --silent --show-error --location "$base/bounded-binary-object-transfer.v1.mjs" -o "$OUT/bounded-binary-object-transfer.v1.mjs"
+          test "$(git hash-object --no-filters "$OUT/bounded-binary-file-ingress.v1.mjs")" = "$INGRESS_BLOB"
+          test "$(git hash-object --no-filters "$OUT/bounded-binary-object-transfer.v1.mjs")" = "$CARRIER_BLOB"
+
+      - name: Create six standard bounded chunk blobs and closed manifest
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          node "$OUT/bounded-binary-file-ingress.v1.mjs" \
+            --source "$OUT/compass-main-orientation-final-v2.mp4" \
+            --repository "$REPOSITORY" \
+            --target-branch "$TRANSFER_BRANCH" \
+            --expected-target-head "${{ github.sha }}" \
+            --destination "$DESTINATION_PATH" \
+            --chunk-size 524288 \
+            --output "$OUT/manifest.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const m=JSON.parse(fs.readFileSync(process.env.OUT+'/manifest.json','utf8'));
+          if(m.schema!=='BOUNDED_BINARY_OBJECT_TRANSFER_MANIFEST_v1') throw new Error('MANIFEST_SCHEMA_MISMATCH');
+          if(m.totalBytes!==Number(process.env.R6_BYTES)) throw new Error('MANIFEST_BYTE_MISMATCH');
+          if(m.sha256!==process.env.R6_SHA256) throw new Error('MANIFEST_SHA_MISMATCH');
+          if(m.chunks.length!==6) throw new Error(`EXPECTED_6_CHUNKS_GOT_${m.chunks.length}`);
+          if(m.chunks.slice(0,5).some(c=>c.bytes!==524288)) throw new Error('STANDARD_CHUNK_SIZE_MISMATCH');
+          if(m.chunks[5].bytes!==102200) throw new Error(`FINAL_CHUNK_SIZE_MISMATCH:${m.chunks[5].bytes}`);
+          NODE
+
+      - name: Execute unchanged installed reconstruction carrier
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const m=JSON.parse(fs.readFileSync(process.env.OUT+'/manifest.json','utf8'));
+          const event={
+            issue:{number:1323},
+            comment:{user:{login:'smansfield635-create'},body:'BOUNDED_BINARY_OBJECT_TRANSFER_REQUEST_V1\n'+JSON.stringify(m)},
+            repository:{full_name:process.env.REPOSITORY}
+          };
+          fs.writeFileSync(process.env.OUT+'/event.json',JSON.stringify(event));
+          NODE
+          node "$OUT/bounded-binary-object-transfer.v1.mjs" \
+            --event "$OUT/event.json" \
+            --repository "$REPOSITORY" \
+            --receipt "$OUT/receipt.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const r=JSON.parse(fs.readFileSync(process.env.OUT+'/receipt.json','utf8'));
+          if(r.disposition!=='PASS') throw new Error(`TRANSFER_NOT_PASS:${r.disposition}`);
+          if(r.finalBlobSha!==process.env.R6_GIT_BLOB) throw new Error(`FINAL_BLOB_MISMATCH:${r.finalBlobSha}`);
+          if(r.sha256!==process.env.R6_SHA256) throw new Error(`FINAL_SHA_MISMATCH:${r.sha256}`);
+          if(r.totalBytes!==Number(process.env.R6_BYTES)) throw new Error(`FINAL_BYTES_MISMATCH:${r.totalBytes}`);
+          if(!r.finalBlobReadbackVerified||!r.destinationReadbackVerified) throw new Error('READBACK_NOT_VERIFIED');
+          console.log(JSON.stringify(r));
+          NODE
+
+      - name: Post durable Gen1987 replay result
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const out=process.env.OUT;
+          let receipt=null,manifest=null;
+          try{receipt=JSON.parse(fs.readFileSync(out+'/receipt.json','utf8'));}catch{}
+          try{manifest=JSON.parse(fs.readFileSync(out+'/manifest.json','utf8'));}catch{}
+          const pass=receipt?.disposition==='PASS'&&receipt?.finalBlobSha===process.env.R6_GIT_BLOB;
+          const lines=[
+            'GEN1987_ONE_OFF_BINARY_INGRESS_REPLAY_RECEIPT_20260907',
+            '',
+            `result: ${pass?'PASS_CLOSED':'FAIL_CLOSED'}`,
+            `operation: COMPASS_V2_R6_R10_MASTER_PLAYER_RELEASE_20260907_001`,
+            `generation: 1987`,
+            `replayRun: ${process.env.GITHUB_RUN_ID}`,
+            `carrierHead: ${process.env.GITHUB_SHA}`,
+            `transferBranch: ${process.env.TRANSFER_BRANCH}`,
+            `sourceBytesImmutable: true`,
+            `reencodingPerformed: false`,
+            `r6Bytes: ${process.env.R6_BYTES}`,
+            `r6Sha256: ${process.env.R6_SHA256}`,
+            `requiredFinalGitBlob: ${process.env.R6_GIT_BLOB}`,
+            `chunkCount: ${manifest?.chunks?.length??'UNAVAILABLE'}`,
+            `finalGitBlob: ${receipt?.finalBlobSha??'UNAVAILABLE'}`,
+            `transferCommit: ${receipt?.targetHeadAfter??'UNAVAILABLE'}`,
+            `finalBlobReadbackVerified: ${receipt?.finalBlobReadbackVerified??false}`,
+            `destinationReadbackVerified: ${receipt?.destinationReadbackVerified??false}`,
+            '',
+            pass?'REPLAY_AUTHORITY_EXHAUSTED_AFTER_EXACT_BLOB_READBACK':'REPLAY_STOPPED_FAIL_CLOSED'
+          ];
+          fs.writeFileSync(out+'/issue-comment.txt',lines.join('\n')+'\n');
+          NODE
+          python3 - <<'PY' > "$OUT/comment-payload.json"
+          import json, os
+          print(json.dumps({'body':open(os.environ['OUT']+'/issue-comment.txt').read()}))
+          PY
+          curl --fail --silent --show-error --location \
+            -X POST \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            -H 'Content-Type: application/json' \
+            --data-binary "@$OUT/comment-payload.json" \
+            "https://api.github.com/repos/${REPOSITORY}/issues/2828/comments" \
+            > "$OUT/comment-return.json"
+
+      - name: Upload replay receipt packet
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gen1987-r7-binary-ingress-replay-${{ github.run_id }}
+          path: |
+            /tmp/gen1987-r7/manifest.json
+            /tmp/gen1987-r7/receipt.json
+            /tmp/gen1987-r7/ffprobe.json
+            /tmp/gen1987-r7/decode-errors.txt
+            /tmp/gen1987-r7/ffmpeg-version.txt
+            /tmp/gen1987-r7/carrier-compare.json
+            /tmp/gen1987-r7/issue-comment.txt
+          if-no-files-found: warn
+          retention-days: 14

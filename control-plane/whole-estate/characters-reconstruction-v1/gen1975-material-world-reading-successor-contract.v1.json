@@ -1,0 +1,110 @@
+{
+  "schema": "MIRRORLAND_GEN1975_MATERIAL_WORLD_READING_SUCCESSOR_CONTRACT_v1",
+  "operationId": "MIRRORLAND_GEN1975_MATERIAL_WORLD_READING_SUCCESSOR_20260906_002",
+  "lockGeneration": 1980,
+  "governingMain": "24eba044e3c4943756ee2412cb81f35a440f9608",
+  "productSubstrate": "84754b3d3f0befc0977fc747dce205af4fbeab25",
+  "frozenV5Blob": "f3b64eb1ffc1c1bc8e908ff96eb6c833b6bc928d",
+  "psalmAckCommentId": 5564705963,
+  "terminalMaterialFailureCommentId": 5564700294,
+  "admissionReturnCommentId": 5564756153,
+  "targetBoundary": "MATERIAL_WORLD_READING_SUCCESSOR_CANDIDATE_FROZEN_MECHANICAL_PASS",
+  "materialDisposition": "UNASSIGNED",
+  "materialDispositionAuthority": false,
+  "failEvidence": false,
+  "predecessorProductFailure": "ESTABLISHED_MATERIAL_WORLD_READING",
+  "repairTargets": [
+    "TERRITORIAL_FOREST_CONTIGUITY",
+    "GROUND_UNDERSTORY_CONTINUITY",
+    "HYDROLOGY_CAUSED_WET_MARGIN_DIFFERENTIATION",
+    "FINITE_WORLD_SURFACE_BOUNDARY_CONTAINMENT",
+    "CROSS_VIEW_MATERIAL_CONTINUITY"
+  ],
+  "protectedPassingDimensions": [
+    "STAND_EDGE_TRANSITION_OPENING_LEGIBILITY",
+    "NEGATIVE_SPACE_AND_DESTINATION_READABILITY",
+    "REPRESENTATION_SEPARATION"
+  ],
+  "allowedPaths": [
+    "characters/vegetation-population.mjs",
+    "characters/vegetation-understory.mjs",
+    "characters/app.mjs",
+    "control-plane/whole-estate/characters-reconstruction-v1/gen1975-material-world-reading-successor-contract.v1.json",
+    "control-plane/whole-estate/characters-reconstruction-v1/verify-gen1975-material-world-reading-successor.v1.mjs",
+    ".github/workflows/characters-gen1975-material-world-reading-successor-v1.yml"
+  ],
+  "protectedByteIdentityPaths": [
+    "characters/vegetation-representation.mjs",
+    "characters/vegetation-stand-topology.mjs",
+    "characters/vegetation-edge-ecology.mjs",
+    "characters/vegetation-composition.mjs",
+    "characters/vegetation-ecology.mjs",
+    "characters/step9-regional-geography.mjs",
+    "characters/gratitude-geography.adapter.mjs",
+    "characters/destination-registry.mjs",
+    "characters/narrative-world-state.mjs",
+    "characters/night-renderer.mjs"
+  ],
+  "population": {
+    "exactCanopyCount": 818,
+    "minimumLatticeColumns": 84,
+    "minimumLatticeRows": 62,
+    "minimumAurenLocalInteriorCanopyCount": 8,
+    "aurenLocalRadius": 180,
+    "requiredSelectionLawToken": "DENSE_LATTICE",
+    "maximumInteriorMedianNearestNeighborDistance": 70
+  },
+  "understory": {
+    "minimumCompactPresentationSampling": 0.65,
+    "requiredHydrologyClass": "REED_WET_MARGIN",
+    "minimumRiparianReedCount": 1,
+    "requiredForestFloorClass": "FOREST_FLOOR_CLUSTER",
+    "minimumInteriorForestFloorCount": 1,
+    "openingShrubSaplingAllowed": false
+  },
+  "surfaceContainment": {
+    "requiredSourceTokens": [
+      "SURFACE_CONTAINMENT",
+      "containedTerrainHeight",
+      "padNearZ",
+      "waterMarginX",
+      "waterFarZ"
+    ],
+    "minimumDesktopPadX": 600,
+    "minimumDesktopPadNearZ": 500,
+    "minimumDesktopWaterMarginX": 740,
+    "minimumDesktopWaterFarZ": 500,
+    "prohibitedAppDiffTokens": [
+      "const DESTINATIONS",
+      "const ORBIT",
+      "function travelTo",
+      "function returnOrbit",
+      "function updateTransition",
+      "STEP9_DESTINATION_BINDINGS[id]",
+      "resolveStep9Camera(binding.siteId)"
+    ]
+  },
+  "mandatoryIndependentWitness": {
+    "destinationId": "auren",
+    "requiredSpatialZone": "INTERIOR",
+    "permittedStandClasses": ["DENSE_WOODLAND", "GROVE", "WET_MARGIN_RIPARIAN"],
+    "normalDestinationCameraRequired": true,
+    "distinctFromManorRequired": true
+  },
+  "checkoutLaw": "EXACT_REF_BLOB_FILTERED_CONE_SPARSE_INDEX_ONLY",
+  "evidenceSuccessor": {
+    "requiredStates": [
+      "WIDE_COAST",
+      "OPEN_TERRAIN",
+      "WOODLAND_EDGE",
+      "FOREST_INTERIOR_INDEPENDENT",
+      "MIRROR_MANOR_APPROACH",
+      "SHORELINE_WETLAND_TRANSITION",
+      "WIDE_RETURN"
+    ],
+    "desktop": [1440, 900],
+    "compactMobile": [390, 844],
+    "captureCount": 14,
+    "materialDispositionMustRemainUnassignedDuringMechanicalQualification": true
+  }
+}

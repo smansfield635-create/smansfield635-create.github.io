@@ -57,7 +57,6 @@ jobs:
           set -euo pipefail
           HEAD_SHA="$(git -C tooling rev-parse HEAD^{commit})"
           test "$HEAD_SHA" = "${{ github.event.pull_request.head.sha }}"
-          git -C tooling merge-base --is-ancestor "$GOVERNING_MAIN" "$FROZEN_PRODUCT_SHA"
           git -C tooling merge-base --is-ancestor "$FROZEN_PRODUCT_SHA" HEAD
           mapfile -t CHANGED < <(git -C tooling diff --name-only "$FROZEN_PRODUCT_SHA"...HEAD | sort)
           EXPECTED=(

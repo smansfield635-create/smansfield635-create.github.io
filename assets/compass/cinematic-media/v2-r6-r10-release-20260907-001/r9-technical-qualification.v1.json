@@ -1,0 +1,47 @@
+{
+  "schema": "COMPASS_V2_R9_TECHNICAL_QUALIFICATION_v1",
+  "result": "R9_TECHNICAL_QUALIFICATION_COMPLETE",
+  "operationId": "COMPASS_V2_R6_R10_MASTER_PLAYER_RELEASE_20260907_001",
+  "lockGeneration": 1987,
+  "governingMain": "24eba044e3c4943756ee2412cb81f35a440f9608",
+  "targetBranch": "compass/v2-r6-r10-master-player-release-20260907-001",
+  "runtimeTestedHead": "f87dcf8d711bdef9a3f8f3f6889d547a919ac47e",
+  "technicalChecks": {
+    "r6MasterIdentity": "PASS",
+    "r7GitCustody": "PASS_CLOSED",
+    "r8PlayerStatic": "PASS_32_OF_32",
+    "r8BrowserDesktop": "PASS",
+    "r8BrowserTablet": "PASS",
+    "r8BrowserPortrait": "PASS",
+    "r8ReducedMotion": "PASS",
+    "play": "PASS",
+    "skip": "PASS",
+    "escape": "PASS",
+    "naturalCompletion": "PASS_REAL_ENDED_EVENT",
+    "zeroBlankFirstFrameHandoff": "PASS",
+    "audioRestoration": "PASS",
+    "focusRestoration": "PASS",
+    "urlHistoryInvariants": "PASS",
+    "navigationAnalyticsInvariants": "PASS",
+    "protectedAuthoritiesReadOnly": "PASS",
+    "indexIntegrationSanity": "PASS"
+  },
+  "qualificationEvidence": {
+    "r8": "assets/compass/cinematic-media/v2-r6-r10-release-20260907-001/r8-player-qualification.v1.json",
+    "staticVerifierGitBlob": "e86a67821b2479637e5b4384d0bcc6fb8e15794a",
+    "staticOutputSha256": "847e3ff796244295f62bef4f0e8752f463a24ce5488901397b3fc89b9085435a",
+    "browserEvidenceSha256": "289c30a4ee2c220b6114eeb02cff55afe6e7b27e03be7be5fe7b998e1d37808e"
+  },
+  "ownerWatch": {
+    "required": true,
+    "status": "AWAITING_EXPLICIT_OWNER_DISPOSITION",
+    "builderMaySelfAccept": false,
+    "constructionAuthorizationIsAcceptance": false,
+    "technicalQualificationIsAcceptance": false,
+    "mergeBlocked": true,
+    "deploymentBlocked": true,
+    "publicationBlocked": true
+  },
+  "nextAllowedAction": "PERSIST_REVIEW_READY_SUCCESSOR_PRESENT_TO_OWNER_AND_STOP",
+  "r10": "BLOCKED_BY_R9_OWNER_ACCEPTANCE"
+}

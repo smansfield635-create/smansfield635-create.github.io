@@ -1,0 +1,46 @@
+{
+  "schema": "COMPASS_V2_R6_R10_RELEASE_MANIFEST_v1",
+  "status": "R9_TECHNICALLY_QUALIFIED_AWAITING_OWNER_ACCEPTANCE",
+  "operationId": "COMPASS_V2_R6_R10_MASTER_PLAYER_RELEASE_20260907_001",
+  "lockGeneration": 1987,
+  "governingMain": "24eba044e3c4943756ee2412cb81f35a440f9608",
+  "targetBranch": "compass/v2-r6-r10-master-player-release-20260907-001",
+  "runtimeTestedHead": "f87dcf8d711bdef9a3f8f3f6889d547a919ac47e",
+  "milestones": {
+    "r6": {
+      "result": "R6_V2_MASTER_PRODUCED",
+      "masterSha256": "0326240cf1d3d8cf7753b91ea1cd0206378b8db7e37590b8bb39c37f6b50f444",
+      "masterGitBlob": "b48bc48e531c3eb29bd1a94a91725badd30186f5"
+    },
+    "r7": {
+      "result": "R7_V2_GIT_CUSTODY_CLOSED",
+      "custodyCommit": "650a0ce31d5667821fc6c0827cd95ee1874c4ba8"
+    },
+    "r8": {
+      "result": "R8_COMPLETE_SUCCESSOR_READY_FOR_REVIEW",
+      "persistenceCommit": "346b0d7899bda59317a0f77fc2cb62a3243d74ce",
+      "qualificationPath": "assets/compass/cinematic-media/v2-r6-r10-release-20260907-001/r8-player-qualification.v1.json"
+    },
+    "r9": {
+      "technicalResult": "R9_TECHNICAL_QUALIFICATION_COMPLETE",
+      "ownerAcceptance": "PENDING_EXPLICIT_OWNER_DISPOSITION",
+      "qualificationPath": "assets/compass/cinematic-media/v2-r6-r10-release-20260907-001/r9-technical-qualification.v1.json"
+    },
+    "r10": {
+      "result": "BLOCKED_BY_R9_OWNER_ACCEPTANCE"
+    }
+  },
+  "releaseGating": {
+    "successorReviewOnly": true,
+    "mainMutated": false,
+    "ownerAcceptanceRequired": true,
+    "ownerAcceptanceStatus": "PENDING",
+    "mergeAllowedNow": false,
+    "deploymentAllowedNow": false,
+    "publicationAllowedNow": false,
+    "nextOwnerChoices": [
+      "READY_FOR_NEXT_HOOK",
+      "CONTINUE_REFINEMENT"
+    ]
+  }
+}

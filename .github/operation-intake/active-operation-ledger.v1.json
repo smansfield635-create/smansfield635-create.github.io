@@ -4583,49 +4583,6 @@
       "scopeHash": "a0ac1d7567ae8e0d058871db030bc032026e8c95e27e48dd7354b964dce8aec4",
       "state": "ADMITTED_LOCKED"
     },
-    "a2be7bc874ba35ad847ffd8f5b91896556b6abce3c0f053b0b8f7e0701616b8c": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "6fb388b0099fa258840f9c33b9ebe7f8b29e9338",
-          "lockGeneration": 1975,
-          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:VEGETATION",
-          "operationId": "MIRRORLAND_TERRITORIAL_MASSING_EDGE_WET_MARGIN_REPAIR_20260906_001",
-          "procedureLocatorDigest": "ef4c7242c4a62b784c5986b14cc5ea5d24723ac6907b8935ce6a3de8669566d7",
-          "requestDigest": "fda9b3c140062d4018109d0918e853bf3dc22dc5727f3139dabc03ef8f0f8b52",
-          "scopeHash": "a2be7bc874ba35ad847ffd8f5b91896556b6abce3c0f053b0b8f7e0701616b8c"
-        },
-        "bindingDigest": "04a7b42d9706fe19c08f4a9155c409d2a6af30c707295807d904b60b6790aedc",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "91a899153366992c923731a3e1ff614186d55c7d2f80485afcce39eb56a836bf",
-          "commentId": 5563284877,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2670,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34069218021,
-          "workflowSha": "6fb388b0099fa258840f9c33b9ebe7f8b29e9338"
-        },
-        "lineageAnchorCommitSha": "bcdb4a9801cdb81af49c8c2a61b252bb82168f4d",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "6fb388b0099fa258840f9c33b9ebe7f8b29e9338",
-      "lockGeneration": 1975,
-      "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:VEGETATION",
-      "operationId": "MIRRORLAND_TERRITORIAL_MASSING_EDGE_WET_MARGIN_REPAIR_20260906_001",
-      "procedureLocatorDigest": "ef4c7242c4a62b784c5986b14cc5ea5d24723ac6907b8935ce6a3de8669566d7",
-      "released": false,
-      "requestDigest": "fda9b3c140062d4018109d0918e853bf3dc22dc5727f3139dabc03ef8f0f8b52",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "a2be7bc874ba35ad847ffd8f5b91896556b6abce3c0f053b0b8f7e0701616b8c",
-      "state": "ADMITTED_LOCKED"
-    },
     "a365baf8431c2bdb220a6c24b91422372536cedc20efd42126d572af814b259e": {
       "governingHead": "21ee87e945a62492b8f9447a5049f4ae0ab1ceb9",
       "lockGeneration": 1537,
@@ -41094,6 +41051,50 @@
       "requestDigest": "8b5e61c0f6de0056cf96b93f96c8b4fdd90d4ccc4fe9ebca89e548ea79c3a3b3",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "57f0ea4b6ed706d3a2bf09e96de841e2f5dcfe1438fefbddeaf806da61d5f9e5",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "6fb388b0099fa258840f9c33b9ebe7f8b29e9338",
+          "lockGeneration": 1975,
+          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:VEGETATION",
+          "operationId": "MIRRORLAND_TERRITORIAL_MASSING_EDGE_WET_MARGIN_REPAIR_20260906_001",
+          "procedureLocatorDigest": "ef4c7242c4a62b784c5986b14cc5ea5d24723ac6907b8935ce6a3de8669566d7",
+          "requestDigest": "fda9b3c140062d4018109d0918e853bf3dc22dc5727f3139dabc03ef8f0f8b52",
+          "scopeHash": "a2be7bc874ba35ad847ffd8f5b91896556b6abce3c0f053b0b8f7e0701616b8c"
+        },
+        "bindingDigest": "04a7b42d9706fe19c08f4a9155c409d2a6af30c707295807d904b60b6790aedc",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "91a899153366992c923731a3e1ff614186d55c7d2f80485afcce39eb56a836bf",
+          "commentId": 5563284877,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2670,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34069218021,
+          "workflowSha": "6fb388b0099fa258840f9c33b9ebe7f8b29e9338"
+        },
+        "lineageAnchorCommitSha": "bcdb4a9801cdb81af49c8c2a61b252bb82168f4d",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "6fb388b0099fa258840f9c33b9ebe7f8b29e9338",
+      "lockGeneration": 1975,
+      "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:VEGETATION",
+      "operationId": "MIRRORLAND_TERRITORIAL_MASSING_EDGE_WET_MARGIN_REPAIR_20260906_001",
+      "procedureLocatorDigest": "ef4c7242c4a62b784c5986b14cc5ea5d24723ac6907b8935ce6a3de8669566d7",
+      "released": true,
+      "requestDigest": "fda9b3c140062d4018109d0918e853bf3dc22dc5727f3139dabc03ef8f0f8b52",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a2be7bc874ba35ad847ffd8f5b91896556b6abce3c0f053b0b8f7e0701616b8c",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

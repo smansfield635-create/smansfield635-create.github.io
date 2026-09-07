@@ -153,10 +153,21 @@ jobs:
           }
           async function closeMap(page){
             const panel=page.locator('#coast-map');
-            if(await panel.isVisible()){
-              await page.locator('#map-close').click();
-              await panel.waitFor({state:'hidden',timeout:10000});
+            if(!await panel.count())return;
+            const state=await panel.evaluate(el=>({hidden:el.hidden,ariaHidden:el.getAttribute('aria-hidden')}));
+            if(state.hidden!==true||state.ariaHidden!=='true'){
+              const close=page.locator('#map-close');
+              if(await close.count()&&await close.isVisible())await close.click();
+              else{
+                const toggle=page.locator('#map-toggle');
+                if(await toggle.count()&&await toggle.isVisible())await toggle.click();
+              }
             }
+            await page.waitForFunction(()=>{
+              const panel=document.querySelector('#coast-map');
+              return !!panel&&panel.hidden===true&&panel.getAttribute('aria-hidden')==='true';
+            },null,{timeout:10000});
+            await sleep(220);
           }
           async function gotoDestination(page,id){
             await returnOrbit(page);

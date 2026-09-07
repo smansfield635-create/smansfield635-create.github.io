@@ -1,0 +1,29 @@
+{
+  "schema": "COMPASS_V2_R3_R5_EVIDENCE_PACKAGE_MANIFEST_v1",
+  "result": "PASS_CLOSED",
+  "operationId": "COMPASS_V2_R3_R5_REPRODUCTION_AND_DURABLE_CAPTURE_20260906_001",
+  "generation": 1981,
+  "sourceCommit": "1085bfe62239980d412d6e805b10d3203eb632ab",
+  "files": {
+    "r4-qualification.v1.json": {
+      "sha256": "ed08c866a3e179c9f95991ebea32b16bb8190481e997229b58e4861a82dc8ea3",
+      "bytes": 11811
+    },
+    "r4-contact-sheet.png": {
+      "sha256": "83f2fb44bf089c395278e4179eed8e7e13c41ba4c318cc3801c0e144e1f43038",
+      "bytes": 328037
+    },
+    "r5-frame-manifest.v1.json": {
+      "sha256": "dfd5c3e3e27158984b7aba61cdd437f42fe96a313fe3e7deb74e7a0bd76aa241",
+      "bytes": 257325
+    },
+    "r5-capture.mp4": {
+      "sha256": "b06c28a18eb849bdace1c5687108284ad15b50f597024a483530cead24982215",
+      "bytes": 1781866
+    },
+    "r5-qualification.v1.json": {
+      "sha256": "6c1d9d784d0b53d57134160bafce74e319978cefbc232726c5c7c59e897bef56",
+      "bytes": 915
+    }
+  }
+}

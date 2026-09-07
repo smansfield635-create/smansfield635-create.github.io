@@ -1,0 +1,325 @@
+{
+  "schema": "COMPASS_V2_R4_REPRESENTATIVE_RENDERED_QUALIFICATION_v1",
+  "result": "PASS_CLOSED",
+  "operationId": "COMPASS_V2_R3_R5_REPRODUCTION_AND_DURABLE_CAPTURE_20260906_001",
+  "generation": 1981,
+  "sourceCommit": "1085bfe62239980d412d6e805b10d3203eb632ab",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "donorIdentity": {
+    "ready": "true",
+    "renderer": "hra-atlas-webgl-carousel-v1",
+    "source": "https://ccf-ontology.hubmapconsortium.org/objects/v1.2/Allen_M_Brain.glb",
+    "expectedMeshes": 283,
+    "expectedTriangles": 656268,
+    "meshCount": 283,
+    "triangleCount": 656268,
+    "primitiveCount": 283
+  },
+  "deterministicSeek": {
+    "ms": 6000,
+    "sha256": "0a748f17548e061e511a2b9824b024c2ddc3faf738d318c42453932fd8e4ee5e",
+    "identical": true
+  },
+  "frames": [
+    {
+      "index": 0,
+      "label": "arrival",
+      "ms": 1500,
+      "file": "r4-00-arrival.png",
+      "sha256": "c18b89bd705cc4eb3caeeed77d61e603abc920f779cd4a70e5205d1c2f69f591",
+      "snapshot": {
+        "schema": "COMPASS_V2_R3_DETACHED_TIME_ADDRESSABLE_CAPTURE_SOURCE_v1",
+        "ready": true,
+        "ms": 1500,
+        "durationMs": 38000,
+        "activeText": [
+          "S01"
+        ],
+        "activeImages": [
+          "S01"
+        ],
+        "worldVisible": false,
+        "audraliaAuthority": "AUDRALIA_AUTHORITY_PACKET_A1",
+        "audraliaWorldInstance": "single-persistent-instance",
+        "mirrorlandGeometryContract": "DIAMOND_GATE_BRIDGE_SHARED_MIRRORLAND_WINDOW_GEOMETRY_TNT_v1",
+        "brainRenderer": "hra-atlas-webgl-carousel-v1",
+        "trophyRenderer": "procedural-webgl-v8-integrated-recessed-plaque",
+        "houseRenderer": "mirror-manor-gothic-phase3-carousel-v6-material-detail-final",
+        "liveAuthorityMutation": false
+      }
+    },
+    {
+      "index": 1,
+      "label": "compass",
+      "ms": 6000,
+      "file": "r4-01-compass.png",
+      "sha256": "0a748f17548e061e511a2b9824b024c2ddc3faf738d318c42453932fd8e4ee5e",
+      "snapshot": {
+        "schema": "COMPASS_V2_R3_DETACHED_TIME_ADDRESSABLE_CAPTURE_SOURCE_v1",
+        "ready": true,
+        "ms": 6000,
+        "durationMs": 38000,
+        "activeText": [
+          "S02"
+        ],
+        "activeImages": [
+          "S02"
+        ],
+        "worldVisible": false,
+        "audraliaAuthority": "AUDRALIA_AUTHORITY_PACKET_A1",
+        "audraliaWorldInstance": "single-persistent-instance",
+        "mirrorlandGeometryContract": "DIAMOND_GATE_BRIDGE_SHARED_MIRRORLAND_WINDOW_GEOMETRY_TNT_v1",
+        "brainRenderer": "hra-atlas-webgl-carousel-v1",
+        "trophyRenderer": "procedural-webgl-v8-integrated-recessed-plaque",
+        "houseRenderer": "mirror-manor-gothic-phase3-carousel-v6-material-detail-final",
+        "liveAuthorityMutation": false
+      }
+    },
+    {
+      "index": 2,
+      "label": "chapter-one",
+      "ms": 11000,
+      "file": "r4-02-chapter-one.png",
+      "sha256": "04ce8765d644c621a2bf7e7ad33a8c65e3b8b146412085c8afa08e351e64a48e",
+      "snapshot": {
+        "schema": "COMPASS_V2_R3_DETACHED_TIME_ADDRESSABLE_CAPTURE_SOURCE_v1",
+        "ready": true,
+        "ms": 11000,
+        "durationMs": 38000,
+        "activeText": [
+          "S03"
+        ],
+        "activeImages": [
+          "S03"
+        ],
+        "worldVisible": false,
+        "audraliaAuthority": "AUDRALIA_AUTHORITY_PACKET_A1",
+        "audraliaWorldInstance": "single-persistent-instance",
+        "mirrorlandGeometryContract": "DIAMOND_GATE_BRIDGE_SHARED_MIRRORLAND_WINDOW_GEOMETRY_TNT_v1",
+        "brainRenderer": "hra-atlas-webgl-carousel-v1",
+        "trophyRenderer": "procedural-webgl-v8-integrated-recessed-plaque",
+        "houseRenderer": "mirror-manor-gothic-phase3-carousel-v6-material-detail-final",
+        "liveAuthorityMutation": false
+      }
+    },
+    {
+      "index": 3,
+      "label": "research",
+      "ms": 15300,
+      "file": "r4-03-research.png",
+      "sha256": "fd7262aff37a60c5ce72f4b656fd0d424985abc373ebd0227bffb65541cd0761",
+      "snapshot": {
+        "schema": "COMPASS_V2_R3_DETACHED_TIME_ADDRESSABLE_CAPTURE_SOURCE_v1",
+        "ready": true,
+        "ms": 15300,
+        "durationMs": 38000,
+        "activeText": [
+          "S04-A"
+        ],
+        "activeImages": [
+          "S04-A"
+        ],
+        "worldVisible": false,
+        "audraliaAuthority": "AUDRALIA_AUTHORITY_PACKET_A1",
+        "audraliaWorldInstance": "single-persistent-instance",
+        "mirrorlandGeometryContract": "DIAMOND_GATE_BRIDGE_SHARED_MIRRORLAND_WINDOW_GEOMETRY_TNT_v1",
+        "brainRenderer": "hra-atlas-webgl-carousel-v1",
+        "trophyRenderer": "procedural-webgl-v8-integrated-recessed-plaque",
+        "houseRenderer": "mirror-manor-gothic-phase3-carousel-v6-material-detail-final",
+        "liveAuthorityMutation": false
+      }
+    },
+    {
+      "index": 4,
+      "label": "readiness",
+      "ms": 17500,
+      "file": "r4-04-readiness.png",
+      "sha256": "70cdaef2997e5900d52c52db90014b6bedf815223f4a87d1b703435846955e61",
+      "snapshot": {
+        "schema": "COMPASS_V2_R3_DETACHED_TIME_ADDRESSABLE_CAPTURE_SOURCE_v1",
+        "ready": true,
+        "ms": 17500,
+        "durationMs": 38000,
+        "activeText": [
+          "S04-B"
+        ],
+        "activeImages": [
+          "S04-B"
+        ],
+        "worldVisible": false,
+        "audraliaAuthority": "AUDRALIA_AUTHORITY_PACKET_A1",
+        "audraliaWorldInstance": "single-persistent-instance",
+        "mirrorlandGeometryContract": "DIAMOND_GATE_BRIDGE_SHARED_MIRRORLAND_WINDOW_GEOMETRY_TNT_v1",
+        "brainRenderer": "hra-atlas-webgl-carousel-v1",
+        "trophyRenderer": "procedural-webgl-v8-integrated-recessed-plaque",
+        "houseRenderer": "mirror-manor-gothic-phase3-carousel-v6-material-detail-final",
+        "liveAuthorityMutation": false
+      }
+    },
+    {
+      "index": 5,
+      "label": "mirrorland",
+      "ms": 21000,
+      "file": "r4-05-mirrorland.png",
+      "sha256": "a018813cfd86d16add9f50c8e0b22cda9852a9b2dfe7fc0da15d9a01dd61b925",
+      "snapshot": {
+        "schema": "COMPASS_V2_R3_DETACHED_TIME_ADDRESSABLE_CAPTURE_SOURCE_v1",
+        "ready": true,
+        "ms": 21000,
+        "durationMs": 38000,
+        "activeText": [
+          "S05"
+        ],
+        "activeImages": [
+          "S05"
+        ],
+        "worldVisible": true,
+        "audraliaAuthority": "AUDRALIA_AUTHORITY_PACKET_A1",
+        "audraliaWorldInstance": "single-persistent-instance",
+        "mirrorlandGeometryContract": "DIAMOND_GATE_BRIDGE_SHARED_MIRRORLAND_WINDOW_GEOMETRY_TNT_v1",
+        "brainRenderer": "hra-atlas-webgl-carousel-v1",
+        "trophyRenderer": "procedural-webgl-v8-integrated-recessed-plaque",
+        "houseRenderer": "mirror-manor-gothic-phase3-carousel-v6-material-detail-final",
+        "liveAuthorityMutation": false
+      }
+    },
+    {
+      "index": 6,
+      "label": "audralia",
+      "ms": 26000,
+      "file": "r4-06-audralia.png",
+      "sha256": "0a0dea1ced9c8cd62441f110c3737d6a84370aa157891aefb256d0197e0b2eaa",
+      "snapshot": {
+        "schema": "COMPASS_V2_R3_DETACHED_TIME_ADDRESSABLE_CAPTURE_SOURCE_v1",
+        "ready": true,
+        "ms": 26000,
+        "durationMs": 38000,
+        "activeText": [
+          "S06"
+        ],
+        "activeImages": [
+          "S06"
+        ],
+        "worldVisible": true,
+        "audraliaAuthority": "AUDRALIA_AUTHORITY_PACKET_A1",
+        "audraliaWorldInstance": "single-persistent-instance",
+        "mirrorlandGeometryContract": "DIAMOND_GATE_BRIDGE_SHARED_MIRRORLAND_WINDOW_GEOMETRY_TNT_v1",
+        "brainRenderer": "hra-atlas-webgl-carousel-v1",
+        "trophyRenderer": "procedural-webgl-v8-integrated-recessed-plaque",
+        "houseRenderer": "mirror-manor-gothic-phase3-carousel-v6-material-detail-final",
+        "liveAuthorityMutation": false
+      }
+    },
+    {
+      "index": 7,
+      "label": "brain",
+      "ms": 30000,
+      "file": "r4-07-brain.png",
+      "sha256": "e761a58107b074e0943c777140447c65a7ef7984adf93317a4ef0e234b805d47",
+      "snapshot": {
+        "schema": "COMPASS_V2_R3_DETACHED_TIME_ADDRESSABLE_CAPTURE_SOURCE_v1",
+        "ready": true,
+        "ms": 30000,
+        "durationMs": 38000,
+        "activeText": [
+          "S07-A"
+        ],
+        "activeImages": [
+          "S07-A"
+        ],
+        "worldVisible": false,
+        "audraliaAuthority": "AUDRALIA_AUTHORITY_PACKET_A1",
+        "audraliaWorldInstance": "single-persistent-instance",
+        "mirrorlandGeometryContract": "DIAMOND_GATE_BRIDGE_SHARED_MIRRORLAND_WINDOW_GEOMETRY_TNT_v1",
+        "brainRenderer": "hra-atlas-webgl-carousel-v1",
+        "trophyRenderer": "procedural-webgl-v8-integrated-recessed-plaque",
+        "houseRenderer": "mirror-manor-gothic-phase3-carousel-v6-material-detail-final",
+        "liveAuthorityMutation": false
+      }
+    },
+    {
+      "index": 8,
+      "label": "trophy",
+      "ms": 32000,
+      "file": "r4-08-trophy.png",
+      "sha256": "e6041f1bce2b90d548a29d7272bf2542cd34d03e0a0e0760d2922d1ab0742e3c",
+      "snapshot": {
+        "schema": "COMPASS_V2_R3_DETACHED_TIME_ADDRESSABLE_CAPTURE_SOURCE_v1",
+        "ready": true,
+        "ms": 32000,
+        "durationMs": 38000,
+        "activeText": [
+          "S07-B"
+        ],
+        "activeImages": [
+          "S07-B"
+        ],
+        "worldVisible": false,
+        "audraliaAuthority": "AUDRALIA_AUTHORITY_PACKET_A1",
+        "audraliaWorldInstance": "single-persistent-instance",
+        "mirrorlandGeometryContract": "DIAMOND_GATE_BRIDGE_SHARED_MIRRORLAND_WINDOW_GEOMETRY_TNT_v1",
+        "brainRenderer": "hra-atlas-webgl-carousel-v1",
+        "trophyRenderer": "procedural-webgl-v8-integrated-recessed-plaque",
+        "houseRenderer": "mirror-manor-gothic-phase3-carousel-v6-material-detail-final",
+        "liveAuthorityMutation": false
+      }
+    },
+    {
+      "index": 9,
+      "label": "house",
+      "ms": 34000,
+      "file": "r4-09-house.png",
+      "sha256": "cbabe5d462c0a3937d1d54a715631d621b16f68f3ae8dcddae566044512eec13",
+      "snapshot": {
+        "schema": "COMPASS_V2_R3_DETACHED_TIME_ADDRESSABLE_CAPTURE_SOURCE_v1",
+        "ready": true,
+        "ms": 34000,
+        "durationMs": 38000,
+        "activeText": [
+          "S07-C"
+        ],
+        "activeImages": [
+          "S07-C"
+        ],
+        "worldVisible": false,
+        "audraliaAuthority": "AUDRALIA_AUTHORITY_PACKET_A1",
+        "audraliaWorldInstance": "single-persistent-instance",
+        "mirrorlandGeometryContract": "DIAMOND_GATE_BRIDGE_SHARED_MIRRORLAND_WINDOW_GEOMETRY_TNT_v1",
+        "brainRenderer": "hra-atlas-webgl-carousel-v1",
+        "trophyRenderer": "procedural-webgl-v8-integrated-recessed-plaque",
+        "houseRenderer": "mirror-manor-gothic-phase3-carousel-v6-material-detail-final",
+        "liveAuthorityMutation": false
+      }
+    },
+    {
+      "index": 10,
+      "label": "return-compass",
+      "ms": 36000,
+      "file": "r4-10-return-compass.png",
+      "sha256": "e535f9e15dea11a86cf0884e0bb109cfcdf4cecc5880bdee4869d9e7461f1e1c",
+      "snapshot": {
+        "schema": "COMPASS_V2_R3_DETACHED_TIME_ADDRESSABLE_CAPTURE_SOURCE_v1",
+        "ready": true,
+        "ms": 36000,
+        "durationMs": 38000,
+        "activeText": [
+          "S08"
+        ],
+        "activeImages": [
+          "S08"
+        ],
+        "worldVisible": false,
+        "audraliaAuthority": "AUDRALIA_AUTHORITY_PACKET_A1",
+        "audraliaWorldInstance": "single-persistent-instance",
+        "mirrorlandGeometryContract": "DIAMOND_GATE_BRIDGE_SHARED_MIRRORLAND_WINDOW_GEOMETRY_TNT_v1",
+        "brainRenderer": "hra-atlas-webgl-carousel-v1",
+        "trophyRenderer": "procedural-webgl-v8-integrated-recessed-plaque",
+        "houseRenderer": "mirror-manor-gothic-phase3-carousel-v6-material-detail-final",
+        "liveAuthorityMutation": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "schema": "COMPASS_V2_R5_QUALIFICATION_v1",
+  "result": "PASS_CLOSED",
+  "operationId": "COMPASS_V2_R3_R5_REPRODUCTION_AND_DURABLE_CAPTURE_20260906_001",
+  "generation": 1981,
+  "sourceCommit": "1085bfe62239980d412d6e805b10d3203eb632ab",
+  "profile": {
+    "durationMs": 38000,
+    "frameRate": 30,
+    "frameCount": 1140,
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "frameTimeRule": "ROUND(frameIndex*1000/30)",
+    "lastFrameTimeMs": 37967
+  },
+  "sequenceSha256": "2061e9f4a976cf11eec896a82acba64c942ee89c9f427163083c239ba15bc84b",
+  "mp4": {
+    "sha256": "b06c28a18eb849bdace1c5687108284ad15b50f597024a483530cead24982215",
+    "ffprobe": {
+      "width": 1280,
+      "height": 720,
+      "r_frame_rate": "30/1",
+      "duration": "38.000000",
+      "nb_read_frames": "1140"
+    }
+  },
+  "r4ContactSheetSha256": "83f2fb44bf089c395278e4179eed8e7e13c41ba4c318cc3801c0e144e1f43038"
+}

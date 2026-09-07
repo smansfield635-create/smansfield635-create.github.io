@@ -4,7 +4,8 @@
   "status": "ACTIVE_REGISTERED_PROJECT",
   "ownedPathPrefixes": [
     "characters/",
-    "control-plane/whole-estate/characters-reconstruction-v1/"
+    "control-plane/whole-estate/characters-reconstruction-v1/",
+    ".github/workflows/characters-gen1983-camera-space-environment-diagnostics-v2-v1.yml"
   ],
   "ownedExactPaths": [
     ".github/workflows/characters-night-world-state-proof.yml"

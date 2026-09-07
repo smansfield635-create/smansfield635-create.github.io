@@ -36,7 +36,17 @@ const GRID=freeze({
   standMassExponent:2.90,
   standCoreScale:112,
   territorialCoreExponent:1.50,
+  standSizeExponent:.72,
   wetMarginSuppression:.34
+});
+const STAND_CLASS_MASS_FACTOR=freeze({
+  DENSE_WOODLAND:1,
+  GROVE:4.8,
+  COASTAL_SCRUB:.72,
+  WET_MARGIN_RIPARIAN:1.35,
+  EXPOSED_UPLAND:.48,
+  SPARSE_TRANSITION:.38,
+  ECOLOGICAL_OPEN:0
 });
 
 export const CANONICAL_VEGETATION_POPULATION_CONTRACT=freeze({
@@ -58,6 +68,7 @@ export const CANONICAL_VEGETATION_POPULATION_CONTRACT=freeze({
   previousPositionSetImmutable:false,
   exactPopulationBudget:GRID.exactTargetCount,
   grid:GRID,
+  standClassMassFactor:STAND_CLASS_MASS_FACTOR,
   fixedTargetCount:true,
   territorialContinuityRepair:true
 });
@@ -124,8 +135,11 @@ function allocateStandLocalInterior(source,budget){
   }
   const rows=[...byStand.entries()].map(([standId,items])=>{
     const canopyDensity=clamp(Number(items[0]?.environment?.standProfile?.canopyDensity)||0,0,1);
-    const weight=items.length*Math.pow(Math.max(.04,canopyDensity),GRID.standMassExponent);
-    return {standId,items:items.sort(sortTerritorialCandidates),weight,quota:0,remainder:0};
+    const standClass=items[0]?.environment?.standClass||'SPARSE_TRANSITION';
+    const classFactor=Number(STAND_CLASS_MASS_FACTOR[standClass]??1);
+    const sizeMass=Math.pow(Math.max(1,items.length),GRID.standSizeExponent);
+    const weight=sizeMass*Math.pow(Math.max(.04,canopyDensity),GRID.standMassExponent)*classFactor;
+    return {standId,standClass,items:items.sort(sortTerritorialCandidates),weight,quota:0,remainder:0};
   }).sort((a,b)=>a.standId.localeCompare(b.standId));
 
   let remaining=Math.min(budget,source.length);
@@ -245,13 +259,13 @@ function createCanonicalPopulation(){
     candidateCount:candidates.length,
     selectedCount:instances.length,
     rejectedEligibleCount:candidates.length-instances.length,
-    selectionLaw:'EXACT_818_CONTIGUOUS_DENSE_LATTICE_RESERVED_EDGE_TRANSITION_STAND_LOCAL_CORE_WEIGHTED_INTERIOR_MASSING',
+    selectionLaw:'EXACT_818_CONTIGUOUS_DENSE_LATTICE_RESERVED_EDGE_TRANSITION_STAND_CLASS_BALANCED_CORE_WEIGHTED_INTERIOR_MASSING',
     standCandidateCounts:freeze(standCandidateCounts),standSelectedCounts:freeze(standSelectedCounts),classCandidateCounts:freeze(classCandidateCounts),classSelectedCounts:freeze(classSelectedCounts),zoneCandidateCounts:freeze(zoneCandidateCounts),zoneSelectedCounts:freeze(zoneSelectedCounts),
     compositionFeatherCandidateCount:compositionFeatherCandidates.length,
     compositionFeatherSelectedCount:compositionFeatherCandidates.filter(x=>selectedSet.has(x.id)).length,
     compatibleInteriorCandidateCount:compatibleInteriorCandidates.length,
     compatibleInteriorSelectedCount:compatibleInteriorCandidates.filter(x=>selectedSet.has(x.id)).length,
-    previousPositionSetImmutable:false,previousGlobalSprinklingAuthoritySuperseded:true,standLocalInteriorAllocation:true,wetMarginCanopySuppression:true,territorialContinuityRepair:true,candidateIdentityCount:candidateById.size
+    previousPositionSetImmutable:false,previousGlobalSprinklingAuthoritySuperseded:true,standLocalInteriorAllocation:true,standClassBalancedInteriorAllocation:true,wetMarginCanopySuppression:true,territorialContinuityRepair:true,candidateIdentityCount:candidateById.size
   });
 
   return freeze({schema:'MIRRORLAND_CANONICAL_VEGETATION_POPULATION_v1',operationId:CANONICAL_VEGETATION_POPULATION_CONTRACT.operationId,stage:CANONICAL_VEGETATION_POPULATION_CONTRACT.stage,frameId:GRATITUDE_DEVELOPMENT_FRAME.frameId,envelope:freeze({...envelope}),ecologyAuthority:VEGETATION_ECOLOGY_AUTHORITY.schema,organizationAuthority:'MIRRORLAND_EDGE_ECOLOGY_CONTRACT_v1',canonicalPopulation:true,standEdgeOrganized:true,deviceInvariant:true,cameraInvariant:true,representationAssigned:false,lodAssigned:false,fixedTargetCount:true,exactTargetCount:GRID.exactTargetCount,instanceCount:instances.length,diagnostics,instances:freeze(instances)});

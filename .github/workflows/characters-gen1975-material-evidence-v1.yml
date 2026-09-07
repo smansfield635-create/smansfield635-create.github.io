@@ -331,10 +331,70 @@ jobs:
             const context=await browser.newContext({viewport:spec.viewport,deviceScaleFactor:1});
             const page=await context.newPage();
             const localErrors=[];
-            page.on('pageerror',error=>localErrors.push({type:'pageerror',message:String(error?.message||error)}));
-            page.on('console',message=>{if(message.type()==='error')localErrors.push({type:'console',message:message.text()});});
-            const response=await page.goto(URL,{waitUntil:'networkidle',timeout:30000});
-            const runtime=await health(page,response);
+            const failedRequests=[];
+            const moduleResponses=[];
+            page.on('pageerror',error=>localErrors.push({type:'pageerror',message:String(error?.message||error),stack:String(error?.stack||'')}));
+            page.on('console',message=>{
+              if(message.type()==='error')localErrors.push({type:'console',message:message.text(),location:message.location()});
+            });
+            page.on('requestfailed',request=>failedRequests.push({
+              url:request.url(),
+              method:request.method(),
+              resourceType:request.resourceType(),
+              failure:request.failure()
+            }));
+            page.on('response',response=>{
+              const request=response.request();
+              const url=response.url();
+              const resourceType=request.resourceType();
+              if(resourceType==='script'||/\.(?:mjs|js)(?:[?#]|$)/i.test(url)){
+                moduleResponses.push({url,status:response.status(),statusText:response.statusText(),ok:response.ok(),resourceType,fromServiceWorker:response.fromServiceWorker()});
+              }
+            });
+            let response=null;
+            let runtime=null;
+            try{
+              response=await page.goto(URL,{waitUntil:'networkidle',timeout:30000});
+              runtime=await health(page,response);
+            }catch(error){
+              const documentSnapshot=await page.evaluate(()=>({
+                href:location.href,
+                readyState:document.readyState,
+                title:document.title,
+                signalLayerCount:document.querySelectorAll('.signal-layer').length,
+                signalCount:document.querySelectorAll('.signal-layer .signal').length,
+                sceneCanvasPresent:!!document.querySelector('#scene'),
+                fatalPresent:!!document.querySelector('#fatal'),
+                fatalShown:document.querySelector('#fatal')?.classList.contains('show')||false,
+                fatalText:(document.querySelector('#fatal')?.textContent||'').trim().slice(0,2000),
+                scripts:[...document.scripts].map(script=>({src:script.src||null,type:script.type||null,noModule:script.noModule||false})),
+                modulePreloads:[...document.querySelectorAll('link[rel="modulepreload"]')].map(link=>link.href)
+              })).catch(snapshotError=>({snapshotError:String(snapshotError?.message||snapshotError)}));
+              writeJson(`${spec.profile}-runtime-health-diagnostic.json`,{
+                schema:'MIRRORLAND_GEN1975_RUNTIME_HEALTH_DIAGNOSTIC_v1',
+                operationId:process.env.OPERATION_ID,
+                lockGeneration:Number(process.env.LOCK_GENERATION),
+                governingHead:process.env.GOVERNING_MAIN,
+                evidenceToolingHead:process.env.TOOLING_HEAD,
+                frozenProductSha:process.env.FROZEN_PRODUCT_SHA,
+                frozenV5BlobSha:process.env.V5_BLOB,
+                phase:'RUNTIME_HEALTH_QUALIFICATION',
+                profile:spec.profile,
+                route:'/characters/',
+                navigationResponse:response?{url:response.url(),status:response.status(),statusText:response.statusText(),ok:response.ok()}:null,
+                healthResult:'FAIL_INSTRUMENTAL',
+                materialEvidenceCaptureReached:false,
+                productFailureEstablished:false,
+                materialDisposition:'UNASSIGNED',
+                pageAndConsoleErrors:localErrors,
+                failedRequests,
+                moduleResponses,
+                documentSnapshot,
+                error:{name:error?.name||'Error',message:String(error?.message||error),stack:String(error?.stack||'')}
+              });
+              await context.close().catch(()=>{});
+              throw error;
+            }
             await dismissPrimer(page);
             await sleep(450);
             const witness=await selectIndependentInterior(page);

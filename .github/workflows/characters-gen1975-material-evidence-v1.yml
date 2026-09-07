@@ -251,7 +251,7 @@ jobs:
               await openMap(page);
               if(!await node.isVisible())throw Error(`MAP_NODE_STILL_NOT_VISIBLE_AFTER_MANOR_REVEAL:${id}`);
             }
-            await node.click();
+            await node.press('Enter');
             await page.locator('#return').waitFor({state:'visible',timeout:10000});
             await sleep(900);
           }

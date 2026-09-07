@@ -24,10 +24,10 @@ const hash32=value=>{
 const rand=(seed,k=0)=>hash32(seed^Math.imul(k+1,0x9e3779b1))/4294967295;
 
 const GRID=freeze({
-  columns:112,
-  rows:84,
+  columns:196,
+  rows:147,
   insetFraction:.025,
-  jitterFraction:.24,
+  jitterFraction:.18,
   minimumForestWeight:.08,
   minimumShorelineDistance:12,
   exactTargetCount:818,
@@ -259,13 +259,13 @@ function createCanonicalPopulation(){
     candidateCount:candidates.length,
     selectedCount:instances.length,
     rejectedEligibleCount:candidates.length-instances.length,
-    selectionLaw:'EXACT_818_CONTIGUOUS_DENSE_LATTICE_RESERVED_EDGE_TRANSITION_STAND_CLASS_BALANCED_CORE_WEIGHTED_INTERIOR_MASSING',
+    selectionLaw:'EXACT_818_CONTIGUOUS_HIGH_RESOLUTION_DENSE_LATTICE_RESERVED_EDGE_TRANSITION_STAND_CLASS_BALANCED_CORE_WEIGHTED_INTERIOR_MASSING',
     standCandidateCounts:freeze(standCandidateCounts),standSelectedCounts:freeze(standSelectedCounts),classCandidateCounts:freeze(classCandidateCounts),classSelectedCounts:freeze(classSelectedCounts),zoneCandidateCounts:freeze(zoneCandidateCounts),zoneSelectedCounts:freeze(zoneSelectedCounts),
     compositionFeatherCandidateCount:compositionFeatherCandidates.length,
     compositionFeatherSelectedCount:compositionFeatherCandidates.filter(x=>selectedSet.has(x.id)).length,
     compatibleInteriorCandidateCount:compatibleInteriorCandidates.length,
     compatibleInteriorSelectedCount:compatibleInteriorCandidates.filter(x=>selectedSet.has(x.id)).length,
-    previousPositionSetImmutable:false,previousGlobalSprinklingAuthoritySuperseded:true,standLocalInteriorAllocation:true,standClassBalancedInteriorAllocation:true,wetMarginCanopySuppression:true,territorialContinuityRepair:true,candidateIdentityCount:candidateById.size
+    previousPositionSetImmutable:false,previousGlobalSprinklingAuthoritySuperseded:true,standLocalInteriorAllocation:true,standClassBalancedInteriorAllocation:true,highResolutionCandidateCapacity:true,wetMarginCanopySuppression:true,territorialContinuityRepair:true,candidateIdentityCount:candidateById.size
   });
 
   return freeze({schema:'MIRRORLAND_CANONICAL_VEGETATION_POPULATION_v1',operationId:CANONICAL_VEGETATION_POPULATION_CONTRACT.operationId,stage:CANONICAL_VEGETATION_POPULATION_CONTRACT.stage,frameId:GRATITUDE_DEVELOPMENT_FRAME.frameId,envelope:freeze({...envelope}),ecologyAuthority:VEGETATION_ECOLOGY_AUTHORITY.schema,organizationAuthority:'MIRRORLAND_EDGE_ECOLOGY_CONTRACT_v1',canonicalPopulation:true,standEdgeOrganized:true,deviceInvariant:true,cameraInvariant:true,representationAssigned:false,lodAssigned:false,fixedTargetCount:true,exactTargetCount:GRID.exactTargetCount,instanceCount:instances.length,diagnostics,instances:freeze(instances)});

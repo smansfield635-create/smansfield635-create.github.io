@@ -83,7 +83,7 @@ function baseClassDensity(type,ecology){
   switch(type){
     case 'GRASS_SEDGE':
       if(drainage!=='LAND'||shore<6||slopeClass==='STEEP_NONCLIMBING')return 0;
-      return clamp(.20+.30*forest+.22*wet+.18*(['LOWLAND_SOIL','COASTAL_SOIL','FOREST_SOIL'].includes(material)?1:0)-.12*(slopeClass==='MODERATE'?1:0),0,.92);
+      return clamp(.24+.28*forest+.28*wet+.20*(['LOWLAND_SOIL','COASTAL_SOIL','FOREST_SOIL'].includes(material)?1:0)-.12*(slopeClass==='MODERATE'?1:0),0,.94);
     case 'LOW_SHRUB':
       if(drainage!=='LAND'||shore<12||forest<.14||slopeClass==='STEEP_NONCLIMBING')return 0;
       return clamp(.08+.48*forest+.10*(curvatureClass==='CONCAVE'?1:0),0,.68);
@@ -92,7 +92,7 @@ function baseClassDensity(type,ecology){
       return clamp(.04+.32*forest+.08*(biomeClass==='FOREST'?1:0),0,.46);
     case 'REED_WET_MARGIN':
       if(drainage!=='LAND'||shore<2||wet<.08||!['LEVEL','GENTLE'].includes(slopeClass))return 0;
-      return clamp(.10+.82*wet,0,.96);
+      return clamp(.16+.96*wet,0,.98);
     case 'DEAD_SPARSE_GROUND':
       if(drainage!=='LAND'||shore<10||!['STONE_AND_SPARSE_SOIL','COASTAL_SOIL'].includes(material)||forest>=.36)return 0;
       return clamp(.10+.28*(material==='STONE_AND_SPARSE_SOIL'?1:0)+.16*(slopeClass==='MODERATE'?1:0),0,.52);
@@ -107,42 +107,44 @@ function zoneMultiplier(type,environment){
   const zone=environment.spatialZone;
   if(zone==='OPENING'){
     if(type==='LOW_SHRUB'||type==='SAPLING_YOUNG_GROWTH')return 0;
-    if(type==='GRASS_SEDGE')return 1.24;
-    if(type==='REED_WET_MARGIN')return 1.08;
-    if(type==='DEAD_SPARSE_GROUND')return .92;
-    return .18;
+    if(type==='GRASS_SEDGE')return 1.62;
+    if(type==='REED_WET_MARGIN')return 1.34;
+    if(type==='DEAD_SPARSE_GROUND')return 1.04;
+    return .12;
   }
   if(zone==='EDGE'){
-    if(type==='LOW_SHRUB')return 1.48;
-    if(type==='SAPLING_YOUNG_GROWTH')return 1.62;
-    if(type==='GRASS_SEDGE')return 1.08;
-    if(type==='FOREST_FLOOR_CLUSTER')return .72;
-    return 1.06;
+    if(type==='LOW_SHRUB')return 1.74;
+    if(type==='SAPLING_YOUNG_GROWTH')return 1.86;
+    if(type==='GRASS_SEDGE')return 1.16;
+    if(type==='REED_WET_MARGIN')return 1.24;
+    if(type==='FOREST_FLOOR_CLUSTER')return .56;
+    return 1.08;
   }
   if(zone==='TRANSITION'){
-    if(type==='LOW_SHRUB')return 1.22;
-    if(type==='SAPLING_YOUNG_GROWTH')return 1.18;
-    if(type==='GRASS_SEDGE')return 1.20;
-    if(type==='FOREST_FLOOR_CLUSTER')return .74;
-    return 1.04;
+    if(type==='LOW_SHRUB')return 1.34;
+    if(type==='SAPLING_YOUNG_GROWTH')return 1.30;
+    if(type==='GRASS_SEDGE')return 1.44;
+    if(type==='REED_WET_MARGIN')return 1.28;
+    if(type==='FOREST_FLOOR_CLUSTER')return .62;
+    return 1.08;
   }
-  if(type==='LOW_SHRUB')return .66;
-  if(type==='SAPLING_YOUNG_GROWTH')return .52;
-  if(type==='GRASS_SEDGE')return .58;
-  if(type==='FOREST_FLOOR_CLUSTER')return 1.26;
-  if(type==='DEAD_SPARSE_GROUND')return .66;
-  return .94;
+  if(type==='LOW_SHRUB')return .50;
+  if(type==='SAPLING_YOUNG_GROWTH')return .38;
+  if(type==='GRASS_SEDGE')return .46;
+  if(type==='FOREST_FLOOR_CLUSTER')return 1.38;
+  if(type==='DEAD_SPARSE_GROUND')return .62;
+  return .98;
 }
 
 function standMultiplier(type,environment){
   switch(environment.standClass){
-    case 'DENSE_WOODLAND':return type==='FOREST_FLOOR_CLUSTER'?1.18:(type==='GRASS_SEDGE'?.72:1);
+    case 'DENSE_WOODLAND':return type==='FOREST_FLOOR_CLUSTER'?1.24:(type==='GRASS_SEDGE'?.66:1);
     case 'GROVE':return 1;
-    case 'COASTAL_SCRUB':return type==='LOW_SHRUB'?1.18:(type==='GRASS_SEDGE'?1.12:1);
-    case 'WET_MARGIN_RIPARIAN':return type==='REED_WET_MARGIN'?1.34:(type==='GRASS_SEDGE'?1.12:1);
-    case 'EXPOSED_UPLAND':return type==='DEAD_SPARSE_GROUND'?1.28:(type==='FOREST_FLOOR_CLUSTER'?.48:.92);
-    case 'SPARSE_TRANSITION':return type==='GRASS_SEDGE'?1.18:(type==='FOREST_FLOOR_CLUSTER'?.58:1);
-    case 'ECOLOGICAL_OPEN':return type==='GRASS_SEDGE'?1.18:(type==='LOW_SHRUB'||type==='SAPLING_YOUNG_GROWTH'?0:.84);
+    case 'COASTAL_SCRUB':return type==='LOW_SHRUB'?1.24:(type==='GRASS_SEDGE'?1.18:1);
+    case 'WET_MARGIN_RIPARIAN':return type==='REED_WET_MARGIN'?1.95:(type==='GRASS_SEDGE'?1.30:(type==='LOW_SHRUB'?.82:1));
+    case 'EXPOSED_UPLAND':return type==='DEAD_SPARSE_GROUND'?1.34:(type==='FOREST_FLOOR_CLUSTER'?.44:.92);
+    case 'SPARSE_TRANSITION':return type==='GRASS_SEDGE'?1.26:(type==='FOREST_FLOOR_CLUSTER'?.52:1);
+    case 'ECOLOGICAL_OPEN':return type==='GRASS_SEDGE'?1.32:(type==='LOW_SHRUB'||type==='SAPLING_YOUNG_GROWTH'?0:.84);
     default:return 1;
   }
 }
@@ -174,8 +176,11 @@ function selectClass(seed,ecology,environment,trees){
   const reed=eligible.find(candidate=>candidate.type==='REED_WET_MARGIN');
   if(reed){
     const wet=Math.max(Number(ecology.hydrology?.riverWeight)||0,Number(ecology.hydrology?.lakeWeight)||0);
+    const shore=Math.max(0,Number(ecology.shorelineDistance)||0);
     const wetAffinity=clamp((wet-.08)/.37,0,1);
-    const reedOpportunity=clamp(reed.density*(.82+.18*wetAffinity),0,.98);
+    const shoreAffinity=clamp((260-shore)/180,0,1);
+    const riparianBoost=environment.standClass==='WET_MARGIN_RIPARIAN'?1.22:1;
+    const reedOpportunity=clamp(reed.density*riparianBoost*(1.02+.30*wetAffinity+.16*shoreAffinity),0,.98);
     if(rand(seed,CLASS_SALT.REED_WET_MARGIN+211)<=reedOpportunity){
       return {type:'REED_WET_MARGIN',density:reed.density};
     }
@@ -189,9 +194,11 @@ function selectClass(seed,ecology,environment,trees){
     const salt=CLASS_SALT[candidate.type];
     const densityScore=candidate.density*(.84+.16*rand(seed,salt));
     const preference=candidate.type===preferredType?.72:0;
-    const edgeYoungBonus=environment.spatialZone==='EDGE'&&['LOW_SHRUB','SAPLING_YOUNG_GROWTH'].includes(candidate.type)?.52:0;
-    const interiorFloorBonus=environment.spatialZone==='INTERIOR'&&candidate.type==='FOREST_FLOOR_CLUSTER'?.42:0;
-    const score=densityScore+preference+edgeYoungBonus+interiorFloorBonus;
+    const edgeYoungBonus=environment.spatialZone==='EDGE'&&['LOW_SHRUB','SAPLING_YOUNG_GROWTH'].includes(candidate.type)?.74:0;
+    const transitionGroundBonus=environment.spatialZone==='TRANSITION'&&['GRASS_SEDGE','LOW_SHRUB','SAPLING_YOUNG_GROWTH'].includes(candidate.type)?.30:0;
+    const openingGroundBonus=environment.spatialZone==='OPENING'&&candidate.type==='GRASS_SEDGE'?.68:0;
+    const interiorFloorBonus=environment.spatialZone==='INTERIOR'&&candidate.type==='FOREST_FLOOR_CLUSTER'?.54:0;
+    const score=densityScore+preference+edgeYoungBonus+transitionGroundBonus+openingGroundBonus+interiorFloorBonus;
     if(score>selectedScore){selected=candidate.type;selectedDensity=candidate.density;selectedScore=score;}
   }
   if(rand(seed,CLASS_SALT[selected]+101)>selectedDensity)return null;

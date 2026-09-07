@@ -1,149 +1,154 @@
 {
   "schema": "COMPASS_MAIN_HOMEPAGE_CINEMATIC_MEDIA_CUSTODY_v1",
-  "status": "PREHOOK_AUDIT_REPAIR_CANDIDATE_SOURCE_SCOPE_PASS_PENDING_RENDERED_REVIEW",
+  "status": "R8_SUCCESSOR_PLAYER_BOUND_TO_R7_V2_MASTER",
   "film": "Welcome to Diamond Gate Bridge",
-  "currentMainIntegrationBase": "8697c502c9fe9422f74e1f6858c6ed462ea8e981",
-  "archivedCinematographicAncestor": "73d10c2ee4a1800e9327eca4d5ef8902e6484dcc",
-  "cloneFloorCommit": "99591457722b9d2f9e23bd4e074d3868a4bc0c19",
-  "adoptedCandidate": "ebcfef7086944e1991f0df2e6bf4553b16ca14ea",
-  "adoptionMerge": "8697c502c9fe9422f74e1f6858c6ed462ea8e981",
-  "branch": "repair/compass-cinematic-prehook-audit-repair-20260905-001",
-  "specificationCommit": "88473442959299d6f6af82396917f0578074cab2",
-  "storyboardIssue": 2756,
+  "operationId": "COMPASS_V2_R6_R10_MASTER_PLAYER_RELEASE_20260907_001",
+  "lockGeneration": 1987,
+  "governingMain": "24eba044e3c4943756ee2412cb81f35a440f9608",
+  "targetBranch": "compass/v2-r6-r10-master-player-release-20260907-001",
+  "r7CustodyCommit": "650a0ce31d5667821fc6c0827cd95ee1874c4ba8",
   "mutationClass": "BOUNDED_PAGE_RELEASE",
-  "activationState": "INTRO_PRESENT_BUT_UNHOOKED",
+  "activationState": "SUCCESSOR_BRANCH_REVIEW_ONLY_NOT_LIVE",
   "masterDurationMs": 38000,
   "entryPrerollMs": 4350,
+  "entryPrerollCountedInMaster": false,
   "shotCount": 8,
   "animationRetimingPerformed": false,
+  "master": {
+    "path": "assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4",
+    "bytes": 2723640,
+    "sha256": "0326240cf1d3d8cf7753b91ea1cd0206378b8db7e37590b8bb39c37f6b50f444",
+    "gitBlob": "b48bc48e531c3eb29bd1a94a91725badd30186f5",
+    "durationMs": 38000,
+    "custody": "R7_GIT_READBACK_PASS_CLOSED"
+  },
+  "entry": {
+    "sourceCommit": "8697c502c9fe9422f74e1f6858c6ed462ea8e981",
+    "durationMs": 4350,
+    "countedInMaster": false,
+    "law": "SELECTED_CONTROL_CELLS_BECOME_SUCCESSOR_STAR_AND_COMPASS_MATTER",
+    "tessellateStartMs": 140,
+    "tessellateEndMs": 820,
+    "cellTravelEndMs": 2300,
+    "compassStartMs": 1700,
+    "compassEndMs": 3550,
+    "zeroBlankHandoff": "FIRST_V2_VIDEO_FRAME_PRESENTED_BEFORE_ENTRY_MATERIAL_CLEARS",
+    "firstFrameGate": "requestVideoFrameCallback_OR_playing_plus_animation_frame_fallback"
+  },
   "shots": [
-    {"id":"S01","startMs":0,"endMs":4500,"category":"ARRIVAL"},
-    {"id":"S02","startMs":4500,"endMs":9500,"category":"ORIENTATION"},
-    {"id":"S03","startMs":9500,"endMs":14500,"category":"GUIDED INTRODUCTION"},
-    {"id":"S04","startMs":14500,"endMs":19500,"category":"RESEARCH & READINESS"},
-    {"id":"S05","startMs":19500,"endMs":25500,"category":"MIRRORLAND"},
-    {"id":"S06","startMs":25500,"endMs":30500,"category":"AUDRALIA"},
-    {"id":"S07","startMs":30500,"endMs":34000,"category":"ENGAGE"},
-    {"id":"S08","startMs":34000,"endMs":38000,"category":"HANDOFF"}
+    {
+      "id": "S01",
+      "startMs": 0,
+      "endMs": 4500,
+      "category": "ARRIVAL"
+    },
+    {
+      "id": "S02",
+      "startMs": 4500,
+      "endMs": 9500,
+      "category": "ORIENTATION"
+    },
+    {
+      "id": "S03",
+      "startMs": 9500,
+      "endMs": 14500,
+      "category": "GUIDED INTRODUCTION"
+    },
+    {
+      "id": "S04",
+      "startMs": 14500,
+      "endMs": 19500,
+      "category": "RESEARCH & READINESS"
+    },
+    {
+      "id": "S05",
+      "startMs": 19500,
+      "endMs": 25500,
+      "category": "MIRRORLAND"
+    },
+    {
+      "id": "S06",
+      "startMs": 25500,
+      "endMs": 30500,
+      "category": "AUDRALIA"
+    },
+    {
+      "id": "S07",
+      "startMs": 30500,
+      "endMs": 34000,
+      "category": "ENGAGE"
+    },
+    {
+      "id": "S08",
+      "startMs": 34000,
+      "endMs": 38000,
+      "category": "HANDOFF"
+    }
   ],
   "surfaces": {
-    "host": {"path":"assets/compass/compass.orientation-cinematic.js","blob":"5e04ede8e679a83db493cd9142a1fde2a58a400e","role":"ARCHIVED_APPROVED_MASTER_CLOCK_AND_ENTRY"},
-    "css": {"path":"assets/compass/compass.orientation-cinematic.css","blob":"a4706ab61783a278fcd0c3d8b002a862426b13e4","role":"APPROVED_FILM_LAYOUT_PLUS_NUMBERED_DOMINANT_CONTEXT"},
-    "primaryRenderer": {"path":"assets/compass/compass.orientation-cinematic.render.js","blob":"fe05813cf1d43817e789ce790435c84a5970b2d7","role":"ARCHIVED_S01_TO_S05_PLUS_CANONICAL_S06_WORLD"},
-    "media": {"path":"assets/compass/compass.orientation-cinematic.media.js","blob":"5c718357ca122f51b1b9cc238ef2e54eadf9ec6a","role":"ARCHIVED_38S_MEDIA_AND_SHOT_CONTRACT_PLUS_PREHOOK_TOUR_RESTART_GUARD"},
-    "finalRenderer": {"path":"assets/compass/compass.orientation-cinematic.final.js","blob":"1af6d8dc0e1cfc8ae7f6e46b962db2629881fbff","role":"TRANSPARENT_BRAIN_TROPHY_PHASE3_HOUSE_AND_S08_HANDOFF"},
-    "verifier": {"path":"assets/compass/compass.homepage-cinematic.verify.mjs","blob":"2cbec28cec659d8e266e27021adfde25c70b9ecf","role":"PREHOOK_AUDIT_REPAIR_STATIC_VERIFIER"},
-    "indexBinding": {"path":"index.html","blob":"9c1c1e815d3847421ff837601dabea12020200e4","role":"UNCHANGED_ADOPTED_REQUEST_IDENTITY"}
-  },
-  "delta": {
-    "storyboardContext": {
-      "stateOwner":"EXISTING_HOST_DATA_SHOT_ID_ONLY",
-      "secondaryClock":false,
-      "secondaryStateMachine":false,
-      "numbered":true,
-      "categorized":true,
-      "dominantContrast":true,
-      "transitionLaw":"CURRENT_TEXT_OUT_BEFORE_CURRENT_SCENE; NEXT_TEXT_IN_BEFORE_NEXT_SCENE",
-      "oldShotSpecificCopyHiddenWhereItCompetes":true
+    "host": {
+      "path": "assets/compass/compass.orientation-cinematic.js",
+      "blob": "6a1fc0820b5d69e2b801ee996ada95f137ce0a45",
+      "role": "R8_THIN_V2_PLAYER_PLUS_RECOVERED_4350MS_ENTRY"
     },
-    "brain": {
-      "geometry":"PRESERVED",
-      "source":"assets/compass/compass.hra-brain-scene.js@c26603744e55c8ede2c82944bd0fd117d04dcbdb",
-      "presentation":"TRANSPARENT_CINEMATIC_ISOLATION",
-      "whiteBackgroundRemoved":true
+    "css": {
+      "path": "assets/compass/compass.orientation-cinematic.css",
+      "blob": "160ffa61cde2e71049a09efb8b36ef6be1bca85d",
+      "role": "R8_THIN_PLAYER_AND_RECOVERED_ENTRY_PRESENTATION"
     },
-    "trophy": {
-      "geometry":"PRESERVED",
-      "source":"assets/compass/compass.trophy-scene.js@d281e18b06128671ffe2a19e8fdb272cc5544e31",
-      "presentation":"TRANSPARENT_CINEMATIC_ISOLATION",
-      "whiteBackgroundRemoved":true
+    "media": {
+      "path": "assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4",
+      "blob": "b48bc48e531c3eb29bd1a94a91725badd30186f5",
+      "role": "R7_CLOSED_IMMUTABLE_V2_MASTER"
     },
-    "house": {
-      "source":"assets/compass/compass.house-scene.js@a82e3c963a10808b9f8f1922faab45155ea4a62b",
-      "phase3":"assets/manor-blueprint/manor.estate.gothic-detail-phase3.mjs@38bc8fa60a251681cb5484926409290f66460ad0",
-      "contract":"MIRROR_MANOR_GOTHIC_ARCHITECTURAL_DETAIL_PHASE3_v1",
-      "characterScenePresent":false,
-      "hiddenLegacyDonorCaptionPresent":true,
-      "hiddenLegacyDonorCaptionDisposition":"NONVISIBLE_CLEANUP_DEFERRED_NOT_PART_OF_TRANSITION_REPAIR"
-    },
-    "audralia": {
-      "source":"showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs@872d20b17bb0cd89d9613ca0262b25350890a617",
-      "constructor":"createMapWideEnvironmentRenderer",
-      "custom2DProjectionPresent":false,
-      "canonicalWorldRendererUsed":true
-    },
-    "cacheIdentity": {
-      "css":"/assets/compass/compass.orientation-cinematic.css?v=approved-film-delta-38s&cb=a4706ab61783a278",
-      "host":"/assets/compass/compass.orientation-cinematic.js?v=approved-film-delta-38s&cb=5e04ede8e679a83d",
-      "pageRemainderMutationAuthorized":false
+    "r7CustodyProof": {
+      "path": "assets/compass/cinematic-media/v2-r6-r10-release-20260907-001/r7-custody-proof.v1.json",
+      "role": "R7_PASS_CLOSED_AUTHORITY"
     }
   },
-  "preHookAuditRepair": {
-    "defect":"TOUR_CONTEXT_ANIMATION_IDENTITY_WAS_REUSED_ACROSS_SHOT_BOUNDARIES_AND_DURATION_CHANGES_DO_NOT_GUARANTEE_RESTART",
-    "repair":"UNIQUE_S01_TO_S08_CURRENT_ANIMATION_NAMES_AND_S01_TO_S07_NEXT_ANIMATION_NAMES_INSTALLED_BY_EXISTING_MEDIA_MODULE_BEFORE_MASTER_PLAYBACK",
-    "coverage":"EVERY_S01_TO_S08_SHOT_TRANSITION",
-    "secondaryClockAdded":false,
-    "secondaryStateMachineAdded":false,
-    "hostChanged":false,
-    "cssChanged":false,
-    "finalRendererChanged":false,
-    "indexChanged":false,
-    "timingChanged":false,
-    "sourceAuthorityChanged":false,
-    "hookStateChanged":false,
-    "exactPaths":[
-      "assets/compass/compass.orientation-cinematic.media.js",
-      "assets/compass/compass.homepage-cinematic.verify.mjs",
-      "assets/compass/cinematic-media/manifest.v1.json"
-    ]
+  "invariants": {
+    "directV1ToV2Only": true,
+    "masterClockAdded": false,
+    "secondaryCinematicRuntimeAdded": false,
+    "navigationWrites": false,
+    "analyticsWrites": false,
+    "historyWrites": false,
+    "entryClearsBeforeFirstV2Frame": false
   },
-  "adoptedCandidateExactDiffPaths": [
-    "assets/compass/cinematic-media/manifest.v1.json",
-    "assets/compass/compass.homepage-cinematic.verify.mjs",
-    "assets/compass/compass.orientation-cinematic.css",
-    "assets/compass/compass.orientation-cinematic.js",
-    "assets/compass/compass.orientation-cinematic.media.js",
-    "assets/compass/compass.orientation-cinematic.render.js",
-    "index.html"
-  ],
-  "exactDiffPaths": [
-    "assets/compass/compass.orientation-cinematic.media.js",
-    "assets/compass/compass.homepage-cinematic.verify.mjs",
-    "assets/compass/cinematic-media/manifest.v1.json"
-  ],
   "protectedUnchanged": [
+    "assets/compass/cinematic-media/compass-main-orientation-final-v1.mp4",
     "assets/compass/compass.controller.js",
     "assets/compass/compass.crystals.js",
-    "assets/compass/compass.orientation-cinematic.js",
-    "assets/compass/compass.orientation-cinematic.css",
-    "assets/compass/compass.orientation-cinematic.render.js",
-    "assets/compass/compass.orientation-cinematic.final.js",
-    "index.html",
-    "navigation",
-    "analytics",
-    "history",
+    "assets/compass/compass.readiness-context-v1.js",
+    "assets/compass/compass.capability-carousel.core.js",
+    "assets/compass/compass.capability-carousel.js",
+    "assets/compass/compass.mirrorland-window.js",
     "characters/**",
-    "showroom/globe/h-earth/**",
-    "h-earth-3d/**"
+    "showroom/**",
+    "navigation/**",
+    "analytics/**"
   ],
   "forbidden": [
     "NEW_CINEMATIC_ARCHITECTURE",
     "SECOND_MASTER_CLOCK",
-    "SECOND_STATE_MACHINE",
-    "CHARACTER_SCENE",
-    "CUSTOM_AUDRALIA_2D_RECONSTRUCTION",
-    "SHOT_RETIMING_BEFORE_RENDERED_REVIEW",
+    "SECOND_CINEMATIC_STATE_MACHINE",
+    "V1_MASTER_OVERWRITE",
+    "PROTECTED_RUNTIME_MUTATION",
     "NAVIGATION_AUTHORITY_DELTA",
     "APPLICATION_STATE_AUTHORITY_DELTA",
     "ANALYTICS_DELTA",
-    "ORDINARY_ENTRY_HOOK_DURING_PREHOOK_REPAIR"
+    "MAIN_MUTATION_BEFORE_R9_OWNER_ACCEPTANCE",
+    "R10_RELEASE_BEFORE_R9_OWNER_ACCEPTANCE"
   ],
   "qualification": {
-    "sourceAudit":"PREHOOK_CODE_AUDIT_REPAIR_SOURCE_SCOPE_PASS",
-    "nativeVerifierExecution":"NOT_PERFORMED_NO_NATIVE_CHECKOUT_IN_CURRENT_EXECUTION_SURFACE",
-    "renderedDesktop":"PENDING",
-    "renderedTablet":"PENDING",
-    "renderedPhone":"PENDING",
-    "ordinaryEntryHook":"BLOCKED_UNTIL_RENDERED_QUALIFICATION"
+    "r8Source": "PERSISTENCE_CANDIDATE",
+    "exactCommittedReadback": "PENDING",
+    "static": "PENDING_R9",
+    "browserDesktop": "PENDING_R9",
+    "browserTablet": "PENDING_R9",
+    "browserPortrait": "PENDING_R9",
+    "reducedMotion": "PENDING_R9",
+    "ownerAcceptance": "NOT_YET_REQUESTED",
+    "r10": "BLOCKED_BY_R9_OWNER_ACCEPTANCE"
   }
 }

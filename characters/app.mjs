@@ -74,7 +74,7 @@ const norm=a=>{const l=Math.hypot(...a)||1;return scale(a,1/l)};
 const bezier=(a,b,c,d,t)=>{const q=1-t;return a.map((_,i)=>q*q*q*a[i]+3*q*q*t*b[i]+3*q*t*t*c[i]+t*t*t*d[i]);};
 const shorelineZ=x=>step9ShorelineZ(x);
 const terrainHeight=(x,z)=>step9TerrainHeight(x,z);
-const SURFACE_CONTAINMENT=Object.freeze({padX:compact?420:620,padNearZ:compact?360:520,drop:72,waterMarginX:compact?520:760,waterFarZ:compact?360:520});
+const SURFACE_CONTAINMENT=Object.freeze({padX:compact?900:1200,padNearZ:compact?800:1000,drop:96,waterMarginX:compact?1050:1400,waterFarZ:compact?800:1000});
 const containedTerrainHeight=(x,z)=>{const cx=clamp(x,frame.xMinimum,frame.xMaximum),cz=clamp(z,frame.zMinimum,frame.zMaximum),base=terrainHeight(cx,cz),outsideX=x<frame.xMinimum?(frame.xMinimum-x)/SURFACE_CONTAINMENT.padX:x>frame.xMaximum?(x-frame.xMaximum)/SURFACE_CONTAINMENT.padX:0,outsideNear=z<frame.zMinimum?(frame.zMinimum-z)/SURFACE_CONTAINMENT.padNearZ:0,fade=clamp(Math.max(outsideX,outsideNear),0,1);return base-SURFACE_CONTAINMENT.drop*fade*fade;};
 const VS=`#version 300 es\nprecision highp float;layout(location=0) in vec3 aPos;layout(location=1) in vec3 aNormal;uniform mat4 uVP;out vec3 vPos;out vec3 vNormal;out float vH;void main(){vPos=aPos;vNormal=aNormal;vH=aPos.y;gl_Position=uVP*vec4(aPos,1.0);}`;
 function makeProgram(vs,fs){const compile=(type,src)=>{const sh=gl.createShader(type);gl.shaderSource(sh,src);gl.compileShader(sh);if(!gl.getShaderParameter(sh,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(sh));return sh};const p=gl.createProgram();gl.attachShader(p,compile(gl.VERTEX_SHADER,vs));gl.attachShader(p,compile(gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(p));return p;}

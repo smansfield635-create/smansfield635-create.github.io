@@ -24,25 +24,25 @@ const hash32=value=>{
 const rand=(seed,k=0)=>hash32(seed^Math.imul(k+1,0x9e3779b1))/4294967295;
 
 const GRID=freeze({
-  columns:84,
-  rows:62,
+  columns:112,
+  rows:84,
   insetFraction:.025,
-  jitterFraction:.30,
+  jitterFraction:.24,
   minimumForestWeight:.08,
   minimumShorelineDistance:12,
   exactTargetCount:818,
   reservedEdgeCount:72,
   reservedTransitionCount:54,
-  standMassExponent:2.72,
-  standCoreScale:96,
-  territorialCoreExponent:1.35,
+  standMassExponent:2.90,
+  standCoreScale:112,
+  territorialCoreExponent:1.50,
   wetMarginSuppression:.34
 });
 
 export const CANONICAL_VEGETATION_POPULATION_CONTRACT=freeze({
   schema:'MIRRORLAND_CANONICAL_VEGETATION_POPULATION_CONTRACT_v1',
-  operationId:'MIRRORLAND_GEN1975_MATERIAL_WORLD_READING_SUCCESSOR_20260906_002',
-  stage:'CONTIGUOUS_TERRITORIAL_CANOPY_SUCCESSOR',
+  operationId:'MIRRORLAND_GEN1980_ENVIRONMENT_MATERIAL_SUCCESSOR_20260907_001',
+  stage:'CONTIGUOUS_TERRITORIAL_CANOPY_ENVIRONMENT_SUCCESSOR',
   frameAuthority:'characters/gratitude-geography.adapter.mjs#GRATITUDE_DEVELOPMENT_FRAME',
   frameId:GRATITUDE_DEVELOPMENT_FRAME.frameId,
   ecologyAuthority:VEGETATION_ECOLOGY_AUTHORITY.schema,
@@ -95,13 +95,13 @@ function createCandidate(row,column,envelope,insetX,insetZ,usableWidth,usableDep
   const environment=resolveVegetationEnvironment(ecology.world.x,ecology.world.z);
   if(environment.spatialZone==='OPENING'||environment.canopyDensity<=0)return null;
   const ecologySupport=clamp(.46+.54*forestWeight,0,1);
-  const stableVariation=.90+.10*rand(seed,3);
+  const stableVariation=.92+.08*rand(seed,3);
   const wetAffinity=wetMarginAffinity(ecology);
   const hydrologyCanopyFactor=1-GRID.wetMarginSuppression*wetAffinity;
   const selectionScore=environment.canopyDensity*ecologySupport*stableVariation*hydrologyCanopyFactor;
   const coreAffinity=clamp(environment.standBoundaryDistance/GRID.standCoreScale,0,1);
   const coreMass=Math.pow(coreAffinity,GRID.territorialCoreExponent);
-  const territorialScore=selectionScore*(.56+.88*coreMass)*(.92+.22*forestWeight);
+  const territorialScore=selectionScore*(.46+1.02*coreMass)*(.90+.24*forestWeight);
   return {
     id:`veg-r${row}-c${column}`,
     lattice:{row,column,seed},
@@ -245,7 +245,7 @@ function createCanonicalPopulation(){
     candidateCount:candidates.length,
     selectedCount:instances.length,
     rejectedEligibleCount:candidates.length-instances.length,
-    selectionLaw:'EXACT_818_DENSE_LATTICE_RESERVED_EDGE_TRANSITION_STAND_LOCAL_CORE_WEIGHTED_INTERIOR_MASSING',
+    selectionLaw:'EXACT_818_CONTIGUOUS_DENSE_LATTICE_RESERVED_EDGE_TRANSITION_STAND_LOCAL_CORE_WEIGHTED_INTERIOR_MASSING',
     standCandidateCounts:freeze(standCandidateCounts),standSelectedCounts:freeze(standSelectedCounts),classCandidateCounts:freeze(classCandidateCounts),classSelectedCounts:freeze(classSelectedCounts),zoneCandidateCounts:freeze(zoneCandidateCounts),zoneSelectedCounts:freeze(zoneSelectedCounts),
     compositionFeatherCandidateCount:compositionFeatherCandidates.length,
     compositionFeatherSelectedCount:compositionFeatherCandidates.filter(x=>selectedSet.has(x.id)).length,

@@ -1,0 +1,134 @@
+name: Characters Gen1980 Environment Material Successor v1
+
+on:
+  pull_request:
+    branches: [characters/material-world-reading-successor-20260906-002]
+    paths:
+      - 'characters/vegetation-population.mjs'
+      - 'characters/vegetation-understory.mjs'
+      - 'characters/app.mjs'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/gen1980-environment-material-successor-contract.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-gen1980-environment-material-successor.v1.mjs'
+      - '.github/workflows/characters-gen1980-environment-material-successor-v1.yml'
+
+permissions:
+  contents: read
+
+env:
+  OPERATION_ID: MIRRORLAND_GEN1980_ENVIRONMENT_MATERIAL_SUCCESSOR_20260907_001
+  LOCK_GENERATION: '1983'
+  PRODUCT_SUBSTRATE: 29b14204d545c93fd95a8a60f3c36eb7449ffb16
+  GOVERNING_MAIN: 24eba044e3c4943756ee2412cb81f35a440f9608
+  V5_REPRESENTATION_BLOB: f3b64eb1ffc1c1bc8e908ff96eb6c833b6bc928d
+
+jobs:
+  exact-head-sparse-environment-qualification:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Materialize exact sparse-index candidate
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git sparse-checkout init --cone --sparse-index
+          git sparse-checkout set \
+            .github/workflows \
+            control-plane/whole-estate/characters-reconstruction-v1 \
+            characters \
+            h-earth-3d/terrain \
+            h-earth-3d/integration \
+            h-earth-3d/control-plane/run-8 \
+            h-earth-3d/cells \
+            h-earth-3d/zones \
+            h-earth-3d/objects \
+            showroom/globe/h-earth/render
+          git -c protocol.version=2 fetch --filter=blob:none --no-tags --depth=80 origin "$HEAD_SHA"
+          git checkout --detach "$HEAD_SHA"
+          test "$(git rev-parse HEAD^{commit})" = "$HEAD_SHA"
+          git cat-file -e "$PRODUCT_SUBSTRATE^{commit}"
+          test "$(git config --bool core.sparseCheckout)" = "true"
+          test "$(git config --bool index.sparse)" = "true"
+          echo "EXACT_HEAD=$HEAD_SHA" >> "$GITHUB_ENV"
+
+      - name: Verify sparse locality and exact identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          SPARSE_ENTRIES="$(git ls-files --sparse | wc -l | tr -d ' ')"
+          MATERIALIZED="$(find . -type f ! -path './.git/*' | wc -l | tr -d ' ')"
+          test "$SPARSE_ENTRIES" -lt 5000
+          test "$MATERIALIZED" -lt 2500
+          for path in \
+            characters/app.mjs \
+            characters/vegetation-population.mjs \
+            characters/vegetation-understory.mjs \
+            control-plane/whole-estate/characters-reconstruction-v1/gen1980-environment-material-successor-contract.v1.json \
+            control-plane/whole-estate/characters-reconstruction-v1/verify-gen1980-environment-material-successor.v1.mjs \
+            .github/workflows/characters-gen1980-environment-material-successor-v1.yml \
+            h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js \
+            h-earth-3d/zones/ground-cell-001.landscape-lattice.js \
+            h-earth-3d/cells/ground-cell-001.js \
+            h-earth-3d/objects/ground-cell-001.objects.js \
+            showroom/globe/h-earth/render/geometry-kernel.js; do test -f "$path"; done
+          test "$(git hash-object characters/vegetation-representation.mjs)" = "$V5_REPRESENTATION_BLOB"
+          BAD_TOP_DIRS="$(find . -mindepth 1 -maxdepth 1 -type d ! -name .git ! -name characters ! -name control-plane ! -name .github ! -name h-earth-3d ! -name showroom -printf '%f\n' | sort)"
+          test -z "$BAD_TOP_DIRS"
+          mkdir -p "$RUNNER_TEMP/environment-material-successor"
+          cat > "$RUNNER_TEMP/environment-material-successor/environment-material-successor-scope-receipt.json" <<JSON
+          {
+            "schema":"MIRRORLAND_GEN1983_SPARSE_SCOPE_RECEIPT_v1",
+            "result":"PASS_CLOSED",
+            "operationId":"$OPERATION_ID",
+            "lockGeneration":$LOCK_GENERATION,
+            "exactHead":"$EXACT_HEAD",
+            "productSubstrate":"$PRODUCT_SUBSTRATE",
+            "checkoutLaw":"EXACT_REF_BLOB_FILTERED_CONE_SPARSE_INDEX_ONLY",
+            "sparseIndex":true,
+            "sparseEntries":$SPARSE_ENTRIES,
+            "materializedFiles":$MATERIALIZED,
+            "topLevelDirectoryLocality":[".github","characters","control-plane","h-earth-3d","showroom"],
+            "runtimeDependencyClosure":["h-earth-3d/terrain","h-earth-3d/integration","h-earth-3d/control-plane/run-8","h-earth-3d/cells","h-earth-3d/zones","h-earth-3d/objects","showroom/globe/h-earth/render"],
+            "coneModeRootFilesPermitted":true
+          }
+          JSON
+          test -z "$(git status --porcelain)"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run exact-head independent environment verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          node control-plane/whole-estate/characters-reconstruction-v1/verify-gen1980-environment-material-successor.v1.mjs \
+            --output "$RUNNER_TEMP/environment-material-successor/environment-material-successor-mechanical-receipt.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const file=path.join(process.env.RUNNER_TEMP,'environment-material-successor','environment-material-successor-mechanical-receipt.json');
+          const r=JSON.parse(fs.readFileSync(file,'utf8'));
+          if(r.schema!=='MIRRORLAND_GEN1980_ENVIRONMENT_MATERIAL_SUCCESSOR_QUALIFICATION_RECEIPT_v1')throw Error('GEN1983_RECEIPT_SCHEMA_INVALID');
+          if(r.result!=='PASS_CLOSED'||r.failCount!==0)throw Error('GEN1983_MECHANICAL_NOT_PASS_CLOSED');
+          if(r.exactHead!==process.env.EXACT_HEAD||r.productSubstrate!==process.env.PRODUCT_SUBSTRATE)throw Error('GEN1983_IDENTITY_MISMATCH');
+          if(r.canopyCount!==818||r.v5RepresentationPreserved!==true)throw Error('GEN1983_PRESERVATION_FAILURE');
+          if(r.materialDisposition!=='UNASSIGNED'||r.materialDispositionAuthority!==false)throw Error('GEN1983_MATERIAL_AUTHORITY_LEAK');
+          NODE
+          test -z "$(git status --porcelain)"
+
+      - name: Upload bounded Gen1983 qualification receipts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gen1983-environment-material-successor-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/environment-material-successor/environment-material-successor-mechanical-receipt.json
+            ${{ runner.temp }}/environment-material-successor/environment-material-successor-scope-receipt.json
+          if-no-files-found: warn
+          retention-days: 90

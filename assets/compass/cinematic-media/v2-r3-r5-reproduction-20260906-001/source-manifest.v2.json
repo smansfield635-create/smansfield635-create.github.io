@@ -1,0 +1,177 @@
+{
+  "acceptedSource": {
+    "capture-source.html": {
+      "gitBlobSha1": "3a065c463c047f176575ef47617b3426afcca5dc",
+      "origin": "BYTE_EXACT_REUSE_FROM_DURABLE_R3_CANDIDATE"
+    },
+    "capture-source.mjs": {
+      "gitBlobSha1": "c08e7a8db3e41d6dee1dbae11c0dd81fe9fd3819",
+      "origin": "BYTE_EXACT_REUSE_FROM_DURABLE_R3_CANDIDATE"
+    }
+  },
+  "authority": {
+    "broadArchaeologyAllowed": false,
+    "prewriteIdentityDisposition": "PREWRITE_IDENTITY_NOT_DURABLY_RECOVERABLE",
+    "r1R2SourceBase": "f6dfa02fbb1d15ee4093d696f4ce3f6fe99a6d9c",
+    "r1SourceAuthorityCommentId": 5562818556,
+    "r2EditorialMapCommentId": 5562864647,
+    "recoveryAdjudicationCommentId": 5563693416,
+    "supersededR3Operation": {
+      "generation": 1979,
+      "operationId": "COMPASS_V2_R3_CAPTURE_SOURCE_RECONSTRUCTION_20260906_001",
+      "terminalDisposition": "SUPERSEDED"
+    }
+  },
+  "carryLaw": {
+    "carryMs": 350,
+    "maxPrecedingImages": 1
+  },
+  "continuity": {
+    "S05_S06": "ONE_IDENTICAL_AUDRALIA_AUTHORITY_PACKET_A1_AND_ONE_PERSISTENT_WORLD_INSTANCE",
+    "S08": "ENDS_ON_LIVE_COMPASS_HANDOFF_SEMANTICS"
+  },
+  "editorialEventMap": {
+    "S01": [
+      250,
+      900,
+      3500,
+      4850
+    ],
+    "S02": [
+      4500,
+      5150,
+      8550,
+      9850
+    ],
+    "S03": [
+      9500,
+      10150,
+      13550,
+      14850
+    ],
+    "S04_A": [
+      14500,
+      15050,
+      16150,
+      16850
+    ],
+    "S04_B": [
+      16500,
+      17050,
+      18550,
+      19850
+    ],
+    "S05": [
+      19500,
+      20150,
+      23150,
+      24850
+    ],
+    "S06": [
+      24500,
+      25050,
+      28050,
+      29350
+    ],
+    "S07_A": [
+      29000,
+      29450,
+      30550,
+      31350
+    ],
+    "S07_B": [
+      31000,
+      31450,
+      32550,
+      33350
+    ],
+    "S07_C": [
+      33000,
+      33450,
+      34550,
+      35350
+    ],
+    "S08": [
+      35000,
+      35400,
+      37200,
+      38000
+    ]
+  },
+  "execution": {
+    "deploymentAuthorized": false,
+    "mergeAuthorized": false,
+    "publicationAuthorized": false,
+    "r4Authorized": true,
+    "r5Authorized": true,
+    "transientLocalAcceptanceAuthority": false
+  },
+  "historicalIdentityRule": "NEW_R4_R5_IDENTITIES_MUST_SUPERSEDE_AND_MUST_NOT_IMPERSONATE_UNRECOVERABLE_PREDECESSOR_BYTES",
+  "operation": {
+    "authorityEffect": "DETACHED_PREPUBLICATION_R3_R4_R5_ONLY",
+    "branch": "compass/v2-r3-r5-reproduction-durable-capture-20260906-001",
+    "generation": 1981,
+    "governingMain": "24eba044e3c4943756ee2412cb81f35a440f9608",
+    "lockLedgerCommit": "a787619cd960edc0b8b45ad7c333c863cd200825",
+    "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:V2:R3_R5_REPRODUCTION_AND_DURABLE_CAPTURE",
+    "operationId": "COMPASS_V2_R3_R5_REPRODUCTION_AND_DURABLE_CAPTURE_20260906_001"
+  },
+  "profile": {
+    "frameCount": 1140,
+    "frameRate": 30,
+    "frameTimeRule": "ROUND(frameIndex*1000/30)",
+    "lastFrameTimeMs": 37967,
+    "masterDurationMs": 38000,
+    "seekPrecision": "INTEGER_MILLISECONDS",
+    "viewport": {
+      "height": 720,
+      "width": 1280
+    }
+  },
+  "protectedSurfaces": {
+    "includes": [
+      "Compass controller",
+      "Compass crystals",
+      "readiness",
+      "capability",
+      "Mirrorland",
+      "Audralia",
+      "Brain",
+      "Trophy",
+      "House",
+      "navigation",
+      "analytics"
+    ],
+    "mode": "READ_ONLY"
+  },
+  "r3Candidate": {
+    "acceptanceRule": "NOT_ACCEPTED_UNTIL_PERSISTED_EXACT_COMMIT_READBACK_AND_INDEPENDENT_VERIFICATION_PASS",
+    "blobs": {
+      "capture-source.html": "3a065c463c047f176575ef47617b3426afcca5dc",
+      "capture-source.mjs": "c08e7a8db3e41d6dee1dbae11c0dd81fe9fd3819",
+      "source-manifest.v1.json": "e96caba658d50baba5fcd013731b17ce3595e3fd",
+      "verify.mjs": "ca65e5b3abf451f6cfbf42e1b1ae56215cbbda5f"
+    },
+    "disposition": "SEMANTICALLY_COMPLIANT_SELECTED_FOR_ATOMIC_PERSISTENCE",
+    "reconstructionPerformed": false,
+    "sourceCommit": "55db08e8a1c47ed95029314dcae825a56c984b72"
+  },
+  "schema": "COMPASS_V2_R3_R5_DURABLE_REPRODUCTION_SOURCE_MANIFEST_v2",
+  "sourceAuthorityBindings": {
+    "audraliaApprovedModelAuthority": "1d45379f81ea4089e9c5f3d7d9688e702be9add3",
+    "audraliaRenderer": "872d20b1",
+    "audraliaSnapshotTree": "88f8a247",
+    "brainScene": "c26603744e55c8ede2c82944bd0fd117d04dcbdb",
+    "chapterOneContract": "9813c60f",
+    "chapterOneIndex": "c7cecb61",
+    "compassController": "568a6b2c",
+    "compassCosmos": "4fe781df",
+    "compassCrystals": "cd2cbad0",
+    "houseScene": "a82e3c96",
+    "mirrorlandSharedGeometry": "fb3ee8ab",
+    "mirrorlandWindow": "f99d3ffe",
+    "readiness": "dd6220df",
+    "trophyScene": "d281e18b"
+  },
+  "transitionLaw": "TEXT_IN < IMAGE_IN < TEXT_OUT < IMAGE_OUT"
+}

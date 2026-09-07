@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en" data-compass-v2-r3-capture-source>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Compass V2 R3 Detached Capture Source</title>
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color-scheme:dark;background:#02070b}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#02070b;color:#f7f2df}body{display:grid;place-items:center}
+#capture{position:relative;width:100vw;height:100vh;overflow:hidden;isolation:isolate;background:radial-gradient(circle at 50% 20%,#10222c 0,#071018 34%,#02070b 74%);contain:layout paint size style}
+#capture::before{content:"";position:absolute;inset:0;z-index:0;background-image:radial-gradient(circle at 12% 16%,rgba(255,245,214,.82) 0 1px,transparent 1.4px),radial-gradient(circle at 72% 24%,rgba(151,217,232,.62) 0 1px,transparent 1.5px),radial-gradient(circle at 38% 73%,rgba(255,225,151,.58) 0 1px,transparent 1.2px),radial-gradient(circle at 87% 68%,rgba(192,169,242,.52) 0 1px,transparent 1.4px);background-size:211px 173px,263px 227px,307px 251px,347px 293px;opacity:.72}
+.layer{position:absolute;inset:0;opacity:0;pointer-events:none}.image-layer{z-index:4;display:grid;place-items:center}.text-layer{z-index:20;display:grid;align-content:end;justify-items:center;padding:0 6vw 7.2vh;text-align:center;text-shadow:0 3px 20px rgba(0,0,0,.72)}
+.text-layer .kicker{margin:0 0 .45rem;color:rgba(157,219,232,.82);font-size:clamp(.62rem,1.1vw,.78rem);font-weight:850;letter-spacing:.15em;text-transform:uppercase}.text-layer h1,.text-layer h2{margin:0;color:#fff5d7;font:500 clamp(2.4rem,6vw,5.8rem)/.9 Georgia,"Times New Roman",serif;letter-spacing:-.045em}.text-layer p{margin:.75rem 0 0;max-width:48rem;color:rgba(230,238,235,.82);font-size:clamp(.82rem,1.5vw,1.02rem);line-height:1.45}
+.glass{border:1px solid rgba(207,229,233,.16);background:linear-gradient(145deg,rgba(16,32,43,.84),rgba(4,12,19,.72));box-shadow:0 30px 90px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.07);backdrop-filter:blur(16px)}
+#arrival-visual{width:min(74vw,920px);height:min(52vh,360px);border-radius:50%;position:relative;background:radial-gradient(ellipse at center,rgba(109,203,222,.16),rgba(244,214,128,.06) 38%,transparent 70%);filter:drop-shadow(0 25px 60px rgba(0,0,0,.4))}#arrival-visual::before,#arrival-visual::after{content:"";position:absolute;inset:12% 8%;border:1px solid rgba(163,220,231,.16);border-radius:50%;transform:rotate(-8deg)}#arrival-visual::after{inset:27% 18%;border-color:rgba(244,214,128,.24);transform:rotate(11deg)}
+.compass-field{position:relative;width:min(66vh,56vw);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(15,33,45,.96) 0 31%,rgba(3,10,16,.82) 32% 48%,transparent 49%),conic-gradient(from 45deg,rgba(244,214,128,.08),transparent 12.5%,rgba(104,201,221,.06) 25%,transparent 37.5%,rgba(244,214,128,.08) 50%,transparent 62.5%,rgba(104,201,221,.06) 75%,transparent 87.5%,rgba(244,214,128,.08));border:1px solid rgba(222,232,228,.16);box-shadow:0 0 90px rgba(74,179,204,.13),inset 0 0 55px rgba(0,0,0,.55)}.compass-field::before,.compass-field::after{content:"";position:absolute;inset:8%;border:1px solid rgba(244,214,128,.18);transform:rotate(45deg);border-radius:11%}.compass-field::after{inset:23%;border-color:rgba(112,208,226,.22)}.cardinal{position:absolute;color:rgba(255,244,207,.94);font-weight:850;letter-spacing:.16em;font-size:clamp(.62rem,1.2vw,.84rem);text-shadow:0 2px 12px #000}.cardinal.n{top:4%;left:50%;transform:translateX(-50%)}.cardinal.e{right:3%;top:50%;transform:translateY(-50%)}.cardinal.s{bottom:4%;left:50%;transform:translateX(-50%)}.cardinal.w{left:3%;top:50%;transform:translateY(-50%)}.compass-gem{position:absolute;left:50%;top:50%;width:21%;aspect-ratio:1;transform:translate(-50%,-50%) rotate(45deg);border:1px solid rgba(255,241,196,.58);background:linear-gradient(135deg,rgba(253,224,137,.42),rgba(98,205,226,.28) 48%,rgba(144,111,220,.34));box-shadow:0 0 55px rgba(244,214,128,.25),inset 0 0 24px rgba(255,255,255,.08)}
+.chapter-card{width:min(76vw,880px);padding:clamp(1.6rem,4vw,3rem);border-radius:1.6rem;text-align:left}.chapter-card .eyebrow,.research-card .eyebrow{color:rgba(158,220,232,.82);font-weight:850;letter-spacing:.14em;text-transform:uppercase;font-size:.72rem}.chapter-card h3{margin:.55rem 0 .7rem;font:500 clamp(2.5rem,5vw,4.7rem)/.94 Georgia,serif;color:#fff4d1}.chapter-card p{margin:0;color:rgba(232,239,236,.8);font-size:clamp(.9rem,1.5vw,1.08rem);line-height:1.55;max-width:44rem}.chapter-path{margin-top:1.3rem;display:flex;gap:.4rem}.chapter-path span{height:4px;flex:1;border-radius:99px;background:rgba(120,206,224,.18)}.chapter-path span:first-child{background:rgba(244,214,128,.7)}
+.research-card{width:min(72vw,820px);padding:clamp(1.5rem,3vw,2.4rem);border-radius:1.4rem}.research-card h3{margin:.5rem 0 .85rem;color:#fff5d7;font:500 clamp(2rem,4vw,3.8rem)/.95 Georgia,serif}.evidence-rail{display:grid;grid-template-columns:repeat(6,1fr);gap:.35rem}.evidence-rail span{height:clamp(2.8rem,6vw,4rem);display:grid;place-items:center;border:1px solid rgba(218,229,231,.14);border-radius:.65rem;background:rgba(10,24,33,.55);color:rgba(223,235,233,.65);font-weight:800;font-size:.7rem}.evidence-rail span.ready{border-color:rgba(244,214,128,.5);background:rgba(244,214,128,.09);color:#fff1c4}
+#audralia-shell{position:absolute;z-index:3;overflow:hidden;background:#0a1117;box-shadow:0 25px 80px rgba(0,0,0,.55);transform-origin:center}#audralia-world{display:block;width:100%;height:100%;background:#0a1117}#mirrorland-window{position:absolute;z-index:7;left:50%;top:50%;width:auto;height:84vh;max-height:680px;aspect-ratio:2/3;transform:translate(-50%,-50%);opacity:0;filter:drop-shadow(0 18px 45px rgba(0,0,0,.72));pointer-events:none}
+.engagement-card{position:relative;width:min(68vw,760px);height:min(57vh,410px);border-radius:1.5rem;overflow:hidden;display:grid;place-items:center}.engagement-card canvas{width:100%;height:100%;display:block}.engagement-card::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;box-shadow:inset 0 0 65px rgba(2,7,11,.72)}
+#brain-canvas{background:radial-gradient(circle at 50% 40%,rgba(105,34,58,.26),transparent 62%)}#trophy-canvas{background:radial-gradient(circle at 50% 35%,rgba(105,76,22,.25),transparent 60%)}#house-canvas{background:linear-gradient(#0b1219,#04090d)}
+#return-visual .compass-field{width:min(54vh,46vw)}
+#status{position:absolute;z-index:50;left:12px;top:10px;padding:.32rem .48rem;border-radius:.4rem;background:rgba(0,0,0,.35);color:rgba(215,228,229,.55);font:700 10px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.05em;pointer-events:none}
+</style>
+<script>
+(()=>{const native=window.matchMedia.bind(window);window.matchMedia=query=>query==='(prefers-reduced-motion: reduce)'?{matches:true,media:query,onchange:null,addListener(){},removeListener(){},addEventListener(){},removeEventListener(){},dispatchEvent(){return false}}:native(query)})();
+</script>
+<script src="/assets/shared/mirrorland-window.geometry.js"></script>
+<script src="/assets/compass/compass.hra-brain-scene.js"></script>
+<script src="/assets/compass/compass.trophy-scene.js"></script>
+<script src="/assets/compass/compass.house-scene.js"></script>
+</head>
+<body>
+<main id="capture" data-r3-source="detached" aria-label="Compass V2 R3 detached capture source">
+  <div id="status">R3 · DETACHED · 00000ms</div>
+  <div class="layer image-layer" data-image="S01"><div id="arrival-visual"></div></div>
+  <div class="layer image-layer" data-image="S02"><div class="compass-field"><span class="cardinal n">NORTH</span><span class="cardinal e">EAST</span><span class="cardinal s">SOUTH</span><span class="cardinal w">WEST</span><i class="compass-gem"></i></div></div>
+  <div class="layer image-layer" data-image="S03"><article class="chapter-card glass"><div class="eyebrow">Chapter One</div><h3>Orientation before exploration.</h3><p>A guided introduction to the experience, its worlds, its research, and the Compass that connects them.</p><div class="chapter-path"><span></span><span></span><span></span><span></span><span></span></div></article></div>
+  <div class="layer image-layer" data-image="S04-A"><article class="research-card glass"><div class="eyebrow">Research Frontier</div><h3>Work stays tied to evidence.</h3><div class="evidence-rail"><span>QUESTION</span><span>MODEL</span><span class="ready">TEST</span><span>RESULT</span><span>BOUNDARY</span><span>CLAIM</span></div></article></div>
+  <div class="layer image-layer" data-image="S04-B"><article class="research-card glass"><div class="eyebrow">Readiness</div><h3>What can move now?</h3><div class="evidence-rail"><span class="ready">SOURCE</span><span class="ready">EVIDENCE</span><span class="ready">VERIFY</span><span>ADOPT</span><span>RELEASE</span><span>PUBLIC</span></div></article></div>
+  <div id="audralia-shell"><canvas id="audralia-world"></canvas></div>
+  <canvas id="mirrorland-window" width="480" height="720" aria-hidden="true"></canvas>
+  <div class="layer image-layer" data-image="S07-A"><div class="engagement-card glass"><canvas id="brain-canvas"></canvas></div></div>
+  <div class="layer image-layer" data-image="S07-B"><div class="engagement-card glass" data-award-trophy><canvas id="trophy-canvas"></canvas><div class="compass-trophy-fallback" hidden></div></div></div>
+  <div class="layer image-layer" data-image="S07-C"><div class="engagement-card glass"><canvas id="house-canvas"></canvas></div></div>
+  <div class="layer image-layer" data-image="S08" id="return-visual"><div class="compass-field"><span class="cardinal n">NORTH</span><span class="cardinal e">EAST</span><span class="cardinal s">SOUTH</span><span class="cardinal w">WEST</span><i class="compass-gem"></i></div></div>
+  <section class="layer text-layer" data-text="S01"><p class="kicker">Interactive experience & research studio</p><h1>Diamond Gate Bridge</h1></section>
+  <section class="layer text-layer" data-text="S02"><p class="kicker">The Compass orients the experience</p><h2>Find your way.</h2></section>
+  <section class="layer text-layer" data-text="S03"><p class="kicker">Chapter One is the guided introduction</p><h2>Start here.</h2></section>
+  <section class="layer text-layer" data-text="S04-A"><p class="kicker">Research / current work</p><h2>See what we're testing.</h2></section>
+  <section class="layer text-layer" data-text="S04-B"><p class="kicker">Readiness / evidence boundary</p><h2>See what's ready.</h2></section>
+  <section class="layer text-layer" data-text="S05"><p class="kicker">Enter the narrative world</p><h2>Cross into Mirrorland.</h2></section>
+  <section class="layer text-layer" data-text="S06"><p class="kicker">Explore a continuous planetary world</p><h2>Enter Audralia.</h2></section>
+  <section class="layer text-layer" data-text="S07-A"><p class="kicker">Take a free coherence assessment</p><h2>Discover your Coherence Index.</h2></section>
+  <section class="layer text-layer" data-text="S07-B"><p class="kicker">See the work recognized — and why</p><h2>Enter the Awards Chamber.</h2></section>
+  <section class="layer text-layer" data-text="S07-C"><p class="kicker">Choose who you want to speak with</p><h2>Meet the characters.</h2></section>
+  <section class="layer text-layer" data-text="S08"><p class="kicker">Return to the Compass</p><h2>Find Your Way.</h2></section>
+</main>
+<script type="module" src="./capture-source.mjs"></script>
+</body>
+</html>

@@ -23,13 +23,33 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
-      - name: Checkout exact evidence-tooling head
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0
-          persist-credentials: false
-          path: tooling
+      - name: Materialize exact evidence-tooling sparse index
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p tooling
+          git -C tooling init
+          git -C tooling remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -C tooling -c protocol.version=2 fetch --no-tags --depth=64 --filter=blob:none origin "${{ github.event.pull_request.head.sha }}"
+          git -C tooling sparse-checkout init --cone --sparse-index
+          git -C tooling sparse-checkout set .github/workflows control-plane/whole-estate/characters-reconstruction-v1
+          git -C tooling checkout --detach FETCH_HEAD
+          test "$(git -C tooling rev-parse HEAD^{commit})" = "${{ github.event.pull_request.head.sha }}"
+          test "$(git -C tooling config --bool index.sparse)" = "true"
+          test "$(git -C tooling config --bool core.sparseCheckoutCone)" = "true"
+          tooling_sparse_entries="$(git -C tooling ls-files --sparse | wc -l | tr -d '[:space:]')"
+          tooling_materialized_files="$(find tooling -type f -not -path 'tooling/.git/*' | wc -l | tr -d '[:space:]')"
+          test "$tooling_sparse_entries" -lt 10000
+          test "$tooling_materialized_files" -lt 10000
+          test -z "$(find tooling -mindepth 1 -maxdepth 1 -type d ! -name .git ! -name .github ! -name control-plane -print -quit)"
+          test -z "$(find tooling/.github -mindepth 1 -maxdepth 1 -type d ! -name workflows -print -quit)"
+          test -z "$(find tooling/control-plane -mindepth 1 -maxdepth 1 -type d ! -name whole-estate -print -quit)"
+          test -z "$(find tooling/control-plane/whole-estate -mindepth 1 -maxdepth 1 -type d ! -name characters-reconstruction-v1 -print -quit)"
+          test -f tooling/.github/workflows/characters-gen1975-material-evidence-v1.yml
+          test -f tooling/control-plane/whole-estate/characters-reconstruction-v1/gen1975-material-evidence-contract.v1.json
+          test -f tooling/control-plane/whole-estate/characters-reconstruction-v1/verify-gen1975-material-evidence.v1.mjs
+          echo "TOOLING_SPARSE_INDEX_ENTRIES=$tooling_sparse_entries"
+          echo "TOOLING_MATERIALIZED_FILES=$tooling_materialized_files"
 
       - name: Verify evidence-tooling scope only
         shell: bash
@@ -50,13 +70,28 @@ jobs:
           test -z "$(git -C tooling status --porcelain)"
           echo "TOOLING_HEAD=$HEAD_SHA" >> "$GITHUB_ENV"
 
-      - name: Checkout exact frozen Gen1975 product
-        uses: actions/checkout@v4
-        with:
-          ref: 84754b3d3f0befc0977fc747dce205af4fbeab25
-          fetch-depth: 1
-          persist-credentials: false
-          path: frozen-product
+      - name: Materialize exact frozen Gen1975 characters sparse index
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p frozen-product
+          git -C frozen-product init
+          git -C frozen-product remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -C frozen-product -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$FROZEN_PRODUCT_SHA"
+          git -C frozen-product sparse-checkout init --cone --sparse-index
+          git -C frozen-product sparse-checkout set characters
+          git -C frozen-product checkout --detach FETCH_HEAD
+          test "$(git -C frozen-product rev-parse HEAD^{commit})" = "$FROZEN_PRODUCT_SHA"
+          test "$(git -C frozen-product config --bool index.sparse)" = "true"
+          test "$(git -C frozen-product config --bool core.sparseCheckoutCone)" = "true"
+          frozen_sparse_entries="$(git -C frozen-product ls-files --sparse | wc -l | tr -d '[:space:]')"
+          frozen_materialized_files="$(find frozen-product -type f -not -path 'frozen-product/.git/*' | wc -l | tr -d '[:space:]')"
+          test "$frozen_sparse_entries" -lt 10000
+          test "$frozen_materialized_files" -lt 10000
+          test -z "$(find frozen-product -mindepth 1 -maxdepth 1 -type d ! -name .git ! -name characters -print -quit)"
+          test -f frozen-product/characters/vegetation-representation.mjs
+          echo "FROZEN_PRODUCT_SPARSE_INDEX_ENTRIES=$frozen_sparse_entries"
+          echo "FROZEN_PRODUCT_MATERIALIZED_FILES=$frozen_materialized_files"
 
       - name: Verify frozen product identity
         shell: bash

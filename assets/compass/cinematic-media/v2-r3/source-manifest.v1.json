@@ -1,0 +1,115 @@
+{
+  "schema": "COMPASS_V2_R3_CAPTURE_SOURCE_MANIFEST_v1",
+  "status": "R3_DETACHED_CAPTURE_SOURCE_CONSTRUCTION",
+  "operation": {
+    "operationId": "COMPASS_V2_R3_CAPTURE_SOURCE_RECONSTRUCTION_20260906_001",
+    "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:V2:R3_CAPTURE_SOURCE_RECONSTRUCTION",
+    "generation": 1979,
+    "lockCommit": "c2abec4b7b30aabca349b9d4cd6a49e794b054b7",
+    "exactGoverningHead": "24eba044e3c4943756ee2412cb81f35a440f9608",
+    "r1r2AuthorityBase": "f6dfa02fbb1d15ee4093d696f4ce3f6fe99a6d9c",
+    "r1AuthorityCommentId": 5562818556,
+    "r2EditorialMapCommentId": 5562864647,
+    "recoveryAdjudicationCommentId": 5563693416,
+    "canonicalRequestCommentId": 5564406742,
+    "branch": "compass/v2-r3-reconstruction-20260906-001",
+    "authorityCeiling": "R3_DETACHED_CAPTURE_SOURCE_ONLY_NO_R4_R5_NO_HOOK_NO_MERGE_NO_RELEASE"
+  },
+  "capture": {
+    "masterDurationMs": 38000,
+    "nominalFrameRate": 30,
+    "nominalFrameCount": 1140,
+    "referenceViewport": {"width": 1280, "height": 720},
+    "timeAddressing": "EXPLICIT_INTEGER_MILLISECONDS_0_TO_38000",
+    "timelineClock": "NONE",
+    "entrypoint": "capture-source.html",
+    "apiGlobal": "CompassV2R3Capture",
+    "determinismRule": "AFTER_READY_REPEATED_SEEK_TO_IDENTICAL_MS_MUST_RETURN_IDENTICAL_DECLARED_CAPTURE_STATE"
+  },
+  "editorialLaw": {
+    "eventOrder": "TEXT_IN < IMAGE_IN < TEXT_OUT < IMAGE_OUT",
+    "carryMs": 350,
+    "events": [
+      {"id":"S01","textIn":250,"imageIn":900,"textOut":3500,"imageOut":4850,"primary":"Diamond Gate Bridge","secondary":"Interactive experience & research studio"},
+      {"id":"S02","textIn":4500,"imageIn":5150,"textOut":8550,"imageOut":9850,"primary":"Find your way.","secondary":"The Compass orients the experience"},
+      {"id":"S03","textIn":9500,"imageIn":10150,"textOut":13550,"imageOut":14850,"primary":"Start here.","secondary":"Chapter One is the guided introduction"},
+      {"id":"S04-A","textIn":14500,"imageIn":15050,"textOut":16150,"imageOut":16850,"primary":"See what we're testing.","secondary":"Research / current work"},
+      {"id":"S04-B","textIn":16500,"imageIn":17050,"textOut":18550,"imageOut":19850,"primary":"See what's ready.","secondary":"Readiness / evidence boundary"},
+      {"id":"S05","textIn":19500,"imageIn":20150,"textOut":23150,"imageOut":24850,"primary":"Cross into Mirrorland.","secondary":"Enter the narrative world"},
+      {"id":"S06","textIn":24500,"imageIn":25050,"textOut":28050,"imageOut":29350,"primary":"Enter Audralia.","secondary":"Explore a continuous planetary world"},
+      {"id":"S07-A","textIn":29000,"imageIn":29450,"textOut":30550,"imageOut":31350,"primary":"Discover your Coherence Index.","secondary":"Take a free coherence assessment"},
+      {"id":"S07-B","textIn":31000,"imageIn":31450,"textOut":32550,"imageOut":33350,"primary":"Enter the Awards Chamber.","secondary":"See the work recognized — and why"},
+      {"id":"S07-C","textIn":33000,"imageIn":33450,"textOut":34550,"imageOut":35350,"primary":"Meet the characters.","secondary":"Choose who you want to speak with"},
+      {"id":"S08","textIn":35000,"imageIn":35400,"textOut":37200,"imageOut":38000,"primary":"Find Your Way.","secondary":"Return to the Compass"}
+    ]
+  },
+  "sourceAuthorities": {
+    "S01_S02_S08": [
+      {"path":"assets/compass/compass.cosmos.js","blob":"4fe781df1a8876218c6f081b6ec88d5d2d6044c7","mode":"READ_ONLY_VISUAL_AUTHORITY"},
+      {"path":"assets/compass/compass.crystals.js","blob":"cd2cbad0494852cc80c51959a6827407d037b8fb","mode":"READ_ONLY_VISUAL_AUTHORITY"},
+      {"path":"assets/compass/compass.controller.js","blob":"568a6b2cd608a4cbcd62cf70ed59b241c39c90d2","mode":"READ_ONLY_BEHAVIOR_AUTHORITY_NOT_MOUNTED"}
+    ],
+    "S03": [
+      {"path":"index.html","blob":"c7cecb616a90f7d40389c6f04cb5a5ddee5166cd","mode":"READ_ONLY_CONTEXT_AUTHORITY"},
+      {"path":".github/ai-router/projects/compass/chapter-one-contextual-delivery-contract.v1.json","blob":"9813c60f8ca9b5f27fccbf44cade7bb08c2f0f2e","mode":"READ_ONLY_CONTEXT_AUTHORITY"}
+    ],
+    "S04": [
+      {"path":"assets/compass/compass.readiness-context-v1.js","blob":"dd6220df67cc73d57150f8fa498d0cf477298ded","mode":"READ_ONLY_CONTEXT_AUTHORITY"}
+    ],
+    "S05": [
+      {"path":"assets/shared/mirrorland-window.geometry.js","blob":"fb3ee8ab92fa4b08e7708b83780de75d1a6f8595","mode":"DIRECT_SHARED_GEOMETRY"},
+      {"path":"assets/compass/compass.mirrorland-window.js","blob":"f99d3ffedf7b7654d067d21d9363eb287877f852","mode":"READ_ONLY_THRESHOLD_PRESENTATION_REFERENCE"},
+      {"path":"characters/index.html","blob":"043ba9a4b8a03d182f41d665128a20b8ce1d8e4d","mode":"READ_ONLY_MIRRORLAND_WORLD_REFERENCE"},
+      {"path":"characters/app.mjs","blob":"0f5bb56068bdbb47b904788f8a4853dd9e74e353","mode":"READ_ONLY_MIRRORLAND_WORLD_REFERENCE"},
+      {"path":"characters/cloud-system.mjs","blob":"47482fd1c37267a2c5e76a3b833210984fe9b505","mode":"READ_ONLY_MIRRORLAND_WORLD_REFERENCE"}
+    ],
+    "AUDRALIA_AUTHORITY_PACKET_A1": [
+      {"path":"showroom/globe/audralia/index.html","blob":"96bf20a3189182683bc94c08e2ad7c0dba740f07","mode":"READ_ONLY_WORLD_ROUTE_AUTHORITY"},
+      {"authority":"approvedModelAuthority","identity":"1d45379f81ea4089e9c5f3d7d9688e702be9add3"},
+      {"authority":"environmentBinding","identity":"IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993"},
+      {"path":"inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs","blob":"872d20b17bb0cd89d9613ca0262b25350890a617","mode":"DIRECT_RENDERER_ONE_INSTANCE_SHARED_S05_S06"},
+      {"path":"inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs","blob":"64b962fcdb098ffa1f3149a434ad1bfcdc4e21d3","mode":"READ_ONLY_PRESENTATION_REFERENCE"},
+      {"path":"inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/acf1-cloud-presentation-v1.mjs","blob":"64557c32146cfaaa953ba7ea27149092442a2f43","mode":"READ_ONLY_PRESENTATION_REFERENCE"},
+      {"path":"inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/fap1-xyz-volumetric-depth-v1.mjs","blob":"c2e0a41c8a47d0c86cfa73b4d5176b51d58e57ec","mode":"READ_ONLY_PRESENTATION_REFERENCE"},
+      {"path":"inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/fap1-weather-presentation-v1.mjs","blob":"d4c7d230ea8ffa265cfd347629ec2e46d653726c","mode":"READ_ONLY_PRESENTATION_REFERENCE"},
+      {"path":"inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/canonical-weather-spatial-lod-proof/weather-model.mjs","blob":"67a3954edf55966f0db7a89cb21a558126d471eb","mode":"READ_ONLY_PRESENTATION_REFERENCE"},
+      {"path":"inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/canonical-weather-spatial-lod-proof/weather-renderer.mjs","blob":"b25e6da17aebffb2eafa36d4d796803d3272f2e1","mode":"READ_ONLY_PRESENTATION_REFERENCE"}
+    ],
+    "S07": [
+      {"path":"assets/compass/compass.hra-brain-scene.js","blob":"c26603744e55c8ede2c82944bd0fd117d04dcbdb","mode":"DIRECT_DONOR_RENDERER","source":"Allen_M_Brain.glb","expectedMeshes":283,"expectedTriangles":656268},
+      {"path":"assets/compass/compass.trophy-scene.js","blob":"d281e18b06128671ffe2a19e8fdb272cc5544e31","mode":"DIRECT_DONOR_RENDERER"},
+      {"path":"assets/compass/compass.house-scene.js","blob":"a82e3c963a10808b9f8f1922faab45155ea4a62b","mode":"DIRECT_DONOR_RENDERER","contract":"MIRROR_MANOR_GOTHIC_ARCHITECTURAL_DETAIL_PHASE3_v1"},
+      {"path":"assets/manor-blueprint/manor.estate.neutral-blockout.mjs","blob":"0377cb8b28907e3c10e6193dff3e720b8623f089","mode":"READ_ONLY_HOUSE_SOURCE"},
+      {"path":"assets/manor-blueprint/manor.estate.gothic-detail-phase1.mjs","blob":"c7bf5ccd2587e1a6087bb469a00bdae7c0a96f94","mode":"READ_ONLY_HOUSE_SOURCE"},
+      {"path":"assets/manor-blueprint/manor.estate.gothic-detail-phase1b.mjs","blob":"577503fd4b1cca1d17828672071409eaa0a300b2","mode":"READ_ONLY_HOUSE_SOURCE"},
+      {"path":"assets/manor-blueprint/manor.estate.gothic-detail-phase2.mjs","blob":"96702c6471ad2df893847f4f997b235cfaec6ee1","mode":"READ_ONLY_HOUSE_SOURCE"},
+      {"path":"assets/manor-blueprint/manor.estate.gothic-detail-phase2c.mjs","blob":"43cac069a13ad8fd93d5ba5362b002c611ecdecc","mode":"READ_ONLY_HOUSE_SOURCE"},
+      {"path":"assets/manor-blueprint/manor.estate.gothic-detail-phase3.mjs","blob":"38bc8fa60a251681cb5484926409290f66460ad0","mode":"READ_ONLY_HOUSE_SOURCE"}
+    ]
+  },
+  "continuity": {
+    "S05_MIRRORLAND_WINDOW_REVEALED_SUBJECT": "AUDRALIA_AUTHORITY_PACKET_A1",
+    "S06_FULL_FRAME_AUDRALIA": "AUDRALIA_AUTHORITY_PACKET_A1",
+    "worldInstanceRule": "ONE_AUDRALIA_RENDERER_INSTANCE_PERSISTS_ACROSS_S05_TO_S06",
+    "thresholdRule": "S05_IMAGE_OUT_DISSOLVES_WINDOW_NOT_WORLD",
+    "finalRule": "S08_TERMINATES_AT_COMPASS_HANDOFF_NOT_BLACK"
+  },
+  "explicitExclusions": [
+    "RETIRED_RIVER_MODEL",
+    "FABRICATED_MIRRORLAND_GRID_INTERIOR",
+    "LIVE_V1_HOOK_MUTATION",
+    "LIVE_COMPASS_CONTROLLER_MUTATION",
+    "LIVE_COMPASS_CRYSTALS_MUTATION",
+    "NAVIGATION_OR_HISTORY_OWNERSHIP",
+    "ANALYTICS_SIDE_EFFECTS",
+    "R4_RENDER_EXECUTION",
+    "R5_MASTER_EXECUTION",
+    "MERGE_DEPLOYMENT_PUBLICATION"
+  ],
+  "artifactPaths": [
+    "assets/compass/cinematic-media/v2-r3/capture-source.html",
+    "assets/compass/cinematic-media/v2-r3/capture-source.mjs",
+    "assets/compass/cinematic-media/v2-r3/source-manifest.v1.json",
+    "assets/compass/cinematic-media/v2-r3/verify.mjs"
+  ]
+}

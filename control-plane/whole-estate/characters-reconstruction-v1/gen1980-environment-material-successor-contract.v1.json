@@ -1,0 +1,98 @@
+{
+  "schema": "MIRRORLAND_GEN1980_ENVIRONMENT_MATERIAL_SUCCESSOR_CONTRACT_v1",
+  "operationId": "MIRRORLAND_GEN1980_ENVIRONMENT_MATERIAL_SUCCESSOR_20260907_001",
+  "lockGeneration": 1983,
+  "governingMain": "24eba044e3c4943756ee2412cb81f35a440f9608",
+  "productSubstrate": "29b14204d545c93fd95a8a60f3c36eb7449ffb16",
+  "frozenV5Blob": "f3b64eb1ffc1c1bc8e908ff96eb6c833b6bc928d",
+  "psalmAckCommentId": 5573785421,
+  "terminalMaterialFailureCommentId": 5573218571,
+  "admissionReturnCommentId": 5573808897,
+  "targetBoundary": "ENVIRONMENT_SUCCESSOR_CANDIDATE_FROZEN_MECHANICAL_PASS",
+  "materialDisposition": "UNASSIGNED",
+  "materialDispositionAuthority": false,
+  "repairTargets": [
+    "TERRITORIAL_ORGANIZATION",
+    "GROUND_UNDERSTORY_CONTINUITY",
+    "ECOLOGICAL_CONDITION_DIFFERENTIATION",
+    "WORLD_BOUNDARY_CONTAINMENT",
+    "CROSS_VIEW_MATERIAL_CONTINUITY"
+  ],
+  "protectedPassingDimensions": [
+    "STAND_EDGE_TRANSITION_OPENING_LEGIBILITY",
+    "NEGATIVE_SPACE_AND_DESTINATION_READABILITY",
+    "REPRESENTATION_SEPARATION"
+  ],
+  "allowedPaths": [
+    "characters/vegetation-population.mjs",
+    "characters/vegetation-understory.mjs",
+    "characters/app.mjs",
+    "control-plane/whole-estate/characters-reconstruction-v1/gen1980-environment-material-successor-contract.v1.json",
+    "control-plane/whole-estate/characters-reconstruction-v1/verify-gen1980-environment-material-successor.v1.mjs",
+    ".github/workflows/characters-gen1980-environment-material-successor-v1.yml"
+  ],
+  "protectedByteIdentityPaths": [
+    "characters/vegetation-representation.mjs",
+    "characters/vegetation-stand-topology.mjs",
+    "characters/vegetation-edge-ecology.mjs",
+    "characters/vegetation-composition.mjs",
+    "characters/vegetation-ecology.mjs",
+    "characters/step9-regional-geography.mjs",
+    "characters/gratitude-geography.adapter.mjs",
+    "characters/destination-registry.mjs",
+    "characters/narrative-world-state.mjs",
+    "characters/night-renderer.mjs",
+    "characters/cloud-system.mjs",
+    "characters/cloud-traversal.mjs",
+    "characters/coast-map.mjs",
+    "characters/orientation-shell.mjs",
+    "characters/knowledge-card.mjs",
+    "characters/index.html"
+  ],
+  "population": {
+    "exactCanopyCount": 818,
+    "minimumLatticeColumns": 84,
+    "minimumLatticeRows": 62,
+    "minimumAurenLocalInteriorCanopyCount": 90,
+    "aurenLocalRadius": 180,
+    "requiredSelectionLawToken": "CONTIGUOUS",
+    "maximumInteriorMedianNearestNeighborDistance": 15
+  },
+  "understory": {
+    "minimumInstanceCount": 7200,
+    "minimumCompactPresentationSampling": 0.82,
+    "requiredHydrologyClass": "REED_WET_MARGIN",
+    "minimumHydrologyQualifiedReedCount": 24,
+    "minimumHydrologyWeightForReed": 0.08,
+    "minimumInteriorForestFloorCount": 900,
+    "openingShrubSaplingAllowed": false
+  },
+  "surfaceContainment": {
+    "requiredSourceTokens": ["SURFACE_CONTAINMENT","containedTerrainHeight","padNearZ","waterMarginX","waterFarZ"],
+    "minimumDesktopPadX": 900,
+    "minimumDesktopPadNearZ": 800,
+    "minimumDesktopWaterMarginX": 1050,
+    "minimumDesktopWaterFarZ": 800,
+    "minimumCompactPadX": 700,
+    "minimumCompactPadNearZ": 650,
+    "minimumCompactWaterMarginX": 850,
+    "minimumCompactWaterFarZ": 650,
+    "permittedChangedLineTokens": ["SURFACE_CONTAINMENT","containedTerrainHeight","function meshTerrain","function meshWater","z0=","x0=","x1=","farZ=","marginX="]
+  },
+  "mandatoryIndependentWitness": {
+    "destinationId": "auren",
+    "requiredSpatialZone": "INTERIOR",
+    "permittedStandClasses": ["DENSE_WOODLAND","GROVE","WET_MARGIN_RIPARIAN"],
+    "normalDestinationCameraRequired": true,
+    "distinctFromManorRequired": true
+  },
+  "checkoutLaw": "EXACT_REF_BLOB_FILTERED_CONE_SPARSE_INDEX_ONLY",
+  "integratedExperienceMutationAuthorized": false,
+  "evidenceSuccessor": {
+    "requiredStates": ["WIDE_COAST","OPEN_TERRAIN","WOODLAND_EDGE","FOREST_INTERIOR_INDEPENDENT","MIRROR_MANOR_APPROACH","SHORELINE_WETLAND_TRANSITION","WIDE_RETURN"],
+    "desktop": [1440,900],
+    "compactMobile": [390,844],
+    "captureCount": 14,
+    "materialDispositionMustRemainUnassignedDuringMechanicalQualification": true
+  }
+}

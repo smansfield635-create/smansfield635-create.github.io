@@ -24,24 +24,25 @@ const hash32=value=>{
 const rand=(seed,k=0)=>hash32(seed^Math.imul(k+1,0x9e3779b1))/4294967295;
 
 const GRID=freeze({
-  columns:60,
-  rows:44,
+  columns:84,
+  rows:62,
   insetFraction:.025,
-  jitterFraction:.34,
+  jitterFraction:.30,
   minimumForestWeight:.08,
   minimumShorelineDistance:12,
   exactTargetCount:818,
   reservedEdgeCount:72,
   reservedTransitionCount:54,
-  standMassExponent:2.35,
-  standCoreScale:72,
+  standMassExponent:2.72,
+  standCoreScale:96,
+  territorialCoreExponent:1.35,
   wetMarginSuppression:.34
 });
 
 export const CANONICAL_VEGETATION_POPULATION_CONTRACT=freeze({
   schema:'MIRRORLAND_CANONICAL_VEGETATION_POPULATION_CONTRACT_v1',
-  operationId:'MIRRORLAND_STAND_TOPOLOGY_EDGE_ECOLOGY_NEGATIVE_SPACE_20260906_002',
-  stage:'STAND_EDGE_ORGANIZED_CANONICAL_POPULATION',
+  operationId:'MIRRORLAND_GEN1975_MATERIAL_WORLD_READING_SUCCESSOR_20260906_002',
+  stage:'CONTIGUOUS_TERRITORIAL_CANOPY_SUCCESSOR',
   frameAuthority:'characters/gratitude-geography.adapter.mjs#GRATITUDE_DEVELOPMENT_FRAME',
   frameId:GRATITUDE_DEVELOPMENT_FRAME.frameId,
   ecologyAuthority:VEGETATION_ECOLOGY_AUTHORITY.schema,
@@ -57,7 +58,8 @@ export const CANONICAL_VEGETATION_POPULATION_CONTRACT=freeze({
   previousPositionSetImmutable:false,
   exactPopulationBudget:GRID.exactTargetCount,
   grid:GRID,
-  fixedTargetCount:true
+  fixedTargetCount:true,
+  territorialContinuityRepair:true
 });
 
 const increment=(object,key)=>{object[key]=(object[key]||0)+1;};
@@ -93,12 +95,13 @@ function createCandidate(row,column,envelope,insetX,insetZ,usableWidth,usableDep
   const environment=resolveVegetationEnvironment(ecology.world.x,ecology.world.z);
   if(environment.spatialZone==='OPENING'||environment.canopyDensity<=0)return null;
   const ecologySupport=clamp(.46+.54*forestWeight,0,1);
-  const stableVariation=.86+.14*rand(seed,3);
+  const stableVariation=.90+.10*rand(seed,3);
   const wetAffinity=wetMarginAffinity(ecology);
   const hydrologyCanopyFactor=1-GRID.wetMarginSuppression*wetAffinity;
   const selectionScore=environment.canopyDensity*ecologySupport*stableVariation*hydrologyCanopyFactor;
   const coreAffinity=clamp(environment.standBoundaryDistance/GRID.standCoreScale,0,1);
-  const territorialScore=selectionScore*(.80+.48*coreAffinity);
+  const coreMass=Math.pow(coreAffinity,GRID.territorialCoreExponent);
+  const territorialScore=selectionScore*(.56+.88*coreMass)*(.92+.22*forestWeight);
   return {
     id:`veg-r${row}-c${column}`,
     lattice:{row,column,seed},
@@ -205,11 +208,7 @@ function createCanonicalPopulation(){
     return freeze({
       id:candidate.id,
       lattice:freeze({...candidate.lattice}),
-      world:freeze({
-        x:quantize(ecology.world.x),
-        y:quantize(ecology.world.y),
-        z:quantize(ecology.world.z)
-      }),
+      world:freeze({x:quantize(ecology.world.x),y:quantize(ecology.world.y),z:quantize(ecology.world.z)}),
       forestWeight:quantize(candidate.forestWeight,12),
       biomeClass:ecology.biome.class,
       drainageClass:ecology.hydrology.drainageClass,
@@ -237,16 +236,8 @@ function createCanonicalPopulation(){
   const standCandidateCounts={},standSelectedCounts={},classCandidateCounts={},classSelectedCounts={};
   const zoneCandidateCounts={INTERIOR:0,EDGE:0,TRANSITION:0,OPENING:0};
   const zoneSelectedCounts={INTERIOR:0,EDGE:0,TRANSITION:0,OPENING:0};
-  for(const candidate of candidates){
-    increment(standCandidateCounts,candidate.environment.standId);
-    increment(classCandidateCounts,candidate.environment.standClass);
-    increment(zoneCandidateCounts,candidate.environment.spatialZone);
-  }
-  for(const instance of instances){
-    increment(standSelectedCounts,instance.standId);
-    increment(classSelectedCounts,instance.standClass);
-    increment(zoneSelectedCounts,instance.spatialZone);
-  }
+  for(const candidate of candidates){increment(standCandidateCounts,candidate.environment.standId);increment(classCandidateCounts,candidate.environment.standClass);increment(zoneCandidateCounts,candidate.environment.spatialZone);}
+  for(const instance of instances){increment(standSelectedCounts,instance.standId);increment(classSelectedCounts,instance.standClass);increment(zoneSelectedCounts,instance.spatialZone);}
   const compositionFeatherCandidates=candidates.filter(x=>x.environment.compositionBand==='FEATHER');
   const compatibleInteriorCandidates=candidates.filter(x=>x.environment.spatialZone==='INTERIOR'&&x.environment.compositionBand==='NONE');
   const selectedSet=new Set(instances.map(x=>x.id));
@@ -254,51 +245,17 @@ function createCanonicalPopulation(){
     candidateCount:candidates.length,
     selectedCount:instances.length,
     rejectedEligibleCount:candidates.length-instances.length,
-    selectionLaw:'EXACT_818_WITH_RESERVED_EDGE_TRANSITION_AND_STAND_LOCAL_WEIGHTED_INTERIOR_MASSING',
-    standCandidateCounts:freeze(standCandidateCounts),
-    standSelectedCounts:freeze(standSelectedCounts),
-    classCandidateCounts:freeze(classCandidateCounts),
-    classSelectedCounts:freeze(classSelectedCounts),
-    zoneCandidateCounts:freeze(zoneCandidateCounts),
-    zoneSelectedCounts:freeze(zoneSelectedCounts),
+    selectionLaw:'EXACT_818_DENSE_LATTICE_RESERVED_EDGE_TRANSITION_STAND_LOCAL_CORE_WEIGHTED_INTERIOR_MASSING',
+    standCandidateCounts:freeze(standCandidateCounts),standSelectedCounts:freeze(standSelectedCounts),classCandidateCounts:freeze(classCandidateCounts),classSelectedCounts:freeze(classSelectedCounts),zoneCandidateCounts:freeze(zoneCandidateCounts),zoneSelectedCounts:freeze(zoneSelectedCounts),
     compositionFeatherCandidateCount:compositionFeatherCandidates.length,
     compositionFeatherSelectedCount:compositionFeatherCandidates.filter(x=>selectedSet.has(x.id)).length,
     compatibleInteriorCandidateCount:compatibleInteriorCandidates.length,
     compatibleInteriorSelectedCount:compatibleInteriorCandidates.filter(x=>selectedSet.has(x.id)).length,
-    previousPositionSetImmutable:false,
-    previousGlobalSprinklingAuthoritySuperseded:true,
-    standLocalInteriorAllocation:true,
-    wetMarginCanopySuppression:true,
-    candidateIdentityCount:candidateById.size
+    previousPositionSetImmutable:false,previousGlobalSprinklingAuthoritySuperseded:true,standLocalInteriorAllocation:true,wetMarginCanopySuppression:true,territorialContinuityRepair:true,candidateIdentityCount:candidateById.size
   });
 
-  return freeze({
-    schema:'MIRRORLAND_CANONICAL_VEGETATION_POPULATION_v1',
-    operationId:CANONICAL_VEGETATION_POPULATION_CONTRACT.operationId,
-    stage:CANONICAL_VEGETATION_POPULATION_CONTRACT.stage,
-    frameId:GRATITUDE_DEVELOPMENT_FRAME.frameId,
-    envelope:freeze({...envelope}),
-    ecologyAuthority:VEGETATION_ECOLOGY_AUTHORITY.schema,
-    organizationAuthority:'MIRRORLAND_EDGE_ECOLOGY_CONTRACT_v1',
-    canonicalPopulation:true,
-    standEdgeOrganized:true,
-    deviceInvariant:true,
-    cameraInvariant:true,
-    representationAssigned:false,
-    lodAssigned:false,
-    fixedTargetCount:true,
-    exactTargetCount:GRID.exactTargetCount,
-    instanceCount:instances.length,
-    diagnostics,
-    instances:freeze(instances)
-  });
+  return freeze({schema:'MIRRORLAND_CANONICAL_VEGETATION_POPULATION_v1',operationId:CANONICAL_VEGETATION_POPULATION_CONTRACT.operationId,stage:CANONICAL_VEGETATION_POPULATION_CONTRACT.stage,frameId:GRATITUDE_DEVELOPMENT_FRAME.frameId,envelope:freeze({...envelope}),ecologyAuthority:VEGETATION_ECOLOGY_AUTHORITY.schema,organizationAuthority:'MIRRORLAND_EDGE_ECOLOGY_CONTRACT_v1',canonicalPopulation:true,standEdgeOrganized:true,deviceInvariant:true,cameraInvariant:true,representationAssigned:false,lodAssigned:false,fixedTargetCount:true,exactTargetCount:GRID.exactTargetCount,instanceCount:instances.length,diagnostics,instances:freeze(instances)});
 }
 
-export function buildCanonicalVegetationPopulation(){
-  if(!cachedPopulation)cachedPopulation=createCanonicalPopulation();
-  return cachedPopulation;
-}
-
-export function getCanonicalVegetationPopulation(_presentationContext=undefined){
-  return buildCanonicalVegetationPopulation();
-}
+export function buildCanonicalVegetationPopulation(){if(!cachedPopulation)cachedPopulation=createCanonicalPopulation();return cachedPopulation;}
+export function getCanonicalVegetationPopulation(_presentationContext=undefined){return buildCanonicalVegetationPopulation();}

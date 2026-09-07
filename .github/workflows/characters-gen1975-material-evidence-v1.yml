@@ -111,6 +111,7 @@ jobs:
           const sha256=file=>crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
           const digest=value=>crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
           const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+          const writeJson=(name,value)=>fs.writeFileSync(path.join(OUT,name),JSON.stringify(value,null,2)+'\n');
           const captures=[];
           const browserErrors=[];
           let authoritativeWitness=null;
@@ -253,6 +254,24 @@ jobs:
               return {populationCount:p.instanceCount,zoneSelectedCounts:p.diagnostics?.zoneSelectedCounts||{},standSelectedCounts:p.diagnostics?.standSelectedCounts||{},understoryCount:u.instanceCount,understoryClassCounts:u.classCounts||{},understoryZoneCounts:u.zoneCounts||{},destination};
             },destinationId);
           }
+          async function witnessNodeState(page,witness){
+            return page.evaluate(id=>{
+              const node=document.querySelector(`.map-node[data-id="${id}"]`);
+              const map=document.querySelector('#coast-map');
+              const ret=document.querySelector('#return');
+              return {
+                exists:!!node,
+                hidden:node?.hidden??null,
+                className:node?.className??null,
+                ariaHidden:node?.getAttribute('aria-hidden')??null,
+                disabled:node?.disabled??null,
+                mapHidden:map?.hidden??null,
+                mapClassName:map?.className??null,
+                returnHidden:ret?.hidden??null,
+                returnClassName:ret?.className??null
+              };
+            },witness.destinationId);
+          }
           async function snapshot(page,profile,state,filename,runtime,destinationId=null){
             const env=await environmentSnapshot(page,destinationId);
             if(env.populationCount!==818)throw Error(`${profile}:${state}:POPULATION_NOT_818`);
@@ -283,8 +302,40 @@ jobs:
             await snapshot(page,spec.profile,'OPEN_TERRAIN',`${spec.profile}-open-terrain.png`,runtime,'crossing');
             await gotoDestination(page,'alaric');
             await snapshot(page,spec.profile,'WOODLAND_EDGE',`${spec.profile}-woodland-edge.png`,runtime,'alaric');
-            await gotoDestination(page,witness.destinationId);
-            await snapshot(page,spec.profile,'FOREST_INTERIOR_INDEPENDENT',`${spec.profile}-forest-interior-independent.png`,runtime,witness.destinationId);
+
+            const preTravelState=await witnessNodeState(page,witness);
+            writeJson(`${spec.profile}-witness-pretravel-diagnostic.json`,{
+              phase:'BEFORE_FOREST_INTERIOR_TRAVEL',
+              profile:spec.profile,
+              witness,
+              nodeState:preTravelState,
+              capturesCompleted:captures.filter(item=>item.profile===spec.profile).map(item=>item.state)
+            });
+            try{
+              await gotoDestination(page,witness.destinationId);
+              const postTravelState=await witnessNodeState(page,witness);
+              const postTravelEnvironment=await environmentSnapshot(page,witness.destinationId);
+              writeJson(`${spec.profile}-witness-posttravel-diagnostic.json`,{
+                phase:'AFTER_FOREST_INTERIOR_TRAVEL_BEFORE_SCREENSHOT',
+                profile:spec.profile,
+                witness,
+                nodeState:postTravelState,
+                environment:postTravelEnvironment,
+                capturesCompleted:captures.filter(item=>item.profile===spec.profile).map(item=>item.state)
+              });
+              await snapshot(page,spec.profile,'FOREST_INTERIOR_INDEPENDENT',`${spec.profile}-forest-interior-independent.png`,runtime,witness.destinationId);
+            }catch(error){
+              writeJson(`${spec.profile}-capture-failure-diagnostic.json`,{
+                phase:'FOREST_INTERIOR_INDEPENDENT_TRANSITION',
+                profile:spec.profile,
+                witness,
+                nodeState:await witnessNodeState(page,witness).catch(()=>null),
+                capturesCompleted:captures.filter(item=>item.profile===spec.profile).map(item=>item.state),
+                error:{name:error?.name||'Error',message:String(error?.message||error),stack:String(error?.stack||'')}
+              });
+              throw error;
+            }
+
             await gotoDestination(page,'manor');
             await snapshot(page,spec.profile,'MIRROR_MANOR_APPROACH',`${spec.profile}-mirror-manor-approach.png`,runtime,'manor');
             await gotoDestination(page,'tarian');
@@ -345,8 +396,7 @@ jobs:
         with:
           name: gen1975-material-evidence-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            ${{ runner.temp }}/gen1975-material-evidence/gen1975-material-evidence-manifest.json
+            ${{ runner.temp }}/gen1975-material-evidence/*.json
             ${{ runner.temp }}/gen1975-material-evidence/*.png
-            ${{ runner.temp }}/gen1975-material-evidence/gen1975-material-evidence-verification-receipt.json
           if-no-files-found: warn
           retention-days: 90

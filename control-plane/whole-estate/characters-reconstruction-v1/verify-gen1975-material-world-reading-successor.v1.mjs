@@ -29,27 +29,18 @@ const changed=git('diff','--name-only',`${contract.productSubstrate}...${exactHe
 const allowed=new Set(contract.allowedPaths);
 const outOfScope=changed.filter(file=>!allowed.has(file));
 check('EXACT_ALLOWED_DIFF_ONLY',outOfScope.length===0,{changed,outOfScope});
-for(const required of ['characters/vegetation-population.mjs','characters/vegetation-understory.mjs','characters/app.mjs',CONTRACT_PATH,'control-plane/whole-estate/characters-reconstruction-v1/verify-gen1975-material-world-reading-successor.v1.mjs','.github/workflows/characters-gen1975-material-world-reading-successor-v1.yml']){
-  check(`REQUIRED_PATH_PRESENT:${required}`,fs.existsSync(required),{});
-}
+for(const required of ['characters/vegetation-population.mjs','characters/vegetation-understory.mjs','characters/app.mjs',CONTRACT_PATH,'control-plane/whole-estate/characters-reconstruction-v1/verify-gen1975-material-world-reading-successor.v1.mjs','.github/workflows/characters-gen1975-material-world-reading-successor-v1.yml'])check(`REQUIRED_PATH_PRESENT:${required}`,fs.existsSync(required),{});
 
 const v5Blob=currentBlob('characters/vegetation-representation.mjs');
 check('V5_BLOB_BYTE_IDENTICAL',v5Blob===contract.frozenV5Blob,{expected:contract.frozenV5Blob,actual:v5Blob});
-for(const file of contract.protectedByteIdentityPaths){
-  const expected=substrateBlob(file),actual=currentBlob(file);
-  check(`PROTECTED_BYTE_IDENTITY:${file}`,actual===expected,{expected,actual});
-}
-
-for(const file of ['characters/vegetation-population.mjs','characters/vegetation-understory.mjs','characters/app.mjs']){
-  const result=spawnSync(process.execPath,['--check',file],{cwd:ROOT,encoding:'utf8'});
-  check(`NODE_SYNTAX:${file}`,result.status===0,{status:result.status,stderr:result.stderr?.trim()});
-}
+for(const file of contract.protectedByteIdentityPaths){const expected=substrateBlob(file),actual=currentBlob(file);check(`PROTECTED_BYTE_IDENTITY:${file}`,actual===expected,{expected,actual});}
+for(const file of ['characters/vegetation-population.mjs','characters/vegetation-understory.mjs','characters/app.mjs']){const result=spawnSync(process.execPath,['--check',file],{cwd:ROOT,encoding:'utf8'});check(`NODE_SYNTAX:${file}`,result.status===0,{status:result.status,stderr:result.stderr?.trim()});}
 
 const appSource=fs.readFileSync('characters/app.mjs','utf8');
 const appDiff=git('diff','--unified=0',contract.productSubstrate,'HEAD','--','characters/app.mjs');
 for(const token of contract.surfaceContainment.requiredSourceTokens)check(`APP_CONTAINMENT_TOKEN:${token}`,appSource.includes(token),{});
 for(const token of contract.surfaceContainment.prohibitedAppDiffTokens)check(`APP_PROTECTED_DIFF_ABSENT:${token}`,!appDiff.split('\n').filter(line=>/^[+-]/.test(line)&&!/^[-+]{3}/.test(line)).some(line=>line.includes(token)),{});
-const desktopNumber=(name)=>{const m=appSource.match(new RegExp(`${name}:compact\\?[-.0-9]+:([-.0-9]+)`));return m?Number(m[1]):NaN;};
+const desktopNumber=name=>{const m=appSource.match(new RegExp(`${name}:compact\\?[-.0-9]+:([-.0-9]+)`));return m?Number(m[1]):NaN;};
 check('APP_DESKTOP_PAD_X',desktopNumber('padX')>=contract.surfaceContainment.minimumDesktopPadX,{actual:desktopNumber('padX')});
 check('APP_DESKTOP_PAD_NEAR_Z',desktopNumber('padNearZ')>=contract.surfaceContainment.minimumDesktopPadNearZ,{actual:desktopNumber('padNearZ')});
 check('APP_DESKTOP_WATER_MARGIN_X',desktopNumber('waterMarginX')>=contract.surfaceContainment.minimumDesktopWaterMarginX,{actual:desktopNumber('waterMarginX')});
@@ -65,8 +56,9 @@ const [populationMod,understoryMod,representationMod,compositionMod,edgeMod,step
 ]);
 
 const population=populationMod.getCanonicalVegetationPopulation();
+const populationGrid=populationMod.CANONICAL_VEGETATION_POPULATION_CONTRACT?.grid;
 check('CANOPY_COUNT_EXACTLY_818',population.instanceCount===contract.population.exactCanopyCount,{instanceCount:population.instanceCount});
-check('POPULATION_DENSE_LATTICE',population.grid?.columns>=contract.population.minimumLatticeColumns&&population.grid?.rows>=contract.population.minimumLatticeRows,{grid:population.grid});
+check('POPULATION_DENSE_LATTICE',populationGrid?.columns>=contract.population.minimumLatticeColumns&&populationGrid?.rows>=contract.population.minimumLatticeRows,{grid:populationGrid});
 check('POPULATION_SELECTION_LAW_CONTIGUITY',String(population.diagnostics?.selectionLaw||'').includes(contract.population.requiredSelectionLawToken),{selectionLaw:population.diagnostics?.selectionLaw});
 check('POPULATION_DEVICE_CAMERA_INVARIANT',populationMod.getCanonicalVegetationPopulation({deviceClass:'desktop',camera:{eye:{x:0,y:0,z:0}}})===populationMod.getCanonicalVegetationPopulation({deviceClass:'mobile',camera:{eye:{x:999,y:999,z:999}}}),{});
 const freshScript=`import crypto from 'node:crypto';const {getCanonicalVegetationPopulation}=await import('./characters/vegetation-population.mjs');const p=getCanonicalVegetationPopulation();process.stdout.write(crypto.createHash('sha256').update(JSON.stringify(p.instances.map(x=>[x.id,x.world.x,x.world.y,x.world.z,x.standId,x.spatialZone]))).digest('hex'));`;
@@ -78,11 +70,7 @@ const hardOpenCanopy=population.instances.filter(x=>x.spatialZone==='OPENING'||c
 check('HARD_OPEN_CORES_PRESERVED',hardOpenCanopy.length===0,{count:hardOpenCanopy.length,ids:hardOpenCanopy.slice(0,10).map(x=>x.id)});
 const interior=population.instances.filter(x=>x.spatialZone==='INTERIOR');
 const nearest=[];
-for(let i=0;i<interior.length;i++){
-  let best=Infinity;
-  for(let j=0;j<interior.length;j++)if(i!==j){const dx=interior[i].world.x-interior[j].world.x,dz=interior[i].world.z-interior[j].world.z;best=Math.min(best,Math.hypot(dx,dz));}
-  if(finite(best))nearest.push(best);
-}
+for(let i=0;i<interior.length;i++){let best=Infinity;for(let j=0;j<interior.length;j++)if(i!==j){const dx=interior[i].world.x-interior[j].world.x,dz=interior[i].world.z-interior[j].world.z;best=Math.min(best,Math.hypot(dx,dz));}if(finite(best))nearest.push(best);}
 const interiorMedianNearest=median(nearest);
 check('INTERIOR_CANOPY_CONTIGUITY_DISTANCE',interiorMedianNearest<=contract.population.maximumInteriorMedianNearestNeighborDistance,{interiorCount:interior.length,medianNearestNeighborDistance:interiorMedianNearest});
 
@@ -106,8 +94,9 @@ check('UNDERSTORY_DEVICE_CAMERA_INVARIANT',understory===understoryAgain,{});
 check('UNDERSTORY_COMPACT_PRESENTATION_FLOOR',understoryMod.V4_UNDERSTORY_CONTRACT.compactPresentationSampling>=contract.understory.minimumCompactPresentationSampling,{actual:understoryMod.V4_UNDERSTORY_CONTRACT.compactPresentationSampling});
 const openingYoung=understory.instances.filter(x=>x.spatialZone==='OPENING'&&['LOW_SHRUB','SAPLING_YOUNG_GROWTH'].includes(x.type));
 check('OPENING_SIGHTLINE_GROWTH_SUPPRESSED',openingYoung.length===0,{count:openingYoung.length});
-const riparianReeds=understory.instances.filter(x=>x.type==='REED_WET_MARGIN'&&x.standClass==='WET_MARGIN_RIPARIAN');
-check('HYDROLOGY_CAUSED_RIPARIAN_REEDS',riparianReeds.length>=contract.understory.minimumRiparianReedCount,{count:riparianReeds.length,totalReeds:understory.classCounts?.REED_WET_MARGIN||0});
+const allReeds=understory.instances.filter(x=>x.type===contract.understory.requiredHydrologyClass);
+const hydrologyQualifiedReeds=allReeds.filter(x=>x.drainageClass==='LAND'&&x.shorelineDistance>=2&&Math.max(Number(x.riverWeight)||0,Number(x.lakeWeight)||0)>=contract.understory.minimumHydrologyWeightForReed);
+check('HYDROLOGY_CAUSED_WET_MARGIN_REEDS',hydrologyQualifiedReeds.length>=contract.understory.minimumHydrologyQualifiedReedCount,{qualifiedCount:hydrologyQualifiedReeds.length,totalReeds:allReeds.length,minimumHydrologyWeight:contract.understory.minimumHydrologyWeightForReed,sample:hydrologyQualifiedReeds.slice(0,5).map(x=>({id:x.id,standClass:x.standClass,riverWeight:x.riverWeight,lakeWeight:x.lakeWeight,shorelineDistance:x.shorelineDistance}))});
 const interiorFloor=understory.instances.filter(x=>x.type==='FOREST_FLOOR_CLUSTER'&&x.spatialZone==='INTERIOR');
 check('INTERIOR_FOREST_FLOOR_PRESENT',interiorFloor.length>=contract.understory.minimumInteriorForestFloorCount,{count:interiorFloor.length});
 check('UNDERSTORY_COVERAGE_PROBABILITY_EXPLICIT',understory.instances.length>0&&understory.instances.every(x=>finite(x.coverageProbability)&&x.coverageProbability>0),{instanceCount:understory.instanceCount});
@@ -115,34 +104,11 @@ check('UNDERSTORY_COVERAGE_PROBABILITY_EXPLICIT',understory.instances.length>0&&
 const frame=representationMod.buildVegetationRepresentationFrame({camera:{eye:{x:0,y:365,z:590},look:{x:70,y:24,z:-660}},previousFrame:null});
 check('V5_REPRESENTATION_COUNT_PRESERVED',frame.canonicalPopulationCount===818&&frame.representationCount===818,{canonicalPopulationCount:frame.canonicalPopulationCount,representationCount:frame.representationCount});
 check('V5_REPRESENTATION_AUTHORITY_PRESERVED',frame.lodAuthority==='CAMERA_DISTANCE'&&frame.hysteresisApplied===true,{lodAuthority:frame.lodAuthority,hysteresisApplied:frame.hysteresisApplied});
-
 check('MATERIAL_DISPOSITION_UNASSIGNED',contract.materialDisposition==='UNASSIGNED'&&contract.materialDispositionAuthority===false,{materialDisposition:contract.materialDisposition,materialDispositionAuthority:contract.materialDispositionAuthority});
 check('SPARSE_CHECKOUT_LAW_FROZEN',contract.checkoutLaw==='EXACT_REF_BLOB_FILTERED_CONE_SPARSE_INDEX_ONLY',{checkoutLaw:contract.checkoutLaw});
 
 const result=failures.length?'FAIL_CLOSED':'PASS_CLOSED';
-const receipt={
-  schema:'MIRRORLAND_GEN1975_MATERIAL_WORLD_READING_SUCCESSOR_QUALIFICATION_RECEIPT_v1',
-  operationId:contract.operationId,
-  lockGeneration:contract.lockGeneration,
-  exactHead,
-  productSubstrate:contract.productSubstrate,
-  governingMain:contract.governingMain,
-  result,
-  boundary:result==='PASS_CLOSED'?contract.targetBoundary:'MATERIAL_WORLD_READING_SUCCESSOR_MECHANICAL_FAIL_CLOSED',
-  materialDisposition:'UNASSIGNED',
-  materialDispositionAuthority:false,
-  canopyCount:population.instanceCount,
-  understoryCount:understory.instanceCount,
-  aurenLocalInteriorCanopyCount:localAuren.length,
-  interiorMedianNearestNeighborDistance:interiorMedianNearest,
-  riparianReedCount:riparianReeds.length,
-  v5RepresentationBlob:v5Blob,
-  v5RepresentationPreserved:v5Blob===contract.frozenV5Blob,
-  changedPaths:changed,
-  passCount:checks.filter(x=>x.pass).length,
-  failCount:failures.length,
-  checks
-};
+const receipt={schema:'MIRRORLAND_GEN1975_MATERIAL_WORLD_READING_SUCCESSOR_QUALIFICATION_RECEIPT_v1',operationId:contract.operationId,lockGeneration:contract.lockGeneration,exactHead,productSubstrate:contract.productSubstrate,governingMain:contract.governingMain,result,boundary:result==='PASS_CLOSED'?contract.targetBoundary:'MATERIAL_WORLD_READING_SUCCESSOR_MECHANICAL_FAIL_CLOSED',materialDisposition:'UNASSIGNED',materialDispositionAuthority:false,canopyCount:population.instanceCount,understoryCount:understory.instanceCount,aurenLocalInteriorCanopyCount:localAuren.length,interiorMedianNearestNeighborDistance:interiorMedianNearest,hydrologyQualifiedReedCount:hydrologyQualifiedReeds.length,totalReedCount:allReeds.length,v5RepresentationBlob:v5Blob,v5RepresentationPreserved:v5Blob===contract.frozenV5Blob,changedPaths:changed,passCount:checks.filter(x=>x.pass).length,failCount:failures.length,checks};
 if(outputPath){fs.mkdirSync(path.dirname(path.resolve(outputPath)),{recursive:true});fs.writeFileSync(path.resolve(outputPath),JSON.stringify(receipt,null,2)+'\n');}
 process.stdout.write(JSON.stringify(receipt,null,2)+'\n');
 process.exitCode=result==='PASS_CLOSED'?0:1;

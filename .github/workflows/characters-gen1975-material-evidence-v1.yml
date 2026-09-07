@@ -165,29 +165,34 @@ jobs:
               const allowed=new Set(['DENSE_WOODLAND','GROVE','WET_MARGIN_RIPARIAN']);
               const radius=260;
               const candidates=[];
+              const diagnostics=[];
               for(const [destinationId,binding] of Object.entries(step9.STEP9_DESTINATION_BINDINGS)){
                 if(destinationId==='manor'||destinationId==='clock')continue;
                 if(!document.querySelector(`.map-node[data-id="${destinationId}"]`))continue;
                 try{
                   const camera=step9.resolveStep9Camera(binding.siteId);
-                  const env=edge.resolveVegetationEnvironment(camera.eye.x,camera.eye.z);
+                  const look=camera.look||camera.worldReference;
+                  const eyeEnvironment=edge.resolveVegetationEnvironment(camera.eye.x,camera.eye.z);
+                  const lookEnvironment=edge.resolveVegetationEnvironment(look.x,look.z);
                   const count=population.instances.filter(tree=>{
                     if(tree.spatialZone!=='INTERIOR')return false;
-                    const dx=tree.world.x-camera.eye.x,dz=tree.world.z-camera.eye.z;
+                    const dx=tree.world.x-look.x,dz=tree.world.z-look.z;
                     return dx*dx+dz*dz<=radius*radius;
                   }).length;
-                  if(env.spatialZone==='INTERIOR'&&allowed.has(env.standClass)&&count>=8){
-                    candidates.push({destinationId,siteId:binding.siteId,camera,environment:{spatialZone:env.spatialZone,standClass:env.standClass,standId:env.standId},nearbyInteriorCanopyCount:count});
+                  diagnostics.push({destinationId,siteId:binding.siteId,eyeZone:eyeEnvironment.spatialZone,eyeStandClass:eyeEnvironment.standClass,lookZone:lookEnvironment.spatialZone,lookStandClass:lookEnvironment.standClass,nearbyInteriorCanopyCount:count});
+                  if(lookEnvironment.spatialZone==='INTERIOR'&&allowed.has(lookEnvironment.standClass)&&count>=8){
+                    candidates.push({destinationId,siteId:binding.siteId,camera,environment:{spatialZone:lookEnvironment.spatialZone,standClass:lookEnvironment.standClass,standId:lookEnvironment.standId},nearbyInteriorCanopyCount:count});
                   }
-                }catch{}
+                }catch(error){
+                  diagnostics.push({destinationId,siteId:binding.siteId,error:String(error?.message||error)});
+                }
               }
               candidates.sort((a,b)=>b.nearbyInteriorCanopyCount-a.nearbyInteriorCanopyCount||a.destinationId.localeCompare(b.destinationId));
-              if(!candidates.length)return null;
               const manorBinding=step9.STEP9_DESTINATION_BINDINGS.manor;
               const manorCamera=step9.resolveStep9Camera(manorBinding.siteId);
-              return {selected:candidates[0],manorCamera,candidateCount:candidates.length};
+              return {selected:candidates[0]||null,manorCamera,candidateCount:candidates.length,candidateDiagnostics:diagnostics};
             });
-            if(!raw)throw Error('NO_INDEPENDENT_INTERIOR_WITNESS');
+            if(!raw?.selected)throw Error(`NO_INDEPENDENT_INTERIOR_WITNESS:${JSON.stringify(raw?.candidateDiagnostics||[])}`);
             const selectedDigest=digest({destinationId:raw.selected.destinationId,siteId:raw.selected.siteId,camera:raw.selected.camera});
             const manorDigest=digest({destinationId:'manor',siteId:'MIRROR_MANOR',camera:raw.manorCamera});
             if(selectedDigest===manorDigest||raw.selected.destinationId==='manor')throw Error('INTERIOR_WITNESS_NOT_DISTINCT_FROM_MANOR');
@@ -207,7 +212,7 @@ jobs:
               distinctFromManor:true,
               qualifiedCandidateCount:raw.candidateCount,
               selectionLaw:'HIGHEST_QUALIFIED_LOCAL_INTERIOR_CANOPY_COUNT_THEN_STABLE_DESTINATION_ID',
-              environmentSamplePoint:'NORMAL_DESTINATION_CAMERA_EYE_XZ'
+              environmentSamplePoint:'NORMAL_DESTINATION_CAMERA_LOOK_XZ'
             };
           }
           async function environmentSnapshot(page,destinationId){

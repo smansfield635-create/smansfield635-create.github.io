@@ -146,12 +146,30 @@ jobs:
               await sleep(450);
             }
           }
-          async function gotoDestination(page,id){
-            await returnOrbit(page);
+          async function openMap(page){
             await page.locator('#map-toggle').click();
             await page.locator('#coast-map').waitFor({state:'visible',timeout:10000});
+          }
+          async function closeMap(page){
+            const panel=page.locator('#coast-map');
+            if(await panel.isVisible()){
+              await page.locator('#map-close').click();
+              await panel.waitFor({state:'hidden',timeout:10000});
+            }
+          }
+          async function gotoDestination(page,id){
+            await returnOrbit(page);
+            await openMap(page);
             const node=page.locator(`.map-node[data-id="${id}"]`);
-            if(!await node.count()||!await node.isVisible())throw Error(`MAP_NODE_NOT_VISIBLE:${id}`);
+            if(!await node.count())throw Error(`MAP_NODE_MISSING:${id}`);
+            if(!await node.isVisible()){
+              await closeMap(page);
+              if(id!=='auren'&&id!=='jeeves')throw Error(`MAP_NODE_NOT_VISIBLE:${id}`);
+              await gotoDestination(page,'manor');
+              await returnOrbit(page);
+              await openMap(page);
+              if(!await node.isVisible())throw Error(`MAP_NODE_STILL_NOT_VISIBLE_AFTER_MANOR_REVEAL:${id}`);
+            }
             await node.click();
             await page.locator('#return').waitFor({state:'visible',timeout:10000});
             await sleep(900);

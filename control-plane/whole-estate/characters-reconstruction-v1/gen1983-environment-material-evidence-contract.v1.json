@@ -1,0 +1,99 @@
+{
+  "schema": "MIRRORLAND_GEN1983_ENVIRONMENT_MATERIAL_EVIDENCE_CONTRACT_v1",
+  "operationId": "MIRRORLAND_GEN1983_ENVIRONMENT_MATERIAL_EVIDENCE_ADJUDICATION_20260907_001",
+  "lockGeneration": 1984,
+  "governingHead": "24eba044e3c4943756ee2412cb81f35a440f9608",
+  "route": "/characters/",
+  "programIssue": 2670,
+  "adjudicationClass": "EVIDENCE_ONLY_NO_PRODUCT_MUTATION",
+  "frozenProductSha": "b193e6758f776b5ff6006c96037ee1a7632ddb64",
+  "productSubstrateSha": "29b14204d545c93fd95a8a60f3c36eb7449ffb16",
+  "frozenV5BlobSha": "f3b64eb1ffc1c1bc8e908ff96eb6c833b6bc928d",
+  "predecessorMechanicalQualificationRun": 34149401286,
+  "predecessorMechanicalArtifactId": 10028814072,
+  "predecessorMechanicalReceiptCommentId": 5574166627,
+  "predecessorTerminalClosureRun": 34149574835,
+  "predecessorTerminalClosureCommentId": 5574182073,
+  "predecessorTerminalClosureCommit": "1364004fa961a0f927fe8604ccb42df84098b48b",
+  "psalmAckPackCommentId": 5574211676,
+  "canonicalIntakeCommentId": 5574222432,
+  "freshPacketRequired": true,
+  "captureSuccessIsMaterialPass": false,
+  "materialDispositionAuthority": "POST_ARTIFACT_READ_ONLY_ADJUDICATION_ONLY",
+  "perViewDispositions": ["PASS", "FAIL_PRODUCT", "FAIL_EVIDENCE", "INDETERMINATE"],
+  "materialTerminalResults": ["MATERIAL_VISUAL_ACCEPTANCE_PASS_CLOSED", "MATERIAL_VISUAL_ACCEPTANCE_FAIL_CLOSED"],
+  "rubric": [
+    "TERRITORIAL_ORGANIZATION",
+    "STAND_EDGE_TRANSITION_OPENING_LEGIBILITY",
+    "GROUND_UNDERSTORY_CONTINUITY",
+    "ECOLOGICAL_CONDITION_DIFFERENTIATION",
+    "NEGATIVE_SPACE_AND_DESTINATION_READABILITY",
+    "WORLD_BOUNDARY_CONTAINMENT",
+    "CROSS_VIEW_MATERIAL_CONTINUITY",
+    "REPRESENTATION_SEPARATION"
+  ],
+  "profiles": {
+    "desktop": {
+      "viewport": [1440, 900],
+      "requiredStates": [
+        "WIDE_COAST",
+        "OPEN_TERRAIN",
+        "WOODLAND_EDGE",
+        "FOREST_INTERIOR_INDEPENDENT",
+        "MIRROR_MANOR_APPROACH",
+        "SHORELINE_WETLAND_TRANSITION",
+        "WIDE_RETURN"
+      ]
+    },
+    "compactMobile": {
+      "viewport": [390, 844],
+      "maxWidthMediaQuery": 720,
+      "requiredStates": [
+        "WIDE_COAST",
+        "OPEN_TERRAIN",
+        "WOODLAND_EDGE",
+        "FOREST_INTERIOR_INDEPENDENT",
+        "MIRROR_MANOR_APPROACH",
+        "SHORELINE_WETLAND_TRANSITION",
+        "WIDE_RETURN"
+      ]
+    }
+  },
+  "independentInteriorRule": {
+    "requiredDestinationId": "auren",
+    "requiredSiteId": "AUREN_LOCAL",
+    "normalDestinationCameraOnly": true,
+    "manorProhibited": true,
+    "syntheticCameraProhibited": true,
+    "mustResolveSpatialZone": "INTERIOR",
+    "allowedStandClasses": ["DENSE_WOODLAND", "GROVE", "WET_MARGIN_RIPARIAN"],
+    "minimumNearbyInteriorCanopyCount": 90,
+    "selectionRadius": 260,
+    "selection": "AUREN_NORMAL_DESTINATION_CAMERA_REQUIRED"
+  },
+  "materialQuestions": [
+    "FOREST_MASS_READS_AS_CONTIGUOUS_TERRITORY_NOT_DISTRIBUTED_SYMBOLS",
+    "EDGE_TRANSITION_OPENING_INTERIOR_WET_MARGIN_ARE_VISUALLY_DISTINCT",
+    "UNDERSTORY_CLOSES_BARE_GROUND_GAPS_WHERE_ECOLOGY_REQUIRES",
+    "WET_MARGINS_READ_HYDROLOGICALLY_DIFFERENT",
+    "INTENTIONAL_CLEARINGS_REMAIN_OPEN_AND_DESTINATIONS_LEGIBLE",
+    "WORLD_BOUNDARY_REMAINS_CONTAINED_IN_ALL_REQUIRED_NORMAL_VIEWS",
+    "ORGANIZATION_HOLDS_FROM_WIDE_INTERIOR_AND_COMPACT_MOBILE"
+  ],
+  "checkoutLaw": "EXACT_REF_BLOB_FILTERED_CONE_SPARSE_INDEX_ONLY",
+  "prohibited": [
+    "CHARACTERS_PRODUCT_MUTATION",
+    "V5_MUTATION",
+    "V6_PLUS",
+    "LOD_THRESHOLD_OR_HYSTERESIS_CHANGE",
+    "GEOGRAPHY_OR_COMPOSITION_TERRITORY_CHANGE",
+    "APPLICATION_CAMERA_MUTATION",
+    "SYNTHETIC_CAMERA",
+    "INTEGRATED_EXPERIENCE_MUTATION",
+    "UNRESTRICTED_FULL_TREE_CHECKOUT",
+    "MERGE",
+    "DEPLOYMENT",
+    "PUBLICATION",
+    "CAPTURE_WORKFLOW_MATERIAL_DISPOSITION"
+  ]
+}

@@ -60,8 +60,8 @@ jobs:
           test "$MATERIALIZED" -lt 2500
           for path in characters/app.mjs characters/vegetation-population.mjs characters/vegetation-understory.mjs control-plane/whole-estate/characters-reconstruction-v1/gen1975-material-world-reading-successor-contract.v1.json control-plane/whole-estate/characters-reconstruction-v1/verify-gen1975-material-world-reading-successor.v1.mjs .github/workflows/characters-gen1975-material-world-reading-successor-v1.yml; do test -f "$path"; done
           test "$(git hash-object characters/vegetation-representation.mjs)" = "$V5_REPRESENTATION_BLOB"
-          BAD_TOP="$(find . -mindepth 1 -maxdepth 1 ! -name .git ! -name characters ! -name control-plane ! -name .github ! -name h-earth-3d -printf '%f\n' | sort)"
-          test -z "$BAD_TOP"
+          BAD_TOP_DIRS="$(find . -mindepth 1 -maxdepth 1 -type d ! -name .git ! -name characters ! -name control-plane ! -name .github ! -name h-earth-3d -printf '%f\n' | sort)"
+          test -z "$BAD_TOP_DIRS"
           mkdir -p "$RUNNER_TEMP/material-world-reading-successor"
           cat > "$RUNNER_TEMP/material-world-reading-successor/material-world-reading-successor-scope-receipt.json" <<JSON
           {
@@ -75,7 +75,8 @@ jobs:
             "sparseIndex":true,
             "sparseEntries":$SPARSE_ENTRIES,
             "materializedFiles":$MATERIALIZED,
-            "topLevelLocality":[".github","characters","control-plane","h-earth-3d"]
+            "topLevelDirectoryLocality":[".github","characters","control-plane","h-earth-3d"],
+            "coneModeRootFilesPermitted":true
           }
           JSON
           test -z "$(git status --porcelain)"

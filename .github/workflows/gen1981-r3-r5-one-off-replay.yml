@@ -1,0 +1,361 @@
+name: Gen1981 R3-R5 One-Off Replay
+
+on:
+  push:
+    branches:
+      - replay/gen1981-r3-r5-actions-20260907-001
+    paths:
+      - .github/workflows/gen1981-r3-r5-one-off-replay.yml
+
+permissions:
+  contents: write
+  issues: write
+  actions: read
+
+concurrency:
+  group: gen1981-r3-r5-one-off-replay
+  cancel-in-progress: false
+
+jobs:
+  replay:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      TARGET_SHA: 1085bfe62239980d412d6e805b10d3203eb632ab
+      GOVERNING_MAIN: 24eba044e3c4943756ee2412cb81f35a440f9608
+      PRODUCT_BRANCH: compass/v2-r3-r5-reproduction-durable-capture-20260906-001
+      EVIDENCE_DIR: assets/compass/cinematic-media/v2-r3-r5-reproduction-20260906-001
+      HRA_URL: https://ccf-ontology.hubmapconsortium.org/objects/v1.2/Allen_M_Brain.glb
+      OUT: /tmp/gen1981-output
+    steps:
+      - name: Prove disposable carrier lineage
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${{ github.ref_name }}" = "replay/gen1981-r3-r5-actions-20260907-001"
+          git init /tmp/carrier-proof >/dev/null
+          cd /tmp/carrier-proof
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          git fetch --depth=1 origin "${{ github.sha }}" "$GOVERNING_MAIN"
+          test "$(git show -s --format=%P ${{ github.sha }})" = "$GOVERNING_MAIN"
+
+      - name: Check out exact persisted R3 source
+        uses: actions/checkout@v4
+        with:
+          ref: 1085bfe62239980d412d6e805b10d3203eb632ab
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact source head and clean worktree
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$TARGET_SHA"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install deterministic renderer dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg zip
+          mkdir -p "$RUNNER_TEMP/gen1981-runner" "$OUT"
+          cd "$RUNNER_TEMP/gen1981-runner"
+          npm init -y >/dev/null
+          npm install --no-save playwright@1.55.0 >/dev/null
+          npx playwright install --with-deps chromium >/dev/null
+
+      - name: Persisted-source static verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          node "$EVIDENCE_DIR/verify.mjs" > "$OUT/static-verification.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const r=JSON.parse(fs.readFileSync(process.env.OUT+'/static-verification.json','utf8'));
+          if(r.result!=='PASS') throw new Error('PERSISTED_SOURCE_STATIC_VERIFICATION_FAILED');
+          NODE
+
+      - name: Fetch frozen HRA donor once
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 --retry-delay 2 "$HRA_URL" -o "$RUNNER_TEMP/Allen_M_Brain.glb"
+          test -s "$RUNNER_TEMP/Allen_M_Brain.glb"
+          sha256sum "$RUNNER_TEMP/Allen_M_Brain.glb" | awk '{print $1}' > "$OUT/hra-donor.sha256"
+          stat -c '%s' "$RUNNER_TEMP/Allen_M_Brain.glb" > "$OUT/hra-donor.size"
+
+      - name: Serve exact source tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 >/tmp/gen1981-http.log 2>&1 &
+          echo $! > /tmp/gen1981-http.pid
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/gen1981-http.log || true
+          exit 1
+
+      - name: Render readiness, R4, and exact R5 frame sequence
+        shell: bash
+        env:
+          HRA_DONOR_PATH: ${{ runner.temp }}/Allen_M_Brain.glb
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/gen1981-runner/run.mjs" <<'NODE'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import crypto from 'node:crypto';
+
+          const OUT=process.env.OUT;
+          const donorPath=process.env.HRA_DONOR_PATH;
+          const HRA_URL=process.env.HRA_URL;
+          const EVIDENCE_DIR=process.env.EVIDENCE_DIR;
+          const TARGET_SHA=process.env.TARGET_SHA;
+          const sha256=b=>crypto.createHash('sha256').update(b).digest('hex');
+          const writeJson=(p,v)=>fs.writeFileSync(p,JSON.stringify(v,null,2)+'\n');
+          const framesDir=path.join(OUT,'frames');
+          const r4Dir=path.join(OUT,'r4');
+          fs.mkdirSync(framesDir,{recursive:true});
+          fs.mkdirSync(r4Dir,{recursive:true});
+
+          const browser=await chromium.launch({headless:true});
+          const context=await browser.newContext({viewport:{width:1280,height:720},deviceScaleFactor:1,reducedMotion:'reduce'});
+          const page=await context.newPage();
+          const pageErrors=[];
+          const failedRequests=[];
+          page.on('pageerror',e=>pageErrors.push(String(e)));
+          page.on('requestfailed',r=>failedRequests.push(`${r.method()} ${r.url()} :: ${r.failure()?.errorText||'failed'}`));
+          const donorBytes=fs.readFileSync(donorPath);
+          await page.route(HRA_URL,async route=>{
+            await route.fulfill({status:200,contentType:'model/gltf-binary',body:donorBytes});
+          });
+          const url=`http://127.0.0.1:4173/${EVIDENCE_DIR}/capture-source.html`;
+          await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});
+          const ready=await page.evaluate(async()=>{
+            if(!globalThis.CompassV2R3Capture) throw new Error('CAPTURE_API_MISSING');
+            await globalThis.CompassV2R3Capture.ready;
+            return globalThis.CompassV2R3Capture.inspect();
+          });
+          const donorIdentity=await page.evaluate(()=>{
+            const c=document.querySelector('#brain-canvas');
+            return {
+              ready:c?.dataset.brainReady||null,
+              renderer:c?.dataset.brainRenderer||null,
+              source:c?.dataset.brainSource||null,
+              expectedMeshes:Number(c?.dataset.brainExpectedMeshes||0),
+              expectedTriangles:Number(c?.dataset.brainExpectedTriangles||0),
+              meshCount:Number(c?.dataset.brainMeshCount||0),
+              triangleCount:Number(c?.dataset.brainTriangleCount||0),
+              primitiveCount:Number(c?.dataset.brainPrimitiveCount||0)
+            };
+          });
+          if(!ready?.ready) throw new Error('PERSISTED_R3_RENDER_NOT_READY');
+          if(donorIdentity.ready!=='true'||donorIdentity.source!==HRA_URL||donorIdentity.meshCount!==283||donorIdentity.triangleCount!==656268) {
+            throw new Error('HRA_DONOR_IDENTITY_FAILED:'+JSON.stringify(donorIdentity));
+          }
+          if(pageErrors.length||failedRequests.length) throw new Error('RUNTIME_ERRORS:'+JSON.stringify({pageErrors,failedRequests}));
+
+          const cdp=await context.newCDPSession(page);
+          const paint=()=>page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+          async function seek(ms){
+            const snap=await page.evaluate(v=>globalThis.CompassV2R3Capture.seek(v),ms);
+            await paint();
+            return snap;
+          }
+          async function png(){
+            const r=await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false,optimizeForSpeed:true});
+            return Buffer.from(r.data,'base64');
+          }
+
+          // Deterministic identical explicit-seek proof on a CSS-only Compass frame.
+          await seek(6000); const detA=await png();
+          await seek(6000); const detB=await png();
+          const detHashA=sha256(detA),detHashB=sha256(detB);
+          if(detHashA!==detHashB) throw new Error('IDENTICAL_SEEK_RENDER_MISMATCH');
+
+          const r4Points=[
+            ['arrival',1500],['compass',6000],['chapter-one',11000],['research',15300],['readiness',17500],
+            ['mirrorland',21000],['audralia',26000],['brain',30000],['trophy',32000],['house',34000],['return-compass',36000]
+          ];
+          const r4Frames=[];
+          for(let i=0;i<r4Points.length;i++){
+            const [label,ms]=r4Points[i];
+            const snap=await seek(ms);
+            const buf=await png();
+            const file=`r4-${String(i).padStart(2,'0')}-${label}.png`;
+            fs.writeFileSync(path.join(r4Dir,file),buf);
+            r4Frames.push({index:i,label,ms,file,sha256:sha256(buf),snapshot:snap});
+          }
+          writeJson(path.join(OUT,'r4-qualification.v1.json'),{
+            schema:'COMPASS_V2_R4_REPRESENTATIVE_RENDERED_QUALIFICATION_v1',result:'PASS_CLOSED',
+            operationId:'COMPASS_V2_R3_R5_REPRODUCTION_AND_DURABLE_CAPTURE_20260906_001',generation:1981,
+            sourceCommit:TARGET_SHA,viewport:{width:1280,height:720},donorIdentity,
+            deterministicSeek:{ms:6000,sha256:detHashA,identical:true},frames:r4Frames
+          });
+
+          const frameRows=[];
+          const sequence=crypto.createHash('sha256');
+          for(let i=0;i<1140;i++){
+            const ms=Math.round(i*1000/30);
+            const snap=await seek(ms);
+            const buf=await png();
+            const digest=sha256(buf);
+            const file=`frame-${String(i).padStart(4,'0')}.png`;
+            fs.writeFileSync(path.join(framesDir,file),buf);
+            const row={index:i,timeMs:ms,sha256:digest,activeText:snap.activeText,activeImages:snap.activeImages};
+            frameRows.push(row);
+            sequence.update(`${i},${ms},${digest}\n`,'utf8');
+          }
+          if(frameRows.length!==1140||frameRows.at(-1).timeMs!==37967) throw new Error('R5_FRAME_PROFILE_FAILED');
+          writeJson(path.join(OUT,'r5-frame-manifest.v1.json'),{
+            schema:'COMPASS_V2_R5_FRAME_MANIFEST_v1',result:'PASS',operationId:'COMPASS_V2_R3_R5_REPRODUCTION_AND_DURABLE_CAPTURE_20260906_001',generation:1981,
+            sourceCommit:TARGET_SHA,profile:{durationMs:38000,frameRate:30,frameCount:1140,viewport:{width:1280,height:720},frameTimeRule:'ROUND(frameIndex*1000/30)',lastFrameTimeMs:37967},
+            sequenceHashAlgorithm:'SHA256_UTF8_LINES_INDEX_COMMA_TIMEMS_COMMA_FRAME_SHA256_NEWLINE',sequenceSha256:sequence.digest('hex'),frames:frameRows
+          });
+          await browser.close();
+          NODE
+          cd "$RUNNER_TEMP/gen1981-runner"
+          node run.mjs
+
+      - name: Build R4 contact sheet and deterministic R5 MP4
+        shell: bash
+        run: |
+          set -euo pipefail
+          ffmpeg -hide_banner -loglevel error -y -framerate 1 -pattern_type glob -i "$OUT/r4/r4-*.png" -vf "scale=320:180,tile=4x3" -frames:v 1 "$OUT/r4-contact-sheet.png"
+          ffmpeg -hide_banner -loglevel error -y -framerate 30 -i "$OUT/frames/frame-%04d.png" -an -c:v libx264 -preset medium -crf 18 -pix_fmt yuv420p -movflags +faststart -map_metadata -1 -fflags +bitexact -flags:v +bitexact "$OUT/r5-capture.mp4"
+          ffprobe -v error -count_frames -select_streams v:0 -show_entries stream=width,height,r_frame_rate,nb_read_frames,duration -of json "$OUT/r5-capture.mp4" > "$OUT/ffprobe.json"
+          rm -rf "$OUT/frames" "$OUT/r4"
+
+      - name: Qualify R5 and build package manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import crypto from 'node:crypto';
+          const OUT=process.env.OUT,E=process.env.EVIDENCE_DIR,T=process.env.TARGET_SHA;
+          const sha=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+          const probe=JSON.parse(fs.readFileSync(OUT+'/ffprobe.json','utf8')).streams?.[0]||{};
+          if(Number(probe.width)!==1280||Number(probe.height)!==720||probe.r_frame_rate!=='30/1'||Number(probe.nb_read_frames)!==1140||Math.abs(Number(probe.duration)-38)>0.001) throw new Error('R5_FFPROBE_PROFILE_FAILED:'+JSON.stringify(probe));
+          const fm=JSON.parse(fs.readFileSync(OUT+'/r5-frame-manifest.v1.json','utf8'));
+          const q={schema:'COMPASS_V2_R5_QUALIFICATION_v1',result:'PASS_CLOSED',operationId:'COMPASS_V2_R3_R5_REPRODUCTION_AND_DURABLE_CAPTURE_20260906_001',generation:1981,sourceCommit:T,profile:fm.profile,sequenceSha256:fm.sequenceSha256,mp4:{sha256:sha(OUT+'/r5-capture.mp4'),ffprobe:probe},r4ContactSheetSha256:sha(OUT+'/r4-contact-sheet.png')};
+          fs.writeFileSync(OUT+'/r5-qualification.v1.json',JSON.stringify(q,null,2)+'\n');
+          const files=['r4-qualification.v1.json','r4-contact-sheet.png','r5-frame-manifest.v1.json','r5-capture.mp4','r5-qualification.v1.json'];
+          const manifest={schema:'COMPASS_V2_R3_R5_EVIDENCE_PACKAGE_MANIFEST_v1',result:'PASS_CLOSED',operationId:q.operationId,generation:1981,sourceCommit:T,files:Object.fromEntries(files.map(f=>[f,{sha256:sha(OUT+'/'+f),bytes:fs.statSync(OUT+'/'+f).size}]))};
+          fs.writeFileSync(OUT+'/package-manifest.v1.json',JSON.stringify(manifest,null,2)+'\n');
+          NODE
+          python3 - <<'PY'
+          import os, zipfile
+          out=os.environ['OUT']; src=os.environ['EVIDENCE_DIR']
+          names=[
+            ('capture-source.html',os.path.join(src,'capture-source.html')),
+            ('capture-source.mjs',os.path.join(src,'capture-source.mjs')),
+            ('source-manifest.v2.json',os.path.join(src,'source-manifest.v2.json')),
+            ('verify.mjs',os.path.join(src,'verify.mjs')),
+            ('static-verification.json',os.path.join(out,'static-verification.json')),
+            ('r4-qualification.v1.json',os.path.join(out,'r4-qualification.v1.json')),
+            ('r4-contact-sheet.png',os.path.join(out,'r4-contact-sheet.png')),
+            ('r5-frame-manifest.v1.json',os.path.join(out,'r5-frame-manifest.v1.json')),
+            ('r5-capture.mp4',os.path.join(out,'r5-capture.mp4')),
+            ('r5-qualification.v1.json',os.path.join(out,'r5-qualification.v1.json')),
+            ('package-manifest.v1.json',os.path.join(out,'package-manifest.v1.json')),
+          ]
+          with zipfile.ZipFile(os.path.join(out,'compass-v2-r3-r5-evidence.zip'),'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+            for arc,p in sorted(names):
+              info=zipfile.ZipInfo(arc,date_time=(1980,1,1,0,0,0)); info.compress_type=zipfile.ZIP_DEFLATED; info.external_attr=(0o100644<<16)
+              with open(p,'rb') as f: z.writestr(info,f.read(),compress_type=zipfile.ZIP_DEFLATED,compresslevel=9)
+          PY
+
+      - name: Atomically persist only authorized Gen1981 evidence paths
+        id: persist
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/persist.mjs" <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const repo=process.env.REPOSITORY,token=process.env.GH_TOKEN,T=process.env.TARGET_SHA,B=process.env.PRODUCT_BRANCH,E=process.env.EVIDENCE_DIR,O=process.env.OUT;
+          const files=['r4-qualification.v1.json','r4-contact-sheet.png','r5-frame-manifest.v1.json','r5-capture.mp4','r5-qualification.v1.json','package-manifest.v1.json','compass-v2-r3-r5-evidence.zip'];
+          const sha256=b=>crypto.createHash('sha256').update(b).digest('hex');
+          const api=async(method,path,body)=>{
+            const r=await fetch(`https://api.github.com/repos/${repo}${path}`,{method,headers:{Authorization:`Bearer ${token}`,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});
+            const text=await r.text(); if(!r.ok) throw new Error(`${method} ${path} HTTP ${r.status}: ${text}`); return text?JSON.parse(text):{};
+          };
+          const result={schema:'GEN1981_ATOMIC_EVIDENCE_PERSISTENCE_RECEIPT_v1',result:'FAIL_CLOSED',sourceCommit:T,productBranch:B};
+          try{
+            const ref=await api('GET',`/git/ref/heads/${B}`);
+            if(ref.object?.sha!==T) throw new Error(`PRODUCT_BRANCH_HEAD_DRIFT:${ref.object?.sha}`);
+            const baseCommit=await api('GET',`/git/commits/${T}`);
+            const entries=[],expected={};
+            for(const f of files){
+              const bytes=fs.readFileSync(`${O}/${f}`); expected[f]={sha256:sha256(bytes),bytes:bytes.length};
+              const blob=await api('POST','/git/blobs',{content:bytes.toString('base64'),encoding:'base64'});
+              entries.push({path:`${E}/${f}`,mode:'100644',type:'blob',sha:blob.sha}); expected[f].blobSha=blob.sha;
+            }
+            const tree=await api('POST','/git/trees',{base_tree:baseCommit.tree.sha,tree:entries});
+            const commit=await api('POST','/git/commits',{message:'Compass V2 Gen1981: atomically persist R4/R5 evidence',tree:tree.sha,parents:[T]});
+            await api('PATCH',`/git/refs/heads/${B}`,{sha:commit.sha,force:false});
+            const rb=await api('GET',`/git/commits/${commit.sha}`);
+            if(rb.parents?.length!==1||rb.parents[0].sha!==T) throw new Error('READBACK_PARENT_MISMATCH');
+            for(const [f,x] of Object.entries(expected)){
+              const b=await api('GET',`/git/blobs/${x.blobSha}`); const bytes=Buffer.from(b.content.replace(/\n/g,''),'base64');
+              if(bytes.length!==x.bytes||sha256(bytes)!==x.sha256) throw new Error(`READBACK_HASH_MISMATCH:${f}`);
+            }
+            const finalRef=await api('GET',`/git/ref/heads/${B}`);
+            if(finalRef.object?.sha!==commit.sha) throw new Error('FINAL_REF_READBACK_MISMATCH');
+            Object.assign(result,{result:'PASS_CLOSED',finalCommit:commit.sha,tree:tree.sha,files:expected});
+          } catch(error){ result.error=String(error?.message||error); }
+          fs.writeFileSync(`${O}/persistence-receipt.json`,JSON.stringify(result,null,2)+'\n');
+          console.log(JSON.stringify(result));
+          if(result.result!=='PASS_CLOSED') process.exit(1);
+          NODE
+          node "$RUNNER_TEMP/persist.mjs"
+          echo "final_commit=$(node -e "console.log(require('$OUT/persistence-receipt.json').finalCommit)")" >> "$GITHUB_OUTPUT"
+
+      - name: Post durable replay result
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE' > "$RUNNER_TEMP/comment.md"
+          import fs from 'node:fs';
+          const p=process.env.OUT+'/persistence-receipt.json';
+          const r=fs.existsSync(p)?JSON.parse(fs.readFileSync(p,'utf8')):{result:'FAIL_CLOSED',error:'PERSISTENCE_RECEIPT_MISSING'};
+          const q=fs.existsSync(process.env.OUT+'/r5-qualification.v1.json')?JSON.parse(fs.readFileSync(process.env.OUT+'/r5-qualification.v1.json','utf8')):null;
+          console.log(`GEN1981_ONE_OFF_ACTIONS_REPLAY_RECEIPT_20260907\n\nRun: \`${process.env.RUN_ID}\` attempt \`${process.env.RUN_ATTEMPT}\`\nResult: **${r.result}**\nPersisted R3 source: \`${process.env.TARGET_SHA}\`\nFinal evidence commit: \`${r.finalCommit??'NONE'}\`\nR5 frame count: \`${q?.profile?.frameCount??'NONE'}\`\nR5 sequence SHA-256: \`${q?.sequenceSha256??'NONE'}\`\nR5 MP4 SHA-256: \`${q?.mp4?.sha256??'NONE'}\`\nError: \`${r.error??'NONE'}\`\n\nCarrier branch is disposable/unmerged. No merge, deployment, publication, protected-surface mutation, or R6 authority was created.`);
+          NODE
+          gh api "repos/${REPOSITORY}/issues/2828/comments" -f body="$(cat "$RUNNER_TEMP/comment.md")"
+
+      - name: Upload compact replay package
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gen1981-r3-r5-replay-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/gen1981-output/static-verification.json
+            /tmp/gen1981-output/hra-donor.sha256
+            /tmp/gen1981-output/hra-donor.size
+            /tmp/gen1981-output/r4-qualification.v1.json
+            /tmp/gen1981-output/r4-contact-sheet.png
+            /tmp/gen1981-output/r5-frame-manifest.v1.json
+            /tmp/gen1981-output/r5-capture.mp4
+            /tmp/gen1981-output/r5-qualification.v1.json
+            /tmp/gen1981-output/package-manifest.v1.json
+            /tmp/gen1981-output/compass-v2-r3-r5-evidence.zip
+            /tmp/gen1981-output/persistence-receipt.json
+          if-no-files-found: warn
+          retention-days: 90

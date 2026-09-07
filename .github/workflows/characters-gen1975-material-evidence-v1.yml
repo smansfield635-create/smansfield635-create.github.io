@@ -70,7 +70,7 @@ jobs:
           test -z "$(git -C tooling status --porcelain)"
           echo "TOOLING_HEAD=$HEAD_SHA" >> "$GITHUB_ENV"
 
-      - name: Materialize exact frozen Gen1975 characters sparse index
+      - name: Materialize exact frozen Gen1975 proven runtime dependency sparse index
         shell: bash
         run: |
           set -euo pipefail
@@ -79,7 +79,15 @@ jobs:
           git -C frozen-product remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
           git -C frozen-product -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$FROZEN_PRODUCT_SHA"
           git -C frozen-product sparse-checkout init --cone --sparse-index
-          git -C frozen-product sparse-checkout set characters
+          git -C frozen-product sparse-checkout set \
+            characters \
+            h-earth-3d/terrain \
+            h-earth-3d/integration \
+            h-earth-3d/control-plane/run-8 \
+            h-earth-3d/zones \
+            h-earth-3d/cells \
+            h-earth-3d/objects \
+            showroom/globe/h-earth/render
           git -C frozen-product checkout --detach FETCH_HEAD
           test "$(git -C frozen-product rev-parse HEAD^{commit})" = "$FROZEN_PRODUCT_SHA"
           test "$(git -C frozen-product config --bool index.sparse)" = "true"
@@ -88,8 +96,37 @@ jobs:
           frozen_materialized_files="$(find frozen-product -type f -not -path 'frozen-product/.git/*' | wc -l | tr -d '[:space:]')"
           test "$frozen_sparse_entries" -lt 10000
           test "$frozen_materialized_files" -lt 10000
-          test -z "$(find frozen-product -mindepth 1 -maxdepth 1 -type d ! -name .git ! -name characters -print -quit)"
-          test -f frozen-product/characters/vegetation-representation.mjs
+          test -z "$(find frozen-product -mindepth 1 -maxdepth 1 -type d ! -name .git ! -name characters ! -name h-earth-3d ! -name showroom -print -quit)"
+          test -z "$(find frozen-product/h-earth-3d -mindepth 1 -maxdepth 1 -type d ! -name terrain ! -name integration ! -name control-plane ! -name zones ! -name cells ! -name objects -print -quit)"
+          test -z "$(find frozen-product/h-earth-3d/control-plane -mindepth 1 -maxdepth 1 -type d ! -name run-8 -print -quit)"
+          test -z "$(find frozen-product/showroom -mindepth 1 -maxdepth 1 -type d ! -name globe -print -quit)"
+          test -z "$(find frozen-product/showroom/globe -mindepth 1 -maxdepth 1 -type d ! -name h-earth -print -quit)"
+          test -z "$(find frozen-product/showroom/globe/h-earth -mindepth 1 -maxdepth 1 -type d ! -name render -print -quit)"
+          for required in \
+            characters/vegetation-representation.mjs \
+            h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js \
+            h-earth-3d/terrain/h-earth.terrain-formations.js \
+            h-earth-3d/terrain/h-earth.terrain-field.js \
+            h-earth-3d/terrain/h-earth.terrain-estate-construction-v1.candidate.js \
+            h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js \
+            h-earth-3d/terrain/h-earth.world-manifold-domain.js \
+            h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js \
+            h-earth-3d/integration/h-earth.landscape-realization-planner.js \
+            h-earth-3d/integration/h-earth.source-object-geometry-resolution.js \
+            h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js \
+            h-earth-3d/integration/h-earth.world-representation-plan.js \
+            h-earth-3d/zones/ground-cell-001.landscape-lattice.js \
+            h-earth-3d/zones/ground-cell-001.zones.js \
+            h-earth-3d/cells/ground-cell-001.js \
+            h-earth-3d/objects/ground-cell-001.objects.js \
+            h-earth-3d/h-earth.matrix.js \
+            showroom/globe/h-earth/render/geometry-kernel.js \
+            showroom/globe/h-earth/render/geometry-landscape.js \
+            showroom/globe/h-earth/render/geometry-distant-context.js \
+            showroom/globe/h-earth/render/geometry-shoreline.js \
+            showroom/globe/h-earth/render/planetary-world-frame.js; do
+            test -f "frozen-product/$required"
+          done
           echo "FROZEN_PRODUCT_SPARSE_INDEX_ENTRIES=$frozen_sparse_entries"
           echo "FROZEN_PRODUCT_MATERIALIZED_FILES=$frozen_materialized_files"
 

@@ -2,7 +2,7 @@ name: Characters Gen1983 Environment Material Evidence v1
 
 on:
   pull_request:
-    branches: [characters/material-world-reading-successor-20260906-002]
+    branches: [characters/gen1980-environment-material-successor-20260907-001]
     paths:
       - 'control-plane/whole-estate/characters-reconstruction-v1/gen1983-environment-material-evidence-contract.v1.json'
       - 'control-plane/whole-estate/characters-reconstruction-v1/verify-gen1983-environment-material-evidence.v1.mjs'

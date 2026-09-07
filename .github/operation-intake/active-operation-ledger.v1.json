@@ -6327,49 +6327,6 @@
       "scopeHash": "dde866deb3700ab6b9d918ca488f97d44312979b3f4ee00c50c1356841393d02",
       "state": "ADMITTED_LOCKED"
     },
-    "de9b64f5c55c70ca554b623e72b8db8d9920254f6631ab09f3dded8488a4368d": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "24eba044e3c4943756ee2412cb81f35a440f9608",
-          "lockGeneration": 1980,
-          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:MATERIAL_WORLD_READING_SUCCESSOR",
-          "operationId": "MIRRORLAND_GEN1975_MATERIAL_WORLD_READING_SUCCESSOR_20260906_002",
-          "procedureLocatorDigest": "d5bcd4a417cd5b8189a507eefd5599bec542a4d87f8289b028851966e7b02a8a",
-          "requestDigest": "555894912adf39242f610574ee347998bf442e2d0b7a900ec5247f58d1d44250",
-          "scopeHash": "de9b64f5c55c70ca554b623e72b8db8d9920254f6631ab09f3dded8488a4368d"
-        },
-        "bindingDigest": "2bf2add4da2cc2b5297847d652a585bc94d862e8d5525d8a20270875e17d9d4f",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "3945d7002b497ec43daaa3af85436e90134add32be00ecbc8571a6b98bcf9a1a",
-          "commentId": 5564754418,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2670,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34080906762,
-          "workflowSha": "24eba044e3c4943756ee2412cb81f35a440f9608"
-        },
-        "lineageAnchorCommitSha": "c2abec4b7b30aabca349b9d4cd6a49e794b054b7",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "24eba044e3c4943756ee2412cb81f35a440f9608",
-      "lockGeneration": 1980,
-      "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:MATERIAL_WORLD_READING_SUCCESSOR",
-      "operationId": "MIRRORLAND_GEN1975_MATERIAL_WORLD_READING_SUCCESSOR_20260906_002",
-      "procedureLocatorDigest": "d5bcd4a417cd5b8189a507eefd5599bec542a4d87f8289b028851966e7b02a8a",
-      "released": false,
-      "requestDigest": "555894912adf39242f610574ee347998bf442e2d0b7a900ec5247f58d1d44250",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "de9b64f5c55c70ca554b623e72b8db8d9920254f6631ab09f3dded8488a4368d",
-      "state": "ADMITTED_LOCKED"
-    },
     "deeb7089d9e25420cb38cf013c7bb9b1f3d546523c68d30d7fb0f505f299766a": {
       "governingHead": "f9e63ce0e08e1c3bbf69c1afcffe8de6aed41c13",
       "lockGeneration": 1651,
@@ -41314,6 +41271,50 @@
       "scopeHash": "5fc000bcf0bfaac2ecf530ad2294520c6ae0a3598e1c5f48821137718e2b23b2",
       "state": "TERMINAL",
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "24eba044e3c4943756ee2412cb81f35a440f9608",
+          "lockGeneration": 1980,
+          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:MATERIAL_WORLD_READING_SUCCESSOR",
+          "operationId": "MIRRORLAND_GEN1975_MATERIAL_WORLD_READING_SUCCESSOR_20260906_002",
+          "procedureLocatorDigest": "d5bcd4a417cd5b8189a507eefd5599bec542a4d87f8289b028851966e7b02a8a",
+          "requestDigest": "555894912adf39242f610574ee347998bf442e2d0b7a900ec5247f58d1d44250",
+          "scopeHash": "de9b64f5c55c70ca554b623e72b8db8d9920254f6631ab09f3dded8488a4368d"
+        },
+        "bindingDigest": "2bf2add4da2cc2b5297847d652a585bc94d862e8d5525d8a20270875e17d9d4f",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "3945d7002b497ec43daaa3af85436e90134add32be00ecbc8571a6b98bcf9a1a",
+          "commentId": 5564754418,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2670,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34080906762,
+          "workflowSha": "24eba044e3c4943756ee2412cb81f35a440f9608"
+        },
+        "lineageAnchorCommitSha": "c2abec4b7b30aabca349b9d4cd6a49e794b054b7",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "24eba044e3c4943756ee2412cb81f35a440f9608",
+      "lockGeneration": 1980,
+      "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:MATERIAL_WORLD_READING_SUCCESSOR",
+      "operationId": "MIRRORLAND_GEN1975_MATERIAL_WORLD_READING_SUCCESSOR_20260906_002",
+      "procedureLocatorDigest": "d5bcd4a417cd5b8189a507eefd5599bec542a4d87f8289b028851966e7b02a8a",
+      "released": true,
+      "requestDigest": "555894912adf39242f610574ee347998bf442e2d0b7a900ec5247f58d1d44250",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "de9b64f5c55c70ca554b623e72b8db8d9920254f6631ab09f3dded8488a4368d",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

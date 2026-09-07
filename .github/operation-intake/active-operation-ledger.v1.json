@@ -1127,49 +1127,6 @@
       "scopeHash": "2d8e31bab5c9bfc7ca27a7c9ba88a8d1b17e79867086159dd335ef376f2f4f93",
       "state": "ADMITTED_LOCKED"
     },
-    "2f1d018a327b00e648850b2c2208ca62f74e0188926cf0dfd647233387225160": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "24eba044e3c4943756ee2412cb81f35a440f9608",
-          "lockGeneration": 1984,
-          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:MATERIAL_EVIDENCE:GEN1983",
-          "operationId": "MIRRORLAND_GEN1983_ENVIRONMENT_MATERIAL_EVIDENCE_ADJUDICATION_20260907_001",
-          "procedureLocatorDigest": "d837372b7652c70a955ae82c4ab495cf82ba7b76da6e7c26357c004b1a6c58e9",
-          "requestDigest": "2d904031cb2f3a1ae13c82585b22e405eada5e7bdfa418291b3047ca928ebc3e",
-          "scopeHash": "2f1d018a327b00e648850b2c2208ca62f74e0188926cf0dfd647233387225160"
-        },
-        "bindingDigest": "624b45d5266d0fa6db56869a18e4e457616594bd73b028d47259fd13f78bc6b1",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "ba73d42a4ec3d558eb5f7a0bd1eb2c24b245819684719893a8f7b92fb99fc5f6",
-          "commentId": 5574222432,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2670,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34150031703,
-          "workflowSha": "24eba044e3c4943756ee2412cb81f35a440f9608"
-        },
-        "lineageAnchorCommitSha": "1364004fa961a0f927fe8604ccb42df84098b48b",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "24eba044e3c4943756ee2412cb81f35a440f9608",
-      "lockGeneration": 1984,
-      "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:MATERIAL_EVIDENCE:GEN1983",
-      "operationId": "MIRRORLAND_GEN1983_ENVIRONMENT_MATERIAL_EVIDENCE_ADJUDICATION_20260907_001",
-      "procedureLocatorDigest": "d837372b7652c70a955ae82c4ab495cf82ba7b76da6e7c26357c004b1a6c58e9",
-      "released": false,
-      "requestDigest": "2d904031cb2f3a1ae13c82585b22e405eada5e7bdfa418291b3047ca928ebc3e",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "2f1d018a327b00e648850b2c2208ca62f74e0188926cf0dfd647233387225160",
-      "state": "ADMITTED_LOCKED"
-    },
     "30aafa8cd70c2229714d2737d9e771d42657aa675aaf3505acceaf10d6c71bc1": {
       "governingHead": "9662c03b106387ff8046e191867214dd1f947a91",
       "lockGeneration": 1588,
@@ -41444,6 +41401,50 @@
       "requestDigest": "a9beea8f85a43476b7b4d47ada726b908903c201d90d6cd2ec8e85f18d2262b0",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "b81cfea1aead1e5b42408659f276f4acdd20ef0acb31e07cc7d4d447698ad3c7",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "24eba044e3c4943756ee2412cb81f35a440f9608",
+          "lockGeneration": 1984,
+          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:MATERIAL_EVIDENCE:GEN1983",
+          "operationId": "MIRRORLAND_GEN1983_ENVIRONMENT_MATERIAL_EVIDENCE_ADJUDICATION_20260907_001",
+          "procedureLocatorDigest": "d837372b7652c70a955ae82c4ab495cf82ba7b76da6e7c26357c004b1a6c58e9",
+          "requestDigest": "2d904031cb2f3a1ae13c82585b22e405eada5e7bdfa418291b3047ca928ebc3e",
+          "scopeHash": "2f1d018a327b00e648850b2c2208ca62f74e0188926cf0dfd647233387225160"
+        },
+        "bindingDigest": "624b45d5266d0fa6db56869a18e4e457616594bd73b028d47259fd13f78bc6b1",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "ba73d42a4ec3d558eb5f7a0bd1eb2c24b245819684719893a8f7b92fb99fc5f6",
+          "commentId": 5574222432,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2670,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34150031703,
+          "workflowSha": "24eba044e3c4943756ee2412cb81f35a440f9608"
+        },
+        "lineageAnchorCommitSha": "1364004fa961a0f927fe8604ccb42df84098b48b",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "24eba044e3c4943756ee2412cb81f35a440f9608",
+      "lockGeneration": 1984,
+      "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:MATERIAL_EVIDENCE:GEN1983",
+      "operationId": "MIRRORLAND_GEN1983_ENVIRONMENT_MATERIAL_EVIDENCE_ADJUDICATION_20260907_001",
+      "procedureLocatorDigest": "d837372b7652c70a955ae82c4ab495cf82ba7b76da6e7c26357c004b1a6c58e9",
+      "released": true,
+      "requestDigest": "2d904031cb2f3a1ae13c82585b22e405eada5e7bdfa418291b3047ca928ebc3e",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "2f1d018a327b00e648850b2c2208ca62f74e0188926cf0dfd647233387225160",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

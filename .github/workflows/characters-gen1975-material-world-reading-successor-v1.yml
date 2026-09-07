@@ -2,7 +2,7 @@ name: Characters Gen1975 Material World Reading Successor v1
 
 on:
   pull_request:
-    branches: [main]
+    branches: [characters/territorial-massing-edge-wet-margin-repair-20260906-001]
     paths:
       - 'characters/vegetation-population.mjs'
       - 'characters/vegetation-understory.mjs'

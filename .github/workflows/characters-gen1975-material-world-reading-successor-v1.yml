@@ -45,6 +45,7 @@ jobs:
             h-earth-3d/control-plane/run-8 \
             h-earth-3d/cells \
             h-earth-3d/zones \
+            h-earth-3d/objects \
             showroom/globe/h-earth/render
           git -c protocol.version=2 fetch --filter=blob:none --no-tags --depth=60 origin "$HEAD_SHA"
           git checkout --detach "$HEAD_SHA"
@@ -62,7 +63,7 @@ jobs:
           MATERIALIZED="$(find . -type f ! -path './.git/*' | wc -l | tr -d ' ')"
           test "$SPARSE_ENTRIES" -lt 5000
           test "$MATERIALIZED" -lt 2500
-          for path in characters/app.mjs characters/vegetation-population.mjs characters/vegetation-understory.mjs control-plane/whole-estate/characters-reconstruction-v1/gen1975-material-world-reading-successor-contract.v1.json control-plane/whole-estate/characters-reconstruction-v1/verify-gen1975-material-world-reading-successor.v1.mjs .github/workflows/characters-gen1975-material-world-reading-successor-v1.yml h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js h-earth-3d/zones/ground-cell-001.landscape-lattice.js h-earth-3d/cells/ground-cell-001.js showroom/globe/h-earth/render/geometry-kernel.js; do test -f "$path"; done
+          for path in characters/app.mjs characters/vegetation-population.mjs characters/vegetation-understory.mjs control-plane/whole-estate/characters-reconstruction-v1/gen1975-material-world-reading-successor-contract.v1.json control-plane/whole-estate/characters-reconstruction-v1/verify-gen1975-material-world-reading-successor.v1.mjs .github/workflows/characters-gen1975-material-world-reading-successor-v1.yml h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js h-earth-3d/zones/ground-cell-001.landscape-lattice.js h-earth-3d/cells/ground-cell-001.js h-earth-3d/objects/ground-cell-001.objects.js showroom/globe/h-earth/render/geometry-kernel.js; do test -f "$path"; done
           test "$(git hash-object characters/vegetation-representation.mjs)" = "$V5_REPRESENTATION_BLOB"
           BAD_TOP_DIRS="$(find . -mindepth 1 -maxdepth 1 -type d ! -name .git ! -name characters ! -name control-plane ! -name .github ! -name h-earth-3d ! -name showroom -printf '%f\n' | sort)"
           test -z "$BAD_TOP_DIRS"
@@ -80,7 +81,7 @@ jobs:
             "sparseEntries":$SPARSE_ENTRIES,
             "materializedFiles":$MATERIALIZED,
             "topLevelDirectoryLocality":[".github","characters","control-plane","h-earth-3d","showroom"],
-            "runtimeDependencyClosure":["h-earth-3d/terrain","h-earth-3d/integration","h-earth-3d/control-plane/run-8","h-earth-3d/cells","h-earth-3d/zones","showroom/globe/h-earth/render"],
+            "runtimeDependencyClosure":["h-earth-3d/terrain","h-earth-3d/integration","h-earth-3d/control-plane/run-8","h-earth-3d/cells","h-earth-3d/zones","h-earth-3d/objects","showroom/globe/h-earth/render"],
             "coneModeRootFilesPermitted":true
           }
           JSON

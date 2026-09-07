@@ -1,0 +1,43 @@
+{
+  "schema": "COMPASS_V2_R7_GIT_CUSTODY_PROOF_v1",
+  "result": "R7_V2_GIT_CUSTODY_CLOSED",
+  "operationId": "COMPASS_V2_R6_R10_MASTER_PLAYER_RELEASE_20260907_001",
+  "lockGeneration": 1987,
+  "governingMain": "24eba044e3c4943756ee2412cb81f35a440f9608",
+  "targetBranch": "compass/v2-r6-r10-master-player-release-20260907-001",
+  "r6Commit": "926512f9ddb6f0b53057db6542200b74fce89f13",
+  "r6Tree": "63b21298532e0855487dab46b363b23e4f745ccd",
+  "transferReplay": {
+    "authorizationComment": 5575233620,
+    "replayRun": 34158704493,
+    "replayReceiptComment": 5575266314,
+    "transferBranch": "transfer/compass-main-orientation-final-v2-20260907-001",
+    "transferCommit": "94bfae88f794e6afc691d0128d100ccec4f3f94e",
+    "result": "PASS_CLOSED",
+    "chunkCount": 6,
+    "finalBlobReadbackVerified": true,
+    "destinationReadbackVerified": true,
+    "replayAuthorityExhausted": true
+  },
+  "master": {
+    "path": "assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4",
+    "bytes": 2723640,
+    "sha256": "0326240cf1d3d8cf7753b91ea1cd0206378b8db7e37590b8bb39c37f6b50f444",
+    "gitBlob": "b48bc48e531c3eb29bd1a94a91725badd30186f5"
+  },
+  "committedReadback": {
+    "commit": "926512f9ddb6f0b53057db6542200b74fce89f13",
+    "tree": "63b21298532e0855487dab46b363b23e4f745ccd",
+    "pathResolvesToExactGitBlob": true,
+    "treeReportedBytes": 2723640,
+    "immutableObjectIdentityMatchesReplayReadback": true,
+    "branchReachable": true
+  },
+  "authority": {
+    "mainMutated": false,
+    "v1Overwritten": false,
+    "mergeAuthorityCreated": false,
+    "publicationAuthorityCreated": false,
+    "replayAuthorityExhausted": true
+  }
+}

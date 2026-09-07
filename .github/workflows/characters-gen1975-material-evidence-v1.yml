@@ -154,18 +154,15 @@ jobs:
           async function closeMap(page){
             const panel=page.locator('#coast-map');
             if(!await panel.count())return;
-            const state=await panel.evaluate(el=>({hidden:el.hidden,ariaHidden:el.getAttribute('aria-hidden')}));
-            if(state.hidden!==true||state.ariaHidden!=='true'){
+            const state=await panel.evaluate(el=>({show:el.classList.contains('show'),ariaHidden:el.getAttribute('aria-hidden')}));
+            if(state.show||state.ariaHidden!=='true'){
               const close=page.locator('#map-close');
-              if(await close.count()&&await close.isVisible())await close.click();
-              else{
-                const toggle=page.locator('#map-toggle');
-                if(await toggle.count()&&await toggle.isVisible())await toggle.click();
-              }
+              if(!await close.count())throw Error('MAP_CLOSE_CONTROL_MISSING');
+              await close.click();
             }
             await page.waitForFunction(()=>{
               const panel=document.querySelector('#coast-map');
-              return !!panel&&panel.hidden===true&&panel.getAttribute('aria-hidden')==='true';
+              return !!panel&&!panel.classList.contains('show')&&panel.getAttribute('aria-hidden')==='true';
             },null,{timeout:10000});
             await sleep(220);
           }
@@ -278,6 +275,7 @@ jobs:
                 disabled:node?.disabled??null,
                 mapHidden:map?.hidden??null,
                 mapClassName:map?.className??null,
+                mapAriaHidden:map?.getAttribute('aria-hidden')??null,
                 returnHidden:ret?.hidden??null,
                 returnClassName:ret?.className??null
               };

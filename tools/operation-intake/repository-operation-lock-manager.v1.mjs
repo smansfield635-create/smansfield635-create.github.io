@@ -260,6 +260,18 @@ export async function verifyCanonicalLockRefLineage({repository,token,branchHead
     if(c?.author?.login==='github-actions[bot]'&&c?.commit?.verification?.verified===true&&canonicalMutationMessage(c?.commit?.message))continue;
     const recovery=EXACT_LOCK_REF_LINEAGE_RECOVERIES.find(value=>value.commitSha===c?.sha);
     if(recovery&&await verifyExactLockRefLineageRecovery({repository,token,summary:c,recovery}))continue;
+    if(c?.author?.login==='smansfield635-create'&&c?.committer?.login==='smansfield635-create'){
+      const detail=await req(`${u}/commits/${c.sha}`,{headers:H(token)}),files=Array.isArray(detail?.files)?detail.files:[];
+      if(files.length!==1||files[0]?.filename!==LEDGER_PATH||!/^[0-9a-f]{40}$/.test(files[0]?.sha||''))throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.commits','authority-lineage',String(c?.sha||'UNKNOWN_COMMIT'));
+      const resultingLedger=await readLedgerBlob({repository,token,blobSha:files[0].sha});
+      try{
+        const {verifyCanonicalLedgerCommitV2}=await import('./repository-operation-lock-lineage.v2.mjs');
+        verifyCanonicalLedgerCommitV2({commit:detail,changedPaths:files.map(file=>file.filename),resultingLedger});
+        continue;
+      }catch(error){
+        throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.commits','authority-lineage',`${c.sha}:${error?.code||error?.message||'OWNER_CERTIFICATION_FAILED'}`);
+      }
+    }
     throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.commits','authority-lineage',String(c?.sha||'UNKNOWN_COMMIT'));
   }
   return stable({result:'CANONICAL_LOCK_REF_LINEAGE_VERIFIED',anchorCommitSha:anchor,branchHead:head,commitCount:seen.length});

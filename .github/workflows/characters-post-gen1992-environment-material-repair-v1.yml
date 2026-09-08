@@ -1,0 +1,240 @@
+name: Characters Post-Gen1992 Environment Material Repair v1
+
+on:
+  pull_request:
+    paths:
+      - 'characters/vegetation-population.mjs'
+      - 'characters/vegetation-understory.mjs'
+      - 'characters/app.mjs'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/post-gen1992-environment-material-repair-contract.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-post-gen1992-environment-material-repair.v1.mjs'
+      - '.github/workflows/characters-post-gen1992-environment-material-repair-v1.yml'
+
+permissions:
+  contents: read
+
+env:
+  OPERATION_ID: MIRRORLAND_POST_GEN1992_ENVIRONMENT_MATERIAL_REPAIR_20260907_002
+  LOCK_GENERATION: '1995'
+  GOVERNING_MAIN: 8f97bb035dce439cf28ca156b2fcd5bdfc6a1953
+  FROZEN_PRODUCT_SHA: b193e6758f776b5ff6006c96037ee1a7632ddb64
+  V2_TOOLING_HEAD: 834038c23711c3eed83dc21964027bd515852b51
+  V2_CONTRACT_BLOB: 84014a5a51a50d43e86c9e4f54bb0804d3655af1
+  V2_VERIFIER_BLOB: 6a7007cb37d04ea5af3542783342043c5c0a5829
+  V2_WORKFLOW_BLOB: 77b5b2e460adb86a123437c6eeb8d36ea8da5ba2
+  V5_BLOB: f3b64eb1ffc1c1bc8e908ff96eb6c833b6bc928d
+
+jobs:
+  exact-post-gen1992-environment-material-repair:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - name: Materialize exact repair candidate with cone sparse index
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p candidate
+          git -C candidate init
+          git -C candidate remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -C candidate -c protocol.version=2 fetch --no-tags --depth=64 --filter=blob:none origin \
+            "${{ github.event.pull_request.head.sha }}" "$FROZEN_PRODUCT_SHA" "$GOVERNING_MAIN"
+          git -C candidate sparse-checkout init --cone --sparse-index
+          git -C candidate sparse-checkout set \
+            characters \
+            control-plane/whole-estate/characters-reconstruction-v1 \
+            .github/workflows \
+            h-earth-3d/terrain \
+            h-earth-3d/integration \
+            h-earth-3d/control-plane/run-8 \
+            h-earth-3d/zones \
+            h-earth-3d/cells \
+            h-earth-3d/objects \
+            showroom/globe/h-earth/render
+          git -C candidate checkout --detach "${{ github.event.pull_request.head.sha }}"
+          test "$(git -C candidate rev-parse HEAD^{commit})" = "${{ github.event.pull_request.head.sha }}"
+          test "$(git -C candidate config --bool index.sparse)" = "true"
+          test "$(git -C candidate config --bool core.sparseCheckoutCone)" = "true"
+          test -z "$(find candidate -mindepth 1 -maxdepth 1 -type d ! -name .git ! -name .github ! -name characters ! -name control-plane ! -name h-earth-3d ! -name showroom -print -quit)"
+          test "$(git -C candidate ls-remote origin refs/heads/main | awk '{print $1}')" = "$GOVERNING_MAIN"
+
+      - name: Verify exact candidate ancestry and six-path scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          HEAD_SHA="$(git -C candidate rev-parse HEAD^{commit})"
+          git -C candidate merge-base --is-ancestor "$FROZEN_PRODUCT_SHA" "$HEAD_SHA"
+          mapfile -t CHANGED < <(git -C candidate diff --name-only "$FROZEN_PRODUCT_SHA"..."$HEAD_SHA" | sort)
+          EXPECTED=(
+            '.github/workflows/characters-post-gen1992-environment-material-repair-v1.yml'
+            'characters/app.mjs'
+            'characters/vegetation-population.mjs'
+            'characters/vegetation-understory.mjs'
+            'control-plane/whole-estate/characters-reconstruction-v1/post-gen1992-environment-material-repair-contract.v1.json'
+            'control-plane/whole-estate/characters-reconstruction-v1/verify-post-gen1992-environment-material-repair.v1.mjs'
+          )
+          mapfile -t EXPECTED_SORTED < <(printf '%s\n' "${EXPECTED[@]}" | sort)
+          test "${#CHANGED[@]}" -eq 6
+          for i in "${!EXPECTED_SORTED[@]}"; do test "${CHANGED[$i]}" = "${EXPECTED_SORTED[$i]}"; done
+          test -z "$(git -C candidate status --porcelain)"
+          echo "CANDIDATE_HEAD=$HEAD_SHA" >> "$GITHUB_ENV"
+
+      - name: Materialize exact frozen failed product with cone sparse index
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p baseline
+          git -C baseline init
+          git -C baseline remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -C baseline -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$FROZEN_PRODUCT_SHA"
+          git -C baseline sparse-checkout init --cone --sparse-index
+          git -C baseline sparse-checkout set \
+            characters \
+            h-earth-3d/terrain \
+            h-earth-3d/integration \
+            h-earth-3d/control-plane/run-8 \
+            h-earth-3d/zones \
+            h-earth-3d/cells \
+            h-earth-3d/objects \
+            showroom/globe/h-earth/render
+          git -C baseline checkout --detach FETCH_HEAD
+          test "$(git -C baseline rev-parse HEAD^{commit})" = "$FROZEN_PRODUCT_SHA"
+          test "$(git -C baseline config --bool index.sparse)" = "true"
+          test "$(git -C baseline config --bool core.sparseCheckoutCone)" = "true"
+          test -z "$(find baseline -mindepth 1 -maxdepth 1 -type d ! -name .git ! -name characters ! -name h-earth-3d ! -name showroom -print -quit)"
+
+      - name: Materialize exact immutable Gen1992 V2 tooling with cone sparse index
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p v2-tooling
+          git -C v2-tooling init
+          git -C v2-tooling remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -C v2-tooling -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$V2_TOOLING_HEAD"
+          git -C v2-tooling sparse-checkout init --cone --sparse-index
+          git -C v2-tooling sparse-checkout set control-plane/whole-estate/characters-reconstruction-v1 .github/workflows
+          git -C v2-tooling checkout --detach FETCH_HEAD
+          test "$(git -C v2-tooling rev-parse HEAD^{commit})" = "$V2_TOOLING_HEAD"
+          test "$(git -C v2-tooling config --bool index.sparse)" = "true"
+          test "$(git -C v2-tooling config --bool core.sparseCheckoutCone)" = "true"
+          test "$(git -C v2-tooling hash-object control-plane/whole-estate/characters-reconstruction-v1/gen1983-camera-space-environment-diagnostics-v2-contract.v1.json)" = "$V2_CONTRACT_BLOB"
+          test "$(git -C v2-tooling hash-object control-plane/whole-estate/characters-reconstruction-v1/verify-gen1983-camera-space-environment-diagnostics-v2.v1.mjs)" = "$V2_VERIFIER_BLOB"
+          test "$(git -C v2-tooling hash-object .github/workflows/characters-gen1983-camera-space-environment-diagnostics-v2-v1.yml)" = "$V2_WORKFLOW_BLOB"
+          test -z "$(git -C v2-tooling status --porcelain)"
+
+      - name: Verify exact frozen product and protected V5 identity before evaluation
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C baseline hash-object characters/vegetation-representation.mjs)" = "$V5_BLOB"
+          test "$(git -C candidate hash-object characters/vegetation-representation.mjs)" = "$V5_BLOB"
+          test -z "$(git -C baseline status --porcelain)"
+          test -z "$(git -C candidate status --porcelain)"
+          test -z "$(git -C v2-tooling status --porcelain)"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Reprove calibrated V2 baseline on exact frozen failed product
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/post-gen1992-environment-material-repair"
+          node v2-tooling/control-plane/whole-estate/characters-reconstruction-v1/verify-gen1983-camera-space-environment-diagnostics-v2.v1.mjs \
+            --product-root baseline \
+            --output "$RUNNER_TEMP/post-gen1992-environment-material-repair/v2-baseline-receipt.json"
+          node - <<'NODE'
+          const fs=require('fs');
+          const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/post-gen1992-environment-material-repair/v2-baseline-receipt.json'));
+          if(r.result!=='PASS_CLOSED'||r.checkCount!==24||r.passCount!==24||r.failCount!==0)process.exit(1);
+          if(!r.metrics?.familyRisk||!Object.values(r.metrics.familyRisk).every(Boolean))process.exit(1);
+          if(r.metrics?.population?.instanceCount!==818||r.metrics?.population?.v5BlobObserved!==process.env.V5_BLOB)process.exit(1);
+          NODE
+
+      - name: Run unchanged V2 evaluator on repaired candidate in fresh process one
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          node v2-tooling/control-plane/whole-estate/characters-reconstruction-v1/verify-gen1983-camera-space-environment-diagnostics-v2.v1.mjs \
+            --product-root candidate \
+            --output "$RUNNER_TEMP/post-gen1992-environment-material-repair/v2-candidate-receipt.json"
+          status=$?
+          set -e
+          test "$status" = 1
+
+      - name: Run unchanged V2 evaluator on repaired candidate in fresh process two
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          node v2-tooling/control-plane/whole-estate/characters-reconstruction-v1/verify-gen1983-camera-space-environment-diagnostics-v2.v1.mjs \
+            --product-root candidate \
+            --output "$RUNNER_TEMP/post-gen1992-environment-material-repair/v2-candidate-repeat-receipt.json"
+          status=$?
+          set -e
+          test "$status" = 1
+          cmp \
+            "$RUNNER_TEMP/post-gen1992-environment-material-repair/v2-candidate-receipt.json" \
+            "$RUNNER_TEMP/post-gen1992-environment-material-repair/v2-candidate-repeat-receipt.json"
+
+      - name: Run independent repair verifier in fresh process one
+        shell: bash
+        run: |
+          set -euo pipefail
+          node candidate/control-plane/whole-estate/characters-reconstruction-v1/verify-post-gen1992-environment-material-repair.v1.mjs \
+            --baseline-root baseline \
+            --candidate-root candidate \
+            --v2-receipt "$RUNNER_TEMP/post-gen1992-environment-material-repair/v2-candidate-receipt.json" \
+            --output "$RUNNER_TEMP/post-gen1992-environment-material-repair/repair-verification-receipt.json"
+
+      - name: Run independent repair verifier in fresh process two
+        shell: bash
+        run: |
+          set -euo pipefail
+          node candidate/control-plane/whole-estate/characters-reconstruction-v1/verify-post-gen1992-environment-material-repair.v1.mjs \
+            --baseline-root baseline \
+            --candidate-root candidate \
+            --v2-receipt "$RUNNER_TEMP/post-gen1992-environment-material-repair/v2-candidate-repeat-receipt.json" \
+            --output "$RUNNER_TEMP/post-gen1992-environment-material-repair/repair-verification-repeat-receipt.json"
+          cmp \
+            "$RUNNER_TEMP/post-gen1992-environment-material-repair/repair-verification-receipt.json" \
+            "$RUNNER_TEMP/post-gen1992-environment-material-repair/repair-verification-repeat-receipt.json"
+
+      - name: Enforce terminal mechanical clear without assigning material acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs=require('fs');
+          const root=process.env.RUNNER_TEMP+'/post-gen1992-environment-material-repair/';
+          const v2=JSON.parse(fs.readFileSync(root+'v2-candidate-receipt.json'));
+          const repair=JSON.parse(fs.readFileSync(root+'repair-verification-receipt.json'));
+          const expectedFailed=[
+            'ALL_FOUR_KNOWN_FAILURE_FAMILIES_DETECTED',
+            'CALIBRATION_CANOPY_CONTINUITY_RISK_DETECTED',
+            'CALIBRATION_GROUND_VISUAL_AREA_RISK_DETECTED',
+            'CALIBRATION_HYDROLOGY_RESPONSE_RISK_DETECTED',
+            'CALIBRATION_SURFACE_CONTAINMENT_RISK_DETECTED'
+          ].sort();
+          const observedFailed=(v2.checks||[]).filter(x=>x.pass!==true).map(x=>x.id).sort();
+          if(v2.result!=='FAIL_CLOSED'||v2.failCount!==5||JSON.stringify(observedFailed)!==JSON.stringify(expectedFailed))process.exit(1);
+          if(!v2.metrics?.familyRisk||Object.values(v2.metrics.familyRisk).some(Boolean))process.exit(1);
+          if(repair.result!=='PASS_CLOSED'||repair.failCount!==0||repair.materialDispositionAuthority!==false)process.exit(1);
+          if(repair.materialDisposition!=='UNASSIGNED_PENDING_FRESH_VISUAL_EVIDENCE_AND_READ_ONLY_ADJUDICATION')process.exit(1);
+          NODE
+          test "$(git -C candidate hash-object characters/vegetation-representation.mjs)" = "$V5_BLOB"
+          test -z "$(git -C candidate status --porcelain)"
+          test -z "$(git -C baseline status --porcelain)"
+          test -z "$(git -C v2-tooling status --porcelain)"
+
+      - name: Upload post-Gen1992 repair receipts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: post-gen1992-environment-material-repair-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/post-gen1992-environment-material-repair/*.json
+          if-no-files-found: warn
+          retention-days: 90

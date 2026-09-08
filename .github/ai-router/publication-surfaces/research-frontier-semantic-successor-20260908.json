@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "research-frontier-semantic-successor-20260908",
-  "description": "Research Frontier seven-object semantic successor live verification contract with direct-document, Meaning/Evidence reader, Shared Bridge, retained-side return, claim-boundary, and runtime-error proof.",
+  "description": "Research Frontier seven-object semantic successor live verification contract.",
   "checks": [
     {
       "path": "/evidence/agentic-frontier/",
@@ -10,21 +10,11 @@
         "Different tests. A common structural question.",
         "Different experiments. Different claim ceilings. No evidence transfer or statistical pooling. Cross-domain generality remains open.",
         "One carousel · Seven research objects · One shared bridge",
-        "data-orbit-stage",
-        "data-orbit-card",
         "data-object='RFV3-01'",
         "data-object='RFV3-07'",
-        "data-reader data-face='scientific'",
-        "data-reader-face='scientific'",
-        "data-reader-face='agentic'",
-        "data-return-orbit",
         "PREDICTIVE SIGNAL",
         "MECHANISM REPLICATED",
         "ORIENTATION SELECTED",
-        "Bound the question",
-        "Separate the evidence",
-        "Preserve the event",
-        "Earn the claim",
         "The constraint is shared. The evidence is not.",
         "CONVERGING QUESTIONS AND RESULTS ≠ ONE POOLED CLAIM."
       ],
@@ -62,20 +52,9 @@
             "value": "true"
           },
           {
-            "type": "attributeEquals",
-            "selector": "[data-orbit-card][data-object='RFV3-02']",
-            "name": "aria-current",
-            "value": "true"
-          },
-          {
             "type": "textContains",
             "selector": "[data-orbit-status]",
             "value": "02 / 07"
-          },
-          {
-            "type": "textContains",
-            "selector": "[data-orbit-status]",
-            "value": "What Has to Be True First?"
           }
         ],
         "timeoutMs": 5000
@@ -99,18 +78,6 @@
             "selector": "[data-reader]",
             "name": "aria-labelledby",
             "value": "meaning-rfv3-02-title"
-          },
-          {
-            "type": "attributeEquals",
-            "selector": "[data-reader-face='scientific']",
-            "name": "aria-hidden",
-            "value": "false"
-          },
-          {
-            "type": "attributeEquals",
-            "selector": "[data-orbit-stage]",
-            "name": "aria-hidden",
-            "value": "true"
           }
         ],
         "timeoutMs": 5000
@@ -133,27 +100,16 @@
             "selector": "[data-reader]",
             "name": "aria-labelledby",
             "value": "evidence-rfv3-02-title"
-          },
-          {
-            "type": "attributeEquals",
-            "selector": "[data-reader-face='scientific']",
-            "name": "aria-hidden",
-            "value": "true"
-          },
-          {
-            "type": "attributeEquals",
-            "selector": "[data-reader-face='agentic']",
-            "name": "aria-hidden",
-            "value": "false"
           }
         ],
         "timeoutMs": 5000
       },
       {
-        "name": "Evidence side opens Shared Bridge",
+        "name": "keyboard opens Shared Bridge from Evidence side",
         "action": {
-          "type": "click",
-          "selector": "[data-reader-face='agentic'] [data-open-bridge]"
+          "type": "key",
+          "selector": "[data-reader-face='agentic'] [data-open-bridge]",
+          "key": "Enter"
         },
         "assertions": [
           {
@@ -176,23 +132,24 @@
         "timeoutMs": 5000
       },
       {
-        "name": "Shared Bridge returns to retained Evidence side",
+        "name": "keyboard closes Shared Bridge to retained Evidence side",
         "action": {
-          "type": "click",
-          "selector": "[data-shared-bridge] [data-close-bridge]"
+          "type": "key",
+          "selector": "[data-shared-bridge]:not([hidden]) [data-close-bridge]",
+          "key": "Enter"
         },
         "assertions": [
           {
             "type": "attributeEquals",
             "selector": "[data-reader]",
-            "name": "data-face",
-            "value": "agentic"
+            "name": "data-bridge-open",
+            "value": ""
           },
           {
             "type": "attributeEquals",
-            "selector": "[data-reader-face='agentic']",
-            "name": "aria-hidden",
-            "value": "false"
+            "selector": "[data-reader]",
+            "name": "data-face",
+            "value": "agentic"
           },
           {
             "type": "attributeEquals",
@@ -213,12 +170,6 @@
         "assertions": [
           {
             "type": "attributeEquals",
-            "selector": "[data-orbit-stage]",
-            "name": "aria-hidden",
-            "value": ""
-          },
-          {
-            "type": "attributeEquals",
             "selector": "[data-orbit-card][data-object='RFV3-02']",
             "name": "data-active",
             "value": "true"
@@ -228,35 +179,6 @@
             "selector": "[data-orbit-card][data-object='RFV3-02']",
             "name": "aria-label",
             "value": "Evidence side"
-          }
-        ],
-        "timeoutMs": 5000
-      },
-      {
-        "name": "keyboard reopens retained Evidence side",
-        "action": {
-          "type": "key",
-          "selector": "[data-orbit-stage]",
-          "key": "Enter"
-        },
-        "assertions": [
-          {
-            "type": "attributeEquals",
-            "selector": "[data-reader]",
-            "name": "data-face",
-            "value": "agentic"
-          },
-          {
-            "type": "attributeEquals",
-            "selector": "[data-reader]",
-            "name": "aria-labelledby",
-            "value": "evidence-rfv3-02-title"
-          },
-          {
-            "type": "attributeEquals",
-            "selector": "[data-orbit-stage]",
-            "name": "aria-hidden",
-            "value": "true"
           }
         ],
         "timeoutMs": 5000

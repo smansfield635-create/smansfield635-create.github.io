@@ -1,121 +1,157 @@
 {
   "schema": "R11A_UNIFIED_CONSTRUCTION_MANIFEST_v1",
-  "manifestId": "COMPASS_R11A_DETERMINISTIC_MANIFEST_20260908_001",
+  "manifestId": "COMPASS_R11A_DETERMINISTIC_MANIFEST_20260908_002_SOURCE_TRUTH_SALVAGE",
+  "revision": 2,
+  "supersedesManifestSha256": "ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f",
   "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
-  "constructionLaw": {"issue":2843,"commentId":5577947464},
-  "timingLaw": {"commentId":5577430926,"fps":30,"renderedFrameInterval":[0,1275],"renderedFrameCount":1275,"durationSeconds":42.5},
-  "contextLaw": {"commentId":5577446213,"contextEndFrame":990},
+  "constructionLaw": {"issue": 2843, "commentId": 5577947464},
+  "salvageClarification": {"issue": 2843, "commentId": 5579014346},
+  "timingLaw": {"commentId": 5577430926, "fps": 30, "renderedFrameInterval": [0, 1275], "intervalConvention": "[start_frame,end_frame)", "renderedFrameCount": 1275, "durationSeconds": 42.5},
+  "contextLaw": {"commentId": 5577446213, "contextEndFrame": 990},
   "builderVerifierInvariant": "BUILDER_INPUT_MANIFEST_SHA256 == VERIFIER_INPUT_MANIFEST_SHA256 == FROZEN_R11A_MANIFEST_SHA256",
-  "materializedCanonicalOccurrence": {
-    "sourceCommit": "1085bfe62239980d412d6e805b10d3203eb632ab",
-    "videoSha256": "b06c28a18eb849bdace1c5687108284ad15b50f597024a483530cead24982215",
-    "artifactId": 10025501948,
-    "artifactDigest": "18b254aa75048342134c2b5bac35d4466b1b3500924a7a8ae5caa38dd831f68b",
-    "useLaw": "RENDERED_OCCURRENCE_ONLY_WHERE_SOURCE_COMMIT_BLOB_IDENTITY_EQUALS_FROZEN_R11A_CANONICAL_SOURCE_BLOB; R11A_MANIFEST_REMAINS_EDIT_AUTHORITY",
-    "blobIdentityEquivalence": {
-      "index.html":"c7cecb616a90f7d40389c6f04cb5a5ddee5166cd",
-      "assets/compass/upstream-compass.geometry.js":"fe35d8d844859a6af810684ace53d2c65258522f",
-      "assets/compass/upstream-compass.renderer.js":"965376dd8a92686bc7008d1fea4846b5f8300872",
-      "assets/compass/upstream-compass.css":"ea4ac7da5f7a20fe1497c1bbcc46250783c6fe8e",
-      "assets/compass/compass.readiness-context-v1.js":"dd6220df67cc73d57150f8fa498d0cf477298ded",
-      "assets/shared/mirrorland-window.geometry.js":"fb3ee8ab92fa4b08e7708b83780de75d1a6f8595",
-      "assets/compass/compass.mirrorland-window.js":"f99d3ffedf7b7654d067d21d9363eb287877f852",
-      "showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs":"872d20b17bb0cd89d9613ca0262b25350890a617",
-      "assets/compass/compass.brain-scene.js":"325b9486d0ab2136d425aed9468c22c28c67a57b",
-      "assets/compass/compass.hra-brain-scene.js":"c26603744e55c8ede2c82944bd0fd117d04dcbdb",
-      "assets/compass/compass.house-scene.js":"a82e3c963a10808b9f8f1922faab45155ea4a62b",
-      "assets/compass/compass.trophy-scene.js":"d281e18b06128671ffe2a19e8fdb272cc5544e31",
-      "assets/compass/compass.trophy-cursive-inlay.js":"ef31d429d47df030d8dd6dce5313845a864baa1e"
-    }
+  "productionLaw": "APPROVED_SHOT_AUTHORITY + CANONICAL_VISIBLE_ASSET_AUTHORITY -> FINAL_SHOT",
+  "rejectedProductionLaw": "R5_MASTER -> TIME_STRETCH -> R11A",
+  "historicalDonorPolicy": {
+    "role": "PROVENANCE_AND_APPROVAL_EVIDENCE_ONLY",
+    "runtimeRequired": false,
+    "missingContainerBlocksConstruction": false,
+    "useIfRecovered": "OPTIONAL_ONLY_AFTER_SHA256_VERIFICATION",
+    "noDecisionLostFromContainerAbsence": true
   },
-  "donorIdentities": {
-    "1000001185.mp4":"8fae46b5db044b3802a1053c72aa151bc78a2907d35175c9670cb1fe57d28d55",
-    "1000001227.mp4":"b6922c9c86317e6739c2661be30619f779fdc84b9f4b390faf044605b0ff1a3e",
-    "1000001249.mp4":"62f0a56135853d2d62ef162f9c0ace74a3f701f82af14f3020750b876af6432b",
-    "1000001250.mp4":"d31312fc581e251946d35dbeb757417c9ee9537a18d674df623424add220f5e9"
+  "historicalRejectedImplementation": {
+    "detachedR5VideoSha256": "b06c28a18eb849bdace1c5687108284ad15b50f597024a483530cead24982215",
+    "artifactId": 10025501948,
+    "disposition": "FAIL_CLOSED_SOURCE_TRUTH_MOTION_AUDIO",
+    "runtimeUseProhibited": true
+  },
+  "survivingMotionAuthority": {
+    "r3SourceCommit": "1085bfe62239980d412d6e805b10d3203eb632ab",
+    "r3CaptureSourcePath": "assets/compass/cinematic-media/v2-r3-r5-reproduction-20260906-001/capture-source.mjs",
+    "r3CaptureSourceGitBlob": "c08e7a8db3e41d6dee1dbae11c0dd81fe9fd3819",
+    "r3SourceManifestPath": "assets/compass/cinematic-media/v2-r3-r5-reproduction-20260906-001/source-manifest.v2.json",
+    "r3SourceManifestGitBlob": "f88ff1367e4978a59e9c8d8e827b2feca8dabca8",
+    "transitionLaw": "TEXT_IN < IMAGE_IN < TEXT_OUT < IMAGE_OUT",
+    "carryMs": 350,
+    "maxPrecedingImages": 1
+  },
+  "audioAuthority": {
+    "source": "Saint-Saens - The Carnival of the Animals - 07 Aquarium",
+    "authoritySha1": "17f8b735b8754fac17967b9122cd050f47322805",
+    "authorityBytes": 1969578,
+    "delivery": "AAC-LC stereo 48 kHz",
+    "requiredForReviewMaster": true
+  },
+  "constructionInputs": {
+    "canonicalSourceMode": "LIVE_EXACT_HEAD_OR_EXACT_BLOB_EQUIVALENT_READ_ONLY_CAPTURE",
+    "shotFrameMode": "LOSSLESS_1280X720_30FPS_SOURCE_TRUTH_FRAMES",
+    "historicalDonorMediaRuntimeInput": false,
+    "r5MasterRuntimeInput": false
+  },
+  "historicalDonorIdentities": {
+    "1000001185.mp4": {"sha256": "8fae46b5db044b3802a1053c72aa151bc78a2907d35175c9670cb1fe57d28d55", "runtimeRequired": false, "role": "PROVENANCE_ONLY"},
+    "1000001227.mp4": {"sha256": "b6922c9c86317e6739c2661be30619f779fdc84b9f4b390faf044605b0ff1a3e", "runtimeRequired": false, "role": "PROVENANCE_ONLY"},
+    "1000001249.mp4": {"sha256": "62f0a56135853d2d62ef162f9c0ace74a3f701f82af14f3020750b876af6432b", "runtimeRequired": false, "role": "PROVENANCE_ONLY"},
+    "1000001250.mp4": {"sha256": "d31312fc581e251946d35dbeb757417c9ee9537a18d674df623424add220f5e9", "runtimeRequired": false, "role": "PROVENANCE_ONLY"}
   },
   "scenes": [
     {
-      "id":"S00","label":"Opening / entry invitation","frameRange":[0,144],"frameCount":144,"durationSeconds":4.8,
-      "canonicalSources":[{"path":"index.html","gitBlob":"c7cecb616a90f7d40389c6f04cb5a5ddee5166cd"}],
-      "donorStructure":[{"file":"1000001250.mp4","sha256":"d31312fc581e251946d35dbeb757417c9ee9537a18d674df623424add220f5e9"}],
-      "treatment":"APPROVED_MOTION_PROOF","motionProof":"ENTRY_SURFACE_ENHANCED_DISINTEGRATION",
-      "context":["Welcome to Diamond Gate Bridge","Find Your Way"],
-      "acceptanceRule":"Actual entry-surface rendered occurrence remains recognizable before pixel-block fragmentation propagates through the full surface and resolves to a clean cinematic field; no button-only dissolve.",
-      "sourceOccurrence":{"startSec":0.25,"endSec":4.85}
+      "id": "S00", "label": "Opening / entry invitation", "frameRange": [0, 144], "frameCount": 144, "durationSeconds": 4.8,
+      "canonicalSources": [{"path": "index.html", "gitBlob": "c7cecb616a90f7d40389c6f04cb5a5ddee5166cd"}],
+      "historicalDonorProvenance": [{"file": "1000001250.mp4", "sha256": "d31312fc581e251946d35dbeb757417c9ee9537a18d674df623424add220f5e9", "runtimeRequired": false}],
+      "motionCompositionAuthority": {"class": "APPROVED_MOTION_PROOF", "id": "ENTRY_SURFACE_ENHANCED_DISINTEGRATION", "r3OccurrenceMs": [250, 4850], "structuralLaw": "Play selected -> fragmentation propagates through the actual entry surface -> headline/body/controls/card become mobile successor matter -> clean cinematic field remains.", "proofFrameSha256": ["4ffd110d358825f9f6f395735e71405ef8115597acc5374ad2ddeb5aa7ed890b", "0481540c7b5c45ec8a2634e1e2915d164ac22aecf6724e28ef38fb6fa32e2682", "b0d8865502c348d473431b1f1fdb8c99246167a10c167906d3b07ef3e4604992", "4e23d33467e639423c96b9ebba2ff5057ccefbfe3e62efd74f73eb985f2aca9d"]},
+      "treatment": "APPROVED_MOTION_PROOF", "context": ["Welcome to Diamond Gate Bridge", "Find Your Way"], "salvageStatus": "READY_FOR_SOURCE_TRUTH_CONSTRUCTION", "runtimeDonorRequired": false,
+      "acceptanceRule": "Actual entry surface remains recognizable before full-surface fragmentation and clean handoff; no detached R5 source and no button-only dissolve."
     },
     {
-      "id":"S01","label":"Compass orientation","frameRange":[144,318],"frameCount":174,"durationSeconds":5.8,
-      "canonicalSources":[{"path":"assets/compass/upstream-compass.geometry.js","gitBlob":"fe35d8d844859a6af810684ace53d2c65258522f"},{"path":"assets/compass/upstream-compass.renderer.js","gitBlob":"965376dd8a92686bc7008d1fea4846b5f8300872"},{"path":"assets/compass/upstream-compass.css","gitBlob":"ea4ac7da5f7a20fe1497c1bbcc46250783c6fe8e"},{"path":"assets/compass/compass.controller.js","gitBlob":"568a6b2cd608a4cbcd62cf70ed59b241c39c90d2","protected":true}],
-      "donorStructure":[{"file":"1000001185.mp4","sha256":"8fae46b5db044b3802a1053c72aa151bc78a2907d35175c9670cb1fe57d28d55"}],
-      "treatment":"SOURCE_REPRODUCTION","context":["Discover our ideas, enter the story, or explore your own."],
-      "acceptanceRule":"Canonical Compass remains fully recognizable; donor motion/composition is reproduced without reinterpretation.",
-      "sourceOccurrence":{"startSec":5.15,"endSec":9.85}
+      "id": "S01", "label": "Compass orientation", "frameRange": [144, 318], "frameCount": 174, "durationSeconds": 5.8,
+      "canonicalSources": [{"path": "assets/compass/upstream-compass.geometry.js", "gitBlob": "fe35d8d844859a6af810684ace53d2c65258522f"}, {"path": "assets/compass/upstream-compass.renderer.js", "gitBlob": "965376dd8a92686bc7008d1fea4846b5f8300872"}, {"path": "assets/compass/upstream-compass.css", "gitBlob": "ea4ac7da5f7a20fe1497c1bbcc46250783c6fe8e"}, {"path": "assets/compass/compass.controller.js", "gitBlob": "568a6b2cd608a4cbcd62cf70ed59b241c39c90d2", "protected": true}],
+      "historicalDonorProvenance": [{"file": "1000001185.mp4", "sha256": "8fae46b5db044b3802a1053c72aa151bc78a2907d35175c9670cb1fe57d28d55", "runtimeRequired": false}],
+      "motionCompositionAuthority": {"class": "SOURCE_REPRODUCTION", "approvedMomentsSeconds": [15.0, 18.0], "r3OccurrenceMs": [5150, 9850], "transitionLaw": "TEXT_IN < IMAGE_IN < TEXT_OUT < IMAGE_OUT", "source": "persisted R3 event map plus #2843 owner approval"},
+      "treatment": "SOURCE_REPRODUCTION", "context": ["Discover our ideas, enter the story, or explore your own."], "salvageStatus": "READY_FOR_SOURCE_TRUTH_CONSTRUCTION", "runtimeDonorRequired": false,
+      "acceptanceRule": "Canonical upstream Compass geometry/renderer/CSS is the visible object; preserve approved motion/composition and never substitute the CSS .compass-field proxy."
     },
     {
-      "id":"S02","label":"Chapter One","frameRange":[318,444],"frameCount":126,"durationSeconds":4.2,
-      "canonicalSources":[{"path":"index.html","gitBlob":"c7cecb616a90f7d40389c6f04cb5a5ddee5166cd"},{"path":".github/ai-router/projects/compass/chapter-one-contextual-delivery-contract.v1.json","gitBlob":"9813c60f8ca9b5f27fccbf44cade7bb08c2f0f2e"}],
-      "donorStructure":[{"file":"1000001185.mp4","sha256":"8fae46b5db044b3802a1053c72aa151bc78a2907d35175c9670cb1fe57d28d55"}],
-      "treatment":"SOURCE_REPRODUCTION","context":["Begin with Chapter One."],
-      "acceptanceRule":"Approved Chapter One visual remains recognizable and context is minimal; no redesign.",
-      "sourceOccurrence":{"startSec":10.15,"endSec":14.75}
+      "id": "S02", "label": "Chapter One", "frameRange": [318, 444], "frameCount": 126, "durationSeconds": 4.2,
+      "canonicalSources": [{"path": "index.html", "gitBlob": "c7cecb616a90f7d40389c6f04cb5a5ddee5166cd"}, {"path": ".github/ai-router/projects/compass/chapter-one-contextual-delivery-contract.v1.json", "gitBlob": "9813c60f8ca9b5f27fccbf44cade7bb08c2f0f2e"}],
+      "historicalDonorProvenance": [{"file": "1000001185.mp4", "sha256": "8fae46b5db044b3802a1053c72aa151bc78a2907d35175c9670cb1fe57d28d55", "runtimeRequired": false}],
+      "motionCompositionAuthority": {"class": "SOURCE_REPRODUCTION", "approvedMomentSeconds": 24.0, "r3OccurrenceMs": [10150, 14850], "transitionLaw": "TEXT_IN < IMAGE_IN < TEXT_OUT < IMAGE_OUT", "source": "persisted R3 event map plus #2843 owner approval"},
+      "treatment": "SOURCE_REPRODUCTION", "context": ["Begin with Chapter One."], "salvageStatus": "READY_FOR_SOURCE_TRUTH_CONSTRUCTION", "runtimeDonorRequired": false,
+      "acceptanceRule": "Approved Chapter One composition is reproduced from the canonical Chapter One surface and contract; no generic detached chapter card and no redesign."
     },
     {
-      "id":"S03","label":"Choice / Readiness","frameRange":[444,570],"frameCount":126,"durationSeconds":4.2,
-      "canonicalSources":[{"path":"assets/compass/compass.readiness-context-v1.js","gitBlob":"dd6220df67cc73d57150f8fa498d0cf477298ded"},{"path":"index.html","gitBlob":"c7cecb616a90f7d40389c6f04cb5a5ddee5166cd"}],
-      "donorStructure":[{"file":"1000001185.mp4","sha256":"8fae46b5db044b3802a1053c72aa151bc78a2907d35175c9670cb1fe57d28d55"}],
-      "treatment":"SOURCE_REPRODUCTION","context":["When you’re ready, choose your way forward."],
-      "acceptanceRule":"Readiness state is recognizable, stable, and non-interactive; no capability-state mutation.",
-      "sourceOccurrence":{"startSec":17.05,"endSec":19.75}
+      "id": "S03", "label": "Choice / Readiness", "frameRange": [444, 570], "frameCount": 126, "durationSeconds": 4.2,
+      "canonicalSources": [{"path": "assets/compass/compass.readiness-context-v1.js", "gitBlob": "dd6220df67cc73d57150f8fa498d0cf477298ded"}, {"path": "index.html", "gitBlob": "c7cecb616a90f7d40389c6f04cb5a5ddee5166cd"}],
+      "historicalDonorProvenance": [{"file": "1000001185.mp4", "sha256": "8fae46b5db044b3802a1053c72aa151bc78a2907d35175c9670cb1fe57d28d55", "runtimeRequired": false}],
+      "motionCompositionAuthority": {"class": "SOURCE_REPRODUCTION", "approvedMomentSeconds": 28.0, "r3OccurrenceMs": [17050, 19850], "transitionLaw": "TEXT_IN < IMAGE_IN < TEXT_OUT < IMAGE_OUT", "source": "persisted R3 event map plus #2843 owner approval"},
+      "treatment": "SOURCE_REPRODUCTION", "context": ["When you’re ready, choose your way forward."], "salvageStatus": "READY_FOR_SOURCE_TRUTH_CONSTRUCTION", "runtimeDonorRequired": false,
+      "acceptanceRule": "Canonical Readiness surface is rendered non-interactively; preserve approved composition without generic proxies and without capability-state mutation."
     },
     {
-      "id":"S04","label":"Mirrorland → Audralia threshold","frameRange":[570,816],"frameCount":246,"durationSeconds":8.2,
-      "canonicalSources":[{"path":"assets/shared/mirrorland-window.geometry.js","gitBlob":"fb3ee8ab92fa4b08e7708b83780de75d1a6f8595"},{"path":"assets/compass/compass.mirrorland-window.js","gitBlob":"f99d3ffedf7b7654d067d21d9363eb287877f852"},{"path":"showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs","gitBlob":"872d20b17bb0cd89d9613ca0262b25350890a617"}],
-      "donorStructure":[{"file":"1000001249.mp4","sha256":"62f0a56135853d2d62ef162f9c0ace74a3f701f82af14f3020750b876af6432b"}],
-      "treatment":"APPROVED_MOTION_PROOF","motionProof":"MIRRORLAND_TO_AUDRALIA_PUSH_THROUGH","context":[],
-      "acceptanceRule":"Complete 21-pane threshold remains intact while the same canonical Audralia resolves internally and the camera pushes through until that identical Audralia fills frame; no alternate world or portal substitute.",
-      "sourceOccurrence":{"startSec":20.15,"endSec":29.30}
+      "id": "S04", "label": "Mirrorland -> Audralia threshold", "frameRange": [570, 816], "frameCount": 246, "durationSeconds": 8.2,
+      "canonicalSources": [{"path": "assets/shared/mirrorland-window.geometry.js", "gitBlob": "fb3ee8ab92fa4b08e7708b83780de75d1a6f8595"}, {"path": "assets/compass/compass.mirrorland-window.js", "gitBlob": "f99d3ffedf7b7654d067d21d9363eb287877f852"}, {"path": "showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs", "gitBlob": "872d20b17bb0cd89d9613ca0262b25350890a617"}],
+      "historicalDonorProvenance": [{"file": "1000001249.mp4", "sha256": "62f0a56135853d2d62ef162f9c0ace74a3f701f82af14f3020750b876af6432b", "runtimeRequired": false}],
+      "motionCompositionAuthority": {"class": "APPROVED_MOTION_PROOF", "id": "MIRRORLAND_TO_AUDRALIA_PUSH_THROUGH", "reviewTimingSeconds": [[0.0, 1.8, "COMPLETE_MIRRORLAND_HOLD"], [1.8, 4.8, "INTERNAL_AUDRALIA_REVEAL"], [4.8, 8.0, "CAMERA_WINDOW_PUSH_THROUGH"], [8.0, 8.2, "SAME_AUDRALIA_FULL_FRAME"]], "proofFrameSha256": ["4aea41a845163b2ae2dc1fa90f2d1daab29bb734a44bb80bc5f1d807ad54ea23", "4b23d4628707c2b4559d3c37300b6a4cfd47d9894ab98895002a1cb272e66bd3", "c2fc9a64c68b31c98bd30ba6628c5270b6c41213d7c5b141a5830c5b2e0cc519", "48e5f6ca50faa69c4185caf3121f05cd30ff97d805082274b52c42fcc730d4fc"]},
+      "treatment": "APPROVED_MOTION_PROOF", "context": [], "salvageStatus": "READY_FOR_SOURCE_TRUTH_CONSTRUCTION", "runtimeDonorRequired": false,
+      "acceptanceRule": "Complete 21-pane threshold remains intact while the same canonical Audralia resolves internally and the camera pushes through until identical Audralia fills frame."
     },
     {
-      "id":"S05","label":"Audralia / world opens","frameRange":[816,990],"frameCount":174,"durationSeconds":5.8,
-      "canonicalSources":[{"path":"showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs","gitBlob":"872d20b17bb0cd89d9613ca0262b25350890a617"}],
-      "donorStructure":[{"file":"1000001249.mp4","sha256":"62f0a56135853d2d62ef162f9c0ace74a3f701f82af14f3020750b876af6432b"}],
-      "treatment":"SOURCE_REPRODUCTION","context":["Explore Audralia."],
-      "acceptanceWindows":[{"name":"temperance","frameRange":[945,990],"frameCount":45}],
-      "acceptanceRule":"Correct canonical Audralia remains stable and readable through the exact temperance window; false branching-river model is prohibited.",
-      "sourceOccurrence":{"startSec":25.10,"endSec":29.30}
+      "id": "S05", "label": "Audralia / world opens", "frameRange": [816, 990], "frameCount": 174, "durationSeconds": 5.8,
+      "canonicalSources": [{"path": "showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs", "gitBlob": "872d20b17bb0cd89d9613ca0262b25350890a617"}],
+      "historicalDonorProvenance": [{"file": "1000001249.mp4", "sha256": "62f0a56135853d2d62ef162f9c0ace74a3f701f82af14f3020750b876af6432b", "runtimeRequired": false}, {"file": "1000001227.mp4", "sha256": "b6922c9c86317e6739c2661be30619f779fdc84b9f4b390faf044605b0ff1a3e", "runtimeRequired": false, "role": "EXPLICITLY_REJECTED_FALSE_RIVER_REFERENCE"}],
+      "motionCompositionAuthority": {"class": "SOURCE_REPRODUCTION", "r3OccurrenceMs": [25050, 29350], "source": "persisted R3 event map plus #2843 owner approval"},
+      "treatment": "SOURCE_REPRODUCTION", "context": ["Explore Audralia."], "acceptanceWindows": [{"name": "temperance", "frameRange": [945, 990], "frameCount": 45}], "salvageStatus": "READY_FOR_SOURCE_TRUTH_CONSTRUCTION", "runtimeDonorRequired": false,
+      "acceptanceRule": "Correct canonical Audralia remains stable/readable through the temperance window; false branching-river model is prohibited."
     },
     {
-      "id":"S06A","label":"Coherence Index / brain","frameRange":[990,1074],"frameCount":84,"durationSeconds":2.8,
-      "canonicalSources":[{"path":"assets/compass/compass.brain-scene.js","gitBlob":"325b9486d0ab2136d425aed9468c22c28c67a57b"},{"path":"assets/compass/compass.hra-brain-scene.js","gitBlob":"c26603744e55c8ede2c82944bd0fd117d04dcbdb"}],
-      "donorStructure":[{"file":"1000001249.mp4","sha256":"62f0a56135853d2d62ef162f9c0ace74a3f701f82af14f3020750b876af6432b"}],
-      "treatment":"SOURCE_REPRODUCTION","context":[],"acceptanceWindows":[{"name":"stable","frameRange":[1026,1062],"frameCount":36}],
-      "acceptanceRule":"Brain remains isolated on dark cinematic field with no white card or obsolete Audralia composite through exact stable window.",
-      "sourceOccurrence":{"startSec":29.45,"endSec":31.35}
+      "id": "S06A", "label": "Coherence Index / brain", "frameRange": [990, 1074], "frameCount": 84, "durationSeconds": 2.8,
+      "canonicalSources": [{"path": "assets/compass/compass.brain-scene.js", "gitBlob": "325b9486d0ab2136d425aed9468c22c28c67a57b"}, {"path": "assets/compass/compass.hra-brain-scene.js", "gitBlob": "c26603744e55c8ede2c82944bd0fd117d04dcbdb"}],
+      "historicalDonorProvenance": [{"file": "1000001249.mp4", "sha256": "62f0a56135853d2d62ef162f9c0ace74a3f701f82af14f3020750b876af6432b", "runtimeRequired": false}],
+      "motionCompositionAuthority": {"class": "SOURCE_REPRODUCTION", "approvedMomentSeconds": 36.0, "r3OccurrenceMs": [29450, 31350], "source": "persisted R3 event map plus #2843 owner approval"},
+      "treatment": "SOURCE_REPRODUCTION", "context": [], "acceptanceWindows": [{"name": "stable", "frameRange": [1026, 1062], "frameCount": 36}], "salvageStatus": "READY_FOR_SOURCE_TRUTH_CONSTRUCTION", "runtimeDonorRequired": false,
+      "acceptanceRule": "Brain remains isolated on dark cinematic field with no white card or obsolete Audralia composite through stable window."
     },
     {
-      "id":"S06B","label":"Talk to the House","frameRange":[1074,1149],"frameCount":75,"durationSeconds":2.5,
-      "canonicalSources":[{"path":"assets/compass/compass.house-scene.js","gitBlob":"a82e3c963a10808b9f8f1922faab45155ea4a62b"}],
-      "donorStructure":[{"file":"1000001249.mp4","sha256":"62f0a56135853d2d62ef162f9c0ace74a3f701f82af14f3020750b876af6432b"}],
-      "treatment":"SOURCE_REPRODUCTION","context":[],"acceptanceWindows":[{"name":"stable","frameRange":[1095,1131],"frameCount":36}],
-      "acceptanceRule":"House remains recognized and isolated on dark cinematic field through exact stable window.",
-      "sourceOccurrence":{"startSec":33.45,"endSec":35.35}
+      "id": "S06B", "label": "Talk to the House", "frameRange": [1074, 1149], "frameCount": 75, "durationSeconds": 2.5,
+      "canonicalSources": [{"path": "assets/compass/compass.house-scene.js", "gitBlob": "a82e3c963a10808b9f8f1922faab45155ea4a62b"}],
+      "historicalDonorProvenance": [{"file": "1000001249.mp4", "sha256": "62f0a56135853d2d62ef162f9c0ace74a3f701f82af14f3020750b876af6432b", "runtimeRequired": false}],
+      "motionCompositionAuthority": {"class": "SOURCE_REPRODUCTION", "approvedMomentSeconds": 40.0, "r3OccurrenceMs": [33450, 35350], "source": "persisted R3 event map plus #2843 owner approval"},
+      "treatment": "SOURCE_REPRODUCTION", "context": [], "acceptanceWindows": [{"name": "stable", "frameRange": [1095, 1131], "frameCount": 36}], "salvageStatus": "READY_FOR_SOURCE_TRUTH_CONSTRUCTION", "runtimeDonorRequired": false,
+      "acceptanceRule": "House remains recognized and isolated on dark cinematic field through stable window."
     },
     {
-      "id":"S06C","label":"Trophy / Awards Chamber","frameRange":[1149,1224],"frameCount":75,"durationSeconds":2.5,
-      "canonicalSources":[{"path":"assets/compass/compass.trophy-scene.js","gitBlob":"d281e18b06128671ffe2a19e8fdb272cc5544e31"},{"path":"assets/compass/compass.trophy-cursive-inlay.js","gitBlob":"ef31d429d47df030d8dd6dce5313845a864baa1e"}],
-      "donorStructure":[{"file":"1000001227.mp4","sha256":"b6922c9c86317e6739c2661be30619f779fdc84b9f4b390faf044605b0ff1a3e"}],
-      "treatment":"SOURCE_REPRODUCTION","context":[],"acceptanceWindows":[{"name":"stable","frameRange":[1170,1206],"frameCount":36}],
-      "acceptanceRule":"Trophy remains recognized and isolated on dark cinematic field through exact stable window.",
-      "sourceOccurrence":{"startSec":31.45,"endSec":33.35}
+      "id": "S06C", "label": "Trophy / Awards Chamber", "frameRange": [1149, 1224], "frameCount": 75, "durationSeconds": 2.5,
+      "canonicalSources": [{"path": "assets/compass/compass.trophy-scene.js", "gitBlob": "d281e18b06128671ffe2a19e8fdb272cc5544e31"}, {"path": "assets/compass/compass.trophy-cursive-inlay.js", "gitBlob": "ef31d429d47df030d8dd6dce5313845a864baa1e"}],
+      "historicalDonorProvenance": [{"file": "1000001227.mp4", "sha256": "b6922c9c86317e6739c2661be30619f779fdc84b9f4b390faf044605b0ff1a3e", "runtimeRequired": false}],
+      "motionCompositionAuthority": {"class": "SOURCE_REPRODUCTION", "approvedMomentSeconds": 36.0, "r3OccurrenceMs": [31450, 33350], "source": "persisted R3 event map plus #2843 owner approval"},
+      "treatment": "SOURCE_REPRODUCTION", "context": [], "acceptanceWindows": [{"name": "stable", "frameRange": [1170, 1206], "frameCount": 36}], "salvageStatus": "READY_FOR_SOURCE_TRUTH_CONSTRUCTION", "runtimeDonorRequired": false,
+      "acceptanceRule": "Trophy remains recognized and isolated on dark cinematic field through stable window."
     },
     {
-      "id":"LIVE","label":"Live-page handoff","frameRange":[1224,1275],"frameCount":51,"durationSeconds":1.7,
-      "canonicalSources":[{"path":"index.html","gitBlob":"c7cecb616a90f7d40389c6f04cb5a5ddee5166cd"}],
-      "donorStructure":[{"file":"1000001250.mp4","sha256":"d31312fc581e251946d35dbeb757417c9ee9537a18d674df623424add220f5e9"}],
-      "treatment":"SOURCE_REPRODUCTION","context":[],
-      "acceptanceRule":"Fade/handoff resolves to the actual current entry-surface occurrence; no generic final-return Compass scene and no contextual closure.",
-      "sourceOccurrence":{"startSec":0.90,"endSec":2.60}
+      "id": "LIVE", "label": "Live-page handoff", "frameRange": [1224, 1275], "frameCount": 51, "durationSeconds": 1.7,
+      "canonicalSources": [{"path": "index.html", "gitBlob": "c7cecb616a90f7d40389c6f04cb5a5ddee5166cd"}],
+      "historicalDonorProvenance": [{"file": "1000001250.mp4", "sha256": "d31312fc581e251946d35dbeb757417c9ee9537a18d674df623424add220f5e9", "runtimeRequired": false}],
+      "motionCompositionAuthority": {"class": "SOURCE_REPRODUCTION", "r3OccurrenceMs": [35400, 38000], "continuity": "ENDS_ON_LIVE_COMPASS_HANDOFF_SEMANTICS", "source": "persisted R3 event map plus #2843 owner approval"},
+      "treatment": "SOURCE_REPRODUCTION", "context": [], "salvageStatus": "READY_FOR_SOURCE_TRUTH_CONSTRUCTION", "runtimeDonorRequired": false,
+      "acceptanceRule": "Final frames resolve to the actual live page state so thin-player overlay removal produces a literal film-to-live match; no generic final-return scene."
     }
+  ],
+  "salvageCertification": {
+    "result": "ALL_SCENES_READY_FOR_SOURCE_TRUTH_CONSTRUCTION",
+    "decisionLostSceneCount": 0,
+    "missingSpecificMotionEvidenceSceneCount": 0,
+    "readySceneIds": ["S00", "S01", "S02", "S03", "S04", "S05", "S06A", "S06B", "S06C", "LIVE"],
+    "strictRepairPriority": ["S00", "S01", "S02", "S03", "LIVE"],
+    "constructionMayProceedWithoutHistoricalDonorContainers": true
+  },
+  "verificationRequirements": [
+    "NO_RUNTIME_REFERENCE_TO_DETACHED_R5_MASTER_OR_HISTORICAL_DONOR_MP4S",
+    "CANONICAL_VISIBLE_SOURCE_IDENTITY_FOR_EVERY_RECOGNIZABLE_ASSET",
+    "EXACTLY_TWO_APPROVED_MOTION_PROOF_SCENES_S00_S04",
+    "R3_MOTION_STRUCTURE_MAY_BE_REUSED_AS_STRUCTURE_NOT_VISIBLE_ASSET_AUTHORITY",
+    "EXACT_FRAME_COVERAGE_0_1275_HALF_OPEN",
+    "CONTEXT_TERMINATES_AT_FRAME_990",
+    "T10_AUDIO_AUTHORITY_RESTORED",
+    "LOSSLESS_FRAME_SOURCE_BEFORE_PUBLICATION_ENCODE",
+    "REVIEW_MASTER_ONLY_NO_LIVE_RELEASE"
   ]
 }

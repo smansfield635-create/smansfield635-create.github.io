@@ -4386,40 +4386,72 @@
       "state": "ADMITTED_LOCKED"
     },
     "984fe6dce105f096e819711867d04635f0cd78d024410795b781a66ad0572d8c": {
-      "governingHead": "c410128e421d39d45f29ca41ebd4985f87eaa011",
+      "governingHead": "3d034773e189d5c8f8fa72bb53457518c1e876de",
       "independentAuthorityProvenance": {
         "authorityIdentity": {
-          "governingHead": "c410128e421d39d45f29ca41ebd4985f87eaa011",
-          "lockGeneration": 2019,
+          "governingHead": "3d034773e189d5c8f8fa72bb53457518c1e876de",
+          "lockGeneration": 2020,
           "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:V6_EVIDENCE_SEQUENCE_MAINTENANCE",
-          "operationId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_001",
-          "procedureLocatorDigest": "1bd65d3888c2da7f9156eca55fcff0fc52947e8b29c12f9899c53c6b52d68c69",
-          "requestDigest": "fa7cbda1ff37a11d6d7331da1217addb0a0eacfefbef250b009cac892ae1ec91",
+          "operationId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_002",
+          "procedureLocatorDigest": "d7fb157e3877f3ba11bbf21c5e14e401fe6ea994ed594afa57dfd2b1c44b6afa",
+          "requestDigest": "287e347303753e7952186c731b28879bf2abd82064319c76b39e3eccb4110aa0",
           "scopeHash": "984fe6dce105f096e819711867d04635f0cd78d024410795b781a66ad0572d8c"
         },
-        "bindingDigest": "90ce3017f70570bb6b23843e4707df36d4edc5602ffad79c738a6bf2a2cddece",
+        "bindingDigest": "5ea66e284fb24b944cf0dae4a435e48a59de87877175c8b28e4513b6c7e1e513",
         "compareAndSwap": {
-          "observedLedgerBlobSha": "be8e07b3ac6e24e744b92e5270b0e2330da97313",
-          "observedLockRefHead": "9e2ff71833dbfce2819f112a982cd13ed1bf1c7c"
+          "observedLedgerBlobSha": "549f95f3df97cf4df0861eebe5d487d5867a9ab1",
+          "observedLockRefHead": "b16b5a9484ffdcd31cceb2e83308802b652a81ff"
         },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
         "source": {
           "authorAssociation": "OWNER",
           "authorLogin": "smansfield635-create",
-          "commentBodySha256": "a896c18650c33189d62f1f796aec06e150442225997db2426cde9f5133a4c0f7",
-          "commentId": 5592104154,
+          "commentBodySha256": "ecbec4052175fe0259e14dca75e5367150944f5b85601e2b8a5669fa0574bb20",
+          "commentId": 5592269751,
           "issueNumber": 2873,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
           "repository": "smansfield635-create/smansfield635-create.github.io"
         },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+        "transitionIdentity": {
+          "predecessor": {
+            "governingHead": "c410128e421d39d45f29ca41ebd4985f87eaa011",
+            "lockGeneration": 2019,
+            "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:V6_EVIDENCE_SEQUENCE_MAINTENANCE",
+            "operationId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_001"
+          },
+          "successor": {
+            "governingHead": "3d034773e189d5c8f8fa72bb53457518c1e876de",
+            "lockGeneration": 2020,
+            "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:V6_EVIDENCE_SEQUENCE_MAINTENANCE",
+            "operationId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_002"
+          },
+          "transitionId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_GEN2019_TO_GEN2020_20260908_001"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
       },
-      "lockGeneration": 2019,
+      "lockGeneration": 2020,
       "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:V6_EVIDENCE_SEQUENCE_MAINTENANCE",
-      "operationId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_001",
-      "procedureLocatorDigest": "1bd65d3888c2da7f9156eca55fcff0fc52947e8b29c12f9899c53c6b52d68c69",
+      "operationId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "c410128e421d39d45f29ca41ebd4985f87eaa011",
+        "lockGeneration": 2019,
+        "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:V6_EVIDENCE_SEQUENCE_MAINTENANCE",
+        "operationId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_001",
+        "preservedEvidenceRefs": [
+          "pr:2873@9bda922cf0f2a3d615e43a74fcc329df2711b493",
+          "workflow-run:34277142287",
+          "issue-comment:5592104154",
+          "operation:MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_001:lock-generation:2019"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_GEN2019_TO_GEN2020_20260908_001"
+      },
+      "procedureLocatorDigest": "d7fb157e3877f3ba11bbf21c5e14e401fe6ea994ed594afa57dfd2b1c44b6afa",
       "released": false,
-      "requestDigest": "fa7cbda1ff37a11d6d7331da1217addb0a0eacfefbef250b009cac892ae1ec91",
+      "requestDigest": "287e347303753e7952186c731b28879bf2abd82064319c76b39e3eccb4110aa0",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "984fe6dce105f096e819711867d04635f0cd78d024410795b781a66ad0572d8c",
       "state": "ADMITTED_LOCKED"
@@ -7546,7 +7578,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2019,
+  "lockGeneration": 2020,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -43198,6 +43230,63 @@
       "scopeHash": "b88ab5891863c5accb6fd1f8fef8725b205713109fa9e7661e15ca9bb348acb9",
       "state": "TERMINAL",
       "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+    },
+    {
+      "governingHead": "c410128e421d39d45f29ca41ebd4985f87eaa011",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "c410128e421d39d45f29ca41ebd4985f87eaa011",
+          "lockGeneration": 2019,
+          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:V6_EVIDENCE_SEQUENCE_MAINTENANCE",
+          "operationId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_001",
+          "procedureLocatorDigest": "1bd65d3888c2da7f9156eca55fcff0fc52947e8b29c12f9899c53c6b52d68c69",
+          "requestDigest": "fa7cbda1ff37a11d6d7331da1217addb0a0eacfefbef250b009cac892ae1ec91",
+          "scopeHash": "984fe6dce105f096e819711867d04635f0cd78d024410795b781a66ad0572d8c"
+        },
+        "bindingDigest": "90ce3017f70570bb6b23843e4707df36d4edc5602ffad79c738a6bf2a2cddece",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "be8e07b3ac6e24e744b92e5270b0e2330da97313",
+          "observedLockRefHead": "9e2ff71833dbfce2819f112a982cd13ed1bf1c7c"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "a896c18650c33189d62f1f796aec06e150442225997db2426cde9f5133a4c0f7",
+          "commentId": 5592104154,
+          "issueNumber": 2873,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "lockGeneration": 2019,
+      "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:V6_EVIDENCE_SEQUENCE_MAINTENANCE",
+      "operationId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_001",
+      "procedureLocatorDigest": "1bd65d3888c2da7f9156eca55fcff0fc52947e8b29c12f9899c53c6b52d68c69",
+      "released": true,
+      "requestDigest": "fa7cbda1ff37a11d6d7331da1217addb0a0eacfefbef250b009cac892ae1ec91",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "984fe6dce105f096e819711867d04635f0cd78d024410795b781a66ad0572d8c",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "pr:2873@9bda922cf0f2a3d615e43a74fcc329df2711b493",
+          "workflow-run:34277142287",
+          "issue-comment:5592104154",
+          "operation:MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_001:lock-generation:2019"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "3d034773e189d5c8f8fa72bb53457518c1e876de",
+        "successorLockGeneration": 2020,
+        "successorLockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:V6_EVIDENCE_SEQUENCE_MAINTENANCE",
+        "successorOperationId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_002",
+        "transitionId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_GEN2019_TO_GEN2020_20260908_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

@@ -15,14 +15,17 @@
   "s01ProofFrameSha256":{},
   "s01ContactSheetSha256":"PENDING_BROWSER_PROOF",
   "deterministicOwnerPreview":{
-    "status":"GENERATED_PENDING_OWNER_ACCEPTANCE",
+    "status":"REVISED_PENDING_OWNER_ACCEPTANCE",
+    "version":2,
     "browserGenerated":false,
-    "videoSha256":"830edc92f9f961d3faa0ecbb8eb8966f49239ba11783fd8d87aef970acaeaf0b",
-    "contactSheetSha256":"ba1a18db6c6bf70fcd803bbaf303d8386a4f6eb4fb806cdf56aebd59864af8ab",
+    "videoSha256":"27f0fd147b3694cbf0a812a2bbf506485893506973b820764550f53cfef70291",
+    "contactSheetSha256":"cf0714b3f17b11ea68afb2022a00b12152f769d66d427a99360bb94aea7dfd76",
     "terminalFrameSha256":"95504373cdff0871621cd859255f48dfeed682845cd8b915bc3cd8592990a8aa",
-    "durationSeconds":5.8,
+    "durationSeconds":7.2,
     "fps":30,
-    "resolution":[1280,720]
+    "resolution":[1280,720],
+    "brandDescriptor":"Independent Interactive Experience & Research Studio",
+    "introContextPresentation":"FOLLOWING_SEPARATE_BEAT"
   },
   "persistentObjectIds":["COMPASS_STAR_ORIENTATION","COMPASS_STAR_TRANSFERABILITY","COMPASS_STAR_CONVERGENCE","COMPASS_STAR_INTEGRITY"],
   "objectReplacementCount":0,

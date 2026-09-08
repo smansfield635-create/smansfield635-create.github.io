@@ -56,8 +56,8 @@
   "successorShot": {
     "schema": "R11A_S01_SOURCE_TRUTH_SHOT_v1",
     "shot": "S01",
-    "frameInterval": [144, 318],
-    "secondsInterval": [4.8, 10.6],
+    "frameInterval": [144, 360],
+    "secondsInterval": [4.8, 12.0],
     "operationId": "COMPASS_R11A_S01_CONTINUITY_CONSTRUCTION_20260908_003",
     "lockGeneration": 2009,
     "authorityState": "ADMITTED_LOCKED",
@@ -93,19 +93,21 @@
       }
     },
     "phaseStates": [
-      {"id":"FOUR_IDENTITIES_DIFFERENTIATING","progress":0.18,"frame":175},
-      {"id":"SAME_STARS_FRAME_DGB_INTRO","progress":0.46,"frame":224},
-      {"id":"SAME_STARS_CONVERGING","progress":0.72,"frame":269},
-      {"id":"APPROVED_FOUR_CARDINAL_COMPASS","progress":1.0,"frame":318}
+      {"id":"FOUR_IDENTITIES_DIFFERENTIATING","progress":0.18,"frame":183},
+      {"id":"SAME_STARS_FRAME_DGB_INTRO","progress":0.46,"frame":243},
+      {"id":"SAME_STARS_CONVERGING","progress":0.72,"frame":299},
+      {"id":"APPROVED_FOUR_CARDINAL_COMPASS","progress":1.0,"frame":360}
     ],
+    "brandDescriptor": "Independent Interactive Experience & Research Studio",
     "introContext": "Discover our ideas, enter the story, or explore your own.",
+    "introPresentationOrder": ["BRAND_IDENTITY_WITH_DESCRIPTOR", "FOLLOWING_CONTEXT_BEAT"],
     "terminalForeground": "ORIENTATION",
     "otherCanonicalStarsVisible": true,
     "genuineManipulation": {
       "required": true,
       "mechanism": "TIMELINE_ROTATES_THE_SAME_FOUR_OBJECT_VECTORS_IN_RIGHT_HANDED_3D_SPACE_AND_SETTLES_ORIENTATION_FOREGROUND",
       "timelineProgressInterval": [0.59, 0.83],
-      "frameInterval": [246, 288],
+      "frameInterval": [271, 323],
       "userInputRequired": false,
       "interactiveSubsystemCreated": false,
       "staticCompassForbidden": true
@@ -114,6 +116,7 @@
       "stageApi": "S01Stage",
       "requiredProgress": [0.0, 0.18, 0.46, 0.72, 1.0],
       "requiresTimelineManipulationReceipt": true,
+      "ownerPreviewDurationSeconds": 7.2,
       "ownerVisibleBrowserProofRequired": true,
       "ownerAcceptance": "PENDING"
     }

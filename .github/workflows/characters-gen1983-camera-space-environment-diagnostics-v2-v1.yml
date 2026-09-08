@@ -1,0 +1,139 @@
+name: Characters Gen1983 Camera Space Environment Diagnostics V2
+
+on:
+  pull_request:
+    branches: [characters/gen1980-environment-material-successor-20260907-001]
+    paths:
+      - 'control-plane/whole-estate/characters-reconstruction-v1/gen1983-camera-space-environment-diagnostics-v2-contract.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-gen1983-camera-space-environment-diagnostics-v2.v1.mjs'
+      - '.github/workflows/characters-gen1983-camera-space-environment-diagnostics-v2-v1.yml'
+
+permissions:
+  contents: read
+
+env:
+  OPERATION_ID: MIRRORLAND_GEN1983_CAMERA_SPACE_ENVIRONMENT_DIAGNOSTICS_CALIBRATION_REPAIR_20260907_002
+  LOCK_GENERATION: '1992'
+  GOVERNING_MAIN: 5ec0a127d55982e1cf985b0ff415a086149a25dc
+  FROZEN_PRODUCT_SHA: b193e6758f776b5ff6006c96037ee1a7632ddb64
+  V5_BLOB: f3b64eb1ffc1c1bc8e908ff96eb6c833b6bc928d
+
+jobs:
+  exact-frozen-product-environment-diagnostics-v2:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Materialize exact diagnostic tooling sparse index
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p tooling
+          git -C tooling init
+          git -C tooling remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -C tooling -c protocol.version=2 fetch --no-tags --depth=32 --filter=blob:none origin "${{ github.event.pull_request.head.sha }}" "$FROZEN_PRODUCT_SHA" "$GOVERNING_MAIN"
+          git -C tooling sparse-checkout init --cone --sparse-index
+          git -C tooling sparse-checkout set .github/workflows control-plane/whole-estate/characters-reconstruction-v1
+          git -C tooling checkout --detach "${{ github.event.pull_request.head.sha }}"
+          test "$(git -C tooling rev-parse HEAD^{commit})" = "${{ github.event.pull_request.head.sha }}"
+          test "$(git -C tooling config --bool index.sparse)" = "true"
+          test "$(git -C tooling config --bool core.sparseCheckoutCone)" = "true"
+          test -z "$(find tooling -mindepth 1 -maxdepth 1 -type d ! -name .git ! -name .github ! -name control-plane -print -quit)"
+          test -f tooling/.github/workflows/characters-gen1983-camera-space-environment-diagnostics-v2-v1.yml
+          test -f tooling/control-plane/whole-estate/characters-reconstruction-v1/gen1983-camera-space-environment-diagnostics-v2-contract.v1.json
+          test -f tooling/control-plane/whole-estate/characters-reconstruction-v1/verify-gen1983-camera-space-environment-diagnostics-v2.v1.mjs
+          test "$(git -C tooling ls-remote origin refs/heads/main | awk '{print $1}')" = "$GOVERNING_MAIN"
+
+      - name: Verify diagnostic tooling scope only
+        shell: bash
+        run: |
+          set -euo pipefail
+          HEAD_SHA="$(git -C tooling rev-parse HEAD^{commit})"
+          git -C tooling merge-base --is-ancestor "$FROZEN_PRODUCT_SHA" "$HEAD_SHA"
+          mapfile -t CHANGED < <(git -C tooling diff --name-only "$FROZEN_PRODUCT_SHA"..."$HEAD_SHA" | sort)
+          EXPECTED=(
+            '.github/workflows/characters-gen1983-camera-space-environment-diagnostics-v2-v1.yml'
+            'control-plane/whole-estate/characters-reconstruction-v1/gen1983-camera-space-environment-diagnostics-v2-contract.v1.json'
+            'control-plane/whole-estate/characters-reconstruction-v1/verify-gen1983-camera-space-environment-diagnostics-v2.v1.mjs'
+          )
+          mapfile -t EXPECTED_SORTED < <(printf '%s\n' "${EXPECTED[@]}" | sort)
+          test "${#CHANGED[@]}" -eq "${#EXPECTED_SORTED[@]}"
+          for i in "${!EXPECTED_SORTED[@]}"; do test "${CHANGED[$i]}" = "${EXPECTED_SORTED[$i]}"; done
+          test -z "$(git -C tooling status --porcelain)"
+          echo "TOOLING_HEAD=$HEAD_SHA" >> "$GITHUB_ENV"
+
+      - name: Materialize exact frozen Gen1983 product sparse index
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p frozen-product
+          git -C frozen-product init
+          git -C frozen-product remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -C frozen-product -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$FROZEN_PRODUCT_SHA"
+          git -C frozen-product sparse-checkout init --cone --sparse-index
+          git -C frozen-product sparse-checkout set \
+            characters \
+            h-earth-3d/terrain \
+            h-earth-3d/integration \
+            h-earth-3d/control-plane/run-8 \
+            h-earth-3d/zones \
+            h-earth-3d/cells \
+            h-earth-3d/objects \
+            showroom/globe/h-earth/render
+          git -C frozen-product checkout --detach FETCH_HEAD
+          test "$(git -C frozen-product rev-parse HEAD^{commit})" = "$FROZEN_PRODUCT_SHA"
+          test "$(git -C frozen-product config --bool index.sparse)" = "true"
+          test "$(git -C frozen-product config --bool core.sparseCheckoutCone)" = "true"
+          test -z "$(find frozen-product -mindepth 1 -maxdepth 1 -type d ! -name .git ! -name characters ! -name h-earth-3d ! -name showroom -print -quit)"
+
+      - name: Verify exact frozen product and V5 identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C frozen-product rev-parse HEAD^{commit})" = "$FROZEN_PRODUCT_SHA"
+          test "$(git -C frozen-product hash-object characters/vegetation-representation.mjs)" = "$V5_BLOB"
+          test -z "$(git -C frozen-product status --porcelain)"
+          test -z "$(git -C tooling status --porcelain)"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run V2 diagnostics in fresh process one
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/gen1983-camera-space-diagnostics-v2"
+          node tooling/control-plane/whole-estate/characters-reconstruction-v1/verify-gen1983-camera-space-environment-diagnostics-v2.v1.mjs \
+            --product-root frozen-product \
+            --output "$RUNNER_TEMP/gen1983-camera-space-diagnostics-v2/gen1983-camera-space-environment-diagnostics-v2-receipt.json"
+
+      - name: Run V2 diagnostics in fresh process two
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tooling/control-plane/whole-estate/characters-reconstruction-v1/verify-gen1983-camera-space-environment-diagnostics-v2.v1.mjs \
+            --product-root frozen-product \
+            --output "$RUNNER_TEMP/gen1983-camera-space-diagnostics-v2/gen1983-camera-space-environment-diagnostics-v2-repeat-receipt.json"
+          cmp \
+            "$RUNNER_TEMP/gen1983-camera-space-diagnostics-v2/gen1983-camera-space-environment-diagnostics-v2-receipt.json" \
+            "$RUNNER_TEMP/gen1983-camera-space-diagnostics-v2/gen1983-camera-space-environment-diagnostics-v2-repeat-receipt.json"
+
+      - name: Verify no mutation after V2 diagnostics
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C frozen-product rev-parse HEAD^{commit})" = "$FROZEN_PRODUCT_SHA"
+          test "$(git -C frozen-product hash-object characters/vegetation-representation.mjs)" = "$V5_BLOB"
+          test -z "$(git -C frozen-product status --porcelain)"
+          test -z "$(git -C tooling status --porcelain)"
+
+      - name: Upload Gen1992 V2 diagnostic receipts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gen1992-camera-space-environment-diagnostics-v2-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/gen1983-camera-space-diagnostics-v2/*.json
+          if-no-files-found: warn
+          retention-days: 90

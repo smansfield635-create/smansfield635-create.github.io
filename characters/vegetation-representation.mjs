@@ -116,15 +116,31 @@ export const HIERARCHICAL_FOLIAGE_V5_REPRESENTATION_CONTRACT=freeze({
   foliageNightLighting:false
 });
 
+export const LIVE_MATERIAL_V6_REPRESENTATION_CONTRACT=freeze({
+  schema:'MIRRORLAND_LIVE_MATERIAL_V6_REPRESENTATION_CONTRACT_v1',
+  operationId:'MIRRORLAND_V6_LIVE_VEGETATION_MATERIAL_RECOVERY_20260908_001',
+  lockGeneration:2018,
+  stage:'V6_LIVE_VEGETATION_MATERIAL_RECOVERY',
+  canonicalPopulationCount:818,
+  canonicalIdentityMutable:false,
+  cameraTrueLodPreserved:true,
+  compactBudgets:freeze({nearLeafMaximum:155,midClusterMaximum:44}),
+  farCanopyLayerCount:2,
+  foliageNightLighting:true,
+  depthResponse:true,
+  materialSignals:freeze(['FACE_NORMAL','MOON_DIFFUSE','VIEW_RIM','HEIGHT_VARIATION','DISTANCE_HAZE']),
+  upstreamIdentityInputsProhibited:freeze(['DEVICE_CLASS','VIEWPORT_CLASS','REDUCED_MOTION','CAMERA_STATE'])
+});
+
 export function resolveNearLeafBudget(forestWeight=0,compact=false){
   const weight=clamp(Number(forestWeight)||0,0,1);
-  const maximum=compact?HIERARCHICAL_FOLIAGE_V5_REPRESENTATION_CONTRACT.budgets.nearLeaf.compactMaximum:HIERARCHICAL_FOLIAGE_V5_REPRESENTATION_CONTRACT.budgets.nearLeaf.maximum;
+  const maximum=compact?LIVE_MATERIAL_V6_REPRESENTATION_CONTRACT.compactBudgets.nearLeafMaximum:HIERARCHICAL_FOLIAGE_V5_REPRESENTATION_CONTRACT.budgets.nearLeaf.maximum;
   return Math.round(HIERARCHICAL_FOLIAGE_V5_REPRESENTATION_CONTRACT.budgets.nearLeaf.minimum+(maximum-HIERARCHICAL_FOLIAGE_V5_REPRESENTATION_CONTRACT.budgets.nearLeaf.minimum)*weight);
 }
 
 export function resolveMidClusterBudget(forestWeight=0,compact=false){
   const weight=clamp(Number(forestWeight)||0,0,1);
-  const maximum=compact?HIERARCHICAL_FOLIAGE_V5_REPRESENTATION_CONTRACT.budgets.midCluster.compactMaximum:HIERARCHICAL_FOLIAGE_V5_REPRESENTATION_CONTRACT.budgets.midCluster.maximum;
+  const maximum=compact?LIVE_MATERIAL_V6_REPRESENTATION_CONTRACT.compactBudgets.midClusterMaximum:HIERARCHICAL_FOLIAGE_V5_REPRESENTATION_CONTRACT.budgets.midCluster.maximum;
   return Math.round(HIERARCHICAL_FOLIAGE_V5_REPRESENTATION_CONTRACT.budgets.midCluster.minimum+(maximum-HIERARCHICAL_FOLIAGE_V5_REPRESENTATION_CONTRACT.budgets.midCluster.minimum)*weight);
 }
 
@@ -223,17 +239,60 @@ layout(location=1) in vec3 aWorld;
 layout(location=2) in float aScale;
 layout(location=3) in float aAngle;
 uniform mat4 uVP;
+out vec3 vWorld;
+out vec3 vLocal;
+out float vScale;
 void main(){
   float c=cos(aAngle),s=sin(aAngle);
   vec3 q=aLocal*aScale;
   vec3 p=vec3(q.x*c-q.z*s,q.y,q.x*s+q.z*c)+aWorld;
+  vWorld=p;
+  vLocal=aLocal;
+  vScale=aScale;
   gl_Position=uVP*vec4(p,1.0);
 }`;
 const FS=`#version 300 es
 precision highp float;
+in vec3 vWorld;
+in vec3 vLocal;
+in float vScale;
 uniform vec3 uTint;
+uniform vec3 uAccent;
+uniform vec3 uEye;
+uniform vec3 uMoonDirection;
+uniform float uLunarIntensity;
+uniform float uHorizonHaze;
+uniform float uMaterialProfile;
+uniform float uTime;
 out vec4 outColor;
-void main(){outColor=vec4(uTint,1.0);}`;
+float hash21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123);}
+void main(){
+  vec3 dx=dFdx(vWorld);
+  vec3 dy=dFdy(vWorld);
+  vec3 normal=normalize(cross(dx,dy));
+  if(!gl_FrontFacing)normal=-normal;
+  vec3 viewDirection=normalize(uEye-vWorld);
+  vec3 moonDirection=normalize(uMoonDirection);
+  float moonFace=.18+.82*abs(dot(normal,moonDirection));
+  float viewRim=pow(1.0-abs(dot(normal,viewDirection)),2.15);
+  float heightSignal=clamp(vLocal.y*.58+.48,0.0,1.0);
+  float variation=hash21(floor(vWorld.xz*.115)+vec2(floor(vScale*3.0),uMaterialProfile*7.0));
+  float foliage=step(1.5,uMaterialProfile);
+  float occlusion=1.0-smoothstep(.0,.32,abs(uMaterialProfile-1.0));
+  float lunar=clamp(uLunarIntensity,0.0,1.0);
+  vec3 pigment=mix(uTint,uAccent,clamp(.12+.36*heightSignal+.24*variation+.16*moonFace,0.0,.82));
+  float ambient=mix(.47,.56,foliage);
+  float illumination=ambient+moonFace*(.18+.34*lunar)+viewRim*(.08+.16*lunar);
+  illumination*=mix(.92,1.08,heightSignal);
+  illumination*=mix(1.0,.62,occlusion);
+  vec3 color=pigment*illumination+uAccent*viewRim*(.035+.075*lunar);
+  float distanceToEye=distance(vWorld,uEye);
+  float haze=smoothstep(780.0,2450.0,distanceToEye)*(.12+.20*clamp(uHorizonHaze,0.0,1.0));
+  vec3 nocturnalHaze=vec3(.045,.072,.092)+uAccent*.035;
+  color=mix(color,nocturnalHaze,haze);
+  float stillness=1.0+.012*sin(uTime*.13+vWorld.x*.017+vWorld.z*.013);
+  outColor=vec4(color*stillness,1.0);
+}`;
 
 export const TRUNK_GEOMETRY=new Float32Array([
   -.035,0,0, .035,0,0, .026,.62,0,
@@ -368,10 +427,10 @@ function buildNearMesoPayload(frame,{compact=false}={}){
   for(const item of frame.representations){
     if(item.lod!=='NEAR_FIELD')continue;
     const source=canonical.get(item.id),metrics=treeMetrics(source);
-    const count=(compact?10:14)+Math.round(metrics.weight*(compact?5:8));
+    const count=(compact?12:18)+Math.round(metrics.weight*(compact?7:11));
     for(let i=0;i<count;i++){
       const p=crownPosition(source,metrics,i,count,1900);
-      const clusterScale=1.20+1.05*metrics.weight+.55*rand(metrics.seed,2400+i);
+      const clusterScale=1.65+1.40*metrics.weight+.75*rand(metrics.seed,2400+i);
       pushInstance(data,p.x,p.y,p.z,clusterScale,p.angle);
     }
   }
@@ -386,7 +445,7 @@ export function buildMidSprayPayload(frame,{compact=false}={}){
     const count=resolveMidClusterBudget(source.forestWeight,compact);
     for(let i=0;i<count;i++){
       const p=crownPosition(source,metrics,i,count,3100);
-      const sprayScale=1.05+1.28*metrics.weight+.62*rand(metrics.seed,3600+i);
+      const sprayScale=1.34+1.54*metrics.weight+.72*rand(metrics.seed,3600+i);
       pushInstance(data,p.x,p.y,p.z,sprayScale,p.angle);
     }
   }
@@ -404,12 +463,23 @@ function buildInternalPayload(frame,lod){
   return new Float32Array(data);
 }
 
-function buildFarCanopyPayload(frame){
+export function buildFarCanopyLayerPayload(frame,layer=0){
+  if(layer!==0&&layer!==1)throw new Error('FAR_CANOPY_LAYER_INVALID');
   const canonical=sourceMap(frame),data=[];
   for(const item of frame.representations){
     if(item.lod!=='FAR_FIELD')continue;
     const source=canonical.get(item.id),metrics=treeMetrics(source);
-    pushInstance(data,source.world.x+metrics.leanX*.7,metrics.crownY,source.world.z+metrics.leanZ*.7,metrics.spread,metrics.yaw);
+    const offset=layer===0?0:metrics.spread*.24;
+    const angle=metrics.yaw+(layer===0?0:1.72);
+    const scale=metrics.spread*(layer===0?1.08:.74);
+    pushInstance(
+      data,
+      source.world.x+metrics.leanX*.7+Math.cos(metrics.yaw+1.15)*offset,
+      metrics.crownY+(layer===0?0:metrics.height*.075),
+      source.world.z+metrics.leanZ*.7+Math.sin(metrics.yaw+1.15)*offset,
+      scale,
+      angle
+    );
   }
   return new Float32Array(data);
 }
@@ -427,26 +497,41 @@ export function createCameraTrueVegetationRenderer(gl,{compact=false}={}){
   const farCanopy=makePrimitive(gl,FAR_CANOPY_BLOB_GEOMETRY);
   const uVP=gl.getUniformLocation(shader,'uVP');
   const uTint=gl.getUniformLocation(shader,'uTint');
+  const uAccent=gl.getUniformLocation(shader,'uAccent');
+  const uEye=gl.getUniformLocation(shader,'uEye');
+  const uMoonDirection=gl.getUniformLocation(shader,'uMoonDirection');
+  const uLunarIntensity=gl.getUniformLocation(shader,'uLunarIntensity');
+  const uHorizonHaze=gl.getUniformLocation(shader,'uHorizonHaze');
+  const uMaterialProfile=gl.getUniformLocation(shader,'uMaterialProfile');
+  const uTime=gl.getUniformLocation(shader,'uTime');
 
-  const drawPrimitive=(primitive,payload,tint)=>{
+  const drawPrimitive=(primitive,payload,tint,accent,materialProfile)=>{
     const count=payload.length/5;
     if(!count)return 0;
     gl.bindVertexArray(primitive.vao);
     gl.bindBuffer(gl.ARRAY_BUFFER,primitive.instances);
     gl.bufferData(gl.ARRAY_BUFFER,payload,gl.DYNAMIC_DRAW);
     gl.uniform3fv(uTint,tint);
+    gl.uniform3fv(uAccent,accent);
+    gl.uniform1f(uMaterialProfile,materialProfile);
     gl.drawArraysInstanced(gl.TRIANGLES,0,primitive.vertexCount,count);
     return count;
   };
 
   return freeze({
-    schema:'MIRRORLAND_HIERARCHICAL_FOLIAGE_V5_RENDERER_v1',
+    schema:'MIRRORLAND_LIVE_MATERIAL_V6_RENDERER_v1',
     compact,
-    draw({vp,camera,previousFrame=null}={}){
+    draw({vp,camera,previousFrame=null,lighting={},time=0}={}){
       if(!vp)throw new Error('VEGETATION_VP_REQUIRED');
       const frame=buildVegetationRepresentationFrame({camera,previousFrame});
+      const moon=lighting.moonDirection||[-.52,.76,.40];
       gl.useProgram(shader);
       gl.uniformMatrix4fv(uVP,false,vp);
+      gl.uniform3f(uEye,camera.eye.x,camera.eye.y,camera.eye.z);
+      gl.uniform3f(uMoonDirection,moon[0],moon[1],moon[2]);
+      gl.uniform1f(uLunarIntensity,finite(lighting.lunarIntensity)?lighting.lunarIntensity:.72);
+      gl.uniform1f(uHorizonHaze,finite(lighting.horizonHaze)?lighting.horizonHaze:.42);
+      gl.uniform1f(uTime,finite(time)?time:0);
 
       const nearTrees=buildTreePayload(frame,'NEAR_FIELD');
       const midTrees=buildTreePayload(frame,'MID_FIELD');
@@ -456,22 +541,24 @@ export function createCameraTrueVegetationRenderer(gl,{compact=false}={}){
       const midSprays=buildMidSprayPayload(frame,{compact});
       const nearInternal=buildInternalPayload(frame,'NEAR_FIELD');
       const midInternal=buildInternalPayload(frame,'MID_FIELD');
-      const farCanopyPayload=buildFarCanopyPayload(frame);
+      const farCanopyPrimary=buildFarCanopyLayerPayload(frame,0);
+      const farCanopySecondary=buildFarCanopyLayerPayload(frame,1);
 
       let instanceDraws=0;
-      instanceDraws+=drawPrimitive(trunk,nearTrees,[.18,.13,.085]);
-      instanceDraws+=drawPrimitive(majorBough,nearTrees,[.17,.125,.082]);
-      instanceDraws+=drawPrimitive(internalOcclusion,nearInternal,[.055,.12,.075]);
-      instanceDraws+=drawPrimitive(mesoCluster,nearMeso,[.085,.205,.125]);
-      instanceDraws+=drawPrimitive(microLeaf,nearLeaves,[.115,.285,.165]);
+      instanceDraws+=drawPrimitive(trunk,nearTrees,[.145,.090,.046],[.34,.235,.125],0);
+      instanceDraws+=drawPrimitive(majorBough,nearTrees,[.135,.082,.043],[.31,.215,.115],.35);
+      instanceDraws+=drawPrimitive(internalOcclusion,nearInternal,[.032,.100,.052],[.085,.225,.115],1);
+      instanceDraws+=drawPrimitive(mesoCluster,nearMeso,[.070,.235,.118],[.225,.515,.270],2);
+      instanceDraws+=drawPrimitive(microLeaf,nearLeaves,[.095,.305,.148],[.300,.635,.335],2.45);
 
-      instanceDraws+=drawPrimitive(trunk,midTrees,[.17,.125,.082]);
-      instanceDraws+=drawPrimitive(reducedBough,midTrees,[.16,.12,.08]);
-      instanceDraws+=drawPrimitive(internalOcclusion,midInternal,[.052,.105,.07]);
-      instanceDraws+=drawPrimitive(midSpray,midSprays,[.092,.225,.14]);
+      instanceDraws+=drawPrimitive(trunk,midTrees,[.135,.083,.044],[.30,.205,.110],0);
+      instanceDraws+=drawPrimitive(reducedBough,midTrees,[.125,.078,.042],[.275,.190,.102],.35);
+      instanceDraws+=drawPrimitive(internalOcclusion,midInternal,[.030,.092,.050],[.078,.205,.108],1);
+      instanceDraws+=drawPrimitive(midSpray,midSprays,[.075,.245,.125],[.235,.535,.285],2.2);
 
-      instanceDraws+=drawPrimitive(trunk,farTrees,[.15,.115,.078]);
-      instanceDraws+=drawPrimitive(farCanopy,farCanopyPayload,[.075,.16,.105]);
+      instanceDraws+=drawPrimitive(trunk,farTrees,[.120,.076,.042],[.255,.178,.098],0);
+      instanceDraws+=drawPrimitive(farCanopy,farCanopyPrimary,[.050,.175,.088],[.175,.405,.215],3);
+      instanceDraws+=drawPrimitive(farCanopy,farCanopySecondary,[.072,.225,.112],[.235,.485,.255],3);
 
       gl.bindVertexArray(null);
       return freeze({
@@ -482,7 +569,9 @@ export function createCameraTrueVegetationRenderer(gl,{compact=false}={}){
           nearMesoInstances:nearMeso.length/5,
           midSprayInstances:midSprays.length/5,
           farLeafInstances:0,
-          farCanopyInstances:farCanopyPayload.length/5
+          farCanopyInstances:farCanopyPrimary.length/5,
+          farCanopyLayerInstances:farCanopySecondary.length/5,
+          materialContract:LIVE_MATERIAL_V6_REPRESENTATION_CONTRACT.schema
         })
       });
     }

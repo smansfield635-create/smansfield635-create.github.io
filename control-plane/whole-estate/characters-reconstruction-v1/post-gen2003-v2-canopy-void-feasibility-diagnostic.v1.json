@@ -1,0 +1,65 @@
+{
+  "schema": "POST_GEN2003_V2_CANOPY_VOID_FEASIBILITY_DIAGNOSTIC_CONTRACT_v1",
+  "operationId": "MIRRORLAND_POST_GEN2003_V2_CANOPY_VOID_FEASIBILITY_DIAGNOSTIC_20260908_001",
+  "lockGeneration": 2004,
+  "governingMain": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
+  "programIssue": 2670,
+  "authority": "READ_ONLY_DIAGNOSTIC_ONLY",
+  "subjects": {
+    "gen2001": "fc466a0d08adbaeb9672d4618f670105cf1af87c",
+    "gen2002": "3a5dd83b936c7041257e73a3ebe30c306a7516f5",
+    "gen2003": "33b8878ad6b6fd5fad942138a26f48881187bfc7",
+    "immutableV2": "834038c23711c3eed83dc21964027bd515852b51",
+    "ahbkReference": "d1d2580509c5f66802899ef6a07174a124604d08"
+  },
+  "v2CanopyLaw": {
+    "footprintRadius": 320,
+    "cellSize": 32,
+    "canopyInfluenceRadius": 30,
+    "riskOccupiedCellRatioBelow": 0.42,
+    "riskLargestComponentRatioBelow": 0.78,
+    "riskMaxEmptyCorridorCellsAbove": 4,
+    "directionalWindowLength": 5
+  },
+  "fixedPopulationBudget": 818,
+  "candidateDomain": {
+    "source": "GEN2001_CANONICAL_VEGETATION_POPULATION_CONTRACT_GRID_AND_ELIGIBILITY",
+    "meaning": "A constructive feasible solution inside this existing lawful candidate lattice certifies feasibility under the current generator. Failure to find one does not prove global continuous-domain infeasibility.",
+    "infeasibleCertificationRule": "INFEASIBLE_CERTIFIED requires an independently valid impossibility or lower-bound certificate; bounded-search failure alone returns UNRESOLVED_BY_BOUNDED_SEARCH."
+  },
+  "requiredAnalyses": [
+    "EXACT_V2_MASK_RECONSTRUCTION_GEN2001_GEN2002_GEN2003",
+    "EMPTY_COMPONENT_MORPHOLOGY",
+    "HORIZONTAL_VERTICAL_RUN_SPECTRA",
+    "CONTIGUOUS_FIVE_CELL_DIRECTIONAL_COVERAGE_OBLIGATIONS",
+    "DENSE_EUCLIDEAN_NEAREST_CANOPY_DISTANCE_APPROXIMATION",
+    "GEN2001_LAWFUL_CANDIDATE_LATTICE_COVERAGE_RELATION",
+    "FIXED_818_CONSTRUCTIVE_FEASIBILITY_SEARCH",
+    "AHBK_STYLE_NONSCALAR_BOUNDARY_SUMMARY"
+  ],
+  "feasibilityDispositions": [
+    "FEASIBLE_CERTIFIED",
+    "INFEASIBLE_CERTIFIED",
+    "UNRESOLVED_BY_BOUNDED_SEARCH"
+  ],
+  "receiptRestrictions": {
+    "emitRepairCoordinates": false,
+    "emitSelectedCandidateIds": false,
+    "emitCandidateCoordinates": false,
+    "emitComponentLocations": false,
+    "certificateDigestOnly": true,
+    "productPassAuthority": false,
+    "materialAcceptanceAuthority": false,
+    "gen2004RepairAuthority": false
+  },
+  "ahbkBoundary": {
+    "use": "FORMAL_DIAGNOSTIC_VOCABULARY_ONLY",
+    "crossDomainEvidenceTransfer": false,
+    "scalarizationOfOccupancyConnectivityCorridor": false,
+    "preserveIncomparabilityAndNonmonotonicity": true
+  },
+  "outputState": {
+    "productMechanicalState": "NON_CLEAR_UNCHANGED",
+    "materialDisposition": "UNASSIGNED_UNCHANGED"
+  }
+}

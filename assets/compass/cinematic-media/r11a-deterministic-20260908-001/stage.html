@@ -1,1 +1,99 @@
-<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Compass R11A Review</title><style>html,body{margin:0;background:#02070b;color:#fff5d7;font-family:system-ui;height:100%}main{height:100%;display:grid;place-items:center;padding:24px;box-sizing:border-box}section{width:min(1280px,100%)}video{display:block;width:100%;aspect-ratio:16/9;background:#000;box-shadow:0 30px 90px #000}p{opacity:.65;font-size:12px;letter-spacing:.08em;text-transform:uppercase}</style><main><section><video controls preload="metadata" src="./compass-main-orientation-r11a-review.mp4"></video><p>R11A · 42.5 s · 30 fps · 1,275 frames · review candidate only</p></section></main>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Compass R11A Source Truth Stage</title>
+<link rel="stylesheet" href="/assets/compass/upstream-compass.css">
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#02070b;color:#fff5d7;font-family:Inter,ui-sans-serif,system-ui,sans-serif}
+#capture{position:relative;width:1280px;height:720px;overflow:hidden;background:#02070b;transform-origin:0 0}
+.source{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none;transition:none!important}
+.source[data-active="true"]{opacity:1;visibility:visible}
+#home-source{width:1280px;height:720px;border:0;background:#02070b}
+#compass-source{display:grid;place-items:center;background:radial-gradient(circle at 50% 46%,#10232d 0,#071018 38%,#02070b 76%)}
+#upstream-mount{position:relative;width:650px;height:650px;display:grid;place-items:center}
+#upstream-mount [data-upstream-compass-control]{position:absolute;inset:0;border:0;background:transparent;color:transparent;pointer-events:none}
+#upstream-mount [data-upstream-compass-fallback]{position:absolute;inset:14%;border:1px solid rgba(244,214,128,.18);border-radius:50%;opacity:.15}
+#world-source{background:#0b1017;overflow:hidden}
+#audralia-shell{position:absolute;left:0;top:0;width:1280px;height:720px;background:#0b1017;transform-origin:center;overflow:hidden}
+#audralia-world{display:block;width:100%;height:100%}
+#mirrorland-window{position:absolute;left:50%;top:50%;width:420px;height:630px;transform:translate(-50%,-50%);filter:drop-shadow(0 22px 60px rgba(0,0,0,.72));z-index:3}
+#object-source{display:grid;place-items:center;background:#02070b}
+.object-canvas{position:absolute;width:720px;height:480px;opacity:0}
+.object-canvas[data-active="true"]{opacity:1}
+#context{position:absolute;z-index:20;left:50%;bottom:72px;transform:translateX(-50%);width:min(1050px,88%);text-align:center;color:#fff5d7;font:500 38px/1.08 Georgia,"Times New Roman",serif;letter-spacing:-.025em;text-shadow:0 4px 24px rgba(0,0,0,.9);opacity:0}
+#status{position:absolute;z-index:30;left:12px;top:10px;padding:.32rem .48rem;border-radius:.4rem;background:rgba(0,0,0,.45);color:rgba(215,228,229,.66);font:700 10px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.05em}
+</style>
+<script src="/assets/compass/upstream-compass.geometry.js"></script>
+<script src="/assets/compass/upstream-compass.renderer.js"></script>
+<script src="/assets/shared/mirrorland-window.geometry.js"></script>
+<script src="/assets/compass/compass.brain-scene.js"></script>
+<script src="/assets/compass/compass.hra-brain-scene.js"></script>
+<script src="/assets/compass/compass.house-scene.js"></script>
+<script src="/assets/compass/compass.trophy-cursive-inlay.js"></script>
+<script src="/assets/compass/compass.trophy-scene.js"></script>
+</head>
+<body>
+<main id="capture" data-r11a-source-truth-stage>
+  <iframe id="home-source" class="source" src="/index.html?r11a-source-truth=1" title="Canonical homepage capture source"></iframe>
+  <section id="compass-source" class="source" aria-label="Canonical upstream Compass capture source">
+    <div id="upstream-mount" data-upstream-compass-mount>
+      <button type="button" data-upstream-compass-control tabindex="-1" aria-hidden="true">Compass</button>
+      <div data-upstream-compass-fallback aria-hidden="true"></div>
+    </div>
+  </section>
+  <section id="world-source" class="source" aria-label="Canonical Mirrorland and Audralia capture source">
+    <div id="audralia-shell"><canvas id="audralia-world" width="1280" height="720"></canvas></div>
+    <canvas id="mirrorland-window" width="480" height="720" aria-hidden="true"></canvas>
+  </section>
+  <section id="object-source" class="source" aria-label="Canonical coda object capture source">
+    <canvas id="brain-canvas" class="object-canvas" width="720" height="480"></canvas>
+    <canvas id="house-canvas" class="object-canvas" width="720" height="480"></canvas>
+    <canvas id="trophy-canvas" class="object-canvas" width="720" height="480" data-award-trophy></canvas>
+  </section>
+  <div id="context" aria-hidden="true"></div>
+  <div id="status">R11A · SOURCE TRUTH · WAITING</div>
+</main>
+<script type="module">
+import createMapWideEnvironmentRenderer from '/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs';
+const capture=document.querySelector('#capture');
+const home=document.querySelector('#home-source');
+const compass=document.querySelector('#compass-source');
+const worldSource=document.querySelector('#world-source');
+const objectSource=document.querySelector('#object-source');
+const context=document.querySelector('#context');
+const status=document.querySelector('#status');
+const mirror=document.querySelector('#mirrorland-window');
+const worldShell=document.querySelector('#audralia-shell');
+const worldCanvas=document.querySelector('#audralia-world');
+const brain=document.querySelector('#brain-canvas');
+const house=document.querySelector('#house-canvas');
+const trophy=document.querySelector('#trophy-canvas');
+const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+const smooth=(a,b,v)=>{const x=clamp((v-a)/(b-a||1));return x*x*(3-2*x)};
+const mix=(a,b,t)=>a+(b-a)*t;
+let manifest=null,currentScene=null,world=null;
+const sourceNodes=[home,compass,worldSource,objectSource];
+function activate(node){for(const n of sourceNodes)n.dataset.active=String(n===node)}
+function setContext(lines,p){const text=(lines||[]).join(' · ');context.textContent=text;context.style.opacity=text?String(smooth(.08,.24,p)*(1-smooth(.86,1,p))):'0'}
+function waitFrame(){return new Promise(r=>requestAnimationFrame(()=>r()))}
+async function homeReady(){if(home.contentDocument?.readyState==='complete')return;await new Promise((resolve,reject)=>{const t=setTimeout(()=>reject(new Error('HOME_SOURCE_TIMEOUT')),15000);home.addEventListener('load',()=>{clearTimeout(t);resolve()},{once:true})})}
+function cleanupHome(){const d=home.contentDocument;if(!d)return;d.querySelectorAll('[data-main-orientation-film],[data-main-orientation-replay]').forEach(n=>n.remove());d.querySelectorAll('audio,video').forEach(n=>{try{n.pause()}catch{}});d.querySelector('#r11a-source-truth-style')?.remove();d.querySelectorAll('[data-r11a-capture-target]').forEach(n=>{n.removeAttribute('data-r11a-capture-target');n.style.removeProperty('--r11a-scale')})}
+function isolateHome(selector,{open=false,hideFilm=false,scale=1}={}){const d=home.contentDocument;if(!d)throw new Error('HOME_DOCUMENT_MISSING');cleanupHome();const target=d.querySelector(selector);if(!target)throw new Error(`CANONICAL_HOME_TARGET_MISSING:${selector}`);if(open&&target instanceof HTMLDetailsElement)target.open=true;target.setAttribute('data-r11a-capture-target','true');target.style.setProperty('--r11a-scale',String(scale));const style=d.createElement('style');style.id='r11a-source-truth-style';style.textContent=`html,body{margin:0!important;width:100%!important;height:100%!important;overflow:hidden!important;background:#02070b!important}body *{visibility:hidden!important}[data-r11a-capture-target],[data-r11a-capture-target] *{visibility:visible!important}[data-r11a-capture-target]{position:fixed!important;left:50%!important;top:50%!important;width:min(1120px,92vw)!important;max-height:670px!important;margin:0!important;transform:translate(-50%,-50%) scale(var(--r11a-scale,1))!important;transform-origin:center!important;overflow:hidden!important}${hideFilm?'.compass-editorial-film{display:none!important}':''}`;d.head.append(style);return target}
+function drawMirror(){const g=globalThis.DGB_MIRRORLAND_WINDOW_GEOMETRY;if(!g?.ready)throw new Error('MIRRORLAND_GEOMETRY_NOT_READY');const ctx=mirror.getContext('2d',{alpha:true});ctx.clearRect(0,0,480,720);for(const pane of g.getPanes()){g.tracePolygon(ctx,pane.points);ctx.fillStyle=g.rgba(pane.color,.24+pane.alpha*.28);ctx.fill();ctx.strokeStyle='rgba(20,27,38,.94)';ctx.lineWidth=4;ctx.stroke()}for(const seg of g.getFrameSegments()){ctx.beginPath();ctx.moveTo(seg[0][0],seg[0][1]);for(let i=1;i<seg.length;i++)ctx.lineTo(seg[i][0],seg[i][1]);ctx.strokeStyle='rgba(12,16,24,.98)';ctx.lineWidth=13;ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();ctx.strokeStyle='rgba(104,117,143,.72)';ctx.lineWidth=3;ctx.stroke()}g.traceOuterWindow(ctx);ctx.strokeStyle='rgba(7,10,16,.99)';ctx.lineWidth=18;ctx.stroke();g.traceInnerWindow(ctx);ctx.strokeStyle='rgba(93,108,137,.78)';ctx.lineWidth=4;ctx.stroke()}
+function thresholdClip(){const g=globalThis.DGB_MIRRORLAND_WINDOW_GEOMETRY;const [left,right]=g.getFrameSegments();const outline=[...left,...[...right].reverse()];return `polygon(${outline.map(([x,y])=>`${(x/480*100).toFixed(4)}% ${(y/720*100).toFixed(4)}%`).join(',')})`}
+async function prepareObjects(){const brainApi=globalThis.CompassBrainScene?.mount?.(brain,{foreground:()=>true})||globalThis.CompassHRABrainScene?.mount?.(brain,{foreground:()=>true})||null;const houseApi=globalThis.CompassHouseScene?.mount?.(house,{foreground:()=>true})||null;const trophyApi=globalThis.CompassTrophyScene?.mount?.(trophy,{foreground:()=>true})||null;if(brainApi?.load)await brainApi.load;houseApi?.draw?.();trophyApi?.capture?.()}
+function sceneForFrame(frame){return manifest.scenes.find(s=>frame>=s.frameRange[0]&&frame<s.frameRange[1])}
+function localProgress(scene,frame){return clamp((frame-scene.frameRange[0])/(scene.frameCount-1||1))}
+async function showHomeScene(scene,p){activate(home);await homeReady();let target;if(scene.id==='S00'||scene.id==='LIVE')target=isolateHome('.compass-estate__header',{scale:scene.id==='S00'?1.02:1});else if(scene.id==='S02')target=isolateHome('[data-compass-static-introduction]',{open:true,hideFilm:true,scale:.92});else if(scene.id==='S03')target=isolateHome('[data-compass-readiness-stage="context-v3"]',{scale:.88});else throw new Error(`HOME_SCENE_UNSUPPORTED:${scene.id}`);const enter=smooth(.02,.18,p),exit=smooth(.86,1,p);target.style.opacity=String(enter*(1-exit));target.style.filter='none'}
+function showCompass(scene,p){activate(compass);const mount=document.querySelector('#upstream-mount');const enter=smooth(.02,.18,p),exit=smooth(.86,1,p);mount.style.opacity=String(enter*(1-exit));mount.style.transform=`scale(${mix(.94,1.04,smooth(.08,.72,p))})`;const api=globalThis.DGB_UPSTREAM_COMPASS_RENDERER;if(!api?.receipt)throw new Error('UPSTREAM_COMPASS_RENDERER_UNAVAILABLE');const receipt=api.receipt();if(receipt?.status==='failed')throw new Error(`UPSTREAM_COMPASS_RENDERER_FAILED:${receipt.lastFailureCode||receipt.lastFailure||'unknown'}`)}
+function showWorld(scene,p){activate(worldSource);const clip=thresholdClip();if(scene.id==='S04'){const t=scene.durationSeconds*p;let q=0;if(t<1.8)q=0;else if(t<4.8)q=smooth(1.8,4.8,t)*.12;else q=smooth(4.8,8.0,t);const h=mix(630,720,q),w=mix(420,1280,q);worldShell.style.width=`${w}px`;worldShell.style.height=`${h}px`;worldShell.style.left=`${(1280-w)/2}px`;worldShell.style.top=`${(720-h)/2}px`;worldShell.style.clipPath=q<.999?clip:'none';mirror.style.opacity=String(1-smooth(4.8,8.0,t));worldShell.style.opacity=String(t<1.8?0:smooth(1.8,4.8,t))}else{worldShell.style.cssText='position:absolute;left:0;top:0;width:1280px;height:720px;background:#0b1017;transform-origin:center;overflow:hidden;opacity:1;clip-path:none';mirror.style.opacity='0'}world?.render?.()}
+function showObject(scene,p){activate(objectSource);for(const c of [brain,house,trophy])c.dataset.active='false';const target=scene.id==='S06A'?brain:scene.id==='S06B'?house:trophy;target.dataset.active='true';target.style.transform=`scale(${mix(.96,1.02,smooth(.08,.7,p))})`;target.style.opacity=String(smooth(.04,.18,p)*(1-smooth(.86,1,p)))}
+async function seek(frameIndex){const frame=Math.max(0,Math.min(1274,Math.trunc(frameIndex)));const scene=sceneForFrame(frame);if(!scene)throw new Error(`FRAME_UNBOUND:${frame}`);const p=localProgress(scene,frame);currentScene=scene.id;setContext(scene.context,p);if(['S00','S02','S03','LIVE'].includes(scene.id))await showHomeScene(scene,p);else if(scene.id==='S01')showCompass(scene,p);else if(['S04','S05'].includes(scene.id))showWorld(scene,p);else showObject(scene,p);capture.dataset.scene=scene.id;capture.dataset.frame=String(frame);status.textContent=`R11A · SOURCE TRUTH · ${scene.id} · F${String(frame).padStart(4,'0')}`;await waitFrame();return inspect()}
+function inspect(){return Object.freeze({schema:'R11A_SOURCE_TRUTH_STAGE_RECEIPT_v1',ready:!!manifest,governingHead:manifest?.governingHead||null,manifestId:manifest?.manifestId||null,scene:currentScene,frame:Number(capture.dataset.frame||0),historicalDonorRuntimeInput:false,r5RuntimeInput:false,liveProductMutation:false})}
+const ready=(async()=>{manifest=await fetch('./manifest.v1.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(`MANIFEST_FETCH_${r.status}`);return r.json()});await homeReady();cleanupHome();drawMirror();world=createMapWideEnvironmentRenderer(worldCanvas);world.focusGratitude?.();world.render?.();await prepareObjects();for(let i=0;i<120;i++){if(globalThis.DGB_UPSTREAM_COMPASS_RENDERER?.receipt?.().status==='available')break;await waitFrame()}await seek(0);capture.dataset.ready='true';return true})();
+Object.defineProperty(globalThis,'R11ASourceTruthStage',{value:Object.freeze({ready,seek,inspect}),configurable:false,writable:false});
+</script>
+</body>
+</html>

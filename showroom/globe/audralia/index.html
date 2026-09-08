@@ -8,7 +8,14 @@
   <meta name="description" content="Explore Audralia continuously from planetary scale to Gratitude and back again.">
   <title>Audralia · Planetary World</title>
   <link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/audralia/">
-  <link rel="modulepreload" href="/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs?cb=EXACT_24057">
+  <script type="importmap">
+    {
+      "imports": {
+        "/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs": "/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs?cb=AUDRALIA_PRECOMPUTED_GRATITUDE_MESH_v1"
+      }
+    }
+  </script>
+  <link rel="modulepreload" href="/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs?cb=AUDRALIA_PRECOMPUTED_GRATITUDE_MESH_v1">
   <link rel="modulepreload" href="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/canonical-weather-spatial-lod-proof/weather-model.mjs?cb=EXACT_24057">
   <link rel="modulepreload" href="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/canonical-weather-spatial-lod-proof/weather-renderer.mjs?cb=EXACT_24057">
   <link rel="stylesheet" href="./index.css?v=AUDRALIA_LOADING_CONTINUITY_v4">
@@ -105,7 +112,8 @@
       cloudCoverageUpgradeDeferred: true,
       loadingContinuity: 'AUDRALIA_LOADING_CONTINUITY_v4',
       startupArchitecture: 'APPROVED_PRESENTATION_PRE_RENDER_v1',
-      tabletStartupStability: 'PRIMARY_WORLD_BEFORE_CELESTIAL_WEBGL_v1',
+      tabletStartupStability: 'PRECOMPUTED_EXACT_MESH_BEFORE_PRIMARY_WORLD_v1',
+      browserMeshConstruction: false,
       tabletFramebufferBudget: 'AUDRALIA_RENDER_PIXEL_BUDGET_v1',
       startupInstrumentation: 'AUDRALIA_STARTUP_DIAGNOSTIC_v1',
       estateSoundtrack: 'AUDRALIA_ESTATE_SOUNDTRACK_RUNTIME_v1',
@@ -132,10 +140,14 @@
       sameEnvironment: true,
       fallbackEnvironment: false,
       primaryWorldBeforeCelestialWebGL: true,
-      status: 'LOADING_PRIMARY_WORLD'
+      status: 'LOADING_PRECOMPUTED_GEOMETRY'
     };
 
     try {
+      const { loadPrecomputedGratitudeMesh } = await import('/showroom/globe/h-earth/terrain-estate-construction-v1/precomputed-gratitude-mesh-v1.mjs?cb=AUDRALIA_PRECOMPUTED_GRATITUDE_MESH_v1');
+      await loadPrecomputedGratitudeMesh();
+      window.__AUDRALIA_TABLET_STARTUP_STABILITY__.status = 'LOADING_PRIMARY_WORLD';
+      await nextFrame();
       await import(`${exactRoot}acf1-cloud-presentation-v1.mjs?cb=EXACT_24057`);
       await nextFrame();
       await import(`${exactRoot}fap1-xyz-volumetric-depth-v1.mjs?cb=EXACT_24057`);

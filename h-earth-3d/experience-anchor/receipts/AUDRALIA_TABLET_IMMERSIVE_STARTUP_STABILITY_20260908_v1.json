@@ -15,8 +15,20 @@
   ],
   "experienceFiles": [
     {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.bin.gz",
+      "sha256": "a475193638e590e218e68a2e5117445c6792af4b3395c7fca0cd902d91996b35"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/precomputed-gratitude-mesh-v1.mjs",
+      "sha256": "6e1843703b62e0c4c97fa1f73a4127909456be56dd7bb41f10150163ac309b59"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs",
+      "sha256": "3bf642f96a1b8e81543a90f35166344961d3f6832f5cefb4a2c884739b266ce0"
+    },
+    {
       "path": "showroom/globe/audralia/index.html",
-      "sha256": "5d25c8daf55c679db02d67a33051846fafe9abfba51313cc6f68910002900bcf"
+      "sha256": "9dc3739705e6032efc48f071823c772ac6c4d50f4eb9e2fbc9e160d5c5920797"
     }
   ],
   "invariants": {
@@ -33,7 +45,7 @@
     "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
   },
   "reviewSummary": {
-    "operation": "AUDRALIA_TABLET_IMMERSIVE_STARTUP_STABILITY_20260908_002",
-    "finding": "The approved exact Audralia environment, terrain, geography, shaders, navigation, interaction model, weather layers, celestial layer, and full-screen CSS presentation are unchanged. Large touch viewports now receive a bounded effective device-pixel ratio before the exact runtime initializes, limiting the primary framebuffer to 921600 internal pixels and reducing tablet GPU memory pressure without substituting another experience."
+    "operation": "AUDRALIA_TABLET_IMMERSIVE_STARTUP_STABILITY_20260908_003",
+    "finding": "The approved exact Audralia environment, terrain, geography, shaders, navigation, interaction model, weather layers, celestial layer, and full-screen CSS presentation are unchanged. The exact approved Gratitude land and coastal-water typed arrays are now loaded from a deterministic precomputed asset before the primary renderer starts, removing the measured long synchronous browser construction task that froze the tablet loader while preserving the identical mesh statistics and interaction contract."
   }
 }

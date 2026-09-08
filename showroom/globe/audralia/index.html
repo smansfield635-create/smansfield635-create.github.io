@@ -76,6 +76,7 @@
       cloudCoverageUpgradeDeferred: true,
       loadingContinuity: 'AUDRALIA_LOADING_CONTINUITY_v4',
       startupArchitecture: 'APPROVED_PRESENTATION_PRE_RENDER_v1',
+      tabletStartupStability: 'PRIMARY_WORLD_BEFORE_CELESTIAL_WEBGL_v1',
       startupInstrumentation: 'AUDRALIA_STARTUP_DIAGNOSTIC_v1',
       estateSoundtrack: 'AUDRALIA_ESTATE_SOUNDTRACK_RUNTIME_v1',
       environmentBinding: 'IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993'
@@ -83,10 +84,48 @@
   </script>
   <script type="module" src="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs?cb=EXACT_24057_LOADER_FIRST"></script>
   <script type="module" src="./audio/estate-soundtrack-v1.mjs?cb=AUDRALIA_ESTATE_SOUNDTRACK_RUNTIME_v1"></script>
-  <script type="module" src="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/acf1-cloud-presentation-v1.mjs?cb=EXACT_24057"></script>
-  <script type="module" src="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/fap1-xyz-volumetric-depth-v1.mjs?cb=EXACT_24057"></script>
-  <script type="module" src="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/fap1-weather-presentation-v1.mjs?cb=EXACT_24057"></script>
-  <script type="module" src="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs?cb=EXACT_24057"></script>
-  <script type="module" src="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/celestial-checkpoint-1.mjs?cb=EXACT_24057"></script>
+  <script type="module">
+    const exactRoot = '/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/';
+    const nextFrame = () => new Promise(resolve => requestAnimationFrame(() => resolve()));
+    const primaryWorldReady = async () => {
+      const deadline = performance.now() + 30000;
+      while (performance.now() < deadline) {
+        const runtime = window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__;
+        if (runtime?.renderer && typeof runtime.getCameraFrame === 'function') return runtime;
+        await nextFrame();
+      }
+      throw new Error('PRIMARY_WORLD_STARTUP_TIMEOUT');
+    };
+
+    window.__AUDRALIA_TABLET_STARTUP_STABILITY__ = {
+      schema: 'AUDRALIA_TABLET_STARTUP_STABILITY_v1',
+      sameEnvironment: true,
+      fallbackEnvironment: false,
+      primaryWorldBeforeCelestialWebGL: true,
+      status: 'LOADING_PRIMARY_WORLD'
+    };
+
+    try {
+      await import(`${exactRoot}acf1-cloud-presentation-v1.mjs?cb=EXACT_24057`);
+      await nextFrame();
+      await import(`${exactRoot}fap1-xyz-volumetric-depth-v1.mjs?cb=EXACT_24057`);
+      await nextFrame();
+      await import(`${exactRoot}fap1-weather-presentation-v1.mjs?cb=EXACT_24057`);
+      await nextFrame();
+      await import(`${exactRoot}weather-presentation-reconciliation/app.mjs?cb=EXACT_24057`);
+      await primaryWorldReady();
+      window.__AUDRALIA_TABLET_STARTUP_STABILITY__.status = 'PRIMARY_WORLD_READY';
+      await nextFrame();
+      await nextFrame();
+      await import(`${exactRoot}celestial-checkpoint-1.mjs?cb=EXACT_24057`);
+      window.__AUDRALIA_TABLET_STARTUP_STABILITY__.status = 'COMPLETE';
+    } catch (error) {
+      window.__AUDRALIA_TABLET_STARTUP_STABILITY__.status = 'FAILED';
+      window.__AUDRALIA_TABLET_STARTUP_STABILITY__.error = String(error?.message || error);
+      console.error('AUDRALIA_SEQUENTIAL_STARTUP_FAILED', error);
+      const status = document.querySelector('[data-h-earth-status]');
+      if (status) status.textContent = 'Audralia could not finish loading';
+    }
+  </script>
 </body>
 </html>

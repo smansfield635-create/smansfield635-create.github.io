@@ -1,31 +1,24 @@
 {
-  "schema": "POST_GEN1996_CANOPY_HYDROLOGY_RELATION_REPAIR_CONTRACT_v1",
-  "operationId": "MIRRORLAND_POST_GEN1996_CANOPY_HYDROLOGY_RELATION_REPAIR_20260908_001",
-  "lockGeneration": 1998,
-  "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:CANOPY_HYDROLOGY_RELATION_REPAIR:POST_GEN1996",
+  "schema": "POST_GEN2000_ECOLOGICAL_RELATION_REPAIR_CONTRACT_v1",
+  "operationId": "MIRRORLAND_POST_GEN2000_ECOLOGICAL_RELATION_REPAIR_20260908_001",
+  "lockGeneration": 2001,
+  "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:ECOLOGICAL_RELATION_REPAIR:POST_GEN2000",
   "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
-  "constructionBranch": "repair/post-gen1996-canopy-hydrology-relation-20260908-001",
-  "partialSuccessFoundationSha": "0f2c821c4464dcef7f8efe5327930b973f69a70d",
+  "constructionBranch": "repair/post-gen2000-ecological-relation-20260908-001",
+  "productSubject": "6363182d880fc3e0d0fb0da7791aa9e641969e0a",
   "route": "/characters/",
   "programIssue": 2670,
-  "psalmAckCommentId": 5578703232,
-  "terminalPredecessor": {
-    "operationId": "MIRRORLAND_POST_GEN1995_CANOPY_HYDROLOGY_REPAIR_20260907_001",
-    "generation": 1996,
-    "disposition": "FAIL_CLOSED",
-    "closureCommentId": 5578679926,
-    "closureHead": "3600e99c8a4b18ab8a51e370ddbc2b208f0d29c9",
-    "negativeMechanicalEvidenceCommentId": 5578659572,
-    "negativeCandidateSha": "0f2c821c4464dcef7f8efe5327930b973f69a70d",
-    "negativeRunId": 34183392416,
-    "negativeArtifactId": 10039711480,
-    "negativeArtifactDigest": "sha256:c9ee7e736439f5c30501e014e6d9d8f871b406ebe853599e58ec4278fb02dcef",
-    "lockReleased": true,
-    "authorityInherited": false,
-    "evidencePreserved": true
+  "psalmAckCommentId": 5586184683,
+  "routerReturn": {
+    "commentId": 5586191322,
+    "workflowRunId": 34234358384,
+    "pathCount": 5,
+    "result": "PASS",
+    "projectId": "CHARACTERS"
   },
   "canonicalAdmission": {
-    "workflowRunId": 34184101693,
+    "commentId": 5586284531,
+    "workflowRunId": 34235055866,
     "result": "ADMITTED_AND_LOCKED",
     "branchCreationAuthorized": true,
     "repositoryWritesAuthorized": true,
@@ -33,19 +26,32 @@
     "deploymentAuthorityCreated": false,
     "publicationAuthorityCreated": false
   },
-  "fivePathRouterProof": {
-    "runId": 34183946522,
-    "commentId": 5578709172,
-    "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
-    "pathCount": 5,
-    "result": "ALL_5_REGISTERED_PROJECT_CHARACTERS_PASS"
+  "gen2000Diagnostic": {
+    "evidenceCommentId": 5579294638,
+    "terminalClosureCommentId": 5579313491,
+    "result": "PASS_CLOSED",
+    "lockReleased": true,
+    "productMutationAuthorityCreated": false,
+    "canopy": {
+      "eligibleSamples": 1091,
+      "occupiedSamples": 1007,
+      "largestOccupiedComponentRatio": 0.997020854,
+      "standOrOpeningBoundaryAssociation": 0.55952381,
+      "meshSpacingGapPotential": 0
+    },
+    "hydrology": {
+      "topDecileMeanWetness": 0.7,
+      "topDecileResponseBearingCount": 0,
+      "topDecileReedPresenceRate": 0,
+      "topDecileNoResponseRate": 1,
+      "topDecileShorelineLt2Rate": 1,
+      "v2HighMinusLow": -0.500721
+    }
   },
   "protectedExactIdentities": {
     "appBlobSha": "cb7e01ad703ae52b756a4603176bfe6d3b4f5e8a",
     "frozenV5RepresentationBlobSha": "f3b64eb1ffc1c1bc8e908ff96eb6c833b6bc928d",
-    "canonicalCanopyCount": 818,
-    "foundationCanopyBlobSha": "ec80daf6f49af6047dec483c3d920042fb75e3be",
-    "foundationUnderstoryBlobSha": "98cd86ed2026160635cc775a2d61d504a286e5bf"
+    "canonicalCanopyCount": 818
   },
   "evaluationTooling": {
     "head": "834038c23711c3eed83dc21964027bd515852b51",
@@ -56,38 +62,6 @@
     "workflowPath": ".github/workflows/characters-gen1983-camera-space-environment-diagnostics-v2-v1.yml",
     "workflowBlobSha": "77b5b2e460adb86a123437c6eeb8d36ea8da5ba2",
     "definitionsConstantsThresholdsBinsWeightsSamplingCamerasStatesImmutable": true
-  },
-  "metricFamilies": [
-    "FRUSTUM_SURFACE_CONTAINMENT_RISK_V2",
-    "CANOPY_FIELD_CONTINUITY",
-    "ELIGIBLE_GROUND_VISUAL_AREA_OCCUPANCY_V2",
-    "HYDROLOGY_RESPONSE_STRENGTH"
-  ],
-  "foundationMechanicalState": {
-    "FRUSTUM_SURFACE_CONTAINMENT_RISK_V2": false,
-    "ELIGIBLE_GROUND_VISUAL_AREA_OCCUPANCY_V2": false,
-    "CANOPY_FIELD_CONTINUITY": true,
-    "HYDROLOGY_RESPONSE_STRENGTH": true,
-    "canopy": {
-      "passingStates": ["OPEN_TERRAIN", "WOODLAND_EDGE", "MIRROR_MANOR_APPROACH"],
-      "wideCoastMaxEmptyCorridorCells": 6,
-      "forestInteriorMaxEmptyCorridorCells": 7,
-      "wetlandLargestComponentRatio": 0.680233,
-      "wetlandMaxEmptyCorridorCells": 11,
-      "wideReturnMaxEmptyCorridorCells": 6
-    },
-    "hydrology": {
-      "highMinusLow": -0.395537,
-      "requiredHighMinusLowAtLeast": 0.18
-    },
-    "materialDisposition": "UNASSIGNED"
-  },
-  "v2FrozenThresholds": {
-    "canopyOccupiedCellRatioAtLeast": 0.42,
-    "canopyLargestComponentRatioAtLeast": 0.78,
-    "canopyMaxEmptyCorridorCellsAtMost": 4,
-    "hydrologyHighMinusLowAtLeast": 0.18,
-    "hydrologyHighWetnessSamplesAtLeast": 6
   },
   "exactMutationSurface": {
     "product": [
@@ -102,60 +76,41 @@
     "allOtherRepositoryPathsProhibited": true
   },
   "canopyRepairLaw": {
-    "goal": "GLOBAL_ECOLOGY_BOUND_GAP_AND_COMPONENT_CLOSURE_WITH_FIXED_818",
-    "preserveGen1996MeshImprovement": true,
-    "allocationLaw": "DETERMINISTIC_WORLD_SPACE_ECOLOGY_ELIGIBLE_GLOBAL_GAP_COMPONENT_PRIORITY",
+    "goal": "GENERIC_NON_OPENING_STAND_TRANSITION_CONTINUITY_WITH_FIXED_818",
     "allowedInputs": [
       "WORLD_COORDINATES",
       "CANONICAL_ECOLOGY_AUTHORITY",
       "CANONICAL_STAND_AUTHORITY",
       "CANONICAL_OPENING_AUTHORITY",
-      "DETERMINISTIC_SPATIAL_NEIGHBOR_RELATIONSHIPS"
+      "STAND_BOUNDARY_DISTANCE",
+      "SPATIAL_ZONE",
+      "DETERMINISTIC_WORLD_MESH_RELATIONSHIPS"
     ],
-    "prohibitedInputs": [
-      "CAMERA_ID",
-      "DESTINATION_ID",
-      "VIEWPORT_CLASS",
-      "DEVICE_CLASS",
-      "REPRESENTATIVE_STATE_IDENTITY",
-      "AUREN_WITNESS_IDENTITY",
-      "V2_RESULT_LOCATION"
-    ],
-    "canonicalCanopyCountMustRemain": 818
+    "hardOpeningCanopyAllowed": false,
+    "canonicalCanopyCountMustRemain": 818,
+    "v2WitnessCameraBinThresholdCoordinatesMayControlPlacement": false,
+    "gen2000DiagnosticCoordinatesMayControlPlacement": false
   },
   "hydrologyRepairLaw": {
-    "goal": "CONTINUOUS_CANONICAL_WETNESS_TO_RESPONSE_BEARING_VEGETATION_ORDERING",
+    "goal": "CANONICAL_HIGHEST_WETNESS_LAND_SHORELINE_EXPRESSES_RESPONSE_BEARING_WET_MARGIN_UNDERSTORY",
     "wetnessAuthority": "EXISTING_CANONICAL_RIVER_LAKE_SHORELINE_FIELDS_ONLY",
     "responseCompositionMustIncreaseWithCanonicalWetness": true,
+    "landShorelineDistanceBelow2MayExpressWetMarginVegetation": true,
     "lowWetnessEcologyMustRemainRepresented": true,
     "v2LowMidHighBinsMayNotControlProductPlacement": true,
     "v2ResultCoordinatesMayNotControlProductPlacement": true,
+    "gen2000DiagnosticCoordinatesMayNotControlProductPlacement": true,
     "hydrologyOrGeographyAuthorityMutationProhibited": true,
     "v2BinningWeightsThresholdsSamplingMutationProhibited": true
   },
-  "repairedCandidateV2Interpretation": {
-    "candidateEvaluatorExpectedProcessExitCode": 1,
-    "candidateEvaluatorExpectedResult": "FAIL_CLOSED",
-    "candidateEvaluatorExpectedInstrumentValid": false,
-    "requiredFailedCheckIdsExactly": [
-      "ALL_FOUR_KNOWN_FAILURE_FAMILIES_DETECTED",
-      "CALIBRATION_CANOPY_CONTINUITY_RISK_DETECTED",
-      "CALIBRATION_GROUND_VISUAL_AREA_RISK_DETECTED",
-      "CALIBRATION_HYDROLOGY_RESPONSE_RISK_DETECTED",
-      "CALIBRATION_SURFACE_CONTAINMENT_RISK_DETECTED"
-    ],
-    "allOtherV2ChecksMustPass": true,
-    "metricsFamilyRiskMustBeAllFalse": true,
-    "diagnosticFailureMustNotBeRelabeledAsProductFailure": true,
-    "diagnosticFailureMustNotBeRelabeledAsInstrumentFailure": true
-  },
   "acceptanceLaw": {
-    "fourFamilyRisksMustBeFalseSimultaneously": true,
-    "exactFiveExpectedCalibrationFailuresAndNoOthers": true,
     "surfaceContainmentRiskMustRemainFalse": true,
     "groundVisualAreaRiskMustRemainFalse": true,
     "canopyContinuityRiskMustBecomeFalse": true,
     "hydrologyResponseRiskMustBecomeFalse": true,
+    "fourFamilyRisksMustBeFalseSimultaneously": true,
+    "hydrologyHighMinusLowAtLeast": 0.18,
+    "hydrologyHighWetnessSamplesAtLeast": 6,
     "canopyCountMustEqual": 818,
     "protectedAppBlobMustEqual": "cb7e01ad703ae52b756a4603176bfe6d3b4f5e8a",
     "v5BlobMustEqual": "f3b64eb1ffc1c1bc8e908ff96eb6c833b6bc928d",
@@ -168,25 +123,27 @@
     "SUCCESSOR_CONTRACT_FROZEN",
     "SUCCESSOR_INDEPENDENT_VERIFIER_FROZEN",
     "SUCCESSOR_SPARSE_PASSIVE_WORKFLOW_FROZEN",
-    "GEN1992_V2_TOOLING_AND_GEN1996_FOUNDATION_IDENTITIES_REPROVED",
-    "ONLY_THEN_PRODUCT_MUTATION"
+    "ONLY_THEN_PRODUCT_MUTATION",
+    "ONE_PASSIVE_QUALIFICATION",
+    "STOP_ON_FIRST_QUALIFICATION_FAILURE",
+    "TERMINAL_CLOSURE_BEFORE_DOWNSTREAM_MAP_OR_CARD_WORK"
   ],
   "checkoutLaw": "EXACT_REF_BLOB_FILTERED_CONE_SPARSE_INDEX_ONLY",
   "prohibited": [
     "APP_MUTATION",
     "V5_MUTATION",
     "CANOPY_COUNT_CHANGE",
-    "CAMERA_MUTATION",
+    "CANONICAL_HARD_OPENING_INFILL",
     "GEOGRAPHY_MUTATION",
-    "HYDROLOGY_AUTHORITY_MUTATION",
+    "STAND_TOPOLOGY_MUTATION",
+    "EDGE_ECOLOGY_MUTATION",
+    "COMPOSITION_AUTHORITY_MUTATION",
     "V2_DEFINITION_THRESHOLD_BIN_WEIGHT_SAMPLING_CAMERA_STATE_MUTATION",
-    "V2_BIN_OR_RESULT_TARGETED_PRODUCT_CONTROL",
-    "CAMERA_DESTINATION_VIEWPORT_DEVICE_WITNESS_TARGETED_PRODUCT_PLACEMENT",
+    "V2_OR_DIAGNOSTIC_COORDINATE_TARGETED_PRODUCT_CONTROL",
     "LOW_WETNESS_DENOMINATOR_DESTRUCTION",
-    "MANOR_OR_OPENING_REGRESSION",
     "SURFACE_CONTAINMENT_REGRESSION",
     "GROUND_VISUAL_AREA_REGRESSION",
-    "EXPERIENCE_LAYER_MUTATION",
+    "MAP_CARD_CLOUD_NAVIGATION_MUTATION",
     "MATERIAL_ACCEPTANCE_SELF_ASSIGNMENT",
     "MERGE",
     "DEPLOYMENT",

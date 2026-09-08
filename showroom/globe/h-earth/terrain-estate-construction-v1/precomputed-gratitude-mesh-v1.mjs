@@ -1,16 +1,32 @@
-const MESH_URL = new URL('./gratitude-mesh-v1.bin.gz?cb=AUDRALIA_GRATITUDE_MESH_v1', import.meta.url);
+const PART_LENGTHS = Object.freeze([1200000, 1200000, 1200000, 1200000, 1200000, 1200000, 1200000, 769742]);
+const MESH_URLS = Object.freeze(PART_LENGTHS.map((_, index) =>
+  new URL(`./gratitude-mesh-v1.part-${String(index).padStart(2, '0')}.gz`, import.meta.url)
+));
 const MAGIC = 'AUDGMV1';
 
 const readMagic = buffer => new TextDecoder().decode(new Uint8Array(buffer, 0, 7));
 
 export async function loadPrecomputedGratitudeMesh() {
   const startedAt = performance.now();
-  const response = await fetch(MESH_URL, { cache: 'force-cache' });
-  if (!response.ok) throw new Error(`AUDRALIA_MESH_FETCH_FAILED_${response.status}`);
-  if (!response.body || typeof DecompressionStream !== 'function') {
+  if (typeof DecompressionStream !== 'function') {
     throw new Error('AUDRALIA_MESH_DECOMPRESSION_UNAVAILABLE');
   }
-  const buffer = await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+  const parts = await Promise.all(MESH_URLS.map(async (url, index) => {
+    const response = await fetch(url, { cache: 'force-cache' });
+    if (!response.ok) throw new Error(`AUDRALIA_MESH_PART_${index}_FETCH_FAILED_${response.status}`);
+    if (!response.body) throw new Error(`AUDRALIA_MESH_PART_${index}_BODY_UNAVAILABLE`);
+    const part = await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+    if (part.byteLength !== PART_LENGTHS[index]) throw new Error(`AUDRALIA_MESH_PART_${index}_LENGTH_INVALID`);
+    return new Uint8Array(part);
+  }));
+  const totalLength = parts.reduce((total, part) => total + part.byteLength, 0);
+  const merged = new Uint8Array(totalLength);
+  let mergedOffset = 0;
+  for (const part of parts) {
+    merged.set(part, mergedOffset);
+    mergedOffset += part.byteLength;
+  }
+  const buffer = merged.buffer;
   const view = new DataView(buffer);
   if (readMagic(buffer) !== MAGIC || view.getUint32(8, true) !== 1) {
     throw new Error('AUDRALIA_MESH_HEADER_INVALID');
@@ -41,6 +57,7 @@ export async function loadPrecomputedGratitudeMesh() {
     schema: 'AUDRALIA_PRECOMPUTED_GRATITUDE_MESH_v1',
     identicalApprovedGeometry: true,
     browserConstructionRemoved: true,
+    verifiedChunkCount: parts.length,
     loadMilliseconds: performance.now() - startedAt,
     landMesh: Object.freeze({ vertices: landVertices, indices: landIndices, statistics: Object.freeze(statistics.land) }),
     coastalWaterMesh: Object.freeze({ vertices: waterVertices, indices: waterIndices, statistics: Object.freeze(statistics.water) })

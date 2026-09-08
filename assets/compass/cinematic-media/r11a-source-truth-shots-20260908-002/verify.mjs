@@ -1,0 +1,22 @@
+#!/usr/bin/env node
+import fs from 'node:fs';
+import crypto from 'node:crypto';
+const args=process.argv.slice(2); const mi=args.indexOf('--manifest');
+if(mi<0||!args[mi+1]) throw new Error('MANIFEST_REQUIRED');
+const path=args[mi+1], raw=fs.readFileSync(path,'utf8'), m=JSON.parse(raw);
+const fail=(c)=>{throw new Error(c)};
+if(m.schema!=='R11A_SOURCE_TRUTH_SHOT_MANIFEST_v1')fail('SCHEMA');
+if(m.governingHead!=='691339e6becbaf724e4ac28bd4cd9c1834254d83')fail('GOVERNING_HEAD');
+if(m.operationId!=='COMPASS_R11A_SOURCE_TRUTH_SHOT_CONSTRUCTION_20260908_002'||m.lockGeneration!==2005)fail('AUTHORITY');
+if(m.shot!=='S00'||m.transformationGrammarSegment!=='SURFACE_TO_MATTER')fail('SHOT_GRAMMAR');
+const expected=['INTACT_ENTRY_SURFACE','PROPAGATING_FRAGMENTATION_ACROSS_COMPLETE_SURFACE','MATERIALLY_COMPLETE_DISINTEGRATION','SUCCESSOR_CINEMATIC_MATTER'];
+if(JSON.stringify(m.approvedMorphology)!==JSON.stringify(expected))fail('MORPHOLOGY');
+if(m.proofStates?.length!==4||m.proofStates.map(x=>x.progress).join(',')!=='0,0.28,0.78,1')fail('PROOF_STATES');
+if(!m.acceptance?.fragmentationMustPropagateThroughEntireSurface||!m.acceptance?.buttonOnlyFragmentationForbidden||!m.acceptance?.headerOnlyFadeForbidden)fail('PROPAGATION_LAW');
+if(!m.acceptance?.exitMustRemainEntryDerivedMatter||!m.acceptance?.exitMustSupportS00ToS01CausalHandoff)fail('EXIT_LAW');
+if(m.fullMasterAuthorized!==false||m.liveMutationAuthorized!==false)fail('AUTHORITY_WIDENING');
+const stagePath=new URL('./stage.html',import.meta.url);const stage=fs.readFileSync(stagePath,'utf8');
+for(const token of ['data-entry-surface','surface.getBoundingClientRect()','play.getBoundingClientRect()','setRaster','ENTRY_SURFACE_MATTER_READY_FOR_ORIENTATION_FIELD']) if(!stage.includes(token)) fail('STAGE_TOKEN_'+token);
+if(stage.includes('buildEntryTessellation(button)'))fail('BUTTON_ONLY_PREDECESSOR_REINTRODUCED');
+const digest=crypto.createHash('sha256').update(raw).digest('hex');
+process.stdout.write(JSON.stringify({schema:'R11A_SOURCE_TRUTH_SHOT_VERIFICATION_RECEIPT_v1',result:'PASS_AT_SOURCE_AND_PROOF_CONTRACT_LEVEL',shot:'S00',manifestSha256:digest,fullMasterAuthorized:false,liveMutationAuthorized:false},null,2)+'\n');

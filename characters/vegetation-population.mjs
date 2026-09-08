@@ -40,14 +40,16 @@ const TOPOLOGY=freeze({
   meshSpacingEnd:136,
   meshSpacingStep:8,
   staggerFraction:.5,
-  rowAspect:.866025403784
+  rowAspect:.866025403784,
+  boundaryContinuityDistance:160,
+  boundaryMeshWeight:1.35
 });
 const STAND_RECORDS=new Map(getStandTopologySeeds().map(stand=>[stand.id,stand]));
 
 export const CANONICAL_VEGETATION_POPULATION_CONTRACT=freeze({
   schema:'MIRRORLAND_CANONICAL_VEGETATION_POPULATION_CONTRACT_v1',
-  operationId:'MIRRORLAND_POST_GEN1996_CANOPY_HYDROLOGY_RELATION_REPAIR_20260908_001',
-  stage:'GLOBAL_ECOLOGY_BOUND_CANOPY_GAP_COMPONENT_CLOSURE',
+  operationId:'MIRRORLAND_POST_GEN2000_ECOLOGICAL_RELATION_REPAIR_20260908_001',
+  stage:'GENERIC_NON_OPENING_STAND_TRANSITION_CONTINUITY_REPAIR',
   frameAuthority:'characters/gratitude-geography.adapter.mjs#GRATITUDE_DEVELOPMENT_FRAME',
   frameId:GRATITUDE_DEVELOPMENT_FRAME.frameId,
   ecologyAuthority:VEGETATION_ECOLOGY_AUTHORITY.schema,
@@ -70,13 +72,14 @@ export const CANONICAL_VEGETATION_POPULATION_CONTRACT=freeze({
   deterministicTerritorialCellRoundRobin:false,
   deterministicAdaptiveConnectedMesh:true,
   deterministicStaggeredTwoDimensionalMesh:true,
-  deterministicMultiPassTerritorialSpacing:true,
+  deterministicBoundaryContinuityWeightedMesh:true,
+  canonicalHardOpeningsPreserved:true,
   canonicalStandSeedCenteredAllocation:false,
   ecologyDerivedDominantForestCoreAllocation:false
 });
 
 const increment=(object,key)=>{object[key]=(object[key]||0)+1;};
-const sortTerritorialCandidates=(a,b)=>b.territorialScore-a.territorialScore||b.selectionScore-a.selectionScore||a.id.localeCompare(b.id);
+const sortTerritorialCandidates=(a,b)=>b.territorialScore-a.territorialScore||a.id.localeCompare(b.id);
 let cachedPopulation=null;
 
 function wetMarginAffinity(ecology){
@@ -93,6 +96,11 @@ function standCarryingCapacity(stand){
   const shorelineDistance=Math.max(0,Number(stand?.source?.shorelineDistance)||0);
   const inlandContinuity=clamp(shorelineDistance/900,.2,1.2);
   return quantize(forestWeight*inlandContinuity,12);
+}
+function boundaryContinuityAffinity(environment){
+  const distanceAffinity=clamp(1-(Number(environment.standBoundaryDistance)||0)/TOPOLOGY.boundaryContinuityDistance,0,1);
+  const zoneAffinity=environment.spatialZone==='EDGE'?1:(environment.spatialZone==='TRANSITION'?.82:.18);
+  return clamp(distanceAffinity*zoneAffinity,0,1);
 }
 function createCandidate(row,column,envelope,insetX,insetZ,usableWidth,usableDepth){
   const seed=hash32(Math.imul(row+1,73856093)^Math.imul(column+1,19349663)^0x5a17c3d9);
@@ -120,9 +128,22 @@ function createCandidate(row,column,envelope,insetX,insetZ,usableWidth,usableDep
   const wetAffinity=wetMarginAffinity(ecology);
   const hydrologyCanopyFactor=1-GRID.wetMarginSuppression*wetAffinity;
   const selectionScore=environment.canopyDensity*ecologySupport*stableVariation*hydrologyCanopyFactor;
-  const boundarySupport=clamp(environment.standBoundaryDistance/160,0,1);
-  const territorialScore=selectionScore*(.72+.28*boundarySupport)*(.92+.16*forestWeight);
-  return {id:`veg-r${row}-c${column}`,lattice:{row,column,seed},ecology,environment,standSeed,standSeedDistance:quantize(standSeedDistance,6),standCarryingCapacity:carryingCapacity,forestWeight,wetMarginAffinity:quantize(wetAffinity,12),selectionScore:quantize(selectionScore,12),territorialScore:quantize(territorialScore,12)};
+  const continuityAffinity=boundaryContinuityAffinity(environment);
+  const territorialScore=selectionScore*(.88+.30*continuityAffinity)*(.92+.16*forestWeight);
+  return {
+    id:`veg-r${row}-c${column}`,
+    lattice:{row,column,seed},
+    ecology,
+    environment,
+    standSeed,
+    standSeedDistance:quantize(standSeedDistance,6),
+    standCarryingCapacity:carryingCapacity,
+    forestWeight,
+    wetMarginAffinity:quantize(wetAffinity,12),
+    boundaryContinuityAffinity:quantize(continuityAffinity,12),
+    selectionScore:quantize(selectionScore,12),
+    territorialScore:quantize(territorialScore,12)
+  };
 }
 
 function nearestStaggeredTarget(candidate,spacing){
@@ -134,18 +155,23 @@ function nearestStaggeredTarget(candidate,spacing){
   const target={x:column*spacing+offset,z:row*rowStep};
   return {...target,distance2:(x-target.x)**2+(z-target.z)**2,row,column};
 }
+function meshCandidate(candidate,target,spacing){
+  const normalizedDistance2=target.distance2/(spacing*spacing);
+  const meshTargetCost=normalizedDistance2/(1+TOPOLOGY.boundaryMeshWeight*candidate.boundaryContinuityAffinity);
+  return {...candidate,meshTargetDistance2:target.distance2,meshTargetCost:quantize(meshTargetCost,12)};
+}
 function buildMeshNodes(candidates,spacing){
   const nodes=new Map();
   for(const candidate of candidates){
     const target=nearestStaggeredTarget(candidate,spacing);
     const key=`${target.row},${target.column}`;
     if(!nodes.has(key))nodes.set(key,{key,target:{x:target.x,z:target.z,row:target.row,column:target.column},items:[]});
-    nodes.get(key).items.push({...candidate,meshTargetDistance2:target.distance2});
+    nodes.get(key).items.push(meshCandidate(candidate,target,spacing));
   }
   return [...nodes.values()].map(node=>({
     ...node,
     rank:hash32(Math.imul(node.target.row,73856093)^Math.imul(node.target.column,19349663)^0x4c53a91d),
-    items:node.items.sort((a,b)=>a.meshTargetDistance2-b.meshTargetDistance2||sortTerritorialCandidates(a,b))
+    items:node.items.sort((a,b)=>a.meshTargetCost-b.meshTargetCost||a.meshTargetDistance2-b.meshTargetDistance2||sortTerritorialCandidates(a,b))
   })).sort((a,b)=>a.target.row-b.target.row||a.target.column-b.target.column||a.rank-b.rank);
 }
 function allocateConnectedMesh(candidates,budget){
@@ -170,8 +196,8 @@ function allocateConnectedMesh(candidates,budget){
   if(selected.length<budget){
     const fallback=[...candidates].filter(x=>!selectedIds.has(x.id)).map(candidate=>{
       const target=nearestStaggeredTarget(candidate,meshSpacing);
-      return {...candidate,meshTargetDistance2:target.distance2};
-    }).sort((a,b)=>a.meshTargetDistance2-b.meshTargetDistance2||sortTerritorialCandidates(a,b));
+      return meshCandidate(candidate,target,meshSpacing);
+    }).sort((a,b)=>a.meshTargetCost-b.meshTargetCost||a.meshTargetDistance2-b.meshTargetDistance2||sortTerritorialCandidates(a,b));
     for(const candidate of fallback){if(selected.length>=budget)break;selected.push(candidate);selectedIds.add(candidate.id);}
   }
   return {selected:selected.slice(0,budget),roundCounts,meshSpacing,meshNodeCount:nodes.length};
@@ -200,8 +226,8 @@ function createCanonicalPopulation(){
       slope:quantize(ecology.slope,12),slopeClass:ecology.slopeClass,shorelineDistance:quantize(ecology.shorelineDistance,6),standId:environment.standId,standClass:environment.standClass,
       spatialZone:environment.spatialZone,standSeedDistance:candidate.standSeedDistance,standCarryingCapacity:candidate.standCarryingCapacity,standBoundaryDistance:environment.standBoundaryDistance,
       canopyDensity:environment.canopyDensity,compositionTerritoryId:environment.compositionTerritoryId,compositionSiteId:environment.compositionSiteId,compositionBand:environment.compositionBand,
-      wetMarginAffinity:candidate.wetMarginAffinity,selectionScore:candidate.selectionScore,territorialScore:candidate.territorialScore,organizationAuthority:environment.edgeEcologyAuthority,
-      geographyAuthority:ecology.geographyAuthority,sourceContractId:ecology.sourceContractId
+      wetMarginAffinity:candidate.wetMarginAffinity,boundaryContinuityAffinity:candidate.boundaryContinuityAffinity,selectionScore:candidate.selectionScore,territorialScore:candidate.territorialScore,
+      organizationAuthority:environment.edgeEcologyAuthority,geographyAuthority:ecology.geographyAuthority,sourceContractId:ecology.sourceContractId
     });
   });
   const standCandidateCounts={},standSelectedCounts={},classCandidateCounts={},classSelectedCounts={};
@@ -211,7 +237,7 @@ function createCanonicalPopulation(){
   const selectedIds=new Set(instances.map(x=>x.id));
   const diagnostics=freeze({
     candidateCount:candidates.length,selectedCount:instances.length,rejectedEligibleCount:candidates.length-instances.length,
-    selectionLaw:'EXACT_818_CANONICAL_ECOLOGY_ELIGIBLE_NON_OPENING_ADAPTIVE_STAGGERED_2D_WORLD_MESH',
+    selectionLaw:'EXACT_818_CANONICAL_ECOLOGY_ELIGIBLE_NON_OPENING_BOUNDARY_WEIGHTED_ADAPTIVE_STAGGERED_2D_WORLD_MESH',
     meshSpacing:allocation.meshSpacing,meshRowAspect:TOPOLOGY.rowAspect,meshNodeCount:allocation.meshNodeCount,meshRoundCounts:freeze(allocation.roundCounts.map(x=>freeze({...x}))),
     standCandidateCounts:freeze(standCandidateCounts),standSelectedCounts:freeze(standSelectedCounts),classCandidateCounts:freeze(classCandidateCounts),classSelectedCounts:freeze(classSelectedCounts),
     zoneCandidateCounts:freeze(zoneCandidateCounts),zoneSelectedCounts:freeze(zoneSelectedCounts),
@@ -220,7 +246,8 @@ function createCanonicalPopulation(){
     compatibleInteriorCandidateCount:candidates.filter(x=>x.environment.spatialZone==='INTERIOR'&&x.environment.compositionBand==='NONE').length,
     compatibleInteriorSelectedCount:candidates.filter(x=>x.environment.spatialZone==='INTERIOR'&&x.environment.compositionBand==='NONE'&&selectedIds.has(x.id)).length,
     previousPositionSetImmutable:false,previousCoreConcentrationAuthoritySuperseded:true,deterministicTerritorialCellRoundRobin:false,deterministicAdaptiveConnectedMesh:true,
-    deterministicStaggeredTwoDimensionalMesh:true,deviceCameraDestinationInputsUsed:false,highResolutionCandidateCapacity:true,wetMarginCanopySuppression:true,territorialContinuityRepair:true
+    deterministicStaggeredTwoDimensionalMesh:true,deterministicBoundaryContinuityWeightedMesh:true,canonicalHardOpeningsPreserved:true,
+    deviceCameraDestinationInputsUsed:false,highResolutionCandidateCapacity:true,wetMarginCanopySuppression:true,territorialContinuityRepair:true
   });
   return freeze({schema:'MIRRORLAND_CANONICAL_VEGETATION_POPULATION_v1',operationId:CANONICAL_VEGETATION_POPULATION_CONTRACT.operationId,stage:CANONICAL_VEGETATION_POPULATION_CONTRACT.stage,frameId:GRATITUDE_DEVELOPMENT_FRAME.frameId,envelope:freeze({...envelope}),ecologyAuthority:VEGETATION_ECOLOGY_AUTHORITY.schema,organizationAuthority:'MIRRORLAND_EDGE_ECOLOGY_CONTRACT_v1',canonicalPopulation:true,standEdgeOrganized:true,deviceInvariant:true,cameraInvariant:true,representationAssigned:false,lodAssigned:false,fixedTargetCount:true,exactTargetCount:GRID.exactTargetCount,instanceCount:instances.length,diagnostics,instances:freeze(instances)});
 }

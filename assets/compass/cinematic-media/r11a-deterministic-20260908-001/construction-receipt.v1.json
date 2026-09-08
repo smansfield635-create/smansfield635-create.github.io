@@ -11,6 +11,6 @@
   "frameRate": 30,
   "durationSeconds": 42.5,
   "outputPath": "compass-main-orientation-r11a-review.mp4",
-  "outputSha256": "83aec1eb89ceef2f30a716a6e021dc6f71a3a765680da2c2153a57c3babd785e",
+  "outputSha256": "5c5e0c5e63babf46f249fb29db0cbc15985db9c5edc02aa2759949aebe721f23",
   "builderVerifierInvariant": "BUILDER_INPUT_MANIFEST_SHA256 == VERIFIER_INPUT_MANIFEST_SHA256 == FROZEN_R11A_MANIFEST_SHA256"
 }

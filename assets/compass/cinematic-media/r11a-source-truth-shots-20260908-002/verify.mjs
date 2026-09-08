@@ -30,6 +30,7 @@ const s=m.successorShot;
 if(s?.schema!=='R11A_S01_SOURCE_TRUTH_SHOT_v1'||s.shot!=='S01')fail('S01_SCHEMA');
 if(s.operationId!=='COMPASS_R11A_S01_CONTINUITY_CONSTRUCTION_20260908_003'||s.lockGeneration!==2009||s.authorityState!=='ADMITTED_LOCKED')fail('S01_AUTHORITY');
 if(s.dramaticInputState!=='S00_SUCCESSOR_CINEMATIC_MATTER'||s.dramaticOutputState!=='APPROVED_FOUR_CARDINAL_COMPASS_WITH_ORIENTATION_FOREGROUND')fail('S00_S01_HANDOFF');
+if(s.inputFrameProofSha256!==acceptedS00.proof[3]||!s.inputFrameRule?.startsWith('S01_PROGRESS_ZERO_RECONSTRUCTS_ACCEPTED_S00_SUCCESSOR_MATTER'))fail('S00_S01_PIXEL_HANDOFF');
 const ids=['COMPASS_STAR_ORIENTATION','COMPASS_STAR_TRANSFERABILITY','COMPASS_STAR_CONVERGENCE','COMPASS_STAR_INTEGRITY'];
 if(JSON.stringify(s.persistentObjects?.map(x=>x.objectId))!==JSON.stringify(ids)||new Set(s.persistentObjects?.map(x=>x.objectId)).size!==4)fail('PERSISTENT_IDENTITIES');
 if(s.objectCreationCount!==4||s.objectReplacementCount!==0)fail('OBJECT_REPLACEMENT');
@@ -45,7 +46,7 @@ const sourceFiles={
 for(const [name,url] of Object.entries(sourceFiles)){const bytes=fs.readFileSync(url);if(gitBlob(bytes)!==s.canonicalSourceAuthority?.[name])fail(`CANONICAL_SOURCE_BLOB:${name}`)}
 for(const token of [
   'R11A_S01_SOURCE_TRUTH_STAGE_v1','S00_SUCCESSOR_CINEMATIC_MATTER','objectReplacementCount:0',
-  'RIGHT_HANDED_EUCLIDEAN_XYZ','S01Stage','manipulate','pointermove',
+  'RIGHT_HANDED_EUCLIDEAN_XYZ','S00_PALETTE','S01Stage','manipulate','pointermove',
   ...ids,'SAME_STARS_FRAME_DGB_INTRO','SAME_STARS_CONVERGING','APPROVED_FOUR_CARDINAL_COMPASS'
 ]) if(!stage.includes(token))fail('S01_STAGE_TOKEN_'+token);
 for(const forbidden of ['<script src="../../compass.controller.js','<script src="../../compass.crystals.js','<script src="../../compass.cosmos.js'])if(stage.includes(forbidden))fail('PROTECTED_RUNTIME_LOADED_FOR_MUTATION');

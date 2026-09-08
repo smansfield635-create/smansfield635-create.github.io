@@ -18,6 +18,7 @@
     "contractPath": "control-plane/whole-estate/characters-reconstruction-v1/gen1983-camera-space-environment-diagnostics-v2-contract.v1.json",
     "contractBlobSha": "84014a5a51a50d43e86c9e4f54bb0804d3655af1",
     "verifierPath": "control-plane/whole-estate/characters-reconstruction-v1/verify-gen1983-camera-space-environment-diagnostics-v2.v1.mjs",
+    "verifierBlobSha": "6a7007cb37d04ea5af3542783342043c5c0a5829",
     "workflowPath": ".github/workflows/characters-gen1983-camera-space-environment-diagnostics-v2-v1.yml",
     "workflowBlobSha": "77b5b2e460adb86a123437c6eeb8d36ea8da5ba2",
     "definitionsAndThresholdsImmutable": true
@@ -109,6 +110,24 @@
     "experienceLayer": true,
     "v5Representation": true
   },
+  "repairedCandidateV2Interpretation": {
+    "unchangedEvaluatorCalibrationRequirement": "ALL_FOUR_GEN1984_FAILED_DIMENSIONS_RISK_TRUE",
+    "candidateEvaluatorExpectedProcessExitCode": 1,
+    "candidateEvaluatorExpectedResult": "FAIL_CLOSED",
+    "candidateEvaluatorExpectedInstrumentValid": false,
+    "reason": "UNCHANGED_CALIBRATION_ASSERTIONS_MUST_FAIL_WHEN_ALL_FOUR_RISK_FAMILIES_CLEAR",
+    "requiredFailedCheckIdsExactly": [
+      "ALL_FOUR_KNOWN_FAILURE_FAMILIES_DETECTED",
+      "CALIBRATION_CANOPY_CONTINUITY_RISK_DETECTED",
+      "CALIBRATION_GROUND_VISUAL_AREA_RISK_DETECTED",
+      "CALIBRATION_HYDROLOGY_RESPONSE_RISK_DETECTED",
+      "CALIBRATION_SURFACE_CONTAINMENT_RISK_DETECTED"
+    ],
+    "allOtherV2ChecksMustPass": true,
+    "metricsFamilyRiskMustBeAllFalse": true,
+    "diagnosticFailureMustNotBeRelabeledAsProductFailure": true,
+    "diagnosticFailureMustNotBeRelabeledAsInstrumentFailure": true
+  },
   "acceptanceLaw": {
     "v2ReceiptSchema": "MIRRORLAND_GEN1983_CAMERA_SPACE_ENVIRONMENT_DIAGNOSTICS_V2_RECEIPT_v1",
     "allStateRiskFlagsMustBeFalse": true,
@@ -124,6 +143,8 @@
   "checkoutLaw": "EXACT_REF_BLOB_FILTERED_CONE_SPARSE_INDEX_ONLY",
   "prohibited": [
     "V2_DEFINITION_OR_THRESHOLD_MUTATION",
+    "V2_CANDIDATE_FAIL_CLOSED_RELABELING_AS_PRODUCT_FAILURE",
+    "V2_CANDIDATE_FAIL_CLOSED_RELABELING_AS_INSTRUMENT_FAILURE",
     "V5_MUTATION",
     "CANOPY_COUNT_CHANGE",
     "CAMERA_MUTATION",

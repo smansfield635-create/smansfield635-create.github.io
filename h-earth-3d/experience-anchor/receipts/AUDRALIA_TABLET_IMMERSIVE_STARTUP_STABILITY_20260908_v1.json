@@ -15,20 +15,44 @@
   ],
   "experienceFiles": [
     {
-      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.bin.gz",
-      "sha256": "a475193638e590e218e68a2e5117445c6792af4b3395c7fca0cd902d91996b35"
+      "path": "showroom/globe/audralia/index.html",
+      "sha256": "8f06f3e8bcbd4667511f7329adea1082b3ab17046a376767f2ab1b0f50bc054f"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.part-00.gz",
+      "sha256": "20e67d850ddbb64170c1945aa7d8754fa44b7132a352d9aff5013092c400d5a3"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.part-01.gz",
+      "sha256": "f047d658875a8737a02e59522ecdf829f19ff66d5d08b2b23baa96fdd17cd5ae"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.part-02.gz",
+      "sha256": "09086c16b7eee5294f556064edb94acf2ca9e4f439ee9d46c4f10776a3b96328"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.part-03.gz",
+      "sha256": "b46fc12b5e2c8a8442eeced58df8951ba3e6b2d896b006c9c0b01b757e2573f6"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.part-04.gz",
+      "sha256": "da3ac9ff61c00660fbe99aa552cbb53a96d01240719e0a5cd68d366ef6455578"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.part-05.gz",
+      "sha256": "31e7965f1c3d36a5f59e641471e7fb717cec43d02054d5be16b11dca02aafcec"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.part-06.gz",
+      "sha256": "f6b4c87633bbdee0dae7866295fdf823f45ff367172a18bfcdf95de965f017fd"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.part-07.gz",
+      "sha256": "3c9d1850346672c48ab4da023d34785d8cea3098906b766c0795bb4822ba8f90"
     },
     {
       "path": "showroom/globe/h-earth/terrain-estate-construction-v1/precomputed-gratitude-mesh-v1.mjs",
-      "sha256": "6e1843703b62e0c4c97fa1f73a4127909456be56dd7bb41f10150163ac309b59"
-    },
-    {
-      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs",
-      "sha256": "3bf642f96a1b8e81543a90f35166344961d3f6832f5cefb4a2c884739b266ce0"
-    },
-    {
-      "path": "showroom/globe/audralia/index.html",
-      "sha256": "ffaa25b99c4ade0c52077bca8b14ae87a600c2b6fe2e00e83ccd2d5149867abe"
+      "sha256": "2909ce820f11f5b6ebefa4532a9008ceedfb8ee105bd95c69840f9134510c93f"
     }
   ],
   "invariants": {
@@ -46,6 +70,6 @@
   },
   "reviewSummary": {
     "operation": "AUDRALIA_TABLET_IMMERSIVE_STARTUP_STABILITY_20260908_003",
-    "finding": "The approved exact Audralia environment, terrain, geography, shaders, navigation, interaction model, weather layers, celestial layer, and full-screen CSS presentation are unchanged. The exact approved Gratitude land and coastal-water typed arrays are loaded from a commit-pinned content-addressed CDN asset before the primary renderer starts, removing the measured long synchronous browser construction task that froze the tablet loader while preserving the identical mesh statistics and interaction contract."
+    "finding": "The approved exact Audralia environment, terrain, geography, shaders, navigation, interaction model, weather layers, celestial layer, and full-screen CSS presentation are unchanged. The exact approved 9,169,742-byte Gratitude mesh is delivered as eight independently complete, length-validated gzip members from a commit-pinned content-addressed route before renderer startup. This replaces the deterministically identified truncated single payload while retaining the removal of the long synchronous browser construction task."
   }
 }

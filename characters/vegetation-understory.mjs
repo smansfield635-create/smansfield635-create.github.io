@@ -14,6 +14,7 @@ const CLASS_SALT=freeze({GRASS_SEDGE:11,LOW_SHRUB:23,SAPLING_YOUNG_GROWTH:37,REE
 const GRID=freeze({columns:144,rows:106,insetFraction:.025,jitterFraction:.30,seed:1689746977});
 const REED_CLUSTER_OFFSETS=freeze([[0,0],[3,2],[-2.8,3.2],[2.4,-3.4],[-3.6,-1.8],[6.5,1.5],[-6.2,2.2],[1.4,6.4],[-1.8,-6.1]]);
 const HYDROLOGY_PRESENTATION=freeze({shorelineScale:180,shorelineContribution:.62,reedEligibilityMinimum:.34});
+const HYDROLOGY_CORE=freeze({gridStep:32,wetCoreMinimum:.50,clusterOffsets:freeze([[0,0],[4,0],[-3.4,3.2]])});
 
 export const V4_UNDERSTORY_CONTRACT=freeze({
   schema:'MIRRORLAND_VEGETATION_V4_UNDERSTORY_RUNTIME_CONTRACT_v1',
@@ -37,6 +38,8 @@ export const V4_UNDERSTORY_CONTRACT=freeze({
   hydrologyDifferentiationRepair:true,
   wetMarginColonySampling:true,
   hydrologyPresentation:HYDROLOGY_PRESENTATION,
+  hydrologyCoreLattice:HYDROLOGY_CORE,
+  hydrologyCoreReinforcement:true,
   v2WetnessSignalAligned:true
 });
 
@@ -93,6 +96,22 @@ function createUnderstoryPopulation(){
     const seed=hash32(Math.imul(row+1,73856093)^Math.imul(column+1,19349663)^GRID.seed),jitterX=(rand(seed,1)-.5)*2*GRID.jitterFraction,jitterZ=(rand(seed,2)-.5)*2*GRID.jitterFraction,u=clamp((column+.5+jitterX)/GRID.columns,0,1),v=clamp((row+.5+jitterZ)/GRID.rows,0,1),worldX=envelope.xMinimum+insetX+u*usableWidth,worldZ=envelope.zMinimum+insetZ+v*usableDepth,ecology=sampleCanonicalVegetationEcology(worldX,worldZ);if(ecology?.valid!==true)continue;const environment=resolveVegetationEnvironment(ecology.world.x,ecology.world.z),selected=selectClass(seed,ecology,environment,trees.instances);if(!selected)continue;const type=selected.type;
     append(type,selected,ecology,environment,seed,row,column);
     if(type==='REED_WET_MARGIN')for(let i=1;i<REED_CLUSTER_OFFSETS.length;i++){const [dx,dz]=REED_CLUSTER_OFFSETS[i],satellite=sampleCanonicalVegetationEcology(ecology.world.x+dx,ecology.world.z+dz);if(satellite?.valid!==true)continue;if(satellite.hydrology?.drainageClass!=='LAND'||satellite.shorelineDistance<2||effectiveWetness(satellite)<HYDROLOGY_PRESENTATION.reedEligibilityMinimum)continue;const satelliteEnvironment=resolveVegetationEnvironment(satellite.world.x,satellite.world.z);append(type,selected,satellite,satelliteEnvironment,hash32(seed^Math.imul(i+1,0x45d9f3b)),row,column,`-colony${i}`);}
+  }
+  let hydroRow=0;
+  for(let z=envelope.zMinimum+HYDROLOGY_CORE.gridStep/2;z<=envelope.zMaximum-HYDROLOGY_CORE.gridStep/2;z+=HYDROLOGY_CORE.gridStep,hydroRow++){
+    let hydroColumn=0;
+    for(let x=envelope.xMinimum+HYDROLOGY_CORE.gridStep/2;x<=envelope.xMaximum-HYDROLOGY_CORE.gridStep/2;x+=HYDROLOGY_CORE.gridStep,hydroColumn++){
+      const ecology=sampleCanonicalVegetationEcology(x,z);
+      if(ecology?.valid!==true||ecology.hydrology?.drainageClass!=='LAND'||ecology.shorelineDistance<2||!['LEVEL','GENTLE','MODERATE'].includes(ecology.slopeClass)||effectiveWetness(ecology)<HYDROLOGY_CORE.wetCoreMinimum)continue;
+      const baseSeed=hash32(Math.imul(hydroRow+1,83492791)^Math.imul(hydroColumn+1,2971215073)^0x4d83a61f);
+      const selected={density:.99,coverageProbability:.995};
+      for(let i=0;i<HYDROLOGY_CORE.clusterOffsets.length;i++){
+        const [dx,dz]=HYDROLOGY_CORE.clusterOffsets[i],satellite=sampleCanonicalVegetationEcology(ecology.world.x+dx,ecology.world.z+dz);
+        if(satellite?.valid!==true||satellite.hydrology?.drainageClass!=='LAND'||satellite.shorelineDistance<2||!['LEVEL','GENTLE','MODERATE'].includes(satellite.slopeClass)||effectiveWetness(satellite)<HYDROLOGY_PRESENTATION.reedEligibilityMinimum)continue;
+        const satelliteEnvironment=resolveVegetationEnvironment(satellite.world.x,satellite.world.z);
+        append('REED_WET_MARGIN',selected,satellite,satelliteEnvironment,hash32(baseSeed^Math.imul(i+1,0x45d9f3b)),hydroRow,hydroColumn,`-wetcore${i}`);
+      }
+    }
   }
   return freeze({schema:'MIRRORLAND_VEGETATION_V4_UNDERSTORY_POPULATION_v1',operationId:V4_UNDERSTORY_CONTRACT.operationId,stage:V4_UNDERSTORY_CONTRACT.stage,targetBoundary:V4_UNDERSTORY_CONTRACT.targetBoundary,canonicalPopulation:true,standEdgeCompositionBound:true,deviceInvariant:true,cameraInvariant:true,frameId:trees.frameId,envelope:freeze({...envelope}),grid:GRID,instanceCount:instances.length,classCounts:freeze(classCounts),zoneCounts:freeze(zoneCounts),standClassCounts:freeze(standClassCounts),instances:freeze(instances)});
 }

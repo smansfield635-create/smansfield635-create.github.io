@@ -163,7 +163,13 @@ jobs:
             const v=JSON.parse(fs.readFileSync(root+dir+'-v2.json'));
             const observed=v.metrics.stateMetrics.map(x=>x.canopyFieldContinuity);
             const declared=d.subjects[key].map(x=>({state:x.state,...x.metrics}));
-            if(JSON.stringify(observed)!==JSON.stringify(declared))throw new Error('SUBJECT_V2_METRIC_MISMATCH:'+key);
+            const fields=['state','eligibleCellCount','occupiedCellCount','occupiedCellRatio','largestConnectedOccupiedCells','largestComponentRatio','maxEmptyCorridorCells','risk'];
+            if(observed.length!==declared.length)throw new Error(`SUBJECT_V2_METRIC_COUNT_MISMATCH:${key}:${observed.length}:${declared.length}`);
+            for(let i=0;i<observed.length;i++)for(const field of fields){
+              if(!Object.hasOwn(observed[i],field)||!Object.hasOwn(declared[i],field)||observed[i][field]!==declared[i][field]){
+                throw new Error(`SUBJECT_V2_METRIC_MISMATCH:${key}:${i}:${field}:${String(observed[i]?.[field])}:${String(declared[i]?.[field])}`);
+              }
+            }
           }
           NODE
 

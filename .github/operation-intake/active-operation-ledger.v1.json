@@ -812,6 +812,49 @@
       "scopeHash": "1bbc100f974e1cb61f1bc9a2b59a09a3e51e5233871d5acb3b5b3cf5c1b85dc8",
       "state": "ADMITTED_LOCKED"
     },
+    "1be5b54028d0e129eca0de882d02ab41e15a4b11690d180890e6bd3a22fbd1c5": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
+          "lockGeneration": 2001,
+          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:ECOLOGICAL_RELATION_REPAIR:POST_GEN2000",
+          "operationId": "MIRRORLAND_POST_GEN2000_ECOLOGICAL_RELATION_REPAIR_20260908_001",
+          "procedureLocatorDigest": "00760a39af475e65eeae84cb63edda5dd665a73525ea9154e0ef310d7b44f257",
+          "requestDigest": "c5e297608f7329610a7d3fcd235ebfa8af5c0bf3d4feb6cdb92c6ff5696a168f",
+          "scopeHash": "1be5b54028d0e129eca0de882d02ab41e15a4b11690d180890e6bd3a22fbd1c5"
+        },
+        "bindingDigest": "b62ebdbb92e23d2e176eaeef54c3ce980e663b4612847827692eae6d7a322c87",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "344c37dcc29cb30cb6d0e163371805ab90bc893c52e585b16312e6c30a0e2add",
+          "commentId": 5586279463,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2670,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34235055866,
+          "workflowSha": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953"
+        },
+        "lineageAnchorCommitSha": "9a852886b27cb71ceb0a0971bdcb2d54f0e4ed5b",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
+      "lockGeneration": 2001,
+      "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:ECOLOGICAL_RELATION_REPAIR:POST_GEN2000",
+      "operationId": "MIRRORLAND_POST_GEN2000_ECOLOGICAL_RELATION_REPAIR_20260908_001",
+      "procedureLocatorDigest": "00760a39af475e65eeae84cb63edda5dd665a73525ea9154e0ef310d7b44f257",
+      "released": false,
+      "requestDigest": "c5e297608f7329610a7d3fcd235ebfa8af5c0bf3d4feb6cdb92c6ff5696a168f",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "1be5b54028d0e129eca0de882d02ab41e15a4b11690d180890e6bd3a22fbd1c5",
+      "state": "ADMITTED_LOCKED"
+    },
     "1d9d8d95d3f6a61a708cf328302c426749126870c51f0e81d18fbda94c0cd952": {
       "governingHead": "0e21f21314d3c453880da19605e3ce2566964b78",
       "lockGeneration": 1686,
@@ -7343,7 +7386,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2000,
+  "lockGeneration": 2001,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

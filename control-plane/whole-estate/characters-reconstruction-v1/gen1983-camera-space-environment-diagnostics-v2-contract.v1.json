@@ -1,0 +1,112 @@
+{
+  "schema": "MIRRORLAND_GEN1983_CAMERA_SPACE_ENVIRONMENT_DIAGNOSTICS_V2_CONTRACT_v1",
+  "operationId": "MIRRORLAND_GEN1983_CAMERA_SPACE_ENVIRONMENT_DIAGNOSTICS_CALIBRATION_REPAIR_20260907_002",
+  "lockGeneration": 1992,
+  "governingHead": "5ec0a127d55982e1cf985b0ff415a086149a25dc",
+  "frozenProductSha": "b193e6758f776b5ff6006c96037ee1a7632ddb64",
+  "frozenV5BlobSha": "f3b64eb1ffc1c1bc8e908ff96eb6c833b6bc928d",
+  "route": "/characters/",
+  "programIssue": 2670,
+  "materialTruthCommentId": 5574384328,
+  "failedCalibrationCommentId": 5574540080,
+  "failedPredecessorRun": 34152513316,
+  "failedPredecessorArtifactId": 10029840687,
+  "psalmAckCommentId": 5574558265,
+  "environmentDispositionAuthority": false,
+  "materialDispositionAuthority": false,
+  "metricFamilies": [
+    "FRUSTUM_SURFACE_CONTAINMENT_RISK_V2",
+    "CANOPY_FIELD_CONTINUITY",
+    "ELIGIBLE_GROUND_VISUAL_AREA_OCCUPANCY_V2",
+    "HYDROLOGY_RESPONSE_STRENGTH"
+  ],
+  "profiles": {
+    "desktop": {
+      "viewport": [1440, 900],
+      "verticalFovDegrees": 52
+    },
+    "compactMobile": {
+      "viewport": [390, 844],
+      "verticalFovDegrees": 52
+    }
+  },
+  "representativeStates": [
+    {"state": "WIDE_COAST", "camera": "ORBIT"},
+    {"state": "OPEN_TERRAIN", "destination": "crossing"},
+    {"state": "WOODLAND_EDGE", "destination": "alaric"},
+    {"state": "FOREST_INTERIOR_INDEPENDENT", "destination": "auren"},
+    {"state": "MIRROR_MANOR_APPROACH", "destination": "manor"},
+    {"state": "SHORELINE_WETLAND_TRANSITION", "destination": "tarian"},
+    {"state": "WIDE_RETURN", "camera": "ORBIT"}
+  ],
+  "frustumContainmentV2": {
+    "horizontalSamples": 25,
+    "verticalSamples": 25,
+    "rayMaxDistance": 3200,
+    "rayStep": 12,
+    "riskMaxAdjacentHorizonDiscontinuityAboveBins": 2,
+    "riskInternalSurfaceHoleCountAbove": 0,
+    "riskVisibleOuterBoundarySamplesAbove": 0,
+    "outerBoundaryPerimeterStep": 32
+  },
+  "groundVisualAreaOccupancyV2": {
+    "footprintRadius": 280,
+    "ecologyGridStep": 14,
+    "zeroDepthMinimumRasterThickness": 0.18,
+    "eligibleZones": ["INTERIOR", "EDGE", "TRANSITION"],
+    "riskUpperBoundRatioBelow": 0.12,
+    "geometrySource": "characters/vegetation-understory.mjs#GEOMETRY",
+    "instanceScaleSource": "characters/vegetation-understory.mjs#getCanonicalUnderstoryPopulation().instances[].scale",
+    "overlapSubtracted": false,
+    "interpretation": "CONSERVATIVE_UPPER_BOUND"
+  },
+  "canopyContinuity": {
+    "footprintRadius": 320,
+    "cellSize": 32,
+    "canopyInfluenceRadius": 30,
+    "riskOccupiedCellRatioBelow": 0.42,
+    "riskLargestComponentRatioBelow": 0.78,
+    "riskMaxEmptyCorridorCellsAbove": 4
+  },
+  "hydrologyResponse": {
+    "gridStep": 36,
+    "shorelineScale": 180,
+    "wetnessBins": {
+      "lowMax": 0.24,
+      "midMax": 0.52
+    },
+    "responseRadius": 30,
+    "riskHighMinusLowBelow": 0.18,
+    "requiredHighWetnessSamples": 6
+  },
+  "calibration": {
+    "knownFailedDimensions": [
+      "WORLD_BOUNDARY_CONTAINMENT",
+      "TERRITORIAL_ORGANIZATION",
+      "GROUND_UNDERSTORY_CONTINUITY",
+      "ECOLOGICAL_CONDITION_DIFFERENTIATION"
+    ],
+    "requiredRiskFamilies": {
+      "WORLD_BOUNDARY_CONTAINMENT": "FRUSTUM_SURFACE_CONTAINMENT_RISK_V2",
+      "TERRITORIAL_ORGANIZATION": "CANOPY_FIELD_CONTINUITY",
+      "GROUND_UNDERSTORY_CONTINUITY": "ELIGIBLE_GROUND_VISUAL_AREA_OCCUPANCY_V2",
+      "ECOLOGICAL_CONDITION_DIFFERENTIATION": "HYDROLOGY_RESPONSE_STRENGTH"
+    },
+    "allFourKnownFailuresMustRegisterRisk": true,
+    "postBaselineThresholdMutationProhibited": true
+  },
+  "checkoutLaw": "EXACT_REF_BLOB_FILTERED_CONE_SPARSE_INDEX_ONLY",
+  "prohibited": [
+    "PRODUCT_MUTATION",
+    "SYNTHETIC_CAMERA",
+    "DUPLICATE_GEOGRAPHY_CAMERA_SURFACE_VEGETATION_OR_UNDERSTORY_AUTHORITY",
+    "HAND_AUTHORED_PER_CLASS_VISUAL_AREA_TABLE",
+    "POST_BASELINE_V2_CONSTANT_MUTATION",
+    "MATERIAL_OR_ENVIRONMENT_PASS_SELF_ASSIGNMENT",
+    "INTEGRATED_EXPERIENCE_MUTATION",
+    "UNRESTRICTED_FULL_TREE_CHECKOUT",
+    "MERGE",
+    "DEPLOYMENT",
+    "PUBLICATION"
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "schema":"R11A_SOURCE_TRUTH_SHOT_VERIFICATION_RECEIPT_v1",
-  "result":"BROWSER_PROOF_GENERATED_OWNER_ACCEPTANCE_PENDING",
-  "shot":"S00",
+  "result":"S00_BROWSER_PROOF_ACCEPTED_S01_BROWSER_PROOF_PENDING",
+  "shots":["S00","S01"],
   "proofFrameSha256":{
     "intact":"56f9a6fcf4b0ca2e79c6e1e67082ceb7381199f53c6213dd844f2d9b25242339",
     "propagation":"5c720504e1ea520313b9ef219266b095aea09cbb22d17c6c337e013522422620",
@@ -11,6 +11,13 @@
   "contactSheetSha256":"95ea56f1bbfd1d804930427df7d9bfa9648e80870d76368a714033dd5a8c9061",
   "proofShowsWholeSurfacePropagation":true,
   "proofShowsCleanEntryDerivedSuccessorMatter":true,
-  "ownerAcceptance":"PENDING",
+  "acceptedS00Head":"aefb46cf1e3b3a77b302d5176c53b5a67ad364fd",
+  "s01ProofFrameSha256":{},
+  "s01ContactSheetSha256":"PENDING",
+  "persistentObjectIds":["COMPASS_STAR_ORIENTATION","COMPASS_STAR_TRANSFERABILITY","COMPASS_STAR_CONVERGENCE","COMPASS_STAR_INTEGRITY"],
+  "objectReplacementCount":0,
+  "proofShowsGenuineManipulation":"PENDING_BROWSER_PROOF",
+  "proofShowsOrientationDominantWithOtherThreeVisible":"PENDING_BROWSER_PROOF",
+  "ownerAcceptance":{"S00":"ACCEPTED","S01":"PENDING"},
   "nextShotConstructionAuthorized":false
 }

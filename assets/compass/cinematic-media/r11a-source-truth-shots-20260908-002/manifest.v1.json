@@ -47,6 +47,71 @@
     "exitMustSupportS00ToS01CausalHandoff": true,
     "ownerAcceptanceRequired": true
   },
+  "acceptedPredecessor": {
+    "shot": "S00",
+    "head": "aefb46cf1e3b3a77b302d5176c53b5a67ad364fd",
+    "ownerAcceptance": "ACCEPTED",
+    "immutabilityRule": "PRESERVE_ACCEPTED_S00_PROOF_STATES_MORPHOLOGY_AND_HANDOFF_IDENTITY_EXACTLY"
+  },
+  "successorShot": {
+    "schema": "R11A_S01_SOURCE_TRUTH_SHOT_v1",
+    "shot": "S01",
+    "frameInterval": [144, 318],
+    "secondsInterval": [4.8, 10.6],
+    "operationId": "COMPASS_R11A_S01_CONTINUITY_CONSTRUCTION_20260908_003",
+    "lockGeneration": 2009,
+    "authorityState": "ADMITTED_LOCKED",
+    "dramaticInputState": "S00_SUCCESSOR_CINEMATIC_MATTER",
+    "dramaticOutputState": "APPROVED_FOUR_CARDINAL_COMPASS_WITH_ORIENTATION_FOREGROUND",
+    "capabilityGain": "VIEWER_SEES_AND_CAN_PERFORM_GENUINE_COMPASS_MANIPULATION",
+    "transformationGrammarSegment": "MATTER_TO_PERSISTENT_CARDINAL_CONSTELLATION",
+    "continuityLaw": "ACCEPTED S00 MATTER -> FOUR CANONICAL STAR IDENTITIES -> SAME STARS FRAME DGB INTRO -> SAME STARS CONVERGE -> APPROVED FOUR-CARDINAL COMPASS -> ORIENTATION FOREGROUND",
+    "persistentObjects": [
+      {"objectId":"COMPASS_STAR_ORIENTATION","label":"ORIENTATION","wing":"north","sourceMatterCluster":0},
+      {"objectId":"COMPASS_STAR_TRANSFERABILITY","label":"TRANSFERABILITY","wing":"east","sourceMatterCluster":1},
+      {"objectId":"COMPASS_STAR_CONVERGENCE","label":"CONVERGENCE","wing":"south","sourceMatterCluster":2},
+      {"objectId":"COMPASS_STAR_INTEGRITY","label":"INTEGRITY","wing":"west","sourceMatterCluster":3}
+    ],
+    "objectCreationCount": 4,
+    "objectReplacementCount": 0,
+    "canonicalSourceAuthority": {
+      "assets/compass/compass.crystals.js": "cd2cbad0494852cc80c51959a6827407d037b8fb",
+      "assets/compass/compass.cosmos.js": "4fe781df1a8876218c6f081b6ec88d5d2d6044c7",
+      "assets/compass/compass.controller.js": "568a6b2cd608a4cbcd62cf70ed59b241c39c90d2"
+    },
+    "canonicalCrystalContract": {
+      "coordinateSystem": "RIGHT_HANDED_EUCLIDEAN_XYZ",
+      "primaryAnchor": [0, 0.625, 0.78],
+      "cardinalMesh": {"points":8,"radius":0.72,"inner":0.30,"depth":0.42,"crown":0.20,"yScale":0.78},
+      "palette": {
+        "north": [0.72, 0.88, 1],
+        "east": [0.56, 0.92, 1],
+        "south": [1, 0.82, 0.48],
+        "west": [0.96, 0.68, 0.46]
+      }
+    },
+    "phaseStates": [
+      {"id":"FOUR_IDENTITIES_DIFFERENTIATING","progress":0.18,"frame":175},
+      {"id":"SAME_STARS_FRAME_DGB_INTRO","progress":0.46,"frame":224},
+      {"id":"SAME_STARS_CONVERGING","progress":0.72,"frame":269},
+      {"id":"APPROVED_FOUR_CARDINAL_COMPASS","progress":1.0,"frame":318}
+    ],
+    "introContext": "Discover our ideas, enter the story, or explore your own.",
+    "terminalForeground": "ORIENTATION",
+    "otherCanonicalStarsVisible": true,
+    "genuineManipulation": {
+      "required": true,
+      "mechanism": "POINTER_DRAG_ROTATES_THE_SAME_FOUR_OBJECT_VECTORS_IN_RIGHT_HANDED_3D_SPACE",
+      "staticCompassForbidden": true
+    },
+    "proof": {
+      "stageApi": "S01Stage",
+      "requiredProgress": [0.0, 0.18, 0.46, 0.72, 1.0],
+      "requiresPointerManipulationReceipt": true,
+      "ownerVisibleBrowserProofRequired": true,
+      "ownerAcceptance": "PENDING"
+    }
+  },
   "fullMasterAuthorized": false,
   "liveMutationAuthorized": false
 }

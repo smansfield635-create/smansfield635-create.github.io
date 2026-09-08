@@ -14,14 +14,14 @@ const CLASS_SALT=freeze({GRASS_SEDGE:11,LOW_SHRUB:23,SAPLING_YOUNG_GROWTH:37,REE
 const GRID=freeze({columns:144,rows:106,insetFraction:.025,jitterFraction:.30,seed:1689746977});
 const REED_CLUSTER_OFFSETS=freeze([[0,0],[3,2],[-2.8,3.2],[2.4,-3.4],[-3.6,-1.8],[6.5,1.5],[-6.2,2.2],[1.4,6.4],[-1.8,-6.1]]);
 const HYDROLOGY_PRESENTATION=freeze({shorelineScale:180,shorelineContribution:.62,reedEligibilityMinimum:.34});
-const HYDROLOGY_CORE=freeze({gridStep:32,wetCoreMinimum:.50,clusterOffsets:freeze([[0,0],[4,0],[-3.4,3.2]])});
+const HYDROLOGY_CORE=freeze({gridStep:18,wetCoreMinimum:.44,clusterOffsets:freeze([[0,0]])});
 
 export const V4_UNDERSTORY_CONTRACT=freeze({
   schema:'MIRRORLAND_VEGETATION_V4_UNDERSTORY_RUNTIME_CONTRACT_v1',
-  operationId:'MIRRORLAND_POST_GEN1992_ENVIRONMENT_MATERIAL_REPAIR_20260907_002',
-  stage:'ENVIRONMENT_GROUND_CLOSURE_AND_HYDROLOGY_DIFFERENTIATION_REPAIR',
-  predecessorBoundary:'GEN1992_CALIBRATED_ENVIRONMENT_FAILURE_BASELINE',
-  targetBoundary:'POST_GEN1992_ENVIRONMENT_MECHANICAL_CLEAR_CANDIDATE',
+  operationId:'MIRRORLAND_POST_GEN1995_CANOPY_HYDROLOGY_REPAIR_20260907_001',
+  stage:'CANONICAL_WETNESS_RESPONSE_ORDERING_AND_COVERAGE_REPAIR',
+  predecessorBoundary:'GEN1995_PARTIAL_SUCCESS_TWO_CLEAR_TWO_FAIL',
+  targetBoundary:'ALL_FOUR_V2_ENVIRONMENT_RISK_FAMILIES_CLEAR',
   ecologySource:'characters/vegetation-ecology.mjs#sampleCanonicalVegetationEcology',
   treePopulationSource:'characters/vegetation-population.mjs#getCanonicalVegetationPopulation',
   standEdgeSource:'characters/vegetation-edge-ecology.mjs#resolveVegetationEnvironment',
@@ -40,6 +40,8 @@ export const V4_UNDERSTORY_CONTRACT=freeze({
   hydrologyPresentation:HYDROLOGY_PRESENTATION,
   hydrologyCoreLattice:HYDROLOGY_CORE,
   hydrologyCoreReinforcement:true,
+  hydrologyCoreDistributedCoverage:true,
+  hydrologyCoreRedundantClustering:false,
   v2WetnessSignalAligned:true
 });
 

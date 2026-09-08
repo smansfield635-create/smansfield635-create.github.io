@@ -60,7 +60,8 @@
       ".github/workflows/bounded-binary-object-transfer-v1.yml",
       "tools/ai-room-transport/bounded-binary-object-transfer.v1.mjs",
       "tools/ai-room-transport/bounded-binary-object-transfer.v1.test.mjs",
-      ".github/ai-toolset-transport/bounded-binary-object-transfer.v1.json"
+      ".github/ai-toolset-transport/bounded-binary-object-transfer.v1.json",
+      "tools/operation-intake/"
     ],
     "validationCommand": "node tools/repository-ai-entry-router.mjs --self-test --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/router-self-test-receipt.json"
   },

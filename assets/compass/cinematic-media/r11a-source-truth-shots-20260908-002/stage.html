@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>R11A S00 Source Truth Proof</title>
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#010407;color:#f6f0df}
+#capture{position:relative;width:1280px;height:720px;overflow:hidden;background:#010407;font-family:Inter,ui-sans-serif,system-ui,sans-serif}
+.gate{position:absolute;inset:0;display:grid;place-items:center;padding:20px;overflow:hidden;background:radial-gradient(circle at 50% 24%,rgba(33,86,91,.14),transparent 42%),linear-gradient(180deg,#061014,#02070b 58%,#010407)}
+.gate-card{position:relative;width:min(680px,100%);box-sizing:border-box;padding:54px;border:1px solid rgba(232,203,120,.24);border-radius:32px;background:rgba(2,10,16,.86);box-shadow:0 34px 110px rgba(0,0,0,.45),inset 0 1px rgba(255,255,255,.045);text-align:center;backdrop-filter:blur(14px)}
+.gate-card::before,.gate-card::after{content:"";position:absolute;left:50%;pointer-events:none}
+.gate-card::before{top:-68px;width:1px;height:48px;background:linear-gradient(180deg,transparent,rgba(120,220,232,.52))}
+.gate-card::after{bottom:-52px;width:104px;height:1px;transform:translateX(-50%);background:linear-gradient(90deg,transparent,rgba(232,203,120,.6),transparent)}
+.eyebrow{margin:0 0 14px;color:#e8cb78;font:900 .72rem/1.2 Inter,ui-sans-serif,system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase}
+.gate-card h2{margin:0;color:#f6f0df;font-family:Georgia,"Times New Roman",serif;font-size:5.8rem;font-weight:500;line-height:.94;letter-spacing:-.055em}
+.gate-card>p:not(.eyebrow){max-width:34rem;margin:18px auto 0;color:#c2ccca;font-size:1.22rem;line-height:1.55}
+.actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:28px}
+.button{min-height:52px;padding:0 24px;border:1px solid rgba(232,203,120,.34);border-radius:999px;background:rgba(232,203,120,.08);color:#fff2c7;font:900 .78rem/1 Inter,ui-sans-serif,system-ui,sans-serif;letter-spacing:.02em;box-shadow:inset 0 1px rgba(255,255,255,.06)}
+.button.primary{border-color:rgba(232,203,120,.72);background:linear-gradient(135deg,rgba(232,203,120,.24),rgba(120,220,232,.08));box-shadow:0 0 0 5px rgba(120,220,232,.08),inset 0 1px rgba(255,255,255,.08)}
+#matter{position:absolute;inset:0;width:1280px;height:720px;display:block;opacity:0}
+#capture.is-rasterized .gate{visibility:hidden}
+</style>
+</head>
+<body>
+<main id="capture">
+  <section class="gate" aria-label="Authentic Diamond Gate Bridge orientation entry surface">
+    <div class="gate-card" data-entry-surface>
+      <p class="eyebrow">Diamond Gate Bridge</p>
+      <h2>Find your way.</h2>
+      <p>A short orientation before you enter.</p>
+      <div class="actions">
+        <button class="button primary" data-play>Play intro</button>
+        <button class="button">Skip intro</button>
+      </div>
+    </div>
+  </section>
+  <canvas id="matter" width="1280" height="720" aria-hidden="true"></canvas>
+</main>
+<script>
+(()=>{'use strict';
+const W=1280,H=720,SEED=0x0b17e17;
+const capture=document.querySelector('#capture'),canvas=document.querySelector('#matter'),ctx=canvas.getContext('2d');
+const surface=document.querySelector('[data-entry-surface]'),play=document.querySelector('[data-play]');
+let source=null,sourceRect=null,cells=[],stars=[];
+const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+const smooth=(a,b,v)=>{const x=clamp((v-a)/(b-a||1));return x*x*(3-2*x)};
+const mix=(a,b,t)=>a+(b-a)*t;
+function rng(seed){let v=seed>>>0;return()=>{v+=0x6d2b79f5;let r=v;r=Math.imul(r^(r>>>15),r|1);r^=r+Math.imul(r^(r>>>7),r|61);return((r^(r>>>14))>>>0)/4294967296}}
+function metrics(){const r=surface.getBoundingClientRect(),p=play.getBoundingClientRect();return {surface:{x:r.x,y:r.y,w:r.width,h:r.height},play:{x:p.x+p.width/2,y:p.y+p.height/2}}}
+function build(){if(!sourceRect)return;const random=rng(SEED),cw=24,ch=20;cells=[];let maxD=1;const pc=sourceRect.play;
+ for(let y=0;y<sourceRect.surface.h;y+=ch)for(let x=0;x<sourceRect.surface.w;x+=cw){
+  const w=Math.min(cw,sourceRect.surface.w-x),h=Math.min(ch,sourceRect.surface.h-y);
+  const gx=sourceRect.surface.x+x+w/2,gy=sourceRect.surface.y+y+h/2,d=Math.hypot(gx-pc.x,gy-pc.y);maxD=Math.max(maxD,d);
+  cells.push({x,y,w,h,gx,gy,d,j:random(),spin:(random()-.5)*1.7,scale:.72+random()*.34,cluster:Math.floor(random()*4)});
+ }
+ for(const c of cells){const dn=c.d/maxD;c.start=.08+dn*.42+c.j*.05;c.finish=c.start+.34;const centers=[[W*.5,H*.18],[W*.82,H*.5],[W*.5,H*.82],[W*.18,H*.5]],base=centers[c.cluster];const angle=(c.j*6.283)+(c.cluster*1.57),rad=40+120*c.j;c.tx=base[0]+Math.cos(angle)*rad;c.ty=base[1]+Math.sin(angle)*rad*.65}
+ stars=Array.from({length:170},(_,i)=>{const rr=rng(SEED^(i*2654435761));const cluster=i%4,centers=[[W*.5,H*.18],[W*.82,H*.5],[W*.5,H*.82],[W*.18,H*.5]],b=centers[cluster],a=rr()*Math.PI*2,rad=12+rr()*165;return{x:b[0]+Math.cos(a)*rad,y:b[1]+Math.sin(a)*rad*.62,r:.5+rr()*1.7,a:.25+rr()*.55,phase:rr()*Math.PI*2}})
+}
+function setRaster(dataUrl,m){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>{source=img;sourceRect=m;build();capture.classList.add('is-rasterized');canvas.style.opacity='1';resolve(true)};img.onerror=reject;img.src=dataUrl})}
+function drawField(p){const alpha=smooth(.42,.92,p);for(let i=0;i<stars.length;i++){const s=stars[i],pulse=.86+.14*Math.sin(i*.71);ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(${i%4===0?'224,235,240':i%4===1?'234,208,131':i%4===2?'170,155,224':'154,217,225'},${s.a*alpha*pulse})`;ctx.fill()}}
+function render(p){p=clamp(Number(p)||0);ctx.clearRect(0,0,W,H);ctx.fillStyle='#010407';ctx.fillRect(0,0,W,H);ctx.fillStyle='rgba(20,64,70,.08)';ctx.fillRect(0,0,W,H);if(!source){return false}
+ drawField(p);
+ const s=sourceRect.surface;for(const c of cells){const t=clamp((p-c.start)/(c.finish-c.start));const e=1-Math.pow(1-t,3);let x=s.x+c.x,y=s.y+c.y,scale=1,alpha=1,rot=0;
+  if(t>0){x=mix(x,c.tx,e);y=mix(y,c.ty,e);scale=mix(1,.09,e);rot=c.spin*e;alpha=1-smooth(.72,1,t)*.62}
+  if(p>.84)alpha*=1-smooth(.84,1,p);
+  ctx.save();ctx.globalAlpha=alpha;ctx.translate(x+c.w*scale/2,y+c.h*scale/2);ctx.rotate(rot);ctx.scale(scale,scale);ctx.drawImage(source,c.x,c.y,c.w,c.h,-c.w/2,-c.h/2,c.w,c.h);ctx.restore();
+ }
+ if(p>=.93){const q=smooth(.93,1,p);ctx.fillStyle=`rgba(1,4,7,${q})`;ctx.fillRect(0,0,W,H);drawField(1)}
+ capture.dataset.progress=p.toFixed(3);return true}
+window.S00Stage=Object.freeze({metrics,setRaster,render,inspect:()=>({schema:'R11A_S00_SOURCE_TRUTH_STAGE_v1',rasterized:!!source,progress:Number(capture.dataset.progress||0),cellCount:cells.length,starCount:stars.length,transition:'SURFACE_TO_MATTER',exitState:'ENTRY_SURFACE_MATTER_READY_FOR_ORIENTATION_FIELD'})});
+})();
+</script>
+</body>
+</html>

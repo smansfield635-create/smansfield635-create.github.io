@@ -13,14 +13,24 @@
   "proofShowsCleanEntryDerivedSuccessorMatter":true,
   "acceptedS00Head":"aefb46cf1e3b3a77b302d5176c53b5a67ad364fd",
   "s01ProofFrameSha256":{},
-  "s01ContactSheetSha256":"PENDING",
+  "s01ContactSheetSha256":"PENDING_BROWSER_PROOF",
+  "deterministicOwnerPreview":{
+    "status":"GENERATED_PENDING_OWNER_ACCEPTANCE",
+    "browserGenerated":false,
+    "videoSha256":"830edc92f9f961d3faa0ecbb8eb8966f49239ba11783fd8d87aef970acaeaf0b",
+    "contactSheetSha256":"ba1a18db6c6bf70fcd803bbaf303d8386a4f6eb4fb806cdf56aebd59864af8ab",
+    "terminalFrameSha256":"95504373cdff0871621cd859255f48dfeed682845cd8b915bc3cd8592990a8aa",
+    "durationSeconds":5.8,
+    "fps":30,
+    "resolution":[1280,720]
+  },
   "persistentObjectIds":["COMPASS_STAR_ORIENTATION","COMPASS_STAR_TRANSFERABILITY","COMPASS_STAR_CONVERGENCE","COMPASS_STAR_INTEGRITY"],
   "objectReplacementCount":0,
-  "proofShowsGenuineManipulation":"PENDING_BROWSER_PROOF",
+  "proofShowsGenuineManipulation":"DETERMINISTIC_OWNER_PREVIEW_GENERATED_BROWSER_PROOF_PENDING",
   "manipulationMode":"TIMELINE_DRIVEN_3D_REORIENTATION",
   "audienceInteractionRequired":false,
   "interactiveSubsystemCreated":false,
-  "proofShowsOrientationDominantWithOtherThreeVisible":"PENDING_BROWSER_PROOF",
+  "proofShowsOrientationDominantWithOtherThreeVisible":"DETERMINISTIC_OWNER_PREVIEW_GENERATED_BROWSER_PROOF_PENDING",
   "ownerAcceptance":{"S00":"ACCEPTED","S01":"PENDING"},
   "nextShotConstructionAuthorized":false
 }

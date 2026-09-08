@@ -52,7 +52,7 @@ for(const token of [
   'RIGHT_HANDED_EUCLIDEAN_XYZ','S00_PALETTE','S01Stage','authoredOrientation','smooth(.59,.83,p)','mix(-.82,0,q)','mix(.20,0,q)','timelineDrivenManipulation:true','userInputRequired:false',
   ...ids,'SAME_STARS_FRAME_DGB_INTRO','SAME_STARS_CONVERGING','APPROVED_FOUR_CARDINAL_COMPASS'
 ]) if(!stage.includes(token))fail('S01_STAGE_TOKEN_'+token);
-for(const interactiveToken of ['function manipulate(','pointerdown','pointermove','setPointerCapture','DRAG TO REORIENT'])if(stage.includes(interactiveToken))fail('INTERACTIVE_SUBSYSTEM_TOKEN_'+interactiveToken);
+for(const interactiveToken of ['function manipulate(','pointerdown','pointermove','setPointerCapture','DRAG TO REORIENT','THE COMPASS REORIENTS','Discover the estate.'])if(stage.includes(interactiveToken))fail('INTERACTIVE_OR_UNFROZEN_PRESENTATION_TOKEN_'+interactiveToken);
 for(const forbidden of ['<script src="../../compass.controller.js','<script src="../../compass.crystals.js','<script src="../../compass.cosmos.js'])if(stage.includes(forbidden))fail('PROTECTED_RUNTIME_LOADED_FOR_MUTATION');
 const digest=crypto.createHash('sha256').update(raw).digest('hex');
 process.stdout.write(JSON.stringify({schema:'R11A_SOURCE_TRUTH_SHOT_VERIFICATION_RECEIPT_v1',result:'PASS_AT_SOURCE_AND_PROOF_CONTRACT_LEVEL',shots:['S00','S01'],manifestSha256:digest,acceptedS00Preserved:true,persistentObjectIds:ids,objectReplacementCount:0,genuineManipulation:'TIMELINE_DRIVEN_3D_REORIENTATION',manipulationFrameInterval:[246,288],audienceInteractionRequired:false,interactiveSubsystemCreated:false,terminalForeground:'ORIENTATION',ownerAcceptance:'PENDING',fullMasterAuthorized:false,liveMutationAuthorized:false},null,2)+'\n');

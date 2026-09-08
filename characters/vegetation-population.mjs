@@ -42,14 +42,19 @@ const TOPOLOGY=freeze({
   staggerFraction:.5,
   rowAspect:.866025403784,
   boundaryContinuityDistance:160,
-  boundaryMeshWeight:1.35
+  boundaryMeshWeight:1.35,
+  bridgeChainSpacing:52,
+  bridgeSwapBudget:192,
+  redundancyRadius:72,
+  pathBoundaryPreference:.18,
+  pathTransitionPreference:.08
 });
 const STAND_RECORDS=new Map(getStandTopologySeeds().map(stand=>[stand.id,stand]));
 
 export const CANONICAL_VEGETATION_POPULATION_CONTRACT=freeze({
   schema:'MIRRORLAND_CANONICAL_VEGETATION_POPULATION_CONTRACT_v1',
-  operationId:'MIRRORLAND_POST_GEN2000_ECOLOGICAL_RELATION_REPAIR_20260908_001',
-  stage:'GENERIC_NON_OPENING_STAND_TRANSITION_CONTINUITY_REPAIR',
+  operationId:'MIRRORLAND_POST_GEN2002_CANOPY_BRIDGE_CHAIN_REPAIR_20260908_001',
+  stage:'GENERIC_STAND_ANCHORED_ELIGIBLE_PATH_BRIDGE_CHAIN_REPAIR',
   frameAuthority:'characters/gratitude-geography.adapter.mjs#GRATITUDE_DEVELOPMENT_FRAME',
   frameId:GRATITUDE_DEVELOPMENT_FRAME.frameId,
   ecologyAuthority:VEGETATION_ECOLOGY_AUTHORITY.schema,
@@ -73,6 +78,8 @@ export const CANONICAL_VEGETATION_POPULATION_CONTRACT=freeze({
   deterministicAdaptiveConnectedMesh:true,
   deterministicStaggeredTwoDimensionalMesh:true,
   deterministicBoundaryContinuityWeightedMesh:true,
+  deterministicStandBackbone:true,
+  deterministicEligiblePathBridgeChains:true,
   canonicalHardOpeningsPreserved:true,
   canonicalStandSeedCenteredAllocation:false,
   ecologyDerivedDominantForestCoreAllocation:false
@@ -203,6 +210,181 @@ function allocateConnectedMesh(candidates,budget){
   return {selected:selected.slice(0,budget),roundCounts,meshSpacing,meshNodeCount:nodes.length};
 }
 
+const cellKey=(row,column)=>`${row},${column}`;
+const worldDistance=(a,b)=>Math.hypot(a.ecology.world.x-b.ecology.world.x,a.ecology.world.z-b.ecology.world.z);
+function candidateNeighbors(candidate,candidateByCell){
+  const neighbors=[];
+  for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){
+    if(dr===0&&dc===0)continue;
+    const other=candidateByCell.get(cellKey(candidate.lattice.row+dr,candidate.lattice.column+dc));
+    if(other)neighbors.push(other);
+  }
+  return neighbors.sort((a,b)=>a.lattice.row-b.lattice.row||a.lattice.column-b.lattice.column||a.id.localeCompare(b.id));
+}
+function buildStandAnchors(candidates){
+  const byStand=new Map();
+  for(const candidate of candidates){
+    if(!byStand.has(candidate.environment.standId))byStand.set(candidate.environment.standId,[]);
+    byStand.get(candidate.environment.standId).push(candidate);
+  }
+  const anchors=[];
+  for(const [standId,items] of [...byStand.entries()].sort((a,b)=>a[0].localeCompare(b[0]))){
+    const stand=STAND_RECORDS.get(standId);
+    if(!stand)continue;
+    const anchor=[...items].sort((a,b)=>{
+      const da=Math.hypot(a.ecology.world.x-stand.world.x,a.ecology.world.z-stand.world.z);
+      const db=Math.hypot(b.ecology.world.x-stand.world.x,b.ecology.world.z-stand.world.z);
+      return da-db||b.territorialScore-a.territorialScore||a.id.localeCompare(b.id);
+    })[0];
+    if(anchor)anchors.push({standId,candidate:anchor});
+  }
+  return anchors;
+}
+function buildStandBackbone(anchors){
+  if(anchors.length<2)return [];
+  const ordered=[...anchors].sort((a,b)=>a.standId.localeCompare(b.standId));
+  const connected=new Set([ordered[0].standId]);
+  const edges=[];
+  while(connected.size<ordered.length){
+    let best=null;
+    for(const from of ordered){
+      if(!connected.has(from.standId))continue;
+      for(const to of ordered){
+        if(connected.has(to.standId))continue;
+        const distance=worldDistance(from.candidate,to.candidate);
+        const key=`${from.standId}->${to.standId}`;
+        if(!best||distance<best.distance||(distance===best.distance&&key<best.key))best={from,to,distance,key};
+      }
+    }
+    if(!best)break;
+    edges.push(best);
+    connected.add(best.to.standId);
+  }
+  return edges;
+}
+class MinHeap{
+  constructor(){this.items=[];}
+  push(item){
+    const a=this.items;a.push(item);let i=a.length-1;
+    while(i>0){const p=(i-1)>>1;if(a[p].cost<item.cost||(a[p].cost===item.cost&&a[p].id<=item.id))break;a[i]=a[p];i=p;}
+    a[i]=item;
+  }
+  pop(){
+    const a=this.items;if(!a.length)return null;const root=a[0],tail=a.pop();if(a.length){let i=0;while(true){let l=i*2+1,r=l+1;if(l>=a.length)break;let c=r<a.length&&(a[r].cost<a[l].cost||(a[r].cost===a[l].cost&&a[r].id<a[l].id))?r:l;if(a[c].cost>tail.cost||(a[c].cost===tail.cost&&a[c].id>=tail.id))break;a[i]=a[c];i=c;}a[i]=tail;}return root;
+  }
+  get size(){return this.items.length;}
+}
+function pathStepCost(a,b){
+  const distance=worldDistance(a,b);
+  const boundary=(a.boundaryContinuityAffinity+b.boundaryContinuityAffinity)/2;
+  const transition=(a.environment.spatialZone==='TRANSITION'||b.environment.spatialZone==='TRANSITION')?1:0;
+  const preference=1+TOPOLOGY.pathBoundaryPreference*boundary+TOPOLOGY.pathTransitionPreference*transition;
+  return distance/preference;
+}
+function shortestEligiblePath(start,end,candidateByCell){
+  if(start.id===end.id)return [start];
+  const heap=new MinHeap();
+  const best=new Map([[start.id,0]]),previous=new Map();
+  heap.push({id:start.id,candidate:start,cost:0});
+  while(heap.size){
+    const current=heap.pop();
+    if(current.cost!==best.get(current.id))continue;
+    if(current.id===end.id){
+      const path=[];let id=end.id;
+      while(id){const item=candidateByCell.get(id)||[start,end].find(x=>x.id===id);if(!item)break;path.push(item);id=previous.get(id);}
+      return path.reverse();
+    }
+    for(const neighbor of candidateNeighbors(current.candidate,candidateByCell.byLattice)){
+      const nextCost=current.cost+pathStepCost(current.candidate,neighbor);
+      const prior=best.get(neighbor.id);
+      if(prior===undefined||nextCost<prior-1e-9||(Math.abs(nextCost-prior)<=1e-9&&current.id<(previous.get(neighbor.id)||'~'))){
+        best.set(neighbor.id,nextCost);previous.set(neighbor.id,current.id);heap.push({id:neighbor.id,candidate:neighbor,cost:nextCost});
+      }
+    }
+  }
+  return null;
+}
+function createCandidateIndexes(candidates){
+  const byId=new Map(),byLattice=new Map();
+  for(const candidate of candidates){byId.set(candidate.id,candidate);byLattice.set(cellKey(candidate.lattice.row,candidate.lattice.column),candidate);}
+  byId.byLattice=byLattice;
+  return byId;
+}
+function sampleBridgePath(path){
+  if(!path?.length)return [];
+  const sampled=[path[0]];let last=path[0];
+  for(let i=1;i<path.length-1;i++){
+    if(worldDistance(last,path[i])>=TOPOLOGY.bridgeChainSpacing){sampled.push(path[i]);last=path[i];}
+  }
+  if(path.length>1&&sampled[sampled.length-1].id!==path[path.length-1].id)sampled.push(path[path.length-1]);
+  return sampled;
+}
+function centerOut(items){
+  const result=[];if(!items.length)return result;
+  let left=Math.floor((items.length-1)/2),right=left+1;
+  while(left>=0||right<items.length){if(left>=0)result.push(items[left--]);if(right<items.length)result.push(items[right++]);}
+  return result;
+}
+function redundancyScore(candidate,selected){
+  const limit2=TOPOLOGY.redundancyRadius*TOPOLOGY.redundancyRadius;
+  let neighbors=0,sameStand=0,nearest2=Infinity;
+  for(const other of selected){
+    if(other.id===candidate.id)continue;
+    const dx=candidate.ecology.world.x-other.ecology.world.x,dz=candidate.ecology.world.z-other.ecology.world.z,d2=dx*dx+dz*dz;
+    if(d2>limit2)continue;
+    neighbors++;if(other.environment.standId===candidate.environment.standId)sameStand++;if(d2<nearest2)nearest2=d2;
+  }
+  if(!neighbors)return -Infinity;
+  const proximity=Number.isFinite(nearest2)?clamp((TOPOLOGY.redundancyRadius-Math.sqrt(nearest2))/TOPOLOGY.redundancyRadius,0,1):0;
+  const interior=candidate.environment.spatialZone==='INTERIOR'?.35:0;
+  return quantize(neighbors*2+sameStand*.6+proximity+interior-candidate.boundaryContinuityAffinity*.5,12);
+}
+function refineBridgeChains(initialSelected,candidates){
+  const indexes=createCandidateIndexes(candidates);
+  const anchors=buildStandAnchors(candidates);
+  const backbone=buildStandBackbone(anchors);
+  const pathRecords=[];
+  const bridgeChainIds=new Set();
+  for(const edge of backbone){
+    const path=shortestEligiblePath(edge.from.candidate,edge.to.candidate,indexes);
+    if(!path?.length)continue;
+    const sampled=sampleBridgePath(path);
+    for(const candidate of sampled)bridgeChainIds.add(candidate.id);
+    pathRecords.push({edge,sampled,pathLength:path.length});
+  }
+  const selectedIds=new Set(initialSelected.map(x=>x.id));
+  const queues=pathRecords.map(record=>centerOut(record.sampled.filter(x=>!selectedIds.has(x.id))));
+  const additions=[],additionIds=new Set();
+  for(let round=0;additions.length<TOPOLOGY.bridgeSwapBudget;round++){
+    let progressed=false;
+    for(const queue of queues){
+      const candidate=queue[round];
+      if(!candidate||additionIds.has(candidate.id))continue;
+      additions.push(candidate);additionIds.add(candidate.id);progressed=true;
+      if(additions.length>=TOPOLOGY.bridgeSwapBudget)break;
+    }
+    if(!progressed)break;
+  }
+  const removalPool=initialSelected.filter(x=>!bridgeChainIds.has(x.id)).map(candidate=>({candidate,score:redundancyScore(candidate,initialSelected)})).filter(x=>Number.isFinite(x.score)).sort((a,b)=>b.score-a.score||a.candidate.territorialScore-b.candidate.territorialScore||a.candidate.id.localeCompare(b.candidate.id));
+  const swapCount=Math.min(additions.length,removalPool.length);
+  const usedAdditions=additions.slice(0,swapCount);
+  const removals=removalPool.slice(0,swapCount);
+  const removeIds=new Set(removals.map(x=>x.candidate.id));
+  const selected=initialSelected.filter(x=>!removeIds.has(x.id));
+  for(const candidate of usedAdditions)selected.push(candidate);
+  if(selected.length!==GRID.exactTargetCount)throw new Error(`BRIDGE_CHAIN_BUDGET_DIVERGENCE:${selected.length}:${GRID.exactTargetCount}`);
+  return {
+    selected,
+    anchorCount:anchors.length,
+    backboneEdgeCount:backbone.length,
+    pathCount:pathRecords.length,
+    sampledChainMemberCount:bridgeChainIds.size,
+    addedCount:usedAdditions.length,
+    removedCount:removals.length,
+    pathSummaries:pathRecords.map(record=>freeze({fromStandId:record.edge.from.standId,toStandId:record.edge.to.standId,pathLength:record.pathLength,sampledCount:record.sampled.length}))
+  };
+}
+
 function createCanonicalPopulation(){
   const envelope=GRATITUDE_DEVELOPMENT_FRAME.envelope;
   const width=envelope.xMaximum-envelope.xMinimum,depth=envelope.zMaximum-envelope.zMinimum;
@@ -215,7 +397,8 @@ function createCanonicalPopulation(){
   }
   if(candidates.length<GRID.exactTargetCount)throw new Error(`TERRITORIAL_CANOPY_UNDERFLOW:${candidates.length}:${GRID.exactTargetCount}`);
   const allocation=allocateConnectedMesh(candidates,GRID.exactTargetCount);
-  const selected=allocation.selected;
+  const refinement=refineBridgeChains(allocation.selected,candidates);
+  const selected=refinement.selected;
   if(selected.length!==GRID.exactTargetCount)throw new Error(`CONNECTED_CANOPY_TARGET_UNRESOLVED:${selected.length}:${GRID.exactTargetCount}`);
   selected.sort((a,b)=>a.lattice.row-b.lattice.row||a.lattice.column-b.lattice.column);
   const instances=selected.map(candidate=>{
@@ -237,8 +420,11 @@ function createCanonicalPopulation(){
   const selectedIds=new Set(instances.map(x=>x.id));
   const diagnostics=freeze({
     candidateCount:candidates.length,selectedCount:instances.length,rejectedEligibleCount:candidates.length-instances.length,
-    selectionLaw:'EXACT_818_CANONICAL_ECOLOGY_ELIGIBLE_NON_OPENING_BOUNDARY_WEIGHTED_ADAPTIVE_STAGGERED_2D_WORLD_MESH',
+    selectionLaw:'EXACT_818_CANONICAL_ECOLOGY_ELIGIBLE_NON_OPENING_BOUNDARY_WEIGHTED_MESH_PLUS_STAND_ANCHORED_SHORTEST_ELIGIBLE_PATH_BRIDGE_CHAINS',
     meshSpacing:allocation.meshSpacing,meshRowAspect:TOPOLOGY.rowAspect,meshNodeCount:allocation.meshNodeCount,meshRoundCounts:freeze(allocation.roundCounts.map(x=>freeze({...x}))),
+    bridgeChainAnchorCount:refinement.anchorCount,bridgeChainBackboneEdgeCount:refinement.backboneEdgeCount,bridgeChainPathCount:refinement.pathCount,
+    bridgeChainSampledMemberCount:refinement.sampledChainMemberCount,bridgeChainAddedCount:refinement.addedCount,bridgeChainRemovedCount:refinement.removedCount,
+    bridgeChainPathSummaries:freeze(refinement.pathSummaries),
     standCandidateCounts:freeze(standCandidateCounts),standSelectedCounts:freeze(standSelectedCounts),classCandidateCounts:freeze(classCandidateCounts),classSelectedCounts:freeze(classSelectedCounts),
     zoneCandidateCounts:freeze(zoneCandidateCounts),zoneSelectedCounts:freeze(zoneSelectedCounts),
     compositionFeatherCandidateCount:candidates.filter(x=>x.environment.compositionBand==='FEATHER').length,
@@ -246,8 +432,8 @@ function createCanonicalPopulation(){
     compatibleInteriorCandidateCount:candidates.filter(x=>x.environment.spatialZone==='INTERIOR'&&x.environment.compositionBand==='NONE').length,
     compatibleInteriorSelectedCount:candidates.filter(x=>x.environment.spatialZone==='INTERIOR'&&x.environment.compositionBand==='NONE'&&selectedIds.has(x.id)).length,
     previousPositionSetImmutable:false,previousCoreConcentrationAuthoritySuperseded:true,deterministicTerritorialCellRoundRobin:false,deterministicAdaptiveConnectedMesh:true,
-    deterministicStaggeredTwoDimensionalMesh:true,deterministicBoundaryContinuityWeightedMesh:true,canonicalHardOpeningsPreserved:true,
-    deviceCameraDestinationInputsUsed:false,highResolutionCandidateCapacity:true,wetMarginCanopySuppression:true,territorialContinuityRepair:true
+    deterministicStaggeredTwoDimensionalMesh:true,deterministicBoundaryContinuityWeightedMesh:true,deterministicStandBackbone:true,deterministicEligiblePathBridgeChains:true,
+    canonicalHardOpeningsPreserved:true,deviceCameraDestinationInputsUsed:false,highResolutionCandidateCapacity:true,wetMarginCanopySuppression:true,territorialContinuityRepair:true
   });
   return freeze({schema:'MIRRORLAND_CANONICAL_VEGETATION_POPULATION_v1',operationId:CANONICAL_VEGETATION_POPULATION_CONTRACT.operationId,stage:CANONICAL_VEGETATION_POPULATION_CONTRACT.stage,frameId:GRATITUDE_DEVELOPMENT_FRAME.frameId,envelope:freeze({...envelope}),ecologyAuthority:VEGETATION_ECOLOGY_AUTHORITY.schema,organizationAuthority:'MIRRORLAND_EDGE_ECOLOGY_CONTRACT_v1',canonicalPopulation:true,standEdgeOrganized:true,deviceInvariant:true,cameraInvariant:true,representationAssigned:false,lodAssigned:false,fixedTargetCount:true,exactTargetCount:GRID.exactTargetCount,instanceCount:instances.length,diagnostics,instances:freeze(instances)});
 }

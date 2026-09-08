@@ -1,0 +1,13 @@
+{
+  "schema":"R11A_SOURCE_TRUTH_SHOT_CONSTRUCTION_RECEIPT_v1",
+  "result":"S00_CONSTRUCTED_BROWSER_PROOF_READY_FOR_OWNER_ACCEPTANCE",
+  "operationId":"COMPASS_R11A_SOURCE_TRUTH_SHOT_CONSTRUCTION_20260908_002",
+  "lockGeneration":2005,
+  "shot":"S00",
+  "implementationLaw":"CANONICAL_BROWSER_RENDERED_ENTRY_SURFACE -> EXACT_PIXEL_RASTER -> PROPAGATING_FULL_SURFACE_FRAGMENTATION -> SUCCESSOR_CINEMATIC_MATTER",
+  "buttonOnlyPredecessorRejected":true,
+  "headerFadePredecessorRejected":true,
+  "fullMasterCreated":false,
+  "liveMutationPerformed":false,
+  "ownerAcceptance":"PENDING"
+}

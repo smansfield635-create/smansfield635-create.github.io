@@ -6,7 +6,7 @@
   "frozenManifestSha256": "ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f",
   "builderInputManifestSha256": "ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f",
   "verifierInputManifestSha256": "ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f",
-  "masterSha256": "83aec1eb89ceef2f30a716a6e021dc6f71a3a765680da2c2153a57c3babd785e",
+  "masterSha256": "5c5e0c5e63babf46f249fb29db0cbc15985db9c5edc02aa2759949aebe721f23",
   "checks": [
     {"id":"MANIFEST_SHA_IDENTITY","pass":true,"detail":{"manifestSha":"ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f","builder":"ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f","frozen":"ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f"}},
     {"id":"FRAME_INTERVAL","pass":true,"detail":null},
@@ -19,6 +19,6 @@
     {"id":"MASTER_FRAME_COUNT","pass":true,"detail":"1275"},
     {"id":"MASTER_DURATION","pass":true,"detail":"42.500000"},
     {"id":"DECODE_ZERO_ERROR","pass":true,"detail":null},
-    {"id":"MASTER_SHA_MATCH_CONSTRUCTION","pass":true,"detail":{"masterSha":"83aec1eb89ceef2f30a716a6e021dc6f71a3a765680da2c2153a57c3babd785e","construction":"83aec1eb89ceef2f30a716a6e021dc6f71a3a765680da2c2153a57c3babd785e"}}
+    {"id":"MASTER_SHA_MATCH_CONSTRUCTION","pass":true,"detail":{"masterSha":"5c5e0c5e63babf46f249fb29db0cbc15985db9c5edc02aa2759949aebe721f23","construction":"5c5e0c5e63babf46f249fb29db0cbc15985db9c5edc02aa2759949aebe721f23"}}
   ]
 }

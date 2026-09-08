@@ -606,6 +606,45 @@
       "scopeHash": "130b91450800662195c41e6efddd8931e868979b4ed76bae359a9cfe88de00e9",
       "state": "ADMITTED_LOCKED"
     },
+    "1397301660e51f2f55e5076b4ebc1d84cf3e077f9c9956191dc62ba90fe92eb4": {
+      "governingHead": "3d034773e189d5c8f8fa72bb53457518c1e876de",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "3d034773e189d5c8f8fa72bb53457518c1e876de",
+          "lockGeneration": 2021,
+          "lockScope": "H_EARTH:AUDRALIA:TABLET_IMMERSIVE_STARTUP_STABILITY:V1",
+          "operationId": "AUDRALIA_TABLET_IMMERSIVE_STARTUP_STABILITY_20260908_001",
+          "procedureLocatorDigest": "ccebcdd3201ab797aa123dc46f84fbdcc8f8567d745690b6663653721d9021d1",
+          "requestDigest": "75f434042d7597a98e5f2c23f02b20416521e3d075e6acf17513c4823c793bb2",
+          "scopeHash": "1397301660e51f2f55e5076b4ebc1d84cf3e077f9c9956191dc62ba90fe92eb4"
+        },
+        "bindingDigest": "fd9099a0dcea8d29fc34aa5ecbc4be32dde149001f387769d6e559a6bb93bf55",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "61968ce53eb32627fc9a48e2d60f6b63b6c8d8b2",
+          "observedLockRefHead": "35bee492cd50690c0829355b518579f85b6fc80a"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "1a92b45bdb4d5fd6101580e77d29d97d74997a190c08fdaa0168149a4ac8de49",
+          "commentId": 5592314456,
+          "issueNumber": 2171,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "lockGeneration": 2021,
+      "lockScope": "H_EARTH:AUDRALIA:TABLET_IMMERSIVE_STARTUP_STABILITY:V1",
+      "operationId": "AUDRALIA_TABLET_IMMERSIVE_STARTUP_STABILITY_20260908_001",
+      "procedureLocatorDigest": "ccebcdd3201ab797aa123dc46f84fbdcc8f8567d745690b6663653721d9021d1",
+      "released": false,
+      "requestDigest": "75f434042d7597a98e5f2c23f02b20416521e3d075e6acf17513c4823c793bb2",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "1397301660e51f2f55e5076b4ebc1d84cf3e077f9c9956191dc62ba90fe92eb4",
+      "state": "ADMITTED_LOCKED"
+    },
     "147dc7c04b0ab95c257cf99e988904dac93874d34af5d35be4a69b8cfe1dcf2b": {
       "governingHead": "3e91d0f94a762d99c5a614e528612db40827fa19",
       "lockGeneration": 247,

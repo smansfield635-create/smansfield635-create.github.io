@@ -1,16 +1,22 @@
 {
   "schema": "R11A_CONSTRUCTION_RECEIPT_v1",
-  "result": "CONSTRUCTION_COMPLETE",
+  "result": "SOURCE_TRUTH_RECONSTRUCTION_PENDING",
   "operationId": "COMPASS_R11A_DETERMINISTIC_FILM_CONSTRUCTION_20260908_001",
   "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
-  "frozenManifestSha256": "ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f",
-  "builderInputManifestSha256": "ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f",
-  "sourceOccurrenceSha256": "b06c28a18eb849bdace1c5687108284ad15b50f597024a483530cead24982215",
-  "sourceArtifactId": 10025501948,
-  "renderedFrameCount": 1275,
-  "frameRate": 30,
-  "durationSeconds": 42.5,
-  "outputPath": "compass-main-orientation-r11a-review.mp4",
-  "outputSha256": "5c5e0c5e63babf46f249fb29db0cbc15985db9c5edc02aa2759949aebe721f23",
-  "builderVerifierInvariant": "BUILDER_INPUT_MANIFEST_SHA256 == VERIFIER_INPUT_MANIFEST_SHA256 == FROZEN_R11A_MANIFEST_SHA256"
+  "salvageManifestCommit": "8695a5af14d6618a06b7f0d0f3b37f7a4b0f78f3",
+  "salvageManifestGitBlob": "ed1ad4852a7e7c5546b86ae36578944c7abf58d5",
+  "sourceTruthStageCommit": "a9e454a9444794cae5ef763264092af49d9d7c6c",
+  "sourceTruthAssemblerCommit": "e74bbaa7a7edec653dbf713c28257e299af6bcdb",
+  "sourceTruthVerifierCommit": "86b0ddac841ff5bc44c4974cf2b23d8ea81b7e57",
+  "salvageCertification": "ALL_SCENES_READY_FOR_SOURCE_TRUTH_CONSTRUCTION",
+  "decisionLostSceneCount": 0,
+  "missingSpecificMotionEvidenceSceneCount": 0,
+  "historicalDonorRuntimeInput": false,
+  "r5RuntimeInput": false,
+  "supersededMaster": {
+    "sha256": "5c5e0c5e63babf46f249fb29db0cbc15985db9c5edc02aa2759949aebe721f23",
+    "disposition": "FAIL_CLOSED_DO_NOT_REUSE_AS_R11A_SOURCE"
+  },
+  "nextRequiredOutput": "1275_LOSSLESS_SOURCE_TRUTH_FRAMES_PLUS_T10_AUDIO_THEN_DETERMINISTIC_DOUBLE_ENCODE",
+  "publicationAuthority": false
 }

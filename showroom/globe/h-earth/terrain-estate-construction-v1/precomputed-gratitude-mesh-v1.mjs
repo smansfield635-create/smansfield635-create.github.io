@@ -11,19 +11,17 @@ export async function loadPrecomputedGratitudeMesh() {
   if (typeof DecompressionStream !== 'function') {
     throw new Error('AUDRALIA_MESH_DECOMPRESSION_UNAVAILABLE');
   }
-  const parts = await Promise.all(MESH_URLS.map(async (url, index) => {
+  const totalLength = PART_LENGTHS.reduce((total, length) => total + length, 0);
+  const merged = new Uint8Array(totalLength);
+  let mergedOffset = 0;
+  for (let index = 0; index < MESH_URLS.length; index += 1) {
+    const url = MESH_URLS[index];
     const response = await fetch(url, { cache: 'force-cache' });
     if (!response.ok) throw new Error(`AUDRALIA_MESH_PART_${index}_FETCH_FAILED_${response.status}`);
     if (!response.body) throw new Error(`AUDRALIA_MESH_PART_${index}_BODY_UNAVAILABLE`);
     const part = await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
     if (part.byteLength !== PART_LENGTHS[index]) throw new Error(`AUDRALIA_MESH_PART_${index}_LENGTH_INVALID`);
-    return new Uint8Array(part);
-  }));
-  const totalLength = parts.reduce((total, part) => total + part.byteLength, 0);
-  const merged = new Uint8Array(totalLength);
-  let mergedOffset = 0;
-  for (const part of parts) {
-    merged.set(part, mergedOffset);
+    merged.set(new Uint8Array(part), mergedOffset);
     mergedOffset += part.byteLength;
   }
   const buffer = merged.buffer;
@@ -57,7 +55,9 @@ export async function loadPrecomputedGratitudeMesh() {
     schema: 'AUDRALIA_PRECOMPUTED_GRATITUDE_MESH_v1',
     identicalApprovedGeometry: true,
     browserConstructionRemoved: true,
-    verifiedChunkCount: parts.length,
+    verifiedChunkCount: MESH_URLS.length,
+    peakExpandedMeshCopies: 1,
+    sequentialChunkAssembly: true,
     loadMilliseconds: performance.now() - startedAt,
     landMesh: Object.freeze({ vertices: landVertices, indices: landIndices, statistics: Object.freeze(statistics.land) }),
     coastalWaterMesh: Object.freeze({ vertices: waterVertices, indices: waterIndices, statistics: Object.freeze(statistics.water) })

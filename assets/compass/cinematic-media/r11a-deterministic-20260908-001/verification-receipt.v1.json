@@ -1,24 +1,31 @@
 {
   "schema": "R11A_VERIFICATION_RECEIPT_v1",
-  "result": "PASS_CLOSED",
+  "result": "FAIL_CLOSED",
   "operationId": "COMPASS_R11A_DETERMINISTIC_FILM_CONSTRUCTION_20260908_001",
   "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
   "frozenManifestSha256": "ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f",
   "builderInputManifestSha256": "ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f",
   "verifierInputManifestSha256": "ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f",
   "masterSha256": "5c5e0c5e63babf46f249fb29db0cbc15985db9c5edc02aa2759949aebe721f23",
+  "publicationReady": false,
   "checks": [
-    {"id":"MANIFEST_SHA_IDENTITY","pass":true,"detail":{"manifestSha":"ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f","builder":"ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f","frozen":"ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f"}},
-    {"id":"FRAME_INTERVAL","pass":true,"detail":null},
-    {"id":"SCENE_COVERAGE","pass":true,"detail":null},
-    {"id":"MOTION_PROOFS_EXACT","pass":true,"detail":null},
-    {"id":"CONTEXT_END","pass":true,"detail":null},
-    {"id":"ACCEPTANCE_WINDOWS","pass":true,"detail":null},
-    {"id":"MASTER_CODEC","pass":true,"detail":{"codec_name":"h264","profile":"High","width":1280,"height":720,"pix_fmt":"yuv420p","r_frame_rate":"30/1","nb_read_frames":"1275"}},
-    {"id":"MASTER_FPS","pass":true,"detail":"30/1"},
-    {"id":"MASTER_FRAME_COUNT","pass":true,"detail":"1275"},
+    {"id":"MANIFEST_SHA_IDENTITY","pass":true,"detail":{"manifestSha":"ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f"}},
+    {"id":"FRAME_INTERVAL","pass":true,"detail":"[0,1275)"},
+    {"id":"SCENE_COVERAGE","pass":true,"detail":"1275 frames / 42.5 seconds / 30 fps"},
+    {"id":"MASTER_CODEC","pass":true,"detail":{"codec_name":"h264","profile":"High","width":1280,"height":720,"pix_fmt":"yuv420p"}},
+    {"id":"MASTER_FRAME_COUNT","pass":true,"detail":1275},
     {"id":"MASTER_DURATION","pass":true,"detail":"42.500000"},
     {"id":"DECODE_ZERO_ERROR","pass":true,"detail":null},
-    {"id":"MASTER_SHA_MATCH_CONSTRUCTION","pass":true,"detail":{"masterSha":"5c5e0c5e63babf46f249fb29db0cbc15985db9c5edc02aa2759949aebe721f23","construction":"5c5e0c5e63babf46f249fb29db0cbc15985db9c5edc02aa2759949aebe721f23"}}
-  ]
+    {"id":"AUDIO_CONTINUITY","pass":false,"detail":"R11A master contains no audio stream. The accepted V2 baseline preserves AAC-LC stereo 48 kHz audio and the mandatory award-film protocol requires audio continuity/profile qualification."},
+    {"id":"S00_CANONICAL_ENTRY_SURFACE","pass":false,"detail":"The renderer sources S00 from the detached R5 occurrence and applies FFmpeg pixelize/shuffle/fade. The occurrence is the generic detached arrival treatment, not the actual current index.html entry surface required by the R11A acceptance rule."},
+    {"id":"S01_CANONICAL_COMPASS_IDENTITY","pass":false,"detail":"The R5 detached capture source renders a CSS .compass-field proxy and does not load/use upstream-compass.geometry.js, upstream-compass.renderer.js, or upstream-compass.css for the visible Compass. Repository co-presence of those blobs does not establish rendered source identity."},
+    {"id":"S02_CHAPTER_ONE_SOURCE_TRUTH","pass":false,"detail":"The detached occurrence uses a generic .chapter-card representation rather than the approved Chapter One source surface."},
+    {"id":"S03_READINESS_SOURCE_TRUTH","pass":false,"detail":"The detached occurrence uses a generic .research-card/readiness representation rather than rendering the canonical readiness source."},
+    {"id":"MOTION_NONREGRESSION","pass":false,"detail":"Final audit freeze detection (-45 dB, minimum 0.8 s) found approximately 37.2 seconds of frozen/static intervals in the 42.5-second master, including the full 5.8-second S01 interval. This does not satisfy the preserved donor-motion/cinematic-grammar requirement."},
+    {"id":"MASTER_BITRATE_QUALITY_FLOOR","pass":false,"detail":"Observed container bitrate is approximately 130846 bit/s at 1280x720/30 fps. Decode validity alone is insufficient to establish cinematic/awards-grade visual quality; gradients and disintegration require a higher-quality publication encode after source-truth repair."},
+    {"id":"REPOSITORY_MASTER_CUSTODY","pass":false,"detail":"The exact MP4 is not committed on compass/r11a-deterministic-film-20260908-001; current branch diff contains only the six text/package files and no review master."},
+    {"id":"REVIEW_AND_RELEASE_GATE","pass":false,"detail":"No R11A review PR exists, owner perceptual acceptance has not occurred, and the admitted R11A operation explicitly carries no merge, deployment, or publication authority."}
+  ],
+  "failureDisposition": "R11A_FINAL_AUDIT_FAIL_CLOSED_SOURCE_TRUTH_MOTION_AUDIO_AND_CUSTODY_REPAIR_REQUIRED",
+  "nextLawfulState": "REPAIR_CANDIDATE_WITH_DIRECT_CANONICAL_SOURCE_RENDERING_AND_PRESERVED_AUDIO_THEN_REVERIFY_BEFORE_OWNER_REVIEW_OR_PUBLICATION"
 }

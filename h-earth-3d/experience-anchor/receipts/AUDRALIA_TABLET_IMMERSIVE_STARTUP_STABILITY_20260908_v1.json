@@ -28,7 +28,7 @@
     },
     {
       "path": "showroom/globe/audralia/index.html",
-      "sha256": "9dc3739705e6032efc48f071823c772ac6c4d50f4eb9e2fbc9e160d5c5920797"
+      "sha256": "ffaa25b99c4ade0c52077bca8b14ae87a600c2b6fe2e00e83ccd2d5149867abe"
     }
   ],
   "invariants": {
@@ -46,6 +46,6 @@
   },
   "reviewSummary": {
     "operation": "AUDRALIA_TABLET_IMMERSIVE_STARTUP_STABILITY_20260908_003",
-    "finding": "The approved exact Audralia environment, terrain, geography, shaders, navigation, interaction model, weather layers, celestial layer, and full-screen CSS presentation are unchanged. The exact approved Gratitude land and coastal-water typed arrays are now loaded from a deterministic precomputed asset before the primary renderer starts, removing the measured long synchronous browser construction task that froze the tablet loader while preserving the identical mesh statistics and interaction contract."
+    "finding": "The approved exact Audralia environment, terrain, geography, shaders, navigation, interaction model, weather layers, celestial layer, and full-screen CSS presentation are unchanged. The exact approved Gratitude land and coastal-water typed arrays are loaded from a commit-pinned content-addressed CDN asset before the primary renderer starts, removing the measured long synchronous browser construction task that froze the tablet loader while preserving the identical mesh statistics and interaction contract."
   }
 }

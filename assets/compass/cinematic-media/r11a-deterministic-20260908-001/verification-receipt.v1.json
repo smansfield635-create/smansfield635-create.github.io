@@ -1,0 +1,24 @@
+{
+  "schema": "R11A_VERIFICATION_RECEIPT_v1",
+  "result": "PASS_CLOSED",
+  "operationId": "COMPASS_R11A_DETERMINISTIC_FILM_CONSTRUCTION_20260908_001",
+  "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
+  "frozenManifestSha256": "ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f",
+  "builderInputManifestSha256": "ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f",
+  "verifierInputManifestSha256": "ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f",
+  "masterSha256": "83aec1eb89ceef2f30a716a6e021dc6f71a3a765680da2c2153a57c3babd785e",
+  "checks": [
+    {"id":"MANIFEST_SHA_IDENTITY","pass":true,"detail":{"manifestSha":"ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f","builder":"ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f","frozen":"ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f"}},
+    {"id":"FRAME_INTERVAL","pass":true,"detail":null},
+    {"id":"SCENE_COVERAGE","pass":true,"detail":null},
+    {"id":"MOTION_PROOFS_EXACT","pass":true,"detail":null},
+    {"id":"CONTEXT_END","pass":true,"detail":null},
+    {"id":"ACCEPTANCE_WINDOWS","pass":true,"detail":null},
+    {"id":"MASTER_CODEC","pass":true,"detail":{"codec_name":"h264","profile":"High","width":1280,"height":720,"pix_fmt":"yuv420p","r_frame_rate":"30/1","nb_read_frames":"1275"}},
+    {"id":"MASTER_FPS","pass":true,"detail":"30/1"},
+    {"id":"MASTER_FRAME_COUNT","pass":true,"detail":"1275"},
+    {"id":"MASTER_DURATION","pass":true,"detail":"42.500000"},
+    {"id":"DECODE_ZERO_ERROR","pass":true,"detail":null},
+    {"id":"MASTER_SHA_MATCH_CONSTRUCTION","pass":true,"detail":{"masterSha":"83aec1eb89ceef2f30a716a6e021dc6f71a3a765680da2c2153a57c3babd785e","construction":"83aec1eb89ceef2f30a716a6e021dc6f71a3a765680da2c2153a57c3babd785e"}}
+  ]
+}

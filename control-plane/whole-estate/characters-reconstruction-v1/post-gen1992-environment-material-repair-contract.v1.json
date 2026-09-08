@@ -1,24 +1,25 @@
 {
-  "schema": "POST_GEN2000_ECOLOGICAL_RELATION_REPAIR_CONTRACT_v1",
-  "operationId": "MIRRORLAND_POST_GEN2000_ECOLOGICAL_RELATION_REPAIR_20260908_001",
-  "lockGeneration": 2001,
-  "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:ECOLOGICAL_RELATION_REPAIR:POST_GEN2000",
+  "schema": "POST_GEN2002_CANOPY_BRIDGE_CHAIN_REPAIR_CONTRACT_v1",
+  "operationId": "MIRRORLAND_POST_GEN2002_CANOPY_BRIDGE_CHAIN_REPAIR_20260908_001",
+  "lockGeneration": 2003,
+  "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:CANOPY_BRIDGE_CHAIN_REPAIR:POST_GEN2002",
   "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
-  "constructionBranch": "repair/post-gen2000-ecological-relation-20260908-001",
-  "productSubject": "6363182d880fc3e0d0fb0da7791aa9e641969e0a",
+  "constructionBranch": "repair/post-gen2002-canopy-bridge-chain-20260908-001",
+  "partialSuccessFoundation": "fc466a0d08adbaeb9672d4618f670105cf1af87c",
+  "failedGen2002Candidate": "3a5dd83b936c7041257e73a3ebe30c306a7516f5",
   "route": "/characters/",
   "programIssue": 2670,
-  "psalmAckCommentId": 5586184683,
+  "psalmAckCommentId": 5586934312,
   "routerReturn": {
-    "commentId": 5586191322,
-    "workflowRunId": 34234358384,
-    "pathCount": 5,
+    "commentId": 5586945621,
+    "workflowRunId": 34239938930,
+    "pathCount": 4,
     "result": "PASS",
     "projectId": "CHARACTERS"
   },
   "canonicalAdmission": {
-    "commentId": 5586284531,
-    "workflowRunId": 34235055866,
+    "commentId": 5587024908,
+    "workflowRunId": 34240513254,
     "result": "ADMITTED_AND_LOCKED",
     "branchCreationAuthorized": true,
     "repositoryWritesAuthorized": true,
@@ -26,31 +27,31 @@
     "deploymentAuthorityCreated": false,
     "publicationAuthorityCreated": false
   },
-  "gen2000Diagnostic": {
-    "evidenceCommentId": 5579294638,
-    "terminalClosureCommentId": 5579313491,
-    "result": "PASS_CLOSED",
+  "gen2002NegativeEvidence": {
+    "evidenceCommentId": 5586872302,
+    "terminalClosureCommentId": 5586908215,
+    "result": "FAIL_CLOSED",
     "lockReleased": true,
-    "productMutationAuthorityCreated": false,
-    "canopy": {
-      "eligibleSamples": 1091,
-      "occupiedSamples": 1007,
-      "largestOccupiedComponentRatio": 0.997020854,
-      "standOrOpeningBoundaryAssociation": 0.55952381,
-      "meshSpacingGapPotential": 0
-    },
+    "terminalHistoryPreserved": true,
+    "candidateHead": "3a5dd83b936c7041257e73a3ebe30c306a7516f5",
+    "interpretation": "GENERIC_COVERAGE_DENSITY_IMPROVED_BUT_CONNECTED_EMPTY_CORRIDOR_TOPOLOGY_REMAINED_NON_CLEAR",
+    "strategyMayNotBeRepeatedAsSuccessor": "REDUNDANCY_TO_ISOLATED_COVERAGE_GAP_SCORING"
+  },
+  "gen2001PartialSuccess": {
+    "candidateHead": "fc466a0d08adbaeb9672d4618f670105cf1af87c",
+    "surfaceContainmentRisk": false,
+    "eligibleGroundOccupancyRisk": false,
+    "canopyContinuityRisk": true,
     "hydrology": {
-      "topDecileMeanWetness": 0.7,
-      "topDecileResponseBearingCount": 0,
-      "topDecileReedPresenceRate": 0,
-      "topDecileNoResponseRate": 1,
-      "topDecileShorelineLt2Rate": 1,
-      "v2HighMinusLow": -0.500721
+      "risk": false,
+      "highMinusLow": 0.361075,
+      "requiredAtLeast": 0.18
     }
   },
   "protectedExactIdentities": {
     "appBlobSha": "cb7e01ad703ae52b756a4603176bfe6d3b4f5e8a",
     "frozenV5RepresentationBlobSha": "f3b64eb1ffc1c1bc8e908ff96eb6c833b6bc928d",
+    "frozenGen2001UnderstoryBlobSha": "e410e6f771cdfad7b921ba28c3a5e97df14dd37b",
     "canonicalCanopyCount": 818
   },
   "evaluationTooling": {
@@ -64,10 +65,7 @@
     "definitionsConstantsThresholdsBinsWeightsSamplingCamerasStatesImmutable": true
   },
   "exactMutationSurface": {
-    "product": [
-      "characters/vegetation-population.mjs",
-      "characters/vegetation-understory.mjs"
-    ],
+    "product": ["characters/vegetation-population.mjs"],
     "tooling": [
       "control-plane/whole-estate/characters-reconstruction-v1/post-gen1992-environment-material-repair-contract.v1.json",
       "control-plane/whole-estate/characters-reconstruction-v1/verify-post-gen1992-environment-material-repair.v1.mjs",
@@ -76,43 +74,53 @@
     "allOtherRepositoryPathsProhibited": true
   },
   "canopyRepairLaw": {
-    "goal": "GENERIC_NON_OPENING_STAND_TRANSITION_CONTINUITY_WITH_FIXED_818",
+    "goal": "GENERIC_STAND_ANCHORED_ELIGIBLE_PATH_BRIDGE_CHAINS_WITH_FIXED_818",
+    "foundationSelectionPreservedAsSeed": true,
+    "refinementLaw": "DETERMINISTIC_STAND_BACKBONE_SHORTEST_ELIGIBLE_PATH_CHAIN_SWAPS",
     "allowedInputs": [
       "WORLD_COORDINATES",
       "CANONICAL_ECOLOGY_AUTHORITY",
       "CANONICAL_STAND_AUTHORITY",
       "CANONICAL_OPENING_AUTHORITY",
-      "STAND_BOUNDARY_DISTANCE",
+      "STAND_SEED_WORLD_POSITIONS",
       "SPATIAL_ZONE",
-      "DETERMINISTIC_WORLD_MESH_RELATIONSHIPS"
+      "STAND_BOUNDARY_DISTANCE",
+      "DETERMINISTIC_CANDIDATE_LATTICE_NEIGHBOR_RELATIONSHIPS",
+      "PRODUCT_OWNED_MESH_SCALE"
+    ],
+    "requiredMechanisms": [
+      "STAND_ANCHORS_DERIVED_FROM_CANONICAL_STAND_SEEDS",
+      "DETERMINISTIC_STAND_MINIMUM_SPANNING_BACKBONE",
+      "SHORTEST_ELIGIBLE_CANDIDATE_PATHS_BETWEEN_BACKBONE_ANCHORS",
+      "BRIDGE_CHAIN_CANDIDATES_INTERLEAVED_ACROSS_BACKBONE_EDGES",
+      "EQUAL_COUNT_REDUNDANCY_REMOVALS_EXCLUDING_BRIDGE_CHAIN_MEMBERS"
     ],
     "hardOpeningCanopyAllowed": false,
     "canonicalCanopyCountMustRemain": 818,
-    "v2WitnessCameraBinThresholdCoordinatesMayControlPlacement": false,
-    "gen2000DiagnosticCoordinatesMayControlPlacement": false
+    "v2WitnessCameraStateBinThresholdCoordinatesMayControlPlacement": false,
+    "gen2000DiagnosticCoordinatesMayControlPlacement": false,
+    "gen2002FailingStateOrResultCoordinatesMayControlPlacement": false,
+    "failedGen2002CoverageGapScorerMayBeRepeated": false
   },
-  "hydrologyRepairLaw": {
-    "goal": "CANONICAL_HIGHEST_WETNESS_LAND_SHORELINE_EXPRESSES_RESPONSE_BEARING_WET_MARGIN_UNDERSTORY",
-    "wetnessAuthority": "EXISTING_CANONICAL_RIVER_LAKE_SHORELINE_FIELDS_ONLY",
-    "responseCompositionMustIncreaseWithCanonicalWetness": true,
-    "landShorelineDistanceBelow2MayExpressWetMarginVegetation": true,
-    "lowWetnessEcologyMustRemainRepresented": true,
-    "v2LowMidHighBinsMayNotControlProductPlacement": true,
-    "v2ResultCoordinatesMayNotControlProductPlacement": true,
-    "gen2000DiagnosticCoordinatesMayNotControlProductPlacement": true,
-    "hydrologyOrGeographyAuthorityMutationProhibited": true,
-    "v2BinningWeightsThresholdsSamplingMutationProhibited": true
-  },
-  "acceptanceLaw": {
+  "preservationLaw": {
+    "understoryMutationAllowed": false,
+    "understoryBlobMustEqual": "e410e6f771cdfad7b921ba28c3a5e97df14dd37b",
+    "hydrologyResponseRiskMustRemainFalse": true,
+    "hydrologyHighMinusLowAtLeast": 0.18,
     "surfaceContainmentRiskMustRemainFalse": true,
     "groundVisualAreaRiskMustRemainFalse": true,
-    "canopyContinuityRiskMustBecomeFalse": true,
-    "hydrologyResponseRiskMustBecomeFalse": true,
+    "appMutationAllowed": false,
+    "v5MutationAllowed": false
+  },
+  "acceptanceLaw": {
     "fourFamilyRisksMustBeFalseSimultaneously": true,
+    "canopyContinuityRiskMustBecomeFalse": true,
+    "canopyAllSevenStatesMustBeClear": true,
+    "hydrologyResponseRiskMustRemainFalse": true,
     "hydrologyHighMinusLowAtLeast": 0.18,
-    "hydrologyHighWetnessSamplesAtLeast": 6,
     "canopyCountMustEqual": 818,
     "protectedAppBlobMustEqual": "cb7e01ad703ae52b756a4603176bfe6d3b4f5e8a",
+    "understoryBlobMustEqual": "e410e6f771cdfad7b921ba28c3a5e97df14dd37b",
     "v5BlobMustEqual": "f3b64eb1ffc1c1bc8e908ff96eb6c833b6bc928d",
     "twoFreshV2ReceiptsMustBeByteIdentical": true,
     "twoFreshSuccessorVerificationReceiptsMustBeByteIdenticalPassClosed": true,
@@ -123,13 +131,15 @@
     "SUCCESSOR_CONTRACT_FROZEN",
     "SUCCESSOR_INDEPENDENT_VERIFIER_FROZEN",
     "SUCCESSOR_SPARSE_PASSIVE_WORKFLOW_FROZEN",
-    "ONLY_THEN_PRODUCT_MUTATION",
+    "ONLY_THEN_CANOPY_PRODUCT_MUTATION",
     "ONE_PASSIVE_QUALIFICATION",
     "STOP_ON_FIRST_QUALIFICATION_FAILURE",
     "TERMINAL_CLOSURE_BEFORE_DOWNSTREAM_MAP_OR_CARD_WORK"
   ],
   "checkoutLaw": "EXACT_REF_BLOB_FILTERED_CONE_SPARSE_INDEX_ONLY",
   "prohibited": [
+    "UNDERSTORY_MUTATION",
+    "HYDROLOGY_PRODUCT_MUTATION",
     "APP_MUTATION",
     "V5_MUTATION",
     "CANOPY_COUNT_CHANGE",
@@ -139,10 +149,11 @@
     "EDGE_ECOLOGY_MUTATION",
     "COMPOSITION_AUTHORITY_MUTATION",
     "V2_DEFINITION_THRESHOLD_BIN_WEIGHT_SAMPLING_CAMERA_STATE_MUTATION",
-    "V2_OR_DIAGNOSTIC_COORDINATE_TARGETED_PRODUCT_CONTROL",
-    "LOW_WETNESS_DENOMINATOR_DESTRUCTION",
+    "V2_OR_DIAGNOSTIC_OR_FAILED_RESULT_COORDINATE_TARGETED_PRODUCT_CONTROL",
+    "GEN2002_ISOLATED_COVERAGE_GAP_SCORER_RETRY",
     "SURFACE_CONTAINMENT_REGRESSION",
     "GROUND_VISUAL_AREA_REGRESSION",
+    "HYDROLOGY_RESPONSE_REGRESSION",
     "MAP_CARD_CLOUD_NAVIGATION_MUTATION",
     "MATERIAL_ACCEPTANCE_SELF_ASSIGNMENT",
     "MERGE",

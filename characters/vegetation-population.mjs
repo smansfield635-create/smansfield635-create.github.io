@@ -35,12 +35,18 @@ const GRID=freeze({
   territorialCellSize:80,
   wetMarginSuppression:.10
 });
+const TOPOLOGY=freeze({
+  meshSpacingStart:128,
+  meshSpacingEnd:176,
+  meshSpacingStep:8,
+  alongSpacing:48
+});
 const STAND_RECORDS=new Map(getStandTopologySeeds().map(stand=>[stand.id,stand]));
 
 export const CANONICAL_VEGETATION_POPULATION_CONTRACT=freeze({
   schema:'MIRRORLAND_CANONICAL_VEGETATION_POPULATION_CONTRACT_v1',
-  operationId:'MIRRORLAND_POST_GEN1992_ENVIRONMENT_MATERIAL_REPAIR_20260907_002',
-  stage:'CONTIGUOUS_TERRITORIAL_CANOPY_ENVIRONMENT_REPAIR',
+  operationId:'MIRRORLAND_POST_GEN1995_CANOPY_HYDROLOGY_REPAIR_20260907_001',
+  stage:'GLOBAL_ECOLOGY_BOUND_CANOPY_CONNECTIVITY_REPAIR',
   frameAuthority:'characters/gratitude-geography.adapter.mjs#GRATITUDE_DEVELOPMENT_FRAME',
   frameId:GRATITUDE_DEVELOPMENT_FRAME.frameId,
   ecologyAuthority:VEGETATION_ECOLOGY_AUTHORITY.schema,
@@ -57,10 +63,12 @@ export const CANONICAL_VEGETATION_POPULATION_CONTRACT=freeze({
   previousPositionSetImmutable:false,
   exactPopulationBudget:GRID.exactTargetCount,
   grid:GRID,
+  topology:TOPOLOGY,
   fixedTargetCount:true,
   territorialContinuityRepair:true,
-  deterministicTerritorialCellRoundRobin:true,
-  deterministicMultiPassTerritorialSpacing:false,
+  deterministicTerritorialCellRoundRobin:false,
+  deterministicAdaptiveConnectedMesh:true,
+  deterministicMultiPassTerritorialSpacing:true,
   canonicalStandSeedCenteredAllocation:false,
   ecologyDerivedDominantForestCoreAllocation:false
 });
@@ -130,45 +138,61 @@ function createCandidate(row,column,envelope,insetX,insetZ,usableWidth,usableDep
   };
 }
 
-function allocateTerritorialCoverage(candidates,budget){
-  const buckets=new Map();
+function nearestMeshTarget(candidate,meshSpacing){
+  const x=candidate.ecology.world.x,z=candidate.ecology.world.z,along=TOPOLOGY.alongSpacing;
+  const vx=Math.round(x/meshSpacing)*meshSpacing,vz=Math.round(z/along)*along;
+  const hx=Math.round(x/along)*along,hz=Math.round(z/meshSpacing)*meshSpacing;
+  const dv=(x-vx)**2+(z-vz)**2,dh=(x-hx)**2+(z-hz)**2;
+  if(dv<=dh)return {x:vx,z:vz,distance2:dv};
+  return {x:hx,z:hz,distance2:dh};
+}
+
+function buildMeshNodes(candidates,meshSpacing){
+  const nodes=new Map();
   for(const candidate of candidates){
-    const cx=Math.floor(candidate.ecology.world.x/GRID.territorialCellSize);
-    const cz=Math.floor(candidate.ecology.world.z/GRID.territorialCellSize);
-    const key=`${cx},${cz}`;
-    if(!buckets.has(key))buckets.set(key,{cx,cz,items:[]});
-    buckets.get(key).items.push(candidate);
+    const target=nearestMeshTarget(candidate,meshSpacing);
+    const key=`${target.x},${target.z}`;
+    if(!nodes.has(key))nodes.set(key,{key,target:{x:target.x,z:target.z},items:[]});
+    nodes.get(key).items.push({...candidate,meshTargetDistance2:target.distance2});
   }
-  const cells=[...buckets.values()].map(cell=>({
-    ...cell,
-    rank:hash32(Math.imul(cell.cx,73856093)^Math.imul(cell.cz,19349663)^0x71c8e3d5),
-    items:cell.items.sort(sortTerritorialCandidates)
-  })).sort((a,b)=>a.rank-b.rank||a.cz-b.cz||a.cx-b.cx);
-  const selected=[];
-  const selectedIds=new Set();
-  const roundCounts=[];
+  const ranked=[...nodes.values()].map(node=>({
+    ...node,
+    rank:hash32(Math.imul(Math.round(node.target.x),73856093)^Math.imul(Math.round(node.target.z),19349663)^0x4c53a91d),
+    items:node.items.sort((a,b)=>a.meshTargetDistance2-b.meshTargetDistance2||sortTerritorialCandidates(a,b))
+  })).sort((a,b)=>a.target.z-b.target.z||a.target.x-b.target.x||a.rank-b.rank);
+  return ranked;
+}
+
+function allocateConnectedMesh(candidates,budget){
+  let nodes=null,meshSpacing=TOPOLOGY.meshSpacingEnd;
+  for(let spacing=TOPOLOGY.meshSpacingStart;spacing<=TOPOLOGY.meshSpacingEnd;spacing+=TOPOLOGY.meshSpacingStep){
+    const candidateNodes=buildMeshNodes(candidates,spacing);
+    nodes=candidateNodes;meshSpacing=spacing;
+    if(candidateNodes.length<=budget)break;
+  }
+  const selected=[],selectedIds=new Set(),roundCounts=[];
   for(let round=0;selected.length<budget;round++){
     let added=0;
-    for(const cell of cells){
+    for(const node of nodes){
       if(selected.length>=budget)break;
-      const candidate=cell.items[round];
+      const candidate=node.items[round];
       if(!candidate||selectedIds.has(candidate.id))continue;
-      selected.push(candidate);
-      selectedIds.add(candidate.id);
-      added++;
+      selected.push(candidate);selectedIds.add(candidate.id);added++;
     }
     roundCounts.push({round,added,total:selected.length});
     if(!added)break;
   }
   if(selected.length<budget){
-    for(const candidate of [...candidates].sort(sortTerritorialCandidates)){
+    const fallback=[...candidates].filter(x=>!selectedIds.has(x.id)).map(candidate=>{
+      const target=nearestMeshTarget(candidate,meshSpacing);
+      return {...candidate,meshTargetDistance2:target.distance2};
+    }).sort((a,b)=>a.meshTargetDistance2-b.meshTargetDistance2||sortTerritorialCandidates(a,b));
+    for(const candidate of fallback){
       if(selected.length>=budget)break;
-      if(selectedIds.has(candidate.id))continue;
-      selected.push(candidate);
-      selectedIds.add(candidate.id);
+      selected.push(candidate);selectedIds.add(candidate.id);
     }
   }
-  return {selected:selected.slice(0,budget),roundCounts,territorialCellCount:cells.length};
+  return {selected:selected.slice(0,budget),roundCounts,meshSpacing,meshNodeCount:nodes.length};
 }
 
 function createCanonicalPopulation(){
@@ -189,9 +213,9 @@ function createCanonicalPopulation(){
   }
   if(candidates.length<GRID.exactTargetCount)throw new Error(`TERRITORIAL_CANOPY_UNDERFLOW:${candidates.length}:${GRID.exactTargetCount}`);
 
-  const allocation=allocateTerritorialCoverage(candidates,GRID.exactTargetCount);
+  const allocation=allocateConnectedMesh(candidates,GRID.exactTargetCount);
   const selected=allocation.selected;
-  if(selected.length!==GRID.exactTargetCount)throw new Error(`TERRITORIAL_CANOPY_TARGET_UNRESOLVED:${selected.length}:${GRID.exactTargetCount}`);
+  if(selected.length!==GRID.exactTargetCount)throw new Error(`CONNECTED_CANOPY_TARGET_UNRESOLVED:${selected.length}:${GRID.exactTargetCount}`);
 
   selected.sort((a,b)=>a.lattice.row-b.lattice.row||a.lattice.column-b.lattice.column);
   const instances=selected.map(candidate=>{
@@ -236,10 +260,11 @@ function createCanonicalPopulation(){
     candidateCount:candidates.length,
     selectedCount:instances.length,
     rejectedEligibleCount:candidates.length-instances.length,
-    selectionLaw:'EXACT_818_CANONICAL_ECOLOGY_ELIGIBLE_NON_OPENING_TERRITORIAL_CELL_ROUND_ROBIN',
-    territorialCellSize:GRID.territorialCellSize,
-    territorialCellCount:allocation.territorialCellCount,
-    territorialRoundCounts:freeze(allocation.roundCounts.map(x=>freeze({...x}))),
+    selectionLaw:'EXACT_818_CANONICAL_ECOLOGY_ELIGIBLE_NON_OPENING_ADAPTIVE_CONNECTED_WORLD_MESH',
+    meshSpacing:allocation.meshSpacing,
+    meshAlongSpacing:TOPOLOGY.alongSpacing,
+    meshNodeCount:allocation.meshNodeCount,
+    meshRoundCounts:freeze(allocation.roundCounts.map(x=>freeze({...x}))),
     standCandidateCounts:freeze(standCandidateCounts),
     standSelectedCounts:freeze(standSelectedCounts),
     classCandidateCounts:freeze(classCandidateCounts),
@@ -252,7 +277,8 @@ function createCanonicalPopulation(){
     compatibleInteriorSelectedCount:candidates.filter(x=>x.environment.spatialZone==='INTERIOR'&&x.environment.compositionBand==='NONE'&&selectedIds.has(x.id)).length,
     previousPositionSetImmutable:false,
     previousCoreConcentrationAuthoritySuperseded:true,
-    deterministicTerritorialCellRoundRobin:true,
+    deterministicTerritorialCellRoundRobin:false,
+    deterministicAdaptiveConnectedMesh:true,
     deviceCameraDestinationInputsUsed:false,
     highResolutionCandidateCapacity:true,
     wetMarginCanopySuppression:true,

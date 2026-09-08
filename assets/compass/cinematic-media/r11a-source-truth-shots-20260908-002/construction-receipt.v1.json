@@ -1,6 +1,6 @@
 {
   "schema":"R11A_SOURCE_TRUTH_SHOT_CONSTRUCTION_RECEIPT_v1",
-  "result":"S00_ACCEPTED_AND_S01_CONSTRUCTED_BROWSER_PROOF_READY_FOR_OWNER_ACCEPTANCE",
+  "result":"S00_ACCEPTED_AND_S01_OWNER_ACCEPTED_FORMAL_BROWSER_PROOF_PENDING",
   "operationId":"COMPASS_R11A_S01_CONTINUITY_CONSTRUCTION_20260908_003",
   "lockGeneration":2009,
   "shots":["S00","S01"],
@@ -22,5 +22,8 @@
   "headerFadePredecessorRejected":true,
   "fullMasterCreated":false,
   "liveMutationPerformed":false,
-  "ownerAcceptance":{"S00":"ACCEPTED","S01":"PENDING"}
+  "ownerAcceptance":{"S00":"ACCEPTED","S01":"ACCEPTED"},
+  "s01OwnerAcceptanceBasis":{"previewVersion":3,"videoSha256":"14f991099dc4f71b8b43a41377ff15642faa6e4f0ba6c78039e4938eea7c4675","sequencePosition":"IMMEDIATELY_AFTER_ACCEPTED_S00_DISSOLVE_PIXELATION_AND_SUCCESSOR_MATTER"},
+  "s01FormalBrowserProofStatus":"PENDING",
+  "nextShotConstructionAuthorized":false
 }

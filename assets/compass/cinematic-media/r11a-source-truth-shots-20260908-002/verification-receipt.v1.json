@@ -1,6 +1,6 @@
 {
   "schema":"R11A_SOURCE_TRUTH_SHOT_VERIFICATION_RECEIPT_v1",
-  "result":"S00_BROWSER_PROOF_ACCEPTED_S01_BROWSER_PROOF_PENDING",
+  "result":"S00_BROWSER_PROOF_ACCEPTED_S01_OWNER_ACCEPTED_FORMAL_BROWSER_PROOF_PENDING",
   "shots":["S00","S01"],
   "proofFrameSha256":{
     "intact":"56f9a6fcf4b0ca2e79c6e1e67082ceb7381199f53c6213dd844f2d9b25242339",
@@ -15,7 +15,7 @@
   "s01ProofFrameSha256":{},
   "s01ContactSheetSha256":"PENDING_BROWSER_PROOF",
   "deterministicOwnerPreview":{
-    "status":"REVISED_PENDING_OWNER_ACCEPTANCE",
+    "status":"ACCEPTED_BY_OWNER",
     "version":3,
     "browserGenerated":false,
     "videoSha256":"14f991099dc4f71b8b43a41377ff15642faa6e4f0ba6c78039e4938eea7c4675",
@@ -35,6 +35,8 @@
   "audienceInteractionRequired":false,
   "interactiveSubsystemCreated":false,
   "proofShowsOrientationDominantWithOtherThreeVisible":"DETERMINISTIC_OWNER_PREVIEW_GENERATED_BROWSER_PROOF_PENDING",
-  "ownerAcceptance":{"S00":"ACCEPTED","S01":"PENDING"},
+  "ownerAcceptance":{"S00":"ACCEPTED","S01":"ACCEPTED"},
+  "s01OwnerAcceptanceBasis":{"previewVersion":3,"videoSha256":"14f991099dc4f71b8b43a41377ff15642faa6e4f0ba6c78039e4938eea7c4675","sequencePosition":"IMMEDIATELY_AFTER_ACCEPTED_S00_DISSOLVE_PIXELATION_AND_SUCCESSOR_MATTER"},
+  "s01FormalBrowserProofStatus":"PENDING",
   "nextShotConstructionAuthorized":false
 }

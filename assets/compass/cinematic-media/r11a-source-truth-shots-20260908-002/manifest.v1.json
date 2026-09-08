@@ -119,7 +119,14 @@
       "requiresTimelineManipulationReceipt": true,
       "ownerPreviewDurationSeconds": 9.0,
       "ownerVisibleBrowserProofRequired": true,
-      "ownerAcceptance": "PENDING"
+      "ownerAcceptance": "ACCEPTED",
+      "ownerAcceptanceBasis": {
+        "previewVersion": 3,
+        "videoSha256": "14f991099dc4f71b8b43a41377ff15642faa6e4f0ba6c78039e4938eea7c4675",
+        "sequencePosition": "IMMEDIATELY_AFTER_ACCEPTED_S00_DISSOLVE_PIXELATION_AND_SUCCESSOR_MATTER"
+      },
+      "formalBrowserProofStatus": "PENDING",
+      "nextShotConstructionAuthorized": false
     }
   },
   "fullMasterAuthorized": false,

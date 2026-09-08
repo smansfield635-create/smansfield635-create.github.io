@@ -2665,49 +2665,6 @@
       "scopeHash": "63777d77bf1f419f024efca5e8f5dbc7f8cfd999a6016ff06ca3a39708ceafca",
       "state": "ADMITTED_LOCKED"
     },
-    "64b9815bda17c61a0580028cc8d0d81698fdc85e3121a83b7c21c32b28a45e26": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
-          "lockGeneration": 2003,
-          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:CANOPY_BRIDGE_CHAIN_REPAIR:POST_GEN2002",
-          "operationId": "MIRRORLAND_POST_GEN2002_CANOPY_BRIDGE_CHAIN_REPAIR_20260908_001",
-          "procedureLocatorDigest": "70b78b35e6b095328ff191de3ac8e54e1f8715f048e48e1f00ea68cda440cc81",
-          "requestDigest": "1563329b9cb183acd47fa4d281b526fdafca4094125f53e6aef44a204c69ebe9",
-          "scopeHash": "64b9815bda17c61a0580028cc8d0d81698fdc85e3121a83b7c21c32b28a45e26"
-        },
-        "bindingDigest": "9daabbc4201769dc199a8099d088744a648c83b5713216ae4d03118bcab32e35",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "bd76616fd7fddb2c59860eeb890b4364c6612548a65c7e72943e8fd10f60ac48",
-          "commentId": 5587019960,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2670,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34240513254,
-          "workflowSha": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953"
-        },
-        "lineageAnchorCommitSha": "6b1be7d929a1c6982f6dc05fc55c533b522f65d1",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
-      "lockGeneration": 2003,
-      "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:CANOPY_BRIDGE_CHAIN_REPAIR:POST_GEN2002",
-      "operationId": "MIRRORLAND_POST_GEN2002_CANOPY_BRIDGE_CHAIN_REPAIR_20260908_001",
-      "procedureLocatorDigest": "70b78b35e6b095328ff191de3ac8e54e1f8715f048e48e1f00ea68cda440cc81",
-      "released": false,
-      "requestDigest": "1563329b9cb183acd47fa4d281b526fdafca4094125f53e6aef44a204c69ebe9",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "64b9815bda17c61a0580028cc8d0d81698fdc85e3121a83b7c21c32b28a45e26",
-      "state": "ADMITTED_LOCKED"
-    },
     "650ecddeb51e8e427fafe9a395e80ee71f87b10c59860e95a1f68e12dbfb63e3": {
       "governingHead": "7f832b749617b0360ad6bbfafadc37508d328dc3",
       "lockGeneration": 1378,
@@ -42354,6 +42311,50 @@
       "requestDigest": "ec7dd043432965b9627c01225a7e9a6eae03374ab612c1e4acfc39f70553864f",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "42050c288fbfc85c0360ab459c2a6f258b382b30e7a90f84ebf30b5d0dd5f3fd",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
+          "lockGeneration": 2003,
+          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:CANOPY_BRIDGE_CHAIN_REPAIR:POST_GEN2002",
+          "operationId": "MIRRORLAND_POST_GEN2002_CANOPY_BRIDGE_CHAIN_REPAIR_20260908_001",
+          "procedureLocatorDigest": "70b78b35e6b095328ff191de3ac8e54e1f8715f048e48e1f00ea68cda440cc81",
+          "requestDigest": "1563329b9cb183acd47fa4d281b526fdafca4094125f53e6aef44a204c69ebe9",
+          "scopeHash": "64b9815bda17c61a0580028cc8d0d81698fdc85e3121a83b7c21c32b28a45e26"
+        },
+        "bindingDigest": "9daabbc4201769dc199a8099d088744a648c83b5713216ae4d03118bcab32e35",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "bd76616fd7fddb2c59860eeb890b4364c6612548a65c7e72943e8fd10f60ac48",
+          "commentId": 5587019960,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2670,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34240513254,
+          "workflowSha": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953"
+        },
+        "lineageAnchorCommitSha": "6b1be7d929a1c6982f6dc05fc55c533b522f65d1",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
+      "lockGeneration": 2003,
+      "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:CANOPY_BRIDGE_CHAIN_REPAIR:POST_GEN2002",
+      "operationId": "MIRRORLAND_POST_GEN2002_CANOPY_BRIDGE_CHAIN_REPAIR_20260908_001",
+      "procedureLocatorDigest": "70b78b35e6b095328ff191de3ac8e54e1f8715f048e48e1f00ea68cda440cc81",
+      "released": true,
+      "requestDigest": "1563329b9cb183acd47fa4d281b526fdafca4094125f53e6aef44a204c69ebe9",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "64b9815bda17c61a0580028cc8d0d81698fdc85e3121a83b7c21c32b28a45e26",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
     }

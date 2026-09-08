@@ -29,11 +29,11 @@ const GRID=freeze({
   rows:147,
   insetFraction:.025,
   jitterFraction:.18,
-  minimumForestWeight:.08,
-  minimumShorelineDistance:12,
+  minimumForestWeight:.04,
+  minimumShorelineDistance:6,
   exactTargetCount:818,
-  territorialSpacingPasses:freeze([58,52,46,40,34,28]),
-  wetMarginSuppression:.34
+  territorialCellSize:80,
+  wetMarginSuppression:.10
 });
 const STAND_RECORDS=new Map(getStandTopologySeeds().map(stand=>[stand.id,stand]));
 
@@ -59,14 +59,14 @@ export const CANONICAL_VEGETATION_POPULATION_CONTRACT=freeze({
   grid:GRID,
   fixedTargetCount:true,
   territorialContinuityRepair:true,
-  deterministicMultiPassTerritorialSpacing:true,
+  deterministicTerritorialCellRoundRobin:true,
+  deterministicMultiPassTerritorialSpacing:false,
   canonicalStandSeedCenteredAllocation:false,
   ecologyDerivedDominantForestCoreAllocation:false
 });
 
 const increment=(object,key)=>{object[key]=(object[key]||0)+1;};
 const sortTerritorialCandidates=(a,b)=>b.territorialScore-a.territorialScore||b.selectionScore-a.selectionScore||a.id.localeCompare(b.id);
-const stableCoverageOrder=(a,b)=>a.coverageRank-b.coverageRank||b.selectionScore-a.selectionScore||a.id.localeCompare(b.id);
 
 let cachedPopulation=null;
 
@@ -126,38 +126,39 @@ function createCandidate(row,column,envelope,insetX,insetZ,usableWidth,usableDep
     forestWeight,
     wetMarginAffinity:quantize(wetAffinity,12),
     selectionScore:quantize(selectionScore,12),
-    territorialScore:quantize(territorialScore,12),
-    coverageRank:hash32(seed^0x71c8e3d5)
+    territorialScore:quantize(territorialScore,12)
   };
 }
 
-function farEnough(candidate,selected,minimumDistance){
-  const min2=minimumDistance*minimumDistance;
-  for(const item of selected){
-    const dx=candidate.ecology.world.x-item.ecology.world.x;
-    const dz=candidate.ecology.world.z-item.ecology.world.z;
-    if(dx*dx+dz*dz<min2)return false;
-  }
-  return true;
-}
-
 function allocateTerritorialCoverage(candidates,budget){
-  const ordered=[...candidates].sort(stableCoverageOrder);
+  const buckets=new Map();
+  for(const candidate of candidates){
+    const cx=Math.floor(candidate.ecology.world.x/GRID.territorialCellSize);
+    const cz=Math.floor(candidate.ecology.world.z/GRID.territorialCellSize);
+    const key=`${cx},${cz}`;
+    if(!buckets.has(key))buckets.set(key,{cx,cz,items:[]});
+    buckets.get(key).items.push(candidate);
+  }
+  const cells=[...buckets.values()].map(cell=>({
+    ...cell,
+    rank:hash32(Math.imul(cell.cx,73856093)^Math.imul(cell.cz,19349663)^0x71c8e3d5),
+    items:cell.items.sort(sortTerritorialCandidates)
+  })).sort((a,b)=>a.rank-b.rank||a.cz-b.cz||a.cx-b.cx);
   const selected=[];
   const selectedIds=new Set();
-  const passCounts=[];
-  for(const minimumDistance of GRID.territorialSpacingPasses){
+  const roundCounts=[];
+  for(let round=0;selected.length<budget;round++){
     let added=0;
-    for(const candidate of ordered){
+    for(const cell of cells){
       if(selected.length>=budget)break;
-      if(selectedIds.has(candidate.id))continue;
-      if(!farEnough(candidate,selected,minimumDistance))continue;
+      const candidate=cell.items[round];
+      if(!candidate||selectedIds.has(candidate.id))continue;
       selected.push(candidate);
       selectedIds.add(candidate.id);
       added++;
     }
-    passCounts.push({minimumDistance,added,total:selected.length});
-    if(selected.length>=budget)break;
+    roundCounts.push({round,added,total:selected.length});
+    if(!added)break;
   }
   if(selected.length<budget){
     for(const candidate of [...candidates].sort(sortTerritorialCandidates)){
@@ -167,7 +168,7 @@ function allocateTerritorialCoverage(candidates,budget){
       selectedIds.add(candidate.id);
     }
   }
-  return {selected:selected.slice(0,budget),passCounts};
+  return {selected:selected.slice(0,budget),roundCounts,territorialCellCount:cells.length};
 }
 
 function createCanonicalPopulation(){
@@ -235,9 +236,10 @@ function createCanonicalPopulation(){
     candidateCount:candidates.length,
     selectedCount:instances.length,
     rejectedEligibleCount:candidates.length-instances.length,
-    selectionLaw:'EXACT_818_CANONICAL_ECOLOGY_ELIGIBLE_NON_OPENING_MULTI_PASS_TERRITORIAL_SPACING',
-    territorialSpacingPasses:GRID.territorialSpacingPasses,
-    territorialSpacingPassCounts:freeze(allocation.passCounts.map(x=>freeze({...x}))),
+    selectionLaw:'EXACT_818_CANONICAL_ECOLOGY_ELIGIBLE_NON_OPENING_TERRITORIAL_CELL_ROUND_ROBIN',
+    territorialCellSize:GRID.territorialCellSize,
+    territorialCellCount:allocation.territorialCellCount,
+    territorialRoundCounts:freeze(allocation.roundCounts.map(x=>freeze({...x}))),
     standCandidateCounts:freeze(standCandidateCounts),
     standSelectedCounts:freeze(standSelectedCounts),
     classCandidateCounts:freeze(classCandidateCounts),
@@ -250,7 +252,7 @@ function createCanonicalPopulation(){
     compatibleInteriorSelectedCount:candidates.filter(x=>x.environment.spatialZone==='INTERIOR'&&x.environment.compositionBand==='NONE'&&selectedIds.has(x.id)).length,
     previousPositionSetImmutable:false,
     previousCoreConcentrationAuthoritySuperseded:true,
-    deterministicMultiPassTerritorialSpacing:true,
+    deterministicTerritorialCellRoundRobin:true,
     deviceCameraDestinationInputsUsed:false,
     highResolutionCandidateCapacity:true,
     wetMarginCanopySuppression:true,

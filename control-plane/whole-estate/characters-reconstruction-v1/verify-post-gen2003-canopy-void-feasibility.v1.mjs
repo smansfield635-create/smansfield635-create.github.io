@@ -1,0 +1,37 @@
+#!/usr/bin/env node
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import {fileURLToPath} from 'node:url';
+const HERE=path.dirname(fileURLToPath(import.meta.url));
+const CONTRACT=JSON.parse(fs.readFileSync(path.join(HERE,'post-gen2003-canopy-void-feasibility-contract.v1.json'),'utf8'));
+const args={};for(let i=2;i<process.argv.length;i++){const t=process.argv[i];if(!t.startsWith('--'))throw new Error(`UNKNOWN_ARGUMENT:${t}`);args[t.slice(2)]=process.argv[++i]??null;}
+if(!args.receipt||!args.output)throw new Error('RECEIPT_AND_OUTPUT_REQUIRED');
+const receipt=JSON.parse(fs.readFileSync(path.resolve(args.receipt),'utf8'));
+const stable=v=>Array.isArray(v)?v.map(stable):(v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])])):v);
+const stableText=v=>JSON.stringify(stable(v),null,2)+'\n';
+const sha256=v=>crypto.createHash('sha256').update(v).digest('hex');
+const checks=[];const check=(id,pass,detail={})=>checks.push({id,pass:Boolean(pass),detail});
+check('RECEIPT_SCHEMA',receipt.schema==='POST_GEN2003_CANOPY_VOID_FEASIBILITY_DIAGNOSTIC_RECEIPT_v1',{observed:receipt.schema});
+check('OPERATION_ID',receipt.operationId===CONTRACT.operationId,{observed:receipt.operationId});
+check('LOCK_GENERATION',receipt.lockGeneration===CONTRACT.lockGeneration,{observed:receipt.lockGeneration});
+check('GOVERNING_HEAD',receipt.governingHead===CONTRACT.governingHead,{observed:receipt.governingHead});
+check('DIAGNOSTIC_RESULT_PASS_CLOSED',receipt.result==='PASS_CLOSED'&&receipt.diagnosticValid===true,{result:receipt.result,diagnosticValid:receipt.diagnosticValid});
+check('NO_PRODUCT_MUTATION_OR_AUTHORITY',receipt.productMutationDetected===false&&receipt.productRepairAuthority===false&&receipt.mergeAuthority===false&&receipt.deploymentAuthority===false&&receipt.publicationAuthority===false);
+check('MATERIAL_AND_PRODUCT_BOUNDARY',receipt.materialDisposition==='UNASSIGNED'&&receipt.productMechanicalState==='NON_CLEAR',{materialDisposition:receipt.materialDisposition,productMechanicalState:receipt.productMechanicalState});
+check('FROZEN_SUBJECT_IDENTITIES',receipt.frozenSubjects?.GEN2001===CONTRACT.gen2001Foundation&&receipt.frozenSubjects?.GEN2002===CONTRACT.gen2002NegativeCandidate&&receipt.frozenSubjects?.GEN2003===CONTRACT.gen2003NegativeCandidate&&receipt.frozenSubjects?.immutableV2===CONTRACT.immutableV2ToolingHead&&receipt.frozenSubjects?.ahbkReference===CONTRACT.ahbkReferenceHead,{observed:receipt.frozenSubjects});
+check('GENERIC_CANDIDATE_UNIVERSE_NON_TARGETED',receipt.candidateUniverse?.generatedBeforeV2FailureAnalysis===true&&receipt.candidateUniverse?.failureCoordinatesUsedForGeneration===false&&receipt.candidateUniverse?.candidateCount>=CONTRACT.canonicalCanopyCount,{candidateUniverse:receipt.candidateUniverse});
+check('ALL_THREE_SUBJECTS_SEVEN_STATES',Array.isArray(receipt.subjects?.GEN2001)&&receipt.subjects.GEN2001.length===7&&receipt.subjects.GEN2002?.length===7&&receipt.subjects.GEN2003?.length===7);
+check('COVERAGE_MATRIX_PRESENT',Number(receipt.coverageMatrix?.eligibleStateCellCount)>0&&Number(receipt.coverageMatrix?.fiveCellWindowCount)>0&&Number(receipt.coverageMatrix?.candidateCount)===Number(receipt.candidateUniverse?.candidateCount),{coverageMatrix:receipt.coverageMatrix});
+const d=receipt.feasibility?.disposition;
+check('FEASIBILITY_DISPOSITION_VALID',['FEASIBLE','INFEASIBLE','UNRESOLVED'].includes(d),{disposition:d});
+const ids=receipt.feasibility?.witnessIds||[],metrics=receipt.feasibility?.witnessCanopyMetrics||[],cert=receipt.feasibility?.certificate||null;
+check('FEASIBLE_REQUIRES_EXACT_818_CLEAR_WITNESS',d!=='FEASIBLE'||(ids.length===CONTRACT.canonicalCanopyCount&&new Set(ids).size===CONTRACT.canonicalCanopyCount&&metrics.length===7&&metrics.every(m=>m.risk===false)),{idCount:ids.length,metricCount:metrics.length});
+check('INFEASIBLE_REQUIRES_CERTIFICATE',d!=='INFEASIBLE'||Boolean(cert),{certificate:cert});
+check('UNRESOLVED_NOT_COERCED',d!=='UNRESOLVED'||(!cert&&ids.length===0),{certificate:cert,idCount:ids.length});
+check('HEURISTIC_FAILURE_NOT_COERCED_TO_INFEASIBLE',receipt.feasibility?.heuristicFailureCoercedToInfeasible===false);
+check('WITNESS_CONTAINS_IDS_NOT_COORDINATES',ids.every(x=>typeof x==='string'&&/^veg-r\d+-c\d+$/.test(x))&&!JSON.stringify(receipt.feasibility||{}).includes('"world"'));
+check('AHBK_METHOD_ONLY',receipt.ahbkBoundaryRecord?.methodOnly===true&&receipt.ahbkBoundaryRecord?.empiricalSupportTransferred===false&&receipt.ahbkBoundaryRecord?.noncompensatoryDimensions?.length===3&&receipt.ahbkBoundaryRecord?.scalarCollapseProhibited===true,{ahbkBoundaryRecord:receipt.ahbkBoundaryRecord});
+const copy={...receipt};delete copy.receiptDigest;check('RECEIPT_DIGEST',receipt.receiptDigest===sha256(stableText(copy)),{observed:receipt.receiptDigest,expected:sha256(stableText(copy))});
+const failed=checks.filter(x=>!x.pass);const out={schema:'POST_GEN2003_CANOPY_VOID_FEASIBILITY_VERIFICATION_RECEIPT_v1',operationId:CONTRACT.operationId,lockGeneration:CONTRACT.lockGeneration,governingHead:CONTRACT.governingHead,result:failed.length?'FAIL_CLOSED':'PASS_CLOSED',diagnosticDisposition:d,productMutationAuthority:false,repairAuthority:false,mergeAuthority:false,deploymentAuthority:false,publicationAuthority:false,checkCount:checks.length,passCount:checks.length-failed.length,failCount:failed.length,checks};
+fs.mkdirSync(path.dirname(path.resolve(args.output)),{recursive:true});fs.writeFileSync(path.resolve(args.output),stableText(out));process.stdout.write(stableText(out));if(failed.length)process.exitCode=1;

@@ -1,0 +1,137 @@
+name: Characters Coast Map True to World v1
+
+on:
+  pull_request:
+    paths:
+      - 'characters/index.html'
+      - 'characters/app.mjs'
+      - 'characters/coast-map-renderer.mjs'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/coast-map-true-to-world-contract.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-coast-map-true-to-world.v1.mjs'
+      - '.github/workflows/characters-coast-map-true-to-world-v1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /characters/
+            /h-earth-3d/
+            /showroom/globe/h-earth/
+            /control-plane/whole-estate/characters-reconstruction-v1/coast-map-true-to-world-contract.v1.json
+            /control-plane/whole-estate/characters-reconstruction-v1/verify-coast-map-true-to-world.v1.mjs
+            /.github/workflows/characters-coast-map-true-to-world-v1.yml
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact-head geography and protected identities
+        run: |
+          set +e
+          node control-plane/whole-estate/characters-reconstruction-v1/verify-coast-map-true-to-world.v1.mjs > sequence4-machine-verifier.log 2>&1
+          status=$?
+          cat sequence4-machine-verifier.log
+          exit $status
+      - name: Preserve machine verifier diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: characters-coast-map-machine-diagnostics-${{ github.sha }}
+          path: |
+            sequence4-machine-verifier.log
+            coast-map-true-to-world-receipt.json
+          if-no-files-found: ignore
+          retention-days: 90
+      - name: Install browser qualification runtime
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Capture desktop and mobile world/map evidence
+        run: |
+          mkdir -p coast-map-true-to-world-evidence
+          python3 -m http.server 4173 >/tmp/characters-map-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {chromium} from 'playwright';
+          const browser=await chromium.launch({headless:true,args:['--use-angle=swiftshader','--enable-webgl']});
+          const evidence=[];
+          for(const spec of [
+            {id:'desktop',viewport:{width:1440,height:1000}},
+            {id:'mobile',viewport:{width:390,height:844},isMobile:true,hasTouch:true}
+          ]){
+            const context=await browser.newContext({viewport:spec.viewport,isMobile:spec.isMobile||false,hasTouch:spec.hasTouch||false,reducedMotion:'reduce'});
+            const page=await context.newPage();
+            const errors=[];
+            page.on('pageerror',e=>errors.push(String(e)));
+            await page.goto('http://127.0.0.1:4173/characters/',{waitUntil:'domcontentloaded'});
+            await page.locator('#map-grid').waitFor({state:'attached'});
+            await page.locator('[data-coast-map-surface]').waitFor({state:'attached'});
+            const preOpen=await page.evaluate(()=>({
+              readyState:document.readyState,
+              fatal:document.querySelector('#fatal')?.classList.contains('show')||false,
+              mapTogglePresent:Boolean(document.querySelector('#map-toggle')),
+              surfacePresent:Boolean(document.querySelector('[data-coast-map-surface]')),
+              source:document.querySelector('#map-grid')?.dataset.geographySource||null
+            }));
+            fs.writeFileSync(`coast-map-true-to-world-evidence/${spec.id}-preopen.json`,JSON.stringify({...preOpen,pageErrors:errors},null,2)+'\n');
+            if(!preOpen.mapTogglePresent||!preOpen.surfacePresent||preOpen.source!=='WORLD_DERIVED')throw new Error(`MAP_PREOPEN_FAILURE:${spec.id}:${JSON.stringify({...preOpen,pageErrors:errors})}`);
+            await page.screenshot({path:`coast-map-true-to-world-evidence/${spec.id}-world.png`,fullPage:true});
+            await page.evaluate(()=>document.querySelector('#map-toggle')?.click());
+            await page.locator('#coast-map.show').waitFor({state:'visible'});
+            await page.locator('[data-coast-map-surface]').waitFor({state:'visible'});
+            const material=await page.evaluate(()=>({
+              source:document.querySelector('#map-grid')?.dataset.geographySource,
+              renderer:document.querySelector('#map-grid')?.dataset.coastMapRenderer,
+              coastline:document.querySelectorAll('[data-map-layer="CANONICAL_COASTLINE"]').length,
+              terrain:document.querySelectorAll('[data-map-layer="WORLD_DERIVED_TERRAIN"] rect').length,
+              forests:document.querySelectorAll('[data-forest-region]').length,
+              visibleNodes:[...document.querySelectorAll('.map-node')].filter(x=>!x.hidden).length,
+              mapOpen:document.querySelector('#coast-map')?.classList.contains('show')||false
+            }));
+            fs.writeFileSync(`coast-map-true-to-world-evidence/${spec.id}-material.json`,JSON.stringify({...material,pageErrors:errors},null,2)+'\n');
+            if(!material.mapOpen||material.source!=='WORLD_DERIVED'||material.coastline!==1||material.terrain<40||material.forests!==7)throw new Error(`MAP_MATERIALITY_FAILURE:${spec.id}:${JSON.stringify({...material,pageErrors:errors})}`);
+            await page.screenshot({path:`coast-map-true-to-world-evidence/${spec.id}-map.png`,fullPage:true});
+            evidence.push({id:spec.id,viewport:spec.viewport,material,pageErrors:errors});
+            await context.close();
+          }
+          await browser.close();
+          fs.writeFileSync('coast-map-true-to-world-evidence/browser-receipt.json',JSON.stringify({schema:'MIRRORLAND_COAST_MAP_BROWSER_EVIDENCE_v1',result:'PASS_CLOSED',candidateHead:process.env.GITHUB_SHA,evidence},null,2)+'\n');
+          NODE
+      - name: Preserve browser diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: characters-coast-map-browser-diagnostics-${{ github.sha }}
+          path: coast-map-true-to-world-evidence/
+          if-no-files-found: ignore
+          retention-days: 90
+      - name: Finalize qualification receipt
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const machine=JSON.parse(fs.readFileSync('coast-map-true-to-world-receipt.json','utf8'));
+          const browser=JSON.parse(fs.readFileSync('coast-map-true-to-world-evidence/browser-receipt.json','utf8'));
+          if(machine.result!=='PASS_MACHINE_BROWSER_EVIDENCE_REQUIRED'||machine.failCount!==0||browser.result!=='PASS_CLOSED')throw new Error('SEQUENCE_4_QUALIFICATION_NONPASS');
+          machine.result='PASS_CLOSED';
+          machine.browserEvidence=browser;
+          machine.browserEvidenceRequired=false;
+          fs.writeFileSync('coast-map-true-to-world-receipt.json',JSON.stringify(machine,null,2)+'\n');
+          NODE
+      - name: Upload Sequence 4 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: characters-coast-map-true-to-world-${{ github.sha }}
+          path: |
+            coast-map-true-to-world-receipt.json
+            coast-map-true-to-world-evidence/
+          if-no-files-found: error
+          retention-days: 90

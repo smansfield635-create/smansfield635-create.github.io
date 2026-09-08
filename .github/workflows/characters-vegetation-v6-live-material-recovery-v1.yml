@@ -191,10 +191,24 @@ jobs:
           }
 
           async function gotoManor(page){
-            await page.locator('#map-toggle').click();
-            await page.locator('#coast-map').waitFor({state:'visible',timeout:10000});
-            const node=page.locator('.map-node[data-id="manor"]');
-            await node.click();
+            const map=page.locator('#coast-map');
+            const toggle=page.locator('#map-toggle');
+            const manor=page.locator('.map-node[data-id="manor"]');
+            await toggle.click();
+            await map.waitFor({state:'visible',timeout:10000});
+            if(!(await manor.isVisible())){
+              const crossing=page.locator('.map-node[data-id="crossing"]');
+              await crossing.waitFor({state:'visible',timeout:10000});
+              await crossing.click();
+              const back=page.locator('#return');
+              await back.waitFor({state:'visible',timeout:12000});
+              await back.click();
+              await page.waitForFunction(()=>document.querySelector('#status')?.textContent?.startsWith('Orbit'),null,{timeout:12000});
+              await toggle.click();
+              await map.waitFor({state:'visible',timeout:10000});
+              await manor.waitFor({state:'visible',timeout:10000});
+            }
+            await manor.click();
             await page.locator('#return').waitFor({state:'visible',timeout:12000});
             await wait(1100);
           }

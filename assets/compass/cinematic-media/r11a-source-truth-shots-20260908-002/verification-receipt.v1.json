@@ -16,16 +16,17 @@
   "s01ContactSheetSha256":"PENDING_BROWSER_PROOF",
   "deterministicOwnerPreview":{
     "status":"REVISED_PENDING_OWNER_ACCEPTANCE",
-    "version":2,
+    "version":3,
     "browserGenerated":false,
-    "videoSha256":"27f0fd147b3694cbf0a812a2bbf506485893506973b820764550f53cfef70291",
-    "contactSheetSha256":"cf0714b3f17b11ea68afb2022a00b12152f769d66d427a99360bb94aea7dfd76",
+    "videoSha256":"14f991099dc4f71b8b43a41377ff15642faa6e4f0ba6c78039e4938eea7c4675",
+    "contactSheetSha256":"8dc56bf9d61ef007a0bbf410a8b3633760c7e3f283bee8ec121b26bf328c14cd",
     "terminalFrameSha256":"95504373cdff0871621cd859255f48dfeed682845cd8b915bc3cd8592990a8aa",
-    "durationSeconds":7.2,
+    "durationSeconds":9.0,
     "fps":30,
     "resolution":[1280,720],
     "brandDescriptor":"Independent Interactive Experience & Research Studio",
-    "introContextPresentation":"FOLLOWING_SEPARATE_BEAT"
+    "introContextPresentation":"DEFERRED_TO_REMAINDER_OF_CINEMATIC_NO_S01_FRAME",
+    "starMotionContinuity":"PASS_NO_PROGRESS_0_24_POSITION_RESET"
   },
   "persistentObjectIds":["COMPASS_STAR_ORIENTATION","COMPASS_STAR_TRANSFERABILITY","COMPASS_STAR_CONVERGENCE","COMPASS_STAR_INTEGRITY"],
   "objectReplacementCount":0,

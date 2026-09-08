@@ -56,8 +56,8 @@
   "successorShot": {
     "schema": "R11A_S01_SOURCE_TRUTH_SHOT_v1",
     "shot": "S01",
-    "frameInterval": [144, 360],
-    "secondsInterval": [4.8, 12.0],
+    "frameInterval": [144, 414],
+    "secondsInterval": [4.8, 13.8],
     "operationId": "COMPASS_R11A_S01_CONTINUITY_CONSTRUCTION_20260908_003",
     "lockGeneration": 2009,
     "authorityState": "ADMITTED_LOCKED",
@@ -67,7 +67,7 @@
     "dramaticOutputState": "APPROVED_FOUR_CARDINAL_COMPASS_WITH_ORIENTATION_FOREGROUND",
     "capabilityGain": "VIEWER_SEES_GENUINE_COMPASS_MANIPULATION_PERFORMED_BY_THE_CINEMATIC",
     "transformationGrammarSegment": "MATTER_TO_PERSISTENT_CARDINAL_CONSTELLATION",
-    "continuityLaw": "ACCEPTED S00 MATTER -> FOUR CANONICAL STAR IDENTITIES -> SAME STARS FRAME DGB INTRO -> SAME STARS CONVERGE -> APPROVED FOUR-CARDINAL COMPASS -> ORIENTATION FOREGROUND",
+    "continuityLaw": "ACCEPTED S00 MATTER -> FOUR CANONICAL STAR IDENTITIES -> SAME STARS FRAME DGB IDENTITY -> SAME STARS CONVERGE -> APPROVED FOUR-CARDINAL COMPASS -> ORIENTATION FOREGROUND",
     "persistentObjects": [
       {"objectId":"COMPASS_STAR_ORIENTATION","label":"ORIENTATION","wing":"north","sourceMatterCluster":0},
       {"objectId":"COMPASS_STAR_TRANSFERABILITY","label":"TRANSFERABILITY","wing":"east","sourceMatterCluster":1},
@@ -93,21 +93,22 @@
       }
     },
     "phaseStates": [
-      {"id":"FOUR_IDENTITIES_DIFFERENTIATING","progress":0.18,"frame":183},
-      {"id":"SAME_STARS_FRAME_DGB_INTRO","progress":0.46,"frame":243},
-      {"id":"SAME_STARS_CONVERGING","progress":0.72,"frame":299},
-      {"id":"APPROVED_FOUR_CARDINAL_COMPASS","progress":1.0,"frame":360}
+      {"id":"FOUR_IDENTITIES_DIFFERENTIATING","progress":0.18,"frame":193},
+      {"id":"SAME_STARS_FRAME_DGB_IDENTITY","progress":0.46,"frame":268},
+      {"id":"SAME_STARS_CONVERGING","progress":0.72,"frame":338},
+      {"id":"APPROVED_FOUR_CARDINAL_COMPASS","progress":1.0,"frame":414}
     ],
     "brandDescriptor": "Independent Interactive Experience & Research Studio",
     "introContext": "Discover our ideas, enter the story, or explore your own.",
-    "introPresentationOrder": ["BRAND_IDENTITY_WITH_DESCRIPTOR", "FOLLOWING_CONTEXT_BEAT"],
+    "introContextDisposition": "DEFERRED_TO_REMAINDER_OF_CINEMATIC_NOT_RENDERED_AS_S01_FRAME",
+    "introPresentationOrder": ["BRAND_IDENTITY_WITH_DESCRIPTOR"],
     "terminalForeground": "ORIENTATION",
     "otherCanonicalStarsVisible": true,
     "genuineManipulation": {
       "required": true,
       "mechanism": "TIMELINE_ROTATES_THE_SAME_FOUR_OBJECT_VECTORS_IN_RIGHT_HANDED_3D_SPACE_AND_SETTLES_ORIENTATION_FOREGROUND",
       "timelineProgressInterval": [0.59, 0.83],
-      "frameInterval": [271, 323],
+      "frameInterval": [303, 368],
       "userInputRequired": false,
       "interactiveSubsystemCreated": false,
       "staticCompassForbidden": true
@@ -116,7 +117,7 @@
       "stageApi": "S01Stage",
       "requiredProgress": [0.0, 0.18, 0.46, 0.72, 1.0],
       "requiresTimelineManipulationReceipt": true,
-      "ownerPreviewDurationSeconds": 7.2,
+      "ownerPreviewDurationSeconds": 9.0,
       "ownerVisibleBrowserProofRequired": true,
       "ownerAcceptance": "PENDING"
     }

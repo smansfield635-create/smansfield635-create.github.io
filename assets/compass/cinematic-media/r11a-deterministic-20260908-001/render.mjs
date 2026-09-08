@@ -48,7 +48,7 @@ manifest.scenes.forEach((s,i)=>{
 filters.push(`${manifest.scenes.map((_,i)=>`[v${i}]`).join('')}concat=n=${manifest.scenes.length}:v=1:a=0,format=yuv420p[outv]`);
 const filterFile=path.join(path.dirname(outputPath),'.r11a-filter.txt');
 fs.writeFileSync(filterFile,filters.join(';\n')+'\n');
-const args=['-y','-hide_banner','-loglevel','error','-i',sourcePath,'-filter_complex_script',filterFile,'-map','[outv]','-frames:v','1275','-r','30','-c:v','libx264','-profile:v','high','-pix_fmt','yuv420p','-crf','17','-preset','medium','-movflags','+faststart',outputPath];
+const args=['-y','-hide_banner','-loglevel','error','-i',sourcePath,'-filter_complex_script',filterFile,'-map','[outv]','-frames:v','1275','-r','30','-c:v','libx264','-profile:v','high','-pix_fmt','yuv420p','-crf','25','-preset','slow','-movflags','+faststart',outputPath];
 const run=spawnSync('ffmpeg',args,{stdio:'inherit'});
 if(run.status!==0) process.exit(run.status??1);
 const receipt={schema:'R11A_CONSTRUCTION_RECEIPT_v1',result:'CONSTRUCTION_COMPLETE',operationId:'COMPASS_R11A_DETERMINISTIC_FILM_CONSTRUCTION_20260908_001',governingHead:manifest.governingHead,frozenManifestSha256:manifestSha,builderInputManifestSha256:manifestSha,sourceOccurrenceSha256:sourceSha,sourceArtifactId:manifest.materializedCanonicalOccurrence.artifactId,renderedFrameCount:1275,frameRate:30,durationSeconds:42.5,outputPath:path.basename(outputPath),outputSha256:sha(fs.readFileSync(outputPath)),builderVerifierInvariant:manifest.builderVerifierInvariant};

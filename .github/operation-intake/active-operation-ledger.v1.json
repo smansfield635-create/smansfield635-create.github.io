@@ -3385,6 +3385,49 @@
       "scopeHash": "7a1801fda8f16f1009e5b8e24b281c3e8be742326f9493de05556257addf287f",
       "state": "ADMITTED_LOCKED"
     },
+    "7a314c4b92d4ccb9728b38abc456d05432b9b1334509e5de3905e6b29d3b36c0": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
+          "lockGeneration": 2000,
+          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:CANOPY_HYDROLOGY_RELATION_DIAGNOSTIC:POST_GEN1998",
+          "operationId": "MIRRORLAND_POST_GEN1998_CANOPY_HYDROLOGY_RELATION_DIAGNOSTIC_20260908_001",
+          "procedureLocatorDigest": "03e44383c8d8536a4c2b8f02ea7f6c76ca20ddedeb0141a6d238a9d2b740c0d2",
+          "requestDigest": "442377fb55614873c0dc15e5b3861df2eef3240856d8fbc9469f594c49a74453",
+          "scopeHash": "7a314c4b92d4ccb9728b38abc456d05432b9b1334509e5de3905e6b29d3b36c0"
+        },
+        "bindingDigest": "85d04f9ea22609983ae8c97eff9581b0176be8f7dbe3d83be5615c5b4f7ee703",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "1408a9773907d3dba1be3678b669537e7d9a82164d39c2f9bd79dc6bb85e16a1",
+          "commentId": 5579119714,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2670,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34186525519,
+          "workflowSha": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953"
+        },
+        "lineageAnchorCommitSha": "a3f1edd9895ecdebf957a073556a5ffbd574bcd3",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
+      "lockGeneration": 2000,
+      "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:CANOPY_HYDROLOGY_RELATION_DIAGNOSTIC:POST_GEN1998",
+      "operationId": "MIRRORLAND_POST_GEN1998_CANOPY_HYDROLOGY_RELATION_DIAGNOSTIC_20260908_001",
+      "procedureLocatorDigest": "03e44383c8d8536a4c2b8f02ea7f6c76ca20ddedeb0141a6d238a9d2b740c0d2",
+      "released": false,
+      "requestDigest": "442377fb55614873c0dc15e5b3861df2eef3240856d8fbc9469f594c49a74453",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "7a314c4b92d4ccb9728b38abc456d05432b9b1334509e5de3905e6b29d3b36c0",
+      "state": "ADMITTED_LOCKED"
+    },
     "7ea206d40ec86e7fdf6df84f2b93093d476a4c0d25be93c481ab1f8f7feeb234": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -7343,7 +7386,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1999,
+  "lockGeneration": 2000,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

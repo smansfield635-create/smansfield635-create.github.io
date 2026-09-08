@@ -7260,6 +7260,49 @@
       "scopeHash": "f972e84b465e1b63fd935b753f376a1a79e0a9ba9d8f6335fbf084c7fae80bae",
       "state": "ADMITTED_LOCKED"
     },
+    "fa7ed4cf2243f2ab1ef1fe1a927aab4672af0c5d0659c64c825b7dce0869d7c6": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
+          "lockGeneration": 2004,
+          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:V2_CANOPY_VOID_FEASIBILITY_DIAGNOSTIC:POST_GEN2003",
+          "operationId": "MIRRORLAND_POST_GEN2003_V2_CANOPY_VOID_FEASIBILITY_DIAGNOSTIC_20260908_001",
+          "procedureLocatorDigest": "2f20558fc996bb2eac57eabb06b4453d948f1686b50c28ebda9cc5fa203c2442",
+          "requestDigest": "af49f7ab613a89673bf58d0972071447090a196f93f4578063febd2c0289b556",
+          "scopeHash": "fa7ed4cf2243f2ab1ef1fe1a927aab4672af0c5d0659c64c825b7dce0869d7c6"
+        },
+        "bindingDigest": "6263594ce7f1829cfee59cb9db5eb404a3c9bc44666c188bc7815028bed5588c",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "334233cf4c9dda7385f0a8a8b3be7b3d500084299eb7cf77b39992ce9100b256",
+          "commentId": 5587589762,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2670,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34244577989,
+          "workflowSha": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953"
+        },
+        "lineageAnchorCommitSha": "f816e43d860ba728cbd36f6c5327e03be5d24d21",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
+      "lockGeneration": 2004,
+      "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:V2_CANOPY_VOID_FEASIBILITY_DIAGNOSTIC:POST_GEN2003",
+      "operationId": "MIRRORLAND_POST_GEN2003_V2_CANOPY_VOID_FEASIBILITY_DIAGNOSTIC_20260908_001",
+      "procedureLocatorDigest": "2f20558fc996bb2eac57eabb06b4453d948f1686b50c28ebda9cc5fa203c2442",
+      "released": false,
+      "requestDigest": "af49f7ab613a89673bf58d0972071447090a196f93f4578063febd2c0289b556",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "fa7ed4cf2243f2ab1ef1fe1a927aab4672af0c5d0659c64c825b7dce0869d7c6",
+      "state": "ADMITTED_LOCKED"
+    },
     "fb941fb311d034729a4ad8f949bf10f0473f08f64690169c0365ec59101fc34e": {
       "governingHead": "2be9f181f626251e7611a877be013feff9c10b2a",
       "lockGeneration": 490,
@@ -7343,7 +7386,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2003,
+  "lockGeneration": 2004,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

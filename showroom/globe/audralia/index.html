@@ -62,6 +62,35 @@
   </main>
 
   <script>
+    (() => {
+      const nativeDpr = window.devicePixelRatio || 1;
+      const viewportPixels = Math.max(1, window.innerWidth * window.innerHeight);
+      const tabletPixelBudget = 921600;
+      const isLargeTouchViewport = navigator.maxTouchPoints > 0 && viewportPixels > 700000;
+      const budgetDpr = isLargeTouchViewport
+        ? Math.min(nativeDpr, Math.sqrt(tabletPixelBudget / viewportPixels))
+        : nativeDpr;
+
+      if (budgetDpr < nativeDpr) {
+        Object.defineProperty(window, 'devicePixelRatio', {
+          configurable: true,
+          get: () => budgetDpr
+        });
+      }
+
+      window.__AUDRALIA_RENDER_PIXEL_BUDGET__ = Object.freeze({
+        schema: 'AUDRALIA_RENDER_PIXEL_BUDGET_v1',
+        appliesToLargeTouchViewportsOnly: true,
+        cssPresentationChanged: false,
+        environmentChanged: false,
+        nativeDpr,
+        effectiveDpr: budgetDpr,
+        viewportPixels,
+        maximumPrimaryRenderPixels: tabletPixelBudget,
+        active: budgetDpr < nativeDpr
+      });
+    })();
+
     window.__AUDRALIA_LIVE_PLANETARY_INTEGRATION__ = Object.freeze({
       schema: 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v7_EXACT_24057_LOADER_FIRST',
       legacyPlanetActive: false,
@@ -77,6 +106,7 @@
       loadingContinuity: 'AUDRALIA_LOADING_CONTINUITY_v4',
       startupArchitecture: 'APPROVED_PRESENTATION_PRE_RENDER_v1',
       tabletStartupStability: 'PRIMARY_WORLD_BEFORE_CELESTIAL_WEBGL_v1',
+      tabletFramebufferBudget: 'AUDRALIA_RENDER_PIXEL_BUDGET_v1',
       startupInstrumentation: 'AUDRALIA_STARTUP_DIAGNOSTIC_v1',
       estateSoundtrack: 'AUDRALIA_ESTATE_SOUNDTRACK_RUNTIME_v1',
       environmentBinding: 'IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993'

@@ -1,6 +1,7 @@
 import {sampleCanonicalVegetationEcology} from './vegetation-ecology.mjs';
 import {getCanonicalVegetationPopulation} from './vegetation-population.mjs';
 import {resolveVegetationEnvironment} from './vegetation-edge-ecology.mjs';
+import {sampleGratitudeWorld} from './gratitude-geography.adapter.mjs';
 
 const freeze=(value,seen=new WeakSet())=>{if(value===null||typeof value!=='object'||ArrayBuffer.isView(value)||Object.isFrozen(value)||seen.has(value))return value;seen.add(value);for(const nested of Object.values(value))freeze(nested,seen);return Object.freeze(value);};
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
@@ -12,39 +13,51 @@ const TAU=Math.PI*2;
 export const UNDERSTORY_CLASSES=freeze(['GRASS_SEDGE','LOW_SHRUB','SAPLING_YOUNG_GROWTH','REED_WET_MARGIN','DEAD_SPARSE_GROUND','FOREST_FLOOR_CLUSTER']);
 const CLASS_SALT=freeze({GRASS_SEDGE:11,LOW_SHRUB:23,SAPLING_YOUNG_GROWTH:37,REED_WET_MARGIN:53,DEAD_SPARSE_GROUND:71,FOREST_FLOOR_CLUSTER:89});
 const GRID=freeze({columns:144,rows:106,insetFraction:.025,jitterFraction:.30,seed:1689746977});
-const REED_CLUSTER_OFFSETS=freeze([[0,0],[3,2],[-2.8,3.2],[2.4,-3.4],[-3.6,-1.8],[6.5,1.5],[-6.2,2.2],[1.4,6.4],[-1.8,-6.1]]);
-const HYDROLOGY_PRESENTATION=freeze({shorelineScale:180,shorelineContribution:.62,reedEligibilityMinimum:.34});
-const HYDROLOGY_CORE=freeze({gridStep:18,wetCoreMinimum:.44,clusterOffsets:freeze([[0,0]])});
+const REED_CLUSTER_OFFSETS=freeze([[0,0],[4.2,2.8],[-3.8,3.6]]);
+const HYDROLOGY_PRESENTATION=freeze({shorelineScale:220,shorelineContribution:.70,reedEligibilityMinimum:.18});
+const HYDROLOGY_CORE=freeze({gridStep:22,wetParticipationFloor:.10,satelliteRadius:8,maxSatellites:4});
 
 export const V4_UNDERSTORY_CONTRACT=freeze({
   schema:'MIRRORLAND_VEGETATION_V4_UNDERSTORY_RUNTIME_CONTRACT_v1',
-  operationId:'MIRRORLAND_POST_GEN1995_CANOPY_HYDROLOGY_REPAIR_20260907_001',
-  stage:'CANONICAL_WETNESS_RESPONSE_ORDERING_AND_COVERAGE_REPAIR',
-  predecessorBoundary:'GEN1995_PARTIAL_SUCCESS_TWO_CLEAR_TWO_FAIL',
+  operationId:'MIRRORLAND_POST_GEN1996_CANOPY_HYDROLOGY_RELATION_REPAIR_20260908_001',
+  stage:'CONTINUOUS_CANONICAL_WETNESS_RESPONSE_ORDERING_REPAIR',
+  predecessorBoundary:'GEN1996_PARTIAL_SUCCESS_CANOPY_IMPROVED_HYDROLOGY_STILL_INVERTED',
   targetBoundary:'ALL_FOUR_V2_ENVIRONMENT_RISK_FAMILIES_CLEAR',
   ecologySource:'characters/vegetation-ecology.mjs#sampleCanonicalVegetationEcology',
+  canonicalWetnessSource:'characters/gratitude-geography.adapter.mjs#sampleGratitudeWorld',
   treePopulationSource:'characters/vegetation-population.mjs#getCanonicalVegetationPopulation',
   standEdgeSource:'characters/vegetation-edge-ecology.mjs#resolveVegetationEnvironment',
   geographyAuthorityCreated:false,
   populationIdentityDeviceInvariant:true,
   populationIdentityCameraInvariant:true,
-  canonicalIdentityInputs:freeze(['ROW','COLUMN','FROZEN_SEED','CANONICAL_ECOLOGY','STAND_ID','SPATIAL_ZONE']),
-  prohibitedIdentityInputs:freeze(['DEVICE_CLASS','VIEWPORT_CLASS','CAMERA_STATE','REDUCED_MOTION','LOD']),
+  canonicalIdentityInputs:freeze(['ROW','COLUMN','FROZEN_SEED','CANONICAL_ECOLOGY','CANONICAL_WETNESS','STAND_ID','SPATIAL_ZONE']),
+  prohibitedIdentityInputs:freeze(['DEVICE_CLASS','VIEWPORT_CLASS','CAMERA_STATE','REDUCED_MOTION','LOD','DESTINATION_ID','REPRESENTATIVE_STATE_ID']),
   grid:GRID,
   compactPresentationSampling:.96,
   v3CameraContextReused:true,
   openingShrubSaplingAllowed:false,
   groundClosureRepair:true,
   hydrologyDifferentiationRepair:true,
+  continuousWetnessResponseOrdering:true,
+  lowWetnessEcologyPreserved:true,
   wetMarginColonySampling:true,
   hydrologyPresentation:HYDROLOGY_PRESENTATION,
   hydrologyCoreLattice:HYDROLOGY_CORE,
   hydrologyCoreReinforcement:true,
   hydrologyCoreDistributedCoverage:true,
   hydrologyCoreRedundantClustering:false,
-  v2WetnessSignalAligned:true
+  v2BinsUsedAsProductControl:false,
+  v2ResultCoordinatesUsedAsProductControl:false
 });
 
+function canonicalWetnessAt(x,z){
+  const source=sampleGratitudeWorld(x,z).source;
+  const river=Number(source.hydrology?.riverWeight)||0;
+  const lake=Number(source.hydrology?.lakeWeight)||0;
+  const shore=Math.max(0,Number(source.shorelineDistance)||0);
+  const shorelineSignal=clamp(1-shore/HYDROLOGY_PRESENTATION.shorelineScale,0,1)*HYDROLOGY_PRESENTATION.shorelineContribution;
+  return {source,wetness:clamp(Math.max(river,lake,shorelineSignal),0,1)};
+}
 function effectiveWetness(ecology){
   const river=Number(ecology.hydrology?.riverWeight)||0;
   const lake=Number(ecology.hydrology?.lakeWeight)||0;
@@ -53,13 +66,18 @@ function effectiveWetness(ecology){
   const shorelineSignal=clamp(1-shore/HYDROLOGY_PRESENTATION.shorelineScale,0,1)*HYDROLOGY_PRESENTATION.shorelineContribution;
   return clamp(Math.max(wet,shorelineSignal),0,1);
 }
+function smoothWetParticipation(wetness){
+  const w=clamp(wetness,0,1);
+  const smooth=w*w*(3-2*w);
+  return clamp(HYDROLOGY_CORE.wetParticipationFloor+(1-HYDROLOGY_CORE.wetParticipationFloor)*smooth,0,1);
+}
 function baseClassDensity(type,ecology){
   const forest=Number(ecology.biome?.forestWeight)||0,river=Number(ecology.hydrology?.riverWeight)||0,lake=Number(ecology.hydrology?.lakeWeight)||0,wet=Math.max(river,lake),effectiveWet=effectiveWetness(ecology),drainage=ecology.hydrology?.drainageClass,slopeClass=ecology.slopeClass,curvatureClass=ecology.curvatureClass,material=ecology.materialProfile,biomeClass=ecology.biome?.class,shore=Number(ecology.shorelineDistance);
   switch(type){
-    case 'GRASS_SEDGE':if(drainage!=='LAND'||shore<5||slopeClass==='STEEP_NONCLIMBING')return 0;return clamp(.36+.32*forest+.42*wet+.25*(['LOWLAND_SOIL','COASTAL_SOIL','FOREST_SOIL'].includes(material)?1:0)-.08*(slopeClass==='MODERATE'?1:0),0,.99);
+    case 'GRASS_SEDGE':if(drainage!=='LAND'||shore<5||slopeClass==='STEEP_NONCLIMBING')return 0;return clamp(.34+.30*forest+.50*effectiveWet+.20*(['LOWLAND_SOIL','COASTAL_SOIL','FOREST_SOIL'].includes(material)?1:0)-.08*(slopeClass==='MODERATE'?1:0),0,.99);
     case 'LOW_SHRUB':if(drainage!=='LAND'||shore<12||forest<.14||slopeClass==='STEEP_NONCLIMBING')return 0;return clamp(.12+.52*forest+.12*(curvatureClass==='CONCAVE'?1:0),0,.78);
     case 'SAPLING_YOUNG_GROWTH':if(drainage!=='LAND'||shore<18||forest<.28||!['LEVEL','GENTLE','MODERATE'].includes(slopeClass))return 0;return clamp(.05+.34*forest+.09*(biomeClass==='FOREST'?1:0),0,.50);
-    case 'REED_WET_MARGIN':if(drainage!=='LAND'||shore<2||effectiveWet<HYDROLOGY_PRESENTATION.reedEligibilityMinimum||!['LEVEL','GENTLE','MODERATE'].includes(slopeClass))return 0;return clamp(.38+1.38*effectiveWet,0,.99);
+    case 'REED_WET_MARGIN':if(drainage!=='LAND'||shore<2||effectiveWet<HYDROLOGY_PRESENTATION.reedEligibilityMinimum||!['LEVEL','GENTLE','MODERATE'].includes(slopeClass))return 0;return clamp(.12+1.52*effectiveWet,0,.99);
     case 'DEAD_SPARSE_GROUND':if(drainage!=='LAND'||shore<10||!['STONE_AND_SPARSE_SOIL','COASTAL_SOIL'].includes(material)||forest>=.36)return 0;return clamp(.16+.34*(material==='STONE_AND_SPARSE_SOIL'?1:0)+.18*(slopeClass==='MODERATE'?1:0),0,.62);
     case 'FOREST_FLOOR_CLUSTER':if(drainage!=='LAND'||shore<12||forest<.20||!(material==='FOREST_SOIL'||['WOODLAND','FOREST'].includes(biomeClass)))return 0;return clamp(.30+.72*forest+.12*(curvatureClass==='CONCAVE'?1:0),0,.99);
     default:return 0;
@@ -70,8 +88,8 @@ function standMultiplier(type,environment){switch(environment.standClass){case '
 function classDensity(type,ecology,environment){const base=baseClassDensity(type,ecology);return base<=0?0:clamp(base*zoneMultiplier(type,environment)*standMultiplier(type,environment),0,.99);}
 function nearestTreeWithin(x,z,trees,minimum){const min2=minimum*minimum;for(const tree of trees){const dx=x-tree.world.x,dz=z-tree.world.z;if(dx*dx+dz*dz<min2)return true;}return false;}
 function coverageFloor(type,ecology,environment){
-  const effectiveWet=effectiveWetness(ecology);
-  if(type==='REED_WET_MARGIN'&&effectiveWet>=HYDROLOGY_PRESENTATION.reedEligibilityMinimum)return .98;
+  const wet=effectiveWetness(ecology);
+  if(type==='REED_WET_MARGIN')return clamp(.10+.84*wet,.10,.94);
   if(type==='FOREST_FLOOR_CLUSTER'&&environment.spatialZone==='INTERIOR'&&['DENSE_WOODLAND','GROVE'].includes(environment.standClass))return .88;
   if(type==='GRASS_SEDGE'&&environment.spatialZone==='OPENING')return .82;
   if(type==='GRASS_SEDGE'&&environment.spatialZone==='TRANSITION')return .76;
@@ -84,7 +102,7 @@ function selectClass(seed,ecology,environment,trees){
   const eligible=[];for(const type of UNDERSTORY_CLASSES){const density=classDensity(type,ecology,environment);if(density<=0)continue;if(type==='SAPLING_YOUNG_GROWTH'&&nearestTreeWithin(ecology.world.x,ecology.world.z,trees,5))continue;eligible.push({type,density});}
   if(!eligible.length)return null;
   const reed=eligible.find(candidate=>candidate.type==='REED_WET_MARGIN');
-  if(reed){const effectiveWet=effectiveWetness(ecology),shore=Math.max(0,Number(ecology.shorelineDistance)||0),wetAffinity=clamp((effectiveWet-HYDROLOGY_PRESENTATION.reedEligibilityMinimum)/(1-HYDROLOGY_PRESENTATION.reedEligibilityMinimum),0,1),shoreAffinity=clamp((180-shore)/150,0,1),riparianBoost=environment.standClass==='WET_MARGIN_RIPARIAN'?1.70:1.28;const reedOpportunity=Math.max(coverageFloor('REED_WET_MARGIN',ecology,environment),clamp(reed.density*riparianBoost*(1.18+.52*wetAffinity+.26*shoreAffinity),0,.995));if(rand(seed,CLASS_SALT.REED_WET_MARGIN+211)<=reedOpportunity)return {type:'REED_WET_MARGIN',density:reed.density,coverageProbability:reedOpportunity};}
+  if(reed){const wet=effectiveWetness(ecology),reedOpportunity=clamp(Math.max(coverageFloor('REED_WET_MARGIN',ecology,environment),reed.density)*smoothWetParticipation(wet),0,.995);if(rand(seed,CLASS_SALT.REED_WET_MARGIN+211)<=reedOpportunity)return {type:'REED_WET_MARGIN',density:reed.density,coverageProbability:reedOpportunity};}
   const preferredIndex=hash32(seed^0x6f17c2a9)%eligible.length,preferredType=eligible[preferredIndex].type;let selected=null,selectedDensity=0,selectedScore=-1;
   for(const candidate of eligible){const densityScore=candidate.density*(.88+.12*rand(seed,CLASS_SALT[candidate.type])),preference=candidate.type===preferredType?.54:0,edgeYoungBonus=environment.spatialZone==='EDGE'&&['LOW_SHRUB','SAPLING_YOUNG_GROWTH'].includes(candidate.type)?.64:0,transitionGroundBonus=environment.spatialZone==='TRANSITION'&&['GRASS_SEDGE','LOW_SHRUB','SAPLING_YOUNG_GROWTH'].includes(candidate.type)?.40:0,openingGroundBonus=environment.spatialZone==='OPENING'&&candidate.type==='GRASS_SEDGE'?.82:0,interiorFloorBonus=environment.spatialZone==='INTERIOR'&&candidate.type==='FOREST_FLOOR_CLUSTER'?.98:0,score=densityScore+preference+edgeYoungBonus+transitionGroundBonus+openingGroundBonus+interiorFloorBonus;if(score>selectedScore){selected=candidate.type;selectedDensity=candidate.density;selectedScore=score;}}
   const probability=Math.max(selectedDensity,coverageFloor(selected,ecology,environment));if(rand(seed,CLASS_SALT[selected]+101)>probability)return null;return {type:selected,density:selectedDensity,coverageProbability:probability};
@@ -103,15 +121,24 @@ function createUnderstoryPopulation(){
   for(let z=envelope.zMinimum+HYDROLOGY_CORE.gridStep/2;z<=envelope.zMaximum-HYDROLOGY_CORE.gridStep/2;z+=HYDROLOGY_CORE.gridStep,hydroRow++){
     let hydroColumn=0;
     for(let x=envelope.xMinimum+HYDROLOGY_CORE.gridStep/2;x<=envelope.xMaximum-HYDROLOGY_CORE.gridStep/2;x+=HYDROLOGY_CORE.gridStep,hydroColumn++){
+      const {source,wetness}=canonicalWetnessAt(x,z);
+      if(source.hydrology?.drainageClass!=='LAND')continue;
       const ecology=sampleCanonicalVegetationEcology(x,z);
-      if(ecology?.valid!==true||ecology.hydrology?.drainageClass!=='LAND'||ecology.shorelineDistance<2||!['LEVEL','GENTLE','MODERATE'].includes(ecology.slopeClass)||effectiveWetness(ecology)<HYDROLOGY_CORE.wetCoreMinimum)continue;
+      if(ecology?.valid!==true||ecology.hydrology?.drainageClass!=='LAND'||ecology.shorelineDistance<2||!['LEVEL','GENTLE','MODERATE'].includes(ecology.slopeClass))continue;
       const baseSeed=hash32(Math.imul(hydroRow+1,83492791)^Math.imul(hydroColumn+1,2971215073)^0x4d83a61f);
-      const selected={density:.99,coverageProbability:.995};
-      for(let i=0;i<HYDROLOGY_CORE.clusterOffsets.length;i++){
-        const [dx,dz]=HYDROLOGY_CORE.clusterOffsets[i],satellite=sampleCanonicalVegetationEcology(ecology.world.x+dx,ecology.world.z+dz);
-        if(satellite?.valid!==true||satellite.hydrology?.drainageClass!=='LAND'||satellite.shorelineDistance<2||!['LEVEL','GENTLE','MODERATE'].includes(satellite.slopeClass)||effectiveWetness(satellite)<HYDROLOGY_PRESENTATION.reedEligibilityMinimum)continue;
+      const participation=smoothWetParticipation(wetness);
+      if(rand(baseSeed,401)>participation)continue;
+      const baseSelected={density:clamp(.18+.81*wetness,0,.99),coverageProbability:participation};
+      const environment=resolveVegetationEnvironment(ecology.world.x,ecology.world.z);
+      append('REED_WET_MARGIN',baseSelected,ecology,environment,baseSeed,hydroRow,hydroColumn,'-wetfield0');
+      for(let i=1;i<=HYDROLOGY_CORE.maxSatellites;i++){
+        const satelliteProbability=participation*clamp(wetness*(1.08-.12*i),0,1);
+        if(rand(baseSeed,401+i)>satelliteProbability)continue;
+        const angle=TAU*rand(baseSeed,451+i),radius=HYDROLOGY_CORE.satelliteRadius*(.55+.55*rand(baseSeed,501+i));
+        const satellite=sampleCanonicalVegetationEcology(ecology.world.x+Math.cos(angle)*radius,ecology.world.z+Math.sin(angle)*radius);
+        if(satellite?.valid!==true||satellite.hydrology?.drainageClass!=='LAND'||satellite.shorelineDistance<2||!['LEVEL','GENTLE','MODERATE'].includes(satellite.slopeClass))continue;
         const satelliteEnvironment=resolveVegetationEnvironment(satellite.world.x,satellite.world.z);
-        append('REED_WET_MARGIN',selected,satellite,satelliteEnvironment,hash32(baseSeed^Math.imul(i+1,0x45d9f3b)),hydroRow,hydroColumn,`-wetcore${i}`);
+        append('REED_WET_MARGIN',baseSelected,satellite,satelliteEnvironment,hash32(baseSeed^Math.imul(i+1,0x45d9f3b)),hydroRow,hydroColumn,`-wetfield${i}`);
       }
     }
   }

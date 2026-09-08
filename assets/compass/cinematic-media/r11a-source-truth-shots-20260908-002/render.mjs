@@ -17,7 +17,12 @@ const plan={
     sourceHandoff:'S00_SUCCESSOR_CINEMATIC_MATTER',
     stageApi:'S01Stage',
     renderCall:'S01Stage.render(progress)',
-    manipulationCall:'S01Stage.manipulate(deltaYaw, deltaPitch)',
+    timelineManipulation:{
+      frameInterval:manifest.successorShot.genuineManipulation.frameInterval,
+      progressInterval:manifest.successorShot.genuineManipulation.timelineProgressInterval,
+      orientationSampler:'S01Stage.getOrientation(progress)',
+      userInputRequired:false
+    },
     proofProgress:manifest.successorShot.proof.requiredProgress,
     objectIds:manifest.successorShot.persistentObjects.map(x=>x.objectId),
     terminalForeground:manifest.successorShot.terminalForeground,

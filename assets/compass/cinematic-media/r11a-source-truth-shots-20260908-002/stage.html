@@ -19,8 +19,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#010407;col
 .button{min-height:52px;padding:0 24px;border:1px solid rgba(232,203,120,.34);border-radius:999px;background:rgba(232,203,120,.08);color:#fff2c7;font:900 .78rem/1 Inter,ui-sans-serif,system-ui,sans-serif;letter-spacing:.02em;box-shadow:inset 0 1px rgba(255,255,255,.06)}
 .button.primary{border-color:rgba(232,203,120,.72);background:linear-gradient(135deg,rgba(232,203,120,.24),rgba(120,220,232,.08));box-shadow:0 0 0 5px rgba(120,220,232,.08),inset 0 1px rgba(255,255,255,.08)}
 #matter{position:absolute;inset:0;width:1280px;height:720px;display:block;opacity:0}
-#orientation{position:absolute;inset:0;width:1280px;height:720px;display:block;opacity:0;touch-action:none;cursor:grab}
-#orientation.is-dragging{cursor:grabbing}
+#orientation{position:absolute;inset:0;width:1280px;height:720px;display:block;opacity:0}
 .s01-semantics{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
 #capture.is-rasterized .gate{visibility:hidden}
 </style>
@@ -39,7 +38,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#010407;col
     </div>
   </section>
   <canvas id="matter" width="1280" height="720" aria-hidden="true"></canvas>
-  <canvas id="orientation" width="1280" height="720" role="img" aria-label="Four persistent faceted stars form and manipulate a spherical Compass constellation while the Diamond Gate Bridge introduction appears between them."></canvas>
+  <canvas id="orientation" width="1280" height="720" role="img" aria-label="Four persistent faceted stars automatically reorient through spherical space while the Diamond Gate Bridge introduction appears between them, then settle with Orientation in the foreground."></canvas>
   <ol class="s01-semantics" aria-label="Persistent Compass star identities">
     <li data-s01-object-id="COMPASS_STAR_ORIENTATION">ORIENTATION</li>
     <li data-s01-object-id="COMPASS_STAR_TRANSFERABILITY">TRANSFERABILITY</li>
@@ -86,8 +85,8 @@ window.S00Stage=Object.freeze({metrics,setRaster,render,inspect:()=>({schema:'R1
 /*
   S01 consumes the accepted S00 successor-matter arrangement and the read-only
   geometry/palette/sphere contract frozen in compass.crystals.js. The four
-  objects below are allocated once. Every phase and every pointer manipulation
-  moves those same records; replacement objects are never created.
+  objects below are allocated once. The cinematic timeline moves those same
+  records through one authored 3D reorientation; replacements are never created.
 */
 const W=1280,H=720,SEED=0x0b17e17,TAU=Math.PI*2;
 const capture=document.querySelector('#capture'),canvas=document.querySelector('#orientation'),ctx=canvas.getContext('2d');
@@ -115,18 +114,19 @@ const DEFINITIONS=Object.freeze([
 const S00_PALETTE=Object.freeze([[224,235,240],[234,208,131],[170,155,224],[154,217,225]]);
 const stars=DEFINITIONS.map((d,index)=>({objectId:d.id,label:d.label,wing:d.wing,vector:d.vector.slice(),matter:d.matter.slice(),ordinal:index,createdAt:'S00_SUCCESSOR_MATTER_HANDOFF'}));
 Object.freeze(stars);
-let progress=0,yaw=0,pitch=0,drag=null,manipulationCount=0,lastRender='ENTRY_DERIVED_MATTER';
+let progress=0,lastRender='ENTRY_DERIVED_MATTER';
 function rng(seed){let v=seed>>>0;return()=>{v+=0x6d2b79f5;let r=v;r=Math.imul(r^(r>>>15),r|1);r^=r+Math.imul(r^(r>>>7),r|61);return((r^(r>>>14))>>>0)/4294967296}}
 const matter=Array.from({length:170},(_,i)=>{const rr=rng(SEED^(i*2654435761)),cluster=i%4,b=DEFINITIONS[cluster].matter,a=rr()*TAU,rad=12+rr()*165;return{id:`S00_MATTER_${String(i).padStart(3,'0')}`,cluster,x:b[0]+Math.cos(a)*rad,y:b[1]+Math.sin(a)*rad*.62,r:.5+rr()*1.7,alpha:.25+rr()*.55}});
-function rotate(v){let [x,y,z]=v;const cy=Math.cos(yaw),sy=Math.sin(yaw),cp=Math.cos(pitch),sp=Math.sin(pitch);const x1=x*cy+z*sy,z1=-x*sy+z*cy;return [x1,y*cp-z1*sp,y*sp+z1*cp]}
-function project(v){const r=rotate(v),depth=(r[2]+1)/2,scale=.66+depth*.76;return{x:W/2+r[0]*CANONICAL.horizontalRadius*205,y:H/2-r[1]*CANONICAL.verticalRadius*170,z:r[2],scale}}
+function authoredOrientation(p=progress){const q=smooth(.59,.83,p);return {yaw:mix(-.82,0,q),pitch:mix(.20,0,q)}}
+function rotate(v,p=progress){let [x,y,z]=v;const {yaw,pitch}=authoredOrientation(p),cy=Math.cos(yaw),sy=Math.sin(yaw),cp=Math.cos(pitch),sp=Math.sin(pitch),x1=x*cy+z*sy,z1=-x*sy+z*cy;return [x1,y*cp-z1*sp,y*sp+z1*cp]}
+function project(v,p=progress){const r=rotate(v,p),depth=(r[2]+1)/2,scale=.66+depth*.76;return{x:W/2+r[0]*CANONICAL.horizontalRadius*205,y:H/2-r[1]*CANONICAL.verticalRadius*170,z:r[2],scale}}
 function rgb(v,lift=1){return v.map(n=>Math.round(clamp(n*lift)*255))}
 function line(x1,y1,x2,y2,alpha,width=1){ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.strokeStyle=`rgba(195,220,225,${alpha})`;ctx.lineWidth=width;ctx.stroke()}
 function drawBackground(p){ctx.fillStyle='#010407';ctx.fillRect(0,0,W,H);const a=smooth(.02,.42,p);if(!a)return;const g=ctx.createRadialGradient(W*.5,H*.42,0,W*.5,H*.42,W*.62);g.addColorStop(0,`rgba(24,71,79,${.24*a})`);g.addColorStop(.46,`rgba(9,30,39,${.12*a})`);g.addColorStop(1,'rgba(1,4,7,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H)}
 function drawMatter(alpha,drawVectors=false,p=0){for(let i=0;i<matter.length;i++){const s=matter[i],pulse=.86+.14*Math.sin(i*.71);ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,TAU);const c=rgb(CANONICAL.palette[DEFINITIONS[s.cluster].wing],1.04),v=mix3(S00_PALETTE[s.cluster],c,smooth(.02,.34,p)).map(Math.round);ctx.fillStyle=`rgba(${v[0]},${v[1]},${v[2]},${s.alpha*alpha*pulse})`;ctx.fill();if(drawVectors&&i%11===0){const d=DEFINITIONS[s.cluster].matter;line(s.x,s.y,d[0],d[1],.035*alpha)}}}
 function starPhasePosition(star,p){
  const corner=[[250,170,0],[1030,170,0],[1030,550,0],[250,550,0]][star.ordinal];
- const cardinal=project(star.vector);
+ const cardinal=project(star.vector,p);
  if(p<.24){const t=smooth(0,.24,p);return{x:mix(star.matter[0],corner[0],t*.22),y:mix(star.matter[1],corner[1],t*.22),z:mix(-.3,0,t),scale:mix(.10,.68,t)}}
  if(p<.59){const t=smooth(.24,.59,p);return{x:mix(star.matter[0],corner[0],t),y:mix(star.matter[1],corner[1],t),z:mix(0,.08,t),scale:mix(.68,.78,t)}}
  if(p<.83){const t=smooth(.59,.83,p);return{x:mix(corner[0],cardinal.x,t),y:mix(corner[1],cardinal.y,t),z:mix(.08,cardinal.z,t),scale:mix(.78,cardinal.scale,t)}}
@@ -135,7 +135,7 @@ function starPhasePosition(star,p){
 function drawOrbit(points,alpha){if(alpha<=0)return;ctx.save();ctx.setLineDash([2,11]);for(let ring=0;ring<3;ring++){ctx.beginPath();ctx.ellipse(W/2,H/2,305-ring*28,226+ring*13,ring===1?.2:ring===2?-.18:0,0,TAU);ctx.strokeStyle=`rgba(${ring===1?'232,203,120':'154,217,225'},${alpha*(.14-ring*.025)})`;ctx.lineWidth=1;ctx.stroke()}ctx.setLineDash([]);for(let i=0;i<points.length;i++)line(points[i].x,points[i].y,points[(i+1)%points.length].x,points[(i+1)%points.length].y,alpha*.16);ctx.restore()}
 function drawFacetStar(star,pos,alpha,p){
  const spec=CANONICAL.mesh,c=CANONICAL.palette[star.wing],orientation=star.wing==='north';
- const base=78*pos.scale*(orientation?mix(1,1.34,smooth(.83,1,p)):1),inner=base*(spec.inner/spec.radius),rot=-Math.PI/2+star.ordinal*.10+yaw*.22;
+ const {yaw}=authoredOrientation(p),base=78*pos.scale*(orientation?mix(1,1.34,smooth(.83,1,p)):1),inner=base*(spec.inner/spec.radius),rot=-Math.PI/2+star.ordinal*.10+yaw*.22;
  ctx.save();ctx.translate(pos.x,pos.y);ctx.rotate(rot);ctx.globalAlpha=alpha;
  const halo=ctx.createRadialGradient(0,0,base*.08,0,0,base*1.6),hc=rgb(c,1.05);halo.addColorStop(0,`rgba(${hc[0]},${hc[1]},${hc[2]},${orientation?.34:.20})`);halo.addColorStop(.42,`rgba(${hc[0]},${hc[1]},${hc[2]},${orientation?.11:.07})`);halo.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=halo;ctx.beginPath();ctx.arc(0,0,base*1.6,0,TAU);ctx.fill();
  const vertices=[];for(let i=0;i<spec.points*2;i++){const point=i%2===0,r=point?base:inner,a=TAU*i/(spec.points*2)-Math.PI/2;vertices.push([Math.cos(a)*r,Math.sin(a)*r*spec.yScale])}
@@ -149,7 +149,7 @@ function drawIdentity(star,pos,alpha,p){
  if(orientation&&dominance>.05){ctx.fillStyle=`rgba(250,249,242,${alpha})`;ctx.font=`700 ${Math.round(mix(17,46,dominance))}px Georgia,"Times New Roman",serif`;ctx.letterSpacing=`${mix(2,7,dominance)}px`;ctx.fillText(star.label,pos.x,labelY)}
  else{ctx.fillStyle=`rgba(241,232,202,${alpha*.92})`;ctx.font='850 12px Inter,ui-sans-serif,system-ui,sans-serif';ctx.letterSpacing='2px';ctx.fillText(star.label,pos.x,labelY)}ctx.restore();
 }
-function drawManipulationCue(alpha){if(alpha<=0)return;ctx.save();ctx.textAlign='center';ctx.fillStyle=`rgba(155,190,197,${alpha*.78})`;ctx.font='800 10px Inter,ui-sans-serif,system-ui,sans-serif';ctx.letterSpacing='2.3px';ctx.fillText(manipulationCount?'SPHERE REORIENTED · SAME FOUR OBJECTS':'DRAG TO REORIENT · SAME FOUR OBJECTS',W/2,H-34);ctx.restore()}
+function drawManipulationCue(alpha){if(alpha<=0)return;ctx.save();ctx.textAlign='center';ctx.fillStyle=`rgba(155,190,197,${alpha*.78})`;ctx.font='800 10px Inter,ui-sans-serif,system-ui,sans-serif';ctx.letterSpacing='2.3px';ctx.fillText('THE COMPASS REORIENTS · SAME FOUR STARS',W/2,H-34);ctx.restore()}
 function render(value=progress){progress=clamp(Number(value)||0);canvas.style.opacity='1';sourceCanvas.style.opacity='0';capture.classList.add('is-rasterized');drawBackground(progress);
  const matterAlpha=1-smooth(.05,.38,progress);drawMatter(matterAlpha,progress>.01&&progress<.3,progress);drawIntro(progress);
  const positions=stars.map(s=>starPhasePosition(s,progress));drawOrbit(positions,smooth(.52,.90,progress));
@@ -157,12 +157,8 @@ function render(value=progress){progress=clamp(Number(value)||0);canvas.style.op
  for(const item of order){drawFacetStar(item.s,item.p,starAlpha,progress);drawIdentity(item.s,item.p,starAlpha,progress)}
  drawManipulationCue(smooth(.80,.96,progress));
  lastRender=progress<.24?'FOUR_IDENTITIES_DIFFERENTIATING':progress<.59?'SAME_STARS_FRAME_DGB_INTRO':progress<.83?'SAME_STARS_CONVERGING':'APPROVED_FOUR_CARDINAL_COMPASS';capture.dataset.s01Progress=progress.toFixed(3);capture.dataset.s01Phase=lastRender;return true}
-function manipulate(deltaYaw=0,deltaPitch=0){yaw+=Number(deltaYaw)||0;pitch=clamp(pitch+(Number(deltaPitch)||0),-.72,.72);manipulationCount++;render(Math.max(progress,.84));return getOrientation()}
-function getOrientation(){return Object.freeze({yaw,pitch,manipulationCount,objects:stars.map(s=>Object.freeze({objectId:s.objectId,wing:s.wing,vector:Object.freeze(rotate(s.vector).map(v=>Number(v.toFixed(6))))}))})}
-canvas.addEventListener('pointerdown',event=>{if(progress<.80)return;drag={id:event.pointerId,x:event.clientX,y:event.clientY};canvas.setPointerCapture?.(event.pointerId);canvas.classList.add('is-dragging')});
-canvas.addEventListener('pointermove',event=>{if(!drag||drag.id!==event.pointerId)return;const dx=event.clientX-drag.x,dy=event.clientY-drag.y;drag.x=event.clientX;drag.y=event.clientY;yaw+=dx/W*Math.PI*1.12;pitch=clamp(pitch+dy/H*Math.PI*.72,-.72,.72);manipulationCount++;render(progress)});
-const end=event=>{if(!drag||drag.id!==event.pointerId)return;drag=null;canvas.classList.remove('is-dragging')};canvas.addEventListener('pointerup',end);canvas.addEventListener('pointercancel',end);
-window.S01Stage=Object.freeze({render,manipulate,getOrientation,inspect:()=>Object.freeze({schema:'R11A_S01_SOURCE_TRUTH_STAGE_v1',progress,lastRender,sourceHandoff:'S00_SUCCESSOR_CINEMATIC_MATTER',objectCreationCount:4,objectReplacementCount:0,objectIds:Object.freeze(stars.map(s=>s.objectId)),canonicalSource:Object.freeze({...CANONICAL}),genuineManipulation:true,manipulationCount,terminalForeground:'ORIENTATION',otherCanonicalStarsVisible:true})});
+function getOrientation(p=progress){const orientation=authoredOrientation(clamp(Number(p)||0));return Object.freeze({...orientation,progress:clamp(Number(p)||0),objects:stars.map(s=>Object.freeze({objectId:s.objectId,wing:s.wing,vector:Object.freeze(rotate(s.vector,p).map(v=>Number(v.toFixed(6))))}))})}
+window.S01Stage=Object.freeze({render,getOrientation,inspect:()=>Object.freeze({schema:'R11A_S01_SOURCE_TRUTH_STAGE_v1',progress,lastRender,sourceHandoff:'S00_SUCCESSOR_CINEMATIC_MATTER',objectCreationCount:4,objectReplacementCount:0,objectIds:Object.freeze(stars.map(s=>s.objectId)),canonicalSource:Object.freeze({...CANONICAL}),genuineManipulation:true,timelineDrivenManipulation:true,userInputRequired:false,interactiveSubsystemCreated:false,manipulationWindowFrames:Object.freeze([246,288]),authoredOrientation:Object.freeze(authoredOrientation(progress)),terminalForeground:'ORIENTATION',otherCanonicalStarsVisible:true})});
 })();
 </script>
 </body>

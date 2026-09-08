@@ -36,6 +36,9 @@ if(JSON.stringify(s.persistentObjects?.map(x=>x.objectId))!==JSON.stringify(ids)
 if(s.objectCreationCount!==4||s.objectReplacementCount!==0)fail('OBJECT_REPLACEMENT');
 if(s.terminalForeground!=='ORIENTATION'||s.otherCanonicalStarsVisible!==true)fail('TERMINAL_COMPOSITION');
 if(s.genuineManipulation?.required!==true||s.genuineManipulation?.staticCompassForbidden!==true)fail('MANIPULATION_LAW');
+if(s.genuineManipulation?.mechanism!=='TIMELINE_ROTATES_THE_SAME_FOUR_OBJECT_VECTORS_IN_RIGHT_HANDED_3D_SPACE_AND_SETTLES_ORIENTATION_FOREGROUND')fail('TIMELINE_MANIPULATION_MECHANISM');
+if(JSON.stringify(s.genuineManipulation?.frameInterval)!==JSON.stringify([246,288])||JSON.stringify(s.genuineManipulation?.timelineProgressInterval)!==JSON.stringify([0.59,0.83]))fail('TIMELINE_MANIPULATION_WINDOW');
+if(s.genuineManipulation?.userInputRequired!==false||s.genuineManipulation?.interactiveSubsystemCreated!==false)fail('AUDIENCE_INTERACTION_REINTRODUCED');
 if(s.proof?.ownerVisibleBrowserProofRequired!==true||s.proof?.ownerAcceptance!=='PENDING')fail('OWNER_GATE');
 if(JSON.stringify(s.proof?.requiredProgress)!==JSON.stringify([0,0.18,0.46,0.72,1]))fail('S01_PROOF_STATES');
 const sourceFiles={
@@ -46,9 +49,10 @@ const sourceFiles={
 for(const [name,url] of Object.entries(sourceFiles)){const bytes=fs.readFileSync(url);if(gitBlob(bytes)!==s.canonicalSourceAuthority?.[name])fail(`CANONICAL_SOURCE_BLOB:${name}`)}
 for(const token of [
   'R11A_S01_SOURCE_TRUTH_STAGE_v1','S00_SUCCESSOR_CINEMATIC_MATTER','objectReplacementCount:0',
-  'RIGHT_HANDED_EUCLIDEAN_XYZ','S00_PALETTE','S01Stage','manipulate','pointermove',
+  'RIGHT_HANDED_EUCLIDEAN_XYZ','S00_PALETTE','S01Stage','authoredOrientation','smooth(.59,.83,p)','mix(-.82,0,q)','mix(.20,0,q)','timelineDrivenManipulation:true','userInputRequired:false',
   ...ids,'SAME_STARS_FRAME_DGB_INTRO','SAME_STARS_CONVERGING','APPROVED_FOUR_CARDINAL_COMPASS'
 ]) if(!stage.includes(token))fail('S01_STAGE_TOKEN_'+token);
+for(const interactiveToken of ['function manipulate(','pointerdown','pointermove','setPointerCapture','DRAG TO REORIENT'])if(stage.includes(interactiveToken))fail('INTERACTIVE_SUBSYSTEM_TOKEN_'+interactiveToken);
 for(const forbidden of ['<script src="../../compass.controller.js','<script src="../../compass.crystals.js','<script src="../../compass.cosmos.js'])if(stage.includes(forbidden))fail('PROTECTED_RUNTIME_LOADED_FOR_MUTATION');
 const digest=crypto.createHash('sha256').update(raw).digest('hex');
-process.stdout.write(JSON.stringify({schema:'R11A_SOURCE_TRUTH_SHOT_VERIFICATION_RECEIPT_v1',result:'PASS_AT_SOURCE_AND_PROOF_CONTRACT_LEVEL',shots:['S00','S01'],manifestSha256:digest,acceptedS00Preserved:true,persistentObjectIds:ids,objectReplacementCount:0,genuineManipulation:true,terminalForeground:'ORIENTATION',ownerAcceptance:'PENDING',fullMasterAuthorized:false,liveMutationAuthorized:false},null,2)+'\n');
+process.stdout.write(JSON.stringify({schema:'R11A_SOURCE_TRUTH_SHOT_VERIFICATION_RECEIPT_v1',result:'PASS_AT_SOURCE_AND_PROOF_CONTRACT_LEVEL',shots:['S00','S01'],manifestSha256:digest,acceptedS00Preserved:true,persistentObjectIds:ids,objectReplacementCount:0,genuineManipulation:'TIMELINE_DRIVEN_3D_REORIENTATION',manipulationFrameInterval:[246,288],audienceInteractionRequired:false,interactiveSubsystemCreated:false,terminalForeground:'ORIENTATION',ownerAcceptance:'PENDING',fullMasterAuthorized:false,liveMutationAuthorized:false},null,2)+'\n');

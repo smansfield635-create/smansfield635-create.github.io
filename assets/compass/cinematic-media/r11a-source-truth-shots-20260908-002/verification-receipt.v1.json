@@ -17,6 +17,9 @@
   "persistentObjectIds":["COMPASS_STAR_ORIENTATION","COMPASS_STAR_TRANSFERABILITY","COMPASS_STAR_CONVERGENCE","COMPASS_STAR_INTEGRITY"],
   "objectReplacementCount":0,
   "proofShowsGenuineManipulation":"PENDING_BROWSER_PROOF",
+  "manipulationMode":"TIMELINE_DRIVEN_3D_REORIENTATION",
+  "audienceInteractionRequired":false,
+  "interactiveSubsystemCreated":false,
   "proofShowsOrientationDominantWithOtherThreeVisible":"PENDING_BROWSER_PROOF",
   "ownerAcceptance":{"S00":"ACCEPTED","S01":"PENDING"},
   "nextShotConstructionAuthorized":false

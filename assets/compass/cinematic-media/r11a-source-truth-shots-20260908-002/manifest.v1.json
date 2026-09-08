@@ -65,7 +65,7 @@
     "inputFrameProofSha256": "f0e090c88e57062f0c19f71ef8bcc1ace400dfe431402653f93524c1dad6918f",
     "inputFrameRule": "S01_PROGRESS_ZERO_RECONSTRUCTS_ACCEPTED_S00_SUCCESSOR_MATTER_FROM_THE_SAME_SEED_POSITIONS_RADII_ALPHA_PULSE_AND_PALETTE",
     "dramaticOutputState": "APPROVED_FOUR_CARDINAL_COMPASS_WITH_ORIENTATION_FOREGROUND",
-    "capabilityGain": "VIEWER_SEES_AND_CAN_PERFORM_GENUINE_COMPASS_MANIPULATION",
+    "capabilityGain": "VIEWER_SEES_GENUINE_COMPASS_MANIPULATION_PERFORMED_BY_THE_CINEMATIC",
     "transformationGrammarSegment": "MATTER_TO_PERSISTENT_CARDINAL_CONSTELLATION",
     "continuityLaw": "ACCEPTED S00 MATTER -> FOUR CANONICAL STAR IDENTITIES -> SAME STARS FRAME DGB INTRO -> SAME STARS CONVERGE -> APPROVED FOUR-CARDINAL COMPASS -> ORIENTATION FOREGROUND",
     "persistentObjects": [
@@ -103,13 +103,17 @@
     "otherCanonicalStarsVisible": true,
     "genuineManipulation": {
       "required": true,
-      "mechanism": "POINTER_DRAG_ROTATES_THE_SAME_FOUR_OBJECT_VECTORS_IN_RIGHT_HANDED_3D_SPACE",
+      "mechanism": "TIMELINE_ROTATES_THE_SAME_FOUR_OBJECT_VECTORS_IN_RIGHT_HANDED_3D_SPACE_AND_SETTLES_ORIENTATION_FOREGROUND",
+      "timelineProgressInterval": [0.59, 0.83],
+      "frameInterval": [246, 288],
+      "userInputRequired": false,
+      "interactiveSubsystemCreated": false,
       "staticCompassForbidden": true
     },
     "proof": {
       "stageApi": "S01Stage",
       "requiredProgress": [0.0, 0.18, 0.46, 0.72, 1.0],
-      "requiresPointerManipulationReceipt": true,
+      "requiresTimelineManipulationReceipt": true,
       "ownerVisibleBrowserProofRequired": true,
       "ownerAcceptance": "PENDING"
     }

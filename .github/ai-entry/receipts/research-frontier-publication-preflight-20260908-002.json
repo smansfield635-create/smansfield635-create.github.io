@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "research-frontier-publication-preflight-20260908-002",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 2859,
+  "requestBranch": "ai-dispatch-request-rf-preflight-2-20260908",
+  "requestCommit": "dd662537160d34d18701835053cca40d4fd9c0d5",
+  "requestCommitParent": "691339e6becbaf724e4ac28bd4cd9c1834254d83",
+  "currentMainSha": "691339e6becbaf724e4ac28bd4cd9c1834254d83",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "691339e6becbaf724e4ac28bd4cd9c1834254d83",
+    "surface_id": "research-frontier-semantic-successor-20260908"
+  },
+  "bridgeRunId": "34246154839",
+  "dispatchedRunId": 34246174373,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/34246174373",
+  "dispatchedRunHeadSha": "691339e6becbaf724e4ac28bd4cd9c1834254d83",
+  "dispatchedAt": "2026-09-08T15:39:37.920Z",
+  "resolvedAt": "2026-09-08T15:39:41.823Z"
+}

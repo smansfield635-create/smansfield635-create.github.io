@@ -1,0 +1,135 @@
+{
+  "schema": "MIRRORLAND_STAND_EDGE_COMPOSITION_CONTRACT_v1",
+  "operationId": "MIRRORLAND_STAND_TOPOLOGY_EDGE_ECOLOGY_NEGATIVE_SPACE_20260906_002",
+  "lockGeneration": 1969,
+  "governingHead": "8af6708cf872ec90b9ed39f9aa477f64f557a695",
+  "route": "/characters/",
+  "precinct": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:VEGETATION",
+  "targetBoundary": "STAND_TOPOLOGY_EDGE_ECOLOGY_NEGATIVE_SPACE_PASS",
+  "cleanerLaw": "818_IS_DETERMINISTIC_POPULATION_BUDGET_NOT_IMMUTABLE_POSITION_SET",
+  "causalOrder": [
+    "TERRAIN_HYDROLOGY",
+    "CANONICAL_ECOLOGY_BIOME",
+    "STAND_TOPOLOGY",
+    "NEGATIVE_SPACE_COMPOSITION",
+    "EDGE_INTERIOR_TRANSITION_OPENING",
+    "DETERMINISTIC_INDIVIDUAL_POPULATION",
+    "ZONE_AWARE_UNDERSTORY",
+    "EXISTING_V5_REPRESENTATION"
+  ],
+  "population": {
+    "exactBudget": 818,
+    "existingV2PositionsImmutable": false,
+    "deviceInvariant": true,
+    "cameraInvariant": true,
+    "everyIndividualRequiresStandId": true,
+    "everyIndividualRequiresZone": true
+  },
+  "standClasses": [
+    "DENSE_WOODLAND",
+    "GROVE",
+    "COASTAL_SCRUB",
+    "WET_MARGIN_RIPARIAN",
+    "EXPOSED_UPLAND",
+    "SPARSE_TRANSITION",
+    "ECOLOGICAL_OPEN"
+  ],
+  "spatialZones": ["INTERIOR", "EDGE", "TRANSITION", "OPENING"],
+  "composition": {
+    "canonicalAnchorSource": "characters/step9-regional-geography.mjs#resolveStep9Site/resolveStep9Camera",
+    "requiredSiteIds": [
+      "MIRROR_MANOR",
+      "WATERLINE_STATION",
+      "WATCHFIRE_OVERLOOK",
+      "CROSSING"
+    ],
+    "additionalSiteIds": [
+      "SIGNAL_LANTERN_FIELD",
+      "RESTORATION_BOUNDARY",
+      "BEYOND_MANOR"
+    ],
+    "hardOpenCoreRequired": true,
+    "featherBandRequired": true,
+    "approachCorridorDerivedFromCameraToSite": true,
+    "duplicateDestinationCoordinateTableProhibited": true
+  },
+  "standProfiles": {
+    "DENSE_WOODLAND": {"canopyDensity": 0.94, "edgeWidth": 24, "transitionWidth": 34},
+    "GROVE": {"canopyDensity": 0.78, "edgeWidth": 22, "transitionWidth": 32},
+    "COASTAL_SCRUB": {"canopyDensity": 0.50, "edgeWidth": 18, "transitionWidth": 30},
+    "WET_MARGIN_RIPARIAN": {"canopyDensity": 0.54, "edgeWidth": 18, "transitionWidth": 28},
+    "EXPOSED_UPLAND": {"canopyDensity": 0.35, "edgeWidth": 16, "transitionWidth": 28},
+    "SPARSE_TRANSITION": {"canopyDensity": 0.28, "edgeWidth": 16, "transitionWidth": 30},
+    "ECOLOGICAL_OPEN": {"canopyDensity": 0.0, "edgeWidth": 14, "transitionWidth": 30}
+  },
+  "zoneCanopyMultipliers": {
+    "INTERIOR": 1.0,
+    "EDGE": 0.62,
+    "TRANSITION": 0.32,
+    "OPENING": 0.0
+  },
+  "antiFalsePass": {
+    "minimumOccupiedStandCount": 6,
+    "minimumOccupiedStandClassCount": 3,
+    "minimumNonInteriorCanopyFraction": 0.08,
+    "minimumInteriorToTransitionDensityRatio": 1.20,
+    "minimumStandDensityCoefficientOfVariation": 0.10,
+    "hardOpenCanopyCount": 0,
+    "schemaOnlyLabelsInsufficient": true
+  },
+  "v5Substrate": {
+    "path": "characters/vegetation-representation.mjs",
+    "requiredGitBlobSha": "f3b64eb1ffc1c1bc8e908ff96eb6c833b6bc928d",
+    "byteIdenticalRequired": true,
+    "nearMidFarRepresentationProtected": true,
+    "cameraDistanceHysteresisLodProtected": true,
+    "representationCountMustEqualPopulation": true
+  },
+  "understory": {
+    "mustConsumeStandAndZone": true,
+    "hydrologySpecificClassesPreserved": true,
+    "openingSuppressesShrubAndSapling": true,
+    "edgeFavorsShrubAndSaplingRelativeToInterior": true,
+    "interiorFavorsForestFloorRelativeToOpening": true
+  },
+  "protectedAuthorities": [
+    "characters/vegetation-representation.mjs",
+    "characters/vegetation-ecology.mjs",
+    "characters/gratitude-geography.adapter.mjs",
+    "characters/step9-regional-geography.mjs",
+    "characters/forest-system.mjs",
+    "characters/cloud-system.mjs",
+    "characters/cloud-traversal.mjs",
+    "characters/night-renderer.mjs",
+    "characters/coast-map.mjs",
+    "characters/coast-map-renderer.mjs",
+    "characters/destination-registry.mjs",
+    "characters/knowledge-card.mjs",
+    "characters/app.mjs",
+    "characters/index.html"
+  ],
+  "materialWorldReadingSequence": [
+    "WIDE_COAST",
+    "OPEN_TERRAIN",
+    "WOODLAND_EDGE",
+    "FOREST_INTERIOR",
+    "CLEARING",
+    "MIRROR_MANOR_APPROACH",
+    "SHORELINE_WETLAND_TRANSITION",
+    "WIDE_RETURN"
+  ],
+  "materialJudgment": [
+    "DENSITY_RHYTHM",
+    "OPEN_DENSE_CONTRAST",
+    "EDGE_LEGIBILITY",
+    "PARALLAX",
+    "OCCLUSION_ACCUMULATION",
+    "SILHOUETTE_HIERARCHY",
+    "DESTINATION_READABILITY",
+    "BREATHING_SPACE",
+    "LOD_CONTINUITY",
+    "UNDERSTANDABLE_SPATIAL_STRUCTURE"
+  ],
+  "mergeDeploymentPublicationAuthorized": false,
+  "v6PlusAuthorized": false
+}

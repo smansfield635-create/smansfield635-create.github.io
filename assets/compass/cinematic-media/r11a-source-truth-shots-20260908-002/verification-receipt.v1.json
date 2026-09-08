@@ -1,0 +1,16 @@
+{
+  "schema":"R11A_SOURCE_TRUTH_SHOT_VERIFICATION_RECEIPT_v1",
+  "result":"BROWSER_PROOF_GENERATED_OWNER_ACCEPTANCE_PENDING",
+  "shot":"S00",
+  "proofFrameSha256":{
+    "intact":"56f9a6fcf4b0ca2e79c6e1e67082ceb7381199f53c6213dd844f2d9b25242339",
+    "propagation":"5c720504e1ea520313b9ef219266b095aea09cbb22d17c6c337e013522422620",
+    "disintegration":"346af67d006dfd8d85b2d04090f5bc94b62c539916fded26dee2ef2ccc542986",
+    "successorMatter":"f0e090c88e57062f0c19f71ef8bcc1ace400dfe431402653f93524c1dad6918f"
+  },
+  "contactSheetSha256":"95ea56f1bbfd1d804930427df7d9bfa9648e80870d76368a714033dd5a8c9061",
+  "proofShowsWholeSurfacePropagation":true,
+  "proofShowsCleanEntryDerivedSuccessorMatter":true,
+  "ownerAcceptance":"PENDING",
+  "nextShotConstructionAuthorized":false
+}

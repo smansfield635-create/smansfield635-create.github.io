@@ -5199,6 +5199,69 @@
       "scopeHash": "b97df7525443f153ed5ce9410430bebb6d692bb9040df2810e892126f3a10198",
       "state": "ADMITTED_LOCKED"
     },
+    "ba6b152b746237d1cd78301225bfd2cacf5cadf2889fa6e290bf292b5c2ad8a5": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "691339e6becbaf724e4ac28bd4cd9c1834254d83",
+          "lockGeneration": 2005,
+          "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:SOURCE_TRUTH_SHOT_CONSTRUCTION",
+          "operationId": "COMPASS_R11A_SOURCE_TRUTH_SHOT_CONSTRUCTION_20260908_002",
+          "procedureLocatorDigest": "e38a8fd1d1bc707ba9f98f015c016261d2ed4aed301384aef1a0f2d332635d36",
+          "requestDigest": "525ae81f475af0ed68f6af806cbd54656302e904d73d9bed796bb0d836d43856",
+          "scopeHash": "ba6b152b746237d1cd78301225bfd2cacf5cadf2889fa6e290bf292b5c2ad8a5"
+        },
+        "bindingDigest": "a41bb9cde2b143a10630da09dd6360717e7e709840e082f70bce60abb926a896",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "ebf912f7b74d78650fddce34c8b74a235c85eb6b0f794483a99064ea85caa8d3",
+          "commentId": 5587836735,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2843,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34246482939,
+          "workflowSha": "691339e6becbaf724e4ac28bd4cd9c1834254d83"
+        },
+        "lineageAnchorCommitSha": "beaf44fba6515656f38f40bc0642bf8a98728453",
+        "origin": "CANONICAL_SUCCESSOR",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "691339e6becbaf724e4ac28bd4cd9c1834254d83",
+      "lockGeneration": 2005,
+      "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:SOURCE_TRUTH_SHOT_CONSTRUCTION",
+      "operationId": "COMPASS_R11A_SOURCE_TRUTH_SHOT_CONSTRUCTION_20260908_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
+        "lockGeneration": 1997,
+        "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:DETERMINISTIC_FILM_CONSTRUCTION",
+        "operationId": "COMPASS_R11A_DETERMINISTIC_FILM_CONSTRUCTION_20260908_001",
+        "preservedEvidenceRefs": [
+          "issue:2843#issuecomment-5578376753",
+          "issue:2843#issuecomment-5578379549",
+          "issue:2843#issuecomment-5586586951",
+          "issue:2843#issuecomment-5587024065",
+          "issue:2843#issuecomment-5587214920",
+          "issue:2843#issuecomment-5587267479",
+          "issue:2843#issuecomment-5587288510"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_R11A_GEN1997_TO_SOURCE_TRUTH_SHOTS_20260908_002"
+      },
+      "procedureLocatorDigest": "e38a8fd1d1bc707ba9f98f015c016261d2ed4aed301384aef1a0f2d332635d36",
+      "released": false,
+      "requestDigest": "525ae81f475af0ed68f6af806cbd54656302e904d73d9bed796bb0d836d43856",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ba6b152b746237d1cd78301225bfd2cacf5cadf2889fa6e290bf292b5c2ad8a5",
+      "state": "ADMITTED_LOCKED"
+    },
     "bb638420fe76f1dfd6ab87392ad1fe4b6088121cc7efef2d2a9989cbffe3e570": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -7315,49 +7378,6 @@
       "scopeHash": "fb941fb311d034729a4ad8f949bf10f0473f08f64690169c0365ec59101fc34e",
       "state": "ADMITTED_LOCKED"
     },
-    "fe8e244f57fd122705bbb90d57f42d8717e7a6fe622fc5021d94a42ecefb6599": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
-          "lockGeneration": 1997,
-          "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:DETERMINISTIC_FILM_CONSTRUCTION",
-          "operationId": "COMPASS_R11A_DETERMINISTIC_FILM_CONSTRUCTION_20260908_001",
-          "procedureLocatorDigest": "6defb23af4a9b233222a8cd0da18f28410bb9aa81cbdd1c7619e153c638e3a39",
-          "requestDigest": "9094d1561b5a0ab3f927e66aa48274f879df0eb8b10efced3fabf9831b395b02",
-          "scopeHash": "fe8e244f57fd122705bbb90d57f42d8717e7a6fe622fc5021d94a42ecefb6599"
-        },
-        "bindingDigest": "ff75bfbbae0e290830f4a8571e8e7be9f6fc1944cdf9e27fdca835bcd1ec760d",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "fcd6b04d4161120a9b7a817125ff4b54d324283cd28135b8eb1a4b971e58627d",
-          "commentId": 5578376753,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2843,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34181537472,
-          "workflowSha": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953"
-        },
-        "lineageAnchorCommitSha": "3a9771e94c20ea0ca5f50747eaed5eedf46bb1ee",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
-      "lockGeneration": 1997,
-      "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:DETERMINISTIC_FILM_CONSTRUCTION",
-      "operationId": "COMPASS_R11A_DETERMINISTIC_FILM_CONSTRUCTION_20260908_001",
-      "procedureLocatorDigest": "6defb23af4a9b233222a8cd0da18f28410bb9aa81cbdd1c7619e153c638e3a39",
-      "released": false,
-      "requestDigest": "9094d1561b5a0ab3f927e66aa48274f879df0eb8b10efced3fabf9831b395b02",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "fe8e244f57fd122705bbb90d57f42d8717e7a6fe622fc5021d94a42ecefb6599",
-      "state": "ADMITTED_LOCKED"
-    },
     "ff79734b4cea600d6f944a537b197ea4a4265fd816845d998f108693c6616247": {
       "governingHead": "dffdc60207c3b666b1a6341832eba6bba6bff10f",
       "lockGeneration": 1544,
@@ -7386,7 +7406,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2004,
+  "lockGeneration": 2005,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -42400,6 +42420,70 @@
       "scopeHash": "64b9815bda17c61a0580028cc8d0d81698fdc85e3121a83b7c21c32b28a45e26",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
+          "lockGeneration": 1997,
+          "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:DETERMINISTIC_FILM_CONSTRUCTION",
+          "operationId": "COMPASS_R11A_DETERMINISTIC_FILM_CONSTRUCTION_20260908_001",
+          "procedureLocatorDigest": "6defb23af4a9b233222a8cd0da18f28410bb9aa81cbdd1c7619e153c638e3a39",
+          "requestDigest": "9094d1561b5a0ab3f927e66aa48274f879df0eb8b10efced3fabf9831b395b02",
+          "scopeHash": "fe8e244f57fd122705bbb90d57f42d8717e7a6fe622fc5021d94a42ecefb6599"
+        },
+        "bindingDigest": "ff75bfbbae0e290830f4a8571e8e7be9f6fc1944cdf9e27fdca835bcd1ec760d",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "fcd6b04d4161120a9b7a817125ff4b54d324283cd28135b8eb1a4b971e58627d",
+          "commentId": 5578376753,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2843,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34181537472,
+          "workflowSha": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953"
+        },
+        "lineageAnchorCommitSha": "3a9771e94c20ea0ca5f50747eaed5eedf46bb1ee",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
+      "lockGeneration": 1997,
+      "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:DETERMINISTIC_FILM_CONSTRUCTION",
+      "operationId": "COMPASS_R11A_DETERMINISTIC_FILM_CONSTRUCTION_20260908_001",
+      "procedureLocatorDigest": "6defb23af4a9b233222a8cd0da18f28410bb9aa81cbdd1c7619e153c638e3a39",
+      "released": true,
+      "requestDigest": "9094d1561b5a0ab3f927e66aa48274f879df0eb8b10efced3fabf9831b395b02",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "fe8e244f57fd122705bbb90d57f42d8717e7a6fe622fc5021d94a42ecefb6599",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:2843#issuecomment-5578376753",
+          "issue:2843#issuecomment-5578379549",
+          "issue:2843#issuecomment-5586586951",
+          "issue:2843#issuecomment-5587024065",
+          "issue:2843#issuecomment-5587214920",
+          "issue:2843#issuecomment-5587267479",
+          "issue:2843#issuecomment-5587288510"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "691339e6becbaf724e4ac28bd4cd9c1834254d83",
+        "successorLockGeneration": 2005,
+        "successorLockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:SOURCE_TRUTH_SHOT_CONSTRUCTION",
+        "successorOperationId": "COMPASS_R11A_SOURCE_TRUTH_SHOT_CONSTRUCTION_20260908_002",
+        "transitionId": "COMPASS_R11A_GEN1997_TO_SOURCE_TRUTH_SHOTS_20260908_002"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

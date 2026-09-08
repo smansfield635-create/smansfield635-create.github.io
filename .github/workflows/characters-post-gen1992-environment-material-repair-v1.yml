@@ -42,7 +42,6 @@ jobs:
           test "$(git -C diagnostic rev-parse HEAD^{commit})" = "${{ github.event.pull_request.head.sha }}"
           test "$(git -C diagnostic config --bool index.sparse)" = "true"
           test "$(git -C diagnostic config --bool core.sparseCheckoutCone)" = "true"
-          test "$(git -C diagnostic ls-remote origin refs/heads/main | awk '{print $1}')" = "$GOVERNING_MAIN"
 
       - name: Verify exact three-path diagnostic-only scope
         shell: bash

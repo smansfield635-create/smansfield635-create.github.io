@@ -162,7 +162,7 @@ jobs:
           for(const [dir,key] of [['gen2001','GEN2001'],['gen2002','GEN2002'],['gen2003','GEN2003']]){
             const v=JSON.parse(fs.readFileSync(root+dir+'-v2.json'));
             const observed=v.metrics.stateMetrics.map(x=>x.canopyFieldContinuity);
-            const declared=d.subjects[key].map(x=>x.metrics);
+            const declared=d.subjects[key].map(x=>({state:x.state,...x.metrics}));
             if(JSON.stringify(observed)!==JSON.stringify(declared))throw new Error('SUBJECT_V2_METRIC_MISMATCH:'+key);
           }
           NODE

@@ -1,0 +1,16 @@
+{
+  "schema": "R11A_CONSTRUCTION_RECEIPT_v1",
+  "result": "CONSTRUCTION_COMPLETE",
+  "operationId": "COMPASS_R11A_DETERMINISTIC_FILM_CONSTRUCTION_20260908_001",
+  "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
+  "frozenManifestSha256": "ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f",
+  "builderInputManifestSha256": "ed98b0b9a4944a4f7b7e856c81e6e874d88b56823132108314f9739c9a59f59f",
+  "sourceOccurrenceSha256": "b06c28a18eb849bdace1c5687108284ad15b50f597024a483530cead24982215",
+  "sourceArtifactId": 10025501948,
+  "renderedFrameCount": 1275,
+  "frameRate": 30,
+  "durationSeconds": 42.5,
+  "outputPath": "compass-main-orientation-r11a-review.mp4",
+  "outputSha256": "83aec1eb89ceef2f30a716a6e021dc6f71a3a765680da2c2153a57c3babd785e",
+  "builderVerifierInvariant": "BUILDER_INPUT_MANIFEST_SHA256 == VERIFIER_INPUT_MANIFEST_SHA256 == FROZEN_R11A_MANIFEST_SHA256"
+}

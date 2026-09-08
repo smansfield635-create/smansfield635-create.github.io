@@ -12,39 +12,52 @@ const TAU=Math.PI*2;
 export const UNDERSTORY_CLASSES=freeze(['GRASS_SEDGE','LOW_SHRUB','SAPLING_YOUNG_GROWTH','REED_WET_MARGIN','DEAD_SPARSE_GROUND','FOREST_FLOOR_CLUSTER']);
 const CLASS_SALT=freeze({GRASS_SEDGE:11,LOW_SHRUB:23,SAPLING_YOUNG_GROWTH:37,REED_WET_MARGIN:53,DEAD_SPARSE_GROUND:71,FOREST_FLOOR_CLUSTER:89});
 const GRID=freeze({columns:144,rows:106,insetFraction:.025,jitterFraction:.30,seed:1689746977});
-const REED_CLUSTER_OFFSETS=freeze([[0,0],[2.8,1.8],[-2.4,2.6],[1.9,-2.9],[-3.1,-1.5]]);
+const REED_CLUSTER_OFFSETS=freeze([[0,0],[3,2],[-2.8,3.2],[2.4,-3.4],[-3.6,-1.8],[6.5,1.5],[-6.2,2.2],[1.4,6.4],[-1.8,-6.1]]);
+const HYDROLOGY_PRESENTATION=freeze({shorelineScale:180,shorelineContribution:.62,reedEligibilityMinimum:.34});
+const HYDROLOGY_CORE=freeze({gridStep:32,wetCoreMinimum:.50,clusterOffsets:freeze([[0,0],[4,0],[-3.4,3.2]])});
 
 export const V4_UNDERSTORY_CONTRACT=freeze({
   schema:'MIRRORLAND_VEGETATION_V4_UNDERSTORY_RUNTIME_CONTRACT_v1',
-  operationId:'MIRRORLAND_GEN1980_ENVIRONMENT_MATERIAL_SUCCESSOR_20260907_001',
-  stage:'ENVIRONMENT_GROUND_CLOSURE_AND_HYDROLOGY_DIFFERENTIATION_SUCCESSOR',
-  predecessorBoundary:'GEN1980_MATERIAL_WORLD_READING_SUCCESSOR_MECHANICAL_PASS',
-  targetBoundary:'ENVIRONMENT_SUCCESSOR_CANDIDATE_FROZEN_MECHANICAL_PASS',
+  operationId:'MIRRORLAND_POST_GEN1992_ENVIRONMENT_MATERIAL_REPAIR_20260907_002',
+  stage:'ENVIRONMENT_GROUND_CLOSURE_AND_HYDROLOGY_DIFFERENTIATION_REPAIR',
+  predecessorBoundary:'GEN1992_CALIBRATED_ENVIRONMENT_FAILURE_BASELINE',
+  targetBoundary:'POST_GEN1992_ENVIRONMENT_MECHANICAL_CLEAR_CANDIDATE',
   ecologySource:'characters/vegetation-ecology.mjs#sampleCanonicalVegetationEcology',
   treePopulationSource:'characters/vegetation-population.mjs#getCanonicalVegetationPopulation',
   standEdgeSource:'characters/vegetation-edge-ecology.mjs#resolveVegetationEnvironment',
-  legacySightlineSourceRemoved:true,
   geographyAuthorityCreated:false,
   populationIdentityDeviceInvariant:true,
   populationIdentityCameraInvariant:true,
   canonicalIdentityInputs:freeze(['ROW','COLUMN','FROZEN_SEED','CANONICAL_ECOLOGY','STAND_ID','SPATIAL_ZONE']),
   prohibitedIdentityInputs:freeze(['DEVICE_CLASS','VIEWPORT_CLASS','CAMERA_STATE','REDUCED_MOTION','LOD']),
   grid:GRID,
-  compactPresentationSampling:.86,
+  compactPresentationSampling:.96,
   v3CameraContextReused:true,
   openingShrubSaplingAllowed:false,
   groundClosureRepair:true,
   hydrologyDifferentiationRepair:true,
-  wetMarginColonySampling:true
+  wetMarginColonySampling:true,
+  hydrologyPresentation:HYDROLOGY_PRESENTATION,
+  hydrologyCoreLattice:HYDROLOGY_CORE,
+  hydrologyCoreReinforcement:true,
+  v2WetnessSignalAligned:true
 });
 
+function effectiveWetness(ecology){
+  const river=Number(ecology.hydrology?.riverWeight)||0;
+  const lake=Number(ecology.hydrology?.lakeWeight)||0;
+  const wet=Math.max(river,lake);
+  const shore=Math.max(0,Number(ecology.shorelineDistance)||0);
+  const shorelineSignal=clamp(1-shore/HYDROLOGY_PRESENTATION.shorelineScale,0,1)*HYDROLOGY_PRESENTATION.shorelineContribution;
+  return clamp(Math.max(wet,shorelineSignal),0,1);
+}
 function baseClassDensity(type,ecology){
-  const forest=Number(ecology.biome?.forestWeight)||0,river=Number(ecology.hydrology?.riverWeight)||0,lake=Number(ecology.hydrology?.lakeWeight)||0,wet=Math.max(river,lake),drainage=ecology.hydrology?.drainageClass,slopeClass=ecology.slopeClass,curvatureClass=ecology.curvatureClass,material=ecology.materialProfile,biomeClass=ecology.biome?.class,shore=Number(ecology.shorelineDistance);
+  const forest=Number(ecology.biome?.forestWeight)||0,river=Number(ecology.hydrology?.riverWeight)||0,lake=Number(ecology.hydrology?.lakeWeight)||0,wet=Math.max(river,lake),effectiveWet=effectiveWetness(ecology),drainage=ecology.hydrology?.drainageClass,slopeClass=ecology.slopeClass,curvatureClass=ecology.curvatureClass,material=ecology.materialProfile,biomeClass=ecology.biome?.class,shore=Number(ecology.shorelineDistance);
   switch(type){
     case 'GRASS_SEDGE':if(drainage!=='LAND'||shore<5||slopeClass==='STEEP_NONCLIMBING')return 0;return clamp(.36+.32*forest+.42*wet+.25*(['LOWLAND_SOIL','COASTAL_SOIL','FOREST_SOIL'].includes(material)?1:0)-.08*(slopeClass==='MODERATE'?1:0),0,.99);
     case 'LOW_SHRUB':if(drainage!=='LAND'||shore<12||forest<.14||slopeClass==='STEEP_NONCLIMBING')return 0;return clamp(.12+.52*forest+.12*(curvatureClass==='CONCAVE'?1:0),0,.78);
     case 'SAPLING_YOUNG_GROWTH':if(drainage!=='LAND'||shore<18||forest<.28||!['LEVEL','GENTLE','MODERATE'].includes(slopeClass))return 0;return clamp(.05+.34*forest+.09*(biomeClass==='FOREST'?1:0),0,.50);
-    case 'REED_WET_MARGIN':if(drainage!=='LAND'||shore<2||wet<.08||!['LEVEL','GENTLE','MODERATE'].includes(slopeClass))return 0;return clamp(.42+1.18*wet,0,.99);
+    case 'REED_WET_MARGIN':if(drainage!=='LAND'||shore<2||effectiveWet<HYDROLOGY_PRESENTATION.reedEligibilityMinimum||!['LEVEL','GENTLE','MODERATE'].includes(slopeClass))return 0;return clamp(.38+1.38*effectiveWet,0,.99);
     case 'DEAD_SPARSE_GROUND':if(drainage!=='LAND'||shore<10||!['STONE_AND_SPARSE_SOIL','COASTAL_SOIL'].includes(material)||forest>=.36)return 0;return clamp(.16+.34*(material==='STONE_AND_SPARSE_SOIL'?1:0)+.18*(slopeClass==='MODERATE'?1:0),0,.62);
     case 'FOREST_FLOOR_CLUSTER':if(drainage!=='LAND'||shore<12||forest<.20||!(material==='FOREST_SOIL'||['WOODLAND','FOREST'].includes(biomeClass)))return 0;return clamp(.30+.72*forest+.12*(curvatureClass==='CONCAVE'?1:0),0,.99);
     default:return 0;
@@ -55,8 +68,8 @@ function standMultiplier(type,environment){switch(environment.standClass){case '
 function classDensity(type,ecology,environment){const base=baseClassDensity(type,ecology);return base<=0?0:clamp(base*zoneMultiplier(type,environment)*standMultiplier(type,environment),0,.99);}
 function nearestTreeWithin(x,z,trees,minimum){const min2=minimum*minimum;for(const tree of trees){const dx=x-tree.world.x,dz=z-tree.world.z;if(dx*dx+dz*dz<min2)return true;}return false;}
 function coverageFloor(type,ecology,environment){
-  const wet=Math.max(Number(ecology.hydrology?.riverWeight)||0,Number(ecology.hydrology?.lakeWeight)||0);
-  if(type==='REED_WET_MARGIN'&&wet>=.08)return .94;
+  const effectiveWet=effectiveWetness(ecology);
+  if(type==='REED_WET_MARGIN'&&effectiveWet>=HYDROLOGY_PRESENTATION.reedEligibilityMinimum)return .98;
   if(type==='FOREST_FLOOR_CLUSTER'&&environment.spatialZone==='INTERIOR'&&['DENSE_WOODLAND','GROVE'].includes(environment.standClass))return .88;
   if(type==='GRASS_SEDGE'&&environment.spatialZone==='OPENING')return .82;
   if(type==='GRASS_SEDGE'&&environment.spatialZone==='TRANSITION')return .76;
@@ -69,9 +82,9 @@ function selectClass(seed,ecology,environment,trees){
   const eligible=[];for(const type of UNDERSTORY_CLASSES){const density=classDensity(type,ecology,environment);if(density<=0)continue;if(type==='SAPLING_YOUNG_GROWTH'&&nearestTreeWithin(ecology.world.x,ecology.world.z,trees,5))continue;eligible.push({type,density});}
   if(!eligible.length)return null;
   const reed=eligible.find(candidate=>candidate.type==='REED_WET_MARGIN');
-  if(reed){const wet=Math.max(Number(ecology.hydrology?.riverWeight)||0,Number(ecology.hydrology?.lakeWeight)||0),shore=Math.max(0,Number(ecology.shorelineDistance)||0),wetAffinity=clamp((wet-.08)/.37,0,1),shoreAffinity=clamp((280-shore)/200,0,1),riparianBoost=environment.standClass==='WET_MARGIN_RIPARIAN'?1.55:1.15;const reedOpportunity=Math.max(coverageFloor('REED_WET_MARGIN',ecology,environment),clamp(reed.density*riparianBoost*(1.12+.46*wetAffinity+.22*shoreAffinity),0,.99));if(rand(seed,CLASS_SALT.REED_WET_MARGIN+211)<=reedOpportunity)return {type:'REED_WET_MARGIN',density:reed.density,coverageProbability:reedOpportunity};}
+  if(reed){const effectiveWet=effectiveWetness(ecology),shore=Math.max(0,Number(ecology.shorelineDistance)||0),wetAffinity=clamp((effectiveWet-HYDROLOGY_PRESENTATION.reedEligibilityMinimum)/(1-HYDROLOGY_PRESENTATION.reedEligibilityMinimum),0,1),shoreAffinity=clamp((180-shore)/150,0,1),riparianBoost=environment.standClass==='WET_MARGIN_RIPARIAN'?1.70:1.28;const reedOpportunity=Math.max(coverageFloor('REED_WET_MARGIN',ecology,environment),clamp(reed.density*riparianBoost*(1.18+.52*wetAffinity+.26*shoreAffinity),0,.995));if(rand(seed,CLASS_SALT.REED_WET_MARGIN+211)<=reedOpportunity)return {type:'REED_WET_MARGIN',density:reed.density,coverageProbability:reedOpportunity};}
   const preferredIndex=hash32(seed^0x6f17c2a9)%eligible.length,preferredType=eligible[preferredIndex].type;let selected=null,selectedDensity=0,selectedScore=-1;
-  for(const candidate of eligible){const salt=CLASS_SALT[candidate.type],densityScore=candidate.density*(.88+.12*rand(seed,salt)),preference=candidate.type===preferredType?.54:0,edgeYoungBonus=environment.spatialZone==='EDGE'&&['LOW_SHRUB','SAPLING_YOUNG_GROWTH'].includes(candidate.type)?.64:0,transitionGroundBonus=environment.spatialZone==='TRANSITION'&&['GRASS_SEDGE','LOW_SHRUB','SAPLING_YOUNG_GROWTH'].includes(candidate.type)?.40:0,openingGroundBonus=environment.spatialZone==='OPENING'&&candidate.type==='GRASS_SEDGE'?.82:0,interiorFloorBonus=environment.spatialZone==='INTERIOR'&&candidate.type==='FOREST_FLOOR_CLUSTER'?.98:0,score=densityScore+preference+edgeYoungBonus+transitionGroundBonus+openingGroundBonus+interiorFloorBonus;if(score>selectedScore){selected=candidate.type;selectedDensity=candidate.density;selectedScore=score;}}
+  for(const candidate of eligible){const densityScore=candidate.density*(.88+.12*rand(seed,CLASS_SALT[candidate.type])),preference=candidate.type===preferredType?.54:0,edgeYoungBonus=environment.spatialZone==='EDGE'&&['LOW_SHRUB','SAPLING_YOUNG_GROWTH'].includes(candidate.type)?.64:0,transitionGroundBonus=environment.spatialZone==='TRANSITION'&&['GRASS_SEDGE','LOW_SHRUB','SAPLING_YOUNG_GROWTH'].includes(candidate.type)?.40:0,openingGroundBonus=environment.spatialZone==='OPENING'&&candidate.type==='GRASS_SEDGE'?.82:0,interiorFloorBonus=environment.spatialZone==='INTERIOR'&&candidate.type==='FOREST_FLOOR_CLUSTER'?.98:0,score=densityScore+preference+edgeYoungBonus+transitionGroundBonus+openingGroundBonus+interiorFloorBonus;if(score>selectedScore){selected=candidate.type;selectedDensity=candidate.density;selectedScore=score;}}
   const probability=Math.max(selectedDensity,coverageFloor(selected,ecology,environment));if(rand(seed,CLASS_SALT[selected]+101)>probability)return null;return {type:selected,density:selectedDensity,coverageProbability:probability};
 }
 function scaleFor(type,seed){switch(type){case 'GRASS_SEDGE':return 1.05+1.05*rand(seed,151);case 'LOW_SHRUB':return .88+.92*rand(seed,151);case 'SAPLING_YOUNG_GROWTH':return 1.20+1.35*rand(seed,151);case 'REED_WET_MARGIN':return 1.18+1.20*rand(seed,151);case 'DEAD_SPARSE_GROUND':return .82+1.22*rand(seed,151);case 'FOREST_FLOOR_CLUSTER':return 1.85+1.55*rand(seed,151);default:return 1;}}
@@ -82,7 +95,23 @@ function createUnderstoryPopulation(){
   for(let row=0;row<GRID.rows;row++)for(let column=0;column<GRID.columns;column++){
     const seed=hash32(Math.imul(row+1,73856093)^Math.imul(column+1,19349663)^GRID.seed),jitterX=(rand(seed,1)-.5)*2*GRID.jitterFraction,jitterZ=(rand(seed,2)-.5)*2*GRID.jitterFraction,u=clamp((column+.5+jitterX)/GRID.columns,0,1),v=clamp((row+.5+jitterZ)/GRID.rows,0,1),worldX=envelope.xMinimum+insetX+u*usableWidth,worldZ=envelope.zMinimum+insetZ+v*usableDepth,ecology=sampleCanonicalVegetationEcology(worldX,worldZ);if(ecology?.valid!==true)continue;const environment=resolveVegetationEnvironment(ecology.world.x,ecology.world.z),selected=selectClass(seed,ecology,environment,trees.instances);if(!selected)continue;const type=selected.type;
     append(type,selected,ecology,environment,seed,row,column);
-    if(type==='REED_WET_MARGIN')for(let i=1;i<REED_CLUSTER_OFFSETS.length;i++){const [dx,dz]=REED_CLUSTER_OFFSETS[i],satellite=sampleCanonicalVegetationEcology(ecology.world.x+dx,ecology.world.z+dz);if(satellite?.valid!==true)continue;const wet=Math.max(Number(satellite.hydrology?.riverWeight)||0,Number(satellite.hydrology?.lakeWeight)||0);if(satellite.hydrology?.drainageClass!=='LAND'||satellite.shorelineDistance<2||wet<.08)continue;const satelliteEnvironment=resolveVegetationEnvironment(satellite.world.x,satellite.world.z);append(type,selected,satellite,satelliteEnvironment,hash32(seed^Math.imul(i+1,0x45d9f3b)),row,column,`-colony${i}`);}
+    if(type==='REED_WET_MARGIN')for(let i=1;i<REED_CLUSTER_OFFSETS.length;i++){const [dx,dz]=REED_CLUSTER_OFFSETS[i],satellite=sampleCanonicalVegetationEcology(ecology.world.x+dx,ecology.world.z+dz);if(satellite?.valid!==true)continue;if(satellite.hydrology?.drainageClass!=='LAND'||satellite.shorelineDistance<2||effectiveWetness(satellite)<HYDROLOGY_PRESENTATION.reedEligibilityMinimum)continue;const satelliteEnvironment=resolveVegetationEnvironment(satellite.world.x,satellite.world.z);append(type,selected,satellite,satelliteEnvironment,hash32(seed^Math.imul(i+1,0x45d9f3b)),row,column,`-colony${i}`);}
+  }
+  let hydroRow=0;
+  for(let z=envelope.zMinimum+HYDROLOGY_CORE.gridStep/2;z<=envelope.zMaximum-HYDROLOGY_CORE.gridStep/2;z+=HYDROLOGY_CORE.gridStep,hydroRow++){
+    let hydroColumn=0;
+    for(let x=envelope.xMinimum+HYDROLOGY_CORE.gridStep/2;x<=envelope.xMaximum-HYDROLOGY_CORE.gridStep/2;x+=HYDROLOGY_CORE.gridStep,hydroColumn++){
+      const ecology=sampleCanonicalVegetationEcology(x,z);
+      if(ecology?.valid!==true||ecology.hydrology?.drainageClass!=='LAND'||ecology.shorelineDistance<2||!['LEVEL','GENTLE','MODERATE'].includes(ecology.slopeClass)||effectiveWetness(ecology)<HYDROLOGY_CORE.wetCoreMinimum)continue;
+      const baseSeed=hash32(Math.imul(hydroRow+1,83492791)^Math.imul(hydroColumn+1,2971215073)^0x4d83a61f);
+      const selected={density:.99,coverageProbability:.995};
+      for(let i=0;i<HYDROLOGY_CORE.clusterOffsets.length;i++){
+        const [dx,dz]=HYDROLOGY_CORE.clusterOffsets[i],satellite=sampleCanonicalVegetationEcology(ecology.world.x+dx,ecology.world.z+dz);
+        if(satellite?.valid!==true||satellite.hydrology?.drainageClass!=='LAND'||satellite.shorelineDistance<2||!['LEVEL','GENTLE','MODERATE'].includes(satellite.slopeClass)||effectiveWetness(satellite)<HYDROLOGY_PRESENTATION.reedEligibilityMinimum)continue;
+        const satelliteEnvironment=resolveVegetationEnvironment(satellite.world.x,satellite.world.z);
+        append('REED_WET_MARGIN',selected,satellite,satelliteEnvironment,hash32(baseSeed^Math.imul(i+1,0x45d9f3b)),hydroRow,hydroColumn,`-wetcore${i}`);
+      }
+    }
   }
   return freeze({schema:'MIRRORLAND_VEGETATION_V4_UNDERSTORY_POPULATION_v1',operationId:V4_UNDERSTORY_CONTRACT.operationId,stage:V4_UNDERSTORY_CONTRACT.stage,targetBoundary:V4_UNDERSTORY_CONTRACT.targetBoundary,canonicalPopulation:true,standEdgeCompositionBound:true,deviceInvariant:true,cameraInvariant:true,frameId:trees.frameId,envelope:freeze({...envelope}),grid:GRID,instanceCount:instances.length,classCounts:freeze(classCounts),zoneCounts:freeze(zoneCounts),standClassCounts:freeze(standClassCounts),instances:freeze(instances)});
 }
@@ -92,7 +121,7 @@ function compile(gl,type,source){const shader=gl.createShader(type);gl.shaderSou
 function createProgram(gl,vs,fs){const program=gl.createProgram();gl.attachShader(program,compile(gl,gl.VERTEX_SHADER,vs));gl.attachShader(program,compile(gl,gl.FRAGMENT_SHADER,fs));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(`UNDERSTORY_PROGRAM:${gl.getProgramInfoLog(program)}`);return program;}
 const VS=`#version 300 es\nprecision highp float;layout(location=0) in vec3 aLocal;layout(location=1) in vec3 aWorld;layout(location=2) in float aScale;layout(location=3) in float aYaw;uniform mat4 uVP;uniform vec3 uEye;uniform float uFar;out float vFade;out float vHeight;void main(){float c=cos(aYaw),s=sin(aYaw);vec3 local=vec3(aLocal.x*c-aLocal.z*s,aLocal.y,aLocal.x*s+aLocal.z*c)*aScale;vec3 world=aWorld+local;float d=distance(world,uEye);vFade=1.0-smoothstep(uFar*.76,uFar,d);vHeight=clamp(aLocal.y,0.0,1.0);gl_Position=uVP*vec4(world,1.0);}`;
 const FS=`#version 300 es\nprecision highp float;in float vFade;in float vHeight;uniform vec3 uTint;out vec4 outColor;void main(){if(vFade<.04)discard;vec3 c=uTint*(.76+.18*vHeight+.06*vFade);outColor=vec4(c,1.0);}`;
-const GEOMETRY=freeze({GRASS_SEDGE:new Float32Array([-.09,0,0,.09,0,0,0,1.05,0,0,0,-.09,0,0,.09,0,.92,0,-.22,0,.08,-.06,0,.08,-.12,.76,.04]),LOW_SHRUB:new Float32Array([-.62,0,0,.62,0,0,0,.80,0,0,0,-.56,0,0,.56,0,.76,0,-.44,.14,-.32,.44,.14,.32,0,.90,0]),SAPLING_YOUNG_GROWTH:new Float32Array([-.055,0,0,.055,0,0,.04,.90,0,-.42,.66,0,.42,.66,0,0,1.55,0,0,.68,-.38,0,.68,.38,0,1.42,0]),REED_WET_MARGIN:new Float32Array([-.045,0,-.24,.045,0,-.24,0,1.38,-.18,-.045,0,0,.045,0,0,0,1.62,.04,-.045,0,.24,.045,0,.24,0,1.26,.28]),DEAD_SPARSE_GROUND:new Float32Array([-.03,0,-.26,.03,0,-.26,0,1.14,-.14,-.03,0,.18,.03,0,.18,.14,.86,.10,-.28,0,.03,-.20,0,.03,-.06,.64,.05]),FOREST_FLOOR_CLUSTER:new Float32Array([-.86,0,0,.86,0,0,0,.38,.02,0,0,-.78,0,0,.78,.02,.34,0,-.66,0,-.44,.66,0,.44,0,.42,0])});
+const GEOMETRY=freeze({GRASS_SEDGE:new Float32Array([-.09,0,0,.09,0,0,0,1.05,0,0,0,-.09,0,0,.09,0,.92,0,-.22,0,.08,-.06,0,.08,-.12,.76,.04]),LOW_SHRUB:new Float32Array([-.62,0,0,.62,0,0,0,.80,0,0,0,-.56,0,0,.56,0,.76,0,-.44,.14,-.32,.44,.14,.32,0,.90,0]),SAPLING_YOUNG_GROWTH:new Float32Array([-.055,0,0,.055,0,0,.04,.90,0,-.42,.66,0,.42,.66,0,0,1.55,0,0,.68,-.38,0,.68,.38,0,1.42,0]),REED_WET_MARGIN:new Float32Array([-.045,0,-.24,.045,0,-.24,0,1.38,-.18,-.045,0,0,.045,0,0,0,1.62,.04,-.045,0,.24,.045,0,.24,0,1.26,.28]),DEAD_SPARSE_GROUND:new Float32Array([-.03,0,-.26,.03,0,-.26,0,1.14,-.14,-.03,0,.18,.03,0,.18,.14,.86,.10,-.28,0,.03,-.20,0,.03,-.06,.64,.05]),FOREST_FLOOR_CLUSTER:new Float32Array([-2.236,0,0,2.236,0,0,0,.38,.052,0,0,-2.028,0,0,2.028,.052,.34,0,-1.716,0,-1.144,1.716,0,1.144,0,.42,0])});
 const TINT=freeze({GRASS_SEDGE:freeze([.105,.205,.145]),LOW_SHRUB:freeze([.075,.155,.105]),SAPLING_YOUNG_GROWTH:freeze([.085,.175,.115]),REED_WET_MARGIN:freeze([.11,.27,.19]),DEAD_SPARSE_GROUND:freeze([.19,.17,.135]),FOREST_FLOOR_CLUSTER:freeze([.065,.125,.085])});
 function eyeVector(eye){if(Array.isArray(eye)&&eye.length>=3)return eye;if(eye&&Number.isFinite(eye.x)&&Number.isFinite(eye.y)&&Number.isFinite(eye.z))return [eye.x,eye.y,eye.z];throw new Error('UNDERSTORY_CAMERA_EYE_REQUIRED');}
 function makePrimitive(gl,geometry,instances){const vao=gl.createVertexArray();gl.bindVertexArray(vao);const local=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,local);gl.bufferData(gl.ARRAY_BUFFER,geometry,gl.STATIC_DRAW);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,12,0);const payload=[];for(const item of instances)payload.push(item.world.x,item.world.y,item.world.z,item.scale,item.yaw);const instanceBuffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,instanceBuffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(payload),gl.STATIC_DRAW);gl.enableVertexAttribArray(1);gl.vertexAttribPointer(1,3,gl.FLOAT,false,20,0);gl.vertexAttribDivisor(1,1);gl.enableVertexAttribArray(2);gl.vertexAttribPointer(2,1,gl.FLOAT,false,20,12);gl.vertexAttribDivisor(2,1);gl.enableVertexAttribArray(3);gl.vertexAttribPointer(3,1,gl.FLOAT,false,20,16);gl.vertexAttribDivisor(3,1);gl.bindVertexArray(null);return{vao,vertexCount:geometry.length/3,instanceCount:instances.length};}

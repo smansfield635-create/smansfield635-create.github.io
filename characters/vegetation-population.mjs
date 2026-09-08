@@ -29,34 +29,18 @@ const GRID=freeze({
   rows:147,
   insetFraction:.025,
   jitterFraction:.18,
-  minimumForestWeight:.08,
-  minimumShorelineDistance:12,
+  minimumForestWeight:.04,
+  minimumShorelineDistance:6,
   exactTargetCount:818,
-  reservedEdgeCount:72,
-  reservedTransitionCount:54,
-  standMassExponent:2.90,
-  standCoreScale:112,
-  territorialCoreExponent:1.50,
-  standSizeExponent:.72,
-  dominantStandMinimumCarryingCapacity:.44,
-  dominantStandCoreMinimum:90,
-  wetMarginSuppression:.34
-});
-const STAND_CLASS_MASS_FACTOR=freeze({
-  DENSE_WOODLAND:1,
-  GROVE:4.8,
-  COASTAL_SCRUB:.72,
-  WET_MARGIN_RIPARIAN:1.35,
-  EXPOSED_UPLAND:.48,
-  SPARSE_TRANSITION:.38,
-  ECOLOGICAL_OPEN:0
+  territorialCellSize:80,
+  wetMarginSuppression:.10
 });
 const STAND_RECORDS=new Map(getStandTopologySeeds().map(stand=>[stand.id,stand]));
 
 export const CANONICAL_VEGETATION_POPULATION_CONTRACT=freeze({
   schema:'MIRRORLAND_CANONICAL_VEGETATION_POPULATION_CONTRACT_v1',
-  operationId:'MIRRORLAND_GEN1980_ENVIRONMENT_MATERIAL_SUCCESSOR_20260907_001',
-  stage:'CONTIGUOUS_TERRITORIAL_CANOPY_ENVIRONMENT_SUCCESSOR',
+  operationId:'MIRRORLAND_POST_GEN1992_ENVIRONMENT_MATERIAL_REPAIR_20260907_002',
+  stage:'CONTIGUOUS_TERRITORIAL_CANOPY_ENVIRONMENT_REPAIR',
   frameAuthority:'characters/gratitude-geography.adapter.mjs#GRATITUDE_DEVELOPMENT_FRAME',
   frameId:GRATITUDE_DEVELOPMENT_FRAME.frameId,
   ecologyAuthority:VEGETATION_ECOLOGY_AUTHORITY.schema,
@@ -73,17 +57,16 @@ export const CANONICAL_VEGETATION_POPULATION_CONTRACT=freeze({
   previousPositionSetImmutable:false,
   exactPopulationBudget:GRID.exactTargetCount,
   grid:GRID,
-  standClassMassFactor:STAND_CLASS_MASS_FACTOR,
   fixedTargetCount:true,
   territorialContinuityRepair:true,
-  canonicalStandSeedCenteredAllocation:true,
-  ecologyDerivedDominantForestCoreAllocation:true
+  deterministicTerritorialCellRoundRobin:true,
+  deterministicMultiPassTerritorialSpacing:false,
+  canonicalStandSeedCenteredAllocation:false,
+  ecologyDerivedDominantForestCoreAllocation:false
 });
 
 const increment=(object,key)=>{object[key]=(object[key]||0)+1;};
-const sortCandidates=(a,b)=>b.selectionScore-a.selectionScore||a.id.localeCompare(b.id);
 const sortTerritorialCandidates=(a,b)=>b.territorialScore-a.territorialScore||b.selectionScore-a.selectionScore||a.id.localeCompare(b.id);
-const sortStandCoreCandidates=(a,b)=>a.standSeedDistance-b.standSeedDistance||b.territorialScore-a.territorialScore||b.selectionScore-a.selectionScore||a.id.localeCompare(b.id);
 
 let cachedPopulation=null;
 
@@ -130,9 +113,8 @@ function createCandidate(row,column,envelope,insetX,insetZ,usableWidth,usableDep
   const wetAffinity=wetMarginAffinity(ecology);
   const hydrologyCanopyFactor=1-GRID.wetMarginSuppression*wetAffinity;
   const selectionScore=environment.canopyDensity*ecologySupport*stableVariation*hydrologyCanopyFactor;
-  const coreAffinity=clamp(environment.standBoundaryDistance/GRID.standCoreScale,0,1);
-  const coreMass=Math.pow(coreAffinity,GRID.territorialCoreExponent);
-  const territorialScore=selectionScore*(.46+1.02*coreMass)*(.90+.24*forestWeight);
+  const boundarySupport=clamp(environment.standBoundaryDistance/160,0,1);
+  const territorialScore=selectionScore*(.72+.28*boundarySupport)*(.92+.16*forestWeight);
   return {
     id:`veg-r${row}-c${column}`,
     lattice:{row,column,seed},
@@ -148,65 +130,45 @@ function createCandidate(row,column,envelope,insetX,insetZ,usableWidth,usableDep
   };
 }
 
-function allocateStandLocalInterior(source,budget){
-  if(budget<=0)return [];
-  const byStand=new Map();
-  for(const candidate of source){
-    const id=candidate.environment.standId;
-    if(!byStand.has(id))byStand.set(id,[]);
-    byStand.get(id).push(candidate);
+function allocateTerritorialCoverage(candidates,budget){
+  const buckets=new Map();
+  for(const candidate of candidates){
+    const cx=Math.floor(candidate.ecology.world.x/GRID.territorialCellSize);
+    const cz=Math.floor(candidate.ecology.world.z/GRID.territorialCellSize);
+    const key=`${cx},${cz}`;
+    if(!buckets.has(key))buckets.set(key,{cx,cz,items:[]});
+    buckets.get(key).items.push(candidate);
   }
-  const rows=[...byStand.entries()].map(([standId,items])=>{
-    const canopyDensity=clamp(Number(items[0]?.environment?.standProfile?.canopyDensity)||0,0,1);
-    const standClass=items[0]?.environment?.standClass||'SPARSE_TRANSITION';
-    const classFactor=Number(STAND_CLASS_MASS_FACTOR[standClass]??1);
-    const sizeMass=Math.pow(Math.max(1,items.length),GRID.standSizeExponent);
-    const carryingCapacity=Number(items[0]?.standCarryingCapacity)||0;
-    const weight=sizeMass*Math.pow(Math.max(.04,canopyDensity),GRID.standMassExponent)*classFactor;
-    const dominantForestCore=['GROVE','DENSE_WOODLAND'].includes(standClass)&&carryingCapacity>=GRID.dominantStandMinimumCarryingCapacity;
-    return {standId,standClass,items:items.sort(sortStandCoreCandidates),carryingCapacity,dominantForestCore,weight,quota:0,remainder:0};
-  }).sort((a,b)=>a.standId.localeCompare(b.standId));
-
-  let remaining=Math.min(budget,source.length);
-  const dominantRows=rows.filter(row=>row.dominantForestCore).sort((a,b)=>b.carryingCapacity-a.carryingCapacity||a.standId.localeCompare(b.standId));
-  for(const row of dominantRows){
-    if(remaining<=0)break;
-    const coreGrant=Math.min(row.items.length,GRID.dominantStandCoreMinimum,remaining);
-    row.quota=coreGrant;
-    remaining-=coreGrant;
-  }
-
-  while(remaining>0){
-    const available=rows.filter(row=>row.quota<row.items.length);
-    if(!available.length)break;
-    const totalWeight=available.reduce((sum,row)=>sum+row.weight,0);
-    let floorAssigned=0;
-    const shares=available.map(row=>{
-      const exact=totalWeight>0?remaining*(row.weight/totalWeight):remaining/available.length;
-      const capacity=row.items.length-row.quota;
-      const base=Math.min(capacity,Math.floor(exact));
-      row.quota+=base;
-      floorAssigned+=base;
-      row.remainder=exact-Math.floor(exact);
-      return row;
-    });
-    remaining-=floorAssigned;
-    if(remaining<=0)break;
-    shares.sort((a,b)=>b.remainder-a.remainder||b.weight-a.weight||a.standId.localeCompare(b.standId));
-    let remainderAssigned=0;
-    for(const row of shares){
-      if(remaining<=0)break;
-      if(row.quota>=row.items.length)continue;
-      row.quota++;
-      remaining--;
-      remainderAssigned++;
-    }
-    if(floorAssigned===0&&remainderAssigned===0)break;
-  }
-
+  const cells=[...buckets.values()].map(cell=>({
+    ...cell,
+    rank:hash32(Math.imul(cell.cx,73856093)^Math.imul(cell.cz,19349663)^0x71c8e3d5),
+    items:cell.items.sort(sortTerritorialCandidates)
+  })).sort((a,b)=>a.rank-b.rank||a.cz-b.cz||a.cx-b.cx);
   const selected=[];
-  for(const row of rows)selected.push(...row.items.slice(0,row.quota));
-  return selected.slice(0,budget);
+  const selectedIds=new Set();
+  const roundCounts=[];
+  for(let round=0;selected.length<budget;round++){
+    let added=0;
+    for(const cell of cells){
+      if(selected.length>=budget)break;
+      const candidate=cell.items[round];
+      if(!candidate||selectedIds.has(candidate.id))continue;
+      selected.push(candidate);
+      selectedIds.add(candidate.id);
+      added++;
+    }
+    roundCounts.push({round,added,total:selected.length});
+    if(!added)break;
+  }
+  if(selected.length<budget){
+    for(const candidate of [...candidates].sort(sortTerritorialCandidates)){
+      if(selected.length>=budget)break;
+      if(selectedIds.has(candidate.id))continue;
+      selected.push(candidate);
+      selectedIds.add(candidate.id);
+    }
+  }
+  return {selected:selected.slice(0,budget),roundCounts,territorialCellCount:cells.length};
 }
 
 function createCanonicalPopulation(){
@@ -225,30 +187,12 @@ function createCanonicalPopulation(){
       if(candidate)candidates.push(candidate);
     }
   }
-  if(candidates.length<GRID.exactTargetCount)throw new Error(`STAND_EDGE_CANOPY_UNDERFLOW:${candidates.length}:${GRID.exactTargetCount}`);
+  if(candidates.length<GRID.exactTargetCount)throw new Error(`TERRITORIAL_CANOPY_UNDERFLOW:${candidates.length}:${GRID.exactTargetCount}`);
 
-  const edge=candidates.filter(x=>x.environment.spatialZone==='EDGE').sort(sortCandidates);
-  const transition=candidates.filter(x=>x.environment.spatialZone==='TRANSITION').sort(sortCandidates);
-  const interior=candidates.filter(x=>x.environment.spatialZone==='INTERIOR');
-  const selected=[];
-  const selectedIds=new Set();
-  const take=(source,count)=>{
-    for(const item of source){
-      if(selected.length>=GRID.exactTargetCount||count<=0)break;
-      if(selectedIds.has(item.id))continue;
-      selected.push(item);selectedIds.add(item.id);count--;
-    }
-  };
-  take(edge,Math.min(GRID.reservedEdgeCount,edge.length));
-  take(transition,Math.min(GRID.reservedTransitionCount,transition.length));
-  const interiorBudget=GRID.exactTargetCount-selected.length;
-  take(allocateStandLocalInterior(interior,interiorBudget),interiorBudget);
-  if(selected.length<GRID.exactTargetCount){
-    take([...edge,...transition,...interior].sort(sortTerritorialCandidates),GRID.exactTargetCount-selected.length);
-  }
-  if(selected.length!==GRID.exactTargetCount)throw new Error(`STAND_EDGE_CANOPY_TARGET_UNRESOLVED:${selected.length}:${GRID.exactTargetCount}`);
+  const allocation=allocateTerritorialCoverage(candidates,GRID.exactTargetCount);
+  const selected=allocation.selected;
+  if(selected.length!==GRID.exactTargetCount)throw new Error(`TERRITORIAL_CANOPY_TARGET_UNRESOLVED:${selected.length}:${GRID.exactTargetCount}`);
 
-  const candidateById=new Map(candidates.map(x=>[x.id,x]));
   selected.sort((a,b)=>a.lattice.row-b.lattice.row||a.lattice.column-b.lattice.column);
   const instances=selected.map(candidate=>{
     const {ecology,environment}=candidate;
@@ -287,30 +231,32 @@ function createCanonicalPopulation(){
   const zoneSelectedCounts={INTERIOR:0,EDGE:0,TRANSITION:0,OPENING:0};
   for(const candidate of candidates){increment(standCandidateCounts,candidate.environment.standId);increment(classCandidateCounts,candidate.environment.standClass);increment(zoneCandidateCounts,candidate.environment.spatialZone);}
   for(const instance of instances){increment(standSelectedCounts,instance.standId);increment(classSelectedCounts,instance.standClass);increment(zoneSelectedCounts,instance.spatialZone);}
-  const compositionFeatherCandidates=candidates.filter(x=>x.environment.compositionBand==='FEATHER');
-  const compatibleInteriorCandidates=candidates.filter(x=>x.environment.spatialZone==='INTERIOR'&&x.environment.compositionBand==='NONE');
-  const selectedSet=new Set(instances.map(x=>x.id));
-  const dominantStandSelectedCounts={};
-  for(const stand of STAND_RECORDS.values()){
-    const carryingCapacity=standCarryingCapacity(stand);
-    if(['GROVE','DENSE_WOODLAND'].includes(stand.standClass)&&carryingCapacity>=GRID.dominantStandMinimumCarryingCapacity){
-      dominantStandSelectedCounts[stand.id]=standSelectedCounts[stand.id]||0;
-    }
-  }
+  const selectedIds=new Set(instances.map(x=>x.id));
   const diagnostics=freeze({
     candidateCount:candidates.length,
     selectedCount:instances.length,
     rejectedEligibleCount:candidates.length-instances.length,
-    selectionLaw:'EXACT_818_CONTIGUOUS_ECOLOGY_DERIVED_DOMINANT_FOREST_CORES_CANONICAL_STAND_SEED_CENTERED_HIGH_RESOLUTION_RESERVED_EDGE_TRANSITION_STAND_CLASS_BALANCED_INTERIOR_MASSING',
-    standCandidateCounts:freeze(standCandidateCounts),standSelectedCounts:freeze(standSelectedCounts),classCandidateCounts:freeze(classCandidateCounts),classSelectedCounts:freeze(classSelectedCounts),zoneCandidateCounts:freeze(zoneCandidateCounts),zoneSelectedCounts:freeze(zoneSelectedCounts),
-    dominantStandSelectedCounts:freeze(dominantStandSelectedCounts),
-    dominantStandMinimumCarryingCapacity:GRID.dominantStandMinimumCarryingCapacity,
-    dominantStandCoreMinimum:GRID.dominantStandCoreMinimum,
-    compositionFeatherCandidateCount:compositionFeatherCandidates.length,
-    compositionFeatherSelectedCount:compositionFeatherCandidates.filter(x=>selectedSet.has(x.id)).length,
-    compatibleInteriorCandidateCount:compatibleInteriorCandidates.length,
-    compatibleInteriorSelectedCount:compatibleInteriorCandidates.filter(x=>selectedSet.has(x.id)).length,
-    previousPositionSetImmutable:false,previousGlobalSprinklingAuthoritySuperseded:true,standLocalInteriorAllocation:true,standClassBalancedInteriorAllocation:true,canonicalStandSeedCenteredAllocation:true,ecologyDerivedDominantForestCoreAllocation:true,highResolutionCandidateCapacity:true,wetMarginCanopySuppression:true,territorialContinuityRepair:true,candidateIdentityCount:candidateById.size
+    selectionLaw:'EXACT_818_CANONICAL_ECOLOGY_ELIGIBLE_NON_OPENING_TERRITORIAL_CELL_ROUND_ROBIN',
+    territorialCellSize:GRID.territorialCellSize,
+    territorialCellCount:allocation.territorialCellCount,
+    territorialRoundCounts:freeze(allocation.roundCounts.map(x=>freeze({...x}))),
+    standCandidateCounts:freeze(standCandidateCounts),
+    standSelectedCounts:freeze(standSelectedCounts),
+    classCandidateCounts:freeze(classCandidateCounts),
+    classSelectedCounts:freeze(classSelectedCounts),
+    zoneCandidateCounts:freeze(zoneCandidateCounts),
+    zoneSelectedCounts:freeze(zoneSelectedCounts),
+    compositionFeatherCandidateCount:candidates.filter(x=>x.environment.compositionBand==='FEATHER').length,
+    compositionFeatherSelectedCount:candidates.filter(x=>x.environment.compositionBand==='FEATHER'&&selectedIds.has(x.id)).length,
+    compatibleInteriorCandidateCount:candidates.filter(x=>x.environment.spatialZone==='INTERIOR'&&x.environment.compositionBand==='NONE').length,
+    compatibleInteriorSelectedCount:candidates.filter(x=>x.environment.spatialZone==='INTERIOR'&&x.environment.compositionBand==='NONE'&&selectedIds.has(x.id)).length,
+    previousPositionSetImmutable:false,
+    previousCoreConcentrationAuthoritySuperseded:true,
+    deterministicTerritorialCellRoundRobin:true,
+    deviceCameraDestinationInputsUsed:false,
+    highResolutionCandidateCapacity:true,
+    wetMarginCanopySuppression:true,
+    territorialContinuityRepair:true
   });
 
   return freeze({schema:'MIRRORLAND_CANONICAL_VEGETATION_POPULATION_v1',operationId:CANONICAL_VEGETATION_POPULATION_CONTRACT.operationId,stage:CANONICAL_VEGETATION_POPULATION_CONTRACT.stage,frameId:GRATITUDE_DEVELOPMENT_FRAME.frameId,envelope:freeze({...envelope}),ecologyAuthority:VEGETATION_ECOLOGY_AUTHORITY.schema,organizationAuthority:'MIRRORLAND_EDGE_ECOLOGY_CONTRACT_v1',canonicalPopulation:true,standEdgeOrganized:true,deviceInvariant:true,cameraInvariant:true,representationAssigned:false,lodAssigned:false,fixedTargetCount:true,exactTargetCount:GRID.exactTargetCount,instanceCount:instances.length,diagnostics,instances:freeze(instances)});

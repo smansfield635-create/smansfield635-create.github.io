@@ -1,0 +1,161 @@
+{
+  "schema": "POST_GEN1992_ENVIRONMENT_MATERIAL_REPAIR_CONTRACT_v1",
+  "operationId": "MIRRORLAND_POST_GEN1992_ENVIRONMENT_MATERIAL_REPAIR_20260907_002",
+  "lockGeneration": 1995,
+  "governingHead": "8f97bb035dce439cf28ca156b2fcd5bdfc6a1953",
+  "frozenFailedProductSha": "b193e6758f776b5ff6006c96037ee1a7632ddb64",
+  "frozenV5BlobSha": "f3b64eb1ffc1c1bc8e908ff96eb6c833b6bc928d",
+  "canonicalCanopyCount": 818,
+  "route": "/characters/",
+  "programIssue": 2670,
+  "psalmAckCommentId": 5577301162,
+  "calibratedBaselineCommentId": 5577219297,
+  "frozenMaterialRubricCommentId": 5563231134,
+  "gen1994ClosureCommentId": 5577573265,
+  "sixPathRouterProofRun": 34176085441,
+  "evaluationTooling": {
+    "head": "834038c23711c3eed83dc21964027bd515852b51",
+    "contractPath": "control-plane/whole-estate/characters-reconstruction-v1/gen1983-camera-space-environment-diagnostics-v2-contract.v1.json",
+    "contractBlobSha": "84014a5a51a50d43e86c9e4f54bb0804d3655af1",
+    "verifierPath": "control-plane/whole-estate/characters-reconstruction-v1/verify-gen1983-camera-space-environment-diagnostics-v2.v1.mjs",
+    "verifierBlobSha": "6a7007cb37d04ea5af3542783342043c5c0a5829",
+    "workflowPath": ".github/workflows/characters-gen1983-camera-space-environment-diagnostics-v2-v1.yml",
+    "workflowBlobSha": "77b5b2e460adb86a123437c6eeb8d36ea8da5ba2",
+    "definitionsAndThresholdsImmutable": true
+  },
+  "metricFamilies": [
+    "FRUSTUM_SURFACE_CONTAINMENT_RISK_V2",
+    "CANOPY_FIELD_CONTINUITY",
+    "ELIGIBLE_GROUND_VISUAL_AREA_OCCUPANCY_V2",
+    "HYDROLOGY_RESPONSE_STRENGTH"
+  ],
+  "v2Constants": {
+    "frustumContainmentV2": {
+      "horizontalSamples": 25,
+      "verticalSamples": 25,
+      "rayMaxDistance": 3200,
+      "rayStep": 12,
+      "riskMaxAdjacentHorizonDiscontinuityAboveBins": 2,
+      "riskInternalSurfaceHoleCountAbove": 0,
+      "riskVisibleOuterBoundarySamplesAbove": 0,
+      "outerBoundaryPerimeterStep": 32
+    },
+    "groundVisualAreaOccupancyV2": {
+      "footprintRadius": 280,
+      "ecologyGridStep": 14,
+      "zeroDepthMinimumRasterThickness": 0.18,
+      "eligibleZones": ["INTERIOR", "EDGE", "TRANSITION"],
+      "riskUpperBoundRatioBelow": 0.12,
+      "geometrySource": "characters/vegetation-understory.mjs#GEOMETRY",
+      "instanceScaleSource": "characters/vegetation-understory.mjs#getCanonicalUnderstoryPopulation().instances[].scale",
+      "overlapSubtracted": false,
+      "interpretation": "CONSERVATIVE_UPPER_BOUND"
+    },
+    "canopyContinuity": {
+      "footprintRadius": 320,
+      "cellSize": 32,
+      "canopyInfluenceRadius": 30,
+      "riskOccupiedCellRatioBelow": 0.42,
+      "riskLargestComponentRatioBelow": 0.78,
+      "riskMaxEmptyCorridorCellsAbove": 4
+    },
+    "hydrologyResponse": {
+      "gridStep": 36,
+      "shorelineScale": 180,
+      "wetnessBins": {"lowMax": 0.24, "midMax": 0.52},
+      "responseRadius": 30,
+      "riskHighMinusLowBelow": 0.18,
+      "requiredHighWetnessSamples": 6
+    }
+  },
+  "representativeStates": [
+    "WIDE_COAST",
+    "OPEN_TERRAIN",
+    "WOODLAND_EDGE",
+    "FOREST_INTERIOR_INDEPENDENT",
+    "MIRROR_MANOR_APPROACH",
+    "SHORELINE_WETLAND_TRANSITION",
+    "WIDE_RETURN"
+  ],
+  "allowedProductMutation": {
+    "characters/vegetation-population.mjs": "CANOPY_TERRITORY_ORGANIZATION_ONLY",
+    "characters/vegetation-understory.mjs": "GROUND_VISUAL_AREA_AND_HYDROLOGY_RESPONSE_PRESENTATION_ONLY",
+    "characters/app.mjs": "SURFACE_CONTAINMENT_LAW_ONLY"
+  },
+  "allowedToolingPaths": [
+    "control-plane/whole-estate/characters-reconstruction-v1/post-gen1992-environment-material-repair-contract.v1.json",
+    "control-plane/whole-estate/characters-reconstruction-v1/verify-post-gen1992-environment-material-repair.v1.mjs",
+    ".github/workflows/characters-post-gen1992-environment-material-repair-v1.yml"
+  ],
+  "protectedPaths": [
+    "characters/vegetation-representation.mjs",
+    "characters/gratitude-geography.adapter.mjs",
+    "characters/step9-regional-geography.mjs",
+    "characters/destination-registry.mjs",
+    "characters/population-registry.mjs",
+    "characters/coast-map.mjs",
+    "characters/coast-map-renderer.mjs",
+    "characters/knowledge-card.mjs",
+    "characters/cloud-system.mjs",
+    "characters/cloud-traversal.mjs",
+    "characters/night-renderer.mjs",
+    "characters/index.html"
+  ],
+  "protectedSemanticAuthorities": {
+    "canonicalGeography": true,
+    "normalDestinationCameras": true,
+    "aurenIndependentInteriorWitness": true,
+    "manorClearingAndSightlines": true,
+    "hardOpenings": true,
+    "experienceLayer": true,
+    "v5Representation": true
+  },
+  "repairedCandidateV2Interpretation": {
+    "unchangedEvaluatorCalibrationRequirement": "ALL_FOUR_GEN1984_FAILED_DIMENSIONS_RISK_TRUE",
+    "candidateEvaluatorExpectedProcessExitCode": 1,
+    "candidateEvaluatorExpectedResult": "FAIL_CLOSED",
+    "candidateEvaluatorExpectedInstrumentValid": false,
+    "reason": "UNCHANGED_CALIBRATION_ASSERTIONS_MUST_FAIL_WHEN_ALL_FOUR_RISK_FAMILIES_CLEAR",
+    "requiredFailedCheckIdsExactly": [
+      "ALL_FOUR_KNOWN_FAILURE_FAMILIES_DETECTED",
+      "CALIBRATION_CANOPY_CONTINUITY_RISK_DETECTED",
+      "CALIBRATION_GROUND_VISUAL_AREA_RISK_DETECTED",
+      "CALIBRATION_HYDROLOGY_RESPONSE_RISK_DETECTED",
+      "CALIBRATION_SURFACE_CONTAINMENT_RISK_DETECTED"
+    ],
+    "allOtherV2ChecksMustPass": true,
+    "metricsFamilyRiskMustBeAllFalse": true,
+    "diagnosticFailureMustNotBeRelabeledAsProductFailure": true,
+    "diagnosticFailureMustNotBeRelabeledAsInstrumentFailure": true
+  },
+  "acceptanceLaw": {
+    "v2ReceiptSchema": "MIRRORLAND_GEN1983_CAMERA_SPACE_ENVIRONMENT_DIAGNOSTICS_V2_RECEIPT_v1",
+    "allStateRiskFlagsMustBeFalse": true,
+    "hydrologyRiskMustBeFalse": true,
+    "canopyCountMustEqual": 818,
+    "v5BlobMustEqualFrozen": true,
+    "protectedPathBytesMustEqualFrozenFailedProduct": true,
+    "twoFreshV2ReceiptsMustBeByteIdentical": true,
+    "twoFreshRepairVerificationReceiptsMustBeByteIdentical": true,
+    "materialDispositionAuthority": false,
+    "materialDisposition": "UNASSIGNED_PENDING_FRESH_VISUAL_EVIDENCE_AND_READ_ONLY_ADJUDICATION"
+  },
+  "checkoutLaw": "EXACT_REF_BLOB_FILTERED_CONE_SPARSE_INDEX_ONLY",
+  "prohibited": [
+    "V2_DEFINITION_OR_THRESHOLD_MUTATION",
+    "V2_CANDIDATE_FAIL_CLOSED_RELABELING_AS_PRODUCT_FAILURE",
+    "V2_CANDIDATE_FAIL_CLOSED_RELABELING_AS_INSTRUMENT_FAILURE",
+    "V5_MUTATION",
+    "CANOPY_COUNT_CHANGE",
+    "CAMERA_MUTATION",
+    "GEOGRAPHY_MUTATION",
+    "MANOR_OR_OPENING_REGRESSION",
+    "MAP_CARD_MESSAGE_NARRATIVE_DISCOVERY_NAVIGATION_INTERACTION_MUTATION",
+    "MATERIAL_ACCEPTANCE_SELF_ASSIGNMENT",
+    "UNRESTRICTED_FULL_TREE_CHECKOUT",
+    "MERGE",
+    "DEPLOYMENT",
+    "PUBLICATION",
+    "ENVIRONMENT_FLOOR_FREEZE"
+  ]
+}

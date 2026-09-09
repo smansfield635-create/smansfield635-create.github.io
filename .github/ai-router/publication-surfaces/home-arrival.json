@@ -34,7 +34,7 @@
         "HOME_ARRIVAL_EXTERIOR_v1",
         "mirror-manor-gothic-phase3-carousel-v6-material-detail-final",
         "assets/compass/compass.house-scene.js",
-        "data-home-arrival-ready",
+        "homeArrivalReady",
         "torchCount",
         "const order=[0,5,1,4,2,3]"
       ],

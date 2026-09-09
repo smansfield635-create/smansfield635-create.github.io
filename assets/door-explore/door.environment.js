@@ -1,15 +1,15 @@
-/* DOOR_MIRRORLAND_DEPTH_ENVIRONMENT_v2 */
+/* DOOR_MIRRORLAND_MONOLITH_ENVIRONMENT_v3 */
 (() => {
   "use strict";
   const root = document.documentElement;
   const threshold = document.querySelector('[data-door-mirrorland]');
-  const stage = document.querySelector('[data-door-depth-stage]');
+  const stage = document.querySelector('[data-door-monolith-stage]');
   if (!threshold || !stage) return;
 
   const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
   const fine = window.matchMedia?.('(pointer: fine)')?.matches ?? false;
-  const baseYaw = fine ? -7 : -10;
-  const basePitch = fine ? 3 : 4;
+  const baseYaw = fine ? -9 : -12;
+  const basePitch = fine ? 2 : 3.4;
 
   const setPose = (yaw, pitch, rise = 0) => {
     root.style.setProperty('--door-yaw', `${yaw.toFixed(2)}deg`);
@@ -25,20 +25,23 @@
       if (!rect.width || !rect.height) return;
       const nx = ((event.clientX - rect.left) / rect.width) - .5;
       const ny = ((event.clientY - rect.top) / rect.height) - .5;
-      setPose(baseYaw + nx * 13, basePitch - ny * 8, ny * -3);
+      setPose(baseYaw + nx * 8, basePitch - ny * 5, ny * -2);
     }, { passive: true });
     threshold.addEventListener('pointerleave', () => setPose(baseYaw, basePitch, 0), { passive: true });
   }
 
   threshold.dataset.doorMirrorlandReady = 'true';
-  threshold.dataset.doorMirrorlandMotion = reduced ? 'reduced-static-depth' : (fine ? 'pointer-depth-parallax' : 'static-mobile-depth');
-  threshold.dataset.doorMirrorlandDepth = 'front-68-mid-20-back-72';
+  threshold.dataset.doorMirrorlandMotion = reduced ? 'reduced-static-monolith' : (fine ? 'pointer-monolith-parallax' : 'static-mobile-monolith');
+  threshold.dataset.doorMirrorlandMaterial = 'near-black-mirror';
+  threshold.dataset.doorMirrorlandStructure = 'front-mid-back-architectural-planes';
 
   window.DGBDoorEnvironment = Object.freeze({
-    contract: 'DOOR_MIRRORLAND_DEPTH_ENVIRONMENT_v2',
+    contract: 'DOOR_MIRRORLAND_MONOLITH_ENVIRONMENT_v3',
     ready: true,
     reducedMotion: reduced,
     mobileStaticPerspective: !fine,
+    mirrorMaterialPrimary: true,
+    stainedGlassGeometryPresent: false,
     explicitDepthStack: true,
     legacyMirrorlandRendererAdopted: false
   });

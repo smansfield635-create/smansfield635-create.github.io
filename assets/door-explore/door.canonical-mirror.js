@@ -1,8 +1,9 @@
-/* DOOR_CANONICAL_RENDERER_MIRROR_v7_1
-   Copy/background correction on accepted G7 source strategy:
+/* DOOR_CANONICAL_RENDERER_MIRROR_v7_2
+   Background-only correction on accepted G7 source strategy:
    - preserve three clean cinematic states;
    - preserve canonical Trophy and Brain renderers;
-   - relabel those two states as visitor-facing destinations;
+   - preserve visitor-facing labels;
+   - force a fresh canonical-object host so the retired white stage cannot persist from cache;
    - remain passive: no scene buttons or visitor interaction.
 */
 (() => {
@@ -18,6 +19,7 @@
 
   const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
   const TRANSITION_MS = 920;
+  const OBJECT_HOST_VERSION = 'door-canonical-object-host-g7-2-20260909-1';
   const scenes = Object.freeze([
     Object.freeze({ label: 'Mirrorland', kind: 'film', time: 39.55, motionMs: 820, dwellMs: 4300, zoom: 1.54, x: 0, y: -2.5, authority: 'owner-authorized-compass-cinematic-clean-state' }),
     Object.freeze({ label: 'Audralia', kind: 'film', time: 47.55, motionMs: 880, dwellMs: 4450, zoom: 1.68, x: 0, y: -7.5, authority: 'owner-authorized-compass-cinematic-clean-state' }),
@@ -144,7 +146,7 @@
     return new Promise((resolve, reject) => {
       const iframe = document.createElement('iframe');
       iframe.className = 'door-canonical-mirror__object';
-      iframe.src = `/door/canonical-object.html?scene=${encodeURIComponent(scene.object)}&g=${stamp}`;
+      iframe.src = `/door/canonical-object.html?v=${OBJECT_HOST_VERSION}&scene=${encodeURIComponent(scene.object)}&g=${stamp}`;
       iframe.title = `${scene.label} canonical estate geometry`;
       iframe.tabIndex = -1;
       iframe.setAttribute('aria-hidden', 'true');
@@ -271,13 +273,14 @@
   setCopy(0);
 
   window.DGBDoorEnvironment = Object.freeze({
-    contract: 'DOOR_CANONICAL_RENDERER_MIRROR_v7_1',
+    contract: 'DOOR_CANONICAL_RENDERER_MIRROR_v7_2',
     ready: true,
     sceneOrder: scenes.map(scene => scene.label),
     automaticSequence: !reduced,
     manualSelectorsEnabled: false,
     cinematicCleanStates: Object.freeze(['Mirrorland', 'Audralia', 'Mirror Manor']),
     canonicalRendererStates: Object.freeze(['Explore the Awards Chamber', 'Discover your Coherence Index']),
+    canonicalObjectHostVersion: OBJECT_HOST_VERSION,
     trophyAuthority: 'CompassTrophyScene',
     brainAuthority: 'CompassBrainScene',
     trophySource: '/assets/compass/compass.trophy-scene.js',

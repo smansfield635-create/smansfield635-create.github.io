@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "door-explore-carousel-preflight-20260909-001",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 2917,
+  "requestBranch": "ai-dispatch-request-door-explore-carousel-preflight-20260909-001",
+  "requestCommit": "49a27e062dffd73e9c028cdbd9fb9f70814e3612",
+  "requestCommitParent": "0608a3288a02fe6685339a0cb2a9d9a15affb4ce",
+  "currentMainSha": "0608a3288a02fe6685339a0cb2a9d9a15affb4ce",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "e1c6986b91d42147c609de5face949f8745a0c29",
+    "surface_id": "door-explore"
+  },
+  "bridgeRunId": "34393339569",
+  "dispatchedRunId": 34393358507,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/34393358507",
+  "dispatchedRunHeadSha": "0608a3288a02fe6685339a0cb2a9d9a15affb4ce",
+  "dispatchedAt": "2026-09-09T19:09:18.834Z",
+  "resolvedAt": "2026-09-09T19:09:22.933Z"
+}

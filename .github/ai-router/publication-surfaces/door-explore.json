@@ -1,13 +1,14 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "door-explore",
-  "description": "Door and Explore terminal 11-card spatial successor: six Door cards, five Explore cards, five closed spatial reconstruction cycles.",
+  "description": "Door and Explore terminal 11-card spatial successor: six Door cards, five Explore cards, five closed spatial reconstruction cycles, with page-bound carousel traversal.",
   "checks": [
     {
       "path": "/door/",
       "includes": [
         "data-route=\"/door/\"",
         "data-door-card-count=\"6\"",
+        "data-door-carousel",
         "data-card=\"products\"",
         "data-card=\"gauges\"",
         "data-card=\"frontier\"",
@@ -25,7 +26,15 @@
         "/assets/door-explore/frontier-cycle1.mjs",
         "/assets/door-explore/laws-magnet-v2.mjs",
         "/assets/door-explore/governance-gavel-v2.mjs",
-        "/assets/door-explore/home-identity-v2.mjs"
+        "/assets/door-explore/home-identity-v2.mjs",
+        "pointerdown",
+        "pointermove",
+        "pointerup",
+        "pointercancel",
+        "ArrowLeft",
+        "ArrowRight",
+        "scrollLeft",
+        "DOOR_EXPLORE_CAROUSEL_TRAVERSAL_REPAIR_V1"
       ],
       "excludes": [
         "families-v1.mjs",
@@ -43,6 +52,7 @@
       "includes": [
         "data-route=\"/explore/\"",
         "data-explore-card-count=\"5\"",
+        "data-explore-carousel",
         "data-card=\"measurement\"",
         "data-card=\"identity\"",
         "data-card=\"laws\"",
@@ -55,7 +65,15 @@
         "/assets/door-explore/products-constellation-v2.mjs",
         "/assets/door-explore/earth-instrument-v2.mjs",
         "/assets/door-explore/laws-magnet-v2.mjs",
-        "/assets/door-explore/home-identity-v2.mjs"
+        "/assets/door-explore/home-identity-v2.mjs",
+        "pointerdown",
+        "pointermove",
+        "pointerup",
+        "pointercancel",
+        "ArrowLeft",
+        "ArrowRight",
+        "scrollLeft",
+        "DOOR_EXPLORE_CAROUSEL_TRAVERSAL_REPAIR_V1"
       ],
       "excludes": [
         "families-v1.mjs",

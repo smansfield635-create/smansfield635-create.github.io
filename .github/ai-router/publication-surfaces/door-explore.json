@@ -34,6 +34,7 @@
         "ArrowLeft",
         "ArrowRight",
         "scrollLeft",
+        "carouselKeyMoved",
         "DOOR_EXPLORE_CAROUSEL_TRAVERSAL_REPAIR_V1"
       ],
       "excludes": [
@@ -73,6 +74,7 @@
         "ArrowLeft",
         "ArrowRight",
         "scrollLeft",
+        "carouselKeyMoved",
         "DOOR_EXPLORE_CAROUSEL_TRAVERSAL_REPAIR_V1"
       ],
       "excludes": [
@@ -122,12 +124,21 @@
   ],
   "runtime": {
     "enabled": true,
-    "path": "/door/",
+    "path": "/explore/",
     "timeoutMs": 30000,
-    "readySelector": "[data-door-carousel]",
-    "binding": {"mode": "direct-document", "path": "/door/"},
+    "readySelector": "[data-explore-carousel]",
+    "binding": {"mode": "direct-document", "path": "/explore/"},
     "failOnConsoleErrors": true,
     "failOnPageErrors": true,
-    "interactions": []
+    "interactions": [
+      {
+        "name": "Explore carousel ArrowRight moves",
+        "action": {"type": "key", "selector": "[data-explore-carousel]", "key": "ArrowRight"},
+        "assertions": [
+          {"type": "attributeEquals", "selector": "[data-explore-carousel]", "name": "data-carousel-key-moved", "value": "true"}
+        ],
+        "timeoutMs": 1500
+      }
+    ]
   }
 }

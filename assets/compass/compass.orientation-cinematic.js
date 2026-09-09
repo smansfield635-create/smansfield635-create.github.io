@@ -1,19 +1,19 @@
 (()=>{'use strict';
 
 const CONTRACT=Object.freeze({
-  version:'COMPASS_EXPERIENTIAL_PLAYER_R11A_V8',
+  version:'COMPASS_EXPERIENTIAL_PLAYER_R11A_V7_FILMED_ENTRY_RESTORATION',
   mutationClass:'RUNTIME_OR_NEW_DEVELOPMENT',
-  operationId:'COMPASS_R11A_V8_EXPERIENTIAL_INTEGRATION_20260909_001_SUCCESSOR_003',
-  lockGeneration:2032,
-  mediaPath:'/assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4?v=r11a-v8-review&cb=746606b76fbd05e9',
-  mediaBytes:8925582,
-  mediaSha256:'746606b76fbd05e9278787c25d484d001c67e18ba22f3890e95eee50e42ba29c',
-  mediaGitBlob:'f2fad2e98bd712b226a9c52c764e92a7dd0b46da',
-  sourceHead:'593a79e2175d0391992a6442b83b9d1f9eb6fcec',
-  masterDurationMs:59967,
-  entryPrerollMs:2300,
-  entryPrerollCountedInMaster:false,
-  entryContinuityLaw:'ACTUAL_PRESSED_DOM_SURFACE_PIXELATES_TO_FILM_OR_LIVE_PAGE',
+  operationId:'COMPASS_R11A_V7_FILMED_ENTRY_RESTORATION_20260909_001',
+  lockGeneration:2047,
+  mediaPath:'/assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4?v=r11a-v7-filmed-entry&cb=9641cf6653d1317d',
+  mediaBytes:8869131,
+  mediaSha256:'9641cf6653d1317d5b69b0310cfea301723da4ddd4cce8be15d4a7fcde23e919',
+  mediaGitBlob:'326d1c5b887262c6c828b3c8920a4b2e6f91d30b',
+  sourceHead:'97524e7e4c811a1d5b7f9e98cb86210bb33a8a87',
+  masterDurationMs:56900,
+  entryPrerollMs:0,
+  entryPrerollCountedInMaster:true,
+  entryContinuityLaw:'FILMED_ENTRY_PANEL_DISINTEGRATION_IS_INCLUDED_IN_THE_SINGLE_MASTER',
   viewportLaw:'ONE_CONTINUOUS_EXPERIENTIAL_REGION',
   terminalLaw:'MOVIE_DISSOLVES_TO_CANONICAL_LIVE_FOUR_STAR_COMPASS',
   naturalFadeMs:2200
@@ -111,7 +111,7 @@ function buildOverlay(){
   overlay.setAttribute('data-media-git-blob',CONTRACT.mediaGitBlob);
   overlay.setAttribute('data-media-sha256',CONTRACT.mediaSha256);
   overlay.setAttribute('data-entry-preroll-ms',String(CONTRACT.entryPrerollMs));
-  overlay.setAttribute('data-entry-preroll-counted-in-master','false');
+  overlay.setAttribute('data-entry-preroll-counted-in-master',String(CONTRACT.entryPrerollCountedInMaster));
   overlay.setAttribute('data-entry-continuity-law',CONTRACT.entryContinuityLaw);
   overlay.setAttribute('data-entry-state','IDLE');
   overlay.setAttribute('role','dialog');
@@ -350,11 +350,12 @@ function revealFirstPresentedFrame(){
   if(session.state===STATE.SETTLED||session.firstFramePresented)return;
   session.firstFramePresented=true;
   if(session.overlay){
-    session.overlay.dataset.entryState='FILM_PRESENTED_DOM_DISSOLVE_CONTINUES';
+    session.overlay.dataset.entryState='COMPLETE';
     session.overlay.dataset.firstFramePresentedBeforeEntryClear='true';
   }
   markState(STATE.PLAYING);
-  if(performance.now()-session.entryStartedAt>=ENTRY_CELL_TRAVEL_END_MS){session.gate?.setAttribute('hidden','');cancelEntryFrame();}
+  session.gate?.setAttribute('hidden','');
+  cancelEntryFrame();
 }
 async function maybeStartMasterPlayback(){
   if(session.videoStartRequested||session.state===STATE.SETTLED||!session.playRequested||!session.entryTransitionComplete||!session.videoReady)return;
@@ -384,9 +385,8 @@ function play(){
   if(reduced()){settle('reduced-motion-complete');return;}
   session.playRequested=true;
   session.entryAction='play';
-  session.overlay.dataset.entryState='TRANSITION';
-  session.gate?.classList.add('is-dissolving');
-  buildEntryTessellation(q('[data-main-orientation-entry-card]',session.overlay));
+  session.entryTransitionComplete=true;
+  session.overlay.dataset.entryState='MASTER_STARTING';
   session.entryStartedAt=performance.now();
   suppressAmbient();
   const video=session.video;
@@ -395,7 +395,7 @@ function play(){
     video.currentTime=0;
     video.load();
     noteVideoReady();
-    session.entryRaf=requestAnimationFrame(drawEntryTransition);
+    void maybeStartMasterPlayback();
   }catch(error){
     session.overlay?.setAttribute('data-player-error',String(error?.name||'MEDIA_PREPARE_FAILED'));
     settle('fail-open');

@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "door-mirrorland",
-  "description": "Door canonical estate preview reel using accepted Compass cinematic footage while preserving the frozen Cycle-7 carousel and all card renderers.",
+  "description": "Door passive magic-mirror sequence using clean scene-specific framing from the owner-authorized Compass cinematic while preserving Explore and the frozen Cycle-7 Door carousel.",
   "checks": [
     {
       "path": "/door/",
@@ -9,10 +9,10 @@
         "data-page=\"door\"",
         "data-version=\"DOOR-EXPLORE-ANIMATION-COHERENCE-V1-CYCLE7\"",
         "data-door-card-count=\"6\"",
-        "data-environment=\"door-estate-reel-v4\"",
+        "data-environment=\"door-magic-mirror-v5\"",
         "data-door-estate-reel",
         "data-door-estate-reel-ready=\"false\"",
-        "Five animated glimpses of the Diamond Gate Bridge estate",
+        "Automatic magic-mirror sequence of five Diamond Gate Bridge estate scenes",
         "Five glimpses of the estate",
         "Mirrorland",
         "Audralia",
@@ -20,58 +20,54 @@
         "Brain",
         "Manor",
         "/assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4",
-        "/assets/compass/cinematic-media/compass-main-orientation-entry-frame.png",
-        "/assets/door-explore/door.environment.css?v=door-estate-reel-g4-20260909-1",
-        "/assets/door-explore/door.environment.js?v=door-estate-reel-g4-20260909-1",
+        "/assets/door-explore/door.magic-mirror.css?v=door-magic-mirror-g5-20260909",
+        "/assets/door-explore/door.magic-mirror.js?v=door-magic-mirror-g5-20260909",
         "carousel.dataset.carouselAuthority='page-bound-v1'"
       ],
       "excludes": [
+        "/assets/door-explore/door.environment.js?v=door-estate-reel-g4-20260909-1",
         "data-door-monolith-stage",
         "Dark mirrored Mirrorland threshold",
-        "Six ways through.",
-        "door-window-rib",
-        "door-pane cyan",
-        "door-pane violet"
+        "Six ways through."
       ]
     },
     {
-      "path": "/assets/door-explore/door.environment.js",
+      "path": "/assets/door-explore/door.magic-mirror.js",
       "includes": [
-        "DOOR_CANONICAL_ESTATE_REEL_v4",
+        "DOOR_MAGIC_MIRROR_AUTO_SEQUENCE_v5",
         "data-door-estate-reel-ready",
-        "compass-main-orientation-final-v2",
-        "owner-authorized-compass-cinematic-v2",
-        "Mirrorland",
-        "Audralia",
-        "Trophy",
-        "Brain",
-        "Mirror Manor",
+        "doorEstateReelAutoplay",
+        "doorEstateReelInteraction = 'none'",
+        "39.55",
+        "47.55",
+        "57.22",
+        "53.30",
+        "60.86",
+        "manualSelectorsEnabled: false",
+        "cleanFraming: 'scene-specific-zoom-and-offset'",
+        "transition: 'canvas-crossfade-plus-reflective-ripple'",
         "embeddedAudraliaRuntime: false",
         "additionalWebGLContexts: 0",
         "generatedArtwork: false"
       ],
       "excludes": [
-        "DOOR_MIRRORLAND_MONOLITH_ENVIRONMENT_v3",
-        "DOOR_MIRRORLAND_DEPTH_ENVIRONMENT_v2",
+        "addEventListener('click'",
         "pointer-monolith-parallax"
       ]
     },
     {
-      "path": "/assets/door-explore/door.environment.css",
+      "path": "/assets/door-explore/door.magic-mirror.css",
       "includes": [
-        "DOOR_CANONICAL_ESTATE_REEL_v4",
-        ".door-estate-reel__frame",
-        ".door-estate-reel__video",
-        ".door-estate-reel__ghost",
-        ".door-estate-reel__selectors",
+        "DOOR_MAGIC_MIRROR_AUTO_SEQUENCE_v5",
+        ".door-estate-reel__selectors{display:none!important}",
+        "--door-mirror-zoom",
+        "door-magic-mirror-ripple",
         "@media(prefers-reduced-motion:reduce)"
       ],
       "excludes": [
         ".door-monolith-scene",
         ".door-portal-front",
-        ".door-route-signal",
-        ".door-window-rib",
-        ".door-pane.cyan"
+        ".door-route-signal"
       ]
     },
     {

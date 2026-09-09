@@ -1,7 +1,8 @@
-/* DOOR_CANONICAL_RENDERER_MIRROR_v7
-   Final source-correction pass:
-   - preserve the three clean cinematic states accepted in physical review;
-   - replace only pixelated Trophy and Brain footage with exact existing Compass renderers;
+/* DOOR_CANONICAL_RENDERER_MIRROR_v7_1
+   Copy/background correction on accepted G7 source strategy:
+   - preserve three clean cinematic states;
+   - preserve canonical Trophy and Brain renderers;
+   - relabel those two states as visitor-facing destinations;
    - remain passive: no scene buttons or visitor interaction.
 */
 (() => {
@@ -20,8 +21,8 @@
   const scenes = Object.freeze([
     Object.freeze({ label: 'Mirrorland', kind: 'film', time: 39.55, motionMs: 820, dwellMs: 4300, zoom: 1.54, x: 0, y: -2.5, authority: 'owner-authorized-compass-cinematic-clean-state' }),
     Object.freeze({ label: 'Audralia', kind: 'film', time: 47.55, motionMs: 880, dwellMs: 4450, zoom: 1.68, x: 0, y: -7.5, authority: 'owner-authorized-compass-cinematic-clean-state' }),
-    Object.freeze({ label: 'Trophy', kind: 'canonical', object: 'trophy', dwellMs: 4400, authority: 'CompassTrophyScene' }),
-    Object.freeze({ label: 'Brain', kind: 'canonical', object: 'brain', dwellMs: 4700, authority: 'CompassBrainScene' }),
+    Object.freeze({ label: 'Explore the Awards Chamber', kind: 'canonical', object: 'trophy', dwellMs: 4400, authority: 'CompassTrophyScene' }),
+    Object.freeze({ label: 'Discover your Coherence Index', kind: 'canonical', object: 'brain', dwellMs: 4700, authority: 'CompassBrainScene' }),
     Object.freeze({ label: 'Mirror Manor', kind: 'film', time: 60.86, motionMs: 820, dwellMs: 4550, zoom: 1.78, x: 0, y: -6.5, authority: 'owner-authorized-compass-cinematic-clean-state' })
   ]);
 
@@ -270,13 +271,13 @@
   setCopy(0);
 
   window.DGBDoorEnvironment = Object.freeze({
-    contract: 'DOOR_CANONICAL_RENDERER_MIRROR_v7',
+    contract: 'DOOR_CANONICAL_RENDERER_MIRROR_v7_1',
     ready: true,
     sceneOrder: scenes.map(scene => scene.label),
     automaticSequence: !reduced,
     manualSelectorsEnabled: false,
     cinematicCleanStates: Object.freeze(['Mirrorland', 'Audralia', 'Mirror Manor']),
-    canonicalRendererStates: Object.freeze(['Trophy', 'Brain']),
+    canonicalRendererStates: Object.freeze(['Explore the Awards Chamber', 'Discover your Coherence Index']),
     trophyAuthority: 'CompassTrophyScene',
     brainAuthority: 'CompassBrainScene',
     trophySource: '/assets/compass/compass.trophy-scene.js',

@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "door-mirrorland",
-  "description": "Door passive magic-mirror source correction: preserve the three physically accepted clean cinematic states and replace pixelated Trophy and Brain footage with exact existing Compass renderers. Explore and the frozen Cycle-7 Door carousel remain unchanged.",
+  "description": "Door passive magic-mirror copy/background correction on the accepted G7 source strategy: preserve clean Mirrorland, Audralia, and Mirror Manor cinematic states; keep exact Compass Trophy and Brain renderers; darken canonical object presentation; relabel Trophy and Brain as visitor-facing estate destinations. Explore and the frozen Cycle-7 Door carousel remain unchanged.",
   "checks": [
     {
       "path": "/door/",
@@ -9,7 +9,7 @@
         "data-page=\"door\"",
         "data-version=\"DOOR-EXPLORE-ANIMATION-COHERENCE-V1-CYCLE7\"",
         "data-door-card-count=\"6\"",
-        "data-environment=\"door-canonical-renderer-mirror-v7\"",
+        "data-environment=\"door-canonical-renderer-mirror-v7-1\"",
         "data-door-canonical-mirror",
         "data-door-canonical-mirror-ready=\"false\"",
         "Automatic magic-mirror sequence of five Diamond Gate Bridge estate scenes",
@@ -17,7 +17,7 @@
         "Mirrorland",
         "/assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4",
         "/assets/door-explore/door.canonical-mirror.css?v=door-canonical-renderer-mirror-g7-20260909-1",
-        "/assets/door-explore/door.canonical-mirror.js?v=door-canonical-renderer-mirror-g7-20260909-1",
+        "/assets/door-explore/door.canonical-mirror.js?v=door-canonical-renderer-mirror-g7-1-20260909-1",
         "carousel.dataset.carouselAuthority='page-bound-v1'"
       ],
       "excludes": [
@@ -33,10 +33,12 @@
     {
       "path": "/assets/door-explore/door.canonical-mirror.js",
       "includes": [
-        "DOOR_CANONICAL_RENDERER_MIRROR_v7",
+        "DOOR_CANONICAL_RENDERER_MIRROR_v7_1",
         "owner-authorized-compass-cinematic-clean-state",
         "CompassTrophyScene",
         "CompassBrainScene",
+        "Explore the Awards Chamber",
+        "Discover your Coherence Index",
         "/assets/compass/compass.trophy-scene.js",
         "/assets/compass/compass.hra-brain-scene.js",
         "canonicalRendererStates",
@@ -57,6 +59,7 @@
       "includes": [
         "data-door-canonical-object-host=\"v1\"",
         "data-door-canonical-object-canvas",
+        "background:#01040a",
         "/assets/door-explore/door.canonical-object.mjs?v=door-canonical-object-g7-20260909-1"
       ],
       "excludes": [

@@ -1,6 +1,11 @@
 name: Characters Alaric Exact-Head Qualification v1
 
 on:
+  pull_request:
+    branches:
+      - 'candidate/alaric-cardinal-integration-r1-rebind-001'
+    paths:
+      - '.github/workflows/characters-alaric-exact-head-qualification-v1.yml'
   push:
     branches:
       - 'qualification/alaric-exact-head-94c34-20260909'

@@ -1,9 +1,9 @@
 {
   "schema": "COMPASS_R11A_V8_TECHNICAL_QUALIFICATION_v1",
   "status": "SOURCE_AND_MEDIA_PASS_RESPONSIVE_BROWSER_QA_PENDING",
-  "operationId": "COMPASS_R11A_V8_EXPERIENTIAL_INTEGRATION_20260909_001_SUCCESSOR_001",
-  "lockGeneration": 2027,
-  "governingMain": "4a228b7322ffc2bf71fae7ee103bae1a81725460",
+  "operationId": "COMPASS_R11A_V8_EXPERIENTIAL_INTEGRATION_20260909_001_SUCCESSOR_003",
+  "lockGeneration": 2032,
+  "governingMain": "593a79e2175d0391992a6442b83b9d1f9eb6fcec",
   "master": {
     "path": "assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4",
     "bytes": 8925582,

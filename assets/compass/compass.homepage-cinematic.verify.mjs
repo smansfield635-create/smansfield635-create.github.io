@@ -21,9 +21,9 @@ const acceptance=json(`${evidenceRoot}/owner-acceptance.v1.json`);
 const technical=json(`${evidenceRoot}/technical-qualification.v1.json`);
 const release=json(`${evidenceRoot}/release-manifest.v1.json`);
 const EXPECTED=Object.freeze({
-  operationId:'COMPASS_R11A_V8_EXPERIENTIAL_INTEGRATION_20260909_001_SUCCESSOR_001',
-  lockGeneration:2027,
-  governingMain:'4a228b7322ffc2bf71fae7ee103bae1a81725460',
+  operationId:'COMPASS_R11A_V8_EXPERIENTIAL_INTEGRATION_20260909_001_SUCCESSOR_003',
+  lockGeneration:2032,
+  governingMain:'593a79e2175d0391992a6442b83b9d1f9eb6fcec',
   playerContract:'COMPASS_EXPERIENTIAL_PLAYER_R11A_V8',
   mediaBytes:8925582,
   mediaSha256:'746606b76fbd05e9278787c25d484d001c67e18ba22f3890e95eee50e42ba29c',
@@ -70,10 +70,10 @@ check('SYNTAX',syntax.every(item=>item.result.status===0),syntax.filter(item=>it
 check('AUTHORITY_BOUND',[custody,timing,acceptance,technical,release].every(value=>value.operationId===EXPECTED.operationId&&value.lockGeneration===EXPECTED.lockGeneration));
 check('GOVERNING_HEAD_BOUND',[custody,timing,technical,release].every(value=>value.governingMain===EXPECTED.governingMain));
 check('MASTER_CUSTODY',custody.master?.bytes===EXPECTED.mediaBytes&&custody.master?.sha256===EXPECTED.mediaSha256&&custody.master?.gitBlob===EXPECTED.mediaGitBlob&&technical.master?.sha256===EXPECTED.mediaSha256);
-check('PREPUBLICATION_ONLY',acceptance.status==='PENDING_OWNER_REVIEW'&&acceptance.ownerAcceptanceIsInferred===false&&release.mergeAuthorized===false&&release.deploymentAuthorized===false&&release.liveMutationPerformed===false);
+check('OWNER_PUBLICATION_AUTHORITY',acceptance.status==='OWNER_ACCEPTED_AND_ORDERED_LIVE_REPLACEMENT'&&acceptance.ownerAcceptanceIsInferred===false&&acceptance.publicationAuthority===true&&release.mergeAuthorized===true&&release.deploymentAuthorized===true&&release.liveMutationPerformed===false);
 check('EXACT_PATH_BOUNDARY',diff.status===0&&[...changed].every(value=>allowed.has(value)),[...changed].filter(value=>!allowed.has(value)).join(','));
 
-check('PLAYER_CONTRACT',has(`version:'${EXPECTED.playerContract}'`)&&has(`operationId:'${EXPECTED.operationId}'`)&&has('lockGeneration:2027'));
+check('PLAYER_CONTRACT',has(`version:'${EXPECTED.playerContract}'`)&&has(`operationId:'${EXPECTED.operationId}'`)&&has(`lockGeneration:${EXPECTED.lockGeneration}`));
 check('PLAYER_MASTER_IDENTITY',has(`mediaBytes:${EXPECTED.mediaBytes}`)&&has(`mediaSha256:'${EXPECTED.mediaSha256}'`)&&has(`mediaGitBlob:'${EXPECTED.mediaGitBlob}'`)&&has(`masterDurationMs:${EXPECTED.durationMs}`));
 check('CACHE_BUSTED_MEDIA',has("mediaPath:'/assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4?v=r11a-v8-review&cb=746606b76fbd05e9'")&&html.includes('data-compass-orientation-cinematic="r11a-v8-review"'));
 check('ACTUAL_DOM_PLAY_DISSOLVE',playBody.includes("session.entryAction='play'")&&playBody.includes("buildEntryTessellation(q('[data-main-orientation-entry-card]',session.overlay))")&&playBody.includes('requestAnimationFrame(drawEntryTransition)'));

@@ -66,6 +66,17 @@ export const V4_UNDERSTORY_CONTRACT=freeze({
   v3CameraContextReused:true
 });
 
+export const V6_UNDERSTORY_PRESENTATION_CONTRACT=freeze({
+  schema:'MIRRORLAND_V6_UNDERSTORY_PRESENTATION_CONTRACT_v1',
+  operationId:'MIRRORLAND_V6_LIVE_VEGETATION_MATERIAL_RECOVERY_20260908_001',
+  lockGeneration:2018,
+  canonicalPopulationMutable:false,
+  compactPresentationSampling:.90,
+  nightLighting:true,
+  depthResponse:true,
+  canonicalIdentityInputsProhibited:freeze(['DEVICE_CLASS','VIEWPORT_CLASS','CAMERA_STATE','REDUCED_MOTION','LOD'])
+});
+
 function insideSightline(x,z){
   return FOREST_SIGHTLINE_EXCLUSIONS.some(item=>Math.hypot(x-item.x,z-item.z)<item.radius);
 }
@@ -262,25 +273,51 @@ uniform vec3 uEye;
 uniform float uFar;
 out float vFade;
 out float vHeight;
+out vec3 vWorld;
+out vec3 vLocal;
 void main(){
   float c=cos(aYaw),s=sin(aYaw);
   vec3 local=vec3(aLocal.x*c-aLocal.z*s,aLocal.y,aLocal.x*s+aLocal.z*c)*aScale;
   vec3 world=aWorld+local;
   float d=distance(world,uEye);
-  vFade=1.0-smoothstep(uFar*.76,uFar,d);
+  vFade=1.0-smoothstep(uFar*.78,uFar,d);
   vHeight=clamp(aLocal.y,0.0,1.0);
+  vWorld=world;
+  vLocal=aLocal;
   gl_Position=uVP*vec4(world,1.0);
 }`;
 const FS=`#version 300 es
 precision highp float;
 in float vFade;
 in float vHeight;
+in vec3 vWorld;
+in vec3 vLocal;
 uniform vec3 uTint;
+uniform vec3 uAccent;
+uniform vec3 uEye;
+uniform vec3 uMoonDirection;
+uniform float uLunarIntensity;
+uniform float uHorizonHaze;
+uniform float uTime;
 out vec4 outColor;
+float hash21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123);}
 void main(){
-  if(vFade<.04)discard;
-  vec3 c=uTint*(.76+.18*vHeight+.06*vFade);
-  outColor=vec4(c,1.0);
+  if(vFade<.035)discard;
+  vec3 normal=normalize(cross(dFdx(vWorld),dFdy(vWorld)));
+  if(!gl_FrontFacing)normal=-normal;
+  vec3 moonDirection=normalize(uMoonDirection);
+  vec3 viewDirection=normalize(uEye-vWorld);
+  float moonFace=.22+.78*abs(dot(normal,moonDirection));
+  float rim=pow(1.0-abs(dot(normal,viewDirection)),2.0);
+  float variation=hash21(floor(vWorld.xz*.19)+floor(vLocal.xy*7.0));
+  vec3 pigment=mix(uTint,uAccent,clamp(.10+.36*vHeight+.22*variation+.12*moonFace,0.0,.78));
+  float lunar=clamp(uLunarIntensity,0.0,1.0);
+  float illumination=.50+moonFace*(.18+.28*lunar)+rim*(.05+.10*lunar);
+  vec3 color=pigment*illumination+uAccent*rim*.035*lunar;
+  float haze=(1.0-vFade)*(.12+.18*clamp(uHorizonHaze,0.0,1.0));
+  color=mix(color,vec3(.042,.072,.086),haze);
+  color*=1.0+.01*sin(uTime*.11+vWorld.x*.021+vWorld.z*.017);
+  outColor=vec4(color,1.0);
 }`;
 
 const GEOMETRY=freeze({
@@ -317,12 +354,20 @@ const GEOMETRY=freeze({
 });
 
 const TINT=freeze({
-  GRASS_SEDGE:freeze([.105,.205,.145]),
-  LOW_SHRUB:freeze([.075,.155,.105]),
-  SAPLING_YOUNG_GROWTH:freeze([.085,.175,.115]),
-  REED_WET_MARGIN:freeze([.125,.205,.145]),
-  DEAD_SPARSE_GROUND:freeze([.19,.17,.135]),
-  FOREST_FLOOR_CLUSTER:freeze([.065,.125,.085])
+  GRASS_SEDGE:freeze([.095,.230,.145]),
+  LOW_SHRUB:freeze([.065,.190,.108]),
+  SAPLING_YOUNG_GROWTH:freeze([.075,.220,.120]),
+  REED_WET_MARGIN:freeze([.105,.245,.158]),
+  DEAD_SPARSE_GROUND:freeze([.205,.175,.125]),
+  FOREST_FLOOR_CLUSTER:freeze([.052,.155,.085])
+});
+const ACCENT=freeze({
+  GRASS_SEDGE:freeze([.265,.500,.295]),
+  LOW_SHRUB:freeze([.185,.420,.220]),
+  SAPLING_YOUNG_GROWTH:freeze([.225,.485,.250]),
+  REED_WET_MARGIN:freeze([.310,.555,.330]),
+  DEAD_SPARSE_GROUND:freeze([.380,.315,.205]),
+  FOREST_FLOOR_CLUSTER:freeze([.155,.345,.180])
 });
 
 function eyeVector(eye){
@@ -361,7 +406,7 @@ function makePrimitive(gl,geometry,instances){
 export function createUnderstoryRenderer(gl,{compact=false}={}){
   if(!gl||typeof gl.drawArraysInstanced!=='function')throw new Error('WEBGL2_INSTANCING_REQUIRED');
   const population=getCanonicalUnderstoryPopulation();
-  const visible=population.instances.filter(item=>!compact||item.presentationSample<V4_UNDERSTORY_CONTRACT.compactPresentationSampling);
+  const visible=population.instances.filter(item=>!compact||item.presentationSample<V6_UNDERSTORY_PRESENTATION_CONTRACT.compactPresentationSampling);
   const groups=Object.fromEntries(UNDERSTORY_CLASSES.map(type=>[type,visible.filter(item=>item.type===type)]));
   const primitives=Object.fromEntries(UNDERSTORY_CLASSES.map(type=>[type,makePrimitive(gl,GEOMETRY[type],groups[type])]));
   const shader=createProgram(gl,VS,FS);
@@ -369,24 +414,36 @@ export function createUnderstoryRenderer(gl,{compact=false}={}){
   const uEye=gl.getUniformLocation(shader,'uEye');
   const uFar=gl.getUniformLocation(shader,'uFar');
   const uTint=gl.getUniformLocation(shader,'uTint');
+  const uAccent=gl.getUniformLocation(shader,'uAccent');
+  const uMoonDirection=gl.getUniformLocation(shader,'uMoonDirection');
+  const uLunarIntensity=gl.getUniformLocation(shader,'uLunarIntensity');
+  const uHorizonHaze=gl.getUniformLocation(shader,'uHorizonHaze');
+  const uTime=gl.getUniformLocation(shader,'uTime');
 
   return freeze({
-    schema:'MIRRORLAND_VEGETATION_V4_UNDERSTORY_RENDERER_v1',
+    schema:'MIRRORLAND_V6_LIVE_MATERIAL_UNDERSTORY_RENDERER_v1',
     canonicalPopulation:population,
     compact:Boolean(compact),
     presentationCount:visible.length,
-    draw({vp,eye}){
+    presentationSampling:compact?V6_UNDERSTORY_PRESENTATION_CONTRACT.compactPresentationSampling:1,
+    draw({vp,eye,lighting={},time=0}){
       if(!vp||vp.length!==16)throw new Error('UNDERSTORY_VP_REQUIRED');
       const e=eyeVector(eye);
+      const moon=lighting.moonDirection||[-.52,.76,.40];
       gl.useProgram(shader);
       gl.uniformMatrix4fv(uVP,false,vp);
       gl.uniform3f(uEye,e[0],e[1],e[2]);
-      gl.uniform1f(uFar,compact?1800:2400);
+      gl.uniform3f(uMoonDirection,moon[0],moon[1],moon[2]);
+      gl.uniform1f(uLunarIntensity,Number.isFinite(lighting.lunarIntensity)?lighting.lunarIntensity:.72);
+      gl.uniform1f(uHorizonHaze,Number.isFinite(lighting.horizonHaze)?lighting.horizonHaze:.42);
+      gl.uniform1f(uTime,Number.isFinite(time)?time:0);
+      gl.uniform1f(uFar,compact?2050:2500);
       let drawCalls=0,instancesDrawn=0;
       for(const type of UNDERSTORY_CLASSES){
         const primitive=primitives[type];
         if(!primitive.instanceCount)continue;
         gl.uniform3fv(uTint,TINT[type]);
+        gl.uniform3fv(uAccent,ACCENT[type]);
         gl.bindVertexArray(primitive.vao);
         gl.drawArraysInstanced(gl.TRIANGLES,0,primitive.vertexCount,primitive.instanceCount);
         drawCalls++;

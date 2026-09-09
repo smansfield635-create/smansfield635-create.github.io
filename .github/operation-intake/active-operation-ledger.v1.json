@@ -2767,6 +2767,45 @@
       "scopeHash": "65c30a151d0eee047d4366a3ae54ceb8d8313ab03a3964c507bb60433ebe4c75",
       "state": "ADMITTED_LOCKED"
     },
+    "67ae3d563650ced53ef6603c64f79470b4d229c7809d62e964b78ec9d10ad22b": {
+      "governingHead": "04a9f3c163abfaf2489cf9cd634f53a759380601",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "04a9f3c163abfaf2489cf9cd634f53a759380601",
+          "lockGeneration": 2024,
+          "lockScope": "COMPASS:PUBLICATION_MANIFEST:R11A_V7",
+          "operationId": "COMPASS_R11A_V7_PUBLICATION_BINDING_20260909_002",
+          "procedureLocatorDigest": "bdbd4d38414030919caa24d5ff329e940f6ef4d139503c60deed7df7b66217ec",
+          "requestDigest": "5cb04c9eed70935562e5d355180a21f5d3a86b832f61927bbced9c5f56511948",
+          "scopeHash": "67ae3d563650ced53ef6603c64f79470b4d229c7809d62e964b78ec9d10ad22b"
+        },
+        "bindingDigest": "476bd1c3d1388c29177592e9546f39e28c5ea7e95b0fcde7d244faa635bc8f3d",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "e8e980b75fc5f40398eaf0d3a89ebdebab657f9f",
+          "observedLockRefHead": "5f2f680dd2de1381c559ed75d4c7715f8e53d9fc"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "a53d23ea562f0308167712d1e6787e2c86f2a00bb347244844a82748e614b580",
+          "commentId": 5594285214,
+          "issueNumber": 2843,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "lockGeneration": 2024,
+      "lockScope": "COMPASS:PUBLICATION_MANIFEST:R11A_V7",
+      "operationId": "COMPASS_R11A_V7_PUBLICATION_BINDING_20260909_002",
+      "procedureLocatorDigest": "bdbd4d38414030919caa24d5ff329e940f6ef4d139503c60deed7df7b66217ec",
+      "released": false,
+      "requestDigest": "5cb04c9eed70935562e5d355180a21f5d3a86b832f61927bbced9c5f56511948",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "67ae3d563650ced53ef6603c64f79470b4d229c7809d62e964b78ec9d10ad22b",
+      "state": "ADMITTED_LOCKED"
+    },
     "68ac263182dcac32f11cb11d06d94a28100dc4537f69c8c986b68caca15e8582": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -7617,7 +7656,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2023,
+  "lockGeneration": 2024,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

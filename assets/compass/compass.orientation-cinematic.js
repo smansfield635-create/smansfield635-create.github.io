@@ -1,24 +1,20 @@
 (()=>{'use strict';
 
 const CONTRACT=Object.freeze({
-  version:'COMPASS_FULLSCREEN_STAGE_R11A_GEN2041',
+  version:'COMPASS_EXPERIENTIAL_PLAYER_R11A_V8',
   mutationClass:'RUNTIME_OR_NEW_DEVELOPMENT',
-  operationId:'COMPASS_R11A_FULLSCREEN_STAGE_INTEGRATION_20260909_001_SUCCESSOR_001',
-  lockGeneration:2041,
+  operationId:'COMPASS_R11A_V8_EXPERIENTIAL_INTEGRATION_20260909_001_SUCCESSOR_003',
+  lockGeneration:2032,
   mediaPath:'/assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4?v=r11a-v8-review&cb=746606b76fbd05e9',
   mediaBytes:8925582,
   mediaSha256:'746606b76fbd05e9278787c25d484d001c67e18ba22f3890e95eee50e42ba29c',
   mediaGitBlob:'f2fad2e98bd712b226a9c52c764e92a7dd0b46da',
   sourceHead:'593a79e2175d0391992a6442b83b9d1f9eb6fcec',
-  candidateBaseHead:'6df1f7b59db07bfc149220442adf5327d33e9c70',
   masterDurationMs:59967,
   entryPrerollMs:2300,
   entryPrerollCountedInMaster:false,
   entryContinuityLaw:'ACTUAL_PRESSED_DOM_SURFACE_PIXELATES_TO_FILM_OR_LIVE_PAGE',
-  viewportLaw:'FULL_VIEWPORT_STAGE_CONTAIN_UNLESS_COVER_IS_BAKED_CONTENT_SAFE',
-  coverSafeMinAspect:1.775,
-  coverSafeMaxAspect:1.78,
-  decoderLaw:'ONE_CINEMATIC_VIDEO_ELEMENT_ONE_ACTIVE_DECODER',
+  viewportLaw:'ONE_CONTINUOUS_EXPERIENTIAL_REGION',
   terminalLaw:'MOVIE_DISSOLVES_TO_CANONICAL_LIVE_FOUR_STAR_COMPASS',
   naturalFadeMs:2200
 });
@@ -37,7 +33,7 @@ const mix=(a,b,t)=>a+(b-a)*t;
 const easeOut=t=>1-Math.pow(1-clamp(t),3);
 const reduced=()=>window.matchMedia?.('(prefers-reduced-motion: reduce)').matches===true;
 const session={
-  state:null,overlay:null,video:null,gate:null,play:null,skip:null,replay:null,
+  state:null,overlay:null,video:null,ambientVideo:null,gate:null,play:null,skip:null,replay:null,
   root:null,rootInert:false,rootAriaHidden:null,priorFocus:null,
   ambient:null,ambientSnapshot:null,url:null,historyLength:0,
   fadeStarted:false,settlementCount:0,
@@ -117,11 +113,20 @@ function buildOverlay(){
   overlay.setAttribute('data-entry-preroll-ms',String(CONTRACT.entryPrerollMs));
   overlay.setAttribute('data-entry-preroll-counted-in-master','false');
   overlay.setAttribute('data-entry-continuity-law',CONTRACT.entryContinuityLaw);
-  overlay.setAttribute('data-decoder-law',CONTRACT.decoderLaw);
   overlay.setAttribute('data-entry-state','IDLE');
   overlay.setAttribute('role','dialog');
   overlay.setAttribute('aria-modal','true');
   overlay.setAttribute('aria-label','Diamond Gate Bridge orientation film');
+
+  const ambientVideo=document.createElement('video');
+  ambientVideo.className='compass-prerendered-player__ambient-video';
+  ambientVideo.playsInline=true;
+  ambientVideo.preload='auto';
+  ambientVideo.controls=false;
+  ambientVideo.muted=true;
+  ambientVideo.disablePictureInPicture=true;
+  ambientVideo.setAttribute('aria-hidden','true');
+  ambientVideo.src=CONTRACT.mediaPath;
 
   const video=document.createElement('video');
   video.className='compass-prerendered-player__video';
@@ -145,9 +150,10 @@ function buildOverlay(){
   const playingSkip=makeButton('Skip','data-main-orientation-skip','quiet');
   playingSkip.classList.add('compass-prerendered-player__skip');
 
-  overlay.append(video,gate,playingSkip);
+  overlay.append(ambientVideo,video,gate,playingSkip);
   session.overlay=overlay;
   session.video=video;
+  session.ambientVideo=ambientVideo;
   session.gate=gate;
   session.play=play;
   session.skip=skip;
@@ -179,7 +185,6 @@ function emitSettlement(reason){
     mediaSha256:CONTRACT.mediaSha256,
     mediaGitBlob:CONTRACT.mediaGitBlob,
     sourceHead:CONTRACT.sourceHead,
-    candidateBaseHead:CONTRACT.candidateBaseHead,
     masterDurationMs:CONTRACT.masterDurationMs,
     entryPreRollMs:CONTRACT.entryPrerollMs,
     entryPreRollCountedInMaster:CONTRACT.entryPrerollCountedInMaster,
@@ -200,10 +205,11 @@ function cleanupOverlay(){
   window.removeEventListener('keydown',onKey,true);
   window.removeEventListener('resize',resizeEntryCanvas);
   cancelEntryFrame();
-  if(session.video){try{session.video.pause();}catch{}session.video.removeAttribute('src');try{session.video.load();}catch{}}
+  for(const video of [session.video,session.ambientVideo])if(video){try{video.pause();}catch{}video.removeAttribute('src');try{video.load();}catch{}}
   session.overlay?.remove();
   session.overlay=null;
   session.video=null;
+  session.ambientVideo=null;
   session.gate=null;
   session.play=null;
   session.skip=null;
@@ -264,17 +270,6 @@ function resizeEntryCanvas(){
       color:ENTRY_COLORS[Math.floor(random()*ENTRY_COLORS.length)],phase:random()*Math.PI*2
     });
   });
-  applyViewportMode();
-}
-function applyViewportMode(){
-  const overlay=session.overlay;
-  if(!overlay)return;
-  const width=Math.max(1,innerWidth||document.documentElement.clientWidth||1);
-  const height=Math.max(1,innerHeight||document.documentElement.clientHeight||1);
-  const aspect=width/height;
-  const coverSafe=aspect>=CONTRACT.coverSafeMinAspect&&aspect<=CONTRACT.coverSafeMaxAspect;
-  overlay.classList.toggle('is-cover-safe',coverSafe);
-  overlay.dataset.fitMode=coverSafe?'COVER_SAFE':'CONTAIN_SAFE';
 }
 function buildEntryTessellation(surface){
   const rect=surface.getBoundingClientRect(),baseSize=clamp(Math.min(rect.width,rect.height)*.035,14,44);
@@ -363,12 +358,13 @@ function revealFirstPresentedFrame(){
 }
 async function maybeStartMasterPlayback(){
   if(session.videoStartRequested||session.state===STATE.SETTLED||!session.playRequested||!session.entryTransitionComplete||!session.videoReady)return;
-  const video=session.video;
+  const video=session.video,ambientVideo=session.ambientVideo;
   if(!video)return;
   session.videoStartRequested=true;
   suppressAmbient();
   try{
     video.currentTime=0;
+    if(ambientVideo){ambientVideo.currentTime=0;const ambientPlay=ambientVideo.play();if(ambientPlay&&typeof ambientPlay.catch==='function')ambientPlay.catch(()=>{});}
     if(typeof video.requestVideoFrameCallback==='function'){
       video.requestVideoFrameCallback(()=>revealFirstPresentedFrame());
     }else{
@@ -442,13 +438,14 @@ function onKey(event){
 function onAmbientTrigger(){if(session.state===STATE.PLAYING||session.playRequested)queueMicrotask(suppressAmbient);}
 
 function bindOverlay(){
-  const overlay=session.overlay,video=session.video;
+  const overlay=session.overlay,video=session.video,ambientVideo=session.ambientVideo;
   overlay.addEventListener('click',onOverlayClick);
   video.addEventListener('loadeddata',noteVideoReady);
   video.addEventListener('canplay',noteVideoReady);
   video.addEventListener('ended',()=>settle('complete'),{once:true});
   video.addEventListener('error',()=>settle('fail-open'),{once:true});
   video.addEventListener('timeupdate',maybeNaturalFade);
+  video.addEventListener('timeupdate',()=>{if(ambientVideo&&Math.abs((ambientVideo.currentTime||0)-(video.currentTime||0))>.09)ambientVideo.currentTime=video.currentTime;});
   window.addEventListener('keydown',onKey,true);
   window.addEventListener('resize',resizeEntryCanvas,{passive:true});
 }
@@ -501,7 +498,6 @@ globalThis.__DGB_COMPASS_PRERENDERED_PLAYER__=Object.freeze({
     mediaPath:CONTRACT.mediaPath,
     mediaGitBlob:CONTRACT.mediaGitBlob,
     mediaSha256:CONTRACT.mediaSha256,
-    candidateBaseHead:CONTRACT.candidateBaseHead,
     entryPrerollMs:CONTRACT.entryPrerollMs,
     entryPrerollCountedInMaster:CONTRACT.entryPrerollCountedInMaster,
     playRequested:session.playRequested,
@@ -510,12 +506,7 @@ globalThis.__DGB_COMPASS_PRERENDERED_PLAYER__=Object.freeze({
     firstFramePresentedBeforeEntryClear:session.firstFramePresented,
     entryAction:session.entryAction,
     viewportLaw:CONTRACT.viewportLaw,
-    coverSafeAspectRange:[CONTRACT.coverSafeMinAspect,CONTRACT.coverSafeMaxAspect],
-    decoderLaw:CONTRACT.decoderLaw,
     terminalLaw:CONTRACT.terminalLaw,
-    fitMode:session.overlay?.dataset.fitMode||null,
-    cinematicVideoElementCount:session.overlay?.querySelectorAll('video').length||0,
-    cinematicMediaSourceCount:(session.video?.currentSrc||session.video?.src)?1:0,
     reducedMotion:reduced(),
     rootInert:Boolean(session.root?.inert),
     ambientMuted:Boolean(session.ambient?.muted),

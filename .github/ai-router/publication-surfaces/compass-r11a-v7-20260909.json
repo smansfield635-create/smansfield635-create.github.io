@@ -85,7 +85,7 @@
         "name": "Skip restores exact Compass",
         "action": {
           "type": "click",
-          "selector": "[data-main-orientation-skip]"
+          "selector": ".compass-prerendered-player__skip[data-main-orientation-skip]"
         },
         "assertions": [
           {

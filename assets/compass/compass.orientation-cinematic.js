@@ -1,16 +1,18 @@
 (()=>{'use strict';
 
 const CONTRACT=Object.freeze({
-  version:'COMPASS_EXPERIENTIAL_PLAYER_R11A_V7_FILMED_ENTRY_RESTORATION',
+  version:'COMPASS_EXPERIENTIAL_PLAYER_R11A_V7_V8_HYBRID_CANDIDATE',
   mutationClass:'RUNTIME_OR_NEW_DEVELOPMENT',
-  operationId:'COMPASS_R11A_V7_FILMED_ENTRY_RESTORATION_20260909_001',
-  lockGeneration:2047,
-  mediaPath:'/assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4?v=r11a-v7-filmed-entry&cb=9641cf6653d1317d',
-  mediaBytes:8869131,
-  mediaSha256:'9641cf6653d1317d5b69b0310cfea301723da4ddd4cce8be15d4a7fcde23e919',
-  mediaGitBlob:'326d1c5b887262c6c828b3c8920a4b2e6f91d30b',
-  sourceHead:'97524e7e4c811a1d5b7f9e98cb86210bb33a8a87',
-  masterDurationMs:56900,
+  operationId:'COMPASS_R11A_V7_V8_HYBRID_CANDIDATE_20260909_001',
+  mediaPath:'/assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4?v=r11a-v7-v8-hybrid&cb=507081bfe7290b20',
+  mediaBytes:9141773,
+  mediaSha256:'507081bfe7290b201c357368649430b2de7b1c45bba141f2037e0b28f0faec01',
+  mediaGitBlob:'758806d9df52cb33ef61892bb49a97b46f90cbb5',
+  posterPath:'/assets/compass/cinematic-media/compass-main-orientation-entry-frame.png?v=r11a-v7-v8-hybrid&cb=47ca784c3f679555',
+  posterBytes:87700,
+  posterSha256:'47ca784c3f67955554536852b96cb109547d83497d0dbef7edeb3ecd3dce1061',
+  sourceHead:'9af4b749d9015deb69cac55f503afc694440f3ed',
+  masterDurationMs:64767,
   entryPrerollMs:0,
   entryPrerollCountedInMaster:true,
   entryContinuityLaw:'FILMED_ENTRY_PANEL_DISINTEGRATION_IS_INCLUDED_IN_THE_SINGLE_MASTER',
@@ -126,6 +128,7 @@ function buildOverlay(){
   ambientVideo.muted=true;
   ambientVideo.disablePictureInPicture=true;
   ambientVideo.setAttribute('aria-hidden','true');
+  ambientVideo.poster=CONTRACT.posterPath;
   ambientVideo.src=CONTRACT.mediaPath;
 
   const video=document.createElement('video');
@@ -136,6 +139,7 @@ function buildOverlay(){
   video.disablePictureInPicture=true;
   video.setAttribute('aria-label','Diamond Gate Bridge orientation film');
   video.setAttribute('data-main-orientation-video','');
+  video.poster=CONTRACT.posterPath;
   video.src=CONTRACT.mediaPath;
 
   const gate=document.createElement('div');
@@ -394,7 +398,7 @@ function play(){
   try{
     video.preload='auto';
     video.currentTime=0;
-    video.load();
+    if(video.readyState===0)video.load();
     noteVideoReady();
     void maybeStartMasterPlayback();
   }catch(error){

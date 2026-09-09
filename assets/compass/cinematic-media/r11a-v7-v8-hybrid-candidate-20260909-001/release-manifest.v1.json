@@ -1,0 +1,14 @@
+{
+  "schema": "COMPASS_R11A_V7_V8_HYBRID_RELEASE_MANIFEST_v1",
+  "status": "OWNER_AUTHORIZED_RELEASE_PENDING_EXACT_HEAD_QUALIFICATION",
+  "operationId": "COMPASS_R11A_V7_V8_HYBRID_CANDIDATE_20260909_001",
+  "governingMain": "9af4b749d9015deb69cac55f503afc694440f3ed",
+  "candidateBranch": "compass/r11a-v7-v8-hybrid-candidate-20260909-001",
+  "constructionHead": "dac29f92be267370a3104c267b7875f4575bae36",
+  "candidateSha256": "507081bfe7290b201c357368649430b2de7b1c45bba141f2037e0b28f0faec01",
+  "candidateBytes": 9141773,
+  "mergeAuthorized": true,
+  "deploymentAuthorized": true,
+  "liveMutationPerformed": false,
+  "nextGate": "RECONCILE_AND_RUN_EXACT_HEAD_QUALIFICATION"
+}

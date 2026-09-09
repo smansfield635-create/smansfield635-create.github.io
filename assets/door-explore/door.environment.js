@@ -1,48 +1,177 @@
-/* DOOR_MIRRORLAND_MONOLITH_ENVIRONMENT_v3 */
+/* DOOR_CANONICAL_ESTATE_REEL_v4 */
 (() => {
   "use strict";
-  const root = document.documentElement;
-  const threshold = document.querySelector('[data-door-mirrorland]');
-  const stage = document.querySelector('[data-door-monolith-stage]');
-  if (!threshold || !stage) return;
+
+  const reel = document.querySelector('[data-door-estate-reel]');
+  const frame = reel?.querySelector('[data-door-reel-frame]');
+  const video = reel?.querySelector('[data-door-reel-video]');
+  const ghost = reel?.querySelector('[data-door-reel-ghost]');
+  const label = reel?.querySelector('[data-door-reel-label]');
+  const count = reel?.querySelector('[data-door-reel-count]');
+  const selectors = reel ? [...reel.querySelectorAll('[data-door-reel-index]')] : [];
+  if (!reel || !frame || !video || !ghost || !label || !count || selectors.length !== 5) return;
 
   const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
-  const fine = window.matchMedia?.('(pointer: fine)')?.matches ?? false;
-  const baseYaw = fine ? -9 : -12;
-  const basePitch = fine ? 2 : 3.4;
+  const scenes = Object.freeze([
+    Object.freeze({ label: 'Mirrorland', time: 37.6 }),
+    Object.freeze({ label: 'Audralia', time: 49.6 }),
+    Object.freeze({ label: 'Trophy', time: 57.4 }),
+    Object.freeze({ label: 'Brain', time: 53.6 }),
+    Object.freeze({ label: 'Mirror Manor', time: 61.03 })
+  ]);
 
-  const setPose = (yaw, pitch, rise = 0) => {
-    root.style.setProperty('--door-yaw', `${yaw.toFixed(2)}deg`);
-    root.style.setProperty('--door-pitch', `${pitch.toFixed(2)}deg`);
-    root.style.setProperty('--door-rise', `${rise.toFixed(2)}px`);
+  let index = 0;
+  let ready = false;
+  let changing = false;
+  let timer = 0;
+  let visible = true;
+
+  const clearTimer = () => {
+    if (timer) window.clearTimeout(timer);
+    timer = 0;
   };
 
-  setPose(baseYaw, basePitch, 0);
+  const updateLabels = () => {
+    const scene = scenes[index];
+    label.textContent = scene.label;
+    count.textContent = `${index + 1} / ${scenes.length}`;
+    reel.dataset.doorEstateReelScene = scene.label.toLowerCase().replace(/\s+/g, '-');
+    selectors.forEach((button, buttonIndex) => {
+      const selected = buttonIndex === index;
+      button.setAttribute('aria-pressed', selected ? 'true' : 'false');
+      button.dataset.active = selected ? 'true' : 'false';
+    });
+  };
 
-  if (!reduced && fine) {
-    threshold.addEventListener('pointermove', (event) => {
-      const rect = threshold.getBoundingClientRect();
-      if (!rect.width || !rect.height) return;
-      const nx = ((event.clientX - rect.left) / rect.width) - .5;
-      const ny = ((event.clientY - rect.top) / rect.height) - .5;
-      setPose(baseYaw + nx * 8, basePitch - ny * 5, ny * -2);
-    }, { passive: true });
-    threshold.addEventListener('pointerleave', () => setPose(baseYaw, basePitch, 0), { passive: true });
+  const fitGhost = () => {
+    const rect = frame.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    const width = Math.max(2, Math.round(rect.width * dpr));
+    const height = Math.max(2, Math.round(rect.height * dpr));
+    if (ghost.width !== width) ghost.width = width;
+    if (ghost.height !== height) ghost.height = height;
+    return { width, height };
+  };
+
+  const captureCurrentFrame = () => {
+    if (video.readyState < 2 || !video.videoWidth || !video.videoHeight) return false;
+    try {
+      const { width, height } = fitGhost();
+      const context = ghost.getContext('2d', { alpha: false });
+      if (!context) return false;
+      context.clearRect(0, 0, width, height);
+      context.drawImage(video, 0, 0, width, height);
+      ghost.classList.add('is-visible');
+      void ghost.offsetWidth;
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const markReady = (state = 'ready') => {
+    ready = true;
+    reel.dataset.doorEstateReelReady = 'true';
+    reel.dataset.doorEstateReelState = state;
+    reel.dataset.doorEstateReelSource = 'compass-main-orientation-final-v2';
+    reel.dataset.doorEstateReelSceneCount = String(scenes.length);
+    reel.dataset.doorEstateReelMotion = reduced ? 'manual-reduced-motion' : 'timed-crossfade';
+  };
+
+  const schedule = () => {
+    clearTimer();
+    if (reduced || !ready || !visible || document.hidden) return;
+    timer = window.setTimeout(() => selectScene((index + 1) % scenes.length, false), 4200);
+  };
+
+  const finishSeek = (initial = false) => {
+    updateLabels();
+    changing = false;
+    if (!ready) markReady('ready');
+    if (!initial) {
+      frame.classList.remove('is-arriving');
+      void frame.offsetWidth;
+      frame.classList.add('is-arriving');
+      requestAnimationFrame(() => ghost.classList.remove('is-visible'));
+      window.setTimeout(() => frame.classList.remove('is-arriving'), 780);
+    } else {
+      ghost.classList.remove('is-visible');
+    }
+    schedule();
+  };
+
+  function selectScene(nextIndex, manual = false) {
+    if (!Number.isInteger(nextIndex) || nextIndex < 0 || nextIndex >= scenes.length) return;
+    if (changing && nextIndex !== index) return;
+    if (manual) clearTimer();
+    if (ready && nextIndex === index) {
+      schedule();
+      return;
+    }
+
+    changing = true;
+    const initial = !ready;
+    if (!initial) captureCurrentFrame();
+    index = nextIndex;
+    const scene = scenes[index];
+    const maximum = Number.isFinite(video.duration) && video.duration > .2 ? Math.max(.05, video.duration - .12) : scene.time;
+    const target = Math.min(scene.time, maximum);
+
+    const onSeeked = () => finishSeek(initial);
+    video.addEventListener('seeked', onSeeked, { once: true });
+    try {
+      video.pause();
+      video.currentTime = target;
+    } catch {
+      video.removeEventListener('seeked', onSeeked);
+      changing = false;
+      markReady('poster-fallback');
+      updateLabels();
+      schedule();
+    }
   }
 
-  threshold.dataset.doorMirrorlandReady = 'true';
-  threshold.dataset.doorMirrorlandMotion = reduced ? 'reduced-static-monolith' : (fine ? 'pointer-monolith-parallax' : 'static-mobile-monolith');
-  threshold.dataset.doorMirrorlandMaterial = 'near-black-mirror';
-  threshold.dataset.doorMirrorlandStructure = 'front-mid-back-architectural-planes';
+  selectors.forEach((button, buttonIndex) => {
+    button.addEventListener('click', () => selectScene(buttonIndex, true));
+  });
+
+  video.muted = true;
+  video.defaultMuted = true;
+  video.playsInline = true;
+  video.addEventListener('loadedmetadata', () => selectScene(0, false), { once: true });
+  video.addEventListener('error', () => {
+    changing = false;
+    markReady('poster-fallback');
+    updateLabels();
+  }, { once: true });
+
+  if (video.readyState >= 1) selectScene(0, false);
+  else video.load();
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(entries => {
+      visible = entries.some(entry => entry.isIntersecting);
+      if (visible) schedule(); else clearTimer();
+    }, { rootMargin: '160px' }).observe(reel);
+  }
+
+  document.addEventListener('visibilitychange', schedule);
+  window.addEventListener('resize', () => {
+    if (ghost.classList.contains('is-visible')) captureCurrentFrame();
+  }, { passive: true });
+
+  updateLabels();
 
   window.DGBDoorEnvironment = Object.freeze({
-    contract: 'DOOR_MIRRORLAND_MONOLITH_ENVIRONMENT_v3',
+    contract: 'DOOR_CANONICAL_ESTATE_REEL_v4',
     ready: true,
-    reducedMotion: reduced,
-    mobileStaticPerspective: !fine,
-    mirrorMaterialPrimary: true,
-    stainedGlassGeometryPresent: false,
-    explicitDepthStack: true,
-    legacyMirrorlandRendererAdopted: false
+    source: '/assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4',
+    sourceAuthority: 'owner-authorized-compass-cinematic-v2',
+    sceneCount: scenes.length,
+    sceneOrder: scenes.map(scene => scene.label),
+    embeddedAudraliaRuntime: false,
+    additionalWebGLContexts: 0,
+    generatedArtwork: false,
+    reducedMotion: reduced
   });
 })();

@@ -16,11 +16,11 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/audralia/index.html",
-      "sha256": "ef35e1d08f3a0c9c0a6654e8c3ffb706ee410227211eb229bcb8a1e56c462eae"
+      "sha256": "53446fee8745876767e1b92bc7838094589a49cb95c45fd61d9720114e35564d"
     },
     {
-      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/precomputed-gratitude-mesh-v1.mjs",
-      "sha256": "1847b0f4ce4fae65a78a740cc4ee7f072282684d992b8690ce70a0d4be9acc37"
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs",
+      "sha256": "6a09faf20c58c4f22d60879afa0eaf0d31ddf1b6d6d9b9280cf4fb413fc84e77"
     }
   ],
   "invariants": {
@@ -38,6 +38,6 @@
   },
   "reviewSummary": {
     "operation": "AUDRALIA_TABLET_IMMERSIVE_STARTUP_STABILITY_20260908_003",
-    "finding": "The approved exact Audralia environment and 9,169,742-byte geometry remain unchanged. The eight verified chunks are now fetched, decompressed, validated, and copied sequentially into one final allocation instead of being expanded concurrently and then duplicated. This bounds peak CPU-side mesh assembly to one final world buffer plus one 1.2 MB temporary chunk immediately before WebGL initialization."
+    "finding": "The approved exact Audralia environment and 9,169,742-byte geometry remain unchanged. The eight verified chunks are fetched and assembled sequentially. On the already-declared large-touch framebuffer profile, the primary WebGL context now omits multisample antialiasing and uses the default-power GPU path, removing the second startup allocation spike before the unchanged atmospheric and weather layers initialize."
   }
 }

@@ -1,0 +1,71 @@
+name: Characters Alaric Exact-Head Qualification v1
+
+on:
+  pull_request:
+    branches:
+      - 'candidate/alaric-cardinal-integration-r1-rebind-001'
+    paths:
+      - '.github/workflows/characters-alaric-exact-head-qualification-v1.yml'
+  push:
+    branches:
+      - 'qualification/alaric-exact-head-94c34-20260909'
+
+permissions:
+  contents: read
+
+jobs:
+  qualify-exact-alaric-candidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout immutable Alaric product candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 94c34c0594f8c86e253d4fd5d515719d296cebbf
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prove exact candidate and product blob
+        shell: bash
+        run: |
+          set -euo pipefail
+          EXACT_HEAD="$(git rev-parse HEAD^{commit})"
+          test "$EXACT_HEAD" = "94c34c0594f8c86e253d4fd5d515719d296cebbf"
+          APP_BLOB="$(git rev-parse HEAD:characters/app.mjs)"
+          test "$APP_BLOB" = "a0441762e25a37b6bd6294fc97d668062bf35759"
+          echo "EXACT_HEAD=$EXACT_HEAD" >> "$GITHUB_ENV"
+          echo "APP_BLOB=$APP_BLOB" >> "$GITHUB_ENV"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run successor-specific Alaric qualification
+        shell: bash
+        run: |
+          set -euo pipefail
+          node control-plane/whole-estate/characters-reconstruction-v1/verify-alaric-cardinal-integration-r1.mjs
+          cp /tmp/characters-alaric-cardinal-integration-r1.json alaric-exact-head-qualification-receipt.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt=JSON.parse(fs.readFileSync('alaric-exact-head-qualification-receipt.json','utf8'));
+          if(receipt.schema!=='CHARACTERS_ALARIC_CARDINAL_INTEGRATION_R1_QUALIFICATION_v1')throw new Error('ALARIC_RECEIPT_SCHEMA_INVALID');
+          if(receipt.candidateHead!=='94c34c0594f8c86e253d4fd5d515719d296cebbf')throw new Error('ALARIC_RECEIPT_HEAD_MISMATCH');
+          if(receipt.governingHead!=='2c3156e96fac028ed766ec4fa69a73ab73868ea2')throw new Error('ALARIC_GOVERNING_HEAD_MISMATCH');
+          if(receipt.result!=='PASS_EXACT_ALARIC_CANDIDATE_QUALIFIED'||receipt.eligible!==true)throw new Error('ALARIC_EXACT_HEAD_NOT_QUALIFIED');
+          if(receipt.issues.length!==0)throw new Error('ALARIC_RECEIPT_HAS_ISSUES');
+          const b=receipt.boundaries||{};
+          for(const key of ['tariaNPropagationPerformed','elaraPropagationPerformed','sorenPropagationPerformed','mergePerformed','deploymentPerformed','publicationPerformed']){
+            if(b[key]!==false)throw new Error('BOUNDARY_VIOLATION:'+key);
+          }
+          NODE
+
+      - name: Upload exact-head qualification receipt
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: alaric-exact-head-qualification-94c34c0594f8c86e253d4fd5d515719d296cebbf
+          path: alaric-exact-head-qualification-receipt.json
+          if-no-files-found: error
+          retention-days: 90

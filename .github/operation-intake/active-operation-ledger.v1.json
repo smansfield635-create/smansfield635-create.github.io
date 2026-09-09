@@ -2767,76 +2767,6 @@
       "scopeHash": "65c30a151d0eee047d4366a3ae54ceb8d8313ab03a3964c507bb60433ebe4c75",
       "state": "ADMITTED_LOCKED"
     },
-    "67ae3d563650ced53ef6603c64f79470b4d229c7809d62e964b78ec9d10ad22b": {
-      "governingHead": "97524e7e4c811a1d5b7f9e98cb86210bb33a8a87",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "97524e7e4c811a1d5b7f9e98cb86210bb33a8a87",
-          "lockGeneration": 2023,
-          "lockScope": "COMPASS:PUBLICATION_MANIFEST:R11A_V7",
-          "operationId": "COMPASS_R11A_V7_PUBLICATION_BINDING_20260909_001",
-          "procedureLocatorDigest": "5371159c53184a6342acbabbf39a4f823d9fbf59bdf2e0873cb1705f221709bc",
-          "requestDigest": "65a9ee4cfad739bdeff0c3b6e820b401c3fc8a4f9102c48bbc2c0fe684de71da",
-          "scopeHash": "67ae3d563650ced53ef6603c64f79470b4d229c7809d62e964b78ec9d10ad22b"
-        },
-        "bindingDigest": "d699cbc5f52863568e6258c8b00140e1ef49f46b095378d8324518cc6bf0d8dd",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "db830de90b7e6e72946fd2082f7725e0e995b28a",
-          "observedLockRefHead": "1be2d096b5d6b1c0b25d06ba397058f5dc6f16e3"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "a8cea486abeebd4d76a11c0b0543b94a287b608c434fecfd409994f24f36ed99",
-          "commentId": 5594112392,
-          "issueNumber": 2843,
-          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transitionIdentity": {
-          "predecessor": {
-            "governingHead": "49fd160e1cb462feefd328c1472fe6001f277747",
-            "lockGeneration": 2022,
-            "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A_V7_LIVE_REPLACEMENT",
-            "operationId": "COMPASS_R11A_V7_LIVE_REPLACEMENT_20260909_001"
-          },
-          "successor": {
-            "governingHead": "97524e7e4c811a1d5b7f9e98cb86210bb33a8a87",
-            "lockGeneration": 2023,
-            "lockScope": "COMPASS:PUBLICATION_MANIFEST:R11A_V7",
-            "operationId": "COMPASS_R11A_V7_PUBLICATION_BINDING_20260909_001"
-          },
-          "transitionId": "TRANSITION_COMPASS_R11A_V7_PUBLICATION_BINDING_20260909_001"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
-      },
-      "lockGeneration": 2023,
-      "lockScope": "COMPASS:PUBLICATION_MANIFEST:R11A_V7",
-      "operationId": "COMPASS_R11A_V7_PUBLICATION_BINDING_20260909_001",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "49fd160e1cb462feefd328c1472fe6001f277747",
-        "lockGeneration": 2022,
-        "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A_V7_LIVE_REPLACEMENT",
-        "operationId": "COMPASS_R11A_V7_LIVE_REPLACEMENT_20260909_001",
-        "preservedEvidenceRefs": [
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/2882",
-          "97524e7e4c811a1d5b7f9e98cb86210bb33a8a87",
-          "sha256:9641cf6653d1317d5b69b0310cfea301723da4ddd4cce8be15d4a7fcde23e919"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "TRANSITION_COMPASS_R11A_V7_PUBLICATION_BINDING_20260909_001"
-      },
-      "procedureLocatorDigest": "5371159c53184a6342acbabbf39a4f823d9fbf59bdf2e0873cb1705f221709bc",
-      "released": false,
-      "requestDigest": "65a9ee4cfad739bdeff0c3b6e820b401c3fc8a4f9102c48bbc2c0fe684de71da",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "67ae3d563650ced53ef6603c64f79470b4d229c7809d62e964b78ec9d10ad22b",
-      "state": "ADMITTED_LOCKED"
-    },
     "68ac263182dcac32f11cb11d06d94a28100dc4537f69c8c986b68caca15e8582": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -43452,6 +43382,114 @@
         "transitionId": "TRANSITION_COMPASS_R11A_V7_PUBLICATION_BINDING_20260909_001"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "97524e7e4c811a1d5b7f9e98cb86210bb33a8a87",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "97524e7e4c811a1d5b7f9e98cb86210bb33a8a87",
+          "lockGeneration": 2023,
+          "lockScope": "COMPASS:PUBLICATION_MANIFEST:R11A_V7",
+          "operationId": "COMPASS_R11A_V7_PUBLICATION_BINDING_20260909_001",
+          "procedureLocatorDigest": "5371159c53184a6342acbabbf39a4f823d9fbf59bdf2e0873cb1705f221709bc",
+          "requestDigest": "65a9ee4cfad739bdeff0c3b6e820b401c3fc8a4f9102c48bbc2c0fe684de71da",
+          "scopeHash": "67ae3d563650ced53ef6603c64f79470b4d229c7809d62e964b78ec9d10ad22b"
+        },
+        "bindingDigest": "d699cbc5f52863568e6258c8b00140e1ef49f46b095378d8324518cc6bf0d8dd",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "db830de90b7e6e72946fd2082f7725e0e995b28a",
+          "observedLockRefHead": "1be2d096b5d6b1c0b25d06ba397058f5dc6f16e3"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "a8cea486abeebd4d76a11c0b0543b94a287b608c434fecfd409994f24f36ed99",
+          "commentId": 5594112392,
+          "issueNumber": 2843,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transitionIdentity": {
+          "predecessor": {
+            "governingHead": "49fd160e1cb462feefd328c1472fe6001f277747",
+            "lockGeneration": 2022,
+            "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A_V7_LIVE_REPLACEMENT",
+            "operationId": "COMPASS_R11A_V7_LIVE_REPLACEMENT_20260909_001"
+          },
+          "successor": {
+            "governingHead": "97524e7e4c811a1d5b7f9e98cb86210bb33a8a87",
+            "lockGeneration": 2023,
+            "lockScope": "COMPASS:PUBLICATION_MANIFEST:R11A_V7",
+            "operationId": "COMPASS_R11A_V7_PUBLICATION_BINDING_20260909_001"
+          },
+          "transitionId": "TRANSITION_COMPASS_R11A_V7_PUBLICATION_BINDING_20260909_001"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "97524e7e4c811a1d5b7f9e98cb86210bb33a8a87",
+          "lockGeneration": 2023,
+          "lockScope": "COMPASS:PUBLICATION_MANIFEST:R11A_V7",
+          "operationId": "COMPASS_R11A_V7_PUBLICATION_BINDING_20260909_001",
+          "procedureLocatorDigest": "5371159c53184a6342acbabbf39a4f823d9fbf59bdf2e0873cb1705f221709bc",
+          "requestDigest": "65a9ee4cfad739bdeff0c3b6e820b401c3fc8a4f9102c48bbc2c0fe684de71da",
+          "scopeHash": "67ae3d563650ced53ef6603c64f79470b4d229c7809d62e964b78ec9d10ad22b"
+        },
+        "bindingDigest": "58909e4e20961dbcf807cf814ddbb28303579aca08f5ac8dc76a8bfd52638400",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "716e10923d2814b5851e3d42edb1418080c7efb0",
+          "observedLockRefHead": "a55c8f63675ec153a7cf8e87732b796c55d0260d"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "4396a77d421b403950eaef43c6830ad1c6d5220b8d95965074ec519c1c6ac9ee",
+          "commentId": 5594238931,
+          "issueNumber": 2843,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "97524e7e4c811a1d5b7f9e98cb86210bb33a8a87",
+          "lockGeneration": 2023,
+          "lockScope": "COMPASS:PUBLICATION_MANIFEST:R11A_V7",
+          "operationId": "COMPASS_R11A_V7_PUBLICATION_BINDING_20260909_001",
+          "released": true,
+          "scopeHash": "67ae3d563650ced53ef6603c64f79470b4d229c7809d62e964b78ec9d10ad22b",
+          "state": "TERMINAL",
+          "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2023,
+      "lockScope": "COMPASS:PUBLICATION_MANIFEST:R11A_V7",
+      "operationId": "COMPASS_R11A_V7_PUBLICATION_BINDING_20260909_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "49fd160e1cb462feefd328c1472fe6001f277747",
+        "lockGeneration": 2022,
+        "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A_V7_LIVE_REPLACEMENT",
+        "operationId": "COMPASS_R11A_V7_LIVE_REPLACEMENT_20260909_001",
+        "preservedEvidenceRefs": [
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/2882",
+          "97524e7e4c811a1d5b7f9e98cb86210bb33a8a87",
+          "sha256:9641cf6653d1317d5b69b0310cfea301723da4ddd4cce8be15d4a7fcde23e919"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "TRANSITION_COMPASS_R11A_V7_PUBLICATION_BINDING_20260909_001"
+      },
+      "procedureLocatorDigest": "5371159c53184a6342acbabbf39a4f823d9fbf59bdf2e0873cb1705f221709bc",
+      "released": true,
+      "requestDigest": "65a9ee4cfad739bdeff0c3b6e820b401c3fc8a4f9102c48bbc2c0fe684de71da",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "67ae3d563650ced53ef6603c64f79470b4d229c7809d62e964b78ec9d10ad22b",
+      "state": "TERMINAL",
+      "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
     }
   ]
 }

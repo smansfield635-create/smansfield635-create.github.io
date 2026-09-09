@@ -7562,40 +7562,67 @@
       "state": "ADMITTED_LOCKED"
     },
     "fdf6e8131021dfcdd3c99b1747dac4aac2b51481ed12b8f324c0e17101e41279": {
-      "governingHead": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f",
+      "governingHead": "6df1f7b59db07bfc149220442adf5327d33e9c70",
       "independentAuthorityProvenance": {
         "authorityIdentity": {
-          "governingHead": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f",
-          "lockGeneration": 2038,
+          "governingHead": "6df1f7b59db07bfc149220442adf5327d33e9c70",
+          "lockGeneration": 2041,
           "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:FULLSCREEN_STAGE_INTEGRATION",
-          "operationId": "COMPASS_R11A_FULLSCREEN_STAGE_INTEGRATION_20260909_001",
-          "procedureLocatorDigest": "9406b6b4b5cdf58ef67e61e1005099d6ebf0cad4839355f379e56f3dc9cce5b2",
-          "requestDigest": "6bf2ea5cebb44c1a5c7f31fba8739fc454e30d59c5c43ca1f9d17d628a62a0fe",
+          "operationId": "COMPASS_R11A_FULLSCREEN_STAGE_INTEGRATION_20260909_001_SUCCESSOR_001",
+          "procedureLocatorDigest": "44347527fb538d61643b6ceefa59f061dfe646149a561c6a395f977bb8e2c193",
+          "requestDigest": "a87ecb4e9666a9b969097068eea8036158d98d2b5fe27d1db5389a74b959f84a",
           "scopeHash": "fdf6e8131021dfcdd3c99b1747dac4aac2b51481ed12b8f324c0e17101e41279"
         },
-        "bindingDigest": "074cbd125cf800acb5db6b6a3570e293391bc97bea0560d1fb87c795f29a1faa",
+        "bindingDigest": "de74f29ce0e014cf2f8df142bdcb197fb5e5848ea189fdc64280aa23493c912e",
         "compareAndSwap": {
-          "observedLedgerBlobSha": "93727852f1502b790c6379bdbbfa738c4e571ea0",
-          "observedLockRefHead": "923fda5bc18728a8dfb254d08089f1c015059e92"
+          "observedLedgerBlobSha": "2b87e6e7eb38cd32f64c674bc88aa98829982fbb",
+          "observedLockRefHead": "5f357c0a2930b8fc53c3d3741c2231bc6fd02725"
         },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
         "source": {
           "authorAssociation": "OWNER",
           "authorLogin": "smansfield635-create",
-          "commentBodySha256": "5a3cbcb5790ffd3c5fd3b0c9758e0b991c177decd78b933e92a07232a55afa5b",
-          "commentId": 5605101287,
+          "commentBodySha256": "bdf59d262d395160fcd6e268adaa6f29449d076500b4a3b672d1c63e16797abe",
+          "commentId": 5605715132,
           "issueNumber": 2843,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
           "repository": "smansfield635-create/smansfield635-create.github.io"
         },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+        "transitionIdentity": {
+          "predecessor": {
+            "governingHead": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f",
+            "lockGeneration": 2038,
+            "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:FULLSCREEN_STAGE_INTEGRATION",
+            "operationId": "COMPASS_R11A_FULLSCREEN_STAGE_INTEGRATION_20260909_001"
+          },
+          "successor": {
+            "governingHead": "6df1f7b59db07bfc149220442adf5327d33e9c70",
+            "lockGeneration": 2041,
+            "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:FULLSCREEN_STAGE_INTEGRATION",
+            "operationId": "COMPASS_R11A_FULLSCREEN_STAGE_INTEGRATION_20260909_001_SUCCESSOR_001"
+          },
+          "transitionId": "COMPASS_R11A_FULLSCREEN_STAGE_GEN2038_TO_SUCCESSOR_001_20260909"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
       },
-      "lockGeneration": 2038,
+      "lockGeneration": 2041,
       "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:FULLSCREEN_STAGE_INTEGRATION",
-      "operationId": "COMPASS_R11A_FULLSCREEN_STAGE_INTEGRATION_20260909_001",
-      "procedureLocatorDigest": "9406b6b4b5cdf58ef67e61e1005099d6ebf0cad4839355f379e56f3dc9cce5b2",
+      "operationId": "COMPASS_R11A_FULLSCREEN_STAGE_INTEGRATION_20260909_001_SUCCESSOR_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f",
+        "lockGeneration": 2038,
+        "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:FULLSCREEN_STAGE_INTEGRATION",
+        "operationId": "COMPASS_R11A_FULLSCREEN_STAGE_INTEGRATION_20260909_001",
+        "preservedEvidenceRefs": [],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_R11A_FULLSCREEN_STAGE_GEN2038_TO_SUCCESSOR_001_20260909"
+      },
+      "procedureLocatorDigest": "44347527fb538d61643b6ceefa59f061dfe646149a561c6a395f977bb8e2c193",
       "released": false,
-      "requestDigest": "6bf2ea5cebb44c1a5c7f31fba8739fc454e30d59c5c43ca1f9d17d628a62a0fe",
+      "requestDigest": "a87ecb4e9666a9b969097068eea8036158d98d2b5fe27d1db5389a74b959f84a",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "fdf6e8131021dfcdd3c99b1747dac4aac2b51481ed12b8f324c0e17101e41279",
       "state": "ADMITTED_LOCKED"
@@ -7628,7 +7655,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2040,
+  "lockGeneration": 2041,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -44663,6 +44690,58 @@
       "scopeHash": "68b72110b7ebfe1835f4f42b6e30c1313148a629021c0315a1bb1da17e5f85b2",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f",
+          "lockGeneration": 2038,
+          "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:FULLSCREEN_STAGE_INTEGRATION",
+          "operationId": "COMPASS_R11A_FULLSCREEN_STAGE_INTEGRATION_20260909_001",
+          "procedureLocatorDigest": "9406b6b4b5cdf58ef67e61e1005099d6ebf0cad4839355f379e56f3dc9cce5b2",
+          "requestDigest": "6bf2ea5cebb44c1a5c7f31fba8739fc454e30d59c5c43ca1f9d17d628a62a0fe",
+          "scopeHash": "fdf6e8131021dfcdd3c99b1747dac4aac2b51481ed12b8f324c0e17101e41279"
+        },
+        "bindingDigest": "074cbd125cf800acb5db6b6a3570e293391bc97bea0560d1fb87c795f29a1faa",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "93727852f1502b790c6379bdbbfa738c4e571ea0",
+          "observedLockRefHead": "923fda5bc18728a8dfb254d08089f1c015059e92"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "5a3cbcb5790ffd3c5fd3b0c9758e0b991c177decd78b933e92a07232a55afa5b",
+          "commentId": 5605101287,
+          "issueNumber": 2843,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "lockGeneration": 2038,
+      "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:FULLSCREEN_STAGE_INTEGRATION",
+      "operationId": "COMPASS_R11A_FULLSCREEN_STAGE_INTEGRATION_20260909_001",
+      "procedureLocatorDigest": "9406b6b4b5cdf58ef67e61e1005099d6ebf0cad4839355f379e56f3dc9cce5b2",
+      "released": true,
+      "requestDigest": "6bf2ea5cebb44c1a5c7f31fba8739fc454e30d59c5c43ca1f9d17d628a62a0fe",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "fdf6e8131021dfcdd3c99b1747dac4aac2b51481ed12b8f324c0e17101e41279",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "6df1f7b59db07bfc149220442adf5327d33e9c70",
+        "successorLockGeneration": 2041,
+        "successorLockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:FULLSCREEN_STAGE_INTEGRATION",
+        "successorOperationId": "COMPASS_R11A_FULLSCREEN_STAGE_INTEGRATION_20260909_001_SUCCESSOR_001",
+        "transitionId": "COMPASS_R11A_FULLSCREEN_STAGE_GEN2038_TO_SUCCESSOR_001_20260909"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

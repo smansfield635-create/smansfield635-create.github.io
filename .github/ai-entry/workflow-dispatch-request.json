@@ -1,6 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "jen-constellation-direct-bind-82d73333",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
-  "inputs": {"target_sha":"82d73333f2f15f25e1b044f2b777712406d7f5e1"}
+  "requestId": "door-explore-live-preflight-20260909-001",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "inputs": {
+    "target_sha": "85b1ce648f2fc3c9b11954d68db4ddf510b815ad",
+    "surface_id": "door-explore"
+  }
 }

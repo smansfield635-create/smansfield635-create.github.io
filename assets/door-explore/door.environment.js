@@ -1,19 +1,23 @@
-/* DOOR_MIRRORLAND_ENVIRONMENT_v1 */
+/* DOOR_MIRRORLAND_DEPTH_ENVIRONMENT_v2 */
 (() => {
   "use strict";
   const root = document.documentElement;
-  const hero = document.querySelector('.hero');
   const threshold = document.querySelector('[data-door-mirrorland]');
-  const windowEl = document.querySelector('[data-door-window]');
-  if (!hero || !threshold || !windowEl) return;
+  const stage = document.querySelector('[data-door-depth-stage]');
+  if (!threshold || !stage) return;
 
   const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
   const fine = window.matchMedia?.('(pointer: fine)')?.matches ?? false;
-  const setShift = (x, y) => {
-    root.style.setProperty('--door-shift-x', `${Math.max(-10, Math.min(10, x))}px`);
-    root.style.setProperty('--door-shift-y', `${Math.max(-8, Math.min(8, y))}px`);
-    windowEl.style.transform = `translate(-50%,-50%) perspective(700px) rotateX(${(-y * .08).toFixed(2)}deg) rotateY(${(x * .08).toFixed(2)}deg)`;
+  const baseYaw = fine ? -7 : -10;
+  const basePitch = fine ? 3 : 4;
+
+  const setPose = (yaw, pitch, rise = 0) => {
+    root.style.setProperty('--door-yaw', `${yaw.toFixed(2)}deg`);
+    root.style.setProperty('--door-pitch', `${pitch.toFixed(2)}deg`);
+    root.style.setProperty('--door-rise', `${rise.toFixed(2)}px`);
   };
+
+  setPose(baseYaw, basePitch, 0);
 
   if (!reduced && fine) {
     threshold.addEventListener('pointermove', (event) => {
@@ -21,17 +25,21 @@
       if (!rect.width || !rect.height) return;
       const nx = ((event.clientX - rect.left) / rect.width) - .5;
       const ny = ((event.clientY - rect.top) / rect.height) - .5;
-      setShift(nx * 14, ny * 10);
+      setPose(baseYaw + nx * 13, basePitch - ny * 8, ny * -3);
     }, { passive: true });
-    threshold.addEventListener('pointerleave', () => setShift(0, 0), { passive: true });
+    threshold.addEventListener('pointerleave', () => setPose(baseYaw, basePitch, 0), { passive: true });
   }
 
   threshold.dataset.doorMirrorlandReady = 'true';
-  threshold.dataset.doorMirrorlandMotion = reduced ? 'reduced-static' : (fine ? 'pointer-parallax' : 'ambient-only');
+  threshold.dataset.doorMirrorlandMotion = reduced ? 'reduced-static-depth' : (fine ? 'pointer-depth-parallax' : 'static-mobile-depth');
+  threshold.dataset.doorMirrorlandDepth = 'front-68-mid-20-back-72';
+
   window.DGBDoorEnvironment = Object.freeze({
-    contract: 'DOOR_MIRRORLAND_ENVIRONMENT_v1',
+    contract: 'DOOR_MIRRORLAND_DEPTH_ENVIRONMENT_v2',
     ready: true,
     reducedMotion: reduced,
+    mobileStaticPerspective: !fine,
+    explicitDepthStack: true,
     legacyMirrorlandRendererAdopted: false
   });
 })();

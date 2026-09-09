@@ -1048,6 +1048,49 @@
       "scopeHash": "22915677617813b00eaed5bce76b46f5e50b209e8312f9cb56000dc56fcad4a7",
       "state": "ADMITTED_LOCKED"
     },
+    "244817be86796b639ccab6547e7921cc58069f4240935fe5cf6c61dd03ebd31f": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f",
+          "lockGeneration": 2035,
+          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:LEAN_CHAPTER_THRESHOLD_CARDS",
+          "operationId": "MIRRORLAND_LEAN_CHAPTER_THRESHOLD_CARDS_20260909_001",
+          "procedureLocatorDigest": "65807509cfc55d90f0e88b70360af2463e4f57c706df9d9fb6860fc2d7529b0d",
+          "requestDigest": "24eb3bb2b21b219873a955ac2b9d4df845364c745e4730eee1c6de6465a8cba3",
+          "scopeHash": "244817be86796b639ccab6547e7921cc58069f4240935fe5cf6c61dd03ebd31f"
+        },
+        "bindingDigest": "53fd68376b6c391875d1e9ef0b414654b112bd7cc98de1f0ead54cc1238eb391",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "76f6160fd18187c20c33a6136802aca76309cd4f67c764c80cc59ea15ed393cc",
+          "commentId": 5596171878,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2670,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34313953866,
+          "workflowSha": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f"
+        },
+        "lineageAnchorCommitSha": "a8181327f236fa5afa55390df6c5f60f85a795a1",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f",
+      "lockGeneration": 2035,
+      "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:LEAN_CHAPTER_THRESHOLD_CARDS",
+      "operationId": "MIRRORLAND_LEAN_CHAPTER_THRESHOLD_CARDS_20260909_001",
+      "procedureLocatorDigest": "65807509cfc55d90f0e88b70360af2463e4f57c706df9d9fb6860fc2d7529b0d",
+      "released": false,
+      "requestDigest": "24eb3bb2b21b219873a955ac2b9d4df845364c745e4730eee1c6de6465a8cba3",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "244817be86796b639ccab6547e7921cc58069f4240935fe5cf6c61dd03ebd31f",
+      "state": "ADMITTED_LOCKED"
+    },
     "24fa9c5a47aaa63c03b39c5a0cea1aa722dbca6fae7694318b115a0faeb4b0f6": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -7585,7 +7628,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2034,
+  "lockGeneration": 2035,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

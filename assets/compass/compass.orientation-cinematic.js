@@ -4,7 +4,7 @@ const CONTRACT=Object.freeze({
   version:'COMPASS_PRERENDERED_THIN_PLAYER_R11A_V7',
   mutationClass:'BOUNDED_PAGE_RELEASE',
   operationId:'COMPASS_R11A_V7_LIVE_REPLACEMENT_20260909_001',
-  mediaPath:'/assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4',
+  mediaPath:'/assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4?v=r11a-v7-live&cb=9641cf6653d1317d',
   mediaBytes:8869131,
   mediaSha256:'9641cf6653d1317d5b69b0310cfea301723da4ddd4cce8be15d4a7fcde23e919',
   mediaGitBlob:'326d1c5b887262c6c828b3c8920a4b2e6f91d30b',
@@ -124,7 +124,7 @@ function buildOverlay(){
   video.disablePictureInPicture=true;
   video.setAttribute('aria-label','Diamond Gate Bridge orientation film');
   video.setAttribute('data-main-orientation-video','');
-  video.src=`${CONTRACT.mediaPath}?v=${CONTRACT.mediaSha256.slice(0,16)}`;
+  video.src=CONTRACT.mediaPath;
 
   const gate=document.createElement('div');
   gate.className='compass-prerendered-player__gate';

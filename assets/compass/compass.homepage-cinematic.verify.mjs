@@ -77,7 +77,7 @@ check('RELEASE_SUCCESSOR_IDENTITY',release.successorSha256===EXPECTED.mediaSha25
 
 check('PLAYER_CONTRACT',has(`version:'${EXPECTED.playerContract}'`)&&has(`operationId:'${EXPECTED.operationId}'`));
 check('PLAYER_MASTER_IDENTITY',has(`mediaBytes:${EXPECTED.mediaBytes}`)&&has(`mediaSha256:'${EXPECTED.mediaSha256}'`)&&has(`mediaGitBlob:'${EXPECTED.mediaGitBlob}'`)&&has(`masterDurationMs:${EXPECTED.durationMs}`));
-check('CACHE_BUSTED_MEDIA',has('video.src=`${CONTRACT.mediaPath}?v=${CONTRACT.mediaSha256.slice(0,16)}`'));
+check('CACHE_BUSTED_MEDIA',has("mediaPath:'/assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4?v=r11a-v7-live&cb=9641cf6653d1317d'")&&has('video.src=CONTRACT.mediaPath'));
 check('NO_EXTERNAL_PREROLL',custody.entryPrerollMs===0&&custody.entryPrerollCountedInMaster===true&&has('entryPrerollMs:0')&&has('entryPrerollCountedInMaster:true')&&has("data-entry-preroll-counted-in-master','true'"));
 check('DIRECT_MASTER_START',playBody.includes('session.entryTransitionComplete=true')&&playBody.includes('void maybeStartMasterPlayback()')&&!playBody.includes('requestAnimationFrame(drawEntryTransition)')&&!playBody.includes('buildEntryTessellation'));
 check('THIN_STATE_MACHINE',has("const STATE=Object.freeze({ARMED:'ARMED',PLAYING:'PLAYING',SETTLED:'SETTLED'})"));

@@ -104,7 +104,7 @@
     },
     {
       "path": "/assets/door-explore/laws-magnet-v2.mjs",
-      "includes": ["DOOR_EXPLORE_LAWS_MAGNET_SPATIAL_V2", "LAW_PROJECT_SCALE=1.42", "inspectLawsFrame", "createCardClock", "prefers-reduced-motion"],
+      "includes": ["DOOR_EXPLORE_LAWS_MAGNET_SPATIAL_V2", "LAW_PROJECT_SCALE = 1.42", "inspectLawsFrame", "createCardClock", "prefers-reduced-motion"],
       "excludes": []
     },
     {

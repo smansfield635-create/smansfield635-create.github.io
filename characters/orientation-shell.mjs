@@ -103,6 +103,13 @@ export const FRONTIER_DESTINATION_CARDS=Object.freeze({
   })
 });
 
+export function resolveCardGesture({flipped,deltaX,deltaY,horizontalIntent,threshold=42,tapSlop=7}){
+  const current=Boolean(flipped);
+  if(Math.hypot(deltaX,deltaY)<tapSlop)return !current;
+  if(horizontalIntent&&Math.abs(deltaX)>=threshold)return !current;
+  return current;
+}
+
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const world=document.querySelector('.world');
 const story=document.querySelector('#story');
@@ -150,7 +157,10 @@ let activeId=null;
 let flipped=false;
 let dragging=false;
 let startX=0;
+let startY=0;
 let dragDelta=0;
+let dragDeltaY=0;
+let horizontalIntent=false;
 let pointerId=null;
 
 function prepareStoryCard(){
@@ -179,7 +189,7 @@ function prepareStoryCard(){
           <button class="frontier-card__enter" data-card-enter type="button">Enter</button>
         </div>
         <p class="frontier-card__notice" data-card-notice hidden aria-live="polite">Coming Soon</p>
-        <p class="frontier-card__cue">Swipe the card for Story + Clock</p>
+        <p class="frontier-card__cue">Swipe either way for Story + Clock</p>
       </article>
       <article class="frontier-card__face frontier-card__face--back" data-card-face="back" aria-hidden="true">
         <div class="frontier-card__back-head"><span class="frontier-card__label">Context</span><h2 class="frontier-card__title" data-card-back-title></h2></div>
@@ -191,7 +201,7 @@ function prepareStoryCard(){
           <button class="frontier-card__map" data-card-map type="button">Open coast map</button>
           <button class="frontier-card__return" data-card-return type="button">Return to orbit</button>
         </div>
-        <p class="frontier-card__cue">Swipe back to the scene card</p>
+        <p class="frontier-card__cue">Swipe either way back to the scene card</p>
       </article>
     </div>`;
   story.append(source,card);
@@ -279,31 +289,33 @@ function interactiveTarget(target){return Boolean(target?.closest?.('button,a,in
 
 cardUi?.card.addEventListener('pointerdown',event=>{
   if(interactiveTarget(event.target))return;
-  dragging=true;startX=event.clientX;dragDelta=0;pointerId=event.pointerId;
+  dragging=true;startX=event.clientX;startY=event.clientY;dragDelta=0;dragDeltaY=0;horizontalIntent=false;pointerId=event.pointerId;
   cardUi.inner.classList.add('dragging');
   cardUi.card.setPointerCapture?.(event.pointerId);
 });
 cardUi?.card.addEventListener('pointermove',event=>{
   if(!dragging||event.pointerId!==pointerId)return;
   dragDelta=event.clientX-startX;
+  dragDeltaY=event.clientY-startY;
+  const horizontalDistance=Math.abs(dragDelta);
+  const verticalDistance=Math.abs(dragDeltaY);
+  if(!horizontalIntent&&horizontalDistance>=8&&horizontalDistance>verticalDistance*1.08)horizontalIntent=true;
+  if(!horizontalIntent)return;
+  event.preventDefault();
   const width=Math.max(1,cardUi.card.getBoundingClientRect().width);
-  const travel=Math.min(180,Math.abs(dragDelta)/width*230);
-  const angle=flipped?-180+(dragDelta>0?travel:0):(dragDelta<0?-travel:0);
+  const travel=Math.min(155,horizontalDistance/width*210);
+  const angle=(flipped?-180:0)+(dragDelta<0?-travel:travel);
   cardUi.inner.style.transform=`rotateY(${angle}deg)`;
-});
+},{passive:false});
 function finishPointer(event){
   if(!dragging||event.pointerId!==pointerId)return;
   dragging=false;
   cardUi.card.releasePointerCapture?.(event.pointerId);
-  const wasTap=Math.abs(dragDelta)<7;
-  if(wasTap)settleCard(!flipped);
-  else if(!flipped&&dragDelta<-42)settleCard(true);
-  else if(flipped&&dragDelta>42)settleCard(false);
-  else settleCard(flipped);
-  pointerId=null;dragDelta=0;
+  settleCard(resolveCardGesture({flipped,deltaX:dragDelta,deltaY:dragDeltaY,horizontalIntent}));
+  pointerId=null;dragDelta=0;dragDeltaY=0;horizontalIntent=false;
 }
 cardUi?.card.addEventListener('pointerup',finishPointer);
-cardUi?.card.addEventListener('pointercancel',event=>{if(dragging&&event.pointerId===pointerId){dragging=false;pointerId=null;dragDelta=0;settleCard(flipped);}});
+cardUi?.card.addEventListener('pointercancel',event=>{if(dragging&&event.pointerId===pointerId){dragging=false;pointerId=null;dragDelta=0;dragDeltaY=0;horizontalIntent=false;settleCard(flipped);}});
 cardUi?.card.addEventListener('keydown',event=>{
   if(event.target!==cardUi.card)return;
   if(event.key==='Enter'||event.key===' '){event.preventDefault();settleCard(!flipped);}

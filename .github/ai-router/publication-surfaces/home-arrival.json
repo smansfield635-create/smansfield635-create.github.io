@@ -1,0 +1,87 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "home-arrival",
+  "description": "Home exterior-arrival successor using the mature Compass Mirror Manor renderer with six bounded courtyard torches and contextual-expression adoption from Compass, Laws, and Community.",
+  "checks": [
+    {
+      "path": "/home/",
+      "includes": [
+        "data-contract=\"HOME_ARRIVAL_EXTERIOR_v1\"",
+        "data-home-role=\"estate-arrival\"",
+        "data-manor-interior=\"false\"",
+        "data-manor-geometry-authority=\"compass-mature-renderer\"",
+        "data-courtyard-torches=\"six\"",
+        "data-contextual-expression=\"compass-laws-community-adoption\"",
+        "data-home-arrival",
+        "data-home-manor-canvas",
+        "data-home-torch",
+        "/assets/home/home.arrival.css?v=home-g1-20260909",
+        "/assets/home/home.arrival.js?v=home-g1-20260909",
+        "Welcome home.",
+        "Arrive before you decide what comes next.",
+        "What would be useful now?"
+      ],
+      "excludes": [
+        "HOME_VALUE_PROFILE_RECEIVER_TNT_v1",
+        "data-home-role=\"value-orientation-profile\"",
+        "data-canvas=\"false\"",
+        "data-webgl=\"false\""
+      ]
+    },
+    {
+      "path": "/assets/home/home.arrival.js",
+      "includes": [
+        "HOME_ARRIVAL_EXTERIOR_v1",
+        "mirror-manor-gothic-phase3-carousel-v6-material-detail-final",
+        "assets/compass/compass.house-scene.js",
+        "homeArrivalReady",
+        "torchCount",
+        "const order=[0,5,1,4,2,3]"
+      ],
+      "excludes": [
+        "buildNeutralMesh",
+        "neutral-fallback",
+        "innerHTML"
+      ]
+    },
+    {
+      "path": "/assets/home/home.arrival.css",
+      "includes": [
+        "HOME_ARRIVAL_EXTERIOR_v1",
+        ".home-torch",
+        "@media(prefers-reduced-motion:reduce)",
+        ".home-epigraph",
+        ".home-path-grid"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/assets/compass/compass.house-scene.js",
+      "includes": [
+        "mirror-manor-gothic-phase3-carousel-v6-material-detail-final",
+        "canonical-phase3-principal-estate-mesh",
+        "true-facade-openings",
+        "procedural-slate-shingle-courses",
+        "engraved-stone-court"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/home/",
+    "timeoutMs": 30000,
+    "readySelector": "[data-home-arrival]",
+    "readyAttribute": {
+      "selector": "[data-home-arrival]",
+      "name": "data-home-arrival-ready",
+      "contains": "true"
+    },
+    "binding": {
+      "mode": "direct-document",
+      "path": "/home/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true
+  }
+}

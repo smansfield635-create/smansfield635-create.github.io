@@ -7561,72 +7561,6 @@
       "scopeHash": "fb941fb311d034729a4ad8f949bf10f0473f08f64690169c0365ec59101fc34e",
       "state": "ADMITTED_LOCKED"
     },
-    "fdf6e8131021dfcdd3c99b1747dac4aac2b51481ed12b8f324c0e17101e41279": {
-      "governingHead": "6df1f7b59db07bfc149220442adf5327d33e9c70",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "6df1f7b59db07bfc149220442adf5327d33e9c70",
-          "lockGeneration": 2041,
-          "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:FULLSCREEN_STAGE_INTEGRATION",
-          "operationId": "COMPASS_R11A_FULLSCREEN_STAGE_INTEGRATION_20260909_001_SUCCESSOR_001",
-          "procedureLocatorDigest": "44347527fb538d61643b6ceefa59f061dfe646149a561c6a395f977bb8e2c193",
-          "requestDigest": "a87ecb4e9666a9b969097068eea8036158d98d2b5fe27d1db5389a74b959f84a",
-          "scopeHash": "fdf6e8131021dfcdd3c99b1747dac4aac2b51481ed12b8f324c0e17101e41279"
-        },
-        "bindingDigest": "de74f29ce0e014cf2f8df142bdcb197fb5e5848ea189fdc64280aa23493c912e",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "2b87e6e7eb38cd32f64c674bc88aa98829982fbb",
-          "observedLockRefHead": "5f357c0a2930b8fc53c3d3741c2231bc6fd02725"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "bdf59d262d395160fcd6e268adaa6f29449d076500b4a3b672d1c63e16797abe",
-          "commentId": 5605715132,
-          "issueNumber": 2843,
-          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transitionIdentity": {
-          "predecessor": {
-            "governingHead": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f",
-            "lockGeneration": 2038,
-            "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:FULLSCREEN_STAGE_INTEGRATION",
-            "operationId": "COMPASS_R11A_FULLSCREEN_STAGE_INTEGRATION_20260909_001"
-          },
-          "successor": {
-            "governingHead": "6df1f7b59db07bfc149220442adf5327d33e9c70",
-            "lockGeneration": 2041,
-            "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:FULLSCREEN_STAGE_INTEGRATION",
-            "operationId": "COMPASS_R11A_FULLSCREEN_STAGE_INTEGRATION_20260909_001_SUCCESSOR_001"
-          },
-          "transitionId": "COMPASS_R11A_FULLSCREEN_STAGE_GEN2038_TO_SUCCESSOR_001_20260909"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
-      },
-      "lockGeneration": 2041,
-      "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:FULLSCREEN_STAGE_INTEGRATION",
-      "operationId": "COMPASS_R11A_FULLSCREEN_STAGE_INTEGRATION_20260909_001_SUCCESSOR_001",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f",
-        "lockGeneration": 2038,
-        "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:FULLSCREEN_STAGE_INTEGRATION",
-        "operationId": "COMPASS_R11A_FULLSCREEN_STAGE_INTEGRATION_20260909_001",
-        "preservedEvidenceRefs": [],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "COMPASS_R11A_FULLSCREEN_STAGE_GEN2038_TO_SUCCESSOR_001_20260909"
-      },
-      "procedureLocatorDigest": "44347527fb538d61643b6ceefa59f061dfe646149a561c6a395f977bb8e2c193",
-      "released": false,
-      "requestDigest": "a87ecb4e9666a9b969097068eea8036158d98d2b5fe27d1db5389a74b959f84a",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "fdf6e8131021dfcdd3c99b1747dac4aac2b51481ed12b8f324c0e17101e41279",
-      "state": "ADMITTED_LOCKED"
-    },
     "ff79734b4cea600d6f944a537b197ea4a4265fd816845d998f108693c6616247": {
       "governingHead": "dffdc60207c3b666b1a6341832eba6bba6bff10f",
       "lockGeneration": 1544,
@@ -44742,6 +44676,110 @@
         "transitionId": "COMPASS_R11A_FULLSCREEN_STAGE_GEN2038_TO_SUCCESSOR_001_20260909"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "6df1f7b59db07bfc149220442adf5327d33e9c70",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "6df1f7b59db07bfc149220442adf5327d33e9c70",
+          "lockGeneration": 2041,
+          "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:FULLSCREEN_STAGE_INTEGRATION",
+          "operationId": "COMPASS_R11A_FULLSCREEN_STAGE_INTEGRATION_20260909_001_SUCCESSOR_001",
+          "procedureLocatorDigest": "44347527fb538d61643b6ceefa59f061dfe646149a561c6a395f977bb8e2c193",
+          "requestDigest": "a87ecb4e9666a9b969097068eea8036158d98d2b5fe27d1db5389a74b959f84a",
+          "scopeHash": "fdf6e8131021dfcdd3c99b1747dac4aac2b51481ed12b8f324c0e17101e41279"
+        },
+        "bindingDigest": "de74f29ce0e014cf2f8df142bdcb197fb5e5848ea189fdc64280aa23493c912e",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "2b87e6e7eb38cd32f64c674bc88aa98829982fbb",
+          "observedLockRefHead": "5f357c0a2930b8fc53c3d3741c2231bc6fd02725"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "bdf59d262d395160fcd6e268adaa6f29449d076500b4a3b672d1c63e16797abe",
+          "commentId": 5605715132,
+          "issueNumber": 2843,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transitionIdentity": {
+          "predecessor": {
+            "governingHead": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f",
+            "lockGeneration": 2038,
+            "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:FULLSCREEN_STAGE_INTEGRATION",
+            "operationId": "COMPASS_R11A_FULLSCREEN_STAGE_INTEGRATION_20260909_001"
+          },
+          "successor": {
+            "governingHead": "6df1f7b59db07bfc149220442adf5327d33e9c70",
+            "lockGeneration": 2041,
+            "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:FULLSCREEN_STAGE_INTEGRATION",
+            "operationId": "COMPASS_R11A_FULLSCREEN_STAGE_INTEGRATION_20260909_001_SUCCESSOR_001"
+          },
+          "transitionId": "COMPASS_R11A_FULLSCREEN_STAGE_GEN2038_TO_SUCCESSOR_001_20260909"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "6df1f7b59db07bfc149220442adf5327d33e9c70",
+          "lockGeneration": 2041,
+          "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:FULLSCREEN_STAGE_INTEGRATION",
+          "operationId": "COMPASS_R11A_FULLSCREEN_STAGE_INTEGRATION_20260909_001_SUCCESSOR_001",
+          "procedureLocatorDigest": "44347527fb538d61643b6ceefa59f061dfe646149a561c6a395f977bb8e2c193",
+          "requestDigest": "a87ecb4e9666a9b969097068eea8036158d98d2b5fe27d1db5389a74b959f84a",
+          "scopeHash": "fdf6e8131021dfcdd3c99b1747dac4aac2b51481ed12b8f324c0e17101e41279"
+        },
+        "bindingDigest": "d8ba4332ff3b836ed0e7f87dcdf6e36240423fab352a0a3e6abc09b112142866",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "35f411ff4cf018341caf1dd70c91e956e8fe0afc",
+          "observedLockRefHead": "ce74ac38cfd336e5c44a41a74dc96b5be139c4e0"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "b70b0bcb8d24e667cf98e136bb310594e5259db117a8b8b0f93d445e50164694",
+          "commentId": 5605975597,
+          "issueNumber": 2843,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "6df1f7b59db07bfc149220442adf5327d33e9c70",
+          "lockGeneration": 2041,
+          "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:FULLSCREEN_STAGE_INTEGRATION",
+          "operationId": "COMPASS_R11A_FULLSCREEN_STAGE_INTEGRATION_20260909_001_SUCCESSOR_001",
+          "released": true,
+          "scopeHash": "fdf6e8131021dfcdd3c99b1747dac4aac2b51481ed12b8f324c0e17101e41279",
+          "state": "TERMINAL",
+          "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2041,
+      "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:FULLSCREEN_STAGE_INTEGRATION",
+      "operationId": "COMPASS_R11A_FULLSCREEN_STAGE_INTEGRATION_20260909_001_SUCCESSOR_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f",
+        "lockGeneration": 2038,
+        "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A:FULLSCREEN_STAGE_INTEGRATION",
+        "operationId": "COMPASS_R11A_FULLSCREEN_STAGE_INTEGRATION_20260909_001",
+        "preservedEvidenceRefs": [],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_R11A_FULLSCREEN_STAGE_GEN2038_TO_SUCCESSOR_001_20260909"
+      },
+      "procedureLocatorDigest": "44347527fb538d61643b6ceefa59f061dfe646149a561c6a395f977bb8e2c193",
+      "released": true,
+      "requestDigest": "a87ecb4e9666a9b969097068eea8036158d98d2b5fe27d1db5389a74b959f84a",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "fdf6e8131021dfcdd3c99b1747dac4aac2b51481ed12b8f324c0e17101e41279",
+      "state": "TERMINAL",
+      "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
     }
   ]
 }

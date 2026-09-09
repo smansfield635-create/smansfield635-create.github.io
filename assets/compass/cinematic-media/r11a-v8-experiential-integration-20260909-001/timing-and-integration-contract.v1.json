@@ -1,0 +1,35 @@
+{
+  "schema": "COMPASS_R11A_V8_TIMING_AND_INTEGRATION_CONTRACT_v1",
+  "status": "CONSTRUCTION_BOUND",
+  "operationId": "COMPASS_R11A_V8_EXPERIENTIAL_INTEGRATION_20260909_001_SUCCESSOR_001",
+  "lockGeneration": 2027,
+  "governingMain": "4a228b7322ffc2bf71fae7ee103bae1a81725460",
+  "entry": {
+    "play": "THE_ACTUAL_PRESSED_DOM_GATE_PIXELATES_AND_REVEALS_THE_FILM_MATTER",
+    "skip": "THE_SAME_ACTUAL_DOM_GATE_PIXELATES_AND_DISSOLVES_TO_THE_LIVE_COMPASS_PAGE",
+    "simulatedGateInsideMaster": false,
+    "filmInteractivity": "NONE_AFTER_ENTRY_CHOICE"
+  },
+  "viewport": {
+    "law": "ONE_CONTINUOUS_EXPERIENTIAL_REGION",
+    "desktop": "EDGELESS_FULL_VIEWPORT",
+    "tabletAndPortrait": "SYNCHRONIZED_AMBIENT_COVER_PLUS_EDGE_BLENDED_PRIMARY_COMPOSITION",
+    "hardCinematicRectangle": false
+  },
+  "timing": {
+    "fps": 30,
+    "audraliaAdditionalHoldFrames": 90,
+    "audraliaAdditionalHoldMs": 3000,
+    "closingTraversalScale": 1.6,
+    "terminalPixelDissolveFrames": 60,
+    "terminalPixelDissolveMs": 2000,
+    "liveCompassRevealMs": 2200
+  },
+  "terminal": {
+    "inventedDialAllowed": false,
+    "movieProxyCompassAllowed": false,
+    "requiredVisibleSurface": "CANONICAL_LIVE_FOUR_STAR_COMPASS",
+    "handoff": "HOUSE_PIXEL_DISSOLVE_CROSSFADED_TO_ALREADY_LOADED_LIVE_COMPASS"
+  },
+  "publication": "OWNER_REVIEW_REQUIRED_BEFORE_MERGE_OR_LIVE_REPLACEMENT"
+}

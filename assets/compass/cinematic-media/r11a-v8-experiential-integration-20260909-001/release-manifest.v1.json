@@ -1,0 +1,14 @@
+{
+  "schema": "COMPASS_R11A_V8_RELEASE_MANIFEST_v1",
+  "status": "PREPUBLICATION_CONSTRUCTION_CANDIDATE",
+  "operationId": "COMPASS_R11A_V8_EXPERIENTIAL_INTEGRATION_20260909_001_SUCCESSOR_001",
+  "lockGeneration": 2027,
+  "governingMain": "4a228b7322ffc2bf71fae7ee103bae1a81725460",
+  "candidateBranch": "compass/r11a-v8-experiential-integration-20260909-001",
+  "candidateSha256": "746606b76fbd05e9278787c25d484d001c67e18ba22f3890e95eee50e42ba29c",
+  "replacesLiveV7OnlyAfterOwnerAcceptance": true,
+  "mergeAuthorized": false,
+  "deploymentAuthorized": false,
+  "liveMutationPerformed": false,
+  "nextGate": "RESPONSIVE_BROWSER_QA_AND_OWNER_REVIEW"
+}

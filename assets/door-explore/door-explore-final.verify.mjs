@@ -36,12 +36,13 @@ for(const src of [home,laws,governance,earth,products])assert.ok(src.includes('p
 assert.ok(spatial.includes('touch-action:pan-y'));
 assert.ok(!/carousel-arrow|prev-button|next-button/i.test(door+explore));
 
-const traversalTokens=['pointerdown','pointermove','pointerup','pointercancel','ArrowLeft','ArrowRight','scrollLeft','setPointerCapture','releasePointerCapture','preventDefault','DOOR_EXPLORE_CAROUSEL_TRAVERSAL_REPAIR_V1'];
+const traversalTokens=['pointerdown','pointermove','pointerup','pointercancel','ArrowLeft','ArrowRight','scrollLeft','setPointerCapture','releasePointerCapture','preventDefault','carouselTraversal','carouselKeyMoved','DOOR_EXPLORE_CAROUSEL_TRAVERSAL_REPAIR_V1'];
 for(const [name,page,selector] of [['door',door,'data-door-carousel'],['explore',explore,'data-explore-carousel']]){
   assert.ok(page.includes(selector),`${name} carousel selector`);
   for(const token of traversalTokens)assert.ok(page.includes(token),`${name} traversal ${token}`);
   assert.ok(page.includes("Math.abs(dy)>Math.abs(dx)"),`${name} vertical intent arbitration`);
   assert.ok(page.includes("behavior:reduced?'auto':'smooth'"),`${name} reduced motion traversal`);
+  assert.ok(page.includes("Math.abs(carousel.scrollLeft-before)>1?'true':'false'"),`${name} actual key movement receipt`);
   assert.ok(page.includes("if(moved){e.preventDefault();e.stopPropagation()"),`${name} click-after-drag suppression`);
 }
 
@@ -49,11 +50,20 @@ const doorSurface=publicationSurface.checks.find(x=>x.path==='/door/');
 const exploreSurface=publicationSurface.checks.find(x=>x.path==='/explore/');
 assert.ok(doorSurface&&exploreSurface,'publication page checks');
 for(const [name,check,selector] of [['door',doorSurface,'data-door-carousel'],['explore',exploreSurface,'data-explore-carousel']]){
-  for(const token of [selector,'pointerdown','pointermove','pointerup','pointercancel','ArrowLeft','ArrowRight','scrollLeft','DOOR_EXPLORE_CAROUSEL_TRAVERSAL_REPAIR_V1'])assert.ok(check.includes.includes(token),`${name} publication traversal ${token}`);
+  for(const token of [selector,'pointerdown','pointermove','pointerup','pointercancel','ArrowLeft','ArrowRight','scrollLeft','carouselKeyMoved','DOOR_EXPLORE_CAROUSEL_TRAVERSAL_REPAIR_V1'])assert.ok(check.includes.includes(token),`${name} publication traversal ${token}`);
 }
+assert.equal(publicationSurface.runtime.enabled,true);
+assert.equal(publicationSurface.runtime.path,'/explore/');
+assert.equal(publicationSurface.runtime.readySelector,'[data-explore-carousel]');
+assert.equal(publicationSurface.runtime.interactions.length,1);
+const interaction=publicationSurface.runtime.interactions[0];
+assert.equal(interaction.action.type,'key');
+assert.equal(interaction.action.selector,'[data-explore-carousel]');
+assert.equal(interaction.action.key,'ArrowRight');
+assert.ok(interaction.assertions.some(x=>x.type==='attributeEquals'&&x.selector==='[data-explore-carousel]'&&x.name==='data-carousel-key-moved'&&x.value==='true'));
 
 assert.equal(crosswalk.status,'PASS_CLOSED');
 assert.deepEqual(crosswalk.progress,{closed:11,total:11,cycleClosed:5,cycleTotal:5});
 assert.equal(crosswalk.cards.filter(x=>x.status==='CLOSED').length,11);
 assert.equal(crosswalk.families.filter(x=>x.status==='CLOSED').length,5);
-console.log(JSON.stringify({result:'PASS_SPATIAL_CLOSED_WITH_CAROUSEL_TRAVERSAL',cards:11,cycles:5,door:6,explore:5,traversal:'PAGE_BOUND'}));
+console.log(JSON.stringify({result:'PASS_SPATIAL_CLOSED_WITH_CAROUSEL_TRAVERSAL',cards:11,cycles:5,door:6,explore:5,traversal:'PAGE_BOUND_RUNTIME_RECEIPT'}));

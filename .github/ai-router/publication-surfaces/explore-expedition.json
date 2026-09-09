@@ -1,0 +1,74 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "explore-expedition",
+  "description": "Explore expedition-map environment with a bounded magnifying-lens interaction layered around the frozen Cycle-7 carousel and card renderers.",
+  "checks": [
+    {
+      "path": "/explore/",
+      "includes": [
+        "data-page=\"explore\"",
+        "data-version=\"DOOR-EXPLORE-ANIMATION-COHERENCE-V1-CYCLE7\"",
+        "data-environment=\"expedition-map-v1\"",
+        "data-explore-card-count=\"5\"",
+        "data-explore-expedition",
+        "data-explore-lens",
+        "Estate survey · five lenses",
+        "Look closer. The route appears.",
+        "/assets/door-explore/explore.environment.css?v=explore-expedition-g1-20260909",
+        "/assets/door-explore/explore.environment.js?v=explore-expedition-g1-20260909",
+        "data-carousel-authority='page-bound-v1'"
+      ],
+      "excludes": [
+        "data-environment=\"mirrorland-door-v1\""
+      ]
+    },
+    {
+      "path": "/assets/door-explore/explore.environment.js",
+      "includes": [
+        "EXPLORE_EXPEDITION_ENVIRONMENT_v1",
+        "data-explore-expedition-ready",
+        "pointer-follow",
+        "intro-sweep-touch",
+        "fixed-reduced-motion"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/assets/door-explore/explore.environment.css",
+      "includes": [
+        "EXPLORE_EXPEDITION_ENVIRONMENT_v1",
+        ".explore-map",
+        ".explore-lens",
+        ".explore-map-compass",
+        "@media(prefers-reduced-motion:reduce)"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/assets/door-explore/spatial-v2.css",
+      "includes": [
+        ".carousel",
+        ".route-card",
+        ".home-identity-v2-stage"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/explore/",
+    "timeoutMs": 30000,
+    "readySelector": "[data-explore-expedition]",
+    "readyAttribute": {
+      "selector": "[data-explore-expedition]",
+      "name": "data-explore-expedition-ready",
+      "contains": "true"
+    },
+    "binding": {
+      "mode": "direct-document",
+      "path": "/explore/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true
+  }
+}

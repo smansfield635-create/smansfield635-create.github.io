@@ -5642,49 +5642,6 @@
       "scopeHash": "c0a42d3df4ef14e1ee871cfe1313ea38615afed4ba609fe9d01cfd64b0e3d080",
       "state": "ADMITTED_LOCKED"
     },
-    "c0a52021e8a29bc902f5c383ab2bf7f2f4570cb0c097a9d67d1881a574fc84a4": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f",
-          "lockGeneration": 2034,
-          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:COAST_MAP_FOREST_STAND_BINDING",
-          "operationId": "MIRRORLAND_COAST_MAP_FOREST_STAND_BINDING_20260909_002",
-          "procedureLocatorDigest": "b491ef53a697225df43dd57b1e9113d29a783e35c4acdf3ca042cba36b2f294f",
-          "requestDigest": "f74c0301368513b3f21b14d2fd18735ce3ae0499228da0605170779a7e23129e",
-          "scopeHash": "c0a52021e8a29bc902f5c383ab2bf7f2f4570cb0c097a9d67d1881a574fc84a4"
-        },
-        "bindingDigest": "1e2689160c14a73433909e33f269ae0b8f2d6e9e383a5ca6a383dd6d6ebb6deb",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "79e76c2c27b7d6cf7801cf865639b8af9e43b91ab574209596d8e1fb41d4d138",
-          "commentId": 5595846637,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2670,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34311534111,
-          "workflowSha": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f"
-        },
-        "lineageAnchorCommitSha": "5ef2524712ebc9343b94b4515f3d53373a7d629c",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f",
-      "lockGeneration": 2034,
-      "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:COAST_MAP_FOREST_STAND_BINDING",
-      "operationId": "MIRRORLAND_COAST_MAP_FOREST_STAND_BINDING_20260909_002",
-      "procedureLocatorDigest": "b491ef53a697225df43dd57b1e9113d29a783e35c4acdf3ca042cba36b2f294f",
-      "released": false,
-      "requestDigest": "f74c0301368513b3f21b14d2fd18735ce3ae0499228da0605170779a7e23129e",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "c0a52021e8a29bc902f5c383ab2bf7f2f4570cb0c097a9d67d1881a574fc84a4",
-      "state": "ADMITTED_LOCKED"
-    },
     "c0a7ca0b1c3e4d038929eb91fe75f453cdefcb4726b535e1c1b9b8b82742e57e": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -44300,6 +44257,50 @@
       "scopeHash": "c0a52021e8a29bc902f5c383ab2bf7f2f4570cb0c097a9d67d1881a574fc84a4",
       "state": "TERMINAL",
       "terminalDisposition": "WITHDRAWN"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f",
+          "lockGeneration": 2034,
+          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:COAST_MAP_FOREST_STAND_BINDING",
+          "operationId": "MIRRORLAND_COAST_MAP_FOREST_STAND_BINDING_20260909_002",
+          "procedureLocatorDigest": "b491ef53a697225df43dd57b1e9113d29a783e35c4acdf3ca042cba36b2f294f",
+          "requestDigest": "f74c0301368513b3f21b14d2fd18735ce3ae0499228da0605170779a7e23129e",
+          "scopeHash": "c0a52021e8a29bc902f5c383ab2bf7f2f4570cb0c097a9d67d1881a574fc84a4"
+        },
+        "bindingDigest": "1e2689160c14a73433909e33f269ae0b8f2d6e9e383a5ca6a383dd6d6ebb6deb",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "79e76c2c27b7d6cf7801cf865639b8af9e43b91ab574209596d8e1fb41d4d138",
+          "commentId": 5595846637,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2670,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34311534111,
+          "workflowSha": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f"
+        },
+        "lineageAnchorCommitSha": "5ef2524712ebc9343b94b4515f3d53373a7d629c",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f",
+      "lockGeneration": 2034,
+      "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:COAST_MAP_FOREST_STAND_BINDING",
+      "operationId": "MIRRORLAND_COAST_MAP_FOREST_STAND_BINDING_20260909_002",
+      "procedureLocatorDigest": "b491ef53a697225df43dd57b1e9113d29a783e35c4acdf3ca042cba36b2f294f",
+      "released": true,
+      "requestDigest": "f74c0301368513b3f21b14d2fd18735ce3ae0499228da0605170779a7e23129e",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c0a52021e8a29bc902f5c383ab2bf7f2f4570cb0c097a9d67d1881a574fc84a4",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

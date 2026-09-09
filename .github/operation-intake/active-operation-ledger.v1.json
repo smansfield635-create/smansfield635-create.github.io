@@ -2849,49 +2849,6 @@
       "scopeHash": "68ac263182dcac32f11cb11d06d94a28100dc4537f69c8c986b68caca15e8582",
       "state": "ADMITTED_LOCKED"
     },
-    "68b72110b7ebfe1835f4f42b6e30c1313148a629021c0315a1bb1da17e5f85b2": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f",
-          "lockGeneration": 2039,
-          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:TWO_SIDED_DESTINATION_CARDS",
-          "operationId": "MIRRORLAND_TWO_SIDED_DESTINATION_CARDS_20260909_001",
-          "procedureLocatorDigest": "891f6a93f564596cf54abc28dc24353a32ebea3b8a0bdf65b978243a77d1412f",
-          "requestDigest": "2374b53c583c9f385b4861cd973e4df9a073128845a084365470b3673e478394",
-          "scopeHash": "68b72110b7ebfe1835f4f42b6e30c1313148a629021c0315a1bb1da17e5f85b2"
-        },
-        "bindingDigest": "6862aff49787804b8ef8cecb018977e6b565ccd30374aa0a1d9568662eee904c",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "72f585bb6cb04a6c369ee0028e19a1ee9e4b7321dc3342adf02c2e7fd57a7c1d",
-          "commentId": 5605384241,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2670,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34378092173,
-          "workflowSha": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f"
-        },
-        "lineageAnchorCommitSha": "8570a624b3362ddaf6224a8b45fb676d4edf8d9c",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f",
-      "lockGeneration": 2039,
-      "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:TWO_SIDED_DESTINATION_CARDS",
-      "operationId": "MIRRORLAND_TWO_SIDED_DESTINATION_CARDS_20260909_001",
-      "procedureLocatorDigest": "891f6a93f564596cf54abc28dc24353a32ebea3b8a0bdf65b978243a77d1412f",
-      "released": false,
-      "requestDigest": "2374b53c583c9f385b4861cd973e4df9a073128845a084365470b3673e478394",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "68b72110b7ebfe1835f4f42b6e30c1313148a629021c0315a1bb1da17e5f85b2",
-      "state": "ADMITTED_LOCKED"
-    },
     "68e01500d6651bb1dbcc777d203efc3c0c80a9c702e646c8f78ae742679ffcfa": {
       "governingHead": "4d5ef78ac7fae24da2a0e9d941607af870e1056e",
       "lockGeneration": 1613,
@@ -44619,6 +44576,50 @@
       "scopeHash": "ab64cd322f27dce1c7a472e48b7ba112f7b5346d14ee6539b924a15b9a6cc0cf",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f",
+          "lockGeneration": 2039,
+          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:TWO_SIDED_DESTINATION_CARDS",
+          "operationId": "MIRRORLAND_TWO_SIDED_DESTINATION_CARDS_20260909_001",
+          "procedureLocatorDigest": "891f6a93f564596cf54abc28dc24353a32ebea3b8a0bdf65b978243a77d1412f",
+          "requestDigest": "2374b53c583c9f385b4861cd973e4df9a073128845a084365470b3673e478394",
+          "scopeHash": "68b72110b7ebfe1835f4f42b6e30c1313148a629021c0315a1bb1da17e5f85b2"
+        },
+        "bindingDigest": "6862aff49787804b8ef8cecb018977e6b565ccd30374aa0a1d9568662eee904c",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "72f585bb6cb04a6c369ee0028e19a1ee9e4b7321dc3342adf02c2e7fd57a7c1d",
+          "commentId": 5605384241,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2670,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34378092173,
+          "workflowSha": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f"
+        },
+        "lineageAnchorCommitSha": "8570a624b3362ddaf6224a8b45fb676d4edf8d9c",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "3529eb407dcc8ada2d3936bf0c7689ecfd16839f",
+      "lockGeneration": 2039,
+      "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:TWO_SIDED_DESTINATION_CARDS",
+      "operationId": "MIRRORLAND_TWO_SIDED_DESTINATION_CARDS_20260909_001",
+      "procedureLocatorDigest": "891f6a93f564596cf54abc28dc24353a32ebea3b8a0bdf65b978243a77d1412f",
+      "released": true,
+      "requestDigest": "2374b53c583c9f385b4861cd973e4df9a073128845a084365470b3673e478394",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "68b72110b7ebfe1835f4f42b6e30c1313148a629021c0315a1bb1da17e5f85b2",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

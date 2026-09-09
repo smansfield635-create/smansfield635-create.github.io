@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "home-arrival",
-  "description": "Home exterior-arrival successor using the mature Compass Mirror Manor renderer with six bounded courtyard torches and contextual-expression adoption from Compass, Laws, and Community.",
+  "description": "Home exterior-arrival successor using the mature Compass Mirror Manor renderer with six bounded courtyard torches and direct, plain-language contextual expression.",
   "checks": [
     {
       "path": "/home/",
@@ -18,14 +18,18 @@
         "/assets/home/home.arrival.css?v=home-g1-20260909",
         "/assets/home/home.arrival.js?v=home-g1-20260909",
         "Welcome home.",
-        "Arrive before you decide what comes next.",
-        "What would be useful now?"
+        "Take your time. You can choose from here.",
+        "Where would you like to go?",
+        "Looking for something specific?"
       ],
       "excludes": [
         "HOME_VALUE_PROFILE_RECEIVER_TNT_v1",
         "data-home-role=\"value-orientation-profile\"",
         "data-canvas=\"false\"",
-        "data-webgl=\"false\""
+        "data-webgl=\"false\"",
+        "Home is where the signal steadies",
+        "estate's receiving ground",
+        "orientation turns into belonging"
       ]
     },
     {

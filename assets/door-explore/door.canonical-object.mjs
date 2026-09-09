@@ -7,6 +7,9 @@ const canvas = document.querySelector('[data-door-canonical-object-canvas]');
 const params = new URLSearchParams(location.search);
 const scene = String(params.get('scene') || '').toLowerCase();
 const ALLOWED = new Set(['trophy','brain']);
+let active = true;
+
+const foreground = () => active && !document.hidden;
 
 const post = (state, detail = {}) => {
   try {
@@ -36,7 +39,7 @@ const waitFrames = (count = 2) => new Promise(resolve => {
 async function mountTrophy() {
   await loadScript('/assets/compass/compass.trophy-scene.js');
   if (!window.CompassTrophyScene?.mount) throw new Error('COMPASS_TROPHY_SCENE_UNAVAILABLE');
-  const api = window.CompassTrophyScene.mount(canvas, { foreground: () => !document.hidden });
+  const api = window.CompassTrophyScene.mount(canvas, { foreground });
   await waitFrames(3);
   const inspect = api?.inspect?.() || window.CompassTrophyScene.inspect?.();
   if (!api || inspect?.fallback === true || canvas.hidden) throw new Error('CANONICAL_TROPHY_RENDER_FAILED');
@@ -49,7 +52,7 @@ async function mountTrophy() {
 async function mountBrain() {
   await loadScript('/assets/compass/compass.hra-brain-scene.js');
   if (!window.CompassBrainScene?.mount) throw new Error('COMPASS_BRAIN_SCENE_UNAVAILABLE');
-  const api = window.CompassBrainScene.mount(canvas, { foreground: () => !document.hidden });
+  const api = window.CompassBrainScene.mount(canvas, { foreground });
   if (!api) throw new Error('CANONICAL_BRAIN_MOUNT_FAILED');
   const loaded = await api.load;
   if (!loaded || canvas.dataset.brainReady !== 'true') throw new Error('CANONICAL_BRAIN_LOAD_FAILED');
@@ -75,7 +78,21 @@ async function start() {
   }
 }
 
+window.addEventListener('message', event => {
+  if (event.origin !== location.origin) return;
+  const data = event.data;
+  if (!data || data.type !== 'DGB_DOOR_CANONICAL_OBJECT_CONTROL') return;
+  active = Boolean(data.active);
+  if (active) {
+    try {
+      if (scene === 'trophy') window.CompassTrophyScene?.activate?.();
+      else window.CompassBrainScene?.activate?.();
+    } catch {}
+  }
+});
+
 window.addEventListener('pagehide', () => {
+  active = false;
   try {
     const gl = canvas?.getContext?.('webgl') || canvas?.getContext?.('webgl2');
     gl?.getExtension?.('WEBGL_lose_context')?.loseContext?.();

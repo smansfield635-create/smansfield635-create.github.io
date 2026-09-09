@@ -1,15 +1,17 @@
-/* DOOR_CANONICAL_RENDERER_MIRROR_v7
+/* DOOR_CANONICAL_RENDERER_MIRROR_v7_2
    Passive magic mirror. Three clean cinematic states remain where physical review passed;
    Trophy and Brain are supplied by their exact canonical Compass renderers.
+   Legacy portal placeholder geometry is explicitly suppressed on this successor.
 */
-html[data-page="door"][data-environment="door-canonical-renderer-mirror-v7"] .portal-object.door-canonical-mirror{position:relative;overflow:hidden;min-height:0!important;padding:0!important;pointer-events:none;border-color:rgba(166,190,215,.29);background:radial-gradient(circle at 50% 44%,rgba(91,165,187,.10),transparent 52%),#01040a;box-shadow:0 1.8rem 5rem rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.025)}
+html[data-page="door"][data-environment="door-canonical-renderer-mirror-v7-2"] .portal-object.door-canonical-mirror{position:relative;overflow:hidden;min-height:0!important;padding:0!important;pointer-events:none;border-color:rgba(166,190,215,.29);background:radial-gradient(circle at 50% 44%,rgba(91,165,187,.10),transparent 52%),#01040a;box-shadow:0 1.8rem 5rem rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.025)}
+html[data-page="door"][data-environment="door-canonical-renderer-mirror-v7-2"] .portal-object.door-canonical-mirror::before{content:none!important;display:none!important}
 .door-canonical-mirror__frame{position:relative;isolation:isolate;width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:1.6rem;background:radial-gradient(ellipse at 50% 44%,rgba(87,164,190,.12),transparent 52%),linear-gradient(180deg,#07111c,#010307 88%);box-shadow:inset 0 0 0 1px rgba(205,220,234,.16),inset 0 0 4.8rem rgba(0,0,0,.46)}
 .door-canonical-mirror__frame::before{content:"";position:absolute;z-index:8;inset:.38rem;border:1px solid rgba(214,226,237,.22);border-radius:1.3rem;pointer-events:none;background:linear-gradient(113deg,transparent 0 28%,rgba(255,255,255,.038) 32%,transparent 37% 66%,rgba(131,220,235,.025) 71%,transparent 77%);box-shadow:inset 0 0 1.7rem rgba(112,200,219,.035),0 0 1.4rem rgba(232,201,126,.03)}
 .door-canonical-mirror__film,.door-canonical-mirror__objects{position:absolute;z-index:1;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .82s cubic-bezier(.22,.72,.18,1);will-change:opacity}
 .door-canonical-mirror__film{object-fit:cover;background:#01040a;transform-origin:50% 50%;transform:translate3d(var(--door-film-x,0%),var(--door-film-y,0%),0) scale(var(--door-film-zoom,1.5));filter:saturate(1.04) contrast(1.055) brightness(1.02);transition:opacity .82s cubic-bezier(.22,.72,.18,1),transform 3.8s cubic-bezier(.16,.72,.18,1)}
-.door-canonical-mirror__objects{z-index:2;overflow:hidden;background:radial-gradient(circle at 50% 48%,rgba(53,116,142,.07),transparent 58%)}
+.door-canonical-mirror__objects{z-index:2;overflow:hidden;background:radial-gradient(circle at 50% 48%,rgba(53,116,142,.07),transparent 58%),#01040a}
 .door-canonical-mirror__film.is-visible,.door-canonical-mirror__objects.is-visible{opacity:1}
-.door-canonical-mirror__object{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;opacity:0;transform:scale(.985);transition:opacity .82s cubic-bezier(.22,.72,.18,1),transform 1.15s cubic-bezier(.16,.72,.18,1);background:transparent}
+.door-canonical-mirror__object{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;opacity:0;transform:scale(.985);transition:opacity .82s cubic-bezier(.22,.72,.18,1),transform 1.15s cubic-bezier(.16,.72,.18,1);background:#01040a}
 .door-canonical-mirror__object.is-visible{opacity:1;transform:scale(1)}
 .door-canonical-mirror__veil{position:absolute;z-index:6;inset:-18%;pointer-events:none;opacity:0;background:radial-gradient(ellipse at 50% 48%,rgba(142,224,235,.13),rgba(69,98,150,.045) 34%,transparent 68%),linear-gradient(112deg,transparent 34%,rgba(255,255,255,.055) 43%,transparent 52%);mix-blend-mode:screen}
 .door-canonical-mirror__frame.is-changing .door-canonical-mirror__veil{animation:door-canonical-mirror-change .96s cubic-bezier(.18,.72,.2,1)}

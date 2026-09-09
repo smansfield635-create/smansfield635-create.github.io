@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "door-mirrorland",
-  "description": "Door passive magic-mirror copy/background correction on the accepted G7 source strategy: preserve clean Mirrorland, Audralia, and Mirror Manor cinematic states; keep exact Compass Trophy and Brain renderers; darken canonical object presentation; relabel Trophy and Brain as visitor-facing estate destinations. Explore and the frozen Cycle-7 Door carousel remain unchanged.",
+  "description": "Door passive magic-mirror background-only correction: preserve the accepted G7.1 sequence, labels, canonical Trophy/Brain renderers, and clean cinematic states; remove the inherited legacy portal placeholder and force a fresh canonical-object host so the retired white stage cannot persist from cache. Explore and the frozen Cycle-7 Door carousel remain unchanged.",
   "checks": [
     {
       "path": "/door/",
@@ -9,15 +9,15 @@
         "data-page=\"door\"",
         "data-version=\"DOOR-EXPLORE-ANIMATION-COHERENCE-V1-CYCLE7\"",
         "data-door-card-count=\"6\"",
-        "data-environment=\"door-canonical-renderer-mirror-v7-1\"",
+        "data-environment=\"door-canonical-renderer-mirror-v7-2\"",
         "data-door-canonical-mirror",
         "data-door-canonical-mirror-ready=\"false\"",
         "Automatic magic-mirror sequence of five Diamond Gate Bridge estate scenes",
         "Five glimpses of the estate",
         "Mirrorland",
         "/assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4",
-        "/assets/door-explore/door.canonical-mirror.css?v=door-canonical-renderer-mirror-g7-20260909-1",
-        "/assets/door-explore/door.canonical-mirror.js?v=door-canonical-renderer-mirror-g7-1-20260909-1",
+        "/assets/door-explore/door.canonical-mirror.css?v=door-canonical-renderer-mirror-g7-2-20260909-1",
+        "/assets/door-explore/door.canonical-mirror.js?v=door-canonical-renderer-mirror-g7-2-20260909-1",
         "carousel.dataset.carouselAuthority='page-bound-v1'"
       ],
       "excludes": [
@@ -33,7 +33,8 @@
     {
       "path": "/assets/door-explore/door.canonical-mirror.js",
       "includes": [
-        "DOOR_CANONICAL_RENDERER_MIRROR_v7_1",
+        "DOOR_CANONICAL_RENDERER_MIRROR_v7_2",
+        "OBJECT_HOST_VERSION = 'door-canonical-object-host-g7-2-20260909-1'",
         "owner-authorized-compass-cinematic-clean-state",
         "CompassTrophyScene",
         "CompassBrainScene",
@@ -87,9 +88,12 @@
     {
       "path": "/assets/door-explore/door.canonical-mirror.css",
       "includes": [
-        "DOOR_CANONICAL_RENDERER_MIRROR_v7",
+        "DOOR_CANONICAL_RENDERER_MIRROR_v7_2",
+        ".portal-object.door-canonical-mirror::before",
+        "content:none!important",
         ".door-canonical-mirror__film",
         ".door-canonical-mirror__object",
+        "background:#01040a",
         "door-canonical-mirror-change",
         "@media(prefers-reduced-motion:reduce)"
       ],

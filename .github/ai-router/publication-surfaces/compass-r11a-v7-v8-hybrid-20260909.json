@@ -11,7 +11,7 @@
         "data-compass-static-introduction",
         "/assets/compass/cinematic-media/compass-main-orientation-entry-frame.png?v=r11a-v7-v8-hybrid&cb=47ca784c3f679555",
         "/assets/compass/compass.orientation-cinematic.css?v=r11a-v7-v8-hybrid&cb=507081bfe7290b20",
-        "/assets/compass/compass.orientation-cinematic.js?v=r11a-v7-v8-hybrid&cb=507081bfe7290b20"
+        "/assets/compass/compass.orientation-cinematic.js?v=r11b-entry-routing-v1&cb=d84de4c41e919a2c"
       ],
       "excludes": [
         "r11a-v7-media-owned-entry&cb=84038cd2c0a10690"
@@ -26,7 +26,12 @@
         "758806d9df52cb33ef61892bb49a97b46f90cbb5",
         "47ca784c3f67955554536852b96cb109547d83497d0dbef7edeb3ecd3dce1061",
         "entryPrerollMs:0",
-        "entryPrerollCountedInMaster:true"
+        "entryPrerollCountedInMaster:true",
+        "COMPASS_ORIENTATION_ENTRY_ROUTING_V1",
+        "EXTERNAL_OR_DIRECT_ENTRY",
+        "INTERNAL_RETURN",
+        "HISTORY_RETURN",
+        "REPLAY_FORCED"
       ],
       "excludes": [
         "COMPASS_EXPERIENTIAL_PLAYER_R11A_V7_FILMED_ENTRY_RESTORATION"

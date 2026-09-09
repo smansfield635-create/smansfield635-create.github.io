@@ -21,6 +21,14 @@ const CONTRACT=Object.freeze({
   naturalFadeMs:2200
 });
 const STATE=Object.freeze({ARMED:'ARMED',PLAYING:'PLAYING',SETTLED:'SETTLED'});
+const ENTRY_POLICY=Object.freeze({
+  version:'COMPASS_ORIENTATION_ENTRY_ROUTING_V1',
+  externalOrDirect:'OFFER',
+  internalReturn:'BYPASS',
+  historyReturn:'BYPASS',
+  reload:'BYPASS',
+  replay:'ALWAYS_AVAILABLE'
+});
 const ENTRY_TESSELLATE_START_MS=140;
 const ENTRY_TESSELLATE_END_MS=820;
 const ENTRY_CELL_TRAVEL_END_MS=2300;
@@ -42,7 +50,7 @@ const session={
   entryCanvas:null,entryCtx:null,entryWidth:0,entryHeight:0,entryDpr:1,
   entryStars:[],entryCells:[],entryStartedAt:0,entryRaf:0,
   playRequested:false,entryTransitionComplete:false,videoReady:false,
-  videoStartRequested:false,firstFramePresented:false,entryAction:''
+  videoStartRequested:false,firstFramePresented:false,entryAction:'',entryDecision:null
 };
 
 function markState(state){
@@ -110,6 +118,7 @@ function buildOverlay(){
   overlay.className='compass-prerendered-player';
   overlay.setAttribute('data-main-orientation-film','');
   overlay.setAttribute('data-player-contract',CONTRACT.version);
+  overlay.setAttribute('data-entry-policy',ENTRY_POLICY.version);
   overlay.setAttribute('data-media-git-blob',CONTRACT.mediaGitBlob);
   overlay.setAttribute('data-media-sha256',CONTRACT.mediaSha256);
   overlay.setAttribute('data-entry-preroll-ms',String(CONTRACT.entryPrerollMs));
@@ -165,6 +174,53 @@ function buildOverlay(){
   session.entryCanvas=q('[data-main-orientation-entry-canvas]',gate);
   document.body.append(overlay);
   return overlay;
+}
+
+function currentNavigationType(){
+  const entry=performance.getEntriesByType?.('navigation')?.[0];
+  return typeof entry?.type==='string'?entry.type:'navigate';
+}
+function decideOrdinaryEntry({
+  referrer=document.referrer,
+  navigationType=currentNavigationType(),
+  origin=location.origin
+}={}){
+  let sameOriginReferrer=false;
+  if(referrer){
+    try{sameOriginReferrer=new URL(referrer,location.href).origin===origin;}catch{}
+  }
+  let reason='EXTERNAL_OR_DIRECT_ENTRY';
+  if(navigationType==='back_forward')reason='HISTORY_RETURN';
+  else if(navigationType==='reload')reason='RELOAD';
+  else if(sameOriginReferrer)reason='INTERNAL_RETURN';
+  return Object.freeze({
+    offer:reason==='EXTERNAL_OR_DIRECT_ENTRY',
+    reason,
+    navigationType,
+    sameOriginReferrer
+  });
+}
+function emitEntryDecision(decision){
+  document.dispatchEvent(new CustomEvent('dgb:compass-orientation-entry-decision',{detail:{
+    policy:ENTRY_POLICY.version,
+    ...decision,
+    replayAvailable:true
+  }}));
+}
+function bypassOrdinaryEntry(decision){
+  session.entryDecision=decision;
+  session.state=STATE.SETTLED;
+  delete document.documentElement.dataset.compassOrientationCinematic;
+  document.documentElement.dataset.compassOrientationEntry=decision.reason;
+  ensureReplay();
+}
+function routeOrdinaryEntry(){
+  const decision=decideOrdinaryEntry();
+  session.entryDecision=decision;
+  document.documentElement.dataset.compassOrientationEntry=decision.reason;
+  if(decision.offer)mount('ordinary-entry');
+  else bypassOrdinaryEntry(decision);
+  emitEntryDecision(decision);
 }
 
 function ensureReplay(){
@@ -475,6 +531,9 @@ function mount(source='initial'){
     document.documentElement.classList.add('compass-orientation-cinematic-active');
     const overlay=buildOverlay();
     overlay.dataset.mountSource=source;
+    overlay.dataset.entryRoute=source==='ordinary-entry'
+      ?(session.entryDecision?.reason||'EXTERNAL_OR_DIRECT_ENTRY')
+      :'REPLAY_FORCED';
     overlay.dataset.reducedMotion=String(reduced());
     markState(STATE.ARMED);
     bindOverlay();
@@ -495,6 +554,8 @@ function mount(source='initial'){
 
 globalThis.__DGB_COMPASS_PRERENDERED_PLAYER__=Object.freeze({
   contract:CONTRACT,
+  entryPolicy:ENTRY_POLICY,
+  decideEntry:input=>decideOrdinaryEntry(input),
   replay:()=>mount('inspection-api'),
   skip,
   inspect:()=>Object.freeze({
@@ -516,10 +577,11 @@ globalThis.__DGB_COMPASS_PRERENDERED_PLAYER__=Object.freeze({
     rootInert:Boolean(session.root?.inert),
     ambientMuted:Boolean(session.ambient?.muted),
     currentTime:Number(session.video?.currentTime||0),
-    duration:Number(session.video?.duration||0)
+    duration:Number(session.video?.duration||0),
+    entryDecision:session.entryDecision
   })
 });
 
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>mount('ordinary-entry'),{once:true});
-else mount('ordinary-entry');
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',routeOrdinaryEntry,{once:true});
+else routeOrdinaryEntry();
 })();

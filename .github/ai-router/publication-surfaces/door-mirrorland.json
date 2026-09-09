@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "door-mirrorland",
-  "description": "Door passive magic-mirror sequence rendered entirely from native canvas geometry, with no cinematic footage and no visitor-operated scene controls, while preserving Explore and the frozen Cycle-7 Door carousel.",
+  "description": "Door passive magic-mirror source correction: preserve the three physically accepted clean cinematic states and replace pixelated Trophy and Brain footage with exact existing Compass renderers. Explore and the frozen Cycle-7 Door carousel remain unchanged.",
   "checks": [
     {
       "path": "/door/",
@@ -9,67 +9,91 @@
         "data-page=\"door\"",
         "data-version=\"DOOR-EXPLORE-ANIMATION-COHERENCE-V1-CYCLE7\"",
         "data-door-card-count=\"6\"",
-        "data-environment=\"door-native-geometry-mirror-v6\"",
-        "data-door-estate-reel",
-        "data-door-estate-reel-ready=\"false\"",
-        "data-door-geometry-canvas",
-        "Automatic native-geometry magic mirror showing five Diamond Gate Bridge estate scenes",
+        "data-environment=\"door-canonical-renderer-mirror-v7\"",
+        "data-door-canonical-mirror",
+        "data-door-canonical-mirror-ready=\"false\"",
+        "Automatic magic-mirror sequence of five Diamond Gate Bridge estate scenes",
         "Five glimpses of the estate",
         "Mirrorland",
-        "/assets/door-explore/door.geometry-mirror.css?v=door-native-geometry-mirror-g6-20260909",
-        "/assets/door-explore/door.geometry-mirror.js?v=door-native-geometry-mirror-g6-20260909",
+        "/assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4",
+        "/assets/door-explore/door.canonical-mirror.css?v=door-canonical-renderer-mirror-g7-20260909-1",
+        "/assets/door-explore/door.canonical-mirror.js?v=door-canonical-renderer-mirror-g7-20260909-1",
         "carousel.dataset.carouselAuthority='page-bound-v1'"
       ],
       "excludes": [
-        "data-door-reel-video",
-        "data-door-reel-ghost",
+        "/assets/door-explore/door.geometry-mirror.css?v=door-native-geometry-mirror-g6-20260909",
+        "/assets/door-explore/door.geometry-mirror.js?v=door-native-geometry-mirror-g6-20260909",
+        "data-door-geometry-canvas",
         "data-door-reel-index",
-        "compass-main-orientation-final-v2.mp4",
-        "door.magic-mirror.js?v=door-magic-mirror-g5-20260909",
         "data-door-monolith-stage",
         "Dark mirrored Mirrorland threshold",
         "Six ways through."
       ]
     },
     {
-      "path": "/assets/door-explore/door.geometry-mirror.js",
+      "path": "/assets/door-explore/door.canonical-mirror.js",
       "includes": [
-        "DOOR_NATIVE_GEOMETRY_MIRROR_v6",
-        "data-door-estate-reel-ready",
-        "native-canvas-geometry",
-        "Mirrorland",
-        "Audralia",
-        "Trophy",
-        "Brain",
-        "Mirror Manor",
-        "manualControlsEnabled: false",
-        "filmFootageUsed: false",
-        "nativeGeometry: true",
-        "transition: 'vector-crossfade-plus-reflective-ripple'",
-        "additionalWebGLContexts: 0",
-        "generatedArtwork: false"
+        "DOOR_CANONICAL_RENDERER_MIRROR_v7",
+        "owner-authorized-compass-cinematic-clean-state",
+        "CompassTrophyScene",
+        "CompassBrainScene",
+        "/assets/compass/compass.trophy-scene.js",
+        "/assets/compass/compass.hra-brain-scene.js",
+        "canonicalRendererStates",
+        "manualSelectorsEnabled: false",
+        "generatedArtwork: false",
+        "inventedGeometry: false"
       ],
       "excludes": [
-        "drawImage(video",
-        "currentTime =",
+        "door.geometry-mirror",
+        "drawTrophy(",
+        "drawBrain(",
         "data-door-reel-index",
         "addEventListener('click'"
       ]
     },
     {
-      "path": "/assets/door-explore/door.geometry-mirror.css",
+      "path": "/door/canonical-object.html",
       "includes": [
-        "DOOR_NATIVE_GEOMETRY_MIRROR_v6",
-        ".door-geometry-mirror__canvas",
-        "door-native-geometry-mirror-v6",
+        "data-door-canonical-object-host=\"v1\"",
+        "data-door-canonical-object-canvas",
+        "/assets/door-explore/door.canonical-object.mjs?v=door-canonical-object-g7-20260909-1"
+      ],
+      "excludes": [
+        "video",
+        "compass-main-orientation-final-v2.mp4"
+      ]
+    },
+    {
+      "path": "/assets/door-explore/door.canonical-object.mjs",
+      "includes": [
+        "DOOR_CANONICAL_OBJECT_HOST_v1",
+        "/assets/compass/compass.trophy-scene.js",
+        "/assets/compass/compass.hra-brain-scene.js",
+        "window.CompassTrophyScene.mount",
+        "window.CompassBrainScene.mount",
+        "CANONICAL_TROPHY_RENDER_FAILED",
+        "CANONICAL_BRAIN_LOAD_FAILED"
+      ],
+      "excludes": [
+        "drawTrophy(",
+        "drawBrain(",
+        "compass-main-orientation-final-v2.mp4"
+      ]
+    },
+    {
+      "path": "/assets/door-explore/door.canonical-mirror.css",
+      "includes": [
+        "DOOR_CANONICAL_RENDERER_MIRROR_v7",
+        ".door-canonical-mirror__film",
+        ".door-canonical-mirror__object",
+        "door-canonical-mirror-change",
         "@media(prefers-reduced-motion:reduce)"
       ],
       "excludes": [
-        ".door-estate-reel__selector",
-        "--door-mirror-zoom",
+        ".door-geometry-mirror__canvas",
         ".door-monolith-scene",
-        ".door-portal-front",
-        ".door-route-signal"
+        ".door-portal-front"
       ]
     },
     {
@@ -86,10 +110,10 @@
     "enabled": true,
     "path": "/door/",
     "timeoutMs": 30000,
-    "readySelector": "[data-door-estate-reel]",
+    "readySelector": "[data-door-canonical-mirror]",
     "readyAttribute": {
-      "selector": "[data-door-estate-reel]",
-      "name": "data-door-estate-reel-ready",
+      "selector": "[data-door-canonical-mirror]",
+      "name": "data-door-canonical-mirror-ready",
       "contains": "true"
     },
     "binding": {

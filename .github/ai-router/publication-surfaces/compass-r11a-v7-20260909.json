@@ -1,0 +1,107 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "compass-r11a-v7-20260909",
+  "description": "Compass root with the owner-approved 56.9-second R11A v7 orientation master, signature colored Mirrorland, canonical Audralia crossing, pixel-reconfigured brain, trophy, house, and final Compass handoff.",
+  "checks": [
+    {
+      "path": "/",
+      "includes": [
+        "<title>Diamond Gate Bridge Compass</title>",
+        "data-compass-root",
+        "data-compass-static-introduction",
+        "/assets/compass/compass.orientation-cinematic.css?v=prerendered-master-t12-v1&cb=dea9061beb87b354",
+        "/assets/compass/compass.orientation-cinematic.js?v=r11a-v7-live&cb=2345df281dd5c891"
+      ],
+      "excludes": [
+        "/assets/compass/compass.orientation-cinematic.js?v=prerendered-master-t12-v1&cb=aa56aab44b8bc51a"
+      ]
+    },
+    {
+      "path": "/assets/compass/compass.orientation-cinematic.js",
+      "includes": [
+        "COMPASS_PRERENDERED_THIN_PLAYER_R11A_V7",
+        "/assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4?v=r11a-v7-live&cb=9641cf6653d1317d",
+        "9641cf6653d1317d5b69b0310cfea301723da4ddd4cce8be15d4a7fcde23e919",
+        "326d1c5b887262c6c828b3c8920a4b2e6f91d30b",
+        "entryPrerollMs:0",
+        "entryPrerollCountedInMaster:true"
+      ],
+      "excludes": [
+        "COMPASS_PRERENDERED_THIN_PLAYER_R8_v2",
+        "entryPrerollMs:4350",
+        "requestAnimationFrame(drawEntryTransition)"
+      ]
+    },
+    {
+      "path": "/assets/compass/cinematic-media/manifest.v1.json",
+      "includes": [
+        "R11A_V7_LIVE_REPLACEMENT_QUALIFIED",
+        "COMPASS_R11A_V7_LIVE_REPLACEMENT_20260909_001",
+        "9641cf6653d1317d5b69b0310cfea301723da4ddd4cce8be15d4a7fcde23e919",
+        "326d1c5b887262c6c828b3c8920a4b2e6f91d30b",
+        "SIGNATURE_COLORED_MIRRORLAND_PANES"
+      ],
+      "excludes": [
+        "R8_SUCCESSOR_PLAYER_BOUND_TO_R7_V2_MASTER"
+      ]
+    },
+    {
+      "path": "/assets/compass/cinematic-media/r11a-v7-live-release-20260908-001/release-manifest.v1.json",
+      "includes": [
+        "COMPASS_R11A_V7_LIVE_RELEASE_MANIFEST_v1",
+        "CANDIDATE_QUALIFIED_FOR_OWNER_DIRECTED_REPLACEMENT",
+        "9641cf6653d1317d5b69b0310cfea301723da4ddd4cce8be15d4a7fcde23e919",
+        "EXACT_HEAD_MARKER_AND_MEDIA_SHA256_FETCHBACK"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/",
+    "timeoutMs": 45000,
+    "readySelector": "[data-main-orientation-film][data-player-contract=\"COMPASS_PRERENDERED_THIN_PLAYER_R11A_V7\"][data-media-sha256=\"9641cf6653d1317d5b69b0310cfea301723da4ddd4cce8be15d4a7fcde23e919\"]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/"
+    },
+    "interactions": [
+      {
+        "name": "Start exact R11A v7 master",
+        "action": {
+          "type": "click",
+          "selector": "[data-main-orientation-play]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-main-orientation-film]",
+            "name": "data-state",
+            "value": "PLAYING"
+          }
+        ],
+        "timeoutMs": 10000
+      },
+      {
+        "name": "Skip restores exact Compass",
+        "action": {
+          "type": "click",
+          "selector": "[data-main-orientation-skip]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "[data-compass-root]:not([inert])"
+          },
+          {
+            "type": "exists",
+            "selector": "[data-main-orientation-replay]"
+          }
+        ],
+        "timeoutMs": 5000
+      }
+    ],
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true
+  }
+}

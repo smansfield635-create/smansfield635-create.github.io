@@ -12,7 +12,10 @@ import {
   text,
   verifyAuthorityProvenanceBinding
 } from '../../../tools/operation-intake/repository-operation-lock-manager.v1.mjs';
-import { verifyOwnerProvenance } from '../../../tools/operation-intake/repository-operation-lock-lineage.v2.mjs';
+import {
+  verifyOwnerProvenance,
+  verifyOwnerSuccessorProvenance
+} from '../../../tools/operation-intake/repository-operation-lock-lineage.v2.mjs';
 
 export const PLAN_SCHEMA = 'OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PLAN_v1';
 export const PROVENANCE_SCHEMA = 'OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1';
@@ -56,8 +59,17 @@ export function validateOwnerSuccessorSource(sourceComment) {
 export function verifyCanonicalPredecessorAuthority(lock) {
   try { return verifyAuthorityProvenanceBinding(lock); }
   catch (canonicalError) {
-    try { return verifyOwnerProvenance(lock); }
-    catch (ownerError) { fail('PREDECESSOR_PROVENANCE_INVALID', 'predecessor', `${canonicalError.code || canonicalError.message}|${ownerError.code || ownerError.message}`); }
+    try { return verifyOwnerSuccessorProvenance(lock); }
+    catch (ownerSuccessorError) {
+      try { return verifyOwnerProvenance(lock); }
+      catch (ownerError) {
+        fail(
+          'PREDECESSOR_PROVENANCE_INVALID',
+          'predecessor',
+          `${canonicalError.code || canonicalError.message}|${ownerSuccessorError.code || ownerSuccessorError.message}|${ownerError.code || ownerError.message}`
+        );
+      }
+    }
   }
 }
 

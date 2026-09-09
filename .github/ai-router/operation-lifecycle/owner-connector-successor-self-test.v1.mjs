@@ -8,7 +8,8 @@ import {
   PROVENANCE_SCHEMA,
   TRANSPORT_ID,
   buildIndependentSuccessorProvenance,
-  validateOwnerSuccessorSource
+  validateOwnerSuccessorSource,
+  verifyCanonicalPredecessorAuthority
 } from './owner-connector-canonical-successor.v1.mjs';
 
 let passed = 0;
@@ -91,6 +92,18 @@ const core = stable({
 });
 assert.equal(provenance.bindingDigest, sha(canonical(core)));
 pass();
+const chainedPredecessorLock = { ...successorLock, independentAuthorityProvenance: provenance };
+const chainedVerification = verifyCanonicalPredecessorAuthority(chainedPredecessorLock);
+assert.equal(chainedVerification.result, 'OWNER_CONNECTOR_SUCCESSOR_PROVENANCE_VERIFIED');
+assert.equal(chainedVerification.authorityIdentity.operationId, successorLock.operationId);
+pass();
+expectCode(
+  () => verifyCanonicalPredecessorAuthority({
+    ...chainedPredecessorLock,
+    independentAuthorityProvenance: { ...provenance, bindingDigest: '0'.repeat(64) }
+  }),
+  'PREDECESSOR_PROVENANCE_INVALID'
+);
 expectCode(() => buildIndependentSuccessorProvenance({ source: parsed, successorLock, transition, observedLedgerBlobSha: 'bad', observedLockRefHead: 'f'.repeat(40) }), 'INVALID_DIGEST');
 expectCode(() => buildIndependentSuccessorProvenance({ source: parsed, successorLock, transition, observedLedgerBlobSha: 'e'.repeat(40), observedLockRefHead: 'bad' }), 'INVALID_DIGEST');
 
@@ -110,6 +123,7 @@ console.log(JSON.stringify({
   ownerSourceAuthentication: true,
   exactCasBinding: true,
   canonicalSuccessorLocalDelegation: true,
+  chainedOwnerSuccessorPredecessorAccepted: true,
   plannerPerformsRepositoryWrite: false,
   planIsReceipt: false,
   authorityInherited: false

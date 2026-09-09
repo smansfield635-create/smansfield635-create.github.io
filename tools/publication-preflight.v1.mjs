@@ -85,18 +85,24 @@ function stampAudralia(stage,targetSha){
   if(!text.includes(`data-audralia-build-sha="${targetSha}"`)||!text.includes(`BUILD ${short}`))throw new Error('AUDRALIA_BUILD_FINGERPRINT_VERIFY_FAILED');
 }
 function appendMatches(target,text,re){let match;while((match=re.exec(text))!==null){if(match[1])target.push(match[1]);}}
+function extractJavaScriptResourceSpecifiers(target,text){
+  appendMatches(target,text,/\b(?:import|export)\s+(?:[^'";]*?\s+from\s*)?["']([^"']+)["']/gs);
+  appendMatches(target,text,/\bimport\s*\(\s*["']([^"']+)["']\s*\)/gs);
+  appendMatches(target,text,/\bimportWrapper\s*\(\s*["'][^"']+["']\s*,\s*["']([^"']+)["']\s*\)/gs);
+  appendMatches(target,text,/\bnew\s+URL\s*\(\s*["']([^"']+)["']\s*,\s*import\.meta\.url\s*\)/gs);
+  appendMatches(target,text,/\bfetch\s*\(\s*["']([^"']+)["']/gs);
+  appendMatches(target,text,/\b(?:Worker|SharedWorker)\s*\(\s*["']([^"']+)["']/gs);
+}
 function extractResourceSpecifiers(rel,text){
   const ext=path.posix.extname(rel).toLowerCase();
   const refs=[];
-  if(ext==='.html'||ext==='.htm')appendMatches(refs,text,/<(?:script|link|img|source|video|audio|iframe)\b[^>]*?\b(?:src|href)\s*=\s*["']([^"']+)["'][^>]*>/gi);
-  if(ext==='.mjs'||ext==='.js'||ext==='.cjs'){
-    appendMatches(refs,text,/\b(?:import|export)\s+(?:[^'";]*?\s+from\s*)?["']([^"']+)["']/gs);
-    appendMatches(refs,text,/\bimport\s*\(\s*["']([^"']+)["']\s*\)/gs);
-    appendMatches(refs,text,/\bimportWrapper\s*\(\s*["'][^"']+["']\s*,\s*["']([^"']+)["']\s*\)/gs);
-    appendMatches(refs,text,/\bnew\s+URL\s*\(\s*["']([^"']+)["']\s*,\s*import\.meta\.url\s*\)/gs);
-    appendMatches(refs,text,/\bfetch\s*\(\s*["']([^"']+)["']/gs);
-    appendMatches(refs,text,/\b(?:Worker|SharedWorker)\s*\(\s*["']([^"']+)["']/gs);
+  if(ext==='.html'||ext==='.htm'){
+    appendMatches(refs,text,/<(?:script|link|img|source|video|audio|iframe)\b[^>]*?\b(?:src|href)\s*=\s*["']([^"']+)["'][^>]*>/gi);
+    const inlineScript=/<script\b[^>]*>([\s\S]*?)<\/script>/gi;
+    let match;
+    while((match=inlineScript.exec(text))!==null)extractJavaScriptResourceSpecifiers(refs,match[1]||'');
   }
+  if(ext==='.mjs'||ext==='.js'||ext==='.cjs')extractJavaScriptResourceSpecifiers(refs,text);
   if(ext==='.css'){
     appendMatches(refs,text,/@import\s+(?:url\(\s*)?["']?([^"')\s;]+)["']?\s*\)?/gi);
     appendMatches(refs,text,/url\(\s*["']?([^"')]+)["']?\s*\)/gi);

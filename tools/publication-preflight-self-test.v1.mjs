@@ -39,11 +39,12 @@ try{
   fs.writeFileSync(path.join(repo,'inspection/audralia-24057-exact/snapshot/runtime/entry.mjs'),"import './child.mjs';\nexport const READY=true;\n");
   fs.writeFileSync(path.join(repo,'inspection/audralia-24057-exact/snapshot/runtime/child.mjs'),"export const CHILD=()=>import('../runtime/shared/grandchild.mjs');\n");
   fs.writeFileSync(path.join(repo,'inspection/audralia-24057-exact/snapshot/runtime/shared/grandchild.mjs'),'export const VALUE=1;\n');
+  fs.writeFileSync(path.join(repo,'inspection/audralia-24057-exact/snapshot/runtime/inline-entry.mjs'),'export const INLINE_READY=true;\n');
   fs.writeFileSync(path.join(repo,'inspection/audralia-24057-exact/snapshot/runtime/style.css'),".fixture{background-image:url('./texture.svg')}\n");
   fs.writeFileSync(path.join(repo,'inspection/audralia-24057-exact/snapshot/runtime/texture.svg'),'<svg xmlns="http://www.w3.org/2000/svg"></svg>\n');
   fs.writeFileSync(path.join(repo,'inspection/compass/live/index.html'),'must-ship');
   fs.writeFileSync(path.join(repo,'showroom/globe/audralia/local-compositor.mjs'),"async function importWrapper(label,url){return import(url);}\nawait importWrapper('WRAPPED_RUNTIME','/inspection/audralia-24057-exact/snapshot/runtime/entry.mjs?cb=1');\n");
-  fs.writeFileSync(path.join(repo,'showroom/globe/audralia/index.html'),'<!doctype html><div class="audralia-loading-version">LIVE BUILD</div><link rel="stylesheet" href="/inspection/audralia-24057-exact/snapshot/runtime/style.css?cb=1"><script type="module" src="./local-compositor.mjs?cb=1"></script>\n');
+  fs.writeFileSync(path.join(repo,'showroom/globe/audralia/index.html'),'<!doctype html><div class="audralia-loading-version">LIVE BUILD</div><link rel="stylesheet" href="/inspection/audralia-24057-exact/snapshot/runtime/style.css?cb=1"><script type="module" src="./local-compositor.mjs?cb=1"></script><script type="module">await import(\'/inspection/audralia-24057-exact/snapshot/runtime/inline-entry.mjs?cb=1\');</script>\n');
   const manifest={schema:'PUBLICATION_SURFACE_VERIFICATION_v1',surfaceId:'demo',checks:[{path:'/demo/',includes:['TOKEN_OK'],excludes:[]}],runtime:{enabled:false}};
   const audraliaManifest={schema:'PUBLICATION_SURFACE_VERIFICATION_v1',surfaceId:'audralia',checks:[{path:'/showroom/globe/audralia/',includes:['LIVE BUILD'],excludes:[]}],runtime:{enabled:false}};
   fs.writeFileSync(path.join(repo,'.github/ai-router/publication-surfaces/demo.json'),JSON.stringify(manifest,null,2));
@@ -66,7 +67,8 @@ try{
   check('positive-fixture-top-level-breakdown',Array.isArray(built.topLevelBytes)&&built.topLevelBytes.some(row=>row.path==='demo'&&row.bytes>0));
   check('protected-closure-preserved-on-non-protected-surface',built.authorizedExcludedRuntimeDependencies?.status==='PROMOTED'&&built.authorizedExcludedRuntimeDependencies?.protectedSurfaceId==='audralia'&&built.authorizedExcludedRuntimeDependencies?.requestedSurfaceId==='demo');
   check('protected-closure-entry-on-non-protected-surface',fs.existsSync(path.join(promotedDemoRoot,'entry.mjs')));
-  check('protected-closure-local-wrapper-discovered-on-non-protected-surface',built.authorizedExcludedRuntimeDependencies?.traversedResourceCount>=7);
+  check('protected-closure-inline-module-import-on-non-protected-surface',fs.existsSync(path.join(promotedDemoRoot,'inline-entry.mjs')));
+  check('protected-closure-local-wrapper-discovered-on-non-protected-surface',built.authorizedExcludedRuntimeDependencies?.traversedResourceCount>=8);
   check('protected-closure-unreferenced-snapshot-excluded-on-non-protected-surface',!fs.existsSync(path.join(stage,'inspection/audralia-24057-exact/snapshot/clone.txt')));
   check('protected-audralia-exact-head-stamped-on-non-protected-surface',stagedAudralia.includes(`data-audralia-build-sha="${demoSha}"`)&&stagedAudralia.includes('BUILD BBBBBBBB'));
 
@@ -77,13 +79,14 @@ try{
   check('authorized-closure-entry-promoted-through-local-wrapper',fs.existsSync(path.join(promotedRoot,'entry.mjs')));
   check('authorized-closure-static-import-promoted',fs.existsSync(path.join(promotedRoot,'child.mjs')));
   check('authorized-closure-dynamic-import-promoted',fs.existsSync(path.join(promotedRoot,'shared/grandchild.mjs')));
+  check('authorized-closure-inline-module-dynamic-import-promoted',fs.existsSync(path.join(promotedRoot,'inline-entry.mjs')));
   check('authorized-closure-stylesheet-promoted',fs.existsSync(path.join(promotedRoot,'style.css')));
   check('authorized-closure-css-url-promoted',fs.existsSync(path.join(promotedRoot,'texture.svg')));
   check('authorized-closure-unreferenced-snapshot-excluded',!fs.existsSync(path.join(audraliaStage,'inspection/audralia-24057-exact/snapshot/clone.txt')));
   check('authorized-closure-receipt-pass',audraliaBuilt.authorizedExcludedRuntimeDependencies?.status==='PROMOTED'&&audraliaBuilt.authorizedExcludedRuntimeDependencies?.mode==='EXACT_REFERENCED_CLOSURE_ONLY');
-  check('authorized-closure-receipt-count',audraliaBuilt.authorizedExcludedRuntimeDependencies?.fileCount===5);
+  check('authorized-closure-receipt-count',audraliaBuilt.authorizedExcludedRuntimeDependencies?.fileCount===6);
   check('authorized-closure-receipt-digest',/^[0-9a-f]{64}$/.test(audraliaBuilt.authorizedExcludedRuntimeDependencies?.digest||''));
-  check('authorized-closure-local-module-traversed',audraliaBuilt.authorizedExcludedRuntimeDependencies?.traversedResourceCount>=7);
+  check('authorized-closure-local-module-traversed',audraliaBuilt.authorizedExcludedRuntimeDependencies?.traversedResourceCount>=8);
   check('authorized-direct-audralia-exact-head-stamped',stagedAudraliaDirect.includes(`data-audralia-build-sha="${audraliaSha}"`)&&stagedAudraliaDirect.includes('BUILD CCCCCCCC'));
 
   let missingDependencyRejected=false;

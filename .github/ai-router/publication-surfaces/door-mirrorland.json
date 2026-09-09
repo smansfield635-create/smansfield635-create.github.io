@@ -1,0 +1,79 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "door-mirrorland",
+  "description": "Door crystalline Mirrorland threshold environment layered around the frozen Cycle-7 carousel and card renderers without adopting the legacy Mirrorland renderer.",
+  "checks": [
+    {
+      "path": "/door/",
+      "includes": [
+        "data-page=\"door\"",
+        "data-version=\"DOOR-EXPLORE-ANIMATION-COHERENCE-V1-CYCLE7\"",
+        "data-door-card-count=\"6\"",
+        "data-environment=\"mirrorland-door-v1\"",
+        "data-door-mirrorland",
+        "data-door-window",
+        "Mirrorland threshold",
+        "Six paths wait beyond the glass.",
+        "/assets/door-explore/door.environment.css?v=door-mirrorland-g1-20260909",
+        "/assets/door-explore/door.environment.js?v=door-mirrorland-g1-20260909",
+        "carousel.dataset.carouselAuthority='page-bound-v1'"
+      ],
+      "excludes": [
+        "DGB_COMPASS_MIRRORLAND_WINDOW_HARDENED_v2",
+        "data-environment=\"expedition-map-v1\""
+      ]
+    },
+    {
+      "path": "/assets/door-explore/door.environment.js",
+      "includes": [
+        "DOOR_MIRRORLAND_ENVIRONMENT_v1",
+        "data-door-mirrorland-ready",
+        "legacyMirrorlandRendererAdopted: false",
+        "pointer-parallax",
+        "ambient-only",
+        "reduced-static"
+      ],
+      "excludes": [
+        "DGB_COMPASS_MIRRORLAND_WINDOW_HARDENED_v2"
+      ]
+    },
+    {
+      "path": "/assets/door-explore/door.environment.css",
+      "includes": [
+        "DOOR_MIRRORLAND_ENVIRONMENT_v1",
+        ".door-window",
+        ".door-pane.cyan",
+        ".door-pane.violet",
+        ".door-threshold-floor",
+        "@media(prefers-reduced-motion:reduce)"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/assets/door-explore/spatial-v2.css",
+      "includes": [
+        ".carousel",
+        ".route-card",
+        ".home-identity-v2-stage"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/door/",
+    "timeoutMs": 30000,
+    "readySelector": "[data-door-mirrorland]",
+    "readyAttribute": {
+      "selector": "[data-door-mirrorland]",
+      "name": "data-door-mirrorland-ready",
+      "contains": "true"
+    },
+    "binding": {
+      "mode": "direct-document",
+      "path": "/door/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true
+  }
+}

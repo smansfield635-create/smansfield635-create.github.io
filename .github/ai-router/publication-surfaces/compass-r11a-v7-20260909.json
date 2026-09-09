@@ -28,8 +28,7 @@
       ],
       "excludes": [
         "COMPASS_PRERENDERED_THIN_PLAYER_R8_v2",
-        "entryPrerollMs:4350",
-        "requestAnimationFrame(drawEntryTransition)"
+        "entryPrerollMs:4350"
       ]
     },
     {

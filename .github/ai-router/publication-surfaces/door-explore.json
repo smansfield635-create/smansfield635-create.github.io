@@ -1,0 +1,80 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "door-explore",
+  "description": "Door and Explore 11-card successor traversal: six Door cards, five Explore cards, five closed shared animation families.",
+  "checks": [
+    {
+      "path": "/door/",
+      "includes": [
+        "data-route=\"/door/\"",
+        "data-door-card-count=\"6\"",
+        "data-card=\"products\"",
+        "data-card=\"gauges\"",
+        "data-card=\"frontier\"",
+        "data-card=\"laws\"",
+        "data-card=\"governance\"",
+        "data-card=\"home\"",
+        "/assets/door-explore/frontier-cycle1.mjs",
+        "/assets/door-explore/families-v1.mjs",
+        "crosswalkProgress:'11/11 closed'"
+      ],
+      "excludes": [
+        "character-section",
+        "diagnostic-boundary",
+        "data-ai-characters-featured"
+      ]
+    },
+    {
+      "path": "/explore/",
+      "includes": [
+        "data-route=\"/explore/\"",
+        "data-explore-card-count=\"5\"",
+        "data-card=\"measurement\"",
+        "data-card=\"identity\"",
+        "data-card=\"laws\"",
+        "data-card=\"products\"",
+        "data-card=\"gauges\"",
+        "/assets/door-explore/families-v1.mjs",
+        "crosswalkProgress:'11/11 closed'"
+      ],
+      "excludes": [
+        "The Book",
+        "The Constellation"
+      ]
+    },
+    {
+      "path": "/assets/door-explore/families-v1.mjs",
+      "includes": [
+        "DOOR_EXPLORE_PRODUCTS_CYCLE2_V1",
+        "DOOR_EXPLORE_INSTRUMENT_DECISION_CYCLE3_V1",
+        "DOOR_EXPLORE_LAWS_CYCLE4_V1",
+        "DOOR_HOME_EXPLORE_IDENTITY_CYCLE5_V1",
+        "prefers-reduced-motion"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/assets/door-explore/frontier-cycle1.mjs",
+      "includes": [
+        "/showroom/globe/h-earth/render/geometry-kernel.js",
+        "constructHEarthTriangleMesh",
+        "admitHEarthPrimitiveRecord",
+        "DOOR_FRONTIER_APPLIED_SYSTEMS_CYCLE1_V1"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/door/",
+    "timeoutMs": 30000,
+    "readySelector": "[data-door-carousel]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/door/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "interactions": []
+  }
+}

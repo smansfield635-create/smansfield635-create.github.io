@@ -1,0 +1,31 @@
+{
+  "schema": "COMPASS_R11A_V8_TECHNICAL_QUALIFICATION_v1",
+  "status": "SOURCE_AND_MEDIA_PASS_RESPONSIVE_BROWSER_QA_PENDING",
+  "operationId": "COMPASS_R11A_V8_EXPERIENTIAL_INTEGRATION_20260909_001_SUCCESSOR_001",
+  "lockGeneration": 2027,
+  "governingMain": "4a228b7322ffc2bf71fae7ee103bae1a81725460",
+  "master": {
+    "path": "assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4",
+    "bytes": 8925582,
+    "sha256": "746606b76fbd05e9278787c25d484d001c67e18ba22f3890e95eee50e42ba29c",
+    "gitBlob": "f2fad2e98bd712b226a9c52c764e92a7dd0b46da",
+    "durationMs": 59967,
+    "frameCount": 1799
+  },
+  "passed": [
+    "FULL_VIDEO_AND_AUDIO_DECODE",
+    "H264_HIGH_1280X720_30FPS_YUV420P_BT709_LIMITED",
+    "AAC_LC_48000HZ_STEREO",
+    "NO_HALF_SECOND_SILENT_GAP",
+    "SIMULATED_ENTRY_FRAMES_REMOVED",
+    "INVENTED_TERMINAL_DIAL_FRAMES_REMOVED",
+    "AUDRALIA_ADDITIONAL_HOLD_90_FRAMES",
+    "CLOSING_TRAVERSAL_RETIMED_1_6X",
+    "PLAYER_AND_CONSTRUCTION_SOURCE_SYNTAX"
+  ],
+  "pending": [
+    "RESPONSIVE_BROWSER_PLAY_SKIP_NATURAL_HANDOFF_QA",
+    "OWNER_VISUAL_ACCEPTANCE"
+  ],
+  "publicationAuthority": false
+}

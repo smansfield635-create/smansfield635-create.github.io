@@ -1,119 +1,67 @@
 {
   "schema": "COMPASS_MAIN_HOMEPAGE_CINEMATIC_MEDIA_CUSTODY_v1",
-  "status": "R8_SUCCESSOR_PLAYER_BOUND_TO_R7_V2_MASTER",
+  "status": "R11A_V7_LIVE_REPLACEMENT_QUALIFIED",
   "film": "Welcome to Diamond Gate Bridge",
-  "operationId": "COMPASS_V2_R6_R10_MASTER_PLAYER_RELEASE_20260907_001",
-  "lockGeneration": 1987,
-  "governingMain": "24eba044e3c4943756ee2412cb81f35a440f9608",
-  "targetBranch": "compass/v2-r6-r10-master-player-release-20260907-001",
-  "r7CustodyCommit": "650a0ce31d5667821fc6c0827cd95ee1874c4ba8",
+  "operationId": "COMPASS_R11A_V7_LIVE_REPLACEMENT_20260909_001",
+  "lockGeneration": 2022,
+  "governingMain": "49fd160e1cb462feefd328c1472fe6001f277747",
+  "targetBranch": "compass/r11a-v7-live-replacement-20260908-001",
   "mutationClass": "BOUNDED_PAGE_RELEASE",
-  "activationState": "SUCCESSOR_BRANCH_REVIEW_ONLY_NOT_LIVE",
-  "masterDurationMs": 38000,
-  "entryPrerollMs": 4350,
-  "entryPrerollCountedInMaster": false,
-  "shotCount": 8,
-  "animationRetimingPerformed": false,
+  "activationState": "QUALIFIED_FOR_EXPLICIT_PAGES_EXACT_HEAD_DEPLOYMENT",
+  "masterDurationMs": 56900,
+  "entryPrerollMs": 0,
+  "entryPrerollCountedInMaster": true,
   "master": {
     "path": "assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4",
-    "bytes": 2723640,
-    "sha256": "0326240cf1d3d8cf7753b91ea1cd0206378b8db7e37590b8bb39c37f6b50f444",
-    "gitBlob": "b48bc48e531c3eb29bd1a94a91725badd30186f5",
-    "durationMs": 38000,
-    "custody": "R7_GIT_READBACK_PASS_CLOSED"
+    "bytes": 8869131,
+    "sha256": "9641cf6653d1317d5b69b0310cfea301723da4ddd4cce8be15d4a7fcde23e919",
+    "gitBlob": "326d1c5b887262c6c828b3c8920a4b2e6f91d30b",
+    "durationMs": 56900,
+    "frameCount": 1707,
+    "video": "H264_HIGH_1280X720_30FPS_YUV420P_BT709_LIMITED",
+    "audio": "AAC_LC_48000HZ_STEREO_192KBPS"
+  },
+  "music": {
+    "title": "Aquarium",
+    "acceptedSourceSha256": "0f52601bf88e629f22e0c9307808939814efbaa192d9839b7701d7afea040c2e",
+    "continuity": "EXACT_ACCEPTED_T10_SOURCE_FROM_MASTER_START_WITH_NO_DETECTED_SILENT_GAP",
+    "encodedComparisonPsnrDb": {"left": 160.898, "right": 161.028}
   },
   "entry": {
-    "sourceCommit": "8697c502c9fe9422f74e1f6858c6ed462ea8e981",
-    "durationMs": 4350,
-    "countedInMaster": false,
-    "law": "SELECTED_CONTROL_CELLS_BECOME_SUCCESSOR_STAR_AND_COMPASS_MATTER",
-    "tessellateStartMs": 140,
-    "tessellateEndMs": 820,
-    "cellTravelEndMs": 2300,
-    "compassStartMs": 1700,
-    "compassEndMs": 3550,
-    "zeroBlankHandoff": "FIRST_V2_VIDEO_FRAME_PRESENTED_BEFORE_ENTRY_MATERIAL_CLEARS",
+    "externalDurationMs": 0,
+    "countedInMaster": true,
+    "law": "R11A_S00_PIXEL_ENTRY_IS_INCLUDED_IN_THE_SINGLE_MASTER",
+    "startRule": "PLAY_STARTS_MASTER_IMMEDIATELY_AND_GATE_CLEARS_AFTER_FIRST_PRESENTED_VIDEO_FRAME",
+    "zeroBlankHandoff": "FIRST_R11A_VIDEO_FRAME_PRESENTED_BEFORE_ENTRY_GATE_CLEARS",
     "firstFrameGate": "requestVideoFrameCallback_OR_playing_plus_animation_frame_fallback"
   },
-  "shots": [
-    {
-      "id": "S01",
-      "startMs": 0,
-      "endMs": 4500,
-      "category": "ARRIVAL"
-    },
-    {
-      "id": "S02",
-      "startMs": 4500,
-      "endMs": 9500,
-      "category": "ORIENTATION"
-    },
-    {
-      "id": "S03",
-      "startMs": 9500,
-      "endMs": 14500,
-      "category": "GUIDED INTRODUCTION"
-    },
-    {
-      "id": "S04",
-      "startMs": 14500,
-      "endMs": 19500,
-      "category": "RESEARCH & READINESS"
-    },
-    {
-      "id": "S05",
-      "startMs": 19500,
-      "endMs": 25500,
-      "category": "MIRRORLAND"
-    },
-    {
-      "id": "S06",
-      "startMs": 25500,
-      "endMs": 30500,
-      "category": "AUDRALIA"
-    },
-    {
-      "id": "S07",
-      "startMs": 30500,
-      "endMs": 34000,
-      "category": "ENGAGE"
-    },
-    {
-      "id": "S08",
-      "startMs": 34000,
-      "endMs": 38000,
-      "category": "HANDOFF"
-    }
+  "visualSequence": [
+    "COMMUNITY_BODIES_ASSEMBLE_SIGNATURE_COLORED_MIRRORLAND_PANES",
+    "COMPLETED_OPAQUE_WINDOW_HOLDS_AS_ITS_OWN_IMAGE",
+    "PANES_THEN_BECOME_TRANSPARENT",
+    "CAMERA_CROSSES_WINDOW_INTO_CANONICAL_AUDRALIA",
+    "AUDRALIA_PIXELATES_AND_RECONFIGURES_TO_BRAIN",
+    "BRAIN_PIXELATES_AND_RECONFIGURES_TO_TROPHY",
+    "TROPHY_PIXELATES_AND_RECONFIGURES_TO_HOUSE",
+    "HOUSE_PIXELATES_AND_RECONFIGURES_TO_FINAL_COMPASS_HANDOFF"
   ],
-  "surfaces": {
-    "host": {
-      "path": "assets/compass/compass.orientation-cinematic.js",
-      "blob": "6a1fc0820b5d69e2b801ee996ada95f137ce0a45",
-      "role": "R8_THIN_V2_PLAYER_PLUS_RECOVERED_4350MS_ENTRY"
-    },
-    "css": {
-      "path": "assets/compass/compass.orientation-cinematic.css",
-      "blob": "160ffa61cde2e71049a09efb8b36ef6be1bca85d",
-      "role": "R8_THIN_PLAYER_AND_RECOVERED_ENTRY_PRESENTATION"
-    },
-    "media": {
-      "path": "assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4",
-      "blob": "b48bc48e531c3eb29bd1a94a91725badd30186f5",
-      "role": "R7_CLOSED_IMMUTABLE_V2_MASTER"
-    },
-    "r7CustodyProof": {
-      "path": "assets/compass/cinematic-media/v2-r6-r10-release-20260907-001/r7-custody-proof.v1.json",
-      "role": "R7_PASS_CLOSED_AUTHORITY"
-    }
-  },
   "invariants": {
-    "directV1ToV2Only": true,
-    "masterClockAdded": false,
+    "singleMasterClock": true,
+    "externalPrerollRemoved": true,
     "secondaryCinematicRuntimeAdded": false,
     "navigationWrites": false,
     "analyticsWrites": false,
     "historyWrites": false,
-    "entryClearsBeforeFirstV2Frame": false
+    "entryClearsBeforeFirstFrame": false,
+    "skipReplayReducedMotionAndRestorationPreserved": true,
+    "canonicalAudraliaOnly": true,
+    "signatureColoredMirrorlandPanes": true,
+    "preservedApprovedPrefixFrames": 984
+  },
+  "evidence": {
+    "ownerAcceptance": "assets/compass/cinematic-media/r11a-v7-live-release-20260908-001/owner-source-and-cinematic-acceptance.v1.json",
+    "technicalQualification": "assets/compass/cinematic-media/r11a-v7-live-release-20260908-001/technical-qualification.v1.json",
+    "releaseManifest": "assets/compass/cinematic-media/r11a-v7-live-release-20260908-001/release-manifest.v1.json"
   },
   "protectedUnchanged": [
     "assets/compass/cinematic-media/compass-main-orientation-final-v1.mp4",
@@ -127,28 +75,5 @@
     "showroom/**",
     "navigation/**",
     "analytics/**"
-  ],
-  "forbidden": [
-    "NEW_CINEMATIC_ARCHITECTURE",
-    "SECOND_MASTER_CLOCK",
-    "SECOND_CINEMATIC_STATE_MACHINE",
-    "V1_MASTER_OVERWRITE",
-    "PROTECTED_RUNTIME_MUTATION",
-    "NAVIGATION_AUTHORITY_DELTA",
-    "APPLICATION_STATE_AUTHORITY_DELTA",
-    "ANALYTICS_DELTA",
-    "MAIN_MUTATION_BEFORE_R9_OWNER_ACCEPTANCE",
-    "R10_RELEASE_BEFORE_R9_OWNER_ACCEPTANCE"
-  ],
-  "qualification": {
-    "r8Source": "PERSISTENCE_CANDIDATE",
-    "exactCommittedReadback": "PENDING",
-    "static": "PENDING_R9",
-    "browserDesktop": "PENDING_R9",
-    "browserTablet": "PENDING_R9",
-    "browserPortrait": "PENDING_R9",
-    "reducedMotion": "PENDING_R9",
-    "ownerAcceptance": "NOT_YET_REQUESTED",
-    "r10": "BLOCKED_BY_R9_OWNER_ACCEPTANCE"
-  }
+  ]
 }

@@ -1,0 +1,27 @@
+{
+  "schema": "COMPASS_R11A_V7_OWNER_SOURCE_AND_CINEMATIC_ACCEPTANCE_v1",
+  "status": "OWNER_ACCEPTED_AND_ORDERED_LIVE_REPLACEMENT",
+  "operationId": "COMPASS_R11A_V7_LIVE_REPLACEMENT_20260909_001",
+  "lockGeneration": 2022,
+  "intakeSourceCommentId": 5593805559,
+  "ownerDisposition": {
+    "visualReview": "WE_DID_IT_AND_IT_LOOKS_AMAZING",
+    "mirrorlandCorrection": "SIGNATURE_COLORED_GLASS_PANES_REQUIRED_AND_PRESENT_IN_ACCEPTED_SUCCESSOR",
+    "pixelationSequence": "AUDRALIA_TO_BRAIN_TO_TROPHY_TO_HOUSE_TO_COMPASS",
+    "downloadConstraint": "OWNER_DEVICE_DOWNLOAD_TOO_LARGE_OR_INEFFICIENT",
+    "releaseDirection": "UNHOOK_CURRENT_LIVE_INTRO_AND_HOOK_ACCEPTED_SUCCESSOR_IN"
+  },
+  "acceptedMaster": {
+    "path": "assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4",
+    "sha256": "9641cf6653d1317d5b69b0310cfea301723da4ddd4cce8be15d4a7fcde23e919",
+    "bytes": 8869131,
+    "durationMs": 56900,
+    "frameCount": 1707
+  },
+  "acceptedMusic": {
+    "title": "Aquarium",
+    "sourceSha256": "0f52601bf88e629f22e0c9307808939814efbaa192d9839b7701d7afea040c2e",
+    "embeddedInMaster": true
+  },
+  "ownerAcceptanceIsInferred": false
+}

@@ -16,11 +16,11 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/audralia/index.html",
-      "sha256": "53446fee8745876767e1b92bc7838094589a49cb95c45fd61d9720114e35564d"
+      "sha256": "8620d14d8bd27deadf6049327f2d9b0f60d54b58441d33193c4a132f8e9c31cb"
     },
     {
-      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs",
-      "sha256": "6a09faf20c58c4f22d60879afa0eaf0d31ddf1b6d6d9b9280cf4fb413fc84e77"
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-runtime.mjs",
+      "sha256": "e77541f38041a3bc8ef2af298655d3ff52b4ef644912b4e7a45cd26fb1e80449"
     }
   ],
   "invariants": {
@@ -38,6 +38,6 @@
   },
   "reviewSummary": {
     "operation": "AUDRALIA_TABLET_IMMERSIVE_STARTUP_STABILITY_20260908_003",
-    "finding": "The approved exact Audralia environment and 9,169,742-byte geometry remain unchanged. The eight verified chunks are fetched and assembled sequentially. On the already-declared large-touch framebuffer profile, the primary WebGL context now omits multisample antialiasing and uses the default-power GPU path, removing the second startup allocation spike before the unchanged atmospheric and weather layers initialize."
+    "finding": "The approved Audralia terrain, 9,169,742-byte geometry, shader-presentation authority, camera, navigation, and direct gestures remain unchanged. Large touch displays now enter the actual primary world through one WebGL context and one geometry upload. The redundant clear-atmosphere, exterior-weather, canonical-weather, and celestial WebGL contexts are deferred on that constrained profile rather than being constructed in one startup burst. No canvas fallback, flat map, or alternate environment is used."
   }
 }

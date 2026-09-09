@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "door-mirrorland",
-  "description": "Door crystalline Mirrorland threshold environment layered around the frozen Cycle-7 carousel and card renderers without adopting the legacy Mirrorland renderer.",
+  "description": "Door dimensional Mirrorland threshold environment layered around the frozen Cycle-7 carousel and card renderers without adopting the legacy Mirrorland renderer.",
   "checks": [
     {
       "path": "/door/",
@@ -9,29 +9,31 @@
         "data-page=\"door\"",
         "data-version=\"DOOR-EXPLORE-ANIMATION-COHERENCE-V1-CYCLE7\"",
         "data-door-card-count=\"6\"",
-        "data-environment=\"mirrorland-door-v1\"",
+        "data-environment=\"mirrorland-door-depth-v2\"",
         "data-door-mirrorland",
-        "data-door-window",
+        "data-door-depth-stage",
         "Mirrorland threshold",
         "Six paths wait beyond the glass.",
-        "/assets/door-explore/door.environment.css?v=door-mirrorland-g1-20260909",
-        "/assets/door-explore/door.environment.js?v=door-mirrorland-g1-20260909",
+        "/assets/door-explore/door.environment.css?v=door-mirrorland-depth-g2-20260909",
+        "/assets/door-explore/door.environment.js?v=door-mirrorland-depth-g2-20260909",
         "carousel.dataset.carouselAuthority='page-bound-v1'"
       ],
       "excludes": [
         "DGB_COMPASS_MIRRORLAND_WINDOW_HARDENED_v2",
-        "data-environment=\"expedition-map-v1\""
+        "data-environment=\"expedition-map-v1\"",
+        "data-environment=\"mirrorland-door-v1\""
       ]
     },
     {
       "path": "/assets/door-explore/door.environment.js",
       "includes": [
-        "DOOR_MIRRORLAND_ENVIRONMENT_v1",
+        "DOOR_MIRRORLAND_DEPTH_ENVIRONMENT_v2",
         "data-door-mirrorland-ready",
-        "legacyMirrorlandRendererAdopted: false",
-        "pointer-parallax",
-        "ambient-only",
-        "reduced-static"
+        "explicitDepthStack: true",
+        "mobileStaticPerspective",
+        "pointer-depth-parallax",
+        "static-mobile-depth",
+        "legacyMirrorlandRendererAdopted: false"
       ],
       "excludes": [
         "DGB_COMPASS_MIRRORLAND_WINDOW_HARDENED_v2"
@@ -40,11 +42,13 @@
     {
       "path": "/assets/door-explore/door.environment.css",
       "includes": [
-        "DOOR_MIRRORLAND_ENVIRONMENT_v1",
+        "DOOR_MIRRORLAND_DEPTH_ENVIRONMENT_v2",
+        ".door-depth-scene",
+        ".door-vault-back",
+        ".door-vault-mid",
+        ".door-jamb-left",
         ".door-window",
-        ".door-pane.cyan",
-        ".door-pane.violet",
-        ".door-threshold-floor",
+        ".door-reflection",
         "@media(prefers-reduced-motion:reduce)"
       ],
       "excludes": []

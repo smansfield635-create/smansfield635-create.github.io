@@ -16,7 +16,7 @@
         "Look closer. The route appears.",
         "/assets/door-explore/explore.environment.css?v=explore-expedition-g1-20260909",
         "/assets/door-explore/explore.environment.js?v=explore-expedition-g1-20260909",
-        "data-carousel-authority='page-bound-v1'"
+        "carousel.dataset.carouselAuthority='page-bound-v1'"
       ],
       "excludes": [
         "data-environment=\"mirrorland-door-v1\""

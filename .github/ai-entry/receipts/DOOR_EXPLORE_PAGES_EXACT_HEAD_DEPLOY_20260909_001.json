@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "DOOR_EXPLORE_PAGES_EXACT_HEAD_DEPLOY_20260909_001",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 2907,
+  "requestBranch": "ai-dispatch-request-door-explore-20260909-001",
+  "requestCommit": "07d30f6f518be3c76aa6bb9918331135b2d61b36",
+  "requestCommitParent": "492b55572850a0f3160f664d23ec4e4bde8df3e7",
+  "currentMainSha": "492b55572850a0f3160f664d23ec4e4bde8df3e7",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "492b55572850a0f3160f664d23ec4e4bde8df3e7",
+    "surface_id": "door-explore"
+  },
+  "bridgeRunId": "34378336538",
+  "dispatchedRunId": 34378365060,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/34378365060",
+  "dispatchedRunHeadSha": "492b55572850a0f3160f664d23ec4e4bde8df3e7",
+  "dispatchedAt": "2026-09-09T16:42:06.926Z",
+  "resolvedAt": "2026-09-09T16:42:11.233Z"
+}

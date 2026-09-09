@@ -1,0 +1,113 @@
+{
+  "schema": "COMPASS_R11A_V7_V8_HYBRID_CANDIDATE_EVIDENCE_v1",
+  "status": "CONSTRUCTION_QUALIFIED_OWNER_REVIEW_PENDING",
+  "operationId": "COMPASS_R11A_V7_V8_HYBRID_CANDIDATE_20260909_001",
+  "branch": "compass/r11a-v7-v8-hybrid-candidate-20260909-001",
+  "baseHead": "14bec2fe87d75411f23d954ae4bf846b024d874f",
+  "aiEntryRouter": {
+    "task": "bounded non-interactive cinematic presentation playback",
+    "result": "PASS_BOUNDED_PAGE_RELEASE",
+    "canonicalAdmissionRequired": false
+  },
+  "problem": {
+    "entry": "A delayed first decode exposed a blank interval between the visible gate and filmed frame zero.",
+    "body": "Restoring the older whole master recovered its filmed opening but also restored its rushed coda and rejected terminal Compass.",
+    "correction": "Use only V7 frames 0-143, then continue with the complete V8 body, settled Audralia timing, retimed coda, and particles-to-live-Compass terminal. Preload an exact decoded frame-zero poster."
+  },
+  "sources": {
+    "v7": {
+      "sha256": "9641cf6653d1317d5b69b0310cfea301723da4ddd4cce8be15d4a7fcde23e919",
+      "bytes": 8869131,
+      "durationMs": 56900,
+      "frameCount": 1707,
+      "usedVideoFrames": [0, 144],
+      "usedAudioMs": [0, 4800]
+    },
+    "v8": {
+      "sha256": "746606b76fbd05e9278787c25d484d001c67e18ba22f3890e95eee50e42ba29c",
+      "bytes": 8925582,
+      "durationMs": 59967,
+      "frameCount": 1799,
+      "usedVideoFrames": [0, 1799],
+      "usedAudioMs": [0, 59967]
+    }
+  },
+  "candidate": {
+    "path": "assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4",
+    "sha256": "507081bfe7290b201c357368649430b2de7b1c45bba141f2037e0b28f0faec01",
+    "gitBlob": "758806d9df52cb33ef61892bb49a97b46f90cbb5",
+    "bytes": 9141773,
+    "durationMs": 64767,
+    "frameCount": 1943,
+    "fps": 30,
+    "width": 1280,
+    "height": 720,
+    "poster": {
+      "path": "assets/compass/cinematic-media/compass-main-orientation-entry-frame.png",
+      "sha256": "47ca784c3f67955554536852b96cb109547d83497d0dbef7edeb3ecd3dce1061",
+      "gitBlob": "03ed43066f82ca6f8be90d19dad2f4827159a1d3",
+      "bytes": 87700,
+      "pixelSource": "CANDIDATE_DECODED_FRAME_ZERO"
+    }
+  },
+  "measuredEvidence": {
+    "v7EntrySimilarity": {
+      "frames": [0, 144],
+      "ssim": 0.999777,
+      "psnrDb": 61.279275
+    },
+    "v8ContinuationSimilarity": {
+      "candidateStartFrame": 144,
+      "v8StartFrame": 0,
+      "ssim": 0.998749,
+      "psnrDb": 54.906287
+    },
+    "fullAudioVideoDecode": "PASS",
+    "halfSecondSilenceDetection": "NO_EVENTS",
+    "freezeDetection": {
+      "audraliaSettleSeconds": [46.4, 49.8],
+      "brainSettleSeconds": [51.3, 53.9333],
+      "trophySettleSeconds": [55.2, 57.7667],
+      "houseSettleSeconds": [59.0667, 61.9667]
+    }
+  },
+  "restoredBehavior": {
+    "audraliaAdditionalHoldFrames": 90,
+    "audraliaAdditionalHoldMs": 3000,
+    "closingTraversalScale": 1.6,
+    "terminalPixelDissolveFrames": 60,
+    "terminalClearFrames": 24,
+    "inventedTerminalCompassFrames": 0,
+    "finalVisibleFilmState": "PARTICLES_TO_CLEAR",
+    "handoffSurface": "CANONICAL_LIVE_FOUR_STAR_COMPASS"
+  },
+  "entryContinuity": {
+    "posterPreloadedInHead": true,
+    "posterAssignedBeforeVideoSource": true,
+    "posterMatchesCandidateDecodedFrameZero": true,
+    "decodedVideoIsNotReloadedOnPlay": true,
+    "transparentHitAreasRemainAlignedToFilmedButtons": true,
+    "videoStartsAtFrameZero": true
+  },
+  "declaredPaths": [
+    "index.html",
+    "assets/compass/compass.orientation-cinematic.js",
+    "assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4",
+    "assets/compass/cinematic-media/compass-main-orientation-entry-frame.png",
+    "assets/compass/cinematic-media/manifest.v1.json",
+    "assets/compass/cinematic-media/r11a-v7-v8-hybrid-candidate-20260909-001/manifest.v1.json",
+    "assets/compass/cinematic-media/r11a-v7-v8-hybrid-candidate-20260909-001/verify.mjs"
+  ],
+  "excluded": [
+    "No homepage product logic changes",
+    "No live Compass changes",
+    "No navigation, analytics, or application-state changes",
+    "No merge, deployment, or publication"
+  ],
+  "pending": [
+    "OWNER_VISUAL_ACCEPTANCE",
+    "REAL_PHONE_OR_TABLET_PLAYBACK",
+    "FINAL_PUBLICATION_DECISION"
+  ],
+  "publicationAuthority": false
+}

@@ -2767,6 +2767,76 @@
       "scopeHash": "65c30a151d0eee047d4366a3ae54ceb8d8313ab03a3964c507bb60433ebe4c75",
       "state": "ADMITTED_LOCKED"
     },
+    "67ae3d563650ced53ef6603c64f79470b4d229c7809d62e964b78ec9d10ad22b": {
+      "governingHead": "97524e7e4c811a1d5b7f9e98cb86210bb33a8a87",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "97524e7e4c811a1d5b7f9e98cb86210bb33a8a87",
+          "lockGeneration": 2023,
+          "lockScope": "COMPASS:PUBLICATION_MANIFEST:R11A_V7",
+          "operationId": "COMPASS_R11A_V7_PUBLICATION_BINDING_20260909_001",
+          "procedureLocatorDigest": "5371159c53184a6342acbabbf39a4f823d9fbf59bdf2e0873cb1705f221709bc",
+          "requestDigest": "65a9ee4cfad739bdeff0c3b6e820b401c3fc8a4f9102c48bbc2c0fe684de71da",
+          "scopeHash": "67ae3d563650ced53ef6603c64f79470b4d229c7809d62e964b78ec9d10ad22b"
+        },
+        "bindingDigest": "d699cbc5f52863568e6258c8b00140e1ef49f46b095378d8324518cc6bf0d8dd",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "db830de90b7e6e72946fd2082f7725e0e995b28a",
+          "observedLockRefHead": "1be2d096b5d6b1c0b25d06ba397058f5dc6f16e3"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "a8cea486abeebd4d76a11c0b0543b94a287b608c434fecfd409994f24f36ed99",
+          "commentId": 5594112392,
+          "issueNumber": 2843,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transitionIdentity": {
+          "predecessor": {
+            "governingHead": "49fd160e1cb462feefd328c1472fe6001f277747",
+            "lockGeneration": 2022,
+            "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A_V7_LIVE_REPLACEMENT",
+            "operationId": "COMPASS_R11A_V7_LIVE_REPLACEMENT_20260909_001"
+          },
+          "successor": {
+            "governingHead": "97524e7e4c811a1d5b7f9e98cb86210bb33a8a87",
+            "lockGeneration": 2023,
+            "lockScope": "COMPASS:PUBLICATION_MANIFEST:R11A_V7",
+            "operationId": "COMPASS_R11A_V7_PUBLICATION_BINDING_20260909_001"
+          },
+          "transitionId": "TRANSITION_COMPASS_R11A_V7_PUBLICATION_BINDING_20260909_001"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
+      },
+      "lockGeneration": 2023,
+      "lockScope": "COMPASS:PUBLICATION_MANIFEST:R11A_V7",
+      "operationId": "COMPASS_R11A_V7_PUBLICATION_BINDING_20260909_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "49fd160e1cb462feefd328c1472fe6001f277747",
+        "lockGeneration": 2022,
+        "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A_V7_LIVE_REPLACEMENT",
+        "operationId": "COMPASS_R11A_V7_LIVE_REPLACEMENT_20260909_001",
+        "preservedEvidenceRefs": [
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/2882",
+          "97524e7e4c811a1d5b7f9e98cb86210bb33a8a87",
+          "sha256:9641cf6653d1317d5b69b0310cfea301723da4ddd4cce8be15d4a7fcde23e919"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "TRANSITION_COMPASS_R11A_V7_PUBLICATION_BINDING_20260909_001"
+      },
+      "procedureLocatorDigest": "5371159c53184a6342acbabbf39a4f823d9fbf59bdf2e0873cb1705f221709bc",
+      "released": false,
+      "requestDigest": "65a9ee4cfad739bdeff0c3b6e820b401c3fc8a4f9102c48bbc2c0fe684de71da",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "67ae3d563650ced53ef6603c64f79470b4d229c7809d62e964b78ec9d10ad22b",
+      "state": "ADMITTED_LOCKED"
+    },
     "68ac263182dcac32f11cb11d06d94a28100dc4537f69c8c986b68caca15e8582": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -5777,45 +5847,6 @@
       "scopeHash": "c188071f90c9ba14844212f7fe7acf37e9ac8f63960c00d41c1f5d9fd326ec20",
       "state": "ADMITTED_LOCKED"
     },
-    "c1b67ce59024ef10d8d93bc52f295579e25924722210717a5340ecab42bc042f": {
-      "governingHead": "49fd160e1cb462feefd328c1472fe6001f277747",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "49fd160e1cb462feefd328c1472fe6001f277747",
-          "lockGeneration": 2022,
-          "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A_V7_LIVE_REPLACEMENT",
-          "operationId": "COMPASS_R11A_V7_LIVE_REPLACEMENT_20260909_001",
-          "procedureLocatorDigest": "0262b020f97b6396ee7d3be0748da635855f4f9666f7b8bb5afaf764a70332af",
-          "requestDigest": "4132d6c6674bd8d0d23491d7b48a165dd5cd68988049813f09321e3bc2b05615",
-          "scopeHash": "c1b67ce59024ef10d8d93bc52f295579e25924722210717a5340ecab42bc042f"
-        },
-        "bindingDigest": "5a5f56b54d9a3a6c4f5dc3ab28d404d53baeacbe47b4b7a039ab97b267c1a685",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "dc811935842200badd40652cca67609d4d428040",
-          "observedLockRefHead": "f529d7aaf2184e82a824c419671f7ee029374fb2"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "ac43f27b3c1706492d594ed43a9239df021f7424c3b43b84384da3b13eeeda89",
-          "commentId": 5593805559,
-          "issueNumber": 2843,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 2022,
-      "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A_V7_LIVE_REPLACEMENT",
-      "operationId": "COMPASS_R11A_V7_LIVE_REPLACEMENT_20260909_001",
-      "procedureLocatorDigest": "0262b020f97b6396ee7d3be0748da635855f4f9666f7b8bb5afaf764a70332af",
-      "released": false,
-      "requestDigest": "4132d6c6674bd8d0d23491d7b48a165dd5cd68988049813f09321e3bc2b05615",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "c1b67ce59024ef10d8d93bc52f295579e25924722210717a5340ecab42bc042f",
-      "state": "ADMITTED_LOCKED"
-    },
     "c1ba696331eecd7fd2470687c7323308f897ddae55cd651d9b094d321d88ac6c": {
       "governingHead": "482756414d65a0aff3a5ba42f09ee5ec858629c6",
       "lockGeneration": 1711,
@@ -7656,7 +7687,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2022,
+  "lockGeneration": 2023,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -43363,6 +43394,62 @@
         "successorLockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:V6_EVIDENCE_SEQUENCE_MAINTENANCE",
         "successorOperationId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_002",
         "transitionId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_GEN2019_TO_GEN2020_20260908_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "49fd160e1cb462feefd328c1472fe6001f277747",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "49fd160e1cb462feefd328c1472fe6001f277747",
+          "lockGeneration": 2022,
+          "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A_V7_LIVE_REPLACEMENT",
+          "operationId": "COMPASS_R11A_V7_LIVE_REPLACEMENT_20260909_001",
+          "procedureLocatorDigest": "0262b020f97b6396ee7d3be0748da635855f4f9666f7b8bb5afaf764a70332af",
+          "requestDigest": "4132d6c6674bd8d0d23491d7b48a165dd5cd68988049813f09321e3bc2b05615",
+          "scopeHash": "c1b67ce59024ef10d8d93bc52f295579e25924722210717a5340ecab42bc042f"
+        },
+        "bindingDigest": "5a5f56b54d9a3a6c4f5dc3ab28d404d53baeacbe47b4b7a039ab97b267c1a685",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "dc811935842200badd40652cca67609d4d428040",
+          "observedLockRefHead": "f529d7aaf2184e82a824c419671f7ee029374fb2"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "ac43f27b3c1706492d594ed43a9239df021f7424c3b43b84384da3b13eeeda89",
+          "commentId": 5593805559,
+          "issueNumber": 2843,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "lockGeneration": 2022,
+      "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:R11A_V7_LIVE_REPLACEMENT",
+      "operationId": "COMPASS_R11A_V7_LIVE_REPLACEMENT_20260909_001",
+      "procedureLocatorDigest": "0262b020f97b6396ee7d3be0748da635855f4f9666f7b8bb5afaf764a70332af",
+      "released": true,
+      "requestDigest": "4132d6c6674bd8d0d23491d7b48a165dd5cd68988049813f09321e3bc2b05615",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c1b67ce59024ef10d8d93bc52f295579e25924722210717a5340ecab42bc042f",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/2882",
+          "97524e7e4c811a1d5b7f9e98cb86210bb33a8a87",
+          "sha256:9641cf6653d1317d5b69b0310cfea301723da4ddd4cce8be15d4a7fcde23e919"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "97524e7e4c811a1d5b7f9e98cb86210bb33a8a87",
+        "successorLockGeneration": 2023,
+        "successorLockScope": "COMPASS:PUBLICATION_MANIFEST:R11A_V7",
+        "successorOperationId": "COMPASS_R11A_V7_PUBLICATION_BINDING_20260909_001",
+        "transitionId": "TRANSITION_COMPASS_R11A_V7_PUBLICATION_BINDING_20260909_001"
       },
       "terminalDisposition": "SUPERSEDED"
     }

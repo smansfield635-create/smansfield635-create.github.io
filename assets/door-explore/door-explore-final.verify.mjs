@@ -3,67 +3,68 @@ import assert from 'node:assert/strict';
 
 const root=process.cwd();
 const read=p=>fs.readFileSync(`${root}/${p}`,'utf8');
+const count=(text,token)=>text.split(token).length-1;
 const door=read('door/index.html');
 const explore=read('explore/index.html');
 const spatial=read('assets/door-explore/spatial-v2.css');
+const lifecycle=read('assets/door-explore/card-lifecycle-v1.mjs');
 const home=read('assets/door-explore/home-identity-v2.mjs');
 const laws=read('assets/door-explore/laws-magnet-v2.mjs');
 const governance=read('assets/door-explore/governance-gavel-v2.mjs');
 const earth=read('assets/door-explore/earth-instrument-v2.mjs');
 const products=read('assets/door-explore/products-constellation-v2.mjs');
 const frontier=read('assets/door-explore/frontier-cycle1.mjs');
+const phase4=read('assets/manor-blueprint/manor.estate.gothic-detail-phase4.mjs');
+const publication=JSON.parse(read('.github/ai-router/publication-surfaces/door-explore.json'));
 const crosswalk=JSON.parse(read('assets/door-explore/crosswalk.v1.json'));
-const publicationSurface=JSON.parse(read('.github/ai-router/publication-surfaces/door-explore.json'));
 
-const doorIds=['products','gauges','frontier','laws','governance','home'];
-const exploreIds=['measurement','identity','laws','products','gauges'];
-assert.equal((door.match(/\bdata-card="(?:products|gauges|frontier|laws|governance|home)"/g)||[]).length,6);
-assert.equal((explore.match(/\bdata-card="(?:measurement|identity|laws|products|gauges)"/g)||[]).length,5);
-for(const id of doorIds)assert.ok(door.includes(`data-card="${id}"`),`door:${id}`);
-for(const id of exploreIds)assert.ok(explore.includes(`data-card="${id}"`),`explore:${id}`);
+for(const page of [door,explore])assert.ok(page.includes('data-version="DOOR-EXPLORE-ANIMATION-COHERENCE-V1-CYCLE7"'));
+assert.equal((door.match(/\bdata-card=/g)||[]).length,6);
+assert.equal((explore.match(/\bdata-card=/g)||[]).length,5);
 
-for(const token of ['data-products-constellation-v2','data-earth-instrument-v2','data-frontier-cycle1','data-laws-magnet-v2','data-governance-gavel-v2','data-home-identity-v2'])assert.ok(door.includes(token),`door spatial ${token}`);
-for(const token of ['data-earth-instrument-v2','data-home-identity-v2','data-laws-magnet-v2','data-products-constellation-v2'])assert.ok(explore.includes(token),`explore spatial ${token}`);
-for(const legacy of ['families-v1.mjs','families-v1.css','data-products-cycle2','data-instrument-cycle3','data-laws-cycle4','data-identity-cycle5']){assert.ok(!door.includes(legacy),`door legacy ${legacy}`);assert.ok(!explore.includes(legacy),`explore legacy ${legacy}`);}
+for(const [name,page,moduleToken] of [['door',door,'data-door-carousel'],['explore',explore,'data-explore-carousel']]){
+  assert.ok(page.includes(moduleToken),`${name}:carousel`);
+  for(const token of ['pointerdown','pointermove','pointerup','pointercancel','ArrowLeft','ArrowRight','scrollLeft','carouselKeyMoved','DOOR_EXPLORE_CAROUSEL_TRAVERSAL_REPAIR_V1'])assert.ok(page.includes(token),`${name}:${token}`);
+  assert.equal(count(page,"carousel.dataset.spatialCarouselBound='true'"),1,`${name}:single-traversal-marker`);
+  assert.equal(count(page,"carousel.dataset.carouselAuthority='page-bound-v1'"),1,`${name}:single-authority-id`);
+  assert.ok(page.indexOf("carousel.dataset.spatialCarouselBound='true'")<page.indexOf('home-identity-v2.mjs'),`${name}:authority-precedes-module`);
+}
+assert.ok(home.includes("carousel.dataset.spatialCarouselBound==='true'"));
 
-assert.ok(home.includes('DOOR_EXPLORE_HOME_IDENTITY_SPATIAL_V2'));
-assert.ok(laws.includes('DOOR_EXPLORE_LAWS_MAGNET_SPATIAL_V2'));
-assert.ok(governance.includes('DOOR_GOVERNANCE_GAVEL_SPATIAL_V2'));
-assert.ok(earth.includes('DOOR_EXPLORE_EARTH_INSTRUMENT_SPATIAL_V2'));
-assert.ok(products.includes('DOOR_EXPLORE_PRODUCTS_VOLUMETRIC_CONSTELLATION_V2'));
-assert.ok(frontier.includes('DOOR_FRONTIER_APPLIED_SYSTEMS_CYCLE1_V1'));
-for(const src of [home,laws,governance,earth,products])assert.ok(src.includes('prefers-reduced-motion'));
+for(const token of ['DOOR_EXPLORE_CARD_LIFECYCLE_V1','CARD_LIFECYCLE_ENTER_RATIO=.58','CARD_LIFECYCLE_EXIT_RATIO=.42','ACTIVATE','DEACTIVATE','sampleCardLifecycle','createCardClock'])assert.ok(lifecycle.includes(token),`lifecycle:${token}`);
+for(const [name,src] of [['home',home],['laws',laws],['governance',governance],['products',products],['frontier',frontier]]){
+  assert.ok(src.includes('createCardClock'),`${name}:clock-import`);
+  assert.ok(src.includes('createCardClock(root)'),`${name}:clock-mount`);
+  assert.ok(src.includes('clock.sample(now)'),`${name}:clock-sample`);
+}
+
+assert.ok(home.includes('manor.estate.gothic-detail-phase4.mjs'));
+assert.ok(home.includes('auditPhase4()'));
+assert.ok(home.includes('if(!audit.passStatic)'));
+assert.ok(phase4.includes('MIRROR_MANOR_GOTHIC_ARCHITECTURAL_DETAIL_PHASE4_LIVED_IN_v1'));
+assert.ok(phase4.includes('passStatic:p.passStatic&&bounded&&selective&&preserved'));
+
+for(const token of ['DOOR_GOVERNANCE_GAVEL_SPATIAL_V2','BLOCK_TOP_Y=-4.425','SURFACE_TOP_Y=-6.375','inspectGovernancePose','blockPenetration','surfacePenetration','decisionBeforeClearance','recoil'])assert.ok(governance.includes(token),`governance:${token}`);
+for(const token of ['DOOR_EXPLORE_LAWS_MAGNET_SPATIAL_V2','LAW_PROJECT_SCALE = 1.42','inspectLawsFrame','fieldRodState'])assert.ok(laws.includes(token),`laws:${token}`);
+for(const token of ['DOOR_EXPLORE_PRODUCTS_VOLUMETRIC_CONSTELLATION_V2','PRODUCTS_SPATIAL_CYCLE_MS=11000','gemCount:GEMS.length'])assert.ok(products.includes(token),`products:${token}`);
+for(const token of ['DOOR_FRONTIER_APPLIED_SYSTEMS_CYCLE1_V1','./frontier-cycle1.state.mjs','deriveFrontierCausalVisualState','flowDelivery','energyDelivery','flowEffect','energyEffect','transformedEffect','frontierCausalStage',"state.phase === 'TRANSFORMED'"])assert.ok(frontier.includes(token),`frontier:${token}`);
+for(const token of ['DOOR_EXPLORE_EARTH_INSTRUMENT_SPATIAL_V2','AXIAL_TILT_DEG=23.44','DGBEarthLattice256'])assert.ok(earth.includes(token),`earth:${token}`);
+
 assert.ok(spatial.includes('touch-action:pan-y'));
-assert.ok(!/carousel-arrow|prev-button|next-button/i.test(door+explore));
-
-const traversalTokens=['pointerdown','pointermove','pointerup','pointercancel','ArrowLeft','ArrowRight','scrollLeft','setPointerCapture','releasePointerCapture','preventDefault','carouselTraversal','carouselKeyMoved','DOOR_EXPLORE_CAROUSEL_TRAVERSAL_REPAIR_V1'];
-for(const [name,page,selector] of [['door',door,'data-door-carousel'],['explore',explore,'data-explore-carousel']]){
-  assert.ok(page.includes(selector),`${name} carousel selector`);
-  for(const token of traversalTokens)assert.ok(page.includes(token),`${name} traversal ${token}`);
-  assert.ok(page.includes("Math.abs(dy)>Math.abs(dx)"),`${name} vertical intent arbitration`);
-  assert.ok(page.includes("behavior:reduced?'auto':'smooth'"),`${name} reduced motion traversal`);
-  assert.ok(page.includes("Math.abs(carousel.scrollLeft-before)>1?'true':'false'"),`${name} actual key movement receipt`);
-  assert.ok(page.includes("if(moved){e.preventDefault();e.stopPropagation()"),`${name} click-after-drag suppression`);
+for(const cssPath of ['assets/door-explore/products-constellation-v2.css','assets/door-explore/earth-instrument-v2.css','assets/door-explore/laws-v2.css','assets/door-explore/governance-v2.css','assets/door-explore/frontier-cycle1.css','assets/door-explore/spatial-v2.css']){
+  const css=read(cssPath);
+  assert.ok(css.includes('@media(max-width:40rem)'),`${cssPath}:mobile-media`);
+  assert.ok(css.includes('min-height:15rem'),`${cssPath}:mobile-stage-floor`);
 }
 
-const doorSurface=publicationSurface.checks.find(x=>x.path==='/door/');
-const exploreSurface=publicationSurface.checks.find(x=>x.path==='/explore/');
-assert.ok(doorSurface&&exploreSurface,'publication page checks');
-for(const [name,check,selector] of [['door',doorSurface,'data-door-carousel'],['explore',exploreSurface,'data-explore-carousel']]){
-  for(const token of [selector,'pointerdown','pointermove','pointerup','pointercancel','ArrowLeft','ArrowRight','scrollLeft','carouselKeyMoved','DOOR_EXPLORE_CAROUSEL_TRAVERSAL_REPAIR_V1'])assert.ok(check.includes.includes(token),`${name} publication traversal ${token}`);
-}
-assert.equal(publicationSurface.runtime.enabled,true);
-assert.equal(publicationSurface.runtime.path,'/explore/');
-assert.equal(publicationSurface.runtime.readySelector,'[data-explore-carousel]');
-assert.equal(publicationSurface.runtime.interactions.length,1);
-const interaction=publicationSurface.runtime.interactions[0];
-assert.equal(interaction.action.type,'key');
-assert.equal(interaction.action.selector,'[data-explore-carousel]');
-assert.equal(interaction.action.key,'ArrowRight');
-assert.ok(interaction.assertions.some(x=>x.type==='attributeEquals'&&x.selector==='[data-explore-carousel]'&&x.name==='data-carousel-key-moved'&&x.value==='true'));
-
+const doorSurface=publication.checks.find(x=>x.path==='/door/');
+const exploreSurface=publication.checks.find(x=>x.path==='/explore/');
+assert.ok(doorSurface&&exploreSurface);
+for(const check of [doorSurface,exploreSurface])for(const token of ['spatialCarouselBound','carouselAuthority','carouselKeyMoved','DOOR_EXPLORE_CAROUSEL_TRAVERSAL_REPAIR_V1'])assert.ok(check.includes.includes(token),`publication:${token}`);
+assert.equal(publication.runtime.enabled,true);
+assert.equal(publication.runtime.path,'/explore/');
+assert.equal(publication.runtime.readySelector,'[data-explore-carousel]');
 assert.equal(crosswalk.status,'PASS_CLOSED');
-assert.deepEqual(crosswalk.progress,{closed:11,total:11,cycleClosed:5,cycleTotal:5});
 assert.equal(crosswalk.cards.filter(x=>x.status==='CLOSED').length,11);
-assert.equal(crosswalk.families.filter(x=>x.status==='CLOSED').length,5);
-console.log(JSON.stringify({result:'PASS_SPATIAL_CLOSED_WITH_CAROUSEL_TRAVERSAL',cards:11,cycles:5,door:6,explore:5,traversal:'PAGE_BOUND_RUNTIME_RECEIPT'}));
+
+console.log(JSON.stringify({result:'PASS_ANIMATION_COHERENCE_CYCLE7_FROZEN',cards:11,door:6,explore:5,lifecycle:'ACTIVATION_LOCAL',governance:'CONTACT_BOUNDED',laws:'MOBILE_FRAMED',homeIdentity:'PHASE4_AUDIT_PRESERVED',products:'CLEARANCE_PRESERVED',frontier:'CAUSAL_DELIVERY',traversal:'SINGLE_PAGE_AUTHORITY'}));

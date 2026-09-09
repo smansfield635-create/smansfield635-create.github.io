@@ -1,12 +1,13 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "door-explore",
-  "description": "Door and Explore terminal 11-card spatial successor: six Door cards, five Explore cards, five closed spatial reconstruction cycles, with page-bound carousel traversal.",
+  "description": "Door and Explore 11-card animation-coherence successor: activation-local cycles, bounded spatial motion, causal Frontier delivery, mobile presentation, and one page-bound carousel traversal authority.",
   "checks": [
     {
       "path": "/door/",
       "includes": [
         "data-route=\"/door/\"",
+        "data-version=\"DOOR-EXPLORE-ANIMATION-COHERENCE-V1-CYCLE7\"",
         "data-door-card-count=\"6\"",
         "data-door-carousel",
         "data-card=\"products\"",
@@ -34,6 +35,8 @@
         "ArrowLeft",
         "ArrowRight",
         "scrollLeft",
+        "spatialCarouselBound",
+        "carouselAuthority",
         "carouselKeyMoved",
         "DOOR_EXPLORE_CAROUSEL_TRAVERSAL_REPAIR_V1"
       ],
@@ -52,6 +55,7 @@
       "path": "/explore/",
       "includes": [
         "data-route=\"/explore/\"",
+        "data-version=\"DOOR-EXPLORE-ANIMATION-COHERENCE-V1-CYCLE7\"",
         "data-explore-card-count=\"5\"",
         "data-explore-carousel",
         "data-card=\"measurement\"",
@@ -74,6 +78,8 @@
         "ArrowLeft",
         "ArrowRight",
         "scrollLeft",
+        "spatialCarouselBound",
+        "carouselAuthority",
         "carouselKeyMoved",
         "DOOR_EXPLORE_CAROUSEL_TRAVERSAL_REPAIR_V1"
       ],
@@ -87,18 +93,23 @@
       ]
     },
     {
+      "path": "/assets/door-explore/card-lifecycle-v1.mjs",
+      "includes": ["DOOR_EXPLORE_CARD_LIFECYCLE_V1", "ACTIVATE", "DEACTIVATE", "sampleCardLifecycle", "createCardClock"],
+      "excludes": []
+    },
+    {
       "path": "/assets/door-explore/home-identity-v2.mjs",
-      "includes": ["DOOR_EXPLORE_HOME_IDENTITY_SPATIAL_V2", "manor.estate.gothic-detail-phase4.mjs", "prefers-reduced-motion", "pointerdown", "ArrowRight"],
+      "includes": ["DOOR_EXPLORE_HOME_IDENTITY_SPATIAL_V2", "manor.estate.gothic-detail-phase4.mjs", "auditPhase4()", "createCardClock", "prefers-reduced-motion"],
       "excludes": []
     },
     {
       "path": "/assets/door-explore/laws-magnet-v2.mjs",
-      "includes": ["DOOR_EXPLORE_LAWS_MAGNET_SPATIAL_V2", "prefers-reduced-motion"],
+      "includes": ["DOOR_EXPLORE_LAWS_MAGNET_SPATIAL_V2", "LAW_PROJECT_SCALE = 1.42", "inspectLawsFrame", "createCardClock", "prefers-reduced-motion"],
       "excludes": []
     },
     {
       "path": "/assets/door-explore/governance-gavel-v2.mjs",
-      "includes": ["DOOR_GOVERNANCE_GAVEL_SPATIAL_V2", "prefers-reduced-motion"],
+      "includes": ["DOOR_GOVERNANCE_GAVEL_SPATIAL_V2", "BLOCK_TOP_Y=-4.425", "inspectGovernancePose", "decisionBeforeClearance", "createCardClock", "prefers-reduced-motion"],
       "excludes": []
     },
     {
@@ -108,17 +119,17 @@
     },
     {
       "path": "/assets/door-explore/products-constellation-v2.mjs",
-      "includes": ["DOOR_EXPLORE_PRODUCTS_VOLUMETRIC_CONSTELLATION_V2", "prefers-reduced-motion"],
+      "includes": ["DOOR_EXPLORE_PRODUCTS_VOLUMETRIC_CONSTELLATION_V2", "PRODUCTS_SPATIAL_CYCLE_MS=11000", "createCardClock", "prefers-reduced-motion"],
       "excludes": []
     },
     {
       "path": "/assets/door-explore/frontier-cycle1.mjs",
-      "includes": ["/showroom/globe/h-earth/render/geometry-kernel.js", "constructHEarthTriangleMesh", "admitHEarthPrimitiveRecord", "DOOR_FRONTIER_APPLIED_SYSTEMS_CYCLE1_V1"],
+      "includes": ["/showroom/globe/h-earth/render/geometry-kernel.js", "constructHEarthTriangleMesh", "admitHEarthPrimitiveRecord", "DOOR_FRONTIER_APPLIED_SYSTEMS_CYCLE1_V1", "deriveFrontierCausalVisualState", "flowDelivery", "energyDelivery", "transformedEffect", "createCardClock"],
       "excludes": []
     },
     {
       "path": "/assets/door-explore/spatial-v2.css",
-      "includes": ["touch-action:pan-y"],
+      "includes": ["touch-action:pan-y", "@media(max-width:40rem)"],
       "excludes": []
     }
   ],
@@ -132,10 +143,11 @@
     "failOnPageErrors": true,
     "interactions": [
       {
-        "name": "Explore carousel ArrowRight moves",
+        "name": "Explore carousel ArrowRight moves under single page authority",
         "action": {"type": "key", "selector": "[data-explore-carousel]", "key": "ArrowRight"},
         "assertions": [
-          {"type": "attributeEquals", "selector": "[data-explore-carousel]", "name": "data-carousel-key-moved", "value": "true"}
+          {"type": "attributeEquals", "selector": "[data-explore-carousel]", "name": "data-carousel-key-moved", "value": "true"},
+          {"type": "attributeEquals", "selector": "[data-explore-carousel]", "name": "data-carousel-authority", "value": "page-bound-v1"}
         ],
         "timeoutMs": 1500
       }

@@ -7343,49 +7343,6 @@
       "scopeHash": "f0e4fd005a821d995a9e7f750043582ced1e9e08fa136da8931770e58c8eb7a1",
       "state": "ADMITTED_LOCKED"
     },
-    "f28d05386c7711c82489930c51a7d1a28f7ffa27703bf37961462617b543c312": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "b2c3e68367f99de8faecc3ddd8ebb891cb16c59a",
-          "lockGeneration": 2043,
-          "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:FULLSCREEN_STAGE_ROLLBACK",
-          "operationId": "COMPASS_FULLSCREEN_STAGE_ROLLBACK_20260909_001",
-          "procedureLocatorDigest": "37d328b4efeed56f1f083d129af4ae2b1daff201a9f4636eb8eebcb5c648a1d4",
-          "requestDigest": "2ef4bf16228feeb31b48127824eecaaf1cb6b189762081f7a29cb304db3e9443",
-          "scopeHash": "f28d05386c7711c82489930c51a7d1a28f7ffa27703bf37961462617b543c312"
-        },
-        "bindingDigest": "dcb887512d528e1ec269e422fc01d49c2cd600d878c5293e51f0cab0be120f80",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "3b689421a1360903d100bfbdcfe6483701890ea4980e3e9f42d0b43f76f3c3bd",
-          "commentId": 5606771805,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2843,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34389154165,
-          "workflowSha": "b2c3e68367f99de8faecc3ddd8ebb891cb16c59a"
-        },
-        "lineageAnchorCommitSha": "c2d71cde81bc91a18d5e55a34c6a46cf65330f9d",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "b2c3e68367f99de8faecc3ddd8ebb891cb16c59a",
-      "lockGeneration": 2043,
-      "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:FULLSCREEN_STAGE_ROLLBACK",
-      "operationId": "COMPASS_FULLSCREEN_STAGE_ROLLBACK_20260909_001",
-      "procedureLocatorDigest": "37d328b4efeed56f1f083d129af4ae2b1daff201a9f4636eb8eebcb5c648a1d4",
-      "released": false,
-      "requestDigest": "2ef4bf16228feeb31b48127824eecaaf1cb6b189762081f7a29cb304db3e9443",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "f28d05386c7711c82489930c51a7d1a28f7ffa27703bf37961462617b543c312",
-      "state": "ADMITTED_LOCKED"
-    },
     "f38ebc3a9fade06e8b82494b50bcb52fa321cd6758d97032e1b1a27d5e603ddb": {
       "governingHead": "a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc",
       "lockGeneration": 458,
@@ -44898,6 +44855,50 @@
       "requestDigest": "9eaa9c82e7d3a11244b22de5268e95957d2440f620ef5826d2eedb4f6addea88",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "c7bb1b4fab16b621e17bdabc325dcd9b02f0b6f49b3b5c5205e55f351c663b39",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "b2c3e68367f99de8faecc3ddd8ebb891cb16c59a",
+          "lockGeneration": 2043,
+          "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:FULLSCREEN_STAGE_ROLLBACK",
+          "operationId": "COMPASS_FULLSCREEN_STAGE_ROLLBACK_20260909_001",
+          "procedureLocatorDigest": "37d328b4efeed56f1f083d129af4ae2b1daff201a9f4636eb8eebcb5c648a1d4",
+          "requestDigest": "2ef4bf16228feeb31b48127824eecaaf1cb6b189762081f7a29cb304db3e9443",
+          "scopeHash": "f28d05386c7711c82489930c51a7d1a28f7ffa27703bf37961462617b543c312"
+        },
+        "bindingDigest": "dcb887512d528e1ec269e422fc01d49c2cd600d878c5293e51f0cab0be120f80",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "3b689421a1360903d100bfbdcfe6483701890ea4980e3e9f42d0b43f76f3c3bd",
+          "commentId": 5606771805,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2843,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34389154165,
+          "workflowSha": "b2c3e68367f99de8faecc3ddd8ebb891cb16c59a"
+        },
+        "lineageAnchorCommitSha": "c2d71cde81bc91a18d5e55a34c6a46cf65330f9d",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "b2c3e68367f99de8faecc3ddd8ebb891cb16c59a",
+      "lockGeneration": 2043,
+      "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:FULLSCREEN_STAGE_ROLLBACK",
+      "operationId": "COMPASS_FULLSCREEN_STAGE_ROLLBACK_20260909_001",
+      "procedureLocatorDigest": "37d328b4efeed56f1f083d129af4ae2b1daff201a9f4636eb8eebcb5c648a1d4",
+      "released": true,
+      "requestDigest": "2ef4bf16228feeb31b48127824eecaaf1cb6b189762081f7a29cb304db3e9443",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "f28d05386c7711c82489930c51a7d1a28f7ffa27703bf37961462617b543c312",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

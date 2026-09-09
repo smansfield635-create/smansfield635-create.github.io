@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "door-mirrorland",
-  "description": "Door dark-mirror monolith threshold environment layered around the frozen Cycle-7 carousel and card renderers without adopting the legacy Mirrorland renderer.",
+  "description": "Door canonical estate preview reel using accepted Compass cinematic footage while preserving the frozen Cycle-7 carousel and all card renderers.",
   "checks": [
     {
       "path": "/door/",
@@ -9,61 +9,80 @@
         "data-page=\"door\"",
         "data-version=\"DOOR-EXPLORE-ANIMATION-COHERENCE-V1-CYCLE7\"",
         "data-door-card-count=\"6\"",
-        "data-environment=\"mirrorland-door-monolith-v3\"",
-        "data-door-mirrorland",
-        "data-door-monolith-stage",
-        "Dark mirrored Mirrorland threshold",
-        "Mirrorland threshold",
-        "Six ways through.",
-        "/assets/door-explore/door.environment.css?v=door-mirrorland-monolith-g3-20260909",
-        "/assets/door-explore/door.environment.js?v=door-mirrorland-monolith-g3-20260909",
+        "data-environment=\"door-estate-reel-v4\"",
+        "data-door-estate-reel",
+        "data-door-estate-reel-ready=\"false\"",
+        "Five animated glimpses of the Diamond Gate Bridge estate",
+        "Five glimpses of the estate",
+        "Mirrorland",
+        "Audralia",
+        "Trophy",
+        "Brain",
+        "Manor",
+        "/assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4",
+        "/assets/compass/cinematic-media/compass-main-orientation-entry-frame.png",
+        "/assets/door-explore/door.environment.css?v=door-estate-reel-g4-20260909-1",
+        "/assets/door-explore/door.environment.js?v=door-estate-reel-g4-20260909-1",
         "carousel.dataset.carouselAuthority='page-bound-v1'"
       ],
       "excludes": [
-        "DGB_COMPASS_MIRRORLAND_WINDOW_HARDENED_v2",
-        "data-environment=\"expedition-map-v1\"",
-        "data-environment=\"mirrorland-door-v1\"",
-        "data-environment=\"mirrorland-door-depth-v2\"",
+        "data-door-monolith-stage",
+        "Dark mirrored Mirrorland threshold",
+        "Six ways through.",
         "door-window-rib",
         "door-pane cyan",
-        "door-pane violet",
-        "Six paths wait beyond the glass."
+        "door-pane violet"
       ]
     },
     {
       "path": "/assets/door-explore/door.environment.js",
       "includes": [
-        "DOOR_MIRRORLAND_MONOLITH_ENVIRONMENT_v3",
-        "data-door-mirrorland-ready",
-        "mirrorMaterialPrimary: true",
-        "stainedGlassGeometryPresent: false",
-        "mobileStaticPerspective",
-        "pointer-monolith-parallax",
-        "static-mobile-monolith",
-        "legacyMirrorlandRendererAdopted: false"
+        "DOOR_CANONICAL_ESTATE_REEL_v4",
+        "data-door-estate-reel-ready",
+        "compass-main-orientation-final-v2",
+        "owner-authorized-compass-cinematic-v2",
+        "Mirrorland",
+        "Audralia",
+        "Trophy",
+        "Brain",
+        "Mirror Manor",
+        "embeddedAudraliaRuntime: false",
+        "additionalWebGLContexts: 0",
+        "generatedArtwork: false"
       ],
       "excludes": [
-        "DGB_COMPASS_MIRRORLAND_WINDOW_HARDENED_v2",
-        "DOOR_MIRRORLAND_DEPTH_ENVIRONMENT_v2"
+        "DOOR_MIRRORLAND_MONOLITH_ENVIRONMENT_v3",
+        "DOOR_MIRRORLAND_DEPTH_ENVIRONMENT_v2",
+        "pointer-monolith-parallax"
       ]
     },
     {
       "path": "/assets/door-explore/door.environment.css",
       "includes": [
-        "DOOR_MIRRORLAND_MONOLITH_ENVIRONMENT_v3",
-        ".door-monolith-scene",
-        ".door-portal-front",
-        ".door-side-left",
-        ".door-side-right",
-        ".door-route-signal",
-        ".door-floor-reflection",
+        "DOOR_CANONICAL_ESTATE_REEL_v4",
+        ".door-estate-reel__frame",
+        ".door-estate-reel__video",
+        ".door-estate-reel__ghost",
+        ".door-estate-reel__selectors",
         "@media(prefers-reduced-motion:reduce)"
       ],
       "excludes": [
+        ".door-monolith-scene",
+        ".door-portal-front",
+        ".door-route-signal",
         ".door-window-rib",
-        ".door-pane.cyan",
-        ".door-pane.violet"
+        ".door-pane.cyan"
       ]
+    },
+    {
+      "path": "/assets/compass/cinematic-media/manifest.v1.json",
+      "includes": [
+        "R11A_V7_V8_HYBRID_OWNER_AUTHORIZED_RELEASE",
+        "assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4",
+        "canonicalAudraliaOnly",
+        "publicationAuthority"
+      ],
+      "excludes": []
     },
     {
       "path": "/assets/door-explore/spatial-v2.css",
@@ -79,10 +98,10 @@
     "enabled": true,
     "path": "/door/",
     "timeoutMs": 30000,
-    "readySelector": "[data-door-mirrorland]",
+    "readySelector": "[data-door-estate-reel]",
     "readyAttribute": {
-      "selector": "[data-door-mirrorland]",
-      "name": "data-door-mirrorland-ready",
+      "selector": "[data-door-estate-reel]",
+      "name": "data-door-estate-reel-ready",
       "contains": "true"
     },
     "binding": {

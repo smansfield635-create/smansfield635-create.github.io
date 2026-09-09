@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "door-mirrorland",
-  "description": "Door passive magic-mirror Manor-separation refinement: preserve the accepted G7.2 sequence, labels, canonical Trophy/Brain renderers, clean cinematic states, dark object stage, and removed legacy placeholder; add only a scene-local backlight behind Mirror Manor so the dark roof remains legible. Explore and the frozen Cycle-7 Door carousel remain unchanged.",
+  "description": "Door passive magic-mirror Manor contrast refinement: preserve the accepted G7.3 sequence, labels, canonical Trophy/Brain renderers, clean cinematic states, dark object stage, and removed legacy placeholder; strengthen only the Mirror Manor presentation with a visible moonlit backplate, reduced scene-local vignette, modest brightness lift, and low warm courtyard spill so the dark roof remains legible. Explore and the frozen Cycle-7 Door carousel remain unchanged.",
   "checks": [
     {
       "path": "/door/",
@@ -9,7 +9,7 @@
         "data-page=\"door\"",
         "data-version=\"DOOR-EXPLORE-ANIMATION-COHERENCE-V1-CYCLE7\"",
         "data-door-card-count=\"6\"",
-        "data-environment=\"door-canonical-renderer-mirror-v7-3\"",
+        "data-environment=\"door-canonical-renderer-mirror-v7-4\"",
         "data-door-canonical-mirror",
         "data-door-canonical-mirror-ready=\"false\"",
         "Automatic magic-mirror sequence of five Diamond Gate Bridge estate scenes",
@@ -17,7 +17,7 @@
         "Mirrorland",
         "door-canonical-mirror__scene-glow",
         "/assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4",
-        "/assets/door-explore/door.canonical-mirror.css?v=door-canonical-renderer-mirror-g7-3-20260909-1",
+        "/assets/door-explore/door.canonical-mirror.css?v=door-canonical-renderer-mirror-g7-4-20260909-1",
         "/assets/door-explore/door.canonical-mirror.js?v=door-canonical-renderer-mirror-g7-2-20260909-1",
         "carousel.dataset.carouselAuthority='page-bound-v1'"
       ],
@@ -89,13 +89,16 @@
     {
       "path": "/assets/door-explore/door.canonical-mirror.css",
       "includes": [
-        "DOOR_CANONICAL_RENDERER_MIRROR_v7_3",
+        "DOOR_CANONICAL_RENDERER_MIRROR_v7_4",
         ".portal-object.door-canonical-mirror::before",
         "content:none!important",
         ".door-canonical-mirror__film",
         ".door-canonical-mirror__object",
         ".door-canonical-mirror__scene-glow",
         "data-door-canonical-mirror-scene=\"mirror-manor\"",
+        "brightness(1.12)",
+        "rgba(164,222,238,.40)",
+        "rgba(238,187,104,.16)",
         "mix-blend-mode:screen",
         "background:#01040a",
         "door-canonical-mirror-change",

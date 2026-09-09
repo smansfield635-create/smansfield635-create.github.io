@@ -1,0 +1,45 @@
+{
+  "schema": "COMPASS_R11A_V7_TECHNICAL_QUALIFICATION_v1",
+  "status": "PASS",
+  "operationId": "COMPASS_R11A_V7_LIVE_REPLACEMENT_20260909_001",
+  "lockGeneration": 2022,
+  "master": {
+    "path": "assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4",
+    "sha256": "9641cf6653d1317d5b69b0310cfea301723da4ddd4cce8be15d4a7fcde23e919",
+    "gitBlob": "326d1c5b887262c6c828b3c8920a4b2e6f91d30b",
+    "bytes": 8869131,
+    "durationMs": 56900,
+    "frameCount": 1707
+  },
+  "video": {
+    "codec": "h264",
+    "profile": "High",
+    "width": 1280,
+    "height": 720,
+    "frameRate": "30/1",
+    "pixelFormat": "yuv420p",
+    "colorRange": "tv",
+    "colorSpace": "bt709",
+    "colorTransfer": "bt709",
+    "colorPrimaries": "bt709"
+  },
+  "audio": {
+    "codec": "aac",
+    "profile": "LC",
+    "sampleRate": 48000,
+    "channels": 2,
+    "layout": "stereo",
+    "acceptedT10SourceSha256": "0f52601bf88e629f22e0c9307808939814efbaa192d9839b7701d7afea040c2e",
+    "acceptedSourceComparisonPsnrDb": {"left": 160.898, "right": 161.028},
+    "silentGapsAtMinus50DbFor500Ms": 0
+  },
+  "verification": {
+    "fullVideoAndAudioDecode": "PASS_1707_FRAMES",
+    "singleMaster": true,
+    "externalPrerollMs": 0,
+    "firstFrameGate": "PASS",
+    "skipReplayReducedMotionAndRestoration": "PASS",
+    "cacheIdentity": "SHA256_PREFIX_QUERY",
+    "exactVerifier": "node assets/compass/compass.homepage-cinematic.verify.mjs"
+  }
+}

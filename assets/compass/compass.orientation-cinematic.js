@@ -1,18 +1,18 @@
 (()=>{'use strict';
 
 const CONTRACT=Object.freeze({
-  version:'COMPASS_PRERENDERED_THIN_PLAYER_R8_v2',
+  version:'COMPASS_PRERENDERED_THIN_PLAYER_R11A_V7',
   mutationClass:'BOUNDED_PAGE_RELEASE',
-  operationId:'COMPASS_V2_R6_R10_MASTER_PLAYER_RELEASE_20260907_001',
+  operationId:'COMPASS_R11A_V7_LIVE_REPLACEMENT_20260909_001',
   mediaPath:'/assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4',
-  mediaBytes:2723640,
-  mediaSha256:'0326240cf1d3d8cf7753b91ea1cd0206378b8db7e37590b8bb39c37f6b50f444',
-  mediaGitBlob:'b48bc48e531c3eb29bd1a94a91725badd30186f5',
-  sourceHead:'650a0ce31d5667821fc6c0827cd95ee1874c4ba8',
-  masterDurationMs:38000,
-  entryPrerollMs:4350,
-  entryPrerollCountedInMaster:false,
-  entryContinuityLaw:'SELECTED_CONTROL_CELLS_BECOME_SUCCESSOR_STAR_AND_COMPASS_MATTER',
+  mediaBytes:8869131,
+  mediaSha256:'9641cf6653d1317d5b69b0310cfea301723da4ddd4cce8be15d4a7fcde23e919',
+  mediaGitBlob:'326d1c5b887262c6c828b3c8920a4b2e6f91d30b',
+  sourceHead:'49fd160e1cb462feefd328c1472fe6001f277747',
+  masterDurationMs:56900,
+  entryPrerollMs:0,
+  entryPrerollCountedInMaster:true,
+  entryContinuityLaw:'R11A_S00_PIXEL_ENTRY_IS_INCLUDED_IN_THE_SINGLE_MASTER',
   naturalFadeMs:460
 });
 const STATE=Object.freeze({ARMED:'ARMED',PLAYING:'PLAYING',SETTLED:'SETTLED'});
@@ -109,7 +109,7 @@ function buildOverlay(){
   overlay.setAttribute('data-media-git-blob',CONTRACT.mediaGitBlob);
   overlay.setAttribute('data-media-sha256',CONTRACT.mediaSha256);
   overlay.setAttribute('data-entry-preroll-ms',String(CONTRACT.entryPrerollMs));
-  overlay.setAttribute('data-entry-preroll-counted-in-master','false');
+  overlay.setAttribute('data-entry-preroll-counted-in-master','true');
   overlay.setAttribute('data-entry-continuity-law',CONTRACT.entryContinuityLaw);
   overlay.setAttribute('data-entry-state','IDLE');
   overlay.setAttribute('role','dialog');
@@ -124,7 +124,7 @@ function buildOverlay(){
   video.disablePictureInPicture=true;
   video.setAttribute('aria-label','Diamond Gate Bridge orientation film');
   video.setAttribute('data-main-orientation-video','');
-  video.src=CONTRACT.mediaPath;
+  video.src=`${CONTRACT.mediaPath}?v=${CONTRACT.mediaSha256.slice(0,16)}`;
 
   const gate=document.createElement('div');
   gate.className='compass-prerendered-player__gate';
@@ -403,18 +403,16 @@ function play(){
   if(session.state!==STATE.ARMED||session.playRequested)return;
   if(reduced()){settle('reduced-motion-complete');return;}
   session.playRequested=true;
-  session.overlay.dataset.entryState='TRANSITION';
+  session.entryTransitionComplete=true;
+  session.overlay.dataset.entryState='MASTER_STARTING';
   suppressAmbient();
-  resizeEntryCanvas();
-  buildEntryTessellation(session.play);
-  session.entryStartedAt=performance.now();
-  session.entryRaf=requestAnimationFrame(drawEntryTransition);
   const video=session.video;
   try{
     video.preload='auto';
     video.currentTime=0;
     video.load();
     noteVideoReady();
+    void maybeStartMasterPlayback();
   }catch(error){
     session.overlay?.setAttribute('data-player-error',String(error?.name||'MEDIA_PREPARE_FAILED'));
     settle('fail-open');

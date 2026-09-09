@@ -1,0 +1,25 @@
+{
+  "schema": "COMPASS_R11A_V7_LIVE_RELEASE_MANIFEST_v1",
+  "status": "CANDIDATE_QUALIFIED_FOR_OWNER_DIRECTED_REPLACEMENT",
+  "operationId": "COMPASS_R11A_V7_LIVE_REPLACEMENT_20260909_001",
+  "lockGeneration": 2022,
+  "governingMain": "49fd160e1cb462feefd328c1472fe6001f277747",
+  "canonicalLivePath": "assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4",
+  "successorSha256": "9641cf6653d1317d5b69b0310cfea301723da4ddd4cce8be15d4a7fcde23e919",
+  "successorGitBlob": "326d1c5b887262c6c828b3c8920a4b2e6f91d30b",
+  "retiredLiveSha256": "0326240cf1d3d8cf7753b91ea1cd0206378b8db7e37590b8bb39c37f6b50f444",
+  "retiredExternalPrerollMs": 4350,
+  "newExternalPrerollMs": 0,
+  "playerContract": "COMPASS_PRERENDERED_THIN_PLAYER_R11A_V7",
+  "deployment": {
+    "workflow": ".github/workflows/pages-exact-head-deploy-v3.yml",
+    "requiredInput": "exact merged main SHA",
+    "liveVerification": "EXACT_HEAD_MARKER_AND_MEDIA_SHA256_FETCHBACK",
+    "automaticDeploymentAssumed": false
+  },
+  "rollback": {
+    "mediaSha256": "0326240cf1d3d8cf7753b91ea1cd0206378b8db7e37590b8bb39c37f6b50f444",
+    "playerContract": "COMPASS_PRERENDERED_THIN_PLAYER_R8_v2",
+    "externalPrerollMs": 4350
+  }
+}

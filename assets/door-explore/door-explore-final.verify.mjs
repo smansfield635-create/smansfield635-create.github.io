@@ -9,12 +9,12 @@ const explore=read('explore/index.html');
 const spatial=read('assets/door-explore/spatial-v2.css');
 const lifecycle=read('assets/door-explore/card-lifecycle-v1.mjs');
 const home=read('assets/door-explore/home-identity-v2.mjs');
+const houseScene=read('assets/compass/compass.house-scene.js');
 const laws=read('assets/door-explore/laws-magnet-v2.mjs');
 const governance=read('assets/door-explore/governance-gavel-v2.mjs');
 const earth=read('assets/door-explore/earth-instrument-v2.mjs');
 const products=read('assets/door-explore/products-constellation-v2.mjs');
 const frontier=read('assets/door-explore/frontier-cycle1.mjs');
-const phase4=read('assets/manor-blueprint/manor.estate.gothic-detail-phase4.mjs');
 const publication=JSON.parse(read('.github/ai-router/publication-surfaces/door-explore.json'));
 const crosswalk=JSON.parse(read('assets/door-explore/crosswalk.v1.json'));
 
@@ -38,11 +38,9 @@ for(const [name,src] of [['home',home],['laws',laws],['governance',governance],[
   assert.ok(src.includes('clock.sample(now)'),`${name}:clock-sample`);
 }
 
-assert.ok(home.includes('manor.estate.gothic-detail-phase4.mjs'));
-assert.ok(home.includes('auditPhase4()'));
-assert.ok(home.includes('if(!audit.passStatic)'));
-assert.ok(phase4.includes('MIRROR_MANOR_GOTHIC_ARCHITECTURAL_DETAIL_PHASE4_LIVED_IN_v1'));
-assert.ok(phase4.includes('passStatic:p.passStatic&&bounded&&selective&&preserved'));
+for(const token of ['assets/compass/compass.house-scene.js','mirror-manor-gothic-phase3-carousel-v6-material-detail-final','MIRROR_MANOR_GOTHIC_ARCHITECTURAL_DETAIL_PHASE3_v1','loadMatureHouseScene'])assert.ok(home.includes(token),`home-mature:${token}`);
+assert.ok(!home.includes('buildNeutralMesh'), 'home:no-neutral-blockout-renderer');
+for(const token of ['mirror-manor-gothic-phase3-carousel-v6-material-detail-final','MIRROR_MANOR_GOTHIC_ARCHITECTURAL_DETAIL_PHASE3_v1','canonical-phase3-principal-estate-mesh','true-facade-openings','procedural-slate-shingle-courses','engraved-stone-court'])assert.ok(houseScene.includes(token),`house-scene:${token}`);
 
 for(const token of ['DOOR_GOVERNANCE_GAVEL_SPATIAL_V2','BLOCK_TOP_Y=-4.425','SURFACE_TOP_Y=-6.375','inspectGovernancePose','blockPenetration','surfacePenetration','decisionBeforeClearance','recoil'])assert.ok(governance.includes(token),`governance:${token}`);
 for(const token of ['DOOR_EXPLORE_LAWS_MAGNET_SPATIAL_V2','LAW_PROJECT_SCALE = 1.42','inspectLawsFrame','fieldRodState'])assert.ok(laws.includes(token),`laws:${token}`);
@@ -59,12 +57,14 @@ for(const cssPath of ['assets/door-explore/products-constellation-v2.css','asset
 
 const doorSurface=publication.checks.find(x=>x.path==='/door/');
 const exploreSurface=publication.checks.find(x=>x.path==='/explore/');
-assert.ok(doorSurface&&exploreSurface);
+const matureHouseSurface=publication.checks.find(x=>x.path==='/assets/compass/compass.house-scene.js');
+assert.ok(doorSurface&&exploreSurface&&matureHouseSurface);
 for(const check of [doorSurface,exploreSurface])for(const token of ['spatialCarouselBound','carouselAuthority','carouselKeyMoved','DOOR_EXPLORE_CAROUSEL_TRAVERSAL_REPAIR_V1'])assert.ok(check.includes.includes(token),`publication:${token}`);
+for(const token of ['mirror-manor-gothic-phase3-carousel-v6-material-detail-final','canonical-phase3-principal-estate-mesh'])assert.ok(matureHouseSurface.includes.includes(token),`publication-mature-house:${token}`);
 assert.equal(publication.runtime.enabled,true);
 assert.equal(publication.runtime.path,'/explore/');
 assert.equal(publication.runtime.readySelector,'[data-explore-carousel]');
 assert.equal(crosswalk.status,'PASS_CLOSED');
 assert.equal(crosswalk.cards.filter(x=>x.status==='CLOSED').length,11);
 
-console.log(JSON.stringify({result:'PASS_ANIMATION_COHERENCE_CYCLE7_FROZEN',cards:11,door:6,explore:5,lifecycle:'ACTIVATION_LOCAL',governance:'CONTACT_BOUNDED',laws:'MOBILE_FRAMED',homeIdentity:'PHASE4_AUDIT_PRESERVED',products:'CLEARANCE_PRESERVED',frontier:'CAUSAL_DELIVERY',traversal:'SINGLE_PAGE_AUTHORITY'}));
+console.log(JSON.stringify({result:'PASS_ANIMATION_COHERENCE_CYCLE7_MATURE_MANOR_BINDING',cards:11,door:6,explore:5,lifecycle:'ACTIVATION_LOCAL',governance:'CONTACT_BOUNDED',laws:'MOBILE_FRAMED',homeIdentity:'MATURE_COMPASS_MANOR_PHASE3',products:'CLEARANCE_PRESERVED',frontier:'CAUSAL_DELIVERY',traversal:'SINGLE_PAGE_AUTHORITY'}));

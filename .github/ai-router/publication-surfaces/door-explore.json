@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "door-explore",
-  "description": "Door and Explore 11-card animation-coherence successor: activation-local cycles, bounded spatial motion, causal Frontier delivery, mobile presentation, and one page-bound carousel traversal authority.",
+  "description": "Door and Explore 11-card animation-coherence successor with the mature Compass Mirror Manor renderer bound into Home and Identity.",
   "checks": [
     {
       "path": "/door/",
@@ -40,16 +40,7 @@
         "carouselKeyMoved",
         "DOOR_EXPLORE_CAROUSEL_TRAVERSAL_REPAIR_V1"
       ],
-      "excludes": [
-        "families-v1.mjs",
-        "families-v1.css",
-        "data-products-cycle2",
-        "data-instrument-cycle3",
-        "data-laws-cycle4",
-        "data-identity-cycle5",
-        "character-section",
-        "diagnostic-boundary"
-      ]
+      "excludes": ["families-v1.mjs","families-v1.css","data-products-cycle2","data-instrument-cycle3","data-laws-cycle4","data-identity-cycle5","character-section","diagnostic-boundary"]
     },
     {
       "path": "/explore/",
@@ -83,14 +74,7 @@
         "carouselKeyMoved",
         "DOOR_EXPLORE_CAROUSEL_TRAVERSAL_REPAIR_V1"
       ],
-      "excludes": [
-        "families-v1.mjs",
-        "families-v1.css",
-        "data-products-cycle2",
-        "data-instrument-cycle3",
-        "data-laws-cycle4",
-        "data-identity-cycle5"
-      ]
+      "excludes": ["families-v1.mjs","families-v1.css","data-products-cycle2","data-instrument-cycle3","data-laws-cycle4","data-identity-cycle5"]
     },
     {
       "path": "/assets/door-explore/card-lifecycle-v1.mjs",
@@ -99,7 +83,12 @@
     },
     {
       "path": "/assets/door-explore/home-identity-v2.mjs",
-      "includes": ["DOOR_EXPLORE_HOME_IDENTITY_SPATIAL_V2", "manor.estate.gothic-detail-phase4.mjs", "auditPhase4()", "createCardClock", "prefers-reduced-motion"],
+      "includes": ["DOOR_EXPLORE_HOME_IDENTITY_SPATIAL_V2", "assets/compass/compass.house-scene.js", "mirror-manor-gothic-phase3-carousel-v6-material-detail-final", "MIRROR_MANOR_GOTHIC_ARCHITECTURAL_DETAIL_PHASE3_v1", "loadMatureHouseScene", "createCardClock", "prefers-reduced-motion"],
+      "excludes": ["buildNeutralMesh", "neutral-fallback"]
+    },
+    {
+      "path": "/assets/compass/compass.house-scene.js",
+      "includes": ["mirror-manor-gothic-phase3-carousel-v6-material-detail-final", "MIRROR_MANOR_GOTHIC_ARCHITECTURAL_DETAIL_PHASE3_v1", "canonical-phase3-principal-estate-mesh", "true-facade-openings", "procedural-slate-shingle-courses", "engraved-stone-court"],
       "excludes": []
     },
     {

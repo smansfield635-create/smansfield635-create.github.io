@@ -4317,49 +4317,6 @@
       "scopeHash": "91498847235a51be58ef771a735c58e11a5e9b4ae49e65b29a5f9fc377c830ee",
       "state": "ADMITTED_LOCKED"
     },
-    "9164b74a72c8a387946dab57556194317c375f5a6c70eb83980d467d09ccbacf": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "85b1ce648f2fc3c9b11954d68db4ddf510b815ad",
-          "lockGeneration": 2048,
-          "lockScope": "DOOR_EXPLORE:ANIMATION_COHERENCE_CYCLICAL_REPAIR:V1",
-          "operationId": "DOOR_EXPLORE_ANIMATION_COHERENCE_CYCLES_20260909_001",
-          "procedureLocatorDigest": "0981024965ea56cb76ca5d1d89d52f29087707330fdbe08aa6a88a210192871a",
-          "requestDigest": "9c434cad11e23e7b6a16b196145254bf853e40dd91de4aaabe26fb573a4bd84e",
-          "scopeHash": "9164b74a72c8a387946dab57556194317c375f5a6c70eb83980d467d09ccbacf"
-        },
-        "bindingDigest": "10e73bb1117543df87f5a530bc077da093dc0d1a015e3a245dcf0a359e698b26",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "fec1dee3bdd4cb18e335813da5c76e873bf759d9b25739d3b8bde044ebdb4c8f",
-          "commentId": 5607731753,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2910,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34396873665,
-          "workflowSha": "85b1ce648f2fc3c9b11954d68db4ddf510b815ad"
-        },
-        "lineageAnchorCommitSha": "727e36d1160f370169e2044db6f3a9d681b66b8a",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "85b1ce648f2fc3c9b11954d68db4ddf510b815ad",
-      "lockGeneration": 2048,
-      "lockScope": "DOOR_EXPLORE:ANIMATION_COHERENCE_CYCLICAL_REPAIR:V1",
-      "operationId": "DOOR_EXPLORE_ANIMATION_COHERENCE_CYCLES_20260909_001",
-      "procedureLocatorDigest": "0981024965ea56cb76ca5d1d89d52f29087707330fdbe08aa6a88a210192871a",
-      "released": false,
-      "requestDigest": "9c434cad11e23e7b6a16b196145254bf853e40dd91de4aaabe26fb573a4bd84e",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "9164b74a72c8a387946dab57556194317c375f5a6c70eb83980d467d09ccbacf",
-      "state": "ADMITTED_LOCKED"
-    },
     "91684c5071256e3e17781b5339bbfec38f0843cc605bde557fe61b1b573f4760": {
       "governingHead": "adfebb0ac443dca6d18c4568a9faa95d38995bae",
       "lockGeneration": 1644,
@@ -45118,6 +45075,50 @@
       "requestDigest": "59b3fa6d8024841997ca01d77f4736b493f72e39dc287893b292c9a27dd92c8f",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "fc6623d86e2ddb9dcc63b7d70769188266ee565c2bb14a2df33a086fa05ae5f8",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "85b1ce648f2fc3c9b11954d68db4ddf510b815ad",
+          "lockGeneration": 2048,
+          "lockScope": "DOOR_EXPLORE:ANIMATION_COHERENCE_CYCLICAL_REPAIR:V1",
+          "operationId": "DOOR_EXPLORE_ANIMATION_COHERENCE_CYCLES_20260909_001",
+          "procedureLocatorDigest": "0981024965ea56cb76ca5d1d89d52f29087707330fdbe08aa6a88a210192871a",
+          "requestDigest": "9c434cad11e23e7b6a16b196145254bf853e40dd91de4aaabe26fb573a4bd84e",
+          "scopeHash": "9164b74a72c8a387946dab57556194317c375f5a6c70eb83980d467d09ccbacf"
+        },
+        "bindingDigest": "10e73bb1117543df87f5a530bc077da093dc0d1a015e3a245dcf0a359e698b26",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "fec1dee3bdd4cb18e335813da5c76e873bf759d9b25739d3b8bde044ebdb4c8f",
+          "commentId": 5607731753,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2910,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34396873665,
+          "workflowSha": "85b1ce648f2fc3c9b11954d68db4ddf510b815ad"
+        },
+        "lineageAnchorCommitSha": "727e36d1160f370169e2044db6f3a9d681b66b8a",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "85b1ce648f2fc3c9b11954d68db4ddf510b815ad",
+      "lockGeneration": 2048,
+      "lockScope": "DOOR_EXPLORE:ANIMATION_COHERENCE_CYCLICAL_REPAIR:V1",
+      "operationId": "DOOR_EXPLORE_ANIMATION_COHERENCE_CYCLES_20260909_001",
+      "procedureLocatorDigest": "0981024965ea56cb76ca5d1d89d52f29087707330fdbe08aa6a88a210192871a",
+      "released": true,
+      "requestDigest": "9c434cad11e23e7b6a16b196145254bf853e40dd91de4aaabe26fb573a4bd84e",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "9164b74a72c8a387946dab57556194317c375f5a6c70eb83980d467d09ccbacf",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

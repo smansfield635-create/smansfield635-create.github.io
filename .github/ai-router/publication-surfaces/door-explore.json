@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "door-explore",
-  "description": "Door and Explore 11-card successor traversal: six Door cards, five Explore cards, five closed shared animation families.",
+  "description": "Door and Explore terminal 11-card spatial successor: six Door cards, five Explore cards, five closed spatial reconstruction cycles.",
   "checks": [
     {
       "path": "/door/",
@@ -14,14 +14,28 @@
         "data-card=\"laws\"",
         "data-card=\"governance\"",
         "data-card=\"home\"",
+        "data-products-constellation-v2",
+        "data-earth-instrument-v2",
+        "data-frontier-cycle1",
+        "data-laws-magnet-v2",
+        "data-governance-gavel-v2",
+        "data-home-identity-v2",
+        "/assets/door-explore/products-constellation-v2.mjs",
+        "/assets/door-explore/earth-instrument-v2.mjs",
         "/assets/door-explore/frontier-cycle1.mjs",
-        "/assets/door-explore/families-v1.mjs",
-        "crosswalkProgress:'11/11 closed'"
+        "/assets/door-explore/laws-magnet-v2.mjs",
+        "/assets/door-explore/governance-gavel-v2.mjs",
+        "/assets/door-explore/home-identity-v2.mjs"
       ],
       "excludes": [
+        "families-v1.mjs",
+        "families-v1.css",
+        "data-products-cycle2",
+        "data-instrument-cycle3",
+        "data-laws-cycle4",
+        "data-identity-cycle5",
         "character-section",
-        "diagnostic-boundary",
-        "data-ai-characters-featured"
+        "diagnostic-boundary"
       ]
     },
     {
@@ -34,33 +48,57 @@
         "data-card=\"laws\"",
         "data-card=\"products\"",
         "data-card=\"gauges\"",
-        "/assets/door-explore/families-v1.mjs",
-        "crosswalkProgress:'11/11 closed'"
+        "data-products-constellation-v2",
+        "data-earth-instrument-v2",
+        "data-laws-magnet-v2",
+        "data-home-identity-v2",
+        "/assets/door-explore/products-constellation-v2.mjs",
+        "/assets/door-explore/earth-instrument-v2.mjs",
+        "/assets/door-explore/laws-magnet-v2.mjs",
+        "/assets/door-explore/home-identity-v2.mjs"
       ],
       "excludes": [
-        "The Book",
-        "The Constellation"
+        "families-v1.mjs",
+        "families-v1.css",
+        "data-products-cycle2",
+        "data-instrument-cycle3",
+        "data-laws-cycle4",
+        "data-identity-cycle5"
       ]
     },
     {
-      "path": "/assets/door-explore/families-v1.mjs",
-      "includes": [
-        "DOOR_EXPLORE_PRODUCTS_CYCLE2_V1",
-        "DOOR_EXPLORE_INSTRUMENT_DECISION_CYCLE3_V1",
-        "DOOR_EXPLORE_LAWS_CYCLE4_V1",
-        "DOOR_HOME_EXPLORE_IDENTITY_CYCLE5_V1",
-        "prefers-reduced-motion"
-      ],
+      "path": "/assets/door-explore/home-identity-v2.mjs",
+      "includes": ["DOOR_EXPLORE_HOME_IDENTITY_SPATIAL_V2", "manor.estate.gothic-detail-phase4.mjs", "prefers-reduced-motion", "pointerdown", "ArrowRight"],
+      "excludes": []
+    },
+    {
+      "path": "/assets/door-explore/laws-magnet-v2.mjs",
+      "includes": ["DOOR_EXPLORE_LAWS_MAGNET_SPATIAL_V2", "prefers-reduced-motion"],
+      "excludes": []
+    },
+    {
+      "path": "/assets/door-explore/governance-gavel-v2.mjs",
+      "includes": ["DOOR_GOVERNANCE_GAVEL_SPATIAL_V2", "prefers-reduced-motion"],
+      "excludes": []
+    },
+    {
+      "path": "/assets/door-explore/earth-instrument-v2.mjs",
+      "includes": ["DOOR_EXPLORE_EARTH_INSTRUMENT_SPATIAL_V2", "AXIAL_TILT_DEG=23.44", "DGBEarthLattice256", "prefers-reduced-motion"],
+      "excludes": []
+    },
+    {
+      "path": "/assets/door-explore/products-constellation-v2.mjs",
+      "includes": ["DOOR_EXPLORE_PRODUCTS_VOLUMETRIC_CONSTELLATION_V2", "prefers-reduced-motion"],
       "excludes": []
     },
     {
       "path": "/assets/door-explore/frontier-cycle1.mjs",
-      "includes": [
-        "/showroom/globe/h-earth/render/geometry-kernel.js",
-        "constructHEarthTriangleMesh",
-        "admitHEarthPrimitiveRecord",
-        "DOOR_FRONTIER_APPLIED_SYSTEMS_CYCLE1_V1"
-      ],
+      "includes": ["/showroom/globe/h-earth/render/geometry-kernel.js", "constructHEarthTriangleMesh", "admitHEarthPrimitiveRecord", "DOOR_FRONTIER_APPLIED_SYSTEMS_CYCLE1_V1"],
+      "excludes": []
+    },
+    {
+      "path": "/assets/door-explore/spatial-v2.css",
+      "includes": ["touch-action:pan-y"],
       "excludes": []
     }
   ],
@@ -69,10 +107,7 @@
     "path": "/door/",
     "timeoutMs": 30000,
     "readySelector": "[data-door-carousel]",
-    "binding": {
-      "mode": "direct-document",
-      "path": "/door/"
-    },
+    "binding": {"mode": "direct-document", "path": "/door/"},
     "failOnConsoleErrors": true,
     "failOnPageErrors": true,
     "interactions": []

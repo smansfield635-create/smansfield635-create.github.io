@@ -23,8 +23,15 @@ const gated = (value, start) => smooth01((clamp01(value) - start) / Math.max(1e-
 
 export function deriveFrontierCausalVisualState(sourceState) {
   const state = sourceState || {};
-  const flowDelivery = gated(state.waterPulse, 0.22);
-  const energyDelivery = gated(state.energyPulse, 0.30);
+  const reducedTerminal =
+    state.phase === 'TRANSFORMED' &&
+    clamp01(state.awaken) === 1 &&
+    clamp01(state.flow) === 1 &&
+    clamp01(state.energy) === 1 &&
+    clamp01(state.transformed) === 1 &&
+    clamp01(state.energyPulse) < 1;
+  const flowDelivery = reducedTerminal ? 1 : gated(state.waterPulse, 0.22);
+  const energyDelivery = reducedTerminal ? 1 : gated(state.energyPulse, 0.30);
   const flowEffect = clamp01(clamp01(state.flow) * flowDelivery);
   const energyEffect = clamp01(clamp01(state.energy) * energyDelivery);
   const transformReady = gated(energyEffect, 0.72);

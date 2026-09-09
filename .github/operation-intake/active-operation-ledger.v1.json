@@ -4573,77 +4573,6 @@
       "scopeHash": "9712e989ecb4bec72350132dabef6e62ee76e50f10badfc9fddd1ddadf3eb889",
       "state": "ADMITTED_LOCKED"
     },
-    "984fe6dce105f096e819711867d04635f0cd78d024410795b781a66ad0572d8c": {
-      "governingHead": "3d034773e189d5c8f8fa72bb53457518c1e876de",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "3d034773e189d5c8f8fa72bb53457518c1e876de",
-          "lockGeneration": 2020,
-          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:V6_EVIDENCE_SEQUENCE_MAINTENANCE",
-          "operationId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_002",
-          "procedureLocatorDigest": "d7fb157e3877f3ba11bbf21c5e14e401fe6ea994ed594afa57dfd2b1c44b6afa",
-          "requestDigest": "287e347303753e7952186c731b28879bf2abd82064319c76b39e3eccb4110aa0",
-          "scopeHash": "984fe6dce105f096e819711867d04635f0cd78d024410795b781a66ad0572d8c"
-        },
-        "bindingDigest": "5ea66e284fb24b944cf0dae4a435e48a59de87877175c8b28e4513b6c7e1e513",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "549f95f3df97cf4df0861eebe5d487d5867a9ab1",
-          "observedLockRefHead": "b16b5a9484ffdcd31cceb2e83308802b652a81ff"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "ecbec4052175fe0259e14dca75e5367150944f5b85601e2b8a5669fa0574bb20",
-          "commentId": 5592269751,
-          "issueNumber": 2873,
-          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transitionIdentity": {
-          "predecessor": {
-            "governingHead": "c410128e421d39d45f29ca41ebd4985f87eaa011",
-            "lockGeneration": 2019,
-            "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:V6_EVIDENCE_SEQUENCE_MAINTENANCE",
-            "operationId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_001"
-          },
-          "successor": {
-            "governingHead": "3d034773e189d5c8f8fa72bb53457518c1e876de",
-            "lockGeneration": 2020,
-            "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:V6_EVIDENCE_SEQUENCE_MAINTENANCE",
-            "operationId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_002"
-          },
-          "transitionId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_GEN2019_TO_GEN2020_20260908_001"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
-      },
-      "lockGeneration": 2020,
-      "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:V6_EVIDENCE_SEQUENCE_MAINTENANCE",
-      "operationId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_002",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "c410128e421d39d45f29ca41ebd4985f87eaa011",
-        "lockGeneration": 2019,
-        "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:V6_EVIDENCE_SEQUENCE_MAINTENANCE",
-        "operationId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_001",
-        "preservedEvidenceRefs": [
-          "pr:2873@9bda922cf0f2a3d615e43a74fcc329df2711b493",
-          "workflow-run:34277142287",
-          "issue-comment:5592104154",
-          "operation:MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_001:lock-generation:2019"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_GEN2019_TO_GEN2020_20260908_001"
-      },
-      "procedureLocatorDigest": "d7fb157e3877f3ba11bbf21c5e14e401fe6ea994ed594afa57dfd2b1c44b6afa",
-      "released": false,
-      "requestDigest": "287e347303753e7952186c731b28879bf2abd82064319c76b39e3eccb4110aa0",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "984fe6dce105f096e819711867d04635f0cd78d024410795b781a66ad0572d8c",
-      "state": "ADMITTED_LOCKED"
-    },
     "98f937c4e75d3bebae38be91452b3e9bb1c42d9301e13c563754bb77e2284c4e": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -43927,6 +43856,115 @@
       "scopeHash": "4d1785f2bd4ddf23d901ddd49c764801e3b2648d8be5cb07adf40eb1f309d518",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "governingHead": "3d034773e189d5c8f8fa72bb53457518c1e876de",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "3d034773e189d5c8f8fa72bb53457518c1e876de",
+          "lockGeneration": 2020,
+          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:V6_EVIDENCE_SEQUENCE_MAINTENANCE",
+          "operationId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_002",
+          "procedureLocatorDigest": "d7fb157e3877f3ba11bbf21c5e14e401fe6ea994ed594afa57dfd2b1c44b6afa",
+          "requestDigest": "287e347303753e7952186c731b28879bf2abd82064319c76b39e3eccb4110aa0",
+          "scopeHash": "984fe6dce105f096e819711867d04635f0cd78d024410795b781a66ad0572d8c"
+        },
+        "bindingDigest": "5ea66e284fb24b944cf0dae4a435e48a59de87877175c8b28e4513b6c7e1e513",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "549f95f3df97cf4df0861eebe5d487d5867a9ab1",
+          "observedLockRefHead": "b16b5a9484ffdcd31cceb2e83308802b652a81ff"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "ecbec4052175fe0259e14dca75e5367150944f5b85601e2b8a5669fa0574bb20",
+          "commentId": 5592269751,
+          "issueNumber": 2873,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transitionIdentity": {
+          "predecessor": {
+            "governingHead": "c410128e421d39d45f29ca41ebd4985f87eaa011",
+            "lockGeneration": 2019,
+            "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:V6_EVIDENCE_SEQUENCE_MAINTENANCE",
+            "operationId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_001"
+          },
+          "successor": {
+            "governingHead": "3d034773e189d5c8f8fa72bb53457518c1e876de",
+            "lockGeneration": 2020,
+            "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:V6_EVIDENCE_SEQUENCE_MAINTENANCE",
+            "operationId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_002"
+          },
+          "transitionId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_GEN2019_TO_GEN2020_20260908_001"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "3d034773e189d5c8f8fa72bb53457518c1e876de",
+          "lockGeneration": 2020,
+          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:V6_EVIDENCE_SEQUENCE_MAINTENANCE",
+          "operationId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_002",
+          "procedureLocatorDigest": "d7fb157e3877f3ba11bbf21c5e14e401fe6ea994ed594afa57dfd2b1c44b6afa",
+          "requestDigest": "287e347303753e7952186c731b28879bf2abd82064319c76b39e3eccb4110aa0",
+          "scopeHash": "984fe6dce105f096e819711867d04635f0cd78d024410795b781a66ad0572d8c"
+        },
+        "bindingDigest": "be4c44a6a5bf1be923e0fe923aadc8c27827fb9f791f6863d7feafa7993b9fb6",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "2fe3458e7815a56e4d0b81a72727276105cdb784",
+          "observedLockRefHead": "1ee6970dde054426b002984e4d021f4e555e7e44"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "92c3016da277e491c78e4c4861ded92d42f76ca586811508d3b46bbd31dfce17",
+          "commentId": 5595177608,
+          "issueNumber": 2873,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "3d034773e189d5c8f8fa72bb53457518c1e876de",
+          "lockGeneration": 2020,
+          "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:V6_EVIDENCE_SEQUENCE_MAINTENANCE",
+          "operationId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_002",
+          "released": true,
+          "scopeHash": "984fe6dce105f096e819711867d04635f0cd78d024410795b781a66ad0572d8c",
+          "state": "TERMINAL",
+          "terminalDisposition": "PASS_CLOSED"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2020,
+      "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:V6_EVIDENCE_SEQUENCE_MAINTENANCE",
+      "operationId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "c410128e421d39d45f29ca41ebd4985f87eaa011",
+        "lockGeneration": 2019,
+        "lockScope": "CHARACTERS:MIRRORLAND:GRATITUDE_COAST:V6_EVIDENCE_SEQUENCE_MAINTENANCE",
+        "operationId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_001",
+        "preservedEvidenceRefs": [
+          "pr:2873@9bda922cf0f2a3d615e43a74fcc329df2711b493",
+          "workflow-run:34277142287",
+          "issue-comment:5592104154",
+          "operation:MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_20260908_001:lock-generation:2019"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "MIRRORLAND_V6_EVIDENCE_SEQUENCE_MAINTENANCE_GEN2019_TO_GEN2020_20260908_001"
+      },
+      "procedureLocatorDigest": "d7fb157e3877f3ba11bbf21c5e14e401fe6ea994ed594afa57dfd2b1c44b6afa",
+      "released": true,
+      "requestDigest": "287e347303753e7952186c731b28879bf2abd82064319c76b39e3eccb4110aa0",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "984fe6dce105f096e819711867d04635f0cd78d024410795b781a66ad0572d8c",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

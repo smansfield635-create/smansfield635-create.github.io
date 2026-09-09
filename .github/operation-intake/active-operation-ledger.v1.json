@@ -1,1 +1,50 @@
-{"schema":"REPOSITORY_ACTIVE_OPERATION_LEDGER_v1","lockRef":"refs/heads/operation-locks/repository-operation-intake-v1","lockGeneration":0,"activeScopes":{},"terminalHistory":[],"allowedChangedPaths":[".github/operation-intake/active-operation-ledger.v1.json"]}
+{
+  "activeScopes": {
+    "073d996fc68459936504b55dd2a01db63308a813326722ad83d3de87fbd35603": {
+      "governingHead": "2c3156e96fac028ed766ec4fa69a73ab73868ea2",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "2c3156e96fac028ed766ec4fa69a73ab73868ea2",
+          "lockGeneration": 1,
+          "lockScope": "CHARACTERS:GRATITUDE_COAST:CARDINAL_INTEGRATION:ALARIC_PROOF",
+          "operationId": "CHARACTERS_GRATITUDE_CARDINAL_INTEGRATION_RECOVERY_ALARIC_PROOF_20260909_001_REBIND_001",
+          "procedureLocatorDigest": "f129cf8b80266009adf708c0058a83bb624c5c76a0c64a1174642187e198adea",
+          "requestDigest": "2377629034580516d576e48938302b133ceb161b79f626b0a7e76b46121326b7",
+          "scopeHash": "073d996fc68459936504b55dd2a01db63308a813326722ad83d3de87fbd35603"
+        },
+        "bindingDigest": "36712da76badd50b94c4bb4020a5f6422476ea4f679e1d06ec3181dd12ddb0fa",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "553d4e96cf3b1a76c4fb23cb69768b3e34ae2304",
+          "observedLockRefHead": "8900e55625967c383d10f6f5ccbec50703ff5248"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "453cd431ee322973bd242b3313d7c864e597b889da10af8c02a9dd2b822381b2",
+          "commentId": 5609960952,
+          "issueNumber": 2944,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "lockGeneration": 1,
+      "lockScope": "CHARACTERS:GRATITUDE_COAST:CARDINAL_INTEGRATION:ALARIC_PROOF",
+      "operationId": "CHARACTERS_GRATITUDE_CARDINAL_INTEGRATION_RECOVERY_ALARIC_PROOF_20260909_001_REBIND_001",
+      "procedureLocatorDigest": "f129cf8b80266009adf708c0058a83bb624c5c76a0c64a1174642187e198adea",
+      "released": false,
+      "requestDigest": "2377629034580516d576e48938302b133ceb161b79f626b0a7e76b46121326b7",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "073d996fc68459936504b55dd2a01db63308a813326722ad83d3de87fbd35603",
+      "state": "ADMITTED_LOCKED"
+    }
+  },
+  "allowedChangedPaths": [
+    ".github/operation-intake/active-operation-ledger.v1.json"
+  ],
+  "lockGeneration": 1,
+  "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+  "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
+  "terminalHistory": []
+}

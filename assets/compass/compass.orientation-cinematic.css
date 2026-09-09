@@ -32,16 +32,18 @@ html.compass-orientation-cinematic-active,html.compass-orientation-cinematic-act
 @media(max-aspect-ratio:4/3){.compass-prerendered-player__video{inset:auto 0;top:50%;width:100%;height:auto;object-fit:fill;transform:translateY(-50%);-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 15%,#000 85%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 15%,#000 85%,transparent 100%)}.compass-prerendered-player__ambient-video{object-position:50% 58%;filter:blur(clamp(20px,4vw,48px)) saturate(.92) brightness(.52);opacity:1}}
 @media(prefers-reduced-motion:reduce){.compass-prerendered-player,.compass-prerendered-player *{animation:none!important;transition:none!important}.compass-prerendered-player__video,.compass-prerendered-player__ambient-video,.compass-prerendered-player__entry-canvas{display:none!important}}
 
-/* Match the live gate to the 1280x720 surface baked into frame zero. */
+/* Frame zero is the entry artwork; DOM controls are aligned hit areas only. */
 .compass-prerendered-player{--compass-entry-frame-em:min(1.25vw,2.222222vh)}
-.compass-prerendered-player__gate{isolation:isolate}
-.compass-prerendered-player__gate-card{width:42.5em;padding:3.375em 2.125em;border-width:.0625em;border-radius:2em;background:rgba(2,10,16,.86);box-shadow:0 2.125em 6.875em rgba(0,0,0,.45),inset 0 .0625em rgba(255,255,255,.045);font-size:var(--compass-entry-frame-em);backdrop-filter:blur(.875em)}
-.compass-prerendered-player__gate-card::before{top:-4.25em;width:.0625em;height:3em}
-.compass-prerendered-player__gate-card::after{bottom:-3.25em;width:6.5em;height:.0625em}
-.compass-prerendered-player__eyebrow{margin-bottom:.875em;font-size:.72em}
-.compass-prerendered-player__gate-card h2{font-size:5.8em;white-space:nowrap}
-.compass-prerendered-player__gate-card>p:not(.compass-prerendered-player__eyebrow){max-width:27.868853em;margin-top:.922131em;font-size:1.22em}
-.compass-prerendered-player__actions{gap:.75em;margin-top:1.75em}
-.compass-prerendered-player__button{min-height:4.166667em;padding:0 1.923077em;border-width:.080128em;font-size:.78em}
+.compass-prerendered-player__gate{isolation:isolate;outline:0}
+.compass-prerendered-player__gate::before{opacity:0}
+.compass-prerendered-player__gate:not(.is-skip-dissolve) .compass-prerendered-player__entry-canvas{opacity:0}
+.compass-prerendered-player__gate-card{width:42.5em;height:22.25em;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;font-size:var(--compass-entry-frame-em);backdrop-filter:none}
+.compass-prerendered-player__gate-card::before,.compass-prerendered-player__gate-card::after{display:none}
+.compass-prerendered-player__eyebrow,.compass-prerendered-player__gate-card h2,.compass-prerendered-player__gate-card>p:not(.compass-prerendered-player__eyebrow){opacity:0}
+.compass-prerendered-player__actions{position:absolute;top:15.9375em;left:50%;gap:.625em;margin:0;transform:translateX(-50%);flex-wrap:nowrap}
+.compass-prerendered-player__actions .compass-prerendered-player__button{height:3.375em;min-height:3.375em;padding:0;border-color:transparent!important;background:transparent!important;color:transparent!important;font-size:1em;box-shadow:none!important}
+.compass-prerendered-player__actions [data-main-orientation-play]{width:8.375em}
+.compass-prerendered-player__actions [data-main-orientation-skip]{width:7.375em}
 @media(min-aspect-ratio:16/10){.compass-prerendered-player{--compass-entry-frame-em:max(1.25vw,2.222222vh)}}
-@media(max-width:600px){.compass-prerendered-player__gate-card{width:42.5em;padding:3.375em 2.125em;border-radius:2em}.compass-prerendered-player__actions{display:flex;gap:.75em}.compass-prerendered-player__button{min-width:auto;padding-inline:1.923077em}}
+@media(max-width:600px){.compass-prerendered-player__gate-card{width:42.5em;height:22.25em;padding:0;border-radius:0}.compass-prerendered-player__actions{display:flex;gap:.625em}.compass-prerendered-player__actions .compass-prerendered-player__button{min-width:0;padding:0}}
+@media(prefers-reduced-motion:reduce){.compass-prerendered-player__video,.compass-prerendered-player__ambient-video{display:block!important}}

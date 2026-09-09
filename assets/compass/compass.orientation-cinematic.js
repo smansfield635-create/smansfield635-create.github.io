@@ -141,6 +141,7 @@ function buildOverlay(){
   const gate=document.createElement('div');
   gate.className='compass-prerendered-player__gate';
   gate.setAttribute('data-main-orientation-gate','');
+  gate.tabIndex=-1;
   gate.innerHTML='<canvas class="compass-prerendered-player__entry-canvas" data-main-orientation-entry-canvas aria-hidden="true"></canvas><div class="compass-prerendered-player__gate-card" data-main-orientation-entry-card><p class="compass-prerendered-player__eyebrow">Diamond Gate Bridge</p><h2>Find your way.</h2><p>A short orientation before you enter.</p><div class="compass-prerendered-player__actions"></div></div>';
   const actions=q('.compass-prerendered-player__actions',gate);
   const play=makeButton(reduced()?'Enter Compass':'Play intro','data-main-orientation-play','primary');
@@ -476,7 +477,7 @@ function mount(source='initial'){
     resizeEntryCanvas();
     drawEntryIdle();
     noteVideoReady();
-    session.play?.focus({preventScroll:true});
+    session.gate?.focus({preventScroll:true});
   }catch(error){
     cleanupOverlay();restoreProduct();restoreAmbient();
     document.documentElement.classList.remove('compass-orientation-cinematic-active');

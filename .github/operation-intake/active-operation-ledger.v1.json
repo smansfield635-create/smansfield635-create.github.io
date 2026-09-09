@@ -2084,6 +2084,45 @@
       "scopeHash": "4d10cbd4d82bf6eb73978132b4534d3a7f198b567e83b4c600e91b44c77d1515",
       "state": "ADMITTED_LOCKED"
     },
+    "4d1785f2bd4ddf23d901ddd49c764801e3b2648d8be5cb07adf40eb1f309d518": {
+      "governingHead": "055ba46c01fe7f4057418775f70b78c9f44d916a",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "055ba46c01fe7f4057418775f70b78c9f44d916a",
+          "lockGeneration": 2030,
+          "lockScope": "CONTROL_PLANE:OWNER_CONNECTOR_CANONICAL_SUCCESSOR:CHAINED_PROVENANCE",
+          "operationId": "CONTROL_PLANE_OWNER_CONNECTOR_CHAINED_SUCCESSOR_PROVENANCE_REPAIR_20260909_002",
+          "procedureLocatorDigest": "e4b79e04644c59483dfa4efc2248e8105007742a1847a8ad34acaa66600a1802",
+          "requestDigest": "4045f8dcd8e5b55912adb9490c8769a9c8ccce212ba3b1b479a6ef606ca60fc5",
+          "scopeHash": "4d1785f2bd4ddf23d901ddd49c764801e3b2648d8be5cb07adf40eb1f309d518"
+        },
+        "bindingDigest": "e844a0fb0a4c16189de5c1324ea4cfab7f381822b9f4d9b85756847ed483fdb1",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "a1e9f84af2c7a3c7aa8a64bbef1a3ecdc2d9980f",
+          "observedLockRefHead": "97a55d6fb33a71842dad0ac6462faf783ee9b259"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "054893959b8c1cd28f711adae9c45810595ec0c91a9fcd8da0c9b161e7ab4283",
+          "commentId": 5595249619,
+          "issueNumber": 2843,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "lockGeneration": 2030,
+      "lockScope": "CONTROL_PLANE:OWNER_CONNECTOR_CANONICAL_SUCCESSOR:CHAINED_PROVENANCE",
+      "operationId": "CONTROL_PLANE_OWNER_CONNECTOR_CHAINED_SUCCESSOR_PROVENANCE_REPAIR_20260909_002",
+      "procedureLocatorDigest": "e4b79e04644c59483dfa4efc2248e8105007742a1847a8ad34acaa66600a1802",
+      "released": false,
+      "requestDigest": "4045f8dcd8e5b55912adb9490c8769a9c8ccce212ba3b1b479a6ef606ca60fc5",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "4d1785f2bd4ddf23d901ddd49c764801e3b2648d8be5cb07adf40eb1f309d518",
+      "state": "ADMITTED_LOCKED"
+    },
     "4e4c43e0804b4ad70b6e69c4119748bfe56fbaa74b67ae8174fd77ac12691925": {
       "governingHead": "8c7821995458c0baf45e2e4a82bf4d3667fe0a3d",
       "lockGeneration": 617,
@@ -7727,7 +7766,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2029,
+  "lockGeneration": 2030,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

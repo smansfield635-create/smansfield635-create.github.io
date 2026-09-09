@@ -1,26 +1,28 @@
 (()=>{'use strict';
 
 const CONTRACT=Object.freeze({
-  version:'COMPASS_PRERENDERED_THIN_PLAYER_R11A_V7',
-  mutationClass:'BOUNDED_PAGE_RELEASE',
-  operationId:'COMPASS_R11A_V7_LIVE_REPLACEMENT_20260909_001',
-  mediaPath:'/assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4?v=r11a-v7-live&cb=9641cf6653d1317d',
-  mediaBytes:8869131,
-  mediaSha256:'9641cf6653d1317d5b69b0310cfea301723da4ddd4cce8be15d4a7fcde23e919',
-  mediaGitBlob:'326d1c5b887262c6c828b3c8920a4b2e6f91d30b',
-  sourceHead:'49fd160e1cb462feefd328c1472fe6001f277747',
-  masterDurationMs:56900,
-  entryPrerollMs:0,
-  entryPrerollCountedInMaster:true,
-  entryContinuityLaw:'R11A_S00_PIXEL_ENTRY_IS_INCLUDED_IN_THE_SINGLE_MASTER',
-  naturalFadeMs:460
+  version:'COMPASS_EXPERIENTIAL_PLAYER_R11A_V8',
+  mutationClass:'RUNTIME_OR_NEW_DEVELOPMENT',
+  operationId:'COMPASS_R11A_V8_EXPERIENTIAL_INTEGRATION_20260909_001_SUCCESSOR_003',
+  lockGeneration:2032,
+  mediaPath:'/assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4?v=r11a-v8-review&cb=746606b76fbd05e9',
+  mediaBytes:8925582,
+  mediaSha256:'746606b76fbd05e9278787c25d484d001c67e18ba22f3890e95eee50e42ba29c',
+  mediaGitBlob:'f2fad2e98bd712b226a9c52c764e92a7dd0b46da',
+  sourceHead:'593a79e2175d0391992a6442b83b9d1f9eb6fcec',
+  masterDurationMs:59967,
+  entryPrerollMs:2300,
+  entryPrerollCountedInMaster:false,
+  entryContinuityLaw:'ACTUAL_PRESSED_DOM_SURFACE_PIXELATES_TO_FILM_OR_LIVE_PAGE',
+  viewportLaw:'ONE_CONTINUOUS_EXPERIENTIAL_REGION',
+  terminalLaw:'MOVIE_DISSOLVES_TO_CANONICAL_LIVE_FOUR_STAR_COMPASS',
+  naturalFadeMs:2200
 });
 const STATE=Object.freeze({ARMED:'ARMED',PLAYING:'PLAYING',SETTLED:'SETTLED'});
 const ENTRY_TESSELLATE_START_MS=140;
 const ENTRY_TESSELLATE_END_MS=820;
 const ENTRY_CELL_TRAVEL_END_MS=2300;
-const ENTRY_COMPASS_START_MS=1700;
-const ENTRY_COMPASS_END_MS=3550;
+const ENTRY_FILM_REVEAL_MS=780;
 const ENTRY_GOLDEN_ANGLE=Math.PI*(3-Math.sqrt(5));
 const ENTRY_SEED=0x0b17e17;
 const ENTRY_COLORS=['255,248,224','154,217,225','234,208,131','170,155,224'];
@@ -31,14 +33,14 @@ const mix=(a,b,t)=>a+(b-a)*t;
 const easeOut=t=>1-Math.pow(1-clamp(t),3);
 const reduced=()=>window.matchMedia?.('(prefers-reduced-motion: reduce)').matches===true;
 const session={
-  state:null,overlay:null,video:null,gate:null,play:null,skip:null,replay:null,
+  state:null,overlay:null,video:null,ambientVideo:null,gate:null,play:null,skip:null,replay:null,
   root:null,rootInert:false,rootAriaHidden:null,priorFocus:null,
   ambient:null,ambientSnapshot:null,url:null,historyLength:0,
   fadeStarted:false,settlementCount:0,
   entryCanvas:null,entryCtx:null,entryWidth:0,entryHeight:0,entryDpr:1,
   entryStars:[],entryCells:[],entryStartedAt:0,entryRaf:0,
   playRequested:false,entryTransitionComplete:false,videoReady:false,
-  videoStartRequested:false,firstFramePresented:false
+  videoStartRequested:false,firstFramePresented:false,entryAction:''
 };
 
 function markState(state){
@@ -109,12 +111,22 @@ function buildOverlay(){
   overlay.setAttribute('data-media-git-blob',CONTRACT.mediaGitBlob);
   overlay.setAttribute('data-media-sha256',CONTRACT.mediaSha256);
   overlay.setAttribute('data-entry-preroll-ms',String(CONTRACT.entryPrerollMs));
-  overlay.setAttribute('data-entry-preroll-counted-in-master','true');
+  overlay.setAttribute('data-entry-preroll-counted-in-master','false');
   overlay.setAttribute('data-entry-continuity-law',CONTRACT.entryContinuityLaw);
   overlay.setAttribute('data-entry-state','IDLE');
   overlay.setAttribute('role','dialog');
   overlay.setAttribute('aria-modal','true');
   overlay.setAttribute('aria-label','Diamond Gate Bridge orientation film');
+
+  const ambientVideo=document.createElement('video');
+  ambientVideo.className='compass-prerendered-player__ambient-video';
+  ambientVideo.playsInline=true;
+  ambientVideo.preload='auto';
+  ambientVideo.controls=false;
+  ambientVideo.muted=true;
+  ambientVideo.disablePictureInPicture=true;
+  ambientVideo.setAttribute('aria-hidden','true');
+  ambientVideo.src=CONTRACT.mediaPath;
 
   const video=document.createElement('video');
   video.className='compass-prerendered-player__video';
@@ -138,9 +150,10 @@ function buildOverlay(){
   const playingSkip=makeButton('Skip','data-main-orientation-skip','quiet');
   playingSkip.classList.add('compass-prerendered-player__skip');
 
-  overlay.append(video,gate,playingSkip);
+  overlay.append(ambientVideo,video,gate,playingSkip);
   session.overlay=overlay;
   session.video=video;
+  session.ambientVideo=ambientVideo;
   session.gate=gate;
   session.play=play;
   session.skip=skip;
@@ -192,15 +205,11 @@ function cleanupOverlay(){
   window.removeEventListener('keydown',onKey,true);
   window.removeEventListener('resize',resizeEntryCanvas);
   cancelEntryFrame();
-  const video=session.video;
-  if(video){
-    try{video.pause();}catch{}
-    video.removeAttribute('src');
-    try{video.load();}catch{}
-  }
+  for(const video of [session.video,session.ambientVideo])if(video){try{video.pause();}catch{}video.removeAttribute('src');try{video.load();}catch{}}
   session.overlay?.remove();
   session.overlay=null;
   session.video=null;
+  session.ambientVideo=null;
   session.gate=null;
   session.play=null;
   session.skip=null;
@@ -262,33 +271,16 @@ function resizeEntryCanvas(){
     });
   });
 }
-function entryCompassTargets(){
-  const width=session.entryWidth,height=session.entryHeight;
-  const radius=Math.min(width,height)*(width<560?.34:.29),cx=width*.5,cy=height*.49;
-  const targets=[];
-  for(let ring=0;ring<3;ring++){
-    const r=radius*(.34+ring*.25),count=ring===2?32:20;
-    for(let i=0;i<count;i++){
-      const a=i/count*Math.PI*2-Math.PI/2;
-      targets.push({x:cx+Math.cos(a)*r,y:cy+Math.sin(a)*r});
-    }
-  }
-  for(let i=0;i<16;i++){
-    const a=i/16*Math.PI*2-Math.PI/2,r=i%2===0?radius*.93:radius*.50;
-    targets.push({x:cx+Math.cos(a)*r,y:cy+Math.sin(a)*r*.78});
-  }
-  return targets;
-}
-function buildEntryTessellation(button){
-  const rect=button.getBoundingClientRect(),baseSize=clamp(rect.height*.34,14,22);
+function buildEntryTessellation(surface){
+  const rect=surface.getBoundingClientRect(),baseSize=clamp(Math.min(rect.width,rect.height)*.035,14,44);
   const sx=baseSize*.90,sy=baseSize*.72;
   const cols=Math.ceil(rect.width/sx)+2,rows=Math.ceil(rect.height/sy)+2;
   const random=randomFactory(ENTRY_SEED^Math.round(rect.width*17)^Math.round(rect.height*31));
-  const compass=entryCompassTargets(),stars=session.entryStars,cells=[];
+  const stars=session.entryStars,cells=[];
   for(let row=-1;row<rows;row++)for(let col=-1;col<cols;col++){
     const x=rect.left+col*sx+(row%2?sx*.5:0),y=rect.top+row*sy;
     if(x<rect.left-baseSize||x>rect.right+baseSize||y<rect.top-baseSize||y>rect.bottom+baseSize)continue;
-    const target=random()<.62?compass[Math.floor(random()*compass.length)]:stars[Math.floor(random()*stars.length)]||{x:session.entryWidth*.5,y:session.entryHeight*.5};
+    const target=stars[Math.floor(random()*stars.length)]||{x:session.entryWidth*.5,y:session.entryHeight*.5};
     cells.push({x,y,targetX:target.x,targetY:target.y,size:baseSize*mix(.72,1.08,random()),delay:random()*.32,rotation:mix(-.24,.24,random()),spin:mix(-1.4,1.4,random()),tone:random()<.33?'gold':'cool'});
   }
   session.entryCells=cells;
@@ -307,37 +299,21 @@ function drawEntryStars(alpha,now){
     ctx.fillStyle=`rgba(${star.color},${star.alpha*alpha*pulse})`;ctx.fill();
   }
 }
-function drawEntryCompass(alpha){
-  if(alpha<=0)return;
-  const ctx=session.entryCtx,w=session.entryWidth,h=session.entryHeight,cx=w*.5,cy=h*.49,r=Math.min(w,h)*(w<560?.34:.29);
-  ctx.save();ctx.globalAlpha=alpha;ctx.lineWidth=1;
-  for(const scale of [.34,.59,.84]){
-    ctx.strokeStyle='rgba(120,220,232,.25)';ctx.beginPath();ctx.arc(cx,cy,r*scale,0,Math.PI*2);ctx.stroke();
-  }
-  ctx.strokeStyle='rgba(244,214,128,.48)';ctx.beginPath();ctx.moveTo(cx,cy-r*.96);ctx.lineTo(cx,cy+r*.96);ctx.moveTo(cx-r*.96,cy);ctx.lineTo(cx+r*.96,cy);ctx.stroke();
-  ctx.beginPath();
-  for(let i=0;i<16;i++){
-    const a=i/16*Math.PI*2-Math.PI/2,rr=i%2===0?r*.93:r*.50,x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr*.78;
-    if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
-  }
-  ctx.closePath();ctx.strokeStyle='rgba(244,214,128,.62)';ctx.stroke();ctx.restore();
-}
 function drawEntryIdle(now=performance.now()){
   const ctx=session.entryCtx;
   if(!ctx)return;
   ctx.setTransform(session.entryDpr,0,0,session.entryDpr,0,0);
   ctx.clearRect(0,0,session.entryWidth,session.entryHeight);
-  drawEntryStars(.10,now);drawEntryCompass(.10);
+  drawEntryStars(.10,now);
 }
 function drawEntryTransition(now){
-  if(session.state===STATE.SETTLED||session.firstFramePresented)return;
+  if(session.state===STATE.SETTLED)return;
   const ctx=session.entryCtx,elapsed=Math.max(0,now-session.entryStartedAt);
   if(!ctx){settle('fail-open');return;}
   ctx.setTransform(session.entryDpr,0,0,session.entryDpr,0,0);
   ctx.clearRect(0,0,session.entryWidth,session.entryHeight);
   const starProgress=easeOut(clamp((elapsed-900)/(ENTRY_CELL_TRAVEL_END_MS-900)));
-  const compassProgress=easeOut(clamp((elapsed-ENTRY_COMPASS_START_MS)/(ENTRY_COMPASS_END_MS-ENTRY_COMPASS_START_MS)));
-  drawEntryStars(mix(.12,.84,starProgress),now);drawEntryCompass(compassProgress);
+  drawEntryStars(mix(.12,session.entryAction==='play'?.82:.28,starProgress),now);
   const tileProgress=clamp((elapsed-ENTRY_TESSELLATE_START_MS)/(ENTRY_TESSELLATE_END_MS-ENTRY_TESSELLATE_START_MS));
   const moveProgress=clamp((elapsed-ENTRY_TESSELLATE_END_MS)/(ENTRY_CELL_TRAVEL_END_MS-ENTRY_TESSELLATE_END_MS));
   for(const cell of session.entryCells){
@@ -351,12 +327,16 @@ function drawEntryTransition(now){
     const fade=clamp((elapsed-ENTRY_TESSELLATE_START_MS*.72)/(ENTRY_TESSELLATE_END_MS+420-ENTRY_TESSELLATE_START_MS*.72));
     card.style.opacity=String(1-fade);card.style.transform=`scale(${mix(1,.988,fade)})`;card.style.pointerEvents=fade>.06?'none':'auto';
   }
-  if(elapsed>=CONTRACT.entryPrerollMs&&!session.entryTransitionComplete){
+  if(session.entryAction==='play'&&elapsed>=ENTRY_FILM_REVEAL_MS&&!session.entryTransitionComplete){
     session.entryTransitionComplete=true;
-    if(session.overlay)session.overlay.dataset.entryState='PREROLL_COMPLETE_WAITING_FOR_FRAME_1';
+    if(session.overlay)session.overlay.dataset.entryState='DOM_DISSOLVING_FILM_STARTING';
   }
-  void maybeStartMasterPlayback();
-  if(!session.firstFramePresented)session.entryRaf=requestAnimationFrame(drawEntryTransition);
+  if(session.entryAction==='play')void maybeStartMasterPlayback();
+  if(elapsed>=ENTRY_CELL_TRAVEL_END_MS){
+    if(session.entryAction!=='play'){settle(session.entryAction||'skip-armed');return;}
+    if(session.firstFramePresented){session.gate?.setAttribute('hidden','');cancelEntryFrame();return;}
+  }
+  session.entryRaf=requestAnimationFrame(drawEntryTransition);
 }
 
 function noteVideoReady(){
@@ -370,21 +350,21 @@ function revealFirstPresentedFrame(){
   if(session.state===STATE.SETTLED||session.firstFramePresented)return;
   session.firstFramePresented=true;
   if(session.overlay){
-    session.overlay.dataset.entryState='COMPLETE';
+    session.overlay.dataset.entryState='FILM_PRESENTED_DOM_DISSOLVE_CONTINUES';
     session.overlay.dataset.firstFramePresentedBeforeEntryClear='true';
   }
-  session.gate?.setAttribute('hidden','');
-  cancelEntryFrame();
   markState(STATE.PLAYING);
+  if(performance.now()-session.entryStartedAt>=ENTRY_CELL_TRAVEL_END_MS){session.gate?.setAttribute('hidden','');cancelEntryFrame();}
 }
 async function maybeStartMasterPlayback(){
   if(session.videoStartRequested||session.state===STATE.SETTLED||!session.playRequested||!session.entryTransitionComplete||!session.videoReady)return;
-  const video=session.video;
+  const video=session.video,ambientVideo=session.ambientVideo;
   if(!video)return;
   session.videoStartRequested=true;
   suppressAmbient();
   try{
     video.currentTime=0;
+    if(ambientVideo){ambientVideo.currentTime=0;const ambientPlay=ambientVideo.play();if(ambientPlay&&typeof ambientPlay.catch==='function')ambientPlay.catch(()=>{});}
     if(typeof video.requestVideoFrameCallback==='function'){
       video.requestVideoFrameCallback(()=>revealFirstPresentedFrame());
     }else{
@@ -403,8 +383,11 @@ function play(){
   if(session.state!==STATE.ARMED||session.playRequested)return;
   if(reduced()){settle('reduced-motion-complete');return;}
   session.playRequested=true;
-  session.entryTransitionComplete=true;
-  session.overlay.dataset.entryState='MASTER_STARTING';
+  session.entryAction='play';
+  session.overlay.dataset.entryState='TRANSITION';
+  session.gate?.classList.add('is-dissolving');
+  buildEntryTessellation(q('[data-main-orientation-entry-card]',session.overlay));
+  session.entryStartedAt=performance.now();
   suppressAmbient();
   const video=session.video;
   try{
@@ -412,11 +395,28 @@ function play(){
     video.currentTime=0;
     video.load();
     noteVideoReady();
-    void maybeStartMasterPlayback();
+    session.entryRaf=requestAnimationFrame(drawEntryTransition);
   }catch(error){
     session.overlay?.setAttribute('data-player-error',String(error?.name||'MEDIA_PREPARE_FAILED'));
     settle('fail-open');
   }
+}
+
+function skip(){
+  if(session.state===STATE.SETTLED||session.entryAction.startsWith('skip'))return;
+  if(reduced()){settle('reduced-motion-skip');return;}
+  const playing=session.state===STATE.PLAYING;
+  session.entryAction=playing?'skip-playing':'skip-armed';
+  session.overlay.dataset.entryState='SKIP_DISSOLVE';
+  session.overlay.classList.add('is-skip-handoff');
+  session.gate?.removeAttribute('hidden');
+  session.gate?.classList.add('is-dissolving','is-skip-dissolve');
+  const card=q('[data-main-orientation-entry-card]',session.overlay);
+  if(playing&&card)card.hidden=true;
+  resizeEntryCanvas();
+  buildEntryTessellation(playing?session.overlay:card);
+  session.entryStartedAt=performance.now();
+  session.entryRaf=requestAnimationFrame(drawEntryTransition);
 }
 
 function onOverlayClick(event){
@@ -425,26 +425,27 @@ function onOverlayClick(event){
   }
   if(event.target.closest('[data-main-orientation-skip]')){
     event.preventDefault();event.stopPropagation();
-    settle(session.state===STATE.PLAYING?'skip-playing':session.playRequested?'skip-preroll':'skip-armed');
+    skip();
   }
 }
 function onKey(event){
   if(session.state===STATE.SETTLED)return;
   if(event.key==='Escape'){
     event.preventDefault();event.stopPropagation();
-    settle(session.state===STATE.PLAYING?'skip-playing':session.playRequested?'skip-preroll':'skip-armed');
+    skip();
   }
 }
 function onAmbientTrigger(){if(session.state===STATE.PLAYING||session.playRequested)queueMicrotask(suppressAmbient);}
 
 function bindOverlay(){
-  const overlay=session.overlay,video=session.video;
+  const overlay=session.overlay,video=session.video,ambientVideo=session.ambientVideo;
   overlay.addEventListener('click',onOverlayClick);
   video.addEventListener('loadeddata',noteVideoReady);
   video.addEventListener('canplay',noteVideoReady);
   video.addEventListener('ended',()=>settle('complete'),{once:true});
   video.addEventListener('error',()=>settle('fail-open'),{once:true});
   video.addEventListener('timeupdate',maybeNaturalFade);
+  video.addEventListener('timeupdate',()=>{if(ambientVideo&&Math.abs((ambientVideo.currentTime||0)-(video.currentTime||0))>.09)ambientVideo.currentTime=video.currentTime;});
   window.addEventListener('keydown',onKey,true);
   window.addEventListener('resize',resizeEntryCanvas,{passive:true});
 }
@@ -455,6 +456,7 @@ function resetRunState(){
   session.entryStartedAt=0;session.entryRaf=0;
   session.playRequested=false;session.entryTransitionComplete=false;session.videoReady=false;
   session.videoStartRequested=false;session.firstFramePresented=false;
+  session.entryAction='';
 }
 function mount(source='initial'){
   if(session.overlay)return;
@@ -489,7 +491,7 @@ function mount(source='initial'){
 globalThis.__DGB_COMPASS_PRERENDERED_PLAYER__=Object.freeze({
   contract:CONTRACT,
   replay:()=>mount('inspection-api'),
-  skip:()=>settle(session.state===STATE.PLAYING?'skip-playing':session.playRequested?'skip-preroll':'skip-armed'),
+  skip,
   inspect:()=>Object.freeze({
     state:session.state,
     overlayMounted:Boolean(session.overlay),
@@ -502,6 +504,9 @@ globalThis.__DGB_COMPASS_PRERENDERED_PLAYER__=Object.freeze({
     entryTransitionComplete:session.entryTransitionComplete,
     videoReady:session.videoReady,
     firstFramePresentedBeforeEntryClear:session.firstFramePresented,
+    entryAction:session.entryAction,
+    viewportLaw:CONTRACT.viewportLaw,
+    terminalLaw:CONTRACT.terminalLaw,
     reducedMotion:reduced(),
     rootInert:Boolean(session.root?.inert),
     ambientMuted:Boolean(session.ambient?.muted),

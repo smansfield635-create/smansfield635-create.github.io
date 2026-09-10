@@ -1,0 +1,11 @@
+{
+  "schema": "METHODS_MINIMUM_REAL_3D_PROOF_INDEPENDENT_EQUALITY_RECEIPT_v1",
+  "status": "PASS",
+  "validatedCandidateHead": "fba5239ce97a35cbebd1732c91b086d2a93b9f93",
+  "workflowRun": 31068588197,
+  "fingerprint": "51575d2a45db96ae2cfd1f370d09e987fdbbf78bcefec12d0da62d23519efd4c",
+  "builderFingerprint": "51575d2a45db96ae2cfd1f370d09e987fdbbf78bcefec12d0da62d23519efd4c",
+  "freshVerifierFingerprint": "51575d2a45db96ae2cfd1f370d09e987fdbbf78bcefec12d0da62d23519efd4c",
+  "exactNormalizedEquality": true,
+  "result": "PASS"
+}

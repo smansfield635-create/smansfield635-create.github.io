@@ -1,0 +1,47 @@
+{
+  "id": "z64am",
+  "type": "nodes",
+  "title": "Coherence as a Constraint: A Universal Gap Bridged Across History, Science, and Society (The Missing Link Was Structural)",
+  "description": "In many fragmented domains, unresolved gaps are treated as missing objects rather than missing constraints. This leads to prolonged searches for entities, explanations, or artifacts that can never resolve the inconsistency. In such cases, the missing link is not something to be discovered, but a structural rule that was never applied. Introducing coherence as a constraint resolves these gaps without requiring new objects to be found.\nWe completed a long-standing fragmentation not only in science, but across the broader landscape of human understanding by enforcing coherence as an explicit constraint—without rewriting or replacing existing results, doctrines, or traditions. This project addresses a foundational but largely unexamined limitation shared across disciplines: fragmentation that emerges when locally correct frameworks evolve in isolation without an enforceable global standard of compatibility. Science, philosophy, theology, and culture each produced internally consistent truths, yet lacked a mechanism to reconcile them when they diverged. Fragmentation did not arise from error, but from the absence of a constraint capable of integrating correct but incompatible interpretations across scale, domain, and time.\nHistorically, different doctrines recognized this limitation through metaphor—light and darkness, alignment and misalignment, order and chaos—but lacked the instrumentation to enforce it operationally. As specialization increased and distraction and drift accumulated, coherence was assumed rather than constrained, allowing narrative substitution, semantic drift, and speculative reconciliation to persist. This work introduces coherence as an objective, operational constraint that applies uniformly across domains, independent of belief system or explanatory language. By making coherence enforceable rather than implicit, the project shows how fragmentation can be repaired without invalidating scientific results, philosophical insights, or spiritual wisdom, and without introducing new empirical laws.\nThe core claim is modest but structural: knowledge systems were not broken—they were fragmented. Enforcing coherence collapses narrative variance, reduces admissible interpretations, and restores definitive resolution using existing information. The result is not the replacement of any doctrine, but a unifying constraint that allows distinct domains to align where they must, diverge where they legitimately can, and close questions that were previously deferred indefinitely.",
+  "category": "project",
+  "public": true,
+  "registration": false,
+  "preprint": false,
+  "date_created": "2026-01-23T22:23:09.980080",
+  "date_modified": "2026-08-01T06:44:07.835628",
+  "current_user_permissions": [
+    "read"
+  ],
+  "tags": [],
+  "subjects": [],
+  "node_license": null,
+  "parent_id": null,
+  "is_component": false,
+  "osf_url": "https://osf.io/z64am/",
+  "api_url": "https://api.osf.io/v2/nodes/z64am/",
+  "source_collection": "user_nodes",
+  "harvested_at": "2026-08-01T07:55:53.361042+00:00",
+  "file_inventory_count": 0,
+  "file_errors": [],
+  "relevance_discovery": {
+    "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+    "law_relevance_score": 16,
+    "law_term_hits": [
+      "law",
+      "coherence",
+      "constraint",
+      "alignment"
+    ],
+    "evidence_signal_score": 8,
+    "evidence_term_hits": [
+      "result",
+      "results",
+      "empirical"
+    ],
+    "extractable_file_count": 0,
+    "has_data_file": false,
+    "has_code_file": false,
+    "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+  },
+  "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+}

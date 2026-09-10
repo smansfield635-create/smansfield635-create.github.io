@@ -1,0 +1,38 @@
+{
+  "id": "sfjn6",
+  "type": "nodes",
+  "title": "Broke the Four-Minute Mile in Tech",
+  "description": "🏁 Breaking the Four-Minute Mile in Tech 🏁\n\n══════════════════════════════════════\n\n 🚧 From “Impossible” to Implemented\n\nThis project documents the claim that a major technical barrier has been crossed.\n\nThe “four-minute mile” is used as a metaphor for a threshold once believed to be unreachable until proof changed the conversation.\n\nHere, the focus is not hype.\n\nIt is proof.\n\n══════════════════════════════════════\n\n 🔍 Core Mission\n\nIf the system can be shown, tested, repeated, and explained, then the barrier has been crossed.**\n\nThis project exists to organize the evidence, clarify the architecture, and present the work for review.\n\n══════════════════════════════════════\n\n 🌐 Public Interfaces\n\n- cogrid.net\n- diamondgatebridge.com\n\n══════════════════════════════════════\n\n✅ Status",
+  "category": "project",
+  "public": true,
+  "registration": false,
+  "preprint": false,
+  "date_created": "2026-05-04T02:42:33.270607",
+  "date_modified": "2026-05-04T02:46:18.246516",
+  "current_user_permissions": [
+    "read"
+  ],
+  "tags": [],
+  "subjects": [],
+  "node_license": null,
+  "parent_id": null,
+  "is_component": false,
+  "osf_url": "https://osf.io/sfjn6/",
+  "api_url": "https://api.osf.io/v2/nodes/sfjn6/",
+  "source_collection": "user_nodes",
+  "harvested_at": "2026-08-01T07:55:45.682789+00:00",
+  "file_inventory_count": 0,
+  "file_errors": [],
+  "relevance_discovery": {
+    "candidate_band": "LOW_DIRECT_LAWS_SIGNAL",
+    "law_relevance_score": 0,
+    "law_term_hits": [],
+    "evidence_signal_score": 0,
+    "evidence_term_hits": [],
+    "extractable_file_count": 0,
+    "has_data_file": false,
+    "has_code_file": false,
+    "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+  },
+  "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+}

@@ -1,0 +1,48 @@
+{
+  "id": "vazr6",
+  "type": "nodes",
+  "title": "Priority Knowledge Why Failure Is Predictable Before It Appears",
+  "description": "Abstract\nThis paper formalizes priority knowledge as a scientifically admissible construct defined as the constraint-based ordering of relevance required for stable action under finite time, attention, and resources. Priority knowledge is not treated as belief, intuition, or metaphysical truth, but as a pre-behavioral constraint that determines which information must be acted upon first to prevent instability and failure cascades. The framework specifies explicit priority inversion falsification tests, repair dynamics, historical and contemporary pilot evidence, and clear failure conditions. Priority knowledge is proposed as a foundational constraint underlying psychology, theology, governance, and institutional design.\n1. Definition\nPriority knowledge is the ordering of information that determines what must be acted on first to maintain stability under constraint.\nPriority knowledge is:\nnot truth\nnot belief\nnot preference\nIt is selection under limitation.\n2. Constraint Structure\nPriority knowledge is forced by non-negotiable constraints:\nFinite cognition\nFinite time\nFinite resources\nIrreversible consequences under delay\nWithout ordering, action becomes incoherent.\n3. Core Claim\nStable action is impossible without correct priority ordering; incorrect ordering produces predictable instability.\nThis claim is falsifiable.\n4. Explicit Falsification — Priority Inversion\nPriority Inversion Definition\nPriority inversion occurs when non-priority variables are treated as primary, while priority variables are deferred or ignored.\nPrediction\nPriority inversion produces:\nincreased variance\ncontradiction accumulation\nslower recovery\nfailure cascades\nFalsification Condition\nIf a system remains stable and effective under sustained priority inversion, priority knowledge is false.\n5. Inversion Test Domains (Canonical)\nA. Psychological Systems\nInversion: advice or ideology before self-regulation\nObserved outcome: low follow-through, relapse, burnout\nFail condition: durable stability without self-regulation\nB. Educational Systems\nInversion: information before attention and coherence\nObserved outcome: short-term recall, long-term decay\nFail condition: durable competence without coherence\nC. Organizational Systems\nInversion: growth targets before trust and accountability\nObserved outcome: turnover, scandal, collapse\nFail condition: stable growth without trust repair\n6. Repair Dynamics\nPriority failures are repaired through:\nrelevance re-ranking\nfeedback integration\nerror acknowledgment\nstructural correction\nSystems lacking priority repair accumulate incoherence.\n7. Historical Pilot Evidence (Admissible)\nAcross ancient ethical, civic, and organizational systems:\nPriority-respected: behavior and repair precede ideology → persistence\nPriority-inverted: ideology precedes repair → fragmentation\nThese observations are descriptive pilot evidence, not confirmation.\n8. Contemporary Pilot Evidence (Admissible)\nModern pilot signals include:\ntherapeutic systems prioritizing regulation before optimization recover faster\norganizations correcting priority misordering regain stability\nengagement data shows humans seek structure before content\nNo belief enforcement is required for these effects.\n9. Failure Conditions (Category-Level)\nPriority knowledge fails if any of the following are demonstrated:\nEffective action without ordering\nStability without priority assumptions\nNo effect from priority inversion\nUnlimited capacity removes ordering necessity\nAll are explicit and testable.\nCanonical Statement\nPriority knowledge is a falsifiable constraint governing stable action under limitation, testable through priority inversion across domains.\nKeywords\nPriority knowledge; constraint systems; falsifiability; stability; repair; inversion",
+  "category": "project",
+  "public": true,
+  "registration": false,
+  "preprint": false,
+  "date_created": "2026-01-10T22:47:30.805434",
+  "date_modified": "2026-08-01T06:08:52.169947",
+  "current_user_permissions": [
+    "read"
+  ],
+  "tags": [],
+  "subjects": [],
+  "node_license": null,
+  "parent_id": null,
+  "is_component": false,
+  "osf_url": "https://osf.io/vazr6/",
+  "api_url": "https://api.osf.io/v2/nodes/vazr6/",
+  "source_collection": "user_nodes",
+  "harvested_at": "2026-08-01T07:57:34.258993+00:00",
+  "file_inventory_count": 0,
+  "file_errors": [],
+  "relevance_discovery": {
+    "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+    "law_relevance_score": 16,
+    "law_term_hits": [
+      "coherence",
+      "constraint",
+      "falsification",
+      "failure"
+    ],
+    "evidence_signal_score": 9,
+    "evidence_term_hits": [
+      "data",
+      "falsif",
+      "table",
+      "pilot"
+    ],
+    "extractable_file_count": 0,
+    "has_data_file": false,
+    "has_code_file": false,
+    "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+  },
+  "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+}

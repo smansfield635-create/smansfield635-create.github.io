@@ -1,0 +1,40 @@
+{
+  "id": "5vgfd",
+  "type": "nodes",
+  "title": "8️⃣ Energy Distribution Under Closed-Loop Abundance",
+  "description": "This project formalizes the first of four sociatal assets and principles that govern how high-energy systems are distributed once closed-loop abundance becomes possible. It establishes that as energy density and operating risk increase, viable systems must push generation and extreme regimes upstream while simplifying endpoints downstream. This law explains why fusion and plasma systems belong in centralized infrastructure, while vehicles and consumer devices operate on passive stored potential such as batteries or fuels. The framework resolves long-standing confusion between energy origin and energy use, providing a coherent model for safe mass adoption, licensing, and commercialization without catastrophic risk.",
+  "category": "project",
+  "public": true,
+  "registration": false,
+  "preprint": false,
+  "date_created": "2026-02-09T16:35:39.128092",
+  "date_modified": "2026-08-01T06:04:55.992108",
+  "current_user_permissions": [
+    "read"
+  ],
+  "tags": [],
+  "subjects": [],
+  "node_license": null,
+  "parent_id": null,
+  "is_component": false,
+  "osf_url": "https://osf.io/5vgfd/",
+  "api_url": "https://api.osf.io/v2/nodes/5vgfd/",
+  "source_collection": "user_nodes",
+  "harvested_at": "2026-08-01T07:55:10.733497+00:00",
+  "file_inventory_count": 0,
+  "file_errors": [],
+  "relevance_discovery": {
+    "candidate_band": "APPLIED_OR_CONTEXTUAL_CANDIDATE",
+    "law_relevance_score": 5,
+    "law_term_hits": [
+      "law"
+    ],
+    "evidence_signal_score": 0,
+    "evidence_term_hits": [],
+    "extractable_file_count": 0,
+    "has_data_file": false,
+    "has_code_file": false,
+    "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+  },
+  "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+}

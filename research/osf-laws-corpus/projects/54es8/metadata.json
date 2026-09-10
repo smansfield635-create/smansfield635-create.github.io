@@ -1,0 +1,47 @@
+{
+  "id": "54es8",
+  "type": "nodes",
+  "title": "Fork of Metaphysics framework closed",
+  "description": "I’m writing to share the public release of v1.0.0 of the Metaphysics Closure Framework, now formally frozen and posted to OSF.\nThis work addresses a long-standing problem at the foundation of philosophy and science: how to determine, in an observer-invariant way, which metaphysical claims are admissible as knowledge claims, which must be treated as model comparisons, and which should be explicitly labeled non-operational.\nWhat this framework does\nDefines metaphysics as a model-admissibility and comparison layer, not a source of explanatory or predictive claims.\nRequires all admissible metaphysical statements to be rewritten as observer-invariant model comparisons.\nEnforces strict non-collapse into physics while preserving the authority of empirical science.\nTerminates interpretive disputes structurally rather than rhetorically.\nDemonstrates resistance to paradoxes, adversarial manipulation, and observer bias.\nWhat it does not do\nIt does not claim truth.\nIt does not predict outcomes.\nIt does not introduce new entities or mechanisms.\nIt does not replace domain sciences.\nThe framework has undergone formal stress testing, live adversarial testing, observer-invariance testing, and historical/event-aligned empirical validation of the “confusion → instability amplification” limb. Based on these results, v1.0.0 is declared structurally complete and frozen. All future work will occur only as applications, empirical instantiations, tooling, or governance materials.\nThe OSF repository contains:\nThe frozen framework specification\nThe metaphysics–physics interface appendix\nStress-test and adversarial validation reports\nA scope and limitations declaration\nThe formal freeze declaration (v1.0.0)\nThis release is intended as public infrastructure, not a manifesto. Disagreement with outcomes is expected; challenges to admissibility must be expressed as model-comparison critiques.",
+  "category": "project",
+  "public": true,
+  "registration": false,
+  "preprint": false,
+  "date_created": "2026-01-03T20:15:02.409612",
+  "date_modified": "2026-08-01T06:09:32.937024",
+  "current_user_permissions": [
+    "read"
+  ],
+  "tags": [],
+  "subjects": [],
+  "node_license": null,
+  "parent_id": null,
+  "is_component": false,
+  "osf_url": "https://osf.io/54es8/",
+  "api_url": "https://api.osf.io/v2/nodes/54es8/",
+  "source_collection": "user_nodes",
+  "harvested_at": "2026-08-01T07:56:55.746124+00:00",
+  "file_inventory_count": 0,
+  "file_errors": [],
+  "relevance_discovery": {
+    "candidate_band": "APPLIED_OR_CONTEXTUAL_CANDIDATE",
+    "law_relevance_score": 8,
+    "law_term_hits": [
+      "invariant",
+      "instantiation"
+    ],
+    "evidence_signal_score": 13,
+    "evidence_term_hits": [
+      "result",
+      "results",
+      "empirical",
+      "appendix",
+      "validation"
+    ],
+    "extractable_file_count": 0,
+    "has_data_file": false,
+    "has_code_file": false,
+    "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+  },
+  "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+}

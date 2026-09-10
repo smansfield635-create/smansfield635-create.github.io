@@ -1,0 +1,44 @@
+{
+  "id": "7fupz",
+  "type": "nodes",
+  "title": "Coherence as a Field Phenomenon",
+  "description": "Coherence is not accumulated — it flows.\nThis project introduces a field-based model of coherence governed by resistance, thresholds, and phase transitions, replacing accumulation-based explanations that fail at scale. Electrical and plasma-regime analogies make coherence dynamics observable across materials, information propagation, and complex systems. Diamond growth acceleration appears here as a worked application of the method, not its focus.\nFor a clearer, continuously updated, and more user-friendly presentation of the framework, see the companion site and live materials on GitHub:\n👉 https://smansfield635-create.github.io/control/",
+  "category": "project",
+  "public": true,
+  "registration": false,
+  "preprint": false,
+  "date_created": "2026-02-02T18:12:06.788905",
+  "date_modified": "2026-08-01T06:03:56.539022",
+  "current_user_permissions": [
+    "read"
+  ],
+  "tags": [],
+  "subjects": [],
+  "node_license": null,
+  "parent_id": null,
+  "is_component": false,
+  "osf_url": "https://osf.io/7fupz/",
+  "api_url": "https://api.osf.io/v2/nodes/7fupz/",
+  "source_collection": "user_nodes",
+  "harvested_at": "2026-08-01T07:56:01.655325+00:00",
+  "file_inventory_count": 1,
+  "file_errors": [],
+  "relevance_discovery": {
+    "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+    "law_relevance_score": 12,
+    "law_term_hits": [
+      "coherence",
+      "propagation",
+      "field phenomenon"
+    ],
+    "evidence_signal_score": 2,
+    "evidence_term_hits": [
+      "method"
+    ],
+    "extractable_file_count": 1,
+    "has_data_file": false,
+    "has_code_file": false,
+    "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+  },
+  "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+}

@@ -1,0 +1,81 @@
+{
+  "id": "7jnxq",
+  "type": "registrations",
+  "title": "Universal Law of Coherence Dynamics",
+  "description": "Description\nThe Universal Law of Coherence Dynamics describes constraint-based coherence behavior across organized systems. It defines the structural conditions under which coherence is preserved, degrades, or collapses, independent of domain, scale, intent, or moral judgment.\nThe law is descriptive, falsifiable, and observer-invariant. It does not predict outcomes, infer causation, or prescribe intervention. Instead, it specifies invariant relationships between constraints, signal resolution, alignment, fragmentation, and determinate trajectory.\nWithin this framework, coherence is bounded by internal consistency and governed by the clarity and stability of constraint signals. When constraints become unresolved or fragmented, misalignment and disorder emerge, and system trajectory becomes non-arbitrary even while specific outcomes remain uncertain.\nThis page serves as the canonical framework reference. Foundational laws are fixed internally at their declared versions. Diagnostic instruments associated with the framework—alignment, transparency, fragmentation, internal misalignment, and trajectory—are treated as measurement tools and may evolve in operational detail without altering the law itself.",
+  "category": "project",
+  "public": true,
+  "registration": true,
+  "preprint": false,
+  "date_created": "2026-01-12T01:40:23.811229",
+  "date_modified": "2026-01-12T01:23:46.617914",
+  "current_user_permissions": [
+    "read"
+  ],
+  "tags": [
+    "Coherence Constraint Dynamics",
+    "Diagnostic framework",
+    "Falsifiability",
+    "Fragmentation",
+    "Social thermodynamics",
+    "System Stability",
+    "Systems theory",
+    "Trojectory observer-invariant"
+  ],
+  "subjects": [
+    [
+      {
+        "id": "584240d954be81056ceca9a1",
+        "text": "Physical Sciences and Mathematics"
+      }
+    ],
+    [
+      {
+        "id": "584240da54be81056cecac48",
+        "text": "Social and Behavioral Sciences"
+      }
+    ]
+  ],
+  "node_license": {
+    "copyright_holders": [],
+    "year": ""
+  },
+  "parent_id": null,
+  "is_component": false,
+  "osf_url": "https://osf.io/7jnxq/",
+  "api_url": "https://api.osf.io/v2/registrations/7jnxq/",
+  "source_collection": "user_registrations",
+  "harvested_at": "2026-08-01T07:59:03.188508+00:00",
+  "file_inventory_count": 6,
+  "file_errors": [],
+  "relevance_discovery": {
+    "candidate_band": "CORE_LAWS_CANDIDATE",
+    "law_relevance_score": 36,
+    "law_term_hits": [
+      "law",
+      "coherence",
+      "constraint",
+      "invariant",
+      "falsification",
+      "failure",
+      "trajectory",
+      "diagnostic",
+      "alignment",
+      "boundary"
+    ],
+    "evidence_signal_score": 14,
+    "evidence_term_hits": [
+      "method",
+      "methods",
+      "experiment",
+      "falsif",
+      "appendix",
+      "table"
+    ],
+    "extractable_file_count": 5,
+    "has_data_file": false,
+    "has_code_file": false,
+    "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+  },
+  "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+}

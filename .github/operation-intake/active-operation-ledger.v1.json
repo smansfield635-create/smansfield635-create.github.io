@@ -1,40 +1,39 @@
 {
   "activeScopes": {
     "073d996fc68459936504b55dd2a01db63308a813326722ad83d3de87fbd35603": {
-      "governingHead": "2c3156e96fac028ed766ec4fa69a73ab73868ea2",
+      "governingHead": "5e4bb2091d73419d380614b9073739722b5618c6",
       "independentAuthorityProvenance": {
         "authorityIdentity": {
-          "governingHead": "2c3156e96fac028ed766ec4fa69a73ab73868ea2",
-          "lockGeneration": 1,
+          "governingHead": "5e4bb2091d73419d380614b9073739722b5618c6",
+          "lockGeneration": 2,
           "lockScope": "CHARACTERS:GRATITUDE_COAST:CARDINAL_INTEGRATION:ALARIC_PROOF",
-          "operationId": "CHARACTERS_GRATITUDE_CARDINAL_INTEGRATION_RECOVERY_ALARIC_PROOF_20260909_001_REBIND_001",
-          "procedureLocatorDigest": "f129cf8b80266009adf708c0058a83bb624c5c76a0c64a1174642187e198adea",
-          "requestDigest": "2377629034580516d576e48938302b133ceb161b79f626b0a7e76b46121326b7",
+          "operationId": "CHARACTERS_GRATITUDE_CARDINAL_INTEGRATION_RECOVERY_ALARIC_PROOF_20260909_001_REBIND_002",
+          "procedureLocatorDigest": "ba7b114ab2fc2ea872b020e13c1cbcfca0b8a9cdc5fd64949b5c481a61f400cc",
+          "requestDigest": "33275b8acd532605472a0e8a301c7c79d587d7e75c8a7d2cbf2abf9aa2f5e5fc",
           "scopeHash": "073d996fc68459936504b55dd2a01db63308a813326722ad83d3de87fbd35603"
         },
-        "bindingDigest": "36712da76badd50b94c4bb4020a5f6422476ea4f679e1d06ec3181dd12ddb0fa",
+        "bindingDigest": "4e93c42a66c6f84bdfc3cbdd30e12290424643f4992757f4ada49d8553fa5db7",
         "compareAndSwap": {
-          "observedLedgerBlobSha": "553d4e96cf3b1a76c4fb23cb69768b3e34ae2304",
-          "observedLockRefHead": "8900e55625967c383d10f6f5ccbec50703ff5248"
+          "observedLedgerBlobSha": "203e71691258c9aa1a93d1283fe89b40c44807bc",
+          "observedLockRefHead": "5bcdf83310bd501e61344342bc172fb34e1d60f3"
         },
         "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
         "source": {
           "authorAssociation": "OWNER",
           "authorLogin": "smansfield635-create",
-          "commentBodySha256": "453cd431ee322973bd242b3313d7c864e597b889da10af8c02a9dd2b822381b2",
-          "commentId": 5609960952,
+          "commentId": 5611119646,
           "issueNumber": 2944,
           "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
           "repository": "smansfield635-create/smansfield635-create.github.io"
         },
         "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
       },
-      "lockGeneration": 1,
+      "lockGeneration": 2,
       "lockScope": "CHARACTERS:GRATITUDE_COAST:CARDINAL_INTEGRATION:ALARIC_PROOF",
-      "operationId": "CHARACTERS_GRATITUDE_CARDINAL_INTEGRATION_RECOVERY_ALARIC_PROOF_20260909_001_REBIND_001",
-      "procedureLocatorDigest": "f129cf8b80266009adf708c0058a83bb624c5c76a0c64a1174642187e198adea",
+      "operationId": "CHARACTERS_GRATITUDE_CARDINAL_INTEGRATION_RECOVERY_ALARIC_PROOF_20260909_001_REBIND_002",
+      "procedureLocatorDigest": "ba7b114ab2fc2ea872b020e13c1cbcfca0b8a9cdc5fd64949b5c481a61f400cc",
       "released": false,
-      "requestDigest": "2377629034580516d576e48938302b133ceb161b79f626b0a7e76b46121326b7",
+      "requestDigest": "33275b8acd532605472a0e8a301c7c79d587d7e75c8a7d2cbf2abf9aa2f5e5fc",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "073d996fc68459936504b55dd2a01db63308a813326722ad83d3de87fbd35603",
       "state": "ADMITTED_LOCKED"
@@ -43,8 +42,37 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1,
+  "globalMainWriterLease": {
+    "schema": "GLOBAL_MAIN_WRITER_LEASE_v1",
+    "leaseId": "GLOBAL_MAIN_WRITER_LEASE_20260910_001",
+    "leaseGeneration": 1,
+    "holderOperationId": "CHARACTERS_GRATITUDE_CARDINAL_INTEGRATION_RECOVERY_ALARIC_PROOF_20260909_001_REBIND_002",
+    "holderScopeHash": "073d996fc68459936504b55dd2a01db63308a813326722ad83d3de87fbd35603",
+    "exactGoverningMainSha": "5e4bb2091d73419d380614b9073739722b5618c6",
+    "physicalWriter": "LAB",
+    "assigningAuthority": "NORTH",
+    "allowedMutationSurface": [
+      ".github/operation-intake/active-operation-ledger.v1.json",
+      "characters/app.mjs",
+      "control-plane/whole-estate/characters-reconstruction-v1/verify-alaric-cardinal-integration-r1.mjs"
+    ],
+    "state": "ACQUIRED",
+    "acquired": true,
+    "released": false,
+    "terminalDisposition": null
+  },
+  "lockGeneration": 2,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
-  "terminalHistory": []
+  "terminalHistory": [
+    {
+      "operationId": "CHARACTERS_GRATITUDE_CARDINAL_INTEGRATION_RECOVERY_ALARIC_PROOF_20260909_001_REBIND_001",
+      "governingHead": "2c3156e96fac028ed766ec4fa69a73ab73868ea2",
+      "lockGeneration": 1,
+      "scopeHash": "073d996fc68459936504b55dd2a01db63308a813326722ad83d3de87fbd35603",
+      "terminalDisposition": "SUPERSEDED",
+      "reason": "FRESH_HEAD_REBIND_UNDER_SINGLE_GLOBAL_WRITER_RESET",
+      "successorOperationId": "CHARACTERS_GRATITUDE_CARDINAL_INTEGRATION_RECOVERY_ALARIC_PROOF_20260909_001_REBIND_002"
+    }
+  ]
 }

@@ -120,9 +120,9 @@ export function planOwnerConnectorTerminalClosure({ closureRequest, rawLedger, s
   const request = validateClosureRequest(closureRequest);
   const source = parseOwnerSource(sourceComment);
   const mainHead = digest(observedMainHead, 40, 'observedMainHead');
+  const sourceExpectedMainHead = digest(source.envelope.expectedMainHead, 40, 'source.expectedMainHead');
   digest(observedLedgerBlobSha, 40, 'observedLedgerBlobSha');
   digest(observedLockRefHead, 40, 'observedLockRefHead');
-  if (source.envelope.expectedMainHead !== mainHead) fail('GOVERNING_HEAD_MISMATCH', 'expectedMainHead', `current=${mainHead}`);
   if (canonical(source.envelope.closureRequest) !== canonical(request)) fail('SOURCE_CLOSURE_REQUEST_MISMATCH', 'closureRequest');
 
   const baseLedger = ledger(rawLedger);
@@ -142,7 +142,7 @@ export function planOwnerConnectorTerminalClosure({ closureRequest, rawLedger, s
   const nextLedger = stable({ ...local.ledger, terminalHistory });
   const commitMessage = `Close operation lock ${request.lockGeneration}: ${request.operationId} ${request.terminalDisposition}`;
 
-  return stable({ schema: PLAN_SCHEMA, result: 'TERMINAL_CLOSURE_PLANNED', transportId: TRANSPORT_ID, nativeResult: local.receipt, operationId: request.operationId, lockScope: request.lockScope, lockGeneration: request.lockGeneration, terminalDisposition: request.terminalDisposition, activeAuthorityVerification, independentClosureProvenance, observedMainHead: mainHead, observedLedgerBlobSha, observedLockRefHead, exactMutationPath: LEDGER_PATH, lockRef: LOCK_REF, commitMessage, ledgerMutationAuthorized: true, oneLedgerMutationRequired: true, planIsReceipt: false, finalReceiptRequiresCommitRereadAndLineageVerification: true, nextLedger });
+  return stable({ schema: PLAN_SCHEMA, result: 'TERMINAL_CLOSURE_PLANNED', transportId: TRANSPORT_ID, nativeResult: local.receipt, operationId: request.operationId, lockScope: request.lockScope, lockGeneration: request.lockGeneration, terminalDisposition: request.terminalDisposition, activeAuthorityVerification, independentClosureProvenance, sourceExpectedMainHead, observedMainHead: mainHead, currentMainBindingRequired: false, staleMainContextObserved: sourceExpectedMainHead !== mainHead, terminalClosureCreatesAuthority: false, observedLedgerBlobSha, observedLockRefHead, exactMutationPath: LEDGER_PATH, lockRef: LOCK_REF, commitMessage, ledgerMutationAuthorized: true, oneLedgerMutationRequired: true, planIsReceipt: false, finalReceiptRequiresCommitRereadAndLineageVerification: true, nextLedger });
 }
 
 function args(argv) { const out = {}; for (let index = 0; index < argv.length; index++) { if (!argv[index].startsWith('--')) fail('UNKNOWN_ARGUMENT', argv[index]); out[argv[index].slice(2)] = argv[++index] ?? null; } return out; }

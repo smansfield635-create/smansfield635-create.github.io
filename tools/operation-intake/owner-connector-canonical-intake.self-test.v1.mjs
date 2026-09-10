@@ -8,7 +8,12 @@ const head = '1111111111111111111111111111111111111111';
 const request = {
   schema:'REPOSITORY_OPERATION_REQUEST_v1', operationId:'SELF_TEST_OWNER_CONNECTOR', projectId:'SELF_TEST', lockScope:'SELF_TEST_SCOPE', exactGoverningHead:head,
   subjectIdentity:{kind:'self-test'}, requestingAuthority:{kind:'OWNER'}, executingRole:{kind:'BUILDER'}, independentVerifier:{kind:'SELF_TEST'},
-  constructionProcedureLocator:'self-test', requiredInputs:[{id:'input',resolved:true}], allowedPaths:['index.html'], prohibitedPaths:['forbidden/'], requiredOutputs:['receipt'],
+  constructionProcedureLocator:'self-test', requiredInputs:[{id:'input',resolved:true}],
+  intakeCompletenessReceipt:{
+    schema:'INTAKE_COMPLETENESS_RECEIPT_v1', receiptId:'SELF_TEST_OWNER_CONNECTOR_COMPLETENESS', result:'COMPLETE_NO_QUESTIONS_REQUIRED',
+    unresolvedMaterialQuestions:[], receiptDigest:'self-test-owner-connector-completeness', authorityEffect:'NONE_BY_INTAKE_COMPLETENESS_RECEIPT'
+  },
+  allowedPaths:['index.html'], prohibitedPaths:['forbidden/'], requiredOutputs:['receipt'],
   exactTestCommand:'node self-test', workflowPath:'self-test.yml', artifactPaths:['self-test.json'], fingerprintDomain:{kind:'self-test'}, errorPrecedence:['FAIL_CLOSED'], stopConditions:['FAIL'], terminalDispositions:['PASS_CLOSED','FAIL_CLOSED']
 };
 const procedure = {

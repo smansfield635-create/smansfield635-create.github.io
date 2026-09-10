@@ -99,15 +99,14 @@ function bindCarousel(track){
   track.dataset.carouselReady='true';
   controls.hidden=false;
   sync(0,{announce:false});
-  slides.forEach((slide,i)=>slide.addEventListener('click',e=>{if(e.defaultPrevented||e.target.closest('a,button,video,input,select,textarea'))return;scrollToIndex(i)}));
+  slides.forEach((slide,i)=>slide.addEventListener('click',e=>{if(e.defaultPrevented||e.target.closest('a,button,video,input,select,textarea'))return;scrollToIndex(i,'auto')}));
   track.addEventListener('scroll',()=>{if(raf)return;raf=requestAnimationFrame(()=>{raf=0;sync(nearest(),{announce:false})})},{passive:true});
   track.addEventListener('keydown',e=>{if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;e.preventDefault();scrollToIndex(active+(e.key==='ArrowRight'?1:-1))});
   prev.addEventListener('click',()=>scrollToIndex(active-1));
   next.addEventListener('click',()=>scrollToIndex(active+1));
   track.addEventListener('pointerdown',e=>{
     if(e.pointerType==='mouse'&&e.button!==0)return;
-    tracking=true;dragging=e.pointerType==='mouse';moved=false;pointerId=e.pointerId;startX=e.clientX;startY=e.clientY;startLeft=track.scrollLeft;
-    if(dragging){track.classList.add('dragging');try{track.setPointerCapture?.(e.pointerId)}catch{}}
+    tracking=true;dragging=false;moved=false;pointerId=e.pointerId;startX=e.clientX;startY=e.clientY;startLeft=track.scrollLeft;
   });
   track.addEventListener('pointermove',e=>{
     if(!tracking||e.pointerId!==pointerId)return;

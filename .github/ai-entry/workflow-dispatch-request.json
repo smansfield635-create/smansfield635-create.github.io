@@ -1,6 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "jen-constellation-direct-bind-82d73333",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
-  "inputs": {"target_sha":"82d73333f2f15f25e1b044f2b777712406d7f5e1"}
+  "requestId": "preflight-rollback-4eba3a76-compass-r11a-v7-v8-hybrid-20260910-001",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "inputs": {
+    "target_sha": "4eba3a76f1d9e6f7e817cc021536a4e0783b3eff",
+    "surface_id": "compass-r11a-v7-v8-hybrid-20260909"
+  }
 }

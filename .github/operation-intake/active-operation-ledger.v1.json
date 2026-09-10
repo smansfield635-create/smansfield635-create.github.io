@@ -3,42 +3,61 @@
     "002173df4e5336ed999b3a0705cc63715261ab9e6e2bc78184e8ab89eb58a34b": {
       "authorityProvenance": {
         "authorityIdentity": {
-          "governingHead": "2a7817471bbaa30a4f69e35d3605e48598348cd1",
-          "lockGeneration": 2077,
+          "governingHead": "1a70824210cb40f00604b72328972a0abc743cdb",
+          "lockGeneration": 2078,
           "lockScope": "BUILD:CONSUMER_JOURNEY_TWO_CAROUSEL:BUILD_INDEX:V1",
-          "operationId": "BUILD_CONSUMER_JOURNEY_TWO_CAROUSEL_SUCCESSOR_20260910_001",
-          "procedureLocatorDigest": "345a4e136075b3dac771cc27f6dd4edb6b4205f88a13bdb4c59169186046d232",
-          "requestDigest": "449c06ba32a29f2106b02ce12bf0ebfb49d95ea5f31cab391e574f5e62f172c9",
+          "operationId": "BUILD_CONSUMER_JOURNEY_TWO_CAROUSEL_SUCCESSOR_20260910_002",
+          "procedureLocatorDigest": "28950dccfb90a3953b75f1477c5fcd00443a795c8ce6c68135277f6bd0bb91ba",
+          "requestDigest": "b76246f6a9c0104dcb9c85952cdf02f06b069ab8b533ed0bfe4723cf0a25ac0b",
           "scopeHash": "002173df4e5336ed999b3a0705cc63715261ab9e6e2bc78184e8ab89eb58a34b"
         },
-        "bindingDigest": "a12da0daeb1f3edc3a31e9122824d6ff8e54c81c3067fb48c07dd9bdf7d8ef73",
+        "bindingDigest": "d5dc2e6dc5388d9dd08dbb29aebf2a8943e514ebf997d3cbeccc92bfcd9cd87b",
         "invocation": {
           "commentAuthorAssociation": "OWNER",
           "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "bc8fe4d22e1e1759128d506836bdd96f4811c113f2d54a62b5c8044245f0e9d0",
-          "commentId": 5626808461,
+          "commentBodySha256": "83377fa4e62c25bf405edfd0e447e69b803060d40af7c1843e39020a9a6c286b",
+          "commentId": 5627111735,
           "eventAction": "created",
           "eventName": "issue_comment",
           "issueNumber": 3017,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
           "repository": "smansfield635-create/smansfield635-create.github.io",
           "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
           "workflowRunAttempt": 1,
-          "workflowRunId": 34542133580,
-          "workflowSha": "2a7817471bbaa30a4f69e35d3605e48598348cd1"
+          "workflowRunId": 34544110247,
+          "workflowSha": "1a70824210cb40f00604b72328972a0abc743cdb"
         },
-        "lineageAnchorCommitSha": "a3194b2b1185473b6ad28db499c7cf22130136e0",
-        "origin": "CANONICAL_INTAKE",
+        "lineageAnchorCommitSha": "31eb3c8d80f9cf5970179476ba3175c3e4cb693e",
+        "origin": "CANONICAL_SUCCESSOR",
         "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
       },
-      "governingHead": "2a7817471bbaa30a4f69e35d3605e48598348cd1",
-      "lockGeneration": 2077,
+      "governingHead": "1a70824210cb40f00604b72328972a0abc743cdb",
+      "lockGeneration": 2078,
       "lockScope": "BUILD:CONSUMER_JOURNEY_TWO_CAROUSEL:BUILD_INDEX:V1",
-      "operationId": "BUILD_CONSUMER_JOURNEY_TWO_CAROUSEL_SUCCESSOR_20260910_001",
-      "procedureLocatorDigest": "345a4e136075b3dac771cc27f6dd4edb6b4205f88a13bdb4c59169186046d232",
+      "operationId": "BUILD_CONSUMER_JOURNEY_TWO_CAROUSEL_SUCCESSOR_20260910_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "2a7817471bbaa30a4f69e35d3605e48598348cd1",
+        "lockGeneration": 2077,
+        "lockScope": "BUILD:CONSUMER_JOURNEY_TWO_CAROUSEL:BUILD_INDEX:V1",
+        "operationId": "BUILD_CONSUMER_JOURNEY_TWO_CAROUSEL_SUCCESSOR_20260910_001",
+        "preservedEvidenceRefs": [
+          "ISSUE:3017",
+          "PSALM_ACK_PACK_COMMENT:5626621223",
+          "CANONICAL_PREDECESSOR_ADMISSION_COMMENT:5626811350",
+          "DONOR_CANDIDATE_HEAD:2b74e67245763fd925e0ec5c447def8de7ac7d20",
+          "DONOR_BUILD_BLOB:9d8992f1bf5f5c816e89eae7a1bb5ce87b995523",
+          "DRAFT_PR:3024"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "BUILD_CONSUMER_JOURNEY_HEAD_ADVANCE_20260910_002"
+      },
+      "procedureLocatorDigest": "28950dccfb90a3953b75f1477c5fcd00443a795c8ce6c68135277f6bd0bb91ba",
       "released": false,
-      "requestDigest": "449c06ba32a29f2106b02ce12bf0ebfb49d95ea5f31cab391e574f5e62f172c9",
+      "requestDigest": "b76246f6a9c0104dcb9c85952cdf02f06b069ab8b533ed0bfe4723cf0a25ac0b",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "002173df4e5336ed999b3a0705cc63715261ab9e6e2bc78184e8ab89eb58a34b",
       "state": "ADMITTED_LOCKED"
@@ -7778,7 +7797,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2077,
+  "lockGeneration": 2078,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -46639,6 +46658,69 @@
       "scopeHash": "dba51e076742070e02582b2be1cf58f71dddef3090baf2f4350291dc15b436ce",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "2a7817471bbaa30a4f69e35d3605e48598348cd1",
+          "lockGeneration": 2077,
+          "lockScope": "BUILD:CONSUMER_JOURNEY_TWO_CAROUSEL:BUILD_INDEX:V1",
+          "operationId": "BUILD_CONSUMER_JOURNEY_TWO_CAROUSEL_SUCCESSOR_20260910_001",
+          "procedureLocatorDigest": "345a4e136075b3dac771cc27f6dd4edb6b4205f88a13bdb4c59169186046d232",
+          "requestDigest": "449c06ba32a29f2106b02ce12bf0ebfb49d95ea5f31cab391e574f5e62f172c9",
+          "scopeHash": "002173df4e5336ed999b3a0705cc63715261ab9e6e2bc78184e8ab89eb58a34b"
+        },
+        "bindingDigest": "a12da0daeb1f3edc3a31e9122824d6ff8e54c81c3067fb48c07dd9bdf7d8ef73",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "bc8fe4d22e1e1759128d506836bdd96f4811c113f2d54a62b5c8044245f0e9d0",
+          "commentId": 5626808461,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3017,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34542133580,
+          "workflowSha": "2a7817471bbaa30a4f69e35d3605e48598348cd1"
+        },
+        "lineageAnchorCommitSha": "a3194b2b1185473b6ad28db499c7cf22130136e0",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "2a7817471bbaa30a4f69e35d3605e48598348cd1",
+      "lockGeneration": 2077,
+      "lockScope": "BUILD:CONSUMER_JOURNEY_TWO_CAROUSEL:BUILD_INDEX:V1",
+      "operationId": "BUILD_CONSUMER_JOURNEY_TWO_CAROUSEL_SUCCESSOR_20260910_001",
+      "procedureLocatorDigest": "345a4e136075b3dac771cc27f6dd4edb6b4205f88a13bdb4c59169186046d232",
+      "released": true,
+      "requestDigest": "449c06ba32a29f2106b02ce12bf0ebfb49d95ea5f31cab391e574f5e62f172c9",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "002173df4e5336ed999b3a0705cc63715261ab9e6e2bc78184e8ab89eb58a34b",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "ISSUE:3017",
+          "PSALM_ACK_PACK_COMMENT:5626621223",
+          "CANONICAL_PREDECESSOR_ADMISSION_COMMENT:5626811350",
+          "DONOR_CANDIDATE_HEAD:2b74e67245763fd925e0ec5c447def8de7ac7d20",
+          "DONOR_BUILD_BLOB:9d8992f1bf5f5c816e89eae7a1bb5ce87b995523",
+          "DRAFT_PR:3024"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "1a70824210cb40f00604b72328972a0abc743cdb",
+        "successorLockGeneration": 2078,
+        "successorLockScope": "BUILD:CONSUMER_JOURNEY_TWO_CAROUSEL:BUILD_INDEX:V1",
+        "successorOperationId": "BUILD_CONSUMER_JOURNEY_TWO_CAROUSEL_SUCCESSOR_20260910_002",
+        "transitionId": "BUILD_CONSUMER_JOURNEY_HEAD_ADVANCE_20260910_002"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

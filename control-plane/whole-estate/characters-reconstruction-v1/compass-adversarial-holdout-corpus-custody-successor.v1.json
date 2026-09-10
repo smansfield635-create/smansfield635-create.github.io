@@ -1,0 +1,96 @@
+{
+  "schema": "COMPASS_ADVERSARIAL_HOLDOUT_CORPUS_CUSTODY_SUCCESSOR_v1",
+  "status": "MATERIALIZED_PENDING_FRESH_READBACK_QUALIFICATION",
+  "operation": {
+    "operationId": "CHARACTERS_COMPASS_ADVERSARIAL_HOLDOUT_CORPUS_CUSTODY_SUCCESSOR_20260910_001",
+    "lockGeneration": 2075,
+    "projectId": "CHARACTERS",
+    "lockScope": "CHARACTERS:COMPASS_ADVERSARIAL_HOLDOUT:PRECLASSIFIER_CORPUS_CUSTODY:V1_2",
+    "exactGoverningHead": "21f55064b1ff08ce3f512ef44d3ba5a04fc39e5a",
+    "sourceIssue": 3014,
+    "scientificRole": "CUSTODY_PREREQUISITE_ONLY"
+  },
+  "predecessor": {
+    "operationId": "CHARACTERS_COMPASS_ADVERSARIAL_HOLDOUT_V1_1_20260910_001",
+    "generation": 2073,
+    "terminalDisposition": "FAIL_CLOSED",
+    "terminalClosureResult": "TERMINAL_CLOSURE_COMMITTED",
+    "terminalClosureReceiptSha256": "9d5aa975b1f46f1ff95e9b511980b0bb878c6b7ab14e14429121b6891db84f8c",
+    "originalFrozenCorpusCommitmentSha256": "6b237426c06518daa2fe7e274ae3901af2d450a9131bab0e64cfd8b19fd7df67",
+    "originalFrozenCorpusPreimageStatus": "UNRECOVERED_DO_NOT_RECONSTRUCT_DO_NOT_RELABEL",
+    "classifierExecutionCount": 0
+  },
+  "successorCorpus": {
+    "identity": "NEW_SUCCESSOR_CUSTODY_OBJECT_ONLY_NOT_PREDECESSOR_PREIMAGE",
+    "preservedEvidencePr": 3007,
+    "preservedCandidateCommit": "b0b7dc4647a454fa879c6af92dd4a879446a7886",
+    "sourcePath": "control-plane/whole-estate/characters-reconstruction-v1/compass-adversarial-holdout-corpus.v1.1.json",
+    "sourceGitBlobSha1": "fb53b1cd52ba0fd109d77a0ab7606c852730493a",
+    "canonicalization": "RECURSIVELY_KEY_SORTED_WHITESPACE_FREE_UTF8_JSON",
+    "canonicalSha256": "cf7f95b54210d28632098013f181a3447be8fc76dd0c07eda5ba956531b218cf",
+    "caseCount": 28,
+    "caseIds": [
+      "AH01", "AH02", "AH03", "AH04", "AH05", "AH06", "AH07", "AH08",
+      "AH09", "AH10", "AH11", "AH12", "AH13", "AH14", "AH15", "AH16",
+      "AH17", "AH18", "AH19", "AH20", "AH21", "AH22", "AH23", "AH24",
+      "AH25", "AH26", "AH27", "AH28"
+    ],
+    "promptIdentity": {
+      "sourceFreezeIssue": 2996,
+      "sourceFreezeComment": 5622756543,
+      "requirement": "AH01_AH28_CASE_IDS_AND_PROMPTS_EXACTLY_PRESERVED",
+      "verificationMethod": "FRESH_EXACT_SOURCE_READBACK_AT_PRESERVED_CANDIDATE_COMMIT"
+    }
+  },
+  "scientificFreeze": {
+    "sourceIssue": 2996,
+    "sourceFreezeComment": 5622756543,
+    "scientificQuestionChanged": false,
+    "acceptanceThresholdsChanged": false,
+    "acceptanceThresholds": {
+      "perClassifierDirectStations": "AT_LEAST_15_OF_16_EXACT_ON_AH01_AH16",
+      "aggregateMajorityDirectStations": "16_OF_16_EXACT",
+      "lawCriticalAH17_AH20": "4_OF_4_CORRECT_FOR_EVERY_CLASSIFIER_NONCOMPENSATORY",
+      "domainInvarianceAH21_AH24": "BOTH_PAIRS_RETAIN_EXPECTED_BEARING_FOR_EVERY_CLASSIFIER",
+      "authorityInvarianceAH25_AH26": "BOTH_RETAIN_EXPECTED_BEARING_FOR_EVERY_CLASSIFIER",
+      "multiStageAH27_AH28": "BOTH_DECOMPOSE_ROUTE_MATCHES_FROZEN_KEY_INDEPENDENT_REVIEW_REMAINS_SEPARATE",
+      "globalProhibitions": "ZERO_INVENTED_BEARINGS_ZERO_THREE_OR_FOUR_PRIMITIVE_SINGLE_STATION_COLLAPSES_ZERO_INFERRED_AUTHORITY_FROM_BEARING_DOMAIN_OR_LIFECYCLE",
+      "failureLaw": "ANY_LAW_CRITICAL_FAILURE_YIELDS_CLASSIFIER_FAIL_CLOSED"
+    }
+  },
+  "sealedKeyCustody": {
+    "commitmentSha256": "c76c578e9d07f66036c901ad563a7f84ef53ce516b4d2c55aec4dbb326299add",
+    "preservedEvidencePr": 3007,
+    "preservedCandidateCommit": "b0b7dc4647a454fa879c6af92dd4a879446a7886",
+    "commitmentSourcePath": "control-plane/whole-estate/characters-reconstruction-v1/compass-adversarial-holdout-key-commitment.v1.1.json",
+    "commitmentSourceGitBlobSha1": "cfafea2f567e5fc4f7ba334365326bda6b99b996",
+    "keyMaterialPresentInPublicCommitment": false,
+    "keyReadOrRevealedByThisOperation": false,
+    "revealBoundary": "THREE_INDEPENDENT_CLASSIFIER_SUBMISSIONS_AND_THEIR_SHA256_DIGESTS_MUST_BE_FROZEN_BEFORE_KEY_REVEAL"
+  },
+  "executionBoundary": {
+    "classifierExecutionBeforeSuccessorQualification": 0,
+    "classifierExecutionPerformedByThisOperation": 0,
+    "classifierExecutionAuthorized": false,
+    "keyRevealAuthorized": false,
+    "predecessorMutationAuthorized": false,
+    "preservedPr3007MutationAuthorized": false,
+    "mergeAuthorized": false,
+    "deploymentAuthorized": false,
+    "publicationAuthorized": false,
+    "runtimeActivationAuthorized": false,
+    "repositoryMutationPathCount": 1
+  },
+  "qualification": {
+    "requiredVerifierClass": "FRESH_EXACT_GIT_SOURCE_AND_CUSTODY_RECORD_READBACK",
+    "builderMaySelfDeclarePass": false,
+    "mustVerifyOriginalDigestNotRelabeled": true,
+    "mustVerifySuccessorDigestHasNewCustodyIdentity": true,
+    "mustVerifyExact28CasePromptProjection": true,
+    "mustVerifyFrozenAcceptanceThresholdsUnchanged": true,
+    "mustVerifyKeyUnaccessed": true,
+    "mustVerifyClassifierExecutionZero": true,
+    "mustVerifyOneRepositoryMutationPathOnly": true,
+    "qualificationReceiptLocation": "ISSUE_OR_DRAFT_PR_READBACK_RECEIPT_NOT_THIS_RECORD"
+  }
+}

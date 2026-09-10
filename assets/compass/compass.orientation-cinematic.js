@@ -36,6 +36,8 @@ const ENTRY_FILM_REVEAL_MS=780;
 const ENTRY_GOLDEN_ANGLE=Math.PI*(3-Math.sqrt(5));
 const ENTRY_SEED=0x0b17e17;
 const ENTRY_COLORS=['255,248,224','154,217,225','234,208,131','170,155,224'];
+const ENTRY_CONTROL_RETRACT_MS=170;
+const AUDRALIA_HOLD=Object.freeze({captureAt:49.30,revealAt:49.70,releaseAt:49.88,clearAt:50.24});
 
 const q=(s,r=document)=>r.querySelector(s);
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
@@ -43,14 +45,15 @@ const mix=(a,b,t)=>a+(b-a)*t;
 const easeOut=t=>1-Math.pow(1-clamp(t),3);
 const reduced=()=>window.matchMedia?.('(prefers-reduced-motion: reduce)').matches===true;
 const session={
-  state:null,overlay:null,video:null,ambientVideo:null,gate:null,play:null,skip:null,replay:null,
+  state:null,overlay:null,video:null,ambientVideo:null,audraliaHoldAmbient:null,audraliaHoldForeground:null,gate:null,play:null,skip:null,replay:null,
   root:null,rootInert:false,rootAriaHidden:null,priorFocus:null,
   ambient:null,ambientSnapshot:null,url:null,historyLength:0,
   fadeStarted:false,settlementCount:0,
   entryCanvas:null,entryCtx:null,entryWidth:0,entryHeight:0,entryDpr:1,
   entryStars:[],entryCells:[],entryStartedAt:0,entryRaf:0,
   playRequested:false,entryTransitionComplete:false,videoReady:false,
-  videoStartRequested:false,firstFramePresented:false,entryAction:'',entryDecision:null
+  videoStartRequested:false,firstFramePresented:false,entryAction:'',entryDecision:null,
+  entryControlTimer:0,audraliaFrameCallback:0,audraliaHoldCaptured:false,audraliaHoldVisible:false,audraliaHoldReleased:false
 };
 
 function markState(state){
@@ -151,6 +154,14 @@ function buildOverlay(){
   video.poster=CONTRACT.posterPath;
   video.src=CONTRACT.mediaPath;
 
+  const audraliaHoldAmbient=document.createElement('canvas');
+  audraliaHoldAmbient.className='compass-prerendered-player__audralia-hold compass-prerendered-player__audralia-hold--ambient';
+  audraliaHoldAmbient.setAttribute('aria-hidden','true');
+
+  const audraliaHoldForeground=document.createElement('canvas');
+  audraliaHoldForeground.className='compass-prerendered-player__audralia-hold compass-prerendered-player__audralia-hold--foreground';
+  audraliaHoldForeground.setAttribute('aria-hidden','true');
+
   const gate=document.createElement('div');
   gate.className='compass-prerendered-player__gate';
   gate.setAttribute('data-main-orientation-gate','');
@@ -164,10 +175,12 @@ function buildOverlay(){
   const playingSkip=makeButton('Skip','data-main-orientation-skip','quiet');
   playingSkip.classList.add('compass-prerendered-player__skip');
 
-  overlay.append(ambientVideo,video,gate,playingSkip);
+  overlay.append(ambientVideo,audraliaHoldAmbient,video,audraliaHoldForeground,gate,playingSkip);
   session.overlay=overlay;
   session.video=video;
   session.ambientVideo=ambientVideo;
+  session.audraliaHoldAmbient=audraliaHoldAmbient;
+  session.audraliaHoldForeground=audraliaHoldForeground;
   session.gate=gate;
   session.play=play;
   session.skip=skip;
@@ -262,21 +275,73 @@ function cancelEntryFrame(){
   if(session.entryRaf)cancelAnimationFrame(session.entryRaf);
   session.entryRaf=0;
 }
+function cancelAudraliaFrame(){
+  if(session.audraliaFrameCallback&&session.video?.cancelVideoFrameCallback)session.video.cancelVideoFrameCallback(session.audraliaFrameCallback);
+  session.audraliaFrameCallback=0;
+}
 function cleanupOverlay(){
   window.removeEventListener('keydown',onKey,true);
   window.removeEventListener('resize',resizeEntryCanvas);
   cancelEntryFrame();
+  cancelAudraliaFrame();
+  if(session.entryControlTimer)clearTimeout(session.entryControlTimer);
   for(const video of [session.video,session.ambientVideo])if(video){try{video.pause();}catch{}video.removeAttribute('src');try{video.load();}catch{}}
   session.overlay?.remove();
   session.overlay=null;
   session.video=null;
   session.ambientVideo=null;
+  session.audraliaHoldAmbient=null;
+  session.audraliaHoldForeground=null;
   session.gate=null;
   session.play=null;
   session.skip=null;
   session.entryCanvas=null;
   session.entryCtx=null;
+  session.entryControlTimer=0;
   session.fadeStarted=false;
+}
+
+function captureAudraliaHold(){
+  const video=session.video;
+  if(!video?.videoWidth||!video.videoHeight)return false;
+  for(const canvas of [session.audraliaHoldAmbient,session.audraliaHoldForeground]){
+    if(!canvas)continue;
+    canvas.width=video.videoWidth;
+    canvas.height=video.videoHeight;
+    const ctx=canvas.getContext('2d',{alpha:false});
+    if(!ctx)continue;
+    ctx.drawImage(video,0,0,canvas.width,canvas.height);
+  }
+  session.audraliaHoldCaptured=true;
+  return true;
+}
+function updateAudraliaHold(mediaTime){
+  if(session.state!==STATE.PLAYING||!Number.isFinite(mediaTime))return;
+  if(!session.audraliaHoldCaptured&&mediaTime>=AUDRALIA_HOLD.captureAt&&mediaTime<AUDRALIA_HOLD.revealAt)captureAudraliaHold();
+  if(!session.audraliaHoldVisible&&mediaTime>=AUDRALIA_HOLD.revealAt&&mediaTime<AUDRALIA_HOLD.clearAt){
+    if(!session.audraliaHoldCaptured&&!captureAudraliaHold())return;
+    session.audraliaHoldVisible=true;
+    for(const canvas of [session.audraliaHoldAmbient,session.audraliaHoldForeground])canvas?.classList.add('is-active');
+  }
+  if(session.audraliaHoldVisible&&!session.audraliaHoldReleased&&mediaTime>=AUDRALIA_HOLD.releaseAt){
+    session.audraliaHoldReleased=true;
+    for(const canvas of [session.audraliaHoldAmbient,session.audraliaHoldForeground])canvas?.classList.add('is-releasing');
+  }
+  if(mediaTime>=AUDRALIA_HOLD.clearAt){
+    for(const canvas of [session.audraliaHoldAmbient,session.audraliaHoldForeground])canvas?.classList.remove('is-active','is-releasing');
+    cancelAudraliaFrame();
+  }
+}
+function monitorAudraliaFrame(_now,metadata){
+  updateAudraliaHold(Number(metadata?.mediaTime));
+  if(session.video?.requestVideoFrameCallback&&Number(metadata?.mediaTime)<AUDRALIA_HOLD.clearAt){
+    session.audraliaFrameCallback=session.video.requestVideoFrameCallback(monitorAudraliaFrame);
+  }
+}
+function startAudraliaMonitor(){
+  const video=session.video;
+  if(!video?.requestVideoFrameCallback||session.audraliaFrameCallback)return;
+  session.audraliaFrameCallback=video.requestVideoFrameCallback(monitorAudraliaFrame);
 }
 function settle(reason='complete'){
   if(session.state===STATE.SETTLED)return;
@@ -433,6 +498,7 @@ async function maybeStartMasterPlayback(){
       video.addEventListener('playing',()=>requestAnimationFrame(revealFirstPresentedFrame),{once:true});
     }
     const p=video.play();
+    startAudraliaMonitor();
     if(p&&typeof p.then==='function')await p;
     if(typeof video.requestVideoFrameCallback!=='function'&&video.readyState>=2&&video.currentTime>0)requestAnimationFrame(revealFirstPresentedFrame);
   }catch(error){
@@ -480,20 +546,37 @@ function skip(){
   session.entryRaf=requestAnimationFrame(drawEntryTransition);
 }
 
+function retractEntryControls(then){
+  if(session.state!==STATE.ARMED||reduced()){then();return;}
+  if(session.entryControlTimer||session.overlay?.dataset.entryState==='CONTROLS_RETRACTING')return;
+  session.overlay.dataset.entryState='CONTROLS_RETRACTING';
+  for(const button of [session.play,session.skip]){
+    if(!button)continue;
+    button.disabled=true;
+    button.setAttribute('aria-disabled','true');
+  }
+  session.entryControlTimer=window.setTimeout(()=>{
+    session.entryControlTimer=0;
+    then();
+  },ENTRY_CONTROL_RETRACT_MS);
+}
+
 function onOverlayClick(event){
   if(event.target.closest('[data-main-orientation-play]')){
-    event.preventDefault();event.stopPropagation();play();return;
+    event.preventDefault();event.stopPropagation();retractEntryControls(play);return;
   }
   if(event.target.closest('[data-main-orientation-skip]')){
     event.preventDefault();event.stopPropagation();
-    skip();
+    if(session.state===STATE.ARMED)retractEntryControls(skip);
+    else skip();
   }
 }
 function onKey(event){
   if(session.state===STATE.SETTLED)return;
   if(event.key==='Escape'){
     event.preventDefault();event.stopPropagation();
-    skip();
+    if(session.state===STATE.ARMED)retractEntryControls(skip);
+    else skip();
   }
 }
 function onAmbientTrigger(){if(session.state===STATE.PLAYING||session.playRequested)queueMicrotask(suppressAmbient);}
@@ -506,6 +589,7 @@ function bindOverlay(){
   video.addEventListener('ended',()=>settle('complete'),{once:true});
   video.addEventListener('error',()=>settle('fail-open'),{once:true});
   video.addEventListener('timeupdate',maybeNaturalFade);
+  video.addEventListener('timeupdate',()=>updateAudraliaHold(video.currentTime));
   video.addEventListener('timeupdate',()=>{if(ambientVideo&&Math.abs((ambientVideo.currentTime||0)-(video.currentTime||0))>.09)ambientVideo.currentTime=video.currentTime;});
   window.addEventListener('keydown',onKey,true);
   window.addEventListener('resize',resizeEntryCanvas,{passive:true});
@@ -518,6 +602,8 @@ function resetRunState(){
   session.playRequested=false;session.entryTransitionComplete=false;session.videoReady=false;
   session.videoStartRequested=false;session.firstFramePresented=false;
   session.entryAction='';
+  session.entryControlTimer=0;session.audraliaFrameCallback=0;
+  session.audraliaHoldCaptured=false;session.audraliaHoldVisible=false;session.audraliaHoldReleased=false;
 }
 function mount(source='initial'){
   if(session.overlay)return;

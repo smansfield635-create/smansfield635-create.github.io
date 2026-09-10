@@ -37,7 +37,7 @@ const ENTRY_GOLDEN_ANGLE=Math.PI*(3-Math.sqrt(5));
 const ENTRY_SEED=0x0b17e17;
 const ENTRY_COLORS=['255,248,224','154,217,225','234,208,131','170,155,224'];
 const ENTRY_CONTROL_RETRACT_MS=170;
-const AUDRALIA_HOLD=Object.freeze({captureAt:49.30,revealAt:49.70,releaseAt:49.88,clearAt:50.24});
+const AUDRALIA_HOLD=Object.freeze({captureAt:49.30,revealAt:49.70,releaseAt:1499/30,clearAt:50.24});
 
 const q=(s,r=document)=>r.querySelector(s);
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));

@@ -1,0 +1,35 @@
+name: Identity Conditioned Reachability External Bridge v1
+
+on:
+  pull_request:
+    paths:
+      - 'research/route-operator-platform-v1/empirical-tests/externally-sourced-icr-bridge-v1/**'
+      - '.github/workflows/identity-conditioned-reachability-external-bridge-v1.yml'
+  workflow_dispatch:
+
+jobs:
+  bridge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check cryptography==46.0.4 jsonschema==4.26.0 networkx==3.6.1 Pillow==12.2.0 pandas==2.2.3 numpy scikit-learn ucimlrepo
+      - name: Verify frozen package
+        run: python research/route-operator-platform-v1/empirical-tests/externally-sourced-icr-bridge-v1/verify_package_v1.py
+      - name: Confirm exploratory software bridge
+        working-directory: research/route-operator-platform-v1/empirical-tests/externally-sourced-icr-bridge-v1/software
+        run: |
+          python run_bridge_v1.py
+          python verify_software_bridge_v1.py
+      - name: Run prospective UCI bridge
+        working-directory: research/route-operator-platform-v1/empirical-tests/externally-sourced-icr-bridge-v1/data
+        run: python run_uci_bridge_v1.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: externally-sourced-icr-bridge-v1-results
+          path: |
+            research/route-operator-platform-v1/empirical-tests/externally-sourced-icr-bridge-v1/software/execution-report.json
+            research/route-operator-platform-v1/empirical-tests/externally-sourced-icr-bridge-v1/data/uci-execution-report.json

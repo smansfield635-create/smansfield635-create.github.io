@@ -1,0 +1,10 @@
+{
+  "software_bridge": [
+    {"id": "OUTPUT_CONTINUITY_EQUALS_IDENTITY", "rule": "A visible pass is classified as original identity continuity."},
+    {"id": "ADDITIVE_CAPACITY_COMPENSATION", "rule": "Unrelated extra capacity is predicted to compensate for a missing relation."}
+  ],
+  "uci_data_bridge": [
+    {"id": "OUTPUT_HISTORY", "rule": "Restricted visible operating or output variables."},
+    {"id": "BLACK_BOX_FULL", "rule": "Full admitted feature field with a random forest."}
+  ]
+}

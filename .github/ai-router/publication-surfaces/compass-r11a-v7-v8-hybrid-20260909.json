@@ -11,7 +11,7 @@
         "data-compass-static-introduction",
         "/assets/compass/cinematic-media/compass-main-orientation-entry-frame.png?v=r11a-v7-v8-hybrid&cb=47ca784c3f679555",
         "/assets/compass/compass.orientation-cinematic.css?v=r11a-v7-v8-hybrid&cb=507081bfe7290b20",
-        "/assets/compass/compass.orientation-cinematic.js?v=r11b-entry-routing-v1&cb=d84de4c41e919a2c"
+        "/assets/compass/compass.orientation-cinematic.js?v=audralia-immersive-title-v1&cb=6c8c39913ba3fa26"
       ],
       "excludes": [
         "r11a-v7-media-owned-entry&cb=84038cd2c0a10690"
@@ -31,10 +31,17 @@
         "EXTERNAL_OR_DIRECT_ENTRY",
         "INTERNAL_RETURN",
         "HISTORY_RETURN",
-        "REPLAY_FORCED"
+        "REPLAY_FORCED",
+        "ENTER_THE_EXPERIENCE_IMMERSIVE_UNTIL_PIXELATION_V1",
+        "eyebrow:'ENTER THE EXPERIENCE'",
+        "title:'IMMERSIVE'",
+        "audraliaPerceptualDwellMs:0",
+        "clearAt:49.80"
       ],
       "excludes": [
-        "COMPASS_EXPERIENTIAL_PLAYER_R11A_V7_FILMED_ENTRY_RESTORATION"
+        "COMPASS_EXPERIENTIAL_PLAYER_R11A_V7_FILMED_ENTRY_RESTORATION",
+        "startAudraliaPerceptualDwell",
+        "AUDRALIA_DWELL_RESUME_FAILED"
       ]
     },
     {

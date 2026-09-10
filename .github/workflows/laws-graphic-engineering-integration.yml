@@ -1,0 +1,84 @@
+name: Laws graphic engineering integration
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/laws-geometric-grammar-lab.yml"
+      - ".github/workflows/laws-graphic-engineering-integration.yml"
+      - "research/prototypes/laws-geometric-grammar-lab/**"
+      - "research/prototypes/laws-graphic-engineering-integration/**"
+      - "research/prototypes/laws-compass-page-delivery/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-coordinated-slice:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Enforce isolated research paths
+        shell: bash
+        run: |
+          git fetch origin "${{ github.base_ref || 'main' }}" --depth=1
+          base="origin/${{ github.base_ref || 'main' }}"
+          mapfile -t changed < <(git diff --name-only "$base"...HEAD)
+          printf '%s\n' "${changed[@]}"
+          for path in "${changed[@]}"; do
+            case "$path" in
+              .github/workflows/laws-geometric-grammar-lab.yml|\
+              .github/workflows/laws-graphic-engineering-integration.yml|\
+              research/prototypes/laws-geometric-grammar-lab/*|\
+              research/prototypes/laws-graphic-engineering-integration/*|\
+              research/prototypes/laws-compass-page-delivery/*) ;;
+              *) echo "Disallowed path in coordinated research PR: $path" >&2; exit 1 ;;
+            esac
+          done
+
+      - name: Verify JavaScript syntax
+        run: |
+          node --check research/prototypes/laws-graphic-engineering-integration/shared/experience-runtime.js
+          node --check research/prototypes/laws-graphic-engineering-integration/shared/first-research-content.js
+          node --check research/prototypes/laws-graphic-engineering-integration/shared/first-research-webgl2.js
+          node --check research/prototypes/laws-geometric-grammar-lab/slice-01-first-research.js
+          node --check research/prototypes/laws-compass-page-delivery/app.js
+          node --check research/prototypes/laws-graphic-engineering-integration/verify.mjs
+          node --check research/prototypes/laws-graphic-engineering-integration/browser-verify.mjs
+
+      - name: Verify shared contracts and production boundary
+        run: node research/prototypes/laws-graphic-engineering-integration/verify.mjs
+
+      - name: Install browser verifier
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Serve repository
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-integration-server.log 2>&1 &
+          echo $! > /tmp/laws-integration-server.pid
+          for attempt in {1..30}; do
+            curl -fsS http://127.0.0.1:4173/research/prototypes/laws-compass-page-delivery/ >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/laws-integration-server.log
+          exit 1
+
+      - name: Execute Compass and laboratory browser verification
+        env:
+          BASE_URL: http://127.0.0.1:4173
+          EVIDENCE_DIR: browser-evidence-laws-integration
+        run: node research/prototypes/laws-graphic-engineering-integration/browser-verify.mjs
+
+      - name: Upload coordinated slice evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-graphic-engineering-integration-slice-01
+          path: browser-evidence-laws-integration
+          if-no-files-found: warn

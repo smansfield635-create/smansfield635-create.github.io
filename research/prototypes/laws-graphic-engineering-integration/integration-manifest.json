@@ -1,0 +1,64 @@
+{
+  "program": "LAWS_CHAMBER_GRAPHIC_ENGINEERING_INTEGRATION",
+  "slice": "SLICE_01_RESEARCH_COMES_FIRST_RELATIONSHIP",
+  "production_authorized": false,
+  "protected_laws_mutation": false,
+  "components": [
+    {
+      "component": "FIRST_RESEARCH_CONTENT_RECORD",
+      "semantic_purpose": "Freeze the real F.I.R.S.T. and Research relationship used by both workstreams.",
+      "source_content": "laws/index.html@6a9b35100bd0207187ce07d3155db9eebd757922",
+      "visitor_role": "Primary story immediately beneath the accepted Compass.",
+      "engineering_owner": "shared/first-research-content.js",
+      "compass_usage": "Headline, relationship explanation, labels, lens narratives, and evidence boundary.",
+      "full_motion_state": "Unchanged content with staged geometric settlement.",
+      "reduced_motion_state": "Unchanged content with direct stepped state changes.",
+      "static_equivalent": "Unchanged content with fixed SVG relationship map.",
+      "evidence_boundary": "Research supports examination and custody; it does not create validation.",
+      "verification_status": "PENDING_CURRENT_HEAD_WORKFLOW",
+      "admission_status": "COMPASS_CANDIDATE"
+    },
+    {
+      "component": "FIRST_RESEARCH_SHARED_MECHANIC",
+      "semantic_purpose": "Show F.I.R.S.T. as a connected sequence and Research as a surrounding examination and record relationship.",
+      "source_content": "FIRST_RESEARCH_CONTENT_RECORD",
+      "visitor_role": "Explain relationship, not renderer construction.",
+      "engineering_owner": "shared/first-research-webgl2.js",
+      "compass_usage": "One bounded scene under the headline.",
+      "full_motion_state": "Sequence assembles, Research tether settles, and active meaning receives focus.",
+      "reduced_motion_state": "No continuous movement; direct state settlement and user-triggered focus.",
+      "static_equivalent": "Fixed SVG with the same nodes, ordering, Research boundary, and labels.",
+      "evidence_boundary": "Visual settlement never changes scientific status.",
+      "verification_status": "PENDING_CURRENT_HEAD_WORKFLOW",
+      "admission_status": "EXPERIMENTAL"
+    },
+    {
+      "component": "SHARED_EXPERIENCE_RUNTIME",
+      "semantic_purpose": "Keep lens state, motion mode, lifecycle, focus, and receipts identical across lab and Compass prototype.",
+      "source_content": "PROGRAM_CONTRACT",
+      "visitor_role": "Invisible support for consistent operation.",
+      "engineering_owner": "shared/experience-runtime.js",
+      "compass_usage": "Consumed directly without reimplementation.",
+      "full_motion_state": "Visible and document-active render loop only.",
+      "reduced_motion_state": "Direct state updates without continuous semantic travel.",
+      "static_equivalent": "Canvas disabled and SVG revealed.",
+      "evidence_boundary": "Runtime cannot alter source content or evidence status.",
+      "verification_status": "PENDING_CURRENT_HEAD_WORKFLOW",
+      "admission_status": "EXPERIMENTAL"
+    },
+    {
+      "component": "ACCEPTED_COMPASS_FRAME",
+      "semantic_purpose": "Present the accepted Compass unchanged while the new story slice is evaluated below it.",
+      "source_content": "/laws/",
+      "visitor_role": "Primary navigation and orientation authority.",
+      "engineering_owner": "existing protected Laws runtime",
+      "compass_usage": "Same-origin frame with prototype-only presentation cropping.",
+      "full_motion_state": "Existing accepted Compass behavior.",
+      "reduced_motion_state": "Existing accepted Compass reduced-motion behavior.",
+      "static_equivalent": "Existing accepted Compass fallback behavior plus textual orientation.",
+      "evidence_boundary": "No route, content, or validation authority is transferred to the prototype.",
+      "verification_status": "PENDING_CURRENT_HEAD_WORKFLOW",
+      "admission_status": "COMPASS_CANDIDATE"
+    }
+  ]
+}

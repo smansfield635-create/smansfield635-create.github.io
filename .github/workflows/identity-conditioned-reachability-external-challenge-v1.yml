@@ -1,0 +1,25 @@
+name: Identity Conditioned Reachability External Challenge v1
+
+on:
+  pull_request:
+    paths:
+      - "research/route-operator-platform-v1/registered-challenges/identity-conditioned-reachability-external-adversarial-v1/**"
+      - ".github/workflows/identity-conditioned-reachability-external-challenge-v1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-frozen-external-challenge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify frozen external adversarial challenge protocol
+        working-directory: research/route-operator-platform-v1/registered-challenges/identity-conditioned-reachability-external-adversarial-v1
+        run: python verify_external_challenge_protocol_v1.py

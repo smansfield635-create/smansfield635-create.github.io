@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "predictions": {
+      "minItems": 1,
+      "type": "array"
+    },
+    "protocol_version": {
+      "const": "1.0.0"
+    },
+    "public_package_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "role": {
+      "enum": [
+        "OBSERVER",
+        "BASELINE"
+      ]
+    },
+    "submission_id": {
+      "minLength": 8,
+      "type": "string"
+    },
+    "submission_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "submitted_at_utc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "team_id": {
+      "minLength": 3,
+      "type": "string"
+    }
+  },
+  "required": [
+    "submission_id",
+    "team_id",
+    "role",
+    "protocol_version",
+    "public_package_sha256",
+    "predictions",
+    "submitted_at_utc",
+    "submission_sha256"
+  ],
+  "title": "Sealed observer or baseline submission",
+  "type": "object"
+}

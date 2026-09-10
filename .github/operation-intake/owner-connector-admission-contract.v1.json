@@ -10,7 +10,12 @@
   "semantics": {
     "legacyLocalGate": "tools/operation-intake/repository-operation-intake-gate.v1.mjs#prepare",
     "legacySingleFlight": "tools/operation-intake/repository-operation-lock-manager.v1.mjs#acquireLocal",
-    "planner": "tools/operation-intake/owner-connector-canonical-intake.v1.mjs"
+    "planner": "tools/operation-intake/owner-connector-canonical-intake.v1.mjs",
+    "executor": "tools/operation-intake/owner-connector-canonical-intake-executor.v1.mjs",
+    "executorSelfTest": "tools/operation-intake/owner-connector-canonical-intake-executor-self-test.v1.mjs",
+    "plannerRemainsAdmissionDecisionAuthority": true,
+    "planIsReceipt": false,
+    "admissionSemanticsDuplicatedByExecutor": false
   },
   "requiredAuthentication": [
     "SOURCE_COMMENT_AUTHOR_IS_OWNER_LOGIN",
@@ -21,6 +26,27 @@
     "OBSERVED_LEDGER_BLOB_SHA_IS_CURRENT_AT_WRITE",
     "OBSERVED_LOCK_REF_HEAD_IS_CURRENT_AT_WRITE"
   ],
+  "executionLaw": {
+    "fixedInputs": [
+      "SOURCE_COMMENT_ID",
+      "EXPECTED_CURRENT_MAIN_HEAD"
+    ],
+    "callerSuppliedCommandAllowed": false,
+    "callerSuppliedRepositoryAllowed": false,
+    "callerSuppliedLedgerContentAllowed": false,
+    "callerSuppliedLockRefAllowed": false,
+    "callerSuppliedMutationPathAllowed": false,
+    "callerSuppliedEnvironmentOverrideAllowed": false,
+    "currentMainRevalidationBeforeCasRequired": true,
+    "ledgerBlobCompareAndSwapRequired": true,
+    "lockRefCompareAndSwapRequired": true,
+    "blindRetryAfterConflictAllowed": false,
+    "postCommitReadbackRequired": true,
+    "canonicalLineageVerificationRequired": true,
+    "successReceiptSchema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_EXECUTION_RECEIPT_v1",
+    "nestedCanonicalAdmissionReceiptSchema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "githubActionsAgentTransport": false
+  },
   "writeLaw": {
     "exactAllowedPaths": [
       ".github/operation-intake/active-operation-ledger.v1.json"
@@ -30,6 +56,24 @@
     "secondLedger": false,
     "forceRefUpdate": false,
     "authorityWidening": false
+  },
+  "readbackLaw": {
+    "exactChangedPaths": [
+      ".github/operation-intake/active-operation-ledger.v1.json"
+    ],
+    "requiredIdentityFields": [
+      "operationId",
+      "lockScope",
+      "scopeHash",
+      "lockGeneration",
+      "governingHead",
+      "requestDigest",
+      "procedureLocatorDigest",
+      "independentAuthorityProvenance"
+    ],
+    "exactParentMustEqualObservedLockRefHead": true,
+    "exactCommitMessageMustEqualPlannerMessage": true,
+    "receiptBeforeReadbackAllowed": false
   },
   "lineageLaw": {
     "legacyVerifiedBotCommitsRemainCanonical": true,

@@ -55,8 +55,7 @@ const session={
   playRequested:false,entryTransitionComplete:false,videoReady:false,
   videoStartRequested:false,firstFramePresented:false,entryAction:'',entryDecision:null,
   entryControlTimer:0,audraliaFrameCallback:0,audraliaHoldCaptured:false,audraliaHoldVisible:false,audraliaHoldReleased:false,
-  audraliaDwellTimer:0,audraliaDwellStarted:false,audraliaDwellComplete:false,audraliaDwellMediaTime:0,
-  audraliaDwellStartedAt:0,audraliaDwellCompletedAt:0,audraliaDwellElapsedMs:0
+  audraliaDwellTimer:0,audraliaDwellStarted:false,audraliaDwellComplete:false,audraliaDwellMediaTime:0
 };
 
 function markState(state){
@@ -326,25 +325,12 @@ function startAudraliaPerceptualDwell(){
   if(!video)return;
   session.audraliaDwellStarted=true;
   session.audraliaDwellMediaTime=video.currentTime;
-  session.audraliaDwellStartedAt=performance.now();
-  if(session.overlay){
-    session.overlay.dataset.audraliaDwellStarted='true';
-    session.overlay.dataset.audraliaDwellMediaTime=String(session.audraliaDwellMediaTime);
-    session.overlay.dataset.audraliaDwellStartedAt=String(session.audraliaDwellStartedAt);
-  }
   try{video.pause();}catch{}
   if(ambientVideo)try{ambientVideo.pause();}catch{}
   session.audraliaDwellTimer=window.setTimeout(()=>{
     session.audraliaDwellTimer=0;
     if(session.state!==STATE.PLAYING||session.entryAction!=='play'||session.video!==video)return;
-    session.audraliaDwellCompletedAt=performance.now();
-    session.audraliaDwellElapsedMs=session.audraliaDwellCompletedAt-session.audraliaDwellStartedAt;
     session.audraliaDwellComplete=true;
-    if(session.overlay){
-      session.overlay.dataset.audraliaDwellComplete='true';
-      session.overlay.dataset.audraliaDwellCompletedAt=String(session.audraliaDwellCompletedAt);
-      session.overlay.dataset.audraliaDwellElapsedMs=String(session.audraliaDwellElapsedMs);
-    }
     if(ambientVideo===session.ambientVideo){
       const ambientPlay=ambientVideo.play();
       if(ambientPlay&&typeof ambientPlay.catch==='function')ambientPlay.catch(()=>{});
@@ -359,15 +345,12 @@ function startAudraliaPerceptualDwell(){
 function updateAudraliaHold(mediaTime){
   if(session.state!==STATE.PLAYING||!Number.isFinite(mediaTime))return;
   if(!session.audraliaHoldCaptured&&mediaTime>=AUDRALIA_HOLD.captureAt&&mediaTime<AUDRALIA_HOLD.revealAt)captureAudraliaHold();
-  if(!session.audraliaDwellStarted&&mediaTime>=AUDRALIA_HOLD.revealAt){
+  if(!session.audraliaHoldVisible&&mediaTime>=AUDRALIA_HOLD.revealAt&&mediaTime<AUDRALIA_HOLD.clearAt){
     if(!session.audraliaHoldCaptured&&!captureAudraliaHold())return;
-    if(!session.audraliaHoldVisible){
-      session.audraliaHoldVisible=true;
-      for(const canvas of [session.audraliaHoldAmbient,session.audraliaHoldForeground])canvas?.classList.add('is-active');
-    }
-    startAudraliaPerceptualDwell();
-    if(session.audraliaDwellStarted)return;
+    session.audraliaHoldVisible=true;
+    for(const canvas of [session.audraliaHoldAmbient,session.audraliaHoldForeground])canvas?.classList.add('is-active');
   }
+  if(session.audraliaHoldVisible&&!session.audraliaDwellStarted&&mediaTime>=AUDRALIA_HOLD.revealAt&&mediaTime<AUDRALIA_HOLD.releaseAt)startAudraliaPerceptualDwell();
   if(session.audraliaHoldVisible&&!session.audraliaHoldReleased&&mediaTime>=AUDRALIA_HOLD.releaseAt){
     session.audraliaHoldReleased=true;
     for(const canvas of [session.audraliaHoldAmbient,session.audraliaHoldForeground])canvas?.classList.add('is-releasing');
@@ -650,7 +633,6 @@ function resetRunState(){
   session.entryControlTimer=0;session.audraliaFrameCallback=0;
   session.audraliaHoldCaptured=false;session.audraliaHoldVisible=false;session.audraliaHoldReleased=false;
   session.audraliaDwellTimer=0;session.audraliaDwellStarted=false;session.audraliaDwellComplete=false;session.audraliaDwellMediaTime=0;
-  session.audraliaDwellStartedAt=0;session.audraliaDwellCompletedAt=0;session.audraliaDwellElapsedMs=0;
 }
 function mount(source='initial'){
   if(session.overlay)return;
@@ -715,9 +697,6 @@ globalThis.__DGB_COMPASS_PRERENDERED_PLAYER__=Object.freeze({
     audraliaDwellStarted:session.audraliaDwellStarted,
     audraliaDwellComplete:session.audraliaDwellComplete,
     audraliaDwellMediaTime:session.audraliaDwellMediaTime,
-    audraliaDwellStartedAt:session.audraliaDwellStartedAt,
-    audraliaDwellCompletedAt:session.audraliaDwellCompletedAt,
-    audraliaDwellElapsedMs:session.audraliaDwellElapsedMs,
     entryDecision:session.entryDecision
   })
 });

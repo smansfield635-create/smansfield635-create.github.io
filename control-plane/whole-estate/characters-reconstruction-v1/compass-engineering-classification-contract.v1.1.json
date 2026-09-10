@@ -1,0 +1,80 @@
+{
+  "schema": "COMPASS_ENGINEERING_CLASSIFICATION_CONTRACT_v1_1",
+  "status": "FROZEN_CANDIDATE",
+  "constitutionSemanticId": "e2e37227c4c04ffab10562161f78a76e0378864fee63ee80b9043ce414d2eeea",
+  "coordinate": "O=(B,R,L,D,A)",
+  "separationLaws": {
+    "ACL-1": "At most two material adjacent primitives may compose one routed bearing.",
+    "OSL-1": "Opposing material primitives, or three/four material primitives, require decomposition.",
+    "authority": "Bearing and domain never create authority.",
+    "ambiguity": "If evidence is insufficient to select a bearing without invention, ABSTAIN rather than mutate geometry or guess."
+  },
+  "submission": {
+    "schema": "COMPASS_ENGINEERING_CLASSIFIER_SUBMISSION_v1_1",
+    "requiredTopLevel": [
+      "schema",
+      "classifierId",
+      "modelFamily",
+      "executionContextId",
+      "constitutionSemanticId",
+      "blindPacketDigestSha256",
+      "keyAccessedBeforeSubmission",
+      "peerSubmissionsAccessedBeforeSubmission",
+      "classifications"
+    ],
+    "attestations": {
+      "keyAccessedBeforeSubmission": false,
+      "peerSubmissionsAccessedBeforeSubmission": false
+    },
+    "rowFields": [
+      "id",
+      "disposition",
+      "primitiveRequirements",
+      "dominance",
+      "adjacency",
+      "opposition",
+      "decomposition",
+      "bearing",
+      "domain",
+      "authority",
+      "independentReviewBearing",
+      "ambiguity",
+      "authorityInferredFromBearing",
+      "geometryMutationRequired"
+    ],
+    "enums": {
+      "disposition": ["ROUTE", "DECOMPOSE", "ABSTAIN"],
+      "dominance": ["N", "E", "S", "W", "BALANCED", "NONE", "UNRESOLVED"],
+      "adjacency": ["ADJACENT", "NOT_APPLICABLE", "OPPOSING", "MIXED", "UNRESOLVED"],
+      "bearing": ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW", null],
+      "ambiguity": ["NONE", "BEARING_UNDERSPECIFIED", "BEARING_DOMINANCE_UNDERSPECIFIED", "AUTHORITY_UNSPECIFIED"]
+    },
+    "crossFieldRules": [
+      "ROUTE => bearing non-null and decomposition=false",
+      "DECOMPOSE => bearing=null and decomposition=true",
+      "ABSTAIN => bearing=null",
+      "authority must exactly echo case.grantedAuthority, including null",
+      "domain must exactly echo case.declaredDomain",
+      "authorityInferredFromBearing=false",
+      "geometryMutationRequired=false"
+    ]
+  },
+  "independence": {
+    "requiredSubmissionCount": 3,
+    "classifierIdsUnique": true,
+    "executionContextIdsUnique": true,
+    "noPeerOutputSharingBeforeFreeze": true,
+    "sameFrozenBlindPacketRequired": true,
+    "preferred": "Use distinct model/provider families where available; isolated contexts are mandatory even when model families repeat.",
+    "notIndependent": [
+      "three copies of one generated answer",
+      "one classifier correcting another before freeze",
+      "key-aware classification"
+    ]
+  },
+  "digestSemantics": {
+    "constitutionSemanticId": "Frozen identifier carried from v1 donor; not asserted to be the raw SHA-256 of constitution file bytes.",
+    "blindPacketDigestSha256": "SHA-256 of recursively key-sorted, compact UTF-8 JSON blind projection with no trailing newline.",
+    "submissionDigestSha256": "Raw file SHA-256 as evaluated after submission freeze."
+  }
+}

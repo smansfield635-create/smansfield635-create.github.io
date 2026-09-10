@@ -1,0 +1,84 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "awards",
+  "description": "Awards & Recognition chamber with the qualified Achievement and Trophy Standard carousel modernization served from the canonical showroom/globe/h-earth/awards route.",
+  "checks": [
+    {
+      "path": "/showroom/globe/h-earth/awards/index.html",
+      "includes": [
+        "data-awards-carousel=\"achievement\"",
+        "aria-label=\"Achievement stories\"",
+        "data-carousel-prev",
+        "data-carousel-next",
+        "1 / 5",
+        "data-awards-carousel=\"trophy\"",
+        "aria-label=\"Trophy Standard chapters\"",
+        "1 / 6",
+        "Swipe · drag · or use Left/Right keys"
+      ],
+      "excludes": [
+        "class=\"rail\" role=\"tablist\" aria-label=\"Achievement stories\"",
+        "class=\"lensrail\" role=\"tablist\" aria-label=\"Trophy Standard chapters\""
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/showroom/globe/h-earth/awards/",
+    "timeoutMs": 15000,
+    "readySelector": "[data-awards-carousel=\"achievement\"][data-carousel-ready=\"true\"]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/showroom/globe/h-earth/awards/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [
+      "Failed to load resource: the server responded with a status of 404 (File not found)"
+    ],
+    "interactions": [
+      {
+        "name": "Achievement carousel advances to Native Craft",
+        "action": {
+          "type": "click",
+          "selector": "[data-carousel-shell=\"achievement\"] [data-carousel-next]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-awards-carousel=\"achievement\"] .awards-slide[data-story=\"native\"]",
+            "name": "aria-current",
+            "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-carousel-shell=\"achievement\"] [data-carousel-status]",
+            "value": "2 / 5"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Trophy Standard carousel advances to 3D World",
+        "action": {
+          "type": "click",
+          "selector": "[data-carousel-shell=\"trophy\"] [data-carousel-next]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-awards-carousel=\"trophy\"] .awards-slide[data-lens=\"world\"]",
+            "name": "aria-current",
+            "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-carousel-shell=\"trophy\"] [data-carousel-status]",
+            "value": "2 / 6"
+          }
+        ],
+        "timeoutMs": 5000
+      }
+    ]
+  }
+}

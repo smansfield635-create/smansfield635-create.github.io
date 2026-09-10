@@ -7344,40 +7344,71 @@
       "state": "ADMITTED_LOCKED"
     },
     "f2589488e3f85b994a167d6df51aa5d42fb848bf87f1e3207904062e72dd0b6a": {
-      "governingHead": "db9610ceca983cceae2dad04925d0c153d8da9fc",
+      "governingHead": "bfaed97fac3e6146e9159bef68e649153a71d796",
       "independentAuthorityProvenance": {
         "authorityIdentity": {
-          "governingHead": "db9610ceca983cceae2dad04925d0c153d8da9fc",
-          "lockGeneration": 2049,
+          "governingHead": "bfaed97fac3e6146e9159bef68e649153a71d796",
+          "lockGeneration": 2050,
           "lockScope": "COMPASS:ORIENTATION_CINEMATIC:BOUNDED_RESPONSIVE_POLISH",
-          "operationId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001",
-          "procedureLocatorDigest": "58ed42b255d63beab150d383111e419ce0bdaef36a118aa90bccec4d3461b534",
-          "requestDigest": "a602f7e7ce1f7e818bf134a84db637a3c1b63811cd3a7fa63689f5c3649cc1a9",
+          "operationId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001_REBIND_001",
+          "procedureLocatorDigest": "79fccb174aefe614e6e7a94712c0aa507432fed8bdadc5254281e7db3abbfc4c",
+          "requestDigest": "06878e77ff789188d49bbd35708558127484bd0c7c6f724ed6a1356da2e31df8",
           "scopeHash": "f2589488e3f85b994a167d6df51aa5d42fb848bf87f1e3207904062e72dd0b6a"
         },
-        "bindingDigest": "8d413f51527a6dbd8e1e0d6ccf298a51a58c5ab4608e3512f7355b3d311ded09",
+        "bindingDigest": "08eb24e3006af58185aae5613b2f01b68ea648a750c1d3dcf12135a96519fe6a",
         "compareAndSwap": {
-          "observedLedgerBlobSha": "edb279c78e26a1f113a29ee202635c55c2ec4326",
-          "observedLockRefHead": "8900e55625967c383d10f6f5ccbec50703ff5248"
+          "observedLedgerBlobSha": "414e63d52e9b48fc75462d7393e157c14a3fdbb9",
+          "observedLockRefHead": "de978a1165871aa51bb546ee5ec69f895637c8dd"
         },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
         "source": {
           "authorAssociation": "OWNER",
           "authorLogin": "smansfield635-create",
-          "commentBodySha256": "f2674faed6c096aa95eba74f1760c8ecaabcc91127f596dca4bbd87709ca321b",
-          "commentId": 5610403899,
+          "commentBodySha256": "06a12615a736bfcb520b929306623f5a2d81fa04bdee561221faea692d9516bb",
+          "commentId": 5610596281,
           "issueNumber": 1011,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
           "repository": "smansfield635-create/smansfield635-create.github.io"
         },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+        "transitionIdentity": {
+          "predecessor": {
+            "governingHead": "db9610ceca983cceae2dad04925d0c153d8da9fc",
+            "lockGeneration": 2049,
+            "lockScope": "COMPASS:ORIENTATION_CINEMATIC:BOUNDED_RESPONSIVE_POLISH",
+            "operationId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001"
+          },
+          "successor": {
+            "governingHead": "bfaed97fac3e6146e9159bef68e649153a71d796",
+            "lockGeneration": 2050,
+            "lockScope": "COMPASS:ORIENTATION_CINEMATIC:BOUNDED_RESPONSIVE_POLISH",
+            "operationId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001_REBIND_001"
+          },
+          "transitionId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001_REBIND_001_TRANSITION"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
       },
-      "lockGeneration": 2049,
+      "lockGeneration": 2050,
       "lockScope": "COMPASS:ORIENTATION_CINEMATIC:BOUNDED_RESPONSIVE_POLISH",
-      "operationId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001",
-      "procedureLocatorDigest": "58ed42b255d63beab150d383111e419ce0bdaef36a118aa90bccec4d3461b534",
+      "operationId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001_REBIND_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "db9610ceca983cceae2dad04925d0c153d8da9fc",
+        "lockGeneration": 2049,
+        "lockScope": "COMPASS:ORIENTATION_CINEMATIC:BOUNDED_RESPONSIVE_POLISH",
+        "operationId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001",
+        "preservedEvidenceRefs": [
+          "issue://1011#issuecomment-5610403899",
+          "refs/heads/quarantine/operation-intake-truncation-20260909-001",
+          "router-receipt://db9610ceca983cceae2dad04925d0c153d8da9fc"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001_REBIND_001_TRANSITION"
+      },
+      "procedureLocatorDigest": "79fccb174aefe614e6e7a94712c0aa507432fed8bdadc5254281e7db3abbfc4c",
       "released": false,
-      "requestDigest": "a602f7e7ce1f7e818bf134a84db637a3c1b63811cd3a7fa63689f5c3649cc1a9",
+      "requestDigest": "06878e77ff789188d49bbd35708558127484bd0c7c6f724ed6a1356da2e31df8",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "f2589488e3f85b994a167d6df51aa5d42fb848bf87f1e3207904062e72dd0b6a",
       "state": "ADMITTED_LOCKED"
@@ -7585,7 +7616,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2049,
+  "lockGeneration": 2050,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -45160,6 +45191,62 @@
       "scopeHash": "9164b74a72c8a387946dab57556194317c375f5a6c70eb83980d467d09ccbacf",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "db9610ceca983cceae2dad04925d0c153d8da9fc",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "db9610ceca983cceae2dad04925d0c153d8da9fc",
+          "lockGeneration": 2049,
+          "lockScope": "COMPASS:ORIENTATION_CINEMATIC:BOUNDED_RESPONSIVE_POLISH",
+          "operationId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001",
+          "procedureLocatorDigest": "58ed42b255d63beab150d383111e419ce0bdaef36a118aa90bccec4d3461b534",
+          "requestDigest": "a602f7e7ce1f7e818bf134a84db637a3c1b63811cd3a7fa63689f5c3649cc1a9",
+          "scopeHash": "f2589488e3f85b994a167d6df51aa5d42fb848bf87f1e3207904062e72dd0b6a"
+        },
+        "bindingDigest": "8d413f51527a6dbd8e1e0d6ccf298a51a58c5ab4608e3512f7355b3d311ded09",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "edb279c78e26a1f113a29ee202635c55c2ec4326",
+          "observedLockRefHead": "8900e55625967c383d10f6f5ccbec50703ff5248"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "f2674faed6c096aa95eba74f1760c8ecaabcc91127f596dca4bbd87709ca321b",
+          "commentId": 5610403899,
+          "issueNumber": 1011,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "lockGeneration": 2049,
+      "lockScope": "COMPASS:ORIENTATION_CINEMATIC:BOUNDED_RESPONSIVE_POLISH",
+      "operationId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001",
+      "procedureLocatorDigest": "58ed42b255d63beab150d383111e419ce0bdaef36a118aa90bccec4d3461b534",
+      "released": true,
+      "requestDigest": "a602f7e7ce1f7e818bf134a84db637a3c1b63811cd3a7fa63689f5c3649cc1a9",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "f2589488e3f85b994a167d6df51aa5d42fb848bf87f1e3207904062e72dd0b6a",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue://1011#issuecomment-5610403899",
+          "refs/heads/quarantine/operation-intake-truncation-20260909-001",
+          "router-receipt://db9610ceca983cceae2dad04925d0c153d8da9fc"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "bfaed97fac3e6146e9159bef68e649153a71d796",
+        "successorLockGeneration": 2050,
+        "successorLockScope": "COMPASS:ORIENTATION_CINEMATIC:BOUNDED_RESPONSIVE_POLISH",
+        "successorOperationId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001_REBIND_001",
+        "transitionId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001_REBIND_001_TRANSITION"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

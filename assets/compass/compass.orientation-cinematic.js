@@ -37,6 +37,7 @@ const ENTRY_GOLDEN_ANGLE=Math.PI*(3-Math.sqrt(5));
 const ENTRY_SEED=0x0b17e17;
 const ENTRY_COLORS=['255,248,224','154,217,225','234,208,131','170,155,224'];
 const ENTRY_CONTROL_RETRACT_MS=170;
+const AUDRALIA_PERCEPTUAL_DWELL_MS=2000;
 const AUDRALIA_HOLD=Object.freeze({captureAt:49.30,revealAt:49.70,releaseAt:1499/30,clearAt:50.24});
 
 const q=(s,r=document)=>r.querySelector(s);
@@ -53,7 +54,8 @@ const session={
   entryStars:[],entryCells:[],entryStartedAt:0,entryRaf:0,
   playRequested:false,entryTransitionComplete:false,videoReady:false,
   videoStartRequested:false,firstFramePresented:false,entryAction:'',entryDecision:null,
-  entryControlTimer:0,audraliaFrameCallback:0,audraliaHoldCaptured:false,audraliaHoldVisible:false,audraliaHoldReleased:false
+  entryControlTimer:0,audraliaFrameCallback:0,audraliaHoldCaptured:false,audraliaHoldVisible:false,audraliaHoldReleased:false,
+  audraliaDwellTimer:0,audraliaDwellStarted:false,audraliaDwellComplete:false,audraliaDwellMediaTime:0
 };
 
 function markState(state){
@@ -285,6 +287,7 @@ function cleanupOverlay(){
   cancelEntryFrame();
   cancelAudraliaFrame();
   if(session.entryControlTimer)clearTimeout(session.entryControlTimer);
+  if(session.audraliaDwellTimer)clearTimeout(session.audraliaDwellTimer);
   for(const video of [session.video,session.ambientVideo])if(video){try{video.pause();}catch{}video.removeAttribute('src');try{video.load();}catch{}}
   session.overlay?.remove();
   session.overlay=null;
@@ -298,6 +301,7 @@ function cleanupOverlay(){
   session.entryCanvas=null;
   session.entryCtx=null;
   session.entryControlTimer=0;
+  session.audraliaDwellTimer=0;
   session.fadeStarted=false;
 }
 
@@ -315,6 +319,29 @@ function captureAudraliaHold(){
   session.audraliaHoldCaptured=true;
   return true;
 }
+function startAudraliaPerceptualDwell(){
+  if(session.audraliaDwellStarted||session.state!==STATE.PLAYING||session.entryAction!=='play')return;
+  const video=session.video,ambientVideo=session.ambientVideo;
+  if(!video)return;
+  session.audraliaDwellStarted=true;
+  session.audraliaDwellMediaTime=video.currentTime;
+  try{video.pause();}catch{}
+  if(ambientVideo)try{ambientVideo.pause();}catch{}
+  session.audraliaDwellTimer=window.setTimeout(()=>{
+    session.audraliaDwellTimer=0;
+    if(session.state!==STATE.PLAYING||session.entryAction!=='play'||session.video!==video)return;
+    session.audraliaDwellComplete=true;
+    if(ambientVideo===session.ambientVideo){
+      const ambientPlay=ambientVideo.play();
+      if(ambientPlay&&typeof ambientPlay.catch==='function')ambientPlay.catch(()=>{});
+    }
+    const p=video.play();
+    if(p&&typeof p.catch==='function')p.catch(error=>{
+      session.overlay?.setAttribute('data-player-error',String(error?.name||'AUDRALIA_DWELL_RESUME_FAILED'));
+      settle('fail-open');
+    });
+  },AUDRALIA_PERCEPTUAL_DWELL_MS);
+}
 function updateAudraliaHold(mediaTime){
   if(session.state!==STATE.PLAYING||!Number.isFinite(mediaTime))return;
   if(!session.audraliaHoldCaptured&&mediaTime>=AUDRALIA_HOLD.captureAt&&mediaTime<AUDRALIA_HOLD.revealAt)captureAudraliaHold();
@@ -323,6 +350,7 @@ function updateAudraliaHold(mediaTime){
     session.audraliaHoldVisible=true;
     for(const canvas of [session.audraliaHoldAmbient,session.audraliaHoldForeground])canvas?.classList.add('is-active');
   }
+  if(session.audraliaHoldVisible&&!session.audraliaDwellStarted&&mediaTime>=AUDRALIA_HOLD.revealAt&&mediaTime<AUDRALIA_HOLD.releaseAt)startAudraliaPerceptualDwell();
   if(session.audraliaHoldVisible&&!session.audraliaHoldReleased&&mediaTime>=AUDRALIA_HOLD.releaseAt){
     session.audraliaHoldReleased=true;
     for(const canvas of [session.audraliaHoldAmbient,session.audraliaHoldForeground])canvas?.classList.add('is-releasing');
@@ -604,6 +632,7 @@ function resetRunState(){
   session.entryAction='';
   session.entryControlTimer=0;session.audraliaFrameCallback=0;
   session.audraliaHoldCaptured=false;session.audraliaHoldVisible=false;session.audraliaHoldReleased=false;
+  session.audraliaDwellTimer=0;session.audraliaDwellStarted=false;session.audraliaDwellComplete=false;session.audraliaDwellMediaTime=0;
 }
 function mount(source='initial'){
   if(session.overlay)return;
@@ -664,6 +693,10 @@ globalThis.__DGB_COMPASS_PRERENDERED_PLAYER__=Object.freeze({
     ambientMuted:Boolean(session.ambient?.muted),
     currentTime:Number(session.video?.currentTime||0),
     duration:Number(session.video?.duration||0),
+    audraliaPerceptualDwellMs:AUDRALIA_PERCEPTUAL_DWELL_MS,
+    audraliaDwellStarted:session.audraliaDwellStarted,
+    audraliaDwellComplete:session.audraliaDwellComplete,
+    audraliaDwellMediaTime:session.audraliaDwellMediaTime,
     entryDecision:session.entryDecision
   })
 });

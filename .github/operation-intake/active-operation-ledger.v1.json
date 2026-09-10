@@ -6862,49 +6862,6 @@
       "scopeHash": "e5ea3daf509ed50beb2dd98ec7e0f88dfc7fd4593d645d8cad4c8768d42b577b",
       "state": "ADMITTED_LOCKED"
     },
-    "e6eea0ec855325b389923339d4e300bb886ffcd82331eada0baafe8870f9f71e": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "19cdc6bdf286d63c711da56b7df49f6d350faa14",
-          "lockGeneration": 2060,
-          "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:AUDRALIA_PERCEPTUAL_DWELL",
-          "operationId": "CINEMATIC_IMMERSIVE_CONTEXT_AUDRALIA_PERCEPTUAL_DWELL_20260909_001",
-          "procedureLocatorDigest": "7668bf50cc52ce19cf600a288bac46db431a8deb95f1c6dbb48854ae2a3779b3",
-          "requestDigest": "ae7d753e463065073ee39c674189ae264b007839762bba2f788be7bff99173e1",
-          "scopeHash": "e6eea0ec855325b389923339d4e300bb886ffcd82331eada0baafe8870f9f71e"
-        },
-        "bindingDigest": "0b8c9aef2a6c14eb2b700d2ed61916b890c2b7552178bd3fa1650a4b616af46f",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "22db3ff1719447fe535584779e3900275a37eefc4f99f1c21f9620e5b98c9386",
-          "commentId": 5613337706,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2966,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34438596844,
-          "workflowSha": "19cdc6bdf286d63c711da56b7df49f6d350faa14"
-        },
-        "lineageAnchorCommitSha": "412ec69ba7d4f26e9712474159c00930bb761001",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "19cdc6bdf286d63c711da56b7df49f6d350faa14",
-      "lockGeneration": 2060,
-      "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:AUDRALIA_PERCEPTUAL_DWELL",
-      "operationId": "CINEMATIC_IMMERSIVE_CONTEXT_AUDRALIA_PERCEPTUAL_DWELL_20260909_001",
-      "procedureLocatorDigest": "7668bf50cc52ce19cf600a288bac46db431a8deb95f1c6dbb48854ae2a3779b3",
-      "released": false,
-      "requestDigest": "ae7d753e463065073ee39c674189ae264b007839762bba2f788be7bff99173e1",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "e6eea0ec855325b389923339d4e300bb886ffcd82331eada0baafe8870f9f71e",
-      "state": "ADMITTED_LOCKED"
-    },
     "e705191c2e8d19f69525f0fa6f083068b6528233582990254765ecf4d70d8dde": {
       "governingHead": "2121fbe36a15898e9b54be0c937ae705766407f7",
       "lockGeneration": 416,
@@ -45865,6 +45822,50 @@
       "requestDigest": "2765c159aeb3a9c9999a6a67137efb25fac54d56ad5181f1e9b4918e72974c8a",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "d0e5f8968848b919891b7caf1b955ba9968f9cfdd47ad8eb01951e8fe1dd81ad",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "19cdc6bdf286d63c711da56b7df49f6d350faa14",
+          "lockGeneration": 2060,
+          "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:AUDRALIA_PERCEPTUAL_DWELL",
+          "operationId": "CINEMATIC_IMMERSIVE_CONTEXT_AUDRALIA_PERCEPTUAL_DWELL_20260909_001",
+          "procedureLocatorDigest": "7668bf50cc52ce19cf600a288bac46db431a8deb95f1c6dbb48854ae2a3779b3",
+          "requestDigest": "ae7d753e463065073ee39c674189ae264b007839762bba2f788be7bff99173e1",
+          "scopeHash": "e6eea0ec855325b389923339d4e300bb886ffcd82331eada0baafe8870f9f71e"
+        },
+        "bindingDigest": "0b8c9aef2a6c14eb2b700d2ed61916b890c2b7552178bd3fa1650a4b616af46f",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "22db3ff1719447fe535584779e3900275a37eefc4f99f1c21f9620e5b98c9386",
+          "commentId": 5613337706,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2966,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34438596844,
+          "workflowSha": "19cdc6bdf286d63c711da56b7df49f6d350faa14"
+        },
+        "lineageAnchorCommitSha": "412ec69ba7d4f26e9712474159c00930bb761001",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "19cdc6bdf286d63c711da56b7df49f6d350faa14",
+      "lockGeneration": 2060,
+      "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:AUDRALIA_PERCEPTUAL_DWELL",
+      "operationId": "CINEMATIC_IMMERSIVE_CONTEXT_AUDRALIA_PERCEPTUAL_DWELL_20260909_001",
+      "procedureLocatorDigest": "7668bf50cc52ce19cf600a288bac46db431a8deb95f1c6dbb48854ae2a3779b3",
+      "released": true,
+      "requestDigest": "ae7d753e463065073ee39c674189ae264b007839762bba2f788be7bff99173e1",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "e6eea0ec855325b389923339d4e300bb886ffcd82331eada0baafe8870f9f71e",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

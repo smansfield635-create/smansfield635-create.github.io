@@ -29,8 +29,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0
+          fetch-depth: 1
           persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/operation-intake/locator.v1.json
+            /.github/workflows/remote-operation-terminal-closure-v1.yml
+            /tools/operation-intake/repository-operation-lock-manager.v1.mjs
+            /tools/operation-intake/remote-operation-terminal-closure-bridge.v1.mjs
+            /tools/operation-intake/remote-operation-terminal-closure-bridge.v1.test.mjs
+            /tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -80,8 +88,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
-          fetch-depth: 0
+          fetch-depth: 1
           persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/operation-intake/locator.v1.json
+            /.github/workflows/remote-operation-terminal-closure-v1.yml
+            /tools/operation-intake/repository-operation-lock-manager.v1.mjs
+            /tools/operation-intake/remote-operation-terminal-closure-bridge.v1.mjs
+            /tools/operation-intake/remote-operation-terminal-closure-bridge.v1.test.mjs
+            /tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs
       - uses: actions/setup-node@v4
         with:
           node-version: 22

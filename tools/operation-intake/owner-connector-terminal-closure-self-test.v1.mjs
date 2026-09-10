@@ -117,6 +117,10 @@ assert.equal(valid.transportId, TRANSPORT_ID);
 assert.equal(valid.ledgerMutationAuthorized, true);
 assert.equal(valid.oneLedgerMutationRequired, true);
 assert.equal(valid.planIsReceipt, false);
+assert.equal(valid.currentMainBindingRequired, false);
+assert.equal(valid.staleMainContextObserved, false);
+assert.equal(valid.sourceExpectedMainHead, MAIN);
+assert.equal(valid.terminalClosureCreatesAuthority, false);
 assert.equal(valid.commitMessage, `Close operation lock ${generation}: ${operationId} PASS_CLOSED`);
 assert.equal(Object.keys(valid.nextLedger.activeScopes).length, 0);
 assert.equal(valid.nextLedger.terminalHistory.length, 1);
@@ -128,7 +132,14 @@ assert.equal(verifyOwnerTerminalClosureProvenance(valid.nextLedger.terminalHisto
 expectCode(() => plan({ sourceComment: sourceFor(closureRequest, { user: { login: 'not-owner' } }) }), 'SOURCE_COMMENT_NOT_OWNER');
 expectCode(() => plan({ sourceComment: sourceFor(closureRequest, { author_association: 'MEMBER' }) }), 'SOURCE_COMMENT_NOT_OWNER');
 expectCode(() => plan({ sourceComment: { ...sourceFor(), body: `WRONG_MARKER\n{}` } }), 'SOURCE_MARKER_MISMATCH');
-expectCode(() => plan({ observedMainHead: '9'.repeat(40) }), 'GOVERNING_HEAD_MISMATCH');
+const staleMain = plan({ observedMainHead: '9'.repeat(40) });
+assert.equal(staleMain.result, 'TERMINAL_CLOSURE_PLANNED');
+assert.equal(staleMain.currentMainBindingRequired, false);
+assert.equal(staleMain.staleMainContextObserved, true);
+assert.equal(staleMain.sourceExpectedMainHead, MAIN);
+assert.equal(staleMain.observedMainHead, '9'.repeat(40));
+assert.equal(staleMain.terminalClosureCreatesAuthority, false);
+expectCode(() => plan({ sourceComment: sourceFor(closureRequest, { body: `${MARKER}\n${JSON.stringify({schema:INVOCATION_SCHEMA,repository:REPOSITORY,expectedMainHead:'bad',closureRequest})}` }) }), 'INVALID_DIGEST');
 expectCode(() => plan({ observedLedgerBlobSha: 'bad' }), 'INVALID_DIGEST');
 expectCode(() => plan({ observedLockRefHead: 'bad' }), 'INVALID_DIGEST');
 const wrongGeneration = stable({ ...closureRequest, lockGeneration: generation + 1 });
@@ -145,6 +156,9 @@ process.stdout.write(JSON.stringify(stable({
   schema: 'OWNER_CONNECTOR_TERMINAL_CLOSURE_SELF_TEST_RECEIPT_v1',
   result: 'PASS',
   validClosurePlanned: true,
+  staleMainContextDoesNotBlockClosure: true,
+  currentMainBindingRequired: false,
+  terminalClosureCreatesAuthority: false,
   terminalLineageVerified: true,
   sourceTamperRejected: true,
   casTamperRejected: true,

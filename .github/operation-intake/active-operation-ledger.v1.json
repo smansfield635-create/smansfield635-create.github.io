@@ -7343,76 +7343,6 @@
       "scopeHash": "f0e4fd005a821d995a9e7f750043582ced1e9e08fa136da8931770e58c8eb7a1",
       "state": "ADMITTED_LOCKED"
     },
-    "f2589488e3f85b994a167d6df51aa5d42fb848bf87f1e3207904062e72dd0b6a": {
-      "governingHead": "bfaed97fac3e6146e9159bef68e649153a71d796",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "bfaed97fac3e6146e9159bef68e649153a71d796",
-          "lockGeneration": 2050,
-          "lockScope": "COMPASS:ORIENTATION_CINEMATIC:BOUNDED_RESPONSIVE_POLISH",
-          "operationId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001_REBIND_001",
-          "procedureLocatorDigest": "79fccb174aefe614e6e7a94712c0aa507432fed8bdadc5254281e7db3abbfc4c",
-          "requestDigest": "06878e77ff789188d49bbd35708558127484bd0c7c6f724ed6a1356da2e31df8",
-          "scopeHash": "f2589488e3f85b994a167d6df51aa5d42fb848bf87f1e3207904062e72dd0b6a"
-        },
-        "bindingDigest": "08eb24e3006af58185aae5613b2f01b68ea648a750c1d3dcf12135a96519fe6a",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "414e63d52e9b48fc75462d7393e157c14a3fdbb9",
-          "observedLockRefHead": "de978a1165871aa51bb546ee5ec69f895637c8dd"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "06a12615a736bfcb520b929306623f5a2d81fa04bdee561221faea692d9516bb",
-          "commentId": 5610596281,
-          "issueNumber": 1011,
-          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transitionIdentity": {
-          "predecessor": {
-            "governingHead": "db9610ceca983cceae2dad04925d0c153d8da9fc",
-            "lockGeneration": 2049,
-            "lockScope": "COMPASS:ORIENTATION_CINEMATIC:BOUNDED_RESPONSIVE_POLISH",
-            "operationId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001"
-          },
-          "successor": {
-            "governingHead": "bfaed97fac3e6146e9159bef68e649153a71d796",
-            "lockGeneration": 2050,
-            "lockScope": "COMPASS:ORIENTATION_CINEMATIC:BOUNDED_RESPONSIVE_POLISH",
-            "operationId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001_REBIND_001"
-          },
-          "transitionId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001_REBIND_001_TRANSITION"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
-      },
-      "lockGeneration": 2050,
-      "lockScope": "COMPASS:ORIENTATION_CINEMATIC:BOUNDED_RESPONSIVE_POLISH",
-      "operationId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001_REBIND_001",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "db9610ceca983cceae2dad04925d0c153d8da9fc",
-        "lockGeneration": 2049,
-        "lockScope": "COMPASS:ORIENTATION_CINEMATIC:BOUNDED_RESPONSIVE_POLISH",
-        "operationId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001",
-        "preservedEvidenceRefs": [
-          "issue://1011#issuecomment-5610403899",
-          "refs/heads/quarantine/operation-intake-truncation-20260909-001",
-          "router-receipt://db9610ceca983cceae2dad04925d0c153d8da9fc"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001_REBIND_001_TRANSITION"
-      },
-      "procedureLocatorDigest": "79fccb174aefe614e6e7a94712c0aa507432fed8bdadc5254281e7db3abbfc4c",
-      "released": false,
-      "requestDigest": "06878e77ff789188d49bbd35708558127484bd0c7c6f724ed6a1356da2e31df8",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "f2589488e3f85b994a167d6df51aa5d42fb848bf87f1e3207904062e72dd0b6a",
-      "state": "ADMITTED_LOCKED"
-    },
     "f38ebc3a9fade06e8b82494b50bcb52fa321cd6758d97032e1b1a27d5e603ddb": {
       "governingHead": "a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc",
       "lockGeneration": 458,
@@ -45247,6 +45177,114 @@
         "transitionId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001_REBIND_001_TRANSITION"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "bfaed97fac3e6146e9159bef68e649153a71d796",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "bfaed97fac3e6146e9159bef68e649153a71d796",
+          "lockGeneration": 2050,
+          "lockScope": "COMPASS:ORIENTATION_CINEMATIC:BOUNDED_RESPONSIVE_POLISH",
+          "operationId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001_REBIND_001",
+          "procedureLocatorDigest": "79fccb174aefe614e6e7a94712c0aa507432fed8bdadc5254281e7db3abbfc4c",
+          "requestDigest": "06878e77ff789188d49bbd35708558127484bd0c7c6f724ed6a1356da2e31df8",
+          "scopeHash": "f2589488e3f85b994a167d6df51aa5d42fb848bf87f1e3207904062e72dd0b6a"
+        },
+        "bindingDigest": "08eb24e3006af58185aae5613b2f01b68ea648a750c1d3dcf12135a96519fe6a",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "414e63d52e9b48fc75462d7393e157c14a3fdbb9",
+          "observedLockRefHead": "de978a1165871aa51bb546ee5ec69f895637c8dd"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "06a12615a736bfcb520b929306623f5a2d81fa04bdee561221faea692d9516bb",
+          "commentId": 5610596281,
+          "issueNumber": 1011,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transitionIdentity": {
+          "predecessor": {
+            "governingHead": "db9610ceca983cceae2dad04925d0c153d8da9fc",
+            "lockGeneration": 2049,
+            "lockScope": "COMPASS:ORIENTATION_CINEMATIC:BOUNDED_RESPONSIVE_POLISH",
+            "operationId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001"
+          },
+          "successor": {
+            "governingHead": "bfaed97fac3e6146e9159bef68e649153a71d796",
+            "lockGeneration": 2050,
+            "lockScope": "COMPASS:ORIENTATION_CINEMATIC:BOUNDED_RESPONSIVE_POLISH",
+            "operationId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001_REBIND_001"
+          },
+          "transitionId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001_REBIND_001_TRANSITION"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "bfaed97fac3e6146e9159bef68e649153a71d796",
+          "lockGeneration": 2050,
+          "lockScope": "COMPASS:ORIENTATION_CINEMATIC:BOUNDED_RESPONSIVE_POLISH",
+          "operationId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001_REBIND_001",
+          "procedureLocatorDigest": "79fccb174aefe614e6e7a94712c0aa507432fed8bdadc5254281e7db3abbfc4c",
+          "requestDigest": "06878e77ff789188d49bbd35708558127484bd0c7c6f724ed6a1356da2e31df8",
+          "scopeHash": "f2589488e3f85b994a167d6df51aa5d42fb848bf87f1e3207904062e72dd0b6a"
+        },
+        "bindingDigest": "6f9a16ec493d290e8f06738c0fccc65a0f9ba1944fc67dc16b20f75af8936b2e",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "6f347e4e0eab87fde9f0cee391d295f90a4b27d1",
+          "observedLockRefHead": "eeb96de115479e86ac7cfe72abeb5b53b091926c"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "8d7dbd89e4d4907cde47923bacb3642103ee9f38c3ed1634332217df434ea45b",
+          "commentId": 5610969810,
+          "issueNumber": 1011,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "bfaed97fac3e6146e9159bef68e649153a71d796",
+          "lockGeneration": 2050,
+          "lockScope": "COMPASS:ORIENTATION_CINEMATIC:BOUNDED_RESPONSIVE_POLISH",
+          "operationId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001_REBIND_001",
+          "released": true,
+          "scopeHash": "f2589488e3f85b994a167d6df51aa5d42fb848bf87f1e3207904062e72dd0b6a",
+          "state": "TERMINAL",
+          "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2050,
+      "lockScope": "COMPASS:ORIENTATION_CINEMATIC:BOUNDED_RESPONSIVE_POLISH",
+      "operationId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001_REBIND_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "db9610ceca983cceae2dad04925d0c153d8da9fc",
+        "lockGeneration": 2049,
+        "lockScope": "COMPASS:ORIENTATION_CINEMATIC:BOUNDED_RESPONSIVE_POLISH",
+        "operationId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001",
+        "preservedEvidenceRefs": [
+          "issue://1011#issuecomment-5610403899",
+          "refs/heads/quarantine/operation-intake-truncation-20260909-001",
+          "router-receipt://db9610ceca983cceae2dad04925d0c153d8da9fc"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_ORIENTATION_CINEMATIC_BOUNDED_POLISH_20260909_001_REBIND_001_TRANSITION"
+      },
+      "procedureLocatorDigest": "79fccb174aefe614e6e7a94712c0aa507432fed8bdadc5254281e7db3abbfc4c",
+      "released": true,
+      "requestDigest": "06878e77ff789188d49bbd35708558127484bd0c7c6f724ed6a1356da2e31df8",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "f2589488e3f85b994a167d6df51aa5d42fb848bf87f1e3207904062e72dd0b6a",
+      "state": "TERMINAL",
+      "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
     }
   ]
 }

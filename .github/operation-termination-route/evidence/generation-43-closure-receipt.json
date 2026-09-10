@@ -1,0 +1,15 @@
+{
+  "closureCommitSha": "9399a220b57a8cf8ded3e4dfb6fc6d70000a1da2",
+  "committedLedgerBlobSha": "26b1f081eca896f3651c2de5179eea415bfcae50",
+  "lockGeneration": 43,
+  "lockReleased": true,
+  "lockScope": "H_EARTH:REGISTRY_TWO_PATH_SUCCESSOR_REPAIR:TOOLSET_REGISTRATION:A:V1",
+  "observedBranchHead": "24b132d449b2712cf462663c12e6862ca6bbf36b",
+  "observedLedgerBlobSha": "d4d362015be77477625d12314a54459c9a587d8e",
+  "operationId": "H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_REPAIR_TOOLSET_REGISTRATION_A_001",
+  "result": "TERMINAL_CLOSURE_COMMITTED",
+  "schema": "REPOSITORY_OPERATION_CLOSURE_RECEIPT_v1",
+  "scopeHash": "ce3554c46bdea439cb4db91820c8393c920e25be45fe860b4821ec78304ba9ef",
+  "terminalDisposition": "FAIL_CLOSED",
+  "terminalHistoryPreserved": true
+}

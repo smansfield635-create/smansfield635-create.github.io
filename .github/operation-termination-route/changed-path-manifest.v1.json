@@ -1,0 +1,20 @@
+{
+  "schema": "CP9_GENERATION_43_TERMINATION_ROUTE_CHANGED_PATH_MANIFEST_v1",
+  "baseHead": "5d6295c6c4a9b94db168e0822e02e36fbee29414",
+  "authorityIssue": 580,
+  "expectedChangedPathCount": 7,
+  "expectedChangedPaths": [
+    ".github/operation-termination-route/AGENTS.md",
+    ".github/operation-termination-route/changed-path-manifest.v1.json",
+    ".github/operation-termination-route/closure-request.generation-43.v1.json",
+    ".github/operation-termination-route/contract.v1.json",
+    ".github/operation-termination-route/evidence/generation-43-closure-receipt.json",
+    ".github/workflows/cp9-generation-43-termination-route.yml",
+    "tools/operation-termination-route/cp9-generation-43-close.v1.mjs"
+  ],
+  "lockRefMutationAllowed": true,
+  "ordinaryRepositoryMutationByRouteAllowed": false,
+  "lockAcquisitionAllowed": false,
+  "mergeAllowed": false,
+  "cp9RetryAllowed": false
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "COMPASS_ENGINEERING_COVERAGE_CORPUS_v1",
+  "status": "FROZEN_CANDIDATE_PENDING_CANONICAL_ADMISSION",
+  "constitutionDigest": "e2e37227c4c04ffab10562161f78a76e0378864fee63ee80b9043ce414d2eeea",
+  "instructions": {
+    "requiredOutputs": ["primitiveRequirements", "dominance", "adjacency", "opposition", "decomposition", "bearing", "domain", "authority", "independentReviewBearing", "ambiguity"],
+    "allowedPrimitives": ["N", "E", "S", "W"],
+    "allowedBearings": ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"],
+    "laws": ["ADJACENT_FUNCTIONS_MAY_COMPOSE", "OPPOSING_FUNCTIONS_MUST_SEPARATE", "THREE_OR_FOUR_MATERIAL_PRIMITIVES_MUST_DECOMPOSE", "AUTHORITY_IS_NEVER_INFERRED_FROM_BEARING"]
+  },
+  "cases": [
+    {"id":"EC01","taskClass":"Requirements","prompt":"Convert an owner's stated outcome and constraints into a bounded technical problem statement. Do not implement, approve, or verify a solution."},
+    {"id":"EC02","taskClass":"Architecture","prompt":"Choose a system decomposition and interface topology using observed workload and dependency evidence. Produce a design for separate implementation and review."},
+    {"id":"EC03","taskClass":"Research","prompt":"Investigate why a proposed mechanism might work, gather discriminating evidence, and recommend the next experiment without implementing the mechanism."},
+    {"id":"EC04","taskClass":"Data gathering","prompt":"Collect, normalize, and preserve telemetry from declared sources under an already-fixed collection protocol. Do not interpret policy or certify completeness."},
+    {"id":"EC05","taskClass":"Implementation","prompt":"Translate an approved specification into working code while preserving its declared interfaces and state across the implementation sequence."},
+    {"id":"EC06","taskClass":"Integration","prompt":"Connect two approved components, preserve their interface contracts, and demonstrate that information passes correctly across the joined lifecycle."},
+    {"id":"EC07","taskClass":"Debugging","prompt":"Use logs and reproducible observations to locate a runtime defect, apply the smallest correction, and retain before-and-after behavior."},
+    {"id":"EC08","taskClass":"Testing","prompt":"Execute an approved test plan repeatedly, preserve fixtures and outcomes, and report deviations without deciding release authorization."},
+    {"id":"EC09","taskClass":"Verification","prompt":"Determine independently whether a completed implementation satisfies its frozen acceptance contract and record a bounded pass or failure."},
+    {"id":"EC10","taskClass":"Security analysis","prompt":"Evaluate an implemented system against declared security constraints, preserve reproducible findings, and prevent unsafe acceptance."},
+    {"id":"EC11","taskClass":"Threat modeling","prompt":"Identify plausible attack paths before implementation and use boundary assumptions to redirect the proposed architecture."},
+    {"id":"EC12","taskClass":"Deployment","prompt":"Carry an approved immutable release through staging and production while preserving version identity, ordering, and rollback state."},
+    {"id":"EC13","taskClass":"Release management","prompt":"Coordinate a qualified candidate through final release gates, enforce stop conditions, and preserve the exact released identity."},
+    {"id":"EC14","taskClass":"SRE","prompt":"Maintain service continuity while enforcing reliability limits, error budgets, and controlled recovery procedures."},
+    {"id":"EC15","taskClass":"Incident response","prompt":"Contain an active production incident, establish the safest recovery direction, and keep investigation and restoration responsibilities explicit."},
+    {"id":"EC16","taskClass":"Audit","prompt":"Independently inspect an operation's authority, evidence, mutations, and closure record without changing the inspected operation."},
+    {"id":"EC17","taskClass":"Documentation","prompt":"Turn approved system facts and operating procedures into accurate, usable documentation without creating new technical authority."},
+    {"id":"EC18","taskClass":"Project coordination","prompt":"Maintain sequencing, dependencies, owners, and handoffs across an already-approved multi-stage engineering plan."},
+    {"id":"EC19","taskClass":"Product review","prompt":"Compare delivered behavior with the intended product direction and user constraints, then recommend bounded changes without implementing them."},
+    {"id":"EC20","taskClass":"Governance and closure","prompt":"The same assignment would define the target direction, implement it, produce its evidence, judge that evidence, authorize release, and close the operation. Route it without collapsing opposing responsibilities."}
+  ]
+}

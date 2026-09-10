@@ -1,0 +1,7 @@
+{
+  "schema": "COMPASS_ENGINEERING_CLASSIFIER_SUBMISSION_v1",
+  "classifierId": "REPLACE_WITH_INDEPENDENT_CLASSIFIER_ID",
+  "constitutionDigest": "e2e37227c4c04ffab10562161f78a76e0378864fee63ee80b9043ce414d2eeea",
+  "keyAccessedBeforeSubmission": false,
+  "classifications": []
+}

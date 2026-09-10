@@ -1,0 +1,26 @@
+{
+  "schema": "COMPASS_ENGINEERING_COVERAGE_KEY_v1",
+  "status": "SEALED_REFERENCE_CANDIDATE",
+  "cases": [
+    {"id":"EC01","primitiveRequirements":["N"],"dominance":"N","adjacency":"NOT_APPLICABLE","opposition":false,"decomposition":false,"bearing":"N","independentReviewBearing":"S"},
+    {"id":"EC02","primitiveRequirements":["N","E"],"dominance":"BALANCED","adjacency":"ADJACENT","opposition":false,"decomposition":false,"bearing":"NE","independentReviewBearing":"SW"},
+    {"id":"EC03","primitiveRequirements":["N","E"],"dominance":"E","adjacency":"ADJACENT","opposition":false,"decomposition":false,"bearing":"ENE","independentReviewBearing":"WSW"},
+    {"id":"EC04","primitiveRequirements":["E"],"dominance":"E","adjacency":"NOT_APPLICABLE","opposition":false,"decomposition":false,"bearing":"E","independentReviewBearing":"W"},
+    {"id":"EC05","primitiveRequirements":["E","S"],"dominance":"E","adjacency":"ADJACENT","opposition":false,"decomposition":false,"bearing":"ESE","independentReviewBearing":"WNW"},
+    {"id":"EC06","primitiveRequirements":["E","S"],"dominance":"BALANCED","adjacency":"ADJACENT","opposition":false,"decomposition":false,"bearing":"SE","independentReviewBearing":"NW"},
+    {"id":"EC07","primitiveRequirements":["E","S"],"dominance":"E","adjacency":"ADJACENT","opposition":false,"decomposition":false,"bearing":"ESE","independentReviewBearing":"WNW"},
+    {"id":"EC08","primitiveRequirements":["E","S"],"dominance":"S","adjacency":"ADJACENT","opposition":false,"decomposition":false,"bearing":"SSE","independentReviewBearing":"NNW"},
+    {"id":"EC09","primitiveRequirements":["S","W"],"dominance":"S","adjacency":"ADJACENT","opposition":false,"decomposition":false,"bearing":"SSW","independentReviewBearing":"NNE"},
+    {"id":"EC10","primitiveRequirements":["S","W"],"dominance":"W","adjacency":"ADJACENT","opposition":false,"decomposition":false,"bearing":"WSW","independentReviewBearing":"ENE"},
+    {"id":"EC11","primitiveRequirements":["W","N"],"dominance":"W","adjacency":"ADJACENT","opposition":false,"decomposition":false,"bearing":"WNW","independentReviewBearing":"ESE"},
+    {"id":"EC12","primitiveRequirements":["E","S"],"dominance":"S","adjacency":"ADJACENT","opposition":false,"decomposition":false,"bearing":"SSE","independentReviewBearing":"NNW"},
+    {"id":"EC13","primitiveRequirements":["S","W"],"dominance":"S","adjacency":"ADJACENT","opposition":false,"decomposition":false,"bearing":"SSW","independentReviewBearing":"NNE"},
+    {"id":"EC14","primitiveRequirements":["S","W"],"dominance":"BALANCED","adjacency":"ADJACENT","opposition":false,"decomposition":false,"bearing":"SW","independentReviewBearing":"NE"},
+    {"id":"EC15","primitiveRequirements":["W","N"],"dominance":"BALANCED","adjacency":"ADJACENT","opposition":false,"decomposition":false,"bearing":"NW","independentReviewBearing":"SE"},
+    {"id":"EC16","primitiveRequirements":["W"],"dominance":"W","adjacency":"NOT_APPLICABLE","opposition":false,"decomposition":false,"bearing":"W","independentReviewBearing":"E"},
+    {"id":"EC17","primitiveRequirements":["E"],"dominance":"E","adjacency":"NOT_APPLICABLE","opposition":false,"decomposition":false,"bearing":"E","independentReviewBearing":"W"},
+    {"id":"EC18","primitiveRequirements":["S"],"dominance":"S","adjacency":"NOT_APPLICABLE","opposition":false,"decomposition":false,"bearing":"S","independentReviewBearing":"N"},
+    {"id":"EC19","primitiveRequirements":["W","N"],"dominance":"N","adjacency":"ADJACENT","opposition":false,"decomposition":false,"bearing":"NNW","independentReviewBearing":"SSE"},
+    {"id":"EC20","primitiveRequirements":["N","E","S","W"],"dominance":"NONE","adjacency":"MIXED","opposition":true,"decomposition":true,"bearing":null,"independentReviewBearing":"MULTI_STAGE_INDEPENDENT_REVIEW"}
+  ]
+}

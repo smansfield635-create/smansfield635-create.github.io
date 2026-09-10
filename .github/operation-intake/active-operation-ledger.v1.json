@@ -2426,6 +2426,49 @@
       "scopeHash": "58185bc73a55d5818fc4f191d2f77edf6d710f90d4d6169167f0ca783da7a652",
       "state": "ADMITTED_LOCKED"
     },
+    "583d375d6339fd207254a1b3e5cb210ece12598a9a46163aa8bc7303557948d8": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "2cde10f20c152257f72d7ebc23a8dd09158c9561",
+          "lockGeneration": 2066,
+          "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:AUDRALIA_DWELL_DELIVERY_CORRECTION",
+          "operationId": "CINEMATIC_AUDRALIA_DWELL_DELIVERY_CORRECTION_20260910_001_REBIND_002",
+          "procedureLocatorDigest": "58ae0275b6bc4293c6382b4da649e4866f8580b522bb4488e7248b2f33acf80d",
+          "requestDigest": "d9fc0619b0f801a8dbe561e2d2c0f48deec33130e72a5c62144b689941accd7b",
+          "scopeHash": "583d375d6339fd207254a1b3e5cb210ece12598a9a46163aa8bc7303557948d8"
+        },
+        "bindingDigest": "8c5a9a971712987b55192d19688bab55be35a81e50af4f1ac1f389c7071d0b7e",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "ea5e2c33c5e42a8533daca1a963dff9783cdd58aa91d32ecddbd69187337350b",
+          "commentId": 5620435692,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2966,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34490252996,
+          "workflowSha": "2cde10f20c152257f72d7ebc23a8dd09158c9561"
+        },
+        "lineageAnchorCommitSha": "bda1245bb2ba232eb39e5dd60f8acff98550b9fb",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "2cde10f20c152257f72d7ebc23a8dd09158c9561",
+      "lockGeneration": 2066,
+      "lockScope": "COMPASS:MAIN_ORIENTATION_CINEMATIC:AUDRALIA_DWELL_DELIVERY_CORRECTION",
+      "operationId": "CINEMATIC_AUDRALIA_DWELL_DELIVERY_CORRECTION_20260910_001_REBIND_002",
+      "procedureLocatorDigest": "58ae0275b6bc4293c6382b4da649e4866f8580b522bb4488e7248b2f33acf80d",
+      "released": false,
+      "requestDigest": "d9fc0619b0f801a8dbe561e2d2c0f48deec33130e72a5c62144b689941accd7b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "583d375d6339fd207254a1b3e5cb210ece12598a9a46163aa8bc7303557948d8",
+      "state": "ADMITTED_LOCKED"
+    },
     "58fd695623b73437bd875b2af63462b9ba0f798e460267d014d60b7eba8afaf3": {
       "governingHead": "1012e4630b4c04cf919379df6723ee427e6de606",
       "lockGeneration": 1198,
@@ -7649,7 +7692,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2065,
+  "lockGeneration": 2066,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

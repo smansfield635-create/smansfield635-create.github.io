@@ -3211,6 +3211,49 @@
       "scopeHash": "718aadd02ac238f1732d7b5400b06fed069dbcfbb5e685cc6a698666b69cc586",
       "state": "ADMITTED_LOCKED"
     },
+    "71ec6ff7fa1925948a04a51dfd31f1e2bfaab5abb410c0c15743ce71892e96aa": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "4eba3a76f1d9e6f7e817cc021536a4e0783b3eff",
+          "lockGeneration": 2071,
+          "lockScope": "COMPASS:CINEMATIC:R11A_V7_V8_HYBRID:AUDRALIA_IMMERSIVE_TITLE",
+          "operationId": "COMPASS_AUDRALIA_IMMERSIVE_TITLE_CONTINUITY_20260910_001",
+          "procedureLocatorDigest": "8ae690ebf17d316125a631c9eed41ae1845153add424571100c8fb6ce05273a7",
+          "requestDigest": "3a09fdd63572d049e28c8947a5b7d8c7bd87e506229f7c894d32c000fddf9180",
+          "scopeHash": "71ec6ff7fa1925948a04a51dfd31f1e2bfaab5abb410c0c15743ce71892e96aa"
+        },
+        "bindingDigest": "b89dcd7478d127c1343f251e8fe848fa147a0aa7772713465441f504003382bb",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "9f154ba2b9e6be3a42449a5102d968b7c1e1eda60aa2193e752d560f11a84685",
+          "commentId": 5622296101,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2994,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34504696509,
+          "workflowSha": "4eba3a76f1d9e6f7e817cc021536a4e0783b3eff"
+        },
+        "lineageAnchorCommitSha": "76609b1c051c26def99f51dd90f95ecfdd116f01",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "4eba3a76f1d9e6f7e817cc021536a4e0783b3eff",
+      "lockGeneration": 2071,
+      "lockScope": "COMPASS:CINEMATIC:R11A_V7_V8_HYBRID:AUDRALIA_IMMERSIVE_TITLE",
+      "operationId": "COMPASS_AUDRALIA_IMMERSIVE_TITLE_CONTINUITY_20260910_001",
+      "procedureLocatorDigest": "8ae690ebf17d316125a631c9eed41ae1845153add424571100c8fb6ce05273a7",
+      "released": false,
+      "requestDigest": "3a09fdd63572d049e28c8947a5b7d8c7bd87e506229f7c894d32c000fddf9180",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "71ec6ff7fa1925948a04a51dfd31f1e2bfaab5abb410c0c15743ce71892e96aa",
+      "state": "ADMITTED_LOCKED"
+    },
     "72258889edde8bc7e3b0fc272d34a3c067cf9a80d2d925323982309def876c6d": {
       "governingHead": "d27e6157147e1a96951422fd25b319ff3142ecec",
       "lockGeneration": 1425,
@@ -7754,7 +7797,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2070,
+  "lockGeneration": 2071,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

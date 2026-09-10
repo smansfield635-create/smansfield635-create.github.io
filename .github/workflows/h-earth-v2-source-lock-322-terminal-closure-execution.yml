@@ -1,0 +1,228 @@
+name: H-Earth V2 Source Lock 322 Terminal Closure Execution
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, synchronize]
+    paths:
+      - '.github/workflows/h-earth-v2-source-lock-322-terminal-closure-execution.yml'
+
+permissions:
+  contents: write
+  actions: read
+  issues: read
+  pull-requests: read
+
+concurrency:
+  group: h-earth-v2-source-lock-322-terminal-closure
+  cancel-in-progress: false
+
+env:
+  REPOSITORY: smansfield635-create/smansfield635-create.github.io
+  CARRIER_PATH: .github/workflows/h-earth-v2-source-lock-322-terminal-closure-execution.yml
+  CARRIER_BRANCH: execution/h-earth-v2-source-lock-322-terminal-closure-001
+  PREMERGE_MAIN: 634cea084cfd7d8b3cbcf28b250f5ebfb3b9beaf
+  EXACT_MERGE_COMMIT: 502f791f26f19b9802920a7d1d24671aeae822c2
+  SOURCE_HEAD: 7ab3408099c80a0eeb6cf29b39cc28c8ca0bd602
+  SOURCE_TREE: c82bbc92b3c77d4cadf29fb40138f53aa0621ae6
+  GOVERNING_BASE: 6ca63ec4ba34b9c84e783aaaf5aa73c4604f4fb6
+  SOURCE_OPERATION: H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_002
+  SOURCE_LOCK_SCOPE: H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_002_EXACT_13_PATH_SCOPE
+  SOURCE_LOCK_SCOPE_HASH: 2625fe569e2cd59c528b87cd5b481eb4b2c18eae8d8c483b62b1a9b0b69d2f14
+  ROLE4_AUTHORIZATION_COMMENT_ID: '5207436443'
+  REGISTRY_PR: '657'
+  REGISTRY_HEAD: da74dcf214bb1ff542894ad343a7102899d68bde
+  REGISTRY_MERGE_COMMIT: e5be5aeb0efc4c7d2f98f34259b169d49e11232b
+  REGISTRY_PREFLIGHT_RUN: '31075566797'
+  REGISTRY_PREFLIGHT_ARTIFACT: '8957345147'
+  REGISTRY_PREFLIGHT_ARTIFACT_DIGEST: sha256:c800f0bdc2291e9e8beae09b482f1b6219ba14612ad1453a72d2999b1c0b358b
+  OUT: /tmp/h-earth-v2-source-lock-322-terminal
+
+jobs:
+  verify-merge-and-close-lock-322:
+    if: ${{ github.event.pull_request.head.ref == 'execution/h-earth-v2-source-lock-322-terminal-closure-001' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out exact disposable carrier
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify exact carrier and merged-source identity
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$OUT"
+          test "$(git rev-parse HEAD^)" = "$EXACT_MERGE_COMMIT"
+          test "$(git diff --name-only HEAD^ HEAD)" = "$CARRIER_PATH"
+          test "$(git diff --name-status HEAD^ HEAD)" = "A	$CARRIER_PATH"
+          test "$(git rev-parse "$SOURCE_HEAD^{tree}")" = "$SOURCE_TREE"
+          test "$(git rev-parse "$SOURCE_HEAD^")" = "$GOVERNING_BASE"
+          test "$(git rev-list --count "$GOVERNING_BASE..$SOURCE_HEAD")" = "1"
+          test "$(git rev-parse "$EXACT_MERGE_COMMIT^1")" = "$PREMERGE_MAIN"
+          test "$(git rev-parse "$EXACT_MERGE_COMMIT^2")" = "$SOURCE_HEAD"
+
+          mapfile -t source_status < <(git diff --name-status "$GOVERNING_BASE..$SOURCE_HEAD")
+          test "${#source_status[@]}" = "13"
+          for row in "${source_status[@]}"; do [[ "$row" == $'A\t'* ]]; done
+
+          mapfile -t merge_status < <(git diff --name-status "$PREMERGE_MAIN..$EXACT_MERGE_COMMIT")
+          test "${#merge_status[@]}" = "13"
+          for row in "${merge_status[@]}"; do [[ "$row" == $'A\t'* ]]; done
+
+          mapfile -t source_paths < <(git diff --name-only "$GOVERNING_BASE..$SOURCE_HEAD")
+          mapfile -t merge_paths < <(git diff --name-only "$PREMERGE_MAIN..$EXACT_MERGE_COMMIT")
+          test "$(printf '%s\n' "${source_paths[@]}" | sort | sha256sum | cut -d' ' -f1)" = "$(printf '%s\n' "${merge_paths[@]}" | sort | sha256sum | cut -d' ' -f1)"
+          for path in "${source_paths[@]}"; do
+            test "$(git rev-parse "$SOURCE_HEAD:$path")" = "$(git rev-parse "$EXACT_MERGE_COMMIT:$path")"
+          done
+
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const headers={Accept:'application/vnd.github+json',Authorization:`Bearer ${process.env.GITHUB_TOKEN}`,'X-GitHub-Api-Version':'2022-11-28'};
+          const api=`https://api.github.com/repos/${process.env.REPOSITORY}`;
+          const get=async path=>{const r=await fetch(`${api}${path}`,{headers});const t=await r.text();let b;try{b=t?JSON.parse(t):null}catch{b={raw:t}}if(!r.ok)throw Error(`GITHUB_API_ERROR:${r.status}:${path}:${t}`);return b};
+          const req=(v,c)=>{if(!v)throw Error(c)};
+          const decode=f=>JSON.parse(Buffer.from(String(f.content).replace(/\s/g,''),'base64').toString());
+
+          const main=await get('/git/ref/heads/main');
+          req(main.object.sha===process.env.EXACT_MERGE_COMMIT,'CURRENT_MAIN_MISMATCH');
+          const pr652=await get('/pulls/652');
+          req(pr652.state==='closed'&&pr652.merged===true&&pr652.draft===false,'PR_652_NOT_CLOSED_MERGED');
+          req(pr652.head.sha===process.env.SOURCE_HEAD,'PR_652_HEAD_MISMATCH');
+          req(pr652.merge_commit_sha===process.env.EXACT_MERGE_COMMIT,'PR_652_MERGE_COMMIT_MISMATCH');
+          const mergeCommit=await get(`/git/commits/${process.env.EXACT_MERGE_COMMIT}`);
+          req(mergeCommit.parents.length===2,'MERGE_PARENT_COUNT_MISMATCH');
+          req(mergeCommit.parents[0].sha===process.env.PREMERGE_MAIN,'MERGE_FIRST_PARENT_MISMATCH');
+          req(mergeCommit.parents[1].sha===process.env.SOURCE_HEAD,'MERGE_SECOND_PARENT_MISMATCH');
+          const sourceCommit=await get(`/git/commits/${process.env.SOURCE_HEAD}`);
+          req(sourceCommit.tree.sha===process.env.SOURCE_TREE,'SOURCE_TREE_MISMATCH');
+          req(sourceCommit.parents.length===1&&sourceCommit.parents[0].sha===process.env.GOVERNING_BASE,'SOURCE_PARENT_MISMATCH');
+
+          const auth=await get(`/issues/comments/${process.env.ROLE4_AUTHORIZATION_COMMENT_ID}`);
+          req(['OWNER','MEMBER','COLLABORATOR'].includes(auth.author_association),'ROLE4_AUTHORIZATION_ASSOCIATION_INVALID');
+          for(const token of ['PASS_EXACT_SOURCE_HEAD_MERGE_AUTHORIZED',process.env.SOURCE_HEAD,process.env.SOURCE_TREE,'LOCK_322_PASS_CLOSURE = AUTHORIZED_AFTER_POSTMERGE_PASS','BOUND_LOCK_MANAGER_REQUIRED = TRUE']) req(String(auth.body).includes(token),`ROLE4_AUTHORIZATION_TOKEN_MISSING:${token}`);
+
+          const pr657=await get(`/pulls/${process.env.REGISTRY_PR}`);
+          req(pr657.state==='closed'&&pr657.merged===true,'REGISTRY_PR_NOT_MERGED');
+          req(pr657.head.sha===process.env.REGISTRY_HEAD,'REGISTRY_HEAD_MISMATCH');
+          req(pr657.merge_commit_sha===process.env.REGISTRY_MERGE_COMMIT,'REGISTRY_MERGE_COMMIT_MISMATCH');
+          const registryRun=await get(`/actions/runs/${process.env.REGISTRY_PREFLIGHT_RUN}`);
+          req(registryRun.status==='completed'&&registryRun.conclusion==='success','REGISTRY_PREFLIGHT_NOT_SUCCESS');
+          req(registryRun.head_sha===process.env.SOURCE_HEAD,'REGISTRY_PREFLIGHT_SOURCE_HEAD_MISMATCH');
+          const artifacts=await get(`/actions/runs/${process.env.REGISTRY_PREFLIGHT_RUN}/artifacts?per_page=100`);
+          const registryArtifact=artifacts.artifacts.find(a=>String(a.id)===process.env.REGISTRY_PREFLIGHT_ARTIFACT);
+          req(registryArtifact&&registryArtifact.digest===process.env.REGISTRY_PREFLIGHT_ARTIFACT_DIGEST,'REGISTRY_PREFLIGHT_ARTIFACT_MISMATCH');
+
+          const ledgerFile=await get('/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=operation-locks%2Frepository-operation-intake-v1');
+          const ledger=decode(ledgerFile),active=Object.values(ledger.activeScopes||{}),terminal=ledger.terminalHistory||[];
+          const lock322=active.find(x=>x.lockGeneration===322);
+          req(lock322&&lock322.operationId===process.env.SOURCE_OPERATION,'LOCK_322_OPERATION_MISMATCH');
+          req(lock322.lockScope===process.env.SOURCE_LOCK_SCOPE&&lock322.scopeHash===process.env.SOURCE_LOCK_SCOPE_HASH,'LOCK_322_SCOPE_MISMATCH');
+          req(lock322.governingHead===process.env.GOVERNING_BASE&&lock322.state==='ADMITTED_LOCKED'&&lock322.released===false,'LOCK_322_PRESTATE_MISMATCH');
+          req(!active.some(x=>x.lockGeneration===339),'REGISTRY_LOCK_339_STILL_ACTIVE');
+          const lock339=terminal.find(x=>x.lockGeneration===339);
+          req(lock339&&lock339.state==='TERMINAL'&&lock339.terminalDisposition==='PASS_CLOSED'&&lock339.released===true,'REGISTRY_LOCK_339_TERMINAL_MISMATCH');
+
+          fs.writeFileSync(`${process.env.OUT}/preclosure-merged-source-receipt.json`,JSON.stringify({schema:'H_EARTH_V2_CAUSAL_CORRECTION_002_PRECLOSURE_MERGED_SOURCE_RECEIPT_v1',result:'PASS_READY_FOR_POSTMERGE_EXECUTION',sourcePr:652,sourceHead:pr652.head.sha,sourceTree:sourceCommit.tree.sha,governingBase:process.env.GOVERNING_BASE,premergeMain:process.env.PREMERGE_MAIN,mergeCommit:pr652.merge_commit_sha,currentMain:main.object.sha,sourceCommitCount:1,sourceChangedPaths:13,sourceAddedPaths:13,sourceModifiedPaths:0,sourceDeletedPaths:0,mergeChangedPaths:13,mergeAddedPaths:13,mergeModifiedPaths:0,mergeDeletedPaths:0,registryPr:Number(process.env.REGISTRY_PR),registryHead:pr657.head.sha,registryMergeCommit:pr657.merge_commit_sha,registryPreflightRun:Number(process.env.REGISTRY_PREFLIGHT_RUN),registryPreflightArtifact:Number(process.env.REGISTRY_PREFLIGHT_ARTIFACT),registryPreflightArtifactDigest:registryArtifact.digest,registeredPaths:11,unresolvedPaths:0,registryResolution:'PASS_11_OF_11',lock322State:lock322.state,lock322Released:lock322.released,lock339TerminalDisposition:lock339.terminalDisposition,lock339Released:lock339.released,productMutation:false,terrainMutation:false,liveEnvironmentMutation:false,estateMutation:false,manorMutation:false},null,2)+'\n');
+          NODE
+
+      - name: Execute exact postmerge source verification command
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/h-earth-v2-source-checkout /tmp/h-earth-v2-causal-correction
+          git worktree add --detach /tmp/h-earth-v2-source-checkout "$SOURCE_HEAD"
+          cd /tmp/h-earth-v2-source-checkout
+          node h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/verify.v2.mjs
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const read=name=>JSON.parse(fs.readFileSync(`/tmp/h-earth-v2-causal-correction/${name}`,'utf8'));
+          const req=(v,c)=>{if(!v)throw Error(c)};
+          const verification=read('verification-receipt.json');
+          const fixtures=read('fixture-results.json');
+          const determinism=read('determinism-receipt.json');
+          const v1=read('v1-preservation-receipt.json');
+          const path=read('path-boundary-receipt.json');
+          req(verification.result==='PASS','POSTMERGE_VERIFICATION_RECEIPT_NOT_PASS');
+          req(fixtures.result==='PASS'&&fixtures.fixtureCount===16&&fixtures.passedFixtureCount===16&&fixtures.failedFixtureCount===0,'POSTMERGE_FIXTURE_RESULT_MISMATCH');
+          req(fixtures.allEightResultClassesCovered===true&&fixtures.resultClassCoverage.length===8,'POSTMERGE_RESULT_CLASS_COVERAGE_MISMATCH');
+          req(fixtures.zeroPassNonInferenceResult==='PASS','POSTMERGE_ZERO_PASS_NON_INFERENCE_FAILURE');
+          req(fixtures.terrainInfeasibilityTestResult==='PASS','POSTMERGE_TERRAIN_PROOF_GATE_FAILURE');
+          req(fixtures.estateInfeasibilityTestResult==='PASS','POSTMERGE_ESTATE_PROOF_GATE_FAILURE');
+          req(fixtures.missingEvidenceTestResult==='PASS','POSTMERGE_MISSING_EVIDENCE_FAILURE');
+          req(determinism.result==='PASS'&&determinism.byteEquivalentCanonicalOutputs===true&&determinism.rerunAsha256===determinism.rerunBsha256,'POSTMERGE_DETERMINISM_FAILURE');
+          req(v1.result==='PASS'&&v1.changedCriticalIdentityPathCount===0&&v1.existingPathMutationCount===0&&!v1.v1Rewritten&&!v1.v1Reinterpreted,'POSTMERGE_V1_PRESERVATION_FAILURE');
+          req(path.result==='PASS'&&path.commitCount===1&&path.changedPathCount===13&&path.addedPathCount===13&&path.modifiedPathCount===0&&path.deletedPathCount===0&&path.prohibitedMutationCount===0,'POSTMERGE_PATH_BOUNDARY_FAILURE');
+          const generatedCausalTraces=fixtures.fixtureResults.reduce((n,x)=>n+Number(x.causalTraceCount||0),0);
+          req(generatedCausalTraces===15,'POSTMERGE_CAUSAL_TRACE_COUNT_MISMATCH');
+          fs.writeFileSync(`${process.env.OUT}/postmerge-exact-command-receipt.json`,JSON.stringify({schema:'H_EARTH_V2_CAUSAL_CORRECTION_002_POSTMERGE_EXACT_COMMAND_RECEIPT_v1',result:'PASS',executionOrder:'AFTER_EXACT_MERGE_BEFORE_LOCK_CLOSURE',currentMainExpected:process.env.EXACT_MERGE_COMMIT,executedSourceHead:process.env.SOURCE_HEAD,exactCommand:'node h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/verify.v2.mjs',causalFixtureResult:'16_OF_16_PASS',resultClassCoverage:'8_OF_8',generatedCausalTraces,zeroPassNonInferenceResult:fixtures.zeroPassNonInferenceResult,terrainInfeasibilityResult:fixtures.terrainInfeasibilityTestResult,estateInfeasibilityResult:fixtures.estateInfeasibilityTestResult,missingEvidenceResult:fixtures.missingEvidenceTestResult,deterministicRerunResult:'PASS_BYTE_IDENTICAL',v1CriticalPreservationResult:'PASS',v1FrozenRegistryPreservationResult:'PASS_16_OF_16_FROZEN_BLOBS',registryResolutionResult:'PASS_11_OF_11',verificationFingerprint:verification.fingerprint,productMutation:false,terrainMutation:false,liveEnvironmentMutation:false,estateMutation:false,manorMutation:false},null,2)+'\n');
+          NODE
+
+      - name: Execute canonical lock 322 terminal closure
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE"
+          test "$(git hash-object tools/operation-intake/repository-operation-lock-manager.v1.mjs)" = "6fc0199c9dc943b8cdf3efe7c789f0e1888774b8"
+          node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+            --action close \
+            --repository "$REPOSITORY" \
+            --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+            --operation-id "$SOURCE_OPERATION" \
+            --lock-scope "$SOURCE_LOCK_SCOPE" \
+            --lock-generation 322 \
+            --terminal-disposition PASS_CLOSED \
+            --output "$OUT/lock-322-closure.json"
+          node -e "const r=require(process.env.OUT+'/lock-322-closure.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||r.lockGeneration!==322||r.terminalDisposition!=='PASS_CLOSED'||r.lockReleased!==true)process.exit(1)"
+
+      - name: Verify terminal custody and unchanged merged result
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const closure=JSON.parse(fs.readFileSync(`${process.env.OUT}/lock-322-closure.json`,'utf8'));
+          const command=JSON.parse(fs.readFileSync(`${process.env.OUT}/postmerge-exact-command-receipt.json`,'utf8'));
+          const headers={Accept:'application/vnd.github+json',Authorization:`Bearer ${process.env.GITHUB_TOKEN}`,'X-GitHub-Api-Version':'2022-11-28'};
+          const api=`https://api.github.com/repos/${process.env.REPOSITORY}`;
+          const get=async path=>{const r=await fetch(`${api}${path}`,{headers});const t=await r.text();let b;try{b=t?JSON.parse(t):null}catch{b={raw:t}}if(!r.ok)throw Error(`GITHUB_API_ERROR:${r.status}:${path}:${t}`);return b};
+          const req=(v,c)=>{if(!v)throw Error(c)};
+          const main=await get('/git/ref/heads/main');
+          req(main.object.sha===process.env.EXACT_MERGE_COMMIT,'MAIN_MOVED_DURING_TERMINAL_CLOSURE');
+          const pr652=await get('/pulls/652');
+          req(pr652.state==='closed'&&pr652.merged===true&&pr652.head.sha===process.env.SOURCE_HEAD&&pr652.merge_commit_sha===process.env.EXACT_MERGE_COMMIT,'PR_652_TERMINAL_STATE_MISMATCH');
+          const lockRef=await get('/git/ref/heads/operation-locks/repository-operation-intake-v1');
+          req(lockRef.object.sha===closure.closureCommitSha,'LOCK_REF_CLOSURE_COMMIT_MISMATCH');
+          const ledgerFile=await get('/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=operation-locks%2Frepository-operation-intake-v1');
+          const ledger=JSON.parse(Buffer.from(String(ledgerFile.content).replace(/\s/g,''),'base64').toString()),active=Object.values(ledger.activeScopes||{}),terminal=ledger.terminalHistory||[];
+          req(!active.some(x=>x.lockGeneration===322),'LOCK_322_STILL_ACTIVE');
+          const lock322=terminal.find(x=>x.lockGeneration===322);
+          req(lock322&&lock322.operationId===process.env.SOURCE_OPERATION&&lock322.lockScope===process.env.SOURCE_LOCK_SCOPE&&lock322.scopeHash===process.env.SOURCE_LOCK_SCOPE_HASH,'LOCK_322_TERMINAL_IDENTITY_MISMATCH');
+          req(lock322.governingHead===process.env.GOVERNING_BASE&&lock322.state==='TERMINAL'&&lock322.terminalDisposition==='PASS_CLOSED'&&lock322.released===true,'LOCK_322_TERMINAL_STATE_MISMATCH');
+          const lock339=terminal.find(x=>x.lockGeneration===339);
+          req(lock339&&lock339.state==='TERMINAL'&&lock339.terminalDisposition==='PASS_CLOSED'&&lock339.released===true,'LOCK_339_TERMINAL_STATE_REGRESSION');
+          req(command.result==='PASS','POSTMERGE_COMMAND_RECEIPT_REGRESSION');
+          fs.writeFileSync(`${process.env.OUT}/terminal-return.json`,JSON.stringify({schema:'H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_002_ROLE_1_TERMINAL_RETURN_v1',result:'PASS_CLOSED',pr652FinalState:'CLOSED_MERGED',exactMergedSourceHead:pr652.head.sha,sourceMergeCommit:pr652.merge_commit_sha,currentMain:main.object.sha,postmergeVerificationRun:Number(process.env.GITHUB_RUN_ID),postmergeVerificationAttempt:Number(process.env.GITHUB_RUN_ATTEMPT),causalFixtureResult:command.causalFixtureResult,resultClassCoverage:command.resultClassCoverage,generatedCausalTraces:command.generatedCausalTraces,zeroPassNonInferenceResult:command.zeroPassNonInferenceResult,terrainInfeasibilityResult:command.terrainInfeasibilityResult,estateInfeasibilityResult:command.estateInfeasibilityResult,missingEvidenceResult:command.missingEvidenceResult,deterministicRerunResult:command.deterministicRerunResult,v1PreservationResult:command.v1FrozenRegistryPreservationResult,registryResolutionResult:command.registryResolutionResult,lock322ClosureRun:Number(process.env.GITHUB_RUN_ID),lock322ClosureCommit:closure.closureCommitSha,lock322TerminalDisposition:lock322.terminalDisposition,lock322Released:lock322.released,registryLock339TerminalDisposition:lock339.terminalDisposition,registryLock339Released:lock339.released,productMutation:false,terrainMutation:false,liveEnvironmentMutation:false,estateMutation:false,manorMutation:false,role1FinalDisposition:'PASS_CLOSED',nextLawfulHolder:'ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY'},null,2)+'\n');
+          NODE
+
+      - name: Upload terminal execution receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-v2-source-lock-322-terminal-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/h-earth-v2-causal-correction
+            /tmp/h-earth-v2-source-lock-322-terminal
+          if-no-files-found: error
+          retention-days: 90

@@ -27,10 +27,22 @@ function mountCapabilityEnhancement(){
   });
   globalThis.DGB_COMPASS_OPTIONAL_ENHANCEMENT_BOUNDARY=Object.freeze({afterDocumentLoad:false,delayMs:0,firstPaintDependency:false,domOwnerReplacement:false,manorDeliveryIdentity:MIRROR_MANOR_DELIVERY_IDENTITY});
 }
+function scheduleCapabilityEnhancement(){
+  const target=document.querySelector('[data-capability-orbit][data-first-paint-authority="static"]');
+  if(!target||typeof IntersectionObserver!=='function'){mountCapabilityEnhancement();return;}
+  let triggered=false;
+  const observer=new IntersectionObserver(entries=>{
+    if(triggered||!entries.some(entry=>entry.isIntersecting))return;
+    triggered=true;
+    observer.disconnect();
+    mountCapabilityEnhancement();
+  },{rootMargin:'1200px 0px'});
+  observer.observe(target);
+}
 declareControllerSettledLabelAuthority();
 requirePresentationOwner(()=>{
   bindStaticFirstPaintAuthority();
   load('/assets/compass/compass.statement-orbit.js?v=statement-orbit-restoration-v2&cb=980dbbe68b46','data-compass-statement-orbit-runtime');
-  mountCapabilityEnhancement();
+  scheduleCapabilityEnhancement();
 });
 })();

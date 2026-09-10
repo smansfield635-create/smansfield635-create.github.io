@@ -247,6 +247,14 @@
       ],
       "entrypoint": ".github/ai-router/projects/characters/entrypoint.v1.json",
       "priority": 100
+    },
+    {
+      "projectId": "BUILD",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": [],
+      "ownedExactPaths": ["build/index.html"],
+      "entrypoint": ".github/ai-router/projects/build/entrypoint.v1.json",
+      "priority": 100
     }
   ],
   "unregisteredPathPolicy": {

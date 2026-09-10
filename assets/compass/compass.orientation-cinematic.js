@@ -37,7 +37,20 @@ const ENTRY_GOLDEN_ANGLE=Math.PI*(3-Math.sqrt(5));
 const ENTRY_SEED=0x0b17e17;
 const ENTRY_COLORS=['255,248,224','154,217,225','234,208,131','170,155,224'];
 const ENTRY_CONTROL_RETRACT_MS=170;
-const AUDRALIA_PERCEPTUAL_DWELL_MS=2000;
+const AUDRALIA_IMMERSIVE=Object.freeze({
+  armAt:46.40,
+  revealAt:46.62,
+  clearAt:49.80,
+  eyebrow:'ENTER THE EXPERIENCE',
+  title:'IMMERSIVE',
+  masterWidth:1280,
+  masterHeight:720,
+  masterLeft:68,
+  masterTop:76,
+  masterWidthPx:430,
+  eyebrowPx:10.5,
+  titlePx:56
+});
 const AUDRALIA_HOLD=Object.freeze({captureAt:49.30,revealAt:49.70,releaseAt:1499/30,clearAt:50.24});
 
 const q=(s,r=document)=>r.querySelector(s);
@@ -46,7 +59,7 @@ const mix=(a,b,t)=>a+(b-a)*t;
 const easeOut=t=>1-Math.pow(1-clamp(t),3);
 const reduced=()=>window.matchMedia?.('(prefers-reduced-motion: reduce)').matches===true;
 const session={
-  state:null,overlay:null,video:null,ambientVideo:null,audraliaHoldAmbient:null,audraliaHoldForeground:null,gate:null,play:null,skip:null,replay:null,
+  state:null,overlay:null,video:null,ambientVideo:null,audraliaHoldAmbient:null,audraliaHoldForeground:null,audraliaImmersiveTitle:null,gate:null,play:null,skip:null,replay:null,
   root:null,rootInert:false,rootAriaHidden:null,priorFocus:null,
   ambient:null,ambientSnapshot:null,url:null,historyLength:0,
   fadeStarted:false,settlementCount:0,
@@ -55,7 +68,7 @@ const session={
   playRequested:false,entryTransitionComplete:false,videoReady:false,
   videoStartRequested:false,firstFramePresented:false,entryAction:'',entryDecision:null,
   entryControlTimer:0,audraliaFrameCallback:0,audraliaHoldCaptured:false,audraliaHoldVisible:false,audraliaHoldReleased:false,
-  audraliaDwellTimer:0,audraliaDwellStarted:false,audraliaDwellComplete:false,audraliaDwellMediaTime:0
+  audraliaImmersiveArmed:false,audraliaImmersiveVisible:false,audraliaImmersiveCleared:false
 };
 
 function markState(state){
@@ -118,6 +131,23 @@ function makeButton(label,attr,kind='secondary'){
   return b;
 }
 
+function makeAudraliaImmersiveTitle(){
+  const title=document.createElement('div');
+  title.setAttribute('data-audralia-immersive-title','');
+  title.setAttribute('aria-hidden','true');
+  title.style.cssText='position:absolute;z-index:4;pointer-events:none;opacity:0;transition:opacity 160ms cubic-bezier(.32,0,.18,1);white-space:nowrap;text-align:left;transform:translateZ(0);will-change:opacity;';
+  const eyebrow=document.createElement('div');
+  eyebrow.setAttribute('data-audralia-immersive-eyebrow','');
+  eyebrow.textContent=AUDRALIA_IMMERSIVE.eyebrow;
+  eyebrow.style.cssText='margin:0 0 .38em;color:rgba(231,231,220,.68);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-weight:600;line-height:1;letter-spacing:.31em;text-transform:uppercase;text-shadow:0 1px 10px rgba(0,0,0,.46);';
+  const heading=document.createElement('div');
+  heading.setAttribute('data-audralia-immersive-heading','');
+  heading.textContent=AUDRALIA_IMMERSIVE.title;
+  heading.style.cssText='margin:0;color:rgba(235,233,222,.72);font-family:Georgia,"Times New Roman",serif;font-weight:400;line-height:.92;letter-spacing:.01em;text-shadow:0 1px 14px rgba(0,0,0,.48);';
+  title.append(eyebrow,heading);
+  return title;
+}
+
 function buildOverlay(){
   const overlay=document.createElement('section');
   overlay.className='compass-prerendered-player';
@@ -129,6 +159,7 @@ function buildOverlay(){
   overlay.setAttribute('data-entry-preroll-ms',String(CONTRACT.entryPrerollMs));
   overlay.setAttribute('data-entry-preroll-counted-in-master',String(CONTRACT.entryPrerollCountedInMaster));
   overlay.setAttribute('data-entry-continuity-law',CONTRACT.entryContinuityLaw);
+  overlay.setAttribute('data-audralia-title-contract','ENTER_THE_EXPERIENCE_IMMERSIVE_UNTIL_PIXELATION_V1');
   overlay.setAttribute('data-entry-state','IDLE');
   overlay.setAttribute('role','dialog');
   overlay.setAttribute('aria-modal','true');
@@ -164,6 +195,8 @@ function buildOverlay(){
   audraliaHoldForeground.className='compass-prerendered-player__audralia-hold compass-prerendered-player__audralia-hold--foreground';
   audraliaHoldForeground.setAttribute('aria-hidden','true');
 
+  const audraliaImmersiveTitle=makeAudraliaImmersiveTitle();
+
   const gate=document.createElement('div');
   gate.className='compass-prerendered-player__gate';
   gate.setAttribute('data-main-orientation-gate','');
@@ -177,12 +210,13 @@ function buildOverlay(){
   const playingSkip=makeButton('Skip','data-main-orientation-skip','quiet');
   playingSkip.classList.add('compass-prerendered-player__skip');
 
-  overlay.append(ambientVideo,audraliaHoldAmbient,video,audraliaHoldForeground,gate,playingSkip);
+  overlay.append(ambientVideo,audraliaHoldAmbient,video,audraliaHoldForeground,audraliaImmersiveTitle,gate,playingSkip);
   session.overlay=overlay;
   session.video=video;
   session.ambientVideo=ambientVideo;
   session.audraliaHoldAmbient=audraliaHoldAmbient;
   session.audraliaHoldForeground=audraliaHoldForeground;
+  session.audraliaImmersiveTitle=audraliaImmersiveTitle;
   session.gate=gate;
   session.play=play;
   session.skip=skip;
@@ -284,10 +318,10 @@ function cancelAudraliaFrame(){
 function cleanupOverlay(){
   window.removeEventListener('keydown',onKey,true);
   window.removeEventListener('resize',resizeEntryCanvas);
+  window.removeEventListener('resize',placeAudraliaImmersiveTitle);
   cancelEntryFrame();
   cancelAudraliaFrame();
   if(session.entryControlTimer)clearTimeout(session.entryControlTimer);
-  if(session.audraliaDwellTimer)clearTimeout(session.audraliaDwellTimer);
   for(const video of [session.video,session.ambientVideo])if(video){try{video.pause();}catch{}video.removeAttribute('src');try{video.load();}catch{}}
   session.overlay?.remove();
   session.overlay=null;
@@ -295,14 +329,63 @@ function cleanupOverlay(){
   session.ambientVideo=null;
   session.audraliaHoldAmbient=null;
   session.audraliaHoldForeground=null;
+  session.audraliaImmersiveTitle=null;
   session.gate=null;
   session.play=null;
   session.skip=null;
   session.entryCanvas=null;
   session.entryCtx=null;
   session.entryControlTimer=0;
-  session.audraliaDwellTimer=0;
   session.fadeStarted=false;
+}
+
+function renderedVideoContentRect(){
+  const video=session.video;
+  if(!video)return null;
+  const box=video.getBoundingClientRect();
+  if(!(box.width>0&&box.height>0))return null;
+  const naturalWidth=video.videoWidth||AUDRALIA_IMMERSIVE.masterWidth;
+  const naturalHeight=video.videoHeight||AUDRALIA_IMMERSIVE.masterHeight;
+  const style=getComputedStyle(video);
+  const fit=style.objectFit||'fill';
+  const sx=box.width/naturalWidth,sy=box.height/naturalHeight;
+  if(fit==='fill')return {left:box.left,top:box.top,width:box.width,height:box.height,scaleX:sx,scaleY:sy,scale:Math.min(sx,sy)};
+  const scale=fit==='cover'?Math.max(sx,sy):Math.min(sx,sy);
+  const width=naturalWidth*scale,height=naturalHeight*scale;
+  return {left:box.left+(box.width-width)/2,top:box.top+(box.height-height)/2,width,height,scaleX:scale,scaleY:scale,scale};
+}
+function placeAudraliaImmersiveTitle(){
+  const title=session.audraliaImmersiveTitle;
+  const rect=renderedVideoContentRect();
+  if(!title||!rect)return;
+  const sx=rect.scaleX,sy=rect.scaleY,scale=rect.scale;
+  title.style.left=`${rect.left+AUDRALIA_IMMERSIVE.masterLeft*sx}px`;
+  title.style.top=`${rect.top+AUDRALIA_IMMERSIVE.masterTop*sy}px`;
+  title.style.width=`${AUDRALIA_IMMERSIVE.masterWidthPx*sx}px`;
+  const eyebrow=q('[data-audralia-immersive-eyebrow]',title);
+  const heading=q('[data-audralia-immersive-heading]',title);
+  if(eyebrow)eyebrow.style.fontSize=`${Math.max(3.5,AUDRALIA_IMMERSIVE.eyebrowPx*scale)}px`;
+  if(heading)heading.style.fontSize=`${Math.max(16,AUDRALIA_IMMERSIVE.titlePx*scale)}px`;
+}
+function updateAudraliaImmersiveTitle(mediaTime){
+  const title=session.audraliaImmersiveTitle;
+  if(!title||!Number.isFinite(mediaTime))return;
+  if(!session.audraliaImmersiveArmed&&mediaTime>=AUDRALIA_IMMERSIVE.armAt&&mediaTime<AUDRALIA_IMMERSIVE.clearAt){
+    session.audraliaImmersiveArmed=true;
+    placeAudraliaImmersiveTitle();
+    session.overlay?.setAttribute('data-audralia-title-state','ARMED_AFTER_BAKED_TITLE');
+  }
+  if(!session.audraliaImmersiveVisible&&mediaTime>=AUDRALIA_IMMERSIVE.revealAt&&mediaTime<AUDRALIA_IMMERSIVE.clearAt){
+    session.audraliaImmersiveVisible=true;
+    title.style.opacity='1';
+    session.overlay?.setAttribute('data-audralia-title-state','IMMERSIVE_VISIBLE');
+  }
+  if(!session.audraliaImmersiveCleared&&mediaTime>=AUDRALIA_IMMERSIVE.clearAt){
+    session.audraliaImmersiveCleared=true;
+    session.audraliaImmersiveVisible=false;
+    title.style.opacity='0';
+    session.overlay?.setAttribute('data-audralia-title-state','CLEARED_AT_PIXELATION');
+  }
 }
 
 function captureAudraliaHold(){
@@ -319,38 +402,15 @@ function captureAudraliaHold(){
   session.audraliaHoldCaptured=true;
   return true;
 }
-function startAudraliaPerceptualDwell(){
-  if(session.audraliaDwellStarted||session.state!==STATE.PLAYING||session.entryAction!=='play')return;
-  const video=session.video,ambientVideo=session.ambientVideo;
-  if(!video)return;
-  session.audraliaDwellStarted=true;
-  session.audraliaDwellMediaTime=video.currentTime;
-  try{video.pause();}catch{}
-  if(ambientVideo)try{ambientVideo.pause();}catch{}
-  session.audraliaDwellTimer=window.setTimeout(()=>{
-    session.audraliaDwellTimer=0;
-    if(session.state!==STATE.PLAYING||session.entryAction!=='play'||session.video!==video)return;
-    session.audraliaDwellComplete=true;
-    if(ambientVideo===session.ambientVideo){
-      const ambientPlay=ambientVideo.play();
-      if(ambientPlay&&typeof ambientPlay.catch==='function')ambientPlay.catch(()=>{});
-    }
-    const p=video.play();
-    if(p&&typeof p.catch==='function')p.catch(error=>{
-      session.overlay?.setAttribute('data-player-error',String(error?.name||'AUDRALIA_DWELL_RESUME_FAILED'));
-      settle('fail-open');
-    });
-  },AUDRALIA_PERCEPTUAL_DWELL_MS);
-}
 function updateAudraliaHold(mediaTime){
   if(session.state!==STATE.PLAYING||!Number.isFinite(mediaTime))return;
+  updateAudraliaImmersiveTitle(mediaTime);
   if(!session.audraliaHoldCaptured&&mediaTime>=AUDRALIA_HOLD.captureAt&&mediaTime<AUDRALIA_HOLD.revealAt)captureAudraliaHold();
   if(!session.audraliaHoldVisible&&mediaTime>=AUDRALIA_HOLD.revealAt&&mediaTime<AUDRALIA_HOLD.clearAt){
     if(!session.audraliaHoldCaptured&&!captureAudraliaHold())return;
     session.audraliaHoldVisible=true;
     for(const canvas of [session.audraliaHoldAmbient,session.audraliaHoldForeground])canvas?.classList.add('is-active');
   }
-  if(session.audraliaHoldVisible&&!session.audraliaDwellStarted&&mediaTime>=AUDRALIA_HOLD.revealAt&&mediaTime<AUDRALIA_HOLD.releaseAt)startAudraliaPerceptualDwell();
   if(session.audraliaHoldVisible&&!session.audraliaHoldReleased&&mediaTime>=AUDRALIA_HOLD.releaseAt){
     session.audraliaHoldReleased=true;
     for(const canvas of [session.audraliaHoldAmbient,session.audraliaHoldForeground])canvas?.classList.add('is-releasing');
@@ -498,6 +558,7 @@ function noteVideoReady(){
   if(!video||video.readyState<2)return;
   session.videoReady=true;
   if(session.overlay)session.overlay.dataset.videoReady='true';
+  placeAudraliaImmersiveTitle();
   void maybeStartMasterPlayback();
 }
 function revealFirstPresentedFrame(){
@@ -621,6 +682,7 @@ function bindOverlay(){
   video.addEventListener('timeupdate',()=>{if(ambientVideo&&Math.abs((ambientVideo.currentTime||0)-(video.currentTime||0))>.09)ambientVideo.currentTime=video.currentTime;});
   window.addEventListener('keydown',onKey,true);
   window.addEventListener('resize',resizeEntryCanvas,{passive:true});
+  window.addEventListener('resize',placeAudraliaImmersiveTitle,{passive:true});
 }
 
 function resetRunState(){
@@ -632,7 +694,7 @@ function resetRunState(){
   session.entryAction='';
   session.entryControlTimer=0;session.audraliaFrameCallback=0;
   session.audraliaHoldCaptured=false;session.audraliaHoldVisible=false;session.audraliaHoldReleased=false;
-  session.audraliaDwellTimer=0;session.audraliaDwellStarted=false;session.audraliaDwellComplete=false;session.audraliaDwellMediaTime=0;
+  session.audraliaImmersiveArmed=false;session.audraliaImmersiveVisible=false;session.audraliaImmersiveCleared=false;
 }
 function mount(source='initial'){
   if(session.overlay)return;
@@ -693,10 +755,13 @@ globalThis.__DGB_COMPASS_PRERENDERED_PLAYER__=Object.freeze({
     ambientMuted:Boolean(session.ambient?.muted),
     currentTime:Number(session.video?.currentTime||0),
     duration:Number(session.video?.duration||0),
-    audraliaPerceptualDwellMs:AUDRALIA_PERCEPTUAL_DWELL_MS,
-    audraliaDwellStarted:session.audraliaDwellStarted,
-    audraliaDwellComplete:session.audraliaDwellComplete,
-    audraliaDwellMediaTime:session.audraliaDwellMediaTime,
+    audraliaPerceptualDwellMs:0,
+    audraliaImmersiveEyebrow:AUDRALIA_IMMERSIVE.eyebrow,
+    audraliaImmersiveTitle:AUDRALIA_IMMERSIVE.title,
+    audraliaImmersiveRevealAt:AUDRALIA_IMMERSIVE.revealAt,
+    audraliaImmersiveClearAt:AUDRALIA_IMMERSIVE.clearAt,
+    audraliaImmersiveVisible:session.audraliaImmersiveVisible,
+    audraliaImmersiveCleared:session.audraliaImmersiveCleared,
     entryDecision:session.entryDecision
   })
 });

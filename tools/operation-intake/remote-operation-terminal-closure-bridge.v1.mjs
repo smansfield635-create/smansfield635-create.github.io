@@ -15,15 +15,19 @@ import {
 export const REPOSITORY = 'smansfield635-create/smansfield635-create.github.io';
 export const ROUTE_ID = 'REMOTE_OPERATION_TERMINAL_CLOSURE_v1';
 export const REQUEST_SCHEMA = 'REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_v1';
+export const INVOCATION_SCHEMA = 'REMOTE_OPERATION_TERMINAL_CLOSURE_INVOCATION_REQUEST_v1';
 export const RECEIPT_SCHEMA = 'REMOTE_OPERATION_TERMINAL_CLOSURE_INVOCATION_RECEIPT_v1';
 export const LOCATOR_PATH = '.github/operation-intake/locator.v1.json';
 export const LOCK_MANAGER_PATH = 'tools/operation-intake/repository-operation-lock-manager.v1.mjs';
 const REQUIRED_KEYS = Object.freeze(['schema','repository','operationId','lockScope','lockGeneration','terminalDisposition']);
+const INVOCATION_KEYS = Object.freeze(['schema','repository','expectedMainHead','closureRequest']);
 const PROHIBITED_KEYS = Object.freeze(['command','shellCommand','scriptBody','workflowOverride','repositoryOverride','lockRef','lockRefOverride','environment','environmentOverride','extraArguments','branch','path','ledgerPath','ledgerContent']);
 const isObject=value=>value&&typeof value==='object'&&!Array.isArray(value);
 const sha256=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
 const fail=(code,detail=null)=>{const e=new Error(code);e.code=code;e.detail=detail;throw e;};
 const auditFactory=()=>{const events=[];return{events,add(event,details={}){events.push({sequence:events.length+1,event,details:stable(details)});}};};
+const exactKeys=(value,required,code)=>{const keys=Object.keys(value).sort();if(JSON.stringify(keys)!==JSON.stringify([...required].sort()))fail(code,keys);};
+const digest40=(value,field)=>{if(typeof value!=='string'||!/^[0-9a-f]{40}$/.test(value))fail('EXPECTED_MAIN_HEAD_INVALID',field);return value;};
 function repositoryRoot(){return path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');}
 export function resolveCanonicalIdentity(root=repositoryRoot()){
   const locatorFile=path.join(root,LOCATOR_PATH);
@@ -37,8 +41,7 @@ export function resolveCanonicalIdentity(root=repositoryRoot()){
 }
 export function validateClosureRequest(value){
   if(!isObject(value)) fail('REQUEST_NOT_OBJECT');
-  const keys=Object.keys(value).sort();
-  if(JSON.stringify(keys)!==JSON.stringify([...REQUIRED_KEYS].sort())) fail('REQUEST_SCHEMA_OR_KEYSET_INVALID',keys);
+  exactKeys(value,REQUIRED_KEYS,'REQUEST_SCHEMA_OR_KEYSET_INVALID');
   for(const key of PROHIBITED_KEYS) if(Object.hasOwn(value,key)) fail('PROHIBITED_REQUEST_FIELD',key);
   if(value.schema!==REQUEST_SCHEMA) fail('REQUEST_SCHEMA_OR_KEYSET_INVALID','schema');
   if(value.repository!==REPOSITORY) fail('REPOSITORY_SUBSTITUTION_PROHIBITED',value.repository);
@@ -49,10 +52,25 @@ export function validateClosureRequest(value){
   if(!TERMINAL.includes(value.terminalDisposition)) fail('TERMINAL_DISPOSITION_INVALID');
   return stable(value);
 }
+export function normalizeClosureInput(value){
+  if(!isObject(value)) fail('REQUEST_NOT_OBJECT');
+  if(value.schema===REQUEST_SCHEMA){
+    return stable({request:validateClosureRequest(value),inputShape:'LEGACY_DIRECT_CLOSURE_REQUEST',expectedMainHeadContext:null,currentMainBindingRequired:false});
+  }
+  exactKeys(value,INVOCATION_KEYS,'INVOCATION_SCHEMA_OR_KEYSET_INVALID');
+  for(const key of PROHIBITED_KEYS) if(Object.hasOwn(value,key)) fail('PROHIBITED_REQUEST_FIELD',key);
+  if(value.schema!==INVOCATION_SCHEMA) fail('INVOCATION_SCHEMA_OR_KEYSET_INVALID','schema');
+  if(value.repository!==REPOSITORY) fail('REPOSITORY_SUBSTITUTION_PROHIBITED',value.repository);
+  const expectedMainHeadContext=digest40(value.expectedMainHead,'expectedMainHead');
+  const request=validateClosureRequest(value.closureRequest);
+  return stable({request,inputShape:'OWNER_INVOCATION_ENVELOPE',expectedMainHeadContext,currentMainBindingRequired:false});
+}
 export async function executeClosure(raw){
-  const audit=auditFactory();let nativeReceipt=null;let identity=null;
+  const audit=auditFactory();let nativeReceipt=null;let identity=null;let normalized=null;
   try{
-    const request=validateClosureRequest(raw);
+    normalized=normalizeClosureInput(raw);
+    const request=normalized.request;
+    audit.add('REQUEST_NORMALIZED',{inputShape:normalized.inputShape,expectedMainHeadContext:normalized.expectedMainHeadContext,currentMainBindingRequired:false});
     audit.add('REQUEST_VALIDATED',{operationId:request.operationId,lockScope:request.lockScope,lockGeneration:request.lockGeneration,terminalDisposition:request.terminalDisposition});
     const token=process.env.GITHUB_TOKEN;if(!token) fail('GITHUB_TOKEN_MISSING');
     identity=resolveCanonicalIdentity();
@@ -63,10 +81,10 @@ export async function executeClosure(raw){
     if(nativeReceipt.result!=='TERMINAL_CLOSURE_COMMITTED'||nativeReceipt.lockReleased!==true) fail('REMOTE_CAS_CLOSURE_FAILURE',nativeReceipt.result);
     if(nativeReceipt.operationId!==request.operationId||nativeReceipt.lockScope!==request.lockScope||nativeReceipt.lockGeneration!==request.lockGeneration||nativeReceipt.terminalDisposition!==request.terminalDisposition) fail('NATIVE_RECEIPT_IDENTITY_MISMATCH');
     const nativeBytes=Buffer.from(text(nativeReceipt),'utf8');
-    return{receipt:stable({schema:RECEIPT_SCHEMA,result:'TERMINAL_CLOSURE_COMMITTED',routeId:ROUTE_ID,repository:REPOSITORY,...identity,operationId:request.operationId,lockScope:request.lockScope,lockGeneration:request.lockGeneration,terminalDisposition:request.terminalDisposition,nativeReceiptSha256:sha256(nativeBytes),nativeReceiptJson:nativeReceipt,nativeReceiptRewritten:false,directLedgerEditPerformed:false,genericCommandAuthority:false,repositoryMutationLimitedToCanonicalLockManager:true,semanticAuthorityCreated:false,auditEvents:audit.events}),nativeReceipt};
+    return{receipt:stable({schema:RECEIPT_SCHEMA,result:'TERMINAL_CLOSURE_COMMITTED',routeId:ROUTE_ID,repository:REPOSITORY,...identity,inputShape:normalized.inputShape,expectedMainHeadContext:normalized.expectedMainHeadContext,currentMainBindingRequired:false,terminalClosureCreatesAuthority:false,operationId:request.operationId,lockScope:request.lockScope,lockGeneration:request.lockGeneration,terminalDisposition:request.terminalDisposition,nativeReceiptSha256:sha256(nativeBytes),nativeReceiptJson:nativeReceipt,nativeReceiptRewritten:false,directLedgerEditPerformed:false,genericCommandAuthority:false,repositoryMutationLimitedToCanonicalLockManager:true,semanticAuthorityCreated:false,auditEvents:audit.events}),nativeReceipt};
   }catch(error){
     const nativeBytes=nativeReceipt?Buffer.from(text(nativeReceipt),'utf8'):null;
-    return{receipt:stable({schema:RECEIPT_SCHEMA,result:'FAIL_CLOSED_NO_CLOSURE',routeId:ROUTE_ID,repository:REPOSITORY,canonicalLocator:LOCATOR_PATH,lockManagerPath:LOCK_MANAGER_PATH,lockRef:LOCK_REF,canonicalIdentityResolvedAtRuntime:false,errorCode:error.code??'UNEXPECTED_TERMINAL_CLOSURE_FAILURE',detail:error.detail??error.message,nativeReceiptSha256:nativeBytes?sha256(nativeBytes):null,nativeReceiptJson:nativeReceipt,nativeReceiptRewritten:false,directLedgerEditPerformed:false,genericCommandAuthority:false,repositoryMutationLimitedToCanonicalLockManager:true,semanticAuthorityCreated:false,auditEvents:audit.events}),nativeReceipt};
+    return{receipt:stable({schema:RECEIPT_SCHEMA,result:'FAIL_CLOSED_NO_CLOSURE',routeId:ROUTE_ID,repository:REPOSITORY,canonicalLocator:LOCATOR_PATH,lockManagerPath:LOCK_MANAGER_PATH,lockRef:LOCK_REF,canonicalIdentityResolvedAtRuntime:false,inputShape:normalized?.inputShape??null,expectedMainHeadContext:normalized?.expectedMainHeadContext??null,currentMainBindingRequired:false,terminalClosureCreatesAuthority:false,errorCode:error.code??'UNEXPECTED_TERMINAL_CLOSURE_FAILURE',detail:error.detail??error.message,nativeReceiptSha256:nativeBytes?sha256(nativeBytes):null,nativeReceiptJson:nativeReceipt,nativeReceiptRewritten:false,directLedgerEditPerformed:false,genericCommandAuthority:false,repositoryMutationLimitedToCanonicalLockManager:true,semanticAuthorityCreated:false,auditEvents:audit.events}),nativeReceipt};
   }
 }
 function parseArgs(argv){const allowed=new Set(['--input','--output','--native-output']);const result={};for(let i=0;i<argv.length;i+=2){const key=argv[i],value=argv[i+1];if(!allowed.has(key)||value===undefined)fail('CLI_ARGUMENTS_NOT_FIXED',key);const normalized=key.slice(2);if(Object.hasOwn(result,normalized))fail('CLI_ARGUMENT_DUPLICATE',key);result[normalized]=value;}if(Object.keys(result).length!==3||!result.input||!result.output||!result['native-output'])fail('CLI_ARGUMENTS_INCOMPLETE');return result;}

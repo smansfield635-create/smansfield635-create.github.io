@@ -97,6 +97,14 @@
     "notRequiredForMutationClasses": ["STATIC_EDITORIAL_MICRO","BOUNDED_PAGE_RELEASE"],
     "humanDispositionCompletenessRequired": true,
     "humanDispositionInvariant": "NO_MATERIAL_HUMAN_UNKNOWN_ENTERS_INTAKE_UNDECLARED",
+    "staleHeadResolutionOrder": {
+      "terminalDispositionRequested": "OWNER_CONNECTOR_TERMINAL_CLOSURE_WITHOUT_CURRENT_MAIN_REBIND",
+      "continuationRequested": "DIFFERENTIAL_CONTINUITY_PREFLIGHT_THEN_CARRY_FORWARD_OR_STRICT_SUCCESSOR",
+      "carryForwardResult": "CARRY_FORWARD_APPROVED",
+      "strictSuccessorResult": "STRICT_SUCCESSOR_REQUIRED",
+      "terminalClosureCreatesAuthority": false,
+      "terminalClosureCurrentMainBindingRequired": false
+    },
     "successorLifecycle": {
       "protocol": ".github/ai-router/operation-lifecycle/successor-protocol.v1.json",
       "gateCli": ".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs",
@@ -167,8 +175,13 @@
       "planner": "tools/operation-intake/owner-connector-canonical-terminal-closure.v1.mjs",
       "selfTest": "tools/operation-intake/owner-connector-terminal-closure-self-test.v1.mjs",
       "sourceMarker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+      "invocationSchema": "REMOTE_OPERATION_TERMINAL_CLOSURE_INVOCATION_REQUEST_v1",
+      "closureRequestSchema": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_v1",
+      "legacyDirectClosureRequestAccepted": true,
       "canonicalSemantics": "tools/operation-intake/repository-operation-lock-manager.v1.mjs#closeLocal/closeRemote",
-      "exactCurrentMainRequired": true,
+      "exactCurrentMainRequired": false,
+      "expectedMainHeadRole": "OBSERVATIONAL_CONTEXT_ONLY",
+      "terminalClosureCreatesAuthority": false,
       "activeLockProvenanceRequired": true,
       "terminalLineageCertificationRequired": true,
       "ledgerBlobCompareAndSwapRequired": true,
@@ -283,6 +296,8 @@
     "FAIL_CLOSED_ON_GENUINE_AMBIGUITY_OR_CONTRADICTORY_EVIDENCE",
     "PUBLIC_METADATA_GRANTS_NO_PRIVATE_AUTHORITY",
     "TRANSPORT_DOES_NOT_DEFINE_ADMISSION_LOCK_OR_CLOSURE_SEMANTICS",
+    "STALE_TERMINAL_CLOSURE_REDUCES_AUTHORITY_WITHOUT_CURRENT_MAIN_REBIND",
+    "STALE_CONTINUATION_REQUIRES_DIFFERENTIAL_CONTINUITY_BEFORE_STRICT_SUCCESSOR",
     "OWNER_CONNECTOR_SUCCESSOR_MUST_REUSE_CANONICAL_SUCCESSOR_LOCAL_AND_SHA_GUARDED_SINGLE_CAS",
     "OWNER_CONNECTOR_TERMINAL_CLOSURE_MUST_REUSE_CANONICAL_CLOSE_LOCAL_OR_CLOSE_REMOTE_AND_SHA_GUARDED_SINGLE_CAS",
     "DISPLAY_CONTINUITY_CONSTITUTION_REQUIRED_FOR_APPLICABLE_CONSTRUCTION"

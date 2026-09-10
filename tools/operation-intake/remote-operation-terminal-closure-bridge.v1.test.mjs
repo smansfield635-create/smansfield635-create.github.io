@@ -1,8 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  INVOCATION_SCHEMA,
   REPOSITORY,
   REQUEST_SCHEMA,
+  normalizeClosureInput,
   validateClosureRequest
 } from './remote-operation-terminal-closure-bridge.v1.mjs';
 import {
@@ -18,15 +20,58 @@ const valid = () => ({
   lockGeneration: 1,
   terminalDisposition: 'PASS_CLOSED'
 });
+const invocation = (expectedMainHead = 'a'.repeat(40)) => ({
+  schema: INVOCATION_SCHEMA,
+  repository: REPOSITORY,
+  expectedMainHead,
+  closureRequest: valid()
+});
 
 function rejects(mutator, code) {
   const value = valid();
   mutator(value);
   assert.throws(() => validateClosureRequest(value), error => error?.code === code);
 }
+function rejectsInvocation(mutator, code) {
+  const value = invocation();
+  mutator(value);
+  assert.throws(() => normalizeClosureInput(value), error => error?.code === code);
+}
 
 test('accepts the exact closed request schema', () => {
   assert.deepEqual(validateClosureRequest(valid()), valid());
+});
+
+test('normalizes owner invocation envelope to canonical closure request', () => {
+  const value = invocation('b'.repeat(40));
+  const normalized = normalizeClosureInput(value);
+  assert.equal(normalized.inputShape, 'OWNER_INVOCATION_ENVELOPE');
+  assert.equal(normalized.expectedMainHeadContext, 'b'.repeat(40));
+  assert.equal(normalized.currentMainBindingRequired, false);
+  assert.deepEqual(normalized.request, valid());
+});
+
+test('preserves legacy direct six-field compatibility', () => {
+  const normalized = normalizeClosureInput(valid());
+  assert.equal(normalized.inputShape, 'LEGACY_DIRECT_CLOSURE_REQUEST');
+  assert.equal(normalized.expectedMainHeadContext, null);
+  assert.equal(normalized.currentMainBindingRequired, false);
+  assert.deepEqual(normalized.request, valid());
+});
+
+test('treats stale expected main as observational context only', () => {
+  const oldHead = '1'.repeat(40);
+  const normalized = normalizeClosureInput(invocation(oldHead));
+  assert.equal(normalized.expectedMainHeadContext, oldHead);
+  assert.equal(normalized.currentMainBindingRequired, false);
+});
+
+test('rejects malformed expected-main context', () => {
+  rejectsInvocation(value => { value.expectedMainHead = 'bad'; }, 'EXPECTED_MAIN_HEAD_INVALID');
+});
+
+test('rejects extra owner-invocation fields', () => {
+  rejectsInvocation(value => { value.command = 'echo unsafe'; }, 'INVOCATION_SCHEMA_OR_KEYSET_INVALID');
 });
 
 test('accepts mutation-closed evidence-continuation disposition', () => {
@@ -76,6 +121,10 @@ test('preserves existing lowercase operation identifiers', () => {
 
 test('rejects repository substitution', () => {
   rejects(value => { value.repository = 'other/repository'; }, 'REPOSITORY_SUBSTITUTION_PROHIBITED');
+});
+
+test('rejects repository substitution in owner invocation', () => {
+  rejectsInvocation(value => { value.repository = 'other/repository'; }, 'REPOSITORY_SUBSTITUTION_PROHIBITED');
 });
 
 test('rejects noncanonical lock scope', () => {

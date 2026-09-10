@@ -5062,49 +5062,6 @@
       "scopeHash": "abe1bbea45186f434c0e75459ebbdee92c7f14d183c6294078688029ff703d54",
       "state": "ADMITTED_LOCKED"
     },
-    "ac8a55db88474723808065f2409edc34f146c858b4c99e1fcbd3ff85c7dcc928": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "2de1d7340f9507703c95c2be74be84e5228d7f80",
-          "lockGeneration": 2063,
-          "lockScope": "CONTROL_PLANE:REMOTE_OPERATION_TERMINAL_CLOSURE:SPARSE_CHECKOUT_REPAIR",
-          "operationId": "CONTROL_PLANE_TERMINAL_CLOSURE_SPARSE_CHECKOUT_REPAIR_20260910_001",
-          "procedureLocatorDigest": "961d9d37242833ea26592d59c48ed95a16230bc39cf2f5dce24cf433e8eda0ca",
-          "requestDigest": "d152b27b0c280903b10c621339125656ac7530c464e916f030a9c4143059783b",
-          "scopeHash": "ac8a55db88474723808065f2409edc34f146c858b4c99e1fcbd3ff85c7dcc928"
-        },
-        "bindingDigest": "0af98d9b0aa65a667bd3922a6c658c4df03bbefeaba433eb3ff9e206efd3981d",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "fa5ebc4b03a9a9858f62c15499950687f08782a450afab7242a04a5b6f408837",
-          "commentId": 5619589082,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2979,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34483841052,
-          "workflowSha": "2de1d7340f9507703c95c2be74be84e5228d7f80"
-        },
-        "lineageAnchorCommitSha": "0770e3e91f213c7e378fbcae447f7d04389297c3",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "2de1d7340f9507703c95c2be74be84e5228d7f80",
-      "lockGeneration": 2063,
-      "lockScope": "CONTROL_PLANE:REMOTE_OPERATION_TERMINAL_CLOSURE:SPARSE_CHECKOUT_REPAIR",
-      "operationId": "CONTROL_PLANE_TERMINAL_CLOSURE_SPARSE_CHECKOUT_REPAIR_20260910_001",
-      "procedureLocatorDigest": "961d9d37242833ea26592d59c48ed95a16230bc39cf2f5dce24cf433e8eda0ca",
-      "released": false,
-      "requestDigest": "d152b27b0c280903b10c621339125656ac7530c464e916f030a9c4143059783b",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "ac8a55db88474723808065f2409edc34f146c858b4c99e1fcbd3ff85c7dcc928",
-      "state": "ADMITTED_LOCKED"
-    },
     "b005780502dd946f07165ee8dc69dabc7435554d107eb54a089ac8d16fdfed99": {
       "governingHead": "f1016a29d28b0790041567eae1c05dab572bb6ed",
       "lockGeneration": 156,
@@ -45988,6 +45945,50 @@
       "scopeHash": "58c6fc094a89cd3dda577522144b56a7334b26b3b4bb1d89681bc1b456eb30d9",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "2de1d7340f9507703c95c2be74be84e5228d7f80",
+          "lockGeneration": 2063,
+          "lockScope": "CONTROL_PLANE:REMOTE_OPERATION_TERMINAL_CLOSURE:SPARSE_CHECKOUT_REPAIR",
+          "operationId": "CONTROL_PLANE_TERMINAL_CLOSURE_SPARSE_CHECKOUT_REPAIR_20260910_001",
+          "procedureLocatorDigest": "961d9d37242833ea26592d59c48ed95a16230bc39cf2f5dce24cf433e8eda0ca",
+          "requestDigest": "d152b27b0c280903b10c621339125656ac7530c464e916f030a9c4143059783b",
+          "scopeHash": "ac8a55db88474723808065f2409edc34f146c858b4c99e1fcbd3ff85c7dcc928"
+        },
+        "bindingDigest": "0af98d9b0aa65a667bd3922a6c658c4df03bbefeaba433eb3ff9e206efd3981d",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "fa5ebc4b03a9a9858f62c15499950687f08782a450afab7242a04a5b6f408837",
+          "commentId": 5619589082,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2979,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34483841052,
+          "workflowSha": "2de1d7340f9507703c95c2be74be84e5228d7f80"
+        },
+        "lineageAnchorCommitSha": "0770e3e91f213c7e378fbcae447f7d04389297c3",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "2de1d7340f9507703c95c2be74be84e5228d7f80",
+      "lockGeneration": 2063,
+      "lockScope": "CONTROL_PLANE:REMOTE_OPERATION_TERMINAL_CLOSURE:SPARSE_CHECKOUT_REPAIR",
+      "operationId": "CONTROL_PLANE_TERMINAL_CLOSURE_SPARSE_CHECKOUT_REPAIR_20260910_001",
+      "procedureLocatorDigest": "961d9d37242833ea26592d59c48ed95a16230bc39cf2f5dce24cf433e8eda0ca",
+      "released": true,
+      "requestDigest": "d152b27b0c280903b10c621339125656ac7530c464e916f030a9c4143059783b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ac8a55db88474723808065f2409edc34f146c858b4c99e1fcbd3ff85c7dcc928",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

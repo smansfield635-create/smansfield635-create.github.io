@@ -1,0 +1,108 @@
+name: Methods Native Visual Architecture Risk Review v1
+
+on:
+  push:
+    branches:
+      - candidate/methods-native-visual-architecture-v1-001
+    paths:
+      - "verification/methods-native-visual-architecture-v1/**"
+      - ".github/workflows/methods-native-visual-architecture-v1.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "verification/methods-native-visual-architecture-v1/**"
+      - ".github/workflows/methods-native-visual-architecture-v1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: methods-native-visual-architecture-v1-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deterministic-risk-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Set up Chrome
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install pinned browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Validate candidate source syntax
+        run: |
+          node --check verification/methods-native-visual-architecture-v1/native-architecture.js
+          node --check verification/methods-native-visual-architecture-v1/risk-review-runner.mjs
+          test -s verification/methods-native-visual-architecture-v1/index.html
+          test -s verification/methods-native-visual-architecture-v1/static-model-catalog.html
+
+      - name: Verify public Methods remains unchanged in this branch operation
+        run: |
+          git diff --exit-code origin/main...HEAD -- \
+            laws/research/methods-and-models/index.html \
+            laws/research/methods-and-models/showroom.css \
+            laws/research/methods-and-models/showroom.js \
+            laws/research/methods-and-models/showroom-refinement.css \
+            laws/research/methods-and-models/showroom-refinement.js \
+            laws/research/methods-and-models/showroom-euclidean.css \
+            laws/research/methods-and-models/showroom-euclidean-interaction.css \
+            laws/research/methods-and-models/showroom-euclidean.js \
+            laws/research/methods-and-models/canonical-records-v1.html
+
+      - name: Start static server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/methods-native-server.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:4173/verification/methods-native-visual-architecture-v1/ >/dev/null; then
+              exit 0
+            fi
+            sleep 0.25
+          done
+          cat /tmp/methods-native-server.log
+          exit 1
+
+      - name: Run deterministic risk review
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+          CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: node verification/methods-native-visual-architecture-v1/risk-review-runner.mjs
+
+      - name: Generate evidence archive identity
+        if: always()
+        run: |
+          mkdir -p methods-native-visual-architecture-risk-evidence
+          cp /tmp/methods-native-server.log methods-native-visual-architecture-risk-evidence/server.log || true
+          cp verification/methods-native-visual-architecture-v1/native-architecture.css methods-native-visual-architecture-risk-evidence/executed-native-architecture.css || true
+          cp verification/methods-native-visual-architecture-v1/native-architecture.js methods-native-visual-architecture-risk-evidence/executed-native-architecture.js || true
+          cp verification/methods-native-visual-architecture-v1/index.html methods-native-visual-architecture-risk-evidence/executed-index.html || true
+          tar -czf methods-native-visual-architecture-risk-evidence.tar.gz methods-native-visual-architecture-risk-evidence
+          sha256sum methods-native-visual-architecture-risk-evidence.tar.gz > methods-native-visual-architecture-risk-evidence.tar.gz.sha256
+
+      - name: Upload risk-review evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-native-visual-architecture-v1-risk-evidence
+          path: |
+            methods-native-visual-architecture-risk-evidence/
+            methods-native-visual-architecture-risk-evidence.tar.gz
+            methods-native-visual-architecture-risk-evidence.tar.gz.sha256
+            /tmp/methods-native-server.log
+          if-no-files-found: warn
+          retention-days: 30

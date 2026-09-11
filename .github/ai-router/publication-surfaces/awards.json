@@ -1,20 +1,24 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "awards",
-  "description": "Awards & Recognition chamber with the qualified Achievement and Trophy Standard carousel modernization served from the canonical showroom/globe/h-earth/awards route.",
+  "description": "Awards & Recognition chamber with the qualified judge-facing spatial Achievement and Trophy Standard instruments served from the canonical showroom/globe/h-earth/awards route.",
   "checks": [
     {
       "path": "/showroom/globe/h-earth/awards/index.html",
       "includes": [
-        "data-awards-carousel=\"achievement\"",
+        "data-awards-architecture=\"JUDGE_FACING_SPATIAL_INSTRUMENT_V1\"",
+        "data-achievement-stage",
         "aria-label=\"Achievement stories\"",
-        "data-carousel-prev",
-        "data-carousel-next",
+        "data-achievement-prev",
+        "data-achievement-next",
         "1 / 5",
-        "data-awards-carousel=\"trophy\"",
+        "data-trophy-stage",
         "aria-label=\"Trophy Standard chapters\"",
+        "data-trophy-prev",
+        "data-trophy-next",
         "1 / 6",
-        "Swipe · drag · or use Left/Right keys"
+        "Drag · swipe · select a visible object · or use Left/Right keys",
+        "Swipe · drag · or use Left/Right keys · the sequence wraps"
       ],
       "excludes": [
         "class=\"rail\" role=\"tablist\" aria-label=\"Achievement stories\"",
@@ -26,7 +30,7 @@
     "enabled": true,
     "path": "/showroom/globe/h-earth/awards/",
     "timeoutMs": 15000,
-    "readySelector": "[data-awards-carousel=\"achievement\"][data-carousel-ready=\"true\"]",
+    "readySelector": "[data-achievement-stage][data-ready=\"true\"]",
     "binding": {
       "mode": "direct-document",
       "path": "/showroom/globe/h-earth/awards/"
@@ -38,42 +42,42 @@
     ],
     "interactions": [
       {
-        "name": "Achievement carousel advances to Native Craft",
+        "name": "Achievement spatial instrument advances to Native Craft",
         "action": {
           "type": "click",
-          "selector": "[data-carousel-shell=\"achievement\"] [data-carousel-next]"
+          "selector": "[data-achievement-next]"
         },
         "assertions": [
           {
             "type": "attributeEquals",
-            "selector": "[data-awards-carousel=\"achievement\"] .awards-slide[data-story=\"native\"]",
+            "selector": "[data-achievement-stage] .instrument-card[data-story=\"native\"]",
             "name": "aria-current",
             "value": "true"
           },
           {
             "type": "textContains",
-            "selector": "[data-carousel-shell=\"achievement\"] [data-carousel-status]",
+            "selector": "[data-achievement-status]",
             "value": "2 / 5"
           }
         ],
         "timeoutMs": 5000
       },
       {
-        "name": "Trophy Standard carousel advances to 3D World",
+        "name": "Trophy Standard spatial instrument advances to 3D World",
         "action": {
           "type": "click",
-          "selector": "[data-carousel-shell=\"trophy\"] [data-carousel-next]"
+          "selector": "[data-trophy-next]"
         },
         "assertions": [
           {
             "type": "attributeEquals",
-            "selector": "[data-awards-carousel=\"trophy\"] .awards-slide[data-lens=\"world\"]",
+            "selector": "[data-trophy-stage] .instrument-card[data-lens-key=\"world\"]",
             "name": "aria-current",
             "value": "true"
           },
           {
             "type": "textContains",
-            "selector": "[data-carousel-shell=\"trophy\"] [data-carousel-status]",
+            "selector": "[data-trophy-status]",
             "value": "2 / 6"
           }
         ],

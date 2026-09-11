@@ -1,48 +1,5 @@
 {
   "activeScopes": {
-    "00dee3ab08f31a137dc4b97c04bd38f3718ff6923ca1349c188b9fd5c74850aa": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "59d7bb6dac569e09823a8b9b2d4e408b53f94fbe",
-          "lockGeneration": 2083,
-          "lockScope": "H_EARTH:AWARDS:TROPHY_SPATIAL_BROWSER_VERIFIER:V1",
-          "operationId": "AWARDS_TROPHY_SPATIAL_BROWSER_VERIFIER_CONTRACT_REPAIR_20260910_001_REBIND_001",
-          "procedureLocatorDigest": "c68b3a14d30cea74d30e41b82b1bedba22076339aebcd9caeaefca10ba6ced01",
-          "requestDigest": "890c87f866f4290018df57ae48ce2026bb8098419ec9dea891baca86f57a2a08",
-          "scopeHash": "00dee3ab08f31a137dc4b97c04bd38f3718ff6923ca1349c188b9fd5c74850aa"
-        },
-        "bindingDigest": "d7e31a95ee4c3661ae188beb5668493bef72ebc2a98dad6e87e29e48643f6646",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "8721016cce105223057f3c47102ea339873e80ddda4c022400ee05c38a1fa287",
-          "commentId": 5628665862,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 3031,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34555758071,
-          "workflowSha": "59d7bb6dac569e09823a8b9b2d4e408b53f94fbe"
-        },
-        "lineageAnchorCommitSha": "ba33b95cebca906f52cf514d74b8d99a36766e56",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "59d7bb6dac569e09823a8b9b2d4e408b53f94fbe",
-      "lockGeneration": 2083,
-      "lockScope": "H_EARTH:AWARDS:TROPHY_SPATIAL_BROWSER_VERIFIER:V1",
-      "operationId": "AWARDS_TROPHY_SPATIAL_BROWSER_VERIFIER_CONTRACT_REPAIR_20260910_001_REBIND_001",
-      "procedureLocatorDigest": "c68b3a14d30cea74d30e41b82b1bedba22076339aebcd9caeaefca10ba6ced01",
-      "released": false,
-      "requestDigest": "890c87f866f4290018df57ae48ce2026bb8098419ec9dea891baca86f57a2a08",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "00dee3ab08f31a137dc4b97c04bd38f3718ff6923ca1349c188b9fd5c74850aa",
-      "state": "ADMITTED_LOCKED"
-    },
     "01572acf600dc9a4724182e4e740faac14e141f961b09501aa9022b8d4d08d65": {
       "governingHead": "b7728eb3f8e1da8b0c408a4f255adb144fabcee3",
       "lockGeneration": 366,
@@ -47017,6 +46974,50 @@
         "transitionId": "AWARDS_CHAMBER_JUDGE_FACING_SUCCESSOR_20260910_001_REBIND_001_TRANSITION"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "59d7bb6dac569e09823a8b9b2d4e408b53f94fbe",
+          "lockGeneration": 2083,
+          "lockScope": "H_EARTH:AWARDS:TROPHY_SPATIAL_BROWSER_VERIFIER:V1",
+          "operationId": "AWARDS_TROPHY_SPATIAL_BROWSER_VERIFIER_CONTRACT_REPAIR_20260910_001_REBIND_001",
+          "procedureLocatorDigest": "c68b3a14d30cea74d30e41b82b1bedba22076339aebcd9caeaefca10ba6ced01",
+          "requestDigest": "890c87f866f4290018df57ae48ce2026bb8098419ec9dea891baca86f57a2a08",
+          "scopeHash": "00dee3ab08f31a137dc4b97c04bd38f3718ff6923ca1349c188b9fd5c74850aa"
+        },
+        "bindingDigest": "d7e31a95ee4c3661ae188beb5668493bef72ebc2a98dad6e87e29e48643f6646",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "8721016cce105223057f3c47102ea339873e80ddda4c022400ee05c38a1fa287",
+          "commentId": 5628665862,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3031,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34555758071,
+          "workflowSha": "59d7bb6dac569e09823a8b9b2d4e408b53f94fbe"
+        },
+        "lineageAnchorCommitSha": "ba33b95cebca906f52cf514d74b8d99a36766e56",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "59d7bb6dac569e09823a8b9b2d4e408b53f94fbe",
+      "lockGeneration": 2083,
+      "lockScope": "H_EARTH:AWARDS:TROPHY_SPATIAL_BROWSER_VERIFIER:V1",
+      "operationId": "AWARDS_TROPHY_SPATIAL_BROWSER_VERIFIER_CONTRACT_REPAIR_20260910_001_REBIND_001",
+      "procedureLocatorDigest": "c68b3a14d30cea74d30e41b82b1bedba22076339aebcd9caeaefca10ba6ced01",
+      "released": true,
+      "requestDigest": "890c87f866f4290018df57ae48ce2026bb8098419ec9dea891baca86f57a2a08",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "00dee3ab08f31a137dc4b97c04bd38f3718ff6923ca1349c188b9fd5c74850aa",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

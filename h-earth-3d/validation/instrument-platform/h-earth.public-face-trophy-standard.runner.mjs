@@ -26,16 +26,12 @@ try {
 const changedPaths = exec(`git diff --name-only ${comparisonBase}...HEAD`)
   .split('\n').map((value) => value.trim()).filter(Boolean).sort();
 const allowedPaths = [
-  '.github/workflows/h-earth-public-face-trophy-standard.yml',
-  'h-earth-3d/control-plane/instrument-platform/H_EARTH_PUBLIC_FACE_TROPHY_STANDARD_RECONCILIATION_001.v1.mjs',
   'h-earth-3d/validation/instrument-platform/h-earth.public-face-trophy-standard.browser.mjs',
   'h-earth-3d/validation/instrument-platform/h-earth.public-face-trophy-standard.runner.mjs',
-  'showroom/globe/h-earth/awards/index.html',
-  'showroom/globe/h-earth/index.css',
-  'showroom/globe/h-earth/index.html'
+  'showroom/globe/h-earth/awards/index.html'
 ].sort();
 const sensitiveChangedPaths = changedPaths.filter((path) => allowedPaths.includes(path));
-const unauthorizedChangedPaths = sensitiveChangedPaths.filter((path) => !allowedPaths.includes(path));
+const unauthorizedChangedPaths = changedPaths.filter((path) => !allowedPaths.includes(path));
 
 const indexHtml = read('showroom/globe/h-earth/index.html');
 const awardsHtml = read('showroom/globe/h-earth/awards/index.html');
@@ -65,12 +61,33 @@ check('CANVAS_ID_PRESERVED', indexHtml.includes('id="h-earth-functional-landscap
 check('GESTURE_MOUNT_ID_PRESERVED', indexHtml.includes('id="h-earth-functional-landscape-mount"'));
 
 check('AWARDS_ROUTE_IDENTITY', awardsHtml.includes('data-awards-overview="DIAMOND_GATE_BRIDGE_AWARD_LANDSCAPE"'));
+check('AWARDS_ARCHITECTURE_PRESERVED', awardsHtml.includes('data-awards-architecture="JUDGE_FACING_SPATIAL_INSTRUMENT_V1"'));
 check('AWARDS_CLAIM_BOUNDARY', awardsHtml.includes('data-claim-boundary="TARGETS_AND_RATIONALE_NOT_NOMINATIONS_OR_WINS"'));
 const stories = [...awardsHtml.matchAll(/data-story="([^"]+)"/g)].map((match) => match[1]);
-const trophyLenses = [...awardsHtml.matchAll(/<button\b[^>]*\bdata-lens="([^"]+)"[^>]*>/g)].map((match) => match[1]);
+const trophyLenses = [...awardsHtml.matchAll(/<article\b[^>]*\bdata-lens-key="([^"]+)"[^>]*>/g)].map((match) => match[1]);
 check('FIVE_ACHIEVEMENT_STORIES', stories.length === 5, stories);
+check('ACHIEVEMENT_STORY_ORDER', JSON.stringify(stories) === JSON.stringify(['experience','native','governed','continuity','platform']), stories);
 check('SIX_TROPHY_STANDARD_LENSES', trophyLenses.length === 6, trophyLenses);
 check('TROPHY_CHAPTER_ORDER', JSON.stringify(trophyLenses) === JSON.stringify(['compass','world','ip','ai','diagnostic','independent']), trophyLenses);
+check('TED_EDITORIAL_SPINE', [
+  'What happens when an idea becomes a world?',
+  'One body of work. Five reasons to look closer.',
+  'The visitor feels the system before they ever see the machinery.',
+  'Built in 2026. Entering the 2027 award season.',
+  'The question is no longer whether it can be built. The question is how it stands when placed beside the best.',
+  'Six chapters. One story told from six directions.'
+].every((text) => awardsHtml.includes(text)));
+check('WHOLE_CARD_TAP_DRAG_FLIP_CONTRACT', [
+  'card-flip-shell',
+  "card.dataset.flipped='false'",
+  'const toggleFlip=card=>',
+  'suppressClick=dragMoved',
+  "if(suppressClick){e.preventDefault();e.stopPropagation();suppressClick=false;return}",
+  "if(i!==active){settle(i);return}toggleFlip(card)"
+].every((token) => awardsHtml.includes(token)));
+check('STATE_DEPENDENT_DEPTH_BLUR_CONTRACT', awardsHtml.includes('--content-blur') && awardsHtml.includes('--content-opacity') && awardsHtml.includes('depth<1.5?3.2:7') && awardsHtml.includes('a<1.55?.46:0'));
+check('ACTIVE_CARD_FRONT_BACK_STATE', awardsHtml.includes('.instrument-card[data-flipped="true"] .card-flip-shell') && awardsHtml.includes("card.setAttribute('aria-expanded',on?'true':'false')"));
+check('TROPHY_VISIBLE_CARD_TAP_CONTRACT', awardsHtml.includes("stage.addEventListener('click',e=>{const card=e.target.closest('[data-lens-key]')") && awardsHtml.includes('if(i!==active)settle(i)'));
 check('COMPASS_SEVEN_BEAT_ARGUMENT', [
   'Navigation requires orientation.',
   'Without orientation, there is no navigation.',
@@ -86,12 +103,14 @@ check('AWARD_TARGETS_NOT_WINS', /does not claim that a submission, nomination, s
 check('AWARDS_2027_TARGET_DATE_PRESENT', awardsHtml.includes('Planned submissions · late October 2026 · 2027 cycle'));
 check('AWARDS_RETURN_TO_PROMOTED_H_EARTH', awardsHtml.includes('href="/showroom/globe/h-earth/"'));
 
+check('EXACT_THREE_PATH_SCOPE', changedPaths.length === 3 && unauthorizedChangedPaths.length === 0 && allowedPaths.every((path) => changedPaths.includes(path)), { changedPaths, allowedPaths, unauthorizedChangedPaths });
 check('SENSITIVE_SCOPE_BOUNDED', unauthorizedChangedPaths.length === 0, { sensitiveChangedPaths, unauthorizedChangedPaths });
 check('WORKFLOW_LOCAL_AND_PUBLIC_MODES', workflow.includes('PUBLIC_VERIFICATION') && workflow.includes('https://diamondgatebridge.com'));
 check('WORKFLOW_NO_PR_COMMENT_TRANSPORT', !workflow.includes('issues.createComment'));
 check('BROWSER_RUNNER_COVERS_DESKTOP', browserRunner.includes('DESKTOP_POINTER_DRAG_LOOK'));
 check('BROWSER_RUNNER_COVERS_MOBILE', browserRunner.includes('MOBILE_ONE_FINGER_LOOK'));
-check('BROWSER_RUNNER_COVERS_AWARDS', browserRunner.includes('AWARDS_ROUTE_REACHABLE'));
+check('BROWSER_RUNNER_COVERS_AWARDS', browserRunner.includes('AWARDS_ROUTE_REACHABLE') && browserRunner.includes('AWARDS_ACTIVE_CARD_FLIPS') && browserRunner.includes('AWARDS_DRAG_DOES_NOT_FLIP'));
+check('BROWSER_RUNNER_COVERS_AWARDS_MOBILE', browserRunner.includes('MOBILE_AWARDS_NO_HORIZONTAL_OVERFLOW') && browserRunner.includes('MOBILE_AWARDS_INACTIVE_CONTENT_BLURRED'));
 check('BROWSER_RUNNER_COVERS_ZERO_ERRORS', browserRunner.includes('PAGE_ERRORS_ZERO') && browserRunner.includes('CONSOLE_ERRORS_ZERO') && browserRunner.includes('OWNED_HTTP_ERRORS_ZERO'));
 
 const failedAssertions = assertions.filter((entry) => !entry.pass);

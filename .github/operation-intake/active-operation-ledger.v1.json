@@ -67,49 +67,6 @@
       "scopeHash": "02ca5f62227a02a7d233eb0923bf2f11b44d3ea30cd692499df324a076711157",
       "state": "ADMITTED_LOCKED"
     },
-    "0307c6d2cca34fec1bfeeb920a93b5576d1034ba669f70344aec131873ab9f8a": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "299a4a6d9710ef21763bbfa8be0a5e14f3994099",
-          "lockGeneration": 2090,
-          "lockScope": "H_EARTH_AWARDS_JURY_HUB_EDITORIAL_INTERACTION_REFINEMENT",
-          "operationId": "AWARDS_JURY_HUB_EDITORIAL_INTERACTION_REFINEMENT_20260911_001_REBIND_007",
-          "procedureLocatorDigest": "e156a2c0b5d313d2772f52c8053e1c22fbf9848c327d81e140e1dc8cd72ea852",
-          "requestDigest": "c739bebbf0700e35fd74809373d6cbdabf3a8811662e9e8d965da043119e5467",
-          "scopeHash": "0307c6d2cca34fec1bfeeb920a93b5576d1034ba669f70344aec131873ab9f8a"
-        },
-        "bindingDigest": "75e1a655a182a176223f9df73b91c1ee44a50cbc16dab08a03c2d02034d49bcb",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "e55faf89f9b9d26dd4c9f640795b61560a282a019917722e153086fa66cd42cf",
-          "commentId": 5638065878,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 3042,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34626894260,
-          "workflowSha": "299a4a6d9710ef21763bbfa8be0a5e14f3994099"
-        },
-        "lineageAnchorCommitSha": "176cf718f63ad45bef96380bbb423854e0f7f3b8",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "299a4a6d9710ef21763bbfa8be0a5e14f3994099",
-      "lockGeneration": 2090,
-      "lockScope": "H_EARTH_AWARDS_JURY_HUB_EDITORIAL_INTERACTION_REFINEMENT",
-      "operationId": "AWARDS_JURY_HUB_EDITORIAL_INTERACTION_REFINEMENT_20260911_001_REBIND_007",
-      "procedureLocatorDigest": "e156a2c0b5d313d2772f52c8053e1c22fbf9848c327d81e140e1dc8cd72ea852",
-      "released": false,
-      "requestDigest": "c739bebbf0700e35fd74809373d6cbdabf3a8811662e9e8d965da043119e5467",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "0307c6d2cca34fec1bfeeb920a93b5576d1034ba669f70344aec131873ab9f8a",
-      "state": "ADMITTED_LOCKED"
-    },
     "030c5cb6224be06a78d1117e2cc3b8e4984de7aa4fea2dbb42736c90cf51fc86": {
       "governingHead": "888b70bd8a56767f0e33d9c083d412cd55c339f4",
       "lockGeneration": 346,
@@ -47320,6 +47277,50 @@
       "procedureLocatorDigest": "93dfef9d80bc97407290e9a517e5216a39ed15aa90eb702eba81891872649211",
       "released": true,
       "requestDigest": "ed244607b455a6ec6dc79a6281d8be12ec65c9149597db9007967c0167f312b2",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "0307c6d2cca34fec1bfeeb920a93b5576d1034ba669f70344aec131873ab9f8a",
+      "state": "TERMINAL",
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "299a4a6d9710ef21763bbfa8be0a5e14f3994099",
+          "lockGeneration": 2090,
+          "lockScope": "H_EARTH_AWARDS_JURY_HUB_EDITORIAL_INTERACTION_REFINEMENT",
+          "operationId": "AWARDS_JURY_HUB_EDITORIAL_INTERACTION_REFINEMENT_20260911_001_REBIND_007",
+          "procedureLocatorDigest": "e156a2c0b5d313d2772f52c8053e1c22fbf9848c327d81e140e1dc8cd72ea852",
+          "requestDigest": "c739bebbf0700e35fd74809373d6cbdabf3a8811662e9e8d965da043119e5467",
+          "scopeHash": "0307c6d2cca34fec1bfeeb920a93b5576d1034ba669f70344aec131873ab9f8a"
+        },
+        "bindingDigest": "75e1a655a182a176223f9df73b91c1ee44a50cbc16dab08a03c2d02034d49bcb",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "e55faf89f9b9d26dd4c9f640795b61560a282a019917722e153086fa66cd42cf",
+          "commentId": 5638065878,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3042,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34626894260,
+          "workflowSha": "299a4a6d9710ef21763bbfa8be0a5e14f3994099"
+        },
+        "lineageAnchorCommitSha": "176cf718f63ad45bef96380bbb423854e0f7f3b8",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "299a4a6d9710ef21763bbfa8be0a5e14f3994099",
+      "lockGeneration": 2090,
+      "lockScope": "H_EARTH_AWARDS_JURY_HUB_EDITORIAL_INTERACTION_REFINEMENT",
+      "operationId": "AWARDS_JURY_HUB_EDITORIAL_INTERACTION_REFINEMENT_20260911_001_REBIND_007",
+      "procedureLocatorDigest": "e156a2c0b5d313d2772f52c8053e1c22fbf9848c327d81e140e1dc8cd72ea852",
+      "released": true,
+      "requestDigest": "c739bebbf0700e35fd74809373d6cbdabf3a8811662e9e8d965da043119e5467",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "0307c6d2cca34fec1bfeeb920a93b5576d1034ba669f70344aec131873ab9f8a",
       "state": "TERMINAL",

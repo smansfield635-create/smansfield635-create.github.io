@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'characters/**'
+      - 'assets/manor-blueprint/**'
       - 'h-earth-3d/**'
       - 'showroom/globe/h-earth/**'
       - 'control-plane/whole-estate/characters-reconstruction-v1/**'
@@ -23,6 +24,7 @@ jobs:
         with:
           sparse-checkout: |
             characters
+            assets/manor-blueprint
             h-earth-3d
             showroom/globe/h-earth
             control-plane/whole-estate/characters-reconstruction-v1

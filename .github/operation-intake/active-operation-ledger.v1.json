@@ -2785,42 +2785,59 @@
     "644f3fc9b27bdfdb7c73a36b53321f81d3dffb7a748343b38e6e7af11e76938e": {
       "authorityProvenance": {
         "authorityIdentity": {
-          "governingHead": "f5b4be781ed53f7071d13cb99ae4011d9a812159",
-          "lockGeneration": 2079,
+          "governingHead": "40ed2c1cf7f0df31ecb9483bd3ffc01c70397936",
+          "lockGeneration": 2082,
           "lockScope": "H_EARTH:AWARDS_CHAMBER:JUDGE_FACING_SUCCESSOR:V1",
-          "operationId": "AWARDS_CHAMBER_JUDGE_FACING_SUCCESSOR_20260910_001",
-          "procedureLocatorDigest": "2f8ea7577a63bf0812aa898d01a4bc01625120936731d2c00ffafda9b624ea37",
-          "requestDigest": "1baaf44828717119d6032eef0288c2be1dcfee79fc39808f5ae40922fbc76bba",
+          "operationId": "AWARDS_CHAMBER_JUDGE_FACING_SUCCESSOR_20260910_001_REBIND_001",
+          "procedureLocatorDigest": "fa1a0c785da0df33087c2a5af696d1eea97efa3d98db0e884be03fa564362ab2",
+          "requestDigest": "86e88f7da2fcafb16db8a965a59d449e17ae9fd15ea935e21c172b7b43b11d0d",
           "scopeHash": "644f3fc9b27bdfdb7c73a36b53321f81d3dffb7a748343b38e6e7af11e76938e"
         },
-        "bindingDigest": "c99e272fc42658e52939472e9e3ead954837746854f1dbcd5b554516369b079e",
+        "bindingDigest": "49e9716d1971e2ea51071b917f441f56cce31ffd6d1deb4f7d0186cf442d6ed1",
         "invocation": {
           "commentAuthorAssociation": "OWNER",
           "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "2479ad7e976455fdf23c3b9f7ea508ed818fa8441b11849fac8ffd6642c13a91",
-          "commentId": 5627370060,
+          "commentBodySha256": "34ec469c117f629c0e410935dc856c180e05a17b9cce02fde65654911ecc5711",
+          "commentId": 5627883744,
           "eventAction": "created",
           "eventName": "issue_comment",
           "issueNumber": 2981,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
           "repository": "smansfield635-create/smansfield635-create.github.io",
           "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
           "workflowRunAttempt": 1,
-          "workflowRunId": 34546015925,
-          "workflowSha": "f5b4be781ed53f7071d13cb99ae4011d9a812159"
+          "workflowRunId": 34549830931,
+          "workflowSha": "40ed2c1cf7f0df31ecb9483bd3ffc01c70397936"
         },
-        "lineageAnchorCommitSha": "4abf5d78ae07d9776b2dfbbd620a71ac0962ac19",
-        "origin": "CANONICAL_INTAKE",
+        "lineageAnchorCommitSha": "c28b2c1ccb3bd0839d6a367c3adf7d6510975bef",
+        "origin": "CANONICAL_SUCCESSOR",
         "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
       },
-      "governingHead": "f5b4be781ed53f7071d13cb99ae4011d9a812159",
-      "lockGeneration": 2079,
+      "governingHead": "40ed2c1cf7f0df31ecb9483bd3ffc01c70397936",
+      "lockGeneration": 2082,
       "lockScope": "H_EARTH:AWARDS_CHAMBER:JUDGE_FACING_SUCCESSOR:V1",
-      "operationId": "AWARDS_CHAMBER_JUDGE_FACING_SUCCESSOR_20260910_001",
-      "procedureLocatorDigest": "2f8ea7577a63bf0812aa898d01a4bc01625120936731d2c00ffafda9b624ea37",
+      "operationId": "AWARDS_CHAMBER_JUDGE_FACING_SUCCESSOR_20260910_001_REBIND_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "f5b4be781ed53f7071d13cb99ae4011d9a812159",
+        "lockGeneration": 2079,
+        "lockScope": "H_EARTH:AWARDS_CHAMBER:JUDGE_FACING_SUCCESSOR:V1",
+        "operationId": "AWARDS_CHAMBER_JUDGE_FACING_SUCCESSOR_20260910_001",
+        "preservedEvidenceRefs": [
+          "issue:2981",
+          "comment:5627224836",
+          "comment:5627867540",
+          "private-issue:geodiametrics1#574"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "AWARDS_CHAMBER_JUDGE_FACING_SUCCESSOR_20260910_001_REBIND_001_TRANSITION"
+      },
+      "procedureLocatorDigest": "fa1a0c785da0df33087c2a5af696d1eea97efa3d98db0e884be03fa564362ab2",
       "released": false,
-      "requestDigest": "1baaf44828717119d6032eef0288c2be1dcfee79fc39808f5ae40922fbc76bba",
+      "requestDigest": "86e88f7da2fcafb16db8a965a59d449e17ae9fd15ea935e21c172b7b43b11d0d",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "644f3fc9b27bdfdb7c73a36b53321f81d3dffb7a748343b38e6e7af11e76938e",
       "state": "ADMITTED_LOCKED"
@@ -7778,7 +7795,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2081,
+  "lockGeneration": 2082,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -46853,6 +46870,67 @@
       "scopeHash": "22305d7b33f63a4e058ea6412ccb8daf489497b1171eccdc293ca55ffcb68d5d",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "f5b4be781ed53f7071d13cb99ae4011d9a812159",
+          "lockGeneration": 2079,
+          "lockScope": "H_EARTH:AWARDS_CHAMBER:JUDGE_FACING_SUCCESSOR:V1",
+          "operationId": "AWARDS_CHAMBER_JUDGE_FACING_SUCCESSOR_20260910_001",
+          "procedureLocatorDigest": "2f8ea7577a63bf0812aa898d01a4bc01625120936731d2c00ffafda9b624ea37",
+          "requestDigest": "1baaf44828717119d6032eef0288c2be1dcfee79fc39808f5ae40922fbc76bba",
+          "scopeHash": "644f3fc9b27bdfdb7c73a36b53321f81d3dffb7a748343b38e6e7af11e76938e"
+        },
+        "bindingDigest": "c99e272fc42658e52939472e9e3ead954837746854f1dbcd5b554516369b079e",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "2479ad7e976455fdf23c3b9f7ea508ed818fa8441b11849fac8ffd6642c13a91",
+          "commentId": 5627370060,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2981,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34546015925,
+          "workflowSha": "f5b4be781ed53f7071d13cb99ae4011d9a812159"
+        },
+        "lineageAnchorCommitSha": "4abf5d78ae07d9776b2dfbbd620a71ac0962ac19",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "f5b4be781ed53f7071d13cb99ae4011d9a812159",
+      "lockGeneration": 2079,
+      "lockScope": "H_EARTH:AWARDS_CHAMBER:JUDGE_FACING_SUCCESSOR:V1",
+      "operationId": "AWARDS_CHAMBER_JUDGE_FACING_SUCCESSOR_20260910_001",
+      "procedureLocatorDigest": "2f8ea7577a63bf0812aa898d01a4bc01625120936731d2c00ffafda9b624ea37",
+      "released": true,
+      "requestDigest": "1baaf44828717119d6032eef0288c2be1dcfee79fc39808f5ae40922fbc76bba",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "644f3fc9b27bdfdb7c73a36b53321f81d3dffb7a748343b38e6e7af11e76938e",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:2981",
+          "comment:5627224836",
+          "comment:5627867540",
+          "private-issue:geodiametrics1#574"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "40ed2c1cf7f0df31ecb9483bd3ffc01c70397936",
+        "successorLockGeneration": 2082,
+        "successorLockScope": "H_EARTH:AWARDS_CHAMBER:JUDGE_FACING_SUCCESSOR:V1",
+        "successorOperationId": "AWARDS_CHAMBER_JUDGE_FACING_SUCCESSOR_20260910_001_REBIND_001",
+        "transitionId": "AWARDS_CHAMBER_JUDGE_FACING_SUCCESSOR_20260910_001_REBIND_001_TRANSITION"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

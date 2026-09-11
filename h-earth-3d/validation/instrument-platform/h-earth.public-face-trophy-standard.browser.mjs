@@ -114,7 +114,11 @@ try {
   check('AWARDS_TRANSPARENCY_BOUNDARY_VISIBLE', await transparencyBoundary.isVisible());
   const hEarthDoor = awards.getByText('Enter H-Earth', { exact: true }).locator('xpath=ancestor::a[1]');
   check('AWARDS_H_EARTH_DOOR_PRESENT', (await hEarthDoor.getAttribute('href')) === '/showroom/globe/h-earth/');
-  await awards.locator('[data-story="governed"]').click();
+  const achievementNext = awards.locator('[data-achievement-next]');
+  check('ACHIEVEMENT_NEXT_CONTROL_PRESENT', await achievementNext.count() === 1 && await achievementNext.isVisible());
+  for (let step = 0; step < 2; step += 1) await achievementNext.click();
+  const governedStory = awards.locator('[data-story="governed"]');
+  check('GOVERNED_STORY_ACTIVE', await governedStory.getAttribute('aria-current') === 'true' && await governedStory.getAttribute('aria-hidden') === 'false' && await governedStory.isVisible());
   check('GOVERNED_STORY_CONTENT_UPDATES', (await awards.locator('#story-title').textContent())?.trim() === 'The thousandth pull request became a simplification milestone.');
   const trophyNext = awards.locator('[data-trophy-next]');
   check('TROPHY_STANDARD_NEXT_CONTROL_PRESENT', await trophyNext.count() === 1 && await trophyNext.isVisible());

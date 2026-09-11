@@ -10,11 +10,12 @@
     "githubActionsAllowedForAgentExecution": false,
     "githubActionsAllowedAsExecutionTransport": false,
     "githubActionsAllowedForManualAgentDispatch": false,
-    "githubActionsPermittedRoles": ["PASSIVE_CI_AFTER_REPOSITORY_CHANGE","HISTORICAL_EVIDENCE_INSPECTION","LATER_REPLAY_WHEN_SEPARATELY_AUTHORIZED"],
-    "requiredExecutionPreference": ["CONNECTED_GITHUB_API_OR_NATIVE_AGENT_TOOLS","AUTHORIZED_CODESPACE_OR_DISPOSABLE_BUILDER","LOCAL_OR_EXTERNAL_EXACT_HEAD_EXECUTION_SUBSTRATE"],
-    "prohibited": ["DO_NOT_DISPATCH_GITHUB_ACTIONS_TO_PERFORM_AGENT_WORK","DO_NOT_USE_WORKFLOW_RUNS_AS_A_SUBSTITUTE_FOR_NATIVE_EXECUTION","DO_NOT_CREATE_SERIAL_ACTIONS_CARRIERS_WHEN_NATIVE_EXECUTION_IS_AVAILABLE"],
-    "failureDisposition": "REPORT_NATIVE_EXECUTION_SURFACE_UNAVAILABLE_DO_NOT_FALL_BACK_TO_GITHUB_ACTIONS",
-    "precedent": "Issue #678 three-tier Codespace execution substrate integration separates disposable builder/fresh-verifier execution from later GitHub Actions replay."
+    "githubActionsFixedCanonicalIntakeFallbackAllowed": true,
+    "githubActionsPermittedRoles": ["PASSIVE_CI_AFTER_REPOSITORY_CHANGE","HISTORICAL_EVIDENCE_INSPECTION","LATER_REPLAY_WHEN_SEPARATELY_AUTHORIZED","FIXED_CANONICAL_INTAKE_FALLBACK"],
+    "requiredExecutionPreference": ["CONNECTED_GITHUB_API_OR_NATIVE_AGENT_TOOLS","FIXED_CANONICAL_INTAKE_FALLBACK_WHEN_NATIVE_TRANSPORT_UNAVAILABLE","AUTHORIZED_CODESPACE_OR_DISPOSABLE_BUILDER","LOCAL_OR_EXTERNAL_EXACT_HEAD_EXECUTION_SUBSTRATE"],
+    "prohibited": ["DO_NOT_DISPATCH_GITHUB_ACTIONS_TO_PERFORM_GENERAL_AGENT_WORK","DO_NOT_USE_WORKFLOW_RUNS_AS_A_SUBSTITUTE_FOR_NATIVE_EXECUTION_EXCEPT_THE_REGISTERED_FIXED_CANONICAL_INTAKE_FALLBACK","DO_NOT_CREATE_SERIAL_ACTIONS_CARRIERS_WHEN_NATIVE_EXECUTION_IS_AVAILABLE"],
+    "failureDisposition": "FOR_CANONICAL_INTAKE_TRANSPORT_UNAVAILABILITY_USE_THE_REGISTERED_FIXED_CANONICAL_INTAKE_FALLBACK_WITH_THE_SAME_REQUEST_AND_PROCEDURE; OTHERWISE_REPORT_NATIVE_EXECUTION_SURFACE_UNAVAILABLE_AND_DO_NOT_FALL_BACK_TO_GITHUB_ACTIONS",
+    "precedent": "Issue #678 three-tier Codespace execution substrate integration separates disposable builder/fresh-verifier execution from later GitHub Actions replay; Issue #3054 restores only the fixed canonical-intake workflow as a bounded transport fallback."
   },
   "routerRegistry": ".github/ai-router/router.v1.json",
   "routerCli": "tools/repository-ai-entry-router.mjs",
@@ -199,12 +200,16 @@
     "invocationMarker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
     "executionWorkflow": ".github/workflows/canonical-operation-intake-transport-v1.yml",
     "fixedCommand": "node tools/operation-intake/canonical-operation-intake-transport.v1.mjs --input <REQUEST_ENVELOPE.json> --output <TRANSPORT_RECEIPT.json>",
+    "exactCurrentMainHeadRequired": true,
+    "sameRequestAndProcedureOnFallbackRequired": true,
+    "fallbackOnSemanticRejectionAllowed": false,
     "authorityCreated": false,
     "mergeAuthorityCreated": false,
     "prMutationAuthorityCreated": false,
+    "productMutationAuthorityCreated": false,
     "admissionSemanticsDuplicated": false,
-    "agentInvocationAllowed": false,
-    "agentUse": "PROHIBITED_GITHUB_ACTIONS_TRANSPORT"
+    "agentInvocationAllowed": true,
+    "agentUse": "AUTHORIZED_BOUNDED_CANONICAL_INTAKE_FALLBACK_ONLY"
   },
   "remoteRouterReceiptTransport": {
     "schema": "REPOSITORY_AI_ROUTER_REMOTE_TRANSPORT_CAPABILITY_v1",
@@ -272,9 +277,10 @@
     "claimAuthorityCreated": false
   },
   "rules": [
-    "AGENT_EXECUTION_MUST_NOT_USE_GITHUB_ACTIONS",
-    "GITHUB_ACTIONS_ARE_CI_EVIDENCE_OR_SEPARATELY_AUTHORIZED_LATER_REPLAY_NOT_AGENT_EXECUTION_TRANSPORT",
-    "NATIVE_CONNECTED_TOOL_OR_DISPOSABLE_BUILDER_EXECUTION_PRECEDES_ANY_WORKFLOW_REPLAY",
+    "GENERAL_AGENT_EXECUTION_MUST_NOT_USE_GITHUB_ACTIONS",
+    "FIXED_CANONICAL_INTAKE_WORKFLOW_IS_AUTHORIZED_ONLY_AS_A_BOUNDED_TRANSPORT_FALLBACK_WHEN_NATIVE_INTAKE_TRANSPORT_IS_UNAVAILABLE",
+    "GITHUB_ACTIONS_OTHER_THAN_THE_FIXED_CANONICAL_INTAKE_EXCEPTION_ARE_CI_EVIDENCE_OR_SEPARATELY_AUTHORIZED_LATER_REPLAY_NOT_AGENT_EXECUTION_TRANSPORT",
+    "NATIVE_CONNECTED_TOOL_OR_DISPOSABLE_BUILDER_EXECUTION_PRECEDES_ANY_WORKFLOW_REPLAY_EXCEPT_THE_FIXED_CANONICAL_INTAKE_FALLBACK",
     "CLASSIFY_PAGE_MUTATION_BEFORE_AUTHORITY_ESCALATION",
     "NO_REPEATED_EQUIVALENT_PROBE_WITHOUT_NEW_EVIDENCE",
     "CHANGE_EVIDENCE_SURFACE_AFTER_FIRST_FAILED_RETRIEVAL",

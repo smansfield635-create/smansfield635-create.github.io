@@ -3,7 +3,7 @@
   "status": "ACTIVE_FAIL_CLOSED",
   "profileId": "CONNECTED_GITHUB_NATIVE_PRIMITIVES_V1",
   "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1",
-  "purpose": "Expose the existing canonical owner-connector admission semantics to standard connected-GitHub rooms without requiring a raw token-bearing shell.",
+  "purpose": "Expose the existing canonical owner-connector admission semantics to standard connected-GitHub rooms without requiring a raw token-bearing shell, while permitting the separately registered fixed canonical workflow only as a transport-layer fallback.",
   "semanticBackend": {
     "planner": "tools/operation-intake/owner-connector-canonical-intake.v1.mjs",
     "gate": "tools/operation-intake/repository-operation-intake-gate.v1.mjs#prepare",
@@ -139,7 +139,8 @@
     "receiptBeforeReadbackAllowed": false
   },
   "failureLaw": {
-    "missingRequiredPrimitive": "FAIL_CLOSED",
+    "missingRequiredPrimitive": "HAND_OFF_SAME_REQUEST_TO_AUTHORIZED_FIXED_CANONICAL_WORKFLOW_FALLBACK",
+    "nativeTransportUnavailable": "HAND_OFF_SAME_REQUEST_TO_AUTHORIZED_FIXED_CANONICAL_WORKFLOW_FALLBACK",
     "staleCurrentMain": "FAIL_CLOSED",
     "staleLockRef": "FAIL_CLOSED",
     "staleLedgerBlob": "FAIL_CLOSED",
@@ -150,6 +151,15 @@
     "readbackMismatch": "FAIL_CLOSED",
     "lineageFailure": "FAIL_CLOSED"
   },
+  "fallbackLaw": {
+    "workflowTransportId": "GITHUB_ACTIONS_CANONICAL_INTAKE_V1",
+    "reuseSameOperationRequest": true,
+    "reuseSameConstructionProcedure": true,
+    "scopeWideningAllowed": false,
+    "fallbackOnSemanticRejectionAllowed": false,
+    "fallbackOnStaleHeadOrCasConflictAllowed": false,
+    "successStillRequires": "ADMITTED_AND_LOCKED"
+  },
   "prohibitions": [
     "NO_DIRECT_OR_MANUAL_LEDGER_EDIT",
     "NO_MANUAL_LEDGER_COMMIT_EMULATION_OUTSIDE_THIS_PROTOCOL",
@@ -158,12 +168,14 @@
     "NO_FORCED_LOCK_REF_UPDATE",
     "NO_PLAN_AS_ADMISSION_RECEIPT",
     "NO_RECEIPT_BEFORE_READBACK",
-    "NO_GITHUB_ACTIONS_AGENT_EXECUTION_TRANSPORT",
+    "NO_GITHUB_ACTIONS_GENERAL_AGENT_EXECUTION_TRANSPORT",
     "NO_BRANCH_OR_PRODUCT_MUTATION_BEFORE_ADMITTED_AND_LOCKED",
     "NO_AUTHORITY_INFERENCE_FROM_CONNECTED_TOOL_AVAILABILITY"
   ],
   "githubActions": {
-    "agentExecutionAllowed": false,
+    "generalAgentExecutionAllowed": false,
+    "fixedCanonicalIntakeFallbackAllowed": true,
+    "authorizedFallbackWorkflow": ".github/workflows/canonical-operation-intake-transport-v1.yml",
     "passiveCiAfterRepositoryChangeAllowed": true,
     "historicalEvidenceInspectionAllowed": true
   },

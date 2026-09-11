@@ -6,12 +6,16 @@
   "transports": [
     {
       "transportId": "GITHUB_ACTIONS_CANONICAL_INTAKE_V1",
-      "status": "ACTIVE_LEGACY_COMPATIBLE",
+      "status": "ACTIVE_BOUNDED_FALLBACK",
       "principal": "github-actions[bot]",
       "invocationMarker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+      "executionWorkflow": ".github/workflows/canonical-operation-intake-transport-v1.yml",
+      "fixedCanonicalCommandOnly": true,
+      "generalAgentExecutionAllowed": false,
+      "selectionRole": "FALLBACK_WHEN_NATIVE_UNAVAILABLE_OR_CANNOT_COMPLETE",
       "authorityCreated": false,
       "admissionSemanticsDuplicated": false,
-      "agentExecutionEligible": false
+      "agentExecutionEligible": true
     },
     {
       "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1",
@@ -41,7 +45,8 @@
       "canonicalSemantics": "tools/operation-intake/repository-operation-lock-manager.v1.mjs",
       "agentExecutionEligible": true,
       "githubActionsAgentExecutionRequired": false,
-      "failureDisposition": "FAIL_CLOSED"
+      "selectionRole": "PREFERRED_WHEN_HEALTHY",
+      "failureDisposition": "USE_AUTHORIZED_FIXED_CANONICAL_WORKFLOW_FALLBACK_IF_NATIVE_TRANSPORT_UNAVAILABLE_OR_CANNOT_COMPLETE_OTHERWISE_FAIL_CLOSED"
     }
   ]
 }

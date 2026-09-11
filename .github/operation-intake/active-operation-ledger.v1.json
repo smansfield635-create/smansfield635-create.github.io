@@ -4745,6 +4745,49 @@
       "scopeHash": "9485a119ec533eed9ce9e0d01e6d0d672d2384d21fc0b70a6f0fd8ab413071ab",
       "state": "ADMITTED_LOCKED"
     },
+    "9514b56a307e855dded6618741f52f1c5bf5ff41e8b3d11701bb3d00db9f4f5d": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "08161cae4f9ed2e0f6bcb6b9ea56110a04be695f",
+          "lockGeneration": 2098,
+          "lockScope": "CHARACTERS:GRATITUDE_COAST:G4:MANOR_MOON_TRAVERSAL_COMPOSITION",
+          "operationId": "CHARACTERS_G4_MAP_CLOSE_POINTER_HIT_TEST_CORRECTIVE_20260911_001",
+          "procedureLocatorDigest": "cf8298db591eb8f2ff7eb566327dae6758c24aaca3e0c22168b7b709b015c49f",
+          "requestDigest": "e8d453d47eabb6697dc273eaef94b019ea8a95fc73bf962a02daff1c91bbf12c",
+          "scopeHash": "9514b56a307e855dded6618741f52f1c5bf5ff41e8b3d11701bb3d00db9f4f5d"
+        },
+        "bindingDigest": "7ea0eac3a16a143bc695dc2058b101aa68040a8eaf94e1f94769797f40830a24",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "c3216506f6b744e6a22f01e32ecfc7d960f0c4c7def2508f65893bd5fe839ff0",
+          "commentId": 5641604040,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2954,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34656427236,
+          "workflowSha": "08161cae4f9ed2e0f6bcb6b9ea56110a04be695f"
+        },
+        "lineageAnchorCommitSha": "d19a57136c05eab032cc989c2d4840641e74cdcc",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "08161cae4f9ed2e0f6bcb6b9ea56110a04be695f",
+      "lockGeneration": 2098,
+      "lockScope": "CHARACTERS:GRATITUDE_COAST:G4:MANOR_MOON_TRAVERSAL_COMPOSITION",
+      "operationId": "CHARACTERS_G4_MAP_CLOSE_POINTER_HIT_TEST_CORRECTIVE_20260911_001",
+      "procedureLocatorDigest": "cf8298db591eb8f2ff7eb566327dae6758c24aaca3e0c22168b7b709b015c49f",
+      "released": false,
+      "requestDigest": "e8d453d47eabb6697dc273eaef94b019ea8a95fc73bf962a02daff1c91bbf12c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "9514b56a307e855dded6618741f52f1c5bf5ff41e8b3d11701bb3d00db9f4f5d",
+      "state": "ADMITTED_LOCKED"
+    },
     "961b7888499ecbe8fde655fe945fd2b91be8842c0fcbd972345e66aea23ed28f": {
       "governingHead": "36152fc4c64cde138272d35060a9c1cdfc905e2d",
       "lockGeneration": 264,
@@ -8010,7 +8053,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2097,
+  "lockGeneration": 2098,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

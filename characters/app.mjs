@@ -10,6 +10,7 @@ import {buildCardinalSiteGeometry} from './cardinal-scene-geometry.mjs';
 import {buildMirrorManorWorldGeometry} from './manor-world-geometry.mjs';
 
 const canvas=document.querySelector('#scene');
+canvas.style.pointerEvents='none';
 const statusNode=document.querySelector('#status');
 const returnButton=document.querySelector('#return');
 const inspectButton=document.querySelector('#inspect');

@@ -16,6 +16,8 @@ concurrency:
 jobs:
   prepare:
     runs-on: ubuntu-latest
+    outputs:
+      awards_sha256: ${{ steps.stage.outputs.awards_sha256 }}
     steps:
       - name: Materialize bounded automatic-release sparse index
         env:
@@ -85,6 +87,7 @@ jobs:
           node preview/bt4/entitlement-v1/verify-entitlement-preview.v1.mjs
 
       - name: Stage exact-head Pages payload
+        id: stage
         env:
           TARGET_SHA: ${{ github.sha }}
           PAGES_STAGE: ${{ runner.temp }}/pages-site
@@ -158,6 +161,42 @@ jobs:
           rm -rf "$PAGES_STAGE/showroom/globe/h-earth"
           mkdir -p "$PAGES_STAGE/showroom/globe/h-earth"
           rsync -a --delete h-earth-live-6d18e158/showroom/globe/h-earth/ "$PAGES_STAGE/showroom/globe/h-earth/"
+
+          # The frozen H-Earth public replacement intentionally owns the broader
+          # H-Earth runtime, but Awards is an exact-head product surface. Overlay
+          # the exact-head Awards subtree after the frozen replacement so a stale
+          # Awards copy inside the frozen tree can never replace the adopted page.
+          awards_src='showroom/globe/h-earth/awards'
+          awards_dst="$PAGES_STAGE/showroom/globe/h-earth/awards"
+          test -f "$awards_src/index.html"
+          rm -rf "$awards_dst"
+          mkdir -p "$awards_dst"
+          rsync -a --delete "$awards_src/" "$awards_dst/"
+          test -f "$awards_dst/index.html"
+
+          awards_source_sha256="$(sha256sum "$awards_src/index.html" | awk '{print $1}')"
+          awards_staged_sha256="$(sha256sum "$awards_dst/index.html" | awk '{print $1}')"
+          test "$awards_source_sha256" = "$awards_staged_sha256"
+          (
+            cd "$awards_src"
+            find . -type f -print0 | sort -z | xargs -0 sha256sum
+          ) > "$RUNNER_TEMP/awards-source.sha256"
+          (
+            cd "$awards_dst"
+            find . -type f -print0 | sort -z | xargs -0 sha256sum
+          ) > "$RUNNER_TEMP/awards-staged.sha256"
+          diff -u "$RUNNER_TEMP/awards-source.sha256" "$RUNNER_TEMP/awards-staged.sha256"
+          grep -Fq 'data-awards-architecture="JUDGE_FACING_SPATIAL_INSTRUMENT_V1"' "$awards_dst/index.html"
+          grep -Fq 'SELECT_OPEN_RETURN_EDITORIAL_DEPTH' "$awards_dst/index.html"
+          grep -Fq 'Open the reason' "$awards_dst/index.html"
+          grep -Fq 'id="awards-reader"' "$awards_dst/index.html"
+          if grep -Fq 'Inspect this reason' "$awards_dst/index.html"; then
+            echo 'AWARDS_PREDECESSOR_COPY_DETECTED_IN_STAGED_PAYLOAD' >&2
+            exit 1
+          fi
+          echo "awards_sha256=$awards_source_sha256" >> "$GITHUB_OUTPUT"
+          echo "AWARDS_EXACT_HEAD_OVERLAY=PASS sha256=$awards_source_sha256"
+          echo 'AWARDS_SOURCE_STAGED_SUBTREE_IDENTITY=PASS'
 
           audralia_snapshot="$PAGES_STAGE/inspection/audralia-24057-exact/snapshot"
           test -f "$audralia_snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs"
@@ -286,13 +325,14 @@ jobs:
         uses: actions/deploy-pages@v4
 
   verify-live-exact-head:
-    needs: deploy
+    needs: [prepare, deploy]
     runs-on: ubuntu-latest
     steps:
-      - name: Require public exact-head marker, BT4 surfaces, and Audralia exact environment
+      - name: Require public exact-head marker, BT4 surfaces, Awards exact-head bytes, and Audralia exact environment
         env:
           TARGET_SHA: ${{ github.sha }}
           PAGE_URL: ${{ needs.deploy.outputs.page_url }}
+          AWARDS_SHA256: ${{ needs.prepare.outputs.awards_sha256 }}
         shell: bash
         run: |
           set -euo pipefail
@@ -302,6 +342,7 @@ jobs:
           ops_url="${PAGE_URL%/}/preview/bt4/operational-release-v1/"
           real_url="${PAGE_URL%/}/evidence/readiness/governance-gen3-entitlement/"
           real_identity_url="${real_url}evidence-identity.v1.json"
+          awards_url="${PAGE_URL%/}/showroom/globe/h-earth/awards/"
           audralia_url="${PAGE_URL%/}/showroom/globe/audralia/"
           audralia_loader_url="${PAGE_URL%/}/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs?cb=EXACT_24057_LOADER_FIRST"
           audralia_app_url="${PAGE_URL%/}/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs?cb=EXACT_24057"
@@ -317,12 +358,23 @@ jobs:
             real_html="$(curl --fail --silent --show-error -L --max-time 20 "$real_url" 2>/dev/null || true)"
             real_identity="$(curl --fail --silent --show-error -L --max-time 20 "$real_identity_url" 2>/dev/null || true)"
             real_release="$(printf '%s' "$real_identity" | jq -r '.releaseCommit // empty' 2>/dev/null || true)"
+            awards_html="$(curl --fail --silent --show-error -L --max-time 20 "$awards_url" 2>/dev/null || true)"
+            awards_live_sha256="$(printf '%s' "$awards_html" | sha256sum | awk '{print $1}')"
+            awards_legacy=0
+            grep -Fq 'Inspect this reason' <<<"$awards_html" && awards_legacy=1 || true
             audralia_html="$(curl --fail --silent --show-error -L --max-time 20 "$audralia_url" 2>/dev/null || true)"
             audralia_loader="$(curl --fail --silent --show-error -L --max-time 20 "$audralia_loader_url" 2>/dev/null || true)"
             audralia_app="$(curl --fail --silent --show-error -L --max-time 20 "$audralia_app_url" 2>/dev/null || true)"
             audralia_renderer="$(curl --fail --silent --show-error -L --max-time 20 "$audralia_renderer_url" 2>/dev/null || true)"
             audralia_transfer="$(curl --fail --silent --show-error -L --max-time 20 "$audralia_transfer_url" 2>/dev/null || true)"
             if [ "$observed" = "$TARGET_SHA" ] \
+              && [ -n "$AWARDS_SHA256" ] \
+              && [ "$awards_live_sha256" = "$AWARDS_SHA256" ] \
+              && [ "$awards_legacy" = "0" ] \
+              && grep -Fq 'data-awards-architecture="JUDGE_FACING_SPATIAL_INSTRUMENT_V1"' <<<"$awards_html" \
+              && grep -Fq 'SELECT_OPEN_RETURN_EDITORIAL_DEPTH' <<<"$awards_html" \
+              && grep -Fq 'Open the reason' <<<"$awards_html" \
+              && grep -Fq 'id="awards-reader"' <<<"$awards_html" \
               && grep -Fq 'NONPRODUCTION · BT4 SERVED-STATE EXPERIMENT' <<<"$claim_html" \
               && grep -Fq 'entitlement-engine.v1.mjs' <<<"$claim_html" \
               && grep -Fq 'computeEntitlement' <<<"$claim_engine" \
@@ -337,15 +389,16 @@ jobs:
               && grep -Fq 'createMapWideEnvironmentRenderer' <<<"$audralia_renderer" \
               && grep -Fq 'AUDRALIA_GRATITUDE_GEOGRAPHIC_TRANSFER_AUTHORITY_v1' <<<"$audralia_transfer"; then
               echo "LIVE_EXACT_HEAD_VERIFIED target=$TARGET_SHA"
+              echo "AWARDS_EXACT_HEAD_LIVE_BYTES=PASS url=$awards_url sha256=$awards_live_sha256"
               echo "BT4_PUBLIC_CLAIM_SURFACE=PASS url=$claim_url"
               echo "BT4_PUBLIC_OPERATIONAL_SURFACE=PASS url=$ops_url"
               echo "BT4_REAL_OBJECT_SURFACE=PASS url=$real_url"
               echo "AUDRALIA_EXACT_24057_PUBLIC_CLOSURE=PASS url=$audralia_url"
               exit 0
             fi
-            echo "Attempt $attempt: observed=${observed:-none}; waiting for target=$TARGET_SHA, BT4 surfaces, and Audralia exact closure"
+            echo "Attempt $attempt: observed=${observed:-none}; awards_live_sha256=${awards_live_sha256:-none}; waiting for target=$TARGET_SHA, exact Awards bytes, BT4 surfaces, and Audralia exact closure"
             sleep 10
           done
           echo "DEPLOYMENT_NOT_PROVEN expected=$TARGET_SHA observed=${observed:-none}" >&2
-          echo "BT4_OR_AUDRALIA_PUBLIC_SURFACE_VERIFICATION=FAIL" >&2
+          echo "AWARDS_BT4_OR_AUDRALIA_PUBLIC_SURFACE_VERIFICATION=FAIL" >&2
           exit 1

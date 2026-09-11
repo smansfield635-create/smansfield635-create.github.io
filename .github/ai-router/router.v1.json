@@ -32,6 +32,7 @@
       "tools/ai-room-transport/successor-compatibility-self-test.v1.mjs",
       ".github/workflows/repository-operation-intake-validation.yml",
       ".github/workflows/progressive-system-continuity-v1.yml",
+      ".github/workflows/ai-entry-auto-release.yml",
       "_config.yml",
       ".github/workflows/agentic-frontier-paired-execution-v1.yml",
       ".github/workflows/bounded-exact-head-execution-carrier-v1.yml",

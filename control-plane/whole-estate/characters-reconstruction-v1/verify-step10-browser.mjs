@@ -79,17 +79,68 @@ for(const spec of cases){
   const mapButton=page.locator('#map-toggle');
   await mapButton.click();
   const mapOpen=await page.locator('#coast-map').evaluate(el=>el.classList.contains('show'));
-  await page.locator('#map-close').click();
+  const mapHitTest=await page.evaluate(()=>{
+    const describe=el=>{
+      if(!el)return null;
+      const style=getComputedStyle(el);
+      const rect=el.getBoundingClientRect();
+      return {
+        tag:el.tagName,
+        id:el.id||'',
+        className:typeof el.className==='string'?el.className:String(el.className?.baseVal||''),
+        pointerEvents:style.pointerEvents,
+        position:style.position,
+        zIndex:style.zIndex,
+        transform:style.transform,
+        display:style.display,
+        visibility:style.visibility,
+        opacity:style.opacity,
+        rect:{x:rect.x,y:rect.y,width:rect.width,height:rect.height,top:rect.top,right:rect.right,bottom:rect.bottom,left:rect.left}
+      };
+    };
+    const close=document.querySelector('#map-close');
+    const closeRect=close?.getBoundingClientRect();
+    const center=closeRect?{x:closeRect.left+closeRect.width/2,y:closeRect.top+closeRect.height/2}:null;
+    const stack=center?document.elementsFromPoint(center.x,center.y).map(describe):[];
+    return {
+      center,
+      elementFromPoint:center?describe(document.elementFromPoint(center.x,center.y)):null,
+      elementsFromPoint:stack,
+      nodes:{
+        scene:describe(document.querySelector('#scene')),
+        world:describe(document.querySelector('.world')),
+        coastMap:describe(document.querySelector('#coast-map')),
+        mapCard:describe(document.querySelector('#coast-map .map-card')),
+        mapClose:describe(close)
+      },
+      classState:{
+        html:document.documentElement.className,
+        body:document.body.className,
+        world:document.querySelector('.world')?.className||'',
+        coastMap:document.querySelector('#coast-map')?.className||'',
+        primerHidden:document.querySelector('#step9-primer')?.hidden===true,
+        primerActive:document.querySelector('.world')?.classList.contains('step9-primer-active')===true
+      }
+    };
+  });
+  let mapCloseClickError='';
+  try{
+    await page.locator('#map-close').click();
+  }catch(error){
+    mapCloseClickError=String(error?.message||error);
+  }
+  const mapClosed=await page.locator('#coast-map').evaluate(el=>!el.classList.contains('show'));
   const noHorizontalEscape=initial.bodyWidth<=initial.viewportWidth;
   await page.screenshot({path:`${outDir}/${spec.id}.png`,fullPage:true});
   const filmPlayOk=!spec.proveFilmPlay||(filmPlayProof.playing&&filmPlayProof.inFilmSkip&&filmPlayProof.webglVisible&&filmPlayProof.audioElement);
-  const ok=introControls&&filmPlayOk&&replayAvailable&&routeContract&&initial.webgl2&&!initial.fatal&&initial.signalCount>0&&noHorizontalEscape&&returnPath&&mapOpen&&pageErrors.length===0;
+  const mapCloseOk=mapOpen&&mapClosed&&!mapCloseClickError;
+  const ok=introControls&&filmPlayOk&&replayAvailable&&routeContract&&initial.webgl2&&!initial.fatal&&initial.signalCount>0&&noHorizontalEscape&&returnPath&&mapCloseOk&&pageErrors.length===0;
   if(!ok) failed=true;
-  receipts.push({id:spec.id,ok,intro,introControls,filmPlayProof,filmPlayOk,replayAvailable,connectedRoutes,routeContract,initial,arrivalStatus,returnStatus,returnPath,mapOpen,noHorizontalEscape,pageErrors,consoleErrors});
+  receipts.push({id:spec.id,ok,intro,introControls,filmPlayProof,filmPlayOk,replayAvailable,connectedRoutes,routeContract,initial,arrivalStatus,returnStatus,returnPath,mapOpen,mapClosed,mapCloseOk,mapCloseClickError,mapHitTest,noHorizontalEscape,pageErrors,consoleErrors});
   await context.close();
 }
 await browser.close();
-const receipt={schema:'CHARACTERS_STEP10_BROWSER_ACCEPTANCE_RECEIPT_v2',result:failed?'FAIL':'PASS',cases:receipts};
+const receipt={schema:'CHARACTERS_STEP10_BROWSER_ACCEPTANCE_RECEIPT_v2',result:failed?'FAIL':'PASS',diagnostic:'MAP_CLOSE_HIT_TEST_V1',cases:receipts};
 fs.writeFileSync(`${outDir}/receipt.json`,JSON.stringify(receipt,null,2));
 console.log(JSON.stringify(receipt,null,2));
 if(failed) process.exit(1);

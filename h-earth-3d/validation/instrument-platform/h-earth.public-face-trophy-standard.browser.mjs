@@ -99,7 +99,14 @@ try {
   check('AWARDS_ROUTE_IDENTITY', await awards.locator('html').getAttribute('data-awards-overview') === 'DIAMOND_GATE_BRIDGE_AWARD_LANDSCAPE');
   check('AWARDS_CLAIM_BOUNDARY', await awards.locator('html').getAttribute('data-claim-boundary') === 'TARGETS_AND_RATIONALE_NOT_NOMINATIONS_OR_WINS');
   check('FIVE_ACHIEVEMENT_STORIES', await awards.locator('[data-story]').count() === 5);
-  check('SIX_TROPHY_STANDARD_LENSES', await awards.locator('[data-lens]').count() === 6);
+  const trophyStage = awards.locator('[data-trophy-stage]');
+  check('TROPHY_STANDARD_STAGE_PRESENT', await trophyStage.count() === 1);
+  await awards.waitForFunction(() => document.querySelector('[data-trophy-stage]')?.dataset.ready === 'true');
+  const trophyLenses = trophyStage.locator('[data-lens-key]');
+  const trophyKeys = await trophyLenses.evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-lens-key')));
+  check('SIX_TROPHY_STANDARD_LENSES', trophyKeys.length === 6, trophyKeys);
+  check('TROPHY_STANDARD_LENS_ORDER', JSON.stringify(trophyKeys) === JSON.stringify(['compass','world','ip','ai','diagnostic','independent']), trophyKeys);
+  check('TROPHY_STANDARD_LEGACY_TEMPLATE_NOT_LIVE', await trophyStage.locator('[data-lens]').count() === 0);
   check('AWARDS_2027_CAMPAIGN_VISIBLE', await awards.getByText('Planned submissions · late October 2026 · 2027 cycle', { exact: true }).isVisible());
   const transparencyBoundary = awards.getByText(/does not claim that a submission, nomination, shortlist or win has already occurred/i);
   const transparencyDisclosure = transparencyBoundary.locator('xpath=ancestor::details[1]');
@@ -109,7 +116,11 @@ try {
   check('AWARDS_H_EARTH_DOOR_PRESENT', (await hEarthDoor.getAttribute('href')) === '/showroom/globe/h-earth/');
   await awards.locator('[data-story="governed"]').click();
   check('GOVERNED_STORY_CONTENT_UPDATES', (await awards.locator('#story-title').textContent())?.trim() === 'The thousandth pull request became a simplification milestone.');
-  await awards.locator('[data-lens="diagnostic"]').click();
+  const trophyNext = awards.locator('[data-trophy-next]');
+  check('TROPHY_STANDARD_NEXT_CONTROL_PRESENT', await trophyNext.count() === 1 && await trophyNext.isVisible());
+  for (let step = 0; step < 4; step += 1) await trophyNext.click();
+  const diagnosticLens = trophyStage.locator('[data-lens-key="diagnostic"]');
+  check('DIAGNOSTIC_LENS_ACTIVE', await diagnosticLens.getAttribute('aria-current') === 'true' && await diagnosticLens.getAttribute('aria-hidden') === 'false' && await diagnosticLens.isVisible());
   check('DIAGNOSTIC_LENS_CONTENT_UPDATES', (await awards.locator('#lens-title').textContent())?.trim() === 'Reasoning becomes more useful when you can inspect it.');
   await awards.close(); await page.close(); await desktop.close();
 

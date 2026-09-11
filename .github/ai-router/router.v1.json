@@ -244,7 +244,8 @@
         ".github/workflows/characters-post-gen1992-environment-material-repair-v1.yml"
       ],
       "ownedExactPaths": [
-        ".github/workflows/characters-night-world-state-proof.yml"
+        ".github/workflows/characters-night-world-state-proof.yml",
+        ".github/workflows/characters-step9-regional-bridge.yml"
       ],
       "entrypoint": ".github/ai-router/projects/characters/entrypoint.v1.json",
       "priority": 100

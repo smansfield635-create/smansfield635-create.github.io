@@ -748,6 +748,49 @@
       "scopeHash": "175a7e083dd13cd000b5601aaf940c5b0b3b367b0ebe256b43b71e5a47552265",
       "state": "ADMITTED_LOCKED"
     },
+    "183b1b241399b28dfd910ff6b6c3f742f208a1d3b22645ec48f7230da81d91b2": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "18ac179266ef75509e8619c0822fc46f1111e4ac",
+          "lockGeneration": 2100,
+          "lockScope": "CHARACTERS:STEP9_QUALIFICATION:MANOR_BLUEPRINT_DEPENDENCY_SURFACE",
+          "operationId": "CHARACTERS_STEP9_MANOR_BLUEPRINT_DEPENDENCY_SURFACE_REPAIR_20260911_001",
+          "procedureLocatorDigest": "8db2d1fb60839a893b1e9a742b71e03d81748eb9a09c8a63cd474b99628415ef",
+          "requestDigest": "5654d1f33a94c223611a0bcaf1ca44768ae8f8a0d6e66f29627669dc48e0b61e",
+          "scopeHash": "183b1b241399b28dfd910ff6b6c3f742f208a1d3b22645ec48f7230da81d91b2"
+        },
+        "bindingDigest": "e11a650c093b6526c33726589237f9e2b447777df16a293ac2f8b2cee7103e0d",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "6eb01140d94da6e0673c9a8c7e611bbdf57f1637c8a483367a533374432dbfac",
+          "commentId": 5641751946,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2954,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34657714052,
+          "workflowSha": "18ac179266ef75509e8619c0822fc46f1111e4ac"
+        },
+        "lineageAnchorCommitSha": "af740e6c261a068af13995576bb926aeb294715d",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "18ac179266ef75509e8619c0822fc46f1111e4ac",
+      "lockGeneration": 2100,
+      "lockScope": "CHARACTERS:STEP9_QUALIFICATION:MANOR_BLUEPRINT_DEPENDENCY_SURFACE",
+      "operationId": "CHARACTERS_STEP9_MANOR_BLUEPRINT_DEPENDENCY_SURFACE_REPAIR_20260911_001",
+      "procedureLocatorDigest": "8db2d1fb60839a893b1e9a742b71e03d81748eb9a09c8a63cd474b99628415ef",
+      "released": false,
+      "requestDigest": "5654d1f33a94c223611a0bcaf1ca44768ae8f8a0d6e66f29627669dc48e0b61e",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "183b1b241399b28dfd910ff6b6c3f742f208a1d3b22645ec48f7230da81d91b2",
+      "state": "ADMITTED_LOCKED"
+    },
     "18965398d20b7bb87e40a3c84c9a9b9299fe5c3abf539de3f9437b113918fcb1": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -8010,7 +8053,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2099,
+  "lockGeneration": 2100,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

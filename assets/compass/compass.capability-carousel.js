@@ -25,19 +25,40 @@ function mountCapabilityEnhancement(){
       });
     });
   });
-  globalThis.DGB_COMPASS_OPTIONAL_ENHANCEMENT_BOUNDARY=Object.freeze({afterDocumentLoad:false,delayMs:0,firstPaintDependency:false,domOwnerReplacement:false,manorDeliveryIdentity:MIRROR_MANOR_DELIVERY_IDENTITY});
+  globalThis.DGB_COMPASS_OPTIONAL_ENHANCEMENT_BOUNDARY=Object.freeze({afterDocumentLoad:true,delayMs:0,firstPaintDependency:false,domOwnerReplacement:false,activationPolicy:'ACTUAL_VIEWPORT_AFTER_LOAD_OR_USER_INTENT_FALLBACK',manorDeliveryIdentity:MIRROR_MANOR_DELIVERY_IDENTITY});
 }
 function scheduleCapabilityEnhancement(){
   const target=document.querySelector('[data-capability-orbit][data-first-paint-authority="static"]');
-  if(!target||typeof IntersectionObserver!=='function'){mountCapabilityEnhancement();return;}
+  if(!target)return;
   let triggered=false;
-  const observer=new IntersectionObserver(entries=>{
-    if(triggered||!entries.some(entry=>entry.isIntersecting))return;
+  let observer=null;
+  const mountOnce=()=>{
+    if(triggered)return;
     triggered=true;
-    observer.disconnect();
+    observer?.disconnect();
     mountCapabilityEnhancement();
-  },{rootMargin:'1200px 0px'});
-  observer.observe(target);
+  };
+  const armUserIntentFallback=()=>{
+    const passive={once:true,passive:true,capture:true};
+    window.addEventListener('pointerdown',mountOnce,passive);
+    window.addEventListener('touchstart',mountOnce,passive);
+    window.addEventListener('wheel',mountOnce,passive);
+    window.addEventListener('scroll',mountOnce,passive);
+    window.addEventListener('keydown',mountOnce,{once:true,capture:true});
+  };
+  const armAfterLoad=()=>{
+    if(typeof IntersectionObserver!=='function'){
+      armUserIntentFallback();
+      return;
+    }
+    observer=new IntersectionObserver(entries=>{
+      if(!entries.some(entry=>entry.isIntersecting))return;
+      mountOnce();
+    },{rootMargin:'0px'});
+    observer.observe(target);
+  };
+  if(document.readyState==='complete')queueMicrotask(armAfterLoad);
+  else window.addEventListener('load',armAfterLoad,{once:true});
 }
 declareControllerSettledLabelAuthority();
 requirePresentationOwner(()=>{

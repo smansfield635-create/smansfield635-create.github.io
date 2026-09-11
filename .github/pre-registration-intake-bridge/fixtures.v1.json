@@ -1,0 +1,204 @@
+{
+  "bridgeInputTemplate": {
+    "constructionProcedure": {
+      "bridgeOutputFingerprintDomain": {
+        "domainId": "PRE_REGISTRATION_BRIDGE_REMOTE_PROOF_FINGERPRINT_v1",
+        "fields": [
+          "operationId",
+          "lockScope",
+          "exactGoverningHead"
+        ]
+      },
+      "canonicalInputSchemas": [
+        ".github/operation-intake/request.schema.v1.json",
+        ".github/operation-intake/construction-procedure.schema.v1.json"
+      ],
+      "canonicalOutputSchemas": [
+        ".github/operation-intake/admission-receipt.schema.v1.json",
+        ".github/pre-registration-intake-bridge/output.schema.v1.json"
+      ],
+      "errorCodeAndValidationPrecedence": [
+        "GOVERNING_HEAD_MISMATCH",
+        "MISSING_REQUIRED_REQUEST_FIELD",
+        "CONSTRUCTION_PROCEDURE_INVALID",
+        "ACTIVE_OPERATION_ALREADY_EXISTS",
+        "REMOTE_LOCK_FAILURE"
+      ],
+      "evaluationToolingHeadBindingRule": "EXACT_BRIDGE_CANDIDATE_HEAD_ONLY",
+      "exactAllowedRepositoryPaths": [
+        ".github/pre-registration-intake-bridge/remote-proof-sentinel.v1.json"
+      ],
+      "exactBranchAndCommitSequence": [
+        {
+          "action": "NO_ORDINARY_REPOSITORY_MUTATION",
+          "step": 1
+        },
+        {
+          "action": "ACQUIRE_AND_TERMINATE_ONLY_FIXED_LOCK_SCOPE",
+          "step": 2
+        }
+      ],
+      "exactGoverningHead": "aaa96943d0c817c6a489529250a3e46324324894",
+      "exactTestRunnerCommand": "node tools/pre-registration-intake-bridge/remote-proof-runner.v1.mjs --output /tmp/pre-registration-bridge-remote-proof.receipt.v1.json",
+      "independentVerifierDefinition": {
+        "freshCheckout": true,
+        "locatorOnly": true,
+        "mayRepair": false
+      },
+      "operationClass": "PRE_REGISTRATION_INTAKE_BRIDGE_REMOTE_PROOF",
+      "priorAttemptInspectionLimits": {
+        "readOnly": true,
+        "repairInferenceProhibited": true
+      },
+      "procedureId": "PRE_REGISTRATION_BRIDGE_REMOTE_PROOF_PROCEDURE_TEMPLATE",
+      "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+      "workflowAndArtifactPackagingPaths": {
+        "artifactPaths": [
+          "/tmp/pre-registration-bridge-remote-proof.receipt.v1.json"
+        ],
+        "workflowPath": ".github/workflows/pre-registration-intake-bridge-certification.yml"
+      }
+    },
+    "exactGoverningHead": "aaa96943d0c817c6a489529250a3e46324324894",
+    "executionHolder": "PRE_REGISTRATION_BRIDGE_REMOTE_PROOF_TEMPLATE",
+    "operationRequest": {
+      "allowedPaths": [
+        ".github/pre-registration-intake-bridge/remote-proof-sentinel.v1.json"
+      ],
+      "artifactPaths": [
+        "/tmp/pre-registration-bridge-remote-proof.receipt.v1.json"
+      ],
+      "constructionProcedureLocator": ".github/pre-registration-intake-bridge/fixtures.v1.json#procedureTemplate",
+      "errorPrecedence": [
+        "GOVERNING_HEAD_MISMATCH",
+        "MISSING_REQUIRED_REQUEST_FIELD",
+        "CONSTRUCTION_PROCEDURE_INVALID",
+        "ACTIVE_OPERATION_ALREADY_EXISTS",
+        "REMOTE_LOCK_FAILURE"
+      ],
+      "exactGoverningHead": "aaa96943d0c817c6a489529250a3e46324324894",
+      "exactTestCommand": "node tools/pre-registration-intake-bridge/remote-proof-runner.v1.mjs --output /tmp/pre-registration-bridge-remote-proof.receipt.v1.json",
+      "executingRole": {
+        "roleId": "PRE_REGISTRATION_BRIDGE_REMOTE_PROOF_OPERATOR",
+        "temporary": true
+      },
+      "fingerprintDomain": {
+        "domainId": "PRE_REGISTRATION_BRIDGE_REMOTE_PROOF_FINGERPRINT_v1",
+        "fields": [
+          "operationId",
+          "lockScope",
+          "exactGoverningHead"
+        ]
+      },
+      "independentVerifier": {
+        "mayRepair": false,
+        "roleId": "FRESH_PRE_REGISTRATION_BRIDGE_REPRODUCER"
+      },
+      "lockScope": "PRE_REGISTRATION_BRIDGE_REMOTE_PROOF_TEMPLATE",
+      "operationId": "PRE_REGISTRATION_BRIDGE_REMOTE_PROOF_TEMPLATE",
+      "prohibitedPaths": [
+        "h-earth-3d/",
+        "showroom/",
+        "assets/",
+        "laws/",
+        ".github/operation-intake/active-operation-ledger.v1.json"
+      ],
+      "projectId": "REPOSITORY_OPERATION_INTAKE_BOOTSTRAP_LIVENESS_REPAIR",
+      "requestingAuthority": {
+        "authorityClass": "EXPLICIT_USER_ORIGIN_GENESIS_AUTHORITY",
+        "authorityId": "USER_ORIGIN_PRE_REGISTRATION_BRIDGE_GENESIS_AUTHORITY_2026_08_04_v1"
+      },
+      "requiredInputs": [
+        {
+          "id": "EXACT_GOVERNING_HEAD",
+          "resolved": true
+        },
+        {
+          "id": "FIXED_LOCK_REF",
+          "resolved": true
+        }
+      ],
+      "requiredOutputs": [
+        "COMMAND_EMITTED_ADMISSION_OR_REJECTION_RECEIPT",
+        "REMOTE_LOCK_IDENTITY"
+      ],
+      "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+      "stopConditions": [
+        "GOVERNING_HEAD_CHANGED",
+        "LOCK_REF_SUBSTITUTED",
+        "UNRELATED_REPOSITORY_MUTATION"
+      ],
+      "subjectIdentity": {
+        "productMutation": false,
+        "subject": "BOUNDED_REMOTE_LOCK_PROOF"
+      },
+      "terminalDispositions": [
+        "PASS_CLOSED",
+        "FAIL_CLOSED"
+      ],
+      "workflowPath": ".github/workflows/pre-registration-intake-bridge-certification.yml"
+    },
+    "repository": "smansfield635-create/smansfield635-create.github.io",
+    "requestId": "PRE_REGISTRATION_BRIDGE_REMOTE_PROOF_TEMPLATE",
+    "requestNonce": "0000000000000000000000000000000000000000000000000000000000000000",
+    "schema": "PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_v1"
+  },
+  "concurrencyFixtureCount": 1,
+  "negativeFixtureCount": 8,
+  "negativeMutations": [
+    {
+      "id": "NEG_001_REPOSITORY_SUBSTITUTION",
+      "target": "bridge.repository",
+      "value": "example/other"
+    },
+    {
+      "id": "NEG_002_LOCK_REF_SUBSTITUTION",
+      "target": "prohibited_input_key",
+      "value": "lockRef"
+    },
+    {
+      "id": "NEG_003_COMMAND_INJECTION",
+      "target": "prohibited_input_key",
+      "value": "command"
+    },
+    {
+      "id": "NEG_004_GOVERNING_HEAD_MISMATCH",
+      "target": "procedure.exactGoverningHead",
+      "value": "1111111111111111111111111111111111111111"
+    },
+    {
+      "id": "NEG_005_SCOPE_MISMATCH",
+      "target": "procedure.exactAllowedRepositoryPaths",
+      "value": [
+        "other/path"
+      ]
+    },
+    {
+      "id": "NEG_006_TEST_COMMAND_MISMATCH",
+      "target": "procedure.exactTestRunnerCommand",
+      "value": "node other.mjs"
+    },
+    {
+      "id": "NEG_007_MISSING_REQUIRED_REQUEST_FIELD",
+      "target": "delete_request_field",
+      "value": "requiredOutputs"
+    },
+    {
+      "id": "NEG_008_MOVING_HEAD",
+      "target": "bridge.exactGoverningHead",
+      "value": "main"
+    }
+  ],
+  "positiveFixtureCount": 1,
+  "remoteTestClasses": [
+    "VALID_REQUEST",
+    "INVALID_REQUEST",
+    "STALE_HEAD_REQUEST",
+    "LOCK_CONFLICT",
+    "REPLAY_ACTIVE",
+    "REPLAY_TERMINAL",
+    "TOKEN_WITH_INSUFFICIENT_SCOPE"
+  ],
+  "replayFixtureCount": 2,
+  "schema": "PRE_REGISTRATION_INTAKE_BRIDGE_FIXTURES_v1"
+}

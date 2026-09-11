@@ -1,0 +1,24 @@
+{
+  "activationRequired": true,
+  "authorityId": "USER_ORIGIN_PRE_REGISTRATION_BRIDGE_GENESIS_AUTHORITY_2026_08_04_v1",
+  "authorityPath": ".github/pre-registration-intake-bridge/authority-basis.v1.json",
+  "bridgeId": "CANONICAL_REPOSITORY_OPERATION_INTAKE_PRE_REGISTRATION_EXECUTION_BRIDGE_v1",
+  "bridgePath": "tools/pre-registration-intake-bridge/canonical-intake-execution-bridge.v1.mjs",
+  "canonicalGate": {
+    "blob": "f0b22e6b9574507632f1ad07647710971a4d63de",
+    "path": "tools/operation-intake/repository-operation-intake-gate.v1.mjs"
+  },
+  "contractId": "REPOSITORY_OPERATION_INTAKE_PRE_REGISTRATION_EXECUTION_BRIDGE_CONTRACT_v1",
+  "contractPath": ".github/pre-registration-intake-bridge/bridge-contract.v1.json",
+  "fixedCommand": "node tools/pre-registration-intake-bridge/canonical-intake-execution-bridge.v1.mjs --input <RUNNER_TEMP_INPUT_JSON> --output <RUNNER_TEMP_OUTPUT_JSON>",
+  "fixturesPath": ".github/pre-registration-intake-bridge/fixtures.v1.json",
+  "inputSchemaPath": ".github/pre-registration-intake-bridge/input.schema.v1.json",
+  "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+  "ordinaryToolsetRegistrationRequired": false,
+  "outputSchemaPath": ".github/pre-registration-intake-bridge/output.schema.v1.json",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "schema": "PRE_REGISTRATION_INTAKE_BRIDGE_LOCATOR_v1",
+  "status": "MATERIALIZED_INACTIVE_BOOTSTRAP_CAPABILITY",
+  "terminationProcedurePath": ".github/pre-registration-intake-bridge/termination-procedure.v1.json",
+  "tokenSource": "GITHUB_TOKEN"
+}

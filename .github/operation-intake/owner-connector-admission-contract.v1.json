@@ -17,6 +17,32 @@
     "planIsReceipt": false,
     "admissionSemanticsDuplicatedByExecutor": false
   },
+  "invocationProfiles": {
+    "connectedGithubNative": {
+      "profileId": "CONNECTED_GITHUB_NATIVE_PRIMITIVES_V1",
+      "status": "ACTIVE_PREFERRED_FOR_STANDARD_CONNECTED_ROOMS",
+      "protocol": ".github/operation-intake/connected-github-native-admission-protocol.v1.json",
+      "authenticationModel": "AMBIENT_AUTHORIZED_CONNECTED_GITHUB_IDENTITY_PLUS_OWNER_SOURCE_COMMENT",
+      "rawGithubTokenRequiredFromRoom": false,
+      "sameCanonicalTransport": true,
+      "sameCanonicalPlanner": true,
+      "sameCanonicalLedger": true,
+      "sameCanonicalLockRef": true,
+      "sameAdmissionReceiptMeaning": true,
+      "missingRequiredPrimitiveDisposition": "FAIL_CLOSED"
+    },
+    "localNativeNode": {
+      "profileId": "LOCAL_NATIVE_NODE_EXECUTOR_V1",
+      "status": "ACTIVE_WHEN_AUTHORIZED_TOKEN_BEARING_HOST_EXISTS",
+      "executor": "tools/operation-intake/owner-connector-canonical-intake-executor.v1.mjs",
+      "rawGithubTokenRequiredFromRoom": true,
+      "sameCanonicalTransport": true,
+      "sameCanonicalPlanner": true,
+      "sameCanonicalLedger": true,
+      "sameCanonicalLockRef": true,
+      "sameAdmissionReceiptMeaning": true
+    }
+  },
   "requiredAuthentication": [
     "SOURCE_COMMENT_AUTHOR_IS_OWNER_LOGIN",
     "SOURCE_COMMENT_AUTHOR_ASSOCIATION_IS_OWNER",

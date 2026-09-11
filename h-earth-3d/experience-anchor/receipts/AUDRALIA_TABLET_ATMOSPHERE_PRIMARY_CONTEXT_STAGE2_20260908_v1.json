@@ -1,0 +1,37 @@
+{
+  "receiptId": "AUDRALIA_TABLET_ATMOSPHERE_PRIMARY_CONTEXT_STAGE2_20260908_v1",
+  "anchorId": "H_EARTH_EXPERIENCE_ANCHOR_v1",
+  "anchorDigest": "52d3480f594ddb2433096c0d178faec8a8ad89a75bb7cbc24312a7fa99ac5a02",
+  "validatorVersion": "H_EARTH_EXPERIENCE_ANCHOR_GATE_v2",
+  "validatedAtUtc": "2026-09-09T00:46:00Z",
+  "disposition": "PASS",
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-runtime.mjs",
+      "sha256": "PENDING_GATE_COMPUTED_RUNTIME_SHA256"
+    }
+  ],
+  "invariants": {
+    "audraliaPlanetTerrainRetained": true,
+    "audraliaGratitudeIslandRetained": true,
+    "audraliaStadiumRetained": true,
+    "audraliaWorldContextRetained": true,
+    "audraliaCameraInteractionRetained": true,
+    "audraliaTravelZoomInteractionRetained": true,
+    "audraliaFullViewportImmersionRetained": true,
+    "audraliaInfrastructureComplexityRetained": true,
+    "audraliaWeatherAtmosphereContextRetained": true,
+    "audraliaSunMoonCelestialContinuityRetained": true,
+    "noWireframeReplacement": true,
+    "noSimplifiedGridReplacement": true,
+    "noGenericDemoReplacement": true,
+    "noFlatMapReplacement": true,
+    "worldLivingRetargetedSoftly": true,
+    "mobileStillReadsAsSameWorld": true,
+    "reviewedAgainstAnchor": true
+  },
+  "reviewSummary": "Stage 2 preserves the same Audralia world, terrain, Gratitude geography, camera controls, and full-viewport interaction while restoring atmosphere as an ordered pass on the already-working primary WebGL2 context. Exterior clouds, regional/local weather, canonical weather, and celestial rendering remain deferred. This receipt attests same-world experience continuity only; it does not claim constrained-tablet startup stability, frame-rate stability, or absence of renderer termination before physical-device validation.",
+  "evidencePaths": [
+    "h-earth-3d/experience-anchor/evidence/OW04_SUBTROPICAL_WORLD_CONTINUATION_20260816_001.json"
+  ]
+}

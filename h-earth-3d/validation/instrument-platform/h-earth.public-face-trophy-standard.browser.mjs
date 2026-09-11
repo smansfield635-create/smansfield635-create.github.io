@@ -92,14 +92,18 @@ try {
   check('ENGINEERING_LENS_REVEALS_RUNTIME_DIAGNOSTICS', await page.locator('details.h-earth-runtime-diagnostics').isVisible());
   await page.locator('[data-b10-lens="EVIDENCE_LENS"] > summary').click(); await waitForSingleOpen(page, 'EVIDENCE_LENS');
   check('EVIDENCE_LENS_REVEALS_STARTUP_RECEIPT', await page.locator('details.h-earth-startup-receipt').isVisible());
-
   const awards = await desktop.newPage(); captureErrors(awards, 'awards');
   const awardsResponse = await awards.goto(`${ORIGIN}${AWARDS_PATH}`, { waitUntil: 'domcontentloaded', timeout: 120000 });
   check('AWARDS_ROUTE_REACHABLE', awardsResponse?.ok() === true, awardsResponse?.status());
   check('AWARDS_ROUTE_IDENTITY', await awards.locator('html').getAttribute('data-awards-overview') === 'DIAMOND_GATE_BRIDGE_AWARD_LANDSCAPE');
   check('AWARDS_CLAIM_BOUNDARY', await awards.locator('html').getAttribute('data-claim-boundary') === 'TARGETS_AND_RATIONALE_NOT_NOMINATIONS_OR_WINS');
   check('FIVE_ACHIEVEMENT_STORIES', await awards.locator('[data-story]').count() === 5);
-  check('SIX_TROPHY_STANDARD_LENSES', await awards.locator('[data-lens]').count() === 6);
+  const trophyStage = awards.locator('[data-trophy-stage]');
+  check('TROPHY_SPATIAL_STAGE_ACTIVE', await trophyStage.count() === 1 && await trophyStage.isVisible() && await trophyStage.getAttribute('data-ready') === 'true' && await trophyStage.getAttribute('aria-roledescription') === 'spatial carousel');
+  const trophyObjects = trophyStage.locator('[data-lens-key]');
+  const trophyKeys = await trophyObjects.evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-lens-key')));
+  check('SIX_TROPHY_STANDARD_LENSES', trophyKeys.length === 6, trophyKeys);
+  check('TROPHY_STANDARD_LENS_KEY_ORDER', JSON.stringify(trophyKeys) === JSON.stringify(['compass', 'world', 'ip', 'ai', 'diagnostic', 'independent']), trophyKeys);
   check('AWARDS_2027_CAMPAIGN_VISIBLE', await awards.getByText('Planned submissions · late October 2026 · 2027 cycle', { exact: true }).isVisible());
   const transparencyBoundary = awards.getByText(/does not claim that a submission, nomination, shortlist or win has already occurred/i);
   const transparencyDisclosure = transparencyBoundary.locator('xpath=ancestor::details[1]');
@@ -107,9 +111,13 @@ try {
   check('AWARDS_TRANSPARENCY_BOUNDARY_VISIBLE', await transparencyBoundary.isVisible());
   const hEarthDoor = awards.getByText('Enter H-Earth', { exact: true }).locator('xpath=ancestor::a[1]');
   check('AWARDS_H_EARTH_DOOR_PRESENT', (await hEarthDoor.getAttribute('href')) === '/showroom/globe/h-earth/');
-  await awards.locator('[data-story="governed"]').click();
+  await awards.locator('[data-achievement-next]').click();
+  await awards.locator('[data-achievement-next]').click();
   check('GOVERNED_STORY_CONTENT_UPDATES', (await awards.locator('#story-title').textContent())?.trim() === 'The thousandth pull request became a simplification milestone.');
-  await awards.locator('[data-lens="diagnostic"]').click();
+  const trophyNext = awards.locator('[data-trophy-next]');
+  for (let step = 0; step < 4; step += 1) await trophyNext.click();
+  const diagnosticLens = trophyStage.locator('[data-lens-key="diagnostic"]');
+  check('DIAGNOSTIC_LENS_ACTIVE_SPATIAL_OBJECT', await diagnosticLens.getAttribute('aria-current') === 'true' && await diagnosticLens.getAttribute('aria-hidden') === 'false' && await diagnosticLens.evaluate((node) => node.classList.contains('is-active')));
   check('DIAGNOSTIC_LENS_CONTENT_UPDATES', (await awards.locator('#lens-title').textContent())?.trim() === 'Reasoning becomes more useful when you can inspect it.');
   await awards.close(); await page.close(); await desktop.close();
 

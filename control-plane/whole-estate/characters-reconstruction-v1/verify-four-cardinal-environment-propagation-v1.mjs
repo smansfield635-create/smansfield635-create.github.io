@@ -148,7 +148,7 @@ for(const {destinationId,siteId,characterId} of CARDINALS){
   const route=phaseRoute(stateModule,storyState,siteId);
   const expected=['SURVEY_HUB','ENCOUNTER_PREVIEW','SCENE_TRANSITION','CHARACTER_SCENE','LOCAL_INSPECTION','SURVEY_HUB'];
   assert(JSON.stringify(route.phases)===JSON.stringify(expected),`CARDINAL_PHASE_ROUTE_MISMATCH:${siteId}`,{expected,actual:route.phases});
-  assert(route.state.phase==='SURVEY_HUB'&&route.state.selectedSiteId===null&&route.state.activeSiteId===null,`CARDINAL_RETURN_NOT_CLEAN:${siteId}`);
+  assert(route.state.phase==='SURVEY_HUB'&&route.state.selectedSiteId===siteId&&route.state.activeSiteId===null&&route.state.pendingTravel===null&&route.state.activeDiscoveryId===null,`CARDINAL_RETURN_NOT_CLEAN:${siteId}`);
   const local=geometryModule.buildCardinalSiteGeometry(siteId,'LOCAL');
   const regional=geometryModule.buildCardinalSiteGeometry(siteId,'REGIONAL');
   const camera=geographyModule.resolveCameraSiteAnchor(siteId);

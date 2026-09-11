@@ -10,7 +10,8 @@
       "principal": "github-actions[bot]",
       "invocationMarker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
       "authorityCreated": false,
-      "admissionSemanticsDuplicated": false
+      "admissionSemanticsDuplicated": false,
+      "agentExecutionEligible": false
     },
     {
       "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1",
@@ -24,12 +25,22 @@
         "CANONICAL_MUTATION_MESSAGE"
       ],
       "invocationMarker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+      "invocationProfiles": [
+        "CONNECTED_GITHUB_NATIVE_PRIMITIVES_V1",
+        "LOCAL_NATIVE_NODE_EXECUTOR_V1"
+      ],
+      "preferredStandardConnectedRoomProfile": "CONNECTED_GITHUB_NATIVE_PRIMITIVES_V1",
+      "connectedGithubNativeProtocol": ".github/operation-intake/connected-github-native-admission-protocol.v1.json",
+      "canonicalLedger": ".github/operation-intake/active-operation-ledger.v1.json",
+      "canonicalLockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
       "allowedMutationPaths": [
         ".github/operation-intake/active-operation-ledger.v1.json"
       ],
       "authorityCreated": false,
       "admissionSemanticsDuplicated": false,
       "canonicalSemantics": "tools/operation-intake/repository-operation-lock-manager.v1.mjs",
+      "agentExecutionEligible": true,
+      "githubActionsAgentExecutionRequired": false,
       "failureDisposition": "FAIL_CLOSED"
     }
   ]

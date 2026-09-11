@@ -1,0 +1,171 @@
+{
+  "schema": "CONNECTED_GITHUB_NATIVE_ADMISSION_PROTOCOL_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "profileId": "CONNECTED_GITHUB_NATIVE_PRIMITIVES_V1",
+  "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1",
+  "purpose": "Expose the existing canonical owner-connector admission semantics to standard connected-GitHub rooms without requiring a raw token-bearing shell.",
+  "semanticBackend": {
+    "planner": "tools/operation-intake/owner-connector-canonical-intake.v1.mjs",
+    "gate": "tools/operation-intake/repository-operation-intake-gate.v1.mjs#prepare",
+    "lockManager": "tools/operation-intake/repository-operation-lock-manager.v1.mjs#acquireLocal",
+    "lineageVerifier": "tools/operation-intake/repository-operation-lock-lineage.v2.mjs",
+    "localNativeExecutor": "tools/operation-intake/owner-connector-canonical-intake-executor.v1.mjs",
+    "canonicalLedger": ".github/operation-intake/active-operation-ledger.v1.json",
+    "canonicalLockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+    "successReceiptSchema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_EXECUTION_RECEIPT_v1",
+    "nestedAdmissionReceiptSchema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "secondBackendCreated": false,
+    "secondLedgerCreated": false
+  },
+  "authentication": {
+    "model": "AMBIENT_AUTHORIZED_CONNECTED_GITHUB_IDENTITY",
+    "rawGithubTokenRequiredFromRoom": false,
+    "ownerSourceCommentRequired": true,
+    "ownerLogin": "smansfield635-create",
+    "ownerAssociationRequired": "OWNER",
+    "sourceMarker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1"
+  },
+  "requiredConnectorPrimitives": [
+    "FETCH_OWNER_SOURCE_COMMENT",
+    "FETCH_CURRENT_MAIN_HEAD",
+    "FETCH_LOCK_REF",
+    "FETCH_LEDGER_BLOB_AND_CONTENT",
+    "CREATE_BLOB",
+    "CREATE_TREE_FROM_EXACT_LOCK_HEAD_TREE",
+    "CREATE_SINGLE_PARENT_COMMIT",
+    "UPDATE_LOCK_REF_NON_FORCE",
+    "FETCH_RESULTING_LOCK_REF",
+    "FETCH_RESULTING_COMMIT",
+    "FETCH_RESULTING_LEDGER"
+  ],
+  "knownConnectedGithubActionMapping": {
+    "FETCH_OWNER_SOURCE_COMMENT": "fetch",
+    "FETCH_CURRENT_MAIN_HEAD": "fetch",
+    "FETCH_LOCK_REF": "fetch",
+    "FETCH_LEDGER_BLOB_AND_CONTENT": "fetch_blob",
+    "CREATE_BLOB": "create_blob",
+    "CREATE_TREE_FROM_EXACT_LOCK_HEAD_TREE": "create_tree",
+    "CREATE_SINGLE_PARENT_COMMIT": "create_commit",
+    "UPDATE_LOCK_REF_NON_FORCE": "update_ref",
+    "FETCH_RESULTING_LOCK_REF": "fetch",
+    "FETCH_RESULTING_COMMIT": "fetch",
+    "FETCH_RESULTING_LEDGER": "fetch_blob"
+  },
+  "executionSequence": [
+    {
+      "step": 1,
+      "action": "RESOLVE_AI_ENTRY_AND_CANONICAL_INTAKE_LOCATOR",
+      "authorityEffect": "NONE"
+    },
+    {
+      "step": 2,
+      "action": "FETCH_OWNER_SOURCE_CURRENT_MAIN_LOCK_REF_AND_LEDGER",
+      "authorityEffect": "NONE"
+    },
+    {
+      "step": 3,
+      "action": "RUN_EXISTING_OWNER_CONNECTOR_PLANNER_UNCHANGED",
+      "plannerOutputIsReceipt": false,
+      "authorityEffect": "NONE"
+    },
+    {
+      "step": 4,
+      "action": "REQUIRE_PLANNER_RESULT_ADMITTED_AND_LOCKED_AND_EXACT_PLANNED_NEXT_LEDGER",
+      "plannerOutputIsReceipt": false,
+      "authorityEffect": "NONE"
+    },
+    {
+      "step": 5,
+      "action": "CREATE_BLOB_FROM_EXACT_PLANNED_NEXT_LEDGER_PRETTY_JSON_PLUS_NEWLINE",
+      "allowedRepositoryPath": ".github/operation-intake/active-operation-ledger.v1.json"
+    },
+    {
+      "step": 6,
+      "action": "CREATE_TREE_FROM_EXACT_CURRENT_LOCK_HEAD_TREE_REPLACING_ONLY_CANONICAL_LEDGER_PATH",
+      "exactChangedPathCount": 1
+    },
+    {
+      "step": 7,
+      "action": "REVALIDATE_CURRENT_MAIN_LOCK_REF_AND_LEDGER_BLOB_IMMEDIATELY_BEFORE_COMMIT_AND_REF_UPDATE",
+      "onMismatch": "FAIL_CLOSED_NO_BLIND_RETRY"
+    },
+    {
+      "step": 8,
+      "action": "CREATE_SINGLE_PARENT_CANONICAL_LOCK_COMMIT",
+      "parent": "EXACT_OBSERVED_LOCK_REF_HEAD",
+      "message": "Acquire operation lock <LOCK_GENERATION>: <OPERATION_ID>"
+    },
+    {
+      "step": 9,
+      "action": "ADVANCE_CANONICAL_LOCK_REF_NON_FORCE",
+      "force": false
+    },
+    {
+      "step": 10,
+      "action": "READ_BACK_LOCK_REF_COMMIT_AND_LEDGER",
+      "authorityEffect": "EVIDENCE_ONLY"
+    },
+    {
+      "step": 11,
+      "action": "VERIFY_EXACT_PARENT_MESSAGE_ONE_LEDGER_PATH_LOCK_IDENTITY_AND_INDEPENDENT_AUTHORITY_PROVENANCE",
+      "authorityEffect": "EVIDENCE_ONLY"
+    },
+    {
+      "step": 12,
+      "action": "EMIT_EXISTING_OWNER_AUTHENTICATED_CANONICAL_INTAKE_EXECUTION_RECEIPT",
+      "condition": "ONLY_AFTER_EXACT_READBACK_AND_LINEAGE_VERIFICATION_PASS"
+    }
+  ],
+  "writeLaw": {
+    "exactAllowedPaths": [
+      ".github/operation-intake/active-operation-ledger.v1.json"
+    ],
+    "canonicalCommitMessage": "Acquire operation lock <LOCK_GENERATION>: <OPERATION_ID>",
+    "exactParentMustEqualObservedLockRefHead": true,
+    "lockRefUpdateForce": false,
+    "currentMainRevalidationRequired": true,
+    "lockRefCompareAndSwapRequired": true,
+    "ledgerBlobCompareAndSwapRequired": true,
+    "blindRetryAfterConflictAllowed": false
+  },
+  "readbackLaw": {
+    "required": true,
+    "exactChangedPathCount": 1,
+    "exactChangedPaths": [
+      ".github/operation-intake/active-operation-ledger.v1.json"
+    ],
+    "lineageVerificationRequired": true,
+    "independentAuthorityProvenanceRequired": true,
+    "receiptBeforeReadbackAllowed": false
+  },
+  "failureLaw": {
+    "missingRequiredPrimitive": "FAIL_CLOSED",
+    "staleCurrentMain": "FAIL_CLOSED",
+    "staleLockRef": "FAIL_CLOSED",
+    "staleLedgerBlob": "FAIL_CLOSED",
+    "sourceAuthenticationFailure": "FAIL_CLOSED",
+    "plannerNonAdmission": "STOP_NO_MUTATION",
+    "treePathExpansion": "FAIL_CLOSED",
+    "forcedRefUpdateRequested": "FAIL_CLOSED",
+    "readbackMismatch": "FAIL_CLOSED",
+    "lineageFailure": "FAIL_CLOSED"
+  },
+  "prohibitions": [
+    "NO_DIRECT_OR_MANUAL_LEDGER_EDIT",
+    "NO_MANUAL_LEDGER_COMMIT_EMULATION_OUTSIDE_THIS_PROTOCOL",
+    "NO_SECOND_ADMISSION_BACKEND",
+    "NO_SECOND_LEDGER",
+    "NO_FORCED_LOCK_REF_UPDATE",
+    "NO_PLAN_AS_ADMISSION_RECEIPT",
+    "NO_RECEIPT_BEFORE_READBACK",
+    "NO_GITHUB_ACTIONS_AGENT_EXECUTION_TRANSPORT",
+    "NO_BRANCH_OR_PRODUCT_MUTATION_BEFORE_ADMITTED_AND_LOCKED",
+    "NO_AUTHORITY_INFERENCE_FROM_CONNECTED_TOOL_AVAILABILITY"
+  ],
+  "githubActions": {
+    "agentExecutionAllowed": false,
+    "passiveCiAfterRepositoryChangeAllowed": true,
+    "historicalEvidenceInspectionAllowed": true
+  },
+  "successResult": "ADMITTED_AND_LOCKED"
+}

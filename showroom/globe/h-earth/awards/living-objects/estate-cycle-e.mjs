@@ -100,9 +100,9 @@ export function createAwardsEstateCycleE({document:doc=document,reducedMotion=fa
   function rest(){settleVisual();return S('FOREGROUND_REST')}
   function stable(){settleVisual();return S('FOREGROUND_IDLE')}
   function playSignature(){S('SIGNATURE_PLAY');phase='torchlit-arrival';bridge?.draw?.();bridge?.ignite?.();if(!reducedMotion){frame.style.transform='scale(1.018)';frame.style.filter='brightness(1.07) saturate(1.04)';clearTimeout(timer);timer=setTimeout(()=>{if(destroyed)return;settleVisual();phase='ambient';S('FOREGROUND_IDLE')},850)}else{phase='ambient';S('FOREGROUND_IDLE')}return api}
-  function select(){S('SELECT_RESPONSE');if(!reducedMotion)frame.style.transform='scale(.985)';return api}
-  function openReader(){S('READER_OPEN');frame.style.opacity='.82';return api}
-  function restore(){S('RETURN_RESTORING');clearTimeout(timer);settleVisual();timer=setTimeout(()=>{if(!destroyed){phase='ambient';rest()}},reducedMotion?0:220);return api}
+  function select(){S('SELECT_RESPONSE');bridge?.setForeground?.(true);if(!reducedMotion)frame.style.transform='scale(.985)';return api}
+  function openReader(){S('READER_OPEN');bridge?.setForeground?.(false);frame.style.opacity='.82';return api}
+  function restore(){S('RETURN_RESTORING');clearTimeout(timer);bridge?.setForeground?.(true);settleVisual();timer=setTimeout(()=>{if(!destroyed){phase='ambient';rest()}},reducedMotion?0:220);return api}
   function inspect(){return Object.freeze({state,phase,reducedMotion:!!reducedMotion,webglContexts:destroyed?0:1,renderer:DONOR.version,donorContract:DONOR.contract,recognizableObject:'HOUSE_MANOR',signatureEvent:CONTRACT.signatureEvent,eventCount:1,donorReady:!!bridge,donorError:error?.message||null,donorInspection:bridge?.inspect?.()||null,torchCount:TORCH_SOURCE.torchCount,torchSource:TORCH_SOURCE.contract,ambientEnvironment:'NIGHT_ESTATE_FIELD',perimeterGlow:true,compositionProfile:CONTRACT.compositionProfile,sourceBinding:CONTRACT.sourceBinding,presentationAuthority:'PROVEN_COMPASS_MANOR_PLUS_HOME_TORCH_AMBIENCE'})}
   function destroy(){destroyed=true;clearTimeout(timer);bridge?.destroy?.();bridge=null;try{frame.src='about:blank'}catch{}frame.remove();root.remove()}
   const api=Object.freeze({element:root,contract:CONTRACT,ready,approach,rest,playSignature,select,openReader,restore,stable,inspect,destroy});

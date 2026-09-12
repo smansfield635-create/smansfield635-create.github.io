@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: write
+  actions: read
 
 jobs:
   render:
@@ -19,6 +20,8 @@ jobs:
       TARGET_HEAD: bd6af5fa35d35d85c3c246b7a1d0c4593524b702
       MEDIA: showroom/globe/h-earth/awards/media/awards-cinematic-epilogue-first-picture-v1.mp4
       MASTER_URL: https://commons.wikimedia.org/wiki/Special:Redirect/file/Vivaldi_-_Four_Seasons_2_Summer_mvt_1_Allegro_non_molto_-_John_Harrison_violin.oga
+      TRANSPORT_ARTIFACT_ID: '9472056242'
+      TRANSPORT_ZIP_SHA256: 7dba5f64e6be81a9e94cfd47fd808abe8c4dec53317e985890b4cc6c83ac48ca
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,23 +33,40 @@ jobs:
           git checkout --detach "$TARGET_HEAD"
           test "$(git rev-parse HEAD)" = "$TARGET_HEAD"
 
-      - name: Recover seven frozen dependency blobs
+      - name: Import retained exact-object transport and restore historical H-Earth dependencies
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          prefixes=(872d20b1 a67a4e95 8910148d 4f407900 698dc392 8e094b2b a7a60734)
-          for p in "${prefixes[@]}"; do
-            line="$(git rev-list --objects --all | awk -v p="$p" 'index($1,p)==1 {print; exit}')"
-            test -n "$line" || { echo "MISSING_OBJECT_PREFIX:$p"; exit 1; }
-            sha="${line%% *}"
-            path="${line#* }"
-            test "$sha" != "$path" || { echo "MISSING_OBJECT_PATH:$p"; exit 1; }
+          curl -L --fail --retry 4 --retry-delay 3 \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${TRANSPORT_ARTIFACT_ID}/zip" \
+            -o /tmp/compass-transport.zip
+          echo "${TRANSPORT_ZIP_SHA256}  /tmp/compass-transport.zip" | sha256sum -c -
+          unzip -p /tmp/compass-transport.zip compass-d59b6f4f.bundle > /tmp/compass-d59b6f4f.bundle
+          test "$(stat -c%s /tmp/compass-d59b6f4f.bundle)" = "189876331"
+          git fetch -q /tmp/compass-d59b6f4f.bundle '+refs/transport/*:refs/gen2128-transport/*'
+
+          restore_blob() {
+            sha="$1"; path="$2"
+            git cat-file -e "${sha}^{blob}"
             mkdir -p "$(dirname "$path")"
             git cat-file blob "$sha" > "$path"
             observed="$(git hash-object "$path")"
             test "$observed" = "$sha" || { echo "BLOB_MISMATCH:$path:$sha:$observed"; exit 1; }
-            echo "RECOVERED $p $sha $path"
-          done
+            echo "RECOVERED $sha $path"
+          }
+
+          restore_blob 872d20b17bb0cd89d9613ca0262b25350890a617 showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs
+          restore_blob a67a4e95f7634eb97a375ff103d95bdc81c64f0b h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js
+          restore_blob 8910148d0888a93841db61a52d75cea095651400 h-earth-live-6d18e158/showroom/globe/h-earth/render/geometry-distant-context.js
+          restore_blob 4f407900fbb7b381339d056e47f36f0cf7be5051 h-earth-live-6d18e158/showroom/globe/h-earth/render/geometry-shoreline.js
+
+          test "$(git hash-object characters/cardinal-scene-geometry.mjs)" = 698dc392edd0b74547d76fb09a05bb3bb2437c15
+          test "$(git hash-object characters/gratitude-geography.adapter.mjs)" = 8e094b2beed8117f6322ca18d9b592949998aac4
+          test "$(git hash-object characters/cardinal-scene-state.mjs)" = a7a60734529cfd6ebeea08e40f4722436689f5f3
 
       - name: Verify recursive module closure
         run: |
@@ -95,9 +115,6 @@ jobs:
           set -euo pipefail
           curl -L --fail --retry 4 --retry-delay 3 "$MASTER_URL" -o /tmp/vivaldi-summer-mvt1.oga
           ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 /tmp/vivaldi-summer-mvt1.oga
-          # Existing Chapter Two binding starts this exact master at 167.000s. The
-          # frozen carrier window starts at 88.770s, so source time is 255.770s.
-          # The page audio is looped; continue from 0 after the 302.093333s master end.
           ffmpeg -y -v error -i /tmp/vivaldi-summer-mvt1.oga -filter_complex \
             "[0:a]atrim=start=255.770:end=302.093333333333,asetpts=PTS-STARTPTS[a0];[0:a]atrim=start=0:end=12.450666666667,asetpts=PTS-STARTPTS[a1];[a0][a1]concat=n=2:v=0:a=1,aresample=48000[a]" \
             -map "[a]" -t 58.774 -ac 2 -c:a pcm_s16le /tmp/gen2128-audio.wav

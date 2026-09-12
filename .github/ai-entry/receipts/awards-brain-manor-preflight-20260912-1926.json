@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "awards-brain-manor-preflight-20260912-1926",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3224,
+  "requestBranch": "ai-dispatch-request-awards-brain-manor-preflight-20260912-1926",
+  "requestCommit": "c6d54ed270e964393c95bb498f5dcec40bd959a2",
+  "requestCommitParent": "00f6fc66520d82ff6ce92aeb6020226737a459fb",
+  "currentMainSha": "00f6fc66520d82ff6ce92aeb6020226737a459fb",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "00f6fc66520d82ff6ce92aeb6020226737a459fb",
+    "surface_id": "awards"
+  },
+  "bridgeRunId": "34726184796",
+  "dispatchedRunId": 34726190425,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/34726190425",
+  "dispatchedRunHeadSha": "00f6fc66520d82ff6ce92aeb6020226737a459fb",
+  "dispatchedAt": "2026-09-12T23:44:15.799Z",
+  "resolvedAt": "2026-09-12T23:44:19.342Z"
+}

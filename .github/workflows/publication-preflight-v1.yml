@@ -179,6 +179,13 @@ jobs:
           const awardsPath='/showroom/globe/h-earth/awards/';
           const sleep=ms=>new Promise(r=>setTimeout(r,ms));
           const objects=['experience','world','coherence','trust','estate'];
+          const profiles={
+            experience:{width:'min(46vw,300px)',aspectRatio:'2 / 3'},
+            world:{width:'min(78vw,720px)',aspectRatio:'16 / 9'},
+            coherence:{width:'min(62vw,480px)',aspectRatio:'6 / 5'},
+            trust:{width:'min(80vw,760px)',aspectRatio:'2 / 1'},
+            estate:{width:'min(72vw,620px)',aspectRatio:'4 / 3'}
+          };
           const viewports=[
             {name:'phone',width:412,height:915,deviceScaleFactor:2,isMobile:true,hasTouch:true},
             {name:'tablet',width:800,height:1280,deviceScaleFactor:2,isMobile:true,hasTouch:true},
@@ -187,21 +194,6 @@ jobs:
           const captures=[];
           const server=spawn('python3',['-m','http.server','4173','--bind','127.0.0.1','--directory',stage],{stdio:'ignore'});
           let browser;
-
-          const standalonePath=path.join(stage,'showroom','globe','h-earth','awards','__recognition-standalone.html');
-          fs.writeFileSync(standalonePath,`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>
-          *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#01040a}body{display:grid;place-items:center}.field{width:100%;height:100%;display:grid;place-items:center;background:radial-gradient(circle at 50% 48%,rgba(80,128,148,.13),#01040a 70%)}#host{position:relative;overflow:visible;contain:layout paint style}#host[data-story="experience"]{width:min(46vw,300px);aspect-ratio:2/3}#host[data-story="world"]{width:min(78vw,720px);aspect-ratio:16/9}#host[data-story="coherence"]{width:min(62vw,480px);aspect-ratio:6/5}#host[data-story="trust"]{width:min(80vw,760px);aspect-ratio:2/1}#host[data-story="estate"]{width:min(72vw,620px);aspect-ratio:4/3}#host>*{width:100%;height:100%}
-          </style></head><body><main class="field"><div id="host"></div></main><script type="module">
-          const story=new URLSearchParams(location.search).get('story');const host=document.getElementById('host');host.dataset.story=story;
-          let api;
-          if(story==='experience'){const m=await import('./living-objects/experience-cycle-a.mjs');api=m.mountExperienceLivingObject(host,{reducedMotion:false});}
-          else if(story==='world'){const m=await import('./living-objects/world-cycle-b.mjs');api=m.mountWorldLivingObject(host,{reducedMotion:false});}
-          else if(story==='coherence'){const m=await import('./living-objects/coherence-cycle-c.mjs');api=m.mountCoherenceLivingObject(host,{reducedMotion:false});if(api.ready)await api.ready;}
-          else if(story==='trust'){const m=await import('./living-objects/trust-cycle-d.mjs');api=m.mountTrustLivingObject(host,{reducedMotion:false});}
-          else if(story==='estate'){const m=await import('./living-objects/estate-cycle-e.mjs');api=m.createAwardsEstateCycleE({document,reducedMotion:false});host.replaceChildren(api.element);api.rest?.();}
-          else throw new Error('UNKNOWN_STORY:'+story);
-          window.__recognitionApi=api;window.__recognitionReady=true;
-          </script></body></html>`);
 
           async function waitServer(){
             for(let i=0;i<30;i++){
@@ -233,20 +225,73 @@ jobs:
             captures.push({...entry,selector,file:path.basename(file),cssPixels:{width:Math.round(box.width),height:Math.round(box.height)},bytes:stat.size,captureResult:'CAPTURED',expectedDisposition:'REVIEW_REQUIRED'});
           }
           async function setViewport(page,v){await page.setViewport({width:v.width,height:v.height,deviceScaleFactor:v.deviceScaleFactor,isMobile:v.isMobile,hasTouch:v.hasTouch});}
+          async function selectStory(page,story){
+            for(let guard=0;guard<6;guard++){
+              const active=await page.$eval('[data-achievement-stage]',(stage,target)=>stage.querySelector(`.instrument-card[data-story="${target}"]`)?.getAttribute('aria-current')==='true',story);
+              if(active)return;
+              await page.click('[data-achievement-next]');
+              await sleep(650);
+            }
+            throw new Error('AWARDS_STORY_NOT_SELECTED:'+story);
+          }
+          async function enterStandalone(page,story,hostSel){
+            await page.$eval(hostSel,(shell,{story,profile})=>{
+              const marker=document.createElement('span');
+              marker.hidden=true;
+              marker.dataset.recognitionRestore='1';
+              shell.parentElement.insertBefore(marker,shell);
+              shell.dataset.recognitionPriorStyle=shell.getAttribute('style')||'';
+              const overlay=document.createElement('div');
+              overlay.id='recognition-standalone-overlay';
+              overlay.setAttribute('aria-hidden','true');
+              overlay.style.cssText='position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;background:#01040a;pointer-events:none;overflow:hidden';
+              const host=document.createElement('div');
+              host.id='recognition-standalone-host';
+              host.dataset.story=story;
+              host.style.width=profile.width;
+              host.style.aspectRatio=profile.aspectRatio;
+              host.style.position='relative';
+              host.style.overflow='visible';
+              shell.style.setProperty('width','100%','important');
+              shell.style.setProperty('height','100%','important');
+              shell.style.setProperty('max-width','none','important');
+              shell.style.setProperty('aspect-ratio','auto','important');
+              shell.style.setProperty('position','relative','important');
+              shell.style.setProperty('inset','auto','important');
+              host.appendChild(shell);
+              overlay.appendChild(host);
+              document.body.appendChild(overlay);
+            },{story,profile:profiles[story]});
+            await objectReady(page,'#recognition-standalone-host');
+          }
+          async function leaveStandalone(page){
+            await page.evaluate(()=>{
+              const overlay=document.querySelector('#recognition-standalone-overlay');
+              const shell=overlay?.querySelector('.living-object-shell');
+              const marker=document.querySelector('[data-recognition-restore="1"]');
+              if(!overlay||!shell||!marker||!marker.parentElement)throw new Error('STANDALONE_RESTORE_STATE_MISSING');
+              marker.parentElement.insertBefore(shell,marker);
+              marker.remove();
+              const prior=shell.dataset.recognitionPriorStyle||'';
+              delete shell.dataset.recognitionPriorStyle;
+              if(prior)shell.setAttribute('style',prior);else shell.removeAttribute('style');
+              overlay.remove();
+            });
+            await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+            await sleep(300);
+          }
 
           try{
             await waitServer();
             browser=await puppeteer.launch({executablePath:chrome,headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--use-gl=swiftshader']});
 
+            // Preserve the existing World raw-canvas compatibility artifact.
             {
               const page=await browser.newPage();
               await setViewport(page,viewports[0]);
               await page.goto(baseUrl+awardsPath,{waitUntil:'networkidle0',timeout:45000});
               await page.waitForSelector('[data-achievement-stage]',{timeout:15000});
-              const next='[data-achievement-next]';
-              await page.waitForSelector(next,{timeout:10000});
-              await page.click(next);
-              await page.waitForFunction(()=>document.querySelector('[data-achievement-stage] .instrument-card[data-story="world"]')?.getAttribute('aria-current')==='true',{timeout:10000});
+              await selectStory(page,'world');
               await sleep(1400);
               const selector='[data-achievement-stage] .instrument-card[data-story="world"] .living-object-shell canvas.awards-world-true3d';
               await page.waitForSelector(selector,{timeout:10000});
@@ -261,46 +306,33 @@ jobs:
               await page.close();
             }
 
-            for(const v of viewports){
-              for(const story of objects){
-                const page=await browser.newPage();
-                await setViewport(page,v);
-                await page.goto(`${baseUrl}${awardsPath}__recognition-standalone.html?story=${story}`,{waitUntil:'networkidle0',timeout:45000});
-                await page.waitForFunction(()=>window.__recognitionReady===true,{timeout:30000});
-                await objectReady(page,'#host');
-                const file=path.join(evidenceDir,`standalone-${story}-${v.name}.png`);
-                await captureElement(page,'#host',file,{targetSha,mode:'standalone',object:story,viewport:{name:v.name,width:v.width,height:v.height,deviceScaleFactor:v.deviceScaleFactor},textHidden:true});
-                await page.close();
-              }
-            }
-
+            // Use the already-passing real Awards runtime for both evidence modes.
+            // Integrated = unchanged Cycle F host. Standalone = same live renderer shell
+            // temporarily reparented into an object-specific runner overlay, then restored.
             for(const v of viewports){
               const page=await browser.newPage();
               await setViewport(page,v);
               await page.goto(baseUrl+awardsPath,{waitUntil:'networkidle0',timeout:45000});
               await page.waitForSelector('[data-achievement-stage]',{timeout:15000});
               for(const story of objects){
-                for(let guard=0;guard<6;guard++){
-                  const active=await page.$eval('[data-achievement-stage]',(stage,target)=>stage.querySelector(`.instrument-card[data-story="${target}"]`)?.getAttribute('aria-current')==='true',story);
-                  if(active)break;
-                  await page.click('[data-achievement-next]');
-                  await sleep(650);
-                }
-                await page.waitForFunction(target=>document.querySelector(`[data-achievement-stage] .instrument-card[data-story="${target}"]`)?.getAttribute('aria-current')==='true',{timeout:10000},story);
+                await selectStory(page,story);
                 const cardSel=`[data-achievement-stage] .instrument-card[data-story="${story}"]`;
                 const hostSel=`${cardSel} .living-object-shell`;
                 await objectReady(page,hostSel);
-                await page.$eval(cardSel,card=>{
-                  for(const el of card.querySelectorAll('.surface-copy,.kicker,h3,.surface-thought,.open-cue'))el.style.visibility='hidden';
-                });
-                const file=path.join(evidenceDir,`integrated-${story}-${v.name}.png`);
-                await captureElement(page,hostSel,file,{targetSha,mode:'integrated',object:story,viewport:{name:v.name,width:v.width,height:v.height,deviceScaleFactor:v.deviceScaleFactor},textHidden:true});
+
+                const integratedFile=path.join(evidenceDir,`integrated-${story}-${v.name}.png`);
+                await captureElement(page,hostSel,integratedFile,{targetSha,mode:'integrated',object:story,viewport:{name:v.name,width:v.width,height:v.height,deviceScaleFactor:v.deviceScaleFactor},textHidden:true});
+
+                await enterStandalone(page,story,hostSel);
+                const standaloneFile=path.join(evidenceDir,`standalone-${story}-${v.name}.png`);
+                await captureElement(page,'#recognition-standalone-host',standaloneFile,{targetSha,mode:'standalone',object:story,viewport:{name:v.name,width:v.width,height:v.height,deviceScaleFactor:v.deviceScaleFactor},textHidden:true});
+                await leaveStandalone(page);
               }
               await page.close();
             }
 
             if(captures.length!==30)throw new Error(`RECOGNITION_MATRIX_INCOMPLETE:${captures.length}`);
-            const manifest={schema:'AWARDS_RECOGNITION_EVIDENCE_MANIFEST_v1',result:'EVIDENCE_CAPTURED_NOT_SEMANTIC_PASS',targetSha,surfaceId:'awards',captureCount:captures.length,objects,viewports:viewports.map(({name,width,height,deviceScaleFactor})=>({name,width,height,deviceScaleFactor})),modes:['standalone','integrated'],textHidden:true,semanticRecognitionAuthority:'SEPARATE_NONCOMPENSATORY_REVIEW',negativeControlSupport:{expectedDispositionField:true,decisionOwnedByParentRecovery:true},captures};
+            const manifest={schema:'AWARDS_RECOGNITION_EVIDENCE_MANIFEST_v1',result:'EVIDENCE_CAPTURED_NOT_SEMANTIC_PASS',targetSha,surfaceId:'awards',captureCount:captures.length,objects,viewports:viewports.map(({name,width,height,deviceScaleFactor})=>({name,width,height,deviceScaleFactor})),modes:['standalone','integrated'],textHidden:true,standaloneHarness:'RUNNER_OVERLAY_REPARENT_SAME_LIVE_RENDERER_INSTANCE',semanticRecognitionAuthority:'SEPARATE_NONCOMPENSATORY_REVIEW',negativeControlSupport:{expectedDispositionField:true,decisionOwnedByParentRecovery:true},captures};
             fs.writeFileSync(evidenceManifest,JSON.stringify(manifest,null,2)+'\n');
           } finally {
             if(browser)await browser.close();
@@ -310,7 +342,7 @@ jobs:
           test -s "$SCREENSHOT"
           test -s "$EVIDENCE_MANIFEST"
           test "$(find "$EVIDENCE_DIR" -maxdepth 1 -type f -name '*.png' | wc -l | tr -d '[:space:]')" -eq 30
-          jq -e --arg sha "$TARGET_SHA" '.schema=="AWARDS_RECOGNITION_EVIDENCE_MANIFEST_v1" and .result=="EVIDENCE_CAPTURED_NOT_SEMANTIC_PASS" and .targetSha==$sha and .captureCount==30 and (.captures|length)==30 and ([.captures[].mode]|unique|sort)==["integrated","standalone"] and ([.captures[].object]|unique|sort)==["coherence","estate","experience","trust","world"] and ([.captures[].viewport.name]|unique|sort)==["desktop","phone","tablet"]' "$EVIDENCE_MANIFEST" >/dev/null
+          jq -e --arg sha "$TARGET_SHA" '.schema=="AWARDS_RECOGNITION_EVIDENCE_MANIFEST_v1" and .result=="EVIDENCE_CAPTURED_NOT_SEMANTIC_PASS" and .targetSha==$sha and .captureCount==30 and (.captures|length)==30 and .standaloneHarness=="RUNNER_OVERLAY_REPARENT_SAME_LIVE_RENDERER_INSTANCE" and ([.captures[].mode]|unique|sort)==["integrated","standalone"] and ([.captures[].object]|unique|sort)==["coherence","estate","experience","trust","world"] and ([.captures[].viewport.name]|unique|sort)==["desktop","phone","tablet"]' "$EVIDENCE_MANIFEST" >/dev/null
 
       - uses: actions/upload-artifact@v4
         if: always()

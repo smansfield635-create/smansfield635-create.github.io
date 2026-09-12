@@ -1,0 +1,36 @@
+{
+  "schema": "AWARDS_LIVING_OBJECT_CYCLE_LEDGER_v1",
+  "operationId": "AWARDS_TOP_CAROUSEL_LIVING_OBJECT_SUCCESSOR_20260911_001",
+  "lockGeneration": 2102,
+  "governingHead": "751b93edbd662573231b651e2f915c3a5882a942",
+  "constructionSequence": "showroom/globe/h-earth/awards/AWARDS_LIVING_OBJECT_CONSTRUCTION_SEQUENCE_20260911.md",
+  "cycles": {
+    "A_EXPERIENCE": {
+      "status": "CANDIDATE_FROZEN_AWAITING_FRESH_QUALIFICATION",
+      "claim": "A website can behave like a place.",
+      "candidateCommit": null,
+      "objectPath": "showroom/globe/h-earth/awards/living-objects/experience-cycle-a.mjs",
+      "cssPath": "showroom/globe/h-earth/awards/living-objects/living-objects.v1.css",
+      "sourceBinding": {
+        "compassController": "568a6b2cd608a4cbcd62cf70ed59b241c39c90d2",
+        "compassGeometry": "fe35d8d844859a6af810684ace53d2c65258522f",
+        "compassRenderer": "965376dd8a92686bc7008d1fea4846b5f8300872",
+        "mirrorlandWindow": "f99d3ffedf7b7654d067d21d9363eb287877f852"
+      },
+      "technicalQualification": "PENDING_FRESH_VERIFIER",
+      "visualAcceptance": "PENDING_FRESH_VERIFIER"
+    },
+    "B_WORLD": {"status": "NOT_STARTED"},
+    "C_COHERENCE": {"status": "NOT_STARTED"},
+    "D_TRUST": {"status": "NOT_STARTED"},
+    "E_ESTATE": {"status": "NOT_STARTED"},
+    "F_SHARED_COMPOSITION": {"status": "NOT_STARTED"}
+  },
+  "invariants": {
+    "canonicalIntakeCount": 1,
+    "cycleOrder": ["A_EXPERIENCE","B_WORLD","C_COHERENCE","D_TRUST","E_ESTATE","F_SHARED_COMPOSITION"],
+    "priorClosedCyclesReadOnly": true,
+    "bottomTrophyCarouselMutationAuthorized": false,
+    "mergeDeploymentPublicationAuthorized": false
+  }
+}

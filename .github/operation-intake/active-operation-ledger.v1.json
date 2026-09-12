@@ -1370,6 +1370,49 @@
       "scopeHash": "3260334210612761568271d95f8d7e558fb52fe338fdaa7fd2809e31d44a7095",
       "state": "ADMITTED_LOCKED"
     },
+    "32de22e91d34a0d960bd86c088c7144ae0e448920a0727ab628e3f5e8b218990": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "423f428f8d8a0a000de65ba792be8c6f002ce1e6",
+          "lockGeneration": 2112,
+          "lockScope": "H_EARTH:AWARDS:TRUST_CYCLE_D:CONSTRUCT_QUALIFY_CLOSE:V2",
+          "operationId": "AWARDS_LIVING_OBJECT_TRUST_CYCLE_D_20260911_002",
+          "procedureLocatorDigest": "32780b447665156049010a62d63deabcaeec6642d07b78aa35e740bd097242e2",
+          "requestDigest": "9a71d214adcdca1c6227e67e3f0a33fed9eea507e1ace0f1c683bb6d1ae37221",
+          "scopeHash": "32de22e91d34a0d960bd86c088c7144ae0e448920a0727ab628e3f5e8b218990"
+        },
+        "bindingDigest": "ba08be917fd3f81eb4b9bafb5f4bcabb9962027ca25be944c6db766ed0ff8b2d",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "2c378ca88ae9d8e42a49bc78c869eb18bcc87d897b9689e83a993c4fce84d055",
+          "commentId": 5642683316,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3102,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34666190831,
+          "workflowSha": "423f428f8d8a0a000de65ba792be8c6f002ce1e6"
+        },
+        "lineageAnchorCommitSha": "efe024173c87b4162611d87adc2b366d6454c049",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "423f428f8d8a0a000de65ba792be8c6f002ce1e6",
+      "lockGeneration": 2112,
+      "lockScope": "H_EARTH:AWARDS:TRUST_CYCLE_D:CONSTRUCT_QUALIFY_CLOSE:V2",
+      "operationId": "AWARDS_LIVING_OBJECT_TRUST_CYCLE_D_20260911_002",
+      "procedureLocatorDigest": "32780b447665156049010a62d63deabcaeec6642d07b78aa35e740bd097242e2",
+      "released": false,
+      "requestDigest": "9a71d214adcdca1c6227e67e3f0a33fed9eea507e1ace0f1c683bb6d1ae37221",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "32de22e91d34a0d960bd86c088c7144ae0e448920a0727ab628e3f5e8b218990",
+      "state": "ADMITTED_LOCKED"
+    },
     "3351fa3ef6fac7bd7187ecbd20f5b92c87a15c4d921e2bd82fb58f2bf9c4bb20": {
       "governingHead": "8a04a9f94a65e82c9ed3df50af999cfcb33d068b",
       "lockGeneration": 1371,
@@ -8225,7 +8268,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2111,
+  "lockGeneration": 2112,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

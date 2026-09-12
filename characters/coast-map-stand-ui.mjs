@@ -36,8 +36,6 @@ function terrainColor(source){
   const wetSand=clamp(Number(source.coastline?.wetSandWeight)||0,0,1);
   if(beach>0)base=mixRgb(base,[202,181,123],beach);
   if(wetSand>0)base=mixRgb(base,[105,99,76],wetSand*.72);
-  const river=clamp(Number(source.hydrology?.riverWeight)||0,0,1);
-  if(river>0)base=mixRgb(base,[48,104,117],river*.86);
   const contour=Math.abs(((elevation+240)%16)-8)<.5?.84:1;
   const shade=(.54+light*.48)*contour;
   return base.map(value=>clamp(Math.round(value*shade),0,255));

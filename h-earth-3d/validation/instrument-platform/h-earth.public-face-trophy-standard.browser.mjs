@@ -14,6 +14,11 @@ const captureErrors=(page,label)=>{ page.on('pageerror',e=>pageErrors.push({labe
 const digestCanvas=async page=>sha256(await page.locator('#h-earth-functional-landscape-canvas').screenshot({type:'png'}));
 const waitForHEarth=async page=>{ const r=await page.goto(`${ORIGIN}${H_EARTH_PATH}`,{waitUntil:'domcontentloaded',timeout:120000}); check('PROMOTED_ROUTE_REACHABLE',r?.ok()===true,r?.status()); await page.locator('#h-earth-functional-landscape-canvas').waitFor({state:'visible',timeout:30000}); await page.waitForTimeout(1000); };
 const numericStyle=async(locator,p)=>Number.parseFloat(await locator.evaluate((node,p)=>getComputedStyle(node).getPropertyValue(p),p));
+const waitForSettledAwardsDepth=async page=>{
+ await page.waitForFunction(()=>{const node=document.querySelectorAll('[data-achievement-stage] [data-story]')[1];if(!(node instanceof HTMLElement))return false;const style=getComputedStyle(node);const opacity=Number.parseFloat(style.opacity);const blur=Number.parseFloat(style.getPropertyValue('--content-blur'));return Number.isFinite(opacity)&&opacity>=.30&&opacity<=.56&&Number.isFinite(blur)&&blur>=1;},null,{timeout:5000});
+ await page.waitForTimeout(120);
+ await page.waitForFunction(()=>{const node=document.querySelectorAll('[data-achievement-stage] [data-story]')[1];if(!(node instanceof HTMLElement))return false;const style=getComputedStyle(node);const opacity=Number.parseFloat(style.opacity);const blur=Number.parseFloat(style.getPropertyValue('--content-blur'));return Number.isFinite(opacity)&&opacity>=.30&&opacity<=.56&&Number.isFinite(blur)&&blur>=1;},null,{timeout:5000});
+};
 const browser=await chromium.launch({headless:true,args:['--use-gl=swiftshader','--enable-webgl','--ignore-gpu-blocklist','--disable-dev-shm-usage','--no-sandbox']});
 try{
  const desktop=await browser.newContext({viewport:{width:1440,height:960},deviceScaleFactor:1});
@@ -30,6 +35,7 @@ try{
  check('AWARDS_CLAIM_BOUNDARY',await awards.locator('html').getAttribute('data-claim-boundary')==='TARGETS_AND_RATIONALE_NOT_NOMINATIONS_OR_WINS');
  const cards=awards.locator('[data-achievement-stage] [data-story]'); const storyOrder=await cards.evaluateAll(nodes=>nodes.map(n=>n.getAttribute('data-story'))); check('CURRENT_ACHIEVEMENT_STORY_ORDER',JSON.stringify(storyOrder)===JSON.stringify(['experience','world','coherence','trust','estate']),storyOrder);
  check('ACHIEVEMENT_SPATIAL_STAGE_ACTIVE',await awards.locator('[data-achievement-stage]').getAttribute('data-ready')==='true');
+ await waitForSettledAwardsDepth(awards);
  const activeOpacity=await numericStyle(cards.nth(0),'opacity'),activeBlur=await numericStyle(cards.nth(0),'--content-blur'),inactiveOpacity=await numericStyle(cards.nth(1),'opacity'),inactiveBlur=await numericStyle(cards.nth(1),'--content-blur');
  check('AWARDS_ACTIVE_CARD_OPAQUE',activeOpacity>=.98&&activeBlur===0,{activeOpacity,activeBlur}); check('AWARDS_INACTIVE_CARD_RECEDES_WITH_VISIBLE_GLASS',inactiveOpacity>=.30&&inactiveOpacity<.80&&inactiveBlur>=1,{inactiveOpacity,inactiveBlur});
  await cards.nth(1).click({position:{x:40,y:40},force:true}); await awards.waitForTimeout(150); check('AWARDS_WHOLE_CARD_SELECTS_VISIBLE_NEIGHBOR',await cards.nth(1).getAttribute('aria-current')==='true');

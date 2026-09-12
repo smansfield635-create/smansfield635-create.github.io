@@ -16,6 +16,18 @@ export function isSafeInteriorPoint(world,{minimumHorizontalInset=SAFE_INTERIOR.
   return world.x>=f.xMin+minimumHorizontalInset&&world.x<=f.xMax-minimumHorizontalInset&&world.z>=f.zMin+minimumHorizontalInset&&world.z<=f.zMax-minimumHorizontalInset;
 }
 
+const timelineFractions=Object.freeze({ASCENT:0,CLOUD_ENTRY:.17,CLOUD_TRANSIT:.37,DESCENT:.72,ARRIVAL:1});
+export function buildCloudTraversalTimeline({durationMs=2460,reducedMotion=false}={}){
+  const duration=Math.max(reducedMotion?160:800,Number.isFinite(durationMs)?durationMs:2460);
+  return Object.freeze([
+    Object.freeze({state:'ASCENT',atMs:0}),
+    Object.freeze({state:'CLOUD_ENTRY',atMs:Math.round(duration*timelineFractions.CLOUD_ENTRY)}),
+    Object.freeze({state:'CLOUD_TRANSIT',atMs:Math.round(duration*timelineFractions.CLOUD_TRANSIT)}),
+    Object.freeze({state:'DESCENT',atMs:Math.round(duration*timelineFractions.DESCENT)}),
+    Object.freeze({state:'ARRIVAL',atMs:duration})
+  ]);
+}
+
 function ensureCloudLayer(root=document.body){
   let layer=document.querySelector('[data-mirrorland-cloud-traversal]');
   if(layer)return layer;
@@ -27,27 +39,37 @@ function ensureCloudLayer(root=document.body){
   return layer;
 }
 
-export function createCloudTraversalController({root=document.body,reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches,onState=()=>{}}={}){
+export function createCloudTraversalController({root=document.body,reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches,onState=()=>{},autoBindSignals=false}={}){
   const layer=ensureCloudLayer(root);
   let state='ORBIT';
   let timers=[];
   let disposed=false;
   let transitionEpoch=0;
   const setState=next=>{
+    if(!CLOUD_TRAVEL_STATES.includes(next))throw new RangeError(`UNKNOWN_CLOUD_TRAVEL_STATE:${next}`);
     state=next;
     layer.dataset.state=next;
     document.documentElement.dataset.cloudTravel=next;
     onState(next);
   };
+  const opacityFor=next=>next==='CLOUD_ENTRY'?'.12':next==='CLOUD_TRANSIT'?'.22':next==='DESCENT'?'.10':'0';
   const cancelTimers=()=>{for(const id of timers)clearTimeout(id);timers=[];};
+  const schedule=(epoch,ms,fn)=>timers.push(setTimeout(()=>{if(!disposed&&epoch===transitionEpoch)fn();},ms));
   const clear=()=>{
     transitionEpoch+=1;
     cancelTimers();
     layer.style.opacity='0';
+    delete layer.dataset.destinationId;
+    delete layer.dataset.worldAnchor;
     setState('ORBIT');
   };
-  const schedule=(epoch,ms,fn)=>timers.push(setTimeout(()=>{if(!disposed&&epoch===transitionEpoch)fn();},ms));
-  const begin=({destinationId,worldAnchor=null}={})=>{
+  const complete=()=>{
+    transitionEpoch+=1;
+    cancelTimers();
+    layer.style.opacity='0';
+    setState('ARRIVAL');
+  };
+  const begin=({destinationId,worldAnchor=null,durationMs=2460}={})=>{
     transitionEpoch+=1;
     const epoch=transitionEpoch;
     cancelTimers();
@@ -55,21 +77,21 @@ export function createCloudTraversalController({root=document.body,reducedMotion
     setState('ORBIT');
     layer.dataset.destinationId=destinationId||'';
     layer.dataset.cloudIdentity=CLOUD_IDENTITY_FRAME;
-    if(worldAnchor)layer.dataset.worldAnchor=`${worldAnchor.x},${worldAnchor.z}`;
-    else delete layer.dataset.worldAnchor;
-    if(reducedMotion){
-      setState('CLOUD_TRANSIT');
-      layer.style.transition='opacity 100ms linear';
-      layer.style.opacity='.18';
-      schedule(epoch,650,()=>{layer.style.opacity='0';setState('ARRIVAL');});
-      return;
+    const safeAnchor=worldAnchor?safeInteriorPoint(worldAnchor):null;
+    if(safeAnchor){
+      layer.dataset.worldAnchor=`${safeAnchor.x},${safeAnchor.z}`;
+      layer.dataset.safeInterior='true';
+    }else{
+      delete layer.dataset.worldAnchor;
+      delete layer.dataset.safeInterior;
     }
-    layer.style.transition='opacity 420ms ease';
-    setState('ASCENT');
-    schedule(epoch,420,()=>{setState('CLOUD_ENTRY');layer.style.opacity='.12';});
-    schedule(epoch,900,()=>{setState('CLOUD_TRANSIT');layer.style.opacity='.22';});
-    schedule(epoch,1780,()=>{setState('DESCENT');layer.style.opacity='.10';});
-    schedule(epoch,2460,()=>{layer.style.opacity='0';setState('ARRIVAL');});
+    layer.style.transition=reducedMotion?'opacity 80ms linear':'opacity 420ms ease';
+    const timeline=buildCloudTraversalTimeline({durationMs,reducedMotion});
+    for(const entry of timeline){
+      const apply=()=>{setState(entry.state);layer.style.opacity=opacityFor(entry.state);};
+      if(entry.atMs===0)apply();else schedule(epoch,entry.atMs,apply);
+    }
+    return Object.freeze({destinationId:destinationId||'',safeAnchor,timeline});
   };
   const onSignalClick=event=>{
     const signal=event.target?.closest?.('.signal[data-id],.signal[data-destination-id]');
@@ -78,10 +100,14 @@ export function createCloudTraversalController({root=document.body,reducedMotion
     event.__mirrorlandCloudTraversalHandled=true;
     begin({destinationId:signal.dataset.destinationId||signal.dataset.id||''});
   };
-  document.addEventListener('click',onSignalClick,true);
-  const dispose=()=>{disposed=true;document.removeEventListener('click',onSignalClick,true);clear();};
+  if(autoBindSignals)document.addEventListener('click',onSignalClick,true);
+  const dispose=()=>{
+    disposed=true;
+    if(autoBindSignals)document.removeEventListener('click',onSignalClick,true);
+    clear();
+  };
   setState('ORBIT');
-  const api=Object.freeze({begin,clear,dispose,getState:()=>state,identityFrame:CLOUD_IDENTITY_FRAME});
+  const api=Object.freeze({begin,complete,clear,dispose,getState:()=>state,identityFrame:CLOUD_IDENTITY_FRAME,autoBindSignals});
   globalThis.__MIRRORLAND_CLOUD_TRAVERSAL__=api;
   return api;
 }

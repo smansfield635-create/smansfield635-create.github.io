@@ -146,7 +146,7 @@ css.textContent=`
 .frontier-card__back-head{padding-bottom:.72rem;border-bottom:1px solid rgba(255,255,255,.13)}
 .frontier-card__context{display:grid;gap:1rem;padding:.95rem 0}.frontier-card__context section{padding:.75rem .78rem;border:1px solid rgba(255,255,255,.11);border-radius:.95rem;background:rgba(255,255,255,.035)}
 .frontier-card__label{display:block;margin-bottom:.32rem;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;font-weight:900;color:#f3dfaa}.frontier-card__context p{margin:0;font-size:.9rem;line-height:1.5;color:rgba(255,255,255,.84)}
-@media(max-width:720px){.story.frontier-card-mode{left:14px;right:14px;width:auto;bottom:126px}.frontier-card{height:min(510px,calc(100vh - 190px));min-height:330px}.frontier-card__face{padding:1rem}.frontier-card__title{font-size:clamp(1.55rem,8vw,2.15rem)}.frontier-card__actions{gap:.38rem}.frontier-card__actions button{padding:.62rem .68rem}.frontier-card__context{gap:.72rem}.frontier-card__context section{padding:.65rem .68rem}.frontier-card__context p{font-size:.84rem}}
+@media(max-width:720px){.story.frontier-card-mode{left:14px;right:14px;width:auto;bottom:calc(216px + env(safe-area-inset-bottom))}.frontier-card{height:min(510px,calc(100vh - 334px));min-height:min(330px,calc(100vh - 334px))}.frontier-card__face{padding:1rem}.frontier-card__title{font-size:clamp(1.55rem,8vw,2.15rem)}.frontier-card__actions{gap:.38rem}.frontier-card__actions button{padding:.62rem .68rem}.frontier-card__context{gap:.72rem}.frontier-card__context section{padding:.65rem .68rem}.frontier-card__context p{font-size:.84rem}}
 @media(prefers-reduced-motion:reduce){.frontier-card__inner{transition:none}}
 `;
 document.head.appendChild(css);
@@ -328,6 +328,8 @@ story?.addEventListener('click',event=>{
   if(back){existingReturn?.click();return;}
   const enter=event.target.closest?.('[data-card-enter]');
   if(enter&&activeId){
+    const sourceEnter=[...(storyMore?.querySelectorAll('button')||[])].find(button=>/^Enter scene$/i.test((button.textContent||'').trim()));
+    if(sourceEnter){sourceEnter.click();return;}
     cardUi.notice.hidden=false;
     const destination=getDestination(activeId);
     if(status)status.textContent=`${destination?.title||'This scene'} · Coming Soon`;

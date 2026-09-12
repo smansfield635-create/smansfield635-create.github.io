@@ -150,6 +150,22 @@ const resume=()=>{if(reduce.matches||hidden)return;resize();resumeAudio();schedu
 document.addEventListener('visibilitychange',()=>{hidden=document.hidden;if(hidden){stopMotion();suspendAudio()}else resume()});reduce.addEventListener?.('change',()=>{if(reduce.matches){stopMotion();suspendAudio();canvas.style.display='none'}else{canvas.style.display='block';resume()}});coarse.addEventListener?.('change',resize);addEventListener('resize',resize,{passive:true});resize();if(reduce.matches){canvas.style.display='none'}else{canvas.style.display='block';scheduleNormal(rand(2200,4600))}
 })();
 </script>
+<script>
+(()=>{
+const prior=document.querySelector('[data-dgb-fireworks-sound]');if(!prior)return;
+const button=prior.cloneNode(true);prior.replaceWith(button);
+const reduce=window.matchMedia('(prefers-reduced-motion: reduce)'),sourcePage='https://freesound.org/people/Eightmate/sounds/789562/',sourceUrl='https://cdn.freesound.org/previews/789/789562_3010666-hq.mp3';
+let audio=null,audioEnabled=false,failed=false;
+button.dataset.dgbFireworksAudioSource=sourcePage;button.dataset.dgbFireworksAudioLicense='CC0-1.0';button.disabled=false;button.style.opacity='';
+const update=()=>{button.setAttribute('aria-pressed',String(audioEnabled));button.setAttribute('aria-label',audioEnabled?'Turn off distant fireworks sound':'Turn on distant fireworks sound');button.textContent=failed?'Fireworks sound unavailable':audioEnabled?'Fireworks sound: on':'Fireworks sound: off'};
+const ensureAudio=()=>{if(audio)return audio;audio=new Audio();audio.preload='none';audio.loop=true;audio.volume=.38;audio.playsInline=true;audio.setAttribute('aria-hidden','true');audio.dataset.sourcePage=sourcePage;audio.dataset.license='CC0-1.0';return audio};
+const playRecorded=async()=>{if(reduce.matches||document.hidden||failed)return false;const media=ensureAudio();if(!media.src)media.src=sourceUrl;try{await media.play();return true}catch{failed=true;media.pause();media.removeAttribute('src');try{media.load()}catch{}return false}};
+button.addEventListener('click',async()=>{if(failed){update();return}if(audioEnabled){audioEnabled=false;audio?.pause();update();return}if(reduce.matches)return;audioEnabled=await playRecorded();update()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)audio?.pause();else if(audioEnabled&&!reduce.matches)audio?.play().catch(()=>{})});
+reduce.addEventListener?.('change',()=>{if(reduce.matches)audio?.pause();else if(audioEnabled&&!document.hidden)audio?.play().catch(()=>{})});
+update();
+})();
+</script>
 <script src="/assets/build/fibonacci-cosmos.js?v=7" defer></script>
 </body>
 </html>

@@ -1,0 +1,123 @@
+name: Laws Page Excellence Exact Git Object Transport v1
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/laws-page-excellence-exact-git-object-transport-v1.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  package-exact-git-objects:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PUBLIC_REPOSITORY: smansfield635-create/smansfield635-create.github.io
+      CANDIDATE_SHA: 9923e9f346c8d1301ff4c79ec162fcd53340f361
+      BASE_SHA: a7862cf021bee931f07626f616c1baa191483c14
+      SOURCE_SHA: 9923e9f346c8d1301ff4c79ec162fcd53340f361
+      METHODS_MODELS_BLOB_SHA: d48ca6648aec91fd19254bfa8de97e72cb0eebc5
+      PLAYWRIGHT_VERSION: 1.55.0
+    steps:
+      - name: Checkout transport workflow head only
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Materialize exact public Git objects
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf "$RUNNER_TEMP/exact-public"
+          git init -q "$RUNNER_TEMP/exact-public"
+          git -C "$RUNNER_TEMP/exact-public" remote add origin "https://github.com/${PUBLIC_REPOSITORY}.git"
+          git -C "$RUNNER_TEMP/exact-public" fetch --no-tags origin "$CANDIDATE_SHA" "$BASE_SHA" "$SOURCE_SHA"
+          git -C "$RUNNER_TEMP/exact-public" update-ref refs/transport/candidate "$CANDIDATE_SHA"
+          git -C "$RUNNER_TEMP/exact-public" update-ref refs/transport/base "$BASE_SHA"
+          git -C "$RUNNER_TEMP/exact-public" update-ref refs/transport/source "$SOURCE_SHA"
+
+      - name: Verify exact candidate lineage and Methods object
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C "$RUNNER_TEMP/exact-public" rev-parse refs/transport/candidate^{commit})" = "$CANDIDATE_SHA"
+          test "$(git -C "$RUNNER_TEMP/exact-public" rev-parse refs/transport/base^{commit})" = "$BASE_SHA"
+          test "$(git -C "$RUNNER_TEMP/exact-public" rev-parse refs/transport/source^{commit})" = "$SOURCE_SHA"
+          git -C "$RUNNER_TEMP/exact-public" cat-file -p "$CANDIDATE_SHA" | grep -Fx "parent $BASE_SHA"
+          test "$(git -C "$RUNNER_TEMP/exact-public" rev-parse "$CANDIDATE_SHA:laws/research/methods-and-models/index.html")" = "$METHODS_MODELS_BLOB_SHA"
+
+      - name: Create Git-native bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p transport
+          git -C "$RUNNER_TEMP/exact-public" bundle create "$GITHUB_WORKSPACE/transport/laws-page-excellence-9923e9f.bundle" refs/transport/candidate refs/transport/base refs/transport/source
+          git -C "$RUNNER_TEMP/exact-public" bundle verify "$GITHUB_WORKSPACE/transport/laws-page-excellence-9923e9f.bundle"
+
+      - name: Prove bundle reconstructs the exact Git subject
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf "$RUNNER_TEMP/reconstructed"
+          git init -q "$RUNNER_TEMP/reconstructed"
+          git -C "$RUNNER_TEMP/reconstructed" fetch --no-tags "$GITHUB_WORKSPACE/transport/laws-page-excellence-9923e9f.bundle" refs/transport/candidate:refs/transport/candidate refs/transport/base:refs/transport/base refs/transport/source:refs/transport/source
+          git -C "$RUNNER_TEMP/reconstructed" checkout -q --detach refs/transport/candidate
+          test "$(git -C "$RUNNER_TEMP/reconstructed" rev-parse HEAD^{commit})" = "$CANDIDATE_SHA"
+          test -z "$(git -C "$RUNNER_TEMP/reconstructed" status --porcelain=v1 --untracked-files=all)"
+          git -C "$RUNNER_TEMP/reconstructed" cat-file -p HEAD | grep -Fx "parent $BASE_SHA"
+          test "$(git -C "$RUNNER_TEMP/reconstructed" rev-parse "HEAD:laws/research/methods-and-models/index.html")" = "$METHODS_MODELS_BLOB_SHA"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Package pinned Playwright execution runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p transport/playwright-runtime transport/playwright-browsers
+          npm install --prefix transport/playwright-runtime --no-save "playwright@${PLAYWRIGHT_VERSION}"
+          PLAYWRIGHT_BROWSERS_PATH="$GITHUB_WORKSPACE/transport/playwright-browsers" node transport/playwright-runtime/node_modules/playwright/cli.js install chromium
+          test "$(node -p "require('./transport/playwright-runtime/node_modules/playwright/package.json').version")" = "$PLAYWRIGHT_VERSION"
+          test -n "$(find transport/playwright-browsers -type f \( -name chrome -o -name headless_shell \) | head -1)"
+
+      - name: Emit transport-only provenance receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          BUNDLE_SHA256="$(sha256sum transport/laws-page-excellence-9923e9f.bundle | awk '{print $1}')"
+          cat > transport/receipt.json <<JSON
+          {
+            "schema": "LAWS_PAGE_EXCELLENCE_EXACT_GIT_OBJECT_TRANSPORT_RECEIPT_v1",
+            "result": "PASS_CLOSED",
+            "repository": "$PUBLIC_REPOSITORY",
+            "candidateSha": "$CANDIDATE_SHA",
+            "baseSha": "$BASE_SHA",
+            "sourceShas": ["$SOURCE_SHA"],
+            "methodsModelsBlobSha": "$METHODS_MODELS_BLOB_SHA",
+            "format": "GIT_BUNDLE",
+            "bundleSha256": "$BUNDLE_SHA256",
+            "bundleVerified": true,
+            "reconstructionVerified": true,
+            "playwrightVersion": "$PLAYWRIGHT_VERSION",
+            "playwrightRuntimeTransported": true,
+            "privateEvaluationExecuted": false,
+            "qualificationAuthorityCreated": false,
+            "productMutationAuthorityCreated": false,
+            "mergeAuthorityCreated": false,
+            "deploymentAuthorityCreated": false,
+            "ownerAcceptanceCreated": false,
+            "userApprovalCreated": false
+          }
+          JSON
+
+      - name: Upload exact Git object transport artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-page-excellence-exact-git-object-transport-9923e9f
+          path: transport/
+          if-no-files-found: error
+          retention-days: 30

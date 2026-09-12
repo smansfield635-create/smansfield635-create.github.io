@@ -1566,6 +1566,49 @@
       "scopeHash": "33b3a9ca351c0200d83ffdad8cfff05b98daca038923441d54e5e214ff6e3f13",
       "state": "ADMITTED_LOCKED"
     },
+    "33d0173ed2df45881d0959501d98021f28954045f1db2862b83e7fcd3b13afbd": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "0c39fd7f12f67d0f6586b5e681ba6de0c5faa651",
+          "lockGeneration": 2147,
+          "lockScope": "H_EARTH_AWARDS_CHAPTER_02_RELEASE",
+          "operationId": "AWARDS_CHAPTER_02_MEDIA_REBIND_RELEASE_20260912_001",
+          "procedureLocatorDigest": "097507b0d9e2cbee50ce4748a565ab4a301ffddd91d2033d9dbb44c21ae11e93",
+          "requestDigest": "a3eab07fa3812fb78b539edce1fbd78711a38ad086a1d05c657759390024bc21",
+          "scopeHash": "33d0173ed2df45881d0959501d98021f28954045f1db2862b83e7fcd3b13afbd"
+        },
+        "bindingDigest": "eb5c14c87ba34fcb38a8bdae545f116fe85affcd12cfec4eaef280a50f1e3a9e",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "f59123ebd6b2db13faa26d607682947b54812f3e3be1466333ffc28a87f0d35a",
+          "commentId": 5644325302,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3135,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34679456687,
+          "workflowSha": "c7def9c32b6ab01e0aaf2f39faf1b4f58f95b9ad"
+        },
+        "lineageAnchorCommitSha": "5f5c4ca3e9ce7c8bb4fb29963601d64b732a19ac",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "0c39fd7f12f67d0f6586b5e681ba6de0c5faa651",
+      "lockGeneration": 2147,
+      "lockScope": "H_EARTH_AWARDS_CHAPTER_02_RELEASE",
+      "operationId": "AWARDS_CHAPTER_02_MEDIA_REBIND_RELEASE_20260912_001",
+      "procedureLocatorDigest": "097507b0d9e2cbee50ce4748a565ab4a301ffddd91d2033d9dbb44c21ae11e93",
+      "released": false,
+      "requestDigest": "a3eab07fa3812fb78b539edce1fbd78711a38ad086a1d05c657759390024bc21",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "33d0173ed2df45881d0959501d98021f28954045f1db2862b83e7fcd3b13afbd",
+      "state": "ADMITTED_LOCKED"
+    },
     "33e1020395a365d229c5f70b86e04dcc4477028b4fc4f7e3fdaa7695eff1bb3c": {
       "governingHead": "3684c3fecf47d1ee4213a9c636cfa15606087cb5",
       "lockGeneration": 1405,
@@ -8673,7 +8716,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2146,
+  "lockGeneration": 2147,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

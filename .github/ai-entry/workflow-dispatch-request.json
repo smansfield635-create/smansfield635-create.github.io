@@ -1,6 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "jen-constellation-direct-bind-82d73333",
+  "requestId": "awards-gen2148-exact-head-publish-8ab52a15-20260912",
   "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
-  "inputs": {"target_sha":"82d73333f2f15f25e1b044f2b777712406d7f5e1"}
+  "inputs": {
+    "target_sha": "8ab52a15833a4e4e0cdc71e57caa1fc6d473a4da",
+    "surface_id": "awards"
+  }
 }

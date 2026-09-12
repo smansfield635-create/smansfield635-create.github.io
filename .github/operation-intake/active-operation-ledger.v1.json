@@ -6711,42 +6711,60 @@
     "c7dd30f2e7ec5dd7b6a8fed10a2074a53e9b35516b9f0bf93568e3d4240d760c": {
       "authorityProvenance": {
         "authorityIdentity": {
-          "governingHead": "a7399e6c08378e59b3544f3cf6839a1abf8dd8f9",
-          "lockGeneration": 2121,
+          "governingHead": "45b13f8cc59f60a05f8d9c6e0c0612129b2b23ab",
+          "lockGeneration": 2130,
           "lockScope": "H_EARTH:AWARDS:LIVING_OBJECT:F_SHARED_COMPOSITION",
-          "operationId": "AWARDS_LIVING_OBJECT_SHARED_CAROUSEL_CYCLE_F_20260912_001",
-          "procedureLocatorDigest": "54f7ba8c2581cbdbb4cc851f9f300c5d9b7444e0bed235cb4380732fcb83c73d",
-          "requestDigest": "a9b9ca4ff9e64952eaee7279e414a0ed585d7109b63865199d793d688b6a69d3",
+          "operationId": "AWARDS_LIVING_OBJECT_SHARED_CAROUSEL_CYCLE_F_20260912_001_REBIND_001",
+          "procedureLocatorDigest": "66a91b376077c14603298e6eb401129292688e5002727dde8a3f91bf8a971ea0",
+          "requestDigest": "dee81545093fba123f5c602fc8ef44158dc7b5d987240c9df51fdf3fc89c8a05",
           "scopeHash": "c7dd30f2e7ec5dd7b6a8fed10a2074a53e9b35516b9f0bf93568e3d4240d760c"
         },
-        "bindingDigest": "efe9d6e9eebf37b1ba247afc7400bc6267fcbbc061185a42883d0849b44e2264",
+        "bindingDigest": "3ec221e1abd04cf3635409dc2ac5f7e2bf31e2a4d715be3fd0ef7cf48e632fcf",
         "invocation": {
           "commentAuthorAssociation": "OWNER",
           "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "a40ab7e43b1155d234e9ab152b6288e654a4aa824e23f2b9b10aaaf1533fa504",
-          "commentId": 5643027594,
+          "commentBodySha256": "2af359d85d171caca1daf39fccbad556010434a443d1d387c2c4339fb600f5ef",
+          "commentId": 5643269189,
           "eventAction": "created",
           "eventName": "issue_comment",
           "issueNumber": 3123,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
           "repository": "smansfield635-create/smansfield635-create.github.io",
           "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
           "workflowRunAttempt": 1,
-          "workflowRunId": 34669242281,
-          "workflowSha": "3b4c6e0192856568a7803ea631fb536b1e2e3160"
+          "workflowRunId": 34671414069,
+          "workflowSha": "45b13f8cc59f60a05f8d9c6e0c0612129b2b23ab"
         },
-        "lineageAnchorCommitSha": "c45cff900951754b51f1a43d26dbb5ec164fc522",
-        "origin": "CANONICAL_INTAKE",
+        "lineageAnchorCommitSha": "e21352f5c41fa2d3a969f1411b8ea5973b1b52b2",
+        "origin": "CANONICAL_SUCCESSOR",
         "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
       },
-      "governingHead": "a7399e6c08378e59b3544f3cf6839a1abf8dd8f9",
-      "lockGeneration": 2121,
+      "governingHead": "45b13f8cc59f60a05f8d9c6e0c0612129b2b23ab",
+      "lockGeneration": 2130,
       "lockScope": "H_EARTH:AWARDS:LIVING_OBJECT:F_SHARED_COMPOSITION",
-      "operationId": "AWARDS_LIVING_OBJECT_SHARED_CAROUSEL_CYCLE_F_20260912_001",
-      "procedureLocatorDigest": "54f7ba8c2581cbdbb4cc851f9f300c5d9b7444e0bed235cb4380732fcb83c73d",
+      "operationId": "AWARDS_LIVING_OBJECT_SHARED_CAROUSEL_CYCLE_F_20260912_001_REBIND_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "a7399e6c08378e59b3544f3cf6839a1abf8dd8f9",
+        "lockGeneration": 2121,
+        "lockScope": "H_EARTH:AWARDS:LIVING_OBJECT:F_SHARED_COMPOSITION",
+        "operationId": "AWARDS_LIVING_OBJECT_SHARED_CAROUSEL_CYCLE_F_20260912_001",
+        "preservedEvidenceRefs": [
+          "issue:3123",
+          "pr:3124",
+          "commit:4ea5063edf1a511cf05c15f1f7527137e3297a28",
+          "issue:3125",
+          "commit:45b13f8cc59f60a05f8d9c6e0c0612129b2b23ab"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "AWARDS_LIVING_OBJECT_SHARED_CAROUSEL_CYCLE_F_20260912_001_REBIND_001_TRANSITION"
+      },
+      "procedureLocatorDigest": "66a91b376077c14603298e6eb401129292688e5002727dde8a3f91bf8a971ea0",
       "released": false,
-      "requestDigest": "a9b9ca4ff9e64952eaee7279e414a0ed585d7109b63865199d793d688b6a69d3",
+      "requestDigest": "dee81545093fba123f5c602fc8ef44158dc7b5d987240c9df51fdf3fc89c8a05",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "c7dd30f2e7ec5dd7b6a8fed10a2074a53e9b35516b9f0bf93568e3d4240d760c",
       "state": "ADMITTED_LOCKED"
@@ -8483,7 +8501,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2129,
+  "lockGeneration": 2130,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -49021,6 +49039,68 @@
       "scopeHash": "cf07349e27ad164a97ada452ba6a9ba2f6e717f76e296027b9a86b507d1af759",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "a7399e6c08378e59b3544f3cf6839a1abf8dd8f9",
+          "lockGeneration": 2121,
+          "lockScope": "H_EARTH:AWARDS:LIVING_OBJECT:F_SHARED_COMPOSITION",
+          "operationId": "AWARDS_LIVING_OBJECT_SHARED_CAROUSEL_CYCLE_F_20260912_001",
+          "procedureLocatorDigest": "54f7ba8c2581cbdbb4cc851f9f300c5d9b7444e0bed235cb4380732fcb83c73d",
+          "requestDigest": "a9b9ca4ff9e64952eaee7279e414a0ed585d7109b63865199d793d688b6a69d3",
+          "scopeHash": "c7dd30f2e7ec5dd7b6a8fed10a2074a53e9b35516b9f0bf93568e3d4240d760c"
+        },
+        "bindingDigest": "efe9d6e9eebf37b1ba247afc7400bc6267fcbbc061185a42883d0849b44e2264",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "a40ab7e43b1155d234e9ab152b6288e654a4aa824e23f2b9b10aaaf1533fa504",
+          "commentId": 5643027594,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3123,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34669242281,
+          "workflowSha": "3b4c6e0192856568a7803ea631fb536b1e2e3160"
+        },
+        "lineageAnchorCommitSha": "c45cff900951754b51f1a43d26dbb5ec164fc522",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "a7399e6c08378e59b3544f3cf6839a1abf8dd8f9",
+      "lockGeneration": 2121,
+      "lockScope": "H_EARTH:AWARDS:LIVING_OBJECT:F_SHARED_COMPOSITION",
+      "operationId": "AWARDS_LIVING_OBJECT_SHARED_CAROUSEL_CYCLE_F_20260912_001",
+      "procedureLocatorDigest": "54f7ba8c2581cbdbb4cc851f9f300c5d9b7444e0bed235cb4380732fcb83c73d",
+      "released": true,
+      "requestDigest": "a9b9ca4ff9e64952eaee7279e414a0ed585d7109b63865199d793d688b6a69d3",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c7dd30f2e7ec5dd7b6a8fed10a2074a53e9b35516b9f0bf93568e3d4240d760c",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:3123",
+          "pr:3124",
+          "commit:4ea5063edf1a511cf05c15f1f7527137e3297a28",
+          "issue:3125",
+          "commit:45b13f8cc59f60a05f8d9c6e0c0612129b2b23ab"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "45b13f8cc59f60a05f8d9c6e0c0612129b2b23ab",
+        "successorLockGeneration": 2130,
+        "successorLockScope": "H_EARTH:AWARDS:LIVING_OBJECT:F_SHARED_COMPOSITION",
+        "successorOperationId": "AWARDS_LIVING_OBJECT_SHARED_CAROUSEL_CYCLE_F_20260912_001_REBIND_001",
+        "transitionId": "AWARDS_LIVING_OBJECT_SHARED_CAROUSEL_CYCLE_F_20260912_001_REBIND_001_TRANSITION"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

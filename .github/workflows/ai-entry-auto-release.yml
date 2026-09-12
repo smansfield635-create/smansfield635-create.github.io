@@ -188,7 +188,7 @@ jobs:
           diff -u "$RUNNER_TEMP/awards-source.sha256" "$RUNNER_TEMP/awards-staged.sha256"
           grep -Fq 'data-awards-architecture="JUDGE_FACING_SPATIAL_INSTRUMENT_V1"' "$awards_dst/index.html"
           grep -Fq 'SELECT_OPEN_RETURN_EDITORIAL_DEPTH' "$awards_dst/index.html"
-          grep -Fq 'Open the reason' "$awards_dst/index.html"
+          grep -Fq 'AWARDS_SHARED_CAROUSEL_COMPOSITION_CYCLE_F_V1' "$awards_dst/index.html"
           grep -Fq 'id="awards-reader"' "$awards_dst/index.html"
           if grep -Fq 'Inspect this reason' "$awards_dst/index.html"; then
             echo 'AWARDS_PREDECESSOR_COPY_DETECTED_IN_STAGED_PAYLOAD' >&2
@@ -373,7 +373,7 @@ jobs:
               && [ "$awards_legacy" = "0" ] \
               && grep -Fq 'data-awards-architecture="JUDGE_FACING_SPATIAL_INSTRUMENT_V1"' <<<"$awards_html" \
               && grep -Fq 'SELECT_OPEN_RETURN_EDITORIAL_DEPTH' <<<"$awards_html" \
-              && grep -Fq 'Open the reason' <<<"$awards_html" \
+              && grep -Fq 'AWARDS_SHARED_CAROUSEL_COMPOSITION_CYCLE_F_V1' <<<"$awards_html" \
               && grep -Fq 'id="awards-reader"' <<<"$awards_html" \
               && grep -Fq 'NONPRODUCTION · BT4 SERVED-STATE EXPERIMENT' <<<"$claim_html" \
               && grep -Fq 'entitlement-engine.v1.mjs' <<<"$claim_html" \

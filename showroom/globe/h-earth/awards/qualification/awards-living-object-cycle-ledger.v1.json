@@ -4,11 +4,20 @@
   "lockGeneration": 2102,
   "governingHead": "751b93edbd662573231b651e2f915c3a5882a942",
   "constructionSequence": "showroom/globe/h-earth/awards/AWARDS_LIVING_OBJECT_CONSTRUCTION_SEQUENCE_20260911.md",
+  "ownerAcceptanceInterpretation": {
+    "commentId": 5642137098,
+    "perCycleVisualReapprovalRequired": false,
+    "priorVisualAuditControlsCyclesAThroughE": true,
+    "finalCycleFCompositionVisualApprovalRequired": true,
+    "finalQualifiedDesignMergeAuthorized": true,
+    "deploymentPublicationAuthorized": false
+  },
   "cycles": {
     "A_EXPERIENCE": {
-      "status": "CANDIDATE_FROZEN_AWAITING_FRESH_QUALIFICATION",
+      "status": "PASS_CLOSED",
       "claim": "A website can behave like a place.",
-      "candidateCommit": null,
+      "candidateCommit": "55eef607570f576bff89fa84401140b678ca2568",
+      "qualificationReceiptCommentId": 5642139933,
       "objectPath": "showroom/globe/h-earth/awards/living-objects/experience-cycle-a.mjs",
       "cssPath": "showroom/globe/h-earth/awards/living-objects/living-objects.v1.css",
       "sourceBinding": {
@@ -17,10 +26,10 @@
         "compassRenderer": "965376dd8a92686bc7008d1fea4846b5f8300872",
         "mirrorlandWindow": "f99d3ffedf7b7654d067d21d9363eb287877f852"
       },
-      "technicalQualification": "PENDING_FRESH_VERIFIER",
-      "visualAcceptance": "PENDING_FRESH_VERIFIER"
+      "technicalQualification": "PASS_CLOSED",
+      "visualAcceptance": "SATISFIED_BY_PRIOR_AUDIT_NO_PER_CYCLE_REAPPROVAL"
     },
-    "B_WORLD": {"status": "NOT_STARTED"},
+    "B_WORLD": {"status": "ACTIVE"},
     "C_COHERENCE": {"status": "NOT_STARTED"},
     "D_TRUST": {"status": "NOT_STARTED"},
     "E_ESTATE": {"status": "NOT_STARTED"},
@@ -31,6 +40,8 @@
     "cycleOrder": ["A_EXPERIENCE","B_WORLD","C_COHERENCE","D_TRUST","E_ESTATE","F_SHARED_COMPOSITION"],
     "priorClosedCyclesReadOnly": true,
     "bottomTrophyCarouselMutationAuthorized": false,
-    "mergeDeploymentPublicationAuthorized": false
+    "prematureMergeAuthorized": false,
+    "finalQualifiedCycleFMergeAuthorized": true,
+    "deploymentPublicationAuthorized": false
   }
 }

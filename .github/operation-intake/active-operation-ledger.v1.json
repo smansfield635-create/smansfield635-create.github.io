@@ -1449,6 +1449,49 @@
       "scopeHash": "33e1020395a365d229c5f70b86e04dcc4477028b4fc4f7e3fdaa7695eff1bb3c",
       "state": "ADMITTED_LOCKED"
     },
+    "3406beefc29a0f2160156a77784c53903fc8c663b94fef477a77f8cc700c3bdc": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "33fe2b92ec327d235e3d50bad42657245c2ffe82",
+          "lockGeneration": 2127,
+          "lockScope": "H_EARTH:AWARDS:CINEMATIC_EPILOGUE:EXACT_PATH_REGISTRY",
+          "operationId": "H_EARTH_AWARDS_CINEMATIC_EPILOGUE_PATH_REGISTRY_PREREQUISITE_20260911_002",
+          "procedureLocatorDigest": "e8651c52bf5b86331cc31484ff349d384b05e18710429869ada94ffaeb8e485f",
+          "requestDigest": "f88776102de418f8c9f2d2189f5dc1fb0aee88164982cc9629568c65657af4f4",
+          "scopeHash": "3406beefc29a0f2160156a77784c53903fc8c663b94fef477a77f8cc700c3bdc"
+        },
+        "bindingDigest": "fdbe959c3a54027b9b9b0a4fe59c4aaa6eb798d1e50d871454c5627fce0b403e",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "404b84cd2db24911766329d441bee8ed4a2952f3c17632db74031968bf96a823",
+          "commentId": 5643155028,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3128,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34670441566,
+          "workflowSha": "33fe2b92ec327d235e3d50bad42657245c2ffe82"
+        },
+        "lineageAnchorCommitSha": "17342e9cd9f697a5e5f1010c6200a1d7ee36ee2d",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "33fe2b92ec327d235e3d50bad42657245c2ffe82",
+      "lockGeneration": 2127,
+      "lockScope": "H_EARTH:AWARDS:CINEMATIC_EPILOGUE:EXACT_PATH_REGISTRY",
+      "operationId": "H_EARTH_AWARDS_CINEMATIC_EPILOGUE_PATH_REGISTRY_PREREQUISITE_20260911_002",
+      "procedureLocatorDigest": "e8651c52bf5b86331cc31484ff349d384b05e18710429869ada94ffaeb8e485f",
+      "released": false,
+      "requestDigest": "f88776102de418f8c9f2d2189f5dc1fb0aee88164982cc9629568c65657af4f4",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "3406beefc29a0f2160156a77784c53903fc8c663b94fef477a77f8cc700c3bdc",
+      "state": "ADMITTED_LOCKED"
+    },
     "346e9ba9bb279714c38e2afc5960c991d7d988df27f021729f1ea649975d261f": {
       "governingHead": "c68f4c917577f09dd71f799e466373a67e71e3b2",
       "lockGeneration": 1722,
@@ -8483,7 +8526,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2126,
+  "lockGeneration": 2127,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

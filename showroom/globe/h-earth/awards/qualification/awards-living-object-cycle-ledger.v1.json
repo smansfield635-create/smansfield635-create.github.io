@@ -1,198 +1,38 @@
 {
   "schema": "AWARDS_LIVING_OBJECT_CYCLE_LEDGER_v1",
-  "operationId": "AWARDS_LIVING_OBJECT_SHARED_CAROUSEL_CYCLE_F_20260912_001",
-  "lockGeneration": 2121,
-  "governingHead": "a7399e6c08378e59b3544f3cf6839a1abf8dd8f9",
-  "predecessorHead": "a7399e6c08378e59b3544f3cf6839a1abf8dd8f9",
-  "ownerAcceptanceInterpretation": {
-    "perCycleVisualReapprovalRequired": false,
-    "priorVisualAuditControlsCyclesAThroughE": true,
-    "finalCycleFCompositionVisualApprovalRequired": true,
-    "deploymentPublicationAuthorized": false
-  },
+  "operationId": "AWARDS_TRUE_3D_LIVING_OBJECT_SUCCESSOR_20260912_002",
+  "lockGeneration": 2146,
+  "governingHead": "0c39fd7f12f67d0f6586b5e681ba6de0c5faa651",
+  "frozenIssue": 3145,
   "cycles": {
-    "A_EXPERIENCE": {
-      "status": "PASS_CLOSED",
-      "claim": "A website can behave like a place.",
-      "candidateCommit": "55eef607570f576bff89fa84401140b678ca2568",
-      "qualificationReceiptCommentId": 5642139933,
-      "objectPath": "showroom/globe/h-earth/awards/living-objects/experience-cycle-a.mjs",
-      "sourceBinding": {
-        "compassController": "568a6b2cd608a4cbcd62cf70ed59b241c39c90d2",
-        "compassGeometry": "fe35d8d844859a6af810684ace53d2c65258522f",
-        "compassRenderer": "965376dd8a92686bc7008d1fea4846b5f8300872",
-        "mirrorlandWindow": "f99d3ffedf7b7654d067d21d9363eb287877f852"
-      },
-      "technicalQualification": "PASS_CLOSED",
-      "visualAcceptance": "SATISFIED_BY_PRIOR_AUDIT_NO_PER_CYCLE_REAPPROVAL"
-    },
-    "B_WORLD": {
-      "status": "PASS_CLOSED",
-      "claim": "The browser can hold a world.",
-      "candidateCommit": "8ecf1492c03c92ea13bff7cc63e6fef4d9775f03",
-      "objectCommit": "13d1a61c55f77034d97070ea3866f9197d6c84bf",
-      "objectBlob": "d0e6238befcfd06dc7abc0fce91605b85a8846d2",
-      "qualificationReceiptCommentId": 5642189560,
-      "objectPath": "showroom/globe/h-earth/awards/living-objects/world-cycle-b.mjs",
-      "sourceBinding": {
-        "hEarthIndex": "b26aa16abfebf24bf0d77b62d36f7a11ade1ac5c",
-        "hEarthRenderer": "799d37cec5244e6aa19b7d94dffe37e182b85884",
-        "hEarthEnvironment": "3f3bc750b0e1a87531e0ea425dc0ac343fb18381",
-        "hEarthCompositor": "3764f0d53b0564de7a5e983bd339dda75017bc82"
-      },
-      "technicalQualification": "PASS_CLOSED",
-      "visualAcceptance": "SATISFIED_BY_PRIOR_AUDIT_NO_PER_CYCLE_REAPPROVAL"
-    },
-    "C_COHERENCE": {
-      "status": "PASS_CLOSED",
-      "claim": "Coherence can be inspected without pretending uncertainty is certainty.",
-      "objectPath": "showroom/globe/h-earth/awards/living-objects/coherence-cycle-c.mjs",
-      "sourceBinding": {
-        "coherenceDiagnosticPath": "products/coherence-diagnostic/index.html",
-        "coherenceDiagnosticBlob": "b0785f36d913c286dc19e042f33ea91afcd166bc"
-      },
-      "semanticBinding": {
-        "dimensions": ["SCOPE", "RECEIPTS", "RULES", "SCALE"],
-        "actionClasses": ["PROCEED", "HOLD", "CONTAIN"],
-        "numericScoreAuthorized": false,
-        "coherenceIndexMeaning": "QUALITATIVE_SOURCE_BOUND_ALIGNMENT_INDEX",
-        "scoreMeaning": "BOUNDED_ACTION_CLASSIFICATION_NOT_A_NUMERIC_EFFICACY_SCORE"
-      },
-      "technicalQualification": "PASS_CLOSED",
-      "visualAcceptance": "SATISFIED_BY_PRIOR_AUDIT_NO_PER_CYCLE_REAPPROVAL"
-    },
-    "D_TRUST": {
-      "status": "PASS_CLOSED",
-      "claim": "Software should have to earn the right to say it worked.",
-      "objectPath": "showroom/globe/h-earth/awards/living-objects/trust-cycle-d.mjs",
-      "sourceBinding": {
-        "governanceIndexPath": "governance/index.html",
-        "governanceIndexBlob": "9b216d8f86e5dbc76794ab01ce967d3e9357ef21",
-        "governanceRuntimePath": "governance/governance.js",
-        "governanceRuntimeBlob": "d4404826317739dca929f046c960fd5fd11f6995",
-        "evidenceIndexPath": "evidence/index.html",
-        "evidenceIndexBlob": "69b15800b1d7ef044a1ab7e77b84861bdd81602f",
-        "evidenceConditionPath": "evidence/current-public-condition.mjs",
-        "evidenceConditionBlob": "b2d4231a984da4579ad71528dd1276df023fd1aa"
-      },
-      "semanticBinding": {
-        "authorityProgression": ["INTENT", "EXECUTION", "VERIFICATION", "EVIDENCE", "AUTHORIZED_CLAIM"],
-        "boundedDispositions": ["HOLD", "DENY", "FAIL_CLOSED", "AUTHORIZED"],
-        "executionImpliesSuccess": false,
-        "executionImpliesClaimAuthority": false,
-        "authorizedClaimRequires": ["VERIFICATION", "EVIDENCE"]
-      },
-      "technicalQualification": "PASS_CLOSED",
-      "visualAcceptance": "SATISFIED_BY_PRIOR_AUDIT_NO_PER_CYCLE_REAPPROVAL"
-    },
-    "E_ESTATE": {
-      "status": "PASS_CLOSED",
-      "claim": "The surprise is not one feature. It is that the pieces belong together.",
-      "objectPath": "showroom/globe/h-earth/awards/living-objects/estate-cycle-e.mjs",
-      "sourceBinding": {
-        "compassPath": "index.html",
-        "compassBlob": "3a684cf4f4aedcfa2c76fa2686fb4c733d5903bb",
-        "hEarthPath": "showroom/globe/h-earth/index.html",
-        "hEarthBlob": "f4fa5df980c639184352d978909532dc8f1bcbd8",
-        "charactersPath": "characters/index.html",
-        "charactersBlob": "6bebd977905ec9c9d7b717a4ea4305688e82aa03",
-        "coherencePath": "products/coherence-diagnostic/index.html",
-        "coherenceBlob": "b0785f36d913c286dc19e042f33ea91afcd166bc",
-        "lawsPath": "laws/index.html",
-        "lawsBlob": "d6de5558a6ba38e66ad6284a80c03de67682628b",
-        "governancePath": "governance/index.html",
-        "governanceBlob": "9b216d8f86e5dbc76794ab01ce967d3e9357ef21"
-      },
-      "semanticBinding": {
-        "estateElements": ["COMPASS", "H_EARTH", "CHARACTERS", "COHERENCE", "LAWS", "GOVERNANCE"],
-        "roleClasses": ["ORIENTATION", "WORLD", "ENCOUNTER", "INSPECTION", "CONSTRAINT", "AUTHORIZATION"],
-        "relationKinds": ["ORIENTS_TO", "INSPECTS_WITHIN", "CONSTRAINS_WITHIN", "BOUNDS_CLAIMS_FOR", "SHARES_ESTATE_WITH"],
-        "relationIsClaim": true,
-        "identicalMaturityImplied": false,
-        "identicalAuthorityImplied": false,
-        "completionEquivalenceImplied": false
-      },
-      "technicalQualification": "PASS_CLOSED",
-      "visualAcceptance": "SATISFIED_BY_PRIOR_AUDIT_NO_PER_CYCLE_REAPPROVAL"
-    },
-    "F_SHARED_COMPOSITION": {
-      "status": "PASS_CLOSED",
-      "claim": "Five independently closed living objects compose into one shared Awards carousel without losing their identities.",
-      "compositionPath": "showroom/globe/h-earth/awards/living-objects/shared-carousel-cycle-f.mjs",
-      "surfacePath": "showroom/globe/h-earth/awards/index.html",
-      "verifierPath": "showroom/globe/h-earth/awards/qualification/verify-shared-carousel-cycle-f.mjs",
-      "preservedObjectBlobs": {
-        "experience": "8ea491a1936ec5e5d6dbe9f31d7e73658e2a6494",
-        "world": "d0e6238befcfd06dc7abc0fce91605b85a8846d2",
-        "coherence": "3d1e43417d915ca81a4a4c827f65543e5b4a4ddd",
-        "trust": "efa3d115080c831966b6c4d292a1ef2eb4150e4b",
-        "estate": "fd1899c7c156ccffa36dfd8177e30f093e335643"
-      },
-      "semanticBinding": {
-        "livingObjects": ["EXPERIENCE", "WORLD", "COHERENCE", "TRUST", "ESTATE"],
-        "allIndependentlyClosed": true,
-        "objectIdentityLost": false,
-        "maxActiveLivingObjectInstances": 1,
-        "rearHeavyRuntime": false,
-        "inactiveTeardown": true,
-        "exactHashFocusRestReturn": true,
-        "swipeDragTraversal": true,
-        "rearCardTapToFront": true,
-        "activeCardSelectToReader": true,
-        "keyboardTraversal": true,
-        "reducedMotionEquivalent": true,
-        "bottomTrophyCarouselRedesigned": false
-      },
-      "technicalQualification": "PASS_CLOSED",
-      "visualAcceptance": "REQUIRES_FINAL_CYCLE_F_COMPOSITION_REVIEW_BEFORE_DEPLOYMENT_PUBLICATION"
-    }
+    "A_EXPERIENCE": {"status":"SUCCESSOR_REPLACED_TRUE_3D","objectPath":"showroom/globe/h-earth/awards/living-objects/experience-cycle-a.mjs","recognizableObject":"MIRRORLAND_WINDOW","renderer":"WEBGL_3D","webglContexts":1,"paneCount":21,"signatureEvent":"OPAQUE_CATHEDRAL_GLASS_TO_CLEAR_AUDRALIA_TO_OPAQUE"},
+    "B_WORLD": {"status":"SUCCESSOR_REPLACED_TRUE_3D","objectPath":"showroom/globe/h-earth/awards/living-objects/world-cycle-b.mjs","recognizableObject":"H_EARTH_AUDRALIA_WORLD","renderer":"WEBGL_3D","webglContexts":1,"shorelineProvider":"getHEarth3DSharedShorelineBoundary","signatureEvent":"ENVIRONMENT_DEPTH_RESOLVE"},
+    "C_COHERENCE": {"status":"SUCCESSOR_REPLACED_TRUE_3D","objectPath":"showroom/globe/h-earth/awards/living-objects/coherence-cycle-c.mjs","recognizableObject":"BRAIN","renderer":"WEBGL_3D_QUALIFIED_GLB","webglContexts":1,"qualifiedAsset":"Allen_M_Brain.glb","expectedMeshes":283,"expectedTriangles":656268,"geometryMutationAuthorized":false,"signatureEvent":"NEURAL_SYNCHRONIZATION"},
+    "D_TRUST": {"status":"SUCCESSOR_REPLACED_TRUE_3D","objectPath":"showroom/globe/h-earth/awards/living-objects/trust-cycle-d.mjs","recognizableObject":"NINE_SUMMITS","renderer":"WEBGL_3D_PROCEDURAL_MASSIF","webglContexts":1,"summitCount":9,"signatureEvent":"EARNED_ASCENT_REVEAL"},
+    "E_ESTATE": {"status":"SUCCESSOR_REPLACED_TRUE_3D","objectPath":"showroom/globe/h-earth/awards/living-objects/estate-cycle-e.mjs","recognizableObject":"HOUSE_MANOR","renderer":"WEBGL_3D_DONOR_MESH","webglContexts":1,"neutralBuilder":"buildNeutralMesh","gothicBuilder":"buildPhase1DetailMesh","roofStampedWindows":false,"signatureEvent":"STRUCTURAL_ASSEMBLY"},
+    "F_SHARED_COMPOSITION": {"status":"PRESERVED_BYTE_IDENTICAL","compositionPath":"showroom/globe/h-earth/awards/living-objects/shared-carousel-cycle-f.mjs","blob":"eed0c1782cb258d03e4eb740b86d95e6ed9fd2dc","maxActiveLivingObjectInstances":1,"rearHeavyRuntime":false,"inactiveTeardown":true}
+  },
+  "true3DSuccessor": {
+    "operationId":"AWARDS_TRUE_3D_LIVING_OBJECT_SUCCESSOR_20260912_002",
+    "lockGeneration":2146,
+    "status":"CANDIDATE_READY_FOR_EXACT_QUALIFICATION",
+    "functionalBearing":"ESE",
+    "primitiveRequirements":["E","S"],
+    "frozenCrosswalk":{"experience":"MIRRORLAND_WINDOW","world":"H_EARTH_AUDRALIA_WORLD","coherence":"BRAIN","trust":"NINE_SUMMITS","estate":"HOUSE_MANOR"},
+    "mediumLaw":"ACTIVE_OBJECT_MUST_BE_REAL_WEBGL_3D",
+    "twoDimensionalSubstituteObjectsForbidden":true,
+    "generatedImageAssetsIntroduced":false,
+    "awardsIndexPreservedBlob":"1e7317a6543e21a74ceaba208d027bc6ff79267a",
+    "sharedCarouselPreservedBlob":"eed0c1782cb258d03e4eb740b86d95e6ed9fd2dc",
+    "maxActiveLivingObjectInstances":1,
+    "webglContextsPerActiveObject":1,
+    "rearHeavyRuntime":false,
+    "inactiveTeardown":true,
+    "deploymentPublicationAuthorized":false,
+    "verifierPath":"showroom/globe/h-earth/awards/qualification/verify-recognizable-estate-object-successor-v1.mjs"
   },
   "invariants": {
-    "cycleOrder": ["A_EXPERIENCE", "B_WORLD", "C_COHERENCE", "D_TRUST", "E_ESTATE", "F_SHARED_COMPOSITION"],
-    "priorClosedCyclesReadOnly": true,
-    "coherenceDiagnosticProductMutationAuthorized": false,
-    "numericCoherenceScoreClaimAuthorized": false,
-    "trustSourceMutationAuthorized": false,
-    "executionAloneAuthorizesTrustClaim": false,
-    "estateSourceMutationAuthorized": false,
-    "estateEqualMaturityClaimAuthorized": false,
-    "estateEqualAuthorityClaimAuthorized": false,
-    "bottomTrophyCarouselMutationAuthorized": false,
-    "prematureMergeAuthorized": false,
-    "deploymentPublicationAuthorized": false
-  },
-  "recognizableEstateObjectSuccessor": {
-    "operationId": "AWARDS_RECOGNIZABLE_ESTATE_OBJECT_SUCCESSOR_20260912_001",
-    "lockGeneration": 2134,
-    "governingHead": "56c1630070b869f5e3a2d91e53a0812fd885a046",
-    "status": "CANDIDATE_READY_FOR_EXACT_QUALIFICATION",
-    "frozenIssue": 3145,
-    "frozenCrosswalk": {
-      "experience": "MIRRORLAND_WINDOW",
-      "world": "H_EARTH_AUDRALIA_WORLD",
-      "coherence": "BRAIN",
-      "trust": "NINE_SUMMITS",
-      "estate": "HOUSE_MANOR"
-    },
-    "signatureEvents": {
-      "experience": "OPAQUE_CATHEDRAL_GLASS_TO_CLEAR_AUDRALIA_TO_OPAQUE",
-      "world": "ENVIRONMENT_DEPTH_RESOLVE",
-      "coherence": "NEURAL_SYNCHRONIZATION",
-      "trust": "EARNED_ASCENT_REVEAL",
-      "estate": "STRUCTURAL_ASSEMBLY"
-    },
-    "oneEventPerObject": true,
-    "sharedCarouselPreserved": true,
-    "awardsIndexPreserved": true,
-    "cardCopyPreserved": true,
-    "readerPreserved": true,
-    "bottomTrophyCarouselPreserved": true,
-    "maxActiveLivingObjectInstances": 1,
-    "rearHeavyRuntime": false,
-    "inactiveTeardown": true,
-    "reducedMotionEquivalent": true,
-    "generatedImageAssetsIntroduced": false,
-    "deploymentPublicationAuthorized": false,
-    "verifierPath": "showroom/globe/h-earth/awards/qualification/verify-recognizable-estate-object-successor-v1.mjs"
+    "cardCopyPreserved":true,"readerPreserved":true,"bottomTrophyCarouselPreserved":true,"carouselPhysicsPreserved":true,
+    "awardsIndexMutationAuthorized":false,"sharedCarouselMutationAuthorized":false,"generatedImagesAuthorized":false,"deploymentPublicationAuthorized":false
   }
 }

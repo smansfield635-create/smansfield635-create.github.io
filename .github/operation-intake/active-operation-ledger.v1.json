@@ -1635,78 +1635,6 @@
       "scopeHash": "2d8e31bab5c9bfc7ca27a7c9ba88a8d1b17e79867086159dd335ef376f2f4f93",
       "state": "ADMITTED_LOCKED"
     },
-    "30540ae1b0d9b0bd25e4af93f8e2978d33e34833a234374e83764050933b8a50": {
-      "governingHead": "f1204cd375181ae611abe0766187f7871b3521a4",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "f1204cd375181ae611abe0766187f7871b3521a4",
-          "lockGeneration": 2169,
-          "lockScope": "H_EARTH:AUDRALIA:CLOUD_PRESENTATION:ADVANCED_GLOBAL_POPULATION:V1",
-          "operationId": "AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_CURRENT_MAIN_SUCCESSOR_V1_20260912_001",
-          "procedureLocatorDigest": "013ad58ee712528e77e038b4bcb81157d1601b91e4863caa572634278d23e7f9",
-          "requestDigest": "d77269bdafade571d351b9fabe7e52fb4a6d20088f7d91db948dc4941f07f46f",
-          "scopeHash": "30540ae1b0d9b0bd25e4af93f8e2978d33e34833a234374e83764050933b8a50"
-        },
-        "bindingDigest": "acd11879be6078d18e384e0ad9c965ee682795c5446e8564858fa21198ac3541",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "1bd80f9f746902078ea9c2c81e3459532ede5e8d",
-          "observedLockRefHead": "eb685d016c2755391344115bdf70089f2f10726f"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "0b2ffa80f53dca97dfe1641a8c1cc2f7965e2c6c96e79966ccf7b89656ef1996",
-          "commentId": 5648128923,
-          "issueNumber": 3192,
-          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transitionIdentity": {
-          "predecessor": {
-            "governingHead": "152be0c1d318dde932c8d1ad9fbecbe7bbce7ccb",
-            "lockGeneration": 2161,
-            "lockScope": "H_EARTH:AUDRALIA:CLOUD_PRESENTATION:ADVANCED_GLOBAL_POPULATION:V1",
-            "operationId": "AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_V1_20260912_001"
-          },
-          "successor": {
-            "governingHead": "f1204cd375181ae611abe0766187f7871b3521a4",
-            "lockGeneration": 2169,
-            "lockScope": "H_EARTH:AUDRALIA:CLOUD_PRESENTATION:ADVANCED_GLOBAL_POPULATION:V1",
-            "operationId": "AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_CURRENT_MAIN_SUCCESSOR_V1_20260912_001"
-          },
-          "transitionId": "AUDRALIA_CLOUD_GEN2161_TO_F1204CD_CONTINUITY_20260912_001"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
-      },
-      "lockGeneration": 2169,
-      "lockScope": "H_EARTH:AUDRALIA:CLOUD_PRESENTATION:ADVANCED_GLOBAL_POPULATION:V1",
-      "operationId": "AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_CURRENT_MAIN_SUCCESSOR_V1_20260912_001",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "152be0c1d318dde932c8d1ad9fbecbe7bbce7ccb",
-        "lockGeneration": 2161,
-        "lockScope": "H_EARTH:AUDRALIA:CLOUD_PRESENTATION:ADVANCED_GLOBAL_POPULATION:V1",
-        "operationId": "AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_V1_20260912_001",
-        "preservedEvidenceRefs": [
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/3192#issuecomment-5647621700",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/3193#issuecomment-5647880786",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/3193#issuecomment-5648095570",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/3205",
-          "git:91e5fcecf291d419ffedad75ce9d885e07d69ca6"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "AUDRALIA_CLOUD_GEN2161_TO_F1204CD_CONTINUITY_20260912_001"
-      },
-      "procedureLocatorDigest": "013ad58ee712528e77e038b4bcb81157d1601b91e4863caa572634278d23e7f9",
-      "released": false,
-      "requestDigest": "d77269bdafade571d351b9fabe7e52fb4a6d20088f7d91db948dc4941f07f46f",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "30540ae1b0d9b0bd25e4af93f8e2978d33e34833a234374e83764050933b8a50",
-      "state": "ADMITTED_LOCKED"
-    },
     "30aafa8cd70c2229714d2737d9e771d42657aa675aaf3505acceaf10d6c71bc1": {
       "governingHead": "9662c03b106387ff8046e191867214dd1f947a91",
       "lockGeneration": 1588,
@@ -50983,6 +50911,116 @@
         "transitionId": "AUDRALIA_CLOUD_GEN2161_TO_F1204CD_CONTINUITY_20260912_001"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "f1204cd375181ae611abe0766187f7871b3521a4",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "f1204cd375181ae611abe0766187f7871b3521a4",
+          "lockGeneration": 2169,
+          "lockScope": "H_EARTH:AUDRALIA:CLOUD_PRESENTATION:ADVANCED_GLOBAL_POPULATION:V1",
+          "operationId": "AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_CURRENT_MAIN_SUCCESSOR_V1_20260912_001",
+          "procedureLocatorDigest": "013ad58ee712528e77e038b4bcb81157d1601b91e4863caa572634278d23e7f9",
+          "requestDigest": "d77269bdafade571d351b9fabe7e52fb4a6d20088f7d91db948dc4941f07f46f",
+          "scopeHash": "30540ae1b0d9b0bd25e4af93f8e2978d33e34833a234374e83764050933b8a50"
+        },
+        "bindingDigest": "acd11879be6078d18e384e0ad9c965ee682795c5446e8564858fa21198ac3541",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "1bd80f9f746902078ea9c2c81e3459532ede5e8d",
+          "observedLockRefHead": "eb685d016c2755391344115bdf70089f2f10726f"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "0b2ffa80f53dca97dfe1641a8c1cc2f7965e2c6c96e79966ccf7b89656ef1996",
+          "commentId": 5648128923,
+          "issueNumber": 3192,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transitionIdentity": {
+          "predecessor": {
+            "governingHead": "152be0c1d318dde932c8d1ad9fbecbe7bbce7ccb",
+            "lockGeneration": 2161,
+            "lockScope": "H_EARTH:AUDRALIA:CLOUD_PRESENTATION:ADVANCED_GLOBAL_POPULATION:V1",
+            "operationId": "AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_V1_20260912_001"
+          },
+          "successor": {
+            "governingHead": "f1204cd375181ae611abe0766187f7871b3521a4",
+            "lockGeneration": 2169,
+            "lockScope": "H_EARTH:AUDRALIA:CLOUD_PRESENTATION:ADVANCED_GLOBAL_POPULATION:V1",
+            "operationId": "AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_CURRENT_MAIN_SUCCESSOR_V1_20260912_001"
+          },
+          "transitionId": "AUDRALIA_CLOUD_GEN2161_TO_F1204CD_CONTINUITY_20260912_001"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "f1204cd375181ae611abe0766187f7871b3521a4",
+          "lockGeneration": 2169,
+          "lockScope": "H_EARTH:AUDRALIA:CLOUD_PRESENTATION:ADVANCED_GLOBAL_POPULATION:V1",
+          "operationId": "AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_CURRENT_MAIN_SUCCESSOR_V1_20260912_001",
+          "procedureLocatorDigest": "013ad58ee712528e77e038b4bcb81157d1601b91e4863caa572634278d23e7f9",
+          "requestDigest": "d77269bdafade571d351b9fabe7e52fb4a6d20088f7d91db948dc4941f07f46f",
+          "scopeHash": "30540ae1b0d9b0bd25e4af93f8e2978d33e34833a234374e83764050933b8a50"
+        },
+        "bindingDigest": "72eabb26be6e25ce2d30147f2ec27c33bae16fdfc0725a4497c1b70706154569",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "fffc70d4f1cce59b87faff9b43903c8642a6336f",
+          "observedLockRefHead": "e5d95a3964e7001a0f7358409013fe0297605fbb"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "ff0ee79432127371f702638c6e9882f960615782cc8433f3ba4ed82611d77b7d",
+          "commentId": 5648220567,
+          "issueNumber": 3192,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "f1204cd375181ae611abe0766187f7871b3521a4",
+          "lockGeneration": 2169,
+          "lockScope": "H_EARTH:AUDRALIA:CLOUD_PRESENTATION:ADVANCED_GLOBAL_POPULATION:V1",
+          "operationId": "AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_CURRENT_MAIN_SUCCESSOR_V1_20260912_001",
+          "released": true,
+          "scopeHash": "30540ae1b0d9b0bd25e4af93f8e2978d33e34833a234374e83764050933b8a50",
+          "state": "TERMINAL",
+          "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2169,
+      "lockScope": "H_EARTH:AUDRALIA:CLOUD_PRESENTATION:ADVANCED_GLOBAL_POPULATION:V1",
+      "operationId": "AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_CURRENT_MAIN_SUCCESSOR_V1_20260912_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "152be0c1d318dde932c8d1ad9fbecbe7bbce7ccb",
+        "lockGeneration": 2161,
+        "lockScope": "H_EARTH:AUDRALIA:CLOUD_PRESENTATION:ADVANCED_GLOBAL_POPULATION:V1",
+        "operationId": "AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_V1_20260912_001",
+        "preservedEvidenceRefs": [
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/3192#issuecomment-5647621700",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/3193#issuecomment-5647880786",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/3193#issuecomment-5648095570",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/3205",
+          "git:91e5fcecf291d419ffedad75ce9d885e07d69ca6"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "AUDRALIA_CLOUD_GEN2161_TO_F1204CD_CONTINUITY_20260912_001"
+      },
+      "procedureLocatorDigest": "013ad58ee712528e77e038b4bcb81157d1601b91e4863caa572634278d23e7f9",
+      "released": true,
+      "requestDigest": "d77269bdafade571d351b9fabe7e52fb4a6d20088f7d91db948dc4941f07f46f",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "30540ae1b0d9b0bd25e4af93f8e2978d33e34833a234374e83764050933b8a50",
+      "state": "TERMINAL",
+      "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
     }
   ]
 }

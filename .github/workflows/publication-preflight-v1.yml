@@ -141,10 +141,61 @@ jobs:
             --receipt "$RECEIPT"
           jq -e '.schema=="PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1" and .result=="PREFLIGHT_PASS" and .deploymentPerformed==false' "$RECEIPT" >/dev/null
 
+      - name: Capture browser visual evidence
+        if: ${{ steps.surface.outputs.runtime == 'true' && inputs.surface_id == 'awards' }}
+        env:
+          STAGE: ${{ runner.temp }}/pages-site
+          SCREENSHOT: ${{ runner.temp }}/publication-preflight-screenshot.png
+        shell: bash
+        run: |
+          set -euo pipefail
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          test -n "$CHROME_PATH"
+          node --input-type=module <<'NODE'
+          import {spawn} from 'node:child_process';
+          import puppeteer from 'puppeteer-core';
+
+          const stage=process.env.STAGE;
+          const screenshot=process.env.SCREENSHOT;
+          const chrome=process.env.CHROME_PATH;
+          const server=spawn('python3',['-m','http.server','4173','--bind','127.0.0.1','--directory',stage],{stdio:'ignore'});
+          const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+          let browser;
+          try{
+            for(let i=0;i<30;i++){
+              try{const r=await fetch('http://127.0.0.1:4173/showroom/globe/h-earth/awards/');if(r.ok)break;}catch{}
+              await sleep(200);
+            }
+            browser=await puppeteer.launch({executablePath:chrome,headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--use-gl=swiftshader']});
+            const page=await browser.newPage();
+            await page.setViewport({width:412,height:915,deviceScaleFactor:2,isMobile:true,hasTouch:true});
+            await page.goto('http://127.0.0.1:4173/showroom/globe/h-earth/awards/',{waitUntil:'networkidle0',timeout:45000});
+            await page.waitForSelector('[data-achievement-stage]',{timeout:15000});
+            const next='[data-achievement-next]';
+            await page.waitForSelector(next,{timeout:10000});
+            await page.click(next);
+            await page.waitForFunction(()=>document.querySelector('[data-achievement-stage] .instrument-card[data-story="world"]')?.getAttribute('aria-current')==='true',{timeout:10000});
+            await sleep(1400);
+            const card=await page.$('[data-achievement-stage] .instrument-card[data-story="world"]');
+            if(!card)throw new Error('WORLD_CARD_NOT_FOUND_FOR_SCREENSHOT');
+            const box=await card.boundingBox();
+            if(!box)throw new Error('WORLD_CARD_NOT_VISIBLE_FOR_SCREENSHOT');
+            const clip={x:Math.max(0,box.x),y:Math.max(0,box.y),width:Math.min(box.width,412-Math.max(0,box.x)),height:Math.min(box.height,915-Math.max(0,box.y))};
+            if(clip.width<120||clip.height<120)throw new Error('WORLD_SCREENSHOT_CLIP_TOO_SMALL');
+            await page.screenshot({path:screenshot,clip});
+          } finally {
+            if(browser)await browser.close();
+            server.kill('SIGTERM');
+          }
+          NODE
+          test -s "$SCREENSHOT"
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: publication-fast-preflight-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/publication-preflight-receipt.json
+          path: |
+            ${{ runner.temp }}/publication-preflight-receipt.json
+            ${{ runner.temp }}/publication-preflight-screenshot.png
           if-no-files-found: error
           retention-days: 90

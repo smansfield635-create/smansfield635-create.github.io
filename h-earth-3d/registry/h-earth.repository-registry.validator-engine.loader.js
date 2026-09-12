@@ -1,33 +1,33 @@
 /**
- * H-Earth repository registry validator dependency loader v27 successor.
- * Preserves the exact v26 Awards cinematic epilogue successor through a
- * delegated predecessor and adds only exact Awards Shared Carousel Cycle F path recognition.
+ * H-Earth repository registry validator dependency loader v28 successor.
+ * Preserves the exact v27 Awards Shared Carousel Cycle F successor through a
+ * delegated predecessor and adds only exact Awards recognizable-successor verifier path recognition.
  */
 import {
   loadHEarthRepositoryRegistryValidatorDependencies as loadBaseDependencies,
   runHEarthC2R1MC5AutomaticRegistryPreflight
-} from './h-earth.repository-registry.validator-engine.loader.pre-awards-shared-carousel-cycle-f-path-recognition.js';
+} from './h-earth.repository-registry.validator-engine.loader.pre-awards-recognizable-successor-verifier-path-recognition.js';
 import registryFacade, {
-  verifyHEarthAwardsSharedCarouselCycleFPathRecognition
-} from './accepted-amendments/h-earth.repository-registry.awards-shared-carousel-cycle-f-path-recognition.js';
+  verifyHEarthAwardsRecognizableSuccessorVerifierPathRecognition
+} from './accepted-amendments/h-earth.repository-registry.awards-recognizable-successor-verifier-path-recognition.js';
 import { deepFreeze } from './h-earth.repository-registry.validator-engine.identity.js';
 
 export function loadHEarthRepositoryRegistryValidatorDependencies() {
   const base=loadBaseDependencies();
-  const cycleFVerification=verifyHEarthAwardsSharedCarouselCycleFPathRecognition();
+  const verification=verifyHEarthAwardsRecognizableSuccessorVerifierPathRecognition();
   const registryInstance=registryFacade.getHEarthRepositoryRegistryInstance();
   const discovery=registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
   const successorChecks=deepFreeze({
-    predecessorLoaderIdentityPreserved:base.loaderId==='H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v26_AWARDS_CINEMATIC_EPILOGUE_EXACT_PATH_RECOGNITION_SUCCESSOR',
+    predecessorLoaderIdentityPreserved:base.loaderId==='H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v27_AWARDS_SHARED_CAROUSEL_CYCLE_F_EXACT_PATH_RECOGNITION_SUCCESSOR',
     predecessorIdentityStatePreserved:base.identityVerified===false,
     predecessorSuccessorIntegrityPreserved:base.successorIntegrityVerified===true,
-    cycleFPathRecognitionEligible:cycleFVerification.eligible===true,
-    cycleFExactFourPathsResolved:cycleFVerification.checks.exactTargetPathCount===true&&cycleFVerification.checks.allTargetPathsResolve===true,
-    cycleFTruthfulAbsentOccurrences:cycleFVerification.checks.allOccurrencesAbsentAtGoverningMain===true,
-    cycleFExactPathOnly:cycleFVerification.checks.exactPathOnly===true&&cycleFVerification.checks.noPrefixRegistration===true,
-    cycleFAuditOnlyNoAuthorityLeak:cycleFVerification.checks.auditOnly===true&&cycleFVerification.checks.pathResolutionOnly===true&&cycleFVerification.checks.noCycleFMutationAuthority===true&&cycleFVerification.checks.noPreflightWaiverAuthority===true&&cycleFVerification.checks.noPublicationAuthority===true,
-    frozenCycleFCandidateBound:cycleFVerification.checks.frozenCandidateBound===true,
-    failedPreflightBound:cycleFVerification.checks.failedPreflightBound===true,
+    pathRecognitionEligible:verification.eligible===true,
+    exactOnePathResolved:verification.checks.exactTargetPathCount===true&&verification.checks.allTargetPathsResolve===true,
+    truthfulAbsentOccurrence:verification.checks.allOccurrencesAbsentAtGoverningMain===true,
+    exactPathOnly:verification.checks.exactPathOnly===true&&verification.checks.noPrefixRegistration===true,
+    auditOnlyNoAuthorityLeak:verification.checks.auditOnly===true&&verification.checks.pathResolutionOnly===true&&verification.checks.noProductMutationAuthority===true&&verification.checks.noPreflightWaiverAuthority===true&&verification.checks.noPublicationAuthority===true,
+    frozenCandidateBound:verification.checks.frozenCandidateBound===true,
+    failedPreflightBound:verification.checks.failedPreflightBound===true,
     registryIdPreserved:registryInstance.registryId===base.registryInstance.registryId,
     registryVersionPreserved:registryInstance.registryVersion===base.registryInstance.registryVersion,
     schemaIdPreserved:registryInstance.schemaId===base.registryInstance.schemaId,
@@ -39,16 +39,16 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
   const successorIntegrityVerified=Object.values(successorChecks).every(Boolean);
   return deepFreeze({
     ...base,
-    loaderId:'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v27_AWARDS_SHARED_CAROUSEL_CYCLE_F_EXACT_PATH_RECOGNITION_SUCCESSOR',
+    loaderId:'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v28_AWARDS_RECOGNIZABLE_SUCCESSOR_VERIFIER_EXACT_PATH_RECOGNITION_SUCCESSOR',
     registryFacade,registryInstance,discovery,
-    identityChecks:deepFreeze({...base.identityChecks,awardsSharedCarouselCycleFPathRecognition:cycleFVerification.eligible===true,awardsSharedCarouselCycleFPathRecognitionSuccessorIntegrity:successorIntegrityVerified}),
+    identityChecks:deepFreeze({...base.identityChecks,awardsRecognizableSuccessorVerifierPathRecognition:verification.eligible===true,awardsRecognizableSuccessorVerifierPathRecognitionSuccessorIntegrity:successorIntegrityVerified}),
     identityVerified:base.identityVerified,
     inheritedIdentityPreserved:base.identityVerified===false,
     successorIntegrityVerified,
-    awardsSharedCarouselCycleFPathRecognitionSuccessorChecks:successorChecks,
-    awardsSharedCarouselCycleFPathRecognitionVerification:cycleFVerification,
-    boundary:deepFreeze({...base.boundary,awardsSharedCarouselCycleFExactPathRecognitionOnly:true,awardsSharedCarouselCycleFProductMutationAuthorityCreated:false,awardsSharedCarouselCycleFQualificationMutationAuthorityCreated:false,awardsSharedCarouselCycleFPrefixWideRegistrationAuthorityCreated:false,awardsSharedCarouselCycleFPreflightWaiverAuthorityCreated:false,awardsSharedCarouselCycleFDeploymentPublicationAuthorityCreated:false}),
-    stoppingCondition:deepFreeze({...base.stoppingCondition,awardsSharedCarouselCycleFPathRecognitionLoaded:true,awardsSharedCarouselCycleFPathRecognitionSuccessorIntegrityVerified:successorIntegrityVerified,inheritedIdentityStatePreserved:true,awardsSharedCarouselCycleFProductMutationAuthorized:false,awardsSharedCarouselCycleFQualificationMutationAuthorized:false,awardsSharedCarouselCycleFPrefixWideRegistrationAuthorized:false,awardsSharedCarouselCycleFPreflightWaiverAuthorized:false,awardsSharedCarouselCycleFDeploymentPublicationAuthorized:false})
+    awardsRecognizableSuccessorVerifierPathRecognitionSuccessorChecks:successorChecks,
+    awardsRecognizableSuccessorVerifierPathRecognitionVerification:verification,
+    boundary:deepFreeze({...base.boundary,awardsRecognizableSuccessorVerifierExactPathRecognitionOnly:true,awardsRecognizableSuccessorVerifierProductMutationAuthorityCreated:false,awardsRecognizableSuccessorVerifierQualificationMutationAuthorityCreated:false,awardsRecognizableSuccessorVerifierPrefixWideRegistrationAuthorityCreated:false,awardsRecognizableSuccessorVerifierPreflightWaiverAuthorityCreated:false,awardsRecognizableSuccessorVerifierDeploymentPublicationAuthorityCreated:false}),
+    stoppingCondition:deepFreeze({...base.stoppingCondition,awardsRecognizableSuccessorVerifierPathRecognitionLoaded:true,awardsRecognizableSuccessorVerifierPathRecognitionSuccessorIntegrityVerified:successorIntegrityVerified,inheritedIdentityStatePreserved:true,awardsRecognizableSuccessorVerifierProductMutationAuthorized:false,awardsRecognizableSuccessorVerifierQualificationMutationAuthorized:false,awardsRecognizableSuccessorVerifierPrefixWideRegistrationAuthorized:false,awardsRecognizableSuccessorVerifierPreflightWaiverAuthorized:false,awardsRecognizableSuccessorVerifierDeploymentPublicationAuthorized:false})
   });
 }
 export {runHEarthC2R1MC5AutomaticRegistryPreflight};

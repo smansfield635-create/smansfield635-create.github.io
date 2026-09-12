@@ -1,0 +1,164 @@
+{
+  "schema": "CANONICAL_NATIVE_AGENT_INVOCATION_CONTRACT_v1",
+  "status": "MANDATORY_FOR_ALL_REPOSITORY_TASKS",
+  "ownerDirectiveIssue": 3209,
+  "constitutionPath": "control-plane/whole-estate/characters-reconstruction-v1/compass-functional-coordinate-constitution.v1.json",
+  "constitutionBlob": "49e08bd13e09e70e9363e9c5e18c6f778288cbfe",
+  "identities": {
+    "N": {
+      "identity": "Alaric",
+      "function": "Navigation"
+    },
+    "E": {
+      "identity": "Elara",
+      "function": "Signal"
+    },
+    "S": {
+      "identity": "Tarian",
+      "function": "Continuity"
+    },
+    "W": {
+      "identity": "Soren",
+      "function": "Boundary"
+    }
+  },
+  "intermediateStations": "Twelve frozen adjacent compositions; not additional identities or sixteen independent workers.",
+  "requiredTaskClasses": [
+    "MATERIAL_GOVERNED_ENGINEERING",
+    "STATIC_EDITORIAL_MICRO",
+    "BOUNDED_PAGE_RELEASE",
+    "READ_ONLY_ADMINISTRATIVE",
+    "SOURCE_READBACK",
+    "DIAGNOSTIC",
+    "QUALIFICATION",
+    "ADOPTION",
+    "PUBLICATION",
+    "CONTROL_PLANE"
+  ],
+  "unitOfInvocation": "One bounded task or unchanged continuing assignment; not one new worker per shell command or file read.",
+  "substantiveWorkWithoutInvocationAllowed": false,
+  "bootstrap": {
+    "purpose": "Discover the current mandatory invocation contract and invoke the correct existing function before substantive task work.",
+    "allowedReadPaths": [
+      "AI_ENTRYPOINT.json",
+      "AGENTS.md",
+      ".github/ai-router/agent-invocation/contract.v1.json",
+      "control-plane/whole-estate/characters-reconstruction-v1/compass-functional-coordinate-constitution.v1.json"
+    ],
+    "allowedObservations": [
+      "CURRENT_MAIN_IDENTITY",
+      "NATIVE_TOOL_AVAILABILITY"
+    ],
+    "allowsProductInspection": false,
+    "allowsRepositoryMutation": false,
+    "createsAuthority": false
+  },
+  "execution": {
+    "substrate": "EXISTING_CONNECTED_NATIVE_AGENT_TOOLS",
+    "mustActuallyInvoke": true,
+    "preferredWhenAvailable": [
+      "NATIVE_AGENT_SPAWN",
+      "NATIVE_AGENT_FOLLOWUP_FOR_EXISTING_INSTANCE"
+    ],
+    "persistentSeparateModelRequired": false,
+    "secondExecutorCreated": false,
+    "newIdentitiesAllowed": false,
+    "allFourAgentsEveryTaskRequired": false,
+    "directRoomWorkSubstitutesForAssignedAgentInvocation": false,
+    "actionsOrPassiveCIQualifiesAsAgent": false,
+    "unavailableDisposition": "NATIVE_AGENT_INVOCATION_UNAVAILABLE_STOP_SUBSTANTIVE_WORK"
+  },
+  "assignment": {
+    "required": [
+      "task identity",
+      "exact repository and governing head",
+      "frozen bearing and participating canonical identities",
+      "objective and required output",
+      "typed target and relationship",
+      "lifecycle phase",
+      "domain capability",
+      "explicit authority and prohibited scope",
+      "evidence and unresolved conditions",
+      "handoff"
+    ],
+    "freezeBeforeInvocation": true,
+    "authorityEffect": "NONE",
+    "opposingFunctions": "Separate assignments and decisions under OSL-1; preserve independent review.",
+    "continuation": "Reuse an actual invoked task only while its head, scope, authority and lifecycle assignment remain applicable; record a native followup for changed assignment."
+  },
+  "evidence": {
+    "schema": "CANONICAL_NATIVE_AGENT_EXECUTION_EVIDENCE_v1",
+    "validator": ".github/ai-router/agent-invocation/evidence-gate.v1.mjs",
+    "requiredStartProof": [
+      "frozen assignment digest",
+      "native invocation source event",
+      "native returned task identity"
+    ],
+    "requiredCompletionProof": [
+      "attributable native returned output",
+      "output digest and source event",
+      "independent native observer and source readback",
+      "unresolved conditions and handoff"
+    ],
+    "routeResolvedProvesExecution": false,
+    "admittedAndLockedProvesExecution": false,
+    "selfAuthoredInvokedBooleanProvesExecution": false,
+    "jsonStructureProvesSourceAuthenticity": false,
+    "independentObserverMustActuallyRun": true,
+    "sourceUnavailableDisposition": "EXECUTION_UNVERIFIED_DO_NOT_CLAIM_INVOCATION_OR_COMPLETION",
+    "fileOnlyValidationResult": "STRUCTURE_VALID_EXECUTION_UNVERIFIED",
+    "providedObservationComparisonResult": "MATCHES_PROVIDED_OBSERVATIONS",
+    "validatorCreatesAuthority": false,
+    "syntheticTestsProveActualInvocation": false
+  },
+  "requiredCheckpoints": [
+    "BEFORE_SUBSTANTIVE_REPOSITORY_TASK_WORK",
+    "BEFORE_NEW_OR_CHANGED_ASSIGNMENT",
+    "BEFORE_COMPLETION_OR_QUALIFICATION_CLAIM",
+    "BEFORE_ADOPTION_OR_PUBLICATION_CLAIM"
+  ],
+  "authoritySeparation": {
+    "functionalRouteExemptionExemptsNativeInvocation": false,
+    "readOnlyInvocationRequiresMutationIntake": false,
+    "staticInvocationRequiresMutationIntake": false,
+    "canonicalIntakeAndProjectAuthorityStillRequiredWhereApplicable": true,
+    "nativeInvocationGrantsMergeOrDeployment": false,
+    "unsuccessfulExecutionMayReleaseLock": true,
+    "authorityReducingDispositionsRemainAvailable": [
+      "FAIL_CLOSED",
+      "REJECTED_CLOSED",
+      "WITHDRAWN",
+      "SUPERSEDED",
+      "VOIDED",
+      "EXPIRED",
+      "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+    ]
+  },
+  "reporting": {
+    "mustName": [
+      "canonical function",
+      "actual native task identity",
+      "completed output or exact unresolved boundary"
+    ],
+    "mustSeparate": [
+      "ASSIGNED",
+      "INVOKED",
+      "RUNNING",
+      "RETURNED",
+      "INDEPENDENTLY_CHECKED"
+    ],
+    "allRepositoryAgentsCurrentlyEnforcedClaimAllowed": false
+  },
+  "hostEnforcement": {
+    "repositoryProcedureMandatory": true,
+    "hostOrConnectorInterpositionInstalled": false,
+    "globalBypassPreventionProven": false,
+    "gapId": "CANONICAL_NATIVE_AGENT_INVOCATION_HOST_ENFORCEMENT",
+    "closureRequires": [
+      "Repository entry policy adopted",
+      "Actual post-adoption tasks use canonical native assignments and independent source readback",
+      "Host or connector enforcement denies unmediated work or a bounded enforcement claim explicitly excludes those channels"
+    ]
+  },
+  "selfTest": ".github/ai-router/agent-invocation/self-test.v1.mjs"
+}

@@ -11,9 +11,23 @@
     "githubActionsAllowedAsExecutionTransport": false,
     "githubActionsAllowedForManualAgentDispatch": false,
     "githubActionsFixedCanonicalIntakeFallbackAllowed": true,
-    "githubActionsPermittedRoles": ["PASSIVE_CI_AFTER_REPOSITORY_CHANGE","HISTORICAL_EVIDENCE_INSPECTION","LATER_REPLAY_WHEN_SEPARATELY_AUTHORIZED","FIXED_CANONICAL_INTAKE_FALLBACK"],
-    "requiredExecutionPreference": ["CONNECTED_GITHUB_API_OR_NATIVE_AGENT_TOOLS","FIXED_CANONICAL_INTAKE_FALLBACK_WHEN_NATIVE_TRANSPORT_UNAVAILABLE","AUTHORIZED_CODESPACE_OR_DISPOSABLE_BUILDER","LOCAL_OR_EXTERNAL_EXACT_HEAD_EXECUTION_SUBSTRATE"],
-    "prohibited": ["DO_NOT_DISPATCH_GITHUB_ACTIONS_TO_PERFORM_GENERAL_AGENT_WORK","DO_NOT_USE_WORKFLOW_RUNS_AS_A_SUBSTITUTE_FOR_NATIVE_EXECUTION_EXCEPT_THE_REGISTERED_FIXED_CANONICAL_INTAKE_FALLBACK","DO_NOT_CREATE_SERIAL_ACTIONS_CARRIERS_WHEN_NATIVE_EXECUTION_IS_AVAILABLE"],
+    "githubActionsPermittedRoles": [
+      "PASSIVE_CI_AFTER_REPOSITORY_CHANGE",
+      "HISTORICAL_EVIDENCE_INSPECTION",
+      "LATER_REPLAY_WHEN_SEPARATELY_AUTHORIZED",
+      "FIXED_CANONICAL_INTAKE_FALLBACK"
+    ],
+    "requiredExecutionPreference": [
+      "CONNECTED_GITHUB_API_OR_NATIVE_AGENT_TOOLS",
+      "FIXED_CANONICAL_INTAKE_FALLBACK_WHEN_NATIVE_TRANSPORT_UNAVAILABLE",
+      "AUTHORIZED_CODESPACE_OR_DISPOSABLE_BUILDER",
+      "LOCAL_OR_EXTERNAL_EXACT_HEAD_EXECUTION_SUBSTRATE"
+    ],
+    "prohibited": [
+      "DO_NOT_DISPATCH_GITHUB_ACTIONS_TO_PERFORM_GENERAL_AGENT_WORK",
+      "DO_NOT_USE_WORKFLOW_RUNS_AS_A_SUBSTITUTE_FOR_NATIVE_EXECUTION_EXCEPT_THE_REGISTERED_FIXED_CANONICAL_INTAKE_FALLBACK",
+      "DO_NOT_CREATE_SERIAL_ACTIONS_CARRIERS_WHEN_NATIVE_EXECUTION_IS_AVAILABLE"
+    ],
     "failureDisposition": "FOR_CANONICAL_INTAKE_TRANSPORT_UNAVAILABILITY_USE_THE_REGISTERED_FIXED_CANONICAL_INTAKE_FALLBACK_WITH_THE_SAME_REQUEST_AND_PROCEDURE; OTHERWISE_REPORT_NATIVE_EXECUTION_SURFACE_UNAVAILABLE_AND_DO_NOT_FALL_BACK_TO_GITHUB_ACTIONS",
     "precedent": "Issue #678 three-tier Codespace execution substrate integration separates disposable builder/fresh-verifier execution from later GitHub Actions replay; Issue #3054 restores only the fixed canonical-intake workflow as a bounded transport fallback."
   },
@@ -47,13 +61,30 @@
     "intakeInvariant": "NO_MATERIAL_HUMAN_UNKNOWN_ENTERS_INTAKE_UNDECLARED",
     "defaultQuestionCount": 0,
     "autoResolveRepositoryFactsFirst": true,
-    "askOnlyIfAnswerCanChange": ["SCOPE","AUTHORITY_REQUEST","IMPLEMENTATION_DIRECTION","ACCEPTANCE","PUBLICATION"],
+    "askOnlyIfAnswerCanChange": [
+      "SCOPE",
+      "AUTHORITY_REQUEST",
+      "IMPLEMENTATION_DIRECTION",
+      "ACCEPTANCE",
+      "PUBLICATION"
+    ],
     "humanDispositionCreatesAuthority": false,
     "humanDispositionReplacesOperationLedger": false,
-    "separationLaw": {"humanDisposition":"WHAT_IS_INTENDED_OR_ACCEPTED","governance":"WHAT_IS_AUTHORIZED","evidence":"WHAT_IS_PROVEN","execution":"WHAT_OCCURRED"},
+    "separationLaw": {
+      "humanDisposition": "WHAT_IS_INTENDED_OR_ACCEPTED",
+      "governance": "WHAT_IS_AUTHORIZED",
+      "evidence": "WHAT_IS_PROVEN",
+      "execution": "WHAT_OCCURRED"
+    },
     "requiredBeforeCanonicalIntakeForGovernedMutation": true,
-    "completeResults": ["COMPLETE_NO_QUESTIONS_REQUIRED","COMPLETE_AFTER_USER_DISPOSITION"],
-    "failClosedResults": ["INCOMPLETE_HUMAN_INPUT_REQUIRED","INCOMPLETE_SCOPE_AMBIGUOUS"]
+    "completeResults": [
+      "COMPLETE_NO_QUESTIONS_REQUIRED",
+      "COMPLETE_AFTER_USER_DISPOSITION"
+    ],
+    "failClosedResults": [
+      "INCOMPLETE_HUMAN_INPUT_REQUIRED",
+      "INCOMPLETE_SCOPE_AMBIGUOUS"
+    ]
   },
   "pageMutationProportionality": {
     "schema": "PAGE_MUTATION_PROPORTIONALITY_POLICY_v1",
@@ -68,7 +99,12 @@
     "runtimeBehaviorAuthorityOrAmbiguousCanonicalAdmissionRequired": true,
     "ambiguityDisposition": "RUNTIME_OR_AUTHORITY",
     "mixedPathDisposition": "RUNTIME_OR_AUTHORITY",
-    "requiredStaticProofs": ["EXACT_HEAD","DECLARED_PATHS_ONLY","NO_EXECUTABLE_RUNTIME_DELTA","NO_UNRELATED_DIFF"]
+    "requiredStaticProofs": [
+      "EXACT_HEAD",
+      "DECLARED_PATHS_ONLY",
+      "NO_EXECUTABLE_RUNTIME_DELTA",
+      "NO_UNRELATED_DIFF"
+    ]
   },
   "publicationRelease": {
     "schema": "PUBLICATION_RELEASE_BINDING_v1",
@@ -76,8 +112,17 @@
     "deploymentCapabilityId": "PAGES_EXACT_HEAD_DEPLOY",
     "deploymentCapabilityRegistry": ".github/ai-router/workflow-dispatch-capability.v1.json",
     "deploymentWorkflow": ".github/workflows/pages-exact-head-deploy-v3.yml",
-    "boundedPageReleaseSequence": ["APPROVED_COMMIT","EXPLICIT_DEPLOYMENT","LIVE_EXACT_HEAD_VERIFICATION"],
-    "runtimeOrNewDevelopmentSequence": ["APPLICABLE_GOVERNANCE_AND_QUALIFICATION","APPROVED_COMMIT","EXPLICIT_DEPLOYMENT","LIVE_EXACT_HEAD_VERIFICATION"],
+    "boundedPageReleaseSequence": [
+      "APPROVED_COMMIT",
+      "EXPLICIT_DEPLOYMENT",
+      "LIVE_EXACT_HEAD_VERIFICATION"
+    ],
+    "runtimeOrNewDevelopmentSequence": [
+      "APPLICABLE_GOVERNANCE_AND_QUALIFICATION",
+      "APPROVED_COMMIT",
+      "EXPLICIT_DEPLOYMENT",
+      "LIVE_EXACT_HEAD_VERIFICATION"
+    ],
     "explicitDeploymentInput": "target_sha",
     "liveVerificationMarker": ".well-known/dgb-release.json",
     "successResult": "LIVE_EXACT_HEAD_VERIFIED",
@@ -94,8 +139,13 @@
   "operationIntakeGate": {
     "locator": ".github/operation-intake/locator.v1.json",
     "mandatoryBeforeMutationRouting": false,
-    "requiredForMutationClasses": ["RUNTIME_OR_AUTHORITY"],
-    "notRequiredForMutationClasses": ["STATIC_EDITORIAL_MICRO","BOUNDED_PAGE_RELEASE"],
+    "requiredForMutationClasses": [
+      "RUNTIME_OR_AUTHORITY"
+    ],
+    "notRequiredForMutationClasses": [
+      "STATIC_EDITORIAL_MICRO",
+      "BOUNDED_PAGE_RELEASE"
+    ],
     "humanDispositionCompletenessRequired": true,
     "humanDispositionInvariant": "NO_MATERIAL_HUMAN_UNKNOWN_ENTERS_INTAKE_UNDECLARED",
     "staleHeadResolutionOrder": {
@@ -257,7 +307,10 @@
   "systemContinuityTrack": {
     "status": "ACTIVE_FAIL_CLOSED",
     "protocol": ".github/ai-router/system-continuity/progressive-system-continuity-protocol.v1.json",
-    "mandatoryFor": ["SHARED_CONTROL_PLANE_INTERFACE_CHANGE","SYSTEM_GAP_CLOSED_CLAIM"],
+    "mandatoryFor": [
+      "SHARED_CONTROL_PLANE_INTERFACE_CHANGE",
+      "SYSTEM_GAP_CLOSED_CLAIM"
+    ],
     "authorityCreated": false,
     "replacementAuthorityCreated": false
   },
@@ -277,6 +330,11 @@
     "claimAuthorityCreated": false
   },
   "rules": [
+    "READ_CANONICAL_AGENT_INVOCATION_CONTRACT_AND_ACTUALLY_INVOKE_ASSIGNED_NATIVE_AGENTS_BEFORE_SUBSTANTIVE_REPOSITORY_WORK",
+    "READ_ONLY_STATIC_AND_SOURCE_READBACK_CLASSES_DO_NOT_EXEMPT_NATIVE_AGENT_INVOCATION",
+    "ROUTE_RESOLVED_AND_ADMITTED_AND_LOCKED_ARE_NOT_AGENT_EXECUTION_PROOF",
+    "COMPLETION_REQUIRES_ATTRIBUTABLE_NATIVE_OUTPUT_AND_INDEPENDENT_SOURCE_READBACK",
+    "DO_NOT_CLAIM_GLOBAL_HOST_ENFORCEMENT_FROM_REPOSITORY_POLICY_OR_JSON_VALIDATION",
     "GENERAL_AGENT_EXECUTION_MUST_NOT_USE_GITHUB_ACTIONS",
     "FIXED_CANONICAL_INTAKE_WORKFLOW_IS_AUTHORIZED_ONLY_AS_A_BOUNDED_TRANSPORT_FALLBACK_WHEN_NATIVE_INTAKE_TRANSPORT_IS_UNAVAILABLE",
     "GITHUB_ACTIONS_OTHER_THAN_THE_FIXED_CANONICAL_INTAKE_EXCEPTION_ARE_CI_EVIDENCE_OR_SEPARATELY_AUTHORIZED_LATER_REPLAY_NOT_AGENT_EXECUTION_TRANSPORT",
@@ -307,5 +365,21 @@
     "OWNER_CONNECTOR_SUCCESSOR_MUST_REUSE_CANONICAL_SUCCESSOR_LOCAL_AND_SHA_GUARDED_SINGLE_CAS",
     "OWNER_CONNECTOR_TERMINAL_CLOSURE_MUST_REUSE_CANONICAL_CLOSE_LOCAL_OR_CLOSE_REMOTE_AND_SHA_GUARDED_SINGLE_CAS",
     "DISPLAY_CONTINUITY_CONSTITUTION_REQUIRED_FOR_APPLICABLE_CONSTRUCTION"
-  ]
+  ],
+  "canonicalAgentInvocation": {
+    "schema": "CANONICAL_NATIVE_AGENT_INVOCATION_ENTRY_BINDING_v1",
+    "status": "MANDATORY_FOR_ALL_REPOSITORY_TASKS",
+    "contract": ".github/ai-router/agent-invocation/contract.v1.json",
+    "sharedProcedureId": "CANONICAL_NATIVE_AGENT_INVOCATION",
+    "beforeSubstantiveRepositoryWork": true,
+    "requiredForReadOnlyAndStaticTasks": true,
+    "actualNativeInvocationRequired": true,
+    "routeReceiptIsExecutionProof": false,
+    "receiptValidator": ".github/ai-router/agent-invocation/evidence-gate.v1.mjs",
+    "sourceAuthenticity": "INDEPENDENT_NATIVE_SOURCE_READBACK_REQUIRED; FILE_ONLY_VALIDATION_IS_NOT_EXECUTION_PROOF",
+    "unavailableDisposition": "NATIVE_AGENT_INVOCATION_UNAVAILABLE_STOP_SUBSTANTIVE_WORK",
+    "newExecutorCreated": false,
+    "globalHostEnforcementProven": false,
+    "gapId": "CANONICAL_NATIVE_AGENT_INVOCATION_HOST_ENFORCEMENT"
+  }
 }

@@ -1,51 +1,99 @@
 {
   "schema": "AWARDS_LIVING_OBJECT_CYCLE_LEDGER_v1",
-  "operationId": "AWARDS_TRUE_3D_VISUAL_COMPOSITION_CORRECTIVE_20260912_001",
-  "lockGeneration": 2148,
-  "governingHead": "c7def9c32b6ab01e0aaf2f39faf1b4f58f95b9ad",
+  "operationId": "AWARDS_WORLD_TRUE_3D_VISUAL_CORRECTIVE_20260912_001_REBIND_001",
+  "lockGeneration": 2152,
+  "governingHead": "244d232532cf7d045bcff87e708b10a2c4ab0fc1",
   "frozenIssue": 3145,
   "cycles": {
-    "A_EXPERIENCE": {"status":"REFERENCE_PRESERVED_TRUE_3D","objectPath":"showroom/globe/h-earth/awards/living-objects/experience-cycle-a.mjs","recognizableObject":"MIRRORLAND_WINDOW","renderer":"WEBGL_3D","webglContexts":1,"paneCount":21,"signatureEvent":"OPAQUE_CATHEDRAL_GLASS_TO_CLEAR_AUDRALIA_TO_OPAQUE","compositionRole":"REFERENCE_VISUAL"},
-    "B_WORLD": {"status":"COMPOSITION_CORRECTED_TRUE_3D","objectPath":"showroom/globe/h-earth/awards/living-objects/world-cycle-b.mjs","recognizableObject":"H_EARTH_AUDRALIA_WORLD","renderer":"WEBGL_3D","webglContexts":1,"shorelineProvider":"getHEarth3DSharedShorelineBoundary","signatureEvent":"ENVIRONMENT_DEPTH_RESOLVE","cameraMode":"OBLIQUE_TERRAIN","targetFrameOccupancy":0.78},
-    "C_COHERENCE": {"status":"COMPOSITION_CORRECTED_TRUE_3D","objectPath":"showroom/globe/h-earth/awards/living-objects/coherence-cycle-c.mjs","recognizableObject":"BRAIN","renderer":"WEBGL_3D_QUALIFIED_GLB","webglContexts":1,"qualifiedAsset":"Allen_M_Brain.glb","expectedMeshes":283,"expectedTriangles":656268,"geometryMutationAuthorized":false,"signatureEvent":"NEURAL_SYNCHRONIZATION","displayScale":2.25,"cameraDistance":3.0,"targetFrameOccupancy":0.72},
-    "D_TRUST": {"status":"COMPOSITION_CORRECTED_TRUE_3D","objectPath":"showroom/globe/h-earth/awards/living-objects/trust-cycle-d.mjs","recognizableObject":"NINE_SUMMITS","renderer":"WEBGL_3D_PROCEDURAL_MASSIF","webglContexts":1,"summitCount":9,"distinctSummitCount":9,"signatureEvent":"EARNED_ASCENT_REVEAL","cameraMode":"OBLIQUE_MASSIF","targetFrameOccupancy":0.76},
-    "E_ESTATE": {"status":"COMPOSITION_CORRECTED_TRUE_3D","objectPath":"showroom/globe/h-earth/awards/living-objects/estate-cycle-e.mjs","recognizableObject":"HOUSE_MANOR","renderer":"WEBGL_3D_DONOR_MESH","webglContexts":1,"neutralBuilder":"buildNeutralMesh","gothicBuilder":"buildPhase1DetailMesh","roofStampedWindows":false,"signatureEvent":"STRUCTURAL_ASSEMBLY","cameraMode":"OBLIQUE_ARCHITECTURAL","boundsNormalized":true,"targetFrameOccupancy":0.76},
-    "F_SHARED_COMPOSITION": {"status":"PRESERVED_BYTE_IDENTICAL","compositionPath":"showroom/globe/h-earth/awards/living-objects/shared-carousel-cycle-f.mjs","blob":"eed0c1782cb258d03e4eb740b86d95e6ed9fd2dc","maxActiveLivingObjectInstances":1,"rearHeavyRuntime":false,"inactiveTeardown":true}
+    "A_EXPERIENCE": {
+      "status": "FROZEN_BYTE_IDENTICAL",
+      "objectPath": "showroom/globe/h-earth/awards/living-objects/experience-cycle-a.mjs",
+      "blob": "3fe650a4abe2a4c2a1f93c4c1002037e80080b36",
+      "recognizableObject": "MIRRORLAND_WINDOW",
+      "renderer": "WEBGL_3D",
+      "webglContexts": 1
+    },
+    "B_WORLD": {
+      "status": "WORLD_ONLY_VISUAL_CORRECTIVE",
+      "objectPath": "showroom/globe/h-earth/awards/living-objects/world-cycle-b.mjs",
+      "recognizableObject": "H_EARTH_AUDRALIA_WORLD",
+      "renderer": "WEBGL_3D_CONNECTED_TERRAIN",
+      "webglContexts": 1,
+      "shorelineProvider": "getHEarth3DSharedShorelineBoundary",
+      "signatureEvent": "ENVIRONMENT_DEPTH_RESOLVE",
+      "cameraMode": "PERSPECTIVE_TERRAIN_FLYBY",
+      "connectedTerrain": true,
+      "shorelineRecession": true,
+      "depthLayers": "NEAR_MID_FAR",
+      "targetFrameOccupancy": 0.86
+    },
+    "C_COHERENCE": {
+      "status": "FROZEN_BYTE_IDENTICAL",
+      "objectPath": "showroom/globe/h-earth/awards/living-objects/coherence-cycle-c.mjs",
+      "blob": "c759bc0a7b3ebb309aafa784e9d16e598ad5fb0b",
+      "recognizableObject": "BRAIN"
+    },
+    "D_TRUST": {
+      "status": "FROZEN_BYTE_IDENTICAL",
+      "objectPath": "showroom/globe/h-earth/awards/living-objects/trust-cycle-d.mjs",
+      "blob": "65edf31f8c34e44ea1c1a997522c520acaec1c32",
+      "recognizableObject": "NINE_SUMMITS"
+    },
+    "E_ESTATE": {
+      "status": "FROZEN_BYTE_IDENTICAL",
+      "objectPath": "showroom/globe/h-earth/awards/living-objects/estate-cycle-e.mjs",
+      "blob": "cdcd77debf24a130724a6d47f2934b212502bbf2",
+      "recognizableObject": "HOUSE_MANOR"
+    },
+    "F_SHARED_COMPOSITION": {
+      "status": "PRESERVED_BYTE_IDENTICAL",
+      "compositionPath": "showroom/globe/h-earth/awards/living-objects/shared-carousel-cycle-f.mjs",
+      "blob": "eed0c1782cb258d03e4eb740b86d95e6ed9fd2dc",
+      "maxActiveLivingObjectInstances": 1,
+      "rearHeavyRuntime": false,
+      "inactiveTeardown": true
+    }
   },
-  "compositionCorrective": {
-    "operationId":"AWARDS_TRUE_3D_VISUAL_COMPOSITION_CORRECTIVE_20260912_001",
-    "lockGeneration":2148,
-    "status":"CANDIDATE_READY_FOR_BROWSER_QUALIFICATION",
-    "functionalBearing":"ESE",
-    "primitiveRequirements":["E","S"],
-    "evidenceReference":"1444.mp4",
-    "referenceVisual":"A_EXPERIENCE",
-    "mobileFirstLaw":"ACTIVE_OBJECT_MUST_READ_AS_VOLUMETRIC_AT_FIRST_GLANCE",
-    "tinyPrimaryObjectForbidden":true,
-    "flatHorizonCompositionForbidden":true,
-    "mergedSummitSilhouetteForbidden":true,
-    "iconicManorScaleForbidden":true,
-    "donorGeometryReplacementAuthorized":false,
-    "twoDimensionalSubstituteObjectsForbidden":true,
-    "generatedImageAssetsIntroduced":false,
-    "awardsIndexPreservedBlob":"1e7317a6543e21a74ceaba208d027bc6ff79267a",
-    "sharedCarouselPreservedBlob":"eed0c1782cb258d03e4eb740b86d95e6ed9fd2dc",
-    "maxActiveLivingObjectInstances":1,
-    "webglContextsPerActiveObject":1,
-    "rearHeavyRuntime":false,
-    "inactiveTeardown":true,
-    "deploymentPublicationAuthorized":false,
-    "verifierPath":"showroom/globe/h-earth/awards/qualification/verify-recognizable-estate-object-successor-v1.mjs"
+  "worldVisualCorrective": {
+    "operationId": "AWARDS_WORLD_TRUE_3D_VISUAL_CORRECTIVE_20260912_001_REBIND_001",
+    "lockGeneration": 2152,
+    "status": "CANDIDATE_REQUIRES_BROWSER_RENDERED_MOBILE_VISUAL_PASS",
+    "functionalBearing": "ESE",
+    "primitiveRequirements": [
+      "E",
+      "S"
+    ],
+    "evidenceReference": "1455.jpg",
+    "mobileFirstLaw": "WORLD_MUST_READ_AS_VOLUMETRIC_3D_AT_FIRST_GLANCE",
+    "flatPeakBandForbidden": true,
+    "flatHorizonStripForbidden": true,
+    "twoDimensionalCanvasIllustrationReadForbidden": true,
+    "connectedTerrainRequired": true,
+    "shorelineSpatialRecessionRequired": true,
+    "perspectiveCameraRequired": true,
+    "browserRenderedMobileEvidenceRequired": true,
+    "builderMaySelfDeclareVisualPass": false,
+    "nonWorldMutationAuthorized": false,
+    "generatedImageAssetsIntroduced": false,
+    "awardsIndexPreservedBlob": "1e7317a6543e21a74ceaba208d027bc6ff79267a",
+    "sharedCarouselPreservedBlob": "eed0c1782cb258d03e4eb740b86d95e6ed9fd2dc",
+    "maxActiveLivingObjectInstances": 1,
+    "webglContextsPerActiveObject": 1,
+    "deploymentPublicationAuthorized": false,
+    "verifierPath": "showroom/globe/h-earth/awards/qualification/verify-recognizable-estate-object-successor-v1.mjs"
   },
   "invariants": {
-    "cardCopyPreserved":true,
-    "readerPreserved":true,
-    "bottomTrophyCarouselPreserved":true,
-    "carouselPhysicsPreserved":true,
-    "experienceReferencePreserved":true,
-    "awardsIndexMutationAuthorized":false,
-    "sharedCarouselMutationAuthorized":false,
-    "generatedImagesAuthorized":false,
-    "deploymentPublicationAuthorized":false
+    "experienceByteIdentical": true,
+    "coherenceByteIdentical": true,
+    "trustByteIdentical": true,
+    "estateByteIdentical": true,
+    "cardCopyPreserved": true,
+    "readerPreserved": true,
+    "bottomTrophyCarouselPreserved": true,
+    "carouselPhysicsPreserved": true,
+    "awardsIndexMutationAuthorized": false,
+    "sharedCarouselMutationAuthorized": false,
+    "generatedImagesAuthorized": false,
+    "deploymentPublicationAuthorized": false
   }
 }

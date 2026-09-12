@@ -3284,6 +3284,49 @@
       "scopeHash": "5e36e37c837036a3eaccd5c00ca5fbfea00c9d5626cd1c3cbdc46a94935a0745",
       "state": "ADMITTED_LOCKED"
     },
+    "5e555ca9501b782fc6d137e3cef35c3892417bad19f9cbda073e72e0f62f0d80": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "195c0cdead57e18ec6261185a26e08bed52e570e",
+          "lockGeneration": 2175,
+          "lockScope": "H_EARTH:AWARDS:WORLD_TRUST_RECOGNITION:V1",
+          "operationId": "AWARDS_WORLD_TRUST_RECOGNITION_SUCCESSOR_20260912_002",
+          "procedureLocatorDigest": "70bdb062fdb2891c32959056d428362433a1cfe1ca750208208883b239c9d014",
+          "requestDigest": "6dd86568d4a9bf80119be82c108fc5d161f4720890c6f7d1c78c69589fee9b7c",
+          "scopeHash": "5e555ca9501b782fc6d137e3cef35c3892417bad19f9cbda073e72e0f62f0d80"
+        },
+        "bindingDigest": "00fdb288a94398516828a6f993175627c3b6fb34c5e2e1b6f253fcdccb75eaea",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "94c583b709892de7a1fd2d4719144bd66a104f619cc1b55211bbbdda5f1dcd0c",
+          "commentId": 5649185732,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3214,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34723543267,
+          "workflowSha": "195c0cdead57e18ec6261185a26e08bed52e570e"
+        },
+        "lineageAnchorCommitSha": "9f1c25e344d1946b8ffb1fa7ffea005e32100143",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "195c0cdead57e18ec6261185a26e08bed52e570e",
+      "lockGeneration": 2175,
+      "lockScope": "H_EARTH:AWARDS:WORLD_TRUST_RECOGNITION:V1",
+      "operationId": "AWARDS_WORLD_TRUST_RECOGNITION_SUCCESSOR_20260912_002",
+      "procedureLocatorDigest": "70bdb062fdb2891c32959056d428362433a1cfe1ca750208208883b239c9d014",
+      "released": false,
+      "requestDigest": "6dd86568d4a9bf80119be82c108fc5d161f4720890c6f7d1c78c69589fee9b7c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "5e555ca9501b782fc6d137e3cef35c3892417bad19f9cbda073e72e0f62f0d80",
+      "state": "ADMITTED_LOCKED"
+    },
     "5e5c30caab71198dc5563abfb095ef69a55d3530130d2a7510ee3243cd73b83d": {
       "governingHead": "0573296d0051d30ba0670dc7a0927ba4289cfb59",
       "lockGeneration": 656,
@@ -9490,7 +9533,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2174,
+  "lockGeneration": 2175,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

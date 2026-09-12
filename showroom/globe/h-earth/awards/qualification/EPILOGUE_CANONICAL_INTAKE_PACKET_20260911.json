@@ -1,0 +1,9 @@
+{
+  "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+  "operationId": "AWARDS_CINEMATIC_EPILOGUE_FIRST_PICTURE_CONSTRUCTION_20260911_001",
+  "projectId": "H_EARTH",
+  "lockScope": "H_EARTH:AWARDS:CINEMATIC_EPILOGUE:FIRST_PICTURE_CONSTRUCTION",
+  "exactGoverningHead": "3b4c6e0192856568a7803ea631fb536b1e2e3160",
+  "status": "PREPARED_NOT_ADMITTED",
+  "note": "Repository-resident copy of the canonical intake subject. Authority is created only by the canonical intake system, never by this file."
+}

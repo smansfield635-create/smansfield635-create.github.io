@@ -50,7 +50,7 @@ check('TROPHY_CHAPTER_ORDER', JSON.stringify(trophyLenses) === JSON.stringify(['
 check('CURRENT_READER_ARCHITECTURE', awardsHtml.includes('class="reader"') && awardsHtml.includes('class="reader-body"') && awardsHtml.includes('class="reader-return"'));
 check('RETIRED_FLIP_ARCHITECTURE_NOT_REQUIRED', !awardsHtml.includes('card-flip-shell') && !awardsHtml.includes('feature-back'));
 check('STATE_DEPENDENT_DEPTH_BLUR_CONTRACT', awardsHtml.includes('--content-blur') && awardsHtml.includes('--content-opacity'));
-check('VISIBLE_CARD_SELECTION_CONTRACT', awardsHtml.includes("e.target.closest('[data-story],[data-lens-key]')") || awardsHtml.includes("closest('[data-lens-key]')") || awardsHtml.includes("closest('[data-story]')"));
+check('VISIBLE_CARD_SELECTION_CONTRACT', awardsHtml.includes('data-achievement-stage') && awardsHtml.includes('data-story=') && awardsHtml.includes('data-trophy-stage') && awardsHtml.includes('data-lens-key='));
 check('AWARD_TARGETS_NOT_WINS', /does not claim that a submission, nomination, shortlist or win has already occurred/i.test(awardsHtml) && !/data-award-state="(?:WIN|WON|NOMINATED|SHORTLISTED)"/i.test(awardsHtml));
 check('AWARDS_2027_TARGET_DATE_PRESENT', awardsHtml.includes('Planned submissions · late October 2026 · 2027 cycle'));
 check('AWARDS_RETURN_TO_PROMOTED_H_EARTH', awardsHtml.includes('href="/showroom/globe/h-earth/"'));

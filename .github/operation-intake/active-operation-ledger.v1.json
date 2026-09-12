@@ -2346,6 +2346,49 @@
       "scopeHash": "463e729ec606645b8bb530b7e5c1c401df221f273d7c64d4673542af8d3fcd83",
       "state": "ADMITTED_LOCKED"
     },
+    "4648268e99ee7e662f6aab7a5071fd5ab31b2920e9d3fab2f431915aa290f74a": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "b67eecf6f46de8da759f28496d7e50a63b18adb2",
+          "lockGeneration": 2158,
+          "lockScope": "H_EARTH:AWARDS:LIVING_OBJECT:TRUST_RANGE_PRESENTATION",
+          "operationId": "AWARDS_TRUST_RANGE_PRESENTATION_CORRECTIVE_20260912_001",
+          "procedureLocatorDigest": "ebe44a95fd1a6d8cf21eecd2e4ffc8652a58436b6d8089b818294c96128bed08",
+          "requestDigest": "272010304855a57551cb826752a4af65c07efffdfa59761f1909ea4f8bde86de",
+          "scopeHash": "4648268e99ee7e662f6aab7a5071fd5ab31b2920e9d3fab2f431915aa290f74a"
+        },
+        "bindingDigest": "a151a1ce25f532dc9a26d3f4aba38cab70c041efe1cd824bcc1ff357c9a4c130",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "06174e195db9a9bbc800b098d31b3d6186f48765b2b43c65d6d3601c4d003967",
+          "commentId": 5647349002,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3145,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34706871732,
+          "workflowSha": "ffd790560de9da63e62f1d938de96edd50131fb3"
+        },
+        "lineageAnchorCommitSha": "cc31bee1f1e5e37a32bec69c71314bcee93e2ac9",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "b67eecf6f46de8da759f28496d7e50a63b18adb2",
+      "lockGeneration": 2158,
+      "lockScope": "H_EARTH:AWARDS:LIVING_OBJECT:TRUST_RANGE_PRESENTATION",
+      "operationId": "AWARDS_TRUST_RANGE_PRESENTATION_CORRECTIVE_20260912_001",
+      "procedureLocatorDigest": "ebe44a95fd1a6d8cf21eecd2e4ffc8652a58436b6d8089b818294c96128bed08",
+      "released": false,
+      "requestDigest": "272010304855a57551cb826752a4af65c07efffdfa59761f1909ea4f8bde86de",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "4648268e99ee7e662f6aab7a5071fd5ab31b2920e9d3fab2f431915aa290f74a",
+      "state": "ADMITTED_LOCKED"
+    },
     "46d8820d7d8b789c333aa292935c616171ea4fef6507fc3d9984e92b115aaa8c": {
       "governingHead": "4d5ef78ac7fae24da2a0e9d941607af870e1056e",
       "lockGeneration": 1614,
@@ -9121,7 +9164,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2157,
+  "lockGeneration": 2158,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -53,7 +53,12 @@
       ".github/workflows/workflow-lifecycle-continuity-v2-actions-inventory.yml",
       ".github/workflows/workflow-lifecycle-continuity-v2-authenticated-assessment.yml",
       ".github/workflows/workflow-lifecycle-continuity-v2-consumer-discovery.yml",
-      "tools/issue-comment-fanout-consolidation-v1.mjs"
+      "tools/issue-comment-fanout-consolidation-v1.mjs",
+      "research/bt4/verify-site-level-enrollment.v1.mjs",
+      "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-benchmark.config.mjs",
+      "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-browser-baseline.mjs",
+      ".github/workflows/showroom-four-compass-exact-head-regression.yml",
+      ".github/workflows/bt4-world-diagnostic-entitlement-v1.yml"
     ],
     "ownedPathPrefixes": [
       ".github/ai-router/",

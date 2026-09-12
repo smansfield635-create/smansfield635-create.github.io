@@ -112,35 +112,45 @@ for(const spec of cases){
     travelError=String(error?.message||error);
   }
 
-  let cardinalPreviewProof={signalAvailable:false,phaseBefore:'',phaseAfter:'',returnHiddenInPreview:false,sourceEnterSceneControl:false,visibleEnterControl:false,enteredScene:false,returnedToOrbit:false,error:''};
-  const cardinalSignal=page.locator('.signal[data-id="alaric"]:not([hidden]):not(.unseen):not([aria-hidden="true"])');
-  if(await cardinalSignal.count()){
-    cardinalPreviewProof.signalAvailable=true;
-    try{
-      cardinalPreviewProof.phaseBefore=await page.evaluate(()=>window.__DGB_CARDINAL_PROPAGATION__?.phase||'');
+  let cardinalPreviewProof={signalAvailable:false,mapNodeAvailable:false,selectionSource:'',phaseBefore:'',phaseAfter:'',returnHiddenInPreview:false,sourceEnterSceneControl:false,visibleEnterControl:false,enteredScene:false,returnedToOrbit:false,error:''};
+  try{
+    cardinalPreviewProof.phaseBefore=await page.evaluate(()=>window.__DGB_CARDINAL_PROPAGATION__?.phase||'');
+    const cardinalSignal=page.locator('.signal[data-id="alaric"]:not([hidden]):not(.unseen):not([aria-hidden="true"])');
+    if(await cardinalSignal.count()){
+      cardinalPreviewProof.signalAvailable=true;
+      cardinalPreviewProof.selectionSource='signal';
       await cardinalSignal.click();
-      await page.waitForFunction(()=>window.__DGB_CARDINAL_PROPAGATION__?.phase==='ENCOUNTER_PREVIEW',null,{timeout:5000});
-      const preview=await page.evaluate(()=>({
-        phase:window.__DGB_CARDINAL_PROPAGATION__?.phase||'',
-        returnShown:document.querySelector('#return')?.classList.contains('show')===true,
-        sourceEnterScene:[...document.querySelectorAll('#story .story-source button')].some(b=>/^Enter scene$/i.test((b.textContent||'').trim())),
-        visibleEnter:!!document.querySelector('#story [data-card-enter]')
-      }));
-      cardinalPreviewProof.phaseAfter=preview.phase;
-      cardinalPreviewProof.returnHiddenInPreview=!preview.returnShown;
-      cardinalPreviewProof.sourceEnterSceneControl=preview.sourceEnterScene;
-      cardinalPreviewProof.visibleEnterControl=preview.visibleEnter;
-      await page.locator('#story [data-card-enter]').first().click();
-      await page.waitForFunction(()=>document.querySelector('#return')?.classList.contains('show')===true,null,{timeout:15000});
-      cardinalPreviewProof.enteredScene=await page.evaluate(()=>window.__DGB_CARDINAL_PROPAGATION__?.phase==='CHARACTER_SCENE');
-      await page.locator('#return').click();
-      await page.waitForFunction(()=>/Orbit/.test(document.querySelector('#status')?.textContent||''),null,{timeout:15000});
-      cardinalPreviewProof.returnedToOrbit=true;
-    }catch(error){
-      cardinalPreviewProof.error=String(error?.message||error);
+    }else{
+      await page.locator('#map-toggle').click();
+      await page.waitForFunction(()=>document.querySelector('#coast-map')?.classList.contains('show')===true,null,{timeout:3000});
+      const alaricNode=page.locator('.map-node[data-id="alaric"]:not([hidden])');
+      cardinalPreviewProof.mapNodeAvailable=await alaricNode.count()>0;
+      if(!cardinalPreviewProof.mapNodeAvailable)throw new Error('NO_USER_ACTIONABLE_ALARIC_ROUTE');
+      cardinalPreviewProof.selectionSource='map';
+      await alaricNode.click();
     }
+    await page.waitForFunction(()=>window.__DGB_CARDINAL_PROPAGATION__?.phase==='ENCOUNTER_PREVIEW',null,{timeout:5000});
+    const preview=await page.evaluate(()=>({
+      phase:window.__DGB_CARDINAL_PROPAGATION__?.phase||'',
+      returnShown:document.querySelector('#return')?.classList.contains('show')===true,
+      sourceEnterScene:[...document.querySelectorAll('#story .story-source button')].some(b=>/^Enter scene$/i.test((b.textContent||'').trim())),
+      visibleEnter:!!document.querySelector('#story [data-card-enter]')
+    }));
+    cardinalPreviewProof.phaseAfter=preview.phase;
+    cardinalPreviewProof.returnHiddenInPreview=!preview.returnShown;
+    cardinalPreviewProof.sourceEnterSceneControl=preview.sourceEnterScene;
+    cardinalPreviewProof.visibleEnterControl=preview.visibleEnter;
+    await page.locator('#story [data-card-enter]').first().click();
+    await page.waitForFunction(()=>document.querySelector('#return')?.classList.contains('show')===true,null,{timeout:15000});
+    cardinalPreviewProof.enteredScene=await page.evaluate(()=>window.__DGB_CARDINAL_PROPAGATION__?.phase==='CHARACTER_SCENE');
+    await page.locator('#return').click();
+    await page.waitForFunction(()=>/Orbit/.test(document.querySelector('#status')?.textContent||''),null,{timeout:15000});
+    cardinalPreviewProof.returnedToOrbit=true;
+  }catch(error){
+    cardinalPreviewProof.error=String(error?.message||error);
   }
-  const cardinalPreviewOk=cardinalPreviewProof.signalAvailable&&cardinalPreviewProof.phaseAfter==='ENCOUNTER_PREVIEW'&&cardinalPreviewProof.returnHiddenInPreview&&cardinalPreviewProof.sourceEnterSceneControl&&cardinalPreviewProof.visibleEnterControl&&cardinalPreviewProof.enteredScene&&cardinalPreviewProof.returnedToOrbit&&!cardinalPreviewProof.error;
+  const cardinalRouteAvailable=cardinalPreviewProof.signalAvailable||cardinalPreviewProof.mapNodeAvailable;
+  const cardinalPreviewOk=cardinalRouteAvailable&&cardinalPreviewProof.phaseAfter==='ENCOUNTER_PREVIEW'&&cardinalPreviewProof.returnHiddenInPreview&&cardinalPreviewProof.sourceEnterSceneControl&&cardinalPreviewProof.visibleEnterControl&&cardinalPreviewProof.enteredScene&&cardinalPreviewProof.returnedToOrbit&&!cardinalPreviewProof.error;
 
   const mapButton=page.locator('#map-toggle');
   await mapButton.click();
@@ -206,7 +216,7 @@ for(const spec of cases){
   await context.close();
 }
 await browser.close();
-const receipt={schema:'CHARACTERS_STEP10_BROWSER_ACCEPTANCE_RECEIPT_v2',result:failed?'FAIL':'PASS',diagnostic:'GEN2114_VISIBLE_ENTER_HANDOFF_V1',cases:receipts};
+const receipt={schema:'CHARACTERS_STEP10_BROWSER_ACCEPTANCE_RECEIPT_v2',result:failed?'FAIL':'PASS',diagnostic:'GEN2116_MOBILE_ACTION_REACHABILITY_V1',cases:receipts};
 fs.writeFileSync(`${outDir}/receipt.json`,JSON.stringify(receipt,null,2));
 console.log(JSON.stringify(receipt,null,2));
 if(failed) process.exit(1);

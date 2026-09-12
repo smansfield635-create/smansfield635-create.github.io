@@ -1,0 +1,543 @@
+name: Characters Gen1980 Material Evidence v1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'control-plane/whole-estate/characters-reconstruction-v1/gen1980-material-evidence-contract.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-gen1980-material-evidence.v1.mjs'
+      - '.github/workflows/characters-gen1980-material-evidence-v1.yml'
+
+permissions:
+  contents: read
+
+env:
+  OPERATION_ID: MIRRORLAND_GEN1980_MATERIAL_EVIDENCE_ADJUDICATION_20260907_001
+  LOCK_GENERATION: '1982'
+  GOVERNING_MAIN: 24eba044e3c4943756ee2412cb81f35a440f9608
+  FROZEN_PRODUCT_SHA: 29b14204d545c93fd95a8a60f3c36eb7449ffb16
+  V5_BLOB: f3b64eb1ffc1c1bc8e908ff96eb6c833b6bc928d
+
+jobs:
+  exact-frozen-product-material-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Materialize exact evidence-tooling sparse index
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p tooling
+          git -C tooling init
+          git -C tooling remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -C tooling -c protocol.version=2 fetch --no-tags --depth=64 --filter=blob:none origin "${{ github.event.pull_request.head.sha }}"
+          git -C tooling sparse-checkout init --cone --sparse-index
+          git -C tooling sparse-checkout set .github/workflows control-plane/whole-estate/characters-reconstruction-v1
+          git -C tooling checkout --detach FETCH_HEAD
+          test "$(git -C tooling rev-parse HEAD^{commit})" = "${{ github.event.pull_request.head.sha }}"
+          test "$(git -C tooling config --bool index.sparse)" = "true"
+          test "$(git -C tooling config --bool core.sparseCheckoutCone)" = "true"
+          tooling_sparse_entries="$(git -C tooling ls-files --sparse | wc -l | tr -d '[:space:]')"
+          tooling_materialized_files="$(find tooling -type f -not -path 'tooling/.git/*' | wc -l | tr -d '[:space:]')"
+          test "$tooling_sparse_entries" -lt 10000
+          test "$tooling_materialized_files" -lt 10000
+          test -z "$(find tooling -mindepth 1 -maxdepth 1 -type d ! -name .git ! -name .github ! -name control-plane -print -quit)"
+          test -z "$(find tooling/.github -mindepth 1 -maxdepth 1 -type d ! -name workflows -print -quit)"
+          test -z "$(find tooling/control-plane -mindepth 1 -maxdepth 1 -type d ! -name whole-estate -print -quit)"
+          test -z "$(find tooling/control-plane/whole-estate -mindepth 1 -maxdepth 1 -type d ! -name characters-reconstruction-v1 -print -quit)"
+          test -f tooling/.github/workflows/characters-gen1980-material-evidence-v1.yml
+          test -f tooling/control-plane/whole-estate/characters-reconstruction-v1/gen1980-material-evidence-contract.v1.json
+          test -f tooling/control-plane/whole-estate/characters-reconstruction-v1/verify-gen1980-material-evidence.v1.mjs
+          echo "TOOLING_SPARSE_INDEX_ENTRIES=$tooling_sparse_entries"
+          echo "TOOLING_MATERIALIZED_FILES=$tooling_materialized_files"
+
+      - name: Verify evidence-tooling scope only
+        shell: bash
+        run: |
+          set -euo pipefail
+          HEAD_SHA="$(git -C tooling rev-parse HEAD^{commit})"
+          test "$HEAD_SHA" = "${{ github.event.pull_request.head.sha }}"
+          git -C tooling merge-base --is-ancestor "$GOVERNING_MAIN" HEAD
+          mapfile -t CHANGED < <(git -C tooling diff --name-only "$GOVERNING_MAIN"...HEAD | sort)
+          EXPECTED=(
+            '.github/workflows/characters-gen1980-material-evidence-v1.yml'
+            'control-plane/whole-estate/characters-reconstruction-v1/gen1980-material-evidence-contract.v1.json'
+            'control-plane/whole-estate/characters-reconstruction-v1/verify-gen1980-material-evidence.v1.mjs'
+          )
+          mapfile -t EXPECTED_SORTED < <(printf '%s\n' "${EXPECTED[@]}" | sort)
+          test "${#CHANGED[@]}" -eq "${#EXPECTED_SORTED[@]}"
+          for i in "${!EXPECTED_SORTED[@]}"; do test "${CHANGED[$i]}" = "${EXPECTED_SORTED[$i]}"; done
+          test -z "$(git -C tooling status --porcelain)"
+          echo "TOOLING_HEAD=$HEAD_SHA" >> "$GITHUB_ENV"
+
+      - name: Materialize exact frozen Gen1980 proven runtime dependency sparse index
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p frozen-product
+          git -C frozen-product init
+          git -C frozen-product remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -C frozen-product -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$FROZEN_PRODUCT_SHA"
+          git -C frozen-product sparse-checkout init --cone --sparse-index
+          git -C frozen-product sparse-checkout set \
+            characters \
+            h-earth-3d/terrain \
+            h-earth-3d/integration \
+            h-earth-3d/control-plane/run-8 \
+            h-earth-3d/zones \
+            h-earth-3d/cells \
+            h-earth-3d/objects \
+            showroom/globe/h-earth/render
+          git -C frozen-product checkout --detach FETCH_HEAD
+          test "$(git -C frozen-product rev-parse HEAD^{commit})" = "$FROZEN_PRODUCT_SHA"
+          test "$(git -C frozen-product config --bool index.sparse)" = "true"
+          test "$(git -C frozen-product config --bool core.sparseCheckoutCone)" = "true"
+          frozen_sparse_entries="$(git -C frozen-product ls-files --sparse | wc -l | tr -d '[:space:]')"
+          frozen_materialized_files="$(find frozen-product -type f -not -path 'frozen-product/.git/*' | wc -l | tr -d '[:space:]')"
+          test "$frozen_sparse_entries" -lt 10000
+          test "$frozen_materialized_files" -lt 10000
+          test -z "$(find frozen-product -mindepth 1 -maxdepth 1 -type d ! -name .git ! -name characters ! -name h-earth-3d ! -name showroom -print -quit)"
+          test -z "$(find frozen-product/h-earth-3d -mindepth 1 -maxdepth 1 -type d ! -name terrain ! -name integration ! -name control-plane ! -name zones ! -name cells ! -name objects -print -quit)"
+          test -z "$(find frozen-product/h-earth-3d/control-plane -mindepth 1 -maxdepth 1 -type d ! -name run-8 -print -quit)"
+          test -z "$(find frozen-product/showroom -mindepth 1 -maxdepth 1 -type d ! -name globe -print -quit)"
+          test -z "$(find frozen-product/showroom/globe -mindepth 1 -maxdepth 1 -type d ! -name h-earth -print -quit)"
+          test -z "$(find frozen-product/showroom/globe/h-earth -mindepth 1 -maxdepth 1 -type d ! -name render -print -quit)"
+          for required in \
+            characters/vegetation-representation.mjs \
+            h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js \
+            h-earth-3d/terrain/h-earth.terrain-formations.js \
+            h-earth-3d/terrain/h-earth.terrain-field.js \
+            h-earth-3d/terrain/h-earth.terrain-estate-construction-v1.candidate.js \
+            h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js \
+            h-earth-3d/terrain/h-earth.world-manifold-domain.js \
+            h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js \
+            h-earth-3d/integration/h-earth.landscape-realization-planner.js \
+            h-earth-3d/integration/h-earth.source-object-geometry-resolution.js \
+            h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js \
+            h-earth-3d/integration/h-earth.world-representation-plan.js \
+            h-earth-3d/zones/ground-cell-001.landscape-lattice.js \
+            h-earth-3d/zones/ground-cell-001.zones.js \
+            h-earth-3d/cells/ground-cell-001.js \
+            h-earth-3d/objects/ground-cell-001.objects.js \
+            h-earth-3d/h-earth.matrix.js \
+            showroom/globe/h-earth/render/geometry-kernel.js \
+            showroom/globe/h-earth/render/geometry-landscape.js \
+            showroom/globe/h-earth/render/geometry-distant-context.js \
+            showroom/globe/h-earth/render/geometry-shoreline.js \
+            showroom/globe/h-earth/render/planetary-world-frame.js; do
+            test -f "frozen-product/$required"
+          done
+          echo "FROZEN_PRODUCT_SPARSE_INDEX_ENTRIES=$frozen_sparse_entries"
+          echo "FROZEN_PRODUCT_MATERIALIZED_FILES=$frozen_materialized_files"
+
+      - name: Verify frozen product identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C frozen-product rev-parse HEAD^{commit})" = "$FROZEN_PRODUCT_SHA"
+          test "$(git -C frozen-product hash-object characters/vegetation-representation.mjs)" = "$V5_BLOB"
+          test -z "$(git -C frozen-product status --porcelain)"
+          test -z "$(git -C tooling status --porcelain)"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install passive Chromium tooling outside repository
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/gen1980-pw"
+          cd "$RUNNER_TEMP/gen1980-pw"
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null
+
+      - name: Start exact frozen-product server
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd frozen-product
+          python3 -m http.server 4173 --bind 127.0.0.1 >"$RUNNER_TEMP/gen1980-http.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/gen1980-http.pid"
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/characters/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat "$RUNNER_TEMP/gen1980-http.log"
+          exit 1
+
+      - name: Capture fresh desktop and compact material evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/gen1980-material-evidence"
+          cat > "$RUNNER_TEMP/gen1980-material-capture.cjs" <<'NODE'
+          const fs=require('fs');
+          const path=require('path');
+          const crypto=require('crypto');
+          const {chromium}=require(path.join(process.env.RUNNER_TEMP,'gen1980-pw','node_modules','playwright'));
+          const OUT=path.join(process.env.RUNNER_TEMP,'gen1980-material-evidence');
+          const URL='http://127.0.0.1:4173/characters/';
+          const sha256=file=>crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+          const digest=value=>crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
+          const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+          const writeJson=(name,value)=>fs.writeFileSync(path.join(OUT,name),JSON.stringify(value,null,2)+'\n');
+          const captures=[];
+          const browserErrors=[];
+          let authoritativeWitness=null;
+
+          const profiles=[
+            {profile:'desktop',viewport:{width:1440,height:900},compact:false},
+            {profile:'compactMobile',viewport:{width:390,height:844},compact:true}
+          ];
+
+          async function dismissPrimer(page){
+            const skip=page.locator('#intro-skip');
+            if(await skip.count()&&await skip.isVisible())await skip.click();
+            const primer=page.locator('#step9-primer');
+            if(await primer.count())await primer.waitFor({state:'hidden',timeout:10000});
+          }
+          async function health(page,response){
+            if(!response||response.status()!==200)throw Error(`HTTP_${response?.status()??'NO_RESPONSE'}`);
+            await page.locator('.signal-layer .signal').first().waitFor({state:'attached',timeout:15000});
+            await sleep(900);
+            const state=await page.evaluate(()=>{
+              const canvas=document.querySelector('#scene');
+              const gl=canvas?.getContext('webgl2');
+              return {webgl2:!!gl,fatal:document.querySelector('#fatal')?.classList.contains('show')||false,canvasWidth:canvas?.width||0,canvasHeight:canvas?.height||0};
+            });
+            if(!state.webgl2||state.fatal||state.canvasWidth<1||state.canvasHeight<1)throw Error(`RUNTIME_HEALTH_INVALID:${JSON.stringify(state)}`);
+            return state;
+          }
+          async function returnOrbit(page){
+            const button=page.locator('#return');
+            if(await button.count()&&await button.isVisible()){
+              await button.click();
+              await button.waitFor({state:'hidden',timeout:10000});
+              await sleep(450);
+            }
+          }
+          async function openMap(page){
+            await page.locator('#map-toggle').click();
+            await page.locator('#coast-map').waitFor({state:'visible',timeout:10000});
+          }
+          async function closeMap(page){
+            const panel=page.locator('#coast-map');
+            if(!await panel.count())return;
+            const state=await panel.evaluate(el=>({show:el.classList.contains('show'),ariaHidden:el.getAttribute('aria-hidden')}));
+            if(state.show||state.ariaHidden!=='true'){
+              const close=page.locator('#map-close');
+              if(!await close.count())throw Error('MAP_CLOSE_CONTROL_MISSING');
+              await close.click();
+            }
+            await page.waitForFunction(()=>{
+              const panel=document.querySelector('#coast-map');
+              return !!panel&&!panel.classList.contains('show')&&panel.getAttribute('aria-hidden')==='true';
+            },null,{timeout:10000});
+            await sleep(220);
+          }
+          async function gotoDestination(page,id){
+            await returnOrbit(page);
+            await openMap(page);
+            const node=page.locator(`.map-node[data-id="${id}"]`);
+            if(!await node.count())throw Error(`MAP_NODE_MISSING:${id}`);
+            if(!await node.isVisible()){
+              await closeMap(page);
+              if(id!=='auren'&&id!=='jeeves')throw Error(`MAP_NODE_NOT_VISIBLE:${id}`);
+              await gotoDestination(page,'manor');
+              await returnOrbit(page);
+              await openMap(page);
+              if(!await node.isVisible())throw Error(`MAP_NODE_STILL_NOT_VISIBLE_AFTER_MANOR_REVEAL:${id}`);
+            }
+            await node.press('Enter');
+            await page.locator('#return').waitFor({state:'visible',timeout:10000});
+            await sleep(900);
+          }
+          async function selectIndependentInterior(page){
+            const raw=await page.evaluate(async()=>{
+              const step9=await import('./step9-regional-geography.mjs');
+              const edge=await import('./vegetation-edge-ecology.mjs');
+              const pop=await import('./vegetation-population.mjs');
+              const population=pop.getCanonicalVegetationPopulation();
+              const allowed=new Set(['DENSE_WOODLAND','GROVE','WET_MARGIN_RIPARIAN']);
+              const radius=260;
+              const candidates=[];
+              const diagnostics=[];
+              for(const [destinationId,binding] of Object.entries(step9.STEP9_DESTINATION_BINDINGS)){
+                if(destinationId==='manor'||destinationId==='clock')continue;
+                if(!document.querySelector(`.map-node[data-id="${destinationId}"]`))continue;
+                try{
+                  const camera=step9.resolveStep9Camera(binding.siteId);
+                  const look=camera.look||camera.worldReference;
+                  const eyeEnvironment=edge.resolveVegetationEnvironment(camera.eye.x,camera.eye.z);
+                  const lookEnvironment=edge.resolveVegetationEnvironment(look.x,look.z);
+                  const count=population.instances.filter(tree=>{
+                    if(tree.spatialZone!=='INTERIOR')return false;
+                    const dx=tree.world.x-look.x,dz=tree.world.z-look.z;
+                    return dx*dx+dz*dz<=radius*radius;
+                  }).length;
+                  diagnostics.push({destinationId,siteId:binding.siteId,eyeZone:eyeEnvironment.spatialZone,eyeStandClass:eyeEnvironment.standClass,lookZone:lookEnvironment.spatialZone,lookStandClass:lookEnvironment.standClass,nearbyInteriorCanopyCount:count});
+                  if(lookEnvironment.spatialZone==='INTERIOR'&&allowed.has(lookEnvironment.standClass)&&count>=8){
+                    candidates.push({destinationId,siteId:binding.siteId,camera,environment:{spatialZone:lookEnvironment.spatialZone,standClass:lookEnvironment.standClass,standId:lookEnvironment.standId},nearbyInteriorCanopyCount:count});
+                  }
+                }catch(error){
+                  diagnostics.push({destinationId,siteId:binding.siteId,error:String(error?.message||error)});
+                }
+              }
+              candidates.sort((a,b)=>b.nearbyInteriorCanopyCount-a.nearbyInteriorCanopyCount||a.destinationId.localeCompare(b.destinationId));
+              const manorBinding=step9.STEP9_DESTINATION_BINDINGS.manor;
+              const manorCamera=step9.resolveStep9Camera(manorBinding.siteId);
+              return {selected:candidates[0]||null,manorCamera,candidateCount:candidates.length,candidateDiagnostics:diagnostics};
+            });
+            if(!raw?.selected)throw Error(`NO_INDEPENDENT_INTERIOR_WITNESS:${JSON.stringify(raw?.candidateDiagnostics||[])}`);
+            const selectedDigest=digest({destinationId:raw.selected.destinationId,siteId:raw.selected.siteId,camera:raw.selected.camera});
+            const manorDigest=digest({destinationId:'manor',siteId:'MIRROR_MANOR',camera:raw.manorCamera});
+            if(selectedDigest===manorDigest||raw.selected.destinationId==='manor')throw Error('INTERIOR_WITNESS_NOT_DISTINCT_FROM_MANOR');
+            return {
+              destinationId:raw.selected.destinationId,
+              siteId:raw.selected.siteId,
+              normalDestinationCamera:true,
+              syntheticCameraUsed:false,
+              spatialZone:raw.selected.environment.spatialZone,
+              standClass:raw.selected.environment.standClass,
+              standId:raw.selected.environment.standId,
+              nearbyInteriorCanopyCount:raw.selected.nearbyInteriorCanopyCount,
+              cameraEye:raw.selected.camera.eye,
+              cameraLook:raw.selected.camera.look||raw.selected.camera.worldReference,
+              cameraIdentityDigest:selectedDigest,
+              manorCameraIdentityDigest:manorDigest,
+              distinctFromManor:true,
+              qualifiedCandidateCount:raw.candidateCount,
+              selectionLaw:'HIGHEST_QUALIFIED_LOCAL_INTERIOR_CANOPY_COUNT_THEN_STABLE_DESTINATION_ID',
+              environmentSamplePoint:'NORMAL_DESTINATION_CAMERA_LOOK_XZ'
+            };
+          }
+          async function environmentSnapshot(page,destinationId){
+            return page.evaluate(async destinationId=>{
+              const pop=await import('./vegetation-population.mjs');
+              const under=await import('./vegetation-understory.mjs');
+              const step9=await import('./step9-regional-geography.mjs');
+              const edge=await import('./vegetation-edge-ecology.mjs');
+              const p=pop.getCanonicalVegetationPopulation();
+              const u=under.getCanonicalUnderstoryPopulation();
+              let destination=null;
+              if(destinationId&&step9.STEP9_DESTINATION_BINDINGS[destinationId]){
+                const binding=step9.STEP9_DESTINATION_BINDINGS[destinationId];
+                const camera=step9.resolveStep9Camera(binding.siteId);
+                const eyeEnvironment=edge.resolveVegetationEnvironment(camera.eye.x,camera.eye.z);
+                const look=camera.look||camera.worldReference;
+                const lookEnvironment=edge.resolveVegetationEnvironment(look.x,look.z);
+                destination={destinationId,siteId:binding.siteId,cameraEye:camera.eye,cameraLook:look,eyeZone:eyeEnvironment.spatialZone,eyeStandClass:eyeEnvironment.standClass,lookZone:lookEnvironment.spatialZone,lookStandClass:lookEnvironment.standClass};
+              }
+              return {populationCount:p.instanceCount,zoneSelectedCounts:p.diagnostics?.zoneSelectedCounts||{},standSelectedCounts:p.diagnostics?.standSelectedCounts||{},understoryCount:u.instanceCount,understoryClassCounts:u.classCounts||{},understoryZoneCounts:u.zoneCounts||{},destination};
+            },destinationId);
+          }
+          async function witnessNodeState(page,witness){
+            return page.evaluate(id=>{
+              const node=document.querySelector(`.map-node[data-id="${id}"]`);
+              const map=document.querySelector('#coast-map');
+              const ret=document.querySelector('#return');
+              return {
+                exists:!!node,
+                hidden:node?.hidden??null,
+                className:node?.className??null,
+                ariaHidden:node?.getAttribute('aria-hidden')??null,
+                disabled:node?.disabled??null,
+                mapHidden:map?.hidden??null,
+                mapClassName:map?.className??null,
+                mapAriaHidden:map?.getAttribute('aria-hidden')??null,
+                returnHidden:ret?.hidden??null,
+                returnClassName:ret?.className??null
+              };
+            },witness.destinationId);
+          }
+          async function snapshot(page,profile,state,filename,runtime,destinationId=null){
+            const env=await environmentSnapshot(page,destinationId);
+            if(env.populationCount!==818)throw Error(`${profile}:${state}:POPULATION_NOT_818`);
+            const file=path.join(OUT,filename);
+            await page.screenshot({path:file,fullPage:false});
+            const stat=fs.statSync(file);
+            if(stat.size<10000)throw Error(`${profile}:${state}:PNG_TOO_SMALL:${stat.size}`);
+            const viewport=page.viewportSize();
+            captures.push({profile,state,file:filename,destinationId,width:viewport.width,height:viewport.height,compactMediaQueryMatches:await page.evaluate(()=>matchMedia('(max-width: 720px)').matches),runtime,environment:env,bytes:stat.size,sha256:sha256(file)});
+          }
+
+          async function captureProfile(browser,spec){
+            const context=await browser.newContext({viewport:spec.viewport,deviceScaleFactor:1});
+            const page=await context.newPage();
+            const localErrors=[];
+            const failedRequests=[];
+            const moduleResponses=[];
+            page.on('pageerror',error=>localErrors.push({type:'pageerror',message:String(error?.message||error),stack:String(error?.stack||'')}));
+            page.on('console',message=>{
+              if(message.type()==='error')localErrors.push({type:'console',message:message.text(),location:message.location()});
+            });
+            page.on('requestfailed',request=>failedRequests.push({
+              url:request.url(),
+              method:request.method(),
+              resourceType:request.resourceType(),
+              failure:request.failure()
+            }));
+            page.on('response',response=>{
+              const request=response.request();
+              const url=response.url();
+              const resourceType=request.resourceType();
+              if(resourceType==='script'||/\.(?:mjs|js)(?:[?#]|$)/i.test(url)){
+                moduleResponses.push({url,status:response.status(),statusText:response.statusText(),ok:response.ok(),resourceType,fromServiceWorker:response.fromServiceWorker()});
+              }
+            });
+            let response=null;
+            let runtime=null;
+            try{
+              response=await page.goto(URL,{waitUntil:'networkidle',timeout:30000});
+              runtime=await health(page,response);
+            }catch(error){
+              const documentSnapshot=await page.evaluate(()=>({
+                href:location.href,
+                readyState:document.readyState,
+                title:document.title,
+                signalLayerCount:document.querySelectorAll('.signal-layer').length,
+                signalCount:document.querySelectorAll('.signal-layer .signal').length,
+                sceneCanvasPresent:!!document.querySelector('#scene'),
+                fatalPresent:!!document.querySelector('#fatal'),
+                fatalShown:document.querySelector('#fatal')?.classList.contains('show')||false,
+                fatalText:(document.querySelector('#fatal')?.textContent||'').trim().slice(0,2000),
+                scripts:[...document.scripts].map(script=>({src:script.src||null,type:script.type||null,noModule:script.noModule||false})),
+                modulePreloads:[...document.querySelectorAll('link[rel="modulepreload"]')].map(link=>link.href)
+              })).catch(snapshotError=>({snapshotError:String(snapshotError?.message||snapshotError)}));
+              writeJson(`${spec.profile}-runtime-health-diagnostic.json`,{
+                schema:'MIRRORLAND_GEN1980_RUNTIME_HEALTH_DIAGNOSTIC_v1',
+                operationId:process.env.OPERATION_ID,
+                lockGeneration:Number(process.env.LOCK_GENERATION),
+                governingHead:process.env.GOVERNING_MAIN,
+                evidenceToolingHead:process.env.TOOLING_HEAD,
+                frozenProductSha:process.env.FROZEN_PRODUCT_SHA,
+                frozenV5BlobSha:process.env.V5_BLOB,
+                phase:'RUNTIME_HEALTH_QUALIFICATION',
+                profile:spec.profile,
+                route:'/characters/',
+                navigationResponse:response?{url:response.url(),status:response.status(),statusText:response.statusText(),ok:response.ok()}:null,
+                healthResult:'FAIL_INSTRUMENTAL',
+                materialEvidenceCaptureReached:false,
+                productFailureEstablished:false,
+                materialDisposition:'UNASSIGNED',
+                pageAndConsoleErrors:localErrors,
+                failedRequests,
+                moduleResponses,
+                documentSnapshot,
+                error:{name:error?.name||'Error',message:String(error?.message||error),stack:String(error?.stack||'')}
+              });
+              await context.close().catch(()=>{});
+              throw error;
+            }
+            await dismissPrimer(page);
+            await sleep(450);
+            const witness=await selectIndependentInterior(page);
+            if(!authoritativeWitness)authoritativeWitness=witness;
+            else if(witness.destinationId!==authoritativeWitness.destinationId||witness.cameraIdentityDigest!==authoritativeWitness.cameraIdentityDigest)throw Error(`INTERIOR_WITNESS_PROFILE_DRIFT:${spec.profile}`);
+
+            await snapshot(page,spec.profile,'WIDE_COAST',`${spec.profile}-wide-coast.png`,runtime);
+            await gotoDestination(page,'crossing');
+            await snapshot(page,spec.profile,'OPEN_TERRAIN',`${spec.profile}-open-terrain.png`,runtime,'crossing');
+            await gotoDestination(page,'alaric');
+            await snapshot(page,spec.profile,'WOODLAND_EDGE',`${spec.profile}-woodland-edge.png`,runtime,'alaric');
+
+            const preTravelState=await witnessNodeState(page,witness);
+            writeJson(`${spec.profile}-witness-pretravel-diagnostic.json`,{
+              phase:'BEFORE_FOREST_INTERIOR_TRAVEL',
+              profile:spec.profile,
+              witness,
+              nodeState:preTravelState,
+              capturesCompleted:captures.filter(item=>item.profile===spec.profile).map(item=>item.state)
+            });
+            try{
+              await gotoDestination(page,witness.destinationId);
+              const postTravelState=await witnessNodeState(page,witness);
+              const postTravelEnvironment=await environmentSnapshot(page,witness.destinationId);
+              writeJson(`${spec.profile}-witness-posttravel-diagnostic.json`,{
+                phase:'AFTER_FOREST_INTERIOR_TRAVEL_BEFORE_SCREENSHOT',
+                profile:spec.profile,
+                witness,
+                nodeState:postTravelState,
+                environment:postTravelEnvironment,
+                capturesCompleted:captures.filter(item=>item.profile===spec.profile).map(item=>item.state)
+              });
+              await snapshot(page,spec.profile,'FOREST_INTERIOR_INDEPENDENT',`${spec.profile}-forest-interior-independent.png`,runtime,witness.destinationId);
+            }catch(error){
+              writeJson(`${spec.profile}-capture-failure-diagnostic.json`,{
+                phase:'FOREST_INTERIOR_INDEPENDENT_TRANSITION',
+                profile:spec.profile,
+                witness,
+                nodeState:await witnessNodeState(page,witness).catch(()=>null),
+                capturesCompleted:captures.filter(item=>item.profile===spec.profile).map(item=>item.state),
+                error:{name:error?.name||'Error',message:String(error?.message||error),stack:String(error?.stack||'')}
+              });
+              throw error;
+            }
+
+            await gotoDestination(page,'manor');
+            await snapshot(page,spec.profile,'MIRROR_MANOR_APPROACH',`${spec.profile}-mirror-manor-approach.png`,runtime,'manor');
+            await gotoDestination(page,'tarian');
+            await snapshot(page,spec.profile,'SHORELINE_WETLAND_TRANSITION',`${spec.profile}-shoreline-wetland.png`,runtime,'tarian');
+            await returnOrbit(page);
+            await snapshot(page,spec.profile,'WIDE_RETURN',`${spec.profile}-wide-return.png`,runtime);
+
+            if(localErrors.length)browserErrors.push({profile:spec.profile,errors:localErrors});
+            await context.close();
+          }
+
+          (async()=>{
+            const browser=await chromium.launch({headless:true,args:['--use-gl=swiftshader','--enable-webgl','--ignore-gpu-blocklist']});
+            try{
+              for(const spec of profiles)await captureProfile(browser,spec);
+              if(browserErrors.length)throw Error(`BROWSER_ERRORS:${JSON.stringify(browserErrors)}`);
+              if(captures.length!==14)throw Error(`CAPTURE_COUNT:${captures.length}`);
+              const manifest={
+                schema:'MIRRORLAND_GEN1980_MATERIAL_EVIDENCE_MANIFEST_v1',
+                operationId:process.env.OPERATION_ID,
+                lockGeneration:Number(process.env.LOCK_GENERATION),
+                governingHead:process.env.GOVERNING_MAIN,
+                evidenceToolingHead:process.env.TOOLING_HEAD,
+                frozenProductSha:process.env.FROZEN_PRODUCT_SHA,
+                frozenV5BlobSha:process.env.V5_BLOB,
+                route:'/characters/',
+                result:'EVIDENCE_CAPTURE_PASS',
+                productPathMutationDetected:false,
+                visualDispositionAuthority:'NOT_ASSIGNED_BY_CAPTURE_JOB',
+                materialDisposition:'EVIDENCE_CAPTURED_PENDING_VISUAL_ADJUDICATION',
+                freshPacket:true,
+                independentInteriorWitness:authoritativeWitness,
+                browserErrors,
+                captures
+              };
+              fs.writeFileSync(path.join(OUT,'gen1980-material-evidence-manifest.json'),JSON.stringify(manifest,null,2)+'\n');
+            }finally{await browser.close();}
+          })().catch(error=>{console.error(error);process.exitCode=1;});
+          NODE
+          node "$RUNNER_TEMP/gen1980-material-capture.cjs"
+
+      - name: Verify frozen evidence packet identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tooling/control-plane/whole-estate/characters-reconstruction-v1/verify-gen1980-material-evidence.v1.mjs \
+            --manifest "$RUNNER_TEMP/gen1980-material-evidence/gen1980-material-evidence-manifest.json" \
+            --evidence-root "$RUNNER_TEMP/gen1980-material-evidence" \
+            --output "$RUNNER_TEMP/gen1980-material-evidence/gen1980-material-evidence-verification-receipt.json"
+          test "$(git -C frozen-product rev-parse HEAD^{commit})" = "$FROZEN_PRODUCT_SHA"
+          test "$(git -C frozen-product hash-object characters/vegetation-representation.mjs)" = "$V5_BLOB"
+          test -z "$(git -C frozen-product status --porcelain)"
+          test -z "$(git -C tooling status --porcelain)"
+
+      - name: Upload Gen1980 material evidence packet
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gen1980-material-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/gen1980-material-evidence/*.json
+            ${{ runner.temp }}/gen1980-material-evidence/*.png
+          if-no-files-found: warn
+          retention-days: 90

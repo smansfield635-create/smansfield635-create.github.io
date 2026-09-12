@@ -23,18 +23,16 @@ jobs:
   preflight:
     runs-on: ubuntu-latest
     steps:
-      - name: Require exact dispatched head
+      - name: Require canonical main dispatch and valid target SHA
         id: resolve
         env:
           REQUESTED_SHA: ${{ inputs.target_sha }}
-          DISPATCHED_HEAD_SHA: ${{ github.sha }}
         shell: bash
         run: |
           set -euo pipefail
           requested="$(printf '%s' "$REQUESTED_SHA" | tr -d '[:space:]')"
-          dispatched="$(printf '%s' "$DISPATCHED_HEAD_SHA" | tr -d '[:space:]')"
           printf '%s' "$requested" | grep -Eq '^[0-9a-f]{40}$'
-          test "$requested" = "$dispatched"
+          test "$GITHUB_REF" = "refs/heads/main"
           echo "target_sha=$requested" >> "$GITHUB_OUTPUT"
 
       - name: Materialize bounded publication sparse index

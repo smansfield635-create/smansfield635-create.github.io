@@ -19,6 +19,7 @@ const waitForSettledAwardsDepth=async page=>{
  await page.waitForTimeout(120);
  await page.waitForFunction(()=>{const node=document.querySelectorAll('[data-achievement-stage] [data-story]')[1];if(!(node instanceof HTMLElement))return false;const style=getComputedStyle(node);const opacity=Number.parseFloat(style.opacity);const blur=Number.parseFloat(style.getPropertyValue('--content-blur'));return Number.isFinite(opacity)&&opacity>=.30&&opacity<=.56&&Number.isFinite(blur)&&blur>=1;},null,{timeout:5000});
 };
+const waitForCurrent=async(page,selector,index)=>page.waitForFunction(({selector,index})=>document.querySelectorAll(selector)[index]?.getAttribute('aria-current')==='true',{selector,index},{timeout:5000});
 const browser=await chromium.launch({headless:true,args:['--use-gl=swiftshader','--enable-webgl','--ignore-gpu-blocklist','--disable-dev-shm-usage','--no-sandbox']});
 try{
  const desktop=await browser.newContext({viewport:{width:1440,height:960},deviceScaleFactor:1});
@@ -38,11 +39,11 @@ try{
  await waitForSettledAwardsDepth(awards);
  const activeOpacity=await numericStyle(cards.nth(0),'opacity'),activeBlur=await numericStyle(cards.nth(0),'--content-blur'),inactiveOpacity=await numericStyle(cards.nth(1),'opacity'),inactiveBlur=await numericStyle(cards.nth(1),'--content-blur');
  check('AWARDS_ACTIVE_CARD_OPAQUE',activeOpacity>=.98&&activeBlur===0,{activeOpacity,activeBlur}); check('AWARDS_INACTIVE_CARD_RECEDES_WITH_VISIBLE_GLASS',inactiveOpacity>=.30&&inactiveOpacity<.80&&inactiveBlur>=1,{inactiveOpacity,inactiveBlur});
- await cards.nth(1).click({position:{x:40,y:40},force:true}); await awards.waitForTimeout(150); check('AWARDS_WHOLE_CARD_SELECTS_VISIBLE_NEIGHBOR',await cards.nth(1).getAttribute('aria-current')==='true');
+ await cards.nth(1).click({position:{x:40,y:40},force:true}); await waitForCurrent(awards,'[data-achievement-stage] [data-story]',1); check('AWARDS_WHOLE_CARD_SELECTS_VISIBLE_NEIGHBOR',await cards.nth(1).getAttribute('aria-current')==='true');
  await cards.nth(1).click({position:{x:80,y:80},force:true}); await awards.waitForTimeout(150); const reader=awards.locator('.reader'); check('AWARDS_ACTIVE_CARD_OPENS_READER',await reader.isVisible());
  const returnButton=reader.locator('.reader-return'); check('AWARDS_READER_RETURN_PRESENT',await returnButton.count()===1); await returnButton.click(); await awards.waitForTimeout(100); check('AWARDS_READER_RETURN_CLOSES',await reader.isHidden());
  const trophy=awards.locator('[data-trophy-stage]'),trophyObjects=trophy.locator('[data-lens-key]'); const keys=await trophyObjects.evaluateAll(nodes=>nodes.map(n=>n.getAttribute('data-lens-key'))); check('TROPHY_STANDARD_LENS_KEY_ORDER',JSON.stringify(keys)===JSON.stringify(['compass','world','ip','ai','diagnostic','independent']),keys);
- await trophyObjects.nth(1).click({position:{x:40,y:40},force:true}); await awards.waitForTimeout(120); check('TROPHY_WHOLE_CARD_SELECTS_VISIBLE_NEIGHBOR',await trophyObjects.nth(1).getAttribute('aria-current')==='true');
+ await trophyObjects.nth(1).click({position:{x:40,y:40},force:true}); await waitForCurrent(awards,'[data-trophy-stage] [data-lens-key]',1); check('TROPHY_WHOLE_CARD_SELECTS_VISIBLE_NEIGHBOR',await trophyObjects.nth(1).getAttribute('aria-current')==='true');
  await trophyObjects.nth(1).click({position:{x:80,y:80},force:true}); await awards.waitForTimeout(150); check('TROPHY_ACTIVE_CARD_OPENS_READER',await reader.isVisible());
  const video=reader.locator('video'); check('CHAPTER_02_SINGLE_VIDEO',await video.count()===1); const src=await video.getAttribute('src'); const approved=src?.includes('diamond-gate-h-earth-audralia-30s-vivaldi.mp4')||src?.includes('awards-cinematic-epilogue-first-picture-v1.mp4'); check('CHAPTER_02_APPROVED_MEDIA_SOURCE',approved,src); if(src?.includes('awards-cinematic-epilogue-first-picture-v1.mp4')) check('GEN2128_CONTINUATION_CONTROL_PRESENT',(await reader.getByText(/Continue to Chapter 03/i).count())>=1);
  await reader.locator('.reader-return').click(); check('AWARDS_2027_CAMPAIGN_VISIBLE',await awards.getByText('Planned submissions · late October 2026 · 2027 cycle',{exact:true}).isVisible());

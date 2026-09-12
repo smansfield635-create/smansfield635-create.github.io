@@ -1462,6 +1462,49 @@
       "scopeHash": "3604afb2c90275381cbf8af3f3e04d1cebd307d037b5b6b2417cb3054cc5aeca",
       "state": "ADMITTED_LOCKED"
     },
+    "36fb7673540bc131b48e9ff6975fa05659ac59cbf77af1de659aa427596ed43d": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "92c5be0af9d848a872f83e98c9ac65d7b6d4031e",
+          "lockGeneration": 2105,
+          "lockScope": "COMPASS:MANOR:PHASE1:AUDIT_COMPARATOR",
+          "operationId": "COMPASS_MANOR_PHASE1_FLOATING_POINT_AUDIT_CORRECTIVE_20260911_001",
+          "procedureLocatorDigest": "76c26c5c079e9aaca9b26622aae0792b157a9684f392bcff8e345a285aae4e31",
+          "requestDigest": "a3d69a93cc622142994d608a227a504a5763123ad1c504426806e2a5f3c4fd22",
+          "scopeHash": "36fb7673540bc131b48e9ff6975fa05659ac59cbf77af1de659aa427596ed43d"
+        },
+        "bindingDigest": "5bda85d0020b2a7b7bacd168c591d9a758d2aad39acb359716569ad426627979",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "cd661be4ed454b45ca3e971504f7bacb7487203a8a3bd9b593c1917dbd3cb996",
+          "commentId": 5642251059,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2954,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34662481086,
+          "workflowSha": "92c5be0af9d848a872f83e98c9ac65d7b6d4031e"
+        },
+        "lineageAnchorCommitSha": "fc2d02a866fef1ab3037b3b8a5630a72d0144428",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "92c5be0af9d848a872f83e98c9ac65d7b6d4031e",
+      "lockGeneration": 2105,
+      "lockScope": "COMPASS:MANOR:PHASE1:AUDIT_COMPARATOR",
+      "operationId": "COMPASS_MANOR_PHASE1_FLOATING_POINT_AUDIT_CORRECTIVE_20260911_001",
+      "procedureLocatorDigest": "76c26c5c079e9aaca9b26622aae0792b157a9684f392bcff8e345a285aae4e31",
+      "released": false,
+      "requestDigest": "a3d69a93cc622142994d608a227a504a5763123ad1c504426806e2a5f3c4fd22",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "36fb7673540bc131b48e9ff6975fa05659ac59cbf77af1de659aa427596ed43d",
+      "state": "ADMITTED_LOCKED"
+    },
     "3774dc0ae012f09ec1f5bf4311aaf1235b5688fb85a4515e235c644c454bea8e": {
       "governingHead": "6b927d74913391041153f6cb3acdba8924bad8a4",
       "lockGeneration": 199,
@@ -8053,7 +8096,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2104,
+  "lockGeneration": 2105,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

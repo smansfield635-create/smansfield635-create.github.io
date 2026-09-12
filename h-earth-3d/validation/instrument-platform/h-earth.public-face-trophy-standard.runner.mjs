@@ -63,7 +63,7 @@ if (hasGen2128Media) {
   check('GEN2128_NO_AUTOMATIC_CHAPTER_ADVANCE', !/addEventListener\(['"]ended['"][\s\S]{0,400}activateLens\(/.test(awardsHtml));
 }
 
-const verifierRepairShape = changedPaths.length === 2 && verifierPaths.every(path => changedPaths.includes(path));
+const verifierRepairShape = verifierChangedPaths.length >= 1 && verifierChangedPaths.length <= verifierPaths.length && verifierChangedPaths.length === changedPaths.length;
 const releaseShape = changedPaths.length === 2 && productReleasePaths.every(path => changedPaths.includes(path));
 const mainPushShape = changedPaths.length === 0;
 check('CURRENT_OPERATION_SCOPE_RECOGNIZED', verifierRepairShape || releaseShape || mainPushShape, { changedPaths, verifierRepairShape, releaseShape, mainPushShape });

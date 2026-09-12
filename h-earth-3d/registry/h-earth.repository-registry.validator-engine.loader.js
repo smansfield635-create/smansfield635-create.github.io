@@ -1,32 +1,33 @@
 /**
- * H-Earth repository registry validator dependency loader v25 successor.
- * Preserves the exact v24 Awards Trust Cycle D successor through a
- * delegated predecessor and adds only exact Awards Estate Cycle E path recognition.
+ * H-Earth repository registry validator dependency loader v26 successor.
+ * Preserves the exact v25 Awards Estate Cycle E successor through a
+ * delegated predecessor and adds only exact Awards cinematic epilogue path recognition.
  */
 import {
   loadHEarthRepositoryRegistryValidatorDependencies as loadBaseDependencies,
   runHEarthC2R1MC5AutomaticRegistryPreflight
-} from './h-earth.repository-registry.validator-engine.loader.pre-awards-estate-cycle-e-path-recognition.js';
+} from './h-earth.repository-registry.validator-engine.loader.pre-awards-cinematic-epilogue-path-recognition.js';
 import registryFacade, {
-  verifyHEarthAwardsEstateCycleEPathRecognition
-} from './accepted-amendments/h-earth.repository-registry.awards-estate-cycle-e-path-recognition.js';
+  verifyHEarthAwardsCinematicEpiloguePathRecognition
+} from './accepted-amendments/h-earth.repository-registry.awards-cinematic-epilogue-path-recognition.js';
 import { deepFreeze } from './h-earth.repository-registry.validator-engine.identity.js';
 
 export function loadHEarthRepositoryRegistryValidatorDependencies() {
   const base=loadBaseDependencies();
-  const cycleEVerification=verifyHEarthAwardsEstateCycleEPathRecognition();
+  const epilogueVerification=verifyHEarthAwardsCinematicEpiloguePathRecognition();
   const registryInstance=registryFacade.getHEarthRepositoryRegistryInstance();
   const discovery=registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
   const successorChecks=deepFreeze({
-    predecessorLoaderIdentityPreserved:base.loaderId==='H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v24_AWARDS_TRUST_CYCLE_D_EXACT_PATH_RECOGNITION_SUCCESSOR',
+    predecessorLoaderIdentityPreserved:base.loaderId==='H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v25_AWARDS_ESTATE_CYCLE_E_EXACT_PATH_RECOGNITION_SUCCESSOR',
     predecessorIdentityStatePreserved:base.identityVerified===false,
     predecessorSuccessorIntegrityPreserved:base.successorIntegrityVerified===true,
-    cycleEPathRecognitionEligible:cycleEVerification.eligible===true,
-    cycleEExactThreePathsResolved:cycleEVerification.checks.exactTargetPathCount===true&&cycleEVerification.checks.allTargetPathsResolve===true,
-    cycleETruthfulAbsentOccurrences:cycleEVerification.checks.allOccurrencesAbsentAtGoverningMain===true,
-    cycleEExactPathOnly:cycleEVerification.checks.exactPathOnly===true&&cycleEVerification.checks.noPrefixRegistration===true,
-    cycleEAuditOnlyNoAuthorityLeak:cycleEVerification.checks.auditOnly===true&&cycleEVerification.checks.pathResolutionOnly===true&&cycleEVerification.checks.noCycleEMutationAuthority===true&&cycleEVerification.checks.noPreflightWaiverAuthority===true&&cycleEVerification.checks.noPublicationAuthority===true,
-    frozenCycleECandidateBound:cycleEVerification.checks.frozenCandidateBound===true,
+    epiloguePathRecognitionEligible:epilogueVerification.eligible===true,
+    epilogueExactSevenPathsResolved:epilogueVerification.checks.exactTargetPathCount===true&&epilogueVerification.checks.allTargetPathsResolve===true,
+    epilogueTruthfulAbsentOccurrences:epilogueVerification.checks.allOccurrencesAbsentAtGoverningMain===true,
+    epilogueExactPathOnly:epilogueVerification.checks.exactPathOnly===true&&epilogueVerification.checks.noPrefixRegistration===true,
+    epilogueAuditOnlyNoAuthorityLeak:epilogueVerification.checks.auditOnly===true&&epilogueVerification.checks.pathResolutionOnly===true&&epilogueVerification.checks.noCinematicMutationAuthority===true&&epilogueVerification.checks.noPreflightWaiverAuthority===true&&epilogueVerification.checks.noPublicationAuthority===true,
+    epilogueGoverningMainBound:epilogueVerification.checks.governingMainBound===true,
+    epilogueConformLedgerBound:epilogueVerification.checks.conformLedgerBound===true,
     registryIdPreserved:registryInstance.registryId===base.registryInstance.registryId,
     registryVersionPreserved:registryInstance.registryVersion===base.registryInstance.registryVersion,
     schemaIdPreserved:registryInstance.schemaId===base.registryInstance.schemaId,
@@ -38,16 +39,16 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
   const successorIntegrityVerified=Object.values(successorChecks).every(Boolean);
   return deepFreeze({
     ...base,
-    loaderId:'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v25_AWARDS_ESTATE_CYCLE_E_EXACT_PATH_RECOGNITION_SUCCESSOR',
+    loaderId:'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v26_AWARDS_CINEMATIC_EPILOGUE_EXACT_PATH_RECOGNITION_SUCCESSOR',
     registryFacade,registryInstance,discovery,
-    identityChecks:deepFreeze({...base.identityChecks,awardsEstateCycleEPathRecognition:cycleEVerification.eligible===true,awardsEstateCycleEPathRecognitionSuccessorIntegrity:successorIntegrityVerified}),
+    identityChecks:deepFreeze({...base.identityChecks,awardsCinematicEpiloguePathRecognition:epilogueVerification.eligible===true,awardsCinematicEpiloguePathRecognitionSuccessorIntegrity:successorIntegrityVerified}),
     identityVerified:base.identityVerified,
     inheritedIdentityPreserved:base.identityVerified===false,
     successorIntegrityVerified,
-    awardsEstateCycleEPathRecognitionSuccessorChecks:successorChecks,
-    awardsEstateCycleEPathRecognitionVerification:cycleEVerification,
-    boundary:deepFreeze({...base.boundary,awardsEstateCycleEExactPathRecognitionOnly:true,awardsEstateCycleEProductMutationAuthorityCreated:false,awardsEstateCycleEQualificationMutationAuthorityCreated:false,awardsEstateCycleEPrefixWideRegistrationAuthorityCreated:false,awardsEstateCycleEPreflightWaiverAuthorityCreated:false,awardsEstateCycleEFLaterCycleAuthorityCreated:false,awardsEstateCycleEDeploymentPublicationAuthorityCreated:false}),
-    stoppingCondition:deepFreeze({...base.stoppingCondition,awardsEstateCycleEPathRecognitionLoaded:true,awardsEstateCycleEPathRecognitionSuccessorIntegrityVerified:successorIntegrityVerified,inheritedIdentityStatePreserved:true,awardsEstateCycleEProductMutationAuthorized:false,awardsEstateCycleEQualificationMutationAuthorized:false,awardsEstateCycleEPrefixWideRegistrationAuthorized:false,awardsEstateCycleEPreflightWaiverAuthorized:false,awardsEstateCycleEFLaterCycleActivationAuthorized:false,awardsEstateCycleEDeploymentPublicationAuthorized:false})
+    awardsCinematicEpiloguePathRecognitionSuccessorChecks:successorChecks,
+    awardsCinematicEpiloguePathRecognitionVerification:epilogueVerification,
+    boundary:deepFreeze({...base.boundary,awardsCinematicEpilogueExactPathRecognitionOnly:true,awardsCinematicEpilogueProductMutationAuthorityCreated:false,awardsCinematicEpilogueQualificationMutationAuthorityCreated:false,awardsCinematicEpiloguePrefixWideRegistrationAuthorityCreated:false,awardsCinematicEpiloguePreflightWaiverAuthorityCreated:false,awardsCinematicEpilogueDeploymentPublicationAuthorityCreated:false}),
+    stoppingCondition:deepFreeze({...base.stoppingCondition,awardsCinematicEpiloguePathRecognitionLoaded:true,awardsCinematicEpiloguePathRecognitionSuccessorIntegrityVerified:successorIntegrityVerified,inheritedIdentityStatePreserved:true,awardsCinematicEpilogueProductMutationAuthorized:false,awardsCinematicEpilogueQualificationMutationAuthorized:false,awardsCinematicEpiloguePrefixWideRegistrationAuthorized:false,awardsCinematicEpiloguePreflightWaiverAuthorized:false,awardsCinematicEpilogueDeploymentPublicationAuthorized:false})
   });
 }
 export {runHEarthC2R1MC5AutomaticRegistryPreflight};

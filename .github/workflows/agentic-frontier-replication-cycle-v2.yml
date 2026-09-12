@@ -1,0 +1,197 @@
+name: Agentic Frontier Replication Cycle v2
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  environment-neutral-control:
+    if: >-
+      github.event.issue.number == 2089 &&
+      contains(github.event.comment.body, 'AGENTIC_FRONTIER_REPLICATION_CYCLE_V2')
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      OLLAMA_MODEL: qwen2.5-coder:7b
+      OLLAMA_HOST_URL: http://127.0.0.1:11434
+      OPENHANDS_INACTIVITY_S: '180'
+      OPENHANDS_HARD_TIMEOUT_S: '600'
+      PAIR_HEARTBEAT_S: '15'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: main, fetch-depth: 1}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Build stock OpenHands environment and freeze exact resolution
+        run: |
+          set -euo pipefail
+          python -m venv .cache/agentic-frontier/replication-v2
+          VENV="$GITHUB_WORKSPACE/.cache/agentic-frontier/replication-v2"
+          "$VENV/bin/python" -m pip install --disable-pip-version-check 'openhands==1.14.0'
+          "$VENV/bin/python" -m pip freeze | LC_ALL=C sort > openhands-environment-freeze-v2.txt
+          sha256sum openhands-environment-freeze-v2.txt | tee openhands-environment-freeze-v2.sha256
+          echo "$VENV/bin" >> "$GITHUB_PATH"
+          "$VENV/bin/openhands" --version
+      - name: Start common 7B model runtime
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.ollama/models"
+          docker pull ollama/ollama:0.32.14
+          docker run -d --name agentic-frontier-ollama -e OLLAMA_CONTEXT_LENGTH=8192 -v "$HOME/.ollama:/root/.ollama" -p 11434:11434 ollama/ollama:0.32.14
+          for i in $(seq 1 45); do curl -fsS "$OLLAMA_HOST_URL/api/tags" >/dev/null && break; sleep 2; done
+          docker exec agentic-frontier-ollama ollama pull "$OLLAMA_MODEL"
+      - name: Prove neutral OpenHands inspect-edit-test capability
+        run: python tools/research/agentic-frontier/openhands-neutral-control-v1.py
+      - name: Upload frozen environment and neutral receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agentic-frontier-replication-environment-v2
+          path: |
+            openhands-environment-freeze-v2.txt
+            openhands-environment-freeze-v2.sha256
+            agentic-frontier-openhands-neutral-control-v1.json
+          if-no-files-found: error
+
+  current-af-ir-01-smoke:
+    needs: environment-neutral-control
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      OLLAMA_MODEL: qwen2.5-coder:7b
+      OLLAMA_HOST_URL: http://127.0.0.1:11434
+      MODEL_FIRST_TOKEN_TIMEOUT_S: '90'
+      MODEL_HARD_TIMEOUT_S: '240'
+      OPENHANDS_INACTIVITY_S: '180'
+      OPENHANDS_HARD_TIMEOUT_S: '600'
+      PAIR_HEARTBEAT_S: '15'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: main, fetch-depth: 1}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/download-artifact@v4
+        with:
+          name: agentic-frontier-replication-environment-v2
+          path: environment-v2
+      - name: Reconstruct exact OpenHands environment
+        run: |
+          set -euo pipefail
+          python -m venv .cache/agentic-frontier/replication-v2
+          VENV="$GITHUB_WORKSPACE/.cache/agentic-frontier/replication-v2"
+          "$VENV/bin/python" -m pip install --disable-pip-version-check -r environment-v2/openhands-environment-freeze-v2.txt
+          "$VENV/bin/python" -m pip freeze | LC_ALL=C sort > reconstructed-freeze.txt
+          diff -u environment-v2/openhands-environment-freeze-v2.txt reconstructed-freeze.txt
+          echo "$VENV/bin" >> "$GITHUB_PATH"
+      - name: Start common model runtime
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.ollama/models"
+          docker pull ollama/ollama:0.32.14
+          docker run -d --name agentic-frontier-ollama -e OLLAMA_CONTEXT_LENGTH=8192 -v "$HOME/.ollama:/root/.ollama" -p 11434:11434 ollama/ollama:0.32.14
+          for i in $(seq 1 45); do curl -fsS "$OLLAMA_HOST_URL/api/tags" >/dev/null && break; sleep 2; done
+          docker exec agentic-frontier-ollama ollama pull "$OLLAMA_MODEL"
+      - id: smoke
+        name: Replay frozen AF-IR-01
+        run: |
+          set +e
+          python tools/research/agentic-frontier/paired-smoke-ir01-v1.py
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          test "$code" = "0" -o "$code" = "3"
+      - name: Upload current AF-IR-01 receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agentic-frontier-current-af-ir-01-v2
+          path: agentic-frontier-ir01-paired-receipt.json
+          if-no-files-found: error
+
+  full-population-shard:
+    needs: [environment-neutral-control, current-af-ir-01-smoke]
+    strategy:
+      fail-fast: false
+      matrix:
+        stratum: [IMPLEMENTATION_REPAIR, LONG_HORIZON, COLLABORATIVE_HANDOFF, FAILURE_RECOVERY]
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      AF_STRATUM: ${{ matrix.stratum }}
+      OLLAMA_MODEL: qwen2.5-coder:7b
+      OLLAMA_HOST_URL: http://127.0.0.1:11434
+      MODEL_FIRST_TOKEN_TIMEOUT_S: '90'
+      MODEL_HARD_TIMEOUT_S: '240'
+      OPENHANDS_INACTIVITY_S: '180'
+      OPENHANDS_HARD_TIMEOUT_S: '600'
+      PAIR_HEARTBEAT_S: '15'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: main, fetch-depth: 1}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/download-artifact@v4
+        with:
+          name: agentic-frontier-replication-environment-v2
+          path: environment-v2
+      - name: Reconstruct exact OpenHands environment
+        run: |
+          set -euo pipefail
+          python -m venv .cache/agentic-frontier/replication-v2
+          VENV="$GITHUB_WORKSPACE/.cache/agentic-frontier/replication-v2"
+          "$VENV/bin/python" -m pip install --disable-pip-version-check -r environment-v2/openhands-environment-freeze-v2.txt
+          "$VENV/bin/python" -m pip freeze | LC_ALL=C sort > reconstructed-freeze.txt
+          diff -u environment-v2/openhands-environment-freeze-v2.txt reconstructed-freeze.txt
+          echo "$VENV/bin" >> "$GITHUB_PATH"
+      - name: Start common model runtime
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.ollama/models"
+          docker pull ollama/ollama:0.32.14
+          docker run -d --name agentic-frontier-ollama -e OLLAMA_CONTEXT_LENGTH=8192 -v "$HOME/.ollama:/root/.ollama" -p 11434:11434 ollama/ollama:0.32.14
+          for i in $(seq 1 45); do curl -fsS "$OLLAMA_HOST_URL/api/tags" >/dev/null && break; sleep 2; done
+          docker exec agentic-frontier-ollama ollama pull "$OLLAMA_MODEL"
+      - name: Execute frozen stratum
+        run: python tools/research/agentic-frontier/full-study-v1.py
+      - name: Upload raw stratum receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: replication-v2-shard-${{ matrix.stratum }}
+          path: agentic-frontier-full24/${{ matrix.stratum }}/
+          if-no-files-found: error
+
+  aggregate-current-population:
+    needs: full-population-shard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: main, fetch-depth: 1}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: replication-v2-shard-*
+          path: downloaded
+      - uses: actions/download-artifact@v4
+        with:
+          name: agentic-frontier-current-af-ir-01-v2
+          path: downloaded-smoke
+      - name: Aggregate only after 24 current unique receipts exist
+        run: python tools/research/agentic-frontier/aggregate-full24-replication-v2.py
+      - name: Upload replication aggregate
+        uses: actions/upload-artifact@v4
+        with:
+          name: agentic-frontier-replication-v2-aggregate
+          path: aggregate-v2/
+          if-no-files-found: error

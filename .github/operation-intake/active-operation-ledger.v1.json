@@ -1,5 +1,48 @@
 {
   "activeScopes": {
+    "00acf74cd821d4287b7729c95e2909bdbfd3204aa34cc7954b472288ec23ce25": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "521c4b146337e16c784b9f3f0a6bb94045b756b5",
+          "lockGeneration": 2162,
+          "lockScope": "H_EARTH:AWARDS:TOP_CAROUSEL:RECOGNITION_FIRST_VISUAL_RECOVERY:V1",
+          "operationId": "AWARDS_CHAMBER_RECOGNITION_FIRST_VISUAL_RECOVERY_PUBLIC_20260912_001",
+          "procedureLocatorDigest": "96645c620c8fb235f4dae6370276a8cafe1d31201fb95718c343bfc46e513c71",
+          "requestDigest": "32e9eec62091dad91a1e10897723d9ecc61409762b373388afddd29173c8b75d",
+          "scopeHash": "00acf74cd821d4287b7729c95e2909bdbfd3204aa34cc7954b472288ec23ce25"
+        },
+        "bindingDigest": "65a82696ad8d4917e0e53f1857d7a0cad9167b21ef53e4701a52710e85196272",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "5ee36e8004f6addd14902db9b0c79eeaa56dd18e474e56a5dcfbc34d254256da",
+          "commentId": 5647706888,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3145,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34710091931,
+          "workflowSha": "521c4b146337e16c784b9f3f0a6bb94045b756b5"
+        },
+        "lineageAnchorCommitSha": "20f3941ae768a35dfcb69744fe5fab54cdce700c",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "521c4b146337e16c784b9f3f0a6bb94045b756b5",
+      "lockGeneration": 2162,
+      "lockScope": "H_EARTH:AWARDS:TOP_CAROUSEL:RECOGNITION_FIRST_VISUAL_RECOVERY:V1",
+      "operationId": "AWARDS_CHAMBER_RECOGNITION_FIRST_VISUAL_RECOVERY_PUBLIC_20260912_001",
+      "procedureLocatorDigest": "96645c620c8fb235f4dae6370276a8cafe1d31201fb95718c343bfc46e513c71",
+      "released": false,
+      "requestDigest": "32e9eec62091dad91a1e10897723d9ecc61409762b373388afddd29173c8b75d",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "00acf74cd821d4287b7729c95e2909bdbfd3204aa34cc7954b472288ec23ce25",
+      "state": "ADMITTED_LOCKED"
+    },
     "01572acf600dc9a4724182e4e740faac14e141f961b09501aa9022b8d4d08d65": {
       "governingHead": "b7728eb3f8e1da8b0c408a4f255adb144fabcee3",
       "lockGeneration": 366,
@@ -9232,7 +9275,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2161,
+  "lockGeneration": 2162,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

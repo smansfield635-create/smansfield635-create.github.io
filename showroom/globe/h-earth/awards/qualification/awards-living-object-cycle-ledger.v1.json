@@ -160,5 +160,39 @@
     "bottomTrophyCarouselMutationAuthorized": false,
     "prematureMergeAuthorized": false,
     "deploymentPublicationAuthorized": false
+  },
+  "recognizableEstateObjectSuccessor": {
+    "operationId": "AWARDS_RECOGNIZABLE_ESTATE_OBJECT_SUCCESSOR_20260912_001",
+    "lockGeneration": 2134,
+    "governingHead": "56c1630070b869f5e3a2d91e53a0812fd885a046",
+    "status": "CANDIDATE_READY_FOR_EXACT_QUALIFICATION",
+    "frozenIssue": 3145,
+    "frozenCrosswalk": {
+      "experience": "MIRRORLAND_WINDOW",
+      "world": "H_EARTH_AUDRALIA_WORLD",
+      "coherence": "BRAIN",
+      "trust": "NINE_SUMMITS",
+      "estate": "HOUSE_MANOR"
+    },
+    "signatureEvents": {
+      "experience": "OPAQUE_CATHEDRAL_GLASS_TO_CLEAR_AUDRALIA_TO_OPAQUE",
+      "world": "ENVIRONMENT_DEPTH_RESOLVE",
+      "coherence": "NEURAL_SYNCHRONIZATION",
+      "trust": "EARNED_ASCENT_REVEAL",
+      "estate": "STRUCTURAL_ASSEMBLY"
+    },
+    "oneEventPerObject": true,
+    "sharedCarouselPreserved": true,
+    "awardsIndexPreserved": true,
+    "cardCopyPreserved": true,
+    "readerPreserved": true,
+    "bottomTrophyCarouselPreserved": true,
+    "maxActiveLivingObjectInstances": 1,
+    "rearHeavyRuntime": false,
+    "inactiveTeardown": true,
+    "reducedMotionEquivalent": true,
+    "generatedImageAssetsIntroduced": false,
+    "deploymentPublicationAuthorized": false,
+    "verifierPath": "showroom/globe/h-earth/awards/qualification/verify-recognizable-estate-object-successor-v1.mjs"
   }
 }

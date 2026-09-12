@@ -1,113 +1,41 @@
 const CONTRACT=Object.freeze({
-  id:'AWARDS_ESTATE_LIVING_OBJECT_CYCLE_E_V1',
-  cycle:'E_ESTATE',
-  claim:'The surprise is not one feature. It is that the pieces belong together.',
-  governingHead:'e764b8ea37a7ed6c3f0a2c5be5d4be520db489f4',
-  sourceBinding:Object.freeze([
-    Object.freeze({id:'COMPASS',role:'ORIENTATION',authorityClass:'NAVIGATION',maturityClass:'PUBLIC_OPERATING_SURFACE',path:'index.html',blob:'3a684cf4f4aedcfa2c76fa2686fb4c733d5903bb'}),
-    Object.freeze({id:'H_EARTH',role:'WORLD',authorityClass:'EXPERIENCE',maturityClass:'PUBLIC_OPERATING_SURFACE',path:'showroom/globe/h-earth/index.html',blob:'f4fa5df980c639184352d978909532dc8f1bcbd8'}),
-    Object.freeze({id:'CHARACTERS',role:'ENCOUNTER',authorityClass:'EXPERIENCE',maturityClass:'PUBLIC_EVOLVING_SURFACE',path:'characters/index.html',blob:'6bebd977905ec9c9d7b717a4ea4305688e82aa03'}),
-    Object.freeze({id:'COHERENCE',role:'INSPECTION',authorityClass:'DIAGNOSTIC',maturityClass:'BOUNDED_INSTRUMENT',path:'products/coherence-diagnostic/index.html',blob:'b0785f36d913c286dc19e042f33ea91afcd166bc'}),
-    Object.freeze({id:'LAWS',role:'CONSTRAINT',authorityClass:'KNOWLEDGE',maturityClass:'PUBLIC_KNOWLEDGE_SURFACE',path:'laws/index.html',blob:'d6de5558a6ba38e66ad6284a80c03de67682628b'}),
-    Object.freeze({id:'GOVERNANCE',role:'AUTHORIZATION',authorityClass:'GOVERNANCE',maturityClass:'PUBLIC_CONTROL_SURFACE',path:'governance/index.html',blob:'9b216d8f86e5dbc76794ab01ce967d3e9357ef21'})
-  ]),
-  relations:Object.freeze([
-    Object.freeze({from:'COMPASS',to:'H_EARTH',kind:'ORIENTS_TO'}),
-    Object.freeze({from:'COMPASS',to:'CHARACTERS',kind:'ORIENTS_TO'}),
-    Object.freeze({from:'COHERENCE',to:'LAWS',kind:'INSPECTS_WITHIN'}),
-    Object.freeze({from:'LAWS',to:'GOVERNANCE',kind:'CONSTRAINS_WITHIN'}),
-    Object.freeze({from:'GOVERNANCE',to:'H_EARTH',kind:'BOUNDS_CLAIMS_FOR'}),
-    Object.freeze({from:'GOVERNANCE',to:'CHARACTERS',kind:'BOUNDS_CLAIMS_FOR'}),
-    Object.freeze({from:'H_EARTH',to:'COHERENCE',kind:'SHARES_ESTATE_WITH'}),
-    Object.freeze({from:'CHARACTERS',to:'COHERENCE',kind:'SHARES_ESTATE_WITH'})
-  ]),
-  invariants:Object.freeze({
-    relationIsClaim:true,
-    identicalMaturityImplied:false,
-    identicalAuthorityImplied:false,
-    completionEquivalenceImplied:false,
-    sourceMutationAuthorized:false,
-    webglContexts:0
-  }),
-  lifecycle:Object.freeze(['REAR_INERT','APPROACHING','FOREGROUND_REST','SIGNATURE_PLAY','FOREGROUND_IDLE','SELECT_RESPONSE','READER_OPEN','RETURN_RESTORING'])
+ id:'AWARDS_ESTATE_LIVING_OBJECT_CYCLE_E_V2_RECOGNIZABLE_MANOR',cycle:'E_ESTATE',claim:'The surprise is not one feature. It is that the pieces belong together.',recognizableObject:'HOUSE_MANOR',signatureEvent:'STRUCTURAL_ASSEMBLY',eventCount:1,governingHead:'56c1630070b869f5e3a2d91e53a0812fd885a046',
+ sourceBinding:Object.freeze({neutralBlockout:Object.freeze({path:'/assets/manor-blueprint/manor.estate.neutral-blockout.mjs',blob:'0377cb8b28907e3c10e6193dff3e720b8623f089',contract:'MIRROR_MANOR_NEUTRAL_SITE_MASSING_BLOCKOUT_v1'}),gothicPhase1:Object.freeze({path:'/assets/manor-blueprint/manor.estate.gothic-detail-phase1.mjs',blob:'4fd6b286062317151d93984422439aa39a2c0465',contract:'MIRROR_MANOR_GOTHIC_ARCHITECTURAL_DETAIL_PHASE1_v1'}),manorRuntime:Object.freeze({path:'/assets/manor-blueprint/manor.blueprint.js',blob:'dcabd668ad769c0870641a181db7c85c741e7d3c'})}),
+ semanticBoundary:Object.freeze({relationIsClaim:true,identicalMaturityImplied:false,identicalAuthorityImplied:false,completionEquivalenceImplied:false,sourceMutationAuthorized:false}),
+ lifecycle:Object.freeze(['REAR_INERT','APPROACHING','FOREGROUND_REST','SIGNATURE_PLAY','FOREGROUND_IDLE','SELECT_RESPONSE','READER_OPEN','RETURN_RESTORING'])
 });
-
-function makeNode(doc,item,index){
-  const node=doc.createElement('button');
-  node.type='button';
-  node.className='awards-estate-node';
-  node.dataset.estateId=item.id;
-  node.dataset.role=item.role;
-  node.dataset.authority=item.authorityClass;
-  node.dataset.maturity=item.maturityClass;
-  node.style.setProperty('--estate-index',String(index));
-  node.innerHTML=`<span class="awards-estate-node__id">${item.id}</span><span class="awards-estate-node__role">${item.role}</span>`;
-  return node;
-}
-
+const STYLE_ID='awards-estate-manor-v2-style';
+const STYLE=`
+.awards-manor-object{position:relative;width:100%;height:100%;min-height:220px;overflow:hidden;isolation:isolate;pointer-events:none;background:radial-gradient(circle at 50% 67%,rgba(181,190,188,.09),transparent 50%)}
+.awards-manor-object .manor-stage{position:absolute;inset:7% 1% 5%;perspective:700px;display:grid;place-items:end center}
+.awards-manor-object .manor{position:relative;width:92%;height:80%;max-width:205px;max-height:175px;transform-style:preserve-3d;filter:drop-shadow(0 13px 14px rgba(0,0,0,.38));transition:transform .8s cubic-bezier(.2,.8,.2,1),filter .7s ease}
+.awards-manor-object .piece{position:absolute;background:linear-gradient(145deg,#747878,#4c5254 64%,#32383b);border:1px solid rgba(207,214,212,.23);box-shadow:inset 0 1px rgba(255,255,255,.09);transition:transform .9s cubic-bezier(.2,.8,.2,1),opacity .7s ease,filter .7s ease}
+.awards-manor-object .core{left:30%;bottom:8%;width:40%;height:45%;border-radius:3px}.awards-manor-object .wing-l{left:8%;bottom:7%;width:27%;height:34%;transform:translateX(-13px)}.awards-manor-object .wing-r{right:8%;bottom:7%;width:27%;height:34%;transform:translateX(13px)}
+.awards-manor-object .tower-l,.awards-manor-object .tower-r{bottom:7%;width:17%;height:62%;border-radius:3px 3px 0 0}.awards-manor-object .tower-l{left:17%;transform:translate(-9px,-7px)}.awards-manor-object .tower-r{right:17%;transform:translate(9px,-7px)}
+.awards-manor-object .roof{position:absolute;background:linear-gradient(155deg,#343a41,#171d24);clip-path:polygon(50% 0,100% 100%,0 100%);transition:transform .9s cubic-bezier(.2,.8,.2,1),opacity .7s ease}.awards-manor-object .roof-core{left:27%;bottom:52%;width:46%;height:31%;transform:translateY(-10px)}.awards-manor-object .roof-l{left:5%;bottom:40%;width:32%;height:23%;transform:translate(-15px,-5px)}.awards-manor-object .roof-r{right:5%;bottom:40%;width:32%;height:23%;transform:translate(15px,-5px)}
+.awards-manor-object .crown{position:absolute;width:22%;height:24%;bottom:67%;background:linear-gradient(155deg,#313840,#121922);clip-path:polygon(50% 0,100% 100%,0 100%);transition:transform .9s cubic-bezier(.2,.8,.2,1),opacity .7s ease}.awards-manor-object .crown-l{left:14%;transform:translate(-8px,-13px)}.awards-manor-object .crown-r{right:14%;transform:translate(8px,-13px)}
+.awards-manor-object .door{position:absolute;left:46%;bottom:8%;width:8%;height:17%;border-radius:45% 45% 0 0;background:#13191c;border:1px solid rgba(226,205,150,.24);z-index:4}.awards-manor-object .window{position:absolute;width:5%;height:10%;background:rgba(154,205,210,.2);border:1px solid rgba(196,218,218,.27);z-index:4;box-shadow:0 0 5px rgba(121,196,205,.08)}
+.awards-manor-object .w1{left:36%;bottom:29%}.awards-manor-object .w2{right:36%;bottom:29%}.awards-manor-object .w3{left:22%;bottom:40%}.awards-manor-object .w4{right:22%;bottom:40%}
+.awards-manor-object .ground{position:absolute;left:2%;right:2%;bottom:5%;height:2px;background:linear-gradient(90deg,transparent,rgba(152,164,160,.36),transparent)}
+.awards-manor-object[data-estate-phase='assemble'] .piece,.awards-manor-object[data-estate-phase='assemble'] .roof,.awards-manor-object[data-estate-phase='assemble'] .crown{transform:translate(0,0);opacity:1;filter:brightness(1.08)}
+.awards-manor-object[data-estate-phase='assemble'] .manor{transform:scale(1.035);filter:drop-shadow(0 13px 14px rgba(0,0,0,.35)) drop-shadow(0 0 14px rgba(173,199,198,.13))}
+.awards-manor-object[data-estate-phase='equivalent'] .piece,.awards-manor-object[data-estate-phase='equivalent'] .roof,.awards-manor-object[data-estate-phase='equivalent'] .crown{transform:translate(0,0);opacity:1}.awards-manor-object[data-estate-phase='selected'] .manor{transform:scale(.97)}.awards-manor-object[data-estate-phase='rear']{opacity:.3;filter:saturate(.62) blur(1px)}
+@media(max-width:760px){.awards-manor-object .manor{width:96%;height:76%;max-width:185px}}
+@media(prefers-reduced-motion:reduce){.awards-manor-object *{transition:none!important}}
+`;
+function ensureStyle(doc){let s=doc.getElementById(STYLE_ID);if(s)return;s=doc.createElement('style');s.id=STYLE_ID;s.textContent=STYLE;doc.head.append(s)}
+function build(doc){ensureStyle(doc);const root=doc.createElement('section');root.className='awards-manor-object';root.dataset.cycle='E_ESTATE';root.dataset.lifecycle='REAR_INERT';root.dataset.estatePhase='rest';root.dataset.recognizableObject='HOUSE_MANOR';root.setAttribute('aria-label','Mirror Manor');root.innerHTML=`<div class="manor-stage"><div class="manor"><i class="ground"></i><i class="piece wing-l"></i><i class="piece wing-r"></i><i class="piece core"></i><i class="piece tower-l"></i><i class="piece tower-r"></i><i class="roof roof-l"></i><i class="roof roof-core"></i><i class="roof roof-r"></i><i class="crown crown-l"></i><i class="crown crown-r"></i><i class="door"></i><i class="window w1"></i><i class="window w2"></i><i class="window w3"></i><i class="window w4"></i></div></div>`;return root}
 export function createAwardsEstateCycleE({document:doc=document,reducedMotion=false}={}){
-  const root=doc.createElement('section');
-  root.className='awards-living-object awards-estate-object';
-  root.dataset.cycle='E_ESTATE';
-  root.dataset.lifecycle='REAR_INERT';
-  root.dataset.reducedMotion=reducedMotion?'true':'false';
-  root.setAttribute('aria-label','Estate constellation');
-
-  const field=doc.createElement('div');
-  field.className='awards-estate-field';
-  const relationLayer=doc.createElement('div');
-  relationLayer.className='awards-estate-relations';
-  relationLayer.setAttribute('aria-hidden','true');
-  field.append(relationLayer);
-
-  const nodes=new Map();
-  CONTRACT.sourceBinding.forEach((item,index)=>{
-    const node=makeNode(doc,item,index);
-    node.addEventListener('click',()=>select(item.id));
-    nodes.set(item.id,node);
-    field.append(node);
-  });
-
-  const center=doc.createElement('div');
-  center.className='awards-estate-center';
-  center.textContent='ONE ESTATE';
-  field.append(center);
-  root.append(field);
-
-  let state='REAR_INERT';
-  let selected=null;
-  function setState(next){
-    if(!CONTRACT.lifecycle.includes(next))throw new Error('ESTATE_INVALID_LIFECYCLE');
-    state=next;root.dataset.lifecycle=next;return api;
-  }
-  function stable(){return setState('FOREGROUND_IDLE')}
-  function approach(){return setState('APPROACHING')}
-  function rest(){return setState('FOREGROUND_REST')}
-  function playSignature(){
-    setState('SIGNATURE_PLAY');
-    root.dataset.relationship='BELONGING_VISIBLE';
-    root.dataset.configuration='CONSTELLATION_CONVERGED';
-    if(reducedMotion){root.dataset.motionEquivalent='RELATIONSHIP_REVEALED_WITHOUT_TRANSIT';return stable()}
-    root.dataset.motionEquivalent='ANIMATED_CONVERGENCE';
-    return api;
-  }
-  function select(id){
-    if(!nodes.has(id))throw new Error('ESTATE_UNKNOWN_NODE');
-    selected=id;root.dataset.selected=id;setState('SELECT_RESPONSE');
-    for(const [nodeId,node] of nodes)node.dataset.selected=nodeId===id?'true':'false';
-    return api;
-  }
-  function openReader(){return setState('READER_OPEN')}
-  function restore(){
-    selected=null;delete root.dataset.selected;delete root.dataset.relationship;delete root.dataset.configuration;
-    for(const node of nodes.values())delete node.dataset.selected;
-    setState('RETURN_RESTORING');return rest();
-  }
-  function inspect(){return Object.freeze({state,selected,reducedMotion,sourceCount:CONTRACT.sourceBinding.length,relationCount:CONTRACT.relations.length,webglContexts:0})}
-  function destroy(){root.remove()}
-  const api=Object.freeze({element:root,contract:CONTRACT,approach,rest,playSignature,select,openReader,restore,stable,inspect,destroy});
-  return api;
+ const root=build(doc);root.dataset.reducedMotion=reducedMotion?'true':'false';let state='REAR_INERT',token=0,timers=[];const clear=()=>{timers.forEach(clearTimeout);timers=[]};const phase=v=>root.dataset.estatePhase=v;const schedule=(fn,ms,t)=>timers.push(setTimeout(()=>{if(t===token)fn()},ms));
+ function setState(next){if(!CONTRACT.lifecycle.includes(next))throw new Error('ESTATE_INVALID_LIFECYCLE');state=next;root.dataset.lifecycle=next;return api}
+ function approach(){phase(reducedMotion?'equivalent':'rest');return setState('APPROACHING')}
+ function rest(){phase(reducedMotion?'equivalent':'rest');return setState('FOREGROUND_REST')}
+ function stable(){return setState('FOREGROUND_IDLE')}
+ function playSignature(){token++;clear();const t=token;setState('SIGNATURE_PLAY');if(reducedMotion){phase('equivalent');return stable()}phase('rest');schedule(()=>phase('assemble'),360,t);schedule(()=>phase('rest'),2700,t);schedule(()=>stable(),3350,t);return api}
+ function select(){token++;clear();setState('SELECT_RESPONSE');phase(reducedMotion?'equivalent':'selected');return api}
+ function openReader(){return setState('READER_OPEN')}
+ function restore(){token++;clear();setState('RETURN_RESTORING');phase(reducedMotion?'equivalent':'rest');const t=token;schedule(()=>rest(),reducedMotion?0:380,t);return api}
+ function inspect(){return Object.freeze({state,reducedMotion,webglContexts:0,recognizableObject:CONTRACT.recognizableObject,signatureEvent:CONTRACT.signatureEvent,eventCount:1,sourceBinding:CONTRACT.sourceBinding,semanticBoundary:CONTRACT.semanticBoundary})}
+ function destroy(){token++;clear();root.remove()}const api=Object.freeze({element:root,contract:CONTRACT,approach,rest,playSignature,select,openReader,restore,stable,inspect,destroy});if(reducedMotion)phase('equivalent');return api
 }
-
-export {CONTRACT as AWARDS_ESTATE_CYCLE_E_CONTRACT};
-export default createAwardsEstateCycleE;
+export {CONTRACT as AWARDS_ESTATE_CYCLE_E_CONTRACT};export default createAwardsEstateCycleE;

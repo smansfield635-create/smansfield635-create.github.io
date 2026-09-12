@@ -152,6 +152,7 @@ jobs:
           export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
           test -n "$CHROME_PATH"
           node --input-type=module <<'NODE'
+          import fs from 'node:fs';
           import {spawn} from 'node:child_process';
           import puppeteer from 'puppeteer-core';
 
@@ -176,11 +177,16 @@ jobs:
             await page.click(next);
             await page.waitForFunction(()=>document.querySelector('[data-achievement-stage] .instrument-card[data-story="world"]')?.getAttribute('aria-current')==='true',{timeout:10000});
             await sleep(1400);
-            const shell=await page.$('[data-achievement-stage] .instrument-card[data-story="world"] .living-object-shell');
-            if(!shell)throw new Error('WORLD_LIVING_OBJECT_SHELL_NOT_FOUND_FOR_SCREENSHOT');
-            const box=await shell.boundingBox();
-            if(!box||box.width<120||box.height<120)throw new Error('WORLD_LIVING_OBJECT_SHELL_NOT_VISIBLE_FOR_SCREENSHOT');
-            await shell.screenshot({path:screenshot});
+            const selector='[data-achievement-stage] .instrument-card[data-story="world"] .living-object-shell canvas.awards-world-true3d';
+            await page.waitForSelector(selector,{timeout:10000});
+            await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+            const dataUrl=await page.$eval(selector,canvas=>{
+              if(!(canvas instanceof HTMLCanvasElement))throw new Error('WORLD_WEBGL_CANVAS_NOT_FOUND');
+              if(canvas.width<120||canvas.height<120)throw new Error('WORLD_WEBGL_CANVAS_TOO_SMALL');
+              return canvas.toDataURL("image/png");
+            });
+            if(!dataUrl.startsWith('data:image/png;base64,'))throw new Error('WORLD_WEBGL_CANVAS_PNG_INVALID');
+            fs.writeFileSync(screenshot,Buffer.from(dataUrl.slice('data:image/png;base64,'.length),'base64'));
           } finally {
             if(browser)await browser.close();
             server.kill('SIGTERM');

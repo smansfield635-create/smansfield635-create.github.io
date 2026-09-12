@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "build-fireworks-exact-head-deploy-20260911-001",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3100,
+  "requestBranch": "ai-dispatch-request-build-fireworks-deploy-20260911-001",
+  "requestCommit": "5a8079126eac3949f75059b7012153a782820973",
+  "requestCommitParent": "8b30456435161cfbdfada8575aeb2cfa59057dae",
+  "currentMainSha": "8b30456435161cfbdfada8575aeb2cfa59057dae",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "8b30456435161cfbdfada8575aeb2cfa59057dae",
+    "surface_id": "build"
+  },
+  "bridgeRunId": "34665937587",
+  "dispatchedRunId": 34665945761,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/34665945761",
+  "dispatchedRunHeadSha": "8b30456435161cfbdfada8575aeb2cfa59057dae",
+  "dispatchedAt": "2026-09-12T01:49:33.287Z",
+  "resolvedAt": "2026-09-12T01:49:37.258Z"
+}

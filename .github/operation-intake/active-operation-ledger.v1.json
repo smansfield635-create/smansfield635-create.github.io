@@ -1291,6 +1291,49 @@
       "scopeHash": "2d8e31bab5c9bfc7ca27a7c9ba88a8d1b17e79867086159dd335ef376f2f4f93",
       "state": "ADMITTED_LOCKED"
     },
+    "2e63330908018beedcc12afa48adbafa790fbc3ad1e32a697f6eea056251f702": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "0c00c49f678c1ea6f597e864ca08d538dc05b274",
+          "lockGeneration": 2108,
+          "lockScope": "BUILD:PUBLIC_PAGE:FIREWORKS_ENVIRONMENTAL_SYSTEM:V1",
+          "operationId": "BUILD_FIREWORKS_ENVIRONMENTAL_SYSTEM_20260911_001",
+          "procedureLocatorDigest": "26cb997e14b5a69d6aaa497619fe5487578c8e37dd5fe966f4b10cd2733b8b85",
+          "requestDigest": "93f295621c6069c7f8910b03ab480031116dffee90bf51c85b7d270d53468bff",
+          "scopeHash": "2e63330908018beedcc12afa48adbafa790fbc3ad1e32a697f6eea056251f702"
+        },
+        "bindingDigest": "b5220d002cbab2cc805a9664976304e046e06faa8827f9221a8d6250d8189d93",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "922e64f565352b75eefca7b9ef65e133d1a10085172132be784aaae886852afb",
+          "commentId": 5642500146,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3092,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34664575388,
+          "workflowSha": "0c00c49f678c1ea6f597e864ca08d538dc05b274"
+        },
+        "lineageAnchorCommitSha": "8e873dc13fa3e61ae82c5143bf41dd9a5b8854a0",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "0c00c49f678c1ea6f597e864ca08d538dc05b274",
+      "lockGeneration": 2108,
+      "lockScope": "BUILD:PUBLIC_PAGE:FIREWORKS_ENVIRONMENTAL_SYSTEM:V1",
+      "operationId": "BUILD_FIREWORKS_ENVIRONMENTAL_SYSTEM_20260911_001",
+      "procedureLocatorDigest": "26cb997e14b5a69d6aaa497619fe5487578c8e37dd5fe966f4b10cd2733b8b85",
+      "released": false,
+      "requestDigest": "93f295621c6069c7f8910b03ab480031116dffee90bf51c85b7d270d53468bff",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "2e63330908018beedcc12afa48adbafa790fbc3ad1e32a697f6eea056251f702",
+      "state": "ADMITTED_LOCKED"
+    },
     "30aafa8cd70c2229714d2737d9e771d42657aa675aaf3505acceaf10d6c71bc1": {
       "governingHead": "9662c03b106387ff8046e191867214dd1f947a91",
       "lockGeneration": 1588,
@@ -8139,7 +8182,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2107,
+  "lockGeneration": 2108,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

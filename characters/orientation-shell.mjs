@@ -328,6 +328,8 @@ story?.addEventListener('click',event=>{
   if(back){existingReturn?.click();return;}
   const enter=event.target.closest?.('[data-card-enter]');
   if(enter&&activeId){
+    const sourceEnter=[...(storyMore?.querySelectorAll('button')||[])].find(button=>/^Enter scene$/i.test((button.textContent||'').trim()));
+    if(sourceEnter){sourceEnter.click();return;}
     cardUi.notice.hidden=false;
     const destination=getDestination(activeId);
     if(status)status.textContent=`${destination?.title||'This scene'} · Coming Soon`;

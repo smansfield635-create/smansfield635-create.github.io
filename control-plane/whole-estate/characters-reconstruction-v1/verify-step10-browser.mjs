@@ -59,23 +59,61 @@ for(const spec of cases){
     bodyWidth:document.body.scrollWidth,
     viewportWidth:innerWidth,
     status:document.querySelector('#status')?.textContent||'',
-    signalCount:[...document.querySelectorAll('.signal')].filter(el=>!el.hidden).length,
+    signalCount:[...document.querySelectorAll('.signal')].filter(el=>!el.hidden&&!el.classList.contains('unseen')&&el.getAttribute('aria-hidden')!=='true'&&el.tabIndex>=0).length,
     reduced:matchMedia('(prefers-reduced-motion: reduce)').matches
   }));
+
   let returnPath=false;
   let arrivalStatus='';
   let returnStatus='';
-  const visibleSignal=page.locator('.signal:not([hidden])').first();
-  if(await visibleSignal.count()){
-    await visibleSignal.click({force:true});
-    await page.waitForFunction(()=>document.querySelector('#return')?.classList.contains('show'),null,{timeout:15000});
-    arrivalStatus=await page.locator('#status').textContent();
-    await page.locator('#return').click({force:true});
-    await page.waitForFunction(()=>!document.querySelector('#return')?.classList.contains('show'),null,{timeout:15000});
-    await page.waitForFunction(()=>/Orbit/.test(document.querySelector('#status')?.textContent||''),null,{timeout:15000});
-    returnStatus=await page.locator('#status').textContent();
-    returnPath=/Orbit/.test(returnStatus||'');
+  let travelError='';
+  let selectedSignalId='';
+  const availableSignal=page.locator('.signal:not([hidden]):not(.unseen):not([aria-hidden="true"])').filter({hasNot:page.locator('[tabindex="-1"]')}).first();
+  if(await availableSignal.count()){
+    selectedSignalId=await availableSignal.getAttribute('data-id')||'';
+    try{
+      await availableSignal.click();
+      await page.waitForFunction(()=>document.querySelector('#return')?.classList.contains('show'),null,{timeout:15000});
+      arrivalStatus=await page.locator('#status').textContent();
+      await page.locator('#return').click();
+      await page.waitForFunction(()=>!document.querySelector('#return')?.classList.contains('show'),null,{timeout:15000});
+      await page.waitForFunction(()=>/Orbit/.test(document.querySelector('#status')?.textContent||''),null,{timeout:15000});
+      returnStatus=await page.locator('#status').textContent();
+      returnPath=/Orbit/.test(returnStatus||'');
+    }catch(error){
+      travelError=String(error?.message||error);
+    }
   }
+
+  let cardinalPreviewProof={signalAvailable:false,phaseBefore:'',phaseAfter:'',returnHiddenInPreview:false,enterSceneControl:false,enteredScene:false,returnedToOrbit:false,error:''};
+  const cardinalSignal=page.locator('.signal[data-id="alaric"]:not(.unseen):not([aria-hidden="true"])');
+  if(await cardinalSignal.count()){
+    cardinalPreviewProof.signalAvailable=true;
+    try{
+      cardinalPreviewProof.phaseBefore=await page.evaluate(()=>window.__DGB_CARDINAL_PROPAGATION__?.phase||'');
+      await cardinalSignal.click();
+      await page.waitForFunction(()=>window.__DGB_CARDINAL_PROPAGATION__?.phase==='ENCOUNTER_PREVIEW',null,{timeout:5000});
+      const preview=await page.evaluate(()=>({
+        phase:window.__DGB_CARDINAL_PROPAGATION__?.phase||'',
+        returnShown:document.querySelector('#return')?.classList.contains('show')===true,
+        enterScene:[...document.querySelectorAll('#story button')].some(b=>/Enter scene/i.test(b.textContent||''))
+      }));
+      cardinalPreviewProof.phaseAfter=preview.phase;
+      cardinalPreviewProof.returnHiddenInPreview=!preview.returnShown;
+      cardinalPreviewProof.enterSceneControl=preview.enterScene;
+      const enter=page.locator('#story button',{hasText:'Enter scene'}).first();
+      await enter.click();
+      await page.waitForFunction(()=>document.querySelector('#return')?.classList.contains('show')===true,null,{timeout:15000});
+      cardinalPreviewProof.enteredScene=await page.evaluate(()=>window.__DGB_CARDINAL_PROPAGATION__?.phase==='CHARACTER_SCENE');
+      await page.locator('#return').click();
+      await page.waitForFunction(()=>/Orbit/.test(document.querySelector('#status')?.textContent||''),null,{timeout:15000});
+      cardinalPreviewProof.returnedToOrbit=true;
+    }catch(error){
+      cardinalPreviewProof.error=String(error?.message||error);
+    }
+  }
+  const cardinalPreviewOk=cardinalPreviewProof.signalAvailable&&cardinalPreviewProof.phaseAfter==='ENCOUNTER_PREVIEW'&&cardinalPreviewProof.returnHiddenInPreview&&cardinalPreviewProof.enterSceneControl&&cardinalPreviewProof.enteredScene&&cardinalPreviewProof.returnedToOrbit&&!cardinalPreviewProof.error;
+
   const mapButton=page.locator('#map-toggle');
   await mapButton.click();
   const mapOpen=await page.locator('#coast-map').evaluate(el=>el.classList.contains('show'));
@@ -134,13 +172,13 @@ for(const spec of cases){
   await page.screenshot({path:`${outDir}/${spec.id}.png`,fullPage:true});
   const filmPlayOk=!spec.proveFilmPlay||(filmPlayProof.playing&&filmPlayProof.inFilmSkip&&filmPlayProof.webglVisible&&filmPlayProof.audioElement);
   const mapCloseOk=mapOpen&&mapClosed&&!mapCloseClickError;
-  const ok=introControls&&filmPlayOk&&replayAvailable&&routeContract&&initial.webgl2&&!initial.fatal&&initial.signalCount>0&&noHorizontalEscape&&returnPath&&mapCloseOk&&pageErrors.length===0;
+  const ok=introControls&&filmPlayOk&&replayAvailable&&routeContract&&initial.webgl2&&!initial.fatal&&initial.signalCount>0&&noHorizontalEscape&&returnPath&&!travelError&&cardinalPreviewOk&&mapCloseOk&&pageErrors.length===0;
   if(!ok) failed=true;
-  receipts.push({id:spec.id,ok,intro,introControls,filmPlayProof,filmPlayOk,replayAvailable,connectedRoutes,routeContract,initial,arrivalStatus,returnStatus,returnPath,mapOpen,mapClosed,mapCloseOk,mapCloseClickError,mapHitTest,noHorizontalEscape,pageErrors,consoleErrors});
+  receipts.push({id:spec.id,ok,intro,introControls,filmPlayProof,filmPlayOk,replayAvailable,connectedRoutes,routeContract,initial,selectedSignalId,arrivalStatus,returnStatus,returnPath,travelError,cardinalPreviewProof,cardinalPreviewOk,mapOpen,mapClosed,mapCloseOk,mapCloseClickError,mapHitTest,noHorizontalEscape,pageErrors,consoleErrors});
   await context.close();
 }
 await browser.close();
-const receipt={schema:'CHARACTERS_STEP10_BROWSER_ACCEPTANCE_RECEIPT_v2',result:failed?'FAIL':'PASS',diagnostic:'MAP_CLOSE_HIT_TEST_V1',cases:receipts};
+const receipt={schema:'CHARACTERS_STEP10_BROWSER_ACCEPTANCE_RECEIPT_v2',result:failed?'FAIL':'PASS',diagnostic:'GEN2111_SEMANTIC_SIGNAL_AND_CARDINAL_PREVIEW_V2',cases:receipts};
 fs.writeFileSync(`${outDir}/receipt.json`,JSON.stringify(receipt,null,2));
 console.log(JSON.stringify(receipt,null,2));
 if(failed) process.exit(1);

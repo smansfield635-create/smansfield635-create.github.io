@@ -8002,6 +8002,49 @@
       "scopeHash": "e9cbe056d00e04292ba7e44fb4bebbd0390f917f0ba1317639bb9d5b5b7c2e1d",
       "state": "ADMITTED_LOCKED"
     },
+    "ea266225769e5dd64eaafa527749d78555dd2a0fbb6e8130bcce5f5ce50d8141": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "c7def9c32b6ab01e0aaf2f39faf1b4f58f95b9ad",
+          "lockGeneration": 2148,
+          "lockScope": "H_EARTH:AWARDS:LIVING_OBJECT:TRUE_3D_VISUAL_COMPOSITION_CORRECTIVE",
+          "operationId": "AWARDS_TRUE_3D_VISUAL_COMPOSITION_CORRECTIVE_20260912_001",
+          "procedureLocatorDigest": "e2c1601484b33d1df668c1a2341dba3a65268f965bb2e5d84b4f6c9c7582f73b",
+          "requestDigest": "09a29e42f2087403fac984575888bce14de64aa0e84692f10d01482c445b1cea",
+          "scopeHash": "ea266225769e5dd64eaafa527749d78555dd2a0fbb6e8130bcce5f5ce50d8141"
+        },
+        "bindingDigest": "da3ff1dce5c68dfa4d41bf665eb0f2a2e0f367529ae2783ec4bc3e2b8ead4273",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "9dfdf3350a830359eb9ce023ef044eee95362216a975bf79e229bcdb9952dc21",
+          "commentId": 5644406380,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3145,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34680234504,
+          "workflowSha": "c7def9c32b6ab01e0aaf2f39faf1b4f58f95b9ad"
+        },
+        "lineageAnchorCommitSha": "31021d26c68547c75f169765e7185c8fdb6300e3",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "c7def9c32b6ab01e0aaf2f39faf1b4f58f95b9ad",
+      "lockGeneration": 2148,
+      "lockScope": "H_EARTH:AWARDS:LIVING_OBJECT:TRUE_3D_VISUAL_COMPOSITION_CORRECTIVE",
+      "operationId": "AWARDS_TRUE_3D_VISUAL_COMPOSITION_CORRECTIVE_20260912_001",
+      "procedureLocatorDigest": "e2c1601484b33d1df668c1a2341dba3a65268f965bb2e5d84b4f6c9c7582f73b",
+      "released": false,
+      "requestDigest": "09a29e42f2087403fac984575888bce14de64aa0e84692f10d01482c445b1cea",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ea266225769e5dd64eaafa527749d78555dd2a0fbb6e8130bcce5f5ce50d8141",
+      "state": "ADMITTED_LOCKED"
+    },
     "ea3c1daaebdb8162884dbda2b0068de332b8d14a8b4189dbe22c322ad4f5d35d": {
       "governingHead": "8a7f54a1686bc2f027ef66c3d92e3bb14df1b591",
       "lockGeneration": 1665,
@@ -8716,7 +8759,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2147,
+  "lockGeneration": 2148,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

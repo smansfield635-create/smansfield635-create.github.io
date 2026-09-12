@@ -11,28 +11,35 @@ on:
         description: Registered public surface verification id
         required: true
         type: string
+  pull_request:
+    paths:
+      - '.github/workflows/publication-preflight-v1.yml'
 
 permissions:
   contents: read
 
 concurrency:
-  group: publication-preflight-${{ inputs.surface_id }}-${{ inputs.target_sha }}
+  group: publication-preflight-${{ github.event_name == 'workflow_dispatch' && inputs.surface_id || 'awards' }}-${{ github.event_name == 'workflow_dispatch' && inputs.target_sha || github.event.pull_request.head.sha }}
   cancel-in-progress: false
 
 jobs:
   preflight:
     runs-on: ubuntu-latest
     steps:
-      - name: Require canonical main dispatch and valid target SHA
+      - name: Require canonical dispatch or workflow self-test target
         id: resolve
         env:
-          REQUESTED_SHA: ${{ inputs.target_sha }}
+          REQUESTED_SHA: ${{ github.event_name == 'workflow_dispatch' && inputs.target_sha || github.event.pull_request.head.sha }}
         shell: bash
         run: |
           set -euo pipefail
           requested="$(printf '%s' "$REQUESTED_SHA" | tr -d '[:space:]')"
           printf '%s' "$requested" | grep -Eq '^[0-9a-f]{40}$'
-          test "$GITHUB_REF" = "refs/heads/main"
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            test "$GITHUB_REF" = "refs/heads/main"
+          else
+            test "$GITHUB_EVENT_NAME" = "pull_request"
+          fi
           echo "target_sha=$requested" >> "$GITHUB_OUTPUT"
 
       - name: Materialize bounded publication sparse index
@@ -83,7 +90,7 @@ jobs:
       - name: Validate registered surface
         id: surface
         env:
-          SURFACE_ID: ${{ inputs.surface_id }}
+          SURFACE_ID: ${{ github.event_name == 'workflow_dispatch' && inputs.surface_id || 'awards' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -92,12 +99,13 @@ jobs:
           test -f "$manifest"
           jq -e --arg id "$SURFACE_ID" '.schema=="PUBLICATION_SURFACE_VERIFICATION_v1" and .surfaceId==$id and (.checks|type=="array") and (.checks|length>0)' "$manifest" >/dev/null
           echo "manifest=$manifest" >> "$GITHUB_OUTPUT"
+          echo "surface_id=$SURFACE_ID" >> "$GITHUB_OUTPUT"
           echo "runtime=$(jq -r 'if .runtime?.enabled == true then "true" else "false" end' "$manifest")" >> "$GITHUB_OUTPUT"
 
       - name: Build and size-check exact Pages payload
         env:
           TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
-          SURFACE_ID: ${{ inputs.surface_id }}
+          SURFACE_ID: ${{ steps.surface.outputs.surface_id }}
           STAGE: ${{ runner.temp }}/pages-site
           RECEIPT: ${{ runner.temp }}/publication-preflight-receipt.json
         shell: bash
@@ -124,7 +132,7 @@ jobs:
       - name: Verify exact staged payload
         env:
           TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
-          SURFACE_ID: ${{ inputs.surface_id }}
+          SURFACE_ID: ${{ steps.surface.outputs.surface_id }}
           STAGE: ${{ runner.temp }}/pages-site
           RECEIPT: ${{ runner.temp }}/publication-preflight-receipt.json
         shell: bash
@@ -142,7 +150,7 @@ jobs:
           jq -e '.schema=="PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1" and .result=="PREFLIGHT_PASS" and .deploymentPerformed==false' "$RECEIPT" >/dev/null
 
       - name: Capture browser visual evidence and Awards recognition matrix
-        if: ${{ steps.surface.outputs.runtime == 'true' && inputs.surface_id == 'awards' }}
+        if: ${{ steps.surface.outputs.runtime == 'true' && steps.surface.outputs.surface_id == 'awards' }}
         env:
           TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
           STAGE: ${{ runner.temp }}/pages-site
@@ -225,7 +233,6 @@ jobs:
             await waitServer();
             browser=await puppeteer.launch({executablePath:chrome,headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--use-gl=swiftshader']});
 
-            // Preserve the existing World raw-canvas compatibility evidence exactly in role.
             {
               const page=await browser.newPage();
               await setViewport(page,viewports[0]);
@@ -249,7 +256,6 @@ jobs:
               await page.close();
             }
 
-            // Standalone matrix: no explanatory typography exists in the runner-local harness.
             for(const v of viewports){
               for(const story of objects){
                 const page=await browser.newPage();
@@ -263,7 +269,6 @@ jobs:
               }
             }
 
-            // Integrated matrix: select through the real Awards Next control and hide explanatory copy only for evidence capture.
             for(const v of viewports){
               const page=await browser.newPage();
               await setViewport(page,v);

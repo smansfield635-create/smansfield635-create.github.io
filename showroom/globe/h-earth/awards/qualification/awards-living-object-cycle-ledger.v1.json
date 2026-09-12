@@ -1,9 +1,9 @@
 {
   "schema": "AWARDS_LIVING_OBJECT_CYCLE_LEDGER_v1",
-  "operationId": "AWARDS_LIVING_OBJECT_ESTATE_CYCLE_E_20260911_001",
-  "lockGeneration": 2119,
-  "governingHead": "e764b8ea37a7ed6c3f0a2c5be5d4be520db489f4",
-  "predecessorHead": "36cef93bbdf4c08ca35b862e893c11195b111d8a",
+  "operationId": "AWARDS_LIVING_OBJECT_SHARED_CAROUSEL_CYCLE_F_20260912_001",
+  "lockGeneration": 2121,
+  "governingHead": "a7399e6c08378e59b3544f3cf6839a1abf8dd8f9",
+  "predecessorHead": "a7399e6c08378e59b3544f3cf6839a1abf8dd8f9",
   "ownerAcceptanceInterpretation": {
     "perCycleVisualReapprovalRequired": false,
     "priorVisualAuditControlsCyclesAThroughE": true,
@@ -115,7 +115,37 @@
       "technicalQualification": "PASS_CLOSED",
       "visualAcceptance": "SATISFIED_BY_PRIOR_AUDIT_NO_PER_CYCLE_REAPPROVAL"
     },
-    "F_SHARED_COMPOSITION": {"status": "NOT_STARTED"}
+    "F_SHARED_COMPOSITION": {
+      "status": "PASS_CLOSED",
+      "claim": "Five independently closed living objects compose into one shared Awards carousel without losing their identities.",
+      "compositionPath": "showroom/globe/h-earth/awards/living-objects/shared-carousel-cycle-f.mjs",
+      "surfacePath": "showroom/globe/h-earth/awards/index.html",
+      "verifierPath": "showroom/globe/h-earth/awards/qualification/verify-shared-carousel-cycle-f.mjs",
+      "preservedObjectBlobs": {
+        "experience": "8ea491a1936ec5e5d6dbe9f31d7e73658e2a6494",
+        "world": "d0e6238befcfd06dc7abc0fce91605b85a8846d2",
+        "coherence": "3d1e43417d915ca81a4a4c827f65543e5b4a4ddd",
+        "trust": "efa3d115080c831966b6c4d292a1ef2eb4150e4b",
+        "estate": "fd1899c7c156ccffa36dfd8177e30f093e335643"
+      },
+      "semanticBinding": {
+        "livingObjects": ["EXPERIENCE", "WORLD", "COHERENCE", "TRUST", "ESTATE"],
+        "allIndependentlyClosed": true,
+        "objectIdentityLost": false,
+        "maxActiveLivingObjectInstances": 1,
+        "rearHeavyRuntime": false,
+        "inactiveTeardown": true,
+        "exactHashFocusRestReturn": true,
+        "swipeDragTraversal": true,
+        "rearCardTapToFront": true,
+        "activeCardSelectToReader": true,
+        "keyboardTraversal": true,
+        "reducedMotionEquivalent": true,
+        "bottomTrophyCarouselRedesigned": false
+      },
+      "technicalQualification": "PASS_CLOSED",
+      "visualAcceptance": "REQUIRES_FINAL_CYCLE_F_COMPOSITION_REVIEW_BEFORE_DEPLOYMENT_PUBLICATION"
+    }
   },
   "invariants": {
     "cycleOrder": ["A_EXPERIENCE", "B_WORLD", "C_COHERENCE", "D_TRUST", "E_ESTATE", "F_SHARED_COMPOSITION"],

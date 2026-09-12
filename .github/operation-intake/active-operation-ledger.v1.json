@@ -4960,6 +4960,49 @@
       "scopeHash": "9485a119ec533eed9ce9e0d01e6d0d672d2384d21fc0b70a6f0fd8ab413071ab",
       "state": "ADMITTED_LOCKED"
     },
+    "95133b7c6348736aae2e18bb38c5403c8583ec46a9be23007f18a92ec848b39c": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "e764b8ea37a7ed6c3f0a2c5be5d4be520db489f4",
+          "lockGeneration": 2119,
+          "lockScope": "H_EARTH:AWARDS:LIVING_OBJECT:E_ESTATE",
+          "operationId": "AWARDS_LIVING_OBJECT_ESTATE_CYCLE_E_20260911_001",
+          "procedureLocatorDigest": "db8b757086f2779bfe997b1bff99019a74052b0b015e230544fe90194ba5fae6",
+          "requestDigest": "03a4e4428d1b7b007fa37a9cee1a5197defdb86e6ffd4f561e6d0fd7bf99304a",
+          "scopeHash": "95133b7c6348736aae2e18bb38c5403c8583ec46a9be23007f18a92ec848b39c"
+        },
+        "bindingDigest": "e73d3273a7597ea70b5e547299740b578abc7b4dc92b2657d0a749aa636d14e8",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "5d97d175501ab6efd1c2ee89a3428d1488add5473c9bbc26f1681fafe67c1675",
+          "commentId": 5642940975,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3117,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34668451057,
+          "workflowSha": "e764b8ea37a7ed6c3f0a2c5be5d4be520db489f4"
+        },
+        "lineageAnchorCommitSha": "85fefaeed236b7d3fd72b9dbf0524ce5a9b86da5",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "e764b8ea37a7ed6c3f0a2c5be5d4be520db489f4",
+      "lockGeneration": 2119,
+      "lockScope": "H_EARTH:AWARDS:LIVING_OBJECT:E_ESTATE",
+      "operationId": "AWARDS_LIVING_OBJECT_ESTATE_CYCLE_E_20260911_001",
+      "procedureLocatorDigest": "db8b757086f2779bfe997b1bff99019a74052b0b015e230544fe90194ba5fae6",
+      "released": false,
+      "requestDigest": "03a4e4428d1b7b007fa37a9cee1a5197defdb86e6ffd4f561e6d0fd7bf99304a",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "95133b7c6348736aae2e18bb38c5403c8583ec46a9be23007f18a92ec848b39c",
+      "state": "ADMITTED_LOCKED"
+    },
     "961b7888499ecbe8fde655fe945fd2b91be8842c0fcbd972345e66aea23ed28f": {
       "governingHead": "36152fc4c64cde138272d35060a9c1cdfc905e2d",
       "lockGeneration": 264,
@@ -8268,7 +8311,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2118,
+  "lockGeneration": 2119,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -380,6 +380,9 @@
     "unavailableDisposition": "NATIVE_AGENT_INVOCATION_UNAVAILABLE_STOP_SUBSTANTIVE_WORK",
     "newExecutorCreated": false,
     "globalHostEnforcementProven": false,
-    "gapId": "CANONICAL_NATIVE_AGENT_INVOCATION_HOST_ENFORCEMENT"
+    "gapId": "CANONICAL_NATIVE_AGENT_INVOCATION_HOST_ENFORCEMENT",
+    "startupDiscovery": ".github/ai-router/agent-invocation/contract.v1.json#startupDiscovery",
+    "complementaryOfficeDiscovery": ".github/ai-router/agent-invocation/contract.v1.json#complementaryOfficeDiscovery",
+    "emptyDeferredRegistryProvesNativeUnavailable": false
   }
 }

@@ -11,12 +11,14 @@ import {
   stable,
   text
 } from './repository-operation-lock-manager.v1.mjs';
+import { resolveWorkPacket } from '../../.github/ai-router/functional-routing/compass-functional-router.v1.mjs';
 
 export const REQUEST_SCHEMA = 'REPOSITORY_OPERATION_REQUEST_v1';
 export const PROCEDURE_SCHEMA = 'REPOSITORY_CONSTRUCTION_PROCEDURE_v1';
 export const SOURCE_READBACK_OPERATION_CLASS = 'SOURCE_READBACK';
 export const RUNTIME_OR_AUTHORITY_OPERATION_CLASS = 'RUNTIME_OR_AUTHORITY';
 export const INTAKE_COMPLETENESS_SCHEMA = 'INTAKE_COMPLETENESS_RECEIPT_v1';
+export const FUNCTIONAL_COORDINATION_SCHEMA = 'FUNCTIONAL_BEARING_COORDINATION_v1';
 export const COMPLETE_INTAKE_RESULTS = new Set([
   'COMPLETE_NO_QUESTIONS_REQUIRED',
   'COMPLETE_AFTER_USER_DISPOSITION'
@@ -169,6 +171,45 @@ export function validateProcedure(value) {
   return stable(p);
 }
 
+export function validateFunctionalCoordination(request, procedure) {
+  const source = 'functional-bearing-routing';
+  const field = 'functionalCoordination';
+  if (!Object.hasOwn(request || {}, field)) bad('FUNCTIONAL_COORDINATION_REQUIRED', field, source);
+  const fc = obj(request[field], field, source);
+  if (fc.schema !== FUNCTIONAL_COORDINATION_SCHEMA) bad('FUNCTIONAL_COORDINATION_SCHEMA_INVALID', `${field}.schema`, source);
+  if (fc.authorityEffect !== 'NONE') bad('AUTHORITY_EFFECT_NONZERO', `${field}.authorityEffect`, source);
+  if (!Array.isArray(fc.primitiveRequirements)) bad('FUNCTIONAL_COORDINATION_SCHEMA_INVALID', `${field}.primitiveRequirements`, source);
+
+  const packet = {
+    schema: 'FUNCTIONAL_BEARING_WORK_PACKET_v1',
+    packetId: `INTAKE:${request.operationId}`,
+    parentOperationId: request.operationId,
+    applicabilityClass: fc.applicabilityClass,
+    functionalBearing: fc.functionalBearing,
+    R: request.subjectIdentity,
+    L: { operationClass: procedure.operationClass },
+    D: { projectId: request.projectId },
+    A: request.requestingAuthority,
+    objective: request.operationId,
+    requiredOutput: request.requiredOutputs[0],
+    evidenceRefs: request.requiredInputs.map(x => x.id),
+    unresolvedConditions: [],
+    prohibitedAuthority: request.prohibitedPaths,
+    handoff: { predecessorPacketId: null, successorRelation: 'CANONICAL_INTAKE' },
+    primitiveRequirements: fc.primitiveRequirements
+  };
+
+  let receipt;
+  try { receipt = resolveWorkPacket(packet); }
+  catch (e) {
+    const code = e.code === 'SCHEMA_INVALID' ? 'FUNCTIONAL_COORDINATION_SCHEMA_INVALID' : (e.code || 'FUNCTIONAL_COORDINATION_SCHEMA_INVALID');
+    bad(code, e.field ? `${field}.${e.field}` : field, source, e.detail || null);
+  }
+  if (receipt.authorityEffect !== 'NONE') bad('AUTHORITY_EFFECT_NONZERO', field, source);
+  if (!eq(receipt.A, request.requestingAuthority)) bad('AUTHORITY_EFFECT_NONZERO', `${field}.A`, source);
+  return stable({ ...fc, validationReceipt: receipt });
+}
+
 export function prepare(r0, p0) {
   const r = validateRequest(r0);
   const p = validateProcedure(p0);
@@ -177,7 +218,10 @@ export function prepare(r0, p0) {
 
   if (requestSourceReadback !== procedureSourceReadback) bad('OPERATION_CLASS_MISMATCH', 'operationClass', 'request-and-procedure');
   if (requestSourceReadback && r.operationClass !== p.operationClass) bad('OPERATION_CLASS_MISMATCH', 'operationClass', 'request-and-procedure');
-  if (p.operationClass === RUNTIME_OR_AUTHORITY_OPERATION_CLASS) validateIntakeCompleteness(r, 'operation-request');
+  if (p.operationClass === RUNTIME_OR_AUTHORITY_OPERATION_CLASS) {
+    validateIntakeCompleteness(r, 'operation-request');
+    validateFunctionalCoordination(r, p);
+  }
   if (r.exactGoverningHead !== p.exactGoverningHead) bad('GOVERNING_HEAD_MISMATCH', 'exactGoverningHead', 'request-and-procedure');
   if (!eq(r.allowedPaths, p.exactAllowedRepositoryPaths)) bad('SCOPE_MISMATCH', 'allowedPaths', 'request-and-procedure');
   for (const x of r.prohibitedPaths) if (r.allowedPaths.includes(x)) bad('PROHIBITED_PATH_REQUESTED', 'prohibitedPaths', 'operation-request', x);

@@ -5,6 +5,7 @@ import {
   SOURCE_READBACK_OPERATION_CLASS,
   RUNTIME_OR_AUTHORITY_OPERATION_CLASS
 } from './repository-operation-intake-gate.v1.mjs';
+import { selfTest as functionalRouterSelfTest } from '../../.github/ai-router/functional-routing/compass-functional-router.v1.mjs';
 
 const HEAD = 'ec1e19a8ec5c351827fad248635039906ffb2f3b';
 
@@ -182,6 +183,11 @@ assert.doesNotThrow(() => prepare(baseRequest(), baseProcedure()));
   assert.throws(() => prepare(r, p), /SOURCE_READBACK_REQUIRES_EMPTY_ARRAY/);
 }
 
+const functionalRouterReceipt = functionalRouterSelfTest();
+assert.equal(functionalRouterReceipt.result, 'PASS_CLOSED');
+assert.equal(functionalRouterReceipt.failed, 0);
+assert.equal(functionalRouterReceipt.authorityEffect, 'NONE');
+
 process.stdout.write(JSON.stringify({
   schema: 'REPOSITORY_OPERATION_CLASS_VALIDATION_RECEIPT_v1',
   result: 'PASS_CLOSED',
@@ -193,6 +199,8 @@ process.stdout.write(JSON.stringify({
   bearingAuthorityEffectNoneRequired: true,
   validationOccursBeforeLockAcquisition: true,
   adoptedFunctionalRouterReused: true,
+  functionalRouterSelfTestResult: functionalRouterReceipt.result,
+  functionalRouterSelfTestChecks: functionalRouterReceipt.checks,
   sourceReadbackNullWorkflowAllowed: true,
   sourceReadbackEmptyArtifactsAllowed: true,
   sourceReadbackRequiresBilateralDeclaration: true,

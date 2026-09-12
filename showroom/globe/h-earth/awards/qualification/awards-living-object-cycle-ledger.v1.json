@@ -1,25 +1,31 @@
 {
   "schema": "AWARDS_LIVING_OBJECT_CYCLE_LEDGER_v1",
-  "operationId": "AWARDS_TRUE_3D_LIVING_OBJECT_SUCCESSOR_20260912_002",
-  "lockGeneration": 2146,
-  "governingHead": "0c39fd7f12f67d0f6586b5e681ba6de0c5faa651",
+  "operationId": "AWARDS_TRUE_3D_VISUAL_COMPOSITION_CORRECTIVE_20260912_001",
+  "lockGeneration": 2148,
+  "governingHead": "c7def9c32b6ab01e0aaf2f39faf1b4f58f95b9ad",
   "frozenIssue": 3145,
   "cycles": {
-    "A_EXPERIENCE": {"status":"SUCCESSOR_REPLACED_TRUE_3D","objectPath":"showroom/globe/h-earth/awards/living-objects/experience-cycle-a.mjs","recognizableObject":"MIRRORLAND_WINDOW","renderer":"WEBGL_3D","webglContexts":1,"paneCount":21,"signatureEvent":"OPAQUE_CATHEDRAL_GLASS_TO_CLEAR_AUDRALIA_TO_OPAQUE"},
-    "B_WORLD": {"status":"SUCCESSOR_REPLACED_TRUE_3D","objectPath":"showroom/globe/h-earth/awards/living-objects/world-cycle-b.mjs","recognizableObject":"H_EARTH_AUDRALIA_WORLD","renderer":"WEBGL_3D","webglContexts":1,"shorelineProvider":"getHEarth3DSharedShorelineBoundary","signatureEvent":"ENVIRONMENT_DEPTH_RESOLVE"},
-    "C_COHERENCE": {"status":"SUCCESSOR_REPLACED_TRUE_3D","objectPath":"showroom/globe/h-earth/awards/living-objects/coherence-cycle-c.mjs","recognizableObject":"BRAIN","renderer":"WEBGL_3D_QUALIFIED_GLB","webglContexts":1,"qualifiedAsset":"Allen_M_Brain.glb","expectedMeshes":283,"expectedTriangles":656268,"geometryMutationAuthorized":false,"signatureEvent":"NEURAL_SYNCHRONIZATION"},
-    "D_TRUST": {"status":"SUCCESSOR_REPLACED_TRUE_3D","objectPath":"showroom/globe/h-earth/awards/living-objects/trust-cycle-d.mjs","recognizableObject":"NINE_SUMMITS","renderer":"WEBGL_3D_PROCEDURAL_MASSIF","webglContexts":1,"summitCount":9,"signatureEvent":"EARNED_ASCENT_REVEAL"},
-    "E_ESTATE": {"status":"SUCCESSOR_REPLACED_TRUE_3D","objectPath":"showroom/globe/h-earth/awards/living-objects/estate-cycle-e.mjs","recognizableObject":"HOUSE_MANOR","renderer":"WEBGL_3D_DONOR_MESH","webglContexts":1,"neutralBuilder":"buildNeutralMesh","gothicBuilder":"buildPhase1DetailMesh","roofStampedWindows":false,"signatureEvent":"STRUCTURAL_ASSEMBLY"},
+    "A_EXPERIENCE": {"status":"REFERENCE_PRESERVED_TRUE_3D","objectPath":"showroom/globe/h-earth/awards/living-objects/experience-cycle-a.mjs","recognizableObject":"MIRRORLAND_WINDOW","renderer":"WEBGL_3D","webglContexts":1,"paneCount":21,"signatureEvent":"OPAQUE_CATHEDRAL_GLASS_TO_CLEAR_AUDRALIA_TO_OPAQUE","compositionRole":"REFERENCE_VISUAL"},
+    "B_WORLD": {"status":"COMPOSITION_CORRECTED_TRUE_3D","objectPath":"showroom/globe/h-earth/awards/living-objects/world-cycle-b.mjs","recognizableObject":"H_EARTH_AUDRALIA_WORLD","renderer":"WEBGL_3D","webglContexts":1,"shorelineProvider":"getHEarth3DSharedShorelineBoundary","signatureEvent":"ENVIRONMENT_DEPTH_RESOLVE","cameraMode":"OBLIQUE_TERRAIN","targetFrameOccupancy":0.78},
+    "C_COHERENCE": {"status":"COMPOSITION_CORRECTED_TRUE_3D","objectPath":"showroom/globe/h-earth/awards/living-objects/coherence-cycle-c.mjs","recognizableObject":"BRAIN","renderer":"WEBGL_3D_QUALIFIED_GLB","webglContexts":1,"qualifiedAsset":"Allen_M_Brain.glb","expectedMeshes":283,"expectedTriangles":656268,"geometryMutationAuthorized":false,"signatureEvent":"NEURAL_SYNCHRONIZATION","displayScale":2.25,"cameraDistance":3.0,"targetFrameOccupancy":0.72},
+    "D_TRUST": {"status":"COMPOSITION_CORRECTED_TRUE_3D","objectPath":"showroom/globe/h-earth/awards/living-objects/trust-cycle-d.mjs","recognizableObject":"NINE_SUMMITS","renderer":"WEBGL_3D_PROCEDURAL_MASSIF","webglContexts":1,"summitCount":9,"distinctSummitCount":9,"signatureEvent":"EARNED_ASCENT_REVEAL","cameraMode":"OBLIQUE_MASSIF","targetFrameOccupancy":0.76},
+    "E_ESTATE": {"status":"COMPOSITION_CORRECTED_TRUE_3D","objectPath":"showroom/globe/h-earth/awards/living-objects/estate-cycle-e.mjs","recognizableObject":"HOUSE_MANOR","renderer":"WEBGL_3D_DONOR_MESH","webglContexts":1,"neutralBuilder":"buildNeutralMesh","gothicBuilder":"buildPhase1DetailMesh","roofStampedWindows":false,"signatureEvent":"STRUCTURAL_ASSEMBLY","cameraMode":"OBLIQUE_ARCHITECTURAL","boundsNormalized":true,"targetFrameOccupancy":0.76},
     "F_SHARED_COMPOSITION": {"status":"PRESERVED_BYTE_IDENTICAL","compositionPath":"showroom/globe/h-earth/awards/living-objects/shared-carousel-cycle-f.mjs","blob":"eed0c1782cb258d03e4eb740b86d95e6ed9fd2dc","maxActiveLivingObjectInstances":1,"rearHeavyRuntime":false,"inactiveTeardown":true}
   },
-  "true3DSuccessor": {
-    "operationId":"AWARDS_TRUE_3D_LIVING_OBJECT_SUCCESSOR_20260912_002",
-    "lockGeneration":2146,
-    "status":"CANDIDATE_READY_FOR_EXACT_QUALIFICATION",
+  "compositionCorrective": {
+    "operationId":"AWARDS_TRUE_3D_VISUAL_COMPOSITION_CORRECTIVE_20260912_001",
+    "lockGeneration":2148,
+    "status":"CANDIDATE_READY_FOR_BROWSER_QUALIFICATION",
     "functionalBearing":"ESE",
     "primitiveRequirements":["E","S"],
-    "frozenCrosswalk":{"experience":"MIRRORLAND_WINDOW","world":"H_EARTH_AUDRALIA_WORLD","coherence":"BRAIN","trust":"NINE_SUMMITS","estate":"HOUSE_MANOR"},
-    "mediumLaw":"ACTIVE_OBJECT_MUST_BE_REAL_WEBGL_3D",
+    "evidenceReference":"1444.mp4",
+    "referenceVisual":"A_EXPERIENCE",
+    "mobileFirstLaw":"ACTIVE_OBJECT_MUST_READ_AS_VOLUMETRIC_AT_FIRST_GLANCE",
+    "tinyPrimaryObjectForbidden":true,
+    "flatHorizonCompositionForbidden":true,
+    "mergedSummitSilhouetteForbidden":true,
+    "iconicManorScaleForbidden":true,
+    "donorGeometryReplacementAuthorized":false,
     "twoDimensionalSubstituteObjectsForbidden":true,
     "generatedImageAssetsIntroduced":false,
     "awardsIndexPreservedBlob":"1e7317a6543e21a74ceaba208d027bc6ff79267a",
@@ -32,7 +38,14 @@
     "verifierPath":"showroom/globe/h-earth/awards/qualification/verify-recognizable-estate-object-successor-v1.mjs"
   },
   "invariants": {
-    "cardCopyPreserved":true,"readerPreserved":true,"bottomTrophyCarouselPreserved":true,"carouselPhysicsPreserved":true,
-    "awardsIndexMutationAuthorized":false,"sharedCarouselMutationAuthorized":false,"generatedImagesAuthorized":false,"deploymentPublicationAuthorized":false
+    "cardCopyPreserved":true,
+    "readerPreserved":true,
+    "bottomTrophyCarouselPreserved":true,
+    "carouselPhysicsPreserved":true,
+    "experienceReferencePreserved":true,
+    "awardsIndexMutationAuthorized":false,
+    "sharedCarouselMutationAuthorized":false,
+    "generatedImagesAuthorized":false,
+    "deploymentPublicationAuthorized":false
   }
 }

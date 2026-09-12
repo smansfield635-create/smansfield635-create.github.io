@@ -56,6 +56,53 @@
       ]
     }
   },
+  "qualificationRouting": {
+    "schema": "QUALIFICATION_PROPORTIONALITY_POLICY_v1",
+    "status": "ACTIVE_FAIL_CLOSED",
+    "sequence": [
+      "CLASSIFY_CHANGE",
+      "ROUTE_EXACT_PATHS",
+      "ADMIT_ONCE_IF_REQUIRED",
+      "RUN_ONLY_DISCRIMINATING_CHECKS",
+      "MERGE_AFTER_PASS",
+      "RELEASE_SEPARATELY"
+    ],
+    "separationLaw": "FILESYSTEM_OWNERSHIP_IS_NOT_PRODUCT_SEMANTICS_IS_NOT_QUALIFICATION_SCOPE",
+    "proofLadder": [
+      "EXACT_BASE",
+      "EXACT_DECLARED_DIFF",
+      "PATH_AUTHORITY_VALID",
+      "PRODUCT_SPECIFIC_VERIFIER",
+      "ONE_RELEVANT_INTEGRATION_CHECK",
+      "PASS_CLOSED"
+    ],
+    "additionalGateLaw": "ADDITIONAL_CHECK_MAY_GATE_ONLY_WHEN_IT_NAMES_A_CONCRETE_FAILURE_CLASS_THE_CURRENT_CANDIDATE_CAN_CAUSE_AND_ACTUALLY_INSPECTS_THAT_DEPENDENCY_OR_SURFACE",
+    "historicalFailureLaw": "WORKFLOW_FAILURE_BEFORE_CANDIDATE_INSPECTION_IS_EVIDENCE_ONLY_NOT_A_GATE",
+    "awardsUnderHEarth": {
+      "pathPattern": "showroom/globe/h-earth/awards/**",
+      "filesystemOwner": "H_EARTH",
+      "productSemantics": "AWARDS",
+      "namespaceQualification": "BOUNDED_H_EARTH_PATH_REGISTRY_PREFLIGHT",
+      "behavioralQualification": "AWARDS_PRODUCT_SPECIFIC_VERIFIER",
+      "integrationQualification": "ONE_RELEVANT_AWARDS_H_EARTH_INTEGRATION_SANITY_CHECK",
+      "fullHEarthEngineQualificationByDirectoryLocation": false
+    },
+    "byteIdenticalRebind": {
+      "whenCandidateBlobsIdentical": "CONTINUITY_VERIFICATION",
+      "designRestartRequired": false,
+      "scientificRestartRequired": false,
+      "dependencyRequalificationRequiredOnlyIfRelevantDependencyChanged": true
+    },
+    "prerequisiteConvergence": {
+      "reuseEstablishedBoundedPathFamilyRegistration": true,
+      "bespokeSiblingPrerequisiteCycleAllowedOnlyForNewAuthorityBoundary": true
+    },
+    "crossSubsystemChange": {
+      "retainRelevantCrossSubsystemGate": true,
+      "directoryLocationAloneCreatesCrossSubsystemChange": false
+    },
+    "ambiguityDisposition": "FAIL_CLOSED_TO_BROADER_RELEVANT_QUALIFICATION"
+  },
   "ambiguityDisposition": "RUNTIME_OR_AUTHORITY",
   "mixedPathDisposition": "RUNTIME_OR_AUTHORITY",
   "runtimeAuthorityCannotBeCreatedByProportionalClassification": true,

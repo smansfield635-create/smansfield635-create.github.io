@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "awards-world-gen2152-raw-canvas-20f0a830-20260912",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3185,
+  "requestBranch": "ai-dispatch-request-awards-world-gen2152-raw-canvas",
+  "requestCommit": "345610f2fdf56817059dcb8753db4fc5b7137002",
+  "requestCommitParent": "1564a68e1ea9e29a16a3794c922d7208e3cf4c67",
+  "currentMainSha": "1564a68e1ea9e29a16a3794c922d7208e3cf4c67",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "20f0a830441dbd09778ed65077ceb0057bd912d6",
+    "surface_id": "awards"
+  },
+  "bridgeRunId": "34705742351",
+  "dispatchedRunId": 34705751989,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/34705751989",
+  "dispatchedRunHeadSha": "1564a68e1ea9e29a16a3794c922d7208e3cf4c67",
+  "dispatchedAt": "2026-09-12T16:36:24.127Z",
+  "resolvedAt": "2026-09-12T16:36:28.056Z"
+}

@@ -211,6 +211,7 @@
       "ownedPathPrefixes": ["assets/compass/"],
       "ownedExactPaths": [
         "index.html",
+        "assets/manor-blueprint/manor.estate.gothic-detail-phase1.mjs",
         ".github/workflows/pages-direct-deploy.yml",
         ".github/live-qualification/verifiers/compass-root.v1.mjs",
         ".github/workflows/compass-audit-derived-candidate-qualification.yml"

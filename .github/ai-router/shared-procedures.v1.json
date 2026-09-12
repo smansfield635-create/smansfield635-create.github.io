@@ -5,23 +5,83 @@
   "authorityLimit": "PROCEDURES_SUPPLY_OPERATIONAL_METHODS_AND_NEVER_CREATE_PROJECT_AUTHORITY",
   "procedures": [
     {
+      "procedureId": "CANONICAL_NATIVE_AGENT_INVOCATION",
+      "purpose": "Require actual native execution instances assigned existing canonical functions for every repository task, with independent source readback before completion claims.",
+      "contract": ".github/ai-router/agent-invocation/contract.v1.json",
+      "applicability": "ALL_REPOSITORY_TASKS_INCLUDING_READ_ONLY_STATIC_AND_SOURCE_READBACK",
+      "steps": [
+        "Perform only minimal bootstrap discovery declared by the contract.",
+        "Freeze exact-head bounded assignment with canonical function, objective, authority, evidence and handoff.",
+        "Actually invoke the existing native agent tool and retain its returned native task identity before substantive work.",
+        "Continue only the unchanged assigned task or issue an attributable native followup.",
+        "Capture native returned output and digest; independently inspect native source events and output before completion or acceptance claims.",
+        "Use evidence validation for structure/consistency only; never treat JSON or ROUTE_RESOLVED as source authenticity.",
+        "Report invoked native identities and outputs; stop substantive work when invocation is unavailable.",
+        "Preserve existing proportional intake, project authority and authority-reducing closure."
+      ],
+      "authorityCreated": false,
+      "newExecutorCreated": false,
+      "hostEnforcementProven": false
+    },
+    {
       "procedureId": "FUNCTIONAL_BEARING_ROUTING",
       "purpose": "Require and validate Compass functional bearing for material governed engineering work while preserving existing project, path, lifecycle, verification, merge, deployment, and certification authority.",
       "constitution": "control-plane/whole-estate/characters-reconstruction-v1/compass-functional-coordinate-constitution.v1.json",
       "router": ".github/ai-router/functional-routing/compass-functional-router.v1.mjs",
       "workPacketSchema": ".github/ai-router/functional-routing/work-packet.schema.v1.json",
       "executionReceiptSchema": ".github/ai-router/functional-routing/execution-receipt.schema.v1.json",
-      "applicability": {"required": ["MATERIAL_GOVERNED_ENGINEERING"], "exempt": ["STATIC_EDITORIAL_MICRO", "READ_ONLY_ADMINISTRATIVE", "SOURCE_READBACK"], "unclassified": "FAIL_CLOSED"},
-      "steps": ["Classify applicability before functional routing; unclassified or ambiguous applicability fails closed.", "For MATERIAL_GOVERNED_ENGINEERING require one frozen bearing or an ordered multi-bearing route.", "Resolve every bearing against the frozen Compass constitution; no task-specific bearing may be invented.", "Enforce ACL-1 and OSL-1; opposing or three/four-primitive work decomposes rather than collapsing into one station.", "Preserve O=(B,R,L,D,A), evidence, unresolved conditions, and handoff relations in attributable work packets and execution receipts.", "Preserve granted authority exactly; bearing has authorityEffect=NONE and never grants project, path, mutation, merge, deployment, release, or certification authority.", "Use the existing execution substrate and independent verification mechanisms; do not create a second executor or sixteen worker identities."],
-      "failClosedWhen": ["APPLICABILITY_UNCLASSIFIED", "BEARING_REQUIRED_MISSING", "BEARING_NOT_IN_CONSTITUTION", "OSL1_VIOLATION", "MULTI_PRIMITIVE_DECOMPOSITION_REQUIRED", "AUTHORITY_EFFECT_NONZERO", "CONSTITUTION_MISSING_OR_CHANGED"],
+      "applicability": {
+        "required": [
+          "MATERIAL_GOVERNED_ENGINEERING"
+        ],
+        "exempt": [
+          "STATIC_EDITORIAL_MICRO",
+          "READ_ONLY_ADMINISTRATIVE",
+          "SOURCE_READBACK"
+        ],
+        "unclassified": "FAIL_CLOSED"
+      },
+      "steps": [
+        "Classify applicability before functional routing; unclassified or ambiguous applicability fails closed.",
+        "For MATERIAL_GOVERNED_ENGINEERING require one frozen bearing or an ordered multi-bearing route.",
+        "Resolve every bearing against the frozen Compass constitution; no task-specific bearing may be invented.",
+        "Enforce ACL-1 and OSL-1; opposing or three/four-primitive work decomposes rather than collapsing into one station.",
+        "Preserve O=(B,R,L,D,A), evidence, unresolved conditions, and handoff relations in attributable work packets and execution receipts.",
+        "Preserve granted authority exactly; bearing has authorityEffect=NONE and never grants project, path, mutation, merge, deployment, release, or certification authority.",
+        "Use the existing execution substrate and independent verification mechanisms; do not create a second executor or sixteen worker identities."
+      ],
+      "failClosedWhen": [
+        "APPLICABILITY_UNCLASSIFIED",
+        "BEARING_REQUIRED_MISSING",
+        "BEARING_NOT_IN_CONSTITUTION",
+        "OSL1_VIOLATION",
+        "MULTI_PRIMITIVE_DECOMPOSITION_REQUIRED",
+        "AUTHORITY_EFFECT_NONZERO",
+        "CONSTITUTION_MISSING_OR_CHANGED"
+      ],
       "authorityCreated": false,
-      "bearingAuthorityEffect": "NONE"
+      "bearingAuthorityEffect": "NONE",
+      "nativeInvocationRequirement": {
+        "procedureId": "CANONICAL_NATIVE_AGENT_INVOCATION",
+        "allTaskClassesRequired": true,
+        "legacyApplicabilityExemptionsApplyOnlyToBearingRouteValidation": true,
+        "routeReceiptDoesNotProveAgentExecution": true
+      }
     },
     {
       "procedureId": "REPOSITORY_ENTRY",
       "purpose": "Resolve the owning project and load its instructions before substantive action.",
-      "steps": ["Read AI_ENTRYPOINT.json.", "Run the repository entry router for every affected path.", "Load every resolved project entrypoint, nested AGENTS.md, registry, validator, and stopping rule.", "Honor the emitted disposition."],
-      "failClosedWhen": ["ROUTER_MISSING", "ROUTE_AMBIGUOUS", "PROJECT_ENTRYPOINT_MISSING"]
+      "steps": [
+        "Read AI_ENTRYPOINT.json.",
+        "Run the repository entry router for every affected path.",
+        "Load every resolved project entrypoint, nested AGENTS.md, registry, validator, and stopping rule.",
+        "Honor the emitted disposition."
+      ],
+      "failClosedWhen": [
+        "ROUTER_MISSING",
+        "ROUTE_AMBIGUOUS",
+        "PROJECT_ENTRYPOINT_MISSING"
+      ]
     },
     {
       "procedureId": "EVIDENCE_BEARING_EXECUTION",
@@ -38,20 +98,45 @@
         "When a lawful next execution step is available, execute it rather than returning a status-only response.",
         "After execution, report completed action, new evidence or none, current boundary, and next lawful action or blocker."
       ],
-      "failClosedWhen": ["REPEATED_EQUIVALENT_PROBE_WITHOUT_NEW_EVIDENCE", "REPAIR_PROPOSED_BEFORE_FAULT_LOCALIZATION", "SPECULATIVE_MUTATION_FROM_VERIFICATION_FAILURE", "PROGRESS_CLAIM_WITHOUT_NEW_EVIDENCE", "KNOWN_LAWFUL_EXECUTION_STEP_REPLACED_BY_STATUS_ONLY_RESPONSE"],
+      "failClosedWhen": [
+        "REPEATED_EQUIVALENT_PROBE_WITHOUT_NEW_EVIDENCE",
+        "REPAIR_PROPOSED_BEFORE_FAULT_LOCALIZATION",
+        "SPECULATIVE_MUTATION_FROM_VERIFICATION_FAILURE",
+        "PROGRESS_CLAIM_WITHOUT_NEW_EVIDENCE",
+        "KNOWN_LAWFUL_EXECUTION_STEP_REPLACED_BY_STATUS_ONLY_RESPONSE"
+      ],
       "authorityCreated": false
     },
     {
       "procedureId": "EXACT_COMMIT_RESOLUTION",
       "purpose": "Bind work to immutable repository identities.",
-      "steps": ["Resolve each supplied ref with git rev-parse <ref>^{commit}.", "Record the exact 40-character commit SHA.", "Resolve and record parent and merge-base identities when lineage matters.", "Reject abbreviated, missing, or moving refs as final evidence."],
-      "receiptFields": ["exactCommit", "parentCommit", "mergeBaseCommit"]
+      "steps": [
+        "Resolve each supplied ref with git rev-parse <ref>^{commit}.",
+        "Record the exact 40-character commit SHA.",
+        "Resolve and record parent and merge-base identities when lineage matters.",
+        "Reject abbreviated, missing, or moving refs as final evidence."
+      ],
+      "receiptFields": [
+        "exactCommit",
+        "parentCommit",
+        "mergeBaseCommit"
+      ]
     },
     {
       "procedureId": "CLEAN_CHECKOUT",
       "purpose": "Execute against committed state rather than conversation or private working state.",
-      "steps": ["Fetch the exact required commits.", "Create a detached checkout or worktree at the governing head.", "Verify git status --porcelain is empty.", "Execute only the repository-declared command.", "Write outputs outside the repository or to an ignored path."],
-      "failClosedWhen": ["COMMIT_UNRESOLVABLE", "WORKTREE_DIRTY", "DECLARED_COMMAND_MISSING"]
+      "steps": [
+        "Fetch the exact required commits.",
+        "Create a detached checkout or worktree at the governing head.",
+        "Verify git status --porcelain is empty.",
+        "Execute only the repository-declared command.",
+        "Write outputs outside the repository or to an ignored path."
+      ],
+      "failClosedWhen": [
+        "COMMIT_UNRESOLVABLE",
+        "WORKTREE_DIRTY",
+        "DECLARED_COMMAND_MISSING"
+      ]
     },
     {
       "procedureId": "GITHUB_ACTIONS_FALLBACK",
@@ -59,15 +144,26 @@
       "purpose": "Historical procedure retained only to make prior records interpretable. It is not an executable fallback for AI rooms.",
       "agentExecutionAllowed": false,
       "supersededBy": "AI_ENTRYPOINT.json#agentExecutionSurface",
-      "permittedRoles": ["PASSIVE_CI_AFTER_REPOSITORY_CHANGE", "HISTORICAL_EVIDENCE_INSPECTION", "SEPARATELY_AUTHORIZED_LATER_REPLAY"],
-      "steps": ["Do not invoke this procedure to perform AI agent construction, verification, reproduction, or other native command work.", "If no authorized non-Actions execution surface is connected, fail closed with execution surface unavailable."],
+      "permittedRoles": [
+        "PASSIVE_CI_AFTER_REPOSITORY_CHANGE",
+        "HISTORICAL_EVIDENCE_INSPECTION",
+        "SEPARATELY_AUTHORIZED_LATER_REPLAY"
+      ],
+      "steps": [
+        "Do not invoke this procedure to perform AI agent construction, verification, reproduction, or other native command work.",
+        "If no authorized non-Actions execution surface is connected, fail closed with execution surface unavailable."
+      ],
       "forbiddenSubstitute": "GITHUB_ACTIONS_AS_AGENT_EXECUTION_TRANSPORT"
     },
     {
       "procedureId": "AI_ENTRY_NATIVE_WORKFLOW_DISPATCH",
       "purpose": "Preserve allowlisted GitHub Actions dispatch only for roles separately permitted by AI_ENTRYPOINT.json; never use it as AI agent native execution transport.",
       "agentExecutionAllowed": false,
-      "permittedRoles": ["PASSIVE_CI_AFTER_REPOSITORY_CHANGE", "SEPARATELY_AUTHORIZED_LATER_REPLAY", "EXPLICIT_DEPLOYMENT_WHEN_SEPARATELY_AUTHORIZED"],
+      "permittedRoles": [
+        "PASSIVE_CI_AFTER_REPOSITORY_CHANGE",
+        "SEPARATELY_AUTHORIZED_LATER_REPLAY",
+        "EXPLICIT_DEPLOYMENT_WHEN_SEPARATELY_AUTHORIZED"
+      ],
       "capabilityRegistry": ".github/ai-router/workflow-dispatch-capability.v1.json",
       "preferredTransport": "DIRECT_CONNECTED_GITHUB_WORKFLOW_DISPATCH",
       "fallbackTransport": "SAME_REPOSITORY_PR_NATIVE_WORKFLOW_DISPATCH_BRIDGE",
@@ -84,7 +180,16 @@
         "On success, the bridge closes the transport PR and deletes the ephemeral request branch.",
         "Before creating a replacement carrier after failure, localize the bridge or target-workflow assertion."
       ],
-      "failClosedWhen": ["REQUEST_IS_AI_AGENT_EXECUTION", "UNKNOWN_CAPABILITY_ID", "REQUEST_BRANCH_NOT_FRESH_FROM_CURRENT_MAIN", "TRANSPORT_PR_NOT_SAME_REPOSITORY", "UNDECLARED_OR_OVERRIDDEN_PROTECTED_INPUT", "NATIVE_WORKFLOW_DISPATCH_NOT_ACCEPTED", "DISPATCHED_RUN_ID_NOT_RESOLVED", "REPEATED_CARRIER_WITHOUT_FAILURE_LOCALIZATION"],
+      "failClosedWhen": [
+        "REQUEST_IS_AI_AGENT_EXECUTION",
+        "UNKNOWN_CAPABILITY_ID",
+        "REQUEST_BRANCH_NOT_FRESH_FROM_CURRENT_MAIN",
+        "TRANSPORT_PR_NOT_SAME_REPOSITORY",
+        "UNDECLARED_OR_OVERRIDDEN_PROTECTED_INPUT",
+        "NATIVE_WORKFLOW_DISPATCH_NOT_ACCEPTED",
+        "DISPATCHED_RUN_ID_NOT_RESOLVED",
+        "REPEATED_CARRIER_WITHOUT_FAILURE_LOCALIZATION"
+      ],
       "authorityCreated": false,
       "genericCommandAuthorityCreated": false,
       "transportPullRequestMergeAuthorityCreated": false
@@ -94,60 +199,140 @@
       "purpose": "Turn a separately admitted request into exact-head nonmutating command execution on an authorized non-Actions disposable executor.",
       "contract": ".github/ai-router/codespace-execution/execution-environment-contract.v1.json",
       "transport": ".github/ai-router/codespace-execution/callable-transport.v1.json",
-      "steps": ["Resolve the separately admitted operation and owning project profile.", "Require a connected transport with callableByCurrentChatGPTRoom=true.", "Resolve the exact target commit and declared fixed command.", "Create or attach to a disposable clean environment permitted by the project profile.", "Checkout the target commit detached with full history when lineage is tested.", "Verify a clean worktree before execution.", "Execute only the declared command with outputs outside the repository or in an ignored disposable path.", "Emit environment and command-execution receipts.", "Destroy or invalidate the mutable environment after receipt capture."],
-      "failClosedWhen": ["TRANSPORT_UNAVAILABLE", "REPOSITORY_NOT_MATERIALIZED", "DEPENDENCIES_NOT_READY", "COMMAND_EXECUTION_UNAVAILABLE"],
+      "steps": [
+        "Resolve the separately admitted operation and owning project profile.",
+        "Require a connected transport with callableByCurrentChatGPTRoom=true.",
+        "Resolve the exact target commit and declared fixed command.",
+        "Create or attach to a disposable clean environment permitted by the project profile.",
+        "Checkout the target commit detached with full history when lineage is tested.",
+        "Verify a clean worktree before execution.",
+        "Execute only the declared command with outputs outside the repository or in an ignored disposable path.",
+        "Emit environment and command-execution receipts.",
+        "Destroy or invalidate the mutable environment after receipt capture."
+      ],
+      "failClosedWhen": [
+        "TRANSPORT_UNAVAILABLE",
+        "REPOSITORY_NOT_MATERIALIZED",
+        "DEPENDENCIES_NOT_READY",
+        "COMMAND_EXECUTION_UNAVAILABLE"
+      ],
       "authorityCreated": false
     },
     {
       "procedureId": "FRESH_VERIFIER_REEXECUTION",
       "purpose": "Reexecute the same frozen target and command in a distinct clean environment with no mutable-state reuse.",
       "profile": ".github/ai-router/codespace-execution/fresh-verifier-profile.v1.json",
-      "steps": ["Create a fresh environment with a distinct environment identity.", "Resolve the same exact target commit independently.", "Execute the same declared command without builder mutable outputs.", "Emit a fresh-verifier command receipt and output digests."],
+      "steps": [
+        "Create a fresh environment with a distinct environment identity.",
+        "Resolve the same exact target commit independently.",
+        "Execute the same declared command without builder mutable outputs.",
+        "Emit a fresh-verifier command receipt and output digests."
+      ],
       "authorityCreated": false
     },
     {
       "procedureId": "INDEPENDENT_EXECUTION_EQUALITY",
       "purpose": "Compare builder and fresh-verifier immutable outputs without favorable-result substitution.",
-      "steps": ["Bind builder and fresh-verifier receipt digests.", "Compare the declared equality domain exactly.", "Emit PASS_EXACT_EQUALITY or FAIL_CLOSED_MISMATCH.", "Do not reinterpret mismatches as success."],
+      "steps": [
+        "Bind builder and fresh-verifier receipt digests.",
+        "Compare the declared equality domain exactly.",
+        "Emit PASS_EXACT_EQUALITY or FAIL_CLOSED_MISMATCH.",
+        "Do not reinterpret mismatches as success."
+      ],
       "authorityCreated": false
     },
     {
       "procedureId": "EXECUTION_ENVIRONMENT_DESTRUCTION",
       "purpose": "Prove that a disposable environment is no longer relied upon as continuing authority after execution.",
-      "steps": ["Record environment identity and last exact target.", "Remove the disposable environment when transport permits, or mark it detached nonauthoritative.", "Emit the destruction receipt.", "Never treat a long-lived environment as canonical custody."],
+      "steps": [
+        "Record environment identity and last exact target.",
+        "Remove the disposable environment when transport permits, or mark it detached nonauthoritative.",
+        "Emit the destruction receipt.",
+        "Never treat a long-lived environment as canonical custody."
+      ],
       "authorityCreated": false
     },
     {
       "procedureId": "BRANCH_MAIN_COMPARISON",
       "purpose": "Determine exact divergence without assuming branch state.",
-      "steps": ["Resolve exact base and head commits.", "Compute merge base.", "List every changed path and blob identity.", "Record ahead and behind counts.", "Treat unrelated main advancement separately from candidate lineage."]
+      "steps": [
+        "Resolve exact base and head commits.",
+        "Compute merge base.",
+        "List every changed path and blob identity.",
+        "Record ahead and behind counts.",
+        "Treat unrelated main advancement separately from candidate lineage."
+      ]
     },
     {
       "procedureId": "WORKFLOW_ARTIFACT_RETRIEVAL",
       "purpose": "Recover executable evidence from GitHub Actions without redundant retrieval loops.",
-      "steps": ["Resolve workflow run and job identities once.", "Inspect step conclusions and fetch the failed job log.", "Extract the exact failed assertion or strongest available machine evidence.", "If the first log surface is incomplete, change evidence surface once: artifact, receipt, run metadata, or alternate transport.", "Do not repeat an equivalent log fetch after NO_NEW_EVIDENCE.", "List artifacts by exact run when declared.", "Download the named artifact when needed.", "Verify artifact digest and contained receipt identities."],
-      "failClosedWhen": ["FAILED_ASSERTION_NOT_LOCALIZED_AND_REPAIR_PROPOSED", "EQUIVALENT_LOG_FETCH_REPEATED_WITHOUT_NEW_EVIDENCE"]
+      "steps": [
+        "Resolve workflow run and job identities once.",
+        "Inspect step conclusions and fetch the failed job log.",
+        "Extract the exact failed assertion or strongest available machine evidence.",
+        "If the first log surface is incomplete, change evidence surface once: artifact, receipt, run metadata, or alternate transport.",
+        "Do not repeat an equivalent log fetch after NO_NEW_EVIDENCE.",
+        "List artifacts by exact run when declared.",
+        "Download the named artifact when needed.",
+        "Verify artifact digest and contained receipt identities."
+      ],
+      "failClosedWhen": [
+        "FAILED_ASSERTION_NOT_LOCALIZED_AND_REPAIR_PROPOSED",
+        "EQUIVALENT_LOG_FETCH_REPEATED_WITHOUT_NEW_EVIDENCE"
+      ]
     },
     {
       "procedureId": "HASH_AND_BLOB_VERIFICATION",
       "purpose": "Distinguish repository identity from file names and summaries.",
-      "steps": ["Resolve Git blob SHA for committed text identity.", "Compute SHA-256 for transported artifact bytes.", "Record byte count and member manifest for archives.", "Reject name-only or URL-only identity claims."]
+      "steps": [
+        "Resolve Git blob SHA for committed text identity.",
+        "Compute SHA-256 for transported artifact bytes.",
+        "Record byte count and member manifest for archives.",
+        "Reject name-only or URL-only identity claims."
+      ]
     },
     {
       "procedureId": "RECEIPT_PUBLICATION",
       "purpose": "Make execution durable and independently discoverable.",
-      "steps": ["Use the procedure-declared receipt schema.", "Bind exact governing and target commits, commands, measurements, artifacts, and disposition.", "Commit only after validation when repository publication is authorized.", "Preserve workflow artifact identity when repository publication is not authorized."]
+      "steps": [
+        "Use the procedure-declared receipt schema.",
+        "Bind exact governing and target commits, commands, measurements, artifacts, and disposition.",
+        "Commit only after validation when repository publication is authorized.",
+        "Preserve workflow artifact identity when repository publication is not authorized."
+      ]
     },
     {
       "procedureId": "ROLLBACK_VERIFICATION",
       "purpose": "Prove bounded reversibility.",
-      "steps": ["Record exact starting head and changed paths.", "Declare the rollback operation before promotion.", "Execute rollback in an isolated branch or worktree.", "Verify protected blobs and accepted baseline identities are restored exactly."]
+      "steps": [
+        "Record exact starting head and changed paths.",
+        "Declare the rollback operation before promotion.",
+        "Execute rollback in an isolated branch or worktree.",
+        "Verify protected blobs and accepted baseline identities are restored exactly."
+      ]
     },
     {
       "procedureId": "WHOLE_ESTATE_DISPLAY_CONTINUITY",
       "purpose": "Load and apply whole-estate narrative and display continuity laws before applicable page, frontier, product, room, world, campaign, navigation, transition, responsive, or shared visual-system construction.",
-      "steps": ["Read .github/ai-router/display-continuity-constitution-v1/display-constitution.v1.json and .github/ai-router/display-continuity-constitution-v1/README.md.", "Read control-plane/whole-estate/narrative-continuity-development-map-v1/map.v1.json and the governing narrative spine when narrative relation is material.", "Resolve the route display contract: local identity, narrative relation, orientation relation, display role, runtime ceiling, persistent objects, transition meaning, progressive disclosure, mobile composition, reduced-motion equivalence, return contract, claim boundary, local visual identity, and continuity hook.", "Treat the runtime class as a ceiling, not a requirement.", "Preserve Compass global orientation, room-local identity, explicit return, semantic meaning under reduced motion, and claim boundaries.", "If the task is not visual or experiential, do not invent display work or widen the admitted scope merely because this global context exists.", "Honor all project-specific entrypoints, nested AGENTS.md files, scientific and evidence boundaries, and runtime authorities after loading this context."],
-      "failClosedWhen": ["COMPETING_GLOBAL_ORIENTATION", "NARRATIVE_RELATION_UNRESOLVED", "RUNTIME_CEILING_UNJUSTIFIED", "MOBILE_OR_REDUCED_MOTION_SEMANTICS_MISSING", "DISCOVERY_MUTATES_CARDINAL_MAP", "VISUAL_EMPHASIS_CREATES_CLAIM_AUTHORITY", "DEEP_ROUTE_HAS_NO_EXPLICIT_RETURN", "UNIVERSAL_SHELL_FLATTENS_REQUIRED_LOCAL_IDENTITY"],
+      "steps": [
+        "Read .github/ai-router/display-continuity-constitution-v1/display-constitution.v1.json and .github/ai-router/display-continuity-constitution-v1/README.md.",
+        "Read control-plane/whole-estate/narrative-continuity-development-map-v1/map.v1.json and the governing narrative spine when narrative relation is material.",
+        "Resolve the route display contract: local identity, narrative relation, orientation relation, display role, runtime ceiling, persistent objects, transition meaning, progressive disclosure, mobile composition, reduced-motion equivalence, return contract, claim boundary, local visual identity, and continuity hook.",
+        "Treat the runtime class as a ceiling, not a requirement.",
+        "Preserve Compass global orientation, room-local identity, explicit return, semantic meaning under reduced motion, and claim boundaries.",
+        "If the task is not visual or experiential, do not invent display work or widen the admitted scope merely because this global context exists.",
+        "Honor all project-specific entrypoints, nested AGENTS.md files, scientific and evidence boundaries, and runtime authorities after loading this context."
+      ],
+      "failClosedWhen": [
+        "COMPETING_GLOBAL_ORIENTATION",
+        "NARRATIVE_RELATION_UNRESOLVED",
+        "RUNTIME_CEILING_UNJUSTIFIED",
+        "MOBILE_OR_REDUCED_MOTION_SEMANTICS_MISSING",
+        "DISCOVERY_MUTATES_CARDINAL_MAP",
+        "VISUAL_EMPHASIS_CREATES_CLAIM_AUTHORITY",
+        "DEEP_ROUTE_HAS_NO_EXPLICIT_RETURN",
+        "UNIVERSAL_SHELL_FLATTENS_REQUIRED_LOCAL_IDENTITY"
+      ],
       "authorityCreated": false
     }
   ]

@@ -2,6 +2,22 @@
 
 Read `AI_ENTRYPOINT.json` first and classify the requested page mutation before escalating into repository-operation authority.
 
+## Mandatory native invocation of canonical agents
+
+For every repository task, load `.github/ai-router/agent-invocation/contract.v1.json` and actually invoke the appropriate existing canonical agent function through the available native agent tools before substantive work. This applies to reading, inspection, diagnosis, static edits, construction, qualification, adoption, publication, and control-plane operations. The owner requirement is recorded in issue #3209.
+
+Alaric/N owns Navigation, Elara/E Signal, Tarian/S Continuity, and Soren/W Boundary. Resolve intermediate bearings through the frozen constitution; they compose existing functions and do not create more identities. Dispatch only the functions needed for the task. Preserve opposing-function separation and independent review. A native task assigned one of these functions is an execution instance; do not claim a separate persistent model or create sixteen workers.
+
+The initial room may perform only the contract's minimal source discovery and current-main/tool-availability observations needed to make the correct invocation. This bootstrap creates no product inspection or mutation authority. After discovery, use the native spawn or followup capability, freeze the assignment and retain the returned task identity. A role written in JSON, a route receipt, or a room silently calling itself an agent is not a substitute for invocation. If native invocation is unavailable, report `NATIVE_AGENT_INVOCATION_UNAVAILABLE` and stop substantive work.
+
+Work is assigned by bounded task, not by individual tool call. Reuse an invoked worker for its unchanged assignment; issue an attributable native followup when head, scope, authority, objective or lifecycle changes. The coordinator may manage admission, transport and handoffs under the declared operation while assigned agents perform their bounded work. It must not silently replace their work with unassigned execution.
+
+Before claiming completion, qualification, adoption or publication, retain the native returned output and its digest and obtain independent native source readback. Record the actual task identities, canonical functions, assignment, invocation event, output event and unresolved conditions. The observer must be a different native execution instance and must actually inspect the source events and output. A file-only evidence validator can check structure and consistency; it cannot authenticate a native invocation. Neither synthetic tests nor supplied observation JSON establishes source authenticity. Missing source evidence remains `EXECUTION_UNVERIFIED`.
+
+Apply this invocation procedure in addition to existing proportional classification, intake, project routing, lifecycle and release rules. The legacy functional router's static/read-only/source-readback exemptions concern that routing schema only; they do not exempt native invocation. Read-only and static work do not acquire a new mutation-intake requirement from agent invocation. Passive CI and fixed canonical intake are not intelligent agents. Failed or withdrawn work may still release authority through canonical closure without a successful-agent result.
+
+Report the canonical function, actual native task identity, and completed output or precise unresolved boundary. Distinguish assigned, invoked, running, returned and independently checked. Repository instructions mandate this behavior for compliant rooms; they do not establish host/connector-wide interception of direct GitHub tools. Keep `CANONICAL_NATIVE_AGENT_INVOCATION_HOST_ENFORCEMENT` open until its declared evidence exists.
+
 ## Canonical abstraction before implementation
 
 Before constructing any control-plane workaround, determine whether `AI_ENTRYPOINT.json`, its registered router/procedure registries, or an existing canonical workflow already exposes the required capability. Existing canonical abstractions outrank room-invented lower-level mechanisms.

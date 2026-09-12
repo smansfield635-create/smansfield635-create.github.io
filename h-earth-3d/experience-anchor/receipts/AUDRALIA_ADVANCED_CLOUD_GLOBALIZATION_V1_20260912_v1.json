@@ -1,0 +1,55 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW04_SUBTROPICAL_WORLD_CONTINUATION_20260816_001.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW04_SUBTROPICAL_WORLD_CONTINUATION_20260816_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW04_SUBTROPICAL_WORLD_CONTINUATION_20260816_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/audralia/index.html",
+      "sha256": "ed8081cf2f286f1f02561fcbfa944839c07c80f09bbb8cbd9dba2fc8aaccc58c"
+    },
+    {
+      "path": "showroom/globe/audralia/fap1-weather-presentation-v1.mjs",
+      "sha256": "d372a019bbf4abf17a5d9c3e16f90be5f107284a3cd6c86a35240b3bc739129e"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-cloud-pass.mjs",
+      "sha256": "c077d8cee0f89219df6dbf17dcdd352650356d1b8654d0e2cfd39eeee81cfb5e"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-clouds-runtime.mjs",
+      "sha256": "732e7957cdddeb536f1e8ccd1ab2d6db840fca199a376f5057f919a989c64451"
+    }
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "reviewSummary": {
+    "operation": "AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_V1_20260912_001",
+    "governingHead": "152be0c1d318dde932c8d1ad9fbecbe7bbce7ccb",
+    "productCandidateBeforeReceipt": "9c1b26cd7f220bf07b7a47c78a605cc2e8deb307",
+    "finding": "The candidate changes cloud presentation only. It retires the cheap global background cloud field as a visible authority, preserves the proven structured cyclone and long organized-band grammar, distributes advanced variants at additional geographic anchors, and keeps deliberate clear-air windows. Geography, terrain, ocean, camera, direct interaction, navigation, primary canvas/context architecture, tablet render-pixel budget, regional/local weather authority and celestial authority are unchanged.",
+    "tabletBoundary": "The tablet path remains one primary WebGL2 context with zero additional canvas or renderer and retains the frozen 8-step rest / 6-step interaction cloud raymarch ceilings.",
+    "qualificationBoundary": "This PASS is limited to the immutable H-Earth experience-anchor and same-world continuity criterion plus source-level cloud authority boundaries. It does not assert physical tablet stability or final owner visual acceptance; those remain post-publication physical-device traversal evidence."
+  }
+}

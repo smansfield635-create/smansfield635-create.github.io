@@ -1,0 +1,55 @@
+{
+  "schema": "MIRRORLAND_WORLD_TO_MAP_TRUTH_CONTRACT_v1",
+  "contractId": "MIRRORLAND_WORLD_TO_MAP_TRUTH_CONTRACT_v1",
+  "operationId": "MIRRORLAND_WORLD_TO_MAP_TRUTH_20260903_006",
+  "programIssue": 2670,
+  "sequence": 1,
+  "targetBoundary": "WORLD_TO_MAP_TRUTH_FROZEN",
+  "exactGoverningHead": "0970708876005e86260b7ed427225113c98920eb",
+  "worldLaw": "ONE_WORLD_ONE_GEOGRAPHY_MULTIPLE_SCALES_OF_ACCESS",
+  "coordinateConsumer": "characters/gratitude-geography.adapter.mjs",
+  "mapConsumer": "characters/coast-map.mjs",
+  "geographyAuthority": "h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js",
+  "transform": {
+    "forward": "worldToMap",
+    "inverse": "mapToWorld",
+    "worldEast": "POSITIVE_X",
+    "worldNorth": "NEGATIVE_Z",
+    "mapUPositiveDirection": "WORLD_EAST",
+    "mapVPositiveDirection": "WORLD_SOUTH",
+    "roundTripTolerance": 1e-9
+  },
+  "canonicalMarkerIds": [
+    "WATCHFIRE_OVERLOOK",
+    "WATERLINE_STATION",
+    "SIGNAL_LANTERN_FIELD",
+    "RESTORATION_BOUNDARY",
+    "MIRROR_MANOR",
+    "CROSSING",
+    "CLOCK",
+    "DEXTRION_TRANSMISSION"
+  ],
+  "shorelineSampleCount": 65,
+  "proofRequirements": [
+    "UPSTREAM_GEOGRAPHY_UNCHANGED",
+    "ONE_INVERTIBLE_WORLD_TO_MAP_TRANSFORM",
+    "CANONICAL_MARKER_PROJECTION",
+    "CANONICAL_SHORELINE_PROJECTION",
+    "NO_HAND_POSITIONED_MARKERS",
+    "ORIENTATION_NOT_MIRRORED_OR_ROTATED",
+    "VISUAL_DIAGNOSTIC_DATA_IDENTITY"
+  ],
+  "allowedPaths": [
+    "characters/world-to-map-truth-diagnostic.html",
+    "characters/world-to-map-truth-diagnostic.mjs",
+    "control-plane/whole-estate/characters-reconstruction-v1/world-to-map-truth-contract.v1.json",
+    "control-plane/whole-estate/characters-reconstruction-v1/verify-world-to-map-truth.v1.mjs",
+    ".github/workflows/characters-world-to-map-truth-v1.yml"
+  ],
+  "upstreamReadOnlyPaths": [
+    "characters/gratitude-geography.adapter.mjs",
+    "characters/coast-map.mjs",
+    "h-earth-3d/"
+  ],
+  "sequence2PlusExcluded": true
+}

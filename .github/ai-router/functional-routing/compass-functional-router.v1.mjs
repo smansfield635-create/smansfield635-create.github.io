@@ -62,7 +62,7 @@ export function resolveWorkPacket(packet,{root=process.cwd(),constitution=null}=
   for(const f of ['packetId','parentOperationId','objective','requiredOutput'])str(packet[f],f);
   for(const f of ['R','L','D','A','handoff'])obj(packet[f],f);
   for(const f of ['evidenceRefs','unresolvedConditions','prohibitedAuthority'])arr(packet[f],f);
-  const {cls,bearings}=validateApplicability(packet);
+  const {cls,mode,bearings}=validateApplicability(packet);
   const c=constitution??loadConstitution(root);
   const allowed=new Set(c.stations.map(x=>x.bearing));
   for(const b of bearings)if(!allowed.has(b))fail('BEARING_NOT_IN_CONSTITUTION','functionalBearing.bearings',b);

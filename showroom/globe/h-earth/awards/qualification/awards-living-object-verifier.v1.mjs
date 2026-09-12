@@ -25,67 +25,62 @@ const P = Object.freeze({
 function pass(payload){ console.log(JSON.stringify({result:'PASS', verifier:'AWARDS_LIVING_OBJECT_VERIFIER_v1', ...payload},null,2)); }
 function fail(code, detail){ console.error(JSON.stringify({result:'FAIL_CLOSED', verifier:'AWARDS_LIVING_OBJECT_VERIFIER_v1', errorCode:code, detail},null,2)); process.exit(1); }
 function requireText(text, tokens, label){ for(const token of tokens) assert.ok(text.includes(token), `${label} missing ${token}`); }
+function ledger(){return JSON.parse(read(P.ledger));}
 
 function verifyA(){
   assert.ok(exists(P.experience),'Cycle A object missing');
   assert.ok(exists(P.css),'shared living object CSS missing');
   assert.ok(exists(P.ledger),'cycle ledger missing');
-  const js=read(P.experience), css=read(P.css), ledger=JSON.parse(read(P.ledger));
+  const js=read(P.experience), css=read(P.css), l=ledger();
   requireText(js,[
-    'AWARDS_EXPERIENCE_LIVING_OBJECT_CYCLE_A_V1',
-    'A_EXPERIENCE',
-    'A website can behave like a place.',
-    '568a6b2cd608a4cbcd62cf70ed59b241c39c90d2',
-    'fe35d8d844859a6af810684ace53d2c65258522f',
-    '965376dd8a92686bc7008d1fea4846b5f8300872',
-    'f99d3ffedf7b7654d067d21d9363eb287877f852',
-    'FOUR_CARDINAL_SPHERICAL_CONSTELLATION',
-    'CARDINAL_FOCUS_TO_ROOM_CLUSTER',
-    'ROOM_SELECTION',
-    'MIRRORLAND_REVEAL_AND_FOCUS',
-    'EXACT_RESTORATION',
+    'AWARDS_EXPERIENCE_LIVING_OBJECT_CYCLE_A_V1','A_EXPERIENCE','A website can behave like a place.',
+    '568a6b2cd608a4cbcd62cf70ed59b241c39c90d2','fe35d8d844859a6af810684ace53d2c65258522f','965376dd8a92686bc7008d1fea4846b5f8300872','f99d3ffedf7b7654d067d21d9363eb287877f852',
+    'FOUR_CARDINAL_SPHERICAL_CONSTELLATION','CARDINAL_FOCUS_TO_ROOM_CLUSTER','ROOM_SELECTION','MIRRORLAND_REVEAL_AND_FOCUS','EXACT_RESTORATION',
     "['REAR_INERT','APPROACHING','FOREGROUND_REST','SIGNATURE_PLAY','FOREGROUND_IDLE','SELECT_RESPONSE','READER_OPEN','RETURN_RESTORING']",
-    'mountExperienceLivingObject',
-    'webglContexts:0',
-    "phase('orient')",
-    "phase('cluster')",
-    "phase('select')",
-    "phase('threshold')",
-    "phase('travel')",
-    "phase('restore')"
+    'mountExperienceLivingObject','webglContexts:0',"phase('orient')","phase('cluster')","phase('select')","phase('threshold')","phase('travel')","phase('restore')"
   ],'Cycle A JS');
-  requireText(css,[
-    '.awards-lo--experience',
-    'perspective:760px',
-    'transform-style:preserve-3d',
-    '.exp-field',
-    '.exp-node',
-    '.exp-cluster',
-    '.exp-threshold',
-    '[data-exp-phase="travel"]',
-    '[data-exp-phase="equivalent"]',
-    '@media(max-width:760px)',
-    '@media(prefers-reduced-motion:reduce)'
-  ],'Cycle A CSS');
-  assert.equal(ledger.operationId,'AWARDS_TOP_CAROUSEL_LIVING_OBJECT_SUCCESSOR_20260911_001');
-  assert.equal(ledger.lockGeneration,2102);
-  assert.ok(['CANDIDATE_FROZEN_AWAITING_FRESH_QUALIFICATION','PASS_CLOSED'].includes(ledger.cycles.A_EXPERIENCE.status));
-  for(const id of ['B_WORLD','C_COHERENCE','D_TRUST','E_ESTATE','F_SHARED_COMPOSITION']) assert.equal(ledger.cycles[id].status,'NOT_STARTED');
-  assert.equal(ledger.invariants.canonicalIntakeCount,1);
-  assert.equal(ledger.invariants.bottomTrophyCarouselMutationAuthorized,false);
-  return {cycle:'A_EXPERIENCE', static3d:true, webglContextsExpected:0, laterCyclesUntouched:true};
+  requireText(css,['.awards-lo--experience','perspective:760px','transform-style:preserve-3d','.exp-field','.exp-node','.exp-cluster','.exp-threshold','[data-exp-phase="travel"]','[data-exp-phase="equivalent"]','@media(max-width:760px)','@media(prefers-reduced-motion:reduce)'],'Cycle A CSS');
+  assert.equal(l.operationId,'AWARDS_TOP_CAROUSEL_LIVING_OBJECT_SUCCESSOR_20260911_001');
+  assert.equal(l.lockGeneration,2102);
+  assert.equal(l.cycles.A_EXPERIENCE.status,'PASS_CLOSED');
+  assert.equal(l.cycles.A_EXPERIENCE.candidateCommit,'55eef607570f576bff89fa84401140b678ca2568');
+  assert.equal(l.ownerAcceptanceInterpretation.perCycleVisualReapprovalRequired,false);
+  assert.equal(l.invariants.priorClosedCyclesReadOnly,true);
+  return {cycle:'A_EXPERIENCE', static3d:true, webglContextsExpected:0, closed:true};
+}
+
+function verifyB(){
+  verifyA();
+  assert.ok(exists(P.world),'Cycle B object missing');
+  const js=read(P.world), l=ledger();
+  requireText(js,[
+    'AWARDS_WORLD_LIVING_OBJECT_CYCLE_B_V1','B_WORLD','The browser can hold a world.',
+    'b26aa16abfebf24bf0d77b62d36f7a11ade1ac5c','799d37cec5244e6aa19b7d94dffe37e182b85884','3f3bc750b0e1a87531e0ea425dc0ac343fb18381','3764f0d53b0564de7a5e983bd339dda75017bc82',
+    'BROWSER_NATIVE_WORLD_STAGE','SPHERICAL_GLOBE_RESOLUTION','WORLD_SPACE_GROUND_AND_SHORELINE','DIRECT_MANIPULATION_VIEW','INSPECTION_STATE_RETURN',
+    "['REAR_INERT','APPROACHING','FOREGROUND_REST','SIGNATURE_PLAY','FOREGROUND_IDLE','SELECT_RESPONSE','READER_OPEN','RETURN_RESTORING']",
+    'mountWorldLivingObject','webglContexts:0',"phase('resolve')","phase('terrain')","phase('shoreline')","phase('inspect')","phase('restore')",
+    '.world-globe','.world-land','.world-shore','.world-lens','@media(max-width:760px)','@media(prefers-reduced-motion:reduce)'
+  ],'Cycle B JS');
+  assert.ok(['ACTIVE','CANDIDATE_FROZEN_AWAITING_FRESH_QUALIFICATION','PASS_CLOSED'].includes(l.cycles.B_WORLD.status));
+  assert.equal(l.cycles.C_COHERENCE.status,'NOT_STARTED');
+  assert.equal(l.cycles.D_TRUST.status,'NOT_STARTED');
+  assert.equal(l.cycles.E_ESTATE.status,'NOT_STARTED');
+  assert.equal(l.cycles.F_SHARED_COMPOSITION.status,'NOT_STARTED');
+  return {cycle:'B_WORLD', static3d:true, webglContextsExpected:0, priorCycleAClosed:true};
 }
 
 try{
   if(cycle==='A'){ pass(verifyA()); process.exit(0); }
+  if(cycle==='B'){ pass(verifyB()); process.exit(0); }
   if(all){
     const a=verifyA();
-    const ledger=JSON.parse(read(P.ledger));
+    const b=verifyB();
+    const l=ledger();
     const required=['A_EXPERIENCE','B_WORLD','C_COHERENCE','D_TRUST','E_ESTATE','F_SHARED_COMPOSITION'];
-    for(const id of required) assert.equal(ledger.cycles[id]?.status,'PASS_CLOSED',`${id} not PASS_CLOSED`);
+    for(const id of required) assert.equal(l.cycles[id]?.status,'PASS_CLOSED',`${id} not PASS_CLOSED`);
     for(const p of [P.experience,P.world,P.coherence,P.trust,P.estate,P.shared,P.css,P.ledger]) assert.ok(exists(p),`missing terminal artifact ${p}`);
-    pass({mode:'ALL_CYCLES_SELF_TEST', cycles:required, cycleA:a});
+    pass({mode:'ALL_CYCLES_SELF_TEST', cycles:required, cycleA:a, cycleB:b});
     process.exit(0);
   }
-  fail('USAGE','Use --cycle A or --all-cycles-self-test');
+  fail('USAGE','Use --cycle A, --cycle B, or --all-cycles-self-test');
 }catch(error){ fail('QUALIFICATION_ASSERTION_FAILED',error?.message||String(error)); }

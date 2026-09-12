@@ -9121,40 +9121,76 @@
       "state": "ADMITTED_LOCKED"
     },
     "ef9fc16e8849d7978f038b316fbaa0de6a07845b2901645e0dba484af7bfc0fd": {
-      "governingHead": "254bdf9b5a9c5c01dbfcd9378a3cc6d5de046df5",
+      "governingHead": "00f6fc66520d82ff6ce92aeb6020226737a459fb",
       "independentAuthorityProvenance": {
         "authorityIdentity": {
-          "governingHead": "254bdf9b5a9c5c01dbfcd9378a3cc6d5de046df5",
-          "lockGeneration": 2177,
+          "governingHead": "00f6fc66520d82ff6ce92aeb6020226737a459fb",
+          "lockGeneration": 2178,
           "lockScope": "H_EARTH:PR3193:FROZEN_CLOUD_QUALIFICATION_RECONCILIATION:V1",
-          "operationId": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_V1_20260912_001",
-          "procedureLocatorDigest": "16888eea651670d234f2beed530833d454404cd80563a133e884a751fded5794",
-          "requestDigest": "d9a368f2cee4700fb656bd1246308b661fc95560f8a436970f0bb195ceb84fde",
+          "operationId": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_CURRENT_MAIN_SUCCESSOR_V1_20260912_001",
+          "procedureLocatorDigest": "2b6bf082498cde1efa4c789abd1960302ac51f06f74c9c4f196f3d797c774ece",
+          "requestDigest": "6268a08c9a390210d230cbc6e954f25e836883a0a2088846b50d1db0dd52336f",
           "scopeHash": "ef9fc16e8849d7978f038b316fbaa0de6a07845b2901645e0dba484af7bfc0fd"
         },
-        "bindingDigest": "cf96d020d9da80360cc83a670fc6e647ad45d6416e8580c1573cbdd4026ce3cf",
+        "bindingDigest": "b420a90bea9ab5a08efb41f5f99afde2fdb1291f79b0b22fbca85f274bcadecc",
         "compareAndSwap": {
-          "observedLedgerBlobSha": "057cf32808c9c829c0f9e1536d7b79e2a4f168eb",
-          "observedLockRefHead": "dea9f14c766368854e8b6deb24199b77dba88f92"
+          "observedLedgerBlobSha": "03c3f620ac3d4365aa80c63ffeb27ca890ba4817",
+          "observedLockRefHead": "9be5ae284489f77e7e93a2e7a5c5a10af60f1193"
         },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
         "source": {
           "authorAssociation": "OWNER",
           "authorLogin": "smansfield635-create",
-          "commentBodySha256": "5a7b7f383e0b42fb42439596942beeeffbae4c5917d70fe8edd8f4657458e703",
-          "commentId": 5649317263,
+          "commentBodySha256": "f2933489edfa3946a02c962fcaa6fcd8d73d68f0cda9d7e7c35c2451801e9c97",
+          "commentId": 5649477909,
           "issueNumber": 3193,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
           "repository": "smansfield635-create/smansfield635-create.github.io"
         },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+        "transitionIdentity": {
+          "predecessor": {
+            "governingHead": "254bdf9b5a9c5c01dbfcd9378a3cc6d5de046df5",
+            "lockGeneration": 2177,
+            "lockScope": "H_EARTH:PR3193:FROZEN_CLOUD_QUALIFICATION_RECONCILIATION:V1",
+            "operationId": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_V1_20260912_001"
+          },
+          "successor": {
+            "governingHead": "00f6fc66520d82ff6ce92aeb6020226737a459fb",
+            "lockGeneration": 2178,
+            "lockScope": "H_EARTH:PR3193:FROZEN_CLOUD_QUALIFICATION_RECONCILIATION:V1",
+            "operationId": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_CURRENT_MAIN_SUCCESSOR_V1_20260912_001"
+          },
+          "transitionId": "PR3193_GEN2177_TO_CURRENT_MAIN_00F6FC66520D_SUCCESSOR_V1_20260912_001"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
       },
-      "lockGeneration": 2177,
+      "lockGeneration": 2178,
       "lockScope": "H_EARTH:PR3193:FROZEN_CLOUD_QUALIFICATION_RECONCILIATION:V1",
-      "operationId": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_V1_20260912_001",
-      "procedureLocatorDigest": "16888eea651670d234f2beed530833d454404cd80563a133e884a751fded5794",
+      "operationId": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_CURRENT_MAIN_SUCCESSOR_V1_20260912_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "254bdf9b5a9c5c01dbfcd9378a3cc6d5de046df5",
+        "lockGeneration": 2177,
+        "lockScope": "H_EARTH:PR3193:FROZEN_CLOUD_QUALIFICATION_RECONCILIATION:V1",
+        "operationId": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_V1_20260912_001",
+        "preservedEvidenceRefs": [
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/3193#issuecomment-5649317263",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/3193#issuecomment-5649374723",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/3192#issuecomment-5647621700",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/3192#issuecomment-5648128923",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/commit/109166adb6fe939d2cdba78797f74877e17e1c1d",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/commit/254bdf9b5a9c5c01dbfcd9378a3cc6d5de046df5",
+          "sha256:dacb99ca7f9f970918745f094dd2dd5a97a8b2fa7eaae59bd44c4c08d88b979c:soren-pr3193-acceptance-review.txt",
+          "sha256:1314f1fb14f3a971d7294e3dab5caac9da8b76c6883a819511f1dd1c4be59e91:soren-gen2177-recovery-review.txt"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "PR3193_GEN2177_TO_CURRENT_MAIN_00F6FC66520D_SUCCESSOR_V1_20260912_001"
+      },
+      "procedureLocatorDigest": "2b6bf082498cde1efa4c789abd1960302ac51f06f74c9c4f196f3d797c774ece",
       "released": false,
-      "requestDigest": "d9a368f2cee4700fb656bd1246308b661fc95560f8a436970f0bb195ceb84fde",
+      "requestDigest": "6268a08c9a390210d230cbc6e954f25e836883a0a2088846b50d1db0dd52336f",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "ef9fc16e8849d7978f038b316fbaa0de6a07845b2901645e0dba484af7bfc0fd",
       "state": "ADMITTED_LOCKED"
@@ -9615,7 +9651,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2177,
+  "lockGeneration": 2178,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -51497,6 +51533,67 @@
       "scopeHash": "41ab0d040aecac33438e27dfe323b420912911600b9fe6f1a7f75e89df5e8144",
       "state": "TERMINAL",
       "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+    },
+    {
+      "governingHead": "254bdf9b5a9c5c01dbfcd9378a3cc6d5de046df5",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "254bdf9b5a9c5c01dbfcd9378a3cc6d5de046df5",
+          "lockGeneration": 2177,
+          "lockScope": "H_EARTH:PR3193:FROZEN_CLOUD_QUALIFICATION_RECONCILIATION:V1",
+          "operationId": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_V1_20260912_001",
+          "procedureLocatorDigest": "16888eea651670d234f2beed530833d454404cd80563a133e884a751fded5794",
+          "requestDigest": "d9a368f2cee4700fb656bd1246308b661fc95560f8a436970f0bb195ceb84fde",
+          "scopeHash": "ef9fc16e8849d7978f038b316fbaa0de6a07845b2901645e0dba484af7bfc0fd"
+        },
+        "bindingDigest": "cf96d020d9da80360cc83a670fc6e647ad45d6416e8580c1573cbdd4026ce3cf",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "057cf32808c9c829c0f9e1536d7b79e2a4f168eb",
+          "observedLockRefHead": "dea9f14c766368854e8b6deb24199b77dba88f92"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "5a7b7f383e0b42fb42439596942beeeffbae4c5917d70fe8edd8f4657458e703",
+          "commentId": 5649317263,
+          "issueNumber": 3193,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "lockGeneration": 2177,
+      "lockScope": "H_EARTH:PR3193:FROZEN_CLOUD_QUALIFICATION_RECONCILIATION:V1",
+      "operationId": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_V1_20260912_001",
+      "procedureLocatorDigest": "16888eea651670d234f2beed530833d454404cd80563a133e884a751fded5794",
+      "released": true,
+      "requestDigest": "d9a368f2cee4700fb656bd1246308b661fc95560f8a436970f0bb195ceb84fde",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ef9fc16e8849d7978f038b316fbaa0de6a07845b2901645e0dba484af7bfc0fd",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/3193#issuecomment-5649317263",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/3193#issuecomment-5649374723",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/3192#issuecomment-5647621700",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/3192#issuecomment-5648128923",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/commit/109166adb6fe939d2cdba78797f74877e17e1c1d",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/commit/254bdf9b5a9c5c01dbfcd9378a3cc6d5de046df5",
+          "sha256:dacb99ca7f9f970918745f094dd2dd5a97a8b2fa7eaae59bd44c4c08d88b979c:soren-pr3193-acceptance-review.txt",
+          "sha256:1314f1fb14f3a971d7294e3dab5caac9da8b76c6883a819511f1dd1c4be59e91:soren-gen2177-recovery-review.txt"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "00f6fc66520d82ff6ce92aeb6020226737a459fb",
+        "successorLockGeneration": 2178,
+        "successorLockScope": "H_EARTH:PR3193:FROZEN_CLOUD_QUALIFICATION_RECONCILIATION:V1",
+        "successorOperationId": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_CURRENT_MAIN_SUCCESSOR_V1_20260912_001",
+        "transitionId": "PR3193_GEN2177_TO_CURRENT_MAIN_00F6FC66520D_SUCCESSOR_V1_20260912_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

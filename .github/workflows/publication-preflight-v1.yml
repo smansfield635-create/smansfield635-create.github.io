@@ -11,28 +11,35 @@ on:
         description: Registered public surface verification id
         required: true
         type: string
+  pull_request:
+    paths:
+      - '.github/workflows/publication-preflight-v1.yml'
 
 permissions:
   contents: read
 
 concurrency:
-  group: publication-preflight-${{ inputs.surface_id }}-${{ inputs.target_sha }}
+  group: publication-preflight-${{ github.event_name == 'workflow_dispatch' && inputs.surface_id || 'awards' }}-${{ github.event_name == 'workflow_dispatch' && inputs.target_sha || github.event.pull_request.head.sha }}
   cancel-in-progress: false
 
 jobs:
   preflight:
     runs-on: ubuntu-latest
     steps:
-      - name: Require canonical main dispatch and valid target SHA
+      - name: Require canonical dispatch or workflow self-test target
         id: resolve
         env:
-          REQUESTED_SHA: ${{ inputs.target_sha }}
+          REQUESTED_SHA: ${{ github.event_name == 'workflow_dispatch' && inputs.target_sha || github.event.pull_request.head.sha }}
         shell: bash
         run: |
           set -euo pipefail
           requested="$(printf '%s' "$REQUESTED_SHA" | tr -d '[:space:]')"
           printf '%s' "$requested" | grep -Eq '^[0-9a-f]{40}$'
-          test "$GITHUB_REF" = "refs/heads/main"
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            test "$GITHUB_REF" = "refs/heads/main"
+          else
+            test "$GITHUB_EVENT_NAME" = "pull_request"
+          fi
           echo "target_sha=$requested" >> "$GITHUB_OUTPUT"
 
       - name: Materialize bounded publication sparse index
@@ -83,7 +90,7 @@ jobs:
       - name: Validate registered surface
         id: surface
         env:
-          SURFACE_ID: ${{ inputs.surface_id }}
+          SURFACE_ID: ${{ github.event_name == 'workflow_dispatch' && inputs.surface_id || 'awards' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -92,12 +99,13 @@ jobs:
           test -f "$manifest"
           jq -e --arg id "$SURFACE_ID" '.schema=="PUBLICATION_SURFACE_VERIFICATION_v1" and .surfaceId==$id and (.checks|type=="array") and (.checks|length>0)' "$manifest" >/dev/null
           echo "manifest=$manifest" >> "$GITHUB_OUTPUT"
+          echo "surface_id=$SURFACE_ID" >> "$GITHUB_OUTPUT"
           echo "runtime=$(jq -r 'if .runtime?.enabled == true then "true" else "false" end' "$manifest")" >> "$GITHUB_OUTPUT"
 
       - name: Build and size-check exact Pages payload
         env:
           TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
-          SURFACE_ID: ${{ inputs.surface_id }}
+          SURFACE_ID: ${{ steps.surface.outputs.surface_id }}
           STAGE: ${{ runner.temp }}/pages-site
           RECEIPT: ${{ runner.temp }}/publication-preflight-receipt.json
         shell: bash
@@ -124,7 +132,7 @@ jobs:
       - name: Verify exact staged payload
         env:
           TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
-          SURFACE_ID: ${{ inputs.surface_id }}
+          SURFACE_ID: ${{ steps.surface.outputs.surface_id }}
           STAGE: ${{ runner.temp }}/pages-site
           RECEIPT: ${{ runner.temp }}/publication-preflight-receipt.json
         shell: bash
@@ -141,58 +149,200 @@ jobs:
             --receipt "$RECEIPT"
           jq -e '.schema=="PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1" and .result=="PREFLIGHT_PASS" and .deploymentPerformed==false' "$RECEIPT" >/dev/null
 
-      - name: Capture browser visual evidence
-        if: ${{ steps.surface.outputs.runtime == 'true' && inputs.surface_id == 'awards' }}
+      - name: Capture browser visual evidence and Awards recognition matrix
+        if: ${{ steps.surface.outputs.runtime == 'true' && steps.surface.outputs.surface_id == 'awards' }}
         env:
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
           STAGE: ${{ runner.temp }}/pages-site
           SCREENSHOT: ${{ runner.temp }}/publication-preflight-screenshot.png
+          EVIDENCE_DIR: ${{ runner.temp }}/awards-recognition-evidence
+          EVIDENCE_MANIFEST: ${{ runner.temp }}/awards-recognition-evidence/recognition-evidence-manifest.json
         shell: bash
         run: |
           set -euo pipefail
           export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
           test -n "$CHROME_PATH"
+          mkdir -p "$EVIDENCE_DIR"
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
+          import path from 'node:path';
           import {spawn} from 'node:child_process';
           import puppeteer from 'puppeteer-core';
 
           const stage=process.env.STAGE;
           const screenshot=process.env.SCREENSHOT;
+          const evidenceDir=process.env.EVIDENCE_DIR;
+          const evidenceManifest=process.env.EVIDENCE_MANIFEST;
+          const targetSha=process.env.TARGET_SHA;
           const chrome=process.env.CHROME_PATH;
-          const server=spawn('python3',['-m','http.server','4173','--bind','127.0.0.1','--directory',stage],{stdio:'ignore'});
+          const baseUrl='http://127.0.0.1:4173';
+          const awardsPath='/showroom/globe/h-earth/awards/';
           const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+          const objects=['experience','world','coherence','trust','estate'];
+          const profiles={
+            experience:{width:'min(46vw,300px)',aspectRatio:'2 / 3'},
+            world:{width:'min(78vw,720px)',aspectRatio:'16 / 9'},
+            coherence:{width:'min(62vw,480px)',aspectRatio:'6 / 5'},
+            trust:{width:'min(80vw,760px)',aspectRatio:'2 / 1'},
+            estate:{width:'min(72vw,620px)',aspectRatio:'4 / 3'}
+          };
+          const viewports=[
+            {name:'phone',width:412,height:915,deviceScaleFactor:2,isMobile:true,hasTouch:true},
+            {name:'tablet',width:800,height:1280,deviceScaleFactor:2,isMobile:true,hasTouch:true},
+            {name:'desktop',width:1440,height:1000,deviceScaleFactor:1,isMobile:false,hasTouch:false}
+          ];
+          const captures=[];
+          const server=spawn('python3',['-m','http.server','4173','--bind','127.0.0.1','--directory',stage],{stdio:'ignore'});
           let browser;
-          try{
+
+          async function waitServer(){
             for(let i=0;i<30;i++){
-              try{const r=await fetch('http://127.0.0.1:4173/showroom/globe/h-earth/awards/');if(r.ok)break;}catch{}
+              try{const r=await fetch(baseUrl+awardsPath);if(r.ok)return;}catch{}
               await sleep(200);
             }
-            browser=await puppeteer.launch({executablePath:chrome,headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--use-gl=swiftshader']});
-            const page=await browser.newPage();
-            await page.setViewport({width:412,height:915,deviceScaleFactor:2,isMobile:true,hasTouch:true});
-            await page.goto('http://127.0.0.1:4173/showroom/globe/h-earth/awards/',{waitUntil:'networkidle0',timeout:45000});
-            await page.waitForSelector('[data-achievement-stage]',{timeout:15000});
-            const next='[data-achievement-next]';
-            await page.waitForSelector(next,{timeout:10000});
-            await page.click(next);
-            await page.waitForFunction(()=>document.querySelector('[data-achievement-stage] .instrument-card[data-story="world"]')?.getAttribute('aria-current')==='true',{timeout:10000});
-            await sleep(1400);
-            const selector='[data-achievement-stage] .instrument-card[data-story="world"] .living-object-shell canvas.awards-world-true3d';
-            await page.waitForSelector(selector,{timeout:10000});
+            throw new Error('LOCAL_STAGE_SERVER_UNAVAILABLE');
+          }
+          async function objectReady(page,selector){
+            await page.waitForSelector(selector,{timeout:20000});
+            await page.waitForFunction(sel=>{
+              const el=document.querySelector(sel);
+              if(!el)return false;
+              const canvas=el.querySelector('canvas')||(el instanceof HTMLCanvasElement?el:null);
+              if(canvas)return canvas.width>=120&&canvas.height>=120;
+              const svg=el.querySelector('svg')||(el instanceof SVGElement?el:null);
+              if(svg){const r=svg.getBoundingClientRect();return r.width>=80&&r.height>=80;}
+              const r=el.getBoundingClientRect();
+              return r.width>=80&&r.height>=80&&el.childElementCount>0;
+            },{timeout:30000},selector);
             await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
-            const dataUrl=await page.$eval(selector,canvas=>{
-              if(!(canvas instanceof HTMLCanvasElement))throw new Error('WORLD_WEBGL_CANVAS_NOT_FOUND');
-              if(canvas.width<120||canvas.height<120)throw new Error('WORLD_WEBGL_CANVAS_TOO_SMALL');
-              return canvas.toDataURL("image/png");
+            await sleep(900);
+          }
+          async function captureElement(page,selector,file,entry){
+            const handle=await page.$(selector);if(!handle)throw new Error('CAPTURE_SELECTOR_MISSING:'+selector);
+            const box=await handle.boundingBox();if(!box||box.width<80||box.height<80)throw new Error('CAPTURE_BOX_TOO_SMALL:'+selector);
+            await handle.screenshot({path:file,type:'png'});
+            const stat=fs.statSync(file);if(stat.size<800)throw new Error('CAPTURE_PNG_TOO_SMALL:'+file);
+            captures.push({...entry,selector,file:path.basename(file),cssPixels:{width:Math.round(box.width),height:Math.round(box.height)},bytes:stat.size,captureResult:'CAPTURED',expectedDisposition:'REVIEW_REQUIRED'});
+          }
+          async function setViewport(page,v){await page.setViewport({width:v.width,height:v.height,deviceScaleFactor:v.deviceScaleFactor,isMobile:v.isMobile,hasTouch:v.hasTouch});}
+          async function selectStory(page,story){
+            for(let guard=0;guard<6;guard++){
+              const active=await page.$eval('[data-achievement-stage]',(stage,target)=>stage.querySelector(`.instrument-card[data-story="${target}"]`)?.getAttribute('aria-current')==='true',story);
+              if(active)return;
+              await page.click('[data-achievement-next]');
+              await sleep(650);
+            }
+            throw new Error('AWARDS_STORY_NOT_SELECTED:'+story);
+          }
+          async function enterStandalone(page,story,hostSel){
+            await page.$eval(hostSel,(shell,{story,profile})=>{
+              const marker=document.createElement('span');
+              marker.hidden=true;
+              marker.dataset.recognitionRestore='1';
+              shell.parentElement.insertBefore(marker,shell);
+              shell.dataset.recognitionPriorStyle=shell.getAttribute('style')||'';
+              const overlay=document.createElement('div');
+              overlay.id='recognition-standalone-overlay';
+              overlay.setAttribute('aria-hidden','true');
+              overlay.style.cssText='position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;background:#01040a;pointer-events:none;overflow:hidden';
+              const host=document.createElement('div');
+              host.id='recognition-standalone-host';
+              host.dataset.story=story;
+              host.style.width=profile.width;
+              host.style.aspectRatio=profile.aspectRatio;
+              host.style.position='relative';
+              host.style.overflow='visible';
+              shell.style.setProperty('width','100%','important');
+              shell.style.setProperty('height','100%','important');
+              shell.style.setProperty('max-width','none','important');
+              shell.style.setProperty('aspect-ratio','auto','important');
+              shell.style.setProperty('position','relative','important');
+              shell.style.setProperty('inset','auto','important');
+              host.appendChild(shell);
+              overlay.appendChild(host);
+              document.body.appendChild(overlay);
+            },{story,profile:profiles[story]});
+            await objectReady(page,'#recognition-standalone-host');
+          }
+          async function leaveStandalone(page){
+            await page.evaluate(()=>{
+              const overlay=document.querySelector('#recognition-standalone-overlay');
+              const shell=overlay?.querySelector('.living-object-shell');
+              const marker=document.querySelector('[data-recognition-restore="1"]');
+              if(!overlay||!shell||!marker||!marker.parentElement)throw new Error('STANDALONE_RESTORE_STATE_MISSING');
+              marker.parentElement.insertBefore(shell,marker);
+              marker.remove();
+              const prior=shell.dataset.recognitionPriorStyle||'';
+              delete shell.dataset.recognitionPriorStyle;
+              if(prior)shell.setAttribute('style',prior);else shell.removeAttribute('style');
+              overlay.remove();
             });
-            if(!dataUrl.startsWith('data:image/png;base64,'))throw new Error('WORLD_WEBGL_CANVAS_PNG_INVALID');
-            fs.writeFileSync(screenshot,Buffer.from(dataUrl.slice('data:image/png;base64,'.length),'base64'));
+            await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+            await sleep(300);
+          }
+
+          try{
+            await waitServer();
+            browser=await puppeteer.launch({executablePath:chrome,headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--use-gl=swiftshader']});
+
+            // Preserve the existing World raw-canvas compatibility artifact.
+            {
+              const page=await browser.newPage();
+              await setViewport(page,viewports[0]);
+              await page.goto(baseUrl+awardsPath,{waitUntil:'networkidle0',timeout:45000});
+              await page.waitForSelector('[data-achievement-stage]',{timeout:15000});
+              await selectStory(page,'world');
+              await sleep(1400);
+              const selector='[data-achievement-stage] .instrument-card[data-story="world"] .living-object-shell canvas.awards-world-true3d';
+              await page.waitForSelector(selector,{timeout:10000});
+              await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+              const dataUrl=await page.$eval(selector,canvas=>{
+                if(!(canvas instanceof HTMLCanvasElement))throw new Error('WORLD_WEBGL_CANVAS_NOT_FOUND');
+                if(canvas.width<120||canvas.height<120)throw new Error('WORLD_WEBGL_CANVAS_TOO_SMALL');
+                return canvas.toDataURL('image/png');
+              });
+              if(!dataUrl.startsWith('data:image/png;base64,'))throw new Error('WORLD_WEBGL_CANVAS_PNG_INVALID');
+              fs.writeFileSync(screenshot,Buffer.from(dataUrl.slice('data:image/png;base64,'.length),'base64'));
+              await page.close();
+            }
+
+            // Use the already-passing real Awards runtime for both evidence modes.
+            // Integrated = unchanged Cycle F host. Standalone = same live renderer shell
+            // temporarily reparented into an object-specific runner overlay, then restored.
+            for(const v of viewports){
+              const page=await browser.newPage();
+              await setViewport(page,v);
+              await page.goto(baseUrl+awardsPath,{waitUntil:'networkidle0',timeout:45000});
+              await page.waitForSelector('[data-achievement-stage]',{timeout:15000});
+              for(const story of objects){
+                await selectStory(page,story);
+                const cardSel=`[data-achievement-stage] .instrument-card[data-story="${story}"]`;
+                const hostSel=`${cardSel} .living-object-shell`;
+                await objectReady(page,hostSel);
+
+                const integratedFile=path.join(evidenceDir,`integrated-${story}-${v.name}.png`);
+                await captureElement(page,hostSel,integratedFile,{targetSha,mode:'integrated',object:story,viewport:{name:v.name,width:v.width,height:v.height,deviceScaleFactor:v.deviceScaleFactor},textHidden:true});
+
+                await enterStandalone(page,story,hostSel);
+                const standaloneFile=path.join(evidenceDir,`standalone-${story}-${v.name}.png`);
+                await captureElement(page,'#recognition-standalone-host',standaloneFile,{targetSha,mode:'standalone',object:story,viewport:{name:v.name,width:v.width,height:v.height,deviceScaleFactor:v.deviceScaleFactor},textHidden:true});
+                await leaveStandalone(page);
+              }
+              await page.close();
+            }
+
+            if(captures.length!==30)throw new Error(`RECOGNITION_MATRIX_INCOMPLETE:${captures.length}`);
+            const manifest={schema:'AWARDS_RECOGNITION_EVIDENCE_MANIFEST_v1',result:'EVIDENCE_CAPTURED_NOT_SEMANTIC_PASS',targetSha,surfaceId:'awards',captureCount:captures.length,objects,viewports:viewports.map(({name,width,height,deviceScaleFactor})=>({name,width,height,deviceScaleFactor})),modes:['standalone','integrated'],textHidden:true,standaloneHarness:'RUNNER_OVERLAY_REPARENT_SAME_LIVE_RENDERER_INSTANCE',semanticRecognitionAuthority:'SEPARATE_NONCOMPENSATORY_REVIEW',negativeControlSupport:{expectedDispositionField:true,decisionOwnedByParentRecovery:true},captures};
+            fs.writeFileSync(evidenceManifest,JSON.stringify(manifest,null,2)+'\n');
           } finally {
             if(browser)await browser.close();
             server.kill('SIGTERM');
           }
           NODE
           test -s "$SCREENSHOT"
+          test -s "$EVIDENCE_MANIFEST"
+          test "$(find "$EVIDENCE_DIR" -maxdepth 1 -type f -name '*.png' | wc -l | tr -d '[:space:]')" -eq 30
+          jq -e --arg sha "$TARGET_SHA" '.schema=="AWARDS_RECOGNITION_EVIDENCE_MANIFEST_v1" and .result=="EVIDENCE_CAPTURED_NOT_SEMANTIC_PASS" and .targetSha==$sha and .captureCount==30 and (.captures|length)==30 and .standaloneHarness=="RUNNER_OVERLAY_REPARENT_SAME_LIVE_RENDERER_INSTANCE" and ([.captures[].mode]|unique|sort)==["integrated","standalone"] and ([.captures[].object]|unique|sort)==["coherence","estate","experience","trust","world"] and ([.captures[].viewport.name]|unique|sort)==["desktop","phone","tablet"]' "$EVIDENCE_MANIFEST" >/dev/null
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -201,5 +351,7 @@ jobs:
           path: |
             ${{ runner.temp }}/publication-preflight-receipt.json
             ${{ runner.temp }}/publication-preflight-screenshot.png
+            ${{ runner.temp }}/awards-recognition-evidence/recognition-evidence-manifest.json
+            ${{ runner.temp }}/awards-recognition-evidence/*.png
           if-no-files-found: error
           retention-days: 90

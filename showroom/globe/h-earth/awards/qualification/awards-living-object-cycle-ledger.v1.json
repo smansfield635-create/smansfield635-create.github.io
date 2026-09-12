@@ -1,9 +1,9 @@
 {
   "schema": "AWARDS_LIVING_OBJECT_CYCLE_LEDGER_v1",
-  "operationId": "AWARDS_LIVING_OBJECT_TRUST_CYCLE_D_20260911_002",
-  "lockGeneration": 2112,
-  "governingHead": "423f428f8d8a0a000de65ba792be8c6f002ce1e6",
-  "predecessorHead": "423f428f8d8a0a000de65ba792be8c6f002ce1e6",
+  "operationId": "AWARDS_LIVING_OBJECT_ESTATE_CYCLE_E_20260911_001",
+  "lockGeneration": 2119,
+  "governingHead": "e764b8ea37a7ed6c3f0a2c5be5d4be520db489f4",
+  "predecessorHead": "36cef93bbdf4c08ca35b862e893c11195b111d8a",
   "ownerAcceptanceInterpretation": {
     "perCycleVisualReapprovalRequired": false,
     "priorVisualAuditControlsCyclesAThroughE": true,
@@ -85,7 +85,36 @@
       "technicalQualification": "PASS_CLOSED",
       "visualAcceptance": "SATISFIED_BY_PRIOR_AUDIT_NO_PER_CYCLE_REAPPROVAL"
     },
-    "E_ESTATE": {"status": "NOT_STARTED"},
+    "E_ESTATE": {
+      "status": "PASS_CLOSED",
+      "claim": "The surprise is not one feature. It is that the pieces belong together.",
+      "objectPath": "showroom/globe/h-earth/awards/living-objects/estate-cycle-e.mjs",
+      "sourceBinding": {
+        "compassPath": "index.html",
+        "compassBlob": "3a684cf4f4aedcfa2c76fa2686fb4c733d5903bb",
+        "hEarthPath": "showroom/globe/h-earth/index.html",
+        "hEarthBlob": "f4fa5df980c639184352d978909532dc8f1bcbd8",
+        "charactersPath": "characters/index.html",
+        "charactersBlob": "6bebd977905ec9c9d7b717a4ea4305688e82aa03",
+        "coherencePath": "products/coherence-diagnostic/index.html",
+        "coherenceBlob": "b0785f36d913c286dc19e042f33ea91afcd166bc",
+        "lawsPath": "laws/index.html",
+        "lawsBlob": "d6de5558a6ba38e66ad6284a80c03de67682628b",
+        "governancePath": "governance/index.html",
+        "governanceBlob": "9b216d8f86e5dbc76794ab01ce967d3e9357ef21"
+      },
+      "semanticBinding": {
+        "estateElements": ["COMPASS", "H_EARTH", "CHARACTERS", "COHERENCE", "LAWS", "GOVERNANCE"],
+        "roleClasses": ["ORIENTATION", "WORLD", "ENCOUNTER", "INSPECTION", "CONSTRAINT", "AUTHORIZATION"],
+        "relationKinds": ["ORIENTS_TO", "INSPECTS_WITHIN", "CONSTRAINS_WITHIN", "BOUNDS_CLAIMS_FOR", "SHARES_ESTATE_WITH"],
+        "relationIsClaim": true,
+        "identicalMaturityImplied": false,
+        "identicalAuthorityImplied": false,
+        "completionEquivalenceImplied": false
+      },
+      "technicalQualification": "PASS_CLOSED",
+      "visualAcceptance": "SATISFIED_BY_PRIOR_AUDIT_NO_PER_CYCLE_REAPPROVAL"
+    },
     "F_SHARED_COMPOSITION": {"status": "NOT_STARTED"}
   },
   "invariants": {
@@ -95,6 +124,9 @@
     "numericCoherenceScoreClaimAuthorized": false,
     "trustSourceMutationAuthorized": false,
     "executionAloneAuthorizesTrustClaim": false,
+    "estateSourceMutationAuthorized": false,
+    "estateEqualMaturityClaimAuthorized": false,
+    "estateEqualAuthorityClaimAuthorized": false,
     "bottomTrophyCarouselMutationAuthorized": false,
     "prematureMergeAuthorized": false,
     "deploymentPublicationAuthorized": false

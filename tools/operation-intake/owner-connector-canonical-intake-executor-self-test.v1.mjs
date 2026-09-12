@@ -34,6 +34,13 @@ function request(overrides = {}) {
       receiptDigest: 'self-test-native-admission-executor',
       authorityEffect: 'NONE_BY_INTAKE_COMPLETENESS_RECEIPT'
     },
+    functionalCoordination: {
+      schema: 'FUNCTIONAL_BEARING_COORDINATION_v1',
+      applicabilityClass: 'MATERIAL_GOVERNED_ENGINEERING',
+      functionalBearing: { mode: 'SINGLE', bearings: ['E'], exemptionReason: null },
+      primitiveRequirements: ['E'],
+      authorityEffect: 'NONE'
+    },
     allowedPaths: ['index.html'],
     prohibitedPaths: ['forbidden/'],
     requiredOutputs: ['receipt'],

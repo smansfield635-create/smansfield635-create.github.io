@@ -10,6 +10,8 @@ export const TRANSITION_SCHEMA = 'REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_REQU
 export const AUTHORITY_POLICY = 'FRESH_SUCCESSOR_REQUEST_REQUIRED_NO_IMPLICIT_INHERITANCE';
 export const EVIDENCE_POLICY = 'EXACT_HEAD_REVALIDATION_REQUIRED';
 export const GOVERNING_REF = 'refs/heads/main';
+export const RUNTIME_OR_AUTHORITY_OPERATION_CLASS = 'RUNTIME_OR_AUTHORITY';
+export const FUNCTIONAL_COORDINATION_SCHEMA = 'FUNCTIONAL_BEARING_COORDINATION_v1';
 
 function fail(code, field, detail = null) {
   const error = new Error(`${code}:${field}${detail ? `:${detail}` : ''}`);
@@ -85,7 +87,8 @@ const FORBIDDEN_REBIND_PREFIXES = [
   '/independentVerifier',
   '/terminalDispositions',
   '/exactAllowedRepositoryPaths',
-  '/operationClass'
+  '/operationClass',
+  '/functionalCoordination'
 ];
 
 function forbiddenPointer(pointer) {
@@ -97,7 +100,10 @@ function applyRebind(document, raw, oldHead, newHead, seen) {
   const documentName = string(rebind.document, 'rebind.document');
   if (!['operationRequest', 'constructionProcedure'].includes(documentName)) fail('REBIND_DOCUMENT_INVALID', 'rebind.document');
   const pointer = string(rebind.pointer, 'rebind.pointer');
-  if (forbiddenPointer(pointer)) fail('REBIND_AUTHORITY_OR_SCOPE_FIELD_FORBIDDEN', `${documentName}${pointer}`);
+  if (forbiddenPointer(pointer)) {
+    if (pointer === '/functionalCoordination' || pointer.startsWith('/functionalCoordination/')) fail('FUNCTIONAL_COORDINATION_REBIND_FORBIDDEN', `${documentName}${pointer}`);
+    fail('REBIND_AUTHORITY_OR_SCOPE_FIELD_FORBIDDEN', `${documentName}${pointer}`);
+  }
   const key = `${documentName}:${pointer}`;
   if (seen.has(key)) fail('DUPLICATE_REBIND_POINTER', key);
   seen.add(key);
@@ -165,6 +171,20 @@ function validateNoScopeExpansion(beforeRequest, afterRequest, beforeProcedure, 
   }
 }
 
+function validateFreshFunctionalCoordination(successor, predecessorProcedure) {
+  const required = predecessorProcedure.operationClass === RUNTIME_OR_AUTHORITY_OPERATION_CLASS;
+  const supplied = Object.hasOwn(successor, 'functionalCoordination');
+  if (required && !supplied) fail('FRESH_FUNCTIONAL_COORDINATION_REQUIRED', 'successor.functionalCoordination');
+  if (!supplied) return null;
+  const fc = clone(object(successor.functionalCoordination, 'successor.functionalCoordination'));
+  if (fc.schema !== FUNCTIONAL_COORDINATION_SCHEMA) fail('FUNCTIONAL_COORDINATION_SCHEMA_INVALID', 'successor.functionalCoordination.schema');
+  if (fc.authorityEffect !== 'NONE') fail('AUTHORITY_EFFECT_NONZERO', 'successor.functionalCoordination.authorityEffect');
+  string(fc.applicabilityClass, 'successor.functionalCoordination.applicabilityClass');
+  object(fc.functionalBearing, 'successor.functionalCoordination.functionalBearing');
+  array(fc.primitiveRequirements, 'successor.functionalCoordination.primitiveRequirements');
+  return fc;
+}
+
 export function compileSuccessorPacket(raw) {
   const input = object(raw, '$');
   if (input.schema !== COMPILE_REQUEST_SCHEMA) fail('COMPILE_REQUEST_SCHEMA_MISMATCH', 'schema');
@@ -191,12 +211,15 @@ export function compileSuccessorPacket(raw) {
   const transitionId = string(successor.transitionId, 'successor.transitionId');
   const preservedEvidenceRefs = array(successor.preservedEvidenceRefs, 'successor.preservedEvidenceRefs').map((value, index) => string(value, `successor.preservedEvidenceRefs[${index}]`));
   if (new Set(preservedEvidenceRefs).size !== preservedEvidenceRefs.length) fail('DUPLICATE_PRESERVED_EVIDENCE_REF', 'successor.preservedEvidenceRefs');
+  const freshFunctionalCoordination = validateFreshFunctionalCoordination(successor, predecessorProcedure);
 
   const operationRequest = clone(predecessorRequest);
+  delete operationRequest.functionalCoordination;
   const constructionProcedure = clone(predecessorProcedure);
   operationRequest.operationId = newOperationId;
   constructionProcedure.procedureId = newProcedureId;
   operationRequest.constructionProcedureLocator = `INLINE:${newProcedureId}`;
+  if (freshFunctionalCoordination) operationRequest.functionalCoordination = freshFunctionalCoordination;
   const document = { operationRequest, constructionProcedure };
   const seen = new Set();
   const appliedRebinds = array(successor.rebinds, 'successor.rebinds').map((rebind) => applyRebind(document, rebind, oldHead, newHead, seen));
@@ -248,6 +271,9 @@ export function compileSuccessorPacket(raw) {
     appliedRebinds,
     exactScopePreserved: true,
     authorityInherited: false,
+    functionalCoordinationInherited: false,
+    freshFunctionalCoordinationRequired: predecessorProcedure.operationClass === RUNTIME_OR_AUTHORITY_OPERATION_CLASS,
+    freshFunctionalCoordinationSupplied: Boolean(freshFunctionalCoordination),
     predecessorEvidenceRelabeledAsSuccessorEvidence: false,
     freshOperationIdRequired: true,
     freshProcedureIdRequired: true,
